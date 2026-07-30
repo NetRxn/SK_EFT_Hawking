@@ -69,11 +69,17 @@ theorem arg_cell_B {z : ℂ} (hre : 0 < z.re) (him : z.im ≤ 0) (h : -z.re < Re
   · rw [arg_eq_arctan_of_re_pos hre, Real.arctan_le_zero]
     exact div_nonpos_of_nonpos_of_nonneg him hre.le
 
-/-- **Sector C** — `arg z ∈ (π/3, π/2)`. -/
-theorem arg_cell_C {z : ℂ} (hre : 0 < z.re) (h : Real.sqrt 3 * z.re < z.im) :
-    Real.pi / 3 < z.arg ∧ z.arg < Real.pi / 2 := by
+/-- **Sector C** — `arg z ∈ (π/4, π/2)`, certified by the radical-free `Re z < Im z`.
+
+The two large-argument sectors are deliberately *asymmetric*: `π/4` on the positive side and `π/3`
+on the negative side (sector D). Those are the widest thresholds the Haldane plaquette arithmetic
+below tolerates — widening D to `π/4` as well would push the winding plaquette's bracket onto the
+boundary of its `2π` window. Stating C at `π/4` keeps its side-condition free of `√3`, which is
+what makes the two tightest links (`Re ≈ 0.39`) provable by rational enclosure alone. -/
+theorem arg_cell_C {z : ℂ} (hre : 0 < z.re) (h : z.re < z.im) :
+    Real.pi / 4 < z.arg ∧ z.arg < Real.pi / 2 := by
   have hpi := Real.pi_pos
-  refine ⟨lt_arg_of_slope hre tan_pi_div_three (by linarith) (by linarith) h, ?_⟩
+  refine ⟨lt_arg_of_slope hre Real.tan_pi_div_four (by linarith) (by linarith) (by linarith), ?_⟩
   have habs : |z.arg| < Real.pi / 2 := Complex.abs_arg_lt_pi_div_two_iff.mpr (Or.inl hre)
   exact (abs_lt.mp habs).2
 
@@ -423,5 +429,978 @@ theorem haldane_mass_inversion_iff (t t₂ φ m : ℝ) :
     nlinarith [sq_abs m, sq_abs c, abs_nonneg m, abs_nonneg c]
   · intro h
     nlinarith [sq_abs m, sq_abs c, abs_nonneg m, abs_nonneg c]
+
+/-! ## The `4 × 4` discretized Brillouin torus -/
+
+/-- The Bloch phase sampled at vertex `j` of a length-4 cycle: `θ = 2π j / 4 = π j / 2`. -/
+noncomputable def bzPhase (j : ZMod 4) : ℝ := Real.pi * (j.val : ℝ) / 2
+
+/-- The `4 × 4` Brillouin-zone sample point of a torus vertex. -/
+noncomputable def bzPoint (k : Torus 4 4) : ℝ × ℝ := (bzPhase k.1, bzPhase k.2)
+
+/-- **The Haldane `d`-field on the `4 × 4` discretized Brillouin torus** at the declared
+parameters `t = t₂ = 1`, `φ = π/2`, with the mass `m` left free. -/
+noncomputable def haldaneD44 (m : ℝ) (k : Torus 4 4) : Fin 3 → ℝ :=
+  haldaneD 1 1 (Real.pi / 2) m (bzPoint k)
+
+/-- The `4 × 4` Haldane `d`-field, expanded into base trigonometric values (the
+next-nearest-neighbour term's angle difference is opened with `Real.sin_sub`, so every entry is a
+value of `sin`/`cos` at one of the four sampled phases). -/
+theorem haldaneD44_eq (m : ℝ) (k : Torus 4 4) :
+    haldaneD44 m k
+      = ![1 + Real.cos (bzPhase k.1) + Real.cos (bzPhase k.2),
+          -(Real.sin (bzPhase k.1) + Real.sin (bzPhase k.2)),
+          m - 2 * (Real.sin (bzPhase k.1)
+              + (Real.sin (bzPhase k.2) * Real.cos (bzPhase k.1)
+                  - Real.cos (bzPhase k.2) * Real.sin (bzPhase k.1))
+              - Real.sin (bzPhase k.2))] := by
+  unfold haldaneD44 haldaneD haldaneNNN bzPoint
+  rw [Real.sin_pi_div_two, structureFactor_re, structureFactor_im, Real.sin_sub]
+  norm_num
+
+theorem bzPhase_zero : bzPhase 0 = 0 := by
+  rw [bzPhase, show ((0 : ZMod 4)).val = 0 from rfl]; norm_num
+
+theorem bzPhase_one : bzPhase 1 = Real.pi / 2 := by
+  rw [bzPhase, show ((1 : ZMod 4)).val = 1 from rfl]; norm_num
+
+theorem bzPhase_two : bzPhase 2 = Real.pi := by
+  rw [bzPhase, show ((2 : ZMod 4)).val = 2 from rfl]; push_cast; ring
+
+theorem bzPhase_three : bzPhase 3 = 3 * Real.pi / 2 := by
+  rw [bzPhase, show ((3 : ZMod 4)).val = 3 from rfl]; push_cast; ring
+
+theorem sin_three_pi_div_two : Real.sin (3 * Real.pi / 2) = -1 := by
+  rw [show (3 * Real.pi / 2 : ℝ) = Real.pi / 2 + Real.pi by ring, Real.sin_add_pi,
+    Real.sin_pi_div_two]
+
+theorem cos_three_pi_div_two : Real.cos (3 * Real.pi / 2) = 0 := by
+  rw [show (3 * Real.pi / 2 : ℝ) = Real.pi / 2 + Real.pi by ring, Real.cos_add_pi,
+    Real.cos_pi_div_two, neg_zero]
+
+/-! ### The `d`-vector table on the 16 sampled momenta
+
+Every entry is `haldaneD44 m` evaluated by the base trigonometric values. The pattern of the third
+components — `m`, `m − 4`, `m + 4` — is the discretized image of the `±3√3 t₂ sin φ` Dirac-mass
+splitting of `haldaneD_diracK`/`haldaneD_diracK'`. -/
+
+theorem hD44_00 (m : ℝ) : haldaneD44 m (0, 0) = ![3, 0, m] := by
+  rw [haldaneD44_eq]; norm_num [bzPhase_zero]
+
+theorem hD44_01 (m : ℝ) : haldaneD44 m (0, 1) = ![2, -1, m] := by
+  rw [haldaneD44_eq]; norm_num [bzPhase_zero, bzPhase_one]
+
+theorem hD44_02 (m : ℝ) : haldaneD44 m (0, 2) = ![1, 0, m] := by
+  rw [haldaneD44_eq]; norm_num [bzPhase_zero, bzPhase_two]
+
+theorem hD44_03 (m : ℝ) : haldaneD44 m (0, 3) = ![2, 1, m] := by
+  rw [haldaneD44_eq]
+  norm_num [bzPhase_zero, bzPhase_three, sin_three_pi_div_two, cos_three_pi_div_two]
+
+theorem hD44_10 (m : ℝ) : haldaneD44 m (1, 0) = ![2, -1, m] := by
+  rw [haldaneD44_eq]; norm_num [bzPhase_zero, bzPhase_one]
+
+theorem hD44_11 (m : ℝ) : haldaneD44 m (1, 1) = ![1, -2, m] := by
+  rw [haldaneD44_eq]; norm_num [bzPhase_one]
+
+theorem hD44_12 (m : ℝ) : haldaneD44 m (1, 2) = ![0, -1, m - 4] := by
+  rw [haldaneD44_eq]; norm_num [bzPhase_one, bzPhase_two]
+
+theorem hD44_13 (m : ℝ) : haldaneD44 m (1, 3) = ![1, 0, m - 4] := by
+  rw [haldaneD44_eq]
+  norm_num [bzPhase_one, bzPhase_three, sin_three_pi_div_two, cos_three_pi_div_two]
+
+theorem hD44_20 (m : ℝ) : haldaneD44 m (2, 0) = ![1, 0, m] := by
+  rw [haldaneD44_eq]; norm_num [bzPhase_zero, bzPhase_two]
+
+theorem hD44_21 (m : ℝ) : haldaneD44 m (2, 1) = ![0, -1, m + 4] := by
+  rw [haldaneD44_eq]; norm_num [bzPhase_one, bzPhase_two]
+
+theorem hD44_22 (m : ℝ) : haldaneD44 m (2, 2) = ![-1, 0, m] := by
+  rw [haldaneD44_eq]; norm_num [bzPhase_two]
+
+theorem hD44_23 (m : ℝ) : haldaneD44 m (2, 3) = ![0, 1, m - 4] := by
+  rw [haldaneD44_eq]
+  norm_num [bzPhase_two, bzPhase_three, sin_three_pi_div_two, cos_three_pi_div_two]
+
+theorem hD44_30 (m : ℝ) : haldaneD44 m (3, 0) = ![2, 1, m] := by
+  rw [haldaneD44_eq]
+  norm_num [bzPhase_zero, bzPhase_three, sin_three_pi_div_two, cos_three_pi_div_two]
+
+theorem hD44_31 (m : ℝ) : haldaneD44 m (3, 1) = ![1, 0, m + 4] := by
+  rw [haldaneD44_eq]
+  norm_num [bzPhase_one, bzPhase_three, sin_three_pi_div_two, cos_three_pi_div_two]
+
+theorem hD44_32 (m : ℝ) : haldaneD44 m (3, 2) = ![0, 1, m + 4] := by
+  rw [haldaneD44_eq]
+  norm_num [bzPhase_two, bzPhase_three, sin_three_pi_div_two, cos_three_pi_div_two]
+
+theorem hD44_33 (m : ℝ) : haldaneD44 m (3, 3) = ![1, 2, m] := by
+  rw [haldaneD44_eq]
+  norm_num [bzPhase_three, sin_three_pi_div_two, cos_three_pi_div_two]
+
+/-! ### Link overlaps on the 4×4 torus
+
+`hLink m μ k` is the raw lower-band overlap across the `μ`-link at `k`. The four *cell* lemmas
+below are the workhorses: each takes the two `d`-vector evaluations plus three numeric
+side-conditions and returns a closed `π/6`-wide bracket for the link's argument. Every one of the
+32 links is one application. -/
+
+/-- The raw lower-band overlap across the `μ`-link at `k`. -/
+noncomputable def hLink (m : ℝ) (μ : Fin 2) (k : Torus 4 4) : ℂ :=
+  frameOverlap (lbVec (haldaneD44 m k)) (lbVec (haldaneD44 m (shift 4 4 μ k)))
+
+theorem hLink_re {m : ℝ} {μ : Fin 2} {k k' : Torus 4 4} {a1 a2 a3 b1 b2 b3 : ℝ}
+    (hs : shift 4 4 μ k = k')
+    (hk : haldaneD44 m k = ![a1, a2, a3]) (hk' : haldaneD44 m k' = ![b1, b2, b3]) :
+    (hLink m μ k).re = a1 * b1 + a2 * b2
+      + (a3 + Real.sqrt (a1 ^ 2 + a2 ^ 2 + a3 ^ 2))
+        * (b3 + Real.sqrt (b1 ^ 2 + b2 ^ 2 + b3 ^ 2)) := by
+  rw [hLink, hs, lbOverlap_re, hk, hk']
+  simp [dNormSq]
+
+theorem hLink_im {m : ℝ} {μ : Fin 2} {k k' : Torus 4 4} {a1 a2 a3 b1 b2 b3 : ℝ}
+    (hs : shift 4 4 μ k = k')
+    (hk : haldaneD44 m k = ![a1, a2, a3]) (hk' : haldaneD44 m k' = ![b1, b2, b3]) :
+    (hLink m μ k).im = a2 * b1 - a1 * b2 := by
+  rw [hLink, hs, lbOverlap_im, hk, hk']
+  simp
+
+/-- The overlap is nonzero whenever its imaginary part is. -/
+theorem hLink_ne_zero_of_im {m : ℝ} {μ : Fin 2} {k k' : Torus 4 4} {a1 a2 a3 b1 b2 b3 : ℝ}
+    (hs : shift 4 4 μ k = k')
+    (hk : haldaneD44 m k = ![a1, a2, a3]) (hk' : haldaneD44 m k' = ![b1, b2, b3])
+    (h : a2 * b1 - a1 * b2 ≠ 0) : hLink m μ k ≠ 0 := by
+  intro hz
+  exact h (by rw [← hLink_im hs hk hk', hz, Complex.zero_im])
+
+/-- Link bracket, **cell A**: `arg ∈ [0, π/6]`. -/
+theorem hLink_cellA {m : ℝ} {μ : Fin 2} {k k' : Torus 4 4} {a1 a2 a3 b1 b2 b3 : ℝ}
+    (hs : shift 4 4 μ k = k')
+    (hk : haldaneD44 m k = ![a1, a2, a3]) (hk' : haldaneD44 m k' = ![b1, b2, b3])
+    (h0 : 0 < a1 * b1 + a2 * b2 + (a3 + Real.sqrt (a1 ^ 2 + a2 ^ 2 + a3 ^ 2))
+            * (b3 + Real.sqrt (b1 ^ 2 + b2 ^ 2 + b3 ^ 2)))
+    (h1 : 0 ≤ a2 * b1 - a1 * b2)
+    (h2 : Real.sqrt 3 * (a2 * b1 - a1 * b2)
+            < a1 * b1 + a2 * b2 + (a3 + Real.sqrt (a1 ^ 2 + a2 ^ 2 + a3 ^ 2))
+              * (b3 + Real.sqrt (b1 ^ 2 + b2 ^ 2 + b3 ^ 2))) :
+    0 ≤ (hLink m μ k).arg ∧ (hLink m μ k).arg ≤ Real.pi / 6 := by
+  have hre := hLink_re hs hk hk'
+  have him := hLink_im hs hk hk'
+  obtain ⟨p, q⟩ := arg_cell_A (z := hLink m μ k) (by rw [hre]; exact h0) (by rw [him]; exact h1)
+    (by rw [hre, him]; exact h2)
+  exact ⟨p, q.le⟩
+
+/-- Link bracket, **cell B**: `arg ∈ [−π/6, 0]`. -/
+theorem hLink_cellB {m : ℝ} {μ : Fin 2} {k k' : Torus 4 4} {a1 a2 a3 b1 b2 b3 : ℝ}
+    (hs : shift 4 4 μ k = k')
+    (hk : haldaneD44 m k = ![a1, a2, a3]) (hk' : haldaneD44 m k' = ![b1, b2, b3])
+    (h0 : 0 < a1 * b1 + a2 * b2 + (a3 + Real.sqrt (a1 ^ 2 + a2 ^ 2 + a3 ^ 2))
+            * (b3 + Real.sqrt (b1 ^ 2 + b2 ^ 2 + b3 ^ 2)))
+    (h1 : a2 * b1 - a1 * b2 ≤ 0)
+    (h2 : -(a1 * b1 + a2 * b2 + (a3 + Real.sqrt (a1 ^ 2 + a2 ^ 2 + a3 ^ 2))
+              * (b3 + Real.sqrt (b1 ^ 2 + b2 ^ 2 + b3 ^ 2)))
+            < Real.sqrt 3 * (a2 * b1 - a1 * b2)) :
+    -(Real.pi / 6) ≤ (hLink m μ k).arg ∧ (hLink m μ k).arg ≤ 0 := by
+  have hre := hLink_re hs hk hk'
+  have him := hLink_im hs hk hk'
+  obtain ⟨p, q⟩ := arg_cell_B (z := hLink m μ k) (by rw [hre]; exact h0) (by rw [him]; exact h1)
+    (by rw [hre, him]; exact h2)
+  exact ⟨p.le, q⟩
+
+/-- Link bracket, **cell C**: `arg ∈ [π/4, π/2]`. -/
+theorem hLink_cellC {m : ℝ} {μ : Fin 2} {k k' : Torus 4 4} {a1 a2 a3 b1 b2 b3 : ℝ}
+    (hs : shift 4 4 μ k = k')
+    (hk : haldaneD44 m k = ![a1, a2, a3]) (hk' : haldaneD44 m k' = ![b1, b2, b3])
+    (h0 : 0 < a1 * b1 + a2 * b2 + (a3 + Real.sqrt (a1 ^ 2 + a2 ^ 2 + a3 ^ 2))
+            * (b3 + Real.sqrt (b1 ^ 2 + b2 ^ 2 + b3 ^ 2)))
+    (h2 : a1 * b1 + a2 * b2 + (a3 + Real.sqrt (a1 ^ 2 + a2 ^ 2 + a3 ^ 2))
+              * (b3 + Real.sqrt (b1 ^ 2 + b2 ^ 2 + b3 ^ 2))
+            < a2 * b1 - a1 * b2) :
+    Real.pi / 4 ≤ (hLink m μ k).arg ∧ (hLink m μ k).arg ≤ Real.pi / 2 := by
+  have hre := hLink_re hs hk hk'
+  have him := hLink_im hs hk hk'
+  obtain ⟨p, q⟩ := arg_cell_C (z := hLink m μ k) (by rw [hre]; exact h0)
+    (by rw [hre, him]; exact h2)
+  exact ⟨p.le, q.le⟩
+
+/-- Link bracket, **cell D**: `arg ∈ [−π/2, −π/3]`. -/
+theorem hLink_cellD {m : ℝ} {μ : Fin 2} {k k' : Torus 4 4} {a1 a2 a3 b1 b2 b3 : ℝ}
+    (hs : shift 4 4 μ k = k')
+    (hk : haldaneD44 m k = ![a1, a2, a3]) (hk' : haldaneD44 m k' = ![b1, b2, b3])
+    (h0 : 0 < a1 * b1 + a2 * b2 + (a3 + Real.sqrt (a1 ^ 2 + a2 ^ 2 + a3 ^ 2))
+            * (b3 + Real.sqrt (b1 ^ 2 + b2 ^ 2 + b3 ^ 2)))
+    (h2 : a2 * b1 - a1 * b2
+            < -(Real.sqrt 3 * (a1 * b1 + a2 * b2 + (a3 + Real.sqrt (a1 ^ 2 + a2 ^ 2 + a3 ^ 2))
+              * (b3 + Real.sqrt (b1 ^ 2 + b2 ^ 2 + b3 ^ 2))))) :
+    -(Real.pi / 2) ≤ (hLink m μ k).arg ∧ (hLink m μ k).arg ≤ -(Real.pi / 3) := by
+  have hre := hLink_re hs hk hk'
+  have him := hLink_im hs hk hk'
+  obtain ⟨p, q⟩ := arg_cell_D (z := hLink m μ k) (by rw [hre]; exact h0)
+    (by rw [hre, him]; exact h2)
+  exact ⟨p.le, q.le⟩
+
+/-- Narrow link (`|arg| < π/4`) from `|Im| < Re`. -/
+theorem hLink_narrow {m : ℝ} {μ : Fin 2} {k k' : Torus 4 4} {a1 a2 a3 b1 b2 b3 : ℝ}
+    (hs : shift 4 4 μ k = k')
+    (hk : haldaneD44 m k = ![a1, a2, a3]) (hk' : haldaneD44 m k' = ![b1, b2, b3])
+    (h : |a2 * b1 - a1 * b2| < a1 * b1 + a2 * b2
+            + (a3 + Real.sqrt (a1 ^ 2 + a2 ^ 2 + a3 ^ 2))
+              * (b3 + Real.sqrt (b1 ^ 2 + b2 ^ 2 + b3 ^ 2))) :
+    |(hLink m μ k).arg| < Real.pi / 4 := by
+  have hre := hLink_re hs hk hk'
+  have him := hLink_im hs hk hk'
+  refine abs_arg_lt_pi_div_four (z := hLink m μ k) ?_ ?_
+  · rw [hre]; exact lt_of_le_of_lt (abs_nonneg _) h
+  · rw [hre, him]; exact h
+
+/-! ### Rational enclosures of the radicals that occur
+
+Every `d`-vector on the 4×4 grid at the declared parameters is integral, so `‖d‖ = √n` for an
+integer `n`. These are the only irrational quantities in the whole Chern computation, and four-digit
+rational enclosures are ample: the tightest inequality in the argument has slack `0.026`. -/
+
+theorem sqrt2_lb : (1.4142 : ℝ) < Real.sqrt 2 := (Real.lt_sqrt (by norm_num)).mpr (by norm_num)
+theorem sqrt2_ub : Real.sqrt 2 < 1.4143 := (Real.sqrt_lt' (by norm_num)).mpr (by norm_num)
+theorem sqrt3_lb : (1.7320 : ℝ) < Real.sqrt 3 := (Real.lt_sqrt (by norm_num)).mpr (by norm_num)
+theorem sqrt3_ub : Real.sqrt 3 < 1.7321 := (Real.sqrt_lt' (by norm_num)).mpr (by norm_num)
+theorem sqrt6_lb : (2.4494 : ℝ) < Real.sqrt 6 := (Real.lt_sqrt (by norm_num)).mpr (by norm_num)
+theorem sqrt6_ub : Real.sqrt 6 < 2.4495 := (Real.sqrt_lt' (by norm_num)).mpr (by norm_num)
+theorem sqrt10_lb : (3.1622 : ℝ) < Real.sqrt 10 := (Real.lt_sqrt (by norm_num)).mpr (by norm_num)
+theorem sqrt10_ub : Real.sqrt 10 < 3.1623 := (Real.sqrt_lt' (by norm_num)).mpr (by norm_num)
+theorem sqrt26_lb : (5.0990 : ℝ) < Real.sqrt 26 := (Real.lt_sqrt (by norm_num)).mpr (by norm_num)
+theorem sqrt26_ub : Real.sqrt 26 < 5.0991 := (Real.sqrt_lt' (by norm_num)).mpr (by norm_num)
+
+/-- The north-pole condition `‖d‖ + d₃ > 0`, read off an explicit table entry. -/
+theorem hpos_of_table {m : ℝ} {k : Torus 4 4} {a1 a2 a3 : ℝ}
+    (hk : haldaneD44 m k = ![a1, a2, a3])
+    (h : 0 < Real.sqrt (a1 ^ 2 + a2 ^ 2 + a3 ^ 2) + a3) :
+    0 < Real.sqrt (dNormSq (haldaneD44 m k)) + (haldaneD44 m k) 2 := by
+  rw [hk]; simpa [dNormSq] using h
+
+/-! ### The trivial phase `m = 6` (outside the window: `6 > 3√3 ≈ 5.196`) -/
+
+theorem haldane6_pos : ∀ k : Torus 4 4,
+    0 < Real.sqrt (dNormSq (haldaneD44 6 k)) + (haldaneD44 6 k) 2 := by
+  intro k
+  fin_cases k
+  · exact hpos_of_table (hD44_00 _) (by norm_num <;> positivity)
+  · exact hpos_of_table (hD44_01 _) (by norm_num <;> positivity)
+  · exact hpos_of_table (hD44_02 _) (by norm_num <;> positivity)
+  · exact hpos_of_table (hD44_03 _) (by norm_num <;> positivity)
+  · exact hpos_of_table (hD44_10 _) (by norm_num <;> positivity)
+  · exact hpos_of_table (hD44_11 _) (by norm_num <;> positivity)
+  · exact hpos_of_table (hD44_12 _) (by norm_num <;> positivity)
+  · exact hpos_of_table (hD44_13 _) (by norm_num <;> positivity)
+  · exact hpos_of_table (hD44_20 _) (by norm_num <;> positivity)
+  · exact hpos_of_table (hD44_21 _) (by norm_num <;> positivity)
+  · exact hpos_of_table (hD44_22 _) (by norm_num <;> positivity)
+  · exact hpos_of_table (hD44_23 _) (by norm_num <;> positivity)
+  · exact hpos_of_table (hD44_30 _) (by norm_num <;> positivity)
+  · exact hpos_of_table (hD44_31 _) (by norm_num <;> positivity)
+  · exact hpos_of_table (hD44_32 _) (by norm_num <;> positivity)
+  · exact hpos_of_table (hD44_33 _) (by norm_num <;> positivity)
+
+theorem haldane6_link_ne : ∀ (μ : Fin 2) (k : Torus 4 4), hLink 6 μ k ≠ 0 := by
+  intro μ k
+  fin_cases μ <;> fin_cases k
+  · exact hLink_ne_zero_of_im (by decide) (hD44_00 6) (hD44_10 6) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_01 6) (hD44_11 6) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_02 6) (hD44_12 6) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_03 6) (hD44_13 6) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_10 6) (hD44_20 6) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_11 6) (hD44_21 6) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_12 6) (hD44_22 6) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_13 6) (hD44_23 6) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_20 6) (hD44_30 6) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_21 6) (hD44_31 6) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_22 6) (hD44_32 6) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_23 6) (hD44_33 6) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_30 6) (hD44_00 6) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_31 6) (hD44_01 6) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_32 6) (hD44_02 6) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_33 6) (hD44_03 6) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_00 6) (hD44_01 6) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_01 6) (hD44_02 6) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_02 6) (hD44_03 6) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_03 6) (hD44_00 6) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_10 6) (hD44_11 6) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_11 6) (hD44_12 6) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_12 6) (hD44_13 6) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_13 6) (hD44_10 6) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_20 6) (hD44_21 6) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_21 6) (hD44_22 6) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_22 6) (hD44_23 6) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_23 6) (hD44_20 6) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_30 6) (hD44_31 6) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_31 6) (hD44_32 6) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_32 6) (hD44_33 6) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_33 6) (hD44_30 6) (by norm_num)
+
+theorem haldane6_link_narrow :
+    ∀ (μ : Fin 2) (k : Torus 4 4), |(hLink 6 μ k).arg| < Real.pi / 4 := by
+  intro μ k
+  fin_cases μ <;> fin_cases k
+  · exact hLink_narrow (by decide) (hD44_00 6) (hD44_10 6)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (45 : ℝ), Real.sqrt_nonneg (41 : ℝ),
+        mul_nonneg (Real.sqrt_nonneg (45 : ℝ)) (Real.sqrt_nonneg (41 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_01 6) (hD44_11 6)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (41 : ℝ), Real.sqrt_nonneg (41 : ℝ),
+        mul_nonneg (Real.sqrt_nonneg (41 : ℝ)) (Real.sqrt_nonneg (41 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_02 6) (hD44_12 6)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (37 : ℝ), Real.sqrt_nonneg (5 : ℝ),
+        mul_nonneg (Real.sqrt_nonneg (37 : ℝ)) (Real.sqrt_nonneg (5 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_03 6) (hD44_13 6)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (41 : ℝ), Real.sqrt_nonneg (5 : ℝ),
+        mul_nonneg (Real.sqrt_nonneg (41 : ℝ)) (Real.sqrt_nonneg (5 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_10 6) (hD44_20 6)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (41 : ℝ), Real.sqrt_nonneg (37 : ℝ),
+        mul_nonneg (Real.sqrt_nonneg (41 : ℝ)) (Real.sqrt_nonneg (37 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_11 6) (hD44_21 6)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (41 : ℝ), Real.sqrt_nonneg (101 : ℝ),
+        mul_nonneg (Real.sqrt_nonneg (41 : ℝ)) (Real.sqrt_nonneg (101 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_12 6) (hD44_22 6)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (5 : ℝ), Real.sqrt_nonneg (37 : ℝ),
+        mul_nonneg (Real.sqrt_nonneg (5 : ℝ)) (Real.sqrt_nonneg (37 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_13 6) (hD44_23 6)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (5 : ℝ), Real.sqrt_nonneg (5 : ℝ),
+        mul_nonneg (Real.sqrt_nonneg (5 : ℝ)) (Real.sqrt_nonneg (5 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_20 6) (hD44_30 6)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (37 : ℝ), Real.sqrt_nonneg (41 : ℝ),
+        mul_nonneg (Real.sqrt_nonneg (37 : ℝ)) (Real.sqrt_nonneg (41 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_21 6) (hD44_31 6)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (101 : ℝ), Real.sqrt_nonneg (101 : ℝ),
+        mul_nonneg (Real.sqrt_nonneg (101 : ℝ)) (Real.sqrt_nonneg (101 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_22 6) (hD44_32 6)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (37 : ℝ), Real.sqrt_nonneg (101 : ℝ),
+        mul_nonneg (Real.sqrt_nonneg (37 : ℝ)) (Real.sqrt_nonneg (101 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_23 6) (hD44_33 6)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (5 : ℝ), Real.sqrt_nonneg (41 : ℝ),
+        mul_nonneg (Real.sqrt_nonneg (5 : ℝ)) (Real.sqrt_nonneg (41 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_30 6) (hD44_00 6)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (41 : ℝ), Real.sqrt_nonneg (45 : ℝ),
+        mul_nonneg (Real.sqrt_nonneg (41 : ℝ)) (Real.sqrt_nonneg (45 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_31 6) (hD44_01 6)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (101 : ℝ), Real.sqrt_nonneg (41 : ℝ),
+        mul_nonneg (Real.sqrt_nonneg (101 : ℝ)) (Real.sqrt_nonneg (41 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_32 6) (hD44_02 6)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (101 : ℝ), Real.sqrt_nonneg (37 : ℝ),
+        mul_nonneg (Real.sqrt_nonneg (101 : ℝ)) (Real.sqrt_nonneg (37 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_33 6) (hD44_03 6)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (41 : ℝ), Real.sqrt_nonneg (41 : ℝ),
+        mul_nonneg (Real.sqrt_nonneg (41 : ℝ)) (Real.sqrt_nonneg (41 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_00 6) (hD44_01 6)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (45 : ℝ), Real.sqrt_nonneg (41 : ℝ),
+        mul_nonneg (Real.sqrt_nonneg (45 : ℝ)) (Real.sqrt_nonneg (41 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_01 6) (hD44_02 6)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (41 : ℝ), Real.sqrt_nonneg (37 : ℝ),
+        mul_nonneg (Real.sqrt_nonneg (41 : ℝ)) (Real.sqrt_nonneg (37 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_02 6) (hD44_03 6)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (37 : ℝ), Real.sqrt_nonneg (41 : ℝ),
+        mul_nonneg (Real.sqrt_nonneg (37 : ℝ)) (Real.sqrt_nonneg (41 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_03 6) (hD44_00 6)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (41 : ℝ), Real.sqrt_nonneg (45 : ℝ),
+        mul_nonneg (Real.sqrt_nonneg (41 : ℝ)) (Real.sqrt_nonneg (45 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_10 6) (hD44_11 6)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (41 : ℝ), Real.sqrt_nonneg (41 : ℝ),
+        mul_nonneg (Real.sqrt_nonneg (41 : ℝ)) (Real.sqrt_nonneg (41 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_11 6) (hD44_12 6)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (41 : ℝ), Real.sqrt_nonneg (5 : ℝ),
+        mul_nonneg (Real.sqrt_nonneg (41 : ℝ)) (Real.sqrt_nonneg (5 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_12 6) (hD44_13 6)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (5 : ℝ), Real.sqrt_nonneg (5 : ℝ),
+        mul_nonneg (Real.sqrt_nonneg (5 : ℝ)) (Real.sqrt_nonneg (5 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_13 6) (hD44_10 6)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (5 : ℝ), Real.sqrt_nonneg (41 : ℝ),
+        mul_nonneg (Real.sqrt_nonneg (5 : ℝ)) (Real.sqrt_nonneg (41 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_20 6) (hD44_21 6)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (37 : ℝ), Real.sqrt_nonneg (101 : ℝ),
+        mul_nonneg (Real.sqrt_nonneg (37 : ℝ)) (Real.sqrt_nonneg (101 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_21 6) (hD44_22 6)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (101 : ℝ), Real.sqrt_nonneg (37 : ℝ),
+        mul_nonneg (Real.sqrt_nonneg (101 : ℝ)) (Real.sqrt_nonneg (37 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_22 6) (hD44_23 6)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (37 : ℝ), Real.sqrt_nonneg (5 : ℝ),
+        mul_nonneg (Real.sqrt_nonneg (37 : ℝ)) (Real.sqrt_nonneg (5 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_23 6) (hD44_20 6)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (5 : ℝ), Real.sqrt_nonneg (37 : ℝ),
+        mul_nonneg (Real.sqrt_nonneg (5 : ℝ)) (Real.sqrt_nonneg (37 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_30 6) (hD44_31 6)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (41 : ℝ), Real.sqrt_nonneg (101 : ℝ),
+        mul_nonneg (Real.sqrt_nonneg (41 : ℝ)) (Real.sqrt_nonneg (101 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_31 6) (hD44_32 6)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (101 : ℝ), Real.sqrt_nonneg (101 : ℝ),
+        mul_nonneg (Real.sqrt_nonneg (101 : ℝ)) (Real.sqrt_nonneg (101 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_32 6) (hD44_33 6)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (101 : ℝ), Real.sqrt_nonneg (41 : ℝ),
+        mul_nonneg (Real.sqrt_nonneg (101 : ℝ)) (Real.sqrt_nonneg (41 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_33 6) (hD44_30 6)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (41 : ℝ), Real.sqrt_nonneg (41 : ℝ),
+        mul_nonneg (Real.sqrt_nonneg (41 : ℝ)) (Real.sqrt_nonneg (41 : ℝ))])
+
+/-! ### The topological phase `m = 1` (inside the window: `1 < 3√3`) -/
+
+theorem haldane1_pos : ∀ k : Torus 4 4,
+    0 < Real.sqrt (dNormSq (haldaneD44 1 k)) + (haldaneD44 1 k) 2 := by
+  intro k
+  fin_cases k
+  · exact hpos_of_table (hD44_00 _) (by norm_num <;> positivity)
+  · exact hpos_of_table (hD44_01 _) (by norm_num <;> positivity)
+  · exact hpos_of_table (hD44_02 _) (by norm_num <;> positivity)
+  · exact hpos_of_table (hD44_03 _) (by norm_num <;> positivity)
+  · exact hpos_of_table (hD44_10 _) (by norm_num <;> positivity)
+  · exact hpos_of_table (hD44_11 _) (by norm_num <;> positivity)
+  · exact hpos_of_table (hD44_12 _) (by norm_num <;> nlinarith [sqrt10_lb])
+  · exact hpos_of_table (hD44_13 _) (by norm_num <;> nlinarith [sqrt10_lb])
+  · exact hpos_of_table (hD44_20 _) (by norm_num <;> positivity)
+  · exact hpos_of_table (hD44_21 _) (by norm_num <;> positivity)
+  · exact hpos_of_table (hD44_22 _) (by norm_num <;> positivity)
+  · exact hpos_of_table (hD44_23 _) (by norm_num <;> nlinarith [sqrt10_lb])
+  · exact hpos_of_table (hD44_30 _) (by norm_num <;> positivity)
+  · exact hpos_of_table (hD44_31 _) (by norm_num <;> positivity)
+  · exact hpos_of_table (hD44_32 _) (by norm_num <;> positivity)
+  · exact hpos_of_table (hD44_33 _) (by norm_num <;> positivity)
+
+theorem haldane1_link_ne : ∀ (μ : Fin 2) (k : Torus 4 4), hLink 1 μ k ≠ 0 := by
+  intro μ k
+  fin_cases μ <;> fin_cases k
+  · exact hLink_ne_zero_of_im (by decide) (hD44_00 1) (hD44_10 1) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_01 1) (hD44_11 1) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_02 1) (hD44_12 1) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_03 1) (hD44_13 1) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_10 1) (hD44_20 1) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_11 1) (hD44_21 1) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_12 1) (hD44_22 1) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_13 1) (hD44_23 1) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_20 1) (hD44_30 1) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_21 1) (hD44_31 1) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_22 1) (hD44_32 1) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_23 1) (hD44_33 1) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_30 1) (hD44_00 1) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_31 1) (hD44_01 1) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_32 1) (hD44_02 1) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_33 1) (hD44_03 1) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_00 1) (hD44_01 1) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_01 1) (hD44_02 1) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_02 1) (hD44_03 1) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_03 1) (hD44_00 1) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_10 1) (hD44_11 1) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_11 1) (hD44_12 1) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_12 1) (hD44_13 1) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_13 1) (hD44_10 1) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_20 1) (hD44_21 1) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_21 1) (hD44_22 1) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_22 1) (hD44_23 1) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_23 1) (hD44_20 1) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_30 1) (hD44_31 1) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_31 1) (hD44_32 1) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_32 1) (hD44_33 1) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_33 1) (hD44_30 1) (by norm_num)
+
+/-- **The topological Haldane frame**: `t = t₂ = 1`, `φ = π/2`, `m = 1`. -/
+noncomputable def haldaneFrameTopo : BlochLowerBandFrame 4 4 :=
+  blochFrameOfD (haldaneD44 1) haldane1_pos haldane1_link_ne
+
+/-- **The trivial-phase Haldane frame**: same hoppings, `m = 6` (outside the window). -/
+noncomputable def haldaneFrameTrivial : BlochLowerBandFrame 4 4 :=
+  blochFrameOfD (haldaneD44 6) haldane6_pos haldane6_link_ne
+
+theorem rawCurl_topo (k : Torus 4 4) :
+    rawCurl 4 4 (linkOfFrame haldaneFrameTopo.toAdmissibleBandFrame) k
+      = (hLink 1 0 k).arg + (hLink 1 1 (shift 4 4 0 k)).arg
+        - (hLink 1 0 (shift 4 4 1 k)).arg - (hLink 1 1 k).arg := by
+  unfold rawCurl haldaneFrameTopo
+  rw [linkArg_blochFrameOfD, linkArg_blochFrameOfD, linkArg_blochFrameOfD,
+    linkArg_blochFrameOfD]
+  rfl
+
+/-! #### Per-link argument brackets (32 links, four sector cells) -/
+
+/-- `μ=0` link at `(0, 0)` → `(1, 0)`: cell A (arg ≈ 8.383°). -/
+theorem argL000 : 0 ≤ (hLink 1 0 (0, 0)).arg ∧ (hLink 1 0 (0, 0)).arg ≤ Real.pi / 6 :=
+  hLink_cellA (by decide) (hD44_00 1) (hD44_10 1)
+    (by norm_num <;> nlinarith [sqrt6_lb, sqrt6_ub, sqrt10_lb, sqrt10_ub])
+    (by norm_num)
+    (by norm_num <;> nlinarith [sqrt6_lb, sqrt6_ub, sqrt10_lb, sqrt10_ub, sqrt3_lb, sqrt3_ub])
+
+/-- `μ=0` link at `(0, 1)` → `(1, 1)`: cell A (arg ≈ 10.686°). -/
+theorem argL001 : 0 ≤ (hLink 1 0 (0, 1)).arg ∧ (hLink 1 0 (0, 1)).arg ≤ Real.pi / 6 :=
+  hLink_cellA (by decide) (hD44_01 1) (hD44_11 1)
+    (by norm_num <;> nlinarith [sqrt6_lb, sqrt6_ub])
+    (by norm_num)
+    (by norm_num <;> nlinarith [sqrt6_lb, sqrt6_ub, sqrt3_lb, sqrt3_ub])
+
+/-- `μ=0` link at `(0, 2)` → `(1, 2)`: cell C (arg ≈ 68.606°). -/
+theorem argL002 : Real.pi / 4 ≤ (hLink 1 0 (0, 2)).arg ∧ (hLink 1 0 (0, 2)).arg ≤ Real.pi / 2 :=
+  hLink_cellC (by decide) (hD44_02 1) (hD44_12 1)
+    (by norm_num <;> nlinarith [sqrt2_lb, sqrt2_ub, sqrt10_lb, sqrt10_ub])
+    (by norm_num <;> nlinarith [sqrt2_lb, sqrt2_ub, sqrt10_lb, sqrt10_ub])
+
+/-- `μ=0` link at `(0, 3)` → `(1, 3)`: cell A (arg ≈ 21.339°). -/
+theorem argL003 : 0 ≤ (hLink 1 0 (0, 3)).arg ∧ (hLink 1 0 (0, 3)).arg ≤ Real.pi / 6 :=
+  hLink_cellA (by decide) (hD44_03 1) (hD44_13 1)
+    (by norm_num <;> nlinarith [sqrt6_lb, sqrt6_ub, sqrt10_lb, sqrt10_ub])
+    (by norm_num)
+    (by norm_num <;> nlinarith [sqrt6_lb, sqrt6_ub, sqrt10_lb, sqrt10_ub, sqrt3_lb, sqrt3_ub])
+
+/-- `μ=0` link at `(1, 0)` → `(2, 0)`: cell B (arg ≈ -5.530°). -/
+theorem argL010 : -(Real.pi / 6) ≤ (hLink 1 0 (1, 0)).arg ∧ (hLink 1 0 (1, 0)).arg ≤ 0 :=
+  hLink_cellB (by decide) (hD44_10 1) (hD44_20 1)
+    (by norm_num <;> nlinarith [sqrt2_lb, sqrt2_ub, sqrt6_lb, sqrt6_ub])
+    (by norm_num)
+    (by norm_num <;> nlinarith [sqrt2_lb, sqrt2_ub, sqrt6_lb, sqrt6_ub, sqrt3_lb, sqrt3_ub])
+
+/-- `μ=0` link at `(1, 1)` → `(2, 1)`: cell A (arg ≈ 1.555°). -/
+theorem argL011 : 0 ≤ (hLink 1 0 (1, 1)).arg ∧ (hLink 1 0 (1, 1)).arg ≤ Real.pi / 6 :=
+  hLink_cellA (by decide) (hD44_11 1) (hD44_21 1)
+    (by norm_num <;> nlinarith [sqrt6_lb, sqrt6_ub, sqrt26_lb, sqrt26_ub])
+    (by norm_num)
+    (by norm_num <;> nlinarith [sqrt6_lb, sqrt6_ub, sqrt26_lb, sqrt26_ub, sqrt3_lb, sqrt3_ub])
+
+/-- `μ=0` link at `(1, 2)` → `(2, 2)`: cell C (arg ≈ 68.606°). -/
+theorem argL012 : Real.pi / 4 ≤ (hLink 1 0 (1, 2)).arg ∧ (hLink 1 0 (1, 2)).arg ≤ Real.pi / 2 :=
+  hLink_cellC (by decide) (hD44_12 1) (hD44_22 1)
+    (by norm_num <;> nlinarith [sqrt2_lb, sqrt2_ub, sqrt10_lb, sqrt10_ub])
+    (by norm_num <;> nlinarith [sqrt2_lb, sqrt2_ub, sqrt10_lb, sqrt10_ub])
+
+/-- `μ=0` link at `(1, 3)` → `(2, 3)`: cell D (arg ≈ -88.492°). -/
+theorem argL013 : -(Real.pi / 2) ≤ (hLink 1 0 (1, 3)).arg ∧ (hLink 1 0 (1, 3)).arg ≤ -(Real.pi / 3) :=
+  hLink_cellD (by decide) (hD44_13 1) (hD44_23 1)
+    (by norm_num <;> nlinarith [sqrt10_lb, sqrt10_ub])
+    (by norm_num <;> nlinarith [sqrt10_lb, sqrt10_ub, sqrt3_lb, sqrt3_ub])
+
+/-- `μ=0` link at `(2, 0)` → `(3, 0)`: cell B (arg ≈ -5.530°). -/
+theorem argL020 : -(Real.pi / 6) ≤ (hLink 1 0 (2, 0)).arg ∧ (hLink 1 0 (2, 0)).arg ≤ 0 :=
+  hLink_cellB (by decide) (hD44_20 1) (hD44_30 1)
+    (by norm_num <;> nlinarith [sqrt2_lb, sqrt2_ub, sqrt6_lb, sqrt6_ub])
+    (by norm_num)
+    (by norm_num <;> nlinarith [sqrt2_lb, sqrt2_ub, sqrt6_lb, sqrt6_ub, sqrt3_lb, sqrt3_ub])
+
+/-- `μ=0` link at `(2, 1)` → `(3, 1)`: cell B (arg ≈ -0.562°). -/
+theorem argL021 : -(Real.pi / 6) ≤ (hLink 1 0 (2, 1)).arg ∧ (hLink 1 0 (2, 1)).arg ≤ 0 :=
+  hLink_cellB (by decide) (hD44_21 1) (hD44_31 1)
+    (by norm_num <;> nlinarith [sqrt26_lb, sqrt26_ub])
+    (by norm_num)
+    (by norm_num <;> nlinarith [sqrt26_lb, sqrt26_ub, sqrt3_lb, sqrt3_ub])
+
+/-- `μ=0` link at `(2, 2)` → `(3, 2)`: cell A (arg ≈ 2.349°). -/
+theorem argL022 : 0 ≤ (hLink 1 0 (2, 2)).arg ∧ (hLink 1 0 (2, 2)).arg ≤ Real.pi / 6 :=
+  hLink_cellA (by decide) (hD44_22 1) (hD44_32 1)
+    (by norm_num <;> nlinarith [sqrt2_lb, sqrt2_ub, sqrt26_lb, sqrt26_ub])
+    (by norm_num)
+    (by norm_num <;> nlinarith [sqrt2_lb, sqrt2_ub, sqrt26_lb, sqrt26_ub, sqrt3_lb, sqrt3_ub])
+
+/-- `μ=0` link at `(2, 3)` → `(3, 3)`: cell A (arg ≈ 21.339°). -/
+theorem argL023 : 0 ≤ (hLink 1 0 (2, 3)).arg ∧ (hLink 1 0 (2, 3)).arg ≤ Real.pi / 6 :=
+  hLink_cellA (by decide) (hD44_23 1) (hD44_33 1)
+    (by norm_num <;> nlinarith [sqrt6_lb, sqrt6_ub, sqrt10_lb, sqrt10_ub])
+    (by norm_num)
+    (by norm_num <;> nlinarith [sqrt6_lb, sqrt6_ub, sqrt10_lb, sqrt10_ub, sqrt3_lb, sqrt3_ub])
+
+/-- `μ=0` link at `(3, 0)` → `(0, 0)`: cell A (arg ≈ 8.383°). -/
+theorem argL030 : 0 ≤ (hLink 1 0 (3, 0)).arg ∧ (hLink 1 0 (3, 0)).arg ≤ Real.pi / 6 :=
+  hLink_cellA (by decide) (hD44_30 1) (hD44_00 1)
+    (by norm_num <;> nlinarith [sqrt6_lb, sqrt6_ub, sqrt10_lb, sqrt10_ub])
+    (by norm_num)
+    (by norm_num <;> nlinarith [sqrt6_lb, sqrt6_ub, sqrt10_lb, sqrt10_ub, sqrt3_lb, sqrt3_ub])
+
+/-- `μ=0` link at `(3, 1)` → `(0, 1)`: cell A (arg ≈ 1.555°). -/
+theorem argL031 : 0 ≤ (hLink 1 0 (3, 1)).arg ∧ (hLink 1 0 (3, 1)).arg ≤ Real.pi / 6 :=
+  hLink_cellA (by decide) (hD44_31 1) (hD44_01 1)
+    (by norm_num <;> nlinarith [sqrt6_lb, sqrt6_ub, sqrt26_lb, sqrt26_ub])
+    (by norm_num)
+    (by norm_num <;> nlinarith [sqrt6_lb, sqrt6_ub, sqrt26_lb, sqrt26_ub, sqrt3_lb, sqrt3_ub])
+
+/-- `μ=0` link at `(3, 2)` → `(0, 2)`: cell A (arg ≈ 2.349°). -/
+theorem argL032 : 0 ≤ (hLink 1 0 (3, 2)).arg ∧ (hLink 1 0 (3, 2)).arg ≤ Real.pi / 6 :=
+  hLink_cellA (by decide) (hD44_32 1) (hD44_02 1)
+    (by norm_num <;> nlinarith [sqrt2_lb, sqrt2_ub, sqrt26_lb, sqrt26_ub])
+    (by norm_num)
+    (by norm_num <;> nlinarith [sqrt2_lb, sqrt2_ub, sqrt26_lb, sqrt26_ub, sqrt3_lb, sqrt3_ub])
+
+/-- `μ=0` link at `(3, 3)` → `(0, 3)`: cell A (arg ≈ 10.686°). -/
+theorem argL033 : 0 ≤ (hLink 1 0 (3, 3)).arg ∧ (hLink 1 0 (3, 3)).arg ≤ Real.pi / 6 :=
+  hLink_cellA (by decide) (hD44_33 1) (hD44_03 1)
+    (by norm_num <;> nlinarith [sqrt6_lb, sqrt6_ub])
+    (by norm_num)
+    (by norm_num <;> nlinarith [sqrt6_lb, sqrt6_ub, sqrt3_lb, sqrt3_ub])
+
+/-- `μ=1` link at `(0, 0)` → `(0, 1)`: cell A (arg ≈ 8.383°). -/
+theorem argL100 : 0 ≤ (hLink 1 1 (0, 0)).arg ∧ (hLink 1 1 (0, 0)).arg ≤ Real.pi / 6 :=
+  hLink_cellA (by decide) (hD44_00 1) (hD44_01 1)
+    (by norm_num <;> nlinarith [sqrt6_lb, sqrt6_ub, sqrt10_lb, sqrt10_ub])
+    (by norm_num)
+    (by norm_num <;> nlinarith [sqrt6_lb, sqrt6_ub, sqrt10_lb, sqrt10_ub, sqrt3_lb, sqrt3_ub])
+
+/-- `μ=1` link at `(0, 1)` → `(0, 2)`: cell B (arg ≈ -5.530°). -/
+theorem argL101 : -(Real.pi / 6) ≤ (hLink 1 1 (0, 1)).arg ∧ (hLink 1 1 (0, 1)).arg ≤ 0 :=
+  hLink_cellB (by decide) (hD44_01 1) (hD44_02 1)
+    (by norm_num <;> nlinarith [sqrt2_lb, sqrt2_ub, sqrt6_lb, sqrt6_ub])
+    (by norm_num)
+    (by norm_num <;> nlinarith [sqrt2_lb, sqrt2_ub, sqrt6_lb, sqrt6_ub, sqrt3_lb, sqrt3_ub])
+
+/-- `μ=1` link at `(0, 2)` → `(0, 3)`: cell B (arg ≈ -5.530°). -/
+theorem argL102 : -(Real.pi / 6) ≤ (hLink 1 1 (0, 2)).arg ∧ (hLink 1 1 (0, 2)).arg ≤ 0 :=
+  hLink_cellB (by decide) (hD44_02 1) (hD44_03 1)
+    (by norm_num <;> nlinarith [sqrt2_lb, sqrt2_ub, sqrt6_lb, sqrt6_ub])
+    (by norm_num)
+    (by norm_num <;> nlinarith [sqrt2_lb, sqrt2_ub, sqrt6_lb, sqrt6_ub, sqrt3_lb, sqrt3_ub])
+
+/-- `μ=1` link at `(0, 3)` → `(0, 0)`: cell A (arg ≈ 8.383°). -/
+theorem argL103 : 0 ≤ (hLink 1 1 (0, 3)).arg ∧ (hLink 1 1 (0, 3)).arg ≤ Real.pi / 6 :=
+  hLink_cellA (by decide) (hD44_03 1) (hD44_00 1)
+    (by norm_num <;> nlinarith [sqrt6_lb, sqrt6_ub, sqrt10_lb, sqrt10_ub])
+    (by norm_num)
+    (by norm_num <;> nlinarith [sqrt6_lb, sqrt6_ub, sqrt10_lb, sqrt10_ub, sqrt3_lb, sqrt3_ub])
+
+/-- `μ=1` link at `(1, 0)` → `(1, 1)`: cell A (arg ≈ 10.686°). -/
+theorem argL110 : 0 ≤ (hLink 1 1 (1, 0)).arg ∧ (hLink 1 1 (1, 0)).arg ≤ Real.pi / 6 :=
+  hLink_cellA (by decide) (hD44_10 1) (hD44_11 1)
+    (by norm_num <;> nlinarith [sqrt6_lb, sqrt6_ub])
+    (by norm_num)
+    (by norm_num <;> nlinarith [sqrt6_lb, sqrt6_ub, sqrt3_lb, sqrt3_ub])
+
+/-- `μ=1` link at `(1, 1)` → `(1, 2)`: cell A (arg ≈ 21.339°). -/
+theorem argL111 : 0 ≤ (hLink 1 1 (1, 1)).arg ∧ (hLink 1 1 (1, 1)).arg ≤ Real.pi / 6 :=
+  hLink_cellA (by decide) (hD44_11 1) (hD44_12 1)
+    (by norm_num <;> nlinarith [sqrt6_lb, sqrt6_ub, sqrt10_lb, sqrt10_ub])
+    (by norm_num)
+    (by norm_num <;> nlinarith [sqrt6_lb, sqrt6_ub, sqrt10_lb, sqrt10_ub, sqrt3_lb, sqrt3_ub])
+
+/-- `μ=1` link at `(1, 2)` → `(1, 3)`: cell D (arg ≈ -88.492°). -/
+theorem argL112 : -(Real.pi / 2) ≤ (hLink 1 1 (1, 2)).arg ∧ (hLink 1 1 (1, 2)).arg ≤ -(Real.pi / 3) :=
+  hLink_cellD (by decide) (hD44_12 1) (hD44_13 1)
+    (by norm_num <;> nlinarith [sqrt10_lb, sqrt10_ub])
+    (by norm_num <;> nlinarith [sqrt10_lb, sqrt10_ub, sqrt3_lb, sqrt3_ub])
+
+/-- `μ=1` link at `(1, 3)` → `(1, 0)`: cell A (arg ≈ 21.339°). -/
+theorem argL113 : 0 ≤ (hLink 1 1 (1, 3)).arg ∧ (hLink 1 1 (1, 3)).arg ≤ Real.pi / 6 :=
+  hLink_cellA (by decide) (hD44_13 1) (hD44_10 1)
+    (by norm_num <;> nlinarith [sqrt6_lb, sqrt6_ub, sqrt10_lb, sqrt10_ub])
+    (by norm_num)
+    (by norm_num <;> nlinarith [sqrt6_lb, sqrt6_ub, sqrt10_lb, sqrt10_ub, sqrt3_lb, sqrt3_ub])
+
+/-- `μ=1` link at `(2, 0)` → `(2, 1)`: cell A (arg ≈ 2.349°). -/
+theorem argL120 : 0 ≤ (hLink 1 1 (2, 0)).arg ∧ (hLink 1 1 (2, 0)).arg ≤ Real.pi / 6 :=
+  hLink_cellA (by decide) (hD44_20 1) (hD44_21 1)
+    (by norm_num <;> nlinarith [sqrt2_lb, sqrt2_ub, sqrt26_lb, sqrt26_ub])
+    (by norm_num)
+    (by norm_num <;> nlinarith [sqrt2_lb, sqrt2_ub, sqrt26_lb, sqrt26_ub, sqrt3_lb, sqrt3_ub])
+
+/-- `μ=1` link at `(2, 1)` → `(2, 2)`: cell A (arg ≈ 2.349°). -/
+theorem argL121 : 0 ≤ (hLink 1 1 (2, 1)).arg ∧ (hLink 1 1 (2, 1)).arg ≤ Real.pi / 6 :=
+  hLink_cellA (by decide) (hD44_21 1) (hD44_22 1)
+    (by norm_num <;> nlinarith [sqrt2_lb, sqrt2_ub, sqrt26_lb, sqrt26_ub])
+    (by norm_num)
+    (by norm_num <;> nlinarith [sqrt2_lb, sqrt2_ub, sqrt26_lb, sqrt26_ub, sqrt3_lb, sqrt3_ub])
+
+/-- `μ=1` link at `(2, 2)` → `(2, 3)`: cell C (arg ≈ 68.606°). -/
+theorem argL122 : Real.pi / 4 ≤ (hLink 1 1 (2, 2)).arg ∧ (hLink 1 1 (2, 2)).arg ≤ Real.pi / 2 :=
+  hLink_cellC (by decide) (hD44_22 1) (hD44_23 1)
+    (by norm_num <;> nlinarith [sqrt2_lb, sqrt2_ub, sqrt10_lb, sqrt10_ub])
+    (by norm_num <;> nlinarith [sqrt2_lb, sqrt2_ub, sqrt10_lb, sqrt10_ub])
+
+/-- `μ=1` link at `(2, 3)` → `(2, 0)`: cell C (arg ≈ 68.606°). -/
+theorem argL123 : Real.pi / 4 ≤ (hLink 1 1 (2, 3)).arg ∧ (hLink 1 1 (2, 3)).arg ≤ Real.pi / 2 :=
+  hLink_cellC (by decide) (hD44_23 1) (hD44_20 1)
+    (by norm_num <;> nlinarith [sqrt2_lb, sqrt2_ub, sqrt10_lb, sqrt10_ub])
+    (by norm_num <;> nlinarith [sqrt2_lb, sqrt2_ub, sqrt10_lb, sqrt10_ub])
+
+/-- `μ=1` link at `(3, 0)` → `(3, 1)`: cell A (arg ≈ 1.555°). -/
+theorem argL130 : 0 ≤ (hLink 1 1 (3, 0)).arg ∧ (hLink 1 1 (3, 0)).arg ≤ Real.pi / 6 :=
+  hLink_cellA (by decide) (hD44_30 1) (hD44_31 1)
+    (by norm_num <;> nlinarith [sqrt6_lb, sqrt6_ub, sqrt26_lb, sqrt26_ub])
+    (by norm_num)
+    (by norm_num <;> nlinarith [sqrt6_lb, sqrt6_ub, sqrt26_lb, sqrt26_ub, sqrt3_lb, sqrt3_ub])
+
+/-- `μ=1` link at `(3, 1)` → `(3, 2)`: cell B (arg ≈ -0.562°). -/
+theorem argL131 : -(Real.pi / 6) ≤ (hLink 1 1 (3, 1)).arg ∧ (hLink 1 1 (3, 1)).arg ≤ 0 :=
+  hLink_cellB (by decide) (hD44_31 1) (hD44_32 1)
+    (by norm_num <;> nlinarith [sqrt26_lb, sqrt26_ub])
+    (by norm_num)
+    (by norm_num <;> nlinarith [sqrt26_lb, sqrt26_ub, sqrt3_lb, sqrt3_ub])
+
+/-- `μ=1` link at `(3, 2)` → `(3, 3)`: cell A (arg ≈ 1.555°). -/
+theorem argL132 : 0 ≤ (hLink 1 1 (3, 2)).arg ∧ (hLink 1 1 (3, 2)).arg ≤ Real.pi / 6 :=
+  hLink_cellA (by decide) (hD44_32 1) (hD44_33 1)
+    (by norm_num <;> nlinarith [sqrt6_lb, sqrt6_ub, sqrt26_lb, sqrt26_ub])
+    (by norm_num)
+    (by norm_num <;> nlinarith [sqrt6_lb, sqrt6_ub, sqrt26_lb, sqrt26_ub, sqrt3_lb, sqrt3_ub])
+
+/-- `μ=1` link at `(3, 3)` → `(3, 0)`: cell A (arg ≈ 10.686°). -/
+theorem argL133 : 0 ≤ (hLink 1 1 (3, 3)).arg ∧ (hLink 1 1 (3, 3)).arg ≤ Real.pi / 6 :=
+  hLink_cellA (by decide) (hD44_33 1) (hD44_30 1)
+    (by norm_num <;> nlinarith [sqrt6_lb, sqrt6_ub])
+    (by norm_num)
+    (by norm_num <;> nlinarith [sqrt6_lb, sqrt6_ub, sqrt3_lb, sqrt3_ub])
+
+/-! #### Per-plaquette branch indices -/
+
+theorem pb1_00 : plaquetteBranch 4 4
+    (linkOfFrame haldaneFrameTopo.toAdmissibleBandFrame) (0, 0) = 0 := by
+  unfold plaquetteBranch
+  rw [rawCurl_topo,
+    show shift 4 4 0 ((0 : ZMod 4), (0 : ZMod 4)) = ((1 : ZMod 4), (0 : ZMod 4)) from by decide,
+    show shift 4 4 1 ((0 : ZMod 4), (0 : ZMod 4)) = ((0 : ZMod 4), (1 : ZMod 4)) from by decide]
+  exact branchIndex_eq_zero_of
+    (by linarith [argL000.1, argL000.2, argL110.1, argL110.2, argL001.1, argL001.2,
+      argL100.1, argL100.2, Real.pi_pos])
+    (by linarith [argL000.1, argL000.2, argL110.1, argL110.2, argL001.1, argL001.2,
+      argL100.1, argL100.2, Real.pi_pos])
+
+theorem pb1_01 : plaquetteBranch 4 4
+    (linkOfFrame haldaneFrameTopo.toAdmissibleBandFrame) (0, 1) = 0 := by
+  unfold plaquetteBranch
+  rw [rawCurl_topo,
+    show shift 4 4 0 ((0 : ZMod 4), (1 : ZMod 4)) = ((1 : ZMod 4), (1 : ZMod 4)) from by decide,
+    show shift 4 4 1 ((0 : ZMod 4), (1 : ZMod 4)) = ((0 : ZMod 4), (2 : ZMod 4)) from by decide]
+  exact branchIndex_eq_zero_of
+    (by linarith [argL001.1, argL001.2, argL111.1, argL111.2, argL002.1, argL002.2,
+      argL101.1, argL101.2, Real.pi_pos])
+    (by linarith [argL001.1, argL001.2, argL111.1, argL111.2, argL002.1, argL002.2,
+      argL101.1, argL101.2, Real.pi_pos])
+
+theorem pb1_02 : plaquetteBranch 4 4
+    (linkOfFrame haldaneFrameTopo.toAdmissibleBandFrame) (0, 2) = 0 := by
+  unfold plaquetteBranch
+  rw [rawCurl_topo,
+    show shift 4 4 0 ((0 : ZMod 4), (2 : ZMod 4)) = ((1 : ZMod 4), (2 : ZMod 4)) from by decide,
+    show shift 4 4 1 ((0 : ZMod 4), (2 : ZMod 4)) = ((0 : ZMod 4), (3 : ZMod 4)) from by decide]
+  exact branchIndex_eq_zero_of
+    (by linarith [argL002.1, argL002.2, argL112.1, argL112.2, argL003.1, argL003.2,
+      argL102.1, argL102.2, Real.pi_pos])
+    (by linarith [argL002.1, argL002.2, argL112.1, argL112.2, argL003.1, argL003.2,
+      argL102.1, argL102.2, Real.pi_pos])
+
+theorem pb1_03 : plaquetteBranch 4 4
+    (linkOfFrame haldaneFrameTopo.toAdmissibleBandFrame) (0, 3) = 0 := by
+  unfold plaquetteBranch
+  rw [rawCurl_topo,
+    show shift 4 4 0 ((0 : ZMod 4), (3 : ZMod 4)) = ((1 : ZMod 4), (3 : ZMod 4)) from by decide,
+    show shift 4 4 1 ((0 : ZMod 4), (3 : ZMod 4)) = ((0 : ZMod 4), (0 : ZMod 4)) from by decide]
+  exact branchIndex_eq_zero_of
+    (by linarith [argL003.1, argL003.2, argL113.1, argL113.2, argL000.1, argL000.2,
+      argL103.1, argL103.2, Real.pi_pos])
+    (by linarith [argL003.1, argL003.2, argL113.1, argL113.2, argL000.1, argL000.2,
+      argL103.1, argL103.2, Real.pi_pos])
+
+theorem pb1_10 : plaquetteBranch 4 4
+    (linkOfFrame haldaneFrameTopo.toAdmissibleBandFrame) (1, 0) = 0 := by
+  unfold plaquetteBranch
+  rw [rawCurl_topo,
+    show shift 4 4 0 ((1 : ZMod 4), (0 : ZMod 4)) = ((2 : ZMod 4), (0 : ZMod 4)) from by decide,
+    show shift 4 4 1 ((1 : ZMod 4), (0 : ZMod 4)) = ((1 : ZMod 4), (1 : ZMod 4)) from by decide]
+  exact branchIndex_eq_zero_of
+    (by linarith [argL010.1, argL010.2, argL120.1, argL120.2, argL011.1, argL011.2,
+      argL110.1, argL110.2, Real.pi_pos])
+    (by linarith [argL010.1, argL010.2, argL120.1, argL120.2, argL011.1, argL011.2,
+      argL110.1, argL110.2, Real.pi_pos])
+
+theorem pb1_11 : plaquetteBranch 4 4
+    (linkOfFrame haldaneFrameTopo.toAdmissibleBandFrame) (1, 1) = 0 := by
+  unfold plaquetteBranch
+  rw [rawCurl_topo,
+    show shift 4 4 0 ((1 : ZMod 4), (1 : ZMod 4)) = ((2 : ZMod 4), (1 : ZMod 4)) from by decide,
+    show shift 4 4 1 ((1 : ZMod 4), (1 : ZMod 4)) = ((1 : ZMod 4), (2 : ZMod 4)) from by decide]
+  exact branchIndex_eq_zero_of
+    (by linarith [argL011.1, argL011.2, argL121.1, argL121.2, argL012.1, argL012.2,
+      argL111.1, argL111.2, Real.pi_pos])
+    (by linarith [argL011.1, argL011.2, argL121.1, argL121.2, argL012.1, argL012.2,
+      argL111.1, argL111.2, Real.pi_pos])
+
+theorem pb1_12 : plaquetteBranch 4 4
+    (linkOfFrame haldaneFrameTopo.toAdmissibleBandFrame) (1, 2) = 1 := by
+  unfold plaquetteBranch
+  rw [rawCurl_topo,
+    show shift 4 4 0 ((1 : ZMod 4), (2 : ZMod 4)) = ((2 : ZMod 4), (2 : ZMod 4)) from by decide,
+    show shift 4 4 1 ((1 : ZMod 4), (2 : ZMod 4)) = ((1 : ZMod 4), (3 : ZMod 4)) from by decide]
+  exact branchIndex_eq_one_of
+    (by linarith [argL012.1, argL012.2, argL122.1, argL122.2, argL013.1, argL013.2,
+      argL112.1, argL112.2, Real.pi_pos])
+    (by linarith [argL012.1, argL012.2, argL122.1, argL122.2, argL013.1, argL013.2,
+      argL112.1, argL112.2, Real.pi_pos])
+
+theorem pb1_13 : plaquetteBranch 4 4
+    (linkOfFrame haldaneFrameTopo.toAdmissibleBandFrame) (1, 3) = 0 := by
+  unfold plaquetteBranch
+  rw [rawCurl_topo,
+    show shift 4 4 0 ((1 : ZMod 4), (3 : ZMod 4)) = ((2 : ZMod 4), (3 : ZMod 4)) from by decide,
+    show shift 4 4 1 ((1 : ZMod 4), (3 : ZMod 4)) = ((1 : ZMod 4), (0 : ZMod 4)) from by decide]
+  exact branchIndex_eq_zero_of
+    (by linarith [argL013.1, argL013.2, argL123.1, argL123.2, argL010.1, argL010.2,
+      argL113.1, argL113.2, Real.pi_pos])
+    (by linarith [argL013.1, argL013.2, argL123.1, argL123.2, argL010.1, argL010.2,
+      argL113.1, argL113.2, Real.pi_pos])
+
+theorem pb1_20 : plaquetteBranch 4 4
+    (linkOfFrame haldaneFrameTopo.toAdmissibleBandFrame) (2, 0) = 0 := by
+  unfold plaquetteBranch
+  rw [rawCurl_topo,
+    show shift 4 4 0 ((2 : ZMod 4), (0 : ZMod 4)) = ((3 : ZMod 4), (0 : ZMod 4)) from by decide,
+    show shift 4 4 1 ((2 : ZMod 4), (0 : ZMod 4)) = ((2 : ZMod 4), (1 : ZMod 4)) from by decide]
+  exact branchIndex_eq_zero_of
+    (by linarith [argL020.1, argL020.2, argL130.1, argL130.2, argL021.1, argL021.2,
+      argL120.1, argL120.2, Real.pi_pos])
+    (by linarith [argL020.1, argL020.2, argL130.1, argL130.2, argL021.1, argL021.2,
+      argL120.1, argL120.2, Real.pi_pos])
+
+theorem pb1_21 : plaquetteBranch 4 4
+    (linkOfFrame haldaneFrameTopo.toAdmissibleBandFrame) (2, 1) = 0 := by
+  unfold plaquetteBranch
+  rw [rawCurl_topo,
+    show shift 4 4 0 ((2 : ZMod 4), (1 : ZMod 4)) = ((3 : ZMod 4), (1 : ZMod 4)) from by decide,
+    show shift 4 4 1 ((2 : ZMod 4), (1 : ZMod 4)) = ((2 : ZMod 4), (2 : ZMod 4)) from by decide]
+  exact branchIndex_eq_zero_of
+    (by linarith [argL021.1, argL021.2, argL131.1, argL131.2, argL022.1, argL022.2,
+      argL121.1, argL121.2, Real.pi_pos])
+    (by linarith [argL021.1, argL021.2, argL131.1, argL131.2, argL022.1, argL022.2,
+      argL121.1, argL121.2, Real.pi_pos])
+
+theorem pb1_22 : plaquetteBranch 4 4
+    (linkOfFrame haldaneFrameTopo.toAdmissibleBandFrame) (2, 2) = 0 := by
+  unfold plaquetteBranch
+  rw [rawCurl_topo,
+    show shift 4 4 0 ((2 : ZMod 4), (2 : ZMod 4)) = ((3 : ZMod 4), (2 : ZMod 4)) from by decide,
+    show shift 4 4 1 ((2 : ZMod 4), (2 : ZMod 4)) = ((2 : ZMod 4), (3 : ZMod 4)) from by decide]
+  exact branchIndex_eq_zero_of
+    (by linarith [argL022.1, argL022.2, argL132.1, argL132.2, argL023.1, argL023.2,
+      argL122.1, argL122.2, Real.pi_pos])
+    (by linarith [argL022.1, argL022.2, argL132.1, argL132.2, argL023.1, argL023.2,
+      argL122.1, argL122.2, Real.pi_pos])
+
+theorem pb1_23 : plaquetteBranch 4 4
+    (linkOfFrame haldaneFrameTopo.toAdmissibleBandFrame) (2, 3) = 0 := by
+  unfold plaquetteBranch
+  rw [rawCurl_topo,
+    show shift 4 4 0 ((2 : ZMod 4), (3 : ZMod 4)) = ((3 : ZMod 4), (3 : ZMod 4)) from by decide,
+    show shift 4 4 1 ((2 : ZMod 4), (3 : ZMod 4)) = ((2 : ZMod 4), (0 : ZMod 4)) from by decide]
+  exact branchIndex_eq_zero_of
+    (by linarith [argL023.1, argL023.2, argL133.1, argL133.2, argL020.1, argL020.2,
+      argL123.1, argL123.2, Real.pi_pos])
+    (by linarith [argL023.1, argL023.2, argL133.1, argL133.2, argL020.1, argL020.2,
+      argL123.1, argL123.2, Real.pi_pos])
+
+theorem pb1_30 : plaquetteBranch 4 4
+    (linkOfFrame haldaneFrameTopo.toAdmissibleBandFrame) (3, 0) = 0 := by
+  unfold plaquetteBranch
+  rw [rawCurl_topo,
+    show shift 4 4 0 ((3 : ZMod 4), (0 : ZMod 4)) = ((0 : ZMod 4), (0 : ZMod 4)) from by decide,
+    show shift 4 4 1 ((3 : ZMod 4), (0 : ZMod 4)) = ((3 : ZMod 4), (1 : ZMod 4)) from by decide]
+  exact branchIndex_eq_zero_of
+    (by linarith [argL030.1, argL030.2, argL100.1, argL100.2, argL031.1, argL031.2,
+      argL130.1, argL130.2, Real.pi_pos])
+    (by linarith [argL030.1, argL030.2, argL100.1, argL100.2, argL031.1, argL031.2,
+      argL130.1, argL130.2, Real.pi_pos])
+
+theorem pb1_31 : plaquetteBranch 4 4
+    (linkOfFrame haldaneFrameTopo.toAdmissibleBandFrame) (3, 1) = 0 := by
+  unfold plaquetteBranch
+  rw [rawCurl_topo,
+    show shift 4 4 0 ((3 : ZMod 4), (1 : ZMod 4)) = ((0 : ZMod 4), (1 : ZMod 4)) from by decide,
+    show shift 4 4 1 ((3 : ZMod 4), (1 : ZMod 4)) = ((3 : ZMod 4), (2 : ZMod 4)) from by decide]
+  exact branchIndex_eq_zero_of
+    (by linarith [argL031.1, argL031.2, argL101.1, argL101.2, argL032.1, argL032.2,
+      argL131.1, argL131.2, Real.pi_pos])
+    (by linarith [argL031.1, argL031.2, argL101.1, argL101.2, argL032.1, argL032.2,
+      argL131.1, argL131.2, Real.pi_pos])
+
+theorem pb1_32 : plaquetteBranch 4 4
+    (linkOfFrame haldaneFrameTopo.toAdmissibleBandFrame) (3, 2) = 0 := by
+  unfold plaquetteBranch
+  rw [rawCurl_topo,
+    show shift 4 4 0 ((3 : ZMod 4), (2 : ZMod 4)) = ((0 : ZMod 4), (2 : ZMod 4)) from by decide,
+    show shift 4 4 1 ((3 : ZMod 4), (2 : ZMod 4)) = ((3 : ZMod 4), (3 : ZMod 4)) from by decide]
+  exact branchIndex_eq_zero_of
+    (by linarith [argL032.1, argL032.2, argL102.1, argL102.2, argL033.1, argL033.2,
+      argL132.1, argL132.2, Real.pi_pos])
+    (by linarith [argL032.1, argL032.2, argL102.1, argL102.2, argL033.1, argL033.2,
+      argL132.1, argL132.2, Real.pi_pos])
+
+theorem pb1_33 : plaquetteBranch 4 4
+    (linkOfFrame haldaneFrameTopo.toAdmissibleBandFrame) (3, 3) = 0 := by
+  unfold plaquetteBranch
+  rw [rawCurl_topo,
+    show shift 4 4 0 ((3 : ZMod 4), (3 : ZMod 4)) = ((0 : ZMod 4), (3 : ZMod 4)) from by decide,
+    show shift 4 4 1 ((3 : ZMod 4), (3 : ZMod 4)) = ((3 : ZMod 4), (0 : ZMod 4)) from by decide]
+  exact branchIndex_eq_zero_of
+    (by linarith [argL033.1, argL033.2, argL103.1, argL103.2, argL030.1, argL030.2,
+      argL133.1, argL133.2, Real.pi_pos])
+    (by linarith [argL033.1, argL033.2, argL103.1, argL103.2, argL030.1, argL030.2,
+      argL133.1, argL133.2, Real.pi_pos])
+
+theorem plaquetteBranch_topo (k : Torus 4 4) :
+    plaquetteBranch 4 4 (linkOfFrame haldaneFrameTopo.toAdmissibleBandFrame) k
+      = if k = ((1 : ZMod 4), (2 : ZMod 4)) then 1 else 0 := by
+  fin_cases k
+  · rw [if_neg (by decide)]; exact pb1_00
+  · rw [if_neg (by decide)]; exact pb1_01
+  · rw [if_neg (by decide)]; exact pb1_02
+  · rw [if_neg (by decide)]; exact pb1_03
+  · rw [if_neg (by decide)]; exact pb1_10
+  · rw [if_neg (by decide)]; exact pb1_11
+  · rw [if_pos (by decide)]; exact pb1_12
+  · rw [if_neg (by decide)]; exact pb1_13
+  · rw [if_neg (by decide)]; exact pb1_20
+  · rw [if_neg (by decide)]; exact pb1_21
+  · rw [if_neg (by decide)]; exact pb1_22
+  · rw [if_neg (by decide)]; exact pb1_23
+  · rw [if_neg (by decide)]; exact pb1_30
+  · rw [if_neg (by decide)]; exact pb1_31
+  · rw [if_neg (by decide)]; exact pb1_32
+  · rw [if_neg (by decide)]; exact pb1_33
+
+
+/-! ## Headline: the two-phase Chern classification -/
+
+/-- A `d`-field frame whose raw nearest-neighbour overlaps are all narrow has zero Chern number. -/
+theorem blochLatticeChern_eq_zero_of_narrow_D {N₁ N₂ : ℕ} [NeZero N₁] [NeZero N₂]
+    (D : Torus N₁ N₂ → (Fin 3 → ℝ))
+    (hpos : ∀ k, 0 < Real.sqrt (dNormSq (D k)) + (D k) 2)
+    (hov : ∀ (μ : Fin 2) (k : Torus N₁ N₂),
+      frameOverlap (lbVec (D k)) (lbVec (D (shift N₁ N₂ μ k))) ≠ 0)
+    (h : ∀ (μ : Fin 2) (k : Torus N₁ N₂),
+      |Complex.arg (frameOverlap (lbVec (D k)) (lbVec (D (shift N₁ N₂ μ k))))| < Real.pi / 4) :
+    blochLatticeChern (blochFrameOfD D hpos hov).toAdmissibleBandFrame = 0 := by
+  refine blochLatticeChern_eq_zero_of_narrow _ (fun μ k => ?_)
+  show |Complex.arg (frameOverlap (normalizeVec (lbVec (D k)))
+      (normalizeVec (lbVec (D (shift N₁ N₂ μ k)))))| < Real.pi / 4
+  rw [arg_frameOverlap_normalizeVec _ _ (selfNormSq_lbVec_pos (hpos k))
+    (selfNormSq_lbVec_pos (hpos _))]
+  exact h μ k
+
+/-- **The trivial phase carries no Chern number.** At `m = 6` — outside the topological window
+`|m| < 3√3 ≈ 5.196` of `haldane_mass_inversion_iff` — every one of the 32 nearest-neighbour
+overlaps on the `4 × 4` Brillouin torus is narrow, so no plaquette carries a branch correction. -/
+theorem haldane_trivial_phase_chern_zero :
+    blochLatticeChern haldaneFrameTrivial.toAdmissibleBandFrame = 0 :=
+  blochLatticeChern_eq_zero_of_narrow_D _ _ _ haldane6_link_narrow
+
+/-- **The Haldane Chern witness.** At the declared parameters `t = t₂ = 1`, `φ = π/2`, `m = 1` —
+inside the topological window — the lower-band frame on the `4 × 4` discretized Brillouin torus has
+FHS lattice Chern number `−1`.
+
+Exactly **one** of the sixteen plaquettes (the one at `k = (1, 2)`) carries a branch correction, and
+it carries `+1`; `latticeChern = −∑ plaquetteBranch` (the repo's frozen orientation convention, fixed
+so that `∑ plaquetteArg = 2π · latticeChern`) then gives `−1`. The overall sign is the convention's,
+not the physics': replacing `φ = π/2` by `φ = −π/2` reverses the time-reversal-breaking flux and
+flips it.
+
+Together with `haldane_trivial_phase_chern_zero` this is a **classification**, not a single number:
+the invariant is `−1` inside the mass-inversion window of `haldane_mass_inversion_iff` and `0`
+outside it. -/
+theorem haldaneFrame_latticeChern_eq_neg_one :
+    blochLatticeChern haldaneFrameTopo.toAdmissibleBandFrame = -1 := by
+  unfold blochLatticeChern latticeChern
+  rw [Finset.sum_congr rfl (fun k _ => plaquetteBranch_topo k)]
+  decide
+
+/-- **The two phases are distinguished by the invariant.** The Haldane model at these two mass
+values is not merely computed twice: the invariant separates them, which is what makes the
+witness a topological statement rather than an arithmetic coincidence. -/
+theorem haldane_chern_distinguishes_phases :
+    blochLatticeChern haldaneFrameTopo.toAdmissibleBandFrame
+      ≠ blochLatticeChern haldaneFrameTrivial.toAdmissibleBandFrame := by
+  rw [haldaneFrame_latticeChern_eq_neg_one, haldane_trivial_phase_chern_zero]
+  decide
 
 end SKEFTHawking.GrapheneBand
