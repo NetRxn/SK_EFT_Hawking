@@ -435,8 +435,16 @@ by fiat — see `poissonMean_eq`). -/
 noncomputable def poissonMean (N : ℝ≥0) : ℝ := ∑' n : ℕ, poissonPMFReal N n * (n : ℝ)
 
 /-- The variance of a `Poisson N` source, defined **independently** as the second central
-moment of the pmf about its own mean. Defining it this way (rather than as `N`) is what makes
-`shot_variance_eq_mean` a theorem with content rather than a tautology. -/
+moment of the pmf about its own mean. Defining it this way (rather than as `N`) is what gives
+`poissonVariance_eq` content: it is a computation, not a definitional restatement.
+
+*(This docstring previously justified a theorem named shot_variance_eq_mean
+(de-backticked: it no longer exists), deleted 2026-07-29 as an
+identity wrapper — its proof was one `rw` composing `poissonVariance_eq` and `poissonMean_eq`,
+both of which already state `= (N : ℝ)`, and it had no consumers. The filtered-count layer
+`shotFilteredMean_le_variance` / `shotFilteredVariance_boxcar_eq_mean` /
+`shotFilteredVariance_ramp_gt_mean` carries the real content: variance equals the mean for the
+boxcar only.)* -/
 noncomputable def poissonVariance (N : ℝ≥0) : ℝ :=
   ∑' n : ℕ, poissonPMFReal N n * ((n : ℝ) - poissonMean N) ^ 2
 
@@ -584,7 +592,7 @@ theorem poissonVariance_eq (N : ℝ≥0) : poissonVariance N = (N : ℝ) := by
 /-! ## The filtered count: Fano factor and the boxcar
 
 **Correction (Stage-13, 2026-07-29).** Earlier text in this module asserted a "filtered-count
-(`N_eff`) normalization" and a bare `shot_variance_eq_mean : poissonVariance N = poissonMean N`.
+(`N_eff`) normalization" and a bare shot_variance_eq_mean : poissonVariance N = poissonMean N (removed).
 Both were wrong-headed and are removed. `N_eff` was never defined anywhere in the Detection layer;
 and the unfiltered identity was a one-`rw` composition of `poissonVariance_eq` and `poissonMean_eq`
 (both of which state `= (N : ℝ)`), with no consumers — the identity-wrapper anti-pattern.
@@ -651,7 +659,7 @@ open MeasureTheory in
 `h(x) = 2x` on `[0,1]` has `∫h = 1 = T` but `∫h² = 4/3`, so its filtered count's variance exceeds
 its mean by a third. `shotFilteredMean_le_variance` is therefore a real inequality, and the claim
 "variance = mean for the filtered count" is false as a general statement — which is exactly what
-the removed `shot_variance_eq_mean` docstring asserted. -/
+the removed shot_variance_eq_mean (removed) docstring asserted. -/
 theorem shotFilteredVariance_ramp_gt_mean {M V : (ℝ → ℝ) → ℝ} {lam : ℝ} (hlam : 0 < lam)
     (hmom : IsShotFilteredMoments M V lam 1) :
     M (fun x => 2 * x) < V (fun x => 2 * x) := by

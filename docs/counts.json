@@ -1,12 +1,12 @@
 {
-  "generated": "2026-07-29T21:28:09.147507",
+  "generated": "2026-07-29T23:20:37.735895",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 39928,
-    "theorems_total": 25806,
-    "theorems_substantive": 25780,
+    "total_declarations": 39953,
+    "theorems_total": 25827,
+    "theorems_substantive": 25801,
     "theorems_placeholder": 26,
-    "theorems_kernel_substantive": 25711,
+    "theorems_kernel_substantive": 25732,
     "theorems_tracked_vacuity_debt": 69,
     "theorems_vacuity_baseline": 48,
     "theorems_vacuous_proxy": 6,
@@ -15,7 +15,7 @@
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 2004,
+    "modules": 2005,
     "module_names": [
       "SKEFTHawking.A1Ext",
       "SKEFTHawking.A1ExtSubstantive",
@@ -1241,6 +1241,7 @@
       "SKEFTHawking.QuantumNetwork.GeneralizedAmpDamp",
       "SKEFTHawking.QuantumNetwork.GibbsVariational",
       "SKEFTHawking.QuantumNetwork.HaarPauli",
+      "SKEFTHawking.QuantumNetwork.HelstromDiscrimination",
       "SKEFTHawking.QuantumNetwork.HermitianCarrier",
       "SKEFTHawking.QuantumNetwork.KroneckerEntropy",
       "SKEFTHawking.QuantumNetwork.KroneckerOpNorm",
@@ -2022,7 +2023,7 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 12621,
+    "definitions": 12625,
     "structures": 472,
     "instances": 928,
     "inductives": 101,
