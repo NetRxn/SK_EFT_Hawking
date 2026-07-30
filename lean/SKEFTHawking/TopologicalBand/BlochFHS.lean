@@ -21,9 +21,21 @@ adapter, making the FHS lattice-Chern pipeline genuinely depend on the spectral 
   concrete constant two-band model (`d ≡ (0,0,1)`, `u ≡ e₂`) whose admissibility **and** lower-band
   law are discharged, with `blochLatticeChern = 0`.
 
-Finite/data-level. A **nontrivial** frame-derived Chern value (`C = ±1`) requires the QWZ
-transcendental evaluation (`Complex.arg` of `sin/cos` at generic momenta) and stays behind the
-separately-gated QWZ spike.
+Finite/data-level.
+
+**A nontrivial frame-derived Chern value no longer waits on the QWZ spike (updated 2026-07-29).**
+This file previously stated that `C = ±1` "requires the QWZ transcendental evaluation
+(`Complex.arg` of `sin/cos` at generic momenta)". That is refuted:
+`GrapheneBand.haldaneFrame_latticeChern_eq_neg_one` ships `C = −1` for the Haldane model on a
+`4 × 4` torus with no `Complex.arg` evaluation anywhere. The reason is structural — `latticeChern`
+is `−∑ branchIndex (rawCurl)`, a sum of **integers**, so the invariant is a *bounding* problem, not
+an evaluation problem, and `TopologicalBand.ArgSectors` discharges the bounds with radical-free
+comparisons of `Re` and `Im`.
+
+The reusable machinery for such a computation is model-independent and lives alongside this file,
+in `TopologicalBand.ArgSectors` (the sector calculus) and `TopologicalBand.BlochFrameOfD` (the
+`d`-field → frame adapter, `blochFrameOfD`, and the narrow-link triviality criterion). A
+square-lattice QWZ spike should consume those directly; it must not import a graphene module.
 -/
 
 open Complex Real Matrix

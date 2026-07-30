@@ -4286,6 +4286,14 @@ import SKEFTHawking.TopologicalBand.FHSLatticeGauge
 import SKEFTHawking.TopologicalBand.FHSExamples
 import SKEFTHawking.TopologicalBand.BlochFrame
 import SKEFTHawking.TopologicalBand.BlochFHS
+-- Model-independent machinery for concrete FHS lattice-Chern computations, promoted out of
+-- GrapheneBand.HaldaneWitness on 2026-07-29 so a square-lattice (QWZ) spike need not import a
+-- graphene module: a rational-enclosure `arg` sector calculus that places Complex.arg in a
+-- 2pi-window WITHOUT evaluating any transcendental (latticeChern is a sum of integers, so it is a
+-- bounding problem), and the d-field -> BlochLowerBandFrame adapter (lbVec, blochFrameOfD) with
+-- the narrow-link triviality criterion.
+import SKEFTHawking.TopologicalBand.ArgSectors
+import SKEFTHawking.TopologicalBand.BlochFrameOfD
 -- Phase 6CE (D11 materials series) — effective-medium homogenization (Maxwell–Garnett)
 import SKEFTHawking.MaxwellGarnett
 import SKEFTHawking.EffectiveMediumBounds
