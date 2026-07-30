@@ -2,6 +2,13 @@
 
 ## 🎯 STATUS: COMPLETE (2026-07-28) — all three waves shipped, Stage-13 clean
 
+> **Round-3 remediation in flight (2026-07-29).** A third fresh-context adversarial pass found
+> **zero mathematical errors** and a claims-layer punch list. The Waves 1–2 half is applied (see
+> **Stage 13** below); the Wave-3 half is being applied separately. Counts, `lean_deps.json`,
+> `atlas_view.json` and the Inventory Index are **stale until the post-merge gate re-runs** —
+> `folklore_missFloor_beaten_sixfold` was renamed to `folklore_missFloor_beaten_148fold` and Wave 2
+> gained four declarations.
+
 Authorized 2026-07-27, closed 2026-07-28. `lake build` 10,365 jobs clean +
 `lake build SKEFTHawking.ExtractDeps` 10,366 clean, **zero sorry, zero axioms**, every declaration
 kernel-pure `{propext, Classical.choice, Quot.sound}`; `validate.py` **49/49**. Counts moved
@@ -17,15 +24,27 @@ kernel-pure `{propext, Classical.choice, Quot.sound}`; `validate.py` **49/49**. 
   the dark-baseline trio `poisson_darkBaseline_miss_floor` / `_optimum` /
   `darkBaseline_zeroFalseAlarm_load_bearing` with `falseAlarm_zero`, `isCountRule_thresholdRule`,
   `falseAlarm_thresholdRule_zero`; the ∀-quantified refutations `folklore_miss_floor_false`,
-  `folklore_missFloor_beaten_sixfold`, `folkloreGap_split`, `folklore_avgFloor_unsound_of_bright`,
+  `folklore_missFloor_beaten_148fold`, `folkloreGap_split`, `folklore_avgFloor_unsound_of_bright`,
   `brightGap_5060`, `folklore_avg_floor_unsound`, `folklore_avgFloor_unsound_factor1000`.
-- **Wave 2 — `Detection/GaussianThreshold.lean` (36 decls).** Project-local `gaussianQ`, `thrErr0`,
-  `thrErr1`; `gaussianQ_zero` / `_antitone` / `_neg` / `_pos` / `_le_half` / `_sub_of_le`;
-  `gaussianPDF_moment_Ioi`; the tails `gaussianTail_ge_window`, `gaussianTail_mills`,
-  `gaussianTail_chernoff` (**full `z ≥ 0`**), `gaussianTail_birnbaum` (stretch, closed); the
-  rational bracket `gaussianQ_two_le_rational` / `_ge_rational`; `thrErr0_mono_in_sigma`,
+  *(Count basis: `lean_deps.json` lists 28 entries for the module; 27 are authored, the 28th is the
+  auto-generated equation lemma `thresholdRule.eq_1`.)*
+- **Wave 2 — `Detection/GaussianThreshold.lean` (40 decls after the 2026-07-29 round-3 pass; 36
+  before).** Project-local `gaussianQ`, `thrErr0`, `thrErr1`; `gaussianQ_zero` / `_antitone` /
+  `_neg` / `_pos` / `_le_half` / `_sub_of_le`; `gaussianPDF_moment_Ioi`; the tails
+  `gaussianTail_ge_window`, `gaussianTail_mills`, `gaussianTail_chernoff` (**full `z ≥ 0`**),
+  `gaussianTail_birnbaum` (stretch, closed; **unrestricted in `z` since round 3**); the rational
+  bracket `gaussianQ_two_le_rational` / `_ge_rational`; `thrErr0_mono_in_sigma`,
   `thrErr1_mono_in_sigma`, `offCenter_threshold_tradeoff`, `midpoint_threshold_symmetric`;
-  `avgError_ge_gaussianQ_sharp` (stretch, closed — shipped in place of the ½-constant form).
+  `avgError_ge_gaussianQ_sharp` (stretch, closed — shipped in place of the ½-constant form);
+  **and the round-3 probability bridge** `gaussianReal_map_affine`, `gaussianQ_eq_measure`,
+  `thrErr0_eq_measure`, `thrErr1_eq_measure`.
+  *(Count basis: `lean_deps.json` listed 40 entries for the module before round 3 = 36 authored + 3
+  auto-generated `.eq_1` equation lemmas for this module's three `def`s + 1 foreign
+  `QuantumNetwork.avgAssignmentError.eq_1` attributed here because this module first forces it.
+  Round 3 adds 4 authored theorems → **40 authored / 44 entries**. Private auxiliaries
+  (`gaussianQ_two_le_add_aux`, and since round 3 `gaussianTail_birnbaum_aux`) do **not** appear in
+  `lean_deps.json` and are not counted. `lean_deps.json` must be regenerated before these numbers
+  can be re-checked mechanically.)*
 - **Wave 3 — `Detection/ShotNoise.lean` (~18 decls).** `diagonalPSD`, `psdSqrt_diagonal`,
   `diagonalState_sqrtFidelity_eq_affinity` (S1), `binaryDist`, `binaryDensityOperator`,
   `pushforwardFidelity_eq_binaryAffinity`, `poissonFloor_le_diagonalQuantumBound` (S2, shipped as a
@@ -36,9 +55,45 @@ kernel-pure `{propext, Classical.choice, Quot.sound}`; `validate.py` **49/49**. 
 
 **Stage 13.** Round 1 (`2026-07-28-1839`): 2 BLOCKER + 5 MAJOR + 5 MINOR — all remediated.
 Round 2 (`2026-07-28-1924`): **ZERO BLOCKER**, both round-1 blockers independently verified closed;
-its 3 MAJORs + merited MINORs remediated in `1bd72ceb`. The statement set was found substantively
-sound in both rounds — no vacuous theorem, no tautology, no empty quantifier, no degenerate floor —
-and every finding in both rounds was prose attached to the artifacts, never a proof.
+its 3 MAJORs + merited MINORs remediated in `1bd72ceb`. Round 3 (fresh-context, 2026-07-29): **zero
+mathematical errors across all three waves** — no incorrect theorem, no missing hypothesis, no seam
+mismatch, no numeric drift; every finding was again prose or looseness attached to correct
+mathematics. Its calibration note — *6EA's failure mode is consistently narrative inflation around
+correct mathematics* — is the standing warning for any D12 lift. Round-3 Waves 1–2 remediation
+(2026-07-29):
+
+- **I5** — the missing *probability* bridge. `gaussianQ` was an integral of a density with no
+  theorem tying it to `ProbabilityTheory.gaussianReal`, while the whole downstream chain is sold as
+  a floor on detector **error probability**. Shipped `gaussianQ_eq_measure` plus
+  `thrErr0_eq_measure` / `thrErr1_eq_measure` (the miss branch via the reflected scale `−σ`, so no
+  null-set bookkeeping) on the new composite push-forward `gaussianReal_map_affine`.
+- **I3** — `thrErr1_mono_in_sigma` was `thrErr0_mono_in_sigma` at permuted arguments counted twice
+  (`thrErr1 μ₁ σ t` is *definitionally* `thrErr0 t σ μ₁`). Body is now the one-term application,
+  docstring marks it an orientation alias with no separate content.
+- **M4/M5** — `gaussianTail_birnbaum` no longer carries `0 < z` (true at every real `z`); the two
+  `mono_in_sigma` hypotheses relaxed from `<` to `≤` under the identical proof script.
+- **M7/M9 — two loose constants, both from the same cause.** `folklore_missFloor_beaten_sixfold`
+  claimed factor 6 against a true `e⁵ = 148.4`, and `gaussianQ_two_le_rational` gave `Q(2) ≤ 1/6`
+  against a true `1/43.96`, because both discharged an exponent through `expNeg_enclosure`, whose
+  Bernoulli endpoint is intrinsically that loose at `r = 2` and `r = 5`. Both re-routed through
+  `Real.exp_one_gt_d9` (already used elsewhere in the family): the falsifier is now
+  `folklore_missFloor_beaten_148fold` (0.3 % off truth, 25× sharper) and the bracket is
+  `[1/125, 1/37]` (span 3.4, was 20.8). The "non-degenerate bracket" wording is replaced by the
+  measured span.
+- **Pin drift** — the Wave-2 module docstring's "no `erf`/`erfc`/Gaussian CDF at pin `5e932f97`" was
+  written before the v4.32.0 bump; re-verified against the current pin `81a5d257` and updated, with
+  the caveat that Mathlib's generic `ProbabilityTheory.cdf` exists but carries no Gaussian closed
+  form.
+
+**Carried, not closed (round 3).** Two items are genuinely cross-file and are deliberately *not*
+done inside the Waves 1–2 edit: (i) tightening `gaussianQ_two_ge_rational` from `1/125` (35 % of
+truth) to a Birnbaum-backed rational near `2.16e−2` (95 % of truth) — `1/125` is hard-coded in two
+`MatchedFilter` statements, so it must land in one commit with them; (ii) the
+`poissonPMFReal → poissonMeasure` deprecation migration — a **carrier** change (`Measure ℕ` vs
+`ℕ → ℝ`), not a rename, and `ShotNoise.lean` passes `poissonPMFReal_nonneg` / `poissonPMFRealSum`
+directly against `PoissonDiscrimination`'s `hasSum_falseAlarm` / `hasSum_missProb` /
+`affinity_le_binaryAffinity` statements, so it cannot be split by file. The `Mathlib.Data.Real.Sqrt`
+→ `Mathlib.Analysis.Real.Sqrt` half of that item **is** done.
 
 **Deviations, all strengthenings** (detail in the two freeze docs' deviation tables): D7's Chernoff
 closed at the full `z ≥ 0`; the D10 half-constant floor was dropped as an identity-wrapper once the
@@ -54,7 +109,7 @@ substrate gap.
 
 **Originally: PLANNED (authorized 2026-07-27).** Opens the **new `6E*` thematic series** (theme: *verified device-physics metrology — detection statistics, readout noise floors, electrothermal device physics, and graphene electronic structure*), independent of the `6B*` (comp-chem/OQS → D10), `6C*` (band-theory/metamaterials → D11), and `6D*` (constant-provenance audit) series. The `6E*` series continues the repo's existing public readout-metrology arc (`ReadoutRelaxationBound`, `ThermalAssignmentFloor`, `QuantumFDTFloor`, `GrapheneNoiseFormula`) downward into the *classical detection layer* every physical readout chain bottoms out in.
 
-**Thesis.** Every intensity-detection readout — photon counters, threshold discriminators, homodyne-style filtered-current classifiers — obeys a small set of textbook statistical floors that are routinely *cited* in device papers but have never been *kernel-checked* anywhere: the Bhattacharyya/Le Cam universal floor on Poisson discrimination, the zero-false-alarm dark-baseline optimum, and Gaussian threshold-error algebra with honest tail bounds. **(Corrected 2026-07-28, Stage-13 round 2: this sentence previously also promised "the Neyman–Pearson structure of counting tests". No Neyman–Pearson or likelihood-ratio theorem ships in this phase — the floors are symmetric Bayes/Le Cam bounds. The identical overstatement was struck from the novelty claim below; it survived here, one line above, which is the sentence most likely to be lifted into D12.)** This phase builds that layer once, exactly, in the repo's established `_enclosure` exact-rational style, so that every later device phase (6EB filtered readout, 6EC electrothermal detectors, 6EE composite readout ceilings) *consumes floors instead of re-deriving them* — and so that any experimental claim of discrimination performance can be checked against a machine-verified bound by hand.
+**Thesis.** Every intensity-detection readout — photon counters, threshold discriminators, homodyne-style filtered-current classifiers — obeys a small set of textbook statistical floors that are routinely *cited* in device papers but have never been *kernel-checked* anywhere: the Bhattacharyya/Le Cam universal floor on Poisson discrimination, the zero-false-alarm dark-baseline optimum, and Gaussian threshold-error algebra with honest tail bounds. **(Corrected 2026-07-28, Stage-13 round 2: this sentence previously also promised "the Neyman–Pearson structure of counting tests". No Neyman–Pearson or likelihood-ratio theorem ships in this phase — the floors are symmetric Bayes/Le Cam bounds. The identical overstatement was struck from the novelty claim below; it survived here, one line above, which is the sentence most likely to be lifted into D12.)** This phase builds that layer once, exactly, in the repo's established `_enclosure` exact-rational style, so that every later device phase (6EB filtered readout, 6EC electrothermal detectors, 6EE composite readout ceilings) *consumes floors instead of re-deriving them* — and so that any experimental claim of discrimination performance can be checked against a machine-verified bound by hand. **(Scope note, 2026-07-29: as shipped, that consumption is of the Wave-2 Gaussian layer and Wave-3's `shotPSD`. 6EB and 6EC consume zero Wave-1 Poisson declarations — see the verified dependency record under Wave 1 below. Any D12 lift of this sentence must not imply the Poisson layer is load-bearing downstream; it is standalone.)**
 
 **NOVELTY CLAIM — REFUTED AS ORIGINALLY STATED; NARROWED 2026-07-28 after a live prior-art sweep.** The original "no theorem prover has a kernel-checked … family" is **false**, and was false inside our own dependency tree:
 
@@ -83,7 +138,7 @@ substrate gap.
 **Standing invariants:** kernel-pure `{propext, Classical.choice, Quot.sound}`; no new project-local axioms (#15); no `native_decide`; no `maxHeartbeats` (#10); preemptive-strengthening; never push. **Two-layer honesty:** the *mathematics* (Poisson sums, exp-series identities, tail inequalities, threshold algebra) is Lean-verified; *physical identifications* (what counts as an absorbed photon, which plane a power is referred to) are the consuming phase's declared hypotheses, never smuggled into these statements. Wave sizing ≈ one `/goal`.
 
 **Substrate (verified 2026-07-27).**
-- **Reuse (exists — cite, don't re-prove):** `SKEFTHawking.QuantumNetwork.NumericalBounds.expNeg_enclosure` (`1−r ≤ e^{−r} ≤ 1/(1+r)`) — the enclosure pattern every rational screen here follows; `SKEFTHawking.QuantumNetwork.FidelityUpperBound.classical_fvdg` (classical two-outcome Fuchs–van de Graaf identity — the TV↔Bhattacharyya bridge shape); `SKEFTHawking.LDP.CramerIID` (Chernoff-exponent machinery, for the Wave-3 seam); `SKEFTHawking.QuantumNetwork.ReadoutRelaxationBound.avgAssignmentError_rational_floor` (the existing composed-error-floor capstone this phase generalizes below).
+- **Reuse (exists — cite, don't re-prove):** `SKEFTHawking.QuantumNetwork.NumericalBounds.expNeg_enclosure` (`1−r ≤ e^{−r} ≤ 1/(1+r)`) — the enclosure *pattern* every rational screen here follows. ⚠ **Corrected 2026-07-29 (round 3): 6EA makes no direct call to it.** Both call sites (`folklore_missFloor_beaten_sixfold` at `r = 5`, `gaussianQ_two_le_rational` at `r = 2`) were the *cause* of the two loose constants that round 3 flagged — the Bernoulli endpoint caps the certified factor at 6 in both places — and both were re-routed through `Real.exp_one_gt_d9`. It remains this phase's style template and a live brick for `DampedTwoLevel`, `ReadoutRelaxationBound`, `ThermalAssignmentFloor` and `ETFModel`; the 6EA docstrings no longer claim a call they do not make. `SKEFTHawking.QuantumNetwork.FidelityUpperBound.classical_fvdg` (classical two-outcome Fuchs–van de Graaf identity — the TV↔Bhattacharyya bridge shape); `SKEFTHawking.LDP.CramerIID` (Chernoff-exponent machinery, for the Wave-3 seam); `SKEFTHawking.QuantumNetwork.ReadoutRelaxationBound.avgAssignmentError_rational_floor` (the existing composed-error-floor capstone this phase generalizes below).
 - **Absent → build (sweep 2026-07-27; corrected 2026-07-28 at Stage 13):** no *project* Poisson-detection statistics of any kind; no Gaussian Q-function/erfc tail bounds anywhere (Mathlib included); no Hellinger/Bhattacharyya/Le Cam bounds in Mathlib. Mathlib carries the Poisson pmf (`Probability.Distributions.Poisson.Basic`, rate `ℝ≥0`) and `Real.exp` series, and — **contrary to the original sweep** — it *does* carry an abstract decision-theoretic risk scaffold (`Probability.Decision.Risk`: `bayesRisk`/`minimaxRisk` over `Kernel`s, `ℝ≥0∞`-valued). That scaffold is not usable here (this phase needs real-valued `exp` floors over a randomized `δ : ℕ → ℝ`, and the `ℝ≥0∞` truncated arithmetic is hostile to it — the same reason `PMF` was rejected at UNKNOWN-1), but the original 'no Neyman–Pearson/likelihood-ratio structure' phrasing overstated the absence and is retracted.
 - **PhysLib seam — ⛔ NOT USED (Stage-13 correction 2026-07-28).** `QuantumInfo.ResourceTheory.HypothesisTesting` (`OptimalHypothesisRate`) was scoped as the Wave-3 seam and is **type-level impossible** for this phase: it is `[Fintype d]`-bound (as is PhysLib's classical carrier `ProbDistribution α`), and Poisson lives on ℕ; it is also the *asymmetric* Neyman–Pearson value against this phase's *symmetric* Bayes/Le Cam average error. Wave 3 instead routes the seam through the `Fin 2` **pushforward**, as a diagonal restriction against the project's own fidelity substrate. **Zero `Detection.*` declarations reference `OptimalHypothesisRate`.** See `SETTLED_FORKS.md#6ea-optimalhypothesisrate-quantum-seam`.
 
@@ -95,9 +150,15 @@ substrate gap.
 
 **Goal.** The exact universal floor family for discriminating `Poisson(N_b)` vs `Poisson(N_a)` at equal priors, plus the two-sided refutation of the folklore exponential form. Verdict: reachable — finite/series algebra over Mathlib's Poisson pmf, no measure-theoretic depth required if statements are phrased over pmf sums (UNKNOWN-1).
 
-**Why.** **Consumption record, corrected 2026-07-29 (this bullet previously claimed Wave 1 was "the single most-consumed floor of the series" — verified FALSE).** With 6EB and 6EC both now COMPLETE, they consume **zero** Wave-1 declarations: `poisson_avgError_floor`, `poissonBhattacharyya_eq`, `avgError_ge_affinity_sq`, `IsCountRule`, `falseAlarm`, `missProb` and `affinity_le_binaryAffinity` have no reference outside `PoissonDiscrimination.lean` + `ShotNoise.lean`. What the downstream actually consumes is **Wave 2** (`avgError_ge_gaussianQ_sharp` ×8, `thrErr0`/`thrErr1` ×4 each, `gaussianQ_two_ge_rational` ×2) plus Wave 3's `shotPSD`. Wave 1 is a standalone distribution-free result with one internal consumer — genuinely novel, but not load-bearing for the series as shipped. If it is meant to be, 6EE must actually consume it and that belongs in 6EE's AC as an explicit item. It is also the sharpest example of the series' value: the folklore form is wrong in both directions, and the correct form is a two-line closed expression nobody has kernel-checked.
+**Why.** **Consumption record, corrected 2026-07-29 and re-verified the same day against `lean/lean_deps.json` (this bullet previously claimed Wave 1 was "the single most-consumed floor of the series" — verified FALSE).** Counting basis, stated once because the first correction mixed two of them: the figures below are **proof-term dependencies** taken from the `ExtractDeps` reverse index (`name_deps_project` ∪ `type_deps_project` ∪ `value_deps_project`), *not* textual occurrences — a docstring mention is not a consumption.
 
-**Bricks.** `expNeg_enclosure` (`QuantumNetwork/NumericalBounds.lean:23`); Mathlib `poissonPMFReal` + `Real.exp_eq_tsum`; `classical_fvdg` (`QuantumNetwork/FidelityUpperBound.lean:47`) as the structural template for TV↔affinity manipulation.
+- **The headline correction stands: Wave 1 is consumed by nothing downstream.** With 6EB (`Detection/{FilterFloors,NEPAlgebra,MatchedFilter}`) and 6EC (`Electrothermal/*`) both COMPLETE, they reference **zero** Wave-1 declarations. `poisson_avgError_floor` and `poisson_darkBaseline_miss_floor` have **0** references anywhere in the tree; `poissonBhattacharyya_eq`, `avgError_ge_affinity_sq`, `IsCountRule`, `falseAlarm`, `missProb`, `affinity`, `affinity_le_binaryAffinity` and `binaryAffinity_sq_le_two_mul_add` are referenced only inside `PoissonDiscrimination.lean` + `ShotNoise.lean`.
+- **What the downstream actually consumes is Wave 2**, at these dependency counts (6EB + 6EC only, excluding in-phase `ShotNoise`): `thrErr0` **6** (MatchedFilter 3, BolometricFloors 3), `thrErr1` **6** (same split), `gaussianQ` **5** (MatchedFilter 2, BolometricFloors 3), `gaussianQ_antitone` **1** (BolometricFloors), `gaussianQ_two_ge_rational` **1** (MatchedFilter; +1 in `ShotNoise`), `avgError_ge_gaussianQ_sharp` **1** (MatchedFilter). ⚠ The first pass of this correction wrote "`avgError_ge_gaussianQ_sharp` ×8, `thrErr0`/`thrErr1` ×4 each": the ×8 was a **text-grep count** (6 hits in `MatchedFilter.lean` + 2 in `BolometricFloors.lean`, nearly all docstring prose), and the ×4 undercounted. The dependency truth is that `avgError_ge_gaussianQ_sharp` has exactly **one** direct consumer — `MatchedFilter`'s budget→floor composition, which 6EC then reaches transitively — and that the *broadly* consumed Wave-2 objects are the two branch-error definitions, not the floor theorem.
+- **Plus Wave 3's `shotPSD`** — 3 references, all in `Detection/NEPAlgebra` (6EB).
+
+Wave 1 is a standalone distribution-free result with one internal consumer — genuinely novel, but not load-bearing for the series as shipped. If it is meant to be, 6EE must actually consume it and that belongs in 6EE's AC as an explicit item. It is also the sharpest example of the series' value: the folklore form is wrong in both directions, and the correct form is a two-line closed expression nobody has kernel-checked.
+
+**Bricks.** ~~`expNeg_enclosure` (`QuantumNetwork/NumericalBounds.lean:23`)~~ — **superseded 2026-07-29**: its Bernoulli endpoint capped the quantitative falsifier at factor 6 against a true `e⁵ = 148.4`, so the wave now discharges that exponent through `Real.exp_one_gt_d9` and makes no call to it (style template only). Mathlib `poissonPMFReal` + `Real.exp_eq_tsum` — ⚠ `poissonPMFReal` is **deprecated** as of the v4.32.0 pin in favour of the `poissonMeasure` carrier; migration is cross-file (see *Carried, not closed* above). `classical_fvdg` (`QuantumNetwork/FidelityUpperBound.lean:47`) as the structural template for TV↔affinity manipulation.
 
 **Done (AC / `/goal` condition).**
 - [x] `lean/SKEFTHawking/Detection/PoissonDiscrimination.lean` builds 0-sorry, kernel-pure, no new axioms, with:
@@ -115,15 +176,16 @@ substrate gap.
 
 **Why.** Filtered-current readouts classify by thresholding a (conditionally) Gaussian statistic; 6EB composes these errors with noise floors, and 6EE's ceilings need both upper AND lower tail control (a lower bound on error is a ceiling on fidelity — the load-bearing direction).
 
-**Bricks.** `expNeg_enclosure`; Mathlib Gaussian integral (`integral_gaussian`); `ReadoutRelaxationBound.avgAssignmentError_rational_floor` as the composition-shape template.
+**Bricks.** ~~`expNeg_enclosure`~~ — **superseded 2026-07-29** for the same reason as Wave 1 (it capped `Q(2) ≤ 1/6` against a true `1/43.96`); the rational bracket now routes through `Real.pi_*_d*` + `Real.exp_one_*_d9`. Mathlib Gaussian integral (`integral_gaussian`); Mathlib's Gaussian *measure* `ProbabilityTheory.gaussianReal` + `gaussianReal_apply_eq_integral` / `gaussianReal_map_const_mul` / `gaussianReal_map_add_const` (added at round 3 for the probability bridge); `ReadoutRelaxationBound.avgAssignmentError_rational_floor` as the composition-shape template.
 
 **Done (AC / `/goal` condition).**
 - [x] `lean/SKEFTHawking/Detection/GaussianThreshold.lean` builds 0-sorry, kernel-pure, with:
 - [x] **closed at the FULL `z ≥ 0` (D7 fallback not needed)** `gaussianTail_chernoff : Q z ≤ (1/2) · exp (−z^2/2)` for `z ≥ 0` (with `Q` defined as the standardized upper-tail integral);
-- [x] **shipped as `gaussianTail_ge_window` + `gaussianTail_birnbaum` (D8; interval form rejected as vacuous)** `gaussianTail_lower_enclosure` — a rational/exp lower bound on `Q z` sufficient to state error *floors* (candidate: `Q z ≥ (1/2)·(1 − z/√(2π))` on a stated interval, or the standard `z/(1+z²)·φ(z)` form; pick at Stage 2, UNKNOWN-2);
+- [x] **shipped as `gaussianTail_ge_window` + `gaussianTail_birnbaum` (D8; interval form rejected as vacuous; `birnbaum` unrestricted in `z` since round 3)** `gaussianTail_lower_enclosure` — a rational/exp lower bound on `Q z` sufficient to state error *floors* (candidate: `Q z ≥ (1/2)·(1 − z/√(2π))` on a stated interval, or the standard `z/(1+z²)·φ(z)` form; pick at Stage 2, UNKNOWN-2);
 - [x] **shipped as `thrErr0/1_mono_in_sigma`** `thresholdErrors_monotone_in_sigma` — both branch errors increase with σ when the threshold lies between the means (the conservativity workhorse);
 - [x] **strengthened to name the value (D9)** `midpoint_threshold_symmetric : equal σ → e₀ = e₁` and `offCenter_threshold_tradeoff` (signed monotonicity in the threshold position);
 - [x] **shipped SHARP as `avgError_ge_gaussianQ_sharp`; the ½·Q(z₀) form (D10) dropped as a weaker restatement** `avg_error_ge_of_z_le : z ≤ z₀ → (e₀+e₁)/2 ≥ Q z₀`-shape floor connecting separation budgets to error floors;
+- [x] **added at Stage-13 round 3 (2026-07-29), not in the original AC** — the *probability* bridge `gaussianQ_eq_measure` / `thrErr0_eq_measure` / `thrErr1_eq_measure` on `gaussianReal_map_affine`. The wave shipped `gaussianQ` as a bare density integral while every consuming statement is read as an **error-probability** floor; that reading is now a theorem against Mathlib's own `ProbabilityTheory.gaussianReal`, matching the discipline Wave 3 applied with `binaryDensityOperator`. Any future project-local "probability" definition owes the same bridge at the wave it is introduced, not two rounds later;
 - [x] preemptive-strengthening + post-wave audit.
 
 ## Wave 3 — Shot-noise algebra & the quantum seam
@@ -201,7 +263,12 @@ for sign-off; all four are decided here so no wave stalls on them.
 - **Witness arithmetic — VERIFIED (40-digit), and both admit stronger forms than the `∃` shape asked for.**
   W1: the undershoot is **exactly `e^{N_b}`, for every bright baseline at every `N_a`** — no `N_b < N_a`
   needed; freeze the quantitative `6·miss ≤ folklore`, discharged via `expNeg_enclosure` at `r = 5`
-  (which also makes the cited brick a real call rather than a docstring reference). W2: the exact
+  (which also makes the cited brick a real call rather than a docstring reference).
+  ⚠ **SUPERSEDED 2026-07-29 (Stage-13 round 3).** The parenthetical traded 25× of the certified
+  constant for a brick call: `expNeg_enclosure` at `r = 5` cannot certify better than 6, while the
+  true undershoot at `(N_b, N_a) = (5, 10)` is `e⁵ = 148.413`. The shipped witness is now
+  `folklore_missFloor_beaten_148fold` via `Real.exp_one_gt_d9`. **Standing lesson: never let a
+  brick-consumption bookkeeping goal set a certified constant.** W2: the exact
   characterization is `(N_a−N_b) − (√N_a−√N_b)² = 2√N_b(√N_a−√N_b)`, so the Le Cam floor exceeds the
   folklore form **iff `2√N_b(√N_a−√N_b) > log 4`**; the `(50,60)` witness closes by `norm_num` with no
   `Real.log` in the statement.

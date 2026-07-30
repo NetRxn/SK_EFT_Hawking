@@ -12,11 +12,15 @@ Exact error algebra for two-Gaussian threshold classification at common variance
 tail enclosures replacing the un-formalized Q-function, and the separation-budget error floor
 every downstream readout ceiling consumes.
 
-**Mathlib carries no `erf` / `erfc` / Gaussian CDF / Q-function at pin `5e932f97`** (verified by
-declaration-level grep, 2026-07-27; re-verified 2026-07-28). The upper-tail probability
-`gaussianQ` is therefore defined here, project-locally, as the tail integral of Mathlib's
-`ProbabilityTheory.gaussianPDFReal 0 1`; every bound below is proved about *that* definition,
-whose normalization is pinned to Mathlib's own Gaussian integral by `gaussianQ_zero`.
+**Mathlib carries no `erf` / `erfc` and no Gaussian CDF / Q-function at pin `81a5d257`** (v4.32.0;
+verified by declaration-level grep 2026-07-27 at the then-current `5e932f97`, re-verified
+2026-07-28, and re-verified against `81a5d257` on 2026-07-29). Mathlib's generic
+`ProbabilityTheory.cdf` (a `StieltjesFunction`) exists but carries no Gaussian closed form and no
+tail bound. The upper-tail probability `gaussianQ` is therefore defined here, project-locally, as
+the tail integral of Mathlib's `ProbabilityTheory.gaussianPDFReal 0 1`; every bound below is
+proved about *that* definition, whose normalization is pinned to Mathlib's own Gaussian integral
+by `gaussianQ_zero` and whose reading as a *probability* is pinned to Mathlib's
+`ProbabilityTheory.gaussianReal` by `gaussianQ_eq_measure`.
 
 ## Layout
 
@@ -26,14 +30,19 @@ whose normalization is pinned to Mathlib's own Gaussian integral by `gaussianQ_z
 * **Standard-normal pdf helpers** — closed form, evenness, antitonicity in `x²`, integrability.
 * **Structural lemmas** — `gaussianQ_zero` (`= 1/2`, from `Real.integral_gaussian_Ioi`),
   `gaussianQ_sub` (the interval-integral workhorse), monotonicity, reflection, range.
+* **Probability bridge** — `gaussianQ_eq_measure`, `thrErr0_eq_measure`, `thrErr1_eq_measure`:
+  `Q` and the two branch errors are the tail probabilities of Mathlib's own
+  `ProbabilityTheory.gaussianReal`, so "probability" below is a theorem, not a docstring word.
+  `gaussianReal_map_affine` is the supporting composite push-forward Mathlib lacks.
 * **Tail bounds** — the lower tails `gaussianTail_ge_window` (global, parametric window) and
   `gaussianTail_birnbaum` (sharp), and the upper tails `gaussianTail_mills`,
   `gaussianTail_chernoff`. `gaussianPDF_moment_Ioi` (`∫_{(z,∞)} x·φ(x) dx = φ(z)`) is the shared
   workhorse for Mills and Birnbaum.
 * **Rational witnesses** — `gaussianQ_two_le_rational` / `gaussianQ_two_ge_rational` bracket
-  `Q(2)` between two rationals with no floating-point `exp`, in the project's
-  `NumericalBounds` rational-enclosure style; `gaussianQ_two_le_rational` consumes
-  `SKEFTHawking.QuantumNetwork.expNeg_enclosure` directly.
+  `Q(2)` in `[1/125, 1/37]` with no floating-point `exp`, in the project's `NumericalBounds`
+  rational-enclosure style (true value `1/43.96`; span 3.4). Both endpoints route through
+  `Real.pi_*_d*` + `Real.exp_one_*_d9`; neither calls `expNeg_enclosure`, whose Bernoulli
+  endpoint is too loose at `r = 2` (see `gaussianQ_two_le_rational`'s route note).
 * **Threshold algebra** — conservativity in `σ`, the ROC tradeoff in `t`, midpoint symmetry.
 * **Error floors** — `avgError_ge_gaussianQ_sharp`, stated in the project's canonical error
   functional `SKEFTHawking.QuantumNetwork.avgAssignmentError`.
@@ -65,6 +74,8 @@ consuming phase's declared hypothesis and is never smuggled into these statement
 namespace SKEFTHawking.Detection
 
 open ProbabilityTheory Real MeasureTheory SKEFTHawking.QuantumNetwork
+
+open scoped NNReal
 
 /-! ## Definitions -/
 
@@ -186,6 +197,66 @@ theorem gaussianQ_eq_half_sub (z : ℝ) :
   have h := gaussianQ_sub 0 z
   rw [gaussianQ_zero] at h
   linarith
+
+/-! ## The probability bridge
+
+`gaussianQ` is *defined* as an integral of a density, and `thrErr0` / `thrErr1` are defined from
+it. The three theorems below are what make reading any of them as a **probability** — and hence
+every floor downstream as a floor on detector *error probability* — a theorem rather than a
+docstring claim. This is the same discipline `Detection/ShotNoise.lean`'s `binaryDensityOperator`
+applies to its density-operator reading. -/
+
+/-- **Affine push-forward of the standard normal.** For every scale `c` and centre `μ`, pushing
+`N(0,1)` through `y ↦ c·y + μ` gives `N(μ, c²)`, with the variance supplied as a hypothesis so
+that `c` and `−c` can both be used against the *same* `v`. Mathlib carries the two factors
+(`gaussianReal_map_const_mul`, `gaussianReal_map_add_const`) but not the composite. -/
+theorem gaussianReal_map_affine {c : ℝ} {v : ℝ≥0} (hv : (v : ℝ) = c ^ 2) (μ : ℝ) :
+    (gaussianReal 0 1).map (fun y => c * y + μ) = gaussianReal μ v := by
+  have hcomp : (fun y : ℝ => c * y + μ) = (· + μ) ∘ (c * ·) := rfl
+  rw [hcomp, ← Measure.map_map (by fun_prop) (by fun_prop), gaussianReal_map_const_mul,
+    gaussianReal_map_add_const]
+  congr 1
+  · ring
+  · exact NNReal.coe_injective (by simp [hv])
+
+/-- **`gaussianQ` IS the standard-normal upper-tail probability**: `Q z = ℙ[Z > z]` for
+`Z ∼ N(0,1)` in Mathlib's own `ProbabilityTheory.gaussianReal 0 1`. Without this the file's
+`gaussianQ` is only an integral of a density and the word "probability" in every docstring below
+is unbacked; with it, `gaussianQ_zero`'s normalization and the tail bounds are statements about a
+genuine probability measure. -/
+theorem gaussianQ_eq_measure (z : ℝ) : (gaussianReal 0 1).real (Set.Ioi z) = gaussianQ z := by
+  rw [measureReal_def, gaussianReal_apply_eq_integral 0 (v := 1) (by norm_num) (Set.Ioi z),
+    ENNReal.toReal_ofReal (setIntegral_nonneg measurableSet_Ioi
+      fun x _ => gaussianPDFReal_nonneg 0 1 x)]
+  rfl
+
+/-- **The false-alarm branch error IS a probability**: `thrErr0 μ₀ σ t = ℙ[X > t]` for
+`X ∼ N(μ₀, σ²)`. This is what licenses the name — the standardisation `(t − μ₀)/σ` baked into the
+definition is here derived from the affine push-forward, not asserted. -/
+theorem thrErr0_eq_measure {μ₀ σ : ℝ} {v : ℝ≥0} (hσ : 0 < σ) (hv : (v : ℝ) = σ ^ 2) (t : ℝ) :
+    (gaussianReal μ₀ v).real (Set.Ioi t) = thrErr0 μ₀ σ t := by
+  have hpre : (fun y : ℝ => σ * y + μ₀) ⁻¹' Set.Ioi t = Set.Ioi ((t - μ₀) / σ) := by
+    ext y
+    simp only [Set.mem_preimage, Set.mem_Ioi, div_lt_iff₀ hσ]
+    constructor <;> intro h <;> nlinarith
+  rw [← gaussianReal_map_affine hv μ₀, measureReal_def,
+    Measure.map_apply (by fun_prop) measurableSet_Ioi, hpre, ← measureReal_def,
+    gaussianQ_eq_measure, thrErr0]
+
+/-- **The miss branch error IS a probability**: `thrErr1 μ₁ σ t = ℙ[X < t]` for `X ∼ N(μ₁, σ²)`.
+Proved by pushing forward with the *reflected* scale `−σ`, which turns the lower tail into the
+standard normal's upper tail with no null-set bookkeeping (`(−σ)² = σ²`, so the same variance `v`
+serves both branches). -/
+theorem thrErr1_eq_measure {μ₁ σ : ℝ} {v : ℝ≥0} (hσ : 0 < σ) (hv : (v : ℝ) = σ ^ 2) (t : ℝ) :
+    (gaussianReal μ₁ v).real (Set.Iio t) = thrErr1 μ₁ σ t := by
+  have hv' : (v : ℝ) = (-σ) ^ 2 := by rw [hv]; ring
+  have hpre : (fun y : ℝ => -σ * y + μ₁) ⁻¹' Set.Iio t = Set.Ioi ((μ₁ - t) / σ) := by
+    ext y
+    simp only [Set.mem_preimage, Set.mem_Iio, Set.mem_Ioi, div_lt_iff₀ hσ]
+    constructor <;> intro h <;> nlinarith
+  rw [← gaussianReal_map_affine hv' μ₁, measureReal_def,
+    Measure.map_apply (by fun_prop) measurableSet_Iio, hpre, ← measureReal_def,
+    gaussianQ_eq_measure, thrErr1]
 
 /-! ## Tail bounds -/
 
@@ -381,14 +452,8 @@ theorem tendsto_mills_atTop :
     Filter.Tendsto (fun y : ℝ => -gaussianPDFReal 0 1 y / y) Filter.atTop (nhds 0) :=
   tendsto_neg_gaussianPDF_atTop.div_atTop Filter.tendsto_id
 
-/-- **Birnbaum/Feller sharp lower tail**: `Q z ≥ (z/(1+z²))·φ(z)` for `z > 0`. At `z = 3` this
-returns `1.3296e−3` against the true `1.3499e−3` (ratio `0.985`), versus the window bound's
-factor-2.6 constant loss. Substituting this for `gaussianTail_ge_window` in a consumer requires
-no restatement: both are lower bounds on the same `gaussianQ`.
-
-Proof: `∫_{(z,∞)} φ(x)(1 + 1/x²) dx = φ(z)/z` by FTC-2 with antiderivative `−φ(x)/x`; then
-`1/x² ≤ 1/z²` on `(z,∞)` gives `∫_{(z,∞)} φ/x² ≤ Q z / z²`, so `Q z·(1 + 1/z²) ≥ φ(z)/z`. -/
-theorem gaussianTail_birnbaum {z : ℝ} (hz : 0 < z) :
+/-- Positive case of `gaussianTail_birnbaum`, where the FTC-2 route applies. -/
+private theorem gaussianTail_birnbaum_aux {z : ℝ} (hz : 0 < z) :
     z / (1 + z ^ 2) * gaussianPDFReal 0 1 z ≤ gaussianQ z := by
   have hz2 : (0:ℝ) < z ^ 2 := by positivity
   have hint1 : IntegrableOn (gaussianPDFReal 0 1) (Set.Ioi z) := gaussianPDF_integrableOn _
@@ -424,6 +489,26 @@ theorem gaussianTail_birnbaum {z : ℝ} (hz : 0 < z) :
   rw [div_mul_eq_mul_div, div_le_iff₀ (by positivity : (0:ℝ) < 1 + z ^ 2)]
   linarith
 
+/-- **Birnbaum/Feller sharp lower tail**: `Q z ≥ (z/(1+z²))·φ(z)`, at **every real `z`**. At
+`z = 3` this returns `1.3296e−3` against the true `1.3499e−3` (ratio `0.985`), versus the window
+bound's factor-2.6 constant loss. Substituting this for `gaussianTail_ge_window` in a consumer
+requires no restatement: both are lower bounds on the same `gaussianQ`.
+
+Proof (`z > 0`): `∫_{(z,∞)} φ(x)(1 + 1/x²) dx = φ(z)/z` by FTC-2 with antiderivative `−φ(x)/x`;
+then `1/x² ≤ 1/z²` on `(z,∞)` gives `∫_{(z,∞)} φ/x² ≤ Q z / z²`, so `Q z·(1 + 1/z²) ≥ φ(z)/z`.
+
+**No sign hypothesis.** The FTC-2 route needs `z > 0`, but the *statement* is true at every real
+`z`: for `z ≤ 0` the left side is `≤ 0` while `Q z ≥ 0`. Carrying `0 < z` would make every
+consumer holding an unsigned `z` case-split for nothing (Stage-13 finding, 2026-07-29), so the
+split is done once, here. -/
+theorem gaussianTail_birnbaum (z : ℝ) :
+    z / (1 + z ^ 2) * gaussianPDFReal 0 1 z ≤ gaussianQ z := by
+  rcases lt_or_ge 0 z with hz | hz
+  · exact gaussianTail_birnbaum_aux hz
+  · have h1 : z / (1 + z ^ 2) ≤ 0 := div_nonpos_of_nonpos_of_nonneg hz (by positivity)
+    have h2 : 0 ≤ gaussianPDFReal 0 1 z := gaussianPDFReal_nonneg 0 1 z
+    nlinarith [gaussianQ_nonneg z]
+
 /-! ## Rational witnesses (non-vacuity, `NumericalBounds` enclosure style) -/
 
 /-- **The upper tail is never vacuously zero**: `Q z > 0` at every `z`. Consequently no floor
@@ -438,23 +523,56 @@ theorem gaussianQ_pos (z : ℝ) : 0 < gaussianQ z := by
     rw [gaussianQ_zero] at hq
     linarith
 
-/-- **Rational upper enclosure at the `z = 2` operating point**: `Q(2) ≤ 1/6`. The constant is
-rational with no floating-point `exp`: `gaussianTail_chernoff` gives `Q(2) ≤ ½·e^{−2}`, and
-`SKEFTHawking.QuantumNetwork.expNeg_enclosure` at `r = 2` gives `e^{−2} ≤ 1/3`. (True value
-`Q(2) = 2.275e−2`.) This is the Wave-2 consumption of the roadmap's named `expNeg_enclosure`
-brick — a call, not a docstring reference. -/
-theorem gaussianQ_two_le_rational : gaussianQ 2 ≤ 1 / 6 := by
-  have hch := gaussianTail_chernoff (z := 2) (by norm_num)
-  have hex := (expNeg_enclosure (by norm_num : (0:ℝ) ≤ 2)).2
-  norm_num at hch hex
+/-- **Rational upper enclosure at the `z = 2` operating point**: `Q(2) ≤ 1/37`. The constant is
+rational with no floating-point `exp`: `gaussianTail_mills` gives `Q(2) ≤ φ(2)/2`, then
+`√(2π) ≥ 2.5066` from `Real.pi_gt_d6` and `e² ≥ 7.387` from `Real.exp_one_gt_d9` bound
+`φ(2)/2 = e^{−2}/(2√(2π)) ≤ 1/37.03`. True value `Q(2) = 2.275e−2 = 1/43.96`, so this is 19 %
+above truth.
+
+**Route change, 2026-07-29 (Stage-13 finding).** The shipped route was
+`gaussianTail_chernoff` + `SKEFTHawking.QuantumNetwork.expNeg_enclosure` at `r = 2`
+(`e^{−2} ≤ 1/3`), which caps at `Q(2) ≤ 1/6` — a factor 7.3 above truth, advertised as part of a
+"non-degenerate" bracket that in fact spanned 20.8. The Bernoulli endpoint `e^{−r} ≤ 1/(1+r)` is
+intrinsically that loose at `r = 2`; the `Real.exp_one_gt_d9` route already used elsewhere in this
+family is 6× sharper for one extra `have`. `expNeg_enclosure` remains this phase's *style*
+template (the `_enclosure` exact-rational pattern) but is no longer called here — this docstring
+does not claim a call it does not make. -/
+theorem gaussianQ_two_le_rational : gaussianQ 2 ≤ 1 / 37 := by
+  have hmills := gaussianTail_mills (z := 2) (by norm_num)
+  rw [gaussianPDF_std, show -(2:ℝ) ^ 2 / 2 = -2 by norm_num] at hmills
+  have hspos : (0:ℝ) < √(2 * π) := Real.sqrt_pos.mpr (by positivity)
+  have hsge : (2.5066 : ℝ) ≤ √(2 * π) := by
+    rw [show (2.5066:ℝ) = √(2.5066 ^ 2) from (Real.sqrt_sq (by norm_num)).symm]
+    exact Real.sqrt_le_sqrt (by nlinarith [Real.pi_gt_d6])
+  have hA : (√(2 * π))⁻¹ ≤ 1 / 2.5066 := by
+    rw [inv_eq_one_div]
+    exact one_div_le_one_div_of_le (by norm_num) hsge
+  have hE1 : (2.718 : ℝ) < Real.exp 1 := lt_trans (by norm_num) Real.exp_one_gt_d9
+  have hpow : Real.exp 2 = Real.exp 1 ^ 2 := by rw [← Real.exp_nat_mul]; norm_num
+  have he2 : (7.387 : ℝ) < Real.exp 2 := by
+    rw [hpow]; nlinarith [Real.exp_pos 1]
+  have hB : Real.exp (-2 : ℝ) ≤ 1 / 7.387 := by
+    rw [Real.exp_neg, ← one_div]
+    exact le_of_lt (one_div_lt_one_div_of_lt (by norm_num) he2)
+  have hprod : (√(2 * π))⁻¹ * Real.exp (-2:ℝ) ≤ (1 / 2.5066) * (1 / 7.387) :=
+    mul_le_mul hA hB (le_of_lt (Real.exp_pos _)) (by norm_num)
   linarith
 
 /-- **Rational lower enclosure at the `z = 2` operating point**: `Q(2) ≥ 1/125`. This is the
 load-bearing direction (a lower bound on error is a ceiling on fidelity), certified with a
 rational constant and no floating-point `exp`. Route: `gaussianTail_ge_window` at `c = 1/2`
 gives `Q(2) ≥ ½·φ(5/2)`; then `√(2π) ≤ 2.51` from `Real.pi_lt_d2`, `e^{−3} ≥ 1/20.09` from
-`Real.exp_one_lt_d9`, and `e^{−1/8} ≥ 7/8` from `Real.add_one_le_exp`. The certified bracket
-`1/125 ≤ Q(2) ≤ 1/6` is non-degenerate (true value `2.275e−2`). -/
+`Real.exp_one_lt_d9`, and `e^{−1/8} ≥ 7/8` from `Real.add_one_le_exp`.
+
+**Bracket quality, measured (2026-07-29 Stage-13 finding — the previous docstring called the
+bracket "non-degenerate", which was true but oversold it).** With the sharpened
+`gaussianQ_two_le_rational` the certified bracket is `1/125 ≤ Q(2) ≤ 1/37`, i.e.
+`[8.00e−3, 2.70e−2]` around the true `2.275e−2`: a span of **3.4** (it was 20.8). The loose end is
+now this lower bound, at 35 % of truth. `gaussianTail_birnbaum` at `z = 2` would give
+`(2/5)·φ(2) = 2.160e−2` — **95 % of truth** — with no new machinery, but that sharpening is *not*
+taken here: `1/125` is hard-coded in two downstream statements
+(`MatchedFilter.error_floor_from_budget`-family and its `(0,2,4)` witness), so tightening it is a
+cross-file change and belongs in one commit with those. Flagged, not silently deferred. -/
 theorem gaussianQ_two_ge_rational : (1 : ℝ) / 125 ≤ gaussianQ 2 := by
   have hw := gaussianTail_ge_window (z := 2) (c := 1/2) (by norm_num) (by norm_num)
   rw [gaussianPDF_std, show (2:ℝ) + 1/2 = 5/2 by norm_num,
@@ -485,21 +603,24 @@ theorem gaussianQ_two_ge_rational : (1 : ℝ) / 125 ≤ gaussianQ 2 := by
 
 /-! ## Threshold algebra -/
 
-/-- **Conservativity workhorse (false-alarm branch)**: the false-alarm error increases with the
-noise scale `σ` when the threshold sits above the baseline mean. -/
-theorem thrErr0_mono_in_sigma {μ₀ σ σ' t : ℝ} (hσ : 0 < σ) (hσ' : σ ≤ σ') (ht : μ₀ < t) :
+/-- **Conservativity workhorse**: the false-alarm error increases with the noise scale `σ` when
+the threshold sits at or above the baseline mean. `μ₀ ≤ t` (not `μ₀ < t`) is what the argument
+uses, so a consumer at coincidence needs no case split (Stage-13 finding, 2026-07-29). -/
+theorem thrErr0_mono_in_sigma {μ₀ σ σ' t : ℝ} (hσ : 0 < σ) (hσ' : σ ≤ σ') (ht : μ₀ ≤ t) :
     thrErr0 μ₀ σ t ≤ thrErr0 μ₀ σ' t := by
   refine gaussianQ_antitone ?_
   -- v4.32: `gcongr` now discharges the `0 ≤ t - μ₀` side goal itself (was a trailing `linarith`).
   gcongr
 
-/-- **Conservativity workhorse (miss branch)**: the miss error increases with the noise scale
-`σ` when the threshold sits below the signal mean. -/
-theorem thrErr1_mono_in_sigma {μ₁ σ σ' t : ℝ} (hσ : 0 < σ) (hσ' : σ ≤ σ') (ht : t < μ₁) :
-    thrErr1 μ₁ σ t ≤ thrErr1 μ₁ σ' t := by
-  refine gaussianQ_antitone ?_
-  -- v4.32: `gcongr` now discharges the `0 ≤ μ₁ - t` side goal itself (was a trailing `linarith`).
-  gcongr
+/-- **Orientation alias, not a second theorem.** `thrErr1 μ₁ σ t` is *definitionally*
+`thrErr0 t σ μ₁` (both unfold to `gaussianQ ((μ₁ − t)/σ)`), so the miss-branch conservativity
+statement is `thrErr0_mono_in_sigma` at permuted arguments and its proof is that one term. It is
+kept only because a consumer sweeping the miss branch reads `thrErr1` and should not have to
+rediscover the permutation; it carries **no content beyond `thrErr0_mono_in_sigma`** and must not
+be counted as a separate result (Stage-13 finding, 2026-07-29). -/
+theorem thrErr1_mono_in_sigma {μ₁ σ σ' t : ℝ} (hσ : 0 < σ) (hσ' : σ ≤ σ') (ht : t ≤ μ₁) :
+    thrErr1 μ₁ σ t ≤ thrErr1 μ₁ σ' t :=
+  thrErr0_mono_in_sigma hσ hσ' ht
 
 /-- **ROC tradeoff**: moving the threshold right trades false alarm against miss, monotonically
 and in opposite directions. The two conjuncts are **not** logically independent — each is the
