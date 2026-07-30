@@ -72,7 +72,10 @@ Clean whitespace: no prover has a kernel-checked ENBW/NEP/matched-filter floor f
 
 **Why.** Closes the layer: with matched-filter optimality, every downstream floor is stated against the *best possible* linear readout, which is what makes a ceiling a ceiling.
 
-**Bricks.** Wave 1 + Wave 2; 6EA `avg_error_ge_of_z_le`.
+**Bricks.** Wave 1 + Wave 2; 6EA `avgError_ge_gaussianQ_sharp` (and the distribution-free
+`avgError_ge_affinity_sq`). *(Record correction 2026-07-30: this line previously named
+`avg_error_ge_of_z_le`, which resolves to nothing — the AC-text name was never reconciled against
+what 6EA actually shipped.)*
 
 **Done (AC / `/goal` condition).** ✅ **SHIPPED 2026-07-29** — 33 extracted declarations (`lean_deps.json`, the same convention under which W1 = 23 and W2 = 41), 0 sorry / 0 axiom / 0 `native_decide` / 0 `maxHeartbeats`, kernel-pure `{propext, Classical.choice, Quot.sound}`, root-imported.
 - [x] `lean/SKEFTHawking/Detection/MatchedFilter.lean` builds 0-sorry, kernel-pure, with:

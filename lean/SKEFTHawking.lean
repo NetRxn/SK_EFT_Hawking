@@ -5146,6 +5146,24 @@ import SKEFTHawking.GrapheneBand.DiracExpansion
 -- calculus (arg_cell_A/B/C/D) so no transcendental Complex.arg evaluation is needed anywhere.
 import SKEFTHawking.GrapheneBand.HaldaneWitness
 
+-- Phase 6ED Wave 4 — Bernal (AB) bilayer graphene: the OTHER graphene band structure the repo's
+-- analog-fluid side actually cites (DiracFluidWKB / GrapheneNoiseFormula specify a bilayer de Laval
+-- nozzle). The 4x4 secular determinant collapses to one real quadratic in w = E^2 - u^2
+-- (`bernal_det_eq`), so the whole wave is polynomial — no eigenvalue machinery and no `arg` sector
+-- calculus (Real.sqrt appears only inside existence witnesses). Zero bias: the low bands touch
+-- QUADRATICALLY, with the global two-sided enclosure x^2/g^2 - 2x^3/g^4 <= w <= x^2/g^2 and an
+-- explicit 2x^2/g^3 remainder on x <= g^2/2. Nonzero bias: the spectrum GAPS, with the floor
+-- u^2 g^2 <= E^2 (g^2+4u^2) ATTAINED, so `bernal_halfGapSq_isLeast` is the exact HALF-gap squared
+-- (the FULL gap is twice min|E|; `bernal_fullGapSq_eq` gives McCann's U^2 g^2/(g^2+U^2), U = 2u).
+-- The naive "gap = bias" reading is REFUTED by `bernal_mexicanHat`: the minimum is at finite
+-- momentum. CHIRALITY: `bernal_chirality_two` proves the exact J = 2 relation, and
+-- `bernal_spectrum_not_determine_model` shows the conjugated look-alike `bernalBlochSwapped` is
+-- equally Hermitian with an IDENTICAL characteristic polynomial but chirality 0 — the first pass of
+-- this module shipped that wrong matrix and every spectral gate passed, so multi-band models here
+-- now require an eigenvector-level invariant, not just a spectrum check.
+-- Ships `det_fin_four`, the Mathlib-grade 4x4 Laplace expansion Mathlib itself stops short of.
+import SKEFTHawking.GrapheneBand.BernalBilayer
+
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
 

@@ -4445,6 +4445,41 @@ KERNEL_NOGO_REGISTRY: dict[str, dict] = {
             "`IsHoneycombChart`, not prose.",
         'memory': None,
     },
+    'spectrum_determines_multiband_model': {
+        'fork_id': '6ed-spectrum-determines-multiband-model',
+        'backing_theorems': [
+            'SKEFTHawking.GrapheneBand.bernal_spectrum_not_determine_model',
+            'SKEFTHawking.GrapheneBand.bernal_chirality_two',
+            'SKEFTHawking.GrapheneBand.bernalSwapped_chirality_zero',
+        ],
+        'nogo_kind': 'refutation',
+        'false_statement': "A multi-band lattice Hamiltonian is pinned down -- and its "
+            "identification with a named physical model certified -- by its SPECTRUM: if the "
+            "characteristic polynomial / secular determinant comes out right, and the matrix is "
+            "Hermitian, the model is the one claimed. FALSE (Phase 6ED Wave 4, 2026-07-30, "
+            "kernel-checked; found by adversarial review of the wave's OWN first pass, which "
+            "shipped the wrong matrix and passed every gate). WITNESS: "
+            "`bernal_spectrum_not_determine_model` exhibits `bernalBlochSwapped` -- the Bernal "
+            "bilayer Hamiltonian with layer 2's intralayer element conjugated -- and proves (i) it "
+            "is Hermitian, (ii) its characteristic polynomial is IDENTICAL to `bernalBloch`'s at "
+            "EVERY parameter point `(u, gamma, E, f)`, and (iii) it is nevertheless a different "
+            "matrix. The invariant that separates them is not spectral but EIGENVECTOR-level: "
+            "`bernal_chirality_two` gives the true bilayer the exact J = 2 relation "
+            "`E (gamma v_A1 - f v_A2) = -f^2 v_B2` (McCann-Koshino Eq. 40), while "
+            "`bernalSwapped_chirality_zero` gives the look-alike the phase-blind coefficient "
+            "`f fbar = |f|^2`, i.e. chirality 0 -- winding 2 versus winding 0 around the cone. "
+            "WHY IT MATTERS HERE: in AB (Bernal) stacking both layers are the same honeycomb in "
+            "the same orientation, so their A->B bond vectors coincide and BOTH intralayer "
+            "elements are `f`. The conjugated variant is layer 2 with its sublattices exchanged -- "
+            "a different material. Because the determinant only ever sees `f fbar`, the error was "
+            "invisible to `bernal_det_eq`, the exact gap, the touching enclosure, kernel purity, "
+            "sorry-count and validate.py alike. STANDING CONSEQUENCE: for any multi-band "
+            "Hamiltonian in this project, ship at least one eigenvector-level invariant (winding, "
+            "Berry phase, chirality) verified against the primary source. A determinant-level gate "
+            "cannot certify a model's identification. Phase 6ED Wave 3's `coneBerryPhase_pi` is "
+            "the shape of theorem that catches this class.",
+        'memory': None,
+    },
     'unsigned_matched_saturation_characterization': {
         'fork_id': '6eb-unsigned-matched-saturation-characterization',
         'backing_theorems': [

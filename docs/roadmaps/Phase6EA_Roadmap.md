@@ -1,13 +1,32 @@
 # Phase 6EA — Kernel-Verified Photodetection Statistics: Poisson & Gaussian Discrimination Floors
 
-## 🎯 STATUS: COMPLETE (2026-07-28) — all three waves shipped, Stage-13 clean
+## 🎯 STATUS: COMPLETE (2026-07-28; round-3 remediation closed 2026-07-29) — all three waves shipped, Stage-13 clean
 
-> **Round-3 remediation in flight (2026-07-29).** A third fresh-context adversarial pass found
-> **zero mathematical errors** and a claims-layer punch list. The Waves 1–2 half is applied (see
-> **Stage 13** below); the Wave-3 half is being applied separately. Counts, `lean_deps.json`,
-> `atlas_view.json` and the Inventory Index are **stale until the post-merge gate re-runs** —
-> `folklore_missFloor_beaten_sixfold` was renamed to `folklore_missFloor_beaten_148fold` and Wave 2
-> gained four declarations.
+> **Round-3 remediation — APPLIED AND MERGED (2026-07-29, `fb563b19`).** A third fresh-context
+> adversarial pass found **zero mathematical errors**, one BLOCKER at the claims layer, and a
+> punch list. All of it is applied: Waves 1–2 (see **Stage 13** below) and Wave 3.
+> - **BLOCKER — the quantum bound is now EARNED, not asserted.** Wave 3 had been described as a
+>   "diagonal restriction of a quantum two-state discrimination bound" while invoking no quantum
+>   bound at all. Rather than narrow the sentence, the bound was built:
+>   `QuantumNetwork/HelstromDiscrimination.lean` ships `IsBinaryPOVM`, `helstrom_le_povmAvgError`,
+>   `helstrom_isLeast_povmAvgError`, and `quarter_sqrtFidelity_sq_le_povmAvgError` — a genuine
+>   Holevo–Helstrom optimality statement over POVMs with the Fuchs–van de Graaf floor beneath it.
+>   The Wave-3 claim is now backed by the theorem it names. *(The Stage-2 UNKNOWN-3 finding below —
+>   that `OptimalHypothesisRate` is type-level unreachable from a Poisson-on-ℕ carrier — still
+>   stands; this bound is the project's own, not a PhysLib specialization.)*
+> - `folklore_missFloor_beaten_sixfold` → `folklore_missFloor_beaten_148fold` (verified present in
+>   `lean_deps.json` as `SKEFTHawking.Detection.folklore_missFloor_beaten_148fold`; the old name is
+>   gone). Wave 2 gained four declarations.
+> - **`Detection/` migrated off the deprecated `poissonPMFReal` carrier** onto `poissonMeasure`,
+>   atomically across both files via the `hasSum_poissonMeasureReal` helper; zero deprecation
+>   warnings remain. Two theorem *names* still contain the dead identifier
+>   (`hasSum_poissonPMFReal_mul_id`, `hasSum_poissonPMFReal_mul_descFactorial`) — deliberately kept,
+>   since they are cited in frozen `papers/AutomatedReviews/` artifacts; their statements are fully
+>   migrated.
+> - Counts, `lean_deps.json`, `atlas_view.json` and the Inventory Index were **refreshed by the
+>   post-merge gate** and are current as of `fb563b19`: `validate.py` **50/50**, 25,855 theorems.
+> The dated build/validate figures in the paragraph below are the **2026-07-28 close-out record**
+> and are not restated to the current gate on purpose.
 
 Authorized 2026-07-27, closed 2026-07-28. `lake build` 10,365 jobs clean +
 `lake build SKEFTHawking.ExtractDeps` 10,366 clean, **zero sorry, zero axioms**, every declaration
@@ -51,7 +70,15 @@ kernel-pure `{propext, Classical.choice, Quot.sound}`; `validate.py` **49/49**. 
   sandwich); `shotPSD`, `shotPSD_eq_hawkingNoisePSD`, `shotPSD_plane_transfer`, `shotPSD_pos`;
   `hasSum_poisson_thinning` / `poisson_thinning`, `hasSum_poissonPMFReal_mul_descFactorial`,
   `poissonMean_eq`, `poissonMean_thinning`, `thinnedMean_eq_eta_mul`, `poissonVariance_eq`,
-  `shot_variance_eq_mean`; `shotGaussian_avgError_gt_leCam_floor`.
+  `shotFilteredVariance_boxcar_eq_mean` / `shotFilteredVariance_ramp_gt_mean`;
+  `shotGaussian_avgError_gt_leCam_floor`.
+
+  > **Record correction (2026-07-30, record-level audit).** This list previously named
+  > `shot_variance_eq_mean`, which resolves to nothing — and the shipped pair says something
+  > *stronger and different*: shot variance equals the mean **only for the boxcar window**
+  > (`shotFilteredVariance_boxcar_eq_mean`), and is **strictly greater** for a ramp
+  > (`shotFilteredVariance_ramp_gt_mean`). The stale name asserted a window-independent identity
+  > that the wave's own theorems refute, so this was a claim defect, not just a rename.
 
 **Stage 13.** Round 1 (`2026-07-28-1839`): 2 BLOCKER + 5 MAJOR + 5 MINOR — all remediated.
 Round 2 (`2026-07-28-1924`): **ZERO BLOCKER**, both round-1 blockers independently verified closed;
