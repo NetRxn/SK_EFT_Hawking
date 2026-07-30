@@ -147,6 +147,67 @@ theorem norm_integral_mul_mul_le [CompleteSpace A] {B Kp Kq T : ℝ}
   refine le_trans (add_le_add (norm_sub_le _ _) le_rfl) ?_
   nlinarith [hbdry, hIA, hIC, hB, hKp, hKq, hT]
 
+/-! ## 4. From the averaging bound to a genuine propagator difference
+
+Two links. First, the product of two ODE solutions `L' = L·P`, `U' = Q·U` is itself an ODE solution
+with generator `P + Q`, so FTC turns `∫₀ᵀ L·(P+Q)·U` into the boundary value `L T·U T − L 0·U 0` —
+this is the discrepancy identity. Second, when `L` is a left inverse of a third propagator `Ur`, the
+difference `U − Ur` factors as `Ur·(L·U − 1)`, transferring the bound off the conjugated quantity
+and onto the literal difference. -/
+
+/-- The product of two ODE solutions solves the ODE with the SUMMED generator. -/
+theorem hasDerivAt_mul_ode (hL : ∀ s, HasDerivAt L (L s * P s) s)
+    (hU : ∀ s, HasDerivAt U (Q s * U s) s) (s : ℝ) :
+    HasDerivAt (fun r => L r * U r) (L s * (P s + Q s) * U s) s := by
+  have h := (hL s).mul (hU s)
+  have heq : L s * P s * U s + L s * (Q s * U s) = L s * (P s + Q s) * U s := by
+    noncomm_ring
+  rw [heq] at h
+  exact h
+
+/-- **The discrepancy identity.** -/
+theorem integral_mul_ode [CompleteSpace A] (hL : ∀ s, HasDerivAt L (L s * P s) s)
+    (hU : ∀ s, HasDerivAt U (Q s * U s) s)
+    (hcont : Continuous fun s => L s * (P s + Q s) * U s) (T : ℝ) :
+    (∫ s in (0 : ℝ)..T, L s * (P s + Q s) * U s) = L T * U T - L 0 * U 0 :=
+  intervalIntegral.integral_eq_sub_of_hasDerivAt
+    (fun s _ => hasDerivAt_mul_ode hL hU s) (hcont.intervalIntegrable 0 T)
+
+/-- **The unitarity transfer.** If `Ur` has right inverse `Vr` and `‖Ur‖ ≤ 1`, a bound on the
+CONJUGATED discrepancy `Vr·Ue − 1` transfers to the literal difference `Ue − Ur`. -/
+theorem norm_sub_le_norm_mul_sub_one {Ue Ur Vr : A} (hinv : Ur * Vr = 1) (hUr : ‖Ur‖ ≤ 1) :
+    ‖Ue - Ur‖ ≤ ‖Vr * Ue - 1‖ := by
+  have hfac : Ue - Ur = Ur * (Vr * Ue - 1) := by
+    rw [mul_sub, ← mul_assoc, hinv, one_mul, mul_one]
+  rw [hfac]
+  exact le_trans (norm_mul_le _ _) (mul_le_of_le_one_left (norm_nonneg _) hUr)
+
+/-- **The propagator difference bound.** The capstone: the difference between the exact propagator
+`U` and the reduced propagator `Ur` is bounded by `B·(1 + T·(Kp+Kq))`, where `B` bounds the
+ANTIDERIVATIVE of the discrepancy generator `P + Q`.
+
+Nothing here asserts the reduction as an equality; the conclusion is an inequality whose constant is
+explicit in every parameter. -/
+theorem norm_propagator_sub_le [CompleteSpace A] {B Kp Kq T : ℝ} {Ur : A}
+    (hS : ∀ s, HasDerivAt S (P s + Q s) s)
+    (hL : ∀ s, HasDerivAt L (L s * P s) s) (hU : ∀ s, HasDerivAt U (Q s * U s) s)
+    (hSc : Continuous S) (hLc : Continuous L) (hUc : Continuous U)
+    (hPc : Continuous P) (hQc : Continuous Q)
+    (hS0 : S 0 = 0) (hL0U0 : L 0 * U 0 = 1)
+    (hLb : ∀ s, ‖L s‖ ≤ 1) (hUb : ∀ s, ‖U s‖ ≤ 1) (hSb : ∀ s, ‖S s‖ ≤ B)
+    (hPb : ∀ s, ‖P s‖ ≤ Kp) (hQb : ∀ s, ‖Q s‖ ≤ Kq) (hB : 0 ≤ B) (hT : 0 ≤ T)
+    (hinv : Ur * L T = 1) (hUrb : ‖Ur‖ ≤ 1) :
+    ‖U T - Ur‖ ≤ B * (1 + T * (Kp + Kq)) := by
+  -- Transfer to the conjugated discrepancy.
+  refine le_trans (norm_sub_le_norm_mul_sub_one hinv hUrb) ?_
+  -- The conjugated discrepancy IS the integral of `L·(P+Q)·U`.
+  have hid := integral_mul_ode hL hU (by fun_prop) T
+  rw [hL0U0] at hid
+  rw [← hid]
+  -- ... which the averaging bound controls, with `G := P + Q`.
+  exact norm_integral_mul_mul_le hS hL hU hSc hLc hUc hPc hQc (hPc.add hQc)
+    hS0 hLb hUb hSb hPb hQb hB hT
+
 end
 
 end SKEFTHawking.Control
