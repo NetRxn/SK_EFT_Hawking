@@ -619,8 +619,9 @@ fresh 2-agent toehold sweep + roadmap re-read, per the fence discipline):
   intrinsic limit: `set`-bound eigenvector unitaries are reducible, so per-entry access forces a
   spectral whnf-explosion. FIX (no `maxHeartbeats`): prove the diagonal bound as a generic lemma over
   an ABSTRACT `M` (`normSq_diag_le_re_conjTranspose_mul_self`) + `clear_value`. **Lesson: "spectral
-  whnf timeout" ⟹ abstract the heavy term, do NOT bump heartbeats.** Only the FvdG-UPPER bound
-  remains fenced (Uhlmann purification, above).
+  whnf timeout" ⟹ abstract the heavy term, do NOT bump heartbeats.** **NOTHING here remains fenced:** both FvdG bounds and `F ≤ 1` are PROVEN (see the
+  two bullets above). This sentence previously claimed the upper bound was still fenced, which the
+  bullet directly above it contradicts — corrected 2026-07-29.
 -/
 
 end SKEFTHawking.QuantumNetwork

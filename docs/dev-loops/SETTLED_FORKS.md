@@ -1315,7 +1315,7 @@ chain, and encoding it in Lean costs more than it saves).**
 - verdict: dead
 - tier: agent-reviewed
 - authored_by: coach
-- killed_by: Phase 6EA Stage-2 statement freeze §4 (UNKNOWN-3 resolution), after reading PhysLib `QuantumInfo.Finite.ResourceTheory.HypothesisTesting` in full (568 lines)
+- killed_by: Phase 6EA Stage-2 statement freeze §4 (UNKNOWN-3 resolution), after reading PhysLib `QuantumInfo.ResourceTheory.HypothesisTesting` in full (568 lines)
 - reason: TYPE-LEVEL IMPOSSIBLE, two independent ways. (i) `OptimalHypothesisRate ρ ε S` takes `ρ : MState d` with `[Fintype d]`, and PhysLib's classical embedding `MState.ofClassical` takes `ProbDistribution α` with `[Fintype α]` — Poisson lives on ℕ, which is not a `Fintype`, so it cannot be an argument to either. (ii) `OptimalHypothesisRate` is the *asymmetric* Neyman–Pearson value (min Type-II at Type-I ≤ ε), whereas the 6EA floor bounds the *symmetric* Bayes/Le Cam average error at equal priors — calling one a specialization of the other is a category error, so any such theorem would be false or vacuous. Not kernel-encodable (a typing/functional fact, not a false proposition). The seam instead routes through the `Fin 2` pushforward as a diagonal restriction of the project's own proven FvdG. COROLLARY: 6EA Wave 3 must NOT be described as "the first project consumption of `HypothesisTesting`" in any D12-facing text unless that consumption actually happens.
 - memory: [[project_vectorC_public_6E_series]]
 - created_ts: 2026-07-28T00:00:00Z
