@@ -1,0 +1,23 @@
+{
+  "bundle_target": "D11",
+  "tier": 1,
+  "title": "Kernel-Verified Topological Band Theory & Metamaterial Substrate",
+  "target_journal": "PRD | PRX Quantum | PRB",
+  "phase7_subphase": "6CA-CE+6ED",
+  "stage9_status": "pending",
+  "stage10_status": "pending",
+  "stage13_status": "pending",
+  "stage13_redo_required": true,
+  "freshness_stale": false,
+  "source_manifest_last_regen": "2026-07-30T21:53:51Z",
+  "last_lift": "2026-07-30T21:53:51Z",
+  "last_stage9_review": null,
+  "last_stage10_review": null,
+  "last_stage13_review": null,
+  "blockers_open": 0,
+  "advisories_open": 0,
+  "stage13_review_doc": null,
+  "audit_log_path": "papers/D11/audit_log.jsonl",
+  "supersession_ledger_anchor": "docs/review_finding_supersessions.json",
+  "notes": null
+}

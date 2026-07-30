@@ -1,0 +1,39 @@
+{
+  "bundle_target": "D11",
+  "events": [
+    {
+      "date": "2026-07-30T21:53:51Z",
+      "source_paper": "D11_initial_draft",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a71",
+      "lean_modules_referenced": [
+        "BlochBundle",
+        "TopologicalBand.PrincipalBranch",
+        "TopologicalBand.FiniteTorus",
+        "TopologicalBand.FHSLatticeGauge",
+        "TopologicalBand.FHSExamples",
+        "TopologicalBand.BlochFrame",
+        "TopologicalBand.BlochFHS",
+        "TopologicalBand.ArgSectors",
+        "TopologicalBand.BlochFrameOfD",
+        "AcousticBlochOperator",
+        "PhononicBandGap",
+        "BandGapEnclosure",
+        "NonHermitianBloch",
+        "ExceptionalPoint",
+        "NonHermitianWinding",
+        "MaxwellGarnett",
+        "EffectiveMediumBounds",
+        "EffectiveModuli",
+        "GrapheneBand.Honeycomb",
+        "GrapheneBand.DiracExpansion",
+        "GrapheneBand.HaldaneWitness",
+        "GrapheneBand.BernalBilayer"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-07-30T21:53:51Z",
+      "notes": "Sourceless synthesis: substrate is 22 Lean modules across Phases 6CA (FHS lattice Chern), 6CB (acoustic/phononic band gap), 6CD (non-Hermitian exceptional points), 6CE (effective-medium homogenization, algebraic path only), 6ED (graphene band structure incl. the concrete Haldane Chern witness); no per-paper-draft sources. First content-lift of the 2026-06-29-authorized D11 bundle (6ED admitted 2026-07-27). Thread (i) scoped to finite-lattice FHS Chern: Berry curvature and bulk-boundary are DEFERRED, not conditional - PAPER_STRATEGY.md corrected 2026-07-30 to match the tree."
+    }
+  ]
+}
