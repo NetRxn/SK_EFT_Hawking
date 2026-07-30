@@ -5164,6 +5164,16 @@ import SKEFTHawking.GrapheneBand.HaldaneWitness
 -- Ships `det_fin_four`, the Mathlib-grade 4x4 Laplace expansion Mathlib itself stops short of.
 import SKEFTHawking.GrapheneBand.BernalBilayer
 
+-- Phase 6EE Wave 1 — the control layer: rotating-wave reduction with an EXPLICIT remainder.
+-- `interactionHamiltonian_decomp` splits the exact interaction-picture generator into the
+-- time-independent co-rotating part plus a purely oscillatory counter-rotating remainder, as an
+-- exact algebraic identity. The rotating-wave *approximation* is the act of discarding that
+-- remainder; the split is what makes the discard quantifiable rather than folklore.
+-- The remainder's Bloch-Siegert `Ω/ω` scale comes from its closed-form antiderivative being
+-- bounded uniformly in `t` — a naive Duhamel/Gronwall estimate yields only `Ω·T/2`, which grows
+-- without bound in `T` and carries no `1/ω`, so it is NOT of Bloch-Siegert scale.
+import SKEFTHawking.Control.RotatingWave
+
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
 
