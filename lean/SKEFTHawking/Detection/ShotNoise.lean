@@ -1,6 +1,8 @@
 import SKEFTHawking.Detection.PoissonDiscrimination
 import SKEFTHawking.Detection.GaussianThreshold
+import SKEFTHawking.Detection.FilterFloors
 import SKEFTHawking.QuantumNetwork.DiamondNormChoi
+import SKEFTHawking.QuantumNetwork.HelstromDiscrimination
 import SKEFTHawking.GrapheneNoiseFormula
 
 /-!
@@ -9,40 +11,59 @@ import SKEFTHawking.GrapheneNoiseFormula
 Two independent strands, joined by the file's guardrail:
 
 **The quantum seam.** The classical discrimination floors of Wave 1 are the *commutative
-shadow* of the project's quantum fidelity substrate (`QuantumNetwork/MixedState.lean`). The
-bridge is exact: the Uhlmann root fidelity of two **diagonal** density matrices is the classical
-Bhattacharyya affinity of their diagonals (`diagonalState_sqrtFidelity_eq_affinity`), and the
-Wave-1 Poisson floor factors through the root fidelity of the two-outcome pushforward states
-(`poissonFloor_le_diagonalQuantumBound`).
+shadow* of the project's quantum fidelity substrate (`QuantumNetwork/MixedState.lean`). Two things
+are needed for that to be a claim and not a slogan, and both are here:
 
-**Shot-noise algebra.** The one-sided shot-noise PSD, its reference-plane transfer under
-quantum efficiency `η`, the pmf-level Poisson thinning identity, and the mean/variance
-identity in the filtered-count normalization.
+1. an *identification*: the Uhlmann root fidelity of two **diagonal** density matrices is the
+   classical Bhattacharyya affinity of their diagonals (`diagonalState_sqrtFidelity_eq_affinity`),
+   and the classical average assignment error is the Born-rule error of one particular POVM on
+   those states (`povmAvgError_diagonal_eq_avgAssignmentError`);
+2. a *quantum bound to restrict*: `QuantumNetwork/HelstromDiscrimination.lean`'s
+   `quarter_sqrtFidelity_sq_le_povmAvgError` — `¼F(ρ,σ)² ≤ P_err` for **arbitrary** density
+   operators and **arbitrary** two-outcome POVMs, from Holevo–Helstrom plus Fuchs–van de Graaf.
+
+`poissonFloor_le_diagonalQuantumBound` is then the composition, and its second conjunct is
+literally the restriction of (2) along (1). Without (2) the seam would be notational — (1) alone
+makes the "quantum" quantity *equal* to a classical one, so a classical proof of the same
+inequality would establish nothing.
+
+**Shot-noise algebra.** The one-sided shot-noise PSD, its reference-plane transfer under a
+transfer factor `η`, the pmf-level Poisson thinning identity, the single-binder bridge tying the
+PSD `η` to the thinning `η`, and the Fano factor of a *filtered* count.
 
 ## Main results
 
 * `psdSqrt_diagonal` — the PSD square root of a diagonal matrix is the entrywise `√`; the one
-  net-new piece of mathematics in the seam, via PSD-square-root uniqueness.
+  net-new piece of mathematics in the identification step, via PSD-square-root uniqueness.
 * `diagonalState_sqrtFidelity_eq_affinity` — **(S1)** `F(diag p, diag q) = ∑ᵢ √(pᵢqᵢ)`.
 * `pushforwardFidelity_eq_binaryAffinity` — the two-outcome specialization.
+* `declareSignalPOVM`, `isBinaryPOVM_declareSignal`,
+  `povmAvgError_diagonal_eq_avgAssignmentError` — the classical binary decision exhibited as one
+  POVM out of the whole admissible family, and its error as a *value* of the quantum error
+  functional.
 * `poissonFloor_le_diagonalQuantumBound` — **(S2)** the Wave-1 Poisson floor is sandwiched:
-  it is dominated by a quarter of the squared root fidelity of the diagonal pushforward
-  states, which in turn is a floor on the average assignment error.
+  classical data processing on the left, the quantum discrimination floor on the right.
 * `shotPSD`, `shotPSD_eq_hawkingNoisePSD`, `shotPSD_plane_transfer`, `shotPSD_pos` — the
-  one-sided shot-noise PSD, its agreement with the repo's `GrapheneNoiseFormula` convention,
-  and the `η`-transfer between reference planes.
+  one-sided shot-noise PSD, agreement of its leading `2` with the repo's `GrapheneNoiseFormula`
+  convention (slot identity is *not* pinned — see that theorem), and the `η`-transfer.
 * `hasSum_poisson_thinning` / `poisson_thinning` — the **pmf-level** thinning identity
   `Poisson N ↦ Poisson (ηN)`, in `HasSum` and `tsum` form.
-* `poissonMean_eq`, `poissonVariance_eq`, `shot_variance_eq_mean` — the second-moment
-  computation and the resulting mean = variance identity.
-* `poissonMean_thinning` — mean algebra on a `Poisson (η·N)` law; `thinnedMean_eq_eta_mul` is
-  the bridge proper, reducing the *thinning sum* through `poisson_thinning` to show the
-  transfer factor of `shotPSD_plane_transfer` is the same `η` that scales the count mean.
+* `shotPSD_thinnedMean_same_eta` — **the `η` bridge**: one `ℝ≥0` binder used in *both* the PSD
+  transfer and the thinning kernel, with `shotPSD_thinnedMean_eta_exponent_load_bearing` showing
+  the identity pins the two scaling exponents to agree. `poissonMean_thinning` is mean algebra
+  only; `thinnedMean_eq_eta_mul` reduces the thinning sum but still binds its own `η`.
+* `poissonMean_eq`, `poissonVariance_eq` — the second-moment computation for the *unfiltered*
+  Poisson count.
+* `IsShotFilteredMoments`, `shotFilteredMean_le_variance`,
+  `shotFilteredVariance_boxcar_eq_mean`, `shotFilteredVariance_ramp_gt_mean` — the **filtered**
+  count: at matched DC gain its Fano factor is `≥ 1`, with equality exactly at the boxcar and
+  strict excess already at the ramp. "Variance = mean" is the boxcar case, not a property of
+  filtered shot noise.
 * `shotGaussian_avgError_gt_leCam_floor` — a concrete operating point at which a shot-limited
-  Gaussian threshold model errs by more than 3/2 of the Le Cam floor **value**, certifying the
-  floor is not a disguised equality there. It does *not* exhibit a count rule beating its own
-  floor: the Gaussian error pair is not claimed realizable by any `δ` (see the theorem's scope
-  note).
+  Gaussian threshold model (branch widths `√N_b`, `√N_a`) errs by more than 3/2 of the Le Cam
+  floor **value**, certifying the floor is not a disguised equality there. It does *not* exhibit
+  a count rule beating its own floor: the Gaussian error pair is not claimed realizable by any
+  `δ` (see the theorem's scope note).
 
 ## Guardrail
 
@@ -171,6 +192,44 @@ theorem one_sub_missProb_mem_Icc {r : ℝ≥0} {δ : ℕ → ℝ} (hδ : IsCount
     (1 - missProb r δ) ∈ Set.Icc (0 : ℝ) 1 :=
   ⟨by linarith [(missProb_mem_Icc (r := r) hδ).2], by linarith [(missProb_mem_Icc (r := r) hδ).1]⟩
 
+/-! ### The classical decision as a POVM -/
+
+/-- **The computational-basis effect "declare signal"** on the two-outcome decision alphabet: the
+rank-one projector onto outcome `0`. This is the measurement a classical count rule actually
+performs on its pushforward states — the *one* POVM out of the whole admissible family
+`{E : 0 ⪯ E ⪯ 1}` over which the Helstrom optimum below ranges. -/
+def declareSignalPOVM : Matrix (Fin 2) (Fin 2) ℂ := Matrix.diagonal ![1, 0]
+
+theorem isBinaryPOVM_declareSignal : IsBinaryPOVM declareSignalPOVM := by
+  constructor
+  · rw [show declareSignalPOVM = Matrix.diagonal (fun i => ((![1, 0] i : ℝ) : ℂ)) by
+      rw [declareSignalPOVM]; ext i j; fin_cases i <;> fin_cases j <;> simp]
+    exact diagonalPSD (by intro i; fin_cases i <;> norm_num)
+  · rw [show (1 : Matrix (Fin 2) (Fin 2) ℂ) - declareSignalPOVM
+        = Matrix.diagonal (fun i => ((![0, 1] i : ℝ) : ℂ)) by
+      rw [declareSignalPOVM]; ext i j; fin_cases i <;> fin_cases j <;> simp]
+    exact diagonalPSD (by intro i; fin_cases i <;> norm_num)
+
+/-- **The diagonal restriction, exactly.** The classical average assignment error of a two-outcome
+experiment with false-alarm `e₀` and miss `e₁` *is* the quantum average error `povmAvgError` of the
+computational-basis POVM on the diagonal pushforward states `ρ = diag(1−e₁, e₁)` (signal) and
+`σ = diag(e₀, 1−e₀)` (baseline).
+
+This is the equation that makes "the classical floor is the diagonal restriction of a quantum
+bound" a theorem rather than a figure of speech: the classical error is not merely *bounded by*
+the quantum error functional, it is a *value* of it. Hypothesis-free — pure Born-rule algebra on
+diagonal matrices, valid for any reals `e₀, e₁`. -/
+theorem povmAvgError_diagonal_eq_avgAssignmentError (e₀ e₁ : ℝ) :
+    povmAvgError (Matrix.diagonal (fun i => (binaryDist (1 - e₁) i : ℂ)))
+        (Matrix.diagonal (fun i => (binaryDist e₀ i : ℂ))) declareSignalPOVM
+      = avgAssignmentError e₀ e₁ := by
+  have h1 : (1 : Matrix (Fin 2) (Fin 2) ℂ) - declareSignalPOVM = Matrix.diagonal ![0, 1] := by
+    rw [declareSignalPOVM]; ext i j; fin_cases i <;> fin_cases j <;> simp
+  rw [povmAvgError, h1, declareSignalPOVM, Matrix.diagonal_mul_diagonal,
+    Matrix.diagonal_mul_diagonal, Matrix.trace_diagonal, Matrix.trace_diagonal,
+    Fin.sum_univ_two, Fin.sum_univ_two, avgAssignmentError]
+  simp [binaryDist]
+
 /-- **(S2) The seam: the Wave-1 Poisson floor factors through a quantum fidelity.** For any
 count rule `δ`, push the experiment forward to its two-outcome decision alphabet `Fin 2` and
 embed the resulting distributions as diagonal density matrices `ρ₀, ρ₁` (genuinely density
@@ -179,14 +238,26 @@ operators — `binaryDensityOperator`). Then
 * the classical Poisson floor `¼·exp(−(√N_a − √N_b)²)` is at most `¼·F(ρ₀,ρ₁)²`, and
 * `¼·F(ρ₀,ρ₁)²` is itself a floor on the average assignment error.
 
-So the Wave-1 floor is *the diagonal restriction of a quantum two-state discrimination bound*:
-the quantum root fidelity sits between the classical exponential floor and the error, and the
-first inequality is the data-processing loss of distinguishability incurred by collapsing the
-whole count record to a binary decision. Both conjuncts are needed
-and neither implies the other — the left one is data processing (Wave 1's
-`affinity_le_binaryAffinity` composed with `poissonBhattacharyya_eq`), the right one is the
-two-outcome AM–GM step (`binaryAffinity_sq_le_two_mul_add`) transported through
-`pushforwardFidelity_eq_binaryAffinity`.
+So the Wave-1 floor is *the diagonal restriction of a quantum two-state discrimination bound*.
+Both conjuncts are needed and neither implies the other, and they come from opposite sides:
+
+* the left one is **classical data processing** — Wave 1's `affinity_le_binaryAffinity` composed
+  with `poissonBhattacharyya_eq`: the distinguishability lost by collapsing the whole count
+  record to a binary decision;
+* the right one is **quantum**, and is where the word "quantum" is earned. It is
+  `QuantumNetwork.quarter_sqrtFidelity_sq_le_povmAvgError` — the Holevo–Helstrom optimum
+  `½(1 − D(ρ₀,ρ₁))` (least over *all* two-outcome POVMs, `helstrom_isLeast_povmAvgError`)
+  combined with Fuchs–van de Graaf `D ≤ √(1 − F²)` — instantiated at these two diagonal states
+  and at the one POVM the classical rule actually performs
+  (`povmAvgError_diagonal_eq_avgAssignmentError`). It is **not** a re-expression of Wave 1's
+  two-outcome AM–GM step: `binaryAffinity_sq_le_two_mul_add` is not called here, and the bound
+  being restricted holds for arbitrary (non-commuting) density operators and arbitrary POVMs.
+
+The distinction matters: without the second bullet the "quantum" content would be notational —
+`pushforwardFidelity_eq_binaryAffinity` proves `F` of these states *equals* the classical binary
+affinity, so a classical proof of the same inequality would establish nothing quantum. What makes
+it a restriction is that the inequality being restricted is proved for objects the diagonal case
+does not exhaust.
 
 An `OptimalHypothesisRate` specialization is **not** available and is not attempted: that value
 is `[Fintype d]`-bound and asymmetric (Neyman–Pearson), whereas Poisson lives on `ℕ` and Wave 1
@@ -199,24 +270,27 @@ theorem poissonFloor_le_diagonalQuantumBound {Nb Na : ℝ≥0} {δ : ℕ → ℝ
             (binaryPSD (one_sub_missProb_mem_Icc (r := Na) hδ)) ^ 2
           ≤ avgAssignmentError (falseAlarm Nb δ) (missProb Na δ) := by
   have hFA := falseAlarm_mem_Icc (r := Nb) hδ
-  have hMP := missProb_mem_Icc (r := Na) hδ
-  have hF := pushforwardFidelity_eq_binaryAffinity (e₀ := falseAlarm Nb δ) (e₁ := missProb Na δ)
-    hFA (one_sub_missProb_mem_Icc (r := Na) hδ)
-  have hCS := affinity_le_binaryAffinity (p := poissonPMFReal Nb) (q := poissonPMFReal Na)
-    (fun _ => poissonPMFReal_nonneg) (fun _ => poissonPMFReal_nonneg)
-    (poissonPMFRealSum Nb) (poissonPMFRealSum Na) hδ (hasSum_falseAlarm hδ) (hasSum_missProb hδ)
-  rw [poissonBhattacharyya_eq, ← hF] at hCS
-  have hAM := binaryAffinity_sq_le_two_mul_add hFA hMP
-  rw [← hF] at hAM
-  have hexp : Real.exp (-(√(Nb : ℝ) - √(Na : ℝ)) ^ 2 / 2) ^ 2
-      = Real.exp (-(√(Na : ℝ) - √(Nb : ℝ)) ^ 2) := by
-    rw [sq, ← Real.exp_add]; congr 1; ring
+  have h1MP := one_sub_missProb_mem_Icc (r := Na) hδ
   refine ⟨?_, ?_⟩
-  · have := mul_self_le_mul_self (Real.exp_pos _).le hCS
+  · -- classical data processing: BC(Poisson Nb, Poisson Na) ≤ binary affinity = F(ρ₀,ρ₁)
+    have hF := pushforwardFidelity_eq_binaryAffinity (e₀ := falseAlarm Nb δ) (e₁ := missProb Na δ)
+      hFA h1MP
+    have hCS := affinity_le_binaryAffinity (p := poissonPMFReal Nb) (q := poissonPMFReal Na)
+      (fun _ => poissonPMFReal_nonneg) (fun _ => poissonPMFReal_nonneg)
+      (poissonPMFRealSum Nb) (poissonPMFRealSum Na) hδ (hasSum_falseAlarm hδ) (hasSum_missProb hδ)
+    rw [poissonBhattacharyya_eq, ← hF] at hCS
+    have hexp : Real.exp (-(√(Nb : ℝ) - √(Na : ℝ)) ^ 2 / 2) ^ 2
+        = Real.exp (-(√(Na : ℝ) - √(Nb : ℝ)) ^ 2) := by
+      rw [sq, ← Real.exp_add]; congr 1; ring
+    have := mul_self_le_mul_self (Real.exp_pos _).le hCS
     rw [← sq, ← sq, hexp] at this
     linarith
-  · unfold avgAssignmentError
-    linarith
+  · -- the quantum step: Holevo–Helstrom + Fuchs–van de Graaf, restricted to the diagonal POVM
+    have hq := quarter_sqrtFidelity_sq_le_povmAvgError (binaryDensityOperator h1MP)
+      (binaryDensityOperator hFA) isBinaryPOVM_declareSignal
+    rw [povmAvgError_diagonal_eq_avgAssignmentError,
+      sqrtFidelity_comm (binaryPSD h1MP) (binaryPSD hFA)] at hq
+    exact hq
 
 /-! ## Shot-noise PSD algebra -/
 
@@ -225,18 +299,25 @@ one-sided convention (a two-sided PSD would carry `1`); it is fixed here once an
 every statement below rather than being left to a docstring. -/
 noncomputable def shotPSD (E_ph P : ℝ) : ℝ := 2 * E_ph * P
 
-/-- **The one-sided convention agrees with the repository's.** `shotPSD E_ph P` is the
+/-- **The one-sided prefactor agrees with the repository's.** `shotPSD E_ph P` is the
 unit-greybody, unit-occupation case of `GrapheneNoiseFormula.hawkingNoisePSD` — *propositionally*,
 not definitionally: the proof needs `mul_one` twice, so `:= rfl` does not close it. Its leading
 `2` is the same one-sided convention (its companion `johnsonNyquistPSD = 4·k_BT·σ_Q` carries the
-matching `4`). Stating this as a theorem is what makes "matches the repo convention" checkable
-instead of a claim in prose: change either definition's convention and this line fails.
+matching `4`).
 
-**Scope (Stage-13, 2026-07-28):** this is an identity between two *dimensionless real formulas*,
-asserting agreement of the one-sided prefactor and nothing more. It does **not** assert that the
-optical power `P` of `shotPSD` and the quantum-conductance slot `σ_Q` of `hawkingNoisePSD` are
-the same physical quantity — they are not, and no such identification is claimed anywhere in this
-file. Physical identification of any slot remains the consuming phase's declared hypothesis, per
+**Exactly what this pins (Stage-13, corrected 2026-07-29).** `hawkingNoisePSD a b c d` is the
+plain product `2·a·b·c·d`, hence *symmetric in all four arguments*. So this identity is invariant
+under every permutation of them, and it therefore pins only
+
+* the leading numeral `2` — a `shotPSD` with any other prefactor breaks the line; and
+* the monomial degree — that the greybody and occupation slots are set to `1`, not to `P`.
+
+It pins **nothing about slot identity**: the earlier docstring's "change either definition's
+convention and this line fails" was too strong, since swapping which argument carries the optical
+power leaves the statement true. No slot-identifying statement is available here (a symmetric
+function admits none), and none is claimed. In particular this does **not** assert that the
+optical power `P` and the quantum-conductance slot `σ_Q` are the same physical quantity — they are
+not. Physical identification of any slot remains the consuming phase's declared hypothesis, per
 the module guardrail. -/
 theorem shotPSD_eq_hawkingNoisePSD (E_ph P : ℝ) :
     shotPSD E_ph P = SKEFTHawking.GrapheneNoiseFormula.hawkingNoisePSD E_ph P 1 1 := by
@@ -250,14 +331,17 @@ explicit argument, never absorbed into `shotPSD`.
 No sign or range hypothesis on `η`: the identity is pure algebra and any `0 ≤ η ≤ 1`
 side-condition would be an unused hypothesis.
 
-**Honest accounting (Stage-13, 2026-07-28).** This theorem is one `ring` call and it does **not**
-test the one-sided `2`: the same statement holds verbatim for `shotPSD' E P = 7·E·P`, so the
-constant is untested *here*. The `2` is pinned separately and genuinely, by
+**Honest accounting (Stage-13, 2026-07-28; corrected 2026-07-29).** This theorem is one `ring`
+call and it does **not** test the one-sided `2`: the same statement holds verbatim for
+`shotPSD' E P = 7·E·P`, so the constant is untested *here*. The `2` is pinned separately by
 `shotPSD_eq_hawkingNoisePSD` against `GrapheneNoiseFormula`. What this theorem does carry is the
 *placement* of `η` — outside the definition, as an explicit transfer factor rather than baked in.
-And what makes that `η` more than a bare algebraic parameter is `thinnedMean_eq_eta_mul` (not
-`poissonMean_thinning`, which is mean algebra and calls nothing): it reduces the thinning sum
-through `poisson_thinning` and shows the *same* `η` scales the count mean. -/
+
+What it does **not** carry is any tie to the count model. `thinnedMean_eq_eta_mul` was previously
+cited here as supplying that tie; it does not, because its `η` is a *separately bound* `ℝ≥0` while
+this one is an unconstrained `ℝ` — two theorems about two different variables that happen to share
+a name. The statement that genuinely binds one `η` and uses it in both carriers is
+`shotPSD_thinnedMean_same_eta`. -/
 theorem shotPSD_plane_transfer (E_ph P η : ℝ) : shotPSD E_ph (η * P) = η * shotPSD E_ph P := by
   unfold shotPSD
   ring
@@ -423,13 +507,59 @@ by `η`, and this scales the count mean by the *same* `η`.
 Unlike `poissonMean_thinning` (which is mean algebra on an already-`Poisson (η·N)` law), this
 statement **calls `poisson_thinning`**: the thinning sum is reduced to `poissonPMFReal (η * N)`
 before the mean is taken. Without it, the `η` of `shotPSD_plane_transfer` would be a bare
-algebraic parameter with no proved tie to the count model. -/
+algebraic parameter with no proved tie to the count model.
+
+**It is still not the bridge on its own** (Stage-13, 2026-07-29). This theorem's `η` is `ℝ≥0`
+while `shotPSD_plane_transfer`'s is `ℝ`; two theorems about two separately-bound variables that
+happen to share a name assert nothing about each other, and the PSD `η` even ranges over values
+this one cannot represent. The single statement that binds *one* `η` and uses it in *both*
+carriers is `shotPSD_thinnedMean_same_eta`. -/
 theorem thinnedMean_eq_eta_mul (N η : ℝ≥0) :
     (∑' n : ℕ, (∑' m : ℕ, poissonPMFReal N m * (m.choose n : ℝ) * (η : ℝ) ^ n
         * (1 - (η : ℝ)) ^ (m - n)) * (n : ℝ)) = (η : ℝ) * poissonMean N := by
   simp only [poisson_thinning]
   rw [show (∑' n : ℕ, poissonPMFReal (η * N) n * (n : ℝ)) = poissonMean (η * N) from rfl,
     poissonMean_eq, poissonMean_eq, NNReal.coe_mul]
+
+/-- **One transfer factor, two carriers — with one binder.** A *single* retention weight `η : ℝ≥0`
+is used simultaneously in the reference-plane PSD transfer and in the thinning kernel, and the
+resulting cross-carrier identity holds:
+
+    S(η·P) · E[n]  =  S(P) · E[thinned n]
+
+Both sides equal `η · S(P) · E[n]`, which is exactly the content: the factor by which referring
+the optical power across the plane scales the shot PSD is the *same number* as the factor by which
+retaining counts with weight `η` scales the count mean.
+
+**Why this statement and not the conjunction of the two.** `shotPSD_plane_transfer` binds
+`η : ℝ` and `thinnedMean_eq_eta_mul` binds `η : ℝ≥0`; separately bound variables sharing a name
+assert nothing about each other, so their conjunction is not a bridge. Here the coercion
+`(η : ℝ)` of one `ℝ≥0` binder appears in both carriers, so the theorem is false if either scaling
+law changes — see `shotPSD_thinnedMean_eta_exponent_load_bearing`, which breaks it by squaring the
+PSD-side factor alone.
+
+`ℝ≥0` is the honest home for the shared binder: a retention weight cannot be negative (the
+thinning kernel would not be a kernel), whereas the PSD identity is pure algebra valid for any
+real. So the bridge instantiates the *more general* carrier at the *more constrained* one, rather
+than weakening either. -/
+theorem shotPSD_thinnedMean_same_eta (E_ph P : ℝ) (N η : ℝ≥0) :
+    shotPSD E_ph ((η : ℝ) * P) * poissonMean N
+      = shotPSD E_ph P * ∑' n : ℕ, (∑' m : ℕ, poissonPMFReal N m * (m.choose n : ℝ)
+          * (η : ℝ) ^ n * (1 - (η : ℝ)) ^ (m - n)) * (n : ℝ) := by
+  rw [shotPSD_plane_transfer, thinnedMean_eq_eta_mul]
+  ring
+
+/-- **The shared-`η` bridge is falsifiable in its exponent.** Squaring the transfer factor on the
+PSD side alone breaks `shotPSD_thinnedMean_same_eta` at `E_ph = P = N = 1`, `η = 1/2`: the left
+side becomes `1/2` while the right stays `1`. So the identity is not an artefact of both sides
+being "some function of `η`" — it pins the two scaling exponents to be equal. -/
+theorem shotPSD_thinnedMean_eta_exponent_load_bearing :
+    shotPSD 1 (((1 / 2 : ℝ≥0) : ℝ) ^ 2 * 1) * poissonMean 1
+      ≠ shotPSD 1 1 * ∑' n : ℕ, (∑' m : ℕ, poissonPMFReal 1 m * (m.choose n : ℝ)
+          * ((1 / 2 : ℝ≥0) : ℝ) ^ n * (1 - ((1 / 2 : ℝ≥0) : ℝ)) ^ (m - n)) * (n : ℝ) := by
+  rw [thinnedMean_eq_eta_mul, poissonMean_eq, shotPSD, shotPSD]
+  push_cast
+  norm_num
 
 /-- **The Poisson variance is the rate** — computed from the independently-defined second
 central moment, via `E[n(n−1)] = N²` and `E[n] = N`. -/
@@ -451,40 +581,128 @@ theorem poissonVariance_eq (N : ℝ≥0) : poissonVariance N = (N : ℝ) := by
   rw [hval] at hsum
   exact hsum.tsum_eq
 
-/-- **Mean = variance for a shot-limited count**, in the filtered-count (`N_eff`) normalization
-— the scaling every downstream dominance argument uses. Substantive because `poissonVariance`
-is the second central moment of the pmf, computed independently of the mean
-(`hasSum_poissonPMFReal_mul_descFactorial`), not a definitional restatement of `N`. -/
-theorem shot_variance_eq_mean (N : ℝ≥0) : poissonVariance N = poissonMean N := by
-  rw [poissonVariance_eq, poissonMean_eq]
+/-! ## The filtered count: Fano factor and the boxcar
+
+**Correction (Stage-13, 2026-07-29).** Earlier text in this module asserted a "filtered-count
+(`N_eff`) normalization" and a bare `shot_variance_eq_mean : poissonVariance N = poissonMean N`.
+Both were wrong-headed and are removed. `N_eff` was never defined anywhere in the Detection layer;
+and the unfiltered identity was a one-`rw` composition of `poissonVariance_eq` and `poissonMean_eq`
+(both of which state `= (N : ℝ)`), with no consumers — the identity-wrapper anti-pattern.
+
+Worse, the physics it gestured at is false as stated: a *filtered* shot count does not have
+variance equal to its mean. By Campbell's theorem the filtered output has mean `λ∫h` and variance
+`λ∫h²`, so at matched DC gain the Fano factor is `∫h²/∫h ≥ 1` — **equality only for the boxcar**.
+That is the content shipped below.
+-/
+
+open MeasureTheory in
+/-- **Campbell's theorem for a filtered shot-noise count, declared as an explicit hypothesis.**
+`M h` and `V h` are the mean and the variance of the output of a Poisson point source of rate
+`lam` read out through the filter `h` over the window `[0,T]`:
+
+    M h = lam · ∫₀ᵀ h        V h = lam · ∫₀ᵀ h²
+
+*Why a `Prop` parameter and not a derived object.* Exactly the reasoning of the sibling
+`FilterFloors.IsWhiteFilteredVariance`: the repo models no point processes, and Mathlib at pin
+carries no Campbell theory (no shot-noise second-moment formula for a filtered Poisson process),
+so an "abstract filtered-count moment functional" would have to be built from scratch to state
+what is, physically, a modelling assumption about the source. Carrying it as a declared hypothesis
+keeps it visible in every consuming binder list.
+
+*Substantive load, disclosed.* Campbell's theorem itself — that the two moments take these forms —
+lives in this definition. What the theorems below add is the *shape* consequence: the
+Cauchy–Schwarz comparison of `∫h²` against `∫h` and its boxcar equality case. -/
+def IsShotFilteredMoments (M V : (ℝ → ℝ) → ℝ) (lam T : ℝ) : Prop :=
+  (∀ h : ℝ → ℝ, M h = lam * ∫ x in (0:ℝ)..T, h x)
+    ∧ ∀ h : ℝ → ℝ, V h = lam * ∫ x in (0:ℝ)..T, h x ^ 2
+
+open MeasureTheory in
+/-- **A filtered shot count is never sub-Poissonian: `mean ≤ variance` at matched DC gain.**
+
+Normalising the filter to the boxcar's DC gain (`∫₀ᵀ h = T`), the filtered count's variance
+`lam·∫h²` is at least its mean `lam·T`, by the interval Cauchy–Schwarz bound
+`FilterFloors.sq_integral_le`. So "Fano factor 1" is not a property of filtered shot noise; it is
+an upper-extreme case, saturated by exactly one filter shape. -/
+theorem shotFilteredMean_le_variance {M V : (ℝ → ℝ) → ℝ} {lam T : ℝ} (hlam : 0 ≤ lam)
+    (hT : 0 < T) (hmom : IsShotFilteredMoments M V lam T) (h : ℝ → ℝ)
+    (hint : IntervalIntegrable h volume 0 T)
+    (hsq : IntervalIntegrable (fun x => h x ^ 2) volume 0 T)
+    (hDC : (∫ x in (0:ℝ)..T, h x) = T) :
+    M h ≤ V h := by
+  have hCS := sq_integral_le h T hT hint hsq
+  rw [hDC] at hCS
+  have hTle : T ≤ ∫ x in (0:ℝ)..T, h x ^ 2 := by
+    have := (mul_le_mul_iff_of_pos_left hT).mp (by nlinarith [hCS] :
+      T * T ≤ T * ∫ x in (0:ℝ)..T, h x ^ 2)
+    linarith
+  rw [hmom.1 h, hmom.2 h, hDC]
+  exact mul_le_mul_of_nonneg_left hTle hlam
+
+/-- **The boxcar saturates it: for the matched single-shot integrator, variance = mean exactly.**
+This is where "shot-limited, Fano factor 1" is actually true, and it is the *only* place: the
+boxcar is the unique DC-matched shape with `∫h² = ∫h` (`FilterFloors.enbw_eq_half_iff_boxcar`
+records the same extremality on the bandwidth side). Hypothesis-free in `lam`. -/
+theorem shotFilteredVariance_boxcar_eq_mean {M V : (ℝ → ℝ) → ℝ} {lam T : ℝ} (hT : 0 ≤ T)
+    (hmom : IsShotFilteredMoments M V lam T) : V (boxcar T) = M (boxcar T) := by
+  rw [hmom.1, hmom.2, integral_boxcar T hT, integral_boxcar_sq T hT]
+
+open MeasureTheory in
+/-- **Non-vacuity: a non-boxcar shape is strictly super-Poissonian.** The DC-matched ramp
+`h(x) = 2x` on `[0,1]` has `∫h = 1 = T` but `∫h² = 4/3`, so its filtered count's variance exceeds
+its mean by a third. `shotFilteredMean_le_variance` is therefore a real inequality, and the claim
+"variance = mean for the filtered count" is false as a general statement — which is exactly what
+the removed `shot_variance_eq_mean` docstring asserted. -/
+theorem shotFilteredVariance_ramp_gt_mean {M V : (ℝ → ℝ) → ℝ} {lam : ℝ} (hlam : 0 < lam)
+    (hmom : IsShotFilteredMoments M V lam 1) :
+    M (fun x => 2 * x) < V (fun x => 2 * x) := by
+  have h1 : (∫ x in (0:ℝ)..1, 2 * x) = 1 := by
+    rw [intervalIntegral.integral_const_mul, integral_id]; norm_num
+  have h2 : (∫ x in (0:ℝ)..1, (2 * x) ^ 2) = 4 / 3 := by
+    have : (fun x : ℝ => (2 * x) ^ 2) = fun x : ℝ => 4 * x ^ 2 := by funext x; ring
+    rw [this, intervalIntegral.integral_const_mul, integral_pow]
+    norm_num
+  rw [hmom.1, hmom.2, h1, h2]
+  linarith
 
 /-! ## Non-vacuity: the floor family has slack -/
 
-/-- **The Le Cam floor's *value* is strictly exceeded by a shot-limited Gaussian model.** At
-baseline rate `N_b = 1` and signal rate `N_a = 9`, a Gaussian threshold classifier with means
-`μ₀ = 1`, `μ₁ = 9`, common width `σ = 2` and threshold at the midpoint `t = 5` has both branch
-errors equal to `Q(2)`, and its average assignment error exceeds **3/2 times** the Le Cam floor
-value `¼·BC(Poisson 1, Poisson 9)²`. (`σ = 2` is the mean of the two shot widths `√1 = 1` and
-`√9 = 3`; a single common `σ` is what the equal-variance threshold model of Wave 2 assumes, and
-this is the stated choice of it — not a derived quantity.)
+/-- **The Le Cam floor's *value* is strictly exceeded by a genuinely shot-limited Gaussian
+model.** At baseline rate `N_b = 1` and signal rate `N_a = 9`, a Gaussian threshold classifier
+with means `μ₀ = 1`, `μ₁ = 9`, **branch widths `σ₀ = √N_b` and `σ₁ = √N_a`** and threshold at the
+midpoint of the means `t = 5` errs, on average, by more than **3/2 times** the Le Cam floor value
+`¼·BC(Poisson 1, Poisson 9)²`.
 
-**Scope — read this before citing it.** The Gaussian error pair `(thrErr0 1 2 5, thrErr1 9 2 5)`
-is NOT claimed to be realizable by any count rule `δ`, so this does **not** exhibit a count rule
-whose error strictly exceeds its own floor; it compares the floor's numeric value against a
-different (Gaussian) model evaluated at the same rates. What it certifies is narrower, and the narrowness is the point: at this operating point the
-floor's value is strictly below the error of *a* concrete detection model, with a quantified
-factor rather than a bare `≠`. It does **not** certify slack against attainable count-rule error
-— that would need the realizability this note denies. The theorem that *does* exhibit slack over
-the same experiment is `poisson_avgError_equalRates_eq_half`: at coincident rates every count
-rule errs exactly `1/2` while the floor returns `1/4`, so the Le Cam constant is provably loose
-there by a factor of two.
+**"Shot-limited" is in the statement, not the prose (corrected 2026-07-29).** The widths appear
+literally as `√(1 : ℝ)` and `√(9 : ℝ)` — each branch carries the standard deviation of *its own*
+Poisson law, which is what "shot-limited" means. The previous version used a single common
+`σ = 2`, justified only as "the mean of the two shot widths `√1 = 1` and `√9 = 3`", which is not a
+derivable surrogate and is not conservative: the common-`σ` model gives branch errors `Q(2)` each
+(average `≈ 0.0228`), whereas the true unequal-variance model gives `½(Q(4) + Q(4/3)) ≈ 0.0456` —
+a factor of two *larger*. The surrogate understated the error of the model it claimed to describe,
+so it is removed rather than kept alongside.
+
+The threshold `t = 5` is the midpoint of the means, which is **not** the likelihood-ratio-optimal
+threshold once the widths differ; it is a declared, concrete operating point, and a suboptimal
+threshold only raises the error, so it cannot manufacture the strict inequality.
+
+**Scope — read this before citing it.** The Gaussian error pair is NOT claimed to be realizable by
+any count rule `δ`, so this does **not** exhibit a count rule whose error strictly exceeds its own
+floor; it compares the floor's numeric value against a different (Gaussian) model evaluated at the
+same rates. What it certifies is narrower, and the narrowness is the point: at this operating
+point the floor's value is strictly below the error of *a* concrete detection model, with a
+quantified factor rather than a bare `≠`. It does **not** certify slack against attainable
+count-rule error — that would need the realizability this note denies. The theorem that *does*
+exhibit slack over the same experiment is `poisson_avgError_equalRates_eq_half`: at coincident
+rates every count rule errs exactly `1/2` while the floor returns `1/4`, so the Le Cam constant is
+provably loose there by a factor of two.
 
 The statement is a real cross-wave call in both directions: the left side is Wave 1's affinity at
 the Poisson pair (discharged through `poissonBhattacharyya_eq`) and the right side is Wave 2's
-threshold-error pair (bounded through `gaussianQ_two_ge_rational`). -/
+threshold-error pair, bounded through `gaussianTail_ge_window` (`gaussianQ_two_ge_rational` no
+longer suffices: `Q(4/3)` is the load-bearing branch and lies outside its reach). -/
 theorem shotGaussian_avgError_gt_leCam_floor :
     (3 / 2) * ((1 / 4) * affinity (poissonPMFReal 1) (poissonPMFReal 9) ^ 2)
-      < avgAssignmentError (thrErr0 1 2 5) (thrErr1 9 2 5) := by
+      < avgAssignmentError (thrErr0 1 (√(1 : ℝ)) 5) (thrErr1 9 (√(9 : ℝ)) 5) := by
   have h1 : √(1 : ℝ) = 1 := Real.sqrt_one
   have h9 : √(9 : ℝ) = 3 := by
     rw [show (9 : ℝ) = 3 ^ 2 by norm_num, Real.sqrt_sq (by norm_num : (0 : ℝ) ≤ 3)]
@@ -493,9 +711,12 @@ theorem shotGaussian_avgError_gt_leCam_floor :
     push_cast
     rw [h1, h9, sq, ← Real.exp_add]
     norm_num
-  have hQ : avgAssignmentError (thrErr0 1 2 5) (thrErr1 9 2 5) = gaussianQ 2 := by
+  have hQ : avgAssignmentError (thrErr0 1 (√(1 : ℝ)) 5) (thrErr1 9 (√(9 : ℝ)) 5)
+      = (gaussianQ 4 + gaussianQ (4 / 3)) / 2 := by
     unfold avgAssignmentError thrErr0 thrErr1
+    rw [h1, h9]
     norm_num
+  -- the floor value: exp(4) > 46.875, so ¼·exp(−4) < 1/187.5
   have hexp4 : (46.875 : ℝ) < Real.exp 4 := by
     have he : (2.718 : ℝ) < Real.exp 1 := lt_trans (by norm_num) Real.exp_one_gt_d9
     have hp : (2.718 : ℝ) ^ 4 < Real.exp 1 ^ 4 := pow_lt_pow_left₀ he (by norm_num) (by norm_num)
@@ -504,9 +725,28 @@ theorem shotGaussian_avgError_gt_leCam_floor :
     linarith [hp, show (46.875 : ℝ) < 2.718 ^ 4 by norm_num]
   have hneg : Real.exp (-(4 : ℝ)) = 1 / Real.exp 4 := by
     rw [Real.exp_neg]; exact inv_eq_one_div _
+  have hinv : 1 / Real.exp 4 < 1 / 46.875 := one_div_lt_one_div_of_lt (by norm_num) hexp4
+  -- the wide branch: Q(4/3) ≥ (2/3)·φ(2) ≥ (2/3)/18.6, via the window bound at c = 2/3
+  have hphi : (1 : ℝ) / 18.6 ≤ gaussianPDFReal 0 1 2 := by
+    rw [gaussianPDF_std, show -(2 : ℝ) ^ 2 / 2 = -2 by norm_num]
+    have hspos : (0 : ℝ) < √(2 * Real.pi) := Real.sqrt_pos.mpr (by positivity)
+    have hsle : √(2 * Real.pi) ≤ 2.51 := by
+      rw [show (2.51 : ℝ) = √(2.51 ^ 2) from (Real.sqrt_sq (by norm_num)).symm]
+      exact Real.sqrt_le_sqrt (by nlinarith [Real.pi_lt_d2])
+    have hA : (1 : ℝ) / 2.51 ≤ (√(2 * Real.pi))⁻¹ := by
+      rw [inv_eq_one_div]; exact one_div_le_one_div_of_le hspos hsle
+    have hE1 : Real.exp 1 < 2.7183 := lt_trans Real.exp_one_lt_d9 (by norm_num)
+    have hpow : Real.exp 2 = Real.exp 1 ^ 2 := by rw [← Real.exp_nat_mul]; norm_num
+    have he2 : Real.exp 2 < 7.4 := by
+      rw [hpow]; nlinarith [hE1, Real.exp_pos (1 : ℝ)]
+    have hB : (1 : ℝ) / 7.4 ≤ Real.exp (-2) := by
+      rw [Real.exp_neg, inv_eq_one_div]
+      exact one_div_le_one_div_of_le (Real.exp_pos 2) he2.le
+    have hApos : (0 : ℝ) < (√(2 * Real.pi))⁻¹ := by positivity
+    nlinarith [hA, hB, hApos, Real.exp_pos (-2 : ℝ)]
+  have hwin := gaussianTail_ge_window (z := 4 / 3) (c := 2 / 3) (by norm_num) (by norm_num)
+  rw [show (4 : ℝ) / 3 + 2 / 3 = 2 by norm_num] at hwin
   rw [hBC, hQ, hneg]
-  have hinv : 1 / Real.exp 4 < 1 / 46.875 :=
-    one_div_lt_one_div_of_lt (by norm_num) hexp4
-  linarith [gaussianQ_two_ge_rational, hinv]
+  linarith [gaussianQ_nonneg 4, hphi, hwin, hinv]
 
 end SKEFTHawking.Detection
