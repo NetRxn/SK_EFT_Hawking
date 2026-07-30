@@ -3951,6 +3951,8 @@ import SKEFTHawking.QuantumNetwork.DiamondNormAttainment
 import SKEFTHawking.QuantumNetwork.DiamondNormChoi
 -- Phase 6AF-10 (2026-06-02): Fuchs–van de Graaf UPPER bound (Helstrom + classical-FvdG foundation).
 import SKEFTHawking.QuantumNetwork.FidelityUpperBound
+-- Phase 6EA (2026-07-29): Holevo–Helstrom two-state discrimination + the fidelity floor ¼F² ≤ P_err.
+import SKEFTHawking.QuantumNetwork.HelstromDiscrimination
 -- Phase 6AF-10 (2026-06-02): Schatten-2 Cauchy–Schwarz (traceNorm(A·B) ≤ ‖A‖_F·‖B‖_F).
 import SKEFTHawking.QuantumNetwork.TraceNormCauchySchwarz
 -- Phase 6AF-11 (2026-06-02): diamond-norm Choi operator-norm UPPER bound (Watrous sandwich).
