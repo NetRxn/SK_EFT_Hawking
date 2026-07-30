@@ -54,12 +54,27 @@ theorem longitudinalElement_driveOp (a b c d : ℝ) :
 
 /-! ## 2. Transverse duration calibration, with its fail conditions -/
 
-/-- **Transverse duration calibration.** Driving for `T = 2θ/(m·Ω)` achieves exactly the target
-angle `θ`. The two fail conditions are explicit hypotheses, not absorbed magnitudes. -/
+/-- **Transverse duration calibration, ON RESONANCE.** Driving for `T = 2θ/(m·Ω)` achieves exactly
+the target angle `θ` **when `ω₀ = ω`**. The two fail conditions are explicit hypotheses, not
+absorbed magnitudes.
+
+⚠️ The resonance restriction is not decorative: `rwaRotationAngle` ignores detuning, so off
+resonance the achieved angle is strictly larger (`rwaRotationAngle_lt_generalRotationAngle`) and a
+duration computed from this identity UNDER-rotates. Use `calibrated_duration_general` off
+resonance. -/
 theorem calibrated_duration_transverse (Ω b c θ : ℝ)
     (hm : ‖projectedDriveElement b c‖ ≠ 0) (hΩ : Ω ≠ 0) :
     rwaRotationAngle Ω b c (2 * θ / (‖projectedDriveElement b c‖ * Ω)) = θ := by
   rw [rwaRotationAngle_eq_projected]
+  field_simp
+
+/-- **Transverse duration calibration at GENERAL detuning** — the physically correct form. The
+generator magnitude is `√(Δ² + Ω²m²)/2` (`rwaGenerator_sq`), so the calibrated duration is
+`T = 2θ/√(Δ² + Ω²m²)`. Its fail condition is that the generator not vanish. -/
+theorem calibrated_duration_general (Δ Ω b c θ : ℝ)
+    (hgen : Real.sqrt (Δ ^ 2 + Ω ^ 2 * (b ^ 2 + c ^ 2)) ≠ 0) :
+    generalRotationAngle Δ Ω b c (2 * θ / Real.sqrt (Δ ^ 2 + Ω ^ 2 * (b ^ 2 + c ^ 2))) = θ := by
+  unfold generalRotationAngle
   field_simp
 
 /-- **Fail condition 1 — a vanishing matrix element.** If the projected drive element is zero, NO
@@ -208,15 +223,20 @@ theorem kramers_degeneracy {Θ : V → V} {H : V →ₗ[ℂ] V}
 time reversal — is antiunitary with `Θ² = -1`. Without this the degeneracy theorem could be
 vacuously true. -/
 theorem kramers_hypotheses_inhabited :
-    ∃ Θ : (Fin 2 → ℂ) → (Fin 2 → ℂ),
+    ∃ Θ : EuclideanSpace ℂ (Fin 2) → EuclideanSpace ℂ (Fin 2),
+      (∀ x y, ⟪Θ x, Θ y⟫_ℂ = ⟪y, x⟫_ℂ) ∧
       (∀ x, Θ (Θ x) = -x) ∧
-      (∀ (z : ℂ) (x : Fin 2 → ℂ), Θ (z • x) = (starRingEnd ℂ) z • Θ x) := by
-  refine ⟨fun x => ![-(starRingEnd ℂ) (x 1), (starRingEnd ℂ) (x 0)], ?_, ?_⟩
+      (∀ (z : ℂ) (x : EuclideanSpace ℂ (Fin 2)), Θ (z • x) = (starRingEnd ℂ) z • Θ x) := by
+  refine ⟨fun x => WithLp.toLp 2
+      ![-(starRingEnd ℂ) (WithLp.ofLp x 1), (starRingEnd ℂ) (WithLp.ofLp x 0)], ?_, ?_, ?_⟩
+  · intro x y
+    simp [PiLp.inner_apply, Fin.sum_univ_two, RCLike.inner_apply]
+    ring
   · intro x
-    funext i
+    ext i
     fin_cases i <;> simp
   · intro z x
-    funext i
+    ext i
     fin_cases i <;> simp
 
 end Kramers

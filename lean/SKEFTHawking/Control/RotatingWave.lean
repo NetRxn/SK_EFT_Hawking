@@ -448,14 +448,17 @@ def projectedDriveElement (b c : ℝ) : ℂ := (b : ℂ) - Complex.I * (c : ℂ)
     Complex.normSq (projectedDriveElement b c) = b ^ 2 + c ^ 2 := by
   simp [projectedDriveElement, Complex.normSq_apply]; ring
 
-/-- **The co-rotating generator is `(Ω·m/2)` times a reflection.**
+/-- **The co-rotating generator squares to a scalar — the GENERAL, off-resonance form.**
 
-At resonance (`ω₀ = ω`) the detuning term drops and `H_RWA² = (Ω²m²/4)·1`. Since a traceless
-involution generates a rotation, this pins the generator's magnitude EXACTLY at `Ω·m/2` — which is
-what makes the rotation angle `θ = (m/2)·Ω·T` rather than merely bounding it. -/
-theorem rwaGenerator_sq_resonance (ω Ω φ b c : ℝ) :
-    rwaGenerator ω ω Ω φ b c ^ 2
-      = ((Ω ^ 2 * (b ^ 2 + c ^ 2) / 4 : ℝ) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+`H_RWA² = ((Δ² + Ω²m²)/4)·1` with detuning `Δ = ω₀ - ω`. Since a traceless involution generates a
+rotation, this pins the generator's magnitude EXACTLY at `√(Δ² + Ω²m²)/2` — so the accumulated
+angle is `(T/2)√(Δ² + Ω²m²)`, and the familiar `(m/2)·Ω·T` is the `Δ = 0` case, NOT the general
+one. Detuning genuinely changes the rotation rate; a calibration that ignores it is wrong off
+resonance. -/
+theorem rwaGenerator_sq (ω₀ ω Ω φ b c : ℝ) :
+    rwaGenerator ω₀ ω Ω φ b c ^ 2
+      = (((ω₀ - ω) ^ 2 / 4 + Ω ^ 2 * (b ^ 2 + c ^ 2) / 4 : ℝ) : ℂ)
+        • (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
   have hpy := Real.sin_sq_add_cos_sq φ
   rw [pow_two]
   unfold rwaGenerator
@@ -463,10 +466,55 @@ theorem rwaGenerator_sq_resonance (ω Ω φ b c : ℝ) :
   fin_cases i <;> fin_cases j <;>
     simp [σ_x, σ_y, σ_z, Matrix.mul_apply, Fin.sum_univ_two, Complex.ext_iff,
       -Complex.ofReal_pow, -Complex.ofReal_cos, -Complex.ofReal_sin] <;>
-    ring_nf <;> refine ⟨by linear_combination (Ω ^ 2 * (b ^ 2 + c ^ 2) / 4) * hpy, trivial⟩
+    ring_nf <;> constructor <;>
+    (first
+      | trivial
+      | linear_combination (Ω ^ 2 * (b ^ 2 + c ^ 2) / 4) * hpy)
 
-/-- The RWA rotation angle accumulated over duration `T`, in the exponent convention above. -/
+/-- The resonance case, as a corollary of the general identity. -/
+theorem rwaGenerator_sq_resonance (ω Ω φ b c : ℝ) :
+    rwaGenerator ω ω Ω φ b c ^ 2
+      = ((Ω ^ 2 * (b ^ 2 + c ^ 2) / 4 : ℝ) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  have h := rwaGenerator_sq ω ω Ω φ b c
+  simpa using h
+
+/-- The GENERAL rotation angle accumulated over `T` at detuning `Δ`, in the exponent convention:
+`θ = (T/2)·√(Δ² + Ω²m²)`, the magnitude pinned by `rwaGenerator_sq`. -/
+def generalRotationAngle (Δ Ω b c T : ℝ) : ℝ :=
+  (T / 2) * Real.sqrt (Δ ^ 2 + Ω ^ 2 * (b ^ 2 + c ^ 2))
+
+/-- The RWA rotation angle accumulated over duration `T`, in the exponent convention above.
+
+⚠️ ON RESONANCE ONLY. This is `generalRotationAngle` at `Δ = 0` (`generalRotationAngle_resonance`);
+it ignores detuning, so it is the achieved angle only when `ω₀ = ω`. Off resonance the rate is
+`√(Δ² + Ω²m²)/2`, strictly larger. -/
 def rwaRotationAngle (Ω b c T : ℝ) : ℝ := (Real.sqrt (b ^ 2 + c ^ 2) / 2) * Ω * T
+
+/-- At zero detuning the general angle reduces to `rwaRotationAngle`. This is what makes the
+resonance restriction on `rwaRotationAngle` precise rather than merely asserted. -/
+theorem generalRotationAngle_resonance (Ω b c T : ℝ) (hΩ : 0 ≤ Ω) :
+    generalRotationAngle 0 Ω b c T = rwaRotationAngle Ω b c T := by
+  unfold generalRotationAngle rwaRotationAngle
+  rw [show (0 : ℝ) ^ 2 + Ω ^ 2 * (b ^ 2 + c ^ 2) = Ω ^ 2 * (b ^ 2 + c ^ 2) by ring,
+    Real.sqrt_mul (by positivity), Real.sqrt_sq hΩ]
+  ring
+
+/-- **Detuning strictly increases the rotation rate.** Off resonance the achieved angle EXCEEDS the
+on-resonance formula, so a calibration computed from `rwaRotationAngle` under-rotates — the
+concrete failure the resonance restriction guards against. -/
+theorem rwaRotationAngle_lt_generalRotationAngle (Δ Ω b c T : ℝ) (hΔ : Δ ≠ 0) (hΩ : 0 ≤ Ω)
+    (hT : 0 < T) : rwaRotationAngle Ω b c T < generalRotationAngle Δ Ω b c T := by
+  rw [← generalRotationAngle_resonance Ω b c T hΩ]
+  unfold generalRotationAngle
+  have hlt : Ω ^ 2 * (b ^ 2 + c ^ 2) < Δ ^ 2 + Ω ^ 2 * (b ^ 2 + c ^ 2) := by
+    have : 0 < Δ ^ 2 := by positivity
+    linarith
+  have hs : Real.sqrt ((0:ℝ) ^ 2 + Ω ^ 2 * (b ^ 2 + c ^ 2))
+      < Real.sqrt (Δ ^ 2 + Ω ^ 2 * (b ^ 2 + c ^ 2)) := by
+    apply Real.sqrt_lt_sqrt (by positivity)
+    simpa using hlt
+  have hT2 : 0 < T / 2 := by linarith
+  exact mul_lt_mul_of_pos_left hs hT2
 
 /-- **The calibration identity:** `θ = (m/2)·Ω·T` with `m = |⟨0|O_drive|1⟩|`. -/
 theorem rwaRotationAngle_eq_projected (Ω b c T : ℝ) :
