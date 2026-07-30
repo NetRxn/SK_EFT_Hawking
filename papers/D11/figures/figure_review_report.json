@@ -1,0 +1,285 @@
+{
+  "review_date": "2026-07-30T23:30:55Z",
+  "reviewer": "skeft-qa:figure-reviewer",
+  "bundle_target": "D11",
+  "stage": "9",
+  "figures_reviewed": 4,
+  "overall_status": "issues_found",
+  "pass_criterion": "ALL PASS (no FAIL, no MINOR)",
+  "pass_criterion_met": false,
+  "severity_counts": {
+    "FAIL": 3,
+    "MINOR": 13
+  },
+  "figures": [
+    {
+      "name": "d11_fig1_phononic_band_gap.png",
+      "status": "fail",
+      "findings": [
+        {
+          "severity": "FAIL",
+          "category": "rendering",
+          "finding": "The layout x-axis title 'Bloch wavevector  k a' is drawn directly on top of the legend entry 'acoustic branch ω²₋'. The two strings overprint glyph-for-glyph and BOTH are illegible in the overlap region. Cause: legend(orientation='h', y=-0.26) at height=460 places the legend row at the same y as the axis title, and no bottom margin is reserved.",
+          "recommendation": "In fig_d11_phononic_band_gap (src/core/visualizations.py:14955): raise height 460→560, set legend(y=-0.34) and add margin=dict(b=150). Alternatively give the axis title standoff: xaxis=dict(title=dict(text='Bloch wavevector  k a', standoff=8)) together with the larger bottom margin."
+        },
+        {
+          "severity": "MINOR",
+          "category": "caption_match",
+          "finding": "The source docstring claims 'The rational inner bracket certified without floating point, 1 < 141/100 ≤ √2, is marked in frequency units on the right axis annotation.' No such annotation exists in the rendered PNG, and formulas.phononic_gap_rational_enclosure() is never called by the figure function. The certified anchors band_gap_rational_enclosure / sqrt_two_enclosure are therefore undepicted. (The LaTeX caption does not repeat the claim, so the paper itself is not affected.)",
+          "recommendation": "Either add the annotation — e.g. a right-side annotation '√ of the gap: 1 < 141/100 ≤ √2 (rational, norm_num)' driven by F.phononic_gap_rational_enclosure() — or delete that sentence from the fig_d11_phononic_band_gap docstring."
+        }
+      ],
+      "rendering": {
+        "status": "issues",
+        "issues": [
+          "x-axis title 'Bloch wavevector  k a' overprints legend entry 'acoustic branch ω²₋' (FAIL)"
+        ]
+      },
+      "physics": {
+        "status": "pass",
+        "verified": [
+          "gap edges ω² = 1 and 2 shown ATTAINED at k = ±π (filled/open carmine diamonds); F.diatomic_branches(1,2,1,π) = (1.0, 2.0)",
+          "ω²₋(0) = 0, ω²₊(0) = 3, consistent with ω²± = 3/2 ± √(5/4 + cos k) as stated at paper_draft.tex:189",
+          "shaded forbidden band spans exactly (1, 2); no trace enters it"
+        ]
+      },
+      "style": {
+        "status": "pass",
+        "issues": []
+      },
+      "caption_match": true,
+      "notes": "Physics fully correct and tight. The only blocker is the axis-title/legend overprint. Docstring advertises a rational-enclosure annotation (1 < 141/100 ≤ √2) that is not drawn."
+    },
+    {
+      "name": "d11_fig2_pt_exceptional_point.png",
+      "status": "fail",
+      "findings": [
+        {
+          "severity": "FAIL",
+          "category": "rendering",
+          "finding": "Same layout defect as Fig. 1: the x-axis title 'non-Hermiticity  g' overprints the legend entry 'Re λ = −√(1−g²)'. Both strings are illegible where they collide.",
+          "recommendation": "In fig_d11_pt_exceptional_point (src/core/visualizations.py:15004): raise height 460→560, set legend(y=-0.34), add margin=dict(b=150)."
+        },
+        {
+          "severity": "MINOR",
+          "category": "rendering",
+          "finding": "The certified proximity enclosure (ep_proximity_enclosure: 99/100 ≤ g² ≤ 1 ⟹ Δ ≤ 1/5) is marked by a dotted vline at g = √0.99 ≈ 0.99499, which on the plotted range g ∈ [0, 1.6] falls ~5 px from the EP marker at g = 1 — the two are visually indistinguishable, so the anchor the annotation exists to show cannot be read off the figure. Its label 'g² = 99/100 ⟹ Δ ≤ 1/5' also abuts the dotted line.",
+          "recommendation": "Add an inset axis over g ∈ [0.97, 1.005] (or a small second panel plotting the splitting Δ(g) = 2√(1−g²) with the box g² ≥ 99/100, Δ ≤ 1/5 drawn) so the enclosure is resolvable; keep the main panel for the global PT transition."
+        }
+      ],
+      "rendering": {
+        "status": "issues",
+        "issues": [
+          "x-axis title 'non-Hermiticity  g' overprints legend entry 'Re λ = −√(1−g²)' (FAIL)",
+          "proximity-enclosure vline at g = √0.99 is ~5 px from the EP at g = 1 — unresolvable (MINOR)"
+        ]
+      },
+      "physics": {
+        "status": "pass",
+        "verified": [
+          "EP sits at g = 1 with vanishing splitting: both blue branches meet at λ = 0 and the amber branches emanate from it; F.pt_eigenvalue_splitting(1.0) = 0.0",
+          "λ(g=0) = ±1 (H = σₓ), real for g < 1, purely imaginary for g > 1 — the sharp biconditional",
+          "Δ at g² = 99/100 is 0.2 = 1/5 exactly, matching ep_proximity_enclosure"
+        ]
+      },
+      "style": {
+        "status": "pass",
+        "issues": []
+      },
+      "caption_match": true,
+      "notes": "Re λ (g<1) and Im λ (g>1) share one axis; this is standard for PT figures and is disclosed both in the axis label and in every legend entry, so it is not flagged. The legend's 'defective' label is not readable from the plotted spectrum but is a legitimate annotation of the certified exceptional_point_defective."
+    },
+    {
+      "name": "d11_fig3_haldane_chern.png",
+      "status": "fail",
+      "findings": [
+        {
+          "severity": "FAIL",
+          "category": "rendering",
+          "finding": "The right subplot's add_vrect annotation ('analytic inversion window', annotation_position='top left', row=1 col=2) does NOT render — it is suppressed/clipped behind the subplot title. The right panel therefore carries a large unexplained blue shaded region spanning the left edge to m ≈ 5.196, with no annotation and no legend entry (the right-panel traces are all showlegend=False). A reader cannot tell what the shading means. Verified by pixel crop of the right panel's top-left region.",
+          "recommendation": "In fig_d11_haldane_chern (src/core/visualizations.py:15053): move the col=2 vrect annotation clear of the subplot title — annotation_position='bottom right', or replace it with an explicit fig.add_annotation(x=…, y=…, text='analytic inversion window |m| < 3√3', row=1, col=2, showarrow=False) placed in free space near C ≈ 0.6."
+        },
+        {
+          "severity": "MINOR",
+          "category": "style_palette",
+          "finding": "The right panel encodes the three certified points as carmine RED (m = 1, C = −1), sage GREEN (m = 5, C = 0) and steel blue (m = 6, C = 0) — a red/green pair used as the data-distinguishing channel in one panel, against the project standard (blue/amber, not red/green). m = 5 and m = 6 additionally sit at the same C = 0 and adjacent in m, so colour is doing real discriminating work there.",
+          "recommendation": "Recolour the m = 5 point from sage (#5C946E) to amber (#F18F01), and additionally vary marker symbol (diamond / square / circle) so the three points remain separable in greyscale."
+        },
+        {
+          "severity": "MINOR",
+          "category": "rendering",
+          "finding": "The point label 'm = 5:  C = 0 — inside the window' is overprinted by the red dotted flip line at m ≈ 3.3177, which passes between 'm = 5:' and 'C = 0'.",
+          "recommendation": "Offset the m = 5 label to the right of its marker (textposition='bottom right') or raise the flip line's annotation, so the vline no longer crosses label text."
+        },
+        {
+          "severity": "MINOR",
+          "category": "caption_match_physics",
+          "finding": "The parameter point is omitted where the certified values are shown. The D11 anchor list states that prose 'omitting the parameter point' is a finding: the certified value is C = −1 at t = t₂ = 1, φ = π/2, m = 1 on a 4×4 torus. The right subplot title ('certified lattice Chern number, 4×4 torus') states no parameters at all; the left title gives (t₂ = 1, φ = π/2) but not t = 1; and the LaTeX caption (paper_draft.tex:283-286) gives neither the parameters nor the headline value C = −1.",
+          "recommendation": "Retitle the right subplot 'certified lattice Chern number, 4×4 torus (t = t₂ = 1, φ = π/2)' and extend the caption to '…the certified lattice Chern number on the 4×4 torus at t = t₂ = 1, φ = π/2: C = −1 at m = 1, C = 0 at m = 5 and m = 6.'"
+        },
+        {
+          "severity": "MINOR",
+          "category": "caption_match_physics",
+          "finding": "The flip location '≈ 3.3177' is annotated inside a panel titled 'certified lattice Chern number', but it is NOT kernel-certified — it appears only as a numerical-audit value in HaldaneWitness.lean docstrings (lines 37, 1388, 1418). The kernel-certified content is exactly three point values (C at m = 1, 5, 6) plus haldane_window_bounds. Placing an uncertified number in a panel labelled 'certified' invites the reader to treat it as certified.",
+          "recommendation": "Relabel the vline '4×4 flip (numerical audit, not certified) ≈ 3.3177', or drop the numeral from the figure and state it in the caption with an explicit hedge."
+        },
+        {
+          "severity": "MINOR",
+          "category": "caption_match_physics",
+          "finding": "Both the figure title ('mass inversion is necessary, not sufficient, at fixed N') and the LaTeX caption ('necessary but not sufficient at fixed grid size') assert the NECESSITY direction. The 'not sufficient' half is kernel-certified (haldane_massInversion_not_sufficient_at_N4: m = 5 inside the window, C = 0). Necessity is not: no Lean theorem quantifies over m, and the certified support is the single sample m = 6 outside the window (haldane_trivial_phase_chern_zero). The claim is true (the N = 4 window 3.3177 is a strict subset of 3√3) but is prose-level, matching HaldaneWitness.lean's module header rather than a theorem. NOTE: the figure does NOT resurrect the retracted 'exactly where the masses invert' framing — that check passes.",
+          "recommendation": "Hedge the necessity direction in both the figure title and the caption, e.g. 'not sufficient at fixed N (certified at m = 5); the necessary direction is sampled at m = 6, not proven for all m.'"
+        }
+      ],
+      "rendering": {
+        "status": "issues",
+        "issues": [
+          "right-panel 'analytic inversion window' vrect annotation does not render — the shaded region is unlabelled (FAIL)",
+          "red dotted flip line at m ≈ 3.3177 overprints the 'm = 5:  C = 0' label (MINOR)"
+        ]
+      },
+      "physics": {
+        "status": "pass",
+        "verified": [
+          "C = −1 at m = 1 (haldaneFrame_latticeChern_eq_neg_one); sign is −1, not +1",
+          "C = 0 at m = 5 (haldane_massInversion_not_sufficient_at_N4) and at m = 6 (haldane_trivial_phase_chern_zero)",
+          "4×4 flip at 3.3177 drawn strictly inside the analytic window 3√3 = 5.19615",
+          "left panel: gap zeros at m = ±3√3 coincide exactly with the shaded window edges; K/K' masses are opposite-signed",
+          "m = 5 is inside the window with product of Dirac masses < 0 — the not-sufficient witness — and reads C = 0"
+        ],
+        "issues": [
+          "'necessary' direction asserted but not theorem-backed (MINOR)",
+          "3.3177 presented inside a panel titled 'certified' but is a numerical-audit value (MINOR)",
+          "parameter point t = t₂ = 1, φ = π/2 absent from the certified panel and from the caption (MINOR)"
+        ]
+      },
+      "style": {
+        "status": "issues",
+        "issues": [
+          "red/green pair (carmine m=1, sage m=5) used as the data-distinguishing channel"
+        ]
+      },
+      "caption_match": true,
+      "notes": "SCOPE CHECK PASSES — this is the figure the D11 anchor list flags as highest-priority. The panel is titled 'certified lattice Chern number, 4×4 torus' and the y-axis reads 'lattice Chern number C'. No Berry curvature, no continuum Chern integral C = (1/2π)∫F, and no bulk-boundary correspondence is implied anywhere. The retracted 'exactly where the masses invert' framing is NOT resurrected — the figure title and caption both say 'not sufficient', which is the correct post-retraction phrasing."
+    },
+    {
+      "name": "d11_fig4_effective_medium.png",
+      "status": "warning",
+      "findings": [
+        {
+          "severity": "MINOR",
+          "category": "rendering",
+          "finding": "The left panel's 'constituent bounds ε_h ≤ ε_eff ≤ ε_i' shading (add_hrect y0=1, y1=4) coincides exactly with the auto-scaled data range, so it fills the whole panel and conveys nothing: the reader cannot see the curve sitting inside the bounds because the bound region IS the panel.",
+          "recommendation": "Set the left y-axis range explicitly, e.g. fig.update_yaxes(range=[0.6, 4.4], row=1, col=1), so the shaded band is visibly narrower than the panel; optionally add dashed horizontal lines at ε_h = 1 and ε_i = 4."
+        },
+        {
+          "severity": "MINOR",
+          "category": "style",
+          "finding": "'ε_h', 'ε_i' and 'ε_eff' render with literal ASCII underscores in the left subplot title, the y-axis title, the bounds annotation, the legend entry and the marked-point label — while the SAME figure renders 'M₁', 'M₂' as true subscripts, and Figs. 1 and 3 use proper subscripts throughout (ω²₋, ω²₊, m₁, m₂, t₂). Raw source-notation underscores in a publication figure are a style regression.",
+          "recommendation": "Replace with Plotly subscript markup in fig_d11_effective_medium: 'ε<sub>h</sub>', 'ε<sub>i</sub>', 'ε<sub>eff</sub>' (kaleido renders <sub> correctly), matching the M₁/M₂ treatment."
+        },
+        {
+          "severity": "MINOR",
+          "category": "rendering",
+          "finding": "The single shared horizontal legend interleaves both panels' entries: 'exact Voigt − Reuss gap' and 'widest gap Δ = 1.000' are right-panel objects but render beneath the LEFT panel, next to the left panel's own entry. A reader scanning the Maxwell–Garnett panel sees swatches for series that are not in it. Additionally the two x-axis titles ('inclusion fill fraction  f', 'phase-2 fill fraction  f') sit hard against the legend row — bounding boxes overlap by a few px; this is the same layout bug that overprints destructively in Figs. 1 and 2 and should be fixed here pre-emptively.",
+          "recommendation": "Split into two legends via legendgroup + legend/legend2 anchored under their own subplots, or annotate the gap band in-panel and drop it from the legend. Also add margin=dict(b=130) and legend(y=-0.40)."
+        },
+        {
+          "severity": "MINOR",
+          "category": "caption_match_physics",
+          "finding": "The legend entry 'widest gap Δ = 1.000' is a numerical argmax over a 400-point grid, not a certified quantity: Lean ships voigt_sub_reuss_eq (the EXACT gap formula) but no maximizer theorem. Rendered as '1.000' inside a certification-framed figure it reads as a certified numeric. It is in fact exactly 1 at exactly f = 2/3 (3f² − 8f + 4 = 0), so the approximate presentation also understates what is true.",
+          "recommendation": "Relabel 'numerical max of the certified gap formula: f = 2/3, Δ = 1 (exact)'. Consider adding a Lean lemma for the maximizer if the point is to stay load-bearing."
+        },
+        {
+          "severity": "MINOR",
+          "category": "style_palette",
+          "finding": "Carmine RED marks the certified Maxwell–Garnett point (left) and sage GREEN marks the widest-gap point (right) — a red/green pairing of the two highlighted points across one figure, against the project standard.",
+          "recommendation": "Recolour the widest-gap marker to amber (#F18F01) and/or change its symbol (square vs diamond)."
+        },
+        {
+          "severity": "MINOR",
+          "category": "caption_match",
+          "finding": "The source docstring says the Maxwell–Garnett curve lies 'strictly inside its constituent bounds'. It is not strict: ε_eff = ε_h = 1 at f = 0 (maxwellGarnett_host_recovery) and ε_eff = ε_i = 4 at f = 1, both visible as the curve touching the panel corners; the Lean anchor effectiveMedium_constituent_bounds is non-strict (≤). The figure's own annotation correctly writes 'ε_h ≤ ε_eff ≤ ε_i', and the LaTeX caption says only 'inside', so this is docstring-only.",
+          "recommendation": "Drop the word 'strictly' from the fig_d11_effective_medium docstring (src/core/visualizations.py:15080)."
+        }
+      ],
+      "rendering": {
+        "status": "issues",
+        "issues": [
+          "left-panel constituent-bounds shading coincides with the data range and fills the whole panel (MINOR)",
+          "shared legend interleaves both panels' entries; x-axis titles abut the legend row (MINOR)"
+        ]
+      },
+      "physics": {
+        "status": "pass",
+        "verified": [
+          "Maxwell-Garnett point (ε_h, ε_i, f) = (1, 4, 1/2) marked at exactly ε_eff = 2; F.maxwell_garnett(1,4,0.5) = 2.0",
+          "endpoints ε_eff(0) = 1 = ε_h (host recovery) and ε_eff(1) = 4 = ε_i",
+          "Voigt linear 1→4, Reuss = 4/(4−3f), coincident at f = 0 and 1, Voigt ≥ Reuss throughout",
+          "widest gap at f = 2/3 with Δ = 1 exactly (3f² − 8f + 4 = 0), matching the plotted marker"
+        ],
+        "issues": [
+          "'widest gap Δ = 1.000' is a numerical argmax, not a certified quantity (MINOR)"
+        ]
+      },
+      "style": {
+        "status": "issues",
+        "issues": [
+          "ε_h / ε_i / ε_eff rendered with literal ASCII underscores while M₁ / M₂ in the same figure use true subscripts",
+          "red/green pairing between the two highlighted points across panels"
+        ]
+      },
+      "caption_match": true,
+      "notes": "All four certified numbers check out exactly. The route-disclosure framing ('two-scale route deliberately not taken') appears in the title and matches the paper's Route disclosure paragraph. Issues are presentation-level."
+    }
+  ],
+  "cross_cutting": [
+    {
+      "id": "XC-1",
+      "severity": "FAIL",
+      "title": "Systemic axis-title / horizontal-legend collision",
+      "detail": "Figs. 1 and 2 (single-panel, height=460, legend y=-0.26, no bottom margin) both overprint their x-axis title onto a legend entry. Fig. 4 exhibits the same layout at the near-miss threshold. Figs. 3 and 4 escape the destructive version only because make_subplots places per-subplot axis titles higher. This is one bug, not four.",
+      "fix": "Adopt a single convention for D11 figure functions: margin=dict(b=140), legend(orientation='h', y=-0.34), height >= 560 for single-panel figures. Then add a structural check to scripts/review_figures.py asserting that no layout annotation/axis-title bounding box intersects a legend bounding box."
+    },
+    {
+      "id": "XC-2",
+      "severity": "MINOR",
+      "title": "Red/green encoding in Figs. 3 and 4",
+      "detail": "carmine (#E63946) and sage (#5C946E) are both used as data-distinguishing marker colours — in the same panel in Fig. 3, across panels in Fig. 4. The project standard is blue/amber, not red/green.",
+      "fix": "Reserve carmine for a single accent per figure and move the second highlight to amber (#F18F01); vary marker symbol so the encoding survives greyscale."
+    },
+    {
+      "id": "XC-3",
+      "severity": "MINOR",
+      "title": "Uncertified numerics inside certification-framed panels",
+      "detail": "Fig. 3's flip location 3.3177 and Fig. 4's 'widest gap Δ = 1.000' are numerical results presented in panels/legends framed by the word 'certified'. Neither is a Lean theorem.",
+      "fix": "Mark numerical-only quantities explicitly ('numerical audit', 'numerical max of the certified formula') wherever they share a panel with kernel-certified values."
+    }
+  ],
+  "anchor_checks": {
+    "thread_i_scope_finite_lattice_only": "PASS — no figure depicts or implies a Berry curvature, a continuum Chern integral C = (1/2π)∫F, or a bulk-boundary correspondence. Fig. 3 is explicitly titled 'certified lattice Chern number, 4×4 torus' with y-axis 'lattice Chern number C'.",
+    "chern_sign_minus_one": "PASS — Fig. 3 shows C = −1 at m = 1; no figure quotes +1.",
+    "chern_parameter_point_stated": "FINDING (MINOR) — t = t₂ = 1, φ = π/2 absent from the certified right panel and from the LaTeX caption; the left subplot gives only t₂ and φ.",
+    "retracted_classification_not_resurrected": "PASS — neither figure text nor caption says 'exactly where the masses invert'; both use the post-retraction 'not sufficient' phrasing. The necessity half is separately hedged (MINOR).",
+    "gap_edges_attained_at_pi": "PASS — Fig. 1 marks ω²₋(±π) = 1 and ω²₊(±π) = 2 with distinct markers; verified numerically as exactly (1.0, 2.0).",
+    "ep_at_g_equals_one_vanishing_splitting": "PASS — Fig. 2 places the EP2 marker at (1, 0) where all four branches meet; Δ(1) = 0 verified.",
+    "maxwell_garnett_1_4_half_equals_two": "PASS — Fig. 4 marks (0.5, 2) on the curve; verified exactly 2.0.",
+    "flip_inside_analytic_window": "PASS — 3.3177 < 5.19615, drawn strictly inside the shaded window.",
+    "html_entities_rendered_literally": "PASS — no literal '&rarr;'-style entity strings in any of the four PNGs; all arrows/operators (⟹, −, ≤, ±, √, ∈) are Unicode glyphs and render correctly.",
+    "colorblind_blue_amber": "FINDING (MINOR) — see XC-2."
+  },
+  "summary": "All four D11 figures are PHYSICS-CORRECT: every Lean-certified value called out in the brief was verified numerically against src/core/formulas.py and against the theorem statements in lean/SKEFTHawking/GrapheneBand/HaldaneWitness.lean — gap edges ω² = 1, 2 attained at k = ±π; EP at g = 1 with Δ = 0; C = −1 at m = 1 and C = 0 at m = 5 and m = 6 with the 4×4 flip at 3.3177 strictly inside 3√3 = 5.196; Maxwell-Garnett (1, 4, 1/2) = 2 exactly. The highest-priority D11 anchor — thread (i) scope honesty — PASSES cleanly: no figure implies a Berry curvature, a continuum Chern integral, or a bulk-boundary result, and the retracted 'exactly where the masses invert' classification is not resurrected. The bundle nonetheless FAILS the ALL-PASS Stage-9 criterion on presentation: three FAIL-level rendering defects (a systemic axis-title/legend overprint destroying text in Figs. 1 and 2, and a silently-dropped annotation that leaves Fig. 3's right-panel shaded region unlabelled) plus twelve MINOR findings spanning colourblind palette, subscript style, certified-vs-numerical labelling, and the missing Haldane parameter point.",
+  "recommendations": [
+    "P0 — Fix the systemic layout bug (XC-1): margin=dict(b=140), legend(y=-0.34), height>=560 for fig_d11_phononic_band_gap and fig_d11_pt_exceptional_point; apply pre-emptively to fig_d11_effective_medium.",
+    "P0 — Fix Fig. 3's dropped right-panel vrect annotation so the shaded inversion window is labelled in BOTH panels.",
+    "P1 — Add the parameter point (t = t₂ = 1, φ = π/2) to Fig. 3's right subplot title AND to the LaTeX caption at paper_draft.tex:283-286, together with the headline value C = −1 at m = 1.",
+    "P1 — Hedge the two uncertified numerics: Fig. 3's '≈ 3.3177' flip and Fig. 4's 'widest gap Δ = 1.000'.",
+    "P1 — Hedge the 'necessary' direction in Fig. 3's title and caption; only 'not sufficient' is theorem-backed.",
+    "P2 — Recolour the red/green marker pairs in Figs. 3 and 4 to blue/amber and vary marker symbols.",
+    "P2 — Convert Fig. 4's 'ε_h'/'ε_i'/'ε_eff' to <sub> markup to match the M₁/M₂ treatment.",
+    "P2 — Give Fig. 4 per-subplot legends so right-panel series stop appearing under the left panel.",
+    "P2 — Widen Fig. 4's left y-range so the constituent-bounds band is visibly narrower than the panel.",
+    "P2 — Add an inset to Fig. 2 resolving the g² = 99/100 proximity enclosure from the EP.",
+    "P3 — Docstring corrections in src/core/visualizations.py: remove the unrendered rational-enclosure sentence from fig_d11_phononic_band_gap; remove 'strictly' from fig_d11_effective_medium (bounds are non-strict and attained at f = 0 and f = 1).",
+    "P3 — Add a structural check to scripts/review_figures.py for axis-title/legend bbox intersection so this class of defect is caught programmatically rather than visually."
+  ]
+}

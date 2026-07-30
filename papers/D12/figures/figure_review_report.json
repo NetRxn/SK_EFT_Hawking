@@ -1,0 +1,304 @@
+{
+  "review_date": "2026-07-30T19:05:00Z",
+  "agent_run_id": "figure-reviewer:bundle-D12:2026-07-30T19:05:00Z",
+  "reviewer_version": "figure-reviewer-bundle-aware",
+  "reviewer_model": "claude-opus-5",
+  "stage": 9,
+  "bundle_target": "D12",
+  "anchor_source": "docs/agents/claims-reviewer-bundle-prompts.md#D12",
+  "figures_reviewed": 3,
+  "overall_status": "issues_found",
+  "pass_criterion": "ALL PASS (no FAIL, no MINOR)",
+  "pass_criterion_met": false,
+  "structural_checks_json": "absent for papers/D12/figures (none generated); review is visual + source + formula cross-check",
+  "anchor_trap_results": {
+    "fig1_shading_starts_at_crossover_not_whole_range": "PASS -- first shaded N_a = 51.4411 vs analytic crossover 51.3959; sub-crossover region correctly left unshaded",
+    "fig1_log4_threshold_consistent_with_crossover": "PASS -- log 4 = 1.38629 hline; gap exponent crosses it at N_a = 51.396, matching the left-panel vline",
+    "fig1_certified_witness_50_60": "PASS -- gap exponent 9.544512 (certified 9.5445); ratio 3491.955 > 1000 (folklore_avgFloor_unsound_factor1000)",
+    "fig1_folklore_not_presented_as_bound": "PASS -- trace legend reads 'folklore exp(-(N_a-N_b)) -- NOT a bound'",
+    "fig1_both_refutation_directions_shown": "FAIL -- only direction (B) plotted; see D12-F1-01",
+    "fig2_enbw_T_floor_is_one_half_saturated_by_boxcar": "PASS -- boxcar 0.5 exactly, coincident with the IsLeast hline",
+    "fig2_ramp_at_two_thirds": "PASS -- 0.666667, strictly above the floor (enbw_ramp_gt_half)",
+    "fig2_gaussian_sandwich_ordering": "PASS -- BF <= Q <= min(Chernoff, Mills) holds across the plotted range",
+    "fig3_stability_boundary_at_L_eq_neg_one": "PASS -- vline at L = -1, branches split at -1.06 / -0.94 so the pole is not drawn through",
+    "fig3_tau_eff_negative_on_unstable_branch": "PASS -- tau_eff(-3) = -0.5, diverging to -inf as L -> -1 from below; not plotted through abs()",
+    "fig3_johnson_factor_is_abs_one_minus_L": "PASS -- 2 at L = 3 (NOT 4), confirming the 2026-07-29 physics BLOCKER fix",
+    "fig3_stability_blind_equal_at_L_5_and_L_neg_3": "PASS numerically (both 4, both labelled) -- but not visually demonstrated; see D12-F3-03",
+    "fig3_naive_overstates_region_0_to_2": "PASS -- vrect on 0 < L < 2 is exactly where |1 - L| < 1",
+    "literal_markup_entities_in_png": "FAIL -- one site, fig2 Chernoff legend; see D12-F2-02"
+  },
+  "figures": [
+    {
+      "name": "d12_fig1_poisson_floor_vs_folklore",
+      "path": "papers/D12/figures/d12_fig1_poisson_floor_vs_folklore.png",
+      "source_fn": "src/core/visualizations.py::fig_d12_poisson_floor_vs_folklore",
+      "consumed_at": "papers/D12/paper_draft.tex:129-138 (label fig:folklore)",
+      "status": "fail",
+      "severity_counts": {
+        "MAJOR": 1,
+        "MINOR": 3
+      },
+      "rendering": {
+        "status": "issues",
+        "issues": [
+          "Right panel: the carmine diamond at (60, 9.5445) has no text label and no legend entry (showlegend=False). The only legend entry using that glyph reads 'certified witness (50, 60): ratio > 1000', which is the LEFT panel's quantity, so a reader can misread the right-panel ordinate 9.5445 as the ratio.",
+          "Right panel: the 'log 4 -- fail-open threshold' annotation is struck through by the blue gap-exponent curve, which crosses the text between 'log 4' and the em dash (verified on a 2x crop)."
+        ]
+      },
+      "physics": {
+        "status": "pass",
+        "issues": [],
+        "verified": [
+          "Le Cam floor (1/4)exp(-(sqrt(N_a)-sqrt(N_b))^2) matches poisson_avg_error_floor",
+          "fail-open shading begins only at the crossover (the brief's primary trap): PASS",
+          "gap exponent 9.5445 and ratio 3491.96 > 1000 at (N_b,N_a) = (50,60)",
+          "log 4 threshold in the right panel is numerically consistent with the left-panel crossover"
+        ]
+      },
+      "style": {
+        "status": "pass",
+        "issues": [],
+        "notes": "blue/amber/carmine only, no red-green pairing; palette values match COLORS exactly"
+      },
+      "caption_match": false,
+      "caption_match_detail": "The \\caption itself (tex:131-136) is accurate. The mismatch is (a) the in-image title 'fails in two directions' and (b) the body sentence at tex:162 'Fig. 1 plots both failures' -- only one failure is plotted.",
+      "findings": [
+        {
+          "id": "D12-F1-01",
+          "severity": "MAJOR",
+          "area": "overclaim",
+          "finding": "The in-image title reads 'the folklore photon-counting floor fails in two directions' and paper_draft.tex:162 asserts 'Fig.~\\ref{fig:folklore} plots both failures', but ONLY failure (B) (exponentially fail-open as an average-error screen) is plotted. Failure (A) -- false-strict as a miss bound (folklore_miss_floor_false / folklore_missFloor_beaten_148fold, the unit-threshold counter undershooting by e^{N_b} at (N_b,N_a)=(5,10), factor 148.41) -- appears in no trace, marker or annotation. The source docstring at visualizations.py:14719 likewise claims 'showing BOTH kernel-checked failure directions'. Note the sub-crossover region where the amber curve sits ABOVE the blue floor is NOT direction (A): it is merely the conservative regime of direction (B).",
+          "fix": "Preferred: add a third panel (or inset) plotting the admissible unit-threshold counter's miss probability e^{-N_a} against the folklore e^{-(N_a-N_b)} at N_b = 5, with the (5,10) marker annotated '148x' (true e^5 = 148.41). Then the title is earned. Alternative if the 2-panel layout is fixed: retitle to 'the folklore photon-counting floor is exponentially fail-open as an average-error screen', correct the docstring, and rewrite paper_draft.tex:162 to 'Fig.~\\ref{fig:folklore} plots the second failure.'"
+        },
+        {
+          "id": "D12-F1-02",
+          "severity": "MINOR",
+          "area": "rendering",
+          "finding": "Right panel: the carmine diamond at (60, 9.5445) has no text label and no legend entry (showlegend=False). The only legend entry using that glyph reads 'certified witness (50, 60): ratio > 1000', which is the LEFT panel's quantity, so a reader can misread the right-panel ordinate 9.5445 as the ratio.",
+          "fix": "visualizations.py:14774-14777 -- switch to mode='markers+text', text=['brightGap_5060 = 9.5445'], textposition='top left'."
+        },
+        {
+          "id": "D12-F1-03",
+          "severity": "MINOR",
+          "area": "rendering",
+          "finding": "Right panel: the 'log 4 -- fail-open threshold' annotation is struck through by the blue gap-exponent curve, which crosses the text between 'log 4' and the em dash (verified on a 2x crop).",
+          "fix": "visualizations.py:14771-14773 -- change annotation_position from 'top left' to 'bottom right'; the curve is far above the log 4 line at large N_a, so the right end is clear."
+        },
+        {
+          "id": "D12-F1-04",
+          "severity": "MINOR",
+          "area": "physics-presentation",
+          "finding": "The crossover is neither quantified in the figure ('crossover' with no value) nor in the caption ('beyond the crossover'), even though it is the load-bearing quantity tying the left panel to the right panel's log 4 line. Separately, the vline is drawn at the first grid point where the mask flips (N_a = 51.4411) rather than at the analytic root (N_a = 51.3959); the 0.045 offset is ~1.4 px here but is grid-density dependent.",
+          "fix": "visualizations.py:14750-14752 -- compute the crossover analytically as ((log(4)/(2*sqrt(n_b))) + sqrt(n_b))**2 and use it for add_vline; set annotation_text='crossover  N_a = 51.40'. Add the number to the caption too."
+        }
+      ],
+      "notes": "Physics is clean and the primary anchor trap is passed correctly. The single blocking issue is scope-of-claim, not numerics."
+    },
+    {
+      "name": "d12_fig2_enbw_matched_filter",
+      "path": "papers/D12/figures/d12_fig2_enbw_matched_filter.png",
+      "source_fn": "src/core/visualizations.py::fig_d12_enbw_matched_filter",
+      "consumed_at": "papers/D12/paper_draft.tex:207-214 (label fig:enbw); forward-referenced from tex:182",
+      "status": "fail",
+      "severity_counts": {
+        "FAIL": 2,
+        "MINOR": 6,
+        "INFO": 1
+      },
+      "rendering": {
+        "status": "issues",
+        "issues": [
+          "The 3-row horizontal legend (y=-0.36) overprints BOTH subplot x-axis titles. 'integration window T' is overwritten by 'realizable slack above the floor' and the matched-boxcar swatch; 'separation budget  z = Delta-mu/(2 sigma)' is overwritten by 'DC-matched ramp -- 2/3'. Both axis titles are illegible in the shipped PNG. fig1 and fig3 escape this only because they have fewer legend rows.",
+          "Literal markup rendered in the PNG: the Chernoff legend entry reads 'Chernoff  (1/2)e^{-z^2/2}' with the caret-brace exponent shown verbatim -- kaleido does not interpret LaTeX/'^{}' in legend text. This is the same defect class as a literal HTML entity. (Audited all three figures: every other glyph -- Unicode arrows, script-L, radicals, superscript 2, minus signs, phi/sigma/Delta-mu -- renders correctly; this is the only literal-markup site.)",
+          "The carmine 'floor 1/2' hline coincides exactly with the blue matched-boxcar trace, so the dotted floor is stamped on top of the trace it is meant to be saturated BY; on a 2x crop the blue is largely hidden. The 'saturates' message is visually muddied.",
+          "Left-panel x-axis title 'integration window  T' carries no unit, while the panel is deliberately unit-agnostic. fig1 ('(counts)') and fig3 ('(units of tau = C/G)') set the right precedent."
+        ]
+      },
+      "physics": {
+        "status": "pass",
+        "issues": [],
+        "verified": [
+          "ENBW*T floor = 1/2 exactly, saturated by the matched boxcar at every T",
+          "DC-matched ramp at 2/3, strictly above the floor",
+          "both products T-independent, as enbw_boxcar / enbw_ramp require",
+          "Birnbaum-Feller <= Q <= min(Chernoff, Mills) across the plotted z range"
+        ],
+        "presentation_caveats": [
+          "D12-F2-03 (realizable-set labelling)",
+          "D12-F2-04 (tail probability > 1)"
+        ]
+      },
+      "style": {
+        "status": "issues",
+        "issues": [
+          "Right panel pairs sage green (#5C946E, Mills) against carmine (#E63946, Birnbaum-Feller) as adjacent curves. The project standard is blue/amber, not red/green; the two are separated only by dash pattern (dot vs dashdot), which is weak under deuteranopia at this line width.",
+          "The left-panel slack fill is hardcoded rgba(70, 130, 180, 0.15) -- CSS 'steelblue' #4682B4 -- not the project steel blue COLORS['steel_blue'] = #2E86AB, which the same function's line traces use. The fill and its own boundary trace are therefore different blues. (fig1's amber fill and fig3's vrect DO match the palette, so this is an isolated slip.)"
+        ]
+      },
+      "caption_match": true,
+      "caption_match_detail": "Caption (tex:209-212) accurately describes both panels, including the 'screen with real slack' reading of the ramp.",
+      "findings": [
+        {
+          "id": "D12-F2-01",
+          "severity": "FAIL",
+          "area": "rendering",
+          "finding": "The 3-row horizontal legend (y=-0.36) overprints BOTH subplot x-axis titles. 'integration window T' is overwritten by 'realizable slack above the floor' and the matched-boxcar swatch; 'separation budget  z = Delta-mu/(2 sigma)' is overwritten by 'DC-matched ramp -- 2/3'. Both axis titles are illegible in the shipped PNG. fig1 and fig3 escape this only because they have fewer legend rows.",
+          "fix": "visualizations.py:14848-14851 -- raise the canvas and push the legend clear: height=560, margin=dict(l=80, r=40, t=90, b=170), legend=dict(orientation='h', yanchor='top', y=-0.30, x=0.0). Re-render and confirm no glyph overlap."
+        },
+        {
+          "id": "D12-F2-02",
+          "severity": "FAIL",
+          "area": "rendering",
+          "finding": "Literal markup rendered in the PNG: the Chernoff legend entry reads 'Chernoff  (1/2)e^{-z^2/2}' with the caret-brace exponent shown verbatim -- kaleido does not interpret LaTeX/'^{}' in legend text. This is the same defect class as a literal HTML entity. (Audited all three figures: every other glyph -- Unicode arrows, script-L, radicals, superscript 2, minus signs, phi/sigma/Delta-mu -- renders correctly; this is the only literal-markup site.)",
+          "fix": "visualizations.py:14835 -- replace name='Chernoff  (1/2)e^{-z^2/2}' with a Unicode/plain form, e.g. 'Chernoff  (1/2)*exp(-z^2/2)' using the U+00B2 superscript already used elsewhere in the file."
+        },
+        {
+          "id": "D12-F2-03",
+          "severity": "MINOR",
+          "area": "overclaim",
+          "finding": "The left-panel fill is labelled 'realizable slack above the floor' but spans only boxcar (1/2) to ramp (2/3). The realizable set of ENBW*T is [1/2, infinity); the label invites reading 2/3 as an upper edge of realizability, which enbw_mul_window_isLeast does not assert (it pins only the LEAST element).",
+          "fix": "visualizations.py:14810 -- rename to 'example slack: boxcar -> ramp (set unbounded above)'."
+        },
+        {
+          "id": "D12-F2-04",
+          "severity": "MINOR",
+          "area": "physics-presentation",
+          "finding": "Right panel: the y-axis is titled 'tail probability' but the Mills envelope phi(z)/z reaches 7.97 at z = 0.05 and the axis is ticked to 10. A tail probability > 1 is impossible; the trace is a bound, and in that region a vacuous one (Chernoff's 1/2 is the binding envelope for z < ~1).",
+          "fix": "visualizations.py:14846 -- retitle the axis 'tail probability / bound'; and either restrict the Mills trace to z >= 1 (where it is non-vacuous and beats Chernoff) or annotate 'Mills vacuous for z < 0.8'."
+        },
+        {
+          "id": "D12-F2-05",
+          "severity": "MINOR",
+          "area": "style-colorblind",
+          "finding": "Right panel pairs sage green (#5C946E, Mills) against carmine (#E63946, Birnbaum-Feller) as adjacent curves. The project standard is blue/amber, not red/green; the two are separated only by dash pattern (dot vs dashdot), which is weak under deuteranopia at this line width.",
+          "fix": "visualizations.py:14837 -- recolor Mills to berry (#A23B72) or a dark blue, retaining the dot dash so both encodings carry the distinction."
+        },
+        {
+          "id": "D12-F2-06",
+          "severity": "MINOR",
+          "area": "style-palette",
+          "finding": "The left-panel slack fill is hardcoded rgba(70, 130, 180, 0.15) -- CSS 'steelblue' #4682B4 -- not the project steel blue COLORS['steel_blue'] = #2E86AB, which the same function's line traces use. The fill and its own boundary trace are therefore different blues. (fig1's amber fill and fig3's vrect DO match the palette, so this is an isolated slip.)",
+          "fix": "visualizations.py:14809 -- use rgba(46, 134, 171, 0.15)."
+        },
+        {
+          "id": "D12-F2-07",
+          "severity": "MINOR",
+          "area": "rendering",
+          "finding": "The carmine 'floor 1/2' hline coincides exactly with the blue matched-boxcar trace, so the dotted floor is stamped on top of the trace it is meant to be saturated BY; on a 2x crop the blue is largely hidden. The 'saturates' message is visually muddied.",
+          "fix": "visualizations.py:14817-14820 -- draw the hline with layer='below' and width=1.5, or give the boxcar trace mode='lines+markers' with a few markers so it reads through the dots."
+        },
+        {
+          "id": "D12-F2-08",
+          "severity": "MINOR",
+          "area": "rendering",
+          "finding": "Left-panel x-axis title 'integration window  T' carries no unit, while the panel is deliberately unit-agnostic. fig1 ('(counts)') and fig3 ('(units of tau = C/G)') set the right precedent.",
+          "fix": "visualizations.py:14821 -- 'integration window  T  (arbitrary time units)'."
+        },
+        {
+          "id": "D12-F2-09",
+          "severity": "INFO",
+          "area": "layout",
+          "finding": "The right panel (Gaussian tail sandwich) belongs to Sec. 2 'Gaussian thresholds' but the float is placed in Sec. 3 'Filtered-readout floors', forcing a forward reference at paper_draft.tex:182. The two panels share no physics.",
+          "fix": "Optional: split into two floats, or move the float to Sec. 2 and forward-reference the ENBW panel instead. No action required if column budget is binding."
+        }
+      ],
+      "notes": "Two hard rendering FAILs (illegible axis titles, literal markup) make this figure not publication-ready as shipped; the underlying physics is correct."
+    },
+    {
+      "name": "d12_fig3_etf_stability",
+      "path": "papers/D12/figures/d12_fig3_etf_stability.png",
+      "source_fn": "src/core/visualizations.py::fig_d12_etf_stability",
+      "consumed_at": "papers/D12/paper_draft.tex:280-288 (label fig:etf)",
+      "status": "warning",
+      "severity_counts": {
+        "MINOR": 4
+      },
+      "rendering": {
+        "status": "issues",
+        "issues": [
+          "Right panel: all three witness labels use textposition='top center', and |1 - L| has slope +-1, so the curve runs straight through each label. In 'L = 5 -> 4' the arrow glyph is partly overwritten by the trace (verified on a 2x crop); 'L = 3 -> 2' and 'L = -3 -> 4' are struck likewise.",
+          "Left panel: the 'L = -1 marginal (frozen)' annotation is struck through by the blue stable branch at its leading script-L glyph (the branch rises through y ~ 3.6 at L ~ -0.72, inside the text box).",
+          "Right panel: autorange puts the y-max at exactly 5, which is |1 - L| at both L = -4 and L = 6, so the trace stroke is half-clipped at both upper corners."
+        ]
+      },
+      "physics": {
+        "status": "pass",
+        "issues": [],
+        "verified": [
+          "stability boundary at L = -1; branches split around the pole rather than drawn through it",
+          "tau_eff NEGATIVE on the unstable branch (-0.5 at L = -3), not passed through abs()",
+          "speedup witness tau_eff = tau/4 at L = 3",
+          "Johnson correction |1 - L| gives 2 at L = 3 (NOT 4) -- the 2026-07-29 BLOCKER is fixed",
+          "equal factor 4 at L = 5 and L = -3, both labelled",
+          "naive-overstates vrect on 0 < L < 2 is exactly the region |1 - L| < 1"
+        ],
+        "presentation_caveats": [
+          "D12-F3-03 (stability-blindness asserted but not figure-visible)"
+        ]
+      },
+      "style": {
+        "status": "pass",
+        "issues": [],
+        "notes": "blue/amber/carmine/sage present but sage is used only for isolated witness markers, never adjacent to carmine; no red-green discrimination burden"
+      },
+      "caption_match": true,
+      "caption_match_detail": "Caption (tex:282-287) matches: negative unstable branch, |1-L| as an equality, overstatement on 0 < L < 2, stability-blindness.",
+      "findings": [
+        {
+          "id": "D12-F3-01",
+          "severity": "MINOR",
+          "area": "rendering",
+          "finding": "Right panel: all three witness labels use textposition='top center', and |1 - L| has slope +-1, so the curve runs straight through each label. In 'L = 5 -> 4' the arrow glyph is partly overwritten by the trace (verified on a 2x crop); 'L = 3 -> 2' and 'L = -3 -> 4' are struck likewise.",
+          "fix": "visualizations.py:14902-14906 -- place labels on the concave side: textposition='middle right' with xshift=8 for L = 3 and L = 5, textposition='middle left' with xshift=-8 for L = -3."
+        },
+        {
+          "id": "D12-F3-02",
+          "severity": "MINOR",
+          "area": "rendering",
+          "finding": "Left panel: the 'L = -1 marginal (frozen)' annotation is struck through by the blue stable branch at its leading script-L glyph (the branch rises through y ~ 3.6 at L ~ -0.72, inside the text box).",
+          "fix": "visualizations.py:14880-14882 -- annotation_position='top left' (the region left of the vline at high tau_eff is empty), or keep 'top right' with annotation_yshift and a shorter string."
+        },
+        {
+          "id": "D12-F3-03",
+          "severity": "MINOR",
+          "area": "physics-presentation",
+          "finding": "The stability boundary L = -1 is drawn in the LEFT panel but not the right, yet the entire point of the L = 5 / L = -3 pair is that they carry the same factor 4 on OPPOSITE SIDES of that boundary (johnsonNEP_correction_magnitude_loses_stability_information). As rendered, the right panel shows two equal ordinates with no cue that one device is stable and the other divergent, so 'stability-blind' -- asserted in both the docstring and the caption -- is not figure-visible.",
+          "fix": "visualizations.py -- add to row=1, col=2: fig.add_vline(x=-1.0, line=dict(color=amber, width=2, dash='dot'), annotation_text='stability boundary  L = -1', annotation_position='bottom left'), plus a light add_vrect(x0=-4, x1=-1) so the equal-4 pair is visibly split."
+        },
+        {
+          "id": "D12-F3-04",
+          "severity": "MINOR",
+          "area": "rendering",
+          "finding": "Right panel: autorange puts the y-max at exactly 5, which is |1 - L| at both L = -4 and L = 6, so the trace stroke is half-clipped at both upper corners.",
+          "fix": "visualizations.py:14908 -- fig.update_yaxes(range=[0, 5.4], row=1, col=2)."
+        }
+      ],
+      "notes": "Physically the strongest of the three -- every anchor-listed trap is handled correctly. All findings are legibility/completeness, none are numerical."
+    }
+  ],
+  "cross_figure_findings": [
+    {
+      "id": "D12-X-01",
+      "severity": "INFO",
+      "area": "style",
+      "finding": "All three PNGs carry a rendered in-image title ('D12 Fig. 1 -- ...') in addition to their LaTeX \\caption, duplicating the caption and consuming ~9% of figure height in a single-column float. This is consistent across the project's figure corpus, so it reads as house style rather than a defect of these three -- flagged for an operator decision, not as a required fix.",
+      "fix": "Optional: add a for_paper=True argument that sets title=None on the publication render while the notebook/dashboard variants keep titles."
+    }
+  ],
+  "totals": {
+    "FAIL": 2,
+    "MAJOR": 1,
+    "MINOR": 13,
+    "INFO": 2
+  },
+  "summary": "D12's three figures are numerically sound: every Lean-certified value the brief named was reproduced exactly (crossover 51.396 with fail-open shading correctly starting there and not before; log 4 = 1.38629; gap exponent 9.544512 and ratio 3491.96 > 1000 at (50,60); ENBW*T floor 1/2 saturated by the boxcar with the ramp at 2/3; tau_eff negative on the unstable branch; Johnson correction |1-L| giving 2 at L = 3 and 4 at both L = 5 and L = -3). The brief's primary physics trap -- shading the whole range of fig1 rather than only the post-crossover fail-open region -- is passed. The bundle nonetheless does NOT meet the ALL-PASS criterion: fig2 carries two hard rendering FAILs (a 3-row legend that overprints both x-axis titles into illegibility, and a literal '^{}' exponent in the Chernoff legend that kaleido renders verbatim), and fig1 carries a MAJOR overclaim -- its title and the body sentence at tex:162 promise 'two directions'/'both failures' while only the fail-open average-error direction is plotted; the false-strict miss-bound refutation (148x at (5,10)) is absent from the figure entirely. Thirteen MINOR items follow, chiefly annotation/curve collisions, one red-green envelope pairing in fig2's right panel, one off-palette fill, and the fact that fig3's stability-blindness claim is stated but not made visible for want of an L = -1 marker in the right panel.",
+  "recommendations": [
+    "BLOCKING (fig2): re-render with height=560, margin b=170 and legend y=-0.30 so 'integration window T' and 'separation budget z = Delta-mu/(2 sigma)' are legible.",
+    "BLOCKING (fig2): replace the literal 'e^{-z^2/2}' in the Chernoff legend with a Unicode/plain form.",
+    "BLOCKING (fig1): either add the missing miss-bound panel (unit-threshold e^{-N_a} vs folklore at N_b = 5, marking 148x at (5,10)) so the 'two directions' title is earned, or narrow the title, the docstring at visualizations.py:14719 and paper_draft.tex:162 to the single failure actually plotted. Per the project's correctness-over-expediency standard the added panel is preferred to the walk-back.",
+    "fig1: label the right-panel witness marker '9.5445' and move the log 4 annotation to 'bottom right'; draw the crossover vline at the analytic root and quantify it as N_a = 51.40 in both figure and caption.",
+    "fig2: rename the slack fill so it does not imply the realizable set is bounded above by 2/3; retitle the right y-axis 'tail probability / bound'; recolor Mills off green; use COLORS['steel_blue'] for the fill; draw the floor hline below the boxcar trace; add units to the T axis.",
+    "fig3: move the three witness labels off the curve, move the marginal annotation off the stable branch, add an L = -1 boundary to the RIGHT panel so stability-blindness is visible, and set the right y-range to [0, 5.4] to stop the corner clipping.",
+    "Re-run scripts/review_figures.py after the edits and re-review; the ALL-PASS gate cannot be cleared without a re-render."
+  ]
+}
