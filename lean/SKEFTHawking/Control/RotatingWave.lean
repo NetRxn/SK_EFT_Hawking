@@ -266,6 +266,105 @@ theorem bsAntiderivative_hasDerivAt (ω Ω φ a b c d : ℝ) (hω : ω ≠ 0) (t
       (g2.ofReal_comp.smul_const σ_x)).add (g3.ofReal_comp.smul_const σ_y)
   exact hsum
 
+/-! ### 3.1 Pauli operator norms (ℓ^∞ operator norm = max row sum) -/
+
+lemma linftyOpNorm_sigmaX_le_one : ‖σ_x‖ ≤ 1 := by
+  rw [Matrix.linfty_opNorm_def]; simp [σ_x, Fin.sum_univ_two]
+
+lemma linftyOpNorm_sigmaY_le_one : ‖σ_y‖ ≤ 1 := by
+  rw [Matrix.linfty_opNorm_def]; simp [σ_y, Fin.sum_univ_two]
+
+lemma linftyOpNorm_sigmaZ_le_one : ‖σ_z‖ ≤ 1 := by
+  rw [Matrix.linfty_opNorm_def]; simp [σ_z, Fin.sum_univ_two]
+
+lemma linftyOpNorm_one_le_one : ‖(1 : Matrix (Fin 2) (Fin 2) ℂ)‖ ≤ 1 := by
+  rw [Matrix.linfty_opNorm_def]; simp [Matrix.one_apply, Fin.sum_univ_two]
+
+/-! ### 3.2 The Bloch–Siegert bound -/
+
+private lemma abs_sin_sub_sin_le_two (x y : ℝ) : |Real.sin x - Real.sin y| ≤ 2 := by
+  rw [abs_le]
+  constructor <;>
+    nlinarith [Real.neg_one_le_sin x, Real.sin_le_one x, Real.neg_one_le_sin y, Real.sin_le_one y]
+
+private lemma abs_cos_sub_cos_le_two (x y : ℝ) : |Real.cos x - Real.cos y| ≤ 2 := by
+  rw [abs_le]
+  constructor <;>
+    nlinarith [Real.neg_one_le_cos x, Real.cos_le_one x, Real.neg_one_le_cos y, Real.cos_le_one y]
+
+/-- **The Bloch–Siegert bound — the load-bearing estimate of this module.**
+
+The antiderivative of the counter-rotating remainder is bounded by an explicit constant times
+`Ω/ω`, **uniformly in `t`**. The uniformity is the whole point: it is what separates this from a
+naive Duhamel estimate, which bounds the same object only by `O(Ω·T)` — carrying no `1/ω` and
+growing without bound in `T`.
+
+The constant `2` multiplies the drive's coefficient `ℓ¹` norm `|a|+|b|+|c|+|d|`, so the bound is
+explicit in every parameter and degrades gracefully as the drive operator grows. -/
+theorem bsAntiderivative_norm_le (ω Ω φ a b c d t : ℝ) (hω : 0 < ω) (hΩ : 0 ≤ Ω) :
+    ‖bsAntiderivative ω Ω φ a b c d t‖ ≤ 2 * (Ω / ω) * (|a| + |b| + |c| + |d|) := by
+  have hr : 0 ≤ Ω / ω := div_nonneg hΩ hω.le
+  have hsmul : ∀ (r : ℝ) (M : Matrix (Fin 2) (Fin 2) ℂ), ‖((r : ℝ) : ℂ) • M‖ = |r| * ‖M‖ := by
+    intro r M; rw [norm_smul]; simp
+  -- Longitudinal block: ‖a•1 + d•σ_z‖ ≤ |a| + |d|.
+  have hM1 : ‖(a : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) + (d : ℂ) • σ_z‖ ≤ |a| + |d| := by
+    refine (norm_add_le _ _).trans ?_
+    rw [hsmul a, hsmul d]
+    have := linftyOpNorm_one_le_one
+    have := linftyOpNorm_sigmaZ_le_one
+    nlinarith [abs_nonneg a, abs_nonneg d, norm_nonneg (1 : Matrix (Fin 2) (Fin 2) ℂ),
+      norm_nonneg (σ_z : Matrix (Fin 2) (Fin 2) ℂ)]
+  -- The three scalar coefficients.
+  have hA1 : |(Ω / ω) * (Real.sin (ω * t + φ) - Real.sin φ)| ≤ 2 * (Ω / ω) := by
+    rw [abs_mul, abs_of_nonneg hr]
+    nlinarith [abs_sin_sub_sin_le_two (ω * t + φ) φ, abs_nonneg (Real.sin (ω * t + φ) - Real.sin φ)]
+  have hA2 : |(Ω / (4 * ω)) * (b * (Real.sin (2 * ω * t + φ) - Real.sin φ)
+      - c * (Real.cos (2 * ω * t + φ) - Real.cos φ))| ≤ (Ω / ω) * (|b| + |c|) / 2 := by
+    rw [abs_mul]
+    have h4 : |Ω / (4 * ω)| = (Ω / ω) / 4 := by
+      rw [abs_of_nonneg (by positivity)]; field_simp
+    rw [h4]
+    have hin : |b * (Real.sin (2 * ω * t + φ) - Real.sin φ)
+        - c * (Real.cos (2 * ω * t + φ) - Real.cos φ)| ≤ 2 * |b| + 2 * |c| := by
+      refine (abs_sub _ _).trans ?_
+      rw [abs_mul, abs_mul]
+      nlinarith [abs_sin_sub_sin_le_two (2 * ω * t + φ) φ,
+        abs_cos_sub_cos_le_two (2 * ω * t + φ) φ, abs_nonneg b, abs_nonneg c]
+    nlinarith [hin, hr, abs_nonneg b, abs_nonneg c]
+  have hA3 : |(Ω / (4 * ω)) * (b * (Real.cos (2 * ω * t + φ) - Real.cos φ)
+      + c * (Real.sin (2 * ω * t + φ) - Real.sin φ))| ≤ (Ω / ω) * (|b| + |c|) / 2 := by
+    rw [abs_mul]
+    have h4 : |Ω / (4 * ω)| = (Ω / ω) / 4 := by
+      rw [abs_of_nonneg (by positivity)]; field_simp
+    rw [h4]
+    have hin : |b * (Real.cos (2 * ω * t + φ) - Real.cos φ)
+        + c * (Real.sin (2 * ω * t + φ) - Real.sin φ)| ≤ 2 * |b| + 2 * |c| := by
+      refine (abs_add_le _ _).trans ?_
+      rw [abs_mul, abs_mul]
+      nlinarith [abs_sin_sub_sin_le_two (2 * ω * t + φ) φ,
+        abs_cos_sub_cos_le_two (2 * ω * t + φ) φ, abs_nonneg b, abs_nonneg c]
+    nlinarith [hin, hr, abs_nonneg b, abs_nonneg c]
+  -- Assemble by the triangle inequality, bounding each product of two nonneg factors.
+  rw [bsAntiderivative]
+  refine ((norm_add_le _ _).trans (add_le_add (norm_add_le _ _) le_rfl)).trans ?_
+  rw [hsmul, hsmul, hsmul]
+  have hx := linftyOpNorm_sigmaX_le_one
+  have hy := linftyOpNorm_sigmaY_le_one
+  have t1 : |(Ω / ω) * (Real.sin (ω * t + φ) - Real.sin φ)|
+      * ‖(a : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) + (d : ℂ) • σ_z‖
+      ≤ (2 * (Ω / ω)) * (|a| + |d|) :=
+    mul_le_mul hA1 hM1 (norm_nonneg _) (by positivity)
+  have t2 : |(Ω / (4 * ω)) * (b * (Real.sin (2 * ω * t + φ) - Real.sin φ)
+        - c * (Real.cos (2 * ω * t + φ) - Real.cos φ))| * ‖σ_x‖
+      ≤ ((Ω / ω) * (|b| + |c|) / 2) * 1 :=
+    mul_le_mul hA2 hx (norm_nonneg _) (by positivity)
+  have t3 : |(Ω / (4 * ω)) * (b * (Real.cos (2 * ω * t + φ) - Real.cos φ)
+        + c * (Real.sin (2 * ω * t + φ) - Real.sin φ))| * ‖σ_y‖
+      ≤ ((Ω / ω) * (|b| + |c|) / 2) * 1 :=
+    mul_le_mul hA3 hy (norm_nonneg _) (by positivity)
+  nlinarith [t1, t2, t3, hr, abs_nonneg a, abs_nonneg b, abs_nonneg c, abs_nonneg d,
+    mul_nonneg hr (abs_nonneg b), mul_nonneg hr (abs_nonneg c)]
+
 end
 
 end SKEFTHawking.Control
