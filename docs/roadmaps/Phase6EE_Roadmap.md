@@ -7,21 +7,25 @@
 ## ✅ Shipped declarations (2026-07-30)
 
 `lean/SKEFTHawking/Control/` — 4 modules, all root-imported in `lean/SKEFTHawking.lean`.
-**145 extracted declarations** (135 authored + 10 compiler-generated equation lemmas), **145/145
+**163 extracted declarations** (153 authored + 10 compiler-generated equation lemmas), **163/163
 kernel-pure** with axiom closures ⊆ `{propext, Classical.choice, Quot.sound}` and **zero project
 axioms** (verified from `lean/lean_deps.json` axiom closures, not spot-checks). Zero `sorry`, zero
 `native_decide`, zero `maxHeartbeats`, zero linter warnings. `lake build SKEFTHawking.ExtractDeps`
 clean at 10,799 jobs; `validate.py` **50/50 ALL CHECKS PASSED** (2026-07-30).
 
-**Reviewed twice.** Two fresh-context `skeft-qa:adversarial-reviewer` runs; the second found a
-BLOCKER, 3 MAJOR and 5 IMPORTANT that the first pass and its remediation both missed. All are fixed
-in-session (PD-5) — see "Second-review remediation" below.
+**Reviewed three times, fresh context each time.** Review 2 found a BLOCKER in code review 1 had
+already blessed; review 3 found 3 MAJOR / 5 IMPORTANT (and zero BLOCKERs) largely showing that
+round 2's own fixes were bridged to their referents by prose. Everything BLOCKER/MAJOR/IMPORTANT is
+remediated in-session per PD-5 — see the two remediation tables below. The recurring defect class,
+across all three rounds, is **a kernel-checked object bridged to the physical object it is named
+for by a docstring sentence rather than by a declaration**; every fix closes that bridge with a
+theorem.
 
 | Module | Decls | Core content |
 |---|---:|---|
-| `RotatingWave` | 68 | `interactionHamiltonian_decomp` (the EXACT split `H_I = H_RWA + V`); `rotFrame_zero`/`_hasDerivAt`/`_ode`/`_unique` (the frame pinned as `exp(i(ωt/2)σ_z)` — uniqueness now a THEOREM via `ODE_solution_unique`, not a docstring claim); `bsAntiderivative` + `_hasDerivAt` + `bsAntiderivative_norm_le` (`‖S t‖ ≤ 2(Ω/ω)·ℓ¹`, uniform in `t`); `integral_counterRotating` (FTC); `rwaGenerator_sq` (general `(Δ²+Ω²m²)/4`) and its resonance corollary; `generalRotationAngle` + `rwaRotationAngle_lt_generalRotationAngle`; `rwa_propagator_difference_bound` (+ `_inhabited`, exhibiting a real propagator pair); the closed-form co-rotating propagator `rwaPropagator` pinned by `rwaPropagator_ode` + `rwaPropagator_unique` and read by `rwaPropagator_trace`; validity + exact-value failure witnesses |
+| `RotatingWave` | 84 | `interactionPicture_ode` (the frame change GENERATES the dynamics — what forces the `−(ω/2)σ_z`); `interactionHamiltonian_decomp` (the EXACT split `H_I = H_RWA + V`); `driveOp_conjTranspose` + `exists_driveOp_of_isHermitian` (the Hermitian-generality scope claim); `norm_counterRotating_le` + `integral_counterRotating_naive_bound` (the naive Duhamel alternative, shipped so the route justification is checkable); `rwaPropagator_mul_neg` (unitarity) + `rwa_propagator_difference_bound_physical` (the bound AT the exact/co-rotating pair, nondegenerate); `rotFrame_zero`/`_hasDerivAt`/`_ode`/`_unique` (the frame pinned as `exp(i(ωt/2)σ_z)` — uniqueness now a THEOREM via `ODE_solution_unique`, not a docstring claim); `bsAntiderivative` + `_hasDerivAt` + `bsAntiderivative_norm_le` (`‖S t‖ ≤ 2(Ω/ω)·ℓ¹`, uniform in `t`); `integral_counterRotating` (FTC); `rwaGenerator_sq` (general `(Δ²+Ω²m²)/4`) and its resonance corollary; `generalRotationAngle` + `rwaRotationAngle_lt_generalRotationAngle`; `rwa_propagator_difference_bound` (+ `_inhabited`, a degenerate commuting-drive witness); the closed-form co-rotating propagator `rwaPropagator` pinned by `rwaPropagator_ode` + `rwaPropagator_unique` and read by `rwaPropagator_trace`; validity + exact-value failure witnesses |
 | `BanachAveraging` | 8 | `hasDerivAt_mul₃`, `integral_averaging`, `norm_integral_mul_mul_le` (bounds `∫L·G·U` via the ANTIDERIVATIVE of `G`, general factor bounds), `integral_mul_ode` (discrepancy identity), `norm_sub_le_norm_mul_sub_one` (unitarity transfer), `norm_propagator_sub_le` |
-| `DriveCalibration` | 34 | `transverseElement`/`longitudinalElement` read off the operator and proved equal to their Pauli forms; transverse + longitudinal + general-detuning **duration** calibration identities; `no_duration_achieves_nonzero_angle_of_zero_element`, `magnitude_calibration_rotates_backwards`; the **phase** calibration layer — `rwaAxisPhasor` bridged to the generator by `transverseElement_rwaGenerator`, the factorisation `rwaAxisPhasor_eq`, `envelope_phase_alignment` (command `φ = χ − arg conj⟨0\|O\|1⟩` to land the axis at azimuth `χ`), its `m = 0` fail condition, and a σ_y quarter-turn mis-pointing witness; `transverseElement_norm_le` + traceless 11× witness; Kramers (`kramers_inner_eq_zero`, `_partner_eigenvector`, `_degeneracy`, `_hypotheses_inhabited`) |
+| `DriveCalibration` | 36 | `transverseElement`/`longitudinalElement` read off the operator and proved equal to their Pauli forms; transverse + longitudinal + general-detuning **duration** calibration identities; `no_duration_achieves_nonzero_angle_of_zero_element`, `magnitude_calibration_rotates_backwards`; the **phase** calibration layer — `rwaAxisPhasor` bridged to the generator by `transverseElement_rwaGenerator`, the factorisation `rwaAxisPhasor_eq`, `envelope_phase_alignment` (command `φ = χ − arg conj⟨0\|O\|1⟩` to land the axis at azimuth `χ`), its `m = 0` fail condition, and a σ_y quarter-turn mis-pointing witness; `calibrated_duration_transverse_propagator_full` (the WHOLE operator, sign- and axis-sensitive) + `trace_blind_to_rotation_direction` (refuting the trace-only reading); `transverseElement_norm_le` + traceless 11× witness; Kramers (`kramers_inner_eq_zero`, `_partner_eigenvector`, `_degeneracy` with linear independence, `_hypotheses_inhabited`) |
 | `CompositeReadoutCeilings` | 35 | `assignmentFidelity` + floor→ceiling format; `add_le_branch_error_of_disjoint` (measure-theoretic disjointness); `combined_floor/ceiling_max`, `combined_floor/ceiling_add`, `combined_ceiling_add_lt_max` + `combined_ceiling_gap_witness` (gap `= 1/200`, derived by instantiating the comparison at the concrete `gapWitnessMeasure` model); **`relaxation_photon_ceiling`** — two NAMED floors on one attributed readout, with `relaxation_dominates_photon_at_separation_99` showing the `max` selects; per-mechanism ceilings for relaxation, relaxation⊕thermal, 6EA, 6EB, 6EC — the last three DERIVED from their upstream floor theorems; a BITES/does-not-BITE witness pair for **all five** ceilings, every BITES half proved *through its own ceiling theorem* (so it concludes about `assignmentFidelity`, not about a detached bound expression) and every does-not-BITE half stated on that ceiling's own bound expression with the operating point as a hypothesis |
 
 ### Second-review remediation (2026-07-30)
@@ -33,10 +37,10 @@ had in common.
 
 | # | Finding | Fix |
 |---|---|---|
-| **B1** | `rwa_propagator_difference_bound`'s hypothesis `hSgen` forced `P + Q = counterRotating` (the *Hermitian* remainder) by uniqueness of the derivative. A Schrödinger propagator pair gives `P + Q = −i·V`. So the theorem, while true, **could not be instantiated at `U_exact`/`U_rwa` at all** — the systems it covered were never the physical ones. | Restated `hSgen` on the `−i`-scaled antiderivative (§4.1); `‖−i • S‖ = ‖S‖`, so the Bloch–Siegert constant is untouched. Added `rwa_propagator_difference_bound_inhabited`, which **exhibits an actual propagator pair** satisfying every binder (commuting identity-drive at resonance, where the exact propagator is available in closed form). |
+| **B1** | `rwa_propagator_difference_bound`'s hypothesis `hSgen` forced `P + Q = counterRotating` (the *Hermitian* remainder) by uniqueness of the derivative. A Schrödinger propagator pair gives `P + Q = −i·V`. So the theorem, while true, **could not be instantiated at `U_exact`/`U_rwa` at all** — the systems it covered were never the physical ones. | Restated `hSgen` on the `−i`-scaled antiderivative (§4.1); `‖−i • S‖ = ‖S‖`, so the Bloch–Siegert constant is untouched. Added `rwa_propagator_difference_bound_inhabited`, exhibiting a propagator pair satisfying every binder (commuting identity-drive at resonance). ⚠️ **That witness is DEGENERATE** — identity drive means `rwaGenerator = 0`, `U_rwa ≡ 1`, and the whole difference is unobservable global phase; the third review caught the docs overstating it. The nondegenerate statement is `rwa_propagator_difference_bound_physical` (MJ-1 below). |
 | **M1** | The whole rotation-angle layer was disconnected from any propagator — no matrix exponential existed in the phase, `rwaRotationAngle` was a definition, and `rwaGenerator_sq` was cited by `calibrated_duration_general`'s docstring but called by nothing. | Built §3.5: `rwaRate`, `rwaPropagator`, and **`rwaPropagator_ode`** pinning the closed form by `U' = −i·H·U` (this is where `rwaGenerator_sq` is consumed). `rwaPropagator_trace` reads the angle off the propagator; `calibrated_duration_transverse_propagator` restates the calibration identity *on the propagator*. |
 | **M2** | Calibration docstrings said the duration achieves the target angle "exactly", with no RWA caveat — contradicted by the phase's own `integral_counterRotating_witness_resonance`. | Both duration identities now carry the co-rotating-model caveat naming the remainder bound and the resonance witness. |
-| **M3** | Nothing composed two *named* mechanism floors: `combined_floor_max` was generic in abstract reals and never instantiated. | Added `avgAssignmentError_mono`, `photon_budget_floor_attributed`, and **`relaxation_photon_ceiling`** — the first theorem in the series bounding one readout by two independently-derived named floors under explicit attribution, plus `relaxation_dominates_photon_at_separation_99` showing the `max` genuinely selects. |
+| **M3** | Nothing composed a *detection-layer* floor with a *device-layer* floor: `combined_floor_max` was generic in abstract reals and never instantiated at a 6EA/6EB/6EC floor. | Added `avgAssignmentError_mono`, `photon_budget_floor_attributed`, and **`relaxation_photon_ceiling`**, plus `relaxation_dominates_photon_at_separation_99` showing the `max` genuinely selects. ⚠️ **This row originally claimed `relaxation_photon_ceiling` was the first two-named-floor composite in the series — that was false**, and the third review caught it: `relaxation_thermal_ceiling` already composed relaxation ⊕ thermal and predates this phase. The correct claim is *first cross-layer* composite. |
 | **I1** | `combined_ceiling_gap_witness` was numerals only — it would survive any edit to either composite. | Now **derived by instantiating `combined_ceiling_add_lt_max`** at a concrete two-point measure model (`gapWitnessMeasure`), at operating point `(e0,e1) = (0, 3/100)`. |
 | **I2** | `norm_integral_counterRotating_conjugated_le` assumed four facts the module proves, so it carried no `Ω/ω`. | Discharges them from `hω`/`hΩ`; the conclusion now carries the explicit Bloch–Siegert constant. |
 | **I3** | `combined_floor_max` is `max_le` under a physics name. | Docstring now says so plainly and points at §3.5, where the content actually lives. |
@@ -51,10 +55,33 @@ the substantive `no_duration_achieves_nonzero_longitudinal_angle_of_zero_detunin
 it), N5 (disclosed below rather than fixed), N6 (redundant-but-harmless binders in
 `combined_ceiling_add_lt_max`).
 
+### Third-review remediation (2026-07-30)
+
+A third fresh-context pass reported **zero BLOCKERs** but 3 MAJOR / 5 IMPORTANT — largely finding
+that the *second* round's fixes were bridged to their physical referents by prose in the same way
+the defects they replaced had been. All closed in-session.
+
+| # | Finding | Fix |
+|---|---|---|
+| **MJ-1** | The B1 inhabitation witness sits where the co-rotating dynamics is EMPTY (identity drive ⇒ `rwaGenerator = 0`, `U_rwa ≡ 1`, difference is pure global phase), while the docs called it "a real propagator pair". No declaration connected the bound to `rwaPropagator` at all. | Built the missing substrate — `rwaGenerator_conjTranspose`, `rwaPropagator_neg_eq_conjTranspose`, `rwaPropagator_mul_neg` (unitarity), `rwaGenerator_comm_rwaPropagator`, `rwaPropagatorInv_hasDerivAt`, `continuous_rwaPropagator` — and shipped **`rwa_propagator_difference_bound_physical`**: for ANY solution of `U' = −i·H_I·U` with `U(0)=1`, the difference from `rwaPropagator` is bounded, with `b`,`c` unconstrained beyond `0 < rate`. Nondegenerate, and no existence theorem needed. |
+| **MJ-2** | `calibrated_duration_transverse_propagator` certifies only the TRACE, which is even in `θ` — blind to both the rotation direction (`magnitude_calibration_rotates_backwards`) and the axis (`envelope_phase_alignment`). | **`calibrated_duration_transverse_propagator_full`** pins the whole operator (`sin θ` carries the sign, `rwaGenerator` the axis), and **`trace_blind_to_rotation_direction`** refutes the trace-only reading outright: the time-reverse shares the trace but is a different operator. |
+| **MJ-3** | Nothing tied `interactionHamiltonian` to the dynamics of `drivenHamiltonian` — replacing `−(ω/2)σ_z` by `+(ω/2)σ_z` would leave every theorem in the module true. Likewise `driveOp`'s Hermiticity and "loses no generality" were prose. | **`interactionPicture_ode`**: if `U' = −i·H·U` then `(R·U)' = −i·H_I·(R·U)` — the subtraction is now forced by a declaration. Plus `rotFrame_conjTranspose_mul`, `sigmaY_conjTranspose`, `driveOp_conjTranspose`, and **`exists_driveOp_of_isHermitian`** (every Hermitian 2×2 has that form). |
+| **IM-1** | `relaxation_dominates_photon_at_separation_99` matched the relaxation floor by the bare numeral `1/4`. | Restated on the ceiling's own expression `t/T₁/(2(1+t/T₁))` at `t = T₁`. |
+| **IM-2** | "First theorem in the series composing two named floors" was false. | Corrected in the docstring, this table, and both Inventory files — see the M3 row above. |
+| **IM-3** | `SK_EFT_Hawking_Inventory.md` was stale relative to the second-round fixes (still carried the pre-N1 `10⁻²`, omitted the whole M3 deliverable). | Rewritten; the two Inventory artifacts now agree. |
+| **IM-4** | The Duhamel/Grönwall counterfactual — the stated justification for the entire route — appeared in three mutually incompatible forms and was backed by no declaration. | **`norm_counterRotating_le`** and **`integral_counterRotating_naive_bound`** ship the alternative bound (`2Ω·ℓ¹·T`, linear in `T`, no `1/ω`). The contrast is now between two theorems; all three prose sites reworded to match. |
+| **IM-5** | The 6EB/6EC does-not-bite witnesses were one arithmetic fact with decorative binders, calling neither ceiling. | Both now CALL their ceiling and conclude about `assignmentFidelity` (existential form: the ceiling they produce is ≥ 17/18). |
+| **N3** *(2nd round)* | — | see previous table. |
+
 **Disclosed, not fixed:** the 6EB and 6EC BITES witnesses fire at `matchedBudget = 0`, i.e. a
 signal-free readout. That is a real operating point and the witnesses are honest, but it is a
 *degenerate* one — no non-degenerate biting point is bracketed for those two ceilings. Recorded here
 because the summaries previously said only "a witness pair for all five ceilings".
+
+**Third-review MINORs left:** MN-1 (section numbering in `RotatingWave.lean` is out of order —
+cosmetic), MN-2 (`linearIndependent_of_inner_eq_zero` states the pair-independence property rather
+than Mathlib's bundled `LinearIndependent`), MN-5 ("Bloch–Siegert scale" names the `Ω/ω` small
+parameter, not the second-order shift — flagged as a possible reader trap), MN-6, MN-8.
 
 **Not in scope, still owed:** `MajoranaKramers` renaming (see the series-close list below). The
 second review independently confirmed the characterization of those two lemmas.
@@ -81,9 +108,10 @@ used before the substrate existed. Where a name differs, the shipped one is auth
   corpus does NOT instantiate: `bch_order_2_cubic_thm` bounds a *static* group commutator, whereas
   the RWA remainder compares a **time-ordered** propagator of a time-*dependent* generator; and BCH
   is cubic in one small `δ` bounding both arguments while the remainder is *first order* in `Ω/ω`
-  with non-co-small arguments. PhysLib `Resolvent` fails for the first reason too. Duhamel/Grönwall
-  alone yields only `O(Ω·T)` — true, but **not** Bloch–Siegert scale, and shipping it would have
-  been a silent de-scope. The route taken is the **near-identity (Bloch–Siegert) frame
+  with non-co-small arguments. PhysLib `Resolvent` fails for the first reason too. the naive Duhamel route
+  yields only `2Ω·ℓ¹·T` — true, but **not** Bloch–Siegert scale, and shipping it would have been a
+  silent de-scope. That contrast is no longer a counterfactual: `norm_counterRotating_le` and
+  `integral_counterRotating_naive_bound` ship the alternative bound, so both sides are theorems. The route taken is the **near-identity (Bloch–Siegert) frame
   transformation**: `counterRotating` is a trigonometric polynomial with a CLOSED-FORM
   antiderivative bounded uniformly in `t`, which is where the `1/ω` comes from.
 - **UNKNOWN-2 (Kramers formulation): RESOLVED — built from first principles.** Mathlib's

@@ -312,8 +312,15 @@ theorem photon_budget_floor_attributed {Nb Na : NNReal} {δ : ℕ → ℝ} {e0 e
 /-- **End-to-end two-mechanism ceiling: relaxation ⊕ photon budget.** Both floors are the project's
 own named theorems — `avgAssignmentError_rational_floor` (relaxation) and
 `Detection.poisson_avgError_floor` (6EA) — applied to a SINGLE readout `(e0, e1)` under explicit
-attribution hypotheses, then combined by `combined_ceiling_max`. This is the first theorem in the
-`6E*` series in which two independently-derived mechanism floors bound one readout together. -/
+attribution hypotheses, then combined by `combined_ceiling_max`.
+
+⚠️ It is **not** the first two-named-floor composite in the project: `relaxation_thermal_ceiling`
+below already composes relaxation ⊕ thermal, and did so before this phase (via the upstream
+`avgAssignmentError_combined_floor`). What is new here is that it is the first composite spanning
+the DEVICE layer (`QuantumNetwork`) and the DETECTION layer (`Detection`/6EA) — a pairing that was
+previously impossible because the 6EA floor is stated at the count rule's own error pair and had no
+transfer rule; `photon_budget_floor_attributed` supplies it. (An earlier draft of this docstring and
+of the roadmap claimed priority outright; corrected 2026-07-30 after adversarial review.) -/
 theorem relaxation_photon_ceiling {t T1 e0 e1 : ℝ} {Nb Na : NNReal} {δ : ℕ → ℝ}
     (ht : 0 ≤ t) (hT1 : 0 < T1) (he0 : 0 ≤ e0) (hdecay : readoutDecayProb t T1 ≤ e1)
     (hδ : Detection.IsCountRule δ)
@@ -327,15 +334,24 @@ theorem relaxation_photon_ceiling {t T1 e0 e1 : ℝ} {Nb Na : NNReal} {δ : ℕ 
 
 /-- **The composite genuinely selects between the two mechanisms**, rather than restating whichever
 input the reader happens to look at. At a generous photon budget (separation `99`) the photon floor
-drops strictly below the relaxation floor at `t = T₁`, so the `max` resolves to the relaxation
-branch: the combined ceiling bites at `3/4` where the photon-budget ceiling alone would permit
-`999/1000`. Nothing is assumed — the comparison is discharged here. -/
-theorem relaxation_dominates_photon_at_separation_99 (Na Nb : ℝ)
-    (hsep : (Real.sqrt Na - Real.sqrt Nb) ^ 2 = 99) :
-    (1 / 4) * Real.exp (-(Real.sqrt Na - Real.sqrt Nb) ^ 2) < 1 / 4
-      ∧ max (1 / 4) ((1 / 4) * Real.exp (-(Real.sqrt Na - Real.sqrt Nb) ^ 2)) = 1 / 4 := by
-  have hlt : (1 / 4) * Real.exp (-(Real.sqrt Na - Real.sqrt Nb) ^ 2) < 1 / 4 := by
-    rw [hsep]
+drops strictly below the relaxation floor, so the `max` in `relaxation_photon_ceiling` resolves to
+the relaxation branch.
+
+Both sides are written as the ceiling's OWN bound expressions — the relaxation floor as
+`t/T₁/(2(1+t/T₁))` at `t = T₁`, not as the numeral `1/4` — so this cannot survive an edit to either
+mechanism's floor. -/
+theorem relaxation_dominates_photon_at_separation_99 {t T1 : ℝ} (ht : t = T1) (hT1 : 0 < T1)
+    {Na Nb : ℝ} (hsep : (Real.sqrt Na - Real.sqrt Nb) ^ 2 = 99) :
+    (1 / 4) * Real.exp (-(Real.sqrt Na - Real.sqrt Nb) ^ 2) < t / T1 / (2 * (1 + t / T1))
+      ∧ max (t / T1 / (2 * (1 + t / T1)))
+            ((1 / 4) * Real.exp (-(Real.sqrt Na - Real.sqrt Nb) ^ 2))
+          = t / T1 / (2 * (1 + t / T1)) := by
+  have hrel : t / T1 / (2 * (1 + t / T1)) = 1 / 4 := by
+    rw [ht, div_self hT1.ne']
+    norm_num
+  have hlt : (1 / 4) * Real.exp (-(Real.sqrt Na - Real.sqrt Nb) ^ 2)
+      < t / T1 / (2 * (1 + t / T1)) := by
+    rw [hrel, hsep]
     have henc := (QuantumNetwork.expNeg_enclosure (r := (99 : ℝ)) (by norm_num)).2
     have hpos : (0 : ℝ) < Real.exp (-(99 : ℝ)) := Real.exp_pos _
     nlinarith
@@ -491,21 +507,45 @@ theorem gaussian_ceiling_does_not_bite {B : ℝ} (hB : B = 8) :
   norm_num at hch henc ⊢
   linarith
 
-/-- **Filtered-readout ceiling (6EB) does NOT bite** at a matched budget of `8`. -/
-theorem filtered_readout_ceiling_does_not_bite {S₀ T : ℝ} {s : ℝ → ℝ}
+open MeasureTheory in
+/-- **Filtered-readout ceiling (6EB) does NOT bite** at a matched budget of `8`: the ceiling
+`filtered_readout_ceiling` produces for such a chain is at least `17/18`, so it forbids nothing
+below that. Stated by CALLING the ceiling and comparing against its actual conclusion, rather than
+by restating the bound expression by hand. -/
+theorem filtered_readout_ceiling_does_not_bite {V : (ℝ → ℝ) → ℝ} {S₀ T : ℝ}
+    (hwhite : Detection.IsWhiteFilteredVariance V S₀ T) (hS : 0 < S₀) (hT : 0 ≤ T)
+    {s h : ℝ → ℝ} (hadm : Detection.IsAdmissibleFilter T s h)
+    (hs : IntervalIntegrable (fun x => s x ^ 2) volume 0 T)
+    {μ₀ μ₁ σ t : ℝ} (hσ : 0 < σ) (hμle : μ₀ ≤ μ₁)
+    (hμ : μ₁ - μ₀ = ∫ x in (0:ℝ)..T, h x * s x) (hσV : σ = Real.sqrt (V h))
     (hb : Detection.matchedBudget S₀ T s = 8) :
-    (17 : ℝ) / 18 ≤ 1 - Detection.gaussianQ (Detection.matchedBudget S₀ T s / 2) :=
-  gaussian_ceiling_does_not_bite hb
+    ∃ F : ℝ, assignmentFidelity (Detection.thrErr0 μ₀ σ t) (Detection.thrErr1 μ₁ σ t) ≤ F
+      ∧ (17 : ℝ) / 18 ≤ F := by
+  refine ⟨1 - Detection.gaussianQ (Detection.matchedBudget S₀ T s / 2),
+    filtered_readout_ceiling hwhite hS hT hadm hs hσ hμle hμ hσV,
+    gaussian_ceiling_does_not_bite hb⟩
 
+open MeasureTheory in
 /-- **Detector-chain ceiling (6EC) does NOT bite** at a bolometer noise budget yielding matched
-budget `8` — the same permissive point, reached through the phonon ⊕ Johnson sum. -/
+budget `8` — the same permissive point, reached through the phonon ⊕ Johnson sum, and likewise
+stated by calling `detector_chain_ceiling` rather than by mirroring its bound. -/
 theorem detector_chain_ceiling_does_not_bite (m : Electrothermal.ETFModel) {kB T Tw : ℝ}
-    {s : ℝ → ℝ}
+    {Vtot : (ℝ → ℝ) → ℝ} {V : Fin 2 → (ℝ → ℝ) → ℝ} {s hf : ℝ → ℝ} {μ₀ μ₁ σ t : ℝ}
+    (hkB : 0 < kB) (hT : 0 < T) (hG : 0 < m.G)
+    (hindep : Detection.IsUncorrelatedAt Finset.univ Vtot V)
+    (hphonon : Electrothermal.ETFModel.IsThermalFluctuationLimited (V 0) m kB T Tw)
+    (hjohnson : Detection.IsWhiteFilteredVariance (V 1) (m.johnsonNEP kB T ^ 2) Tw)
+    (hTw : 0 ≤ Tw) (hadm : Detection.IsAdmissibleFilter Tw s hf)
+    (hs : IntervalIntegrable (fun x => s x ^ 2) volume 0 Tw)
+    (hσ : 0 < σ) (hμle : μ₀ ≤ μ₁)
+    (hμ : μ₁ - μ₀ = ∫ x in (0:ℝ)..Tw, hf x * s x) (hσV : σ = Real.sqrt (Vtot hf))
     (hb : Detection.matchedBudget (m.phononNEP kB T ^ 2 + m.johnsonNEP kB T ^ 2) Tw s = 8) :
-    (17 : ℝ) / 18
-      ≤ 1 - Detection.gaussianQ
-          (Detection.matchedBudget (m.phononNEP kB T ^ 2 + m.johnsonNEP kB T ^ 2) Tw s / 2) :=
-  gaussian_ceiling_does_not_bite hb
+    ∃ F : ℝ, assignmentFidelity (Detection.thrErr0 μ₀ σ t) (Detection.thrErr1 μ₁ σ t) ≤ F
+      ∧ (17 : ℝ) / 18 ≤ F := by
+  refine ⟨1 - Detection.gaussianQ
+      (Detection.matchedBudget (m.phononNEP kB T ^ 2 + m.johnsonNEP kB T ^ 2) Tw s / 2),
+    detector_chain_ceiling m hkB hT hG hindep hphonon hjohnson hTw hadm hs hσ hμle hμ hσV,
+    gaussian_ceiling_does_not_bite hb⟩
 
 end
 

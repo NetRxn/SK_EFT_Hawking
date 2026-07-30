@@ -107,6 +107,55 @@ theorem calibrated_duration_transverse_propagator (ω Ω b c θ : ℝ)
   rw [rwaPropagator_trace, sub_self, generalRotationAngle_resonance Ω b c _ hΩ.le,
     calibrated_duration_transverse Ω b c θ hm hΩ.ne']
 
+/-- **The FULL operator identity at the calibrated duration** — the statement `calibrated_duration_*`
+actually needs.
+
+The trace form above is **even in `θ`**: `U` and its time reverse share it, so it certifies neither
+the rotation DIRECTION nor the AXIS. Since direction is this module's headline failure mode
+(`magnitude_calibration_rotates_backwards` lands on `−θ`) and axis mis-pointing is what
+`envelope_phase_alignment` exists to correct, the trace alone is too weak to support the word
+"achieves". This identity pins the whole operator: `sin θ` carries the sign, and `rwaGenerator`
+carries the axis. -/
+theorem calibrated_duration_transverse_propagator_full (ω Ω b c θ : ℝ)
+    (hm : ‖projectedDriveElement b c‖ ≠ 0) (hΩ : 0 < Ω) :
+    rwaPropagator ω ω Ω 0 b c (2 * θ / (‖projectedDriveElement b c‖ * Ω))
+      = ((Real.cos θ : ℝ) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ)
+        - (Complex.I * ((Real.sin θ / rwaRate 0 Ω b c : ℝ) : ℂ)) • rwaGenerator ω ω Ω 0 b c := by
+  unfold rwaPropagator
+  rw [sub_self, generalRotationAngle_resonance Ω b c _ hΩ.le,
+    calibrated_duration_transverse Ω b c θ hm hΩ.ne']
+
+/-- **Why the trace form is not enough — a refutation, not a caveat.** The time-reversed propagator
+has the SAME trace as the forward one, yet is a different operator whenever the rotation is
+nontrivial. So any calibration claim resting only on the trace is satisfied equally by a rotation
+of `−θ`. -/
+theorem trace_blind_to_rotation_direction (ω₀ ω Ω φ b c t : ℝ)
+    (hsin : Real.sin (generalRotationAngle (ω₀ - ω) Ω b c t) ≠ 0)
+    (hk : 0 < rwaRate (ω₀ - ω) Ω b c) (hgen : rwaGenerator ω₀ ω Ω φ b c ≠ 0) :
+    (rwaPropagator ω₀ ω Ω φ b c (-t) 0 0 + rwaPropagator ω₀ ω Ω φ b c (-t) 1 1
+        = rwaPropagator ω₀ ω Ω φ b c t 0 0 + rwaPropagator ω₀ ω Ω φ b c t 1 1)
+      ∧ rwaPropagator ω₀ ω Ω φ b c (-t) ≠ rwaPropagator ω₀ ω Ω φ b c t := by
+  constructor
+  · rw [rwaPropagator_trace, rwaPropagator_trace, generalRotationAngle_neg, Real.cos_neg]
+  · intro hcontra
+    apply hgen
+    have hdiff : (Complex.I * ((2 * Real.sin (generalRotationAngle (ω₀ - ω) Ω b c t)
+        / rwaRate (ω₀ - ω) Ω b c : ℝ) : ℂ)) • rwaGenerator ω₀ ω Ω φ b c = 0 := by
+      have h := congrArg (fun M => M - rwaPropagator ω₀ ω Ω φ b c t) hcontra
+      simp only [sub_self] at h
+      rw [← h]
+      unfold rwaPropagator
+      rw [generalRotationAngle_neg, Real.cos_neg, Real.sin_neg]
+      push_cast
+      module
+    have hscal : (Complex.I * ((2 * Real.sin (generalRotationAngle (ω₀ - ω) Ω b c t)
+        / rwaRate (ω₀ - ω) Ω b c : ℝ) : ℂ)) ≠ 0 := by
+      simp only [ne_eq, mul_eq_zero, Complex.I_ne_zero, false_or, Complex.ofReal_eq_zero,
+        div_eq_zero_iff]
+      push_neg
+      exact ⟨by simpa using hsin, ne_of_gt hk⟩
+    exact (smul_eq_zero.mp hdiff).resolve_left hscal
+
 /-- **Fail condition 1 — a vanishing matrix element.** If the projected drive element is zero, NO
 duration produces any rotation: the calibration equation has no solution for a nonzero target.
 This is why the duration identity must carry `m ≠ 0` rather than dividing and hoping. -/
