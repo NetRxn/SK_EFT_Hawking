@@ -3,7 +3,81 @@ import SKEFTHawking.TopologicalBand.BlochFHS
 
 /-!
 # The Haldane Chern witness and the cone Berry phase (Phase 6ED, Wave 3)
+
+Waves 1–2 built graphene's honeycomb band structure — the structure factor, its Dirac points, the
+linear dispersion, the mass gap. Phase 6CA built the *abstract* two-band Chern machinery — the
+`blochPauli` `d·σ` substrate and the exact Fukui–Hatsugai–Suzuki lattice Chern number. This wave
+closes the loop between them: **a named lattice model with a kernel-checked nonzero topological
+invariant.**
+
+## What ships
+
+* **`coneBerryPhase_pi`** — the sublattice-pseudospin Berry phase of the *gapless* cone is exactly
+  `π`, on a four-point loop enclosing the `K` Dirac point of Wave 1. Its winding is
+  `coneWinding_two_pi` (`2π`); the contrast pair `flatWinding_zero` / `flatLoopBerryPhase_zero`
+  shows a non-winding loop of the same construction carries `0`.
+* **`haldaneFrame_latticeChern_eq_neg_one`** — the Haldane model at `t = t₂ = 1`, `φ = π/2`,
+  `m = 1`, sampled on a `4 × 4` Brillouin torus, has FHS lattice Chern number `−1`. This is the
+  repo's **first** nontrivial concrete Chern frame (see the coordination note below).
+* **`haldane_trivial_phase_chern_zero`** — the same model at `m = 6` (outside the window) has `0`,
+  and **`haldane_chern_iff_mass_inversion`** ties both values to the analytic phase boundary
+  `|m| < 3√3 |t₂ sin φ|` of `haldane_mass_inversion_iff`. The pair is a *classification*.
+
+## Why no transcendental evaluation is needed (the architectural point)
+
+`BlochFHS.lean` warns that a nontrivial frame-derived Chern value "requires the QWZ transcendental
+evaluation (`Complex.arg` of `sin/cos` at generic momenta)". That is true of *evaluating* the
+plaquette phases — at `N = 4` none of the 32 link phases is a rational multiple of `π`. But
+`latticeChern` never needs their values. It is `−∑ branchIndex (rawCurl)`, a sum of **integers**,
+and `∑ rawCurl = 0` by torus telescoping. So the whole invariant is carried by *which `2π`-window*
+each raw curl falls in — a **bounding** problem, not an evaluation problem.
+
+Accordingly this file ships a small **rational-enclosure `arg` sector calculus**
+(`arg_cell_A`/`_B`/`_C`/`_D`, `abs_arg_lt_pi_div_four`), built on `Complex.tan_arg` and
+`Real.arctan` monotonicity, whose side-conditions are radical-free comparisons of the overlap's
+real and imaginary parts. At `N = 4` the momenta are `0, π/2, π, 3π/2`, so every `d`-vector is
+*integral* and the only irrationals in the entire computation are `√2, √3, √6, √10, √26`. Four-digit
+enclosures of those five numbers suffice: the tightest inequality in the argument
+(`19 − 6√10 > 0`, i.e. `361 > 360`) has slack `0.026`, and the tightest window placement has
+`1.64 rad` of margin. **No `native_decide`, no `Complex.arg` evaluation, no new axioms.**
+
+## Grid choice
+
+`N = 4`. `N = 3` is *broken*: one plaquette lands at `rawCurl = −π` exactly — on the branch cut —
+and the winding plaquettes cancel, so its `latticeChern` reads `0` even inside the topological
+window. `N = 4` is the smallest clean grid; exactly one of its sixteen plaquettes carries a branch
+correction.
+
+## Sign convention
+
+The value is `−1`, not `+1`. `FHSLatticeGauge` freezes `latticeChern = −∑ plaquetteBranch` (so that
+`∑ plaquetteArg = 2π · latticeChern`), and the single nonzero branch index here is `+1`. The
+overall sign is the orientation convention's, not the physics': `φ ↦ −φ` reverses the
+time-reversal-breaking flux and flips it.
+
+## 6CA coordination
+
+**Guardrail branch B applies.** The separately-gated QWZ (square-lattice) spike has not landed —
+`TopologicalBand/BlochFHS.lean` still defers any nontrivial concrete Chern frame. This Haldane
+witness is therefore the repo's first, and a later QWZ spike should reuse the adapter pattern here
+(`blochFrameOfD`, the sector calculus, `blochLatticeChern_eq_zero_of_narrow`) rather than rebuild it.
+
+**⚠ Guardrail (inherited from Waves 1–2).** Every statement is about the *stated* Haldane
+tight-binding model on a *stated* finite grid. The `latticeChern` integer is the FHS lattice
+invariant; it is not claimed equal to any continuum first Chern class (that comparison is a separate
+deferred analytic program, per `FHSLatticeGauge`'s scope note). No claim about devices, transport,
+or fabrication.
+
+**Publication target:** bundle **D11**.
 -/
+
+-- This file is dominated by ~120 mechanically parallel lemmas (16 `d`-vector table entries, 64 link
+-- brackets, 16 plaquettes, 8 loop-vertex evaluations) that deliberately share one tactic shape and
+-- one `simp` set. Two style linters fire on exactly that uniformity: where a shared `simp` set
+-- happens not to be needed at some index, and where `norm_num <;> nlinarith` happens to leave
+-- exactly one goal. Family-wide uniformity is worth more here than per-index minimality.
+set_option linter.unnecessarySeqFocus false
+set_option linter.unusedSimpArgs false
 
 namespace SKEFTHawking.GrapheneBand
 
@@ -147,7 +221,7 @@ theorem frameOverlap_self {n : ℕ} (v : Fin n → ℂ) :
   rw [mul_comm, Complex.mul_conj]
 
 theorem selfNormSq_nonneg {n : ℕ} (v : Fin n → ℂ) : 0 ≤ selfNormSq v :=
-  Finset.sum_nonneg fun i _ => Complex.normSq_nonneg _
+  Finset.sum_nonneg fun _ _ => Complex.normSq_nonneg _
 
 /-- Rescaling a raw state to unit norm. -/
 noncomputable def normalizeVec {n : ℕ} (v : Fin n → ℂ) : Fin n → ℂ :=
@@ -1394,13 +1468,426 @@ theorem haldaneFrame_latticeChern_eq_neg_one :
   rw [Finset.sum_congr rfl (fun k _ => plaquetteBranch_topo k)]
   decide
 
-/-- **The two phases are distinguished by the invariant.** The Haldane model at these two mass
-values is not merely computed twice: the invariant separates them, which is what makes the
-witness a topological statement rather than an arithmetic coincidence. -/
-theorem haldane_chern_distinguishes_phases :
-    blochLatticeChern haldaneFrameTopo.toAdmissibleBandFrame
-      ≠ blochLatticeChern haldaneFrameTrivial.toAdmissibleBandFrame := by
-  rw [haldaneFrame_latticeChern_eq_neg_one, haldane_trivial_phase_chern_zero]
-  decide
+/-- `m = 1` is inside the topological window `|m| < 3√3 |t₂ sin φ|` and `m = 6` is outside it —
+the `norm_num`-backed numeric fact that makes the two sample points meaningful. `3√3 ≈ 5.196`. -/
+theorem haldane_window_bounds :
+    |(1 : ℝ)| < |3 * Real.sqrt 3 * 1 * Real.sin (Real.pi / 2)| ∧
+      ¬ |(6 : ℝ)| < |3 * Real.sqrt 3 * 1 * Real.sin (Real.pi / 2)| := by
+  rw [Real.sin_pi_div_two]
+  have h1 : (0 : ℝ) < 3 * Real.sqrt 3 * 1 * 1 := by positivity
+  rw [abs_of_pos h1]
+  constructor
+  · rw [abs_of_pos (by norm_num : (0:ℝ) < 1)]; nlinarith [sqrt3_lb]
+  · rw [abs_of_pos (by norm_num : (0:ℝ) < 6), not_lt]; nlinarith [sqrt3_ub]
+
+/-- **The invariant tracks the mass inversion.** At both sampled masses the kernel-checked Chern
+number is nonzero *exactly* when the two Dirac masses of `haldane_mass_inversion_iff` have opposite
+signs. This is what makes the witness/anti-witness pair a classification tied to the analytic phase
+boundary, rather than two unrelated arithmetic evaluations. -/
+theorem haldane_chern_iff_mass_inversion :
+    (blochLatticeChern haldaneFrameTopo.toAdmissibleBandFrame ≠ 0
+        ↔ haldaneD 1 1 (Real.pi / 2) 1 diracK 2 * haldaneD 1 1 (Real.pi / 2) 1 diracK' 2 < 0) ∧
+      (blochLatticeChern haldaneFrameTrivial.toAdmissibleBandFrame ≠ 0
+        ↔ haldaneD 1 1 (Real.pi / 2) 6 diracK 2 * haldaneD 1 1 (Real.pi / 2) 6 diracK' 2 < 0) := by
+  obtain ⟨hw1, hw6⟩ := haldane_window_bounds
+  constructor
+  · rw [haldaneFrame_latticeChern_eq_neg_one, haldane_mass_inversion_iff]
+    exact iff_of_true (by decide) hw1
+  · rw [haldane_trivial_phase_chern_zero, haldane_mass_inversion_iff]
+    exact iff_of_false (by decide) hw6
+
+/-! ## The gapless cone's Berry phase
+
+UNKNOWN-2 is resolved in favour of the **discretized principal-branch form**, matching
+`FHSLatticeGauge`'s style and this file's Chern machinery: a closed loop of sampled states carries
+the Wilson-loop phase `arg ∏ ⟨u_j, u_{j+1}⟩`, and its pseudospin winding is the sum of the
+principal-branch phase increments `arg (⟨f_j, f_{j+1}⟩)` of the (massless) structure factor. No
+continuum line integral is used; the repo deliberately avoids that machinery.
+
+The loop is the `π/2`-diamond centred on the `K` Dirac point of Wave 1. -/
+
+/-- The **discrete Wilson-loop (Berry) phase** of a cyclic family of states: the argument of the
+product of consecutive overlaps around the loop. -/
+noncomputable def wilsonLoopArg {M n : ℕ} [NeZero M] (u : Fin M → Fin n → ℂ) : ℝ :=
+  Complex.arg (∏ j : Fin M, frameOverlap (u j) (u (j + 1)))
+
+/-- Polar certificate for an argument: `z = r(cos θ + i sin θ)` with `r > 0` and `θ ∈ (−π, π]`. -/
+theorem arg_eq_of_polar {θ r : ℝ} (hr : 0 < r) (hθ : θ ∈ Set.Ioc (-Real.pi) Real.pi) {z : ℂ}
+    (hre : z.re = r * Real.cos θ) (him : z.im = r * Real.sin θ) : z.arg = θ := by
+  have hz : z = (r : ℂ) * (Complex.cos (θ : ℂ) + Complex.sin (θ : ℂ) * Complex.I) := by
+    apply Complex.ext <;>
+      simp [hre, him, Complex.cos_ofReal_re, Complex.sin_ofReal_re, Complex.cos_ofReal_im,
+        Complex.sin_ofReal_im]
+  rw [hz, Complex.arg_real_mul _ hr]
+  exact Complex.arg_cos_add_sin_mul_I hθ
+
+theorem principal_add_two_pi (θ : ℝ) : principal (θ + 2 * Real.pi) = principal θ := by
+  unfold principal
+  rw [show θ + 2 * Real.pi = θ + 1 • (2 * Real.pi) by simp]
+  exact toIocMod_add_zsmul _ _ _ 1
+
+/-- **The transition amplitude carries the principal-branch phase increment.** For nonzero `a, b`,
+`arg (conj a · b)` is exactly the principal reduction of `arg b − arg a`. This is what licenses
+calling the sum below a *principal-branch winding*: it is the same branch discipline
+`FHSLatticeGauge` uses for the plaquette field strength. -/
+theorem arg_conj_mul_eq_principal_sub {a b : ℂ} (ha : a ≠ 0) (hb : b ≠ 0) :
+    Complex.arg ((starRingEnd ℂ) a * b) = principal (Complex.arg b - Complex.arg a) := by
+  have hca : (starRingEnd ℂ) a ≠ 0 := by simpa using ha
+  rw [arg_mul_eq_principal_add _ _ hca hb, Complex.arg_conj]
+  rcases eq_or_ne (Complex.arg a) Real.pi with h | h
+  · rw [if_pos h, h, show Real.pi + Complex.arg b = (Complex.arg b - Real.pi) + 2 * Real.pi by ring,
+      principal_add_two_pi]
+  · rw [if_neg h]; ring_nf
+
+/-! ### The four-point loop around `K` -/
+
+/-- The `π/2`-diamond centred on the `K` Dirac point, traversed counterclockwise in the Bloch-phase
+plane. Its four vertices are `K ± (π/2, 0)` and `K ± (0, π/2)`; `K` is their centroid, so the loop
+genuinely encircles the cone rather than merely sampling four states. -/
+noncomputable def coneLoop : Fin 4 → ℝ × ℝ
+  | 0 => (diracK.1 + Real.pi / 2, diracK.2)
+  | 1 => (diracK.1, diracK.2 + Real.pi / 2)
+  | 2 => (diracK.1 - Real.pi / 2, diracK.2)
+  | 3 => (diracK.1, diracK.2 - Real.pi / 2)
+
+private theorem cos_2pi3 : Real.cos (2 * Real.pi / 3) = -(1/2) := by
+  rw [show (2 * Real.pi / 3 : ℝ) = Real.pi - Real.pi / 3 by ring, Real.cos_pi_sub,
+    Real.cos_pi_div_three]
+
+private theorem sin_2pi3 : Real.sin (2 * Real.pi / 3) = Real.sqrt 3 / 2 := by
+  rw [show (2 * Real.pi / 3 : ℝ) = Real.pi - Real.pi / 3 by ring, Real.sin_pi_sub,
+    Real.sin_pi_div_three]
+
+private theorem cos_4pi3 : Real.cos (4 * Real.pi / 3) = -(1/2) := by
+  rw [show (4 * Real.pi / 3 : ℝ) = Real.pi / 3 + Real.pi by ring, Real.cos_add_pi,
+    Real.cos_pi_div_three]
+
+private theorem sin_4pi3 : Real.sin (4 * Real.pi / 3) = -(Real.sqrt 3 / 2) := by
+  rw [show (4 * Real.pi / 3 : ℝ) = Real.pi / 3 + Real.pi by ring, Real.sin_add_pi,
+    Real.sin_pi_div_three]
+
+/-- The structure factor at the four loop vertices. Writing `p = (1+√3)/2`, `q = (1−√3)/2`, the
+four values are `q − ip`, `p − iq`, `p + iq`, `q + ip` — all of modulus `√2`, and their phases
+advance monotonically around the circle. -/
+theorem coneLoop_re_0 : (structureFactor (coneLoop 0)).re = (1 - Real.sqrt 3) / 2 := by
+  simp only [coneLoop, structureFactor_re, diracK, Real.cos_add, Real.cos_sub,
+    Real.cos_pi_div_two, Real.sin_pi_div_two, cos_2pi3, sin_2pi3, cos_4pi3, sin_4pi3]
+  ring
+
+theorem coneLoop_im_0 : (structureFactor (coneLoop 0)).im = -((1 + Real.sqrt 3) / 2) := by
+  simp only [coneLoop, structureFactor_im, diracK, Real.sin_add, Real.sin_sub,
+    Real.cos_pi_div_two, Real.sin_pi_div_two, cos_2pi3, sin_2pi3, cos_4pi3, sin_4pi3]
+  ring
+
+theorem coneLoop_re_1 : (structureFactor (coneLoop 1)).re = (1 + Real.sqrt 3) / 2 := by
+  simp only [coneLoop, structureFactor_re, diracK, Real.cos_add, Real.cos_sub,
+    Real.cos_pi_div_two, Real.sin_pi_div_two, cos_2pi3, sin_2pi3, cos_4pi3, sin_4pi3]
+  ring
+
+theorem coneLoop_im_1 : (structureFactor (coneLoop 1)).im = -((1 - Real.sqrt 3) / 2) := by
+  simp only [coneLoop, structureFactor_im, diracK, Real.sin_add, Real.sin_sub,
+    Real.cos_pi_div_two, Real.sin_pi_div_two, cos_2pi3, sin_2pi3, cos_4pi3, sin_4pi3]
+  ring
+
+theorem coneLoop_re_2 : (structureFactor (coneLoop 2)).re = (1 + Real.sqrt 3) / 2 := by
+  simp only [coneLoop, structureFactor_re, diracK, Real.cos_add, Real.cos_sub,
+    Real.cos_pi_div_two, Real.sin_pi_div_two, cos_2pi3, sin_2pi3, cos_4pi3, sin_4pi3]
+  ring
+
+theorem coneLoop_im_2 : (structureFactor (coneLoop 2)).im = (1 - Real.sqrt 3) / 2 := by
+  simp only [coneLoop, structureFactor_im, diracK, Real.sin_add, Real.sin_sub,
+    Real.cos_pi_div_two, Real.sin_pi_div_two, cos_2pi3, sin_2pi3, cos_4pi3, sin_4pi3]
+  ring
+
+theorem coneLoop_re_3 : (structureFactor (coneLoop 3)).re = (1 - Real.sqrt 3) / 2 := by
+  simp only [coneLoop, structureFactor_re, diracK, Real.cos_add, Real.cos_sub,
+    Real.cos_pi_div_two, Real.sin_pi_div_two, cos_2pi3, sin_2pi3, cos_4pi3, sin_4pi3]
+  ring
+
+theorem coneLoop_im_3 : (structureFactor (coneLoop 3)).im = (1 + Real.sqrt 3) / 2 := by
+  simp only [coneLoop, structureFactor_im, diracK, Real.sin_add, Real.sin_sub,
+    Real.cos_pi_div_two, Real.sin_pi_div_two, cos_2pi3, sin_2pi3, cos_4pi3, sin_4pi3]
+  ring
+/-! ### Moduli and overlaps on the loop -/
+
+/-- The overlap of two massless-honeycomb lower-band states, in structure-factor data.
+For the chiral (`d₃ = 0`) model the raw lower-band vector is `v(θ) = (f(θ), −|f(θ)|)`. -/
+theorem lbOv_cone_re (θ θ' : ℝ × ℝ) :
+    (frameOverlap (lbVec (honeycombD θ)) (lbVec (honeycombD θ'))).re
+      = (structureFactor θ).re * (structureFactor θ').re
+        + (structureFactor θ).im * (structureFactor θ').im
+        + ‖structureFactor θ‖ * ‖structureFactor θ'‖ := by
+  rw [lbOverlap_re, honeycomb_energy_eq, honeycomb_energy_eq]
+  simp only [honeycombD, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons,
+    Matrix.cons_val_two, Matrix.tail_cons]
+  ring
+
+theorem lbOv_cone_im (θ θ' : ℝ × ℝ) :
+    (frameOverlap (lbVec (honeycombD θ)) (lbVec (honeycombD θ'))).im
+      = (structureFactor θ).re * (structureFactor θ').im
+        - (structureFactor θ).im * (structureFactor θ').re := by
+  rw [lbOverlap_im]
+  simp only [honeycombD, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons,
+    Matrix.cons_val_two, Matrix.tail_cons]
+  ring
+
+private theorem sq3 : Real.sqrt 3 * Real.sqrt 3 = 3 := Real.mul_self_sqrt (by norm_num)
+private theorem sq2 : Real.sqrt 2 * Real.sqrt 2 = 2 := Real.mul_self_sqrt (by norm_num)
+
+theorem coneLoop_norm_0 : ‖structureFactor (coneLoop 0)‖ = Real.sqrt 2 := by
+  rw [Complex.norm_def, Complex.normSq_apply, coneLoop_re_0, coneLoop_im_0]
+  congr 1; nlinarith [sq3]
+
+theorem coneLoop_norm_1 : ‖structureFactor (coneLoop 1)‖ = Real.sqrt 2 := by
+  rw [Complex.norm_def, Complex.normSq_apply, coneLoop_re_1, coneLoop_im_1]
+  congr 1; nlinarith [sq3]
+
+theorem coneLoop_norm_2 : ‖structureFactor (coneLoop 2)‖ = Real.sqrt 2 := by
+  rw [Complex.norm_def, Complex.normSq_apply, coneLoop_re_2, coneLoop_im_2]
+  congr 1; nlinarith [sq3]
+
+theorem coneLoop_norm_3 : ‖structureFactor (coneLoop 3)‖ = Real.sqrt 2 := by
+  rw [Complex.norm_def, Complex.normSq_apply, coneLoop_re_3, coneLoop_im_3]
+  congr 1; nlinarith [sq3]
+
+theorem coneOv_0 : frameOverlap (lbVec (honeycombD (coneLoop 0)))
+    (lbVec (honeycombD (coneLoop 1))) = 1 + (Real.sqrt 3 : ℝ) * Complex.I := by
+  rw [Complex.ext_iff]
+  refine ⟨?_, ?_⟩
+  · rw [lbOv_cone_re, coneLoop_re_0, coneLoop_im_0, coneLoop_re_1, coneLoop_im_1,
+      coneLoop_norm_0, coneLoop_norm_1]
+    simp only [Complex.add_re, Complex.one_re, Complex.mul_re, Complex.I_re, Complex.I_im,
+      Complex.ofReal_re, Complex.ofReal_im]
+    nlinarith [sq3, sq2]
+  · rw [lbOv_cone_im, coneLoop_re_0, coneLoop_im_0, coneLoop_re_1, coneLoop_im_1]
+    simp only [Complex.add_im, Complex.one_im, Complex.mul_im, Complex.I_re, Complex.I_im,
+      Complex.ofReal_re, Complex.ofReal_im]
+    nlinarith [sq3]
+
+theorem coneOv_1 : frameOverlap (lbVec (honeycombD (coneLoop 1)))
+    (lbVec (honeycombD (coneLoop 2))) = ((2 + Real.sqrt 3 : ℝ) : ℂ) - Complex.I := by
+  refine Complex.ext ?_ ?_
+  · rw [lbOv_cone_re, coneLoop_re_1, coneLoop_im_1, coneLoop_re_2, coneLoop_im_2,
+      coneLoop_norm_1, coneLoop_norm_2]
+    simp only [Complex.sub_re, Complex.ofReal_re, Complex.I_re, sub_zero]
+    nlinarith [sq3, sq2]
+  · rw [lbOv_cone_im, coneLoop_re_1, coneLoop_im_1, coneLoop_re_2, coneLoop_im_2]
+    simp only [Complex.sub_im, Complex.ofReal_im, Complex.I_im, zero_sub]
+    nlinarith [sq3]
+
+theorem coneOv_2 : frameOverlap (lbVec (honeycombD (coneLoop 2)))
+    (lbVec (honeycombD (coneLoop 3))) = 1 + (Real.sqrt 3 : ℝ) * Complex.I := by
+  rw [Complex.ext_iff]
+  refine ⟨?_, ?_⟩
+  · rw [lbOv_cone_re, coneLoop_re_2, coneLoop_im_2, coneLoop_re_3, coneLoop_im_3,
+      coneLoop_norm_2, coneLoop_norm_3]
+    simp only [Complex.add_re, Complex.one_re, Complex.mul_re, Complex.I_re, Complex.I_im,
+      Complex.ofReal_re, Complex.ofReal_im]
+    nlinarith [sq3, sq2]
+  · rw [lbOv_cone_im, coneLoop_re_2, coneLoop_im_2, coneLoop_re_3, coneLoop_im_3]
+    simp only [Complex.add_im, Complex.one_im, Complex.mul_im, Complex.I_re, Complex.I_im,
+      Complex.ofReal_re, Complex.ofReal_im]
+    nlinarith [sq3]
+
+theorem coneOv_3 : frameOverlap (lbVec (honeycombD (coneLoop 3)))
+    (lbVec (honeycombD (coneLoop 0))) = ((2 - Real.sqrt 3 : ℝ) : ℂ) + Complex.I := by
+  refine Complex.ext ?_ ?_
+  · rw [lbOv_cone_re, coneLoop_re_3, coneLoop_im_3, coneLoop_re_0, coneLoop_im_0,
+      coneLoop_norm_3, coneLoop_norm_0]
+    simp only [Complex.add_re, Complex.ofReal_re, Complex.I_re, add_zero]
+    nlinarith [sq3, sq2]
+  · rw [lbOv_cone_im, coneLoop_re_3, coneLoop_im_3, coneLoop_re_0, coneLoop_im_0]
+    simp only [Complex.add_im, Complex.ofReal_im, Complex.I_im, zero_add]
+    nlinarith [sq3]
+
+/-- The Wilson-loop product around the cone is the **negative rational** `−16`. -/
+theorem coneWilson_prod :
+    (∏ j : Fin 4, frameOverlap (lbVec (honeycombD (coneLoop j)))
+      (lbVec (honeycombD (coneLoop (j + 1))))) = -16 := by
+  rw [Fin.prod_univ_four]
+  rw [show ((0 : Fin 4) + 1) = 1 from rfl, show ((1 : Fin 4) + 1) = 2 from rfl,
+    show ((2 : Fin 4) + 1) = 3 from rfl, show ((3 : Fin 4) + 1) = 0 from rfl]
+  rw [coneOv_0, coneOv_1, coneOv_2, coneOv_3]
+  set t : ℂ := ((Real.sqrt 3 : ℝ) : ℂ) with ht
+  have h3 : t ^ 2 = 3 := by
+    rw [ht, ← Complex.ofReal_pow, Real.sq_sqrt (by norm_num : (0:ℝ) ≤ 3)]; norm_num
+  have hA : (1 + t * Complex.I) * (1 + t * Complex.I) = -2 + 2 * t * Complex.I := by
+    linear_combination (-1 : ℂ) * h3 + t ^ 2 * Complex.I_sq
+  have hB : (2 + t - Complex.I) * (2 - t + Complex.I) = 2 + 2 * t * Complex.I := by
+    linear_combination (-1 : ℂ) * h3 + (-1 : ℂ) * Complex.I_sq
+  have hC : (-2 + 2 * t * Complex.I) * (2 + 2 * t * Complex.I) = -16 := by
+    linear_combination (-4 : ℂ) * h3 + 4 * t ^ 2 * Complex.I_sq
+  calc (1 + t * Complex.I) * (((2 + Real.sqrt 3 : ℝ) : ℂ) - Complex.I) * (1 + t * Complex.I)
+        * (((2 - Real.sqrt 3 : ℝ) : ℂ) + Complex.I)
+      = ((1 + t * Complex.I) * (1 + t * Complex.I))
+          * ((2 + t - Complex.I) * (2 - t + Complex.I)) := by rw [ht]; push_cast; ring
+    _ = (-2 + 2 * t * Complex.I) * (2 + 2 * t * Complex.I) := by rw [hA, hB]
+    _ = -16 := hC
+
+/-- **The cone Berry phase is exactly `π`.** The Wilson loop of the lower-band states around the
+`π/2`-diamond enclosing the `K` Dirac point has argument `π` — the sublattice-pseudospin Berry
+phase of the gapless Dirac cone. The product is the negative rational `−16`, so the value is exact,
+not an enclosure. -/
+theorem coneBerryPhase_pi :
+    wilsonLoopArg (fun j : Fin 4 => lbVec (honeycombD (coneLoop j))) = Real.pi := by
+  unfold wilsonLoopArg
+  rw [coneWilson_prod, Complex.arg_eq_pi_iff]
+  norm_num
+
+/-! ### The pseudospin winding -/
+
+theorem transAmp_re (a b : ℂ) : ((starRingEnd ℂ) a * b).re = a.re * b.re + a.im * b.im := by
+  simp only [Complex.mul_re, Complex.conj_re, Complex.conj_im]; ring
+
+theorem transAmp_im (a b : ℂ) : ((starRingEnd ℂ) a * b).im = a.re * b.im - a.im * b.re := by
+  simp only [Complex.mul_im, Complex.conj_re, Complex.conj_im]; ring
+
+theorem coneLoop_ne_zero (j : Fin 4) : structureFactor (coneLoop j) ≠ 0 := by
+  intro h
+  have hn : ‖structureFactor (coneLoop j)‖ = Real.sqrt 2 := by
+    fin_cases j
+    exacts [coneLoop_norm_0, coneLoop_norm_1, coneLoop_norm_2, coneLoop_norm_3]
+  rw [h, norm_zero] at hn
+  exact absurd hn.symm (ne_of_gt (Real.sqrt_pos.mpr (by norm_num)))
+
+private theorem cos_5pi6 : Real.cos (5 * Real.pi / 6) = -(Real.sqrt 3 / 2) := by
+  rw [show (5 * Real.pi / 6 : ℝ) = Real.pi - Real.pi / 6 by ring, Real.cos_pi_sub,
+    Real.cos_pi_div_six]
+
+private theorem sin_5pi6 : Real.sin (5 * Real.pi / 6) = 1 / 2 := by
+  rw [show (5 * Real.pi / 6 : ℝ) = Real.pi - Real.pi / 6 by ring, Real.sin_pi_sub,
+    Real.sin_pi_div_six]
+
+theorem coneArg_01 : Complex.arg ((starRingEnd ℂ) (structureFactor (coneLoop 0))
+    * structureFactor (coneLoop 1)) = 2 * Real.pi / 3 := by
+  refine arg_eq_of_polar (r := 2) (by norm_num)
+    ⟨by linarith [Real.pi_pos], by linarith [Real.pi_pos]⟩ ?_ ?_
+  · rw [transAmp_re, coneLoop_re_0, coneLoop_im_0, coneLoop_re_1, coneLoop_im_1, cos_2pi3]
+    nlinarith [sq3]
+  · rw [transAmp_im, coneLoop_re_0, coneLoop_im_0, coneLoop_re_1, coneLoop_im_1, sin_2pi3]
+    nlinarith [sq3]
+
+theorem coneArg_12 : Complex.arg ((starRingEnd ℂ) (structureFactor (coneLoop 1))
+    * structureFactor (coneLoop 2)) = -(Real.pi / 6) := by
+  refine arg_eq_of_polar (r := 2) (by norm_num)
+    ⟨by linarith [Real.pi_pos], by linarith [Real.pi_pos]⟩ ?_ ?_
+  · rw [transAmp_re, coneLoop_re_1, coneLoop_im_1, coneLoop_re_2, coneLoop_im_2, Real.cos_neg,
+      Real.cos_pi_div_six]
+    nlinarith [sq3]
+  · rw [transAmp_im, coneLoop_re_1, coneLoop_im_1, coneLoop_re_2, coneLoop_im_2, Real.sin_neg,
+      Real.sin_pi_div_six]
+    nlinarith [sq3]
+
+theorem coneArg_23 : Complex.arg ((starRingEnd ℂ) (structureFactor (coneLoop 2))
+    * structureFactor (coneLoop 3)) = 2 * Real.pi / 3 := by
+  refine arg_eq_of_polar (r := 2) (by norm_num)
+    ⟨by linarith [Real.pi_pos], by linarith [Real.pi_pos]⟩ ?_ ?_
+  · rw [transAmp_re, coneLoop_re_2, coneLoop_im_2, coneLoop_re_3, coneLoop_im_3, cos_2pi3]
+    nlinarith [sq3]
+  · rw [transAmp_im, coneLoop_re_2, coneLoop_im_2, coneLoop_re_3, coneLoop_im_3, sin_2pi3]
+    nlinarith [sq3]
+
+theorem coneArg_30 : Complex.arg ((starRingEnd ℂ) (structureFactor (coneLoop 3))
+    * structureFactor (coneLoop 0)) = 5 * Real.pi / 6 := by
+  refine arg_eq_of_polar (r := 2) (by norm_num)
+    ⟨by linarith [Real.pi_pos], by linarith [Real.pi_pos]⟩ ?_ ?_
+  · rw [transAmp_re, coneLoop_re_3, coneLoop_im_3, coneLoop_re_0, coneLoop_im_0, cos_5pi6]
+    nlinarith [sq3]
+  · rw [transAmp_im, coneLoop_re_3, coneLoop_im_3, coneLoop_re_0, coneLoop_im_0, sin_5pi6]
+    nlinarith [sq3]
+
+/-- **The sublattice pseudospin winds exactly once around the cone.** The four principal-branch
+increments of the structure-factor phase around the `π/2`-diamond enclosing `K` are
+`2π/3, −π/6, 2π/3, 5π/6`, and they sum to `2π`.
+
+This is the discretized winding number `+1` of the Dirac cone — the topological charge that
+`coneBerryPhase_pi` converts into the Berry phase `π`. -/
+theorem coneWinding_two_pi :
+    principal (Complex.arg (structureFactor (coneLoop 1))
+        - Complex.arg (structureFactor (coneLoop 0)))
+      + principal (Complex.arg (structureFactor (coneLoop 2))
+        - Complex.arg (structureFactor (coneLoop 1)))
+      + principal (Complex.arg (structureFactor (coneLoop 3))
+        - Complex.arg (structureFactor (coneLoop 2)))
+      + principal (Complex.arg (structureFactor (coneLoop 0))
+        - Complex.arg (structureFactor (coneLoop 3)))
+      = 2 * Real.pi := by
+  rw [← arg_conj_mul_eq_principal_sub (coneLoop_ne_zero 0) (coneLoop_ne_zero 1),
+    ← arg_conj_mul_eq_principal_sub (coneLoop_ne_zero 1) (coneLoop_ne_zero 2),
+    ← arg_conj_mul_eq_principal_sub (coneLoop_ne_zero 2) (coneLoop_ne_zero 3),
+    ← arg_conj_mul_eq_principal_sub (coneLoop_ne_zero 3) (coneLoop_ne_zero 0),
+    coneArg_01, coneArg_12, coneArg_23, coneArg_30]
+  ring
+
+/-! ### Contrast: a non-winding loop has Berry phase `0` -/
+
+/-- A three-point loop through Γ and the two `M` points. It does **not** enclose a Dirac point and
+its pseudospin does not wind: all three structure-factor values are positive reals. -/
+noncomputable def flatLoop : Fin 3 → ℝ × ℝ
+  | 0 => gammaPoint
+  | 1 => mPoint
+  | 2 => (0, Real.pi)
+
+theorem flatLoop_f_0 : structureFactor (flatLoop 0) = 3 := structureFactor_gamma
+theorem flatLoop_f_1 : structureFactor (flatLoop 1) = 1 := structureFactor_mPoint
+
+theorem flatLoop_f_2 : structureFactor (flatLoop 2) = 1 := by
+  show structureFactor (0, Real.pi) = 1
+  unfold structureFactor
+  simp [Complex.exp_mul_I]
+
+theorem flatLoop_ov (j j' : Fin 3) (x y : ℝ) (hx : 0 < x) (hy : 0 < y)
+    (hj : structureFactor (flatLoop j) = (x : ℂ)) (hj' : structureFactor (flatLoop j') = (y : ℂ)) :
+    frameOverlap (lbVec (honeycombD (flatLoop j))) (lbVec (honeycombD (flatLoop j')))
+      = ((2 * x * y : ℝ) : ℂ) := by
+  refine Complex.ext ?_ ?_
+  · rw [lbOv_cone_re, hj, hj']
+    simp [Complex.norm_real, abs_of_pos hx, abs_of_pos hy]
+    ring
+  · rw [lbOv_cone_im, hj, hj']
+    simp
+
+/-- **The non-winding loop carries Berry phase `0`.** Same construction, same band, but the
+pseudospin phase never turns: the Wilson product is the positive rational `72`. Together with
+`coneBerryPhase_pi` this makes the `π` a *discriminating* statement about the cone, not an artefact
+of the discretization. -/
+theorem flatLoopBerryPhase_zero :
+    wilsonLoopArg (fun j : Fin 3 => lbVec (honeycombD (flatLoop j))) = 0 := by
+  unfold wilsonLoopArg
+  rw [Fin.prod_univ_three, show ((0 : Fin 3) + 1) = 1 from rfl,
+    show ((1 : Fin 3) + 1) = 2 from rfl, show ((2 : Fin 3) + 1) = 0 from rfl,
+    flatLoop_ov 0 1 3 1 (by norm_num) (by norm_num) (by rw [flatLoop_f_0]; norm_num)
+      (by rw [flatLoop_f_1]; norm_num),
+    flatLoop_ov 1 2 1 1 (by norm_num) (by norm_num) (by rw [flatLoop_f_1]; norm_num)
+      (by rw [flatLoop_f_2]; norm_num),
+    flatLoop_ov 2 0 1 3 (by norm_num) (by norm_num) (by rw [flatLoop_f_2]; norm_num)
+      (by rw [flatLoop_f_0]; norm_num)]
+  norm_num
+
+theorem principal_zero : principal 0 = 0 := by
+  have h := principal_add_branch 0
+  rw [branchIndex_zero] at h
+  simpa using h
+
+/-- **The non-winding loop's pseudospin does not turn.** All three structure-factor values are
+positive reals, so every principal-branch increment is `0` and the winding is `0` — against the
+cone's `2π` (`coneWinding_two_pi`). The winding, not the Berry phase, is where the two loops
+actually differ; the phase difference `π` vs `0` follows. -/
+theorem flatWinding_zero :
+    principal (Complex.arg (structureFactor (flatLoop 1))
+        - Complex.arg (structureFactor (flatLoop 0)))
+      + principal (Complex.arg (structureFactor (flatLoop 2))
+        - Complex.arg (structureFactor (flatLoop 1)))
+      + principal (Complex.arg (structureFactor (flatLoop 0))
+        - Complex.arg (structureFactor (flatLoop 2)))
+      = 0 := by
+  have a0 : Complex.arg (structureFactor (flatLoop 0)) = 0 := by
+    rw [flatLoop_f_0]; exact Complex.arg_ofReal_of_nonneg (by norm_num)
+  have a1 : Complex.arg (structureFactor (flatLoop 1)) = 0 := by
+    rw [flatLoop_f_1, Complex.arg_one]
+  have a2 : Complex.arg (structureFactor (flatLoop 2)) = 0 := by
+    rw [flatLoop_f_2, Complex.arg_one]
+  rw [a0, a1, a2, sub_zero, principal_zero]
+  ring
 
 end SKEFTHawking.GrapheneBand
