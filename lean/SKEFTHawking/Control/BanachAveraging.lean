@@ -77,19 +77,27 @@ itself. A pointwise bound on `G` would give `O(‖G‖·T)`; this gives `B·(1 +
 oscillates fast `B` is small even though `‖G‖` is not. That is the whole mechanism behind the
 Bloch–Siegert scale. -/
 
-/-- **The first-order averaging bound.** -/
-theorem norm_integral_mul_mul_le [CompleteSpace A] {B Kp Kq T : ℝ}
+/-- **The first-order averaging bound.**
+
+The factor bounds `KL`, `KU` are ARBITRARY, not pinned to `1`. That matters concretely: at the
+`ℓ^∞` operator norm a generic `2×2` unitary has norm `> 1` (the co-rotating propagator
+`exp(-iθσ_x)` has row sums `|cos θ| + |sin θ|`, reaching `√2`), so a hypothesis `‖L s‖ ≤ 1` would
+exclude essentially every rotation — i.e. exactly the propagators this machinery exists to bound.
+Carrying general bounds keeps the theorem applicable to the intended objects in any norm. -/
+theorem norm_integral_mul_mul_le [CompleteSpace A] {B KL KU Kp Kq T : ℝ}
     (hS : ∀ s, HasDerivAt S (G s) s)
     (hL : ∀ s, HasDerivAt L (L s * P s) s) (hU : ∀ s, HasDerivAt U (Q s * U s) s)
     (hSc : Continuous S) (hLc : Continuous L) (hUc : Continuous U)
     (hPc : Continuous P) (hQc : Continuous Q) (hGc : Continuous G)
     (hS0 : S 0 = 0)
-    (hLb : ∀ s, ‖L s‖ ≤ 1) (hUb : ∀ s, ‖U s‖ ≤ 1) (hSb : ∀ s, ‖S s‖ ≤ B)
+    (hLb : ∀ s, ‖L s‖ ≤ KL) (hUb : ∀ s, ‖U s‖ ≤ KU) (hSb : ∀ s, ‖S s‖ ≤ B)
     (hPb : ∀ s, ‖P s‖ ≤ Kp) (hQb : ∀ s, ‖Q s‖ ≤ Kq)
     (hB : 0 ≤ B) (hT : 0 ≤ T) :
-    ‖∫ s in (0 : ℝ)..T, L s * G s * U s‖ ≤ B * (1 + T * (Kp + Kq)) := by
+    ‖∫ s in (0 : ℝ)..T, L s * G s * U s‖ ≤ KL * KU * B * (1 + T * (Kp + Kq)) := by
   have hKp : 0 ≤ Kp := le_trans (norm_nonneg _) (hPb 0)
   have hKq : 0 ≤ Kq := le_trans (norm_nonneg _) (hQb 0)
+  have hKL : 0 ≤ KL := le_trans (norm_nonneg _) (hLb 0)
+  have hKU : 0 ≤ KU := le_trans (norm_nonneg _) (hUb 0)
   -- The three summands are continuous, hence interval-integrable.
   have iA : IntervalIntegrable (fun s => L s * P s * S s * U s) MeasureTheory.volume 0 T :=
     (((hLc.mul hPc).mul hSc).mul hUc).intervalIntegrable 0 T
@@ -111,41 +119,40 @@ theorem norm_integral_mul_mul_le [CompleteSpace A] {B Kp Kq T : ℝ}
     rw [← hid]; abel
   rw [hsplit]
   -- Bound the boundary term and the two integrals.
-  have hbdry : ‖L T * S T * U T‖ ≤ B := by
+  -- Pointwise bound on a triple product `‖L · X · U‖ ≤ KL · KX · KU`.
+  have htriple : ∀ (X : A) (KX : ℝ), 0 ≤ KX → ‖X‖ ≤ KX → ∀ s : ℝ,
+      ‖L s * X * U s‖ ≤ KL * KX * KU := by
+    intro X KX hKX hX s
     refine le_trans (norm_mul_le _ _) ?_
-    have h1 : ‖L T * S T‖ ≤ B := by
-      refine le_trans (norm_mul_le _ _) ?_
-      nlinarith [hLb T, hSb T, norm_nonneg (L T), norm_nonneg (S T)]
-    nlinarith [h1, hUb T, norm_nonneg (U T), hB]
-  have hIA : ‖∫ s in (0 : ℝ)..T, L s * P s * S s * U s‖ ≤ (B * Kp) * T := by
+    have h1 : ‖L s * X‖ ≤ KL * KX :=
+      le_trans (norm_mul_le _ _) (mul_le_mul (hLb s) hX (norm_nonneg _) hKL)
+    exact mul_le_mul h1 (hUb s) (norm_nonneg _) (by positivity)
+  have hbdry : ‖L T * S T * U T‖ ≤ KL * B * KU := htriple (S T) B hB (hSb T) T
+  have hIA : ‖∫ s in (0 : ℝ)..T, L s * P s * S s * U s‖ ≤ (KL * (Kp * B) * KU) * T := by
     have := intervalIntegral.norm_integral_le_of_norm_le_const
-      (C := B * Kp) (f := fun s => L s * P s * S s * U s) (a := 0) (b := T) ?_
+      (C := KL * (Kp * B) * KU) (f := fun s => L s * P s * S s * U s) (a := 0) (b := T) ?_
     · simpa [abs_of_nonneg hT] using this
     · intro s _
-      refine le_trans (norm_mul_le _ _) ?_
-      have h1 : ‖L s * P s * S s‖ ≤ B * Kp := by
-        refine le_trans (norm_mul_le _ _) ?_
-        have h2 : ‖L s * P s‖ ≤ Kp := by
-          refine le_trans (norm_mul_le _ _) ?_
-          nlinarith [hLb s, hPb s, norm_nonneg (L s), norm_nonneg (P s)]
-        nlinarith [h2, hSb s, norm_nonneg (S s), hKp, hB]
-      exact le_trans (mul_le_of_le_one_right (norm_nonneg _) (hUb s)) h1
-  have hIC : ‖∫ s in (0 : ℝ)..T, L s * S s * (Q s * U s)‖ ≤ (B * Kq) * T := by
+      have hPS : ‖P s * S s‖ ≤ Kp * B :=
+        le_trans (norm_mul_le _ _) (mul_le_mul (hPb s) (hSb s) (norm_nonneg _) hKp)
+      have := htriple (P s * S s) (Kp * B) (by positivity) hPS s
+      calc ‖L s * P s * S s * U s‖ = ‖L s * (P s * S s) * U s‖ := by congr 1; noncomm_ring
+        _ ≤ KL * (Kp * B) * KU := this
+  have hIC : ‖∫ s in (0 : ℝ)..T, L s * S s * (Q s * U s)‖ ≤ (KL * (B * Kq) * KU) * T := by
     have := intervalIntegral.norm_integral_le_of_norm_le_const
-      (C := B * Kq) (f := fun s => L s * S s * (Q s * U s)) (a := 0) (b := T) ?_
+      (C := KL * (B * Kq) * KU) (f := fun s => L s * S s * (Q s * U s)) (a := 0) (b := T) ?_
     · simpa [abs_of_nonneg hT] using this
     · intro s _
-      refine le_trans (norm_mul_le _ _) ?_
-      have h1 : ‖L s * S s‖ ≤ B := by
-        refine le_trans (norm_mul_le _ _) ?_
-        nlinarith [hLb s, hSb s, norm_nonneg (L s), norm_nonneg (S s)]
-      have h2 : ‖Q s * U s‖ ≤ Kq := by
-        refine le_trans (norm_mul_le _ _) ?_
-        nlinarith [hQb s, hUb s, norm_nonneg (Q s), norm_nonneg (U s)]
-      nlinarith [h1, h2, hB, hKq, norm_nonneg (L s * S s), norm_nonneg (Q s * U s)]
+      have hSQ : ‖S s * Q s‖ ≤ B * Kq :=
+        le_trans (norm_mul_le _ _) (mul_le_mul (hSb s) (hQb s) (norm_nonneg _) hB)
+      have := htriple (S s * Q s) (B * Kq) (by positivity) hSQ s
+      calc ‖L s * S s * (Q s * U s)‖ = ‖L s * (S s * Q s) * U s‖ := by
+            congr 1; noncomm_ring
+        _ ≤ KL * (B * Kq) * KU := this
   refine le_trans (norm_sub_le _ _) ?_
   refine le_trans (add_le_add (norm_sub_le _ _) le_rfl) ?_
-  nlinarith [hbdry, hIA, hIC, hB, hKp, hKq, hT]
+  nlinarith [hbdry, hIA, hIC, hB, hKp, hKq, hKL, hKU, hT,
+    mul_nonneg (mul_nonneg hKL hKU) hB, mul_nonneg hKL hKU]
 
 /-! ## 4. From the averaging bound to a genuine propagator difference
 
@@ -175,12 +182,14 @@ theorem integral_mul_ode [CompleteSpace A] (hL : ∀ s, HasDerivAt L (L s * P s)
 
 /-- **The unitarity transfer.** If `Ur` has right inverse `Vr` and `‖Ur‖ ≤ 1`, a bound on the
 CONJUGATED discrepancy `Vr·Ue − 1` transfers to the literal difference `Ue − Ur`. -/
-theorem norm_sub_le_norm_mul_sub_one {Ue Ur Vr : A} (hinv : Ur * Vr = 1) (hUr : ‖Ur‖ ≤ 1) :
-    ‖Ue - Ur‖ ≤ ‖Vr * Ue - 1‖ := by
+theorem norm_sub_le_norm_mul_sub_one {Ue Ur Vr : A} {KUr : ℝ} (hinv : Ur * Vr = 1)
+    (hUr : ‖Ur‖ ≤ KUr) :
+    ‖Ue - Ur‖ ≤ KUr * ‖Vr * Ue - 1‖ := by
   have hfac : Ue - Ur = Ur * (Vr * Ue - 1) := by
     rw [mul_sub, ← mul_assoc, hinv, one_mul, mul_one]
   rw [hfac]
-  exact le_trans (norm_mul_le _ _) (mul_le_of_le_one_left (norm_nonneg _) hUr)
+  exact le_trans (norm_mul_le _ _)
+    (mul_le_mul_of_nonneg_right hUr (norm_nonneg _))
 
 /-- **The propagator difference bound.** The capstone: the difference between the exact propagator
 `U` and the reduced propagator `Ur` is bounded by `B·(1 + T·(Kp+Kq))`, where `B` bounds the
@@ -188,18 +197,20 @@ ANTIDERIVATIVE of the discrepancy generator `P + Q`.
 
 Nothing here asserts the reduction as an equality; the conclusion is an inequality whose constant is
 explicit in every parameter. -/
-theorem norm_propagator_sub_le [CompleteSpace A] {B Kp Kq T : ℝ} {Ur : A}
+theorem norm_propagator_sub_le [CompleteSpace A] {B KL KU KUr Kp Kq T : ℝ} {Ur : A}
     (hS : ∀ s, HasDerivAt S (P s + Q s) s)
     (hL : ∀ s, HasDerivAt L (L s * P s) s) (hU : ∀ s, HasDerivAt U (Q s * U s) s)
     (hSc : Continuous S) (hLc : Continuous L) (hUc : Continuous U)
     (hPc : Continuous P) (hQc : Continuous Q)
     (hS0 : S 0 = 0) (hL0U0 : L 0 * U 0 = 1)
-    (hLb : ∀ s, ‖L s‖ ≤ 1) (hUb : ∀ s, ‖U s‖ ≤ 1) (hSb : ∀ s, ‖S s‖ ≤ B)
+    (hLb : ∀ s, ‖L s‖ ≤ KL) (hUb : ∀ s, ‖U s‖ ≤ KU) (hSb : ∀ s, ‖S s‖ ≤ B)
     (hPb : ∀ s, ‖P s‖ ≤ Kp) (hQb : ∀ s, ‖Q s‖ ≤ Kq) (hB : 0 ≤ B) (hT : 0 ≤ T)
-    (hinv : Ur * L T = 1) (hUrb : ‖Ur‖ ≤ 1) :
-    ‖U T - Ur‖ ≤ B * (1 + T * (Kp + Kq)) := by
+    (hinv : Ur * L T = 1) (hUrb : ‖Ur‖ ≤ KUr) :
+    ‖U T - Ur‖ ≤ KUr * (KL * KU * B * (1 + T * (Kp + Kq))) := by
   -- Transfer to the conjugated discrepancy.
   refine le_trans (norm_sub_le_norm_mul_sub_one hinv hUrb) ?_
+  have hKUr : 0 ≤ KUr := le_trans (norm_nonneg _) hUrb
+  refine mul_le_mul_of_nonneg_left ?_ hKUr
   -- The conjugated discrepancy IS the integral of `L·(P+Q)·U`.
   have hid := integral_mul_ode hL hU (by fun_prop) T
   rw [hL0U0] at hid
