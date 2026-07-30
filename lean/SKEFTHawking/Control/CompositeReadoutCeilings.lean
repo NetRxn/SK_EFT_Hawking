@@ -511,7 +511,11 @@ open MeasureTheory in
 /-- **Filtered-readout ceiling (6EB) does NOT bite** at a matched budget of `8`: the ceiling
 `filtered_readout_ceiling` produces for such a chain is at least `17/18`, so it forbids nothing
 below that. Stated by CALLING the ceiling and comparing against its actual conclusion, rather than
-by restating the bound expression by hand. -/
+by restating the bound expression by hand.
+
+⚠️ Deliberately NOT stated as `∃ F, fidelity ≤ F ∧ 17/18 ≤ F` — that shape is trivially satisfiable
+by `F = max(fidelity, 17/18)` and would carry no content. The two conjuncts here name the SAME
+expression, which is what makes them a claim about this ceiling. -/
 theorem filtered_readout_ceiling_does_not_bite {V : (ℝ → ℝ) → ℝ} {S₀ T : ℝ}
     (hwhite : Detection.IsWhiteFilteredVariance V S₀ T) (hS : 0 < S₀) (hT : 0 ≤ T)
     {s h : ℝ → ℝ} (hadm : Detection.IsAdmissibleFilter T s h)
@@ -519,10 +523,10 @@ theorem filtered_readout_ceiling_does_not_bite {V : (ℝ → ℝ) → ℝ} {S₀
     {μ₀ μ₁ σ t : ℝ} (hσ : 0 < σ) (hμle : μ₀ ≤ μ₁)
     (hμ : μ₁ - μ₀ = ∫ x in (0:ℝ)..T, h x * s x) (hσV : σ = Real.sqrt (V h))
     (hb : Detection.matchedBudget S₀ T s = 8) :
-    ∃ F : ℝ, assignmentFidelity (Detection.thrErr0 μ₀ σ t) (Detection.thrErr1 μ₁ σ t) ≤ F
-      ∧ (17 : ℝ) / 18 ≤ F := by
-  refine ⟨1 - Detection.gaussianQ (Detection.matchedBudget S₀ T s / 2),
-    filtered_readout_ceiling hwhite hS hT hadm hs hσ hμle hμ hσV,
+    assignmentFidelity (Detection.thrErr0 μ₀ σ t) (Detection.thrErr1 μ₁ σ t)
+        ≤ 1 - Detection.gaussianQ (Detection.matchedBudget S₀ T s / 2)
+      ∧ (17 : ℝ) / 18 ≤ 1 - Detection.gaussianQ (Detection.matchedBudget S₀ T s / 2) :=
+  ⟨filtered_readout_ceiling hwhite hS hT hadm hs hσ hμle hμ hσV,
     gaussian_ceiling_does_not_bite hb⟩
 
 open MeasureTheory in
@@ -540,11 +544,12 @@ theorem detector_chain_ceiling_does_not_bite (m : Electrothermal.ETFModel) {kB T
     (hσ : 0 < σ) (hμle : μ₀ ≤ μ₁)
     (hμ : μ₁ - μ₀ = ∫ x in (0:ℝ)..Tw, hf x * s x) (hσV : σ = Real.sqrt (Vtot hf))
     (hb : Detection.matchedBudget (m.phononNEP kB T ^ 2 + m.johnsonNEP kB T ^ 2) Tw s = 8) :
-    ∃ F : ℝ, assignmentFidelity (Detection.thrErr0 μ₀ σ t) (Detection.thrErr1 μ₁ σ t) ≤ F
-      ∧ (17 : ℝ) / 18 ≤ F := by
-  refine ⟨1 - Detection.gaussianQ
-      (Detection.matchedBudget (m.phononNEP kB T ^ 2 + m.johnsonNEP kB T ^ 2) Tw s / 2),
-    detector_chain_ceiling m hkB hT hG hindep hphonon hjohnson hTw hadm hs hσ hμle hμ hσV,
+    assignmentFidelity (Detection.thrErr0 μ₀ σ t) (Detection.thrErr1 μ₁ σ t)
+        ≤ 1 - Detection.gaussianQ
+            (Detection.matchedBudget (m.phononNEP kB T ^ 2 + m.johnsonNEP kB T ^ 2) Tw s / 2)
+      ∧ (17 : ℝ) / 18 ≤ 1 - Detection.gaussianQ
+            (Detection.matchedBudget (m.phononNEP kB T ^ 2 + m.johnsonNEP kB T ^ 2) Tw s / 2) :=
+  ⟨detector_chain_ceiling m hkB hT hG hindep hphonon hjohnson hTw hadm hs hσ hμle hμ hσV,
     gaussian_ceiling_does_not_bite hb⟩
 
 end
