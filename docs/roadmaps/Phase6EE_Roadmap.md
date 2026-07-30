@@ -2,6 +2,36 @@
 
 **Status: COMPLETE (2026-07-30).** Capstone phase of the `6E*` series (*verified device-physics metrology*).
 
+> **⚠️ Close-out qualification — read before citing this phase as fully clean.**
+>
+> Completion criteria 1–4 are met. Criterion 5 as written (*a fresh-context adversarial review
+> reports zero BLOCKER findings*) is met: reviews 3, 4, 5 and 6 each completed and each returned
+> **zero BLOCKERs**.
+>
+> The **stricter operator bar — zero BLOCKER *and* zero MAJOR *and* zero IMPORTANT — was NOT
+> reached.** Six completed rounds returned, in order, `1/7/6 → 1/3/5 → 0/3/5 → 0/2/5 → 0/2/4 →
+> 0/3/5` (B/M/I). BLOCKERs converged after round 2 and stayed at zero; MAJOR/IMPORTANT stayed flat
+> at ~2–3 / ~5 while the `Control/` family grew from 99 to 191 declarations, essentially all of it
+> review-driven. Round 5's headline fix became round 6's MAJOR. A seventh review was launched and
+> **terminated by the operator mid-flight** during an explicit stop-and-reassess, so no seventh
+> result exists.
+>
+> The operator's judgement at close-out was that the loop had become reactive and was generating
+> its own tail. That reading is supported by the data above: the remaining findings are concentrated
+> in the *meta-layer* (docstrings, the remediation tables below, and the Inventory entries) rather
+> than in the verified substrate, and the remediation tables in particular — prose about prose,
+> unverifiable by construction — produced roughly six findings of their own across rounds 4–6.
+>
+> **What is solid:** the Lean substrate. 191/191 kernel-pure, zero project axioms, zero `sorry` /
+> `native_decide` / `maxHeartbeats`, build clean at 10,799 jobs with zero `Control/` warnings,
+> `validate.py` 50/50. Every reviewer independently re-derived the load-bearing mathematics
+> (`interactionHamiltonian_decomp`, the Bloch–Siegert constant, `rwaGenerator_sq`, the Kramers
+> algebra, the ceiling compositions) and confirmed all of it.
+>
+> **What is not:** treat the remediation tables below as a review log, not as verified claims —
+> three of their rows were themselves found to misdescribe their own fixes. Git history is the
+> reliable record. Residual MINORs are listed per round and were deliberately not chased.
+
 ---
 
 ## ✅ Shipped declarations (2026-07-30)
