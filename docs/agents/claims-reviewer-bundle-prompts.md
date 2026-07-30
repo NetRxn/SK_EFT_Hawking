@@ -623,6 +623,294 @@ reviewed 0 BLOCKER / 0 MAJOR. Novelty backing: `papers/D10/prior_art_novelty.md`
 
 ---
 
+### D11. Kernel-Verified Topological Band Theory & Metamaterial Substrate
+
+(NEW BUNDLE — created 2026-07-30, first content-lift; authorized 2026-06-29
+per Pipeline Invariant #14, 6ED admitted 2026-07-27. Sourceless synthesis
+from Phases 6CA + 6CB + 6CD + 6CE + 6ED.)
+
+**Sources:** 6CA (FHS lattice Chern), 6CB (acoustic/phononic band gap),
+6CD (non-Hermitian exceptional points), 6CE (effective-medium
+homogenization), 6ED (graphene band structure). 22 Lean modules, all
+Lean-only. Novelty backing: `papers/D11/prior_art_novelty.md`.
+
+**Anchors (load-bearing, must verify):**
+- **Lattice topology** (6CA): `latticeChern` (`: ℤ` *by construction*),
+  `sum_plaquetteArg_eq_two_pi_mul_latticeChern` (unconditional
+  integrality), `latticeChern_gaugeInvariant`, `blochLatticeChern_integrality`,
+  `blochLatticeChern_rephase`, `latticeChern_Uwit` (`= 1`),
+  `latticeChern_trivial` (`= 0`), `blochLatticeChern_eq_zero_of_narrow_D`,
+  `blochPauli_sq`, `blochPauli_gap_pos`. Lean:
+  `TopologicalBand/{PrincipalBranch,FiniteTorus,FHSLatticeGauge,FHSExamples,
+  BlochFrame,BlochFHS,ArgSectors,BlochFrameOfD}.lean` + `BlochBundle.lean`.
+- **Phononic** (6CB, ns `SKEFTHawking.Phononic`): `DiatomicChain`,
+  `acousticBloch_spectrum`, `acousticBloch_eigenvalue_iff` (spectral
+  completeness), `acousticBloch_charpoly_factor`, `phononic_band_gap_exists`,
+  `band_gap_falsifier`, `branchMinus_at_pi` (`= 1`), `branchPlus_at_pi`
+  (`= 2`), `band_gap_rational_enclosure`, `sqrt_two_enclosure`.
+- **Non-Hermitian** (6CD, ns `SKEFTHawking.NonHermitian`): `ptBloch`,
+  `exceptional_point_defective`, `ptBlochEP_nilpotent`,
+  `ptBlochEP_kernel_line`, `pt_symmetric_real_spectrum_iff` (**sharp
+  biconditional**), `ep_order_two`, `ep_proximity_enclosure`,
+  `ep_splitting_at_ep`.
+- **Effective medium** (6CE, ns `SKEFTHawking.Metamaterial`):
+  `maxwellGarnett`, `maxwellGarnett_clausius_mossotti`,
+  `maxwellGarnett_host_recovery`, `effectiveMedium_constituent_bounds`,
+  `effectiveMedium_hashinShtrikman_enclosure`, `voigtModulus`,
+  `reussModulus`, `voigt_sub_reuss_eq` (**exact** AM–HM gap),
+  `effectiveModuli_enclosure`.
+- **Graphene** (6ED, ns `SKEFTHawking.GrapheneBand`): `structureFactor`,
+  `IsHoneycombChart`, `isHoneycombChart_of_neighbours`,
+  `structureFactor_eq_zero_iff`, `diracK'_ne_recip_translate_diracK`,
+  `honeycomb_band_secular`, `norm_exp_mul_I_sub_one_sub_id_le`,
+  `structureFactor_linear_expansion_global`, `quadForm_of_chart`,
+  `dispersion_slope_eq_hbar_fermiVelocity`, `dispersion_linear_enclosure`,
+  `gapped_dirac_gap_eq`, **`haldaneFrame_latticeChern_eq_neg_one`**,
+  `haldaneFrame_latticeChern_gauge_independent`,
+  `haldane_trivial_phase_chern_zero`,
+  `haldane_massInversion_not_sufficient_at_N4`, `coneBerryPhase_pi`,
+  `coneWinding_two_pi`, `flatLoopBerryPhase_zero`, `det_fin_four`,
+  `bernal_chirality_two`, `bernal_spectrum_not_determine_model`,
+  `bernal_mexicanHat`, `bernal_fullGapSq_eq`, `bernal_halfGapSq_isLeast`.
+
+**Stage-13 anchors specific to D11:**
+- **Scope honesty on thread (i) — HIGHEST priority.** `PAPER_STRATEGY.md`
+  advertised Berry curvature and a *conditional* bulk–boundary
+  correspondence until 2026-07-30. **Neither exists.** Any D11 prose
+  claiming Berry curvature, a continuum Chern integral
+  `C = (1/2π)∫F`, or a bulk–boundary result — conditional or otherwise —
+  is a **BLOCKER**. The shipped invariant is a *finite-lattice* FHS
+  Chern number on `ZMod N₁ × ZMod N₂`; `FHSLatticeGauge.lean`'s own scope
+  note disclaims equality to any continuum first Chern class. Verify the
+  draft says so.
+- **Chern sign and regime.** The certified value is **`−1`**, not `+1`
+  (`latticeChern := −∑ plaquetteBranch`), at `t = t₂ = 1`, `φ = π/2`,
+  `m = 1`, on a `4×4` torus. Any prose quoting `+1`, omitting the
+  parameter point, or implying generality beyond that grid is a finding.
+- **The retracted classification claim.** `haldane_chern_iff_mass_inversion`
+  was **deleted** 2026-07-29 as both false (the `4×4` invariant flips at
+  `|m| ≈ 3.3177`, strictly inside the analytic window `|m| < 3√3 ≈ 5.1962`)
+  and contentless. **No statement may be phrased as "exactly where the
+  masses invert" at fixed `N`.** Verify `haldane_massInversion_not_sufficient_at_N4`
+  is what carries this, and that the draft does not resurrect the old claim.
+- **Two kernel no-gos must be represented, not elided.**
+  `honeycomb_phase_chart_gl2z_invariant` (GL₂(ℤ) chart invariance REFUTED
+  by `structureFactor_zero_set_not_shear_invariant`) and
+  `spectrum_determines_multiband_model` (REFUTED by
+  `bernal_spectrum_not_determine_model`). The second carries the bundle's
+  strongest methodological result — a determinant-level gate cannot
+  certify a model's identification; every multi-band Hamiltonian needs an
+  *eigenvector-level* invariant. Cross-check against `KERNEL_NOGO_REGISTRY`
+  in `src/core/constants.py`.
+- **Structural-hypothesis disclosure.** D11 carries **zero tracked-Prop
+  hypotheses**, but three structural conditions are load-bearing and must
+  be disclosed, not buried: `AdmissibleBandFrame.overlap_ne` (nonzero NN
+  overlap is an explicit field — a gap does *not* imply it), the north-pole
+  condition `0 < ‖d‖ + d₃` in `blochFrameOfD` (a real coordinate
+  singularity), and `IsHoneycombChart`. Also the **`3 ∣ N` grid no-go**
+  (grids with `3 ∣ N` are inadmissible — `N = 3, 6, 12, 24, …` all fail).
+- **Novelty carve-outs.** "First acoustic Bloch/Floquet in any proof
+  assistant" and "no prover has a kernel-checked honeycomb band structure
+  / Haldane Chern number" are **repo-sweep-based, not multi-prover-search
+  based**, dated 2026-06-29 / 2026-07-27. Given the sibling precedent
+  (Phase 6BD's novelty refuted by QBlue, arXiv:2509.18583) and 6EA's own
+  refuted sweep, every such claim must be knowledge-hedged and scoped to
+  the checks actually performed. An unhedged "first in any prover" is a
+  finding.
+- **Counting convention.** Source-level declaration counts and
+  `lean_deps.json` extracted counts differ (the latter include generated
+  equation lemmas). The draft must state which convention it uses and not
+  mix them. Roadmap-quoted counts are stale against the live extract.
+- **Do not conflate `ChernBridge`.** `SKEFTHawking/ChernBridge.lean` is a
+  Chebyshev *marker* from Phase 6w, explicitly **not** a Bloch-band Chern
+  number. Citing it as one is a finding.
+- **No project-local axioms (Invariant #15).** 0 axioms / 0 `sorry` /
+  0 `native_decide` / 0 `maxHeartbeats`. `by decide` *is* used (kernel
+  decidability on `Fin`/`ZMod`) — that is safe and distinct from
+  `native_decide`; verify the draft does not blur them.
+
+---
+
+### D12. Kernel-Verified Detector & Readout Metrology — From Photon Statistics to Composite Fidelity Ceilings
+
+(NEW BUNDLE — created 2026-07-30, first content-lift; authorized 2026-07-27
+per Pipeline Invariant #14. Sourceless synthesis from Phases 6EA + 6EB +
+6EC + 6EE.)
+
+**Sources:** 6EA (Poisson/Gaussian discrimination floors, shot noise),
+6EB (ENBW/NEP/matched filter), 6EC (electrothermal detector physics),
+6EE (two-level control + composite readout ceilings). 13 Lean modules,
+all Lean-only. Novelty backing: `papers/D12/prior_art_novelty.md`.
+
+**Anchors (load-bearing, must verify):**
+- **Discrimination floors** (6EA, ns `SKEFTHawking.Detection`):
+  `IsCountRule`, `falseAlarm`, `missProb`, `thresholdRule`, `affinity`,
+  `affinity_le_binaryAffinity`, `avgError_ge_affinity_sq`,
+  `poissonBhattacharyya_hasSum`, `poissonBhattacharyya_eq`,
+  **`poisson_avgError_floor`**, `poisson_avgError_equalRates_eq_half`,
+  `poisson_darkBaseline_miss_floor`, `poisson_darkBaseline_miss_optimum`,
+  `isCountRule_thresholdRule`, `darkBaseline_zeroFalseAlarm_load_bearing`.
+- **The folklore refutation pair** (first-class deliverable):
+  **`folklore_miss_floor_false`** (false-strict against the realizable
+  unit-threshold counter), **`folklore_missFloor_beaten_148fold`**,
+  `folkloreGap_split`, **`folklore_avgFloor_unsound_of_bright`**
+  (exponentially fail-open as an average-error screen), `brightGap_5060`,
+  `folklore_avg_floor_unsound`, `folklore_avgFloor_unsound_factor1000`.
+- **Gaussian threshold** (6EA W2): `gaussianQ`, `thrErr0`, `thrErr1`,
+  **`avgError_ge_gaussianQ_sharp`**, `gaussianQ_two_le_add`,
+  `gaussianTail_chernoff`, `gaussianTail_mills`, `gaussianTail_birnbaum`,
+  `gaussianTail_ge_window`, `gaussianPDF_moment_Ioi`,
+  `gaussianQ_eq_measure`, `thrErr0_eq_measure`, `thrErr1_eq_measure`,
+  `midpoint_threshold_symmetric`, `gaussianQ_two_le_rational` (`≤ 1/37`),
+  `gaussianQ_two_ge_rational` (`≥ 1/125`).
+- **Shot noise / quantum seam** (6EA W3): `diagonalPSD`, `psdSqrt_diagonal`,
+  `diagonalState_sqrtFidelity_eq_affinity`, `declareSignalPOVM`,
+  `isBinaryPOVM_declareSignal`,
+  `povmAvgError_diagonal_eq_avgAssignmentError`,
+  **`poissonFloor_le_diagonalQuantumBound`**, `shotPSD`,
+  `shotPSD_eq_hawkingNoisePSD`, `poisson_thinning`,
+  `shotPSD_thinnedMean_same_eta`, `IsShotFilteredMoments`,
+  `shotFilteredVariance_boxcar_eq_mean`, `shotFilteredVariance_ramp_gt_mean`.
+- **Filtered floors** (6EB W1): `enbw`, `boxcar`, `IsWhiteFilteredVariance`,
+  **`enbw_mul_window_ge_half`**, **`enbw_eq_half_iff_boxcar`**,
+  `enbw_boxcar`, **`enbw_mul_window_isLeast`**, `enbw_oneSided_ne_twoSided`,
+  `enbw_const_mul`, `variance_eq_psd_mul_enbw`,
+  `johnsonNyquist_filteredVariance_floor`,
+  `enbw_dcGain_hypothesis_load_bearing`, `enbw_ramp_gt_half`.
+- **NEP algebra** (6EB W2): `nepOfPSD`, `nepOfOutput`, `snrChain`,
+  `IsResponsivityChain`, `IsUncorrelatedAt`, `nepOfPSD_sq`,
+  `sigma_eq_responsivity_nep_sqrt_enbw`, `shot_nep_formula`,
+  `nep_thermal_johnsonNyquist`, `shotLimited_iff_psd_lt`,
+  `nep_incident_absorbed_transfer`, `nep_quadrature_two`,
+  `quadrature_uncorrelated_hypothesis_load_bearing`,
+  `sigma_conventionMix_ne`, **`snrChain_le_window_ceiling`**,
+  `snrChain_window_ceiling_attained`.
+- **Matched filter** (6EB W3): `IsAdmissibleFilter`, `filteredSNR`,
+  `matchedBudget`, **`filteredSNR_le_matchedBudget`**,
+  **`matchedFilter_isGreatest`**, **`filteredSNR_eq_budget_iff`**,
+  `filteredSNR_neg_matched_eq_neg_budget`,
+  `unsigned_saturation_characterization_false`,
+  `power_unsigned_characterization_false`, `matchedBudget_antitone_psd`,
+  `matchedBudget_half_eq`, `error_floor_from_budget`,
+  `matched_filter_of_boxcar_saturates_enbw_floor`.
+- **Electrothermal** (6EC, ns `SKEFTHawking.Electrothermal`): `ETFModel`,
+  `loopGain`, `effectiveConductance`, `effectiveTimeConstant`, `alphaTCR`,
+  `SolvesHeatBalance`, `PerturbationsDecay`, `biasPower_linearization`,
+  `linearizedSlope_eq_neg_effectiveConductance`, `loopGain_eq_irwinHilton`,
+  `effectiveConductance_pos_iff`, `solution_unique`, **`etf_stable_iff`**,
+  `etf_diverges_of_loopGain_lt_neg_one`,
+  `etf_marginal_of_loopGain_eq_neg_one`, `effectiveTimeConstant_eq_div`,
+  `magnitudeOnly_criterion_unsound`, `absLoopGain_criterion_unsound`;
+  `responsivity_etf_correction`, `hasDerivAt_responsivityETF`,
+  `responsivity_opposite_sign_of_unstable`, `marginalWitness_correction_fails`,
+  `responsivity_magnitudeOnly_loses_stability_information`,
+  `thermalResponseAmplitude_eq_singlePole`;
+  `phononPSD`, `johnsonCurrentPSD`, `johnsonTransfer`,
+  `johnsonCurrentPSD_eq_johnsonNyquist`, `johnson_transfer_eq`,
+  **`johnsonNEP_eq_abs_one_sub_loopGain_mul_naive`**,
+  `johnsonNEPNaive_lt_johnsonNEP_iff`,
+  `johnsonNEP_naive_overstates_at_unit_loopGain`,
+  `johnsonNEP_correction_magnitude_loses_stability_information`,
+  **`bolometer_error_floor`**, `phonon_floor_of_psd_ge`,
+  **`phonon_only_error_floor`**, `phononLimited_iff_psd_lt`.
+- **Control + composite ceilings** (6EE, ns `SKEFTHawking.Control`):
+  `interactionPicture_ode`, `interactionHamiltonian_decomp`,
+  `bsAntiderivative`, `rwa_propagator_difference_bound_physical`,
+  `rwaGenerator_sq`, `rwaPropagator_ode`, `rwaPropagator_unique`,
+  `norm_rwaPropagator_quarter_turn`, `diagonal_drive_propagator_bound`;
+  `calibrated_duration_transverse`, `trace_blind_to_rotation_direction`,
+  `rwaAxisPhasor`, `envelope_phase_alignment`, `kramers_degeneracy`;
+  `assignmentFidelity`, `combined_floor_max`, `combined_floor_add`,
+  `combined_ceiling_gap_witness`, `relaxation_ceiling`,
+  `relaxation_thermal_ceiling`, `photon_budget_ceiling`,
+  `filtered_readout_ceiling`, `detector_chain_ceiling`,
+  `relaxation_photon_ceiling`, `avgAssignmentError_mono`.
+
+**Stage-13 anchors specific to D12:**
+- **Novelty framing — HIGHEST priority; the original claim was REFUTED.**
+  6EA's "no theorem prover has a kernel-checked … family" was falsified by
+  a live sweep (2026-07-28) *inside our own dependency tree*: Mathlib
+  already kernel-checks a sub-Gaussian Chernoff bound
+  (`ProbabilityTheory.HasSubgaussianMGF.measure_ge_le`) at our own pin —
+  our `gaussianTail_chernoff` is a **factor-2 sharpening, a refinement not
+  a first** — and PhysLib already kernel-checks quantum hypothesis testing
+  (`OptimalHypothesisRate`) and carries a Bhattacharyya TODO in
+  `Distance/Fidelity.lean`. Only the knowledge-hedged narrowed form is
+  permitted. An unhedged "first" is a **BLOCKER**.
+- **Two blocking pre-submission prior-art checks.** (1)
+  `RemyDegenne/testing-lower-bounds` — a Bayes-binary-risk ↔ divergence
+  lower bound there would be substantially our Le Cam floor; **highest
+  prior-art risk in the bundle**. (2) Isabelle/AFP `Error_Function` +
+  `Probability`, and Coq `infotheo` — **wholly unassessed**, which is a
+  gap in evidence, not a finding of absence. Verify the draft does not
+  assert absence in these ecosystems.
+- **Do not claim hypothesis-testing consumption.** Kernel no-go
+  `6ea-optimalhypothesisrate-quantum-seam` (verdict `dead`, type-level
+  impossible two ways). Zero `Detection.*` declarations reference
+  `OptimalHypothesisRate`; the single occurrence is a docstring
+  disclaiming it. Also: the POVM layer consumed is the **project's own**
+  D9-family `QuantumNetwork/HelstromDiscrimination.lean`, not PhysLib.
+- **Wave 1 is standalone, not load-bearing.** 6EB and 6EC reference
+  **zero** Wave-1 declarations; `poisson_avgError_floor` and
+  `poisson_darkBaseline_miss_floor` have **0** in-tree references outside
+  their own module. Any prose implying the Poisson layer is the series'
+  most-consumed floor is a finding — that claim was verified FALSE and
+  retracted. 6EA's standing failure mode is *narrative inflation around
+  correct mathematics*.
+- **Stale names that resolve to nothing** — any occurrence is a finding:
+  `folklore_missFloor_beaten_sixfold` (now `_148fold`; the factor-6
+  constant was an `expNeg_enclosure` artefact 25× below truth),
+  `johnsonNEP_naive_understates_by_one_sub_loopGain` and
+  `johnsonNEP_bare_understates_by_one_plus_loopGain`,
+  `shot_variance_eq_mean` (a *claim* defect — its content is refuted by
+  its own file's theorems), `matched_filter_snr_optimal`,
+  `avg_error_ge_of_z_le`, `nep_def`, `enbw_def`, `snr_composition`,
+  `drivenBalance_eq_effectiveConductance_form`, `phonon_nep_floor`,
+  `johnson_nep_via_responsivity`, `avgError_ge_half_gaussianQ`.
+- **The Johnson factor is `|1 − ℒ|`, not `|1 + ℒ|`.** A post-review
+  physics BLOCKER (2026-07-29) found Wave 3 had modelled Johnson noise as
+  pure *output* noise, omitting a first-order ETF effect from the very
+  wave whose subject is electrothermal feedback. The two ETF effects
+  partially cancel; an ETF-unaware budget at `ℒ = 3` is **2× low, not 4×**.
+  Verify every occurrence.
+- **`phonon_psd_eq_johnsonNyquist_scaled` is a resemblance, NOT a
+  citation.** Its own docstring says so; the `4·k_B·T²·G` prefactor is
+  **asserted, not cited**, and the identity constrains nothing (it holds
+  for any `4·a·b²·c`) and is unit-incoherent as provenance. The original
+  "cited, not asserted" claim was corrected 2026-07-29. Same class:
+  `shotPSD_eq_hawkingNoisePSD` pins only the leading numeral `2` and the
+  monomial degree — nothing about slot identity.
+- **Tracked-Prop disclosure (11 of them).** `IsWhiteFilteredVariance`
+  (Parseval + PSD flatness live *in the definition*, not in
+  `variance_eq_psd_mul_enbw`), `IsShotFilteredMoments` (**Campbell's
+  theorem itself lives in the definition**), `IsResponsivityChain`,
+  `IsUncorrelatedAt`, `IsAdmissibleFilter`, `SolvesHeatBalance`,
+  `PerturbationsDecay`, `SolvesDrivenBalance`, `SolvesSinusoidalBalance`,
+  `IsThermalFluctuationLimited`, `IsCountRule`. Each must be presented as
+  a disclosed modelling hypothesis. Note the withdrawn claim: *"an
+  abbreviation cannot make a hypothesis stronger"* —
+  `IsThermalFluctuationLimited` does not let a consumer "state physics
+  rather than spectral algebra."
+- **Degenerate-witness disclosure.** The 6EB and 6EC BITES witnesses fire
+  at `matchedBudget = 0` (a signal-free readout). Honest but degenerate;
+  no non-degenerate biting point is bracketed for those two ceilings.
+  Verify the draft discloses this rather than implying general bite.
+- **6EE close-out qualification.** The stricter operator bar (zero
+  BLOCKER *and* MAJOR *and* IMPORTANT) was **not** reached across six
+  rounds (`1/7/6 → 1/3/5 → 0/3/5 → 0/2/5 → 0/2/4 → 0/3/5`). What is solid
+  is the substrate (191/191 kernel-pure, zero project axioms). The
+  roadmap's remediation tables are a **review log, not verified claims** —
+  three rows misdescribed their own fixes. Do not cite them as evidence.
+- **Two counting conventions.** Source-authored vs `lean_deps.json`
+  extracted counts differ materially (e.g. `ETFModel` 50 vs 68). Roadmap
+  tables are stale against the live extract. State the convention; never mix.
+- **No project-local axioms (Invariant #15).** Verified across all 13
+  modules from `lean_deps.json` axiom closures — not spot checks —
+  `axiom_deps_project` empty and `axiom_deps_core` exactly
+  `{propext, Classical.choice, Quot.sound}` for every declaration.
+
+---
+
 ## Tier 2 — PRL splashes
 
 ### L1. GW170817 / vestigial-graviton
@@ -787,6 +1075,12 @@ audit pass.
 | CC channel | D3 §21 | D5 §7 | Same heat-kernel a_0 |
 | Polariton companion | D1 §6 | E1 | Same LKB device specs |
 | Graphene companion | D1 §7 | E2 | Same Dean-Kim-Lucas specs |
+| Readout envelopes ↓ physical floors | D9 | D12 | D12 **consumes** D9's relaxation/thermal readout-window envelopes (`readoutDecayProb`, `thermalExcitedPop`, `avgAssignmentError_rational_floor`) as cited floors; consumption-only, no re-proof. D9 must not claim the physical detection layer. |
+| Helstrom/POVM seam | D9 | D12 §quantum seam | Same `IsBinaryPOVM` / `quarter_sqrtFidelity_sq_le_povmAvgError` from `QuantumNetwork/HelstromDiscrimination.lean`. Project-side, **not** PhysLib. |
+| Johnson–Nyquist PSD | D1 (`GrapheneNoiseFormula`) | D12 §6EB, §6EC | Same `johnsonNyquistPSD`; the `4·k_B·T·σ_Q` prefactor is convention-pinned end-to-end through `johnsonNyquist_filteredVariance_floor`. |
+| Lattice Chern machinery | D11 §6CA | D11 §6ED | The Haldane witness *instantiates* the FHS adapter (`blochFrameOfD` → `linkOfFrame` → `latticeChern`); nothing at the adapter layer is rebuilt. Intra-bundle, must stay consistent on the sign convention (`C = −1`). |
+| Graphene band vs Dirac fluid | D11 §6ED | D1 / E2 | **Disjoint by design**: D11 is single-particle band structure (`GrapheneBand/`); D1/E2 are hydrodynamic/transport (`GrapheneHawking`, `GrapheneNoiseFormula`, `DiracFluidWKB`). A claim crossing this line is a finding. |
+| Chern marker vs Chern number | D7 (`ChernBridge`) | D11 | **Different objects.** `ChernBridge` is a categorical↔real-space Chebyshev *marker*; D11's is a Bloch-band lattice Chern *number*. Conflation is a finding. |
 
 The Wave 7.3 `validate.py --check bundle_consistency` walks each
 cluster in `cluster_bundle_index.json` (built by Wave 7.1

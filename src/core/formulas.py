@@ -11121,3 +11121,651 @@ def thermal_excited_pop_enclosure(x: float) -> tuple[float, float]:
     upper = 1.0 / (2.0 + x)
     lower = max(0.0, (1.0 - x) / (2.0 - x)) if x < 2.0 else 0.0
     return (lower, upper)
+
+
+# ============================================================================
+# D12 — Detector & readout metrology (Phases 6EA / 6EB / 6EC / 6EE)
+# ============================================================================
+#
+# Two-layer honesty, inherited from the Lean substrate and binding on every
+# consumer of this block: the ALGEBRA below is kernel-verified in Lean. The
+# IDENTIFICATION of any of these symbols with a physical instrument (what
+# counts as an absorbed photon, which plane a power is referred to, whether a
+# real detector sits inside its linearization neighbourhood) is the caller's
+# declared hypothesis and is NEVER smuggled in here.
+# ----------------------------------------------------------------------------
+
+
+def poisson_bhattacharyya_coefficient(n_a: float, n_b: float) -> float:
+    """
+    Bhattacharyya coefficient between two Poisson laws of means n_a, n_b:
+
+        BC(P_a, P_b) = Σ_n √(P_a(n) P_b(n)) = exp(−(√n_a − √n_b)² / 2)
+
+    Closed form; holds at n_a = 0 (no positivity hypothesis needed).
+
+    Lean: poissonBhattacharyya_hasSum, poissonBhattacharyya_eq
+          (Detection/PoissonDiscrimination.lean)
+    """
+    return float(np.exp(-((np.sqrt(n_a) - np.sqrt(n_b)) ** 2) / 2.0))
+
+
+def poisson_avg_error_floor(n_a: float, n_b: float) -> float:
+    """
+    Universal Le Cam / Bhattacharyya average-error floor for discriminating
+    two Poisson sources, valid for EVERY randomized count rule δ: ℕ → [0,1]:
+
+        P_e ≥ (1/4) · exp(−(√n_a − √n_b)²)
+
+    Distribution-free: no false-alarm constraint, no monotone-likelihood-ratio
+    assumption, no threshold structure. This is the correct universal
+    statement; see `folklore_miss_floor` for the incorrect folklore form it
+    replaces.
+
+    Lean: poisson_avgError_floor (Detection/PoissonDiscrimination.lean),
+          resting on affinity_le_binaryAffinity, binaryAffinity_sq_le_two_mul_add,
+          avgError_ge_affinity_sq
+    """
+    return 0.25 * float(np.exp(-((np.sqrt(n_a) - np.sqrt(n_b)) ** 2)))
+
+
+def folklore_miss_floor(n_a: float, n_b: float) -> float:
+    """
+    The FOLKLORE photon-counting floor exp(−(n_a − n_b)) = exp(−N_diff).
+
+    ⚠ This function exists so the refutation can be plotted and cited; it is
+    NOT a valid bound and must never be used as one. It fails in two distinct,
+    kernel-checked ways:
+
+      (A) FALSE-STRICT as a miss-probability lower bound. The ideal unit-
+          threshold counter (`thresholdRule 1`, an admissible count rule)
+          misses with probability exactly exp(−n_a), undershooting this value
+          by the factor exp(n_b) — for EVERY bright baseline n_b > 0.
+      (B) EXPONENTIALLY FAIL-OPEN as an average-error screen. Whenever
+          4 < exp(2√n_b(√n_a − √n_b)), the true Le Cam floor STRICTLY EXCEEDS
+          this value, so a screen built on it admits configurations the true
+          floor forbids.
+
+    Lean: folklore_miss_floor_false, folklore_missFloor_beaten_148fold (A);
+          folklore_avgFloor_unsound_of_bright, folklore_avg_floor_unsound,
+          folklore_avgFloor_unsound_factor1000 (B)
+          (Detection/PoissonDiscrimination.lean)
+    """
+    return float(np.exp(-(n_a - n_b)))
+
+
+def folklore_gap_exponent(n_a: float, n_b: float) -> float:
+    """
+    Exact exponent gap between the Le Cam floor and the folklore form:
+
+        (n_a − n_b) − (√n_a − √n_b)² = 2√n_b (√n_a − √n_b)
+
+    The Le Cam exponent beats the folklore exponent by exactly twice the
+    baseline amplitude times the amplitude separation. The folklore form
+    fails open as an average-error screen precisely when this exceeds log 4.
+
+    Lean: folkloreGap_split, brightGap_5060 (Detection/PoissonDiscrimination.lean)
+    """
+    return 2.0 * float(np.sqrt(n_b)) * float(np.sqrt(n_a) - np.sqrt(n_b))
+
+
+def poisson_dark_baseline_miss_optimum(n_a: float) -> float:
+    """
+    Zero-false-alarm miss optimum against a dark (n_b = 0) baseline: exp(−n_a).
+
+    This is the ONLY regime in which the exponential form exp(−N) is exact.
+    It requires the zero-false-alarm hypothesis, which is load-bearing:
+    dropping it lets `thresholdRule 0` miss strictly less often.
+
+    Lean: poisson_darkBaseline_miss_floor, poisson_darkBaseline_miss_optimum,
+          darkBaseline_zeroFalseAlarm_load_bearing
+          (Detection/PoissonDiscrimination.lean)
+    """
+    return float(np.exp(-n_a))
+
+
+def gaussian_q(z: float) -> float:
+    """
+    Upper standard-normal tail Q(z) = ∫_z^∞ φ(x) dx.
+
+    Mathlib carries no erf/erfc/Gaussian-CDF/Q-function at pin 81a5d257
+    (v4.32.0), so `gaussianQ` is project-local in Lean; here we use the
+    scipy-free complementary error function via math.erfc.
+
+    Lean: gaussianQ, gaussianQ_eq_measure (Detection/GaussianThreshold.lean)
+    """
+    import math
+    return 0.5 * math.erfc(z / math.sqrt(2.0))
+
+
+def gaussian_threshold_error_floor(mu_0: float, mu_1: float, sigma: float) -> float:
+    """
+    Sharp separation-budget floor for Gaussian threshold discrimination:
+
+        P_e ≥ Q((mu_1 − mu_0) / (2 sigma))
+
+    UNIFORM over threshold placement t — no threshold gets below this — and
+    attained at the midpoint. The sharp constant (Q, not Q/2) comes from
+    `gaussianQ_two_le_add`: the centred window carries the most Gaussian mass.
+
+    Lean: avgError_ge_gaussianQ_sharp, gaussianQ_two_le_add,
+          midpoint_threshold_symmetric (Detection/GaussianThreshold.lean)
+    """
+    return gaussian_q((mu_1 - mu_0) / (2.0 * sigma))
+
+
+def gaussian_tail_chernoff_upper(z: float) -> float:
+    """
+    Q(z) ≤ (1/2) exp(−z²/2), for every z ≥ 0 (full range).
+
+    ⚠ Prior-art scope: Mathlib already kernel-checks a sub-Gaussian Chernoff
+    bound (ProbabilityTheory.HasSubgaussianMGF.measure_ge_le) at our own pin.
+    At c = 1 its constant is a factor 2 weaker than this one, so the Lean
+    result is a genuine SHARPENING — a refinement, not a first. Any external
+    write-up must position it that way.
+
+    Lean: gaussianTail_chernoff (Detection/GaussianThreshold.lean)
+    """
+    return 0.5 * float(np.exp(-(z ** 2) / 2.0))
+
+
+def gaussian_tail_mills_upper(z: float) -> float:
+    """
+    Mills-ratio upper tail bound Q(z) ≤ φ(z)/z, for z > 0.
+
+    Lean: gaussianTail_mills, gaussianPDF_moment_Ioi
+          (Detection/GaussianThreshold.lean)
+    """
+    phi = float(np.exp(-(z ** 2) / 2.0) / np.sqrt(2.0 * np.pi))
+    return phi / z
+
+
+def gaussian_tail_birnbaum_lower(z: float) -> float:
+    """
+    Sharp Birnbaum/Feller lower tail bound  Q(z) ≥ z/(1+z²) · φ(z),
+    valid at EVERY real z (no sign hypothesis).
+
+    Lean: gaussianTail_birnbaum, gaussianPDF_moment_Ioi
+          (Detection/GaussianThreshold.lean)
+    """
+    phi = float(np.exp(-(z ** 2) / 2.0) / np.sqrt(2.0 * np.pi))
+    return (z / (1.0 + z ** 2)) * phi
+
+
+def enbw_boxcar(window_T: float) -> float:
+    """
+    One-sided equivalent noise bandwidth of the DC-matched boxcar:
+    ENBW = 1/(2T). This is the unique saturating window of the realizability
+    floor below.
+
+    Lean: enbw_boxcar, enbw_eq_half_iff_boxcar (Detection/FilterFloors.lean)
+    """
+    return 1.0 / (2.0 * window_T)
+
+
+def enbw_window_product_floor() -> float:
+    """
+    The single-shot realizability floor: for EVERY admissible filter h with
+    nonvanishing DC gain on [0,T],
+
+        ENBW(h,T) · T ≥ 1/2
+
+    and 1/2 is the LEAST element of the realizable set (sharp — no better
+    constant exists), attained iff h is a.e. a positive multiple of the
+    boxcar on (0,T].
+
+    Convention-critical: this is the ONE-SIDED normalization. The one- and
+    two-sided conventions provably disagree on the boxcar at every T > 0, so
+    a convention-ambiguous statement of this bound is wrong, not merely
+    differently phrased.
+
+    Lean: enbw_mul_window_ge_half, enbw_mul_window_isLeast,
+          enbw_eq_half_iff_boxcar, enbw_oneSided_ne_twoSided
+          (Detection/FilterFloors.lean)
+    """
+    return 0.5
+
+
+def enbw_ramp(window_T: float) -> float:
+    """
+    ENBW of the DC-matched linear ramp h(x) = x on [0,T]; its window product
+    is 2/3 > 1/2, so the realizability floor is a screen with real slack.
+
+    Lean: enbw_ramp_gt_half (Detection/FilterFloors.lean)
+    """
+    return (2.0 / 3.0) / window_T
+
+
+def matched_budget(psd_S0: float, signal_energy: float) -> float:
+    """
+    Filter-free matched-filter SNR budget  √(2 ∫_0^T s² / S_0).
+
+    Bounds the signed filtered SNR of EVERY admissible filter, and is the
+    GREATEST element of the realizable set — attained iff h is a.e. a
+    STRICTLY POSITIVE multiple of the template s. (The positivity is not
+    removable: h = −s saturates Cauchy–Schwarz in magnitude yet sits at
+    −matched_budget, which is what refutes the sign-free characterization.)
+
+    Lean: matchedBudget, filteredSNR_le_matchedBudget, matchedFilter_isGreatest,
+          filteredSNR_eq_budget_iff, filteredSNR_neg_matched_eq_neg_budget,
+          unsigned_saturation_characterization_false
+          (Detection/MatchedFilter.lean)
+    """
+    return float(np.sqrt(2.0 * signal_energy / psd_S0))
+
+
+def snr_chain_window_ceiling(p_signal: float, window_T: float, nep: float) -> float:
+    """
+    End-to-end single-shot SNR ceiling for ANY admissible filter:
+
+        SNR ≤ P_sig √(2T) / NEP
+
+    Sharp — attained by the matched boxcar. Independent of responsivity
+    (responsivity cancels between signal and noise paths).
+
+    Lean: snrChain_le_window_ceiling, snrChain_window_ceiling_attained,
+          snrChain_independent_of_responsivity (Detection/NEPAlgebra.lean)
+    """
+    return p_signal * float(np.sqrt(2.0 * window_T)) / nep
+
+
+def nep_quadrature(*neps: float) -> float:
+    """
+    Quadrature composition of uncorrelated NEP contributions: √(Σ NEP_i²).
+
+    ⚠ Carries the IsUncorrelatedAt hypothesis. It is NOT derivable from the
+    algebra: a fully-correlated pair has total PSD 4S where quadrature
+    predicts 2S — an error of exactly √2.
+
+    Lean: nep_quadrature_add, nep_quadrature_two, nep_total_eq_sqrt_sum_sq,
+          quadrature_uncorrelated_hypothesis_load_bearing,
+          correlated_pair_sigma_eq_sqrt_two_mul (Detection/NEPAlgebra.lean)
+    """
+    return float(np.sqrt(sum(n ** 2 for n in neps)))
+
+
+def etf_loop_gain(voltage: float, dRdT: float, resistance: float,
+                  conductance: float) -> float:
+    """
+    Electrothermal-feedback loop gain of a voltage-biased bolometer:
+
+        ℒ = V² (dR/dT) / (R² G)
+
+    SIGNED — the sign of dR/dT is load-bearing and must not be absorbed into
+    a magnitude. Equals the Irwin–Hilton instrument convention P_J α /(G T).
+
+    Lean: loopGain, loopGain_eq_irwinHilton, loopGain_pos_iff_dRdT_pos
+          (Electrothermal/ETFModel.lean)
+    """
+    return voltage ** 2 * dRdT / (resistance ** 2 * conductance)
+
+
+def etf_effective_conductance(conductance: float, loop_gain: float) -> float:
+    """
+    G_eff = G (1 + ℒ). Positive iff ℒ > −1 (for G > 0), which is exactly the
+    stability boundary.
+
+    Lean: effectiveConductance, effectiveConductance_pos_iff,
+          linearizedSlope_eq_neg_effectiveConductance (Electrothermal/ETFModel.lean)
+    """
+    return conductance * (1.0 + loop_gain)
+
+
+def etf_effective_time_constant(heat_capacity: float, conductance: float,
+                                loop_gain: float) -> float:
+    """
+    τ_eff = C / (G(1+ℒ)) = τ / (1+ℒ).
+
+    ⚠ On the unstable branch (ℒ < −1) this is NEGATIVE. Reading it through
+    an absolute value inverts the physics — a speed-up and a divergence are
+    not the same thing.
+
+    Lean: effectiveTimeConstant, effectiveTimeConstant_eq_div,
+          effectiveTimeConstant_neg_of_unstable (Electrothermal/ETFModel.lean)
+    """
+    return heat_capacity / (conductance * (1.0 + loop_gain))
+
+
+def etf_is_stable(loop_gain: float) -> bool:
+    """
+    The ETF stability dichotomy, as an iff: every perturbation decays
+    ⟺ ℒ > −1. At ℒ = −1 the perturbation is frozen (marginal); below it,
+    |δT| → ∞.
+
+    ⚠ Two seemingly natural criteria are kernel-refuted: replacing dR/dT by
+    its magnitude flips an unstable device to stable, and |ℒ| does not
+    determine stability (ℒ = ±2 sit on opposite sides).
+
+    Lean: etf_stable_iff, etf_marginal_of_loopGain_eq_neg_one,
+          etf_diverges_of_loopGain_lt_neg_one, magnitudeOnly_criterion_unsound,
+          absLoopGain_criterion_unsound (Electrothermal/ETFModel.lean)
+    """
+    return loop_gain > -1.0
+
+
+def phonon_psd(k_B: float, temperature: float, conductance: float) -> float:
+    """
+    Thermal-fluctuation (phonon) noise PSD referred to absorbed power:
+    S_ph = 4 k_B T² G.
+
+    ⚠ Provenance honesty: this 4 k_B T² G prefactor is ASSERTED in the Lean
+    substrate, not cited. The in-tree identity relating it to the
+    Johnson–Nyquist form is an arithmetic RESEMBLANCE, not a citation — it
+    constrains nothing (it holds for any 4·a·b²·c) and is unit-incoherent as
+    provenance. A γ-correction factor (radiative/ballistic regimes) is NOT
+    modelled; phonon_psd corresponds to γ = 1.
+
+    Lean: phononPSD, phononPSD_eq_phononPSDGamma_one,
+          phonon_psd_eq_johnsonNyquist_scaled (labelled a resemblance)
+          (Electrothermal/BolometricFloors.lean)
+    """
+    return 4.0 * k_B * temperature ** 2 * conductance
+
+
+def johnson_current_psd(k_B: float, temperature: float, resistance: float) -> float:
+    """
+    Johnson current-noise PSD S_I = 4 k_B T / R. This one IS a genuine FDT
+    citation: it is the Johnson–Nyquist form evaluated at the electrical
+    conductance 1/R.
+
+    Lean: johnsonCurrentPSD, johnsonCurrentPSD_eq_johnsonNyquist
+          (Electrothermal/BolometricFloors.lean)
+    """
+    return 4.0 * k_B * temperature / resistance
+
+
+def johnson_nep_correction_factor(loop_gain: float) -> float:
+    """
+    Ratio of the true ETF-aware Johnson NEP to the ETF-unaware naive value:
+
+        NEP_J = |1 − ℒ| · NEP_J^naive
+
+    ⚠ This is an EQUALITY, not a direction — and the factor is |1 − ℒ|, NOT
+    |1 + ℒ|. A post-review physics BLOCKER (2026-07-29) found the original
+    treatment had modelled Johnson noise as pure OUTPUT noise, omitting a
+    first-order ETF effect from the very layer whose subject is electrothermal
+    feedback. The two ETF effects partially cancel, so an ETF-unaware budget
+    at ℒ = 3 is low by exactly 2, not 4.
+
+    The naive value OVERSTATES whenever |1 − ℒ| < 1, i.e. 0 < ℒ < 2 — so no
+    blanket "the naive budget is optimistic" statement is available. Note
+    also that |1 − ℒ| is stability-blind: ℒ = 5 and ℒ = −3 give the same
+    factor 4 on opposite sides of the stability boundary.
+
+    Lean: johnsonNEP_eq_abs_one_sub_loopGain_mul_naive,
+          johnsonNEPNaive_lt_johnsonNEP_iff,
+          johnsonNEP_naive_overstates_at_unit_loopGain,
+          johnsonNEP_correction_magnitude_loses_stability_information
+          (Electrothermal/BolometricFloors.lean)
+    """
+    return abs(1.0 - loop_gain)
+
+
+def assignment_fidelity(e_0: float, e_1: float) -> float:
+    """
+    Single-shot assignment fidelity F = 1 − (e_0 + e_1)/2, the complement of
+    the average assignment error that every D12 floor bounds from below.
+    A floor on the error is therefore a CEILING on this quantity.
+
+    Lean: assignmentFidelity, assignmentFidelity_le_of_floor,
+          avgAssignmentError (QuantumNetwork), avgAssignmentError_mono
+          (Control/CompositeReadoutCeilings.lean)
+    """
+    return 1.0 - (e_0 + e_1) / 2.0
+
+
+def bloch_siegert_scale(rabi_Omega: float, drive_omega: float) -> float:
+    """
+    Scale of the counter-rotating (Bloch–Siegert) remainder retained by the
+    rotating-wave reduction: 2 Ω/ω.
+
+    The Lean substrate states the rotating-wave approximation as an explicit-
+    remainder INEQUALITY at this scale, never as an equality. The propagator
+    difference is bounded by this times the ℓ¹ drive weight.
+
+    Lean: bsAntiderivative, bsAntiderivative_norm_le,
+          rwa_propagator_difference_bound_physical, interactionHamiltonian_decomp
+          (Control/RotatingWave.lean)
+    """
+    return 2.0 * rabi_Omega / drive_omega
+
+
+# ============================================================================
+# D11 — Topological band theory & metamaterial substrate
+#        (Phases 6CA / 6CB / 6CD / 6CE / 6ED)
+# ============================================================================
+
+
+def diatomic_branches(m_1: float, m_2: float, kappa: float,
+                      k: float, a: float = 1.0) -> tuple[float, float]:
+    """
+    Squared-frequency branches of the diatomic mass-spring Bloch dynamical
+    matrix D(k), returned as (acoustic ω²₋, optical ω²₊):
+
+        mid  = κ(1/m₁ + 1/m₂),  ω²± = mid ± √(mid² − 2κ²(1 − cos ka)/(m₁m₂))
+
+    Built because PhysLib's TightBindingChain is a single, GAPLESS band; a
+    two-band model was required for a gap to exist at all.
+
+    Lean: DiatomicChain, DiatomicChain.blochMatrix, branchMinus, branchPlus,
+          acousticBloch_spectrum, acousticBloch_eigenvalue_iff
+          (AcousticBlochOperator.lean)
+    """
+    mid = kappa * (1.0 / m_1 + 1.0 / m_2)
+    gap = kappa * (1.0 / m_1 - 1.0 / m_2)
+    norm_sq_off = 2.0 * kappa ** 2 * (1.0 + np.cos(k * a)) / (m_1 * m_2)
+    disc = gap ** 2 + norm_sq_off
+    root = float(np.sqrt(max(disc, 0.0)))
+    return (mid - root, mid + root)
+
+
+def phononic_gap_edges() -> tuple[float, float]:
+    """
+    Certified band-gap edges in ω² for the concrete crystal
+    (m₁, m₂, κ, a) = (1, 2, 1, 1): the gap is (1, 2), and BOTH edges are
+    ATTAINED at k = π — so the bound is tight, not loose.
+
+    The general falsifier is stronger than the existence statement: any real
+    ω annihilating det(D(k) − ω·I) with 1 < ω < 2 yields False.
+
+    Lean: diatomicCrystal, phononic_band_gap_exists, branchMinus_at_pi,
+          branchPlus_at_pi, band_gap_falsifier (PhononicBandGap.lean)
+    """
+    return (1.0, 2.0)
+
+
+def phononic_gap_rational_enclosure() -> tuple[float, float]:
+    """
+    Rational inner bracket of the true frequency gap (1, √2), certified by
+    norm_num with no floating point: 1 < 141/100 ≤ √2 ≤ 142/100.
+
+    Lean: band_gap_rational_enclosure, sqrt_two_enclosure (BandGapEnclosure.lean)
+    """
+    return (1.0, 141.0 / 100.0)
+
+
+def pt_eigenvalue_splitting(g: float) -> float:
+    """
+    Eigenvalue splitting of the PT-symmetric non-Hermitian Bloch Hamiltonian
+    H(g) = [[ig, 1], [1, −ig]]:  Δ(g) = 2√(1 − g²), eigenvalues ±√(1−g²).
+
+    The PT transition is a SHARP BICONDITIONAL: the spectrum is real ⟺ g² ≤ 1.
+    At g = 1 the splitting vanishes and the matrix is genuinely DEFECTIVE
+    (algebraic multiplicity 2, geometric multiplicity 1) — an order-2
+    exceptional point, certified without full Jordan normal form.
+
+    Lean: ptBloch, eigenvalueSplitting, pt_symmetric_real_spectrum_iff,
+          exceptional_point_defective, ep_order_two, ep_splitting_at_ep
+          (NonHermitianBloch.lean, ExceptionalPoint.lean, NonHermitianWinding.lean)
+    """
+    return 2.0 * float(np.sqrt(max(1.0 - g ** 2, 0.0)))
+
+
+def maxwell_garnett(eps_host: float, eps_incl: float, fill: float) -> float:
+    """
+    Maxwell–Garnett effective permittivity of a two-phase composite:
+
+        ε_eff = ε_h (ε_i + 2ε_h + 2f(ε_i − ε_h)) / (ε_i + 2ε_h − f(ε_i − ε_h))
+
+    Algebraic path ONLY. The two-scale / periodic-homogenization derivation
+    is a documented substrate stall (Mathlib has Sobolev inequalities, not
+    two-scale convergence; PhysLib Optics is an explicit placeholder) and was
+    deliberately NOT attempted — a respected guardrail, not an oversight.
+
+    Bounded by its constituents: ε_h ≤ ε_eff ≤ ε_i for 0 ≤ f ≤ 1,
+    0 < ε_h ≤ ε_i (a Hashin–Shtrikman/Wiener-type enclosure).
+
+    Lean: maxwellGarnett, maxwellGarnett_clausius_mossotti,
+          maxwellGarnett_host_recovery, effectiveMedium_constituent_bounds,
+          effectiveMedium_hashinShtrikman_enclosure
+          (MaxwellGarnett.lean, EffectiveMediumBounds.lean)
+    """
+    num = eps_host * (eps_incl + 2.0 * eps_host + 2.0 * fill * (eps_incl - eps_host))
+    den = eps_incl + 2.0 * eps_host - fill * (eps_incl - eps_host)
+    return num / den
+
+
+def voigt_modulus(m_1: float, m_2: float, fill: float) -> float:
+    """Voigt (arithmetic / iso-strain) effective modulus (1−f)M₁ + fM₂.
+
+    Lean: voigtModulus, voigt_bounds (EffectiveModuli.lean)
+    """
+    return (1.0 - fill) * m_1 + fill * m_2
+
+
+def reuss_modulus(m_1: float, m_2: float, fill: float) -> float:
+    """Reuss (harmonic / iso-stress) effective modulus M₁M₂/((1−f)M₂ + fM₁).
+
+    Lean: reussModulus, reuss_le_voigt, reuss_ge_host, effectiveModuli_enclosure
+          (EffectiveModuli.lean)
+    """
+    return m_1 * m_2 / ((1.0 - fill) * m_2 + fill * m_1)
+
+
+def voigt_reuss_gap(m_1: float, m_2: float, fill: float) -> float:
+    """
+    EXACT arithmetic-minus-harmonic gap between the Voigt and Reuss bounds:
+
+        M_V − M_R = f(1−f)(M₁ − M₂)² / ((1−f)M₂ + fM₁)
+
+    Shipped as an equality (not merely ≥ 0) — the earlier substrate asserted
+    the exact gap in a docstring while formalizing only the inequality.
+
+    Lean: voigt_sub_reuss_eq (EffectiveModuli.lean)
+    """
+    return fill * (1.0 - fill) * (m_1 - m_2) ** 2 / ((1.0 - fill) * m_2 + fill * m_1)
+
+
+def honeycomb_structure_factor(theta_1: float, theta_2: float) -> complex:
+    """
+    Honeycomb tight-binding structure factor f(θ) = 1 + e^{iθ₁} + e^{iθ₂},
+    in the d·σ Bloch frame with d = (Re f, −Im f, 0).
+
+    Vanishes exactly on the Dirac orbit; the two cones K = (2π/3, 4π/3) and
+    K' = (4π/3, 2π/3) are INEQUIVALENT (not related by a reciprocal-lattice
+    translation). Band energies are ±|f| as genuine eigenvalues.
+
+    ⚠ Kernel no-go: the zero set is NOT invariant under a general GL₂(ℤ)
+    chart change — the shear-invariance claim is refuted. The honeycomb's own
+    120°-neighbour geometry FORCES the admissible chart.
+
+    Lean: structureFactor, honeycombD, honeycomb_energy_eq,
+          honeycomb_band_secular, structureFactor_eq_zero_iff,
+          diracK'_ne_recip_translate_diracK, isHoneycombChart_of_neighbours,
+          structureFactor_zero_set_not_shear_invariant (GrapheneBand/Honeycomb.lean)
+    """
+    return 1.0 + np.exp(1j * theta_1) + np.exp(1j * theta_2)
+
+
+def dirac_linear_form_norm(q_1: float, q_2: float) -> float:
+    """
+    Norm of the linearized structure factor about a Dirac point:
+    ‖L(q)‖ = √(q₁² − q₁q₂ + q₂²).
+
+    The expansion remainder is bounded GLOBALLY, with constant 1 and no
+    validity ball: | ‖f(K+q)‖ − ‖L(q)‖ | ≤ q₁² + q₂².
+
+    Isotropy is chart-specific, not universal: q₁² − q₁q₂ + q₂² equals
+    (3/4)‖a₁‖²‖p‖² only for an admissible honeycomb chart.
+
+    Lean: linearForm, linearForm_norm, norm_exp_mul_I_sub_one_sub_id_le,
+          structureFactor_linear_expansion_global, quadForm_of_chart
+          (GrapheneBand/DiracExpansion.lean)
+    """
+    return float(np.sqrt(q_1 ** 2 - q_1 * q_2 + q_2 ** 2))
+
+
+def fermi_velocity(hopping_t: float, a_cc: float, hbar: float) -> float:
+    """
+    Graphene Fermi velocity v_F = 3 t a_CC / (2ℏ), parametrized (no baked-in
+    unit contract), giving the Dirac dispersion E = ℏ v_F ‖p‖.
+
+    Lean: fermiVelocity, dispersion_slope_of_neighbours,
+          dispersion_slope_eq_hbar_fermiVelocity (GrapheneBand/DiracExpansion.lean)
+    """
+    return 3.0 * hopping_t * a_cc / (2.0 * hbar)
+
+
+def haldane_nnn(theta_1: float, theta_2: float) -> float:
+    """
+    Haldane next-nearest-neighbour phase sum
+    sin θ₁ + sin(θ₂ − θ₁) − sin θ₂, which supplies the sublattice-staggered
+    mass term. Takes the values ±3√3/2 at the two Dirac points, which is the
+    entire mechanism: the cones acquire OPPOSITE masses.
+
+    Lean: haldaneNNN, haldaneNNN_eq_nnnSum, haldaneNNN_diracK, haldaneNNN_diracK'
+          (GrapheneBand/HaldaneWitness.lean)
+    """
+    return float(np.sin(theta_1) + np.sin(theta_2 - theta_1) - np.sin(theta_2))
+
+
+def haldane_dirac_masses(semenoff_m: float, t_2: float,
+                         phi: float) -> tuple[float, float]:
+    """
+    Dirac-point masses (at K, K') of the Haldane model:
+        (m − 3√3 t₂ sin φ,  m + 3√3 t₂ sin φ)
+
+    The gaps are twice the absolute values. Masses invert iff
+    |m| < |3√3 t₂ sin φ| — the analytic window.
+
+    ⚠ RETRACTED CLAIM: mass inversion is NOT equivalent to a nonzero lattice
+    Chern number at fixed grid size. The 4×4 invariant flips at |m| ≈ 3.3177,
+    strictly inside the analytic window |m| < 3√3 ≈ 5.1962 — so on roughly a
+    third of the window the masses invert while the invariant reads 0. No
+    statement may be phrased as "exactly where the masses invert" at fixed N.
+
+    Lean: haldaneD_diracK, haldaneD_diracK', haldane_gap_diracK,
+          haldane_mass_inversion_iff, haldane_window_bounds,
+          haldane_massInversion_not_sufficient_at_N4
+          (GrapheneBand/HaldaneWitness.lean)
+    """
+    shift = 3.0 * float(np.sqrt(3.0)) * t_2 * float(np.sin(phi))
+    return (semenoff_m - shift, semenoff_m + shift)
+
+
+def haldane_mass_inversion_window(t_2: float, phi: float) -> float:
+    """
+    Half-width |3√3 t₂ sin φ| of the analytic mass-inversion window.
+    At t₂ = 1, φ = π/2 this is 3√3 ≈ 5.1962.
+
+    Lean: haldane_mass_inversion_iff, haldane_window_bounds
+          (GrapheneBand/HaldaneWitness.lean)
+    """
+    return abs(3.0 * float(np.sqrt(3.0)) * t_2 * float(np.sin(phi)))
+
+
+def bernal_full_gap_sq(bias_u: float, gamma: float) -> float:
+    """
+    Bernal-stacked bilayer graphene field-induced full gap squared:
+        Δ² = U²γ²/(γ² + U²)  with U = 2u   (factor-4 convention pinned)
+
+    The band minimum sits at FINITE momentum — a "Mexican hat" — so the gap
+    is strictly below the applied bias: at γ = 1, u = 1/2 the minimum E² is
+    1/8 versus 1/4 at the Dirac point, a 29% suppression.
+
+    Lean: bernal_fullGapSq_eq, bernal_field_gap, bernal_halfGapSq_isLeast,
+          bernal_mexicanHat, bernal_mexicanHat_witness, bernal_gap_enclosure
+          (GrapheneBand/BernalBilayer.lean)
+    """
+    U = 2.0 * bias_u
+    return U ** 2 * gamma ** 2 / (gamma ** 2 + U ** 2)

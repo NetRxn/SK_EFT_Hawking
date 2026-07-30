@@ -14707,3 +14707,431 @@ def fig_qnet_readout_envelopes() -> go.Figure:
         height=520, width=1000, margin=dict(l=80, r=40, t=90, b=110),
         plot_bgcolor="white")
     return fig
+
+
+# ============================================================
+# D12 — Detector & readout metrology (Phases 6EA/6EB/6EC/6EE)
+# ============================================================
+
+
+def fig_d12_poisson_floor_vs_folklore() -> go.Figure:
+    """D12 Fig. 1 — the Le Cam/Bhattacharyya Poisson average-error floor
+    against the folklore e^{−N_diff} form, showing BOTH kernel-checked failure
+    directions. Left: at a fixed bright baseline N_b = 50, the true floor
+    (1/4)e^{−(√N_a−√N_b)²} rises far above the folklore curve once the gap
+    exponent 2√N_b(√N_a−√N_b) exceeds log 4 — the folklore form is
+    exponentially FAIL-OPEN as an average-error screen (shaded). Right: the
+    gap exponent itself, with the log 4 fail-open threshold and the certified
+    (50,60) witness at 9.5445."""
+    from src.core import formulas as F
+    blue, amber, carmine = COLORS["steel_blue"], COLORS["amber"], COLORS["carmine"]
+    fig = make_subplots(rows=1, cols=2, horizontal_spacing=0.11, subplot_titles=(
+        "average-error floor vs folklore form  (N_b = 50)",
+        "gap exponent  2√N_b(√N_a − √N_b)"))
+
+    n_b = 50.0
+    n_a = np.linspace(50.0, 75.0, 400)
+    true_floor = np.array([F.poisson_avg_error_floor(x, n_b) for x in n_a])
+    folk = np.array([F.folklore_miss_floor(x, n_b) for x in n_a])
+
+    # Shade ONLY where the folklore form actually fails open, i.e. where it
+    # sits BELOW the true floor. Below the crossover (gap exponent < log 4)
+    # the folklore value is merely conservative, not unsound — shading the
+    # whole range there would misrepresent the refutation.
+    open_mask = folk < true_floor
+    if open_mask.any():
+        n_open = n_a[open_mask]
+        fig.add_trace(go.Scatter(
+            x=np.concatenate([n_open, n_open[::-1]]),
+            y=np.concatenate([true_floor[open_mask], folk[open_mask][::-1]]),
+            fill="toself", fillcolor="rgba(241, 143, 1, 0.20)", line=dict(width=0),
+            name="fail-open region: folklore admits what the true floor forbids",
+            hoverinfo="skip"), row=1, col=1)
+        fig.add_vline(x=float(n_open[0]), line=dict(color=carmine, width=1.5, dash="dot"),
+                      annotation_text="crossover", annotation_position="top right",
+                      row=1, col=1)
+    fig.add_trace(go.Scatter(
+        x=n_a, y=true_floor, mode="lines", line=dict(color=blue, width=3),
+        name="Le Cam floor  (1/4)·exp(−(√N_a−√N_b)²)"), row=1, col=1)
+    fig.add_trace(go.Scatter(
+        x=n_a, y=folk, mode="lines", line=dict(color=amber, width=2.5, dash="dash"),
+        name="folklore  exp(−(N_a−N_b))  — NOT a bound"), row=1, col=1)
+    fig.add_trace(go.Scatter(
+        x=[60.0], y=[F.poisson_avg_error_floor(60.0, 50.0)], mode="markers",
+        marker=dict(color=carmine, size=11, symbol="diamond"),
+        name="certified witness (50, 60): ratio > 1000"), row=1, col=1)
+    fig.update_yaxes(type="log", title_text="average assignment-error floor",
+                     exponentformat="power", showexponent="all", row=1, col=1)
+    fig.update_xaxes(title_text="source rate  N_a  (counts)", row=1, col=1)
+
+    gap = np.array([F.folklore_gap_exponent(x, n_b) for x in n_a])
+    fig.add_trace(go.Scatter(
+        x=n_a, y=gap, mode="lines", line=dict(color=blue, width=3),
+        name="gap exponent", showlegend=False), row=1, col=2)
+    fig.add_hline(y=float(np.log(4.0)), line=dict(color=carmine, width=2, dash="dot"),
+                  annotation_text="log 4 — fail-open threshold",
+                  annotation_position="top left", row=1, col=2)
+    fig.add_trace(go.Scatter(
+        x=[60.0], y=[F.folklore_gap_exponent(60.0, 50.0)], mode="markers",
+        marker=dict(color=carmine, size=11, symbol="diamond"),
+        name="brightGap_5060 = 9.5445", showlegend=False), row=1, col=2)
+    fig.update_xaxes(title_text="source rate  N_a  (counts)", row=1, col=2)
+    fig.update_yaxes(title_text="exponent advantage of the Le Cam floor",
+                     row=1, col=2)
+
+    fig.update_layout(
+        title="D12 Fig. 1 — the folklore photon-counting floor fails in two directions",
+        template="plotly_white", height=430, width=1080,
+        legend=dict(orientation="h", yanchor="bottom", y=-0.34, x=0.0))
+    return fig
+
+
+def fig_d12_enbw_matched_filter() -> go.Figure:
+    """D12 Fig. 2 — single-shot realizability floors. Left: the window product
+    ENBW·T for the DC-matched boxcar (saturating the floor 1/2, which is the
+    LEAST element of the realizable set) and the linear ramp (2/3, showing the
+    floor is a screen with real slack). Right: the sharp Gaussian
+    separation-budget floor Q(z) with its Chernoff and Mills upper envelopes
+    and the Birnbaum–Feller lower envelope — the two-sided tail sandwich."""
+    from src.core import formulas as F
+    blue, amber, sage = COLORS["steel_blue"], COLORS["amber"], COLORS["sage"]
+    carmine = COLORS["carmine"]
+    fig = make_subplots(rows=1, cols=2, horizontal_spacing=0.11, subplot_titles=(
+        "ENBW·T realizability floor (one-sided convention)",
+        "Gaussian tail sandwich  Q(z)"))
+
+    T = np.linspace(0.25, 4.0, 400)
+    box = np.array([F.enbw_boxcar(t) * t for t in T])
+    ramp = np.array([F.enbw_ramp(t) * t for t in T])
+    fig.add_trace(go.Scatter(
+        x=np.concatenate([T, T[::-1]]),
+        y=np.concatenate([ramp, box[::-1]]),
+        fill="toself", fillcolor="rgba(70, 130, 180, 0.15)", line=dict(width=0),
+        name="realizable slack above the floor", hoverinfo="skip"), row=1, col=1)
+    fig.add_trace(go.Scatter(
+        x=T, y=box, mode="lines", line=dict(color=blue, width=3),
+        name="matched boxcar — saturates at 1/2"), row=1, col=1)
+    fig.add_trace(go.Scatter(
+        x=T, y=ramp, mode="lines", line=dict(color=amber, width=2.5, dash="dash"),
+        name="DC-matched ramp — 2/3"), row=1, col=1)
+    fig.add_hline(y=F.enbw_window_product_floor(),
+                  line=dict(color=carmine, width=2, dash="dot"),
+                  annotation_text="floor 1/2 (IsLeast — sharp)",
+                  annotation_position="bottom right", row=1, col=1)
+    fig.update_xaxes(title_text="integration window  T", row=1, col=1)
+    fig.update_yaxes(title_text="ENBW · T", range=[0.0, 1.0], row=1, col=1)
+
+    z = np.linspace(0.05, 3.5, 400)
+    q = np.array([F.gaussian_q(x) for x in z])
+    ch = np.array([F.gaussian_tail_chernoff_upper(x) for x in z])
+    mi = np.array([F.gaussian_tail_mills_upper(x) for x in z])
+    bf = np.array([F.gaussian_tail_birnbaum_lower(x) for x in z])
+    fig.add_trace(go.Scatter(
+        x=np.concatenate([z, z[::-1]]), y=np.concatenate([np.minimum(ch, mi), bf[::-1]]),
+        fill="toself", fillcolor="rgba(241, 143, 1, 0.18)", line=dict(width=0),
+        name="certified sandwich", hoverinfo="skip"), row=1, col=2)
+    fig.add_trace(go.Scatter(
+        x=z, y=ch, mode="lines", line=dict(color=amber, width=2, dash="dash"),
+        name="Chernoff  (1/2)e^{−z²/2}"), row=1, col=2)
+    fig.add_trace(go.Scatter(
+        x=z, y=mi, mode="lines", line=dict(color=sage, width=2, dash="dot"),
+        name="Mills  φ(z)/z"), row=1, col=2)
+    fig.add_trace(go.Scatter(
+        x=z, y=bf, mode="lines", line=dict(color=carmine, width=2, dash="dashdot"),
+        name="Birnbaum–Feller  z φ(z)/(1+z²)"), row=1, col=2)
+    fig.add_trace(go.Scatter(
+        x=z, y=q, mode="lines", line=dict(color=blue, width=3), name="Q(z)"),
+        row=1, col=2)
+    fig.update_xaxes(title_text="separation budget  z = Δμ/(2σ)", row=1, col=2)
+    fig.update_yaxes(type="log", title_text="tail probability", row=1, col=2)
+
+    fig.update_layout(
+        title="D12 Fig. 2 — filtered-readout realizability floor and the Gaussian tail sandwich",
+        template="plotly_white", height=430, width=1080,
+        legend=dict(orientation="h", yanchor="bottom", y=-0.36, x=0.0))
+    return fig
+
+
+def fig_d12_etf_stability() -> go.Figure:
+    """D12 Fig. 3 — electrothermal feedback. Left: the stability dichotomy
+    τ_eff = τ/(1+ℒ) as an iff at ℒ = −1, with the unstable branch shown
+    NEGATIVE (reading it through |·| inverts the physics) and the marginal
+    frozen point marked. Right: the Johnson NEP correction |1−ℒ| — an
+    EQUALITY, not a direction: the ETF-unaware naive budget overstates on
+    0 < ℒ < 2 and understates outside it, and the factor is stability-blind
+    (ℒ = 5 and ℒ = −3 both give 4, on opposite sides of the boundary)."""
+    from src.core import formulas as F
+    blue, amber, carmine = COLORS["steel_blue"], COLORS["amber"], COLORS["carmine"]
+    sage = COLORS["sage"]
+    fig = make_subplots(rows=1, cols=2, horizontal_spacing=0.11, subplot_titles=(
+        "ETF stability dichotomy  τ_eff = τ/(1+ℒ)",
+        "Johnson NEP correction  |1 − ℒ|"))
+
+    stable = np.linspace(-0.94, 6.0, 400)
+    unstable = np.linspace(-6.0, -1.06, 400)
+    fig.add_trace(go.Scatter(
+        x=stable, y=[F.etf_effective_time_constant(1.0, 1.0, L) for L in stable],
+        mode="lines", line=dict(color=blue, width=3),
+        name="stable branch  ℒ > −1  (perturbations decay)"), row=1, col=1)
+    fig.add_trace(go.Scatter(
+        x=unstable, y=[F.etf_effective_time_constant(1.0, 1.0, L) for L in unstable],
+        mode="lines", line=dict(color=carmine, width=3, dash="dash"),
+        name="unstable branch  ℒ < −1  (τ_eff < 0, divergent)"), row=1, col=1)
+    fig.add_vline(x=-1.0, line=dict(color=amber, width=2, dash="dot"),
+                  annotation_text="ℒ = −1 marginal (frozen)",
+                  annotation_position="top right", row=1, col=1)
+    fig.add_trace(go.Scatter(
+        x=[3.0], y=[F.etf_effective_time_constant(1.0, 1.0, 3.0)], mode="markers",
+        marker=dict(color=sage, size=11, symbol="diamond"),
+        name="speedup witness ℒ = 3: τ_eff = τ/4"), row=1, col=1)
+    fig.update_xaxes(title_text="loop gain  ℒ", row=1, col=1)
+    fig.update_yaxes(title_text="τ_eff  (units of τ = C/G)", range=[-4.0, 4.0],
+                     row=1, col=1)
+
+    L = np.linspace(-4.0, 6.0, 500)
+    corr = np.array([F.johnson_nep_correction_factor(x) for x in L])
+    fig.add_trace(go.Scatter(
+        x=L, y=corr, mode="lines", line=dict(color=blue, width=3),
+        name="|1 − ℒ|  (true / naive)", showlegend=False), row=1, col=2)
+    fig.add_hline(y=1.0, line=dict(color=carmine, width=2, dash="dot"),
+                  annotation_text="naive exact",
+                  annotation_position="top left", row=1, col=2)
+    fig.add_vrect(x0=0.0, x1=2.0, fillcolor="rgba(241, 143, 1, 0.18)",
+                  line_width=0, annotation_text="naive OVERSTATES",
+                  annotation_position="bottom left", row=1, col=2)
+    for Lv, lab in ((3.0, "ℒ = 3 → 2"), (5.0, "ℒ = 5 → 4"), (-3.0, "ℒ = −3 → 4")):
+        fig.add_trace(go.Scatter(
+            x=[Lv], y=[F.johnson_nep_correction_factor(Lv)], mode="markers+text",
+            marker=dict(color=sage, size=10, symbol="diamond"),
+            text=[lab], textposition="top center", showlegend=False), row=1, col=2)
+    fig.update_xaxes(title_text="loop gain  ℒ", row=1, col=2)
+    fig.update_yaxes(title_text="correction factor", row=1, col=2)
+
+    fig.update_layout(
+        title="D12 Fig. 3 — electrothermal feedback: stability dichotomy and the |1−ℒ| Johnson correction",
+        template="plotly_white", height=430, width=1080,
+        legend=dict(orientation="h", yanchor="bottom", y=-0.30, x=0.0))
+    return fig
+
+
+# ============================================================
+# D11 — Topological band theory & metamaterials (6CA/6CB/6CD/6CE/6ED)
+# ============================================================
+
+
+def fig_d11_phononic_band_gap() -> go.Figure:
+    """D11 Fig. 1 — the certified phononic band gap of the diatomic mass-spring
+    chain (m₁, m₂, κ, a) = (1, 2, 1, 1). Both branches ω²±(k) are plotted over
+    the Brillouin zone; the gap (1, 2) is shaded and BOTH edges are attained at
+    k = ±π, so the bound is tight rather than loose. The rational inner bracket
+    certified without floating point, 1 < 141/100 ≤ √2, is marked in frequency
+    units on the right axis annotation."""
+    from src.core import formulas as F
+    blue, amber, carmine = COLORS["steel_blue"], COLORS["amber"], COLORS["carmine"]
+    k = np.linspace(-np.pi, np.pi, 801)
+    branches = [F.diatomic_branches(1.0, 2.0, 1.0, kk) for kk in k]
+    acoustic = np.array([b[0] for b in branches])
+    optical = np.array([b[1] for b in branches])
+    lo, hi = F.phononic_gap_edges()
+
+    fig = go.Figure()
+    fig.add_hrect(y0=lo, y1=hi, fillcolor="rgba(241, 143, 1, 0.20)", line_width=0,
+                  annotation_text=f"certified gap  ω² ∈ ({lo:g}, {hi:g})  — no state here",
+                  annotation_position="top left")
+    fig.add_trace(go.Scatter(
+        x=k, y=optical, mode="lines", line=dict(color=amber, width=3),
+        name="optical branch  ω²₊"))
+    fig.add_trace(go.Scatter(
+        x=k, y=acoustic, mode="lines", line=dict(color=blue, width=3),
+        name="acoustic branch  ω²₋"))
+    fig.add_trace(go.Scatter(
+        x=[-np.pi, np.pi], y=[lo, lo], mode="markers",
+        marker=dict(color=carmine, size=11, symbol="diamond"),
+        name="ω²₋(±π) = 1  (edge attained)"))
+    fig.add_trace(go.Scatter(
+        x=[-np.pi, np.pi], y=[hi, hi], mode="markers",
+        marker=dict(color=carmine, size=11, symbol="diamond-open"),
+        name="ω²₊(±π) = 2  (edge attained)"))
+    fig.update_layout(
+        title="D11 Fig. 1 — certified phononic band gap, diatomic chain (m₁,m₂,κ,a) = (1,2,1,1)",
+        xaxis=dict(title="Bloch wavevector  k a", tickmode="array",
+                   tickvals=[-np.pi, -np.pi / 2, 0, np.pi / 2, np.pi],
+                   ticktext=["−π", "−π/2", "0", "π/2", "π"]),
+        yaxis=dict(title="squared frequency  ω²"),
+        template="plotly_white", height=460, width=880,
+        legend=dict(orientation="h", yanchor="bottom", y=-0.26, x=0.0))
+    return fig
+
+
+def fig_d11_pt_exceptional_point() -> go.Figure:
+    """D11 Fig. 2 — the PT-symmetric non-Hermitian Bloch Hamiltonian
+    H(g) = [[ig, 1], [1, −ig]]. Eigenvalues ±√(1−g²) are real for g² ≤ 1 and
+    purely imaginary beyond; the transition is a SHARP BICONDITIONAL, and at
+    g = 1 the splitting vanishes at a genuinely defective order-2 exceptional
+    point (algebraic multiplicity 2, geometric multiplicity 1) certified
+    without full Jordan normal form. The certified proximity enclosure
+    (99/100 ≤ g² ≤ 1 ⟹ Δ ≤ 1/5) is marked."""
+    from src.core import formulas as F
+    blue, amber, carmine = COLORS["steel_blue"], COLORS["amber"], COLORS["carmine"]
+    g_real = np.linspace(0.0, 1.0, 500)
+    g_broken = np.linspace(1.0, 1.6, 300)
+    lam = np.sqrt(np.maximum(1.0 - g_real ** 2, 0.0))
+    imag = np.sqrt(np.maximum(g_broken ** 2 - 1.0, 0.0))
+
+    fig = go.Figure()
+    fig.add_vrect(x0=0.0, x1=1.0, fillcolor="rgba(70, 130, 180, 0.12)", line_width=0,
+                  annotation_text="PT-unbroken — spectrum real",
+                  annotation_position="top left")
+    fig.add_trace(go.Scatter(x=g_real, y=lam, mode="lines",
+                             line=dict(color=blue, width=3),
+                             name="Re λ = +√(1−g²)"))
+    fig.add_trace(go.Scatter(x=g_real, y=-lam, mode="lines",
+                             line=dict(color=blue, width=3, dash="dash"),
+                             name="Re λ = −√(1−g²)"))
+    fig.add_trace(go.Scatter(x=g_broken, y=imag, mode="lines",
+                             line=dict(color=amber, width=3),
+                             name="Im λ = +√(g²−1)  (PT-broken)"))
+    fig.add_trace(go.Scatter(x=g_broken, y=-imag, mode="lines",
+                             line=dict(color=amber, width=3, dash="dash"),
+                             name="Im λ = −√(g²−1)"))
+    fig.add_trace(go.Scatter(
+        x=[1.0], y=[0.0], mode="markers",
+        marker=dict(color=carmine, size=14, symbol="x"),
+        name="EP2 at g = 1  (defective, Δ = 0)"))
+    fig.add_vline(x=float(np.sqrt(0.99)), line=dict(color=carmine, width=1.5, dash="dot"),
+                  annotation_text="g² = 99/100 ⟹ Δ ≤ 1/5",
+                  annotation_position="bottom left")
+    fig.update_layout(
+        title="D11 Fig. 2 — PT transition and the order-2 exceptional point",
+        xaxis=dict(title="non-Hermiticity  g"),
+        yaxis=dict(title="eigenvalue  λ  (real branch / imaginary branch)"),
+        template="plotly_white", height=460, width=880,
+        legend=dict(orientation="h", yanchor="bottom", y=-0.26, x=0.0))
+    return fig
+
+
+def fig_d11_haldane_chern() -> go.Figure:
+    """D11 Fig. 3 — the Haldane Chern witness and its retracted classification.
+    Left: Dirac-point gaps 2|m ∓ 3√3 t₂ sin φ| at K and K' versus the Semenoff
+    mass m; the cones acquire OPPOSITE masses and the analytic mass-inversion
+    window is |m| < 3√3 ≈ 5.1962. Right: the certified lattice Chern number on
+    the 4×4 torus at t = t₂ = 1, φ = π/2 — C = −1 at m = 1, C = 0 at m = 5 and
+    m = 6. The m = 5 point is INSIDE the analytic window yet reads C = 0: mass
+    inversion is NOT sufficient at fixed grid size, which is why the earlier
+    'exactly where the masses invert' classification was retracted."""
+    from src.core import formulas as F
+    blue, amber, carmine = COLORS["steel_blue"], COLORS["amber"], COLORS["carmine"]
+    sage = COLORS["sage"]
+    fig = make_subplots(rows=1, cols=2, horizontal_spacing=0.12, subplot_titles=(
+        "Dirac-point gaps  (t₂ = 1, φ = π/2)",
+        "certified lattice Chern number, 4×4 torus"))
+
+    m = np.linspace(-8.0, 8.0, 600)
+    gaps = [F.haldane_dirac_masses(x, 1.0, np.pi / 2) for x in m]
+    gap_K = np.array([2.0 * abs(g[0]) for g in gaps])
+    gap_Kp = np.array([2.0 * abs(g[1]) for g in gaps])
+    window = F.haldane_mass_inversion_window(1.0, np.pi / 2)
+    fig.add_vrect(x0=-window, x1=window, fillcolor="rgba(70, 130, 180, 0.22)",
+                  line_width=1, line_color=blue, line_dash="dot",
+                  annotation_text="analytic inversion window  |m| < 3√3 ≈ 5.196",
+                  annotation_position="top left", row=1, col=1,
+                  exclude_empty_subplots=False)
+    fig.add_trace(go.Scatter(x=m, y=gap_K, mode="lines",
+                             line=dict(color=blue, width=3),
+                             name="gap at K  = 2|m − 3√3 t₂ sin φ|"), row=1, col=1)
+    fig.add_trace(go.Scatter(x=m, y=gap_Kp, mode="lines",
+                             line=dict(color=amber, width=3, dash="dash"),
+                             name="gap at K′ = 2|m + 3√3 t₂ sin φ|"), row=1, col=1)
+    fig.update_xaxes(title_text="Semenoff mass  m", row=1, col=1)
+    fig.update_yaxes(title_text="Dirac-point gap", row=1, col=1)
+
+    # Three certified points. m = 5 and m = 6 both sit at C = 0 and are close
+    # in x, so their labels are pushed to opposite sides to stay legible.
+    pts = [(1.0, -1.0, "m = 1:  C = −1", carmine, "top center"),
+           (5.0, 0.0, "m = 5:  C = 0  — inside the window", sage, "bottom center"),
+           (6.0, 0.0, "m = 6:  C = 0", blue, "top center")]
+    fig.add_vrect(x0=-window, x1=window, fillcolor="rgba(70, 130, 180, 0.22)",
+                  line_width=1, line_color=blue, line_dash="dot",
+                  annotation_text="analytic inversion window",
+                  annotation_position="top left", row=1, col=2,
+                  exclude_empty_subplots=False)
+    for mm, cc, lab, col, pos in pts:
+        fig.add_trace(go.Scatter(
+            x=[mm], y=[cc], mode="markers+text",
+            marker=dict(color=col, size=14, symbol="diamond"),
+            text=[lab], textposition=pos, textfont=dict(size=12),
+            cliponaxis=False, showlegend=False), row=1, col=2)
+    fig.add_vline(x=3.3177, line=dict(color=carmine, width=2, dash="dot"),
+                  annotation_text="4×4 invariant flips here ≈ 3.3177",
+                  annotation_position="bottom left", row=1, col=2)
+    fig.update_xaxes(title_text="Semenoff mass  m", range=[-0.5, 8.5], row=1, col=2)
+    fig.update_yaxes(title_text="lattice Chern number  C", range=[-1.9, 1.1],
+                     dtick=1, row=1, col=2)
+
+    fig.update_layout(
+        title="D11 Fig. 3 — Haldane Chern witness: mass inversion is necessary, not sufficient, at fixed N",
+        template="plotly_white", height=450, width=1080,
+        legend=dict(orientation="h", yanchor="bottom", y=-0.30, x=0.0))
+    return fig
+
+
+def fig_d11_effective_medium() -> go.Figure:
+    """D11 Fig. 4 — algebraic effective-medium theory. Left: the Maxwell–Garnett
+    effective permittivity versus inclusion fill fraction, strictly inside its
+    constituent (Wiener/Hashin–Shtrikman-type) bounds ε_h ≤ ε_eff ≤ ε_i, with
+    the certified point (ε_h, ε_i, f) = (1, 4, 1/2) ⟹ ε_eff = 2 marked. Right:
+    the Voigt and Reuss elastic bounds and their EXACT arithmetic-minus-harmonic
+    gap f(1−f)(M₁−M₂)²/((1−f)M₂+fM₁), shipped as an equality rather than an
+    inequality. Both are algebraic-path results: the two-scale homogenization
+    route is a documented substrate stall and was deliberately not attempted."""
+    from src.core import formulas as F
+    blue, amber, carmine = COLORS["steel_blue"], COLORS["amber"], COLORS["carmine"]
+    sage = COLORS["sage"]
+    fig = make_subplots(rows=1, cols=2, horizontal_spacing=0.11, subplot_titles=(
+        "Maxwell–Garnett permittivity  (ε_h = 1, ε_i = 4)",
+        "Voigt–Reuss elastic bounds  (M₁ = 1, M₂ = 4)"))
+
+    f_frac = np.linspace(0.0, 1.0, 400)
+    eps = np.array([F.maxwell_garnett(1.0, 4.0, x) for x in f_frac])
+    fig.add_hrect(y0=1.0, y1=4.0, fillcolor="rgba(70, 130, 180, 0.16)", line_width=0,
+                  annotation_text="constituent bounds  ε_h ≤ ε_eff ≤ ε_i",
+                  annotation_position="top left", row=1, col=1,
+                  exclude_empty_subplots=False)
+    fig.add_trace(go.Scatter(x=f_frac, y=eps, mode="lines",
+                             line=dict(color=blue, width=3),
+                             name="ε_eff (Maxwell–Garnett)"), row=1, col=1)
+    fig.add_trace(go.Scatter(
+        x=[0.5], y=[F.maxwell_garnett(1.0, 4.0, 0.5)], mode="markers+text",
+        marker=dict(color=carmine, size=12, symbol="diamond"),
+        text=["f = 1/2 ⟹ ε_eff = 2"], textposition="top left",
+        showlegend=False), row=1, col=1)
+    fig.update_xaxes(title_text="inclusion fill fraction  f", row=1, col=1)
+    fig.update_yaxes(title_text="effective permittivity  ε_eff", row=1, col=1)
+
+    voigt = np.array([F.voigt_modulus(1.0, 4.0, x) for x in f_frac])
+    reuss = np.array([F.reuss_modulus(1.0, 4.0, x) for x in f_frac])
+    fig.add_trace(go.Scatter(
+        x=np.concatenate([f_frac, f_frac[::-1]]),
+        y=np.concatenate([voigt, reuss[::-1]]),
+        fill="toself", fillcolor="rgba(241, 143, 1, 0.20)", line=dict(width=0),
+        name="exact Voigt − Reuss gap", hoverinfo="skip"), row=1, col=2)
+    fig.add_trace(go.Scatter(x=f_frac, y=voigt, mode="lines",
+                             line=dict(color=amber, width=3),
+                             name="Voigt (iso-strain, arithmetic)"), row=1, col=2)
+    fig.add_trace(go.Scatter(x=f_frac, y=reuss, mode="lines",
+                             line=dict(color=blue, width=3),
+                             name="Reuss (iso-stress, harmonic)"), row=1, col=2)
+    f_star = float(f_frac[int(np.argmax(voigt - reuss))])
+    fig.add_trace(go.Scatter(
+        x=[f_star], y=[F.voigt_modulus(1.0, 4.0, f_star)], mode="markers",
+        marker=dict(color=sage, size=11, symbol="diamond"),
+        name=f"widest gap  Δ = {F.voigt_reuss_gap(1.0, 4.0, f_star):.3f}"),
+        row=1, col=2)
+    fig.update_xaxes(title_text="phase-2 fill fraction  f", row=1, col=2)
+    fig.update_yaxes(title_text="effective modulus  M", row=1, col=2)
+
+    fig.update_layout(
+        title="D11 Fig. 4 — algebraic effective-medium bounds (two-scale route deliberately not taken)",
+        template="plotly_white", height=440, width=1080,
+        legend=dict(orientation="h", yanchor="bottom", y=-0.32, x=0.0))
+    return fig
