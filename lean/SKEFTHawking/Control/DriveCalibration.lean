@@ -54,14 +54,22 @@ theorem longitudinalElement_driveOp (a b c d : ℝ) :
 
 /-! ## 2. Transverse duration calibration, with its fail conditions -/
 
-/-- **Transverse duration calibration, ON RESONANCE.** Driving for `T = 2θ/(m·Ω)` achieves exactly
-the target angle `θ` **when `ω₀ = ω`**. The two fail conditions are explicit hypotheses, not
-absorbed magnitudes.
+/-- **Transverse duration calibration, ON RESONANCE.** Driving for `T = 2θ/(m·Ω)` achieves the
+target angle `θ` **when `ω₀ = ω`**. The two fail conditions are explicit hypotheses, not absorbed
+magnitudes.
 
 ⚠️ The resonance restriction is not decorative: `rwaRotationAngle` ignores detuning, so off
 resonance the achieved angle is strictly larger (`rwaRotationAngle_lt_generalRotationAngle`) and a
 duration computed from this identity UNDER-rotates. Use `calibrated_duration_general` off
-resonance. -/
+resonance.
+
+⚠️ **CO-ROTATING MODEL ONLY — this identity is exact in the REDUCED dynamics, not the exact ones.**
+The exact propagator differs from the co-rotating one by the counter-rotating remainder that
+`rwa_propagator_difference_bound` bounds at Bloch–Siegert scale. That remainder is not zero: at
+`ω = Ω` the integrated counter-rotating drive reaches exactly `1/2`
+(`integral_counterRotating_witness_resonance`). Any device claim lifted from this identity inherits
+that `O(Ω/ω)` error bar. `calibrated_duration_transverse_propagator` states the identity on the
+co-rotating propagator itself, which is where the word "achieves" acquires its meaning. -/
 theorem calibrated_duration_transverse (Ω b c θ : ℝ)
     (hm : ‖projectedDriveElement b c‖ ≠ 0) (hΩ : Ω ≠ 0) :
     rwaRotationAngle Ω b c (2 * θ / (‖projectedDriveElement b c‖ * Ω)) = θ := by
@@ -69,13 +77,35 @@ theorem calibrated_duration_transverse (Ω b c θ : ℝ)
   field_simp
 
 /-- **Transverse duration calibration at GENERAL detuning** — the physically correct form. The
-generator magnitude is `√(Δ² + Ω²m²)/2` (`rwaGenerator_sq`), so the calibrated duration is
-`T = 2θ/√(Δ² + Ω²m²)`. Its fail condition is that the generator not vanish. -/
+generator magnitude is `√(Δ² + Ω²m²)/2`, so the calibrated duration is `T = 2θ/√(Δ² + Ω²m²)`. Its
+fail condition is that the generator not vanish. Carries the same co-rotating-model caveat as the
+resonant form above. -/
 theorem calibrated_duration_general (Δ Ω b c θ : ℝ)
     (hgen : Real.sqrt (Δ ^ 2 + Ω ^ 2 * (b ^ 2 + c ^ 2)) ≠ 0) :
     generalRotationAngle Δ Ω b c (2 * θ / Real.sqrt (Δ ^ 2 + Ω ^ 2 * (b ^ 2 + c ^ 2))) = θ := by
   unfold generalRotationAngle
   field_simp
+
+/-- **The rate in the calibration formula IS the generator magnitude** — `rwaGenerator_sq` consumed,
+not cited. `calibrated_duration_general` divides by `√(Δ²+Ω²m²)`; this theorem is what says that
+number is the magnitude of the operator being exponentiated, via `H_RWA² = rate²·1`. -/
+theorem rwaGenerator_sq_eq_rate_sq (ω₀ ω Ω φ b c : ℝ) :
+    rwaGenerator ω₀ ω Ω φ b c ^ 2
+      = ((rwaRate (ω₀ - ω) Ω b c ^ 2 : ℝ) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  rw [rwaGenerator_sq, rwaRate_sq]
+
+/-- **The calibrated duration achieves the target angle ON THE PROPAGATOR.** At resonance, driving
+for `T = 2θ/(m·Ω)` makes the co-rotating propagator's trace exactly `2·cos θ`. This is what upgrades
+`calibrated_duration_transverse` from an identity between real numbers to a statement about the
+operator the drive applies — the propagator being pinned by its own ODE (`rwaPropagator_ode`), not
+by convention. Same co-rotating-model caveat as above. -/
+theorem calibrated_duration_transverse_propagator (ω Ω b c θ : ℝ)
+    (hm : ‖projectedDriveElement b c‖ ≠ 0) (hΩ : 0 < Ω) :
+    rwaPropagator ω ω Ω 0 b c (2 * θ / (‖projectedDriveElement b c‖ * Ω)) 0 0
+      + rwaPropagator ω ω Ω 0 b c (2 * θ / (‖projectedDriveElement b c‖ * Ω)) 1 1
+      = 2 * ((Real.cos θ : ℝ) : ℂ) := by
+  rw [rwaPropagator_trace, sub_self, generalRotationAngle_resonance Ω b c _ hΩ.le,
+    calibrated_duration_transverse Ω b c θ hm hΩ.ne']
 
 /-- **Fail condition 1 — a vanishing matrix element.** If the projected drive element is zero, NO
 duration produces any rotation: the calibration equation has no solution for a nonzero target.
@@ -136,10 +166,40 @@ theorem calibrated_duration_longitudinal (Δ θ : ℝ) (hΔ : Δ ≠ 0) :
   unfold longitudinalRotationAngle
   field_simp
 
-/-- **Longitudinal fail condition.** At zero detuning no duration accumulates any phase. -/
-theorem longitudinalRotationAngle_eq_zero_of_zero_detuning (T : ℝ) :
-    longitudinalRotationAngle 0 T = 0 := by
+/-- **Longitudinal fail condition.** At zero detuning no duration accumulates any phase, so no
+duration achieves a nonzero target — the longitudinal analogue of
+`no_duration_achieves_nonzero_angle_of_zero_element`. -/
+theorem no_duration_achieves_nonzero_longitudinal_angle_of_zero_detuning {θ : ℝ} (hθ : θ ≠ 0) :
+    ∀ T, longitudinalRotationAngle 0 T ≠ θ := by
+  intro T
   unfold longitudinalRotationAngle
+  simpa using fun h => hθ h.symm
+
+/-! ### 3.1 Why `longitudinalElement` has no duration-calibration identity
+
+The "longitudinal dual" above is about DETUNING, not about the longitudinal drive element — and that
+is forced, not an omission. `rwaGenerator` contains no `a` or `d`: a drive along `1` or `σ_z` is
+purely counter-rotating and averages away entirely at RWA order. These two theorems say exactly
+that, so the asymmetry between `transverseElement` (which carries a calibration identity) and
+`longitudinalElement` (which cannot) is recorded in the kernel rather than in a docstring. -/
+
+/-- The longitudinal element measures precisely the drive component that the co-rotating reduction
+discards: two drives differing only in `a` and `d` differ ONLY in their counter-rotating remainder,
+their co-rotating generators being identical. Proved through `interactionHamiltonian_decomp`. -/
+theorem longitudinal_drive_purely_counterRotating (ω₀ ω Ω φ a b c d a' d' t : ℝ) :
+    interactionHamiltonian ω₀ ω Ω φ a b c d t - interactionHamiltonian ω₀ ω Ω φ a' b c d' t
+      = counterRotating ω Ω φ a b c d t - counterRotating ω Ω φ a' b c d' t := by
+  rw [interactionHamiltonian_decomp, interactionHamiltonian_decomp]
+  abel
+
+/-- …and the longitudinal element is what that discarded difference amounts to: it tracks `d`
+exactly, so a nonzero longitudinal element is a real feature of the drive operator which
+nevertheless contributes nothing at RWA order. -/
+theorem longitudinalElement_driveOp_sub (a b c d a' b' c' d' : ℝ) :
+    longitudinalElement (driveOp a b c d) - longitudinalElement (driveOp a' b' c' d')
+      = ((d - d' : ℝ) : ℂ) := by
+  rw [longitudinalElement_driveOp, longitudinalElement_driveOp]
+  push_cast
   ring
 
 /-! ## 3.1 Phase calibration — where the co-rotating rotation axis actually points
@@ -300,20 +360,44 @@ theorem kramers_partner_eigenvector {Θ : V → V} {H : V →ₗ[ℂ] V}
     H (Θ v) = lam • Θ v := by
   rw [← hcomm, hv, hconj, hreal]
 
-/-- **Kramers degeneracy.** For a `Θ`-symmetric Hamiltonian with antiunitary `Θ`, `Θ² = -1`, every
-real eigenvalue carries a SECOND eigenvector orthogonal to the first — so no eigenvalue is simple
-and every level is (at least) doubly degenerate.
+/-- **Two nonzero orthogonal vectors are linearly independent** — the step that turns "there is a
+second eigenvector" into "the eigenspace has dimension ≥ 2". -/
+theorem linearIndependent_of_inner_eq_zero {x y : V} (hx : x ≠ 0) (hy : y ≠ 0)
+    (horth : ⟪y, x⟫_ℂ = 0) : ∀ s t : ℂ, s • x + t • y = 0 → s = 0 ∧ t = 0 := by
+  intro s t hst
+  have hxx : ⟪x, x⟫_ℂ ≠ 0 := inner_self_ne_zero.mpr hx
+  have hyy : ⟪y, y⟫_ℂ ≠ 0 := inner_self_ne_zero.mpr hy
+  have hxy : ⟪x, y⟫_ℂ = 0 := by
+    rw [← inner_conj_symm]; simp [horth]
+  constructor
+  · have h := congrArg (fun z => ⟪z, x⟫_ℂ) hst
+    simp only [inner_add_left, inner_smul_left, inner_zero_left, horth] at h
+    have h2 : s = 0 ∨ x = 0 := by simpa using h
+    exact h2.resolve_right hx
+  · have h := congrArg (fun z => ⟪z, y⟫_ℂ) hst
+    simp only [inner_add_left, inner_smul_left, inner_zero_left, hxy] at h
+    have h2 : t = 0 ∨ y = 0 := by simpa using h
+    exact h2.resolve_right hy
 
-The partner is exhibited (`Θ v`), not merely asserted to exist. -/
+/-- **Kramers degeneracy.** For a `Θ`-symmetric Hamiltonian with antiunitary `Θ`, `Θ² = -1`, every
+real eigenvalue carries a SECOND eigenvector orthogonal to — and hence linearly independent of —
+the first. So no eigenvalue is simple and every level is (at least) doubly degenerate.
+
+The partner is exhibited (`Θ v`), not merely asserted to exist, and the final conjunct is the
+degeneracy proper: no scalar combination of the two vanishes, so the eigenspace really does have
+dimension at least two. -/
 theorem kramers_degeneracy {Θ : V → V} {H : V →ₗ[ℂ] V}
     (hanti : ∀ x y, ⟪Θ x, Θ y⟫_ℂ = ⟪y, x⟫_ℂ)
     (hconj : ∀ (z : ℂ) (x : V), Θ (z • x) = (starRingEnd ℂ) z • Θ x)
     (hsq : ∀ x, Θ (Θ x) = -x) (hcomm : ∀ x, Θ (H x) = H (Θ x))
     {lam : ℂ} (hreal : (starRingEnd ℂ) lam = lam) {v : V} (hv0 : v ≠ 0) (hv : H v = lam • v) :
-    Θ v ≠ 0 ∧ H (Θ v) = lam • Θ v ∧ ⟪Θ v, v⟫_ℂ = 0 :=
+    Θ v ≠ 0 ∧ H (Θ v) = lam • Θ v ∧ ⟪Θ v, v⟫_ℂ = 0
+      ∧ ∀ s t : ℂ, s • v + t • Θ v = 0 → s = 0 ∧ t = 0 :=
   ⟨kramers_apply_ne_zero hconj hsq hv0,
    kramers_partner_eigenvector hconj hcomm hreal hv,
-   kramers_inner_eq_zero hanti hsq v⟩
+   kramers_inner_eq_zero hanti hsq v,
+   linearIndependent_of_inner_eq_zero hv0 (kramers_apply_ne_zero hconj hsq hv0)
+     (kramers_inner_eq_zero hanti hsq v)⟩
 
 /-- **Non-vacuity witness.** The hypothesis bundle is inhabited: on `ℂ²` the map
 `Θ (z₀, z₁) = (-conj z₁, conj z₀)` — i.e. `-iσ_y ∘ (complex conjugation)`, the standard spin-½

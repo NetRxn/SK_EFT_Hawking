@@ -135,6 +135,34 @@ theorem rotFrame_ode (ω t : ℝ) :
     simp [σ_z, Matrix.mul_apply, Fin.sum_univ_two, Matrix.one_apply, Complex.ext_iff,
       -Complex.ofReal_cos, -Complex.ofReal_sin]
 
+/-- Left multiplication by a fixed matrix is Lipschitz — the vector field of a linear ODE. -/
+theorem lipschitzWith_const_mul (A : Matrix (Fin 2) (Fin 2) ℂ) :
+    LipschitzWith ‖A‖₊ (fun X : Matrix (Fin 2) (Fin 2) ℂ => A * X) := by
+  apply LipschitzWith.of_dist_le_mul
+  intro x y
+  simp only [dist_eq_norm, ← mul_sub]
+  exact norm_mul_le _ _
+
+/-- **Uniqueness — `rotFrame` really is THE solution, not merely A solution.** Any function
+solving the same ODE with the same initial condition agrees with `rotFrame` on `[0, T]`. Together
+with `rotFrame_ode` and `rotFrame_zero` this discharges the claim that the closed form *is*
+`exp(i(ωt/2)σ_z)`: the characterization is a theorem here, not a docstring assertion. -/
+theorem rotFrame_unique (ω T : ℝ) (F : ℝ → Matrix (Fin 2) (Fin 2) ℂ)
+    (hFc : ContinuousOn F (Set.Icc 0 T))
+    (hF' : ∀ t ∈ Set.Ico (0 : ℝ) T,
+      HasDerivWithinAt F ((Complex.I * ((ω / 2 : ℝ) : ℂ)) • σ_z * F t) (Set.Ici t) t)
+    (hF0 : F 0 = 1) :
+    Set.EqOn F (rotFrame ω) (Set.Icc 0 T) := by
+  have hode : ∀ t : ℝ, HasDerivAt (rotFrame ω)
+      ((Complex.I * ((ω / 2 : ℝ) : ℂ)) • σ_z * rotFrame ω t) t := fun t =>
+    (rotFrame_ode ω t) ▸ rotFrame_hasDerivAt ω t
+  exact ODE_solution_unique
+    (v := fun _ X => (Complex.I * ((ω / 2 : ℝ) : ℂ)) • σ_z * X)
+    (fun _ => lipschitzWith_const_mul _) hFc hF'
+    (fun t _ => (hode t).continuousAt.continuousWithinAt)
+    (fun t _ => (hode t).hasDerivWithinAt)
+    (by rw [hF0, rotFrame_zero])
+
 /-! ### 2.1 The rotating frame is unitary and acts on the Pauli basis as a rotation -/
 
 -- Entry-level computation idiom shared by every conjugation lemma below: expand the
@@ -446,9 +474,9 @@ They are stated at every `t` and every `T`, so neither is an artefact of a lucky
 /-- **Validity witness.** Far off resonance (`ω = 1000 Ω`) the integrated counter-rotating drive is
 bounded by `2×10⁻³` for ALL `T` — the rotating-wave reduction is quantitatively controlled. -/
 theorem integral_counterRotating_witness_valid (T : ℝ) :
-    ‖∫ s in (0 : ℝ)..T, counterRotating 1000 1 0 0 1 0 0 s‖ ≤ 1 / 100 := by
+    ‖∫ s in (0 : ℝ)..T, counterRotating 1000 1 0 0 1 0 0 s‖ ≤ 1 / 500 := by
   have h := integral_counterRotating_norm_le 1000 1 0 0 1 0 0 T (by norm_num) (by norm_num)
-  have hb : (2 : ℝ) * (1 / 1000) * (|(0 : ℝ)| + |(1 : ℝ)| + |(0 : ℝ)| + |(0 : ℝ)|) ≤ 1 / 100 := by
+  have hb : (2 : ℝ) * (1 / 1000) * (|(0 : ℝ)| + |(1 : ℝ)| + |(0 : ℝ)| + |(0 : ℝ)|) ≤ 1 / 500 := by
     norm_num
   linarith
 
@@ -577,22 +605,172 @@ would therefore exclude essentially every rotation, leaving a theorem that is tr
 
 SCOPE. This bounds the CONJUGATED integrated remainder `‖∫₀ᵀ L·V·U‖`. The literal
 `‖U_exact(T) − U_rwa(T)‖` form is `rwa_propagator_difference_bound` below, which composes this with
-the discrepancy identity and the unitarity transfer from `BanachAveraging`. -/
+the discrepancy identity and the unitarity transfer from `BanachAveraging`.
+
+The antiderivative's properties (its derivative, continuity, vanishing at `0`, and its bound) are
+DISCHARGED here from `hω`/`hΩ` rather than assumed, so the conclusion carries the explicit
+Bloch–Siegert constant `2(Ω/ω)·ℓ¹` instead of an arbitrary `B`. -/
 theorem norm_integral_counterRotating_conjugated_le
-    {L U P Q : ℝ → Matrix (Fin 2) (Fin 2) ℂ} {B KL KU Kp Kq T ω Ω φ a b c d : ℝ}
-    (hS : ∀ s, HasDerivAt (bsAntiderivative ω Ω φ a b c d)
-      (counterRotating ω Ω φ a b c d s) s)
+    {L U P Q : ℝ → Matrix (Fin 2) (Fin 2) ℂ} {KL KU Kp Kq T ω Ω φ a b c d : ℝ}
+    (hω : 0 < ω) (hΩ : 0 ≤ Ω)
     (hL : ∀ s, HasDerivAt L (L s * P s) s) (hU : ∀ s, HasDerivAt U (Q s * U s) s)
-    (hSc : Continuous (bsAntiderivative ω Ω φ a b c d))
     (hLc : Continuous L) (hUc : Continuous U) (hPc : Continuous P) (hQc : Continuous Q)
-    (hS0 : bsAntiderivative ω Ω φ a b c d 0 = 0)
     (hLb : ∀ s, ‖L s‖ ≤ KL) (hUb : ∀ s, ‖U s‖ ≤ KU)
-    (hSb : ∀ s, ‖bsAntiderivative ω Ω φ a b c d s‖ ≤ B)
-    (hPb : ∀ s, ‖P s‖ ≤ Kp) (hQb : ∀ s, ‖Q s‖ ≤ Kq) (hB : 0 ≤ B) (hT : 0 ≤ T) :
+    (hPb : ∀ s, ‖P s‖ ≤ Kp) (hQb : ∀ s, ‖Q s‖ ≤ Kq) (hT : 0 ≤ T) :
     ‖∫ s in (0 : ℝ)..T, L s * counterRotating ω Ω φ a b c d s * U s‖
-      ≤ KL * KU * B * (1 + T * (Kp + Kq)) :=
-  norm_integral_mul_mul_le hS hL hU hSc hLc hUc hPc hQc
-    (continuous_counterRotating ω Ω φ a b c d) hS0 hLb hUb hSb hPb hQb hB hT
+      ≤ KL * KU * (2 * (Ω / ω) * (|a| + |b| + |c| + |d|)) * (1 + T * (Kp + Kq)) :=
+  norm_integral_mul_mul_le
+    (fun s => bsAntiderivative_hasDerivAt ω Ω φ a b c d hω.ne' s) hL hU
+    (by unfold bsAntiderivative; fun_prop) hLc hUc hPc hQc
+    (continuous_counterRotating ω Ω φ a b c d) (bsAntiderivative_zero ω Ω φ a b c d) hLb hUb
+    (fun s => bsAntiderivative_norm_le ω Ω φ a b c d s hω hΩ) hPb hQb (by positivity) hT
+
+/-! ### 3.5 The co-rotating propagator in closed form — what makes the angle an ANGLE
+
+Everything above treats `generalRotationAngle` as a real number defined by a formula. That is not
+yet physics: nothing so far connects it to the operator a drive actually applies. This section
+closes that gap by exhibiting the co-rotating propagator in closed form and **pinning it by its
+defining ODE**, exactly as `rotFrame_ode` pins the rotating frame.
+
+The closed form works only because `rwaGenerator_sq` says `H_RWA² = rate²·1`; that theorem is
+consumed here rather than merely cited, and it is what turns `cos θ·1 − i(sin θ/rate)·H` into a
+solution of `U' = −i·H·U`. -/
+
+/-- The co-rotating rotation RATE, `√(Δ² + Ω²m²)/2` — half the magnitude of `rwaGenerator`. -/
+noncomputable def rwaRate (Δ Ω b c : ℝ) : ℝ := Real.sqrt (Δ ^ 2 + Ω ^ 2 * (b ^ 2 + c ^ 2)) / 2
+
+/-- The angle is the rate times the duration. -/
+theorem generalRotationAngle_eq_rate_mul (Δ Ω b c T : ℝ) :
+    generalRotationAngle Δ Ω b c T = rwaRate Δ Ω b c * T := by
+  unfold generalRotationAngle rwaRate; ring
+
+theorem rwaRate_sq (Δ Ω b c : ℝ) :
+    rwaRate Δ Ω b c ^ 2 = Δ ^ 2 / 4 + Ω ^ 2 * (b ^ 2 + c ^ 2) / 4 := by
+  unfold rwaRate
+  rw [div_pow, Real.sq_sqrt (by positivity)]
+  ring
+
+/-- **The co-rotating propagator**, `U(t) = cos(θ t)·1 − i·(sin(θ t)/rate)·H_RWA`. -/
+noncomputable def rwaPropagator (ω₀ ω Ω φ b c : ℝ) (t : ℝ) : Matrix (Fin 2) (Fin 2) ℂ :=
+  ((Real.cos (generalRotationAngle (ω₀ - ω) Ω b c t) : ℝ) : ℂ)
+      • (1 : Matrix (Fin 2) (Fin 2) ℂ)
+    - (Complex.I * ((Real.sin (generalRotationAngle (ω₀ - ω) Ω b c t)
+        / rwaRate (ω₀ - ω) Ω b c : ℝ) : ℂ)) • rwaGenerator ω₀ ω Ω φ b c
+
+@[simp] theorem rwaPropagator_zero (ω₀ ω Ω φ b c : ℝ) : rwaPropagator ω₀ ω Ω φ b c 0 = 1 := by
+  unfold rwaPropagator generalRotationAngle
+  norm_num
+
+/-- **The defining ODE** — `U'(t) = −i·H_RWA·U(t)`. This is what makes `rwaPropagator` *the*
+co-rotating propagator rather than an arbitrary matrix-valued formula, and it is where
+`rwaGenerator_sq` does its work. Requires a nondegenerate rate (`0 < rate`); at `rate = 0` the
+generator vanishes and there is no rotation to speak of. -/
+theorem rwaPropagator_ode (ω₀ ω Ω φ b c : ℝ) (hk : 0 < rwaRate (ω₀ - ω) Ω b c) (t : ℝ) :
+    HasDerivAt (rwaPropagator ω₀ ω Ω φ b c)
+      ((-Complex.I) • (rwaGenerator ω₀ ω Ω φ b c * rwaPropagator ω₀ ω Ω φ b c t)) t := by
+  set k := rwaRate (ω₀ - ω) Ω b c with hkdef
+  set H := rwaGenerator ω₀ ω Ω φ b c with hHdef
+  have hangle : ∀ s : ℝ, generalRotationAngle (ω₀ - ω) Ω b c s = k * s := fun s =>
+    generalRotationAngle_eq_rate_mul _ _ _ _ s
+  -- the two scalar derivatives
+  have hc : HasDerivAt (fun s : ℝ => Real.cos (generalRotationAngle (ω₀ - ω) Ω b c s))
+      (-k * Real.sin (k * t)) t := by
+    have h := ((hasDerivAt_id t).const_mul k).cos
+    simp only [hangle]
+    simpa [mul_comm, mul_assoc, mul_left_comm] using h
+  have hs : HasDerivAt (fun s : ℝ =>
+      Real.sin (generalRotationAngle (ω₀ - ω) Ω b c s) / k) (Real.cos (k * t)) t := by
+    have h := (((hasDerivAt_id t).const_mul k).sin).div_const k
+    simp only [hangle]
+    have hrw : k * Real.cos (k * t) / k = Real.cos (k * t) := by
+      field_simp
+    rw [← hrw]
+    simpa [mul_comm, mul_assoc, mul_left_comm] using h
+  have h1 := hc.ofReal_comp.smul_const (1 : Matrix (Fin 2) (Fin 2) ℂ)
+  have h2 := (hs.ofReal_comp.const_mul Complex.I).smul_const H
+  have hderiv := h1.sub h2
+  -- identify the derivative with `-i·H·U` using `H² = k²·1`
+  have hsq : H * H = ((k ^ 2 : ℝ) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+    have hgen := rwaGenerator_sq ω₀ ω Ω φ b c
+    rw [← hHdef, pow_two] at hgen
+    rw [hgen, hkdef, rwaRate_sq]
+  have hval : ((-(k * Real.sin (k * t)) : ℝ) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ)
+      - (Complex.I * ((Real.cos (k * t) : ℝ) : ℂ)) • H
+      = (-Complex.I) • (H * rwaPropagator ω₀ ω Ω φ b c t) := by
+    have hexp : rwaPropagator ω₀ ω Ω φ b c t
+        = ((Real.cos (k * t) : ℝ) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ)
+          - (Complex.I * ((Real.sin (k * t) / k : ℝ) : ℂ)) • H := by
+      unfold rwaPropagator; rw [← hHdef, ← hkdef, hangle t]
+    rw [hexp, mul_sub, Matrix.mul_smul, Matrix.mul_smul, mul_one, hsq, smul_smul, smul_sub,
+      smul_smul, smul_smul]
+    push_cast
+    match_scalars <;> (field_simp; try simp [Complex.I_sq])
+  rw [← hval]
+  have : (-(k * Real.sin (k * t)) : ℝ) = -k * Real.sin (k * t) := by ring
+  rw [this]
+  exact hderiv
+
+/-- **Uniqueness for the co-rotating propagator** — the same argument as `rotFrame_unique`. Any
+solution of `U' = −i·H_RWA·U` with `U(0) = 1` agrees with `rwaPropagator` on `[0, T]`, so the closed
+form is THE propagator and the rotation angle read off it below is not an artefact of a choice. -/
+theorem rwaPropagator_unique (ω₀ ω Ω φ b c T : ℝ) (hk : 0 < rwaRate (ω₀ - ω) Ω b c)
+    (F : ℝ → Matrix (Fin 2) (Fin 2) ℂ) (hFc : ContinuousOn F (Set.Icc 0 T))
+    (hF' : ∀ t ∈ Set.Ico (0 : ℝ) T,
+      HasDerivWithinAt F ((-Complex.I) • rwaGenerator ω₀ ω Ω φ b c * F t) (Set.Ici t) t)
+    (hF0 : F 0 = 1) :
+    Set.EqOn F (rwaPropagator ω₀ ω Ω φ b c) (Set.Icc 0 T) := by
+  have hode : ∀ t : ℝ, HasDerivAt (rwaPropagator ω₀ ω Ω φ b c)
+      ((-Complex.I) • rwaGenerator ω₀ ω Ω φ b c * rwaPropagator ω₀ ω Ω φ b c t) t := fun t => by
+    rw [Matrix.smul_mul]
+    exact rwaPropagator_ode ω₀ ω Ω φ b c hk t
+  exact ODE_solution_unique
+    (v := fun _ X => (-Complex.I) • rwaGenerator ω₀ ω Ω φ b c * X)
+    (fun _ => lipschitzWith_const_mul _) hFc hF'
+    (fun t _ => (hode t).continuousAt.continuousWithinAt)
+    (fun t _ => (hode t).hasDerivWithinAt)
+    (by rw [hF0, rwaPropagator_zero])
+
+/-- **The rotation angle is read off the actual propagator.** `rwaGenerator` is traceless, so the
+propagator's trace is `2·cos θ` — i.e. `generalRotationAngle` is the rotation angle of the operator
+the drive applies, not merely a number named "angle". This is the bridge the calibration identities
+in `DriveCalibration` stand on. -/
+theorem rwaPropagator_trace (ω₀ ω Ω φ b c t : ℝ) :
+    rwaPropagator ω₀ ω Ω φ b c t 0 0 + rwaPropagator ω₀ ω Ω φ b c t 1 1
+      = 2 * ((Real.cos (generalRotationAngle (ω₀ - ω) Ω b c t) : ℝ) : ℂ) := by
+  unfold rwaPropagator rwaGenerator
+  simp [σ_x, σ_y, σ_z, Complex.ext_iff]
+  ring
+
+/-! ### 4.1 The Schrödinger-picture antiderivative
+
+A propagator solves `dU/dt = −i·H·U`, so for a propagator PAIR the generator difference `P + Q`
+carries a factor `−i` relative to the Hamiltonian remainder `V`: with `L = U_rwa⁻¹` and
+`U = U_exact` one gets `P = i·H_RWA`, `Q = −i·H_I`, hence `P + Q = −i·V`. The object whose
+derivative is `P + Q` is therefore `−i·S`, **not** `S`.
+
+This matters: stating the propagator bound against `S` itself would force
+`P + Q = counterRotating` by uniqueness of the derivative, which no Schrödinger propagator pair
+satisfies — the theorem would be true but instantiable only at systems whose generator difference
+is the Hermitian `V`, never at the physical ones it is named for. Since `‖-i • S‖ = ‖S‖`, the
+Bloch–Siegert constant survives the correction untouched. -/
+
+/-- The `−i`-scaled Bloch–Siegert antiderivative differentiates to the Schrödinger generator
+difference `−i·V`. -/
+theorem schrodingerAntiderivative_hasDerivAt (ω Ω φ a b c d : ℝ) (hω : ω ≠ 0) (t : ℝ) :
+    HasDerivAt (fun s => (-Complex.I) • bsAntiderivative ω Ω φ a b c d s)
+      ((-Complex.I) • counterRotating ω Ω φ a b c d t) t :=
+  ((bsAntiderivative_hasDerivAt ω Ω φ a b c d hω t).const_smul (-Complex.I) :)
+
+@[simp] theorem schrodingerAntiderivative_zero (ω Ω φ a b c d : ℝ) :
+    (-Complex.I) • bsAntiderivative ω Ω φ a b c d 0 = 0 := by
+  rw [bsAntiderivative_zero]; simp
+
+/-- Scaling by the unit phase `−i` leaves the Bloch–Siegert bound unchanged. -/
+theorem schrodingerAntiderivative_norm_le (ω Ω φ a b c d t : ℝ) (hω : 0 < ω) (hΩ : 0 ≤ Ω) :
+    ‖(-Complex.I) • bsAntiderivative ω Ω φ a b c d t‖
+      ≤ 2 * (Ω / ω) * (|a| + |b| + |c| + |d|) := by
+  rw [norm_smul]
+  simpa using bsAntiderivative_norm_le ω Ω φ a b c d t hω hΩ
 
 /-- **The propagator difference bound for the RWA system, at Bloch–Siegert scale.**
 
@@ -602,12 +780,16 @@ This is the literal `‖U_exact(T) − U_rwa(T)‖` statement. The Bloch–Siege
 `‖U_exact(T) − U_rwa(T)‖ ≤ KUr·KL·KU·2(Ω/ω)(|a|+|b|+|c|+|d|)·(1 + T(Kp+Kq))`.
 
 `hω : 0 < ω` and `hΩ : 0 ≤ Ω` are load-bearing — they are what make the constant `Ω/ω` rather than
-an arbitrary `B`. The reduction is nowhere asserted as an equality. -/
+an arbitrary `B`. The reduction is nowhere asserted as an equality.
+
+`hSgen` is stated on the `−i`-scaled antiderivative (§4.1): that is the form an actual propagator
+pair satisfies, and `rwa_propagator_difference_bound_inhabited` below exhibits one. -/
 theorem rwa_propagator_difference_bound
     {L U P Q : ℝ → Matrix (Fin 2) (Fin 2) ℂ} {Ur : Matrix (Fin 2) (Fin 2) ℂ}
     {KL KU KUr Kp Kq T ω Ω φ a b c d : ℝ} (hω : 0 < ω) (hΩ : 0 ≤ Ω)
     (hL : ∀ s, HasDerivAt L (L s * P s) s) (hU : ∀ s, HasDerivAt U (Q s * U s) s)
-    (hSgen : ∀ s, HasDerivAt (bsAntiderivative ω Ω φ a b c d) (P s + Q s) s)
+    (hSgen : ∀ s, HasDerivAt (fun r => (-Complex.I) • bsAntiderivative ω Ω φ a b c d r)
+      (P s + Q s) s)
     (hLc : Continuous L) (hUc : Continuous U) (hPc : Continuous P) (hQc : Continuous Q)
     (hL0U0 : L 0 * U 0 = 1)
     (hLb : ∀ s, ‖L s‖ ≤ KL) (hUb : ∀ s, ‖U s‖ ≤ KU)
@@ -617,9 +799,109 @@ theorem rwa_propagator_difference_bound
       * (1 + T * (Kp + Kq))) :=
   norm_propagator_sub_le hSgen hL hU
     (by unfold bsAntiderivative; fun_prop) hLc hUc hPc hQc
-    (bsAntiderivative_zero ω Ω φ a b c d) hL0U0 hLb hUb
-    (fun s => bsAntiderivative_norm_le ω Ω φ a b c d s hω hΩ) hPb hQb
+    (schrodingerAntiderivative_zero ω Ω φ a b c d) hL0U0 hLb hUb
+    (fun s => schrodingerAntiderivative_norm_le ω Ω φ a b c d s hω hΩ) hPb hQb
     (by positivity) hT hinv hUrb
+
+/-! ### 4.2 The bound's hypothesis set is inhabited at an actual propagator pair
+
+`rwa_propagator_difference_bound` is only worth its name if some genuine Schrödinger propagator pair
+satisfies every binder. We exhibit one. Take a drive along the identity (`b = c = d = 0`) at
+resonance (`ω₀ = ω`): then `rwaGenerator = 0`, so `U_rwa ≡ 1`, while `H_I(t) = Ω·cos(ωt+φ)·a·1`
+commutes with itself at all times and its propagator is available in closed form. Everything is a
+scalar multiple of the identity, so the pair is genuinely a pair of unitary propagators — not a
+formal solution of a rewritten equation. -/
+
+/-- The accumulated phase of the commuting identity-drive, `∫₀ᵗ Ω·a·cos(ωs+φ) ds`. -/
+noncomputable def commutingDrivePhase (ω Ω φ a : ℝ) (t : ℝ) : ℝ :=
+  (Ω * a / ω) * (Real.sin (ω * t + φ) - Real.sin φ)
+
+/-- The exact propagator of the commuting identity-drive: `exp(-i·phase(t))·1`. -/
+noncomputable def commutingDrivePropagator (ω Ω φ a : ℝ) (t : ℝ) : Matrix (Fin 2) (Fin 2) ℂ :=
+  Complex.exp (-Complex.I * (commutingDrivePhase ω Ω φ a t : ℂ)) • (1 : Matrix (Fin 2) (Fin 2) ℂ)
+
+theorem commutingDrivePhase_hasDerivAt (ω Ω φ a : ℝ) (hω : ω ≠ 0) (t : ℝ) :
+    HasDerivAt (commutingDrivePhase ω Ω φ a) (Ω * a * Real.cos (ω * t + φ)) t := by
+  have hinner : HasDerivAt (fun s : ℝ => ω * s + φ) ω t := by
+    simpa using ((hasDerivAt_id t).const_mul ω).add_const φ
+  have h := (((Real.hasDerivAt_sin (ω * t + φ)).comp t hinner).sub_const
+    (Real.sin φ)).const_mul (Ω * a / ω)
+  have hval : Ω * a / ω * (Real.cos (ω * t + φ) * ω) = Ω * a * Real.cos (ω * t + φ) := by
+    field_simp
+  rw [← hval]
+  exact h
+
+theorem commutingDrivePropagator_zero (ω Ω φ a : ℝ) :
+    commutingDrivePropagator ω Ω φ a 0 = 1 := by
+  unfold commutingDrivePropagator commutingDrivePhase
+  norm_num
+
+theorem norm_commutingDrivePropagator (ω Ω φ a t : ℝ) :
+    ‖commutingDrivePropagator ω Ω φ a t‖ = 1 := by
+  unfold commutingDrivePropagator
+  rw [norm_smul, norm_one, Complex.norm_exp]
+  simp
+
+theorem commutingDrivePropagator_hasDerivAt (ω Ω φ a : ℝ) (hω : ω ≠ 0) (t : ℝ) :
+    HasDerivAt (commutingDrivePropagator ω Ω φ a)
+      (((-Complex.I * ((Ω * a * Real.cos (ω * t + φ) : ℝ) : ℂ)) • (1 : Matrix (Fin 2) (Fin 2) ℂ))
+        * commutingDrivePropagator ω Ω φ a t) t := by
+  have hg := (commutingDrivePhase_hasDerivAt ω Ω φ a hω t).ofReal_comp
+  have hexp := ((hg.const_mul (-Complex.I)).cexp).smul_const
+    (1 : Matrix (Fin 2) (Fin 2) ℂ)
+  have hval :
+      ((-Complex.I * ((Ω * a * Real.cos (ω * t + φ) : ℝ) : ℂ))
+          • (1 : Matrix (Fin 2) (Fin 2) ℂ)) * commutingDrivePropagator ω Ω φ a t
+      = (Complex.exp (-Complex.I * (commutingDrivePhase ω Ω φ a t : ℂ))
+          * (-Complex.I * ((Ω * a * Real.cos (ω * t + φ) : ℝ) : ℂ)))
+        • (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+    unfold commutingDrivePropagator
+    rw [Matrix.smul_mul, Matrix.mul_smul, one_mul, smul_smul, mul_comm]
+  rw [hval]
+  exact hexp
+
+/-- **The propagator-difference bound is inhabited.** Every binder of
+`rwa_propagator_difference_bound` is satisfied by the commuting identity-drive at resonance, with
+`U` its exact propagator, `L = U_rwa⁻¹ = 1`, and `Ur = 1`. So the theorem is a statement about real
+Schrödinger propagator pairs, not one whose hypotheses silently exclude them. -/
+theorem rwa_propagator_difference_bound_inhabited (ω Ω φ a T : ℝ)
+    (hω : 0 < ω) (hΩ : 0 ≤ Ω) (hT : 0 ≤ T) :
+    ‖commutingDrivePropagator ω Ω φ a T - 1‖
+      ≤ 1 * (1 * 1 * (2 * (Ω / ω) * (|a| + |0| + |0| + |0|))
+        * (1 + T * (0 + Ω * |a|))) := by
+  have hQeq : ∀ s : ℝ,
+      (0 : Matrix (Fin 2) (Fin 2) ℂ)
+        + (-Complex.I * ((Ω * a * Real.cos (ω * s + φ) : ℝ) : ℂ))
+            • (1 : Matrix (Fin 2) (Fin 2) ℂ)
+      = (-Complex.I) • counterRotating ω Ω φ a 0 0 0 s := by
+    intro s
+    unfold counterRotating
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [σ_x, σ_y, σ_z, Complex.ext_iff] <;> constructor <;> ring
+  refine rwa_propagator_difference_bound (L := fun _ => 1)
+    (U := commutingDrivePropagator ω Ω φ a) (P := fun _ => 0)
+    (Q := fun s => (-Complex.I * ((Ω * a * Real.cos (ω * s + φ) : ℝ) : ℂ))
+      • (1 : Matrix (Fin 2) (Fin 2) ℂ))
+    (Ur := 1) hω hΩ (fun s => by simp only [mul_zero]; exact hasDerivAt_const s _)
+    (fun s => commutingDrivePropagator_hasDerivAt ω Ω φ a hω.ne' s)
+    (fun s => by
+      rw [hQeq s]
+      exact schrodingerAntiderivative_hasDerivAt ω Ω φ a 0 0 0 hω.ne' s)
+    continuous_const
+    (by
+      unfold commutingDrivePropagator commutingDrivePhase
+      fun_prop)
+    continuous_const
+    (by fun_prop)
+    (by simp [commutingDrivePropagator_zero]) (fun s => by simp)
+    (fun s => (norm_commutingDrivePropagator ω Ω φ a s).le)
+    (fun s => by simp) (fun s => ?_) hT (by simp) (by simp)
+  rw [norm_smul, norm_one, mul_one, norm_mul, norm_neg, Complex.norm_I, one_mul,
+    Complex.norm_real, Real.norm_eq_abs, abs_mul, abs_mul]
+  calc |Ω| * |a| * |Real.cos (ω * s + φ)| ≤ |Ω| * |a| * 1 := by
+        gcongr; exact Real.abs_cos_le_one _
+    _ = Ω * |a| := by rw [mul_one, abs_of_nonneg hΩ]
 
 end
 

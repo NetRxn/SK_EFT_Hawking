@@ -7,19 +7,57 @@
 ## ✅ Shipped declarations (2026-07-30)
 
 `lean/SKEFTHawking/Control/` — 4 modules, all root-imported in `lean/SKEFTHawking.lean`.
-**110 extracted declarations** (100 authored + 10 compiler-generated equation lemmas), **110/110
+**145 extracted declarations** (135 authored + 10 compiler-generated equation lemmas), **145/145
 kernel-pure** with axiom closures ⊆ `{propext, Classical.choice, Quot.sound}` and **zero project
 axioms** (verified from `lean/lean_deps.json` axiom closures, not spot-checks). Zero `sorry`, zero
 `native_decide`, zero `maxHeartbeats`, zero linter warnings. `lake build SKEFTHawking.ExtractDeps`
-clean at 10,799 jobs; `validate.py` **50/50 ALL CHECKS PASSED** (2026-07-30, archived under
-`docs/validation/reports/validation_20260730T13*`).
+clean at 10,799 jobs; `validate.py` **50/50 ALL CHECKS PASSED** (2026-07-30).
+
+**Reviewed twice.** Two fresh-context `skeft-qa:adversarial-reviewer` runs; the second found a
+BLOCKER, 3 MAJOR and 5 IMPORTANT that the first pass and its remediation both missed. All are fixed
+in-session (PD-5) — see "Second-review remediation" below.
 
 | Module | Decls | Core content |
 |---|---:|---|
-| `RotatingWave` | 48 | `interactionHamiltonian_decomp` (the EXACT split `H_I = H_RWA + V`); `rotFrame_zero`/`_hasDerivAt`/`_ode` (the frame pinned as `exp(i(ωt/2)σ_z)`); `bsAntiderivative` + `_hasDerivAt` + `bsAntiderivative_norm_le` (`‖S t‖ ≤ 2(Ω/ω)·ℓ¹`, uniform in `t`); `integral_counterRotating` (FTC); `rwaGenerator_sq` (general `(Δ²+Ω²m²)/4`) and its resonance corollary; `generalRotationAngle` + `rwaRotationAngle_lt_generalRotationAngle`; `rwa_propagator_difference_bound`; validity + exact-value failure witnesses |
+| `RotatingWave` | 68 | `interactionHamiltonian_decomp` (the EXACT split `H_I = H_RWA + V`); `rotFrame_zero`/`_hasDerivAt`/`_ode`/`_unique` (the frame pinned as `exp(i(ωt/2)σ_z)` — uniqueness now a THEOREM via `ODE_solution_unique`, not a docstring claim); `bsAntiderivative` + `_hasDerivAt` + `bsAntiderivative_norm_le` (`‖S t‖ ≤ 2(Ω/ω)·ℓ¹`, uniform in `t`); `integral_counterRotating` (FTC); `rwaGenerator_sq` (general `(Δ²+Ω²m²)/4`) and its resonance corollary; `generalRotationAngle` + `rwaRotationAngle_lt_generalRotationAngle`; `rwa_propagator_difference_bound` (+ `_inhabited`, exhibiting a real propagator pair); the closed-form co-rotating propagator `rwaPropagator` pinned by `rwaPropagator_ode` + `rwaPropagator_unique` and read by `rwaPropagator_trace`; validity + exact-value failure witnesses |
 | `BanachAveraging` | 8 | `hasDerivAt_mul₃`, `integral_averaging`, `norm_integral_mul_mul_le` (bounds `∫L·G·U` via the ANTIDERIVATIVE of `G`, general factor bounds), `integral_mul_ode` (discrepancy identity), `norm_sub_le_norm_mul_sub_one` (unitarity transfer), `norm_propagator_sub_le` |
-| `DriveCalibration` | 29 | `transverseElement`/`longitudinalElement` read off the operator and proved equal to their Pauli forms; transverse + longitudinal + general-detuning **duration** calibration identities; `no_duration_achieves_nonzero_angle_of_zero_element`, `magnitude_calibration_rotates_backwards`; the **phase** calibration layer — `rwaAxisPhasor` bridged to the generator by `transverseElement_rwaGenerator`, the factorisation `rwaAxisPhasor_eq`, `envelope_phase_alignment` (command `φ = χ − arg conj⟨0\|O\|1⟩` to land the axis at azimuth `χ`), its `m = 0` fail condition, and a σ_y quarter-turn mis-pointing witness; `transverseElement_norm_le` + traceless 11× witness; Kramers (`kramers_inner_eq_zero`, `_partner_eigenvector`, `_degeneracy`, `_hypotheses_inhabited`) |
-| `CompositeReadoutCeilings` | 25 | `assignmentFidelity` + floor→ceiling format; `add_le_branch_error_of_disjoint` (measure-theoretic disjointness); `combined_floor/ceiling_max`, `combined_floor/ceiling_add`, `combined_ceiling_add_lt_max` + `combined_ceiling_gap_witness` (gap `= 1/200`); per-mechanism ceilings for relaxation, relaxation⊕thermal, 6EA, 6EB, 6EC — the last three DERIVED from their upstream floor theorems; a BITES/does-not-BITE witness pair for **all five** ceilings, every BITES half proved *through its own ceiling theorem* (so it concludes about `assignmentFidelity`, not about a detached bound expression) and every does-not-BITE half stated on that ceiling's own bound expression with the operating point as a hypothesis |
+| `DriveCalibration` | 34 | `transverseElement`/`longitudinalElement` read off the operator and proved equal to their Pauli forms; transverse + longitudinal + general-detuning **duration** calibration identities; `no_duration_achieves_nonzero_angle_of_zero_element`, `magnitude_calibration_rotates_backwards`; the **phase** calibration layer — `rwaAxisPhasor` bridged to the generator by `transverseElement_rwaGenerator`, the factorisation `rwaAxisPhasor_eq`, `envelope_phase_alignment` (command `φ = χ − arg conj⟨0\|O\|1⟩` to land the axis at azimuth `χ`), its `m = 0` fail condition, and a σ_y quarter-turn mis-pointing witness; `transverseElement_norm_le` + traceless 11× witness; Kramers (`kramers_inner_eq_zero`, `_partner_eigenvector`, `_degeneracy`, `_hypotheses_inhabited`) |
+| `CompositeReadoutCeilings` | 35 | `assignmentFidelity` + floor→ceiling format; `add_le_branch_error_of_disjoint` (measure-theoretic disjointness); `combined_floor/ceiling_max`, `combined_floor/ceiling_add`, `combined_ceiling_add_lt_max` + `combined_ceiling_gap_witness` (gap `= 1/200`, derived by instantiating the comparison at the concrete `gapWitnessMeasure` model); **`relaxation_photon_ceiling`** — two NAMED floors on one attributed readout, with `relaxation_dominates_photon_at_separation_99` showing the `max` selects; per-mechanism ceilings for relaxation, relaxation⊕thermal, 6EA, 6EB, 6EC — the last three DERIVED from their upstream floor theorems; a BITES/does-not-BITE witness pair for **all five** ceilings, every BITES half proved *through its own ceiling theorem* (so it concludes about `assignmentFidelity`, not about a detached bound expression) and every does-not-BITE half stated on that ceiling's own bound expression with the operating point as a hypothesis |
+
+### Second-review remediation (2026-07-30)
+
+The second adversarial pass found that several theorems were bridged to the physical objects they
+are *named* for by a docstring sentence rather than by a declaration. That is the sharper,
+machine-detectable sub-class of this phase's own QI finding, and it is what all four severe items
+had in common.
+
+| # | Finding | Fix |
+|---|---|---|
+| **B1** | `rwa_propagator_difference_bound`'s hypothesis `hSgen` forced `P + Q = counterRotating` (the *Hermitian* remainder) by uniqueness of the derivative. A Schrödinger propagator pair gives `P + Q = −i·V`. So the theorem, while true, **could not be instantiated at `U_exact`/`U_rwa` at all** — the systems it covered were never the physical ones. | Restated `hSgen` on the `−i`-scaled antiderivative (§4.1); `‖−i • S‖ = ‖S‖`, so the Bloch–Siegert constant is untouched. Added `rwa_propagator_difference_bound_inhabited`, which **exhibits an actual propagator pair** satisfying every binder (commuting identity-drive at resonance, where the exact propagator is available in closed form). |
+| **M1** | The whole rotation-angle layer was disconnected from any propagator — no matrix exponential existed in the phase, `rwaRotationAngle` was a definition, and `rwaGenerator_sq` was cited by `calibrated_duration_general`'s docstring but called by nothing. | Built §3.5: `rwaRate`, `rwaPropagator`, and **`rwaPropagator_ode`** pinning the closed form by `U' = −i·H·U` (this is where `rwaGenerator_sq` is consumed). `rwaPropagator_trace` reads the angle off the propagator; `calibrated_duration_transverse_propagator` restates the calibration identity *on the propagator*. |
+| **M2** | Calibration docstrings said the duration achieves the target angle "exactly", with no RWA caveat — contradicted by the phase's own `integral_counterRotating_witness_resonance`. | Both duration identities now carry the co-rotating-model caveat naming the remainder bound and the resonance witness. |
+| **M3** | Nothing composed two *named* mechanism floors: `combined_floor_max` was generic in abstract reals and never instantiated. | Added `avgAssignmentError_mono`, `photon_budget_floor_attributed`, and **`relaxation_photon_ceiling`** — the first theorem in the series bounding one readout by two independently-derived named floors under explicit attribution, plus `relaxation_dominates_photon_at_separation_99` showing the `max` genuinely selects. |
+| **I1** | `combined_ceiling_gap_witness` was numerals only — it would survive any edit to either composite. | Now **derived by instantiating `combined_ceiling_add_lt_max`** at a concrete two-point measure model (`gapWitnessMeasure`), at operating point `(e0,e1) = (0, 3/100)`. |
+| **I2** | `norm_integral_counterRotating_conjugated_le` assumed four facts the module proves, so it carried no `Ω/ω`. | Discharges them from `hω`/`hΩ`; the conclusion now carries the explicit Bloch–Siegert constant. |
+| **I3** | `combined_floor_max` is `max_le` under a physics name. | Docstring now says so plainly and points at §3.5, where the content actually lives. |
+| **I4** | `longitudinalElement` was an orphan, and the reason it *cannot* have a duration identity was prose only. | `longitudinal_drive_purely_counterRotating` (through `interactionHamiltonian_decomp`) + `longitudinalElement_driveOp_sub` put that reason in the kernel. |
+| **N1** | Validity witness concluded `≤ 1/100` while its docstring claimed `2×10⁻³`. | Statement strengthened to `≤ 1/500`, making the docstring — and the "250×" comparison — true. |
+| **N4** | `kramers_degeneracy` claimed double degeneracy but never stated linear independence. | Added `linearIndependent_of_inner_eq_zero`; the theorem now carries the independence conjunct. |
+| **N3** | `rotFrame`'s docstring said the ODE + `R(0)=1` "pins it uniquely", but no uniqueness theorem existed. | Built `lipschitzWith_const_mul` + **`rotFrame_unique`** (via Mathlib's `ODE_solution_unique`), and the same for the new propagator (`rwaPropagator_unique`). The uniqueness claim is now a theorem, not a softened docstring. |
+| **N7** | AC text had the phase-alignment sign backwards. | Corrected in place, with the reason. |
+
+**MINORs left alone, deliberately:** N2 (a trivial longitudinal zero-detuning lemma — superseded by
+the substantive `no_duration_achieves_nonzero_longitudinal_angle_of_zero_detuning` shipped alongside
+it), N5 (disclosed below rather than fixed), N6 (redundant-but-harmless binders in
+`combined_ceiling_add_lt_max`).
+
+**Disclosed, not fixed:** the 6EB and 6EC BITES witnesses fire at `matchedBudget = 0`, i.e. a
+signal-free readout. That is a real operating point and the witnesses are honest, but it is a
+*degenerate* one — no non-degenerate biting point is bracketed for those two ceilings. Recorded here
+because the summaries previously said only "a witness pair for all five ceilings".
+
+**Not in scope, still owed:** `MajoranaKramers` renaming (see the series-close list below). The
+second review independently confirmed the characterization of those two lemmas.
 
 ### Planned → shipped name map
 
@@ -162,7 +200,7 @@ matrix log). All three are kernel-pure and Mathlib-PR-packaged. A second candida
 **Done (AC / `/goal` condition).**
 - [x] `lean/SKEFTHawking/Control/DriveCalibration.lean` builds 0-sorry, kernel-pure, with:
 - [x] `projectedDriveElement_def` (signed complex `⟨0|O|1⟩` and longitudinal `(⟨0|O|0⟩−⟨1|O|1⟩)/2`) + `calibrated_duration_transverse : T = 2θ/(m·Ω)` and the longitudinal dual — both SIGNED, with fail-conditions (`m = 0`, sign-inverted target) as explicit hypotheses, not absorbed magnitudes;
-- [x] `envelope_phase_alignment : achieved axis phase = φ + arg⟨0|O|1⟩` (the phase-calibration identity);
+- [x] `envelope_phase_alignment` (the phase-calibration identity). ⚠️ **The AC text originally read `achieved axis phase = φ + arg⟨0|O|1⟩`; that sign is wrong.** The shipped identity gives azimuth `= φ − arg⟨0|O|1⟩` (equivalently `φ + arg⟨1|O|0⟩`), because the axis phasor factorises as `(Ω/2)·conj⟨0|O|1⟩·e^{iφ}` (`rwaAxisPhasor_eq`). Corrected 2026-07-30 after adversarial review; the shipped table above was already right.
 - [x] `matrixElement_suppression : ‖⟨0|O|1⟩‖ ≤ ‖O‖`-shape bound + a strict-suppression witness (a concrete frame where `m ≪ ‖O‖` — the physics that makes naive `θ = Ω·T` calibration wrong);
 - [x] `kramers_degeneracy : time-reversal antiunitary with T² = −1 → every eigenvalue of a T-symmetric Hamiltonian is (at least) doubly degenerate` (finite-dimensional statement; formulation per UNKNOWN-2);
 - [x] preemptive-strengthening + post-wave audit.

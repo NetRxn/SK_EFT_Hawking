@@ -58,11 +58,23 @@ theorem assignmentFidelity_le_of_floor {F e0 e1 : ℝ} (hfloor : F ≤ avgAssign
 
 /-- **Worst-mechanism combined floor.** Unconditionally sound: no independence, no attribution
 model, nothing beyond the two floors applying to the same readout. This is the form to reach for
-when the mechanisms' error events might overlap. -/
+when the mechanisms' error events might overlap.
+
+This is `max_le` specialised to `avgAssignmentError` — deliberately so: the *content* is not in this
+lemma but in the attribution work that makes two named mechanism floors apply to one readout, which
+is §3.5's job. Cited alone it proves nothing physical. -/
 theorem combined_floor_max {F₁ F₂ e0 e1 : ℝ}
     (h₁ : F₁ ≤ avgAssignmentError e0 e1) (h₂ : F₂ ≤ avgAssignmentError e0 e1) :
     max F₁ F₂ ≤ avgAssignmentError e0 e1 :=
   max_le h₁ h₂
+
+/-- **Averaged assignment error is monotone in each branch error.** The transfer rule that lets a
+mechanism floor stated at the mechanism's OWN error pair apply to any readout whose errors dominate
+it — the technical content of "attribution". -/
+theorem avgAssignmentError_mono {e0 e1 f0 f1 : ℝ} (h0 : e0 ≤ f0) (h1 : e1 ≤ f1) :
+    avgAssignmentError e0 e1 ≤ avgAssignmentError f0 f1 := by
+  unfold avgAssignmentError
+  linarith
 
 /-- **Worst-mechanism ceiling** — the same statement in fidelity form. -/
 theorem combined_ceiling_max {F₁ F₂ e0 e1 : ℝ}
@@ -148,14 +160,71 @@ theorem combined_ceiling_add_lt_max {Ω : Type*} [MeasurableSpace Ω] (μ : Meas
   · exact combined_ceiling_add μ hB hdisj hAE hBE he0 h₁ h₂ he1
   · exact combined_ceiling_max hf₁ hf₂
 
-/-- **Numeric witness of the sharpening.** At mechanism floors `ε₁ = 1/100`, `ε₂ = 1/50` the
-worst-mechanism ceiling is `1 - 1/100` while the additive ceiling is `1 - 3/200`: a gap of exactly
-`1/200`. The AC asks for the difference to be *witnessed*, and a witness is a number. -/
+section GapWitness
+open MeasureTheory
+
+/-- A concrete two-point error model: mechanism 1 fails on `{0}` with probability `1/100`,
+mechanism 2 on `{1}` with probability `1/50`, and the events are disjoint by construction. This is
+the measure space that instantiates `combined_ceiling_add_lt_max` below. -/
+noncomputable def gapWitnessMeasure : Measure (Fin 2) :=
+  ENNReal.ofReal (1 / 100) • Measure.dirac 0 + ENNReal.ofReal (1 / 50) • Measure.dirac 1
+
+theorem gapWitnessMeasure_univ_apply :
+    gapWitnessMeasure Set.univ = ENNReal.ofReal (1 / 100) + ENNReal.ofReal (1 / 50) := by
+  unfold gapWitnessMeasure
+  rw [Measure.add_apply, Measure.smul_apply, Measure.smul_apply]
+  simp
+
+instance : IsFiniteMeasure gapWitnessMeasure := by
+  refine ⟨?_⟩
+  rw [gapWitnessMeasure_univ_apply]
+  exact ENNReal.add_lt_top.mpr ⟨ENNReal.ofReal_lt_top, ENNReal.ofReal_lt_top⟩
+
+@[simp] theorem gapWitnessMeasure_zero : (gapWitnessMeasure {0}).toReal = 1 / 100 := by
+  unfold gapWitnessMeasure
+  rw [Measure.add_apply, Measure.smul_apply, Measure.smul_apply,
+    Measure.dirac_apply' _ (measurableSet_singleton _),
+    Measure.dirac_apply' _ (measurableSet_singleton _)]
+  simp
+
+@[simp] theorem gapWitnessMeasure_one : (gapWitnessMeasure {1}).toReal = 1 / 50 := by
+  unfold gapWitnessMeasure
+  rw [Measure.add_apply, Measure.smul_apply, Measure.smul_apply,
+    Measure.dirac_apply' _ (measurableSet_singleton _),
+    Measure.dirac_apply' _ (measurableSet_singleton _)]
+  simp
+
+@[simp] theorem gapWitnessMeasure_univ : (gapWitnessMeasure Set.univ).toReal = 3 / 100 := by
+  rw [gapWitnessMeasure_univ_apply,
+    ← ENNReal.ofReal_add (by norm_num) (by norm_num), ENNReal.toReal_ofReal (by norm_num)]
+  norm_num
+
+/-- **Numeric witness of the sharpening — DERIVED, not asserted.** This instantiates
+`combined_ceiling_add_lt_max` at the concrete two-point model above, with `(e0, e1) = (0, 3/100)`.
+So the `1/200` gap is the difference between the two shipped composites at a real operating point of
+a real error model, not an arithmetic identity between numerals that would survive an edit to either
+composite. -/
 theorem combined_ceiling_gap_witness :
-    (1 : ℝ) - ((1 / 100 : ℝ) + 1 / 50) / 2 < 1 - max ((1 / 100 : ℝ) / 2) ((1 / 50 : ℝ) / 2)
+    ((1 : ℝ) - ((1 / 100 : ℝ) + 1 / 50) / 2 < 1 - max ((1 / 100 : ℝ) / 2) ((1 / 50 : ℝ) / 2))
+      ∧ assignmentFidelity 0 (3 / 100) ≤ 1 - ((1 / 100 : ℝ) + 1 / 50) / 2
+      ∧ assignmentFidelity 0 (3 / 100) ≤ 1 - max ((1 / 100 : ℝ) / 2) ((1 / 50 : ℝ) / 2)
       ∧ (1 - max ((1 / 100 : ℝ) / 2) ((1 / 50 : ℝ) / 2))
           - (1 - ((1 / 100 : ℝ) + 1 / 50) / 2) = 1 / 200 := by
-  norm_num
+  have hdisj : Disjoint ({0} : Set (Fin 2)) ({1} : Set (Fin 2)) := by simp
+  have hfloor : ∀ ε : ℝ, ε ≤ 3 / 100 → ε / 2 ≤ avgAssignmentError 0 (3 / 100) := by
+    intro ε hε
+    unfold avgAssignmentError
+    linarith
+  obtain ⟨hgap, hadd, hmax⟩ :=
+    combined_ceiling_add_lt_max gapWitnessMeasure (measurableSet_singleton (1 : Fin 2)) hdisj
+      (Set.subset_univ _) (Set.subset_univ _) (e0 := 0) (e1 := 3 / 100)
+      (ε₁ := 1 / 100) (ε₂ := 1 / 50) le_rfl
+      (by rw [gapWitnessMeasure_zero]) (by rw [gapWitnessMeasure_one])
+      (by rw [gapWitnessMeasure_univ]) (by norm_num) (by norm_num)
+      (hfloor _ (by norm_num)) (hfloor _ (by norm_num))
+  exact ⟨hgap, hadd, hmax, by norm_num⟩
+
+end GapWitness
 
 /-! ## 3. Per-mechanism ceilings
 
@@ -219,6 +288,58 @@ theorem detector_chain_ceiling (m : Electrothermal.ETFModel) {kB T Tw : ℝ}
         (Detection.matchedBudget (m.phononNEP kB T ^ 2 + m.johnsonNEP kB T ^ 2) Tw s / 2) :=
   assignmentFidelity_le_of_floor
     (m.bolometer_error_floor hkB hT hG hindep hphonon hjohnson hTw hadm hs hσ hμle hμ hσV)
+
+/-! ## 3.5 End-to-end: TWO NAMED mechanism floors on ONE attributed readout
+
+§2's composites are generic in abstract floors `F₁`, `F₂`; §3's ceilings are each about a single
+mechanism, and each is stated at its own mechanism's error pair. Neither alone delivers the series'
+headline — *"every mechanism floor jointly forbids this fidelity"* — because nothing yet puts two
+NAMED floors on the SAME readout.
+
+That is what this section does. The attribution is carried explicitly: `hattr0`/`hattr1` say the
+photon-counting mechanism's own false-alarm and miss probabilities are dominated by this readout's
+branch errors, which is exactly the empirical claim an experimenter makes when they say "the photon
+budget is what limits my readout". Everything else is then forced. -/
+
+/-- **The 6EA photon-budget floor transfers to any readout dominating the count rule's errors.** -/
+theorem photon_budget_floor_attributed {Nb Na : NNReal} {δ : ℕ → ℝ} {e0 e1 : ℝ}
+    (hδ : Detection.IsCountRule δ)
+    (hattr0 : Detection.falseAlarm Nb δ ≤ e0) (hattr1 : Detection.missProb Na δ ≤ e1) :
+    (1 / 4) * Real.exp (-(Real.sqrt (Na : ℝ) - Real.sqrt (Nb : ℝ)) ^ 2)
+      ≤ avgAssignmentError e0 e1 :=
+  le_trans (Detection.poisson_avgError_floor hδ) (avgAssignmentError_mono hattr0 hattr1)
+
+/-- **End-to-end two-mechanism ceiling: relaxation ⊕ photon budget.** Both floors are the project's
+own named theorems — `avgAssignmentError_rational_floor` (relaxation) and
+`Detection.poisson_avgError_floor` (6EA) — applied to a SINGLE readout `(e0, e1)` under explicit
+attribution hypotheses, then combined by `combined_ceiling_max`. This is the first theorem in the
+`6E*` series in which two independently-derived mechanism floors bound one readout together. -/
+theorem relaxation_photon_ceiling {t T1 e0 e1 : ℝ} {Nb Na : NNReal} {δ : ℕ → ℝ}
+    (ht : 0 ≤ t) (hT1 : 0 < T1) (he0 : 0 ≤ e0) (hdecay : readoutDecayProb t T1 ≤ e1)
+    (hδ : Detection.IsCountRule δ)
+    (hattr0 : Detection.falseAlarm Nb δ ≤ e0) (hattr1 : Detection.missProb Na δ ≤ e1) :
+    assignmentFidelity e0 e1
+      ≤ 1 - max (t / T1 / (2 * (1 + t / T1)))
+          ((1 / 4) * Real.exp (-(Real.sqrt (Na : ℝ) - Real.sqrt (Nb : ℝ)) ^ 2)) :=
+  combined_ceiling_max
+    (avgAssignmentError_rational_floor ht hT1 he0 hdecay)
+    (photon_budget_floor_attributed hδ hattr0 hattr1)
+
+/-- **The composite genuinely selects between the two mechanisms**, rather than restating whichever
+input the reader happens to look at. At a generous photon budget (separation `99`) the photon floor
+drops strictly below the relaxation floor at `t = T₁`, so the `max` resolves to the relaxation
+branch: the combined ceiling bites at `3/4` where the photon-budget ceiling alone would permit
+`999/1000`. Nothing is assumed — the comparison is discharged here. -/
+theorem relaxation_dominates_photon_at_separation_99 (Na Nb : ℝ)
+    (hsep : (Real.sqrt Na - Real.sqrt Nb) ^ 2 = 99) :
+    (1 / 4) * Real.exp (-(Real.sqrt Na - Real.sqrt Nb) ^ 2) < 1 / 4
+      ∧ max (1 / 4) ((1 / 4) * Real.exp (-(Real.sqrt Na - Real.sqrt Nb) ^ 2)) = 1 / 4 := by
+  have hlt : (1 / 4) * Real.exp (-(Real.sqrt Na - Real.sqrt Nb) ^ 2) < 1 / 4 := by
+    rw [hsep]
+    have henc := (QuantumNetwork.expNeg_enclosure (r := (99 : ℝ)) (by norm_num)).2
+    have hpos : (0 : ℝ) < Real.exp (-(99 : ℝ)) := Real.exp_pos _
+    nlinarith
+  exact ⟨hlt, max_eq_left hlt.le⟩
 
 /-! ## 4. Witness pairs
 
