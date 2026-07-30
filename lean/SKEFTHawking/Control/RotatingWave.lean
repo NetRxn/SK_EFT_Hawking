@@ -191,6 +191,81 @@ theorem interactionHamiltonian_decomp (ω₀ ω Ω φ a b c d t : ℝ) :
       -Complex.ofReal_cos, -Complex.ofReal_sin, -Complex.ofReal_pow] <;>
     ring_nf <;> constructor <;> (rw [hs2]; ring)
 
+/-! ## 3. The Bloch–Siegert scale: a closed-form antiderivative for the remainder
+
+This is where the `1/ω` comes from, and it is the whole reason the RWA remainder is small.
+`counterRotating` is a trigonometric polynomial (frequencies `ω` and `2ω`), so it has an
+ELEMENTARY antiderivative — no abstract integration-by-parts is required — and every term of
+that antiderivative carries an explicit `1/ω` while being bounded *uniformly in `t`*.
+
+Contrast: a naive Duhamel/Grönwall estimate consumes only `sup ‖V‖ = O(Ω)` and therefore yields
+`O(Ω·T)`, which carries no `1/ω` and grows without bound in `T`. That estimate is true but is
+NOT of Bloch–Siegert scale. -/
+
+/-- The closed-form antiderivative of `counterRotating`, normalised to vanish at `t = 0`. -/
+def bsAntiderivative (ω Ω φ a b c d : ℝ) (t : ℝ) : Matrix (Fin 2) (Fin 2) ℂ :=
+  (((Ω / ω) * (Real.sin (ω * t + φ) - Real.sin φ) : ℝ) : ℂ) •
+      ((a : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) + (d : ℂ) • σ_z)
+    + (((Ω / (4 * ω)) * (b * (Real.sin (2 * ω * t + φ) - Real.sin φ)
+          - c * (Real.cos (2 * ω * t + φ) - Real.cos φ)) : ℝ) : ℂ) • σ_x
+    + (((Ω / (4 * ω)) * (b * (Real.cos (2 * ω * t + φ) - Real.cos φ)
+          + c * (Real.sin (2 * ω * t + φ) - Real.sin φ)) : ℝ) : ℂ) • σ_y
+
+/-- The antiderivative is normalised: `S(0) = 0`. This is what makes the boundary term at `t = 0`
+drop out of the integration-by-parts estimate. -/
+theorem bsAntiderivative_zero (ω Ω φ a b c d : ℝ) :
+    bsAntiderivative ω Ω φ a b c d 0 = 0 := by
+  simp [bsAntiderivative]
+
+/-- `bsAntiderivative` genuinely differentiates to `counterRotating` — this is what earns it the
+name, and it is where the `1/ω` prefactors are consumed by the chain rule. -/
+theorem bsAntiderivative_hasDerivAt (ω Ω φ a b c d : ℝ) (hω : ω ≠ 0) (t : ℝ) :
+    HasDerivAt (bsAntiderivative ω Ω φ a b c d)
+      (counterRotating ω Ω φ a b c d t) t := by
+  have h1 : HasDerivAt (fun s : ℝ => Real.sin (ω * s + φ)) (Real.cos (ω * t + φ) * ω) t := by
+    simpa using (((hasDerivAt_id t).const_mul ω).add_const φ).sin
+  have h2 : HasDerivAt (fun s : ℝ => Real.sin (2 * ω * s + φ))
+      (Real.cos (2 * ω * t + φ) * (2 * ω)) t := by
+    simpa using (((hasDerivAt_id t).const_mul (2 * ω)).add_const φ).sin
+  have h3 : HasDerivAt (fun s : ℝ => Real.cos (2 * ω * s + φ))
+      (-Real.sin (2 * ω * t + φ) * (2 * ω)) t := by
+    simpa using (((hasDerivAt_id t).const_mul (2 * ω)).add_const φ).cos
+  -- The three scalar coefficient functions, with the `1/ω` consumed by the chain rule.
+  have g1 : HasDerivAt (fun s : ℝ => (Ω / ω) * (Real.sin (ω * s + φ) - Real.sin φ))
+      (Ω * Real.cos (ω * t + φ)) t := by
+    have heq : Ω * Real.cos (ω * t + φ) = Ω / ω * (Real.cos (ω * t + φ) * ω) := by
+      field_simp
+    rw [heq]
+    exact (h1.sub_const (Real.sin φ)).const_mul (Ω / ω)
+  have g2 : HasDerivAt (fun s : ℝ => (Ω / (4 * ω)) * (b * (Real.sin (2 * ω * s + φ) - Real.sin φ)
+        - c * (Real.cos (2 * ω * s + φ) - Real.cos φ)))
+      (Ω / 2 * (b * Real.cos (2 * ω * t + φ) + c * Real.sin (2 * ω * t + φ))) t := by
+    have heq : Ω / 2 * (b * Real.cos (2 * ω * t + φ) + c * Real.sin (2 * ω * t + φ))
+        = Ω / (4 * ω) * (b * (Real.cos (2 * ω * t + φ) * (2 * ω))
+          - c * (-Real.sin (2 * ω * t + φ) * (2 * ω))) := by
+      field_simp
+      ring
+    rw [heq]
+    exact (((h2.sub_const (Real.sin φ)).const_mul b).sub
+      ((h3.sub_const (Real.cos φ)).const_mul c)).const_mul (Ω / (4 * ω))
+  have g3 : HasDerivAt (fun s : ℝ => (Ω / (4 * ω)) * (b * (Real.cos (2 * ω * s + φ) - Real.cos φ)
+        + c * (Real.sin (2 * ω * s + φ) - Real.sin φ)))
+      (Ω / 2 * (-b * Real.sin (2 * ω * t + φ) + c * Real.cos (2 * ω * t + φ))) t := by
+    have heq : Ω / 2 * (-b * Real.sin (2 * ω * t + φ) + c * Real.cos (2 * ω * t + φ))
+        = Ω / (4 * ω) * (b * (-Real.sin (2 * ω * t + φ) * (2 * ω))
+          + c * (Real.cos (2 * ω * t + φ) * (2 * ω))) := by
+      field_simp
+      ring
+    rw [heq]
+    exact (((h3.sub_const (Real.cos φ)).const_mul b).add
+      ((h2.sub_const (Real.sin φ)).const_mul c)).const_mul (Ω / (4 * ω))
+  -- Assemble: each summand is (scalar function) • (constant matrix). The pointwise sum
+  -- `(f₁ + f₂) + f₃` is definitionally `bsAntiderivative`, so `exact` closes it directly.
+  have hsum :=
+    ((g1.ofReal_comp.smul_const ((a : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) + (d : ℂ) • σ_z)).add
+      (g2.ofReal_comp.smul_const σ_x)).add (g3.ofReal_comp.smul_const σ_y)
+  exact hsum
+
 end
 
 end SKEFTHawking.Control
