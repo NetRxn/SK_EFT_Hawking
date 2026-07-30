@@ -401,6 +401,34 @@ theorem dispersion_slope_eq_hbar_fermiVelocity {δ : Fin 3 → ℝ × ℝ} (h : 
   rw [dispersion_slope_of_neighbours h p, fermiVelocity]
   field_simp
 
+/-- **The wave's two halves, composed: the band energy is `ℏ·v_F‖p‖` up to an explicit remainder.**
+
+    | ‖f(K + q(p))‖ − ℏ·v_F·‖p‖ |  ≤  ⟨p, a₁⟩² + ⟨p, a₂⟩²
+
+for a physical momentum `p` against the chart induced by an `IsHoneycombNeighbours` bond geometry,
+at hopping `t = 1`.
+
+Until now the file proved the two halves separately — `structureFactor_linear_expansion_global`
+(the remainder bound, against the abstract `linearForm`) and
+`dispersion_slope_eq_hbar_fermiVelocity` (the identification of that form's norm with `ℏ·v_F‖p‖`) —
+but **no theorem asserted the physically meaningful statement they combine into**, which is the one
+a consumer citing "graphene has linear dispersion with Fermi velocity `v_F`" actually needs. This is
+that statement, obtained by composition rather than re-derivation. *(Added 2026-07-29.)* -/
+theorem dispersion_fermiVelocity_enclosure {δ : Fin 3 → ℝ × ℝ} (h : IsHoneycombNeighbours δ)
+    (p : ℝ × ℝ) (hbar : ℝ) (hbar_ne : hbar ≠ 0) :
+    |‖structureFactor (diracK.1 + planeDot p (δ 0 - δ 2), diracK.2 + planeDot p (δ 1 - δ 2))‖
+        - hbar * fermiVelocity 1 (Real.sqrt (planeDot (δ 0) (δ 0))) hbar * Real.sqrt (planeDot p p)|
+      ≤ planeDot p (δ 0 - δ 2) ^ 2 + planeDot p (δ 1 - δ 2) ^ 2 := by
+  -- Rewrite FORWARD in the remainder bound rather than backward in the goal: the backward
+  -- direction makes `rw` search the whole goal for `hbar * fermiVelocity … * …` and walls the
+  -- elaborator on `isDefEq`.
+  have hbase := structureFactor_linear_expansion_global
+    (q := (planeDot p (δ 0 - δ 2), planeDot p (δ 1 - δ 2)))
+  have hslope := dispersion_slope_eq_hbar_fermiVelocity h p 1 hbar hbar_ne
+  rw [one_mul] at hslope
+  rw [hslope] at hbase
+  exact hbase
+
 /-! ## The two-sided slope enclosure -/
 
 /-- **The dispersion is linear with a bounded, rationally-enclosed slope.**
@@ -409,13 +437,20 @@ theorem dispersion_slope_eq_hbar_fermiVelocity {δ : Fin 3 → ℝ × ℝ} (h : 
 
 where `E(K + q) = ‖f(K + q)‖` is the upper band energy. This is the AC's
 `dispersion_linear_enclosure` — the statement that actually *says* the dispersion is linear, as
-opposed to bounding a difference: it pins the slope `E/‖q‖` into a rational band that closes onto
-`[√½, √3⁄2] ≈ [0.707, 1.225]` as `q → 0`.
+opposed to bounding a difference: it pins the slope `E/‖q‖` into a band whose width is `O(‖q‖)`.
+
+As `q → 0` the band closes onto the **rational** interval `[7/10, 63/50] = [0.7, 1.26]`. That is an
+outer enclosure of the true directional slope range, which is
+`[√(1/2), √(3/2)] ≈ [0.7071, 1.2247]` — the slope is direction-dependent (the cone is isotropic only
+to leading order in this chart's quadratic form), so no single limit exists and the interval, not a
+number, is the right target. *(Corrected 2026-07-29: this note previously said the band "closes
+onto `[√½, √3⁄2]`", which is false — it closes onto the rational endpoints, which merely contain
+those surds — and wrote `√3⁄2` for `√(3/2) ≈ 1.2247` in a file that elsewhere uses `√3/2 ≈ 0.866`.)*
 
 Two ingredients: the anisotropy of the triangular quadratic form is bounded,
-`½‖q‖² ≤ q₁² − q₁q₂ + q₂² ≤ 3⁄2‖q‖²` (the extremes are the `q₁ = ±q₂` directions), and the
+`(1/2)‖q‖² ≤ q₁² − q₁q₂ + q₂² ≤ (3/2)‖q‖²` (the extremes are the `q₁ = ±q₂` directions), and the
 remainder is controlled by `structureFactor_linear_expansion_global`. The rational endpoints
-`7/10 < √½` and `63/50 > √3⁄2` keep the statement `norm_num`-checkable.
+`7/10 < √(1/2)` and `63/50 > √(3/2)` keep the statement `norm_num`-checkable.
 
 The lower bound is informative exactly when `‖q‖ < 7/10`; beyond that it degrades to the trivial
 `E ≥ 0`, which is honest — the expansion has no content at large `q`. -/
