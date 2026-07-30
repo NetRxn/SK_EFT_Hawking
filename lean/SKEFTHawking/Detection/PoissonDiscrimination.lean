@@ -1,5 +1,5 @@
 import Mathlib.Probability.Distributions.Poisson.Basic
-import Mathlib.Data.Real.Sqrt
+import Mathlib.Analysis.Real.Sqrt
 import Mathlib.Topology.Algebra.InfiniteSum.Real
 import Mathlib.Analysis.Complex.ExponentialBounds
 import SKEFTHawking.QuantumNetwork.ReadoutRelaxationBound
@@ -27,7 +27,7 @@ decision rules**, plus the two-sided refutation of the folklore exponential form
   `darkBaseline_zeroFalseAlarm_load_bearing` (with `isCountRule_thresholdRule` and
   `falseAlarm_thresholdRule_zero`) — the dark-baseline zero-false-alarm optimum, its
   attainment, and the proof that the zero-false-alarm hypothesis is non-droppable.
-* `folklore_miss_floor_false`, `folklore_missFloor_beaten_sixfold`, `folkloreGap_split`,
+* `folklore_miss_floor_false`, `folklore_missFloor_beaten_148fold`, `folkloreGap_split`,
   `folklore_avgFloor_unsound_of_bright`, `folklore_avg_floor_unsound`,
   `folklore_avgFloor_unsound_factor1000` — the two-sided refutation of the folklore floor
   `miss ≥ exp(−(N_a − N_b))`, in both the miss-error and average-error directions.
@@ -351,18 +351,32 @@ theorem folklore_miss_floor_false {Nb Na : ℝ≥0} (hNb : 0 < Nb) :
   rw [(poisson_darkBaseline_miss_optimum Na).2]
   exact Real.exp_lt_exp.mpr (by linarith [NNReal.coe_pos.mpr hNb])
 
-/-- Quantitative form at the roadmap's operating point `N_b = 5, N_a = 10`: the unit-threshold
-counter beats the folklore floor by at least a factor of 6. The constant comes from
-`SKEFTHawking.QuantumNetwork.expNeg_enclosure` at `r = 5` (`e^{−5} ≤ 1/(1+5)`). -/
-theorem folklore_missFloor_beaten_sixfold :
-    6 * missProb 10 (thresholdRule 1) ≤ Real.exp (-((10 : ℝ) - 5)) := by
+/-- **Quantitative form at the roadmap's operating point `N_b = 5, N_a = 10`**: the unit-threshold
+counter beats the folklore floor by at least a factor of **148**. The exact factor is
+`e^5 = 148.413…`, so the certified rational constant is within 0.3 % of the truth.
+
+**Constant sharpened 2026-07-29 (Stage-13 finding).** The shipped form claimed a factor of 6,
+because it discharged the exponent through
+`SKEFTHawking.QuantumNetwork.expNeg_enclosure` at `r = 5` (`e^{−5} ≤ 1/(1+5)`), whose Bernoulli
+endpoint is *intrinsically* capped at 6 there — 25× below the true undershoot. A headline
+falsifier should not be 25× loose when the sharper technique (`Real.exp_one_gt_d9`, used 60 lines
+below in `folklore_avgFloor_unsound_factor1000`) is already in this file and costs two `have`s.
+`expNeg_enclosure` remains the phase's exact-rational *style* template; it is no longer called
+here, and this docstring no longer claims a call it does not make. -/
+theorem folklore_missFloor_beaten_148fold :
+    148 * missProb 10 (thresholdRule 1) ≤ Real.exp (-((10 : ℝ) - 5)) := by
   have hm : missProb (10 : ℝ≥0) (thresholdRule 1) = Real.exp (-(10 : ℝ)) := by
     simpa using (poisson_darkBaseline_miss_optimum (10 : ℝ≥0)).2
   have hsplit : Real.exp (-(10 : ℝ)) = Real.exp (-(5 : ℝ)) * Real.exp (-(5 : ℝ)) := by
     rw [← Real.exp_add]; norm_num
-  have h5 : Real.exp (-(5 : ℝ)) ≤ 1 / (1 + 5) := (expNeg_enclosure (by norm_num : (0 : ℝ) ≤ 5)).2
+  have h1 : (2.718 : ℝ) < Real.exp 1 := lt_trans (by norm_num) Real.exp_one_gt_d9
+  have h5 : (2.718 : ℝ) ^ 5 < Real.exp 1 ^ 5 := pow_lt_pow_left₀ h1 (by norm_num) (by norm_num)
+  have hexp5 : Real.exp 5 = Real.exp 1 ^ 5 := by rw [← Real.exp_nat_mul]; norm_num
+  have h148 : (148 : ℝ) < Real.exp 5 := by
+    rw [hexp5]; linarith [h5, show (148 : ℝ) < 2.718 ^ 5 by norm_num]
+  have hcancel : Real.exp (-(5 : ℝ)) * Real.exp 5 = 1 := by rw [← Real.exp_add]; norm_num
   rw [hm, hsplit, show -((10 : ℝ) - 5) = -(5 : ℝ) by norm_num]
-  nlinarith [h5, Real.exp_pos (-(5 : ℝ))]
+  nlinarith [h148, Real.exp_pos (-(5 : ℝ)), hcancel]
 
 /-- **The exact folklore-vs-Le-Cam exponent gap**, in `exp` form (so `Real.log` never enters a
 statement): `(N_a − N_b) − (√N_a − √N_b)² = 2√N_b(√N_a − √N_b)`. This identity — not any
