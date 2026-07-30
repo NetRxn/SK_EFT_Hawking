@@ -35,19 +35,21 @@ as prose; `isHoneycombChart_of_neighbours` proves the honeycomb's own 120° neig
 *forces* it, and `norm_neighbourSum_eq` is the bridge identifying `‖f‖` with the physical
 three-neighbour hopping sum `Σⱼ exp(i⟨k, δⱼ⟩)`.
 
-## The zero set, and why it is stated without `mod 2π`
+## The zero set, in both forms
 
-The roadmap's AC asked for `f k = 0 ↔ (k ≡ K ∨ k ≡ K')` modulo the reciprocal lattice. What ships
-is the equivalent **quotient-free** characterization
+The working form is the **quotient-free** characterization
 
     f(θ) = 0  ↔  cos θ₁ = −1/2  ∧  cos θ₂ = −1/2  ∧  sin θ₁ + sin θ₂ = 0
 
-(`structureFactor_eq_zero_iff`). It is *exactly* the same set — periodicity is automatic in `cos`
-and `sin`, so no `mod` bookkeeping is needed and none is smuggled — and it is strictly easier for a
-consumer to discharge, since it is three real equations rather than a statement about a quotient by
-the reciprocal lattice. The `K`/`K'` reading is recovered by
-`structureFactor_eq_zero_iff_dirac_branch`: the two solutions of the phase constraints are exactly
-`sin θ₁ = +√3/2` (the `K` branch) and `sin θ₁ = −√3/2` (the `K'` branch).
+(`structureFactor_eq_zero_iff`) — three real equations a consumer holding a concrete `θ` can
+discharge by arithmetic, with no quotient bookkeeping. The `K`/`K'` reading follows from
+`structureFactor_eq_zero_iff_dirac_branch`: the two solution branches are `sin θ₁ = ±√3/2`.
+
+The roadmap's AC asked instead for `f k = 0 ↔ (k ≡ K ∨ k ≡ K')` modulo the reciprocal lattice.
+That form is **also shipped**, as `structureFactor_eq_zero_iff_orbit` — in phase coordinates the
+reciprocal lattice is `2πℤ²`, and the equivalence is proved (not merely asserted to be the same
+set) via `cos_sin_eq_iff_add_int_mul_two_pi`. That the two orbits are distinct — the reason
+graphene has *two* cones — is `diracK'_ne_recip_translate_diracK`.
 
 ## Layout
 
@@ -302,7 +304,6 @@ only chart changes the file's theorems survive. -/
 theorem structureFactor_norm_swap (θ : ℝ × ℝ) :
     ‖structureFactor (θ.2, θ.1)‖ = ‖structureFactor θ‖ := by
   unfold structureFactor
-  simp only []
   ring_nf
 
 /-- Re-factoring `δ₀` out of the hopping sum instead of `δ₂` sends `θ ↦ (−θ₁, θ₂ − θ₁)` and
@@ -320,7 +321,6 @@ theorem structureFactor_norm_rotate (θ : ℝ × ℝ) :
   have hfac : structureFactor (-θ.1, θ.2 - θ.1)
       = Complex.exp ((-θ.1 : ℝ) * Complex.I) * structureFactor θ := by
     unfold structureFactor
-    simp only []
     rw [mul_add, mul_add, mul_one, e1, e2]
     ring
   rw [hfac, norm_mul, Complex.norm_exp_ofReal_mul_I, one_mul]
@@ -573,7 +573,7 @@ theorem structureFactor_zero_set_not_shear_invariant :
   intro hf
   obtain ⟨-, h2, -⟩ := (structureFactor_eq_zero_iff _).mp hf
   rw [show ((diracK.1, diracK.1 + diracK.2) : ℝ × ℝ).2 = 2 * π by
-    unfold diracK; simp only []; ring] at h2
+    unfold diracK; ring] at h2
   rw [Real.cos_two_pi] at h2
   norm_num at h2
 
