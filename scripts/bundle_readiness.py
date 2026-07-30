@@ -12,7 +12,7 @@ the per-paper → per-bundle assignment from
      bundle — a readiness summary aggregating per-paper findings,
      classifying each finding by bundle scope (intra-bundle vs cross-
      bundle), and listing the bundle's anchor coverage.
-  2. `docs/BUNDLE_READINESS_HEATMAP.md` — the N-gate × 17-bundle
+  2. `docs/BUNDLE_READINESS_HEATMAP.md` — the N-gate × 21-bundle
      heatmap (the bundle-aware analog of the pre-existing
      `READINESS_GATES.md`).
 
@@ -432,7 +432,7 @@ memory `feedback_stages_11_13_reflexive.md`.
 def write_heatmap(
     by_bundle: dict[str, dict],
 ) -> Path:
-    """Write docs/BUNDLE_READINESS_HEATMAP.md with the N-gate × 17-bundle
+    """Write docs/BUNDLE_READINESS_HEATMAP.md with the N-gate × 21-bundle
     summary."""
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
@@ -445,7 +445,7 @@ def write_heatmap(
     # Header row: bundles in tier order
     bundle_order = [
         "F",
-        "D1", "D2", "D3", "D4", "D5", "D6", "D7", "D8", "D9", "D10",
+        "D1", "D2", "D3", "D4", "D5", "D6", "D7", "D8", "D9", "D10", "D11", "D12",
         "L1", "L2", "L3",
         "I1", "I2", "I3",
         "E1", "E2",
@@ -499,6 +499,7 @@ def write_heatmap(
     tier_map = {
         "F": 0,
         "D1": 1, "D2": 1, "D3": 1, "D4": 1, "D5": 1, "D6": 1, "D7": 1, "D8": 1, "D9": 1, "D10": 1,
+        "D11": 1, "D12": 1,
         "L1": 2, "L2": 2, "L3": 2,
         "I1": 3, "I2": 3, "I3": 3,
         "E1": 4, "E2": 4,

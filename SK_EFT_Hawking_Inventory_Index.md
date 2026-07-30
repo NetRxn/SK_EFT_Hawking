@@ -42,8 +42,8 @@
 | Python source modules | 137 |
 | Test files | 135 |
 | pytest cases | 4916 |
-| Figures (PNG) | 163 |
-| Notebooks | 89 |
+| Figures (PNG) | 170 |
+| Notebooks | 91 |
 | Papers (drafts) | 42 |
 | Publication bundles (per PAPER_STRATEGY) | 21 |
 <!-- AUTOGEN:counts-table END -->
