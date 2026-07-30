@@ -173,18 +173,19 @@ theorem pushforwardFidelity_eq_binaryAffinity {e₀ e₁ : ℝ}
 /-- The false-alarm probability of an admissible count rule lies in `[0,1]`. -/
 theorem falseAlarm_mem_Icc {r : ℝ≥0} {δ : ℕ → ℝ} (hδ : IsCountRule δ) :
     falseAlarm r δ ∈ Set.Icc (0 : ℝ) 1 :=
-  ⟨hasSum_le (fun n => mul_nonneg poissonPMFReal_nonneg (hδ n).1) hasSum_zero
+  ⟨hasSum_le (fun n => mul_nonneg MeasureTheory.measureReal_nonneg (hδ n).1) hasSum_zero
       (hasSum_falseAlarm hδ),
-    hasSum_le (fun n => mul_le_of_le_one_right poissonPMFReal_nonneg (hδ n).2)
-      (hasSum_falseAlarm hδ) (poissonPMFRealSum r)⟩
+    hasSum_le (fun n => mul_le_of_le_one_right MeasureTheory.measureReal_nonneg (hδ n).2)
+      (hasSum_falseAlarm hδ) (hasSum_poissonMeasureReal r)⟩
 
 /-- The miss probability of an admissible count rule lies in `[0,1]`. -/
 theorem missProb_mem_Icc {r : ℝ≥0} {δ : ℕ → ℝ} (hδ : IsCountRule δ) :
     missProb r δ ∈ Set.Icc (0 : ℝ) 1 :=
-  ⟨hasSum_le (fun n => mul_nonneg poissonPMFReal_nonneg (by linarith [(hδ n).2])) hasSum_zero
-      (hasSum_missProb hδ),
-    hasSum_le (fun n => mul_le_of_le_one_right poissonPMFReal_nonneg (by linarith [(hδ n).1]))
-      (hasSum_missProb hδ) (poissonPMFRealSum r)⟩
+  ⟨hasSum_le (fun n => mul_nonneg MeasureTheory.measureReal_nonneg (by linarith [(hδ n).2]))
+      hasSum_zero (hasSum_missProb hδ),
+    hasSum_le
+      (fun n => mul_le_of_le_one_right MeasureTheory.measureReal_nonneg (by linarith [(hδ n).1]))
+      (hasSum_missProb hδ) (hasSum_poissonMeasureReal r)⟩
 
 /-- Complement of the miss probability — the "declare signal" mass of the pushforward under the
 signal hypothesis. -/
@@ -275,9 +276,11 @@ theorem poissonFloor_le_diagonalQuantumBound {Nb Na : ℝ≥0} {δ : ℕ → ℝ
   · -- classical data processing: BC(Poisson Nb, Poisson Na) ≤ binary affinity = F(ρ₀,ρ₁)
     have hF := pushforwardFidelity_eq_binaryAffinity (e₀ := falseAlarm Nb δ) (e₁ := missProb Na δ)
       hFA h1MP
-    have hCS := affinity_le_binaryAffinity (p := poissonPMFReal Nb) (q := poissonPMFReal Na)
-      (fun _ => poissonPMFReal_nonneg) (fun _ => poissonPMFReal_nonneg)
-      (poissonPMFRealSum Nb) (poissonPMFRealSum Na) hδ (hasSum_falseAlarm hδ) (hasSum_missProb hδ)
+    have hCS := affinity_le_binaryAffinity (p := fun n => (poissonMeasure Nb).real {n})
+      (q := fun n => (poissonMeasure Na).real {n})
+      (fun _ => MeasureTheory.measureReal_nonneg) (fun _ => MeasureTheory.measureReal_nonneg)
+      (hasSum_poissonMeasureReal Nb) (hasSum_poissonMeasureReal Na) hδ
+      (hasSum_falseAlarm hδ) (hasSum_missProb hδ)
     rw [poissonBhattacharyya_eq, ← hF] at hCS
     have hexp : Real.exp (-(√(Nb : ℝ) - √(Na : ℝ)) ^ 2 / 2) ^ 2
         = Real.exp (-(√(Na : ℝ) - √(Nb : ℝ)) ^ 2) := by
@@ -373,10 +376,11 @@ Stated in `HasSum` form, which is the workhorse: it carries the summability that
 downstream rewrite needs (the `tsum` form is `poisson_thinning`). -/
 theorem hasSum_poisson_thinning (N η : ℝ≥0) (n : ℕ) :
     HasSum
-      (fun m : ℕ => poissonPMFReal N m * (m.choose n : ℝ) * (η : ℝ) ^ n * (1 - (η : ℝ)) ^ (m - n))
-      (poissonPMFReal (η * N) n) := by
-  have hstep : ∀ j : ℕ, poissonPMFReal N (j + n) * (((j + n).choose n : ℕ) : ℝ) * (η : ℝ) ^ n
-        * (1 - (η : ℝ)) ^ (j + n - n)
+      (fun m : ℕ => (poissonMeasure N).real {m} * (m.choose n : ℝ) * (η : ℝ) ^ n
+        * (1 - (η : ℝ)) ^ (m - n))
+      ((poissonMeasure (η * N)).real {n}) := by
+  have hstep : ∀ j : ℕ, (poissonMeasure N).real {j + n} * (((j + n).choose n : ℕ) : ℝ)
+        * (η : ℝ) ^ n * (1 - (η : ℝ)) ^ (j + n - n)
       = (Real.exp (-(N : ℝ)) * ((η : ℝ) * (N : ℝ)) ^ n / (n ! : ℝ))
         * (((N : ℝ) * (1 - (η : ℝ))) ^ j / (j ! : ℝ)) := by
     intro j
@@ -389,7 +393,7 @@ theorem hasSum_poisson_thinning (N η : ℝ≥0) (n : ℕ) :
     have hj0 : ((j ! : ℕ) : ℝ) ≠ 0 := Nat.cast_ne_zero.mpr j.factorial_ne_zero
     have hcpos : (0 : ℝ) < (((j + n).choose n : ℕ) : ℝ) :=
       Nat.cast_pos.mpr (Nat.choose_pos (Nat.le_add_left n j))
-    rw [poissonPMFReal, Nat.add_sub_cancel, ← hcR, pow_add]
+    rw [poissonMeasure_real_singleton, Nat.add_sub_cancel, ← hcR, pow_add]
     simp only [mul_pow]
     field_simp
   have hser : HasSum (fun j : ℕ => ((N : ℝ) * (1 - (η : ℝ))) ^ j / (j ! : ℝ))
@@ -397,8 +401,8 @@ theorem hasSum_poisson_thinning (N η : ℝ≥0) (n : ℕ) :
     rw [Real.exp_eq_exp_ℝ]
     exact NormedSpace.expSeries_div_hasSum_exp _
   have hconst : Real.exp (-(N : ℝ)) * ((η : ℝ) * (N : ℝ)) ^ n / (n ! : ℝ)
-      * Real.exp ((N : ℝ) * (1 - (η : ℝ))) = poissonPMFReal (η * N) n := by
-    rw [poissonPMFReal, NNReal.coe_mul]
+      * Real.exp ((N : ℝ) * (1 - (η : ℝ))) = (poissonMeasure (η * N)).real {n} := by
+    rw [poissonMeasure_real_singleton, NNReal.coe_mul]
     rw [show Real.exp (-(N : ℝ)) * ((η : ℝ) * (N : ℝ)) ^ n / (n ! : ℝ)
           * Real.exp ((N : ℝ) * (1 - (η : ℝ)))
         = (Real.exp (-(N : ℝ)) * Real.exp ((N : ℝ) * (1 - (η : ℝ))))
@@ -408,31 +412,34 @@ theorem hasSum_poisson_thinning (N η : ℝ≥0) (n : ℕ) :
   have hshift := (hser.mul_left
     (Real.exp (-(N : ℝ)) * ((η : ℝ) * (N : ℝ)) ^ n / (n ! : ℝ)))
   rw [hconst] at hshift
-  have hshift' : HasSum (fun j : ℕ => poissonPMFReal N (j + n) * (((j + n).choose n : ℕ) : ℝ)
-      * (η : ℝ) ^ n * (1 - (η : ℝ)) ^ (j + n - n)) (poissonPMFReal (η * N) n) := by
+  have hshift' : HasSum (fun j : ℕ => (poissonMeasure N).real {j + n}
+      * (((j + n).choose n : ℕ) : ℝ) * (η : ℝ) ^ n * (1 - (η : ℝ)) ^ (j + n - n))
+      ((poissonMeasure (η * N)).real {n}) := by
     simpa only [hstep] using hshift
   have hvanish : ∀ i ∈ Finset.range n,
-      poissonPMFReal N i * ((i.choose n : ℕ) : ℝ) * (η : ℝ) ^ n * (1 - (η : ℝ)) ^ (i - n) = 0 := by
+      (poissonMeasure N).real {i} * ((i.choose n : ℕ) : ℝ) * (η : ℝ) ^ n
+        * (1 - (η : ℝ)) ^ (i - n) = 0 := by
     intro i hi
     rw [Nat.choose_eq_zero_of_lt (Finset.mem_range.mp hi)]
     simp
-  have hmain := (hasSum_nat_add_iff (f := fun m : ℕ => poissonPMFReal N m * ((m.choose n : ℕ) : ℝ)
-    * (η : ℝ) ^ n * (1 - (η : ℝ)) ^ (m - n)) n).mp hshift'
+  have hmain := (hasSum_nat_add_iff (f := fun m : ℕ => (poissonMeasure N).real {m}
+    * ((m.choose n : ℕ) : ℝ) * (η : ℝ) ^ n * (1 - (η : ℝ)) ^ (m - n)) n).mp hshift'
   rw [Finset.sum_congr rfl hvanish, Finset.sum_const_zero, add_zero] at hmain
   exact hmain
 
 /-- **Poisson thinning, `tsum` form** — see `hasSum_poisson_thinning` for the statement's
 content and for why no `η ≤ 1` hypothesis appears. -/
 theorem poisson_thinning (N η : ℝ≥0) (n : ℕ) :
-    ∑' m : ℕ, poissonPMFReal N m * (m.choose n : ℝ) * (η : ℝ) ^ n * (1 - (η : ℝ)) ^ (m - n)
-      = poissonPMFReal (η * N) n :=
+    ∑' m : ℕ, (poissonMeasure N).real {m} * (m.choose n : ℝ) * (η : ℝ) ^ n
+        * (1 - (η : ℝ)) ^ (m - n)
+      = (poissonMeasure (η * N)).real {n} :=
   (hasSum_poisson_thinning N η n).tsum_eq
 
 /-! ## Poisson moments and the mean = variance scaling -/
 
 /-- The mean count of a `Poisson N` source, defined as the first moment of the pmf (not as `N`
 by fiat — see `poissonMean_eq`). -/
-noncomputable def poissonMean (N : ℝ≥0) : ℝ := ∑' n : ℕ, poissonPMFReal N n * (n : ℝ)
+noncomputable def poissonMean (N : ℝ≥0) : ℝ := ∑' n : ℕ, (poissonMeasure N).real {n} * (n : ℝ)
 
 /-- The variance of a `Poisson N` source, defined **independently** as the second central
 moment of the pmf about its own mean. Defining it this way (rather than as `N`) is what gives
@@ -446,53 +453,52 @@ both of which already state `= (N : ℝ)`, and it had no consumers. The filtered
 `shotFilteredVariance_ramp_gt_mean` carries the real content: variance equals the mean for the
 boxcar only.)* -/
 noncomputable def poissonVariance (N : ℝ≥0) : ℝ :=
-  ∑' n : ℕ, poissonPMFReal N n * ((n : ℝ) - poissonMean N) ^ 2
+  ∑' n : ℕ, (poissonMeasure N).real {n} * ((n : ℝ) - poissonMean N) ^ 2
 
 /-- First moment: `∑ₙ n·Poisson(N)ₙ = N`. -/
 theorem hasSum_poissonPMFReal_mul_id (N : ℝ≥0) :
-    HasSum (fun n : ℕ => poissonPMFReal N n * (n : ℝ)) (N : ℝ) := by
-  have hstep : ∀ n : ℕ, poissonPMFReal N (n + 1) * ((n + 1 : ℕ) : ℝ)
-      = (N : ℝ) * poissonPMFReal N n := by
+    HasSum (fun n : ℕ => (poissonMeasure N).real {n} * (n : ℝ)) (N : ℝ) := by
+  have hstep : ∀ n : ℕ, (poissonMeasure N).real {n + 1} * ((n + 1 : ℕ) : ℝ)
+      = (N : ℝ) * (poissonMeasure N).real {n} := by
     intro n
     have hfac : ((n + 1)! : ℝ) = ((n + 1 : ℕ) : ℝ) * (n ! : ℝ) := by
       rw [Nat.factorial_succ]; push_cast; ring
     have hne : ((n + 1 : ℕ) : ℝ) ≠ 0 := by positivity
-    rw [poissonPMFReal, poissonPMFReal, hfac]
+    rw [poissonMeasure_real_singleton, poissonMeasure_real_singleton, hfac]
     field_simp
     ring
-  -- v4.32: `poissonPMFRealSum` is now a deprecated *alias* of `hasSum_one_poissonMeasure`, whose
-  -- statement spells the summand out (`exp (-N) * N ^ n / n !`) instead of `poissonPMFReal N n`.
-  -- Re-fold it through an explicitly-typed `have` so `simpa only [hstep]` matches again.
-  have hone : HasSum (fun n : ℕ => poissonPMFReal N n) 1 := poissonPMFRealSum N
-  have hsum : HasSum (fun n : ℕ => poissonPMFReal N (n + 1) * ((n + 1 : ℕ) : ℝ)) ((N : ℝ) * 1) := by
-    simpa only [hstep] using hone.mul_left (N : ℝ)
-  have := (hasSum_nat_add_iff (f := fun n : ℕ => poissonPMFReal N n * (n : ℝ)) 1).mp (by
-    simpa using hsum)
+  have hsum : HasSum (fun n : ℕ => (poissonMeasure N).real {n + 1} * ((n + 1 : ℕ) : ℝ))
+      ((N : ℝ) * 1) := by
+    simpa only [hstep] using (hasSum_poissonMeasureReal N).mul_left (N : ℝ)
+  have := (hasSum_nat_add_iff
+    (f := fun n : ℕ => (poissonMeasure N).real {n} * (n : ℝ)) 1).mp (by simpa using hsum)
   simpa using this
 
 /-- Second factorial moment: `∑ₙ n(n−1)·Poisson(N)ₙ = N²`. -/
 theorem hasSum_poissonPMFReal_mul_descFactorial (N : ℝ≥0) :
-    HasSum (fun n : ℕ => poissonPMFReal N n * ((n : ℝ) * ((n : ℝ) - 1))) ((N : ℝ) ^ 2) := by
-  have hstep : ∀ n : ℕ, poissonPMFReal N (n + 2) * (((n + 2 : ℕ) : ℝ) * (((n + 2 : ℕ) : ℝ) - 1))
-      = (N : ℝ) ^ 2 * poissonPMFReal N n := by
+    HasSum (fun n : ℕ => (poissonMeasure N).real {n} * ((n : ℝ) * ((n : ℝ) - 1)))
+      ((N : ℝ) ^ 2) := by
+  have hstep : ∀ n : ℕ, (poissonMeasure N).real {n + 2}
+        * (((n + 2 : ℕ) : ℝ) * (((n + 2 : ℕ) : ℝ) - 1))
+      = (N : ℝ) ^ 2 * (poissonMeasure N).real {n} := by
     intro n
     have hfac : ((n + 2)! : ℝ) = (((n : ℝ) + 2) * ((n : ℝ) + 1)) * (n ! : ℝ) := by
       rw [Nat.factorial_succ, Nat.factorial_succ]; push_cast; ring
-    rw [poissonPMFReal, poissonPMFReal, hfac]
+    rw [poissonMeasure_real_singleton, poissonMeasure_real_singleton, hfac]
     have h1 : ((n : ℝ) + 2) ≠ 0 := by positivity
     have h2 : ((n : ℝ) + 1) ≠ 0 := by positivity
     have h3 : ((n ! : ℕ) : ℝ) ≠ 0 := Nat.cast_ne_zero.mpr n.factorial_ne_zero
     push_cast
     field_simp
     ring
-  -- Same v4.32 re-folding as in `hasSum_poissonPMFReal_mul_id`.
-  have hone : HasSum (fun n : ℕ => poissonPMFReal N n) 1 := poissonPMFRealSum N
   have hsum : HasSum
-      (fun n : ℕ => poissonPMFReal N (n + 2) * (((n + 2 : ℕ) : ℝ) * (((n + 2 : ℕ) : ℝ) - 1)))
+      (fun n : ℕ => (poissonMeasure N).real {n + 2}
+        * (((n + 2 : ℕ) : ℝ) * (((n + 2 : ℕ) : ℝ) - 1)))
       ((N : ℝ) ^ 2 * 1) := by
-    simpa only [hstep] using hone.mul_left ((N : ℝ) ^ 2)
+    simpa only [hstep] using (hasSum_poissonMeasureReal N).mul_left ((N : ℝ) ^ 2)
   have := (hasSum_nat_add_iff
-    (f := fun n : ℕ => poissonPMFReal N n * ((n : ℝ) * ((n : ℝ) - 1))) 2).mp (by simpa using hsum)
+    (f := fun n : ℕ => (poissonMeasure N).real {n} * ((n : ℝ) * ((n : ℝ) - 1))) 2).mp
+    (by simpa using hsum)
   simpa [Finset.sum_range_succ] using this
 
 /-- **The Poisson mean is the rate.** -/
@@ -513,9 +519,10 @@ referring the count statistics across it: `shotPSD_plane_transfer` scales the on
 by `η`, and this scales the count mean by the *same* `η`.
 
 Unlike `poissonMean_thinning` (which is mean algebra on an already-`Poisson (η·N)` law), this
-statement **calls `poisson_thinning`**: the thinning sum is reduced to `poissonPMFReal (η * N)`
-before the mean is taken. Without it, the `η` of `shotPSD_plane_transfer` would be a bare
-algebraic parameter with no proved tie to the count model.
+statement **calls `poisson_thinning`**: the thinning sum is reduced to
+`(poissonMeasure (η * N)).real {n}` before the mean is taken. Without it, the `η` of
+`shotPSD_plane_transfer` would be a bare algebraic parameter with no proved tie to the count
+model.
 
 **It is still not the bridge on its own** (Stage-13, 2026-07-29). This theorem's `η` is `ℝ≥0`
 while `shotPSD_plane_transfer`'s is `ℝ`; two theorems about two separately-bound variables that
@@ -523,10 +530,10 @@ happen to share a name assert nothing about each other, and the PSD `η` even ra
 this one cannot represent. The single statement that binds *one* `η` and uses it in *both*
 carriers is `shotPSD_thinnedMean_same_eta`. -/
 theorem thinnedMean_eq_eta_mul (N η : ℝ≥0) :
-    (∑' n : ℕ, (∑' m : ℕ, poissonPMFReal N m * (m.choose n : ℝ) * (η : ℝ) ^ n
+    (∑' n : ℕ, (∑' m : ℕ, (poissonMeasure N).real {m} * (m.choose n : ℝ) * (η : ℝ) ^ n
         * (1 - (η : ℝ)) ^ (m - n)) * (n : ℝ)) = (η : ℝ) * poissonMean N := by
   simp only [poisson_thinning]
-  rw [show (∑' n : ℕ, poissonPMFReal (η * N) n * (n : ℝ)) = poissonMean (η * N) from rfl,
+  rw [show (∑' n : ℕ, (poissonMeasure (η * N)).real {n} * (n : ℝ)) = poissonMean (η * N) from rfl,
     poissonMean_eq, poissonMean_eq, NNReal.coe_mul]
 
 /-- **One transfer factor, two carriers — with one binder.** A *single* retention weight `η : ℝ≥0`
@@ -552,7 +559,7 @@ real. So the bridge instantiates the *more general* carrier at the *more constra
 than weakening either. -/
 theorem shotPSD_thinnedMean_same_eta (E_ph P : ℝ) (N η : ℝ≥0) :
     shotPSD E_ph ((η : ℝ) * P) * poissonMean N
-      = shotPSD E_ph P * ∑' n : ℕ, (∑' m : ℕ, poissonPMFReal N m * (m.choose n : ℝ)
+      = shotPSD E_ph P * ∑' n : ℕ, (∑' m : ℕ, (poissonMeasure N).real {m} * (m.choose n : ℝ)
           * (η : ℝ) ^ n * (1 - (η : ℝ)) ^ (m - n)) * (n : ℝ) := by
   rw [shotPSD_plane_transfer, thinnedMean_eq_eta_mul]
   ring
@@ -563,7 +570,7 @@ side becomes `1/2` while the right stays `1`. So the identity is not an artefact
 being "some function of `η`" — it pins the two scaling exponents to be equal. -/
 theorem shotPSD_thinnedMean_eta_exponent_load_bearing :
     shotPSD 1 (((1 / 2 : ℝ≥0) : ℝ) ^ 2 * 1) * poissonMean 1
-      ≠ shotPSD 1 1 * ∑' n : ℕ, (∑' m : ℕ, poissonPMFReal 1 m * (m.choose n : ℝ)
+      ≠ shotPSD 1 1 * ∑' n : ℕ, (∑' m : ℕ, (poissonMeasure 1).real {m} * (m.choose n : ℝ)
           * ((1 / 2 : ℝ≥0) : ℝ) ^ n * (1 - ((1 / 2 : ℝ≥0) : ℝ)) ^ (m - n)) * (n : ℝ) := by
   rw [thinnedMean_eq_eta_mul, poissonMean_eq, shotPSD, shotPSD]
   push_cast
@@ -574,13 +581,12 @@ central moment, via `E[n(n−1)] = N²` and `E[n] = N`. -/
 theorem poissonVariance_eq (N : ℝ≥0) : poissonVariance N = (N : ℝ) := by
   have hA := hasSum_poissonPMFReal_mul_descFactorial N
   have hB := (hasSum_poissonPMFReal_mul_id N).mul_left (1 - 2 * (N : ℝ))
-  -- Same v4.32 re-folding as in `hasSum_poissonPMFReal_mul_id`.
-  have hone : HasSum (fun n : ℕ => poissonPMFReal N n) 1 := poissonPMFRealSum N
-  have hC := hone.mul_left ((N : ℝ) ^ 2)
+  have hC := (hasSum_poissonMeasureReal N).mul_left ((N : ℝ) ^ 2)
   have hsum := (hA.add hB).add hC
-  have hfun : (fun n : ℕ => poissonPMFReal N n * ((n : ℝ) * ((n : ℝ) - 1))
-        + (1 - 2 * (N : ℝ)) * (poissonPMFReal N n * (n : ℝ)) + (N : ℝ) ^ 2 * poissonPMFReal N n)
-      = fun n : ℕ => poissonPMFReal N n * ((n : ℝ) - poissonMean N) ^ 2 := by
+  have hfun : (fun n : ℕ => (poissonMeasure N).real {n} * ((n : ℝ) * ((n : ℝ) - 1))
+        + (1 - 2 * (N : ℝ)) * ((poissonMeasure N).real {n} * (n : ℝ))
+        + (N : ℝ) ^ 2 * (poissonMeasure N).real {n})
+      = fun n : ℕ => (poissonMeasure N).real {n} * ((n : ℝ) - poissonMean N) ^ 2 := by
     funext n
     rw [poissonMean_eq]
     ring
@@ -709,12 +715,14 @@ the Poisson pair (discharged through `poissonBhattacharyya_eq`) and the right si
 threshold-error pair, bounded through `gaussianTail_ge_window` (`gaussianQ_two_ge_rational` no
 longer suffices: `Q(4/3)` is the load-bearing branch and lies outside its reach). -/
 theorem shotGaussian_avgError_gt_leCam_floor :
-    (3 / 2) * ((1 / 4) * affinity (poissonPMFReal 1) (poissonPMFReal 9) ^ 2)
+    (3 / 2) * ((1 / 4) * affinity (fun n => (poissonMeasure 1).real {n})
+        (fun n => (poissonMeasure 9).real {n}) ^ 2)
       < avgAssignmentError (thrErr0 1 (√(1 : ℝ)) 5) (thrErr1 9 (√(9 : ℝ)) 5) := by
   have h1 : √(1 : ℝ) = 1 := Real.sqrt_one
   have h9 : √(9 : ℝ) = 3 := by
     rw [show (9 : ℝ) = 3 ^ 2 by norm_num, Real.sqrt_sq (by norm_num : (0 : ℝ) ≤ 3)]
-  have hBC : affinity (poissonPMFReal 1) (poissonPMFReal 9) ^ 2 = Real.exp (-(4 : ℝ)) := by
+  have hBC : affinity (fun n => (poissonMeasure 1).real {n})
+      (fun n => (poissonMeasure 9).real {n}) ^ 2 = Real.exp (-(4 : ℝ)) := by
     rw [poissonBhattacharyya_eq]
     push_cast
     rw [h1, h9, sq, ← Real.exp_add]
