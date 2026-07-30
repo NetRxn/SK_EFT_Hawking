@@ -1,6 +1,6 @@
 # Phase 6ED — Kernel-Verified Graphene Electronic Structure: Honeycomb Tight-Binding, Dirac Cones, and the Haldane Chern Witness
 
-**Status: IN PROGRESS — Waves 1 + 2 SHIPPED and REMEDIATED (fresh-context adversarial review, 2026-07-29), Wave 3 open, Wave 4 gated (authorized 2026-07-27).**
+**Status: Waves 1 + 2 + 3 SHIPPED; Waves 1–2 REMEDIATED after a fresh-context adversarial review (2026-07-29). Wave 4 gated (authorized 2026-07-27).** 
 
 > **⚠️ REVIEW OUTCOME — read before consuming Waves 1–2.** A fresh-context adversarial review found two BLOCKERs and seven IMPORTANT findings against the first pass. Both BLOCKERs are remediated in-tree (see the Wave records below): (1) the claim that the Bloch-phase form "holds for **any** primitive-vector choice" was **false** and is now refuted by a kernel-checked theorem, with the true chart hypothesis shipped as `IsHoneycombChart`; (2) the wave's headline AC (`eigenvalues = ±|f|`) had been silently de-scoped to a norm identity and is now shipped as `honeycomb_band_secular`. Two AC items that had been dropped or declined on wrong grounds (`dispersion_linear_enclosure`, `fermiVelocity`) are shipped. Standing deviations are listed at the end of the Wave-2 record. Fourth phase of the `6E*` series (*verified device-physics metrology*). Independent of 6EA–6EC (parallelizable); feeds 6EE's material-parameter seams and closes the graphene gap in the repo's band-theory arc. See `Phase6EA_Roadmap.md` for the series framing.
 
@@ -85,14 +85,32 @@ Clean whitespace: no prover has a kernel-checked honeycomb band structure, Dirac
 
 **Bricks.** `BlochFHS.blochLatticeChern_integrality`/`_rephase` + `FHSLatticeGauge` master identity + `FHSExamples.latticeChern_Uwit` (the existing nontrivial abstract witness whose plaquette-arithmetic pattern the Haldane frame follows); `PrincipalBranch.lean`; Waves 1–2.
 
-**Done (AC / `/goal` condition).**
-- [ ] `lean/SKEFTHawking/GrapheneBand/HaldaneWitness.lean` builds 0-sorry, kernel-pure, with:
-- [ ] `coneBerryPhase_pi` — the ±π pseudospin winding of the gapless cone, stated via the principal-branch arg sum on a stated loop (reusing `PrincipalBranch`; exact statement form frozen at Stage 2, UNKNOWN-2);
-- [ ] `haldaneDVector_def` (declared Haldane parameters `t, t₂, φ, m`) + `haldane_gapped : chosen parameters → ∀ k, d k ≠ 0` (the frame-admissibility proof);
-- [ ] `haldaneFrame_latticeChern_eq_one` (or `−1`; sign fixed by the declared orientation convention) at an explicitly stated parameter point and grid size — the concrete nontrivial Chern witness through `blochLatticeChern`;
-- [ ] `haldane_trivial_phase_chern_zero` at a parameter point in the trivial phase (`|m| > mass threshold`) — the two-phase pair that makes the witness a *classification* statement, not a single number;
-- [ ] 6CA-coordination note recorded (which guardrail branch applied); root-module import + Inventory/counts refresh;
-- [ ] preemptive-strengthening + post-wave audit.
+**Done (AC / `/goal` condition).** ✅ **SHIPPED 2026-07-29** — kernel-pure, 0 sorry / axiom / `native_decide` / `maxHeartbeats`; zero errors **and zero warnings**; root-imported.
+- [x] `lean/SKEFTHawking/GrapheneBand/HaldaneWitness.lean` builds 0-sorry, kernel-pure, with:
+- [x] `coneBerryPhase_pi` — **UNKNOWN-2 resolved to the discretized principal-branch form** (the roadmap default). Shipped on the `π/2`-diamond centred on Wave 1's `diracK` (`K` is its centroid). The Wilson product of the four lower-band overlaps is the **negative rational `−16`**, so `arg = π` is *exact*, not an enclosure. Backed by `coneWinding_two_pi` (increments `2π/3, −π/6, 2π/3, 5π/6`, sum `2π`) — and the "principal-branch" reading is *licensed*, not asserted, by `arg_conj_mul_eq_principal_sub`. Contrast pair `flatWinding_zero` / `flatLoopBerryPhase_zero` (Wilson product `+72`) shipped so the `π` discriminates rather than decorates;
+- [x] **shipped as `haldaneD` (general `t, t₂, φ, m`) + `haldaneD44` (the declared point on the 4×4 torus)**, with admissibility split into its two real obligations: `haldane1_pos`/`haldane6_pos` (the **north-pole condition** `‖d‖ + d₃ > 0`, which is what the `lbVec` gauge actually needs — it implies `d ≠ 0` via `dVec_ne_zero_of`, so the AC's `∀ k, d k ≠ 0` is the weaker consequence) and `haldane1_link_ne`/`haldane6_link_ne` (nonvanishing of all 32 nearest-neighbour overlaps — *not* implied by the gap; `BlochFrame`'s audit §3.3);
+- [x] **shipped as `haldaneFrame_latticeChern_eq_neg_one` — the value is `−1`, not `+1`.** `FHSLatticeGauge.lean:74` freezes `latticeChern = −∑ plaquetteBranch`; the single nonzero branch index (at `k = (1,2)`, one of sixteen plaquettes) is `+1`. The lead's numerical spike reported `∑ branchIndex = +1`, i.e. the same computation *without* that sign. Parameters `t = t₂ = 1`, `φ = π/2`, `m = 1`, grid `4 × 4`, all explicit. `φ ↦ −φ` flips the sign;
+- [x] `haldane_trivial_phase_chern_zero` at `m = 6`, via the reusable **`blochLatticeChern_eq_zero_of_narrow`** ("a frame with no phase frustration cannot wind"), so the trivial phase costs 32 one-line inequalities rather than 16 plaquette computations. **Strengthened past the AC:** `haldane_chern_iff_mass_inversion` shows the invariant is nonzero *exactly* where the two Dirac masses invert, tied to the analytic boundary by `haldane_mass_inversion_iff` + the `nlinarith`-backed `haldane_window_bounds` (`1 < 3√3 ≈ 5.196 < 6`). That is a classification anchored to the phase diagram, not two unrelated evaluations;
+- [x] **6CA coordination: guardrail branch B applied** (recorded in the module docstring). The QWZ spike has not landed, so this Haldane frame is the repo's **first** nontrivial concrete Chern frame; a later QWZ spike should reuse `blochFrameOfD` + the sector calculus rather than rebuild them. Root-module import landed. *Inventory/counts refresh is a post-merge `update_counts.py` step (needs ExtractDeps) — left to the lead.*
+- [x] preemptive-strengthening + post-wave audit (below).
+
+**Wave-3 architectural note — Finding 3 of UNKNOWN-3 confirmed in Lean, and the cost measured.**
+`BlochFHS.lean:24-26`'s "requires the QWZ transcendental evaluation" obstruction **does not bind**.
+The file ships a **rational-enclosure `arg` sector calculus** — `arg_eq_arctan_of_re_pos`,
+`arg_lt_of_slope`/`lt_arg_of_slope`, and the four cells `arg_cell_A` `[0, π/6]`, `arg_cell_B`
+`[−π/6, 0]`, `arg_cell_C` `[π/4, π/2]`, `arg_cell_D` `[−π/2, −π/3]`, plus `abs_arg_lt_pi_div_four` —
+built on Mathlib's `Complex.tan_arg` + `Real.arctan` monotonicity, with `tan` values at `π/6`, `π/4`,
+`π/3`. Every side-condition is a **radical-free comparison** of the overlap's real and imaginary
+parts. **Measured cost: ~110 lines** for the whole calculus (including the `branchIndex` placement
+lemmas), i.e. far below the "budget for it" the guardrail warned about. The reason is structural:
+at `N = 4` every `d`-vector is *integral*, so the only irrationals in the entire Chern computation
+are `√2, √3, √6, √10, √26`, and **four-digit** enclosures suffice — the tightest inequality in the
+whole argument is `19 − 6√10 > 0` (i.e. `361 > 360`), slack `0.026`.
+The cells are deliberately **asymmetric** (`π/4` on the positive side, `π/3` on the negative):
+`π/4` keeps sector C's side-condition free of `√3` — which is what makes the two tightest links
+(`Re ≈ 0.39`) provable by enclosure alone — while sector D must stay at `π/3` or the winding
+plaquette's bracket lands *on* the boundary of its `2π` window (verified: widening D to `π/4` gives
+the bracket `[180°, 360°]` against the half-open window `(180°, 540°]`).
 
 ## Wave 4 (gated) — Bernal bilayer extension
 
@@ -137,5 +155,7 @@ Wave 1 → Wave 2 → Wave 3 critical path; Wave 4 gated. **The whole phase is i
 
   **Consequent Wave-3 shape (supersedes the AC's implied design):** 15 plaquettes need `−π < rawCurl ≤ π` (⟹ `branchIndex = 0`) and exactly **one** needs `π < rawCurl ≤ 3π` (⟹ `branchIndex = 1`). Each `rawCurl` is a sum of four `Complex.arg`s of explicit algebraic numbers (at `N = 4` the momenta are `0, π/2, π, 3π/2`, so `cos`/`sin ∈ {0, ±1}` and the `d`-vectors are rational; only `‖d‖ = √·` is irrational), so the work is **rational enclosures of `arctan` at explicit algebraic points** in the repo's existing `NumericalBounds` style — not transcendental evaluation, and no `native_decide`.
 
-  **Frozen AC constants:** grid `N₁ = N₂ = 4`; `t = 1`, `t₂ = 1`, `φ = π/2`; topological point `m = 1` ⟹ `blochLatticeChern = +1`; trivial point `m = 6` ⟹ `0` (window is `|m| < 3√3 ≈ 5.196`). Frame admissibility verified at both: `min‖d‖ = 1.4142` and `2.2361`, all overlaps nonzero.
+  **Frozen AC constants:** grid `N₁ = N₂ = 4`; `t = 1`, `t₂ = 1`, `φ = π/2`; topological point `m = 1` ⟹ `blochLatticeChern = −1`; trivial point `m = 6` ⟹ `0`. **⚠ SIGN CORRECTED at Wave-3 merge:** the spike wrote `+1` because it summed `branchIndex`, but `FHSLatticeGauge.lean:73` defines `latticeChern := −∑ plaquetteBranch`. The one nonzero branch index is `+1`, so the invariant is `−1` — shipped as `haldaneFrame_latticeChern_eq_neg_one`. Every other spike number reproduced exactly under the worker's independent Lean reconstruction (window is `|m| < 3√3 ≈ 5.196`). Frame admissibility verified at both: `min‖d‖ = 1.4142` and `2.2361`, all overlaps nonzero.
+
+  **⚠ CORRECTION (Wave 3 implementation, 2026-07-29).** An independent reconstruction reproduced every number above *except the sign*: `min‖d‖`, the branch-cut margin (`1.6398947` rad), and the one-of-sixteen nonzero-plaquette count all match exactly, but the kernel-checked value at `m = 1` is **`blochLatticeChern = −1`, not `+1`**. The spike script computed `Σ branchIndex`; `FHSLatticeGauge.lean:74` defines `latticeChern = −Σ plaquetteBranch` (the sign frozen so the headline reads `Σ plaquetteArg = 2π·latticeChern`). The shipped theorem is `haldaneFrame_latticeChern_eq_neg_one`. The overall sign is the orientation convention's, not the physics': `φ ↦ −φ` flips it.
 - **UNKNOWN-4:** whether `TopologicalBand/` gains the QWZ witness before Wave 3 starts (sets the guardrail branch).
