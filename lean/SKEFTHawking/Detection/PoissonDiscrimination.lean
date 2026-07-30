@@ -47,6 +47,24 @@ open scoped NNReal Nat
 
 open ProbabilityTheory SKEFTHawking.QuantumNetwork
 
+/-! ## The Poisson pmf carrier
+
+Mathlib deprecated `poissonPMFReal : ℝ≥0 → ℕ → ℝ` in favour of the measure
+`poissonMeasure : ℝ≥0 → Measure ℕ`. That is a **carrier change, not a rename**: the pmf value is
+now `(poissonMeasure r).real {n}`, and its closed form is reached by the *propositional*
+`poissonMeasure_real_singleton` rather than by unfolding a definition. Every statement in this
+file and in `Detection/ShotNoise.lean` is phrased in the new carrier; the one piece of glue the
+migration needs is the normalization below. -/
+
+/-- **The Poisson pmf sums to one, in the `poissonMeasure` carrier.** Mathlib's
+`hasSum_one_poissonMeasure` states this with the summand spelled out (`exp (-r) · rⁿ / n!`); this
+re-folds it back through `poissonMeasure_real_singleton` so it matches the `(poissonMeasure r).real
+{n}` shape every statement below uses. No positivity hypothesis on `r` — it holds at `r = 0`,
+which is what makes the dark-baseline results statable. -/
+theorem hasSum_poissonMeasureReal (r : ℝ≥0) :
+    HasSum (fun n : ℕ => (poissonMeasure r).real {n}) 1 := by
+  simpa only [poissonMeasure_real_singleton] using hasSum_one_poissonMeasure r
+
 /-! ## Decision rules and their error functionals -/
 
 /-- A (possibly randomized) count-based decision rule: `δ n` is the probability of declaring
@@ -55,10 +73,12 @@ special case (`thresholdRule`); nothing below narrows to them. -/
 def IsCountRule (δ : ℕ → ℝ) : Prop := ∀ n, δ n ∈ Set.Icc (0 : ℝ) 1
 
 /-- False-alarm probability of `δ` against a `Poisson r` baseline. -/
-noncomputable def falseAlarm (r : ℝ≥0) (δ : ℕ → ℝ) : ℝ := ∑' n, poissonPMFReal r n * δ n
+noncomputable def falseAlarm (r : ℝ≥0) (δ : ℕ → ℝ) : ℝ :=
+  ∑' n, (poissonMeasure r).real {n} * δ n
 
 /-- Miss probability of `δ` against a `Poisson r` signal. -/
-noncomputable def missProb (r : ℝ≥0) (δ : ℕ → ℝ) : ℝ := ∑' n, poissonPMFReal r n * (1 - δ n)
+noncomputable def missProb (r : ℝ≥0) (δ : ℕ → ℝ) : ℝ :=
+  ∑' n, (poissonMeasure r).real {n} * (1 - δ n)
 
 /-- The deterministic "declare signal iff count ≥ k" rule. -/
 def thresholdRule (k : ℕ) : ℕ → ℝ := fun n => if k ≤ n then 1 else 0
@@ -77,18 +97,19 @@ theorem isCountRule_thresholdRule (k : ℕ) : IsCountRule (thresholdRule k) := b
 /-- The false-alarm series of any count rule against a Poisson baseline is summable, so
 `falseAlarm` really is *the* sum it names. Dominated by the pmf itself. -/
 theorem hasSum_falseAlarm {r : ℝ≥0} {δ : ℕ → ℝ} (hδ : IsCountRule δ) :
-    HasSum (fun n => poissonPMFReal r n * δ n) (falseAlarm r δ) :=
-  (Summable.of_nonneg_of_le (fun n => mul_nonneg poissonPMFReal_nonneg (hδ n).1)
-    (fun n => mul_le_of_le_one_right poissonPMFReal_nonneg (hδ n).2)
-    (poissonPMFRealSum r).summable).hasSum
+    HasSum (fun n => (poissonMeasure r).real {n} * δ n) (falseAlarm r δ) :=
+  (Summable.of_nonneg_of_le
+    (fun n => mul_nonneg MeasureTheory.measureReal_nonneg (hδ n).1)
+    (fun n => mul_le_of_le_one_right MeasureTheory.measureReal_nonneg (hδ n).2)
+    (hasSum_poissonMeasureReal r).summable).hasSum
 
 /-- The miss series of any count rule against a Poisson signal is summable. -/
 theorem hasSum_missProb {r : ℝ≥0} {δ : ℕ → ℝ} (hδ : IsCountRule δ) :
-    HasSum (fun n => poissonPMFReal r n * (1 - δ n)) (missProb r δ) :=
+    HasSum (fun n => (poissonMeasure r).real {n} * (1 - δ n)) (missProb r δ) :=
   (Summable.of_nonneg_of_le
-    (fun n => mul_nonneg poissonPMFReal_nonneg (by linarith [(hδ n).2]))
-    (fun n => mul_le_of_le_one_right poissonPMFReal_nonneg (by linarith [(hδ n).1]))
-    (poissonPMFRealSum r).summable).hasSum
+    (fun n => mul_nonneg MeasureTheory.measureReal_nonneg (by linarith [(hδ n).2]))
+    (fun n => mul_le_of_le_one_right MeasureTheory.measureReal_nonneg (by linarith [(hδ n).1]))
+    (hasSum_poissonMeasureReal r).summable).hasSum
 
 /-! ## The generic (distribution-free) Le Cam chain -/
 
@@ -203,10 +224,10 @@ theorem avgError_ge_affinity_sq {p q δ : ℕ → ℝ} {e₀ e₁ : ℝ}
 `∑ₙ √(Poisson(a)ₙ · Poisson(b)ₙ) = exp(−(√a − √b)²/2)`. The `HasSum` form is the workhorse: it
 carries summability, which every downstream rewrite needs. -/
 theorem poissonBhattacharyya_hasSum (a b : ℝ≥0) :
-    HasSum (fun n => √(poissonPMFReal a n * poissonPMFReal b n))
+    HasSum (fun n => √((poissonMeasure a).real {n} * (poissonMeasure b).real {n}))
       (Real.exp (-(√(a : ℝ) - √(b : ℝ)) ^ 2 / 2)) := by
   have hab : (0 : ℝ) ≤ (a : ℝ) * (b : ℝ) := by positivity
-  have key : ∀ n : ℕ, √(poissonPMFReal a n * poissonPMFReal b n)
+  have key : ∀ n : ℕ, √((poissonMeasure a).real {n} * (poissonMeasure b).real {n})
       = Real.exp (-((a : ℝ) + (b : ℝ)) / 2) * (√((a : ℝ) * (b : ℝ)) ^ n / (n ! : ℝ)) := by
     intro n
     have h2 : Real.exp (-((a : ℝ) + (b : ℝ)) / 2) ^ 2
@@ -215,9 +236,9 @@ theorem poissonBhattacharyya_hasSum (a b : ℝ≥0) :
       ring_nf
     have h3 : (√((a : ℝ) * (b : ℝ)) ^ n) ^ 2 = (a : ℝ) ^ n * (b : ℝ) ^ n := by
       rw [← pow_mul, mul_comm n 2, pow_mul, Real.sq_sqrt hab, mul_pow]
-    have hsq : poissonPMFReal a n * poissonPMFReal b n
+    have hsq : (poissonMeasure a).real {n} * (poissonMeasure b).real {n}
         = (Real.exp (-((a : ℝ) + (b : ℝ)) / 2) * (√((a : ℝ) * (b : ℝ)) ^ n / (n ! : ℝ))) ^ 2 := by
-      simp only [poissonPMFReal]
+      simp only [poissonMeasure_real_singleton]
       rw [mul_pow, div_pow, h2, h3]
       ring
     rw [hsq, Real.sqrt_sq (by positivity)]
@@ -236,11 +257,12 @@ theorem poissonBhattacharyya_hasSum (a b : ℝ≥0) :
     rw [hexp]; ring
   have hmul := hser.mul_left (Real.exp (-((a : ℝ) + (b : ℝ)) / 2))
   rw [hconst] at hmul
-  exact (funext key : (fun n => √(poissonPMFReal a n * poissonPMFReal b n)) = _) ▸ hmul
+  exact (funext key :
+    (fun n => √((poissonMeasure a).real {n} * (poissonMeasure b).real {n})) = _) ▸ hmul
 
 /-- Closed form of the Poisson Bhattacharyya coefficient, `tsum` form. -/
 theorem poissonBhattacharyya_eq (a b : ℝ≥0) :
-    affinity (poissonPMFReal a) (poissonPMFReal b)
+    affinity (fun n => (poissonMeasure a).real {n}) (fun n => (poissonMeasure b).real {n})
       = Real.exp (-(√(a : ℝ) - √(b : ℝ)) ^ 2 / 2) :=
   (poissonBhattacharyya_hasSum a b).tsum_eq
 
@@ -254,9 +276,11 @@ structure, no monotone-likelihood assumption: the quantifier ranges over every
 theorem poisson_avgError_floor {Nb Na : ℝ≥0} {δ : ℕ → ℝ} (hδ : IsCountRule δ) :
     (1 / 4) * Real.exp (-(√(Na : ℝ) - √(Nb : ℝ)) ^ 2)
       ≤ avgAssignmentError (falseAlarm Nb δ) (missProb Na δ) := by
-  have h := avgError_ge_affinity_sq (p := poissonPMFReal Nb) (q := poissonPMFReal Na)
-    (fun _ => poissonPMFReal_nonneg) (fun _ => poissonPMFReal_nonneg)
-    (poissonPMFRealSum Nb) (poissonPMFRealSum Na) hδ (hasSum_falseAlarm hδ) (hasSum_missProb hδ)
+  have h := avgError_ge_affinity_sq (p := fun n => (poissonMeasure Nb).real {n})
+    (q := fun n => (poissonMeasure Na).real {n})
+    (fun _ => MeasureTheory.measureReal_nonneg) (fun _ => MeasureTheory.measureReal_nonneg)
+    (hasSum_poissonMeasureReal Nb) (hasSum_poissonMeasureReal Na) hδ
+    (hasSum_falseAlarm hδ) (hasSum_missProb hδ)
   rw [poissonBhattacharyya_eq] at h
   have hrw : Real.exp (-(√(Nb : ℝ) - √(Na : ℝ)) ^ 2 / 2) ^ 2
       = Real.exp (-(√(Na : ℝ) - √(Nb : ℝ)) ^ 2) := by
@@ -275,12 +299,13 @@ the universal floor is loose by exactly a factor of two at coincident rates, and
 a comparison between two theorems rather than a remark in a docstring. -/
 theorem poisson_avgError_equalRates_eq_half {N : ℝ≥0} {δ : ℕ → ℝ} (hδ : IsCountRule δ) :
     avgAssignmentError (falseAlarm N δ) (missProb N δ) = 1 / 2 := by
-  have hsum : HasSum (poissonPMFReal N) (falseAlarm N δ + missProb N δ) := by
+  have hsum : HasSum (fun n => (poissonMeasure N).real {n}) (falseAlarm N δ + missProb N δ) := by
     have h := (hasSum_falseAlarm (r := N) hδ).add (hasSum_missProb (r := N) hδ)
-    have hfun : (fun n => poissonPMFReal N n * δ n + poissonPMFReal N n * (1 - δ n))
-        = fun n => poissonPMFReal N n := by funext n; ring
+    have hfun : (fun n => (poissonMeasure N).real {n} * δ n
+          + (poissonMeasure N).real {n} * (1 - δ n))
+        = fun n => (poissonMeasure N).real {n} := by funext n; ring
     rwa [hfun] at h
-  have h1 : falseAlarm N δ + missProb N δ = 1 := hsum.unique (poissonPMFRealSum N)
+  have h1 : falseAlarm N δ + missProb N δ = 1 := hsum.unique (hasSum_poissonMeasureReal N)
   unfold avgAssignmentError
   linarith
 
@@ -292,8 +317,8 @@ This is what makes the zero-false-alarm hypothesis of `poisson_darkBaseline_miss
 constraint on `δ 0` alone. -/
 theorem falseAlarm_zero (δ : ℕ → ℝ) : falseAlarm 0 δ = δ 0 := by
   unfold falseAlarm
-  rw [tsum_eq_single 0 (fun n hn => by simp [poissonPMFReal, zero_pow hn])]
-  simp [poissonPMFReal]
+  rw [tsum_eq_single 0 (fun n hn => by simp [poissonMeasure_real_singleton, zero_pow hn])]
+  simp [poissonMeasure_real_singleton]
 
 /-- **Dark-baseline zero-false-alarm miss floor.** When the baseline is dark (`N_b = 0`), every
 rule with exactly zero false-alarm probability misses with probability at least `exp(−N_a)`.
@@ -303,12 +328,12 @@ theorem poisson_darkBaseline_miss_floor {Na : ℝ≥0} {δ : ℕ → ℝ}
     (hδ : IsCountRule δ) (hFA : falseAlarm 0 δ = 0) :
     Real.exp (-(Na : ℝ)) ≤ missProb Na δ := by
   have hδ0 : δ 0 = 0 := by rw [← falseAlarm_zero δ]; exact hFA
-  have hterm : poissonPMFReal Na 0 * (1 - δ 0) = Real.exp (-(Na : ℝ)) := by
-    simp [poissonPMFReal, hδ0]
-  calc Real.exp (-(Na : ℝ)) = poissonPMFReal Na 0 * (1 - δ 0) := hterm.symm
+  have hterm : (poissonMeasure Na).real {0} * (1 - δ 0) = Real.exp (-(Na : ℝ)) := by
+    simp [poissonMeasure_real_singleton, hδ0]
+  calc Real.exp (-(Na : ℝ)) = (poissonMeasure Na).real {0} * (1 - δ 0) := hterm.symm
     _ ≤ missProb Na δ :=
         le_hasSum (hasSum_missProb hδ) 0
-          fun j _ => mul_nonneg poissonPMFReal_nonneg (by linarith [(hδ j).2])
+          fun j _ => mul_nonneg MeasureTheory.measureReal_nonneg (by linarith [(hδ j).2])
 
 /-- **The floor is attained**, by the ideal unit-threshold counter (`count ≥ 1`): it is a
 zero-false-alarm rule whose miss probability is exactly `exp(−N_a)`. -/
@@ -318,7 +343,7 @@ theorem poisson_darkBaseline_miss_optimum (Na : ℝ≥0) :
   refine ⟨by rw [falseAlarm_zero]; simp [thresholdRule], ?_⟩
   unfold missProb
   rw [tsum_eq_single 0 (fun n hn => by simp [thresholdRule, Nat.one_le_iff_ne_zero.mpr hn])]
-  simp [poissonPMFReal, thresholdRule]
+  simp [poissonMeasure_real_singleton, thresholdRule]
 
 /-- **The always-declare rule saturates the false-alarm budget.** `thresholdRule 0` has
 false-alarm probability exactly `1` against a dark baseline — the maximal violation of the
