@@ -263,6 +263,80 @@ stated here explicitly so the scope boundary is not misread:
 
 ---
 
+## Condensed-matter and device layers (Phases 6C\*, 6E\*) — added 2026-07-30
+
+Two further arcs have landed since the section above was written, and the
+same distinction applies to both: **formalization depth, not predictive-scope
+change.** They are recorded here because this file previously carried zero
+mentions of either, which made a substantial body of verified work invisible
+to anyone reading the scope boundary.
+
+### The 6C\* arc — topological band theory and metamaterials (bundle D11)
+
+Phases 6CA (lattice Chern), 6CB (acoustic/phononic band gaps), 6CD
+(non-Hermitian exceptional points) and 6CE (effective-medium homogenization),
+joined 2026-07-27 by 6ED (graphene electronic structure, including a concrete
+Haldane Chern witness). 22 root-imported modules.
+
+- **Scope:** condensed-matter band theory as *verified mathematics*. It makes
+  no claim about what fluid substrates predict, and does not touch the
+  Layer-3 boundary.
+- **Method through-line:** discrete and algebraic certificates replace
+  continuum-analytic ones. The Chern number is obtained via the
+  Fukui–Hatsugai–Suzuki lattice construction — an integer *by construction* —
+  rather than by integrating a curvature form, because Mathlib has none of the
+  four ingredients Chern–Weil needs (manifold form-integration, Stokes,
+  de~Rham, characteristic classes).
+- **Explicitly deferred, not conditional:** Berry curvature, the
+  bulk–boundary correspondence, and the continuum invariant
+  `C = (1/2π)∫F`. None is in the tree in any form. `PAPER_STRATEGY.md`
+  described two of these as *shipped conditional on a tracked Prop* until
+  corrected on 2026-07-30; that description never matched the tree.
+- **Axiom posture:** zero project-local axioms and **zero tracked-hypothesis
+  Props** — stronger than the arc's own plan anticipated.
+
+### The 6E\* arc — physical detection and readout metrology (bundle D12)
+
+Phases 6EA (Poisson/Gaussian discrimination floors), 6EB (ENBW/NEP/matched
+filter), 6EC (electrothermal detector physics) and 6EE (two-level control and
+composite readout ceilings). 13 root-imported modules.
+
+- **Where it sits in the stack.** This arc adds a layer *beneath* the existing
+  quantum-network work: the stack now descends **D6 (logical) → D9
+  (channel/device) → D12 (physical detection)**, with D12's composite ceilings
+  *consuming* D9's relaxation and thermal readout-window envelopes as cited
+  floors. The dependency is one-way and consumption-only; D12 re-proves
+  nothing of D9's.
+- **Scope:** instrument metrology as verified mathematics. Like the
+  quantum-computation arc, it is a CS/engineering-facing dimension and should
+  be weighed as evidence of method rigor, not as new physics scope.
+- **Two-layer posture, and it is load-bearing here.** The algebra is
+  kernel-verified; the identification of any symbol with a physical instrument
+  — what counts as an absorbed photon, which plane a power is referred to,
+  whether a real detector sits inside its linearization neighbourhood — is the
+  consumer's declared hypothesis and never enters a theorem. Eleven tracked
+  Props carry that modelling content explicitly.
+- **Refutation as deliverable.** Unusually for this project, several headline
+  results are negative: the folklore photon-counting floor `e^{−N_diff}` is
+  refuted in two independent directions, and two natural electrothermal
+  stability criteria are shown unsound.
+- **Axiom posture:** zero project-local axioms, verified from extracted axiom
+  closures for every declaration in all thirteen modules rather than by spot
+  check.
+
+### Scope caution shared by both arcs
+
+Neither arc extends or retracts the Layer-3 predictive boundary. A reader
+assessing the program's *physics* claims should treat both as method rigor.
+Both carry novelty claims scoped to pinned library versions (Mathlib
+`81a5d257`, PhysLib `c4843367`) and to the checks actually performed; D12's
+original novelty claim was **refuted** by a live prior-art sweep and survives
+only in a narrowed, knowledge-hedged form, with two prior-art checks still
+open and flagged as blocking. See `papers/D11/prior_art_novelty.md` and
+`papers/D12/prior_art_novelty.md`.
+
+---
+
 ## Cross-phase non-inheritance
 
 Phase 5y's NO-GO verdicts do **not** propagate to the following
