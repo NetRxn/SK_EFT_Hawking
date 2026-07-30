@@ -63,7 +63,9 @@ is the section whose whole purpose is to make the class honest:
   (attainment), `matchedFilter_isGreatest` (the two combined as a `IsGreatest`), and
   `filteredSNR_eq_budget_iff` (the equality characterization: saturation iff `h` is a.e. a
   **positive** multiple of the template).
-* **Budget and error floor** — `matchedBudget_half_eq` (the separation budget in closed form),
+* **Budget and error floor** — `matchedBudget_antitone_psd` (the budget is antitone in the noise
+  PSD — what lets a downstream consumer state a floor for a single irreducible channel rather
+  than for a composed budget), `matchedBudget_half_eq` (the separation budget in closed form),
   `optimal_z_budget`, and `error_floor_from_budget`, which composes the whole layer with
   6EA Wave 2's `avgError_ge_gaussianQ_sharp`.
 * **Non-vacuity** — a concrete boxcar template at which the floor is a `norm_num`-checkable
@@ -87,8 +89,17 @@ is the section whose whole purpose is to make the class honest:
 * **Equality characterization.** The AC asks for "equality characterization"; what ships is the
   full biconditional `filteredSNR_eq_budget_iff`, including the **positivity** of the scaling
   factor — which `filteredSNR_neg_matched_eq_neg_budget` shows is not removable.
-* **`matchedBudget_half_eq` carries no sign hypothesis.** Both sides collapse to `0` on the
-  degenerate branch, so a `0 ≤ ∫₀ᵀ s²` binder would be dead weight, not a guard.
+* **`matchedBudget_half_eq` is unconditional.** Both sides collapse to `0` on every degenerate
+  branch, so neither a `0 ≤ ∫₀ᵀ s²` binder nor a `0 < S₀` binder is a guard. *(The second was
+  still being carried until 2026-07-29, while the docstring boasted about having dropped the
+  first — the minimality standard is now applied to both. `0 < S₀` is genuinely load-bearing in
+  `matchedBudget_antitone_psd`, and that is the only place in this file it appears as a guard
+  rather than as a route requirement.)*
+* **`optimal_z_budget` ships despite being the headline bound divided by two**, at an identical
+  binder list — the one place the identity-wrapper rule is deliberately *not* applied. Its
+  docstring states why: it crosses the `z = SNR/2` convention boundary that
+  `matchedBudget_half_ne_matchedBudget` proves is detectable, so the division belongs in one
+  audited declaration rather than at each consumer.
 
 **⚠ Guardrail (inherited).** Everything below is a bound over an *admissible filter class*. No
 claim is made about any physical instrument's implementation; identifying a device's readout
@@ -445,6 +456,38 @@ theorem filteredSNR_eq_budget_iff {V : (ℝ → ℝ) → ℝ} {S₀ T : ℝ}
     rw [hswap]
     exact filteredSNR_smul_eq_budget hwhite hS hCpos hc
 
+/-! ## The budget's monotonicity in the noise PSD -/
+
+/-- **The budget is antitone in the one-sided noise PSD** — a quieter channel raises the
+deflection ceiling:
+
+    S₁ ≤ S₂  ⟹  B(S₂, T, s) ≤ B(S₁, T, s).
+
+This is the lemma that turns a *composed* floor into a floor for an **individual** channel: bound
+a detector's total noise PSD from below by the PSD of one irreducible channel, apply this, and the
+error floor survives with every other channel removed from the statement. Consumed by
+`Electrothermal.ETFModel.phonon_only_error_floor`, where dropping the Johnson channel is exactly
+what upgrades "this detector's floor" to "no detector of this class beats the thermal-fluctuation
+floor".
+
+Hypotheses are minimal, held to the same standard as `matchedBudget_half_eq` below. `0 < S₁` is
+**load-bearing**: at `S₁ = 0` Lean's total division sends the left-hand budget to `√(2·E/0) = 0`,
+so the quieter PSD would report the *smaller* budget and the inequality fails at any positive
+template energy. Neither `0 ≤ T` nor integrability of `s²` is required — on the reversed-window
+branch the template energy is non-positive and **both** budgets are Lean's `√(non-positive) = 0`,
+so the ordering holds there as well. -/
+theorem matchedBudget_antitone_psd {S₁ S₂ T : ℝ} (hS : 0 < S₁) (h12 : S₁ ≤ S₂) (s : ℝ → ℝ) :
+    matchedBudget S₂ T s ≤ matchedBudget S₁ T s := by
+  set C := ∫ x in (0:ℝ)..T, s x ^ 2 with hC
+  unfold matchedBudget
+  rw [← hC]
+  rcases le_or_gt 0 C with hCnn | hCneg
+  · apply Real.sqrt_le_sqrt
+    gcongr
+  · have h2 : 0 < S₂ := lt_of_lt_of_le hS h12
+    rw [Real.sqrt_eq_zero_of_nonpos (div_nonpos_of_nonpos_of_nonneg (by linarith) h2.le),
+      Real.sqrt_eq_zero_of_nonpos (div_nonpos_of_nonpos_of_nonneg (by linarith) hS.le)]
+
 /-! ## The separation budget and the composed error floor -/
 
 /-- **The separation budget in closed form.** Half the matched budget — the quantity 6EA's
@@ -454,16 +497,21 @@ threshold algebra consumes as its `z` — is
 
 i.e. the roadmap's `√(∫s²/S₀)`-shaped bound with the one-sided constant made explicit.
 
-Stated with **no** sign hypothesis on the template energy: both sides collapse to `0` on the
-degenerate branch, so a `0 ≤ ∫₀ᵀ s²` binder would be dead weight rather than a guard. -/
-theorem matchedBudget_half_eq {S₀ T : ℝ} (hS : 0 < S₀) (s : ℝ → ℝ) :
+**Fully unconditional**, and the minimality standard is applied to *both* candidate binders rather
+than only to the conspicuous one. Neither a sign hypothesis on the template energy nor `0 < S₀` is
+carried: at `S₀ = 0` both sides collapse to Lean's `√0 = 0`, and on the negative branches the two
+radicands stay in the same sign class (`2C/S₀` and `C/(2S₀)` differ by a positive factor `4`), so
+the identity survives every degenerate combination. *(The `0 < S₀` binder was dropped 2026-07-29
+after adversarial review pointed out that this docstring boasted about dropping a dead binder
+while carrying another one — `matchedBudget_antitone_psd` above is where `0 < S₀` genuinely
+bites.)* -/
+theorem matchedBudget_half_eq {S₀ T : ℝ} (s : ℝ → ℝ) :
     matchedBudget S₀ T s / 2 = √((∫ x in (0:ℝ)..T, s x ^ 2) / (2 * S₀)) := by
   set C := ∫ x in (0:ℝ)..T, s x ^ 2 with hC
   unfold matchedBudget
   rw [show (2:ℝ) = √4 by rw [show (4:ℝ) = 2 ^ 2 by norm_num, Real.sqrt_sq]; norm_num,
     ← Real.sqrt_div' _ (by norm_num)]
   congr 1
-  field_simp
   ring
 
 /-- **The optimal-`z` budget — filter-independent.** The separation `z = (∫ h·s)/(2√(V h))` that
@@ -473,7 +521,19 @@ built from the template energy and the noise PSD alone:
     (∫₀ᵀ h·s) / (2·√(V h)) ≤ √((∫₀ᵀ s²) / (2·S₀))
 
 This is `filteredSNR_le_matchedBudget` in the coordinates 6EA works in, and is what
-`error_floor_from_budget` feeds to `avgError_ge_gaussianQ_sharp`. -/
+`error_floor_from_budget` feeds to `avgError_ge_gaussianQ_sharp`.
+
+**Why this is shipped although it is `filteredSNR_le_matchedBudget` divided by two, at an
+identical binder list.** The AC-deviations section above invokes the identity-wrapper rule to
+justify *not* shipping the AC's literal optimality form; consistency demands saying why that rule
+does not bite here. It does not, because this statement **crosses the phase's factor-2 convention
+boundary**: `filteredSNR` is a deflection-to-noise *amplitude* ratio, while 6EA's threshold
+algebra consumes the midpoint separation `z = (μ₁−μ₀)/(2σ) = filteredSNR/2`. The seam is exactly
+where the two conventions meet, it is provably detectable
+(`matchedBudget_half_ne_matchedBudget` — nearly three orders of magnitude in the resulting error
+floor), and the roadmap's Wave-3 AC names this quantity explicitly. Shipping the `/2` form as a
+named declaration is therefore convention discipline, not restatement: the division happens once,
+in one audited place, instead of at each consumer. -/
 theorem optimal_z_budget {V : (ℝ → ℝ) → ℝ} {S₀ T : ℝ}
     (hwhite : IsWhiteFilteredVariance V S₀ T) (hS : 0 < S₀) (hT : 0 ≤ T)
     {s h : ℝ → ℝ} (hadm : IsAdmissibleFilter T s h)
@@ -481,7 +541,7 @@ theorem optimal_z_budget {V : (ℝ → ℝ) → ℝ} {S₀ T : ℝ}
     (∫ x in (0:ℝ)..T, h x * s x) / (2 * √(V h))
       ≤ √((∫ x in (0:ℝ)..T, s x ^ 2) / (2 * S₀)) := by
   have hbound := filteredSNR_le_matchedBudget hwhite hS hT hadm hs
-  rw [← matchedBudget_half_eq hS s]
+  rw [← matchedBudget_half_eq s]
   unfold filteredSNR at hbound
   rw [show (∫ x in (0:ℝ)..T, h x * s x) / (2 * √(V h))
       = ((∫ x in (0:ℝ)..T, h x * s x) / √(V h)) / 2 by rw [div_div]; ring_nf]
@@ -507,7 +567,7 @@ theorem error_floor_from_budget {V : (ℝ → ℝ) → ℝ} {S₀ T : ℝ}
     gaussianQ (matchedBudget S₀ T s / 2)
       ≤ avgAssignmentError (thrErr0 μ₀ σ t) (thrErr1 μ₁ σ t) := by
   refine avgError_ge_gaussianQ_sharp hσ hμle ?_
-  rw [hμ, hσV, matchedBudget_half_eq hS s]
+  rw [hμ, hσV, matchedBudget_half_eq s]
   exact optimal_z_budget hwhite hS hT hadm hs
 
 /-! ## Non-vacuity: a concrete budget point -/

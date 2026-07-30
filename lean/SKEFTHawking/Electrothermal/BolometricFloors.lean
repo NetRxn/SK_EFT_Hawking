@@ -16,6 +16,15 @@ threshold readout of a thermal detector of this linearized class, through any ad
 single-shot filter, can average better than this error* — with every modelling assumption
 (equilibrium, whiteness, uncorrelatedness, the device identification) sitting in the binder list.
 
+**And its irreducible form** (`phonon_only_error_floor`, with the channel-agnostic
+`phonon_floor_of_psd_ge` behind it) removes the Johnson channel from the *conclusion*: the floor
+computed from the thermal-fluctuation channel alone still binds, so eliminating Johnson noise
+entirely — or any other channel — cannot beat it. That is the phase's headline thesis, and until
+2026-07-29 it was prose rather than a declaration: `bolometer_error_floor` bounds the error by
+`Q(B(NEP_ph² + NEP_J²)/2)`, which is a statement about a detector that *has* Johnson noise. The
+missing step was the budget's antitonicity in the noise PSD, now shipped in 6EB as
+`Detection.matchedBudget_antitone_psd`.
+
 ## What is cited versus what is built
 
 Per the roadmap, the FDT content is **cited, not re-derived**:
@@ -31,7 +40,19 @@ Per the roadmap, the FDT content is **cited, not re-derived**:
 * Quadrature composition is **6EB's** `nep_quadrature_two` / `nep_quadrature_add`, consumed with
   its `IsUncorrelatedAt` hypothesis intact. This wave does not restate quadrature.
 * The error floor is **6EB's** `error_floor_from_budget` composed with **6EA's**
-  `avgError_ge_gaussianQ_sharp`, reached through `matchedBudget` at `S₀ := NEP_total²`.
+  `avgError_ge_gaussianQ_sharp`, reached through `matchedBudget` at `S₀ := NEP_total²`; the
+  irreducible form additionally consumes 6EB's `matchedBudget_antitone_psd` and 6EA's
+  `gaussianQ_antitone`, neither restated here.
+
+## Conventions at the Wave-2 seam
+
+Responsivities are **signed** (Wave 2, Guardrail 2); NEPs and PSDs are **magnitudes** (6EB:
+`nepOfPSD S = √S ≥ 0`). Every referral in this file therefore divides by `|responsivityETF|`, and
+as of 2026-07-29 Wave 2's own NEP transfers do too, so the two waves no longer disagree at the
+seam. The magnitude is the right object for a noise density — but it carries **no** stability
+information, which `johnsonNEP_correction_magnitude_loses_stability_information` proves rather
+than asserts (two published bias points, identical `|1 − ℒ| = 2`, opposite sides of Wave 1's
+dichotomy). Correcting a Johnson budget is not certifying an operating point.
 
 ## Conventions (inherited, not re-chosen)
 
@@ -128,12 +149,20 @@ theorem phononNEP_sq (m : ETFModel) {kB T : ℝ} (hnn : 0 ≤ m.phononPSD kB T) 
   unfold phononNEP nepOfPSD
   exact Real.sq_sqrt hnn
 
-/-- **The declared equilibrium hypothesis feeds 6EB's quadrature algebra.**
+/-- **The PSD-stated equilibrium hypothesis feeds 6EB's NEP²-stated quadrature algebra.**
 
 `IsThermalFluctuationLimited` is stated with the *PSD*; `nep_quadrature_add` consumes whiteness
-stated with the *squared NEP*. This is the bridge, and it is the reason
-`bolometer_nep_floor` below is a composition rather than a forwarder: the physical hypothesis goes
-in, the algebraic precondition comes out. -/
+stated with the *squared NEP*. The bridge between them is `phononNEP_sq`, i.e. the spectral round
+trip `(√S)² = S`, which is where the non-negativity hypothesis `hnn` is spent.
+
+**Scope of the claim.** `IsThermalFluctuationLimited` is a *definitional alias* for
+`IsWhiteFilteredVariance Vph (phononPSD …) Tw`, so it supplies a physically meaningful **name**,
+not additional content — an abbreviation cannot make a consumer's hypothesis stronger or weaker.
+What this lemma genuinely contributes is the `√`-round-trip conversion, and what the consumers
+genuinely contribute is discharging `hnn` from the *physical* hypotheses `0 < kB`, `0 < T`,
+`0 < G` through `phononPSD_pos` rather than carrying an abstract non-negativity binder.
+*(Claim narrowed 2026-07-29 after adversarial review: the earlier docstring credited the alias
+with the work.)* -/
 theorem isWhite_of_thermalFluctuationLimited {Vph : (ℝ → ℝ) → ℝ} {m : ETFModel} {kB T Tw : ℝ}
     (hlim : IsThermalFluctuationLimited Vph m kB T Tw) (hnn : 0 ≤ m.phononPSD kB T) :
     IsWhiteFilteredVariance Vph (m.phononNEP kB T ^ 2) Tw := by
@@ -243,6 +272,31 @@ theorem johnsonCurrentPSD_eq_johnsonNyquist (m : ETFModel) (kB T : ℝ) (hR : m.
   unfold johnsonCurrentPSD GrapheneNoiseFormula.johnsonNyquistPSD
   field_simp
 
+/-- **The Johnson current PSD is positive at any physical bias point** — the counterpart of
+`phononPSD_pos`, and the fact every consumer of the Johnson channel actually needs. Shipped as a
+matched pair with the degenerate-branch disclosure below so the two branches are visible together
+rather than only the flattering one. -/
+theorem johnsonCurrentPSD_pos (m : ETFModel) {kB T : ℝ} (hkB : 0 < kB) (hT : 0 < T)
+    (hR : 0 < m.R) : 0 < m.johnsonCurrentPSD kB T := by
+  unfold johnsonCurrentPSD
+  positivity
+
+/-- **The `R = 0` branch is junk, and it is junk in the OPTIMISTIC direction** — disclosed, because
+an undisclosed optimistic branch is the dangerous kind.
+
+At `R = 0` Lean's total division makes `johnsonCurrentPSD = 4·k_B·T/0 = 0`: a **noise-free**
+Johnson channel. Physically there is no resistive bias point at `R = 0` (the voltage-biased Joule
+power `V²/R` is undefined there, exactly as Wave 1's `loopGain_R_hypothesis_load_bearing`
+records), so the `0` is an artefact — but unlike a junk value that merely blocks a conclusion,
+this one *manufactures* a favourable one: `phononLimited_R_hypothesis_load_bearing` shows the
+resulting model is certified phonon-limited by this file's own screen.
+
+Every statement that reads physics into the Johnson channel must therefore carry `0 < R`. -/
+theorem johnsonCurrentPSD_of_R_eq_zero (m : ETFModel) (kB T : ℝ) (hR : m.R = 0) :
+    m.johnsonCurrentPSD kB T = 0 := by
+  unfold johnsonCurrentPSD
+  rw [hR, div_zero]
+
 /-- **The transfer factor, derived from the coupled small-signal equations.**
 
 Given the current response `δI = v_n/R + (dI/dT)·δT` and the steady-state thermal response to the
@@ -293,14 +347,72 @@ that factor, but the Johnson source's own thermal feedback contributes `|(1−�
 source's thermal feedback entirely and claimed `|1+ℒ|`. The omission was a first-order error in
 the wave whose subject is electrothermal feedback; it was built out, not disclosed around.)*
 
+**Why magnitudes here are correct, and what they still cannot do.** Wave 2's
+`responsivity_magnitudeOnly_loses_stability_information` declares the magnitude-only reading of
+the *responsivity correction* unsound. That verdict does not transfer to this statement, and the
+distinction is not a matter of taste: a **noise density is intrinsically non-negative** (6EB fixes
+`nepOfPSD S = √S ≥ 0`), so `|·|` is the only well-typed object on both sides here — a signed
+"NEP" is not a noise density in any convention. What *does* transfer is the warning attached to
+it: this correction factor **carries no stability information whatever**, and
+`johnsonNEP_correction_magnitude_loses_stability_information` proves it by exhibiting two bias
+points with the identical factor `|1 − ℒ| = 2` on **opposite sides** of Wave 1's dichotomy. A
+consumer that corrects a Johnson budget by this factor has therefore learned nothing about
+whether the operating point is stable, and must pair it with `etf_stable_iff`. *(Wave-3 discharge
+of the phase's Definition-of-Done guardrail (b), added 2026-07-29.)*
+
+**Hypotheses are minimal.** Only `1 + ℒ ≠ 0` is carried — a `G ≠ 0` binder was dropped along with
+the one in `responsivity_etf_correction`, since at `G = 0` both NEPs collapse to Lean's
+total-division `0` and the identity holds as a junk coincidence
+(`Electrothermal.ETFModel.responsivity_of_G_eq_zero`).
+
 Consumes `responsivity_etf_correction`, so this is a computation across the wave boundary. -/
 theorem johnsonNEP_naive_understates_by_one_sub_loopGain (m : ETFModel) (kB T : ℝ)
-    (hGne : m.G ≠ 0) (hL : 1 + m.loopGain ≠ 0) :
+    (hL : 1 + m.loopGain ≠ 0) :
     m.johnsonNEP kB T = |1 - m.loopGain| * m.johnsonNEPNaive kB T := by
   unfold johnsonNEP johnsonNEPNaive johnsonTransfer
-  rw [responsivity_etf_correction m hGne hL, abs_mul, abs_div]
+  rw [responsivity_etf_correction m hL, abs_mul, abs_div]
   have hL' : |1 + m.loopGain| ≠ 0 := abs_ne_zero.mpr hL
   field_simp
+
+/-- **The `|1 − ℒ|` Johnson correction carries NO stability information** — the Wave-3 analogue of
+Wave 2's `responsivity_magnitudeOnly_loses_stability_information`, and the reason the magnitude
+form above must never be read as a certificate.
+
+Two of Wave 1's *published* bias points share the identical correction factor `|1 − ℒ| = 2`:
+`speedupWitness` (`ℒ = 3`, every perturbation decays) and `marginalWitness` (`ℒ = −1`, the
+perturbation is frozen — `PerturbationsDecay` fails). So a budget that has applied the factor `2`
+to its Johnson channel has learned nothing about which side of the dichotomy it is on, and in
+particular cannot rule out a non-relaxing operating point.
+
+This is not the claim that the magnitude is the *wrong object* for a noise density — it is the
+right object (see `johnsonNEP_naive_understates_by_one_sub_loopGain`'s docstring). It is the claim
+that the noise correction is **not** a stability screen, so `etf_stable_iff` remains mandatory. -/
+theorem johnsonNEP_correction_magnitude_loses_stability_information :
+    |1 - speedupWitness.loopGain| = |1 - marginalWitness.loopGain| ∧
+      speedupWitness.PerturbationsDecay ∧ ¬ marginalWitness.PerturbationsDecay := by
+  refine ⟨?_, ?_, ?_⟩
+  · rw [speedupWitness_loopGain, marginalWitness_loopGain]
+    norm_num
+  · rw [etf_stable_iff _ (by norm_num [speedupWitness]) (by norm_num [speedupWitness]),
+      speedupWitness_loopGain]
+    norm_num
+  · rw [etf_stable_iff _ (by norm_num [marginalWitness]) (by norm_num [marginalWitness]),
+      marginalWitness_loopGain]
+    norm_num
+
+/-- **The Johnson budget error at the published bias point, as a rational number.** At Wave 1's
+`speedupWitness` (`ℒ = 3`) the ETF-unaware Johnson budget is low by exactly a factor of **2** — not
+the factor `4` a responsivity-only correction would predict, because the noise source's own
+thermal feedback cancels one power of `(1+ℒ)`.
+
+Backs the numeric claim in `johnsonNEP_naive_understates_by_one_sub_loopGain`'s docstring with a
+theorem, in the same style as Wave 2's `speedupWitness_nep_quarter`; falsifiable by arithmetic,
+with no floating point anywhere. -/
+theorem speedupWitness_johnsonNEP_double (kB T : ℝ) :
+    speedupWitness.johnsonNEP kB T = 2 * speedupWitness.johnsonNEPNaive kB T := by
+  rw [johnsonNEP_naive_understates_by_one_sub_loopGain speedupWitness kB T
+    (by rw [speedupWitness_loopGain]; norm_num), speedupWitness_loopGain]
+  norm_num
 
 /-! ## Quadrature composition — 6EB's algebra, consumed -/
 
@@ -316,10 +428,17 @@ noncomputable def bolometerNEP (m : ETFModel) (kB T : ℝ) : Fin 2 → ℝ
 
 Quadrature itself is 6EB's `nep_quadrature_two`, consumed with its `IsUncorrelatedAt` hypothesis
 intact (`Detection.quadrature_uncorrelated_hypothesis_load_bearing` already witnesses that `hindep`
-cannot be dropped). What this theorem adds is the **physical** entry point: the phonon channel is
-supplied as the declared equilibrium hypothesis `IsThermalFluctuationLimited`, and the whiteness
-precondition 6EB needs is discharged internally via `isWhite_of_thermalFluctuationLimited`. So a
-consumer states physics, not spectral algebra. -/
+cannot be dropped).
+
+What this theorem adds over `nep_quadrature_two` is one specific thing, stated without
+embellishment: 6EB's `hwhite` for the phonon channel asks for whiteness at the **squared NEP**,
+and that precondition is discharged here from `0 < kB`, `0 < T`, `0 < G` — the *physical* binders
+— through `phononPSD_pos` and `isWhite_of_thermalFluctuationLimited`, rather than being passed
+through as an abstract non-negativity hypothesis. The `IsThermalFluctuationLimited` wrapper is a
+naming convenience on top of that (it unfolds to `IsWhiteFilteredVariance` at the phonon PSD) and
+is not itself content. *(Claim narrowed 2026-07-29 after adversarial review, which correctly
+objected that "a consumer states physics, not spectral algebra" is not earned by an
+abbreviation.)* -/
 theorem bolometer_nep_floor (m : ETFModel) {kB T Tw : ℝ} {Vtot : (ℝ → ℝ) → ℝ}
     {V : Fin 2 → (ℝ → ℝ) → ℝ}
     (hkB : 0 < kB) (hT : 0 < T) (hG : 0 < m.G)
@@ -336,29 +455,92 @@ theorem bolometer_nep_floor (m : ETFModel) {kB T Tw : ℝ} {Vtot : (ℝ → ℝ)
     | 1 => exact hjohnson
   exact nep_quadrature_two hindep hwhite h hDC
 
-/-- **The phonon-limited screen, as an `iff`** — the analogue of 6EB's `shotLimited_iff_psd_lt`,
-and a decision procedure on a budget rather than a one-way heuristic.
+/-- **The Johnson NEP is the spectral NEP of the input-referred Johnson PSD.**
+
+    NEP_J = √( S_I · |(1−ℒ)/(1+ℒ)|² / R_etf² )
+
+i.e. referring the Johnson *current* PSD to the input plane through the transfer factor and the
+ETF responsivity, and then taking 6EB's `nepOfPSD`, gives exactly `johnsonNEP`. Needs
+`0 ≤ S_I` — this is `√(a·b²/c²) = √a·|b|/|c|`, not a definitional unfolding — and it is what lets
+the screen below be phrased on **NEPs** in 6EB's own functional rather than on their squares. -/
+theorem johnsonNEP_eq_nepOfPSD (m : ETFModel) {kB T : ℝ}
+    (hnnJ : 0 ≤ m.johnsonCurrentPSD kB T) :
+    m.johnsonNEP kB T
+      = nepOfPSD (m.johnsonCurrentPSD kB T * m.johnsonTransfer ^ 2
+          / m.responsivityETF ^ 2) := by
+  unfold johnsonNEP nepOfPSD
+  rw [Real.sqrt_div (by positivity), Real.sqrt_mul hnnJ, Real.sqrt_sq_eq_abs,
+    Real.sqrt_sq_eq_abs]
+
+/-- **The phonon-limited screen, as an `iff` on the NEPs** — the analogue of 6EB's
+`shotLimited_iff_psd_lt`, and a decision procedure on a budget rather than a one-way heuristic.
 
 A thermal detector is **phonon-limited** exactly when the input-referred Johnson PSD falls below
 the phonon PSD. Both sides are in the same one-sided convention, and the Johnson side carries its
-responsivity referral explicitly — so this is the comparison a budget table can be checked against,
-not a qualitative claim.
+transfer factor and responsivity referral explicitly — so this is the comparison a budget table
+can be checked against, not a qualitative claim.
+
+**Stated on NEPs, not on NEP².** The earlier NEP² form was a *definitional unfolding*: after
+`nepOfPSD` is expanded, `NEP_J² = S_I·tr²/R_etf²` and `NEP_ph² = S_ph` are literally the same
+reals as the two sides of the right-hand comparison, so the biconditional held for arbitrary reals
+with no `ETFModel` content at all. Comparing the NEPs instead restores the substance — the
+`Real.sqrt` monotonicity of `Real.sqrt_lt_sqrt_iff`, exactly as 6EB's `shotLimited_iff_psd_lt`
+does. *(Restated 2026-07-29 after adversarial review.)*
 
 Shipped in place of the two `x² ≤ x² + y²` orderings the roadmap's "monotone consequences" would
 literally have licensed: those are true of any reals and carry no bolometric content, whereas this
 separates the two physical regimes.
 
-Carries **no** non-vanishing-responsivity binder: at `R_etf = 0` both sides collapse to
-`0 < phononPSD` identically (Lean's total division), so the equivalence holds there too and a
-`responsivityETF ≠ 0` hypothesis would be dead weight rather than a guard. -/
+**Minimal hypotheses.** Only non-negativity of the Johnson *current* PSD is carried. No
+`responsivityETF ≠ 0` binder: at `R_etf = 0` both sides collapse to `0 < phononPSD` identically.
+No `0 ≤ phononPSD` binder either (dropped 2026-07-29): if the phonon PSD were negative then
+`phononNEP` is Lean's `√(negative) = 0` while the input-referred Johnson PSD is non-negative, so
+both sides are false and the equivalence still holds. -/
 theorem phononLimited_iff_psd_lt (m : ETFModel) {kB T : ℝ}
-    (hnnPh : 0 ≤ m.phononPSD kB T) (hnnJ : 0 ≤ m.johnsonCurrentPSD kB T) :
-    m.johnsonNEP kB T ^ 2 < m.phononNEP kB T ^ 2
+    (hnnJ : 0 ≤ m.johnsonCurrentPSD kB T) :
+    m.johnsonNEP kB T < m.phononNEP kB T
       ↔ m.johnsonCurrentPSD kB T * m.johnsonTransfer ^ 2 / m.responsivityETF ^ 2
           < m.phononPSD kB T := by
-  rw [m.phononNEP_sq hnnPh]
-  unfold johnsonNEP nepOfPSD
-  rw [div_pow, mul_pow, Real.sq_sqrt hnnJ, sq_abs, sq_abs]
+  rw [m.johnsonNEP_eq_nepOfPSD hnnJ]
+  unfold phononNEP nepOfPSD
+  exact Real.sqrt_lt_sqrt_iff (by positivity)
+
+/-- **The phonon-limited regime is INHABITED** — a concrete bias point at which the screen fires.
+
+Wave 1's published `speedupWitness` (`C=G=R=V=1`, `dR/dT=3`, hence `ℒ = 3`, `R_etf = −3/4`,
+`johnsonTransfer = −1/2`) at `k_B = T = 1`: the input-referred Johnson PSD is
+`4·(1/4)/(9/16) = 16/9`, comfortably under the phonon PSD `4`. So the detector is
+phonon-limited — the irreducible thermal-fluctuation channel dominates.
+
+Without a witness the `iff` above would be an empty decision procedure; 6EB's `shotLimited_witness`
+says exactly this about its own crossover screen and is the precedent followed here. Reusing an
+already-published Wave-1 bias point rather than minting a convenient new one keeps the claim tied
+to a model whose stability verdict is already a theorem. -/
+theorem phononLimited_witness :
+    speedupWitness.johnsonNEP 1 1 < speedupWitness.phononNEP 1 1 := by
+  rw [speedupWitness.phononLimited_iff_psd_lt (by
+    unfold johnsonCurrentPSD speedupWitness; norm_num)]
+  unfold johnsonCurrentPSD johnsonTransfer phononPSD responsivityETF currentTempSlope
+    effectiveConductance loopGain speedupWitness
+  norm_num
+
+/-- **The `0 < R` hypothesis is load-bearing for the screen — and dropping it is OPTIMISTIC.**
+
+A model with `R = 0` is certified **phonon-limited** by `phononLimited_iff_psd_lt`, for any
+positive phonon PSD, because Lean's total division reports a *vanishing* Johnson PSD
+(`johnsonCurrentPSD_of_R_eq_zero`) — a noise-free Johnson channel. The verdict is junk, and it is
+junk in the direction that flatters the detector, which is why it is disclosed as a theorem rather
+than left implicit.
+
+Same shape as Wave 1's `loopGain_R_hypothesis_load_bearing`, and the reason
+`bolometer_nep_floor` and `bolometer_error_floor` are stated over the *phonon* channel's physical
+positivity hypotheses rather than over an abstract PSD. -/
+theorem phononLimited_R_hypothesis_load_bearing (m : ETFModel) {kB T : ℝ}
+    (hR : m.R = 0) (hph : 0 < m.phononPSD kB T) :
+    m.johnsonNEP kB T < m.phononNEP kB T := by
+  rw [m.phononLimited_iff_psd_lt (by rw [m.johnsonCurrentPSD_of_R_eq_zero kB T hR])]
+  rw [m.johnsonCurrentPSD_of_R_eq_zero kB T hR]
+  simpa using hph
 
 /-- **The composed PSD is positive at any physical bias point** — discharged from the physical
 hypotheses (`0 < kB`, `0 < T`, `0 < G`) rather than assumed, which is what makes the capstone
@@ -416,6 +598,96 @@ theorem bolometer_error_floor (m : ETFModel) {kB T Tw : ℝ} {Vtot : (ℝ → �
     have := nep_quadrature_add hindep (fun i _ => hch i)
     simpa [Fin.sum_univ_two, bolometerNEP] using this
   exact error_floor_from_budget hwhite (m.bolometer_psd_pos hkB hT hG) hTw hadm hs hσ hμle hμ hσV
+
+/-! ## The irreducible floor: what no detector of this class can beat -/
+
+/-- **The universal thermal-fluctuation floor: any readout whose noise is at least phonon-limited.**
+
+For a readout whose composed input-referred noise is white with one-sided PSD `S₀`, and whose `S₀`
+is **at least** the thermal-fluctuation PSD `NEP_ph²` — with *no* assumption about what the
+remaining noise is, or whether there is any at all — the average assignment error is at least
+`Q(B(NEP_ph²)/2)`, the floor computed from the phonon channel **alone**.
+
+The engine is 6EB's `matchedBudget_antitone_psd`: a smaller PSD yields a *larger* deflection
+budget, and `gaussianQ_antitone` turns a larger budget into a *smaller* error floor — so
+evaluating the floor at the phonon PSD alone is valid for every detector at or above it, and the
+resulting bound mentions no other channel.
+
+This is the statement that makes the thermal-fluctuation channel *irreducible* rather than merely
+present: improving, or entirely removing, every other noise source cannot push the error below
+this value. `phonon_only_error_floor` below instantiates it at this wave's two-channel bolometer;
+the strength of the present form is that it does not need the detector to be that bolometer. -/
+theorem phonon_floor_of_psd_ge (m : ETFModel) {kB T Tw S₀ : ℝ} {Vtot : (ℝ → ℝ) → ℝ}
+    {s hf : ℝ → ℝ} {μ₀ μ₁ σ t : ℝ}
+    (hkB : 0 < kB) (hT : 0 < T) (hG : 0 < m.G)
+    (hwhite : IsWhiteFilteredVariance Vtot S₀ Tw)
+    (hge : m.phononNEP kB T ^ 2 ≤ S₀)
+    (hTw : 0 ≤ Tw) (hadm : IsAdmissibleFilter Tw s hf)
+    (hs : IntervalIntegrable (fun x => s x ^ 2) volume 0 Tw)
+    (hσ : 0 < σ) (hμle : μ₀ ≤ μ₁)
+    (hμ : μ₁ - μ₀ = ∫ x in (0:ℝ)..Tw, hf x * s x) (hσV : σ = Real.sqrt (Vtot hf)) :
+    gaussianQ (matchedBudget (m.phononNEP kB T ^ 2) Tw s / 2)
+      ≤ avgAssignmentError (thrErr0 μ₀ σ t) (thrErr1 μ₁ σ t) := by
+  have hph : 0 < m.phononNEP kB T ^ 2 := by
+    rw [m.phononNEP_sq (m.phononPSD_pos hkB hT hG).le]
+    exact m.phononPSD_pos hkB hT hG
+  have hbud : matchedBudget S₀ Tw s ≤ matchedBudget (m.phononNEP kB T ^ 2) Tw s :=
+    matchedBudget_antitone_psd hph hge s
+  refine le_trans (gaussianQ_antitone (show matchedBudget S₀ Tw s / 2
+    ≤ matchedBudget (m.phononNEP kB T ^ 2) Tw s / 2 by linarith)) ?_
+  exact error_floor_from_budget hwhite (lt_of_lt_of_le hph hge) hTw hadm hs hσ hμle hμ hσV
+
+/-- **THE PHASE'S THESIS, AS A THEOREM: even a Johnson-noise-free detector of this class cannot
+beat the thermal-fluctuation floor.**
+
+    Q( B(NEP_ph²) / 2 )  ≤  average assignment error
+
+for a thermal detector of the stated linearized class, read out through **any** admissible
+single-shot filter and classified by **any** threshold — with the Johnson channel *deleted from
+the bound*. It appears in the hypotheses only to build the detector's actual noise; it does not
+appear in the conclusion, and the conclusion is unchanged if it vanishes.
+
+The roadmap's Wave-3 "Why" promises that *"no thermal detector of this linearized class beats
+this NEP floor at a stated bias point"* becomes a theorem. `bolometer_error_floor` alone does not
+deliver that: its budget is the **composed** `NEP_ph² + NEP_J²`, so it is a statement about a
+detector that *has* Johnson noise, and a reader could reasonably ask whether a quieter readout
+escapes it. This theorem answers that: it does not, because the phonon channel enters the heat
+balance at the point the signal does. *(Shipped 2026-07-29; the gap was found by adversarial
+review, which observed that the phase's headline claim was prose rather than a declaration.)*
+
+Route: this wave's quadrature composition supplies the whiteness (via `nep_quadrature_add`, so
+`IsUncorrelatedAt` stays in the binder list), the trivial ordering `NEP_ph² ≤ NEP_ph² + NEP_J²`
+supplies the hypothesis of `phonon_floor_of_psd_ge`, and 6EB's `matchedBudget_antitone_psd`
+composed with 6EA's `gaussianQ_antitone` does the rest. Note which ordering it is: the roadmap's
+"monotone consequences" `x² ≤ x² + y²` — declined at Wave 3's close as carrying no bolometric
+content on its own — turns out to be *exactly* the step that makes the thesis provable once it is
+composed with the budget's antitonicity. It is content-free as a theorem and load-bearing as a
+lemma; both readings were right. -/
+theorem phonon_only_error_floor (m : ETFModel) {kB T Tw : ℝ} {Vtot : (ℝ → ℝ) → ℝ}
+    {V : Fin 2 → (ℝ → ℝ) → ℝ}
+    {s hf : ℝ → ℝ} {μ₀ μ₁ σ t : ℝ}
+    (hkB : 0 < kB) (hT : 0 < T) (hG : 0 < m.G)
+    (hindep : IsUncorrelatedAt Finset.univ Vtot V)
+    (hphonon : IsThermalFluctuationLimited (V 0) m kB T Tw)
+    (hjohnson : IsWhiteFilteredVariance (V 1) (m.johnsonNEP kB T ^ 2) Tw)
+    (hTw : 0 ≤ Tw)
+    (hadm : IsAdmissibleFilter Tw s hf)
+    (hs : IntervalIntegrable (fun x => s x ^ 2) volume 0 Tw)
+    (hσ : 0 < σ) (hμle : μ₀ ≤ μ₁)
+    (hμ : μ₁ - μ₀ = ∫ x in (0:ℝ)..Tw, hf x * s x) (hσV : σ = Real.sqrt (Vtot hf)) :
+    gaussianQ (matchedBudget (m.phononNEP kB T ^ 2) Tw s / 2)
+      ≤ avgAssignmentError (thrErr0 μ₀ σ t) (thrErr1 μ₁ σ t) := by
+  have hch : ∀ i, IsWhiteFilteredVariance (V i) (m.bolometerNEP kB T i ^ 2) Tw := by
+    intro i
+    match i with
+    | 0 => exact isWhite_of_thermalFluctuationLimited hphonon (m.phononPSD_pos hkB hT hG).le
+    | 1 => exact hjohnson
+  have hwhite : IsWhiteFilteredVariance Vtot
+      (m.phononNEP kB T ^ 2 + m.johnsonNEP kB T ^ 2) Tw := by
+    have := nep_quadrature_add hindep (fun i _ => hch i)
+    simpa [Fin.sum_univ_two, bolometerNEP] using this
+  exact m.phonon_floor_of_psd_ge hkB hT hG hwhite
+    (by nlinarith [sq_nonneg (m.johnsonNEP kB T)]) hTw hadm hs hσ hμle hμ hσV
 
 end ETFModel
 
