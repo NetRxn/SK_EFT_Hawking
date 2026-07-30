@@ -131,10 +131,20 @@ nontrivial. So any calibration claim resting only on the trace is satisfied equa
 of `−θ`. -/
 theorem trace_blind_to_rotation_direction (ω₀ ω Ω φ b c t : ℝ)
     (hsin : Real.sin (generalRotationAngle (ω₀ - ω) Ω b c t) ≠ 0)
-    (hk : 0 < rwaRate (ω₀ - ω) Ω b c) (hgen : rwaGenerator ω₀ ω Ω φ b c ≠ 0) :
+    (hk : 0 < rwaRate (ω₀ - ω) Ω b c) :
     (rwaPropagator ω₀ ω Ω φ b c (-t) 0 0 + rwaPropagator ω₀ ω Ω φ b c (-t) 1 1
         = rwaPropagator ω₀ ω Ω φ b c t 0 0 + rwaPropagator ω₀ ω Ω φ b c t 1 1)
       ∧ rwaPropagator ω₀ ω Ω φ b c (-t) ≠ rwaPropagator ω₀ ω Ω φ b c t := by
+  -- `rwaGenerator ≠ 0` is NOT an independent hypothesis: it follows from `0 < rate` via
+  -- `rwaGenerator_sq` (if the generator vanished, so would `rate²`).
+  have hgen : rwaGenerator ω₀ ω Ω φ b c ≠ 0 := by
+    intro hz
+    have h := rwaGenerator_sq_eq_rate_sq ω₀ ω Ω φ b c
+    rw [hz] at h
+    have h0 := congrFun (congrFun h 0) 0
+    simp at h0
+    have hR : rwaRate (ω₀ - ω) Ω b c ^ 2 = 0 := by exact_mod_cast h0.symm
+    nlinarith [hk, hR]
   constructor
   · rw [rwaPropagator_trace, rwaPropagator_trace, generalRotationAngle_neg, Real.cos_neg]
   · intro hcontra
@@ -151,8 +161,7 @@ theorem trace_blind_to_rotation_direction (ω₀ ω Ω φ b c t : ℝ)
     have hscal : (Complex.I * ((2 * Real.sin (generalRotationAngle (ω₀ - ω) Ω b c t)
         / rwaRate (ω₀ - ω) Ω b c : ℝ) : ℂ)) ≠ 0 := by
       simp only [ne_eq, mul_eq_zero, Complex.I_ne_zero, false_or, Complex.ofReal_eq_zero,
-        div_eq_zero_iff]
-      push_neg
+        div_eq_zero_iff, not_or]
       exact ⟨by simpa using hsin, ne_of_gt hk⟩
     exact (smul_eq_zero.mp hdiff).resolve_left hscal
 
@@ -209,7 +218,9 @@ convention: the `(Δ/2)·σ_z` term of `rwaGenerator` gives `θ_z = (Δ/2)·T`. 
 def longitudinalRotationAngle (Δ T : ℝ) : ℝ := (Δ / 2) * T
 
 /-- **Longitudinal duration calibration** — the dual of the transverse identity, with its own
-fail condition (`Δ = 0`: at zero detuning no longitudinal phase accumulates). -/
+fail condition (`Δ = 0`: at zero detuning no longitudinal phase accumulates). Carries the same
+co-rotating-model caveat as the two transverse identities above: `longitudinalRotationAngle`
+derives from `rwaGenerator`'s `(Δ/2)σ_z` term and inherits the same `O(Ω/ω)` remainder. -/
 theorem calibrated_duration_longitudinal (Δ θ : ℝ) (hΔ : Δ ≠ 0) :
     longitudinalRotationAngle Δ (2 * θ / Δ) = θ := by
   unfold longitudinalRotationAngle
@@ -224,7 +235,7 @@ theorem no_duration_achieves_nonzero_longitudinal_angle_of_zero_detuning {θ : �
   unfold longitudinalRotationAngle
   simpa using fun h => hθ h.symm
 
-/-! ### 3.1 Why `longitudinalElement` has no duration-calibration identity
+/-! ### 3.2 Why `longitudinalElement` has no duration-calibration identity
 
 The "longitudinal dual" above is about DETUNING, not about the longitudinal drive element — and that
 is forced, not an omission. `rwaGenerator` contains no `a` or `d`: a drive along `1` or `σ_z` is

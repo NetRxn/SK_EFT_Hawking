@@ -1087,12 +1087,73 @@ theorem rwa_propagator_difference_bound_physical
     (fun s => rwaPropagatorInv_hasDerivAt ω₀ ω Ω φ b c hk s) hU
     (fun s => by rw [hgen s]; exact schrodingerAntiderivative_hasDerivAt ω Ω φ a b c d hω.ne' s)
     ((continuous_rwaPropagator ω₀ ω Ω φ b c hk).comp continuous_neg) hUc continuous_const ?_
-    (by simpa [hU0] using rwaPropagator_zero ω₀ ω Ω φ b c)
+    (by simp [hU0])
     hLb hUb (fun _ => hPb) hQb hT ?_ hUrb
   · unfold interactionHamiltonian drivenHamiltonian driveOp rotFrame
     fun_prop
   · have := rwaPropagator_mul_neg ω₀ ω Ω φ b c T hk
     simpa using this
+
+/-! ### 4.1d Why the factor bounds are general — the satisfiability claim, shipped
+
+`BanachAveraging` deliberately leaves `KL`, `KU` general rather than pinning them to `1`, and three
+places say that pinning them would make the hypotheses *unsatisfiable for every rotation*. That is
+a satisfiability assertion about a hypothesis set — exactly the category in which review 2 found a
+BLOCKER — so it is proved here rather than asserted.
+
+A quarter-turn `σ_x` rotation has `ℓ^∞` operator norm `√2 > 1`. -/
+
+/-- The quarter-turn co-rotating propagator, written out. -/
+theorem rwaPropagator_quarter_turn (ω Ω : ℝ) (hΩ : 0 < Ω) :
+    rwaPropagator ω ω Ω 0 1 0 (Real.pi / (2 * Ω))
+      = ((Real.cos (Real.pi / 4) : ℝ) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ)
+        - (Complex.I * ((Real.sin (Real.pi / 4) : ℝ) : ℂ)) • σ_x := by
+  have hrate : rwaRate (ω - ω) Ω 1 0 = Ω / 2 := by
+    unfold rwaRate
+    rw [show (ω - ω) ^ 2 + Ω ^ 2 * ((1:ℝ) ^ 2 + (0:ℝ) ^ 2) = Ω ^ 2 by ring, Real.sqrt_sq hΩ.le]
+  have hangle : generalRotationAngle (ω - ω) Ω 1 0 (Real.pi / (2 * Ω)) = Real.pi / 4 := by
+    rw [generalRotationAngle_eq_rate_mul, hrate]
+    field_simp
+    ring
+  have hgen : rwaGenerator ω ω Ω 0 1 0 = ((Ω / 2 : ℝ) : ℂ) • σ_x := by
+    unfold rwaGenerator
+    ext i j
+    fin_cases i <;> fin_cases j <;> simp [σ_x, σ_y, σ_z]
+  have hΩC : ((Ω : ℝ) : ℂ) ≠ 0 := Complex.ofReal_ne_zero.mpr hΩ.ne'
+  unfold rwaPropagator
+  rw [hangle, hrate, hgen, smul_smul]
+  congr 2
+  push_cast
+  field_simp
+
+/-- `‖1 − i·σ_x‖ = 2` in the `ℓ^∞` operator norm — entries `1, ∓i`, so each row sums to `2`. -/
+theorem linftyOpNorm_one_sub_I_sigmaX :
+    ‖(1 : Matrix (Fin 2) (Fin 2) ℂ) - Complex.I • σ_x‖ = 2 := by
+  rw [Matrix.linfty_opNorm_def, show (Finset.univ : Finset (Fin 2)) = {0, 1} from rfl,
+    Finset.sup_insert, Finset.sup_singleton]
+  simp [σ_x, Matrix.one_apply]
+  norm_num
+
+/-- **`‖U_rwa‖ = √2` at the quarter turn** — so a hypothesis `‖L s‖ ≤ 1` in the `ℓ^∞` operator norm
+would exclude this rotation outright. The general `KL`/`KU` binders in `BanachAveraging` are
+load-bearing, and this is the proof rather than the assertion. -/
+theorem norm_rwaPropagator_quarter_turn (ω Ω : ℝ) (hΩ : 0 < Ω) :
+    ‖rwaPropagator ω ω Ω 0 1 0 (Real.pi / (2 * Ω))‖ = Real.sqrt 2 := by
+  have hfac : rwaPropagator ω ω Ω 0 1 0 (Real.pi / (2 * Ω))
+      = ((Real.sqrt 2 / 2 : ℝ) : ℂ) • ((1 : Matrix (Fin 2) (Fin 2) ℂ) - Complex.I • σ_x) := by
+    rw [rwaPropagator_quarter_turn ω Ω hΩ, Real.cos_pi_div_four, Real.sin_pi_div_four]
+    push_cast
+    module
+  rw [hfac, norm_smul, linftyOpNorm_one_sub_I_sigmaX, Complex.norm_real, Real.norm_eq_abs,
+    abs_of_nonneg (by positivity : (0:ℝ) ≤ Real.sqrt 2 / 2)]
+  ring
+
+/-- …and `√2 > 1`, so the exclusion is real: pinning the factor bounds to `1` would have made the
+averaging hypotheses unsatisfiable for the very propagators the module exists to bound. -/
+theorem one_lt_norm_rwaPropagator_quarter_turn (ω Ω : ℝ) (hΩ : 0 < Ω) :
+    1 < ‖rwaPropagator ω ω Ω 0 1 0 (Real.pi / (2 * Ω))‖ := by
+  rw [norm_rwaPropagator_quarter_turn ω Ω hΩ]
+  nlinarith [Real.sq_sqrt (by norm_num : (0:ℝ) ≤ 2), Real.sqrt_nonneg 2]
 
 /-! ### 4.2 The bound's hypothesis set is inhabited at an actual propagator pair
 
@@ -1101,7 +1162,13 @@ satisfies every binder. We exhibit one. Take a drive along the identity (`b = c 
 resonance (`ω₀ = ω`): then `rwaGenerator = 0`, so `U_rwa ≡ 1`, while `H_I(t) = Ω·cos(ωt+φ)·a·1`
 commutes with itself at all times and its propagator is available in closed form. Everything is a
 scalar multiple of the identity, so the pair is genuinely a pair of unitary propagators — not a
-formal solution of a rewritten equation. -/
+formal solution of a rewritten equation.
+
+⚠️ **This witness is DEGENERATE and must not be cited as more.** At `ω₀ = ω` with `b = c = 0` the
+co-rotating generator VANISHES, so `U_rwa ≡ 1` and the entire bounded difference is unobservable
+global phase. It establishes only that the binder set is inhabited at *some* Schrödinger pair. The
+NONdegenerate statement — nonzero generator, nonzero counter-rotating remainder, closed-form exact
+propagator — is `longitudinal_drive_nondegenerate_instantiation` in §4.1c. -/
 
 /-- The accumulated phase of the commuting identity-drive, `∫₀ᵗ Ω·a·cos(ωs+φ) ds`. -/
 noncomputable def commutingDrivePhase (ω Ω φ a : ℝ) (t : ℝ) : ℝ :=
@@ -1154,7 +1221,10 @@ theorem commutingDrivePropagator_hasDerivAt (ω Ω φ a : ℝ) (hω : ω ≠ 0) 
 /-- **The propagator-difference bound is inhabited.** Every binder of
 `rwa_propagator_difference_bound` is satisfied by the commuting identity-drive at resonance, with
 `U` its exact propagator, `L = U_rwa⁻¹ = 1`, and `Ur = 1`. So the theorem is a statement about real
-Schrödinger propagator pairs, not one whose hypotheses silently exclude them. -/
+Schrödinger propagator pairs, not one whose hypotheses silently exclude them.
+
+⚠️ DEGENERATE (see the section header): `rwaGenerator = 0` here, so this shows inhabitation only.
+For the nondegenerate case see `longitudinal_drive_nondegenerate_instantiation`. -/
 theorem rwa_propagator_difference_bound_inhabited (ω Ω φ a T : ℝ)
     (hω : 0 < ω) (hΩ : 0 ≤ Ω) (hT : 0 ≤ T) :
     ‖commutingDrivePropagator ω Ω φ a T - 1‖
@@ -1193,6 +1263,118 @@ theorem rwa_propagator_difference_bound_inhabited (ω Ω φ a T : ℝ)
   calc |Ω| * |a| * |Real.cos (ω * s + φ)| ≤ |Ω| * |a| * 1 := by
         gcongr; exact Real.abs_cos_le_one _
     _ = Ω * |a| := by rw [mul_one, abs_of_nonneg hΩ]
+
+/-! ### 4.1c A NONDEGENERATE inhabitation — nonzero generator, nonzero remainder, closed-form exact
+
+§4.2's witness has `rwaGenerator = 0` (identity drive), so `U_rwa ≡ 1` and the bounded difference is
+unobservable global phase. That is honest but degenerate, and it leaves open whether
+`rwa_propagator_difference_bound_physical` is ever instantiable at a co-rotating generator that
+actually rotates.
+
+It is. Take a **longitudinal** drive (`b = c = d = 0`, `a ≠ 0`) at **nonzero detuning** `ω₀ ≠ ω`:
+
+* `rwaGenerator = ((ω₀−ω)/2)·σ_z ≠ 0` — the co-rotating dynamics is a genuine `σ_z` rotation;
+* `rwaRate = |ω₀−ω|/2 > 0`;
+* `counterRotating = Ω·cos(ωt+φ)·a·1 ≠ 0` — the discarded remainder is nonzero;
+* and because the remainder is a multiple of the identity it commutes with `H_RWA`, so the EXACT
+  propagator factorises in closed form as `e^{−i·phase(t)}·U_rwa(t)`.
+
+So all three of "generator nonzero", "remainder nonzero", and "exact propagator available" hold
+simultaneously — which is what makes this a real test of the bound rather than a formality. -/
+
+/-- The exact interaction-picture propagator for a longitudinal drive at detuning: the co-rotating
+propagator carrying the accumulated phase of the (commuting) counter-rotating term. -/
+noncomputable def longitudinalExactPropagator (ω₀ ω Ω φ a : ℝ) (t : ℝ) :
+    Matrix (Fin 2) (Fin 2) ℂ :=
+  Complex.exp (-Complex.I * (commutingDrivePhase ω Ω φ a t : ℂ)) • rwaPropagator ω₀ ω Ω φ 0 0 t
+
+@[simp] theorem longitudinalExactPropagator_zero (ω₀ ω Ω φ a : ℝ) :
+    longitudinalExactPropagator ω₀ ω Ω φ a 0 = 1 := by
+  unfold longitudinalExactPropagator commutingDrivePhase
+  rw [rwaPropagator_zero]
+  norm_num
+
+theorem norm_longitudinalExactPropagator (ω₀ ω Ω φ a t : ℝ) :
+    ‖longitudinalExactPropagator ω₀ ω Ω φ a t‖ = ‖rwaPropagator ω₀ ω Ω φ 0 0 t‖ := by
+  unfold longitudinalExactPropagator
+  rw [norm_smul, Complex.norm_exp]
+  simp
+
+theorem rwaRate_longitudinal (Δ Ω : ℝ) : rwaRate Δ Ω 0 0 = |Δ| / 2 := by
+  unfold rwaRate
+  rw [show Δ ^ 2 + Ω ^ 2 * ((0:ℝ) ^ 2 + (0:ℝ) ^ 2) = Δ ^ 2 by ring, Real.sqrt_sq_eq_abs]
+
+theorem rwaGenerator_longitudinal_ne_zero (ω₀ ω Ω φ : ℝ) (hdet : ω₀ ≠ ω) :
+    rwaGenerator ω₀ ω Ω φ 0 0 ≠ 0 := by
+  intro hz
+  have h := congrFun (congrFun hz 0) 0
+  unfold rwaGenerator at h
+  simp [σ_x, σ_y, σ_z, Complex.ext_iff] at h
+  exact hdet (by linarith [h])
+
+/-- **It solves the EXACT equation** `U' = −i·H_I·U`, with `H_I` the full interaction-picture
+generator including the counter-rotating remainder. -/
+theorem longitudinalExactPropagator_ode (ω₀ ω Ω φ a : ℝ) (hω : ω ≠ 0)
+    (hk : 0 < rwaRate (ω₀ - ω) Ω 0 0) (t : ℝ) :
+    HasDerivAt (longitudinalExactPropagator ω₀ ω Ω φ a)
+      (((-Complex.I) • interactionHamiltonian ω₀ ω Ω φ a 0 0 0 t)
+        * longitudinalExactPropagator ω₀ ω Ω φ a t) t := by
+  have hg := (commutingDrivePhase_hasDerivAt ω Ω φ a hω t).ofReal_comp
+  have hph := (hg.const_mul (-Complex.I)).cexp
+  have hP := rwaPropagator_ode ω₀ ω Ω φ 0 0 hk t
+  have hprod := hph.smul hP
+  have hval :
+      Complex.exp (-Complex.I * ((commutingDrivePhase ω Ω φ a t : ℝ) : ℂ))
+          • ((-Complex.I) • (rwaGenerator ω₀ ω Ω φ 0 0 * rwaPropagator ω₀ ω Ω φ 0 0 t))
+        + (Complex.exp (-Complex.I * ((commutingDrivePhase ω Ω φ a t : ℝ) : ℂ))
+            * (-Complex.I * ((Ω * a * Real.cos (ω * t + φ) : ℝ) : ℂ)))
+          • rwaPropagator ω₀ ω Ω φ 0 0 t
+      = ((-Complex.I) • interactionHamiltonian ω₀ ω Ω φ a 0 0 0 t)
+        * longitudinalExactPropagator ω₀ ω Ω φ a t := by
+    have hcr : counterRotating ω Ω φ a 0 0 0 t
+        = ((Ω * a * Real.cos (ω * t + φ) : ℝ) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+      unfold counterRotating
+      ext i j
+      fin_cases i <;> fin_cases j <;>
+        simp [σ_x, σ_y, σ_z, Complex.ext_iff] <;> constructor <;> ring
+    unfold longitudinalExactPropagator
+    simp only [interactionHamiltonian_decomp, hcr, smul_add, add_mul, Matrix.smul_mul,
+      Matrix.mul_smul, Matrix.one_mul, smul_smul]
+  rw [← hval]
+  exact hprod
+
+
+/-- **THE NONDEGENERATE INHABITATION.** Every precondition of
+`rwa_propagator_difference_bound_physical` is met at a drive whose co-rotating generator is
+NONZERO and whose counter-rotating remainder is NONZERO — unlike §4.2's identity-drive witness,
+where the generator vanishes and the whole bounded difference is unobservable global phase.
+
+This closes the gap between "the bound is stated over all solutions `U`" and "some `U` actually
+satisfies the hypotheses at a generator that genuinely rotates". -/
+theorem longitudinal_drive_nondegenerate_instantiation (ω₀ ω Ω φ a : ℝ)
+    (hω : ω ≠ 0) (hdet : ω₀ ≠ ω) (hΩ : Ω ≠ 0) (ha : a ≠ 0) (hφ : Real.cos φ ≠ 0) :
+    0 < rwaRate (ω₀ - ω) Ω 0 0
+      ∧ rwaGenerator ω₀ ω Ω φ 0 0 ≠ 0
+      ∧ counterRotating ω Ω φ a 0 0 0 0 ≠ 0
+      ∧ longitudinalExactPropagator ω₀ ω Ω φ a 0 = 1
+      ∧ ∀ t, HasDerivAt (longitudinalExactPropagator ω₀ ω Ω φ a)
+          (((-Complex.I) • interactionHamiltonian ω₀ ω Ω φ a 0 0 0 t)
+            * longitudinalExactPropagator ω₀ ω Ω φ a t) t := by
+  have hk : 0 < rwaRate (ω₀ - ω) Ω 0 0 := by
+    rw [rwaRate_longitudinal]
+    have : (0:ℝ) < |ω₀ - ω| := abs_pos.mpr (sub_ne_zero.mpr hdet)
+    linarith
+  refine ⟨hk, rwaGenerator_longitudinal_ne_zero ω₀ ω Ω φ hdet, ?_,
+    longitudinalExactPropagator_zero ω₀ ω Ω φ a,
+    fun t => longitudinalExactPropagator_ode ω₀ ω Ω φ a hω hk t⟩
+  intro hz
+  have h0 := congrFun (congrFun hz 0) 0
+  unfold counterRotating at h0
+  simp [σ_x, σ_y, σ_z, Complex.ext_iff, -Complex.ofReal_cos, -Complex.ofReal_sin] at h0
+  rcases h0 with (h | h) | h
+  · exact hΩ h
+  · exact hφ (by simpa using h)
+  · exact ha h
 
 end
 

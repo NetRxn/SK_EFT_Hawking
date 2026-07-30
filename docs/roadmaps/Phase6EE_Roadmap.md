@@ -7,23 +7,25 @@
 ## ✅ Shipped declarations (2026-07-30)
 
 `lean/SKEFTHawking/Control/` — 4 modules, all root-imported in `lean/SKEFTHawking.lean`.
-**163 extracted declarations** (153 authored + 10 compiler-generated equation lemmas), **163/163
+**174 extracted declarations** (164 authored + 10 compiler-generated equation lemmas), **174/174
 kernel-pure** with axiom closures ⊆ `{propext, Classical.choice, Quot.sound}` and **zero project
 axioms** (verified from `lean/lean_deps.json` axiom closures, not spot-checks). Zero `sorry`, zero
 `native_decide`, zero `maxHeartbeats`, zero linter warnings. `lake build SKEFTHawking.ExtractDeps`
 clean at 10,799 jobs; `validate.py` **50/50 ALL CHECKS PASSED** (2026-07-30).
 
-**Reviewed three times, fresh context each time.** Review 2 found a BLOCKER in code review 1 had
-already blessed; review 3 found 3 MAJOR / 5 IMPORTANT (and zero BLOCKERs) largely showing that
-round 2's own fixes were bridged to their referents by prose. Everything BLOCKER/MAJOR/IMPORTANT is
-remediated in-session per PD-5 — see the two remediation tables below. The recurring defect class,
+**Reviewed four times, fresh context each time.** Review 2 found a BLOCKER in code review 1 had
+already blessed; review 3 found 3 MAJOR / 5 IMPORTANT (zero BLOCKERs) showing round 2's own fixes
+were bridged to their referents by prose; review 4 found 2 MAJOR / 5 IMPORTANT (zero BLOCKERs), by
+then almost entirely in the documentation layer — including two rows of the remediation tables
+below that misdescribed their own fixes. Everything BLOCKER/MAJOR/IMPORTANT is remediated
+in-session per PD-5 — see the three remediation tables below. The recurring defect class,
 across all three rounds, is **a kernel-checked object bridged to the physical object it is named
 for by a docstring sentence rather than by a declaration**; every fix closes that bridge with a
 theorem.
 
 | Module | Decls | Core content |
 |---|---:|---|
-| `RotatingWave` | 84 | `interactionPicture_ode` (the frame change GENERATES the dynamics — what forces the `−(ω/2)σ_z`); `interactionHamiltonian_decomp` (the EXACT split `H_I = H_RWA + V`); `driveOp_conjTranspose` + `exists_driveOp_of_isHermitian` (the Hermitian-generality scope claim); `norm_counterRotating_le` + `integral_counterRotating_naive_bound` (the naive Duhamel alternative, shipped so the route justification is checkable); `rwaPropagator_mul_neg` (unitarity) + `rwa_propagator_difference_bound_physical` (the bound AT the exact/co-rotating pair, nondegenerate); `rotFrame_zero`/`_hasDerivAt`/`_ode`/`_unique` (the frame pinned as `exp(i(ωt/2)σ_z)` — uniqueness now a THEOREM via `ODE_solution_unique`, not a docstring claim); `bsAntiderivative` + `_hasDerivAt` + `bsAntiderivative_norm_le` (`‖S t‖ ≤ 2(Ω/ω)·ℓ¹`, uniform in `t`); `integral_counterRotating` (FTC); `rwaGenerator_sq` (general `(Δ²+Ω²m²)/4`) and its resonance corollary; `generalRotationAngle` + `rwaRotationAngle_lt_generalRotationAngle`; `rwa_propagator_difference_bound` (+ `_inhabited`, a degenerate commuting-drive witness); the closed-form co-rotating propagator `rwaPropagator` pinned by `rwaPropagator_ode` + `rwaPropagator_unique` and read by `rwaPropagator_trace`; validity + exact-value failure witnesses |
+| `RotatingWave` | 95 | `interactionPicture_ode` (the frame change GENERATES the dynamics — what forces the `−(ω/2)σ_z`); `interactionHamiltonian_decomp` (the EXACT split `H_I = H_RWA + V`); `driveOp_conjTranspose` + `exists_driveOp_of_isHermitian` (the Hermitian-generality scope claim); `norm_counterRotating_le` + `integral_counterRotating_naive_bound` (the naive Duhamel alternative, shipped so the route justification is checkable); `rwaPropagator_mul_neg` (unitarity) + `rwa_propagator_difference_bound_physical` (the bound AT the exact/co-rotating pair, nondegenerate); `rotFrame_zero`/`_hasDerivAt`/`_ode`/`_unique` (the frame pinned as `exp(i(ωt/2)σ_z)` — uniqueness now a THEOREM via `ODE_solution_unique`, not a docstring claim); `bsAntiderivative` + `_hasDerivAt` + `bsAntiderivative_norm_le` (`‖S t‖ ≤ 2(Ω/ω)·ℓ¹`, uniform in `t`); `integral_counterRotating` (FTC); `rwaGenerator_sq` (general `(Δ²+Ω²m²)/4`) and its resonance corollary; `generalRotationAngle` + `rwaRotationAngle_lt_generalRotationAngle`; `rwa_propagator_difference_bound` (+ `_inhabited`, a degenerate commuting-drive witness); the closed-form co-rotating propagator `rwaPropagator` pinned by `rwaPropagator_ode` + `rwaPropagator_unique` and read by `rwaPropagator_trace`; validity + exact-value failure witnesses |
 | `BanachAveraging` | 8 | `hasDerivAt_mul₃`, `integral_averaging`, `norm_integral_mul_mul_le` (bounds `∫L·G·U` via the ANTIDERIVATIVE of `G`, general factor bounds), `integral_mul_ode` (discrepancy identity), `norm_sub_le_norm_mul_sub_one` (unitarity transfer), `norm_propagator_sub_le` |
 | `DriveCalibration` | 36 | `transverseElement`/`longitudinalElement` read off the operator and proved equal to their Pauli forms; transverse + longitudinal + general-detuning **duration** calibration identities; `no_duration_achieves_nonzero_angle_of_zero_element`, `magnitude_calibration_rotates_backwards`; the **phase** calibration layer — `rwaAxisPhasor` bridged to the generator by `transverseElement_rwaGenerator`, the factorisation `rwaAxisPhasor_eq`, `envelope_phase_alignment` (command `φ = χ − arg conj⟨0\|O\|1⟩` to land the axis at azimuth `χ`), its `m = 0` fail condition, and a σ_y quarter-turn mis-pointing witness; `calibrated_duration_transverse_propagator_full` (the WHOLE operator, sign- and axis-sensitive) + `trace_blind_to_rotation_direction` (refuting the trace-only reading); `transverseElement_norm_le` + traceless 11× witness; Kramers (`kramers_inner_eq_zero`, `_partner_eigenvector`, `_degeneracy` with linear independence, `_hypotheses_inhabited`) |
 | `CompositeReadoutCeilings` | 35 | `assignmentFidelity` + floor→ceiling format; `add_le_branch_error_of_disjoint` (measure-theoretic disjointness); `combined_floor/ceiling_max`, `combined_floor/ceiling_add`, `combined_ceiling_add_lt_max` + `combined_ceiling_gap_witness` (gap `= 1/200`, derived by instantiating the comparison at the concrete `gapWitnessMeasure` model); **`relaxation_photon_ceiling`** — two NAMED floors on one attributed readout, with `relaxation_dominates_photon_at_separation_99` showing the `max` selects; per-mechanism ceilings for relaxation, relaxation⊕thermal, 6EA, 6EB, 6EC — the last three DERIVED from their upstream floor theorems; a BITES/does-not-BITE witness pair for **all five** ceilings, every BITES half proved *through its own ceiling theorem* (so it concludes about `assignmentFidelity`, not about a detached bound expression) and every does-not-BITE half stated on that ceiling's own bound expression with the operating point as a hypothesis |
@@ -68,9 +70,9 @@ the defects they replaced had been. All closed in-session.
 | **MJ-3** | Nothing tied `interactionHamiltonian` to the dynamics of `drivenHamiltonian` — replacing `−(ω/2)σ_z` by `+(ω/2)σ_z` would leave every theorem in the module true. Likewise `driveOp`'s Hermiticity and "loses no generality" were prose. | **`interactionPicture_ode`**: if `U' = −i·H·U` then `(R·U)' = −i·H_I·(R·U)` — the subtraction is now forced by a declaration. Plus `rotFrame_conjTranspose_mul`, `sigmaY_conjTranspose`, `driveOp_conjTranspose`, and **`exists_driveOp_of_isHermitian`** (every Hermitian 2×2 has that form). |
 | **IM-1** | `relaxation_dominates_photon_at_separation_99` matched the relaxation floor by the bare numeral `1/4`. | Restated on the ceiling's own expression `t/T₁/(2(1+t/T₁))` at `t = T₁`. |
 | **IM-2** | "First theorem in the series composing two named floors" was false. | Corrected in the docstring, this table, and both Inventory files — see the M3 row above. |
-| **IM-3** | `SK_EFT_Hawking_Inventory.md` was stale relative to the second-round fixes (still carried the pre-N1 `10⁻²`, omitted the whole M3 deliverable). | Rewritten; the two Inventory artifacts now agree. |
+| **IM-3** | `SK_EFT_Hawking_Inventory.md` was stale relative to the second-round fixes (still carried the pre-N1 `10⁻²`, omitted the whole M3 deliverable). | Body rewritten. ⚠️ **This row overstated the fix** — the Index was not touched at all and both files kept a stale review-count line plus the very "a real propagator pair" phrasing MJ-1 was filed against. Review 4 caught it (MJ4-1); both artifacts corrected 2026-07-30. |
 | **IM-4** | The Duhamel/Grönwall counterfactual — the stated justification for the entire route — appeared in three mutually incompatible forms and was backed by no declaration. | **`norm_counterRotating_le`** and **`integral_counterRotating_naive_bound`** ship the alternative bound (`2Ω·ℓ¹·T`, linear in `T`, no `1/ω`). The contrast is now between two theorems; all three prose sites reworded to match. |
-| **IM-5** | The 6EB/6EC does-not-bite witnesses were one arithmetic fact with decorative binders, calling neither ceiling. | Both now CALL their ceiling and conclude about `assignmentFidelity` (existential form: the ceiling they produce is ≥ 17/18). |
+| **IM-5** | The 6EB/6EC does-not-bite witnesses were one arithmetic fact with decorative binders, calling neither ceiling. | Both now CALL their ceiling. ⚠️ The first attempt used `∃ F, fidelity ≤ F ∧ 17/18 ≤ F`, which is **trivially satisfiable** by `F = max(…)` and carries no content — self-caught before review 4 and replaced by a conjunction naming the ceiling's own bound expression in both halves (`f4dc0c51`). This row previously described the discarded existential form. |
 | **N3** *(2nd round)* | — | see previous table. |
 
 **Disclosed, not fixed:** the 6EB and 6EC BITES witnesses fire at `matchedBudget = 0`, i.e. a
@@ -82,6 +84,27 @@ because the summaries previously said only "a witness pair for all five ceilings
 cosmetic), MN-2 (`linearIndependent_of_inner_eq_zero` states the pair-independence property rather
 than Mathlib's bundled `LinearIndependent`), MN-5 ("Bloch–Siegert scale" names the `Ω/ω` small
 parameter, not the second-order shift — flagged as a possible reader trap), MN-6, MN-8.
+
+### Fourth-review remediation (2026-07-30)
+
+Zero BLOCKERs. 2 MAJOR / 5 IMPORTANT — by this round the defect had **migrated out of the Lean and
+into the documentation layer**, including into the remediation tables above, which are themselves
+claims. All closed.
+
+| # | Finding | Fix |
+|---|---|---|
+| **MJ4-1** | Both Inventory artifacts were frozen at the pre-third-review state while the IM-3 row above asserted they had been rewritten. The Index still carried the exact "a real propagator pair" phrasing MJ-1 was filed against, and both files said "reviewed by TWO passes" attributing round 3's findings to round 2. | Both rewritten with accurate review history, the degeneracy disclosed, and every round-3 declaration listed. The IM-3 row now records that it overstated its own fix. |
+| **MJ4-2** | `relaxation_dominates_photon_at_separation_99`'s docstring claimed it "cannot survive an edit to either mechanism's floor" — but the declaration called no floor or ceiling theorem at all; IM-1 had replaced an un-anchored numeral with an un-anchored *expression* and asserted anchoring in prose. | Restated to **call `relaxation_photon_ceiling`** and conclude about `assignmentFidelity` after the `max` collapse, so an edit to either floor breaks the proof. |
+| **IMP-1** | "Zero linter warnings" was false — two warnings, both introduced by the third-round fixes. | Both cleared (`simpa`→`simp`, deprecated `push_neg`→`not_or`); `Control/` builds warning-free. |
+| **IMP-2** | The IM-5 row described its fix as the **existential form it was fixed away from**. | Row corrected; it now records that the existential shape was trivially satisfiable and was replaced. |
+| **IMP-3** | "Pinning `KL`/`KU` to 1 would make the hypotheses unsatisfiable" — load-bearing, asserted in three places, backed by no declaration (the exact category review 2's BLOCKER lived in). | `linftyOpNorm_one_sub_I_sigmaX`, **`norm_rwaPropagator_quarter_turn`** (`= √2`) and `one_lt_norm_rwaPropagator_quarter_turn` ship it. |
+| **IMP-4** | The headline propagator bound had no norm lemma for its own constants. | The quarter-turn norm lemmas above supply the first concrete constant; `‖U_rwa‖ = √2` is exactly the `KL` a consumer needs. |
+| **IMP-5** | (a) No in-repo `U` satisfied the physical bound's ODE hypothesis at a *rotating* generator — the phase's own standard, set by B1, was unmet by its own headline fix. (b) The degeneracy caveat landed in the roadmap but not at the declaration site. | (a) **`longitudinalExactPropagator`** + `_ode` + **`longitudinal_drive_nondegenerate_instantiation`**: a longitudinal drive at nonzero detuning has nonzero generator, nonzero counter-rotating remainder, AND a closed-form exact propagator — all three at once. (b) Caveats added to the §4.2 header and the `_inhabited` docstring, pointing at the nondegenerate statement. |
+
+**Fourth-review MINORs:** fixed MN-1 (redundant `hgen` binder — now *derived* from `0 < rate`),
+MN-3 (the third duration identity now carries the co-rotating caveat), MN-6a (dropped a false
+"previously impossible" claim), MN-9 (duplicate `§3.1`). Left: MN-2 (`0 < rwaRate` is a `field_simp`
+artifact in four lemmas — harmless, excludes nothing physical), MN-4, MN-5, MN-7, MN-8.
 
 **Not in scope, still owed:** `MajoranaKramers` renaming (see the series-close list below). The
 second review independently confirmed the characterization of those two lemmas.

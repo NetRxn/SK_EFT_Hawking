@@ -332,30 +332,36 @@ theorem relaxation_photon_ceiling {t T1 e0 e1 : ℝ} {Nb Na : NNReal} {δ : ℕ 
     (avgAssignmentError_rational_floor ht hT1 he0 hdecay)
     (photon_budget_floor_attributed hδ hattr0 hattr1)
 
-/-- **The composite genuinely selects between the two mechanisms**, rather than restating whichever
-input the reader happens to look at. At a generous photon budget (separation `99`) the photon floor
-drops strictly below the relaxation floor, so the `max` in `relaxation_photon_ceiling` resolves to
-the relaxation branch.
+/-- **The composite genuinely selects between the two mechanisms** — proved BY CALLING
+`relaxation_photon_ceiling`, not by comparing two expressions side by side.
 
-Both sides are written as the ceiling's OWN bound expressions — the relaxation floor as
-`t/T₁/(2(1+t/T₁))` at `t = T₁`, not as the numeral `1/4` — so this cannot survive an edit to either
-mechanism's floor. -/
-theorem relaxation_dominates_photon_at_separation_99 {t T1 : ℝ} (ht : t = T1) (hT1 : 0 < T1)
-    {Na Nb : ℝ} (hsep : (Real.sqrt Na - Real.sqrt Nb) ^ 2 = 99) :
-    (1 / 4) * Real.exp (-(Real.sqrt Na - Real.sqrt Nb) ^ 2) < t / T1 / (2 * (1 + t / T1))
-      ∧ max (t / T1 / (2 * (1 + t / T1)))
-            ((1 / 4) * Real.exp (-(Real.sqrt Na - Real.sqrt Nb) ^ 2))
-          = t / T1 / (2 * (1 + t / T1)) := by
+At `t = T₁` with a generous photon budget (separation `99`) the photon floor drops strictly below
+the relaxation floor, the `max` collapses to the relaxation branch, and the composite ceiling
+therefore reads `1 − t/T₁/(2(1+t/T₁))`. Because the first conjunct is the ceiling theorem's own
+conclusion after that collapse, an edit to either mechanism's floor breaks this proof — which is
+what "anchored" has to mean. (An earlier version stated only an inequality between two expressions
+and *asserted* robustness in its docstring; corrected 2026-07-30 after review.) -/
+theorem relaxation_dominates_photon_at_separation_99 {t T1 e0 e1 : ℝ} {Nb Na : NNReal} {δ : ℕ → ℝ}
+    (ht : t = T1) (hT1 : 0 < T1) (he0 : 0 ≤ e0)
+    (hdecay : readoutDecayProb t T1 ≤ e1) (hδ : Detection.IsCountRule δ)
+    (hattr0 : Detection.falseAlarm Nb δ ≤ e0) (hattr1 : Detection.missProb Na δ ≤ e1)
+    (hsep : (Real.sqrt (Na : ℝ) - Real.sqrt (Nb : ℝ)) ^ 2 = 99) :
+    (1 / 4) * Real.exp (-(Real.sqrt (Na : ℝ) - Real.sqrt (Nb : ℝ)) ^ 2)
+        < t / T1 / (2 * (1 + t / T1))
+      ∧ assignmentFidelity e0 e1 ≤ 1 - t / T1 / (2 * (1 + t / T1)) := by
   have hrel : t / T1 / (2 * (1 + t / T1)) = 1 / 4 := by
     rw [ht, div_self hT1.ne']
     norm_num
-  have hlt : (1 / 4) * Real.exp (-(Real.sqrt Na - Real.sqrt Nb) ^ 2)
+  have hlt : (1 / 4) * Real.exp (-(Real.sqrt (Na : ℝ) - Real.sqrt (Nb : ℝ)) ^ 2)
       < t / T1 / (2 * (1 + t / T1)) := by
     rw [hrel, hsep]
     have henc := (QuantumNetwork.expNeg_enclosure (r := (99 : ℝ)) (by norm_num)).2
     have hpos : (0 : ℝ) < Real.exp (-(99 : ℝ)) := Real.exp_pos _
     nlinarith
-  exact ⟨hlt, max_eq_left hlt.le⟩
+  have hceil := relaxation_photon_ceiling (t := t) (T1 := T1) (by rw [ht]; exact hT1.le) hT1
+    he0 hdecay hδ hattr0 hattr1
+  rw [max_eq_left hlt.le] at hceil
+  exact ⟨hlt, hceil⟩
 
 /-! ## 4. Witness pairs
 
