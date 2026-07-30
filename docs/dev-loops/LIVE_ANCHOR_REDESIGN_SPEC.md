@@ -94,7 +94,7 @@ three load-bearing claims were git-verified). Resolutions, applied in the sectio
   EXECUTES later via the **agent's** reliable backgrounded Bash (post-compact FIRST_ACTION reads
   the flag), never from the hook. No context injection anywhere.
 - **MAJOR 1.7 — ENFILE gate racy.** **Fix:** the deferred regen is lockfile single-flighted,
-  count-gated (`pgrep -fc 'lake|lean-lsp-mcp' < N`), swallows ENFILE, and defaults to SKIP under
+  count-gated (`pgrep -f '[l]ake build' | wc -l` = 0), swallows ENFILE, and defaults to SKIP under
   any doubt (a stale atlas is already fail-soft). (§E)
 - **MAJOR 1.10 — agent may skip the FIRST_ACTION probe → ZERO positive state (worse than today).**
   **Fix:** SessionStart injects a *minimal* git-computed anchor line (`HEAD=<sha8>` + active file
@@ -387,7 +387,7 @@ claude-code/hooks.)
    (writing the **gitignored** `.claude/dev-harness/atlas_view.boundary.json`, NOT the tracked
    `lean/atlas_view.json` — BLOCKER 1.2) when slots are idle, then clears the flag. **ENFILE
    single-flight (1.7):** the agent step is lockfile-guarded + count-gated
-   (`pgrep -fc 'lake|lean-lsp-mcp' < N`), swallows ENFILE, and SKIPS under any doubt (a stale
+   (`pgrep -f '[l]ake build' | wc -l` = 0), swallows ENFILE, and SKIPS under any doubt (a stale
    atlas is fail-soft — `frontier_from_atlas`/probe already degrade). The probe (§A.4) prefers
    `atlas_view.boundary.json` over the tracked file when it is fresher.
 3. **Durable-capture: mechanical, not LLM-synthesized at the hook.** Pre-loss LLM synthesis is

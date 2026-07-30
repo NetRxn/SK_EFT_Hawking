@@ -444,8 +444,9 @@ def build_report(repo, session_id, goal_id, override, mode_override=None):
             p("    is single-flighted (mkdir-lock; flock is absent on macOS), concurrency-gated, writes")
             p("    ONLY the gitignored boundary atlas, and self-clears the flag:")
             p("      sh -c 'd=.claude/dev-harness/regen.lock; mkdir \"$d\" 2>/dev/null || exit 0; "
-              "trap \"rmdir \\\"$d\\\"\" EXIT; [ \"$(pgrep -fc \"lake|lean-lsp-mcp\")\" -lt 3 ] || exit 0; "
-              "lake build SKEFTHawking.ExtractDeps && uv run python scripts/atlas_view.py "
+              "trap \"rmdir \\\"$d\\\"\" EXIT; "
+              "[ \"$(pgrep -f \"[l]ake build\" | wc -l)\" -eq 0 ] || exit 0; "
+              "(cd lean && lake build SKEFTHawking.ExtractDeps) && uv run python scripts/atlas_view.py "
               "--write-boundary && rm -f .claude/dev-harness/regen_requested.flag'")
     return "\n".join(L)
 
