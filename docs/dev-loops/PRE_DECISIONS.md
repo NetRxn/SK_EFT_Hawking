@@ -56,6 +56,21 @@ one scoped Prop per **wave/objective boundary**. A mid-stall unbacked discharge 
 foothold/wall" · any context-budget reasoning. Not your job to manage the context window; never
 re-pollute the roadmap/notebook with escape-language.
 
+### PD-5 — Review findings: BLOCKER/MAJOR/IMPORTANT are never deferred *(operator-set 2026-07-29)*
+
+**Trigger:** triaging adversarial-review findings, or noticing a gap in prior/underspecified work.
+**Do:** fix BLOCKER/MAJOR/IMPORTANT **in-session, at full strength**. Deferral requires an explicit
+operator sign-off *asked for as a question* — never assumed. Items skipped in earlier phases are
+still owed: **circle back.** If a review shows a prior phase was under-reviewed, re-review it at the
+same level. MINOR defaults toward clean (fix merited, skip noise, say which). **Good-citizen
+scope-in:** a gap in a previous roadmap — underspecified, inconsistent, missing a lemma — is scoped
+in and built, not worked around. **"Mathlib lacks X" is a COST input, never route-closure**;
+Mathlib/PhysLib-grade infrastructure is a core competency, so budget it and build.
+*Why:* a "tracked deferral" reads as *handled* to every later consumer, while leaving CLOSED work
+carrying known defects — the 6EC deferral set included a finding that the phase's own headline
+thesis was not derivable from its shipped declarations. Detail → memory
+`feedback-fix-merited-minors-keep-clean`.
+
 ### PD-4 — At a compaction/session boundary, re-anchor before resuming
 
 The compaction summary optimizes *tactical continuity over strategic anchoring* — it freezes the
