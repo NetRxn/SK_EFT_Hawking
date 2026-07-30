@@ -900,7 +900,38 @@ Historical (2026-05-25 snapshot): Current scale: **7339 theorems** (7314 substan
 
 ---
 
-## 5. PAPER DRAFTS (42 papers per counts.json regen 2026-06-10 — `python.papers=42` + 1 short formalization note + prediction tables; the `papers/` tree additionally carries paper31/33/41/42/42b/43/44/45 and `phase6AA_qnetwork_preprint/` drafts) — **17 publication bundles** (per `docs/PAPER_STRATEGY.md`)
+## 5. PAPER DRAFTS (42 papers per counts.json regen 2026-06-10 — `python.papers=42` + 1 short formalization note + prediction tables; the `papers/` tree additionally carries paper31/33/41/42/42b/43/44/45 and `phase6AA_qnetwork_preprint/` drafts) — **21 publication bundles** (per `docs/PAPER_STRATEGY.md`)
+
+> **2026-07-30 bundle-architecture addendum — D11 + D12 first content-lift (18 → 21).**
+> Three Tier-1 bundles have been added since the 2026-06-10 note below: **D10** (comp-chem &
+> open-system foundations, Phases 6BA/6BB/6BC, authorized 2026-06-29, first-lift 2026-06-30) and,
+> on 2026-07-30, **D11** and **D12** — bringing the roster to 1 + 12 + 3 + 3 + 2 = **21**.
+> - **D11 — Kernel-Verified Topological Band Theory & Metamaterial Substrate.** 22 root-imported
+>   modules across Phases 6CA (FHS lattice Chern), 6CB (acoustic/phononic band gap), 6CD
+>   (non-Hermitian exceptional points), 6CE (effective-medium homogenization, algebraic path only)
+>   and 6ED (graphene band structure incl. the concrete Haldane Chern witness `C = −1` on a 4×4
+>   torus). **Zero project-local axioms, zero `sorry`, zero tracked-hypothesis Props.**
+>   ⚠️ Thread (i) is scoped to a **finite-lattice** invariant: Berry curvature, the bulk–boundary
+>   correspondence and the continuum Chern integral are **DEFERRED, not conditional** — none exists
+>   in the tree. `PAPER_STRATEGY.md` described two of them as conditional until corrected on
+>   2026-07-30.
+> - **D12 — Kernel-Verified Detector & Readout Metrology.** 13 root-imported modules across Phases
+>   6EA (Poisson/Gaussian discrimination floors), 6EB (ENBW/NEP/matched filter), 6EC (electrothermal
+>   detector physics) and 6EE (two-level control + composite readout ceilings). Kernel purity
+>   verified from extracted axiom closures for *every* declaration, not by spot check. Sits beneath
+>   D9 in the stack — D6 (logical) → D9 (channel/device) → D12 (physical detection) — consuming D9's
+>   readout-window envelopes as cited floors, consumption-only.
+>   ⚠️ Its original novelty claim was **REFUTED** by a live prior-art sweep (Mathlib already carries
+>   a sub-Gaussian Chernoff bound; PhysLib already carries quantum hypothesis testing). Only the
+>   narrowed, knowledge-hedged form is available, and **two prior-art checks remain open and
+>   blocking**. See `papers/D12/prior_art_novelty.md`.
+>
+> Both ship with a fresh-authored `paper_draft.tex` (compiled to PDF), a `prior_art_novelty.md`,
+> figures under `papers/D1x/figures/`, and an executed companion notebook
+> (`notebooks/D11_TopologicalBandTheory_Technical.ipynb`,
+> `notebooks/D12_DetectorReadoutMetrology_Technical.ipynb`). Substrate synthesis lifted out of the
+> gitignored lab notebooks into tracked `docs/PHASE6C_6E_SUBSTRATE_SYNTHESIS.md`;
+> `docs/ARCHITECTURE_SCOPE.md` gained a 6C\*/6E\* section the same day.
 
 > **2026-06-10 bundle-status addendum.** All pre-D9 **17 publication bundles** have draft directories under `papers/` (D9, authorized later the same day, is being scaffolded): the flagship **F**, eight Tier-1 deep bundles **D1–D8**, three Tier-2 PRL bundles **L1–L3**, three Tier-3 infrastructure bundles **I1–I3**, and two Tier-4 experimental bundles **E1–E2** (1 + 8 + 3 + 3 + 2 = 17). **D8 absorption in progress:** per `docs/PAPER_DRAFT_MAPPING.md`, the verified-quantum-compilation corpus (Phases 6p/6t/6u/6x/6x′/6y/6z + the 6AM W5 Ross-Selinger efficiency layer + 6AN W5 `cliffordTCompile` verified-compiler layer + the 6AO KMM constructive-bound route + ℤ[ζ₈]-Euclidean + the 6AP W3b `diamondDist_cliffordTCompile_le` compiled-gate diamond certificate) maps into D8 §1–§6 + new compiler-algorithm and diamond-certificate sub-sections, with F §7 cross-references — this absorption is the active lift. **D9 AUTHORIZED 2026-06-10** (user; Pipeline Invariant #14): the QI-analytics / quantum-network corpus (Phases 6AA→6AL + 6AM/6AN/6AP/6AQ, `QuantumNetwork/` 103 modules) now maps to the new 18th publication target, Tier-1 bundle **D9 "Kernel-Verified Quantum-Network and Device-Characterization Certification Substrate"** (1 + 9 + 3 + 3 + 2 = 18; see `docs/PAPER_STRATEGY.md` §2.2); the `phase6AA_qnetwork_preprint/` staging draft is the synthesis seed; initial lift in progress. The attribution-content sweep (`docs/roadmaps/AttributionContentSweep_Roadmap.md`) is queued as the next /goal.
 
