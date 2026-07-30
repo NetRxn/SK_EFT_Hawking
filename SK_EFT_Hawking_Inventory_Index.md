@@ -26,12 +26,12 @@
 <!-- AUTOGEN:counts-table BEGIN -->
 | Metric | Value |
 |---|---:|
-| Lean declarations (total) | 40028 |
-| Lean theorems (total) | 25894 |
-| Lean theorems (substantive) | 25868 |
+| Lean declarations (total) | 40110 |
+| Lean theorems (total) | 25963 |
+| Lean theorems (substantive) | 25937 |
 | Lean theorems (placeholder `True := trivial`) | 26 |
-| Lean modules | 2008 |
-| Lean definitions | 12633 |
+| Lean modules | 2012 |
+| Lean definitions | 12646 |
 | Lean structures | 472 |
 | Lean instances | 928 |
 | Lean inductives | 101 |
@@ -108,7 +108,7 @@ For the public narrative of what the project does, see `README.md`. Key story ar
 **936 Lean modules** (per `docs/counts.json` regen 2026-06-10 PM; the jump from 751 at 2026-05-30 reflects (i) the FKLW Ross-Selinger / KMM / grid-synth corpus growth across Phases 6AM→6AO, and (ii) the `QuantumNetwork/` build-out — 103 modules now — across Phases 6AF→6AQ) under `lean/SKEFTHawking/`. Grouped by subdirectory or topical family.
 
 <!-- AUTOGEN:per-family-counts BEGIN -->
-**Per-family verified counts** (from grouping `lean.module_names`): FKLW 373, QuantumNetwork 104, SymTFT 43, DKMBootstrap 12, QuantumCrooks 11, GloriosoLiu 9, CrooksAnalogHawking 8, SymTFTAudit 8, TopologicalBand 8, APSEta 7, FaultTolerance 7, Detection 6, Itô 6, LDP 6, Schellekens 6, DoubleCopy 5, Resurgence 5, SoftTheorems 5, Carrollian 4, GrapheneBand 4, ETH 3, Electrothermal 3, CrossBridges 2, MathlibAux 1; remaining **1362 top-level** modules under `lean/SKEFTHawking/` directly. For full per-module theorem counts + key results, see `SK_EFT_Hawking_Inventory.md` Section 2. For the canonical module-name list, see `docs/counts.json` field `lean.module_names`.
+**Per-family verified counts** (from grouping `lean.module_names`): FKLW 373, QuantumNetwork 104, SymTFT 43, DKMBootstrap 12, QuantumCrooks 11, GloriosoLiu 9, CrooksAnalogHawking 8, SymTFTAudit 8, TopologicalBand 8, APSEta 7, FaultTolerance 7, Detection 6, Itô 6, LDP 6, Schellekens 6, DoubleCopy 5, Resurgence 5, SoftTheorems 5, Carrollian 4, Control 4, GrapheneBand 4, ETH 3, Electrothermal 3, CrossBridges 2, MathlibAux 1; remaining **1362 top-level** modules under `lean/SKEFTHawking/` directly. For full per-module theorem counts + key results, see `SK_EFT_Hawking_Inventory.md` Section 2. For the canonical module-name list, see `docs/counts.json` field `lean.module_names`.
 <!-- AUTOGEN:per-family-counts END -->
 
 ### 3.1 Subdirectory families (sub-packages)
@@ -133,6 +133,7 @@ For the public narrative of what the project does, see `README.md`. Key story ar
 | `lean/SKEFTHawking/MathlibAux/` | 1 | `Pfaffian.lean` — Mathlib-auxiliary Pfaffian helper (project-local upstream-candidate scaffolding). | `ls lean/SKEFTHawking/MathlibAux/` |
 | `lean/SKEFTHawking/DKMBootstrap/` | 12 | Phase 6q DKM transport bootstrap on SK-EFT-Hawking horizon transport (Chowdhury-Hartnoll-Hebbar-Khondaker arXiv:2509.18255 specialization). **11 modules, 2,716 LoC** (Session 1: 10 modules, ~2,375 LoC, 2026-05-23; Session 2: BECBogoliubovBosonicGrowth.lean, 341 LoC, 2026-05-25 strengthening close); zero sorries, zero new axioms. Track 1 (Predicates/AxiomSet/KMSConsistency/NoCrossing/SDPStructure/LinearFunctionals/LDPBridge) builds DKM substrate + resolves three Phase 6o Wave 1c NO-GO obstructions; Track 2 (SKEFTSpecialization/E1E2CrossBridge/HorizonTransportBootstrap) specializes to 3 platforms (graphene/BEC/polariton) with bimodal outcome (positive uniqueness on graphene + sharpened NO-GO on super-factorial-unbounded). Wave 2b.4 module `BECBogoliubovBosonicGrowth.lean` lifts the sharpened-NO-GO half to a witnessed concrete substrate-level stand-in sequence `(2κ)!` (substantive Lieb-Robinson-for-bosons derivation deferred). Python numerical companion at `src/dkm_bootstrap/` ships substantive graphene MIR constant `(2·β_2/(4π))^(1/3) = 0.07562892800257...` (30 dps mpmath). | `ls lean/SKEFTHawking/DKMBootstrap/` |
 | `lean/SKEFTHawking/SymTFT/` | 38 | **Phase 6r SymTFT formalization** (substrate-to-bulk unification under KOZ + FMT + Bhardwaj-Copetti-Pajer-Schäfer-Nameki *Boundary SymTFT* arXiv:2409.02166 framework) + **Phase 6r-prime substantive substrate discharge** (Sessions 1–5, 2026-05-25/26). **38 modules, ~9,910 LoC total across `SymTFT/` + `CrossBridges/SMMatterAsSymTFTBoundary.lean` + `APSEta/SubstrateBulkAsymmetry.lean`**; zero sorries; zero new axioms; **2 legitimate tracked Props** (KT 1990 Pin⁺ bordism cyclic-generation + DMNO 2010 Witt-trivial ⟺ Lagrangian-algebra biconditional, both meeting 3-criterion bar). **Module families:** (a) **Bulk SymTFT data** — `Basic.lean`, `BulkTQFT.lean`, `BulkInstances.lean`, `BulkBoundaryCorrespondence.lean`, `DrinfeldCenterAsBulk.lean`. (b) **Frobenius / Lagrangian-algebra substrate** — `FrobeniusAlgebra.lean`, `FrobeniusPerronDim.lean`, `LagrangianAlgebra.lean`, `GappedBoundary.lean`, `ToricCodeLagrangian.lean`, `ToricCodeLagrangianAnyons.lean`. (c) **Pin⁺ / Z₁₆ / Anderson-dual** — `PinBordism.lean`, `PinPlusManifold4.lean`, `PinPlusBordism4.lean`, `PontryaginDualPinPlus.lean`, `AndersonDualSubstrate.lean`, `AndersonDualFunctor.lean`, `StiefelWhitney.lean`, `SpinSymTFT.lean`, `SpinSymTFTSchellekensAlignment.lean`, `Z16ViaSpinSymTFT.lean`. (d) **RP⁴ + smooth structure (M3 layer)** — `RP4.lean`, `RP4Smooth.lean`, `RP4LocalHomeomorph.lean`, `RP4ChartedSpace.lean`, `RP4IsManifold.lean`. (e) **SM matter + dark sector boundary** — `IsSMMatterTopologicalBoundary.lean`, `AlternativeBoundaries.lean`, `SubstrateToBulkIdentification.lean`, `SubstrateEtaInvariant.lean`. (f) **A5 toric-code object-level (Drinfeld biproducts + Center C)** — `VecGPreadditive.lean`, `CenterPreadditive.lean`, `CenterBiproducts.lean`, `CenterBiproductsHalfBraiding.lean`, `A5VacuumMonObj.lean`, `A5VacuumPlusElectric.lean`, `A5LagrangianCenterUnit.lean`. (g) **Closure** — `Phase6rPrimeClose.lean` (68-conjunct consolidated substantive closure theorem; M-R adversarial-review reviewer anchor). Primary anchor: Bhardwaj-Copetti-Pajer-Schäfer-Nameki arXiv:2409.02166 (substantive boundary-SymTFT framework) + Kirby-Taylor 1990 (Pin⁺ Z₁₆) + Freed-Hopkins arXiv:1604.06527 (Anderson dual) + DMNO arXiv:1009.2117 (Witt-trivial ⟺ Lagrangian-algebra biconditional) + Karoubi 1968 §5 (RP⁴ mod-2 binomial Stiefel-Whitney values) + Davighi-Gripaios-Lohitsiri arXiv:2207.10700 (cited; non-Abelian-finite-group cobordism). | `ls lean/SKEFTHawking/SymTFT/` |
+| `lean/SKEFTHawking/Control/` | 4 | **Phase 6EE — the control + composite-ceiling layers, capstone of the `6E*` verified-device-physics-metrology series (bundle D12).** `RotatingWave` (40 decls): the co-rotating reduction as an EXACT split `interactionHamiltonian_decomp : H_I = H_RWA + V` — the RWA is the act of discarding `V`, and this identity is what makes the discard quantifiable — plus the closed-form Bloch–Siegert antiderivative and its uniform bound `‖S t‖ ≤ 2(Ω/ω)·ℓ¹`, the FTC link, the rotation-angle identity via `rwaGenerator_sq_resonance`, and validity/honest-failure witnesses. `BanachAveraging` (8): the averaging estimate stated over an abstract Banach algebra — `norm_integral_mul_mul_le` bounds `∫L·G·U` using only a bound on the ANTIDERIVATIVE of `G`, and `norm_propagator_sub_le` lifts it to the propagator difference; abstract both because the estimate is not 2×2-specific and because on concrete `Matrix` an instance diamond blocks `HasDerivAt.mul`. `DriveCalibration` (20): signed drive elements read off the operator as matrix ENTRIES and proved equal to their Pauli forms, calibration identities carrying their fail conditions (`m = 0`, sign-inverted target) as explicit binders, the suppression bound with an 11× witness, and Kramers degeneracy from first principles with a non-vacuity witness. `CompositeReadoutCeilings` (14): fidelity ceilings composing the relaxation/thermal/6EA/6EB/6EC floors with attribution as hypotheses, the worst-mechanism and strictly-sharper additive forms, and the gap between them proved. All 82 declarations kernel-pure, zero project axioms. | `ls lean/SKEFTHawking/Control/` |
 | `lean/SKEFTHawking/CrossBridges/` | 2 | Cross-bridge modules for Phase 6r SymTFT consumers: `SMMatterAsSymTFTBoundary.lean` (Wave 3a.3 substantive SM-matter-as-SymTFT-boundary biconditional with `IsBoundarySymTFTCorrespondence` + `witt_triviality_iff_has_lagrangian_algebra`; consumed by D2 + L2 bundle pre-drafts) + `NbReDIIIToPinPlusZ16.lean` (NbRe DIII-class → Pin⁺/ℤ₁₆ cross-bridge, Phase 6v 8.D-8.H family). | `ls lean/SKEFTHawking/CrossBridges/` |
 
 <!-- AUTOGEN:family-count-table BEGIN -->
@@ -159,13 +160,14 @@ For the public narrative of what the project does, see `README.md`. Key story ar
 | `Resurgence` | 5 |
 | `SoftTheorems` | 5 |
 | `Carrollian` | 4 |
+| `Control` | 4 |
 | `GrapheneBand` | 4 |
 | `ETH` | 3 |
 | `Electrothermal` | 3 |
 | `CrossBridges` | 2 |
 | `MathlibAux` | 1 |
 | _(top-level)_ | 1362 |
-| **Total** | **2008** |
+| **Total** | **2012** |
 <!-- AUTOGEN:family-count-table END -->
 
 ### 3.2 Topical groupings (top-level `.lean` files)
