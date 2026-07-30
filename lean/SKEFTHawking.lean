@@ -5188,6 +5188,14 @@ import SKEFTHawking.Control.RotatingWave
 -- Pauli-coefficient forms, so the definitions are not assertions.
 import SKEFTHawking.Control.DriveCalibration
 
+-- Phase 6EE Wave 3 — the composite-ceiling capstone of the 6E* series. Every mechanism floor in the
+-- series lower-bounds the SAME quantity (avgAssignmentError), so they compose; this turns each into
+-- a consumer-facing fidelity CEILING. Gated on one defect class: a composite that silently
+-- under-counts is fail-open. Hence attribution is always a hypothesis about the same (e0,e1) pair,
+-- the worst-mechanism (max) form is unconditional, the additive form requires a stated disjointness
+-- binder, and the strict gap between them is PROVED rather than claimed.
+import SKEFTHawking.Control.CompositeReadoutCeilings
+
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
 
