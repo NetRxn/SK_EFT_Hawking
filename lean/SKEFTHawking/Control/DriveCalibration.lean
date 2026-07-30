@@ -365,7 +365,7 @@ theorem transverseElement_strictly_suppressed :
 /-! ## 5. Kramers degeneracy
 
 Built from first principles. The repo's `MajoranaKramers` module has NO `Θ`-algebra to reuse:
-its `kramers_anticommutation` is `eq_neg_of_add_eq_zero_left` on two REALS, and its
+its `kramers_anticommutation` is a one-line `linarith` on two REALS (`a + b = 0 → a = -b`), and its
 `kramers_pfaffian_definite_sign` is `mul_nonneg` under a self-admitted placeholder hypothesis
 (`∀ a : ℝ, a = a`). Both are true theorems whose names and docstrings claim matrix/Pfaffian content
 they do not state. Nothing here is cited as reused from them.

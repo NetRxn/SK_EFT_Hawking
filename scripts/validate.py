@@ -5661,9 +5661,14 @@ def check_inventory_index_autogen_fresh() -> CheckResult:
 # resolve — i.e. it looks like rename drift rather than a Mathlib or tactic name.
 # That is precisely the observed failure shape and it keeps Mathlib references,
 # tactic names and local binders out of the result.
-_DOCSTRING_STRICT_FAMILIES = ("SKEFTHawking.Detection.", "SKEFTHawking.Electrothermal.")
+_DOCSTRING_STRICT_FAMILIES = ("SKEFTHawking.Detection.", "SKEFTHawking.Electrothermal.",
+                              "SKEFTHawking.Control.")
 _DOCSTRING_TOKEN_RE = re.compile(r"`([A-Za-z][A-Za-z0-9_']*)`")
-_DOCSTRING_BLOCK_RE = re.compile(r"/-[-!](.*?)-/", re.DOTALL)
+# Covers `/-- … -/` doc comments, `/-! … -/` section comments AND plain `/- … -/` module
+# headers. The module-header case was previously unscanned, which let a load-bearing
+# reference to a nonexistent `combined_floor_add_strictly_sharper` sit in
+# `Control/CompositeReadoutCeilings.lean`'s header through five adversarial reviews.
+_DOCSTRING_BLOCK_RE = re.compile(r"/-[-!]?(.*?)-/", re.DOTALL)
 
 
 @register_check("lean_docstring_refs_resolve",

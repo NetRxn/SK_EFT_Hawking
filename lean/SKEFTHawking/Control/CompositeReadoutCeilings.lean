@@ -23,7 +23,7 @@ rather than by comment:
   2. **The sharper form is only available under a stated hypothesis.** The worst-mechanism (`max`)
      form is unconditionally sound and needs nothing. The additive form is strictly sharper but
      requires disjointness of the mechanisms' error events, supplied as a binder. The gap between
-     the two is itself proved (`combined_floor_add_strictly_sharper`), so the sharpening is
+     the two is itself proved (`combined_ceiling_add_lt_max`), so the sharpening is
      demonstrated rather than claimed.
 -/
 
