@@ -45,7 +45,7 @@
 | Figures (PNG) | 163 |
 | Notebooks | 89 |
 | Papers (drafts) | 42 |
-| Publication bundles (per PAPER_STRATEGY) | 19 |
+| Publication bundles (per PAPER_STRATEGY) | 21 |
 <!-- AUTOGEN:counts-table END -->
 
 **SymTFT phase footprint (hand-maintained narrative — not auto-generated):**

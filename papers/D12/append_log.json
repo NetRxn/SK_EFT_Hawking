@@ -1,0 +1,30 @@
+{
+  "bundle_target": "D12",
+  "events": [
+    {
+      "date": "2026-07-30T21:43:13Z",
+      "source_paper": "D12_initial_draft",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a71",
+      "lean_modules_referenced": [
+        "Detection.PoissonDiscrimination",
+        "Detection.GaussianThreshold",
+        "Detection.ShotNoise",
+        "Detection.FilterFloors",
+        "Detection.NEPAlgebra",
+        "Detection.MatchedFilter",
+        "Electrothermal.ETFModel",
+        "Electrothermal.ETFResponsivity",
+        "Electrothermal.BolometricFloors",
+        "Control.RotatingWave",
+        "Control.BanachAveraging",
+        "Control.DriveCalibration",
+        "Control.CompositeReadoutCeilings"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-07-30T21:43:13Z",
+      "notes": "Sourceless synthesis: substrate is 13 Lean modules across Phases 6EA (Poisson/Gaussian discrimination floors, shot noise), 6EB (ENBW/NEP/matched-filter floors), 6EC (electrothermal detector physics), 6EE (two-level control + composite readout ceilings); no per-paper-draft sources. First content-lift of the 2026-07-27-authorized D12 bundle."
+    }
+  ]
+}

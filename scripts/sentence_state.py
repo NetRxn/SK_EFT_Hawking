@@ -203,7 +203,7 @@ _SENTENCE_KNOWN = _SENTENCE_REQUIRED | _SENTENCE_OPTIONAL
 _VALID_BUNDLE_TARGETS = {
     'F',                                # Tier 0 flagship review
     'D1', 'D2', 'D3', 'D4', 'D5',       # Tier 1 deep papers
-    'D6', 'D7', 'D8', 'D9', 'D10',           # Tier 1 deep papers — D6 (FT-QC substrate, Phase 6v.1), D7 (tensor-network demarcation, Phase 6w.6), D8 (universal quantum gate compilation, 2026-05-31), D9 (QN+device certification, 2026-06-10), D10 (comp-chem & open-system foundations, Phases 6BA/6BB/6BC, first-lift 2026-06-30)
+    'D6', 'D7', 'D8', 'D9', 'D10', 'D11', 'D12',   # Tier 1 deep papers — D6 (FT-QC substrate, Phase 6v.1), D7 (tensor-network demarcation, Phase 6w.6), D8 (universal quantum gate compilation, 2026-05-31), D9 (QN+device certification, 2026-06-10), D10 (comp-chem & open-system foundations, Phases 6BA/6BB/6BC, first-lift 2026-06-30), D11 (topological & metamaterial band theory, Phases 6CA/6CB/6CD/6CE + 6ED, authorized 2026-06-29, first-lift 2026-07-30), D12 (detector & readout metrology, Phases 6EA/6EB/6EC/6EE, authorized 2026-07-27, first-lift 2026-07-30)
     'L1', 'L2', 'L3',                   # Tier 2 PRL splashes
     'I1', 'I2', 'I3',                   # Tier 3 infrastructure (I3 added Phase 6n.4 / Phase 6o.ζ — Verified Stochastic Calculus for Mathlib4)
     'E1', 'E2',                         # Tier 4 experimental letters

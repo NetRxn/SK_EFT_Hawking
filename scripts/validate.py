@@ -4575,6 +4575,7 @@ def check_quantum_network() -> CheckResult:
 #: Bundle codes per docs/PAPER_STRATEGY.md (publication-bundle drafts).
 BUNDLE_CODES = (
     "F", "D1", "D2", "D3", "D4", "D5", "D6", "D7", "D8", "D9",
+    "D10", "D11", "D12",
     "E1", "E2", "I1", "I2", "I3", "L1", "L2", "L3",
 )
 
@@ -5159,6 +5160,55 @@ def _lean_source_declares(short: str) -> bool:
     return re.search(pat, _LEAN_SOURCE_CACHE) is not None
 
 
+_PHYSLIB_SOURCE_CACHE: Optional[str] = None
+_PHYSLIB_DIR = PROJECT_ROOT / "lean" / ".lake" / "packages" / "Physlib"
+
+
+def _physlib_declares(short: str) -> bool:
+    """Tertiary resolution source: does the resolved **PhysLib** Lake
+    dependency declare ``short``?
+
+    PhysLib is a first-class dependency of this project (pinned in
+    ``lean/lakefile.toml``), and bundle prose legitimately names its
+    declarations — e.g. D10 cites ``MatrixMap.of_kraus_CP`` for the Choi
+    complete-positivity route, and the D11/D12 drafts lean on the PhysLib
+    Schur and POVM/hypothesis-testing substrates. Those names are real but
+    can never appear in ``lean_deps.json``, which carries *project*
+    declarations only, and they do not start with a Mathlib namespace
+    prefix — so without this tier every correct PhysLib reference is a
+    false FAIL. (That false positive was live on D10 the moment D10 entered
+    ``BUNDLE_CODES``, 2026-07-30.)
+
+    Same comment-stripping + lazy-cache discipline as
+    ``_lean_source_declares``. Returns False when the package is not
+    vendored (fresh clone before ``lake build``), which degrades to the
+    prior ABSENT behaviour rather than silently passing.
+    """
+    global _PHYSLIB_SOURCE_CACHE
+    if _PHYSLIB_SOURCE_CACHE is None:
+        if not _PHYSLIB_DIR.exists():
+            _PHYSLIB_SOURCE_CACHE = ""
+        else:
+            chunks = []
+            for lf in sorted(_PHYSLIB_DIR.rglob("*.lean")):
+                try:
+                    src = lf.read_text()
+                except OSError:
+                    continue
+                src = re.sub(r"--[^\n]*", "", src)
+                prev = None
+                while prev != src:
+                    prev = src
+                    src = re.sub(r"/-(?:(?!/-|-/).)*?-/", "", src, flags=re.DOTALL)
+                chunks.append(src)
+            _PHYSLIB_SOURCE_CACHE = "\n".join(chunks)
+    if not _PHYSLIB_SOURCE_CACHE:
+        return False
+    pat = (r"(?:theorem|lemma|def|abbrev|structure|class|instance|opaque)\s+"
+           + re.escape(short) + r"\b")
+    return re.search(pat, _PHYSLIB_SOURCE_CACHE) is not None
+
+
 def _resolve_prose_ref(token: str, index: dict) -> str:
     """Resolve a candidate token against the Lean name index.
 
@@ -5172,6 +5222,8 @@ def _resolve_prose_ref(token: str, index: dict) -> str:
                    module that does not match the written prefix
                    (module-attribution drift; advisory)
       'MATHLIB'  — known Mathlib namespace (skipped)
+      'PHYSLIB'  — declared in the resolved PhysLib Lake dependency
+                   (resolves upstream, not in lean_deps.json; skipped)
       'ABSENT'   — no match anywhere
     """
     names = index["names"]
@@ -5203,6 +5255,8 @@ def _resolve_prose_ref(token: str, index: dict) -> str:
         return "DRIFTED"
     if _lean_source_declares(short):
         return "PRIVATE"
+    if _physlib_declares(short):
+        return "PHYSLIB"
     return "ABSENT"
 
 
@@ -5215,8 +5269,11 @@ def check_prose_theorem_reference_coverage() -> CheckResult:
     prevention proposed by QI item **qi-leantheoremdrift**
     (`bundle_lean_refs_resolve`, docs/QI_REGISTER.md).
 
-    Scope: the 18 publication-bundle drafts
-    (``papers/{F,D1–D9,E1,E2,I1–I3,L1–L3}/paper_draft.tex``) only.
+    Scope: the 21 publication-bundle drafts
+    (``papers/{F,D1–D12,E1,E2,I1–I3,L1–L3}/paper_draft.tex``) only.
+    D10 joined 2026-07-30 alongside the D11/D12 first-lift — it had been
+    shipping since 2026-06-30 outside this gate's scope, which is exactly
+    the drift exposure the check exists to close.
     Legacy per-paper drafts are *excluded for now* — they are
     historical-snapshot documents superseded by the bundles, and their
     reference hygiene is audited separately by
@@ -5284,7 +5341,7 @@ def check_prose_theorem_reference_coverage() -> CheckResult:
             if tok in _PROSE_REF_ALLOWLIST:
                 continue
             verdict = _resolve_prose_ref(tok, index)
-            if verdict in ("OK", "MATHLIB", "PRIVATE"):
+            if verdict in ("OK", "MATHLIB", "PRIVATE", "PHYSLIB"):
                 continue
             if verdict == "DRIFTED":
                 n_drift += 1
