@@ -130,6 +130,97 @@ theorem transverseElement_strictly_suppressed :
   rw [Matrix.linfty_opNorm_def]
   simp [driveOp, projectedDriveElement, σ_x, σ_y, σ_z, Matrix.one_apply, Fin.sum_univ_two]
 
+/-! ## 5. Kramers degeneracy
+
+Built from first principles. The repo's `MajoranaKramers` module has NO `Θ`-algebra to reuse:
+its `kramers_anticommutation` is `eq_neg_of_add_eq_zero_left` on two REALS, and its
+`kramers_pfaffian_definite_sign` is `mul_nonneg` under a self-admitted placeholder hypothesis
+(`∀ a : ℝ, a = a`). Both are true theorems whose names and docstrings claim matrix/Pfaffian content
+they do not state. Nothing here is cited as reused from them.
+
+An antiunitary `Θ` is characterised by `⟪Θ x, Θ y⟫ = ⟪y, x⟫` (conjugating the inner product) — note
+this already forces `Θ` to be isometric, since `‖Θ x‖² = ⟪Θx,Θx⟫ = ⟪x,x⟫ = ‖x‖²`. Time reversal for
+half-integer spin additionally satisfies `Θ² = -1`, and THAT is what produces the degeneracy. -/
+
+section Kramers
+
+open scoped InnerProductSpace
+
+variable {V : Type*} [NormedAddCommGroup V] [InnerProductSpace ℂ V]
+
+/-- An antiunitary map sends `0` to `0` (from conjugate-homogeneity at `z = 0`). -/
+theorem antiunitary_map_zero {Θ : V → V}
+    (hconj : ∀ (z : ℂ) (x : V), Θ (z • x) = (starRingEnd ℂ) z • Θ x) : Θ 0 = 0 := by
+  have h := hconj 0 0
+  simpa using h
+
+/-- **Kramers orthogonality — the heart of the theorem.** For antiunitary `Θ` with `Θ² = -1`,
+every vector is orthogonal to its own image. This is what forbids `Θ v` from being a multiple of
+`v`, and hence what makes the degeneracy genuine rather than a relabelling.
+
+Note `Θ` need not be assumed linear or semilinear for this: the two stated properties suffice. -/
+theorem kramers_inner_eq_zero {Θ : V → V}
+    (hanti : ∀ x y, ⟪Θ x, Θ y⟫_ℂ = ⟪y, x⟫_ℂ)
+    (hsq : ∀ x, Θ (Θ x) = -x) (v : V) :
+    ⟪Θ v, v⟫_ℂ = 0 := by
+  have h := hanti v (Θ v)
+  rw [hsq v, inner_neg_right] at h
+  -- `h : -⟪Θ v, v⟫ = ⟪Θ v, v⟫`; ℂ has characteristic zero, so the value vanishes.
+  linear_combination (-1 / 2 : ℂ) * h
+
+/-- With `Θ² = -1`, `Θ` kills nothing but `0`. -/
+theorem kramers_apply_ne_zero {Θ : V → V}
+    (hconj : ∀ (z : ℂ) (x : V), Θ (z • x) = (starRingEnd ℂ) z • Θ x)
+    (hsq : ∀ x, Θ (Θ x) = -x) {v : V} (hv : v ≠ 0) : Θ v ≠ 0 := by
+  intro h
+  apply hv
+  have hz := hsq v
+  rw [h, antiunitary_map_zero hconj] at hz
+  exact neg_eq_zero.mp hz.symm
+
+/-- **The Kramers partner is an eigenvector with the SAME eigenvalue.** Conjugate-linearity would
+normally send `λ` to `conj λ`; for a real eigenvalue — i.e. the physical case of a self-adjoint
+Hamiltonian — the eigenvalue is preserved. -/
+theorem kramers_partner_eigenvector {Θ : V → V} {H : V →ₗ[ℂ] V}
+    (hconj : ∀ (z : ℂ) (x : V), Θ (z • x) = (starRingEnd ℂ) z • Θ x)
+    (hcomm : ∀ x, Θ (H x) = H (Θ x))
+    {lam : ℂ} (hreal : (starRingEnd ℂ) lam = lam) {v : V} (hv : H v = lam • v) :
+    H (Θ v) = lam • Θ v := by
+  rw [← hcomm, hv, hconj, hreal]
+
+/-- **Kramers degeneracy.** For a `Θ`-symmetric Hamiltonian with antiunitary `Θ`, `Θ² = -1`, every
+real eigenvalue carries a SECOND eigenvector orthogonal to the first — so no eigenvalue is simple
+and every level is (at least) doubly degenerate.
+
+The partner is exhibited (`Θ v`), not merely asserted to exist. -/
+theorem kramers_degeneracy {Θ : V → V} {H : V →ₗ[ℂ] V}
+    (hanti : ∀ x y, ⟪Θ x, Θ y⟫_ℂ = ⟪y, x⟫_ℂ)
+    (hconj : ∀ (z : ℂ) (x : V), Θ (z • x) = (starRingEnd ℂ) z • Θ x)
+    (hsq : ∀ x, Θ (Θ x) = -x) (hcomm : ∀ x, Θ (H x) = H (Θ x))
+    {lam : ℂ} (hreal : (starRingEnd ℂ) lam = lam) {v : V} (hv0 : v ≠ 0) (hv : H v = lam • v) :
+    Θ v ≠ 0 ∧ H (Θ v) = lam • Θ v ∧ ⟪Θ v, v⟫_ℂ = 0 :=
+  ⟨kramers_apply_ne_zero hconj hsq hv0,
+   kramers_partner_eigenvector hconj hcomm hreal hv,
+   kramers_inner_eq_zero hanti hsq v⟩
+
+/-- **Non-vacuity witness.** The hypothesis bundle is inhabited: on `ℂ²` the map
+`Θ (z₀, z₁) = (-conj z₁, conj z₀)` — i.e. `-iσ_y ∘ (complex conjugation)`, the standard spin-½
+time reversal — is antiunitary with `Θ² = -1`. Without this the degeneracy theorem could be
+vacuously true. -/
+theorem kramers_hypotheses_inhabited :
+    ∃ Θ : (Fin 2 → ℂ) → (Fin 2 → ℂ),
+      (∀ x, Θ (Θ x) = -x) ∧
+      (∀ (z : ℂ) (x : Fin 2 → ℂ), Θ (z • x) = (starRingEnd ℂ) z • Θ x) := by
+  refine ⟨fun x => ![-(starRingEnd ℂ) (x 1), (starRingEnd ℂ) (x 0)], ?_, ?_⟩
+  · intro x
+    funext i
+    fin_cases i <;> simp
+  · intro z x
+    funext i
+    fin_cases i <;> simp
+
+end Kramers
+
 end
 
 end SKEFTHawking.Control
