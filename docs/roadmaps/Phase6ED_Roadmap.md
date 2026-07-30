@@ -49,7 +49,11 @@ Clean whitespace: no prover has a kernel-checked honeycomb band structure, Dirac
 - [x] witnesses at Γ (`|f| = 3`) and M (`|f| = 1`), plus gaplessness at K (`0`); `honeycomb_band_dispersive` now carries all three pairwise comparisons (the missing `Γ ≠ K` conjunct left a two-valued band unexcluded);
 - [x] preemptive-strengthening + post-wave audit. **Audit correction:** the original record credited `honeycombBloch_isHermitian` with making the `blochPauli` instantiation load-bearing. It did not — it was a pure forwarder (`blochPauli_isHermitian (honeycombD θ)`) whose statement carried zero honeycomb-specific information, the identity-wrapper pattern the checklist forbids. **Deleted**; `honeycomb_band_secular` is what makes the instantiation load-bearing.
 
-**UNKNOWN-4 RESOLVED (Stage 2, 2026-07-29) — guardrail branch B applies.** The QWZ spike has **not** landed: `TopologicalBand/BlochFHS.lean:24-26` still reads *"a nontrivial frame-derived Chern value (C = ±1) requires the QWZ transcendental evaluation … and stays behind the separately-gated QWZ spike."* Therefore **Wave 3's Haldane witness becomes the first nontrivial concrete Chern frame in the repo, and the QWZ spike should later cite it.** Recorded per the coordination guardrail. Note the difficulty signal that same comment carries: the obstruction is the transcendental `Complex.arg` evaluation at generic momenta — Wave 3 must budget for it (UNKNOWN-3's grid-size spike is the mitigation).
+**UNKNOWN-4 RESOLVED (Stage 2, 2026-07-29) — guardrail branch B applies.** The QWZ spike has **not** landed, so **Wave 3's Haldane witness is the first nontrivial concrete Chern frame in the repo, and the QWZ spike should later cite it.**
+
+⚠️ **Re-probing this UNKNOWN will now return a different answer — by design.** The probe used to read `TopologicalBand/BlochFHS.lean`'s claim that *"a nontrivial frame-derived Chern value (C = ±1) requires the QWZ transcendental evaluation … and stays behind the separately-gated QWZ spike"*, and treated it as a difficulty signal Wave 3 must budget for. Wave 3 **refuted** that claim (see the architectural note below), and on 2026-07-29 `BlochFHS.lean` was updated to say so and to point at the promoted machinery. The transcendental obstruction does **not** bind; no budget is needed.
+
+**Adapter duplication is now prevented structurally, not by convention.** The reusable machinery was promoted out of `GrapheneBand/HaldaneWitness.lean` into `TopologicalBand/ArgSectors.lean` (the sector calculus) and `TopologicalBand/BlochFrameOfD.lean` (`lbVec`, `blochFrameOfD`, `blochLatticeChern_eq_zero_of_narrow{,_D}`). Neither mentions graphene, so the QWZ spike consumes them directly — it does not have to import a graphene module, which the guardrail against duplicated adapter machinery would otherwise have forced.
 
 ## Wave 2 — Linear dispersion, Fermi velocity, and the Dirac mass
 
@@ -90,7 +94,9 @@ Clean whitespace: no prover has a kernel-checked honeycomb band structure, Dirac
 - [x] `coneBerryPhase_pi` — **UNKNOWN-2 resolved to the discretized principal-branch form** (the roadmap default). Shipped on the `π/2`-diamond centred on Wave 1's `diracK` (`K` is its centroid). The Wilson product of the four lower-band overlaps is the **negative rational `−16`**, so `arg = π` is *exact*, not an enclosure. Backed by `coneWinding_two_pi` (increments `2π/3, −π/6, 2π/3, 5π/6`, sum `2π`) — and the "principal-branch" reading is *licensed*, not asserted, by `arg_conj_mul_eq_principal_sub`. Contrast pair `flatWinding_zero` / `flatLoopBerryPhase_zero` (Wilson product `+72`) shipped so the `π` discriminates rather than decorates;
 - [x] **shipped as `haldaneD` (general `t, t₂, φ, m`) + `haldaneD44` (the declared point on the 4×4 torus)**, with admissibility split into its two real obligations: `haldane1_pos`/`haldane6_pos` (the **north-pole condition** `‖d‖ + d₃ > 0`, which is what the `lbVec` gauge actually needs — it implies `d ≠ 0` via `dVec_ne_zero_of`, so the AC's `∀ k, d k ≠ 0` is the weaker consequence) and `haldane1_link_ne`/`haldane6_link_ne` (nonvanishing of all 32 nearest-neighbour overlaps — *not* implied by the gap; `BlochFrame`'s audit §3.3);
 - [x] **shipped as `haldaneFrame_latticeChern_eq_neg_one` — the value is `−1`, not `+1`.** `FHSLatticeGauge.lean:74` freezes `latticeChern = −∑ plaquetteBranch`; the single nonzero branch index (at `k = (1,2)`, one of sixteen plaquettes) is `+1`. The lead's numerical spike reported `∑ branchIndex = +1`, i.e. the same computation *without* that sign. Parameters `t = t₂ = 1`, `φ = π/2`, `m = 1`, grid `4 × 4`, all explicit. `φ ↦ −φ` flips the sign;
-- [x] `haldane_trivial_phase_chern_zero` at `m = 6`, via the reusable **`blochLatticeChern_eq_zero_of_narrow`** ("a frame with no phase frustration cannot wind"), so the trivial phase costs 32 one-line inequalities rather than 16 plaquette computations. **Strengthened past the AC:** `haldane_chern_iff_mass_inversion` shows the invariant is nonzero *exactly* where the two Dirac masses invert, tied to the analytic boundary by `haldane_mass_inversion_iff` + the `nlinarith`-backed `haldane_window_bounds` (`1 < 3√3 ≈ 5.196 < 6`). That is a classification anchored to the phase diagram, not two unrelated evaluations;
+- [x] `haldane_trivial_phase_chern_zero` at `m = 6`, via the reusable **`blochLatticeChern_eq_zero_of_narrow`** ("a frame with no phase frustration cannot wind"), so the trivial phase costs 32 one-line inequalities rather than 16 plaquette computations.
+- [x] ⚠️ **AC CREDIT RETRACTED AND REPLACED (2026-07-29).** The first pass credited itself with being *"strengthened past the AC"* via `haldane_chern_iff_mass_inversion`, said to show *"the invariant is nonzero exactly where the two Dirac masses invert"* — "a classification anchored to the phase diagram". **Both halves were wrong.** (i) The claim is **false**: the `4 × 4` invariant flips at `|m| ≈ 3.3177`, strictly inside the analytic window `|m| < 3√3 ≈ 5.1962`, so on ~36 % of the window the masses invert while the invariant reads `0` — with the frame still admissible, so it is a genuine value. (ii) The theorem carried **no content** anyway: both sides of each `↔` were closed propositions of known truth value and the proof was `iff_of_true (by decide) …` / `iff_of_false …`, i.e. a restatement of four already-shipped theorems (checklist anti-patterns #1 and #4). **Deleted.** Replaced by `haldane_massInversion_not_sufficient_at_N4`, which states the true relation — *mass inversion is necessary but **not** sufficient at `N = 4`* — and backs it with a third full frame at `m = 5` (`haldane5_pos`, `haldane5_link_ne`, `haldane5_link_narrow`: 32 narrow links) plus a `nlinarith`-backed `|5| < 3√3`. `haldane_window_bounds` now covers all three sample points (`1`, `5`, `6`). The lattice transition is **grid-dependent** and converges to `3√3` only as `N` grows (`N=4 → 3.318`, `N=8 → 4.805`, `N=16 → 5.085`, `N=32 → 5.170`); no statement may be phrased as "exactly where the masses invert" at fixed `N`;
+- [x] **gauge independence stated, not merely imported:** `haldaneFrame_latticeChern_gauge_independent` *calls* `blochLatticeChern_rephase` (previously imported with zero uses), so the `−1` is a property of the sampled band rather than of the chosen `lbVec` representative;
 - [x] **6CA coordination: guardrail branch B applied** (recorded in the module docstring). The QWZ spike has not landed, so this Haldane frame is the repo's **first** nontrivial concrete Chern frame; a later QWZ spike should reuse `blochFrameOfD` + the sector calculus rather than rebuild them. Root-module import landed. *Inventory/counts refresh is a post-merge `update_counts.py` step (needs ExtractDeps) — left to the lead.*
 - [x] preemptive-strengthening + post-wave audit (below).
 
@@ -103,9 +109,18 @@ built on Mathlib's `Complex.tan_arg` + `Real.arctan` monotonicity, with `tan` va
 `π/3`. Every side-condition is a **radical-free comparison** of the overlap's real and imaginary
 parts. **Measured cost: ~110 lines** for the whole calculus (including the `branchIndex` placement
 lemmas), i.e. far below the "budget for it" the guardrail warned about. The reason is structural:
-at `N = 4` every `d`-vector is *integral*, so the only irrationals in the entire Chern computation
-are `√2, √3, √6, √10, √26`, and **four-digit** enclosures suffice — the tightest inequality in the
-whole argument is `19 − 6√10 > 0` (i.e. `361 > 360`), slack `0.026`.
+at `N = 4` every `d`-vector is *integral*, so each computation needs only **four-digit** enclosures
+of a handful of surds — the tightest inequality in the `m = 1` argument is `19 − 6√10 > 0` (i.e.
+`361 > 360`), slack `0.026`.
+
+⚠️ **Corrected 2026-07-29:** this note used to say "the only irrationals in the entire Chern
+computation are `√2, √3, √6, √10, √26`". That is the `m = 1` list only. **Which** surds appear
+depends on the mass: `√2, √6, √10, √26` at `m = 1`; `√2, √26, √30, √34, √82` at `m = 5`;
+`√5, √37, √41, √45, √101` at `m = 6` (plus `√3` from the sector reference angles). The *structural*
+point — integral `d`-vectors, so finitely many four-digit enclosures suffice — is unaffected.
+
+*(The calculus itself now lives in `TopologicalBand/ArgSectors.lean`; the local `tan_pi_div_six` /
+`tan_pi_div_three` were deleted as exact Mathlib duplicates that shadowed `Real.*` at use sites.)*
 The cells are deliberately **asymmetric** (`π/4` on the positive side, `π/3` on the negative):
 `π/4` keeps sector C's side-condition free of `√3` — which is what makes the two tightest links
 (`Re ≈ 0.39`) provable by enclosure alone — while sector D must stay at `π/3` or the winding
@@ -140,16 +155,20 @@ Wave 1 → Wave 2 → Wave 3 critical path; Wave 4 gated. **The whole phase is i
 
   *Spike method:* numerically reconstructed `blochLatticeChern` exactly as `BlochFHS` computes it — Haldane `d`-vector in Wave-1 Bloch-phase coordinates, lower-band eigenvector `u ∝ (d₁ − i d₂, −(d₃ + ‖d‖))`, links `⟨u(k), u(k+μ)⟩/|·|`, `rawCurl` = the unreduced four-link sum, `latticeChern = Σ branchIndex(rawCurl)`. Scripts under the session scratchpad.
 
-  **Finding 1 — `N = 3` is broken and must not be used.** It is the smallest grid at which the *principal-value* sum `ΣF/2π` reads `−1`, which is why it looks attractive, but its `latticeChern` is **0 even inside the topological window** (`m = 1`): one plaquette lands at `rawCurl = −π` **exactly**, i.e. on the branch cut (margin `0.0000` rad), and the four winding plaquettes cancel. `N = 3` also swings with `m` (0 at `m ≤ 2`, +1 at `3 ≤ m ≤ 5.19`), so it is not a stable witness anywhere.
+  **Finding 1 — `N = 3` is broken and must not be used.** ⚠️ **CAUSE CORRECTED 2026-07-29 — and it generalizes.** The spike attributed the failure to "one plaquette lands at `rawCurl = −π` exactly, i.e. on the branch cut". That is a symptom, not the cause. The real mechanism is **admissibility**, and it is arithmetic in `N`: whenever **`3 ∣ N`** the grid samples the Dirac points `K = (2π/3, 4π/3)` and `K′` exactly. There the `d`-vector is purely `±d₃`, and at the Dirac point carrying the *negative* mass it sits on the south pole — at `m = 1` the vertex is `d = (0, 0, 1 − 3√3) = (0, 0, −4.1962)`, so `‖d‖ + d₃ = 0`, the `lbVec` gauge is singular (`lbVec ![0,0,−c] = ![0,0]`), and an overlap **vanishes**. The frame is not admissible at all, so its `latticeChern` is not a meaningful value in either direction.
 
-  **Finding 2 — `N = 4` is clean, and the margin is enormous.**
+  **Finding 2 — `N = 4` is clean.** ⚠️ **TABLE CORRECTED 2026-07-29: `6 × 6` is NOT a clean alternative.** It was listed as such and it fails for exactly the same reason as `3 × 3` — verified: `N = 6` has a south-pole vertex at `k = (2, 4)` with `min(‖d‖ + d₃) = 0`. So do `N = 12`, `24`, … The admissible grids are those with `3 ∤ N`.
 
-  | grid | `m = 1` (topological) | `m = 6` (trivial) | nonzero-branch plaquettes | min margin to branch cut |
-  |---|---|---|---|---|
-  | 3×3 | **0** ✗ (wrong) | 0 | 4 | **0.0000 rad** ✗ |
-  | **4×4** | **+1** ✓ | **0** ✓ | **1 of 16** | **1.6399 rad** ✓ |
-  | 6×6 | +1 | 0 | 1 of 36 | 2.0888 rad |
-  | 8×8 | +1 | 0 | 1 of 64 | 2.3789 rad |
+  | grid | `3 ∣ N`? | admissible? | `m = 1` | `m = 6` | nonzero-branch plaquettes |
+  |---|---|---|---|---|---|
+  | 3×3 | yes | **NO** ✗ (south pole at `k=(1,2)`) | — | — | — |
+  | **4×4** | no | **yes** ✓ | **+1** ✓ | **0** ✓ | **1 of 16** |
+  | 6×6 | yes | **NO** ✗ (south pole at `k=(2,4)`) | — | — | — |
+  | 8×8 | no | yes | +1 | 0 | 1 of 64 |
+
+  At `4 × 4` the minimum margin to the branch cut is `1.6399` rad.
+
+  **Finding 2b (added 2026-07-29) — the lattice transition is grid-dependent, and `4 × 4` is far from the analytic boundary.** The `N = 4` invariant flips at `|m| ≈ 3.3177`, **not** at `3√3 ≈ 5.1962`: the grid never samples `K`/`K′` and its extremal `haldaneNNN` is `±2` against the true `±3√3/2 ≈ ±2.598`, so it sees a strictly smaller window. Convergence from below: `N=4 → 3.318`, `N=5 → 4.228`, `N=8 → 4.805`, `N=16 → 5.085`, `N=32 → 5.170`. This is what forced the retraction of the Wave-3 "classification" claim above.
 
   **Finding 3 (the architectural one) — exact `Complex.arg` evaluation is NOT required, so the QWZ obstruction does not bind here.** `BlochFHS.lean:24-26` warns that a nontrivial Chern value "requires the QWZ transcendental evaluation (`Complex.arg` of `sin/cos` at generic momenta)". That is true of *evaluating* plaquette phases — and the spike confirms they are genuinely transcendental (at 4×4, **zero** of the links are axis-valued; the distinct plaquette phases are generic reals, not multiples of π). **But `latticeChern` never needs them.** It is `Σ branchIndex(rawCurl)`, a sum of *integers*, and `Σ rawCurl = 0` by telescoping (`FiniteTorus.sum_forwardDiff_eq_zero`). So the whole invariant is carried by *which 2π-window* each `rawCurl` falls in — a **bounding** problem, not an evaluation problem, and at 4×4 there is `1.64` rad of slack on every window placement.
 
