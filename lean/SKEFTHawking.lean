@@ -5121,6 +5121,13 @@ import SKEFTHawking.GrapheneBand.Honeycomb
 -- sqrt(q1^2 - q1 q2 + q2^2), the non-exactness witness at the K->K' offset, and the gapped-Dirac
 -- mass: gap exactly 2|m|, strictly monotone in |m|, closing iff m = 0.
 import SKEFTHawking.GrapheneBand.DiracExpansion
+-- Phase 6ED Wave 3 — the Haldane Chern witness and the cone Berry phase. The repo's FIRST
+-- nontrivial concrete Chern frame: the Haldane model (t = t2 = 1, phi = pi/2) sampled on a 4x4
+-- Brillouin torus has blochLatticeChern = -1 at m = 1 and 0 at m = 6, and the pair is tied to the
+-- analytic window |m| < 3 sqrt3 |t2 sin phi| by haldane_chern_iff_mass_inversion. Plus the pi Berry
+-- phase / 2pi pseudospin winding of the gapless cone. Ships a rational-enclosure `arg` sector
+-- calculus (arg_cell_A/B/C/D) so no transcendental Complex.arg evaluation is needed anywhere.
+import SKEFTHawking.GrapheneBand.HaldaneWitness
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
