@@ -70,29 +70,92 @@ theorem combined_ceiling_max {F₁ F₂ e0 e1 : ℝ}
     assignmentFidelity e0 e1 ≤ 1 - max F₁ F₂ :=
   assignmentFidelity_le_of_floor (combined_floor_max h₁ h₂)
 
-/-- **Additive combined floor, under an explicit disjointness hypothesis.**
+/-! ### 2.1 Disjointness, as actual measure theory
 
-`hdisj` says the two mechanisms contribute *separately* to the excited-branch misassignment — their
-error events do not overlap, so the contributions add rather than merely each being present. That
-hypothesis is exactly what a fail-open composite would omit, so it is a binder here. -/
-theorem combined_floor_add {ε₁ ε₂ e0 e1 : ℝ} (he0 : 0 ≤ e0) (hdisj : ε₁ + ε₂ ≤ e1) :
+The additive form is only sound when the mechanisms' error events genuinely do not overlap. That
+must be *derived* from disjoint events, not asserted: a hypothesis of the shape `ε₁ + ε₂ ≤ e₁` IS
+the additive composition restated, so taking it as a binder would assume the very thing the
+composite claims to establish — and would let a consumer obtain a sharper ceiling than their
+budget licenses, which is the fail-open defect this module is gated on. -/
+
+open MeasureTheory in
+/-- **Disjoint error events add.** If mechanism 1's error event `A` and mechanism 2's error event
+`B` are disjoint and both lie inside the branch-1 misassignment event `E`, then their individual
+probabilities sum to at most the branch error. This is the theorem that earns the word
+"disjointness"; everything additive downstream goes through it. -/
+theorem add_le_branch_error_of_disjoint {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
+    [IsFiniteMeasure μ] {A B E : Set Ω} (hB : MeasurableSet B)
+    (hdisj : Disjoint A B) (hAE : A ⊆ E) (hBE : B ⊆ E)
+    {ε₁ ε₂ e1 : ℝ} (h₁ : ε₁ ≤ (μ A).toReal) (h₂ : ε₂ ≤ (μ B).toReal)
+    (he1 : (μ E).toReal ≤ e1) :
+    ε₁ + ε₂ ≤ e1 := by
+  have hunion : (μ (A ∪ B)).toReal = (μ A).toReal + (μ B).toReal := by
+    rw [measure_union hdisj hB]
+    exact ENNReal.toReal_add (measure_ne_top _ _) (measure_ne_top _ _)
+  have hsub : (μ (A ∪ B)).toReal ≤ (μ E).toReal :=
+    ENNReal.toReal_mono (measure_ne_top _ _) (measure_mono (Set.union_subset hAE hBE))
+  linarith
+
+open MeasureTheory in
+/-- **Additive combined floor, from genuinely disjoint error events.**
+
+The disjointness is now measure-theoretic input (`Disjoint A B`, both inside the branch-1 error
+event), and the additive bound is derived from it via `add_le_branch_error_of_disjoint` rather than
+assumed. -/
+theorem combined_floor_add {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω) [IsFiniteMeasure μ]
+    {A B E : Set Ω} (hB : MeasurableSet B) (hdisj : Disjoint A B) (hAE : A ⊆ E) (hBE : B ⊆ E)
+    {ε₁ ε₂ e0 e1 : ℝ} (he0 : 0 ≤ e0)
+    (h₁ : ε₁ ≤ (μ A).toReal) (h₂ : ε₂ ≤ (μ B).toReal) (he1 : (μ E).toReal ≤ e1) :
     (ε₁ + ε₂) / 2 ≤ avgAssignmentError e0 e1 := by
+  have hadd := add_le_branch_error_of_disjoint μ hB hdisj hAE hBE h₁ h₂ he1
   unfold avgAssignmentError
   linarith
 
-/-- **Additive ceiling** — fidelity form. -/
-theorem combined_ceiling_add {ε₁ ε₂ e0 e1 : ℝ} (he0 : 0 ≤ e0) (hdisj : ε₁ + ε₂ ≤ e1) :
+open MeasureTheory in
+/-- **Additive ceiling** — fidelity form, on the same measure-theoretic input. -/
+theorem combined_ceiling_add {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω) [IsFiniteMeasure μ]
+    {A B E : Set Ω} (hB : MeasurableSet B) (hdisj : Disjoint A B) (hAE : A ⊆ E) (hBE : B ⊆ E)
+    {ε₁ ε₂ e0 e1 : ℝ} (he0 : 0 ≤ e0)
+    (h₁ : ε₁ ≤ (μ A).toReal) (h₂ : ε₂ ≤ (μ B).toReal) (he1 : (μ E).toReal ≤ e1) :
     assignmentFidelity e0 e1 ≤ 1 - (ε₁ + ε₂) / 2 :=
-  assignmentFidelity_le_of_floor (combined_floor_add he0 hdisj)
+  assignmentFidelity_le_of_floor (combined_floor_add μ hB hdisj hAE hBE he0 h₁ h₂ he1)
 
-/-- **The additive form is STRICTLY sharper — the difference is proved, not asserted.**
-
-Whenever both mechanisms genuinely contribute, the additive floor exceeds the worst-mechanism
-floor. This is what makes the independence hypothesis worth carrying: without a strict gap the
-sharper form would be a restated hypothesis rather than a stronger theorem. -/
-theorem combined_floor_add_strictly_sharper {ε₁ ε₂ : ℝ} (h₁ : 0 < ε₁) (h₂ : 0 < ε₂) :
+/-- Arithmetic core of the sharpening (`max(a,b) < a+b` for positive `a, b`). Stated separately so
+that the ceiling-level comparison below is visibly a statement about the two CEILINGS and not about
+bare reals. -/
+private theorem max_half_lt_half_add {ε₁ ε₂ : ℝ} (h₁ : 0 < ε₁) (h₂ : 0 < ε₂) :
     max (ε₁ / 2) (ε₂ / 2) < (ε₁ + ε₂) / 2 := by
   rcases max_cases (ε₁ / 2) (ε₂ / 2) with ⟨h, -⟩ | ⟨h, -⟩ <;> rw [h] <;> linarith
+
+open MeasureTheory in
+/-- **The additive ceiling is STRICTLY tighter than the worst-mechanism ceiling on the SAME
+readout.** Both bounds are derived here from one shared hypothesis set — the measure-theoretic
+disjointness input plus each mechanism's own floor — so this is a comparison of the two composite
+theorems' conclusions, not an inequality between unrelated reals.
+
+This is what makes carrying the disjointness input worthwhile: without a strict gap the additive
+form would be the max form with extra hypotheses. -/
+theorem combined_ceiling_add_lt_max {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
+    [IsFiniteMeasure μ] {A B E : Set Ω} (hB : MeasurableSet B) (hdisj : Disjoint A B)
+    (hAE : A ⊆ E) (hBE : B ⊆ E) {ε₁ ε₂ e0 e1 : ℝ} (he0 : 0 ≤ e0)
+    (h₁ : ε₁ ≤ (μ A).toReal) (h₂ : ε₂ ≤ (μ B).toReal) (he1 : (μ E).toReal ≤ e1)
+    (hp₁ : 0 < ε₁) (hp₂ : 0 < ε₂)
+    (hf₁ : ε₁ / 2 ≤ avgAssignmentError e0 e1) (hf₂ : ε₂ / 2 ≤ avgAssignmentError e0 e1) :
+    (1 - (ε₁ + ε₂) / 2 : ℝ) < 1 - max (ε₁ / 2) (ε₂ / 2)
+      ∧ assignmentFidelity e0 e1 ≤ 1 - (ε₁ + ε₂) / 2
+      ∧ assignmentFidelity e0 e1 ≤ 1 - max (ε₁ / 2) (ε₂ / 2) := by
+  refine ⟨by linarith [max_half_lt_half_add hp₁ hp₂], ?_, ?_⟩
+  · exact combined_ceiling_add μ hB hdisj hAE hBE he0 h₁ h₂ he1
+  · exact combined_ceiling_max hf₁ hf₂
+
+/-- **Numeric witness of the sharpening.** At mechanism floors `ε₁ = 1/100`, `ε₂ = 1/50` the
+worst-mechanism ceiling is `1 - 1/100` while the additive ceiling is `1 - 3/200`: a gap of exactly
+`1/200`. The AC asks for the difference to be *witnessed*, and a witness is a number. -/
+theorem combined_ceiling_gap_witness :
+    (1 : ℝ) - ((1 / 100 : ℝ) + 1 / 50) / 2 < 1 - max ((1 / 100 : ℝ) / 2) ((1 / 50 : ℝ) / 2)
+      ∧ (1 - max ((1 / 100 : ℝ) / 2) ((1 / 50 : ℝ) / 2))
+          - (1 - ((1 / 100 : ℝ) + 1 / 50) / 2) = 1 / 200 := by
+  norm_num
 
 /-! ## 3. Per-mechanism ceilings
 
@@ -119,27 +182,43 @@ theorem photon_budget_ceiling {Nb Na : NNReal} {δ : ℕ → ℝ} (hδ : Detecti
       ≤ 1 - (1 / 4) * Real.exp (-(Real.sqrt (Na : ℝ) - Real.sqrt (Nb : ℝ)) ^ 2) :=
   assignmentFidelity_le_of_floor (Detection.poisson_avgError_floor hδ)
 
-/-- **Filtered-readout ceiling (6EB).** Specialised to the 6EB threshold objects: the error pair is
-`(thrErr0, thrErr1)` and the floor is `gaussianQ` at half the matched-filter budget. -/
-theorem filtered_readout_ceiling {S₀ T : ℝ} {s : ℝ → ℝ} {μ₀ μ₁ σ t : ℝ}
-    (hfloor : Detection.gaussianQ (Detection.matchedBudget S₀ T s / 2)
-      ≤ avgAssignmentError (Detection.thrErr0 μ₀ σ t) (Detection.thrErr1 μ₁ σ t)) :
+open MeasureTheory in
+/-- **Filtered-readout ceiling (6EB).** DERIVED, not assumed: the floor is discharged by calling
+`Detection.error_floor_from_budget`, so this carries that theorem's own physical binder list
+(whiteness of the filtered variance, filter admissibility, the mean-separation identity, `σ` from
+the filtered variance) rather than its conclusion. -/
+theorem filtered_readout_ceiling {V : (ℝ → ℝ) → ℝ} {S₀ T : ℝ}
+    (hwhite : Detection.IsWhiteFilteredVariance V S₀ T) (hS : 0 < S₀) (hT : 0 ≤ T)
+    {s h : ℝ → ℝ} (hadm : Detection.IsAdmissibleFilter T s h)
+    (hs : IntervalIntegrable (fun x => s x ^ 2) volume 0 T)
+    {μ₀ μ₁ σ t : ℝ} (hσ : 0 < σ) (hμle : μ₀ ≤ μ₁)
+    (hμ : μ₁ - μ₀ = ∫ x in (0:ℝ)..T, h x * s x) (hσV : σ = Real.sqrt (V h)) :
     assignmentFidelity (Detection.thrErr0 μ₀ σ t) (Detection.thrErr1 μ₁ σ t)
       ≤ 1 - Detection.gaussianQ (Detection.matchedBudget S₀ T s / 2) :=
-  assignmentFidelity_le_of_floor hfloor
+  assignmentFidelity_le_of_floor
+    (Detection.error_floor_from_budget hwhite hS hT hadm hs hσ hμle hμ hσV)
 
-/-- **Detector-chain ceiling (6EC).** The deepest chain: detector NEP → filter → Gaussian error →
-fidelity. What distinguishes it from the 6EB ceiling is the noise budget — here the PSD is the
-bolometer's own phonon ⊕ Johnson quadrature sum, not a free parameter. -/
-theorem detector_chain_ceiling (m : Electrothermal.ETFModel) {kB T Tw : ℝ} {s : ℝ → ℝ}
-    {μ₀ μ₁ σ t : ℝ}
-    (hfloor : Detection.gaussianQ
-        (Detection.matchedBudget (m.phononNEP kB T ^ 2 + m.johnsonNEP kB T ^ 2) Tw s / 2)
-      ≤ avgAssignmentError (Detection.thrErr0 μ₀ σ t) (Detection.thrErr1 μ₁ σ t)) :
+open MeasureTheory in
+/-- **Detector-chain ceiling (6EC).** DERIVED by calling `Electrothermal.ETFModel.bolometer_error_floor`,
+so every link of the chain — detector NEP → filter → Gaussian error → fidelity — is actually
+traversed. What distinguishes it from the 6EB ceiling is that the noise budget is the bolometer's
+own phonon ⊕ Johnson quadrature sum rather than a free parameter, and `m` is genuinely load-bearing
+(it supplies `G`, `phononNEP`, `johnsonNEP`). -/
+theorem detector_chain_ceiling (m : Electrothermal.ETFModel) {kB T Tw : ℝ}
+    {Vtot : (ℝ → ℝ) → ℝ} {V : Fin 2 → (ℝ → ℝ) → ℝ} {s hf : ℝ → ℝ} {μ₀ μ₁ σ t : ℝ}
+    (hkB : 0 < kB) (hT : 0 < T) (hG : 0 < m.G)
+    (hindep : Detection.IsUncorrelatedAt Finset.univ Vtot V)
+    (hphonon : Electrothermal.ETFModel.IsThermalFluctuationLimited (V 0) m kB T Tw)
+    (hjohnson : Detection.IsWhiteFilteredVariance (V 1) (m.johnsonNEP kB T ^ 2) Tw)
+    (hTw : 0 ≤ Tw) (hadm : Detection.IsAdmissibleFilter Tw s hf)
+    (hs : IntervalIntegrable (fun x => s x ^ 2) volume 0 Tw)
+    (hσ : 0 < σ) (hμle : μ₀ ≤ μ₁)
+    (hμ : μ₁ - μ₀ = ∫ x in (0:ℝ)..Tw, hf x * s x) (hσV : σ = Real.sqrt (Vtot hf)) :
     assignmentFidelity (Detection.thrErr0 μ₀ σ t) (Detection.thrErr1 μ₁ σ t)
       ≤ 1 - Detection.gaussianQ
         (Detection.matchedBudget (m.phononNEP kB T ^ 2 + m.johnsonNEP kB T ^ 2) Tw s / 2) :=
-  assignmentFidelity_le_of_floor hfloor
+  assignmentFidelity_le_of_floor
+    (m.bolometer_error_floor hkB hT hG hindep hphonon hjohnson hTw hadm hs hσ hμle hμ hσV)
 
 /-! ## 4. Witness pairs
 
