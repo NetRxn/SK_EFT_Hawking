@@ -317,10 +317,11 @@ attribution hypotheses, then combined by `combined_ceiling_max`.
 ⚠️ It is **not** the first two-named-floor composite in the project: `relaxation_thermal_ceiling`
 below already composes relaxation ⊕ thermal, and did so before this phase (via the upstream
 `avgAssignmentError_combined_floor`). What is new here is that it is the first composite spanning
-the DEVICE layer (`QuantumNetwork`) and the DETECTION layer (`Detection`/6EA) — a pairing that was
-previously impossible because the 6EA floor is stated at the count rule's own error pair and had no
-transfer rule; `photon_budget_floor_attributed` supplies it. (An earlier draft of this docstring and
-of the roadmap claimed priority outright; corrected 2026-07-30 after adversarial review.) -/
+the DEVICE layer (`QuantumNetwork`) and the DETECTION layer (`Detection`/6EA) — a pairing this
+module simply had no transfer rule for, since the 6EA floor is stated at the count rule's own error
+pair; `photon_budget_floor_attributed` (three lines of monotonicity) supplies it. It was never
+"impossible" — merely not done. (An earlier draft claimed priority outright, and a later one called
+the pairing previously impossible; both corrected 2026-07-30 after adversarial review.) -/
 theorem relaxation_photon_ceiling {t T1 e0 e1 : ℝ} {Nb Na : NNReal} {δ : ℕ → ℝ}
     (ht : 0 ≤ t) (hT1 : 0 < T1) (he0 : 0 ≤ e0) (hdecay : readoutDecayProb t T1 ≤ e1)
     (hδ : Detection.IsCountRule δ)

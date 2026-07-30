@@ -1264,41 +1264,29 @@ theorem rwa_propagator_difference_bound_inhabited (ω Ω φ a T : ℝ)
         gcongr; exact Real.abs_cos_le_one _
     _ = Ω * |a| := by rw [mul_one, abs_of_nonneg hΩ]
 
-/-! ### 4.1c A NONDEGENERATE inhabitation — nonzero generator, nonzero remainder, closed-form exact
+/-! ### 4.1c A GENUINELY nondegenerate inhabitation — an OBSERVABLE RWA error
 
-§4.2's witness has `rwaGenerator = 0` (identity drive), so `U_rwa ≡ 1` and the bounded difference is
-unobservable global phase. That is honest but degenerate, and it leaves open whether
-`rwa_propagator_difference_bound_physical` is ever instantiable at a co-rotating generator that
-actually rotates.
+§4.2's witness is a pure identity drive: `rwaGenerator = 0`, `U_rwa ≡ 1`, and the bounded difference
+is unobservable global phase. An earlier version of this section merely added detuning to that same
+identity drive — which fixes the generator but leaves the *discrepancy* a global phase, since
+`driveOp a 0 0 0 = a·1` commutes with everything. That was degenerate in a second way and is
+corrected here.
 
-It is. Take a **longitudinal** drive (`b = c = d = 0`, `a ≠ 0`) at **nonzero detuning** `ω₀ ≠ ω`:
+The witness now carries a **`σ_z` drive component** (`d ≠ 0`) alongside the identity component:
 
-* `rwaGenerator = ((ω₀−ω)/2)·σ_z ≠ 0` — the co-rotating dynamics is a genuine `σ_z` rotation;
-* `rwaRate = |ω₀−ω|/2 > 0`;
-* `counterRotating = Ω·cos(ωt+φ)·a·1 ≠ 0` — the discarded remainder is nonzero;
-* and because the remainder is a multiple of the identity it commutes with `H_RWA`, so the EXACT
-  propagator factorises in closed form as `e^{−i·phase(t)}·U_rwa(t)`.
+* `driveOp a 0 0 d = a·1 + d·σ_z` is **not** a multiple of the identity;
+* `H_RWA = (Δ/2)·σ_z ≠ 0` at nonzero detuning;
+* `V(t) = Ω·cos(ωt+φ)·(a·1 + d·σ_z) ≠ 0`;
+* `V` still commutes with `H_RWA` (both are diagonal), so the EXACT propagator remains available in
+  closed form — but the `d` component now shifts the accumulated **`σ_z` rotation angle**, so
+  `U_exact` and `U_rwa` differ by a genuine relative rotation, not a phase.
 
-So all three of "generator nonzero", "remainder nonzero", and "exact propagator available" hold
-simultaneously — which is what makes this a real test of the bound rather than a formality. -/
+That last point is what makes this a real exercise of the bound: the discrepancy it bounds is
+physically observable.
 
-/-- The exact interaction-picture propagator for a longitudinal drive at detuning: the co-rotating
-propagator carrying the accumulated phase of the (commuting) counter-rotating term. -/
-noncomputable def longitudinalExactPropagator (ω₀ ω Ω φ a : ℝ) (t : ℝ) :
-    Matrix (Fin 2) (Fin 2) ℂ :=
-  Complex.exp (-Complex.I * (commutingDrivePhase ω Ω φ a t : ℂ)) • rwaPropagator ω₀ ω Ω φ 0 0 t
-
-@[simp] theorem longitudinalExactPropagator_zero (ω₀ ω Ω φ a : ℝ) :
-    longitudinalExactPropagator ω₀ ω Ω φ a 0 = 1 := by
-  unfold longitudinalExactPropagator commutingDrivePhase
-  rw [rwaPropagator_zero]
-  norm_num
-
-theorem norm_longitudinalExactPropagator (ω₀ ω Ω φ a t : ℝ) :
-    ‖longitudinalExactPropagator ω₀ ω Ω φ a t‖ = ‖rwaPropagator ω₀ ω Ω φ 0 0 t‖ := by
-  unfold longitudinalExactPropagator
-  rw [norm_smul, Complex.norm_exp]
-  simp
+⚠️ Naming: this is a *longitudinal* drive in the `σ_z` sense (`longitudinalElement (driveOp a 0 0 d)
+= d ≠ 0`, by `longitudinalElement_driveOp`), unlike the earlier `a`-only version whose longitudinal
+element was zero. -/
 
 theorem rwaRate_longitudinal (Δ Ω : ℝ) : rwaRate Δ Ω 0 0 = |Δ| / 2 := by
   unfold rwaRate
@@ -1312,69 +1300,242 @@ theorem rwaGenerator_longitudinal_ne_zero (ω₀ ω Ω φ : ℝ) (hdet : ω₀ �
   simp [σ_x, σ_y, σ_z, Complex.ext_iff] at h
   exact hdet (by linarith [h])
 
-/-- **It solves the EXACT equation** `U' = −i·H_I·U`, with `H_I` the full interaction-picture
-generator including the counter-rotating remainder. -/
-theorem longitudinalExactPropagator_ode (ω₀ ω Ω φ a : ℝ) (hω : ω ≠ 0)
-    (hk : 0 < rwaRate (ω₀ - ω) Ω 0 0) (t : ℝ) :
-    HasDerivAt (longitudinalExactPropagator ω₀ ω Ω φ a)
-      (((-Complex.I) • interactionHamiltonian ω₀ ω Ω φ a 0 0 0 t)
-        * longitudinalExactPropagator ω₀ ω Ω φ a t) t := by
-  have hg := (commutingDrivePhase_hasDerivAt ω Ω φ a hω t).ofReal_comp
-  have hph := (hg.const_mul (-Complex.I)).cexp
-  have hP := rwaPropagator_ode ω₀ ω Ω φ 0 0 hk t
-  have hprod := hph.smul hP
+/-- For a purely diagonal drive the counter-rotating remainder is `Ω·cos(ωt+φ)·(a·1 + d·σ_z)`. -/
+theorem counterRotating_diagonal (ω Ω φ a d t : ℝ) :
+    counterRotating ω Ω φ a 0 0 d t
+      = ((Ω * Real.cos (ω * t + φ) : ℝ) : ℂ)
+        • ((a : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) + (d : ℂ) • σ_z) := by
+  unfold counterRotating
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [σ_x, σ_y, σ_z, Complex.ext_iff] <;> constructor <;> ring
+
+/-- The accumulated `σ_z` rotation angle of the exact dynamics: the co-rotating part `(Δ/2)·t` plus
+the counter-rotating `σ_z` contribution `(Ωd/ω)(sin(ωt+φ) − sin φ)`. The second term is the
+observable error the RWA discards. -/
+noncomputable def longitudinalExactAngle (ω₀ ω Ω φ d : ℝ) (t : ℝ) : ℝ :=
+  (ω₀ - ω) / 2 * t + commutingDrivePhase ω Ω φ d t
+
+/-- A `σ_z` rotation by angle `θ`, i.e. `exp(−i·θ·σ_z)`. -/
+noncomputable def zRotation (θ : ℝ) : Matrix (Fin 2) (Fin 2) ℂ :=
+  ((Real.cos θ : ℝ) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ)
+    - (Complex.I * ((Real.sin θ : ℝ) : ℂ)) • σ_z
+
+/-- **The exact propagator for a diagonal drive at detuning**, in closed form: a global phase from
+the identity component times a `σ_z` rotation whose angle carries the counter-rotating correction. -/
+noncomputable def diagonalExactPropagator (ω₀ ω Ω φ a d : ℝ) (t : ℝ) :
+    Matrix (Fin 2) (Fin 2) ℂ :=
+  Complex.exp (-Complex.I * (commutingDrivePhase ω Ω φ a t : ℂ))
+    • zRotation (longitudinalExactAngle ω₀ ω Ω φ d t)
+
+@[simp] theorem zRotation_zero : zRotation 0 = 1 := by
+  unfold zRotation; norm_num
+
+@[simp] theorem diagonalExactPropagator_zero (ω₀ ω Ω φ a d : ℝ) :
+    diagonalExactPropagator ω₀ ω Ω φ a d 0 = 1 := by
+  unfold diagonalExactPropagator longitudinalExactAngle commutingDrivePhase
+  norm_num
+
+theorem longitudinalExactAngle_hasDerivAt (ω₀ ω Ω φ d : ℝ) (hω : ω ≠ 0) (t : ℝ) :
+    HasDerivAt (longitudinalExactAngle ω₀ ω Ω φ d)
+      ((ω₀ - ω) / 2 + Ω * d * Real.cos (ω * t + φ)) t := by
+  have h1 : HasDerivAt (fun s : ℝ => (ω₀ - ω) / 2 * s) ((ω₀ - ω) / 2) t := by
+    simpa using (hasDerivAt_id t).const_mul ((ω₀ - ω) / 2)
+  exact h1.add (commutingDrivePhase_hasDerivAt ω Ω φ d hω t)
+
+theorem zRotation_hasDerivAt (θ : ℝ → ℝ) (θ' : ℝ) (t : ℝ) (hθ : HasDerivAt θ θ' t) :
+    HasDerivAt (fun s => zRotation (θ s))
+      (((-Complex.I) * ((θ' : ℝ) : ℂ)) • (σ_z * zRotation (θ t))) t := by
+  have hc : HasDerivAt (fun s : ℝ => Real.cos (θ s)) (-Real.sin (θ t) * θ') t :=
+    (Real.hasDerivAt_cos (θ t)).comp t hθ
+  have hs : HasDerivAt (fun s : ℝ => Real.sin (θ s)) (Real.cos (θ t) * θ') t :=
+    (Real.hasDerivAt_sin (θ t)).comp t hθ
+  have h1 := hc.ofReal_comp.smul_const (1 : Matrix (Fin 2) (Fin 2) ℂ)
+  have h2 := (hs.ofReal_comp.const_mul Complex.I).smul_const σ_z
   have hval :
-      Complex.exp (-Complex.I * ((commutingDrivePhase ω Ω φ a t : ℝ) : ℂ))
-          • ((-Complex.I) • (rwaGenerator ω₀ ω Ω φ 0 0 * rwaPropagator ω₀ ω Ω φ 0 0 t))
-        + (Complex.exp (-Complex.I * ((commutingDrivePhase ω Ω φ a t : ℝ) : ℂ))
-            * (-Complex.I * ((Ω * a * Real.cos (ω * t + φ) : ℝ) : ℂ)))
-          • rwaPropagator ω₀ ω Ω φ 0 0 t
-      = ((-Complex.I) • interactionHamiltonian ω₀ ω Ω φ a 0 0 0 t)
-        * longitudinalExactPropagator ω₀ ω Ω φ a t := by
-    have hcr : counterRotating ω Ω φ a 0 0 0 t
-        = ((Ω * a * Real.cos (ω * t + φ) : ℝ) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
-      unfold counterRotating
+      ((-Real.sin (θ t) * θ' : ℝ) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ)
+        - (Complex.I * ((Real.cos (θ t) * θ' : ℝ) : ℂ)) • σ_z
+      = ((-Complex.I) * ((θ' : ℝ) : ℂ)) • (σ_z * zRotation (θ t)) := by
+    unfold zRotation
+    have hzz : σ_z * σ_z = (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
       ext i j
       fin_cases i <;> fin_cases j <;>
-        simp [σ_x, σ_y, σ_z, Complex.ext_iff] <;> constructor <;> ring
-    unfold longitudinalExactPropagator
-    simp only [interactionHamiltonian_decomp, hcr, smul_add, add_mul, Matrix.smul_mul,
+        simp [σ_z, Matrix.mul_apply, Fin.sum_univ_two]
+    simp only [Matrix.mul_sub, Matrix.mul_smul, Matrix.mul_one, hzz, smul_sub, smul_smul]
+    push_cast
+    match_scalars <;> (ring_nf; try simp [Complex.I_sq])
+  rw [← hval]
+  exact h1.sub h2
+
+/-- **The closed form solves the EXACT equation**, counter-rotating term included. -/
+theorem diagonalExactPropagator_ode (ω₀ ω Ω φ a d : ℝ) (hω : ω ≠ 0) (t : ℝ) :
+    HasDerivAt (diagonalExactPropagator ω₀ ω Ω φ a d)
+      (((-Complex.I) • interactionHamiltonian ω₀ ω Ω φ a 0 0 d t)
+        * diagonalExactPropagator ω₀ ω Ω φ a d t) t := by
+  have hg := (commutingDrivePhase_hasDerivAt ω Ω φ a hω t).ofReal_comp
+  have hph := (hg.const_mul (-Complex.I)).cexp
+  have hz := zRotation_hasDerivAt (longitudinalExactAngle ω₀ ω Ω φ d)
+    ((ω₀ - ω) / 2 + Ω * d * Real.cos (ω * t + φ)) t
+    (longitudinalExactAngle_hasDerivAt ω₀ ω Ω φ d hω t)
+  have hprod := hph.smul hz
+  have hcr := counterRotating_diagonal ω Ω φ a d t
+  have hrwa : rwaGenerator ω₀ ω Ω φ 0 0 = (((ω₀ - ω) / 2 : ℝ) : ℂ) • σ_z := by
+    unfold rwaGenerator
+    ext i j
+    fin_cases i <;> fin_cases j <;> simp [σ_x, σ_y, σ_z]
+  have hval :
+      Complex.exp (-Complex.I * ((commutingDrivePhase ω Ω φ a t : ℝ) : ℂ))
+          • (((-Complex.I) * (((ω₀ - ω) / 2 + Ω * d * Real.cos (ω * t + φ) : ℝ) : ℂ))
+            • (σ_z * zRotation (longitudinalExactAngle ω₀ ω Ω φ d t)))
+        + (Complex.exp (-Complex.I * ((commutingDrivePhase ω Ω φ a t : ℝ) : ℂ))
+            * (-Complex.I * ((Ω * a * Real.cos (ω * t + φ) : ℝ) : ℂ)))
+          • zRotation (longitudinalExactAngle ω₀ ω Ω φ d t)
+      = ((-Complex.I) • interactionHamiltonian ω₀ ω Ω φ a 0 0 d t)
+        * diagonalExactPropagator ω₀ ω Ω φ a d t := by
+    unfold diagonalExactPropagator
+    simp only [interactionHamiltonian_decomp, hcr, hrwa, smul_add, add_mul, Matrix.smul_mul,
       Matrix.mul_smul, Matrix.one_mul, smul_smul]
+    push_cast
+    module
   rw [← hval]
   exact hprod
 
+/-- A `σ_z` rotation is unitary in the `ℓ^∞` operator norm: it is diagonal with unimodular
+entries, so every row sums to `1`. -/
+theorem norm_zRotation (θ : ℝ) : ‖zRotation θ‖ = 1 := by
+  have hplus : ‖Complex.cos (θ : ℂ) + Complex.I * Complex.sin (θ : ℂ)‖ = 1 := by
+    rw [show Complex.cos (θ : ℂ) + Complex.I * Complex.sin (θ : ℂ)
+        = Complex.exp ((θ : ℂ) * Complex.I) by rw [Complex.exp_mul_I]; ring]
+    simp [Complex.norm_exp]
+  have hminus : ‖Complex.cos (θ : ℂ) - Complex.I * Complex.sin (θ : ℂ)‖ = 1 := by
+    rw [show Complex.cos (θ : ℂ) - Complex.I * Complex.sin (θ : ℂ)
+        = Complex.exp ((-θ : ℝ) * Complex.I) by
+      push_cast; rw [Complex.exp_mul_I, Complex.cos_neg, Complex.sin_neg]; ring]
+    simp [Complex.norm_exp]
+  rw [zRotation, Matrix.linfty_opNorm_def,
+    show (Finset.univ : Finset (Fin 2)) = {0, 1} from rfl, Finset.sup_insert,
+    Finset.sup_singleton]
+  simp [σ_z, Matrix.one_apply, hplus, hminus]
 
-/-- **THE NONDEGENERATE INHABITATION.** Every precondition of
-`rwa_propagator_difference_bound_physical` is met at a drive whose co-rotating generator is
-NONZERO and whose counter-rotating remainder is NONZERO — unlike §4.2's identity-drive witness,
-where the generator vanishes and the whole bounded difference is unobservable global phase.
+/-- For a purely diagonal drive the co-rotating propagator IS a `σ_z` rotation by `(Δ/2)·t`. -/
+theorem rwaPropagator_diagonal (ω₀ ω Ω φ t : ℝ) (hdet : ω₀ ≠ ω) :
+    rwaPropagator ω₀ ω Ω φ 0 0 t = zRotation ((ω₀ - ω) / 2 * t) := by
+  have hk : rwaRate (ω₀ - ω) Ω 0 0 = |ω₀ - ω| / 2 := rwaRate_longitudinal _ _
+  have hne : |ω₀ - ω| ≠ 0 := abs_ne_zero.mpr (sub_ne_zero.mpr hdet)
+  have hΔC : ((ω₀ : ℂ) - (ω : ℂ)) ≠ 0 := by
+    intro h
+    exact hdet (by exact_mod_cast sub_eq_zero.mp h)
+  have hgen : rwaGenerator ω₀ ω Ω φ 0 0 = (((ω₀ - ω) / 2 : ℝ) : ℂ) • σ_z := by
+    unfold rwaGenerator
+    ext i j
+    fin_cases i <;> fin_cases j <;> simp [σ_x, σ_y, σ_z]
+  have hangle : generalRotationAngle (ω₀ - ω) Ω 0 0 t = |ω₀ - ω| / 2 * t := by
+    rw [generalRotationAngle_eq_rate_mul, hk]
+  unfold rwaPropagator zRotation
+  rw [hangle, hk, hgen, smul_smul]
+  rcases abs_cases (ω₀ - ω) with ⟨habs, hsgn⟩ | ⟨habs, hsgn⟩
+  · rw [habs]
+    congr 2
+    push_cast
+    field_simp
+  · rw [habs, show -(ω₀ - ω) / 2 * t = -((ω₀ - ω) / 2 * t) by ring,
+      Real.cos_neg, Real.sin_neg]
+    congr 2
+    push_cast
+    field_simp
 
-This closes the gap between "the bound is stated over all solutions `U`" and "some `U` actually
-satisfies the hypotheses at a generator that genuinely rotates". -/
-theorem longitudinal_drive_nondegenerate_instantiation (ω₀ ω Ω φ a : ℝ)
-    (hω : ω ≠ 0) (hdet : ω₀ ≠ ω) (hΩ : Ω ≠ 0) (ha : a ≠ 0) (hφ : Real.cos φ ≠ 0) :
-    0 < rwaRate (ω₀ - ω) Ω 0 0
-      ∧ rwaGenerator ω₀ ω Ω φ 0 0 ≠ 0
-      ∧ counterRotating ω Ω φ a 0 0 0 0 ≠ 0
-      ∧ longitudinalExactPropagator ω₀ ω Ω φ a 0 = 1
-      ∧ ∀ t, HasDerivAt (longitudinalExactPropagator ω₀ ω Ω φ a)
-          (((-Complex.I) • interactionHamiltonian ω₀ ω Ω φ a 0 0 0 t)
-            * longitudinalExactPropagator ω₀ ω Ω φ a t) t := by
+theorem norm_rwaPropagator_diagonal (ω₀ ω Ω φ t : ℝ) (hdet : ω₀ ≠ ω) :
+    ‖rwaPropagator ω₀ ω Ω φ 0 0 t‖ = 1 := by
+  rw [rwaPropagator_diagonal ω₀ ω Ω φ t hdet, norm_zRotation]
+
+theorem norm_diagonalExactPropagator (ω₀ ω Ω φ a d t : ℝ) :
+    ‖diagonalExactPropagator ω₀ ω Ω φ a d t‖ = 1 := by
+  unfold diagonalExactPropagator
+  rw [norm_smul, norm_zRotation, Complex.norm_exp]
+  simp
+
+/-- **THE BOUND, APPLIED.** The Bloch–Siegert propagator bound instantiated at the observably
+nondegenerate diagonal drive: `U_exact` is the closed-form solution of the EXACT equation, `U_rwa`
+is the co-rotating propagator, and every constant is discharged — all three propagator norms are
+exactly `1` (diagonal unitaries), `Kp` is the generator norm, and `Kq` comes from
+`interactionHamiltonian_decomp` plus `norm_counterRotating_le`.
+
+This is what `rwa_propagator_difference_bound_physical` is *for*; before this it had no call site,
+and the claim that its preconditions were met at a nondegenerate drive was prose. -/
+theorem diagonal_drive_propagator_bound (ω₀ ω Ω φ a d T Kq : ℝ)
+    (hω : 0 < ω) (hΩ : 0 ≤ Ω) (hT : 0 ≤ T) (hdet : ω₀ ≠ ω)
+    (hQb : ∀ s, ‖(-Complex.I) • interactionHamiltonian ω₀ ω Ω φ a 0 0 d s‖ ≤ Kq) :
+    ‖diagonalExactPropagator ω₀ ω Ω φ a d T - rwaPropagator ω₀ ω Ω φ 0 0 T‖
+      ≤ 1 * (1 * 1 * (2 * (Ω / ω) * (|a| + |0| + |0| + |d|))
+        * (1 + T * (‖Complex.I • rwaGenerator ω₀ ω Ω φ 0 0‖ + Kq))) := by
   have hk : 0 < rwaRate (ω₀ - ω) Ω 0 0 := by
     rw [rwaRate_longitudinal]
     have : (0:ℝ) < |ω₀ - ω| := abs_pos.mpr (sub_ne_zero.mpr hdet)
     linarith
-  refine ⟨hk, rwaGenerator_longitudinal_ne_zero ω₀ ω Ω φ hdet, ?_,
-    longitudinalExactPropagator_zero ω₀ ω Ω φ a,
-    fun t => longitudinalExactPropagator_ode ω₀ ω Ω φ a hω hk t⟩
-  intro hz
-  have h0 := congrFun (congrFun hz 0) 0
-  unfold counterRotating at h0
-  simp [σ_x, σ_y, σ_z, Complex.ext_iff, -Complex.ofReal_cos, -Complex.ofReal_sin] at h0
-  rcases h0 with (h | h) | h
-  · exact hΩ h
-  · exact hφ (by simpa using h)
-  · exact ha h
+  refine rwa_propagator_difference_bound_physical ω₀ ω Ω φ a 0 0 d T 1 1 1
+    ‖Complex.I • rwaGenerator ω₀ ω Ω φ 0 0‖ Kq hω hΩ hT hk
+    (diagonalExactPropagator ω₀ ω Ω φ a d)
+    (fun s => diagonalExactPropagator_ode ω₀ ω Ω φ a d hω.ne' s)
+    (diagonalExactPropagator_zero ω₀ ω Ω φ a d) ?_
+    (fun s => (norm_rwaPropagator_diagonal ω₀ ω Ω φ (-s) hdet).le)
+    (fun s => (norm_diagonalExactPropagator ω₀ ω Ω φ a d s).le)
+    le_rfl hQb (norm_rwaPropagator_diagonal ω₀ ω Ω φ T hdet).le
+  · unfold diagonalExactPropagator zRotation longitudinalExactAngle commutingDrivePhase
+    fun_prop
+
+/-- **The nondegeneracy conditions, collected.** At nonzero detuning with a `σ_z` drive component,
+all four hold at once, and an exact solution exists in closed form:
+
+* the co-rotating generator is nonzero (so `U_rwa` genuinely rotates);
+* the drive operator is **not** a multiple of the identity (so the drive is not a global phase);
+* the counter-rotating remainder is nonzero as a FUNCTION;
+* and the RWA error is **observable** — `d` shifts the accumulated `σ_z` rotation angle, so the two
+  propagators differ by a relative rotation rather than a phase (`longitudinalExactAngle` versus the
+  co-rotating `(Δ/2)·t`).
+
+Contrast `rwa_propagator_difference_bound_inhabited`, whose difference is pure global phase.
+
+⚠️ This theorem collects the *nondegeneracy facts*; it does **not** itself apply the bound (and its
+binders `ω ≠ 0`, `Ω ≠ 0` are deliberately weaker than the bound's `0 < ω`, `0 ≤ Ω`). The bound is
+actually applied in `diagonal_drive_propagator_bound` above, which discharges every constant. An
+earlier version of this docstring claimed "every precondition of
+`rwa_propagator_difference_bound_physical` is met" while calling nothing — corrected 2026-07-30. -/
+theorem diagonal_drive_nondegenerate_instantiation (ω₀ ω Ω φ a d : ℝ)
+    (hω : ω ≠ 0) (hdet : ω₀ ≠ ω) (hΩ : Ω ≠ 0) (hd : d ≠ 0) :
+    0 < rwaRate (ω₀ - ω) Ω 0 0
+      ∧ rwaGenerator ω₀ ω Ω φ 0 0 ≠ 0
+      ∧ driveOp a 0 0 d ≠ (a : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ)
+      ∧ counterRotating ω Ω φ a 0 0 d ≠ 0
+      ∧ diagonalExactPropagator ω₀ ω Ω φ a d 0 = 1
+      ∧ ∀ t, HasDerivAt (diagonalExactPropagator ω₀ ω Ω φ a d)
+          (((-Complex.I) • interactionHamiltonian ω₀ ω Ω φ a 0 0 d t)
+            * diagonalExactPropagator ω₀ ω Ω φ a d t) t := by
+  have hk : 0 < rwaRate (ω₀ - ω) Ω 0 0 := by
+    rw [rwaRate_longitudinal]
+    have : (0:ℝ) < |ω₀ - ω| := abs_pos.mpr (sub_ne_zero.mpr hdet)
+    linarith
+  refine ⟨hk, rwaGenerator_longitudinal_ne_zero ω₀ ω Ω φ hdet, ?_, ?_,
+    diagonalExactPropagator_zero ω₀ ω Ω φ a d,
+    fun t => diagonalExactPropagator_ode ω₀ ω Ω φ a d hω t⟩
+  · intro hz
+    have h := congrFun (congrFun hz 1) 1
+    unfold driveOp at h
+    simp [σ_x, σ_y, σ_z, Complex.ext_iff] at h
+    exact hd h
+  · -- function-level: evaluate at `t = −φ/ω`, where `cos(ωt+φ) = 1`. No hypothesis on `φ`.
+    intro hz
+    have hpt := congrFun hz (-φ / ω)
+    rw [counterRotating_diagonal] at hpt
+    have hcos : ω * (-φ / ω) + φ = 0 := by field_simp; ring
+    rw [hcos, Real.cos_zero, mul_one] at hpt
+    simp only [Pi.zero_apply] at hpt
+    rcases smul_eq_zero.mp hpt with h | h
+    · exact hΩ (by exact_mod_cast h)
+    · have h00 := congrFun (congrFun h 0) 0
+      have h11 := congrFun (congrFun h 1) 1
+      simp [σ_z, Complex.ext_iff] at h00 h11
+      exact hd (by linarith [h00, h11])
+
 
 end
 
