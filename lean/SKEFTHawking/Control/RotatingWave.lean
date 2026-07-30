@@ -29,6 +29,7 @@ References:
 
 import Mathlib
 import SKEFTHawking.PauliMatrices
+import SKEFTHawking.Control.BanachAveraging
 
 set_option autoImplicit false
 
@@ -472,6 +473,33 @@ theorem rwaRotationAngle_eq_projected (Ω b c T : ℝ) :
     rwaRotationAngle Ω b c T = (‖projectedDriveElement b c‖ / 2) * Ω * T := by
   unfold rwaRotationAngle
   simp [Complex.norm_def, projectedDriveElement_normSq]
+
+/-! ## 6. The conjugated integrated remainder, at propagator level
+
+The abstract averaging bound instantiated at `Matrix (Fin 2) (Fin 2) ℂ`, with the counter-rotating
+term as the driving generator and `bsAntiderivative` as its antiderivative. The hypotheses `hL`,
+`hU` are propagator ODEs (`L' = L·P`, `U' = Q·U`), so this is a statement about propagators, not
+about an isolated integral.
+
+SCOPE — what this is and is NOT. It bounds `‖∫₀ᵀ L·V·U‖`, the CONJUGATED integrated remainder.
+Two links still separate that from the literal `‖U_exact(T) − U_rwa(T)‖`: the discrepancy identity
+`Vrwa(T)·Uex(T) − 1 = −i∫₀ᵀ Vrwa·V·Uex`, and the unitarity transfer
+`‖Uex − Urwa‖ = ‖Vrwa·Uex − 1‖`. Both are owed; neither is assumed here. -/
+theorem norm_integral_counterRotating_conjugated_le
+    {L U P Q : ℝ → Matrix (Fin 2) (Fin 2) ℂ} {B Kp Kq T ω Ω φ a b c d : ℝ}
+    (hS : ∀ s, HasDerivAt (bsAntiderivative ω Ω φ a b c d)
+      (counterRotating ω Ω φ a b c d s) s)
+    (hL : ∀ s, HasDerivAt L (L s * P s) s) (hU : ∀ s, HasDerivAt U (Q s * U s) s)
+    (hSc : Continuous (bsAntiderivative ω Ω φ a b c d))
+    (hLc : Continuous L) (hUc : Continuous U) (hPc : Continuous P) (hQc : Continuous Q)
+    (hS0 : bsAntiderivative ω Ω φ a b c d 0 = 0)
+    (hLb : ∀ s, ‖L s‖ ≤ 1) (hUb : ∀ s, ‖U s‖ ≤ 1)
+    (hSb : ∀ s, ‖bsAntiderivative ω Ω φ a b c d s‖ ≤ B)
+    (hPb : ∀ s, ‖P s‖ ≤ Kp) (hQb : ∀ s, ‖Q s‖ ≤ Kq) (hB : 0 ≤ B) (hT : 0 ≤ T) :
+    ‖∫ s in (0 : ℝ)..T, L s * counterRotating ω Ω φ a b c d s * U s‖
+      ≤ B * (1 + T * (Kp + Kq)) :=
+  norm_integral_mul_mul_le hS hL hU hSc hLc hUc hPc hQc
+    (continuous_counterRotating ω Ω φ a b c d) hS0 hLb hUb hSb hPb hQb hB hT
 
 end
 
