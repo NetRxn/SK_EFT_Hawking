@@ -47,12 +47,12 @@ using that argument to decline an AC item. Having it both ways was the defect. T
 **discharged**: `norm_exp_mul_I_sub_one_sub_id_le` proves `‖e^{ix} − 1 − ix‖ ≤ x²` for every real
 `x` (mean-value inequality on `F(t) = e^{it} − 1 − it`, whose derivative has norm
 `2|sin(t/2)| ≤ |t|`), so `structureFactor_linear_expansion_global` carries **no ball at all**. The
-ball-shaped `structureFactor_linear_expansion` is retained as a corollary that discards its
-hypotheses.
+ball-shaped corollary that discarded its own hypotheses was deleted on 2026-07-29: it had no
+consumers anywhere in the repo, and the global form is strictly stronger.
 
 Consequently the AC's "witness that the bound fails outside the ball" is genuinely unsatisfiable —
-there is no outside. The non-vacuity content that replaces it is now stated *where the theorem
-applies*: `dispersion_linear_not_exact_in_ball` exhibits `q = (1,1)`, **inside** `|qᵢ| ≤ 1`, with
+there is no outside. The non-vacuity content that replaces it is stated at cone scale:
+`dispersion_linear_not_exact_in_ball` exhibits `q = (1,1)`, with
 `‖f(K+q)‖ = 2sin(1/2) ≠ 1 = ‖L(q)‖`. (`dispersion_linear_not_exact`, at `|qᵢ| ≈ 2.09`, is kept as
 the companion witness for the global form; on its own it said nothing about the ball.)
 
@@ -130,9 +130,9 @@ theorem norm_exp_mul_I_sub_one_le (t : ℝ) :
 
 /-- **The Taylor bound, globally.** `‖e^{ix} − 1 − ix‖ ≤ x²` for every real `x` — no validity ball.
 
-The file previously argued in prose that the ball in `structureFactor_linear_expansion` was an
-artifact of the Mathlib lemma rather than of the mathematics, and used that argument to decline an
-AC item. This theorem is that argument, discharged. -/
+The file previously argued in prose that the `‖z‖ ≤ 1` ball inherited from Mathlib's
+`Complex.norm_exp_sub_one_sub_id_le` was an artifact of that lemma rather than of the mathematics,
+and used that argument to decline an AC item. This theorem is that argument, discharged. -/
 theorem norm_exp_mul_I_sub_one_sub_id_le (x : ℝ) :
     ‖Complex.exp ((x : ℝ) * Complex.I) - 1 - (x : ℝ) * Complex.I‖ ≤ x ^ 2 := by
   have hderiv : ∀ t : ℝ,
@@ -235,33 +235,21 @@ theorem structureFactor_linear_expansion_global {q : ℝ × ℝ} :
           one_mul, one_mul]
     _ ≤ q.1 ^ 2 + q.2 ^ 2 := add_le_add (hb q.1) (hb q.2)
 
-/-- **Linear dispersion at the Dirac point, ball-shaped form.**
+/-- **The remainder term is genuinely needed, at cone scale.**
 
-    | ‖f(K + q)‖ − √(q₁² − q₁q₂ + q₂²) |  ≤  q₁² + q₂²    for  |q₁| ≤ 1, |q₂| ≤ 1.
-
-Retained under this signature for consumers written against the wave's original ball-shaped
-statement. **The ball is not needed** — the hypotheses are discarded and the result is
-`structureFactor_linear_expansion_global`. Prefer the global form in new code. -/
-theorem structureFactor_linear_expansion {q : ℝ × ℝ}
-    (_h1 : |q.1| ≤ 1) (_h2 : |q.2| ≤ 1) :
-    |‖structureFactor (diracK.1 + q.1, diracK.2 + q.2)‖ - ‖linearForm q‖|
-      ≤ q.1 ^ 2 + q.2 ^ 2 :=
-  structureFactor_linear_expansion_global
-
-/-- **The remainder term is genuinely needed, *inside* the stated ball.**
-
-At `q = (1, 1)` — which satisfies `|q₁| ≤ 1 ∧ |q₂| ≤ 1`, so it is a point where the ball-shaped
-`structureFactor_linear_expansion` actually applies — the two sides differ:
+At `q = (1, 1)` the two sides of `structureFactor_linear_expansion_global` differ:
 
     f(K + (1,1)) = (ω + ω²)(e^{i} − 1) = −(e^{i} − 1),   so ‖f‖ = 2 sin(1/2) ≈ 0.959,
 
 while `‖L(1,1)‖ = √(1 − 1 + 1) = 1`. So the expansion is a genuine inequality, not a disguised
-equality, **where it is stated**.
+equality.
 
-This supersedes the global `dispersion_linear_not_exact` witness as the wave's non-vacuity content:
-that one sits at `|qᵢ| ≈ 2.09`, outside the ball, and therefore said nothing about the region the
-theorem it de-trivializes covers. Both are kept — this one for the ball form, that one for the
-global form. -/
+Kept alongside `dispersion_linear_not_exact` because the two witness strictness at physically
+**different scales**: this one at `|qᵢ| = 1`, inside the cone region where the expansion is
+actually used, and that one at the `K → K'` offset `|qᵢ| = 2π/3 ≈ 2.09`, where the true structure
+factor vanishes outright. Neither subsumes the other. *(Until 2026-07-29 the distinction was
+stated as "one for the ball form, one for the global form"; the ball-shaped forwarder has since
+been deleted, so the honest distinction is the scale.)* -/
 theorem dispersion_linear_not_exact_in_ball :
     ‖structureFactor (diracK.1 + (1 : ℝ), diracK.2 + (1 : ℝ))‖ ≠ ‖linearForm ((1 : ℝ), (1 : ℝ))‖ := by
   have hsum : Complex.exp ((diracK.1 : ℝ) * Complex.I)
@@ -301,10 +289,9 @@ At the offset carrying `K` to the *other* Dirac point `K'` — `q = (2π/3, −2
 structure factor **vanishes** (it is a Dirac point, Wave 1) while the linear form does not:
 `‖L(q)‖ = √(4π²/3) > 0`.
 
-Note this offset has `|qᵢ| = 2π/3 ≈ 2.09`, i.e. it lies **outside** the ball of
-`structureFactor_linear_expansion`; it de-trivializes
-`structureFactor_linear_expansion_global`, not the ball form. The in-ball companion is
-`dispersion_linear_not_exact_in_ball`. -/
+This offset sits at `|qᵢ| = 2π/3 ≈ 2.09`, well beyond cone scale; the companion witness
+`dispersion_linear_not_exact_in_ball` de-trivializes the same global theorem at `|qᵢ| = 1`, inside
+the region where the expansion is actually used. -/
 theorem dispersion_linear_not_exact :
     ‖structureFactor (diracK.1 + 2 * π / 3, diracK.2 + (-(2 * π / 3)))‖
       ≠ ‖linearForm (2 * π / 3, -(2 * π / 3))‖ := by
@@ -573,14 +560,6 @@ theorem gapped_gap_eq_dirac_iff (θ : ℝ × ℝ) (m : ℝ) :
       Real.sq_sqrt (sq_nonneg m)] at this
     exact Complex.normSq_eq_zero.mp (by linarith)
   · intro h; rw [h]; simp
-
-/-- **The gap is strictly monotone in the mass at the Dirac point** — the specialization of
-`gapped_gap_strictMono_in_mass` to `θ = K`, where it reduces to `2|m| < 2|m'|`. Retained for
-consumers; the general-`θ` form carries the content. -/
-theorem gap_vs_mass_strictMono {m m' : ℝ} (h : |m| < |m'|) :
-    2 * Real.sqrt (dNormSq (gappedHoneycombD diracK m))
-      < 2 * Real.sqrt (dNormSq (gappedHoneycombD diracK m')) :=
-  gapped_gap_strictMono_in_mass diracK h
 
 /-- **The mass hypothesis is load-bearing:** at `m = 0` the gap closes at `K`, recovering Wave 1's
 gapless cone. The specialization of `gapped_gapless_iff` to `θ = K`, where the `f θ = 0` conjunct

@@ -63,7 +63,7 @@ Only then are the correction identity and its magnitude/monotonicity corollaries
 * **Derivation** — the bullets above.
 * **The correction** — `responsivity_etf_correction` (whose *only* hypothesis is `1 + ℒ ≠ 0`),
   magnitude and monotonicity corollaries.
-* **NEP transfer (6EB seam)** — `nep_bare_understates_by_one_plus_loopGain` (the factor) and
+* **NEP transfer (6EB seam)** — `nep_bare_eq_nep_etf_div_abs_one_plus_loopGain` (the factor) and
   `nep_bare_lt_nep_etf_of_loopGain_pos` (the direction, pinned under its own hypothesis), with a
   rational witness quantifying the budget error at a stated `ℒ`.
 * **Frequency rolloff** — the sinusoidal solution, its attractor status, its attained envelope,
@@ -341,10 +341,14 @@ branch.** For `ℒ > 0` and a live signal path (`dI/dT ≠ 0`), the magnitudes a
     |R_etf| < |R_bare|.
 
 This is the sensitivity overclaim the wave exists to quantify: a budget written with the bare
-responsivity credits the device with more amps per watt than the biased device delivers. -/
-theorem abs_responsivityETF_lt_abs_responsivityBare (m : ETFModel) (hGne : m.G ≠ 0)
+responsivity credits the device with more amps per watt than the biased device delivers.
+
+`G ≠ 0` is **not** carried: `0 < ℒ` already forces it, since `loopGain_of_G_eq_zero` sends `ℒ` to
+`0` at `G = 0`. The binder is derived in the first line rather than demanded of the caller. -/
+theorem abs_responsivityETF_lt_abs_responsivityBare (m : ETFModel)
     (hL : 0 < m.loopGain) (hslope : m.currentTempSlope ≠ 0) :
     |m.responsivityETF| < |m.responsivityBare| := by
+  have hGne : m.G ≠ 0 := fun h => absurd (loopGain_of_G_eq_zero m h) (ne_of_gt hL)
   have hRetf : m.responsivityETF ≠ 0 :=
     m.responsivityETF_ne_zero hGne (by intro h; linarith [h]) hslope
   rw [responsivity_etf_correction m (by intro h; linarith [h]), abs_mul,
@@ -359,10 +363,13 @@ negative, so `responsivityBare` and `responsivityETF` disagree in *direction*, n
 This is why the correction may never be applied as an absolute value: `|R_bare| = |1+ℒ|·|R_etf|`
 is true but throws away the fact that an unstable bias point inverts the sense of the response.
 The magnitude-only reading is refuted in
-`responsivity_magnitudeOnly_loses_stability_information`. -/
-theorem responsivity_opposite_sign_of_unstable (m : ETFModel) (hGne : m.G ≠ 0)
+`responsivity_magnitudeOnly_loses_stability_information`.
+
+`G ≠ 0` is **not** carried: `ℒ < −1` already forces it (`loopGain_of_G_eq_zero`). -/
+theorem responsivity_opposite_sign_of_unstable (m : ETFModel)
     (hL : m.loopGain < -1) (hslope : m.currentTempSlope ≠ 0) :
     m.responsivityBare * m.responsivityETF < 0 := by
+  have hGne : m.G ≠ 0 := fun h => by rw [loopGain_of_G_eq_zero m h] at hL; norm_num at hL
   have hneg : 1 + m.loopGain < 0 := by linarith
   have hRetf : m.responsivityETF ≠ 0 :=
     m.responsivityETF_ne_zero hGne (by intro h; linarith [h]) hslope
@@ -408,7 +415,7 @@ narrative was wrong-worded for `1 + ℒ < 0`; corrected 2026-07-29 after adversa
 
 This **calls** `Detection.nepOfOutput`, so the seam with 6EB is a computation rather than a
 docstring reference. -/
-theorem nep_bare_understates_by_one_plus_loopGain (m : ETFModel)
+theorem nep_bare_eq_nep_etf_div_abs_one_plus_loopGain (m : ETFModel)
     (hL : 1 + m.loopGain ≠ 0) (sigma enbwVal : ℝ) :
     nepOfOutput sigma |m.responsivityBare| enbwVal
       = nepOfOutput sigma |m.responsivityETF| enbwVal / |1 + m.loopGain| := by
@@ -435,17 +442,20 @@ achieve. It consumes `abs_responsivityETF_lt_abs_responsivityBare`, so the direc
 from the responsivity ordering rather than from a re-derivation.
 
 `0 < ℒ` is load-bearing for the direction (not merely for the proof): at `−2 < ℒ < 0` the factor
-`|1 + ℒ| < 1` and the inequality **reverses**. -/
-theorem nep_bare_lt_nep_etf_of_loopGain_pos (m : ETFModel) (hGne : m.G ≠ 0)
+`|1 + ℒ| < 1` and the inequality **reverses**.
+
+`G ≠ 0` is **not** carried: `0 < ℒ` already forces it (`loopGain_of_G_eq_zero`). -/
+theorem nep_bare_lt_nep_etf_of_loopGain_pos (m : ETFModel)
     (hL : 0 < m.loopGain) (hslope : m.currentTempSlope ≠ 0)
     {sigma enbwVal : ℝ} (hσ : 0 < sigma) (henbw : 0 < enbwVal) :
     nepOfOutput sigma |m.responsivityBare| enbwVal
       < nepOfOutput sigma |m.responsivityETF| enbwVal := by
+  have hGne : m.G ≠ 0 := fun h => absurd (loopGain_of_G_eq_zero m h) (ne_of_gt hL)
   have hRetf : m.responsivityETF ≠ 0 :=
     m.responsivityETF_ne_zero hGne (by intro h; linarith [h]) hslope
   have hpos : 0 < |m.responsivityETF| := abs_pos.mpr hRetf
   have hlt : |m.responsivityETF| < |m.responsivityBare| :=
-    m.abs_responsivityETF_lt_abs_responsivityBare hGne hL hslope
+    m.abs_responsivityETF_lt_abs_responsivityBare hL hslope
   have hs : 0 < Real.sqrt enbwVal := Real.sqrt_pos.mpr henbw
   unfold nepOfOutput
   exact div_lt_div_of_pos_left hσ (by positivity) (by nlinarith)
@@ -491,7 +501,7 @@ report `nepOfOutput 1 R_etf 1 = −4/3`, which is not a noise density. See the s
 theorem speedupWitness_nep_quarter (sigma enbwVal : ℝ) :
     nepOfOutput sigma |speedupWitness.responsivityBare| enbwVal
       = nepOfOutput sigma |speedupWitness.responsivityETF| enbwVal / 4 := by
-  have h := nep_bare_understates_by_one_plus_loopGain speedupWitness (by
+  have h := nep_bare_eq_nep_etf_div_abs_one_plus_loopGain speedupWitness (by
     rw [speedupWitness_loopGain]; norm_num) sigma enbwVal
   rw [h, speedupWitness_loopGain]
   norm_num
@@ -858,10 +868,15 @@ coincidence of junk values rather than as physics. The disclosure lives here, in
 that dropping the binder does not drop the information — the pattern Wave 1 uses for
 `loopGain_of_G_eq_zero`.
 
-Every *quantitative* statement in this file that reads physics into the responsivities
+Each of the three quantitative statements that read physics into the responsivities
 (`abs_responsivityETF_lt_abs_responsivityBare`, `responsivity_opposite_sign_of_unstable`,
-`nep_bare_lt_nep_etf_of_loopGain_pos`) therefore carries `G ≠ 0` explicitly, and each one is
-false at `G = 0`. -/
+`nep_bare_lt_nep_etf_of_loopGain_pos`) is indeed **false at `G = 0`** — but none of them carries
+`G ≠ 0` as a binder, because none of them needs to: each hypothesizes `0 < ℒ` or `ℒ < −1`, and
+`loopGain_of_G_eq_zero` makes either one *imply* `G ≠ 0`. They derive it in their first line. A
+`G ≠ 0` binder alongside `0 < ℒ` would be dead weight, not a guard.
+
+`responsivityETF_ne_zero` is the genuine exception and does carry it: its `1 + ℒ ≠ 0` is satisfied
+at `G = 0` (where `ℒ = 0`, so `1 + ℒ = 1`), so there `G ≠ 0` is real information. -/
 theorem responsivity_of_G_eq_zero (m : ETFModel) (h : m.G = 0) :
     m.responsivityBare = 0 ∧ m.responsivityETF = 0 := by
   refine ⟨?_, ?_⟩
@@ -889,8 +904,8 @@ theorem responsivity_magnitudeOnly_loses_stability_information :
   refine ⟨?_, ?_, ?_, ?_⟩
   · obtain ⟨hb, he⟩ := speedupWitness_responsivities
     rw [hb, he]; norm_num
-  · refine responsivity_opposite_sign_of_unstable unstableWitness (by
-      unfold unstableWitness; norm_num) (by rw [unstableWitness_loopGain]; norm_num) ?_
+  · refine responsivity_opposite_sign_of_unstable unstableWitness
+      (by rw [unstableWitness_loopGain]; norm_num) ?_
     unfold currentTempSlope unstableWitness
     norm_num
   · rw [responsivity_etf_correction speedupWitness

@@ -67,7 +67,7 @@ would double-refer it. The asymmetry is physics, not an oversight.
 The Johnson channel carries **two** distinct ETF effects — the ETF-corrected responsivity *and*
 the noise source's own thermal feedback `johnsonTransfer = (1−ℒ)/(1+ℒ)` — whose net effect is that
 an ETF-unaware budget understates this channel by `|1 − ℒ|`
-(`johnsonNEP_naive_understates_by_one_sub_loopGain`).
+(`johnsonNEP_eq_abs_one_sub_loopGain_mul_naive`).
 
 ## Roadmap UNKNOWN-2, resolved as pre-decided
 
@@ -256,7 +256,7 @@ in the wave whose entire subject is electrothermal feedback:
   `johnson_transfer_eq`.
 
 Their net effect against an ETF-unaware budget is a single factor `|1 − ℒ|`, quantified in
-`johnsonNEP_naive_understates_by_one_sub_loopGain`.
+`johnsonNEP_eq_abs_one_sub_loopGain_mul_naive`.
 
 The phonon channel needs no analogue: thermal-fluctuation noise enters the heat balance at exactly
 the point the signal does, so it is unchanged when input-referred. That asymmetry is the physics,
@@ -333,9 +333,18 @@ source. This is what a budget written without ETF awareness computes. -/
 noncomputable def johnsonNEPNaive (m : ETFModel) (kB T : ℝ) : ℝ :=
   nepOfPSD (m.johnsonCurrentPSD kB T) / |m.responsivityBare|
 
-/-- **The naive Johnson budget understates the true Johnson NEP by exactly `|1 − ℒ|`.**
+/-- **The two Johnson budgets differ by exactly the factor `|1 − ℒ|`.**
 
     NEP_J = |1 − ℒ| · NEP_J^naive
+
+**This is an equality, not a direction.** The naive budget understates the true one exactly when
+`|1 − ℒ| > 1` — i.e. for `ℒ > 2` or `ℒ < 0` — and *overstates* it otherwise. At `ℒ = 1` the
+electrothermal transfer vanishes outright and the true Johnson NEP is `0` while the naive budget
+is not (`johnsonNEP_naive_overstates_at_unit_loopGain`). The direction is therefore pinned by a
+separate biconditional, `johnsonNEPNaive_lt_johnsonNEP_iff`, under its own hypothesis, exactly as
+Wave 2 pins its own transfer with `nep_bare_lt_nep_etf_of_loopGain_pos`. *(This theorem was named
+`…_naive_understates_by_one_sub_loopGain` until 2026-07-29; the name asserted a direction the
+statement does not carry and which is false on `0 < ℒ < 2`.)*
 
 Two ETF effects partially cancel, and the surviving factor is `|1 − ℒ|`, **not** `|1 + ℒ|`:
 the bare responsivity overstates the response by `(1 + ℒ)`, which alone would understate NEP by
@@ -366,7 +375,7 @@ total-division `0` and the identity holds as a junk coincidence
 (`Electrothermal.ETFModel.responsivity_of_G_eq_zero`).
 
 Consumes `responsivity_etf_correction`, so this is a computation across the wave boundary. -/
-theorem johnsonNEP_naive_understates_by_one_sub_loopGain (m : ETFModel) (kB T : ℝ)
+theorem johnsonNEP_eq_abs_one_sub_loopGain_mul_naive (m : ETFModel) (kB T : ℝ)
     (hL : 1 + m.loopGain ≠ 0) :
     m.johnsonNEP kB T = |1 - m.loopGain| * m.johnsonNEPNaive kB T := by
   unfold johnsonNEP johnsonNEPNaive johnsonTransfer
@@ -374,30 +383,101 @@ theorem johnsonNEP_naive_understates_by_one_sub_loopGain (m : ETFModel) (kB T : 
   have hL' : |1 + m.loopGain| ≠ 0 := abs_ne_zero.mpr hL
   field_simp
 
+/-- **The direction of the Johnson-budget error, pinned — and its exact boundary.**
+
+The naive budget is strictly below the true one **iff** `|1 − ℒ| > 1`:
+
+    NEP_J^naive < NEP_J   ↔   1 < |1 − ℒ|.
+
+This is the Wave-3 analogue of Wave 2's `nep_bare_lt_nep_etf_of_loopGain_pos`, and it is stated as
+a biconditional rather than a one-way implication because the boundary is the falsifiable content:
+`|1 − ℒ| > 1` cuts the bias line into `ℒ < 0` and `ℒ > 2` (understated) versus `0 ≤ ℒ ≤ 2`
+(overstated, or exact at `ℒ ∈ {0, 2}`). A budget on the `0 < ℒ < 2` branch that "corrects" its
+Johnson channel upward has moved *away* from the truth.
+
+The positivity hypothesis is on the naive budget itself rather than on its ingredients, because
+that is precisely what the ordering needs and it keeps the statement free of `R`/`G`/`kB`/`T` sign
+bookkeeping. -/
+theorem johnsonNEPNaive_lt_johnsonNEP_iff (m : ETFModel) (kB T : ℝ)
+    (hL : 1 + m.loopGain ≠ 0) (hpos : 0 < m.johnsonNEPNaive kB T) :
+    m.johnsonNEPNaive kB T < m.johnsonNEP kB T ↔ 1 < |1 - m.loopGain| := by
+  rw [johnsonNEP_eq_abs_one_sub_loopGain_mul_naive m kB T hL]
+  exact lt_mul_iff_one_lt_left hpos
+
+/-- **At `ℒ = 1` the naive Johnson budget OVERSTATES — the falsifier for the old name.**
+
+At the bias point `C = G = R = V = dR/dT = 1` the loop gain is exactly `1`, so the electrothermal
+transfer `(1 − ℒ)/(1 + ℒ)` vanishes and the true Johnson NEP is `0`, while the naive budget reads
+`2` (at `kB = T = 1`). So the naive budget is not merely a factor low — on this branch it is
+**high**, and the theorem above cannot be read as an "understates" claim.
+
+This is the concrete counterexample behind the 2026-07-29 rename of
+`johnsonNEP_eq_abs_one_sub_loopGain_mul_naive`. -/
+theorem johnsonNEP_naive_overstates_at_unit_loopGain :
+    (⟨1, 1, 1, 1, 1⟩ : ETFModel).loopGain = 1 ∧
+      (⟨1, 1, 1, 1, 1⟩ : ETFModel).johnsonNEP 1 1 = 0 ∧
+      (⟨1, 1, 1, 1, 1⟩ : ETFModel).johnsonNEPNaive 1 1 = 2 := by
+  norm_num [ETFModel.loopGain, ETFModel.johnsonNEP, ETFModel.johnsonNEPNaive,
+    ETFModel.johnsonTransfer, ETFModel.johnsonCurrentPSD, ETFModel.responsivityETF,
+    ETFModel.responsivityBare, ETFModel.currentTempSlope, ETFModel.effectiveConductance,
+    Detection.nepOfPSD]
+
+/-- Johnson-channel witness on the **relaxing** side, `ℒ = +5`: `1 + ℒ = 6 ≠ 0`, so the Johnson
+correction identity applies, and `|1 − ℒ| = 4`.
+
+Wave 1's published witnesses cannot serve here. The equal-factor condition `|1 − a| = |1 − b|`
+with `a ≠ b` forces `a + b = 2`, so pairing `speedupWitness` (`ℒ = 3`) across the dichotomy forces
+`ℒ = −1` — precisely the marginal point where `1 + ℒ = 0` and the correction identity is empty.
+Hence this pair. -/
+noncomputable def johnsonQuietWitness : ETFModel := ⟨1, 1, 1, 1, 5⟩
+
+/-- Johnson-channel witness on the **divergent** side, `ℒ = −3`: `1 + ℒ = −2 ≠ 0`, and
+`|1 − ℒ| = 4` — the same correction factor as `johnsonQuietWitness`, on the other side of
+`etf_stable_iff`. -/
+noncomputable def johnsonDivergentWitness : ETFModel := ⟨1, 1, 1, 1, -3⟩
+
+theorem johnsonQuietWitness_loopGain : johnsonQuietWitness.loopGain = 5 := by
+  unfold ETFModel.loopGain johnsonQuietWitness; norm_num
+
+theorem johnsonDivergentWitness_loopGain : johnsonDivergentWitness.loopGain = -3 := by
+  unfold ETFModel.loopGain johnsonDivergentWitness; norm_num
+
 /-- **The `|1 − ℒ|` Johnson correction carries NO stability information** — the Wave-3 analogue of
 Wave 2's `responsivity_magnitudeOnly_loses_stability_information`, and the reason the magnitude
 form above must never be read as a certificate.
 
-Two of Wave 1's *published* bias points share the identical correction factor `|1 − ℒ| = 2`:
-`speedupWitness` (`ℒ = 3`, every perturbation decays) and `marginalWitness` (`ℒ = −1`, the
-perturbation is frozen — `PerturbationsDecay` fails). So a budget that has applied the factor `2`
-to its Johnson channel has learned nothing about which side of the dichotomy it is on, and in
-particular cannot rule out a non-relaxing operating point.
+Two bias points share the identical correction factor `|1 − ℒ| = 4` while sitting on **opposite
+sides** of Wave 1's dichotomy: `johnsonQuietWitness` (`ℒ = 5`, every perturbation decays) and
+`johnsonDivergentWitness` (`ℒ = −3`, `PerturbationsDecay` fails). So a budget that has applied the
+factor `4` to its Johnson channel has learned nothing about which side it is on, and in particular
+cannot rule out a non-relaxing operating point.
+
+**Both witnesses satisfy `1 + ℒ ≠ 0`, and the theorem says so.** That conjunct is not decoration:
+without it the pair would exhibit the factor at a point where
+`johnsonNEP_eq_abs_one_sub_loopGain_mul_naive` does not apply, and `|1 − ℒ|` there would be the
+value of an expression rather than *the correction factor* — which is exactly the defect this
+statement had until 2026-07-29, when it used `marginalWitness` (`ℒ = −1`, where `1 + ℒ = 0` and
+the correction identity has no content). The pair is in fact **forced**: `|1 − a| = |1 − b|` with
+`a ≠ b` requires `a + b = 2`, so a stable/divergent pair with `b < −1` needs `a > 3`; `(5, −3)` is
+the smallest such pair in integers.
 
 This is not the claim that the magnitude is the *wrong object* for a noise density — it is the
-right object (see `johnsonNEP_naive_understates_by_one_sub_loopGain`'s docstring). It is the claim
+right object (see `johnsonNEP_eq_abs_one_sub_loopGain_mul_naive`'s docstring). It is the claim
 that the noise correction is **not** a stability screen, so `etf_stable_iff` remains mandatory. -/
 theorem johnsonNEP_correction_magnitude_loses_stability_information :
-    |1 - speedupWitness.loopGain| = |1 - marginalWitness.loopGain| ∧
-      speedupWitness.PerturbationsDecay ∧ ¬ marginalWitness.PerturbationsDecay := by
-  refine ⟨?_, ?_, ?_⟩
-  · rw [speedupWitness_loopGain, marginalWitness_loopGain]
+    (1 + johnsonQuietWitness.loopGain ≠ 0 ∧ 1 + johnsonDivergentWitness.loopGain ≠ 0) ∧
+      |1 - johnsonQuietWitness.loopGain| = |1 - johnsonDivergentWitness.loopGain| ∧
+      johnsonQuietWitness.PerturbationsDecay ∧ ¬ johnsonDivergentWitness.PerturbationsDecay := by
+  refine ⟨⟨?_, ?_⟩, ?_, ?_, ?_⟩
+  · rw [johnsonQuietWitness_loopGain]; norm_num
+  · rw [johnsonDivergentWitness_loopGain]; norm_num
+  · rw [johnsonQuietWitness_loopGain, johnsonDivergentWitness_loopGain]
     norm_num
-  · rw [etf_stable_iff _ (by norm_num [speedupWitness]) (by norm_num [speedupWitness]),
-      speedupWitness_loopGain]
+  · rw [etf_stable_iff _ (by norm_num [johnsonQuietWitness]) (by norm_num [johnsonQuietWitness]),
+      johnsonQuietWitness_loopGain]
     norm_num
-  · rw [etf_stable_iff _ (by norm_num [marginalWitness]) (by norm_num [marginalWitness]),
-      marginalWitness_loopGain]
+  · rw [etf_stable_iff _ (by norm_num [johnsonDivergentWitness])
+      (by norm_num [johnsonDivergentWitness]), johnsonDivergentWitness_loopGain]
     norm_num
 
 /-- **The Johnson budget error at the published bias point, as a rational number.** At Wave 1's
@@ -405,12 +485,12 @@ theorem johnsonNEP_correction_magnitude_loses_stability_information :
 the factor `4` a responsivity-only correction would predict, because the noise source's own
 thermal feedback cancels one power of `(1+ℒ)`.
 
-Backs the numeric claim in `johnsonNEP_naive_understates_by_one_sub_loopGain`'s docstring with a
+Backs the numeric claim in `johnsonNEP_eq_abs_one_sub_loopGain_mul_naive`'s docstring with a
 theorem, in the same style as Wave 2's `speedupWitness_nep_quarter`; falsifiable by arithmetic,
 with no floating point anywhere. -/
 theorem speedupWitness_johnsonNEP_double (kB T : ℝ) :
     speedupWitness.johnsonNEP kB T = 2 * speedupWitness.johnsonNEPNaive kB T := by
-  rw [johnsonNEP_naive_understates_by_one_sub_loopGain speedupWitness kB T
+  rw [johnsonNEP_eq_abs_one_sub_loopGain_mul_naive speedupWitness kB T
     (by rw [speedupWitness_loopGain]; norm_num), speedupWitness_loopGain]
   norm_num
 
