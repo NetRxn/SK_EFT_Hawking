@@ -5392,6 +5392,97 @@
    "superseded_by": "papers/D10/prior_art_novelty.md (Verification updates section)",
    "evidence": "Gate-10 FirstClaimVerification hardening recorded: Stage-13 Mathlib scope check found no Kato-Rellich/relative-boundedness surface, confirming the molecular-Coulomb self-adjointness 'first' is safe. Recorded in prior_art_novelty.md. Verified on disk 2026-06-30.",
    "date": "2026-06-30"
+  },
+  {
+   "finding_id": "review:2026-07-30-stage9-round1:D11:FAIL:fig1-fig2-legend-overprints-axis-title",
+   "status": "fixed",
+   "superseded_by": "review:2026-07-30-stage9-round2:D11",
+   "evidence": "src/core/visualizations.py: introduced _d12_layout() which sets margin=dict(b=...) BEFORE placing legend(orientation='h', yanchor='top', y=...). fig_d11_phononic_band_gap and fig_d11_pt_exceptional_point now use height=580, margin b=160, legend y=-0.20 (was height=460, no bottom margin, legend y=-0.26). Recheck: render either PNG and confirm the x-axis title ('Bloch wavevector k a', 'non-Hermiticity g') is fully legible above the legend row.",
+   "date": "2026-07-30"
+  },
+  {
+   "finding_id": "review:2026-07-30-stage9-round1:D11:FAIL:fig3-vrect-annotation-silently-clipped",
+   "status": "fixed",
+   "superseded_by": "review:2026-07-30-stage9-round2:D11",
+   "evidence": "fig_d11_haldane_chern: the right-panel add_vrect annotation_text was clipped behind the subplot title, leaving a large unexplained shaded region. Replaced with an in-panel add_annotation on the LEFT panel plus a legend-visible marker trace on the right ('shaded: analytic inversion window |m| < 3sqrt(3)'). Recheck: the right panel's shaded region now has a legend entry.",
+   "date": "2026-07-30"
+  },
+  {
+   "finding_id": "review:2026-07-30-stage9-round1:D11:MINOR:fig3-missing-parameter-point",
+   "status": "fixed",
+   "superseded_by": "review:2026-07-30-stage9-round2:D11",
+   "evidence": "fig_d11_haldane_chern right subplot title is now 'certified lattice Chern number  (t = t2 = 1, phi = pi/2, 4x4 torus)'; papers/D11/paper_draft.tex fig:haldane caption states the same parameter point. Recheck: grep the caption for 't = t_2 = 1'.",
+   "date": "2026-07-30"
+  },
+  {
+   "finding_id": "review:2026-07-30-stage9-round1:D11:MINOR:necessity-not-theorem-backed",
+   "status": "fixed",
+   "superseded_by": "review:2026-07-30-stage9-round2:D11",
+   "evidence": "Only 'not sufficient' is certified (haldane_massInversion_not_sufficient_at_N4); necessity rested on the single sample m=6. Figure title changed to '...mass inversion is NOT sufficient at fixed N'; the paper caption now says explicitly that necessity is not certified. Recheck: grep -c 'necessary' papers/D11/paper_draft.tex returns 0.",
+   "date": "2026-07-30"
+  },
+  {
+   "finding_id": "review:2026-07-30-stage9-round1:D11:MINOR:uncertified-numerics-in-certified-panels",
+   "status": "fixed",
+   "superseded_by": "review:2026-07-30-stage9-round2:D11",
+   "evidence": "3.3177 is now annotated 'numerical, not certified' in fig_d11_haldane_chern and in the paper caption. The Voigt-Reuss 'widest gap' argmax claim is dropped: the marker at f=2/3 is labelled 'f = 2/3: gap = 1 exactly' (a value that follows from the certified identity voigt_sub_reuss_eq), with no maximality claim. Recheck: no 'widest' string in visualizations.py.",
+   "date": "2026-07-30"
+  },
+  {
+   "finding_id": "review:2026-07-30-stage9-round1:D11:MINOR:red-green-discriminating-channel",
+   "status": "fixed",
+   "superseded_by": "review:2026-07-30-stage9-round2:D11",
+   "evidence": "carmine/sage adjacency removed across fig_d11_haldane_chern and fig_d11_effective_medium; carmine now used only for single accent markers, curves separated by dash pattern on the blue/amber pair. Recheck: COLORS['sage'] no longer appears in any fig_d11_* body.",
+   "date": "2026-07-30"
+  },
+  {
+   "finding_id": "review:2026-07-30-stage9-round1:D11:MINOR:docstrings-describe-undrawn-content",
+   "status": "fixed",
+   "superseded_by": "review:2026-07-30-stage9-round2:D11",
+   "evidence": "fig_d11_phononic_band_gap now actually draws the rational inner bracket via phononic_gap_rational_enclosure() (an add_annotation reading '1 < 1.41 <= sqrt(2)'), which its docstring had advertised but never rendered. fig_d11_effective_medium's docstring no longer says 'strictly inside' bounds that are non-strict and attained at f=0,1. Recheck: the string 'rational inner bracket' appears in the fig1 PNG.",
+   "date": "2026-07-30"
+  },
+  {
+   "finding_id": "review:2026-07-30-stage9-round1:D12:MAJOR:fig1-plots-only-one-of-two-failure-directions",
+   "status": "fixed",
+   "superseded_by": "review:2026-07-30-stage9-round2:D12",
+   "evidence": "Fixed by BUILDING the missing panel rather than narrowing the title. fig_d12_poisson_floor_vs_folklore is now make_subplots(rows=1, cols=3): panel (A) plots direction A (realizable unit-threshold miss exp(-N_a) vs folklore exp(-(N_a-N_b)) at N_b=5, with the certified 148x marker at (5,10)); panel (B) is the former fail-open panel; the right panel is the exponent gap. papers/D12/paper_draft.tex fig:folklore caption rewritten to describe all three. Recheck: the paper's sentence 'plots both failures' is now true.",
+   "date": "2026-07-30"
+  },
+  {
+   "finding_id": "review:2026-07-30-stage9-round1:D12:FAIL:fig2-literal-tex-markup-in-png",
+   "status": "fixed",
+   "superseded_by": "review:2026-07-30-stage9-round2:D12",
+   "evidence": "kaleido renders ^{} verbatim. The Chernoff legend entry '(1/2)e^{-z^2/2}' is now Unicode: 'Chernoff upper  (1/2)·exp(-z²/2)'. Recheck: no '^{' substring in any fig_d12_* trace name.",
+   "date": "2026-07-30"
+  },
+  {
+   "finding_id": "review:2026-07-30-stage9-round1:D12:FAIL:fig2-legend-overprints-both-axis-titles",
+   "status": "fixed",
+   "superseded_by": "review:2026-07-30-stage9-round2:D12",
+   "evidence": "fig_d12_enbw_matched_filter now uses _d12_layout(height=600, bottom=210, legend_y=-0.24). Recheck: both x-axis titles ('integration window T', 'separation budget z') fully legible.",
+   "date": "2026-07-30"
+  },
+  {
+   "finding_id": "review:2026-07-30-stage9-round1:D12:MINOR:fig2-realizable-slack-wording-and-y-axis",
+   "status": "fixed",
+   "superseded_by": "review:2026-07-30-stage9-round2:D12",
+   "evidence": "The 'realizable slack above the floor' fill implied the realizable set was bounded above by 2/3; it is [1/2, inf). The fill is removed and the ramp is labelled 'one admissible point above'. The right y-axis is retitled 'tail probability / bound value' since the Mills bound exceeds 1 at small z, where it is vacuous (now said in the docstring).",
+   "date": "2026-07-30"
+  },
+  {
+   "finding_id": "review:2026-07-30-stage9-round1:D12:MINOR:fig3-stability-blindness-not-figure-visible",
+   "status": "fixed",
+   "superseded_by": "review:2026-07-30-stage9-round2:D12",
+   "evidence": "fig_d12_etf_stability's right panel now draws the L=-1 stability boundary via add_vline, and the witness labels read 'L = 5 -> 4  (stable)' and 'L = -3 -> 4  (UNSTABLE)', so the equal-valued pair is visibly on opposite sides. Recheck: two vlines at x=-1 across the figure.",
+   "date": "2026-07-30"
+  },
+  {
+   "finding_id": "review:2026-07-30-stage9-round1:D12:MINOR:fig1-crossover-drawn-at-grid-point",
+   "status": "fixed",
+   "superseded_by": "review:2026-07-30-stage9-round2:D12",
+   "evidence": "The crossover vline is now the analytic value ((log 4)/(2*sqrt(N_b)) + sqrt(N_b))^2 = 51.3959, annotated with its numeric value, rather than the first sampled grid point 51.4411.",
+   "date": "2026-07-30"
   }
  ]
 }
