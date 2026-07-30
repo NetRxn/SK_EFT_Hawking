@@ -826,7 +826,30 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    prose.
    backing: `structureFactor_zero_set_not_shear_invariant`, `isHoneycombChart_of_neighbours`
 
-44. `6eb-unsigned-matched-saturation-characterization` [refutation]
+44. `6ed-spectrum-determines-multiband-model` [refutation]
+   A multi-band lattice Hamiltonian is pinned down -- and its identification with a named physical model
+   certified -- by its SPECTRUM: if the characteristic polynomial / secular determinant comes out right, and
+   the matrix is Hermitian, the model is the one claimed. FALSE (Phase 6ED Wave 4, 2026-07-30,
+   kernel-checked; found by adversarial review of the wave's OWN first pass, which shipped the wrong matrix
+   and passed every gate). WITNESS: `bernal_spectrum_not_determine_model` exhibits `bernalBlochSwapped` --
+   the Bernal bilayer Hamiltonian with layer 2's intralayer element conjugated -- and proves (i) it is
+   Hermitian, (ii) its characteristic polynomial is IDENTICAL to `bernalBloch`'s at EVERY parameter point
+   `(u, gamma, E, f)`, and (iii) it is nevertheless a different matrix. The invariant that separates them is
+   not spectral but EIGENVECTOR-level: `bernal_chirality_two` gives the true bilayer the exact J = 2
+   relation `E (gamma v_A1 - f v_A2) = -f^2 v_B2` (McCann-Koshino Eq. 40), while
+   `bernalSwapped_chirality_zero` gives the look-alike the phase-blind coefficient `f fbar = |f|^2`, i.e.
+   chirality 0 -- winding 2 versus winding 0 around the cone. WHY IT MATTERS HERE: in AB (Bernal) stacking
+   both layers are the same honeycomb in the same orientation, so their A->B bond vectors coincide and BOTH
+   intralayer elements are `f`. The conjugated variant is layer 2 with its sublattices exchanged -- a
+   different material. Because the determinant only ever sees `f fbar`, the error was invisible to
+   `bernal_det_eq`, the exact gap, the touching enclosure, kernel purity, sorry-count and validate.py alike.
+   STANDING CONSEQUENCE: for any multi-band Hamiltonian in this project, ship at least one eigenvector-level
+   invariant (winding, Berry phase, chirality) verified against the primary source. A determinant-level gate
+   cannot certify a model's identification. Phase 6ED Wave 3's `coneBerryPhase_pi` is the shape of theorem
+   that catches this class.
+   backing: `bernal_spectrum_not_determine_model`, `bernal_chirality_two`, `bernalSwapped_chirality_zero`
+
+45. `6eb-unsigned-matched-saturation-characterization` [refutation]
    Matched-filter saturation may be characterized WITHOUT a sign condition: `filteredSNR V T s h =
    matchedBudget S0 T s` iff `h` is a.e. on the window SOME scalar multiple of the template `s`. FALSE
    (Phase 6EB Wave 3, 2026-07-29, kernel-checked; refuted flatly by
@@ -868,6 +891,7 @@ import SKEFTHawking.Detection.MatchedFilter
 import SKEFTHawking.FGDualityNoGo
 import SKEFTHawking.GMPinTorsorCeiling
 import SKEFTHawking.GMTripleLayerForcing
+import SKEFTHawking.GrapheneBand.BernalBilayer
 import SKEFTHawking.GrapheneBand.Honeycomb
 import SKEFTHawking.HandleTradeAtomVacuity
 import SKEFTHawking.HandleTradeAtomVacuityConcrete
@@ -1261,6 +1285,15 @@ alias nogo_structureFactor_zero_set_not_shear_invariant := SKEFTHawking.Graphene
 
 /-- NO-GO [`6ed-honeycomb-phase-chart-gl2z-invariant`] — do NOT re-derive. FALSE: The Bloch-phase honeycomb structure factor `f(theta) = 1 + exp(i theta_1) + exp(i theta_2)` is independent of WHICH primitive pair the phases are read against -- i.e. Backing refutation: `SKEFTHawking.GrapheneBand.isHoneycombChart_of_neighbours`. -/
 alias nogo_isHoneycombChart_of_neighbours := SKEFTHawking.GrapheneBand.isHoneycombChart_of_neighbours
+
+/-- NO-GO [`6ed-spectrum-determines-multiband-model`] — do NOT re-derive. FALSE: A multi-band lattice Hamiltonian is pinned down -- and its identification with a named physical model certified -- by its SPECTRUM: if the characteristic polynomial / secular determinant comes out right, and the matrix is Hermitian, the model is the one claimed. Backing refutation: `SKEFTHawking.GrapheneBand.bernal_spectrum_not_determine_model`. -/
+alias nogo_bernal_spectrum_not_determine_model := SKEFTHawking.GrapheneBand.bernal_spectrum_not_determine_model
+
+/-- NO-GO [`6ed-spectrum-determines-multiband-model`] — do NOT re-derive. FALSE: A multi-band lattice Hamiltonian is pinned down -- and its identification with a named physical model certified -- by its SPECTRUM: if the characteristic polynomial / secular determinant comes out right, and the matrix is Hermitian, the model is the one claimed. Backing refutation: `SKEFTHawking.GrapheneBand.bernal_chirality_two`. -/
+alias nogo_bernal_chirality_two := SKEFTHawking.GrapheneBand.bernal_chirality_two
+
+/-- NO-GO [`6ed-spectrum-determines-multiband-model`] — do NOT re-derive. FALSE: A multi-band lattice Hamiltonian is pinned down -- and its identification with a named physical model certified -- by its SPECTRUM: if the characteristic polynomial / secular determinant comes out right, and the matrix is Hermitian, the model is the one claimed. Backing refutation: `SKEFTHawking.GrapheneBand.bernalSwapped_chirality_zero`. -/
+alias nogo_bernalSwapped_chirality_zero := SKEFTHawking.GrapheneBand.bernalSwapped_chirality_zero
 
 /-- NO-GO [`6eb-unsigned-matched-saturation-characterization`] — do NOT re-derive. FALSE: Matched-filter saturation may be characterized WITHOUT a sign condition: `filteredSNR V T s h = matchedBudget S0 T s` iff `h` is a.e. Backing refutation: `SKEFTHawking.Detection.unsigned_saturation_characterization_false`. -/
 alias nogo_unsigned_saturation_characterization_false := SKEFTHawking.Detection.unsigned_saturation_characterization_false
