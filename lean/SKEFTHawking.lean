@@ -5116,6 +5116,11 @@ import SKEFTHawking.Electrothermal.BolometricFloors
 -- quotient-free zero set `cos θ₁ = cos θ₂ = −1/2 ∧ sin θ₁ + sin θ₂ = 0` with its K/K' branch
 -- split, gaplessness at both Dirac points, and Γ/M/K band values as checkable numbers.
 import SKEFTHawking.GrapheneBand.Honeycomb
+-- Phase 6ED Wave 2 — linear dispersion at the Dirac point with an EXPLICIT remainder (C = 1 on
+-- |q| <= 1, via the Complex.exp Taylor bound) against the coordinate-free linear form
+-- sqrt(q1^2 - q1 q2 + q2^2), the non-exactness witness at the K->K' offset, and the gapped-Dirac
+-- mass: gap exactly 2|m|, strictly monotone in |m|, closing iff m = 0.
+import SKEFTHawking.GrapheneBand.DiracExpansion
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization

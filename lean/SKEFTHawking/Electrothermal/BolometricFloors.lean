@@ -20,10 +20,14 @@ single-shot filter, can average better than this error* — with every modelling
 
 Per the roadmap, the FDT content is **cited, not re-derived**:
 
-* `phononNEP` / `johnsonNEP` are built here (nothing electrothermal existed), but
-  `phonon_psd_eq_johnsonNyquist_scaled` shows the phonon PSD **is** the repo-canonical
-  `GrapheneNoiseFormula.johnsonNyquistPSD` evaluated at the *thermal* conductance and scaled by
-  `T` — so the `4·k_B·T²·G` prefactor is tied to an existing declaration rather than asserted.
+* The genuine FDT citation is `johnsonCurrentPSD_eq_johnsonNyquist`: the Johnson *current* PSD is
+  `GrapheneNoiseFormula.johnsonNyquistPSD` at the **electrical** conductance `1/R` — right channel,
+  right conductance, coherent units.
+* The phonon prefactor `4·k_B·T²·G` is **asserted, not cited**: it is the thermal-fluctuation
+  result, and it is *not* derivable from the Johnson–Nyquist declaration.
+  `phonon_psd_eq_johnsonNyquist_scaled` records the arithmetic resemblance and nothing more — see
+  its docstring, which states plainly that the identity holds for any `4·a·b²·c` and therefore
+  constrains nothing.
 * Quadrature composition is **6EB's** `nep_quadrature_two` / `nep_quadrature_add`, consumed with
   its `IsUncorrelatedAt` hypothesis intact. This wave does not restate quadrature.
 * The error floor is **6EB's** `error_floor_from_budget` composed with **6EA's**
@@ -32,11 +36,17 @@ Per the roadmap, the FDT content is **cited, not re-derived**:
 ## Conventions (inherited, not re-chosen)
 
 One-sided PSD throughout, from 6EB Wave 1's `IsWhiteFilteredVariance`. The phonon channel's
-one-sided PSD is `4·k_B·T²·G` and the Johnson *current* PSD is `4·k_B·T/R`; both are referred to
-input power by dividing by the **ETF-corrected** responsivity, never the bare one — using the bare
-form understates the Johnson NEP by exactly `|1+ℒ|`
-(`johnsonNEP_bare_understates_by_one_plus_loopGain`), which is Wave 2's overclaim reappearing in
-the noise budget.
+one-sided PSD is `4·k_B·T²·G` and the Johnson *current* PSD is `4·k_B·T/R`.
+
+**Only the Johnson channel is referred through the responsivity.** Thermal-fluctuation noise
+enters the heat balance at exactly the point the signal does, so it is already an input-referred
+*power* and needs no responsivity step (`phononPSD`'s docstring); dividing it by the responsivity
+would double-refer it. The asymmetry is physics, not an oversight.
+
+The Johnson channel carries **two** distinct ETF effects — the ETF-corrected responsivity *and*
+the noise source's own thermal feedback `johnsonTransfer = (1−ℒ)/(1+ℒ)` — whose net effect is that
+an ETF-unaware budget understates this channel by `|1 − ℒ|`
+(`johnsonNEP_naive_understates_by_one_sub_loopGain`).
 
 ## Roadmap UNKNOWN-2, resolved as pre-decided
 
@@ -84,14 +94,21 @@ statement below. -/
 def IsThermalFluctuationLimited (Vph : (ℝ → ℝ) → ℝ) (m : ETFModel) (kB T Tw : ℝ) : Prop :=
   IsWhiteFilteredVariance Vph (m.phononPSD kB T) Tw
 
-/-- **The phonon prefactor is the repo-canonical FDT PSD, cited not asserted.**
+/-- **An arithmetic resemblance, NOT a citation** — labelled as such deliberately.
 
     4·k_B·T²·G  =  johnsonNyquistPSD (k_B·T) G · T
 
-i.e. the phonon PSD is `GrapheneNoiseFormula.johnsonNyquistPSD` evaluated at the **thermal**
-conductance `G` (rather than an electrical one) and scaled by the operating temperature. This is
-what ties the `4` and the `T²` to an existing declaration — the roadmap's "cite `FDTNoiseFloor`,
-do not re-derive it" — instead of leaving them as a literal a reader must trust. -/
+This is true, and it constrains **nothing**: `johnsonNyquistPSD x y = 4·x·y`, so the identity holds
+for *any* `4·a·b²·c` whatsoever. It is also unit-incoherent as a citation — `johnsonNyquistPSD`'s
+declared contract is a **current** PSD at an **electrical** conductance, and `G` here is thermal.
+
+It is kept only because the resemblance is worth recording, and it is named honestly so that no
+reader mistakes it for provenance. The phonon prefactor is the **thermal-fluctuation** result and
+is *asserted* by `phononPSD`; it is not derivable from Johnson–Nyquist. The genuine FDT citation in
+this file is `johnsonCurrentPSD_eq_johnsonNyquist`.
+
+*(Corrected 2026-07-29 after adversarial review, which showed the original "cited, not asserted"
+docstring claim was false.)* -/
 theorem phonon_psd_eq_johnsonNyquist_scaled (m : ETFModel) (kB T : ℝ) :
     m.phononPSD kB T = GrapheneNoiseFormula.johnsonNyquistPSD (kB * T) m.G * T := by
   unfold phononPSD GrapheneNoiseFormula.johnsonNyquistPSD
@@ -147,6 +164,34 @@ theorem phononPSD_gamma_correction_not_modelled (m : ETFModel) {kB T γ : ℝ}
   have hpos := m.phononPSD_pos hkB hT hG
   nlinarith
 
+/-- **The general (γ-corrected) thermal-fluctuation PSD**, `4·γ·k_B·T²·G`, named as an object so
+that the shipped form's scope is statable rather than merely asserted in prose. -/
+noncomputable def phononPSDGamma (m : ETFModel) (kB T γ : ℝ) : ℝ := 4 * γ * kB * T ^ 2 * m.G
+
+/-- **The actual disclosure: the shipped phonon PSD is exactly the `γ = 1` case.**
+
+This is the content `phononPSD_gamma_correction_not_modelled` alone cannot carry (that statement
+is `x < γ·x`, true of any positive `x`, and never mentions the general form). With
+`phononPSDGamma` named, the scope of the shipped model is a theorem:
+`phononPSD = phononPSDGamma … 1`, and `phononPSD < phononPSDGamma … γ` for `γ > 1` says the shipped
+floor is *optimistic* outside the isothermal-link limit.
+
+*(Added 2026-07-29 after adversarial review found the original disclosure vacuous.)* -/
+theorem phononPSD_eq_phononPSDGamma_one (m : ETFModel) (kB T : ℝ) :
+    m.phononPSD kB T = m.phononPSDGamma kB T 1 := by
+  unfold phononPSD phononPSDGamma
+  ring
+
+/-- For `γ > 1` the true floor strictly exceeds the shipped one — stated against the **named**
+general form, so it is a claim about the γ-correction rather than about multiplication. -/
+theorem phononPSD_lt_phononPSDGamma (m : ETFModel) {kB T γ : ℝ}
+    (hkB : 0 < kB) (hT : 0 < T) (hG : 0 < m.G) (hγ : 1 < γ) :
+    m.phononPSD kB T < m.phononPSDGamma kB T γ := by
+  have hpos := m.phononPSD_pos hkB hT hG
+  unfold phononPSDGamma
+  unfold phononPSD at hpos ⊢
+  nlinarith
+
 /-! ## The Johnson channel, referred to input power -/
 
 /-- **One-sided Johnson current-noise PSD** of the bias-point resistance: `4·k_B·T/R`. Stated in
@@ -154,32 +199,108 @@ the same convention as `phononPSD` (both are `johnsonNyquistPSD`-shaped; here th
 the electrical `1/R`). -/
 noncomputable def johnsonCurrentPSD (m : ETFModel) (kB T : ℝ) : ℝ := 4 * kB * T / m.R
 
-/-- **Johnson NEP, referred to input power through the ETF-corrected responsivity.**
+/-- **The Johnson source's electrothermal transfer factor**, `(1 − ℒ)/(1 + ℒ)`.
 
-    NEP_J = √(4·k_B·T/R) / |R_etf|
+Under voltage bias the Johnson EMF `v_n` does **not** merely add to the output current: it also
+perturbs the dissipated Joule power (`P = (V+v_n)²/R`, so `∂P/∂v_n = 2·I₀`), which drives the
+thermal circuit and feeds back through `dI/dT`. Eliminating `δT` from the coupled pair
 
-The responsivity used is Wave 2's `responsivityETF` — the physical one — never `responsivityBare`.
-The consequence of getting that wrong is quantified in
-`johnsonNEP_bare_understates_by_one_plus_loopGain`. -/
+    δI   = v_n/R + (dI/dT)·δT
+    C·δṪ = 2·I₀·v_n − G_eff·δT        (steady state: δT = 2·I₀·v_n/G_eff)
+
+gives `δI/v_n = (1/R)·(1 − ℒ)/(1 + ℒ)` (`johnson_transfer_eq`, derived below rather than
+asserted). Sanity: at `ℒ = 0` the factor is `1` (no feedback), and the strong-feedback limit
+recovers the standard `NEP_J² → 4·k_B·T·P_J`. -/
+noncomputable def johnsonTransfer (m : ETFModel) : ℝ :=
+  (1 - m.loopGain) / (1 + m.loopGain)
+
+/-- **Johnson NEP, referred to input power through the ETF-corrected responsivity, *with* the
+electrothermal transfer of the noise source itself.**
+
+    NEP_J = √(4·k_B·T/R) · |(1−ℒ)/(1+ℒ)| / |R_etf|
+
+Two distinct ETF effects are present and both are needed — omitting either is a first-order error
+in the wave whose entire subject is electrothermal feedback:
+
+* the **responsivity** is the ETF-corrected `responsivityETF`, never `responsivityBare`;
+* the **source** couples to the thermal circuit through `johnsonTransfer`, derived in
+  `johnson_transfer_eq`.
+
+Their net effect against an ETF-unaware budget is a single factor `|1 − ℒ|`, quantified in
+`johnsonNEP_naive_understates_by_one_sub_loopGain`.
+
+The phonon channel needs no analogue: thermal-fluctuation noise enters the heat balance at exactly
+the point the signal does, so it is unchanged when input-referred. That asymmetry is the physics,
+and it is why only this channel carries a transfer factor. -/
 noncomputable def johnsonNEP (m : ETFModel) (kB T : ℝ) : ℝ :=
-  nepOfPSD (m.johnsonCurrentPSD kB T) / |m.responsivityETF|
+  nepOfPSD (m.johnsonCurrentPSD kB T) * |m.johnsonTransfer| / |m.responsivityETF|
 
-/-- **The bare-responsivity Johnson budget understates the true Johnson NEP by exactly `|1+ℒ|`.**
+/-- **The Johnson current PSD is the repo-canonical Johnson–Nyquist declaration**, at the
+*electrical* conductance `1/R` — a genuine citation with matching units, unlike a rearrangement
+that would hold for any product. -/
+theorem johnsonCurrentPSD_eq_johnsonNyquist (m : ETFModel) (kB T : ℝ) (hR : m.R ≠ 0) :
+    m.johnsonCurrentPSD kB T = GrapheneNoiseFormula.johnsonNyquistPSD (kB * T) (1 / m.R) := by
+  unfold johnsonCurrentPSD GrapheneNoiseFormula.johnsonNyquistPSD
+  field_simp
 
-Wave 2's overclaim reappearing where it does real damage: NEP is output noise *divided* by
-responsivity, so the bare form — which overstates responsivity by `(1+ℒ)` — understates this noise
-channel by the same factor. At the published `ℒ = 3` bias point that is a factor of 4 in a
-*noise* budget.
+/-- **The transfer factor, derived from the coupled small-signal equations.**
 
-Consumes `responsivity_etf_correction`, so this is a computation across the wave boundary rather
-than a restatement. -/
-theorem johnsonNEP_bare_understates_by_one_plus_loopGain (m : ETFModel) (kB T : ℝ)
+Given the current response `δI = v_n/R + (dI/dT)·δT` and the steady-state thermal response to the
+Johnson-driven Joule perturbation `δT = 2·I₀·v_n/G_eff`, the net current-per-EMF is
+`(1/R)·(1 − ℒ)/(1 + ℒ)`. Stated as the identity between the composed expression and
+`johnsonTransfer/R`, so the definition above is *derived* rather than posited. -/
+theorem johnson_transfer_eq (m : ETFModel) (hR : m.R ≠ 0) (hG : m.G ≠ 0)
+    (hL : 1 + m.loopGain ≠ 0) :
+    1 / m.R + m.currentTempSlope * (2 * (m.V / m.R) / m.effectiveConductance)
+      = m.johnsonTransfer / m.R := by
+  unfold johnsonTransfer currentTempSlope effectiveConductance loopGain
+  have hRsq : m.R ^ 2 ≠ 0 := pow_ne_zero 2 hR
+  -- `1 + ℒ = (R²G + V²·dRdT)/(R²G)`, so the cleared denominator is nonzero
+  have hD : m.V ^ 2 * m.dRdT + m.R ^ 2 * m.G ≠ 0 := by
+    intro h
+    apply hL
+    unfold loopGain
+    field_simp
+    linarith
+  have hGL : m.G * (1 + m.V ^ 2 * m.dRdT / (m.R ^ 2 * m.G)) ≠ 0 := by
+    intro h
+    apply hL
+    unfold loopGain
+    rcases mul_eq_zero.mp h with h' | h'
+    · exact absurd h' hG
+    · linarith
+  have hDinv : (m.V ^ 2 * m.dRdT + m.R ^ 2 * m.G)
+      * (m.V ^ 2 * m.dRdT + m.R ^ 2 * m.G)⁻¹ = 1 := mul_inv_cancel₀ hD
+  field_simp
+  linear_combination -hDinv
+
+/-- **The naive Johnson budget** — bare responsivity, and no electrothermal transfer on the noise
+source. This is what a budget written without ETF awareness computes. -/
+noncomputable def johnsonNEPNaive (m : ETFModel) (kB T : ℝ) : ℝ :=
+  nepOfPSD (m.johnsonCurrentPSD kB T) / |m.responsivityBare|
+
+/-- **The naive Johnson budget understates the true Johnson NEP by exactly `|1 − ℒ|`.**
+
+    NEP_J = |1 − ℒ| · NEP_J^naive
+
+Two ETF effects partially cancel, and the surviving factor is `|1 − ℒ|`, **not** `|1 + ℒ|`:
+the bare responsivity overstates the response by `(1 + ℒ)`, which alone would understate NEP by
+that factor, but the Johnson source's own thermal feedback contributes `|(1−ℒ)/(1+ℒ)|`, and the
+`(1+ℒ)` cancels. At the published `ℒ = 3` bias point the naive budget is therefore a factor of
+**2** low — not 4.
+
+*(Corrected 2026-07-29 after adversarial review: the first version of this theorem omitted the
+source's thermal feedback entirely and claimed `|1+ℒ|`. The omission was a first-order error in
+the wave whose subject is electrothermal feedback; it was built out, not disclosed around.)*
+
+Consumes `responsivity_etf_correction`, so this is a computation across the wave boundary. -/
+theorem johnsonNEP_naive_understates_by_one_sub_loopGain (m : ETFModel) (kB T : ℝ)
     (hGne : m.G ≠ 0) (hL : 1 + m.loopGain ≠ 0) :
-    nepOfPSD (m.johnsonCurrentPSD kB T) / |m.responsivityBare|
-      = m.johnsonNEP kB T / |1 + m.loopGain| := by
-  unfold johnsonNEP
-  rw [responsivity_etf_correction m hGne hL, abs_mul]
-  rw [div_div, mul_comm (|1 + m.loopGain|) (|m.responsivityETF|)]
+    m.johnsonNEP kB T = |1 - m.loopGain| * m.johnsonNEPNaive kB T := by
+  unfold johnsonNEP johnsonNEPNaive johnsonTransfer
+  rw [responsivity_etf_correction m hGne hL, abs_mul, abs_div]
+  have hL' : |1 + m.loopGain| ≠ 0 := abs_ne_zero.mpr hL
+  field_simp
 
 /-! ## Quadrature composition — 6EB's algebra, consumed -/
 
@@ -233,10 +354,11 @@ Carries **no** non-vanishing-responsivity binder: at `R_etf = 0` both sides coll
 theorem phononLimited_iff_psd_lt (m : ETFModel) {kB T : ℝ}
     (hnnPh : 0 ≤ m.phononPSD kB T) (hnnJ : 0 ≤ m.johnsonCurrentPSD kB T) :
     m.johnsonNEP kB T ^ 2 < m.phononNEP kB T ^ 2
-      ↔ m.johnsonCurrentPSD kB T / m.responsivityETF ^ 2 < m.phononPSD kB T := by
+      ↔ m.johnsonCurrentPSD kB T * m.johnsonTransfer ^ 2 / m.responsivityETF ^ 2
+          < m.phononPSD kB T := by
   rw [m.phononNEP_sq hnnPh]
   unfold johnsonNEP nepOfPSD
-  rw [div_pow, Real.sq_sqrt hnnJ, sq_abs]
+  rw [div_pow, mul_pow, Real.sq_sqrt hnnJ, sq_abs, sq_abs]
 
 /-- **The composed PSD is positive at any physical bias point** — discharged from the physical
 hypotheses (`0 < kB`, `0 < T`, `0 < G`) rather than assumed, which is what makes the capstone
@@ -268,19 +390,32 @@ the capstone is a composition of this wave's physics with 6EB's bound, not a for
 
 This is what makes the layer a *ceiling*: it is stated against the best possible linear readout,
 so no cleverer filter and no better threshold can beat it. -/
-theorem bolometer_error_floor (m : ETFModel) {kB T Tw : ℝ} {V : (ℝ → ℝ) → ℝ}
+theorem bolometer_error_floor (m : ETFModel) {kB T Tw : ℝ} {Vtot : (ℝ → ℝ) → ℝ}
+    {V : Fin 2 → (ℝ → ℝ) → ℝ}
     {s hf : ℝ → ℝ} {μ₀ μ₁ σ t : ℝ}
     (hkB : 0 < kB) (hT : 0 < T) (hG : 0 < m.G)
-    (hwhite : IsWhiteFilteredVariance V
-      (m.phononNEP kB T ^ 2 + m.johnsonNEP kB T ^ 2) Tw)
+    (hindep : IsUncorrelatedAt Finset.univ Vtot V)
+    (hphonon : IsThermalFluctuationLimited (V 0) m kB T Tw)
+    (hjohnson : IsWhiteFilteredVariance (V 1) (m.johnsonNEP kB T ^ 2) Tw)
     (hTw : 0 ≤ Tw)
     (hadm : IsAdmissibleFilter Tw s hf)
     (hs : IntervalIntegrable (fun x => s x ^ 2) volume 0 Tw)
     (hσ : 0 < σ) (hμle : μ₀ ≤ μ₁)
-    (hμ : μ₁ - μ₀ = ∫ x in (0:ℝ)..Tw, hf x * s x) (hσV : σ = Real.sqrt (V hf)) :
+    (hμ : μ₁ - μ₀ = ∫ x in (0:ℝ)..Tw, hf x * s x) (hσV : σ = Real.sqrt (Vtot hf)) :
     gaussianQ (matchedBudget (m.phononNEP kB T ^ 2 + m.johnsonNEP kB T ^ 2) Tw s / 2)
-      ≤ avgAssignmentError (thrErr0 μ₀ σ t) (thrErr1 μ₁ σ t) :=
-  error_floor_from_budget hwhite (m.bolometer_psd_pos hkB hT hG) hTw hadm hs hσ hμle hμ hσV
+      ≤ avgAssignmentError (thrErr0 μ₀ σ t) (thrErr1 μ₁ σ t) := by
+  -- the composed whiteness is DERIVED from the two channels via 6EB's quadrature algebra,
+  -- so `IsUncorrelatedAt` — the hypothesis 6EB proved non-droppable — is in the binder list
+  have hch : ∀ i, IsWhiteFilteredVariance (V i) (m.bolometerNEP kB T i ^ 2) Tw := by
+    intro i
+    match i with
+    | 0 => exact isWhite_of_thermalFluctuationLimited hphonon (m.phononPSD_pos hkB hT hG).le
+    | 1 => exact hjohnson
+  have hwhite : IsWhiteFilteredVariance Vtot
+      (m.phononNEP kB T ^ 2 + m.johnsonNEP kB T ^ 2) Tw := by
+    have := nep_quadrature_add hindep (fun i _ => hch i)
+    simpa [Fin.sum_univ_two, bolometerNEP] using this
+  exact error_floor_from_budget hwhite (m.bolometer_psd_pos hkB hT hG) hTw hadm hs hσ hμle hμ hσV
 
 end ETFModel
 

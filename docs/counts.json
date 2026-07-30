@@ -1,12 +1,12 @@
 {
-  "generated": "2026-07-29T18:02:01.212875",
+  "generated": "2026-07-29T18:58:38.135965",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 39618,
-    "theorems_total": 25533,
-    "theorems_substantive": 25507,
+    "total_declarations": 39639,
+    "theorems_total": 25548,
+    "theorems_substantive": 25522,
     "theorems_placeholder": 26,
-    "theorems_kernel_substantive": 25438,
+    "theorems_kernel_substantive": 25453,
     "theorems_tracked_vacuity_debt": 69,
     "theorems_vacuity_baseline": 48,
     "theorems_vacuous_proxy": 6,
@@ -15,7 +15,7 @@
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 2002,
+    "modules": 2003,
     "module_names": [
       "SKEFTHawking.A1Ext",
       "SKEFTHawking.A1ExtSubstantive",
@@ -628,6 +628,7 @@
       "SKEFTHawking.GloriosoLiu.Phase1Reconciliation",
       "SKEFTHawking.GloriosoLiu.SecondOrderProjection",
       "SKEFTHawking.GoltermanShamir",
+      "SKEFTHawking.GrapheneBand.DiracExpansion",
       "SKEFTHawking.GrapheneBand.Honeycomb",
       "SKEFTHawking.GrapheneHawking",
       "SKEFTHawking.GrapheneNoiseFormula",
@@ -2020,7 +2021,7 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 12586,
+    "definitions": 12592,
     "structures": 470,
     "instances": 928,
     "inductives": 101,
