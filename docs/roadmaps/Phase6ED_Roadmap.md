@@ -106,5 +106,24 @@ Wave 1 → Wave 2 → Wave 3 critical path; Wave 4 gated. **The whole phase is i
 
 - **UNKNOWN-1:** the cleanest Mathlib route for the explicit-remainder expansion of `f(K+q)` (`Complex.exp` Taylor bounds vs. `Real.cos/sin` two-variable expansion vs. a direct polynomial sandwich on the validity ball) — spike this first in Wave 2; it sets the constant `C`'s quality.
 - **UNKNOWN-2:** Berry-phase statement form — discretized principal-branch arg sum over a stated loop (matches `FHSLatticeGauge` style, cheapest) vs. a continuum line-integral formulation (needs machinery the repo deliberately avoided). Default: discretized form, documented as such.
-- **UNKNOWN-3:** Haldane witness grid size — smallest torus discretization for which the frame is admissible and the plaquette arithmetic is `decide`/`norm_num`-tractable without `maxHeartbeats` pressure; spike before freezing the AC constant.
+- **UNKNOWN-3 — RESOLVED by spike, 2026-07-29. Answer: `N = 4` (a 4×4 torus), and the tractability obstruction is NOT the one the guardrail predicted.**
+
+  *Spike method:* numerically reconstructed `blochLatticeChern` exactly as `BlochFHS` computes it — Haldane `d`-vector in Wave-1 Bloch-phase coordinates, lower-band eigenvector `u ∝ (d₁ − i d₂, −(d₃ + ‖d‖))`, links `⟨u(k), u(k+μ)⟩/|·|`, `rawCurl` = the unreduced four-link sum, `latticeChern = Σ branchIndex(rawCurl)`. Scripts under the session scratchpad.
+
+  **Finding 1 — `N = 3` is broken and must not be used.** It is the smallest grid at which the *principal-value* sum `ΣF/2π` reads `−1`, which is why it looks attractive, but its `latticeChern` is **0 even inside the topological window** (`m = 1`): one plaquette lands at `rawCurl = −π` **exactly**, i.e. on the branch cut (margin `0.0000` rad), and the four winding plaquettes cancel. `N = 3` also swings with `m` (0 at `m ≤ 2`, +1 at `3 ≤ m ≤ 5.19`), so it is not a stable witness anywhere.
+
+  **Finding 2 — `N = 4` is clean, and the margin is enormous.**
+
+  | grid | `m = 1` (topological) | `m = 6` (trivial) | nonzero-branch plaquettes | min margin to branch cut |
+  |---|---|---|---|---|
+  | 3×3 | **0** ✗ (wrong) | 0 | 4 | **0.0000 rad** ✗ |
+  | **4×4** | **+1** ✓ | **0** ✓ | **1 of 16** | **1.6399 rad** ✓ |
+  | 6×6 | +1 | 0 | 1 of 36 | 2.0888 rad |
+  | 8×8 | +1 | 0 | 1 of 64 | 2.3789 rad |
+
+  **Finding 3 (the architectural one) — exact `Complex.arg` evaluation is NOT required, so the QWZ obstruction does not bind here.** `BlochFHS.lean:24-26` warns that a nontrivial Chern value "requires the QWZ transcendental evaluation (`Complex.arg` of `sin/cos` at generic momenta)". That is true of *evaluating* plaquette phases — and the spike confirms they are genuinely transcendental (at 4×4, **zero** of the links are axis-valued; the distinct plaquette phases are generic reals, not multiples of π). **But `latticeChern` never needs them.** It is `Σ branchIndex(rawCurl)`, a sum of *integers*, and `Σ rawCurl = 0` by telescoping (`FiniteTorus.sum_forwardDiff_eq_zero`). So the whole invariant is carried by *which 2π-window* each `rawCurl` falls in — a **bounding** problem, not an evaluation problem, and at 4×4 there is `1.64` rad of slack on every window placement.
+
+  **Consequent Wave-3 shape (supersedes the AC's implied design):** 15 plaquettes need `−π < rawCurl ≤ π` (⟹ `branchIndex = 0`) and exactly **one** needs `π < rawCurl ≤ 3π` (⟹ `branchIndex = 1`). Each `rawCurl` is a sum of four `Complex.arg`s of explicit algebraic numbers (at `N = 4` the momenta are `0, π/2, π, 3π/2`, so `cos`/`sin ∈ {0, ±1}` and the `d`-vectors are rational; only `‖d‖ = √·` is irrational), so the work is **rational enclosures of `arctan` at explicit algebraic points** in the repo's existing `NumericalBounds` style — not transcendental evaluation, and no `native_decide`.
+
+  **Frozen AC constants:** grid `N₁ = N₂ = 4`; `t = 1`, `t₂ = 1`, `φ = π/2`; topological point `m = 1` ⟹ `blochLatticeChern = +1`; trivial point `m = 6` ⟹ `0` (window is `|m| < 3√3 ≈ 5.196`). Frame admissibility verified at both: `min‖d‖ = 1.4142` and `2.2361`, all overlaps nonzero.
 - **UNKNOWN-4:** whether `TopologicalBand/` gains the QWZ witness before Wave 3 starts (sets the guardrail branch).
