@@ -93,8 +93,11 @@ is the section whose whole purpose is to make the class honest:
   branch, so neither a `0 ≤ ∫₀ᵀ s²` binder nor a `0 < S₀` binder is a guard. *(The second was
   still being carried until 2026-07-29, while the docstring boasted about having dropped the
   first — the minimality standard is now applied to both. `0 < S₀` is genuinely load-bearing in
-  `matchedBudget_antitone_psd`, and that is the only place in this file it appears as a guard
-  rather than as a route requirement.)*
+  `matchedBudget_antitone_psd`, and that is now a theorem rather than an assertion:
+  `matchedBudget_antitone_psd_S0_hypothesis_load_bearing` exhibits the failure at `S₀ = 0`.
+  The accompanying "and that is the only place in this file it appears as a guard rather than as a
+  route requirement" was an unproved universal negative over the file; it is retained only as a
+  reading aid, not as a claim.)*
 * **`optimal_z_budget` ships despite being the headline bound divided by two**, at an identical
   binder list — the one place the identity-wrapper rule is deliberately *not* applied. Its
   docstring states why: it crosses the `z = SNR/2` convention boundary that
@@ -487,6 +490,24 @@ theorem matchedBudget_antitone_psd {S₁ S₂ T : ℝ} (hS : 0 < S₁) (h12 : S�
   · have h2 : 0 < S₂ := lt_of_lt_of_le hS h12
     rw [Real.sqrt_eq_zero_of_nonpos (div_nonpos_of_nonpos_of_nonneg (by linarith) h2.le),
       Real.sqrt_eq_zero_of_nonpos (div_nonpos_of_nonpos_of_nonneg (by linarith) hS.le)]
+
+/-- **`0 < S₁` in `matchedBudget_antitone_psd` is load-bearing — the witness.**
+
+At `S₁ = 0`, `S₂ = 1`, unit template on `[0, 1]`: the template energy is `1`, so
+`matchedBudget 1 1 s = √2 > 0` while Lean's total division sends
+`matchedBudget 0 1 s = √(2/0) = 0`. The antitonicity conclusion `matchedBudget S₂ ≤ matchedBudget S₁`
+would read `√2 ≤ 0`, which is false — so dropping the hypothesis does not merely break the proof,
+it breaks the theorem.
+
+The enclosing docstring argued this in prose; this is that argument as a theorem, which is the
+standard the file applies to every other necessity claim. *(Added 2026-07-29.)* -/
+theorem matchedBudget_antitone_psd_S0_hypothesis_load_bearing :
+    ¬ (matchedBudget 1 1 (fun _ => 1) ≤ matchedBudget 0 1 (fun _ => 1)) := by
+  have hint : ∫ x in (0:ℝ)..1, (1:ℝ) ^ 2 = 1 := by norm_num
+  unfold matchedBudget
+  rw [hint]
+  simp only [div_zero, div_one, Real.sqrt_zero, not_le]
+  positivity
 
 /-! ## The separation budget and the composed error floor -/
 

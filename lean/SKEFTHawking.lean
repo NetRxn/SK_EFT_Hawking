@@ -4288,6 +4288,14 @@ import SKEFTHawking.TopologicalBand.FHSLatticeGauge
 import SKEFTHawking.TopologicalBand.FHSExamples
 import SKEFTHawking.TopologicalBand.BlochFrame
 import SKEFTHawking.TopologicalBand.BlochFHS
+-- Model-independent machinery for concrete FHS lattice-Chern computations, promoted out of
+-- GrapheneBand.HaldaneWitness on 2026-07-29 so a square-lattice (QWZ) spike need not import a
+-- graphene module: a rational-enclosure `arg` sector calculus that places Complex.arg in a
+-- 2pi-window WITHOUT evaluating any transcendental (latticeChern is a sum of integers, so it is a
+-- bounding problem), and the d-field -> BlochLowerBandFrame adapter (lbVec, blochFrameOfD) with
+-- the narrow-link triviality criterion.
+import SKEFTHawking.TopologicalBand.ArgSectors
+import SKEFTHawking.TopologicalBand.BlochFrameOfD
 -- Phase 6CE (D11 materials series) — effective-medium homogenization (Maxwell–Garnett)
 import SKEFTHawking.MaxwellGarnett
 import SKEFTHawking.EffectiveMediumBounds
@@ -5104,29 +5112,36 @@ import SKEFTHawking.Electrothermal.ETFModel
 -- Phase 6EC Wave 2 — responsivity with ETF correction: `dI/dT` and both power-to-current
 -- responsivities *derived* as chain-rule derivatives (not defined), the correction identity
 -- `R_bare = (1+ℒ)·R_etf` with its marginal-point counterexample, opposite signs on the unstable
--- branch, the NEP understatement through 6EB's `nepOfOutput`, and the single-pole frequency
+-- branch, the NEP transfer through 6EB's `nepOfOutput` (an equality in |1+ℒ|; the *direction* is a
+-- separate theorem, holding on 0 < ℒ and reversing on −2 < ℒ < 0), and the single-pole frequency
 -- rolloff in `τ_eff` from an explicit sinusoidal steady state.
 import SKEFTHawking.Electrothermal.ETFResponsivity
 -- Phase 6EC Wave 3 — bolometric noise floors and the `6E*` capstone: the phonon PSD tied to the
 -- repo-canonical FDT `johnsonNyquistPSD` at the thermal conductance, Johnson noise referred to
--- input through the ETF-corrected responsivity (understated by |1+ℒ| if the bare form is used),
+-- input through the ETF-corrected responsivity (differing from the naive budget by exactly the
+-- factor |1−ℒ| — NOT |1+ℒ|, and NOT signed: the naive budget overstates on 0 < ℒ < 2),
 -- quadrature composition via 6EB's algebra with the equilibrium hypothesis declared, the
 -- phonon-limited `iff` screen, and `bolometer_error_floor` — 6EC ⊕ 6EB ⊕ 6EA.
 import SKEFTHawking.Electrothermal.BolometricFloors
 -- Phase 6ED Wave 1 — honeycomb tight-binding: the structure factor in Bloch-phase coordinates
--- (primitive-vector independent), the bands ±|f| through BlochBundle's Pauli core, the EXACT
+-- (NOT chart-independent — it is the honeycomb structure factor exactly for an `IsHoneycombChart`
+-- primitive pair and its six relabelings; `structureFactor_zero_set_not_shear_invariant` refutes
+-- GL_2(Z) invariance), the bands ±|f| through BlochBundle's Pauli core, the EXACT
 -- quotient-free zero set `cos θ₁ = cos θ₂ = −1/2 ∧ sin θ₁ + sin θ₂ = 0` with its K/K' branch
 -- split, gaplessness at both Dirac points, and Γ/M/K band values as checkable numbers.
 import SKEFTHawking.GrapheneBand.Honeycomb
--- Phase 6ED Wave 2 — linear dispersion at the Dirac point with an EXPLICIT remainder (C = 1 on
--- |q| <= 1, via the Complex.exp Taylor bound) against the coordinate-free linear form
--- sqrt(q1^2 - q1 q2 + q2^2), the non-exactness witness at the K->K' offset, and the gapped-Dirac
--- mass: gap exactly 2|m|, strictly monotone in |m|, closing iff m = 0.
+-- Phase 6ED Wave 2 — linear dispersion at the Dirac point with an EXPLICIT remainder q1^2 + q2^2
+-- and NO validity ball (`norm_exp_mul_I_sub_one_sub_id_le` discharges the Mathlib lemma's ball)
+-- against the coordinate-free linear form sqrt(q1^2 - q1 q2 + q2^2), non-exactness witnesses at
+-- both cone scale and the K->K' offset, and the gapped-Dirac mass: gap exactly 2|m|, strictly
+-- monotone in |m|, closing iff m = 0.
 import SKEFTHawking.GrapheneBand.DiracExpansion
 -- Phase 6ED Wave 3 — the Haldane Chern witness and the cone Berry phase. The repo's FIRST
 -- nontrivial concrete Chern frame: the Haldane model (t = t2 = 1, phi = pi/2) sampled on a 4x4
--- Brillouin torus has blochLatticeChern = -1 at m = 1 and 0 at m = 6, and the pair is tied to the
--- analytic window |m| < 3 sqrt3 |t2 sin phi| by haldane_chern_iff_mass_inversion. Plus the pi Berry
+-- Brillouin torus has blochLatticeChern = -1 at m = 1 and 0 at m = 6. Mass inversion is NECESSARY
+-- BUT NOT SUFFICIENT at this grid: `haldane_massInversion_not_sufficient_at_N4` exhibits m = 5,
+-- inside the analytic window |m| < 3 sqrt3, where the 4x4 invariant is still 0 — the lattice
+-- transition is grid-dependent and converges to 3 sqrt3 only as N grows. Plus the pi Berry
 -- phase / 2pi pseudospin winding of the gapless cone. Ships a rational-enclosure `arg` sector
 -- calculus (arg_cell_A/B/C/D) so no transcendental Complex.arg evaluation is needed anywhere.
 import SKEFTHawking.GrapheneBand.HaldaneWitness

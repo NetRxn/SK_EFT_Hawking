@@ -1,5 +1,6 @@
 import SKEFTHawking.GrapheneBand.DiracExpansion
 import SKEFTHawking.TopologicalBand.BlochFHS
+import SKEFTHawking.TopologicalBand.BlochFrameOfD
 
 /-!
 # The Haldane Chern witness and the cone Berry phase (Phase 6ED, Wave 3)
@@ -19,34 +20,90 @@ invariant.**
 * **`haldaneFrame_latticeChern_eq_neg_one`** — the Haldane model at `t = t₂ = 1`, `φ = π/2`,
   `m = 1`, sampled on a `4 × 4` Brillouin torus, has FHS lattice Chern number `−1`. This is the
   repo's **first** nontrivial concrete Chern frame (see the coordination note below).
-* **`haldane_trivial_phase_chern_zero`** — the same model at `m = 6` (outside the window) has `0`,
-  and **`haldane_chern_iff_mass_inversion`** ties both values to the analytic phase boundary
-  `|m| < 3√3 |t₂ sin φ|` of `haldane_mass_inversion_iff`. The pair is a *classification*.
+* **`haldane_trivial_phase_chern_zero`** — the same model at `m = 6`, outside the analytic window
+  `|m| < 3√3 |t₂ sin φ|` of `haldane_mass_inversion_iff`, has `0`.
+* **`haldane_massInversion_not_sufficient_at_N4`** — the same model at `m = 5`, **inside** that
+  window, *also* has `0`. See the next section: this is the honest relationship between the
+  invariant and the phase boundary, and it is not the one a first reading suggests.
+
+## What the witness/anti-witness pair does and does not say
+
+**Mass inversion is necessary but NOT sufficient for the `4 × 4` invariant to be nonzero.** It is
+tempting — and wrong — to read the `m = 1` / `m = 6` pair as a classification, i.e. "the invariant
+is `−1` inside the mass-inversion window and `0` outside it". The two sampled masses are consistent
+with that reading, and nothing else is:
+
+* the analytic window is `|m| < 3√3 ≈ 5.1962`;
+* the **`4 × 4` lattice** transition sits at `|m| ≈ 3.3177`, strictly *inside* it;
+* so on roughly 36 % of the window — every `m` with `3.318 ≲ |m| < 5.196` — the Dirac masses invert
+  while `blochLatticeChern` reads `0`. `haldane_massInversion_not_sufficient_at_N4` pins this at
+  `m = 5` with a kernel-checked `0` and a `norm_num`-backed `|5| < 3√3`.
+
+This is **not** a degeneracy or a gauge artefact: the frame stays admissible across the whole range
+(the north-pole condition and the overlap nonvanishing both hold at `m = 5`), so the `0` is a
+genuine value of the invariant on that frame.
+
+The cause is structural and grid-dependent. The `4 × 4` grid never samples `K` or `K′`, and its
+extremal `haldaneNNN` is `±2` against the true `±3√3/2 ≈ ±2.598`, so the lattice sees a *smaller*
+effective window than the continuum. The transition converges to `3√3` from below as `N` grows
+(`N = 4 → 3.318`, `N = 8 → 4.805`, `N = 16 → 5.085`, `N = 32 → 5.170`), which is the expected FHS
+behaviour, not a defect — but it means **no statement here may be phrased as "exactly where the
+Dirac masses invert" at any fixed `N`.** The correct necessary direction is
+`haldane_mass_inversion_iff`, whose own docstring already says the nonzero region is a strict
+subset.
+
+*(The "classification" framing was shipped on 2026-07-28 and retracted on 2026-07-29 after a
+numerical audit located the `N = 4` transition. The theorems were all true; the prose around them
+was not.)*
 
 ## Why no transcendental evaluation is needed (the architectural point)
 
-`BlochFHS.lean` warns that a nontrivial frame-derived Chern value "requires the QWZ transcendental
-evaluation (`Complex.arg` of `sin/cos` at generic momenta)". That is true of *evaluating* the
-plaquette phases — at `N = 4` none of the 32 link phases is a rational multiple of `π`. But
-`latticeChern` never needs their values. It is `−∑ branchIndex (rawCurl)`, a sum of **integers**,
-and `∑ rawCurl = 0` by torus telescoping. So the whole invariant is carried by *which `2π`-window*
-each raw curl falls in — a **bounding** problem, not an evaluation problem.
+`BlochFHS.lean` used to warn that a nontrivial frame-derived Chern value "requires the QWZ
+transcendental evaluation (`Complex.arg` of `sin/cos` at generic momenta)". That would be true of
+*evaluating* the plaquette phases, but `latticeChern` never needs their values. It is
+`−∑ branchIndex (rawCurl)`, a sum of **integers**, and `∑ rawCurl = 0` by torus telescoping. So the
+whole invariant is carried by *which `2π`-window* each raw curl falls in — a **bounding** problem,
+not an evaluation problem. (That warning has been corrected in `BlochFHS.lean` accordingly.)
 
-Accordingly this file ships a small **rational-enclosure `arg` sector calculus**
-(`arg_cell_A`/`_B`/`_C`/`_D`, `abs_arg_lt_pi_div_four`), built on `Complex.tan_arg` and
-`Real.arctan` monotonicity, whose side-conditions are radical-free comparisons of the overlap's
-real and imaginary parts. At `N = 4` the momenta are `0, π/2, π, 3π/2`, so every `d`-vector is
-*integral* and the only irrationals in the entire computation are `√2, √3, √6, √10, √26`. Four-digit
-enclosures of those five numbers suffice: the tightest inequality in the argument
-(`19 − 6√10 > 0`, i.e. `361 > 360`) has slack `0.026`, and the tightest window placement has
-`1.64 rad` of margin. **No `native_decide`, no `Complex.arg` evaluation, no new axioms.**
+The machinery this needs is **model-independent and no longer lives here.** It was promoted on
+2026-07-29 to:
+
+* **`TopologicalBand.ArgSectors`** — the rational-enclosure `arg` sector calculus
+  (`arg_cell_A`/`_B`/`_C`/`_D`, `abs_arg_lt_pi_div_four`, `branchIndex_eq_{zero,one}_of`), built on
+  `Complex.tan_arg` and `Real.arctan` monotonicity, whose side-conditions are radical-free
+  comparisons of a number's real and imaginary parts;
+* **`TopologicalBand.BlochFrameOfD`** — the `d`-field → frame adapter (`lbVec`, `blochFrameOfD`,
+  `linkArg_blochFrameOfD`) and the narrow-link triviality criterion
+  (`blochLatticeChern_eq_zero_of_narrow{,_D}`).
+
+Neither mentions graphene, so a later square-lattice (QWZ) spike consumes them directly instead of
+importing this module.
+
+At `N = 4` the momenta are `0, π/2, π, 3π/2`, so every `d`-vector in the table is *integral* and
+each computation needs only four-digit enclosures of a handful of surds — but **which** surds
+depends on the mass: `√2, √6, √10, √26` at `m = 1`, `√2, √26, √30, √34, √82` at `m = 5`, and
+`√5, √37, √41, √45, √101` at `m = 6` (plus `√3` from the sector reference angles). The tightest
+inequality in the `m = 1` argument (`19 − 6√10 > 0`, i.e. `361 > 360`) has slack `0.026`, and the
+tightest window placement there has `1.64 rad` of margin. **No `native_decide`, no `Complex.arg`
+evaluation, no new axioms.**
+
+Separately: the link phases at `N = 4` are not rational multiples of `π` as far as we can tell, but
+that is an unproven number-theoretic aside and nothing below depends on it — the point of the
+sector calculus is precisely that it never has to decide such a question.
 
 ## Grid choice
 
-`N = 4`. `N = 3` is *broken*: one plaquette lands at `rawCurl = −π` exactly — on the branch cut —
-and the winding plaquettes cancel, so its `latticeChern` reads `0` even inside the topological
-window. `N = 4` is the smallest clean grid; exactly one of its sixteen plaquettes carries a branch
-correction.
+`N = 4`. The constraint is **admissibility, and it is arithmetic in `N`:** whenever `3 ∣ N` the grid
+samples the Dirac points `K = (2π/3, 4π/3)` and `K′`, where the `d`-vector is purely `±d₃`. At the
+Dirac point carrying the *negative* mass the vector sits on the south pole, so `‖d‖ + d₃ = 0`, the
+`lbVec` gauge is singular (`lbVec ![0,0,−c] = ![0,0]` for `c > 0`), and an overlap vanishes — the
+frame is not admissible at all. This kills `N = 3`, `6`, `12`, `24`, … *(An earlier version of this
+note attributed `N = 3`'s failure to a plaquette landing on the branch cut, and a companion roadmap
+table offered `6 × 6` as a clean alternative. Both were wrong: the cause is Dirac-point sampling,
+and `6 × 6` fails for exactly the same reason. Corrected 2026-07-29.)*
+
+`N = 4` is therefore the smallest admissible grid (`N = 5`, `8`, `16`, `32` are also admissible);
+exactly one of its sixteen plaquettes carries a branch correction.
 
 ## Sign convention
 
@@ -57,10 +114,16 @@ time-reversal-breaking flux and flips it.
 
 ## 6CA coordination
 
-**Guardrail branch B applies.** The separately-gated QWZ (square-lattice) spike has not landed —
-`TopologicalBand/BlochFHS.lean` still defers any nontrivial concrete Chern frame. This Haldane
-witness is therefore the repo's first, and a later QWZ spike should reuse the adapter pattern here
-(`blochFrameOfD`, the sector calculus, `blochLatticeChern_eq_zero_of_narrow`) rather than rebuild it.
+**Guardrail branch B applies.** The separately-gated QWZ (square-lattice) spike has not landed, so
+this Haldane witness is the repo's first nontrivial concrete Chern frame. The adapter it needed is
+**not** duplicated per model: `blochFrameOfD`, the sector calculus and
+`blochLatticeChern_eq_zero_of_narrow` were promoted into `TopologicalBand/` (see above) precisely so
+that a QWZ spike consumes them without importing graphene. The roadmap guardrail against duplicated
+adapter machinery is thereby satisfied structurally rather than by convention.
+
+**Gauge independence.** `blochLatticeChern` is invariant under a per-site rephasing of the frame
+(`TopologicalBand.blochLatticeChern_rephase`), so the `−1` below is a property of the sampled band,
+not of the particular `lbVec` representative chosen to compute it.
 
 **⚠ Guardrail (inherited from Waves 1–2).** Every statement is about the *stated* Haldane
 tight-binding model on a *stated* finite grid. The `latticeChern` integer is the FHS lattice
@@ -84,325 +147,6 @@ namespace SKEFTHawking.GrapheneBand
 open Complex Real Matrix SKEFTHawking.Topological SKEFTHawking.TopologicalBand
 open scoped BigOperators
 
-/-! ## Rational-enclosure `arg` sectors -/
-
-/-- For `Re z > 0` the argument is the `arctan` of the slope. -/
-theorem arg_eq_arctan_of_re_pos {z : ℂ} (h : 0 < z.re) : z.arg = Real.arctan (z.im / z.re) := by
-  have habs : |z.arg| < Real.pi / 2 := Complex.abs_arg_lt_pi_div_two_iff.mpr (Or.inl h)
-  rw [abs_lt] at habs
-  rw [← Complex.tan_arg, Real.arctan_tan (by linarith [habs.1]) habs.2]
-
-/-- Upper `arg` bound from a slope bound, at a reference angle `a` with known tangent. -/
-theorem arg_lt_of_slope {z : ℂ} {a c : ℝ} (hre : 0 < z.re) (hta : Real.tan a = c)
-    (ha1 : -(Real.pi / 2) < a) (ha2 : a < Real.pi / 2) (h : z.im < c * z.re) : z.arg < a := by
-  rw [arg_eq_arctan_of_re_pos hre, ← Real.arctan_tan ha1 ha2, hta]
-  exact Real.arctan_lt_arctan_iff.mpr ((div_lt_iff₀ hre).mpr h)
-
-/-- Lower `arg` bound from a slope bound. -/
-theorem lt_arg_of_slope {z : ℂ} {a c : ℝ} (hre : 0 < z.re) (hta : Real.tan a = c)
-    (ha1 : -(Real.pi / 2) < a) (ha2 : a < Real.pi / 2) (h : c * z.re < z.im) : a < z.arg := by
-  rw [arg_eq_arctan_of_re_pos hre, ← Real.arctan_tan ha1 ha2, hta]
-  exact Real.arctan_lt_arctan_iff.mpr ((lt_div_iff₀ hre).mpr h)
-
-theorem tan_pi_div_six : Real.tan (Real.pi / 6) = 1 / Real.sqrt 3 := by
-  rw [Real.tan_eq_sin_div_cos, Real.sin_pi_div_six, Real.cos_pi_div_six,
-    div_div_div_cancel_right₀]
-  norm_num
-
-theorem tan_pi_div_three : Real.tan (Real.pi / 3) = Real.sqrt 3 := by
-  rw [Real.tan_eq_sin_div_cos, Real.sin_pi_div_three, Real.cos_pi_div_three]
-  ring
-
-theorem tan_neg_pi_div_six : Real.tan (-(Real.pi / 6)) = -(1 / Real.sqrt 3) := by
-  rw [Real.tan_neg, tan_pi_div_six]
-
-theorem tan_neg_pi_div_three : Real.tan (-(Real.pi / 3)) = -Real.sqrt 3 := by
-  rw [Real.tan_neg, tan_pi_div_three]
-
-theorem tan_neg_pi_div_four : Real.tan (-(Real.pi / 4)) = -1 := by
-  rw [Real.tan_neg, Real.tan_pi_div_four]
-
-/-- **Sector A** — `arg z ∈ [0, π/6)`: positive real part, non-negative imaginary part, slope
-below `tan (π/6) = 1/√3` (stated as the radical-free `√3 · Im z < Re z`). -/
-theorem arg_cell_A {z : ℂ} (hre : 0 < z.re) (him : 0 ≤ z.im) (h : Real.sqrt 3 * z.im < z.re) :
-    0 ≤ z.arg ∧ z.arg < Real.pi / 6 := by
-  have hpi := Real.pi_pos
-  have h3 : (0:ℝ) < Real.sqrt 3 := by positivity
-  refine ⟨Complex.arg_nonneg_iff.mpr him, arg_lt_of_slope hre tan_pi_div_six (by linarith) (by linarith) ?_⟩
-  rw [one_div, inv_mul_eq_div, lt_div_iff₀ h3]
-  linarith [h]
-
-/-- **Sector B** — `arg z ∈ (−π/6, 0]`. -/
-theorem arg_cell_B {z : ℂ} (hre : 0 < z.re) (him : z.im ≤ 0) (h : -z.re < Real.sqrt 3 * z.im) :
-    -(Real.pi / 6) < z.arg ∧ z.arg ≤ 0 := by
-  have hpi := Real.pi_pos
-  have h3 : (0:ℝ) < Real.sqrt 3 := by positivity
-  refine ⟨lt_arg_of_slope hre tan_neg_pi_div_six (by linarith) (by linarith) ?_, ?_⟩
-  · rw [neg_mul, one_div, inv_mul_eq_div, neg_lt, lt_div_iff₀ h3]
-    nlinarith [h]
-  · rw [arg_eq_arctan_of_re_pos hre, Real.arctan_le_zero]
-    exact div_nonpos_of_nonpos_of_nonneg him hre.le
-
-/-- **Sector C** — `arg z ∈ (π/4, π/2)`, certified by the radical-free `Re z < Im z`.
-
-The two large-argument sectors are deliberately *asymmetric*: `π/4` on the positive side and `π/3`
-on the negative side (sector D). Those are the widest thresholds the Haldane plaquette arithmetic
-below tolerates — widening D to `π/4` as well would push the winding plaquette's bracket onto the
-boundary of its `2π` window. Stating C at `π/4` keeps its side-condition free of `√3`, which is
-what makes the two tightest links (`Re ≈ 0.39`) provable by rational enclosure alone. -/
-theorem arg_cell_C {z : ℂ} (hre : 0 < z.re) (h : z.re < z.im) :
-    Real.pi / 4 < z.arg ∧ z.arg < Real.pi / 2 := by
-  have hpi := Real.pi_pos
-  refine ⟨lt_arg_of_slope hre Real.tan_pi_div_four (by linarith) (by linarith) (by linarith), ?_⟩
-  have habs : |z.arg| < Real.pi / 2 := Complex.abs_arg_lt_pi_div_two_iff.mpr (Or.inl hre)
-  exact (abs_lt.mp habs).2
-
-/-- **Sector D** — `arg z ∈ (−π/2, −π/3)`. -/
-theorem arg_cell_D {z : ℂ} (hre : 0 < z.re) (h : z.im < -(Real.sqrt 3 * z.re)) :
-    -(Real.pi / 2) < z.arg ∧ z.arg < -(Real.pi / 3) := by
-  have hpi := Real.pi_pos
-  refine ⟨?_, arg_lt_of_slope hre tan_neg_pi_div_three (by linarith) (by linarith) (by linarith)⟩
-  have habs : |z.arg| < Real.pi / 2 := Complex.abs_arg_lt_pi_div_two_iff.mpr (Or.inl hre)
-  linarith [(abs_lt.mp habs).1]
-
-/-- **Narrow sector** — `|arg z| < π/4` from `|Im z| < Re z`. -/
-theorem abs_arg_lt_pi_div_four {z : ℂ} (hre : 0 < z.re) (h : |z.im| < z.re) :
-    |z.arg| < Real.pi / 4 := by
-  have hpi := Real.pi_pos
-  rw [abs_lt] at h ⊢
-  constructor
-  · refine lt_arg_of_slope hre tan_neg_pi_div_four (by linarith) (by linarith) ?_
-    linarith [h.1]
-  · refine arg_lt_of_slope hre Real.tan_pi_div_four (by linarith) (by linarith) ?_
-    linarith [h.2]
-
-/-! ## Branch-index placement from bounds -/
-
-theorem branchIndex_eq_zero_of {t : ℝ} (h1 : -Real.pi < t) (h2 : t ≤ Real.pi) :
-    branchIndex t = 0 := by
-  rw [branchIndex, toIocDiv_eq_iff, Set.mem_Ioc]
-  simp only [zero_zsmul, sub_zero]
-  exact ⟨h1, by linarith⟩
-
-theorem branchIndex_eq_one_of {t : ℝ} (h1 : Real.pi < t) (h2 : t ≤ 3 * Real.pi) :
-    branchIndex t = 1 := by
-  rw [branchIndex, toIocDiv_eq_iff, Set.mem_Ioc]
-  simp only [one_zsmul]
-  exact ⟨by linarith, by linarith⟩
-
-/-! ## Frame link arguments -/
-
-theorem arg_circle_exp_of_mem {θ : ℝ} (h : θ ∈ Set.Ioc (-Real.pi) Real.pi) :
-    Complex.arg (Circle.exp θ : ℂ) = θ := by
-  rw [Circle.coe_exp, Complex.exp_mul_I]
-  exact Complex.arg_cos_add_sin_mul_I h
-
-theorem arg_phase (z : ℂ) : Complex.arg (phase z : ℂ) = Complex.arg z :=
-  arg_circle_exp_of_mem (Complex.arg_mem_Ioc z)
-
-/-- The FHS link argument of a frame is the argument of the raw (unnormalized-by-modulus)
-nearest-neighbour overlap. -/
-theorem linkArg_linkOfFrame {N₁ N₂ n : ℕ} (F : AdmissibleBandFrame N₁ N₂ n)
-    (μ : Fin 2) (k : Torus N₁ N₂) :
-    linkArg N₁ N₂ (linkOfFrame F) μ k
-      = Complex.arg (frameOverlap (F.state k) (F.state (shift N₁ N₂ μ k))) :=
-  arg_phase _
-
-/-! ## Normalization: from a raw state to a unit state -/
-
-/-- The squared norm of a raw (unnormalized) state. -/
-noncomputable def selfNormSq {n : ℕ} (v : Fin n → ℂ) : ℝ := ∑ i, Complex.normSq (v i)
-
-theorem frameOverlap_self {n : ℕ} (v : Fin n → ℂ) :
-    frameOverlap v v = ((selfNormSq v : ℝ) : ℂ) := by
-  unfold frameOverlap selfNormSq
-  push_cast
-  refine Finset.sum_congr rfl (fun i _ => ?_)
-  rw [mul_comm, Complex.mul_conj]
-
-theorem selfNormSq_nonneg {n : ℕ} (v : Fin n → ℂ) : 0 ≤ selfNormSq v :=
-  Finset.sum_nonneg fun _ _ => Complex.normSq_nonneg _
-
-/-- Rescaling a raw state to unit norm. -/
-noncomputable def normalizeVec {n : ℕ} (v : Fin n → ℂ) : Fin n → ℂ :=
-  fun i => ((Real.sqrt (selfNormSq v) : ℝ) : ℂ)⁻¹ * v i
-
-theorem frameOverlap_normalizeVec {n : ℕ} (u v : Fin n → ℂ) :
-    frameOverlap (normalizeVec u) (normalizeVec v)
-      = ((Real.sqrt (selfNormSq u) * Real.sqrt (selfNormSq v) : ℝ) : ℂ)⁻¹ * frameOverlap u v := by
-  unfold normalizeVec
-  rw [frameOverlap_smul_left, frameOverlap_smul_right, Complex.conj_inv, Complex.conj_ofReal]
-  push_cast
-  rw [mul_inv]
-  ring
-
-theorem normalizeVec_normalized {n : ℕ} (v : Fin n → ℂ) (hv : 0 < selfNormSq v) :
-    frameOverlap (normalizeVec v) (normalizeVec v) = 1 := by
-  have hs : 0 < Real.sqrt (selfNormSq v) := Real.sqrt_pos.mpr hv
-  rw [frameOverlap_normalizeVec, frameOverlap_self, Real.mul_self_sqrt (selfNormSq_nonneg v),
-    ← Complex.ofReal_inv, ← Complex.ofReal_mul, inv_mul_cancel₀ (ne_of_gt hv)]
-  norm_num
-
-/-- **The normalization is a positive rescaling**, hence invisible to every link argument. -/
-theorem arg_frameOverlap_normalizeVec {n : ℕ} (u v : Fin n → ℂ)
-    (hu : 0 < selfNormSq u) (hv : 0 < selfNormSq v) :
-    Complex.arg (frameOverlap (normalizeVec u) (normalizeVec v))
-      = Complex.arg (frameOverlap u v) := by
-  have hsu : 0 < Real.sqrt (selfNormSq u) := Real.sqrt_pos.mpr hu
-  have hsv : 0 < Real.sqrt (selfNormSq v) := Real.sqrt_pos.mpr hv
-  rw [frameOverlap_normalizeVec, ← Complex.ofReal_inv]
-  exact Complex.arg_real_mul _ (by positivity)
-
-/-! ## The lower-band eigenvector of a `d`-vector -/
-
-/-- The **raw lower-band eigenvector** `v(d) = (d₁ − i d₂, −(d₃ + ‖d‖))` of `blochPauli d`.
-Unnormalized: only its ray matters, and its ray is exactly the `−‖d‖` eigenspace. -/
-noncomputable def lbVec (d : Fin 3 → ℝ) : Fin 2 → ℂ :=
-  ![(d 0 : ℂ) - Complex.I * (d 1 : ℂ), -((d 2 + Real.sqrt (dNormSq d) : ℝ) : ℂ)]
-
-/-- **The lower-band eigenvector law**, proved directly from the `blochPauli` matrix and the
-Pauli norm identity `‖d‖² = d₁² + d₂² + d₃²`. -/
-theorem blochPauli_mulVec_lbVec (d : Fin 3 → ℝ) :
-    (blochPauli d) *ᵥ lbVec d = (-(Real.sqrt (dNormSq d)) : ℂ) • lbVec d := by
-  have hsq : ((Real.sqrt (dNormSq d) : ℝ) : ℂ) * ((Real.sqrt (dNormSq d) : ℝ) : ℂ)
-      = (d 0 : ℂ) ^ 2 + (d 1 : ℂ) ^ 2 + (d 2 : ℂ) ^ 2 := by
-    rw [← Complex.ofReal_mul, Real.mul_self_sqrt (dNormSq_nonneg d), dNormSq]
-    push_cast
-    ring
-  funext i
-  fin_cases i
-  · simp only [lbVec, blochPauli, Matrix.mulVec, dotProduct, Fin.sum_univ_two, Fin.isValue,
-      Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons, Matrix.of_apply,
-      Matrix.cons_val', Pi.smul_apply, smul_eq_mul, Matrix.cons_val_fin_one, Matrix.head_fin_const]
-    push_cast
-    ring
-  · simp only [lbVec, blochPauli, Matrix.mulVec, dotProduct, Fin.sum_univ_two, Fin.isValue,
-      Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons, Matrix.of_apply,
-      Matrix.cons_val', Pi.smul_apply, smul_eq_mul, Matrix.cons_val_fin_one, Matrix.head_fin_const]
-    push_cast
-    linear_combination -hsq - (d 1 : ℂ) ^ 2 * Complex.I_sq
-
-/-- `‖v(d)‖² = 2‖d‖(‖d‖ + d₃)`. -/
-theorem selfNormSq_lbVec (d : Fin 3 → ℝ) :
-    selfNormSq (lbVec d)
-      = 2 * Real.sqrt (dNormSq d) * (Real.sqrt (dNormSq d) + d 2) := by
-  have hsq : Real.sqrt (dNormSq d) * Real.sqrt (dNormSq d) = dNormSq d :=
-    Real.mul_self_sqrt (dNormSq_nonneg d)
-  unfold selfNormSq lbVec dNormSq at *
-  simp only [Fin.sum_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons,
-    Complex.normSq_apply, Complex.sub_re, Complex.sub_im, Complex.mul_re, Complex.mul_im,
-    Complex.I_re, Complex.I_im, Complex.ofReal_re, Complex.ofReal_im, Complex.neg_re,
-    Complex.neg_im]
-  nlinarith [hsq]
-
-/-- The real part of a raw lower-band overlap. -/
-theorem lbOverlap_re (d d' : Fin 3 → ℝ) :
-    (frameOverlap (lbVec d) (lbVec d')).re
-      = d 0 * d' 0 + d 1 * d' 1
-        + (d 2 + Real.sqrt (dNormSq d)) * (d' 2 + Real.sqrt (dNormSq d')) := by
-  unfold frameOverlap lbVec
-  simp only [Fin.sum_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons,
-    Complex.add_re, Complex.mul_re, Complex.mul_im, map_sub, map_mul, Complex.conj_I,
-    Complex.conj_ofReal, map_neg, Complex.sub_re, Complex.sub_im, Complex.neg_re, Complex.neg_im,
-    Complex.I_re, Complex.I_im, Complex.ofReal_re, Complex.ofReal_im]
-  ring
-
-/-- The imaginary part of a raw lower-band overlap — an integer whenever `d`, `d'` are. -/
-theorem lbOverlap_im (d d' : Fin 3 → ℝ) :
-    (frameOverlap (lbVec d) (lbVec d')).im = d 1 * d' 0 - d 0 * d' 1 := by
-  unfold frameOverlap lbVec
-  simp only [Fin.sum_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons,
-    Complex.add_im, Complex.mul_re, Complex.mul_im, map_sub, map_mul, Complex.conj_I,
-    Complex.conj_ofReal, map_neg, Complex.sub_re, Complex.sub_im, Complex.neg_re, Complex.neg_im,
-    Complex.I_re, Complex.I_im, Complex.ofReal_re, Complex.ofReal_im]
-  ring
-
-/-! ## Building a `BlochLowerBandFrame` from a `d`-field -/
-
-/-- The **north-pole condition** `‖d‖ + d₃ > 0` (i.e. `d` is not on the negative `d₃` axis) is
-exactly what makes the `lbVec` gauge nonsingular; it forces the gap. -/
-theorem sqrt_dNormSq_pos_of {d : Fin 3 → ℝ} (h : 0 < Real.sqrt (dNormSq d) + d 2) :
-    0 < Real.sqrt (dNormSq d) := by
-  have hle : d 2 ≤ Real.sqrt (dNormSq d) := by
-    refine (le_abs_self _).trans ?_
-    rw [← Real.sqrt_sq_eq_abs]
-    exact Real.sqrt_le_sqrt (by unfold dNormSq; nlinarith [sq_nonneg (d 0), sq_nonneg (d 1)])
-  linarith [Real.sqrt_nonneg (dNormSq d)]
-
-theorem dVec_ne_zero_of {d : Fin 3 → ℝ} (h : 0 < Real.sqrt (dNormSq d) + d 2) : d ≠ 0 := by
-  intro hd
-  rw [hd] at h
-  simp [dNormSq] at h
-
-theorem selfNormSq_lbVec_pos {d : Fin 3 → ℝ} (h : 0 < Real.sqrt (dNormSq d) + d 2) :
-    0 < selfNormSq (lbVec d) := by
-  rw [selfNormSq_lbVec]
-  nlinarith [sqrt_dNormSq_pos_of h]
-
-theorem normalizeVec_eq_smul {n : ℕ} (v : Fin n → ℂ) :
-    normalizeVec v = ((Real.sqrt (selfNormSq v) : ℝ) : ℂ)⁻¹ • v := rfl
-
-/-- **The lower-band frame of a nonsingular `d`-field.** Every state is the normalized
-`−‖d(k)‖` eigenvector of `blochPauli (d k)`; admissibility is the explicit nonvanishing of the
-raw nearest-neighbour overlaps. -/
-noncomputable def blochFrameOfD {N₁ N₂ : ℕ} (D : Torus N₁ N₂ → (Fin 3 → ℝ))
-    (hpos : ∀ k, 0 < Real.sqrt (dNormSq (D k)) + (D k) 2)
-    (hov : ∀ (μ : Fin 2) (k : Torus N₁ N₂),
-      frameOverlap (lbVec (D k)) (lbVec (D (shift N₁ N₂ μ k))) ≠ 0) :
-    BlochLowerBandFrame N₁ N₂ where
-  state := fun k => normalizeVec (lbVec (D k))
-  normalized := fun k => normalizeVec_normalized _ (selfNormSq_lbVec_pos (hpos k))
-  overlap_ne := by
-    intro μ k
-    rw [frameOverlap_normalizeVec]
-    refine mul_ne_zero ?_ (hov μ k)
-    simp only [ne_eq, inv_eq_zero, Complex.ofReal_eq_zero]
-    exact ne_of_gt (mul_pos (Real.sqrt_pos.mpr (selfNormSq_lbVec_pos (hpos k)))
-      (Real.sqrt_pos.mpr (selfNormSq_lbVec_pos (hpos _))))
-  dField := D
-  gapped := fun k => dVec_ne_zero_of (hpos k)
-  lowerBand := by
-    intro k
-    rw [normalizeVec_eq_smul, Matrix.mulVec_smul, blochPauli_mulVec_lbVec, smul_comm]
-
-/-- The FHS link argument of a `d`-field frame is the argument of the **raw** overlap: the
-normalization is a positive rescaling and drops out. -/
-theorem linkArg_blochFrameOfD {N₁ N₂ : ℕ} (D : Torus N₁ N₂ → (Fin 3 → ℝ))
-    (hpos : ∀ k, 0 < Real.sqrt (dNormSq (D k)) + (D k) 2)
-    (hov : ∀ (μ : Fin 2) (k : Torus N₁ N₂),
-      frameOverlap (lbVec (D k)) (lbVec (D (shift N₁ N₂ μ k))) ≠ 0)
-    (μ : Fin 2) (k : Torus N₁ N₂) :
-    linkArg N₁ N₂ (linkOfFrame (blochFrameOfD D hpos hov).toAdmissibleBandFrame) μ k
-      = Complex.arg (frameOverlap (lbVec (D k)) (lbVec (D (shift N₁ N₂ μ k)))) := by
-  rw [linkArg_linkOfFrame]
-  exact arg_frameOverlap_normalizeVec _ _ (selfNormSq_lbVec_pos (hpos k))
-    (selfNormSq_lbVec_pos (hpos _))
-
-/-- **Narrow-link triviality.** A sampled band frame all of whose nearest-neighbour overlaps lie
-in the open right quarter-plane sector `|arg| < π/4` has vanishing FHS lattice Chern number: every
-plaquette's raw curl is then confined to `(−π, π)`, so no plaquette carries a branch correction.
-
-This is the reusable *negative* criterion — the discrete analogue of "a frame with no phase
-frustration cannot wind" — and it is what discharges the Haldane model's trivial phase without any
-per-plaquette arithmetic. -/
-theorem blochLatticeChern_eq_zero_of_narrow {N₁ N₂ n : ℕ} [NeZero N₁] [NeZero N₂]
-    (F : AdmissibleBandFrame N₁ N₂ n)
-    (h : ∀ (μ : Fin 2) (k : Torus N₁ N₂),
-      |Complex.arg (frameOverlap (F.state k) (F.state (shift N₁ N₂ μ k)))| < Real.pi / 4) :
-    blochLatticeChern F = 0 := by
-  have hz : ∀ k, plaquetteBranch N₁ N₂ (linkOfFrame F) k = 0 := by
-    intro k
-    unfold plaquetteBranch rawCurl
-    rw [linkArg_linkOfFrame, linkArg_linkOfFrame, linkArg_linkOfFrame, linkArg_linkOfFrame]
-    have h1 := h 0 k
-    have h2 := h 1 (shift N₁ N₂ 0 k)
-    have h3 := h 0 (shift N₁ N₂ 1 k)
-    have h4 := h 1 k
-    rw [abs_lt] at h1 h2 h3 h4
-    exact branchIndex_eq_zero_of (by linarith) (by linarith)
-  unfold blochLatticeChern latticeChern
-  rw [Finset.sum_congr rfl (fun k _ => hz k)]
-  simp
 
 /-! ## The Haldane model -/
 
@@ -410,6 +154,68 @@ theorem blochLatticeChern_eq_zero_of_narrow {N₁ N₂ n : ℕ} [NeZero N₁] [N
 antisymmetric triangular-sublattice sum whose value at the two Dirac points is `±3√3/2`. -/
 noncomputable def haldaneNNN (θ : ℝ × ℝ) : ℝ :=
   Real.sin θ.1 + Real.sin (θ.2 - θ.1) - Real.sin θ.2
+
+/-! ### The chart bridge: `haldaneNNN` IS the physical next-nearest-neighbour sum
+
+Wave 1 remediated an exposure in which `structureFactor` was described in honeycomb-geometric terms
+with no chart hypothesis, by shipping `IsHoneycombChart` / `IsHoneycombNeighbours` and the bridge
+`neighbourSum_eq_structureFactor`. `haldaneNNN` reintroduces exactly that exposure one layer up: it
+is described as "the antisymmetric triangular-sublattice sum", which is a geometric claim about
+*vectors*, while the definition is a formula in Bloch phases. The three declarations below close
+the gap the same way Wave 1 did. -/
+
+/-- The three **next-nearest-neighbour** (triangular-sublattice) vectors of a honeycomb chart:
+`b₁ = a₁`, `b₂ = a₂ − a₁`, `b₃ = −a₂`. These are the hops `haldaneNNN` sums over, and their
+orientation is what fixes the sign of the time-reversal-breaking term. -/
+def nnnVecs (a₁ a₂ : ℝ × ℝ) : Fin 3 → ℝ × ℝ := ![a₁, a₂ - a₁, -a₂]
+
+/-- The three next-nearest-neighbour hops **close into a triangle**, `b₁ + b₂ + b₃ = 0`. This is
+why the sum is antisymmetric under `k ↦ −k` and hence why it can carry a time-reversal-breaking
+phase at all. -/
+theorem nnnVecs_sum_zero (a₁ a₂ : ℝ × ℝ) :
+    nnnVecs a₁ a₂ 0 + nnnVecs a₁ a₂ 1 + nnnVecs a₁ a₂ 2 = 0 := by
+  simp [nnnVecs, Prod.ext_iff]
+
+/-- **The bridge.** In the chart coordinates `θᵢ = ⟨k, aᵢ⟩`, the formula `haldaneNNN` *is* the
+physical next-nearest-neighbour phase sum `Σⱼ sin⟨k, bⱼ⟩` — the object the Haldane Hamiltonian's
+`t₂ e^{iφ}` term actually contributes. This is the `haldaneNNN` analogue of Wave 1's
+`neighbourSum_eq_structureFactor`, and it is what licenses the geometric language in the
+definition's docstring.
+
+The **orientation** `(a₁, a₂ − a₁, −a₂)` is the geometric input the docstring's sign convention
+depends on: replacing it by the reversed triple negates `haldaneNNN`, which is the `φ ↦ −φ` flip
+that flips the Chern number. Naming the triple is what makes that convention checkable rather than
+ambiguous. -/
+theorem haldaneNNN_eq_nnnSum (a₁ a₂ k : ℝ × ℝ) :
+    haldaneNNN (planeDot k a₁, planeDot k a₂)
+      = ∑ j : Fin 3, Real.sin (planeDot k (nnnVecs a₁ a₂ j)) := by
+  simp only [haldaneNNN, nnnVecs, Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one,
+    Matrix.head_cons, Matrix.cons_val_two, Matrix.tail_cons, planeDot]
+  rw [show k.1 * (a₂ - a₁).1 + k.2 * (a₂ - a₁).2
+        = (k.1 * a₂.1 + k.2 * a₂.2) - (k.1 * a₁.1 + k.2 * a₁.2) by simp [Prod.fst_sub, Prod.snd_sub]; ring,
+    show k.1 * (-a₂).1 + k.2 * (-a₂).2 = -(k.1 * a₂.1 + k.2 * a₂.2) by simp; ring,
+    Real.sin_neg]
+  ring
+
+/-- **The next-nearest-neighbour set of a honeycomb chart is itself a 120° triple** — equal lengths,
+pairwise `120°`. So `haldaneNNN` really does sum over the *triangular sublattice* of the honeycomb,
+and "antisymmetric triangular-sublattice sum" is a theorem about this file's own objects rather than
+a description.
+
+Together with `haldaneNNN_eq_nnnSum` this is the chart hypothesis Wave 1's remediation asks for: a
+consumer identifying a physical device with this model declares `IsHoneycombChart (a₁, a₂)`, and
+everything geometric said about `haldaneNNN` then follows. -/
+theorem isHoneycombNeighbours_nnnVecs {a₁ a₂ : ℝ × ℝ} (h : IsHoneycombChart a₁ a₂) :
+    IsHoneycombNeighbours (nnnVecs a₁ a₂) := by
+  obtain ⟨hne, hlen, hang⟩ := h
+  simp only [planeDot] at hlen hang
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
+    simp only [nnnVecs, planeDot, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons,
+      Matrix.cons_val_two, Matrix.tail_cons, Prod.fst_sub, Prod.snd_sub, Prod.fst_neg,
+      Prod.snd_neg] <;>
+    first
+      | exact hne
+      | nlinarith [hlen, hang]
 
 /-- **The Haldane `d`-vector.** Wave 1's chiral nearest-neighbour honeycomb `d` (scaled by the
 hopping `t`) plus a `d₃` built from the sublattice mass `m` and the complex next-nearest-neighbour
@@ -912,6 +718,134 @@ theorem haldane6_link_narrow :
       (by norm_num <;> nlinarith [Real.sqrt_nonneg (41 : ℝ), Real.sqrt_nonneg (41 : ℝ),
         mul_nonneg (Real.sqrt_nonneg (41 : ℝ)) (Real.sqrt_nonneg (41 : ℝ))])
 
+/-! ### Inside the window but still trivial: `m = 5` (`5 < 3√3 ≈ 5.196`) -/
+
+theorem haldane5_pos : ∀ k : Torus 4 4,
+    0 < Real.sqrt (dNormSq (haldaneD44 5 k)) + (haldaneD44 5 k) 2 := by
+  intro k
+  fin_cases k
+  · exact hpos_of_table (hD44_00 _) (by norm_num <;> positivity)
+  · exact hpos_of_table (hD44_01 _) (by norm_num <;> positivity)
+  · exact hpos_of_table (hD44_02 _) (by norm_num <;> positivity)
+  · exact hpos_of_table (hD44_03 _) (by norm_num <;> positivity)
+  · exact hpos_of_table (hD44_10 _) (by norm_num <;> positivity)
+  · exact hpos_of_table (hD44_11 _) (by norm_num <;> positivity)
+  · exact hpos_of_table (hD44_12 _) (by norm_num <;> positivity)
+  · exact hpos_of_table (hD44_13 _) (by norm_num <;> positivity)
+  · exact hpos_of_table (hD44_20 _) (by norm_num <;> positivity)
+  · exact hpos_of_table (hD44_21 _) (by norm_num <;> positivity)
+  · exact hpos_of_table (hD44_22 _) (by norm_num <;> positivity)
+  · exact hpos_of_table (hD44_23 _) (by norm_num <;> positivity)
+  · exact hpos_of_table (hD44_30 _) (by norm_num <;> positivity)
+  · exact hpos_of_table (hD44_31 _) (by norm_num <;> positivity)
+  · exact hpos_of_table (hD44_32 _) (by norm_num <;> positivity)
+  · exact hpos_of_table (hD44_33 _) (by norm_num <;> positivity)
+
+theorem haldane5_link_ne : ∀ (μ : Fin 2) (k : Torus 4 4), hLink 5 μ k ≠ 0 := by
+  intro μ k
+  fin_cases μ <;> fin_cases k
+  · exact hLink_ne_zero_of_im (by decide) (hD44_00 5) (hD44_10 5) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_01 5) (hD44_11 5) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_02 5) (hD44_12 5) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_03 5) (hD44_13 5) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_10 5) (hD44_20 5) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_11 5) (hD44_21 5) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_12 5) (hD44_22 5) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_13 5) (hD44_23 5) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_20 5) (hD44_30 5) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_21 5) (hD44_31 5) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_22 5) (hD44_32 5) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_23 5) (hD44_33 5) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_30 5) (hD44_00 5) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_31 5) (hD44_01 5) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_32 5) (hD44_02 5) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_33 5) (hD44_03 5) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_00 5) (hD44_01 5) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_01 5) (hD44_02 5) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_02 5) (hD44_03 5) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_03 5) (hD44_00 5) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_10 5) (hD44_11 5) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_11 5) (hD44_12 5) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_12 5) (hD44_13 5) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_13 5) (hD44_10 5) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_20 5) (hD44_21 5) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_21 5) (hD44_22 5) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_22 5) (hD44_23 5) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_23 5) (hD44_20 5) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_30 5) (hD44_31 5) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_31 5) (hD44_32 5) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_32 5) (hD44_33 5) (by norm_num)
+  · exact hLink_ne_zero_of_im (by decide) (hD44_33 5) (hD44_30 5) (by norm_num)
+
+theorem haldane5_link_narrow :
+    ∀ (μ : Fin 2) (k : Torus 4 4), |(hLink 5 μ k).arg| < Real.pi / 4 := by
+  intro μ k
+  fin_cases μ <;> fin_cases k
+  · exact hLink_narrow (by decide) (hD44_00 5) (hD44_10 5)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (34 : ℝ), Real.sqrt_nonneg (30 : ℝ), mul_nonneg (Real.sqrt_nonneg (34 : ℝ)) (Real.sqrt_nonneg (30 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_01 5) (hD44_11 5)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (30 : ℝ), Real.sqrt_nonneg (30 : ℝ), mul_nonneg (Real.sqrt_nonneg (30 : ℝ)) (Real.sqrt_nonneg (30 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_02 5) (hD44_12 5)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (26 : ℝ), Real.sqrt_nonneg (2 : ℝ), mul_nonneg (Real.sqrt_nonneg (26 : ℝ)) (Real.sqrt_nonneg (2 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_03 5) (hD44_13 5)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (30 : ℝ), Real.sqrt_nonneg (2 : ℝ), mul_nonneg (Real.sqrt_nonneg (30 : ℝ)) (Real.sqrt_nonneg (2 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_10 5) (hD44_20 5)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (30 : ℝ), Real.sqrt_nonneg (26 : ℝ), mul_nonneg (Real.sqrt_nonneg (30 : ℝ)) (Real.sqrt_nonneg (26 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_11 5) (hD44_21 5)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (30 : ℝ), Real.sqrt_nonneg (82 : ℝ), mul_nonneg (Real.sqrt_nonneg (30 : ℝ)) (Real.sqrt_nonneg (82 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_12 5) (hD44_22 5)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (2 : ℝ), Real.sqrt_nonneg (26 : ℝ), mul_nonneg (Real.sqrt_nonneg (2 : ℝ)) (Real.sqrt_nonneg (26 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_13 5) (hD44_23 5)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (2 : ℝ), Real.sqrt_nonneg (2 : ℝ), mul_nonneg (Real.sqrt_nonneg (2 : ℝ)) (Real.sqrt_nonneg (2 : ℝ)), Real.mul_self_sqrt (by norm_num : (0:ℝ) ≤ 2)])
+  · exact hLink_narrow (by decide) (hD44_20 5) (hD44_30 5)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (26 : ℝ), Real.sqrt_nonneg (30 : ℝ), mul_nonneg (Real.sqrt_nonneg (26 : ℝ)) (Real.sqrt_nonneg (30 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_21 5) (hD44_31 5)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (82 : ℝ), Real.sqrt_nonneg (82 : ℝ), mul_nonneg (Real.sqrt_nonneg (82 : ℝ)) (Real.sqrt_nonneg (82 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_22 5) (hD44_32 5)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (26 : ℝ), Real.sqrt_nonneg (82 : ℝ), mul_nonneg (Real.sqrt_nonneg (26 : ℝ)) (Real.sqrt_nonneg (82 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_23 5) (hD44_33 5)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (2 : ℝ), Real.sqrt_nonneg (30 : ℝ), mul_nonneg (Real.sqrt_nonneg (2 : ℝ)) (Real.sqrt_nonneg (30 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_30 5) (hD44_00 5)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (30 : ℝ), Real.sqrt_nonneg (34 : ℝ), mul_nonneg (Real.sqrt_nonneg (30 : ℝ)) (Real.sqrt_nonneg (34 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_31 5) (hD44_01 5)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (82 : ℝ), Real.sqrt_nonneg (30 : ℝ), mul_nonneg (Real.sqrt_nonneg (82 : ℝ)) (Real.sqrt_nonneg (30 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_32 5) (hD44_02 5)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (82 : ℝ), Real.sqrt_nonneg (26 : ℝ), mul_nonneg (Real.sqrt_nonneg (82 : ℝ)) (Real.sqrt_nonneg (26 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_33 5) (hD44_03 5)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (30 : ℝ), Real.sqrt_nonneg (30 : ℝ), mul_nonneg (Real.sqrt_nonneg (30 : ℝ)) (Real.sqrt_nonneg (30 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_00 5) (hD44_01 5)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (34 : ℝ), Real.sqrt_nonneg (30 : ℝ), mul_nonneg (Real.sqrt_nonneg (34 : ℝ)) (Real.sqrt_nonneg (30 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_01 5) (hD44_02 5)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (30 : ℝ), Real.sqrt_nonneg (26 : ℝ), mul_nonneg (Real.sqrt_nonneg (30 : ℝ)) (Real.sqrt_nonneg (26 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_02 5) (hD44_03 5)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (26 : ℝ), Real.sqrt_nonneg (30 : ℝ), mul_nonneg (Real.sqrt_nonneg (26 : ℝ)) (Real.sqrt_nonneg (30 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_03 5) (hD44_00 5)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (30 : ℝ), Real.sqrt_nonneg (34 : ℝ), mul_nonneg (Real.sqrt_nonneg (30 : ℝ)) (Real.sqrt_nonneg (34 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_10 5) (hD44_11 5)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (30 : ℝ), Real.sqrt_nonneg (30 : ℝ), mul_nonneg (Real.sqrt_nonneg (30 : ℝ)) (Real.sqrt_nonneg (30 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_11 5) (hD44_12 5)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (30 : ℝ), Real.sqrt_nonneg (2 : ℝ), mul_nonneg (Real.sqrt_nonneg (30 : ℝ)) (Real.sqrt_nonneg (2 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_12 5) (hD44_13 5)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (2 : ℝ), Real.sqrt_nonneg (2 : ℝ), mul_nonneg (Real.sqrt_nonneg (2 : ℝ)) (Real.sqrt_nonneg (2 : ℝ)), Real.mul_self_sqrt (by norm_num : (0:ℝ) ≤ 2)])
+  · exact hLink_narrow (by decide) (hD44_13 5) (hD44_10 5)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (2 : ℝ), Real.sqrt_nonneg (30 : ℝ), mul_nonneg (Real.sqrt_nonneg (2 : ℝ)) (Real.sqrt_nonneg (30 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_20 5) (hD44_21 5)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (26 : ℝ), Real.sqrt_nonneg (82 : ℝ), mul_nonneg (Real.sqrt_nonneg (26 : ℝ)) (Real.sqrt_nonneg (82 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_21 5) (hD44_22 5)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (82 : ℝ), Real.sqrt_nonneg (26 : ℝ), mul_nonneg (Real.sqrt_nonneg (82 : ℝ)) (Real.sqrt_nonneg (26 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_22 5) (hD44_23 5)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (26 : ℝ), Real.sqrt_nonneg (2 : ℝ), mul_nonneg (Real.sqrt_nonneg (26 : ℝ)) (Real.sqrt_nonneg (2 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_23 5) (hD44_20 5)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (2 : ℝ), Real.sqrt_nonneg (26 : ℝ), mul_nonneg (Real.sqrt_nonneg (2 : ℝ)) (Real.sqrt_nonneg (26 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_30 5) (hD44_31 5)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (30 : ℝ), Real.sqrt_nonneg (82 : ℝ), mul_nonneg (Real.sqrt_nonneg (30 : ℝ)) (Real.sqrt_nonneg (82 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_31 5) (hD44_32 5)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (82 : ℝ), Real.sqrt_nonneg (82 : ℝ), mul_nonneg (Real.sqrt_nonneg (82 : ℝ)) (Real.sqrt_nonneg (82 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_32 5) (hD44_33 5)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (82 : ℝ), Real.sqrt_nonneg (30 : ℝ), mul_nonneg (Real.sqrt_nonneg (82 : ℝ)) (Real.sqrt_nonneg (30 : ℝ))])
+  · exact hLink_narrow (by decide) (hD44_33 5) (hD44_30 5)
+      (by norm_num <;> nlinarith [Real.sqrt_nonneg (30 : ℝ), Real.sqrt_nonneg (30 : ℝ), mul_nonneg (Real.sqrt_nonneg (30 : ℝ)) (Real.sqrt_nonneg (30 : ℝ))])
+
 /-! ### The topological phase `m = 1` (inside the window: `1 < 3√3`) -/
 
 theorem haldane1_pos : ∀ k : Torus 4 4,
@@ -978,6 +912,11 @@ noncomputable def haldaneFrameTopo : BlochLowerBandFrame 4 4 :=
 /-- **The trivial-phase Haldane frame**: same hoppings, `m = 6` (outside the window). -/
 noncomputable def haldaneFrameTrivial : BlochLowerBandFrame 4 4 :=
   blochFrameOfD (haldaneD44 6) haldane6_pos haldane6_link_ne
+
+/-- **The `m = 5` frame** — *inside* the analytic mass-inversion window (`5 < 3√3 ≈ 5.196`), yet
+its `4 × 4` FHS invariant is `0`. Same hoppings as the other two frames. -/
+noncomputable def haldaneFrame5 : BlochLowerBandFrame 4 4 :=
+  blochFrameOfD (haldaneD44 5) haldane5_pos haldane5_link_ne
 
 theorem rawCurl_topo (k : Torus 4 4) :
     rawCurl 4 4 (linkOfFrame haldaneFrameTopo.toAdmissibleBandFrame) k
@@ -1426,21 +1365,6 @@ theorem plaquetteBranch_topo (k : Torus 4 4) :
 
 /-! ## Headline: the two-phase Chern classification -/
 
-/-- A `d`-field frame whose raw nearest-neighbour overlaps are all narrow has zero Chern number. -/
-theorem blochLatticeChern_eq_zero_of_narrow_D {N₁ N₂ : ℕ} [NeZero N₁] [NeZero N₂]
-    (D : Torus N₁ N₂ → (Fin 3 → ℝ))
-    (hpos : ∀ k, 0 < Real.sqrt (dNormSq (D k)) + (D k) 2)
-    (hov : ∀ (μ : Fin 2) (k : Torus N₁ N₂),
-      frameOverlap (lbVec (D k)) (lbVec (D (shift N₁ N₂ μ k))) ≠ 0)
-    (h : ∀ (μ : Fin 2) (k : Torus N₁ N₂),
-      |Complex.arg (frameOverlap (lbVec (D k)) (lbVec (D (shift N₁ N₂ μ k))))| < Real.pi / 4) :
-    blochLatticeChern (blochFrameOfD D hpos hov).toAdmissibleBandFrame = 0 := by
-  refine blochLatticeChern_eq_zero_of_narrow _ (fun μ k => ?_)
-  show |Complex.arg (frameOverlap (normalizeVec (lbVec (D k)))
-      (normalizeVec (lbVec (D (shift N₁ N₂ μ k)))))| < Real.pi / 4
-  rw [arg_frameOverlap_normalizeVec _ _ (selfNormSq_lbVec_pos (hpos k))
-    (selfNormSq_lbVec_pos (hpos _))]
-  exact h μ k
 
 /-- **The trivial phase carries no Chern number.** At `m = 6` — outside the topological window
 `|m| < 3√3 ≈ 5.196` of `haldane_mass_inversion_iff` — every one of the 32 nearest-neighbour
@@ -1459,42 +1383,68 @@ so that `∑ plaquetteArg = 2π · latticeChern`) then gives `−1`. The overall
 not the physics': replacing `φ = π/2` by `φ = −π/2` reverses the time-reversal-breaking flux and
 flips it.
 
-Together with `haldane_trivial_phase_chern_zero` this is a **classification**, not a single number:
-the invariant is `−1` inside the mass-inversion window of `haldane_mass_inversion_iff` and `0`
-outside it. -/
+**This is a witness, NOT a classification.** It is *not* the case that the invariant is `−1`
+throughout the mass-inversion window of `haldane_mass_inversion_iff` and `0` outside it: at this
+grid the transition sits at `|m| ≈ 3.3177`, strictly inside the analytic window `|m| < 3√3 ≈
+5.1962`, and `haldane_massInversion_not_sufficient_at_N4` exhibits `m = 5` inside the window with
+invariant `0`. Mass inversion is necessary but not sufficient at `N = 4`; see the module header.
+*(The classification framing was retracted on 2026-07-29.)* -/
 theorem haldaneFrame_latticeChern_eq_neg_one :
     blochLatticeChern haldaneFrameTopo.toAdmissibleBandFrame = -1 := by
   unfold blochLatticeChern latticeChern
   rw [Finset.sum_congr rfl (fun k _ => plaquetteBranch_topo k)]
   decide
 
-/-- `m = 1` is inside the topological window `|m| < 3√3 |t₂ sin φ|` and `m = 6` is outside it —
-the `norm_num`-backed numeric fact that makes the two sample points meaningful. `3√3 ≈ 5.196`. -/
+/-- The three sampled masses against the analytic window `|m| < 3√3 |t₂ sin φ|`: `1` and `5` are
+inside, `6` is outside. The `norm_num`-backed numeric facts that make the sample points meaningful.
+`3√3 ≈ 5.1962`. -/
 theorem haldane_window_bounds :
     |(1 : ℝ)| < |3 * Real.sqrt 3 * 1 * Real.sin (Real.pi / 2)| ∧
+      |(5 : ℝ)| < |3 * Real.sqrt 3 * 1 * Real.sin (Real.pi / 2)| ∧
       ¬ |(6 : ℝ)| < |3 * Real.sqrt 3 * 1 * Real.sin (Real.pi / 2)| := by
   rw [Real.sin_pi_div_two]
   have h1 : (0 : ℝ) < 3 * Real.sqrt 3 * 1 * 1 := by positivity
   rw [abs_of_pos h1]
-  constructor
+  refine ⟨?_, ?_, ?_⟩
   · rw [abs_of_pos (by norm_num : (0:ℝ) < 1)]; nlinarith [sqrt3_lb]
+  · rw [abs_of_pos (by norm_num : (0:ℝ) < 5)]; nlinarith [sqrt3_lb]
   · rw [abs_of_pos (by norm_num : (0:ℝ) < 6), not_lt]; nlinarith [sqrt3_ub]
 
-/-- **The invariant tracks the mass inversion.** At both sampled masses the kernel-checked Chern
-number is nonzero *exactly* when the two Dirac masses of `haldane_mass_inversion_iff` have opposite
-signs. This is what makes the witness/anti-witness pair a classification tied to the analytic phase
-boundary, rather than two unrelated arithmetic evaluations. -/
-theorem haldane_chern_iff_mass_inversion :
-    (blochLatticeChern haldaneFrameTopo.toAdmissibleBandFrame ≠ 0
-        ↔ haldaneD 1 1 (Real.pi / 2) 1 diracK 2 * haldaneD 1 1 (Real.pi / 2) 1 diracK' 2 < 0) ∧
-      (blochLatticeChern haldaneFrameTrivial.toAdmissibleBandFrame ≠ 0
-        ↔ haldaneD 1 1 (Real.pi / 2) 6 diracK 2 * haldaneD 1 1 (Real.pi / 2) 6 diracK' 2 < 0) := by
-  obtain ⟨hw1, hw6⟩ := haldane_window_bounds
-  constructor
-  · rw [haldaneFrame_latticeChern_eq_neg_one, haldane_mass_inversion_iff]
-    exact iff_of_true (by decide) hw1
-  · rw [haldane_trivial_phase_chern_zero, haldane_mass_inversion_iff]
-    exact iff_of_false (by decide) hw6
+/-- **Mass inversion is NECESSARY BUT NOT SUFFICIENT for a nonzero `4 × 4` invariant.**
+
+At `m = 5` the two Dirac masses of `haldane_mass_inversion_iff` genuinely have opposite signs — `5`
+is inside the analytic window `|m| < 3√3 ≈ 5.1962` — and yet the `4 × 4` FHS lattice Chern number is
+`0`. So the analytic phase boundary does **not** locate the lattice transition at this grid: the
+lattice transition sits at `|m| ≈ 3.3177`, and on the whole interval `3.318 ≲ |m| < 5.196` (about
+36 % of the window) the invariant already reads `0`.
+
+This is the theorem that makes the wave's claims falsifiable in the right direction. It replaces a
+`haldane_chern_iff_mass_inversion` shipped on 2026-07-28, which asserted the two-sided
+correspondence; that statement was true only because it quantified over the two sampled masses `1`
+and `6`, and its proof was `iff_of_true (by decide) …` / `iff_of_false …` — both sides closed
+propositions with known truth values, hence no content beyond the four theorems it cited.
+
+The mechanism is grid discretization, not a degeneracy: the frame is admissible throughout
+(`haldane5_pos`, `haldane5_link_ne` discharge the north-pole and overlap conditions), so this `0` is
+a real value of the invariant. The `4 × 4` grid never samples `K`/`K′` and its extremal `haldaneNNN`
+is `±2` against the true `±3√3/2 ≈ ±2.598`, so it sees a smaller window than the continuum; the
+transition converges to `3√3` from below as `N` grows. -/
+theorem haldane_massInversion_not_sufficient_at_N4 :
+    haldaneD 1 1 (Real.pi / 2) 5 diracK 2 * haldaneD 1 1 (Real.pi / 2) 5 diracK' 2 < 0 ∧
+      blochLatticeChern haldaneFrame5.toAdmissibleBandFrame = 0 := by
+  refine ⟨?_, blochLatticeChern_eq_zero_of_narrow_D _ _ _ haldane5_link_narrow⟩
+  rw [haldane_mass_inversion_iff]
+  exact haldane_window_bounds.2.1
+
+/-- **The `−1` is gauge-independent.** `blochLatticeChern` is invariant under an arbitrary pointwise
+`Circle` rephasing of the frame (`blochLatticeChern_rephase`), so the witness value is a property of
+the sampled lower band rather than of the particular `lbVec` representative used to compute it.
+
+This is a *call*, not a docstring reference: without it the file imported the gauge-invariance
+headline and never used it. -/
+theorem haldaneFrame_latticeChern_gauge_independent (φ : Torus 4 4 → Circle) :
+    blochLatticeChern (rephase φ haldaneFrameTopo.toAdmissibleBandFrame) = -1 := by
+  rw [blochLatticeChern_rephase, haldaneFrame_latticeChern_eq_neg_one]
 
 /-! ## The gapless cone's Berry phase
 
@@ -1819,6 +1769,47 @@ theorem coneWinding_two_pi :
     coneArg_01, coneArg_12, coneArg_23, coneArg_30]
   ring
 
+/-- **The sampling is nowhere near the branch cut.** Every one of the four principal-branch
+increments around the cone loop keeps a margin of at least `π/6` from `±π`:
+
+    |Δⱼ| + π/6  ≤  π      for each j,
+
+with equality at `j = 3` (`Δ₃ = 5π/6`), so `π/6` is the *tight* margin. The four increments are
+`2π/3, −π/6, 2π/3, 5π/6`.
+
+**What this does and does not certify.** A four-point sampling of a loop reports the wrong winding
+when some edge's true phase change exceeds `π` and gets folded back — the aliasing failure mode. An
+increment sitting *at* `±π` is the marginal case where that folding is undetectable; this theorem
+rules that case out quantitatively, so `coneWinding_two_pi` is not a knife-edge reading. It does
+**not** amount to a proof that the continuous path between samples carries no extra winding — that
+would need a bound on `‖f‖` along the edges, which is a genuine analytic program this wave does not
+open. The honest status is: non-marginal, not certified alias-free. -/
+theorem coneWinding_increments_off_branch_cut (j : Fin 4) :
+    |principal (Complex.arg (structureFactor (coneLoop (j + 1)))
+        - Complex.arg (structureFactor (coneLoop j)))| + Real.pi / 6 ≤ Real.pi := by
+  have hpi := Real.pi_pos
+  fin_cases j
+  · show |principal (Complex.arg (structureFactor (coneLoop 1))
+        - Complex.arg (structureFactor (coneLoop 0)))| + Real.pi / 6 ≤ Real.pi
+    rw [← arg_conj_mul_eq_principal_sub (coneLoop_ne_zero 0) (coneLoop_ne_zero 1), coneArg_01,
+      abs_of_nonneg (by linarith)]
+    linarith
+  · show |principal (Complex.arg (structureFactor (coneLoop 2))
+        - Complex.arg (structureFactor (coneLoop 1)))| + Real.pi / 6 ≤ Real.pi
+    rw [← arg_conj_mul_eq_principal_sub (coneLoop_ne_zero 1) (coneLoop_ne_zero 2), coneArg_12,
+      abs_of_nonpos (by linarith)]
+    linarith
+  · show |principal (Complex.arg (structureFactor (coneLoop 3))
+        - Complex.arg (structureFactor (coneLoop 2)))| + Real.pi / 6 ≤ Real.pi
+    rw [← arg_conj_mul_eq_principal_sub (coneLoop_ne_zero 2) (coneLoop_ne_zero 3), coneArg_23,
+      abs_of_nonneg (by linarith)]
+    linarith
+  · show |principal (Complex.arg (structureFactor (coneLoop 0))
+        - Complex.arg (structureFactor (coneLoop 3)))| + Real.pi / 6 ≤ Real.pi
+    rw [← arg_conj_mul_eq_principal_sub (coneLoop_ne_zero 3) (coneLoop_ne_zero 0), coneArg_30,
+      abs_of_nonneg (by linarith)]
+    linarith
+
 /-! ### Contrast: a non-winding loop has Berry phase `0` -/
 
 /-- A three-point loop through Γ and the two `M` points. It does **not** enclose a Dirac point and
@@ -1848,9 +1839,19 @@ theorem flatLoop_ov (j j' : Fin 3) (x y : ℝ) (hx : 0 < x) (hy : 0 < y)
     simp
 
 /-- **The non-winding loop carries Berry phase `0`.** Same construction, same band, but the
-pseudospin phase never turns: the Wilson product is the positive rational `72`. Together with
-`coneBerryPhase_pi` this makes the `π` a *discriminating* statement about the cone, not an artefact
-of the discretization. -/
+pseudospin phase never turns: the Wilson product is the positive rational `72`.
+
+**What the contrast establishes — precisely.** Together with `coneBerryPhase_pi` this shows the `π`
+is *discriminating*: it separates a loop that encloses a Dirac point from one that does not, rather
+than being produced by the four-point construction itself. It does **not** show the `π` is free of
+*discretization* error. On this loop `f` is a positive real at all three vertices, so every phase
+increment is `0`; a loop that cannot turn at all cannot detect undersampling, and contrasting
+against it tests **winding**, not sampling density. The sampling-related guarantee is the separate
+`coneWinding_increments_off_branch_cut` (every cone increment keeps a tight `π/6` margin from the
+branch cut), and even that certifies non-marginality rather than freedom from aliasing.
+
+*(An earlier version of this docstring claimed the contrast made the `π` "not an artefact of the
+discretization". Corrected 2026-07-29: it makes it not an artefact of the **construction**.)* -/
 theorem flatLoopBerryPhase_zero :
     wilsonLoopArg (fun j : Fin 3 => lbVec (honeycombD (flatLoop j))) = 0 := by
   unfold wilsonLoopArg
