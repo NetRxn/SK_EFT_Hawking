@@ -18,10 +18,11 @@ already blessed; review 3 found 3 MAJOR / 5 IMPORTANT (zero BLOCKERs) showing ro
 were bridged to their referents by prose; review 4 found 2 MAJOR / 5 IMPORTANT (zero BLOCKERs), by
 then almost entirely in the documentation layer — including two rows of the remediation tables
 below that misdescribed their own fixes. Everything BLOCKER/MAJOR/IMPORTANT is remediated
-in-session per PD-5 — see the three remediation tables below. The recurring defect class,
-across all three rounds, is **a kernel-checked object bridged to the physical object it is named
-for by a docstring sentence rather than by a declaration**; every fix closes that bridge with a
-theorem.
+in-session per PD-5 — see the three remediation tables below. The recurring defect class, in every
+round, is **a claim bridged to its referent by prose rather than by a declaration** — first in the
+Lean (a hypothesis set that excluded the physical instantiation), then in docstrings, and finally
+in the remediation tables recording that the class had been closed. No automated gate in this repo
+detects it; `validate.py` was 50/50 throughout.
 
 | Module | Decls | Core content |
 |---|---:|---|
