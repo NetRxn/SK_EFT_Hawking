@@ -431,6 +431,48 @@ theorem integral_counterRotating_witness_resonance :
     show (1 : ℝ) * (Real.pi / 2) + 0 = Real.pi / 2 by ring]
   norm_num [Real.sin_pi, Real.cos_pi, Real.sin_pi_div_two, norm_smul, linftyOpNorm_sigmaY_eq_one]
 
+/-! ## 5. Rotation-angle calibration at the RWA level
+
+CONVENTION (stated, not assumed): `θ` is the *exponent* parameter, i.e. the co-rotating propagator
+is `exp(-i·θ·(n̂·σ))`. The Bloch-sphere rotation angle is `2θ`. With this convention the calibration
+identity is `θ = (m/2)·Ω·T`, where `m = |⟨0|O_drive|1⟩|` is the projected drive element. -/
+
+/-- The SIGNED projected drive element `⟨0|O_drive|1⟩ = b - i·c`.
+
+Signed, not a magnitude: the sign/phase is exactly what a calibration can get wrong, and
+`DriveCalibration` (Wave 2) carries that as an explicit fail condition. -/
+def projectedDriveElement (b c : ℝ) : ℂ := (b : ℂ) - Complex.I * (c : ℂ)
+
+@[simp] lemma projectedDriveElement_normSq (b c : ℝ) :
+    Complex.normSq (projectedDriveElement b c) = b ^ 2 + c ^ 2 := by
+  simp [projectedDriveElement, Complex.normSq_apply]; ring
+
+/-- **The co-rotating generator is `(Ω·m/2)` times a reflection.**
+
+At resonance (`ω₀ = ω`) the detuning term drops and `H_RWA² = (Ω²m²/4)·1`. Since a traceless
+involution generates a rotation, this pins the generator's magnitude EXACTLY at `Ω·m/2` — which is
+what makes the rotation angle `θ = (m/2)·Ω·T` rather than merely bounding it. -/
+theorem rwaGenerator_sq_resonance (ω Ω φ b c : ℝ) :
+    rwaGenerator ω ω Ω φ b c ^ 2
+      = ((Ω ^ 2 * (b ^ 2 + c ^ 2) / 4 : ℝ) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  have hpy := Real.sin_sq_add_cos_sq φ
+  rw [pow_two]
+  unfold rwaGenerator
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [σ_x, σ_y, σ_z, Matrix.mul_apply, Fin.sum_univ_two, Complex.ext_iff,
+      -Complex.ofReal_pow, -Complex.ofReal_cos, -Complex.ofReal_sin] <;>
+    ring_nf <;> refine ⟨by linear_combination (Ω ^ 2 * (b ^ 2 + c ^ 2) / 4) * hpy, trivial⟩
+
+/-- The RWA rotation angle accumulated over duration `T`, in the exponent convention above. -/
+def rwaRotationAngle (Ω b c T : ℝ) : ℝ := (Real.sqrt (b ^ 2 + c ^ 2) / 2) * Ω * T
+
+/-- **The calibration identity:** `θ = (m/2)·Ω·T` with `m = |⟨0|O_drive|1⟩|`. -/
+theorem rwaRotationAngle_eq_projected (Ω b c T : ℝ) :
+    rwaRotationAngle Ω b c T = (‖projectedDriveElement b c‖ / 2) * Ω * T := by
+  unfold rwaRotationAngle
+  simp [Complex.norm_def, projectedDriveElement_normSq]
+
 end
 
 end SKEFTHawking.Control
