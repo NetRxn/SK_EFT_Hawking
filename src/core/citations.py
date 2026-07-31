@@ -10970,7 +10970,7 @@ CITATION_REGISTRY = {
         'journal': 'Software repository', 'volume': None, 'page': None, 'year': 2024,
         'doi': None, 'arxiv': None,
         'doi_verified': False, 'inprep': False,
-        'primary_source_path': 'Lit-Search/Phase-6E/primary-sources/LuccioliDegenne2024.note.txt',
+        'primary_source_path': 'Lit-Search/Phase-6E/primary-sources/LuccioliDegenne2024.abstract.txt',
         'used_in': ['papers/D12/paper_draft.tex'],
         'provides': [
             'Data-processing inequality for f-divergences in Lean 4, plus the chain rule for KL. '

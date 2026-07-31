@@ -80,8 +80,9 @@ the `γ = 1` (isothermal-link) case.
 
 **⚠ Direction corrected 2026-07-31.** This header previously recorded the `γ = 1` form as an
 *optimistic* bound, on the strength of two theorems hypothesizing `γ > 1`. That is backwards.
-Referred to the bolometer temperature, `γ ∈ (0, 1]` (Mather 1982; `F_link ∈ [1/2, 1]` in the TES
-literature — see `phononPSDGamma`'s provenance note), so the shipped form **over**states the
+Referred to the bolometer temperature, `γ ∈ (0, 1]` (Mather 1982; the TES literature's F_link, which
+it quotes in the range 1/2 to 1 — see `phononPSDGamma`'s provenance note), so the shipped form
+**over**states the
 phonon noise and the `γ = 1` floor **overstates the floor** for any gradient-loaded detector.
 That is fail-open in the direction this module names as its worst available defect, and it is now
 stated as a theorem (`gammaOne_phononFloor_overstates`) rather than mis-recorded in prose.
@@ -189,10 +190,10 @@ theorem phononPSD_strictMono_conductance {m m' : ETFModel} {kB T : ℝ}
 
 /-- **The general (γ-corrected) thermal-fluctuation PSD**, `4·γ·k_B·T²·G`.
 
-`γ` is the thermal-link gradient factor — `F_link` in the TES instrument literature. Referred to
+`γ` is the thermal-link gradient factor — F_link in the TES instrument literature. Referred to
 the **bolometer** temperature `T` and the conductance `G(T)` at that temperature (the convention
-`phononPSD` fixes), it obeys `0 < γ ≤ 1`: `γ = 1` exactly in the isothermal-link limit
-`T_bolo → T_bath`, falling toward `1/2` for a strongly loaded detector.
+`phononPSD` fixes), it obeys `0 < γ ≤ 1`: `γ = 1` exactly in the isothermal-link limit (bolometer
+temperature → bath temperature), falling toward `1/2` for a strongly loaded detector.
 
 **Provenance (added 2026-07-31; previously the prefactor was asserted).** Mather's non-equilibrium
 bolometer theory [Appl. Opt. **21**, 1125 (1982), DOI 10.1364/AO.21.001125] establishes that phonon
@@ -202,8 +203,8 @@ the diffuse phonon-conduction case the factor is
     γ  =  n/(2n+1) · ((T_b/T_s)^(2n+1) − 1)/((T_b/T_s)^n − 1) · (T_b/T_s)^(−(n+1))
 
 with `n` the thermal-conductivity index and `T_b/T_s` the bolometer-to-bath temperature ratio
-(the third factor converts the literature's `T_bath`-referred statement to this module's
-`T_bolo`-referred convention, using `G ∝ T^(n−1)`). It tends to `1` as `T_b/T_s → 1` and equals
+(the third factor converts the literature's bath-referred statement to this module's
+bolometer-referred convention, using `G ∝ T^(n−1)`). It tends to `1` as `T_b/T_s → 1` and equals
 `≈ 0.47` at `T_b/T_s = 2, n = 4`, reproducing the quoted `[1/2, 1]` range. -/
 noncomputable def phononPSDGamma (m : ETFModel) (kB T γ : ℝ) : ℝ := 4 * γ * kB * T ^ 2 * m.G
 
@@ -217,8 +218,9 @@ theorem phononPSD_eq_phononPSDGamma_one (m : ETFModel) (kB T : ℝ) :
 shipped `γ = 1` form.
 
 ⚠️ **Direction corrected 2026-07-31 (physics error, not a wording change).** Two now-deleted
-theorems (`phononPSD_gamma_correction_not_modelled`, `phononPSD_lt_phononPSDGamma`) hypothesized
-`1 < γ` and concluded the shipped form was an *optimistic* bound. That is backwards: `γ` is
+theorems — a gamma-correction-not-modelled statement and a phononPSD-below-phononPSDGamma
+statement — hypothesized `1 < γ` and concluded the shipped form was an *optimistic* bound. (Their
+names are deliberately not backticked here: they no longer resolve.) That is backwards: `γ` is
 bounded above by `1` (see `phononPSDGamma`'s provenance note), so `1 < γ` is an unphysical regime
 and the shipped form is an **over**estimate of the phonon noise, never an underestimate. The
 consequence for this module's stated defect class is the opposite of what was recorded — see

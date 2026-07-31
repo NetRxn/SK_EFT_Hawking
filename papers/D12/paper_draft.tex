@@ -50,7 +50,8 @@ floor $e^{-N_{\rm diff}}$ fails in \emph{two} directions, being false-strict aga
 counter and exponentially fail-open as an average-error screen; that a magnitude-only electrothermal
 stability criterion is unsound; and that the sign-free characterization of matched-filter saturation
 is false. We are explicit about scope: our Chernoff bound is a factor-two sharpening of one already
-in Mathlib, not a first, and two prior-art checks remain open.
+in Mathlib rather than a first, the affinity's data-processing inequality is plausibly subsumed by
+an existing $f$-divergence development, and one prior-art check remains open.
 \end{abstract}
 
 \maketitle
@@ -208,17 +209,33 @@ and \thm{gaussianQ\_two\_ge\_rational} pin a worked value.
 \subsection{The classical--quantum seam}
 
 Shot noise connects the classical floor to the quantum discrimination bound.
-\thm{diagonalState\_sqrtFidelity\_eq\_affinity} shows that the fidelity of two diagonal states is the
-classical Bhattacharyya coefficient, resting on \thm{psdSqrt\_diagonal} --- the one piece of genuinely
-new mathematics in the identification. \thm{povmAvgError\_diagonal\_eq\_avgAssignmentError} is then
-hypothesis-free Born-rule algebra: the classical average assignment error \emph{is} a value of the
-quantum error functional. The result is shipped as a sandwich,
-\thm{poissonFloor\_le\_diagonalQuantumBound}, whose left conjunct is classical data processing and
-whose right conjunct is the project's Helstrom/Fuchs--van~de~Graaf bound.
+\thm{diagonalState\_sqrtFidelity\_eq\_affinity} shows that the root fidelity of two diagonal states
+is exactly the classical Bhattacharyya coefficient $\sum_i \sqrt{p_i q_i}$, resting on
+\thm{psdSqrt\_diagonal}. The statement assumes only non-negativity of $p$ and $q$, not
+normalisation, so it covers sub-normalised (filtered) weights as well as states.
 
-We are careful about what this does \emph{not} establish. The POVM layer consumed here is the
-project's own network-certification substrate, not an external library, and no quantum
-hypothesis-testing rate is consumed --- see Section~\ref{sec:scope}.
+This correspondence is, to our knowledge, not carried by either library we build on. PhysLib
+defines root fidelity and calls it ``the quantum version of the Bhattacharyya coefficient'' in its
+docstring, but the correspondence itself sits in an open \texttt{TODO} list at
+\texttt{QuantumInfo/States/Mixed/Fidelity.lean} in the pinned revision; the normalisation-free form
+proved here is in any case more general than the state-bound form contemplated there.
+
+\thm{povmAvgError\_diagonal\_eq\_avgAssignmentError} is then hypothesis-free Born-rule algebra: the
+classical average assignment error \emph{is} a value of the quantum error functional. The result is
+shipped as a sandwich, \thm{poissonFloor\_le\_diagonalQuantumBound}, whose left conjunct is
+classical data processing and whose right conjunct is the project's own Helstrom/Fuchs--van~de~Graaf
+bound \thm{quarter\_sqrtFidelity\_sq\_le\_povmAvgError}, with \thm{IsBinaryPOVM} the admissibility
+predicate. Both live in this project's own network-certification substrate, not in an external
+library, and no quantum hypothesis-testing rate is consumed (Section~\ref{sec:scope}).
+
+\paragraph{Attribution of the data-processing step.} The affinity's data-processing inequality
+\thm{affinity\_le\_binaryAffinity} is proved here self-contained, but we do not claim it as new. The
+squared Hellinger distance is an $f$-divergence with generator $f(t) = (\sqrt{t}-1)^2$, and the
+affinity is its complement, so the general $f$-divergence data-processing inequality of the
+\textsc{TestingLowerBounds} development~\cite{LuccioliDegenne2024} --- the project from which
+Mathlib's Kullback--Leibler divergence itself came~\cite{Degenne2025Kernels} --- plausibly subsumes
+it. We have not been able to inspect that development directly, so we state the relationship rather
+than a comparison; see Section~\ref{sec:scope}.
 
 \section{Filtered-readout floors}
 \label{sec:filter}
@@ -241,17 +258,12 @@ $\mathrm{ENBW}\cdot T \ge 1/2$. Three refinements make this more than an inequal
 \thm{enbw\_mul\_window\_isLeast} shows $1/2$ is the \emph{least} element of the realizable set, so no
 better constant exists. Second, \thm{enbw\_eq\_half\_iff\_boxcar} characterizes equality: it holds
 \emph{if and only if} the filter agrees almost everywhere with its own DC average times the boxcar.
-The multiplier is therefore a \emph{nonzero} constant, not necessarily a positive one --- the only
-constraint is that the DC gain not vanish, and $h = -\,\mathrm{boxcar}$ saturates the floor just as
+The multiplier is a \emph{nonzero} constant, not necessarily a positive one: the only constraint is
+that the DC gain not vanish, and $h = -\,\mathrm{boxcar}$ saturates the floor just as
 $h = +\,\mathrm{boxcar}$ does, since ENBW is invariant under $h \mapsto c\,h$ for $c \neq 0$
-(\thm{enbw\_const\_mul}). The two characterizations in this paper therefore differ in exactly this
-respect, and the difference is easy to get backwards. Matched-filter saturation
-(\thm{filteredSNR\_eq\_budget\_iff}, §\ref{sec:filter}) genuinely \emph{does} require $0 < c$,
-because filtered SNR is a \emph{signed} quantity; ENBW does not, because it is a bandwidth and is
-scale-invariant. Carrying the positivity across from the former to the latter would overstate the
-ENBW characterization --- the $h = -\,\mathrm{boxcar}$ witness above refutes it directly. The
-converse error, dropping the sign where it \emph{is} load-bearing, is what
-\thm{unsigned\_saturation\_characterization\_false} refutes on the matched-filter side.
+(\thm{enbw\_const\_mul}). This is exactly where the two characterizations in this paper differ.
+Matched-filter saturation (\thm{filteredSNR\_eq\_budget\_iff}) \emph{does} require $0 < c$, because
+filtered SNR is a signed quantity; ENBW does not, because it is a bandwidth and is scale-invariant.
 Third, \thm{enbw\_ramp\_gt\_half} exhibits a filter strictly above the floor, so the bound
 discriminates.
 
@@ -268,8 +280,11 @@ Johnson--Nyquist source gives the physical floor
 \paragraph{Relation to the classical uncertainty product.} We cite Gabor's variance-based
 time--bandwidth product~\cite{Gabor1946} as the classical antecedent, but our statement is a
 different Cauchy--Schwarz consequence about a filter impulse response, not about the variances of a
-signal and its transform. We located no canonical primary source for the $\mathrm{ENBW}\cdot T$ form,
-so it is proved here self-contained.
+signal and its transform. The $\mathrm{ENBW}\cdot T$ relation itself circulates in the instrument
+literature as a convention attached to particular filters --- $t_{\rm int} = 1/(2\,\mathrm{ENBW})$,
+and $\mathrm{ENBW} = 1/4T$ for a single-pole lock-in filter --- rather than as a proved inequality
+with a sharpness characterization. We found no canonical primary source for it in that form, and
+prove it here self-contained.
 
 \subsection{Noise-equivalent power and matched filtering}
 
@@ -300,10 +315,10 @@ signed filtered SNR of every admissible filter by a \emph{template-only, filter-
 positivity is not removable: \thm{filteredSNR\_neg\_matched\_eq\_neg\_budget} shows the negated
 template saturates Cauchy--Schwarz in magnitude while sitting at \emph{minus} the budget. The
 sign-free characterization is therefore false, formalized as
-\thm{unsigned\_saturation\_characterization\_false}. We were careful to state that refutation
-\emph{within} the admissible class, since refuting a universally quantified statement is not the same
-as refuting its class-restricted form. In the power domain the sign does drop out --- but $c = 0$
-does not, which is \thm{power\_unsigned\_characterization\_false}.
+\thm{unsigned\_saturation\_characterization\_false}. That refutation is stated \emph{within} the
+admissible class, since refuting a universally quantified statement is not the same as refuting its
+class-restricted form. In the power domain the sign does drop out --- but $c = 0$ does not, which is
+\thm{power\_unsigned\_characterization\_false}.
 
 \section{Electrothermal detector physics}
 \label{sec:etf}
@@ -364,25 +379,44 @@ from the coupled small-signal pair. The corrected result is
 \begin{equation}
 \mathrm{NEP}_J \;=\; |1 - \mathcal{L}|\cdot \mathrm{NEP}_J^{\rm naive},
 \end{equation}
-formalized as \thm{johnsonNEP\_eq\_abs\_one\_sub\_loopGain\_mul\_naive}. Three cautions attach, all
-of them things we got wrong first. It is an \emph{equality}, not a direction: the naive budget
-\emph{overstates} whenever $|1-\mathcal{L}| < 1$, and
-\thm{johnsonNEPNaive\_lt\_johnsonNEP\_iff} states the boundary exactly, with the extreme case
-\thm{johnsonNEP\_naive\_overstates\_at\_unit\_loopGain}. The factor is $|1-\mathcal{L}|$ and not
-$|1+\mathcal{L}|$: an earlier treatment modelled Johnson noise as pure output noise and so omitted a
-first-order electrothermal effect from the very layer whose subject is electrothermal feedback; the
-two effects partially cancel, and at $\mathcal{L}=3$ an ETF-unaware budget is low by exactly two, not
-four (\thm{speedupWitness\_johnsonNEP\_double}). And the factor is stability-blind:
-\thm{johnsonNEP\_correction\_magnitude\_loses\_stability\_information} exhibits two models with the
-same correction on opposite sides of \thm{etf\_stable\_iff}.
+formalized as \thm{johnsonNEP\_eq\_abs\_one\_sub\_loopGain\_mul\_naive}. Three features of it are
+easy to get wrong. It is an \emph{equality}, not a direction: the naive budget \emph{overstates}
+whenever $|1-\mathcal{L}| < 1$, and \thm{johnsonNEPNaive\_lt\_johnsonNEP\_iff} states the boundary
+exactly, with the extreme case \thm{johnsonNEP\_naive\_overstates\_at\_unit\_loopGain}. The factor
+is $|1-\mathcal{L}|$ and not $|1+\mathcal{L}|$, because Johnson noise is not pure output noise ---
+the Johnson EMF also perturbs the dissipated Joule power and returns through $dI/dT$, and the two
+electrothermal effects partially cancel. At $\mathcal{L}=3$ an ETF-unaware budget is therefore low
+by exactly two, not four (\thm{speedupWitness\_johnsonNEP\_double}). And the factor is
+stability-blind: \thm{johnsonNEP\_correction\_magnitude\_loses\_stability\_information} exhibits two
+models with the same correction on opposite sides of \thm{etf\_stable\_iff}.
 
-\paragraph{Provenance honesty on the phonon channel.} The phonon PSD prefactor in \thm{phononPSD} is
-\emph{asserted}, not cited. An in-tree identity relating it to the Johnson--Nyquist form is an
-arithmetic \emph{resemblance} only --- it constrains nothing, holding for any expression of the same
-monomial shape, and is unit-incoherent as provenance. We label it as such rather than as a citation.
-A $\gamma$-correction for radiative and ballistic regimes is not modelled;
-\thm{phononPSD\_eq\_phononPSDGamma\_one} is the disclosure that our expression is the $\gamma = 1$
-case.
+\paragraph{The thermal-link gradient factor.} The phonon PSD carries a gradient factor $\gamma$
+(the $F_{\rm link}$ of the instrument literature), $S_{\rm ph} = 4\gamma k_B T^2 G$, modelled by
+\thm{phononPSDGamma} with \thm{IsThermalFluctuationLimitedGamma} as the corresponding equilibrium
+hypothesis. Referred to the bolometer temperature and to $G$ at that temperature --- the convention
+\thm{phononPSD} fixes --- $\gamma \in (0,1]$, equal to $1$ exactly in the isothermal-link limit
+(\thm{phononPSD\_eq\_phononPSDGamma\_one}) and falling toward $1/2$ under strong
+loading~\cite{Mather1982}. In the diffuse-conduction case
+\begin{equation}
+\gamma \;=\; \frac{n}{2n+1}\,\frac{r^{2n+1}-1}{r^{n}-1}\;r^{-(n+1)},
+\end{equation}
+with $r$ the bolometer-to-bath temperature ratio and $n$ the thermal-conductivity index; the
+trailing factor converts the literature's bath-referred statement to ours via $G \propto T^{n-1}$.
+At $r=2$, $n=4$ this gives $\gamma = 0.47$.
+
+The direction matters, and it points the opposite way from a plausible first guess. Because
+$\gamma \le 1$, the $\gamma = 1$ expression \emph{overstates} the phonon noise, so the floor
+computed from it \emph{overstates the floor} for any detector with a real gradient across its link
+(\thm{phononPSDGamma\_lt\_phononPSD}, \thm{gammaOne\_phononFloor\_overstates}) --- fail-open, in the
+direction this layer is most concerned to avoid. The theorems below remain sound because each is
+conditional on \thm{IsThermalFluctuationLimited}, which pins whiteness at the $\gamma = 1$ PSD: a
+gradient-loaded detector simply fails their hypothesis. Consumers modelling one should carry the
+general-$\gamma$ hypothesis instead.
+
+We are explicit that the in-tree identity relating the prefactor to the Johnson--Nyquist form is an
+arithmetic \emph{resemblance} and not provenance --- it holds for any expression of the same
+monomial shape and is unit-incoherent, since the Johnson--Nyquist contract is a current PSD at an
+electrical conductance while $G$ here is thermal. The provenance is \cite{Mather1982}.
 
 \subsection{The composed floor}
 
@@ -427,24 +461,39 @@ error.
 \subsection{Assignment-fidelity ceilings}
 
 A floor on the average assignment error is a \emph{ceiling} on \thm{assignmentFidelity}, via
-\thm{assignmentFidelity\_le\_of\_floor} and the monotonicity \thm{avgAssignmentError\_mono}. Five
-mechanism ceilings are shipped --- \thm{relaxation\_ceiling},
-\thm{relaxation\_thermal\_ceiling}, \thm{photon\_budget\_ceiling} (consuming
+\thm{assignmentFidelity\_le\_of\_floor} and the monotonicity \thm{avgAssignmentError\_mono}. Three
+substantive mechanism ceilings are shipped --- \thm{photon\_budget\_ceiling} (consuming
 Section~\ref{sec:poisson}), \thm{filtered\_readout\_ceiling} (Section~\ref{sec:filter}) and
 \thm{detector\_chain\_ceiling} (Section~\ref{sec:etf}) --- each with a witness pair showing where it
-does and does not bite.
+does and does not bite. \thm{relaxation\_ceiling} and \thm{relaxation\_thermal\_ceiling} are also
+provided, but as format anchors rather than as new results: each is a one-line re-casting of a
+pre-existing quantum-network floor into fidelity form, and we do not count them among the three.
 
 Composition comes in two forms: the unconditionally sound \thm{combined\_floor\_max}, and the sharper
 additive \thm{combined\_floor\_add}, which requires disjointness of the error events as an explicit
 binder. That the sharper form is genuinely sharper is \thm{combined\_ceiling\_gap\_witness}, derived
-by instantiating a measure rather than asserted. The first genuinely cross-layer composite is
-\thm{relaxation\_photon\_ceiling}.
+by instantiating a measure rather than asserted.
 
-\paragraph{A disclosed weakness.} The biting witnesses for the filtered-readout and detector-chain
-ceilings fire at zero matched budget --- a signal-free readout. That is a real operating point and
-the witnesses are honest, but it is a \emph{degenerate} one, and we have not bracketed a
-non-degenerate biting point for those two ceilings. We state this rather than let the witness pairs
-imply more coverage than they have.
+The composites that carry the series' headline pair a device-layer floor with a detection-layer
+floor on one attributed readout, the attribution supplied by explicit hypotheses rather than assumed:
+\thm{relaxation\_photon\_ceiling} (device~$\times$~§\ref{sec:poisson}),
+\thm{relaxation\_filtered\_ceiling} (device~$\times$~§\ref{sec:filter}) and
+\thm{relaxation\_detector\_chain\_ceiling} (device~$\times$~§\ref{sec:etf}), the last being the
+deepest chain in the paper --- an electrothermal PSD carried through a quadrature sum, a
+matched-filter budget and a Gaussian separation floor, then composed against relaxation. The
+transfer rules that make these possible are \thm{photon\_budget\_floor\_attributed},
+\thm{filtered\_readout\_floor\_attributed} and \thm{detector\_chain\_floor\_attributed}; each is
+monotonicity applied to a floor stated at its own mechanism's error pair.
+
+\paragraph{Where the ceilings bite.} For the filtered-readout and detector-chain ceilings we give
+biting witnesses at two operating points. At zero matched budget the ceiling collapses to $1/2$
+(\thm{filtered\_readout\_ceiling\_bites}, \thm{detector\_chain\_ceiling\_bites}) --- a real
+operating point, but a degenerate one, establishing only that a signal-free readout cannot
+discriminate. The substantive witnesses are at matched budget $2$, where the ceiling is $22/25$
+(\thm{filtered\_readout\_ceiling\_bites\_nondegenerate},
+\thm{detector\_chain\_ceiling\_bites\_nondegenerate}): a claimed fidelity of $0.99$ is refuted at an
+ordinary signal-carrying operating point. These rest on \thm{gaussianQ\_one\_ge\_rational}, the
+rational enclosure $Q(1) \ge 3/25$ obtained from the Birnbaum--Feller bound at $95\,\%$ of truth.
 
 \section{Scope and prior art}
 \label{sec:scope}
@@ -463,20 +512,31 @@ Eq.~\eqref{eq:lecam}. The POVM layer we do consume is our own project's network-
 substrate.
 
 Our Gaussian Chernoff bound is a \emph{sharpening}, not a first. Mathlib carries a sub-Gaussian
-Chernoff bound at our own pin~\cite{Degenne2025Kernels}, whose constant at unit variance proxy is a
-factor of two weaker than \thm{gaussianTail\_chernoff}. That is a genuine refinement and we present
-it as one. Mathlib also carries Kullback--Leibler divergence; it does not carry a Hellinger
-divergence, a Bhattacharyya coefficient, a Neyman--Pearson lemma, or any hypothesis test. Transform
-methods and transfer-function algebra are formalized in HOL Light~\cite{RashidHasan2017}; the
-stochastic noise-metrology layer above them is not. PhysLib formalizes operator uncertainty
-relations, which are not bandwidth--duration bounds on a filter, and a thermoelectric \emph{material}
-figure of merit, which is not a device thermal circuit.
+Chernoff bound at our own pin, \thm{HasSubgaussianMGF.measure\_ge\_le}, whose own docstring names it
+a Chernoff bound; at variance proxy $c = 1$ it gives $\exp(-z^2/2)$ against our
+$\tfrac12\exp(-z^2/2)$, a factor of two weaker. What is not inherited is the two-sided bracket: the
+Birnbaum--Feller \emph{lower} bound \thm{gaussianTail\_birnbaum}, valid at every real $z$ with no
+sign hypothesis, has no Mathlib counterpart, and it is what makes the ceilings of
+Section~\ref{sec:control} bite at a finite operating point rather than only at zero budget.
 
-\paragraph{What we do claim, hedged.} To our knowledge, and as of the pinned library versions, no
-interactive theorem prover contains: detection-theoretic photon counting (miss, false alarm, dark
-counts); Bhattacharyya/Le Cam average-error bounds for Poisson hypotheses; ENBW, NEP or
-matched-filter optimality; an electrothermal \emph{device} model; or a rotating-wave approximation
-with an explicit error bound. The strongest of these is the electrothermal device model, for which a
+Mathlib's absence claims here were checked against the pinned revision by direct inspection of the
+checkout, not from documentation. Mathlib carries Kullback--Leibler divergence --- itself developed
+in the \textsc{TestingLowerBounds} project~\cite{LuccioliDegenne2024,Degenne2025Kernels}. It carries
+no Hellinger divergence, no Bhattacharyya coefficient, no Neyman--Pearson lemma, no hypothesis test,
+and no error function or Gaussian CDF; the last is why \thm{gaussianQ} is defined project-locally
+here. Transform methods and transfer-function algebra are formalized in HOL
+Light~\cite{RashidHasan2017}; the stochastic noise-metrology layer above them is not. PhysLib
+formalizes operator uncertainty relations, which are not bandwidth--duration bounds on a filter, and
+a thermoelectric \emph{material} figure of merit, which is not a device thermal circuit.
+
+\paragraph{What we do claim, hedged.} As of the pinned library versions, and restricted to the
+ecosystems we actually assessed --- Lean/Mathlib and PhysLib by direct source
+inspection, Coq and Isabelle by literature search --- we are aware of no formalization of: detection-theoretic photon
+counting (miss, false alarm, dark counts); Bhattacharyya/Le Cam average-error bounds for Poisson
+hypotheses; ENBW, NEP or matched-filter optimality; an electrothermal \emph{device} model; or a
+rotating-wave approximation with an explicit error bound. We phrase this as the limit of our
+evidence rather than as an absence claim, because for the ecosystems named in the next paragraph we
+have no evidence either way. The strongest of these is the electrothermal device model, for which a
 grep across the entire package tree returns no related identifier of any kind.
 
 \paragraph{Two open checks, flagged as blocking.} First, an out-of-Mathlib Lean project on
@@ -494,7 +554,10 @@ substantial are \thm{IsWhiteFilteredVariance}, in whose \emph{definition} the Pa
 spectral flatness live --- not in the theorem that consumes it --- and
 \thm{IsShotFilteredMoments}, in whose definition Campbell's theorem lives. We flag these because a
 reader could otherwise mistake the consuming theorems for derivations of the physics rather than
-consequences of it.
+consequences of it. Two more deserve naming because they are binders of the capstone
+\thm{bolometer\_error\_floor} itself: \thm{IsThermalFluctuationLimited}, asserting the filtered
+variance is white at the phonon PSD, and \thm{IsResponsivityChain}, asserting the readout chain is
+linear in the responsivity. The capstone is only as strong as those two identifications.
 
 \section{Conclusion}
 
@@ -514,9 +577,15 @@ vacuous. Both facts are theorems here, and neither is available to prose.
 
 The floors compose, and that was the point: a single inequality carries an electrothermal power
 spectral density through a matched-filter budget to a Gaussian separation floor and out to an
-assignment-fidelity ceiling. We are equally clear about where the composition is currently thin ---
-two of the five mechanism ceilings have only degenerate biting witnesses --- and about the two
-prior-art checks that remain open.
+assignment-fidelity ceiling, and three cross-layer composites pair that chain with a device-layer
+relaxation floor on one attributed readout. The composites bite at ordinary operating points, not
+only at the degenerate zero-budget one, which is what the Birnbaum--Feller lower bound buys.
+
+Two limits are worth restating. The phonon channel is modelled at general gradient factor $\gamma$,
+but the shipped floors are stated at $\gamma = 1$ and therefore \emph{overstate} the floor for a
+gradient-loaded detector, which is why they carry the equilibrium hypothesis explicitly rather than
+silently. And one prior-art check remains open: whether the \textsc{TestingLowerBounds} development
+carries a Le Cam average-error floor of the shape proved here.
 
 \begin{acknowledgments}
 Formalization was carried out in \Lean{}~4 against Mathlib and PhysLib. We thank the Mathlib and
@@ -537,6 +606,16 @@ Series in Statistics (1986). DOI:10.1007/978-1-4612-4946-7.
 
 \bibitem{Irwin1995} K.~D.~Irwin, \emph{An application of electrothermal feedback for high resolution
 cryogenic particle detection}, Appl. Phys. Lett. \textbf{66}, 1998 (1995). DOI:10.1063/1.113674.
+
+\bibitem{Mather1982} J.~C.~Mather, \emph{Bolometer noise: nonequilibrium theory}, Appl. Opt.
+\textbf{21}, 1125 (1982). DOI:10.1364/AO.21.001125. \emph{(Source for the thermal-link gradient
+factor $\gamma$; establishes that link phonon noise is reduced relative to the equilibrium
+$4k_BT^2G$ form, i.e.\ $\gamma \le 1$.)}
+
+\bibitem{LuccioliDegenne2024} L.~Luccioli and R.~Degenne, \emph{TestingLowerBounds: Information
+theory and hypothesis testing, in Lean} (2024). \emph{(Cited for the $f$-divergence data-processing
+inequality, which plausibly subsumes our affinity data-processing step; its content is quoted from
+Ref.~\cite{Degenne2025Kernels}, as we were unable to inspect the development directly.)}
 
 \bibitem{IrwinHilton2005} K.~D.~Irwin and G.~C.~Hilton, \emph{Transition-Edge Sensors}, in
 C.~Enss (ed.), \emph{Cryogenic Particle Detection}, Topics in Applied Physics \textbf{99}, Springer

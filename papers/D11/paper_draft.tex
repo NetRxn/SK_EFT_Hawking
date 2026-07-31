@@ -164,9 +164,10 @@ The spectral input enters through \thm{blochProj}, the lower-band projector of t
 $d\cdot\sigma$ Hamiltonian \thm{blochPauli}, whose idempotence \thm{blochProj\_idem} follows from the
 Pauli identity \thm{blochPauli\_sq}. The band structure itself is \thm{blochPauli\_band\_secular}
 (the two energies are genuine eigenvalues, via the secular determinant) and
-\thm{blochPauli\_gap\_pos}, which gives the forward direction only: a nonzero $d$-vector implies a
-strictly positive half-gap. We state that carefully because the model \emph{is} gapped exactly away
-from $d = 0$, but only that implication is shipped --- no converse is formalized.
+\thm{blochPauli\_gap\_pos\_iff}: the model is gapped \emph{if and only if} $d \neq 0$, so the
+band-touching point the invariant is defined around is characterized rather than merely excluded.
+The forward direction is \thm{blochPauli\_gap\_pos} and the converse follows from
+\thm{blochPauli\_gap\_zero\_of\_eq\_zero}.
 
 Turning a $d$-field into an admissible frame is \thm{blochFrameOfD}, built on the explicit
 lower-band eigenvector \thm{lbVec} with its eigenvector law \thm{blochPauli\_mulVec\_lbVec}. It
@@ -264,13 +265,19 @@ relation in a cross-multiplied, division-free formulation, so the identity holds
 side-condition beyond nonvanishing of the denominator. \thm{maxwellGarnett\_host\_recovery} is the
 zero-fill sanity check.
 
-Variational bounds in the Hashin--Shtrikman tradition~\cite{HashinShtrikman1962} appear as
-\thm{effectiveMedium\_constituent\_bounds}, with the worked instance
+The bound we actually prove is the elementary \emph{Wiener} bracket
+$\varepsilon_h \le \varepsilon_{\rm eff} \le \varepsilon_i$
+(\thm{effectiveMedium\_constituent\_bounds}), with the worked instance
 \thm{effectiveMedium\_hashinShtrikman\_enclosure} at
-$(\varepsilon_h, \varepsilon_i, f) = (1, 4, \tfrac12)$ giving exactly $2$.
+$(\varepsilon_h, \varepsilon_i, f) = (1, 4, \tfrac12)$ giving exactly $2$. We name this carefully:
+the Hashin--Shtrikman bounds~\cite{HashinShtrikman1962} are \emph{strictly tighter} than the
+constituent bracket --- that they improve on it is their entire point --- so what is formalized here
+is the weaker Wiener-type statement, and the declaration's historical name should not be read as a
+claim to have proved the Hashin--Shtrikman bound itself. The Lean source is explicit about this.
 
-For elastic moduli~\cite{HashinShtrikman1963} we ship \thm{voigtModulus} and \thm{reussModulus} with
-the ordering chain \thm{effectiveModuli\_enclosure}. The sharpest statement here is
+For elastic moduli we ship \thm{voigtModulus} and \thm{reussModulus} with the ordering chain
+\thm{effectiveModuli\_enclosure} --- the classical \emph{Voigt--Reuss} bracket, again weaker than
+the Hashin--Shtrikman bounds~\cite{HashinShtrikman1963} that refine it. The sharpest statement here is
 \thm{voigt\_sub\_reuss\_eq}, which gives the arithmetic-minus-harmonic gap \emph{exactly},
 \begin{equation}
 M_{\rm V} - M_{\rm R} \;=\; \frac{f(1-f)(M_1-M_2)^2}{(1-f)M_2 + fM_1},
@@ -281,11 +288,12 @@ form was formalized.
 \paragraph{Route disclosure.} This section is deliberately \emph{algebraic}. The analytic route ---
 two-scale convergence and periodic homogenization --- was not attempted. Mathlib carries Sobolev
 inequalities but no two-scale convergence, and PhysLib's optics directory is by its own docstring a
-placeholder. We are careful how we phrase this: two-scale convergence is, to our knowledge,
-formalized in \emph{no} proof assistant, so this is a choice between two equally unformalized routes
-in which the algebraic one was tractable --- not the avoidance of an existing formalization. The
-nearest formalized substrate an analytic route would need is the Coq Lax--Milgram
-development~\cite{BoldoLaxMilgram2016}.
+placeholder. Two-scale convergence is, to our knowledge, formalized in \emph{no} proof assistant, so
+this is a choice between two equally unformalized routes in which the algebraic one was tractable ---
+not the avoidance of an existing formalization. The
+nearest substrate an analytic route would need is the Lax--Milgram theorem, for which a detailed
+proof prepared for Coq formalization is available~\cite{BoldoLaxMilgram2016} and a Coq development
+followed.
 
 \section{Graphene and a concrete Chern witness}
 \label{sec:graphene}
@@ -320,8 +328,8 @@ result rather than an invariance result.
 
 \subsection{Dirac expansion with a global remainder}
 
-The linearization about a Dirac point is controlled by an inequality we were able to make
-\emph{global}: \thm{norm\_exp\_mul\_I\_sub\_one\_sub\_id\_le} bounds the second-order remainder of
+The linearization about a Dirac point is controlled by a \emph{global} inequality:
+\thm{norm\_exp\_mul\_I\_sub\_one\_sub\_id\_le} bounds the second-order remainder of
 the complex exponential for \emph{every} real argument, with constant $1$ and no validity ball.
 Consequently \thm{structureFactor\_linear\_expansion\_global} bounds the difference between the exact
 and linearized band norms globally.
@@ -443,9 +451,14 @@ they sample the Dirac points where the $d$-vector is purely longitudinal and the
 degenerates. This is a real constraint on which grids may be used, not a cosmetic one.
 
 \paragraph{Novelty, with carve-outs.} To our knowledge, no proof assistant defines a Chern number or
-a Chern class, formalizes an acoustic or phononic band structure, an exceptional point, a
-$\mathcal{PT}$ transition, a Maxwell--Garnett or Hashin--Shtrikman bound, a honeycomb band structure,
-or the Haldane model. The Mathlib statements are pinned to revision \texttt{81a5d257} and were
+a Chern class \emph{of a vector bundle} --- the topological invariant --- nor formalizes an acoustic
+or phononic band structure, an exceptional point, a $\mathcal{PT}$ transition, a Maxwell--Garnett or
+Wiener/Hashin--Shtrikman-type effective-medium bound, a honeycomb band structure, or the Haldane
+model. One carve-out is our own: this group's \texttt{ChernBridge} module defines a categorical
+Chebyshev \emph{marker} that a companion bundle describes in Chern language. It is a different
+object from the Bloch-band invariant reported here --- an algebraic marker, not an integral of
+curvature over a bundle --- and we flag it rather than let the absence claim stand unqualified
+against our own tree. The Mathlib statements are pinned to revision \texttt{81a5d257} and were
 verified by direct inspection of that checkout rather than from documentation; every occurrence of
 the string \texttt{Chern} in Mathlib is in fact \texttt{Chernoff}. Four carve-outs are mandatory.
 
@@ -458,9 +471,11 @@ classes are \emph{defined} in textbook algebraic topology, so our claim is that 
 the classes, not that the surrounding machinery is absent. Third, Isabelle/HOL formalizes winding
 numbers, Cauchy indices and the argument principle~\cite{LiPaulson2018}, which is the nearest
 machinery to our non-Hermitian winding content and to any index-theoretic reading of bulk--boundary.
-Fourth, the Coq Lax--Milgram development~\cite{BoldoLaxMilgram2016} is the nearest formalized
-substrate for the analytic homogenization route. We also note \texttt{LeanLJ}~\cite{LeanLJ2025} as
-the nearest ``periodic lattice in Lean'' precedent, though it is not band theory.
+Fourth, the Lax--Milgram theorem --- the backbone of elliptic-PDE well-posedness and so of any
+analytic homogenization route --- has a detailed proof prepared for Coq
+formalization~\cite{BoldoLaxMilgram2016}, with a Coq development following it. We also note the formal-proof energy-benchmarking work of Ugwuanyi
+\emph{et al.}~\cite{LeanLJ2025} as the nearest ``periodic lattice in Lean'' precedent, though it is
+not band theory.
 
 Two coverage limits bound these claims, and we state them rather than let a referee find them. The
 Isabelle Archive of Formal Proofs was not directly searchable during our survey, so our negative
@@ -534,11 +549,15 @@ arXiv:2401.16336.
 \bibitem{LiPaulson2018} W.~Li and L.~C.~Paulson, \emph{Evaluating Winding Numbers and Counting
 Complex Roots through Cauchy Indices in Isabelle/HOL} (2018). arXiv:1804.03922.
 
-\bibitem{BoldoLaxMilgram2016} S.~Boldo, F.~Cl\'ement, F.~Faissole, V.~Martin and M.~Mayero,
-\emph{A Coq formal proof of the Lax--Milgram theorem} (2016). arXiv:1607.03618.
+\bibitem{BoldoLaxMilgram2016} F.~Cl\'ement and V.~Martin,
+\emph{The Lax--Milgram Theorem. A detailed proof to be formalized in Coq} (2016).
+arXiv:1607.03618. \emph{(A pen-and-paper proof prepared for formalization, not itself a
+formalization; the Coq development it anticipates is Boldo, Cl\'ement, Faissole, Martin and Mayero,
+ACM CPP 2017, DOI:10.1145/3018610.3018625.)}
 
-\bibitem{LeanLJ2025} S.~Ugwuanyi, M.~Jones, K.~Velkey and T.~Josephson,
-\emph{LeanLJ: Formal verification of Lennard-Jones interaction energies} (2025). arXiv:2505.09095.
+\bibitem{LeanLJ2025} E.~D.~Ugwuanyi, C.~T.~Jones, J.~Velkey and T.~R.~Josephson,
+\emph{Benchmarking Energy Calculations Using Formal Proofs}, Mol. Phys. (2025). arXiv:2505.09095.
+DOI:10.1080/00268976.2025.2539421.
 
 \end{thebibliography}
 
