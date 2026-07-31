@@ -3877,9 +3877,13 @@ def check_recurrence_reopens_closures() -> CheckResult:
 
     details: list[Detail] = []
     hits = 0
+    compared = 0
+    skipped_short = sum(1 for f in findings
+                        if len(_norm(f.get("label", ""))) < _MIN_TITLE)
     for cdate, ctext, cid, csev, cbundle in closed:
         if csev not in ("critical", "major"):
             continue
+        compared += 1
         for odate, otext, oid, _, obundle in open_:
             # Same bundle only. Reviews share heading boilerplate across bundles, so a D2
             # closure matching an I2 finding's title is a template collision, not a
@@ -3904,10 +3908,18 @@ def check_recurrence_reopens_closures() -> CheckResult:
                     f"false. Reopen it or record why the recurrence is a different defect."))
                 break
 
+    # Report what was COMPARED, not what was collected. The previous summary printed
+    # `len(closed)` — 552 — while the loop's severity filter meant 148 were actually
+    # compared, and it never mentioned the findings excluded for a short title. A guard's
+    # summary overstating its own coverage is the failure this session kept producing.
     details.insert(0, Detail(
         "summary", hits == 0,
-        f"{len(closed)} blocking-severity closure(s) checked against {len(open_)} open "
-        f"finding(s) from later reviews; {hits} contradicted by a recurrence"))
+        f"{compared} blocking-severity closure(s) compared against {len(open_)} open "
+        f"finding(s) from later same-bundle reviews; {hits} contradicted by a recurrence. "
+        f"NOT compared: {len(closed) - compared} non-blocking closure(s), and "
+        f"{skipped_short} finding(s) whose normalised title is under {_MIN_TITLE} chars "
+        f"(labels are truncated to heading[:50] upstream, so short titles are a real "
+        f"coverage limit, not a rounding detail)"))
     return CheckResult(passed=hits == 0, details=details)
 
 

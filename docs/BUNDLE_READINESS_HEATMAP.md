@@ -20,24 +20,24 @@
 
 | Bundle | Tier | Sources | Open | Blockers | Severity mix | Stage-13 review | Verdict |
 |---|---:|---:|---:|---:|---|:---:|:---:|
-| **F** | 0 | 63 | 96 | 21 | 58 advisory, 8 critical, 13 major, 17 minor | 2026-06-10 | 🔴 RED |
-| **D1** | 1 | 12 | 52 | 37 | 2 advisory, 24 critical, 13 major, 13 minor | 2026-06-10 | 🔴 RED |
-| **D2** | 1 | 6 | 49 | 17 | 14 advisory, 7 critical, 10 major, 18 minor | 2026-06-10 | 🔴 RED |
-| **D3** | 1 | 31 | 56 | 7 | 42 advisory, 1 critical, 6 major, 7 minor | 2026-06-10 | 🔴 RED |
+| **F** | 0 | 63 | 110 | 21 | 72 advisory, 8 critical, 13 major, 17 minor | 2026-06-10 | 🔴 RED |
+| **D1** | 1 | 12 | 58 | 37 | 8 advisory, 24 critical, 13 major, 13 minor | 2026-06-10 | 🔴 RED |
+| **D2** | 1 | 6 | 58 | 17 | 23 advisory, 7 critical, 10 major, 18 minor | 2026-06-10 | 🔴 RED |
+| **D3** | 1 | 31 | 57 | 7 | 43 advisory, 1 critical, 6 major, 7 minor | 2026-06-10 | 🔴 RED |
 | **D4** | 1 | 12 | 34 | 1 | 33 advisory, 1 critical | 2026-06-10 | 🔴 RED |
-| **D5** | 1 | 9 | 54 | 17 | 27 advisory, 7 critical, 10 major, 10 minor | 2026-06-10 | 🔴 RED |
+| **D5** | 1 | 9 | 62 | 17 | 35 advisory, 7 critical, 10 major, 10 minor | 2026-06-10 | 🔴 RED |
 | **D6** | 1 | 3 | 0 | 0 | _(none)_ | 2026-06-10 † | 🟡 YELLOW (P1 gate blocked: NarrativeGrounding) |
 | **D7** | 1 | 1 | 17 | 12 | 8 critical, 4 major, 5 minor | 2026-06-10 | 🔴 RED |
-| **D8** | 1 | 13 | 10 | 0 | 4 advisory, 6 minor | 2026-06-10 | 🟡 YELLOW |
+| **D8** | 1 | 13 | 14 | 0 | 8 advisory, 6 minor | 2026-06-10 | 🟡 YELLOW |
 | **D9** | 1 | 1 | 0 | 0 | _(none)_ | 2026-06-10 | 🟢 GREEN |
 | **D10** | 1 | 1 | 3 | 0 | 1 advisory, 2 minor | 2026-06-30 | 🟡 YELLOW (P1 gate blocked: NarrativeGrounding) |
 | **D11** | 1 | 1 | 73 | 25 | 12 advisory, 2 critical, 23 major, 36 minor | 2026-07-31 † | 🔴 RED |
-| **D12** | 1 | 1 | 148 | 65 | 6 advisory, 13 critical, 52 major, 77 minor | 2026-07-31 † | 🔴 RED |
+| **D12** | 1 | 1 | 181 | 80 | 7 advisory, 15 critical, 65 major, 94 minor | 2026-07-31 † | 🔴 RED |
 | **L1** | 2 | 2 | 5 | 2 | 2 major, 3 minor | 2026-06-10 | 🔴 RED |
-| **L2** | 2 | 1 | 35 | 14 | 18 advisory, 8 critical, 6 major, 3 minor | 2026-06-10 | 🔴 RED |
-| **L3** | 2 | 4 | 16 | 5 | 8 advisory, 1 critical, 4 major, 3 minor | 2026-06-10 | 🔴 RED |
-| **I1** | 3 | 8 | 37 | 15 | 11 advisory, 2 critical, 13 major, 11 minor | 2026-06-10 | 🔴 RED |
-| **I2** | 3 | 1 | 41 | 19 | 17 advisory, 8 critical, 11 major, 5 minor | 2026-06-10 | 🔴 RED |
+| **L2** | 2 | 1 | 41 | 14 | 24 advisory, 8 critical, 6 major, 3 minor | 2026-06-10 | 🔴 RED |
+| **L3** | 2 | 4 | 23 | 5 | 15 advisory, 1 critical, 4 major, 3 minor | 2026-06-10 | 🔴 RED |
+| **I1** | 3 | 8 | 40 | 15 | 14 advisory, 2 critical, 13 major, 11 minor | 2026-06-10 | 🔴 RED |
+| **I2** | 3 | 1 | 61 | 19 | 37 advisory, 8 critical, 11 major, 5 minor | 2026-06-10 | 🔴 RED |
 | **I3** | 3 | 1 | 36 | 16 | 16 advisory, 9 critical, 7 major, 4 minor | 2026-06-10 | 🔴 RED |
 | **E1** | 4 | 5 | 12 | 5 | 1 critical, 4 major, 7 minor | 2026-06-10 | 🔴 RED |
 | **E2** | 4 | 4 | 21 | 0 | 15 advisory, 6 minor | 2026-06-10 | 🟡 YELLOW |
@@ -48,24 +48,24 @@
 
 | Bundle | AssumptionDisclosu | CitationIntegrity | ComputationCorrect | CountFreshness | CrossPaperConsiste | FixPropagation | LeanProofSubstance | NarrativeGrounding | ParameterProvenanc | ProductionRunHealt | unclassified |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| **F** | 7 | 11 | 8 | 7 | 12 | 0 | 5 | 4 | 14 | 1 | 27 |
-| **D1** | 1 | 22 | 2 | 2 | 8 | 0 | 3 | 6 | 3 | 0 | 5 |
-| **D2** | 9 | 16 | 2 | 2 | 6 | 0 | 1 | 5 | 2 | 0 | 6 |
-| **D3** | 7 | 6 | 7 | 5 | 4 | 0 | 2 | 1 | 6 | 1 | 17 |
+| **F** | 8 | 13 | 10 | 8 | 14 | 0 | 6 | 5 | 15 | 1 | 30 |
+| **D1** | 1 | 26 | 2 | 2 | 8 | 0 | 3 | 6 | 3 | 0 | 7 |
+| **D2** | 11 | 16 | 3 | 3 | 8 | 0 | 2 | 6 | 2 | 0 | 7 |
+| **D3** | 7 | 6 | 7 | 5 | 4 | 0 | 2 | 1 | 7 | 1 | 17 |
 | **D4** | 3 | 2 | 1 | 0 | 5 | 1 | 2 | 1 | 1 | 0 | 18 |
-| **D5** | 2 | 15 | 2 | 2 | 5 | 0 | 2 | 5 | 6 | 0 | 15 |
+| **D5** | 3 | 17 | 2 | 3 | 6 | 0 | 2 | 6 | 6 | 0 | 17 |
 | **D6** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | **D7** | 2 | 1 | 0 | 1 | 3 | 0 | 1 | 2 | 2 | 0 | 5 |
-| **D8** | 2 | 4 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 3 |
+| **D8** | 4 | 4 | 0 | 0 | 0 | 0 | 0 | 2 | 0 | 0 | 4 |
 | **D9** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | **D10** | 0 | 2 | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 0 | 0 |
 | **D11** | 5 | 15 | 3 | 8 | 7 | 0 | 0 | 5 | 10 | 0 | 20 |
-| **D12** | 17 | 15 | 12 | 9 | 2 | 0 | 0 | 22 | 34 | 0 | 37 |
+| **D12** | 22 | 18 | 15 | 10 | 3 | 0 | 0 | 27 | 40 | 0 | 46 |
 | **L1** | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 2 | 2 | 0 | 0 |
-| **L2** | 5 | 4 | 3 | 1 | 5 | 0 | 2 | 1 | 8 | 0 | 6 |
-| **L3** | 1 | 5 | 0 | 2 | 2 | 0 | 0 | 1 | 0 | 1 | 4 |
-| **I1** | 3 | 10 | 0 | 2 | 0 | 0 | 0 | 11 | 2 | 0 | 9 |
-| **I2** | 1 | 4 | 2 | 0 | 1 | 0 | 4 | 8 | 7 | 0 | 14 |
+| **L2** | 6 | 4 | 4 | 2 | 7 | 0 | 3 | 1 | 8 | 0 | 6 |
+| **L3** | 1 | 8 | 0 | 2 | 3 | 0 | 0 | 1 | 0 | 1 | 7 |
+| **I1** | 3 | 10 | 0 | 2 | 0 | 0 | 0 | 13 | 3 | 0 | 9 |
+| **I2** | 2 | 6 | 2 | 3 | 1 | 0 | 5 | 13 | 9 | 0 | 20 |
 | **I3** | 2 | 2 | 0 | 2 | 6 | 0 | 3 | 7 | 6 | 0 | 8 |
 | **E1** | 1 | 3 | 0 | 2 | 0 | 0 | 0 | 3 | 2 | 0 | 1 |
 | **E2** | 1 | 6 | 0 | 0 | 2 | 0 | 1 | 5 | 2 | 0 | 4 |

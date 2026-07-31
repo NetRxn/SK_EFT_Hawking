@@ -1670,14 +1670,22 @@ def extract_review_finding_nodes() -> list[dict]:
                     if glyph in body[:600]:
                         severity = sev
                         break
-            # Escalation: explicit BLOCKER / critical markers override glyph-derived severity
-            if _BLOCKER_RE.search(heading) or _BLOCKER_RE.search(body[:1000]):
-                severity = 'critical'
-            # File-level escalation: if any critical marker exists in the report
-            # (e.g. summary table, QI Candidate section), all findings inherit
-            # critical severity unless they explicitly downgrade in body.
-            elif file_has_critical_marker:
-                severity = 'critical'
+            # Escalation applies ONLY to glyph-inferred severity. A DECLARED
+            # `- **Severity:**` line is authoritative and is never overridden
+            # (D12 Stage-13 round-12 finding 8.2).
+            #
+            # Measured before this fix: one bolded BLOCKER token anywhere in a file
+            # rewrote EVERY declared severity in it to `critical` — 3 of 3 in the
+            # reviewer's test, including one declared `advisory`. So the field I had just
+            # described as authoritative was in fact overridden by the very glyph mechanism
+            # it was introduced to replace. Two reviewers also tripped the file-level rule
+            # on their own reports by quoting the marker while describing it, escalating
+            # entire clean rounds.
+            if _decl is None:
+                if _BLOCKER_RE.search(heading) or _BLOCKER_RE.search(body[:1000]):
+                    severity = 'critical'
+                elif file_has_critical_marker:
+                    severity = 'critical'
 
             # ── BIRTH-STATUS INVARIANT (D12 Stage-13 round-11 finding 8.1b) ──
             # EVERY finding is born `open`. The supersession ledger is the SOLE channel
@@ -1696,12 +1704,6 @@ def extract_review_finding_nodes() -> list[dict]:
             # ledger record closes them. No blocking finding was affected — those already
             # required a record.
             status = 'open'
-            if re.search(r'[✅✓]|\bfixed\b|\bresolved\b|\bdone\b|now\s+closed', heading, re.IGNORECASE):
-                status = 'fixed'
-            if re.search(r'(now\s+closed|✅\s*\(?(?:now\s+)?closed)', body[:600], re.IGNORECASE):
-                status = 'fixed'
-            if re.search(r'[❌✗]\s+still', body[:400], re.IGNORECASE):
-                status = 'open'
 
 
             # Inference text: section heading + body slice + review_name (the

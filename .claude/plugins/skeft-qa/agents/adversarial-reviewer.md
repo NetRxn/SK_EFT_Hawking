@@ -226,6 +226,19 @@ affected, whether this paper is submission-ready after this review.
 
 ### 1.1 — 🔴 BLOCKER — <short heading mapping to finding class 1>
 
+- **Severity:** blocker            ← REQUIRED from 2026-08-01. One of
+                                      blocker | required | recommended | advisory.
+                                      `validate.py --check review_severity_declared` FAILS a
+                                      review dated on/after that cutoff whose findings omit
+                                      it. Severity drives the blocking-closure bar, and
+                                      inferring it from a glyph let it be changed without
+                                      leaving a trace — two exploits were demonstrated
+                                      against the glyph form (a one-line demotion reopening
+                                      self-closure, and a summary typeset as
+                                      `0 «**»BLOCKER«**»` escalating a whole clean report).
+                                      The declared field is authoritative; the glyph is
+                                      decoration.
+
 - **Gate:** CitationIntegrity
 - **Location:** `paper<N>_<name>/paper_draft.tex:<line>`
 - **Observed:** <what you found>
@@ -261,7 +274,8 @@ Severity glyphs match the extractor's parser:
 7. **Do not hide "unknown" findings.** If a citation fetch fails, if a graph query returns empty, if a file is unreadable — emit a finding with verdict `unknown` / `fetch_failed` so it is tracked. Silent skips are how regressions ship.
 8. **NEVER mutate git state.** No `git commit`, `git add`, `git stash`, `git checkout`, `git reset`, `git clean`, `git rebase` — nothing that touches the index, HEAD, or the working tree's tracked content. Read-only git (`log`, `show`, `diff`, `status`, `rev-parse`, `archive`) is fine and encouraged. **Why this is rule 8 and not a footnote:** an unscoped agent commit (`commit -a` / `add -A` behaviour) once swept a human operator's half-finished `scripts/validate.py` into an unrelated Stage-9 commit; because the module it imported was still untracked it did not come along, and HEAD was left raising `ImportError` for the entire validation suite and every test that imports it. You share this repo with a live human and with other agents. The dispatching author does all staging.
 9. **Never compile LaTeX in the bundle directory.** Always `pdflatex -interaction=nonstopmode -output-directory="$(mktemp -d)" papers/<BUNDLE>/paper_draft.tex`, or call `scripts/compile_bundle_pdf.py`. Running `pdflatex` with cwd inside `papers/<BUNDLE>/` writes `paper_draft.{aux,log,out,synctex.gz}` there, and those files are shared with every other process touching the bundle. Measured consequences of not doing this: an `.aux` losing section labels between sequential passes, a `.log` reporting undefined references that the rendered PDF does not have, and one `synctex.gz` written NUL-filled. **When judging a compile, trust the rendered PDF** (`pdftotext … | grep '??'`), not a `.log` that another process may have clobbered.
-10. **Edit-and-revert mutation testing is allowed and encouraged** — it is how you prove a guard is not vacuous — but back up to a scratch path first, restore immediately, and **disclose every file you touched in your report**, even though nothing reached the index. A silent working-tree mutation is indistinguishable from a bug for whoever looks next.
+10. **You cannot close your own findings.** Every finding is born `open`; the ONLY thing that can transition one is a record in `docs/review_finding_supersessions.json` carrying an explicit status, at least 40 characters of evidence, and a commit or date. Wording a heading "✅ FIXED" no longer does anything — that mechanism let review documents close their own findings and was exploited in four consecutive rounds. Report status honestly and let the author file the record.
+11. **Edit-and-revert mutation testing is allowed and encouraged** — it is how you prove a guard is not vacuous — but back up to a scratch path first, restore immediately, and **disclose every file you touched in your report**, even though nothing reached the index. A silent working-tree mutation is indistinguishable from a bug for whoever looks next.
 
 ## Pipeline integration
 

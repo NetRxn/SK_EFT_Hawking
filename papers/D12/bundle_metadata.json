@@ -14,14 +14,14 @@
   "last_stage9_review": "2026-07-31T04:10:00Z",
   "last_stage10_review": "2026-07-30T21:00:00Z",
   "last_stage13_review": "2026-07-31",
-  "blockers_open": 65,
-  "advisories_open": 83,
+  "blockers_open": 80,
+  "advisories_open": 101,
   "stage13_review_doc": null,
   "audit_log_path": "papers/D12/audit_log.jsonl",
   "supersession_ledger_anchor": "docs/review_finding_supersessions.json",
   "notes": "First content-lift 2026-07-30. Stage 10 claims review GREEN (round 2): 0 FAIL across 179 sentences; |1-L| = 2 at L = 3 verified end-to-end through the Lean witnesses; every declaration in the bundle's substrate kernel-pure from axiom closures (the count is NOT frozen here — it drifts with every wave; docs/counts.tex is the generated source, and D12 Stage-13 round-7 finding 7.2 caught this field asserting 565 against a live 582). Stage 9 iterating on typeset legibility. SCOPE: novelty is the narrowed knowledge-hedged form only — the original claim was REFUTED by a live prior-art sweep (Mathlib already carries a sub-Gaussian Chernoff bound; PhysLib already carries quantum hypothesis testing). TWO PRIOR-ART CHECKS REMAIN OPEN AND BLOCK SUBMISSION: RemyDegenne/testing-lower-bounds, and Isabelle AFP + Coq infotheo. || Stage 9 GREEN at round 6 (GO verdict, 0 FAIL, 0 MAJOR, 0 MINOR, 0 publication-blocking). Reviewer mutation-tested the structural harness (3 deliberate breakages, all caught), establishing checked-and-passed rather than not-checked. Documented non-blocking residue: textangle reading direction on one rotated annotation; panel (C) omitting N_b in its subplot title (recoverable from the shared abscissa and the caption); fig-2 legend stacking single-column. Overfull hbox 4 -> 0. || TYPESETTING 2026-07-31 (round-8, CORRECTED round-9): the draft declared `prxquantum`, which this TeX Live's revtex4-2 does not implement and silently drops; switched to `prx`. The round-8 note claimed this invalidated all prior Stage-9 layout measurements — that was asserted without compiling both and is FALSE. Measured 2026-07-31 by compiling both: identical extracted text (same md5), 10 pages, 0 Overfull either way — `aps4-2.rtx` defines `\\rtx@apsprx` as a no-op, so the option changes nothing and NO prior Stage-9 measurement was invalidated. Layout numbers must still be re-measured against the journal's own class before submission.",
   "last_stage13_review_source": "backfilled-from-AutomatedReviews papers/AutomatedReviews/2026-07-31-0829-internal-adversarial/D12.md 2026-07-31",
-  "open_findings": 148,
+  "open_findings": 181,
   "blocked_p1_gates": [
     "FixPropagation",
     "ParameterProvenance"
