@@ -29,8 +29,11 @@ Wiener bracket is `[1.6, 2.5]` and `ε_eff = 2` — so the shipped lower bound `
 the Wiener lower bound `1.6`, and this theorem does **not** entail either sharper family.
 
 Neither the Wiener nor the Hashin–Shtrikman bound is formalized in this development. Do not cite
-this module as having proved one. (The elastic sibling `EffectiveModuli.lean` genuinely does prove
-the arithmetic/harmonic pair, correctly named there as the Voigt–Reuss bracket.)
+this module as having proved one. (The elastic sibling `EffectiveModuli.lean` proves the
+ordering of the arithmetic and harmonic averages plus constituent bounds — it likewise does NOT
+prove the classical Voigt–Reuss bracket on a physical effective modulus. Corrected 2026-07-31: an
+earlier version of this sentence said it was "correctly named there as the Voigt–Reuss bracket",
+which was the same misnomer one file away.)
 
 ## Wave-2 headlines
 

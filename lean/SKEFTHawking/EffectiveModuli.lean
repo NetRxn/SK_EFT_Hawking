@@ -1,7 +1,7 @@
 import SKEFTHawking.EffectiveMediumBounds
 
 /-!
-# Phase 6CE, Wave 3 — Elastic effective moduli (Voigt–Reuss–Hill bounds)
+# Phase 6CE, Wave 3 — Elastic effective moduli (constituent bounds on the Voigt/Reuss averages)
 
 The mechanical analog of the Wave-2 electromagnetic enclosure. For a two-phase elastic composite
 (constituent moduli `0 < M₁ ≤ M₂` — bulk or shear — at volume fraction `f`), the two classical
@@ -83,9 +83,17 @@ lemma reuss_ge_host (M1 M2 f : ℝ) (h1 : 0 < M1) (h2 : 0 < M2) (ho : M1 ≤ M2)
   rw [reussModulus, le_div_iff₀ (reuss_denom_pos M1 M2 f h1 h2 hf0 hf1)]
   nlinarith [mul_nonneg (mul_nonneg (le_of_lt h1) hf0) (sub_nonneg.mpr ho)]
 
-/-- **Voigt–Reuss–Hill enclosure (Phase 6CE W3).** For a physical two-phase elastic composite
-(`0 < M₁ ≤ M₂`, `0 ≤ f ≤ 1`), the effective modulus is bracketed `M₁ ≤ M_Reuss ≤ M_Voigt ≤ M₂` —
-the elastic analog of the Maxwell–Garnett constituent enclosure. -/
+/-- **Constituent bounds on the Voigt/Reuss averages (Phase 6CE W3).** For `0 < M₁ ≤ M₂`,
+`0 ≤ f ≤ 1`, the two averages are ordered and both lie between the constituents:
+`M₁ ≤ M_Reuss ≤ M_Voigt ≤ M₂`. The elastic analog of the Maxwell–Garnett constituent enclosure.
+
+⚠️ **This is NOT the Voigt–Reuss–Hill theorem** (scope corrected 2026-07-31, D11 Stage-13 round 4;
+the module header was corrected in round 3 and this docstring — the one a consumer actually reads —
+was missed). VRH brackets a *physical* effective modulus, `M_Reuss ≤ M_eff ≤ M_Voigt`. **No
+effective modulus of a composite appears anywhere in this statement**: `voigtModulus` and
+`reussModulus` are the two closed-form averages, and what is proved is their ordering plus the
+constituent bounds. `voigtModulus`/`reussModulus` genuinely *are* the Voigt and Reuss averages; it
+is the *bracket on M_eff* that is not formalized here. -/
 theorem effectiveModuli_enclosure (M1 M2 f : ℝ) (h1 : 0 < M1) (h2 : 0 < M2) (ho : M1 ≤ M2)
     (hf0 : 0 ≤ f) (hf1 : f ≤ 1) :
     M1 ≤ reussModulus M1 M2 f ∧

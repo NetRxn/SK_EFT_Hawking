@@ -33,6 +33,7 @@ Exit status is 1 when at least one match is found (so it composes with shell
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import sys
 from pathlib import Path
@@ -70,6 +71,45 @@ def _iter_files(roots: list[Path]) -> list[Path]:
                 continue
             out.append(p)
     return out
+
+
+def _expand_notebook(text: str) -> str:
+    """Flatten a .ipynb into searchable prose: cell sources AND stored outputs.
+
+    Why: a notebook is JSON, so a sentence lives as a list of strings with the
+    newlines encoded as the two characters ``\\n`` rather than as real newlines.
+    Whitespace normalization cannot join across that, so a phrase split at a
+    line boundary in the rendered notebook is invisible even to this tool.
+
+    This cost a Stage-13 round: the assertion "Mass inversion is necessary but
+    NOT sufficient at fixed grid size" survived a normalized sweep because it sat
+    in a notebook's *stored output*, and `notebook_exec` re-blesses stored output
+    on every run. Searching the raw JSON is not enough either — the phrase there
+    is broken by ``\\n`` escapes and quote/bracket punctuation.
+    """
+    try:
+        nb = json.loads(text)
+    except Exception:
+        return text
+    parts: list[str] = []
+    for cell in nb.get("cells", []):
+        src = cell.get("source", [])
+        parts.append("".join(src) if isinstance(src, list) else str(src))
+        for out in cell.get("outputs", []):
+            for key in ("text",):
+                v = out.get(key)
+                if isinstance(v, list):
+                    parts.append("".join(v))
+                elif isinstance(v, str):
+                    parts.append(v)
+            data = out.get("data", {})
+            for key in ("text/plain", "text/markdown"):
+                v = data.get(key)
+                if isinstance(v, list):
+                    parts.append("".join(v))
+                elif isinstance(v, str):
+                    parts.append(v)
+    return "\n".join(parts)
 
 
 def _normalize(text: str) -> tuple[str, list[int]]:
@@ -127,7 +167,11 @@ def main() -> int:
             raw = path.read_text(encoding="utf-8", errors="replace")
         except OSError:
             continue
-        norm, idx = _normalize(raw)
+        # Notebooks: search the flattened cell sources and stored outputs, since the
+        # raw JSON breaks every sentence with \n escapes and quoting. Line numbers
+        # for .ipynb hits are therefore approximate (they index the flattened text).
+        searchable = _expand_notebook(raw) if path.suffix == ".ipynb" else raw
+        norm, idx = _normalize(searchable)
         hay = norm.lower() if args.ignore_case else norm
         start = 0
         while True:
@@ -135,7 +179,7 @@ def main() -> int:
             if j < 0:
                 break
             orig = idx[j] if j < len(idx) else 0
-            line = raw.count("\n", 0, orig) + 1
+            line = searchable.count("\n", 0, orig) + 1
             lo = max(0, j - args.context)
             hi = min(len(norm), j + len(needle) + args.context)
             try:

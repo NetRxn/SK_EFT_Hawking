@@ -29,8 +29,8 @@
 \author{John Roehm}
 
 \begin{abstract}
-We report a machine-checked formalization, in the \Lean{} proof assistant with Mathlib and the
-PhysLib physics library, of five layers of band theory and effective-medium physics: (i) a genuine
+We report a machine-checked formalization, in the \Lean{} proof assistant against Mathlib, of five
+layers of band theory and effective-medium physics: (i) a genuine
 \emph{integer-valued} lattice Chern number on a discretized Brillouin torus, built via the
 Fukui--Hatsugai--Suzuki plaquette construction, with unconditional integrality and gauge invariance;
 (ii) a two-band diatomic acoustic Bloch operator and a band-gap existence theorem whose gap edges are
@@ -98,7 +98,7 @@ statement. We are equally explicit about what we did \emph{not} prove: Section~\
 records that Berry curvature and the bulk--boundary correspondence are \emph{deferred}, not shipped
 in conditional form, and that our claimed novelty carries four mandatory carve-outs.
 
-\paragraph{Substrate summary.} The bundle comprises 22 root-imported modules --- 6133 lines, 394
+\paragraph{Substrate summary.} The bundle comprises 22 root-imported modules --- 6144 lines, 394
 theorems and lemmas, 83 definitions and structures, counted at source level. The counting rule is
 stated so it is reproducible: a declaration is counted when a line begins with \texttt{theorem} or
 \texttt{lemma}, optionally preceded by an attribute bracket or by \texttt{private}/\texttt{protected}.
@@ -536,8 +536,10 @@ the intended one. Closing that second gap needs invariants that see more than th
 now require one for every multi-band model we ship.
 
 \begin{acknowledgments}
-Formalization was carried out in \Lean{}~4 against Mathlib and PhysLib. We thank the Mathlib and
-PhysLib communities for the underlying libraries.
+Formalization was carried out in \Lean{}~4 against Mathlib. We thank the Mathlib community for the
+underlying library. PhysLib is discussed in Sections~\ref{sec:phononic} and~\ref{sec:scope} as
+adjacent prior art, but no module in this bundle imports it: the complete import set is Mathlib
+plus intra-bundle dependencies.
 \end{acknowledgments}
 
 \begin{thebibliography}{99}
