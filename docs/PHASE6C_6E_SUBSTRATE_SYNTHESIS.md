@@ -107,11 +107,17 @@ masses invert" at fixed `N`.
   likelihood-ratio theorem ships in this phase; the floors are symmetric
   Bayes/Le Cam bounds. (The *opposite* over-correction — claiming their total
   absence — was also retracted.)
-- **"Most-consumed floor" claim verified FALSE.** 6EB and 6EC reference
-  **zero** Wave-1 declarations; `poisson_avgError_floor` and
-  `poisson_darkBaseline_miss_floor` have **0** in-tree references outside their
-  own module. **Wave 1 is standalone.** Any D12-facing text implying otherwise
-  is wrong.
+- **"Most-consumed floor" claim verified FALSE — but the correction was itself
+  over-stated, and is corrected here (2026-07-30).** The accurate position:
+  6EB and 6EC reference **zero** Wave-1 declarations (true). But
+  `poisson_avgError_floor` **is** consumed by 6EE —
+  `Control.photon_budget_ceiling` (`CompositeReadoutCeilings.lean:252`) and
+  `Control.photon_budget_floor_attributed` (`:310`) call it directly — so
+  "Wave 1 is standalone" is **wrong**. Only
+  `poisson_darkBaseline_miss_floor` genuinely has zero external references.
+  What is a finding is any text calling the Poisson layer the *series'
+  most-consumed* floor. Caught by the Stage-10 D12 reviewer, which checked the
+  live dependency graph rather than inheriting the roadmap's wording.
 - **`expNeg_enclosure` call retracted** — 6EA makes no direct call to it. The
   standing lesson recorded at the time: *"never let a brick-consumption
   bookkeeping goal set a certified constant."* The factor-6 constant in the

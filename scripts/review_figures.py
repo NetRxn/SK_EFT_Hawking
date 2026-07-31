@@ -1855,6 +1855,128 @@ FIGURE_REGISTRY: list[FigureSpec] = [
         physics_checks=[],
         color_keys=["steel_blue", "amber"],
     ),
+    # ── D11 / D12 bundle figures (added 2026-07-30) ───────────────────────
+    # Stage-9 round 2 identified the ROOT CAUSE of defects surviving a full
+    # review round: these figures had no registry entry, no structural check
+    # and no regression guard. Registering them closes that gap.
+    FigureSpec(
+        name="d11_fig1_phononic_band_gap",
+        function="fig_d11_phononic_band_gap",
+        caption=(
+            "D11 — certified phononic band gap of the diatomic mass-spring "
+            "chain (m₁,m₂,κ,a) = (1,2,1,1). Both edges of the gap ω² ∈ (1,2) "
+            "are ATTAINED at k = ±π (branchMinus_at_pi, branchPlus_at_pi), so "
+            "the bound is tight. Rational inner bracket 1 < 141/100 ≤ √2 "
+            "(band_gap_rational_enclosure, norm_num, no floating point)."
+        ),
+        needs_experiments=False,
+        expected_traces=4,
+        expected_axes={"xaxis": "Bloch wavevector", "yaxis": "squared frequency"},
+        physics_checks=["phononic_gap_edges_attained", "no_state_inside_gap"],
+        color_keys=["steel_blue", "amber", "carmine"],
+    ),
+    FigureSpec(
+        name="d11_fig2_pt_exceptional_point",
+        function="fig_d11_pt_exceptional_point",
+        caption=(
+            "D11 — PT transition of the non-Hermitian Bloch Hamiltonian. Real "
+            "spectrum iff g² ≤ 1 (pt_symmetric_real_spectrum_iff, a sharp "
+            "biconditional); g = 1 is a genuinely defective order-2 exceptional "
+            "point (exceptional_point_defective), certified without a Jordan "
+            "normal form. The proximity enclosure Δ ≤ 1/5 on g² ≥ 99/100 is "
+            "TIGHT — equality at the endpoint."
+        ),
+        needs_experiments=False,
+        expected_traces=5,
+        expected_axes={"xaxis": "non-Hermiticity", "yaxis": "eigenvalue"},
+        physics_checks=["ep_splitting_vanishes_at_one", "ep_enclosure_tight"],
+        color_keys=["steel_blue", "amber", "carmine"],
+    ),
+    FigureSpec(
+        name="d11_fig3_haldane_chern",
+        function="fig_d11_haldane_chern",
+        caption=(
+            "D11 — Haldane Chern witness. C = −1 at t = t₂ = 1, φ = π/2, m = 1 "
+            "on a 4×4 torus (haldaneFrame_latticeChern_eq_neg_one); C = 0 at "
+            "m = 5 and m = 6. m = 5 is INSIDE the analytic window |m| < 3√3, so "
+            "mass inversion is NOT sufficient at fixed N "
+            "(haldane_massInversion_not_sufficient_at_N4). Necessity is not "
+            "certified; the flip location ≈3.3177 is numerical, not certified."
+        ),
+        needs_experiments=False,
+        expected_traces=6,
+        expected_axes={"xaxis": "Semenoff mass", "yaxis": "Dirac-point gap"},
+        physics_checks=["chern_sign_is_negative_one", "m5_inside_window_reads_zero"],
+        color_keys=["steel_blue", "amber", "carmine"],
+    ),
+    FigureSpec(
+        name="d11_fig4_effective_medium",
+        function="fig_d11_effective_medium",
+        caption=(
+            "D11 — algebraic effective-medium bounds. Maxwell–Garnett inside "
+            "its NON-STRICT constituent bounds (attained at f = 0 and f = 1), "
+            "with the certified point (1, 4, 1/2) → exactly 2. Voigt–Reuss gap "
+            "shipped as an EXACT identity (voigt_sub_reuss_eq), not an "
+            "inequality. Algebraic path only — the two-scale homogenization "
+            "route is a documented substrate stall, and is formalized in no prover."
+        ),
+        needs_experiments=False,
+        expected_traces=6,
+        expected_axes={"xaxis": "fill fraction", "yaxis": "effective"},
+        physics_checks=["mg_certified_point_equals_two", "voigt_reuss_gap_exact"],
+        color_keys=["steel_blue", "amber", "carmine"],
+    ),
+    FigureSpec(
+        name="d12_fig1_poisson_floor_vs_folklore",
+        function="fig_d12_poisson_floor_vs_folklore",
+        caption=(
+            "D12 — the folklore photon-counting floor exp(−N_diff) fails in TWO "
+            "directions, both plotted. (A) false-strict as a miss bound: the "
+            "realizable unit-threshold counter misses at exp(−N_a), under the "
+            "folklore value by exp(N_b) — certified 148× at (5,10). (B) "
+            "exponentially fail-open as an average-error screen beyond the "
+            "crossover N_a = 51.3959, where the gap exponent exceeds log 4."
+        ),
+        needs_experiments=False,
+        expected_traces=10,
+        expected_axes={"xaxis": "source rate", "yaxis": "miss probability"},
+        physics_checks=["folklore_fails_both_directions", "shading_only_past_crossover"],
+        color_keys=["steel_blue", "amber", "carmine"],
+    ),
+    FigureSpec(
+        name="d12_fig2_enbw_matched_filter",
+        function="fig_d12_enbw_matched_filter",
+        caption=(
+            "D12 — ENBW·T ≥ 1/2 realizability floor, saturated by the matched "
+            "boxcar (the LEAST element, enbw_mul_window_isLeast) with the "
+            "DC-matched ramp at 2/3. Right: the Gaussian tail Q(z) inside its "
+            "certified Chernoff/Mills upper and Birnbaum–Feller lower envelopes "
+            "— upper curves are BOUNDS, not probabilities (Mills exceeds 1 for "
+            "z ≲ 0.37, where it is vacuous)."
+        ),
+        needs_experiments=False,
+        expected_traces=7,
+        expected_axes={"xaxis": "integration window", "yaxis": "ENBW"},
+        physics_checks=["enbw_floor_saturated_by_boxcar", "gaussian_tail_sandwich_holds"],
+        color_keys=["steel_blue", "amber", "carmine"],
+    ),
+    FigureSpec(
+        name="d12_fig3_etf_stability",
+        function="fig_d12_etf_stability",
+        caption=(
+            "D12 — electrothermal feedback. Stability is an exact dichotomy at "
+            "ℒ = −1 (etf_stable_iff); τ_eff is NEGATIVE on the unstable branch, "
+            "so reading it through |·| inverts the physics. The Johnson NEP "
+            "correction is |1 − ℒ| — an EQUALITY, giving 2 at ℒ = 3 (not 4) — "
+            "and is stability-blind: ℒ = 5 and ℒ = −3 both give 4 on opposite "
+            "sides of the boundary."
+        ),
+        needs_experiments=False,
+        expected_traces=7,
+        expected_axes={"xaxis": "loop gain", "yaxis": "correction factor"},
+        physics_checks=["johnson_factor_two_at_loopgain_three", "stability_blind_pair"],
+        color_keys=["steel_blue", "amber", "carmine"],
+    ),
 ]
 
 

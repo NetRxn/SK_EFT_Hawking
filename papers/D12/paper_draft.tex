@@ -33,7 +33,8 @@ constraint and no likelihood-ratio assumption; the zero-false-alarm dark-baselin
 sharp Gaussian separation-budget floor, uniform over threshold placement, with a two-sided
 Chernoff/Mills/Birnbaum--Feller tail sandwich. (ii) \emph{Filtered-readout floors}: the
 realizability bound $\mathrm{ENBW}\cdot T \ge 1/2$, proved sharp as a \emph{least} element and
-characterized with equality \emph{iff} the filter is a positive multiple of the boxcar; noise-
+characterized with equality \emph{iff} the filter agrees a.e.\ with its own DC average times the
+boxcar --- a \emph{nonzero}, not necessarily positive, multiple; noise-
 equivalent-power composition algebra; and matched-filter optimality as a \emph{greatest} element.
 (iii) \emph{Electrothermal detector physics}: the linearized voltage-biased bolometer, with
 stability as an exact dichotomy in the loop gain, and the Johnson noise-equivalent-power correction.
@@ -87,7 +88,18 @@ proof assistants. Two prior-art checks remain open and are flagged as blocking.
 project's extracted axiom closures for \emph{every} declaration in all thirteen modules --- not from
 spot checks --- with no project-local axioms and the core axiom set exactly
 $\{\texttt{propext},\allowbreak \texttt{Classical.choice},\allowbreak \texttt{Quot.sound}\}$. There
-are no \texttt{sorry}, no \texttt{native\_decide}, and no \texttt{maxHeartbeats} directives.
+are no \texttt{sorry}, no \texttt{native\_decide}, and no \texttt{maxHeartbeats} directives. All
+statements about library contents in this paper --- including every negative one in
+Section~\ref{sec:scope} --- are scoped to Lean toolchain \texttt{v4.32.0}, Mathlib revision
+\texttt{81a5d257} and PhysLib revision \texttt{c4843367}, and were established by direct inspection
+of those checkouts rather than from documentation.
+
+\paragraph{A scoping note on PhysLib.} We build against Mathlib and PhysLib, but we should be precise
+about the second: PhysLib enters this development through the \emph{import closure} of the
+composite-ceiling layer, not because any D12 theorem consumes a PhysLib result. The quantum
+machinery our ceilings touch --- the POVM and Helstrom bounds of Section~\ref{sec:poisson} --- is the
+project's own network-certification substrate. This matters because Section~\ref{sec:scope}
+disclaims novelty against precisely the PhysLib results we do not use.
 
 \section{Poisson discrimination floors}
 \label{sec:poisson}
@@ -212,7 +224,8 @@ hypothesis-testing rate is consumed --- see Section~\ref{sec:scope}.
 \caption{Left: the window product $\mathrm{ENBW}\cdot T$ for the matched boxcar, which saturates the
 floor $1/2$, and for the DC-matched ramp, which does not --- the floor is a screen with real slack.
 Right: the Gaussian tail $Q(z)$ inside its certified Chernoff/Mills upper and Birnbaum--Feller lower
-envelopes.}
+envelopes. The upper curves are \emph{bounds}, not probabilities --- the Mills ratio $\varphi(z)/z$
+exceeds $1$ for $z \lesssim 0.37$, where it is vacuous.}
 \label{fig:enbw}
 \end{figure}
 
@@ -223,7 +236,14 @@ With \thm{enbw} defined in the one-sided, DC-normalized convention, the central 
 $\mathrm{ENBW}\cdot T \ge 1/2$. Three refinements make this more than an inequality. First,
 \thm{enbw\_mul\_window\_isLeast} shows $1/2$ is the \emph{least} element of the realizable set, so no
 better constant exists. Second, \thm{enbw\_eq\_half\_iff\_boxcar} characterizes equality: it holds
-\emph{if and only if} the filter agrees almost everywhere with a positive multiple of the boxcar.
+\emph{if and only if} the filter agrees almost everywhere with its own DC average times the boxcar.
+The multiplier is therefore a \emph{nonzero} constant, not necessarily a positive one --- the only
+constraint is that the DC gain not vanish, and $h = -\,\mathrm{boxcar}$ saturates the floor just as
+$h = +\,\mathrm{boxcar}$ does, since ENBW is invariant under $h \mapsto c\,h$ for $c \neq 0$
+(\thm{enbw\_const\_mul}). We flag the contrast deliberately: the matched-filter saturation
+characterization of Section~\ref{sec:filter} below \emph{does} require strict positivity
+(\thm{filteredSNR\_eq\_budget\_iff}), and importing that qualifier here would be exactly the
+sign-blindness that \thm{unsigned\_saturation\_characterization\_false} refutes one paragraph later.
 Third, \thm{enbw\_ramp\_gt\_half} exhibits a filter strictly above the floor, so the bound
 discriminates.
 

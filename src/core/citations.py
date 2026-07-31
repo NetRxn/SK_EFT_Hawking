@@ -11804,9 +11804,9 @@ CITATION_REGISTRY = {
         'authors': 'Zhou, L., Barthe, G., Strub, P.-Y., Liu, J., Ying, M.',
         'title': 'CoqQ: Foundational Verification of Quantum Programs',
         'journal': 'arXiv', 'volume': None, 'page': None, 'year': 2022,
-        'doi': None, 'arxiv': None, 'doi_verified': False, 'inprep': False,
+        'doi': '10.1145/3571222', 'arxiv': None, 'doi_verified': True, 'inprep': False,
         'primary_source_path': None,
-        'used_in': ['papers/D10/paper_draft.tex'], 'provides': [],
+        'used_in': ['papers/D12/paper_draft.tex', 'papers/D10/paper_draft.tex'], 'provides': [],
         'notes': 'arXiv:2207.11350; ID + author list verified + corrected by D10 Stage-13 review 2026-06-30 (Strub/Liu, not Hsu/Yu). ITP honest-situating ref; PDF off egress whitelist; exempt.',
     },
     'leanQI2025': {

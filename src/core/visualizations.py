@@ -14766,20 +14766,20 @@ def fig_d12_poisson_floor_vs_folklore() -> go.Figure:
         x=np.concatenate([na_a, na_a[::-1]]),
         y=np.concatenate([folk_a, realizable[::-1]]),
         fill="toself", fillcolor="rgba(46, 134, 171, 0.16)", line=dict(width=0),
-        name="the folklore value is NOT a miss lower bound", hoverinfo="skip"),
+        name="(A) the folklore value is NOT a miss lower bound", hoverinfo="skip"),
         row=1, col=1)
     fig.add_trace(go.Scatter(
         x=na_a, y=folk_a, mode="lines", line=dict(color=amber, width=2.5, dash="dash"),
-        name="folklore  exp(−(N_a−N_b))  — NOT a bound"), row=1, col=1)
+        name="(A) folklore  exp(−(N_a−N_b))  — NOT a bound"), row=1, col=1)
     fig.add_trace(go.Scatter(
         x=na_a, y=realizable, mode="lines", line=dict(color=blue, width=3),
-        name="realizable unit-threshold miss  exp(−N_a)"), row=1, col=1)
+        name="(A) realizable unit-threshold miss  exp(−N_a)"), row=1, col=1)
     fig.add_trace(go.Scatter(
         x=[10.0], y=[F.poisson_dark_baseline_miss_optimum(10.0)], mode="markers",
         marker=dict(color=carmine, size=12, symbol="diamond"),
-        name="certified 148× at (N_b,N_a) = (5,10)"), row=1, col=1)
+        name="(A) certified 148× at (N_b,N_a) = (5,10)"), row=1, col=1)
     fig.update_yaxes(type="log", exponentformat="power", showexponent="all",
-                     title_text="miss probability", row=1, col=1)
+                     title_text="(A) miss probability  (dimensionless)", row=1, col=1)
     fig.update_xaxes(title_text="source rate  N_a  (counts)", row=1, col=1)
 
     # ── (B) average-error screen ───────────────────────────────────────────
@@ -14794,7 +14794,7 @@ def fig_d12_poisson_floor_vs_folklore() -> go.Figure:
             x=np.concatenate([n_open, n_open[::-1]]),
             y=np.concatenate([true_floor[open_mask], folk[open_mask][::-1]]),
             fill="toself", fillcolor="rgba(241, 143, 1, 0.22)", line=dict(width=0),
-            name="fail-open: folklore admits what the true floor forbids",
+            name="(B) fail-open: folklore admits what the true floor forbids",
             hoverinfo="skip"), row=1, col=2)
     # analytic crossover: gap exponent == log 4  (not the sampled grid point)
     xover = ((np.log(4.0) / (2.0 * np.sqrt(nb))) + np.sqrt(nb)) ** 2
@@ -14803,16 +14803,16 @@ def fig_d12_poisson_floor_vs_folklore() -> go.Figure:
                   annotation_position="bottom right", row=1, col=2)
     fig.add_trace(go.Scatter(
         x=n_a, y=true_floor, mode="lines", line=dict(color=blue, width=3),
-        name="Le Cam floor  (1/4)·exp(−(√N_a−√N_b)²)"), row=1, col=2)
+        name="(B) Le Cam floor  (1/4)·exp(−(√N_a−√N_b)²)"), row=1, col=2)
     fig.add_trace(go.Scatter(
         x=n_a, y=folk, mode="lines", line=dict(color=amber, width=2.5, dash="dash"),
         showlegend=False), row=1, col=2)
     fig.add_trace(go.Scatter(
         x=[60.0], y=[F.poisson_avg_error_floor(60.0, 50.0)], mode="markers",
         marker=dict(color=carmine, size=12, symbol="diamond"),
-        name="certified ratio > 1000 at (50, 60)"), row=1, col=2)
+        name="(B) certified ratio > 1000 at (50, 60)"), row=1, col=2)
     fig.update_yaxes(type="log", exponentformat="power", showexponent="all",
-                     title_text="average assignment-error floor", row=1, col=2)
+                     title_text="(B) average assignment-error floor  (dimensionless)", row=1, col=2)
     fig.update_xaxes(title_text="source rate  N_a  (counts)", row=1, col=2)
 
     # ── exponent gap ───────────────────────────────────────────────────────
@@ -14829,10 +14829,10 @@ def fig_d12_poisson_floor_vs_folklore() -> go.Figure:
         text=["9.5445"], textposition="top center", cliponaxis=False,
         showlegend=False), row=1, col=3)
     fig.update_xaxes(title_text="source rate  N_a  (counts)", row=1, col=3)
-    fig.update_yaxes(title_text="exponent advantage of the Le Cam floor", row=1, col=3)
+    fig.update_yaxes(title_text="exponent advantage of the Le Cam floor  (nats)", row=1, col=3)
 
     return _d12_layout(
-        fig, "D12 Fig. 1 — the folklore photon-counting floor fails in two directions",
+        fig, "The folklore photon-counting floor fails in two directions",
         height=560, width=1400, legend_y=-0.26, bottom=185)
 
 
@@ -14857,11 +14857,11 @@ def fig_d12_enbw_matched_filter() -> go.Figure:
     box = np.array([F.enbw_boxcar(t) * t for t in T])
     ramp = np.array([F.enbw_ramp(t) * t for t in T])
     fig.add_trace(go.Scatter(
-        x=T, y=box, mode="lines", line=dict(color=blue, width=3),
-        name="matched boxcar — saturates the floor at 1/2"), row=1, col=1)
+        x=T, y=box, mode="lines", line=dict(color=blue, width=7),
+        name="(left) matched boxcar — saturates the floor at 1/2"), row=1, col=1)
     fig.add_trace(go.Scatter(
         x=T, y=ramp, mode="lines", line=dict(color=amber, width=2.5, dash="dash"),
-        name="DC-matched ramp — 2/3 (one admissible point above)"), row=1, col=1)
+        name="(left) DC-matched ramp — 2/3 (one admissible point above)"), row=1, col=1)
     fig.add_hline(y=F.enbw_window_product_floor(),
                   line=dict(color=carmine, width=2, dash="dot"),
                   annotation_text="floor 1/2 — IsLeast, sharp",
@@ -14878,26 +14878,26 @@ def fig_d12_enbw_matched_filter() -> go.Figure:
     fig.add_trace(go.Scatter(
         x=np.concatenate([z, z[::-1]]), y=np.concatenate([np.minimum(ch, mi), bf[::-1]]),
         fill="toself", fillcolor="rgba(241, 143, 1, 0.16)", line=dict(width=0),
-        name="certified sandwich", hoverinfo="skip"), row=1, col=2)
+        name="(right) certified sandwich", hoverinfo="skip"), row=1, col=2)
     # Unicode superscripts only — kaleido renders ^{} literally.
     fig.add_trace(go.Scatter(
         x=z, y=ch, mode="lines", line=dict(color=amber, width=2, dash="dash"),
-        name="Chernoff upper  (1/2)·exp(−z²/2)"), row=1, col=2)
+        name="(right) Chernoff upper  (1/2)·exp(−z²/2)"), row=1, col=2)
     fig.add_trace(go.Scatter(
         x=z, y=mi, mode="lines", line=dict(color=amber, width=2, dash="dot"),
-        name="Mills upper  φ(z)/z  (vacuous for small z)"), row=1, col=2)
+        name="(right) Mills upper  φ(z)/z  (vacuous for small z)"), row=1, col=2)
     fig.add_trace(go.Scatter(
         x=z, y=bf, mode="lines", line=dict(color=blue, width=2, dash="dashdot"),
-        name="Birnbaum–Feller lower  z·φ(z)/(1+z²)"), row=1, col=2)
+        name="(right) Birnbaum–Feller lower  z·φ(z)/(1+z²)"), row=1, col=2)
     fig.add_trace(go.Scatter(
-        x=z, y=q, mode="lines", line=dict(color=blue, width=3.5), name="Q(z)"),
+        x=z, y=q, mode="lines", line=dict(color=blue, width=3.5), name="(right) Q(z)"),
         row=1, col=2)
     fig.update_xaxes(title_text="separation budget  z = Δμ/(2σ)", row=1, col=2)
     fig.update_yaxes(type="log", exponentformat="power", showexponent="all",
-                     title_text="tail probability / bound value", row=1, col=2)
+                     title_text="tail probability / bound value", dtick=1, row=1, col=2)
 
     return _d12_layout(
-        fig, "D12 Fig. 2 — filtered-readout realizability floor and the Gaussian tail sandwich",
+        fig, "Filtered-readout realizability floor and the Gaussian tail sandwich",
         height=600, width=1080, legend_y=-0.24, bottom=210)
 
 
@@ -14929,7 +14929,7 @@ def fig_d12_etf_stability() -> go.Figure:
         name="unstable branch  ℒ < −1  (τ_eff < 0, divergent)"), row=1, col=1)
     fig.add_vline(x=-1.0, line=dict(color=carmine, width=2, dash="dot"),
                   annotation_text="ℒ = −1 marginal",
-                  annotation_position="bottom left", row=1, col=1)
+                  annotation_position="top left", row=1, col=1)
     fig.add_trace(go.Scatter(
         x=[3.0], y=[F.etf_effective_time_constant(1.0, 1.0, 3.0)], mode="markers",
         marker=dict(color=carmine, size=12, symbol="diamond"),
@@ -14942,7 +14942,7 @@ def fig_d12_etf_stability() -> go.Figure:
     corr = np.array([F.johnson_nep_correction_factor(x) for x in L])
     fig.add_vrect(x0=0.0, x1=2.0, fillcolor="rgba(241, 143, 1, 0.18)", line_width=0,
                   annotation_text="naive OVERSTATES", annotation_position="top left",
-                  row=1, col=2, exclude_empty_subplots=False)
+                  layer="below", row=1, col=2, exclude_empty_subplots=False)
     fig.add_trace(go.Scatter(
         x=L, y=corr, mode="lines", line=dict(color=blue, width=3),
         showlegend=False), row=1, col=2)
@@ -14952,10 +14952,10 @@ def fig_d12_etf_stability() -> go.Figure:
     # the stability boundary, so the equal-4 pair is visibly on opposite sides
     fig.add_vline(x=-1.0, line=dict(color=carmine, width=2, dash="dash"),
                   annotation_text="ℒ = −1 stability boundary",
-                  annotation_position="bottom right", row=1, col=2)
+                  annotation_position="bottom left", row=1, col=2)
     for Lv, lab, pos in ((3.0, "ℒ = 3 → 2", "bottom right"),
                          (5.0, "ℒ = 5 → 4  (stable)", "top left"),
-                         (-3.0, "ℒ = −3 → 4  (UNSTABLE)", "top right")):
+                         (-3.0, "ℒ = −3 → 4  (UNSTABLE)", "top left")):
         fig.add_trace(go.Scatter(
             x=[Lv], y=[F.johnson_nep_correction_factor(Lv)], mode="markers+text",
             marker=dict(color=carmine, size=11, symbol="diamond"),
@@ -14967,7 +14967,7 @@ def fig_d12_etf_stability() -> go.Figure:
 
     return _d12_layout(
         fig,
-        "D12 Fig. 3 — electrothermal feedback: stability dichotomy and the |1−ℒ| Johnson correction",
+        "Electrothermal feedback — stability dichotomy and the |1−ℒ| Johnson correction",
         height=580, width=1080, legend_y=-0.24, bottom=185)
 
 
@@ -14997,7 +14997,7 @@ def fig_d11_phononic_band_gap() -> go.Figure:
     fig = go.Figure()
     fig.add_hrect(y0=lo, y1=hi, fillcolor="rgba(241, 143, 1, 0.20)", line_width=0,
                   annotation_text=f"certified gap  ω² ∈ ({lo:g}, {hi:g})  — no state here",
-                  annotation_position="top left")
+                  annotation_position="top left", layer="below")
     fig.add_trace(go.Scatter(
         x=k, y=optical, mode="lines", line=dict(color=amber, width=3),
         name="optical branch  ω²₊"))
@@ -15014,11 +15014,11 @@ def fig_d11_phononic_band_gap() -> go.Figure:
         name="ω²₊(±π) = 2  (upper edge attained)"))
     fig.add_annotation(
         x=0.0, y=(lo + hi) / 2.0, xref="x", yref="y", showarrow=False,
-        text=(f"rational inner bracket in ω:  1 &lt; {enc_hi:.2f} ≤ √2"
+        text=("rational inner bracket in ω:  1 &lt; 141/100 ≤ √2"
               "<br>(norm_num, no floating point)"),
         font=dict(size=12), bgcolor="rgba(255,255,255,0.75)")
     fig.update_layout(
-        title="D11 Fig. 1 — certified phononic band gap, diatomic chain (m₁,m₂,κ,a) = (1,2,1,1)",
+        title="Certified phononic band gap — diatomic chain (m₁, m₂, κ, a) = (1, 2, 1, 1)",
         xaxis=dict(title="Bloch wavevector  k a  (dimensionless)", tickmode="array",
                    tickvals=[-np.pi, -np.pi / 2, 0, np.pi / 2, np.pi],
                    ticktext=["−π", "−π/2", "0", "π/2", "π"]),
@@ -15047,7 +15047,7 @@ def fig_d11_pt_exceptional_point() -> go.Figure:
     fig = go.Figure()
     fig.add_vrect(x0=0.0, x1=1.0, fillcolor="rgba(46, 134, 171, 0.12)", line_width=0,
                   annotation_text="PT-unbroken — spectrum real",
-                  annotation_position="top left")
+                  annotation_position="top left", layer="below")
     fig.add_trace(go.Scatter(x=g_real, y=lam, mode="lines",
                              line=dict(color=blue, width=3),
                              name="Re λ = +√(1−g²)"))
@@ -15066,9 +15066,9 @@ def fig_d11_pt_exceptional_point() -> go.Figure:
         name="EP2 at g = 1  (defective, Δ = 0)"))
     fig.add_vline(x=float(np.sqrt(0.99)), line=dict(color=carmine, width=1.5, dash="dot"),
                   annotation_text="g² = 99/100 ⟹ Δ ≤ 1/5 (tight)",
-                  annotation_position="bottom left")
+                  annotation_position="top left", annotation_yshift=-22)
     fig.update_layout(
-        title="D11 Fig. 2 — PT transition and the order-2 exceptional point",
+        title="PT transition and the order-2 exceptional point",
         xaxis=dict(title="non-Hermiticity  g  (dimensionless)"),
         yaxis=dict(title="eigenvalue λ  (real branch / imaginary branch)"),
         template="plotly_white", height=580, width=900,
@@ -15105,7 +15105,7 @@ def fig_d11_haldane_chern() -> go.Figure:
     gap_Kp = np.array([2.0 * abs(g[1]) for g in gaps])
     window = F.haldane_mass_inversion_window(1.0, np.pi / 2)
     fig.add_vrect(x0=-window, x1=window, fillcolor="rgba(46, 134, 171, 0.20)",
-                  line_width=1, line_color=blue, line_dash="dot",
+                  line_width=1, line_color=blue, line_dash="dot", layer="below",
                   row=1, col=1, exclude_empty_subplots=False)
     fig.add_trace(go.Scatter(x=m, y=gap_K, mode="lines",
                              line=dict(color=blue, width=3),
@@ -15122,7 +15122,7 @@ def fig_d11_haldane_chern() -> go.Figure:
 
     # right panel: shaded window + a legend-visible entry so it is never unexplained
     fig.add_vrect(x0=-window, x1=window, fillcolor="rgba(46, 134, 171, 0.20)",
-                  line_width=1, line_color=blue, line_dash="dot",
+                  line_width=1, line_color=blue, line_dash="dot", layer="below",
                   row=1, col=2, exclude_empty_subplots=False)
     fig.add_trace(go.Scatter(
         x=[None], y=[None], mode="markers",
@@ -15138,8 +15138,8 @@ def fig_d11_haldane_chern() -> go.Figure:
             text=[lab], textposition=pos, textfont=dict(size=12),
             cliponaxis=False, showlegend=False), row=1, col=2)
     fig.add_vline(x=3.3177, line=dict(color=amber, width=2, dash="dot"),
-                  annotation_text="4×4 invariant flips ≈ 3.3177 (numerical, not certified)",
-                  annotation_position="bottom left", row=1, col=2)
+                  annotation_text="4×4 invariant flips ≈ 3.3177<br>(numerical, not certified)",
+                  annotation_position="top left", annotation_yshift=-4, row=1, col=2)
     fig.update_xaxes(title_text="Semenoff mass  m  (units of t)", range=[-0.5, 8.5],
                      row=1, col=2)
     fig.update_yaxes(title_text="lattice Chern number  C", range=[-1.9, 1.1],
@@ -15147,7 +15147,7 @@ def fig_d11_haldane_chern() -> go.Figure:
 
     return _d12_layout(
         fig,
-        "D11 Fig. 3 — Haldane Chern witness: mass inversion is NOT sufficient at fixed N",
+        "Haldane Chern witness — mass inversion is NOT sufficient at fixed N",
         height=580, width=1120, legend_y=-0.22, bottom=175)
 
 
@@ -15170,26 +15170,27 @@ def fig_d11_effective_medium() -> go.Figure:
     from src.core import formulas as F
     blue, amber, carmine = COLORS["steel_blue"], COLORS["amber"], COLORS["carmine"]
     fig = make_subplots(rows=1, cols=2, horizontal_spacing=0.12, subplot_titles=(
-        "Maxwell–Garnett permittivity  (ε_h = 1, ε_i = 4)",
+        "Maxwell–Garnett permittivity  (ε<sub>h</sub> = 1, ε<sub>i</sub> = 4)",
         "Voigt–Reuss elastic bounds  (M₁ = 1, M₂ = 4)"))
 
     f_frac = np.linspace(0.0, 1.0, 400)
     eps = np.array([F.maxwell_garnett(1.0, 4.0, x) for x in f_frac])
     fig.add_hrect(y0=1.0, y1=4.0, fillcolor="rgba(46, 134, 171, 0.14)", line_width=0,
-                  row=1, col=1, exclude_empty_subplots=False)
+                  layer="below", row=1, col=1, exclude_empty_subplots=False)
     fig.add_trace(go.Scatter(x=f_frac, y=eps, mode="lines",
                              line=dict(color=blue, width=3),
-                             name="ε_eff  (Maxwell–Garnett)"), row=1, col=1)
+                             name="(left) ε<sub>eff</sub>  (Maxwell–Garnett)"), row=1, col=1)
     fig.add_trace(go.Scatter(
         x=[0.5], y=[F.maxwell_garnett(1.0, 4.0, 0.5)], mode="markers+text",
         marker=dict(color=carmine, size=12, symbol="diamond"),
-        text=["f = 1/2 ⟹ ε_eff = 2 (certified)"], textposition="top left",
+        text=["f = 1/2 ⟹ ε<sub>eff</sub> = 2 (certified)"], textposition="top left",
         textfont=dict(size=11), cliponaxis=False, showlegend=False), row=1, col=1)
     fig.add_annotation(x=0.5, y=3.6, xref="x", yref="y", showarrow=False,
                        font=dict(size=12), bgcolor="rgba(255,255,255,0.8)",
-                       text="constituent bounds  ε_h ≤ ε_eff ≤ ε_i  (non-strict)")
+                       text="constituent bounds  ε<sub>h</sub> ≤ ε<sub>eff</sub> ≤ ε<sub>i</sub>  (non-strict)")
     fig.update_xaxes(title_text="inclusion fill fraction  f  (dimensionless)", row=1, col=1)
-    fig.update_yaxes(title_text="effective permittivity  ε_eff  (units of ε₀)", row=1, col=1)
+    fig.update_yaxes(title_text="effective permittivity  ε<sub>eff</sub>  (units of ε₀)",
+                     range=[0.4, 4.6], row=1, col=1)
 
     voigt = np.array([F.voigt_modulus(1.0, 4.0, x) for x in f_frac])
     reuss = np.array([F.reuss_modulus(1.0, 4.0, x) for x in f_frac])
@@ -15215,5 +15216,5 @@ def fig_d11_effective_medium() -> go.Figure:
 
     return _d12_layout(
         fig,
-        "D11 Fig. 4 — algebraic effective-medium bounds (two-scale route deliberately not taken)",
+        "Algebraic effective-medium bounds (two-scale route deliberately not taken)",
         height=600, width=1080, legend_y=-0.24, bottom=200)

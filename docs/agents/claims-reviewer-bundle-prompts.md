@@ -850,13 +850,24 @@ all Lean-only. Novelty backing: `papers/D12/prior_art_novelty.md`.
   `OptimalHypothesisRate`; the single occurrence is a docstring
   disclaiming it. Also: the POVM layer consumed is the **project's own**
   D9-family `QuantumNetwork/HelstromDiscrimination.lean`, not PhysLib.
-- **Wave 1 is standalone, not load-bearing.** 6EB and 6EC reference
-  **zero** Wave-1 declarations; `poisson_avgError_floor` and
-  `poisson_darkBaseline_miss_floor` have **0** in-tree references outside
-  their own module. Any prose implying the Poisson layer is the series'
-  most-consumed floor is a finding — that claim was verified FALSE and
+- **Wave 1's consumption, stated precisely** (⚠️ **corrected 2026-07-30** —
+  this bullet previously said Wave-1 declarations have "**0** in-tree
+  references outside their own module," which is **false** and was itself an
+  over-generalization of a roadmap claim scoped to 6EB/6EC only):
+  - 6EB and 6EC reference **zero** Wave-1 declarations. That part is true.
+  - `poisson_avgError_floor` **is** consumed, by 6EE:
+    `Control.photon_budget_ceiling`
+    (`CompositeReadoutCeilings.lean:252`) and
+    `Control.photon_budget_floor_attributed` (`:310`) both call it directly.
+    Prose stating that `photon_budget_ceiling` consumes the Poisson layer is
+    therefore **correct**, and marking it a finding would be wrong.
+  - `poisson_darkBaseline_miss_floor` **does** still have zero references
+    outside its own module.
+  What remains a finding is any prose implying the Poisson layer is the
+  *series' most-consumed* floor — that specific claim was verified FALSE and
   retracted. 6EA's standing failure mode is *narrative inflation around
-  correct mathematics*.
+  correct mathematics*, and this bullet's own earlier wording was an instance
+  of the mirror-image error: deflation past the point of accuracy.
 - **Stale names that resolve to nothing** — any occurrence is a finding:
   `folklore_missFloor_beaten_sixfold` (now `_148fold`; the factor-6
   constant was an `expNeg_enclosure` artefact 25× below truth),

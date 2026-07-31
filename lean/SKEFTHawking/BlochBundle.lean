@@ -16,8 +16,12 @@ are built on:
 * `blochPauli_sq` — `H(d)² = ‖d‖² · I` (the Pauli identity `(d·σ)² = |d|²`).
 * `blochPauli_secular_det` — `det(H(d) − λI) = λ² − ‖d‖²`, so the two bands are `±‖d‖`
   (`blochPauli_band_secular`).
-* `blochPauli_gap_pos` — the bands are separated by the gap `2‖d‖ > 0` **iff** `d ≠ 0`: the model is
-  gapped exactly away from the band-touching point `d = 0`, the degeneracy the Chern number counts.
+* `blochPauli_gap_pos` — `d ≠ 0` implies the bands are separated by a gap `2‖d‖ > 0`, away from the
+  band-touching point `d = 0` that the Chern number is defined around.
+  ⚠️ **Forward direction only.** This docstring previously said "**iff**"; the shipped statement is
+  the single implication `(hd : d ≠ 0) → 0 < √(dNormSq d)` and no converse is formalized. Corrected
+  2026-07-30 after the D11 Stage-10 claims review found the draft had inherited the false "iff" from
+  here. Do not restate it as a biconditional without shipping the converse.
 
 ## Scope (honest)
 
@@ -89,9 +93,13 @@ lemma blochPauli_band_secular (d : Fin 3 → ℝ) :
   exact ⟨blochPauli_secular_zero_of_sq d _ hsq,
     blochPauli_secular_zero_of_sq d _ (by rw [neg_pow]; simpa using hsq)⟩
 
-/-- **The model is gapped iff `d ≠ 0`.** The half-gap `‖d‖` (bands `±‖d‖`, separation `2‖d‖`) is
-strictly positive exactly away from the band-touching point `d = 0` — the degeneracy the Chern number
-is defined around. -/
+/-- **`d ≠ 0` implies the model is gapped.** The half-gap `‖d‖` (bands `±‖d‖`, separation `2‖d‖`) is
+strictly positive away from the band-touching point `d = 0` — the degeneracy the Chern number is
+defined around.
+
+⚠️ **Forward direction only** — the statement is `(hd : d ≠ 0) → 0 < √(dNormSq d)`. The converse is
+true but is *not* shipped, so this must not be cited as a biconditional. (Corrected 2026-07-30: the
+docstring previously read "gapped iff `d ≠ 0`", and the D11 draft inherited that false attribution.) -/
 lemma blochPauli_gap_pos (d : Fin 3 → ℝ) (hd : d ≠ 0) : 0 < Real.sqrt (dNormSq d) := by
   rw [Real.sqrt_pos]
   by_contra hle

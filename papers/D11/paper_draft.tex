@@ -44,7 +44,8 @@ model that had passed every determinant-level gate we had, and forced an eigenve
 into our standing methodology. The through-line is that discrete, kernel-checkable invariants and
 rational enclosures reach genuine condensed-matter conclusions \emph{without} the continuum
 differential-geometry infrastructure the field ordinarily assumes is prerequisite --- infrastructure
-which, as we document, no proof assistant currently has.
+which, as we document, Mathlib does not have at the pinned revision, and which we are aware of in no
+proof assistant.
 \end{abstract}
 
 \maketitle
@@ -61,7 +62,7 @@ machine-checked to the logical kernel, would provide a reusable and unambiguous 
 
 The obstacle is that the textbook route to a Chern number runs through Chern--Weil theory: one
 integrates a curvature two-form over a closed manifold and appeals to de~Rham cohomology to see that
-the result is an integer. That route is not merely unformalized in current proof assistants; it is
+the result is an integer. In Mathlib that route is not merely unformalized; it is
 \emph{structurally unavailable}. As of Mathlib revision \texttt{81a5d257} (toolchain
 \texttt{v4.32.0}), Mathlib has differential forms on normed spaces --- with the manifold version an
 explicit in-source TODO --- and the Poincar\'e lemma only for $1$-forms on convex sets. It has no
@@ -91,11 +92,14 @@ statement. We are equally explicit about what we did \emph{not} prove: Section~\
 records that Berry curvature and the bulk--boundary correspondence are \emph{deferred}, not shipped
 in conditional form, and that our claimed novelty carries four mandatory carve-outs.
 
-\paragraph{Substrate summary.} The bundle comprises 22 root-imported modules --- 6178 lines, 395
-theorems and lemmas, 85 definitions and structures, counted at source level. (Two counting
-conventions circulate in this project: source-authored declarations, used throughout this paper, and
-the larger \texttt{lean\_deps.json} extraction, which additionally counts Lean-generated equation
-lemmas. We use the former uniformly and never mix them.) There are zero project-local axioms, zero
+\paragraph{Substrate summary.} The bundle comprises 22 root-imported modules --- 6024 lines, 392
+theorems and lemmas, 83 definitions and structures, counted at source level. The counting rule is
+stated so it is reproducible: a declaration is counted when a line begins with \texttt{theorem} or
+\texttt{lemma}, optionally preceded by an attribute bracket or by \texttt{private}/\texttt{protected}.
+(Two conventions circulate in this project: these source-authored counts, used throughout this paper,
+and the larger \texttt{lean\_deps.json} extraction --- 452 and 109 respectively --- which additionally
+counts Lean-generated equation lemmas. We use the former uniformly and never mix them.) There are
+zero project-local axioms, zero
 \texttt{sorry}, zero \texttt{native\_decide} and zero \texttt{maxHeartbeats} directives. Kernel
 decidability on finite index types is used freely via \texttt{decide}, which is checked by the kernel
 and is a different thing from \texttt{native\_decide}.
@@ -154,7 +158,9 @@ The spectral input enters through \thm{blochProj}, the lower-band projector of t
 $d\cdot\sigma$ Hamiltonian \thm{blochPauli}, whose idempotence \thm{blochProj\_idem} follows from the
 Pauli identity \thm{blochPauli\_sq}. The band structure itself is \thm{blochPauli\_band\_secular}
 (the two energies are genuine eigenvalues, via the secular determinant) and
-\thm{blochPauli\_gap\_pos} (gapped if and only if the $d$-vector is nonzero).
+\thm{blochPauli\_gap\_pos}, which gives the forward direction only: a nonzero $d$-vector implies a
+strictly positive half-gap. We state that carefully because the model \emph{is} gapped exactly away
+from $d = 0$, but only that implication is shipped --- no converse is formalized.
 
 Turning a $d$-field into an admissible frame is \thm{blochFrameOfD}, built on the explicit
 lower-band eigenvector \thm{lbVec} with its eigenvector law \thm{blochPauli\_mulVec\_lbVec}. It
