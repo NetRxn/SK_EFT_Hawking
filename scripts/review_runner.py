@@ -58,9 +58,15 @@ def list_bundles() -> dict[str, dict]:
         for b in a["bundle_destinations"]:
             by_bundle[b].append(paper)
 
+    # Tier map. This stopped at D9 and so raised KeyError('D10') for every
+    # bundle authorized since 2026-06-29 — meaning the Stage-13 entry point has
+    # been broken for D10 since its first lift, and would have been for D11/D12.
+    # `.get(b, 1)` rather than `tiers[b]` so a newly-authorized deep bundle
+    # degrades to its correct tier instead of crashing the whole listing.
     tiers = {
         "F": 0,
         "D1": 1, "D2": 1, "D3": 1, "D4": 1, "D5": 1, "D6": 1, "D7": 1, "D8": 1, "D9": 1,
+        "D10": 1, "D11": 1, "D12": 1,
         "L1": 2, "L2": 2, "L3": 2,
         "I1": 3, "I2": 3, "I3": 3,
         "E1": 4, "E2": 4,
@@ -70,7 +76,7 @@ def list_bundles() -> dict[str, dict]:
     for b in sorted(_VALID_BUNDLE_TARGETS):
         anchor_section = bool(re.search(rf"### {re.escape(b)}\.\s", anchor_text))
         out[b] = {
-            "tier": tiers[b],
+            "tier": tiers.get(b, 1),
             "sources": sorted(by_bundle[b]),
             "source_count": len(by_bundle[b]),
             "anchor_section_present": anchor_section,
