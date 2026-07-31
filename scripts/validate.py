@@ -3815,6 +3815,83 @@ def check_count_literals() -> CheckResult:
 # CHECK 18: Readiness submission gate (Phase 5v Wave 4)
 # ═══════════════════════════════════════════════════════════════════════
 
+@register_check("review_docs_mint_findings",
+                "Every bundle Stage-13 review document mints at least one ReviewFinding node")
+def check_review_docs_mint_findings() -> CheckResult:
+    """CHECK: a review that produces zero graph nodes must fail loudly, not silently pass.
+
+    Added 2026-07-31 (D12 Stage-13 round-9 BLOCKER 8.2). This is the fail-open path that
+    survived every previous repair, and it needs no mutation to trigger — only a heading
+    that drifts from `### N.N — ` to `#### `, `### Finding `, or `### 1.1: `. The
+    round-9 reviewer wrote a review declaring four BLOCKERs with such headings and it
+    minted **zero** nodes; `findings_reach_the_graph` structurally cannot see it, because
+    that guard's file index is built *from findings*, so a file with no findings is not in
+    it. A whole round of blockers then reads exactly like a clean round.
+
+    The predicate the existing guards cannot express is this one: for each review document
+    named after a bundle in the roster, at least one `ReviewFinding` node must resolve to
+    it. Zero is a parser failure or a malformed document — never evidence of a clean review.
+    """
+    sys.path.insert(0, str(SCRIPT_DIR))
+    try:
+        from build_graph import extract_review_finding_nodes
+        from bundle_registry import BUNDLE_CODES
+        roster = set(BUNDLE_CODES)
+    except ImportError as exc:
+        return CheckResult(passed=False, details=[
+            Detail("import", False,
+                   f"could not import the review extractor ({exc}) — unverified, not passing")])
+
+    try:
+        findings = extract_review_finding_nodes()
+    except Exception as exc:
+        return CheckResult(passed=False, details=[
+            Detail("extract", False,
+                   f"review extraction failed ({type(exc).__name__}: {exc}) — unverified")])
+
+    minted: dict[str, int] = {}
+    for f in findings:
+        rf = (f.get("meta") or {}).get("review_file")
+        if rf:
+            minted[rf] = minted.get(rf, 0) + 1
+
+    reviews_dir = PROJECT_ROOT / "papers" / "AutomatedReviews"
+    details: list[Detail] = []
+    empty = 0
+    checked = 0
+    if reviews_dir.is_dir():
+        for md in sorted(reviews_dir.glob("*/*.md")):
+            # Only documents named after a roster bundle code are bundle reviews...
+            if md.stem not in roster:
+                continue
+            # ...and NOT the `*-bundle-stage13/` directories, which hold
+            # `bundle_readiness.py`'s generated aggregation summaries. Those are statistics
+            # documents with no `### N.N — ` findings and mint zero nodes BY DESIGN: 107 of
+            # 138 do. A first version of this check flagged all of them, i.e. it fired on
+            # correct data, which is worse than not checking (the same trap as the
+            # `accepted` rationale guard earlier today). Excluding them leaves exactly the
+            # population the guard is about — documents that claim to BE a review.
+            if "bundle-stage13" in md.parent.name:
+                continue
+            checked += 1
+            rel = str(md.relative_to(PROJECT_ROOT))
+            n = minted.get(rel, 0)
+            if n == 0:
+                empty += 1
+                details.append(Detail(
+                    rel, False,
+                    f"this Stage-13 review document mints ZERO ReviewFinding nodes. Either "
+                    f"its finding headings do not match the extractor's expected "
+                    f"`### <N.N> — <severity> — <text>` form, or the document is malformed. "
+                    f"A round that mints nothing is invisible to Gate 11 and reads exactly "
+                    f"like a clean round."))
+
+    details.insert(0, Detail(
+        "summary", empty == 0,
+        f"{checked} fresh-context review document(s) checked (generated bundle-stage13 aggregations excluded — they mint zero by design); {empty} mint zero findings"))
+    return CheckResult(passed=empty == 0, details=details)
+
+
 @register_check("accepted_findings_carry_rationale",
                 "Every `accepted` supersession record justifies acceptance in writing")
 def check_accepted_findings_carry_rationale() -> CheckResult:

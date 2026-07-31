@@ -73,13 +73,21 @@ Ljungström & Mörtberg, *Computational Synthetic Cohomology Theory in HoTT*
 (arXiv:2401.16336; Math. Struct. Comp. Sci. 35, 2025) formalizes cohomology
 with arbitrary coefficients, cup products, graded-commutative ring structure,
 the Eilenberg–Steenrod axioms, Mayer–Vietoris **and Gysin** sequences, and
-the cohomology rings of spheres, the torus, the Klein bottle, projective
-planes, and **ℂP^∞**. Related: arXiv:2212.04182 (cohomology rings),
-arXiv:2504.08664 (Steenrod squares).
+the cohomology rings of spheres, the torus, the Klein bottle, the real and
+complex projective **planes**, and infinite **real** projective space.
+Related: arXiv:2212.04182 (cohomology rings), arXiv:2504.08664 (Steenrod squares).
 
-**Carve-out wording:** the Gysin sequence together with H\*(ℂP^∞) is precisely
-the machinery from which Chern classes are *defined* in textbook algebraic
-topology. The honest claim is therefore: *no proof assistant defines Chern
+> ⚠️ **CORRECTED 2026-07-31 (D11 Stage-13 round-9 BLOCKER 1.1).** Three earlier
+> drafts of this entry, and the carve-out below, said **ℂP^∞**. The development
+> contains no ℂP^∞: the abstract reads "real/complex projective *planes*, and
+> infinite *real* projective space", so its infinite projective space is ℝP^∞,
+> whose ring H\*(ℝP^∞;ℤ/2) is the Stiefel–Whitney substrate — **not** the
+> ℤ[c₁] = H\*(ℂP^∞) from which Chern classes are defined. The substitution was
+> load-bearing in the wrong direction: it made our own carve-out concede more
+> than the source supports.
+
+**Carve-out wording:** the Gysin sequence is the machinery from which Euler and
+Chern classes are built. The honest claim is therefore: *no proof assistant defines Chern
 classes or Chern numbers; Cubical Agda has independently formalized the
 cohomological substrate from which they could be built.* Verified by direct
 fetch — the abstract does not mention Chern classes, characteristic classes,

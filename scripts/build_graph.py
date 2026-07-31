@@ -1412,8 +1412,16 @@ _SEV_GLYPHS = {
 #   `### N — Paper Y — ...`          (Citation Reviews)
 #   `### Class N — ...`              (Citation Verification format, 2026-04-26+)
 # also allow plain `### N.N Heading` without em-dashes.
+# Widened 2026-07-31 (D12 Stage-13 round-9 BLOCKER 8.2). Two real review documents minted
+# ZERO findings because their heading form drifted from this pattern, making a whole
+# round's findings invisible to every guard in the suite:
+#   * `### N1.1 — 🔵 RECOMMENDED — …` (D7 round 2) — a single-letter section prefix;
+#   * `#### Anchor 1 — …` (I3 Stage-10 re-invocation) — a fourth-level heading.
+# Both are now recognised. The letter prefix is preserved in the section id so
+# `N1.1` cannot collide with a numeric `1.1` from the same document, the same way the
+# `Class N` form already prepends `C`.
 _REVIEW_SECTION_RE = re.compile(
-    r'^###\s+(?:Class\s+)?(\d+(?:\.\d+)?)\s*[—\-–]\s*(.+?)$',
+    r'^#{3,4}\s+(?:Class\s+)?(?:Anchor\s+)?([A-Z]?\d+(?:\.\d+)?)\s*[—\-–]\s*(.+?)$',
     re.MULTILINE,
 )
 # When the heading uses "Class N" form, prepend "C" to the section number so
@@ -1663,7 +1671,21 @@ def extract_review_finding_nodes() -> list[dict]:
             # `ledger_ids_resolve` guard already checks for danglers. Non-blocking findings
             # keep heading-parse: the stakes are low and the existing corpus is large.
             if status == 'fixed' and severity in ('critical', 'major', 'blocker'):
-                if finding_id not in supersessions:
+                # Membership alone is not enough (D12 Stage-13 round-9 BLOCKER 8.1). The
+                # round-8 version of this guard asked only `finding_id not in
+                # supersessions`, so a one-key record `{"finding_id": "..."}` — no status,
+                # no evidence, no commit — closed a BLOCKER, because `ledger.get('status',
+                # status)` below then fell back to the heading-derived value. The record
+                # must carry the same three things a human would need to audit the closure,
+                # which is the bar `accepted_findings_carry_rationale` already applies to
+                # acceptance.
+                _rec = supersessions.get(finding_id) or {}
+                _why = str(_rec.get('evidence') or _rec.get('note')
+                           or _rec.get('rationale') or '').strip()
+                _closes = (_rec.get('status') == 'fixed'
+                           and len(_why) >= 40
+                           and bool(str(_rec.get('commit') or '').strip()))
+                if not _closes:
                     status = 'open'
 
             meta = {

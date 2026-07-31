@@ -10934,8 +10934,15 @@ CITATION_REGISTRY = {
         'doi_verified': None, 'inprep': False,
         'primary_source_path': 'Lit-Search/Phase-6C/primary-sources/LjungstromMortberg2024.abstract.txt',
         'used_in': ['papers/D11/paper_draft.tex'],
-        'provides': ['Cubical Agda synthetic cohomology: cup products, Eilenberg-Steenrod axioms, Mayer-Vietoris and Gysin sequences, cohomology rings including CP-infinity.'],
-        'notes': 'MANDATORY CARVE-OUT for D11 novelty: Gysin + H*(CP-inf) is the substrate from which Chern classes are DEFINED. D11 may claim no prover defines Chern classes, but must acknowledge this.',
+        'provides': ['Cubical Agda synthetic cohomology: cup products, Eilenberg-Steenrod axioms, Mayer-Vietoris and Gysin sequences, and cohomology rings of the spheres, torus, Klein bottle, the real and complex projective PLANES, and infinite REAL projective space.'],
+        'notes': ('MANDATORY CARVE-OUT for D11 novelty: the Gysin sequence is the machinery from which '
+                  'Euler and Chern classes are built, so D11 may claim no prover DEFINES Chern classes '
+                  'but must acknowledge the surrounding machinery. ⚠️ CORRECTED 2026-07-31 (D11 '
+                  'Stage-13 round-9 BLOCKER 1.1): this note previously said "Gysin + H*(CP-inf)". The '
+                  'development contains NO CP^inf — the abstract lists "real/complex projective planes, '
+                  'and infinite real projective space", so its infinite projective space is RP^inf, whose '
+                  'ring is the Stiefel-Whitney substrate, not the Z[c_1] from which Chern classes are '
+                  'defined. The error conceded more than the source supports.'),
     },
     'LiPaulson2018': {
         'authors': 'Li, W., Paulson, L. C.',
