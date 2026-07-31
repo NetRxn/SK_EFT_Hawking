@@ -11724,7 +11724,10 @@ def maxwell_garnett(eps_host: float, eps_incl: float, fill: float) -> float:
 
 
 def voigt_modulus(m_1: float, m_2: float, fill: float) -> float:
-    """Voigt (arithmetic / iso-strain) effective modulus (1−f)M₁ + fM₂.
+    """Voigt (arithmetic / iso-strain) AVERAGE of the constituent moduli, (1−f)M₁ + fM₂.
+
+    ⚠️ Naming (retracted 2026-07-31, D11 Stage-13): these are the two closed-form AVERAGES, not bounds on a physical effective modulus. The classical Voigt–Reuss bracket M_R ≤ M_eff ≤ M_V is a claim about an M_eff that appears nowhere in this development. See EffectiveModuli.lean's module header.
+
 
     Lean: voigtModulus, voigt_bounds (EffectiveModuli.lean)
     """
@@ -11732,7 +11735,10 @@ def voigt_modulus(m_1: float, m_2: float, fill: float) -> float:
 
 
 def reuss_modulus(m_1: float, m_2: float, fill: float) -> float:
-    """Reuss (harmonic / iso-stress) effective modulus M₁M₂/((1−f)M₂ + fM₁).
+    """Reuss (harmonic / iso-stress) AVERAGE of the constituent moduli, M₁M₂/((1−f)M₂ + fM₁).
+
+    ⚠️ Naming (retracted 2026-07-31, D11 Stage-13): these are the two closed-form AVERAGES, not bounds on a physical effective modulus. The classical Voigt–Reuss bracket M_R ≤ M_eff ≤ M_V is a claim about an M_eff that appears nowhere in this development. See EffectiveModuli.lean's module header.
+
 
     Lean: reussModulus, reuss_le_voigt, reuss_ge_host, effectiveModuli_enclosure
           (EffectiveModuli.lean)
@@ -11742,7 +11748,8 @@ def reuss_modulus(m_1: float, m_2: float, fill: float) -> float:
 
 def voigt_reuss_gap(m_1: float, m_2: float, fill: float) -> float:
     """
-    EXACT arithmetic-minus-harmonic gap between the Voigt and Reuss bounds:
+    EXACT arithmetic-minus-harmonic gap between the Voigt and Reuss AVERAGES
+    (not "bounds" — see the naming note on voigt_modulus):
 
         M_V − M_R = f(1−f)(M₁ − M₂)² / ((1−f)M₂ + fM₁)
 

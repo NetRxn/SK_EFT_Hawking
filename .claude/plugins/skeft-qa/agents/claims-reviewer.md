@@ -539,3 +539,15 @@ uv run python scripts/sentence_state.py normalize-quote "$QUOTE"
 ```
 
 End of claims-reviewer v2 prompt.
+
+## Repo hygiene (hard constraints — shared repo, live human operator)
+
+- **NEVER mutate git state**: no `git commit` / `add` / `stash` / `checkout` / `reset` / `clean`.
+  Read-only git is fine. An unscoped agent commit once swept a human's half-finished
+  `scripts/validate.py` into an unrelated commit and left HEAD with an `ImportError`.
+  The dispatching author does all staging.
+- **Never compile LaTeX in the bundle directory** — use
+  `pdflatex -output-directory="$(mktemp -d)"` or `scripts/compile_bundle_pdf.py`.
+  Concurrent in-place compiles clobber `paper_draft.{aux,log,synctex.gz}`; judge a compile by the
+  rendered PDF, never by a `.log` another process may have overwritten.
+- **Disclose every working-tree file you touched**, including edit-and-revert mutation tests.

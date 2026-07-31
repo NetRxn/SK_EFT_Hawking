@@ -3938,22 +3938,45 @@ def check_notebook_stored_outputs_current() -> CheckResult:
         return CheckResult(passed=True, details=[
             Detail("scope", True, "no bundle companion notebooks found", warning=True)])
 
-    def _strings_in(obj) -> list[str]:
-        """Every string leaf of a JSON payload, in document order.
+    def _strings_in(obj, _path: str = "") -> list[str]:
+        """Every claim-bearing leaf of a JSON payload, in document order.
 
-        For a Plotly figure this is exactly the reader-visible text surface — subplot
-        titles, axis titles, legend names, annotation text, hover templates — and it is
-        immune to float jitter in the trace arrays, which is not a claim about anything.
+        String leaves are the reader-visible text surface — subplot titles, axis titles,
+        legend names, annotation text. Numeric leaves matter too, but only in the places
+        where a number IS a claim.
+
+        ⚠️ The numeric half was added 2026-07-31 after a round-8 reviewer defeated the
+        string-only version: moving the *certified* Maxwell–Garnett marker from
+        `f = 1/2` to `f = 0.55`, while its label still read
+        `f = 1/2 ⟹ ε_eff = 2 (certified)`, left this check green. Scalar coordinates
+        serialize as JSON numbers, not string leaves, so a text-only comparison cannot
+        see a certified point that has silently moved off the value it certifies.
+
+        Bulk trace arrays are deliberately EXCLUDED: `x`/`y`/`z` lists are hundreds of
+        floats whose low-order digits move with library versions, and comparing them
+        would make the check fire on non-claims. Scalar positions do not have that
+        problem — an annotation anchor, a vline abscissa, a single-point marker — and
+        those are exactly where a figure asserts "this value is certified".
         """
         out: list[str] = []
         if isinstance(obj, str):
             out.append(obj)
+        elif isinstance(obj, bool):
+            out.append(f"{_path}={obj}")
+        elif isinstance(obj, (int, float)):
+            out.append(f"{_path}={obj!r}")
         elif isinstance(obj, dict):
             for k in sorted(obj):
-                out.extend(_strings_in(obj[k]))
+                out.extend(_strings_in(obj[k], f"{_path}.{k}" if _path else str(k)))
         elif isinstance(obj, list):
-            for v in obj:
-                out.extend(_strings_in(v))
+            # A list of >8 numbers is a plotted data array, not a claim: skip its
+            # elements but keep its length, so a trace losing points still shows up.
+            nums = sum(1 for v in obj if isinstance(v, (int, float)))
+            if nums > 8 and nums == len(obj):
+                out.append(f"{_path}[len]={len(obj)}")
+                return out
+            for i, v in enumerate(obj):
+                out.extend(_strings_in(v, f"{_path}[{i}]"))
         return out
 
     def _texts(nb) -> list[str]:

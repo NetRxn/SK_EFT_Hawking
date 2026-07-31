@@ -15272,7 +15272,9 @@ def fig_d11_effective_medium() -> go.Figure:
     2026-07-31, D11 Stage-13). The bounds are NON-strict and are attained at
     f = 0 and f = 1. Certified point (ε_h, ε_i, f) = (1, 4, 1/2) ⟹ ε_eff = 2.
 
-    Right: the Voigt and Reuss elastic bounds and their EXACT
+    Right: the Voigt and Reuss elastic AVERAGES (⚠️ not "bounds" — the
+    Voigt–Reuss bracket on a physical M_eff is NOT formalized; retracted
+    2026-07-31, D11 Stage-13) and their EXACT
     arithmetic-minus-harmonic gap, shipped as an equality
     (`voigt_sub_reuss_eq`). The marked point f = 2/3 gives gap = 1 exactly,
     a value that follows from the certified identity — no maximizer theorem is

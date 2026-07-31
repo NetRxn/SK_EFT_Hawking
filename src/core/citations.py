@@ -10844,7 +10844,7 @@ CITATION_REGISTRY = {
     'Voigt1889': {
         'authors': 'Voigt, W.',
         'title': 'Ueber die Beziehung zwischen den beiden Elasticitätsconstanten isotroper Körper',
-        'journal': 'Annalen der Physik', 'volume': 274, 'page': '573', 'year': 1889,
+        'journal': 'Annalen der Physik', 'volume': 274, 'page': '573-587', 'year': 1889,
         'doi': '10.1002/andp.18892741206', 'arxiv': None,
         'doi_verified': True, 'inprep': False,
         'primary_source_path': 'Lit-Search/Phase-6C/primary-sources/Voigt1889.abstract.txt',
@@ -10861,7 +10861,7 @@ CITATION_REGISTRY = {
         'authors': 'Reuss, A.',
         'title': ('Berechnung der Fließgrenze von Mischkristallen auf Grund der '
                   'Plastizitätsbedingung für Einkristalle'),
-        'journal': 'Zeitschrift für Angewandte Mathematik und Mechanik', 'volume': 9, 'page': '49',
+        'journal': 'Zeitschrift für Angewandte Mathematik und Mechanik', 'volume': 9, 'page': '49-58',
         'year': 1929,
         'doi': '10.1002/zamm.19290090104', 'arxiv': None,
         'doi_verified': True, 'inprep': False,
@@ -10910,7 +10910,7 @@ CITATION_REGISTRY = {
         'doi_verified': True, 'inprep': False,
         'primary_source_path': 'Lit-Search/Phase-6C/primary-sources/HashinShtrikman1963.abstract.txt',
         'used_in': ['papers/D11/paper_draft.tex'],
-        'provides': ['Variational bounds on the effective elastic moduli of a multiphase composite, refining the Voigt/Reuss bounds.'],
+        'provides': ['Variational bounds on the effective elastic moduli of a multiphase composite, strictly tighter than the interval spanned by the Voigt and Reuss averages. NOT formalized in this development.'],
         'notes': ('Cite for the ELASTIC Hashin–Shtrikman variational bounds; the 1962 companion is the electromagnetic one. ⚠️ NOT formalized in this development — 6CE EffectiveModuli proves only the ordering of the Voigt (Voigt1889) and Reuss (Reuss1929) averages plus constituent bounds, and the Voigt/Reuss averages are NOT Hashin & Shtrikman\'s; see the module header. Corrected 2026-07-31 (D11 Stage-13 round-7 finding 1.2): the previous note read "CITE THIS ONE for the elastic Voigt/Reuss/HS bounds formalized in 6CE EffectiveModuli", which misattributed Voigt/Reuss to HS AND claimed the HS bounds were formalized — both halves of the error round 6 corrected one layer away in prior_art_novelty.md.'),
     },
     'HasanKane2010': {
