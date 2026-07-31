@@ -3259,16 +3259,58 @@ def check_numerical_literals() -> CheckResult:
 @register_check("graph_integrity",
                 "Knowledge graph integrity — orphans, conflicts, broken chains")
 def check_graph_integrity() -> CheckResult:
-    """CHECK 16: Build provenance graph and run integrity queries."""
+    """CHECK 16: Build provenance graph and run integrity queries.
+
+    Includes a roster round-trip guard (added 2026-07-31): every canonical
+    bundle code must resolve through `build_graph._infer_bundle_from_text`.
+    Without it, `D[1-9]` silently failed on every TWO-DIGIT code (D10/D11/D12,
+    authorized 2026-06-29): the FLAGS-edge builder resolved no bundle, the
+    readiness heatmap counted zero findings for all three, and D12 rendered
+    "Blockers 0" while carrying 36 open ReviewFindings. It also produced FALSE
+    FLAGS edges, since the paper-key text matcher fired in the bundle matcher's
+    place. Any future roster extension now fails here rather than silently.
+    """
+    roster_details = []
     try:
         sys.path.insert(0, str(SCRIPT_DIR))
+        from build_graph import _infer_bundle_from_text
+        try:
+            from bundle_registry import VALID_BUNDLE_TARGETS as _roster
+        except Exception:
+            _roster = frozenset(
+                [f"D{i}" for i in range(1, 13)] + [f"L{i}" for i in range(1, 4)]
+                + [f"I{i}" for i in range(1, 4)] + ["E1", "E2", "F"]
+            )
+        unresolved = sorted(c for c in _roster if _infer_bundle_from_text(c) != c)
+        if unresolved:
+            roster_details.append(Detail(
+                "bundle_code_roundtrip", False,
+                f"{len(unresolved)} roster bundle code(s) do not round-trip through "
+                f"build_graph._infer_bundle_from_text: {', '.join(unresolved)}. "
+                f"Review findings for these bundles are invisible to the FLAGS-edge "
+                f"builder and the readiness heatmap will under-report them as zero.",
+            ))
+        else:
+            roster_details.append(Detail(
+                "bundle_code_roundtrip", True,
+                f"all {len(_roster)} roster bundle codes resolve through the graph's "
+                f"bundle inference (incl. two-digit D10-D12)",
+            ))
+    except Exception as exc:  # pragma: no cover
+        roster_details.append(Detail(
+            "bundle_code_roundtrip", True,
+            f"roster round-trip skipped ({type(exc).__name__}: {exc})", warning=True))
+
+    try:
         from graph_integrity import run_integrity_checks
     except ImportError as exc:
-        return CheckResult(passed=True, details=[
-            Detail("import", True,
-                   f"graph_integrity not available ({exc}); skipping",
-                   warning=True),
-        ])
+        return CheckResult(
+            passed=all(d.passed for d in roster_details),
+            details=roster_details + [
+                Detail("import", True,
+                       f"graph_integrity not available ({exc}); skipping",
+                       warning=True),
+            ])
 
     report = run_integrity_checks()
     s = report['summary']
@@ -3361,6 +3403,8 @@ def check_graph_integrity() -> CheckResult:
     # Hard failures: verification conflicts and orphan claim nodes (R-06 guard).
     passed = s['conflicts'] == 0 and s.get('orphan_claims', 0) == 0
 
+    details = roster_details + details
+    passed = passed and all(d.passed for d in roster_details)
     return CheckResult(passed=passed, details=details)
 
 
@@ -4093,9 +4137,12 @@ def check_citation_primary_sources_present() -> CheckResult:
     # (BoldoLaxMilgram2016, LeanLJ2025), each with the refuted metadata still
     # tagged "[fetched]".
     #
-    # It is worse than inert: scripts/promote_primary_sources.py writes cache
-    # contents BACK INTO the registry, so a stale cache actively re-injects the
-    # bad metadata and undoes the fix.
+    # (An earlier version of this comment claimed promote_primary_sources.py writes
+    # cache contents back into the registry, making a stale cache self-propagating.
+    # That was asserted without reading the script and is FALSE -- it reads only its
+    # sidecar JSON, missing_bibkey_stubs.json and citations.py, and inserts only
+    # 'inprep' and 'primary_source_path'. Corrected 2026-07-31, D11 round 4. The
+    # cache is a bad RECORD, not a loaded gun -- which is reason enough to gate it.)
     #
     # Compare each cache header's Title:/arXiv: against the registry.
     title_details = []
@@ -4106,7 +4153,28 @@ def check_citation_primary_sources_present() -> CheckResult:
             continue
         cache_file = find_workspace() / ps
         if not cache_file.exists():
-            continue  # existence is the other half of this check
+            # Case-insensitive retry: registry paths say `Phase-6E`/`Phase-6C` while the
+            # directories on disk are `Phase-6e`/`Phase-6c`. That resolves on APFS but NOT
+            # on a case-sensitive filesystem, where every entry would fall through this
+            # branch and the gate would report PASS having checked nothing (D11 round-4
+            # finding). Resolve explicitly rather than skip.
+            parent = cache_file.parent
+            resolved = None
+            if not parent.exists():
+                gp = parent.parent
+                if gp.exists():
+                    for cand in gp.iterdir():
+                        if cand.is_dir() and cand.name.lower() == parent.name.lower():
+                            parent = cand
+                            break
+            if parent.exists():
+                for cand in parent.iterdir():
+                    if cand.name.lower() == cache_file.name.lower():
+                        resolved = cand
+                        break
+            if resolved is None:
+                continue  # existence is the other half of this check
+            cache_file = resolved
         try:
             head = cache_file.read_text(encoding="utf-8", errors="replace")[:4000]
         except OSError:
@@ -4119,9 +4187,52 @@ def check_citation_primary_sources_present() -> CheckResult:
                     f"cache_title_mismatch:{bibkey}", False,
                     f"{ps} header Title disagrees with CITATION_REGISTRY. "
                     f"cache={m_title.group(1).strip()!r} registry={reg_title!r}. "
-                    f"A stale cache is not inert — promote_primary_sources.py writes it "
-                    f"back into the registry.",
+                    f"The cache is this pipeline's designated primary-source evidence; a "
+                    f"disagreement means one of the two is wrong.",
                 ))
+        # Author-surname agreement. The round-2 LeanLJ2025 defect was a wrong TITLE *and*
+        # three wrong author initials; a title-only check catches that one but not an
+        # author-only drift, so compare surnames too (initials and accents vary).
+        m_auth = re.search(r"^Authors:\s*(.+)$", head, re.MULTILINE)
+        reg_auth = entry.get("authors")
+        if m_auth and reg_auth:
+            _STOP = {"and", "the", "van", "der", "den", "von", "de", "di", "el"}
+
+            def _surnames(s: str) -> set:
+                # Tokenize into WORDS, not comma-separated chunks: the cache writes
+                # "Scott Aaronson, Daniel Gottesman" while the registry writes
+                # "Aaronson, S. and Gottesman, D.", so a chunk comparison never
+                # intersects. Drop initials (len<=2) and connectives.
+                out = set()
+                for w in re.findall(r"[A-Za-zÀ-ÿ'’-]+", s):
+                    wl = w.lower()
+                    if len(wl) > 2 and wl not in _STOP:
+                        out.add(wl)
+                return out
+            c_s, r_s = _surnames(m_auth.group(1)), _surnames(reg_auth)
+            if c_s and r_s and not (c_s & r_s):
+                title_details.append(Detail(
+                    f"cache_authors_mismatch:{bibkey}", False,
+                    f"{ps} header Authors shares no surname with CITATION_REGISTRY. "
+                    f"cache={m_auth.group(1).strip()!r} registry={reg_auth!r}",
+                ))
+        # Year is ADVISORY only: a cache recording an arXiv v1 year against a registry
+        # holding the journal year is a legitimate convention difference, not a defect.
+        m_year = re.search(r"^Year:\s*(\d{4})", head, re.MULTILINE)
+        reg_year = entry.get("year")
+        if m_year and reg_year and int(m_year.group(1)) != int(reg_year):
+            title_details.append(Detail(
+                f"cache_year_advisory:{bibkey}", True,
+                f"{ps} header Year {m_year.group(1)} != registry {reg_year} "
+                f"(preprint vs publication year?)", warning=True,
+            ))
+        m_doi = re.search(r"^DOI:\s*(\S+)", head, re.MULTILINE)
+        reg_doi = entry.get("doi")
+        if m_doi and reg_doi and m_doi.group(1).strip().rstrip('.') != str(reg_doi).strip():
+            title_details.append(Detail(
+                f"cache_doi_mismatch:{bibkey}", False,
+                f"{ps} header DOI {m_doi.group(1)} != registry {reg_doi}",
+            ))
         m_ax = re.search(r"^arXiv:\s*([0-9]{4}\.[0-9]{4,5}|[a-z-]+/[0-9]{7})", head, re.MULTILINE)
         reg_ax = entry.get("arxiv")
         if m_ax and reg_ax and m_ax.group(1).strip() != str(reg_ax).strip():
@@ -4132,7 +4243,8 @@ def check_citation_primary_sources_present() -> CheckResult:
     if not title_details:
         title_details.append(Detail(
             "cache_content_agreement", True,
-            "Every .abstract.txt cache header agrees with its registry Title/arXiv",
+            "Every .abstract.txt cache header agrees with its registry "
+            "Title/Authors/Year/DOI/arXiv",
         ))
     details.extend(title_details)
     all_pass = all_pass and all(d.passed for d in title_details)

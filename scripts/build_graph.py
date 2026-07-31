@@ -1458,9 +1458,43 @@ def _infer_paper_key_from_text(text: str) -> str | None:
 # tried before the bare single-letter `F`. The alternation below lists the
 # digit-bearing codes first; `F` is anchored to require a token boundary so it
 # cannot swallow a longer code.
+# ⚠️ FIXED 2026-07-31 (D12 Stage-13 round-4 BLOCKER 8.1). The pattern was
+# `D[1-9]|…`, which cannot match a TWO-DIGIT bundle code: on 'D12' the `D[1-9]`
+# branch matches 'D1', then the lookahead demands end-or-separator, sees '2',
+# and the whole match fails — returning None. Every two-digit bundle (D10, D11,
+# D12, authorized 2026-06-29) has therefore been invisible to
+# `extract_flags_edges` ever since, so `bundle_readiness.py` counted zero
+# findings for all three and the heatmap rendered them "Blockers 0" while D12
+# alone carried 36 open ReviewFinding nodes (4 critical, 13 major).
+#
+# Worse than silent: with no bundle resolved, the paper-key text matcher fired
+# instead and produced FALSE FLAGS edges — a D11 finding was attributed to
+# `paper18_doublon_gate` and a D12 finding to `paper3_`.
+#
+# `\d{1,2}` is greedy, so 'D12' now matches 'D12' rather than 'D1'. The result
+# is validated against the canonical roster below so a typo like 'D99' is
+# rejected rather than silently accepted as a new bundle.
 _BUNDLE_CODE_RE = re.compile(
-    r'^(?P<code>D[1-9]|L[1-3]|I[1-3]|E[1-2]|F)(?=$|[-_.])'
+    r'^(?P<code>D\d{1,2}|L[1-3]|I[1-3]|E[1-2]|F)(?=$|[-_.])'
 )
+
+
+def _valid_bundle_codes() -> frozenset[str]:
+    """The canonical bundle roster, for validating a regex-extracted code.
+
+    Falls back to a literal roster if `bundle_registry` is unavailable, so graph
+    builds never hard-fail on an import ordering problem.
+    """
+    try:
+        from bundle_registry import VALID_BUNDLE_TARGETS  # type: ignore
+        return frozenset(VALID_BUNDLE_TARGETS)
+    except Exception:
+        return frozenset(
+            [f"D{i}" for i in range(1, 13)]
+            + [f"L{i}" for i in range(1, 4)]
+            + [f"I{i}" for i in range(1, 4)]
+            + ["E1", "E2", "F"]
+        )
 
 
 def _infer_bundle_from_text(review_name: str) -> str | None:
@@ -1477,7 +1511,12 @@ def _infer_bundle_from_text(review_name: str) -> str | None:
     node in the graph.
     """
     m = _BUNDLE_CODE_RE.match(review_name.strip())
-    return m.group('code') if m else None
+    if not m:
+        return None
+    code = m.group('code')
+    # Reject anything outside the canonical roster, so a widened numeric pattern
+    # cannot invent bundles (see the note on _BUNDLE_CODE_RE).
+    return code if code in _valid_bundle_codes() else None
 
 
 def _load_supersession_ledger() -> dict[str, dict]:
