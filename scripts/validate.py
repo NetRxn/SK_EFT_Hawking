@@ -3815,6 +3815,159 @@ def check_count_literals() -> CheckResult:
 # CHECK 18: Readiness submission gate (Phase 5v Wave 4)
 # ═══════════════════════════════════════════════════════════════════════
 
+@register_check("recurrence_reopens_closures",
+                "A closure is not contradicted by a later review raising the same finding")
+def check_recurrence_reopens_closures() -> CheckResult:
+    """CHECK: a finding closed in the ledger must not recur in a LATER review.
+
+    Added 2026-07-31 (D12 Stage-13 round-11 finding 8.1b, part 3c). The ledger is now the
+    sole channel that can close a finding, which makes a stale closure the remaining way
+    for a real defect to read as resolved: close it, have a later round raise the same
+    thing, and the ledger still says fixed. That happened repeatedly this session — the
+    "effective modulus" misnomer was closed and re-raised across five rounds.
+
+    Recurrence is matched on the finding's own title text, normalised, requiring a long
+    overlap so that two genuinely different findings about the same file do not collide.
+    A hit is reported against the CLOSURE, not the new finding: the new finding is correct,
+    and it is the closure that is now false.
+    """
+    sys.path.insert(0, str(SCRIPT_DIR))
+    try:
+        from build_graph import extract_review_finding_nodes
+    except ImportError as exc:
+        return CheckResult(passed=False, details=[
+            Detail("import", False, f"unavailable ({exc}) — unverified, not passing")])
+
+    # ⚠️ THRESHOLDS ARE MEASURED, NOT GUESSED. The first version required a 60-character
+    # common prefix. Measured afterwards: normalized finding labels run min 5 / median 48 /
+    # **max 56** characters, so that threshold could never be met and the check was
+    # structurally incapable of ever reporting a hit — while printing a reassuring
+    # "0 contradicted" over 500 closures. That is the sixth guard in this session that
+    # could not do what its summary said, and the pattern each time was choosing a constant
+    # from what I imagined the data looked like.
+    _MIN_TITLE = 30          # below this a title is too generic to match on
+    _PREFIX_FLOOR = 30       # absolute characters of agreement required
+    _PREFIX_FRAC = 0.75      # ...and this fraction of the shorter title
+
+    def _norm(s: str) -> str:
+        s = re.sub(r'[`*_\[\]]', '', str(s or '')).lower()
+        s = re.sub(r'[^a-z0-9 ]+', ' ', s)
+        toks = s.split()
+        # Drop leading section-number and severity-word tokens. A recurrence appears under
+        # a DIFFERENT number in a later round — round 8's 5.1 recurring as round 9's 3.2 —
+        # so comparing prefixes that begin with the number is fragile in exactly the case
+        # the check exists for. Verified with a planted probe whose label minted as
+        # "1.1 1.1 blocker ..." against a source of "1.1 blocker ...": the prefix agreement
+        # was near zero for two identical findings.
+        while toks and (re.fullmatch(r'[0-9]+([a-z0-9]*)?', toks[0])
+                        or toks[0] in ('blocker', 'required', 'recommended', 'critical',
+                                       'major', 'minor', 'advisory', 'regression')):
+            toks.pop(0)
+        return " ".join(toks)
+
+    findings = extract_review_finding_nodes()
+    closed, open_ = [], []
+    for f in findings:
+        m = f.get("meta") or {}
+        rec = (m.get("review_date", ""), _norm(f.get("label", "")), f["id"], m.get("severity"),
+               m.get("inferred_bundle") or m.get("inferred_paper"))
+        if not rec[1] or len(rec[1]) < _MIN_TITLE:
+            continue
+        (closed if m.get("status") in ("fixed", "accepted") else open_).append(rec)
+
+    details: list[Detail] = []
+    hits = 0
+    for cdate, ctext, cid, csev, cbundle in closed:
+        if csev not in ("critical", "major"):
+            continue
+        for odate, otext, oid, _, obundle in open_:
+            # Same bundle only. Reviews share heading boilerplate across bundles, so a D2
+            # closure matching an I2 finding's title is a template collision, not a
+            # recurrence — measured: the two hits before this constraint were exactly that
+            # (D2 vs I2, L3 vs L2).
+            if cbundle is None or obundle is None or cbundle != obundle:
+                continue
+            if odate <= cdate:
+                continue
+            # Long shared prefix = the same finding restated, not a coincidence.
+            n = min(len(ctext), len(otext))
+            common = 0
+            while common < n and ctext[common] == otext[common]:
+                common += 1
+            if (common >= _PREFIX_FLOOR
+                    and common >= _PREFIX_FRAC * min(len(ctext), len(otext))):
+                hits += 1
+                details.append(Detail(
+                    cid, False,
+                    f"closed on {cdate}, but {oid} ({odate}) raises the same finding and is "
+                    f"open. The later review is the evidence; the CLOSURE is what is now "
+                    f"false. Reopen it or record why the recurrence is a different defect."))
+                break
+
+    details.insert(0, Detail(
+        "summary", hits == 0,
+        f"{len(closed)} blocking-severity closure(s) checked against {len(open_)} open "
+        f"finding(s) from later reviews; {hits} contradicted by a recurrence"))
+    return CheckResult(passed=hits == 0, details=details)
+
+
+@register_check("review_severity_declared",
+                "Review documents from the cutoff forward declare each finding's severity")
+def check_review_severity_declared() -> CheckResult:
+    """CHECK: severity must be a declared field, not an inferable glyph.
+
+    Added 2026-07-31 (D12 Stage-13 round-11 finding 8.1b, part 3b). Severity drove the
+    blocking-closure bar while being inferred from glyphs in the heading, which made it
+    editable without leaving a trace. Two exploits were demonstrated against that: a
+    one-line glyph demotion plus the word "fixed" reopened self-closure on a past BLOCKER,
+    and typesetting a summary as `0 «**»BLOCKER«**»` escalated a whole zero-blocker report
+    to critical.
+
+    `build_graph` now prefers an explicit `- **Severity:** <level>` line in the finding
+    body. This check makes that mandatory from `_CUTOFF` forward, so omitting it is a red
+    build rather than a silent downgrade. Historical documents keep glyph inference — there
+    are ~1400 findings that predate the convention and rewriting them would be churn with
+    no provenance value, so the cutoff is the honest boundary rather than a blanket rule.
+    """
+    _CUTOFF = "2026-08-01"   # documents dated on/after this must declare severity
+
+    reviews_dir = PROJECT_ROOT / "papers" / "AutomatedReviews"
+    if not reviews_dir.is_dir():
+        return CheckResult(passed=True, details=[
+            Detail("scope", True, "no review directory", warning=True)])
+
+    _SEV_LINE = re.compile(r'^[-*]\s*\*\*Severity:?\*\*', re.M | re.I)
+    _HEADING = re.compile(r'^#{3,5}\s+\S', re.M)
+
+    details: list[Detail] = []
+    bad = 0
+    checked = 0
+    for md in sorted(reviews_dir.glob("*/*.md")):
+        date = md.parent.name[:10]
+        if date < _CUTOFF:
+            continue
+        text = md.read_text(encoding="utf-8", errors="replace")
+        n_head = len(_HEADING.findall(text))
+        if n_head == 0:
+            continue
+        checked += 1
+        n_sev = len(_SEV_LINE.findall(text))
+        if n_sev < n_head:
+            bad += 1
+            details.append(Detail(
+                str(md.relative_to(PROJECT_ROOT)), False,
+                f"{n_head} finding heading(s) but only {n_sev} `- **Severity:**` line(s). "
+                f"From {_CUTOFF} every finding must declare its severity explicitly: "
+                f"severity drives the blocking-closure bar, and inferring it from a glyph "
+                f"lets it be changed without leaving a trace."))
+
+    details.insert(0, Detail(
+        "summary", bad == 0,
+        f"{checked} review document(s) dated >= {_CUTOFF} checked; {bad} with findings "
+        f"that do not declare severity (earlier documents keep glyph inference)"))
+    return CheckResult(passed=bad == 0, details=details)
+
+
 @register_check("review_docs_mint_findings",
                 "Every bundle Stage-13 review document mints at least one ReviewFinding node")
 def check_review_docs_mint_findings() -> CheckResult:

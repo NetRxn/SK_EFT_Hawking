@@ -1631,18 +1631,40 @@ def extract_review_finding_nodes() -> list[dict]:
                 section_num = f'C{section_num}'
 
             # Severity from glyphs OR explicit BLOCKER / severity: critical markers
-            severity = 'advisory'
-            # The HEADING is authoritative for severity; the body is only a fallback
-            # (D11 Stage-13 round-10 finding E4, which that review tripped on itself).
-            # The previous form tested `glyph in heading or glyph in body[:600]` inside a
-            # loop ordered critical→major→minor with a `break`, so a 🟡 finding whose body
-            # QUOTED a red glyph — e.g. while describing another finding — minted as
-            # `critical`. Severity must come from the finding's own label, not from
-            # whatever glyph appears first anywhere nearby.
-            for glyph, sev in _SEV_GLYPHS.items():
-                if glyph in heading:
-                    severity = sev
-                    break
+            # ── DECLARED SEVERITY (D12 round-11 finding 8.1b) ──
+            # A `- **Severity:** <level>` line in the finding body is authoritative when
+            # present. Glyph/heading inference remains as the fallback for the ~1400
+            # historical findings that predate the convention, but a declared field cannot
+            # be changed by editing a glyph, and `review_severity_declared` (validate.py)
+            # fails any review document dated on/after the cutoff whose findings omit it.
+            # So downgrading a finding is a red build, not a silent edit.
+            #
+            # Two demonstrated exploits this closes: a one-line glyph demotion plus the
+            # word "fixed" reopened self-closure on a past 🔴; and typesetting a summary as
+            # `0 «**»BLOCKER«**»` escalated an entire zero-blocker report to critical.
+            _decl = re.search(r'^[-*]\s*\*\*Severity:?\*\*:?\s*([A-Za-z]+)',
+                              body[:1200], re.MULTILINE | re.IGNORECASE)
+            severity = None
+            if _decl:
+                _v = _decl.group(1).strip().lower()
+                _MAP = {'blocker': 'critical', 'critical': 'critical',
+                        'required': 'major', 'major': 'major',
+                        'recommended': 'minor', 'minor': 'minor',
+                        'advisory': 'advisory', 'info': 'advisory'}
+                severity = _MAP.get(_v)
+            if severity is None:
+                severity = 'advisory'
+                # The HEADING is authoritative for the fallback; the body is a last resort
+                # (round-10 E4: a 🟡 finding whose body QUOTED a red glyph minted critical).
+                for glyph, sev in _SEV_GLYPHS.items():
+                    if glyph in heading:
+                        severity = sev
+                        break
+                else:
+                    for glyph, sev in _SEV_GLYPHS.items():
+                        if glyph in body[:600]:
+                            severity = sev
+                            break
             else:
                 for glyph, sev in _SEV_GLYPHS.items():
                     if glyph in body[:600]:
@@ -1657,7 +1679,22 @@ def extract_review_finding_nodes() -> list[dict]:
             elif file_has_critical_marker:
                 severity = 'critical'
 
-            # Status: fixed if ✅ or "fixed" / "done" / "now closed" markers present
+            # ── BIRTH-STATUS INVARIANT (D12 Stage-13 round-11 finding 8.1b) ──
+            # EVERY finding is born `open`. The supersession ledger is the SOLE channel
+            # that can transition it, at every severity.
+            #
+            # This replaces heading-parse closure (`✅`, the word "fixed", "resolved",
+            # "done", "now closed" anywhere in the heading or the first 600 body chars).
+            # That mechanism let a review document close its own findings by wording, and
+            # every repair to it was a patch on a design where the default was "closed if
+            # it says so". Round 8 restricted it to non-blocking severities; rounds 9, 10
+            # and 11 each found a way through what remained. Making the ledger the only
+            # transition channel removes the class instead of narrowing it.
+            #
+            # Measured blast radius at the time of the change: 73 findings (72 advisory,
+            # 1 minor) were closed by heading text alone and now read `open` until a
+            # ledger record closes them. No blocking finding was affected — those already
+            # required a record.
             status = 'open'
             if re.search(r'[✅✓]|\bfixed\b|\bresolved\b|\bdone\b|now\s+closed', heading, re.IGNORECASE):
                 status = 'fixed'
