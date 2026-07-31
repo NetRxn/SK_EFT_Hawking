@@ -1627,6 +1627,7 @@ def extract_review_finding_nodes() -> list[dict]:
             if re.search(r'[❌✗]\s+still', body[:400], re.IGNORECASE):
                 status = 'open'
 
+
             # Inference text: section heading + body slice + review_name (the
             # filename-derived review identifier). Including review_name lets
             # files like "Paper 10 Deep Review — Modular Generation Constraint.md"
@@ -1648,6 +1649,22 @@ def extract_review_finding_nodes() -> list[dict]:
             if finding_id in seen_ids:
                 continue
             seen_ids.add(finding_id)
+            # ⚠️ HEADING-PARSE CANNOT CLOSE A BLOCKING FINDING (added 2026-07-31, D12
+            # Stage-13 round-8 BLOCKER 8.1). Everything above infers `fixed` from the
+            # finding's OWN heading text, so a review document closes its own findings by
+            # wording alone — no remediation, no ledger record, no re-review. The round-8
+            # reviewer demonstrated it twice: the round-6 reconstruction minted all seven
+            # of its findings `fixed`, including the two its own body labels "PARTIALLY
+            # FIXED", and the reviewer's own first draft self-closed two headings
+            # containing "fixed"/"HALF-FIXED".
+            #
+            # For blocking severities, closure now requires a supersession ledger record —
+            # an artifact written deliberately, naming a commit and evidence, that the
+            # `ledger_ids_resolve` guard already checks for danglers. Non-blocking findings
+            # keep heading-parse: the stakes are low and the existing corpus is large.
+            if status == 'fixed' and severity in ('critical', 'major', 'blocker'):
+                if finding_id not in supersessions:
+                    status = 'open'
 
             meta = {
                 'severity': severity,

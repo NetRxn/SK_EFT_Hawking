@@ -1,7 +1,7 @@
 import SKEFTHawking.EffectiveMediumBounds
 
 /-!
-# Phase 6CE, Wave 3 — Elastic effective moduli (constituent bounds on the Voigt/Reuss averages)
+# Phase 6CE, Wave 3 — The elastic Voigt/Reuss averages and their constituent bounds
 
 The mechanical analog of the Wave-2 electromagnetic enclosure. For a two-phase elastic composite
 (constituent moduli `0 < M₁ ≤ M₂` — bulk or shear — at volume fraction `f`), the two classical
@@ -41,10 +41,20 @@ physical bulk/shear modulus of a real composite stays literature-cited (cf. Hill
 
 namespace SKEFTHawking.Metamaterial
 
-/-- The Voigt (arithmetic, iso-strain) effective modulus `(1−f)M₁ + f M₂`. -/
+/-- The Voigt (arithmetic, iso-strain) **average** of the constituent moduli, `(1−f)M₁ + f M₂`.
+
+⚠️ An *average*, not an effective modulus. No physical `M_eff` of a composite is defined or
+bounded anywhere in this module — see the header. (Corrected 2026-07-31, D11 Stage-13 round 8:
+this docstring and `reussModulus`'s said "effective modulus" for five review rounds while the
+header two definitions above denied it in bold. Rounds 3–7 each fixed the wording somewhere
+else — header, theorem docstring, paper, roadmap, formulas.py, visualizations.py — and left the
+two definitions alone, which is where jump-to-definition actually lands.) -/
 noncomputable def voigtModulus (M1 M2 f : ℝ) : ℝ := (1 - f) * M1 + f * M2
 
-/-- The Reuss (harmonic, iso-stress) effective modulus `M₁M₂ / ((1−f)M₂ + f M₁)`. -/
+/-- The Reuss (harmonic, iso-stress) **average** of the constituent moduli,
+`M₁M₂ / ((1−f)M₂ + f M₁)`.
+
+⚠️ An *average*, not an effective modulus — see the note on `voigtModulus`. -/
 noncomputable def reussModulus (M1 M2 f : ℝ) : ℝ := M1 * M2 / ((1 - f) * M2 + f * M1)
 
 /-- The Reuss denominator `(1−f)M₂ + f M₁` is positive for a physical composite. -/

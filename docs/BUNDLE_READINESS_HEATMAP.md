@@ -20,10 +20,10 @@
 
 | Bundle | Tier | Sources | Open | Blockers | Severity mix | Stage-13 review | Verdict |
 |---|---:|---:|---:|---:|---|:---:|:---:|
-| **F** | 0 | 63 | 22 | 10 | 5 critical, 5 major, 12 minor | 2026-06-10 | 🔴 RED |
-| **D1** | 1 | 12 | 50 | 36 | 1 advisory, 24 critical, 12 major, 13 minor | 2026-06-10 | 🔴 RED |
+| **F** | 0 | 63 | 23 | 11 | 5 critical, 6 major, 12 minor | 2026-06-10 | 🔴 RED |
+| **D1** | 1 | 12 | 51 | 37 | 1 advisory, 24 critical, 13 major, 13 minor | 2026-06-10 | 🔴 RED |
 | **D2** | 1 | 6 | 33 | 16 | 7 critical, 9 major, 17 minor | 2026-06-10 | 🔴 RED |
-| **D3** | 1 | 31 | 11 | 3 | 2 advisory, 3 major, 6 minor | 2026-06-10 | 🔴 RED |
+| **D3** | 1 | 31 | 12 | 4 | 2 advisory, 4 major, 6 minor | 2026-06-10 | 🔴 RED |
 | **D4** | 1 | 12 | 0 | 0 | _(none)_ | 2026-06-10 | 🟢 GREEN |
 | **D5** | 1 | 9 | 20 | 11 | 3 advisory, 5 critical, 6 major, 6 minor | 2026-06-10 | 🔴 RED |
 | **D6** | 1 | 3 | 0 | 0 | _(none)_ | 2026-06-10 † | 🟡 YELLOW (P1 gate blocked: NarrativeGrounding) |
@@ -31,8 +31,8 @@
 | **D8** | 1 | 13 | 8 | 0 | 2 advisory, 6 minor | 2026-06-10 | 🟡 YELLOW |
 | **D9** | 1 | 1 | 0 | 0 | _(none)_ | 2026-06-10 | 🟢 GREEN |
 | **D10** | 1 | 1 | 3 | 0 | 1 advisory, 2 minor | 2026-06-30 | 🟡 YELLOW (P1 gate blocked: NarrativeGrounding) |
-| **D11** | 1 | 1 | 31 | 14 | 5 advisory, 1 critical, 13 major, 12 minor | 2026-07-31 † | 🔴 RED |
-| **D12** | 1 | 1 | 28 | 9 | 2 advisory, 1 critical, 8 major, 17 minor | 2026-07-31 † | 🔴 RED |
+| **D11** | 1 | 1 | 44 | 18 | 8 advisory, 1 critical, 17 major, 18 minor | 2026-07-31 † | 🔴 RED |
+| **D12** | 1 | 1 | 58 | 23 | 3 advisory, 6 critical, 17 major, 32 minor | 2026-07-31 † | 🔴 RED |
 | **L1** | 2 | 2 | 1 | 1 | 1 major | 2026-06-10 | 🔴 RED |
 | **L2** | 2 | 1 | 20 | 14 | 3 advisory, 8 critical, 6 major, 3 minor | 2026-06-10 | 🔴 RED |
 | **L3** | 2 | 4 | 8 | 5 | 1 critical, 4 major, 3 minor | 2026-06-10 | 🔴 RED |
@@ -48,10 +48,10 @@
 
 | Bundle | AssumptionDisclosu | CitationIntegrity | ComputationCorrect | CountFreshness | CrossPaperConsiste | LeanProofSubstance | NarrativeGrounding | ParameterProvenanc | unclassified |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| **F** | 2 | 4 | 0 | 1 | 4 | 3 | 2 | 3 | 3 |
-| **D1** | 1 | 21 | 2 | 2 | 8 | 3 | 6 | 3 | 4 |
+| **F** | 3 | 4 | 0 | 1 | 4 | 3 | 2 | 3 | 3 |
+| **D1** | 1 | 22 | 2 | 2 | 8 | 3 | 6 | 3 | 4 |
 | **D2** | 3 | 13 | 2 | 2 | 4 | 1 | 3 | 1 | 4 |
-| **D3** | 4 | 2 | 0 | 0 | 1 | 0 | 1 | 1 | 2 |
+| **D3** | 5 | 2 | 0 | 0 | 1 | 0 | 1 | 1 | 2 |
 | **D4** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | **D5** | 0 | 8 | 0 | 2 | 2 | 1 | 3 | 2 | 2 |
 | **D6** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
@@ -59,8 +59,8 @@
 | **D8** | 2 | 4 | 0 | 0 | 0 | 0 | 0 | 0 | 2 |
 | **D9** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | **D10** | 0 | 2 | 0 | 0 | 0 | 1 | 0 | 0 | 0 |
-| **D11** | 2 | 6 | 2 | 2 | 3 | 0 | 5 | 3 | 8 |
-| **D12** | 3 | 5 | 4 | 0 | 0 | 0 | 5 | 7 | 4 |
+| **D11** | 3 | 8 | 3 | 4 | 4 | 0 | 6 | 5 | 11 |
+| **D12** | 5 | 8 | 7 | 3 | 0 | 0 | 10 | 13 | 12 |
 | **L1** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 |
 | **L2** | 3 | 3 | 1 | 0 | 3 | 2 | 1 | 4 | 3 |
 | **L3** | 1 | 4 | 0 | 0 | 1 | 0 | 1 | 0 | 1 |

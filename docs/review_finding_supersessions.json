@@ -5775,6 +5775,33 @@
       "evidence": "D11 count literals replaced by generated macros from docs/counts.tex. Closed on the INDEPENDENT verification of Stage-13 round 7 (papers/AutomatedReviews/2026-07-31-1530-internal-adversarial/D11.md), which re-read each in the current tree and reported it fixed — not on the author's own say-so.",
       "closed_date": "2026-07-31",
       "closed_by": "stage13-round7-independent-verification"
+    },
+    {
+      "finding_id": "review:2026-07-31-1210-reconstructed-round6:D12:2.1",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "7586aa0b",
+      "evidence": "Round 7 bisected 1−γ(r,4)=0.30 and obtained r*=1.1913538 against the pinned 1.19135 (0.29999643); the false universal is gone from the test file. Closed on Stage-13 round 7's INDEPENDENT verification (papers/AutomatedReviews/2026-07-31-1524-internal-adversarial/D12.md). Deliberately NOT filed for reconstruction findings 1.1, 5.1, 8.1 and 8.2: 5.1 and 8.1 are labelled PARTIALLY FIXED in the reconstruction itself with live residuals, and 1.1/8.2 were never independently re-verified. Those four stay open.",
+      "closed_date": "2026-07-31",
+      "closed_by": "stage13-round7-independent-verification"
+    },
+    {
+      "finding_id": "review:2026-07-31-1210-reconstructed-round6:D12:2.2",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "7586aa0b",
+      "evidence": "Round 7 redid the algebra by hand and confirmed f_link_bath_referred is an independent implementation (max relative error 3.7e-16 over a 28-point grid). Closed on Stage-13 round 7's INDEPENDENT verification (papers/AutomatedReviews/2026-07-31-1524-internal-adversarial/D12.md). Deliberately NOT filed for reconstruction findings 1.1, 5.1, 8.1 and 8.2: 5.1 and 8.1 are labelled PARTIALLY FIXED in the reconstruction itself with live residuals, and 1.1/8.2 were never independently re-verified. Those four stay open.",
+      "closed_date": "2026-07-31",
+      "closed_by": "stage13-round7-independent-verification"
+    },
+    {
+      "finding_id": "review:2026-07-31-1210-reconstructed-round6:D12:4.1",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "7586aa0b",
+      "evidence": "Round 7 confirmed the re-key resolves and the pinned dangling baseline of 67 is exact with no headroom. Closed on Stage-13 round 7's INDEPENDENT verification (papers/AutomatedReviews/2026-07-31-1524-internal-adversarial/D12.md). Deliberately NOT filed for reconstruction findings 1.1, 5.1, 8.1 and 8.2: 5.1 and 8.1 are labelled PARTIALLY FIXED in the reconstruction itself with live residuals, and 1.1/8.2 were never independently re-verified. Those four stay open.",
+      "closed_date": "2026-07-31",
+      "closed_by": "stage13-round7-independent-verification"
     }
   ]
 }

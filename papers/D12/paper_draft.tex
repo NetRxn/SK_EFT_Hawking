@@ -1,4 +1,12 @@
-\documentclass[aps,prxquantum,reprint,nofootinbib,superscriptaddress]{revtex4-2}
+% Class option: `prx`, NOT `prxquantum`. revtex4-2 as shipped in TeX Live 2026 has no
+% PRX Quantum substyle — it silently drops `prxquantum` as an unused global option and
+% typesets in the default APS style, which means every page count, column measurement and
+% Overfull-hbox reading taken against it was against the wrong configuration. Measured
+% 2026-07-31 (D12 Stage-13 round-8): `prxquantum` -> "Unused global option(s): [prxquantum]";
+% `prx`, `prb`, `prl` -> none. `prx` is PRX Quantum's parent style and the closest supported
+% substyle, so the layout below is representative; the final PRX Quantum submission must be
+% re-measured against the journal's own class.
+\documentclass[aps,prx,reprint,nofootinbib,superscriptaddress]{revtex4-2}
 
 \usepackage{graphicx}
 \usepackage{hyperref}
@@ -287,7 +295,8 @@ literature as a convention attached to particular filters --- $t_{\rm int} = 1/(
 and $\mathrm{ENBW} = 1/(4\tau)$ for a single-pole lock-in filter of time constant $\tau$ ---
 rather than as a proved inequality with a sharpness characterization. (The time constant is written
 $\tau$, not $T$: thirty lines above, $T$ is the observation window in
-$\mathrm{ENBW}\cdot T \ge \tfrac14$, and the two are different quantities. Reusing the symbol
+$\mathrm{ENBW}\cdot T \ge \tfrac12$ (\thm{enbw\_mul\_window\_ge\_half}), and the two are
+different quantities. Reusing the symbol
 would read as though the theorem were the convention, which is exactly the conflation this
 paragraph exists to separate.) We found no canonical primary source for either form, and prove the
 inequality here self-contained.
@@ -431,7 +440,8 @@ $F_{\rm link} \in [1/2,1]$ band does not contain $0.4731$.
 \paragraph{A convention, stated because it is load-bearing.} $\gamma$ multiplies the \emph{power}
 spectral density, so $\gamma = 0.4731$ is a $53\,\%$ reduction \emph{in PSD} --- equivalently
 $1 - \sqrt{0.4731} = 31\,\%$ in amplitude. Mather's ``as much as $30\,\%$''~\cite{Mather1982} is
-quoted without a stated convention, and the two readings differ by $21.5$ points ($53-31$ on the rounded figures quoted above), so the comparison
+quoted without a stated convention, and the two readings differ by $21.5$ points ($52.7 - 31.2$; the rounded figures quoted above
+give $22$), so the comparison
 cannot be made without fixing one. Read as a \emph{maximum} --- which ``as much as'' invites --- the
 amplitude reading is the closer fit: the largest amplitude reduction the closed form admits is
 $1 - \sqrt{n/(2n+1)} = 33\,\%$ at $n = 4$, against a largest PSD reduction of $56\,\%$. We put it
@@ -558,8 +568,9 @@ What that establishes is that the \emph{composite} statement, carrying its full 
 concluding about the attributed error pair, is non-vacuous at a signal-carrying operating point. It
 is not a sharper bound: each proof lower-bounds the maximum by its detection branch and discards the
 relaxation term, so the numerical value $22/25$ is the single-mechanism one and holds uniformly in
-$t$ and $T_1$. (The discarded term is not negligible --- for $t/T_1 > 0.4651$ it is the larger of the
-two --- which is precisely why the proofs bound rather than evaluate the maximum.)
+$t$ and $T_1$. (The discarded term is not negligible --- for $t/T_1 > 0.4648$ it is the larger of the
+two --- which is precisely why the proofs bound rather than evaluate the maximum. The crossover
+solves $x/(2(1+x)) = Q(1)$, i.e.\ $x = 2Q(1)/(1-2Q(1)) = 0.46479\ldots$)
 
 \section{Scope and prior art}
 \label{sec:scope}

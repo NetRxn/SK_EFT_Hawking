@@ -79,6 +79,16 @@ def compile_one(bundle_dir: Path, keep: bool = False) -> tuple[bool, str]:
         errors = re.findall(r"^! .*$", log_text, re.M)
         overfull = len(re.findall(r"Overfull", log_text))
 
+        # A silently-dropped \documentclass option makes EVERY layout measurement below
+        # meaningless, because the document was typeset in a different class than the one
+        # it declares. Measured 2026-07-31 (D12 round-8): the draft declared `prxquantum`,
+        # which this revtex4-2 does not implement — it emitted
+        # "Unused global option(s): [prxquantum]" and typeset in default APS style, so
+        # months of "0 Overfull / 10pp" readings were against the wrong configuration.
+        # This is a hard failure, not a warning: a wrong-class page count reads exactly
+        # like a right one.
+        unused_opts = re.findall(r"Unused global option\(s\):\s*\[([^\]]*)\]", log_text)
+
         # Unresolved references are judged from the RENDERED pdf, not the log: `??`
         # is what a reader would actually see, and it cannot be produced by another
         # process racing us.
@@ -98,11 +108,16 @@ def compile_one(bundle_dir: Path, keep: bool = False) -> tuple[bool, str]:
 
         shutil.copy2(pdf, bundle_dir / "paper_draft.pdf")
 
-        ok = not errors and unresolved <= 0
+        ok = not errors and unresolved <= 0 and not unused_opts
         detail = (f"{bundle_dir.name}: {'OK ' if ok else 'FAIL'} "
                   f"pages={pages} overfull={overfull} tex_errors={len(errors)} "
                   f"unresolved_refs_in_pdf="
-                  f"{'n/a (no pdftotext)' if unresolved < 0 else unresolved}")
+                  f"{'n/a (no pdftotext)' if unresolved < 0 else unresolved} "
+                  f"dropped_class_opts={len(unused_opts)}")
+        if unused_opts:
+            detail += (f"\n    ⚠️ DROPPED CLASS OPTION(S): {', '.join(unused_opts)} — the document "
+                       f"was typeset in a DIFFERENT class than it declares, so every layout "
+                       f"number above is against the wrong configuration.")
         if errors:
             detail += f"\n    first error: {errors[0][:160]}"
         if keep:

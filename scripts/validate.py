@@ -3840,8 +3840,15 @@ def check_bundle_metadata_matches_graph() -> CheckResult:
                                       aggregate_by_bundle,
                                       _bundle_metadata_path)
     except ImportError as exc:
-        return CheckResult(passed=True, details=[
-            Detail("import", True, f"unavailable ({exc}); skipping", warning=True)])
+        # FAIL, not pass (D12 Stage-13 round-8 BLOCKER 8.2). A readiness guard that cannot
+        # load its own dependency reports "no disagreement found" — indistinguishable from
+        # agreement. Demonstrated end-to-end by the round-8 reviewer: renaming
+        # `evaluate_all_gates` makes build_graph emit ZERO ReadinessGate nodes, at which
+        # point every readiness check passed green with nothing to check.
+        return CheckResult(passed=False, details=[
+            Detail("import", False,
+                   f"could not import the readiness machinery ({exc}) — this check is "
+                   f"UNVERIFIED, not passing")])
 
     try:
         by_bundle = aggregate_by_bundle(
@@ -3938,6 +3945,10 @@ def check_notebook_stored_outputs_current() -> CheckResult:
         return CheckResult(passed=True, details=[
             Detail("scope", True, "no bundle companion notebooks found", warning=True)])
 
+    # Arrays longer than this are treated as plotted data, not as claims. Applies
+    # identically to base64-encoded numpy arrays and to plain JSON lists.
+    _BULK_ARRAY_MIN = 8
+
     def _strings_in(obj, _path: str = "") -> list[str]:
         """Every claim-bearing leaf of a JSON payload, in document order.
 
@@ -3966,13 +3977,36 @@ def check_notebook_stored_outputs_current() -> CheckResult:
         elif isinstance(obj, (int, float)):
             out.append(f"{_path}={obj!r}")
         elif isinstance(obj, dict):
+            # Plotly serializes a numpy array as {"dtype": "f8", "bdata": "<base64>"}.
+            # `bdata` is a STRING, so without this branch it took the string arm above and
+            # was compared byte-for-byte — the exact opposite of the bulk-array rule below,
+            # which only ever saw arrays that happened to be Python lists at the call site.
+            # Measured 2026-07-31 (D11 round-8 finding 5.1): D11 has 24 base64 arrays and 0
+            # plain lists reaching the rule; D12 has 32 and 2. So the discriminator was
+            # "numpy or list at the call site", not "claim or not", and 56 bulk curves were
+            # being compared to the last bit — a 1e-15 jitter would have failed the check.
+            # Both encodings now route through the SAME length-only rule.
+            if isinstance(obj.get("bdata"), str) and "dtype" in obj:
+                try:
+                    import base64 as _b64
+                    _w = {"f8": 8, "f4": 4, "i8": 8, "i4": 4, "i2": 2, "i1": 1,
+                          "u8": 8, "u4": 4, "u2": 2, "u1": 1}.get(str(obj["dtype"]), 8)
+                    _n = len(_b64.b64decode(obj["bdata"])) // _w
+                except Exception:
+                    _n = -1
+                if _n > _BULK_ARRAY_MIN or _n < 0:
+                    out.append(f"{_path}[bdata:{obj['dtype']}:len]={_n}")
+                    return out
+                # Short enough to be a claim (a certified marker, an anchor) — compare it.
+                out.append(f"{_path}[bdata:{obj['dtype']}]={obj['bdata']}")
+                return out
             for k in sorted(obj):
                 out.extend(_strings_in(obj[k], f"{_path}.{k}" if _path else str(k)))
         elif isinstance(obj, list):
-            # A list of >8 numbers is a plotted data array, not a claim: skip its
-            # elements but keep its length, so a trace losing points still shows up.
+            # A long all-numeric list is plotted data, not a claim: keep only its length,
+            # so a trace losing points still shows up while float jitter does not.
             nums = sum(1 for v in obj if isinstance(v, (int, float)))
-            if nums > 8 and nums == len(obj):
+            if nums > _BULK_ARRAY_MIN and nums == len(obj):
                 out.append(f"{_path}[len]={len(obj)}")
                 return out
             for i, v in enumerate(obj):
@@ -4074,8 +4108,15 @@ def check_readiness_verdicts_agree() -> CheckResult:
                                       resolve_stage13_reviews,
                                       aggregate_by_bundle)
     except ImportError as exc:
-        return CheckResult(passed=True, details=[
-            Detail("import", True, f"unavailable ({exc}); skipping", warning=True)])
+        # FAIL, not pass (D12 Stage-13 round-8 BLOCKER 8.2). A readiness guard that cannot
+        # load its own dependency reports "no disagreement found" — indistinguishable from
+        # agreement. Demonstrated end-to-end by the round-8 reviewer: renaming
+        # `evaluate_all_gates` makes build_graph emit ZERO ReadinessGate nodes, at which
+        # point every readiness check passed green with nothing to check.
+        return CheckResult(passed=False, details=[
+            Detail("import", False,
+                   f"could not import the readiness machinery ({exc}) — this check is "
+                   f"UNVERIFIED, not passing")])
 
     try:
         assignments = parse_mapping(MAPPING_DOC.read_text())
@@ -4096,8 +4137,10 @@ def check_readiness_verdicts_agree() -> CheckResult:
     graph = build_graph_json()
     gates = [n for n in graph.get('nodes', []) if n.get('type') == 'ReadinessGate']
     if not gates:
-        return CheckResult(passed=True, details=[
-            Detail("gates", True, "no ReadinessGate nodes; skipping", warning=True)])
+        return CheckResult(passed=False, details=[
+            Detail("gates", False,
+                   "NO ReadinessGate nodes exist — nothing to cross-check, so the two "
+                   "verdicts are unverified rather than in agreement (round-8 8.2)")])
 
     blocked_at_gate: dict[str, list[str]] = {}
     seen_papers: set[str] = set()
@@ -4202,10 +4245,13 @@ def check_readiness_submission_gate() -> CheckResult:
     graph = build_graph_json()
     gates = [n for n in graph.get('nodes', []) if n['type'] == 'ReadinessGate']
     if not gates:
-        return CheckResult(passed=True, details=[
-            Detail("gates", True,
-                   "no ReadinessGate nodes found (readiness_gates not wired?)",
-                   warning=True),
+        # FAIL, not warn (D12 round-8 BLOCKER 8.2). Zero gate nodes is not "no problems
+        # found" — it is the gate system being absent, which is the only state in which
+        # every bundle trivially satisfies it.
+        return CheckResult(passed=False, details=[
+            Detail("gates", False,
+                   "NO ReadinessGate nodes exist. The submission gate has nothing to "
+                   "evaluate, so its verdict is vacuous — treat as unverified, not passing."),
         ])
 
     # Aggregate per-paper
@@ -4429,6 +4475,33 @@ def archive_results(results: Dict[str, CheckResult]) -> Path:
 # CHECK 19: Citation primary-source cache present (Phase 6i Wave 1)
 # ═══════════════════════════════════════════════════════════════════════
 
+def _discover_cache_for(bibkey: str):
+    """Find a primary-source cache for `bibkey` by globbing, independently of what the
+    registry declares. Mirrors the discovery the existence half of
+    `citation_primary_sources_present` performs, so the content half cannot be opted out
+    of by editing one registry field (D11 round-8 finding 1.1)."""
+    from src.core.workspace import find_workspace as _fw
+    base = _fw() / "Lit-Search"
+    if not base.is_dir():
+        return None
+    for phase in base.iterdir():
+        d = phase / "primary-sources"
+        if not d.is_dir():
+            continue
+        # Every cache extension the existence half accepts. A `.pdf` or `.json` cache is
+        # a legitimate primary source with no parseable header — it resolves here (so it
+        # is not reported unresolvable) and the caller skips the header comparison.
+        for ext in ("abstract.txt", "txt", "md", "json", "pdf"):
+            cand = d / f"{bibkey}.{ext}"
+            if cand.is_file():
+                return cand
+        low = f"{bibkey}.".lower()
+        for cand in d.iterdir():
+            if cand.name.lower().startswith(low) and cand.is_file():
+                return cand
+    return None
+
+
 @register_check("citation_primary_sources_present",
                 "Every external bibitem cited in papers has a primary-source cache file")
 def check_citation_primary_sources_present() -> CheckResult:
@@ -4628,11 +4701,38 @@ def check_citation_primary_sources_present() -> CheckResult:
     # Compare each cache header's Title:/arXiv: against the registry.
     title_details = []
     _norm_ws = lambda s: " ".join(s.split()).strip().lower()
+    # ⚠️ BYPASS CLOSED 2026-07-31 (D11 Stage-13 round-8 finding 1.1). This loop used to
+    # `continue` whenever `primary_source_path` was absent or did not end in
+    # `.abstract.txt`, while the EXISTENCE half above globs for `<bibkey>.<ext>` by bibkey
+    # independently of that field. So blanking one registry field passed existence (the
+    # file is still on disk and still found by glob) and silently skipped every content
+    # check — title, authors, year, DOI, arXiv. A reviewer took that path green in three
+    # mutations. The loop is now driven by the cache DISCOVERED for each bibkey, so the
+    # registry cannot opt itself out, and a declared-but-unresolvable path is a FAIL
+    # rather than a silent skip.
     for bibkey, entry in sorted(CITATION_REGISTRY.items()):
         ps = entry.get("primary_source_path")
-        if not ps or not str(ps).endswith(".abstract.txt"):
-            continue
-        cache_file = find_workspace() / ps
+        declared = bool(ps)
+        cache_file = (find_workspace() / ps) if ps else None
+        if cache_file is None or not str(ps).endswith(".abstract.txt"):
+            # No usable declared path: fall back to the same discovery the existence half
+            # uses, so the content checks still run on whatever cache is actually present.
+            found = _discover_cache_for(bibkey)
+            if found is None:
+                if declared:
+                    title_details.append(Detail(
+                        f"cache_path_unresolvable:{bibkey}", False,
+                        f"registry declares primary_source_path={ps!r} but no cache "
+                        f"resolves for this bibkey by any extension, so NO content check "
+                        f"ran. A declared path that names nothing is worse than none: it "
+                        f"reads as provenance."))
+                continue
+            # Header comparison needs a parseable header. A `.pdf`/`.json` cache has none;
+            # that is a real cache, just not one this half can read — skip silently, as the
+            # `.abstract.txt` opt-in used to, but ONLY after discovery proved it exists.
+            if found.suffix not in (".txt", ".md"):
+                continue
+            cache_file = found
         if not cache_file.exists():
             # Case-insensitive retry: registry paths say `Phase-6E`/`Phase-6C` while the
             # directories on disk are `Phase-6e`/`Phase-6c`. That resolves on APFS but NOT
@@ -4666,7 +4766,7 @@ def check_citation_primary_sources_present() -> CheckResult:
             if _norm_ws(m_title.group(1)) != _norm_ws(reg_title):
                 title_details.append(Detail(
                     f"cache_title_mismatch:{bibkey}", False,
-                    f"{ps} header Title disagrees with CITATION_REGISTRY. "
+                    f"{cache_file} header Title disagrees with CITATION_REGISTRY. "
                     f"cache={m_title.group(1).strip()!r} registry={reg_title!r}. "
                     f"The cache is this pipeline's designated primary-source evidence; a "
                     f"disagreement means one of the two is wrong.",

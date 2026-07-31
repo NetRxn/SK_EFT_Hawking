@@ -672,8 +672,10 @@ its detection half", while its own proof quotes the detection half). Each proof 
 maximum — it *lower-bounds* the max by its detection branch and discards the relaxation term rather
 than evaluating which branch wins — so the numerical bound is exactly the single-mechanism one, and
 it holds uniformly in `t` and `T1`. The discarded term is not negligible: solving
-`x / (2 * (1 + x)) = gaussianQ 1` gives `x = 0.4651`, so for `t / T1 > 0.4651` the relaxation term is
-the larger of the two and the max selects *it*. Calling that branch "inert" (as an earlier version of
+`x / (2 * (1 + x)) = gaussianQ 1` gives `x = 2·Q(1)/(1 − 2·Q(1)) = 0.46479…`, so for
+`t / T1 > 0.4648` the relaxation term is the larger of the two and the max selects *it*.
+(Corrected 2026-07-31, D12 round 8: round 7 stated 0.4651 here and in the paper without
+recomputing; 0.4651 solves to Q = 0.158726, not Q(1) = 0.158655.) Calling that branch "inert" (as an earlier version of
 this note did) is false over most of the theorems' own domain; "discarded by the proof" is the
 accurate description. What is established is that the *composite statement* — full
 binder list, attributed error pair `(e₀, e₁)` rather than the threshold pair — is non-vacuous at a

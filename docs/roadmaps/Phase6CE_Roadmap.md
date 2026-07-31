@@ -43,7 +43,7 @@
   - [x] `EffectiveMediumBounds.lean` builds clean — 0 sorry, kernel-pure, no new axiom
   - [x] `effectiveMedium_hashinShtrikman_enclosure` (`norm_num`-backed two-sided bound) proven
 
-## Wave 3 — elastic / acoustic effective moduli
+## Wave 3 — the elastic Voigt/Reuss averages (⚠️ NOT effective moduli — misnomer retracted 2026-07-31; no physical M_eff is defined or bounded anywhere in 6CE)
 - **Goal:** the effective bulk/shear moduli of a composite via the same algebraic mixing + enclosure (the elastic analog of W1/W2). **Verdict: reachable.**
 - **Why:** extends the certificate from electromagnetic to mechanical metamaterials (ties to 6CB's acoustic substrate).
 - **Bricks:** W1/W2; elastic-modulus mixing rules.
