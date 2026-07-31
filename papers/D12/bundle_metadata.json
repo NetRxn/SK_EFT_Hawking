@@ -1,7 +1,7 @@
 {
   "bundle_target": "D12",
   "tier": 1,
-  "title": "Kernel-Verified Detector & Readout Metrology \u2014 From Photon Statistics to Composite Fidelity Ceilings",
+  "title": "Kernel-Verified Detector & Readout Metrology — From Photon Statistics to Composite Fidelity Ceilings",
   "target_journal": "PRX Quantum | Quantum | Phys. Rev. Applied",
   "phase7_subphase": "6EA-EE",
   "stage9_status": "green",
@@ -14,11 +14,17 @@
   "last_stage9_review": "2026-07-31T04:10:00Z",
   "last_stage10_review": "2026-07-30T21:00:00Z",
   "last_stage13_review": "2026-07-31",
-  "blockers_open": 0,
-  "advisories_open": 0,
+  "blockers_open": 9,
+  "advisories_open": 19,
   "stage13_review_doc": null,
   "audit_log_path": "papers/D12/audit_log.jsonl",
   "supersession_ledger_anchor": "docs/review_finding_supersessions.json",
-  "notes": "First content-lift 2026-07-30. Stage 10 claims review GREEN (round 2): 0 FAIL across 179 sentences; |1-L| = 2 at L = 3 verified end-to-end through the Lean witnesses; all 565 declarations kernel-pure from axiom closures. Stage 9 iterating on typeset legibility. SCOPE: novelty is the narrowed knowledge-hedged form only \u2014 the original claim was REFUTED by a live prior-art sweep (Mathlib already carries a sub-Gaussian Chernoff bound; PhysLib already carries quantum hypothesis testing). TWO PRIOR-ART CHECKS REMAIN OPEN AND BLOCK SUBMISSION: RemyDegenne/testing-lower-bounds, and Isabelle AFP + Coq infotheo. || Stage 9 GREEN at round 6 (GO verdict, 0 FAIL, 0 MAJOR, 0 MINOR, 0 publication-blocking). Reviewer mutation-tested the structural harness (3 deliberate breakages, all caught), establishing checked-and-passed rather than not-checked. Documented non-blocking residue: textangle reading direction on one rotated annotation; panel (C) omitting N_b in its subplot title (recoverable from the shared abscissa and the caption); fig-2 legend stacking single-column. Overfull hbox 4 -> 0.",
-  "last_stage13_review_source": "backfilled-from-AutomatedReviews papers/AutomatedReviews/2026-07-31-0829-internal-adversarial/D12.md 2026-07-31"
+  "notes": "First content-lift 2026-07-30. Stage 10 claims review GREEN (round 2): 0 FAIL across 179 sentences; |1-L| = 2 at L = 3 verified end-to-end through the Lean witnesses; every declaration in the bundle's substrate kernel-pure from axiom closures (the count is NOT frozen here — it drifts with every wave; docs/counts.tex is the generated source, and D12 Stage-13 round-7 finding 7.2 caught this field asserting 565 against a live 582). Stage 9 iterating on typeset legibility. SCOPE: novelty is the narrowed knowledge-hedged form only — the original claim was REFUTED by a live prior-art sweep (Mathlib already carries a sub-Gaussian Chernoff bound; PhysLib already carries quantum hypothesis testing). TWO PRIOR-ART CHECKS REMAIN OPEN AND BLOCK SUBMISSION: RemyDegenne/testing-lower-bounds, and Isabelle AFP + Coq infotheo. || Stage 9 GREEN at round 6 (GO verdict, 0 FAIL, 0 MAJOR, 0 MINOR, 0 publication-blocking). Reviewer mutation-tested the structural harness (3 deliberate breakages, all caught), establishing checked-and-passed rather than not-checked. Documented non-blocking residue: textangle reading direction on one rotated annotation; panel (C) omitting N_b in its subplot title (recoverable from the shared abscissa and the caption); fig-2 legend stacking single-column. Overfull hbox 4 -> 0.",
+  "last_stage13_review_source": "backfilled-from-AutomatedReviews papers/AutomatedReviews/2026-07-31-0829-internal-adversarial/D12.md 2026-07-31",
+  "open_findings": 28,
+  "blocked_p1_gates": [
+    "FixPropagation"
+  ],
+  "readiness": "RED",
+  "readiness_last_computed": "2026-07-31"
 }

@@ -3815,6 +3815,85 @@ def check_count_literals() -> CheckResult:
 # CHECK 18: Readiness submission gate (Phase 5v Wave 4)
 # ═══════════════════════════════════════════════════════════════════════
 
+@register_check("bundle_metadata_matches_graph",
+                "bundle_metadata.json finding counts equal the live graph's")
+def check_bundle_metadata_matches_graph() -> CheckResult:
+    """CHECK: the per-bundle metadata blob must not assert stale finding counts.
+
+    Added 2026-07-31 (D12 Stage-13 round-7 findings 7.2 + 8.3 and D11 4.2 — three
+    findings, one root cause). `bundle_source_manifest.py` initialises
+    `blockers_open` / `advisories_open` to 0 when a bundle is created and nothing
+    updated them afterwards, so ALL 21 bundles asserted `blockers_open: 0` while
+    carrying up to 36 open blockers each — and `freshness_stale: false` rested on
+    that zero. `bundle_readiness.py` now writes the live numbers back
+    (`write_metadata_counts`); this check is the guard that they stay written.
+
+    It compares against the same aggregation the heatmap uses, so a bundle whose
+    metadata was hand-edited, or whose readiness run was skipped after new findings
+    landed, fails here rather than being quoted as evidence of readiness.
+    """
+    sys.path.insert(0, str(SCRIPT_DIR))
+    try:
+        from bundle_readiness import (MAPPING_DOC, parse_mapping,
+                                      load_findings_by_paper,
+                                      resolve_stage13_reviews,
+                                      aggregate_by_bundle,
+                                      _bundle_metadata_path)
+    except ImportError as exc:
+        return CheckResult(passed=True, details=[
+            Detail("import", True, f"unavailable ({exc}); skipping", warning=True)])
+
+    try:
+        by_bundle = aggregate_by_bundle(
+            parse_mapping(MAPPING_DOC.read_text()),
+            load_findings_by_paper(),
+            resolve_stage13_reviews(backfill=False))
+    except Exception as exc:
+        # FAIL, not pass: an uncomputable live verdict is not agreement.
+        return CheckResult(passed=False, details=[
+            Detail("aggregate", False,
+                   f"live counts could not be computed ({type(exc).__name__}: {exc}) "
+                   f"— metadata is therefore UNVERIFIED, not matching")])
+
+    details: list[Detail] = []
+    drift = 0
+    checked = 0
+    for bundle, agg in sorted(by_bundle.items()):
+        mp = _bundle_metadata_path(bundle)
+        if not mp.is_file():
+            continue
+        try:
+            meta = json.loads(mp.read_text())
+        except (json.JSONDecodeError, OSError) as exc:
+            drift += 1
+            details.append(Detail(bundle, False, f"metadata unreadable: {exc}"))
+            continue
+        checked += 1
+        live_blockers = agg.get("blocker_count", 0)
+        live_adv = sum(v for k, v in (agg.get("severity_mix") or {}).items()
+                       if k in ("minor", "advisory"))
+        bad = []
+        if meta.get("blockers_open") != live_blockers:
+            bad.append(f"blockers_open={meta.get('blockers_open')} live={live_blockers}")
+        if meta.get("advisories_open") != live_adv:
+            bad.append(f"advisories_open={meta.get('advisories_open')} live={live_adv}")
+        if meta.get("readiness") != agg.get("readiness"):
+            bad.append(f"readiness={meta.get('readiness')!r} live={agg.get('readiness')!r}")
+        if bad:
+            drift += 1
+            details.append(Detail(
+                bundle, False,
+                f"metadata disagrees with the live graph: {'; '.join(bad)}. "
+                f"Re-run `uv run python scripts/bundle_readiness.py`, which writes these "
+                f"fields; do not hand-edit them."))
+
+    details.insert(0, Detail(
+        "summary", drift == 0,
+        f"{checked} bundle metadata blob(s) compared against the live graph, "
+        f"{drift} with drift"))
+    return CheckResult(passed=drift == 0, details=details)
+
+
 @register_check("notebook_stored_outputs_current",
                 "Bundle companion notebooks' STORED outputs equal what their code produces")
 def check_notebook_stored_outputs_current() -> CheckResult:

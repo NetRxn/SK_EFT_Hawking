@@ -661,6 +661,47 @@ def write_heatmap(
     return HEATMAP_PATH
 
 
+def write_metadata_counts(by_bundle: dict[str, dict]) -> list[str]:
+    """Write the live finding counts back into each `bundle_metadata.json`.
+
+    Added 2026-07-31 (D12 Stage-13 round-7 findings 7.2 and 8.3, D11 4.2 — three
+    findings, one root cause). `bundle_source_manifest.py` initialises
+    `blockers_open` / `advisories_open` to 0 at bundle creation and nothing ever
+    updates them, while this module computes the live numbers on every run and
+    discards them. So the metadata asserted `blockers_open: 0` for bundles carrying
+    a dozen open blockers, and `freshness_stale: false` rested on that zero. The
+    numbers are now written where they are computed rather than maintained by hand.
+
+    Returns the list of bundles whose metadata actually changed.
+    """
+    changed: list[str] = []
+    for bundle, agg in sorted(by_bundle.items()):
+        meta_path = _bundle_metadata_path(bundle)
+        if not meta_path.is_file():
+            continue
+        try:
+            meta = json.loads(meta_path.read_text())
+        except (json.JSONDecodeError, OSError):
+            continue
+        n_adv = sum(v for k, v in (agg.get("severity_mix") or {}).items()
+                    if k in ("minor", "advisory"))
+        updates = {
+            "blockers_open": agg.get("blocker_count", 0),
+            "advisories_open": n_adv,
+            "open_findings": agg.get("open_findings", 0),
+            "blocked_p1_gates": agg.get("blocked_p1_gates", []),
+            "readiness": agg.get("readiness"),
+            "readiness_last_computed": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+        }
+        if all(meta.get(k) == v for k, v in updates.items()
+               if k != "readiness_last_computed"):
+            continue
+        meta.update(updates)
+        meta_path.write_text(json.dumps(meta, indent=2, ensure_ascii=False) + "\n")
+        changed.append(bundle)
+    return changed
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
         description="Phase 6i Wave 7.4 per-bundle readiness summary"
@@ -693,6 +734,12 @@ def main() -> int:
     if args.json:
         print(json.dumps(by_bundle, indent=2))
         return 0
+
+    changed_meta = write_metadata_counts(by_bundle)
+    for b in changed_meta:
+        agg = by_bundle[b]
+        print(f"[METADATA] {b}: blockers_open={agg.get('blocker_count', 0)} "
+              f"readiness={agg.get('readiness')}")
 
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     out_dir = REVIEWS_DIR / f"{today}-bundle-stage13"

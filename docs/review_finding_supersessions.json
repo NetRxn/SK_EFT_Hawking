@@ -5712,6 +5712,69 @@
       "evidence": "ceiling recount: now distinguishes ceilings by floor provenance. Closed on the INDEPENDENT verification of Stage-13 round 7 (papers/AutomatedReviews/2026-07-31-1524-internal-adversarial/D12.md, finding 8.1), which read each of these six in the current tree and reported them demonstrably fixed while still carrying status:open — so D12's FixPropagation block was composed entirely of fixed findings. Not closed on the author's own say-so.",
       "closed_date": "2026-07-31",
       "closed_by": "stage13-round7-independent-verification"
+    },
+    {
+      "finding_id": "review:2026-07-31-1059-internal-adversarial:D11:4.1",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "bb0c7e34",
+      "evidence": "Phase6CE_Roadmap.md: all four misnomer sites corrected with the retraction recorded inline. Closed on the INDEPENDENT verification of Stage-13 round 7 (papers/AutomatedReviews/2026-07-31-1530-internal-adversarial/D11.md), which re-read each in the current tree and reported it fixed — not on the author's own say-so.",
+      "closed_date": "2026-07-31",
+      "closed_by": "stage13-round7-independent-verification"
+    },
+    {
+      "finding_id": "review:2026-07-31-1059-internal-adversarial:D11:5.4",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "bb0c7e34",
+      "evidence": "prior_art_novelty.md §4 attribution rewritten (Maxwell Garnett 1904 / HS 1962 EM / HS 1963 elastic / Voigt 1889 / Reuss 1929). Closed on the INDEPENDENT verification of Stage-13 round 7 (papers/AutomatedReviews/2026-07-31-1530-internal-adversarial/D11.md), which re-read each in the current tree and reported it fixed — not on the author's own say-so.",
+      "closed_date": "2026-07-31",
+      "closed_by": "stage13-round7-independent-verification"
+    },
+    {
+      "finding_id": "review:2026-07-31-1059-internal-adversarial:D11:5.5",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "bb0c7e34",
+      "evidence": "Fig. 4 caption now says 'averages', with a pointer to §5's scope paragraph. Closed on the INDEPENDENT verification of Stage-13 round 7 (papers/AutomatedReviews/2026-07-31-1530-internal-adversarial/D11.md), which re-read each in the current tree and reported it fixed — not on the author's own say-so.",
+      "closed_date": "2026-07-31",
+      "closed_by": "stage13-round7-independent-verification"
+    },
+    {
+      "finding_id": "review:2026-07-31-1059-internal-adversarial:D11:5.6",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "bb0c7e34",
+      "evidence": "Evenness lemmas shipped (branchMinus_neg, branchPlus_neg, disc_neg, normSqOff_neg) plus branch{Minus,Plus}_at_neg_pi; the caption cites them. Closed on the INDEPENDENT verification of Stage-13 round 7 (papers/AutomatedReviews/2026-07-31-1530-internal-adversarial/D11.md), which re-read each in the current tree and reported it fixed — not on the author's own say-so.",
+      "closed_date": "2026-07-31",
+      "closed_by": "stage13-round7-independent-verification"
+    },
+    {
+      "finding_id": "review:2026-07-31-1059-internal-adversarial:D11:5.8",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "bb0c7e34",
+      "evidence": "The voigt_sub_reuss_eq history clause corrected to match git show 230b3528 (header asserted the exact identity while only reuss_le_voigt existed). Closed on the INDEPENDENT verification of Stage-13 round 7 (papers/AutomatedReviews/2026-07-31-1530-internal-adversarial/D11.md), which re-read each in the current tree and reported it fixed — not on the author's own say-so.",
+      "closed_date": "2026-07-31",
+      "closed_by": "stage13-round7-independent-verification"
+    },
+    {
+      "finding_id": "review:2026-07-31-1059-internal-adversarial:D11:5.9",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "bb0c7e34",
+      "evidence": "sum_rawCurl_eq_zero rewritten to route through sum_forwardDiff_eq_zero, which now has a consumer. Closed on the INDEPENDENT verification of Stage-13 round 7 (papers/AutomatedReviews/2026-07-31-1530-internal-adversarial/D11.md), which re-read each in the current tree and reported it fixed — not on the author's own say-so.",
+      "closed_date": "2026-07-31",
+      "closed_by": "stage13-round7-independent-verification"
+    },
+    {
+      "finding_id": "review:2026-07-31-1059-internal-adversarial:D11:7.2",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "bb0c7e34",
+      "evidence": "D11 count literals replaced by generated macros from docs/counts.tex. Closed on the INDEPENDENT verification of Stage-13 round 7 (papers/AutomatedReviews/2026-07-31-1530-internal-adversarial/D11.md), which re-read each in the current tree and reported it fixed — not on the author's own say-so.",
+      "closed_date": "2026-07-31",
+      "closed_by": "stage13-round7-independent-verification"
     }
   ]
 }

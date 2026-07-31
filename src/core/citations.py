@@ -10911,7 +10911,7 @@ CITATION_REGISTRY = {
         'primary_source_path': 'Lit-Search/Phase-6C/primary-sources/HashinShtrikman1963.abstract.txt',
         'used_in': ['papers/D11/paper_draft.tex'],
         'provides': ['Variational bounds on the effective elastic moduli of a multiphase composite, refining the Voigt/Reuss bounds.'],
-        'notes': 'CITE THIS ONE for the elastic Voigt/Reuss/HS bounds formalized in 6CE EffectiveModuli.',
+        'notes': ('Cite for the ELASTIC Hashin–Shtrikman variational bounds; the 1962 companion is the electromagnetic one. ⚠️ NOT formalized in this development — 6CE EffectiveModuli proves only the ordering of the Voigt (Voigt1889) and Reuss (Reuss1929) averages plus constituent bounds, and the Voigt/Reuss averages are NOT Hashin & Shtrikman\'s; see the module header. Corrected 2026-07-31 (D11 Stage-13 round-7 finding 1.2): the previous note read "CITE THIS ONE for the elastic Voigt/Reuss/HS bounds formalized in 6CE EffectiveModuli", which misattributed Voigt/Reuss to HS AND claimed the HS bounds were formalized — both halves of the error round 6 corrected one layer away in prior_art_novelty.md.'),
     },
     'HasanKane2010': {
         'authors': 'Hasan, M. Z., Kane, C. L.',

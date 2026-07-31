@@ -217,7 +217,8 @@ and the re-referencing of `G` via `G ∝ T^(n−1)`; they agree since `r^−(n�
 range `F_link ∈ [1/2, 1]` does not bound this expression and must not be cited as corroborating it.
 (ii) `γ` multiplies the **PSD**, so `0.4731` is a `53 %` PSD reduction, equivalently `31 %` in
 amplitude. Mather's "as much as 30 %" is quoted with no stated convention, and the two readings
-differ by 22 points, so the comparison needs one fixed. Read as a *maximum* the amplitude reading is
+differ by 21.5 points (52.7 % vs 31.2 % at `γ(2,4) = 0.47315`; 53 − 31 on the rounded
+figures), so the comparison needs one fixed. Read as a *maximum* the amplitude reading is
 the closer fit (max amplitude reduction `33 %` at `n = 4`, against a max PSD reduction of `56 %`) —
 but no stronger claim is supportable: the closed form attains **every** PSD reduction in
 `[0, 56 %)`, including `30 %` at `r ≈ 1.19`, so no argument from the available range settles it, and

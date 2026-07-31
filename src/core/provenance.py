@@ -30,6 +30,34 @@ PARAMETER_PROVENANCE = {
 
     # ── Fundamental constants ──────────────────────────────────────
 
+    'MATHER_1982_GRADIENT_REDUCTION': {
+        'value': 0.30,
+        'unit': 'dimensionless (fractional reduction)',
+        'tier': 'LITERATURE',
+        'source': 'Mather 1982, Applied Optics 21, 1125',
+        'detail': ('Mather\'s stated reduction of the phonon (thermal-fluctuation) noise of a '
+                   'bolometer relative to the isothermal-link estimate, quoted as "as much as '
+                   '30 %". ⚠️ THE CONVENTION IS NOT STATED IN THE SOURCE, and the two readings '
+                   'differ by 21.5 points at this bundle\'s worked point: the PSD reading '
+                   '1 − γ(2,4) = 52.7 % and the amplitude reading 1 − √γ(2,4) = 31.2 %. D12 §3.2 '
+                   'quotes the figure with that ambiguity disclosed and does NOT resolve it; the '
+                   'amplitude reading is the closer match but the paper does not assert that as '
+                   'the source\'s intent.'),
+        'doi': '10.1364/AO.21.001125',
+        'llm_verified_date': '2026-07-31',
+        'llm_verified_notes': ('Registered 2026-07-31 (D12 Stage-13 round-7 finding 2.4): this is '
+                               'the numeral the whole §3.2 convention argument turns on and it had '
+                               'no provenance record, so Gate 3 could not see it. Bibkey Mather1982 '
+                               'is in CITATION_REGISTRY with a primary-source cache; the "as much '
+                               'as 30 %" wording and the absence of a stated convention are what '
+                               'this record pins.'),
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': ('Consumed by src/core/formulas.py::phonon_psd_gradient_factor and its Lean '
+                  'counterpart SKEFTHawking.Electrothermal.phononPSDGamma. The computed γ(2,4) '
+                  'itself is DERIVED, not measured — see '
+                  'tests/test_bundle_formulas_d11_d12.py::TestPhononPSD for the regression pins.'),
+    },
     'HBAR': {
         'value': 1.054571817e-34,
         'unit': 'J·s',

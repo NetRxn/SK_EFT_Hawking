@@ -284,9 +284,13 @@ time--bandwidth product~\cite{Gabor1946} as the classical antecedent, but our st
 different Cauchy--Schwarz consequence about a filter impulse response, not about the variances of a
 signal and its transform. The $\mathrm{ENBW}\cdot T$ relation itself circulates in the instrument
 literature as a convention attached to particular filters --- $t_{\rm int} = 1/(2\,\mathrm{ENBW})$,
-and $\mathrm{ENBW} = 1/4T$ for a single-pole lock-in filter --- rather than as a proved inequality
-with a sharpness characterization. We found no canonical primary source for it in that form, and
-prove it here self-contained.
+and $\mathrm{ENBW} = 1/(4\tau)$ for a single-pole lock-in filter of time constant $\tau$ ---
+rather than as a proved inequality with a sharpness characterization. (The time constant is written
+$\tau$, not $T$: thirty lines above, $T$ is the observation window in
+$\mathrm{ENBW}\cdot T \ge \tfrac14$, and the two are different quantities. Reusing the symbol
+would read as though the theorem were the convention, which is exactly the conflation this
+paragraph exists to separate.) We found no canonical primary source for either form, and prove the
+inequality here self-contained.
 
 \subsection{Noise-equivalent power and matched filtering}
 
@@ -427,7 +431,7 @@ $F_{\rm link} \in [1/2,1]$ band does not contain $0.4731$.
 \paragraph{A convention, stated because it is load-bearing.} $\gamma$ multiplies the \emph{power}
 spectral density, so $\gamma = 0.4731$ is a $53\,\%$ reduction \emph{in PSD} --- equivalently
 $1 - \sqrt{0.4731} = 31\,\%$ in amplitude. Mather's ``as much as $30\,\%$''~\cite{Mather1982} is
-quoted without a stated convention, and the two readings differ by $23$ points, so the comparison
+quoted without a stated convention, and the two readings differ by $21.5$ points ($53-31$ on the rounded figures quoted above), so the comparison
 cannot be made without fixing one. Read as a \emph{maximum} --- which ``as much as'' invites --- the
 amplitude reading is the closer fit: the largest amplitude reduction the closed form admits is
 $1 - \sqrt{n/(2n+1)} = 33\,\%$ at $n = 4$, against a largest PSD reduction of $56\,\%$. We put it

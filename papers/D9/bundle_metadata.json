@@ -56,5 +56,9 @@
     "SKEFTHawking.QuantumNetwork.qho_meanEnergy",
     "SKEFTHawking.QuantumNetwork.avgAssignmentError_combined_floor",
     "SKEFTHawking.QuantumNetwork.expNeg_enclosure"
-  ]
+  ],
+  "open_findings": 0,
+  "blocked_p1_gates": [],
+  "readiness": "GREEN",
+  "readiness_last_computed": "2026-07-31"
 }
