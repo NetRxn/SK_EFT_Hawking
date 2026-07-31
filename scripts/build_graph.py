@@ -3386,12 +3386,32 @@ def extract_flags_edges(node_ids: set) -> list[dict]:
         bundle = meta.get('inferred_bundle')
         if not bundle:
             continue
+        emitted_before = len(edges)
         for source_key in bundle_to_papers.get(bundle, []):
             # source_key is a mapping paper_key (e.g. "paper10_modular_generation"
             # or "_phase6n_W1a_lean_only"). The Paper node id is "paper:<key>".
-            # Keys without a Paper node (lean-only phase dirs, initial-draft
-            # stubs) are silently skipped — left as residual, not broadened.
             _emit(f['id'], f'paper:{source_key}', f)
+
+        # ⚠️ FALLBACK ADDED 2026-07-31 (D11 Stage-13 round-5 BLOCKER 4.1).
+        #
+        # The fan-out above resolves a bundle-era finding to its SOURCE papers.
+        # For a bundle whose only mapping sources are synthesis stubs
+        # ("<B>_initial_draft") or lean-only phase dirs ("_phase6n_W1b_lean_only"),
+        # no Paper node exists for any of them, every _emit returned, and the
+        # finding produced ZERO edges — silently. Ten bundles were in that state
+        # (D6, D7, D8, D9, D10, D11, D12, I2, I3), so Gate 11 FixPropagation and
+        # the "a BLOCKER flips the ReadinessGate to blocked" mechanism evaluated
+        # VACUOUSLY PASSED for all of them: readiness_submission_gate reported
+        # "D11 — all P1 passed" while six Stage-13 BLOCKERs sat unclosed on disk.
+        #
+        # The prior comment here called this "left as residual, not broadened" —
+        # i.e. the gap was known and deliberately not closed. That was the wrong
+        # call: an unrecordable finding is indistinguishable from no finding.
+        #
+        # `paper:<bundle>` exists as a node for every bundle, so attach there when
+        # the source fan-out yielded nothing.
+        if len(edges) == emitted_before:
+            _emit(f['id'], f'paper:{bundle}', f)
 
     return edges
 

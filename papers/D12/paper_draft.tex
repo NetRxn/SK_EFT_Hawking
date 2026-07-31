@@ -28,8 +28,9 @@ From Photon Statistics to Composite Fidelity Ceilings}
 \author{John Roehm}
 
 \begin{abstract}
-We report a machine-checked formalization, in the \Lean{} proof assistant with Mathlib and the
-PhysLib physics library, of the floor-and-ceiling theory of physical readout chains --- the layer
+We report a machine-checked formalization, in the \Lean{} proof assistant against Mathlib
+(PhysLib appears in the import closure but no result reported here consumes it), of the
+floor-and-ceiling theory of physical readout chains --- the layer
 beneath the channel- and device-level envelopes of quantum-network certification. Four layers are
 covered. (i) \emph{Discrimination floors}: a distribution-free Le Cam/Bhattacharyya average-error
 floor for Poisson discrimination, valid for every randomized count rule with no false-alarm
@@ -292,10 +293,12 @@ prove it here self-contained.
 The NEP layer fixes a unit contract as a theorem (\thm{nepOfPSD\_sq}) and composes it into the
 operational chain \thm{sigma\_eq\_responsivity\_nep\_sqrt\_enbw}, whose two modelling binders are
 \thm{IsResponsivityChain} --- the readout is linear with responsivity $R$, so its output variance
-scales as $R^2$ --- and whiteness of the input-referred noise. The shot and thermal specializations
-\thm{shot\_nep\_formula} and \thm{nep\_thermal\_johnsonNyquist} carry the same chain-linearity
-hypothesis, and the regime boundary is an iff (\thm{shotLimited\_iff\_psd\_lt}) with an inhabiting
-witness.
+scales as $R^2$ --- and whiteness of the input-referred noise. The shot specialization
+\thm{shot\_nep\_formula} carries the same chain-linearity hypothesis;
+\thm{nep\_thermal\_johnsonNyquist} does \emph{not} --- it is a standalone unit identity for the
+Johnson--Nyquist PSD referred through a responsivity, with three positivity binders and no
+modelling hypothesis. The regime boundary is an iff (\thm{shotLimited\_iff\_psd\_lt}) with an
+inhabiting witness.
 
 Quadrature composition (\thm{nep\_quadrature\_two}) carries the \thm{IsUncorrelatedAt} hypothesis
 explicitly, and that hypothesis is not free:
@@ -408,21 +411,29 @@ literature~\cite{IrwinHilton2005}. In the diffuse-conduction case
 \end{equation}
 with $r$ the bolometer-to-bath temperature ratio and $n$ the thermal-conductivity index. The
 trailing factor is not a physical re-referencing but the change of variable $r = 1/t$ from the
-literature's bath-to-bolometer ratio: with $t = 1/r$ the expression is \emph{identically} the
-$F_{\rm link}(t,n)$ of~\cite{IrwinHilton2005}, and agrees with it digit for digit at every
-operating point we checked. At $r=2$, $n=4$ it gives $\gamma = 0.4731$, and as $r \to \infty$ it
+bath-to-bolometer ratio: with $t = 1/r$ the expression is \emph{algebraically identical} to the
+diffuse-conduction $F_{\rm link}(t,n)$ as that form is usually written, which we verified as an
+identity rather than by spot-checking values. We attach~\cite{IrwinHilton2005} as the standard
+review in which this layer is presented, but we have not inspected its text: we hold that source
+only as a resolved DOI record, so the attribution of this specific closed form to it should be read
+as provisional. At $r=2$, $n=4$ it gives $\gamma = 0.4731$, and as $r \to \infty$ it
 decreases to $n/(2n+1)$, which is $4/9 = 0.444$ at $n=4$ --- not $1/2$, and the commonly quoted
 $F_{\rm link} \in [1/2,1]$ band does not contain $0.4731$.
 
 \paragraph{A convention, stated because it is load-bearing.} $\gamma$ multiplies the \emph{power}
 spectral density, so $\gamma = 0.4731$ is a $53\,\%$ reduction \emph{in PSD} --- equivalently
 $1 - \sqrt{0.4731} = 31\,\%$ in amplitude. Mather's ``as much as $30\,\%$''~\cite{Mather1982} is
-the amplitude figure: no PSD reduction available from the closed form above is anywhere near
-$30\,\%$ (the largest is $1 - n/(2n+1)$, i.e.\ $56\,\%$ at $n=4$), whereas the largest amplitude
-reduction is $1 - \sqrt{n/(2n+1)} = 33\,\%$ at $n=4$, and our own operating point sits at
-$31\,\%$. Read in matching units the two agree; read across units they appear to disagree by
-$23$ points. We record this because an earlier draft of this paper made exactly that error and
-de-attributed the citation on the strength of it.
+quoted without a stated convention, and the two readings differ by $23$ points, so the comparison
+cannot be made without fixing one. Read as a \emph{maximum} --- which ``as much as'' invites --- the
+amplitude reading is the closer fit: the largest amplitude reduction the closed form admits is
+$1 - \sqrt{n/(2n+1)} = 33\,\%$ at $n = 4$, against a largest PSD reduction of $56\,\%$. We put it
+no more strongly than that. We have read \cite{Mather1982} in abstract only, and the closed form
+attains \emph{every} PSD reduction between $0$ and $56\,\%$ --- $30\,\%$ exactly at $r = 1.19$ ---
+so no argument from the available range can settle the convention either way.
+
+We spell this out because both of this paragraph's predecessors were wrong: one compared the two
+figures across conventions and de-attributed the citation on that basis, and its replacement
+asserted that no PSD reduction near $30\,\%$ was available, which is false at $r = 1.19$.
 
 The direction matters, and it points the opposite way from a plausible first guess. Because
 $\gamma \le 1$, the $\gamma = 1$ expression \emph{overstates} the phonon noise, so the floor

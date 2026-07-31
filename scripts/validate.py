@@ -3301,6 +3301,45 @@ def check_graph_integrity() -> CheckResult:
             "bundle_code_roundtrip", True,
             f"roster round-trip skipped ({type(exc).__name__}: {exc})", warning=True))
 
+    # ── Orphaned-finding guard (added 2026-07-31, D11 round-5 BLOCKER 4.1) ────
+    # A ReviewFinding that resolves to a bundle but emits no FLAGS edge is
+    # INVISIBLE to Gate 11 FixPropagation and to the "a BLOCKER flips the
+    # ReadinessGate to blocked" mechanism — so the gate passes vacuously. Ten
+    # bundles were in exactly that state (D6-D12, I2, I3) because their only
+    # PAPER_DRAFT_MAPPING sources are synthesis stubs with no Paper node, and
+    # the fan-out silently skipped them. readiness_submission_gate reported
+    # "D11 — all P1 passed" while six Stage-13 BLOCKERs sat unclosed on disk.
+    # An unrecordable finding is indistinguishable from no finding, so make it
+    # fail loudly.
+    try:
+        from build_graph import build_graph_json
+        _g = build_graph_json()
+        _edges = _g.get("edges") or _g.get("links") or []
+        _flag_src = {e["source"] for e in _edges if e.get("type") == "FLAGS"}
+        _orphans = [
+            n["id"] for n in _g.get("nodes", [])
+            if isinstance(n, dict) and n.get("type") == "ReviewFinding"
+            and (n.get("meta") or {}).get("inferred_bundle")
+            and n["id"] not in _flag_src
+        ]
+        if _orphans:
+            _sample = ", ".join(sorted(_orphans)[:4])
+            _more = f" (+{len(_orphans) - 4} more)" if len(_orphans) > 4 else ""
+            roster_details.append(Detail(
+                "findings_reach_the_graph", False,
+                f"{len(_orphans)} ReviewFinding node(s) resolve to a bundle but emit no "
+                f"FLAGS edge, so Gate 11 cannot see them: {_sample}{_more}",
+            ))
+        else:
+            roster_details.append(Detail(
+                "findings_reach_the_graph", True,
+                "every bundle-resolved ReviewFinding emits a FLAGS edge",
+            ))
+    except Exception as exc:  # pragma: no cover
+        roster_details.append(Detail(
+            "findings_reach_the_graph", True,
+            f"orphan scan skipped ({type(exc).__name__}: {exc})", warning=True))
+
     try:
         from graph_integrity import run_integrity_checks
     except ImportError as exc:

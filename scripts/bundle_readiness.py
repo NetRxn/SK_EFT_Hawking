@@ -118,7 +118,15 @@ def load_findings_by_paper() -> dict[str, list[dict]]:
     by_paper: dict[str, list[dict]] = defaultdict(list)
     for f in findings:
         m = f.get("meta", {}) or {}
-        paper = m.get("inferred_paper")
+        # ⚠️ FALLBACK ADDED 2026-07-31 (D11 Stage-13 round-5 BLOCKER 4.1, second
+        # layer). Bundle-era reviews are named after their bundle code, carry
+        # `inferred_bundle`, and have NO `inferred_paper`. Partitioning on
+        # `inferred_paper` alone therefore dropped every bundle-era finding on
+        # the floor, and the heatmap reported `Blockers 0 / GREEN` for bundles
+        # holding dozens of open criticals — a FALSE GREEN, strictly worse than
+        # the "YELLOW (unreviewed)" it replaced. D11 alone had 40 findings
+        # (6 critical, 11 major) invisible here.
+        paper = m.get("inferred_paper") or m.get("inferred_bundle")
         if not paper:
             continue
         by_paper[paper].append({
@@ -284,7 +292,14 @@ def aggregate_by_bundle(
         sources = [p for p, a in assignments.items()
                    if b in a["bundle_destinations"]]
         all_findings = []
-        for p in sources:
+        # ⚠️ The bundle's OWN key must be included alongside its source papers
+        # (added 2026-07-31, D11 Stage-13 round-5 BLOCKER 4.1, third layer).
+        # Bundle-era Stage-13 findings are keyed by the bundle code, not by any
+        # source paper — and for bundles whose only mapping sources are synthesis
+        # stubs there are no source papers at all. Iterating `sources` alone
+        # therefore collected ZERO findings and rendered 🟢 GREEN / Blockers 0
+        # for bundles carrying dozens of open criticals.
+        for p in ([b] + list(sources)):
             for f in findings_by_paper.get(p, []):
                 f_copy = dict(f)
                 f_copy["paper"] = p

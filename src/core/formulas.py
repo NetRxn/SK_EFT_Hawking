@@ -11507,11 +11507,16 @@ def phonon_psd_gradient_factor(temp_ratio: float, n_index: float) -> float:
 
     Limits (both are regression-pinned in tests):
       * r → 1 (isothermal): γ → 1, matching phononPSD_eq_phononPSDGamma_one.
-      * r = 2, n = 4:       γ = 0.4731. NOTE this is BELOW the commonly quoted
-                            F_link band [1/2, 1] and is a 53% reduction, larger
-                            than Mather's stated "as much as 30%" - cite Mather
-                            for the direction of the effect, not this magnitude.
+      * r = 2, n = 4:       γ = 0.4731. Below the sometimes-quoted F_link band
+                            [1/2, 1], which this closed form does not respect.
       * r -> infinity:      γ -> n/(2n+1) = 4/9 = 0.444 at n = 4, not 1/2.
+
+    CONVENTION (load-bearing): γ multiplies the POWER spectral density, so
+    1-γ = 53% is a PSD reduction and 1-sqrt(γ) = 31% the amplitude one. Mather's
+    "as much as 30%" is quoted without a stated convention; read as a maximum the
+    amplitude reading fits better (max 33% at n=4 vs max 56% PSD), but we put it
+    no more strongly - the closed form attains EVERY PSD reduction in [0, 56%],
+    including 30% exactly at r = 1.19, so the available range settles nothing.
 
     Provenance: Mather (1982), Appl. Opt. 21, 1125; TES-literature F_link range.
     """

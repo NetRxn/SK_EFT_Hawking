@@ -1,6 +1,6 @@
 # Bundle Readiness Heatmap
 
-**Auto-generated:** 2026-07-30
+**Auto-generated:** 2026-07-31
 **Tool:** `scripts/bundle_readiness.py --heatmap`
 
 **Companion to:** `docs/READINESS_GATES.md` (per-paper) — the per-bundle analog. Phase 6i Wave 7.4 deliverable; GREEN semantics tightened 2026-06-10 (S5 closure — see legend).
@@ -20,55 +20,55 @@
 
 | Bundle | Tier | Sources | Open | Blockers | Severity mix | Stage-13 review | Verdict |
 |---|---:|---:|---:|---:|---|:---:|:---:|
-| **F** | 0 | 63 | 0 | 0 | _(none)_ | 2026-06-10 | 🟢 GREEN |
-| **D1** | 1 | 12 | 0 | 0 | _(none)_ | 2026-06-10 | 🟢 GREEN |
-| **D2** | 1 | 6 | 0 | 0 | _(none)_ | 2026-06-10 | 🟢 GREEN |
-| **D3** | 1 | 31 | 0 | 0 | _(none)_ | 2026-06-10 | 🟢 GREEN |
+| **F** | 0 | 63 | 22 | 10 | 5 critical, 5 major, 12 minor | 2026-06-10 | 🔴 RED |
+| **D1** | 1 | 12 | 50 | 36 | 1 advisory, 24 critical, 12 major, 13 minor | 2026-06-10 | 🔴 RED |
+| **D2** | 1 | 6 | 33 | 16 | 7 critical, 9 major, 17 minor | 2026-06-10 | 🔴 RED |
+| **D3** | 1 | 31 | 11 | 3 | 2 advisory, 3 major, 6 minor | 2026-06-10 | 🔴 RED |
 | **D4** | 1 | 12 | 0 | 0 | _(none)_ | 2026-06-10 | 🟢 GREEN |
-| **D5** | 1 | 9 | 0 | 0 | _(none)_ | 2026-06-10 | 🟢 GREEN |
+| **D5** | 1 | 9 | 20 | 11 | 3 advisory, 5 critical, 6 major, 6 minor | 2026-06-10 | 🔴 RED |
 | **D6** | 1 | 3 | 0 | 0 | _(none)_ | 2026-06-10 † | 🟢 GREEN |
-| **D7** | 1 | 1 | 0 | 0 | _(none)_ | 2026-06-10 | 🟢 GREEN |
-| **D8** | 1 | 13 | 0 | 0 | _(none)_ | 2026-06-10 | 🟢 GREEN |
+| **D7** | 1 | 1 | 16 | 12 | 8 critical, 4 major, 4 minor | 2026-06-10 | 🔴 RED |
+| **D8** | 1 | 13 | 8 | 0 | 2 advisory, 6 minor | 2026-06-10 | 🟡 YELLOW |
 | **D9** | 1 | 1 | 0 | 0 | _(none)_ | 2026-06-10 | 🟢 GREEN |
-| **D10** | 1 | 1 | 0 | 0 | _(none)_ | 2026-06-30 | 🟢 GREEN |
-| **D11** | 1 | 1 | 0 | 0 | _(none)_ | — none recorded | 🟡 YELLOW (unreviewed) |
-| **D12** | 1 | 1 | 0 | 0 | _(none)_ | — none recorded | 🟡 YELLOW (unreviewed) |
-| **L1** | 2 | 2 | 0 | 0 | _(none)_ | 2026-06-10 | 🟢 GREEN |
-| **L2** | 2 | 1 | 0 | 0 | _(none)_ | 2026-06-10 | 🟢 GREEN |
-| **L3** | 2 | 4 | 0 | 0 | _(none)_ | 2026-06-10 | 🟢 GREEN |
-| **I1** | 3 | 8 | 0 | 0 | _(none)_ | 2026-06-10 | 🟢 GREEN |
-| **I2** | 3 | 1 | 0 | 0 | _(none)_ | 2026-06-10 | 🟢 GREEN |
-| **I3** | 3 | 1 | 0 | 0 | _(none)_ | 2026-06-10 | 🟢 GREEN |
-| **E1** | 4 | 5 | 0 | 0 | _(none)_ | 2026-06-10 | 🟢 GREEN |
-| **E2** | 4 | 4 | 0 | 0 | _(none)_ | 2026-06-10 | 🟢 GREEN |
+| **D10** | 1 | 1 | 3 | 0 | 1 advisory, 2 minor | 2026-06-30 | 🟢 GREEN |
+| **D11** | 1 | 1 | 39 | 17 | 5 advisory, 6 critical, 11 major, 17 minor | 2026-07-31 † | 🔴 RED |
+| **D12** | 1 | 1 | 36 | 17 | 2 advisory, 4 critical, 13 major, 17 minor | 2026-07-31 † | 🔴 RED |
+| **L1** | 2 | 2 | 1 | 1 | 1 major | 2026-06-10 | 🔴 RED |
+| **L2** | 2 | 1 | 20 | 14 | 3 advisory, 8 critical, 6 major, 3 minor | 2026-06-10 | 🔴 RED |
+| **L3** | 2 | 4 | 8 | 5 | 1 critical, 4 major, 3 minor | 2026-06-10 | 🔴 RED |
+| **I1** | 3 | 8 | 31 | 15 | 5 advisory, 2 critical, 13 major, 11 minor | 2026-06-10 | 🔴 RED |
+| **I2** | 3 | 1 | 31 | 19 | 7 advisory, 8 critical, 11 major, 5 minor | 2026-06-10 | 🔴 RED |
+| **I3** | 3 | 1 | 23 | 16 | 3 advisory, 9 critical, 7 major, 4 minor | 2026-06-10 | 🔴 RED |
+| **E1** | 4 | 5 | 6 | 5 | 1 critical, 4 major, 1 minor | 2026-06-10 | 🔴 RED |
+| **E2** | 4 | 4 | 10 | 0 | 4 advisory, 6 minor | 2026-06-10 | 🟡 YELLOW |
 
 † review date backfilled from on-disk review evidence; the evidence path is recorded in the bundle's `bundle_metadata.json` `last_stage13_review_source` field.
 
 ## Gate × Bundle distribution (open findings)
 
-| Bundle |  |
-|---||
-| **F** |  |
-| **D1** |  |
-| **D2** |  |
-| **D3** |  |
-| **D4** |  |
-| **D5** |  |
-| **D6** |  |
-| **D7** |  |
-| **D8** |  |
-| **D9** |  |
-| **D10** |  |
-| **D11** |  |
-| **D12** |  |
-| **L1** |  |
-| **L2** |  |
-| **L3** |  |
-| **I1** |  |
-| **I2** |  |
-| **I3** |  |
-| **E1** |  |
-| **E2** |  |
+| Bundle | AssumptionDisclosu | CitationIntegrity | ComputationCorrect | CountFreshness | CrossPaperConsiste | LeanProofSubstance | NarrativeGrounding | ParameterProvenanc | unclassified |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| **F** | 2 | 4 | 0 | 1 | 4 | 3 | 2 | 3 | 3 |
+| **D1** | 1 | 21 | 2 | 2 | 8 | 3 | 6 | 3 | 4 |
+| **D2** | 3 | 13 | 2 | 2 | 4 | 1 | 3 | 1 | 4 |
+| **D3** | 4 | 2 | 0 | 0 | 1 | 0 | 1 | 1 | 2 |
+| **D4** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| **D5** | 0 | 8 | 0 | 2 | 2 | 1 | 3 | 2 | 2 |
+| **D6** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| **D7** | 2 | 1 | 0 | 1 | 2 | 1 | 2 | 2 | 5 |
+| **D8** | 2 | 4 | 0 | 0 | 0 | 0 | 0 | 0 | 2 |
+| **D9** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| **D10** | 0 | 2 | 0 | 0 | 0 | 1 | 0 | 0 | 0 |
+| **D11** | 2 | 9 | 3 | 2 | 6 | 0 | 9 | 3 | 5 |
+| **D12** | 5 | 7 | 4 | 0 | 1 | 0 | 9 | 5 | 5 |
+| **L1** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 |
+| **L2** | 3 | 3 | 1 | 0 | 3 | 2 | 1 | 4 | 3 |
+| **L3** | 1 | 4 | 0 | 0 | 1 | 0 | 1 | 0 | 1 |
+| **I1** | 3 | 9 | 0 | 2 | 0 | 0 | 11 | 2 | 4 |
+| **I2** | 1 | 2 | 1 | 0 | 1 | 4 | 8 | 6 | 8 |
+| **I3** | 2 | 2 | 0 | 2 | 2 | 2 | 5 | 4 | 4 |
+| **E1** | 1 | 2 | 0 | 1 | 0 | 0 | 1 | 1 | 0 |
+| **E2** | 1 | 6 | 0 | 0 | 0 | 0 | 2 | 1 | 0 |
 
 ## Notes
 
