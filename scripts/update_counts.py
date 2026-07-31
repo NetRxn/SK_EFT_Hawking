@@ -28,6 +28,7 @@ Usage:
 """
 
 import json
+import pathlib
 import re
 import subprocess
 import sys
@@ -692,15 +693,47 @@ def main():
         "aristotle": aristotle_counts,
     }
 
-    # Write JSON
+    # Write JSON — but only when the SUBSTANCE changed.
+    #
+    # `generated` is a wall-clock stamp, so an unconditional write made every run of
+    # this script (and every `validate.py` run, which calls it when it judges counts
+    # stale) dirty `docs/counts.json` and `docs/counts.tex` with a timestamp-only diff.
+    # That is an idempotency violation in core infrastructure: a validation run must
+    # not modify the tree it is validating, and a reviewer diffing after a check run
+    # cannot tell timestamp churn from a real count change. Comparing everything except
+    # `generated` keeps the stamp meaningful (it now records when the counts last
+    # actually moved) and makes repeated runs byte-stable. Added 2026-07-31.
     OUTPUT_JSON.parent.mkdir(parents=True, exist_ok=True)
-    with open(OUTPUT_JSON, "w") as f:
-        json.dump(counts, f, indent=2)
-    print(f"Counts written to {OUTPUT_JSON}")
+    _substantive = {k: v for k, v in counts.items() if k != "generated"}
+    _unchanged = False
+    if OUTPUT_JSON.is_file():
+        try:
+            _prev = json.loads(OUTPUT_JSON.read_text())
+            _unchanged = {k: v for k, v in _prev.items() if k != "generated"} == _substantive
+            if _unchanged:
+                counts["generated"] = _prev.get("generated", counts["generated"])
+        except (json.JSONDecodeError, OSError):
+            pass
+    if _unchanged:
+        print(f"Counts unchanged — {OUTPUT_JSON} left byte-identical")
+    else:
+        with open(OUTPUT_JSON, "w") as f:
+            json.dump(counts, f, indent=2)
+        print(f"Counts written to {OUTPUT_JSON}")
 
     # Write LaTeX
-    generate_tex(counts, OUTPUT_TEX, deps=deps_data)
-    print(f"LaTeX macros written to {OUTPUT_TEX}")
+    # Same byte-stability contract as the JSON above: generate into memory, compare,
+    # and only write when the content actually differs. `generate_tex` writes directly,
+    # so render to a temp path first.
+    import tempfile as _tf
+    _tmp = pathlib.Path(_tf.mkdtemp()) / "counts.tex"
+    generate_tex(counts, _tmp, deps=deps_data)
+    _new = _tmp.read_text()
+    if OUTPUT_TEX.is_file() and OUTPUT_TEX.read_text() == _new:
+        print(f"LaTeX macros unchanged — {OUTPUT_TEX} left byte-identical")
+    else:
+        OUTPUT_TEX.write_text(_new)
+        print(f"LaTeX macros written to {OUTPUT_TEX}")
 
     # Summary
     lean = lean_counts

@@ -2842,6 +2842,19 @@ def extract_depends_on_edges(node_ids: set) -> list[dict]:
         if paper_id not in node_ids:
             continue
 
+        # Explicitly-named parameters (added 2026-07-31, D12 Stage-13 round-8 finding 2.4).
+        # The platform mechanism below only reaches BEC atom parameters, so a bundle-level
+        # literature parameter — e.g. MATHER_1982_GRADIENT_REDUCTION, the numeral D12's
+        # whole §3.2 convention argument turns on — could be registered in
+        # PARAMETER_PROVENANCE and still be invisible to Gate 3, which then reported
+        # "passed — no parameter dependencies declared".
+        for pkey in entry.get('parameters', []) or []:
+            param_id = f'param:{pkey}'
+            if param_id in node_ids and (paper_id, param_id) not in seen:
+                seen.add((paper_id, param_id))
+                edges.append({'source': paper_id, 'target': param_id,
+                              'type': 'DEPENDS_ON'})
+
         platforms = entry.get('platforms', [])
         param_prefixes = set()
         for platform in platforms:

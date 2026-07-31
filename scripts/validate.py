@@ -3815,6 +3815,61 @@ def check_count_literals() -> CheckResult:
 # CHECK 18: Readiness submission gate (Phase 5v Wave 4)
 # ═══════════════════════════════════════════════════════════════════════
 
+@register_check("accepted_findings_carry_rationale",
+                "Every `accepted` supersession record justifies acceptance in writing")
+def check_accepted_findings_carry_rationale() -> CheckResult:
+    """CHECK: `accepted` must be a recorded decision, never a way to silence a finding.
+
+    Added 2026-07-31 (D12 Stage-13 round-8). `_eval_fix_propagation` stopped treating
+    `accepted` as an open blocker this session — correct, because it is a deliberate
+    decision written into the supersession ledger, not an unclosed finding. But that
+    change also made `accepted` the cheapest way to make a blocking finding disappear
+    from Gate 11: 27 blocking-severity findings are currently invisible to it on that
+    status alone. The round-8 reviewer measured that 138 of 140 accepted records carry
+    substantive rationale and none is wholly bare — so the practice is sound and this
+    check pins it, rather than fixing a live defect.
+
+    A blocking-severity acceptance additionally has to say why acceptance rather than a
+    fix; "accepted" with a one-line restatement of the finding is not a decision.
+    """
+    ledger_path = (Path(__file__).resolve().parent.parent / "docs"
+                   / "review_finding_supersessions.json")
+    if not ledger_path.is_file():
+        return CheckResult(passed=True, details=[
+            Detail("ledger", True, "no supersession ledger; skipping", warning=True)])
+    try:
+        led = json.loads(ledger_path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError) as exc:
+        return CheckResult(passed=False, details=[
+            Detail("ledger", False, f"ledger unreadable ({exc}) — unverified, not passing")])
+
+    MIN_CHARS = 40
+    bad, checked = [], 0
+    for e in led.get("supersessions", []):
+        if e.get("status") != "accepted":
+            continue
+        checked += 1
+        # The ledger uses three field names for the same thing across its history:
+        # `evidence` (recent), `rationale`, and `note` (the 2026-05 records). Reading only
+        # the first two produced two false positives on records that are in fact well
+        # justified — a guard that flags correct data is worse than none.
+        why = " ".join(str(e.get("evidence") or e.get("rationale")
+                           or e.get("note") or "").split())
+        if len(why) < MIN_CHARS:
+            bad.append((e.get("finding_id", "?"), len(why)))
+
+    details = [Detail("summary", not bad,
+                      f"{checked} accepted record(s) checked, {len(bad)} without a written "
+                      f"rationale of at least {MIN_CHARS} characters")]
+    for fid, n in bad[:10]:
+        details.append(Detail(
+            fid, False,
+            f"status=accepted with {n} characters of rationale. `accepted` removes a "
+            f"finding from Gate 11's blocking set, so it must record a DECISION — why "
+            f"acceptance rather than a fix — not merely assert one."))
+    return CheckResult(passed=not bad, details=details)
+
+
 @register_check("bundle_metadata_matches_graph",
                 "bundle_metadata.json finding counts equal the live graph's")
 def check_bundle_metadata_matches_graph() -> CheckResult:
@@ -3868,6 +3923,13 @@ def check_bundle_metadata_matches_graph() -> CheckResult:
     for bundle, agg in sorted(by_bundle.items()):
         mp = _bundle_metadata_path(bundle)
         if not mp.is_file():
+            # FAIL, not skip (D12 round-8): a bundle with no metadata blob has nothing to
+            # disagree with the graph, which is not the same as agreeing with it.
+            drift += 1
+            details.append(Detail(
+                bundle, False,
+                f"no bundle_metadata.json at {mp} — the readiness assertions for this "
+                f"bundle do not exist, so they are unverified rather than consistent"))
             continue
         try:
             meta = json.loads(mp.read_text())
@@ -3886,6 +3948,13 @@ def check_bundle_metadata_matches_graph() -> CheckResult:
             bad.append(f"advisories_open={meta.get('advisories_open')} live={live_adv}")
         if meta.get("readiness") != agg.get("readiness"):
             bad.append(f"readiness={meta.get('readiness')!r} live={agg.get('readiness')!r}")
+        # NOT asserted here: `freshness_stale`. D12 Stage-13 round-8 reported that seven
+        # bundles set it false with blockers open, citing
+        # LATE_PHASE6_ABSORPTION_PROTOCOL.md. I implemented that assertion and it was
+        # wrong — the field is owned by `scripts/check_bundle_source_freshness.py` and
+        # means "a source paper is newer than last_lift", which is independent of blocker
+        # count. The protocol line quoted is a workflow step, not the field's definition.
+        # Asserting it here made two writers fight and `validate.py` non-idempotent.
         if bad:
             drift += 1
             details.append(Detail(

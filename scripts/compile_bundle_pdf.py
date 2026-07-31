@@ -79,14 +79,18 @@ def compile_one(bundle_dir: Path, keep: bool = False) -> tuple[bool, str]:
         errors = re.findall(r"^! .*$", log_text, re.M)
         overfull = len(re.findall(r"Overfull", log_text))
 
-        # A silently-dropped \documentclass option makes EVERY layout measurement below
-        # meaningless, because the document was typeset in a different class than the one
-        # it declares. Measured 2026-07-31 (D12 round-8): the draft declared `prxquantum`,
-        # which this revtex4-2 does not implement — it emitted
-        # "Unused global option(s): [prxquantum]" and typeset in default APS style, so
-        # months of "0 Overfull / 10pp" readings were against the wrong configuration.
-        # This is a hard failure, not a warning: a wrong-class page count reads exactly
-        # like a right one.
+        # A silently-dropped \documentclass option means the document was typeset under a
+        # different configuration than it declares. Whether that changes the layout depends
+        # on the option: the case that prompted this guard (D12 declaring `prxquantum`,
+        # which this revtex4-2 does not implement) turned out to change NOTHING —
+        # compiling both gives identical extracted text, 10 pages, 0 Overfull, because
+        # `aps4-2.rtx` defines `\rtx@apsprx` as a no-op. The round-8 claim that it
+        # invalidated prior measurements was wrong (corrected round-9).
+        #
+        # The guard is still a hard failure rather than a warning, for the reason that
+        # survives: you cannot tell from the PDF whether a dropped option was inert or
+        # load-bearing, and a wrong-class page count reads exactly like a right one. Fail
+        # and let the author check, rather than measure something and hope.
         unused_opts = re.findall(r"Unused global option\(s\):\s*\[([^\]]*)\]", log_text)
 
         # Unresolved references are judged from the RENDERED pdf, not the log: `??`
@@ -116,8 +120,10 @@ def compile_one(bundle_dir: Path, keep: bool = False) -> tuple[bool, str]:
                   f"dropped_class_opts={len(unused_opts)}")
         if unused_opts:
             detail += (f"\n    ⚠️ DROPPED CLASS OPTION(S): {', '.join(unused_opts)} — the document "
-                       f"was typeset in a DIFFERENT class than it declares, so every layout "
-                       f"number above is against the wrong configuration.")
+                       f"was typeset under a DIFFERENT configuration than it declares. The "
+                       f"option may be inert (revtex's `prxquantum` is), but that cannot be "
+                       f"read off the PDF: compile with a recognised option, or confirm this "
+                       f"one is a no-op, before trusting the layout numbers above.")
         if errors:
             detail += f"\n    first error: {errors[0][:160]}"
         if keep:

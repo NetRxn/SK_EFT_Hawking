@@ -1,11 +1,13 @@
 % Class option: `prx`, NOT `prxquantum`. revtex4-2 as shipped in TeX Live 2026 has no
-% PRX Quantum substyle — it silently drops `prxquantum` as an unused global option and
-% typesets in the default APS style, which means every page count, column measurement and
-% Overfull-hbox reading taken against it was against the wrong configuration. Measured
-% 2026-07-31 (D12 Stage-13 round-8): `prxquantum` -> "Unused global option(s): [prxquantum]";
-% `prx`, `prb`, `prl` -> none. `prx` is PRX Quantum's parent style and the closest supported
-% substyle, so the layout below is representative; the final PRX Quantum submission must be
-% re-measured against the journal's own class.
+% PRX Quantum substyle and silently drops `prxquantum` as an unused global option
+% ("Unused global option(s): [prxquantum]"; `prx`/`prb`/`prl` produce no such warning).
+% ⚠️ CORRECTION 2026-07-31 (D12 round-9): the first version of this note claimed the drop
+% meant "every page count and Overfull reading was against the wrong configuration". That
+% was wrong, and I asserted it without compiling both. Compiling both gives IDENTICAL
+% extracted text (same md5), 10 pages and 0 Overfull either way — `aps4-2.rtx` defines
+% `\rtx@apsprx` as a no-op, so no Stage-9 measurement was invalidated. `prx` is used here
+% because it is what revtex actually recognises for a PRX-family target; the final PRX
+% Quantum submission must still be re-measured against the journal's own class.
 \documentclass[aps,prx,reprint,nofootinbib,superscriptaddress]{revtex4-2}
 
 \usepackage{graphicx}

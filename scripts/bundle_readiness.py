@@ -685,8 +685,19 @@ def write_metadata_counts(by_bundle: dict[str, dict]) -> list[str]:
             continue
         n_adv = sum(v for k, v in (agg.get("severity_mix") or {}).items()
                     if k in ("minor", "advisory"))
+        # ⚠️ `freshness_stale` is deliberately NOT written here. It is owned by
+        # `scripts/check_bundle_source_freshness.py`, where it means "a source paper was
+        # modified after this bundle's last_lift" — a statement about content currency,
+        # NOT about blockers. A first version of this function derived it from the
+        # absorption protocol's line "freshness_stale cleared once blockers_open == 0 and
+        # all three statuses GREEN", reading that workflow step as the field's definition.
+        # It is not: two writers then disagreed on every run, `validate.py` became
+        # non-idempotent (pass, then fail, then pass), and the guard built on top of it was
+        # unstable. Blocker-clearance is reported by `blockers_open` and `readiness`, which
+        # this function does own.
+        n_blockers = agg.get("blocker_count", 0)
         updates = {
-            "blockers_open": agg.get("blocker_count", 0),
+            "blockers_open": n_blockers,
             "advisories_open": n_adv,
             "open_findings": agg.get("open_findings", 0),
             "blocked_p1_gates": agg.get("blocked_p1_gates", []),

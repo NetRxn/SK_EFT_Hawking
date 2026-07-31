@@ -3724,6 +3724,22 @@ PARAMETER_PROVENANCE = {
 # ════════════════════════════════════════════════════════════════════
 
 PAPER_DEPENDENCIES = {
+    'D12': {
+        'title': 'D12: Detector Readout Metrology — kernel-verified detection floors',
+        'topic': 'Poisson/ETF/filter floors and the ceilings they impose',
+        'formulas': ['phonon_psd_gradient_factor', 'phonon_psd_gamma',
+                     'f_link_bath_referred', 'assignment_fidelity'],
+        'lean_modules': ['Electrothermal.BolometricFloors', 'Detection.FilterFloors',
+                         'Control.CompositeReadoutCeilings'],
+        'platforms': [],
+        # Explicit — D12 depends on no BEC platform, so the platform mechanism reaches
+        # nothing here. Registered 2026-07-31 (round-8 finding 2.4).
+        'parameters': ['MATHER_1982_GRADIENT_REDUCTION'],
+        'key_claims': [
+            "Mather's \"as much as 30 %\" is quoted with no stated convention; the PSD and "
+            "amplitude readings differ by 21.5 points at gamma(2,4).",
+        ],
+    },
     'paper1_first_order': {
         'title': 'Paper 1: First-Order SK-EFT (PRL)',
         'topic': 'δ_diss = Γ_H/κ correction for 3 BEC platforms',
