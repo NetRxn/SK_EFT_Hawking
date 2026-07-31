@@ -86,7 +86,7 @@ exponential-series identities, tail inequalities, threshold algebra, linearized 
 in the kernel. The \emph{identification} of any symbol with a physical instrument, of what counts as
 an absorbed photon or which plane a power is referred to, is the consuming application's declared
 hypothesis. Where such an identification is needed it appears as an \emph{explicit binder} that the
-application must discharge --- the capstone \thm{bolometer\_error\_floor} carries six, enumerated in
+application must discharge --- the capstone \thm{bolometer\_error\_floor} carries several, enumerated in
 \S\ref{sec:scope} --- rather than being assumed silently inside a proof. No theorem here is a claim
 about any particular device. (An earlier draft of this sentence said identifications ``never enter
 our statements''. That was false of the capstone, whose binders are exactly such identifications;
@@ -300,12 +300,15 @@ different Cauchy--Schwarz consequence about a filter impulse response, not about
 signal and its transform. The $\mathrm{ENBW}\cdot T$ relation itself circulates in the instrument
 literature as a convention attached to particular filters --- $t_{\rm int} = 1/(2\,\mathrm{ENBW})$,
 and $\mathrm{ENBW} = 1/(4\tau)$ for a single-pole lock-in filter of time constant $\tau$ ---
-rather than as a proved inequality with a sharpness characterization. (The time constant is written
-$\tau$, not $T$: thirty lines above, $T$ is the observation window in
-$\mathrm{ENBW}\cdot T \ge \tfrac12$ (\thm{enbw\_mul\_window\_ge\_half}), and the two are
-different quantities. Reusing the symbol
-would read as though the theorem were the convention, which is exactly the conflation this
-paragraph exists to separate.) We found no canonical primary source for either form, and prove the
+rather than as a proved inequality with a sharpness characterization. (The time constant is written $\tau$, not $T$, and the
+distinction is not merely notational: \thm{enbw} and $1/(4\tau)$ are different
+\emph{functionals}, not one functional at two arguments. \thm{enbw} is a time-domain ratio taken
+over the same finite window $T$ that then multiplies it, whereas $1/(4\tau)$ is a frequency-domain
+bandwidth of an infinite-support response. Evaluating \thm{enbw} on a single-pole response over
+$[0,T]$ gives $\tfrac{u}{4}\,\tfrac{1+e^{-u}}{1-e^{-u}}$ with $u = T/\tau$, which is
+$\ge \tfrac12$ for every $u > 0$ and $\to \tfrac12$ as $u \to 0$ --- so it never approaches
+$1/4$, and no choice of window reconciles the two. The theorem does not contradict the convention;
+it is about a different quantity.) We found no canonical primary source for either form, and prove the
 inequality here self-contained.
 
 \subsection{Noise-equivalent power and matched filtering}
@@ -670,8 +673,17 @@ the threshold model's mean separation with the filtered signal integral, and
 $\sigma = \sqrt{V_{\rm tot}(h_f)}$, which identifies its noise scale with the composed variance.
 Both are hypotheses of \thm{bolometer\_error\_floor} and both are load-bearing --- the theorem is
 false without either, since nothing else in the statement ties the threshold pair
-$(\mu_0, \mu_1, \sigma)$ to the filtered channel. The capstone is only as strong as those
-\emph{six} identifications.
+$(\mu_0, \mu_1, \sigma)$ to the filtered channel. A seventh belongs with them:
+square-integrability of the template on the window, $\int_0^{T_w} s^2 < \infty$, the template-side
+counterpart of \thm{IsAdmissibleFilter}. Without it the matched budget can collapse to zero on a
+template that \thm{IsAdmissibleFilter} still admits --- $s = x^{-1/2}$, $h_f = x^{1/2}$ on $[0,1]$
+is such a case --- and the bound fails.
+
+We deliberately do not claim this list is complete. Two earlier drafts of this paragraph asserted
+completeness at ``four'' and then at ``six''; both were wrong, and the second was wrong in
+\emph{both} directions, since $\mu_0 \le \mu_1$ is a binder of the theorem but is not load-bearing
+for this conclusion. The capstone's modelling binders \emph{include} the seven above; the theorem
+statement in \texttt{Electrothermal/BolometricFloors.lean} is the authority on the full list.
 
 \section{Conclusion}
 

@@ -181,7 +181,7 @@ Each `freshness-stale` bundle re-invokes the canonical reviewer triple per `BUND
 
 **BLOCKER resolution:** per `BUNDLE_LIFT_PROCEDURE.md` §11. Author fixes → supersession ledger append → re-invoke same reviewer fresh context → iterate to clean.
 
-**Update:** `bundle_metadata.json.stage{9,10,13}_status` updated; `freshness_stale` cleared once `blockers_open == 0` and all three statuses GREEN.
+**Update:** `bundle_metadata.json.stage{9,10,13}_status` updated. `freshness_stale` is **not** cleared here — it is owned by `scripts/check_bundle_source_freshness.py`, where it means *a source paper is newer than `last_lift`*, and is set/cleared by that check on every run from source mtimes alone. ⚠️ Corrected 2026-07-31 (D12 Stage-13 round-11 finding 8.6): this line previously read "`freshness_stale` cleared once `blockers_open == 0` and all three statuses GREEN", a rule that `check_bundle_source_freshness.py:201` and `bundle_append.py:318` both violate on every run — the field is an mtime signal, not a readiness verdict. Overloading it misled two separate reviewers and one remediation. **The Stage-F exit gate is `stage13_redo_required`**, which `bundle_append.py` sets on lift and no mtime writer clears.
 
 **Mandatory dashboard refresh** (every sub-wave exit per `BUNDLE_LIFT_PROCEDURE.md` §13):
 

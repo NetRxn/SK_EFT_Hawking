@@ -635,3 +635,38 @@ class TestHaldaneLatticeChern:
         # …and on admissible grids it is strictly positive, so the guard is not vacuous.
         for n in (4, 5, 7):
             F.haldane_lattice_chern(1.0, n)   # does not raise
+
+
+class TestBirnbaumGoldenValues:
+    """Lean: gaussianQ_one_ge_rational (Detection/GaussianThreshold.lean).
+
+    Added 2026-07-31 (D12 Stage-13 round-11 finding 2.2). `gaussian_tail_birnbaum_lower`
+    is the source of the paper's 76 % / 95 % tightness figures, and Gate 4 had never
+    examined it because it was outside a hand-curated four-formula list. Its coverage was
+    bounds-only — no test pinned a value — so a coefficient error would have survived.
+    """
+
+    def test_birnbaum_golden_at_z_one_and_two(self):
+        phi = lambda z: math.exp(-z * z / 2) / math.sqrt(2 * math.pi)
+        # Birnbaum (1942): Q(z) >= phi(z) * z / (1 + z^2)
+        assert F.gaussian_tail_birnbaum_lower(1.0) == pytest.approx(
+            phi(1.0) * 1.0 / 2.0, rel=1e-15)
+        assert F.gaussian_tail_birnbaum_lower(1.0) == pytest.approx(
+            0.12098536225957168, rel=1e-15)
+        assert F.gaussian_tail_birnbaum_lower(2.0) == pytest.approx(
+            phi(2.0) * 2.0 / 5.0, rel=1e-15)
+        assert F.gaussian_tail_birnbaum_lower(2.0) == pytest.approx(
+            0.021596386605275228, rel=1e-15)
+
+    def test_birnbaum_is_a_lower_bound_and_mills_an_upper(self):
+        Q = lambda z: 0.5 * math.erfc(z / math.sqrt(2.0))
+        for z in (0.5, 1.0, 2.0, 3.0, 5.0):
+            assert F.gaussian_tail_birnbaum_lower(z) <= Q(z) <= F.gaussian_tail_mills_upper(z)
+
+    def test_the_papers_tightness_figures_are_what_the_ratio_gives(self):
+        Q = lambda z: 0.5 * math.erfc(z / math.sqrt(2.0))
+        assert F.gaussian_tail_birnbaum_lower(1.0) / Q(1.0) == pytest.approx(0.76, abs=5e-3)
+        # z = 2, not 3: paper_draft.tex:572 reads "76 % of the true Q(1) = 0.15866,
+        # against 95 % at z = 2". I first wrote 3.0 here from memory and the test caught
+        # it — the ratio at z = 3 is 0.9849.
+        assert F.gaussian_tail_birnbaum_lower(2.0) / Q(2.0) == pytest.approx(0.95, abs=5e-3)

@@ -3727,8 +3727,27 @@ PAPER_DEPENDENCIES = {
     'D12': {
         'title': 'D12: Detector Readout Metrology — kernel-verified detection floors',
         'topic': 'Poisson/ETF/filter floors and the ceilings they impose',
-        'formulas': ['phonon_psd_gradient_factor', 'phonon_psd_gamma',
-                     'f_link_bath_referred', 'assignment_fidelity'],
+        # Extended 2026-07-31 from a hand-curated 4 to D12's full domain surface (D12
+        # Stage-13 round-11 finding 2.2). Gate 4 evaluates exactly this list, so a curated
+        # subset made the gate a statement about the curation, not about the bundle: it
+        # read "all 4 grounded formulas have substantive tests" while 23 others — including
+        # `gaussian_tail_birnbaum_lower`, the source of the paper's 76 %/95 % figures — were
+        # never examined. The gate flipping to `blocked` on the complete list is the honest
+        # outcome, not a regression.
+        'formulas': [
+            'assignment_fidelity', 'bloch_siegert_scale',
+            'enbw_boxcar', 'enbw_ramp', 'enbw_window_product_floor',
+            'etf_effective_conductance', 'etf_effective_time_constant',
+            'etf_is_stable', 'etf_loop_gain',
+            'f_link_bath_referred',
+            'gaussian_tail_birnbaum_lower', 'gaussian_tail_chernoff_upper',
+            'gaussian_tail_mills_upper',
+            'johnson_current_psd', 'johnson_nep_correction_factor',
+            'matched_budget', 'nep_quadrature',
+            'phonon_psd', 'phonon_psd_gamma', 'phonon_psd_gradient_factor',
+            'poisson_avg_error_floor', 'poisson_bhattacharyya_coefficient',
+            'poisson_dark_baseline_miss_optimum',
+        ],
         'lean_modules': ['Electrothermal.BolometricFloors', 'Detection.FilterFloors',
                          'Control.CompositeReadoutCeilings'],
         'platforms': [],
