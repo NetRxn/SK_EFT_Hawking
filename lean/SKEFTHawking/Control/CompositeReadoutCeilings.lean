@@ -364,6 +364,102 @@ theorem relaxation_dominates_photon_at_separation_99 {t T1 e0 e1 : ℝ} {Nb Na :
   rw [max_eq_left hlt.le] at hceil
   exact ⟨hlt, hceil⟩
 
+/-! ### 3.6 Two further cross-layer composites
+
+`relaxation_photon_ceiling` above pairs the DEVICE layer (`QuantumNetwork`) with the DETECTION
+layer's photon budget (6EA). The same transfer pattern reaches the other two detection layers, and
+these two composites are the answer to a fair criticism of the §3 roster: `relaxation_ceiling` and
+`relaxation_thermal_ceiling` are one-line re-castings of pre-existing quantum-network floors into
+fidelity form, so counting five "mechanism ceilings" overstated how much of §3 was new. Rather than
+concede the count, this section supplies the genuinely composite content the count implied — each
+pairs a device-layer floor with a detection-layer floor on ONE attributed readout. -/
+
+open MeasureTheory in
+/-- **The 6EB filtered-readout floor transfers to any readout dominating the chain's errors.**
+The 6EB analogue of `photon_budget_floor_attributed`: the floor is stated at the Gaussian threshold
+pair, and monotonicity moves it to a dominating readout. -/
+theorem filtered_readout_floor_attributed {V : (ℝ → ℝ) → ℝ} {S₀ T : ℝ}
+    (hwhite : Detection.IsWhiteFilteredVariance V S₀ T) (hS : 0 < S₀) (hT : 0 ≤ T)
+    {s h : ℝ → ℝ} (hadm : Detection.IsAdmissibleFilter T s h)
+    (hs : IntervalIntegrable (fun x => s x ^ 2) volume 0 T)
+    {μ₀ μ₁ σ tThr : ℝ} (hσ : 0 < σ) (hμle : μ₀ ≤ μ₁)
+    (hμ : μ₁ - μ₀ = ∫ x in (0:ℝ)..T, h x * s x) (hσV : σ = Real.sqrt (V h))
+    {e0 e1 : ℝ} (hattr0 : Detection.thrErr0 μ₀ σ tThr ≤ e0)
+    (hattr1 : Detection.thrErr1 μ₁ σ tThr ≤ e1) :
+    Detection.gaussianQ (Detection.matchedBudget S₀ T s / 2) ≤ avgAssignmentError e0 e1 :=
+  le_trans (Detection.error_floor_from_budget hwhite hS hT hadm hs hσ hμle hμ hσV)
+    (avgAssignmentError_mono hattr0 hattr1)
+
+open MeasureTheory in
+/-- **End-to-end two-mechanism ceiling: relaxation ⊕ filtered readout.** Device layer meets 6EB on a
+single attributed readout. Both floors are named project theorems —
+`avgAssignmentError_rational_floor` and `Detection.error_floor_from_budget` — combined by
+`combined_ceiling_max`, so the composite inherits 6EB's full physical binder list rather than its
+conclusion. -/
+theorem relaxation_filtered_ceiling {t T1 e0 e1 : ℝ} (ht : 0 ≤ t) (hT1 : 0 < T1) (he0 : 0 ≤ e0)
+    (hdecay : readoutDecayProb t T1 ≤ e1)
+    {V : (ℝ → ℝ) → ℝ} {S₀ T : ℝ}
+    (hwhite : Detection.IsWhiteFilteredVariance V S₀ T) (hS : 0 < S₀) (hT : 0 ≤ T)
+    {s h : ℝ → ℝ} (hadm : Detection.IsAdmissibleFilter T s h)
+    (hs : IntervalIntegrable (fun x => s x ^ 2) volume 0 T)
+    {μ₀ μ₁ σ tThr : ℝ} (hσ : 0 < σ) (hμle : μ₀ ≤ μ₁)
+    (hμ : μ₁ - μ₀ = ∫ x in (0:ℝ)..T, h x * s x) (hσV : σ = Real.sqrt (V h))
+    (hattr0 : Detection.thrErr0 μ₀ σ tThr ≤ e0) (hattr1 : Detection.thrErr1 μ₁ σ tThr ≤ e1) :
+    assignmentFidelity e0 e1
+      ≤ 1 - max (t / T1 / (2 * (1 + t / T1)))
+          (Detection.gaussianQ (Detection.matchedBudget S₀ T s / 2)) :=
+  combined_ceiling_max
+    (avgAssignmentError_rational_floor ht hT1 he0 hdecay)
+    (filtered_readout_floor_attributed hwhite hS hT hadm hs hσ hμle hμ hσV hattr0 hattr1)
+
+open MeasureTheory in
+/-- **The 6EC detector-chain floor transfers likewise**, with the noise budget supplied by the
+bolometer's own phonon ⊕ Johnson quadrature sum rather than a free parameter. -/
+theorem detector_chain_floor_attributed (m : Electrothermal.ETFModel) {kB T Tw : ℝ}
+    {Vtot : (ℝ → ℝ) → ℝ} {V : Fin 2 → (ℝ → ℝ) → ℝ} {s hf : ℝ → ℝ} {μ₀ μ₁ σ tThr : ℝ}
+    (hkB : 0 < kB) (hT : 0 < T) (hG : 0 < m.G)
+    (hindep : Detection.IsUncorrelatedAt Finset.univ Vtot V)
+    (hphonon : Electrothermal.ETFModel.IsThermalFluctuationLimited (V 0) m kB T Tw)
+    (hjohnson : Detection.IsWhiteFilteredVariance (V 1) (m.johnsonNEP kB T ^ 2) Tw)
+    (hTw : 0 ≤ Tw) (hadm : Detection.IsAdmissibleFilter Tw s hf)
+    (hs : IntervalIntegrable (fun x => s x ^ 2) volume 0 Tw)
+    (hσ : 0 < σ) (hμle : μ₀ ≤ μ₁)
+    (hμ : μ₁ - μ₀ = ∫ x in (0:ℝ)..Tw, hf x * s x) (hσV : σ = Real.sqrt (Vtot hf))
+    {e0 e1 : ℝ} (hattr0 : Detection.thrErr0 μ₀ σ tThr ≤ e0)
+    (hattr1 : Detection.thrErr1 μ₁ σ tThr ≤ e1) :
+    Detection.gaussianQ
+        (Detection.matchedBudget (m.phononNEP kB T ^ 2 + m.johnsonNEP kB T ^ 2) Tw s / 2)
+      ≤ avgAssignmentError e0 e1 :=
+  le_trans (m.bolometer_error_floor hkB hT hG hindep hphonon hjohnson hTw hadm hs hσ hμle hμ hσV)
+    (avgAssignmentError_mono hattr0 hattr1)
+
+open MeasureTheory in
+/-- **End-to-end two-mechanism ceiling: relaxation ⊕ detector chain.** The deepest composite in the
+series: a device-layer relaxation floor and a floor that has already traversed electrothermal PSD →
+quadrature sum → matched-filter budget → Gaussian separation, on one attributed readout. -/
+theorem relaxation_detector_chain_ceiling {t T1 e0 e1 : ℝ} (ht : 0 ≤ t) (hT1 : 0 < T1)
+    (he0 : 0 ≤ e0) (hdecay : readoutDecayProb t T1 ≤ e1)
+    (m : Electrothermal.ETFModel) {kB T Tw : ℝ}
+    {Vtot : (ℝ → ℝ) → ℝ} {V : Fin 2 → (ℝ → ℝ) → ℝ} {s hf : ℝ → ℝ} {μ₀ μ₁ σ tThr : ℝ}
+    (hkB : 0 < kB) (hT : 0 < T) (hG : 0 < m.G)
+    (hindep : Detection.IsUncorrelatedAt Finset.univ Vtot V)
+    (hphonon : Electrothermal.ETFModel.IsThermalFluctuationLimited (V 0) m kB T Tw)
+    (hjohnson : Detection.IsWhiteFilteredVariance (V 1) (m.johnsonNEP kB T ^ 2) Tw)
+    (hTw : 0 ≤ Tw) (hadm : Detection.IsAdmissibleFilter Tw s hf)
+    (hs : IntervalIntegrable (fun x => s x ^ 2) volume 0 Tw)
+    (hσ : 0 < σ) (hμle : μ₀ ≤ μ₁)
+    (hμ : μ₁ - μ₀ = ∫ x in (0:ℝ)..Tw, hf x * s x) (hσV : σ = Real.sqrt (Vtot hf))
+    (hattr0 : Detection.thrErr0 μ₀ σ tThr ≤ e0)
+    (hattr1 : Detection.thrErr1 μ₁ σ tThr ≤ e1) :
+    assignmentFidelity e0 e1
+      ≤ 1 - max (t / T1 / (2 * (1 + t / T1)))
+          (Detection.gaussianQ
+            (Detection.matchedBudget (m.phononNEP kB T ^ 2 + m.johnsonNEP kB T ^ 2) Tw s / 2)) :=
+  combined_ceiling_max
+    (avgAssignmentError_rational_floor ht hT1 he0 hdecay)
+    (detector_chain_floor_attributed m hkB hT hG hindep hphonon hjohnson hTw hadm hs hσ hμle hμ
+      hσV hattr0 hattr1)
+
 /-! ## 4. Witness pairs
 
 Both witnesses use the RELAXATION floor, which is rational in `t/T₁` and therefore settles under
