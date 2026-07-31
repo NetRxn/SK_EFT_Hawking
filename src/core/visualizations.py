@@ -14778,14 +14778,39 @@ def _bundle_layout(fig, title, height=340, width=_BUNDLE_FIG_WIDTH,
         legend=dict(orientation="h", yanchor="top", y=legend_y, x=0.0,
                     font=dict(size=font_size - 1)))
     fig.update_annotations(font_size=font_size - 1)
+    # Per-trace `textfont` is NOT covered by layout.font. Round 4 found two
+    # figures hardcoding 11-12 px on ~900 px canvases -> 6.4-6.8 pt in print,
+    # below the 8 pt floor, while every other string was compliant. Normalize
+    # them here so a single call cannot leave a mixed-size figure behind.
+    fig.update_traces(textfont_size=font_size - 1,
+                      selector=lambda t: getattr(t, "text", None) is not None)
     return fig
 
 
 def bundle_figure_typeset_pt(fig) -> float:
-    """Effective body-text size, in points, this figure will render at when
-    included as `figure*` at \textwidth. Used by the structural checks; a value
-    below ~8 pt against 10 pt body text is a Stage-9 FAIL."""
-    return (fig.layout.font.size or 12) / fig.layout.width * _BUNDLE_TEXTWIDTH_PT
+    """SMALLEST effective text size, in points, this figure renders at when
+    included as `figure*` at \textwidth. A value below ~8 pt against 10 pt body
+    text is a Stage-9 FAIL.
+
+    Takes the minimum over EVERY text-bearing field — layout font, legend font,
+    annotation fonts (incl. subplot titles) and per-trace `textfont` — not just
+    `layout.font`. The earlier version read only the field the layout helper
+    set, so a figure with a hardcoded 11 px `textfont` reported PASS while
+    printing at 6.4 pt: the check concealed exactly the breach it existed to
+    catch. Report the worst string, not the representative one.
+    """
+    base = fig.layout.font.size or 12
+    sizes = [base]
+    if fig.layout.legend and fig.layout.legend.font and fig.layout.legend.font.size:
+        sizes.append(fig.layout.legend.font.size)
+    for ann in (fig.layout.annotations or ()):
+        if ann.font and ann.font.size:
+            sizes.append(ann.font.size)
+    for tr in fig.data:
+        tf = getattr(tr, "textfont", None)
+        if tf is not None and getattr(tf, "size", None):
+            sizes.append(tf.size)
+    return min(sizes) / fig.layout.width * _BUNDLE_TEXTWIDTH_PT
 
 
 def _d12_layout(fig, title, height=560, width=1080, legend_y=-0.30, bottom=170):
@@ -14796,7 +14821,7 @@ def _d12_layout(fig, title, height=560, width=1080, legend_y=-0.30, bottom=170):
 
 
 def fig_d12_poisson_floor_vs_folklore() -> go.Figure:
-    """D12 Fig. 1 — the folklore photon-counting floor fails in TWO directions,
+    """D12 (discrimination) — the folklore photon-counting floor fails in TWO directions,
     and this figure plots BOTH (round-1 Stage 9 found only direction B drawn).
 
     Left (direction A, false-strict as a miss bound): at a bright baseline the
@@ -14897,7 +14922,7 @@ def fig_d12_poisson_floor_vs_folklore() -> go.Figure:
 
 
 def fig_d12_enbw_matched_filter() -> go.Figure:
-    """D12 Fig. 2 — single-shot realizability floors.
+    """D12 (filtered readout) — single-shot realizability floors.
 
     Left: the window product ENBW·T for the DC-matched boxcar, which saturates
     the floor 1/2 (the LEAST element of the realizable set — realizable values
@@ -14962,7 +14987,7 @@ def fig_d12_enbw_matched_filter() -> go.Figure:
 
 
 def fig_d12_etf_stability() -> go.Figure:
-    """D12 Fig. 3 — electrothermal feedback.
+    """D12 (electrothermal) — feedback.
 
     Left: the stability dichotomy τ_eff = τ/(1+ℒ), an iff at ℒ = −1, with the
     unstable branch shown NEGATIVE (reading it through |·| inverts the physics).
@@ -15037,7 +15062,7 @@ def fig_d12_etf_stability() -> go.Figure:
 
 
 def fig_d11_phononic_band_gap() -> go.Figure:
-    """D11 Fig. 1 — the certified phononic band gap of the diatomic mass-spring
+    """D11 (phononic) — the certified band gap of the diatomic mass-spring
     chain (m₁, m₂, κ, a) = (1, 2, 1, 1).
 
     Both branches ω²±(k) are plotted over the Brillouin zone; the gap (1, 2) is
@@ -15088,7 +15113,7 @@ def fig_d11_phononic_band_gap() -> go.Figure:
 
 
 def fig_d11_pt_exceptional_point() -> go.Figure:
-    """D11 Fig. 2 — the PT-symmetric non-Hermitian Bloch Hamiltonian.
+    """D11 (non-Hermitian) — the PT-symmetric non-Hermitian Bloch Hamiltonian.
 
     Eigenvalues ±√(1−g²) are real for g² ≤ 1 and purely imaginary beyond; the
     transition is a SHARP BICONDITIONAL, and at g = 1 the splitting vanishes at
@@ -15134,7 +15159,7 @@ def fig_d11_pt_exceptional_point() -> go.Figure:
 
 
 def fig_d11_haldane_chern() -> go.Figure:
-    """D11 Fig. 3 — the Haldane Chern witness and its retracted classification.
+    """D11 (Haldane) — the Chern witness and its retracted classification.
 
     Left: Dirac-point gaps at K and K' versus the Semenoff mass m; the cones
     acquire OPPOSITE masses and the analytic inversion window is |m| < 3√3.
@@ -15185,7 +15210,7 @@ def fig_d11_haldane_chern() -> go.Figure:
         marker=dict(color="rgba(46, 134, 171, 0.45)", size=14, symbol="square"),
         name="shaded: analytic inversion window |m| < 3√3"), row=1, col=2)
     pts = [(1.0, -1.0, "m = 1:  C = −1", "top center"),
-           (5.0, 0.0, "m = 5:  C = 0 — inside the window", "bottom right"),
+           (5.0, 0.0, "m = 5:  C = 0<br>inside the window", "bottom center"),
            (6.0, 0.0, "m = 6:  C = 0", "top center")]
     for mm, cc, lab, pos in pts:
         fig.add_trace(go.Scatter(
@@ -15195,10 +15220,10 @@ def fig_d11_haldane_chern() -> go.Figure:
             cliponaxis=False, showlegend=False), row=1, col=2)
     fig.add_vline(x=3.3177, line=dict(color=amber, width=2, dash="dot"),
                   annotation_text="4×4 invariant flips ≈ 3.3177<br>(numerical, not certified)",
-                  annotation_position="top left", annotation_yshift=-4, row=1, col=2)
+                  annotation_position="top right", row=1, col=2)
     fig.update_xaxes(title_text="Semenoff mass  m  (units of t)", range=[-0.5, 8.5],
                      row=1, col=2)
-    fig.update_yaxes(title_text="lattice Chern number  C", range=[-1.9, 1.1],
+    fig.update_yaxes(title_text="lattice Chern number  C", range=[-1.55, 0.75],
                      dtick=1, row=1, col=2)
 
     return _bundle_layout(
@@ -15208,7 +15233,7 @@ def fig_d11_haldane_chern() -> go.Figure:
 
 
 def fig_d11_effective_medium() -> go.Figure:
-    """D11 Fig. 4 — algebraic effective-medium theory.
+    """D11 (effective medium) — algebraic theory.
 
     Left: Maxwell–Garnett effective permittivity inside its constituent
     (Wiener/Hashin–Shtrikman-type) bounds ε_h ≤ ε_eff ≤ ε_i. The bounds are
@@ -15263,9 +15288,11 @@ def fig_d11_effective_medium() -> go.Figure:
                              name="(right) Reuss (iso-stress, harmonic)"), row=1, col=2)
     f_star = 2.0 / 3.0
     fig.add_trace(go.Scatter(
-        x=[f_star], y=[F.voigt_modulus(1.0, 4.0, f_star)], mode="markers",
-        marker=dict(color=carmine, size=12, symbol="diamond"),
-        name=f"(right) f = 2/3:  gap = {F.voigt_reuss_gap(1.0, 4.0, f_star):.0f} exactly"),
+        x=[f_star, f_star],
+        y=[F.reuss_modulus(1.0, 4.0, f_star), F.voigt_modulus(1.0, 4.0, f_star)],
+        mode="lines+markers", line=dict(color=carmine, width=3),
+        marker=dict(color=carmine, size=10, symbol="diamond"),
+        name=f"(right) f = 2/3: gap = {F.voigt_reuss_gap(1.0, 4.0, f_star):.0f} exactly"),
         row=1, col=2)
     fig.update_xaxes(title_text="phase-2 fill fraction  f  (dimensionless)", row=1, col=2)
     fig.update_yaxes(title_text="modulus M  (units of M₁)", row=1, col=2)

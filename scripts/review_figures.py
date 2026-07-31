@@ -2333,8 +2333,15 @@ def generate_figures() -> dict[str, Path]:
         try:
             fig = func(experiments) if spec.needs_experiments else func()
             png_path = FIGURES_DIR / f"{spec.name}.png"
+            # Honour a figure's OWN declared canvas when it has one. Forcing
+            # 1200x800 overrides the canvas while leaving fonts fixed, which
+            # silently drops typeset text below the legibility floor — the exact
+            # defect Stage-9 round 3 raised as XC-D. Only figures that declare
+            # no size get the legacy default.
+            _w = fig.layout.width or 1200
+            _h = fig.layout.height or 800
             fig.write_image(str(png_path), format="png",
-                           width=1200, height=800, scale=2)
+                           width=_w, height=_h, scale=2 if _w >= 1000 else 3)
             paths[spec.name] = png_path
             print(f"  ✓ {spec.name}.png")
 

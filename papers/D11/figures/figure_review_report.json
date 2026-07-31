@@ -1,281 +1,273 @@
 {
-  "review_date": "2026-07-31T04:10:00Z",
-  "reviewer": "skeft-qa:figure-reviewer",
-  "bundle_target": "D11",
-  "stage": "9",
-  "round": 3,
-  "figures_reviewed": 4,
-  "overall_status": "issues_found",
-  "pass_criterion": "ALL PASS - zero FAIL and zero MINOR across all four figures and all cross-cutting checks",
-  "pass_criterion_met": false,
-  "severity_counts": {
-    "FAIL": 2,
-    "MINOR": 13,
-    "resolved_from_round2": 2,
-    "anchor_pass": 1
+ "review_date": "2026-07-31T05:40:00Z",
+ "reviewer": "skeft-qa:figure-reviewer",
+ "bundle_target": "D11",
+ "stage": "9",
+ "round": 4,
+ "figures_reviewed": 4,
+ "review_basis": "TYPESET RESULT. papers/D11/paper_draft.pdf (8 pp, 2026-07-30 20:17) rasterised at 200 and 600 dpi with pdftoppm; figure placement measured with pdfimages -list. Standalone PNGs used only as inputs/for pixel forensics.",
+ "overall_status": "issues_found",
+ "pass_criterion": "ALL PASS - zero FAIL and zero MINOR across all four figures and all cross-cutting checks",
+ "pass_criterion_met": false,
+ "severity_counts": {
+  "FAIL": 3,
+  "MINOR": 5,
+  "resolved_from_round3": 7,
+  "anchor_pass": 1
+ },
+ "distinct_root_causes": 3,
+ "headline": "XC-D is genuinely fixed at the layout level and the improvement is large: all four floats are figure* placed at a measured 508.2 pt, and base/legend/annotation text now typesets at 8.7-9.6 pt against 10 pt body. But the contract does not reach per-trace textfont, so the markers+text data labels in the two two-panel figures still print at 6.4-6.8 pt, and bundle_figure_typeset_pt() reports PASS for exactly those figures because it reads only layout.font.size. Two further defects are visible only in the typeset PDF: the bundle's load-bearing 'inside the window' label is clipped mid-word, and the flip annotation overprints a y-axis tick label.",
+ "round3_remediation_verification": [
+  {
+   "item": "XC-D - figure* at \\textwidth + typeset font contract",
+   "verdict": "VERIFIED FIXED at the layout level; INCOMPLETE for per-trace text (see F3)",
+   "evidence": "paper_draft.tex lines 173/211/246/287 are all \\begin{figure*} with \\includegraphics[width=\\textwidth]. pdfimages -list on the compiled PDF: p3 2400x1260 @340ppi, p4 2400x1260 @340ppi, p5 2640x1410 @374ppi, p6 2700x1290 @383ppi -> placed width 508.2, 508.2, 508.2, 507.6 pt (= \\textwidth). Measured typeset sizes: base font 9.56/9.56/9.63/9.27 pt, legend 8.93/8.93/9.07/8.69 pt, annotations 8.93/8.93/9.07/8.69 pt, against 10 pt body. All legible at 600 dpi inspection. Canvas/font scale together as designed: _bundle_font_for(800)=15, (900)=17, (880)=16."
   },
-  "distinct_root_causes": 5,
-  "round2_remediation_verification": [
-    {
-      "item": "XC-A - layer='below' on all six add_vrect/add_hrect",
-      "claimed": "six calls now pass layer='below'; three exact-carmine clusters of 612 px; zero pixels at (193,72,90)",
-      "verdict": "VERIFIED FIXED - independently reconfirmed",
-      "evidence": "Independent pixel sweep over all four PNGs for every plausible composite of carmine/blue/amber under the amber-0.20, blue-0.12, blue-0.14 and blue-0.20 overlays: exact matches = 0 in every case; nearest-within-6 counts are 0 except 4 and 11 stray antialiasing pixels in Fig 2 and 1 each in Fig 4, none forming a cluster. Connected-component analysis of exact carmine (230,57,70): Fig 3 = 3 clusters of exactly 612 px (confirms the claim to the pixel); Fig 4 = in-plot markers of 435 px (left panel, over the blue-0.14 hrect) and 420 px (right panel) plus a 423 px legend swatch, ALL exact carmine, so the Fig-4 marker does match its own legend swatch; Fig 1 = 420 px filled diamonds over the amber-0.20 hrect plus matching 420 px legend swatch. Fig 3's K' curve sampled column-by-column reads exactly (241,143,1) at x=500,700,800 (inside the shaded window) and outside it - no mid-trace colour change."
-    },
-    {
-      "item": "XC-B - remove 'D11 Fig. N -' prefixes from in-image titles",
-      "claimed": "prefixes gone from all four titles; LaTeX owns numbering",
-      "verdict": "VERIFIED FIXED for the reader; source-level residue remains (see MINOR M9)",
-      "evidence": "All four rendered titles carry no ordinal. paper_draft.aux resolves fig:phononic->1, fig:pt->2, fig:effmedium->3, fig:haldane->4, and the compiled PDF (19:26, newer than the 19:07 PNGs) shows FIG. 1 phononic, FIG. 2 PT, FIG. 3 effective-medium, FIG. 4 Haldane with no in-image contradiction. Residue: the PNG filenames d11_fig3_haldane_chern / d11_fig4_effective_medium, the FigureSpec names, and the docstrings ('D11 Fig. 3 - the Haldane Chern witness', visualizations.py:15081; 'D11 Fig. 4 - algebraic effective-medium', :15155) still carry the opposite ordinals."
-    },
-    {
-      "item": "#8-Fig1 - certified rational instead of a .2f decimal",
-      "claimed": "annotation now reads 1 < 141/100 <= sqrt2",
-      "verdict": "VERIFIED FIXED",
-      "evidence": "Rendered annotation reads 'rational inner bracket in w: 1 < 141/100 <= sqrt2 / (norm_num, no floating point)'. phononic_gap_rational_enclosure() returns (1.0, 1.41) and 1 < 1.41 <= 1.4142135623730951 holds. Docstring still misdescribes its position - see MINOR M8."
-    },
-    {
-      "item": "Fig 2 - move the g^2 = 99/100 annotation to top left with negative yshift",
-      "claimed": "stops its own line bisecting it",
-      "verdict": "VERIFIED FIXED (bisection only)",
-      "evidence": "Crop of the annotation band shows 'g^2 = 99/100 => D <= 1/5 (tight)' intact and clear of the dotted line, and clear of the 'PT-unbroken - spectrum real' annotation above it. The separate round-2 finding that the enclosure is unresolvable from the EP is untouched - see MINOR M7."
-    },
-    {
-      "item": "Fig 3 - move the flip annotation to top left, split across two lines",
-      "claimed": "stops it bisecting the 'm = 5:' label",
-      "verdict": "NOT FIXED - remediation targeted the wrong object",
-      "evidence": "The annotation itself did move out of the inter-panel gutter and into the right panel's top-left, and that half of the round-2 finding is closed. But the object crossing the 'm = 5:' label is the add_vline SHAPE at m = 3.3177, which spans the full panel height. The m=5 marker text is centred at m=5 with a half-width of about 2.4 data units, so its left edge sits near m = 2.6 < 3.3177. The rasterised crop shows the orange dotted line running through the digit '5' of 'm = 5:  C = 0  - inside the window'. See MINOR M1."
-    },
-    {
-      "item": "Fig 4 - <sub> markup for the epsilon subscripts",
-      "claimed": "eps subscripts now use plotly <sub>, matching M1/M2 Unicode subscripts",
-      "verdict": "VERIFIED FIXED",
-      "evidence": "eps_h, eps_i and eps_eff render as true subscripts in the subplot title, the y-axis title, the constituent-bounds annotation, the legend key and the certified-point marker text - visually indistinguishable from the Unicode M1/M2/eps_0 subscripts in the same figure."
-    },
-    {
-      "item": "Fig 4 - widen the left y-range to [0.4, 4.6]",
-      "claimed": "constituent band reads as a band rather than filling the panel",
-      "verdict": "VERIFIED FIXED",
-      "evidence": "The 1..4 band now occupies 3/4.2 = 71% of the panel height with clear white above and below; it reads as a band. (Round 2 suggested [0.6, 4.4]; [0.4, 4.6] is more generous and equally effective.)"
-    },
-    {
-      "item": "Fig 4 - legend keys prefixed (left)/(right)",
-      "claimed": "legend keys prefixed (left)/(right)",
-      "verdict": "HALF LANDED",
-      "evidence": "Only one of five keys is prefixed: '(left) eps_eff (Maxwell-Garnett)' (visualizations.py:15182). 'exact Voigt - Reuss gap' (:15201), 'Voigt (iso-strain, arithmetic)' (:15204), 'Reuss (iso-stress, harmonic)' (:15207) and 'f = 2/3: gap = 1 exactly' (:15212) carry no '(right)'. See MINOR M3."
-    },
-    {
-      "item": "XC-C - register all seven D11/D12 figures in FIGURE_REGISTRY",
-      "claimed": "registered with expected traces, axes, physics checks and colour keys; closes the root cause",
-      "verdict": "NOT FIXED - the registration is inert",
-      "evidence": "Seven FigureSpec entries were added (scripts/review_figures.py:1862-1985) but neither func_map dict was extended - generate_figures()'s map at line 2164 and run_structural_checks()'s map at line 2530 both lack every fig_d11_*/fig_d12_* key, and lookup is a plain func_map.get(spec.function) with no getattr/importlib fallback. Empirically confirmed by executing generate_figures() with FIGURE_REGISTRY narrowed to the four D11 specs and FIGURES_DIR redirected to a scratch dir: all four print 'SKIP <name>: function <fn> not found', the return value is {} and zero files are written. Consequently figures/review_manifest.json and figures/structural_checks.json still contain zero occurrences of 'd11' (both still dated 2026-06-14), and produce_manifest() would emit png_path: null for all four. See FAIL XC-C."
-    }
-  ],
-  "physics_reverification": {
-    "method": "Recomputed from src.core.formulas with no reference to the round-1 or round-2 reports.",
-    "fig1": "diatomic_branches(1,2,1,k): k=0 -> (0.0, 3.0); k=pi -> (1.0, 2.0). phononic_gap_edges() = (1.0, 2.0). Over 2001 samples across the full BZ, max(acoustic) = 1.0 and min(optical) = 2.0 exactly, and no sample lies strictly inside (1,2) - the gap is empty AND both edges are attained, matching branchMinus_at_pi = 1 and branchPlus_at_pi = 2. phononic_gap_rational_enclosure() = (1.0, 1.41) and 1 < 141/100 <= sqrt(2) = 1.4142135623730951. PASS.",
-    "fig2": "Eigenvalues +/-sqrt(1-g^2) real for g<=1 and +/-i*sqrt(g^2-1) beyond, with a single crossing at g=1 where the splitting vanishes - consistent with pt_symmetric_real_spectrum_iff as a sharp biconditional and with exceptional_point_defective. The enclosure is exact: D = 2*sqrt(1-g^2) = 2*sqrt(0.01) = 0.2 = 1/5 at g^2 = 99/100, so 'tight' is correct. The vline pixel position (x=1079) matches g = sqrt(0.99) = 0.994987 under the axis calibration (g=0 at x=162, g=1 at x=1083). PASS.",
-    "fig3": "haldane_dirac_masses(m, 1, pi/2) = (m - 3sqrt3, m + 3sqrt3): m=1 -> (-4.19615, +6.19615) opposite signs; m=5 -> (-0.19615, +10.19615) opposite signs (inversion HOLDS) yet the plotted lattice invariant is 0; m=6 -> (+0.80385, +11.19615) same signs (no inversion). haldane_mass_inversion_window(1, pi/2) = 5.196152422706632 = 3sqrt3 exactly. So m=5 is genuinely inside the analytic window and genuinely reads C=0, which is exactly haldane_massInversion_not_sufficient_at_N4. The plotted gaps 2|m -/+ 3sqrt3 t2 sin phi| match the axis labels at every sampled endpoint. Sign convention C = -1 (not +1) is what the figure shows. PASS.",
-    "fig4": "maxwell_garnett(1,4,f): f=0 -> 1.0, f=1/2 -> 2.0 exactly, f=1 -> 4.0; over 1001 samples min = 1.0 and max = 4.0, so the constituent bounds are respected and NON-STRICTLY attained at both endpoints, matching effectiveMedium_constituent_bounds. voigt_modulus(1,4,2/3) = 3.0, reuss_modulus(1,4,2/3) = 2.0, voigt_reuss_gap = 1.0 exactly; Voigt >= Reuss over the whole range with the numerical maximum 0.99999950 at f = 0.667, consistent with the exact identity voigt_sub_reuss_eq. The figure correctly does NOT claim f=2/3 is a certified maximiser. PASS."
+  {
+   "item": "XC-E - serif family",
+   "verdict": "VERIFIED FIXED",
+   "evidence": "_bundle_layout (visualizations.py:14775) sets family='Times New Roman, Nimbus Roman, DejaVu Serif, serif'. Rendered glyphs at 600 dpi are unmistakably serif in all four figures (axis titles, tick labels, legend, annotations, data labels) and match the revtex body text."
   },
-  "anchor_checks": [
-    {
-      "anchor": "HIGHEST PRIORITY - no figure may depict or imply a Berry curvature, a continuum Chern integral C = (1/2pi)Int F, or a bulk-boundary result",
-      "status": "PASS",
-      "evidence": "Exhaustive term sweep over the four fig_d11_* function bodies (all rendered strings, annotations, titles, axis titles and legend names) for 'Berry curvature', 'curvature', 'bulk-boundary'/'bulk boundary', 'edge state', 'edge mode', 'chiral edge', 'first Chern', 'continuum', '1/2pi', 'Int F', 'TKNN', 'Kubo', 'conductance', 'conductivity', 'quantized Hall', 'Hall': ZERO hits. The only 'Chern' strings that reach an image are 'certified lattice Chern number  (t = t2 = 1, phi = pi/2, 4x4 torus)' and the y-axis 'lattice Chern number  C' - both explicitly finite-lattice and parameter-pinned. Cross-checked in the consumer: paper_draft.tex lines 92 and 426-433 explicitly disclaim Berry curvature and the bulk-boundary correspondence as deferred and record that the source disclaims equality to any continuum first Chern class. The only Berry references are the discrete cone Berry PHASE theorems (coneBerryPhase_pi, coneWinding_two_pi, flatLoopBerryPhase_zero), which are legitimately shipped and are not depicted in any figure."
-    },
-    {
-      "anchor": "Chern sign and regime - certified value is -1 at t = t2 = 1, phi = pi/2, m = 1, on a 4x4 torus",
-      "status": "PASS in the image, MINOR in the LaTeX caption",
-      "evidence": "The Fig-3 right panel is titled 'certified lattice Chern number (t = t2 = 1, phi = pi/2, 4x4 torus)' and the m=1 point is labelled 'm = 1:  C = -1'. The sign is -1, not +1, and the parameter point and grid size are both stated. However the LaTeX \\caption for fig:haldane states the parameter point and the m=5 null result but never states C = -1 - see MINOR M10."
-    },
-    {
-      "anchor": "The retracted classification claim - no statement phrased as 'exactly where the masses invert' at fixed N",
-      "status": "PASS",
-      "evidence": "The figure title is 'Haldane Chern witness - mass inversion is NOT sufficient at fixed N'. Nothing asserts an iff. The m=5 label explicitly reads 'C = 0 - inside the window', which is the counterexample, and the flip location is labelled '(numerical, not certified)'."
-    },
-    {
-      "anchor": "Necessity is not certified",
-      "status": "PASS",
-      "evidence": "The figure claims only the 'not sufficient' half in its title; the m=6 sample is plotted without any necessity claim. The docstring and the LaTeX caption both say necessity rests on the single sample m=6."
-    },
-    {
-      "anchor": "Do not conflate ChernBridge (Chebyshev marker, Phase 6w) with a Bloch-band Chern number",
-      "status": "PASS",
-      "evidence": "No figure references ChernBridge, a Chebyshev marker, or a real-space marker. Fig 3 says 'lattice Chern number' throughout."
-    },
-    {
-      "anchor": "Effective-medium route disclosure - algebraic path only, two-scale homogenization not attempted",
-      "status": "PASS",
-      "evidence": "Fig 4's title is 'Algebraic effective-medium bounds (two-scale route deliberately not taken)', which discloses the route limitation in the image itself."
-    }
-  ],
-  "figures": [
-    {
-      "name": "d11_fig1_phononic_band_gap.png",
-      "status": "fail",
-      "rendering": {
-        "status": "issues",
-        "issues": [
-          "XC-D (FAIL): at the typeset size the figure is illegible. The 900 px canvas is placed at \\columnwidth = 246.0 pt (revtex4-2 [aps,prb,reprint]), a scale factor of 0.273. The function sets no font=, so it inherits plotly's 12 px default; 12 x 0.273 = 3.3 pt for tick labels and legend text, 14 x 0.273 = 3.8 pt for axis titles. Measured on the compiled PDF rasterised at 600 dpi, the carmine marker is 33 px = 3.96 pt wide against 10 pt body text on the same page."
-        ]
-      },
-      "physics": {
-        "status": "pass",
-        "issues": []
-      },
-      "style": {
-        "status": "issues",
-        "issues": [
-          "XC-E: does not apply the canonical FONT (visualizations.py:69), so it renders in plotly's default sans-serif while the paper body and the project's 27 other font=FONT figures are serif (verified against figures/fig3_parameter_space.png).",
-          "M8: the docstring still says 'The right-hand annotation records the rational inner bracket' but the annotation is at x=0.0, i.e. centred (visualizations.py:14985). Round-2 finding untouched.",
-          "M9: the filename/spec name/docstring ordinal 'Fig. 1' happens to agree here, but the same scheme is wrong for Figs 3 and 4 - see the cross-cutting entry."
-        ]
-      },
-      "caption_match": true,
-      "notes": "Round-2 FAIL (hrect compositing over the edge markers) is genuinely fixed - verified at the pixel level, all four edge markers and both legend swatches are exact carmine. Round-2 MINOR on the decimal 1.41 is fixed. Physics is exact and tight: the gap (1,2) is empty over 2001 BZ samples and BOTH edges are attained at k = +/-pi. The remaining defects are the cross-cutting typeset-legibility FAIL and two style residues."
-    },
-    {
-      "name": "d11_fig2_pt_exceptional_point.png",
-      "status": "fail",
-      "rendering": {
-        "status": "issues",
-        "issues": [
-          "XC-D (FAIL): same typeset-legibility defect as Fig 1 - 900 px canvas at \\columnwidth = 246.0 pt, no font= set, so tick labels and legend land at about 3.3 pt.",
-          "M7: the certified proximity enclosure is still unresolvable from the exceptional point. The add_vline sits at g = sqrt(99/100) = 0.994987, which pixel calibration puts at x = 1079 while the g=1 vrect edge is at x = 1083 - 4 px apart in an 1800 px image - and it is drawn in the same carmine as the EP2 marker, so it reads as 'the EP' rather than as the enclosure endpoint. The bounded quantity D = 2 sqrt(1-g^2) = 1/5 is never drawn. Round-2 finding untouched."
-        ]
-      },
-      "physics": {
-        "status": "pass",
-        "issues": []
-      },
-      "style": {
-        "status": "issues",
-        "issues": [
-          "XC-E: does not apply the canonical FONT - sans-serif against a serif body.",
-          "M6: the y-axis carries no unit - 'eigenvalue lambda  (real branch / imaginary branch)' (visualizations.py:15073) - while Figs 1, 3 and 4 all carry one (units of kappa/m1, units of t, units of eps_0, units of M1). Round-2 finding untouched.",
-          "M13: bypasses the shared layout helper - inlines margin=dict(b=160, t=90) and legend y=-0.20 where _d12_layout uses bottom=170 and legend_y=-0.30. The two have already diverged numerically."
-        ]
-      },
-      "caption_match": true,
-      "notes": "The round-3 change (annotation to top left with a negative yshift) does stop the vline bisecting the annotation - verified in a crop; the annotation is also clear of the 'PT-unbroken - spectrum real' annotation above it. Physics is exact: the transition is drawn as the sharp biconditional it is, and D = 1/5 exactly at g^2 = 99/100 so 'tight' is correct."
-    },
-    {
-      "name": "d11_fig3_haldane_chern.png",
-      "status": "fail",
-      "rendering": {
-        "status": "issues",
-        "issues": [
-          "XC-D (FAIL): worst of the four. A 1120 px two-panel canvas placed at \\columnwidth = 246.0 pt is a scale factor of 0.220, so 12 px in-panel text lands at 2.6 pt and the axis titles at 3.1 pt. This is a two-panel figure in a single-column figure environment.",
-          "M1: the flip line still bisects the 'm = 5:' label. The round-3 change moved the ANNOTATION (which did fix the round-2 'floats in the inter-panel gutter' finding), but the object crossing the label is the add_vline SHAPE at m = 3.3177, which spans the full panel height. The m=5 marker text is centred at m=5 with a half-width of about 2.4 data units, so its left edge sits near m = 2.6, and the rasterised crop shows the orange dotted line running through the digit '5'.",
-          "M2: the 'm = 6:  C = 0' label is centred on m=6 but its left edge falls directly above the m=5 marker, so the two point labels can be attributed to the wrong markers.",
-          "M11: the right panel's yaxis range=[-1.9, 1.1] with only three plotted points leaves the lower ~40% of the panel empty, with the flip vline running through the void."
-        ]
-      },
-      "physics": {
-        "status": "pass",
-        "issues": []
-      },
-      "style": {
-        "status": "issues",
-        "issues": [
-          "XC-E: does not apply the canonical FONT - sans-serif against a serif body.",
-          "M9: the file is named d11_fig3_* and its docstring opens 'D11 Fig. 3 - the Haldane Chern witness' (visualizations.py:15081), but it is Figure 4 in the compiled document.",
-          "M10: the LaTeX caption omits the headline certified value C = -1."
-        ]
-      },
-      "caption_match": true,
-      "notes": "Round-2 FAIL (window vrect compositing over all three certified markers) is genuinely fixed - all three markers are now exactly 612 px of exact carmine, so m=5 and m=6 are the same red, and the K' curve is exact amber both inside and outside the shaded window. HIGHEST-PRIORITY ANCHOR PASSES: zero hits for Berry curvature, continuum Chern integral or bulk-boundary in any rendered string; the invariant is presented as a finite-lattice 4x4-torus quantity with its parameter point, sign -1, and the retracted iff framing is not resurrected. Physics recomputed from scratch and exact on every point."
-    },
-    {
-      "name": "d11_fig4_effective_medium.png",
-      "status": "fail",
-      "rendering": {
-        "status": "issues",
-        "issues": [
-          "XC-D (FAIL): a 1080 px two-panel canvas at \\columnwidth = 246.0 pt is a scale factor of 0.228. Measured directly on the compiled PDF page 3 at 600 dpi: the figure occupies 3.07 in of ink and its legend text lines measure 23 px and 28 px, i.e. 2.76 pt and 3.36 pt of total type height, against 10 pt body text on the same page. Tick labels land at about 2.7 pt.",
-          "M4: the certified Voigt-Reuss gap is drawn as a single marker at (2/3, 3) - one endpoint on the upper bound - so the legend's 'gap = 1 exactly' is asserted but never depicted as a length. Round-2 P1 recommendation not implemented.",
-          "M5: the right panel has no axis padding while the left panel received range=[0.4, 4.6]; both curves meet at (0,1) and (1,4), which land on the plot frame."
-        ]
-      },
-      "physics": {
-        "status": "pass",
-        "issues": []
-      },
-      "style": {
-        "status": "issues",
-        "issues": [
-          "XC-E: does not apply the canonical FONT - sans-serif against a serif body.",
-          "M3: the (left)/(right) legend prefixing landed on only one of five keys. Because the horizontal legend wraps, the right-panel carmine key 'f = 2/3: gap = 1 exactly' sits on row 2 directly beneath the left-panel key, implying a left-panel association; and 'Reuss (iso-stress, harmonic)' carries the identical steel-blue swatch as '(left) eps_eff (Maxwell-Garnett)' with nothing to distinguish them.",
-          "M9: the file is named d11_fig4_* and its docstring opens 'D11 Fig. 4 - algebraic effective-medium theory' (visualizations.py:15155), but it is Figure 3 in the compiled document."
-        ]
-      },
-      "caption_match": true,
-      "notes": "Round-2 FAIL (bounds hrect compositing over the certified MG marker and desynchronising the legend swatch) is genuinely fixed - the left-panel marker (435 px), the right-panel marker (420 px) and the legend swatch (423 px) are all exact carmine (230,57,70). The <sub> subscript remediation landed everywhere. The widened y-range does make the constituent band read as a band (71% of panel height). Physics exact: MG(1,4,1/2) = 2 and the Voigt-Reuss gap = 1 at f = 2/3, both to machine precision, with the bounds non-strictly attained at f = 0 and f = 1."
-    }
-  ],
-  "cross_cutting": [
-    {
-      "id": "XC-C",
-      "severity": "FAIL",
-      "title": "The D11/D12 FIGURE_REGISTRY registration is inert - the round-2 root cause is NOT closed",
-      "detail": "Seven FigureSpec entries were added at scripts/review_figures.py:1862-1985, but neither func_map dict was extended: generate_figures()'s map at line 2164 and run_structural_checks()'s map at line 2530 both lack every fig_d11_*/fig_d12_* key, and the lookup is a plain func_map.get(spec.function) with no getattr or importlib fallback. Executing generate_figures() with FIGURE_REGISTRY narrowed to the four D11 specs prints 'SKIP <name>: function <fn> not found' four times, returns {}, and writes zero files. figures/review_manifest.json and figures/structural_checks.json therefore still contain zero occurrences of 'd11' and are still dated 2026-06-14. Beyond the wiring: FigureSpec has no output_dir field and generate_figures() hardcodes FIGURES_DIR = PROJECT_ROOT/'figures' with write_image(..., width=1200, height=800, scale=2), so even after wiring the D11 PNGs would land in figures/ rather than papers/D11/figures/ where the .tex consumes them, AND would be re-rendered at 1200x800 - overriding each function's own canvas (900x580, 1120x580, 1080x600) and reflowing every annotation position, silently forking the reviewed image from the shipped image. Neither of the two checks round 2 asked for exists.",
-      "fix": "(1) Import the seven functions and add them to BOTH func_map dicts (lines ~2164 and ~2530). (2) Add 'output_dir: str | None = None' to FigureSpec; in generate_figures() resolve out_dir = PROJECT_ROOT / spec.output_dir if spec.output_dir else FIGURES_DIR, and omit the width/height kwargs from write_image so the figure's own layout size is honoured; set output_dir='papers/D11/figures' on the four D11 specs and the D12 equivalent. (3) Add check_shape_layers(): for every entry of fig.layout.shapes, raise an error when shape.layer != 'below' while the corresponding subplot carries traces. (4) Add check_no_inimage_ordinal(): regex the rendered title/annotation text for r'Fig\\.?\\s*\\d+' and error on any hit, so figure numbering can only ever live in LaTeX."
-    },
-    {
-      "id": "XC-D",
-      "severity": "FAIL",
-      "title": "All four D11 figures are illegible at their typeset size (NEW - invisible to rounds 1 and 2, which reviewed standalone PNGs)",
-      "detail": "paper_draft.tex is revtex4-2 [aps,prb,reprint], measured \\columnwidth = 246.0 pt and \\textwidth = 510.0 pt. All four figures are single-column figure environments with \\includegraphics[width=\\columnwidth]. None of the four functions sets font=, so all four inherit plotly's 12 px default rather than the project's canonical FONT (visualizations.py:69-75, size 14). Scale factors are 246/900 = 0.273 for Figs 1 and 2 and 246/1120 = 0.220 and 246/1080 = 0.228 for the two two-panel figures. Direct measurement on the compiled PDF, page 3 rasterised at 600 dpi: the effective-medium figure occupies 3.07 in of ink; its two legend text rows measure 23 px and 28 px, i.e. 2.76 pt and 3.36 pt of total type height; the carmine marker in Fig 1 measures 33 px = 3.96 pt. Body text on the same page is 10 pt. Tick labels across all four figures land between 2.6 and 3.3 pt. That is roughly one third the body-text size and far below any print-legibility threshold - APS requires lettering that remains legible at final size, with about 5-6 pt the practical floor. Every axis label, tick, legend key and in-panel annotation in D11 is unreadable as typeset.",
-      "fix": "(1) Promote the two two-panel figures to full width: change the fig:effmedium block (paper_draft.tex:246) and the fig:haldane block (:287) to \\begin{figure*} ... \\includegraphics[width=\\textwidth]. (2) Set an explicit base font in each figure via fig.update_layout(font={**FONT, 'size': S}) with S chosen so S * (canvas_px / target_pt) >= 7: Fig 1 and Fig 2 (900 px at 246 pt) -> S = 26; Fig 3 (1120 px at 510 pt) -> S = 16; Fig 4 (1080 px at 510 pt) -> S = 15. Scale the in-panel textfont/annotation font sizes (currently 11-12) by the same factor. (3) Verify by re-running pdftoppm -r 600 on the rebuilt PDF and confirming no text row measures below 7 pt. This same change discharges XC-E."
-    },
-    {
-      "id": "XC-E",
-      "severity": "MINOR",
-      "title": "D11 figures do not apply the canonical FONT",
-      "detail": "None of the four fig_d11_* functions (nor the three fig_d12_*) passes font=FONT or routes through LAYOUT_TEMPLATE, so they render in plotly's default sans-serif. The project convention FONT = 'CMU Serif, Computer Modern, Times New Roman, serif' is defined at visualizations.py:69 and applied at 27 other call sites; the established project figures render serif (verified directly against figures/fig3_parameter_space.png), as does the revtex body text.",
-      "fix": "Fold into XC-D's font={**FONT, 'size': S} change."
-    },
-    {
-      "id": "M9",
-      "severity": "MINOR",
-      "title": "Source-level ordinals still contradict the compiled document",
-      "detail": "The in-image prefixes are gone and the PDF is now self-consistent, so the reader-facing half of XC-B is closed. But d11_fig3_haldane_chern.png is Figure 4 and d11_fig4_effective_medium.png is Figure 3, and the docstrings still open 'D11 Fig. 3 - the Haldane Chern witness' (visualizations.py:15081) and 'D11 Fig. 4 - algebraic effective-medium theory' (:15155), as do the FigureSpec names. Anyone cross-referencing the source against the paper gets the wrong figure.",
-      "fix": "Drop the ordinal from the filenames, the FigureSpec names and the docstring first lines - d11_phononic_band_gap, d11_pt_exceptional_point, d11_haldane_chern, d11_effective_medium - and update the four \\includegraphics paths. This makes the defect class unrepresentable rather than merely currently-correct."
-    },
-    {
-      "id": "M13",
-      "severity": "MINOR",
-      "title": "_d12_layout() centralization - answer to the explicit judgement request",
-      "detail": "It matters, and this round is the evidence. Two reasons. (a) Drift has already begun: _d12_layout uses bottom=170 and legend_y=-0.30 while Figs 1 and 2 inline margin=dict(b=160, t=90) and legend y=-0.20 - the 'equivalent' inline blocks are already numerically different from the helper. (b) Decisively, the required fix for XC-D and XC-E is a LAYOUT change (base font size plus font=FONT). With the current structure that fix must be written four times in D11 and three more in D12, and can rot in exactly the two figures that bypass the helper - which is the same shape of failure that produced XC-A and XC-C.",
-      "fix": "Rename _d12_layout -> _bundle_layout (it already serves D11), give it font_size, width and height parameters, have it apply font={**FONT, 'size': font_size}, and route all seven D11/D12 figures through it. Do this as part of the XC-D fix rather than as a separate cosmetic pass."
-    }
-  ],
-  "judgement_calls_requested": {
-    "fig4_legend_interleaving": "Do NOT split into per-subplot legends. The trace order already groups the legend left-then-right, so interleaving per se is no longer the problem; the residual defect is the half-landed prefixing (M3). Splitting costs vertical space and plotly's multi-legend support inside make_subplots is awkward. The complete fix is four tokens: prefix 'exact Voigt - Reuss gap', 'Voigt (iso-strain, arithmetic)', 'Reuss (iso-stress, harmonic)' and the f = 2/3 key with '(right) '. That removes both the row-2-wrap ambiguity and the duplicate steel-blue swatch ambiguity.",
-    "d12_layout_centralization": "Yes, it still matters - see cross-cutting M13. Figs 1 and 2 being visually correct today is not the test; the test is whether the next required layout change can be made in one place. It cannot, and the next required layout change (XC-D's font sizing) is due now."
+  {
+   "item": "XC-C - func_map wiring",
+   "verdict": "VERIFIED FIXED (resolution); NOT EXERCISED (see M5)",
+   "evidence": "Both call sites now carry the seven keys (scripts/review_figures.py:2317-2323 and 2693-2699). Executed the lookup: all four D11 specs resolve to callables - d11_fig1_phononic_band_gap, d11_fig2_pt_exceptional_point, d11_fig3_haldane_chern, d11_fig4_effective_medium. The round-3 SKIP path is closed."
   },
-  "summary": "Round 3 confirms that both round-2 FAILs are genuinely and completely fixed at the level they were reported. XC-A is verified independently at the pixel level: an exhaustive sweep for every plausible composite of carmine, steel blue and amber under the amber-0.20, blue-0.12, blue-0.14 and blue-0.20 overlays returns zero exact matches across all four PNGs, connected-component analysis gives three exact-carmine clusters of exactly 612 px in Fig 3 (reproducing the claim to the pixel), Fig 4's in-plot markers and legend swatch are all exact carmine so the marker does match its own legend swatch, and Fig 3's K' curve reads exactly (241,143,1) both inside and outside the shaded window. XC-B is verified in the compiled PDF: the in-image ordinals are gone and paper_draft.aux/the rendered pages agree on FIG. 1 phononic, FIG. 2 PT, FIG. 3 effective-medium, FIG. 4 Haldane. Remediations 3, 4 and 6 landed cleanly. The physics was recomputed from scratch and is exact on every anchor, and the highest-priority anchor PASSES with zero hits: no figure contains any Berry-curvature, continuum-Chern-integral or bulk-boundary string, and the draft prose explicitly disclaims all three. The bundle nevertheless does NOT meet the ALL-PASS criterion, for two FAIL-class reasons. XC-C, the stated root-cause remediation, is INERT: the seven FigureSpec entries were added but neither func_map dict was extended, so generate_figures() prints SKIP for all four D11 specs and writes nothing - empirically confirmed by execution - and the manifest and structural-checks files still contain zero 'd11'. The gap that let two FAILs survive round 1 is therefore still open, and would remain open even after wiring because FigureSpec has no output_dir and generate_figures() would re-render the figures at 1200x800 into the wrong directory. XC-D is NEW and is the most publication-relevant finding in three rounds: all four figures are illegible at their typeset size. Both prior rounds reviewed the standalone PNGs; reviewed as typeset, the 900-1120 px canvases placed at \\columnwidth = 246.0 pt put every tick label, legend key and in-panel annotation between 2.6 and 3.3 pt, measured directly on the compiled PDF at 600 dpi (legend rows of 2.76 and 3.36 pt against 10 pt body text). Ten further MINORs survive, of which four are untouched round-2 findings (the Fig-3 flip-line bisection, where the remediation moved the annotation but the crossing object is the vline shape; the Fig-4 one-endpoint gap marker; the Fig-2 unresolvable enclosure; the Fig-2 missing y-axis unit) and one is a half-landed round-3 change (the Fig-4 (left)/(right) prefixing on one key of five).",
-  "recommendations": [
-    "P0 - XC-D: promote fig:effmedium (paper_draft.tex:246) and fig:haldane (:287) to figure* at \\textwidth, and set an explicit base font in all four functions - font={**FONT, 'size': S} with S = 26, 26, 16, 15 for Figs 1-4 - so no typeset text falls below 7 pt. Verify with pdftoppm -r 600. This is the only finding that unambiguously blocks publication.",
-    "P0 - XC-C: add the seven fig_d11_*/fig_d12_* functions to BOTH func_map dicts (scripts/review_figures.py:2164 and :2530); add an output_dir field to FigureSpec and honour it in generate_figures(); drop the hardcoded width=1200, height=800 from write_image so each figure's own canvas is preserved; add the two checks round 2 specified (a layer!='below' shape audit, and a regex ban on any 'Fig. N' text inside a rendered image).",
-    "P1 - Fig 3 (M1, M2): replace the three markers+text point labels with fig.add_annotation(..., showarrow=False, bgcolor='rgba(255,255,255,0.85)') and explicit xanchor - the opaque background makes any crossing shape harmless and the anchor stops the m=6 label starting above the m=5 marker. The same idiom is already used successfully for the left panel's window annotation.",
-    "P1 - Fig 4 (M3): prefix the four right-panel legend names with '(right) ' (visualizations.py:15201, 15204, 15207, 15212).",
-    "P1 - Fig 4 (M4): draw the certified gap as a length - go.Scatter(x=[2/3, 2/3], y=[F.reuss_modulus(1.,4.,2/3), F.voigt_modulus(1.,4.,2/3)], mode='lines+markers', line=dict(color=carmine, width=2.5), marker=dict(color=carmine, size=10, symbol='diamond'), name='(right) f = 2/3:  Voigt - Reuss = 1 exactly').",
-    "P1 - Fig 2 (M7): add go.Scatter(x=[sqrt(0.99)]*2, y=[-0.1, 0.1], mode='lines+markers', line=dict(color=carmine, width=2), name='D = 1/5 at g^2 = 99/100 (tight)') so the bounded quantity is drawn, and recolour the vline to neutral grey so it stops reading as the EP.",
-    "P1 - Fig 2 (M6): give the y-axis a unit - 'eigenvalue lambda  (units of the Hermitian coupling)'.",
-    "P2 - M9: drop the ordinal from the four PNG filenames, FigureSpec names and docstring first lines, and update the \\includegraphics paths, so figure numbering exists only in LaTeX.",
-    "P2 - M10: add the headline certified value to the fig:haldane caption - 'The witness value is C = -1 at m = 1 (\\thm{haldaneFrame_latticeChern_eq_neg_one})'.",
-    "P2 - M13/XC-E: rename _d12_layout -> _bundle_layout, add font_size/width/height parameters, have it apply font={**FONT, 'size': font_size}, and route all seven D11/D12 figures through it - executed together with the XC-D fix.",
-    "P2 - Fig 4 (M5): fig.update_yaxes(range=[0.7, 4.3], row=1, col=2).",
-    "P3 - Fig 3 (M11): tighten the right panel to range=[-1.5, 1.15].",
-    "P3 - Fig 1 (M8): docstring - 'The centred annotation records the rational inner bracket'."
-  ],
-  "root_causes": [
-    "RC1 (XC-C) - the review harness still cannot see the D11 figures: FigureSpec entries exist but no func_map wiring, no output_dir support, and a hardcoded 1200x800 write_image size.",
-    "RC2 (XC-D, XC-E, M13) - no figure sets a base font and none routes through a shared layout helper, so all four inherit plotly's 12 px sans-serif default and become illegible at \\columnwidth; the fix must be made in four places instead of one.",
-    "RC3 (M1, M2) - Fig 3's point labels are mode='markers+text' with no opaque background and no explicit anchor, so any full-height shape crosses them and adjacent labels drift toward the wrong marker.",
-    "RC4 (M9) - the figure ordinal is duplicated into filenames, FigureSpec names and docstrings, so it can disagree with LaTeX even after the in-image prefixes were removed.",
-    "RC5 (M4, M6, M7, M8) - four round-2 recommendations were simply not implemented and were not reported as deferred."
+  {
+   "item": "M3 - fig-4 legend keys side-prefixed",
+   "verdict": "VERIFIED FIXED",
+   "evidence": "All five keys carry a side prefix: '(left) eps_eff (Maxwell-Garnett)', '(right) exact Voigt - Reuss gap', '(right) Voigt (iso-strain, arithmetic)', '(right) Reuss (iso-stress, harmonic)', '(right) f = 2/3: gap = 1 exactly'. Confirmed in source and in the p5 render."
+  },
+  {
+   "item": "M6 - fig-2 ordinate units",
+   "verdict": "VERIFIED FIXED",
+   "evidence": "Reads 'eigenvalue lambda  (units of the hopping scale)' (visualizations.py:15130), rendered legibly on p4."
+  },
+  {
+   "item": "M1 - m=5 label off the flip vline",
+   "verdict": "FIXED, but the move created a new FAIL (F1)",
+   "evidence": "The label no longer intersects the vline at m=3.3177 - it is now at textposition='bottom right' anchored at x=5 - but it now runs off the right edge of the canvas and is clipped mid-word."
+  },
+  {
+   "item": "fig-3 caption corrected (no longer claims the figure labels both hedges)",
+   "verdict": "VERIFIED FIXED and accurate",
+   "evidence": "paper_draft.tex:289-296 now reads '...which is the half that is theorem-backed (haldane_massInversion_not_sufficient_at_N4). Necessity is not certified - it rests on the single sample m = 6 - so the figure makes no necessity claim at all; the flip location approx 3.3177 is labelled in the figure as numerical rather than certified.' Both statements are true of the rendered figure."
+  }
+ ],
+ "physics_reverification": {
+  "method": "Re-derived every plotted quantity from scratch (independent closed forms) and cross-checked against src/core/formulas.py; Lean anchors checked directly in lean/SKEFTHawking/.",
+  "results": [
+   "Fig 1 (phononic): independent w^2_pm = 3/2 +- sqrt(5/4 + cos k) for (m1,m2,kappa,a)=(1,2,1,1). k=0 -> {0, 3}; k=pi -> {1, 2}. Plotted acoustic min 0 at k=0 and max 1 at k=+-pi; optical max 3 at k=0 and min 2 at k=+-pi. MATCHES. Gap (1,2) shaded; both edges attained at k=+-pi and marked at BOTH ends with distinct filled/open diamonds. Rational bracket in omega: 1 < 141/100 <= sqrt2 verified (1.41 <= 1.41421356). CORRECT.",
+   "Fig 2 (PT/EP): eigenvalues +-sqrt(1-g^2); real branch 1 -> 0 on [0,1], imaginary branch 0 -> 1.249 on [1,1.6]. EP2 at g=1. Annotation g^2=99/100 => Delta <= 1/5 (tight): 2*sqrt(1-0.99) = 0.2 exactly, so the bound is attained. CORRECT.",
+   "Fig 3 printed (effective medium): Maxwell-Garnett(1,4,f) = 1 at f=0, exactly 2 at f=1/2, 4 at f=1; 1 <= eps_eff <= 4 verified on a 401-point sweep. Voigt = 1+3f, Reuss = 1/(1-3f/4); V >= R verified on 401 points; gap at f=2/3 is exactly 1 (V=3, R=2), matching f(1-f)(M1-M2)^2/((1-f)M2+fM1) = 2/2 = 1. CORRECT.",
+   "Fig 4 printed (Haldane): window 3*sqrt3*t2*sin(phi) = 5.196152422706632. gap_K = 2|m - 3sqrt3| vanishes at m = +3sqrt3; gap_K' = 2|m + 3sqrt3| vanishes at m = -3sqrt3; both confirmed to 1e-9. Masses have OPPOSITE sign at m=1 (inside) and the SAME sign at m=6 (outside). Plotted curves match on the drawn range m in [-8,8]. CORRECT.",
+   "Fig 4 right panel vs Lean: haldaneFrameTopo is BlochLowerBandFrame 4 4 at t = t2 = 1, phi = pi/2, m = 1 (HaldaneWitness.lean:908-910); haldaneFrame_latticeChern_eq_neg_one proves blochLatticeChern = -1 (:1392-1396). The figure shows C = -1 at m = 1, C = 0 at m = 5, C = 0 at m = 6, with 't = t2 = 1, phi = pi/2, 4x4 torus' in the subplot title. Sign, parameter point and grid all MATCH."
   ]
+ },
+ "anchor_checks": [
+  {
+   "anchor": "HIGHEST PRIORITY - no figure may depict or imply a Berry curvature, a continuum Chern integral, or a bulk-boundary result",
+   "status": "PASS",
+   "evidence": "Re-verified from scratch, three independent ways. (1) Programmatic sweep of EVERY string drawn into the four figures (title + all annotations + all trace names + all trace text arrays; 7/8/11/10 strings) against /berry curvature|berry connection|bulk.?boundary|int|integral sign|first chern class|continuum chern|edge state|chiral edge/i -> ZERO hits in all four. (2) berryCurvature and berryConnection have ZERO occurrences across the entire lean/SKEFTHawking tree, matching the 2026-07-30 scope correction. The only Bulk/Boundary files are SymTFT (DrinfeldCenterAsBulk, GappedBoundary, HorizonWittBoundary) - the topological-field-theory bulk/boundary notion, unrelated to band-theory bulk-boundary correspondence, and none is a D11 module. (3) Visual: the right panel of the Haldane figure plots THREE DISCRETE SAMPLED MARKERS, not a continuous C(m) curve. That is the correct depiction - a continuous curve would visually assert the retracted classification. No integral sign, no BZ-integrated quantity, no edge spectrum, no ribbon geometry appears anywhere in the four figures."
+  },
+  {
+   "anchor": "Chern sign and regime: certified value is -1, at t = t2 = 1, phi = pi/2, m = 1, on a 4x4 torus",
+   "status": "PASS",
+   "evidence": "Figure marker reads 'm = 1:  C = -1' (true minus sign, U+2212). Subplot title states '(right) certified C, t = t2 = 1, phi = pi/2, 4x4 torus'. No '+1' anywhere. No generality implied beyond the grid - the title says 'at fixed N' and the caption says 'at fixed grid size'."
+  },
+  {
+   "anchor": "The retracted classification claim - no statement phrased as 'exactly where the masses invert' at fixed N",
+   "status": "PASS",
+   "evidence": "haldane_chern_iff_mass_inversion is ABSENT from the Lean tree (grep: zero occurrences). The figure title states only the certified half - 'mass inversion is NOT sufficient at fixed N'. The m=5 marker text carries the disconfirming instance. The flip location is labelled '(numerical, not certified)'. The caption explicitly declines the necessity claim."
+  },
+  {
+   "anchor": "Do not conflate ChernBridge",
+   "status": "PASS",
+   "evidence": "No figure references ChernBridge or any Chebyshev marker; the only Chern quantity drawn is the FHS lattice Chern number, labelled 'lattice Chern number  C' on the ordinate."
+  }
+ ],
+ "figures": [
+  {
+   "name": "d11_fig1_phononic_band_gap.png",
+   "printed_as": "FIG. 1 (p. 3)",
+   "status": "warning",
+   "typeset": {
+    "placed_width_pt": 508.2,
+    "base_pt": 9.56,
+    "legend_pt": 8.93,
+    "annotation_pt": 8.93,
+    "smallest_text_pt": 8.93,
+    "verdict": "legible"
+   },
+   "rendering": {
+    "status": "issues",
+    "issues": [
+     "MINOR M1: the add_hrect 'certified gap' annotation uses annotation_position='top left', which is structurally the same point as the open-diamond marker at (-pi, 2) - the top-left corner of the hrect. Pixel forensics on the source PNG: the diamond's stroke has 0 pixels of hard overlap with the text but 14 text pixels within 2 px and 34 within 4 px; the diamond's lower vertex lands on the 'd' ascender of 'certified'. At 508 pt placed width the two read as touching, which damages both the glyph and the marker."
+    ]
+   },
+   "physics": {
+    "status": "pass",
+    "issues": []
+   },
+   "style": {
+    "status": "pass",
+    "issues": []
+   },
+   "caption_match": true,
+   "notes": "Both gap edges are marked at BOTH k = -pi and k = +pi with distinct filled/open diamonds, so the tightness claim is fully depicted. Rational bracket annotation is correct and legible. Palette: steel_blue #2E86AB / amber #F18F01 / carmine #E63946, all canonical."
+  },
+  {
+   "name": "d11_fig2_pt_exceptional_point.png",
+   "printed_as": "FIG. 2 (p. 4)",
+   "status": "pass",
+   "typeset": {
+    "placed_width_pt": 508.2,
+    "base_pt": 9.56,
+    "legend_pt": 8.93,
+    "annotation_pt": 8.93,
+    "smallest_text_pt": 8.93,
+    "verdict": "legible"
+   },
+   "rendering": {
+    "status": "pass",
+    "issues": []
+   },
+   "physics": {
+    "status": "pass",
+    "issues": []
+   },
+   "style": {
+    "status": "pass",
+    "issues": []
+   },
+   "caption_match": true,
+   "notes": "Cleanest of the four. Ordinate now carries units (M6 closed). Five legend keys across two rows, no overlap. The g^2=99/100 annotation is clear of both its own dotted line and the 'PT-unbroken' annotation. EP2 marker sits exactly at the branch merge. No markers+text traces, so no textfont escape."
+  },
+  {
+   "name": "d11_fig4_effective_medium.png",
+   "printed_as": "FIG. 3 (p. 5)",
+   "status": "fail",
+   "typeset": {
+    "placed_width_pt": 508.2,
+    "base_pt": 9.27,
+    "legend_pt": 8.69,
+    "annotation_pt": 8.69,
+    "smallest_text_pt": 6.38,
+    "verdict": "FAILS - smallest text 6.38 pt"
+   },
+   "rendering": {
+    "status": "issues",
+    "issues": [
+     "FAIL F3 (shared): the markers+text label 'f = 1/2 => eps_eff = 2 (certified)' carries textfont=dict(size=11) (visualizations.py:15243) on an 880 px canvas, typesetting at 11/880*510 = 6.38 pt - 61% of 10 pt body, and below the 8 pt threshold the contract itself declares a Stage-9 FAIL. Visible in the p5 render: it is conspicuously smaller than the 'constituent bounds' annotation directly above it, which is on the same figure.",
+     "MINOR M3 (deferred, my call = fix): the caption calls the Voigt-Reuss gap 'exact' and the legend key says 'gap = 1 exactly', but the only mark is a single diamond at the Voigt endpoint (2/3, 3). The quantity named exact is a vertical distance and nothing in the figure spans it, so the value 1 cannot be read off the plot."
+    ]
+   },
+   "physics": {
+    "status": "pass",
+    "issues": []
+   },
+   "style": {
+    "status": "issues",
+    "issues": [
+     "MINOR M4 (deferred, my call = accept): right panel has no padding - both curves start exactly at (0,1) and meet exactly at (1,4), grazing the frame corners. Cosmetic only.",
+     "MINOR M4b (deferred, my call = accept): left panel y-range [0.4, 4.6] against data [1,4] leaves visible empty strips above and below the shaded band. Benign here - the band edges are the physical bounds and the padding keeps them off the frame."
+    ]
+   },
+   "caption_match": true,
+   "notes": "Left panel shading correctly spans the full f in [0,1] (an apparent short-fall at 200 dpi was a rasterisation artefact; confirmed at 600 dpi). All five legend keys side-prefixed (M3 closed)."
+  },
+  {
+   "name": "d11_fig3_haldane_chern.png",
+   "printed_as": "FIG. 4 (p. 6)",
+   "status": "fail",
+   "typeset": {
+    "placed_width_pt": 507.6,
+    "base_pt": 9.63,
+    "legend_pt": 9.07,
+    "annotation_pt": 9.07,
+    "smallest_text_pt": 6.8,
+    "verdict": "FAILS - smallest text 6.80 pt"
+   },
+   "rendering": {
+    "status": "issues",
+    "issues": [
+     "FAIL F1: the label 'm = 5:  C = 0 - inside the window' is CLIPPED mid-word at the figure's right boundary, printing as '...inside the wind'. This is the bundle's single load-bearing scope-honesty statement - the m=5 point being INSIDE the analytic window while the invariant reads 0 is exactly haldane_massInversion_not_sufficient_at_N4, and the caption leans on it. Cause: textposition='bottom right' anchored at x=5 on range [-0.5, 8.5]; cliponaxis=False frees the text from the axis but not from the canvas. Confirmed at 600 dpi.",
+     "FAIL F2: the add_vline annotation '4x4 invariant flips ~ 3.3177 / (numerical, not certified)' uses annotation_position='top left', placing it left of the vline at x=3.3177 and outside the panel's plotting area, where it overprints the y-axis tick label '1'. The tick glyph lands inside the word, rendering '4x4 1nvariant flips'. Both the tick and the word are damaged. Confirmed at 600 dpi.",
+     "FAIL F3 (shared): all three markers+text labels carry textfont=dict(size=12) (visualizations.py:15194) on a 900 px canvas, typesetting at 12/900*510 = 6.80 pt against 10 pt body. Confirmed visually at identical magnification against the legend text (9.07 pt) on the same page - the size difference is obvious.",
+     "Contributing: the two right-panel labels are both left-anchored in the narrow strip between the m=5 and m=6 markers, so the m=6 label ('top center' over x=6) begins immediately right of the m=5 diamond and the m=5 label passes directly beneath the m=6 diamond. Even unclipped, which label belongs to which marker is not visually resolvable."
+    ]
+   },
+   "physics": {
+    "status": "pass",
+    "issues": []
+   },
+   "style": {
+    "status": "issues",
+    "issues": [
+     "MINOR M4c (deferred, my call = FIX, and it is the natural fix for F2): the right panel's y-range is [-1.9, 1.1] with dtick=1 while the data occupy only {-1, 0}. Roughly 45% of the panel height is empty, and that dead band is precisely why the flip annotation had to be pushed to the top edge where it collided with the tick label. Tightening the range to about [-1.6, 0.6] removes the dead space AND opens a clean home for the annotation below the data."
+    ]
+   },
+   "caption_match": true,
+   "notes": "Physics, Chern sign, parameter point and grid are all exactly right, and the discrete-marker depiction is the correct scope-honest choice. The defects are all layout. Left panel is clean: window shading, both cones, zeros at +-3sqrt3, no collisions."
+  }
+ ],
+ "cross_cutting": [
+  {
+   "id": "F3",
+   "severity": "FAIL",
+   "title": "The typeset contract does not reach per-trace textfont - and its own checker cannot see the breach",
+   "detail": "_bundle_layout pins layout.font (visualizations.py:14775-14776) and rewrites annotation fonts via fig.update_annotations(font_size=font_size-1) (:14780), but it never touches per-trace textfont. The two two-panel figures set textfont explicitly on their markers+text traces - size 12 in fig_d11_haldane_chern (:15194) and size 11 in fig_d11_effective_medium (:15243) - and those values are exactly what round 3's XC-D was about: absolute pixel sizes chosen against a canvas, not ratios. Measured: 12/900*510 = 6.80 pt and 11/880*510 = 6.38 pt, versus 10 pt body text and versus 9.07/8.69 pt for the legend text sitting beside them in the same figures. The contract's own docstring for bundle_figure_typeset_pt says 'a value below ~8 pt against 10 pt body text is a Stage-9 FAIL'. SYSTEMIC PART: bundle_figure_typeset_pt(fig) computes fig.layout.font.size / fig.layout.width * 510 and therefore returns 9.63 and 9.27 pt for these two figures - a PASS - while their smallest printed text is 6.80 and 6.38 pt. The verification helper is blind to the only elements that fail. Any future figure that sets a per-trace textfont, or an axis/title font override, will be certified green the same way.",
+   "fix": "(a) Have _bundle_layout also normalise trace text: fig.update_traces(textfont_size=font_size-2) after the layout update, and delete the hardcoded textfont=dict(size=11/12) from both functions. (b) Make bundle_figure_typeset_pt report the MINIMUM over layout.font.size, every annotation font size, legend font size, axis title/tick font sizes and every trace textfont size - not just layout.font.size - so the number it returns is the figure's worst case."
+  },
+  {
+   "id": "F1/F2 root cause",
+   "severity": "FAIL",
+   "title": "Plotly text that escapes the plotting area is clipped by the canvas, not wrapped",
+   "detail": "Both Haldane failures are the same mechanism from opposite sides. cliponaxis=False and annotation_position='top left' each push text outside the subplot's plotting area on the assumption that the surrounding margin will absorb it. In a two-panel figure the right panel's right margin is r=int(font_size*1.8)=30 px and its left neighbour is the y-axis furniture, so text that overflows is either truncated at the canvas edge (F1) or lands on top of the axis labels (F2). Neither is visible in an interactive HTML view, and neither is caught by any current check.",
+   "fix": "F1: shorten to 'm = 5:  C = 0 (inside)' and/or move to textposition='top left' so the string grows leftwards into the panel; or widen the x-range headroom past 8.5. F2: move the annotation inside the panel using the dead vertical space (see M4c) - annotation_position='bottom right' with the tightened y-range - rather than 'top left'. Recommend re-rendering and re-checking BOTH in the compiled PDF, since neither defect is visible in the PNG at screen scale."
+  },
+  {
+   "id": "M2",
+   "severity": "MINOR",
+   "title": "M9 from round 3 is still open - source ordinals contradict the compiled document",
+   "detail": "Confirmed against paper_draft.aux: \\newlabel{fig:effmedium} resolves to 3 and \\newlabel{fig:haldane} to 4, because the effective-medium float is placed first in the .tex (line 246) and the Haldane float second (line 287). So d11_fig4_effective_medium.png prints as FIG. 3 and d11_fig3_haldane_chern.png prints as FIG. 4 - both inverted. The docstrings still open 'D11 Fig. 3 - the Haldane Chern witness' (visualizations.py:15137) and 'D11 Fig. 4 - algebraic effective-medium theory' (:15211), as do the FigureSpec names. Anyone cross-referencing source against paper gets the wrong figure; this review had to carry a printed_as field on every entry to stay unambiguous.",
+   "fix": "Drop the ordinals: d11_phononic_band_gap, d11_pt_exceptional_point, d11_haldane_chern, d11_effective_medium - filenames, FigureSpec names, docstring first lines, and the four \\includegraphics paths. Makes the defect class unrepresentable rather than merely currently-wrong."
+  },
+  {
+   "id": "M5",
+   "severity": "MINOR",
+   "title": "Harness output path and hardcoded canvas - answer to the explicit judgement request",
+   "detail": "VERDICT: a separate harness defect, NOT blocking this Stage-9 figure review - but it must not be closed as cosmetic, and it is why F3 survived to round 4. Reasoning. (1) Not blocking: Stage 9 judges the typeset result, and the shipped PNGs are correct - they were produced at each function's own canvas at scale 3 (2400x1260 = 800x420, 2700x1290 = 900x430, 2640x1410 = 880x470), and paper_draft.pdf consumes them correctly. FIGURES_DIR is PROJECT_ROOT/'figures', not papers/D11/figures/, so running the harness cannot overwrite the paper's inputs. (2) But worse than 'wrong size and wrong directory': generate_figures() calls write_image(..., width=1200, height=800, scale=2) unconditionally (scripts/review_figures.py:2336-2337), overriding each function's canvas while leaving font sizes untouched. Measured effect: phononic 9.56 -> 6.38 pt, haldane 9.63 -> 7.22 pt, effective medium 9.27 -> 6.80 pt. Regenerating through the documented command therefore REINTRODUCES XC-D exactly - the contract comment warns 'If you change width, change font_size with it or the figure silently becomes unreadable in print', and the harness changes width unconditionally. (3) The wiring is verified resolvable but has never been exercised: figures/review_manifest.json and figures/structural_checks.json are both still dated 2026-06-14 with zero occurrences of 'd11'. So the contract currently has NO automated enforcement, which is the reason a 6.4 pt label could ship into round 4 unflagged.",
+   "fix": "Add output_dir to FigureSpec (default FIGURES_DIR), and drop the width/height overrides from write_image so each figure exports at its own declared canvas - keep scale only. Then run the harness for D11 and let the structural check assert bundle_figure_typeset_pt(fig) >= 8.0 with the minimum-over-all-text definition from F3."
+  },
+  {
+   "id": "M6",
+   "severity": "MINOR",
+   "title": "Deferred round-3 items - my calls",
+   "detail": "M4 (gap one-endpoint marker) = FIX, cheap and real: the caption and legend both call the gap 'exact' but nothing in the figure spans it; a vertical segment or double-headed arrow from (2/3, 2) to (2/3, 3) makes the value readable. M5 (right-panel padding) = ACCEPT, genuinely cosmetic. M11 (dead space) = SPLIT: accept on the effective-medium left panel, where the padding usefully keeps the bound edges off the frame; FIX on the Haldane right panel, where ~45% dead height is not merely ugly but is the direct cause of F2 - tightening the y-range is the cleanest fix for the collision. XC-E (serif) = VERIFIED FIXED, no action.",
+   "fix": "See individual entries."
+  }
+ ],
+ "style_checks": {
+  "palette": "PASS - steel_blue #2E86AB, amber #F18F01, carmine #E63946 only; matches project convention; colourblind-safe blue/amber pairing with carmine reserved for certified points.",
+  "font_family": "PASS - serif stack applied via _bundle_layout, matches revtex body.",
+  "latex_log": "PASS for figures - a single Overfull \\hbox (32.4 pt) at paper_draft.log:455, in body prose at lines 134-139, not in any float.",
+  "float_placement": "PASS - all four [t] on their own pages (3,4,5,6), no float collisions, captions immediately below each figure."
+ },
+ "summary": "Round 4 closes the round-3 blocker at the layout level and the improvement is substantial: every figure is now a full-width figure* at a measured 508 pt, in serif, with base, legend and annotation text between 8.7 and 9.6 pt against 10 pt body - legible in print, which none of them were in round 3. The func_map wiring is genuinely live, four of the five targeted MINORs are closed, all four captions are accurate, and the highest-priority anchor re-confirms cleanly from scratch three independent ways: no Berry curvature, no continuum Chern integral, no bulk-boundary content anywhere in the four figures, and the Haldane invariant is correctly shown as three discrete samples rather than a curve. Physics re-derived independently for all four figures and correct throughout, with the Chern sign, parameter point and 4x4 grid matching haldaneFrameTopo and haldaneFrame_latticeChern_eq_neg_one exactly. Three FAILs remain, all layout, all in the two two-panel figures. The typeset contract stops at layout.font and does not reach per-trace textfont, so the markers+text data labels print at 6.4-6.8 pt - and bundle_figure_typeset_pt reports those same figures as 9.3-9.6 pt PASS, because it reads only layout.font.size. On the Haldane panel the bundle's load-bearing 'inside the window' label is clipped mid-word at the canvas edge, and the flip annotation overprints the y-axis '1' tick. All three are invisible in the standalone PNGs at screen scale and were found only in the rasterised PDF, which is the same lesson round 3 recorded. Pass criterion not met.",
+ "recommendations": [
+  "F3 (blocking): delete the hardcoded textfont=dict(size=12) at visualizations.py:15194 and textfont=dict(size=11) at :15243; add fig.update_traces(textfont_size=font_size-2) to _bundle_layout so per-trace text is pinned to the same ratio as everything else.",
+  "F3 systemic (blocking): redefine bundle_figure_typeset_pt to return the MINIMUM over layout.font, title font, legend font, every annotation font and every trace textfont - so it can no longer certify a figure whose smallest text fails.",
+  "F1 (blocking): stop the m=5 label overflowing the canvas - shorten to 'm = 5:  C = 0 (inside)' or set textposition='top left' so it grows into the panel; then re-check in the compiled PDF, not the PNG.",
+  "F2 (blocking): move the flip annotation off 'top left'. Tighten the Haldane right-panel y-range from [-1.9, 1.1] to about [-1.6, 0.6] and place the annotation in the freed space below the data - this fixes the tick-label overprint and the dead-space MINOR together.",
+  "M2: drop the ordinals from the D11 figure filenames, FigureSpec names, docstrings and \\includegraphics paths so filename and printed number cannot diverge.",
+  "M5: give FigureSpec an output_dir and remove the width/height overrides from write_image, then run the harness for D11 so structural_checks.json finally covers these figures and can enforce the >= 8 pt floor.",
+  "M6/M4: add a vertical segment from (2/3, 2) to (2/3, 3) on the Voigt-Reuss panel so the 'exact' gap of 1 is readable off the figure.",
+  "Process: re-review round 5 against the rasterised PDF again. All three round-4 FAILs are invisible in the standalone PNGs; a PNG-only pass would have reported ALL PASS."
+ ],
+ "root_causes": [
+  "The typeset contract was applied at the layout level only. Per-trace textfont bypasses _bundle_font_for, and the verification helper reads the same single field the fix touched, so the breach is self-concealing.",
+  "Plotly text pushed outside a plotting area (cliponaxis=False, annotation_position='top left') is clipped by the canvas or lands on axis furniture; in a two-panel figure the margins cannot absorb it. Not visible at screen scale.",
+  "The structural-check harness has never been exercised on D11 (manifest and structural_checks still 2026-06-14, zero 'd11'), so nothing automatically enforces the contract; and its hardcoded width=1200 would itself violate the contract if run."
+ ]
 }
