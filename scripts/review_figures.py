@@ -1973,7 +1973,7 @@ FIGURE_REGISTRY: list[FigureSpec] = [
         ),
         needs_experiments=False,
         expected_traces=7,
-        expected_axes={"xaxis": "loop gain", "yaxis": "correction factor"},
+        expected_axes={"xaxis": "loop gain", "yaxis": "true / naive"},
         physics_checks=["johnson_factor_two_at_loopgain_three", "stability_blind_pair"],
         color_keys=["steel_blue", "amber", "carmine"],
     ),

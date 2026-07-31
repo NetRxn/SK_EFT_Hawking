@@ -1,213 +1,192 @@
 {
- "review_date": "2026-07-30T21:30:00Z",
- "agent_run_id": "figure-reviewer:bundle-D12:round3:2026-07-30T21:30:00Z",
+ "review_date": "2026-07-30T21:35:00Z",
+ "agent_run_id": "figure-reviewer:bundle-D12:round4:2026-07-30T21:35:00Z",
  "reviewer_version": "figure-reviewer-bundle-aware",
  "reviewer_model": "claude-opus-5",
  "stage": 9,
- "review_round": 3,
- "prior_review": "papers/D12/figures/figure_review_report.json (round 2, 2026-07-30T20:15:00Z)",
+ "review_round": 4,
+ "prior_review": "papers/D12/figures/figure_review_report.json (round 3, 2026-07-30T21:30:00Z)",
  "bundle_target": "D12",
- "anchor_source": "docs/agents/claims-reviewer-bundle-prompts.md#D12",
+ "anchor_source": "docs/agents/claims-reviewer-bundle-prompts.md#D12 (lines 734-838)",
  "figures_reviewed": 3,
  "overall_status": "issues_found",
  "pass_criterion": "ALL PASS (no FAIL, no MINOR)",
  "pass_criterion_met": false,
- "structural_checks_json": "still absent for papers/D12/figures (D12-R3-INFO-02). Review is visual (full-frame + up-to-6x crops) + pixel-level colour/overlap scans + AST source inspection + numerical re-derivation from formulas.py and the Lean statements.",
- "artefact_integrity": "All three shipped PNGs are SHA-256-identical to a fresh scale=2 render from the current src/core/visualizations.py (fig1 e81bc043..., fig2 f358f1ff..., fig3 2f776e9d...). Source mtime 19:06 precedes PNG mtime 19:07 -- no source/artefact drift.",
- "methodology": "Physics re-verified from scratch this round: every plotted quantity recomputed from src/core/formulas.py, the crossover and exponent-gap identities re-derived analytically, and each certified witness matched against its Lean statement in Detection/PoissonDiscrimination.lean, Detection/FilterFloors.lean and Electrothermal/BolometricFloors.lean. Nothing was inherited from the round-2 report.",
- "round2_remediation_verification": [
+ "review_target": "THE TYPESET RESULT. papers/D12/paper_draft.pdf (mtime 2026-07-30T20:17:10, 8 pp., letter, revtex4-2 [aps,prxquantum,reprint]) was rasterized with pdftoppm at 150 / 600 / 1200 dpi and the figures judged as they appear on pp. 3, 4 and 6. The PNGs in papers/D12/figures/ were treated as inputs and used only for pixel-exact measurement of what the page shows.",
+ "structural_checks_json": "still absent from papers/D12/figures (carried from D12-R3-INFO-02 / D12-R2-INFO-03). The three D12 FigureSpecs' checks were executed manually this round: trace counts 10/7/7 all == expected; no NaN/Inf; palette clean; ONE axis_label warning, filed as D12-R4-F3-04.",
+ "artefact_integrity": "BROKEN MID-REVIEW -- see D12-R4-XF-01. At review start the three shipped PNGs were SHA-256-identical to a fresh scale=3 render (fig1 0e0dc8669abc, fig2 7ad2023cd670, fig3 a478976a91bb) and were exactly the images embedded in the 20:17 PDF (3120x1560 @442 ppi, 2640x1410 @374 ppi, 2640x1320 @374 ppi per pdfimages). At 21:19:23 src/core/visualizations.py was modified out of band and at 21:30:32-21:31:11 the D12 PNGs were regenerated (fig1 -> b624505b6c7e, fig2 unchanged, fig3 -> c6b85f4fc72b). paper_draft.pdf was NOT rebuilt, so the PDF now embeds a superseded generation of figs 1 and 3. Both generations were snapshotted and both were inspected.",
+ "methodology": "Nothing inherited from rounds 1-3. (1) The typeset PDF was rasterized and every figure read on-page at 150 dpi, then at 600-1200 dpi over each annotation, axis title, legend row and marker. (2) Every plotted quantity was recomputed from src/core/formulas.py and every identity re-derived analytically (crossover root, exponent-gap split, sandwich inequalities, ENBW window products, |1-L|, tau_eff). (3) Subplot pixel domains were obtained from plotly's full_figure_for_development and collisions were measured by connected-ink column scans on the shipped PNGs rather than by eye. (4) The reviewed generation of fig 3 was reconstructed bit-for-bit (SHA-256 match) to prove the 11 px textfont claim. (5) All 12 figure-backing anchor theorems were resolved to real declarations in lean/SKEFTHawking/.",
+ "round3_remediation_verification": [
   {
-   "round2_item": 1,
-   "id": "D12-R2-F3-01",
+   "round3_item": 1,
+   "id": "typeset legibility (all three figures)",
+   "severity_then": "the D11-round-3 lesson",
+   "verdict": "LANDED",
+   "evidence": "All three floats are figure* at \\textwidth in paper_draft.tex (141, 222, 307) and pdfimages confirms they occupy the full 510 pt column at 442 / 374 / 374 ppi. Fig 1 is 1040x520 at font 19 (9.32 pt), figs 2-3 are 880x470 and 880x440 at font 16 (9.27 pt), against 10 pt body -- legible on the page and matched to the body text. _bundle_font_for(1040) = 19 and _bundle_font_for(880) = 16, consistent with the declared contract; the achieved value is ~9.3 pt rather than the docstring's ~9.5 pt purely through integer rounding of the font size (see INFO-02). ONE EXCEPTION: fig 3's three witness labels bypass the contract at 6.38 pt -- D12-R4-F3-01."
+  },
+  {
+   "round3_item": 2,
+   "id": "D12-R3-F3-01",
    "severity_then": "MAJOR",
-   "description": "'(UNSTABLE)' printed inside the stable half-plane; textposition 'top right' -> 'top left'",
-   "verdict": "PARTIALLY LANDED -- semantics fixed, rendering regressed",
-   "evidence": "visualizations.py:14958 now reads (-3.0, 'L = -3 -> 4  (UNSTABLE)', 'top left'). The claim-legibility half IS fixed: the rendered string spans px 1075..1355 while the marker is at px 1372 and the L = -1 boundary at px 1400, so the entire label -- including the word '(UNSTABLE)' -- now lies at L < -3, strictly in the unstable half-plane, and clears the 'naive OVERSTATES' vrect (left edge px 1581) by 226 px. But the fix pushed the 280-px string into only ~172 px of in-axis room, producing two NEW defects: overflow onto the y-axis title and a curve strike-through of the trailing 'E)'. See D12-R3-F3-01."
+   "verdict": "LANDED",
+   "evidence": "'L = -3 -> 4<br>(UNSTABLE)' anchored 'bottom left' occupies L in [-5.4, -3.3] at y in [3.2, 3.7]. The curve over that x-range is |1-L| in [4.3, 6.4], entirely above the label: zero glyph columns carry curve ink, and the label is wholly inside the axis with no ordinate-title overrun. The stated argument (|1-L| > 4 for L < -3 makes the quadrant curve-free) is correct and is what the render shows. The companion 'L = 5' label DID move to 'top right' as described -- but that anchor is struck by the curve; new finding D12-R4-F3-02."
   },
   {
-   "round2_item": 2,
-   "id": "D12-R2-F3-02",
+   "round3_item": 3,
+   "id": "D12-R3-F3-02",
    "severity_then": "MINOR",
-   "description": "'L = -1 stability boundary' moved to 'bottom left' so the V-curve stops striking through it",
    "verdict": "LANDED",
-   "evidence": "visualizations.py:14955 annotation_position='bottom left'. On a 3x crop the annotation sits at the panel floor (y ~ 0.15) spanning px 1195..1400, entirely left of the V-curve's descending limb (which is at px >= 1490 at that height) and below the y = 1 'naive exact' hline. Zero strike-through. Its left edge clears the '0' y-tick by only ~3 px -- tight, but the two are separately legible at 3x and it is not scored."
+   "evidence": "Both surviving fig-3 legend keys read '(left) ...' ('(left) stable branch L > -1', '(left) unstable branch L < -1', '(left) speed-up witness L = 3'). The right panel exposes no keys, so the blue 'stable branch' key cannot be misread as describing the right panel's stability-blind |1-L| curve."
   },
   {
-   "round2_item": 3,
-   "id": "D12-R2-F3-03",
+   "round3_item": 4,
+   "id": "D12-R3-F1-02",
    "severity_then": "MINOR",
-   "description": "'L = -1 marginal' moved to 'top left' so the amber unstable branch stops striking through it",
    "verdict": "LANDED",
-   "evidence": "visualizations.py:14932 annotation_position='top left'. On a 4x crop the annotation sits near tau_eff ~ +3.6, well above the amber unstable branch (confined to tau_eff < 0) and left of where the blue stable branch enters the top of the frame (at L = -0.75). Zero strike-through by either branch; adequate separation from the subplot title."
+   "evidence": "The sole folklore key now reads '(A,B) folklore  exp(-(N_a-N_b))  -- NOT a bound', and panel (B)'s folklore trace is indeed drawn (showlegend=False) with the same amber dash. The prefix now covers both panels in which the glyph appears. The IDENTICAL failure mode survives one key over, on the (50,60) diamond that also appears in panel (C) -- D12-R4-F1-03."
   },
   {
-   "round2_item": 4,
-   "id": "D12-R2-F2-01",
+   "round3_item": 5,
+   "id": "D12-R3-F1-01",
    "severity_then": "MINOR",
-   "description": "boxcar trace width 2 -> 7, under the width-2 carmine floor hline, so attainment is legible",
    "verdict": "LANDED",
-   "evidence": "visualizations.py:14860 line=dict(color=blue, width=7); the add_hline at 14865-14868 stays width=2 dotted and renders above it. On a 3x crop the result reads unambiguously as a carmine dotted line lying ON a thick steel-blue band -- i.e. the least element is visibly ATTAINED -- rather than as a single striped line. Band thickness corresponds to ~0.012 in ENBW*T units, small enough not to obscure that the value is exactly 1/2."
+   "evidence": "'9.5445' is textposition='top left' on the marker at (60, 9.5445). The gap exponent is strictly increasing in N_a, so {N_a < 60, y > 9.5445} is curve-free; the 600 dpi crop shows the label wholly in white space with the curve passing below-right of it. Zero glyph columns carry curve ink."
   },
   {
-   "round2_item": 5,
-   "id": "D12-R2-F2-02",
+   "round3_item": 6,
+   "id": "D12-R3-F3-03",
    "severity_then": "MINOR",
-   "description": "right log ordinate gets dtick=1, removing ambiguous bare 5/2 minor-tick labels",
-   "verdict": "LANDED",
-   "evidence": "visualizations.py:14897 dtick=1 on yaxis2 (confirmed in the layout dump: yaxis2 type=log dtick=1). The rendered ticks are exactly 10, 1, 10^-1, 10^-2, 10^-3 -- one per decade, no bare minor labels. The mixed plain/power rendering of 10^1 and 10^0 as '10' and '1' is Plotly's standard exponentformat='power' behaviour and matches fig 1's ordinates; not scored."
+   "verdict": "NOT LANDED -- RECURRENCE",
+   "evidence": "The line break was applied ('naive<br>OVERSTATES'), but the word 'OVERSTATES' alone measures 882 px against the band's 489 px (1.80x) and runs to L = 3.68; 'naive' runs to L = 2.50. Both still overhang into the understating region L > 2. Re-filed as D12-R4-F3-03 with a fix that does not depend on horizontal fit."
   },
   {
-   "round2_item": 6,
-   "id": "D12-R2-XF-01",
+   "round3_item": 7,
+   "id": "D12-R3-F1-03",
    "severity_then": "MINOR",
-   "description": "legend keys prefixed (A)/(B) on fig 1 and (left)/(right) on fig 2",
-   "verdict": "PARTIALLY LANDED",
-   "evidence": "Fig 1: all 7 keys now carry (A) or (B). Fig 2: all 7 keys now carry (left) or (right) -- both verified by enumerating fig.data names. TWO gaps remain: (a) the prefixing orphaned panel (B)'s folklore curve, which has showlegend=False and is now excluded by the surviving key's '(A)' prefix -> D12-R3-F1-02; (b) fig 3 was never treated, and has the same two-panel/unrelated-ordinate same-glyph collision, where it is physics-misleading -> D12-R3-F3-02."
-  },
-  {
-   "round2_item": 7,
-   "id": "D12-R2-F1-01",
-   "severity_then": "MINOR",
-   "description": "fig 1 ordinates labelled; exponent-gap axis explicitly (nats)",
    "verdict": "LANDED",
-   "evidence": "Layout dump: yaxis='(A) miss probability  (dimensionless)', yaxis2='(B) average assignment-error floor  (dimensionless)', yaxis3='exponent advantage of the Le Cam floor  (nats)'. All three render legibly. With the nats unit stated, the 'log 4 = 1.386 -- fail-open threshold' hline is now self-explanatory, which was the point of the item."
+   "evidence": "Both witness keys now use the explicit ordered-pair form: '(A) certified 148x at (N_b,N_a) = (5,10)' and '(B) certified ratio > 1000 at (N_b,N_a) = (50,60)'. They agree with each other and with the caption's '(N_b, N_a) = (5, 10)' / '(50, 60)'."
   },
   {
-   "round2_item": 8,
-   "id": "D12-R2-C2-01",
-   "severity_then": "MINOR",
-   "description": "fig 2 caption states the upper curves are bounds, and that Mills exceeds 1 for z <~ 0.37",
-   "verdict": "LANDED",
-   "evidence": "paper_draft.tex:226-228: 'The upper curves are \\emph{bounds}, not probabilities --- the Mills ratio \\varphi(z)/z exceeds $1$ for $z \\lesssim 0.37$, where it is vacuous.' Numerically re-derived: gaussian_tail_mills_upper crosses 1 at z = 0.37223889803561744 (Brent), so '0.37' is correct to the digit quoted, and mills(0.05) = 7.9689 >> 1 confirms the vacuity. The figure's own legend key carries the same hedge ('(right) Mills upper  phi(z)/z  (vacuous for small z)'), and the registry caption in review_figures.py:1958-1961 matches. Sandwich integrity independently checked at z = 0.05, 0.5, 1, 2, 3.5: Birnbaum-Feller < Q < min(Chernoff, Mills) at every point."
-  },
-  {
-   "round2_item": "global-a",
-   "id": "layer='below' on rect shapes",
-   "severity_then": "n/a",
-   "description": "all add_vrect/add_hrect pass layer='below' (D11 colour-compositing fix)",
-   "verdict": "LANDED FOR D12 (global claim overstated -- see D12-R3-INFO-01)",
-   "evidence": "visualizations.py:14945 passes layer='below', and fig 3's 'naive OVERSTATES' band did NOT lose legibility: the amber fill renders at RGB ~ (252,234,209) across the full band px 1581..1720 x 180..787, with the blue |1-L| curve and the annotation text both compositing ON TOP of it. Verified against the un-tinted region immediately left of L = 0. AST audit: 6/6 D11+D12 rect calls carry the kwarg; 10 legacy calls elsewhere in the file do not."
-  },
-  {
-   "round2_item": "global-b",
-   "id": "'D12 Fig. N --' title prefixes dropped",
-   "severity_then": "n/a",
-   "description": "LaTeX owns figure numbering",
-   "verdict": "LANDED",
-   "evidence": "Rendered titles are 'The folklore photon-counting floor fails in two directions', 'Filtered-readout realizability floor and the Gaussian tail sandwich', and 'Electrothermal feedback -- stability dichotomy and the |1-L| Johnson correction'. No 'D12 Fig. N' prefix on any of the three; numbering is left to the \\label/\\ref pairs fig:folklore, fig:enbw, fig:etf."
-  },
-  {
-   "round2_item": "global-c",
-   "id": "FIGURE_REGISTRY completeness",
-   "severity_then": "n/a",
-   "description": "all seven D11/D12 figures registered (root cause of defects surviving rounds)",
-   "verdict": "LANDED",
-   "evidence": "scripts/review_figures.py carries FigureSpec entries for d11_fig1..fig4 (lines 1863, 1879, 1896, 1913) and d12_fig1..fig3 (1930, 1947, 1964). The three D12 specs' expected_traces (10, 7, 7) were checked against live renders and all three match exactly, so the registry's structural gate is now meaningful for D12."
+   "round3_item": 8,
+   "id": "subplot titles shortened and side-labelled",
+   "severity_then": "layout",
+   "verdict": "LANDED, with one knock-on",
+   "evidence": "Titles are now '(A) false-strict miss bound, N_b = 5' / '(B) fail-open screen, N_b = 50' / '(C) exact exponent gap' and '(left)'/'(right)' on figs 2-3; none collides with a neighbour at any panel boundary. Knock-on: fig 1's caption still calls panel (C) 'Right:', which was tolerable when the title was unprefixed and is now a mismatch -- folded into D12-R4-F1-03."
   }
  ],
  "anchor_trap_results": [
   {
-   "trap": "panel (B) shading begins ONLY at the crossover",
-   "verdict": "PASS",
-   "evidence": "Re-derived independently: folk < true_floor iff 2 sqrt(N_b)(sqrt(N_a) - sqrt(N_b)) > log 4, whose root is N_a = (sqrt(N_b) + log4/(2 sqrt(N_b)))^2 = 51.39590342 at N_b = 50 -- matching visualizations.py:14800 exactly. The open_mask fill is built from the sampled comparison folk < true_floor (14790), not from the analytic root, and the two agree: at the root, folklore = 0.2476092398055018 and Le Cam = 0.2476092398055029 (equal to 1e-15). Pixel confirmation on a 3.5x crop: the amber fill's left vertex coincides with the carmine crossover vline AND with the folklore/Le Cam intersection; the sub-crossover strip N_a in [50, 51.40] is unshaded, so the 'merely conservative' regime is not mislabelled as fail-open. Cross-panel: the third panel's curve crosses its log 4 = 1.3862943611 hline at the same N_a."
+   "trap": "panel (B) shading begins only at the crossover; below it the folklore form is merely conservative, which is NOT direction A",
+   "result": "PASS",
+   "evidence": "The shading mask is `folk < true_floor`, exactly the fail-open predicate. Recomputed: (50) 1.0 > 0.25 unshaded; (51) 0.36788 > 0.24877 unshaded; (52) 0.13534 < 0.24515 shaded. The vline is at the analytic root 51.3959034214, and the shaded polygon's left vertex coincides with it. The merely-conservative interval is visibly unshaded on the page."
   },
   {
    "trap": "the certified (50,60) witness",
-   "verdict": "PASS",
-   "evidence": "poisson_avg_error_floor(60,50) = 0.15853452911465984; folklore_miss_floor(60,50) = 4.5399929762e-05; ratio = 3491.9553828398443 > 1000, discharging folklore_avgFloor_unsound_factor1000 (Detection/PoissonDiscrimination.lean:463). The gap exponent folklore_gap_exponent(60,50) = 9.544511501033224 -> label '9.5445' is correctly rounded and is > 9.54, discharging brightGap_5060 (same file, line 436). Marker placement verified: the panel-(B) diamond sits ON the Le Cam curve at y = 0.1585 (not on the folklore curve), which is the correct anchor for a floor-vs-folklore ratio claim. Caption numbers at paper_draft.tex:145-152 reproduce."
+   "result": "PASS",
+   "evidence": "Drawn in panel (B) on the Le Cam curve at N_a = 60 and in panel (C) at (60, 9.5445). Le Cam/folklore ratio = 3491.9553828 > 1000 (key) and gap exponent = 9.5445115010 (label), tied by log(ratio) = gap - log 4 to 1e-10. Both reduce to brightGap_5060 / folklore_avgFloor_unsound_factor1000 in Detection/PoissonDiscrimination.lean."
   },
   {
-   "trap": "ENBW*T = 1/2 saturated by the boxcar, ramp at 2/3",
-   "verdict": "PASS",
-   "evidence": "enbw_boxcar(T)*T = 0.5 exactly and enbw_ramp(T)*T = 0.6666666666666666 exactly at T = 0.25, 1.0, 2.5, 4.0 -- i.e. both are T-independent, as the scale-invariance of the window product requires, so the boxcar trace is a horizontal line AT the floor rather than approaching it. enbw_window_product_floor() = 0.5. This is the IsLeast content of enbw_mul_window_isLeast (Detection/FilterFloors.lean:328, 'IsLeast (enbwWindowProducts T) (1/2)'), and the ramp's 2/3 is enbw_ramp_gt_half (line 503). The figure annotation 'floor 1/2 -- IsLeast, sharp' therefore states the attained-least claim, not merely a bound, and the legend's 'one admissible point above' correctly presents 2/3 as a member of [1/2, inf), not an upper edge. D12-R2-F2-01 CONFIRMED FIXED: on a 3x crop the width-7 steel-blue boxcar band is plainly visible with the width-2 carmine dotted floor drawn over it, so attainment reads as two coincident objects, not one striped line."
+   "trap": "ENBW*T = 1/2 saturated by the boxcar with the ramp at 2/3",
+   "result": "PASS",
+   "evidence": "enbw_boxcar(T)*T = 0.5 exactly and enbw_ramp(T)*T = 0.6666666666666666 at every sampled T; the boxcar trace is drawn coincident with the floor line and the ramp strictly above it."
   },
   {
-   "trap": "Johnson |1 - L| gives 2 at L = 3 (not 4), and exactly 4 at BOTH L = 5 and L = -3",
-   "verdict": "PASS",
-   "evidence": "johnson_nep_correction_factor(3.0) = 2.0, (5.0) = 4.0, (-3.0) = 4.0. The three rendered markers sit at (3, 2), (5, 4), (-3, 4) -- the L = 3 marker is on the y = 2 gridline, NOT y = 4, so the |1+L| error the paper narrates (paper_draft.tex:366-368, 'at L = 3 an ETF-unaware budget is low by exactly two, not four') is correctly depicted. The (5, -3) pair is exactly the Lean witness pair johnsonQuietWitness / johnsonDivergentWitness (Electrothermal/BolometricFloors.lean:431/437), and the docstring's forcing argument (|1-a| = |1-b| with a != b requires a+b = 2, so a stable/divergent pair with b < -1 needs a > 3; (5,-3) is the smallest integer such pair) is respected by the choice of plotted witnesses. Both markers are visibly on opposite sides of the carmine L = -1 dashed boundary, at the same height y = 4, which is the stability-blindness claim rendered geometrically. Left panel: etf_effective_time_constant(1,1,3) = 0.25 = tau/4, matching the legend; the unstable branch is drawn NEGATIVE (amber, -0.2 at L = -6 down to the -4 clip near L = -1.06), so reading it through |.| would invert the physics -- exactly as the caption warns."
+   "trap": "the Johnson correction |1 - L| gives 2 at L = 3, NOT 4, and equals 4 at both L = 5 and L = -3",
+   "result": "PASS",
+   "evidence": "Markers sit at (3, 2), (5, 4) and (-3, 4); formulas.py returns exactly 2.0, 4.0, 4.0. The V-minimum is 0 at L = 1. The (5, -3) pair straddles the drawn L = -1 boundary, so the stability-blindness claim reads off the figure correctly."
   }
  ],
  "figures": [
   {
    "name": "d12_fig1_poisson_floor_vs_folklore",
    "path": "papers/D12/figures/d12_fig1_poisson_floor_vs_folklore.png",
-   "source_fn": "src/core/visualizations.py::fig_d12_poisson_floor_vs_folklore (14738-14836)",
-   "consumed_at": "papers/D12/paper_draft.tex:141-153 (label fig:folklore)",
-   "status": "warning",
+   "source_fn": "src/core/visualizations.py::fig_d12_poisson_floor_vs_folklore",
+   "consumed_at": "papers/D12/paper_draft.tex:141-153 (figure*, width=\\textwidth, label fig:folklore) -> paper_draft.pdf p.3",
+   "reviewed_sha256_prefix": "0e0dc8669abc",
+   "typeset_geometry": "canvas 1040x520 px, shipped at scale=3 (3120x1560), embedded at 442 ppi across the 510 pt \\textwidth. Layout/tick text 9.32 pt, legend + layout annotations 8.83 pt, marker text 9.32 pt -- all against 10 pt body.",
+   "status": "fail",
    "severity_counts": {
     "FAIL": 0,
-    "MAJOR": 0,
-    "MINOR": 3
+    "MAJOR": 2,
+    "MINOR": 1
    },
    "rendering": {
     "status": "issues",
     "issues": [
-     "The '9.5445' witness label is struck through by the gap curve -- 16 glyph columns carry curve ink (D12-R3-F1-01).",
-     "Panel (B)'s folklore curve has no legend key, and the surviving key's '(A)' prefix now excludes it (D12-R3-F1-02).",
-     "CONFIRMED FIXED from round 2: all three ordinates are titled and the exponent-gap axis is explicitly (nats); the log-4 threshold annotation is clear of the curve; the 'crossover N_a = 51.40' annotation is clean, inside the axis, with no tick collision.",
-     "No content reaches any image border (content bbox x 28..2653, y 63..1018 of 2800x1120); nothing is clipped."
+     "Panel (B)'s ordinate title 'avg. error floor' is rendered inside panel (A)'s plot rectangle, on top of panel (A)'s shaded fill and against its folklore curve (D12-R4-F1-01).",
+     "Panel (C): the 'log 4 = 1.386 -- fail-open threshold' annotation collides glyph-on-glyph with the y-axis '0' tick AND is struck through by the gap curve (D12-R4-F1-02).",
+     "CONFIRMED FIXED from round 3: the '9.5445' witness label is now 'top left' of its marker and is entirely clear of the monotonically rising gap curve -- the quadrant {N_a < 60, y > 9.5445} is provably curve-free (D12-R3-F1-01 discharged).",
+     "CONFIRMED FIXED from round 3: the sole folklore legend key now reads '(A,B) folklore  exp(-(N_a-N_b))  -- NOT a bound', so panel (B)'s unkeyed folklore trace is no longer excluded by the prefix (D12-R3-F1-02 discharged).",
+     "The 'crossover N_a = 51.40' annotation is clean: inside the axis, clear of both curves and of the 10^-10 tick.",
+     "Legend clears the three x-axis titles by 33 px at 3x (11 px at 1x, 5.4 pt typeset); the inter-column gap in legend row 3 is 31 px at 3x (5.1 pt typeset) -- tight but non-overlapping.",
+     "Nothing is clipped at any image border."
     ]
    },
    "physics": {
     "status": "pass",
     "issues": [],
     "verified": [
-     "Panel (A) is genuinely direction (A): realizable exp(-N_a) lies strictly BELOW folklore exp(-(N_a-N_b)) with a constant log-offset N_b = 5, so the two lines are exactly parallel on the log ordinate; endpoints reproduce (at N_a = 5: 1 and 6.74e-3; at N_a = 14: 1.23e-4 and 8.32e-7).",
-     "Witness ratio at (5,10) = 148.4131591 -> '148x' (folklore_missFloor_beaten_148fold).",
-     "Panel (B) shading starts only at the crossover; folklore and Le Cam are equal to 1e-15 at the analytic root N_a = 51.39590342.",
-     "Cross-panel consistency: the third panel's gap curve crosses log 4 = 1.3862943611 at the same N_a, and the exponent identity log(true/folk) = 2 sqrt(N_b)(sqrt(N_a)-sqrt(N_b)) - log 4 was re-derived from scratch.",
-     "Witness at (50,60): ratio 3491.9553828 > 1000 and gap 9.544511501 > 9.54 (folklore_avgFloor_unsound_factor1000, brightGap_5060).",
-     "Trace count 10 == FIGURE_REGISTRY expected_traces."
+     "Direction (A) is genuinely direction (A): the realizable unit-threshold miss exp(-N_a) lies strictly BELOW the folklore value exp(-(N_a-N_b)) with a constant log-offset N_b = 5, so the two traces are exactly parallel on the log ordinate. Recomputed from formulas.py at N_a = 10: realizable 4.5399929762e-05, folklore 6.7379469991e-03, ratio 148.4131591026 = e^5 -- the legend's '148x' and the caption's '148x'.",
+     "Direction (B) shading begins ONLY at the crossover, as the caption requires. The mask is `folk < true_floor`, i.e. exactly the fail-open condition. Recomputed: N_a = 50 -> folklore 1.0 > Le Cam 0.25 (conservative, correctly UNSHADED); N_a = 51 -> 0.36788 > 0.24877 (still unshaded); N_a = 52 -> 0.13534 < 0.24515 (shaded). The merely-conservative sub-crossover region is therefore NOT drawn as fail-open. This was the round-4 physics trap and it passes.",
+     "Analytic crossover N_a = ((log 4)/(2 sqrt 50) + sqrt 50)^2 = 51.3959034214; the drawn vline is at that analytic root (not a sampled grid point) and the label rounds it to 51.40 (0.008% error).",
+     "The certified (50,60) witness reproduces on BOTH panels: avg-error ratio Le Cam/folklore = 3491.9553828 > 1000 (panel B key) and gap exponent 2 sqrt(50)(sqrt 60 - sqrt 50) = 9.5445115010 (panel C label, printed as 9.5445). Cross-panel identity log(Le Cam/folklore) = gap - log 4 re-derived independently: 9.5445115010 - 1.3862943611 = 8.1582171399 = log(3491.9553828). Consistent.",
+     "log 4 = 1.3862943611 -> the '1.386' threshold label.",
+     "Trace count 10 == FIGURE_REGISTRY expected_traces; axis-label substrings 'source rate' / 'miss probability' both satisfied.",
+     "Backing Lean declarations resolve: folklore_missFloor_beaten_148fold, folkloreGap_split, brightGap_5060, folklore_avgFloor_unsound_factor1000, poisson_darkBaseline_miss_optimum (Detection/PoissonDiscrimination.lean)."
     ]
    },
    "style": {
     "status": "issues",
     "issues": [
-     "The two certified-witness legend keys use inconsistent pair notation, and panel (B)'s disagrees with the caption (D12-R3-F1-03).",
-     "Palette conforms: steel_blue #2E86AB, amber #F18F01, carmine #E63946 only, matching color_keys in the registry."
+     "Panel (C) is titled '(C)' in the figure but is referenced as 'Right:' in the caption and carries no '(C)'-prefixed legend key (D12-R4-F1-03).",
+     "Palette conforms: steel_blue #2E86AB, amber #F18F01, carmine #E63946 only; serif family matches the revtex body text."
     ]
    },
    "caption_match": true,
-   "caption_match_detail": "paper_draft.tex:143-152 describes (A), (B) and the right panel; 148x, 51.40, (N_b,N_a) = (5,10) and (50,60), and the log 4 threshold all reproduce numerically. The caption calls the third panel 'Right:' while the figure's subplot title is unprefixed -- unambiguous (it is the rightmost) and not scored.",
+   "caption_match_detail": "paper_draft.tex:143-152. Every numeral reproduces (148x, 51.40, (5,10), (50,60), log 4). The caption's explicit sentence 'Below that crossover the folklore form is merely conservative, which is not direction (A)' is faithfully rendered -- the sub-crossover region is unshaded. The only mismatch is the panel name: the caption says 'Right:' where the figure says '(C)' (folded into D12-R4-F1-03).",
    "findings": [
     {
-     "id": "D12-R3-F1-01",
-     "severity": "MINOR",
-     "area": "rendering / label collision",
-     "round": 3,
-     "new_in_round": 3,
-     "origin": "defect in the round-1 remediation that added the '9.5445' label; missed by round 2",
-     "finding": "Fig. 1, exponent-gap panel: the '9.5445' value label added to satisfy round-1 D12-F1-02 is struck through by the rising blue gap curve. It is placed textposition='top center' on the marker at (60, 9.5445), so its right half extends to N_a > 60, where the monotonically increasing curve has already risen past 9.5445. Pixel scan of the label bbox: 16 columns carry both glyph ink and steel-blue curve ink; the crop shows the curve bisecting the trailing '5'. The digit is still decipherable, but a certified numerical value printed under a line crossing it is not publication-clean -- and this label is the figure's only rendering of the 'brightGap_5060' witness (Detection/PoissonDiscrimination.lean:436, '9.54 < 2 sqrt 50 (sqrt 60 - sqrt 50)').",
-     "fix": "src/core/visualizations.py:14829 -- change textposition='top center' to 'top left'. Because the gap exponent 2 sqrt(N_b)(sqrt(N_a) - sqrt(N_b)) is strictly increasing in N_a, the quadrant {N_a < 60, y > 9.5445} lies entirely above the curve, so a left-anchored label cannot collide. cliponaxis=False is already set and the panel has ~10 N_a-units of room to the left of the marker."
+     "id": "D12-R4-F1-01",
+     "severity": "MAJOR",
+     "area": "rendering / cross-panel overprint",
+     "round": 4,
+     "new_in_round": 4,
+     "origin": "regression introduced by the round-3 canvas change (2800x1120 -> 1040x520 at horizontal_spacing=0.075)",
+     "finding": "Panel (B)'s ordinate title 'avg. error floor' is drawn INSIDE panel (A)'s plot rectangle, overprinting panel (A)'s shaded fill and running into its amber folklore curve. Measured on the shipped 3120-px PNG: the subplot x-domains are A = px [273, 1051], B = [1257, 2034], C = [2240, 3018]; the rotated title's ink occupies cols [989, 1076], so 62 of its 88 px (70%) lie inside panel (A) and the 206-px inter-panel gutter is left empty. At 1200 dpi the amber dashed folklore curve passes through the gap between 'avg.' and 'error' and touches the period. Cause: panel (B)'s log tick labels (10^-2 ... 10^-10) at 19 px consume the whole gutter, so plotly pushes the axis title left past panel (A)'s edge. This is not cosmetic: panel (A)'s ordinate is 'miss probability' and panel (B)'s is 'avg. error floor', and separating those two quantities is precisely what the figure exists to do -- a reader who attributes the visible title to the panel it sits in reads direction (A) as an average-error statement.",
+     "fix": "src/core/visualizations.py::fig_d12_poisson_floor_vs_folklore -- raise horizontal_spacing from 0.075 to >= 0.11, or thin panel (B)'s log ticks (dtick=2 -> dtick=4 / showexponent='first'), or move panel (B)'s ordinate title above its axis. Verify by re-measuring that the title's ink bbox lies wholly between panel (A)'s right edge and panel (B)'s left edge.",
+     "still_present_after_2131_regeneration": true
     },
     {
-     "id": "D12-R3-F1-02",
-     "severity": "MINOR",
-     "area": "rendering / legend",
-     "round": 3,
-     "new_in_round": 3,
-     "origin": "regression introduced by the round-2 fix for D12-R2-XF-01",
-     "finding": "Fig. 1: the (A)/(B) prefixing left panel (B)'s folklore curve with NO legend key -- and, worse, actively mis-directs the reader away from the only key that describes it. The amber dashed trace in panel (B) (visualizations.py:14807-14809) carries showlegend=False, so the rendered legend has 7 keys, of which the only folklore key is '(A) folklore  exp(-(N_a-N_b))  -- NOT a bound'. Before round 2 that key was unprefixed and legitimately covered the identically-styled amber dashed curves in BOTH panels; the '(A)' prefix now asserts it does not describe panel (B)'s. Panel (B) is the load-bearing fail-open panel and its amber curve is one of the two curves whose crossing defines the certified crossover, so leaving it unkeyed is a real loss. (Verified by enumerating fig.data legend names: '(B) fail-open: ...', '(B) Le Cam floor ...', '(B) certified ratio ...' -- no '(B) folklore'.)",
-     "fix": "src/core/visualizations.py:14807-14809 -- drop showlegend=False and give the trace its own key: name='(B) folklore  exp(-(N_a-N_b))  -- same form at N_b = 50'. The legend is a 3-column grid with 6 keys on 2 rows plus one orphan; a 8th key completes the grid rather than adding a row, so no _d12_layout bottom-margin change is needed."
+     "id": "D12-R4-F1-02",
+     "severity": "MAJOR",
+     "area": "rendering / label struck + tick collision",
+     "round": 4,
+     "new_in_round": 4,
+     "origin": "regression: round 3 recorded this annotation as 'clear of the curve' on the 2800x1120 canvas; the round-3 canvas change broke it",
+     "finding": "Panel (C), lower-left corner: the add_hline annotation 'log 4 = 1.386 -- fail-open threshold' fails twice. (i) It collides with the y-axis '0' tick label -- the two render as a single connected ink run at cols [2211, 2271] (panel C's axis line is at 2240), so the string reads '0log 4 = 1.386'. (ii) The blue gap curve, which reaches y = log 4 at N_a = 51.40 immediately right of the axis, runs straight through the 'l' and clips the 'o' of 'log' -- at 1200 dpi the 'l' is entirely replaced by curve ink. The annotation names the figure's fail-open threshold, so this is the panel's load-bearing string.",
+     "fix": "annotation_position='bottom right' -> 'top right' on the add_hline at visualizations.py (the log-4 hline in fig_d12_poisson_floor_vs_folklore). At the right end of the panel the gap curve is at ~23 nats, more than 20 nats above the log-4 line, so the strip just above the line at large N_a is provably curve-free and is also far from the '0' tick.",
+     "still_present_after_2131_regeneration": true
     },
     {
-     "id": "D12-R3-F1-03",
+     "id": "D12-R4-F1-03",
      "severity": "MINOR",
-     "area": "style / notation consistency",
-     "round": 3,
-     "new_in_round": 3,
-     "origin": "pre-existing; not flagged in rounds 1-2",
-     "finding": "Fig. 1: the two certified-witness legend keys use inconsistent notation for the same kind of ordered pair. Panel (A)'s key is explicit -- '(A) certified 148x at (N_b,N_a) = (5,10)' -- while panel (B)'s is bare: '(B) certified ratio > 1000 at (50, 60)'. The bare pair's order is only recoverable by cross-reading the subplot title '(N_b = 50)'. The paper caption uses the explicit form for BOTH ('certified at 148x for (N_b,N_a) = (5,10)' and 'the certified witness at (N_b,N_a) = (50,60)', paper_draft.tex:145/151), so the figure is internally inconsistent and inconsistent with its own caption. This matters more than usual because the two panels use different N_b (5 vs 50) and both certified numbers (148x, >1000) are Lean-registered witnesses.",
-     "fix": "src/core/visualizations.py:14813 -- name='(B) certified ratio > 1000 at (N_b,N_a) = (50, 60)'."
+     "area": "legend / caption <-> panel labelling",
+     "round": 4,
+     "new_in_round": 4,
+     "origin": "the round-3 fix for D12-R3-F1-02 was applied to the folklore key only; the same failure mode survives on the witness key, and the caption was not updated when the subplot title gained its '(C)' prefix",
+     "finding": "Panel (C) is titled '(C) exact exponent gap' in the figure, but nothing else in the document calls it (C). The caption (paper_draft.tex:150) says '\\textbf{Right:}'. No legend key carries a '(C)' prefix: panel (C)'s gap curve is showlegend=False, and the red diamond that appears in panel (C) at (60, 9.5445) is keyed only as '(B) certified ratio > 1000 at (N_b,N_a) = (50,60)'. This is the identical failure mode as round-3's D12-R3-F1-02 -- a key whose panel prefix excludes a panel in which the keyed glyph actually appears -- which was fixed there by relabelling '(A)' -> '(A,B)'.",
+     "fix": "(a) name the diamond key '(B,C) certified witness at (N_b,N_a) = (50,60):  ratio > 1000,  gap 9.5445'; (b) paper_draft.tex:150 -- '\\textbf{Right:}' -> '\\textbf{(C)}'. Note the round-3 report declined to score the 'Right:' wording because the subplot title was then unprefixed; it is now prefixed, so the two disagree.",
+     "still_present_after_2131_regeneration": true
     }
-   ],
-   "notes": "Re-rendered PNG is SHA-256-identical to the shipped artefact. Panel (B)'s long ordinate title overruns its subplot vertically without colliding -- see D12-R3-INFO-03."
+   ]
   },
   {
    "name": "d12_fig2_enbw_matched_filter",
    "path": "papers/D12/figures/d12_fig2_enbw_matched_filter.png",
-   "source_fn": "src/core/visualizations.py::fig_d12_enbw_matched_filter (14839-14901)",
-   "consumed_at": "papers/D12/paper_draft.tex:222-230 (label fig:enbw)",
+   "source_fn": "src/core/visualizations.py::fig_d12_enbw_matched_filter",
+   "consumed_at": "papers/D12/paper_draft.tex:222-230 (figure*, width=\\textwidth, label fig:enbw) -> paper_draft.pdf p.4",
+   "reviewed_sha256_prefix": "7ad2023cd670",
+   "typeset_geometry": "canvas 880x470 px at scale=3 (2640x1410), embedded at 374 ppi. Layout/tick text 9.27 pt, legend + annotations 8.69 pt against 10 pt body. No per-trace textfont override, so no string escapes the contract.",
    "status": "pass",
    "severity_counts": {
     "FAIL": 0,
@@ -218,152 +197,193 @@
     "status": "pass",
     "issues": [],
     "verified": [
-     "D12-R2-F2-01 fixed: the width-7 boxcar band with the width-2 carmine dotted floor over it makes ATTAINMENT of the least element legible as two coincident objects.",
-     "D12-R2-F2-02 fixed: dtick=1 gives exactly 10, 1, 10^-1, 10^-2, 10^-3 -- no ambiguous bare minor-tick labels.",
-     "'floor 1/2 -- IsLeast, sharp' sits clear above the band with no strike-through and no clipping at the panel's right edge.",
-     "All 7 legend keys carry a (left)/(right) prefix; no same-glyph ambiguity survives. No content at any image border."
+     "The right panel's ordinate title 'tail prob. / bound' sits cleanly in the inter-panel gutter (left panel ends at px 1252 of 2640; the title begins at ~1330) -- i.e. this figure does NOT have fig 1's D12-R4-F1-01 defect, because its log ticks are short enough to fit the gutter.",
+     "'floor 1/2 -- IsLeast, sharp' sits in the empty band between the boxcar trace at 0.5 and the ramp at 2/3; it touches neither and stays inside the axis.",
+     "Seven single-column legend entries, every one side-prefixed '(left)' / '(right)'; no wrapping, no overlap, and the first row clears the x-axis titles.",
+     "The red dotted floor line is drawn coincident on the width-7 boxcar trace, which is the correct visual encoding of saturation and is disambiguated by both the legend and the annotation.",
+     "Nothing clipped at any border."
     ]
    },
    "physics": {
     "status": "pass",
     "issues": [],
     "verified": [
-     "ENBW*T = 0.5 exactly for the boxcar and 0.6666666667 exactly for the ramp at every sampled T -- T-independent, as scale invariance requires (enbw_mul_window_isLeast, enbw_ramp_gt_half).",
-     "The realizable set is correctly presented as [1/2, inf) with 2/3 as one admissible point above the least element, not as an upper edge.",
-     "Gaussian sandwich holds pointwise: at z = 0.05/0.5/1/2/3.5, Birnbaum-Feller (0.0199/0.1408/0.1210/0.0216/2.305e-4) < Q (0.4801/0.3085/0.1587/0.02275/2.326e-4) < min(Chernoff, Mills).",
-     "The upper envelope correctly switches carrier from Chernoff to Mills as z grows (Chernoff tighter at z = 0.5, Mills tighter at z = 2).",
-     "Mills crosses 1 at z = 0.3722388980, matching the caption's 'z <~ 0.37' vacuity hedge.",
-     "Trace count 7 == FIGURE_REGISTRY expected_traces."
+     "ENBW*T for the matched boxcar is 0.5 at every sampled T (0.5, 1.0, 3.0 all return exactly 0.5) -- the floor is SATURATED, matching enbw_mul_window_isLeast / enbw_eq_half_iff_boxcar.",
+     "ENBW*T for the DC-matched ramp is 0.6666666666666666 = 2/3 exactly at every T, strictly above the floor -- matching enbw_ramp_gt_half and the caption's 'the floor is a screen with real slack'. The requested 'boxcar saturates 1/2, ramp at 2/3' check passes to machine precision.",
+     "Gaussian sandwich verified POINTWISE at all 400 plotted z in [0.05, 3.5]: Q(z) <= min(Chernoff, Mills) everywhere AND Q(z) >= Birnbaum-Feller everywhere. No excursion.",
+     "Mills ratio phi(z)/z > 1 for every z below the exact root 0.3722389 (mills(0.3722389) = 0.99999999), so the caption's conservative 'z <~ 0.37, where it is vacuous' is true and correctly hedged; the figure shows the Mills curve rising above 1 (and above 10) at small z, which is the visual statement of that vacuity.",
+     "Trace count 7 == FIGURE_REGISTRY expected_traces; axis-label substrings 'integration window' / 'ENBW' satisfied.",
+     "Backing Lean declarations resolve: enbw_mul_window_isLeast, enbw_ramp_gt_half (Detection/FilterFloors.lean); gaussianTail_chernoff, gaussianTail_mills, gaussianTail_birnbaum (Detection/GaussianThreshold.lean)."
     ]
    },
    "style": {
     "status": "pass",
     "issues": [],
     "verified": [
-     "Palette limited to steel_blue / amber / carmine; dash vocabulary (solid / dash / dot / dashdot) separates the four right-panel curves where they converge at large z.",
-     "Serif-free sans layout is consistent with the other two D12 figures via _d12_layout; legend clears the x-axis titles."
+     "Palette conforms: steel_blue / amber / carmine only. Upper bounds are both amber (dash vs dot), lower bound and Q(z) both steel blue (dashdot vs solid) -- the bound/probability distinction is carried by colour AND by the caption's explicit 'The upper curves are bounds, not probabilities'.",
+     "Serif family matches the revtex body text."
     ]
    },
    "caption_match": true,
-   "caption_match_detail": "paper_draft.tex:224-228 matches as rendered, including the round-2 C2-01 hedge (bounds not probabilities; Mills vacuous for z <~ 0.37, verified at 0.3722) and the 'screen with real slack' reading of the ramp.",
-   "findings": [],
-   "notes": "Clean. Re-rendered PNG is SHA-256-identical to the shipped artefact."
+   "caption_match_detail": "paper_draft.tex:224-228. 'Left:'/'Right:' match the figure's own '(left)'/'(right)' subplot prefixes; 1/2, 2/3 and the z <~ 0.37 Mills threshold all reproduce.",
+   "findings": []
   },
   {
    "name": "d12_fig3_etf_stability",
    "path": "papers/D12/figures/d12_fig3_etf_stability.png",
-   "source_fn": "src/core/visualizations.py::fig_d12_etf_stability (14904-14971)",
-   "consumed_at": "papers/D12/paper_draft.tex:303-311 (label fig:etf)",
+   "source_fn": "src/core/visualizations.py::fig_d12_etf_stability",
+   "consumed_at": "papers/D12/paper_draft.tex:307-315 (figure*, width=\\textwidth, label fig:etf) -> paper_draft.pdf p.6",
+   "reviewed_sha256_prefix": "a478976a91bb",
+   "typeset_geometry": "canvas 880x440 px at scale=3 (2640x1320), embedded at 374 ppi. Layout/tick text 9.27 pt and layout annotations 8.69 pt, BUT the three witness labels carry a hardcoded per-trace textfont of 11 px = 6.38 pt (D12-R4-F3-01).",
    "status": "fail",
    "severity_counts": {
     "FAIL": 0,
-    "MAJOR": 1,
+    "MAJOR": 2,
     "MINOR": 2
    },
    "rendering": {
     "status": "issues",
     "issues": [
-     "The L = -3 witness label overflows ~120 px past the plot's left edge onto the rotated y-axis title, and its trailing 'E)' is struck through by the |1-L| curve (D12-R3-F3-01, MAJOR).",
-     "'naive OVERSTATES' overhangs its own vrect by 68% of the band width, into the region where the naive budget understates (D12-R3-F3-03).",
-     "CONFIRMED FIXED from round 2: 'L = -1 stability boundary' (bottom left) and 'L = -1 marginal' (top left) are both strike-through-free; the L = 5 label is collision-free (0 overlap columns); layer='below' preserved the amber band's legibility."
+     "The three witness labels print at 6.38 pt, 31% smaller than the rest of the figure and below the project's own 8 pt Stage-9 floor (D12-R4-F3-01).",
+     "The 'L = 5 -> 4 (stable)' label is bisected by the |1-L| curve, which strikes out the leading script-L glyph (D12-R4-F3-02).",
+     "'naive OVERSTATES' still overhangs the [0,2] band it names, into the understating region (D12-R4-F3-03) -- recurrence of D12-R3-F3-03.",
+     "CONFIRMED FIXED from round 3 (the round-3 MAJOR, D12-R3-F3-01): 'L = -3 -> 4<br>(UNSTABLE)' anchored 'bottom left' now occupies L in [-5.4, -3.3] at y in [3.2, 3.7]. |1-L| >= 4.3 throughout that x-range, so the quadrant is provably curve-free -- measured zero strike-through, and the label no longer overruns the axis or the ordinate title. The round-4 verification target is discharged.",
+     "CONFIRMED FIXED from round 3 (D12-R3-F3-02): both legend keys are now side-prefixed '(left)', so the blue 'stable branch L > -1' key can no longer be read as describing the right panel's stability-blind |1-L| curve. The right panel has no legend keys at all, which is unambiguous given the '(left)' prefixes.",
+     "Left panel: 'L = -1 marginal' clears the L = -1 dotted line by 10 px at 600 dpi (~1.2 pt typeset) and clears the stable branch by ~4.7 pt. No overlap, but it reads as abutting -- see INFO.",
+     "'L = -1 stability boundary' (right panel, 'bottom left') is clear of the V-curve and of the y = 1 hline; 'naive exact' is clear of everything.",
+     "Nothing clipped at any border in the REVIEWED generation."
     ]
    },
    "physics": {
     "status": "pass",
     "issues": [],
     "verified": [
-     "|1-L| = 2 at L = 3 (NOT 4) -- the marker sits on the y = 2 gridline, correctly depicting speedupWitness_johnsonNEP_double.",
-     "|1-L| = 4 at BOTH L = 5 and L = -3, the exact Lean witness pair johnsonQuietWitness / johnsonDivergentWitness, rendered at equal height on opposite sides of the L = -1 boundary -- stability-blindness shown geometrically.",
-     "The 'naive OVERSTATES' interval [0, 2] is exactly {|1-L| < 1}, matching johnsonNEPNaive_lt_johnsonNEP_iff.",
-     "tau_eff = tau/(1+L): tau_eff(L=3) = 0.25 = tau/4 matching the legend; the unstable branch is drawn NEGATIVE (-0.2 at L = -6 to the -4 clip near L = -1.06), so the caption's warning that reading it through |.| inverts the physics is what the figure shows.",
-     "The branches are correctly split at the pole with a gap (stable from -0.94, unstable to -1.06) rather than joined by a spurious vertical connector.",
-     "Trace count 7 == FIGURE_REGISTRY expected_traces."
+     "Johnson NEP correction |1 - L| recomputed from formulas.py: L = -3 -> 4, L = 0 -> 1, L = 1 -> 0, L = 2 -> 1, L = 3 -> 2, L = 5 -> 4. The requested trap passes: the figure marks L = 3 at ordinate 2, NOT 4, and marks BOTH L = 5 and L = -3 at exactly 4. The V-minimum touches 0 at L = 1 (johnsonNEP_naive_overstates_at_unit_loopGain).",
+     "Stability-blindness reads correctly: the equal-valued pair (L = -3, L = 5) straddles the drawn L = -1 dashed boundary, one marker on each side.",
+     "The shaded vrect is exactly L in (0, 2) = {|1 - L| < 1}, the region where the ETF-unaware budget overstates -- matching the caption's 'overstates on 0 < L < 2'. (The LABEL overhangs it; the RECT does not.)",
+     "Left panel tau_eff = tau/(1+L) recomputed: +0.25 at L = 3 (= tau/4, matching the legend key) and -0.25 at L = -5. The unstable branch is drawn NEGATIVE across L < -1 with the divergence at L = -1, so the |.| inversion the caption warns about is correctly avoided rather than committed.",
+     "The L = -1 vline is at the true asymptote: the stable branch is clipped at the y-range top where 1/(1+L) = 4 (L = -0.75) and the unstable branch at 1/(1+L) = -4 (L = -1.25), symmetric about -1.",
+     "Trace count 7 == FIGURE_REGISTRY expected_traces.",
+     "Backing Lean declarations resolve: etf_stable_iff (Electrothermal/ETFModel.lean), johnsonNEP_eq_abs_one_sub_loopGain_mul_naive (Electrothermal/BolometricFloors.lean)."
     ]
    },
    "style": {
     "status": "issues",
     "issues": [
-     "The legend was never given the (left)/(right) treatment applied to figs 1-2, and here the omission is physics-misleading: the only blue-solid key claims the right panel's stability-BLIND curve is the 'stable branch L > -1' (D12-R3-F3-02).",
-     "Palette conforms; the carmine dashed L = -1 boundary is visually distinct from the carmine dotted 'naive exact' hline."
+     "Mixed type sizes within one figure: 9.27 pt ticks, 8.69 pt annotations, 6.38 pt witness labels (D12-R4-F3-01).",
+     "FIGURE_REGISTRY declares an ordinate substring this figure does not have (D12-R4-F3-04).",
+     "Palette conforms: steel_blue / amber / carmine only."
     ]
    },
    "caption_match": true,
-   "caption_match_detail": "paper_draft.tex:305-310 matches: the negative unstable branch, the |1-L| equality-not-direction framing, 'overstates on 0 < L < 2' (= the shaded band), and stability-blindness. The caption's open interval vs the closed shaded band differ only at the two measure-zero endpoints where |1-L| = 1; not scored.",
+   "caption_match_detail": "paper_draft.tex:309-314. 'Left:'/'Right:' match the figure's '(left)'/'(right)' prefixes; the dichotomy, the negative unstable branch, the |1-L| equality and the 0 < L < 2 overstating window all render as described.",
    "findings": [
     {
-     "id": "D12-R3-F3-01",
+     "id": "D12-R4-F3-01",
      "severity": "MAJOR",
-     "area": "rendering / claim-legibility",
-     "round": 3,
-     "new_in_round": 3,
-     "origin": "regression introduced by the round-2 fix for D12-R2-F3-01",
-     "finding": "Fig. 3 right panel: the round-2 fix ('top right' -> 'top left') corrected the SEMANTICS but broke the RENDERING of the same label. The string 'L = -3 -> 4  (UNSTABLE)' now spans px x = 1075..1355. Two defects: (i) OVERFLOW -- the right subplot's y-axis sits at px ~1195 (the '5' tick label occupies 1175..1185), so the label's leading 'L =' runs ~120 px OUTSIDE the plotting area and overprints the rotated y-axis title 'correction factor  (true / naive)'; on a 3x crop the minus sign is superimposed on the 'n' of 'naive)'. cliponaxis=False permits the spill. (ii) STRIKE-THROUGH -- the blue |1-L| curve passes through the label's own glyph columns: a pixel scan of the label bbox finds 180 steel-blue pixels at x = 1332..1355 and 20 columns carrying BOTH curve ink and glyph ink, cutting the trailing 'E)' of '(UNSTABLE)'. The panel's x-gridlines at L = -4,-2,0,2,4 sit at px 1302/1442/1581/1720/1860 (69.5 px per unit), so the label needs ~280 px but only ~172 px of in-axis room exists to the left of the marker at (-3, 4). The half of D12-R2-F3-01 that WAS fixed is confirmed: the whole string now lies at L < -3, i.e. strictly inside the unstable half-plane, and clears the amber 'naive OVERSTATES' vrect (which starts at px 1581) by ~226 px.",
-     "fix": "src/core/visualizations.py:14956-14958 -- the label is too wide to fit on one line. Break it and re-anchor below-left, where the region is provably curve-free (for L < -3 the curve satisfies |1-L| > 4, so the quadrant {L < -3, y < 4} lies strictly BELOW the curve):\n    for Lv, lab, pos in ((3.0, 'L = 3 -> 2', 'bottom right'),\n                         (5.0, 'L = 5 -> 4<br>(stable)', 'top left'),\n                         (-3.0, 'L = -3 -> 4<br>(UNSTABLE)', 'bottom left')):\nThe two-line form is ~140 px wide against ~172 px of available in-axis room, so it no longer reaches the y-axis furniture; 'bottom left' keeps it off the curve. (Breaking the L = 5 label too keeps the pair typographically symmetric; that one is already collision-free at 'top left' -- pixel scan: 0 overlap columns -- so the <br> there is cosmetic, not required.)"
+     "area": "typeset legibility / contract breach",
+     "round": 4,
+     "new_in_round": 4,
+     "origin": "pre-existing hardcoded textfont, concealed by the round-3 typeset-size checker",
+     "finding": "The three witness labels ('L = -3 -> 4 (UNSTABLE)', 'L = 3 -> 2', 'L = 5 -> 4 (stable)') are the only strings in the D12 bundle that bypass the round-3 typeset-size contract. They carry a hardcoded per-trace textfont=dict(size=11) on an 880 px canvas, so at figure* width they print at 11/880*510 = 6.38 pt -- against 9.27 pt for the rest of the same figure and 10 pt body text, i.e. 36% smaller than body and below the 8 pt floor the contract's own docstring calls a Stage-9 FAIL. The contract helper _bundle_layout normalizes layout.font, legend.font and layout annotations, but NOT per-trace textfont, and bundle_figure_typeset_pt read only layout.font -- so it reported 9.27 pt and concealed the one breach it existed to catch. This is exactly the D11-round-3 failure mode (structurally fine, illegible in print) surviving in a corner the checker did not look at. PROVEN, not inferred: re-rendering the current source with the witness textfont forced back to 11 reproduces the reviewed PNG's SHA-256 bit-for-bit (a478976a91bb).",
+     "fix": "Drop the textfont=dict(size=11) override in fig_d12_etf_stability's witness loop and let the layout helper set it, AND make the helper cover per-trace textfont (fig.update_traces(textfont_size=font_size-1)) so no future figure can reopen the hole, AND make bundle_figure_typeset_pt return the MINIMUM over layout.font / legend.font / annotation fonts / trace textfont rather than layout.font alone. NOTE: an out-of-band edit at 21:19 already applied all three of these -- see D12-R4-XF-01/02 for why that does not close this item.",
+     "still_present_after_2131_regeneration": false
     },
     {
-     "id": "D12-R3-F3-02",
-     "severity": "MINOR",
-     "area": "rendering / legend",
-     "round": 3,
-     "new_in_round": 3,
-     "origin": "D12-R2-XF-01 was applied to figs 1 and 2 but never to fig 3",
-     "finding": "Fig. 3 carries the SAME cross-panel same-glyph legend collision that D12-R2-XF-01 was raised to fix, and here it is physics-misleading rather than merely ambiguous. The legend has exactly three keys, all sourced from the LEFT panel ('stable branch  L > -1  (perturbations decay)', 'unstable branch  L < -1  (tau_eff < 0, divergent)', 'speed-up witness  L = 3:  tau_eff = tau/4'); the right panel's traces all carry showlegend=False. But the right panel's |1-L| curve is steel-blue, solid, width 3 -- pixel-identical in style to the left panel's 'stable branch' key -- and it spans L in [-4, 6], i.e. straddles the unstable region. A reader who consults the legend for the right panel's blue line is told it is the 'stable branch, L > -1', which is precisely the misreading the panel exists to refute: the panel's whole thesis, and the subplot title, is that |1-L| is STABILITY-BLIND. The same collision hits the marker key: the sole carmine-diamond key reads 'speed-up witness L = 3: tau_eff = tau/4', while the right panel carries three carmine diamonds, two of which (L = 5, L = -3) are the stability-blind pair and not that witness. The two panels also have unrelated ordinates (units of tau = C/G vs. dimensionless true/naive), which is the exact trigger condition D12-R2-XF-01 names.",
-     "fix": "src/core/visualizations.py:14925/14929/14936 -- prefix the three existing keys '(left) ' to match the fig-2 convention, and give the right panel its own keys so no left-panel key can be mapped onto it:\n  * line 14947-14948: set showlegend=True with name='(right) Johnson correction  |1 - L|  (stability-blind)'\n  * in the witness loop (14959-14963), set showlegend=True on the L = 5 entry only, with name='(right) equal-value witnesses  |1 - L| = 4  (opposite sides of L = -1)', leaving the other two showlegend=False so the key is not triplicated.\n_d12_layout already reserves bottom=185 for the legend; two extra keys fit on the existing two rows."
+     "id": "D12-R4-F3-02",
+     "severity": "MAJOR",
+     "area": "rendering / label struck by the data curve",
+     "round": 4,
+     "new_in_round": 4,
+     "origin": "the round-3 remediation moved the companion label to 'top right' while fixing the L = -3 label; the new anchor points into the curve",
+     "finding": "The 'L = 5 -> 4<br>(stable)' label is placed textposition='top right' on the marker at (5, 4). On the stable branch |1-L| has slope +1, so the quadrant {L > 5, y > 4} is precisely where the curve goes -- it is the one quadrant adjacent to that marker that is guaranteed NOT to be free. At 1200 dpi the blue trace runs straight through the leading script-L glyph, striking out the very symbol the label names; the string reads as '= 5 -> 4' with a slashed L. This is the same defect class as the round-3 MAJOR D12-R3-F3-01, relocated from the L = -3 label to its companion by the fix for it. (The L = -3 label itself is now correct -- see rendering.verified.)",
+     "fix": "visualizations.py::fig_d12_etf_stability, the witness loop: (5.0, 'L = 5 -> 4<br>(stable)', 'top right') -> 'top left'. On L in [3.5, 5] the curve sits at y = L - 1 in [2.5, 4], below a label anchored at y >= 4, so 'top left' is provably curve-free -- the mirror of the argument that made 'bottom left' correct for L = -3. 'bottom right' also works. Do NOT rely on cliponaxis=False to rescue an overhang; see D12-R4-XF-02.",
+     "still_present_after_2131_regeneration": "worsened -- now truncated at the canvas edge instead of struck through"
     },
     {
-     "id": "D12-R3-F3-03",
+     "id": "D12-R4-F3-03",
      "severity": "MINOR",
-     "area": "rendering / annotation-scope",
-     "round": 3,
-     "new_in_round": 3,
-     "origin": "pre-existing; not flagged in rounds 1-2",
-     "finding": "Fig. 3 right panel: the 'naive OVERSTATES' annotation is 2.4x wider than the vrect it labels, and it overhangs into the region whose physics is the OPPOSITE of what it says. Pixel measurement: the amber band spans px 1581..1720 (L = 0 to L = 2, at 69.5 px per unit, matching the gridlines); the annotation glyphs span px 1588..1815, i.e. L = 0.10 .. 3.37. So 1.37 L-units -- 68% of the band's own width -- of the label sits OUTSIDE the band, over L in (2, 3.37) where |1 - L| > 1 and the ETF-unaware budget UNDERSTATES. The band edge itself is unambiguous (clean colour boundary, and layer='below' is working -- see the verification note), but the caption pins the interval numerically ('the ETF-unaware budget overstates on 0 < L < 2', paper_draft.tex:308-309), so a label that visually claims out to L ~ 3.4 contradicts the caption it illustrates.",
-     "fix": "src/core/visualizations.py:14943-14945 -- line-break the annotation so it fits inside its own band: annotation_text='naive<br>OVERSTATES' (two lines, ~118 px wide against the band's 139 px). Optionally also pass annotation_font_size=11 to match the witness labels. Keep annotation_position='top left' and layer='below'."
+     "area": "annotation overhangs the region it names",
+     "round": 4,
+     "new_in_round": 4,
+     "origin": "RECURRENCE of D12-R3-F3-03; the round-3 fix (line-break) reduced but did not remove the overhang",
+     "finding": "'naive<br>OVERSTATES' still overhangs the vrect it labels, into the region whose physics is the opposite. Measured at 1200 dpi: the amber band spans px [2004, 2493] = L in [0, 2], i.e. 244.5 px per unit of L. 'OVERSTATES' spans px [2021, 2903] -- 882 px, 1.80x the band width -- so it runs out to L = 3.68; 410 of its 882 px (46%) sit at L > 2, where |1 - L| > 1 and the naive budget UNDERSTATES. 'naive' spans [2309, 2615], running out to L = 2.50, also overhanging. Line-breaking cannot fix this: the single word 'OVERSTATES' is wider than the band at any admissible type size, and the round-3 remediation raised the type size, widening it further.",
+     "fix": "Stop trying to fit the words horizontally. Either (a) set textangle=270 on the vrect annotation so the label runs vertically inside the band, or (b) move it outside the rect entirely (annotation_position='top left' on the axis with a short 'naive overstates' plus the band left unlabelled), or (c) shorten to a symbol anchored at the band centre L = 1. Verify by re-measuring that the annotation's ink bbox is contained in the band's pixel span.",
+     "still_present_after_2131_regeneration": true
+    },
+    {
+     "id": "D12-R4-F3-04",
+     "severity": "MINOR",
+     "area": "structural check / registry mismatch",
+     "round": 4,
+     "new_in_round": 4,
+     "origin": "registry expectation never matched the figure as built",
+     "finding": "scripts/review_figures.py:1976 declares expected_axes={'xaxis': 'loop gain', 'yaxis': 'correction factor'} for d12_fig3_etf_stability, but the figure's yaxis title is 'tau_eff  (units of tau)' and yaxis2 is 'true / naive' -- neither contains 'correction factor'. Running the registry's structural checks over the three D12 specs produces exactly one issue, this one: warning/axis_label \"yaxis title 'tau_eff  (units of tau)' missing expected 'correction factor'\". It is a real mismatch rather than a stale expectation worth ignoring, because the caption calls the right panel 'the Johnson noise-equivalent-power correction |1 - L|' while the ordinate is labelled with the bare ratio 'true / naive', which names neither the correction nor its units.",
+     "fix": "Preferred (fixes both sides): retitle yaxis2 to 'correction factor  |1 - L|' -- it satisfies the registry, matches the caption, and is more informative than 'true / naive'. Alternative: change the registry to expected_axes={'xaxis': 'loop gain', 'yaxis': 'tau_eff', 'yaxis2': 'true / naive'}.",
+     "still_present_after_2131_regeneration": true
     }
-   ],
-   "notes": "Re-rendered PNG is SHA-256-identical to the shipped artefact. The MAJOR is a regression from the round-2 remediation, not a survival: the claim-legibility defect D12-R2-F3-01 named IS fixed."
+   ]
+  }
+ ],
+ "cross_figure_findings": [
+  {
+   "id": "D12-R4-XF-01",
+   "severity": "FAIL",
+   "area": "artefact integrity / bundle state",
+   "round": 4,
+   "new_in_round": 4,
+   "finding": "papers/D12/ is internally inconsistent as of this review and therefore cannot be certified in its present state, independently of any figure defect. Timeline from stat + SHA-256: 20:06:10 paper_draft.tex; 20:15 the three PNGs (fig1 0e0dc8669abc, fig2 7ad2023cd670, fig3 a478976a91bb); 20:17:10 paper_draft.pdf, which pdfimages confirms embeds exactly those three images. Then, DURING this review: 21:19:23 src/core/visualizations.py modified out of band (adds fig.update_traces(textfont_size=font_size-1) to _bundle_layout, rewrites bundle_figure_typeset_pt to take the minimum over every text-bearing field, and edits several D11 figures); 21:30:32 / 21:30:59 / 21:31:11 the three D12 PNGs regenerated (fig1 -> b624505b6c7e, fig2 unchanged, fig3 -> c6b85f4fc72b). paper_draft.pdf was NOT rebuilt. The typeset deliverable therefore no longer corresponds to the shipped figure artefacts. The 21:19 edit's own comment cites 'Round 4 found two figures hardcoding 11-12 px', i.e. a remediation was applied against round-4 findings before round 4 reported them.",
+   "fix": "Rebuild papers/D12/paper_draft.pdf from the current PNGs and re-run Stage 9 against the rebuilt PDF. Certification must be issued against one coherent (tex, png, pdf) triple. Until then this item alone blocks ALL PASS.",
+   "note": "This review's figure findings were taken against the 20:17 PDF -- the artefact set handed to round 4. Each finding records whether it survives into the 21:30-21:31 regeneration."
+  },
+  {
+   "id": "D12-R4-XF-02",
+   "severity": "MAJOR",
+   "area": "regression introduced by the out-of-band 21:19/21:31 fix",
+   "round": 4,
+   "new_in_round": 4,
+   "finding": "In the 21:31 regeneration of fig 3, normalizing the witness textfont from 11 px to 15 px (the correct fix for D12-R4-F3-01) widened the 'L = 5 -> 4' label past the canvas right edge. Because the label sets cliponaxis=False, plotly does not re-anchor it -- it is TRUNCATED by the image boundary, and the newest artefact renders it as 'L = 5 -' with '-> 4' cut off entirely, plus '(stable)' clipped at its right edge. So the out-of-band fix discharges D12-R4-F3-01 but converts D12-R4-F3-02 from a strike-through into a hard clip that destroys the label's content. 'naive OVERSTATES' also grew with the type size, worsening D12-R4-F3-03.",
+   "fix": "Apply the D12-R4-F3-02 re-anchor ('top right' -> 'top left') TOGETHER with the type-size normalization; resizing alone is not sufficient and is currently a net regression. Re-render and confirm the label's ink bbox is inside the canvas AND carries no curve ink."
   }
  ],
  "informational": [
   {
-   "id": "D12-R3-INFO-01",
-   "severity": "INFO",
-   "area": "record accuracy / global change",
-   "finding": "The round-2 brief states that 'all add_vrect/add_hrect calls now pass layer=\"below\"'. An AST audit of src/core/visualizations.py finds 18 such calls, of which 8 carry a layer kwarg and 10 do not (lines 871, 992, 3144, 3145, 3146, 3147, 3989, 5480, 6988, 10787). NO D12 IMPACT: all six D11/D12 calls (14943, 14998, 15048, 15107, 15124, 15178) do carry layer='below', and the D12 fig-3 band is confirmed legible. The 10 un-migrated calls are all legacy non-D11/D12 figures. Flagged only so the change record is not carried forward as a completed global sweep.",
-   "fix": "Either complete the sweep for the 10 legacy calls or restate the change as scoped to the D11/D12 figure set."
-  },
-  {
-   "id": "D12-R3-INFO-02",
+   "id": "D12-R4-INFO-01",
    "severity": "INFO",
    "area": "tooling",
-   "finding": "structural_checks.json is still absent from papers/D12/figures (carried over from D12-R2-INFO-03). With all seven D11/D12 figures now registered in scripts/review_figures.py FIGURE_REGISTRY (verified: entries at lines 1863, 1879, 1896, 1913, 1930, 1947, 1964), a review_figures.py run would now emit it. This round's checks were therefore done independently: full-frame read, up-to-6x crops, pixel-level colour/overlap scans, AST inspection of the source, and numerical re-derivation from formulas.py.",
-   "fix": "Run `uv run python scripts/review_figures.py` and copy structural_checks.json alongside the D12 PNGs."
+   "note": "structural_checks.json is still absent from papers/D12/figures (third round carrying this). The three D12 FigureSpecs were executed by hand this round: trace counts 10/7/7 all meet expected_traces; no NaN or Inf in any trace; every explicit trace colour is in COLORS; one axis_label warning (D12-R4-F3-04). Emitting the file would have surfaced that warning automatically in rounds 1-3."
   },
   {
-   "id": "D12-R3-INFO-03",
+   "id": "D12-R4-INFO-02",
+   "severity": "INFO",
+   "area": "contract accuracy",
+   "note": "The typeset contract's docstring states effective_pt ~= 9.5 at figure* width. The achieved values are 9.32 pt (fig 1, font 19 on 1040 px) and 9.27 pt (figs 2-3, font 16 on 880 px), because _bundle_font_for rounds 1040*13/700 = 19.31 down to 19 and 880*13/700 = 16.34 down to 16. The 2% shortfall is harmless -- both are comfortably above the 8 pt floor and close to the 10 pt body -- but the docstring should say ~9.3 pt, or the helper should round up, so a future reader does not treat 9.5 as measured."
+  },
+  {
+   "id": "D12-R4-INFO-03",
    "severity": "INFO",
    "area": "style observation",
-   "finding": "Fig. 1 panel (B): the ordinate title '(B) average assignment-error floor  (dimensionless)' is long enough that it extends above the subplot-title row and below the x-tick row of its own subplot, ending ~25 px to the right of panel (A)'s '14' tick label. No glyph collision (measured), and it is fully legible, so this is not scored as a finding -- but shortening it to 'average assignment-error floor' (the '(B)' is already carried by the legend prefixes and the subplot title, and 'dimensionless' by the panel-(A) twin) would tidy the two-panel gutter.",
-   "fix": "Optional. No action required for publication."
+   "note": "Fig 3 left panel: 'L = -1 marginal' clears the L = -1 dotted line by only 10 px at 600 dpi (~1.2 pt at typeset size). There is no overlap and nothing is obscured, so it is not scored, but it reads as abutting the line; an annotation_xshift of -8 px would give it normal breathing room. Fig 1 legend row 3 has a comparable 5.1 pt inter-column gap -- also non-overlapping, also tight."
   }
  ],
  "severity_totals": {
-  "FAIL": 0,
-  "MAJOR": 1,
-  "MINOR": 5,
+  "FAIL": 1,
+  "MAJOR": 5,
+  "MINOR": 3,
   "INFO": 3
  },
- "physics_verdict": "PASS -- all three figures. Every numerical value, marker position, threshold, shaded interval and certified witness reproduces from formulas.py and matches its Lean statement. All four named traps pass. No physics finding at any severity in round 3.",
- "summary": "Round 3 of the D12 Stage-9 figure review. Eight of the eight round-2 items were checked individually: six LANDED cleanly (F3-02, F3-03, F2-01, F2-02, F1-01, C2-01) and two landed only partially. The MAJOR D12-R2-F3-01 fixed what it named -- '(UNSTABLE)' now sits entirely in the unstable half-plane -- but relocating a 280-px label into 172 px of room pushed it onto the y-axis title and under the curve, so fig 3 carries a NEW MAJOR (D12-R3-F3-01). D12-R2-XF-01's panel prefixing orphaned fig 1's panel-(B) folklore curve (D12-R3-F1-02) and was never applied to fig 3, where the resulting legend collision tells the reader that a stability-BLIND curve is the 'stable branch' (D12-R3-F3-02). Three further MINORs: a curve strike-through of fig 1's '9.5445' witness label, an annotation overhanging its own shaded band by 68% in fig 3, and inconsistent witness-pair notation in fig 1's legend. Fig 2 is CLEAN -- zero findings. Physics is PASS across all three figures, re-derived from scratch: panel (B) shades only past the crossover (51.39590342, where folklore and Le Cam agree to 1e-15); the (50,60) witness gives ratio 3491.96 > 1000 and gap 9.5445 > 9.54; ENBW*T is exactly 1/2 for the boxcar at every T with the ramp at exactly 2/3; and |1-L| gives 2 at L = 3, not 4, with exactly 4 at both L = 5 and L = -3 on opposite sides of the boundary. The pass criterion is NOT met: 1 MAJOR + 5 MINOR remain, all with concrete one-to-three-line fixes in src/core/visualizations.py and none requiring new physics, new data, or any change to the paper text.",
+ "physics_verdict": "PASS for all three figures. Every plotted quantity, threshold, crossover and certified witness was recomputed from src/core/formulas.py this round and every one reproduces: e^5 = 148.4131591026; crossover 51.3959034214 (labelled 51.40); shading confined to the fail-open set; ratio 3491.9553828 > 1000 and gap 9.5445115010 at (50,60); log 4 = 1.3862943611; ENBW*T = 1/2 (boxcar, saturated) and 2/3 (ramp); the Gaussian sandwich holds pointwise at all 400 sampled z with Mills vacuous below 0.3722389; |1-L| = 2 at L = 3 and 4 at both L = 5 and L = -3; tau_eff = tau/4 at L = 3 and negative throughout the unstable branch. All four round-4 physics traps pass. All 12 figure-backing anchor theorems resolve to real declarations in lean/SKEFTHawking/. No figure misstates its physics; every remaining defect is a rendering, labelling or artefact-state defect.",
+ "summary": "Round 4 reviewed the TYPESET result, not the standalone PNGs: paper_draft.pdf was rasterized at 150-1200 dpi and the figures judged on pp. 3, 4 and 6. The typeset-legibility remediation LANDED -- all three floats are figure* at \\textwidth and their body text prints at 9.27-9.32 pt against 10 pt body, so the D11-round-3 illegibility class is closed for D12 with ONE exception (fig 3's witness labels at 6.38 pt, D12-R4-F3-01). Seven of the eight round-3 remediation items landed, including the round-3 MAJOR: the 'L = -3 -> 4 (UNSTABLE)' label is now correctly anchored into a provably curve-free quadrant with zero strike-through. Physics is clean across all three figures and all four round-4 traps pass. However the pass criterion is not met. Fig 2 is a clean PASS. Fig 1 carries two MAJORs that the canvas change regressed into existence: panel (B)'s ordinate title now prints INSIDE panel (A) on top of its data -- a physics-misattribution risk, since separating 'miss probability' from 'avg. error floor' is the figure's entire purpose -- and panel (C)'s log-4 annotation collides with the '0' tick while being struck through by the gap curve. Fig 3 carries the 6.38 pt contract breach and a relocated strike-through: fixing the L = -3 label moved its companion 'L = 5 -> 4' into 'top right', the one quadrant a slope-+1 branch is guaranteed to occupy, so the curve now strikes out the leading script-L. 'naive OVERSTATES' recurs from round 3 -- the line break helped but the single word is 1.80x the band width. Finally, and independently: the bundle's artefacts changed under review. visualizations.py was edited at 21:19 and the PNGs regenerated at 21:30-21:31 without rebuilding the PDF, so papers/D12/ is now internally inconsistent (D12-R4-XF-01, FAIL), and that out-of-band fix is currently a net regression on fig 3 because it resized the 'L = 5' label without re-anchoring it, turning a strike-through into a hard clip (D12-R4-XF-02).",
  "recommendations": [
-  "P0 (MAJOR, D12-R3-F3-01) visualizations.py:14956-14958 -- line-break the L = -3 witness label and re-anchor it below-left: (-3.0, 'L = -3 -> 4<br>(UNSTABLE)', 'bottom left'). This is the only blocker-class item.",
-  "P1 (D12-R3-F3-02) visualizations.py:14925/14929/14936/14947/14959 -- prefix fig 3's three legend keys with '(left) ' and expose two '(right) ' keys (the |1-L| curve and one witness-marker key), completing D12-R2-XF-01 on fig 3.",
-  "P1 (D12-R3-F1-02) visualizations.py:14807-14809 -- drop showlegend=False on panel (B)'s folklore trace and name it '(B) folklore  exp(-(N_a-N_b))  -- same form at N_b = 50'.",
-  "P2 (D12-R3-F1-01) visualizations.py:14829 -- textposition 'top center' -> 'top left' on the '9.5445' label; the quadrant left-and-above the marker is provably curve-free because the gap exponent is increasing.",
-  "P2 (D12-R3-F3-03) visualizations.py:14943-14945 -- annotation_text='naive<br>OVERSTATES' so the label fits inside the L in [0,2] band it names.",
-  "P3 (D12-R3-F1-03) visualizations.py:14813 -- name='(B) certified ratio > 1000 at (N_b,N_a) = (50, 60)' to match panel (A)'s key and the caption.",
-  "After remediation, run `uv run python scripts/review_figures.py` and place structural_checks.json alongside the D12 PNGs (D12-R3-INFO-02) -- with all seven D11/D12 specs now registered, that gate is finally meaningful.",
-  "Correct the change record: layer='below' is complete for the D11/D12 rect calls but 10 legacy calls elsewhere in visualizations.py still lack it (D12-R3-INFO-01). No D12 impact.",
-  "No change to papers/D12/paper_draft.tex is required by this round: all three captions match their figures and every number in them reproduces."
+  "P0 (FAIL, D12-R4-XF-01) -- restore a coherent (tex, png, pdf) triple: apply the remaining figure fixes, regenerate the PNGs, REBUILD papers/D12/paper_draft.pdf, and re-run Stage 9 against the rebuilt PDF. No ALL-PASS certification is possible against the current state, in which the PDF embeds a superseded generation of figs 1 and 3.",
+  "P0 (MAJOR, D12-R4-XF-02 + D12-R4-F3-02) -- visualizations.py::fig_d12_etf_stability, witness loop: change (5.0, 'L = 5 -> 4<br>(stable)', 'top right') to 'top left'. This must ship WITH the type-size normalization, not after it: at 15 px the 'top right' anchor pushes the label off the canvas, so the current artefact is worse than the one reviewed. On L in [3.5, 5] the curve is at y = L - 1 <= 4, so 'top left' is provably curve-free -- the mirror of the argument that fixed L = -3.",
+  "P0 (MAJOR, D12-R4-F1-01) -- fig_d12_poisson_floor_vs_folklore: raise horizontal_spacing from 0.075 to >= 0.11 (or thin panel (B)'s log ticks to dtick=4) so panel (B)'s ordinate title stops printing inside panel (A). Verify by measuring that the title's ink lies wholly between px 1051 and 1257 of the 3120-px render.",
+  "P0 (MAJOR, D12-R4-F1-02) -- fig_d12_poisson_floor_vs_folklore: the log-4 add_hline's annotation_position 'bottom right' -> 'top right'. At large N_a the gap curve is ~20 nats above the log-4 line, so the strip above the line is curve-free there, and the annotation moves clear of the '0' tick it currently merges with.",
+  "P1 (MAJOR, D12-R4-F3-01) -- keep the 21:19 helper change (per-trace textfont normalization in _bundle_layout + bundle_figure_typeset_pt taking the MINIMUM over layout/legend/annotation/trace fonts). Also delete the now-dead textfont=dict(size=11) literal in fig_d12_etf_stability so the override cannot silently reappear if the helper is refactored.",
+  "P1 (MINOR, D12-R4-F3-03) -- set textangle=270 on the 'naive OVERSTATES' vrect annotation (or move it outside the rect). Horizontal fit is unachievable: the word is 1.80x the band width at 15 px and grew with the round-3 type-size increase.",
+  "P2 (MINOR, D12-R4-F1-03) -- rename the diamond key to '(B,C) certified witness at (N_b,N_a) = (50,60):  ratio > 1000,  gap 9.5445', and change paper_draft.tex:150 '\\textbf{Right:}' to '\\textbf{(C)}' so the caption uses the figure's own panel label.",
+  "P2 (MINOR, D12-R4-F3-04) -- retitle fig 3's yaxis2 to 'correction factor  |1 - L|'. That satisfies the FIGURE_REGISTRY expectation, matches the caption's 'the Johnson noise-equivalent-power correction', and is more informative than the bare ratio 'true / naive'.",
+  "P3 (INFO) -- run `uv run python scripts/review_figures.py` and place structural_checks.json alongside the D12 PNGs; it would have caught D12-R4-F3-04 automatically in round 1. Also correct the typeset-contract docstring from ~9.5 pt to the achieved ~9.3 pt (D12-R4-INFO-02).",
+  "No physics change is required in any of the three figures, and no caption numeral needs correcting; the only caption edit recommended is the '(C)' panel label."
  ]
 }

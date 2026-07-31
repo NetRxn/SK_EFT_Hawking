@@ -14837,7 +14837,7 @@ def fig_d12_poisson_floor_vs_folklore() -> go.Figure:
     Right: the exact exponent gap 2√N_b(√N_a−√N_b) with its log 4 threshold."""
     from src.core import formulas as F
     blue, amber, carmine = COLORS["steel_blue"], COLORS["amber"], COLORS["carmine"]
-    fig = make_subplots(rows=1, cols=3, horizontal_spacing=0.075, subplot_titles=(
+    fig = make_subplots(rows=1, cols=3, horizontal_spacing=0.125, subplot_titles=(
         "(A) false-strict miss bound, N_b = 5",
         "(B) fail-open screen, N_b = 50",
         "(C) exact exponent gap"))
@@ -14864,7 +14864,8 @@ def fig_d12_poisson_floor_vs_folklore() -> go.Figure:
         marker=dict(color=carmine, size=12, symbol="diamond"),
         name="(A) certified 148× at (N_b,N_a) = (5,10)"), row=1, col=1)
     fig.update_yaxes(type="log", exponentformat="power", showexponent="all",
-                     title_text="miss probability", row=1, col=1)
+                     title_text="miss probability", title_standoff=4,
+                     automargin=True, row=1, col=1)
     fig.update_xaxes(title_text="source rate  N_a  (counts)", row=1, col=1)
 
     # ── (B) average-error screen ───────────────────────────────────────────
@@ -14897,7 +14898,8 @@ def fig_d12_poisson_floor_vs_folklore() -> go.Figure:
         marker=dict(color=carmine, size=12, symbol="diamond"),
         name="(B) certified ratio > 1000 at (N_b,N_a) = (50,60)"), row=1, col=2)
     fig.update_yaxes(type="log", exponentformat="power", showexponent="all",
-                     title_text="avg. error floor", row=1, col=2)
+                     title_text="avg. error floor", title_standoff=4,
+                     automargin=True, row=1, col=2)
     fig.update_xaxes(title_text="source rate  N_a  (counts)", row=1, col=2)
 
     # ── exponent gap ───────────────────────────────────────────────────────
@@ -14906,15 +14908,16 @@ def fig_d12_poisson_floor_vs_folklore() -> go.Figure:
         x=n_a, y=gap, mode="lines", line=dict(color=blue, width=3),
         showlegend=False), row=1, col=3)
     fig.add_hline(y=float(np.log(4.0)), line=dict(color=carmine, width=2, dash="dot"),
-                  annotation_text="log 4 = 1.386 — fail-open threshold",
-                  annotation_position="bottom right", row=1, col=3)
+                  annotation_text="log 4 = 1.386<br>fail-open threshold",
+                  annotation_position="top right", row=1, col=3)
     fig.add_trace(go.Scatter(
         x=[60.0], y=[F.folklore_gap_exponent(60.0, 50.0)], mode="markers+text",
         marker=dict(color=carmine, size=12, symbol="diamond"),
         text=["9.5445"], textposition="top left", cliponaxis=False,
         showlegend=False), row=1, col=3)
     fig.update_xaxes(title_text="source rate  N_a  (counts)", row=1, col=3)
-    fig.update_yaxes(title_text="gap exponent (nats)", row=1, col=3)
+    fig.update_yaxes(title_text="gap exponent (nats)", title_standoff=4,
+                     automargin=True, row=1, col=3)
 
     return _bundle_layout(
         fig, "The folklore photon-counting floor fails in two directions",
@@ -15026,8 +15029,9 @@ def fig_d12_etf_stability() -> go.Figure:
     L = np.linspace(-4.0, 6.0, 600)
     corr = np.array([F.johnson_nep_correction_factor(x) for x in L])
     fig.add_vrect(x0=0.0, x1=2.0, fillcolor="rgba(241, 143, 1, 0.18)", line_width=0,
-                  annotation_text="naive<br>OVERSTATES", annotation_position="top left",
-                  layer="below", row=1, col=2, exclude_empty_subplots=False)
+                  annotation_text="naive overstates", annotation_position="top left",
+                  annotation_textangle=270, layer="below", row=1, col=2,
+                  exclude_empty_subplots=False)
     fig.add_trace(go.Scatter(
         x=L, y=corr, mode="lines", line=dict(color=blue, width=3),
         showlegend=False), row=1, col=2)
@@ -15039,7 +15043,7 @@ def fig_d12_etf_stability() -> go.Figure:
                   annotation_text="ℒ = −1 stability boundary",
                   annotation_position="bottom left", row=1, col=2)
     for Lv, lab, pos in ((3.0, "ℒ = 3 → 2", "bottom right"),
-                         (5.0, "ℒ = 5 → 4<br>(stable)", "top right"),
+                         (5.0, "ℒ = 5 → 4<br>(stable)", "top left"),
                          (-3.0, "ℒ = −3 → 4<br>(UNSTABLE)", "bottom left")):
         fig.add_trace(go.Scatter(
             x=[Lv], y=[F.johnson_nep_correction_factor(Lv)], mode="markers+text",
