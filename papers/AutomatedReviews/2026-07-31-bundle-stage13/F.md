@@ -79,10 +79,10 @@ memory `feedback_stages_11_13_reflexive.md`.
 ## Aggregated finding counts
 
 - **Total findings (lifetime):** 458
-- **Open findings (post-supersession):** 110
-- **Blocker-class (critical + major):** 21
-- **Severity mix:** 72 advisory, 8 critical, 13 major, 17 minor
-- **Gate mix:** 8 AssumptionDisclosure, 13 CitationIntegrity, 10 ComputationCorrectness, 8 CountFreshness, 14 CrossPaperConsistency, 6 LeanProofSubstance, 5 NarrativeGrounding, 15 ParameterProvenance, 1 ProductionRunHealth, 30 unclassified
+- **Open findings (post-supersession):** 111
+- **Blocker-class (critical + major):** 22
+- **Severity mix:** 72 advisory, 8 critical, 14 major, 17 minor
+- **Gate mix:** 8 AssumptionDisclosure, 13 CitationIntegrity, 10 ComputationCorrectness, 9 CountFreshness, 14 CrossPaperConsistency, 6 LeanProofSubstance, 5 NarrativeGrounding, 15 ParameterProvenance, 1 ProductionRunHealth, 30 unclassified
 
 ## Fresh-context Stage-13 review recorded
 

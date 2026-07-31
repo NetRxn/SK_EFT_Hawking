@@ -3845,9 +3845,22 @@ def check_recurrence_reopens_closures() -> CheckResult:
     # "0 contradicted" over 500 closures. That is the sixth guard in this session that
     # could not do what its summary said, and the pattern each time was choosing a constant
     # from what I imagined the data looked like.
-    _MIN_TITLE = 30          # below this a title is too generic to match on
-    _PREFIX_FLOOR = 30       # absolute characters of agreement required
-    _PREFIX_FRAC = 0.75      # ...and this fraction of the shorter title
+    # ⚠️ The PRIMITIVE was wrong, not just the constant (D11 round-12 BLOCKER 4.2).
+    # I required a 30-character common PREFIX. Measured over all 4,210 candidate pairs in
+    # this corpus, the maximum prefix ANY pair achieves is 17 — and `_PREFIX_FRAC *
+    # _MIN_TITLE = 22.5` put a second floor above that ceiling, so no single constant could
+    # revive it. The check printed "0 contradicted by a recurrence" while being incapable
+    # of anything else, under a comment that read "THRESHOLDS ARE MEASURED, NOT GUESSED"
+    # and listed the six previous instances. I had measured label LENGTHS; the predicate
+    # compares PREFIXES, and I never measured those.
+    #
+    # A recurrence restates a finding, it does not re-type it: word order and wording drift
+    # while the vocabulary persists. Token overlap (Jaccard) is the right primitive.
+    # Measured on the same 4,210 pairs: median 0.00, p99 0.20, max 0.67 — and the single
+    # pair at 0.67 is a TRUE recurrence ("israel third law parenthetical", closed then
+    # re-raised in a later round). 0.50 sits in the empty band between p99 and that pair.
+    _MIN_TITLE = 12          # below this a title carries too few tokens to compare
+    _MIN_OVERLAP = 0.50      # Jaccard over token sets
 
     def _norm(s: str) -> str:
         s = re.sub(r'[`*_\[\]]', '', str(s or '')).lower()
@@ -3893,13 +3906,10 @@ def check_recurrence_reopens_closures() -> CheckResult:
                 continue
             if odate <= cdate:
                 continue
-            # Long shared prefix = the same finding restated, not a coincidence.
-            n = min(len(ctext), len(otext))
-            common = 0
-            while common < n and ctext[common] == otext[common]:
-                common += 1
-            if (common >= _PREFIX_FLOOR
-                    and common >= _PREFIX_FRAC * min(len(ctext), len(otext))):
+            _a, _b = set(ctext.split()), set(otext.split())
+            if not _a or not _b:
+                continue
+            if len(_a & _b) / len(_a | _b) >= _MIN_OVERLAP:
                 hits += 1
                 details.append(Detail(
                     cid, False,
@@ -4290,8 +4300,14 @@ def check_notebook_stored_outputs_current() -> CheckResult:
 
     targets = sorted(NOTEBOOKS_DIR.glob("D1[12]_*.ipynb"))
     if not targets:
-        return CheckResult(passed=True, details=[
-            Detail("scope", True, "no bundle companion notebooks found", warning=True)])
+        # FAIL, not pass (D11 round-12). The glob is the whole scope, so renaming a
+        # notebook out of the pattern silently emptied it and the check reported success
+        # having examined nothing — the same fail-open shape as the readiness guards.
+        return CheckResult(passed=False, details=[
+            Detail("scope", False,
+                   "NO bundle companion notebook matches D1[12]_*.ipynb. The bundles ship "
+                   "executed notebooks, so an empty scope means the glob no longer finds "
+                   "them — unverified, not passing.")])
 
     # Arrays longer than this are summarised by a rounded-value digest rather than
     # compared element-by-element. Applies identically to base64 numpy arrays and lists.
@@ -4418,8 +4434,15 @@ def check_notebook_stored_outputs_current() -> CheckResult:
                     # asserting C = +1 beside the name of the theorem certifying C = −1,
                     # and this check reported "stored output matches a fresh run". Any
                     # rendered text a reader sees is a claim surface.
+                    # `image/svg+xml` added 2026-07-31 (D11 round-12). SVG was in neither
+                    # the allow-list nor the `json` branch, so the reviewer appended an SVG
+                    # cell, executed it, then edited ONLY the stored SVG to read "C = +1"
+                    # and "3.3177 (certified)" — the exact two claims this guard exists to
+                    # protect — and it reported "stored output matches a fresh run". SVG is
+                    # the realistic attack because GitHub does not render Plotly JSON, so a
+                    # static renderer is what an author reaches for.
                     if key in ("text/plain", "text/html", "text/markdown",
-                               "text/latex", "application/x-latex"):
+                               "text/latex", "application/x-latex", "image/svg+xml"):
                         v = d[key]
                         out.append(v if isinstance(v, str) else "".join(v))
                     elif "json" in key:

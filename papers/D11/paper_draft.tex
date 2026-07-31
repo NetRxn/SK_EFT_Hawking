@@ -315,14 +315,21 @@ docstring.
 
 For elastic moduli we ship \thm{voigtModulus}~\cite{Voigt1889} and
 \thm{reussModulus}~\cite{Reuss1929} with the ordering chain
-\thm{effectiveModuli\_enclosure}, $M_1 \le M_{\rm R} \le M_{\rm V} \le M_2$. This is an
+\thm{effectiveModuli\_enclosure}, $M_1 \le M_{\rm R} \le M_{\rm V} \le M_2$ \emph{for
+$0 < M_1 \le M_2$ at fill fraction $0 \le f \le 1$}. Those hypotheses are load-bearing rather
+than a relabeling, exactly as in the electromagnetic paragraph above: at
+$(M_1, M_2, f) = (4, 1, \tfrac12)$ the harmonic average is $M_{\rm R} = 1.6$, so the first link
+would read $4 \le 1.6$ and the chain is false. (Typeset unconditionally in every draft through
+2026-07-31; rounds 7 and 10 both rated this cosmetic, and round 12 supplied the counterexample.)
+This is an
 ordering of the two \emph{averages} together with constituent bounds; no effective modulus of a
 composite appears in the statement. The classical Voigt--Reuss bracket $M_{\rm R} \le M_{\rm eff}
 \le M_{\rm V}$ is a claim about a physical $M_{\rm eff}$ and is \emph{not} formalized here ---
 the same distinction, and for the same reason, as the constituent-versus-Hashin--Shtrikman one
 above. The Hashin--Shtrikman elastic bounds~\cite{HashinShtrikman1963} refine that physical
 bracket, not this ordering. The sharpest statement here is
-\thm{voigt\_sub\_reuss\_eq}, which gives the arithmetic-minus-harmonic gap \emph{exactly},
+\thm{voigt\_sub\_reuss\_eq}, which gives the arithmetic-minus-harmonic gap \emph{exactly}
+under the same hypotheses,
 \begin{equation}
 M_{\rm V} - M_{\rm R} \;=\; \frac{f(1-f)(M_1-M_2)^2}{(1-f)M_2 + fM_1},
 \end{equation}

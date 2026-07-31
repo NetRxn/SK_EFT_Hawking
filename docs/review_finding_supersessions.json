@@ -1553,9 +1553,9 @@
     },
     {
       "finding_id": "review:2026-05-01-L3-bundle-stage13:L3:6.1",
-      "status": "fixed",
-      "superseded_by": "Phase 7b sub-wave 7b.1 round-1 fixes (2026-05-01)",
-      "evidence": "BLOCKER (NarrativeGrounding): L3 third-law parenthetical labeled as '(κ → 0 at finite proper time)' — that is the VIOLATION form, not Israel's law. Israel's strong third law forbids κ → 0 at finite time; it requires extremal horizon formation only in infinite affine time. Fix: rewrote parenthetical to 'Israel's strong form: κ → 0 attainable only at infinite affine time; equivalently, no extremal-horizon formation in finite proper time'. Aligns with paper27 line 388 ('preserving the Israel 1986 strong third law').",
+      "status": "open",
+      "superseded_by": null,
+      "evidence": "BLOCKER (NarrativeGrounding): L3 third-law parenthetical labeled as '(κ → 0 at finite proper time)' — that is the VIOLATION form, not Israel's law. Israel's strong third law forbids κ → 0 at finite time; it requires extremal horizon formation only in infinite affine time. Fix: rewrote parenthetical to 'Israel's strong form: κ → 0 attainable only at infinite affine time; equivalently, no extremal-horizon formation in finite proper time'. Aligns with paper27 line 388 ('preserving the Israel 1986 strong third law'). ⚠️ REOPENED 2026-07-31 by `validate.py --check recurrence_reopens_closures` (D11 Stage-13 round-12 finding 4.2): a LATER review of the same bundle raises this finding and it is open there. The later review is the evidence; this closure is what became false. It stood because until today the recurrence check used a 30-character common-prefix threshold against a corpus whose maximum achieved prefix is 17, so it could never fire.",
       "date": "2026-05-01"
     },
     {
@@ -5353,9 +5353,9 @@
     },
     {
       "finding_id": "review:2026-06-08-2242-internal-adversarial:paper10_modular_generation:9.1",
-      "status": "fixed",
-      "superseded_by": "docs/audits/stage13_attribution_sweep_2026-06-10.md#paper10",
-      "evidence": "Count literals are macro-driven (\\totaltheorems/\\leanmodules/\\axiomcount); no stale 2237/170/11039/853 literals. Verified on disk 2026-06-10.",
+      "status": "open",
+      "superseded_by": null,
+      "evidence": "Count literals are macro-driven (\\totaltheorems/\\leanmodules/\\axiomcount); no stale 2237/170/11039/853 literals. Verified on disk 2026-06-10. ⚠️ REOPENED 2026-07-31 by `validate.py --check recurrence_reopens_closures` (D11 Stage-13 round-12 finding 4.2): a LATER review of the same bundle raises this finding and it is open there. The later review is the evidence; this closure is what became false. It stood because until today the recurrence check used a 30-character common-prefix threshold against a corpus whose maximum achieved prefix is 17, so it could never fire.",
       "date": "2026-06-10"
     },
     {
