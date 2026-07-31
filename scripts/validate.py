@@ -3815,6 +3815,136 @@ def check_count_literals() -> CheckResult:
 # CHECK 18: Readiness submission gate (Phase 5v Wave 4)
 # ═══════════════════════════════════════════════════════════════════════
 
+@register_check("notebook_stored_outputs_current",
+                "Bundle companion notebooks' STORED outputs equal what their code produces")
+def check_notebook_stored_outputs_current() -> CheckResult:
+    """CHECK: stored notebook output must be what the notebook actually produces.
+
+    Added 2026-07-31 (D11 Stage-13 round-7 BLOCKER 5.1). `notebook_exec` executes
+    each notebook with `NotebookClient` into an in-memory `nb` and **never writes it
+    back** (`scripts/validate.py`, no `nbformat.write` in that path). So it proves a
+    notebook *runs*; it has no opinion about what is stored in it. Stored outputs can
+    therefore drift arbitrarily from what the code produces, and the check stays green
+    the whole time.
+
+    That is exactly what happened: D11's companion notebook shipped as a bundle
+    artifact with stored figure output rendering `Voigt-Reuss elastic bounds` and
+    `effective modulus M` — the two namings the paper's Section 5 and the Lean module
+    header explicitly retract — plus a 3.3177 annotation missing the
+    `(numerical, not certified)` qualifier the paper claims the figure carries. A
+    reader opening the shipped notebook saw the retracted claims.
+
+    NOTE on the diagnosed cause: the round-7 reviewer attributed this to the skip-cache
+    key being "the notebook's own state, not visualizations.py". That is not the
+    mechanism — `_src_core_fingerprint()` hashes all of `src/core/*.py`, visualizations
+    included, and does invalidate the cache. The real cause is narrower and worse: the
+    check never compares or refreshes stored output at all, so no cache key could have
+    saved it.
+
+    Scoped to the bundle companion notebooks (the ones that ship as artifacts) because
+    executing all ~91 costs ~10 minutes; the rest stay covered by `notebook_exec`'s
+    runs-clean guarantee. The scope limit is stated in the summary line rather than
+    left implicit.
+    """
+    try:
+        import nbformat
+        from nbclient import NotebookClient
+    except ImportError as exc:
+        return CheckResult(passed=True, details=[
+            Detail("import", True, f"nbclient/nbformat unavailable ({exc}); skipping",
+                   warning=True)])
+
+    targets = sorted(NOTEBOOKS_DIR.glob("D1[12]_*.ipynb"))
+    if not targets:
+        return CheckResult(passed=True, details=[
+            Detail("scope", True, "no bundle companion notebooks found", warning=True)])
+
+    def _strings_in(obj) -> list[str]:
+        """Every string leaf of a JSON payload, in document order.
+
+        For a Plotly figure this is exactly the reader-visible text surface — subplot
+        titles, axis titles, legend names, annotation text, hover templates — and it is
+        immune to float jitter in the trace arrays, which is not a claim about anything.
+        """
+        out: list[str] = []
+        if isinstance(obj, str):
+            out.append(obj)
+        elif isinstance(obj, dict):
+            for k in sorted(obj):
+                out.extend(_strings_in(obj[k]))
+        elif isinstance(obj, list):
+            for v in obj:
+                out.extend(_strings_in(v))
+        return out
+
+    def _texts(nb) -> list[str]:
+        """Every text-bearing output payload, in order.
+
+        ⚠️ Figure output is the point (D11 round-7 BLOCKER 5.1 was a stale *figure*,
+        not stale stdout). In this repo figures serialize as
+        `application/vnd.plotly.v1+json`, so an implementation that collected only
+        `text/plain` / `text/html` / `application/json` — as the first version of this
+        function did — would ignore all four D11 figures and pass green on precisely the
+        defect it exists to catch. Any `*json*` MIME key is descended into for its string
+        leaves. Raster image payloads are still ignored: bit-level PNG churn is not a
+        claim.
+        """
+        out = []
+        for cell in nb.cells:
+            if cell.cell_type != "code":
+                continue
+            for o in cell.get("outputs", []) or []:
+                if "text" in o:
+                    out.append("".join(o["text"]))
+                d = (o.get("data") or {})
+                for key in sorted(d):
+                    if key in ("text/plain", "text/html"):
+                        v = d[key]
+                        out.append(v if isinstance(v, str) else "".join(v))
+                    elif "json" in key:
+                        out.extend(_strings_in(d[key]))
+        return out
+
+    details: list[Detail] = []
+    all_pass = True
+    for nb_path in targets:
+        try:
+            stored = nbformat.read(nb_path.open(), as_version=4)
+            fresh = nbformat.read(nb_path.open(), as_version=4)
+            NotebookClient(fresh, timeout=180, kernel_name="python3",
+                           resources={"metadata": {"path": str(NOTEBOOKS_DIR)}}).execute()
+        except Exception as exc:
+            all_pass = False
+            details.append(Detail(nb_path.name, False,
+                                  f"could not re-execute for comparison: "
+                                  f"{type(exc).__name__}: {exc}"))
+            continue
+
+        a, b = _texts(stored), _texts(fresh)
+        if a == b:
+            details.append(Detail(nb_path.name, True,
+                                  f"stored output matches a fresh run "
+                                  f"({len(a)} text payloads)"))
+            continue
+        all_pass = False
+        diff = next((f"stored={x[:160]!r} fresh={y[:160]!r}"
+                     for x, y in zip(a, b) if x != y),
+                    f"payload count differs: stored={len(a)} fresh={len(b)}")
+        details.append(Detail(
+            nb_path.name, False,
+            f"STORED OUTPUT IS STALE — a fresh run produces different text. "
+            f"This notebook ships as a bundle artifact, so the stored output is what a "
+            f"reader sees. Re-execute in place: "
+            f"`uv run jupyter nbconvert --to notebook --execute --inplace "
+            f"notebooks/{nb_path.name}`. First divergence: {diff}"))
+
+    details.insert(0, Detail(
+        "summary", all_pass,
+        f"{len(targets)} bundle companion notebook(s) compared against a fresh run; "
+        f"non-bundle notebooks are NOT covered here (cost) and rely on notebook_exec"))
+    return CheckResult(passed=all_pass, details=details)
+
+
 @register_check("readiness_verdicts_agree",
                 "The heatmap and the submission gate return the same per-bundle verdict")
 def check_readiness_verdicts_agree() -> CheckResult:
@@ -3852,9 +3982,14 @@ def check_readiness_verdicts_agree() -> CheckResult:
         review_info = resolve_stage13_reviews(backfill=False)
         by_bundle = aggregate_by_bundle(assignments, findings_by_paper, review_info)
     except Exception as exc:  # pragma: no cover - defensive
-        return CheckResult(passed=True, details=[
-            Detail("heatmap", True, f"heatmap unavailable ({exc}); skipping",
-                   warning=True)])
+        # FAIL, not pass (D12 round-7 finding 8.3). This guard exists to make a
+        # false-green verdict impossible; an exception inside the heatmap computation
+        # must not be indistinguishable from "the two verdicts agree". Same reasoning
+        # as the orphan-scan handler at :3366.
+        return CheckResult(passed=False, details=[
+            Detail("heatmap", False,
+                   f"heatmap verdict could not be computed ({type(exc).__name__}: "
+                   f"{exc}) — the two verdicts are therefore UNVERIFIED, not agreed")])
 
     graph = build_graph_json()
     gates = [n for n in graph.get('nodes', []) if n.get('type') == 'ReadinessGate']
@@ -3873,14 +4008,45 @@ def check_readiness_verdicts_agree() -> CheckResult:
     details: list[Detail] = []
     disagreements = 0
     checked = 0
+
+    # ── Reverse direction (self-audit 2026-07-31; also raised as D12 round-7 8.2) ──
+    # The first version of this check opened with `if readiness != 'RED': continue`,
+    # so it asserted only heatmap-RED ⇒ some gate blocked and was blind BY
+    # CONSTRUCTION to the mirror image: a bundle the heatmap renders GREEN while a P1
+    # gate is blocked. That is the same false-green shape as the defect the check was
+    # written for, one layer over, and it was live — D6 rendered GREEN in
+    # BUNDLE_READINESS_HEATMAP.md with NarrativeGrounding blocked. GREEN is what a
+    # reader takes as "ready", so it must survive every P1 gate, including the ones
+    # the heatmap does not model (it counts findings only).
+    for bundle, agg in sorted(by_bundle.items()):
+        if str(agg.get('readiness', '')).upper() != 'GREEN':
+            continue
+        if bundle in blocked_at_gate:
+            disagreements += 1
+            details.append(Detail(
+                bundle, False,
+                f"DISAGREE (reverse): heatmap renders this bundle GREEN while P1 "
+                f"gate(s) {', '.join(sorted(blocked_at_gate[bundle]))} are blocked. The "
+                f"heatmap models findings only and cannot see these gates; GREEN must "
+                f"not be issued while any P1 gate is blocked"))
+        else:
+            checked += 1
+
     for bundle, agg in sorted(by_bundle.items()):
         if str(agg.get('readiness', '')).upper() != 'RED':
             continue
         if bundle not in seen_papers:
+            # FAIL, not warn (D12 round-7 finding 8.2). A heatmap-RED bundle with NO
+            # gate nodes is the strongest possible form of the defect this check
+            # exists for: the submission gate cannot report it as blocked because it
+            # has nothing to report at all. Warning-and-passing here reproduced the
+            # original 8.1 failure exactly.
+            disagreements += 1
             details.append(Detail(
-                bundle, True,
-                f"heatmap RED ({agg.get('blocker_count', 0)} blockers) but no "
-                f"ReadinessGate nodes exist for paper:{bundle}", warning=True))
+                bundle, False,
+                f"heatmap RED ({agg.get('blocker_count', 0)} blockers) but NO "
+                f"ReadinessGate nodes exist for paper:{bundle} — the submission gate "
+                f"is structurally unable to report this bundle as blocked"))
             continue
         checked += 1
         if bundle in blocked_at_gate:
@@ -4253,7 +4419,6 @@ def check_citation_primary_sources_present() -> CheckResult:
     missing_from_registry: list[str] = []
     inprep_exempt: list[str] = []
     textbook_exempt: list[str] = []
-    unreachable_exempt: list[str] = []
     cached: list[str] = []
     not_cached: list[tuple[str, str, list[str]]] = []  # (key, phase, papers)
 
@@ -4272,28 +4437,6 @@ def check_citation_primary_sources_present() -> CheckResult:
                 and entry.get("doi") is None
                 and entry.get("arxiv") is None):
             textbook_exempt.append(bibkey)
-            continue
-        # Unreachable-primary exemption (added 2026-07-31, D11 Stage-13 round-7
-        # finding 1.4). The clause above equates "has a DOI" with "a primary source
-        # can be cached", which is false for paywalled or pre-digital works: Voigt
-        # 1889, Reuss 1929 and Milton 2002 all have DOIs that resolve, and none is
-        # reachable through this repo's whitelisted scholarly egress. Without this
-        # class the only ways to satisfy the gate would be to DELETE a verified DOI
-        # (strictly worse provenance than the textbook-exempt class it would join)
-        # or to fabricate a cache — so the class exists to keep the honest option
-        # available. It is deliberately opt-in and self-documenting: the registry
-        # entry must set `primary_source_unreachable: True` AND carry a non-empty
-        # `notes` saying why, and these bibkeys are counted and NAMED separately in
-        # the summary so the exemption can never be taken silently.
-        if entry.get("primary_source_unreachable") is True:
-            if str(entry.get("notes") or "").strip():
-                unreachable_exempt.append(bibkey)
-                continue
-            all_pass = False
-            details.append(Detail(
-                f"unreachable_no_justification:{bibkey}", False,
-                f"{bibkey} sets primary_source_unreachable but has empty `notes`; "
-                f"the exemption requires a written justification."))
             continue
         # Resolve phase: prefer canonical (used_in[0] paper), else fallback
         phase = bibkey_phase(entry) or FALLBACK
@@ -4323,9 +4466,7 @@ def check_citation_primary_sources_present() -> CheckResult:
         f"{n_cited} bibkeys cited across {len(paper_tex_files)} papers — "
         f"{n_cached} cached / {n_inprep} inprep-exempt / "
         f"{n_textbook} textbook-exempt / "
-        + (f"{len(unreachable_exempt)} unreachable-primary-exempt "
-           f"({', '.join(sorted(unreachable_exempt))}) / " if unreachable_exempt else "")
-        + f"{n_uncached} need cache / {n_missing} missing-from-registry"
+        f"{n_uncached} need cache / {n_missing} missing-from-registry"
     ))
 
     if missing_from_registry:

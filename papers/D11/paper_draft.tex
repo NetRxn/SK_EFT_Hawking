@@ -110,7 +110,12 @@ counted at source level. The counting rule is stated so it is reproducible, on b
 declaration is counted when a line begins with \texttt{theorem} or \texttt{lemma} (for the first
 figure), or with \texttt{def}, \texttt{noncomputable def}, \texttt{abbrev} or \texttt{structure}
 (for the second), optionally preceded by an attribute bracket or by
-\texttt{private}/\texttt{protected}. The two \texttt{abbrev}s are \thm{Torus} and
+\texttt{private}/\texttt{protected}, \emph{and the line is not inside a block comment}. That last
+clause is not a technicality: docstrings in this corpus routinely discuss declarations in prose, so a
+line such as ``\texttt{theorem X is the sharper form}'' inside a \texttt{/-- ... -/} block matches
+the surface pattern without being a declaration. Omitting the clause overcounts by four in the
+present tree --- and two of those four are docstring sentences written by this bundle's own
+Stage-13 remediations, so the discrepancy grows with every review round rather than staying fixed. The two \texttt{abbrev}s are \thm{Torus} and
 \thm{LinkField}; we include them because \thm{Torus} is cited in this paper and excluding it would
 make a cited object uncountable under our own rule. Every figure in this paragraph is generated
 from the tree by \texttt{scripts/update\_counts.py} rather than written by hand.
@@ -271,7 +276,7 @@ eigenvalue-splitting analysis above.
 \includegraphics[width=\textwidth]{figures/d11_fig4_effective_medium.png}
 \caption{Left: Maxwell--Garnett effective permittivity inside its constituent bounds, with the
 certified point $(\varepsilon_h,\varepsilon_i,f) = (1,4,\tfrac12)$ giving exactly $2$, strictly
-inside $[1,4]$ (\thm{effectiveMedium\_hashinShtrikman\_enclosure}). Right: the Voigt and Reuss
+inside $[1,4]$ (\thm{effectiveMedium\_worked\_point\_strict}). Right: the Voigt and Reuss
 elastic \emph{averages} --- not bounds on a physical $M_{\rm eff}$, see \S\ref{sec:effmedium} ---
 with their \emph{exact} arithmetic-minus-harmonic gap (\thm{voigt\_sub\_reuss\_eq}).}
 \label{fig:effmedium}
@@ -288,9 +293,15 @@ $\varepsilon_h \le \varepsilon_{\rm eff} \le \varepsilon_i$
 (\thm{effectiveMedium\_constituent\_bounds}), for a physical composite
 $0 < \varepsilon_h \le \varepsilon_i$ at fill fraction $0 \le f \le 1$ --- and the ordering
 hypothesis is load-bearing rather than a relabeling, since Maxwell--Garnett is not symmetric under
-exchanging host and inclusion. The worked instance
+exchanging host and inclusion. Away from the degenerate endpoints the bracket is \emph{strict}:
+\thm{effectiveMedium\_constituent\_bounds\_strict} gives
+$\varepsilon_h < \varepsilon_{\rm eff} < \varepsilon_i$ whenever
+$\varepsilon_h < \varepsilon_i$ and $0 < f < 1$, so neither constituent bound is attained on a
+genuinely mixed two-phase composite. The worked instance
 \thm{effectiveMedium\_hashinShtrikman\_enclosure} at
-$(\varepsilon_h, \varepsilon_i, f) = (1, 4, \tfrac12)$ gives exactly $2$.
+$(\varepsilon_h, \varepsilon_i, f) = (1, 4, \tfrac12)$ gives exactly $2$, and
+\thm{effectiveMedium\_worked\_point\_strict} places it strictly inside $[1,4]$ by instantiating the
+general theorem rather than by re-deriving order facts from the value.
 
 The naming needs care, because two distinct sharper families sit above this one. The
 Wiener bounds~\cite{Milton2002} are the harmonic and arithmetic means of the phases, and the
@@ -501,10 +512,10 @@ assistant, of a Chern number or a Chern class \emph{of a vector bundle} --- the 
 invariant --- nor of an acoustic or phononic band structure, an exceptional point, a
 $\mathcal{PT}$ transition, a Maxwell--Garnett constituent enclosure, a Wiener or
 Hashin--Shtrikman-type effective-medium bound, a honeycomb band structure, or the Haldane model.
-(Stated in the past tense deliberately: the present paper formalizes five of these
+(Stated in the past tense deliberately: the present paper formalizes six of these
 eight --- the acoustic band structure, the exceptional point, the $\mathcal{PT}$ transition, the
-Maxwell--Garnett enclosure, the honeycomb band structure and the Haldane model, of which the last two
-are one item apiece --- so a present-tense universal negative would be self-refuting. Two of the eight
+Maxwell--Garnett enclosure, the honeycomb band structure and the Haldane model --- so a present-tense
+universal negative would be self-refuting. Two of the eight
 are \emph{not} delivered here and are listed for the absence claim only: the vector-bundle Chern class
 (Section~\ref{sec:lattice}'s invariant is the Fukui--Hatsugai--Suzuki lattice quantity, not proved
 equal to it) and the Wiener/Hashin--Shtrikman families, which Section~\ref{sec:effmedium} states

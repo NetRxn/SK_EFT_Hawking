@@ -11897,6 +11897,19 @@ def haldane_lattice_chern(semenoff_m: float, n_grid: int = 4,
     """
     if n_grid < 2:
         raise ValueError(f"n_grid must be at least 2, got {n_grid}")
+    if n_grid % 3 == 0:
+        # ADMISSIBILITY GUARD (added 2026-07-31, D11 Stage-13 round-7 finding 6.1).
+        # `blochFrameOfD` carries a north-pole condition `0 < ‖d‖ + d₃`, and on grids
+        # divisible by three the sampling hits the Dirac points, where the d-vector is
+        # purely longitudinal and `‖d‖ + d₃` vanishes EXACTLY (measured 0.000e+00 at
+        # N = 6 and N = 9). The Lean frame does not exist there. Without this guard the
+        # port returned -1 anyway, silently, on exactly the grids the paper calls "a real
+        # constraint on which grids may be used, not a cosmetic one" — a number with no
+        # certified counterpart, indistinguishable from a valid one.
+        raise ValueError(
+            f"n_grid={n_grid} is divisible by 3: the grid samples the Dirac points, where "
+            f"the north-pole condition of blochFrameOfD fails exactly, so no admissible "
+            f"frame exists and the FHS invariant is undefined. Use a grid with 3 ∤ N.")
     if phi is None:
         phi = np.pi / 2.0
     shift_term = 2.0 * t_2 * float(np.sin(phi))
@@ -11907,8 +11920,16 @@ def haldane_lattice_chern(semenoff_m: float, n_grid: int = 4,
         f = 1.0 + np.exp(1j * th1) + np.exp(1j * th2)
         nnn = np.sin(th1) + np.sin(th2 - th1) - np.sin(th2)
         d = np.array([t * f.real, -t * f.imag, semenoff_m - shift_term * nnn])
-        v = np.array([d[0] - 1j * d[1],
-                      -(d[2] + float(np.sqrt(d @ d))) + 0j])
+        nrm = float(np.sqrt(d @ d))
+        # Same north-pole condition, enforced pointwise: 3 ∤ N is the systematic failure
+        # mode, but a caller supplying unusual (t, t₂, φ) can degenerate elsewhere, and a
+        # zero-norm state would silently normalize to nan rather than fail.
+        if nrm + d[2] <= 0.0:
+            raise ValueError(
+                f"north-pole condition ‖d‖ + d₃ > 0 fails at grid point ({j1}, {j2}): "
+                f"‖d‖ + d₃ = {nrm + d[2]:.3e}. No admissible lower-band frame exists there, "
+                f"so the FHS invariant is undefined for these parameters.")
+        v = np.array([d[0] - 1j * d[1], -(d[2] + nrm) + 0j])
         return v / np.linalg.norm(v)
 
     states = [[_state(a, b) for b in range(n_grid)] for a in range(n_grid)]

@@ -271,6 +271,34 @@ def resolve_stage13_reviews(*, backfill: bool) -> dict[str, dict]:
     return out
 
 
+def _blocked_p1_gates_by_paper() -> dict[str, list[str]]:
+    """Bundle/paper key -> names of its BLOCKED priority-1 ReadinessGates.
+
+    Added 2026-07-31 (self-audit, corroborated by D12 Stage-13 round-7 finding 8.2).
+    This module's verdict is computed from review findings ONLY, so it cannot see the
+    gates that are not finding-derived (NarrativeGrounding, ComputationCorrectness,
+    CitationIntegrity, …). It was therefore issuing 🟢 GREEN — the verdict a reader
+    takes as "ready" — for bundles whose P1 gates were blocked: D6 and D10 were both
+    live instances. Neither subsystem was lying about its own inputs; the heatmap
+    simply had no obligation to agree with the gate, which is exactly the shape of the
+    round-6 8.1 defect one layer over.
+
+    Returns an empty mapping (never raises) if the graph is unavailable, and callers
+    treat that as "no downgrade" — the graph is already a hard dependency of
+    `load_findings_by_paper`, so an outage there fails loudly upstream.
+    """
+    try:
+        from readiness_gates import evaluate_all_gates
+        from build_graph import build_graph_json
+        out: dict[str, list[str]] = {}
+        for r in evaluate_all_gates(build_graph_json()):
+            if r.state == "blocked" and r.priority == 1:
+                out.setdefault(r.paper, []).append(r.gate)
+        return out
+    except Exception:
+        return {}
+
+
 def aggregate_by_bundle(
     assignments: dict[str, dict],
     findings_by_paper: dict[str, list[dict]],
@@ -286,6 +314,8 @@ def aggregate_by_bundle(
     """
     if review_info is None:
         review_info = resolve_stage13_reviews(backfill=False)
+
+    blocked_p1 = _blocked_p1_gates_by_paper()
 
     by_bundle: dict[str, dict] = {}
     for b in _VALID_BUNDLE_TARGETS:
@@ -331,6 +361,12 @@ def aggregate_by_bundle(
         else:
             readiness, readiness_display = "GREEN", "GREEN"
 
+        # GREEN must survive every P1 gate, not only the finding-derived ones.
+        gate_block = sorted(blocked_p1.get(b, []))
+        if readiness == "GREEN" and gate_block:
+            readiness = "YELLOW"
+            readiness_display = f"YELLOW (P1 gate blocked: {', '.join(gate_block)})"
+
         by_bundle[b] = {
             "sources": sorted(sources),
             "source_count": len(sources),
@@ -346,6 +382,7 @@ def aggregate_by_bundle(
             "stage13_review_source": rev.get("source"),
             "stage13_review_backfilled": bool(rev.get("backfilled")),
             "stage13_status_caveat": rev.get("status_caveat"),
+            "blocked_p1_gates": gate_block,
             "open_finding_ids": [f["id"] for f in open_findings[:10]],
         }
     return by_bundle

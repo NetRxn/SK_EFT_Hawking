@@ -5658,6 +5658,60 @@
       "evidence": "LuccioliDegenne2024's title carried a subtitle taken from a web-search snippet, not from any read source. Corrected across all four citation layers (bibitem, CITATION_REGISTRY, Lit-Search primary-source cache, prior_art_novelty.md). Round-6 reviewer swept find_phrase.py and confirmed all 7 surviving hits are records-of-fix. (Re-keyed 2026-07-31: this record was originally filed under `review:2026-07-31-bundle-stage13:D12:1.1`, but that directory holds bundle_readiness.py's aggregation summary, which mints no finding nodes — so the closure named nothing. The finding lives in the 2026-07-31-0829-internal-adversarial review.)",
       "closed_date": "2026-07-31",
       "closed_by": "stage13-round6-verification"
+    },
+    {
+      "finding_id": "review:2026-07-31-0829-internal-adversarial:D12:2.2",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "c60e83ad",
+      "evidence": "γ attribution: the draft now cites IrwinHilton2005, states the asymptote as n/(2n+1), and discloses the attribution as provisional. Closed on the INDEPENDENT verification of Stage-13 round 7 (papers/AutomatedReviews/2026-07-31-1524-internal-adversarial/D12.md, finding 8.1), which read each of these six in the current tree and reported them demonstrably fixed while still carrying status:open — so D12's FixPropagation block was composed entirely of fixed findings. Not closed on the author's own say-so.",
+      "closed_date": "2026-07-31",
+      "closed_by": "stage13-round7-independent-verification"
+    },
+    {
+      "finding_id": "review:2026-07-31-0829-internal-adversarial:D12:5.1",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "c60e83ad",
+      "evidence": "one-vs-two prior-art count: abstract, introduction, §5 and conclusion all say two. Closed on the INDEPENDENT verification of Stage-13 round 7 (papers/AutomatedReviews/2026-07-31-1524-internal-adversarial/D12.md, finding 8.1), which read each of these six in the current tree and reported them demonstrably fixed while still carrying status:open — so D12's FixPropagation block was composed entirely of fixed findings. Not closed on the author's own say-so.",
+      "closed_date": "2026-07-31",
+      "closed_by": "stage13-round7-independent-verification"
+    },
+    {
+      "finding_id": "review:2026-07-31-0829-internal-adversarial:D12:5.3",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "c60e83ad",
+      "evidence": "Coq/Isabelle scope: now carved out explicitly. Closed on the INDEPENDENT verification of Stage-13 round 7 (papers/AutomatedReviews/2026-07-31-1524-internal-adversarial/D12.md, finding 8.1), which read each of these six in the current tree and reported them demonstrably fixed while still carrying status:open — so D12's FixPropagation block was composed entirely of fixed findings. Not closed on the author's own say-so.",
+      "closed_date": "2026-07-31",
+      "closed_by": "stage13-round7-independent-verification"
+    },
+    {
+      "finding_id": "review:2026-07-31-0829-internal-adversarial:D12:5.4",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "c60e83ad",
+      "evidence": "fail-open label: reworded to \"mirror image of the fail-open failure ... not an instance of it\". Closed on the INDEPENDENT verification of Stage-13 round 7 (papers/AutomatedReviews/2026-07-31-1524-internal-adversarial/D12.md, finding 8.1), which read each of these six in the current tree and reported them demonstrably fixed while still carrying status:open — so D12's FixPropagation block was composed entirely of fixed findings. Not closed on the author's own say-so.",
+      "closed_date": "2026-07-31",
+      "closed_by": "stage13-round7-independent-verification"
+    },
+    {
+      "finding_id": "review:2026-07-31-0829-internal-adversarial:D12:5.6",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "c60e83ad",
+      "evidence": "propagator norm: now names the ℓ^∞ operator norm and states the spectral norm is 1. Closed on the INDEPENDENT verification of Stage-13 round 7 (papers/AutomatedReviews/2026-07-31-1524-internal-adversarial/D12.md, finding 8.1), which read each of these six in the current tree and reported them demonstrably fixed while still carrying status:open — so D12's FixPropagation block was composed entirely of fixed findings. Not closed on the author's own say-so.",
+      "closed_date": "2026-07-31",
+      "closed_by": "stage13-round7-independent-verification"
+    },
+    {
+      "finding_id": "review:2026-07-31-0829-internal-adversarial:D12:5.7",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "c60e83ad",
+      "evidence": "ceiling recount: now distinguishes ceilings by floor provenance. Closed on the INDEPENDENT verification of Stage-13 round 7 (papers/AutomatedReviews/2026-07-31-1524-internal-adversarial/D12.md, finding 8.1), which read each of these six in the current tree and reported them demonstrably fixed while still carrying status:open — so D12's FixPropagation block was composed entirely of fixed findings. Not closed on the author's own say-so.",
+      "closed_date": "2026-07-31",
+      "closed_by": "stage13-round7-independent-verification"
     }
   ]
 }

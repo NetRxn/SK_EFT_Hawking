@@ -608,3 +608,30 @@ class TestHaldaneLatticeChern:
     def test_bisection_rejects_a_bracket_with_no_flip(self):
         with pytest.raises(ValueError, match="does not straddle"):
             F.haldane_flip_location(4, bracket=(6.0, 8.0))
+
+    def test_grids_divisible_by_three_are_refused(self):
+        # D11 round-7 finding 6.1: at 3 | N the sampling hits the Dirac points, the
+        # north-pole condition of blochFrameOfD fails EXACTLY, and the Lean frame does
+        # not exist. The port used to return -1 anyway, silently.
+        for n in (3, 6, 9, 12):
+            with pytest.raises(ValueError, match="divisible by 3"):
+                F.haldane_lattice_chern(1.0, n)
+
+    def test_the_condition_that_fails_is_exactly_the_north_pole_one(self):
+        # Not just "we refuse 3 | N" — the reason must be true. Measure it.
+        import numpy as np
+        for n in (6, 9):
+            worst = min(
+                (lambda d: float(np.sqrt(d @ d)) + d[2])(
+                    np.array([
+                        1.0 + np.cos(2 * np.pi * a / n) + np.cos(2 * np.pi * b / n),
+                        -(np.sin(2 * np.pi * a / n) + np.sin(2 * np.pi * b / n)),
+                        1.0 - 2.0 * (np.sin(2 * np.pi * a / n)
+                                     + np.sin(2 * np.pi * (b - a) / n)
+                                     - np.sin(2 * np.pi * b / n)),
+                    ]))
+                for a in range(n) for b in range(n))
+            assert worst == pytest.approx(0.0, abs=1e-12)
+        # …and on admissible grids it is strictly positive, so the guard is not vacuous.
+        for n in (4, 5, 7):
+            F.haldane_lattice_chern(1.0, n)   # does not raise

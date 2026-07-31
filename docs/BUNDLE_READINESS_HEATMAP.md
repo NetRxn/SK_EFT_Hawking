@@ -26,13 +26,13 @@
 | **D3** | 1 | 31 | 11 | 3 | 2 advisory, 3 major, 6 minor | 2026-06-10 | 🔴 RED |
 | **D4** | 1 | 12 | 0 | 0 | _(none)_ | 2026-06-10 | 🟢 GREEN |
 | **D5** | 1 | 9 | 20 | 11 | 3 advisory, 5 critical, 6 major, 6 minor | 2026-06-10 | 🔴 RED |
-| **D6** | 1 | 3 | 0 | 0 | _(none)_ | 2026-06-10 † | 🟢 GREEN |
+| **D6** | 1 | 3 | 0 | 0 | _(none)_ | 2026-06-10 † | 🟡 YELLOW (P1 gate blocked: NarrativeGrounding) |
 | **D7** | 1 | 1 | 16 | 12 | 8 critical, 4 major, 4 minor | 2026-06-10 | 🔴 RED |
 | **D8** | 1 | 13 | 8 | 0 | 2 advisory, 6 minor | 2026-06-10 | 🟡 YELLOW |
 | **D9** | 1 | 1 | 0 | 0 | _(none)_ | 2026-06-10 | 🟢 GREEN |
-| **D10** | 1 | 1 | 3 | 0 | 1 advisory, 2 minor | 2026-06-30 | 🟢 GREEN |
-| **D11** | 1 | 1 | 36 | 14 | 5 advisory, 3 critical, 11 major, 17 minor | 2026-07-31 † | 🔴 RED |
-| **D12** | 1 | 1 | 32 | 13 | 2 advisory, 2 critical, 11 major, 17 minor | 2026-07-31 † | 🔴 RED |
+| **D10** | 1 | 1 | 3 | 0 | 1 advisory, 2 minor | 2026-06-30 | 🟡 YELLOW (P1 gate blocked: NarrativeGrounding) |
+| **D11** | 1 | 1 | 38 | 15 | 5 advisory, 1 critical, 14 major, 18 minor | 2026-07-31 † | 🔴 RED |
+| **D12** | 1 | 1 | 28 | 9 | 2 advisory, 1 critical, 8 major, 17 minor | 2026-07-31 † | 🔴 RED |
 | **L1** | 2 | 2 | 1 | 1 | 1 major | 2026-06-10 | 🔴 RED |
 | **L2** | 2 | 1 | 20 | 14 | 3 advisory, 8 critical, 6 major, 3 minor | 2026-06-10 | 🔴 RED |
 | **L3** | 2 | 4 | 8 | 5 | 1 critical, 4 major, 3 minor | 2026-06-10 | 🔴 RED |
@@ -59,8 +59,8 @@
 | **D8** | 2 | 4 | 0 | 0 | 0 | 0 | 0 | 0 | 2 |
 | **D9** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | **D10** | 0 | 2 | 0 | 0 | 0 | 1 | 0 | 0 | 0 |
-| **D11** | 2 | 9 | 3 | 2 | 5 | 0 | 7 | 3 | 5 |
-| **D12** | 4 | 6 | 3 | 0 | 1 | 0 | 9 | 4 | 5 |
+| **D11** | 2 | 7 | 2 | 2 | 5 | 0 | 8 | 4 | 8 |
+| **D12** | 3 | 5 | 4 | 0 | 0 | 0 | 5 | 7 | 4 |
 | **L1** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 |
 | **L2** | 3 | 3 | 1 | 0 | 3 | 2 | 1 | 4 | 3 |
 | **L3** | 1 | 4 | 0 | 0 | 1 | 0 | 1 | 0 | 1 |

@@ -669,8 +669,13 @@ corollaries supply it: at matched budget `2` the composite ceiling is at most `2
 ⚠️ **What this does and does not show** (corrected 2026-07-31, D12 Stage-13 round-6 BLOCKER 5.1;
 this note previously said the bound "is reached through the composite theorem rather than by quoting
 its detection half", while its own proof quotes the detection half). Each proof closes on the right-hand branch of the
-maximum, so at this operating point the relaxation branch is inert and the numerical bound is
-exactly the single-mechanism one. What is established is that the *composite statement* — full
+maximum — it *lower-bounds* the max by its detection branch and discards the relaxation term rather
+than evaluating which branch wins — so the numerical bound is exactly the single-mechanism one, and
+it holds uniformly in `t` and `T1`. The discarded term is not negligible: solving
+`x / (2 * (1 + x)) = gaussianQ 1` gives `x = 0.4651`, so for `t / T1 > 0.4651` the relaxation term is
+the larger of the two and the max selects *it*. Calling that branch "inert" (as an earlier version of
+this note did) is false over most of the theorems' own domain; "discarded by the proof" is the
+accurate description. What is established is that the *composite statement* — full
 binder list, attributed error pair `(e₀, e₁)` rather than the threshold pair — is non-vacuous at a
 signal-carrying point. It is not a sharper bound. -/
 

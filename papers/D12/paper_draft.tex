@@ -552,8 +552,10 @@ is a different comparison and equals $50\,\%$ and $80\,\%$ at those two points.)
 \thm{relaxation\_detector\_chain\_ceiling\_bites} likewise reach $22/25$ at matched budget $2$.
 What that establishes is that the \emph{composite} statement, carrying its full binder list and
 concluding about the attributed error pair, is non-vacuous at a signal-carrying operating point. It
-is not a sharper bound: at this point the relaxation branch is inert and the $\max$ selects the
-detection term, so the value is the single-mechanism one.
+is not a sharper bound: each proof lower-bounds the maximum by its detection branch and discards the
+relaxation term, so the numerical value $22/25$ is the single-mechanism one and holds uniformly in
+$t$ and $T_1$. (The discarded term is not negligible --- for $t/T_1 > 0.4651$ it is the larger of the
+two --- which is precisely why the proofs bound rather than evaluate the maximum.)
 
 \section{Scope and prior art}
 \label{sec:scope}

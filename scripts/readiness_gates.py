@@ -682,6 +682,7 @@ def _eval_fix_propagation(paper: dict, idx: GraphIndex) -> GateResult:
     flagged = idx.incoming(paper['id'], 'FLAGS')
     open_findings = []
     fixed_findings = []
+    accepted_findings = []
     for e in flagged:
         finding = idx.by_id.get(e['source'])
         if not finding:
@@ -689,6 +690,17 @@ def _eval_fix_propagation(paper: dict, idx: GraphIndex) -> GateResult:
         status = finding.get('meta', {}).get('status', 'open')
         if status == 'fixed':
             fixed_findings.append(finding)
+        elif status == 'accepted':
+            # `accepted` is a RECORDED DECISION to accept a finding, not an unclosed
+            # one, and `bundle_readiness.py` has always used the narrower
+            # `status == "open"`. The `!= 'fixed'` partition predates the severity
+            # escalation below, but the escalation is what made it load-bearing: it
+            # turned all 122 project-wide `accepted` findings into submission blockers.
+            # Concrete false RED it produced: E2 blocked on FixPropagation on the
+            # strength of one accepted major, while the heatmap correctly read E2 as
+            # YELLOW with blocker_count=0. Counted and named in the evidence line so it
+            # never disappears silently. (Self-audit 2026-07-31.)
+            accepted_findings.append(finding)
         else:
             open_findings.append(finding)
 
@@ -697,7 +709,8 @@ def _eval_fix_propagation(paper: dict, idx: GraphIndex) -> GateResult:
                 in BLOCKING_SEVERITIES]
 
     r.evidence.append(f'{len(flagged)} findings flag this paper '
-                      f'({len(fixed_findings)} fixed, {len(open_findings)} open, '
+                      f'({len(fixed_findings)} fixed, {len(accepted_findings)} accepted, '
+                      f'{len(open_findings)} open, '
                       f'{len(blocking)} of them submission-blocking)')
     if blocking:
         r.blockers = [f'{f.get("label","?")[:60]}' for f in blocking[:10]]
