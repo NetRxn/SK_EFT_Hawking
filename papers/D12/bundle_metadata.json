@@ -5,19 +5,19 @@
   "target_journal": "PRX Quantum | Quantum | Phys. Rev. Applied",
   "phase7_subphase": "6EA-EE",
   "stage9_status": "pending",
-  "stage10_status": "pending",
+  "stage10_status": "green",
   "stage13_status": "pending",
   "stage13_redo_required": true,
   "freshness_stale": false,
   "source_manifest_last_regen": "2026-07-30T23:27:11Z",
   "last_lift": "2026-07-30T21:43:13Z",
   "last_stage9_review": null,
-  "last_stage10_review": null,
+  "last_stage10_review": "2026-07-30T21:00:00Z",
   "last_stage13_review": null,
   "blockers_open": 0,
   "advisories_open": 0,
   "stage13_review_doc": null,
   "audit_log_path": "papers/D12/audit_log.jsonl",
   "supersession_ledger_anchor": "docs/review_finding_supersessions.json",
-  "notes": null
+  "notes": "First content-lift 2026-07-30. Stage 10 claims review GREEN (round 2): 0 FAIL across 179 sentences; |1-L| = 2 at L = 3 verified end-to-end through the Lean witnesses; all 565 declarations kernel-pure from axiom closures. Stage 9 iterating on typeset legibility. SCOPE: novelty is the narrowed knowledge-hedged form only \u2014 the original claim was REFUTED by a live prior-art sweep (Mathlib already carries a sub-Gaussian Chernoff bound; PhysLib already carries quantum hypothesis testing). TWO PRIOR-ART CHECKS REMAIN OPEN AND BLOCK SUBMISSION: RemyDegenne/testing-lower-bounds, and Isabelle AFP + Coq infotheo."
 }

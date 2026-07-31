@@ -5483,6 +5483,118 @@
    "superseded_by": "review:2026-07-30-stage9-round2:D12",
    "evidence": "The crossover vline is now the analytic value ((log 4)/(2*sqrt(N_b)) + sqrt(N_b))^2 = 51.3959, annotated with its numeric value, rather than the first sampled grid point 51.4411.",
    "date": "2026-07-30"
+  },
+  {
+   "finding_id": "review:2026-07-30-stage9-round2:D11:FAIL:XC-A-rects-render-above-traces",
+   "status": "fixed",
+   "superseded_by": "review:2026-07-30-stage9-round4:D11",
+   "evidence": "layer=\"below\" added to all six add_vrect/add_hrect calls in the D11/D12 block. Round 4 independently reconfirmed at pixel level: exhaustive sweep for composites of carmine/blue/amber under every overlay found ZERO matches in all four PNGs; Fig 3 shows three exact-carmine clusters of 612 px each and Fig 4's marker matches its own legend swatch (both exact carmine). Recheck: search any bundle PNG for RGB (193,72,90) — must be absent.",
+   "date": "2026-07-30"
+  },
+  {
+   "finding_id": "review:2026-07-30-stage9-round2:D11:FAIL:XC-B-in-image-figure-numbers",
+   "status": "fixed",
+   "superseded_by": "review:2026-07-30-stage9-round4:D11",
+   "evidence": "The `D11 Fig. N —`/`D12 Fig. N —` title prefixes were dropped from all seven figure titles, and in round 4 from the seven docstrings too, so LaTeX owns numbering. Recheck: grep 'Fig\\. [0-9]' in the fig_d11_*/fig_d12_* bodies returns nothing.",
+   "date": "2026-07-30"
+  },
+  {
+   "finding_id": "review:2026-07-30-stage9-round3:D11:FAIL:XC-D-illegible-as-typeset",
+   "status": "fixed",
+   "superseded_by": "review:2026-07-30-stage9-round4:D11",
+   "evidence": "Rounds 1-2 reviewed standalone PNGs and missed that at revtex \\columnwidth = 246 pt the figures printed legend text at 2.1-3.3 pt. Fixed on both axes: all seven floats are now figure* at \\textwidth (round 4 measured 508 pt placed width), and visualizations.py carries a documented contract holding effective_pt = font_px/width_px*510 at ~9.5 pt, with _bundle_font_for() deriving font FROM width so widening a canvas cannot silently shrink printed text. Round 4 measured base font at 9.27-9.63 pt against 10 pt body. Recheck: call bundle_figure_typeset_pt(fig).",
+   "date": "2026-07-30"
+  },
+  {
+   "finding_id": "review:2026-07-30-stage9-round3:D11:FAIL:XC-C-registry-fix-inert",
+   "status": "fixed",
+   "superseded_by": "review:2026-07-30-stage9-round4:D11",
+   "evidence": "Adding seven FigureSpec entries was INERT — lookup is a bare func_map.get(), and func_map was never extended, so all seven silently SKIPped. Wired at both call sites (generate_figures and run_structural_checks); round 4 executed the lookup and confirmed all four D11 specs resolve to callables. Separately, write_image no longer forces 1200x800, which would have overridden each canvas while leaving fonts fixed and so reintroduced XC-D on regeneration.",
+   "date": "2026-07-30"
+  },
+  {
+   "finding_id": "review:2026-07-30-stage9-round4:D11:FAIL:F3-per-trace-textfont-and-self-concealing-check",
+   "status": "fixed",
+   "superseded_by": "review:2026-07-30-stage9-round5:D11",
+   "evidence": "_bundle_layout pinned layout.font but never per-trace textfont, so two figures hardcoding 11-12 px on ~900 px canvases printed at 6.38/6.80 pt. Critically, bundle_figure_typeset_pt read ONLY layout.font.size and so returned 9.27/9.63 pt — PASS — for exactly those two figures: the check concealed the breach it existed to catch. Both halves fixed: the helper normalizes per-trace textfont, and the checker returns the MINIMUM over layout font, legend font, annotation fonts and per-trace textfont. Recheck: bundle_figure_typeset_pt now reports 8.69-9.07 pt across all seven (down from 9.27-9.63), and no value may fall below 8.0.",
+   "date": "2026-07-30"
+  },
+  {
+   "finding_id": "review:2026-07-30-stage9-round4:D11:FAIL:F1-headline-label-clipped",
+   "status": "fixed",
+   "superseded_by": "review:2026-07-30-stage9-round5:D11",
+   "evidence": "'m = 5:  C = 0 — inside the window' clipped mid-word to '...the wind'. That label IS haldane_massInversion_not_sufficient_at_N4, the bundle's headline scope-honesty statement. Line-broken via <br> and re-anchored bottom center.",
+   "date": "2026-07-30"
+  },
+  {
+   "finding_id": "review:2026-07-30-stage9-round4:D11:FAIL:F2-annotation-overprints-ytick",
+   "status": "fixed",
+   "superseded_by": "review:2026-07-30-stage9-round5:D11",
+   "evidence": "The Haldane right-panel y-range [-1.9, 1.1] against data at {-1, 0} left ~45% dead height and pushed the flip annotation outside the panel onto a y-tick, rendering '4x4 1nvariant flips'. Range tightened to [-1.55, 0.75] and the annotation moved to top right — one change closes both F2 and M11.",
+   "date": "2026-07-30"
+  },
+  {
+   "finding_id": "review:2026-07-30-stage9-round4:D11:MINOR:M4-exact-gap-unmarked",
+   "status": "fixed",
+   "superseded_by": "review:2026-07-30-stage9-round5:D11",
+   "evidence": "Caption and legend both called the Voigt-Reuss gap 'exact', but only the Voigt endpoint was marked; the named-exact quantity is a vertical distance with nothing spanning it. Now drawn as a lines+markers span from the Reuss to the Voigt curve at f = 2/3.",
+   "date": "2026-07-30"
+  },
+  {
+   "finding_id": "review:2026-07-30-stage9-round2:D12:MAJOR:fig1-plots-one-of-two-directions",
+   "status": "fixed",
+   "superseded_by": "review:2026-07-30-stage9-round4:D12",
+   "evidence": "Fixed by BUILDING the missing panel rather than narrowing the title: fig 1 is now three panels, with (A) plotting the realizable unit-threshold miss exp(-N_a) against the folklore value at N_b = 5 and the certified 148x marker at (5,10). Round 3 confirmed the paper's 'plots both failures' sentence is now true.",
+   "date": "2026-07-30"
+  },
+  {
+   "finding_id": "review:2026-07-30-stage10-round1:D12:FAIL:enbw-positive-multiple",
+   "status": "fixed",
+   "superseded_by": "review:2026-07-30-stage10-round2:D12",
+   "evidence": "The draft claimed ENBW*T = 1/2 holds iff the filter is a POSITIVE multiple of the boxcar. enbw_eq_half_iff_boxcar's multiplier is the filter's own DC average with only the binder (∫h) ≠ 0, so h = -boxcar saturates too (enbw_const_mul at c = -1). Corrected at both sites. The positivity had been imported from filteredSNR_eq_budget_iff, which genuinely does carry 0 < c. Round 2 verified the fix clause by clause and returned 0 FAIL.",
+   "date": "2026-07-30"
+  },
+  {
+   "finding_id": "review:2026-07-30-stage10-round1:D11:FAIL:unhedged-universal-negative",
+   "status": "fixed",
+   "superseded_by": "review:2026-07-30-stage10-round2:D11",
+   "evidence": "Abstract and intro carried unhedged universal negatives over all provers while §8 hedged correctly. Now revision-pinned for the Mathlib half and knowledge-scoped elsewhere. Round 2 swept the whole draft and confirmed no unhedged universal negative survives.",
+   "date": "2026-07-30"
+  },
+  {
+   "finding_id": "review:2026-07-30-stage10-round1:D11:FAIL:count-drift",
+   "status": "fixed",
+   "superseded_by": "review:2026-07-30-stage10-round2:D11",
+   "evidence": "6178/395/85 claimed vs 6032/392/83 actual. The paper now states the counting RULE so the numbers are reproducible; round 2 implemented that rule verbatim and got 392 EXACT (334 theorem + 58 lemma) and 83 EXACT. Line count corrected 6024 -> 6032: 6024 was exact when written and was invalidated by its own sibling commit, which added 8 docstring lines to BlochBundle.lean.",
+   "date": "2026-07-30"
+  },
+  {
+   "finding_id": "review:2026-07-30-stage10-round1:D11:FAIL:biconditional-on-one-directional-lemma",
+   "status": "fixed",
+   "superseded_by": "review:2026-07-30-stage10-round2:D11",
+   "evidence": "blochPauli_gap_pos was cited as an iff; the shipped type is (hd : d ≠ 0) → 0 < √(dNormSq d) with no converse. Fixed in the paper AND at the upstream root cause — BlochBundle.lean's own module header and lemma docstring both said 'iff' and now carry an explicit forward-direction-only warning. Round 2 verified both layers and searched lean_deps.json for a converse (none).",
+   "date": "2026-07-30"
+  },
+  {
+   "finding_id": "review:2026-07-30-stage10-round1:D12:advisory:wave1-zero-references",
+   "status": "fixed",
+   "superseded_by": "review:2026-07-30-stage10-round2:D12",
+   "evidence": "The D12 anchor doc AND the working-docs synthesis both claimed Wave-1 declarations have 0 in-tree references. FALSE: Control.photon_budget_ceiling (CompositeReadoutCeilings.lean:252) and Control.photon_budget_floor_attributed (:310) call poisson_avgError_floor directly. Only poisson_darkBaseline_miss_floor genuinely has none. Both documents corrected; round 2 recomputed from name_deps_project and confirmed the correction.",
+   "date": "2026-07-30"
+  },
+  {
+   "finding_id": "review:2026-07-30-stage10-round2:D12:advisory:contrast-paragraph-inverted",
+   "status": "fixed",
+   "superseded_by": "review:2026-07-30-stage10-round3:D12",
+   "evidence": "The paragraph added to explain the ENBW sign issue had the logic INVERTED: unsigned_saturation_characterization_false refutes DROPPING a sign that matters, whereas importing positivity into the ENBW iff is the opposite error (refuted by the h = -boxcar witness). Rewritten, and the false 'one paragraph later' and the self-referential \\ref removed.",
+   "date": "2026-07-30"
+  },
+  {
+   "finding_id": "review:2026-07-30-stage10-round2:D12:advisory:uncited-bibliography-entries",
+   "status": "fixed",
+   "superseded_by": "review:2026-07-30-stage10-round3:D12",
+   "evidence": "Kailath1967 and LeCam1986 sat in the bibliography but were never \\cite'd, so the Le Cam / Bhattacharyya attributions designated by prior_art_novelty.md §5 were not actually made. Both are now cited at the Bhattacharyya coefficient and the Le Cam two-point floor respectively. Recheck: pdflatex reports zero undefined citations and both keys appear in the .aux.",
+   "date": "2026-07-30"
   }
  ]
 }
