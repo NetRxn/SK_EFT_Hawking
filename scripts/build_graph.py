@@ -1421,7 +1421,17 @@ _SEV_GLYPHS = {
 # `N1.1` cannot collide with a numeric `1.1` from the same document, the same way the
 # `Class N` form already prepends `C`.
 _REVIEW_SECTION_RE = re.compile(
-    r'^#{3,4}\s+(?:Class\s+)?(?:Anchor\s+)?([A-Z]?\d+(?:\.\d+)?)\s*[—\-–]\s*(.+?)$',
+    # Forms found on disk (measured 2026-07-31, D12 round-10 BLOCKER 8.2 — every one of
+    # these was minting ZERO findings, so real reviews were invisible):
+    #   `### 1.1 — `  `### Class 2 — `  `#### Anchor 1 — `  `### N1.1 — `
+    #   `### R-1 — `  `### V.1 — `  `### F-3 — `  `### BLOCKER 1.1 — `  `### 1.1.2 — `
+    # The prefix may be a letter block with an optional separator; the number may have up
+    # to three dot-parts; the heading may be 3 to 5 levels deep; and `:` is accepted as a
+    # separator alongside the dashes.
+    r'^#{3,5}\s+(?:Class\s+|Anchor\s+|Finding\s+|BLOCKER\s+|REQUIRED\s+)?'
+    # …and a dot-part may be a letter suffix: `### 3.1.b — 🔴 BLOCKER (REGRESSION) …`
+    # was the last invisible document on disk, and it is a BLOCKER.
+    r'([A-Za-z]{0,2}[-.]?\d+(?:\.[0-9a-z]+){0,2})\s*[—\-–:]\s*(.+?)$',
     re.MULTILINE,
 )
 # When the heading uses "Class N" form, prepend "C" to the section number so
@@ -1613,10 +1623,22 @@ def extract_review_finding_nodes() -> list[dict]:
 
             # Severity from glyphs OR explicit BLOCKER / severity: critical markers
             severity = 'advisory'
+            # The HEADING is authoritative for severity; the body is only a fallback
+            # (D11 Stage-13 round-10 finding E4, which that review tripped on itself).
+            # The previous form tested `glyph in heading or glyph in body[:600]` inside a
+            # loop ordered critical→major→minor with a `break`, so a 🟡 finding whose body
+            # QUOTED a red glyph — e.g. while describing another finding — minted as
+            # `critical`. Severity must come from the finding's own label, not from
+            # whatever glyph appears first anywhere nearby.
             for glyph, sev in _SEV_GLYPHS.items():
-                if glyph in heading or glyph in body[:600]:
+                if glyph in heading:
                     severity = sev
                     break
+            else:
+                for glyph, sev in _SEV_GLYPHS.items():
+                    if glyph in body[:600]:
+                        severity = sev
+                        break
             # Escalation: explicit BLOCKER / critical markers override glyph-derived severity
             if _BLOCKER_RE.search(heading) or _BLOCKER_RE.search(body[:1000]):
                 severity = 'critical'
@@ -1670,23 +1692,6 @@ def extract_review_finding_nodes() -> list[dict]:
             # an artifact written deliberately, naming a commit and evidence, that the
             # `ledger_ids_resolve` guard already checks for danglers. Non-blocking findings
             # keep heading-parse: the stakes are low and the existing corpus is large.
-            if status == 'fixed' and severity in ('critical', 'major', 'blocker'):
-                # Membership alone is not enough (D12 Stage-13 round-9 BLOCKER 8.1). The
-                # round-8 version of this guard asked only `finding_id not in
-                # supersessions`, so a one-key record `{"finding_id": "..."}` — no status,
-                # no evidence, no commit — closed a BLOCKER, because `ledger.get('status',
-                # status)` below then fell back to the heading-derived value. The record
-                # must carry the same three things a human would need to audit the closure,
-                # which is the bar `accepted_findings_carry_rationale` already applies to
-                # acceptance.
-                _rec = supersessions.get(finding_id) or {}
-                _why = str(_rec.get('evidence') or _rec.get('note')
-                           or _rec.get('rationale') or '').strip()
-                _closes = (_rec.get('status') == 'fixed'
-                           and len(_why) >= 40
-                           and bool(str(_rec.get('commit') or '').strip()))
-                if not _closes:
-                    status = 'open'
 
             meta = {
                 'severity': severity,
@@ -1704,6 +1709,37 @@ def extract_review_finding_nodes() -> list[dict]:
                 meta['superseded_by'] = ledger.get('superseded_by')
                 meta['supersession_evidence'] = ledger.get('evidence')
                 meta['supersession_date'] = ledger.get('date')
+
+            # ⚠️ THE BLOCKING-CLOSURE BAR MUST BE APPLIED HERE, to the value that actually
+            # ships in `meta` — not to the local `status` above (D12 Stage-13 round-10
+            # BLOCKER 8.1). The round-9 version computed exactly these conditions twelve
+            # lines earlier and wrote them into `status`, which the line above then
+            # DISCARDS via `ledger.get('status', status)`. Every one of the 805 live
+            # records carries a `status` key, so that guard fired never: a two-key record
+            # `{"finding_id": X, "status": "fixed"}` closed a live BLOCKER. My mutation
+            # test passed only because I used a ONE-key record — the single shape where
+            # the fallback happens to reach the local variable. I tested the one case that
+            # masked the defect.
+            #
+            # The bar itself is deliberately schema-tolerant. Measured over the live
+            # ledger: 264 blocking closures use the older
+            # `(date, evidence, finding_id, status, superseded_by)` shape and 23 use the
+            # newer one with `commit`/`closed_by`/`closed_date`. Requiring `commit` would
+            # reopen 264 well-formed historical closures — a guard firing on correct data.
+            # So: an explicit `fixed`, a substantive rationale, and SOME provenance anchor
+            # (a commit or a date). The two-key bypass has none of the last two.
+            if (meta.get('status') == 'fixed'
+                    and severity in ('critical', 'major', 'blocker')):
+                _rec = ledger or {}
+                _why = str(_rec.get('evidence') or _rec.get('note')
+                           or _rec.get('rationale') or '').strip()
+                _anchor = any(str(_rec.get(k) or '').strip()
+                              for k in ('commit', 'date', 'closed_date', 'applied_at'))
+                if not (_rec.get('status') == 'fixed' and len(_why) >= 40 and _anchor):
+                    meta['status'] = 'open'
+                    meta['blocking_closure_rejected'] = (
+                        'ledger record does not meet the blocking-closure bar '
+                        '(explicit status=fixed, >=40 chars of rationale, and a commit or date)')
 
             nodes.append({
                 'id': finding_id,

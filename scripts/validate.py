@@ -3832,11 +3832,14 @@ def check_review_docs_mint_findings() -> CheckResult:
     named after a bundle in the roster, at least one `ReviewFinding` node must resolve to
     it. Zero is a parser failure or a malformed document — never evidence of a clean review.
     """
+    # Deliberately LOOSER than `build_graph._REVIEW_SECTION_RE`: this asks "does this
+    # document look like it carries findings", and the gap between the two regexes IS the
+    # defect being detected. If they were the same pattern the check would be a tautology.
+    _FINDING_SHAPED_HEADING = re.compile(r'^#{3,5}\s+\S*\d[\w.\-]*\s*[—\-–:]', re.M)
+
     sys.path.insert(0, str(SCRIPT_DIR))
     try:
         from build_graph import extract_review_finding_nodes
-        from bundle_registry import BUNDLE_CODES
-        roster = set(BUNDLE_CODES)
     except ImportError as exc:
         return CheckResult(passed=False, details=[
             Detail("import", False,
@@ -3861,17 +3864,22 @@ def check_review_docs_mint_findings() -> CheckResult:
     checked = 0
     if reviews_dir.is_dir():
         for md in sorted(reviews_dir.glob("*/*.md")):
-            # Only documents named after a roster bundle code are bundle reviews...
-            if md.stem not in roster:
-                continue
-            # ...and NOT the `*-bundle-stage13/` directories, which hold
-            # `bundle_readiness.py`'s generated aggregation summaries. Those are statistics
-            # documents with no `### N.N — ` findings and mint zero nodes BY DESIGN: 107 of
-            # 138 do. A first version of this check flagged all of them, i.e. it fired on
-            # correct data, which is worse than not checking (the same trap as the
-            # `accepted` rationale guard earlier today). Excluding them leaves exactly the
-            # population the guard is about — documents that claim to BE a review.
-            if "bundle-stage13" in md.parent.name:
+            # Scope by CONTENT, not by filename or directory.
+            #
+            # Two earlier scopings were both wrong, in opposite directions. Filtering to
+            # roster-named files put 120 documents out of scope. Then excluding
+            # `*-bundle-stage13/` — because 107 of 138 files there are
+            # `bundle_readiness.py` aggregations that mint zero BY DESIGN — excluded the
+            # directory `BUNDLE_DIRECTORY_SCHEMA.md:86` and `BUNDLE_LIFT_PROCEDURE.md:243`
+            # name as THE canonical location for a Stage-13 review, hiding five
+            # findings-bearing reviews, one of them declaring a BLOCKER (D12 round-10 8.2).
+            #
+            # The honest discriminator is the document's own content: a file containing
+            # finding-shaped headings must mint findings. A generated aggregation has no
+            # such headings and is silently skipped — not because of where it lives, but
+            # because it never claimed to carry findings.
+            if not _FINDING_SHAPED_HEADING.search(
+                    md.read_text(encoding="utf-8", errors="replace")):
                 continue
             checked += 1
             rel = str(md.relative_to(PROJECT_ROOT))
@@ -4210,7 +4218,14 @@ def check_notebook_stored_outputs_current() -> CheckResult:
                     out.append("".join(o["text"]))
                 d = (o.get("data") or {})
                 for key in sorted(d):
-                    if key in ("text/plain", "text/html"):
+                    # `text/markdown` added 2026-07-31 (D11 round-10 5.1). The digest
+                    # closed the numeric hole, but the MIME allow-list one level up was
+                    # still narrow: the reviewer injected a `text/markdown` output
+                    # asserting C = +1 beside the name of the theorem certifying C = −1,
+                    # and this check reported "stored output matches a fresh run". Any
+                    # rendered text a reader sees is a claim surface.
+                    if key in ("text/plain", "text/html", "text/markdown",
+                               "text/latex", "application/x-latex"):
                         v = d[key]
                         out.append(v if isinstance(v, str) else "".join(v))
                     elif "json" in key:

@@ -78,11 +78,11 @@ memory `feedback_stages_11_13_reflexive.md`.
 
 ## Aggregated finding counts
 
-- **Total findings (lifetime):** 387
-- **Open findings (post-supersession):** 32
-- **Blocker-class (critical + major):** 11
-- **Severity mix:** 9 advisory, 5 critical, 6 major, 12 minor
-- **Gate mix:** 4 AssumptionDisclosure, 6 CitationIntegrity, 2 ComputationCorrectness, 1 CountFreshness, 4 CrossPaperConsistency, 3 LeanProofSubstance, 2 NarrativeGrounding, 4 ParameterProvenance, 6 unclassified
+- **Total findings (lifetime):** 420
+- **Open findings (post-supersession):** 65
+- **Blocker-class (critical + major):** 18
+- **Severity mix:** 30 advisory, 7 critical, 11 major, 17 minor
+- **Gate mix:** 5 AssumptionDisclosure, 9 CitationIntegrity, 3 ComputationCorrectness, 3 CountFreshness, 9 CrossPaperConsistency, 3 LeanProofSubstance, 4 NarrativeGrounding, 10 ParameterProvenance, 19 unclassified
 
 ## Fresh-context Stage-13 review recorded
 
@@ -102,6 +102,8 @@ memory `feedback_stages_11_13_reflexive.md`.
 
 ## Sample open finding IDs (first 10)
 
+- `review:2026-05-04-bundle-stage13:F:1.1`
+- `review:2026-05-04-bundle-stage13:F:1.3`
 - `review:2026-05-04-bundle-stage13:F_r1:1.1`
 - `review:2026-05-04-bundle-stage13:F_r1:1.2`
 - `review:2026-05-04-bundle-stage13:F_r1:1.3`
@@ -110,8 +112,6 @@ memory `feedback_stages_11_13_reflexive.md`.
 - `review:2026-05-04-bundle-stage13:F_r1:1.5`
 - `review:2026-05-04-bundle-stage13:F_r1:8.1`
 - `review:2026-05-04-bundle-stage13:F_r1:6.1`
-- `review:2026-05-11-1730-bundle-stage13-reinvocation:F:1.1`
-- `review:2026-05-11-1730-bundle-stage13-reinvocation:F:1.2`
 
 ## Next actions
 

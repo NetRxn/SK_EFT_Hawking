@@ -5807,8 +5807,8 @@
       "finding_id": "review:2026-07-31-1530-internal-adversarial:D11:1.1",
       "status": "fixed",
       "superseded_by": null,
-      "commit": "ac66444f",
-      "evidence": "The `primary_source_unreachable` exemption was DELETED (zero occurrences in validate.py) and three primary-source caches built from the Semantic Scholar API + DOI resolution. Closed on INDEPENDENT verification by round 8 (1652): \"primary_source_unreachable has ZERO occurrences in validate.py, and mutation tests show the content gate now fails on a hallucinated title, wrong authors, or a fabricated DOI\". ⚠️ Round 9 (1801) reports a RESIDUAL — a declared-but-unresolvable path still passes — tracked separately, not closed here. — not on the author's own say-so. ⚠️ These records were owed at commit ac66444f and were NOT filed: the author filed ten closures against the 1059 round and none against 1530, then reported \"7 supersession records filed\". Round 9 (1801) caught the gap; every 1530 finding had been sitting `open` since, inflating D11's blocker count and failing bundle_metadata_matches_graph.",
+      "commit": "bb0c7e34",
+      "evidence": "The `primary_source_unreachable` exemption was DELETED (zero occurrences in validate.py) and three primary-source caches built from the Semantic Scholar API + DOI resolution. Closed on INDEPENDENT verification by round 8 (1652): \"primary_source_unreachable has ZERO occurrences in validate.py, and mutation tests show the content gate now fails on a hallucinated title, wrong authors, or a fabricated DOI\". ⚠️ Round 9 (1801) reports a RESIDUAL — a declared-but-unresolvable path still passes — tracked separately, not closed here. — not on the author's own say-so. ⚠️ These records were owed at commit ac66444f and were NOT filed: the author filed ten closures against the 1059 round and none against 1530, then reported \"7 supersession records filed\". Round 9 (1801) caught the gap; every 1530 finding had been sitting `open` since, inflating D11's blocker count and failing bundle_metadata_matches_graph. ⚠️ COMMIT CORRECTED 2026-07-31 (D11 round-10): this record cited ac66444f, which does not touch the file the fix is in. Established from `git log -- <artifact>`; the fix is in bb0c7e34. Seven of these eight records carried the wrong SHA — a provenance record whose commit does not contain the change is worse than no record, because it reads as an audit trail.",
       "closed_date": "2026-07-31",
       "closed_by": "stage13-round8-and-9-independent-verification"
     },
@@ -5816,8 +5816,8 @@
       "finding_id": "review:2026-07-31-1530-internal-adversarial:D11:1.2",
       "status": "fixed",
       "superseded_by": null,
-      "commit": "ac66444f",
-      "evidence": "CITATION_REGISTRY['HashinShtrikman1963'].notes rewritten; both halves of the misattribution retracted inline. Closed on INDEPENDENT verification by round 8 (1652): \"Round-7 1.2 fixed: HashinShtrikman1963.notes is rewritten correctly\". — not on the author's own say-so. ⚠️ These records were owed at commit ac66444f and were NOT filed: the author filed ten closures against the 1059 round and none against 1530, then reported \"7 supersession records filed\". Round 9 (1801) caught the gap; every 1530 finding had been sitting `open` since, inflating D11's blocker count and failing bundle_metadata_matches_graph.",
+      "commit": "837f335e",
+      "evidence": "CITATION_REGISTRY['HashinShtrikman1963'].notes rewritten; both halves of the misattribution retracted inline. Closed on INDEPENDENT verification by round 8 (1652): \"Round-7 1.2 fixed: HashinShtrikman1963.notes is rewritten correctly\". — not on the author's own say-so. ⚠️ These records were owed at commit ac66444f and were NOT filed: the author filed ten closures against the 1059 round and none against 1530, then reported \"7 supersession records filed\". Round 9 (1801) caught the gap; every 1530 finding had been sitting `open` since, inflating D11's blocker count and failing bundle_metadata_matches_graph. ⚠️ COMMIT CORRECTED 2026-07-31 (D11 round-10): this record cited ac66444f, which does not touch the file the fix is in. Established from `git log -- <artifact>`; the fix is in 837f335e. Seven of these eight records carried the wrong SHA — a provenance record whose commit does not contain the change is worse than no record, because it reads as an audit trail.",
       "closed_date": "2026-07-31",
       "closed_by": "stage13-round8-and-9-independent-verification"
     },
@@ -5834,8 +5834,8 @@
       "finding_id": "review:2026-07-31-1530-internal-adversarial:D11:4.1",
       "status": "fixed",
       "superseded_by": null,
-      "commit": "ac66444f",
-      "evidence": "PAPER_DRAFT_MAPPING.md:109 regenerated from docs/counts.tex. Closed on INDEPENDENT verification by round 8 (1652) re-derived the counts and reported the row current. — not on the author's own say-so. ⚠️ These records were owed at commit ac66444f and were NOT filed: the author filed ten closures against the 1059 round and none against 1530, then reported \"7 supersession records filed\". Round 9 (1801) caught the gap; every 1530 finding had been sitting `open` since, inflating D11's blocker count and failing bundle_metadata_matches_graph.",
+      "commit": "bb0c7e34",
+      "evidence": "PAPER_DRAFT_MAPPING.md:109 regenerated from docs/counts.tex. Closed on INDEPENDENT verification by round 8 (1652) re-derived the counts and reported the row current. — not on the author's own say-so. ⚠️ These records were owed at commit ac66444f and were NOT filed: the author filed ten closures against the 1059 round and none against 1530, then reported \"7 supersession records filed\". Round 9 (1801) caught the gap; every 1530 finding had been sitting `open` since, inflating D11's blocker count and failing bundle_metadata_matches_graph. ⚠️ COMMIT CORRECTED 2026-07-31 (D11 round-10): this record cited ac66444f, which does not touch the file the fix is in. Established from `git log -- <artifact>`; the fix is in bb0c7e34. Seven of these eight records carried the wrong SHA — a provenance record whose commit does not contain the change is worse than no record, because it reads as an audit trail.",
       "closed_date": "2026-07-31",
       "closed_by": "stage13-round8-and-9-independent-verification"
     },
@@ -5843,8 +5843,8 @@
       "finding_id": "review:2026-07-31-1530-internal-adversarial:D11:5.2",
       "status": "fixed",
       "superseded_by": null,
-      "commit": "ac66444f",
-      "evidence": "Novelty enumeration corrected to \"six of these eight\" with the two non-delivered families named; the stale trailing clause removed. Closed on INDEPENDENT verification by round 8 (1652) counted the clauses independently and confirmed the arithmetic. — not on the author's own say-so. ⚠️ These records were owed at commit ac66444f and were NOT filed: the author filed ten closures against the 1059 round and none against 1530, then reported \"7 supersession records filed\". Round 9 (1801) caught the gap; every 1530 finding had been sitting `open` since, inflating D11's blocker count and failing bundle_metadata_matches_graph.",
+      "commit": "bb0c7e34",
+      "evidence": "Novelty enumeration corrected to \"six of these eight\" with the two non-delivered families named; the stale trailing clause removed. Closed on INDEPENDENT verification by round 8 (1652) counted the clauses independently and confirmed the arithmetic. — not on the author's own say-so. ⚠️ These records were owed at commit ac66444f and were NOT filed: the author filed ten closures against the 1059 round and none against 1530, then reported \"7 supersession records filed\". Round 9 (1801) caught the gap; every 1530 finding had been sitting `open` since, inflating D11's blocker count and failing bundle_metadata_matches_graph. ⚠️ COMMIT CORRECTED 2026-07-31 (D11 round-10): this record cited ac66444f, which does not touch the file the fix is in. Established from `git log -- <artifact>`; the fix is in bb0c7e34. Seven of these eight records carried the wrong SHA — a provenance record whose commit does not contain the change is worse than no record, because it reads as an audit trail.",
       "closed_date": "2026-07-31",
       "closed_by": "stage13-round8-and-9-independent-verification"
     },
@@ -5852,8 +5852,8 @@
       "finding_id": "review:2026-07-31-1530-internal-adversarial:D11:5.3",
       "status": "fixed",
       "superseded_by": null,
-      "commit": "ac66444f",
-      "evidence": "AFP coverage caveat extended to the exceptional-point / PT / non-Hermitian items so the disclosed limit matches the paper's own absence list. Closed on INDEPENDENT verification by round 8 (1652) verified the sentence against prior_art_novelty.md §5.1. — not on the author's own say-so. ⚠️ These records were owed at commit ac66444f and were NOT filed: the author filed ten closures against the 1059 round and none against 1530, then reported \"7 supersession records filed\". Round 9 (1801) caught the gap; every 1530 finding had been sitting `open` since, inflating D11's blocker count and failing bundle_metadata_matches_graph.",
+      "commit": "bb0c7e34",
+      "evidence": "AFP coverage caveat extended to the exceptional-point / PT / non-Hermitian items so the disclosed limit matches the paper's own absence list. Closed on INDEPENDENT verification by round 8 (1652) verified the sentence against prior_art_novelty.md §5.1. — not on the author's own say-so. ⚠️ These records were owed at commit ac66444f and were NOT filed: the author filed ten closures against the 1059 round and none against 1530, then reported \"7 supersession records filed\". Round 9 (1801) caught the gap; every 1530 finding had been sitting `open` since, inflating D11's blocker count and failing bundle_metadata_matches_graph. ⚠️ COMMIT CORRECTED 2026-07-31 (D11 round-10): this record cited ac66444f, which does not touch the file the fix is in. Established from `git log -- <artifact>`; the fix is in bb0c7e34. Seven of these eight records carried the wrong SHA — a provenance record whose commit does not contain the change is worse than no record, because it reads as an audit trail.",
       "closed_date": "2026-07-31",
       "closed_by": "stage13-round8-and-9-independent-verification"
     },
@@ -5861,8 +5861,8 @@
       "finding_id": "review:2026-07-31-1530-internal-adversarial:D11:6.1",
       "status": "fixed",
       "superseded_by": null,
-      "commit": "ac66444f",
-      "evidence": "haldane_lattice_chern now refuses 3|N grids (north-pole condition fails exactly there, measured 0.000e+00 at N=6,9) plus a pointwise guard; five tests MEASURE the condition. Closed on INDEPENDENT verification by round 8 (1652) audited the port declaration-by-declaration and confirmed the guard. — not on the author's own say-so. ⚠️ These records were owed at commit ac66444f and were NOT filed: the author filed ten closures against the 1059 round and none against 1530, then reported \"7 supersession records filed\". Round 9 (1801) caught the gap; every 1530 finding had been sitting `open` since, inflating D11's blocker count and failing bundle_metadata_matches_graph.",
+      "commit": "bb0c7e34",
+      "evidence": "haldane_lattice_chern now refuses 3|N grids (north-pole condition fails exactly there, measured 0.000e+00 at N=6,9) plus a pointwise guard; five tests MEASURE the condition. Closed on INDEPENDENT verification by round 8 (1652) audited the port declaration-by-declaration and confirmed the guard. — not on the author's own say-so. ⚠️ These records were owed at commit ac66444f and were NOT filed: the author filed ten closures against the 1059 round and none against 1530, then reported \"7 supersession records filed\". Round 9 (1801) caught the gap; every 1530 finding had been sitting `open` since, inflating D11's blocker count and failing bundle_metadata_matches_graph. ⚠️ COMMIT CORRECTED 2026-07-31 (D11 round-10): this record cited ac66444f, which does not touch the file the fix is in. Established from `git log -- <artifact>`; the fix is in bb0c7e34. Seven of these eight records carried the wrong SHA — a provenance record whose commit does not contain the change is worse than no record, because it reads as an audit trail.",
       "closed_date": "2026-07-31",
       "closed_by": "stage13-round8-and-9-independent-verification"
     },
@@ -5870,8 +5870,8 @@
       "finding_id": "review:2026-07-31-1530-internal-adversarial:D11:7.1",
       "status": "fixed",
       "superseded_by": null,
-      "commit": "ac66444f",
-      "evidence": "The paper's counting rule now states the block-comment exclusion the generator applies. Closed on INDEPENDENT verification by round 8 (1652) re-derived the counts under the stated rule. — not on the author's own say-so. ⚠️ These records were owed at commit ac66444f and were NOT filed: the author filed ten closures against the 1059 round and none against 1530, then reported \"7 supersession records filed\". Round 9 (1801) caught the gap; every 1530 finding had been sitting `open` since, inflating D11's blocker count and failing bundle_metadata_matches_graph.",
+      "commit": "bb0c7e34",
+      "evidence": "The paper's counting rule now states the block-comment exclusion the generator applies. Closed on INDEPENDENT verification by round 8 (1652) re-derived the counts under the stated rule. — not on the author's own say-so. ⚠️ These records were owed at commit ac66444f and were NOT filed: the author filed ten closures against the 1059 round and none against 1530, then reported \"7 supersession records filed\". Round 9 (1801) caught the gap; every 1530 finding had been sitting `open` since, inflating D11's blocker count and failing bundle_metadata_matches_graph. ⚠️ COMMIT CORRECTED 2026-07-31 (D11 round-10): this record cited ac66444f, which does not touch the file the fix is in. Established from `git log -- <artifact>`; the fix is in bb0c7e34. Seven of these eight records carried the wrong SHA — a provenance record whose commit does not contain the change is worse than no record, because it reads as an audit trail.",
       "closed_date": "2026-07-31",
       "closed_by": "stage13-round8-and-9-independent-verification"
     }

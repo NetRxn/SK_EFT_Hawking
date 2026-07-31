@@ -10844,7 +10844,7 @@ CITATION_REGISTRY = {
     'Voigt1889': {
         'authors': 'Voigt, W.',
         'title': 'Ueber die Beziehung zwischen den beiden Elasticitätsconstanten isotroper Körper',
-        'journal': 'Annalen der Physik', 'volume': 274, 'page': '573-587', 'year': 1889,
+        'journal': 'Annalen der Physik', 'volume': 274, 'page': '573', 'year': 1889,
         'doi': '10.1002/andp.18892741206', 'arxiv': None,
         'doi_verified': True, 'inprep': False,
         'primary_source_path': 'Lit-Search/Phase-6C/primary-sources/Voigt1889.abstract.txt',
@@ -10855,13 +10855,13 @@ CITATION_REGISTRY = {
                   'plus independent DOI resolution; cached. An earlier version of this entry claimed no '
                   'cache was constructible and took a bespoke `primary_source_unreachable` gate '
                   'exemption — that justification was WRONG (round-7 finding 1.4 showed the API returns '
-                  'the record), and the exemption has been deleted rather than kept.'),
+                  'the record), and the exemption has been deleted rather than kept. ⚠️ PAGE FIELD 2026-07-31 (D11 round-10): reverted to the FIRST-PAGE form. This entry briefly carried the full range, which is not a style question: `format_citation` composes `page` into a bibitem-shaped string and `find_unregistered_citations` matches it by substring containment, so a range is unmatchable against the rendered reference. The full range is recorded in the primary-source cache instead.'),
     },
     'Reuss1929': {
         'authors': 'Reuss, A.',
         'title': ('Berechnung der Fließgrenze von Mischkristallen auf Grund der '
                   'Plastizitätsbedingung für Einkristalle'),
-        'journal': 'Zeitschrift für Angewandte Mathematik und Mechanik', 'volume': 9, 'page': '49-58',
+        'journal': 'Zeitschrift für Angewandte Mathematik und Mechanik', 'volume': 9, 'page': '49',
         'year': 1929,
         'doi': '10.1002/zamm.19290090104', 'arxiv': None,
         'doi_verified': True, 'inprep': False,
@@ -10871,7 +10871,7 @@ CITATION_REGISTRY = {
         'notes': ('Added 2026-07-31 (D11 Stage-13 round-7 finding 1.4). Semantic Scholar Graph API '
                   'plus independent DOI resolution; cached. The API records the author as "A. Reuß"; '
                   'this entry uses the transliterated "Reuss" used throughout the composites '
-                  'literature and this draft.'),
+                  'literature and this draft. ⚠️ PAGE FIELD 2026-07-31 (D11 round-10): reverted to the FIRST-PAGE form. This entry briefly carried the full range, which is not a style question: `format_citation` composes `page` into a bibitem-shaped string and `find_unregistered_citations` matches it by substring containment, so a range is unmatchable against the rendered reference. The full range is recorded in the primary-source cache instead.'),
     },
     'Milton2002': {
         'authors': 'Milton, G. W.',
