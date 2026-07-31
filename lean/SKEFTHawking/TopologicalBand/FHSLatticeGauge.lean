@@ -84,13 +84,24 @@ theorem plaquetteArg_eq_principal_rawCurl (U : LinkField N₁ N₂) (k : Torus N
     (Circle.coe_ne_zero _) (Circle.coe_ne_zero _) (Circle.coe_ne_zero _) (Circle.coe_ne_zero _)
 
 /-- **Torus telescoping.** The raw curl sums to zero over the whole grid: it is a difference of two
-forward differences, each of which telescopes to zero by shift invariance. -/
+forward differences, each of which telescopes to zero by shift invariance.
+
+Rewritten 2026-07-31 (D11 Stage-13 round-7 finding 5.9) to go through
+`sum_forwardDiff_eq_zero` rather than applying `sum_shift` twice directly. The paper describes
+that lemma as the torus's single load-bearing property, and it had zero consumers — the description
+was true of `sum_shift`, one link further down. Exhibiting the curl as a difference of two forward
+differences and discharging each by the named lemma makes the paper's account of the dependency the
+one the kernel checks. -/
 theorem sum_rawCurl_eq_zero (U : LinkField N₁ N₂) :
     ∑ k, rawCurl N₁ N₂ U k = 0 := by
-  unfold rawCurl
-  rw [Finset.sum_sub_distrib, Finset.sum_sub_distrib, Finset.sum_add_distrib,
-    sum_shift N₁ N₂ 0 (linkArg N₁ N₂ U 1), sum_shift N₁ N₂ 1 (linkArg N₁ N₂ U 0)]
-  ring
+  have hpt : ∀ k, rawCurl N₁ N₂ U k
+      = (linkArg N₁ N₂ U 1 (shift N₁ N₂ 0 k) - linkArg N₁ N₂ U 1 k)
+        - (linkArg N₁ N₂ U 0 (shift N₁ N₂ 1 k) - linkArg N₁ N₂ U 0 k) := by
+    intro k; unfold rawCurl; ring
+  simp only [hpt]
+  rw [Finset.sum_sub_distrib,
+    sum_forwardDiff_eq_zero N₁ N₂ 0 (linkArg N₁ N₂ U 1),
+    sum_forwardDiff_eq_zero N₁ N₂ 1 (linkArg N₁ N₂ U 0), sub_zero]
 
 /-- **THE INTEGRALITY THEOREM.** The exact FHS identity: the sum of the lattice field strengths over
 the torus equals `2π` times an integer, the lattice Chern number. Unconditional; finite/data-level;

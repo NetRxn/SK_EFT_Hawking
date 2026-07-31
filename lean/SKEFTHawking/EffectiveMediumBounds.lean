@@ -82,11 +82,19 @@ theorem effectiveMedium_constituent_bounds (εh εi f : ℝ) (hh : 0 < εh) (ho 
    maxwellGarnett_le_inclusion εh εi f hh ho hf0 hf1⟩
 
 /-- **Certified rational enclosure (Phase 6CE W2).** A concrete composite (`εₕ = 1`, `εᵢ = 4`,
-half-filled `f = 1/2`) has effective permittivity exactly `ε_eff = 2`, lying (as the bounds require)
-in the constituent interval `[1, 4]`. All values rational; `norm_num`-checkable, no floating point. -/
+half-filled `f = 1/2`) has effective permittivity exactly `ε_eff = 2`, lying **strictly** inside the
+constituent interval `[1, 4]`. All values rational; `norm_num`-checkable, no floating point.
+
+Strengthened 2026-07-31 (D11 Stage-13 round-7 finding 3.2, raised in round 3). The shipped version
+bundled `1 ≤ ε_eff` and `ε_eff ≤ 4` alongside `ε_eff = 2`; both were `norm_num` restatements of the
+first conjunct, i.e. the project's own P2 bundle-redundancy anti-pattern. The conjuncts now assert
+**strict** interiority, which is *not* an instance of `effectiveMedium_constituent_bounds` (that
+theorem gives only the non-strict pair for every admissible parameter) — so this is a genuine
+non-degeneracy witness: at a physical operating point neither constituent bound is attained, and
+therefore neither is vacuous there. -/
 theorem effectiveMedium_hashinShtrikman_enclosure :
     maxwellGarnett 1 4 (1 / 2) = 2 ∧
-    (1 : ℝ) ≤ maxwellGarnett 1 4 (1 / 2) ∧ maxwellGarnett 1 4 (1 / 2) ≤ 4 := by
+    (1 : ℝ) < maxwellGarnett 1 4 (1 / 2) ∧ maxwellGarnett 1 4 (1 / 2) < 4 := by
   have hval : maxwellGarnett 1 4 (1 / 2) = 2 := by unfold maxwellGarnett; norm_num
   exact ⟨hval, by rw [hval]; norm_num, by rw [hval]; norm_num⟩
 

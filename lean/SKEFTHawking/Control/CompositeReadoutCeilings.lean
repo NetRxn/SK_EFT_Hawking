@@ -664,8 +664,15 @@ theorem detector_chain_ceiling_bites_nondegenerate (m : Electrothermal.ETFModel)
 §4.2's non-degenerate witnesses are about the single-mechanism 6EB/6EC ceilings. A claim that the
 *composites* of §3.6 bite needs its own witness, since a `max` of two floors could in principle be
 carried entirely by the relaxation branch and say nothing new about the detection branch. These two
-corollaries supply it: at matched budget `2` the composite ceiling is at most `22/25`, and the bound
-is reached through the composite theorem rather than by quoting its detection half. -/
+corollaries supply it: at matched budget `2` the composite ceiling is at most `22/25`.
+
+⚠️ **What this does and does not show** (corrected 2026-07-31, D12 Stage-13 round-6 BLOCKER 5.1;
+this note previously said the bound "is reached through the composite theorem rather than by quoting
+its detection half", while its own proof quotes the detection half). Each proof closes on the right-hand branch of the
+maximum, so at this operating point the relaxation branch is inert and the numerical bound is
+exactly the single-mechanism one. What is established is that the *composite statement* — full
+binder list, attributed error pair `(e₀, e₁)` rather than the threshold pair — is non-vacuous at a
+signal-carrying point. It is not a sharper bound. -/
 
 open MeasureTheory in
 /-- **The relaxation ⊕ filtered-readout composite bites**, at matched budget `2`. Derived by calling

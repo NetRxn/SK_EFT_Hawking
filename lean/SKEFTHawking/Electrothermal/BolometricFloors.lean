@@ -208,17 +208,24 @@ the diffuse phonon-conduction case the factor is
     γ  =  n/(2n+1) · ((T_b/T_s)^(2n+1) − 1)/((T_b/T_s)^n − 1) · (T_b/T_s)^(−(n+1))
 
 with `n` the thermal-conductivity index and `T_b/T_s` the bolometer-to-bath temperature ratio
-(the third factor converts the literature's bath-referred statement to this module's
-bolometer-referred convention, using `G ∝ T^(n−1)`). It tends to `1` as `T_b/T_s → 1`, equals
+(the third factor admits two equivalent readings — the change of variable `t = 1/r`,
+and the re-referencing of `G` via `G ∝ T^(n−1)`; they agree since `r^−(n−1) · r^−2 = r^−(n+1)`). It tends to `1` as `T_b/T_s → 1`, equals
 `0.4731` at `T_b/T_s = 2, n = 4`, and decreases to `n/(2n+1)` as `T_b/T_s → ∞`.
 
 ⚠️ **Two corrections, 2026-07-31 (D12 Stage-13 rounds 3-4).** (i) The asymptote is `n/(2n+1)`
 (`4/9 = 0.444` at `n = 4`), **not** `1/2`, and `0.4731` already sits below `1/2` — so the folk
 range `F_link ∈ [1/2, 1]` does not bound this expression and must not be cited as corroborating it.
 (ii) `γ` multiplies the **PSD**, so `0.4731` is a `53 %` PSD reduction, equivalently `31 %` in
-amplitude; Mather's "as much as 30 %" is the AMPLITUDE figure and the two agree once the convention
-is matched. An earlier note here compared them across conventions and wrongly concluded Mather did
-not cover these values. -/
+amplitude. Mather's "as much as 30 %" is quoted with no stated convention, and the two readings
+differ by 22 points, so the comparison needs one fixed. Read as a *maximum* the amplitude reading is
+the closer fit (max amplitude reduction `33 %` at `n = 4`, against a max PSD reduction of `56 %`) —
+but no stronger claim is supportable: the closed form attains **every** PSD reduction in
+`[0, 56 %)`, including `30 %` at `r ≈ 1.19`, so no argument from the available range settles it, and
+this project holds Mather in abstract only.
+
+Two earlier notes here were wrong in opposite directions — the first compared across conventions and
+concluded Mather did not cover these values; the second asserted the amplitude reading as settled
+fact. -/
 noncomputable def phononPSDGamma (m : ETFModel) (kB T γ : ℝ) : ℝ := 4 * γ * kB * T ^ 2 * m.G
 
 /-- **The shipped phonon PSD is exactly the `γ = 1` case** — the isothermal-link limit. -/

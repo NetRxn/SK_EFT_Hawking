@@ -657,10 +657,24 @@ def _eval_first_claim_verification(paper: dict, idx: GraphIndex) -> GateResult:
     return r
 
 
+# A ReviewFinding at or above this severity is submission-blocking, not advisory.
+BLOCKING_SEVERITIES = frozenset({'critical', 'blocker', 'major'})
+
+
 def _eval_fix_propagation(paper: dict, idx: GraphIndex) -> GateResult:
-    """Gate 11 (P2): FixPropagation.
+    """Gate 11: FixPropagation — severity-aware.
 
     Every ReviewFinding FLAGS this paper should have status='fixed'.
+
+    Severity determines gate impact (corrected 2026-07-31, D12 Stage-13 round-6
+    BLOCKER 8.1). Before that fix this gate was hardwired P2 and could only ever
+    emit `needs-recheck`, so a bundle carrying unclosed Stage-13 BLOCKERs still
+    rendered as "all P1 passed" in `readiness_submission_gate` — the gate
+    reported the *absence of a red P1 gate*, not the absence of blockers, and no
+    other evaluator reads FLAGS at all. Now an open finding whose severity is in
+    `BLOCKING_SEVERITIES` escalates the result to a **blocked P1** gate, which is
+    what both `paper_aggregate_state` and the submission gate key off. Open
+    findings below that bar keep the old advisory P2 `needs-recheck`.
     """
     paper_key = paper['id'].replace('paper:', '', 1)
     r = GateResult(gate='FixPropagation', paper=paper_key, priority=2)
@@ -678,12 +692,24 @@ def _eval_fix_propagation(paper: dict, idx: GraphIndex) -> GateResult:
         else:
             open_findings.append(finding)
 
+    blocking = [f for f in open_findings
+                if str(f.get('meta', {}).get('severity', '')).lower()
+                in BLOCKING_SEVERITIES]
+
     r.evidence.append(f'{len(flagged)} findings flag this paper '
-                      f'({len(fixed_findings)} fixed, {len(open_findings)} open)')
-    if open_findings:
+                      f'({len(fixed_findings)} fixed, {len(open_findings)} open, '
+                      f'{len(blocking)} of them submission-blocking)')
+    if blocking:
+        r.blockers = [f'{f.get("label","?")[:60]}' for f in blocking[:10]]
+        r.state = 'blocked'
+        r.priority = 1
+        r.notes = (f'{len(blocking)} open review findings at severity '
+                   f'{"/".join(sorted(BLOCKING_SEVERITIES))} '
+                   f'({len(open_findings)} open in total)')
+    elif open_findings:
         r.blockers = [f'{f.get("label","?")[:60]}' for f in open_findings[:10]]
         r.state = 'needs-recheck'
-        r.notes = f'{len(open_findings)} review findings still open'
+        r.notes = f'{len(open_findings)} review findings still open (all advisory)'
     else:
         r.state = 'passed'
         r.notes = ('no review findings' if not flagged
@@ -732,7 +758,10 @@ def evaluate_all_gates(graph: dict) -> list[GateResult]:
 def paper_aggregate_state(results: list[GateResult], paper_key: str) -> str:
     """Return 'red' / 'yellow' / 'green' for a paper's overall state."""
     paper_results = [r for r in results if r.paper == paper_key]
-    if any(r.priority == 1 and r.state == 'blocked' for r in paper_results):
+    # Any blocked gate is red, whatever its priority — `check_readiness_submission_gate`
+    # has always classified a blocked P2 gate as red, and the two verdicts must agree
+    # (enforced by validate.py --check readiness_verdicts_agree).
+    if any(r.state == 'blocked' for r in paper_results):
         return 'red'
     if any(r.state in ('blocked', 'needs-recheck', 'open') for r in paper_results):
         return 'yellow'

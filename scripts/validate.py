@@ -3815,6 +3815,98 @@ def check_count_literals() -> CheckResult:
 # CHECK 18: Readiness submission gate (Phase 5v Wave 4)
 # ═══════════════════════════════════════════════════════════════════════
 
+@register_check("readiness_verdicts_agree",
+                "The heatmap and the submission gate return the same per-bundle verdict")
+def check_readiness_verdicts_agree() -> CheckResult:
+    """CHECK: cross-validate the two independent readiness verdicts.
+
+    Added 2026-07-31 (D12 Stage-13 round-6 BLOCKER 8.1). Two subsystems compute
+    a per-bundle readiness verdict from different inputs and had no consistency
+    obligation between them:
+
+      * `scripts/bundle_readiness.py` counts findings straight off the review
+        files, per bundle, and rendered D11/D12 RED with unclosed blockers;
+      * `readiness_submission_gate` aggregates ReadinessGate node states off the
+        graph, and rendered the same bundles as "all P1 passed".
+
+    Both were reporting honestly about their own inputs; nothing compared them,
+    so the reassuring one could be quoted as the verdict. This check asserts the
+    direction that matters: a bundle the heatmap calls RED (open blocking
+    findings) must NOT be green or yellow at the submission gate.
+    """
+    sys.path.insert(0, str(SCRIPT_DIR))
+    try:
+        from build_graph import build_graph_json
+        from bundle_readiness import (MAPPING_DOC, parse_mapping,
+                                      load_findings_by_paper,
+                                      resolve_stage13_reviews,
+                                      aggregate_by_bundle)
+    except ImportError as exc:
+        return CheckResult(passed=True, details=[
+            Detail("import", True, f"unavailable ({exc}); skipping", warning=True)])
+
+    try:
+        assignments = parse_mapping(MAPPING_DOC.read_text())
+        findings_by_paper = load_findings_by_paper()
+        # Read-only: never backfill review metadata from inside a validation check.
+        review_info = resolve_stage13_reviews(backfill=False)
+        by_bundle = aggregate_by_bundle(assignments, findings_by_paper, review_info)
+    except Exception as exc:  # pragma: no cover - defensive
+        return CheckResult(passed=True, details=[
+            Detail("heatmap", True, f"heatmap unavailable ({exc}); skipping",
+                   warning=True)])
+
+    graph = build_graph_json()
+    gates = [n for n in graph.get('nodes', []) if n.get('type') == 'ReadinessGate']
+    if not gates:
+        return CheckResult(passed=True, details=[
+            Detail("gates", True, "no ReadinessGate nodes; skipping", warning=True)])
+
+    blocked_at_gate: dict[str, list[str]] = {}
+    seen_papers: set[str] = set()
+    for g in gates:
+        m = g['meta']
+        seen_papers.add(m['paper'])
+        if m['state'] == 'blocked':
+            blocked_at_gate.setdefault(m['paper'], []).append(m['gate'])
+
+    details: list[Detail] = []
+    disagreements = 0
+    checked = 0
+    for bundle, agg in sorted(by_bundle.items()):
+        if str(agg.get('readiness', '')).upper() != 'RED':
+            continue
+        if bundle not in seen_papers:
+            details.append(Detail(
+                bundle, True,
+                f"heatmap RED ({agg.get('blocker_count', 0)} blockers) but no "
+                f"ReadinessGate nodes exist for paper:{bundle}", warning=True))
+            continue
+        checked += 1
+        if bundle in blocked_at_gate:
+            details.append(Detail(
+                bundle, True,
+                f"agree: heatmap RED ({agg.get('blocker_count', 0)} blockers), "
+                f"gate blocked on {', '.join(sorted(blocked_at_gate[bundle]))}"))
+        else:
+            disagreements += 1
+            details.append(Detail(
+                bundle, False,
+                f"DISAGREE: heatmap RED with {agg.get('blocker_count', 0)} open "
+                f"blockers, but no ReadinessGate is blocked — the submission gate "
+                f"would report this bundle as passing"))
+
+    if not checked and not details:
+        details.append(Detail("summary", True,
+                              "no bundle is heatmap-RED; nothing to cross-check"))
+    else:
+        details.insert(0, Detail(
+            "summary", disagreements == 0,
+            f"{checked} heatmap-RED bundles cross-checked, "
+            f"{disagreements} disagreement(s)"))
+    return CheckResult(passed=disagreements == 0, details=details)
+
+
 @register_check("readiness_submission_gate",
                 "Every paper has all P1 readiness gates passed (Phase 5v Wave 4)")
 def check_readiness_submission_gate() -> CheckResult:
@@ -4161,6 +4253,7 @@ def check_citation_primary_sources_present() -> CheckResult:
     missing_from_registry: list[str] = []
     inprep_exempt: list[str] = []
     textbook_exempt: list[str] = []
+    unreachable_exempt: list[str] = []
     cached: list[str] = []
     not_cached: list[tuple[str, str, list[str]]] = []  # (key, phase, papers)
 
@@ -4179,6 +4272,28 @@ def check_citation_primary_sources_present() -> CheckResult:
                 and entry.get("doi") is None
                 and entry.get("arxiv") is None):
             textbook_exempt.append(bibkey)
+            continue
+        # Unreachable-primary exemption (added 2026-07-31, D11 Stage-13 round-7
+        # finding 1.4). The clause above equates "has a DOI" with "a primary source
+        # can be cached", which is false for paywalled or pre-digital works: Voigt
+        # 1889, Reuss 1929 and Milton 2002 all have DOIs that resolve, and none is
+        # reachable through this repo's whitelisted scholarly egress. Without this
+        # class the only ways to satisfy the gate would be to DELETE a verified DOI
+        # (strictly worse provenance than the textbook-exempt class it would join)
+        # or to fabricate a cache — so the class exists to keep the honest option
+        # available. It is deliberately opt-in and self-documenting: the registry
+        # entry must set `primary_source_unreachable: True` AND carry a non-empty
+        # `notes` saying why, and these bibkeys are counted and NAMED separately in
+        # the summary so the exemption can never be taken silently.
+        if entry.get("primary_source_unreachable") is True:
+            if str(entry.get("notes") or "").strip():
+                unreachable_exempt.append(bibkey)
+                continue
+            all_pass = False
+            details.append(Detail(
+                f"unreachable_no_justification:{bibkey}", False,
+                f"{bibkey} sets primary_source_unreachable but has empty `notes`; "
+                f"the exemption requires a written justification."))
             continue
         # Resolve phase: prefer canonical (used_in[0] paper), else fallback
         phase = bibkey_phase(entry) or FALLBACK
@@ -4208,7 +4323,9 @@ def check_citation_primary_sources_present() -> CheckResult:
         f"{n_cited} bibkeys cited across {len(paper_tex_files)} papers — "
         f"{n_cached} cached / {n_inprep} inprep-exempt / "
         f"{n_textbook} textbook-exempt / "
-        f"{n_uncached} need cache / {n_missing} missing-from-registry"
+        + (f"{len(unreachable_exempt)} unreachable-primary-exempt "
+           f"({', '.join(sorted(unreachable_exempt))}) / " if unreachable_exempt else "")
+        + f"{n_uncached} need cache / {n_missing} missing-from-registry"
     ))
 
     if missing_from_registry:

@@ -467,20 +467,57 @@ class TestPhononGradientFactor:
         assert F.phonon_psd_gradient_factor(2.0, 4.0) == pytest.approx(0.4731, abs=5e-4)
         assert F.phonon_psd_gradient_factor(2.0, 4.0) < 0.5  # below the folk [1/2,1] band
 
-    def test_mather_30_percent_is_an_amplitude_figure(self):
-        # D12 Stage-13 round-4 BLOCKER 2.1. gamma multiplies the POWER spectral
-        # density, so 1-gamma is a PSD reduction and 1-sqrt(gamma) an amplitude one.
-        # No PSD reduction available from the closed form is near Mather's "as much as
-        # 30%"; the amplitude reduction at the paper's own operating point is ~31%.
-        # This test pins the convention that the paper now states explicitly.
+    def test_psd_and_amplitude_readings_of_gamma(self):
+        # gamma multiplies the POWER spectral density, so 1-gamma is a PSD reduction
+        # and 1-sqrt(gamma) an amplitude one. At the paper's operating point the two
+        # readings are 53% and 31%, which is why Mather's unit-free "as much as 30%"
+        # cannot be compared without fixing a convention.
+        #
+        # RENAMED AND REWRITTEN 2026-07-31 (D12 Stage-13 round-6 BLOCKER 2.1). The old
+        # name asserted the conclusion -- "test_mather_30_percent_is_an_amplitude_figure"
+        # -- and the old comment carried the proposition round 5 blocked: "No PSD
+        # reduction available from the closed form is near 30%". That is FALSE, and the
+        # counterexample is pinned below. A round-5 commit message claimed this file was
+        # fixed; it was never touched.
         g = F.phonon_psd_gradient_factor(2.0, 4.0)
-        psd_red = 1.0 - g
-        amp_red = 1.0 - math.sqrt(g)
-        assert psd_red == pytest.approx(0.527, abs=5e-3)
-        assert amp_red == pytest.approx(0.312, abs=5e-3)
-        # the largest PSD reduction the closed form can produce is nowhere near 30%
+        assert 1.0 - g == pytest.approx(0.527, abs=5e-3)              # PSD reading
+        assert 1.0 - math.sqrt(g) == pytest.approx(0.312, abs=5e-3)   # amplitude reading
+
+    def test_a_thirty_percent_psd_reduction_IS_attainable(self):
+        # The counterexample that refutes the round-4/5 claim, pinned so it cannot be
+        # re-asserted: gamma is continuous and strictly decreasing from 1 toward
+        # n/(2n+1), so EVERY PSD reduction in [0, 1-n/(2n+1)) is attained -- 30%
+        # exactly at r = 1.19135 for n = 4, an ordinary operating point.
+        r_star = 1.19135
+        assert 1.0 - F.phonon_psd_gradient_factor(r_star, 4.0) == pytest.approx(0.30, abs=1e-3)
+        # and the maxima, which are SUPREMA -- approached as r -> infinity, never
+        # attained. Checked at r = 10, where the gap (4.3e-4 at n=3) is comfortably
+        # above float noise; by r = 1e6 it has converged to the asymptote within
+        # double precision and the strict inequality is no longer testable.
         for n in (3.0, 4.0, 5.0):
-            assert 1.0 - n / (2 * n + 1) > 0.50
+            sup_psd = 1.0 - n / (2 * n + 1)
+            assert F.phonon_psd_gradient_factor(10.0, n) > n / (2 * n + 1)
+            assert 1.0 - F.phonon_psd_gradient_factor(10.0, n) < sup_psd
+        # the maximum-reading comparison the paper offers as suggestive, not decisive:
+        # max amplitude reduction 33% at n=4 is closer to Mather's 30% than max PSD 56%
+        assert 1.0 - math.sqrt(4.0 / 9.0) == pytest.approx(0.333, abs=1e-3)
+        assert 1.0 - 4.0 / 9.0 == pytest.approx(0.556, abs=1e-3)
+
+    def test_bolometer_referred_gamma_equals_bath_referred_F_link(self):
+        # The identity D12's draft cites. Our gamma(r,n) is the bolometer-referred
+        # form; the TES literature writes the bath-referred F_link(t,n). Substituting
+        # t = 1/r must make them equal -- the trailing r^-(n+1) is exactly the
+        # bookkeeping difference. Checked against an INDEPENDENT implementation over a
+        # grid, so the paper's "verified as an identity" names an artifact rather than
+        # a claim (round-5 finding 1.2 / round-6 finding 2.2).
+        for n in (3.0, 4.0, 5.0, 6.0):
+            for r in (1.05, 1.19135, 1.5, 2.0, 3.0, 5.0, 10.0):
+                ours = F.phonon_psd_gradient_factor(r, n)
+                theirs = F.f_link_bath_referred(1.0 / r, n)
+                assert ours == pytest.approx(theirs, rel=1e-12), (r, n, ours, theirs)
+        # and both degenerate to 1 in the isothermal limit
+        assert F.phonon_psd_gradient_factor(1.0, 4.0) == 1.0
+        assert F.f_link_bath_referred(1.0, 4.0) == 1.0
 
     def test_gamma_one_recovers_the_shipped_psd(self):
         assert F.phonon_psd_gamma(1.0, 2.0, 3.0, 1.0) == F.phonon_psd(1.0, 2.0, 3.0)
@@ -528,3 +565,46 @@ class TestControlAndCeilings:
 
     def test_bloch_siegert_scale(self):
         assert F.bloch_siegert_scale(1.0, 10.0) == pytest.approx(0.2, abs=1e-12)
+
+
+class TestHaldaneLatticeChern:
+    """Lean: blochLatticeChern, latticeChern, haldaneFrameTopo,
+    haldaneFrameTrivial, haldaneFrame5, haldane_massInversion_not_sufficient_at_N4.
+
+    Added 2026-07-31 (D11 Stage-13 round-7 finding 5.7). The flip location
+    |m| ≈ 3.3177 lived only as a `fig.add_vline` literal and two docstrings;
+    nothing computed it and nothing pinned it. These tests pin the Python port
+    against the three masses the Lean side certifies, and pin the bisection
+    against the number the paper and the figure quote.
+    """
+
+    def test_port_reproduces_the_three_lean_certified_invariants(self):
+        # haldaneFrameTopo (m = 1), haldaneFrame5 (m = 5), haldaneFrameTrivial (m = 6),
+        # all at N = 4, t = t₂ = 1, φ = π/2.
+        assert F.haldane_lattice_chern(1.0, 4) == -1
+        assert F.haldane_lattice_chern(5.0, 4) == 0
+        assert F.haldane_lattice_chern(6.0, 4) == 0
+
+    def test_m_equals_5_is_inside_the_window_yet_reads_zero(self):
+        # This is the whole content of the retraction: mass inversion is not
+        # sufficient for a nonzero invariant at fixed grid size.
+        window = F.haldane_mass_inversion_window(1.0, math.pi / 2)
+        assert 5.0 < window                      # inside the analytic window
+        assert F.haldane_lattice_chern(5.0, 4) == 0
+
+    def test_flip_location_is_the_number_the_paper_quotes(self):
+        m_star = F.haldane_flip_location(4)
+        assert m_star == pytest.approx(3.3177, abs=5e-5)
+        # …and it is a genuine flip: the invariant differs across it.
+        assert F.haldane_lattice_chern(m_star - 1e-4, 4) == -1
+        assert F.haldane_lattice_chern(m_star + 1e-4, 4) == 0
+
+    def test_roughly_a_third_of_the_window_is_misclassified(self):
+        window = F.haldane_mass_inversion_window(1.0, math.pi / 2)
+        frac = (window - F.haldane_flip_location(4)) / window
+        # "roughly a third" / "about 36 %" in the paper and HaldaneWitness.lean.
+        assert 0.35 < frac < 0.37
+
+    def test_bisection_rejects_a_bracket_with_no_flip(self):
+        with pytest.raises(ValueError, match="does not straddle"):
+            F.haldane_flip_location(4, bracket=(6.0, 8.0))

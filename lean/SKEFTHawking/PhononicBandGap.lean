@@ -94,6 +94,21 @@ lemma branchPlus_at_pi : diatomicCrystal.branchPlus Real.pi = 2 := by
   rw [mid_eq, disc_at_pi, show (1 : ℝ) / 4 = (1 / 2) ^ 2 by norm_num, Real.sqrt_sq (by norm_num)]
   norm_num
 
+/-- **The gap bottom is attained at the other zone edge too.** By evenness of the branches
+(`DiatomicChain.branchMinus_neg`), the acoustic branch also reaches exactly `1` at `k = -π`.
+
+Added 2026-07-31 (D11 Stage-13 round-7 finding 5.6). Fig. 1 marks both `+π` and `-π` as certified
+gap-edge points and the caption appealed to evenness in `k`; only the `+π` endpoint had a theorem. -/
+lemma branchMinus_at_neg_pi : diatomicCrystal.branchMinus (-Real.pi) = 1 := by
+  rw [DiatomicChain.branchMinus_neg]
+  exact branchMinus_at_pi
+
+/-- **The gap top is attained at the other zone edge too** — the optical counterpart of
+`branchMinus_at_neg_pi`. -/
+lemma branchPlus_at_neg_pi : diatomicCrystal.branchPlus (-Real.pi) = 2 := by
+  rw [DiatomicChain.branchPlus_neg]
+  exact branchPlus_at_pi
+
 end diatomicCrystal
 
 /-- **Phononic band gap (Phase 6CB W2).** There is a non-empty squared-frequency interval

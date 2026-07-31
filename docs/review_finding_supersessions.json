@@ -5651,11 +5651,11 @@
       "closed_by": "stage13-round5-remediation"
     },
     {
-      "finding_id": "review:2026-07-31-bundle-stage13:D12:1.1",
+      "finding_id": "review:2026-07-31-0829-internal-adversarial:D12:1.1",
       "status": "fixed",
       "superseded_by": null,
       "commit": "55f8fea0",
-      "evidence": "LuccioliDegenne2024's title carried a subtitle taken from a web-search snippet, not from any read source. Corrected across all four citation layers (bibitem, CITATION_REGISTRY, Lit-Search primary-source cache, prior_art_novelty.md). Round-6 reviewer swept find_phrase.py and confirmed all 7 surviving hits are records-of-fix.",
+      "evidence": "LuccioliDegenne2024's title carried a subtitle taken from a web-search snippet, not from any read source. Corrected across all four citation layers (bibitem, CITATION_REGISTRY, Lit-Search primary-source cache, prior_art_novelty.md). Round-6 reviewer swept find_phrase.py and confirmed all 7 surviving hits are records-of-fix. (Re-keyed 2026-07-31: this record was originally filed under `review:2026-07-31-bundle-stage13:D12:1.1`, but that directory holds bundle_readiness.py's aggregation summary, which mints no finding nodes — so the closure named nothing. The finding lives in the 2026-07-31-0829-internal-adversarial review.)",
       "closed_date": "2026-07-31",
       "closed_by": "stage13-round6-verification"
     }

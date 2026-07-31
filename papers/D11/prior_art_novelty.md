@@ -163,9 +163,21 @@ differential forms on normed spaces and covariant derivatives; an unpinned
 | Hashin & Shtrikman, *A Variational Approach to the Theory of the Effective Magnetic Permeability of Multiphase Materials*, J. Appl. Phys. **33**, 3125 (1962) | `10.1063/1.1728579` | DOI resolves |
 | Hashin & Shtrikman, *A variational approach to the theory of the elastic behaviour of multiphase materials*, J. Mech. Phys. Solids **11**, 127 (1963) | `10.1016/0022-5096(63)90060-7` | DOI resolves |
 
-⚠ **For the Maxwell–Garnett *permittivity* formula cite the 1962 paper, not the
-1963 elastic one** — a common bibliography error. The 1963 paper is the correct
-citation for the Voigt/Reuss/Hashin–Shtrikman *elastic* bounds.
+⚠ **Attribution, corrected 2026-07-31 (D11 Stage-13 round-7 finding 5.4).** An
+earlier version of this note read "for the Maxwell–Garnett *permittivity* formula
+cite the 1962 paper, not the 1963 elastic one … the 1963 paper is the correct
+citation for the Voigt/Reuss/Hashin–Shtrikman *elastic* bounds." Both halves were
+wrong. The correct attributions are:
+
+- **Maxwell–Garnett mixing formula** → Maxwell Garnett 1904 (`10.1098/rsta.1904.0024`),
+  which is what the paper cites. Hashin–Shtrikman 1962 is a variational-bounds paper,
+  not the mixing rule.
+- **Hashin–Shtrikman 1962** → the electromagnetic variational bounds;
+  **Hashin–Shtrikman 1963** → the elastic ones. Neither family is formalized in this
+  bundle (see §5 of the draft and `EffectiveMediumBounds.lean`).
+- **Voigt (arithmetic, iso-strain) average** → Voigt 1889;
+  **Reuss (harmonic, iso-stress) average** → Reuss 1929. They are not Hashin &
+  Shtrikman's; HS 1963's contribution is the strictly tighter elastic pair.
 
 Supporting: F. Bloch, Z. Physik **52**, 555 (1929); Hasan & Kane,
 *Colloquium: Topological Insulators*, RMP **82**, 3045 (2010)

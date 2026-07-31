@@ -410,10 +410,14 @@ literature~\cite{IrwinHilton2005}. In the diffuse-conduction case
 \gamma \;=\; \frac{n}{2n+1}\,\frac{r^{2n+1}-1}{r^{n}-1}\;r^{-(n+1)},
 \end{equation}
 with $r$ the bolometer-to-bath temperature ratio and $n$ the thermal-conductivity index. The
-trailing factor is not a physical re-referencing but the change of variable $r = 1/t$ from the
-bath-to-bolometer ratio: with $t = 1/r$ the expression is \emph{algebraically identical} to the
-diffuse-conduction $F_{\rm link}(t,n)$ as that form is usually written, which we verified as an
-identity rather than by spot-checking values. We attach~\cite{IrwinHilton2005} as the standard
+trailing factor admits two equivalent readings, and we do not need to choose between them: it is
+simultaneously the change of variable $r = 1/t$ between the bath- and bolometer-referred ratios,
+and the physical re-referencing of $G$ via $G \propto T^{n-1}$ --- the two differ only in
+bookkeeping and yield the same expression, since $r^{-(n-1)}\cdot r^{-2} = r^{-(n+1)}$. Under
+either reading, substituting $t = 1/r$ makes this expression algebraically identical to the
+diffuse-conduction $F_{\rm link}(t,n)$; that identity is verified in
+\texttt{tests/test\_bundle\_formulas\_d11\_d12.py} against an independent implementation of the
+bath-referred form, not by spot-checking values. We attach~\cite{IrwinHilton2005} as the standard
 review in which this layer is presented, but we have not inspected its text: we hold that source
 only as a resolved DOI record, so the attribution of this specific closed form to it should be read
 as provisional. At $r=2$, $n=4$ it gives $\gamma = 0.4731$, and as $r \to \infty$ it
@@ -543,7 +547,13 @@ ordinary signal-carrying operating point. These rest on \thm{gaussianQ\_one\_ge\
 rational enclosure $Q(1) \ge 3/25$ obtained from the Birnbaum--Feller bound, which at $z = 1$ is
 $76\,\%$ of the true $Q(1) = 0.15866$, against $95\,\%$ at $z = 2$ --- the bound loosens as $z$
 falls. (It sits at a fraction $z^2/(1+z^2)$ of the \emph{Mills} upper bound $\varphi(z)/z$, which
-is a different comparison and equals $50\,\%$ and $80\,\%$ at those two points.) The same operating point carries the two cross-layer composites of \S\ref{sec:control}: \thm{relaxation\_filtered\_ceiling\_bites} and \thm{relaxation\_detector\_chain\_ceiling\_bites} likewise reach $22/25$ at matched budget $2$, so the composites are shown to bite in their own right rather than inheriting the single-mechanism result.
+is a different comparison and equals $50\,\%$ and $80\,\%$ at those two points.) The same operating point carries the two cross-layer composites of \S\ref{sec:control}:
+\thm{relaxation\_filtered\_ceiling\_bites} and
+\thm{relaxation\_detector\_chain\_ceiling\_bites} likewise reach $22/25$ at matched budget $2$.
+What that establishes is that the \emph{composite} statement, carrying its full binder list and
+concluding about the attributed error pair, is non-vacuous at a signal-carrying operating point. It
+is not a sharper bound: at this point the relaxation branch is inert and the $\max$ selects the
+detection term, so the value is the single-mechanism one.
 
 \section{Scope and prior art}
 \label{sec:scope}

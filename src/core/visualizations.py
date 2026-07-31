@@ -15243,8 +15243,14 @@ def fig_d11_haldane_chern() -> go.Figure:
             marker=dict(color=carmine, size=14, symbol="diamond"),
             text=[lab], textposition=pos, textfont=dict(size=12),
             cliponaxis=False, showlegend=False), row=1, col=2)
-    fig.add_vline(x=3.3177, line=dict(color=amber, width=2, dash="dot"),
-                  annotation_text="4×4 invariant flips ≈ 3.3177<br>(numerical, not certified)",
+    # Computed, not hardcoded (D11 Stage-13 round-7 finding 5.7): the literal
+    # 3.3177 used to live only here and in two docstrings, with nothing that
+    # produced it. `haldane_flip_location` bisects the ported FHS invariant and
+    # is pinned by tests/test_bundle_formulas_d11_d12.py.
+    m_flip = F.haldane_flip_location(4)
+    fig.add_vline(x=m_flip, line=dict(color=amber, width=2, dash="dot"),
+                  annotation_text=f"4×4 invariant flips ≈ {m_flip:.4f}"
+                                  "<br>(numerical, not certified)",
                   annotation_position="top right", row=1, col=2)
     fig.update_xaxes(title_text="Semenoff mass  m  (units of t)", range=[-0.5, 8.5],
                      row=1, col=2)

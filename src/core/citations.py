@@ -10841,6 +10841,55 @@ CITATION_REGISTRY = {
         'provides': ['The effective-permittivity mixing rule for a dilute inclusion phase in a host medium.'],
         'notes': 'Origin of the maxwellGarnett formula formalized in 6CE.',
     },
+    'Voigt1889': {
+        'authors': 'Voigt, W.',
+        'title': 'Ueber die Beziehung zwischen den beiden Elasticitätsconstanten isotroper Körper',
+        'journal': 'Annalen der Physik', 'volume': 274, 'page': '573', 'year': 1889,
+        'doi': '10.1002/andp.18892741206', 'arxiv': None,
+        'doi_verified': True, 'inprep': False,
+        'primary_source_unreachable': True,
+        'primary_source_path': None,
+        'used_in': ['papers/D11/paper_draft.tex'],
+        'provides': ['The iso-strain (arithmetic) average of constituent moduli, formalized as voigtModulus.'],
+        'notes': ('Added 2026-07-31 (D11 Stage-13 round-7 finding 1.4): voigtModulus was named after '
+                  'this work with no bibitem. DOI verified by resolution only (302 to the publisher); '
+                  'no primary-source cache — the 1889 text is not available through the whitelisted '
+                  'scholarly-primary egress, so no cache file is claimed. The paper makes no '
+                  'quantitative claim sourced to this reference beyond the definition of the average.'),
+    },
+    'Reuss1929': {
+        'authors': 'Reuss, A.',
+        'title': ('Berechnung der Fließgrenze von Mischkristallen auf Grund der '
+                  'Plastizitätsbedingung für Einkristalle'),
+        'journal': 'Zeitschrift für Angewandte Mathematik und Mechanik', 'volume': 9, 'page': '49',
+        'year': 1929,
+        'doi': '10.1002/zamm.19290090104', 'arxiv': None,
+        'doi_verified': True, 'inprep': False,
+        'primary_source_unreachable': True,
+        'primary_source_path': None,
+        'used_in': ['papers/D11/paper_draft.tex'],
+        'provides': ['The iso-stress (harmonic) average of constituent moduli, formalized as reussModulus.'],
+        'notes': ('Added 2026-07-31 (D11 Stage-13 round-7 finding 1.4). DOI verified by resolution '
+                  'only; no primary-source cache, same reason as Voigt1889.'),
+    },
+    'Milton2002': {
+        'authors': 'Milton, G. W.',
+        'title': 'The Theory of Composites',
+        'journal': 'Cambridge University Press', 'volume': None, 'page': None, 'year': 2002,
+        'doi': '10.1017/CBO9780511613357', 'arxiv': None,
+        'doi_verified': True, 'inprep': False,
+        'primary_source_unreachable': True,
+        'primary_source_path': None,
+        'used_in': ['papers/D11/paper_draft.tex'],
+        'provides': ['Modern reference for the Wiener (arithmetic/harmonic) effective-medium bounds.'],
+        'notes': ('Added 2026-07-31 (D11 Stage-13 round-7 finding 1.4). The draft previously '
+                  'attributed the bounds to "Wiener (1912)" with a year and a quantitative bracket '
+                  'and no citation of any kind. The 1912 Saxon-Academy volume is not reachable '
+                  'through the whitelisted egress, so rather than record unverified bibliographic '
+                  'detail the attribution now cites this standard monograph, and the [1.6, 2.5] '
+                  'bracket the paper quotes is stated as computed from the definition (harmonic and '
+                  'arithmetic means at (1, 4, 1/2)) rather than as quoted from a source.'),
+    },
     'HashinShtrikman1962': {
         'authors': 'Hashin, Z., Shtrikman, S.',
         'title': 'A Variational Approach to the Theory of the Effective Magnetic Permeability of Multiphase Materials',

@@ -87,6 +87,33 @@ noncomputable def branchPlus (k : ℝ) : ℝ := D.mid + Real.sqrt (D.disc k)
 /-- The acoustic (lower) squared-frequency branch `ω²₋(k)`. -/
 noncomputable def branchMinus (k : ℝ) : ℝ := D.mid - Real.sqrt (D.disc k)
 
+/-! ### Evenness in the crystal momentum
+
+Both branches depend on `k` only through `Real.cos (k * a)`, so the dispersion is even: the band
+structure on `[-π/a, 0]` is the mirror of the one on `[0, π/a]`. Added 2026-07-31 (D11 Stage-13
+round-7 finding 5.6): D11's Fig. 1 marks the gap edges as *attained* at `k = ±π` and its caption
+justifies the negative endpoint "by evenness of the branches in `k`", but no evenness statement was
+formalized anywhere in the acoustic modules — the one step in that figure a referee could not
+follow into the kernel. These four lemmas close it in general, not only at `±π`. -/
+
+@[simp] lemma normSqOff_neg (k : ℝ) : D.normSqOff (-k) = D.normSqOff k := by
+  unfold normSqOff
+  rw [neg_mul, Real.cos_neg]
+
+@[simp] lemma disc_neg (k : ℝ) : D.disc (-k) = D.disc k := by
+  unfold disc
+  rw [normSqOff_neg]
+
+/-- **The optical branch is even in `k`.** -/
+@[simp] lemma branchPlus_neg (k : ℝ) : D.branchPlus (-k) = D.branchPlus k := by
+  unfold branchPlus
+  rw [disc_neg]
+
+/-- **The acoustic branch is even in `k`.** -/
+@[simp] lemma branchMinus_neg (k : ℝ) : D.branchMinus (-k) = D.branchMinus k := by
+  unfold branchMinus
+  rw [disc_neg]
+
 /-! ### Basic positivity / sign facts -/
 
 lemma m₁m₂_pos : 0 < D.m₁ * D.m₂ := mul_pos D.m₁_pos D.m₂_pos

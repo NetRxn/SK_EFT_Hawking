@@ -43,20 +43,21 @@
 35 & \texttt{atlas\_integrity} & Derived proof-atlas (ADR-005) is consistent: no kind conflicts, no undisclosed project axioms, open nodes registry-backed, no apex silently closed \\
 36 & \texttt{atlas\_hypothesis\_discipline} & INFO: tracked-hypothesis distribution (total / gating vs orphan-landmark / per-module) for PD-2 visibility --- NEVER a gate; the bank-or-grind discipline lives in the coach \\
 37 & \texttt{count\_literals} & Paper .tex files reference counts via \texttt{\textbackslash input\{counts.tex\}} macros, not literals \\
-38 & \texttt{readiness\_submission\_gate} & Every paper has all P1 readiness gates passed (Phase 5v Wave 4) \\
-39 & \texttt{citation\_primary\_sources\_present} & Every external bibitem cited in papers has a primary-source cache file \\
-40 & \texttt{provenance\_doi\_in\_registry} & PARAMETER\_PROVENANCE source DOIs resolve to CITATION\_REGISTRY bibkeys \\
-41 & \texttt{bundle\_consistency} & Cross-bundle clusters' member sentences agree on numerical content across bundle boundaries \\
-42 & \texttt{bundle\_source\_freshness} & Bundle source-paper mtime $\leq$ bundle last\_lift; flag stale bundles \\
-43 & \texttt{bibitem\_title\_primary\_source} & Registry titles match primary-source cache PDF page-1 titles (drift detector) \\
-44 & \texttt{quantum\_network} & QN Python formulas satisfy the QuantumNetwork Lean theorem identities \\
-45 & \texttt{bundle\_registry\_consistency} & Publication-bundle roster has ONE source of truth (scripts/bundle\_registry.py) that every consumer derives from \\
-46 & \texttt{paper\_latex\_compiles} & Bundle drafts compile under pdflatex (advisory; slow --- pass --force-latex or --check paper\_latex\_compiles) \\
-47 & \texttt{axiom\_count\_prose\_consistency} & Paper prose axiom-count claims agree with docs/counts.json \\
-48 & \texttt{prose\_theorem\_reference\_coverage} & Bundle-draft \texttt{} Lean references resolve in lean\_deps.json \\
-49 & \texttt{theorem\_name\_embedded\_citations} & Declaration names embedding author+year have matching bibliography entries \\
-50 & \texttt{inventory\_index\_autogen\_fresh} & Advisory: SK\_EFT\_Hawking\_Inventory\_Index.md autogen blocks match docs/counts.json \\
-51 & \texttt{lean\_docstring\_refs\_resolve} & Lean docstring `backticked` project names resolve (rename-drift guard) \\
-52 & \texttt{paper\_toolchain\_pin\_drift} & Advisory (Class TP): paper-draft toolchain/Mathlib pins match lean-toolchain + lakefile.toml \\
+38 & \texttt{readiness\_verdicts\_agree} & The heatmap and the submission gate return the same per-bundle verdict \\
+39 & \texttt{readiness\_submission\_gate} & Every paper has all P1 readiness gates passed (Phase 5v Wave 4) \\
+40 & \texttt{citation\_primary\_sources\_present} & Every external bibitem cited in papers has a primary-source cache file \\
+41 & \texttt{provenance\_doi\_in\_registry} & PARAMETER\_PROVENANCE source DOIs resolve to CITATION\_REGISTRY bibkeys \\
+42 & \texttt{bundle\_consistency} & Cross-bundle clusters' member sentences agree on numerical content across bundle boundaries \\
+43 & \texttt{bundle\_source\_freshness} & Bundle source-paper mtime $\leq$ bundle last\_lift; flag stale bundles \\
+44 & \texttt{bibitem\_title\_primary\_source} & Registry titles match primary-source cache PDF page-1 titles (drift detector) \\
+45 & \texttt{quantum\_network} & QN Python formulas satisfy the QuantumNetwork Lean theorem identities \\
+46 & \texttt{bundle\_registry\_consistency} & Publication-bundle roster has ONE source of truth (scripts/bundle\_registry.py) that every consumer derives from \\
+47 & \texttt{paper\_latex\_compiles} & Bundle drafts compile under pdflatex (advisory; slow --- pass --force-latex or --check paper\_latex\_compiles) \\
+48 & \texttt{axiom\_count\_prose\_consistency} & Paper prose axiom-count claims agree with docs/counts.json \\
+49 & \texttt{prose\_theorem\_reference\_coverage} & Bundle-draft \texttt{} Lean references resolve in lean\_deps.json \\
+50 & \texttt{theorem\_name\_embedded\_citations} & Declaration names embedding author+year have matching bibliography entries \\
+51 & \texttt{inventory\_index\_autogen\_fresh} & Advisory: SK\_EFT\_Hawking\_Inventory\_Index.md autogen blocks match docs/counts.json \\
+52 & \texttt{lean\_docstring\_refs\_resolve} & Lean docstring `backticked` project names resolve (rename-drift guard) \\
+53 & \texttt{paper\_toolchain\_pin\_drift} & Advisory (Class TP): paper-draft toolchain/Mathlib pins match lean-toolchain + lakefile.toml \\
 \hline
 \end{tabular}

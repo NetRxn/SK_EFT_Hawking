@@ -11494,6 +11494,27 @@ def phonon_psd_gamma(
     return 4.0 * gamma * k_B * temperature ** 2 * conductance
 
 
+def f_link_bath_referred(t_ratio: float, n_index: float) -> float:
+    """The TES thermal-fluctuation factor F_link in its BATH-REFERRED form:
+
+        F_link(t, n) = [n/(2n+1)] * (t^(2n+1) - 1) / (t^n - 1)
+
+    with t = T_bath / T_bolo (so t < 1 under load). This is the shape the
+    transition-edge-sensor literature usually writes.
+
+    Provided as an INDEPENDENT implementation so that the identity
+    ``f_link_bath_referred(1/r, n) == phonon_psd_gradient_factor(r, n)`` is
+    checked by an artifact rather than asserted in prose. D12's draft cites that
+    test; before it existed the paper claimed a verification nothing performed
+    (Stage-13 round-5 finding 1.2, recurring at round-6 finding 2.2).
+    """
+    if t_ratio == 1.0:
+        return 1.0
+    return (n_index / (2.0 * n_index + 1.0)) * (
+        (t_ratio ** (2.0 * n_index + 1.0) - 1.0) / (t_ratio ** n_index - 1.0)
+    )
+
+
 def phonon_psd_gradient_factor(temp_ratio: float, n_index: float) -> float:
     """
     The thermal-link gradient factor γ (F_link) in the diffuse phonon-conduction
@@ -11501,9 +11522,12 @@ def phonon_psd_gradient_factor(temp_ratio: float, n_index: float) -> float:
 
         γ = [n/(2n+1)] · (r^(2n+1) − 1)/(r^n − 1) · r^(−(n+1))
 
-    with r = T_bolo/T_bath and n the thermal-conductivity index. The literature
-    states the bracketed form against T_bath and G(T_bath); the trailing
-    r^(−(n+1)) converts it to T_bolo and G(T_bolo) using G ∝ T^(n−1).
+    with r = T_bolo/T_bath and n the thermal-conductivity index. The trailing
+    r^(−(n+1)) admits two equivalent readings — the change of variable t = 1/r
+    between the bath- and bolometer-referred ratios, and the re-referencing of G
+    via G ∝ T^(n−1) — which agree because r^−(n−1) · r^−2 = r^−(n+1). The identity
+    against the bath-referred form (f_link_bath_referred) is checked by
+    tests/…::test_bolometer_referred_gamma_equals_bath_referred_F_link.
 
     Limits (both are regression-pinned in tests):
       * r → 1 (isothermal): γ → 1, matching phononPSD_eq_phononPSDGamma_one.
@@ -11826,6 +11850,122 @@ def haldane_mass_inversion_window(t_2: float, phi: float) -> float:
           (GrapheneBand/HaldaneWitness.lean)
     """
     return abs(3.0 * float(np.sqrt(3.0)) * t_2 * float(np.sin(phi)))
+
+
+def _fhs_principal(theta: float) -> float:
+    """Principal representative of an angle in (−π, π].
+
+    Lean: principal (TopologicalBand/PrincipalBranch.lean), which is
+    `toIocMod two_pi_pos (-π)` — the half-open convention matters, because the
+    branch index is what the Chern sum counts.
+    """
+    two_pi = 2.0 * np.pi
+    return float(theta - two_pi * np.ceil(theta / two_pi - 0.5))
+
+
+def haldane_lattice_chern(semenoff_m: float, n_grid: int = 4,
+                          t: float = 1.0, t_2: float = 1.0,
+                          phi: float | None = None) -> int:
+    """
+    Fukui–Hatsugai–Suzuki lattice Chern number of the Haldane lower band,
+    sampled on an `n_grid × n_grid` Brillouin-zone torus.
+
+    This is a faithful Python port of the construction the Lean side certifies,
+    declaration for declaration:
+
+        bzPhase          θ_j = 2π j / N                (HaldaneWitness.lean)
+        structureFactor  f(θ) = 1 + e^{iθ₁} + e^{iθ₂}  (Honeycomb.lean)
+        haldaneD         d = (t Re f, −t Im f, m − 2t₂ sin φ · haldaneNNN)
+        lbVec            u ∝ (d₀ − i d₁, −(d₂ + ‖d‖))  (BlochFrameOfD.lean)
+        linkOfFrame      U_μ(k) = ⟨u(k), u(k+ê_μ)⟩ / |·| (BlochFrame.lean)
+        rawCurl          arg U₀(k) + arg U₁(k+ê₀) − arg U₀(k+ê₁) − arg U₁(k)
+        latticeChern     −Σ_k branchIndex(rawCurl k)   (FHSLatticeGauge.lean)
+
+    At `N = 4`, `t = t₂ = 1`, `φ = π/2` it reproduces the three Lean-certified
+    values exactly: `C(1) = −1`, `C(5) = 0`, `C(6) = 0`. The `m = 5` point is
+    INSIDE the analytic mass-inversion window `|m| < 3√3 ≈ 5.1962` yet reads 0 —
+    the reason the "nonzero exactly where the masses invert" claim was retracted.
+
+    ⚠ This is the *lattice* invariant at finite `N`. It is not proved equal to a
+    continuum first Chern class anywhere in this development.
+
+    Lean: blochLatticeChern, latticeChern, haldaneFrameTopo,
+          haldaneFrameTrivial, haldaneFrame5,
+          haldane_massInversion_not_sufficient_at_N4
+          (TopologicalBand/BlochFrame.lean, TopologicalBand/FHSLatticeGauge.lean,
+           GrapheneBand/HaldaneWitness.lean)
+    """
+    if n_grid < 2:
+        raise ValueError(f"n_grid must be at least 2, got {n_grid}")
+    if phi is None:
+        phi = np.pi / 2.0
+    shift_term = 2.0 * t_2 * float(np.sin(phi))
+
+    def _state(j1: int, j2: int) -> np.ndarray:
+        th1 = 2.0 * np.pi * (j1 % n_grid) / n_grid
+        th2 = 2.0 * np.pi * (j2 % n_grid) / n_grid
+        f = 1.0 + np.exp(1j * th1) + np.exp(1j * th2)
+        nnn = np.sin(th1) + np.sin(th2 - th1) - np.sin(th2)
+        d = np.array([t * f.real, -t * f.imag, semenoff_m - shift_term * nnn])
+        v = np.array([d[0] - 1j * d[1],
+                      -(d[2] + float(np.sqrt(d @ d))) + 0j])
+        return v / np.linalg.norm(v)
+
+    states = [[_state(a, b) for b in range(n_grid)] for a in range(n_grid)]
+
+    def _link_arg(mu: int, a: int, b: int) -> float:
+        a2, b2 = ((a + 1) % n_grid, b) if mu == 0 else (a, (b + 1) % n_grid)
+        return float(np.angle(np.vdot(states[a][b], states[a2][b2])))
+
+    total = 0
+    two_pi = 2.0 * np.pi
+    for a in range(n_grid):
+        for b in range(n_grid):
+            raw = (_link_arg(0, a, b) + _link_arg(1, (a + 1) % n_grid, b)
+                   - _link_arg(0, a, (b + 1) % n_grid) - _link_arg(1, a, b))
+            total += int(round((raw - _fhs_principal(raw)) / two_pi))
+    return -total
+
+
+def haldane_flip_location(n_grid: int = 4, t: float = 1.0, t_2: float = 1.0,
+                          phi: float | None = None,
+                          bracket: tuple[float, float] = (0.0, 8.0),
+                          tol: float = 1e-12) -> float:
+    """
+    Semenoff mass at which the `n_grid × n_grid` FHS lattice Chern number of
+    :func:`haldane_lattice_chern` flips to zero, located by bisection.
+
+    At `N = 4`, `t = t₂ = 1`, `φ = π/2` this returns 3.317672…, i.e. the
+    ≈3.3177 quoted in D11 — strictly inside the analytic inversion window
+    `3√3 ≈ 5.1962`, so on ≈36% of that window the masses invert while the
+    invariant reads 0.
+
+    The invariant is integer-valued and piecewise constant, so this is a
+    genuine sign-change bisection on a step function: the returned value is the
+    midpoint of a bracket narrower than `tol` whose endpoints carry different
+    invariants. It is a NUMERICAL location with no Lean backing — the Lean side
+    certifies the invariant at the three sampled masses only, never the
+    crossing.
+
+    Raises ValueError if the bracket endpoints do not straddle a flip.
+
+    Lean: (none — deliberately. See `haldane_massInversion_not_sufficient_at_N4`
+          for what IS certified.)
+    """
+    lo, hi = float(bracket[0]), float(bracket[1])
+    c_lo = haldane_lattice_chern(lo, n_grid, t, t_2, phi)
+    c_hi = haldane_lattice_chern(hi, n_grid, t, t_2, phi)
+    if c_lo == c_hi:
+        raise ValueError(
+            f"bracket {bracket} does not straddle a flip: "
+            f"C({lo}) = C({hi}) = {c_lo}")
+    while hi - lo > tol:
+        mid = 0.5 * (lo + hi)
+        if haldane_lattice_chern(mid, n_grid, t, t_2, phi) == c_lo:
+            lo = mid
+        else:
+            hi = mid
+    return 0.5 * (lo + hi)
 
 
 def bernal_full_gap_sq(bias_u: float, gamma: float) -> float:

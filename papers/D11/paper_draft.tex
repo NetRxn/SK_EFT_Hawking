@@ -195,8 +195,10 @@ $d_3$ axis where the gauge choice genuinely degenerates, and the overlap conditi
 \caption{The certified phononic band gap of the diatomic chain
 $(m_1,m_2,\kappa,a) = (1,2,1,1)$. Both branches are plotted across the Brillouin zone; the shaded
 band contains no state. Both edges are \emph{attained} at $k = \pi$
-(\thm{branchMinus\_at\_pi}, \thm{branchPlus\_at\_pi}), and by evenness of the branches in $k$ also
-at $-\pi$, so the bound is tight rather than loose.}
+(\thm{branchMinus\_at\_pi}, \thm{branchPlus\_at\_pi}) and, by evenness of the branches in $k$
+(\thm{branchMinus\_neg}, \thm{branchPlus\_neg}), also at $-\pi$
+(\thm{branchMinus\_at\_neg\_pi}, \thm{branchPlus\_at\_neg\_pi}), so the bound is tight rather
+than loose. Both endpoints are theorem-backed; neither is asserted by symmetry alone.}
 \label{fig:phononic}
 \end{figure*}
 
@@ -268,9 +270,10 @@ eigenvalue-splitting analysis above.
 \begin{figure*}[t]
 \includegraphics[width=\textwidth]{figures/d11_fig4_effective_medium.png}
 \caption{Left: Maxwell--Garnett effective permittivity inside its constituent bounds, with the
-certified point $(\varepsilon_h,\varepsilon_i,f) = (1,4,\tfrac12)$ giving exactly $2$. Right: Voigt
-and Reuss elastic bounds with their \emph{exact} arithmetic-minus-harmonic gap
-(\thm{voigt\_sub\_reuss\_eq}).}
+certified point $(\varepsilon_h,\varepsilon_i,f) = (1,4,\tfrac12)$ giving exactly $2$, strictly
+inside $[1,4]$ (\thm{effectiveMedium\_hashinShtrikman\_enclosure}). Right: the Voigt and Reuss
+elastic \emph{averages} --- not bounds on a physical $M_{\rm eff}$, see \S\ref{sec:effmedium} ---
+with their \emph{exact} arithmetic-minus-harmonic gap (\thm{voigt\_sub\_reuss\_eq}).}
 \label{fig:effmedium}
 \end{figure*}
 
@@ -290,15 +293,17 @@ exchanging host and inclusion. The worked instance
 $(\varepsilon_h, \varepsilon_i, f) = (1, 4, \tfrac12)$ gives exactly $2$.
 
 The naming needs care, because two distinct sharper families sit above this one. The
-Wiener~(1912) bounds are the harmonic and arithmetic means of the phases, and the
+Wiener bounds~\cite{Milton2002} are the harmonic and arithmetic means of the phases, and the
 Hashin--Shtrikman bounds~\cite{HashinShtrikman1962} are tighter still. At the worked point the
-constituent bracket is $[1,4]$ while the Wiener bracket is $[1.6, 2.5]$, so our lower bound sits
+constituent bracket is $[1,4]$ while the Wiener bracket, computed from the definition as the
+harmonic and arithmetic means at $(1, 4, \tfrac12)$, is $[1.6, 2.5]$, so our lower bound sits
 strictly below Wiener's and the theorem entails neither family. Neither is formalized here, and the
 declaration's historical name should not be read as a claim to have proved the Hashin--Shtrikman
 bound. The Lean module states this scope explicitly in its header and in the theorem's own
 docstring.
 
-For elastic moduli we ship \thm{voigtModulus} and \thm{reussModulus} with the ordering chain
+For elastic moduli we ship \thm{voigtModulus}~\cite{Voigt1889} and
+\thm{reussModulus}~\cite{Reuss1929} with the ordering chain
 \thm{effectiveModuli\_enclosure}, $M_1 \le M_{\rm R} \le M_{\rm V} \le M_2$. This is an
 ordering of the two \emph{averages} together with constituent bounds; no effective modulus of a
 composite appears in the statement. The classical Voigt--Reuss bracket $M_{\rm R} \le M_{\rm eff}
@@ -310,8 +315,8 @@ bracket, not this ordering. The sharpest statement here is
 \begin{equation}
 M_{\rm V} - M_{\rm R} \;=\; \frac{f(1-f)(M_1-M_2)^2}{(1-f)M_2 + fM_1},
 \end{equation}
-rather than as the inequality $\ge 0$ that a docstring had previously asserted while only the weaker
-form was formalized.
+rather than only as the inequality $M_{\rm V} \ge M_{\rm R}$, which was all that was formalized
+at the time the module header already asserted the exact identity.
 
 \paragraph{Route disclosure.} This section is deliberately \emph{algebraic}. The analytic route ---
 two-scale convergence and periodic homogenization --- was not attempted. Mathlib carries Sobolev
@@ -334,8 +339,9 @@ $t = t_2 = 1$, $\varphi = \pi/2$ on a $4\times4$ torus. The point $m = 5$ lies \
 analytic window yet reads $C = 0$: mass inversion is \emph{not sufficient} at fixed grid size, which
 is the half that is theorem-backed (\thm{haldane\_massInversion\_not\_sufficient\_at\_N4}).
 Necessity is \emph{not} certified --- it rests on the single sample $m = 6$ --- so the figure
-makes no necessity claim at all; the flip location $\approx 3.3177$ is labelled in the figure as
-numerical rather than certified.}
+makes no necessity claim at all. The flip location $\approx 3.3177$ is computed by
+\texttt{haldane\_flip\_location}, a bisection on the ported invariant, and is labelled in the figure
+as numerical rather than certified.}
 \label{fig:haldane}
 \end{figure*}
 
@@ -404,8 +410,11 @@ The companion values are as important as the headline.
 \thm{haldane\_trivial\_phase\_chern\_zero} gives $C = 0$ at $m = 6$, outside the analytic window. And
 \thm{haldane\_massInversion\_not\_sufficient\_at\_N4} gives $C = 0$ at $m = 5$ --- which is
 \emph{inside} the window $|m| < 3\sqrt{3} \approx 5.196$ (\thm{haldane\_window\_bounds}). At this
-grid size the invariant flips \emph{numerically} near $|m| \approx 3.3177$ --- a bisection, with no
-Lean backing --- so on roughly a third of the analytic window
+grid size the invariant flips \emph{numerically} near $|m| \approx 3.3177$ --- a bisection on a
+Python port of the same FHS construction (\texttt{haldane\_lattice\_chern},
+\texttt{haldane\_flip\_location} in \texttt{formulas.py}, pinned against the three Lean-certified
+masses by regression test), with no Lean backing for the crossing itself --- so on roughly a third of
+the analytic window
 the masses have inverted while the $4\times4$ invariant still reads zero (Fig.~\ref{fig:haldane}).
 Section~\ref{sec:refutations} records what we did about that.
 
@@ -490,10 +499,16 @@ degenerates. This is a real constraint on which grids may be used, not a cosmeti
 \paragraph{Novelty, with carve-outs.} We are aware of no \emph{prior} formalization, in any proof
 assistant, of a Chern number or a Chern class \emph{of a vector bundle} --- the topological
 invariant --- nor of an acoustic or phononic band structure, an exceptional point, a
-$\mathcal{PT}$ transition, a Maxwell--Garnett or Wiener/Hashin--Shtrikman-type effective-medium
-bound, a honeycomb band structure, or the Haldane model. (Stated in the past tense deliberately:
-the present paper formalizes six of these seven, so a present-tense universal negative would be
-self-refuting.) One carve-out is our own: this group's \texttt{ChernBridge} module defines a categorical
+$\mathcal{PT}$ transition, a Maxwell--Garnett constituent enclosure, a Wiener or
+Hashin--Shtrikman-type effective-medium bound, a honeycomb band structure, or the Haldane model.
+(Stated in the past tense deliberately: the present paper formalizes five of these
+eight --- the acoustic band structure, the exceptional point, the $\mathcal{PT}$ transition, the
+Maxwell--Garnett enclosure, the honeycomb band structure and the Haldane model, of which the last two
+are one item apiece --- so a present-tense universal negative would be self-refuting. Two of the eight
+are \emph{not} delivered here and are listed for the absence claim only: the vector-bundle Chern class
+(Section~\ref{sec:lattice}'s invariant is the Fukui--Hatsugai--Suzuki lattice quantity, not proved
+equal to it) and the Wiener/Hashin--Shtrikman families, which Section~\ref{sec:effmedium} states
+explicitly are not formalized in this development.) One carve-out is our own: this group's \texttt{ChernBridge} module defines a categorical
 Chebyshev \emph{marker} that a companion bundle describes in Chern language. It is a different
 object from the Bloch-band invariant reported here --- an algebraic marker, not an integral of
 curvature over a bundle --- and we flag it rather than let the absence claim stand unqualified
@@ -576,6 +591,17 @@ DOI:10.1143/JPSJ.74.1674.
 \bibitem{MaxwellGarnett1904} J.~C.~Maxwell~Garnett, \emph{XII. Colours in metal glasses and in
 metallic films}, Phil. Trans. R. Soc. Lond. A \textbf{203}, 385 (1904).
 DOI:10.1098/rsta.1904.0024.
+
+\bibitem{Voigt1889} W.~Voigt, \emph{Ueber die Beziehung zwischen den beiden
+Elasticit\"atsconstanten isotroper K\"orper}, Ann. Phys. \textbf{274}, 573 (1889).
+DOI:10.1002/andp.18892741206.
+
+\bibitem{Reuss1929} A.~Reuss, \emph{Berechnung der Flie\ss{}grenze von Mischkristallen auf Grund
+der Plastizit\"atsbedingung f\"ur Einkristalle}, ZAMM \textbf{9}, 49 (1929).
+DOI:10.1002/zamm.19290090104.
+
+\bibitem{Milton2002} G.~W.~Milton, \emph{The Theory of Composites},
+Cambridge University Press (2002). DOI:10.1017/CBO9780511613357.
 
 \bibitem{HashinShtrikman1962} Z.~Hashin and S.~Shtrikman, \emph{A Variational Approach to the Theory
 of the Effective Magnetic Permeability of Multiphase Materials}, J. Appl. Phys. \textbf{33}, 3125
