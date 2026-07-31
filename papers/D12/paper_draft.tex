@@ -418,15 +418,20 @@ report the closed form as the diffuse-conduction expression on its own terms.
 
 The direction matters, and it points the opposite way from a plausible first guess. Because
 $\gamma \le 1$, the $\gamma = 1$ expression \emph{overstates} the phonon noise, so the floor
-computed from it \emph{overstates the floor} for any detector with a real gradient across its link
-(\thm{phononPSDGamma\_lt\_phononPSD}, \thm{gammaOne\_phononFloor\_overstates}). This is the mirror
+computed from it \emph{overstates the floor} for any detector with a real gradient across its link.
+The PSD comparison is \thm{phononPSDGamma\_lt\_phononPSD} (packaged with the $\gamma = 1$ identity
+as \thm{gammaOne\_phononPSD\_overstates}), and the step from there to the floor is proved rather
+than left to prose: a lower noise PSD gives a \emph{larger} matched budget
+(\thm{matchedBudget\_gamma\_ge}) and hence a smaller Gaussian tail, which is
+\thm{gammaOne\_phononFloor\_overstates}. This is the mirror
 image of the fail-open failure of Section~\ref{sec:poisson}, not an instance of it: a floor stated
 too \emph{high} yields false \emph{refutations} --- a detector that genuinely meets its
 specification is declared impossible --- rather than admitting configurations the true floor
 forbids. The theorems below remain sound because each is
 conditional on \thm{IsThermalFluctuationLimited}, which pins whiteness at the $\gamma = 1$ PSD: a
 gradient-loaded detector simply fails their hypothesis. Consumers modelling one should carry the
-general-$\gamma$ hypothesis instead.
+general-$\gamma$ hypothesis \thm{IsThermalFluctuationLimitedGamma} instead --- which we ship as a
+declared hypothesis with, as yet, no floor theorem stated at general $\gamma$.
 
 We are explicit that the in-tree identity relating the prefactor to the Johnson--Nyquist form is an
 arithmetic \emph{resemblance} and not provenance --- it holds for any expression of the same
@@ -512,8 +517,9 @@ discriminate. The substantive witnesses are at matched budget $2$, where the cei
 \thm{detector\_chain\_ceiling\_bites\_nondegenerate}): a claimed fidelity of $0.99$ is refuted at an
 ordinary signal-carrying operating point. These rest on \thm{gaussianQ\_one\_ge\_rational}, the
 rational enclosure $Q(1) \ge 3/25$ obtained from the Birnbaum--Feller bound, which at $z = 1$ is
-$76\,\%$ of the true $Q(1) = 0.15866$ (the same bound reaches $95\,\%$ at $z = 2$; the ratio
-$z^2/(1+z^2)$ degrades as $z$ falls).
+$76\,\%$ of the true $Q(1) = 0.15866$, against $95\,\%$ at $z = 2$ --- the bound loosens as $z$
+falls. (It sits at a fraction $z^2/(1+z^2)$ of the \emph{Mills} upper bound $\varphi(z)/z$, which
+is a different comparison and equals $50\,\%$ and $80\,\%$ at those two points.) The same operating point carries the two cross-layer composites of \S\ref{sec:control}: \thm{relaxation\_filtered\_ceiling\_bites} and \thm{relaxation\_detector\_chain\_ceiling\_bites} likewise reach $22/25$ at matched budget $2$, so the composites are shown to bite in their own right rather than inheriting the single-mechanism result.
 
 \section{Scope and prior art}
 \label{sec:scope}
@@ -556,7 +562,7 @@ Neyman--Pearson lemma, no hypothesis test, no error function, and --- the operat
 no two-sided tail bracket on the Gaussian. \thm{gaussianQ} is defined project-locally as an upper
 tail because the bounds of Section~\ref{sec:poisson}, not the distribution function, are the
 contribution. Transform methods and transfer-function algebra are formalized in HOL
-Light~\cite{RashidHasan2017}; the stochastic noise-metrology layer above them is not. PhysLib
+Light~\cite{RashidHasan2017}; we are aware of no stochastic noise-metrology layer above them, though HOL Light was not among the ecosystems we assessed and we do not assert absence there. PhysLib
 formalizes operator uncertainty relations, which are not bandwidth--duration bounds on a filter, and
 a thermoelectric \emph{material} figure of merit, which is not a device thermal circuit.
 
@@ -580,7 +586,7 @@ those ecosystems. For HOL4, PVS, Mizar and Agda we say only that we are aware of
 formalization. All negative claims are scoped to the pinned versions and should be re-checked before
 publication.
 
-\paragraph{Disclosed modelling hypotheses.} Eleven propositions carry modelling content that the
+\paragraph{Disclosed modelling hypotheses.} Twelve propositions carry modelling content that the
 algebra cannot supply and that appear in the binder list of every consuming theorem. The two most
 substantial are \thm{IsWhiteFilteredVariance}, in whose \emph{definition} the Parseval step and
 spectral flatness live --- not in the theorem that consumes it --- and
@@ -622,7 +628,7 @@ Two limits are worth restating. The phonon channel is modelled at general gradie
 but the shipped floors are stated at $\gamma = 1$ and therefore \emph{overstate} the floor for a
 gradient-loaded detector, which is why they carry the equilibrium hypothesis explicitly rather than
 silently. And two prior-art checks remain open: whether the \textsc{TestingLowerBounds} development
-carries a Le Cam average-error floor of the shape proved here, and the wholly unassessed Isabelle
+carries a Le Cam average-error floor of the shape proved here, and the unassessed Isabelle
 AFP and Coq \texttt{infotheo} ecosystems.
 
 \begin{acknowledgments}

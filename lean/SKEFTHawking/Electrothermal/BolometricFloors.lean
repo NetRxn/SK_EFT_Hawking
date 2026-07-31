@@ -260,10 +260,48 @@ The shipped theorems are not unsound: every one of them is conditional on
 gradient-loaded detector simply fails their hypothesis and they say nothing about it. What was
 wrong was the recorded *direction of the risk*. Consumers wanting the general case should carry
 `IsThermalFluctuationLimitedGamma` below. -/
-theorem gammaOne_phononFloor_overstates (m : ETFModel) {kB T γ : ℝ}
+theorem gammaOne_phononPSD_overstates (m : ETFModel) {kB T γ : ℝ}
     (hkB : 0 < kB) (hT : 0 < T) (hG : 0 < m.G) (hγ0 : 0 < γ) (hγ1 : γ < 1) :
     m.phononPSDGamma kB T γ < m.phononPSD kB T ∧ m.phononPSD kB T = m.phononPSDGamma kB T 1 :=
   ⟨m.phononPSDGamma_lt_phononPSD hkB hT hG hγ0 hγ1, m.phononPSD_eq_phononPSDGamma_one kB T⟩
+
+/-- **The γ-corrected matched budget is at least the `γ = 1` one.** Lower noise PSD ⇒ larger
+budget. This is the first link of the PSD → floor chain; it is `matchedBudget_antitone_psd`
+instantiated at the two phonon PSDs. -/
+theorem matchedBudget_gamma_ge (m : ETFModel) {kB T γ Tw : ℝ} (s : ℝ → ℝ)
+    (hkB : 0 < kB) (hT : 0 < T) (hG : 0 < m.G) (hγ0 : 0 < γ) (hγ1 : γ ≤ 1) :
+    matchedBudget (m.phononPSD kB T) Tw s ≤ matchedBudget (m.phononPSDGamma kB T γ) Tw s := by
+  refine matchedBudget_antitone_psd ?_ ?_ s
+  · unfold phononPSDGamma; positivity
+  · exact m.phononPSDGamma_le_phononPSD hkB.le hG.le hγ1
+
+/-- **THE FLOOR ITSELF OVERSTATES, not merely the PSD.**
+
+For a gradient-loaded link (`γ < 1`) the Gaussian separation floor computed at the *true* PSD is
+**≤** the one computed at the shipped `γ = 1` PSD:
+
+    gaussianQ (matchedBudget (phononPSDGamma … γ) Tw s / 2)
+      ≤ gaussianQ (matchedBudget (phononPSD …)       Tw s / 2)
+
+so asserting the `γ = 1` floor for such a detector is an overclaim — a floor stated too **high**,
+whose consequence is a false **refutation** (a conforming detector declared impossible). That is the
+mirror image of the fail-open under-counting defect `Control/CompositeReadoutCeilings.lean`'s header
+is gated on, not an instance of it.
+
+⚠️ **Why this theorem exists (D12 Stage-13 round-3 BLOCKER 3.1).** The paper cited
+`gammaOne_phononPSD_overstates` (then named `…_phononFloor_overstates`) for exactly this floor
+claim, but that statement compares *PSDs* and adds a definitional identity — it says nothing about a
+floor, and its two conjuncts were the two other theorems the same sentence already cited. The
+PSD → floor step was real but unproved. It is proved here: lower PSD ⇒ larger matched budget
+(`matchedBudget_gamma_ge`) ⇒ smaller Gaussian tail (`gaussianQ_antitone`). The misnamed theorem was
+renamed to what it actually states. -/
+theorem gammaOne_phononFloor_overstates (m : ETFModel) {kB T γ Tw : ℝ} (s : ℝ → ℝ)
+    (hkB : 0 < kB) (hT : 0 < T) (hG : 0 < m.G) (hγ0 : 0 < γ) (hγ1 : γ ≤ 1) :
+    gaussianQ (matchedBudget (m.phononPSDGamma kB T γ) Tw s / 2)
+      ≤ gaussianQ (matchedBudget (m.phononPSD kB T) Tw s / 2) := by
+  refine gaussianQ_antitone ?_
+  have h := m.matchedBudget_gamma_ge (kB := kB) (T := T) (γ := γ) (Tw := Tw) s hkB hT hG hγ0 hγ1
+  linarith
 
 /-- **The general-γ equilibrium hypothesis**, so a consumer modelling a gradient-loaded link has a
 declared `Prop` to carry instead of being silently restricted to `γ = 1`. The `γ = 1` instance is

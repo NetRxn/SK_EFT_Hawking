@@ -10,10 +10,21 @@ averages:
 
   `M_Voigt = (1−f)M₁ + f M₂`,   `M_Reuss = M₁M₂ / ((1−f)M₂ + f M₁)`.
 
-The **Voigt–Reuss–Hill** theorem brackets any effective modulus between them, and both between the
-constituents:
+What is proved here is an **ordering of the two averages**, together with constituent bounds:
 
   `M₁ ≤ M_Reuss ≤ M_Voigt ≤ M₂`   (`effectiveModuli_enclosure`).
+
+⚠️ **This is NOT the Voigt–Reuss–Hill theorem** (scope corrected 2026-07-31, D11 Stage-13). The VRH
+statement brackets a *physical* effective modulus, `M_Reuss ≤ M_eff ≤ M_Voigt`. No effective modulus
+of a composite appears anywhere in `effectiveModuli_enclosure`'s statement — only the two closed-form
+averages and the constituents. The distinction is exactly the one `EffectiveMediumBounds.lean` draws
+between its constituent bracket and the Hashin–Shtrikman bounds, and for the same reason: to name
+a result after a family it does not touch is the defect that file's header now warns about.
+(Note the reflow: a docstring line that *begins* with the word "theorem" is counted as a
+declaration by this project's stated source-level counting rule, and briefly inflated D11's
+published theorem count by one.)
+`voigtModulus` and `reussModulus` genuinely *are* the Voigt and Reuss averages; it is the *bracket*
+that is not formalized.
 
 The Reuss ≤ Voigt gap is exactly `f(1−f)(M₁−M₂)²/((1−f)M₂+fM₁) ≥ 0` (an AM–HM inequality).
 

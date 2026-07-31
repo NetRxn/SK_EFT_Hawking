@@ -98,7 +98,7 @@ statement. We are equally explicit about what we did \emph{not} prove: Section~\
 records that Berry curvature and the bulk--boundary correspondence are \emph{deferred}, not shipped
 in conditional form, and that our claimed novelty carries four mandatory carve-outs.
 
-\paragraph{Substrate summary.} The bundle comprises 22 root-imported modules --- 6122 lines, 394
+\paragraph{Substrate summary.} The bundle comprises 22 root-imported modules --- 6133 lines, 394
 theorems and lemmas, 83 definitions and structures, counted at source level. The counting rule is
 stated so it is reproducible: a declaration is counted when a line begins with \texttt{theorem} or
 \texttt{lemma}, optionally preceded by an attribute bracket or by \texttt{private}/\texttt{protected}.
@@ -286,8 +286,13 @@ bound. The Lean module states this scope explicitly in its header and in the the
 docstring.
 
 For elastic moduli we ship \thm{voigtModulus} and \thm{reussModulus} with the ordering chain
-\thm{effectiveModuli\_enclosure} --- the classical \emph{Voigt--Reuss} bracket, again weaker than
-the Hashin--Shtrikman bounds~\cite{HashinShtrikman1963} that refine it. The sharpest statement here is
+\thm{effectiveModuli\_enclosure}, $M_1 \le M_{\rm R} \le M_{\rm V} \le M_2$. This is an
+ordering of the two \emph{averages} together with constituent bounds; no effective modulus of a
+composite appears in the statement. The classical Voigt--Reuss bracket $M_{\rm R} \le M_{\rm eff}
+\le M_{\rm V}$ is a claim about a physical $M_{\rm eff}$ and is \emph{not} formalized here ---
+the same distinction, and for the same reason, as the constituent-versus-Hashin--Shtrikman one
+above. The Hashin--Shtrikman elastic bounds~\cite{HashinShtrikman1963} refine that physical
+bracket, not this ordering. The sharpest statement here is
 \thm{voigt\_sub\_reuss\_eq}, which gives the arithmetic-minus-harmonic gap \emph{exactly},
 \begin{equation}
 M_{\rm V} - M_{\rm R} \;=\; \frac{f(1-f)(M_1-M_2)^2}{(1-f)M_2 + fM_1},
@@ -469,17 +474,19 @@ A further discretization caveat: grids whose size is divisible by three are inad
 they sample the Dirac points where the $d$-vector is purely longitudinal and the gauge representative
 degenerates. This is a real constraint on which grids may be used, not a cosmetic one.
 
-\paragraph{Novelty, with carve-outs.} To our knowledge, no proof assistant defines a Chern number or
-a Chern class \emph{of a vector bundle} --- the topological invariant --- nor formalizes an acoustic
-or phononic band structure, an exceptional point, a $\mathcal{PT}$ transition, a Maxwell--Garnett or
-Wiener/Hashin--Shtrikman-type effective-medium bound, a honeycomb band structure, or the Haldane
-model. One carve-out is our own: this group's \texttt{ChernBridge} module defines a categorical
+\paragraph{Novelty, with carve-outs.} We are aware of no \emph{prior} formalization, in any proof
+assistant, of a Chern number or a Chern class \emph{of a vector bundle} --- the topological
+invariant --- nor of an acoustic or phononic band structure, an exceptional point, a
+$\mathcal{PT}$ transition, a Maxwell--Garnett or Wiener/Hashin--Shtrikman-type effective-medium
+bound, a honeycomb band structure, or the Haldane model. (Stated in the past tense deliberately:
+the present paper formalizes six of these seven, so a present-tense universal negative would be
+self-refuting.) One carve-out is our own: this group's \texttt{ChernBridge} module defines a categorical
 Chebyshev \emph{marker} that a companion bundle describes in Chern language. It is a different
 object from the Bloch-band invariant reported here --- an algebraic marker, not an integral of
 curvature over a bundle --- and we flag it rather than let the absence claim stand unqualified
 against our own tree. The Mathlib statements are pinned to revision \texttt{81a5d257} and were
 verified by direct inspection of that checkout rather than from documentation; every occurrence of
-the string \texttt{Chern} in Mathlib is in fact \texttt{Chernoff}. Every PhysLib claim below is
+the string \texttt{Chern} in Mathlib is in fact \texttt{Chernoff}. Every PhysLib claim in this paper is
 likewise pinned, to revision \texttt{c4843367}, and verified against that checkout. Four carve-outs
 are mandatory.
 

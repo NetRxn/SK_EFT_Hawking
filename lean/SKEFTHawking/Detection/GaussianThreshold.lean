@@ -622,8 +622,9 @@ only because a signal-free readout cannot beat a coin flip.
 
 Route: `gaussianTail_birnbaum` at `z = 1` gives `Q(1) ≥ ½·φ(1) = 0.12099` against the true
 `Q(1) = 0.15866`, i.e. **76 % of truth** — tighter than the window bound but materially looser than
-the same bound's `95 %` at `z = 2`, because the Birnbaum–Feller ratio `z²/(1+z²)` degrades as `z`
-falls. (Corrected 2026-07-31: this docstring previously copied the `z = 2` figure of `95 %` to this
+the same bound's `95 %` at `z = 2` — the bound loosens as `z` falls. (Note `z²/(1+z²)` is the
+Birnbaum–Feller bound's fraction of the *Mills* bound `φ(z)/z`, a different comparison: it is `50 %`
+at `z = 1` and `80 %` at `z = 2`, not the `76 %`/`95 %` reported against the truth.) (Corrected 2026-07-31: this docstring previously copied the `z = 2` figure of `95 %` to this
 site.) Then `√(2π) ≤ 2.51` from `Real.pi_lt_d2` and
 `e^{1/2} ≤ 1.6488` from `Real.exp_one_lt_d9` via `exp(½)² = exp 1`, giving
 `½·φ(1) ≥ ½·(1/2.51)·(1/1.6488) = 0.12082`, certified against `3/25 = 0.12`. No floating-point
