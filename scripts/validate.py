@@ -4091,9 +4091,49 @@ def check_notebook_stored_outputs_current() -> CheckResult:
         return CheckResult(passed=True, details=[
             Detail("scope", True, "no bundle companion notebooks found", warning=True)])
 
-    # Arrays longer than this are treated as plotted data, not as claims. Applies
-    # identically to base64-encoded numpy arrays and to plain JSON lists.
+    # Arrays longer than this are summarised by a rounded-value digest rather than
+    # compared element-by-element. Applies identically to base64 numpy arrays and lists.
     _BULK_ARRAY_MIN = 8
+    # Significant figures kept in the digest. 1e-15 relative jitter (library/BLAS
+    # version noise) rounds away; a curve computed from a different formula does not.
+    _DIGEST_SIGFIGS = 9
+
+    def _decode_bdata(obj) -> list:
+        """Decode a Plotly `{"dtype": ..., "bdata": <base64>}` array to a Python list."""
+        import base64 as _b64, struct as _st
+        fmt = {"f8": "<d", "f4": "<f", "i8": "<q", "i4": "<i", "i2": "<h", "i1": "<b",
+               "u8": "<Q", "u4": "<I", "u2": "<H", "u1": "<B"}.get(str(obj.get("dtype")))
+        if fmt is None:
+            return []
+        try:
+            raw = _b64.b64decode(obj["bdata"])
+        except Exception:
+            return []
+        w = _st.calcsize(fmt)
+        return [_st.unpack_from(fmt, raw, i * w)[0] for i in range(len(raw) // w)]
+
+    def _array_digest(values: list) -> str:
+        """Length + a digest of the VALUES rounded to `_DIGEST_SIGFIGS`.
+
+        ⚠️ This replaced a length-only summary on 2026-07-31 (D11 Stage-13 round-9
+        finding 5.1). Length-only meant the *values* of any array longer than
+        `_BULK_ARRAY_MIN` were invisible: the round-9 reviewer demonstrated end-to-end
+        that the shipped notebook could plot `ε = 1 + 3f` instead of Maxwell–Garnett,
+        under an annotation reading "(certified)", and this check still reported
+        "stored output matches a fresh run". A structural exclusion cannot distinguish
+        a claim from noise; a rounded digest can, which is what the reviewer proposed.
+        """
+        import hashlib as _h
+        h = _h.sha256()
+        n = 0
+        for v in values:
+            if not isinstance(v, (int, float)) or v != v or v in (float("inf"), float("-inf")):
+                h.update(repr(v).encode())
+            else:
+                h.update(f"{float(v):.{_DIGEST_SIGFIGS}g}".encode())
+            h.update(b"\x00")
+            n += 1
+        return f"len={n},sha={h.hexdigest()[:16]}"
 
     def _strings_in(obj, _path: str = "") -> list[str]:
         """Every claim-bearing leaf of a JSON payload, in document order.
@@ -4133,18 +4173,8 @@ def check_notebook_stored_outputs_current() -> CheckResult:
             # being compared to the last bit — a 1e-15 jitter would have failed the check.
             # Both encodings now route through the SAME length-only rule.
             if isinstance(obj.get("bdata"), str) and "dtype" in obj:
-                try:
-                    import base64 as _b64
-                    _w = {"f8": 8, "f4": 4, "i8": 8, "i4": 4, "i2": 2, "i1": 1,
-                          "u8": 8, "u4": 4, "u2": 2, "u1": 1}.get(str(obj["dtype"]), 8)
-                    _n = len(_b64.b64decode(obj["bdata"])) // _w
-                except Exception:
-                    _n = -1
-                if _n > _BULK_ARRAY_MIN or _n < 0:
-                    out.append(f"{_path}[bdata:{obj['dtype']}:len]={_n}")
-                    return out
-                # Short enough to be a claim (a certified marker, an anchor) — compare it.
-                out.append(f"{_path}[bdata:{obj['dtype']}]={obj['bdata']}")
+                out.append(f"{_path}[bdata:{obj['dtype']}]="
+                           + _array_digest(_decode_bdata(obj)))
                 return out
             for k in sorted(obj):
                 out.extend(_strings_in(obj[k], f"{_path}.{k}" if _path else str(k)))
@@ -4153,7 +4183,7 @@ def check_notebook_stored_outputs_current() -> CheckResult:
             # so a trace losing points still shows up while float jitter does not.
             nums = sum(1 for v in obj if isinstance(v, (int, float)))
             if nums > _BULK_ARRAY_MIN and nums == len(obj):
-                out.append(f"{_path}[len]={len(obj)}")
+                out.append(f"{_path}[nums]=" + _array_digest(list(obj)))
                 return out
             for i, v in enumerate(obj):
                 out.extend(_strings_in(v, f"{_path}[{i}]"))

@@ -23,7 +23,6 @@
   "last_stage13_review_source": "backfilled-from-AutomatedReviews papers/AutomatedReviews/2026-07-31-0829-internal-adversarial/D12.md 2026-07-31",
   "open_findings": 84,
   "blocked_p1_gates": [
-    "ComputationCorrectness",
     "FixPropagation",
     "ParameterProvenance"
   ],

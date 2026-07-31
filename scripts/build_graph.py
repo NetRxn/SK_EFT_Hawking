@@ -3494,6 +3494,19 @@ def extract_verifies_edges(node_ids: set) -> list[dict]:
     param_nodes = [n for n in extract_parameter_nodes()]
 
     formula_name_to_id = {n['name']: n['id'] for n in formula_nodes}
+    # Accept the module-qualified form too (D12 Stage-13 round-9). Tests overwhelmingly
+    # write `from src.core import formulas as F` and then call `F.hawking_temperature`,
+    # so `referenced_names` carries `F.hawking_temperature` while this index held only
+    # the bare name — and every such edge was silently dropped. Measured: 70 of 403
+    # formulas (17%) were reachable ONLY through the dotted tail, i.e. had NO test
+    # coverage edge despite being tested, which is why ComputationCorrectness reported
+    # "4 formulas untested" for D12 when all four are tested.
+    #
+    # The alias allow-list is deliberate: a blanket tail fallback (what the Parameter
+    # index below does) would let `np.sum` or `math.exp` match a formula named `sum` or
+    # `exp`, manufacturing coverage that does not exist. Measured across the suite, the
+    # only prefixes whose tail hits a formula name are `F` (128) and `formulas` (32).
+    _FORMULA_MODULE_ALIASES = {"F", "formulas", "src.core.formulas"}
     # Parameter keys can have dotted forms like 'Steinhauer.omega_perp';
     # also accept the undotted tail
     param_name_to_id: dict[str, str] = {}
@@ -3509,8 +3522,12 @@ def extract_verifies_edges(node_ids: set) -> list[dict]:
             continue
         test_kind = test.get('meta', {}).get('test_kind', 'unknown')
         for raw in test.get('meta', {}).get('referenced_names', []):
-            # Try Formula first
+            # Try Formula first, bare name then module-qualified
             target = formula_name_to_id.get(raw)
+            if target is None and '.' in raw:
+                _pref, _tail = raw.rsplit('.', 1)
+                if _pref in _FORMULA_MODULE_ALIASES:
+                    target = formula_name_to_id.get(_tail)
             if target is None:
                 target = param_name_to_id.get(raw)
             if target is None:
