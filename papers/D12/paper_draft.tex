@@ -51,7 +51,7 @@ counter and exponentially fail-open as an average-error screen; that a magnitude
 stability criterion is unsound; and that the sign-free characterization of matched-filter saturation
 is false. We are explicit about scope: our Chernoff bound is a factor-two sharpening of one already
 in Mathlib rather than a first, the affinity's data-processing inequality is plausibly subsumed by
-an existing $f$-divergence development, and one prior-art check remains open.
+an existing $f$-divergence development, and two prior-art checks remain open.
 \end{abstract}
 
 \maketitle
@@ -407,8 +407,11 @@ At $r=2$, $n=4$ this gives $\gamma = 0.47$.
 The direction matters, and it points the opposite way from a plausible first guess. Because
 $\gamma \le 1$, the $\gamma = 1$ expression \emph{overstates} the phonon noise, so the floor
 computed from it \emph{overstates the floor} for any detector with a real gradient across its link
-(\thm{phononPSDGamma\_lt\_phononPSD}, \thm{gammaOne\_phononFloor\_overstates}) --- fail-open, in the
-direction this layer is most concerned to avoid. The theorems below remain sound because each is
+(\thm{phononPSDGamma\_lt\_phononPSD}, \thm{gammaOne\_phononFloor\_overstates}). This is the mirror
+image of the fail-open failure of Section~\ref{sec:poisson}, not an instance of it: a floor stated
+too \emph{high} yields false \emph{refutations} --- a detector that genuinely meets its
+specification is declared impossible --- rather than admitting configurations the true floor
+forbids. The theorems below remain sound because each is
 conditional on \thm{IsThermalFluctuationLimited}, which pins whiteness at the $\gamma = 1$ PSD: a
 gradient-loaded detector simply fails their hypothesis. Consumers modelling one should carry the
 general-$\gamma$ hypothesis instead.
@@ -447,9 +450,12 @@ solution of its own equation (\thm{rwaPropagator\_ode}, with uniqueness
 \thm{rwaPropagator\_unique} via Picard--Lindel\"of), resting on the algebraic identity
 \thm{rwaGenerator\_sq}.
 
-That the bound is not vacuous is \thm{norm\_rwaPropagator\_quarter\_turn}, which computes an exact
-propagator norm greater than one --- refuting the assumption that a unit Lipschitz constant suffices
-in the naive Duhamel estimate. An applied instance with all admissibility conditions discharged is
+That the bound is not vacuous is \thm{norm\_rwaPropagator\_quarter\_turn}, which computes the exact
+value $\sqrt{2}$ for the propagator's $\ell^\infty$ operator norm at a quarter turn. The norm must be
+named: the propagator is unitary, so its \emph{spectral} norm is $1$, and it is the $\ell^\infty$
+norm --- the one the Duhamel estimate actually uses --- that exceeds unity. That is what refutes the
+assumption that a unit Lipschitz constant suffices. An applied instance with all admissibility
+conditions discharged is
 \thm{diagonal\_drive\_propagator\_bound}.
 
 Calibration algebra (\thm{calibrated\_duration\_transverse}, \thm{rwaAxisPhasor},
@@ -493,7 +499,9 @@ discriminate. The substantive witnesses are at matched budget $2$, where the cei
 (\thm{filtered\_readout\_ceiling\_bites\_nondegenerate},
 \thm{detector\_chain\_ceiling\_bites\_nondegenerate}): a claimed fidelity of $0.99$ is refuted at an
 ordinary signal-carrying operating point. These rest on \thm{gaussianQ\_one\_ge\_rational}, the
-rational enclosure $Q(1) \ge 3/25$ obtained from the Birnbaum--Feller bound at $95\,\%$ of truth.
+rational enclosure $Q(1) \ge 3/25$ obtained from the Birnbaum--Feller bound, which at $z = 1$ is
+$76\,\%$ of the true $Q(1) = 0.15866$ (the same bound reaches $95\,\%$ at $z = 2$; the ratio
+$z^2/(1+z^2)$ degrades as $z$ falls).
 
 \section{Scope and prior art}
 \label{sec:scope}
@@ -520,18 +528,30 @@ sign hypothesis, has no Mathlib counterpart, and it is what makes the ceilings o
 Section~\ref{sec:control} bite at a finite operating point rather than only at zero budget.
 
 Mathlib's absence claims here were checked against the pinned revision by direct inspection of the
-checkout, not from documentation. Mathlib carries Kullback--Leibler divergence --- itself developed
-in the \textsc{TestingLowerBounds} project~\cite{LuccioliDegenne2024,Degenne2025Kernels}. It carries
-no Hellinger divergence, no Bhattacharyya coefficient, no Neyman--Pearson lemma, no hypothesis test,
-and no error function or Gaussian CDF; the last is why \thm{gaussianQ} is defined project-locally
-here. Transform methods and transfer-function algebra are formalized in HOL
+checkout, not from documentation. What Mathlib \emph{does} carry adjacent to this work is more than
+a survey of divergence names would suggest, and we state it rather than let the absences imply a
+wider gap than exists. It has Kullback--Leibler divergence --- itself developed in the
+\textsc{TestingLowerBounds} project~\cite{LuccioliDegenne2024,Degenne2025Kernels}. It has a
+decision-theoretic layer (\texttt{Mathlib/Probability/Decision/}) with average, Bayes and minimax
+risk and a Bayes-risk data-processing inequality \thm{bayesRisk\_le\_bayesRisk\_comp}. And it has a
+general cumulative distribution function \thm{cdf} for measures on $\mathbb{R}$, which applied to
+the standard \thm{gaussianReal} is a Gaussian CDF --- the very measure our own
+\thm{gaussianQ\_eq\_measure} identifies \thm{gaussianQ} against.
+
+What is absent at the pin is the specialization this paper needs: no binary Bayes risk, no Le Cam
+two-point bound, no Hellinger divergence, no Bhattacharyya coefficient, no $f$-divergence, no
+Neyman--Pearson lemma, no hypothesis test, no error function, and --- the operative point for us ---
+no two-sided tail bracket on the Gaussian. \thm{gaussianQ} is defined project-locally as an upper
+tail because the bounds of Section~\ref{sec:poisson}, not the distribution function, are the
+contribution. Transform methods and transfer-function algebra are formalized in HOL
 Light~\cite{RashidHasan2017}; the stochastic noise-metrology layer above them is not. PhysLib
 formalizes operator uncertainty relations, which are not bandwidth--duration bounds on a filter, and
 a thermoelectric \emph{material} figure of merit, which is not a device thermal circuit.
 
 \paragraph{What we do claim, hedged.} As of the pinned library versions, and restricted to the
-ecosystems we actually assessed --- Lean/Mathlib and PhysLib by direct source
-inspection, Coq and Isabelle by literature search --- we are aware of no formalization of: detection-theoretic photon
+ecosystems we actually assessed --- Lean/Mathlib and PhysLib by direct source inspection of the
+pinned checkouts, and the Coq and Isabelle \emph{published literature} (not their libraries, which
+are treated in the next paragraph) --- we are aware of no formalization of: detection-theoretic photon
 counting (miss, false alarm, dark counts); Bhattacharyya/Le Cam average-error bounds for Poisson
 hypotheses; ENBW, NEP or matched-filter optimality; an electrothermal \emph{device} model; or a
 rotating-wave approximation with an explicit error bound. We phrase this as the limit of our
@@ -554,10 +574,12 @@ substantial are \thm{IsWhiteFilteredVariance}, in whose \emph{definition} the Pa
 spectral flatness live --- not in the theorem that consumes it --- and
 \thm{IsShotFilteredMoments}, in whose definition Campbell's theorem lives. We flag these because a
 reader could otherwise mistake the consuming theorems for derivations of the physics rather than
-consequences of it. Two more deserve naming because they are binders of the capstone
-\thm{bolometer\_error\_floor} itself: \thm{IsThermalFluctuationLimited}, asserting the filtered
-variance is white at the phonon PSD, and \thm{IsResponsivityChain}, asserting the readout chain is
-linear in the responsivity. The capstone is only as strong as those two identifications.
+consequences of it. Four deserve naming because they are the modelling binders of the capstone
+\thm{bolometer\_error\_floor} itself: \thm{IsThermalFluctuationLimited}, asserting the phonon
+channel's filtered variance is white at the $\gamma = 1$ phonon PSD; \thm{IsWhiteFilteredVariance}
+at the Johnson NEP, asserting the same of that channel; \thm{IsUncorrelatedAt}, asserting the two
+channels are uncorrelated so that they compose in quadrature; and \thm{IsAdmissibleFilter}. The
+capstone is only as strong as those four identifications.
 
 \section{Conclusion}
 
@@ -578,14 +600,18 @@ vacuous. Both facts are theorems here, and neither is available to prose.
 The floors compose, and that was the point: a single inequality carries an electrothermal power
 spectral density through a matched-filter budget to a Gaussian separation floor and out to an
 assignment-fidelity ceiling, and three cross-layer composites pair that chain with a device-layer
-relaxation floor on one attributed readout. The composites bite at ordinary operating points, not
-only at the degenerate zero-budget one, which is what the Birnbaum--Feller lower bound buys.
+relaxation floor on one attributed readout. Two of those composites are shown to bite at a
+\emph{non-degenerate} operating point --- matched budget $2$, ceiling $22/25$
+(\thm{relaxation\_filtered\_ceiling\_bites},
+\thm{relaxation\_detector\_chain\_ceiling\_bites}) --- and not merely at the signal-free
+zero-budget point, which is what the Birnbaum--Feller lower bound buys.
 
 Two limits are worth restating. The phonon channel is modelled at general gradient factor $\gamma$,
 but the shipped floors are stated at $\gamma = 1$ and therefore \emph{overstate} the floor for a
 gradient-loaded detector, which is why they carry the equilibrium hypothesis explicitly rather than
-silently. And one prior-art check remains open: whether the \textsc{TestingLowerBounds} development
-carries a Le Cam average-error floor of the shape proved here.
+silently. And two prior-art checks remain open: whether the \textsc{TestingLowerBounds} development
+carries a Le Cam average-error floor of the shape proved here, and the wholly unassessed Isabelle
+AFP and Coq \texttt{infotheo} ecosystems.
 
 \begin{acknowledgments}
 Formalization was carried out in \Lean{}~4 against Mathlib and PhysLib. We thank the Mathlib and
@@ -612,10 +638,13 @@ cryogenic particle detection}, Appl. Phys. Lett. \textbf{66}, 1998 (1995). DOI:1
 factor $\gamma$; establishes that link phonon noise is reduced relative to the equilibrium
 $4k_BT^2G$ form, i.e.\ $\gamma \le 1$.)}
 
-\bibitem{LuccioliDegenne2024} L.~Luccioli and R.~Degenne, \emph{TestingLowerBounds: Information
-theory and hypothesis testing, in Lean} (2024). \emph{(Cited for the $f$-divergence data-processing
-inequality, which plausibly subsumes our affinity data-processing step; its content is quoted from
-Ref.~\cite{Degenne2025Kernels}, as we were unable to inspect the development directly.)}
+\bibitem{LuccioliDegenne2024} L.~Luccioli and R.~Degenne, \emph{TestingLowerBounds} (2024).
+\url{https://github.com/RemyDegenne/testing-lower-bounds}. \emph{(Cited for the $f$-divergence
+data-processing inequality, which plausibly subsumes our affinity data-processing step. We did not
+inspect this development: both its repository host and its blueprint host lie outside the
+network policy under which this work was carried out. Author list, year, title and content are
+taken from its citation as [LD24] in Ref.~\cite{Degenne2025Kernels}, p.~26, which is the sole source
+we verified.)}
 
 \bibitem{IrwinHilton2005} K.~D.~Irwin and G.~C.~Hilton, \emph{Transition-Edge Sensors}, in
 C.~Enss (ed.), \emph{Cryogenic Particle Detection}, Topics in Applied Physics \textbf{99}, Springer

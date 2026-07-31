@@ -609,7 +609,8 @@ detector.
 This section supplies the missing witnesses. At matched budget `2` the ceilings still forbid
 `0.99` — the figure readout claims are routinely quoted at — while the operating point is an
 ordinary signal-carrying chain. The enabling ingredient is `Detection.gaussianQ_one_ge_rational`,
-the Birnbaum--Feller-backed rational enclosure `Q(1) ≥ 3/25` at `95 %` of truth. -/
+the Birnbaum--Feller-backed rational enclosure `Q(1) ≥ 3/25`, which is `76 %` of the true
+`Q(1) = 0.15866`. -/
 
 /-- **Shared non-degenerate bite.** At matched budget `2` the Gaussian ceiling is at most `22/25`.
 Stated over the budget `B` because the 6EB and 6EC ceilings share this bound shape and differ only
@@ -657,6 +658,62 @@ theorem detector_chain_ceiling_bites_nondegenerate (m : Electrothermal.ETFModel)
     hμle hμ hσV
   rw [hb] at hc
   linarith [gaussian_ceiling_bites_nondegenerate (B := (2:ℝ)) rfl]
+
+/-! ### 4.3 The CROSS-LAYER composites bite
+
+§4.2's non-degenerate witnesses are about the single-mechanism 6EB/6EC ceilings. A claim that the
+*composites* of §3.6 bite needs its own witness, since a `max` of two floors could in principle be
+carried entirely by the relaxation branch and say nothing new about the detection branch. These two
+corollaries supply it: at matched budget `2` the composite ceiling is at most `22/25`, and the bound
+is reached through the composite theorem rather than by quoting its detection half. -/
+
+open MeasureTheory in
+/-- **The relaxation ⊕ filtered-readout composite bites**, at matched budget `2`. Derived by calling
+`relaxation_filtered_ceiling`, so it carries that composite's full binder list. -/
+theorem relaxation_filtered_ceiling_bites {t T1 e0 e1 : ℝ} (ht : 0 ≤ t) (hT1 : 0 < T1)
+    (he0 : 0 ≤ e0) (hdecay : readoutDecayProb t T1 ≤ e1)
+    {V : (ℝ → ℝ) → ℝ} {S₀ T : ℝ}
+    (hwhite : Detection.IsWhiteFilteredVariance V S₀ T) (hS : 0 < S₀) (hT : 0 ≤ T)
+    {s h : ℝ → ℝ} (hadm : Detection.IsAdmissibleFilter T s h)
+    (hs : IntervalIntegrable (fun x => s x ^ 2) volume 0 T)
+    {μ₀ μ₁ σ tThr : ℝ} (hσ : 0 < σ) (hμle : μ₀ ≤ μ₁)
+    (hμ : μ₁ - μ₀ = ∫ x in (0:ℝ)..T, h x * s x) (hσV : σ = Real.sqrt (V h))
+    (hattr0 : Detection.thrErr0 μ₀ σ tThr ≤ e0) (hattr1 : Detection.thrErr1 μ₁ σ tThr ≤ e1)
+    (hb : Detection.matchedBudget S₀ T s = 2) :
+    assignmentFidelity e0 e1 ≤ 22 / 25 := by
+  have hc := relaxation_filtered_ceiling ht hT1 he0 hdecay hwhite hS hT hadm hs hσ hμle hμ hσV
+    hattr0 hattr1
+  rw [hb] at hc
+  have hq := gaussian_ceiling_bites_nondegenerate (B := (2:ℝ)) rfl
+  have hmax : Detection.gaussianQ ((2:ℝ) / 2)
+      ≤ max (t / T1 / (2 * (1 + t / T1))) (Detection.gaussianQ ((2:ℝ) / 2)) := le_max_right _ _
+  linarith
+
+open MeasureTheory in
+/-- **The relaxation ⊕ detector-chain composite bites**, at the same non-degenerate point, with the
+noise budget supplied by the bolometer's own phonon ⊕ Johnson quadrature sum. -/
+theorem relaxation_detector_chain_ceiling_bites {t T1 e0 e1 : ℝ} (ht : 0 ≤ t) (hT1 : 0 < T1)
+    (he0 : 0 ≤ e0) (hdecay : readoutDecayProb t T1 ≤ e1)
+    (m : Electrothermal.ETFModel) {kB T Tw : ℝ}
+    {Vtot : (ℝ → ℝ) → ℝ} {V : Fin 2 → (ℝ → ℝ) → ℝ} {s hf : ℝ → ℝ} {μ₀ μ₁ σ tThr : ℝ}
+    (hkB : 0 < kB) (hT : 0 < T) (hG : 0 < m.G)
+    (hindep : Detection.IsUncorrelatedAt Finset.univ Vtot V)
+    (hphonon : Electrothermal.ETFModel.IsThermalFluctuationLimited (V 0) m kB T Tw)
+    (hjohnson : Detection.IsWhiteFilteredVariance (V 1) (m.johnsonNEP kB T ^ 2) Tw)
+    (hTw : 0 ≤ Tw) (hadm : Detection.IsAdmissibleFilter Tw s hf)
+    (hs : IntervalIntegrable (fun x => s x ^ 2) volume 0 Tw)
+    (hσ : 0 < σ) (hμle : μ₀ ≤ μ₁)
+    (hμ : μ₁ - μ₀ = ∫ x in (0:ℝ)..Tw, hf x * s x) (hσV : σ = Real.sqrt (Vtot hf))
+    (hattr0 : Detection.thrErr0 μ₀ σ tThr ≤ e0) (hattr1 : Detection.thrErr1 μ₁ σ tThr ≤ e1)
+    (hb : Detection.matchedBudget (m.phononNEP kB T ^ 2 + m.johnsonNEP kB T ^ 2) Tw s = 2) :
+    assignmentFidelity e0 e1 ≤ 22 / 25 := by
+  have hc := relaxation_detector_chain_ceiling ht hT1 he0 hdecay m hkB hT hG hindep hphonon
+    hjohnson hTw hadm hs hσ hμle hμ hσV hattr0 hattr1
+  rw [hb] at hc
+  have hq := gaussian_ceiling_bites_nondegenerate (B := (2:ℝ)) rfl
+  have hmax : Detection.gaussianQ ((2:ℝ) / 2)
+      ≤ max (t / T1 / (2 * (1 + t / T1))) (Detection.gaussianQ ((2:ℝ) / 2)) := le_max_right _ _
+  linarith
 
 /-- **The Gaussian ceiling does NOT bite at a budget of `8`**: the bound exceeds `17/18`, permitting
 a high-fidelity readout. Uses the Chernoff tail from 6EA plus the rational `exp` enclosure. Stated

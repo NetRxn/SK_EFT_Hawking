@@ -11671,7 +11671,13 @@ def maxwell_garnett(eps_host: float, eps_incl: float, fill: float) -> float:
     deliberately NOT attempted — a respected guardrail, not an oversight.
 
     Bounded by its constituents: ε_h ≤ ε_eff ≤ ε_i for 0 ≤ f ≤ 1,
-    0 < ε_h ≤ ε_i (a Hashin–Shtrikman/Wiener-type enclosure).
+    0 < ε_h ≤ ε_i. This is the CONSTITUENT bracket — NOT the Wiener bound and
+    NOT the Hashin–Shtrikman bound, both of which are strictly tighter and
+    neither of which is formalized here. (Corrected 2026-07-31 after a D11
+    Stage-13 BLOCKER: at (1, 4, 1/2) the constituent bracket is [1, 4] while the
+    Wiener bracket is [1.6, 2.5], so this bound entails neither.) The ordering
+    hypothesis ε_h ≤ ε_i is load-bearing, not WLOG: Maxwell–Garnett is not
+    symmetric under exchanging host and inclusion.
 
     Lean: maxwellGarnett, maxwellGarnett_clausius_mossotti,
           maxwellGarnett_host_recovery, effectiveMedium_constituent_bounds,

@@ -1754,22 +1754,10 @@ CITATION_REGISTRY = {
     # ────────────────────────────────────────────────────────────────
     # Paper 18 (doublon gate) — added 2026-04-26
     # ────────────────────────────────────────────────────────────────
-    'Berry1984': {
-        'authors': 'Berry, M. V.',
-        'title': 'Quantal phase factors accompanying adiabatic changes',
-        'journal': 'Proc. R. Soc. Lond. A',
-        'volume': 392,
-        'page': '45',
-        'year': 1984,
-        'doi': '10.1098/rspa.1984.0023',
-        'arxiv': None,
-        'doi_verified': None,
-        'inprep': False,
-        'primary_source_path': 'Lit-Search/Phase-5q/primary-sources/Berry1984.abstract.txt',
-        'used_in': ['papers/paper18_doublon_gate/paper_draft.tex'],
-        'provides': [],
-        'notes': 'Berry phase foundational paper. No arXiv (pre-arXiv era).',
-    },
+    # 'Berry1984' formerly appeared HERE as a second, shadowed copy. Deleted 2026-07-31
+    # and merged into the single canonical entry later in this dict, which now carries
+    # BOTH consumers (D11 and paper18_doublon_gate). Found by D11 Stage-13 in two
+    # consecutive rounds. Do not re-add a second literal for this key.
     'Zanardi1999': {
         'authors': 'Zanardi, P., Rasetti, M.',
         'title': 'Holonomic quantum computation',
@@ -10795,6 +10783,12 @@ CITATION_REGISTRY = {
         'provides': ['The Chern-number/TKNN-invariant characterization of the quantized Hall conductance of a filled Bloch band.'],
         'notes': 'Origin of the band Chern number D11 formalizes in its lattice (FHS) form.',
     },
+    # NOTE: this key was DUPLICATED until 2026-07-31 — a second 'Berry1984' literal
+    # appeared earlier in this dict, so at import time THIS entry silently won and
+    # paper18's consumer record + its Phase-5q primary-source path were unreachable.
+    # Found by D11 Stage-13 (filed in two consecutive rounds). The two entries agreed
+    # on all bibliographic content including the DOI, so no reader-facing citation was
+    # ever wrong; the defect was in the verification ledger. Merged here.
     'Berry1984': {
         'authors': 'Berry, M. V.',
         'title': 'Quantal phase factors accompanying adiabatic changes',
@@ -10802,9 +10796,17 @@ CITATION_REGISTRY = {
         'doi': '10.1098/rspa.1984.0023', 'arxiv': None,
         'doi_verified': True, 'inprep': False,
         'primary_source_path': 'Lit-Search/Phase-6C/primary-sources/Berry1984.abstract.txt',
-        'used_in': ['papers/D11/paper_draft.tex'],
+        'used_in': [
+            'papers/D11/paper_draft.tex',
+            'papers/paper18_doublon_gate/paper_draft.tex',
+        ],
         'provides': ['The geometric (Berry) phase acquired under adiabatic transport.'],
-        'notes': 'Cited for Berry-phase context of the D11 6ED Wilson loops. NOTE: D11 does NOT formalize Berry curvature - see prior_art_novelty.md.',
+        'notes': (
+            'Cited for Berry-phase context of the D11 6ED Wilson loops. NOTE: D11 does NOT '
+            'formalize Berry curvature - see prior_art_novelty.md. '
+            'Merged 2026-07-31 with a duplicate key that carried the paper18 consumer and the '
+            'alternate cache Lit-Search/Phase-5q/primary-sources/Berry1984.abstract.txt.'
+        ),
     },
     'Haldane1988': {
         'authors': 'Haldane, F. D. M.',
@@ -10868,9 +10870,11 @@ CITATION_REGISTRY = {
         'doi': '10.1103/RevModPhys.82.3045', 'arxiv': '1002.3895',
         'doi_verified': True, 'inprep': False,
         'primary_source_path': 'Lit-Search/Phase-6C/primary-sources/HasanKane2010.abstract.txt',
-        'used_in': ['papers/D11/paper_draft.tex'],
+        'used_in': [],
         'provides': ['Standard review of topological band theory; used here as the bibliographic verification source for TKNN, Berry and Haldane.'],
-        'notes': 'Its bibliography was read directly from the arXiv PDF to confirm three APS citations the fetcher could not reach (APS returns 403).',
+        'notes': 'Its bibliography was read directly from the arXiv PDF to confirm three APS citations the fetcher could not reach (APS returns 403). '
+                 'used_in cleared 2026-07-31 (D11 Stage-13): this key is NOT cited or \\bibitem-ed in any draft — it is a verification source only, '
+                 'and claiming a D11 consumer made the registry assert a citation that does not exist.',
     },
     'LjungstromMortberg2024': {
         'authors': 'Ljungstrom, A., Mortberg, A.',
@@ -10908,9 +10912,9 @@ CITATION_REGISTRY = {
     'LeanLJ2025': {
         'authors': 'Ugwuanyi, E. D., Jones, C. T., Velkey, J., Josephson, T. R.',
         'title': 'Benchmarking Energy Calculations Using Formal Proofs',
-        'journal': None, 'volume': None, 'page': None, 'year': 2025,
-        'doi': None, 'arxiv': '2505.09095',
-        'doi_verified': None, 'inprep': False,
+        'journal': 'Molecular Physics', 'volume': None, 'page': None, 'year': 2025,
+        'doi': '10.1080/00268976.2025.2539421', 'arxiv': '2505.09095',
+        'doi_verified': True, 'inprep': False,
         'primary_source_path': 'Lit-Search/Phase-6C/primary-sources/LeanLJ2025.abstract.txt',
         'used_in': ['papers/D11/paper_draft.tex'],
         'provides': ['Lean 4 formalization of Lennard-Jones interaction energies under periodic boundary conditions, validated against NIST benchmarks.'],
@@ -10966,8 +10970,9 @@ CITATION_REGISTRY = {
     },
     'LuccioliDegenne2024': {
         'authors': 'Luccioli, L., Degenne, R.',
-        'title': 'TestingLowerBounds: Information theory and hypothesis testing, in Lean',
+        'title': 'TestingLowerBounds',
         'journal': 'Software repository', 'volume': None, 'page': None, 'year': 2024,
+        'url': 'https://github.com/RemyDegenne/testing-lower-bounds',
         'doi': None, 'arxiv': None,
         'doi_verified': False, 'inprep': False,
         'primary_source_path': 'Lit-Search/Phase-6E/primary-sources/LuccioliDegenne2024.abstract.txt',
@@ -10977,6 +10982,11 @@ CITATION_REGISTRY = {
             'The Mathlib KL-divergence definition was developed here.',
         ],
         'notes': (
+            'TITLE CORRECTED 2026-07-31 (D12 Stage-13 BLOCKER): the title formerly carried the '
+            'subtitle "Information theory and hypothesis testing, in Lean". That subtitle came from '
+            'a web-SEARCH RESULT SNIPPET, not from any source this project read - the repository '
+            'was never inspected. Degenne2025Kernels p.26 cites it as bare "TestingLowerBounds", '
+            'which is now the recorded title. '
             'PRIOR-ART RELATIONSHIP, disclosed 2026-07-31. The squared Hellinger distance is an '
             'f-divergence (f(t) = (sqrt t - 1)^2) and the Bhattacharyya affinity is its complement, '
             'so a general f-divergence DPI here plausibly SUBSUMES our affinity_le_binaryAffinity. '

@@ -98,13 +98,13 @@ statement. We are equally explicit about what we did \emph{not} prove: Section~\
 records that Berry curvature and the bulk--boundary correspondence are \emph{deferred}, not shipped
 in conditional form, and that our claimed novelty carries four mandatory carve-outs.
 
-\paragraph{Substrate summary.} The bundle comprises 22 root-imported modules --- 6032 lines, 392
+\paragraph{Substrate summary.} The bundle comprises 22 root-imported modules --- 6112 lines, 394
 theorems and lemmas, 83 definitions and structures, counted at source level. The counting rule is
 stated so it is reproducible: a declaration is counted when a line begins with \texttt{theorem} or
 \texttt{lemma}, optionally preceded by an attribute bracket or by \texttt{private}/\texttt{protected}.
 (Two conventions circulate in this project: these source-authored counts, used throughout this paper,
 and the larger \texttt{lean\_deps.json} extraction, which additionally counts Lean-generated
-equation lemmas and reports 452 theorems against these 392. We use the former uniformly and never mix them.) There are
+equation lemmas and reports 454 theorems against these 394. We use the former uniformly and never mix them.) There are
 zero project-local axioms, zero
 \texttt{sorry}, zero \texttt{native\_decide} and zero \texttt{maxHeartbeats} directives. Kernel
 decidability on finite index types is used freely via \texttt{decide}, which is checked by the kernel
@@ -181,8 +181,9 @@ $d_3$ axis where the gauge choice genuinely degenerates, and the overlap conditi
 \includegraphics[width=\textwidth]{figures/d11_fig1_phononic_band_gap.png}
 \caption{The certified phononic band gap of the diatomic chain
 $(m_1,m_2,\kappa,a) = (1,2,1,1)$. Both branches are plotted across the Brillouin zone; the shaded
-band contains no state. Both edges are \emph{attained} at $k = \pm\pi$
-(\thm{branchMinus\_at\_pi}, \thm{branchPlus\_at\_pi}), so the bound is tight rather than loose.}
+band contains no state. Both edges are \emph{attained} at $k = \pi$
+(\thm{branchMinus\_at\_pi}, \thm{branchPlus\_at\_pi}), and by evenness of the branches in $k$ also
+at $-\pi$, so the bound is tight rather than loose.}
 \label{fig:phononic}
 \end{figure*}
 
@@ -206,8 +207,9 @@ branches for all $k$, witnessed at $\mathrm{lo} = 1$ and $\mathrm{hi} = 2$. Both
 $k = \pi$ --- so the gap is the true one and not a loose bracket; see Fig.~\ref{fig:phononic}.
 
 The existence statement has a strictly stronger companion. \thm{band\_gap\_falsifier} says that
-\emph{any} real $\omega$ annihilating the secular determinant strictly inside the gap yields a
-contradiction: the gap is stated as a refutation, not merely as an unmet bound. Finally,
+\emph{any} real $\omega^2$ annihilating the secular determinant strictly inside the gap yields a
+contradiction: the gap is stated as a refutation, not merely as an unmet bound. (The gap $(1,2)$
+above is in $\omega^2$; the frequency gap below is in $\omega$.) Finally,
 \thm{band\_gap\_rational\_enclosure} certifies the frequency gap by a rational inner bracket,
 discharged by \texttt{norm\_num} with no floating-point arithmetic anywhere
 (\thm{sqrt\_two\_enclosure}).
@@ -265,15 +267,23 @@ relation in a cross-multiplied, division-free formulation, so the identity holds
 side-condition beyond nonvanishing of the denominator. \thm{maxwellGarnett\_host\_recovery} is the
 zero-fill sanity check.
 
-The bound we actually prove is the elementary \emph{Wiener} bracket
+The bound we actually prove is the elementary \emph{constituent} bracket
 $\varepsilon_h \le \varepsilon_{\rm eff} \le \varepsilon_i$
-(\thm{effectiveMedium\_constituent\_bounds}), with the worked instance
+(\thm{effectiveMedium\_constituent\_bounds}), for a physical composite
+$0 < \varepsilon_h \le \varepsilon_i$ at fill fraction $0 \le f \le 1$ --- and the ordering
+hypothesis is load-bearing rather than a relabeling, since Maxwell--Garnett is not symmetric under
+exchanging host and inclusion. The worked instance
 \thm{effectiveMedium\_hashinShtrikman\_enclosure} at
-$(\varepsilon_h, \varepsilon_i, f) = (1, 4, \tfrac12)$ giving exactly $2$. We name this carefully:
-the Hashin--Shtrikman bounds~\cite{HashinShtrikman1962} are \emph{strictly tighter} than the
-constituent bracket --- that they improve on it is their entire point --- so what is formalized here
-is the weaker Wiener-type statement, and the declaration's historical name should not be read as a
-claim to have proved the Hashin--Shtrikman bound itself. The Lean source is explicit about this.
+$(\varepsilon_h, \varepsilon_i, f) = (1, 4, \tfrac12)$ gives exactly $2$.
+
+The naming needs care, because two distinct sharper families sit above this one. The
+Wiener~(1912) bounds are the harmonic and arithmetic means of the phases, and the
+Hashin--Shtrikman bounds~\cite{HashinShtrikman1962} are tighter still. At the worked point the
+constituent bracket is $[1,4]$ while the Wiener bracket is $[1.6, 2.5]$, so our lower bound sits
+strictly below Wiener's and the theorem entails neither family. Neither is formalized here, and the
+declaration's historical name should not be read as a claim to have proved the Hashin--Shtrikman
+bound. The Lean module states this scope explicitly in its header and in the theorem's own
+docstring.
 
 For elastic moduli we ship \thm{voigtModulus} and \thm{reussModulus} with the ordering chain
 \thm{effectiveModuli\_enclosure} --- the classical \emph{Voigt--Reuss} bracket, again weaker than
@@ -376,7 +386,8 @@ The companion values are as important as the headline.
 \thm{haldane\_trivial\_phase\_chern\_zero} gives $C = 0$ at $m = 6$, outside the analytic window. And
 \thm{haldane\_massInversion\_not\_sufficient\_at\_N4} gives $C = 0$ at $m = 5$ --- which is
 \emph{inside} the window $|m| < 3\sqrt{3} \approx 5.196$ (\thm{haldane\_window\_bounds}). At this
-grid size the invariant flips near $|m| \approx 3.3177$, so on roughly a third of the analytic window
+grid size the invariant flips \emph{numerically} near $|m| \approx 3.3177$ --- a bisection, with no
+Lean backing --- so on roughly a third of the analytic window
 the masses have inverted while the $4\times4$ invariant still reads zero (Fig.~\ref{fig:haldane}).
 Section~\ref{sec:refutations} records what we did about that.
 
@@ -419,8 +430,12 @@ carried a conjugated off-diagonal block --- the wrong model. It passed every gat
 determinant identity, the gap theorem, the enclosure, kernel purity, the \texttt{sorry} count and the
 full validation suite. What exposed it was an eigenvector-level quantity.
 \thm{bernal\_chirality\_two} gives the exact chirality relation for the correct model, while
-\thm{bernalSwapped\_chirality\_zero} shows the conjugated variant is phase-blind; the two are
-packaged as \thm{bernal\_spectrum\_not\_determine\_model}.
+\thm{bernalSwapped\_chirality\_zero} shows the conjugated variant is phase-blind. The standalone
+refutation \thm{bernal\_spectrum\_not\_determine\_model} then certifies, as a four-way conjunction,
+that the swapped model is Hermitian at all parameters, that the two secular determinants agree at
+all parameters, that the two Hamiltonians are nonetheless distinct at $f = i$, and that
+$i^2 \neq i\,\bar{\imath}$ --- the last being the arithmetic fact that separates the chirality
+coefficients $f^2$ and $f\bar{f}$ which the spectrum cannot see.
 
 We regard this as the bundle's most transferable result, and it has changed our standing practice:
 for any multi-band Hamiltonian, ship at least one eigenvector-level invariant --- a winding number, a
@@ -439,8 +454,12 @@ masses invert'' at a fixed grid size.
 
 \paragraph{What is deferred, and not shipped conditionally.} Berry curvature is not formalized here:
 neither a Berry connection nor a Berry curvature occurs anywhere in this development. The
-bulk--boundary correspondence is likewise absent --- not shipped conditionally on a disclosed
-hypothesis, but simply not undertaken. The continuum invariant is deferred on the infrastructure
+band-theoretic bulk--boundary correspondence is likewise absent from this bundle --- not shipped
+conditionally on a disclosed hypothesis, but simply not undertaken. (A carve-out symmetric with the
+\texttt{ChernBridge} one below: this group's tree does contain categorical bulk--boundary objects in
+its SymTFT modules. They are a different construct --- an algebraic condensation statement, not a
+band-theoretic edge-mode count --- and we name them rather than let the absence claim stand
+unqualified against our own tree.) The continuum invariant is deferred on the infrastructure
 grounds set out in Section~\ref{sec:intro}. Our earlier planning documents described this thread as
 including Berry curvature and a conditional bulk--boundary result; that description did not match the
 tree and has been corrected. What we claim is the finite-lattice FHS invariant and its gauge
@@ -460,7 +479,9 @@ object from the Bloch-band invariant reported here --- an algebraic marker, not 
 curvature over a bundle --- and we flag it rather than let the absence claim stand unqualified
 against our own tree. The Mathlib statements are pinned to revision \texttt{81a5d257} and were
 verified by direct inspection of that checkout rather than from documentation; every occurrence of
-the string \texttt{Chern} in Mathlib is in fact \texttt{Chernoff}. Four carve-outs are mandatory.
+the string \texttt{Chern} in Mathlib is in fact \texttt{Chernoff}. Every PhysLib claim below is
+likewise pinned, to revision \texttt{c4843367}, and verified against that checkout. Four carve-outs
+are mandatory.
 
 First, PhysLib does formalize a tight-binding chain --- but a one-dimensional, single-band, gapless
 one whose Brillouin zone is a real interval, with no multi-band Bloch matrix, no gap, no Berry

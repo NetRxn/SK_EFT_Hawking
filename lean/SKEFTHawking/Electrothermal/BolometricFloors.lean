@@ -84,8 +84,11 @@ Referred to the bolometer temperature, `γ ∈ (0, 1]` (Mather 1982; the TES lit
 it quotes in the range 1/2 to 1 — see `phononPSDGamma`'s provenance note), so the shipped form
 **over**states the
 phonon noise and the `γ = 1` floor **overstates the floor** for any gradient-loaded detector.
-That is fail-open in the direction this module names as its worst available defect, and it is now
-stated as a theorem (`gammaOne_phononFloor_overstates`) rather than mis-recorded in prose.
+Note the direction carefully: this is **not** the fail-open under-counting that
+`Control/CompositeReadoutCeilings.lean` names as its worst defect. It is the opposite failure — an
+*over*stated floor, which yields false **refutations** (a detector that genuinely meets its spec is
+declared impossible) rather than false passes. Both are overclaims; only this one is a floor stated
+too high. It is now a theorem (`gammaOne_phononFloor_overstates`) rather than mis-recorded prose.
 
 **⚠ Guardrail (inherited).** Every statement is about the *stated linearized model* with declared
 noise hypotheses. No claim about any physical instrument.
@@ -247,8 +250,10 @@ shipped until 2026-07-31. A floor claims `error ≥ F`. Because the true `γ` is
 detector with a real temperature gradient across its link, the true phonon PSD — and hence the
 true noise floor — is *strictly below* the one computed at `γ = 1`. A detector can therefore sit
 strictly between the true floor and the shipped floor, so asserting the `γ = 1` floor of this
-module for such a detector is an **overclaim**, i.e. fail-open in exactly the direction the module
-header names as the worst defect available.
+module for such a detector is an **overclaim** — specifically a floor stated too *high*, whose
+consequence is a false **refutation** (a conforming detector declared impossible). This is the
+mirror image of the fail-open under-counting defect that
+`Control/CompositeReadoutCeilings.lean`'s header is gated on, not an instance of it.
 
 The shipped theorems are not unsound: every one of them is conditional on
 `IsThermalFluctuationLimited`, which pins the variance to be white *at the `γ = 1` PSD*, so a

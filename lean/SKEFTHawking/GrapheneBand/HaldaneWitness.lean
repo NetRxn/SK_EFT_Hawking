@@ -295,9 +295,13 @@ theorem haldane_gap_diracK' (t t₂ φ m : ℝ) :
   norm_num [Real.sqrt_sq_eq_abs, Matrix.cons_val_two, Matrix.tail_cons, Matrix.head_cons]
 
 /-- **The topological window, as a mass inversion.** The two Dirac masses have *opposite signs*
-exactly when `|m| < 3√3 |t₂ sin φ|`. This is the falsifiable content of the phase boundary: the
-Chern number can only be nonzero inside this window, and the witness/anti-witness pair below is
-sampled on either side of it. -/
+exactly when `|m| < 3√3 |t₂ sin φ|`. This is a biconditional about the **sign product of the two
+Dirac masses** and the window — it says nothing about any Chern number.
+
+⚠️ Scope corrected 2026-07-31 (D11 Stage-13). This docstring previously added "the Chern number can
+only be nonzero inside this window", i.e. the *necessity* direction. That is **not proved here or
+anywhere in this development** — only sampled. The witness/anti-witness pair below is sampled on
+either side of the window; sampling is not a necessity proof. -/
 theorem haldane_mass_inversion_iff (t t₂ φ m : ℝ) :
     haldaneD t t₂ φ m diracK 2 * haldaneD t t₂ φ m diracK' 2 < 0
       ↔ |m| < |3 * Real.sqrt 3 * t₂ * Real.sin φ| := by
@@ -1410,7 +1414,13 @@ theorem haldane_window_bounds :
   · rw [abs_of_pos (by norm_num : (0:ℝ) < 5)]; nlinarith [sqrt3_lb]
   · rw [abs_of_pos (by norm_num : (0:ℝ) < 6), not_lt]; nlinarith [sqrt3_ub]
 
-/-- **Mass inversion is NECESSARY BUT NOT SUFFICIENT for a nonzero `4 × 4` invariant.**
+/-- **Mass inversion is NOT SUFFICIENT for a nonzero `4 × 4` invariant.**
+
+⚠️ Scope corrected 2026-07-31 (D11 Stage-13). This headline previously read "NECESSARY BUT NOT
+SUFFICIENT". Only the *insufficiency* half is proved — by the single anti-witness below. Necessity
+is **not** formalized anywhere in this development; it rests on sampling, and the D11 draft says so
+explicitly. A referee following the paper's citation must not land on a stronger claim than the
+statement carries.
 
 At `m = 5` the two Dirac masses of `haldane_mass_inversion_iff` genuinely have opposite signs — `5`
 is inside the analytic window `|m| < 3√3 ≈ 5.1962` — and yet the `4 × 4` FHS lattice Chern number is

@@ -9,8 +9,10 @@ matrices — the **`d`-vector model**
   `H(d) = d₁ σˣ + d₂ σʸ + d₃ σᶻ = [[d₃, d₁ − i d₂], [d₁ + i d₂, −d₃]]`   (`blochPauli`),
 
 parameterised by `d = (d₁, d₂, d₃) : ℝ³` (which over a Brillouin zone is a map `d(k)`). This module
-establishes the spectral substrate that the Berry curvature (W1 cont.) and the Chern number (W2)
-are built on:
+establishes the spectral substrate of that model, and only that. (An earlier version of this
+sentence said the Berry curvature and the Chern number "are built on" it, in the present tense;
+none of those objects exists in the tree — see the Scope block below, which is the authority here.)
+What is established:
 
 * `blochPauli_isHermitian` — `H(d)` is Hermitian.
 * `blochPauli_sq` — `H(d)² = ‖d‖² · I` (the Pauli identity `(d·σ)² = |d|²`).
@@ -18,10 +20,12 @@ are built on:
   (`blochPauli_band_secular`).
 * `blochPauli_gap_pos` — `d ≠ 0` implies the bands are separated by a gap `2‖d‖ > 0`, away from the
   band-touching point `d = 0` that the Chern number is defined around.
-  ⚠️ **Forward direction only.** This docstring previously said "**iff**"; the shipped statement is
-  the single implication `(hd : d ≠ 0) → 0 < √(dNormSq d)` and no converse is formalized. Corrected
-  2026-07-30 after the D11 Stage-10 claims review found the draft had inherited the false "iff" from
-  here. Do not restate it as a biconditional without shipping the converse.
+* `blochPauli_gap_pos_iff` — **the citable form**: the model is gapped *if and only if* `d ≠ 0`.
+  (History: this docstring once claimed an "iff" while only the forward implication was shipped, and
+  the D11 draft inherited the false attribution. That was first remediated on 2026-07-30 by
+  narrowing the claim to the forward direction; on 2026-07-31 the converse
+  `blochPauli_gap_zero_of_eq_zero` was shipped instead and the biconditional now exists, so the
+  earlier prohibition on stating it is retired.)
 
 ## Scope (honest)
 

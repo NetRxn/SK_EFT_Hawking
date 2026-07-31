@@ -15260,10 +15260,11 @@ def fig_d11_haldane_chern() -> go.Figure:
 def fig_d11_effective_medium() -> go.Figure:
     """D11 (effective medium) — algebraic theory.
 
-    Left: Maxwell–Garnett effective permittivity inside its constituent
-    (Wiener/Hashin–Shtrikman-type) bounds ε_h ≤ ε_eff ≤ ε_i. The bounds are
-    NON-strict and are attained at f = 0 and f = 1. Certified point
-    (ε_h, ε_i, f) = (1, 4, 1/2) ⟹ ε_eff = 2.
+    Left: Maxwell–Garnett effective permittivity inside its CONSTITUENT bounds
+    ε_h ≤ ε_eff ≤ ε_i. These are neither the Wiener nor the Hashin–Shtrikman
+    bounds — both are strictly tighter and neither is formalized (corrected
+    2026-07-31, D11 Stage-13). The bounds are NON-strict and are attained at
+    f = 0 and f = 1. Certified point (ε_h, ε_i, f) = (1, 4, 1/2) ⟹ ε_eff = 2.
 
     Right: the Voigt and Reuss elastic bounds and their EXACT
     arithmetic-minus-harmonic gap, shipped as an equality

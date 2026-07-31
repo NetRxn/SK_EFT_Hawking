@@ -3190,7 +3190,12 @@ def check_numerical_literals() -> CheckResult:
     details = []
     total_findings = 0
     total_inputs = 0
-    for tex_path in sorted(PAPERS_DIR.glob("paper*_*/paper_draft.tex")):
+    # Glob widened 2026-07-31: was `paper*_*/`, which matched only the legacy
+    # `paperNN_<slug>/` layout and left ALL 21 publication bundles (D1-D12, I1-I3,
+    # L1-L3, E1, E2, F) unscanned. Filed as a Stage-13 QI candidate in two
+    # consecutive rounds before being fixed. Use the same `*/` form the bundle-aware
+    # checks already use.
+    for tex_path in sorted(PAPERS_DIR.glob("*/paper_draft.tex")):
         paper_name = tex_path.parent.name
         try:
             text = tex_path.read_text()
@@ -3575,7 +3580,10 @@ def check_count_literals() -> CheckResult:
         ])
 
     # Papers that have \input'd counts.tex are exempt — they've opted in
-    paper_tex_files = sorted(PAPERS_DIR.glob("paper*/paper_draft.tex"))
+    # Glob widened 2026-07-31: `paper*/` matched only `paperNN_<slug>/`, so every
+    # publication bundle's count literals were ungated and desynchronized silently on
+    # each substrate edit. See check_numerical_literals for the same fix.
+    paper_tex_files = sorted(PAPERS_DIR.glob("*/paper_draft.tex"))
     details = []
     total_findings = 0
 
@@ -3916,6 +3924,7 @@ def check_citation_primary_sources_present() -> CheckResult:
     Bibkeys absent from CITATION_REGISTRY surface as FAIL — that's already a
     CitationIntegrity violation, not a Wave 1 concern, but worth reporting.
     """
+    import ast
     import re
     from src.core.citations import CITATION_REGISTRY, bibkey_phase
     from src.core.workspace import find_workspace
@@ -3923,6 +3932,39 @@ def check_citation_primary_sources_present() -> CheckResult:
     LIT_SEARCH = find_workspace() / "Lit-Search"
     FALLBACK = "Phase-1-and-Background"
     EXTENSIONS = ["pdf", "tex", "abstract.txt", "json"]
+
+    # ── Duplicate-key guard (added 2026-07-31) ────────────────────────────────
+    # CITATION_REGISTRY is a dict *literal*, so a repeated key is legal Python:
+    # the later entry silently wins and the earlier one's `used_in` consumers and
+    # `primary_source_path` become unreachable. That is invisible to every check
+    # that reads the imported dict, because by then the duplicate is already gone.
+    # It shipped undetected for two Stage-13 rounds ('Berry1984'). Detect it by
+    # parsing the source, not the imported object.
+    dup_details = []
+    try:
+        _reg_src = (Path(__file__).resolve().parent.parent
+                    / "src" / "core" / "citations.py").read_text(encoding="utf-8")
+        _tree = ast.parse(_reg_src)
+        _seen: dict[str, int] = {}
+        for _node in ast.walk(_tree):
+            if not isinstance(_node, ast.Dict):
+                continue
+            for _k in _node.keys:
+                if isinstance(_k, ast.Constant) and isinstance(_k.value, str):
+                    _seen[_k.value] = _seen.get(_k.value, 0) + 1
+        _dups = sorted(k for k, n in _seen.items() if n > 1 and k in CITATION_REGISTRY)
+        if _dups:
+            dup_details.append(Detail(
+                "duplicate_bibkeys", False,
+                f"{len(_dups)} bibkey(s) defined more than once in citations.py — the later "
+                f"literal silently shadows the earlier, orphaning its used_in/primary_source_path: "
+                f"{', '.join(_dups)}",
+            ))
+    except Exception as exc:  # pragma: no cover - guard must never mask the real check
+        dup_details.append(Detail(
+            "duplicate_bibkeys", True,
+            f"duplicate-key scan skipped ({type(exc).__name__}: {exc})", warning=True,
+        ))
 
     # Match \cite, \citep, \citet, \citeauthor, etc., with optional star,
     # optional [opt-args], then {key1,key2,...}
@@ -4036,6 +4078,11 @@ def check_citation_primary_sources_present() -> CheckResult:
             True,
             "Every cited external bibkey has a primary-source cache file"
         ))
+
+    # Fold in the duplicate-key guard: a shadowed bibkey is a CitationIntegrity
+    # defect even when every cache file is present.
+    details.extend(dup_details)
+    all_pass = all_pass and all(d.passed for d in dup_details)
 
     return CheckResult(passed=all_pass, details=details)
 

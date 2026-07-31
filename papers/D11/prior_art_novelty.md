@@ -95,12 +95,24 @@ reading of bulk–boundary. Isabelle's general topology is also strong (all 39
 sections of Munkres, 806 results — arXiv:2604.07455; fundamental group via
 auto2 — arXiv:1707.04757), though none of it is index theory.
 
-### C4 — Coq Lax–Milgram (the road not taken)
+### C4 — Lax–Milgram, pen-and-paper and in Coq (the road not taken)
 
-Boldo et al., Lax–Milgram in Coq (arXiv:1607.03618) is the formalized backbone
-of elliptic-PDE well-posedness, and MathComp-Analysis carries Lebesgue
-integration and the differentiation theorem (arXiv:2403.18229). These are the
-substrate an *analytic* homogenization route would need.
+⚠️ **Corrected 2026-07-31.** This entry previously read "Boldo et al., Lax–Milgram
+**in Coq** (arXiv:1607.03618) is the **formalized** backbone…". Both halves were
+wrong, and both are the round-1 BLOCKER 1.1 error verbatim — it was fixed in the
+`.tex` and in `citations.py` but not propagated here, in the very document the
+paper names as its novelty backing.
+
+arXiv:1607.03618 is **Clément & Martin**, *"The Lax–Milgram Theorem. A detailed
+proof to be formalized in Coq"* (2016) — a pen-and-paper proof *prepared for*
+formalization, not a formalization. The actual Coq development is a separate,
+later work: Boldo, Clément, Faissole, Martin & Mayero, *"A Coq formal proof of
+the Lax–Milgram theorem"*, CPP 2017, DOI `10.1145/3018610.3018625`. Both were
+verified by direct fetch.
+
+That Coq development, together with MathComp-Analysis's Lebesgue integration and
+differentiation theorem (arXiv:2403.18229), is the substrate an *analytic*
+homogenization route would need.
 
 **Load-bearing scoping consequence.** Two-scale convergence has **not** been
 formalized in any ecosystem found. Therefore D11's statement that it

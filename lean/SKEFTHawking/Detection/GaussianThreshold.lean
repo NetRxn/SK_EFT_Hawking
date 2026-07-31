@@ -611,8 +611,11 @@ are routinely quoted at — while the operating point itself (matched budget `2`
 signal-carrying chain) is entirely ordinary. Contrast the `matchedBudget = 0` witnesses, which bite
 only because a signal-free readout cannot beat a coin flip.
 
-Route: `gaussianTail_birnbaum` at `z = 1` gives `Q(1) ≥ ½·φ(1)`, which is `95 %` of truth here
-(the window bound would lose a factor `2.6`). Then `√(2π) ≤ 2.51` from `Real.pi_lt_d2` and
+Route: `gaussianTail_birnbaum` at `z = 1` gives `Q(1) ≥ ½·φ(1) = 0.12099` against the true
+`Q(1) = 0.15866`, i.e. **76 % of truth** — tighter than the window bound but materially looser than
+the same bound's `95 %` at `z = 2`, because the Birnbaum–Feller ratio `z²/(1+z²)` degrades as `z`
+falls. (Corrected 2026-07-31: this docstring previously copied the `z = 2` figure of `95 %` to this
+site.) Then `√(2π) ≤ 2.51` from `Real.pi_lt_d2` and
 `e^{1/2} ≤ 1.6488` from `Real.exp_one_lt_d9` via `exp(½)² = exp 1`, giving
 `½·φ(1) ≥ ½·(1/2.51)·(1/1.6488) = 0.12082`, certified against `3/25 = 0.12`. No floating-point
 `exp` and no `native_decide`. -/
