@@ -1,91 +1,76 @@
 {
- "review_date": "2026-07-31T07:20:00Z",
+ "review_date": "2026-07-31T09:40:00Z",
  "reviewer": "skeft-qa:figure-reviewer",
  "bundle_target": "D11",
  "stage": "9",
- "round": 5,
+ "round": 6,
+ "round_type": "CONFIRMATION PASS (scoped) — not a new open-ended sweep",
+ "artefact_commit": "a5480efa",
  "figures_reviewed": 4,
- "review_basis": "TYPESET RESULT. papers/D11/paper_draft.pdf (8 pp, 2026-07-30 21:35) rasterised with pdftoppm at 150 and 600 dpi; float placement measured with pdfimages -list; printed glyph sizes measured by connected-component analysis of the 600 dpi raster against a self-calibrated cap/em ratio (0.665, measured by rendering the figure font at a known px size). Standalone PNGs used only to prove byte-level agreement with the current source.",
- "overall_status": "issues_found",
- "pass_criterion": "ALL PASS - zero FAIL and zero MINOR across all four figures and all cross-cutting checks",
- "pass_criterion_met": false,
+ "review_basis": "TYPESET RESULT. papers/D11/paper_draft.pdf (8 pp, 2026-07-30 22:55, md5 6626c6b6be1e0ae6f231e58b46299608) rasterised with pdftoppm at 150 and 600 dpi; column geometry measured from pdftotext -bbox word boxes on all 8 pages; float placement from pdfimages -list; the validate.py gate mutation-tested in-process without modifying any repo file; physics re-derived from src/core/formulas.py.",
+ "overall_status": "pass_with_documented_residue",
+ "verdict": "GO — D11 figures are ready to proceed to Stage 13",
+ "publication_blocking_figure_defects": 0,
+ "publication_blocking_defects_of_any_kind": 0,
  "severity_counts": {
   "FAIL": 0,
-  "MINOR": 7,
-  "resolved_from_round4": 8,
-  "anchor_pass": 1,
-  "blocking_out_of_figure_scope": 1
+  "MINOR": 6,
+  "confirmed_fixed_from_round5": 5,
+  "anchor_pass": 3,
+  "physics_pass": 4
  },
- "publication_blocking_figure_defects": 0,
- "distinct_root_causes": 3,
- "headline": "Every round-4 FAIL is genuinely fixed and independently re-verified; there are ZERO FAILs and ZERO publication-blocking figure defects this round. F3 in particular is closed on both halves: per-trace textfont is normalised, and bundle_figure_typeset_pt now returns the true minimum over every text-bearing field - measurement in the 600 dpi raster confirms the smallest printed string in each figure is 8.66-9.02 pt against 10 pt body, matching the helper's report to within 0.4% (the residual is the helper's 510 pt constant vs the true 507.6-508.2 pt placement). Physics re-derived from formulas.py from scratch: all correct. The highest-priority anchor is CLEAN. What remains is seven MINORs of three kinds - four small label/marker collisions inside figures, and three guard-integrity gaps in the harness (including the fact that the repaired typeset checker has ZERO callers, so the F3 class is fixed but unguarded). Separately, and OUTSIDE figure scope, the rasterised PDF shows a hard two-column collision on page 2 that IS publication-blocking.",
- "round4_remediation_verification": [
+ "round5_confirmations": [
   {
-   "item": "F3 - per-trace textfont not covered by the layout contract, and the checker concealed it",
-   "verdict": "VERIFIED FIXED, both halves, by two independent methods",
-   "evidence": "(a) ANALYTIC: enumerated every text-bearing font field on each live figure object. fig1 phononic (800x420, base 15): legend 14, ann 14 -> min 14 px -> 8.89 pt. fig2 PT (800x420, base 15): legend 14, ann 14 -> 8.89 pt. haldane (900x430, base 17): legend 16, ann x4 16, trace textfont x3 16 (was hardcoded 12) -> 9.02 pt. effective medium (880x470, base 16): legend 15, ann x3 15, trace textfont 15 (was hardcoded 11) -> 8.66 pt. No axis title font or tickfont is explicitly set anywhere, so all inherit layout.font; nothing escapes the contract. (b) EMPIRICAL: cap/em ratio self-calibrated at 0.665 by rendering the figure font at 200 px; connected-component measurement of the 600 dpi PDF raster gives legend/label cap heights of 50-53 px = 8.9-9.4 pt em, and x-height clusters of 35 px = 9.4 pt em - agreeing with the analytic prediction to 1-2% and sitting just below the 10 pt body text measured on the same pages. (c) The helper reports 8.925/8.925/9.067/8.693 pt vs true-placed 8.894/8.894/9.023/8.663 pt. It is NOT self-concealing: it now returns the worst string, not the representative one. Spot-checked the shared fix on the D12 three as well: 8.83/8.69/8.69 pt, i.e. the claimed 8.69-9.07 pt across all seven bundle figures is accurate."
+   "item": "R5-8 [was the sole BLOCKING item] — 32.4 pt Overfull \\hbox drove sum_plaquetteArg_eq_two_pi_mul_latticeChern into the adjacent column and overprinted 'not' in 'A gap cannot exist in a single band'",
+   "verdict": "CONFIRMED FIXED — overprint gone, wrapped names readable",
+   "evidence": "(a) LOG: 0 Overfull \\hbox (was 1), 0 Overfull \\vbox, 0 LaTeX errors, 0 undefined references or citations. (b) GEOMETRY, independent of the log: on p.2 the left column's maximum word xMax is 299.09 pt and the right column's minimum word xMin is 317.01 pt — a 17.93 pt clear gutter. A same-text-line overlap scan of every left/right word pair across ALL 8 pages returns 0 collisions. (c) VISUAL at 600 dpi: the name breaks as 'sum_plaquetteArg_eq_two_pi_mul_' / 'latticeChern.' with the underscore PRINTED at end-of-line, so the identifier reconstructs unambiguously by concatenation (a tt underscore sits on the baseline and cannot be misread as a hyphen); the right column reads 'not exist in a single band, so a two-band object had to be built' with 'not' fully intact. (d) Other wrapped names spot-checked and readable on the same basis: blochLatticeChern_ / integrality, blochLatticeChern_eq_zero_ / of_narrow_D, sum_rawCurl_eq_ / zero, plaquette_ / gaugeTransform, voigt_sub_reuss_ / eq, phononic_band_. The \\emergencystretch=2em shows up as loose interword spacing on the 'formalized as ...' line; that is well within normal justification tolerance and is not a defect."
   },
   {
-   "item": "F1 - 'm = 5: C = 0 - inside the window' clipped to '...the wind'",
-   "verdict": "VERIFIED FIXED",
-   "evidence": "Line-broken to 'm = 5:  C = 0<br>inside the window' with textposition 'bottom center' and cliponaxis=False. At 600 dpi both lines render complete inside the right panel; no glyph is truncated at the axis or the float edge."
+   "item": "R5-6 [fixed vs prevented] — bundle_figure_typeset_pt had zero consumers; is validate.py --check bundle_figure_integrity genuinely binding?",
+   "verdict": "LEGIBILITY FLOOR: YES, GENUINELY BINDING — proven by 4 mutations. DRIFT GUARD: NO — dead code (new finding R6-1).",
+   "evidence": "Live run: PASS, 7/7 legible (D11 8.89/8.89/9.03/8.66 pt; D12 8.79/8.66/8.66 pt). MUTATION TESTS applied in-process with no repo file modified, each expected to FAIL and each of which DID: (A) per-trace textfont 16 -> 5 px on d11_fig3 => 2.82 pt => FAIL — EXACTLY the round-4 F3 failure mode, so the gate now catches the defect that survived rounds 1-3; (B) canvas 900 -> 2400 px, fonts unchanged => 3.39 pt => FAIL; (C) xaxis title font -> 6 px => 3.39 pt => FAIL; (D) yaxis tickfont -> 6 px => 3.39 pt => FAIL. (C) and (D) are the newly-added field readers and would both have been INVISIBLE to the round-4 helper. Boundary arithmetic exact and correctly signed: 15 px/900 -> 8.467 pt PASS; 14 px/900 -> 7.902 pt FAIL; 13 px/900 -> 7.338 pt FAIL. Conclusion: the F3 class is now PREVENTED, not merely fixed."
   },
   {
-   "item": "F2 + M11 - Haldane right-panel dead height and the flip annotation overprinting a y-tick",
-   "verdict": "VERIFIED FIXED",
-   "evidence": "y-range tightened [-1.9,1.1] -> [-1.55,0.75] with dtick=1 (ticks at -1 and 0), and the flip annotation moved to 'top right'. Measured dead height below the C=-1 data now ~20% of panel height (was ~45%). '4x4 invariant flips ~ 3.3177 / (numerical, not certified)' renders on two clean lines inside the panel, clear of the subplot title above and of both y-tick labels; the round-4 '4x4 1nvariant flips' glyph pile is gone."
+   "item": "R5-2 — m = 5 and m = 6 labels re-anchored away from the 5.196 window boundary and from each other",
+   "verdict": "CONFIRMED FIXED as stated",
+   "evidence": "textposition is now 'bottom left' for m = 5 and 'top right' for m = 6. The dashed 5.196 window boundary now passes BETWEEN the two markers with the whole m = 5 label to its left — it no longer crosses the label. The m = 6 label sits up-and-right of its own marker and no longer overhangs the m = 5 marker. The actual round-5 complaint — 'the label-to-marker association is momentarily ambiguous at exactly the point carrying the bundle's central claim' — is resolved: each label is now unambiguously attached to its own marker. Residue logged as R6-3."
   },
   {
-   "item": "M4 - the 'exact' Voigt-Reuss gap had nothing spanning it",
-   "verdict": "VERIFIED FIXED",
-   "evidence": "A carmine lines+markers trace now spans f = 2/3 from reuss_modulus(1,4,2/3) = 2 to voigt_modulus(1,4,2/3) = 3, i.e. gap = 1, matching voigt_reuss_gap(1,4,2/3) = 1.0 and the closed form f(1-f)(M1-M2)^2/((1-f)M2+fM1) = 1.0 exactly. Legend reads '(right) f = 2/3: gap = 1 exactly'. The span is visually unambiguous against the shaded gap region."
+   "item": "R5-5 — x=[None] legend proxy tripping the nan_data ERROR guard; run_structural_checks() could not run at all (NameError: viz)",
+   "verdict": "CONFIRMED FIXED, both halves",
+   "evidence": "run_structural_checks() now EXECUTES (no NameError) and returns 44 issues repo-wide of which 0 are D11-scoped and 0 are ERROR-severity anywhere (severity histogram {'warning': 44}). The proxy is now a real point at x=[-999.0], y=[-999.0], parked outside the panel's EXPLICIT ranges (x [-0.5, 8.5], y [-1.55, 0.75]): it keeps its legend entry, renders no visible marker, and is not NaN. Confirmed visually (no stray marker in the right panel) and structurally (n_finite_points = 1, not 0)."
   },
   {
-   "item": "M2 - docstring ordinals contradicting LaTeX numbering",
-   "verdict": "VERIFIED FIXED",
-   "evidence": "Regex sweep for ordinals/figure-numbers across all four D11 figure docstrings: zero hits."
-  },
-  {
-   "item": "Harness - review_figures.py forcing width=1200, height=800 (XC-D reintroduction path)",
-   "verdict": "VERIFIED FIXED",
-   "evidence": "scripts/review_figures.py:2341-2344 now reads _w = fig.layout.width or 1200 and _h = fig.layout.height or 800, scale = 2 if _w >= 1000 else 3. For the D11 four (800/800/900/880) that yields scale 3. Regenerating all four from current source and diffing against the committed PNGs gives diff_frac = 0.000000 on every figure, at identical dimensions - so the reviewed PDF provably reflects current source and the documented command can no longer shrink the canvas."
-  },
-  {
-   "item": "Harness - func_map wiring",
-   "verdict": "VERIFIED STILL WIRED",
-   "evidence": "All four fig_d11_* entries present in both func_map instances (lines 2317-2320, 2700-2703)."
-  },
-  {
-   "item": "M5 - axis padding",
-   "verdict": "ACCEPTED AS COSMETIC (round-4 call stands)",
-   "evidence": "Effective-medium left panel range [0.4,4.6] vs data [1,4] still usefully keeps the non-strict bound edges off the frame."
+   "item": "Measurement corrections — _BUNDLE_TEXTWIDTH_PT 510 -> 508; helper now also reads axis title fonts and tickfonts",
+   "verdict": "CONFIRMED CORRECT",
+   "evidence": "pdfimages -list gives placed widths 2400 px @ 340 ppi = 508.24 pt (FIG 1, 2), 2640 @ 374 = 508.24 pt (FIG 3), 2700 @ 383 = 507.57 pt (FIG 4). With 508 the helper reports 8.89 / 8.89 / 9.03 / 8.66 pt against my round-5 raster-measured true-placed 8.894 / 8.894 / 9.023 / 8.663 pt — agreement to <= 0.01 pt, where 510 biased every reported size 0.4% high. The axis-title-font and tickfont readers are load-bearing, not decorative: mutations C and D prove the gate now fails on a breach in either field."
   }
  ],
  "physics_reverification": {
   "status": "PASS",
-  "method": "Re-derived from src/core/formulas.py from scratch, independent of round 4.",
+  "method": "Re-derived from src/core/formulas.py from scratch, independent of rounds 4 and 5.",
   "detail": [
-   "FIG 1 (phononic): diatomic_branches(1,2,1,k) matches 3/2 +- sqrt(5/4 + cos k) to 0.0 max error over 17 k-samples; (0,3) at k=0 and (1,2) at k=pi; phononic_gap_edges() = (1.0,2.0); 20001-point sweep finds ZERO states strictly inside (1,2), acoustic max = 1.0 and optical min = 2.0 so BOTH edges are attained (tight, not loose); rational enclosure (1.0, 1.41) with 1 < 1.41 <= sqrt2 = 1.41421356.",
-   "FIG 2 (PT/EP): +-sqrt(1-g^2) real for g<=1, +-sqrt(g^2-1) imaginary beyond; splitting Delta = 2 sqrt(1-g^2) equals exactly 0.2 = 1/5 at g^2 = 99/100, so the enclosure is TIGHT as claimed, and 0 at g = 1. The dotted vline is drawn at g = sqrt(0.99) = 0.99498744, i.e. correctly on the g axis rather than the g^2 axis.",
-   "FIG 3 as printed (effective medium): maxwell_garnett(1,4,f) = 1.0 / 2.0 / 4.0 at f = 0 / 1/2 / 1, so the certified point is exact and the constituent bounds are attained at both endpoints (non-strict, as labelled); 2001-point sweep confirms 1 <= eps_eff <= 4 throughout. Voigt >= Reuss on all 2001 points; at f = 2/3, Voigt = 3, Reuss = 2, gap = 1.0 exactly.",
-   "FIG 4 as printed (Haldane): haldane_mass_inversion_window(1,pi/2) = 5.196152422706632 = 3 sqrt 3; haldane_dirac_masses gives (m - 3sqrt3, m + 3sqrt3), so blue = 2|m - 3sqrt3 t2 sin phi| zeroes at +3sqrt3 and amber = 2|m + 3sqrt3 t2 sin phi| zeroes at -3sqrt3, matching the plotted zero-crossings and the legend strings; masses are opposite-sign at m = 1 and m = 5 (inside the window) and same-sign at m = 6 (outside)."
+   "FIG 1 (phononic, p.3): diatomic_branches(1,2,1,k) matches 3/2 +- sqrt(5/4 + cos k) to 4.44e-16 max error over 20001 k-samples; acoustic max = 1.000000000000 and optical min = 2.000000000000, so BOTH gap edges are attained (tight, not loose); ZERO states strictly inside (1,2); phononic_gap_edges() = (1.0, 2.0); the printed rational inner bracket 1 < 141/100 <= sqrt(2) = 1.4142135624 holds.",
+   "FIG 2 (PT/EP, p.4): Delta = 2 sqrt(1 - g^2) = 0.200000000000000 exactly at g^2 = 99/100, so the printed 'Delta <= 1/5 (tight)' enclosure is genuinely tight; Delta = 0 at g = 1 (EP2 defective). Re lambda for g <= 1 and Im lambda for g > 1 on one axis is the standard PT convention, named per trace in the legend and stated in the caption.",
+   "FIG 3 as printed (effective medium, p.5): maxwell_garnett(1,4,f) = 1.0 / 2.0 / 4.0 at f = 0 / 1/2 / 1, so the certified point is exact and the non-strict constituent bounds are attained at both endpoints; eps in [1,4] over 4001 samples; Voigt >= Reuss on every sample; at f = 2/3 Voigt = 3.000000000000, Reuss = 2.000000000000, voigt_reuss_gap = 1.000000000000, matching the closed form f(1-f)(M1-M2)^2/((1-f)M2 + f M1) = 1.000000000000.",
+   "FIG 4 as printed (Haldane, p.6): haldane_mass_inversion_window(1, pi/2) = 5.196152422706632 = 3 sqrt(3) exactly; haldane_dirac_masses gives opposite-sign cone masses at m = 1 (-4.196, +6.196) and at m = 5 (-0.196, +10.196), and SAME-sign at m = 6 (+0.804, +11.196). m = 5 is inside the window (5 < 5.196) with inverted masses yet reads C = 0 — the counterexample the figure is built on is real, not an artefact of the plot."
   ]
  },
  "anchor_checks": [
   {
-   "anchor": "HIGHEST PRIORITY - no Berry curvature, no continuum Chern integral C = (1/2pi) int F, no bulk-boundary result may be depicted OR implied",
+   "anchor": "HIGHEST PRIORITY — no Berry curvature, no continuum Chern integral, no bulk-boundary result may be depicted OR implied",
    "status": "PASS",
-   "evidence": "Re-verified from scratch three ways. (1) Programmatic sweep of EVERY string drawn into the four figures - title, axis titles, ticktext, all layout annotations, all trace names, all trace text arrays (14 / 10 / 15 / 14 strings) - against berry curvature|berry connection|bulk-bound|first chern class|continuum chern|edge state|chiral edge|integral sign: ZERO hits in all four. (2) Structural: the Haldane right panel contains only THREE single-point marker traces plus one off-canvas legend proxy (n_finite_x = 1,1,1,0) - there is no continuous C(m) curve anywhere, so nothing interpolates toward a continuum invariant. The y-axis reads 'lattice Chern number C' and the subplot title pins '4x4 torus'. (3) Semantic: the figure's central assertion is that the 4x4 invariant flips at ~3.3177 while the ANALYTIC window edge is 3sqrt3 ~ 5.196 - it actively REFUTES the continuum reading rather than implying it. No boundary, ribbon or edge spectrum is drawn anywhere; the sampled manifold is a closed torus. The bundle's Berry PHASE results (coneBerryPhase_pi) appear only in prose, never in a figure."
+   "evidence": "Re-verified from scratch, four ways. (1) STRING SWEEP of every string drawn into the four figures — title, axis titles, ticktext, all layout annotations, all trace names, all trace text arrays; 53 strings total (14/10/15/14) — against berry curvature | berry connection | berry phase | bulk-bound | first chern class | continuum chern | chern integral | edge state | chiral edge | edge mode | ribbon | integral sign | TKNN: ZERO hits in all four. (2) CAPTIONS: the same regex over all four LaTeX caption bodies: ZERO hits. (3) STRUCTURAL: the Chern panel contains only FOUR single-point marker traces (x = [-999.0] legend proxy, [1.0], [5.0], [6.0]) — no continuous C(m) curve anywhere, so nothing interpolates toward a continuum invariant; the y-axis reads 'lattice Chern number C' and the subplot title pins '4x4 torus'; no boundary, ribbon or edge spectrum is drawn and the sampled manifold is a closed torus. (4) SEMANTIC: the figure's central assertion is that the 4x4 invariant flips at ~3.3177 while the ANALYTIC window edge is 3 sqrt(3) ~ 5.196 — it actively REFUTES the continuum reading rather than implying it. The bundle's Berry PHASE results (coneBerryPhase_pi, coneWinding_two_pi) appear only in prose (p.6, left column), never in a figure."
   },
   {
    "anchor": "Chern sign and regime: -1, at t = t2 = 1, phi = pi/2, m = 1, on a 4x4 torus",
    "status": "PASS",
-   "evidence": "Right-panel subplot title '(right) certified C, t = t2 = 1, phi = pi/2, 4x4 torus'; point label 'm = 1:  C = -1'; y-range [-1.55,0.75] renders the marker unambiguously at -1, not +1. Full parameter point and grid size both stated in-figure. Grid N = 4 respects the 3 | N no-go."
+   "evidence": "Right-panel subplot title '(right) certified C, t = t2 = 1, phi = pi/2, 4x4 torus'; point label 'm = 1:  C = -1'; y-range [-1.55, 0.75] with dtick = 1 renders the marker unambiguously at -1. Cross-checked against the typeset prose on p.5: 'the lattice Chern number of the Haldane frame is -1, formalized as haldaneFrame_latticeChern_eq_neg_one at parameters t = t2 = 1, phi = pi/2, m = 1', with the sign convention and its phi -> -phi flip stated explicitly. Full parameter point and grid size both stated in-figure; N = 4 respects the 3 | N no-go."
   },
   {
    "anchor": "The retracted classification: nothing phrased as 'nonzero exactly where the masses invert' at fixed N",
    "status": "PASS",
-   "evidence": "Figure title is 'Haldane Chern witness - mass inversion is NOT sufficient at fixed N' - the theorem-backed half only. The m = 5 point is drawn inside the shaded window reading C = 0, which is the counterexample itself. The flip line is explicitly captioned '(numerical, not certified)'. No necessity claim is made or implied by any drawn element."
+   "evidence": "Figure title is 'Haldane Chern witness — mass inversion is NOT sufficient at fixed N', the theorem-backed half only. The m = 5 point is drawn inside the shaded window reading C = 0 — the counterexample itself. The flip line is captioned '(numerical, not certified)'. The LaTeX caption states outright 'Necessity is not certified — it rests on the single sample m = 6 — so the figure makes no necessity claim at all'. No necessity claim is made or implied by any drawn element."
   }
  ],
  "figures": [
@@ -96,15 +81,14 @@
    "typeset": {
     "canvas": "800x420",
     "placed_pt": 508.24,
-    "min_printed_pt": 8.894,
-    "helper_reported_pt": 8.925,
+    "min_printed_pt": 8.89,
     "floor_pt": 8.0,
     "verdict": "pass"
    },
    "rendering": {
     "status": "issues",
     "issues": [
-     "R5-1 [MINOR]: the open-diamond 'upper edge attained' marker at (k = -pi, w^2 = 2) overprints the word 'certified' in the add_hrect annotation 'certified gap w^2 in (1,2) - no state here'. The diamond's lower vertex cuts through the 'fi'/'e' glyphs. Both remain legible at 600 dpi, but a load-bearing tightness witness is visually entangled with annotation text. The collision is structural: annotation_position='top left' places the text at the same corner where the k = -pi upper-edge marker sits."
+     "R5-1 [MINOR, CARRIED, ACCEPTED per round-5 triage]: the open-diamond 'upper edge attained' marker at (k = -pi, w^2 = 2) still touches the top of the word 'certified' in the add_hrect annotation. Both legible at 150 and 600 dpi. Not re-raised as blocking."
     ]
    },
    "physics": {
@@ -116,7 +100,7 @@
     "issues": []
    },
    "caption_match": true,
-   "notes": "Branches, gap shading, both attained edges, the rational bracket annotation and the unit-bearing axis titles all agree with the caption and with formulas.py. Legend distinguishes filled (lower edge) from open (upper edge) diamonds correctly. The k = +pi marker is clean; only the left one collides."
+   "notes": "Branches, gap shading, both attained edges, the rational bracket and the unit-bearing axis titles all agree with the caption and with formulas.py. Filled vs open diamond keys are correctly distinguished in the legend."
   },
   {
    "name": "d11_fig2_pt_exceptional_point",
@@ -125,8 +109,7 @@
    "typeset": {
     "canvas": "800x420",
     "placed_pt": 508.24,
-    "min_printed_pt": 8.894,
-    "helper_reported_pt": 8.925,
+    "min_printed_pt": 8.89,
     "floor_pt": 8.0,
     "verdict": "pass"
    },
@@ -143,7 +126,7 @@
     "issues": []
    },
    "caption_match": true,
-   "notes": "Cleanest figure in the bundle. Checked the round-4-adjacent risk explicitly: the 'g^2 = 99/100 => Delta <= 1/5 (tight)' annotation terminates with a clear gap before the carmine dotted vline - zoomed to 4x at 600 dpi, no touch. ACCEPTED-BY-DESIGN observation (not a finding): Re lambda is plotted for g <= 1 and Im lambda for g > 1 on a single axis labelled 'eigenvalue lambda'. This is the standard PT-transition convention, the legend names Re/Im per trace, and the caption states it; I do not consider it a defect."
+   "notes": "Cleanest figure in the bundle; unchanged from round 5 and still clean. The 'g^2 = 99/100 => Delta <= 1/5 (tight)' annotation terminates with a clear gap before the carmine dotted line."
   },
   {
    "name": "d11_fig4_effective_medium",
@@ -152,8 +135,7 @@
    "typeset": {
     "canvas": "880x470",
     "placed_pt": 508.24,
-    "min_printed_pt": 8.663,
-    "helper_reported_pt": 8.693,
+    "min_printed_pt": 8.66,
     "floor_pt": 8.0,
     "verdict": "pass (smallest in the bundle)"
    },
@@ -168,11 +150,11 @@
    "style": {
     "status": "issues",
     "issues": [
-     "R5-4 [MINOR]: '(left) eps_eff (Maxwell-Garnett)' and '(right) Reuss (iso-stress, harmonic)' carry an IDENTICAL steel-blue solid-line legend key for two different physical quantities. They are disambiguated only by the (left)/(right) text prefix. Defensible because they live in different panels, but the visual key is not injective."
+     "R5-4 [MINOR, CARRIED, ACCEPTED per round-5 triage]: '(left) eps_eff (Maxwell-Garnett)' and '(right) Reuss (iso-stress, harmonic)' still share an identical steel-blue solid-line legend key, disambiguated only by the (left)/(right) prefix. Not re-raised as blocking."
     ]
    },
    "caption_match": true,
-   "notes": "M4 is well fixed - the carmine span at f = 2/3 reads immediately as the quantity the 'exact' claim is about. The 'f = 1/2 => eps_eff = 2 (certified)' label clears the marker with a visible gap and is not clipped. Voigt (straight, arithmetic) above Reuss (convex, harmonic), coincident at f = 0 and f = 1, is correct."
+   "notes": "The carmine f = 2/3 span reads immediately as the quantity the 'exact' claim is about. At its 8.66 pt print size — the smallest in the bundle — every axis label, legend entry and annotation is legible in the 150 dpi page render."
   },
   {
    "name": "d11_fig3_haldane_chern",
@@ -181,16 +163,15 @@
    "typeset": {
     "canvas": "900x430",
     "placed_pt": 507.57,
-    "min_printed_pt": 9.023,
-    "helper_reported_pt": 9.067,
+    "min_printed_pt": 9.03,
     "floor_pt": 8.0,
     "verdict": "pass"
    },
    "rendering": {
     "status": "issues",
     "issues": [
-     "R5-2 [MINOR]: in the right panel the dashed window-boundary line at m = 3sqrt3 = 5.196 passes through the 'm = 5:  C = 0 / inside the window' label (between ':' and 'C', and between 'the' and 'window'), while the left edge of the 'm = 6:  C = 0' label sits directly above the m = 5 marker. Nothing is illegible and both labels are correctly centred on their own markers, but the label-to-marker association is momentarily ambiguous at exactly the point carrying the bundle's central claim.",
-     "R5-3 [MINOR]: in the left panel the 'analytic inversion window' annotation's rgba(255,255,255,0.8) background occludes a short segment of the blue gap-at-K trace near m ~ -6 to -7 and clips one amber dash near m ~ 5.5. Cosmetic; the hidden data is outside the window and non-load-bearing."
+     "R6-3 [MINOR, NEW, accepted class]: with m = 5 re-anchored 'bottom left', the amber dotted 3.3177 flip line now clips the left stem of the '5' glyph in 'm = 5:  C = 0' and passes through the whitespace between 'the' and 'window' on the second line. At 5x zoom the '5' is unmistakable (top bar, bowl and terminal intact; only a few leftmost pixels of the upper stem are occluded by an orange dot) and it is disambiguated by both the marker position and the adjacent 'inside the window'. Same corner/reference-line collocation class as the accepted R5-1 and R5-3, and a strict trade for the association ambiguity R5-2 actually complained about, which is now gone.",
+     "R5-3 [MINOR, CARRIED, ACCEPTED per round-5 triage]: the left-panel 'analytic inversion window' annotation background still occludes a short non-load-bearing segment of the blue trace. Not re-raised as blocking."
     ]
    },
    "physics": {
@@ -202,76 +183,90 @@
     "issues": []
    },
    "caption_match": true,
-   "notes": "F1 and F2/M11 both confirmed fixed. Scope discipline in this figure is exemplary: discrete markers rather than a C(m) curve, an explicit 'lattice' y-axis, the grid size in the subplot title, the certified half only in the figure title, and the flip location labelled numerical-not-certified."
+   "notes": "R5-2 and R5-5 both confirmed fixed here. Scope discipline remains exemplary: discrete markers rather than a C(m) curve, an explicit 'lattice' y-axis, the grid size in the subplot title, the certified half only in the figure title, and the flip location labelled numerical-not-certified."
   }
  ],
  "cross_cutting": [
   {
-   "id": "R5-5",
+   "id": "R6-1",
    "severity": "MINOR",
    "category": "harness",
-   "finding": "The D11 figures do NOT pass their own registered structural checks. Running the FIGURE_REGISTRY checks against the live figures yields, for d11_fig3_haldane_chern: an ERROR-severity nan_data on trace 2 in both x and y (the legend-proxy trace declared x=[None], y=[None]; np.array([None], dtype=float) is nan), plus an axis_label warning (registry expects yaxis 'Dirac-point gap', actual is 'Dirac gap (units of t)'); and for d11_fig4_effective_medium an axis_label warning (registry expects yaxis 'effective', actual is 'eps<sub>eff</sub> (units of eps_0)'). Nothing is visually wrong - the legend proxy is a deliberate off-canvas entry - but the registry was added in round 2 precisely to be the regression guard, and a guard that reports an ERROR on a correct figure trains the next round to ignore it.",
-   "recommendation": "Use x=[], y=[] for the legend proxy (identical legend entry, no NaN), and reconcile the two expected_axes substrings with the actual titles (or relax them to 'Dirac gap' / 'eff')."
+   "blocking": false,
+   "finding": "The ADVISORY drift half of bundle_figure_integrity is DEAD CODE and reports a false negative. validate.py:2167 calls pathlib.Path(tmp_path), but validate.py imports 'from pathlib import Path' (line 70) and has NO module-level name 'pathlib'. Every iteration therefore raises NameError: name 'pathlib' is not defined before it can compare hashes, and the bare 'except Exception: pass' at lines 2176-2177 swallows it silently. PROVEN two ways: (a) replaying the exact block in validate.py's own module namespace raises NameError: name 'pathlib' is not defined; (b) behaviourally — a mutation that changed a figure's title, guaranteeing a different render, produced NO drift warning for any of the 7 figures. The reported 'zero drift' is therefore not evidence of zero drift; the comparison never executes. Same self-concealing-guard pattern as the round-4 F3 defect, one level up: the guard exists, is wired, runs, and cannot fire.",
+   "why_not_blocking": "(1) The drift detail is warning-only by design, so even working it could not change the check's pass/fail — the binding half is unaffected. (2) Drift verified independently: all four D11 PNGs are byte-identical by sha256 to a fresh fig.write_image(scale=3) render at identical dimensions (canvases 800x420, 800x420, 900x430, 880x470; PNGs 2400x1260, 2400x1260, 2700x1290, 2640x1410). The reviewed PDF provably reflects current source. R5-7 (output_dir) is subsumed here: the intended answer was built, it just does not execute yet.",
+   "recommendation": "One-token fix: use Path(tmp_path) (already imported at line 70), or add pathlib to the inner 'import hashlib, tempfile, os as _os' line. Separately, narrow the bare 'except Exception: pass' to the renderer errors it is meant to tolerate, or emit a warning-severity Detail when the comparison could not be performed — a guard that cannot distinguish 'no drift' from 'did not run' is the exact failure mode this check was added to end.",
+   "section_ref": "scripts/validate.py, check_bundle_figure_integrity(), the advisory drift block — the line `fresh = hashlib.sha256(pathlib.Path(tmp_path).read_bytes()).hexdigest()` (line 2167 when first read at 23:12, line 2175 at 23:47 after a concurrent edit shifted the file; the block itself is byte-identical). `from pathlib import Path` is at line 70/72; there is no module-level name `pathlib`.",
+   "revalidated_at": "2026-07-30T23:47 local — bug re-confirmed present in the live file after the concurrent edit."
   },
   {
-   "id": "R5-6",
+   "id": "R6-2",
    "severity": "MINOR",
    "category": "harness",
-   "finding": "bundle_figure_typeset_pt() has ZERO consumers repo-wide - it is called by no structural check, no validate.py check and no test. The F3 repair is therefore correct but UNGUARDED: nothing prevents a future canvas or font edit from silently re-breaching the 8 pt floor, which is exactly the failure mode that survived rounds 1-3. This is the residual half of F3.",
-   "recommendation": "Add the assertion to run_structural_checks() - an error-severity CheckIssue when bundle_figure_typeset_pt(fig) < 8.0 for any figure whose layout width is set - so the contract is enforced rather than merely available."
+   "blocking": false,
+   "finding": "check_bundle_figure_integrity enumerates its 7 figures in a hand-maintained SPECS dict. A newly added papers/<bundle>/figures/*.png is not automatically guarded, and no check asserts SPECS covers everything on disk. The gate is binding for what it lists and silent about what it does not.",
+   "recommendation": "Derive SPECS from review_figures.FIGURE_REGISTRY, or assert that every PNG under papers/*/figures/ has a SPECS entry.",
+   "section_ref": "scripts/validate.py, check_bundle_figure_integrity(), the SPECS dict (line 2114 when first read, 2122 at 23:47)."
   },
   {
-   "id": "R5-7",
+   "id": "R5-1",
    "severity": "MINOR",
-   "category": "harness",
-   "finding": "ANSWER TO THE EXPLICIT QUESTION: yes, I consider the output_dir item still OPEN, but NOT blocking. review_figures.py writes to FIGURES_DIR = PROJECT_ROOT/'figures', so the documented regeneration command does not refresh papers/D11/figures/*.png; the paper's copies and the generated copies can silently diverge. Today they have not - I regenerated all four from current source and got diff_frac = 0.000000 at identical dimensions - which is why this is not blocking. But the risk the round-4 harness fix was meant to remove (documented command reintroduces a stale or wrong-canvas figure) is only half removed: the canvas is now honoured, the destination is not.",
-   "recommendation": "Either add output_dir to FigureSpec, or - cheaper and it closes the risk more directly - add a validate.py check asserting that every papers/<bundle>/figures/*.png is byte-identical to a fresh render of its registered function. The sync assertion is what actually protects the paper; output_dir is one way to get there."
+   "category": "in-figure",
+   "blocking": false,
+   "finding": "CARRIED, accepted as-is per round-5 triage and the operator's instruction. Not re-raised; not blocking."
   },
   {
-   "id": "R5-8",
-   "severity": "BLOCKING (out of figure-review scope)",
-   "category": "typesetting",
-   "finding": "Observed while judging the rasterised PDF, and reported because it is publication-blocking even though it is not a figure defect. paper_draft.log carries exactly one Overfull \\hbox (32.40036 pt too wide, paper_draft.tex lines 134-139). On page 2, left column, last line before 'It carries no spectral...', it produces a hard two-column collision: \\thm{sum\\_plaquetteArg\\_eq\\_two\\_pi\\_mul\\_latticeChern} runs past the column edge and overprints the right column's word 'not' in 'A gap cannot exist in a single band', destroying both the theorem name's tail and the word. Verified at 600 dpi.",
-   "recommendation": "Route to the prose/LaTeX owner: allow a break inside the long \\texttt theorem name (\\allowbreak / seqsplit / \\linebreak) or set it on its own display line. Not a figure-reviewer fix."
+   "id": "R5-3",
+   "severity": "MINOR",
+   "category": "in-figure",
+   "blocking": false,
+   "finding": "CARRIED, accepted as-is per round-5 triage and the operator's instruction. Not re-raised; not blocking."
+  },
+  {
+   "id": "R5-4",
+   "severity": "MINOR",
+   "category": "in-figure",
+   "blocking": false,
+   "finding": "CARRIED, accepted as-is per round-5 triage and the operator's instruction. Not re-raised; not blocking."
   }
  ],
- "style_checks": {
-  "palette": "PASS - every explicit hex in all four figures is in visualizations.COLORS: steel_blue #2E86AB, amber #F18F01, carmine #E63946. Consistent with project convention and colourblind-safe (blue/amber primary, carmine reserved for certified points).",
-  "font_family": "PASS - 'Times New Roman, Nimbus Roman, DejaVu Serif, serif' throughout; rendered glyphs at 600 dpi are serif and sit beside the revtex body text without a family clash.",
-  "line_widths_markers": "PASS - 3 px traces and 12-15 px markers on 800-900 px canvases give ~1.9 pt lines and ~8-9 pt markers when placed at 508 pt. Appropriate for print.",
-  "layout": "PASS - all four are figure* at \\textwidth, measured 507.6-508.2 pt; bottom margins reserved before the horizontal legends, so no legend/axis-title overprint anywhere (the round-1 defect stays fixed)."
+ "typesetting_health": {
+  "overfull_hbox": 0,
+  "overfull_vbox": 0,
+  "latex_errors": 0,
+  "undefined_references": 0,
+  "undefined_citations": 0,
+  "two_column_collisions_all_pages": 0,
+  "note": "Underfull \\hbox warnings remain (justification looseness in a narrow two-column measure with long tt identifiers). They are cosmetic and produce no overprint; \\emergencystretch=2em trades a hard collision for looser interword spacing, which is the correct trade."
  },
- "summary": "Round 5 is a clean round on the figures themselves. All three round-4 FAILs and all five MINORs are verified fixed or verified accepted; there are zero FAILs and zero publication-blocking figure defects. F3 was the systemic one and it is closed on both halves, confirmed independently by enumerating every font field on the live figure objects AND by measuring printed glyph heights in the 600 dpi raster against a self-calibrated cap/em ratio - the smallest printed string per figure is 8.89 / 8.89 / 8.66 / 9.02 pt against 10 pt body, and the helper's report tracks the measurement to within 0.4%. Physics re-derived from formulas.py from scratch is correct in all four. The highest-priority anchor passes on a from-scratch string sweep, on structure (discrete markers, no C(m) curve) and on semantics (the figure refutes the continuum reading). The pass criterion is not met because seven MINORs remain: four are small in-figure label/marker collisions I would accept for publication, and three are harness guard-integrity gaps that do not touch the printed paper but do determine whether these defects can recur. One genuinely blocking defect exists in the PDF and it is NOT a figure: a two-column text collision on page 2.",
+ "style_checks": {
+  "palette": "PASS — every explicit hex in all four figures is in visualizations.COLORS: steel_blue #2E86AB, amber #F18F01, carmine #E63946. Colourblind-safe (blue/amber primary, carmine reserved for certified points).",
+  "font_family": "PASS — 'Times New Roman, Nimbus Roman, DejaVu Serif, serif' throughout; sits beside the revtex body text without a family clash.",
+  "line_widths_markers": "PASS — 3 px traces and 12-15 px markers on 800-900 px canvases give ~1.9 pt lines and ~8-9 pt markers at 508 pt placement.",
+  "layout": "PASS — all four are figure* at \\textwidth, measured 507.6-508.2 pt; bottom margins reserved before the horizontal legends, so no legend/axis-title overprint anywhere."
+ },
+ "summary": "Round 6 is a scoped confirmation pass and every item confirms. R5-8, the single blocking item and a prose defect rather than a figure one, is genuinely fixed: 0 Overfull hbox (was 1), and independently of the log, page 2 now shows a 17.93 pt clear gutter with zero same-line column collisions across all 8 pages; at 600 dpi the theorem name wraps as sum_plaquetteArg_eq_two_pi_mul_ / latticeChern with the underscore printed at the break, so it reconstructs unambiguously, and the right column's 'not' is fully intact. R5-6 is confirmed to be a real, binding gate: four independent mutations — per-trace textfont, canvas width, axis title font, tickfont — each correctly FAIL it, and two of those fields were invisible to the round-4 helper, so the systemic F3 class is now prevented rather than merely fixed. R5-2 and R5-5 confirm fixed as stated, and the 508 pt constant now tracks my raster measurement to within 0.01 pt. Physics re-derived from formulas.py from scratch is correct in all four figures, and all three anchors pass — the highest-priority one on a 53-string sweep, a caption sweep, a structural check (four single-point traces, no C(m) curve) and a semantic reading (the figure refutes the continuum picture rather than implying it). One new harness MINOR: the gate's ADVISORY drift half is dead code — a NameError on pathlib, swallowed by a bare except — so its 'zero drift' cannot be distinguished from 'never ran'; it is not blocking because that half is warning-only and because byte-identity of all four shipped PNGs against fresh renders was verified independently. What remains is six MINORs, all accepted-class: three carried from round 5 by the operator's own triage, one new cosmetic label/line contact, and two harness gaps that do not touch the printed paper.",
  "triage": {
-  "publication_blocking": [
-   "R5-8 (two-column collision, p. 2 - prose/LaTeX owner, not figures)"
-  ],
-  "would_accept_as_is": [
+  "publication_blocking": [],
+  "documented_residue_accepted": [
    "R5-1",
-   "R5-2",
    "R5-3",
-   "R5-4"
+   "R5-4",
+   "R6-3"
   ],
-  "accept_for_this_paper_but_fix_for_the_pipeline": [
-   "R5-5",
-   "R5-6",
-   "R5-7"
+  "harness_followups_not_blocking": [
+   "R6-1 (one-token fix; highest value of the residue)",
+   "R6-2"
   ],
-  "note": "If the goal is to ship D11, only R5-8 must be fixed. If the goal is ALL PASS as literally stated, R5-1 through R5-7 are each a small, local change. My own priority order if you fix any subset: R5-8 (blocking), then R5-6 (it is the difference between F3 being fixed and F3 being prevented), then R5-2 (it sits on the central claim), then the rest."
+  "note": "Nothing in this list blocks Stage 13. R6-1 is worth the one-token fix before the next bundle relies on this gate, because until then the drift guard silently cannot fail."
  },
  "recommendations": [
-  "R5-8 FIRST and separately: break the long \\texttt theorem name at paper_draft.tex:135 so page 2's columns stop colliding. Blocking; owned by prose/LaTeX, not figures.",
-  "R5-6: wire bundle_figure_typeset_pt into run_structural_checks() as an error-severity floor at 8.0 pt. Closes the systemic round-4 failure against recurrence.",
-  "R5-2: give the Haldane m = 5 and m = 6 labels non-colliding textpositions (e.g. 'bottom left' and 'top right') so neither label's extent sits over the other's marker or across the window boundary.",
-  "R5-1: shift the phononic gap annotation clear of the k = -pi upper-edge marker (annotation_xshift, or move it to the band's mid-x).",
-  "R5-5: change the Haldane legend proxy to x=[], y=[] and reconcile the two expected_axes substrings with the actual axis titles.",
-  "R5-7: add a validate.py check asserting papers/<bundle>/figures/*.png are byte-identical to a fresh render (preferred over, or alongside, FigureSpec.output_dir).",
-  "R5-4: give the Reuss trace a distinguishable key (dash pattern or a different palette entry) so the legend key is injective.",
-  "R5-3: drop the annotation bgcolor to fully transparent, or move it off the trace, so no data segment is occluded."
+  "PROCEED to Stage 13 for D11 figures. Record R5-1, R5-3, R5-4, R6-3, R6-1 and R6-2 as documented residue.",
+  "R6-1 (non-blocking, one token): validate.py:2167 — replace pathlib.Path(tmp_path) with Path(tmp_path), and make the swallowed-exception path emit a warning Detail so 'drift check did not run' is distinguishable from 'no drift'.",
+  "R6-2 (non-blocking): derive check_bundle_figure_integrity's SPECS from FIGURE_REGISTRY, or assert SPECS covers every PNG under papers/*/figures/."
  ],
- "root_causes": [
-  "Corner-collocation: add_hrect / add_vline annotation_position anchors place text in the same corner where the load-bearing edge markers sit (R5-1), and per-point textposition presets do not know about neighbouring points or reference lines (R5-2, R5-3).",
-  "Guard availability without guard enforcement: the typeset checker exists and is now correct but is called by nothing (R5-6); the FigureSpec registry exists but its expectations were never reconciled with the figures it guards (R5-5); the harness honours the canvas but not the destination (R5-7).",
-  "Long unbreakable \\texttt tokens in a two-column class (R5-8) - a prose-side pattern, listed here only because it was found while judging the rasterised PDF."
- ]
+ "review_environment_note": {
+  "artefact_freeze": "The REVIEWED artefacts were stable for the whole review and are unchanged at exit: paper_draft.pdf md5 6626c6b6be1e0ae6f231e58b46299608 (mtime 22:55:22) identical at entry and exit; paper_draft.tex, paper_draft.log and all four papers/D11/figures/*.png git-clean and unmodified; src/core/visualizations.py mtime 23:02:31, i.e. before this review began. Every figure and typesetting judgement here rests on frozen inputs.",
+  "concurrency_observed": "The repo was NOT otherwise quiescent. scripts/validate.py was rewritten at 23:46:30 — mid-review, after I first read it at ~23:12 — and scripts/bundle_readiness.py (23:36) and scripts/review_runner.py (23:38) also changed. R6-1 was therefore re-verified against the live file at 23:47 and still stands (the drift block is byte-identical, only its line numbers moved). No conclusion in this report depends on a stale read.",
+  "side_effect_caused_by_this_review": "Running review_figures.run_structural_checks() refreshes PROJECT_ROOT/figures/*.png, figures/review_manifest.json and figures/structural_checks.json — the scratch output dir, NOT papers/<bundle>/figures/. Those working-tree modifications are a side effect of this review and can be discarded with `git checkout -- figures/` if a clean tree is wanted. No paper-owned artefact was written by this review other than papers/D11/figures/figure_review_report.json and papers/D11/audit_log.jsonl."
+ }
 }

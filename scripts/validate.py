@@ -57,7 +57,9 @@ Design Decisions
 from __future__ import annotations
 
 import argparse
+import ast
 import hashlib
+import importlib
 import json
 import re
 import shutil
@@ -88,6 +90,12 @@ REPORTS_DIR = PROJECT_ROOT / "docs" / "validation" / "reports"
 
 # Ensure src is importable
 sys.path.insert(0, str(PROJECT_ROOT))
+
+# Ensure sibling scripts/ modules are importable (validate.py is imported as a
+# module by tests/, not only run as __main__).
+if str(SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPT_DIR))
+from bundle_registry import BUNDLE_CODES as _REGISTRY_BUNDLE_CODES  # noqa: E402
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -2111,7 +2119,29 @@ def check_bundle_figure_integrity() -> CheckResult:
             warning=True)])
 
     FLOOR_PT = 8.0
-    SPECS = {
+    # Derived from FIGURE_REGISTRY rather than hand-maintained: a hand-listed
+    # roster means the NEXT bundle figure ships unguarded, which is the same
+    # silent-omission class as the four hardcoded bundle registries this lift
+    # had to patch. The literal below is the fallback if the registry is
+    # unreadable.
+    try:
+        import importlib.util as _ilu
+        _spec = _ilu.spec_from_file_location(
+            "_review_figures", SCRIPT_DIR / "review_figures.py")
+        _rf = _ilu.module_from_spec(_spec)
+        _spec.loader.exec_module(_rf)
+        _derived: dict[str, list] = {}
+        for fs in _rf.FIGURE_REGISTRY:
+            if not fs.name.startswith(("d11_", "d12_")):
+                continue
+            _derived.setdefault(fs.name.split("_")[0].upper(), []).append(
+                (fs.name, fs.function))
+        if _derived:
+            SPECS = _derived
+        else:
+            raise RuntimeError("no d11_/d12_ specs found")
+    except Exception:
+        SPECS = {
         "D11": [("d11_fig1_phononic_band_gap", "fig_d11_phononic_band_gap"),
                 ("d11_fig2_pt_exceptional_point", "fig_d11_pt_exceptional_point"),
                 ("d11_fig3_haldane_chern", "fig_d11_haldane_chern"),
@@ -2164,7 +2194,7 @@ def check_bundle_figure_integrity() -> CheckResult:
                 with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
                     tmp_path = tmp.name
                 fig.write_image(tmp_path, scale=3)
-                fresh = hashlib.sha256(pathlib.Path(tmp_path).read_bytes()).hexdigest()
+                fresh = hashlib.sha256(Path(tmp_path).read_bytes()).hexdigest()
                 shipped = hashlib.sha256(png.read_bytes()).hexdigest()
                 _os.unlink(tmp_path)
                 if fresh != shipped:
@@ -2173,8 +2203,17 @@ def check_bundle_figure_integrity() -> CheckResult:
                         f"shipped PNG differs from a fresh render "
                         f"({shipped[:12]} vs {fresh[:12]}) — re-render before review",
                         warning=True))
-            except Exception:
-                pass  # kaleido unavailable / renderer mismatch — advisory only
+            except ImportError:
+                pass  # kaleido genuinely unavailable — advisory only
+            except Exception as exc:
+                # A bare `except: pass` here previously swallowed a NameError
+                # for a whole review round, making "zero drift" indistinguishable
+                # from "never ran". Surface anything that is not a missing
+                # renderer, as a warning rather than a hard failure.
+                details.append(Detail(
+                    f"drift_check_error:{bundle}:{png_name}", True,
+                    f"drift comparison could not run: {type(exc).__name__}: {exc}",
+                    warning=True))
 
     details.insert(0, Detail(
         "summary", n_fail == 0,
@@ -4682,12 +4721,209 @@ def check_quantum_network() -> CheckResult:
 #  REMEDIATION_TRIAGE_2026-06-10.md, Wave-5 process items a/b/c.)
 # ═══════════════════════════════════════════════════════════════════════
 
-#: Bundle codes per docs/PAPER_STRATEGY.md (publication-bundle drafts).
-BUNDLE_CODES = (
-    "F", "D1", "D2", "D3", "D4", "D5", "D6", "D7", "D8", "D9",
-    "D10", "D11", "D12",
-    "E1", "E2", "I1", "I2", "I3", "L1", "L2", "L3",
+#: Bundle codes per docs/PAPER_STRATEGY.md, from THE roster source of truth
+#: (scripts/bundle_registry.py). Re-exported under the historical name because
+#: three checks below and `tests/` import it.
+#:
+#: This was a hand-maintained literal until 2026-07-30. It omitted D10–D12,
+#: which meant `prose_theorem_reference_coverage` — the one gate that catches
+#: Lean theorem-name drift in bundle prose — never scanned D10 at all between
+#: its 2026-06-30 first lift and 2026-07-30. A short tuple does not error; it
+#: just checks fewer bundles and reports a clean pass.
+BUNDLE_CODES = _REGISTRY_BUNDLE_CODES
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# Bundle-roster single-source-of-truth gate
+# ═══════════════════════════════════════════════════════════════════════
+
+#: Modules that must derive their bundle roster from `bundle_registry`, and the
+#: bundle-keyed attribute names to compare against it. Adding a consumer here
+#: is how you put it under the gate.
+_ROSTER_CONSUMERS: tuple[tuple[str, tuple[str, ...]], ...] = (
+    ("sentence_state", ("_VALID_BUNDLE_TARGETS",)),
+    ("validate", ("BUNDLE_CODES",)),
+    ("bundle_readiness", ("_BUNDLE_ORDER", "_TIER_OF")),
+    ("review_runner", ("TIER_OF",)),
+    ("bundle_source_manifest", ("_TIER_OF", "_BUNDLE_TITLES",
+                               "_BUNDLE_TARGET_JOURNAL", "_BUNDLE_SUBPHASE")),
+    ("datastar_bundles", ("_TIER_OF", "_BUNDLE_TITLES")),
+    ("aristotle_usage_by_bundle", ("ALL_BUNDLES",)),
 )
+
+#: Files allowed to contain a literal bundle roster: the registry itself (the
+#: one legitimate home) and the migration shim that reads historical rosters.
+_ROSTER_LITERAL_ALLOWLIST = frozenset({"bundle_registry.py"})
+
+#: A literal collection holding at least this many distinct bundle codes is a
+#: roster, not a coincidence. The smallest real roster slice that could appear
+#: innocently is a tier (Tier 1 has 12 members); 6 is comfortably below every
+#: hand-rolled roster seen on 2026-07-30 and above any incidental grouping.
+_ROSTER_LITERAL_THRESHOLD = 6
+
+
+@register_check(
+    "bundle_registry_consistency",
+    "Publication-bundle roster has ONE source of truth "
+    "(scripts/bundle_registry.py) that every consumer derives from")
+def check_bundle_registry_consistency() -> CheckResult:
+    """Gate the publication-bundle roster against re-fragmentation.
+
+    Before 2026-07-30 the roster was hardcoded in **seven** places. The D11/D12
+    first lift patched each by hand, and every omission had failed *silently
+    and differently* — `validate.py` skipped D10 in the one check that catches
+    Lean theorem-name drift in prose; `bundle_readiness.py` rendered 19 of 21
+    bundles while looking complete; `aristotle_usage_by_bundle.py` reported a
+    complete-looking `n/len(ALL_BUNDLES)` over a roster that stopped at D9. Only
+    `review_runner.py` failed loudly (`KeyError('D10')`), and that one crash
+    took down the Stage-13 prep-brief entry point for every bundle at once.
+
+    Three independent legs, because "they all import the registry" is only
+    true until someone writes a new dict:
+
+    A. **Documentary agreement** — the registry's codes and tiers must match
+       `docs/PAPER_STRATEGY.md` §6, the human-authoritative roster. This is the
+       leg with teeth for the actual failure mode: a bundle authorized in the
+       strategy doc but never registered. (Only code and tier are compared —
+       the table's titles are abbreviated for width and its target column
+       collapses the registry's ``|``-separated journal alternatives, since a
+       literal ``|`` would break the markdown cell.)
+
+    B. **Consumer agreement** — every module in `_ROSTER_CONSUMERS` exposes
+       bundle-keyed attributes whose key sets equal the registry's exactly.
+       Catches a consumer that drifts by filtering or extending the roster.
+
+    C. **No re-hardcoding** — an AST walk over `scripts/*.py` flags any literal
+       dict/list/tuple/set holding ≥6 distinct bundle codes outside the
+       registry. This is the leg that stops the *next* authorized bundle from
+       regressing this: leg B only sees maps that already exist, but leg C sees
+       a brand-new hand-rolled roster the moment it is written. AST-based, so
+       prose in comments and docstrings never trips it.
+    """
+    details: List[Detail] = []
+    all_pass = True
+
+    def check(name: str, passed: bool, msg: str, warning: bool = False) -> None:
+        nonlocal all_pass
+        details.append(Detail(name, passed, msg, warning=warning))
+        if not passed and not warning:
+            all_pass = False
+
+    import bundle_registry as registry
+
+    ref_codes = set(registry.BUNDLE_CODES)
+
+    # ── Leg A: registry ↔ PAPER_STRATEGY.md §6 ──────────────────────────
+    try:
+        strategy = registry.parse_strategy_roster()
+    except (OSError, ValueError) as exc:
+        check("strategy_doc_parses", False, f"PAPER_STRATEGY.md §6: {exc}")
+        strategy = None
+
+    if strategy is not None:
+        unregistered = sorted(set(strategy) - ref_codes)   # authorized, not registered
+        unauthorized = sorted(ref_codes - set(strategy))   # registered, not in the doc
+        check(
+            "strategy_roster_matches", not unregistered and not unauthorized,
+            "registry codes == PAPER_STRATEGY.md §6 "
+            f"({len(ref_codes)} bundles)"
+            if not unregistered and not unauthorized else
+            "; ".join(filter(None, [
+                f"authorized in PAPER_STRATEGY.md §6 but MISSING from "
+                f"scripts/bundle_registry.py: {unregistered}"
+                if unregistered else "",
+                f"in scripts/bundle_registry.py but absent from "
+                f"PAPER_STRATEGY.md §6: {unauthorized}" if unauthorized else "",
+            ])),
+        )
+        tier_drift = {
+            c: (t, registry.TIER_OF[c])
+            for c, t in strategy.items()
+            if c in registry.TIER_OF and registry.TIER_OF[c] != t
+        }
+        check(
+            "strategy_tiers_match", not tier_drift,
+            f"all {len(strategy)} tiers agree with PAPER_STRATEGY.md §6"
+            if not tier_drift else
+            f"tier drift (doc, registry): {tier_drift}",
+        )
+
+    # ── Leg B: every consumer's key set == the registry's ────────────────
+    if str(SCRIPT_DIR) not in sys.path:
+        sys.path.insert(0, str(SCRIPT_DIR))
+
+    n_attrs = 0
+    leg_b_ok = True
+    for mod_name, attrs in _ROSTER_CONSUMERS:
+        try:
+            mod = importlib.import_module(mod_name)
+        except Exception as exc:  # noqa: BLE001 — any import failure is a fail
+            leg_b_ok = False
+            check(f"consumer_imports:{mod_name}", False,
+                  f"cannot import scripts/{mod_name}.py: {exc}")
+            continue
+        for attr in attrs:
+            obj = getattr(mod, attr, None)
+            if obj is None:
+                leg_b_ok = False
+                check(f"consumer_attr:{mod_name}.{attr}", False,
+                      f"{mod_name}.{attr} is gone — update _ROSTER_CONSUMERS "
+                      f"if it was intentionally renamed")
+                continue
+            keys = set(obj)
+            n_attrs += 1
+            if keys != ref_codes:
+                leg_b_ok = False
+                check(
+                    f"consumer_roster:{mod_name}.{attr}", False,
+                    f"{mod_name}.{attr} disagrees with bundle_registry — "
+                    f"missing {sorted(ref_codes - keys)}, "
+                    f"extra {sorted(keys - ref_codes)}",
+                )
+    if leg_b_ok:
+        check("consumer_rosters_agree", True,
+              f"{n_attrs} bundle-keyed attributes across "
+              f"{len(_ROSTER_CONSUMERS)} modules all match the registry "
+              f"({len(ref_codes)} bundles)")
+
+    # ── Leg C: no re-hardcoded roster literals under scripts/ ────────────
+    offenders: List[str] = []
+    n_scanned = 0
+    for py in sorted(SCRIPT_DIR.glob("*.py")):
+        if py.name in _ROSTER_LITERAL_ALLOWLIST:
+            continue
+        try:
+            tree = ast.parse(py.read_text(encoding="utf-8"), filename=str(py))
+        except (OSError, SyntaxError) as exc:
+            check(f"scan_parses:{py.name}", True, f"unparsed: {exc}",
+                  warning=True)
+            continue
+        n_scanned += 1
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Dict):
+                elements = node.keys
+            elif isinstance(node, (ast.List, ast.Tuple, ast.Set)):
+                elements = node.elts
+            else:
+                continue
+            found = {
+                e.value for e in elements
+                if isinstance(e, ast.Constant) and e.value in ref_codes
+            }
+            if len(found) >= _ROSTER_LITERAL_THRESHOLD:
+                offenders.append(
+                    f"{py.name}:{node.lineno} ({len(found)} bundle codes)")
+
+    check(
+        "no_rehardcoded_rosters", not offenders,
+        f"{n_scanned} scripts/*.py scanned — no literal bundle roster outside "
+        f"scripts/bundle_registry.py"
+        if not offenders else
+        "literal bundle rosters found outside scripts/bundle_registry.py "
+        f"(import from it instead): {offenders}",
+    )
+
+    return CheckResult(passed=all_pass, details=details)
 
 
 # Fatal-error markers in a pdflatex .log. A `! ` line is TeX's universal
