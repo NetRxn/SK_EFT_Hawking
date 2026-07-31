@@ -28,6 +28,7 @@ Usage:
 """
 
 import json
+import re
 import subprocess
 import sys
 from datetime import datetime
@@ -355,6 +356,61 @@ def generate_tex(counts: dict, path: Path, deps: list | None = None):
     #   W6r2+def    (sections 15, 18): scalar-mult + 6x6 lift
     #   W7+r2       (sections 16-17): Vieta + Lipschitz + superexch bound
     #   W8          (section 19):     Berry-phase sign flip
+    # --- D11 bundle substrate summary -------------------------------------
+    # Added 2026-07-31 after SIX consecutive hand-syncs of the same five literals
+    # across Stage-13 rounds 2-5: every substrate edit (including pure docstring
+    # edits, which change the line count) desynchronized the published numbers,
+    # and the freshness gate could not see bundle drafts until round 3. Emit them
+    # as macros so the paper cannot drift again.
+    #
+    # The rule is the one papers/D11/paper_draft.tex states, extended to the
+    # definition side (which the paper previously left unstated — D11 round-4/5
+    # finding 7.1): a declaration counts when a line begins with the keyword,
+    # optionally preceded by an attribute bracket or private/protected. `abbrev`
+    # is INCLUDED and now disclosed; the two are Torus and LinkField, and Torus
+    # is cited in the paper's own prose, so excluding it would make a cited
+    # object uncountable under the stated rule.
+    _D11_MODULES = [
+        "BlochBundle", "AcousticBlochOperator", "PhononicBandGap", "BandGapEnclosure",
+        "MaxwellGarnett", "EffectiveMediumBounds", "EffectiveModuli",
+        "ExceptionalPoint", "NonHermitianWinding", "NonHermitianBloch",
+    ] + [f"TopologicalBand/{m}" for m in (
+        "ArgSectors", "BlochFHS", "BlochFrame", "BlochFrameOfD",
+        "FHSExamples", "FHSLatticeGauge", "FiniteTorus", "PrincipalBranch")
+    ] + [f"GrapheneBand/{m}" for m in (
+        "BernalBilayer", "DiracExpansion", "HaldaneWitness", "Honeycomb")]
+
+    _thm_re = re.compile(r"^(?:@\[[^\]]*\]\s*)?(?:private\s+|protected\s+)?(?:theorem|lemma)\b")
+    _def_re = re.compile(
+        r"^(?:@\[[^\]]*\]\s*)?(?:private\s+|protected\s+)?(?:noncomputable\s+)?"
+        r"(?:def|structure|abbrev)\b")
+    d11_lines = d11_thms = d11_defs = 0
+    d11_ok = True
+    for _m in _D11_MODULES:
+        _p = LEAN_DIR / "SKEFTHawking" / f"{_m}.lean"
+        if not _p.exists():
+            d11_ok = False
+            break
+        _L = _p.read_text(encoding="utf-8").splitlines()
+        d11_lines += len(_L)
+        d11_thms += sum(1 for ln in _L if _thm_re.match(ln))
+        d11_defs += sum(1 for ln in _L if _def_re.match(ln))
+    if d11_ok:
+        lines.append("% --- D11 bundle substrate summary (source-level, stated rule) ---")
+        lines.append(f"\\newcommand{{\\dxiModules}}{{{len(_D11_MODULES)}}}")
+        lines.append(f"\\newcommand{{\\dxiLines}}{{{d11_lines}}}")
+        lines.append(f"\\newcommand{{\\dxiTheorems}}{{{d11_thms}}}")
+        lines.append(f"\\newcommand{{\\dxiDefs}}{{{d11_defs}}}")
+        try:
+            _deps = json.loads((LEAN_DIR / "lean_deps.json").read_text(encoding="utf-8"))
+            _names = {"SKEFTHawking." + m.replace("/", ".") for m in _D11_MODULES}
+            _dt = sum(1 for e in _deps
+                      if isinstance(e, dict) and e.get("module") in _names
+                      and e.get("kind") == "theorem")
+            lines.append(f"\\newcommand{{\\dxiDepsTheorems}}{{{_dt}}}")
+        except Exception:
+            pass
+
     fhd_path = LEAN_DIR / "SKEFTHawking" / "FermiHubbardDimer.lean"
     fhd_sec = count_per_section_theorems(fhd_path)
     if fhd_sec:
