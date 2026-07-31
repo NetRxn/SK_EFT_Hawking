@@ -1431,7 +1431,16 @@ _REVIEW_SECTION_RE = re.compile(
     r'^#{3,5}\s+(?:Class\s+|Anchor\s+|Finding\s+|BLOCKER\s+|REQUIRED\s+)?'
     # …and a dot-part may be a letter suffix: `### 3.1.b — 🔴 BLOCKER (REGRESSION) …`
     # was the last invisible document on disk, and it is a BLOCKER.
-    r'([A-Za-z]{0,2}[-.]?\d+(?:\.[0-9a-z]+){0,2})\s*[—\-–:]\s*(.+?)$',
+    # …and arbitrary text may sit between the id and the separator (D12 round-11 8.2):
+    #   `### 1. Paper 7 — …`   `### 1. Class 6 BLOCKER — …`
+    #   `### BLOCK-1 (Class HD, CRITICAL) — …`   `### I.1 Count … — …`
+    # The separator is restricted to a SPACED em/en dash or colon so an intra-word hyphen
+    # ("### BLOCK-1") cannot be mistaken for it.
+    r'([A-Za-z]{0,5}[-.]?\d+(?:\.[0-9a-z]+){0,2})\.?'
+    # The colon form attaches directly to the id (`### F-1: Stakeholder caption …`), while
+    # the dash form is spaced. Both accepted; requiring a space before the colon lost three
+    # notebook-claims reviews entirely.
+    r'[^\n—–:]{0,70}?(?:\s*:\s+|\s+[—–]\s+)(.+?)$',
     re.MULTILINE,
 )
 # When the heading uses "Class N" form, prepend "C" to the section number so
@@ -1703,9 +1712,14 @@ def extract_review_finding_nodes() -> list[dict]:
                 'inferred_paper': inferred_paper,
                 'inferred_bundle': inferred_bundle,
             }
+            _KNOWN_STATUSES = ('open', 'fixed', 'accepted')
             ledger = supersessions.get(finding_id)
             if ledger:
-                meta['status'] = ledger.get('status', status)
+                _ls = ledger.get('status', status)
+                # An unrecognised token was written straight through and no consumer
+                # validated it, so `{"status": "closed"}` silently became a status nothing
+                # treats as open (round-11 8.1). Unknown tokens now read as `open`.
+                meta['status'] = _ls if _ls in _KNOWN_STATUSES else 'open'
                 meta['superseded_by'] = ledger.get('superseded_by')
                 meta['supersession_evidence'] = ledger.get('evidence')
                 meta['supersession_date'] = ledger.get('date')
@@ -1728,14 +1742,25 @@ def extract_review_finding_nodes() -> list[dict]:
             # reopen 264 well-formed historical closures — a guard firing on correct data.
             # So: an explicit `fixed`, a substantive rationale, and SOME provenance anchor
             # (a commit or a date). The two-key bypass has none of the last two.
-            if (meta.get('status') == 'fixed'
+            # The bar must cover EVERY status that removes a blocking finding from the
+            # open set — not just `fixed` (D12 Stage-13 round-11 BLOCKER 8.1). Round 10's
+            # version keyed on `== 'fixed'`, so `{"finding_id": X, "status": "accepted"}`
+            # — two keys, no evidence, no anchor — closed a live BLOCKER, because
+            # `_eval_fix_propagation` partitions `accepted` out of the open set before the
+            # severity filter ever runs. My round-10 mutation suite enumerated six shapes
+            # and every one of them set `status: fixed`: I tested the space I was thinking
+            # about rather than the space that exists. An unrecognised token like
+            # `"closed"` was equally unvalidated.
+            _CLOSING_STATUSES = ('fixed', 'accepted')
+            if (meta.get('status') in _CLOSING_STATUSES
                     and severity in ('critical', 'major', 'blocker')):
                 _rec = ledger or {}
                 _why = str(_rec.get('evidence') or _rec.get('note')
                            or _rec.get('rationale') or '').strip()
                 _anchor = any(str(_rec.get(k) or '').strip()
                               for k in ('commit', 'date', 'closed_date', 'applied_at'))
-                if not (_rec.get('status') == 'fixed' and len(_why) >= 40 and _anchor):
+                if not (_rec.get('status') in _CLOSING_STATUSES
+                        and len(_why) >= 40 and _anchor):
                     meta['status'] = 'open'
                     meta['blocking_closure_rejected'] = (
                         'ledger record does not meet the blocking-closure bar '

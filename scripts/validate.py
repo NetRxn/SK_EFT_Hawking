@@ -3835,7 +3835,35 @@ def check_review_docs_mint_findings() -> CheckResult:
     # Deliberately LOOSER than `build_graph._REVIEW_SECTION_RE`: this asks "does this
     # document look like it carries findings", and the gap between the two regexes IS the
     # defect being detected. If they were the same pattern the check would be a tautology.
-    _FINDING_SHAPED_HEADING = re.compile(r'^#{3,5}\s+\S*\d[\w.\-]*\s*[—\-–:]', re.M)
+    #
+    # ⚠️ The first version was circular anyway (D12 round-11 BLOCKER 8.2). It required
+    # `<digits><dash>` — the exact fragment that drifts — so the six documents minting zero
+    # were precisely the six it skipped, and my "8 → 0" was measured inside the scope the
+    # check itself defines. Those six carry 47 severity-marked headings including four
+    # declared BLOCKERs in `lean_project_audit.md` and four 🔴 in `CitationReview-01.md`.
+    #
+    # The predicate is now SEVERITY, not numbering: a heading that declares BLOCKER /
+    # REQUIRED / RECOMMENDED / CRITICAL, or carries a severity glyph, is a finding heading
+    # whatever its numbering scheme — including the forms that defeated the old one
+    # (`### 1. Paper 7 —`, `### 1. Class 6 BLOCKER —`, `### BLOCK-1 (…) —`,
+    # `### I.1 Count …`, and glyph-first `### 🔴 BLOCKER 1.1 —`). Severity is the thing a
+    # finding cannot omit and still be a finding.
+    _SEVERITY_HEADING = re.compile(
+        r'^#{3,5}\s+.*(?:BLOCKER|REQUIRED|RECOMMENDED|CRITICAL|MAJOR|MINOR'
+        r'|\U0001F534|\U0001F7E1|\U0001F535|\u26a0)', re.M)
+    # ...but a severity WORD is not a severity LABEL. A clean figure review's headings read
+    # "`fig5.png` (P2) — **PASS** (round-2 BLOCKER resolved)": the token appears inside a
+    # resolution note, and that document correctly mints nothing. Excluding headings that
+    # also declare PASS/RESOLVED is the difference between "carries findings" and "mentions
+    # a finding", and skipping it would have made this guard fire on a correct document —
+    # the fifth time today.
+    _RESOLVED_HEADING = re.compile(r'PASS|RESOLVED|resolved', re.I)
+
+    def _carries_findings(text: str) -> bool:
+        return any(not _RESOLVED_HEADING.search(h)
+                   for h in _SEVERITY_HEADING.findall(text) or []) or any(
+            not _RESOLVED_HEADING.search(m.group(0))
+            for m in _SEVERITY_HEADING.finditer(text))
 
     sys.path.insert(0, str(SCRIPT_DIR))
     try:
@@ -3878,8 +3906,7 @@ def check_review_docs_mint_findings() -> CheckResult:
             # finding-shaped headings must mint findings. A generated aggregation has no
             # such headings and is silently skipped — not because of where it lives, but
             # because it never claimed to carry findings.
-            if not _FINDING_SHAPED_HEADING.search(
-                    md.read_text(encoding="utf-8", errors="replace")):
+            if not _carries_findings(md.read_text(encoding="utf-8", errors="replace")):
                 continue
             checked += 1
             rel = str(md.relative_to(PROJECT_ROOT))
@@ -3896,7 +3923,9 @@ def check_review_docs_mint_findings() -> CheckResult:
 
     details.insert(0, Detail(
         "summary", empty == 0,
-        f"{checked} fresh-context review document(s) checked (generated bundle-stage13 aggregations excluded — they mint zero by design); {empty} mint zero findings"))
+        f"{checked} document(s) carrying unresolved severity-labelled headings checked "
+        f"(a document mentioning a severity only inside a PASS/RESOLVED note carries no "
+        f"findings and is skipped); {empty} mint zero"))
     return CheckResult(passed=empty == 0, details=details)
 
 
