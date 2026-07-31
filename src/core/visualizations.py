@@ -14737,8 +14737,9 @@ def fig_qnet_readout_envelopes() -> go.Figure:
 #
 # All bundle figures therefore (a) declare a canvas at the physical size they will
 # actually occupy — 700 px ~ \textwidth at 96 dpi — and (b) ship as `figure*`
-# (full two-column width, 510 pt) rather than `figure`. At width=700, font=13
-# that gives 13/700*510 = 9.5 pt against 10 pt body: legible, and matching.
+# (full two-column width, MEASURED at 508.2 pt in the compiled PDFs) rather
+# than `figure`. At width=700, font=13 that gives 13/700*508 = 9.4 pt against
+# 10 pt body: legible, and matching.
 #
 # If you change `width`, change `font_size` with it or the figure silently
 # becomes unreadable in print while looking fine as a PNG.

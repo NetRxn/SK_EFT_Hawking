@@ -1,334 +1,350 @@
 {
-  "review_date": "2026-07-30T22:40:00Z",
-  "agent_run_id": "figure-reviewer:bundle-D12:round5:2026-07-30T22:40:00Z",
-  "reviewer_version": "figure-reviewer-bundle-aware",
-  "reviewer_model": "claude-opus-5",
-  "stage": 9,
-  "review_round": 5,
-  "prior_review": "figure-reviewer:bundle-D12:round4:2026-07-30T21:35:00Z",
-  "bundle_target": "D12",
-  "anchor_source": "docs/agents/claims-reviewer-bundle-prompts.md (D12, L734-862)",
-  "figures_reviewed": 3,
-  "overall_status": "issues_found",
-  "pass_criterion": "ALL PASS (no FAIL, no MINOR)",
-  "pass_criterion_met": false,
-  "publication_blocking_findings": 0,
-  "review_target": "typeset PDF papers/D12/paper_draft.pdf (git-clean at a61e3fdf) rasterised at 200 and 600 dpi; figures judged on pp. 3, 4, 6. PNGs used as measurement inputs only.",
-  "structural_checks_json": "UNAVAILABLE - figures/structural_checks.json is dated 2026-06-14T16:33:37Z and contains zero D11/D12 entries, because scripts/review_figures.py --check aborts with NameError. Equivalent checks were reproduced in-process; see D12-R5-XF-01.",
-  "artefact_integrity": {
-    "verdict": "INTACT - round-4 D12-R5 predecessor XF-01 is RESOLVED",
-    "method": "two independent checks: (1) sub-second mtime ordering; (2) pdfimages -png extraction of all three embedded XObjects, alpha-composited over white against the PNGs composited the same way",
-    "mtimes_epoch": {
-      "fig1": 1785467960.25,
-      "fig2": 1785465059.179,
-      "fig3": 1785467973.871,
-      "pdf": 1785467976.17
-    },
-    "pdf_postdates_every_png_by_s": 2.299,
-    "embedded_vs_png_pixel_diff": {
-      "fig1": "maxdiff 0 over 1560x3120x3",
-      "fig2": "maxdiff 0 over 1410x2640x3",
-      "fig3": "maxdiff 0 over 1320x2640x3"
-    },
-    "git": "papers/D12/ clean at a61e3fdf; no artefact changed during the review",
-    "reviewed_sha256_prefixes": {
-      "fig1": "5ca4c3e46d3b46f1",
-      "fig2": "7ad2023cd6709e2e",
-      "fig3": "23d0dfef48ffdc61",
-      "pdf": "9391f1df246e85a0"
-    }
+ "review_date": "2026-07-30T23:30:00Z",
+ "agent_run_id": "figure-reviewer:bundle-D12:round6:2026-07-30T23:30:00Z",
+ "reviewer_version": "figure-reviewer-bundle-aware",
+ "reviewer_model": "claude-opus-5",
+ "stage": 9,
+ "review_round": 6,
+ "review_kind": "confirmation pass (scoped to round-5 remediation + physics re-confirmation), not an open-ended sweep",
+ "prior_review": "figure-reviewer:bundle-D12:round5:2026-07-30T22:40:00Z",
+ "bundle_target": "D12",
+ "anchor_source": "docs/agents/claims-reviewer-bundle-prompts.md (D12)",
+ "figures_reviewed": 3,
+ "overall_status": "pass",
+ "pass_criterion": "no FAIL, no MAJOR, no publication-blocking finding; residual MINOR/INFO accepted as documented residue",
+ "pass_criterion_met": true,
+ "publication_blocking_findings": 0,
+ "stage13_verdict": "GO",
+ "review_target": "typeset PDF papers/D12/paper_draft.pdf (sha256 c8c3dcad35e8e76e), rasterised at 110 dpi for page-level layout and judged against the three embedded XObjects extracted at native resolution. PNGs used as measurement inputs; physics verified from the live figure objects, not from pixels.",
+ "artefact_integrity": {
+  "verdict": "INTACT",
+  "frozen_commit_declared": "a5480efa",
+  "head_at_review_end": "98660389",
+  "head_moved_during_review": true,
+  "head_move_assessment": "HEAD advanced by exactly one commit, 98660389 'fix(review_runner): tier map stopped at D9', touching only scripts/review_runner.py (+7/-1). git diff a5480efa..HEAD over papers/D12, src/core/visualizations.py, scripts/review_figures.py and scripts/validate.py is EMPTY, and all four are working-tree clean. The review surface was untouched; the freeze held where it mattered. Recorded because the declared freeze was nominally broken, not because any judged artefact changed.",
+  "method": "pdfimages -png extraction of all three embedded XObjects plus their soft masks, alpha-composited over white and differenced against the shipped PNGs composited the same way.",
+  "embedded_vs_png_pixel_diff": {
+   "fig1": "maxdiff 0.0000 over 1560x3120x3",
+   "fig2": "maxdiff 0.0000 over 1500x2640x3",
+   "fig3": "maxdiff 0.0000 over 1320x2640x3"
   },
-  "typeset_legibility": {
-    "verdict": "PASS - no printed string below 8 pt in any figure",
-    "placed_width_pt": {
-      "fig1": 508.2,
-      "fig2": 508.2,
-      "fig3": 508.2,
-      "note": "from pdfimages x-ppi (442/374/374); helper assumes 510 pt, a +0.35% optimism"
-    },
-    "field_enumeration_min_pt": {
-      "fig1": 8.83,
-      "fig2": 8.69,
-      "fig3": 8.69
-    },
-    "enumeration_coverage": "independently enumerated layout.font, layout.title, legend.font, every layout.annotation, every axis title.font, every axis tickfont, and every trace textfont - i.e. two field classes (axis title fonts, tickfonts) that bundle_figure_typeset_pt still does NOT read. Neither is set explicitly in any D12 figure, so both inherit layout.font (9.27-9.32 pt) and are not a hidden floor. The reported minimum is therefore genuinely the global minimum.",
-    "independent_pixel_measurement": {
-      "calibration": "cap/digit height of the 9 pt REVTeX caption on the same rendered page, same 140/255 ink threshold",
-      "fig1_smallest": "digits of 'crossover N_a = 51.40' 49-50 px vs caption caps 51 px -> 8.82 pt (predicted 8.80)",
-      "fig3_smallest": "digits of 'L = 5 -> 4' 49 px vs caption caps 51 px -> 8.65 pt (predicted 8.66)",
-      "fig2_smallest": "legend x-height 34 px vs caption x-height 34 px -> 9.0 +/- 0.3 pt (predicted 8.66); coarse feature, quantisation-limited, consistent",
-      "round4_breach": "D12-R4-F3-01 measured 6.38 pt; now 8.65 pt measured in the typeset PDF. CLOSED."
-    }
-  },
-  "round4_remediation_verification": {
-    "D12-R4-XF-01 (FAIL)": "RESOLVED - PDF postdates every PNG by 2.30 s and embeds them pixel-identically",
-    "D12-R4-F3-01 (MAJOR)": "RESOLVED - measured 8.65 pt in print; per-trace textfont normalisation confirmed effective",
-    "D12-R4-F1-01 (MAJOR)": "RESOLVED - panel (B)'s 'avg. error floor' now sits in its own gutter; all three ordinates clear their neighbours",
-    "D12-R4-F1-02 (MAJOR)": "RESOLVED - two-line 'log 4 = 1.386 / fail-open threshold', top right; no merge with the '0' tick, no strike by the gap curve",
-    "D12-R4-F3-02 + XF-02 (MAJOR)": "RESOLVED - 'L = 5 -> 4 (stable)' now top left, fully on canvas, curve-free quadrant",
-    "D12-R4-F3-03 (MINOR, recurrence)": "RESOLVED - rotated into the band with textangle=270; horizontally contained, no overhang",
-    "D12-R4-F1-03 (MINOR)": "RESOLVED - panel (C) named in both its subplot title and the caption",
-    "D12-R4-F3-04 (MINOR)": "PARTIAL - the caption half landed; the FIGURE_REGISTRY half is mis-keyed. See D12-R5-F3-01.",
-    "landed": "8 of 8 figure-visible items; 1 spec-level residue"
-  },
-  "physics_verdict": "PASS - all three figures; all four requested traps re-derived from formulas.py, not from the prior report",
-  "physics_traps": {
-    "panel_B_shading_only_past_crossover": {
-      "verdict": "PASS",
-      "analytic_crossover": 51.395903,
-      "first_shaded_sample": 51.4028,
-      "grid_step": 0.0501,
-      "samples_shaded_below_crossover": 0,
-      "gap_exponent_at_crossover": 1.386294,
-      "log4": 1.386294,
-      "visual": "the shaded polygon's left edge coincides with the dotted crossover rule; clear white gap from N_a = 50 to 51.40"
-    },
-    "witness_50_60": {
-      "verdict": "PASS",
-      "gap_exponent": 9.5445,
-      "printed_label": "9.5445",
-      "true_floor": 0.158535,
-      "folklore": 4.53999e-05,
-      "ratio": 3492.0,
-      "claim": "> 1000",
-      "appears_in": [
-        "panel (B) diamond on the Le Cam curve",
-        "panel (C) diamond at y = 9.5445"
-      ]
-    },
-    "enbw_floor_saturated_by_boxcar": {
-      "verdict": "PASS",
-      "boxcar_min": 0.5,
-      "boxcar_max": 0.5,
-      "exact": true,
-      "ramp": 0.6666666666666666,
-      "ramp_strictly_above_floor": true,
-      "visual": "the carmine dotted floor rule is drawn on top of the thick blue boxcar trace - saturation is shown, not asserted"
-    },
-    "johnson_correction_2_at_L3": {
-      "verdict": "PASS",
-      "abs_1_minus_L": {
-        "3": 2.0,
-        "5": 4.0,
-        "-3": 4.0,
-        "0": 1.0,
-        "2": 1.0,
-        "1": 0.0
-      },
-      "two_not_four_at_L3": true,
-      "equal_4_pair_on_opposite_sides_of_L_eq_minus_1": true,
-      "visual": "the carmine dashed stability boundary at L = -1 separates the (-3, 4) and (5, 4) diamonds"
-    }
-  },
-  "additional_physics_checks": {
-    "fig1_A_witness": "realizable e^-10 = 4.53999e-05 vs folklore e^-5 = 6.73795e-03 -> 148.41x (caption '148x'); realizable < folklore at all 300 sampled N_a, so the panel genuinely refutes a LOWER bound",
-    "fig2_sandwich": "bf <= Q <= min(chernoff, mills) at all 400 samples; worst lower slack 2.11e-06, worst upper slack 1.67e-05",
-    "fig2_mills_vacuity": "Mills = 1 at z = 0.370, matching the caption's 'z <~ 0.37'; vacuous over 9.5% of the panel",
-    "fig3_pole_handling": "the L = -1 pole is not drawn through - branches are sampled on [-6, -1.06] and [-0.94, 6], so no spurious vertical connector crosses the singularity",
-    "caption_theorem_refs": "folkloreGap_split, etf_stable_iff, enbw_mul_window_isLeast, poisson_avgError_floor, gaussianTail_mills, gaussianTail_birnbaum all resolve to live declarations in lean/SKEFTHawking/",
-    "anchor_compliance": "no figure or figure caption asserts a novelty/'first' claim, so the D12 novelty-framing BLOCKER and the two blocking prior-art gates have no figure-side exposure"
-  },
-  "figures": [
-    {
-      "name": "d12_fig1_poisson_floor_vs_folklore",
-      "path": "papers/D12/figures/d12_fig1_poisson_floor_vs_folklore.png",
-      "source_fn": "fig_d12_poisson_floor_vs_folklore",
-      "pdf_page": 3,
-      "reviewed_sha256_prefix": "5ca4c3e46d3b46f1",
-      "typeset_geometry": {
-        "canvas_px": [
-          1040,
-          520
-        ],
-        "placed_pt": 508.2,
-        "min_text_pt": 8.83,
-        "measured_pt": 8.82
-      },
-      "status": "warning",
-      "severity_counts": {
-        "FAIL": 0,
-        "MAJOR": 0,
-        "MINOR": 0,
-        "INFO": 1
-      },
-      "rendering": {
-        "status": "pass",
-        "issues": []
-      },
-      "physics": {
-        "status": "pass",
-        "issues": []
-      },
-      "style": {
-        "status": "pass",
-        "issues": []
-      },
-      "caption_match": true,
-      "caption_match_detail": "three panels (A)/(B)/(C) each named in the caption and in its own subplot title; every caption numeral (148x, 51.40, log 4, (50,60)) reproduces from formulas.py",
-      "findings": [
-        {
-          "id": "D12-R5-F1-01",
-          "severity": "INFO",
-          "text": "panels (A) and (B) state their baseline in the subplot title ('N_b = 5', 'N_b = 50'); panel (C) does not, though it is computed at N_b = 50. Unambiguous from the caption's (50,60) witness and the abscissa shared with (B). Suggested: '(C) exact exponent gap, N_b = 50'.",
-          "accept_as_is": true
-        }
-      ]
-    },
-    {
-      "name": "d12_fig2_enbw_matched_filter",
-      "path": "papers/D12/figures/d12_fig2_enbw_matched_filter.png",
-      "source_fn": "fig_d12_enbw_matched_filter",
-      "pdf_page": 4,
-      "reviewed_sha256_prefix": "7ad2023cd6709e2e",
-      "typeset_geometry": {
-        "canvas_px": [
-          880,
-          470
-        ],
-        "placed_pt": 508.2,
-        "min_text_pt": 8.69,
-        "measured_pt": 9.0
-      },
-      "status": "warning",
-      "severity_counts": {
-        "FAIL": 0,
-        "MAJOR": 0,
-        "MINOR": 1,
-        "INFO": 0
-      },
-      "rendering": {
-        "status": "issues",
-        "issues": [
-          "x-axis title and legend row 1 are set with 0.12 pt of clearance (1 px at 600 dpi)"
-        ]
-      },
-      "physics": {
-        "status": "pass",
-        "issues": []
-      },
-      "style": {
-        "status": "pass",
-        "issues": []
-      },
-      "caption_match": true,
-      "caption_match_detail": "boxcar saturation, ramp slack, the two-sided sandwich and the 'bounds not probabilities' Mills caveat with its z <~ 0.37 threshold are all present and all reproduce numerically",
-      "findings": [
-        {
-          "id": "D12-R5-F2-01",
-          "severity": "MINOR",
-          "class": "rendering",
-          "text": "Zero leading between the x-axis title band (y 1802-1885 at 600 dpi) and legend row 1 (y 1886-1951): 1 px = 0.12 pt clearance. Compare the within-figure gaps elsewhere: fig 1 runs 2.88-5.40 pt and fig 3 runs 3.36-9.96 pt. The strings do not strictly overlap, but 'integration window T (arb. time units)' and '(left) matched boxcar - saturates the floor at 1/2' read as one crushed block, with the 'g' descender of 'integration' sitting on the cap line of '(left)'. This is the failure mode _bundle_layout's own docstring warns about. Not a regression from the round-4 helper change (that touched fonts, not geometry) - it is sub-visible below ~600 dpi and was missed, not introduced.",
-          "fix": "in fig_d12_enbw_matched_filter, bottom 140 -> ~165 or legend_y -0.21 -> ~-0.30",
-          "accept_as_is": false,
-          "publication_blocking": false
-        }
-      ]
-    },
-    {
-      "name": "d12_fig3_etf_stability",
-      "path": "papers/D12/figures/d12_fig3_etf_stability.png",
-      "source_fn": "fig_d12_etf_stability",
-      "pdf_page": 6,
-      "reviewed_sha256_prefix": "23d0dfef48ffdc61",
-      "typeset_geometry": {
-        "canvas_px": [
-          880,
-          440
-        ],
-        "placed_pt": 508.2,
-        "min_text_pt": 8.69,
-        "measured_pt": 8.65
-      },
-      "status": "warning",
-      "severity_counts": {
-        "FAIL": 0,
-        "MAJOR": 0,
-        "MINOR": 2,
-        "INFO": 0
-      },
-      "rendering": {
-        "status": "pass",
-        "issues": []
-      },
-      "physics": {
-        "status": "pass",
-        "issues": []
-      },
-      "style": {
-        "status": "issues",
-        "issues": [
-          "band label rotates opposite to the ordinate titles in the same figure"
-        ]
-      },
-      "caption_match": true,
-      "caption_match_detail": "the caption's 'overstates on 0 < L < 2' matches the drawn vrect x0=0,x1=2 exactly, and |1-L| < 1 on that interval is what 'naive overstates' means",
-      "findings": [
-        {
-          "id": "D12-R5-F3-01",
-          "severity": "MINOR",
-          "class": "registry-spec",
-          "text": "FIGURE_REGISTRY['d12_fig3_etf_stability'].expected_axes is {'xaxis':'loop gain','yaxis':'true / naive'}, but in a 1x2 subplot 'yaxis' is the LEFT panel ('tau_eff  (units of tau)'); 'true / naive' is 'yaxis2'. The round-4 fix changed the expected STRING to the right panel's ordinate without changing the KEY. With the missing `viz` binding patched in, this is the sole D12 structural warning: \"yaxis title 'tau_eff  (units of tau)' missing expected 'true / naive'\". It went unnoticed because the checker cannot run at all (D12-R5-XF-01).",
-          "fix": "key it 'yaxis2', or assert both ordinates",
-          "accept_as_is": false,
-          "publication_blocking": false
-        },
-        {
-          "id": "D12-R5-F3-02",
-          "severity": "MINOR",
-          "class": "style",
-          "text": "annotation_textangle=270 renders 'naive overstates' reading top-to-bottom, while both ordinate titles in the same figure ('tau_eff (units of tau)' and 'true / naive') read bottom-to-top. Two vertical text elements in one figure rotating in opposite senses; bottom-to-top is the journal convention.",
-          "fix": "textangle=90",
-          "accept_as_is": true,
-          "publication_blocking": false
-        }
-      ]
-    }
-  ],
-  "cross_figure_findings": [
-    {
-      "id": "D12-R5-XF-01",
-      "severity": "MAJOR",
-      "class": "tooling-gate",
-      "figure": "__cross_figure__",
-      "text": "scripts/review_figures.py cannot run. run_structural_checks() raises NameError: name 'viz' is not defined at line 2700 - `viz` is never bound anywhere in the file (every occurrence is `viz.fig_*`; there is no `import ... as viz`), so the func_map dict literal fails to evaluate and main() aborts before writing results. Consequence: the deterministic half of the Stage-9 gate has never executed for D11 or D12. figures/structural_checks.json and figures/review_manifest.json are both dated 2026-06-14T16:33Z, six weeks before D12 existed, and contain zero D11/D12 entries. Nothing covers this: no validate.py check and no test imports review_figures. This is a recurrence of the self-concealing-checker class round 3 caught ('Registering the FigureSpecs alone was INERT'); the round-3 wiring fix replaced a silent skip with a hard NameError, which is louder but was equally unobserved because nobody re-ran the script. NOT a defect in the figures themselves - patched in-process, D12 yields exactly one warning (D12-R5-F3-01).",
-      "fix": "add `import src.core.visualizations as viz` at module scope in scripts/review_figures.py, re-run --check, and add a smoke test so the entry point cannot silently rot again",
-      "accept_as_is": false,
-      "publication_blocking": false,
-      "blocks_stage9_signoff": true
-    }
-  ],
-  "informational": [
-    "bundle_target=D12 walked: PAPER_STRATEGY L188-198 gives sources 6EA/6EB/6EC/6EE; the draft carries exactly three figures, all three \\includegraphics resolve, and all three render. No sibling bundle plots the same quantity, so there is no BundleFigureMismatch surface this round.",
-    "colour palette: steel blue #2E86AB, amber #F18F01, carmine #E63946 throughout, matching the registry's declared color_keys; no out-of-palette colour in any of the three figures. Carmine is confined to witness markers and threshold rules, which are additionally distinguished by shape and dash, so the blue/amber colourblind contract holds.",
-    "helper hardening confirmed genuine: bundle_figure_typeset_pt now takes the minimum over layout, legend, annotations and per-trace textfont. Two field classes remain unread (axis title.font, axis tickfont); they are unset in every D12 figure so the reported minimum is currently exact, but a future figure that sets either could under-report."
-  ],
-  "severity_totals": {
-    "FAIL": 0,
-    "MAJOR": 1,
-    "MINOR": 3,
-    "INFO": 1
-  },
-  "triage": {
-    "publication_blocking": [],
-    "would_fix_before_submission": [
-      "D12-R5-F2-01 (fig 2 zero leading - the only item a copy editor would flag)"
-    ],
-    "repo_hygiene_fix_now_not_figure_defects": [
-      "D12-R5-XF-01 (broken checker)",
-      "D12-R5-F3-01 (mis-keyed spec)"
-    ],
-    "accept_as_is": [
-      "D12-R5-F3-02 (rotation sense)",
-      "D12-R5-F1-01 (panel (C) baseline unstated)"
-    ],
-    "statement": "No finding is publication-blocking. All three figures are numerically correct, legible in print (8.65-8.83 pt against 10 pt body / 9 pt captions), and caption-faithful. The single figure-visible defect is fig 2's crushed axis-title/legend leading; everything else is either tooling or preference."
-  },
-  "summary": "Round 5 of the D12 Stage-9 figure review, judged on the typeset PDF. The artefact freeze held and was verified two ways - the PDF postdates every PNG by 2.30 s and embeds all three pixel-identically (maxdiff 0) - so round-4's D12-R4-XF-01 FAIL is closed. All eight figure-visible round-4 items landed. The typeset-legibility contract is now met by measurement, not just by the helper's own arithmetic: enumerating every text-bearing field, including the two classes the helper still does not read, gives a global minimum of 8.83 pt (fig 1) and 8.69 pt (figs 2-3), and independent cap-height measurement against the 9 pt REVTeX caption on the same rendered page returns 8.82 pt for fig 1 and 8.65 pt for fig 3's witness labels - the round-4 6.38 pt breach is genuinely gone. Physics was re-derived from formulas.py rather than inherited: panel (B)'s shading contains zero samples below the analytic crossover 51.395903, the (50,60) witness reproduces at 9.5445 with ratio 3492 on both panels that carry it, ENBW*T is exactly 1/2 for the boxcar at every sampled T with the ramp exactly 2/3 above it, and |1-L| is 2 at L = 3 with 4 at both L = 5 and L = -3 on opposite sides of the drawn stability boundary. Not ALL PASS, but nothing blocking: one MAJOR tooling finding (scripts/review_figures.py aborts with NameError, so the deterministic half of Stage 9 has never run for D11 or D12 and its cached outputs predate both bundles) and three MINORs - fig 2's x-axis title and legend row 1 set with 0.12 pt of clearance, a mis-keyed FIGURE_REGISTRY ordinate expectation for fig 3 that is the unlanded residue of D12-R4-F3-04, and a band label rotating against the ordinate titles in its own figure.",
-  "recommendations": [
-    "Add `import src.core.visualizations as viz` at module scope in scripts/review_figures.py; re-run --check to regenerate figures/structural_checks.json and review_manifest.json with D11/D12 present; add a smoke test that imports the module and calls run_structural_checks() so the entry point cannot rot unobserved again.",
-    "Re-key d12_fig3_etf_stability's expected_axes ordinate to 'yaxis2' (or assert both ordinates).",
-    "In fig_d12_enbw_matched_filter, raise bottom 140 -> ~165 or legend_y -0.21 -> ~-0.30 to give legend row 1 the same 3-5 pt of leading fig 1 and fig 3 already have.",
-    "Optional: textangle 270 -> 90 on the 'naive overstates' band label; add 'N_b = 50' to fig 1's panel (C) title.",
-    "Extend bundle_figure_typeset_pt to also read axis title.font and axis tickfont sizes - unset in D12 today, but the same blind spot that produced the round-4 6.38 pt breach."
+  "shipped_vs_fresh_render": "validate.py --check bundle_figure_integrity reported no drift Detail for any of the 7 D11/D12 figures, i.e. every shipped PNG is byte-identical to a fresh kaleido render at scale=3 from current src/core/visualizations.py. The PDF, the shipped PNGs and the source code are one consistent generation.",
+  "reviewed_sha256_prefixes": {
+   "fig1": "5ca4c3e46d3b46f1",
+   "fig2": "6851a3d2c824c8e1",
+   "fig3": "23d0dfef48ffdc61",
+   "pdf": "c8c3dcad35e8e76e"
+  }
+ },
+ "round5_remediation_verification": {
+  "summary": "all four round-5 items verified LANDED by independent execution/measurement; 0 recurrences",
+  "items": [
+   {
+    "id": "D12-R5-XF-01",
+    "severity_when_raised": "MAJOR",
+    "claim": "review_figures.py could not run (NameError: name 'viz' is not defined)",
+    "status": "CLOSED - VERIFIED BY EXECUTION",
+    "evidence": "Re-ran `uv run python scripts/review_figures.py` end to end: exit 0, no NameError. 137/137 figures generated, including all 7 D11/D12 figures marked OK. Static confirmation: zero occurrences of the `viz.` prefix remain in scripts/review_figures.py, and the D11/D12 functions are imported by bare name in BOTH function-local blocks (generate_figures at L2149-2152 and run_structural_checks at L2543-2546) and registered in the func_map at L2325-2331.",
+    "measured_result": "44 issues across 137 specs, 0 errors, 44 warnings, 0 touching D11 or D12",
+    "determinism": "run_structural_checks() executed twice in-process: 44 and 44 issues, 0 D11/D12 both trials",
+    "liveness_proof": "MUTATION TEST - the decisive check, since rounds 3 and 5 each found a checker that was present but dead. Three independent mutations of the D12 specs were each caught, and reverting restored 0 D12 issues: (1) fig3 expected_axes key reverted to the round-5 buggy 'yaxis' -> flagged \"yaxis title 'tau_eff (units of tau)' missing expected 'true / naive'\"; (2) fig2 expected_traces=99 -> flagged 'Expected >=99 traces, got 7'; (3) fig1 xaxis substring 'ZZZ_NOT_PRESENT' -> flagged. D12's 0-issue result is therefore CHECKED-AND-PASSED, not not-checked."
+   },
+   {
+    "id": "D12-R5-F3-01",
+    "severity_when_raised": "MINOR",
+    "claim": "fig 3 expected_axes ordinate keyed to 'yaxis' (left panel) instead of 'yaxis2'",
+    "status": "LANDED - VERIFIED, and non-vacuous",
+    "evidence": "FIGURE_REGISTRY now carries expected_axes={'xaxis': 'loop gain', 'yaxis2': 'true / naive'}. Source-side, 'true / naive' is set via update_yaxes(..., row=1, col=2) = yaxis2, so the key now names the panel that actually carries the ordinate. Mutation 1 above proves the fix is load-bearing rather than incidentally passing: with the old 'yaxis' key the check FAILS."
+   },
+   {
+    "id": "D12-R5-F2-01",
+    "severity_when_raised": "MINOR (the one to fix before submission)",
+    "claim": "fig 2 x-axis title and legend row 1 sat 0.12 pt apart, reading as one crushed block",
+    "status": "LANDED - RE-MEASURED",
+    "evidence": "Layout now height=500, legend_y=-0.30, bottom=170, width=880 (confirmed in source). Ink-band scan of the shipped 2640x1500 PNG from the computed plot bottom (y=990): x-axis title band y=996-1037, legend row 1 band y=1064-1105.",
+    "measured_clearance_pt": 5.0,
+    "measured_clearance_px": 26,
+    "prior_clearance_pt": 0.12,
+    "context": "5.00 pt now matches the figure's own legend row pitch (4.81-5.00 pt) and sits mid-range against the 2.77-8.80 pt (fig 1) and 3.08-9.62 pt (fig 3) band gaps cited in round 5 as normal elsewhere. Confirmed visually on typeset PDF page 4: the axis titles and the legend read as separate blocks."
+   },
+   {
+    "id": "D12-R5-OVERFULL",
+    "severity_when_raised": "MINOR",
+    "claim": "D12 had 4 overfull boxes; inherits D11's breakable-\\thm fix",
+    "status": "LANDED - VERIFIED",
+    "evidence": "grep of papers/D12/paper_draft.log: 0 occurrences of 'Overfull'. The fix is present in paper_draft.tex L19 (\\newcommand{\\thm}[1]{{\\def\\_{\\char`\\_\\allowbreak}\\texttt{#1}}}) and L21 (\\emergencystretch=2em). Only one LaTeX Warning remains ('Unused global option(s)'). Confirmed visually on page 4: long \\thm identifiers break across lines with no margin intrusion.",
+    "side_effect_noted": "56 Underfull \\hbox (17 at badness 10000), 0 Underfull \\vbox. This is the expected and correct trade: \\emergencystretch converts overfull boxes (ink in the margin, a real defect) into underfull ones (extra word spacing, cosmetic) and is routine in revtex two-column. Not blocking."
+   }
   ]
+ },
+ "hardening_verification": {
+  "textwidth_pt_correction": {
+   "claim": "_BUNDLE_TEXTWIDTH_PT 510 -> 508",
+   "status": "VERIFIED, and independently corroborated",
+   "evidence": "src/core/visualizations.py L14747 now reads 508. Corroborated from the PDF itself: pdfimages -list gives x-ppi 442 (fig1) and 374 (figs 2,3); placed width = px/ppi*72 = 3120/442*72 = 508.2 pt and 2640/374*72 = 508.2 pt. 508 is the correct rounding; 510 was high by 0.35%.",
+   "consistency_check": "Round 5 measured min printed text 8.83/8.69/8.69 pt under the 510 assumption. Scaling by 508/510 predicts 8.795/8.656/8.656; the gate now reports 8.79/8.66/8.66. Exact match - the correction propagated as intended and changed nothing else."
+  },
+  "typeset_pt_field_coverage": {
+   "claim": "bundle_figure_typeset_pt now also reads axis.title.font and axis.tickfont",
+   "status": "VERIFIED",
+   "evidence": "src/core/visualizations.py L14819-14828 iterates every layout attribute prefixed xaxis/yaxis and folds in both title.font.size and tickfont.size, alongside layout.font, legend.font, all layout.annotations and all trace textfonts. These were exactly the two classes round 5 flagged as still unread. Neither is set in any D12 figure today, so the reported minimum is unchanged - the value was already exact, and is now exact by construction rather than by accident."
+  },
+  "binding_gate": {
+   "claim": "validate.py --check bundle_figure_integrity enforces an 8.0 pt floor + shipped-vs-fresh drift guard",
+   "status": "VERIFIED BY EXECUTION - PASS",
+   "evidence": "uv run python scripts/validate.py --check bundle_figure_integrity -> PASS in 47.1 s",
+   "result": "7 bundle figures checked - 7 legible / 0 below the 8.0 pt floor; no drift Detail emitted",
+   "per_figure_min_pt": {
+    "d11_fig1_phononic_band_gap": 8.89,
+    "d11_fig2_pt_exceptional_point": 8.89,
+    "d11_fig3_haldane_chern": 9.03,
+    "d11_fig4_effective_medium": 8.66,
+    "d12_fig1_poisson_floor_vs_folklore": 8.79,
+    "d12_fig2_enbw_matched_filter": 8.66,
+    "d12_fig3_etf_stability": 8.66
+   },
+   "note": "This closes the round-5 observation that bundle_figure_typeset_pt had zero consumers repo-wide. The floor is now enforced, and the drift guard additionally ties the shipped PNGs to the source. The drift half is advisory-only by construction (a mismatch warns, it does not fail the check); the legibility half is binding."
+  }
+ },
+ "physics_verdict": "PASS - all five requested re-confirmations verified numerically from the live figure objects, exactly",
+ "physics_reconfirmation": [
+  {
+   "claim": "panel (B) shading only past the crossover",
+   "verdict": "CONFIRMED",
+   "evidence": "Analytic crossover for N_b=50: the gap exponent (N_a-N_b)-(sqrt(N_a)-sqrt(N_b))^2 simplifies to 2*sqrt(N_b)*(sqrt(N_a)-sqrt(N_b)), which equals log 4 at N_a = 51.395903 (figure annotates 51.40). The panel-B fill trace (trace 4, fill='toself', on x2/y2) spans x in [51.4028, 75.0000]; min x >= crossover is True. No shading left of the crossover."
+  },
+  {
+   "claim": "the (50,60) witness",
+   "verdict": "CONFIRMED",
+   "evidence": "Le Cam floor (1/4)exp(-(sqrt(60)-sqrt(50))^2) = 1.585345e-01; folklore exp(-(60-50)) = 4.539993e-05; ratio = 3492.0 > 1000, matching the legend's 'certified ratio > 1000 at (N_b,N_a) = (50,60)'. Panel (C) gap exponent at the same point = 9.544512, matching the plotted annotation 9.5445. The companion panel-(A) witness also checks: exp(-(10-5))/exp(-10) = 148.4132 vs 'certified 148x'."
+  },
+  {
+   "claim": "ENBW*T = 1/2 saturated by the boxcar, ramp 2/3",
+   "verdict": "CONFIRMED - both exact to the last bit",
+   "evidence": "Boxcar trace is constant at 0.5 with error 0.00e+00 from 1/2; ramp trace is constant at 0.6666666666666666 with error 0.00e+00 from 2/3. Independently re-derived: for one-sided ENBW, ENBW*T = T*int h^2 / (2*(int h)^2); h=1 on [0,T] gives 1/2, h=t on [0,T] gives (T^3/3)/(2*(T^2/2)^2)*T = 2/3. Cauchy-Schwarz gives (int h)^2 <= T*int h^2, so 1/2 is a genuine least element attained only by the constant window - consistent with the 'floor 1/2 - IsLeast, sharp' annotation and with the ramp sitting strictly above as the 'one admissible point above'."
+  },
+  {
+   "claim": "|1 - L| = 2 at L = 3, NOT 4",
+   "verdict": "CONFIRMED",
+   "evidence": "The fig-3 right-panel witness marker sits at exactly (x=3.00, y=2.000) and is labelled 'L = 3 -> 2'. The continuous right-panel trace satisfies max|y - |1-L|| = 0.000e+00 over its 600 samples, so the curve IS |1-L| pointwise, with its vertex at L=1. The round-3 error (reporting 4 at L=3) is gone."
+  },
+  {
+   "claim": "|1 - L| equals 4 at both L = 5 and L = -3",
+   "verdict": "CONFIRMED",
+   "evidence": "Two separate markers at exactly (5.00, 4.000) and (-3.00, 4.000), labelled 'L = 5 -> 4 (stable)' and 'L = -3 -> 4 (UNSTABLE)', straddling the L = -1 boundary drawn as a red dashed rule. Equal ordinate, opposite stability - the stability-blindness of the Johnson correction is shown as an equality, not a bound."
+  }
+ ],
+ "additional_physics_checks": [
+  {
+   "check": "fig 3 left panel does not read tau_eff through |.|",
+   "verdict": "PASS",
+   "evidence": "Stable branch: all tau_eff > 0 (min 0.1429) with all x > -1. Unstable branch: all tau_eff < 0 (max -0.2000) with all x <= -1. The unstable branch is plotted at genuinely negative ordinate, so the sign that carries the physics survives. Speed-up witness at (3, 0.25) = tau/4, matching tau_eff = tau/(1+L)."
+  },
+  {
+   "check": "fig 2 caption numeral 'Mills ratio exceeds 1 for z <~ 0.37'",
+   "verdict": "PASS",
+   "evidence": "phi(z)/z = 1 at z = 0.3728; the caption's 0.37 is correct, and the Mills trace peaks at 7.969 as z -> 0, consistent with 'vacuous for small z'."
+  },
+  {
+   "check": "trace counts meet spec exactly (no slack hiding a dropped trace)",
+   "verdict": "PASS",
+   "evidence": "fig1 expected >=10, actual 10; fig2 expected >=7, actual 7; fig3 expected >=7, actual 7."
+  }
+ ],
+ "physics_checks_note": "IMPORTANT for future rounds: FigureSpec.physics_checks (e.g. 'enbw_floor_saturated_by_boxcar', 'johnson_factor_two_at_loopgain_three') is NEVER executed by run_structural_checks - it is serialised into review_manifest.json as metadata for the LLM reviewer. The harness certifies structure (trace counts, axis titles, NaN/Inf, palette), not physics. Every physics claim above was therefore verified independently by this reviewer against the live figure objects. This is by design, not a defect, but it should not be mistaken for automated physics certification.",
+ "figures": [
+  {
+   "name": "d12_fig1_poisson_floor_vs_folklore",
+   "path": "papers/D12/figures/d12_fig1_poisson_floor_vs_folklore.png",
+   "source_fn": "fig_d12_poisson_floor_vs_folklore",
+   "pdf_page": 3,
+   "reviewed_sha256_prefix": "5ca4c3e46d3b46f1",
+   "typeset_geometry": {
+    "canvas_px": [
+     1040,
+     520
+    ],
+    "png_px": [
+     3120,
+     1560
+    ],
+    "placed_pt": 508.2,
+    "min_text_pt": 8.79
+   },
+   "status": "pass",
+   "severity_counts": {
+    "FAIL": 0,
+    "MAJOR": 0,
+    "MINOR": 0,
+    "INFO": 1
+   },
+   "rendering": {
+    "status": "pass",
+    "issues": []
+   },
+   "physics": {
+    "status": "pass",
+    "issues": []
+   },
+   "style": {
+    "status": "pass",
+    "issues": []
+   },
+   "caption_match": true,
+   "caption_match_detail": "all three panels named in the caption and in their own subplot titles; every caption numeral (148x, 51.40, log 4, (50,60), 9.5445) reproduces exactly from the figure data",
+   "findings": [
+    {
+     "id": "D12-R5-F1-01",
+     "severity": "INFO",
+     "carried_from": "round 5",
+     "accept_as_is": true,
+     "text": "panel (C) omits N_b = 50 from its subplot title where (A) and (B) state theirs. Not re-raised: accepted per triage, and I do not consider it blocking - N_b = 50 is recoverable from the shared abscissa with (B), from the curve's zero-crossing at N_a = 50, and from the caption's (50,60) witness."
+    }
+   ]
+  },
+  {
+   "name": "d12_fig2_enbw_matched_filter",
+   "path": "papers/D12/figures/d12_fig2_enbw_matched_filter.png",
+   "source_fn": "fig_d12_enbw_matched_filter",
+   "pdf_page": 4,
+   "reviewed_sha256_prefix": "6851a3d2c824c8e1",
+   "typeset_geometry": {
+    "canvas_px": [
+     880,
+     500
+    ],
+    "png_px": [
+     2640,
+     1500
+    ],
+    "placed_pt": 508.2,
+    "min_text_pt": 8.66
+   },
+   "status": "pass",
+   "severity_counts": {
+    "FAIL": 0,
+    "MAJOR": 0,
+    "MINOR": 0,
+    "INFO": 1
+   },
+   "rendering": {
+    "status": "pass",
+    "issues": [],
+    "note": "D12-R5-F2-01 resolved: x-axis-title-to-legend clearance 0.12 pt -> 5.00 pt"
+   },
+   "physics": {
+    "status": "pass",
+    "issues": []
+   },
+   "style": {
+    "status": "pass",
+    "issues": []
+   },
+   "caption_match": true,
+   "findings": [
+    {
+     "id": "D12-R6-F2-01",
+     "severity": "INFO",
+     "accept_as_is": true,
+     "new_in_round": 6,
+     "text": "cosmetic only, not raised for action: the 7-entry legend renders as a single stacked column occupying roughly the left 45% of the 880 px canvas, leaving the lower-right quadrant blank. Legible and correctly ordered; a 2-column legend would use the reserved bottom margin better if the figure is ever revisited."
+    }
+   ]
+  },
+  {
+   "name": "d12_fig3_etf_stability",
+   "path": "papers/D12/figures/d12_fig3_etf_stability.png",
+   "source_fn": "fig_d12_etf_stability",
+   "pdf_page": 6,
+   "reviewed_sha256_prefix": "23d0dfef48ffdc61",
+   "typeset_geometry": {
+    "canvas_px": [
+     880,
+     440
+    ],
+    "png_px": [
+     2640,
+     1320
+    ],
+    "placed_pt": 508.2,
+    "min_text_pt": 8.66
+   },
+   "status": "pass",
+   "severity_counts": {
+    "FAIL": 0,
+    "MAJOR": 0,
+    "MINOR": 0,
+    "INFO": 1
+   },
+   "rendering": {
+    "status": "pass",
+    "issues": []
+   },
+   "physics": {
+    "status": "pass",
+    "issues": [],
+    "note": "the two claims this figure exists to make - the exact L = -1 dichotomy with signed tau_eff, and the stability-blind |1-L| equality giving 2 at L=3 and 4 at both L=5 and L=-3 - both verified exactly"
+   },
+   "style": {
+    "status": "pass",
+    "issues": []
+   },
+   "caption_match": true,
+   "findings": [
+    {
+     "id": "D12-R5-F3-02",
+     "severity": "INFO",
+     "carried_from": "round 5",
+     "accept_as_is": true,
+     "text": "the 'naive overstates' band label uses textangle 270 (top-to-bottom) against the bottom-to-top ordinate titles. Not re-raised: accepted per triage, and I do not consider it blocking - the label is short, legible at 8.66 pt, and unambiguously attached to its shaded band."
+    }
+   ]
+  }
+ ],
+ "cross_figure_findings": [
+  {
+   "id": "D12-R6-XF-01",
+   "severity": "INFO",
+   "status": "closed",
+   "text": "round-5 XF-01 (harness could not run) is CLOSED, verified by execution plus a three-way mutation test proving the D12 checks are live. See round5_remediation_verification."
+  },
+  {
+   "id": "D12-R6-XF-02",
+   "severity": "INFO",
+   "status": "open-informational",
+   "new_in_round": 6,
+   "text": "bookkeeping discrepancy, non-blocking: the round-6 fix note reports the harness returning '46 issues across 137 specs'. My run measures 44 issues across 137 specs (0 errors, 44 warnings), deterministic across two in-process trials (44, 44) and matching figures/structural_checks.json ('errors': 0, 'warnings': 44, 44 entries over 19 distinct figures). The load-bearing part of the claim - 137 specs, harness runs, 0 issues touching D11 or D12 - is confirmed in full and is what the gate depends on; only the total count differs by 2. Cause not diagnosed and not worth a round: no D12 artefact depends on it."
+  },
+  {
+   "id": "D12-R6-XF-03",
+   "severity": "INFO",
+   "status": "open-informational",
+   "new_in_round": 6,
+   "text": "documentation residue from the 508 correction: the comment block immediately above the constant (src/core/visualizations.py L14738-14741) still says figures 'ship as figure* (full two-column width, 510 pt)' and works the example '13/700*510 = 9.5 pt', while L14747 now sets _BUNDLE_TEXTWIDTH_PT = 508. The code is right and the arithmetic conclusion is unchanged (13/700*508 = 9.4 pt), but the prose now contradicts the constant three lines below it - the same comment-rots-away-from-constant shape the 508 fix was made to remove. One-line edit whenever the file is next touched; not worth a round on its own."
+  }
+ ],
+ "severity_totals": {
+  "FAIL": 0,
+  "MAJOR": 0,
+  "MINOR": 0,
+  "INFO": 5
+ },
+ "triage": {
+  "blocking_for_stage13": [],
+  "accepted_as_documented_residue": [
+   "D12-R5-F3-02 (fig 3 label reading direction) - carried, accepted, not blocking",
+   "D12-R5-F1-01 (fig 1 panel C omits N_b) - carried, accepted, not blocking",
+   "D12-R6-F2-01 (fig 2 legend uses one stacked column) - cosmetic",
+   "D12-R6-XF-02 (44 vs 46 issue-count bookkeeping) - informational",
+   "D12-R6-XF-03 (stale 510 pt comment above the 508 constant) - informational"
+  ]
+ },
+ "summary": "Round 6 confirmation pass: GO for Stage 13. Zero FAIL, zero MAJOR, zero MINOR, zero publication-blocking findings. All four round-5 remediation items verified landed by independent execution and measurement, with no recurrence: the figure harness now runs end to end (137 specs, 0 errors, 0 issues touching D11/D12, deterministic at 44 issues across two trials); fig 3's expected_axes key is 'yaxis2' and a mutation test proves the fix is load-bearing rather than incidentally passing; fig 2's x-axis-title-to-legend clearance went 0.12 pt -> 5.00 pt, now matching its own legend row pitch; and D12's overfull-box count is 0. Both hardening items check out, with the 508 pt correction independently corroborated by the PDF's own x-ppi (508.2 pt placed) and reproducing the gate's 8.79/8.66/8.66 pt readings exactly. The new binding gate passes 7/7 with no drift. All five requested physics re-confirmations verify exactly from the live figure objects, including the |1-L| = 2 at L = 3 correction and the equal-4 stability-blind pair at L = 5 and L = -3. Artefact integrity is the strongest of any round so far: the three embedded PDF XObjects are pixel-identical to the shipped PNGs (maxdiff 0), which are in turn byte-identical to a fresh render from current source. The one caveat worth recording is procedural, not substantive - HEAD advanced one commit mid-review (98660389, scripts/review_runner.py only), disjoint from every judged artefact. Remaining residue is five INFO items, two of them the previously accepted MINORs; none blocks submission.",
+ "recommendations": [
+  "PROCEED to Stage 13. Record the five INFO items as documented residue; do not iterate figures further.",
+  "Opportunistic, no round required: fix the stale '510 pt' prose at src/core/visualizations.py L14738-14741 next time the file is edited (D12-R6-XF-03).",
+  "Opportunistic: if fig 2 is ever revisited, a 2-column legend would use the reserved bottom margin better (D12-R6-F2-01).",
+  "For future waves: note that FigureSpec.physics_checks is manifest metadata and is never executed - the harness certifies structure, not physics, so an LLM or human physics pass remains required at Stage 9.",
+  "Carry the mutation-test step into future Stage-9 figure rounds. It is what distinguishes 'checked and passed' from 'not checked', and it caught nothing this round only because the wiring was genuinely fixed."
+ ]
 }
