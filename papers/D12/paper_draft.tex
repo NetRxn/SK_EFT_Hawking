@@ -85,7 +85,12 @@ than assumed away.
 exponential-series identities, tail inequalities, threshold algebra, linearized ODEs --- is verified
 in the kernel. The \emph{identification} of any symbol with a physical instrument, of what counts as
 an absorbed photon or which plane a power is referred to, is the consuming application's declared
-hypothesis and never enters our statements. No theorem here is a claim about any particular device.
+hypothesis. Where such an identification is needed it appears as an \emph{explicit binder} that the
+application must discharge --- the capstone \thm{bolometer\_error\_floor} carries six, enumerated in
+\S\ref{sec:scope} --- rather than being assumed silently inside a proof. No theorem here is a claim
+about any particular device. (An earlier draft of this sentence said identifications ``never enter
+our statements''. That was false of the capstone, whose binders are exactly such identifications;
+the point is that they are visible in the statement, not that they are absent from it.)
 
 \paragraph{Refutation is a first-class deliverable.} Three of our results are negative, and they were
 the most useful. Section~\ref{sec:poisson} shows the folklore photon-counting floor fails in two
@@ -657,8 +662,16 @@ consequences of it. Four deserve naming because they are the modelling binders o
 \thm{bolometer\_error\_floor} itself: \thm{IsThermalFluctuationLimited}, asserting the phonon
 channel's filtered variance is white at the $\gamma = 1$ phonon PSD; \thm{IsWhiteFilteredVariance}
 at the Johnson NEP, asserting the same of that channel; \thm{IsUncorrelatedAt}, asserting the two
-channels are uncorrelated so that they compose in quadrature; and \thm{IsAdmissibleFilter}. The
-capstone is only as strong as those four identifications.
+channels are uncorrelated so that they compose in quadrature; and \thm{IsAdmissibleFilter}.
+
+Two further binders belong in the same list and were omitted from three earlier drafts of this
+paragraph (corrected 2026-07-31): $\mu_1 - \mu_0 = \int_0^{T_w} h_f(x)\,s(x)\,dx$, which identifies
+the threshold model's mean separation with the filtered signal integral, and
+$\sigma = \sqrt{V_{\rm tot}(h_f)}$, which identifies its noise scale with the composed variance.
+Both are hypotheses of \thm{bolometer\_error\_floor} and both are load-bearing --- the theorem is
+false without either, since nothing else in the statement ties the threshold pair
+$(\mu_0, \mu_1, \sigma)$ to the filtered channel. The capstone is only as strong as those
+\emph{six} identifications.
 
 \section{Conclusion}
 
