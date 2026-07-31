@@ -14726,13 +14726,73 @@ def fig_qnet_readout_envelopes() -> go.Figure:
 # ^{} markup — superscripts must be Unicode.
 
 
-def _d12_layout(fig, title, height=560, width=1080, legend_y=-0.30, bottom=170):
-    """Shared layout: reserve bottom margin BEFORE placing the legend."""
+# Typeset-size contract (Stage-9 round 3). Rounds 1-2 reviewed standalone PNGs
+# and missed that these figures are ILLEGIBLE as typeset: revtex4-2
+# [aps,prb,reprint] gives \columnwidth = 246 pt, so a 1080 px canvas at plotly's
+# 12 px default renders legend text at ~2.7 pt against 10 pt body text.
+#
+# Only the RATIO font_px/width_px matters, since LaTeX rescales the whole canvas:
+#
+#     effective_pt = font_px / width_px * target_pt
+#
+# All bundle figures therefore (a) declare a canvas at the physical size they will
+# actually occupy — 700 px ~ \textwidth at 96 dpi — and (b) ship as `figure*`
+# (full two-column width, 510 pt) rather than `figure`. At width=700, font=13
+# that gives 13/700*510 = 9.5 pt against 10 pt body: legible, and matching.
+#
+# If you change `width`, change `font_size` with it or the figure silently
+# becomes unreadable in print while looking fine as a PNG.
+_BUNDLE_FIG_WIDTH = 700
+_BUNDLE_FIG_FONT = 13
+_BUNDLE_TEXTWIDTH_PT = 510  # revtex4-2 two-column \textwidth
+
+
+def _bundle_font_for(width: int) -> int:
+    """Font size holding effective_pt ~= 9.5 at `figure*` width, for any canvas.
+
+    Widening the canvas alone SHRINKS the typeset text; this keeps the ratio
+    pinned so a 3-panel figure can have the absolute room its axis titles need
+    without becoming unreadable in print.
+    """
+    return max(10, round(width * _BUNDLE_FIG_FONT / _BUNDLE_FIG_WIDTH))
+
+
+def _bundle_layout(fig, title, height=340, width=_BUNDLE_FIG_WIDTH,
+                   font_size=None, legend_y=-0.16, bottom=80,
+                   top=58):
+    """Shared bundle-figure layout.
+
+    Reserves the bottom margin BEFORE placing the legend (otherwise a
+    horizontal legend overprints the x-axis titles in kaleido), and pins the
+    font/width ratio so the figure is legible at its typeset size. Serif family
+    to match the revtex body text rather than sitting in sans-serif beside it.
+    """
+    if font_size is None:
+        font_size = _bundle_font_for(width)
     fig.update_layout(
-        title=title, template="plotly_white", height=height, width=width,
-        margin=dict(b=bottom, t=90),
-        legend=dict(orientation="h", yanchor="top", y=legend_y, x=0.0))
+        title=dict(text=title, font=dict(size=font_size + 2)),
+        template="plotly_white", height=height, width=width,
+        font=dict(family="Times New Roman, Nimbus Roman, DejaVu Serif, serif",
+                  size=font_size),
+        margin=dict(b=bottom, t=top, l=int(font_size * 4.8), r=int(font_size * 1.8)),
+        legend=dict(orientation="h", yanchor="top", y=legend_y, x=0.0,
+                    font=dict(size=font_size - 1)))
+    fig.update_annotations(font_size=font_size - 1)
     return fig
+
+
+def bundle_figure_typeset_pt(fig) -> float:
+    """Effective body-text size, in points, this figure will render at when
+    included as `figure*` at \textwidth. Used by the structural checks; a value
+    below ~8 pt against 10 pt body text is a Stage-9 FAIL."""
+    return (fig.layout.font.size or 12) / fig.layout.width * _BUNDLE_TEXTWIDTH_PT
+
+
+def _d12_layout(fig, title, height=560, width=1080, legend_y=-0.30, bottom=170):
+    """Deprecated alias retained for any out-of-tree caller; routes to
+    `_bundle_layout` with the typeset-safe defaults rather than the old
+    unreadable canvas."""
+    return _bundle_layout(fig, title)
 
 
 def fig_d12_poisson_floor_vs_folklore() -> go.Figure:
@@ -14753,9 +14813,9 @@ def fig_d12_poisson_floor_vs_folklore() -> go.Figure:
     from src.core import formulas as F
     blue, amber, carmine = COLORS["steel_blue"], COLORS["amber"], COLORS["carmine"]
     fig = make_subplots(rows=1, cols=3, horizontal_spacing=0.075, subplot_titles=(
-        "(A) false-strict as a miss bound  (N_b = 5)",
-        "(B) fail-open as an average-error screen  (N_b = 50)",
-        "exact exponent gap  2√N_b(√N_a − √N_b)"))
+        "(A) false-strict miss bound, N_b = 5",
+        "(B) fail-open screen, N_b = 50",
+        "(C) exact exponent gap"))
 
     # ── (A) miss-bound refutation ──────────────────────────────────────────
     nb_a = 5.0
@@ -14770,7 +14830,7 @@ def fig_d12_poisson_floor_vs_folklore() -> go.Figure:
         row=1, col=1)
     fig.add_trace(go.Scatter(
         x=na_a, y=folk_a, mode="lines", line=dict(color=amber, width=2.5, dash="dash"),
-        name="(A) folklore  exp(−(N_a−N_b))  — NOT a bound"), row=1, col=1)
+        name="(A,B) folklore  exp(−(N_a−N_b))  — NOT a bound"), row=1, col=1)
     fig.add_trace(go.Scatter(
         x=na_a, y=realizable, mode="lines", line=dict(color=blue, width=3),
         name="(A) realizable unit-threshold miss  exp(−N_a)"), row=1, col=1)
@@ -14779,7 +14839,7 @@ def fig_d12_poisson_floor_vs_folklore() -> go.Figure:
         marker=dict(color=carmine, size=12, symbol="diamond"),
         name="(A) certified 148× at (N_b,N_a) = (5,10)"), row=1, col=1)
     fig.update_yaxes(type="log", exponentformat="power", showexponent="all",
-                     title_text="(A) miss probability  (dimensionless)", row=1, col=1)
+                     title_text="miss probability", row=1, col=1)
     fig.update_xaxes(title_text="source rate  N_a  (counts)", row=1, col=1)
 
     # ── (B) average-error screen ───────────────────────────────────────────
@@ -14810,9 +14870,9 @@ def fig_d12_poisson_floor_vs_folklore() -> go.Figure:
     fig.add_trace(go.Scatter(
         x=[60.0], y=[F.poisson_avg_error_floor(60.0, 50.0)], mode="markers",
         marker=dict(color=carmine, size=12, symbol="diamond"),
-        name="(B) certified ratio > 1000 at (50, 60)"), row=1, col=2)
+        name="(B) certified ratio > 1000 at (N_b,N_a) = (50,60)"), row=1, col=2)
     fig.update_yaxes(type="log", exponentformat="power", showexponent="all",
-                     title_text="(B) average assignment-error floor  (dimensionless)", row=1, col=2)
+                     title_text="avg. error floor", row=1, col=2)
     fig.update_xaxes(title_text="source rate  N_a  (counts)", row=1, col=2)
 
     # ── exponent gap ───────────────────────────────────────────────────────
@@ -14826,14 +14886,14 @@ def fig_d12_poisson_floor_vs_folklore() -> go.Figure:
     fig.add_trace(go.Scatter(
         x=[60.0], y=[F.folklore_gap_exponent(60.0, 50.0)], mode="markers+text",
         marker=dict(color=carmine, size=12, symbol="diamond"),
-        text=["9.5445"], textposition="top center", cliponaxis=False,
+        text=["9.5445"], textposition="top left", cliponaxis=False,
         showlegend=False), row=1, col=3)
     fig.update_xaxes(title_text="source rate  N_a  (counts)", row=1, col=3)
-    fig.update_yaxes(title_text="exponent advantage of the Le Cam floor  (nats)", row=1, col=3)
+    fig.update_yaxes(title_text="gap exponent (nats)", row=1, col=3)
 
-    return _d12_layout(
+    return _bundle_layout(
         fig, "The folklore photon-counting floor fails in two directions",
-        height=560, width=1400, legend_y=-0.26, bottom=185)
+        width=1040, height=520, legend_y=-0.21, bottom=150)
 
 
 def fig_d12_enbw_matched_filter() -> go.Figure:
@@ -14850,8 +14910,8 @@ def fig_d12_enbw_matched_filter() -> go.Figure:
     from src.core import formulas as F
     blue, amber, carmine = COLORS["steel_blue"], COLORS["amber"], COLORS["carmine"]
     fig = make_subplots(rows=1, cols=2, horizontal_spacing=0.12, subplot_titles=(
-        "ENBW·T realizability floor (one-sided convention)",
-        "Gaussian tail Q(z) inside its certified envelopes"))
+        "(left) ENBW·T floor, one-sided convention",
+        "(right) Gaussian tail Q(z) and its envelopes"))
 
     T = np.linspace(0.25, 4.0, 400)
     box = np.array([F.enbw_boxcar(t) * t for t in T])
@@ -14867,7 +14927,7 @@ def fig_d12_enbw_matched_filter() -> go.Figure:
                   annotation_text="floor 1/2 — IsLeast, sharp",
                   annotation_position="top right", row=1, col=1)
     fig.update_xaxes(title_text="integration window  T  (arb. time units)", row=1, col=1)
-    fig.update_yaxes(title_text="ENBW · T   (dimensionless)", range=[0.0, 1.0],
+    fig.update_yaxes(title_text="ENBW · T  (dimensionless)", range=[0.0, 1.0],
                      row=1, col=1)
 
     z = np.linspace(0.05, 3.5, 400)
@@ -14894,11 +14954,11 @@ def fig_d12_enbw_matched_filter() -> go.Figure:
         row=1, col=2)
     fig.update_xaxes(title_text="separation budget  z = Δμ/(2σ)", row=1, col=2)
     fig.update_yaxes(type="log", exponentformat="power", showexponent="all",
-                     title_text="tail probability / bound value", dtick=1, row=1, col=2)
+                     title_text="tail prob. / bound", dtick=1, row=1, col=2)
 
-    return _d12_layout(
+    return _bundle_layout(
         fig, "Filtered-readout realizability floor and the Gaussian tail sandwich",
-        height=600, width=1080, legend_y=-0.24, bottom=210)
+        width=880, height=470, legend_y=-0.21, bottom=140)
 
 
 def fig_d12_etf_stability() -> go.Figure:
@@ -14914,34 +14974,34 @@ def fig_d12_etf_stability() -> go.Figure:
     from src.core import formulas as F
     blue, amber, carmine = COLORS["steel_blue"], COLORS["amber"], COLORS["carmine"]
     fig = make_subplots(rows=1, cols=2, horizontal_spacing=0.12, subplot_titles=(
-        "ETF stability dichotomy  τ_eff = τ/(1+ℒ)",
-        "Johnson NEP correction  |1 − ℒ|  (stability-blind)"))
+        "(left) stability dichotomy  τ_eff = τ/(1+ℒ)",
+        "(right) Johnson correction |1 − ℒ| — stability-blind"))
 
     stable = np.linspace(-0.94, 6.0, 400)
     unstable = np.linspace(-6.0, -1.06, 400)
     fig.add_trace(go.Scatter(
         x=stable, y=[F.etf_effective_time_constant(1.0, 1.0, L) for L in stable],
         mode="lines", line=dict(color=blue, width=3),
-        name="stable branch  ℒ > −1  (perturbations decay)"), row=1, col=1)
+        name="(left) stable branch  ℒ > −1  (perturbations decay)"), row=1, col=1)
     fig.add_trace(go.Scatter(
         x=unstable, y=[F.etf_effective_time_constant(1.0, 1.0, L) for L in unstable],
         mode="lines", line=dict(color=amber, width=3, dash="dash"),
-        name="unstable branch  ℒ < −1  (τ_eff < 0, divergent)"), row=1, col=1)
+        name="(left) unstable branch  ℒ < −1  (τ_eff < 0, divergent)"), row=1, col=1)
     fig.add_vline(x=-1.0, line=dict(color=carmine, width=2, dash="dot"),
                   annotation_text="ℒ = −1 marginal",
                   annotation_position="top left", row=1, col=1)
     fig.add_trace(go.Scatter(
         x=[3.0], y=[F.etf_effective_time_constant(1.0, 1.0, 3.0)], mode="markers",
         marker=dict(color=carmine, size=12, symbol="diamond"),
-        name="speed-up witness  ℒ = 3:  τ_eff = τ/4"), row=1, col=1)
+        name="(left) speed-up witness  ℒ = 3:  τ_eff = τ/4"), row=1, col=1)
     fig.update_xaxes(title_text="loop gain  ℒ  (dimensionless)", row=1, col=1)
-    fig.update_yaxes(title_text="τ_eff  (units of τ = C/G)", range=[-4.0, 4.0],
+    fig.update_yaxes(title_text="τ_eff  (units of τ)", range=[-4.0, 4.0],
                      row=1, col=1)
 
     L = np.linspace(-4.0, 6.0, 600)
     corr = np.array([F.johnson_nep_correction_factor(x) for x in L])
     fig.add_vrect(x0=0.0, x1=2.0, fillcolor="rgba(241, 143, 1, 0.18)", line_width=0,
-                  annotation_text="naive OVERSTATES", annotation_position="top left",
+                  annotation_text="naive<br>OVERSTATES", annotation_position="top left",
                   layer="below", row=1, col=2, exclude_empty_subplots=False)
     fig.add_trace(go.Scatter(
         x=L, y=corr, mode="lines", line=dict(color=blue, width=3),
@@ -14954,21 +15014,21 @@ def fig_d12_etf_stability() -> go.Figure:
                   annotation_text="ℒ = −1 stability boundary",
                   annotation_position="bottom left", row=1, col=2)
     for Lv, lab, pos in ((3.0, "ℒ = 3 → 2", "bottom right"),
-                         (5.0, "ℒ = 5 → 4  (stable)", "top left"),
-                         (-3.0, "ℒ = −3 → 4  (UNSTABLE)", "top left")):
+                         (5.0, "ℒ = 5 → 4<br>(stable)", "top right"),
+                         (-3.0, "ℒ = −3 → 4<br>(UNSTABLE)", "bottom left")):
         fig.add_trace(go.Scatter(
             x=[Lv], y=[F.johnson_nep_correction_factor(Lv)], mode="markers+text",
             marker=dict(color=carmine, size=11, symbol="diamond"),
             text=[lab], textposition=pos, textfont=dict(size=11),
             cliponaxis=False, showlegend=False), row=1, col=2)
     fig.update_xaxes(title_text="loop gain  ℒ  (dimensionless)", row=1, col=2)
-    fig.update_yaxes(title_text="correction factor  (true / naive)",
+    fig.update_yaxes(title_text="true / naive",
                      range=[0.0, 5.6], row=1, col=2)
 
-    return _d12_layout(
+    return _bundle_layout(
         fig,
         "Electrothermal feedback — stability dichotomy and the |1−ℒ| Johnson correction",
-        height=580, width=1080, legend_y=-0.24, bottom=185)
+        width=880, height=440, legend_y=-0.20, bottom=118)
 
 
 # ============================================================
@@ -15018,15 +15078,13 @@ def fig_d11_phononic_band_gap() -> go.Figure:
               "<br>(norm_num, no floating point)"),
         font=dict(size=12), bgcolor="rgba(255,255,255,0.75)")
     fig.update_layout(
-        title="Certified phononic band gap — diatomic chain (m₁, m₂, κ, a) = (1, 2, 1, 1)",
         xaxis=dict(title="Bloch wavevector  k a  (dimensionless)", tickmode="array",
                    tickvals=[-np.pi, -np.pi / 2, 0, np.pi / 2, np.pi],
                    ticktext=["−π", "−π/2", "0", "π/2", "π"]),
         yaxis=dict(title="squared frequency  ω²  (units of κ/m₁)"),
-        template="plotly_white", height=580, width=900,
-        margin=dict(b=160, t=90),
-        legend=dict(orientation="h", yanchor="top", y=-0.20, x=0.0))
-    return fig
+    )
+    return _bundle_layout(fig, "Certified phononic band gap — diatomic chain (m₁, m₂, κ, a) = (1, 2, 1, 1)",
+                          width=800, height=420, legend_y=-0.21, bottom=118)
 
 
 def fig_d11_pt_exceptional_point() -> go.Figure:
@@ -15068,13 +15126,11 @@ def fig_d11_pt_exceptional_point() -> go.Figure:
                   annotation_text="g² = 99/100 ⟹ Δ ≤ 1/5 (tight)",
                   annotation_position="top left", annotation_yshift=-22)
     fig.update_layout(
-        title="PT transition and the order-2 exceptional point",
         xaxis=dict(title="non-Hermiticity  g  (dimensionless)"),
-        yaxis=dict(title="eigenvalue λ  (real branch / imaginary branch)"),
-        template="plotly_white", height=580, width=900,
-        margin=dict(b=160, t=90),
-        legend=dict(orientation="h", yanchor="top", y=-0.20, x=0.0))
-    return fig
+        yaxis=dict(title="eigenvalue λ  (units of the hopping scale)"),
+    )
+    return _bundle_layout(fig, "PT transition and the order-2 exceptional point",
+                          width=800, height=420, legend_y=-0.21, bottom=118)
 
 
 def fig_d11_haldane_chern() -> go.Figure:
@@ -15096,8 +15152,8 @@ def fig_d11_haldane_chern() -> go.Figure:
     from src.core import formulas as F
     blue, amber, carmine = COLORS["steel_blue"], COLORS["amber"], COLORS["carmine"]
     fig = make_subplots(rows=1, cols=2, horizontal_spacing=0.13, subplot_titles=(
-        "Dirac-point gaps  (t₂ = 1, φ = π/2)",
-        "certified lattice Chern number  (t = t₂ = 1, φ = π/2, 4×4 torus)"))
+        "(left) Dirac-point gaps, t₂ = 1, φ = π/2",
+        "(right) certified C, t = t₂ = 1, φ = π/2, 4×4 torus"))
 
     m = np.linspace(-8.0, 8.0, 600)
     gaps = [F.haldane_dirac_masses(x, 1.0, np.pi / 2) for x in m]
@@ -15118,7 +15174,7 @@ def fig_d11_haldane_chern() -> go.Figure:
                        bgcolor="rgba(255,255,255,0.8)",
                        text="analytic inversion window  |m| &lt; 3√3 ≈ 5.196")
     fig.update_xaxes(title_text="Semenoff mass  m  (units of t)", row=1, col=1)
-    fig.update_yaxes(title_text="Dirac-point gap  (units of t)", row=1, col=1)
+    fig.update_yaxes(title_text="Dirac gap (units of t)", row=1, col=1)
 
     # right panel: shaded window + a legend-visible entry so it is never unexplained
     fig.add_vrect(x0=-window, x1=window, fillcolor="rgba(46, 134, 171, 0.20)",
@@ -15129,7 +15185,7 @@ def fig_d11_haldane_chern() -> go.Figure:
         marker=dict(color="rgba(46, 134, 171, 0.45)", size=14, symbol="square"),
         name="shaded: analytic inversion window |m| < 3√3"), row=1, col=2)
     pts = [(1.0, -1.0, "m = 1:  C = −1", "top center"),
-           (5.0, 0.0, "m = 5:  C = 0  — inside the window", "bottom center"),
+           (5.0, 0.0, "m = 5:  C = 0 — inside the window", "bottom right"),
            (6.0, 0.0, "m = 6:  C = 0", "top center")]
     for mm, cc, lab, pos in pts:
         fig.add_trace(go.Scatter(
@@ -15145,10 +15201,10 @@ def fig_d11_haldane_chern() -> go.Figure:
     fig.update_yaxes(title_text="lattice Chern number  C", range=[-1.9, 1.1],
                      dtick=1, row=1, col=2)
 
-    return _d12_layout(
+    return _bundle_layout(
         fig,
         "Haldane Chern witness — mass inversion is NOT sufficient at fixed N",
-        height=580, width=1120, legend_y=-0.22, bottom=175)
+        width=900, height=430, legend_y=-0.19, bottom=104)
 
 
 def fig_d11_effective_medium() -> go.Figure:
@@ -15170,8 +15226,8 @@ def fig_d11_effective_medium() -> go.Figure:
     from src.core import formulas as F
     blue, amber, carmine = COLORS["steel_blue"], COLORS["amber"], COLORS["carmine"]
     fig = make_subplots(rows=1, cols=2, horizontal_spacing=0.12, subplot_titles=(
-        "Maxwell–Garnett permittivity  (ε<sub>h</sub> = 1, ε<sub>i</sub> = 4)",
-        "Voigt–Reuss elastic bounds  (M₁ = 1, M₂ = 4)"))
+        "(left) Maxwell–Garnett, ε<sub>h</sub> = 1, ε<sub>i</sub> = 4",
+        "(right) Voigt–Reuss, M₁ = 1, M₂ = 4"))
 
     f_frac = np.linspace(0.0, 1.0, 400)
     eps = np.array([F.maxwell_garnett(1.0, 4.0, x) for x in f_frac])
@@ -15189,7 +15245,7 @@ def fig_d11_effective_medium() -> go.Figure:
                        font=dict(size=12), bgcolor="rgba(255,255,255,0.8)",
                        text="constituent bounds  ε<sub>h</sub> ≤ ε<sub>eff</sub> ≤ ε<sub>i</sub>  (non-strict)")
     fig.update_xaxes(title_text="inclusion fill fraction  f  (dimensionless)", row=1, col=1)
-    fig.update_yaxes(title_text="effective permittivity  ε<sub>eff</sub>  (units of ε₀)",
+    fig.update_yaxes(title_text="ε<sub>eff</sub>  (units of ε₀)",
                      range=[0.4, 4.6], row=1, col=1)
 
     voigt = np.array([F.voigt_modulus(1.0, 4.0, x) for x in f_frac])
@@ -15198,23 +15254,23 @@ def fig_d11_effective_medium() -> go.Figure:
         x=np.concatenate([f_frac, f_frac[::-1]]),
         y=np.concatenate([voigt, reuss[::-1]]),
         fill="toself", fillcolor="rgba(241, 143, 1, 0.20)", line=dict(width=0),
-        name="exact Voigt − Reuss gap", hoverinfo="skip"), row=1, col=2)
+        name="(right) exact Voigt − Reuss gap", hoverinfo="skip"), row=1, col=2)
     fig.add_trace(go.Scatter(x=f_frac, y=voigt, mode="lines",
                              line=dict(color=amber, width=3),
-                             name="Voigt (iso-strain, arithmetic)"), row=1, col=2)
+                             name="(right) Voigt (iso-strain, arithmetic)"), row=1, col=2)
     fig.add_trace(go.Scatter(x=f_frac, y=reuss, mode="lines",
                              line=dict(color=blue, width=3),
-                             name="Reuss (iso-stress, harmonic)"), row=1, col=2)
+                             name="(right) Reuss (iso-stress, harmonic)"), row=1, col=2)
     f_star = 2.0 / 3.0
     fig.add_trace(go.Scatter(
         x=[f_star], y=[F.voigt_modulus(1.0, 4.0, f_star)], mode="markers",
         marker=dict(color=carmine, size=12, symbol="diamond"),
-        name=f"f = 2/3:  gap = {F.voigt_reuss_gap(1.0, 4.0, f_star):.0f} exactly"),
+        name=f"(right) f = 2/3:  gap = {F.voigt_reuss_gap(1.0, 4.0, f_star):.0f} exactly"),
         row=1, col=2)
     fig.update_xaxes(title_text="phase-2 fill fraction  f  (dimensionless)", row=1, col=2)
-    fig.update_yaxes(title_text="effective modulus  M  (units of M₁)", row=1, col=2)
+    fig.update_yaxes(title_text="modulus M  (units of M₁)", row=1, col=2)
 
-    return _d12_layout(
+    return _bundle_layout(
         fig,
         "Algebraic effective-medium bounds (two-scale route deliberately not taken)",
-        height=600, width=1080, legend_y=-0.24, bottom=200)
+        width=880, height=470, legend_y=-0.21, bottom=140)

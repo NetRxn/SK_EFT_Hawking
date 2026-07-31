@@ -34,8 +34,8 @@ sharp Gaussian separation-budget floor, uniform over threshold placement, with a
 Chernoff/Mills/Birnbaum--Feller tail sandwich. (ii) \emph{Filtered-readout floors}: the
 realizability bound $\mathrm{ENBW}\cdot T \ge 1/2$, proved sharp as a \emph{least} element and
 characterized with equality \emph{iff} the filter agrees a.e.\ with its own DC average times the
-boxcar --- a \emph{nonzero}, not necessarily positive, multiple; noise-
-equivalent-power composition algebra; and matched-filter optimality as a \emph{greatest} element.
+boxcar --- a \emph{nonzero}, not necessarily positive, multiple; noise-equivalent-power
+composition algebra; and matched-filter optimality as a \emph{greatest} element.
 (iii) \emph{Electrothermal detector physics}: the linearized voltage-biased bolometer, with
 stability as an exact dichotomy in the loop gain, and the Johnson noise-equivalent-power correction.
 (iv) \emph{Two-level control}: the rotating-wave reduction as an explicit-remainder \emph{inequality}
@@ -112,10 +112,10 @@ error branches are \thm{falseAlarm} and \thm{missProb}, both as \texttt{tsum}s a
 measure. Working on the measure carrier rather than a deprecated density is deliberate: every
 statement is phrased through \thm{hasSum\_poissonMeasureReal}.
 
-The Bhattacharyya coefficient \thm{affinity} obeys a data-processing inequality
+The Bhattacharyya coefficient~\cite{Kailath1967} \thm{affinity} obeys a data-processing inequality
 (\thm{affinity\_le\_binaryAffinity}): any randomized rule collapses the experiment to two outcomes,
 and the affinity cannot decrease. Combining it with the two-outcome arithmetic-geometric bound
-\thm{binaryAffinity\_sq\_le\_two\_mul\_add} yields the general Le Cam two-point floor
+\thm{binaryAffinity\_sq\_le\_two\_mul\_add} yields the general Le Cam two-point floor~\cite{LeCam1986}
 \thm{avgError\_ge\_affinity\_sq}. For the Poisson family the coefficient has a closed form,
 \thm{poissonBhattacharyya\_hasSum}, needing no positivity hypothesis, and the two combine into the
 headline bound
@@ -138,8 +138,8 @@ probability is at least $e^{-N_a}$, attained by the unit-threshold rule
 
 \subsection{The folklore floor fails in two directions}
 
-\begin{figure}[t]
-\includegraphics[width=\columnwidth]{figures/d12_fig1_poisson_floor_vs_folklore.png}
+\begin{figure*}[t]
+\includegraphics[width=\textwidth]{figures/d12_fig1_poisson_floor_vs_folklore.png}
 \caption{Both failure directions. \textbf{(A)} False-strict as a miss bound: the realizable
 unit-threshold counter misses with probability $e^{-N_a}$, strictly \emph{below} the folklore value,
 undershooting it by the factor $e^{N_b}$ --- certified at $148\times$ for $(N_b,N_a) = (5,10)$.
@@ -150,7 +150,7 @@ is merely conservative, which is \emph{not} direction (A). \textbf{Right:} the e
 $2\sqrt{N_b}(\sqrt{N_a}-\sqrt{N_b})$ of \thm{folkloreGap\_split}, with the $\log 4$ threshold and
 the certified witness at $(N_b,N_a) = (50,60)$.}
 \label{fig:folklore}
-\end{figure}
+\end{figure*}
 
 A widely repeated rule of thumb states the photon-counting miss floor as $e^{-N_{\rm diff}}$ with
 $N_{\rm diff} = N_a - N_b$. We prove it wrong twice over, in senses that are genuinely distinct.
@@ -219,15 +219,15 @@ hypothesis-testing rate is consumed --- see Section~\ref{sec:scope}.
 \section{Filtered-readout floors}
 \label{sec:filter}
 
-\begin{figure}[t]
-\includegraphics[width=\columnwidth]{figures/d12_fig2_enbw_matched_filter.png}
+\begin{figure*}[t]
+\includegraphics[width=\textwidth]{figures/d12_fig2_enbw_matched_filter.png}
 \caption{Left: the window product $\mathrm{ENBW}\cdot T$ for the matched boxcar, which saturates the
 floor $1/2$, and for the DC-matched ramp, which does not --- the floor is a screen with real slack.
 Right: the Gaussian tail $Q(z)$ inside its certified Chernoff/Mills upper and Birnbaum--Feller lower
 envelopes. The upper curves are \emph{bounds}, not probabilities --- the Mills ratio $\varphi(z)/z$
 exceeds $1$ for $z \lesssim 0.37$, where it is vacuous.}
 \label{fig:enbw}
-\end{figure}
+\end{figure*}
 
 \subsection{A realizability floor, proved sharp}
 
@@ -240,10 +240,14 @@ better constant exists. Second, \thm{enbw\_eq\_half\_iff\_boxcar} characterizes 
 The multiplier is therefore a \emph{nonzero} constant, not necessarily a positive one --- the only
 constraint is that the DC gain not vanish, and $h = -\,\mathrm{boxcar}$ saturates the floor just as
 $h = +\,\mathrm{boxcar}$ does, since ENBW is invariant under $h \mapsto c\,h$ for $c \neq 0$
-(\thm{enbw\_const\_mul}). We flag the contrast deliberately: the matched-filter saturation
-characterization of Section~\ref{sec:filter} below \emph{does} require strict positivity
-(\thm{filteredSNR\_eq\_budget\_iff}), and importing that qualifier here would be exactly the
-sign-blindness that \thm{unsigned\_saturation\_characterization\_false} refutes one paragraph later.
+(\thm{enbw\_const\_mul}). The two characterizations in this paper therefore differ in exactly this
+respect, and the difference is easy to get backwards. Matched-filter saturation
+(\thm{filteredSNR\_eq\_budget\_iff}, §\ref{sec:filter}) genuinely \emph{does} require $0 < c$,
+because filtered SNR is a \emph{signed} quantity; ENBW does not, because it is a bandwidth and is
+scale-invariant. Carrying the positivity across from the former to the latter would overstate the
+ENBW characterization --- the $h = -\,\mathrm{boxcar}$ witness above refutes it directly. The
+converse error, dropping the sign where it \emph{is} load-bearing, is what
+\thm{unsigned\_saturation\_characterization\_false} refutes on the matched-filter side.
 Third, \thm{enbw\_ramp\_gt\_half} exhibits a filter strictly above the floor, so the bound
 discriminates.
 
@@ -300,15 +304,15 @@ does not, which is \thm{power\_unsigned\_characterization\_false}.
 \section{Electrothermal detector physics}
 \label{sec:etf}
 
-\begin{figure}[t]
-\includegraphics[width=\columnwidth]{figures/d12_fig3_etf_stability.png}
+\begin{figure*}[t]
+\includegraphics[width=\textwidth]{figures/d12_fig3_etf_stability.png}
 \caption{Left: the effective time constant $\tau_{\rm eff} = \tau/(1+\mathcal{L})$ across the
 stability dichotomy \thm{etf\_stable\_iff}. On the unstable branch it is \emph{negative}; reading it
 through an absolute value inverts the physics. Right: the Johnson noise-equivalent-power correction
 $|1-\mathcal{L}|$, which is an equality rather than a direction --- the ETF-unaware budget
 \emph{overstates} on $0 < \mathcal{L} < 2$ --- and which is stability-blind.}
 \label{fig:etf}
-\end{figure}
+\end{figure*}
 
 \subsection{The model and its dichotomy}
 
@@ -323,8 +327,9 @@ right-hand side is exactly minus the effective conductance. The minus sign in th
 linearization is \emph{derived} from the quotient rule over an arbitrary differentiable
 resistance--temperature curve (\thm{biasPower\_hasDerivAt}), not posited.
 
-The central result is an exact dichotomy, \thm{etf\_stable\_iff}: every perturbation decays
-\emph{if and only if} $\mathcal{L} > -1$. Both directions carry content, and the trichotomy is
+The central result is an exact dichotomy, \thm{etf\_stable\_iff}: for a model with positive heat
+capacity and positive thermal conductance --- both carried as explicit binders, not assumed away ---
+every perturbation decays \emph{if and only if} $\mathcal{L} > -1$. Both directions carry content, and the trichotomy is
 completed by \thm{etf\_diverges\_of\_loopGain\_lt\_neg\_one} and
 \thm{etf\_marginal\_of\_loopGain\_eq\_neg\_one}, which shows the perturbation is frozen exactly at
 the boundary. Quantifying over \emph{all} trajectories is legitimate because

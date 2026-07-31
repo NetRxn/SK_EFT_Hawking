@@ -92,13 +92,13 @@ statement. We are equally explicit about what we did \emph{not} prove: Section~\
 records that Berry curvature and the bulk--boundary correspondence are \emph{deferred}, not shipped
 in conditional form, and that our claimed novelty carries four mandatory carve-outs.
 
-\paragraph{Substrate summary.} The bundle comprises 22 root-imported modules --- 6024 lines, 392
+\paragraph{Substrate summary.} The bundle comprises 22 root-imported modules --- 6032 lines, 392
 theorems and lemmas, 83 definitions and structures, counted at source level. The counting rule is
 stated so it is reproducible: a declaration is counted when a line begins with \texttt{theorem} or
 \texttt{lemma}, optionally preceded by an attribute bracket or by \texttt{private}/\texttt{protected}.
 (Two conventions circulate in this project: these source-authored counts, used throughout this paper,
-and the larger \texttt{lean\_deps.json} extraction --- 452 and 109 respectively --- which additionally
-counts Lean-generated equation lemmas. We use the former uniformly and never mix them.) There are
+and the larger \texttt{lean\_deps.json} extraction, which additionally counts Lean-generated
+equation lemmas and reports 452 theorems against these 392. We use the former uniformly and never mix them.) There are
 zero project-local axioms, zero
 \texttt{sorry}, zero \texttt{native\_decide} and zero \texttt{maxHeartbeats} directives. Kernel
 decidability on finite index types is used freely via \texttt{decide}, which is checked by the kernel
@@ -170,14 +170,14 @@ $d_3$ axis where the gauge choice genuinely degenerates, and the overlap conditi
 \section{Phononic band gaps}
 \label{sec:phononic}
 
-\begin{figure}[t]
-\includegraphics[width=\columnwidth]{figures/d11_fig1_phononic_band_gap.png}
+\begin{figure*}[t]
+\includegraphics[width=\textwidth]{figures/d11_fig1_phononic_band_gap.png}
 \caption{The certified phononic band gap of the diatomic chain
 $(m_1,m_2,\kappa,a) = (1,2,1,1)$. Both branches are plotted across the Brillouin zone; the shaded
 band contains no state. Both edges are \emph{attained} at $k = \pm\pi$
 (\thm{branchMinus\_at\_pi}, \thm{branchPlus\_at\_pi}), so the bound is tight rather than loose.}
 \label{fig:phononic}
-\end{figure}
+\end{figure*}
 
 PhysLib's \texttt{TightBindingChain} is a one-dimensional, single-band, gapless model: its dispersion
 is a single cosine and its Brillouin zone is a real interval. A gap cannot exist in a single band, so
@@ -208,14 +208,14 @@ discharged by \texttt{norm\_num} with no floating-point arithmetic anywhere
 \section{Non-Hermitian exceptional points}
 \label{sec:nonhermitian}
 
-\begin{figure}[t]
-\includegraphics[width=\columnwidth]{figures/d11_fig2_pt_exceptional_point.png}
+\begin{figure*}[t]
+\includegraphics[width=\textwidth]{figures/d11_fig2_pt_exceptional_point.png}
 \caption{The $\mathcal{PT}$-symmetric two-level model. Eigenvalues are real in the unbroken phase and
 purely imaginary beyond it; the transition is a sharp biconditional
 (\thm{pt\_symmetric\_real\_spectrum\_iff}) and the critical point is a genuinely defective order-two
 exceptional point (\thm{exceptional\_point\_defective}).}
 \label{fig:pt}
-\end{figure}
+\end{figure*}
 
 For the standard $\mathcal{PT}$-symmetric two-level model \thm{ptBloch}, the secular determinant is
 computed by \thm{ptBloch\_secular\_det}, so the eigenvalues are $\pm\sqrt{1-g^2}$. The transition is
@@ -243,14 +243,14 @@ eigenvalue-splitting analysis above.
 \section{Algebraic effective-medium bounds}
 \label{sec:effmedium}
 
-\begin{figure}[t]
-\includegraphics[width=\columnwidth]{figures/d11_fig4_effective_medium.png}
+\begin{figure*}[t]
+\includegraphics[width=\textwidth]{figures/d11_fig4_effective_medium.png}
 \caption{Left: Maxwell--Garnett effective permittivity inside its constituent bounds, with the
 certified point $(\varepsilon_h,\varepsilon_i,f) = (1,4,\tfrac12)$ giving exactly $2$. Right: Voigt
 and Reuss elastic bounds with their \emph{exact} arithmetic-minus-harmonic gap
 (\thm{voigt\_sub\_reuss\_eq}).}
 \label{fig:effmedium}
-\end{figure}
+\end{figure*}
 
 The Maxwell--Garnett mixing rule~\cite{MaxwellGarnett1904} is formalized as \thm{maxwellGarnett}, and
 \thm{maxwellGarnett\_clausius\_mossotti} verifies that this closed form solves the Clausius--Mossotti
@@ -284,18 +284,18 @@ development~\cite{BoldoLaxMilgram2016}.
 \section{Graphene and a concrete Chern witness}
 \label{sec:graphene}
 
-\begin{figure}[t]
-\includegraphics[width=\columnwidth]{figures/d11_fig3_haldane_chern.png}
+\begin{figure*}[t]
+\includegraphics[width=\textwidth]{figures/d11_fig3_haldane_chern.png}
 \caption{Left: Dirac-point gaps at the two cones, which acquire opposite masses; the analytic
 inversion window $|m| < 3\sqrt{3}$ is shaded. Right: the certified lattice Chern number at
 $t = t_2 = 1$, $\varphi = \pi/2$ on a $4\times4$ torus. The point $m = 5$ lies \emph{inside} the
 analytic window yet reads $C = 0$: mass inversion is \emph{not sufficient} at fixed grid size, which
 is the half that is theorem-backed (\thm{haldane\_massInversion\_not\_sufficient\_at\_N4}).
-Necessity is \emph{not} certified --- it rests on the single sample $m = 6$ --- and the flip
-location $\approx 3.3177$ is numerical rather than certified; both are labelled as such in the
-figure.}
+Necessity is \emph{not} certified --- it rests on the single sample $m = 6$ --- so the figure
+makes no necessity claim at all; the flip location $\approx 3.3177$ is labelled in the figure as
+numerical rather than certified.}
 \label{fig:haldane}
-\end{figure}
+\end{figure*}
 
 \subsection{Honeycomb structure and the chart obligation}
 

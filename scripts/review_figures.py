@@ -2311,6 +2311,16 @@ def generate_figures() -> dict[str, Path]:
         "fig_qnet_w_vs_ghz": fig_qnet_w_vs_ghz,
         # Phase 6AQ — readout-window envelopes (D9 §5)
         "fig_qnet_readout_envelopes": fig_qnet_readout_envelopes,
+        # D11 / D12 bundle figures (2026-07-30). Registering the FigureSpecs
+        # alone was INERT — lookup is a bare func_map.get(), so unmapped specs
+        # silently SKIP. Stage-9 round 3 caught that; these are the wiring.
+        "fig_d11_phononic_band_gap": viz.fig_d11_phononic_band_gap,
+        "fig_d11_pt_exceptional_point": viz.fig_d11_pt_exceptional_point,
+        "fig_d11_haldane_chern": viz.fig_d11_haldane_chern,
+        "fig_d11_effective_medium": viz.fig_d11_effective_medium,
+        "fig_d12_poisson_floor_vs_folklore": viz.fig_d12_poisson_floor_vs_folklore,
+        "fig_d12_enbw_matched_filter": viz.fig_d12_enbw_matched_filter,
+        "fig_d12_etf_stability": viz.fig_d12_etf_stability,
     }
 
     paths = {}
@@ -2677,6 +2687,16 @@ def run_structural_checks() -> list[CheckIssue]:
         "fig_qnet_w_vs_ghz": fig_qnet_w_vs_ghz,
         # Phase 6AQ — readout-window envelopes (D9 §5)
         "fig_qnet_readout_envelopes": fig_qnet_readout_envelopes,
+        # D11 / D12 bundle figures (2026-07-30). Registering the FigureSpecs
+        # alone was INERT — lookup is a bare func_map.get(), so unmapped specs
+        # silently SKIP. Stage-9 round 3 caught that; these are the wiring.
+        "fig_d11_phononic_band_gap": viz.fig_d11_phononic_band_gap,
+        "fig_d11_pt_exceptional_point": viz.fig_d11_pt_exceptional_point,
+        "fig_d11_haldane_chern": viz.fig_d11_haldane_chern,
+        "fig_d11_effective_medium": viz.fig_d11_effective_medium,
+        "fig_d12_poisson_floor_vs_folklore": viz.fig_d12_poisson_floor_vs_folklore,
+        "fig_d12_enbw_matched_filter": viz.fig_d12_enbw_matched_filter,
+        "fig_d12_etf_stability": viz.fig_d12_etf_stability,
     }
 
     issues: list[CheckIssue] = []
