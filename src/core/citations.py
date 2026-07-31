@@ -10964,6 +10964,30 @@ CITATION_REGISTRY = {
         'provides': ['Strong electrothermal feedback in a voltage-biased superconducting transition-edge sensor.'],
         'notes': 'Best-verified D12 citation: the doi.org redirect slug independently confirms title, volume, issue and page.',
     },
+    'LuccioliDegenne2024': {
+        'authors': 'Luccioli, L., Degenne, R.',
+        'title': 'TestingLowerBounds: Information theory and hypothesis testing, in Lean',
+        'journal': 'Software repository', 'volume': None, 'page': None, 'year': 2024,
+        'doi': None, 'arxiv': None,
+        'doi_verified': False, 'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-6E/primary-sources/LuccioliDegenne2024.note.txt',
+        'used_in': ['papers/D12/paper_draft.tex'],
+        'provides': [
+            'Data-processing inequality for f-divergences in Lean 4, plus the chain rule for KL. '
+            'The Mathlib KL-divergence definition was developed here.',
+        ],
+        'notes': (
+            'PRIOR-ART RELATIONSHIP, disclosed 2026-07-31. The squared Hellinger distance is an '
+            'f-divergence (f(t) = (sqrt t - 1)^2) and the Bhattacharyya affinity is its complement, '
+            'so a general f-divergence DPI here plausibly SUBSUMES our affinity_le_binaryAffinity. '
+            'Cite it for that lemma rather than presenting the affinity DPI as unprecedented. '
+            'ATTRIBUTION IS SECONDHAND: the repository is on github.com, outside this repo egress '
+            'whitelist, so it has NOT been inspected. The content statement above is quoted from '
+            'Degenne2025Kernels (arXiv:2510.04070), a whitelisted primary, which cites it as [LD24]. '
+            'Whether the project carries a Le Cam average-error floor, a Poisson Bhattacharyya '
+            'closed form, or a named Bhattacharyya coefficient is UNKNOWN - do not assert absence.'
+        ),
+    },
     'Mather1982': {
         'authors': 'Mather, J. C.',
         'title': 'Bolometer noise: nonequilibrium theory',

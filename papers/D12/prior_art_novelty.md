@@ -144,14 +144,39 @@ These are gates, not suggestions. D12 may not be submitted until both are run.
 
 1. **`RemyDegenne/testing-lower-bounds`** ("Information theory and hypothesis
    testing, in Lean") — an out-of-Mathlib Lean project targeting f-divergences
-   and hypothesis-testing error bounds, with an associated MSc thesis covering
-   the f-divergence data-processing inequality and Hellinger/Rényi divergences.
-   **A Bayes-binary-risk ↔ divergence lower bound there would be substantially
-   our Le Cam floor.** This is the **highest prior-art risk in the bundle**. The
-   repository is on `github.com`, which was unreachable during the sweep, so its
-   contents are unconfirmed. It is deliberately *not* cited as established prior
-   art; `Degenne2025Kernels` (arXiv:2510.04070) is cited instead for the honest
-   scoping of what Mathlib itself carries.
+   and hypothesis-testing error bounds. **A Bayes-binary-risk ↔ divergence lower
+   bound there would be substantially our Le Cam floor.** This remains the
+   **highest prior-art risk in the bundle**.
+
+   **PARTIALLY RESOLVED 2026-07-31 — one genuine hit, from a whitelisted
+   primary.** The repository itself is on `github.com`, still outside this
+   repo's egress whitelist, so it has *not* been inspected. But
+   `Degenne2025Kernels` (arXiv:2510.04070, §on entropy/KL) states the project's
+   headline content directly, and it is now citable:
+
+   > "The Kullback-Leibler divergence definition now in MATHLIB was developed in
+   > the TestingLowerBounds project [LD24]. A highlight of the project is a proof
+   > of the **data-processing inequality for f-divergences**, a class of
+   > divergences between probability distributions that includes KL, as well as
+   > the chain rule for KL."
+
+   with `[LD24] = L. Luccioli and R. Degenne, TestingLowerBounds, 2024`.
+
+   **Consequence — this is a real prior-art relationship and must be disclosed,
+   not argued away.** The squared Hellinger distance is an f-divergence
+   (`f(t) = (√t − 1)²`), and the Bhattacharyya affinity is its complement. So a
+   *general* f-divergence data-processing inequality there plausibly **subsumes
+   our `affinity_le_binaryAffinity`** — one of the two load-bearing lemmas under
+   `poisson_avgError_floor`. The draft must cite `LuccioliDegenne2024` for that
+   lemma's context rather than presenting the affinity DPI as unprecedented.
+
+   **Still unresolved (needs the repo):** whether the project carries (a) the
+   Poisson closed form `poissonBhattacharyya_hasSum`, (b) a Le Cam two-point
+   *average-error* floor of the `P_e ≥ ¼exp(−(√Nₐ−√N_b)²)` shape, or (c) a
+   Bhattacharyya coefficient as a named object. The Degenne paper names neither
+   a Le Cam bound nor any Poisson-specific result, but it is a Markov-kernels
+   paper and its silence is **not** evidence of absence in the downstream repo.
+   Absence must not be asserted for any of (a)–(c).
 2. **Isabelle/AFP `Error_Function` + `Probability`, and Coq `infotheo`** —
    **wholly unassessed.** That is a gap in the evidence, not a finding of
    absence. The draft must not assert absence in these ecosystems.
@@ -159,6 +184,18 @@ These are gates, not suggestions. D12 may not be submitted until both are run.
 Mathlib's probability/information-theory area is under active development by
 Degenne and Luccioli. **Re-run the greps immediately before submission** and
 date-stamp every novelty claim to the pin.
+
+### 3a. Sweeps run 2026-07-31 (previously asserted without running them)
+
+Three claims in the draft were hedged or withdrawn on the strength of a sweep
+that had **never actually been run**. They were run on 2026-07-31; two resolve
+*in favour* of the original claim and one produced the genuine hit above.
+
+| Claim | Sweep result |
+|---|---|
+| Classical↔quantum Bhattacharyya correspondence (`diagonalState_sqrtFidelity_eq_affinity`) | **Stands, and was understated.** Verified by direct read of the pinned PhysLib checkout: `QuantumInfo/States/Mixed/Fidelity.lean:136-139` is a four-item `--TODO:` list whose second item is "Matches with classical (squared) Bhattacharyya coefficient" — i.e. PhysLib lists this correspondence as **open**. Our theorem also assumes only non-negativity, not normalisation, so it is *strictly more general* than the `MState`-bound version that TODO contemplates. Separately, PhysLib's `fidelity_channel_nondecreasing:133` is `@[sorryful]` — its fidelity data-processing inequality is an open `sorry` at pin `c4843367`, and we consume none of it (our axiom closures are exactly `{propext, Classical.choice, Quot.sound}`, no `sorryAx`). |
+| `ENBW·T ≥ 1/2` has no canonical primary source | **Stands.** The engineering literature carries the relation only as a *convention* tied to particular filters — `t_int = 1/(2·ENBW)`, and `ENBW = 1/4T` for a single-pole lock-in filter — never as a proved inequality, and never with a sharpness/least-element characterisation. Gabor (1946) remains the right antecedent to cite, and remains a *different* Cauchy–Schwarz statement. Proving it self-contained is correct. |
+| `RemyDegenne/testing-lower-bounds` | **One genuine hit — see §3.1 above.** The f-divergence DPI plausibly subsumes `affinity_le_binaryAffinity`. Cite `LuccioliDegenne2024`. |
 
 ---
 
