@@ -10895,26 +10895,30 @@ CITATION_REGISTRY = {
         'notes': 'CARVE-OUT for D11 6CD NonHermitianWinding and for any index-theoretic reading of bulk-boundary.',
     },
     'BoldoLaxMilgram2016': {
-        'authors': 'Boldo, S., Clement, F., Faissole, F., Martin, V., Mayero, M.',
-        'title': 'A Coq formal proof of the Lax-Milgram theorem',
+        'authors': 'Clement, F., Martin, V.',
+        'title': 'The Lax-Milgram Theorem. A detailed proof to be formalized in Coq',
         'journal': None, 'volume': None, 'page': None, 'year': 2016,
         'doi': None, 'arxiv': '1607.03618',
         'doi_verified': None, 'inprep': False,
         'primary_source_path': 'Lit-Search/Phase-6C/primary-sources/BoldoLaxMilgram2016.abstract.txt',
         'used_in': ['papers/D11/paper_draft.tex'],
-        'provides': ['Coq formalization of the Lax-Milgram theorem, the backbone of elliptic-PDE well-posedness.'],
+        'provides': ['A detailed pen-and-paper proof of the Lax-Milgram theorem, prepared FOR Coq formalization; the backbone of elliptic-PDE well-posedness.'],
         'notes': 'Cited as the nearest formalized substrate for the ANALYTIC homogenization route D11 did not take. Two-scale convergence itself is formalized nowhere.',
     },
     'LeanLJ2025': {
-        'authors': 'Ugwuanyi, S., Jones, M., Velkey, K., Josephson, T.',
-        'title': 'LeanLJ: Formal verification of Lennard-Jones interaction energies',
+        'authors': 'Ugwuanyi, E. D., Jones, C. T., Velkey, J., Josephson, T. R.',
+        'title': 'Benchmarking Energy Calculations Using Formal Proofs',
         'journal': None, 'volume': None, 'page': None, 'year': 2025,
         'doi': None, 'arxiv': '2505.09095',
         'doi_verified': None, 'inprep': False,
         'primary_source_path': 'Lit-Search/Phase-6C/primary-sources/LeanLJ2025.abstract.txt',
         'used_in': ['papers/D11/paper_draft.tex'],
         'provides': ['Lean 4 formalization of Lennard-Jones interaction energies under periodic boundary conditions, validated against NIST benchmarks.'],
-        'notes': "Nearest 'periodic lattice in Lean' precedent; not band theory.",
+        'notes': "Nearest 'periodic lattice in Lean' precedent; not band theory. "
+                 "⚠️ CORRECTED 2026-07-31 after a Stage-13 BLOCKER: the title was "
+                 "INVENTED ('LeanLJ: Formal verification of Lennard-Jones "
+                 "interaction energies') and three author initials were wrong. "
+                 "True metadata verified by direct fetch of the arXiv abs page.",
     },
     'Kailath1967': {
         'authors': 'Kailath, T.',
@@ -10959,6 +10963,29 @@ CITATION_REGISTRY = {
         'used_in': ['papers/D12/paper_draft.tex'],
         'provides': ['Strong electrothermal feedback in a voltage-biased superconducting transition-edge sensor.'],
         'notes': 'Best-verified D12 citation: the doi.org redirect slug independently confirms title, volume, issue and page.',
+    },
+    'Mather1982': {
+        'authors': 'Mather, J. C.',
+        'title': 'Bolometer noise: nonequilibrium theory',
+        'journal': 'Applied Optics', 'volume': 21, 'page': '1125', 'year': 1982,
+        'doi': '10.1364/AO.21.001125', 'arxiv': None,
+        'doi_verified': True, 'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-6E/primary-sources/Mather1982.abstract.txt',
+        'used_in': ['papers/D12/paper_draft.tex'],
+        'provides': [
+            'Primary source for the thermal-link gradient factor gamma (F_link) multiplying the '
+            'equilibrium phonon PSD 4 k_B T^2 G. Establishes that phonon noise in the link is '
+            'REDUCED relative to the equilibrium form (by up to ~30%), i.e. gamma <= 1.',
+        ],
+        'notes': (
+            'Resolves the 6EC phonon-prefactor provenance gap: the 4 k_B T^2 G form was previously '
+            'ASSERTED in BolometricFloors.lean with only an arithmetic resemblance to '
+            'Johnson-Nyquist offered as provenance. Also the source that corrected the DIRECTION '
+            'error: the tree carried two theorems hypothesizing gamma > 1 and concluded the '
+            'gamma = 1 form was optimistic; gamma is bounded ABOVE by 1, so it overstates. '
+            'Corroborated by the TES-literature F_link range [1/2, 1] (Irwin/Hilton lineage) and '
+            'recomputed from the diffuse-conduction closed form: gamma = 0.47 at T_b/T_s = 2, n = 4.'
+        ),
     },
     'IrwinHilton2005': {
         'authors': 'Irwin, K. D., Hilton, G. C.',

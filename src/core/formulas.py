@@ -11448,18 +11448,76 @@ def phonon_psd(k_B: float, temperature: float, conductance: float) -> float:
     Thermal-fluctuation (phonon) noise PSD referred to absorbed power:
     S_ph = 4 k_B T² G.
 
-    ⚠ Provenance honesty: this 4 k_B T² G prefactor is ASSERTED in the Lean
-    substrate, not cited. The in-tree identity relating it to the
-    Johnson–Nyquist form is an arithmetic RESEMBLANCE, not a citation — it
-    constrains nothing (it holds for any 4·a·b²·c) and is unit-incoherent as
-    provenance. A γ-correction factor (radiative/ballistic regimes) is NOT
-    modelled; phonon_psd corresponds to γ = 1.
+    Provenance: Mather (1982), Appl. Opt. 21, 1125, DOI 10.1364/AO.21.001125 —
+    the non-equilibrium bolometer theory whose isothermal-link limit this is.
+    (The in-tree identity relating the prefactor to the Johnson–Nyquist form
+    remains an arithmetic RESEMBLANCE, not provenance: it holds for any
+    4·a·b²·c and is unit-incoherent. It is retained only as a labelled
+    resemblance.)
 
-    Lean: phononPSD, phononPSD_eq_phononPSDGamma_one,
+    γ-correction: the thermal-link gradient factor γ (F_link) is now modelled —
+    see phonon_psd_gamma below. Referred to the bolometer temperature,
+    γ ∈ (0, 1], so this γ = 1 form OVERSTATES the phonon noise for any detector
+    with a real gradient across its link. Note the direction: the tree carried
+    the opposite claim until 2026-07-31.
+
+    Lean: phononPSD, phononPSD_eq_phononPSDGamma_one, phononPSDGamma,
+          phononPSDGamma_le_phononPSD, gammaOne_phononFloor_overstates,
           phonon_psd_eq_johnsonNyquist_scaled (labelled a resemblance)
           (Electrothermal/BolometricFloors.lean)
     """
     return 4.0 * k_B * temperature ** 2 * conductance
+
+
+def phonon_psd_gamma(
+    k_B: float, temperature: float, conductance: float, gamma: float
+) -> float:
+    """
+    Thermal-fluctuation (phonon) noise PSD with the thermal-link gradient
+    factor: S_ph = 4 γ k_B T² G.
+
+    γ is F_link in the TES instrument literature. Referred to the BOLOMETER
+    temperature T and G(T) at that temperature (the convention phonon_psd
+    fixes), γ ∈ (0, 1]: it is 1 exactly in the isothermal-link limit
+    T_bolo → T_bath and falls toward 1/2 for a strongly loaded detector. So γ
+    can only REDUCE the phonon noise below the equilibrium form.
+
+    Provenance: Mather (1982), Appl. Opt. 21, 1125 — phonon noise in the link is
+    reduced by as much as 30% relative to the equilibrium formula.
+
+    Lean: phononPSDGamma, phononPSD_eq_phononPSDGamma_one,
+          phononPSDGamma_lt_phononPSD, phononPSDGamma_le_phononPSD
+          (Electrothermal/BolometricFloors.lean)
+    """
+    return 4.0 * gamma * k_B * temperature ** 2 * conductance
+
+
+def phonon_psd_gradient_factor(temp_ratio: float, n_index: float) -> float:
+    """
+    The thermal-link gradient factor γ (F_link) in the diffuse phonon-conduction
+    case, converted to this module's bolometer-referred convention:
+
+        γ = [n/(2n+1)] · (r^(2n+1) − 1)/(r^n − 1) · r^(−(n+1))
+
+    with r = T_bolo/T_bath and n the thermal-conductivity index. The literature
+    states the bracketed form against T_bath and G(T_bath); the trailing
+    r^(−(n+1)) converts it to T_bolo and G(T_bolo) using G ∝ T^(n−1).
+
+    Limits (both are regression-pinned in tests):
+      * r → 1 (isothermal): γ → 1, matching phononPSD_eq_phononPSDGamma_one.
+      * r = 2, n = 4:       γ = 0.4729…, reproducing the quoted [1/2, 1] range
+                            and Mather's "reduced by as much as 30%".
+
+    Provenance: Mather (1982), Appl. Opt. 21, 1125; TES-literature F_link range.
+    """
+    if temp_ratio == 1.0:
+        return 1.0
+    bracket = (
+        (n_index / (2.0 * n_index + 1.0))
+        * (temp_ratio ** (2.0 * n_index + 1.0) - 1.0)
+        / (temp_ratio ** n_index - 1.0)
+    )
+    return bracket * temp_ratio ** (-(n_index + 1.0))
 
 
 def johnson_current_psd(k_B: float, temperature: float, resistance: float) -> float:

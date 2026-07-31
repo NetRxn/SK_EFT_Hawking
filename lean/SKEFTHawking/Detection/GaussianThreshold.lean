@@ -601,6 +601,44 @@ theorem gaussianQ_two_ge_rational : (1 : ℝ) / 125 ≤ gaussianQ 2 := by
     mul_le_mul hA hprod (by norm_num) (by positivity)
   linarith
 
+/-- **Rational lower enclosure at the `z = 1` operating point**: `Q(1) ≥ 3/25`.
+
+This is the enclosure that makes a **non-degenerate** biting witness available downstream. The
+`z = 2` pair above brackets an operating point whose tail is already small (`Q(2) ≈ 2.3e−2`); a
+fidelity ceiling built there permits `0.97`, so it refutes little. At `z = 1` the tail is
+`Q(1) = 0.1587`, and the ceiling `1 − Q(1) = 0.841` forbids the `0.99` figure that readout claims
+are routinely quoted at — while the operating point itself (matched budget `2`, i.e. a
+signal-carrying chain) is entirely ordinary. Contrast the `matchedBudget = 0` witnesses, which bite
+only because a signal-free readout cannot beat a coin flip.
+
+Route: `gaussianTail_birnbaum` at `z = 1` gives `Q(1) ≥ ½·φ(1)`, which is `95 %` of truth here
+(the window bound would lose a factor `2.6`). Then `√(2π) ≤ 2.51` from `Real.pi_lt_d2` and
+`e^{1/2} ≤ 1.6488` from `Real.exp_one_lt_d9` via `exp(½)² = exp 1`, giving
+`½·φ(1) ≥ ½·(1/2.51)·(1/1.6488) = 0.12082`, certified against `3/25 = 0.12`. No floating-point
+`exp` and no `native_decide`. -/
+theorem gaussianQ_one_ge_rational : (3 : ℝ) / 25 ≤ gaussianQ 1 := by
+  have hb := gaussianTail_birnbaum 1
+  rw [gaussianPDF_std, show -(1:ℝ) ^ 2 / 2 = -(1/2) by norm_num] at hb
+  have hspos : (0:ℝ) < √(2 * π) := Real.sqrt_pos.mpr (by positivity)
+  have hsle : √(2 * π) ≤ 2.51 := by
+    rw [show (2.51:ℝ) = √(2.51 ^ 2) from (Real.sqrt_sq (by norm_num)).symm]
+    exact Real.sqrt_le_sqrt (by nlinarith [Real.pi_lt_d2])
+  have hA : (1:ℝ) / 2.51 ≤ (√(2 * π))⁻¹ := by
+    rw [inv_eq_one_div]
+    exact one_div_le_one_div_of_le hspos hsle
+  have hE1 : Real.exp 1 < 2.7183 := lt_trans Real.exp_one_lt_d9 (by norm_num)
+  have hsq : Real.exp (1/2 : ℝ) * Real.exp (1/2 : ℝ) = Real.exp 1 := by
+    rw [← Real.exp_add]; norm_num
+  have hhalf : Real.exp (1/2 : ℝ) ≤ 1.6488 := by
+    nlinarith [Real.exp_pos (1/2 : ℝ), hsq, hE1]
+  have hB : (1:ℝ) / 1.6488 ≤ Real.exp (-(1/2) : ℝ) := by
+    rw [Real.exp_neg, ← one_div]
+    exact one_div_le_one_div_of_le (Real.exp_pos _) hhalf
+  have hprod : (1:ℝ) / 2.51 * ((1:ℝ) / 1.6488) ≤ (√(2 * π))⁻¹ * Real.exp (-(1/2) : ℝ) :=
+    mul_le_mul hA hB (by norm_num) (by positivity)
+  rw [show (1:ℝ) / (1 + 1 ^ 2) = 1 / 2 by norm_num] at hb
+  linarith
+
 /-! ## Threshold algebra -/
 
 /-- **Conservativity workhorse**: the false-alarm error increases with the noise scale `σ` when

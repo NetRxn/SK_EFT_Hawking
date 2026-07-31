@@ -502,6 +502,66 @@ theorem detector_chain_ceiling_bites (m : Electrothermal.ETFModel) {kB T Tw : �
   norm_num [Detection.gaussianQ_zero] at hc
   linarith
 
+/-! ### 4.2 Non-degenerate bites for the two Gaussian-bound ceilings
+
+The two BITES witnesses above fire at `matchedBudget = 0` — a signal-free readout, where
+`gaussianQ 0 = 1/2` collapses the ceiling to a coin flip. That is a real operating point, but a
+degenerate one: it demonstrates only that a chain carrying no signal cannot discriminate, which no
+reader doubted. It therefore does not establish that these two ceilings constrain a *working*
+detector.
+
+This section supplies the missing witnesses. At matched budget `2` the ceilings still forbid
+`0.99` — the figure readout claims are routinely quoted at — while the operating point is an
+ordinary signal-carrying chain. The enabling ingredient is `Detection.gaussianQ_one_ge_rational`,
+the Birnbaum--Feller-backed rational enclosure `Q(1) ≥ 3/25` at `95 %` of truth. -/
+
+/-- **Shared non-degenerate bite.** At matched budget `2` the Gaussian ceiling is at most `22/25`.
+Stated over the budget `B` because the 6EB and 6EC ceilings share this bound shape and differ only
+in which noise budget they feed it — the same factoring as `gaussian_ceiling_does_not_bite`. -/
+theorem gaussian_ceiling_bites_nondegenerate {B : ℝ} (hB : B = 2) :
+    1 - Detection.gaussianQ (B / 2) ≤ 22 / 25 := by
+  subst hB
+  rw [show (2:ℝ) / 2 = 1 by norm_num]
+  linarith [Detection.gaussianQ_one_ge_rational]
+
+open MeasureTheory in
+/-- **Filtered-readout ceiling (6EB) BITES at a NONZERO matched budget.** At budget `2` no readout
+of this class can exceed fidelity `22/25 = 0.88`, so a claimed `0.99` is refuted at an operating
+point that carries signal. Derived by calling `filtered_readout_ceiling`, so it inherits that
+theorem's whiteness / admissibility / mean-separation binders. -/
+theorem filtered_readout_ceiling_bites_nondegenerate {V : (ℝ → ℝ) → ℝ} {S₀ T : ℝ}
+    (hwhite : Detection.IsWhiteFilteredVariance V S₀ T) (hS : 0 < S₀) (hT : 0 ≤ T)
+    {s h : ℝ → ℝ} (hadm : Detection.IsAdmissibleFilter T s h)
+    (hs : IntervalIntegrable (fun x => s x ^ 2) volume 0 T)
+    {μ₀ μ₁ σ t : ℝ} (hσ : 0 < σ) (hμle : μ₀ ≤ μ₁)
+    (hμ : μ₁ - μ₀ = ∫ x in (0:ℝ)..T, h x * s x) (hσV : σ = Real.sqrt (V h))
+    (hb : Detection.matchedBudget S₀ T s = 2) :
+    assignmentFidelity (Detection.thrErr0 μ₀ σ t) (Detection.thrErr1 μ₁ σ t) ≤ 22 / 25 := by
+  have hc := filtered_readout_ceiling (t := t) hwhite hS hT hadm hs hσ hμle hμ hσV
+  rw [hb] at hc
+  linarith [gaussian_ceiling_bites_nondegenerate (B := (2:ℝ)) rfl]
+
+open MeasureTheory in
+/-- **Detector-chain ceiling (6EC) BITES at a NONZERO matched budget** — the same bite, reached
+through the bolometer's own phonon ⊕ Johnson quadrature sum rather than a free noise parameter.
+Derived by calling `detector_chain_ceiling`. -/
+theorem detector_chain_ceiling_bites_nondegenerate (m : Electrothermal.ETFModel) {kB T Tw : ℝ}
+    {Vtot : (ℝ → ℝ) → ℝ} {V : Fin 2 → (ℝ → ℝ) → ℝ} {s hf : ℝ → ℝ} {μ₀ μ₁ σ t : ℝ}
+    (hkB : 0 < kB) (hT : 0 < T) (hG : 0 < m.G)
+    (hindep : Detection.IsUncorrelatedAt Finset.univ Vtot V)
+    (hphonon : Electrothermal.ETFModel.IsThermalFluctuationLimited (V 0) m kB T Tw)
+    (hjohnson : Detection.IsWhiteFilteredVariance (V 1) (m.johnsonNEP kB T ^ 2) Tw)
+    (hTw : 0 ≤ Tw) (hadm : Detection.IsAdmissibleFilter Tw s hf)
+    (hs : IntervalIntegrable (fun x => s x ^ 2) volume 0 Tw)
+    (hσ : 0 < σ) (hμle : μ₀ ≤ μ₁)
+    (hμ : μ₁ - μ₀ = ∫ x in (0:ℝ)..Tw, hf x * s x) (hσV : σ = Real.sqrt (Vtot hf))
+    (hb : Detection.matchedBudget (m.phononNEP kB T ^ 2 + m.johnsonNEP kB T ^ 2) Tw s = 2) :
+    assignmentFidelity (Detection.thrErr0 μ₀ σ t) (Detection.thrErr1 μ₁ σ t) ≤ 22 / 25 := by
+  have hc := detector_chain_ceiling m (t := t) hkB hT hG hindep hphonon hjohnson hTw hadm hs hσ
+    hμle hμ hσV
+  rw [hb] at hc
+  linarith [gaussian_ceiling_bites_nondegenerate (B := (2:ℝ)) rfl]
+
 /-- **The Gaussian ceiling does NOT bite at a budget of `8`**: the bound exceeds `17/18`, permitting
 a high-fidelity readout. Uses the Chernoff tail from 6EA plus the rational `exp` enclosure. Stated
 over the budget `B` because the 6EB and 6EC ceilings share this bound shape and differ only in which

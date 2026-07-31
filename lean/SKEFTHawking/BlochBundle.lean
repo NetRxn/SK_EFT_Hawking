@@ -25,9 +25,26 @@ are built on:
 
 ## Scope (honest)
 
-This wave ships the *gapped Bloch-bundle substrate*. The Berry connection/curvature differential
-geometry and the Chern-number integral `C = (1/2π)∫_BZ F ∈ ℤ` (W2) and bulk–boundary correspondence
-(W3, deep → conditional) are built on top of this `‖d‖`-gap structure.
+This wave ships the *gapped Bloch-bundle substrate*, and only that.
+
+⚠️ **Corrected 2026-07-31 (Stage-13 BLOCKER).** This block previously said, in the present tense,
+that the Berry connection/curvature differential geometry, the Chern-number integral
+`C = (1/2π)∫_BZ F ∈ ℤ` (W2) and bulk–boundary correspondence (W3, deep → conditional) "are built on
+top of" this `‖d‖`-gap structure. **None of those three exists in the tree.** The wording described
+a plan as though it were shipped — under a heading titled "Scope (honest)", in the module supplying
+five of the declarations the D11 bundle paper cites by name, so a referee following those citations
+landed here.
+
+What is actually built on this substrate is the **finite-lattice** Fukui–Hatsugai–Suzuki invariant
+(`TopologicalBand/`), reached via `blochProj` and `blochFrameOfD`. It is an invariant of sampled link
+data on a discrete torus; `FHSLatticeGauge.lean`'s own scope note disclaims equality to any continuum
+first Chern class.
+
+**Deferred, not conditional:** Berry connection/curvature (`berryCurvature`/`berryConnection` have
+zero occurrences project-wide), the continuum integral above (route-C deferred — Mathlib has no
+manifold form-integration, Stokes, de Rham or Brouwer degree), and bulk–boundary correspondence
+(never executed; no `H_BulkBoundaryLandmark` Prop exists). Do not describe any of the three as
+shipped, conditional, or in progress.
 
 **Two-layer honesty.** The Pauli algebra and the gap structure are Lean-verified; the identification of
 `d(k)` with a specific lattice model (Qi–Wu–Zhang, BHZ, …) stays literature-cited.
@@ -97,9 +114,13 @@ lemma blochPauli_band_secular (d : Fin 3 → ℝ) :
 strictly positive away from the band-touching point `d = 0` — the degeneracy the Chern number is
 defined around.
 
-⚠️ **Forward direction only** — the statement is `(hd : d ≠ 0) → 0 < √(dNormSq d)`. The converse is
-true but is *not* shipped, so this must not be cited as a biconditional. (Corrected 2026-07-30: the
-docstring previously read "gapped iff `d ≠ 0`", and the D11 draft inherited that false attribution.) -/
+This is the forward direction; the converse is `blochPauli_gap_zero_of_eq_zero`, and the
+biconditional a consumer should cite is `blochPauli_gap_pos_iff`.
+
+*(History: this docstring read "gapped iff `d ≠ 0`" while only the forward implication was shipped,
+and the D11 draft inherited the false attribution. Corrected 2026-07-30 by narrowing the docstring;
+**superseded 2026-07-31 by shipping the converse**, which is four lines — narrowing the claim was
+the wrong remedy when the missing half was this cheap to prove.)* -/
 lemma blochPauli_gap_pos (d : Fin 3 → ℝ) (hd : d ≠ 0) : 0 < Real.sqrt (dNormSq d) := by
   rw [Real.sqrt_pos]
   by_contra hle
@@ -118,5 +139,24 @@ lemma blochPauli_gap_pos (d : Fin 3 → ℝ) (hd : d ≠ 0) : 0 < Real.sqrt (dNo
     have h : d 2 ^ 2 = 0 := by nlinarith [sq_nonneg (d 0), sq_nonneg (d 1), sq_nonneg (d 2)]
     exact pow_eq_zero_iff (by norm_num) |>.mp h
   fin_cases i <;> simp_all
+
+/-- **The converse: the band-touching point is gapless.** At `d = 0` the two bands coincide at
+`0`, so the half-gap vanishes. -/
+lemma blochPauli_gap_zero_of_eq_zero : Real.sqrt (dNormSq (0 : Fin 3 → ℝ)) = 0 := by
+  have h : dNormSq (0 : Fin 3 → ℝ) = 0 := by unfold dNormSq; simp
+  rw [h, Real.sqrt_zero]
+
+/-- **The model is gapped IFF `d ≠ 0`.** The biconditional the `d`-vector picture is usually stated
+with, and the form a consumer should cite. The forward direction is `blochPauli_gap_pos`; the
+converse is the contrapositive of `blochPauli_gap_zero_of_eq_zero`.
+
+Shipped 2026-07-31. The converse had previously been *disclaimed* in a docstring rather than
+proved — but it is four lines, so the disclaimer cost more than the proof. -/
+lemma blochPauli_gap_pos_iff (d : Fin 3 → ℝ) : 0 < Real.sqrt (dNormSq d) ↔ d ≠ 0 := by
+  constructor
+  · intro hpos hd
+    rw [hd, blochPauli_gap_zero_of_eq_zero] at hpos
+    exact lt_irrefl 0 hpos
+  · exact blochPauli_gap_pos d
 
 end SKEFTHawking.Topological

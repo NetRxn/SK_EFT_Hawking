@@ -74,9 +74,17 @@ an ETF-unaware budget understates this channel by `|1 − ℒ|`
 The white `4·k_B·T²·G` phonon form ships with the equilibrium hypothesis explicit
 (`IsThermalFluctuationLimited`, a `Prop` parameter in the 6EB Wave-1 style). The `γ`-factor
 gradient correction — for a detector with a non-negligible temperature drop across the link — is
-**not** shipped and is not blocked on: it is a tagged extension, and
-`phononPSD_gamma_correction_not_modelled` records in-tree that the shipped form is the `γ = 1`
-special case so no consumer can mistake it for the general result.
+now **modelled**: `phononPSDGamma` carries it, `IsThermalFluctuationLimitedGamma` is the
+general-γ equilibrium hypothesis, and `phononPSD_eq_phononPSDGamma_one` pins the shipped form as
+the `γ = 1` (isothermal-link) case.
+
+**⚠ Direction corrected 2026-07-31.** This header previously recorded the `γ = 1` form as an
+*optimistic* bound, on the strength of two theorems hypothesizing `γ > 1`. That is backwards.
+Referred to the bolometer temperature, `γ ∈ (0, 1]` (Mather 1982; `F_link ∈ [1/2, 1]` in the TES
+literature — see `phononPSDGamma`'s provenance note), so the shipped form **over**states the
+phonon noise and the `γ = 1` floor **overstates the floor** for any gradient-loaded detector.
+That is fail-open in the direction this module names as its worst available defect, and it is now
+stated as a theorem (`gammaOne_phononFloor_overstates`) rather than mis-recorded in prose.
 
 **⚠ Guardrail (inherited).** Every statement is about the *stated linearized model* with declared
 noise hypotheses. No claim about any physical instrument.
@@ -179,47 +187,89 @@ theorem phononPSD_strictMono_conductance {m m' : ETFModel} {kB T : ℝ}
   have h4 : 0 < 4 * kB * T ^ 2 := by positivity
   exact mul_lt_mul_of_pos_left hG h4
 
-/-- **The shipped phonon form is the `γ = 1` special case, recorded in-tree.**
+/-- **The general (γ-corrected) thermal-fluctuation PSD**, `4·γ·k_B·T²·G`.
 
-Roadmap UNKNOWN-2: the general thermal-fluctuation NEP carries a geometry factor `γ` for the
-temperature gradient across the link, `NEP² = 4·γ·k_B·T²·G`. This wave ships `γ = 1` (the
-isothermal-link limit) with the equilibrium hypothesis explicit, and this theorem states the
-relationship so that no consumer can read the shipped form as the general result: for `γ > 1` the
-true floor is **strictly higher** than the one shipped, so the shipped form is an *optimistic*
-bound outside its limit — the direction a reader must know. -/
-theorem phononPSD_gamma_correction_not_modelled (m : ETFModel) {kB T γ : ℝ}
-    (hkB : 0 < kB) (hT : 0 < T) (hG : 0 < m.G) (hγ : 1 < γ) :
-    m.phononPSD kB T < γ * m.phononPSD kB T := by
-  have hpos := m.phononPSD_pos hkB hT hG
-  nlinarith
+`γ` is the thermal-link gradient factor — `F_link` in the TES instrument literature. Referred to
+the **bolometer** temperature `T` and the conductance `G(T)` at that temperature (the convention
+`phononPSD` fixes), it obeys `0 < γ ≤ 1`: `γ = 1` exactly in the isothermal-link limit
+`T_bolo → T_bath`, falling toward `1/2` for a strongly loaded detector.
 
-/-- **The general (γ-corrected) thermal-fluctuation PSD**, `4·γ·k_B·T²·G`, named as an object so
-that the shipped form's scope is statable rather than merely asserted in prose. -/
+**Provenance (added 2026-07-31; previously the prefactor was asserted).** Mather's non-equilibrium
+bolometer theory [Appl. Opt. **21**, 1125 (1982), DOI 10.1364/AO.21.001125] establishes that phonon
+noise in the link is *reduced* relative to the equilibrium `4k_BT²G` form — by as much as 30 %. In
+the diffuse phonon-conduction case the factor is
+
+    γ  =  n/(2n+1) · ((T_b/T_s)^(2n+1) − 1)/((T_b/T_s)^n − 1) · (T_b/T_s)^(−(n+1))
+
+with `n` the thermal-conductivity index and `T_b/T_s` the bolometer-to-bath temperature ratio
+(the third factor converts the literature's `T_bath`-referred statement to this module's
+`T_bolo`-referred convention, using `G ∝ T^(n−1)`). It tends to `1` as `T_b/T_s → 1` and equals
+`≈ 0.47` at `T_b/T_s = 2, n = 4`, reproducing the quoted `[1/2, 1]` range. -/
 noncomputable def phononPSDGamma (m : ETFModel) (kB T γ : ℝ) : ℝ := 4 * γ * kB * T ^ 2 * m.G
 
-/-- **The actual disclosure: the shipped phonon PSD is exactly the `γ = 1` case.**
-
-This is the content `phononPSD_gamma_correction_not_modelled` alone cannot carry (that statement
-is `x < γ·x`, true of any positive `x`, and never mentions the general form). With
-`phononPSDGamma` named, the scope of the shipped model is a theorem:
-`phononPSD = phononPSDGamma … 1`, and `phononPSD < phononPSDGamma … γ` for `γ > 1` says the shipped
-floor is *optimistic* outside the isothermal-link limit.
-
-*(Added 2026-07-29 after adversarial review found the original disclosure vacuous.)* -/
+/-- **The shipped phonon PSD is exactly the `γ = 1` case** — the isothermal-link limit. -/
 theorem phononPSD_eq_phononPSDGamma_one (m : ETFModel) (kB T : ℝ) :
     m.phononPSD kB T = m.phononPSDGamma kB T 1 := by
   unfold phononPSD phononPSDGamma
   ring
 
-/-- For `γ > 1` the true floor strictly exceeds the shipped one — stated against the **named**
-general form, so it is a claim about the γ-correction rather than about multiplication. -/
-theorem phononPSD_lt_phononPSDGamma (m : ETFModel) {kB T γ : ℝ}
-    (hkB : 0 < kB) (hT : 0 < T) (hG : 0 < m.G) (hγ : 1 < γ) :
-    m.phononPSD kB T < m.phononPSDGamma kB T γ := by
+/-- **γ can only REDUCE the phonon PSD**: for `0 < γ < 1` the true PSD is *strictly below* the
+shipped `γ = 1` form.
+
+⚠️ **Direction corrected 2026-07-31 (physics error, not a wording change).** Two now-deleted
+theorems (`phononPSD_gamma_correction_not_modelled`, `phononPSD_lt_phononPSDGamma`) hypothesized
+`1 < γ` and concluded the shipped form was an *optimistic* bound. That is backwards: `γ` is
+bounded above by `1` (see `phononPSDGamma`'s provenance note), so `1 < γ` is an unphysical regime
+and the shipped form is an **over**estimate of the phonon noise, never an underestimate. The
+consequence for this module's stated defect class is the opposite of what was recorded — see
+`gammaOne_phononFloor_overstates`. -/
+theorem phononPSDGamma_lt_phononPSD (m : ETFModel) {kB T γ : ℝ}
+    (hkB : 0 < kB) (hT : 0 < T) (hG : 0 < m.G) (hγ0 : 0 < γ) (hγ1 : γ < 1) :
+    m.phononPSDGamma kB T γ < m.phononPSD kB T := by
   have hpos := m.phononPSD_pos hkB hT hG
   unfold phononPSDGamma
   unfold phononPSD at hpos ⊢
   nlinarith
+
+/-- The non-strict form, valid on the whole physical range `γ ≤ 1`. -/
+theorem phononPSDGamma_le_phononPSD (m : ETFModel) {kB T γ : ℝ}
+    (hkB : 0 ≤ kB) (hG : 0 ≤ m.G) (hγ : γ ≤ 1) :
+    m.phononPSDGamma kB T γ ≤ m.phononPSD kB T := by
+  unfold phononPSDGamma phononPSD
+  nlinarith [mul_nonneg (mul_nonneg hkB (sq_nonneg T)) hG]
+
+/-- **The `γ = 1` floor is NOT conservative for a gradient-loaded detector — it OVERSTATES.**
+
+This is the scope statement that matters, and it points the opposite way from the one this module
+shipped until 2026-07-31. A floor claims `error ≥ F`. Because the true `γ` is `< 1` for any
+detector with a real temperature gradient across its link, the true phonon PSD — and hence the
+true noise floor — is *strictly below* the one computed at `γ = 1`. A detector can therefore sit
+strictly between the true floor and the shipped floor, so asserting the `γ = 1` floor of this
+module for such a detector is an **overclaim**, i.e. fail-open in exactly the direction the module
+header names as the worst defect available.
+
+The shipped theorems are not unsound: every one of them is conditional on
+`IsThermalFluctuationLimited`, which pins the variance to be white *at the `γ = 1` PSD*, so a
+gradient-loaded detector simply fails their hypothesis and they say nothing about it. What was
+wrong was the recorded *direction of the risk*. Consumers wanting the general case should carry
+`IsThermalFluctuationLimitedGamma` below. -/
+theorem gammaOne_phononFloor_overstates (m : ETFModel) {kB T γ : ℝ}
+    (hkB : 0 < kB) (hT : 0 < T) (hG : 0 < m.G) (hγ0 : 0 < γ) (hγ1 : γ < 1) :
+    m.phononPSDGamma kB T γ < m.phononPSD kB T ∧ m.phononPSD kB T = m.phononPSDGamma kB T 1 :=
+  ⟨m.phononPSDGamma_lt_phononPSD hkB hT hG hγ0 hγ1, m.phononPSD_eq_phononPSDGamma_one kB T⟩
+
+/-- **The general-γ equilibrium hypothesis**, so a consumer modelling a gradient-loaded link has a
+declared `Prop` to carry instead of being silently restricted to `γ = 1`. The `γ = 1` instance is
+definitionally `IsThermalFluctuationLimited`, recorded by
+`isThermalFluctuationLimitedGamma_one_iff`. -/
+def IsThermalFluctuationLimitedGamma (Vph : (ℝ → ℝ) → ℝ) (m : ETFModel) (kB T γ Tw : ℝ) : Prop :=
+  IsWhiteFilteredVariance Vph (m.phononPSDGamma kB T γ) Tw
+
+/-- The general-γ hypothesis at `γ = 1` is the shipped one. -/
+theorem isThermalFluctuationLimitedGamma_one_iff {Vph : (ℝ → ℝ) → ℝ} {m : ETFModel} {kB T Tw : ℝ} :
+    IsThermalFluctuationLimitedGamma Vph m kB T 1 Tw ↔ IsThermalFluctuationLimited Vph m kB T Tw := by
+  unfold IsThermalFluctuationLimitedGamma IsThermalFluctuationLimited
+  rw [m.phononPSD_eq_phononPSDGamma_one kB T]
 
 /-! ## The Johnson channel, referred to input power -/
 
