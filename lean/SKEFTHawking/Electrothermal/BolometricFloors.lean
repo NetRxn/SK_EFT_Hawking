@@ -80,8 +80,9 @@ the `γ = 1` (isothermal-link) case.
 
 **⚠ Direction corrected 2026-07-31.** This header previously recorded the `γ = 1` form as an
 *optimistic* bound, on the strength of two theorems hypothesizing `γ > 1`. That is backwards.
-Referred to the bolometer temperature, `γ ∈ (0, 1]` (Mather 1982; the TES literature's F_link, which
-it quotes in the range 1/2 to 1 — see `phononPSDGamma`'s provenance note), so the shipped form
+Referred to the bolometer temperature, `γ ∈ (0, 1]` (Mather 1982 for the direction; the closed form
+is the TES literature's F_link — see `phononPSDGamma`'s provenance note, and note that the folk
+range [1/2, 1] does NOT bound it: `γ = 0.4731` at `r = 2, n = 4`), so the shipped form
 **over**states the
 phonon noise and the `γ = 1` floor **overstates the floor** for any gradient-loaded detector.
 Note the direction carefully: this is **not** the fail-open under-counting that
@@ -196,7 +197,8 @@ theorem phononPSD_strictMono_conductance {m m' : ETFModel} {kB T : ℝ}
 `γ` is the thermal-link gradient factor — F_link in the TES instrument literature. Referred to
 the **bolometer** temperature `T` and the conductance `G(T)` at that temperature (the convention
 `phononPSD` fixes), it obeys `0 < γ ≤ 1`: `γ = 1` exactly in the isothermal-link limit (bolometer
-temperature → bath temperature), falling toward `1/2` for a strongly loaded detector.
+temperature → bath temperature), decreasing under load toward the asymptote `n/(2n+1)` — which is
+`4/9 = 0.444` at `n = 4`, **not** `1/2`.
 
 **Provenance (added 2026-07-31; previously the prefactor was asserted).** Mather's non-equilibrium
 bolometer theory [Appl. Opt. **21**, 1125 (1982), DOI 10.1364/AO.21.001125] establishes that phonon
@@ -207,8 +209,16 @@ the diffuse phonon-conduction case the factor is
 
 with `n` the thermal-conductivity index and `T_b/T_s` the bolometer-to-bath temperature ratio
 (the third factor converts the literature's bath-referred statement to this module's
-bolometer-referred convention, using `G ∝ T^(n−1)`). It tends to `1` as `T_b/T_s → 1` and equals
-`≈ 0.47` at `T_b/T_s = 2, n = 4`, reproducing the quoted `[1/2, 1]` range. -/
+bolometer-referred convention, using `G ∝ T^(n−1)`). It tends to `1` as `T_b/T_s → 1`, equals
+`0.4731` at `T_b/T_s = 2, n = 4`, and decreases to `n/(2n+1)` as `T_b/T_s → ∞`.
+
+⚠️ **Two corrections, 2026-07-31 (D12 Stage-13 rounds 3-4).** (i) The asymptote is `n/(2n+1)`
+(`4/9 = 0.444` at `n = 4`), **not** `1/2`, and `0.4731` already sits below `1/2` — so the folk
+range `F_link ∈ [1/2, 1]` does not bound this expression and must not be cited as corroborating it.
+(ii) `γ` multiplies the **PSD**, so `0.4731` is a `53 %` PSD reduction, equivalently `31 %` in
+amplitude; Mather's "as much as 30 %" is the AMPLITUDE figure and the two agree once the convention
+is matched. An earlier note here compared them across conventions and wrongly concluded Mather did
+not cover these values. -/
 noncomputable def phononPSDGamma (m : ETFModel) (kB T γ : ℝ) : ℝ := 4 * γ * kB * T ^ 2 * m.G
 
 /-- **The shipped phonon PSD is exactly the `γ = 1` case** — the isothermal-link limit. -/
@@ -301,6 +311,32 @@ theorem gammaOne_phononFloor_overstates (m : ETFModel) {kB T γ Tw : ℝ} (s : �
       ≤ gaussianQ (matchedBudget (m.phononPSD kB T) Tw s / 2) := by
   refine gaussianQ_antitone ?_
   have h := m.matchedBudget_gamma_ge (kB := kB) (T := T) (γ := γ) (Tw := Tw) s hkB hT hG hγ0 hγ1
+  linarith
+
+/-- **The floor overstates STRICTLY**, given a genuinely gradient-loaded link (`γ < 1`) and a
+signal-carrying template (`0 < ∫₀^Tw s²`).
+
+`gammaOne_phononFloor_overstates` gives only `≤`, which establishes non-*under*statement. The claim
+that a `γ = 1` floor \"overstates\" — i.e. that a conforming detector can sit **strictly** between
+the true floor and the shipped one, producing a false refutation — needs this strict form
+(D12 Stage-13 round-4 finding). Both extra hypotheses are load-bearing: at `γ = 1` the two floors
+coincide, and at zero template energy both matched budgets collapse to `√0 = 0` and the floors
+coincide again. -/
+theorem gammaOne_phononFloor_overstates_strict (m : ETFModel) {kB T γ Tw : ℝ} (s : ℝ → ℝ)
+    (hkB : 0 < kB) (hT : 0 < T) (hG : 0 < m.G) (hγ0 : 0 < γ) (hγ1 : γ < 1)
+    (hE : 0 < ∫ x in (0:ℝ)..Tw, s x ^ 2) :
+    gaussianQ (matchedBudget (m.phononPSDGamma kB T γ) Tw s / 2)
+      < gaussianQ (matchedBudget (m.phononPSD kB T) Tw s / 2) := by
+  have hSγ : 0 < m.phononPSDGamma kB T γ := by unfold phononPSDGamma; positivity
+  have hS1 : 0 < m.phononPSD kB T := m.phononPSD_pos hkB hT hG
+  have hlt : m.phononPSDGamma kB T γ < m.phononPSD kB T :=
+    m.phononPSDGamma_lt_phononPSD hkB hT hG hγ0 hγ1
+  have hbudget : matchedBudget (m.phononPSD kB T) Tw s
+      < matchedBudget (m.phononPSDGamma kB T γ) Tw s := by
+    unfold matchedBudget
+    refine Real.sqrt_lt_sqrt (by positivity) ?_
+    gcongr
+  refine gaussianQ_strictAnti ?_
   linarith
 
 /-- **The general-γ equilibrium hypothesis**, so a consumer modelling a gradient-loaded link has a

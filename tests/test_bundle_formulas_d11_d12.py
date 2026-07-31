@@ -451,10 +451,36 @@ class TestPhononGradientFactor:
             for n in (3.0, 4.0, 5.0):
                 assert 0.0 < F.phonon_psd_gradient_factor(r, n) <= 1.0
 
-    def test_literature_F_link_range_at_realistic_loading(self):
-        # TES literature quotes F_link in [1/2, 1] for typical operating points.
-        for r in (1.0, 1.1, 1.5, 2.0):
-            assert 0.47 <= F.phonon_psd_gradient_factor(r, 4.0) <= 1.0
+    def test_gamma_asymptote_is_n_over_2n_plus_1_not_one_half(self):
+        # CORRECTED 2026-07-31 (D12 Stage-13 rounds 3-4). This test formerly asserted
+        # "TES literature quotes F_link in [1/2, 1]" while silently loosening its own
+        # bound to 0.47 to keep passing -- i.e. it encoded a claim its own assertion
+        # already contradicted. The true asymptote is n/(2n+1), and gamma drops BELOW
+        # 1/2 at ordinary loading, so [1/2, 1] does not bound this expression.
+        for n in (3.0, 4.0, 5.0, 10.0):
+            asymptote = n / (2 * n + 1)
+            assert F.phonon_psd_gradient_factor(1e6, n) == pytest.approx(asymptote, rel=1e-6)
+            # approached from above, and never violated
+            for r in (1.01, 1.5, 2.0, 5.0, 100.0):
+                assert asymptote <= F.phonon_psd_gradient_factor(r, n) <= 1.0
+        # the specific value the paper and the Lean docstrings quote
+        assert F.phonon_psd_gradient_factor(2.0, 4.0) == pytest.approx(0.4731, abs=5e-4)
+        assert F.phonon_psd_gradient_factor(2.0, 4.0) < 0.5  # below the folk [1/2,1] band
+
+    def test_mather_30_percent_is_an_amplitude_figure(self):
+        # D12 Stage-13 round-4 BLOCKER 2.1. gamma multiplies the POWER spectral
+        # density, so 1-gamma is a PSD reduction and 1-sqrt(gamma) an amplitude one.
+        # No PSD reduction available from the closed form is near Mather's "as much as
+        # 30%"; the amplitude reduction at the paper's own operating point is ~31%.
+        # This test pins the convention that the paper now states explicitly.
+        g = F.phonon_psd_gradient_factor(2.0, 4.0)
+        psd_red = 1.0 - g
+        amp_red = 1.0 - math.sqrt(g)
+        assert psd_red == pytest.approx(0.527, abs=5e-3)
+        assert amp_red == pytest.approx(0.312, abs=5e-3)
+        # the largest PSD reduction the closed form can produce is nowhere near 30%
+        for n in (3.0, 4.0, 5.0):
+            assert 1.0 - n / (2 * n + 1) > 0.50
 
     def test_gamma_one_recovers_the_shipped_psd(self):
         assert F.phonon_psd_gamma(1.0, 2.0, 3.0, 1.0) == F.phonon_psd(1.0, 2.0, 3.0)
@@ -463,12 +489,30 @@ class TestPhononGradientFactor:
         # Lean: phononPSDGamma_lt_phononPSD.
         assert F.phonon_psd_gamma(1.0, 2.0, 3.0, 0.5) < F.phonon_psd(1.0, 2.0, 3.0)
 
-    def test_shipped_floor_overstates_for_a_gradient_loaded_link(self):
-        # Lean: gammaOne_phononFloor_overstates. A real detector (gamma < 1) has a
-        # LOWER true floor than the gamma = 1 form asserts, so claiming the
-        # gamma = 1 floor for it is an overclaim.
+    def test_shipped_psd_overstates_for_a_gradient_loaded_link(self):
+        # Lean: phononPSDGamma_lt_phononPSD (bundled as gammaOne_phononPSD_overstates).
+        # RETARGETED 2026-07-31: this comment named gammaOne_phononFloor_overstates,
+        # but that theorem was rewritten in round 3 to state the FLOOR inequality --
+        # this assertion is a PSD comparison, which is the PSD-vs-floor conflation the
+        # round-3 blocker was about. The floor mirror is the next test.
         gamma = F.phonon_psd_gradient_factor(2.0, 4.0)
         assert F.phonon_psd_gamma(1.0, 2.0, 3.0, gamma) < F.phonon_psd(1.0, 2.0, 3.0)
+
+    def test_lower_psd_gives_a_larger_matched_budget_and_a_lower_floor(self):
+        # Lean: matchedBudget_gamma_ge + gammaOne_phononFloor_overstates. The numerical
+        # mirror of the chain built to close round-3 BLOCKER 3.1, which previously had
+        # no mirror at all: lower noise PSD => larger matched budget => smaller
+        # Gaussian tail => lower floor.
+        gamma = F.phonon_psd_gradient_factor(2.0, 4.0)
+        psd_1 = F.phonon_psd(1.0, 2.0, 3.0)
+        psd_g = F.phonon_psd_gamma(1.0, 2.0, 3.0, gamma)
+        assert psd_g < psd_1
+        # matchedBudget S T s = sqrt(2 * int_0^T s^2 / S); template energy fixed
+        energy = 5.0
+        budget = lambda S: math.sqrt(2.0 * energy / S)
+        assert budget(psd_g) > budget(psd_1)          # lower PSD -> larger budget
+        Q = lambda z: 0.5 * math.erfc(z / math.sqrt(2.0))
+        assert Q(budget(psd_g) / 2) < Q(budget(psd_1) / 2)   # -> lower floor
 
 
 class TestControlAndCeilings:

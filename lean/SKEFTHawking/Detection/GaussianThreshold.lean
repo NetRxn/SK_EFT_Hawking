@@ -182,6 +182,21 @@ theorem gaussianQ_antitone : Antitone gaussianQ := by
     intervalIntegral.integral_nonneg hab fun x _ => gaussianPDFReal_nonneg 0 1 x
   linarith
 
+/-- **`Q` is STRICTLY antitone**: moving the cut strictly right strictly shrinks the tail mass.
+
+Needed wherever a *strict* separation is claimed. `gaussianQ_antitone` gives only `≤`, which
+establishes non-understatement but not the strict gap that a "the bound overstates" claim asserts
+(D12 Stage-13 round-4 finding). The strictness is the positivity of `∫_a^b φ` for `a < b`, which
+holds because the Gaussian density is everywhere positive. -/
+theorem gaussianQ_strictAnti : StrictAnti gaussianQ := by
+  intro a b hab
+  have h := gaussianQ_sub_of_le hab.le
+  have hpos : 0 < ∫ x in a..b, gaussianPDFReal 0 1 x := by
+    refine intervalIntegral.intervalIntegral_pos_of_pos_on ?_ ?_ hab
+    · exact (gaussianPDF_integrableOn (Set.uIcc a b)).intervalIntegrable
+    · exact fun x _ => gaussianPDFReal_pos 0 1 x one_ne_zero
+  linarith
+
 /-- **Reflection**: `Q(−z) = 1 − Q(z)`. Needed to write the miss branch as a `Q` value. -/
 theorem gaussianQ_neg (z : ℝ) : gaussianQ (-z) = 1 - gaussianQ z := by
   have h1 : gaussianQ (-z) - gaussianQ 0 = ∫ x in (-z)..(0:ℝ), gaussianPDFReal 0 1 x :=

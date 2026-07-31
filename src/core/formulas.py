@@ -11479,8 +11479,10 @@ def phonon_psd_gamma(
     γ is F_link in the TES instrument literature. Referred to the BOLOMETER
     temperature T and G(T) at that temperature (the convention phonon_psd
     fixes), γ ∈ (0, 1]: it is 1 exactly in the isothermal-link limit
-    T_bolo → T_bath and falls toward 1/2 for a strongly loaded detector. So γ
-    can only REDUCE the phonon noise below the equilibrium form.
+    T_bolo → T_bath and decreases under load toward the asymptote n/(2n+1),
+    which is 4/9 = 0.444 at n = 4 — NOT 1/2, and γ(r=2,n=4) = 0.4731 already
+    sits below 1/2, so the folk range F_link ∈ [1/2, 1] does not bound it.
+    So γ can only REDUCE the phonon noise below the equilibrium form.
 
     Provenance: Mather (1982), Appl. Opt. 21, 1125 — phonon noise in the link is
     reduced by as much as 30% relative to the equilibrium formula.

@@ -290,9 +290,12 @@ prove it here self-contained.
 \subsection{Noise-equivalent power and matched filtering}
 
 The NEP layer fixes a unit contract as a theorem (\thm{nepOfPSD\_sq}) and composes it into the
-operational chain \thm{sigma\_eq\_responsivity\_nep\_sqrt\_enbw}, with the shot and thermal
-specializations \thm{shot\_nep\_formula} and \thm{nep\_thermal\_johnsonNyquist}, and the regime
-boundary as an iff (\thm{shotLimited\_iff\_psd\_lt}) with an inhabiting witness.
+operational chain \thm{sigma\_eq\_responsivity\_nep\_sqrt\_enbw}, whose two modelling binders are
+\thm{IsResponsivityChain} --- the readout is linear with responsivity $R$, so its output variance
+scales as $R^2$ --- and whiteness of the input-referred noise. The shot and thermal specializations
+\thm{shot\_nep\_formula} and \thm{nep\_thermal\_johnsonNyquist} carry the same chain-linearity
+hypothesis, and the regime boundary is an iff (\thm{shotLimited\_iff\_psd\_lt}) with an inhabiting
+witness.
 
 Quadrature composition (\thm{nep\_quadrature\_two}) carries the \thm{IsUncorrelatedAt} hypothesis
 explicitly, and that hypothesis is not free:
@@ -428,7 +431,12 @@ The PSD comparison is \thm{phononPSDGamma\_lt\_phononPSD} (packaged with the $\g
 as \thm{gammaOne\_phononPSD\_overstates}), and the step from there to the floor is proved rather
 than left to prose: a lower noise PSD gives a \emph{larger} matched budget
 (\thm{matchedBudget\_gamma\_ge}) and hence a smaller Gaussian tail, which is
-\thm{gammaOne\_phononFloor\_overstates}. This is the mirror
+\thm{gammaOne\_phononFloor\_overstates}. That form gives $\le$, establishing only that the
+$\gamma = 1$ floor does not \emph{under}state; the strict gap the word ``overstates'' asserts ---
+a conforming detector sitting strictly between the true floor and the shipped one --- is
+\thm{gammaOne\_phononFloor\_overstates\_strict}, which additionally requires $\gamma < 1$ and a
+signal-carrying template $0 < \int_0^{T_w} s^2$. Both are load-bearing: at $\gamma = 1$ the floors
+coincide, and at zero template energy both matched budgets collapse to $\sqrt{0}$. This is the mirror
 image of the fail-open failure of Section~\ref{sec:poisson}, not an instance of it: a floor stated
 too \emph{high} yields false \emph{refutations} --- a detector that genuinely meets its
 specification is declared impossible --- rather than admitting configurations the true floor
@@ -591,9 +599,17 @@ those ecosystems. For HOL4, PVS, Mizar and Agda we say only that we are aware of
 formalization. All negative claims are scoped to the pinned versions and should be re-checked before
 publication.
 
-\paragraph{Disclosed modelling hypotheses.} Twelve propositions carry modelling content that the
-algebra cannot supply and that appear in the binder list of every consuming theorem. The two most
-substantial are \thm{IsWhiteFilteredVariance}, in whose \emph{definition} the Parseval step and
+\paragraph{Disclosed modelling hypotheses.} Twelve propositions carry modelling or admissibility
+content. Ten appear in the binder list of at least one consuming theorem;
+\thm{PerturbationsDecay} appears instead as the \emph{conclusion} of \thm{etf\_stable\_iff}; and
+\thm{IsThermalFluctuationLimitedGamma} is shipped for consumers with no theorem yet stated at
+general $\gamma$. They are \thm{IsWhiteFilteredVariance}, \thm{IsAdmissibleFilter},
+\thm{IsResponsivityChain}, \thm{IsUncorrelatedAt}, \thm{IsCountRule},
+\thm{IsShotFilteredMoments}, \thm{IsThermalFluctuationLimited},
+\thm{IsThermalFluctuationLimitedGamma}, \thm{SolvesHeatBalance}, \thm{PerturbationsDecay},
+\thm{SolvesDrivenBalance} and \thm{SolvesSinusoidalBalance}.
+
+The two most substantial are \thm{IsWhiteFilteredVariance}, in whose \emph{definition} the Parseval step and
 spectral flatness live --- not in the theorem that consumes it --- and
 \thm{IsShotFilteredMoments}, in whose definition Campbell's theorem lives. We flag these because a
 reader could otherwise mistake the consuming theorems for derivations of the physics rather than
