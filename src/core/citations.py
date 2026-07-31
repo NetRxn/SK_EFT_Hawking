@@ -6273,7 +6273,7 @@ CITATION_REGISTRY = {
 
     'Lewis2021VerifQC': {
         'authors': 'Lewis, M. and Soudjani, S. and Zuliani, P.',
-        'title': 'Formal Verification of Quantum Programs: Theory, Tools, and Challenges',
+        'title': 'Formal Verification of Quantum Programs: Theory, Tools and Challenges',
         'journal': 'ACM Trans. Quantum Comput.',
         'volume': 5,
         'page': 'Article 1, 1-35',

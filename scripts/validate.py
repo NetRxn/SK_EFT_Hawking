@@ -4084,6 +4084,59 @@ def check_citation_primary_sources_present() -> CheckResult:
     details.extend(dup_details)
     all_pass = all_pass and all(d.passed for d in dup_details)
 
+    # ── Cache CONTENT agreement (added 2026-07-31) ────────────────────────────
+    # This check historically verified only that a cache file EXISTS. That let a
+    # hallucinated citation be caught in the .tex, fixed in the .tex and in
+    # CITATION_REGISTRY, and survive verbatim in the cache — the artifact the
+    # pipeline calls its strongest evidence class — while this check reported
+    # PASS. Two Stage-13 BLOCKERs of exactly that shape shipped
+    # (BoldoLaxMilgram2016, LeanLJ2025), each with the refuted metadata still
+    # tagged "[fetched]".
+    #
+    # It is worse than inert: scripts/promote_primary_sources.py writes cache
+    # contents BACK INTO the registry, so a stale cache actively re-injects the
+    # bad metadata and undoes the fix.
+    #
+    # Compare each cache header's Title:/arXiv: against the registry.
+    title_details = []
+    _norm_ws = lambda s: " ".join(s.split()).strip().lower()
+    for bibkey, entry in sorted(CITATION_REGISTRY.items()):
+        ps = entry.get("primary_source_path")
+        if not ps or not str(ps).endswith(".abstract.txt"):
+            continue
+        cache_file = find_workspace() / ps
+        if not cache_file.exists():
+            continue  # existence is the other half of this check
+        try:
+            head = cache_file.read_text(encoding="utf-8", errors="replace")[:4000]
+        except OSError:
+            continue
+        m_title = re.search(r"^Title:\s*(.+)$", head, re.MULTILINE)
+        reg_title = entry.get("title")
+        if m_title and reg_title:
+            if _norm_ws(m_title.group(1)) != _norm_ws(reg_title):
+                title_details.append(Detail(
+                    f"cache_title_mismatch:{bibkey}", False,
+                    f"{ps} header Title disagrees with CITATION_REGISTRY. "
+                    f"cache={m_title.group(1).strip()!r} registry={reg_title!r}. "
+                    f"A stale cache is not inert — promote_primary_sources.py writes it "
+                    f"back into the registry.",
+                ))
+        m_ax = re.search(r"^arXiv:\s*([0-9]{4}\.[0-9]{4,5}|[a-z-]+/[0-9]{7})", head, re.MULTILINE)
+        reg_ax = entry.get("arxiv")
+        if m_ax and reg_ax and m_ax.group(1).strip() != str(reg_ax).strip():
+            title_details.append(Detail(
+                f"cache_arxiv_mismatch:{bibkey}", False,
+                f"{ps} header arXiv {m_ax.group(1)} != registry {reg_ax}",
+            ))
+    if not title_details:
+        title_details.append(Detail(
+            "cache_content_agreement", True,
+            "Every .abstract.txt cache header agrees with its registry Title/arXiv",
+        ))
+    details.extend(title_details)
+    all_pass = all_pass and all(d.passed for d in title_details)
+
     return CheckResult(passed=all_pass, details=details)
 
 
