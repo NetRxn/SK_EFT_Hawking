@@ -384,6 +384,42 @@ def generate_tex(counts: dict, path: Path, deps: list | None = None):
     _def_re = re.compile(
         r"^(?:@\[[^\]]*\]\s*)?(?:private\s+|protected\s+)?(?:noncomputable\s+)?"
         r"(?:def|structure|abbrev)\b")
+
+    def _decl_lines(text: str):
+        """Yield only lines OUTSIDE Lean block comments.
+
+        ⚠️ Added 2026-07-31 (D11 Stage-13 round-6 finding 7.1). A naive line-prefix
+        scan counts docstring PROSE that happens to wrap onto a line beginning with
+        `theorem` or `structure`. Two such lines existed and inflated the published
+        figures by one each:
+            GrapheneBand/BernalBilayer.lean:203  "theorem below would be a statement…"
+            GrapheneBand/DiracExpansion.lean:289 "structure factor **vanishes**…"
+        Corroborated independently: lean_deps.json attributes 5 structures to these
+        modules where the naive rule counted 6.
+
+        The instance of this bug was fixed once, by reflowing one docstring in
+        EffectiveModuli.lean. That closed the instance and not the class — this
+        closes the class. A declaration is a line outside `/- … -/` (and `/-- … -/`).
+        """
+        depth = 0
+        for ln in text.splitlines():
+            stripped = ln.lstrip()
+            if depth == 0 and not stripped.startswith("--"):
+                yield ln
+            # Track nesting across the line (Lean block comments nest).
+            i = 0
+            while i < len(ln) - 1:
+                two = ln[i:i + 2]
+                if two == "/-":
+                    depth += 1
+                    i += 2
+                    continue
+                if two == "-/":
+                    depth = max(0, depth - 1)
+                    i += 2
+                    continue
+                i += 1
+
     d11_lines = d11_thms = d11_defs = 0
     d11_ok = True
     for _m in _D11_MODULES:
@@ -391,10 +427,11 @@ def generate_tex(counts: dict, path: Path, deps: list | None = None):
         if not _p.exists():
             d11_ok = False
             break
-        _L = _p.read_text(encoding="utf-8").splitlines()
-        d11_lines += len(_L)
-        d11_thms += sum(1 for ln in _L if _thm_re.match(ln))
-        d11_defs += sum(1 for ln in _L if _def_re.match(ln))
+        _txt = _p.read_text(encoding="utf-8")
+        d11_lines += len(_txt.splitlines())
+        _code = list(_decl_lines(_txt))
+        d11_thms += sum(1 for ln in _code if _thm_re.match(ln))
+        d11_defs += sum(1 for ln in _code if _def_re.match(ln))
     if d11_ok:
         lines.append("% --- D11 bundle substrate summary (source-level, stated rule) ---")
         lines.append(f"\\newcommand{{\\dxiModules}}{{{len(_D11_MODULES)}}}")

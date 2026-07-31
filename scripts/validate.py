@@ -3315,30 +3315,112 @@ def check_graph_integrity() -> CheckResult:
         from build_graph import build_graph_json
         _g = build_graph_json()
         _edges = _g.get("edges") or _g.get("links") or []
-        _flag_src = {e["source"] for e in _edges if e.get("type") == "FLAGS"}
+        # ⚠️ PREDICATE STRENGTHENED 2026-07-31 (D11 round-6 BLOCKER 4.1). The first
+        # version asked only "does this finding emit SOME FLAGS edge", which a
+        # reviewer showed passes green under three mutations — including one that
+        # reproduced the original defect exactly (retarget D11's 39 edges to a
+        # source-paper stub: still "some edge", still PASS). It now asserts the
+        # property that matters: a finding about bundle X flags `paper:X`.
+        _tgt = {}
+        for e in _edges:
+            if e.get("type") == "FLAGS":
+                _tgt.setdefault(e["source"], set()).add(e["target"])
+        _findings = [n for n in _g.get("nodes", [])
+                     if isinstance(n, dict) and n.get("type") == "ReviewFinding"]
         _orphans = [
-            n["id"] for n in _g.get("nodes", [])
-            if isinstance(n, dict) and n.get("type") == "ReviewFinding"
-            and (n.get("meta") or {}).get("inferred_bundle")
-            and n["id"] not in _flag_src
+            n["id"] for n in _findings
+            if (n.get("meta") or {}).get("inferred_bundle")
+            and f"paper:{n['meta']['inferred_bundle']}" not in _tgt.get(n["id"], set())
         ]
-        if _orphans:
-            _sample = ", ".join(sorted(_orphans)[:4])
-            _more = f" (+{len(_orphans) - 4} more)" if len(_orphans) > 4 else ""
-            roster_details.append(Detail(
-                "findings_reach_the_graph", False,
-                f"{len(_orphans)} ReviewFinding node(s) resolve to a bundle but emit no "
-                f"FLAGS edge, so Gate 11 cannot see them: {_sample}{_more}",
-            ))
+        # Second leg (closes mutation B): a finding whose bundle inference FAILS is
+        # excluded from the scan above by construction, so the guard was blind to the
+        # very layer-1 defect that started this class. Assert instead that every
+        # review file named after a roster bundle yields findings that resolve.
+        _by_file = {}
+        for n in _findings:
+            m = n.get("meta") or {}
+            rf = m.get("review_file", "")
+            stem = rf.rsplit("/", 1)[-1].removesuffix(".md")
+            if stem in _roster:
+                _by_file.setdefault(stem, []).append(m.get("inferred_bundle"))
+        _unresolved_files = sorted(
+            f for f, vals in _by_file.items() if not any(v == f for v in vals))
+        if _orphans or _unresolved_files:
+            _msgs = []
+            if _orphans:
+                _msgs.append(
+                    f"{len(_orphans)} ReviewFinding(s) resolve to a bundle but emit no FLAGS "
+                    f"edge to `paper:<that bundle>`: {', '.join(sorted(_orphans)[:3])}")
+            if _unresolved_files:
+                _msgs.append(
+                    f"{len(_unresolved_files)} review file(s) named after a roster bundle "
+                    f"yield no finding resolving to it: {', '.join(_unresolved_files[:3])}")
+            roster_details.append(Detail("findings_reach_the_graph", False, "; ".join(_msgs)))
         else:
             roster_details.append(Detail(
                 "findings_reach_the_graph", True,
-                "every bundle-resolved ReviewFinding emits a FLAGS edge",
+                f"all {sum(1 for n in _findings if (n.get('meta') or {}).get('inferred_bundle'))} "
+                f"bundle-resolved findings flag their own bundle, and every bundle-named review "
+                f"file resolves",
+            ))
+    except Exception as exc:  # pragma: no cover
+        # FAIL, not pass: this guard exists to make invisible findings visible, so a
+        # build error in the scan must not be indistinguishable from a clean scan
+        # (D12 round-6 finding 8.2 — the original `warning=True` failed open).
+        roster_details.append(Detail(
+            "findings_reach_the_graph", False,
+            f"orphan scan could not run ({type(exc).__name__}: {exc}) — treat as unverified"))
+
+    # ── Supersession-ledger referential integrity (D12 round-6 finding 4.1) ──
+    # Findings raised in rounds whose review document was never written to disk
+    # were filed under an EARLIER review's IDs. That both collides with live
+    # findings (a still-open finding rendered `fixed`) and mints dangling IDs
+    # naming no node. Neither is detectable from the ledger alone.
+    try:
+        _led = json.loads(
+            (Path(__file__).resolve().parent.parent / "docs"
+             / "review_finding_supersessions.json").read_text(encoding="utf-8"))
+        _entries = _led.get("supersessions", [])
+        _known = {n["id"] for n in _g.get("nodes", [])
+                  if isinstance(n, dict) and n.get("type") == "ReviewFinding"}
+        # Scope to the `review:<date-dir>:<name>:<section>` scheme, which is the one
+        # extract_review_finding_nodes mints nodes for. Legacy Stage-9/10 records use
+        # an unrelated `bundle-stage10:...` scheme and were never graph nodes, so
+        # flagging them would be noise, not signal.
+        _dangling = sorted({e["finding_id"] for e in _entries
+                            if e.get("finding_id", "").startswith("review:")
+                            and e["finding_id"] not in _known})
+        # Baseline pinned 2026-07-31: 67 pre-existing records use annotated IDs
+        # ("...:5.1-5.3", "...:3.1-residual", "...:1.2prime") that never matched a
+        # node. That is real debt but not this session's; failing on it would
+        # manufacture a blocker. We FAIL only on GROWTH, so a newly-filed dangling
+        # closure — the defect this check exists for — is caught immediately.
+        _LEDGER_DANGLING_BASELINE = 67
+        if len(_dangling) > _LEDGER_DANGLING_BASELINE:
+            _s = ", ".join(_dangling[:4])
+            roster_details.append(Detail(
+                "ledger_ids_resolve", False,
+                f"{len(_dangling)} supersession finding_id(s) name no ReviewFinding node, "
+                f"above the pinned baseline of {_LEDGER_DANGLING_BASELINE} — a closure filed "
+                f"against a nonexistent finding closes nothing: {_s}",
+            ))
+        elif _dangling:
+            roster_details.append(Detail(
+                "ledger_ids_resolve", True,
+                f"{len(_dangling)} dangling supersession finding_id(s) (pre-existing annotated-ID "
+                f"debt, baseline {_LEDGER_DANGLING_BASELINE}); no growth",
+                warning=True,
+            ))
+        else:
+            roster_details.append(Detail(
+                "ledger_ids_resolve", True,
+                f"all review:-scheme supersession finding_ids resolve to ReviewFinding nodes "
+                f"({len(_entries)} entries scanned)",
             ))
     except Exception as exc:  # pragma: no cover
         roster_details.append(Detail(
-            "findings_reach_the_graph", True,
-            f"orphan scan skipped ({type(exc).__name__}: {exc})", warning=True))
+            "ledger_ids_resolve", True,
+            f"ledger integrity scan skipped ({type(exc).__name__}: {exc})", warning=True))
 
     try:
         from graph_integrity import run_integrity_checks

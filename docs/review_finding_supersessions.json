@@ -5646,27 +5646,18 @@
       "status": "fixed",
       "superseded_by": null,
       "commit": "b2369684",
-      "evidence": "IsResponsivityChain was a binder of two cited theorems and appeared nowhere in the paper. Now named in section 3.2. Round-5 reviewer confirmed the capstone binder list is exactly the four the paper names and that the twelve-Prop enumeration is complete.",
+      "evidence": "Section 5 named IsResponsivityChain as a binder of bolometer_error_floor; it is not one. The capstone's four modelling binders are IsUncorrelatedAt, IsThermalFluctuationLimited, IsWhiteFilteredVariance (Johnson) and IsAdmissibleFilter, which is exactly what the paper now names. Round-6 reviewer independently re-read the signature and confirmed. (Evidence text corrected 2026-07-31: the original described a different defect -- IsResponsivityChain being absent from the paper entirely -- which was a separate round-4 finding.)",
       "closed_date": "2026-07-31",
       "closed_by": "stage13-round5-remediation"
     },
     {
-      "finding_id": "review:2026-07-31-0829-internal-adversarial:D12:3.1",
+      "finding_id": "review:2026-07-31-bundle-stage13:D12:1.1",
       "status": "fixed",
       "superseded_by": null,
-      "commit": "b2369684",
-      "evidence": "gammaOne_phononFloor_overstates stated a PSD comparison while cited for a floor claim. Built matchedBudget_gamma_ge plus a rewritten floor theorem; old statement renamed gammaOne_phononPSD_overstates. Round-5 reviewer confirmed the chain is sound, non-vacuous and kernel-pure via the CLI.",
+      "commit": "55f8fea0",
+      "evidence": "LuccioliDegenne2024's title carried a subtitle taken from a web-search snippet, not from any read source. Corrected across all four citation layers (bibitem, CITATION_REGISTRY, Lit-Search primary-source cache, prior_art_novelty.md). Round-6 reviewer swept find_phrase.py and confirmed all 7 surviving hits are records-of-fix.",
       "closed_date": "2026-07-31",
-      "closed_by": "stage13-round5-remediation"
-    },
-    {
-      "finding_id": "review:2026-07-31-0829-internal-adversarial:D12:3.2",
-      "status": "fixed",
-      "superseded_by": null,
-      "commit": "b2369684",
-      "evidence": "The floor chain proved only <= while the prose claimed a strict gap. Built gaussianQ_strictAnti and gammaOne_phononFloor_overstates_strict with gamma<1 and positive template energy as binders. Round-5 reviewer confirmed both hypotheses load-bearing and the prose now matching.",
-      "closed_date": "2026-07-31",
-      "closed_by": "stage13-round5-remediation"
+      "closed_by": "stage13-round6-verification"
     }
   ]
 }

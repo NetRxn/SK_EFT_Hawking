@@ -3380,13 +3380,19 @@ def extract_flags_edges(node_ids: set) -> list[dict]:
                     paper_id = None
             if paper_id is not None:
                 _emit(f['id'], paper_id, f)
-                continue  # paper-key match takes precedence over bundle fan-out
+                # ⚠️ NO LONGER `continue` (2026-07-31, D11 round-6 BLOCKER 4.1, final
+                # layer). A finding can resolve BOTH a paper key and a bundle; the
+                # short-circuit meant the bundle never got its edge, leaving 17
+                # findings across D1/D2/D3/D11/E2/I1/I2/L1/L2/L3 invisible to their
+                # own bundle's gate. A paper-key match is additional information,
+                # not a reason to withhold the bundle attribution.
+                if not meta.get('inferred_bundle'):
+                    continue
 
         # (2) bundle-code resolution (bundle-era D*/L*/I*/F/E* reviews).
         bundle = meta.get('inferred_bundle')
         if not bundle:
             continue
-        emitted_before = len(edges)
         for source_key in bundle_to_papers.get(bundle, []):
             # source_key is a mapping paper_key (e.g. "paper10_modular_generation"
             # or "_phase6n_W1a_lean_only"). The Paper node id is "paper:<key>".
@@ -3408,10 +3414,17 @@ def extract_flags_edges(node_ids: set) -> list[dict]:
         # i.e. the gap was known and deliberately not closed. That was the wrong
         # call: an unrecordable finding is indistinguishable from no finding.
         #
-        # `paper:<bundle>` exists as a node for every bundle, so attach there when
-        # the source fan-out yielded nothing.
-        if len(edges) == emitted_before:
-            _emit(f['id'], f'paper:{bundle}', f)
+        # ⚠️ MADE UNCONDITIONAL 2026-07-31 (D11 round-6 BLOCKER 4.1). This was
+        # `if len(edges) == emitted_before:` — i.e. it attached to the bundle ONLY
+        # when the source fan-out produced nothing. That left 353 of 542
+        # bundle-resolved findings still never reaching their own bundle (every
+        # bundle with real source papers: D1, D2, I1, L1, F, E1, …), and made D11's
+        # own wiring correct only by accident of its mapping: materializing
+        # `paper:D11_initial_draft` as a node would have silently retargeted all 39
+        # of its edges with the guard still green.
+        #
+        # A finding about bundle X flags bundle X. Always.
+        _emit(f['id'], f'paper:{bundle}', f)
 
     return edges
 
