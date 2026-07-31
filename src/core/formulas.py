@@ -11505,8 +11505,11 @@ def phonon_psd_gradient_factor(temp_ratio: float, n_index: float) -> float:
 
     Limits (both are regression-pinned in tests):
       * r → 1 (isothermal): γ → 1, matching phononPSD_eq_phononPSDGamma_one.
-      * r = 2, n = 4:       γ = 0.4729…, reproducing the quoted [1/2, 1] range
-                            and Mather's "reduced by as much as 30%".
+      * r = 2, n = 4:       γ = 0.4731. NOTE this is BELOW the commonly quoted
+                            F_link band [1/2, 1] and is a 53% reduction, larger
+                            than Mather's stated "as much as 30%" - cite Mather
+                            for the direction of the effect, not this magnitude.
+      * r -> infinity:      γ -> n/(2n+1) = 4/9 = 0.444 at n = 4, not 1/2.
 
     Provenance: Mather (1982), Appl. Opt. 21, 1125; TES-literature F_link range.
     """

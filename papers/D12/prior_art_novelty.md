@@ -142,9 +142,14 @@ feedback loop gain, no responsivity, no noise floor. PhysLib has **no**
 
 These are gates, not suggestions. D12 may not be submitted until both are run.
 
-1. **`RemyDegenne/testing-lower-bounds`** ("Information theory and hypothesis
-   testing, in Lean") — an out-of-Mathlib Lean project targeting f-divergences
-   and hypothesis-testing error bounds. **A Bayes-binary-risk ↔ divergence lower
+1. **`RemyDegenne/testing-lower-bounds`**, cited as `TestingLowerBounds` — an
+   out-of-Mathlib Lean project targeting f-divergences and hypothesis-testing
+   error bounds. (⚠️ This entry previously gave the title as "Information theory
+   and hypothesis testing, in Lean". That subtitle came from a web-search
+   snippet, not from any source this project read, and this line was the origin
+   from which it propagated into the registry, the bibitem and the cache.
+   Corrected 2026-07-31 after a D12 Stage-13 BLOCKER; the only verified title is
+   the bare token.) **A Bayes-binary-risk ↔ divergence lower
    bound there would be substantially our Le Cam floor.** This remains the
    **highest prior-art risk in the bundle**.
 

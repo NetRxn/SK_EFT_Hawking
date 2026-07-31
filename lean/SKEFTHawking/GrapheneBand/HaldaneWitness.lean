@@ -28,7 +28,12 @@ invariant.**
 
 ## What the witness/anti-witness pair does and does not say
 
-**Mass inversion is necessary but NOT sufficient for the `4 × 4` invariant to be nonzero.** It is
+**Mass inversion is NOT SUFFICIENT for the `4 × 4` invariant to be nonzero.** The converse
+direction — necessity, i.e. "invariant nonzero ⟹ masses inverted" — is **NOT proved here or
+anywhere in this development**; it is sampled at the single point `m = 6`. (Scope corrected
+2026-07-31 after a D11 Stage-13 BLOCKER: this header previously asserted necessity in bold, which
+is the first substantive claim a reader meets, while the theorem docstrings below correctly
+disclaim it.) It is
 tempting — and wrong — to read the `m = 1` / `m = 6` pair as a classification, i.e. "the invariant
 is `−1` inside the mass-inversion window and `0` outside it". The two sampled masses are consistent
 with that reading, and nothing else is:
@@ -48,9 +53,11 @@ extremal `haldaneNNN` is `±2` against the true `±3√3/2 ≈ ±2.598`, so the 
 effective window than the continuum. The transition converges to `3√3` from below as `N` grows
 (`N = 4 → 3.318`, `N = 8 → 4.805`, `N = 16 → 5.085`, `N = 32 → 5.170`), which is the expected FHS
 behaviour, not a defect — but it means **no statement here may be phrased as "exactly where the
-Dirac masses invert" at any fixed `N`.** The correct necessary direction is
-`haldane_mass_inversion_iff`, whose own docstring already says the nonzero region is a strict
-subset.
+Dirac masses invert" at any fixed `N`.** `haldane_mass_inversion_iff` is a biconditional about the
+**sign product of the two Dirac masses** and the analytic window; it says nothing about any Chern
+number, and in particular does not supply the necessity direction. (Corrected 2026-07-31: this
+sentence previously pointed at that lemma as "the correct necessary direction" and cited a
+docstring sentence which the same remediation had already deleted.)
 
 *(The "classification" framing was shipped on 2026-07-28 and retracted on 2026-07-29 after a
 numerical audit located the `N = 4` transition. The theorems were all true; the prose around them
@@ -1391,7 +1398,10 @@ flips it.
 throughout the mass-inversion window of `haldane_mass_inversion_iff` and `0` outside it: at this
 grid the transition sits at `|m| ≈ 3.3177`, strictly inside the analytic window `|m| < 3√3 ≈
 5.1962`, and `haldane_massInversion_not_sufficient_at_N4` exhibits `m = 5` inside the window with
-invariant `0`. Mass inversion is necessary but not sufficient at `N = 4`; see the module header.
+invariant `0`. So mass inversion is **not sufficient** at `N = 4`. Necessity is **not proved** — it
+is sampled at `m = 6` only; see the module header. (Scope corrected 2026-07-31, D11 Stage-13: this
+docstring is the one a referee reaches from the paper's citation of this theorem, and it previously
+asserted the unproved necessity half.)
 *(The classification framing was retracted on 2026-07-29.)* -/
 theorem haldaneFrame_latticeChern_eq_neg_one :
     blochLatticeChern haldaneFrameTopo.toAdmissibleBandFrame = -1 := by

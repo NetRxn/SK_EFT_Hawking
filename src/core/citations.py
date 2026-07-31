@@ -11017,8 +11017,13 @@ CITATION_REGISTRY = {
             'Johnson-Nyquist offered as provenance. Also the source that corrected the DIRECTION '
             'error: the tree carried two theorems hypothesizing gamma > 1 and concluded the '
             'gamma = 1 form was optimistic; gamma is bounded ABOVE by 1, so it overstates. '
-            'Corroborated by the TES-literature F_link range [1/2, 1] (Irwin/Hilton lineage) and '
-            'recomputed from the diffuse-conduction closed form: gamma = 0.47 at T_b/T_s = 2, n = 4.'
+            'ATTRIBUTION LIMIT (corrected 2026-07-31, D12 Stage-13 BLOCKER): cite Mather for the '
+            'EXISTENCE and DIRECTION of the reduction only. The diffuse-conduction closed form gives '
+            'gamma = 0.473 at T_b/T_s = 2, n = 4, i.e. a 53% reduction -- LARGER than the "as much as '
+            '30%" Mather states, and outside the commonly quoted F_link band [1/2, 1]. The asymptote '
+            'as r -> infinity is n/(2n+1) = 4/9 = 0.444 at n = 4, NOT 1/2. An earlier note here '
+            'claimed the 0.47 value was "corroborated by" the [1/2,1] band and "consistent with" '
+            'Mather 30%; both were false.'
         ),
     },
     'IrwinHilton2005': {

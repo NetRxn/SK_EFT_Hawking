@@ -187,9 +187,10 @@ quantity a practitioner thought they were bounding --- and the folklore statemen
 
 \subsection{Gaussian thresholds}
 
-For a Gaussian readout we define the tail \thm{gaussianQ} project-locally, since Mathlib carries no
-error function or Gaussian CDF at our pin, and the two branch errors \thm{thrErr0} and
-\thm{thrErr1}. The headline is the sharp separation-budget floor
+For a Gaussian readout we define the tail \thm{gaussianQ} project-locally --- Mathlib has no error
+function at our pin, and while its generic \thm{cdf} does apply to \thm{gaussianReal}
+(Section~\ref{sec:scope}), it carries no Gaussian closed form and, decisively for us, no tail bound
+--- together with the two branch errors \thm{thrErr0} and \thm{thrErr1}. The headline is the sharp separation-budget floor
 \thm{avgError\_ge\_gaussianQ\_sharp}: no threshold placement achieves an average error below
 $Q\!\left(\Delta\mu/2\sigma\right)$. The sharp constant --- $Q$, not $Q/2$ --- comes from
 \thm{gaussianQ\_two\_le\_add}, which says the centred window carries the most Gaussian mass, and the
@@ -395,14 +396,25 @@ models with the same correction on opposite sides of \thm{etf\_stable\_iff}.
 \thm{phononPSDGamma} with \thm{IsThermalFluctuationLimitedGamma} as the corresponding equilibrium
 hypothesis. Referred to the bolometer temperature and to $G$ at that temperature --- the convention
 \thm{phononPSD} fixes --- $\gamma \in (0,1]$, equal to $1$ exactly in the isothermal-link limit
-(\thm{phononPSD\_eq\_phononPSDGamma\_one}) and falling toward $1/2$ under strong
-loading~\cite{Mather1982}. In the diffuse-conduction case
+(\thm{phononPSD\_eq\_phononPSDGamma\_one}) and decreasing under load. That link phonon noise is
+\emph{reduced} below the equilibrium form is Mather's result~\cite{Mather1982}; the closed form and
+the numerical values below are the diffuse-conduction expression from the transition-edge-sensor
+literature, and we attribute them separately because they go further than Mather's stated
+magnitude. In the diffuse-conduction case
 \begin{equation}
 \gamma \;=\; \frac{n}{2n+1}\,\frac{r^{2n+1}-1}{r^{n}-1}\;r^{-(n+1)},
 \end{equation}
 with $r$ the bolometer-to-bath temperature ratio and $n$ the thermal-conductivity index; the
 trailing factor converts the literature's bath-referred statement to ours via $G \propto T^{n-1}$.
-At $r=2$, $n=4$ this gives $\gamma = 0.47$.
+At $r=2$, $n=4$ this gives $\gamma = 0.473$, and as $r \to \infty$ it decreases to $n/(2n+1)$,
+which is $4/9 = 0.444$ at $n = 4$.
+
+We flag two attribution limits rather than smooth them over. That asymptote is $n/(2n+1)$, not
+$1/2$; and $\gamma = 0.473$ is a $53\,\%$ reduction, which is larger than the ``as much as
+$30\,\%$'' that~\cite{Mather1982} states, so the numerical values here are \emph{not} covered by
+that citation's stated magnitude. The commonly quoted $F_{\rm link} \in [1/2, 1]$ band likewise does
+not contain $0.473$. We therefore cite Mather for the existence and direction of the effect, and
+report the closed form as the diffuse-conduction expression on its own terms.
 
 The direction matters, and it points the opposite way from a plausible first guess. Because
 $\gamma \le 1$, the $\gamma = 1$ expression \emph{overstates} the phonon noise, so the floor

@@ -12,11 +12,12 @@ Exact error algebra for two-Gaussian threshold classification at common variance
 tail enclosures replacing the un-formalized Q-function, and the separation-budget error floor
 every downstream readout ceiling consumes.
 
-**Mathlib carries no `erf` / `erfc` and no Gaussian CDF / Q-function at pin `81a5d257`** (v4.32.0;
-verified by declaration-level grep 2026-07-27 at the then-current `5e932f97`, re-verified
-2026-07-28, and re-verified against `81a5d257` on 2026-07-29). Mathlib's generic
-`ProbabilityTheory.cdf` (a `StieltjesFunction`) exists but carries no Gaussian closed form and no
-tail bound. The upper-tail probability `gaussianQ` is therefore defined here, project-locally, as
+**Mathlib carries no `erf` / `erfc` and no Q-function at pin `81a5d257`, and no TAIL BOUND on the
+Gaussian** (v4.32.0; verified by declaration-level grep 2026-07-27 at the then-current `5e932f97`,
+re-verified 2026-07-28, and re-verified against `81a5d257` on 2026-07-29 and 2026-07-31). It *does*
+carry a generic `ProbabilityTheory.cdf` (a `StieltjesFunction`) which applies to `gaussianReal`,
+so this module must not be read as claiming Mathlib has no Gaussian CDF — it has one; what it lacks
+is a closed form and the two-sided bracket built here. The upper-tail probability `gaussianQ` is therefore defined here, project-locally, as
 the tail integral of Mathlib's `ProbabilityTheory.gaussianPDFReal 0 1`; every bound below is
 proved about *that* definition, whose normalization is pinned to Mathlib's own Gaussian integral
 by `gaussianQ_zero` and whose reading as a *probability* is pinned to Mathlib's
@@ -79,10 +80,18 @@ open scoped NNReal
 
 /-! ## Definitions -/
 
-/-- **Standard-normal upper-tail probability** `Q(z) = ∫_{(z,∞)} φ`. Mathlib carries no
-`erf` / `erfc` / Gaussian CDF / Q-function at pin `5e932f97` (verified 2026-07-27), so this is
-necessarily project-local; `gaussianQ_zero` pins its normalization to Mathlib's own
-`Real.integral_gaussian_Ioi`. -/
+/-- **Standard-normal upper-tail probability** `Q(z) = ∫_{(z,∞)} φ`.
+
+At pin `81a5d257` Mathlib has no `erf` / `erfc` and no Q-function. It *does* have a generic
+`ProbabilityTheory.cdf` for measures on `ℝ`, which applies to `gaussianReal` — but with no Gaussian
+closed form and, decisively, no tail bound, which is what this module supplies. So `gaussianQ` is
+project-local for the bounds, not for the distribution function; `gaussianQ_eq_measure` ties it back
+to Mathlib's own Gaussian measure and `gaussianQ_zero` pins its normalization to
+`Real.integral_gaussian_Ioi`.
+
+(Corrected 2026-07-31, D12 Stage-13 BLOCKER: this docstring previously claimed Mathlib carried no
+Gaussian CDF — false, and unqualified unlike the module header — and cited pin `5e932f97`, the
+v4.29.1 revision this project left behind.) -/
 noncomputable def gaussianQ (z : ℝ) : ℝ := ∫ x in Set.Ioi z, gaussianPDFReal 0 1 x
 
 /-- False-alarm branch error of a threshold classifier with baseline mean `μ₀`, common standard
