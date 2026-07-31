@@ -41,80 +41,17 @@ sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 from bundle_migration import parse_mapping  # noqa: E402
 from sentence_state import _VALID_BUNDLE_TARGETS  # noqa: E402
 
-# Bundle metadata mirrors `scripts/datastar_bundles.py` (single source of
-# truth — if you edit one, edit both, or refactor into a shared module
-# in a follow-up wave).
-_TIER_OF = {
-    "F": 0,
-    "D1": 1, "D2": 1, "D3": 1, "D4": 1, "D5": 1, "D6": 1, "D7": 1, "D8": 1, "D9": 1, "D10": 1,
-    "D11": 1, "D12": 1,
-    "L1": 2, "L2": 2, "L3": 2,
-    "I1": 3, "I2": 3, "I3": 3,
-    "E1": 4, "E2": 4,
-}
-
-_BUNDLE_TITLES = {
-    "F": "Fluid-Based Approaches to Fundamental Physics — A Formally Verified Survey",
-    "D1": "Analog Hawking across three platforms",
-    "D2": "Anomaly constraints on SM particle content",
-    "D3": "Emergent gravity through BH thermodynamics",
-    "D4": "Topological quantum computation foundations",
-    "D5": "Dark sector under substrate constraints",
-    "D6": "Formally Verified Fault-Tolerant Quantum Computation Substrate",
-    "D7": "Classical Simulability and Quantum Advantage via Tensor Networks: A Formally Verified Demarcation",
-    "D8": "Kernel-Verified Universal Quantum Gate Compilation — Alphabet-Agnostic Solovay-Kitaev across Dimensions",
-    "D9": "Kernel-Verified Quantum-Network and Device-Characterization Certification Substrate",
-    "D10": "Kernel-Verified Foundations of Computational Quantum Chemistry & Open-System Dynamics",
-    "D11": "Kernel-Verified Topological Band Theory & Metamaterial Substrate",
-    "D12": "Kernel-Verified Detector & Readout Metrology — From Photon Statistics to Composite Fidelity Ceilings",
-    "L1": "GW170817 / vestigial-graviton",
-    "L2": "Three generations from modular invariance",
-    "L3": "BCH four laws by regime",
-    "I1": "Verification methodology with worked cases",
-    "I2": "Verified statistical estimators + lean-tensor-categories",
-    "I3": "Verified Stochastic Calculus for Mathlib4 — Stochastic Integral, Quadratic Variation, Itô's Lemma, and Large-Deviation Foundations",
-    "E1": "Paris-LKB polariton letter",
-    "E2": "Dean-Kim-Lucas graphene letter",
-}
-
-_BUNDLE_TARGET_JOURNAL = {
-    "F": "Living Rev. Relativity | Phys. Rep.",
-    "D1": "PRD",
-    "D2": "PRD | JHEP",
-    "D3": "PRD",
-    "D4": "Comm. Math. Phys. | PRX Quantum",
-    "D5": "PRD",
-    "D6": "PRD | PRX Quantum | JHEP",
-    "D7": "PRX Quantum | PRX",
-    "D8": "PRX Quantum | Quantum",
-    "D9": "PRX Quantum | Quantum",
-    "D10": "PRD | PRX Quantum | J. Chem. Phys.",
-    "D11": "PRD | PRX Quantum | PRB",
-    "D12": "PRX Quantum | Quantum | Phys. Rev. Applied",
-    "L1": "PRL",
-    "L2": "PRL",
-    "L3": "PRL",
-    "I1": "CPC | Phys. Rep.",
-    "I2": "JOSS",
-    "I3": "JOSS | CPC",
-    "E1": "PRL | PRR",
-    "E2": "PRL | PRR",
-}
-
-# Bundle-target → sub-phase scheduled (per Phase7_Roadmap.md). I1+I2 in 7a;
-# D5+L1+L3 in 7b; D3 in 7c; D2+L2 in 7d; D1+E1+E2 in 7e; D4 in 7f; F in 7g.
-# I3 in Phase 6o.ζ (community Mathlib4 contribution; out-of-band of the Phase 7 sub-phase ladder).
-# D6/D7/D8 are post-freeze deep-paper additions (Phase 6v / 6w / 2026-05-31 verified-compilation-arc consolidation).
-# D9 is the 2026-06-10 QI/network/device-characterization consolidation (Phases 6AA–6AL + 6AM/6AN/6AP/6AQ envelope waves).
-_BUNDLE_SUBPHASE = {
-    "F": "7g",
-    "D1": "7e", "D2": "7d", "D3": "7c", "D4": "7f", "D5": "7b",
-    "D6": "6v", "D7": "6w", "D8": "6xz", "D9": "6AA-AQ", "D10": "6BA-BC",
-    "D11": "6CA-CE+6ED", "D12": "6EA-EE",
-    "L1": "7b", "L2": "7d", "L3": "7b",
-    "I1": "7a", "I2": "7a", "I3": "6o.zeta",
-    "E1": "7e", "E2": "7e",
-}
+# Bundle metadata comes from scripts/bundle_registry.py — THE roster source of
+# truth (consolidated 2026-07-30, when four hand-maintained copies of these
+# four maps had to be patched by hand for the D11/D12 first lift). Do not
+# re-hardcode a roster here; `validate.py --check bundle_registry_consistency`
+# fails the suite if you do.
+from bundle_registry import (  # noqa: E402
+    BUNDLE_SUBPHASE as _BUNDLE_SUBPHASE,
+    BUNDLE_TARGET_JOURNAL as _BUNDLE_TARGET_JOURNAL,
+    BUNDLE_TITLES as _BUNDLE_TITLES,
+    TIER_OF as _TIER_OF,
+)
 
 
 def _now_iso() -> str:

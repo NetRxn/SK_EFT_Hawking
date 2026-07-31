@@ -70,7 +70,7 @@ papers/<bundle>/
 
 | Field | Type | Allowed values | Updated by |
 |---|---|---|---|
-| `bundle_target` | string | one of `_VALID_BUNDLE_TARGETS` (`F`, `D1`–`D5`, `L1`–`L3`, `I1`, `I2`, `E1`, `E2`) | created at init; never mutates |
+| `bundle_target` | string | any code on the authorized roster (`scripts/bundle_registry.py`) | created at init; never mutates |
 | `tier` | int | `0` (F), `1` (D*), `2` (L*), `3` (I*), `4` (E*) | created at init |
 | `title` | string | freeform | created at init from `PAPER_STRATEGY.md` |
 | `target_journal` | string | freeform (e.g., `"PRL"`, `"PRD"`, `"CPC \| Phys. Rep."`) | created at init from `PAPER_STRATEGY.md` |
@@ -181,10 +181,11 @@ Phase 7b sub-wave 7b.1.1: Lift paper17 SFDM cluster-merger content into D5 §2-�
 
 - `docs/BUNDLE_LIFT_PROCEDURE.md` — 14-step canonical lift workflow that consumes this schema
 - `docs/LATE_PHASE6_ABSORPTION_PROTOCOL.md` — robustness protocol (Stages A-G)
-- `docs/PAPER_STRATEGY.md` — 17-bundle architecture; defines tier + title + target_journal
+- `docs/PAPER_STRATEGY.md` — bundle architecture; §6 is the human-authoritative roster
 - `docs/PAPER_DRAFT_MAPPING.md` — per-source → per-bundle assignment table
 - `docs/agents/claims-reviewer-bundle-prompts.md` — per-bundle Stage-13 anchor list
-- `scripts/sentence_state.py` — `_VALID_BUNDLE_TARGETS` enum (the sole source of truth for bundle codes)
+- **`scripts/bundle_registry.py` — THE source of truth for bundle code + tier + title + target journal + subphase.** Authorizing a bundle means one row in `PAPER_STRATEGY.md` §6 and one `Bundle(...)` record here; every other module derives from it, and `validate.py --check bundle_registry_consistency` fails the suite if one re-hardcodes the roster or drifts from the strategy doc.
+- `scripts/sentence_state.py` — `_VALID_BUNDLE_TARGETS`, a back-compat alias re-exported from `bundle_registry` (it was the *nominal* source of truth until 2026-07-30, but six other modules kept their own copies)
 - Pipeline Invariant #14 (`WAVE_EXECUTION_PIPELINE.md`) — bundle assignment mandatory at Stage 1
 
 ---

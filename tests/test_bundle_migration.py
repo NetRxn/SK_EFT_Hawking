@@ -101,25 +101,38 @@ class TestSchemaAdditions:
             errs = validate_claims_review(cr)
             assert not errs, f"{la}: {errs}"
 
-    def test_all_thirteen_bundles_valid(self):
-        # Every bundle in the schema must validate.
+    def test_all_bundles_valid(self):
+        # Every bundle in the schema must validate. (Named "thirteen" until
+        # 2026-07-30 — the roster has been 21 since the D12 authorization.)
         for b in _VALID_BUNDLE_TARGETS:
             cr = _minimal_claims_review_with(bundle_destination=b)
             errs = validate_claims_review(cr)
             assert not errs, f"{b}: {errs}"
 
-    def test_bundle_target_set_size(self):
-        # Lock the count: 1 flagship + 10 deep + 3 PRL + 3 infra + 2 expt = 19.
-        # History: 13 → 14 with I3 (Phase 6n session 4, commit a72ba68); 14 → 17
-        # with D6 (Phase 6v FT-QC substrate, 2026-05-26), D7 (Phase 6w tensor-network
-        # demarcation, 2026-05-26), and D8 (verified-quantum-compilation arc,
-        # authorized 2026-05-31, commit 856a5dac); 17 → 18 with D9 (QN +
-        # device-characterization certification substrate, authorized 2026-06-10,
-        # consolidating Phases 6AA–6AL + 6AM/6AN/6AP/6AQ); 18 → 19 with D10
-        # (comp-chem & open-system foundations, Phases 6BA–6BC, authorized
-        # 2026-06-29, first-lift 2026-06-30) — each under Pipeline
-        # Invariant #14 user-auth per PAPER_STRATEGY.md §2.2.
-        assert len(_VALID_BUNDLE_TARGETS) == 19
+    def test_bundle_target_set_matches_authorized_roster(self):
+        """The schema's bundle enum must equal the AUTHORIZED roster.
+
+        This was a hardcoded count (`== 19`), which is the same silent-drift
+        trap as the six hardcoded roster maps consolidated on 2026-07-30 into
+        `scripts/bundle_registry.py`: D11 and D12 were authorized 2026-06-29 /
+        2026-07-27 and first-lifted 2026-07-30, and the count was never
+        updated — so this assertion was already red on main.
+
+        Locking against `docs/PAPER_STRATEGY.md` §6 instead of a magic number
+        keeps the guard (a bundle added to the registry without an
+        authorization row still fails) while removing the drift: authorizing
+        D13 means editing the strategy doc and the registry, and nothing else.
+        Pipeline Invariant #14 user-auth per PAPER_STRATEGY.md §2.2.
+        """
+        from bundle_registry import parse_strategy_roster
+
+        authorized = set(parse_strategy_roster())
+        assert authorized, "no roster parsed from PAPER_STRATEGY.md §6"
+        assert set(_VALID_BUNDLE_TARGETS) == authorized, (
+            f"schema enum vs PAPER_STRATEGY.md §6 — "
+            f"missing {sorted(authorized - set(_VALID_BUNDLE_TARGETS))}, "
+            f"extra {sorted(set(_VALID_BUNDLE_TARGETS) - authorized)}"
+        )
 
     def test_lift_action_set_size(self):
         # Lock the count: 6 actions per PAPER_DRAFT_MAPPING.md conventions.

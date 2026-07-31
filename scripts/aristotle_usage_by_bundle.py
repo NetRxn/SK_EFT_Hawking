@@ -3,8 +3,9 @@
 aristotle_usage_by_bundle.py — register-driven Aristotle-clause applicability
 =============================================================================
 
-Deterministically derives, for each of the 18 publication bundles
-(`F`, `D1`–`D9`, `L1`–`L3`, `I1`–`I3`, `E1`, `E2`), whether the bundle's
+Deterministically derives, for each publication bundle on the authorized
+roster (`scripts/bundle_registry.py` — `F`, `D1`–`D12`, `L1`–`L3`, `I1`–`I3`,
+`E1`, `E2`), whether the bundle's
 content used Aristotle-proved theorems. The result selects which AI-disclosure
 variant each bundle carries (see `docs/DISCLOSURE_TEXT.md`): bundles with
 `aristotle_used = yes` include the conditional Aristotle sentence; bundles
@@ -98,15 +99,21 @@ sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 from src.core.constants import ARISTOTLE_THEOREMS          # noqa: E402
 from src.core.provenance import PAPER_DEPENDENCIES          # noqa: E402
 from bundle_migration import parse_mapping, MAPPING_DOC     # noqa: E402
+from bundle_registry import BUNDLE_CODES                    # noqa: E402
 
 LEAN_DEPS_PATH = PROJECT_ROOT / "lean" / "lean_deps.json"
 LEAN_SRC_DIR = PROJECT_ROOT / "lean" / "SKEFTHawking"
 PAPERS_DIR = PROJECT_ROOT / "papers"
 
-ALL_BUNDLES = [
-    "F", "D1", "D2", "D3", "D4", "D5", "D6", "D7", "D8", "D9",
-    "L1", "L2", "L3", "I1", "I2", "I3", "E1", "E2",
-]
+# The roster, from THE source of truth (scripts/bundle_registry.py).
+#
+# This was a hand-maintained literal that stopped at D9 — so D10, D11 and D12
+# were silently excluded from the disclosure-variant verdict below, and those
+# three bundles had NO derived Aristotle-clause applicability at all. Unlike
+# the other roster-drift bugs found on 2026-07-30 this one never surfaced,
+# because the script's own summary line reports `n_yes/len(ALL_BUNDLES)` — a
+# short roster reports a complete-looking fraction of itself.
+ALL_BUNDLES = list(BUNDLE_CODES)
 
 # Bundle-level Lean-module declarations beyond what source papers declare via
 # PAPER_DEPENDENCIES. Empty as of 2026-06-10 (no register carries bundle-level

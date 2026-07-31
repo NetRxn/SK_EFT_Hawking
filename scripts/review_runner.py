@@ -43,6 +43,7 @@ ANCHOR_DOC = PROJECT_ROOT / "docs" / "agents" / "claims-reviewer-bundle-prompts.
 
 sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 from bundle_migration import parse_mapping  # noqa: E402
+from bundle_registry import TIER_OF  # noqa: E402
 from sentence_state import _VALID_BUNDLE_TARGETS  # noqa: E402
 
 
@@ -58,19 +59,15 @@ def list_bundles() -> dict[str, dict]:
         for b in a["bundle_destinations"]:
             by_bundle[b].append(paper)
 
-    # Tier map. This stopped at D9 and so raised KeyError('D10') for every
-    # bundle authorized since 2026-06-29 — meaning the Stage-13 entry point has
-    # been broken for D10 since its first lift, and would have been for D11/D12.
-    # `.get(b, 1)` rather than `tiers[b]` so a newly-authorized deep bundle
-    # degrades to its correct tier instead of crashing the whole listing.
-    tiers = {
-        "F": 0,
-        "D1": 1, "D2": 1, "D3": 1, "D4": 1, "D5": 1, "D6": 1, "D7": 1, "D8": 1, "D9": 1,
-        "D10": 1, "D11": 1, "D12": 1,
-        "L1": 2, "L2": 2, "L3": 2,
-        "I1": 3, "I2": 3, "I3": 3,
-        "E1": 4, "E2": 4,
-    }
+    # Tier map from THE roster source of truth (scripts/bundle_registry.py).
+    # This used to be a local literal that stopped at D9, so it raised
+    # KeyError('D10') for every bundle authorized since 2026-06-29. Because
+    # this function builds the WHOLE listing in one pass, that single unmapped
+    # code took down the documented Stage-13 prep-brief entry point for every
+    # bundle — from D10's first lift until 98660389.
+    # `.get(b, 1)` is belt-and-braces: an unregistered code degrades to the
+    # deep-paper tier instead of crashing the listing again.
+    tiers = TIER_OF
 
     out: dict[str, dict] = {}
     for b in sorted(_VALID_BUNDLE_TARGETS):

@@ -96,6 +96,17 @@ sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 from bundle_migration import parse_mapping, MAPPING_DOC  # noqa: E402
 from sentence_state import _VALID_BUNDLE_TARGETS  # noqa: E402
 
+# Roster metadata from THE source of truth (scripts/bundle_registry.py).
+# Until the 2026-07-30 consolidation `write_heatmap()` carried its OWN
+# `bundle_order` + `tier_map` literals — which stopped at D9 while this module
+# already imported the full roster three lines up. The heatmap therefore
+# rendered 19 of 21 bundles while looking complete: the omitted codes were
+# skipped by `by_bundle.get(b, {})`, so nothing errored.
+from bundle_registry import (  # noqa: E402
+    BUNDLE_CODES as _BUNDLE_ORDER,
+    TIER_OF as _TIER_OF,
+)
+
 
 def load_findings_by_paper() -> dict[str, list[dict]]:
     """Pull current ReviewFinding nodes via build_graph and partition
@@ -442,14 +453,8 @@ def write_heatmap(
         all_gates.update(info["gate_mix"].keys())
     gate_order = sorted(all_gates)
 
-    # Header row: bundles in tier order
-    bundle_order = [
-        "F",
-        "D1", "D2", "D3", "D4", "D5", "D6", "D7", "D8", "D9", "D10", "D11", "D12",
-        "L1", "L2", "L3",
-        "I1", "I2", "I3",
-        "E1", "E2",
-    ]
+    # Header row: bundles in canonical tier order (from bundle_registry).
+    bundle_order = _BUNDLE_ORDER
 
     lines = [
         "# Bundle Readiness Heatmap",
@@ -496,14 +501,7 @@ def write_heatmap(
         "|---|---:|---:|---:|---:|---|:---:|:---:|",
     ]
 
-    tier_map = {
-        "F": 0,
-        "D1": 1, "D2": 1, "D3": 1, "D4": 1, "D5": 1, "D6": 1, "D7": 1, "D8": 1, "D9": 1, "D10": 1,
-        "D11": 1, "D12": 1,
-        "L1": 2, "L2": 2, "L3": 2,
-        "I1": 3, "I2": 3, "I3": 3,
-        "E1": 4, "E2": 4,
-    }
+    tier_map = _TIER_OF
     icon = {"GREEN": "🟢", "YELLOW": "🟡", "RED": "🔴"}
 
     caveat_lines: list[str] = []
