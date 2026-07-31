@@ -1905,7 +1905,7 @@ FIGURE_REGISTRY: list[FigureSpec] = [
         ),
         needs_experiments=False,
         expected_traces=6,
-        expected_axes={"xaxis": "Semenoff mass", "yaxis": "Dirac-point gap"},
+        expected_axes={"xaxis": "Semenoff mass", "yaxis": "Dirac gap"},
         physics_checks=["chern_sign_is_negative_one", "m5_inside_window_reads_zero"],
         color_keys=["steel_blue", "amber", "carmine"],
     ),
@@ -1922,7 +1922,7 @@ FIGURE_REGISTRY: list[FigureSpec] = [
         ),
         needs_experiments=False,
         expected_traces=6,
-        expected_axes={"xaxis": "fill fraction", "yaxis": "effective"},
+        expected_axes={"xaxis": "fill fraction", "yaxis": "eff"},
         physics_checks=["mg_certified_point_equals_two", "voigt_reuss_gap_exact"],
         color_keys=["steel_blue", "amber", "carmine"],
     ),
@@ -1973,7 +1973,7 @@ FIGURE_REGISTRY: list[FigureSpec] = [
         ),
         needs_experiments=False,
         expected_traces=7,
-        expected_axes={"xaxis": "loop gain", "yaxis": "true / naive"},
+        expected_axes={"xaxis": "loop gain", "yaxis2": "true / naive"},
         physics_checks=["johnson_factor_two_at_loopgain_three", "stability_blind_pair"],
         color_keys=["steel_blue", "amber", "carmine"],
     ),
@@ -2142,6 +2142,14 @@ def generate_figures() -> dict[str, Path]:
         fig_fibonacci_braid_word_t_gate_example,
         fig_qnet_bb84_key_rate, fig_qnet_swap_chain_envelope, fig_qnet_w_vs_ghz,
         fig_qnet_readout_envelopes,
+        # D11 / D12 bundle figures (2026-07-30). These must be imported at
+        # BOTH call sites or func_map raises NameError at module-eval time —
+        # which is exactly how the round-3 'wiring fix' turned a silent skip
+        # into an equally-unobserved hard crash.
+        fig_d11_phononic_band_gap, fig_d11_pt_exceptional_point,
+        fig_d11_haldane_chern, fig_d11_effective_medium,
+        fig_d12_poisson_floor_vs_folklore, fig_d12_enbw_matched_filter,
+        fig_d12_etf_stability,
     )
     from src.core.transonic_background import (
         steinhauer_Rb87, heidelberg_K39, trento_spin_sonic,
@@ -2314,13 +2322,13 @@ def generate_figures() -> dict[str, Path]:
         # D11 / D12 bundle figures (2026-07-30). Registering the FigureSpecs
         # alone was INERT — lookup is a bare func_map.get(), so unmapped specs
         # silently SKIP. Stage-9 round 3 caught that; these are the wiring.
-        "fig_d11_phononic_band_gap": viz.fig_d11_phononic_band_gap,
-        "fig_d11_pt_exceptional_point": viz.fig_d11_pt_exceptional_point,
-        "fig_d11_haldane_chern": viz.fig_d11_haldane_chern,
-        "fig_d11_effective_medium": viz.fig_d11_effective_medium,
-        "fig_d12_poisson_floor_vs_folklore": viz.fig_d12_poisson_floor_vs_folklore,
-        "fig_d12_enbw_matched_filter": viz.fig_d12_enbw_matched_filter,
-        "fig_d12_etf_stability": viz.fig_d12_etf_stability,
+        "fig_d11_phononic_band_gap": fig_d11_phononic_band_gap,
+        "fig_d11_pt_exceptional_point": fig_d11_pt_exceptional_point,
+        "fig_d11_haldane_chern": fig_d11_haldane_chern,
+        "fig_d11_effective_medium": fig_d11_effective_medium,
+        "fig_d12_poisson_floor_vs_folklore": fig_d12_poisson_floor_vs_folklore,
+        "fig_d12_enbw_matched_filter": fig_d12_enbw_matched_filter,
+        "fig_d12_etf_stability": fig_d12_etf_stability,
     }
 
     paths = {}
@@ -2528,6 +2536,14 @@ def run_structural_checks() -> list[CheckIssue]:
         fig_qnet_bb84_key_rate, fig_qnet_swap_chain_envelope, fig_qnet_w_vs_ghz,
         fig_qnet_readout_envelopes,
         COLORS,
+        # D11 / D12 bundle figures (2026-07-30). These must be imported at
+        # BOTH call sites or func_map raises NameError at module-eval time —
+        # which is exactly how the round-3 'wiring fix' turned a silent skip
+        # into an equally-unobserved hard crash.
+        fig_d11_phononic_band_gap, fig_d11_pt_exceptional_point,
+        fig_d11_haldane_chern, fig_d11_effective_medium,
+        fig_d12_poisson_floor_vs_folklore, fig_d12_enbw_matched_filter,
+        fig_d12_etf_stability,
     )
     from src.core.transonic_background import (
         steinhauer_Rb87, heidelberg_K39, trento_spin_sonic,
@@ -2697,13 +2713,13 @@ def run_structural_checks() -> list[CheckIssue]:
         # D11 / D12 bundle figures (2026-07-30). Registering the FigureSpecs
         # alone was INERT — lookup is a bare func_map.get(), so unmapped specs
         # silently SKIP. Stage-9 round 3 caught that; these are the wiring.
-        "fig_d11_phononic_band_gap": viz.fig_d11_phononic_band_gap,
-        "fig_d11_pt_exceptional_point": viz.fig_d11_pt_exceptional_point,
-        "fig_d11_haldane_chern": viz.fig_d11_haldane_chern,
-        "fig_d11_effective_medium": viz.fig_d11_effective_medium,
-        "fig_d12_poisson_floor_vs_folklore": viz.fig_d12_poisson_floor_vs_folklore,
-        "fig_d12_enbw_matched_filter": viz.fig_d12_enbw_matched_filter,
-        "fig_d12_etf_stability": viz.fig_d12_etf_stability,
+        "fig_d11_phononic_band_gap": fig_d11_phononic_band_gap,
+        "fig_d11_pt_exceptional_point": fig_d11_pt_exceptional_point,
+        "fig_d11_haldane_chern": fig_d11_haldane_chern,
+        "fig_d11_effective_medium": fig_d11_effective_medium,
+        "fig_d12_poisson_floor_vs_folklore": fig_d12_poisson_floor_vs_folklore,
+        "fig_d12_enbw_matched_filter": fig_d12_enbw_matched_filter,
+        "fig_d12_etf_stability": fig_d12_etf_stability,
     }
 
     issues: list[CheckIssue] = []

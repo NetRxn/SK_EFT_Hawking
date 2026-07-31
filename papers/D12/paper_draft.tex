@@ -13,8 +13,12 @@
 %% All theorem names below are live declarations in lean/SKEFTHawking/.
 %% Counting convention: source-authored declarations (NOT lean_deps.json).
 
-\newcommand{\thm}[1]{\texttt{#1}}
+%% Long Lean names are unbreakable \texttt{} tokens and overflow a revtex
+%% two-column measure. Make the underscore a legal breakpoint so they wrap
+%% instead of overflowing into the adjacent column. No extra package.
+\newcommand{\thm}[1]{{\def\_{\char`\_\allowbreak}\texttt{#1}}}
 \newcommand{\Lean}{Lean~4}
+\emergencystretch=2em
 
 \begin{document}
 

@@ -14744,7 +14744,10 @@ def fig_qnet_readout_envelopes() -> go.Figure:
 # becomes unreadable in print while looking fine as a PNG.
 _BUNDLE_FIG_WIDTH = 700
 _BUNDLE_FIG_FONT = 13
-_BUNDLE_TEXTWIDTH_PT = 510  # revtex4-2 two-column \textwidth
+_BUNDLE_TEXTWIDTH_PT = 508  # revtex4-2 two-column \textwidth, MEASURED
+                            # from placed images in the compiled PDFs
+                            # (508.2 pt); the nominal 510 biased every
+                            # reported size 0.4% high.
 
 
 def _bundle_font_for(width: int) -> int:
@@ -14810,6 +14813,19 @@ def bundle_figure_typeset_pt(fig) -> float:
         tf = getattr(tr, "textfont", None)
         if tf is not None and getattr(tf, "size", None):
             sizes.append(tf.size)
+    # Axis title fonts and tickfonts are not set by the layout helper today, so
+    # they inherit layout.font and contribute nothing — but reading them keeps
+    # the check honest if a future figure sets one directly.
+    for key in dir(fig.layout):
+        if not (key.startswith("xaxis") or key.startswith("yaxis")):
+            continue
+        ax = getattr(fig.layout, key, None)
+        if ax is None:
+            continue
+        for fnt in (getattr(getattr(ax, "title", None), "font", None),
+                    getattr(ax, "tickfont", None)):
+            if fnt is not None and getattr(fnt, "size", None):
+                sizes.append(fnt.size)
     return min(sizes) / fig.layout.width * _BUNDLE_TEXTWIDTH_PT
 
 
@@ -14986,7 +15002,7 @@ def fig_d12_enbw_matched_filter() -> go.Figure:
 
     return _bundle_layout(
         fig, "Filtered-readout realizability floor and the Gaussian tail sandwich",
-        width=880, height=470, legend_y=-0.21, bottom=140)
+        width=880, height=500, legend_y=-0.30, bottom=170)
 
 
 def fig_d12_etf_stability() -> go.Figure:
