@@ -5852,8 +5852,8 @@
       "finding_id": "review:2026-07-31-1530-internal-adversarial:D11:5.3",
       "status": "fixed",
       "superseded_by": null,
-      "commit": "bb0c7e34",
-      "evidence": "AFP coverage caveat extended to the exceptional-point / PT / non-Hermitian items so the disclosed limit matches the paper's own absence list. Closed on INDEPENDENT verification by round 8 (1652) verified the sentence against prior_art_novelty.md §5.1. — not on the author's own say-so. ⚠️ These records were owed at commit ac66444f and were NOT filed: the author filed ten closures against the 1059 round and none against 1530, then reported \"7 supersession records filed\". Round 9 (1801) caught the gap; every 1530 finding had been sitting `open` since, inflating D11's blocker count and failing bundle_metadata_matches_graph. ⚠️ COMMIT CORRECTED 2026-07-31 (D11 round-10): this record cited ac66444f, which does not touch the file the fix is in. Established from `git log -- <artifact>`; the fix is in bb0c7e34. Seven of these eight records carried the wrong SHA — a provenance record whose commit does not contain the change is worse than no record, because it reads as an audit trail.",
+      "commit": "837f335e",
+      "evidence": "AFP coverage caveat extended to the exceptional-point / PT / non-Hermitian items so the disclosed limit matches the paper's own absence list. Closed on INDEPENDENT verification by round 8 (1652) verified the sentence against prior_art_novelty.md §5.1. — not on the author's own say-so. ⚠️ These records were owed at commit ac66444f and were NOT filed: the author filed ten closures against the 1059 round and none against 1530, then reported \"7 supersession records filed\". Round 9 (1801) caught the gap; every 1530 finding had been sitting `open` since, inflating D11's blocker count and failing bundle_metadata_matches_graph. ⚠️ COMMIT CORRECTED 2026-07-31 (D11 round-10): this record cited ac66444f, which does not touch the file the fix is in. Established from `git log -- <artifact>`; the fix is in bb0c7e34. Seven of these eight records carried the wrong SHA — a provenance record whose commit does not contain the change is worse than no record, because it reads as an audit trail. ⚠️ SHA CORRECTED AGAIN 2026-07-31 (D11 round-12): this record cited bb0c7e34, which contains ZERO occurrences of the AFP-caveat edit; 837f335e contains 2. The round-10 correction matched bb0c7e34's COMMIT MESSAGE, which carries a bullet labelled 'D11 5.3' that is actually round-7's finding 5.2. Verified this time from the artifact diff (`git show <sha> -- papers/D11/paper_draft.tex`), not from prose about it — which is the same distinction that produced the original error.",
       "closed_date": "2026-07-31",
       "closed_by": "stage13-round8-and-9-independent-verification"
     },
@@ -5874,6 +5874,69 @@
       "evidence": "The paper's counting rule now states the block-comment exclusion the generator applies. Closed on INDEPENDENT verification by round 8 (1652) re-derived the counts under the stated rule. — not on the author's own say-so. ⚠️ These records were owed at commit ac66444f and were NOT filed: the author filed ten closures against the 1059 round and none against 1530, then reported \"7 supersession records filed\". Round 9 (1801) caught the gap; every 1530 finding had been sitting `open` since, inflating D11's blocker count and failing bundle_metadata_matches_graph. ⚠️ COMMIT CORRECTED 2026-07-31 (D11 round-10): this record cited ac66444f, which does not touch the file the fix is in. Established from `git log -- <artifact>`; the fix is in bb0c7e34. Seven of these eight records carried the wrong SHA — a provenance record whose commit does not contain the change is worse than no record, because it reads as an audit trail.",
       "closed_date": "2026-07-31",
       "closed_by": "stage13-round8-and-9-independent-verification"
+    },
+    {
+      "finding_id": "review:2026-07-31-2103-internal-adversarial:D12:5.1",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "89d10728",
+      "evidence": "ENBW functional account. Round 12: \"The ENBW account is exact — I matched it to 8 significant figures against a 2M-point numeric integration.\" Closed on the INDEPENDENT verification recorded in papers/AutomatedReviews/2026-07-31-2220-internal-adversarial/D12.md — the reviewer that checked it was forbidden by rule 10 from closing it itself, so the record is filed by the author against that reviewer's own words, not against my say-so.",
+      "closed_date": "2026-07-31",
+      "closed_by": "stage13-later-round-independent-verification"
+    },
+    {
+      "finding_id": "review:2026-07-31-2103-internal-adversarial:D12:6.1",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "89d10728",
+      "evidence": "Seventh capstone binder disclosed and the completeness claim dropped. Round 12: \"The seventh binder is honestly disclosed and the completeness claim genuinely dropped ('the Lean statement is the authority').\" Closed on the INDEPENDENT verification recorded in papers/AutomatedReviews/2026-07-31-2220-internal-adversarial/D12.md — the reviewer that checked it was forbidden by rule 10 from closing it itself, so the record is filed by the author against that reviewer's own words, not against my say-so.",
+      "closed_date": "2026-07-31",
+      "closed_by": "stage13-later-round-independent-verification"
+    },
+    {
+      "finding_id": "review:2026-07-31-2103-internal-adversarial:D12:8.6",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "8b9e2376",
+      "evidence": "LATE_PHASE6:184 vs check_bundle_source_freshness.py:201 contradiction resolved in both documents. Round 12: \"LATE_PHASE6:184 is right in both docs and the stage13_redo_required claim checks out against every writer.\" Closed on the INDEPENDENT verification recorded in papers/AutomatedReviews/2026-07-31-2220-internal-adversarial/D12.md — the reviewer that checked it was forbidden by rule 10 from closing it itself, so the record is filed by the author against that reviewer's own words, not against my say-so.",
+      "closed_date": "2026-07-31",
+      "closed_by": "stage13-later-round-independent-verification"
+    },
+    {
+      "finding_id": "review:2026-07-31-2022-internal-adversarial:D12:5.1",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "89d10728",
+      "evidence": "ENBW constant 1/4 -> 1/2. Round 11: \"The constant is right at all four sites — :50, :273, :305 and :688 all say 1/2, matching FilterFloors.lean:197-201.\" Closed on the INDEPENDENT verification recorded in papers/AutomatedReviews/2026-07-31-2103-internal-adversarial/D12.md — the reviewer that checked it was forbidden by rule 10 from closing it itself, so the record is filed by the author against that reviewer's own words, not against my say-so.",
+      "closed_date": "2026-07-31",
+      "closed_by": "stage13-later-round-independent-verification"
+    },
+    {
+      "finding_id": "review:2026-07-31-2022-internal-adversarial:D12:5.2",
+      "status": "open",
+      "superseded_by": null,
+      "commit": "89d10728",
+      "evidence": "Crossover corrected to 2Q(1)/(1-2Q(1)). Round 11: \"fixed. 2Q(1)/(1-2Q(1)) = 0.4647947734915442; round-trips to Q(1) to 15 digits. Paper and Lean agree.\" Closed on the INDEPENDENT verification recorded in papers/AutomatedReviews/2026-07-31-2103-internal-adversarial/D12.md — the reviewer that checked it was forbidden by rule 10 from closing it itself, so the record is filed by the author against that reviewer's own words, not against my say-so. ⚠️ REOPENED minutes after filing, same cause as 2022:D12:2.1 — a later review carries an open finding at the same number on the same subject, and I closed the parent without that residual having independent verification. Two of the seven records I filed this pass were premature in exactly this way, and the recurrence check caught both on its first run since becoming able to fire.",
+      "closed_date": "2026-07-31",
+      "closed_by": "stage13-later-round-independent-verification"
+    },
+    {
+      "finding_id": "review:2026-07-31-2022-internal-adversarial:D12:2.1",
+      "status": "open",
+      "superseded_by": null,
+      "commit": "89d10728",
+      "evidence": "The 21.5-point figure and its derivation. Round 11: \"fixed, all three artifacts agree (52.685->52.7, 31.214->31.2, exact 21.471->21.5).\" Closed on the INDEPENDENT verification recorded in papers/AutomatedReviews/2026-07-31-2103-internal-adversarial/D12.md — the reviewer that checked it was forbidden by rule 10 from closing it itself, so the record is filed by the author against that reviewer's own words, not against my say-so. ⚠️ REOPENED within minutes of being filed, by `validate.py --check recurrence_reopens_closures`. Round 11's 2.1 is a RESIDUAL of this finding — same subject, the surviving defect being a false derivation ('53-31 on the rounded figures', which is 22, not 21.5) — and it is still open with no independent verification. Closing the parent while its residual stands is exactly the stale-closure pattern the check exists to catch. It caught mine on the first run after I filed it, which is the strongest evidence yet that the guard is now real: for its whole prior life it could not fire at all.",
+      "closed_date": "2026-07-31",
+      "closed_by": "stage13-later-round-independent-verification"
+    },
+    {
+      "finding_id": "review:2026-07-31-1951-internal-adversarial:D11:1.1",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "a683b917",
+      "evidence": "CP^inf carve-out. Round 12: \"correct now. Re-fetched the abstract and re-extracted the 40-page PDF myself — S4.4 is 'The Thom isomorphism and the Gysin sequence', Theorem 43 writes the map as (-)cup e with e built per spherical fibration, Euler=0 Chern=0 tokens, infinite projective space is the real one. The narrowed claim does not over-reach.\" Closed on the INDEPENDENT verification recorded in papers/AutomatedReviews/2026-07-31-2220-internal-adversarial/D11.md — the reviewer that checked it was forbidden by rule 10 from closing it itself, so the record is filed by the author against that reviewer's own words, not against my say-so.",
+      "closed_date": "2026-07-31",
+      "closed_by": "stage13-later-round-independent-verification"
     }
   ]
 }
