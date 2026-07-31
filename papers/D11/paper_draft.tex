@@ -13,8 +13,14 @@
 %% Counting convention: source-authored declarations (NOT lean_deps.json
 %% extraction, which additionally counts generated equation lemmas).
 
-\newcommand{\thm}[1]{\texttt{#1}}
+%% Long Lean names are unbreakable \texttt{} tokens and overflow a revtex
+%% two-column measure — one 46-character name produced a 32.4 pt Overfull \hbox
+%% that drove the token into the adjacent column and overprinted running text
+%% (Stage-9 round 5, publication-blocking). Make the underscore a legal
+%% breakpoint so these names wrap instead of overflowing. No extra package.
+\newcommand{\thm}[1]{{\def\_{\char`\_\allowbreak}\texttt{#1}}}
 \newcommand{\Lean}{Lean~4}
+\emergencystretch=2em
 
 \begin{document}
 

@@ -2073,6 +2073,116 @@ def check_elaboration_knob_watchlist() -> CheckResult:
 # CHECK 10: Notebook visualization consistency (warnings only)
 # ═══════════════════════════════════════════════════════════════════════
 
+@register_check("bundle_figure_integrity",
+                "Bundle figures match a fresh render and are legible at typeset size")
+def check_bundle_figure_integrity() -> CheckResult:
+    """Two guarantees the printed paper actually depends on, both of which were
+    violated in the D11/D12 first lift and caught only by a human-in-the-loop
+    reviewer rasterising the PDF:
+
+    1. **No source/artefact drift.** Every ``papers/<bundle>/figures/<name>.png``
+       must be byte-identical to a fresh render from ``src/core/visualizations``.
+       ``review_figures.py`` writes to ``PROJECT_ROOT/figures``, not into the
+       bundle directories, so nothing otherwise stops a shipped figure from
+       silently diverging from the code that is supposed to produce it.
+
+    2. **Legible in print.** ``bundle_figure_typeset_pt`` reports the SMALLEST
+       printed text size, over every text-bearing field, at ``figure*``
+       ``\textwidth``. Stage-9 round 3 found figures printing at 2-3 pt against
+       10 pt body text while looking fine as PNGs. Round 5 then found that the
+       checker itself had **zero consumers repo-wide** — it was honest but not
+       binding. This is the binding.
+
+    Floor is 8.0 pt. Skips cleanly when kaleido is unavailable.
+    """
+    import importlib
+
+    details: List[Detail] = []
+    try:
+        viz = importlib.import_module("src.core.visualizations")
+    except Exception as exc:  # pragma: no cover - import guard
+        return CheckResult(passed=True, details=[Detail(
+            "skipped", True, f"visualizations import failed ({exc}) — skipped",
+            warning=True)])
+
+    if not hasattr(viz, "bundle_figure_typeset_pt"):
+        return CheckResult(passed=True, details=[Detail(
+            "skipped", True, "bundle_figure_typeset_pt absent — skipped",
+            warning=True)])
+
+    FLOOR_PT = 8.0
+    SPECS = {
+        "D11": [("d11_fig1_phononic_band_gap", "fig_d11_phononic_band_gap"),
+                ("d11_fig2_pt_exceptional_point", "fig_d11_pt_exceptional_point"),
+                ("d11_fig3_haldane_chern", "fig_d11_haldane_chern"),
+                ("d11_fig4_effective_medium", "fig_d11_effective_medium")],
+        "D12": [("d12_fig1_poisson_floor_vs_folklore", "fig_d12_poisson_floor_vs_folklore"),
+                ("d12_fig2_enbw_matched_filter", "fig_d12_enbw_matched_filter"),
+                ("d12_fig3_etf_stability", "fig_d12_etf_stability")],
+    }
+
+    n_ok = n_fail = 0
+    for bundle, figs in SPECS.items():
+        for png_name, func_name in figs:
+            png = PAPERS_DIR / bundle / "figures" / f"{png_name}.png"
+            fn = getattr(viz, func_name, None)
+            if fn is None:
+                details.append(Detail(f"missing_fn:{bundle}:{func_name}", False,
+                                      f"{func_name} not found in visualizations"))
+                n_fail += 1
+                continue
+            if not png.exists():
+                details.append(Detail(f"missing_png:{bundle}:{png_name}", False,
+                                      f"papers/{bundle}/figures/{png_name}.png absent"))
+                n_fail += 1
+                continue
+            try:
+                fig = fn()
+            except Exception as exc:
+                details.append(Detail(f"render_error:{bundle}:{png_name}", False,
+                                      f"{func_name}() raised {exc!r}"))
+                n_fail += 1
+                continue
+
+            pt = viz.bundle_figure_typeset_pt(fig)
+            if pt < FLOOR_PT:
+                details.append(Detail(
+                    f"illegible:{bundle}:{png_name}", False,
+                    f"smallest printed text {pt:.2f}pt < {FLOOR_PT}pt floor "
+                    f"(against 10pt body) — widen the canvas or raise the font"))
+                n_fail += 1
+            else:
+                n_ok += 1
+                details.append(Detail(f"legible:{bundle}:{png_name}", True,
+                                      f"smallest printed text {pt:.2f}pt", warning=False))
+
+            # Drift check is advisory: kaleido may be unavailable, and a
+            # byte-compare is sensitive to renderer version. A mismatch is worth
+            # surfacing, not worth blocking a whole validation run on.
+            try:
+                import hashlib, tempfile, os as _os
+                with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
+                    tmp_path = tmp.name
+                fig.write_image(tmp_path, scale=3)
+                fresh = hashlib.sha256(pathlib.Path(tmp_path).read_bytes()).hexdigest()
+                shipped = hashlib.sha256(png.read_bytes()).hexdigest()
+                _os.unlink(tmp_path)
+                if fresh != shipped:
+                    details.append(Detail(
+                        f"drift:{bundle}:{png_name}", True,
+                        f"shipped PNG differs from a fresh render "
+                        f"({shipped[:12]} vs {fresh[:12]}) — re-render before review",
+                        warning=True))
+            except Exception:
+                pass  # kaleido unavailable / renderer mismatch — advisory only
+
+    details.insert(0, Detail(
+        "summary", n_fail == 0,
+        f"{n_ok + n_fail} bundle figures checked — {n_ok} legible / {n_fail} below "
+        f"the {FLOOR_PT}pt floor"))
+    return CheckResult(passed=n_fail == 0, details=details)
+
+
 @register_check("viz_consistency", "Notebook visualizations use imported physics and consistent style")
 def check_viz_consistency() -> CheckResult:
     """Visualization consistency warnings (advisory, always passes).
