@@ -20,13 +20,19 @@
 %%          + 6EC (electrothermal) + 6EE (control + composite ceilings).
 %% Novelty backing: papers/D12/prior_art_novelty.md (research-scout 2026-07-30).
 %% ⛔ TWO BLOCKING PRE-SUBMISSION PRIOR-ART CHECKS — see prior_art_novelty.md §3.
-%% All theorem names below are live declarations in lean/SKEFTHawking/.
+%% Provenance of typeset names: \thm{} = a live declaration in lean/SKEFTHawking/;
+%% \mthm{} = a live Mathlib declaration at our pin (NOT ours). Corrected 2026-08-01:
+%% this line previously claimed ALL names were project-local, which was false for the
+%% four Mathlib names cited in the scope section.
 %% Counting convention: source-authored declarations (NOT lean_deps.json).
 
 %% Long Lean names are unbreakable \texttt{} tokens and overflow a revtex
 %% two-column measure. Make the underscore a legal breakpoint so they wrap
 %% instead of overflowing into the adjacent column. No extra package.
 \newcommand{\thm}[1]{{\def\_{\char`\_\allowbreak}\texttt{#1}}}
+%% \mthm = a MATHLIB declaration, not one of ours. Renders identically to \thm; the
+%% distinction exists so the provenance line above is checkable rather than asserted.
+\newcommand{\mthm}[1]{\thm{#1}}
 \newcommand{\Lean}{Lean~4}
 \emergencystretch=2em
 
@@ -204,7 +210,7 @@ quantity a practitioner thought they were bounding --- and the folklore statemen
 \subsection{Gaussian thresholds}
 
 For a Gaussian readout we define the tail \thm{gaussianQ} project-locally --- Mathlib has no error
-function at our pin, and while its generic \thm{cdf} does apply to \thm{gaussianReal}
+function at our pin, and while its generic \mthm{cdf} does apply to \mthm{gaussianReal}
 (Section~\ref{sec:scope}), it carries no Gaussian closed form and, decisively for us, no tail bound
 --- together with the two branch errors \thm{thrErr0} and \thm{thrErr1}. The headline is the sharp separation-budget floor
 \thm{avgError\_ge\_gaussianQ\_sharp}: no threshold placement achieves an average error below
@@ -599,7 +605,7 @@ Eq.~\eqref{eq:lecam}. The POVM layer we do consume is our own project's network-
 substrate.
 
 Our Gaussian Chernoff bound is a \emph{sharpening}, not a first. Mathlib carries a sub-Gaussian
-Chernoff bound at our own pin, \thm{HasSubgaussianMGF.measure\_ge\_le}, whose own docstring names it
+Chernoff bound at our own pin, \mthm{HasSubgaussianMGF.measure\_ge\_le}, whose own docstring names it
 a Chernoff bound; at variance proxy $c = 1$ it gives $\exp(-z^2/2)$ against our
 $\tfrac12\exp(-z^2/2)$, a factor of two weaker. What is not inherited is the two-sided bracket: the
 Birnbaum--Feller \emph{lower} bound \thm{gaussianTail\_birnbaum}, valid at every real $z$ with no
@@ -612,9 +618,9 @@ a survey of divergence names would suggest, and we state it rather than let the 
 wider gap than exists. It has Kullback--Leibler divergence --- itself developed in the
 \textsc{TestingLowerBounds} project~\cite{LuccioliDegenne2024,Degenne2025Kernels}. It has a
 decision-theoretic layer (\texttt{Mathlib/Probability/Decision/}) with average, Bayes and minimax
-risk and a Bayes-risk data-processing inequality \thm{bayesRisk\_le\_bayesRisk\_comp}. And it has a
-general cumulative distribution function \thm{cdf} for measures on $\mathbb{R}$, which applied to
-the standard \thm{gaussianReal} is a Gaussian CDF --- the very measure our own
+risk and a Bayes-risk data-processing inequality \mthm{bayesRisk\_le\_bayesRisk\_comp}. And it has a
+general cumulative distribution function \mthm{cdf} for measures on $\mathbb{R}$, which applied to
+the standard \mthm{gaussianReal} is a Gaussian CDF --- the very measure our own
 \thm{gaussianQ\_eq\_measure} identifies \thm{gaussianQ} against.
 
 What is absent at the pin is the specialization this paper needs: no binary Bayes risk, no Le Cam
