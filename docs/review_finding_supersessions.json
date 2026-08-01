@@ -6378,6 +6378,24 @@
       "evidence": "Adjudicated REPAIRED by Stage-13 round 14 against the artifact: **B7 — REPAIRED — `0001:13.1` (three ledger records closing a finding their evidence did not describe).** — Source: papers/AutomatedReviews/2026-08-01-0202-internal-adversarial/D12.md. Filed by the author quoting the reviewer, which rule 10 forbids it doing itself.",
       "closed_date": "2026-08-01",
       "closed_by": "stage13-round14-closure-adjudication"
+    },
+    {
+      "finding_id": "review:2026-07-31-2220-internal-adversarial:D11:5.2",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "5356ca97",
+      "evidence": "The misnomer is now disclaimed ON the declaration. REPRODUCE: `EffectiveMediumBounds.lean` — the docstring of `effectiveMedium_hashinShtrikman_enclosure` now states that nothing there is a Hashin-Shtrikman result and that the name is retained only because downstream artifacts cite it. Raised three rounds running because every previous remediation corrected the header, paper, roadmap or formulas.py while leaving the docstring a reader actually lands on. ⚠️ AUTHOR-FILED with a reproducible check, not independent adjudication; round 15 confirms or rejects.",
+      "closed_date": "2026-08-01",
+      "closed_by": "author-filed-reproducible-evidence"
+    },
+    {
+      "finding_id": "review:2026-07-31-2220-internal-adversarial:D11:6.2",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "5356ca97",
+      "evidence": "The Bernal sentence is split by bias regime. REPRODUCE: `papers/D11/paper_draft.tex:451ff` now separates u = 0 (bernal_chirality_two, bernal_lowRoot_enclosure), u != 0 (bernal_mexicanHat, which carries `hu : u != 0` explicitly) and general u (bernal_halfGapSq_isLeast, bernal_fullGapSq_eq), and states that no single operating point carries all five. The previous single sentence chained theorems at mutually exclusive bias values. ⚠️ AUTHOR-FILED with a reproducible check, not independent adjudication; round 15 confirms or rejects.",
+      "closed_date": "2026-08-01",
+      "closed_by": "author-filed-reproducible-evidence"
     }
   ]
 }

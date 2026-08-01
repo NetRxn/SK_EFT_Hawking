@@ -448,12 +448,16 @@ source: the increments are certified non-marginal --- each keeps a margin from t
 The Bernal-stacked bilayer required Mathlib-grade infrastructure: \thm{det\_fin\_four}, since Mathlib
 ships determinant expansions only through \texttt{Matrix.det\_fin\_three}. With it, \thm{bernal\_det\_eq}
 collapses the $4\times4$ secular determinant to a single real quadratic, and
-\thm{bernal\_eigenvector\_iff} confirms its roots are genuine Bloch eigenvectors. The chirality
-relation \thm{bernal\_chirality\_two} is exact; the low-energy behaviour is bracketed globally by
-\thm{bernal\_lowRoot\_enclosure}; the field-induced gap is a genuine least element
-(\thm{bernal\_halfGapSq\_isLeast}) matching the standard form (\thm{bernal\_fullGapSq\_eq}); and
-\thm{bernal\_mexicanHat} certifies that the band minimum sits at finite momentum, with the gap
-strictly below the applied bias.
+\thm{bernal\_eigenvector\_iff} confirms its roots are genuine Bloch eigenvectors. The results split by bias, and the
+split is load-bearing rather than presentational --- an earlier version of this sentence chained
+them all as though they held together, which they cannot (corrected 2026-08-01, D11 Stage-13
+round-14 finding 6.2). \emph{At zero bias} ($u = 0$): the chirality relation
+\thm{bernal\_chirality\_two} is exact and the low-energy behaviour is bracketed globally by
+\thm{bernal\_lowRoot\_enclosure}. \emph{At nonzero bias} ($u \neq 0$, a hypothesis
+\thm{bernal\_mexicanHat} carries explicitly): the band minimum sits at finite momentum, with the
+gap strictly below the applied bias. \emph{For general $u$}: the field-induced gap is a genuine
+least element (\thm{bernal\_halfGapSq\_isLeast}) matching the standard form
+(\thm{bernal\_fullGapSq\_eq}). No single operating point carries all five.
 
 \section{Two refutations}
 \label{sec:refutations}

@@ -128,7 +128,16 @@ Two earlier versions bundled order facts alongside the value: originally `1 ≤ 
 derivable from the value by `norm_num`** — which is what made them redundant, so the round-6 attempt
 fixed the wrong entailment. The non-derivable content is the *general* strict statement, which now
 lives in `effectiveMedium_constituent_bounds_strict`; the interiority of this point is an instance of
-it (`effectiveMedium_worked_point_strict`) rather than a restatement of `= 2`. -/
+it (`effectiveMedium_worked_point_strict`) rather than a restatement of `= 2`.
+
+⚠️ **The NAME is a misnomer and this docstring must say so** (D11 Stage-13 rounds 12–14, finding
+5.2, raised three times). Nothing here is a Hashin–Shtrikman result: this is one evaluated value of
+the Maxwell–Garnett mixing rule. The module header retracts the naming at length, but a reader who
+arrives by jump-to-definition or hover sees only this docstring, and every previous remediation
+corrected the header, the paper, the roadmap or `formulas.py` while leaving the docstring on the
+declaration that carries the wrong name. The name is retained solely because downstream artifacts
+cite it; it is not evidence of what is proved. See `EffectiveMediumBounds.lean`'s header for the
+Wiener and Hashin–Shtrikman families, neither of which is formalized in this development. -/
 theorem effectiveMedium_hashinShtrikman_enclosure :
     maxwellGarnett 1 4 (1 / 2) = 2 := by
   unfold maxwellGarnett; norm_num
