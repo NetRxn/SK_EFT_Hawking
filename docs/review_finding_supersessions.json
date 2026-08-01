@@ -6333,6 +6333,51 @@
       "evidence": "The recurrence summary's denominator now counts closures WITH a candidate, not closures reaching the loop. REPRODUCE: it reports 162, matching your independent count, where it previously said 318. ⚠️ AUTHOR-FILED with a reproducible check, not independent adjudication; round 14 should confirm or reject.",
       "closed_date": "2026-08-01",
       "closed_by": "author-filed-reproducible-evidence"
+    },
+    {
+      "finding_id": "review:2026-07-31-1823-internal-adversarial:D12:8.4",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "23ccbc80",
+      "evidence": "Adjudicated REPAIRED by Stage-13 round 14 against the artifact: **B4 — REPAIRED — `1730:8.4`, `1823:8.4`, `2022:8.4`, `2103:8.4` (`ledger_ids_resolve` fails open).** — Source: papers/AutomatedReviews/2026-08-01-0202-internal-adversarial/D12.md. Filed by the author quoting the reviewer, which rule 10 forbids it doing itself.",
+      "closed_date": "2026-08-01",
+      "closed_by": "stage13-round14-closure-adjudication"
+    },
+    {
+      "finding_id": "review:2026-07-31-2022-internal-adversarial:D12:8.4",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "23ccbc80",
+      "evidence": "Adjudicated REPAIRED by Stage-13 round 14 against the artifact: **B4 — REPAIRED — `1730:8.4`, `1823:8.4`, `2022:8.4`, `2103:8.4` (`ledger_ids_resolve` fails open).** — Source: papers/AutomatedReviews/2026-08-01-0202-internal-adversarial/D12.md. Filed by the author quoting the reviewer, which rule 10 forbids it doing itself.",
+      "closed_date": "2026-08-01",
+      "closed_by": "stage13-round14-closure-adjudication"
+    },
+    {
+      "finding_id": "review:2026-07-31-2103-internal-adversarial:D12:8.4",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "23ccbc80",
+      "evidence": "Adjudicated REPAIRED by Stage-13 round 14 against the artifact: **B4 — REPAIRED — `1730:8.4`, `1823:8.4`, `2022:8.4`, `2103:8.4` (`ledger_ids_resolve` fails open).** — Source: papers/AutomatedReviews/2026-08-01-0202-internal-adversarial/D12.md. Filed by the author quoting the reviewer, which rule 10 forbids it doing itself.",
+      "closed_date": "2026-08-01",
+      "closed_by": "stage13-round14-closure-adjudication"
+    },
+    {
+      "finding_id": "review:2026-07-31-2022-internal-adversarial:D12:5.1",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "23ccbc80",
+      "evidence": "Adjudicated REPAIRED by Stage-13 round 14 against the artifact: **B6 — REPAIRED — `2022:5.1` (the ENBW functional disambiguation).** — Source: papers/AutomatedReviews/2026-08-01-0202-internal-adversarial/D12.md. Filed by the author quoting the reviewer, which rule 10 forbids it doing itself.",
+      "closed_date": "2026-08-01",
+      "closed_by": "stage13-round14-closure-adjudication"
+    },
+    {
+      "finding_id": "review:2026-08-01-0001-internal-adversarial:D12:13.1",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "23ccbc80",
+      "evidence": "Adjudicated REPAIRED by Stage-13 round 14 against the artifact: **B7 — REPAIRED — `0001:13.1` (three ledger records closing a finding their evidence did not describe).** — Source: papers/AutomatedReviews/2026-08-01-0202-internal-adversarial/D12.md. Filed by the author quoting the reviewer, which rule 10 forbids it doing itself.",
+      "closed_date": "2026-08-01",
+      "closed_by": "stage13-round14-closure-adjudication"
     }
   ]
 }
