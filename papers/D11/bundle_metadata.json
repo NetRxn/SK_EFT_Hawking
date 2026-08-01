@@ -14,14 +14,14 @@
   "last_stage9_review": "2026-07-31T04:10:00Z",
   "last_stage10_review": "2026-07-30T21:00:00Z",
   "last_stage13_review": "2026-07-31",
-  "blockers_open": 39,
+  "blockers_open": 27,
   "advisories_open": 61,
   "stage13_review_doc": null,
   "audit_log_path": "papers/D11/audit_log.jsonl",
   "supersession_ledger_anchor": "docs/review_finding_supersessions.json",
   "notes": "First content-lift 2026-07-30. Stage 10 claims review GREEN (round 2): 0 FAIL across 169 sentences; reviewer independently reimplemented the FHS pipeline and confirmed C = -1 with the correct sign, and verified all 566 declarations kernel-pure. Stage 9 iterating on typeset legibility (rounds 1-2 reviewed standalone PNGs and missed that the figures printed at 2-3 pt; fixed by figure* at \\textwidth plus a font/width contract). SCOPE: thread (i) is finite-lattice FHS Chern only — Berry curvature, bulk-boundary and the continuum Chern integral are DEFERRED and absent, never conditional. Zero project axioms, zero tracked Props. || Stage 9 GREEN at round 6 (GO verdict, 0 FAIL, 0 publication-blocking). Six rounds; each found a defect class the previous could not see (standalone-PNG -> rasterised-PDF -> per-string measurement). Documented non-blocking residue, accepted on explicit reviewer triage: R5-1 open-diamond clipping the gap annotation; R5-3 annotation bgcolor occluding a short off-window segment; R5-4 Reuss/Maxwell-Garnett sharing a legend swatch colour; R6-3 the flip line clipping the left stem of the '5' glyph. The one publication-blocking item was PROSE, not figures: a 32.4pt Overfull hbox overprinting the word 'not' — fixed, Overfull count 1 -> 0, verified by a same-line word-overlap scan across all 8 pages returning 0 collisions.",
   "last_stage13_review_source": "backfilled-from-AutomatedReviews papers/AutomatedReviews/2026-07-31-1059-internal-adversarial/D11.md 2026-07-31",
-  "open_findings": 100,
+  "open_findings": 88,
   "blocked_p1_gates": [
     "FixPropagation"
   ],

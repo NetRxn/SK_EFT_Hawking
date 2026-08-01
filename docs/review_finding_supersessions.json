@@ -5937,6 +5937,321 @@
       "evidence": "CP^inf carve-out. Round 12: \"correct now. Re-fetched the abstract and re-extracted the 40-page PDF myself — S4.4 is 'The Thom isomorphism and the Gysin sequence', Theorem 43 writes the map as (-)cup e with e built per spherical fibration, Euler=0 Chern=0 tokens, infinite projective space is the real one. The narrowed claim does not over-reach.\" Closed on the INDEPENDENT verification recorded in papers/AutomatedReviews/2026-07-31-2220-internal-adversarial/D11.md — the reviewer that checked it was forbidden by rule 10 from closing it itself, so the record is filed by the author against that reviewer's own words, not against my say-so.",
       "closed_date": "2026-07-31",
       "closed_by": "stage13-later-round-independent-verification"
+    },
+    {
+      "finding_id": "review:2026-07-31-1210-reconstructed-round6:D12:1.1",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "02cfb5b9",
+      "evidence": "Adjudicated REPAIRED by Stage-13 round 13 against the artifact: **A1 — REPAIRED — `1210:1.1` (Mather γ hedge into the fifth artifact).** `lean/SKEFTHawking/Electrothermal/BolometricFloors.lean:203-228` now carries the paper's full hedge: both convention readings, the two named failed predecessors (\"Two earlier notes here w `lean/SKEFTHawking/Electrothermal/BolometricFloors.lean:203-228` now carries the paper's full hedge: both convention readings, the two named failed predecessors (\"Two earlier notes here were wrong in opposite directions\"), and the sentence \"this project holds Mather in abstract only\". It also carries the *corrected* derivation `52.7 − 31 — Source: papers/AutomatedReviews/2026-08-01-0001-internal-adversarial/D12.md. Filed by the author quoting the reviewer, which rule 10 forbids it doing itself.",
+      "closed_date": "2026-08-01",
+      "closed_by": "stage13-round13-closure-adjudication"
+    },
+    {
+      "finding_id": "review:2026-07-31-0829-internal-adversarial:D12:5.5",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "02cfb5b9",
+      "evidence": "Adjudicated REPAIRED by Stage-13 round 13 against the artifact: **A2 — REPAIRED — `0829:5.5` and `1210:5.1` (the composites \"bite\").** Both witnesses exist and are kernel-pure. `relaxation_filtered_ceiling_bites` (`Control/CompositeReadoutCeilings.lean:687-707`) and `relaxation_detector_chain_ceiling_bites` (`:709-...`) ea Both witnesses exist and are kernel-pure. `relaxation_filtered_ceiling_bites` (`Control/CompositeReadoutCeilings.lean:687-707`) and `relaxation_detector_chain_ceiling_bites` (`:709-...`) each carry the full composite binder list and conclude `assignmentFidelity e0 e1 ≤ 22 / 25` under `hb : … matchedBudget … = 2`. From `lean/lean_deps.jso — Source: papers/AutomatedReviews/2026-08-01-0001-internal-adversarial/D12.md. Filed by the author quoting the reviewer, which rule 10 forbids it doing itself.",
+      "closed_date": "2026-08-01",
+      "closed_by": "stage13-round13-closure-adjudication"
+    },
+    {
+      "finding_id": "review:2026-07-31-1210-reconstructed-round6:D12:5.1",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "02cfb5b9",
+      "evidence": "Adjudicated REPAIRED by Stage-13 round 13 against the artifact: **A2 — REPAIRED — `0829:5.5` and `1210:5.1` (the composites \"bite\").** Both witnesses exist and are kernel-pure. `relaxation_filtered_ceiling_bites` (`Control/CompositeReadoutCeilings.lean:687-707`) and `relaxation_detector_chain_ceiling_bites` (`:709-...`) ea Both witnesses exist and are kernel-pure. `relaxation_filtered_ceiling_bites` (`Control/CompositeReadoutCeilings.lean:687-707`) and `relaxation_detector_chain_ceiling_bites` (`:709-...`) each carry the full composite binder list and conclude `assignmentFidelity e0 e1 ≤ 22 / 25` under `hb : … matchedBudget … = 2`. From `lean/lean_deps.jso — Source: papers/AutomatedReviews/2026-08-01-0001-internal-adversarial/D12.md. Filed by the author quoting the reviewer, which rule 10 forbids it doing itself.",
+      "closed_date": "2026-08-01",
+      "closed_by": "stage13-round13-closure-adjudication"
+    },
+    {
+      "finding_id": "review:2026-07-31-1524-internal-adversarial:D12:2.1",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "02cfb5b9",
+      "evidence": "Adjudicated REPAIRED by Stage-13 round 13 against the artifact: **A3 — REPAIRED — `1524:2.1` and `1730:2.1` (the \"23 points\" / \"$53-31$\" derivation).** `paper_draft.tex:453` now reads \"differ by $21.5$ points ($52.7 - 31.2$; the rounded figures quoted above give $22$)\", and `BolometricFloors.lean:220` mirrors it verbatim. `paper_draft.tex:453` now reads \"differ by $21.5$ points ($52.7 - 31.2$; the rounded figures quoted above give $22$)\", and `BolometricFloors.lean:220` mirrors it verbatim. I recomputed at 30 dps rather than trusting either: `γ(2,4) = 0.473148148148`, PSD reduction `52.685185 %`, amplitude reduction `31.214235 %`, difference `21.47095 → 21 — Source: papers/AutomatedReviews/2026-08-01-0001-internal-adversarial/D12.md. Filed by the author quoting the reviewer, which rule 10 forbids it doing itself.",
+      "closed_date": "2026-08-01",
+      "closed_by": "stage13-round13-closure-adjudication"
+    },
+    {
+      "finding_id": "review:2026-07-31-1524-internal-adversarial:D12:2.4",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "02cfb5b9",
+      "evidence": "Adjudicated REPAIRED by Stage-13 round 13 against the artifact: **A4 — REPAIRED — `1524:2.4` (Mather's 30 % had no `PARAMETER_PROVENANCE` entry).** `PARAMETER_PROVENANCE['MATHER_1982_GRADIENT_REDUCTION']` exists with `value 0.3`, `tier LITERATURE`, `source 'Mather 1982, Applied Optics 21, 1125'`, `doi '10.1364/AO.21.001125 `PARAMETER_PROVENANCE['MATHER_1982_GRADIENT_REDUCTION']` exists with `value 0.3`, `tier LITERATURE`, `source 'Mather 1982, Applied Optics 21, 1125'`, `doi '10.1364/AO.21.001125'`, `llm_verified_date '2026-07-31'`, and a `detail` field that pins the missing convention explicitly. `PAPER_DEPENDENCIES['D12']['parameters'] == ['MATHER_1982_G — Source: papers/AutomatedReviews/2026-08-01-0001-internal-adversarial/D12.md. Filed by the author quoting the reviewer, which rule 10 forbids it doing itself.",
+      "closed_date": "2026-08-01",
+      "closed_by": "stage13-round13-closure-adjudication"
+    },
+    {
+      "finding_id": "review:2026-07-31-1524-internal-adversarial:D12:5.1",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "02cfb5b9",
+      "evidence": "Adjudicated REPAIRED by Stage-13 round 13 against the artifact: **A5 — REPAIRED — `1524:5.1`, `1730:5.1` (BLOCKER) and `1823:5.1` — the ENBW account. This is one of the two you asked me to check, and it holds.** Three separate defects, all gone: (i) the headline constant reads `$\\mathrm{ENBW}\\cdot T \\ge 1/2$` at `:274`, ma This is one of the two you asked me to check, and it holds.** Three separate defects, all gone: (i) the headline constant reads `$\\mathrm{ENBW}\\cdot T \\ge 1/2$` at `:274`, matching `FilterFloors.lean:197-201` (`1 / 2 ≤ enbw h T * T`) — there is no `1/4` statement of the theorem anywhere in the draft; (ii) the lock-in convention is writte — Source: papers/AutomatedReviews/2026-08-01-0001-internal-adversarial/D12.md. Filed by the author quoting the reviewer, which rule 10 forbids it doing itself.",
+      "closed_date": "2026-08-01",
+      "closed_by": "stage13-round13-closure-adjudication"
+    },
+    {
+      "finding_id": "review:2026-07-31-1823-internal-adversarial:D12:5.1",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "02cfb5b9",
+      "evidence": "Adjudicated REPAIRED by Stage-13 round 13 against the artifact: **A5 — REPAIRED — `1524:5.1`, `1730:5.1` (BLOCKER) and `1823:5.1` — the ENBW account. This is one of the two you asked me to check, and it holds.** Three separate defects, all gone: (i) the headline constant reads `$\\mathrm{ENBW}\\cdot T \\ge 1/2$` at `:274`, ma This is one of the two you asked me to check, and it holds.** Three separate defects, all gone: (i) the headline constant reads `$\\mathrm{ENBW}\\cdot T \\ge 1/2$` at `:274`, matching `FilterFloors.lean:197-201` (`1 / 2 ≤ enbw h T * T`) — there is no `1/4` statement of the theorem anywhere in the draft; (ii) the lock-in convention is writte — Source: papers/AutomatedReviews/2026-08-01-0001-internal-adversarial/D12.md. Filed by the author quoting the reviewer, which rule 10 forbids it doing itself.",
+      "closed_date": "2026-08-01",
+      "closed_by": "stage13-round13-closure-adjudication"
+    },
+    {
+      "finding_id": "review:2026-07-31-1524-internal-adversarial:D12:5.2",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "02cfb5b9",
+      "evidence": "Adjudicated REPAIRED by Stage-13 round 13 against the artifact: **A6 — REPAIRED — `1524:5.2` and `1730:5.2` (the \"inert\" relaxation branch and the `0.4651` crossover).** `paper_draft.tex:579-583` now says \"each proof lower-bounds the maximum by its detection branch and discards the relaxation term\", and gives the crossover `0.4651` crossover).** `paper_draft.tex:579-583` now says \"each proof lower-bounds the maximum by its detection branch and discards the relaxation term\", and gives the crossover as `0.4648` with the closed form `x = 2Q(1)/(1-2Q(1)) = 0.46479\\ldots`. `CompositeReadoutCeilings.lean:672-679` mirrors it and additionally records the correctio — Source: papers/AutomatedReviews/2026-08-01-0001-internal-adversarial/D12.md. Filed by the author quoting the reviewer, which rule 10 forbids it doing itself.",
+      "closed_date": "2026-08-01",
+      "closed_by": "stage13-round13-closure-adjudication"
+    },
+    {
+      "finding_id": "review:2026-07-31-1524-internal-adversarial:D12:7.2",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "02cfb5b9",
+      "evidence": "Adjudicated REPAIRED by Stage-13 round 13 against the artifact: **A7 — REPAIRED — `1524:7.2` (`bundle_metadata` asserting \"all 565 declarations\").** The `notes` field now says the count \"is NOT frozen here — it drifts with every wave; docs/counts.tex is the generated source\", and names the finding that forced the change. N The `notes` field now says the count \"is NOT frozen here — it drifts with every wave; docs/counts.tex is the generated source\", and names the finding that forced the change. No declaration-count literal is asserted. — Source: papers/AutomatedReviews/2026-08-01-0001-internal-adversarial/D12.md. Filed by the author quoting the reviewer, which rule 10 forbids it doing itself.",
+      "closed_date": "2026-08-01",
+      "closed_by": "stage13-round13-closure-adjudication"
+    },
+    {
+      "finding_id": "review:2026-07-31-1524-internal-adversarial:D12:8.3",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "02cfb5b9",
+      "evidence": "Adjudicated REPAIRED by Stage-13 round 13 against the artifact: **A8 — REPAIRED — `1524:8.3` (readiness surfaces disagreeing with the graph).** `papers/D12/bundle_metadata.json` reads `blockers_open: 76`, `advisories_open: 101`, `open_findings: 177`, `readiness: \"RED\"`, `blocked_p1_gates: [\"FixPropagation\", \"ParameterProve `papers/D12/bundle_metadata.json` reads `blockers_open: 76`, `advisories_open: 101`, `open_findings: 177`, `readiness: \"RED\"`, `blocked_p1_gates: [\"FixPropagation\", \"ParameterProvenance\"]`. The live Gate 11 evaluation reads \"194 findings flag this paper (17 fixed, 0 accepted, 177 open, 76 of them submission-blocking)\" and the live blocke — Source: papers/AutomatedReviews/2026-08-01-0001-internal-adversarial/D12.md. Filed by the author quoting the reviewer, which rule 10 forbids it doing itself.",
+      "closed_date": "2026-08-01",
+      "closed_by": "stage13-round13-closure-adjudication"
+    },
+    {
+      "finding_id": "review:2026-07-31-1210-reconstructed-round6:D12:8.2",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "02cfb5b9",
+      "evidence": "Adjudicated REPAIRED by Stage-13 round 13 against the artifact: **A9 — REPAIRED — `1210:8.2` (orphan-finding scan failed open).** `validate.py` `findings_reach_the_graph` except handler now emits `Detail(\"findings_reach_the_graph\", False, \"orphan scan could not run (…) — treat as unverified\")`. **A10 — REPAIRED — `1210:8. `validate.py` `findings_reach_the_graph` except handler now emits `Detail(\"findings_reach_the_graph\", False, \"orphan scan could not run (…) — treat as unverified\")`. — Source: papers/AutomatedReviews/2026-08-01-0001-internal-adversarial/D12.md. Filed by the author quoting the reviewer, which rule 10 forbids it doing itself.",
+      "closed_date": "2026-08-01",
+      "closed_by": "stage13-round13-closure-adjudication"
+    },
+    {
+      "finding_id": "review:2026-07-31-1210-reconstructed-round6:D12:8.1",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "02cfb5b9",
+      "evidence": "Adjudicated REPAIRED by Stage-13 round 13 against the artifact: **A10 — REPAIRED — `1210:8.1` (`readiness_submission_gate` reported \"all P1 passed\" with blockers open).** Live output: `D12 — 2 blocked: ParameterProvenance, FixPropagation`. The evaluation is severity-aware and D12 is no longer in the \"all P1 passed\" bucket. blockers open).** Live output: `D12 — 2 blocked: ParameterProvenance, FixPropagation`. The evaluation is severity-aware and D12 is no longer in the \"all P1 passed\" bucket. (The check still returns `passed=True` overall — that is the documented WARN-only rollout posture in its own docstring, not this finding's defect.) — Source: papers/AutomatedReviews/2026-08-01-0001-internal-adversarial/D12.md. Filed by the author quoting the reviewer, which rule 10 forbids it doing itself.",
+      "closed_date": "2026-08-01",
+      "closed_by": "stage13-round13-closure-adjudication"
+    },
+    {
+      "finding_id": "review:2026-07-31-1524-internal-adversarial:D12:8.1",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "02cfb5b9",
+      "evidence": "Adjudicated REPAIRED by Stage-13 round 13 against the artifact: **A11 — REPAIRED — `1524:8.1`(a) and `1730:8.3` (the lost round-6 document).** `papers/AutomatedReviews/2026-07-31-1210-reconstructed-round6/D12.md` exists (9 781 bytes) and its provenance block carries exactly the coverage statement `1730:8.3` demanded: \"This `papers/AutomatedReviews/2026-07-31-1210-reconstructed-round6/D12.md` exists (9 781 bytes) and its provenance block carries exactly the coverage statement `1730:8.3` demanded: \"This file recovers 7 findings; round 6 raised 14\", with `ad844e42`'s \"5 BLOCKER / 9 REQUIRED\" quoted as the source, plus the second correction that rounds 4 and 5 — Source: papers/AutomatedReviews/2026-08-01-0001-internal-adversarial/D12.md. Filed by the author quoting the reviewer, which rule 10 forbids it doing itself.",
+      "closed_date": "2026-08-01",
+      "closed_by": "stage13-round13-closure-adjudication"
+    },
+    {
+      "finding_id": "review:2026-07-31-1524-internal-adversarial:D12:8.2",
+      "status": "open",
+      "superseded_by": null,
+      "commit": "02cfb5b9",
+      "evidence": "Adjudicated REPAIRED by Stage-13 round 13 against the artifact: **A12 — REPAIRED — `1524:8.2` and `1730:8.2` (readiness checks failing open).** `check_readiness_verdicts_agree` returns `passed=False` on both its `ImportError` path and its heatmap `Exception` path, and on zero gate nodes. `check_readiness_submission_gate` r `check_readiness_verdicts_agree` returns `passed=False` on both its `Import ⚠️ NOT CLOSED — reopened by `recurrence_reopens_closures` in the same pass that filed it. A later same-bundle review raises this finding and it is open there, so the round-13 adjudication of the parent does not carry. This is the third time since the threshold was correctly derived that the guard has rejected a closure of mine at the moment of filing, which is the behaviour it was built for and never once exhibited across the four earlier versions I claimed were working.",
+      "closed_date": "2026-08-01",
+      "closed_by": "stage13-round13-closure-adjudication"
+    },
+    {
+      "finding_id": "review:2026-07-31-1823-internal-adversarial:D12:2.2",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "02cfb5b9",
+      "evidence": "Adjudicated REPAIRED by Stage-13 round 13 against the artifact: **A13 — REPAIRED — `1823:2.2` (`extract_verifies_edges` could not see the tests).** Gate 4 for D12 now reads `passed — 23 formulas grounding paper claims (23 with golden/identity/roundtrip, 0 bounds-only, 0 no tests)`. The extractor resolves the aliased names; Gate 4 for D12 now reads `passed — 23 formulas grounding paper claims (23 with golden/identity/roundtrip, 0 bounds-only, 0 no tests)`. The extractor resolves the aliased names; no formula is stranded at `unknown` coverage. — Source: papers/AutomatedReviews/2026-08-01-0001-internal-adversarial/D12.md. Filed by the author quoting the reviewer, which rule 10 forbids it doing itself.",
+      "closed_date": "2026-08-01",
+      "closed_by": "stage13-round13-closure-adjudication"
+    },
+    {
+      "finding_id": "review:2026-07-31-1823-internal-adversarial:D12:8.2",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "02cfb5b9",
+      "evidence": "Adjudicated REPAIRED by Stage-13 round 13 against the artifact: **A14 — REPAIRED — `1823:8.2`(a), `2022:8.2` and `2103:8.2` (`review_docs_mint_findings` scope).** The scope predicate is now content-based (`_SEVERITY_HEADING` minus `_RESOLVED_HEADING`) rather than directory- or numbering-based, and the live check reports `1 scope).** The scope predicate is now content-based (`_SEVERITY_HEADING` minus `_RESOLVED_HEADING`) rather than directory- or numbering-based, and the live check reports `130 document(s) carrying unresolved severity-labelled headings checked; 0 mint zero`. **I mutation-tested it rather than trusting the number**: a planted document in an  — Source: papers/AutomatedReviews/2026-08-01-0001-internal-adversarial/D12.md. Filed by the author quoting the reviewer, which rule 10 forbids it doing itself.",
+      "closed_date": "2026-08-01",
+      "closed_by": "stage13-round13-closure-adjudication"
+    },
+    {
+      "finding_id": "review:2026-07-31-2022-internal-adversarial:D12:8.2",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "02cfb5b9",
+      "evidence": "Adjudicated REPAIRED by Stage-13 round 13 against the artifact: **A14 — REPAIRED — `1823:8.2`(a), `2022:8.2` and `2103:8.2` (`review_docs_mint_findings` scope).** The scope predicate is now content-based (`_SEVERITY_HEADING` minus `_RESOLVED_HEADING`) rather than directory- or numbering-based, and the live check reports `1 scope).** The scope predicate is now content-based (`_SEVERITY_HEADING` minus `_RESOLVED_HEADING`) rather than directory- or numbering-based, and the live check reports `130 document(s) carrying unresolved severity-labelled headings checked; 0 mint zero`. **I mutation-tested it rather than trusting the number**: a planted document in an  — Source: papers/AutomatedReviews/2026-08-01-0001-internal-adversarial/D12.md. Filed by the author quoting the reviewer, which rule 10 forbids it doing itself.",
+      "closed_date": "2026-08-01",
+      "closed_by": "stage13-round13-closure-adjudication"
+    },
+    {
+      "finding_id": "review:2026-07-31-2103-internal-adversarial:D12:8.2",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "02cfb5b9",
+      "evidence": "Adjudicated REPAIRED by Stage-13 round 13 against the artifact: **A14 — REPAIRED — `1823:8.2`(a), `2022:8.2` and `2103:8.2` (`review_docs_mint_findings` scope).** The scope predicate is now content-based (`_SEVERITY_HEADING` minus `_RESOLVED_HEADING`) rather than directory- or numbering-based, and the live check reports `1 scope).** The scope predicate is now content-based (`_SEVERITY_HEADING` minus `_RESOLVED_HEADING`) rather than directory- or numbering-based, and the live check reports `130 document(s) carrying unresolved severity-labelled headings checked; 0 mint zero`. **I mutation-tested it rather than trusting the number**: a planted document in an  — Source: papers/AutomatedReviews/2026-08-01-0001-internal-adversarial/D12.md. Filed by the author quoting the reviewer, which rule 10 forbids it doing itself.",
+      "closed_date": "2026-08-01",
+      "closed_by": "stage13-round13-closure-adjudication"
+    },
+    {
+      "finding_id": "review:2026-07-31-2220-internal-adversarial:D12:8.1",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "02cfb5b9",
+      "evidence": "Adjudicated REPAIRED by Stage-13 round 13 against the artifact: **A15 — REPAIRED — `2220:8.1` (BLOCKER: heading-parse closure still executing). Verified three ways.** (i) Source: `scripts/build_graph.py:1704` is now `status = 'open'` with nothing after it; the seven lines the round-12 commit message claimed to delete are a Verified three ways.** (i) Source: `scripts/build_graph.py:1704` is now `status = 'open'` with nothing after it; the seven lines the round-12 commit message claimed to delete are actually deleted (`git diff fc624fc5..HEAD -- scripts/build_graph.py`). (ii) Live corpus: joining `extract_review_finding_nodes()` against `_load_supersession_l — Source: papers/AutomatedReviews/2026-08-01-0001-internal-adversarial/D12.md. Filed by the author quoting the reviewer, which rule 10 forbids it doing itself.",
+      "closed_date": "2026-08-01",
+      "closed_by": "stage13-round13-closure-adjudication"
+    },
+    {
+      "finding_id": "review:2026-07-31-2220-internal-adversarial:D12:8.3",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "02cfb5b9",
+      "evidence": "Adjudicated REPAIRED by Stage-13 round 13 against the artifact: **A16 — REPAIRED — `2220:8.3` (a bolded marker anywhere in a file overrode every declared severity).** `build_graph.py:1687-1692` now gates the `_BLOCKER_RE` / `file_has_critical_marker` escalation on `if _decl is None:`. Mutation, isolated tree: a document wh severity).** `build_graph.py:1687-1692` now gates the `_BLOCKER_RE` / `file_has_critical_marker` escalation on `if _decl is None:`. Mutation, isolated tree: a document whose Summary contains the bolded marker in prose, carrying a `🟡`-glyph finding that declares `- **Severity:** advisory`, mints **`advisory`** — the declaration survives.  — Source: papers/AutomatedReviews/2026-08-01-0001-internal-adversarial/D12.md. Filed by the author quoting the reviewer, which rule 10 forbids it doing itself.",
+      "closed_date": "2026-08-01",
+      "closed_by": "stage13-round13-closure-adjudication"
+    },
+    {
+      "finding_id": "review:2026-07-31-2022-internal-adversarial:D12:8.6",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "02cfb5b9",
+      "evidence": "Adjudicated REPAIRED by Stage-13 round 13 against the artifact: **A18 — WITHDRAWN — `2022:8.6` (the self-withdrawal itself).** Same disposition: `accepted`, rationale = the withdrawal, anchor = the `LATE_PHASE6:184` correction. **A19 — REPAIRED — `1823:5.2` (the false `prxquantum → prx` rationale).** All three artifacts n `accepted`, rationale = the withdrawal, anchor = the `LATE_PHASE6:184` correction. — Source: papers/AutomatedReviews/2026-08-01-0001-internal-adversarial/D12.md. Filed by the author quoting the reviewer, which rule 10 forbids it doing itself.",
+      "closed_date": "2026-08-01",
+      "closed_by": "stage13-round13-closure-adjudication"
+    },
+    {
+      "finding_id": "review:2026-07-31-1823-internal-adversarial:D12:5.2",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "02cfb5b9",
+      "evidence": "Adjudicated REPAIRED by Stage-13 round 13 against the artifact: **A18 — WITHDRAWN — `2022:8.6` (the self-withdrawal itself).** Same disposition: `accepted`, rationale = the withdrawal, anchor = the `LATE_PHASE6:184` correction. **A19 — REPAIRED — `1823:5.2` (the false `prxquantum → prx` rationale).** All three artifacts n `accepted`, rationale = the withdrawal, anchor = the `LATE_PHASE6:184` correction. — Source: papers/AutomatedReviews/2026-08-01-0001-internal-adversarial/D12.md. Filed by the author quoting the reviewer, which rule 10 forbids it doing itself.",
+      "closed_date": "2026-08-01",
+      "closed_by": "stage13-round13-closure-adjudication"
+    },
+    {
+      "finding_id": "review:2026-07-31-2022-internal-adversarial:D12:6.1",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "02cfb5b9",
+      "evidence": "Adjudicated REPAIRED by Stage-13 round 13 against the artifact: **A20 — REPAIRED — `2022:6.1` (BLOCKER: undisclosed capstone identifications). This is the second item you asked me to check, and it holds.** I read the binder list from `BolometricFloors.lean:793-806` myself: thirteen binders, with `hμ : μ₁ - μ₀ = ∫ x in (0:ℝ second item you asked me to check, and it holds.** I read the binder list from `BolometricFloors.lean:793-806` myself: thirteen binders, with `hμ : μ₁ - μ₀ = ∫ x in (0:ℝ)..Tw, hf x * s x` and `hσV : σ = Real.sqrt (Vtot hf)` — the two equational identifications the finding named — present at `:804`, and `hs : IntervalIntegrable (fun x =>  — Source: papers/AutomatedReviews/2026-08-01-0001-internal-adversarial/D12.md. Filed by the author quoting the reviewer, which rule 10 forbids it doing itself.",
+      "closed_date": "2026-08-01",
+      "closed_by": "stage13-round13-closure-adjudication"
+    },
+    {
+      "finding_id": "review:2026-07-31-1059-internal-adversarial:D11:1.3",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "02cfb5b9",
+      "evidence": "Adjudicated REPAIRED by Stage-13 round 13 against the artifact: **A3 — `1059:D11:1.3` — false `promote_primary_sources.py` rationale — REPAIRED** All three named sites carry an explicit retraction. `scripts/validate.py:5102-5107`: *\"An earlier version of this comment claimed promote_primary_sources.py writes cache content All three named sites carry an explicit retraction. `scripts/validate.py:5102-5107`: *\"An earlier version of this comment claimed promote_primary_sources.py writes cache contents back into the registry… That was asserted without reading the script and is FALSE\"*. `Lit-Search/Phase-6c/primary-sources/BoldoLaxMilgram2016.abstract.txt:33-39` — Source: papers/AutomatedReviews/2026-08-01-0009-internal-adversarial/D11.md. Filed by the author quoting the reviewer, which rule 10 forbids it doing itself.",
+      "closed_date": "2026-08-01",
+      "closed_by": "stage13-round13-closure-adjudication"
+    },
+    {
+      "finding_id": "review:2026-07-31-1059-internal-adversarial:D11:5.3",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "02cfb5b9",
+      "evidence": "Adjudicated REPAIRED by Stage-13 round 13 against the artifact: **A4 — `1059:D11:5.3` — \"the present paper formalizes six of these seven\" — REPAIRED** `papers/D11/paper_draft.tex:518-531` now enumerates **eight** families and says \"six of these eight\", then names the two not delivered explicitly: \"the vector-bundle Chern `papers/D11/paper_draft.tex:518-531` now enumerates **eight** families and says \"six of these eight\", then names the two not delivered explicitly: \"the vector-bundle Chern class … and the Wiener/Hashin--Shtrikman families, which Section~\\ref{sec:effmedium} states explicitly are not formalized in this development.\" Arithmetic checks: 8 clau — Source: papers/AutomatedReviews/2026-08-01-0009-internal-adversarial/D11.md. Filed by the author quoting the reviewer, which rule 10 forbids it doing itself.",
+      "closed_date": "2026-08-01",
+      "closed_by": "stage13-round13-closure-adjudication"
+    },
+    {
+      "finding_id": "review:2026-07-31-1059-internal-adversarial:D11:7.1",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "02cfb5b9",
+      "evidence": "Adjudicated REPAIRED by Stage-13 round 13 against the artifact: **A5 — `1059:D11:7.1` — \"83 definitions and structures\" not reproducible — REPAIRED** `paper_draft.tex:107-119` now states the second rule verbatim (\"`def`, `noncomputable def`, `abbrev` or `structure` … *and the line is not inside a block comment*\") and disc `paper_draft.tex:107-119` now states the second rule verbatim (\"`def`, `noncomputable def`, `abbrev` or `structure` … *and the line is not inside a block comment*\") and discloses the two `abbrev`s by name. I re-derived every figure with my own comment-stripper (whole-file character scan blanking block-comment bodies, different from `updat — Source: papers/AutomatedReviews/2026-08-01-0009-internal-adversarial/D11.md. Filed by the author quoting the reviewer, which rule 10 forbids it doing itself.",
+      "closed_date": "2026-08-01",
+      "closed_by": "stage13-round13-closure-adjudication"
+    },
+    {
+      "finding_id": "review:2026-07-31-1652-internal-adversarial:D11:3.1",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "02cfb5b9",
+      "evidence": "Adjudicated REPAIRED by Stage-13 round 13 against the artifact: **A9 — `1652:D11:3.1` — `EffectiveModuli.lean:44,47` \"effective modulus\" docstrings — REPAIRED** `lean/SKEFTHawking/EffectiveModuli.lean:44-51` now reads \"The Voigt (arithmetic, iso-strain) **average** of the constituent moduli\" with an explicit \"⚠️ An *avera `lean/SKEFTHawking/EffectiveModuli.lean:44-51` now reads \"The Voigt (arithmetic, iso-strain) **average** of the constituent moduli\" with an explicit \"⚠️ An *average*, not an effective modulus\" note and the five-round history; `:57` mirrors it for `reussModulus`. The acceptance criterion round 8 stated is met: `grep -rn \"effective modulus\" — Source: papers/AutomatedReviews/2026-08-01-0009-internal-adversarial/D11.md. Filed by the author quoting the reviewer, which rule 10 forbids it doing itself.",
+      "closed_date": "2026-08-01",
+      "closed_by": "stage13-round13-closure-adjudication"
+    },
+    {
+      "finding_id": "review:2026-07-31-1652-internal-adversarial:D11:5.1",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "02cfb5b9",
+      "evidence": "Adjudicated REPAIRED by Stage-13 round 13 against the artifact: **A11 — `1652:D11:5.1` and `1801:D11:5.1` — bulk-array rule (numpy/list asymmetry; length-only) — REPAIRED (both)** The rounded-value digest is real and discriminates claim-changes from library jitter. End-to-end against the live check on the shipped notebook The rounded-value digest is real and discriminates claim-changes from library jitter. End-to-end against the live check on the shipped notebook, backed up and restored: ``` MUT-A 801-point bulk array scaled x1.3 (the round-9 'moves a certified gap edge' shape) ✗ FAIL D11 … First divergence: stored='data[0].x[bdata:f8]=len=801,sha=6d85ea25 — Source: papers/AutomatedReviews/2026-08-01-0009-internal-adversarial/D11.md. Filed by the author quoting the reviewer, which rule 10 forbids it doing itself.",
+      "closed_date": "2026-08-01",
+      "closed_by": "stage13-round13-closure-adjudication"
+    },
+    {
+      "finding_id": "review:2026-07-31-1801-internal-adversarial:D11:5.1",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "02cfb5b9",
+      "evidence": "Adjudicated REPAIRED by Stage-13 round 13 against the artifact: **A11 — `1652:D11:5.1` and `1801:D11:5.1` — bulk-array rule (numpy/list asymmetry; length-only) — REPAIRED (both)** The rounded-value digest is real and discriminates claim-changes from library jitter. End-to-end against the live check on the shipped notebook The rounded-value digest is real and discriminates claim-changes from library jitter. End-to-end against the live check on the shipped notebook, backed up and restored: ``` MUT-A 801-point bulk array scaled x1.3 (the round-9 'moves a certified gap edge' shape) ✗ FAIL D11 … First divergence: stored='data[0].x[bdata:f8]=len=801,sha=6d85ea25 — Source: papers/AutomatedReviews/2026-08-01-0009-internal-adversarial/D11.md. Filed by the author quoting the reviewer, which rule 10 forbids it doing itself.",
+      "closed_date": "2026-08-01",
+      "closed_by": "stage13-round13-closure-adjudication"
+    },
+    {
+      "finding_id": "review:2026-07-31-1801-internal-adversarial:D11:1.1",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "02cfb5b9",
+      "evidence": "Adjudicated REPAIRED by Stage-13 round 13 against the artifact: **A12 — `1801:D11:1.1` (🔴 critical) — CP^∞ attributed to Ljungström & Mörtberg — REPAIRED IN SUBSTANCE (unrecorded)** Verified from the primary source, not from a prior round. Fresh WebFetch of `https://arxiv.org/abs/2401.16336` returns, verbatim, cohomology Verified from the primary source, not from a prior round. Fresh WebFetch of `https://arxiv.org/abs/2401.16336` returns, verbatim, cohomology rings for *\"various spaces, including the spheres, torus, Klein bottle, real/complex projective **planes**, and infinite **real** projective space\"* — no ℂP^∞. `paper_draft.tex:537-550` now names exac — Source: papers/AutomatedReviews/2026-08-01-0009-internal-adversarial/D11.md. Filed by the author quoting the reviewer, which rule 10 forbids it doing itself.",
+      "closed_date": "2026-08-01",
+      "closed_by": "stage13-round13-closure-adjudication"
+    },
+    {
+      "finding_id": "review:2026-07-31-1951-internal-adversarial:D11:4.1",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "02cfb5b9",
+      "evidence": "Adjudicated REPAIRED by Stage-13 round 13 against the artifact: **A18 — `1951:D11:4.1` — seven of eight ledger commits do not contain the change — REPAIRED** I re-verified all eight independently from `git show <sha> -- <artifact>`, never from a commit message: ``` 1530:1.1 -> bb0c7e34 validate.py diff removes `primary I re-verified all eight independently from `git show <sha> -- <artifact>`, never from a commit message: ``` 1530:1.1 -> bb0c7e34 validate.py diff removes `primary_source_unreachable` (4 occurrences, '-' lines) ✓ 1530:1.2 -> 837f335e src/core/citations.py, 1 insertion / 1 deletion, 2 HashinShtrikman1963 hits ✓ 1530:3.2 -> ac66444f EffectiveMo — Source: papers/AutomatedReviews/2026-08-01-0009-internal-adversarial/D11.md. Filed by the author quoting the reviewer, which rule 10 forbids it doing itself.",
+      "closed_date": "2026-08-01",
+      "closed_by": "stage13-round13-closure-adjudication"
+    },
+    {
+      "finding_id": "review:2026-07-31-1951-internal-adversarial:D11:4.3",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "02cfb5b9",
+      "evidence": "Adjudicated REPAIRED by Stage-13 round 13 against the artifact: **A20 — `1951:D11:4.3` — the closure hardening is unreachable, the ledger's `status` overrides it — REPAIRED** `build_graph.py:1794-1806` now applies the bar to `meta['status']` — i.e. *after* the ledger override at `:1761` — rather than to the discarded loca `build_graph.py:1794-1806` now applies the bar to `meta['status']` — i.e. *after* the ledger override at `:1761` — rather than to the discarded local. `_CLOSING_STATUSES` covers `accepted` as well as `fixed` (`:1793`), and an unrecognised token now reads as `open` (`:1758-1761`). The two-key bypass, the `accepted` bypass and the `\"closed\" — Source: papers/AutomatedReviews/2026-08-01-0009-internal-adversarial/D11.md. Filed by the author quoting the reviewer, which rule 10 forbids it doing itself.",
+      "closed_date": "2026-08-01",
+      "closed_by": "stage13-round13-closure-adjudication"
+    },
+    {
+      "finding_id": "review:2026-07-31-1951-internal-adversarial:D11:5.1",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "02cfb5b9",
+      "evidence": "Adjudicated REPAIRED by Stage-13 round 13 against the artifact: **A22 — `1951:D11:5.1` — the carve-out over-reaches on Euler classes — REPAIRED** `paper_draft.tex:542-548` now reads: \"its Gysin map is stated as $(-)\\smile e$ with $e$ constructed per fibration --- **the Euler class in substance**, though the words ``Euler' `paper_draft.tex:542-548` now reads: \"its Gysin map is stated as $(-)\\smile e$ with $e$ constructed per fibration --- **the Euler class in substance**, though the words ``Euler'' and ``Chern'' do not appear in it. Our claim is therefore narrower than ``the machinery is absent'': it is that no assistant *defines the Chern classes of a vect — Source: papers/AutomatedReviews/2026-08-01-0009-internal-adversarial/D11.md. Filed by the author quoting the reviewer, which rule 10 forbids it doing itself.",
+      "closed_date": "2026-08-01",
+      "closed_by": "stage13-round13-closure-adjudication"
+    },
+    {
+      "finding_id": "review:2026-07-31-2220-internal-adversarial:D11:4.3",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "02cfb5b9",
+      "evidence": "Adjudicated REPAIRED by Stage-13 round 13 against the artifact: **A25 — `2220:D11:4.3` — one of the eight \"corrected\" ledger SHAs is still wrong — REPAIRED** `review:2026-07-31-1530-internal-adversarial:D11:5.3` now carries `commit: 837f335e`. Verified from the diffs, not the messages: `git show 837f335e -- papers/D11/pap `review:2026-07-31-1530-internal-adversarial:D11:5.3` now carries `commit: 837f335e`. Verified from the diffs, not the messages: `git show 837f335e -- papers/D11/paper_draft.tex` contains the AFP-caveat hunk (`+exceptional-point / $\\mathcal{PT}$ / non-Hermitian items of the list above should be read as probable`), and `git show bb0c7e34 - — Source: papers/AutomatedReviews/2026-08-01-0009-internal-adversarial/D11.md. Filed by the author quoting the reviewer, which rule 10 forbids it doing itself.",
+      "closed_date": "2026-08-01",
+      "closed_by": "stage13-round13-closure-adjudication"
+    },
+    {
+      "finding_id": "review:2026-07-31-2220-internal-adversarial:D11:6.1",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "02cfb5b9",
+      "evidence": "Adjudicated REPAIRED by Stage-13 round 13 against the artifact: **A30 — `2220:D11:6.1` — §5's elastic ordering chain printed with no hypotheses — REPAIRED** `paper_draft.tex:316-323` now prints the chain \"\\emph{for $0 < M_1 \\le M_2$ at fill fraction $0 \\le f \\le 1$}\", states \"Those hypotheses are load-bearing rather than `paper_draft.tex:316-323` now prints the chain \"\\emph{for $0 < M_1 \\le M_2$ at fill fraction $0 \\le f \\le 1$}\", states \"Those hypotheses are load-bearing rather than a relabeling\", and gives the counterexample inline (\"at $(M_1,M_2,f) = (4,1,\\tfrac12)$ the harmonic average is $M_{\\rm R} = 1.6$, so the first link would read $4 \\le 1.6$\"). E — Source: papers/AutomatedReviews/2026-08-01-0009-internal-adversarial/D11.md. Filed by the author quoting the reviewer, which rule 10 forbids it doing itself.",
+      "closed_date": "2026-08-01",
+      "closed_by": "stage13-round13-closure-adjudication"
     }
   ]
 }
