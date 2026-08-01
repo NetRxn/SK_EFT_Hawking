@@ -35,29 +35,35 @@
 \author{John Roehm}
 
 \begin{abstract}
-We report a machine-checked formalization, in the \Lean{} proof assistant against Mathlib, of five
-layers of band theory and effective-medium physics: (i) a genuine
-\emph{integer-valued} lattice Chern number on a discretized Brillouin torus, built via the
-Fukui--Hatsugai--Suzuki plaquette construction, with unconditional integrality and gauge invariance;
-(ii) a two-band diatomic acoustic Bloch operator and a band-gap existence theorem whose gap edges are
-\emph{attained}, certified down to a rational enclosure with no floating-point arithmetic;
-(iii) non-Hermitian Bloch Hamiltonians with a sharp biconditional $\mathcal{PT}$ transition and a
-genuinely defective order-two exceptional point, certified without constructing a Jordan normal form;
-(iv) algebraic effective-medium theory --- Maxwell--Garnett permittivity inside its constituent
-bounds, and the \emph{exact} Voigt--Reuss gap; and (v) graphene electronic structure, culminating in
-a concrete Haldane-model Chern witness certifying $C = -1$ on a $4\times4$ torus. Every headline
-theorem is kernel-pure (axiom profile exactly $\{\texttt{propext},\,\texttt{Classical.choice},
-\,\texttt{Quot.sound}\}$), and the bundle carries \emph{no} project-local axioms and \emph{no}
-tracked-hypothesis propositions: every result is unconditional given its explicit mathematical
-hypotheses. Two of our results are refutations. We show that the zero set of the honeycomb structure
-factor is \emph{not} invariant under a general $GL_2(\mathbb{Z})$ chart change, and that a
-multi-band Hamiltonian is \emph{not} determined by its spectrum --- the latter caught a wrong bilayer
-model that had passed every determinant-level gate we had, and forced an eigenvector-level invariant
-into our standing methodology. The through-line is that discrete, kernel-checkable invariants and
-rational enclosures reach genuine condensed-matter conclusions \emph{without} the continuum
-differential-geometry infrastructure the field ordinarily assumes is prerequisite --- infrastructure
-which, as we document, Mathlib does not have at the pinned revision, and which we are aware of in no
-proof assistant.
+Topological band theory is usually formalized on top of continuum differential geometry ---
+connections, curvature, and the bundle machinery that carries them. We show that machine-checked
+condensed-matter conclusions do not need it. Working in \Lean{} against Mathlib, we build band
+theory and effective-medium physics out of discrete, kernel-checkable invariants and exact
+rational enclosures, with no floating-point arithmetic anywhere and no differential-geometric
+prerequisites --- which Mathlib does not have at the pinned revision, and which we have not
+found in any proof assistant.
+
+The central object is an integer-valued lattice Chern number on a discretized Brillouin torus,
+via the Fukui--Hatsugai--Suzuki plaquette construction, with integrality and gauge invariance
+proved unconditionally rather than assumed. It is not vacuous: we certify $C = -1$ for a
+concrete Haldane model on a $4\times4$ torus.
+
+Three further layers rest on the same discipline. For a two-band diatomic acoustic Bloch
+operator we prove a band-gap existence theorem whose gap edges are attained, certified to a
+rational enclosure. For non-Hermitian Bloch Hamiltonians we prove a sharp biconditional
+$\mathcal{PT}$ transition, and exhibit a genuinely defective order-two exceptional point
+without constructing a Jordan normal form. In effective-medium theory we place the
+Maxwell--Garnett permittivity strictly inside its constituent bounds, and give a closed form
+for the gap between the Voigt and Reuss averages.
+
+Two results are refutations, and one of them earned its place. We show that a multi-band
+Hamiltonian is not determined by its spectrum; that refutation caught a wrong bilayer model
+which had passed every determinant-level check we had, and forced an eigenvector-level
+invariant into our standing methodology. We also show that the zero set of the honeycomb
+structure factor is not invariant under a general $GL_2(\mathbb{Z})$ chart change.
+
+Every result is unconditional given its stated hypotheses, with no project-local axioms and no
+tracked-hypothesis propositions.
 \end{abstract}
 
 \maketitle

@@ -44,31 +44,32 @@ From Photon Statistics to Composite Fidelity Ceilings}
 \author{John Roehm}
 
 \begin{abstract}
-We report a machine-checked formalization, in the \Lean{} proof assistant against Mathlib
-(PhysLib appears in the import closure but no result reported here consumes it), of the
-floor-and-ceiling theory of physical readout chains --- the layer
-beneath the channel- and device-level envelopes of quantum-network certification. Four layers are
-covered. (i) \emph{Discrimination floors}: a distribution-free Le Cam/Bhattacharyya average-error
-floor for Poisson discrimination, valid for every randomized count rule with no false-alarm
-constraint and no likelihood-ratio assumption; the zero-false-alarm dark-baseline optimum; and a
-sharp Gaussian separation-budget floor, uniform over threshold placement, with a two-sided
-Chernoff/Mills/Birnbaum--Feller tail sandwich. (ii) \emph{Filtered-readout floors}: the
-realizability bound $\mathrm{ENBW}\cdot T \ge 1/2$, proved sharp as a \emph{least} element and
-characterized with equality \emph{iff} the filter agrees a.e.\ with its own DC average times the
-boxcar --- a \emph{nonzero}, not necessarily positive, multiple; noise-equivalent-power
-composition algebra; and matched-filter optimality as a \emph{greatest} element.
-(iii) \emph{Electrothermal detector physics}: the linearized voltage-biased bolometer, with
-stability as an exact dichotomy in the loop gain, and the Johnson noise-equivalent-power correction.
-(iv) \emph{Two-level control}: the rotating-wave reduction as an explicit-remainder \emph{inequality}
-at Bloch--Siegert scale --- never an equality --- and end-to-end assignment-fidelity ceilings. Every
-theorem is kernel-pure with no project-local axioms, verified from axiom closures rather than by
-spot check. A recurring deliverable is refutation: we prove that the folklore photon-counting miss
-floor $e^{-N_{\rm diff}}$ fails in \emph{two} directions, being false-strict against a realizable
-counter and exponentially fail-open as an average-error screen; that a magnitude-only electrothermal
-stability criterion is unsound; and that the sign-free characterization of matched-filter saturation
-is false. We are explicit about scope: our Chernoff bound is a factor-two sharpening of one already
-in Mathlib rather than a first, the affinity's data-processing inequality is plausibly subsumed by
-an existing $f$-divergence development, and two prior-art checks remain open.
+Every physical readout chain is bounded twice over: by floors no decision rule can beat,
+and by ceilings no filter can exceed. We prove both, machine-checked in \Lean{} against
+Mathlib, for photon-counting and bolometric detection --- and in the course of it show
+that three criteria in current use are wrong.
+
+The folklore photon-counting miss floor $e^{-N_{\rm diff}}$ fails in two opposite
+directions: it is false-strict against a realizable counter, and exponentially fail-open
+when used as an average-error screen. A magnitude-only electrothermal stability criterion
+is unsound; stability is instead an exact dichotomy in the loop gain. And the sign-free
+characterization of matched-filter saturation is false --- equality holds iff the filter
+agrees almost everywhere with its own DC average times the boxcar, a multiple that must be
+nonzero but need not be positive.
+
+The floors that survive are distribution-free. For Poisson discrimination we prove a
+Le Cam/Bhattacharyya average-error floor valid for every randomized count rule, with no
+false-alarm constraint and no likelihood-ratio assumption, together with the zero-false-alarm
+dark-baseline optimum. For Gaussian readout we prove a separation-budget floor uniform over
+threshold placement, sandwiched by Chernoff, Mills and Birnbaum--Feller tails. On the filter
+side, realizability forces $\mathrm{ENBW}\cdot T \ge 1/2$, sharp as a least element, and
+matched filtering is optimal as a greatest element. For two-level control the rotating-wave
+reduction is an inequality with an explicit remainder at Bloch--Siegert scale, never an
+equality, which propagates to end-to-end assignment-fidelity ceilings.
+
+All results are unconditional given their stated hypotheses and carry no project-local
+axioms. Section~\ref{sec:scope} states what we do not claim, including two results whose
+relationship to existing Mathlib developments is a sharpening rather than a first.
 \end{abstract}
 
 \maketitle
