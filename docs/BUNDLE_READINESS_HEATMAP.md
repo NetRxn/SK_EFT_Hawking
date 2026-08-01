@@ -1,6 +1,6 @@
 # Bundle Readiness Heatmap
 
-**Auto-generated:** 2026-07-31
+**Auto-generated:** 2026-08-01
 **Tool:** `scripts/bundle_readiness.py --heatmap`
 
 **Companion to:** `docs/READINESS_GATES.md` (per-paper) — the per-bundle analog. Phase 6i Wave 7.4 deliverable; GREEN semantics tightened 2026-06-10 (S5 closure — see legend).
@@ -20,9 +20,9 @@
 
 | Bundle | Tier | Sources | Open | Blockers | Severity mix | Stage-13 review | Verdict |
 |---|---:|---:|---:|---:|---|:---:|:---:|
-| **F** | 0 | 63 | 111 | 22 | 72 advisory, 8 critical, 14 major, 17 minor | 2026-06-10 | 🔴 RED |
+| **F** | 0 | 63 | 112 | 23 | 72 advisory, 9 critical, 14 major, 17 minor | 2026-06-10 | 🔴 RED |
 | **D1** | 1 | 12 | 58 | 37 | 8 advisory, 24 critical, 13 major, 13 minor | 2026-06-10 | 🔴 RED |
-| **D2** | 1 | 6 | 59 | 18 | 23 advisory, 7 critical, 11 major, 18 minor | 2026-06-10 | 🔴 RED |
+| **D2** | 1 | 6 | 60 | 19 | 23 advisory, 8 critical, 11 major, 18 minor | 2026-06-10 | 🔴 RED |
 | **D3** | 1 | 31 | 57 | 7 | 43 advisory, 1 critical, 6 major, 7 minor | 2026-06-10 | 🔴 RED |
 | **D4** | 1 | 12 | 34 | 1 | 33 advisory, 1 critical | 2026-06-10 | 🔴 RED |
 | **D5** | 1 | 9 | 62 | 17 | 35 advisory, 7 critical, 10 major, 10 minor | 2026-06-10 | 🔴 RED |
@@ -31,12 +31,12 @@
 | **D8** | 1 | 13 | 14 | 0 | 8 advisory, 6 minor | 2026-06-10 | 🟡 YELLOW |
 | **D9** | 1 | 1 | 0 | 0 | _(none)_ | 2026-06-10 | 🟢 GREEN |
 | **D10** | 1 | 1 | 3 | 0 | 1 advisory, 2 minor | 2026-06-30 | 🟡 YELLOW (P1 gate blocked: NarrativeGrounding) |
-| **D11** | 1 | 1 | 94 | 34 | 18 advisory, 5 critical, 29 major, 42 minor | 2026-07-31 † | 🔴 RED |
-| **D12** | 1 | 1 | 177 | 76 | 7 advisory, 15 critical, 61 major, 94 minor | 2026-07-31 † | 🔴 RED |
+| **D11** | 1 | 1 | 100 | 39 | 18 advisory, 8 critical, 31 major, 43 minor | 2026-07-31 † | 🔴 RED |
+| **D12** | 1 | 1 | 178 | 77 | 7 advisory, 16 critical, 61 major, 94 minor | 2026-07-31 † | 🔴 RED |
 | **L1** | 2 | 2 | 5 | 2 | 2 major, 3 minor | 2026-06-10 | 🔴 RED |
-| **L2** | 2 | 1 | 42 | 15 | 24 advisory, 8 critical, 7 major, 3 minor | 2026-06-10 | 🔴 RED |
+| **L2** | 2 | 1 | 43 | 16 | 24 advisory, 9 critical, 7 major, 3 minor | 2026-06-10 | 🔴 RED |
 | **L3** | 2 | 4 | 24 | 6 | 15 advisory, 2 critical, 4 major, 3 minor | 2026-06-10 | 🔴 RED |
-| **I1** | 3 | 8 | 40 | 15 | 14 advisory, 2 critical, 13 major, 11 minor | 2026-06-10 | 🔴 RED |
+| **I1** | 3 | 8 | 41 | 16 | 14 advisory, 2 critical, 14 major, 11 minor | 2026-06-10 | 🔴 RED |
 | **I2** | 3 | 1 | 61 | 19 | 37 advisory, 8 critical, 11 major, 5 minor | 2026-06-10 | 🔴 RED |
 | **I3** | 3 | 1 | 36 | 16 | 16 advisory, 9 critical, 7 major, 4 minor | 2026-06-10 | 🔴 RED |
 | **E1** | 4 | 5 | 12 | 5 | 1 critical, 4 major, 7 minor | 2026-06-10 | 🔴 RED |
@@ -48,9 +48,9 @@
 
 | Bundle | AssumptionDisclosu | CitationIntegrity | ComputationCorrect | CountFreshness | CrossPaperConsiste | FixPropagation | LeanProofSubstance | NarrativeGrounding | ParameterProvenanc | ProductionRunHealt | unclassified |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| **F** | 8 | 13 | 10 | 9 | 14 | 0 | 6 | 5 | 15 | 1 | 30 |
+| **F** | 8 | 13 | 10 | 9 | 15 | 0 | 6 | 5 | 15 | 1 | 30 |
 | **D1** | 1 | 26 | 2 | 2 | 8 | 0 | 3 | 6 | 3 | 0 | 7 |
-| **D2** | 11 | 16 | 3 | 4 | 8 | 0 | 2 | 6 | 2 | 0 | 7 |
+| **D2** | 11 | 16 | 3 | 4 | 9 | 0 | 2 | 6 | 2 | 0 | 7 |
 | **D3** | 7 | 6 | 7 | 5 | 4 | 0 | 2 | 1 | 7 | 1 | 17 |
 | **D4** | 3 | 2 | 1 | 0 | 5 | 1 | 2 | 1 | 1 | 0 | 18 |
 | **D5** | 3 | 17 | 2 | 3 | 6 | 0 | 2 | 6 | 6 | 0 | 17 |
@@ -59,12 +59,12 @@
 | **D8** | 4 | 4 | 0 | 0 | 0 | 0 | 0 | 2 | 0 | 0 | 4 |
 | **D9** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | **D10** | 0 | 2 | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 0 | 0 |
-| **D11** | 7 | 17 | 3 | 12 | 9 | 0 | 1 | 7 | 15 | 0 | 23 |
-| **D12** | 21 | 18 | 15 | 9 | 2 | 0 | 0 | 26 | 40 | 0 | 46 |
+| **D11** | 7 | 18 | 3 | 12 | 11 | 0 | 1 | 7 | 15 | 0 | 26 |
+| **D12** | 21 | 18 | 14 | 9 | 3 | 0 | 0 | 25 | 39 | 0 | 49 |
 | **L1** | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 2 | 2 | 0 | 0 |
-| **L2** | 6 | 4 | 4 | 3 | 7 | 0 | 3 | 1 | 8 | 0 | 6 |
+| **L2** | 6 | 4 | 4 | 3 | 8 | 0 | 3 | 1 | 8 | 0 | 6 |
 | **L3** | 2 | 8 | 0 | 2 | 3 | 0 | 0 | 1 | 0 | 1 | 7 |
-| **I1** | 3 | 10 | 0 | 2 | 0 | 0 | 0 | 13 | 3 | 0 | 9 |
+| **I1** | 3 | 10 | 0 | 2 | 0 | 0 | 0 | 13 | 4 | 0 | 9 |
 | **I2** | 2 | 6 | 2 | 3 | 1 | 0 | 5 | 13 | 9 | 0 | 20 |
 | **I3** | 2 | 2 | 0 | 2 | 6 | 0 | 3 | 7 | 6 | 0 | 8 |
 | **E1** | 1 | 3 | 0 | 2 | 0 | 0 | 0 | 3 | 2 | 0 | 1 |

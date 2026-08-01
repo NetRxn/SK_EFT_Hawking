@@ -1182,9 +1182,9 @@
     },
     {
       "finding_id": "review:2026-05-01-1500-bundle-stage13:I1:5.1",
-      "status": "fixed",
-      "superseded_by": "review:2026-05-01-1507-bundle-stage13:I1 (round-3 verified GREEN, 0 BLOCKERs)",
-      "evidence": "Phase 7a sub-wave 7a.2 round-2 RECOMMENDED 5.1: Phase 6f audit filename em-dash drift (paper rendered '--' which is LaTeX en-dash; actual filename has true em-dash '—'). Remediated 2026-05-01T22:30Z by switching to '---' (LaTeX em-dash) and adding clarifying note in §11 prose that the filename contains a literal em-dash. Round-3 verified clean.",
+      "status": "open",
+      "superseded_by": null,
+      "evidence": "Phase 7a sub-wave 7a.2 round-2 RECOMMENDED 5.1: Phase 6f audit filename em-dash drift (paper rendered '--' which is LaTeX en-dash; actual filename has true em-dash '—'). Remediated 2026-05-01T22:30Z by switching to '---' (LaTeX em-dash) and adding clarifying note in §11 prose that the filename contains a literal em-dash. Round-3 verified clean. ⚠️ REOPENED 2026-08-01 by `recurrence_reopens_closures`, on its FIRST run since the threshold was derived from the check's own pairing rules (max Jaccard 0.429; the previous 0.50 admitted nothing). A later same-bundle review raises this finding and it is open there. For D11:4.1 the recurrence is 2220:D11:4.6 and both are about PAPER_DRAFT_MAPPING.md:109 — which is stale RIGHT NOW (6248 vs \\dxiLines{6258}), so the closure is demonstrably false, not merely contradicted.",
       "date": "2026-05-01"
     },
     {
@@ -5346,9 +5346,9 @@
     },
     {
       "finding_id": "review:2026-06-08-2242-internal-adversarial:paper10_modular_generation:6.1",
-      "status": "fixed",
-      "superseded_by": "docs/audits/stage13_attribution_sweep_2026-06-10.md#paper10",
-      "evidence": "Unconditional companion disclosed (L242-248 cite both forms; 'we cite the unconditional form for the substantive claim'; L323-324). Verified on disk 2026-06-10.",
+      "status": "open",
+      "superseded_by": null,
+      "evidence": "Unconditional companion disclosed (L242-248 cite both forms; 'we cite the unconditional form for the substantive claim'; L323-324). Verified on disk 2026-06-10. ⚠️ REOPENED 2026-08-01 by `recurrence_reopens_closures`, on its FIRST run since the threshold was derived from the check's own pairing rules (max Jaccard 0.429; the previous 0.50 admitted nothing). A later same-bundle review raises this finding and it is open there. For D11:4.1 the recurrence is 2220:D11:4.6 and both are about PAPER_DRAFT_MAPPING.md:109 — which is stale RIGHT NOW (6248 vs \\dxiLines{6258}), so the closure is demonstrably false, not merely contradicted.",
       "date": "2026-06-10"
     },
     {
@@ -5832,10 +5832,10 @@
     },
     {
       "finding_id": "review:2026-07-31-1530-internal-adversarial:D11:4.1",
-      "status": "fixed",
+      "status": "open",
       "superseded_by": null,
       "commit": "bb0c7e34",
-      "evidence": "PAPER_DRAFT_MAPPING.md:109 regenerated from docs/counts.tex. Closed on INDEPENDENT verification by round 8 (1652) re-derived the counts and reported the row current. — not on the author's own say-so. ⚠️ These records were owed at commit ac66444f and were NOT filed: the author filed ten closures against the 1059 round and none against 1530, then reported \"7 supersession records filed\". Round 9 (1801) caught the gap; every 1530 finding had been sitting `open` since, inflating D11's blocker count and failing bundle_metadata_matches_graph. ⚠️ COMMIT CORRECTED 2026-07-31 (D11 round-10): this record cited ac66444f, which does not touch the file the fix is in. Established from `git log -- <artifact>`; the fix is in bb0c7e34. Seven of these eight records carried the wrong SHA — a provenance record whose commit does not contain the change is worse than no record, because it reads as an audit trail.",
+      "evidence": "PAPER_DRAFT_MAPPING.md:109 regenerated from docs/counts.tex. Closed on INDEPENDENT verification by round 8 (1652) re-derived the counts and reported the row current. — not on the author's own say-so. ⚠️ These records were owed at commit ac66444f and were NOT filed: the author filed ten closures against the 1059 round and none against 1530, then reported \"7 supersession records filed\". Round 9 (1801) caught the gap; every 1530 finding had been sitting `open` since, inflating D11's blocker count and failing bundle_metadata_matches_graph. ⚠️ COMMIT CORRECTED 2026-07-31 (D11 round-10): this record cited ac66444f, which does not touch the file the fix is in. Established from `git log -- <artifact>`; the fix is in bb0c7e34. Seven of these eight records carried the wrong SHA — a provenance record whose commit does not contain the change is worse than no record, because it reads as an audit trail. ⚠️ REOPENED 2026-08-01 by `recurrence_reopens_closures`, on its FIRST run since the threshold was derived from the check's own pairing rules (max Jaccard 0.429; the previous 0.50 admitted nothing). A later same-bundle review raises this finding and it is open there. For D11:4.1 the recurrence is 2220:D11:4.6 and both are about PAPER_DRAFT_MAPPING.md:109 — which is stale RIGHT NOW (6248 vs \\dxiLines{6258}), so the closure is demonstrably false, not merely contradicted.",
       "closed_date": "2026-07-31",
       "closed_by": "stage13-round8-and-9-independent-verification"
     },
@@ -5903,29 +5903,29 @@
       "closed_by": "stage13-later-round-independent-verification"
     },
     {
-      "finding_id": "review:2026-07-31-2022-internal-adversarial:D12:5.1",
+      "finding_id": "review:2026-07-31-1730-internal-adversarial:D12:5.1",
       "status": "fixed",
       "superseded_by": null,
       "commit": "89d10728",
-      "evidence": "ENBW constant 1/4 -> 1/2. Round 11: \"The constant is right at all four sites — :50, :273, :305 and :688 all say 1/2, matching FilterFloors.lean:197-201.\" Closed on the INDEPENDENT verification recorded in papers/AutomatedReviews/2026-07-31-2103-internal-adversarial/D12.md — the reviewer that checked it was forbidden by rule 10 from closing it itself, so the record is filed by the author against that reviewer's own words, not against my say-so.",
+      "evidence": "ENBW constant 1/4 -> 1/2. Round 11: \"The constant is right at all four sites — :50, :273, :305 and :688 all say 1/2, matching FilterFloors.lean:197-201.\" Closed on the INDEPENDENT verification recorded in papers/AutomatedReviews/2026-07-31-2103-internal-adversarial/D12.md — the reviewer that checked it was forbidden by rule 10 from closing it itself, so the record is filed by the author against that reviewer's own words, not against my say-so. ⚠️ RE-KEYED 2026-08-01 (D12 Stage-13 round-13 BLOCKER 13.1): this record was filed against review:2026-07-31-2022-internal-adversarial:D12:5.1, whose subject its evidence does not describe — the evidence describes review:2026-07-31-1730-internal-adversarial:D12:5.1. Round 13 adjudicated all three: \"three of the six D12 ledger records at 03a4592e close a finding their evidence does not describe\". My own reopen rationale for two of them invoked a 'residual' that does not exist, which was a third wrong statement about the same records. The defects at the IDs originally named are live and unrepaired.",
       "closed_date": "2026-07-31",
       "closed_by": "stage13-later-round-independent-verification"
     },
     {
-      "finding_id": "review:2026-07-31-2022-internal-adversarial:D12:5.2",
-      "status": "open",
+      "finding_id": "review:2026-07-31-1730-internal-adversarial:D12:5.2",
+      "status": "fixed",
       "superseded_by": null,
       "commit": "89d10728",
-      "evidence": "Crossover corrected to 2Q(1)/(1-2Q(1)). Round 11: \"fixed. 2Q(1)/(1-2Q(1)) = 0.4647947734915442; round-trips to Q(1) to 15 digits. Paper and Lean agree.\" Closed on the INDEPENDENT verification recorded in papers/AutomatedReviews/2026-07-31-2103-internal-adversarial/D12.md — the reviewer that checked it was forbidden by rule 10 from closing it itself, so the record is filed by the author against that reviewer's own words, not against my say-so. ⚠️ REOPENED minutes after filing, same cause as 2022:D12:2.1 — a later review carries an open finding at the same number on the same subject, and I closed the parent without that residual having independent verification. Two of the seven records I filed this pass were premature in exactly this way, and the recurrence check caught both on its first run since becoming able to fire.",
+      "evidence": "Crossover corrected to 2Q(1)/(1-2Q(1)). Round 11: \"fixed. 2Q(1)/(1-2Q(1)) = 0.4647947734915442; round-trips to Q(1) to 15 digits. Paper and Lean agree.\" Closed on the INDEPENDENT verification recorded in papers/AutomatedReviews/2026-07-31-2103-internal-adversarial/D12.md — the reviewer that checked it was forbidden by rule 10 from closing it itself, so the record is filed by the author against that reviewer's own words, not against my say-so. ⚠️ RE-KEYED 2026-08-01 (D12 Stage-13 round-13 BLOCKER 13.1): this record was filed against review:2026-07-31-2022-internal-adversarial:D12:5.2, whose subject its evidence does not describe — the evidence describes review:2026-07-31-1730-internal-adversarial:D12:5.2. Round 13 adjudicated all three: \"three of the six D12 ledger records at 03a4592e close a finding their evidence does not describe\". My own reopen rationale for two of them invoked a 'residual' that does not exist, which was a third wrong statement about the same records. The defects at the IDs originally named are live and unrepaired.",
       "closed_date": "2026-07-31",
       "closed_by": "stage13-later-round-independent-verification"
     },
     {
-      "finding_id": "review:2026-07-31-2022-internal-adversarial:D12:2.1",
-      "status": "open",
+      "finding_id": "review:2026-07-31-1730-internal-adversarial:D12:2.1",
+      "status": "fixed",
       "superseded_by": null,
       "commit": "89d10728",
-      "evidence": "The 21.5-point figure and its derivation. Round 11: \"fixed, all three artifacts agree (52.685->52.7, 31.214->31.2, exact 21.471->21.5).\" Closed on the INDEPENDENT verification recorded in papers/AutomatedReviews/2026-07-31-2103-internal-adversarial/D12.md — the reviewer that checked it was forbidden by rule 10 from closing it itself, so the record is filed by the author against that reviewer's own words, not against my say-so. ⚠️ REOPENED within minutes of being filed, by `validate.py --check recurrence_reopens_closures`. Round 11's 2.1 is a RESIDUAL of this finding — same subject, the surviving defect being a false derivation ('53-31 on the rounded figures', which is 22, not 21.5) — and it is still open with no independent verification. Closing the parent while its residual stands is exactly the stale-closure pattern the check exists to catch. It caught mine on the first run after I filed it, which is the strongest evidence yet that the guard is now real: for its whole prior life it could not fire at all.",
+      "evidence": "The 21.5-point figure and its derivation. Round 11: \"fixed, all three artifacts agree (52.685->52.7, 31.214->31.2, exact 21.471->21.5).\" Closed on the INDEPENDENT verification recorded in papers/AutomatedReviews/2026-07-31-2103-internal-adversarial/D12.md — the reviewer that checked it was forbidden by rule 10 from closing it itself, so the record is filed by the author against that reviewer's own words, not against my say-so. ⚠️ RE-KEYED 2026-08-01 (D12 Stage-13 round-13 BLOCKER 13.1): this record was filed against review:2026-07-31-2022-internal-adversarial:D12:2.1, whose subject its evidence does not describe — the evidence describes review:2026-07-31-1730-internal-adversarial:D12:2.1. Round 13 adjudicated all three: \"three of the six D12 ledger records at 03a4592e close a finding their evidence does not describe\". My own reopen rationale for two of them invoked a 'residual' that does not exist, which was a third wrong statement about the same records. The defects at the IDs originally named are live and unrepaired.",
       "closed_date": "2026-07-31",
       "closed_by": "stage13-later-round-independent-verification"
     },

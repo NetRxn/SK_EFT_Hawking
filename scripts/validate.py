@@ -3815,6 +3815,26 @@ def check_count_literals() -> CheckResult:
 # CHECK 18: Readiness submission gate (Phase 5v Wave 4)
 # ═══════════════════════════════════════════════════════════════════════
 
+# ── NOT SHIPPED: `ledger_evidence_names_its_finding` ────────────────────────────────
+# D12 round-13 BLOCKER 13.1 found three ledger records that close a finding their evidence
+# does not describe, and nothing detects it. I built a guard requiring the evidence to share
+# a content word with the finding's title, and MEASURED it before shipping: it flags 40
+# records, and the ones I sampled are correct. Example —
+# `2026-04-28-...:paper40_higher_curvature:2.1`, whose evidence reads "CrossPaperConsistency
+# gate verifies sampled cross-paper bibitems match character-for-character on load-bearing
+# fields". That describes the FIX; the title describes the DEFECT; well-written evidence
+# routinely shares no vocabulary with the finding it closes.
+#
+# So the premise is wrong, not the threshold, and a guard that flags 40 correct records is
+# worse than no guard — that is the lesson this session has taught eleven times. The three
+# real mis-keys were caught by a reviewer READING them, which is not a test I can currently
+# mechanise. Recording the gap rather than shipping a check that manufactures work.
+#
+# What would work, and is not built: require the record to name the artifact it changed
+# (a file path) and verify that path appears in the cited commit's diff. That is mechanical
+# and would have caught all three, since their evidence names another round's artifacts.
+
+
 @register_check("recurrence_reopens_closures",
                 "A closure is not contradicted by a later review raising the same finding")
 def check_recurrence_reopens_closures() -> CheckResult:
@@ -3860,7 +3880,21 @@ def check_recurrence_reopens_closures() -> CheckResult:
     # pair at 0.67 is a TRUE recurrence ("israel third law parenthetical", closed then
     # re-raised in a later round). 0.50 sits in the empty band between p99 and that pair.
     _MIN_TITLE = 12          # below this a title carries too few tokens to compare
-    _MIN_OVERLAP = 0.50      # Jaccard over token sets
+    # ⚠️ RE-DERIVED 2026-08-01 (D11 round-13 N1). Switching the primitive from prefix to
+    # Jaccard was right; I then kept a 0.50 threshold that I had measured on a sweep whose
+    # pairing rules were NOT the check's own. Measured with the check's `_norm`, its
+    # same-bundle rule and its date rule, over 4,706 pairs: median 0.000, p99 0.200,
+    # MAX 0.429. So 0.50 admitted nothing — the guard still could not fire, one round after
+    # being "fixed", and the 0.67 pair I cited as calibration does not exist as a
+    # closure/open pair at all.
+    #
+    # The two D12 records I reported it "rejecting" were added already `open`; the guard had
+    # no part in it. That claim in commit 03a4592e's message is false and this comment is
+    # the correction.
+    #
+    # 0.40 sits between p99 (0.200) and the top pair (0.429), which is a TRUE stale closure:
+    # 1530:D11:4.1 closed, 2220:D11:4.6 open, both about PAPER_DRAFT_MAPPING.md:109.
+    _MIN_OVERLAP = 0.40      # Jaccard over token sets
 
     def _norm(s: str) -> str:
         s = re.sub(r'[`*_\[\]]', '', str(s or '')).lower()
@@ -3891,12 +3925,12 @@ def check_recurrence_reopens_closures() -> CheckResult:
     details: list[Detail] = []
     hits = 0
     compared = 0
+    _had_candidate: set = set()
     skipped_short = sum(1 for f in findings
                         if len(_norm(f.get("label", ""))) < _MIN_TITLE)
     for cdate, ctext, cid, csev, cbundle in closed:
         if csev not in ("critical", "major"):
             continue
-        compared += 1
         for odate, otext, oid, _, obundle in open_:
             # Same bundle only. Reviews share heading boilerplate across bundles, so a D2
             # closure matching an I2 finding's title is a template collision, not a
@@ -3909,6 +3943,15 @@ def check_recurrence_reopens_closures() -> CheckResult:
             _a, _b = set(ctext.split()), set(otext.split())
             if not _a or not _b:
                 continue
+            # Count a closure as COMPARED only once it has something to compare against
+            # (D12 round-13). `compared += 1` used to sit before this loop, so it counted
+            # closures that reached the loop rather than closures that met a candidate:
+            # the summary said 318 where 162 had any counterpart. Ninth instance of the
+            # same defect, and the third consecutive version of THIS summary line to
+            # overstate its own coverage.
+            if cid not in _had_candidate:
+                _had_candidate.add(cid)
+                compared += 1
             if len(_a & _b) / len(_a | _b) >= _MIN_OVERLAP:
                 hits += 1
                 details.append(Detail(

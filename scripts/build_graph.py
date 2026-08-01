@@ -1665,11 +1665,13 @@ def extract_review_finding_nodes() -> list[dict]:
                         if glyph in body[:600]:
                             severity = sev
                             break
-            else:
-                for glyph, sev in _SEV_GLYPHS.items():
-                    if glyph in body[:600]:
-                        severity = sev
-                        break
+            # NOTE: there is deliberately NO `else` here. An earlier edit of mine left one,
+            # which ran body-glyph inference in exactly the case where a severity HAD been
+            # declared — so the declared value was overwritten by any glyph in body[:600],
+            # in both directions (D11 round-13 N2: declared `recommended` + a 🔴 in the Gate
+            # line minted `critical`; declared `blocker` + a 🔵 minted `minor`). The comment
+            # six lines below asserted the field "is never overridden" while this branch
+            # overrode it.
             # Escalation applies ONLY to glyph-inferred severity. A DECLARED
             # `- **Severity:**` line is authoritative and is never overridden
             # (D12 Stage-13 round-12 finding 8.2).
