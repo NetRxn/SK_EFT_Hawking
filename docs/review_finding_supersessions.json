@@ -6396,6 +6396,42 @@
       "evidence": "The Bernal sentence is split by bias regime. REPRODUCE: `papers/D11/paper_draft.tex:451ff` now separates u = 0 (bernal_chirality_two, bernal_lowRoot_enclosure), u != 0 (bernal_mexicanHat, which carries `hu : u != 0` explicitly) and general u (bernal_halfGapSq_isLeast, bernal_fullGapSq_eq), and states that no single operating point carries all five. The previous single sentence chained theorems at mutually exclusive bias values. ⚠️ AUTHOR-FILED with a reproducible check, not independent adjudication; round 15 confirms or rejects.",
       "closed_date": "2026-08-01",
       "closed_by": "author-filed-reproducible-evidence"
+    },
+    {
+      "finding_id": "review:2026-08-01-0202-internal-adversarial:D12:14.2",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "4b5a1b62",
+      "evidence": "PAPER_DEPENDENCIES['D12']['lean_modules'] extended 3 -> 11. REPRODUCE: the declared list now matches the nine modules D12's formula docstrings cite plus Detection.ShotNoise and Electrothermal.ETFResponsivity from the disclosed-hypotheses paragraph. ⚠️ AUTHOR-FILED with a reproducible check, not independent adjudication.",
+      "closed_date": "2026-08-01",
+      "closed_by": "author-filed-reproducible-evidence"
+    },
+    {
+      "finding_id": "review:2026-08-01-0202-internal-adversarial:D12:14.4",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "4b5a1b62",
+      "evidence": "The recurrence guard's marginal band now requires section-number agreement. REPRODUCE: the false positive you identified (1524:8.2 held against 1823:8.4 at j = 2/5 = 0.400, carried by the shared phrase 'fails open') no longer fires, while 8.3 -> 8.3 is unaffected because it agrees on section number. Scores above _MIN_OVERLAP + 0.10 skip the tie-breaker. ⚠️ AUTHOR-FILED with a reproducible check, not independent adjudication.",
+      "closed_date": "2026-08-01",
+      "closed_by": "author-filed-reproducible-evidence"
+    },
+    {
+      "finding_id": "review:2026-08-01-0202-internal-adversarial:D12:14.6",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "4b5a1b62",
+      "evidence": "citation_cache.stats() no longer raises. REPRODUCE: it returns {'total_records': 131, 'stale_records': 43, ...}. Cause was an offset-naive verified_date in the oldest records subtracted from an aware now(); naive stamps are now read as UTC rather than discarded, since discarding would exempt exactly the records most likely stale. ⚠️ AUTHOR-FILED with a reproducible check, not independent adjudication.",
+      "closed_date": "2026-08-01",
+      "closed_by": "author-filed-reproducible-evidence"
+    },
+    {
+      "finding_id": "review:2026-08-01-0202-internal-adversarial:D12:14.1",
+      "status": "fixed",
+      "closed_by": "lead (independently re-counted, not taken from the review)",
+      "closed_date": "2026-08-01",
+      "commit": "23ccbc80",
+      "superseded_by": null,
+      "evidence": "CONFIRMED, then repaired. I re-counted the D12 region of src/core/formulas.py myself rather than accept the reviewer's number: between the `D12 —` banner at :11127 and the `D11 —` banner at :11626 there are 28 public top-level defs, and the omitted one is snr_chain_window_ceiling at formulas.py:11357 — exactly as 14.1 said. It was not omitted for cause: verification=verified, a golden VERIFIES edge from test_snr_ceiling_closed_form, and paper_draft.tex:335-337 cites all three of its theorems by name. REPRODUCE: len(PAPER_DEPENDENCIES['D12']['formulas']) == 28, 'snr_chain_window_ceiling' in that list, no duplicates. COMMIT ANCHOR VERIFIED BY DIFF, not by message: `git log -S\"'snr_chain_window_ceiling',\" -- src/core/provenance.py` returns 23ccbc80, whose diff adds 2 lines carrying the name. Lineage of this one sentence, all four wrong in turn: 'all 4' -> 'the full 23-formula domain surface' -> 'all 27' -> 28. Each correction was made while fixing the previous one, which is why the round-13 repair took the wrong half of a sentence whose arithmetic only closed at 28."
     }
   ]
 }
