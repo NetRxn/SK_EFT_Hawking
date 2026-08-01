@@ -6432,6 +6432,33 @@
       "commit": "23ccbc80",
       "superseded_by": null,
       "evidence": "CONFIRMED, then repaired. I re-counted the D12 region of src/core/formulas.py myself rather than accept the reviewer's number: between the `D12 —` banner at :11127 and the `D11 —` banner at :11626 there are 28 public top-level defs, and the omitted one is snr_chain_window_ceiling at formulas.py:11357 — exactly as 14.1 said. It was not omitted for cause: verification=verified, a golden VERIFIES edge from test_snr_ceiling_closed_form, and paper_draft.tex:335-337 cites all three of its theorems by name. REPRODUCE: len(PAPER_DEPENDENCIES['D12']['formulas']) == 28, 'snr_chain_window_ceiling' in that list, no duplicates. COMMIT ANCHOR VERIFIED BY DIFF, not by message: `git log -S\"'snr_chain_window_ceiling',\" -- src/core/provenance.py` returns 23ccbc80, whose diff adds 2 lines carrying the name. Lineage of this one sentence, all four wrong in turn: 'all 4' -> 'the full 23-formula domain surface' -> 'all 27' -> 28. Each correction was made while fixing the previous one, which is why the round-13 repair took the wrong half of a sentence whose arithmetic only closed at 28."
+    },
+    {
+      "finding_id": "review:2026-07-31-1823-internal-adversarial:D12:8.1",
+      "status": "fixed",
+      "closed_by": "lead (mutation-tested, not read)",
+      "closed_date": "2026-08-01",
+      "commit": "ee0c0b85",
+      "superseded_by": null,
+      "evidence": "Closed by MUTATION TEST, not by reading the guard — the through-line of this four-round chain is that every prior fix was verified by reading and every next round found it inert. tests/test_closure_guard_bypasses.py constructs a ledger record of each historically-successful bypass shape and asserts a LIVE blocking finding stays open: one-key, two-key-fixed, two-key-accepted, evidence-without-anchor, anchor-with-thin-evidence, accepted-thin-evidence. All 6 pass, plus a source assertion that heading-parse closure is absent (build_graph.py contains zero `status = 'fixed'`) and a non-vacuity leg asserting a WELL-FORMED record still DOES close — without which deleting the ledger reader would pass everything. 9 tests, ledger verified byte-identical after the run. This round's two bypasses specifically: the one-key record is covered by the `one-key` case; self-set severity is closed by honouring a declared `- **Severity:**` and inferring only when undeclared."
+    },
+    {
+      "finding_id": "review:2026-07-31-2022-internal-adversarial:D12:8.1",
+      "status": "fixed",
+      "closed_by": "lead (mutation-tested, not read)",
+      "closed_date": "2026-08-01",
+      "commit": "ee0c0b85",
+      "superseded_by": null,
+      "evidence": "Closed by MUTATION TEST, not by reading the guard — the through-line of this four-round chain is that every prior fix was verified by reading and every next round found it inert. tests/test_closure_guard_bypasses.py constructs a ledger record of each historically-successful bypass shape and asserts a LIVE blocking finding stays open: one-key, two-key-fixed, two-key-accepted, evidence-without-anchor, anchor-with-thin-evidence, accepted-thin-evidence. All 6 pass, plus a source assertion that heading-parse closure is absent (build_graph.py contains zero `status = 'fixed'`) and a non-vacuity leg asserting a WELL-FORMED record still DOES close — without which deleting the ledger reader would pass everything. 9 tests, ledger verified byte-identical after the run. This round's two claims: the overwrite-after-guard inertness is closed by applying the bar AFTER the ledger override; the corpus claim (264 of 287 blocking findings closed by sub-bar records) is re-measured NON-VACUOUSLY — 158 ledger records target a blocking finding and 0 fail the bar. Stated plainly because the first way I measured this was circular: the bar runs at extraction, so 'no CLOSED finding fails the bar' is true by construction and cannot fail. The number above counts records that INTEND closure, which can and would surface failures."
+    },
+    {
+      "finding_id": "review:2026-07-31-2103-internal-adversarial:D12:8.1",
+      "status": "fixed",
+      "closed_by": "lead (mutation-tested, not read)",
+      "closed_date": "2026-08-01",
+      "commit": "ee0c0b85",
+      "superseded_by": null,
+      "evidence": "Closed by MUTATION TEST, not by reading the guard — the through-line of this four-round chain is that every prior fix was verified by reading and every next round found it inert. tests/test_closure_guard_bypasses.py constructs a ledger record of each historically-successful bypass shape and asserts a LIVE blocking finding stays open: one-key, two-key-fixed, two-key-accepted, evidence-without-anchor, anchor-with-thin-evidence, accepted-thin-evidence. All 6 pass, plus a source assertion that heading-parse closure is absent (build_graph.py contains zero `status = 'fixed'`) and a non-vacuity leg asserting a WELL-FORMED record still DOES close — without which deleting the ledger reader would pass everything. 9 tests, ledger verified byte-identical after the run. This round's exact bypass — `{finding_id, status: 'accepted'}` — is the `two-key-accepted` case and is asserted to leave the finding open. _CLOSING_STATUSES is ('fixed','accepted'), so the bar applies at both, which was the scoping gap."
     }
   ]
 }
