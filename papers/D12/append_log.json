@@ -5,7 +5,7 @@
       "date": "2026-07-30T21:43:13Z",
       "source_paper": "D12_initial_draft",
       "lift_action": "Lift-section",
-      "bundle_section_inserted": "\u00a71",
+      "bundle_section_inserted": "§1",
       "lean_modules_referenced": [
         "Detection.PoissonDiscrimination",
         "Detection.GaussianThreshold",
@@ -25,6 +25,14 @@
       "stage13_redo_required": true,
       "agent_run_id": "bundle_append-2026-07-30T21:43:13Z",
       "notes": "Sourceless synthesis: substrate is 13 Lean modules across Phases 6EA (Poisson/Gaussian discrimination floors, shot noise), 6EB (ENBW/NEP/matched-filter floors), 6EC (electrothermal detector physics), 6EE (two-level control + composite readout ceilings); no per-paper-draft sources. First content-lift of the 2026-07-27-authorized D12 bundle."
+    },
+    {
+      "date": "2026-08-01T06:40:00Z",
+      "source_paper": "D12_phase6EA-6EE_complete",
+      "lift_action": "Revision",
+      "bundle_section_inserted": "§1, §2 (new), §7 (new)",
+      "lean_modules_referenced": [],
+      "notes": "D.3 revision (LATE_PHASE6_ABSORPTION_PROTOCOL Stage D.3). 6EA-6EE all closed 2026-08-01; the bundle is lifted once from complete sources rather than absorbing each wave. Reframed to the authorized constructive through-line: the two-layer posture + rational-enclosure certification moved out of §1 into its own §2; the refutations returned to their layers (§3/§4/§5) instead of headlining; a stack-position and roadmap paragraph added to §1; composite ceilings consolidated from two subsections scattered across §5 and §6 into a real §7 (sec:composite). Scope §8 updated with the prior-art finding that the Poisson floor is the classical Le Cam two-point bound instantiated at Poisson (Fuchs-van de Graaf) - the formalization and framing are ours, the inequality is not."
     }
   ]
 }
