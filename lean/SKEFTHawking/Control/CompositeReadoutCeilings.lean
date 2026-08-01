@@ -5,13 +5,21 @@ The capstone of the `6E*` series. Every mechanism floor in the series lower-boun
 quantity, `avgAssignmentError e₀ e₁ = (e₀+e₁)/2`:
 
   relaxation      `avgAssignmentError_rational_floor`   (QuantumNetwork.ReadoutRelaxationBound)
-  thermal         `avgAssignmentError_thermal_floor`    (QuantumNetwork.ThermalAssignmentFloor)
+  thermal         `avgAssignmentError_combined_floor`   (QuantumNetwork.ThermalAssignmentFloor)
   photon budget   `Detection.poisson_avgError_floor`    (6EA)
   filtered readout `Detection.error_floor_from_budget`  (6EB)
   detector chain  `Electrothermal.ETFModel.bolometer_error_floor` (6EC)
 
-so they compose. This module turns each floor into a consumer-facing FIDELITY CEILING and states
-how several of them combine.
+so they compose. This module turns each of those five floors into a consumer-facing FIDELITY
+CEILING and states how several of them combine.
+
+The thermal row names the relaxation ⊕ thermal max-form floor `avgAssignmentError_combined_floor`
+because that is the floor this module actually consumes, in `relaxation_thermal_ceiling`. The
+standalone `avgAssignmentError_thermal_floor` (same upstream file) is called by nothing here, and
+`avgAssignmentError_combined_floor` does not route through it either — it proves the max-form bound
+directly. (Roster corrected 2026-07-31: the row previously named the standalone thermal floor, so
+the sentence above it — that this module turns each listed floor into a ceiling — was false of that
+row.)
 
 ⚠️ THE DEFECT CLASS THIS MODULE IS GATED ON. A composite that silently *under*-counts is fail-open
 and is the worst defect available here. Two disciplines follow, and both are enforced structurally
@@ -164,8 +172,8 @@ section GapWitness
 open MeasureTheory
 
 /-- A concrete two-point error model: mechanism 1 fails on `{0}` with probability `1/100`,
-mechanism 2 on `{1}` with probability `1/50`, and the events are disjoint by construction. This is
-the measure space that instantiates `combined_ceiling_add_lt_max` below. -/
+mechanism 2 on `{1}` with probability `1/50`, and the events are disjoint by construction.
+`combined_ceiling_gap_witness` below instantiates `combined_ceiling_add_lt_max` at this measure. -/
 noncomputable def gapWitnessMeasure : Measure (Fin 2) :=
   ENNReal.ofReal (1 / 100) • Measure.dirac 0 + ENNReal.ofReal (1 / 50) • Measure.dirac 1
 
@@ -228,8 +236,17 @@ end GapWitness
 
 /-! ## 3. Per-mechanism ceilings
 
-Each takes its mechanism's floor as an explicit hypothesis about this readout's `(e₀, e₁)`, so the
-attribution is visible in the type rather than assumed in prose. -/
+Two shapes here, and the difference is load-bearing. The two DEVICE-layer ceilings
+(`relaxation_ceiling`, `relaxation_thermal_ceiling`) take their mechanism's floor as an explicit
+hypothesis about THIS readout's `(e₀, e₁)`, so the attribution is visible in the type. The three
+DETECTION-layer ceilings (`photon_budget_ceiling`, `filtered_readout_ceiling`,
+`detector_chain_ceiling`) mention no `(e₀, e₁)` at all: each is stated at its own mechanism's error
+pair — the count rule's `(falseAlarm, missProb)`, or the Gaussian threshold pair — and getting it
+onto an attributed readout is §3.5/§3.6's job, via the `*_floor_attributed` transfer lemmas.
+
+(Corrected 2026-07-31: this header previously said "each" ceiling takes the floor as a hypothesis
+about this readout's `(e₀, e₁)`. That held for two of the five and contradicted §3.5's own opening,
+which says §3's ceilings are "each stated at its own mechanism's error pair".) -/
 
 /-- **Relaxation ceiling** (format anchor; cites `avgAssignmentError_rational_floor`, no re-proof). -/
 theorem relaxation_ceiling {t T1 e0 e1 : ℝ} (ht : 0 ≤ t) (hT1 : 0 < T1)
@@ -310,18 +327,26 @@ theorem photon_budget_floor_attributed {Nb Na : NNReal} {δ : ℕ → ℝ} {e0 e
   le_trans (Detection.poisson_avgError_floor hδ) (avgAssignmentError_mono hattr0 hattr1)
 
 /-- **End-to-end two-mechanism ceiling: relaxation ⊕ photon budget.** Both floors are the project's
-own named theorems — `avgAssignmentError_rational_floor` (relaxation) and
-`Detection.poisson_avgError_floor` (6EA) — applied to a SINGLE readout `(e0, e1)` under explicit
-attribution hypotheses, then combined by `combined_ceiling_max`.
+own named theorems — `avgAssignmentError_rational_floor` (relaxation, called directly) and
+`Detection.poisson_avgError_floor` (6EA, reached through `photon_budget_floor_attributed`) —
+applied to a SINGLE readout `(e0, e1)` under explicit attribution hypotheses, then combined by
+`combined_ceiling_max`.
 
-⚠️ It is **not** the first two-named-floor composite in the project: `relaxation_thermal_ceiling`
-below already composes relaxation ⊕ thermal, and did so before this phase (via the upstream
-`avgAssignmentError_combined_floor`). What is new here is that it is the first composite spanning
-the DEVICE layer (`QuantumNetwork`) and the DETECTION layer (`Detection`/6EA) — a pairing this
-module simply had no transfer rule for, since the 6EA floor is stated at the count rule's own error
-pair; `photon_budget_floor_attributed` (three lines of monotonicity) supplies it. It was never
-"impossible" — merely not done. (An earlier draft claimed priority outright, and a later one called
-the pairing previously impossible; both corrected 2026-07-30 after adversarial review.) -/
+⚠️ No priority is claimed here, and none is provable from the statement. It is not the first
+two-named-floor composite: `relaxation_thermal_ceiling` ABOVE already composes relaxation ⊕
+thermal, and did so before this phase (via the upstream `avgAssignmentError_combined_floor`). Nor
+is it the only cross-layer composite — §3.6 ships two more on the same pattern
+(`relaxation_filtered_ceiling`, `relaxation_detector_chain_ceiling`). What it is: a composite
+spanning the DEVICE layer (`QuantumNetwork`) and the DETECTION layer (`Detection`/6EA), a pairing
+this module had no transfer rule for until `photon_budget_floor_attributed` — one `le_trans`
+through `avgAssignmentError_mono` — supplied it. It was never "impossible" — merely not done.
+
+(An earlier draft claimed priority outright, and a later one called the pairing previously
+impossible; both corrected 2026-07-30 after adversarial review. Corrected again 2026-07-31: a
+residual "first composite spanning the device and detection layers" claim, which no statement here
+establishes and which §3.6 had since made misleading; "below", which pointed the wrong way at
+`relaxation_thermal_ceiling` — it is above; and "three lines of monotonicity", which is one
+`le_trans`.) -/
 theorem relaxation_photon_ceiling {t T1 e0 e1 : ℝ} {Nb Na : NNReal} {δ : ℕ → ℝ}
     (ht : 0 ≤ t) (hT1 : 0 < T1) (he0 : 0 ≤ e0) (hdecay : readoutDecayProb t T1 ≤ e1)
     (hδ : Detection.IsCountRule δ)
@@ -338,10 +363,12 @@ theorem relaxation_photon_ceiling {t T1 e0 e1 : ℝ} {Nb Na : NNReal} {δ : ℕ 
 
 At `t = T₁` with a generous photon budget (separation `99`) the photon floor drops strictly below
 the relaxation floor, the `max` collapses to the relaxation branch, and the composite ceiling
-therefore reads `1 − t/T₁/(2(1+t/T₁))`. Because the first conjunct is the ceiling theorem's own
-conclusion after that collapse, an edit to either mechanism's floor breaks this proof — which is
-what "anchored" has to mean. (An earlier version stated only an inequality between two expressions
-and *asserted* robustness in its docstring; corrected 2026-07-30 after review.) -/
+therefore reads `1 − t/T₁/(2(1+t/T₁))`. Because the SECOND conjunct is the ceiling theorem's own
+conclusion after that collapse (the first is the strict comparison that drives the collapse), an
+edit to either mechanism's floor breaks this proof — which is what "anchored" has to mean.
+(An earlier version stated only an inequality between two expressions and *asserted* robustness in
+its docstring; corrected 2026-07-30 after review. Conjunct numbering corrected 2026-07-31: this
+note said "first" where the proof puts the ceiling's conclusion second, `⟨hlt, hceil⟩`.) -/
 theorem relaxation_dominates_photon_at_separation_99 {t T1 e0 e1 : ℝ} {Nb Na : NNReal} {δ : ℕ → ℝ}
     (ht : t = T1) (hT1 : 0 < T1) (he0 : 0 ≤ e0)
     (hdecay : readoutDecayProb t T1 ≤ e1) (hδ : Detection.IsCountRule δ)
@@ -393,9 +420,9 @@ theorem filtered_readout_floor_attributed {V : (ℝ → ℝ) → ℝ} {S₀ T : 
 open MeasureTheory in
 /-- **End-to-end two-mechanism ceiling: relaxation ⊕ filtered readout.** Device layer meets 6EB on a
 single attributed readout. Both floors are named project theorems —
-`avgAssignmentError_rational_floor` and `Detection.error_floor_from_budget` — combined by
-`combined_ceiling_max`, so the composite inherits 6EB's full physical binder list rather than its
-conclusion. -/
+`avgAssignmentError_rational_floor` (called directly) and `Detection.error_floor_from_budget`
+(reached through `filtered_readout_floor_attributed`) — combined by `combined_ceiling_max`, so the
+composite inherits 6EB's full physical binder list rather than its conclusion. -/
 theorem relaxation_filtered_ceiling {t T1 e0 e1 : ℝ} (ht : 0 ≤ t) (hT1 : 0 < T1) (he0 : 0 ≤ e0)
     (hdecay : readoutDecayProb t T1 ≤ e1)
     {V : (ℝ → ℝ) → ℝ} {S₀ T : ℝ}
@@ -434,9 +461,17 @@ theorem detector_chain_floor_attributed (m : Electrothermal.ETFModel) {kB T Tw :
     (avgAssignmentError_mono hattr0 hattr1)
 
 open MeasureTheory in
-/-- **End-to-end two-mechanism ceiling: relaxation ⊕ detector chain.** The deepest composite in the
-series: a device-layer relaxation floor and a floor that has already traversed electrothermal PSD →
-quadrature sum → matched-filter budget → Gaussian separation, on one attributed readout. -/
+/-- **End-to-end two-mechanism ceiling: relaxation ⊕ detector chain.** A device-layer relaxation
+floor (`avgAssignmentError_rational_floor`, called directly) composed with a floor that has already
+traversed electrothermal PSD → quadrature sum → matched-filter budget → Gaussian separation
+(`Electrothermal.ETFModel.bolometer_error_floor`, reached through
+`detector_chain_floor_attributed`), on one attributed readout.
+
+This composite is called the deepest of the series elsewhere; what backs that word is dependency
+containment rather than a ranking judgement, and it is checkable:
+`Electrothermal.ETFModel.bolometer_error_floor` itself calls `Detection.error_floor_from_budget`
+(the 6EB floor) along with `Detection.nep_quadrature_add` and the PSD-positivity lemmas, so this
+composite's floor chain strictly extends `relaxation_filtered_ceiling`'s. -/
 theorem relaxation_detector_chain_ceiling {t T1 e0 e1 : ℝ} (ht : 0 ≤ t) (hT1 : 0 < T1)
     (he0 : 0 ≤ e0) (hdecay : readoutDecayProb t T1 ≤ e1)
     (m : Electrothermal.ETFModel) {kB T Tw : ℝ}
@@ -462,10 +497,13 @@ theorem relaxation_detector_chain_ceiling {t T1 e0 e1 : ℝ} (ht : 0 ≤ t) (hT1
 
 /-! ## 4. Witness pairs
 
-Both witnesses use the RELAXATION floor, which is rational in `t/T₁` and therefore settles under
-`norm_num` without any transcendental bound. (The Poisson floor's available lower enclosure
-`1 - r ≤ exp(-r)` is vacuous for `r ≥ 1`, so it cannot witness a bite at a realistic operating
-point; using it here would have produced a witness that looks quantitative but proves nothing.) -/
+Both witnesses concern the RELAXATION mechanism, whose floor is rational in `t/T₁`: the BITES half
+calls `relaxation_ceiling` and settles under `norm_num` alone, and the does-not-bite half exhibits a
+readout at `readoutDecayProb` needing only the rational enclosure
+`QuantumNetwork.expNeg_enclosure`. Neither evaluates a transcendental. (The Poisson floor's
+available lower enclosure `1 - r ≤ exp(-r)` is vacuous for `r ≥ 1`, so it cannot witness a bite at a
+realistic operating point; using it here would have produced a witness that looks quantitative but
+proves nothing.) -/
 
 /-- **The ceiling BITES.** At `t = T₁` the relaxation floor is `1/4`, so no readout of this
 duration can exceed fidelity `3/4` — a claimed `0.99` is refuted outright. -/
@@ -499,10 +537,19 @@ theorem relaxation_ceiling_does_not_bite :
 /-! ### 4.1 Witness pairs for the remaining four ceilings
 
 Every BITES witness is a corollary **of its ceiling theorem** — it calls the ceiling and concludes
-about `assignmentFidelity`, so it cannot survive an edit that weakens the ceiling. Every DOES-NOT-BITE
-witness is stated on the ceiling's own bound *expression* with the operating point as a hypothesis
-(rather than on a bare numeral): that is the strongest honest form, since a permissive ceiling
-licenses a high-fidelity readout but does not exhibit one. -/
+about `assignmentFidelity`, so it cannot survive an edit that weakens the ceiling.
+
+Every DOES-NOT-BITE witness is a PAIR of conjuncts naming the SAME expression: the ceiling's own
+conclusion, obtained by CALLING it, and the permissive bound on that expression, with the operating
+point as a hypothesis. A permissive ceiling licenses a high-fidelity readout but does not exhibit
+one, so the pair is as strong as this shape honestly gets — but it is the ceiling call, not the
+matching expression, that ties the witness to the shipped theorem.
+
+(Corrected 2026-07-31: this note previously described the roster as "stated on the ceiling's own
+bound expression", the weaker shape without the call — and two of the four matched that description
+literally. `photon_budget_ceiling_does_not_bite` and `relaxation_thermal_ceiling_does_not_bite`
+called no ceiling at all while claiming in prose to track one; both now call theirs, which is why
+the description above can be stated of all four.) -/
 
 /-- **Relaxation ⊕ thermal ceiling BITES.** At a vanishing level splitting (`x = 0`) the thermal
 branch alone pins the excited-state population at `1/2`, so the two-mechanism ceiling is at most
@@ -519,10 +566,19 @@ theorem relaxation_thermal_ceiling_bites {t T1 e0 e1 : ℝ} (he0 : 0 ≤ e0)
 
 /-- **Relaxation ⊕ thermal ceiling does NOT bite.** At `t/T₁ = 1/100` and a splitting `x = 98`
 both branches sit below `1/100`, so the ceiling exceeds `199/200` — it permits a `0.99` readout.
-Uses only the rational `exp` enclosures, no transcendental evaluation. -/
-theorem relaxation_thermal_ceiling_does_not_bite {t T1 : ℝ} (hr : t / T1 = 1 / 100) :
-    (199 : ℝ) / 200
-      ≤ 1 - max (readoutDecayProb t T1) (thermalExcitedPop 98) / 2 := by
+Uses only rational `exp` enclosures, no transcendental evaluation.
+
+Same paired shape as the other three does-not-bite witnesses: the first conjunct is
+`relaxation_thermal_ceiling`'s own conclusion, obtained by calling it, and the second bounds that
+same expression from below. (Corrected 2026-07-31: previously the permissive bound alone, calling
+no ceiling — §4.1's roster note claimed otherwise for the whole class.) -/
+theorem relaxation_thermal_ceiling_does_not_bite {t T1 e0 e1 : ℝ} (he0 : 0 ≤ e0)
+    (hd : readoutDecayProb t T1 ≤ e1) (hth : thermalExcitedPop 98 ≤ e1)
+    (hr : t / T1 = 1 / 100) :
+    assignmentFidelity e0 e1 ≤ 1 - max (readoutDecayProb t T1) (thermalExcitedPop 98) / 2
+      ∧ (199 : ℝ) / 200
+        ≤ 1 - max (readoutDecayProb t T1) (thermalExcitedPop 98) / 2 := by
+  refine ⟨relaxation_thermal_ceiling he0 hd hth, ?_⟩
   have hdec : readoutDecayProb t T1 ≤ 1 / 100 := by
     have henc := (QuantumNetwork.expNeg_enclosure (r := (1 : ℝ) / 100) (by norm_num)).1
     unfold readoutDecayProb
@@ -548,12 +604,21 @@ theorem photon_budget_ceiling_bites {Nb Na : NNReal} {δ : ℕ → ℝ} (hδ : D
   linarith
 
 /-- **Photon-budget ceiling does NOT bite.** At a separation of `99` the ceiling exceeds
-`399/400`, permitting a `0.99` readout. Stated on the ceiling's own Bhattacharyya-affinity bound
-with the separation as a hypothesis, so it tracks the shipped `photon_budget_ceiling`. -/
-theorem photon_budget_ceiling_does_not_bite {Nb Na : NNReal}
+`399/400`, permitting a `0.99` readout.
+
+The two conjuncts name the SAME expression, and the first of them is obtained by CALLING
+`photon_budget_ceiling` — so "tracks the shipped ceiling" is structural rather than a prose claim.
+(Corrected 2026-07-31: this theorem previously stated only the permissive bound, restating the
+ceiling's Bhattacharyya-affinity expression by hand while its docstring asserted that it tracked
+`photon_budget_ceiling`. It called nothing, and would have survived any edit to the ceiling.) -/
+theorem photon_budget_ceiling_does_not_bite {Nb Na : NNReal} {δ : ℕ → ℝ}
+    (hδ : Detection.IsCountRule δ)
     (hsep : (Real.sqrt (Na : ℝ) - Real.sqrt (Nb : ℝ)) ^ 2 = 99) :
-    (399 : ℝ) / 400
-      ≤ 1 - (1 / 4) * Real.exp (-(Real.sqrt (Na : ℝ) - Real.sqrt (Nb : ℝ)) ^ 2) := by
+    assignmentFidelity (Detection.falseAlarm Nb δ) (Detection.missProb Na δ)
+        ≤ 1 - (1 / 4) * Real.exp (-(Real.sqrt (Na : ℝ) - Real.sqrt (Nb : ℝ)) ^ 2)
+      ∧ (399 : ℝ) / 400
+        ≤ 1 - (1 / 4) * Real.exp (-(Real.sqrt (Na : ℝ) - Real.sqrt (Nb : ℝ)) ^ 2) := by
+  refine ⟨photon_budget_ceiling hδ, ?_⟩
   rw [hsep]
   have henc := (QuantumNetwork.expNeg_enclosure (r := (99 : ℝ)) (by norm_num)).2
   norm_num at henc ⊢
