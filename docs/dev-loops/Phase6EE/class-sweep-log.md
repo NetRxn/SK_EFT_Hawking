@@ -37,3 +37,61 @@ two of them theorem restatements rather than prose edits.
   grounds in dependency containment rather than asserting.
 - `lean/lean_deps.json` is stale for slot 2's two restatements until ExtractDeps re-runs; a
   cited-means-called re-run will show false MISSes for them until then.
+
+
+---
+
+# Item G verdict: DISCOVERY pass, not confirmation
+
+Stated plainly, per the process correction: **B and C were not done properly.** G returned
+20 findings (2 BLOCKER, 10 REQUIRED, 8 RECOMMENDED). Every instance the sweep enumerated and
+patched checks out; the CLASS did not get swept.
+
+## Why the enumeration could not have worked
+
+1. **It is line-oriented.** BLOCKER 1.1's primary site (`BanachAveraging.lean:94-95`) was
+   missed purely because the docstring hard-wraps mid-phrase: "…`‖L s‖ ≤ 1` would" /
+   "exclude every rotation…". Any line-oriented sweep over this corpus under-reports.
+   **Corrected: unwrap each doc block to one line before matching.**
+2. **Its patterns were the wrong family.** All three surviving class defects carry no
+   numeral, no superlative, and no unresolvable identifier. The class-level patterns that
+   DO reach them are universals, counterfactuals, ordinals and comparatives — measured
+   below.
+3. **`lean_docstring_refs_resolve` is structurally blind here.** It passes with ZERO
+   `Control` findings, because every mis-pointed identifier G found *exists*. A
+   name-resolution gate cannot see "cited but not called" or "points at the wrong sibling".
+
+## Corrected sweep (unwrapped blocks, class-level patterns)
+
+| pattern | blocks |
+|---|---|
+| universal (`every X would…`) | 16 |
+| counterfactual (`would survive/exclude/fail…`) | 8 |
+| ordinal (`first conjunct`) | 3 |
+| comparative (`stronger than`) | 2 |
+| identity-claim (`IS`, `is exactly`, `equals`) | 146 |
+
+146 blocks carry at least one, against 53 sites from the line-oriented version. This is
+**still a candidate generator, not a defect list** — the identity-claim row in particular
+will be mostly legitimate. The lesson from the first sweep stands: adjudicate, don't
+blanket-edit.
+
+## Fixed from G
+
+- **BLOCKER 3.1** — `rwaRate`'s docstring said "half the magnitude of `rwaGenerator`" and
+  justified it with `H_RWA² = rate²·1`, which says the magnitude IS the rate. The
+  justification refuted its own claim in the same sentence, and `DriveCalibration.lean:102`
+  is titled "The rate in the calibration formula IS the generator magnitude".
+- **BLOCKER 1.1** — the "excludes every rotation" universal is proved for the TRANSVERSE
+  family only; `norm_zRotation` gives `‖zRotation θ‖ = 1` at every θ, and the module's own
+  headline `diagonal_drive_propagator_bound` instantiates the capstone at `KL = KU = KUr = 1`
+  and succeeds. Scoped at all four sites to what is proved.
+
+## Still open from G (not yet actioned)
+
+`kramers_degeneracy_instantiated` is NOT non-degenerate and cannot be at ℂ² (for Θ = J∘K the
+commuting algebra is the quaternions; discriminant −4(Im α² + |β|²) ≤ 0 forces a real
+eigenvalue to mean H = real scalar). Nondegeneracy needs dim ≥ 4 — real infrastructure, and
+the claim that it rules `kramers_degeneracy` out of vacuity should be withdrawn or the
+witness rebuilt. Roadmap line 79 overshot (generalises to five witnesses; one calls no
+ceiling). Plus 4.1/4.2, 5.1–5.4, 6.1, 7.1/7.2, 8.1/8.2.

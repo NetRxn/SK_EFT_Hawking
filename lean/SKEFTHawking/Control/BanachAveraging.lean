@@ -98,7 +98,10 @@ this theorem is instantiated at concrete matrices, by
 `SKEFTHawking.Control.one_lt_norm_rwaPropagator_transverse`, with the norm computed exactly in
 `norm_rwaPropagator_transverse`. This module is upstream of those, so it cannot cite them by call;
 the pointer is by name deliberately. Carrying general bounds keeps the theorem applicable to the
-intended objects in any norm. -/
+intended objects in any norm.
+
+⚠️ SCOPE (6EE item-G BLOCKER 1.1, corrected 2026-08-01). This exclusion is proved for the TRANSVERSE family only — `one_lt_norm_rwaPropagator_transverse` is quantified over `rwaPropagator ω ω Ω 0 1 0 t`. It is FALSE as a universal: `norm_zRotation` gives `‖zRotation θ‖ = 1` at every `θ`, lifted to propagators by `norm_rwaPropagator_diagonal`, and the module's own headline instantiation `diagonal_drive_propagator_bound` calls `rwa_propagator_difference_bound_physical … 1 1 1` — i.e. with `KL = KU = KUr = 1` — and succeeds. The general binders earn their generality on the transverse family, not on every propagator.
+-/
 theorem norm_integral_mul_mul_le [CompleteSpace A] {B KL KU Kp Kq T : ℝ}
     (hS : ∀ s, HasDerivAt S (G s) s)
     (hL : ∀ s, HasDerivAt L (L s * P s) s) (hU : ∀ s, HasDerivAt U (Q s * U s) s)

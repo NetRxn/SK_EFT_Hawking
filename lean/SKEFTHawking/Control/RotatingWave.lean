@@ -811,7 +811,10 @@ the discrepancy identity and the unitarity transfer from `BanachAveraging`.
 
 The antiderivative's properties (its derivative, continuity, vanishing at `0`, and its bound) are
 DISCHARGED here from `hω`/`hΩ` rather than assumed, so the conclusion carries the explicit
-Bloch–Siegert constant `2(Ω/ω)·ℓ¹` instead of an arbitrary `B`. -/
+Bloch–Siegert constant `2(Ω/ω)·ℓ¹` instead of an arbitrary `B`.
+
+⚠️ SCOPE (6EE item-G BLOCKER 1.1, corrected 2026-08-01). This exclusion is proved for the TRANSVERSE family only — `one_lt_norm_rwaPropagator_transverse` is quantified over `rwaPropagator ω ω Ω 0 1 0 t`. It is FALSE as a universal: `norm_zRotation` gives `‖zRotation θ‖ = 1` at every `θ`, lifted to propagators by `norm_rwaPropagator_diagonal`, and the module's own headline instantiation `diagonal_drive_propagator_bound` calls `rwa_propagator_difference_bound_physical … 1 1 1` — i.e. with `KL = KU = KUr = 1` — and succeeds. The general binders earn their generality on the transverse family, not on every propagator.
+-/
 theorem norm_integral_counterRotating_conjugated_le
     {L U P Q : ℝ → Matrix (Fin 2) (Fin 2) ℂ} {KL KU Kp Kq T ω Ω φ a b c d : ℝ}
     (hω : 0 < ω) (hΩ : 0 ≤ Ω)
@@ -838,8 +841,16 @@ The closed form works only because `rwaGenerator_sq` says `H_RWA² = rate²·1`;
 consumed here rather than merely cited, and it is what turns `cos θ·1 − i(sin θ/rate)·H` into a
 solution of `U' = −i·H·U`. -/
 
-/-- The co-rotating rotation RATE, `√(Δ² + Ω²m²)/2` — half the magnitude of `rwaGenerator`. The
-"half the magnitude" is `rwaRate_sq` below read against `rwaGenerator_sq`: `H_RWA² = rate²·1`. -/
+/-- The co-rotating rotation RATE, `√(Δ² + Ω²m²)/2`.
+
+⚠️ Corrected 2026-08-01 (6EE item-G BLOCKER 3.1). This docstring said the rate is "half the
+magnitude of `rwaGenerator`" and then justified it with `H_RWA² = rate²·1` — which says the
+magnitude **IS** the rate, not half of it. The justification refuted the claim it was offered for,
+in the same sentence, and `DriveCalibration.lean:102` is titled "The rate in the calibration formula
+IS the generator magnitude". The `/2` is in the DEFINITION of the rate relative to
+`√(Δ² + Ω²m²)`; it is not a factor between the rate and the generator's magnitude.
+
+`rwaRate_sq` read against `rwaGenerator_sq` gives `H_RWA² = rate²·1`, i.e. `‖H_RWA‖ = rate`. -/
 noncomputable def rwaRate (Δ Ω b c : ℝ) : ℝ := Real.sqrt (Δ ^ 2 + Ω ^ 2 * (b ^ 2 + c ^ 2)) / 2
 
 /-- The angle is the rate times the duration. -/
@@ -1206,7 +1217,10 @@ theorem linftyOpNorm_one_sub_I_sigmaX :
 
 /-- **`‖U_rwa‖ = √2` at the quarter turn** — so a hypothesis `‖L s‖ ≤ 1` in the `ℓ^∞` operator norm
 would exclude this rotation outright. The general `KL`/`KU` binders in `BanachAveraging` are
-load-bearing, and this is the proof rather than the assertion. -/
+load-bearing, and this is the proof rather than the assertion.
+
+⚠️ SCOPE (6EE item-G BLOCKER 1.1, corrected 2026-08-01). This exclusion is proved for the TRANSVERSE family only — `one_lt_norm_rwaPropagator_transverse` is quantified over `rwaPropagator ω ω Ω 0 1 0 t`. It is FALSE as a universal: `norm_zRotation` gives `‖zRotation θ‖ = 1` at every `θ`, lifted to propagators by `norm_rwaPropagator_diagonal`, and the module's own headline instantiation `diagonal_drive_propagator_bound` calls `rwa_propagator_difference_bound_physical … 1 1 1` — i.e. with `KL = KU = KUr = 1` — and succeeds. The general binders earn their generality on the transverse family, not on every propagator.
+-/
 theorem norm_rwaPropagator_quarter_turn (ω Ω : ℝ) (hΩ : 0 < Ω) :
     ‖rwaPropagator ω ω Ω 0 1 0 (Real.pi / (2 * Ω))‖ = Real.sqrt 2 := by
   have hfac : rwaPropagator ω ω Ω 0 1 0 (Real.pi / (2 * Ω))
@@ -1249,7 +1263,10 @@ operator norm would exclude the whole family, not merely the quarter turn.
 This is the general form of the satisfiability claim that `BanachAveraging`'s
 `norm_integral_mul_mul_le` docstring makes when it says pinning `KL`, `KU` to `1` would exclude
 essentially every rotation; `one_lt_norm_rwaPropagator_quarter_turn` above is the `θ = π/4`
-instance. -/
+instance.
+
+⚠️ SCOPE (6EE item-G BLOCKER 1.1, corrected 2026-08-01). This exclusion is proved for the TRANSVERSE family only — `one_lt_norm_rwaPropagator_transverse` is quantified over `rwaPropagator ω ω Ω 0 1 0 t`. It is FALSE as a universal: `norm_zRotation` gives `‖zRotation θ‖ = 1` at every `θ`, lifted to propagators by `norm_rwaPropagator_diagonal`, and the module's own headline instantiation `diagonal_drive_propagator_bound` calls `rwa_propagator_difference_bound_physical … 1 1 1` — i.e. with `KL = KU = KUr = 1` — and succeeds. The general binders earn their generality on the transverse family, not on every propagator.
+-/
 theorem one_lt_norm_rwaPropagator_transverse (ω Ω t : ℝ) (hΩ : 0 < Ω)
     (hc : Real.cos (Ω * t / 2) ≠ 0) (hs : Real.sin (Ω * t / 2) ≠ 0) :
     1 < ‖rwaPropagator ω ω Ω 0 1 0 t‖ := by
