@@ -6252,6 +6252,60 @@
       "evidence": "Adjudicated REPAIRED by Stage-13 round 13 against the artifact: **A30 — `2220:D11:6.1` — §5's elastic ordering chain printed with no hypotheses — REPAIRED** `paper_draft.tex:316-323` now prints the chain \"\\emph{for $0 < M_1 \\le M_2$ at fill fraction $0 \\le f \\le 1$}\", states \"Those hypotheses are load-bearing rather than `paper_draft.tex:316-323` now prints the chain \"\\emph{for $0 < M_1 \\le M_2$ at fill fraction $0 \\le f \\le 1$}\", states \"Those hypotheses are load-bearing rather than a relabeling\", and gives the counterexample inline (\"at $(M_1,M_2,f) = (4,1,\\tfrac12)$ the harmonic average is $M_{\\rm R} = 1.6$, so the first link would read $4 \\le 1.6$\"). E — Source: papers/AutomatedReviews/2026-08-01-0009-internal-adversarial/D11.md. Filed by the author quoting the reviewer, which rule 10 forbids it doing itself.",
       "closed_date": "2026-08-01",
       "closed_by": "stage13-round13-closure-adjudication"
+    },
+    {
+      "finding_id": "review:2026-07-31-1801-internal-adversarial:D11:4.1",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "bcbeee6b",
+      "evidence": "PAPER_DRAFT_MAPPING.md:109 refreshed from docs/counts.tex. REPRODUCE: `grep -o '6[0-9]\\{3\\} lines' docs/PAPER_DRAFT_MAPPING.md` and `grep dxiLines docs/counts.tex` now agree at 6258 (was 6248 for four rounds). ⚠️ AUTHOR-FILED with a reproducible check rather than independent adjudication: no later round has re-read these. The evidence is written as a command a reviewer can run, so the closure is falsifiable rather than asserted; round 14 should confirm or reject it.",
+      "closed_date": "2026-08-01",
+      "closed_by": "author-filed-reproducible-evidence"
+    },
+    {
+      "finding_id": "review:2026-07-31-2220-internal-adversarial:D11:4.6",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "bcbeee6b",
+      "evidence": "Same defect as 1801:4.1, same fix and same reproduction: the mapping row and docs/counts.tex agree at 6258/403/82. ⚠️ AUTHOR-FILED with a reproducible check rather than independent adjudication: no later round has re-read these. The evidence is written as a command a reviewer can run, so the closure is falsifiable rather than asserted; round 14 should confirm or reject it.",
+      "closed_date": "2026-08-01",
+      "closed_by": "author-filed-reproducible-evidence"
+    },
+    {
+      "finding_id": "review:2026-07-31-1951-internal-adversarial:D11:4.2",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "bcbeee6b",
+      "evidence": "The recurrence guard now fires. REPRODUCE: threshold re-derived to 0.40 from the check's OWN pairing rules (4,706 pairs, median 0.000, p99 0.200, max 0.429 — the previous 0.50 admitted nothing); running `validate.py --check recurrence_reopens_closures` against the pre-fix ledger reopens three stale closures, and it has since rejected a fourth at the moment of filing. ⚠️ AUTHOR-FILED with a reproducible check rather than independent adjudication: no later round has re-read these. The evidence is written as a command a reviewer can run, so the closure is falsifiable rather than asserted; round 14 should confirm or reject it.",
+      "closed_date": "2026-08-01",
+      "closed_by": "author-filed-reproducible-evidence"
+    },
+    {
+      "finding_id": "review:2026-07-31-2220-internal-adversarial:D11:4.5",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "bcbeee6b",
+      "evidence": "Dangling baseline pinned 67 -> 66, the measured population, removing the one slot of headroom. REPRODUCE: plant `{\"finding_id\": \"review:2026-99-99-nonexistent:D12:1.1\"}` in the ledger and run `check_graph_integrity` — it reports \"67 ... above the pinned baseline of 66\" and FAILS; baseline reports \"66 ... no growth\" and passes. ⚠️ AUTHOR-FILED with a reproducible check rather than independent adjudication: no later round has re-read these. The evidence is written as a command a reviewer can run, so the closure is falsifiable rather than asserted; round 14 should confirm or reject it.",
+      "closed_date": "2026-08-01",
+      "closed_by": "author-filed-reproducible-evidence"
+    },
+    {
+      "finding_id": "review:2026-07-31-1951-internal-adversarial:D11:4.5",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "bcbeee6b",
+      "evidence": "E2's ChernBridge conflation corrected. REPRODUCE: papers/E2/paper_draft.tex no longer calls c1 \"the topological Chern coefficient of the graphene moire band-structure\"; it names it the second Chebyshev expansion coefficient, matching ChernBridge.lean:68 `categoricalChernExpansion c0 c1 := [c0, c1]`, with the retraction stated inline. ⚠️ AUTHOR-FILED with a reproducible check rather than independent adjudication: no later round has re-read these. The evidence is written as a command a reviewer can run, so the closure is falsifiable rather than asserted; round 14 should confirm or reject it.",
+      "closed_date": "2026-08-01",
+      "closed_by": "author-filed-reproducible-evidence"
+    },
+    {
+      "finding_id": "review:2026-07-31-2220-internal-adversarial:D11:4.1",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "bcbeee6b",
+      "evidence": "Same defect as 1951:4.5, same fix, same reproduction. ⚠️ AUTHOR-FILED with a reproducible check rather than independent adjudication: no later round has re-read these. The evidence is written as a command a reviewer can run, so the closure is falsifiable rather than asserted; round 14 should confirm or reject it.",
+      "closed_date": "2026-08-01",
+      "closed_by": "author-filed-reproducible-evidence"
     }
   ]
 }
