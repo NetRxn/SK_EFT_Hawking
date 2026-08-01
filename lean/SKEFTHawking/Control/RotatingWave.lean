@@ -806,7 +806,7 @@ leaving a theorem that is true but about `ℓ^∞`-contractive propagators rathe
 module exists to bound.
 
 SCOPE. This bounds the CONJUGATED integrated remainder `‖∫₀ᵀ L·V·U‖`. The literal
-`‖U_exact(T) − U_rwa(T)‖` form is `rwa_propagator_difference_bound` below, which composes this with
+`‖U-exact(T) − U_rwa(T)‖` form is `rwa_propagator_difference_bound` below, which composes this with
 the discrepancy identity and the unitarity transfer from `BanachAveraging`.
 
 The antiderivative's properties (its derivative, continuity, vanishing at `0`, and its bound) are
@@ -1003,7 +1003,7 @@ theorem rwaPropagator_trace (ω₀ ω Ω φ b c t : ℝ) :
 
 A propagator solves `dU/dt = −i·H·U`, so for a propagator PAIR the generator difference `P + Q`
 carries a factor `−i` relative to the Hamiltonian remainder `V`: with `L = U_rwa⁻¹` and
-`U = U_exact` one gets `P = i·H_RWA`, `Q = −i·H_I`, hence `P + Q = −i·V`. The object whose
+`U = U-exact` one gets `P = i·H_RWA`, `Q = −i·H_I`, hence `P + Q = −i·V`. The object whose
 derivative is `P + Q` is therefore `−i·S`, **not** `S`.
 
 This matters: stating the propagator bound against `S` itself would force
@@ -1033,12 +1033,12 @@ theorem schrodingerAntiderivative_norm_le (ω Ω φ a b c d t : ℝ) (hω : 0 < 
 
 /-- **The propagator difference bound for the RWA system, at Bloch–Siegert scale.**
 
-This is the literal `‖U_exact(T) − U_rwa(T)‖` statement. The Bloch–Siegert constant originates in
+This is the literal `‖U-exact(T) − U_rwa(T)‖` statement. The Bloch–Siegert constant originates in
 `bsAntiderivative_norm_le` and reaches this proof through the `−i`-scaled
 `schrodingerAntiderivative_norm_le` (§4.1), which is the theorem actually called; the scaling is by
 a unit phase, so the constant is unchanged. Hence the bound carries an explicit `Ω/ω`:
 
-`‖U_exact(T) − U_rwa(T)‖ ≤ KUr·KL·KU·2(Ω/ω)(|a|+|b|+|c|+|d|)·(1 + T(Kp+Kq))`.
+`‖U-exact(T) − U_rwa(T)‖ ≤ KUr·KL·KU·2(Ω/ω)(|a|+|b|+|c|+|d|)·(1 + T(Kp+Kq))`.
 
 `hω : 0 < ω` and `hΩ : 0 ≤ Ω` are load-bearing — they are what make the constant `Ω/ω` rather than
 an arbitrary `B`. The reduction is nowhere asserted as an equality.
@@ -1067,7 +1067,7 @@ theorem rwa_propagator_difference_bound
 /-! ### 4.1b The bound AT THE PHYSICAL PAIR — U_exact against U_rwa
 
 §4.1's theorem is stated over abstract `L`, `U`, `P`, `Q`; the identification
-`L = U_rwa⁻¹`, `U = U_exact`, `P = i·H_RWA`, `Q = −i·H_I` lived only in its docstring. This
+`L = U_rwa⁻¹`, `U = U-exact`, `P = i·H_RWA`, `Q = −i·H_I` lived only in its docstring. This
 section performs that identification as a declaration, so the bound is *about* the exact and
 co-rotating propagators rather than about a binder pattern they are said to fit.
 
@@ -1678,9 +1678,9 @@ all SEVEN conjuncts hold at once, and an exact solution exists in closed form:
 2. the co-rotating generator is nonzero (so `U_rwa` genuinely rotates);
 3. the drive operator is **not** a multiple of the identity (so the drive is not a global phase);
 4. the counter-rotating remainder is nonzero as a FUNCTION;
-5. `U_exact(0) = 1`;
-6. `U_exact` solves the EXACT interaction-picture equation, counter-rotating term included;
-7. `U_exact` factors as `phase · zRotation (Φ_d t) · U_rwa(t)` at every `t`
+5. `U-exact(0) = 1`;
+6. `U-exact` solves the EXACT interaction-picture equation, counter-rotating term included;
+7. `U-exact` factors as `phase · zRotation (Φ_d t) · U_rwa(t)` at every `t`
    (`diagonalExactPropagator_factor`).
 
 Conjunct 7 is what makes the RWA error a **relative rotation rather than a phase**: the discarded
