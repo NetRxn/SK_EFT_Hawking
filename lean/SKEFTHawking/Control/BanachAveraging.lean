@@ -58,7 +58,8 @@ theorem hasDerivAt_averaging (hS : ∀ s, HasDerivAt S (G s) s)
       (L s * P s * S s * U s + L s * G s * U s + L s * S s * (Q s * U s)) s :=
   hasDerivAt_mul₃ (hL s) (hS s) (hU s)
 
-/-- **First-order averaging identity** (FTC applied to `L·S·U`). -/
+/-- **First-order averaging identity** (FTC applied to `L·S·U`). "First-order" names the order of
+the averaging expansion — one integration by parts — not a priority or a sharpness claim. -/
 theorem integral_averaging [CompleteSpace A] (hS : ∀ s, HasDerivAt S (G s) s)
     (hL : ∀ s, HasDerivAt L (L s * P s) s) (hU : ∀ s, HasDerivAt U (Q s * U s) s)
     (hcont : Continuous fun s =>
@@ -74,16 +75,30 @@ theorem integral_averaging [CompleteSpace A] (hS : ∀ s, HasDerivAt S (G s) s)
 
 The payoff. `∫₀ᵀ L·G·U` is bounded using only a bound `B` on the ANTIDERIVATIVE `S`, never on `G`
 itself. A pointwise bound on `G` would give `O(‖G‖·T)`; this gives `B·(1 + T(Kp+Kq))`, and when `G`
-oscillates fast `B` is small even though `‖G‖` is not. That is the whole mechanism behind the
-Bloch–Siegert scale. -/
+oscillates fast `B` is small even though `‖G‖` is not. That is the mechanism behind the
+Bloch–Siegert scale.
 
-/-- **The first-order averaging bound.**
+Both halves of that contrast are shipped downstream rather than left as motivation — at the
+concrete drive, `SKEFTHawking.Control.integral_counterRotating_naive_bound` is the `O(‖G‖·T)` side
+and `integral_counterRotating_norm_le` the `T`-uniform side, with
+`norm_integral_counterRotating_conjugated_le` the instantiation of THIS section's bound. Named, not
+called: `RotatingWave` imports this module, not the other way round. -/
+
+/-- **The first-order averaging bound.** "First-order" is the order of the averaging expansion —
+one integration by parts, as in `integral_averaging`. No sharpness is claimed for the constant
+`KL·KU·B·(1 + T(Kp+Kq))`: it is an upper bound assembled from the triangle inequality and
+submultiplicativity, and nothing in the statement asserts it cannot be improved.
 
 The factor bounds `KL`, `KU` are ARBITRARY, not pinned to `1`. That matters concretely: at the
-`ℓ^∞` operator norm a generic `2×2` unitary has norm `> 1` (the co-rotating propagator
+`ℓ^∞` operator norm a `2×2` unitary generally has norm `> 1` (the co-rotating propagator
 `exp(-iθσ_x)` has row sums `|cos θ| + |sin θ|`, reaching `√2`), so a hypothesis `‖L s‖ ≤ 1` would
-exclude essentially every rotation — i.e. exactly the propagators this machinery exists to bound.
-Carrying general bounds keeps the theorem applicable to the intended objects in any norm. -/
+exclude every rotation whose angle is not a multiple of `π/2` — i.e. exactly the propagators this
+machinery exists to bound. That exclusion is not a plausibility argument: it is discharged where
+this theorem is instantiated at concrete matrices, by
+`SKEFTHawking.Control.one_lt_norm_rwaPropagator_transverse`, with the norm computed exactly in
+`norm_rwaPropagator_transverse`. This module is upstream of those, so it cannot cite them by call;
+the pointer is by name deliberately. Carrying general bounds keeps the theorem applicable to the
+intended objects in any norm. -/
 theorem norm_integral_mul_mul_le [CompleteSpace A] {B KL KU Kp Kq T : ℝ}
     (hS : ∀ s, HasDerivAt S (G s) s)
     (hL : ∀ s, HasDerivAt L (L s * P s) s) (hU : ∀ s, HasDerivAt U (Q s * U s) s)
@@ -158,9 +173,10 @@ theorem norm_integral_mul_mul_le [CompleteSpace A] {B KL KU Kp Kq T : ℝ}
 
 Two links. First, the product of two ODE solutions `L' = L·P`, `U' = Q·U` is itself an ODE solution
 with generator `P + Q`, so FTC turns `∫₀ᵀ L·(P+Q)·U` into the boundary value `L T·U T − L 0·U 0` —
-this is the discrepancy identity. Second, when `L` is a left inverse of a third propagator `Ur`, the
-difference `U − Ur` factors as `Ur·(L·U − 1)`, transferring the bound off the conjugated quantity
-and onto the literal difference. -/
+this is the discrepancy identity. Second, when `L T` is a RIGHT inverse of a third propagator `Ur`
+— that is, `Ur · L T = 1`, the `hinv` hypothesis of `norm_propagator_sub_le`; the factorisation
+below needs the product in that order — the difference `U T − Ur` factors as `Ur·(L T·U T − 1)`,
+transferring the bound off the conjugated quantity and onto the literal difference. -/
 
 /-- The product of two ODE solutions solves the ODE with the SUMMED generator. -/
 theorem hasDerivAt_mul_ode (hL : ∀ s, HasDerivAt L (L s * P s) s)
@@ -193,8 +209,10 @@ theorem norm_sub_le_norm_mul_sub_one {Ue Ur Vr : A} {KUr : ℝ} (hinv : Ur * Vr 
     (mul_le_mul_of_nonneg_right hUr (norm_nonneg _))
 
 /-- **The propagator difference bound.** The capstone: the difference between the exact propagator
-`U` and the reduced propagator `Ur` is bounded by `B·(1 + T·(Kp+Kq))`, where `B` bounds the
-ANTIDERIVATIVE of the discrepancy generator `P + Q`.
+`U` and the reduced propagator `Ur` is bounded by `KUr·KL·KU·B·(1 + T·(Kp+Kq))`, where `B` bounds
+the ANTIDERIVATIVE of the discrepancy generator `P + Q`. The three factor bounds are part of the
+constant and are written out here — dropping them to `B·(1 + T·(Kp+Kq))` would state a strictly
+stronger bound than the theorem proves.
 
 Nothing here asserts the reduction as an equality; the conclusion is an inequality whose constant is
 explicit in every parameter. -/
