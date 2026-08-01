@@ -3390,12 +3390,36 @@ def check_graph_integrity() -> CheckResult:
         _dangling = sorted({e["finding_id"] for e in _entries
                             if e.get("finding_id", "").startswith("review:")
                             and e["finding_id"] not in _known})
-        # Baseline pinned 2026-07-31: 67 pre-existing records use annotated IDs
-        # ("...:5.1-5.3", "...:3.1-residual", "...:1.2prime") that never matched a
-        # node. That is real debt but not this session's; failing on it would
-        # manufacture a blocker. We FAIL only on GROWTH, so a newly-filed dangling
-        # closure — the defect this check exists for — is caught immediately.
-        _LEDGER_DANGLING_BASELINE = 67
+        # Baseline re-measured 2026-08-01 (D11 Stage-13 round-13 finding 2220:4.5). It was
+        # pinned at 67 against a population of 66, i.e. it carried one slot of headroom in
+        # which a NEW dangling record could be filed without failing — in the one guard
+        # whose whole purpose is to catch newly-filed closures that name nothing.
+        #
+        # Its justifying comment was also wrong about the population it describes. Measured:
+        # of the 66, 53 use annotated IDs and 13 do not — the comment claimed all 67 were
+        # annotated. 67 was the count of ledger ids MENTIONING stage9/stage10, a different
+        # population that happened to be one larger.
+        #
+        # Pinned to the exact count, so any growth fails on the first record.
+        _LEDGER_DANGLING_BASELINE = 66
+        #
+        # ⚠️ UNRESOLVED, VERIFIED 2026-08-01: THIS GUARD DOES NOT RUN. Planting a record
+        # `{"finding_id": "review:2026-99-99-nonexistent:D12:1.1", ...}` — which the same
+        # predicate, evaluated standalone, counts as dangling (66 -> 67, above the
+        # baseline) — leaves `check_bundle_registry_consistency` passing, and NO
+        # `ledger_ids_resolve` detail appears in its output at all. Reproduced in a single
+        # fresh process with the plant applied before the import, so it is not a caching
+        # artifact of my test.
+        #
+        # The guard is therefore silently absent, not merely mis-tuned: the baseline
+        # correction above is right (the true population is 66, not 67) and changes
+        # nothing, because the comparison never executes. Most likely the enclosing
+        # try/except swallows something, but I have NOT diagnosed it and am not guessing —
+        # eleven guards this session failed because I shipped a plausible fix without
+        # measuring, and this is the twelfth defect of the same family.
+        #
+        # This is the guard that exists to catch a newly-filed closure naming nothing,
+        # which is exactly the failure mode of three ledger records found this session.
         if len(_dangling) > _LEDGER_DANGLING_BASELINE:
             _s = ", ".join(_dangling[:4])
             roster_details.append(Detail(
