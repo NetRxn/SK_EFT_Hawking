@@ -1,0 +1,27 @@
+{
+  "_why": "Frozen recurrence-matching fixture. QI: qi-threshold-calibration-consumes-its-own-datum. Three times in one session a threshold was set just under the live corpus maximum by the same commit that repaired the pair producing that maximum: _PREFIX_FLOOR=30 (ceiling 18) -> _MIN_OVERLAP=0.50 (ceiling 0.429) -> _MIN_OVERLAP=0.40 (ceiling 0.375). Each was measured honestly and each was unreachable on arrival. A threshold on a self-remediating corpus must be calibrated against FROZEN labelled pairs, not a live sweep.",
+  "positives": [
+    [
+      "PAPER_DRAFT_MAPPING.md:109 reports 6144 / 394 / 83 against the generated",
+      "PAPER_DRAFT_MAPPING.md:109 = 6248 vs dxiLines 6258, fourth round"
+    ],
+    [
+      "effectiveModuli_enclosure docstring still claims the Voigt-Reuss-Hill theorem",
+      "EffectiveModuli.lean:44,47 effective modulus docstrings survive"
+    ],
+    [
+      "the recurrence guard shipped at HEAD cannot fire",
+      "_MIN_OVERLAP sits above the corpus ceiling again"
+    ]
+  ],
+  "negatives": [
+    [
+      "the abstract asserts a PhysLib dependency none of the 22 modules has",
+      "PAPER_DRAFT_MAPPING.md:109 = 6248 vs dxiLines 6258, fourth round"
+    ],
+    [
+      "Gate 4 runs on a hand-curated 4 of 27 D12 formulas",
+      "effectiveModuli_enclosure docstring still claims the Voigt-Reuss-Hill theorem"
+    ]
+  ]
+}

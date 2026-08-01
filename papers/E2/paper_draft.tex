@@ -422,7 +422,13 @@ of the categorical marker vanishes.
 called $c_1$ ``the topological Chern coefficient of the graphene moir\'e band-structure''.
 It is neither: \texttt{ChernBridge.lean:68} defines
 \texttt{categoricalChernExpansion c0 c1 := [c0, c1]}, a two-term Chebyshev expansion, and
-no graphene, moir\'e superlattice or Brillouin zone appears anywhere in that module. The
+no graphene and no moir\'e superlattice appear anywhere in that module.
+(\emph{Corrected 2026-08-01}: an earlier version of this retraction also claimed no
+Brillouin zone appears. That was false --- \texttt{ChernBridge.lean:14} frames the
+crystalline limit as a Brillouin-zone Chern number reducing to a sum. The retraction is
+therefore narrower than first written: $c_1$ is a Chebyshev coefficient and the module makes
+no graphene or moir\'e claim, but it does invoke the Brillouin-zone reading, so the
+correction must not be quoted as denying that.) The
 substitution also contradicted D11's own novelty carve-out, which states that this group's
 \texttt{ChernBridge} marker is a different object from a Bloch-band invariant.} The Aalto Chebyshev-TN
 methodology~\cite{TindallMelloFishmanStoudenmireSels2026Science392}

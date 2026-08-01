@@ -3758,6 +3758,13 @@ PAPER_DEPENDENCIES = {
             # four to leave out.
             'gaussian_q', 'gaussian_threshold_error_floor',
             'folklore_miss_floor', 'folklore_gap_exponent',
+            # 28, not 27 (D12 round-14 BLOCKER 14.1). Round 13 said "27 public
+            # functions" and named FIVE omissions against a list of 23 — arithmetic
+            # that closes only at 28. I took the wrong half. `snr_chain_window_ceiling`
+            # is verified, carries golden coverage, and paper_draft.tex:335-337 cites
+            # all three of its theorems by name. Lineage of this one sentence:
+            # "all 4" -> "the full 23-formula domain surface" -> "all 27" -> 28.
+            'snr_chain_window_ceiling',
         ],
         'lean_modules': ['Electrothermal.BolometricFloors', 'Detection.FilterFloors',
                          'Control.CompositeReadoutCeilings'],

@@ -3925,6 +3925,35 @@ def check_recurrence_reopens_closures() -> CheckResult:
     # 0.40 sits between p99 (0.200) and the top pair (0.429), which is a TRUE stale closure:
     # 1530:D11:4.1 closed, 2220:D11:4.6 open, both about PAPER_DRAFT_MAPPING.md:109.
     _MIN_OVERLAP = 0.40      # Jaccard over token sets
+    #
+    # ⚠️ THIS MATCHER IS WEAK, and its limits are measured — but an earlier version of this
+    # comment said it "cannot do its job", which round 14 disproved: driving the ledger off
+    # git snapshots it fires 3 real hits at 0.40 that 0.50 could not reach, and scores 22/29
+    # on a 29-pair labelled set built from twelve self-declared chains. My own fixture has
+    # three positives and I generalised from it to an absolute — the same over-reach, one
+    # layer up, as the numbers this session kept overstating. What follows is the measured
+    # limit, not an impossibility claim. Measured on
+    # `tests/fixtures/recurrence_pairs.json`: true recurrences score 0.188, 0.000, 0.071
+    # while unrelated pairs score 0.000 — the worst positive does not beat the best
+    # negative, so NO threshold separates them. All three tunings this session
+    # (30-char prefix -> 0.50 -> 0.40) were tuning a matcher that cannot discriminate.
+    #
+    # Root cause is upstream: `label` is `heading[:50]`, so a RESTATED finding — which is
+    # what a recurrence is — shares almost no vocabulary with its original. What this guard
+    # actually detects is duplicate heading OPENINGS, which is why every real hit it has
+    # produced was a near-verbatim repeat. Those hits were genuine and worth having; the
+    # guard is kept for them, at a threshold that admits them and little else.
+    #
+    # It is a WEAK recurrence detector — good on near-verbatim restatements, poor on
+    # rewordings — and must not be quoted as a reliable one. Improving it
+    # needs the full finding text carried on the node, not a wider constant — and
+    # `tests/…::TestRecurrenceThresholdAgainstFrozenPairs` fails the day that lands, which
+    # is the signal to replace this comment.
+    #
+    # QI: qi-threshold-calibration-consumes-its-own-datum. Three times a constant was set
+    # just under the live corpus maximum by the same commit that repaired the pair
+    # producing that maximum, so it was unreachable on arrival. Thresholds on a
+    # self-remediating corpus must be calibrated against frozen labelled pairs.
 
     def _norm(s: str) -> str:
         s = re.sub(r'[`*_\[\]]', '', str(s or '')).lower()

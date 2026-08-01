@@ -6309,10 +6309,10 @@
     },
     {
       "finding_id": "review:2026-07-31-2220-internal-adversarial:D12:2.2",
-      "status": "fixed",
+      "status": "open",
       "superseded_by": null,
       "commit": "8d0a3e53",
-      "evidence": "Gate 4's formula list completed 23 -> 27 in PAPER_DEPENDENCIES['D12']. REPRODUCE: the gate now reports \"all 27 grounded formulas have substantive tests\". The four omitted (gaussian_q, gaussian_threshold_error_floor, folklore_miss_floor, folklore_gap_exponent) back every headline numeral in §2 and the refuted folklore bound the paper's first refutation is about. ⚠️ AUTHOR-FILED with a reproducible check, not independent adjudication; round 14 should confirm or reject.",
+      "evidence": "Gate 4's formula list completed 23 -> 27 in PAPER_DEPENDENCIES['D12']. REPRODUCE: the gate now reports \"all 27 grounded formulas have substantive tests\". The four omitted (gaussian_q, gaussian_threshold_error_floor, folklore_miss_floor, folklore_gap_exponent) back every headline numeral in §2 and th ⚠️ REJECTED by round 14 (BLOCKER 14.1) and reopened. My reproducible check ran and returned exactly what I said — Gate 4 reads 'all 27' — but the check was not the claim: the D12 region holds 28 public defs. `recurrence_reopens_closures` independently reached the same verdict by a route the reviewer did not consult, which is the first time that guard has corroborated a human finding.",
       "closed_date": "2026-08-01",
       "closed_by": "author-filed-reproducible-evidence"
     },

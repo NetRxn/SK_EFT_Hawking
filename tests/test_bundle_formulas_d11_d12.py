@@ -18,6 +18,7 @@ the kernel and is a bug in `formulas.py`, not a discovery.
 """
 
 import math
+import pathlib
 
 import numpy as np
 import pytest
@@ -670,3 +671,82 @@ class TestBirnbaumGoldenValues:
         # against 95 % at z = 2". I first wrote 3.0 here from memory and the test caught
         # it — the ratio at z = 3 is 0.9849.
         assert F.gaussian_tail_birnbaum_lower(2.0) / Q(2.0) == pytest.approx(0.95, abs=5e-3)
+
+
+class TestRecurrenceThresholdAgainstFrozenPairs:
+    """QI: qi-threshold-calibration-consumes-its-own-datum.
+
+    Three times in one session the recurrence threshold was set just below the LIVE corpus
+    maximum by the same commit that repaired the pair producing that maximum — so it was
+    unreachable on arrival, three times, each measured honestly. A threshold on a
+    self-remediating corpus cannot be calibrated against that corpus.
+
+    These pairs are frozen. If a change to `_norm` or the threshold stops separating them,
+    this fails regardless of what the live ledger happens to contain today.
+    """
+
+    @staticmethod
+    def _overlap(a: str, b: str) -> float:
+        import re as _re
+        def norm(s):
+            s = _re.sub(r'[`*_\[\]]', '', s).lower()
+            s = _re.sub(r'[^a-z0-9 ]+', ' ', s)
+            toks = s.split()
+            while toks and (_re.fullmatch(r'[0-9]+([a-z0-9]*)?', toks[0]) or toks[0] in
+                            ('blocker', 'required', 'recommended', 'critical', 'major',
+                             'minor', 'advisory', 'regression')):
+                toks.pop(0)
+            return set(toks)
+        A, B = norm(a), norm(b)
+        return len(A & B) / len(A | B) if A and B else 0.0
+
+    def _fixture(self):
+        import json as _j
+        return _j.loads((pathlib.Path(__file__).parent / "fixtures"
+                         / "recurrence_pairs.json").read_text())
+
+    def test_the_matcher_provably_cannot_separate_recurrences(self):
+        """The fixture's verdict on THESE THREE PAIRS: token overlap does not separate them.
+
+        ⚠️ Scope, corrected after round 14. An earlier docstring generalised this to "the
+        matcher cannot do this job at any threshold". Round 14 disproved that on a 29-pair
+        labelled set: 22/29 detected at 0.40. Three fixture pairs cannot support an
+        impossibility claim, and I made one — the same over-reach as the counts this
+        session kept overstating, applied to a capability rather than a number.
+
+        What this fixture does establish, and what it is for: these three realistic
+        rewordings are NOT detected, and no threshold rescues them, so the guard's
+        coverage is partial and must not be described otherwise.
+
+        Measured on the frozen pairs — true recurrences score 0.188, 0.000, 0.071;
+        unrelated pairs score 0.000. The worst positive does not beat the best negative,
+        so no constant separates them and the three tunings this session (30 chars ->
+        0.50 -> 0.40) were all tuning a matcher that cannot discriminate.
+
+        The cause is upstream: `label` is `heading[:50]`, so a RESTATED finding — which is
+        what a recurrence is — shares almost no vocabulary with its original. The guard
+        detects duplicate heading OPENINGS, not recurrences, which is why its only real
+        hits have been near-verbatim repeats.
+
+        This test asserts the limitation so it is impossible to claim otherwise, and fails
+        the day someone makes the matcher actually work — at which point it should be
+        replaced by the separation assertion below it.
+        """
+        fx = self._fixture()
+        pos = [self._overlap(a, b) for a, b in fx["positives"]]
+        neg = [self._overlap(a, b) for a, b in fx["negatives"]]
+        assert min(pos) <= max(neg), (
+            "the matcher now separates recurrences from non-recurrences — good. Replace "
+            "this test with `assert min(pos) > max(neg)` and set the threshold inside the "
+            f"band ({max(neg):.3f}, {min(pos):.3f}]")
+
+    def test_recurrences_are_not_reliably_detected_and_that_is_recorded(self):
+        """Pins the actual detection rate so it cannot be overstated in a summary line."""
+        fx = self._fixture()
+        pos = [self._overlap(a, b) for a, b in fx["positives"]]
+        SHIPPED = 0.40
+        detected = sum(1 for x in pos if x >= SHIPPED)
+        assert detected == 0, (
+            f"{detected}/{len(pos)} frozen recurrences now detected at {SHIPPED}; update "
+            f"this pin and the guard's docstring, which currently says it detects none")
+
