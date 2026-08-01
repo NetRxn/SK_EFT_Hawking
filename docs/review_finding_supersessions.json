@@ -6306,6 +6306,33 @@
       "evidence": "Same defect as 1951:4.5, same fix, same reproduction. ⚠️ AUTHOR-FILED with a reproducible check rather than independent adjudication: no later round has re-read these. The evidence is written as a command a reviewer can run, so the closure is falsifiable rather than asserted; round 14 should confirm or reject it.",
       "closed_date": "2026-08-01",
       "closed_by": "author-filed-reproducible-evidence"
+    },
+    {
+      "finding_id": "review:2026-07-31-2220-internal-adversarial:D12:2.2",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "8d0a3e53",
+      "evidence": "Gate 4's formula list completed 23 -> 27 in PAPER_DEPENDENCIES['D12']. REPRODUCE: the gate now reports \"all 27 grounded formulas have substantive tests\". The four omitted (gaussian_q, gaussian_threshold_error_floor, folklore_miss_floor, folklore_gap_exponent) back every headline numeral in §2 and the refuted folklore bound the paper's first refutation is about. ⚠️ AUTHOR-FILED with a reproducible check, not independent adjudication; round 14 should confirm or reject.",
+      "closed_date": "2026-08-01",
+      "closed_by": "author-filed-reproducible-evidence"
+    },
+    {
+      "finding_id": "review:2026-07-31-2220-internal-adversarial:D12:8.5",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "8d0a3e53",
+      "evidence": "Recurrence detection: threshold re-derived to 0.40 from the check's own pairing rules. REPRODUCE: it now reopens stale closures (three at the fix, a fourth rejected at filing); previously max achievable Jaccard 0.429 < threshold 0.50 meant zero hits were possible. NOT implemented, per your measurement: widening heading[:50], which you showed lowers detection to 73%/69%. ⚠️ AUTHOR-FILED with a reproducible check, not independent adjudication; round 14 should confirm or reject.",
+      "closed_date": "2026-08-01",
+      "closed_by": "author-filed-reproducible-evidence"
+    },
+    {
+      "finding_id": "review:2026-07-31-2220-internal-adversarial:D12:8.6",
+      "status": "fixed",
+      "superseded_by": null,
+      "commit": "8d0a3e53",
+      "evidence": "The recurrence summary's denominator now counts closures WITH a candidate, not closures reaching the loop. REPRODUCE: it reports 162, matching your independent count, where it previously said 318. ⚠️ AUTHOR-FILED with a reproducible check, not independent adjudication; round 14 should confirm or reject.",
+      "closed_date": "2026-08-01",
+      "closed_by": "author-filed-reproducible-evidence"
     }
   ]
 }

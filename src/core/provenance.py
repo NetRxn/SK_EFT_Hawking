@@ -3747,6 +3747,17 @@ PAPER_DEPENDENCIES = {
             'phonon_psd', 'phonon_psd_gamma', 'phonon_psd_gradient_factor',
             'poisson_avg_error_floor', 'poisson_bhattacharyya_coefficient',
             'poisson_dark_baseline_miss_optimum',
+            # Completed 2026-08-01 (D12 round-13 A21). The list was 23 of 27 while the
+            # paragraph describing it said "the full 23-formula domain surface" — so the
+            # description was of the curation again, one round after that same defect was
+            # fixed at four. The four omitted back every headline numeral in §2:
+            # `gaussian_q` and `gaussian_threshold_error_floor` are the threshold algebra,
+            # `folklore_miss_floor` and `folklore_gap_exponent` are the refuted folklore
+            # bound the paper's first refutation is about. Omitting the formulas behind the
+            # refutations from the gate that checks the refutations is the worst possible
+            # four to leave out.
+            'gaussian_q', 'gaussian_threshold_error_floor',
+            'folklore_miss_floor', 'folklore_gap_exponent',
         ],
         'lean_modules': ['Electrothermal.BolometricFloors', 'Detection.FilterFloors',
                          'Control.CompositeReadoutCeilings'],
