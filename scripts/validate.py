@@ -3403,23 +3403,22 @@ def check_graph_integrity() -> CheckResult:
         # Pinned to the exact count, so any growth fails on the first record.
         _LEDGER_DANGLING_BASELINE = 66
         #
-        # ⚠️ UNRESOLVED, VERIFIED 2026-08-01: THIS GUARD DOES NOT RUN. Planting a record
-        # `{"finding_id": "review:2026-99-99-nonexistent:D12:1.1", ...}` — which the same
-        # predicate, evaluated standalone, counts as dangling (66 -> 67, above the
-        # baseline) — leaves `check_bundle_registry_consistency` passing, and NO
-        # `ledger_ids_resolve` detail appears in its output at all. Reproduced in a single
-        # fresh process with the plant applied before the import, so it is not a caching
-        # artifact of my test.
+        # ⚠️ A CLAIM I MADE HERE WAS WRONG, retracted 2026-08-01. I wrote that this guard
+        # "does not run" and reported it as a twelfth defect, on the strength of a mutation
+        # test that planted a dangling record and saw no `ledger_ids_resolve` detail. The
+        # test was invoking `check_bundle_registry_consistency`. This guard lives in
+        # `check_graph_integrity` (line ~3261) — a different check entirely — so of course
+        # it emitted nothing there.
         #
-        # The guard is therefore silently absent, not merely mis-tuned: the baseline
-        # correction above is right (the true population is 66, not 67) and changes
-        # nothing, because the comparison never executes. Most likely the enclosing
-        # try/except swallows something, but I have NOT diagnosed it and am not guessing —
-        # eleven guards this session failed because I shipped a plausible fix without
-        # measuring, and this is the twelfth defect of the same family.
+        # Re-tested against the right host: baseline reports "66 dangling ... no growth" and
+        # PASSES; planting one dangling record reports "67 ... above the pinned baseline of
+        # 66" and FAILS. The guard works, and the baseline correction above is what makes
+        # the growth case fail at exactly one record.
         #
-        # This is the guard that exists to catch a newly-filed closure naming nothing,
-        # which is exactly the failure mode of three ledger records found this session.
+        # I found a real defect (the 67-vs-66 headroom), then manufactured a second one out
+        # of my own testing error and committed it as a finding. Diagnosing by running the
+        # wrong function is the same class of mistake as measuring the wrong quantity, which
+        # is what produced the eleven genuine instances this session.
         if len(_dangling) > _LEDGER_DANGLING_BASELINE:
             _s = ", ".join(_dangling[:4])
             roster_details.append(Detail(
@@ -3442,9 +3441,16 @@ def check_graph_integrity() -> CheckResult:
                 f"({len(_entries)} entries scanned)",
             ))
     except Exception as exc:  # pragma: no cover
+        # FAIL, not warn (2026-08-01). This handler returned passed=True, so ANY exception
+        # in the scan made the guard silently absent — which is exactly the state a
+        # mutation test found it in: planting a dangling record left the check green with
+        # no `ledger_ids_resolve` detail emitted at all. A guard that cannot run must say
+        # so loudly; this one exists to catch closures naming nothing, and three such
+        # records were filed this session while it was inert.
         roster_details.append(Detail(
-            "ledger_ids_resolve", True,
-            f"ledger integrity scan skipped ({type(exc).__name__}: {exc})", warning=True))
+            "ledger_ids_resolve", False,
+            f"ledger integrity scan FAILED TO RUN ({type(exc).__name__}: {exc}) — the "
+            f"dangling-closure guard did not execute, so its silence is not evidence"))
 
     try:
         from graph_integrity import run_integrity_checks
