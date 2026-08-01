@@ -95,3 +95,32 @@ eigenvalue to mean H = real scalar). Nondegeneracy needs dim ≥ 4 — real infr
 the claim that it rules `kramers_degeneracy` out of vacuity should be withdrawn or the
 witness rebuilt. Roadmap line 79 overshot (generalises to five witnesses; one calls no
 ceiling). Plus 4.1/4.2, 5.1–5.4, 6.1, 7.1/7.2, 8.1/8.2.
+
+## Pass 2 — the corrected predicate applied to D11/D12 drafts (2026-08-01)
+
+Ran the unwrap-then-match sweep over `papers/D11` and `papers/D12` `paper_draft.tex`.
+20 class-level candidates (10 per bundle). Adjudicated the five load-bearing universals
+by checking each against the artifact it quantifies over, not by reading it:
+
+| claim | bundle | verdict |
+|---|---|---|
+| "All theorem names below are live declarations in lean/SKEFTHawking/" | D11 | TRUE — 124/124 |
+| same | D12 | **FALSE** — 4 of 164 are Mathlib, not ours. Fixed `e6f81faa` |
+| "Every headline theorem is kernel-pure" | D11 | TRUE — 0 non-pure in closure |
+| "Every theorem is kernel-pure, no project-local axioms" | D12 | TRUE — 0 of all `SKEFTHawking.*` |
+| "scoped to Lean toolchain v4.32.0" | both | TRUE — matches the actual pin |
+
+**The fix was a substrate addition, not a narrowing.** `\thm` is pure typesetting
+(breakable underscores) and carries no provenance, so the header comment was the only
+thing asserting it. Added `\mthm{}` — renders identically, marks Mathlib provenance —
+so the claim is now *checkable* rather than asserted, and states both invariants.
+
+**Method note, recorded because it recurred immediately.** One command after logging the
+unwrap lesson, I grepped the raw `.tex` for a phrase that hard-wraps, and got "not found"
+on a claim that was present. The unwrap is not a refinement of the sweep — it is the
+sweep. Any check that reads LaTeX or docstrings line-oriented is blind to exactly the
+claims that are long enough to matter.
+
+**Precision: 1 defect / 20 candidates.** Same order as pass 1. The predicate is a
+candidate generator; adjudication is per-claim against its artifact and is not automatable
+by token matching — which is the finding, not a limitation of it.
