@@ -5,6 +5,35 @@ without re-deriving it. Read this first, then the linked documents.
 
 ---
 
+## Git layout (as of 2026-08-03)
+
+**`main`** — `c2b597e1 docs(audit): publication-readiness assessment of all 21 bundles`.
+The completed assessment only. No infra code.
+
+**`infra/adr-009-validation-modularization`** — all infrastructure work, off main until every phase is
+done and ready to merge (operator ruling 2026-08-03):
+
+```
+a41f8573  feat(egress): whitelist isa-afp.org + path-scoped prover repos
+50ac26d5  docs(adr): ADR-009 + QA/QI infrastructure map
+cdb81f7e  feat(validate): ADR-009 Phases 0-1
+<review docs commit>  docs(reviews): Stage-13 bundle reviews, 2026-08-01
+```
+
+**`stash@{0}`** — paper-remediation WIP from the 07-31/08-01 sessions (132 regenerated figures,
+`counts.json`/`.tex`, `provenance.py`, `citation_cache.py`, `lean_deps.json.hash`). Separated by mtime;
+boundary verified. **Restoring it changes `counts.json`, which several checks read — take a fresh
+characterization baseline after any unstash.**
+
+⚠️ **Two git gotchas learned here.**
+1. The pre-commit hook runs `sync.py --fast` and **restages** `SK_EFT_Hawking_Inventory_Index.md`,
+   `lean/atlas_view.json`, `docs/ATLAS_HEATMAP.md` and `papers/*/tables/*.tex` into whatever you commit.
+   Stage explicit paths only; check `git show --stat HEAD` afterwards.
+2. **mtime is not provenance.** `harness_web_egress_guard.py` reported an 08-01 mtime for a change made
+   on 08-03. Verify authorship by diff content, not timestamp.
+
+---
+
 ## Where we are
 
 Two workstreams, sequenced by operator ruling (2026-08-03): **infrastructure remediation first, paper-prose
@@ -19,7 +48,7 @@ direction authorized, contingent on architecture review + operator visibility).
 |---|---|
 | **0 — characterization harness** | ✅ **COMPLETE.** 3 guards + the harness, all mutation-verified |
 | **1 — anchors + helpers, file stays put** | ✅ **COMPLETE.** `CHARACTERIZATION HELD — 49 checks identical` |
-| 2 — package split | **NEXT** |
+| 2 — package split | **IN PROGRESS.** Ordering mechanism landed + mutation-verified |
 | 3 — semantic fixes | not started; list in ADR-009 §Deferred |
 
 **Phase 1 delivered** (all verified behaviour-preserving against a pre-change baseline):

@@ -167,8 +167,23 @@ single-source-of-truth gate that exists because the roster was once hardcoded in
 
 **H3 — registration order is semantically load-bearing.** `counts_fresh` (`:2894`), `tables_fresh`
 (`:3011`) and `claim_clusters_fresh` (`:3093`) shell out and **regenerate artifacts that later checks read**;
-`run_checks` (`:4874-4886`) iterates in registration order. *Mitigation:* order preserved via an explicit
-ordered import list; the harness asserts the ordered name list, not the set.
+`run_checks` (`:4874-4886`) iterates in registration order.
+
+*Mitigation, REVISED 2026-08-03 during Phase-2 planning.* The original "preserve order via an explicit
+ordered import list" **cannot work**: the current order interleaves domains (#10 Lean, #11 physics, #13
+papers, #16 Lean), so no ordering of domain modules reproduces it. Import order and execution order are
+genuinely different concerns and must be decoupled.
+
+The suite therefore gains a frozen `_CANONICAL_ORDER` — the 59 names in execution order — and sorts
+`_CHECKS` against it once, after all check modules are imported. Module organisation becomes free; execution
+order becomes explicit data rather than an emergent property of import statements. A check missing from
+`_CANONICAL_ORDER` raises on sort, which is the correct loud failure for a registration that nobody declared
+an execution position for.
+
+This is introduced **before** any module moves and verified to be a no-op against the current file (the
+registry already happens to be in canonical order), so the ordering mechanism is proven inert before it is
+relied upon. `tests/test_validate_registry_contract.py` keeps its OWN independently-frozen list — it must not
+import `_CANONICAL_ORDER`, or it would assert only that production agrees with itself.
 
 **H4 — the eight `lean_deps.json` loaders disagree on missing-file policy** — five PASS (`:571`, `:892`,
 `:1047`, `:1130`, `:7413` with a warning), two FAIL (`:6968`, `:7191`), one unguarded (`:6729`). A single

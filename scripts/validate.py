@@ -4920,6 +4920,75 @@ def _lookup_provenance_value(prov_key, experiments, atoms, polariton_platforms):
 
 
 # ═══════════════════════════════════════════════════════════════════════
+# Execution order (ADR-009 H3)
+# ═══════════════════════════════════════════════════════════════════════
+#
+# Registration order is SEMANTIC, not cosmetic: `counts_fresh`, `tables_fresh` and
+# `claim_clusters_fresh` shell out and REGENERATE artifacts that later checks read
+# (`axiom_count_prose_consistency` and `inventory_index_autogen_fresh` both consume
+# `docs/counts.json`). `run_checks` iterates `_CHECKS` in order, so what a later
+# check observes depends on what ran before it.
+#
+# Until now that order was an EMERGENT PROPERTY of where each `@register_check`
+# happened to sit in one 7,800-line file. That is fine while there is one file and
+# impossible to preserve once the checks are split by domain: the current order
+# interleaves domains (#10 Lean, #11 physics, #13 papers, #16 Lean), so no ordering
+# of domain modules reproduces it.
+#
+# So import order and execution order are decoupled. Modules may be organised
+# however reads best; execution order is declared HERE, as data, and applied once
+# after registration. A registered check absent from this list raises on sort —
+# the correct loud failure for a check nobody declared a position for.
+#
+# NOTE `tests/test_validate_registry_contract.py` keeps its OWN frozen copy and
+# must NOT import this one; otherwise it would assert only that production agrees
+# with itself.
+_CANONICAL_ORDER: tuple[str, ...] = (
+    'formulas', 'placeholder_not_cited', 'disclosure_consistency',
+    'proxy_body_audit', 'tracked_hypothesis_ledger', 'tracked_hypotheses_fresh',
+    'formula_grounding', 'vacuous_statement_audit', 'nogo_substrate_integrity',
+    'native_decide_regression', 'numerical', 'identities',
+    'paper_table', 'd1_hierarchy_table', 'f_hierarchy_claims',
+    'theorems', 'notebooks', 'lean_source',
+    'cgl_fdr', 'lean_build', 'axiom_closure_allowlist',
+    'elaboration_knob_watchlist', 'bundle_figure_integrity', 'viz_consistency',
+    'notebook_exec', 'physical_bounds', 'cross_path_consistency',
+    'paper_provenance', 'parameter_provenance', 'counts_fresh',
+    'tables_fresh', 'claim_clusters_fresh', 'numerical_literals',
+    'graph_integrity', 'atlas_integrity', 'atlas_hypothesis_discipline',
+    'count_literals', 'recurrence_reopens_closures', 'review_severity_declared',
+    'review_docs_mint_findings', 'accepted_findings_carry_rationale',
+    'bundle_metadata_matches_graph', 'notebook_stored_outputs_current',
+    'readiness_verdicts_agree', 'readiness_submission_gate',
+    'citation_primary_sources_present', 'provenance_doi_in_registry',
+    'bundle_consistency', 'bundle_source_freshness',
+    'bibitem_title_primary_source', 'quantum_network',
+    'bundle_registry_consistency', 'paper_latex_compiles',
+    'axiom_count_prose_consistency', 'prose_theorem_reference_coverage',
+    'theorem_name_embedded_citations', 'inventory_index_autogen_fresh',
+    'lean_docstring_refs_resolve', 'paper_toolchain_pin_drift',
+)
+
+
+def _apply_canonical_order() -> None:
+    """Sort `_CHECKS` into `_CANONICAL_ORDER`. Idempotent; a no-op while every
+    check still lives in this file in canonical sequence, which is exactly why it
+    is introduced BEFORE any module moves — the mechanism is proven inert before
+    anything depends on it."""
+    index = {name: i for i, name in enumerate(_CANONICAL_ORDER)}
+    unknown = [s.name for s in _CHECKS if s.name not in index]
+    if unknown:
+        raise RuntimeError(
+            f"check(s) registered with no declared execution position: {unknown}. "
+            f"Add them to _CANONICAL_ORDER — position is semantic (see above), so "
+            f"it must be chosen, not inherited from import order.")
+    _CHECKS.sort(key=lambda s: index[s.name])
+
+
+_apply_canonical_order()
+
+
+# ═══════════════════════════════════════════════════════════════════════
 # Runner
 # ═══════════════════════════════════════════════════════════════════════
 
