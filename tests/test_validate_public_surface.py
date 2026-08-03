@@ -133,6 +133,52 @@ class TestExternalSurface:
             "checks would silently vanish from the run. Re-export by binding, never by copy."
         )
 
+    def test_no_check_derives_a_path_from___file__(self):
+        """ADR-009 H1 — the hazard that makes the whole suite green while measuring
+        nothing, asserted structurally because its symptom is silence.
+
+        `PROJECT_ROOT` is `Path(__file__).resolve().parent.parent`. From
+        `scripts/validate.py` that is the repo root; from
+        `scripts/validation/checks/anything.py` it is `scripts/validation`. Nothing
+        raises — every artifact lookup simply misses and each check takes its
+        "absent" branch. Measured for the five sites that existed on 2026-08-03:
+        three would have failed loudly, but two would have passed SILENTLY —
+        `accepted_findings_carry_rationale` returns `passed=True` on a missing
+        ledger, and `citation_primary_sources_present` downgrades its duplicate-key
+        guard to an advisory warning inside an `except`.
+
+        Phase 1 centralised the seven MODULE-LEVEL anchors and was recorded as
+        having closed H1. It had not: five `Path(__file__)` derivations remained
+        INSIDE check bodies, which is exactly where a module move relocates them.
+        This test is what makes "H1 is closed" checkable instead of asserted.
+
+        Exactly one use is legitimate — the bootstrap that puts `scripts/` and the
+        repo root on `sys.path` before any sibling import can happen. It cannot
+        itself come from `validate_helpers`, since that is what it makes importable.
+        """
+        import ast
+        src = (SK_ROOT / "scripts" / "validate.py").read_text()
+        tree = ast.parse(src)
+
+        offenders = []
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Name) and node.id == "__file__":
+                offenders.append(node.lineno)
+
+        bootstrap = [
+            n.lineno for n in tree.body
+            if isinstance(n, ast.Assign)
+            and any(getattr(t, "id", "") == "_BOOTSTRAP_SCRIPT_DIR" for t in n.targets)
+        ]
+        stray = sorted(set(offenders) - set(bootstrap))
+        assert not stray, (
+            f"`__file__` is used at line(s) {stray} outside the sys.path bootstrap. "
+            f"Any path derived from it retargets when the code moves into "
+            f"`validation/checks/`, and the failure is SILENT for checks that treat "
+            f"a missing artifact as PASS. Derive from `validate_helpers` instead "
+            f"(`_H.LEAN_DIR`, `_H.DOCS_DIR`, `_H.SRC_DIR`, `_H.PAPERS_DIR`, …)."
+        )
+
     def test_validate_is_loaded_exactly_once(self):
         """`validate.py` must have ONE module identity in the interpreter.
 

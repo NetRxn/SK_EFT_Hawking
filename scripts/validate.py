@@ -156,7 +156,7 @@ def check_formulas_to_theorems() -> CheckResult:
     ]
 
     # Build set of all Lean theorem names (Aristotle-proved + manually proved)
-    lean_dir = Path(__file__).parent.parent / 'lean' / 'SKEFTHawking'
+    lean_dir = _H.LEAN_DIR          # was Path(__file__).parent.parent — ADR-009 H1
     all_lean_names = set(ARISTOTLE_THEOREMS.keys())
     if lean_dir.exists():
         for lean_file in lean_dir.glob('*.lean'):
@@ -3344,8 +3344,8 @@ def check_graph_integrity() -> CheckResult:
     # naming no node. Neither is detectable from the ledger alone.
     try:
         _led = json.loads(
-            (Path(__file__).resolve().parent.parent / "docs"
-             / "review_finding_supersessions.json").read_text(encoding="utf-8"))
+            (_H.DOCS_DIR / "review_finding_supersessions.json")   # ADR-009 H1
+            .read_text(encoding="utf-8"))
         _entries = _led.get("supersessions", [])
         _known = {n["id"] for n in _g.get("nodes", [])
                   if isinstance(n, dict) and n.get("type") == "ReviewFinding"}
@@ -4225,8 +4225,10 @@ def check_accepted_findings_carry_rationale() -> CheckResult:
     A blocking-severity acceptance additionally has to say why acceptance rather than a
     fix; "accepted" with a one-line restatement of the finding is not a decision.
     """
-    ledger_path = (Path(__file__).resolve().parent.parent / "docs"
-                   / "review_finding_supersessions.json")
+    # ADR-009 H1. This site is one of the two where a retargeted anchor would be
+    # SILENT: a missing ledger returns passed=True below, so on a module move this
+    # check would report success having examined nothing.
+    ledger_path = _H.DOCS_DIR / "review_finding_supersessions.json"
     if not ledger_path.is_file():
         return CheckResult(passed=True, details=[
             Detail("ledger", True, "no supersession ledger; skipping", warning=True)])
@@ -5169,8 +5171,10 @@ def check_citation_primary_sources_present() -> CheckResult:
     # parsing the source, not the imported object.
     dup_details = []
     try:
-        _reg_src = (Path(__file__).resolve().parent.parent
-                    / "src" / "core" / "citations.py").read_text(encoding="utf-8")
+        # ADR-009 H1 — the other SILENT site: the `except` below downgrades to an
+        # advisory warning, so a retargeted anchor would disable this duplicate-key
+        # guard without failing anything.
+        _reg_src = (_H.SRC_DIR / "core" / "citations.py").read_text(encoding="utf-8")
         _tree = ast.parse(_reg_src)
         _seen: dict[str, int] = {}
         for _node in ast.walk(_tree):
@@ -6111,7 +6115,7 @@ def check_quantum_network() -> CheckResult:
           and F.link_rate(2000, 2e8, 0.5) > F.link_rate(1000, 2e8, 0.5))
 
     # Referenced QN Lean theorem names exist in the QuantumNetwork subdirectory
-    qn_dir = Path(__file__).parent.parent / "lean" / "SKEFTHawking" / "QuantumNetwork"
+    qn_dir = _H.LEAN_DIR / "QuantumNetwork"     # was Path(__file__) — ADR-009 H1
     expected = [
         "wernerParam_swap", "endToEndFidelity_succ", "swapChain_fidelity_envelope",
         "bbpsswRecurrence_gt", "dejmps_increase_phaseFlipOnly", "dejmps_single_step_can_decrease",

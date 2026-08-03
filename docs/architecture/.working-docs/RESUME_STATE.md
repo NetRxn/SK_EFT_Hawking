@@ -162,6 +162,17 @@ immediately.
   idioms return the identical 64 files).
 - **7 path anchors** → aliases of `validate_helpers` (H1). This is what makes the Phase-2 move
   path-neutral rather than silently retargeting `PROJECT_ROOT` into `scripts/`.
+  ⚠️ **This was INCOMPLETE and the claim above overstated it — corrected 2026-08-03.** Phase 1 converted
+  the seven MODULE-LEVEL anchors; **five `Path(__file__)` derivations remained inside check bodies**,
+  which is precisely where a module move relocates them: `formulas` (:159), `graph_integrity` (:3347),
+  `accepted_findings_carry_rationale` (:4228), `citation_primary_sources_present` (:5172),
+  `quantum_network` (:6114). Measured before fixing — three would have failed loudly, but **two would
+  have passed SILENTLY**: `accepted_findings_carry_rationale` returns `passed=True` on a missing ledger,
+  and `citation_primary_sources_present` downgrades its duplicate-bibkey guard to an advisory warning
+  inside an `except`. All five now derive from `validate_helpers`; each replacement was proven to resolve
+  to the identical existing path before substitution.
+  `test_no_check_derives_a_path_from___file__` makes "H1 is closed" checkable instead of asserted, and
+  is the guard to run before EACH module move — not once.
 - **14 redundant `sys.path.insert`** + 3 dead `import sys as _sys` + 2 orphaned guards removed.
 
 **Deliberately NOT converted** (pattern-matched but semantically different):
