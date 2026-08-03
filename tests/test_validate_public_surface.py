@@ -34,6 +34,23 @@ Measured 2026-08-03 by AST-scanning `tests/*.py` and `scripts/*.py` for
 `from validate import ...` and `<alias>.<attr>` where the alias is a real
 `import validate as <alias>`. REMOVING a name from this list is a real decision:
 it means updating the consumer. Adding one is free.
+
+⚠️ **THE FIRST MEASUREMENT MISSED 20 OF THE 53 NAMES**, and the reason is worth
+keeping. That scan filtered on `node.module == "validate"`, but
+`test_substrate_integrity_gates.py` still spelled its imports
+`from scripts.validate import ...` at the time — so the entire file, and every
+name it reaches, was invisible. The spelling was then fixed (it was loading
+`validate.py` a second time under a second module identity), and the scan was not
+re-run, so the frozen list stayed at 34 while the real surface was 54.
+
+Fifteen of the twenty are internals of the not-yet-extracted `lean_substrate`
+module — `_STRUCTURAL_NAME_RE`, `_TRIVIAL_BODY_RES`, `_thin_type_label`,
+`_is_vacuous_identity_wrapper` and friends — so the omission would have bitten
+precisely on the largest remaining extraction.
+
+The lesson generalises: **a measurement is scoped by a predicate, and fixing the
+thing the predicate keyed on invalidates the measurement.** Re-run the scan
+(the snippet is in this file's git history) whenever an import spelling changes.
 """
 from __future__ import annotations
 
@@ -48,13 +65,16 @@ sys.path.insert(0, str(SK_ROOT / "scripts"))
 import validate as v  # noqa: E402
 
 
-#: Check functions imported BY NAME (not via `_CHECKS`) by nine test files.
+#: Check functions imported BY NAME (not via `_CHECKS`) by ten test files.
 EXPECTED_CHECK_FUNCTIONS = [
+    "check_atlas_integrity",
     "check_axiom_count_prose_consistency",
     "check_bundle_consistency",
     "check_citation_primary_sources_present",
     "check_d1_hierarchy_table",
+    "check_disclosure_consistency",
     "check_f_hierarchy_claims",
+    "check_formula_grounding",
     "check_formula_identities",
     "check_formulas_to_theorems",
     "check_inventory_index_autogen_fresh",
@@ -64,27 +84,44 @@ EXPECTED_CHECK_FUNCTIONS = [
     "check_paper_table_consistency",
     "check_paper_toolchain_pin_drift",
     "check_prose_theorem_reference_coverage",
+    "check_proxy_body_audit",
     "check_theorem_count",
     "check_theorem_name_embedded_citations",
+    "check_vacuous_statement_audit",
 ]
 
 #: Private helpers, pure cores and module state reached from outside.
 EXPECTED_PRIVATE = [
     "_CANONICAL_ORDER",
     "_CHECKS",
+    "_HEDGE_CLAIM_RE",
+    "_LEDGER_HEDGE_RE",
+    "_NONTRIVIAL_MARKER_RE",
+    "_OVERCLAIM_VERB_RE",
     "_PROSE_REF_WAIVERS",
     "_RECURRENCE_MIN_OVERLAP",
+    "_STRUCTURAL_NAME_RE",
+    "_THIN_HARD",
+    "_TRACKED_PROP_NAME_RE",
+    "_TRIVIAL_BODY_RES",
+    "_VERIFY_CLAIM_RE",
     "_axiom_prose_findings",
     "_counts_is_stale",          # scripts/sync_manifest.py — production, not a test
     "_embedded_citation_pairs",
     "_extract_prose_lean_candidates",
+    "_is_autogen_decl",
+    "_is_prop_codomain",
+    "_is_vacuous_identity_wrapper",
     "_paper_bibitems",
+    "_parse_formula_lean_refs",
     "_parse_latex_number",
     "_prose_occurrence_disclaimed",
     "_recurrence_norm",
     "_resolve_prose_ref",
     "_strip_tex_comments",
     "_tables_is_stale",          # scripts/sync_manifest.py — production, not a test
+    "_tex_name_pattern",
+    "_thin_type_label",
     "_tp_live_pins",
     "_tp_scan_lines",
 ]
