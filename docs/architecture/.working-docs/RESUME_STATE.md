@@ -16,9 +16,16 @@ done and ready to merge (operator ruling 2026-08-03):
 ```
 a41f8573  feat(egress): whitelist isa-afp.org + path-scoped prover repos
 50ac26d5  docs(adr): ADR-009 + QA/QI infrastructure map
-cdb81f7e  feat(validate): ADR-009 Phases 0-1
-<review docs commit>  docs(reviews): Stage-13 bundle reviews, 2026-08-01
+cdb81f7e  feat(validate): ADR-009 Phases 0-1 — characterization harness + shared helpers
+cc943091  docs(reviews): Stage-13 bundle review documents, 2026-08-01
+8cde34a0  feat(validate): decouple execution order from import order (H3)  ← mechanism was DEFECTIVE
+436bc3a2  feat(validate): Phase 2 — one flag owner (_config), and FIX the ordering mechanism
+2fd89d59  fix(tests): repair the strict-mode prose test; freeze validate's external surface
+9886ecf4  refactor(validate): extract result types + registry to validation/_registry
 ```
+
+Untracked and deliberately NOT committed: `docs/dev-loops/proposals/prose-bridged-claims-gate.md` — an
+operator-filed DRAFT awaiting the operator's own go/no-go. Not this workstream's to land.
 
 **`stash@{0}`** — paper-remediation WIP from the 07-31/08-01 sessions (132 regenerated figures,
 `counts.json`/`.tex`, `provenance.py`, `citation_cache.py`, `lean_deps.json.hash`). Separated by mtime;
@@ -48,8 +55,58 @@ direction authorized, contingent on architecture review + operator visibility).
 |---|---|
 | **0 — characterization harness** | ✅ **COMPLETE.** 3 guards + the harness, all mutation-verified |
 | **1 — anchors + helpers, file stays put** | ✅ **COMPLETE.** `CHARACTERIZATION HELD — 49 checks identical` |
-| 2 — package split | **IN PROGRESS.** Ordering mechanism + `_config` landed; no check module extracted yet |
-| 3 — semantic fixes | not started; list in ADR-009 §Deferred |
+| 2 — package split | **IN PROGRESS.** Framework layer done (`_config`, `_registry`, ordering); **0 of 8 check modules extracted** |
+| 3 — semantic fixes | not started; list in ADR-009 §Deferred (8 items) |
+
+### Phase 2 — what remains, concretely
+
+The framework layer is done and the import cycle that blocked extraction is gone. What is left is the
+mechanical move itself, module by module, per the assignment table in
+[validation-module-migration-notes.md §4](validation-module-migration-notes.md):
+
+`checks/lean_substrate.py` · `physics.py` · `papers_prose.py` · `citations.py` ·
+`bundles_readiness.py` · `graph_atlas.py` · `freshness.py` · `notebooks.py`
+
+**Per-module loop — do NOT batch several modules into one unverified move:**
+1. Move the check bodies verbatim. No body edited, no policy unified, no threshold touched, no
+   always-pass flipped (ADR-009 D4 — Phases 1–2 are provably behaviour-preserving or they are nothing).
+2. Import `register_check` / `CheckResult` / `Detail` from `validation._registry`, paths from
+   `validate_helpers`, flags as `_cfg.<FLAG>` — **never** by value (H5).
+3. Re-export every moved name from `scripts/validate.py`. The frozen 33-name list is in
+   `tests/test_validate_public_surface.py`; two of them are consumed by `scripts/sync_manifest.py`, a
+   production script, not by tests.
+4. Move `_apply_canonical_order()` below the check-module import block once that block exists — this is
+   what turns "after all registrations" from positional into structural, and retires the H3 hazard.
+5. Verify: full fast suite (~2.5 min), `--list` (59, canonical order), `--strict` rc 0→1, then
+   characterization. **`graph_integrity` will move if you touched `tests/` — attribute it, don't
+   dismiss it**; the arithmetic and the HEAD-vs-baseline trap are documented in
+   `tests/validate_characterization.py`.
+6. Commit per module, so any single move is revertible.
+
+**Phase 2 is done when** `scripts/validate.py` is framework-only (~400 lines: result-type re-exports,
+`_CANONICAL_ORDER`, `run_checks`, reporting, `archive_results`, CLI, `BUNDLE_CODES`) and every check body
+lives in a `validation/checks/*.py` that fits in one read.
+
+### Phase 3 — semantic fixes (ADR-009 §Deferred, 8 items)
+
+Each is a **separate reviewed change** that ships with a mutation test proving both directions — fires on
+a seeded defect, silent on correct data (D5). Never batch them with a mechanical move.
+
+Ordered by how much a wrong answer costs today:
+1. `readiness_submission_gate` is **inverted** — fails only when zero gate nodes exist, and its `--strict`
+   path was never built. 14 RED bundles never fired it.
+2. The **8 always-pass checks** — disposition each. Three are honestly advisory; `paper_latex_compiles`
+   and `readiness_submission_gate` are not.
+3. `native_decide_regression` reads a `counts.json` that `counts_fresh` regenerates ~20 positions later —
+   a stale ratchet in one of only three commit-gate checks.
+4. **Fabricated VERIFIES edges** (§Deferred item 7) — `np.kron` → `Curvature.kron`, `v` →
+   `EWMassMatrixInputs.v`. 10 of 534. One-line alias guard; changes what a gate measures.
+5. No `UNEVALUATED` state — ~20 sites encode "could not measure" as PASS.
+6. `count_literals` ⊂ `axiom_count_prose_consistency` — same predicate, one hard-fails, one cannot fail.
+7. `--strict` reaches no automated caller, so two gates are unreachable in practice.
+8. Memoizing `load_lean_deps()` + a shared graph handle — **reviewed together**, because both change what
+   a check observes once the `*_fresh` checks regenerate artifacts mid-run (≈8 extractions / ≈20 parses of
+   a 70 MB file per run today).
 
 **Phase 2 so far** — three pieces of scaffolding, each of which had to be repaired after being built:
 
@@ -75,10 +132,26 @@ every consuming check must show `_cfg` in `co_names`, and `TestNoCheckModuleShad
 suite module binds a flag in its own namespace at all** — which catches it however the body reads it.
 Mutation-verified: the old leg MISSES the cross-module copy, the new one catches it.
 
-**Standing lesson for the rest of this refactor.** Three for three, the scaffolding was defective on first
+4. **`validation/_registry.py`** — `Detail` / `CheckResult` / `CheckSpec` / `_CHECKS` / `register_check`.
+   Kills the import cycle that blocked check-module extraction (a check module needs `register_check`;
+   `validate` imports check modules for their side-effect). Re-exported from `validate` **by binding** —
+   `_CHECKS` must stay the SAME list, since registration appends and the canonical sort mutates in place.
+   ⚠️ Extracting it **surfaced a pre-existing defect**: `test_substrate_integrity_gates.py` imported
+   `from scripts.validate import …` while everything else uses `import validate`, so `validate.py` was
+   loaded TWICE under two module identities. Invisible while all shared state was per-module (two
+   registries of 59 look like one); fatal once `_CHECKS` became a singleton (118 checks, duplicate names).
+   Never harmless: `isinstance` across the two `CheckResult` classes was silently False. Fixed at source;
+   `test_validate_is_loaded_exactly_once` guards it via `sys.modules`.
+
+**Standing lesson for the rest of this refactor.** Four for four, the scaffolding was defective on first
 write and the defect was of the *same class the scaffolding exists to prevent* — an inert guard, a
-partially-applied mechanism, a name that resolves to the wrong thing. Assume the next piece is too, and
-attack it before trusting it.
+partially-applied mechanism, a name that resolves to the wrong thing, a module with two identities.
+Three of the four were found by re-reading or by attempting the next step, **not by any test**. Assume the
+next piece is defective too, and attack it before trusting it.
+
+**And run the WHOLE fast suite, not the tests you just wrote.** Removing `validate.STRICT_MODE` broke the
+one pre-existing test of strict mode; targeted runs stayed green and the 2.5-minute full suite caught it
+immediately.
 
 **Phase 1 delivered** (all verified behaviour-preserving against a pre-change baseline):
 - `scripts/validate_helpers.py` — the single path anchor + artifact loaders.
