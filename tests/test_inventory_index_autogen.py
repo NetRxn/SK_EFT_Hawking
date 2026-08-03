@@ -136,20 +136,33 @@ class TestValidateCheckRegistered:
         assert any(d.name == "freshness" for d in result.details)
 
     def test_check_is_in_registry_with_two_string_decorator(self):
+        """The decorator must be statically parseable — some tooling reads the
+        registry from source rather than by importing it.
+
+        ⚠️ SCOPE WIDENED 2026-08-03 (ADR-009 Phase 2). This scanned only
+        `scripts/validate.py`; the check now lives in
+        `scripts/validation/checks/freshness.py`, so a one-file scan reported the
+        decorator missing when nothing was wrong with it. A structural test scoped
+        to a single file goes stale the moment the code is split — the same defect
+        that had to be fixed in `test_validate_public_surface.py`'s H1 guard.
+        """
         import ast
-        validate_py = PROJECT_ROOT / "scripts" / "validate.py"
-        tree = ast.parse(validate_py.read_text())
+        sources = [PROJECT_ROOT / "scripts" / "validate.py"]
+        sources += sorted((PROJECT_ROOT / "scripts" / "validation").rglob("*.py"))
         names = []
-        for node in ast.walk(tree):
-            if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
-                continue
-            for dec in node.decorator_list:
-                if (isinstance(dec, ast.Call)
-                        and isinstance(dec.func, ast.Name)
-                        and dec.func.id == "register_check"
-                        and len(dec.args) >= 2
-                        and isinstance(dec.args[0], ast.Constant)
-                        and isinstance(dec.args[1], ast.Constant)):
-                    names.append(str(dec.args[0].value))
+        for src in sources:
+            tree = ast.parse(src.read_text())
+            for node in ast.walk(tree):
+                if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                    continue
+                for dec in node.decorator_list:
+                    if (isinstance(dec, ast.Call)
+                            and isinstance(dec.func, ast.Name)
+                            and dec.func.id == "register_check"
+                            and len(dec.args) >= 2
+                            and isinstance(dec.args[0], ast.Constant)
+                            and isinstance(dec.args[1], ast.Constant)):
+                        names.append(str(dec.args[0].value))
         assert "inventory_index_autogen_fresh" in names, (
-            "check not AST-parseable as a two-string register_check decorator")
+            "check not AST-parseable as a two-string register_check decorator "
+            f"across {len(sources)} suite source file(s)")

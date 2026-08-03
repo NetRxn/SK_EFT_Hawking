@@ -164,14 +164,32 @@ class TestCanonicalOrderMechanism:
         src = (SK_ROOT / "scripts" / "validate.py").read_text()
         tree = ast.parse(src)
 
-        last_registration = max(
-            (node.lineno for node in ast.walk(tree)
-             if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
-             for d in node.decorator_list
-             if isinstance(d, ast.Call) and getattr(d.func, "id", "") == "register_check"),
-            default=None,
+        # Registration happens two ways, and the sort must follow BOTH:
+        #   (a) `@register_check` decorators still in validate.py, and
+        #   (b) `from validation.checks import <mod>` — importing a check module
+        #       runs its decorators.
+        # (a) shrinks to ZERO as Phase 2 completes, at which point (b) is the
+        # whole story. Keying only on (a) — which this test did until 2026-08-03 —
+        # would have made it assert nothing on an empty max(), and it would have
+        # missed an import placed *below* the sort, which is the live hazard now
+        # that check modules exist.
+        in_file = [
+            node.lineno for node in ast.walk(tree)
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+            for d in node.decorator_list
+            if isinstance(d, ast.Call) and getattr(d.func, "id", "") == "register_check"
+        ]
+        module_imports = [
+            node.lineno for node in ast.walk(tree)
+            if isinstance(node, ast.ImportFrom)
+            and (node.module or "").startswith("validation.checks")
+        ]
+        registrations = in_file + module_imports
+        assert registrations, (
+            "found neither an in-file @register_check nor a `from validation.checks "
+            "import ...` — nothing registers, so this test would assert nothing."
         )
-        assert last_registration is not None, "no @register_check decorators found"
+        last_registration = max(registrations)
 
         call_lines = [
             node.lineno for node in tree.body
