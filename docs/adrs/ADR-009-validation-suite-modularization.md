@@ -1,0 +1,337 @@
+# ADR-009 — Validation-suite modularization and the mutation-test obligation
+
+- **Status:** **PROPOSED (2026-08-03).** Direction authorized in principle by the project owner on
+  2026-08-03 ("as long as you take it that direction, it's authorized"), explicitly **contingent on this
+  architecture document being reviewed first**, on operator visibility during execution, and on the standing
+  rule that no core-infrastructure file may be modified by an agent that has not read it in full directly.
+  No implementation may begin before acceptance and Phase-0 completion.
+- **Decider:** John Roehm (project owner) — raised the concern that `scripts/validate.py` "has exploded in
+  terms of ad-hoc edits", is "too big to read directly in one go", and that "agents were just adding to it
+  without reading what already exists"; directed that the validation layer become "a legit module rather
+  than a single file".
+- **Investigation and draft:** Claude (Opus 5), from a complete direct read of all 7,778 lines of
+  `scripts/validate.py` on 2026-08-03. Reconnaissance agents mapped adjacent subsystems; **every
+  load-bearing claim in this ADR is verified against the source by the author**, not inherited from a
+  subagent report. Two subagent claims were checked and corrected (§Alternatives, note 3).
+- **Scope:** `scripts/validate.py` and the package that replaces it; the shared-helper layer it grows; and
+  the process obligation attached to every check in the suite. **Out of scope:** the semantics of any
+  individual check (§Deferred), the readiness/graph subsystems it consumes, and the publication-bundle
+  remediation that surfaced this work.
+- **Related:** [ADR-002](ADR-002-native-decide-policy.md) (the `native_decide` ratchet, enforced by a check
+  this ADR moves); [ADR-004](ADR-004-substrate-integrity-gates.md) (R1–R5 gates, five of the checks in
+  scope; and the single-writer/generated-artifact posture this ADR must not disturb);
+  [ADR-005](ADR-005-derived-proof-atlas.md) and [ADR-007](ADR-007-kernel-nogo-ledger-and-negative-frontier.md)
+  (atlas and no-go gates, likewise in scope);
+  `docs/architecture/.working-docs/` (migration working notes).
+
+> **Line-citation baseline.** Every `validate.py:NNNN` citation below is anchored to the file **as read on
+> 2026-08-03 at 7,778 lines**. The `stage13_status` guard shipped the same day (§Consequences) inserted 35
+> lines at `:4355`, so the file is now **7,813** lines and **every citation after `:4355` is +35 from the
+> live file** — e.g. `readiness_submission_gate` is cited here at `:4744` and lives at `:4779`; the
+> `# WARN not FAIL during rollout` line is cited at `:4830` and lives at `:4865`. Citations at or before
+> `:4355` are unchanged. This note exists rather than a hand-rewrite because silently renumbering 25
+> citations is a larger correctness risk than stating the offset. **Phase 1 should re-anchor them once,
+> mechanically, and delete this note.**
+
+---
+
+## Context
+
+`scripts/validate.py` is the project's cross-layer gate: 59 registered checks spanning Python ↔ Lean ↔
+notebooks ↔ papers, invoked at Stage 7 and Stage 12 of the wave pipeline, by `scripts/gate_precheck.py`, and
+by the pre-commit hook.
+
+It has grown 1,158 → **7,778** lines since 2026-03-26, with ~2,550 lines added in the five weeks to 07-31
+and ~1,650 on 07-31 alone.
+
+**The registration architecture is sound and is not the problem.** `@register_check(name, description)`
+(`validate.py:151-156`) is a clean contract documented at `:34-43`; all seven checks added on 07-31 followed
+it, introduced no duplication, and are among the best-written in the file — three carry explicit
+*"FAIL, not pass, because unverified ≠ agreement"* reasoning (`:4302-4310`, `:4317-4322`, `:4330-4336`).
+
+Three distinct problems are conflated under "the file is too big":
+
+1. **No shared-helper layer.** Eight independent `lean_deps.json` load sites with *incompatible*
+   missing-file policies; three mutually inconsistent paper-draft scoping idioms; 13 redundant
+   `sys.path.insert` calls; 59 scattered `re.compile` sites with no shared TeX-parsing layer.
+2. **The file exceeds a single readable unit**, so a new check is written without sight of the existing
+   ones. This is the mechanism behind (1).
+3. **No mutation-test discipline.** This is the one that caused the damage. The repository's own commit log
+   records at least eight shipped guards that could not fire: `edd9878d` *"the drift guard was dead code"*,
+   `221cb6c9` *"my closure guard was inert and my mutation test hid it"*, `b6830c7d` *"the readiness gate was
+   blind in three stacked layers"*, `5073276a` *"an eighth guard that could not fire"*. Each was found only
+   by adversarial review, never by the test suite.
+
+A concurrent publication-readiness audit established the consequence: **the project's quality
+instrumentation reports absence-of-measurement as success.** Eight checks are structurally incapable of
+returning `passed=False`; two more can fail only under `--strict`, which no automated caller passes; and
+roughly twenty sites encode "could not measure" as PASS. `CheckResult.passed` is a bare `bool` (`:105-119`)
+with no third state, though the concept exists in comments and in three hand-patched sites.
+
+**Splitting the file addresses (1) and (2). It does not address (3), and (3) is the disease.** A refactor
+that lands without the mutation-test obligation would relieve the symptom while leaving the generator
+intact — and would itself be executed against ~80% untested surface.
+
+### Test protection is thinner than it looks
+
+Measured across the 11 test files that import `validate`: **16 checks TESTED, 6 PARTIAL (pure cores only),
+37 UNTESTED.** Of the 16, **eleven assert only `result.passed` on the live tree** — so a check rewritten to
+`return CheckResult(passed=True, details=[])` would pass every one of them. **Exactly five checks have a
+test that would fail on a seeded defect**: `formula_grounding`, `d1_hierarchy_table`, `f_hierarchy_claims`,
+and weakly the three prose checks via their pure cores.
+
+The sharpest case is a test that *reads* as protection and is not. `recurrence_reopens_closures` calibrates
+its Jaccard threshold against `tests/fixtures/recurrence_pairs.json`, whose own `_why` field states the
+principle: *"A threshold on a self-remediating corpus must be calibrated against FROZEN labelled pairs, not
+a live sweep."* But the matcher `_norm` is a **nested closure** (`:3958`) and `_MIN_OVERLAP` a function-local
+(`:3927`), so neither is importable — and `tests/test_bundle_formulas_d11_d12.py:691` **re-implements `norm`
+as a local function** and re-hardcodes `SHIPPED = 0.40` at `:747`. Verified: that file never imports
+`validate`. **The production matcher could be deleted or inverted and both fixture tests would still pass.**
+The check's own source comment cites the fixture as its calibration basis, so the file reads as covered.
+
+Two further measurements bearing on the migration contract: **no test asserts the check count or the
+registration order** (two assert membership only), and the fast suite takes **152 s**, not the "~2s"
+`CLAUDE.md` claims — a 75× doc drift that matters because Phase 0's snapshot loop runs against it.
+
+### One architectural payoff worth naming
+
+`build_graph_json()` is invoked four times per validate run (`:3316` and, inside
+`graph_integrity.run_integrity_checks()`, an independent extraction; then `:4660`, `:4768` — pre-shift
+numbering). Verified at `build_graph.py:2544-2601`, each build additionally re-runs **16 node extractors plus
+a full edge pass** inside `extract_readiness_gate_nodes` to break gate/graph recursion. Net: **≈8 full
+extraction passes and ≈20 parses of a 70 MB `lean_deps.json` per run**, ~15 s per build measured by the
+dashboard. A shared graph handle is a natural consequence of the framework/`helpers` split and is the one
+performance item large enough to justify naming here — but it is a **Phase 3 semantic change**, since
+sharing a graph across checks alters what each check observes when the `*_fresh` checks regenerate artifacts
+mid-run.
+
+---
+
+## Decision
+
+### D1 — the checks move to `scripts/validation/`; `scripts/validate.py` stays the module
+
+**⚠️ CORRECTED 2026-08-03, during Phase 2 planning.** This clause originally specified a
+`scripts/validate/` **package** plus a thin `scripts/validate.py` **shim**. Those cannot coexist:
+verified empirically that a package **shadows** a same-named module on the same `sys.path` entry, so
+`import validate` would resolve to `validate/__init__.py` and the shim would be unreachable by import —
+dead code that looks load-bearing. Worse, it would silently satisfy H2 (`import validate` works,
+`BUNDLE_CODES` present) via a file nobody realised was the live one.
+
+The corrected layout:
+
+- **`scripts/validate.py` remains a module** — the framework core (~400 lines: `Detail` / `CheckResult` /
+  `CheckSpec`, the `_CHECKS` registry and `register_check`, `run_checks`, reporting, `archive_results`, the
+  CLI, and the `BUNDLE_CODES` re-export H2 requires). It imports the check modules for their registration
+  side-effect, from an **explicit ordered list** (H3).
+- **`scripts/validation/checks/*.py`** — the 59 checks, split by domain, each file readable in one pass.
+- **`scripts/validate_helpers.py`** — already shipped in Phase 1; stays put so its path anchor keeps
+  resolving from `scripts/` (H1).
+
+This preserves `python scripts/validate.py`, `import validate`, `--check`, `--list`, `--json` and every
+hook / skill / documentation invocation, with no name collision anywhere.
+
+Layout, rationale and per-check module assignment: `docs/architecture/.working-docs/`.
+
+### D2 — The migration contract is asserted mechanically, not asserted in prose
+
+The following are invariant across every phase, verified by the Phase-0 harness at each boundary:
+
+1. `--list` output byte-identical — 59 names, **same order**, same descriptions.
+2. Per-check `passed` values identical on the live tree.
+3. Exit codes identical — `0` all-pass, `1` any-fail, **`2`** unknown `--check` (`:7732-7735`; the inline
+   comment records that `all([]) == True` would otherwise silently disable the gate).
+4. `import validate` resolves **and** exposes `BUNDLE_CODES` (see H2).
+5. `--json` payload schema unchanged — `gate_precheck.py` and `pre-commit-sync.sh` parse it.
+6. `--check <name>` behaves as today for all 59, including the `FORCE_LATEX` side-effect at `:7719`.
+7. No new import-time side effects; registration remains the only one.
+
+### D3 — Five identified hazards are handled explicitly, not discovered during execution
+
+Each was found by direct reading and would break a mechanical refactor silently.
+
+**H1 — `PROJECT_ROOT` retargets on a package move.** `SCRIPT_DIR = Path(__file__).resolve().parent`
+(`:79`); `PROJECT_ROOT = SCRIPT_DIR.parent` (`:80`). Under `scripts/validate/__init__.py` this yields
+`PROJECT_ROOT = scripts/`. Nothing raises: every check takes its artifact-absent branch and the suite goes
+**green while measuring nothing** — the exact failure mode this ADR exists to end, reintroduced across all
+59 at once. Four further sites derive paths identically (`:3381`, `:4239`, `:5066`, and
+`Path(__file__).parent` at `:179`, `:452`, `:619`, `:6009`).
+*Mitigation:* path anchoring is centralized in `_paths.py` **in Phase 1, while the file stays put**, so the
+snapshot proves path-neutrality before anything moves.
+
+**H2 — the roster gate asserts on a module named exactly `validate`.** `_ROSTER_CONSUMERS` (`:6059-6068`)
+contains `("validate", ("BUNDLE_CODES",))`; leg B does `importlib.import_module` + `getattr` and requires
+key-set equality (`:6175-6189`). *Mitigation:* `__init__.py` re-exports `BUNDLE_CODES` deliberately, and the
+harness asserts it. Removing the `_ROSTER_CONSUMERS` entry is prohibited — it would drop `validate` from the
+single-source-of-truth gate that exists because the roster was once hardcoded in seven places.
+
+**H3 — registration order is semantically load-bearing.** `counts_fresh` (`:2894`), `tables_fresh`
+(`:3011`) and `claim_clusters_fresh` (`:3093`) shell out and **regenerate artifacts that later checks read**;
+`run_checks` (`:4874-4886`) iterates in registration order. *Mitigation:* order preserved via an explicit
+ordered import list; the harness asserts the ordered name list, not the set.
+
+**H4 — the eight `lean_deps.json` loaders disagree on missing-file policy** — five PASS (`:571`, `:892`,
+`:1047`, `:1130`, `:7413` with a warning), two FAIL (`:6968`, `:7191`), one unguarded (`:6729`). A single
+extracted loader silently unifies eight checks' behaviour. *Mitigation:* the helper takes an explicit
+`on_missing` policy per call site reproducing today's behaviour exactly, each marked
+`TODO(semantic-review)`. The same applies to draft scoping: `bundle_drafts()` (21 drafts) and
+`all_paper_drafts()` (64) ship as two named functions, **never one function with a flag** — the difference is
+documented and load-bearing (`:6939-6942`).
+
+**H5 — runtime flags are module globals set by `main()`.** `STRICT_MODE` (`:136`), `FORCE_LATEX` (`:148`),
+`FORCE_NOTEBOOK_REEXEC` (`:142`), assigned at `:7716-7719`, read across seven checks. A `from validate import
+STRICT_MODE` in a split module binds a copy at import time and the flag silently stops working. *Mitigation:*
+one config object accessed by attribute; never imported by value.
+
+### D4 — Phased, independently revertible, stoppable after Phase 1
+
+- **Phase 0 — characterization harness. Do this or do nothing:** at the documented eight-inert-guards base
+  rate, refactoring this file without it is a coin flip. Scope, set by the measured coverage in §"Test
+  protection is thinner than it looks":
+  - **Three cheap guards first**, each closing a hazard no current test covers. (i) `assert len(_CHECKS) == 59`
+    plus a frozen **ordered** name list (H3) — note `main()` returns 0 for silently-dropped checks because
+    `all([])` is `True`; `:7732-7735` guards this for `--check` but **nothing guards the full run**.
+    (ii) One propagation test per runtime global (H5): `STRICT_MODE` is read at 12 sites with only 1 tested;
+    `FORCE_LATEX` and `FORCE_NOTEBOOK_REEXEC` are untested entirely, and a silently-stuck `False` makes
+    `paper_latex_compiles` skip forever and `notebook_exec` return a cache verdict without executing anything.
+    (iii) Promote `recurrence_reopens_closures`'s nested `_norm` / `_MIN_OVERLAP` to module scope so its
+    fixture test imports them instead of re-implementing them.
+  - **Golden `--json` snapshot per check**, not one whole-suite run — a single run lets the
+    artifact-regenerating checks contaminate later ones. Measured: two runs of
+    `--json --check formula_grounding` diff in exactly one line (`elapsed_seconds`). Normalize by dropping
+    that key, sorting `details` by name, scrubbing subprocess job counts, and pinning `PYTHONHASHSEED=0`
+    (13 unsorted `glob`/`iterdir` sites plus set-derived comprehensions can otherwise permute detail order).
+  - **Nine checks are structurally non-snapshottable and must be quarantined, not forced:** `lean_build`,
+    `notebook_exec`, `notebook_stored_outputs_current`, `paper_latex_compiles`, `counts_fresh`,
+    `tables_fresh`, `claim_clusters_fresh`, `tracked_hypotheses_fresh`, `bundle_figure_integrity`. They shell
+    out, execute notebooks, or rewrite tracked artifacts, so run *N+1* legitimately differs from run *N*.
+    Snapshotting the remaining ~50 covers 37 currently-untested checks against mechanical damage.
+  - **A snapshot detects change, not inertness.** It must ship with D5, or the refactor is validated by the
+    same "it still passes" reasoning that produced eight inert guards.
+- **Phase 1 — anchors and helpers, file stays put.** `_paths.py` + `helpers/` introduced in place; the 8
+  loaders and 10 glob sites rewritten to call them at identical semantics; the 13 redundant `sys.path`
+  mutations deleted. H1 cannot bite. Snapshot must be byte-identical. **Most of the value is banked here.**
+- **Phase 2 — package split.** Code moves; shim added; `_config` wired; order and re-exports preserved.
+  Snapshot must be byte-identical.
+- **Phase 3 — semantic fixes,** separately reviewed (§Deferred). **Never** mixed with Phases 1–2.
+
+### D5 — Every check ships with a mutation test (standing obligation, independent of the refactor)
+
+**A new or modified check MUST ship with a test demonstrating both directions: it FAILS on a seeded defect,
+and it stays SILENT on correct data.** Where a check has a pure core, the test targets that core; where it
+does not, the seeded defect is applied to a fixture or to live state and reverted.
+
+Both halves are mandatory. The file already teaches the second at `:3848-3866`, where a proposed guard
+measured to flag **40 correct records** was deliberately **not shipped**, the reasoning recorded in a comment
+instead: *"a guard that flags 40 correct records is worse than no guard."*
+
+Precedent exists: `_tp_scan_lines` (`:7573`) was extracted as a pure core specifically to be testable, and
+`papers/AutomatedReviews/2026-08-01-0009-internal-adversarial/D11.md:179` records a real mutation test. The
+`stage13_status` guard added 2026-08-03 (§Consequences) shipped with one.
+
+---
+
+## Overlap reconciliation with prior ADRs (keep the ADR set one system)
+
+- **ADR-002** owns the `native_decide` policy and its ratchet metric; **ADR-009 owns only the code location**
+  of `native_decide_regression`. The ratchet's ceiling, clusters and elimination policy are untouched.
+  *One defect is surfaced, not fixed here:* that check reads `docs/counts.json` at registration position ~10,
+  **before** `counts_fresh` regenerates it at ~30, so the ratchet can compare against a stale count. It is one
+  of only three checks in the commit gate. Deferred to Phase 3 (§Deferred, item 1) — it is a semantic
+  ordering fix, and mixing it into a mechanical move is precisely what this ADR forbids.
+- **ADR-004** defines the R1–R5 substrate-integrity gates and the *single-writer* posture for generated
+  artifacts. Five of its enforcing checks move modules; none changes behaviour. The single-writer rule is
+  strengthened, not weakened: H4's explicit per-site policies prevent an extracted helper from becoming a
+  second writer of policy.
+- **ADR-005 / ADR-007** own the atlas and kernel-no-go ledgers; their enforcing checks (`atlas_integrity`,
+  `atlas_hypothesis_discipline`, `nogo_substrate_integrity`) move into `checks/graph_atlas.py` and
+  `checks/lean_substrate.py` unchanged.
+- **ADR-008** established that shared infrastructure must be compatible before any client activates. This ADR
+  adopts the same separation: Phases 0–2 change no behaviour, so no consumer needs to activate anything.
+
+---
+
+## Consequences
+
+**Accepted costs.**
+- ~4 days of work on infrastructure that produces no new physics, of which ~1.5 (Phases 0–1) captures most
+  of the value.
+- The suite gains a package boundary, so a check can no longer reach a sibling's private helper by accident —
+  deliberate, and it will surface hidden coupling as import errors during Phase 2.
+- `--list` and `--json` become contract surfaces with tests, so changing them costs more than it does today.
+  Intended.
+
+**Already realized.** The `stage13_status` guard was added to `check_bundle_metadata_matches_graph`
+(`validate.py:4355`) on 2026-08-03 under separate operator approval, making `stage13_status: "green"` illegal
+while blockers are open. It fires on 14 of 21 bundles, passes 7 live negative controls, and reproduces the
+mutation recorded as missed at `2026-08-01-0009-internal-adversarial/D11.md:179`. **`validate.py` is
+consequently RED on `main` until those bundles are remediated** — the dial working as intended.
+
+**Risk if not done.** The next check is written against a file no agent can read, on ~80% untested surface,
+at a documented base rate of roughly one inert guard per two rounds of adversarial review. The instrumentation
+continues to be trusted in proportion to how little it measures.
+
+**Risk if done badly.** H1 alone converts every check into a silent pass. This is why Phase 0 precedes
+everything and Phase 1 moves no files.
+
+---
+
+## Alternatives considered
+
+1. **Leave it as one file; add only the mutation-test rule.** Rejected as insufficient, but *closer to
+   correct than it appears* — the rule is the load-bearing half. Rejected because the shared-helper defects
+   (H4) are live today: five checks currently pass on a missing `lean_deps.json` while two fail, and no
+   reader of any single check can see that.
+2. **Rewrite the checks while splitting.** Rejected outright. Mixing mechanical and semantic change is the
+   documented mechanism by which the inert guards shipped. Phases 1–2 must be provably behaviour-preserving.
+3. **Trust the reconnaissance and skip the full read.** Rejected by the operator, and vindicated: the five
+   hazards in D3 were all found by reading and none appeared in any reconnaissance report. Two subagent
+   claims also required correction — `readiness_submission_gate` was initially reported as a working gate
+   (it is effectively always-pass, `:4830`, `:4836`), and `atlas_hypothesis_discipline` was reported as
+   contradicting its own "never a gate" description when its `passed=False` at `:3717` is in the
+   **exception handler** — a fail-on-cannot-measure, which is the correct pattern.
+4. **Split by size rather than domain.** Rejected: arbitrary boundaries would cut the shared-helper clusters
+   the refactor exists to consolidate.
+
+---
+
+## Deferred — semantic fixes, each requiring separate review
+
+Identified during the read; explicitly **not** part of Phases 0–2.
+
+0. **Memoizing `load_lean_deps()` is a behaviour change, not an optimisation** — discovered while
+   writing the Phase-1 helper. The eight sites re-read and re-parse the 70 MB file on every call, and that
+   is load-bearing: `counts_fresh` (position ~30) shells out to `update_counts.py`, which can **regenerate
+   `lean/lean_deps.json` mid-run**. Readers at ~5/7/8/9 observe the pre-regeneration file; readers at
+   ~55/56/58 observe the regenerated one. A cache would freeze whichever was read first and silently change
+   what the later checks validate against. Note also that these sites read the file **directly**, never
+   through `extract_lean_deps.load_lean_deps()`, so they never trigger its hash-guarded refresh. Any caching
+   must be reviewed together with the shared-graph-handle item (both change what a check observes).
+1. `native_decide_regression` reads a possibly-stale `counts.json` (H3 ordering).
+2. `readiness_submission_gate` is **inverted** (`:4770-4836`): it fails only when zero `ReadinessGate` nodes
+   exist and passes when it measures RED (`:4830`, `# WARN not FAIL during rollout`). Its docstring promises a
+   `--strict` path (`:4756`) that was **never built** — `STRICT_MODE` is not referenced in the function.
+3. The eight always-pass checks — decide per check whether that is intended: `paper_latex_compiles`
+   (`:6347`), `paper_toolchain_pin_drift` (`:7675`), `count_literals` (`:3841`), `numerical_literals`
+   (`:3252`), `viz_consistency` (`:2325`), `elaboration_knob_watchlist` (`:2077`),
+   `inventory_index_autogen_fresh` (`:7358`), `readiness_submission_gate` (`:4836`). Three are honestly
+   advisory by design; at least two are not.
+4. No `UNEVALUATED` result state (`:105-119`).
+5. `count_literals` ⊂ `axiom_count_prose_consistency` — same predicate shape split by subject, one
+   hard-failing and one incapable of failing.
+6. `--strict` is passed by no automated caller, making two gates unreachable in practice.
+
+---
+
+## References
+
+- `scripts/validate.py` — read in full 2026-08-03; all line citations above verified against that read.
+- `docs/architecture/.working-docs/` — migration working notes, module layout, per-check assignment.
+- `docs/audits/2026-08-01-publication-readiness/` — the audit that surfaced this work; `SYNTHESIS.md` §2
+  documents the absence-of-measurement finding across five independent mechanisms.
+- `papers/AutomatedReviews/2026-07-31-1652-internal-adversarial/D11.md:227` — the `stage13_status` remedy,
+  authored by this project's own reviewer.
+- `papers/AutomatedReviews/2026-08-01-0009-internal-adversarial/D11.md:179` — the committed mutation test
+  that recorded the hole as `PASS <-- missed`.
+- Commits `edd9878d`, `221cb6c9`, `ad844e42`, `b6830c7d`, `5073276a`, `055083ad`, `bcbeee6b` — the
+  inert-guard history motivating D5.
