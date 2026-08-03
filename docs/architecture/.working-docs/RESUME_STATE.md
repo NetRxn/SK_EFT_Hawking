@@ -55,7 +55,7 @@ direction authorized, contingent on architecture review + operator visibility).
 |---|---|
 | **0 — characterization harness** | ✅ **COMPLETE.** 3 guards + the harness, all mutation-verified |
 | **1 — anchors + helpers, file stays put** | ✅ **COMPLETE.** `CHARACTERIZATION HELD — 49 checks identical` |
-| 2 — package split | **IN PROGRESS.** Framework layer done; H1 genuinely closed; **1 of 8 check modules extracted** (`notebooks`) |
+| 2 — package split | **IN PROGRESS.** Framework layer done; H1 genuinely closed; **2 of 8 check modules extracted** (`notebooks`, `physics`) |
 | 3 — semantic fixes | not started; list in ADR-009 §Deferred (8 items) |
 
 ### Phase 2 — what remains, concretely
@@ -64,11 +64,18 @@ The framework layer is done and the import cycle that blocked extraction is gone
 mechanical move itself, module by module, per the assignment table in
 [validation-module-migration-notes.md §4](validation-module-migration-notes.md):
 
-✅ `checks/notebooks.py` — **DONE** (`970e946e`), `CHARACTERIZATION HELD — 49 identical`. Use it as the
-template; the recipe below is proven, not theoretical.
+✅ `checks/notebooks.py` — **DONE** (`970e946e`), `CHARACTERIZATION HELD — 49 identical`.
+✅ `checks/physics.py` — **DONE** (`e42b902e`), 9 checks + `_parse_latex_number`; 6 of the frozen 33 names.
+   Use either as the template; the recipe below is proven, not theoretical.
 
-⬜ `lean_substrate.py` · `physics.py` · `papers_prose.py` · `citations.py` · `bundles_readiness.py` ·
+⬜ `lean_substrate.py` · `papers_prose.py` · `citations.py` · `bundles_readiness.py` ·
 `graph_atlas.py` · `freshness.py`
+
+⚠️ **NO MODULE-LEVEL PATH ALIASES in a check module** — `PAPERS_DIR = _H.PAPERS_DIR` is an import-time
+copy, the same shape H5 forbids for flags. It looks harmless because paths are never reassigned in
+production, and it is not: a test monkeypatching the owner to seed a defect no longer reaches the check.
+Cost me a real failure on `physics.py`. Reach `_H.<NAME>` at each use; tests patch
+`validate_helpers.<NAME>`. Guard: `test_no_check_module_aliases_a_path`.
 
 ⚠️ **Two checks are unassigned in the migration notes' §4 table** — `theorems` and
 `paper_toolchain_pin_drift`. Assign them deliberately (suggest `lean_substrate` and `papers_prose`) and
