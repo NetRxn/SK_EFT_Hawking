@@ -145,6 +145,32 @@ The following are invariant across every phase, verified by the Phase-0 harness 
 5. `--json` payload schema unchanged — `gate_precheck.py` and `pre-commit-sync.sh` parse it.
 6. `--check <name>` behaves as today for all 59, including the `FORCE_LATEX` side-effect at `:7719`.
 7. No new import-time side effects; registration remains the only one.
+8. **The 33-name external surface of `validate` stays reachable as `validate.<name>`.** Added 2026-08-03,
+   measured by AST across `tests/` and `scripts/` — and it is the constraint most likely to break the
+   extraction, because items 1–7 are all satisfied by a split that nonetheless makes every one of these
+   `ImportError`:
+   - **16 check functions imported by name** — `check_formulas_to_theorems`, `check_numerical_consistency`,
+     `check_theorem_count`, `check_lean_source`, `check_notebook_isolation`, `check_formula_identities`,
+     `check_paper_table_consistency`, `check_d1_hierarchy_table`, `check_f_hierarchy_claims`,
+     `check_bundle_consistency`, `check_citation_primary_sources_present`,
+     `check_axiom_count_prose_consistency`, `check_prose_theorem_reference_coverage`,
+     `check_theorem_name_embedded_citations`, `check_inventory_index_autogen_fresh`,
+     `check_paper_toolchain_pin_drift`. Nine test files call these DIRECTLY rather than through `_CHECKS`.
+   - **17 private helpers and pure cores** — including the four deliberately extracted to be testable
+     (`_tp_scan_lines`, `_axiom_prose_findings`, `_extract_prose_lean_candidates`,
+     `_prose_occurrence_disclaimed`), the Guard-3 recurrence matcher (`_recurrence_norm`,
+     `_RECURRENCE_MIN_OVERLAP`), and `_CHECKS` / `_CANONICAL_ORDER`.
+   - ⚠️ **Two are consumed by a production script, not a test:** `scripts/sync_manifest.py` imports
+     `_counts_is_stale` and `_tables_is_stale`. So this is not merely a test-ergonomics concern — the
+     pre-commit sync path depends on `validate`'s private surface.
+   - `BUNDLE_CODES` is additionally reached dynamically via `_ROSTER_CONSUMERS` (H2) and so does not appear
+     in a static import scan. It is contract item 4 and is easy to lose precisely because no `import`
+     statement names it.
+
+   **Therefore `scripts/validate.py` re-exports every moved name.** Not "most"; a partial re-export fails
+   loudly at import, which is the good case, but only for whichever consumer happens to run first.
+   `tests/test_validate_public_surface.py` freezes the list independently so the extraction cannot quietly
+   shrink it.
 
 ### D3 — Five identified hazards are handled explicitly, not discovered during execution
 

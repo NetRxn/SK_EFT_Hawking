@@ -354,14 +354,23 @@ class TestLiveRepoSmoke:
     def test_theorem_name_embedded_citations_passes_strict(self):
         # Mirrors provenance_doi_in_registry's strict-flag pattern: with
         # zero mismatches the check must also pass under --strict.
-        old = v.STRICT_MODE
+        #
+        # Retargeted 2026-08-03 (ADR-009 H5): the flag moved to
+        # `validation._config`, which is now its ONE owner — `validate.STRICT_MODE`
+        # no longer exists. Setting the old name here would create a dead
+        # attribute on the `validate` module that no check ever reads, and this
+        # test would pass while exercising the non-strict path. It happened to
+        # fail loudly instead, because it READS the flag before writing it; that
+        # is luck, not design, so prefer read-before-write in flag fixtures.
+        from validation import _config as cfg
+        old = cfg.STRICT_MODE
         try:
-            v.STRICT_MODE = True
+            cfg.STRICT_MODE = True
             result = check_theorem_name_embedded_citations()
             assert result.passed, [
                 (d.name, d.message) for d in result.details if not d.passed]
         finally:
-            v.STRICT_MODE = old
+            cfg.STRICT_MODE = old
 
     def test_summary_details_present(self):
         for fn in (check_axiom_count_prose_consistency,
