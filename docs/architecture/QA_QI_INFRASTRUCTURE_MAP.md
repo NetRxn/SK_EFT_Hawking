@@ -40,7 +40,8 @@ flowchart TB
     end
 
     subgraph V["③ VALIDATION — mechanical"]
-        VAL["validate.py<br/>59 registered checks"]
+        VAL["validate.py — framework<br/>registry · order · CLI · re-exports"]
+        VCK["validation/checks/*.py<br/>59 checks, 6 of 9 modules"]
         GI["graph_integrity.py"]
         RG["readiness_gates.py<br/>11 gates × N papers"]
         BR["bundle_readiness.py<br/>→ heatmap + metadata counts"]
@@ -64,10 +65,11 @@ flowchart TB
     TEX --> BG
     BG --> PG & GI & RG
     RG --> BR
-    ED & CNT & ATL & BG --> VAL
-    GI & RG & BR --> VAL
+    ED & CNT & ATL & BG --> VCK
+    GI & RG & BR --> VCK
+    VCK --> VAL
     TEX --> FR & CR & AR
-    NB --> VAL
+    NB --> VCK
     AR & CR --> RF --> BG
     VAL --> HEAT
     BR --> HEAT
@@ -76,10 +78,22 @@ flowchart TB
     DEC -.->|"ratify · promote · close"| PY & TEX
 
     classDef broken stroke:#c0392b,stroke-width:3px
-    class VAL,RG broken
+    class VCK,RG broken
 ```
 
 Red-outlined nodes carry the enforcement defects in §6.
+
+> **Plane ③ is mid-migration (ADR-009 Phase 2).** `scripts/validate.py` was a single 7,900-line file when
+> this map was first written; it is now **4,369 lines of framework** — result-type and check re-exports, the
+> `_CHECKS` registry, `_CANONICAL_ORDER`, `run_checks`, reporting and the CLI — with the check bodies moving
+> into `scripts/validation/checks/*.py`. **37 of 59 checks have moved** across six modules
+> (`lean_substrate` 1079, `physics` 714, `freshness` 688, `lean_toolchain` 578, `graph_atlas` 512,
+> `notebooks` 341); 22 remain, targeted at `papers_prose`, `citations` and `bundles_readiness`.
+>
+> Runtime flags live in `validation/_config.py` and result types in `validation/_registry.py`, each with a
+> single owner reached by attribute at call time. **None of this changes what any check measures** — every
+> phase boundary is verified `CHARACTERIZATION HELD — 49 checks identical`, and §6's enforcement reality is
+> therefore unchanged by the split. The semantic fixes are Phase 3 (ADR-009 §Deferred), still pending.
 
 ---
 
@@ -108,9 +122,9 @@ column:** content-hash and content-compare are sound; mtime is weaker; *none* me
 **Concurrency.** `harness_lock.regen_lock` is **skip-and-use-cache, never block-and-wait**: 5 s bounded poll,
 then yield `False`. On skip, `load_lean_deps()` silently returns the stale 70 MB file, and downstream
 generators write `counts.json` / `counts.tex` / `atlas_view.json` from stale input **and report success**.
-The lock also fails *open* on any internal error. Only two real call sites take it; `validate.py`'s three
-auto-regenerating checks (`counts_fresh`, `tables_fresh`, `claim_clusters_fresh`) shell out **with no lock
-at all**.
+The lock also fails *open* on any internal error. Only two real call sites take it; the suite's three
+auto-regenerating checks (`counts_fresh`, `tables_fresh`, `claim_clusters_fresh` — now in
+`validation/checks/freshness.py`) shell out **with no lock at all**.
 
 **Cost.** `build_graph_json()` runs **4×** per validate run, and each run internally re-executes 16 node
 extractors plus a full edge pass inside `extract_readiness_gate_nodes` (verified, `build_graph.py:2544-2601`)
@@ -250,14 +264,26 @@ as canonical — under a filename that is also wrong.
 
 ### Test protection over the gates themselves
 
-| | count |
-|---|---|
-| Checks with a test that would **fail on a seeded defect** | **5** of 59 |
-| Checks tested only by `assert result.passed` on the live tree | 11 |
-| Checks with **no test at all** | 37 |
-| Tests asserting the check **count or registration order** | **0** |
+| | at first mapping | now |
+|---|---|---|
+| Checks with a test that would **fail on a seeded defect** | **5** of 59 | **5** of 59 — unchanged |
+| Checks tested only by `assert result.passed` on the live tree | 11 | 11 |
+| Checks with **no test at all** | 37 | 37 |
+| Tests asserting the check **count or registration order** | **0** | **25** (three suites) |
 
-A check rewritten to `return CheckResult(passed=True, details=[])` passes all eleven green-only tests.
+A check rewritten to `return CheckResult(passed=True, details=[])` still passes all eleven green-only tests.
+
+**What ADR-009 Phase 0–2 did and did not change here.** The per-check number is *deliberately* unchanged: the
+25 new tests protect the **framework and the migration contract**, not the check bodies. They freeze the check
+count and registration order, assert that `_CANONICAL_ORDER` covers every registered check and that the sort
+runs after the last registration, prove each runtime flag reaches the checks that read it, forbid a check
+module from deriving a path from `__file__` or aliasing one by value, hold `validate.py` to one module
+identity, and freeze the 54-name external surface. Every one is mutation-verified in both directions.
+
+That is the migration's safety net, and it is not test coverage of the checks themselves. **Raising the
+per-check number is D5's standing obligation** — every new or modified check ships a mutation test — and it
+is the work that closes the §7 pattern. The split makes it tractable (a domain module fits in one read); it
+does not perform it.
 
 ---
 
@@ -315,10 +341,17 @@ in the papers.
 
 ## 9. Provenance and scope
 
-**Basis.** `scripts/validate.py` read in full by the author (7,778 lines, 2026-08-03); four read-only
-reconnaissance sweeps over the artifact-generation, readiness/bundle, agent/hook/register, and test-coverage
-subsystems; every load-bearing claim re-verified against source before entering this map. Line citations are
-anchored to that read — see the offset note in ADR-009.
+**Basis.** `scripts/validate.py` read in full by the author — 7,778 lines on 2026-08-03, and again at 7,900
+after the `stage13_status` guard landed; four read-only reconnaissance sweeps over the artifact-generation,
+readiness/bundle, agent/hook/register and test-coverage subsystems; every load-bearing claim re-verified
+against source before entering this map. Line citations are anchored to that read — see the offset note in
+ADR-009.
+
+⚠️ **Those line citations are being invalidated by ADR-009 Phase 2**, which is moving the check bodies into
+`scripts/validation/checks/*.py` (see the note under §1). A citation of the form `validate.py:NNNN` for a
+CHECK BODY should now be read as "the check named X", and located by name in its module; citations for the
+framework (registry, `run_checks`, reporting, CLI, `main`) still resolve in `validate.py`. The behaviour
+those citations describe is unchanged — every phase boundary is verified `CHARACTERIZATION HELD`.
 
 **Audit trail.** How each claim was established, which reconnaissance findings were rejected, and the
 author's own corrected measurements: `.working-docs/qa-qi-map-verification-log.md`.
