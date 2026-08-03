@@ -228,6 +228,73 @@ class TestExternalSurface:
             f"(`_H.LEAN_DIR`, `_H.DOCS_DIR`, `_H.SRC_DIR`, `_H.PAPERS_DIR`, …)."
         )
 
+    def test_no_check_module_has_an_undefined_module_level_reference(self):
+        """A moved check must not reference a name left behind in `validate.py`.
+
+        This is the extraction's most likely mechanical failure and it is INVISIBLE
+        to the test suite. A module-level constant — a compiled regex, a pattern
+        list — sits above its check separated by a blank line, so a banner-walk that
+        stops at the first non-comment line leaves it behind. The module still
+        imports and `--list` still shows 59 checks; the check raises `NameError`
+        only when RUN, and `run_checks` converts that into
+        `CheckResult(passed=False, error=...)` rather than a crash.
+
+        It happened on the `papers_prose` split: `_COUNT_LITERAL_PATTERNS`,
+        `_NUMERICAL_LITERAL_RE` and `_LATEX_FATAL_RE` were stranded. **The full
+        4,986-test suite passed**; only the characterization harness caught it,
+        because only it actually invokes every check. This test closes that gap
+        statically, so the next module does not depend on a 6-minute capture to
+        discover a one-line omission.
+
+        Deliberately static (AST) rather than "import and call": several checks are
+        minutes-long, and the failure is a missing NAME, which resolves statically.
+        """
+        import ast
+        import builtins
+
+        def bound_names(tree):
+            out = set(dir(builtins))
+            for n in ast.walk(tree):
+                if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+                    out.add(n.name)
+                elif isinstance(n, ast.Assign):
+                    for t in n.targets:
+                        out |= {x.id for x in ast.walk(t) if isinstance(x, ast.Name)}
+                elif isinstance(n, ast.AnnAssign) and isinstance(n.target, ast.Name):
+                    out.add(n.target.id)
+                elif isinstance(n, (ast.Import, ast.ImportFrom)):
+                    out |= {(a.asname or a.name).split(".")[0] for a in n.names}
+                elif isinstance(n, ast.arg):
+                    out.add(n.arg)
+                elif isinstance(n, ast.Name) and isinstance(n.ctx, ast.Store):
+                    out.add(n.id)
+                elif isinstance(n, ast.ExceptHandler) and n.name:
+                    out.add(n.name)
+                elif isinstance(n, ast.comprehension):
+                    out |= {x.id for x in ast.walk(n.target) if isinstance(x, ast.Name)}
+                elif isinstance(n, ast.Global):
+                    out |= set(n.names)
+            return out
+
+        problems = {}
+        modules = sorted((SK_ROOT / "scripts" / "validation").rglob("*.py"))
+        assert modules, "no validation package modules found — scope is wrong"
+        for path in modules:
+            tree = ast.parse(path.read_text())
+            bound = bound_names(tree)
+            used = {n.id for n in ast.walk(tree)
+                    if isinstance(n, ast.Name) and isinstance(n.ctx, ast.Load)}
+            missing = sorted(u for u in used - bound if not u.startswith("__"))
+            if missing:
+                problems[str(path.relative_to(SK_ROOT))] = missing
+
+        assert not problems, (
+            f"check module(s) reference names that are neither defined nor imported "
+            f"there: {problems}. Almost certainly a module-level constant left behind "
+            f"in validate.py by the extraction. The module imports fine and --list "
+            f"still reports 59 — the check raises NameError only when RUN."
+        )
+
     def test_no_check_module_aliases_a_path(self):
         """A check module must not bind a `validate_helpers` path at module level.
 
