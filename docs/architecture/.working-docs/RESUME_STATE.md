@@ -55,7 +55,7 @@ direction authorized, contingent on architecture review + operator visibility).
 |---|---|
 | **0 — characterization harness** | ✅ **COMPLETE.** 3 guards + the harness, all mutation-verified |
 | **1 — anchors + helpers, file stays put** | ✅ **COMPLETE.** `CHARACTERIZATION HELD — 49 checks identical` |
-| 2 — package split | **IN PROGRESS.** Framework layer done; H1 genuinely closed; **4 of 8 check modules extracted**; validate.py 7900 → 5894 lines |
+| 2 — package split | **IN PROGRESS.** Framework layer done; H1 genuinely closed; **6 of 9 check modules extracted**; validate.py 7900 → 4369 lines |
 | 3 — semantic fixes | not started; list in ADR-009 §Deferred (8 items) |
 
 ### Phase 2 — what remains, concretely
@@ -68,10 +68,19 @@ mechanical move itself, module by module, per the assignment table in
 ✅ `checks/physics.py` — **DONE** (`e42b902e`), 9 checks + `_parse_latex_number`.
 ✅ `checks/graph_atlas.py` — **DONE** (`f620dc84`), 3 checks; one contiguous block.
 ✅ `checks/freshness.py` — **DONE** (`06d34f1f`), 6 checks + the 3 `_*_is_stale` cores.
+✅ `checks/lean_toolchain.py` — **DONE** (`22fe203b`), 7 checks. **Split out of the planned
+   `lean_substrate`**, which measured ~1,580 lines and failed D1's readable-in-one-pass criterion.
+   The two halves share no helpers. `theorems` was assigned here (the table never assigned it).
+✅ `checks/lean_substrate.py` — **DONE** (`218a74ca`), 9 checks + the type-thinness classifier;
+   **20 re-exported names**, the largest surface footprint of any module.
    Use any of them as the template; the recipe below is proven, not theoretical.
 
-⬜ `lean_substrate.py` (the big one — 15 of its internals are in the frozen surface) ·
-`papers_prose.py` · `citations.py` · `bundles_readiness.py`
+⬜ `papers_prose.py` · `citations.py` · `bundles_readiness.py`  — and `paper_toolchain_pin_drift`
+   is still unassigned in §4 (suggest `papers_prose`).
+
+**Split a module when it exceeds one readable pass.** The §4 table is a plan, not scripture; D1's
+criterion is the requirement. Measure the block before extracting, split on a seam where the two
+halves share no helpers, and update §4 with the reasoning.
 
 ⚠️ **STRUCTURAL TESTS GO STALE WHEN CODE MOVES.** Three so far were scoped to
 `scripts/validate.py` alone and had to be widened to `validation/**/*.py`: the H1 `__file__`
