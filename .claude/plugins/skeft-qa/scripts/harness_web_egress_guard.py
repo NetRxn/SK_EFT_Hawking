@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import json
 import os
+import posixpath
 import re
 import sys
 from urllib.parse import urlparse
@@ -55,6 +56,41 @@ _WHITELIST = (
     # nature.com scholarly primary + Semantic Scholar meta, user-authorized 2026-07-10:
     "patents.google.com", "patentscope.wipo.int", "uspto.gov",
     "worldwide.espacenet.com", "nature.com", "semanticscholar.org",
+    # Isabelle Archive of Formal Proofs — a curated, refereed formalization archive and a
+    # primary prior-art source for novelty claims. User-authorized 2026-08-01 for the D12
+    # blocking prior-art gate (AFP `Error_Function`, `Probability`, `Kraus Maps`,
+    # `Concentration Inequalities`, `Projective Measurements`, `Isabelle Marries Dirac`).
+    "isa-afp.org",
+)
+
+# Path-scoped destinations: (host, path_prefix). A URL passes iff its host matches the
+# entry (exactly or as a subdomain) AND its NORMALIZED path equals the prefix or extends
+# it at a "/" boundary. This exists so single code-hosting repositories can be reached
+# WITHOUT whitelisting the whole host — github.com carries arbitrary user-controlled
+# content, so a bare host entry would be a far broader grant than intended.
+#
+# User-authorized 2026-08-01: theorem-prover ecosystem repositories, for prior-art and
+# novelty verification. Absence-of-formalization is a claim this project makes in print;
+# it must be checkable against the actual sources. Add repos here one at a time — never
+# widen this to a bare "github.com" entry in _WHITELIST.
+_PATH_WHITELIST = (
+    # D12 blocking prior-art gate (the highest prior-art risk in that bundle):
+    ("github.com", "/RemyDegenne/testing-lower-bounds"),
+    ("raw.githubusercontent.com", "/RemyDegenne/testing-lower-bounds"),
+    # Coq `infotheo` — the other half of the same D12 gate:
+    ("github.com", "/affeldt-aist/infotheo"),
+    ("raw.githubusercontent.com", "/affeldt-aist/infotheo"),
+    # Standing prover-ecosystem prior-art sources:
+    ("github.com", "/leanprover-community/mathlib4"),
+    ("raw.githubusercontent.com", "/leanprover-community/mathlib4"),
+    ("github.com", "/leanprover/lean4"),
+    ("raw.githubusercontent.com", "/leanprover/lean4"),
+    ("github.com", "/math-comp/math-comp"),
+    ("raw.githubusercontent.com", "/math-comp/math-comp"),
+    ("github.com", "/agda/agda-stdlib"),
+    ("raw.githubusercontent.com", "/agda/agda-stdlib"),
+    ("github.com", "/HOL-Theorem-Prover/HOL"),
+    ("raw.githubusercontent.com", "/HOL-Theorem-Prover/HOL"),
 )
 
 _HEADER = re.compile(r"^#\s*-+\s*(.+?)\s*-+\s*$")
@@ -94,9 +130,36 @@ def _load_patterns():
     return out
 
 
+def _host_matches(host: str, entry: str) -> bool:
+    """Exact host, or a subdomain of it — never a suffix-confusable lookalike."""
+    return host == entry or host.endswith("." + entry)
+
+
 def _host_allowed(host: str) -> bool:
     host = (host or "").lower()
-    return any(host == d or host.endswith("." + d) for d in _WHITELIST)
+    return any(_host_matches(host, d) for d in _WHITELIST)
+
+
+def _path_allowed(host: str, path: str) -> bool:
+    """True iff (host, path) matches a _PATH_WHITELIST entry.
+
+    The path is normalized first, so `/owner/repo/../../elsewhere` cannot walk out of an
+    allowed prefix. Matching is casefolded: a case variant of an allowed repo path resolves
+    to the same repository, and denying on case alone would produce exactly the kind of
+    spurious "policy block" this guard must not manufacture.
+    """
+    host = (host or "").lower()
+    norm = posixpath.normpath(path or "/")
+    if not norm.startswith("/"):
+        norm = "/" + norm
+    norm = norm.casefold()
+    for entry_host, prefix in _PATH_WHITELIST:
+        if not _host_matches(host, entry_host):
+            continue
+        pref = prefix.casefold()
+        if norm == pref or norm.startswith(pref + "/"):
+            return True
+    return False
 
 
 def evaluate(ev: dict):
@@ -118,8 +181,9 @@ def evaluate(ev: dict):
                 f"and retry. (dev-harness web-egress guard)"
             )
     if tool == "WebFetch":
-        host = urlparse(tool_input.get("url", "")).hostname or ""
-        if not _host_allowed(host):
+        parsed = urlparse(tool_input.get("url", ""))
+        host = parsed.hostname or ""
+        if not _host_allowed(host) and not _path_allowed(host, parsed.path):
             return (
                 f"[web-egress] WebFetch to non-whitelisted domain "
                 f"'{host or tool_input.get('url', '')}'. Only scholarly primaries / greylist "
