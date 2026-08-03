@@ -48,8 +48,37 @@ direction authorized, contingent on architecture review + operator visibility).
 |---|---|
 | **0 — characterization harness** | ✅ **COMPLETE.** 3 guards + the harness, all mutation-verified |
 | **1 — anchors + helpers, file stays put** | ✅ **COMPLETE.** `CHARACTERIZATION HELD — 49 checks identical` |
-| 2 — package split | **IN PROGRESS.** Ordering mechanism landed + mutation-verified |
+| 2 — package split | **IN PROGRESS.** Ordering mechanism + `_config` landed; no check module extracted yet |
 | 3 — semantic fixes | not started; list in ADR-009 §Deferred |
+
+**Phase 2 so far** — three pieces of scaffolding, each of which had to be repaired after being built:
+
+1. **`_CANONICAL_ORDER` + `_apply_canonical_order()`** (H3) — execution order declared as data, so module
+   organisation stops determining it. ⚠️ **Shipped broken and was caught by the mandatory full re-read, not
+   by any test.** The call sat mid-file: 14 of 59 checks registered below it were never sorted, and its
+   `raise` for an undeclared check could not fire for anything after that line — including the end of the
+   file, where a new check naturally goes. Invisible because the tail was coincidentally already in
+   canonical order. Fixed by moving the call below the last registration; ADR-009 H3 carries the full
+   account. **Phase 2 must move it after the check-module import block**, which makes it structural.
+2. **`scripts/validation/_config.py`** (H5) — the three runtime flags now have exactly one owner, reached by
+   attribute access (`_cfg.STRICT_MODE`) so the value resolves at call time. `validate.STRICT_MODE` and
+   siblings no longer exist.
+3. **`scripts/validation/__init__.py`** — the package. Named `validation`, **not** `validate`: a package
+   shadows a same-named module on the same `sys.path` entry (verified empirically), so ADR-009 D1's original
+   `scripts/validate/` + shim pairing was unbuildable and is corrected in the ADR.
+
+⚠️ **Guard 2 had a hole, found by attempting the work it protects.** `co_names` records names used for
+`LOAD_ATTR` as well as `LOAD_GLOBAL`, so `from validate import STRICT_MODE` still shows `STRICT_MODE` in
+`co_names` — a global lookup resolving against the wrong namespace. The flag freezes at import time,
+`--strict` becomes a no-op, and the guard written for exactly that hazard stays green. Closed structurally:
+every consuming check must show `_cfg` in `co_names`, and `TestNoCheckModuleShadowsAFlag` asserts that **no
+suite module binds a flag in its own namespace at all** — which catches it however the body reads it.
+Mutation-verified: the old leg MISSES the cross-module copy, the new one catches it.
+
+**Standing lesson for the rest of this refactor.** Three for three, the scaffolding was defective on first
+write and the defect was of the *same class the scaffolding exists to prevent* — an inert guard, a
+partially-applied mechanism, a name that resolves to the wrong thing. Assume the next piece is too, and
+attack it before trusting it.
 
 **Phase 1 delivered** (all verified behaviour-preserving against a pre-change baseline):
 - `scripts/validate_helpers.py` — the single path anchor + artifact loaders.

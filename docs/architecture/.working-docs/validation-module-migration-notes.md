@@ -106,6 +106,19 @@ can hard-block on `main`. Filed as a §7 semantic fix; **not** to be repaired du
 **Constraint:** registration order must be byte-preserved across the migration, and the golden snapshot must
 assert the ordered check-name list, not just the set.
 
+> **⚠️ MITIGATION REVISED 2026-08-03.** "Preserve order via an explicit ordered import list" **cannot
+> work**: the live order interleaves domains (#10 Lean, #11 physics, #13 papers, #16 Lean), so no ordering
+> of domain modules reproduces it. Import order and execution order are different concerns and are now
+> decoupled — `validate._CANONICAL_ORDER` declares the 59 names as data and `_apply_canonical_order()`
+> sorts `_CHECKS` once. Module organisation becomes free; order becomes explicit.
+>
+> **The sort must run after the LAST registration.** The first implementation put the call next to its
+> definition, mid-file, leaving 14 of 59 checks unsorted below it and making its "undeclared check" `raise`
+> unreachable for anything registered after that point — including the end of the file. Both were invisible
+> because the tail was coincidentally in canonical order. In Phase 2 the call goes **after the
+> `validation.checks.*` import block**, which makes "after all registrations" structural; until then
+> `TestCanonicalOrderMechanism` asserts the position from the AST.
+
 ### H4 — Divergent "artifact absent" policies, which a shared loader would silently unify
 
 Eight independent `lean_deps.json` load sites, with **incompatible** missing-file semantics:
@@ -150,12 +163,28 @@ functions, never one with a flag.
 
 `main()` sets the first three via `global` at `:7716-7719`. Split across modules, a `from validate import
 STRICT_MODE` binds a **copy at import time** and the flag stops working — silently, since the affected
-checks simply take their non-strict branch. The three caches are correctness-relevant too: they are shared
-across checks within a run, and duplicating them per-module changes cost, not behaviour — but only if the
-split is done by reference, not by value.
+checks simply take their non-strict branch.
+
+> **⚠️ CORRECTION 2026-08-03 — the three caches are NOT shared across checks.** This section claimed they
+> "are shared across checks within a run". Measured: all three are populated and consumed inside the call
+> tree of **one** check, `prose_theorem_reference_coverage`, via `_load_lean_name_index()` and
+> `_resolve_prose_ref()`. No other check reaches them. So they move together with that check and carry no
+> cross-module sharing obligation — but if the resolver helpers are ever split from the cache globals, the
+> H5 rule below applies to them unchanged. (The same wrong claim was also in
+> `tests/validate_characterization.py`'s rationale and is corrected there.)
 
 **Constraint:** runtime flags move into a single explicit config object passed to checks, or stay in one
 module accessed by attribute (`cfg.STRICT_MODE`), never imported by value.
+
+✅ **SHIPPED** as `scripts/validation/_config.py`. `validate.STRICT_MODE` and siblings **no longer exist** —
+one owner, reached as `_cfg.<FLAG>`.
+
+> **⚠️ The `co_names` guard written for this hazard did not cover it.** `co_names` records names used for
+> `LOAD_ATTR` as well as `LOAD_GLOBAL`, so `from validate import STRICT_MODE` still puts `STRICT_MODE` in
+> the function's `co_names` — a global lookup resolving against the *wrong* namespace. The value freezes at
+> import time, `--strict` becomes a no-op, and the guard stays green. Closed structurally: consuming checks
+> must show `_cfg` in `co_names`, and `TestNoCheckModuleShadowsAFlag` asserts that **no suite module binds a
+> flag in its own namespace at all**, which holds however the body reads it. Mutation-verified both ways.
 
 ---
 
@@ -176,21 +205,29 @@ Asserted by the golden snapshot at every phase boundary:
 
 ## 4. Target architecture
 
+> **⚠️ CORRECTED 2026-08-03 — the layout below is NOT the one this section originally described.**
+> It specified a `scripts/validate/` **package** plus a thin `scripts/validate.py` **shim**. Those cannot
+> coexist: a package **shadows** a same-named module on the same `sys.path` entry (verified empirically),
+> so `import validate` would resolve to `validate/__init__.py` and the shim would be unreachable — dead
+> code that looks load-bearing, while silently satisfying H2 through a file nobody realised was live.
+> ADR-009 D1 carries the correction. The package is **`scripts/validation/`**; `scripts/validate.py`
+> **stays a module** and remains the framework core.
+
 ```
-scripts/validate.py              # thin shim: `from validate import main; sys.exit(main())`
-                                 #   — keeps `python scripts/validate.py` and every doc/hook invocation working
-scripts/validate/
-  __init__.py                    # public surface: main, run_checks, register_check, CheckResult, Detail,
-                                 #   BUNDLE_CODES (H2). Imports checks/* for registration side-effect,
-                                 #   in an EXPLICIT ordered list (H3).
-  _paths.py                      # THE path anchor. PROJECT_ROOT resolved once, explicitly (H1).
-  _config.py                     # STRICT_MODE / FORCE_LATEX / FORCE_NOTEBOOK_REEXEC as one object (H5)
-  _result.py                     # Detail, CheckResult, CheckSpec, registry, run_checks
-  _report.py                     # print_results, archive_results, --json payload
-  helpers/
-    lean_deps.py                 # load_lean_deps(on_missing=...) + the three source caches (H4, H5)
-    papers.py                    # bundle_drafts() / all_paper_drafts() — two names, never a flag (H4)
-    counts.py                    # load_counts()
+scripts/validate.py              # STAYS A MODULE — the framework core (~400 lines):
+                                 #   Detail / CheckResult / CheckSpec, the _CHECKS registry +
+                                 #   register_check, _CANONICAL_ORDER + _apply_canonical_order,
+                                 #   run_checks, print_results, archive_results, main, and the
+                                 #   BUNDLE_CODES re-export H2 requires. Imports validation.checks.*
+                                 #   for their registration side-effect, THEN sorts (H3).
+scripts/validate_helpers.py      # THE path anchor + artifact loaders (H1, H4). Shipped in Phase 1;
+                                 #   stays at scripts/ so its anchor keeps resolving.
+scripts/validation/
+  __init__.py                    # package docstring only — no re-exports, no import side effects.
+                                 #   ⚠️ Execution order does NOT live here (see H3 below).
+  _config.py                     # STRICT_MODE / FORCE_LATEX / FORCE_NOTEBOOK_REEXEC (H5).  ✅ SHIPPED
+                                 #   Reached as `_cfg.<FLAG>`; never imported by value.
+  helpers/                       # (not yet created — validate_helpers.py covers Phase 1's needs)
     tex.py                       # _strip_tex_comments, _line_of, shared regexes
   checks/
     lean_substrate.py            # formulas, placeholder_not_cited, disclosure_consistency, proxy_body_audit,
@@ -281,6 +318,12 @@ Identified while reading; **not** part of the mechanical work.
    hard-fails, one cannot fail. Candidates to merge into one parameterized check.
 6. **`--strict` is passed by nothing automated** — not the commit hook, not `gate_precheck.py`. Two gates
    (`axiom_closure_allowlist`, `bundle_source_freshness`) are therefore unreachable in practice.
+7. **Fabricated VERIFIES edges from library aliases** (`build_graph.py:3587`, found 2026-08-03). The Lean
+   short-name branch of the test-coverage resolver has no alias guard, though the formula branch beside it
+   has one with a comment explaining exactly this risk. 10 of 534 Lean-targeted VERIFIES edges are false —
+   `np.kron` → `Curvature.kron`, `v` → `EWMassMatrixInputs.v`, etc. Feeds the ComputationCorrectness gate as
+   coverage evidence. One-line fix, Phase 3 (it changes what a gate measures). Full detail: ADR-009
+   §Deferred item 7.
 
 **Correction to an earlier claim of mine:** I reported `atlas_hypothesis_discipline` as contradicting its own
 "NEVER a gate" description. Reading it, the `passed=False` at `:3717` is in the **exception handler** — it
@@ -289,17 +332,26 @@ pattern, not a defect. Withdrawn.
 
 ---
 
-## 8. Open — pending reconnaissance
+## 8. Reconnaissance — CLOSED 2026-08-03
 
-Four read-only explorations are in flight (artifact-generation stack; readiness/bundle stack; agent/hook/
-register layer; test coverage). Three answers could change this plan:
+The four read-only explorations landed and their load-bearing claims were verified directly. Outcomes:
 
-- **Test coverage** — which of the 59 could break silently under a mechanical move, and whether
-  `--json` is deterministic enough for Phase 0.
-- **Artifact-generation stack** — whether `build_graph_json()` is invoked multiple times per run (several
-  checks call it; if uncached, that is a large duplicated cost and a possible consistency hazard when
-  artifacts are regenerated mid-run by the `*_fresh` checks).
-- **Agent/hook layer** — every external caller of `validate.py` that must keep working (hooks,
-  `gate_precheck`, skills, the dashboard).
+- **Test coverage** — 16 TESTED / 6 PARTIAL / 37 UNTESTED, and **eleven of the sixteen assert only
+  `result.passed`**, so a check rewritten to `return CheckResult(passed=True, details=[])` passes them.
+  Exactly five would fail on a seeded defect. `--json` proved deterministic enough once `elapsed_seconds`
+  is dropped, details are sorted and `PYTHONHASHSEED` is pinned — but **ten checks are structurally
+  non-snapshottable and are quarantined** rather than forced (see `tests/validate_characterization.py`).
+- **Artifact-generation stack** — confirmed: `build_graph_json()` runs ≈8 full extraction passes and ≈20
+  parses of a 70 MB `lean_deps.json` per suite run, ~15 s per build. A shared graph handle is the obvious
+  consequence and is deliberately **Phase 3**, because sharing changes what each check observes once the
+  `*_fresh` checks regenerate artifacts mid-run. Same reasoning forbids memoizing `load_lean_deps()`
+  (§7 item 0 / ADR-009 §Deferred item 0).
+- **Agent/hook layer** — external callers enumerated (pre-commit hook, `gate_precheck.py`,
+  `pre-commit-sync.sh`, the skills/plugins, the dashboard). All go through `python scripts/validate.py`,
+  `import validate`, or the `--json` payload — which is why the migration contract in §3 pins exactly those
+  three surfaces. **The Codex control plane was checked separately and has zero coupling to the validation
+  suite** (verified across its 7 commits); parked in `tangential-items.md` T1 — do not re-derive it.
 
-This plan is not final until those land and I have verified their load-bearing claims myself.
+The plan is final in the sense that reconnaissance no longer gates it. It is **not** final in the sense of
+being correct on first write: three pieces of Phase-0/2 scaffolding shipped defective and were caught by
+re-reading and mutation, not by tests. See RESUME_STATE.md's standing lesson.

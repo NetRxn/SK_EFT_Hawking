@@ -29,13 +29,26 @@ The *permanent* structural guarantees live in the two committed guards:
 EXECUTION MODEL
 ---------------
 Checks run **in-process, sequentially, in registration order** — the same way
-`run_checks` executes them. That is deliberate:
+`run_checks` executes them. Two reasons, one of which had to be corrected:
 
-* It is faithful. Module-global caches (`_LEAN_NAME_INDEX_CACHE`,
-  `_LEAN_SOURCE_CACHE`, `_PHYSLIB_SOURCE_CACHE`) are shared across checks in a
-  real run, so sharing them here characterizes the real behaviour.
 * It is affordable. Per-check subprocesses would re-pay import and graph-build
-  cost ~50 times; `build_graph_json()` alone runs 4× per suite at ~15 s.
+  cost ~50 times; `build_graph_json()` alone runs 4× per suite at ~15 s. This is
+  the load-bearing reason.
+* It is faithful *to process-level state generally* — module globals, `sys.path`,
+  the runtime flags in `validation._config` — so a defect that only manifests
+  when checks share an interpreter is visible here.
+
+⚠️ An earlier version of this paragraph justified the model by claiming the three
+module-global caches (`_LEAN_NAME_INDEX_CACHE`, `_LEAN_SOURCE_CACHE`,
+`_PHYSLIB_SOURCE_CACHE`) "are shared across checks in a real run". **Measured
+2026-08-03: they are not.** All three are populated and consumed inside the call
+tree of a single check — `prose_theorem_reference_coverage`, via
+`_load_lean_name_index()` and `_resolve_prose_ref()` — and no other check reaches
+them. The design is unchanged because the cost argument alone carries it; the
+reason was wrong and is corrected rather than quietly dropped. Asserting a
+property of the data without measuring it is the defect class this whole harness
+exists to catch, so it does not get to sit uncorrected in the harness's own
+rationale.
 
 The contamination hazard that motivated "one subprocess per check" is confined
 to the three checks that regenerate on-disk artifacts a later check reads — and

@@ -87,6 +87,10 @@ from bundle_registry import BUNDLE_CODES as _REGISTRY_BUNDLE_CODES  # noqa: E402
 # ADR-009 Phase 1: shared path anchors + artifact loaders. Owns WHERE things are
 # and HOW they are read; each call site keeps its OWN verdict on absence (H4).
 import validate_helpers as _H  # noqa: E402
+# ADR-009 H5: runtime flags live in ONE module, reached by ATTRIBUTE ACCESS so the
+# value is resolved at call time. Importing them by value binds a copy at import
+# time and silently freezes --strict once the checks are split across modules.
+from validation import _config as _cfg  # noqa: E402
 
 # ── Path anchors — ALIASES, not independent derivations (ADR-009 H1) ─────
 # These were each computed from `Path(__file__)`. That is safe while this file
@@ -144,19 +148,16 @@ _CHECKS: List[CheckSpec] = []
 # Strict mode flag — set by CLI --strict. Tightens advisory warnings to hard
 # failures for paper-submission gating (currently used by parameter_provenance
 # and provenance_doi_in_registry).
-STRICT_MODE: bool = False
 
 # Force flag — set by CLI --force-notebooks. Bypasses the CHECK 11 notebook
 # skip-cache and re-executes every notebook (use after a kernel / dependency
 # upgrade that could change execution outcomes without changing notebook
 # content). Default False: unchanged, previously-vetted notebooks are skipped.
-FORCE_NOTEBOOK_REEXEC: bool = False
 
 # Force flag — set by CLI --force-latex OR when `paper_latex_compiles` is the
 # explicitly selected `--check`. The latex-compile check is slow (pdflatex ×
 # all bundle drafts), so it SKIPS in the default full run unless one of these
 # is set. Default False.
-FORCE_LATEX: bool = False
 
 
 def register_check(name: str, description: str):
@@ -2004,7 +2005,7 @@ def check_axiom_closure_allowlist() -> CheckResult:
             f"(counts.json 'Axioms: 0' counts only declared `axiom`s)",
             warning=True))
 
-    strict = STRICT_MODE
+    strict = _cfg.STRICT_MODE
     if unexpected:
         sample = list(unexpected.items())[:10]
         msg = (f"{len(unexpected)} declaration(s) carry a non-allow-listed axiom "
@@ -2390,7 +2391,7 @@ def check_notebook_execution() -> CheckResult:
     # all); --force-notebooks ignores it entirely.
     src_fp = _src_core_fingerprint()
     prev_passed: Dict[str, str] = {}
-    if NOTEBOOK_EXEC_CACHE.is_file() and not FORCE_NOTEBOOK_REEXEC:
+    if NOTEBOOK_EXEC_CACHE.is_file() and not _cfg.FORCE_NOTEBOOK_REEXEC:
         try:
             loaded = json.loads(NOTEBOOK_EXEC_CACHE.read_text())
             if isinstance(loaded, dict) and loaded.get("src_fingerprint") == src_fp:
@@ -2413,7 +2414,7 @@ def check_notebook_execution() -> CheckResult:
         code_hash = _notebook_code_hash(nb)
 
         # Skip unchanged, previously-vetted notebooks.
-        if not FORCE_NOTEBOOK_REEXEC and prev_passed.get(nb_path.name) == code_hash:
+        if not _cfg.FORCE_NOTEBOOK_REEXEC and prev_passed.get(nb_path.name) == code_hash:
             n_skipped += 1
             new_passed[nb_path.name] = code_hash
             details.append(Detail(nb_path.name, True,
@@ -2777,7 +2778,7 @@ def check_parameter_provenance() -> CheckResult:
         k for k in not_human
         if PARAMETER_PROVENANCE[k].get('tier') != 'PROJECTED'
     ]
-    if STRICT_MODE and not_human_required:
+    if _cfg.STRICT_MODE and not_human_required:
         all_pass = False
         sample = ', '.join(not_human_required[:8])
         more = f" + {len(not_human_required) - 8} more" if len(not_human_required) > 8 else ""
@@ -4985,7 +4986,23 @@ def _apply_canonical_order() -> None:
     _CHECKS.sort(key=lambda s: index[s.name])
 
 
-_apply_canonical_order()
+# ⚠️ THE CALL IS DELIBERATELY NOT HERE. It lives at the BOTTOM of this module,
+# after the last `@register_check`. Placing it here — which is where it was first
+# written, on 2026-08-03 — sorted only the 45 checks registered above this point
+# and left the 14 below it appended, unsorted, in import order. Two consequences,
+# both invisible because the tail happened to already be in canonical sequence:
+#
+#   1. The mechanism was inert for 14/59 checks, i.e. exactly the ones a Phase-2
+#      module move is most likely to reorder.
+#   2. The `raise` above — the "loud failure for a check nobody declared a
+#      position for" — could not fire for anything registered below, INCLUDING
+#      the end of the file, which is where a new check naturally goes. Verified
+#      by mutation: an undeclared check added at :7441 ran, listed, and exited 0.
+#
+# So the guard written to make ordering explicit was itself order-dependent.
+# `tests/test_validate_registry_contract.py` now asserts the call's position
+# structurally, because no behavioural test can see this while the tail is
+# coincidentally correct.
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -5544,7 +5561,7 @@ def check_provenance_doi_in_registry() -> CheckResult:
         more = f" + {len(missing_doi) - 5} more" if len(missing_doi) > 5 else ""
         msg = (f"{len(missing_doi)} provenance DOIs absent from "
                f"CITATION_REGISTRY: {sample}{more}")
-        if STRICT_MODE:
+        if _cfg.STRICT_MODE:
             all_pass = False
             details.append(Detail("missing_dois", False, f"[strict] {msg}"))
         else:
@@ -5747,7 +5764,7 @@ def check_bundle_source_freshness() -> CheckResult:
         passed = f["passed"]
         warning = f.get("warning", False)
         # In strict mode, WARN bundles fail
-        if STRICT_MODE and warning:
+        if _cfg.STRICT_MODE and warning:
             passed = False
         details.append(Detail(
             f"bundle:{bundle}",
@@ -5764,7 +5781,7 @@ def check_bundle_source_freshness() -> CheckResult:
         f"{len(findings)} sub-findings: {n_fail} FAIL / {n_warn} WARN / "
         f"{len(findings) - n_fail - n_warn} PASS"
     )
-    if STRICT_MODE:
+    if _cfg.STRICT_MODE:
         summary_msg += " (strict mode: WARN promoted to FAIL)"
     details.insert(0, Detail("summary", n_fail == 0, summary_msg))
 
@@ -5975,8 +5992,8 @@ def check_bibitem_title_primary_source() -> CheckResult:
     # In strict mode, both drift classes fail; in default mode, only
     # DROP-WORD flags fail (high-confidence BLOCKER pattern), NOT-FOUND
     # is advisory only.
-    summary_passed = STRICT_MODE is False or (n_drop_word == 0 and n_not_found == 0)
-    if not STRICT_MODE:
+    summary_passed = _cfg.STRICT_MODE is False or (n_drop_word == 0 and n_not_found == 0)
+    if not _cfg.STRICT_MODE:
         summary_passed = True  # Always pass in default mode
 
     details.append(Detail(
@@ -5989,17 +6006,17 @@ def check_bibitem_title_primary_source() -> CheckResult:
         f"skipped: {skipped_inprep} inprep, {skipped_textbook} textbook, "
         f"{skipped_no_pdf} non-pdf cache, {skipped_no_title} no-title, "
         f"{skipped_missing_cache} cache-missing"
-        + (" (strict mode: drift flags promoted to FAIL)" if STRICT_MODE else ""),
-        warning=(n_drop_word > 0 or n_not_found > 0) and not STRICT_MODE,
+        + (" (strict mode: drift flags promoted to FAIL)" if _cfg.STRICT_MODE else ""),
+        warning=(n_drop_word > 0 or n_not_found > 0) and not _cfg.STRICT_MODE,
     ))
 
     # DROP-WORD findings: high-confidence drift (the BLOCKER class)
     for bibkey, msg, pdf_excerpt in drop_word_flags[:20]:
         details.append(Detail(
             f"drop_word:{bibkey}",
-            STRICT_MODE is False,
+            _cfg.STRICT_MODE is False,
             f"{msg} — pdf-page1≈{pdf_excerpt!r}",
-            warning=not STRICT_MODE,
+            warning=not _cfg.STRICT_MODE,
         ))
     if len(drop_word_flags) > 20:
         details.append(Detail(
@@ -6398,7 +6415,7 @@ def check_paper_latex_compiles() -> CheckResult:
     """
     details: List[Detail] = []
 
-    if not FORCE_LATEX:
+    if not _cfg.FORCE_LATEX:
         return CheckResult(passed=True, details=[Detail(
             "skipped", True,
             "SKIPPED (slow) — pass --force-latex or "
@@ -7401,7 +7418,7 @@ def check_theorem_name_embedded_citations() -> CheckResult:
                       "CITATION_REGISTRY used_in entry (phantom-citation "
                       "candidate)"
                 )
-                if STRICT_MODE:
+                if _cfg.STRICT_MODE:
                     details.append(Detail(
                         f"embedded_citation_missing:{bundle}:{short}:{author}",
                         False, f"[strict] {msg}"))
@@ -7411,7 +7428,7 @@ def check_theorem_name_embedded_citations() -> CheckResult:
                         True, msg, warning=True))
 
     passed = True
-    if STRICT_MODE and n_warn > 0:
+    if _cfg.STRICT_MODE and n_warn > 0:
         passed = False
     details.insert(0, Detail(
         "summary",
@@ -7419,10 +7436,10 @@ def check_theorem_name_embedded_citations() -> CheckResult:
         f"{len(year_decls)} year-token declaration name(s) project-wide / "
         f"{n_checked} prose-mention checks across bundles — {n_warn} "
         f"embedded-citation mismatch(es)"
-        + (" (strict mode: mismatches FAIL)" if STRICT_MODE else " (advisory)")
+        + (" (strict mode: mismatches FAIL)" if _cfg.STRICT_MODE else " (advisory)")
         + (f" / {n_skipped_no_author} skipped (no inferable author)"
            if n_skipped_no_author else ""),
-        warning=(n_warn > 0 and not STRICT_MODE),
+        warning=(n_warn > 0 and not _cfg.STRICT_MODE),
     ))
     if n_warn == 0:
         details.append(Detail(
@@ -7797,6 +7814,23 @@ def check_paper_toolchain_pin_drift() -> CheckResult:
     return CheckResult(passed=True, details=details)
 
 
+# ═══════════════════════════════════════════════════════════════════════
+# Apply the declared execution order — AFTER every registration (ADR-009 H3)
+# ═══════════════════════════════════════════════════════════════════════
+# This must be the last statement following the final `@register_check`, and it
+# must run at IMPORT time rather than inside `main()`: the tests, the
+# characterization harness and `gate_precheck.py` all read `_CHECKS` directly
+# without ever calling `main`, so a sort deferred to the CLI would leave every
+# in-process consumer running an unordered registry.
+#
+# In Phase 2 this becomes structurally safe rather than positionally safe — the
+# framework will import the check modules and then sort, so "after all
+# registrations" is enforced by the import block rather than by where this line
+# happens to sit. Until then, the position IS the contract, and the registry
+# test asserts it.
+_apply_canonical_order()
+
+
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(
         description="SK-EFT Hawking cross-layer validation suite",
@@ -7835,10 +7869,9 @@ Examples:
     )
     args = parser.parse_args(argv)
 
-    global STRICT_MODE, FORCE_NOTEBOOK_REEXEC, FORCE_LATEX
-    STRICT_MODE = args.strict
-    FORCE_NOTEBOOK_REEXEC = args.force_notebooks
-    FORCE_LATEX = args.force_latex or args.check == "paper_latex_compiles"
+    _cfg.STRICT_MODE = args.strict
+    _cfg.FORCE_NOTEBOOK_REEXEC = args.force_notebooks
+    _cfg.FORCE_LATEX = args.force_latex or args.check == "paper_latex_compiles"
 
     if args.list:
         print("Available checks:")

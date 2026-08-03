@@ -185,6 +185,27 @@ registry already happens to be in canonical order), so the ordering mechanism is
 relied upon. `tests/test_validate_registry_contract.py` keeps its OWN independently-frozen list — it must not
 import `_CANONICAL_ORDER`, or it would assert only that production agrees with itself.
 
+> **⚠️ The sort must run after the LAST registration, and that is not a detail — it is the mechanism.**
+> Recorded because the first implementation (2026-08-03) got it wrong and nothing caught it. The
+> `_apply_canonical_order()` call was placed next to its definition, mid-file, which left **14 of the 59
+> checks registered below it** — appended in import order, never sorted — and made the clause's own
+> `raise` unreachable for anything declared after that point, *including the end of the file, where a new
+> check naturally goes*. Verified by mutation: an undeclared check registered at `:7441` ran, listed, and
+> exited 0.
+>
+> Both failures were invisible because the tail happened to already be in canonical sequence, so every
+> behavioural test stayed green — the guard written to make ordering explicit was itself order-dependent.
+> This is the ADR's own §Context item 3 (no mutation-test discipline) reproduced inside the fix for H3.
+>
+> Two consequences for the phases that follow. **Phase 2 must place the sort after the check-module import
+> block**, at which point "after all registrations" becomes structural rather than positional and this
+> hazard retires. Until then the position *is* the contract, and
+> `TestCanonicalOrderMechanism::test_the_sort_runs_after_the_last_registration` asserts it from the AST —
+> deliberately a source-structure test, because while the tail is coincidentally ordered no behavioural
+> test can tell an early sort from a correct one. Its sibling leg asserts the property the `raise` was
+> supposed to guarantee (every registered check has a declared position), since a `raise` reachable for
+> only part of the registry is evidence of nothing.
+
 **H4 — the eight `lean_deps.json` loaders disagree on missing-file policy** — five PASS (`:571`, `:892`,
 `:1047`, `:1130`, `:7413` with a warning), two FAIL (`:6968`, `:7191`), one unguarded (`:6729`). A single
 extracted loader silently unifies eight checks' behaviour. *Mitigation:* the helper takes an explicit
@@ -335,6 +356,26 @@ Identified during the read; explicitly **not** part of Phases 0–2.
 5. `count_literals` ⊂ `axiom_count_prose_consistency` — same predicate shape split by subject, one
    hard-failing and one incapable of failing.
 6. `--strict` is passed by no automated caller, making two gates unreachable in practice.
+7. **`build_graph`'s Lean-side VERIFIES resolver manufactures coverage from library aliases.**
+   Found 2026-08-03 while attributing a characterization diff. `extract_test_verifies_edges`
+   (`build_graph.py:3587`) resolves each of a test's `referenced_names` against Formula, Parameter, then
+   **Lean short names**. The *formula* branch is deliberately guarded — `_FORMULA_MODULE_ALIASES` restricts
+   dotted tails to `{F, formulas, src.core.formulas}`, with a comment stating that a blanket tail fallback
+   "would let `np.sum` or `math.exp` match a formula named `sum` or `exp`, manufacturing coverage that does
+   not exist". **The Lean branch has no equivalent guard**, so exactly that happens. Measured on the live
+   graph: **10 of the 534 Lean-targeted VERIFIES edges are fabricated** this way — `np.kron` →
+   `Curvature.kron`, `np.all` → `FaultTolerance.Pauli.all`, `np.diag` → `IsCharQ.diag`, `sp.binomial` →
+   `FractonHydro.binomial`, and `v` (the conventional `import validate as v` alias) →
+   `ScalarRungInterpretation.EWMassMatrixInputs.v`.
+   Most collisions are silently spared only by AMBIGUITY — the resolver skips names with ≥2 candidates, and
+   the run log shows `np.sum`, `np.conj`, `math.e`, `re.compile`, `sp.I` all being *attempted*. A name that
+   happens to be unique gets through. So the protection is accidental, and it weakens as the Lean library
+   grows more unique short names.
+   Impact: `ReadinessGate: ComputationCorrectness` reads these edges as test-coverage evidence, so a Lean
+   declaration can read as tested because an unrelated test called a NumPy function. Small in count, but it
+   is fabricated evidence in a gate. **Fix is one line** (apply an alias allow-list, or require the ref to be
+   undotted, before Lean resolution) — deliberately NOT done here: it changes what a gate measures, which is
+   Phase 3, and mixing that into a mechanical phase is what this ADR forbids.
 
 ---
 

@@ -123,6 +123,75 @@ class TestRegistryContract:
         )
 
 
+class TestCanonicalOrderMechanism:
+    """`_CANONICAL_ORDER` + `_apply_canonical_order()` are what decouple EXECUTION
+    order from IMPORT order (ADR-009 H3), so the Phase-2 domain split can organise
+    modules for reading. Both legs below exist because the mechanism shipped
+    BROKEN on 2026-08-03 and every other test in this file stayed green:
+
+    the call sat mid-file, so it sorted the 45 checks registered above it and left
+    the 14 below appended in import order — and its `raise` for an undeclared check
+    could not fire for anything registered below, including the end of the file,
+    which is where a new check naturally goes. Nothing caught it because the tail
+    was coincidentally already in canonical sequence.
+    """
+
+    def test_every_registered_check_has_a_declared_position(self):
+        """The property `_apply_canonical_order`'s `raise` promises to enforce.
+
+        Asserted here as well as in production because the raise is reachable only
+        for checks registered before the call — so on its own it is evidence of
+        nothing.
+        """
+        declared = set(v._CANONICAL_ORDER)
+        undeclared = [s.name for s in v._CHECKS if s.name not in declared]
+        assert not undeclared, (
+            f"check(s) registered with no declared execution position: {undeclared}. "
+            "Position is semantic (the *_fresh checks regenerate artifacts later "
+            "checks read), so it must be chosen, not inherited from import order."
+        )
+
+    def test_the_sort_runs_after_the_last_registration(self):
+        """Structural, and it has to be: while the tail is coincidentally in the
+        right order, NO behavioural test can distinguish a sort that ran too early
+        from one that ran at the right time. That coincidence is exactly the state
+        this file was in when the defect shipped.
+
+        AST-based, so the `@register_check` example in the module docstring and any
+        mention in a comment are not counted — only real decorators.
+        """
+        import ast
+        src = (SK_ROOT / "scripts" / "validate.py").read_text()
+        tree = ast.parse(src)
+
+        last_registration = max(
+            (node.lineno for node in ast.walk(tree)
+             if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+             for d in node.decorator_list
+             if isinstance(d, ast.Call) and getattr(d.func, "id", "") == "register_check"),
+            default=None,
+        )
+        assert last_registration is not None, "no @register_check decorators found"
+
+        call_lines = [
+            node.lineno for node in tree.body
+            if isinstance(node, ast.Expr) and isinstance(node.value, ast.Call)
+            and getattr(node.value.func, "id", "") == "_apply_canonical_order"
+        ]
+        assert len(call_lines) == 1, (
+            f"expected exactly one module-level `_apply_canonical_order()` call, "
+            f"found {len(call_lines)} at lines {call_lines}. Two calls would make "
+            f"the first one dead and hide which registrations it covered."
+        )
+        assert call_lines[0] > last_registration, (
+            f"`_apply_canonical_order()` is called at line {call_lines[0]} but the "
+            f"last `@register_check` is at line {last_registration}. Every check "
+            f"registered after the call is appended UNSORTED, and the call's "
+            f"`raise` cannot fire for any of them — so both halves of the ordering "
+            f"mechanism are silently inert for the tail of the file."
+        )
+
+
 class TestListOutputMatchesRegistry:
     """`--list` is a contract surface: `ADR-009` requires it byte-identical
     across the migration, and other tooling reads it."""

@@ -56,6 +56,7 @@ SK_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(SK_ROOT / "scripts"))
 
 import validate as v  # noqa: E402
+from validation import _config as cfg  # noqa: E402
 
 
 def _check(name: str):
@@ -64,10 +65,10 @@ def _check(name: str):
 
 @pytest.fixture(autouse=True)
 def _restore_flags():
-    """Flags are module globals; never leak a mutation into another test."""
-    saved = (v.STRICT_MODE, v.FORCE_LATEX, v.FORCE_NOTEBOOK_REEXEC)
+    """Flags live on `validation._config`; never leak a mutation into another test."""
+    saved = (cfg.STRICT_MODE, cfg.FORCE_LATEX, cfg.FORCE_NOTEBOOK_REEXEC)
     yield
-    v.STRICT_MODE, v.FORCE_LATEX, v.FORCE_NOTEBOOK_REEXEC = saved
+    cfg.STRICT_MODE, cfg.FORCE_LATEX, cfg.FORCE_NOTEBOOK_REEXEC = saved
 
 
 # ────────────────────────────────────────────────────────────────────────
@@ -80,9 +81,9 @@ class TestStrictModeReachesChecks:
         the checks that implement it."""
         fn = _check("parameter_provenance")
 
-        v.STRICT_MODE = False
+        cfg.STRICT_MODE = False
         lenient = fn()
-        v.STRICT_MODE = True
+        cfg.STRICT_MODE = True
         strict = fn()
 
         assert lenient.passed is True, (
@@ -100,7 +101,7 @@ class TestStrictModeReachesChecks:
         """Not just the verdict: the strict path must emit its own finding, so a
         check that flipped for an unrelated reason does not read as success."""
         fn = _check("parameter_provenance")
-        v.STRICT_MODE = True
+        cfg.STRICT_MODE = True
         names = [d.name for d in fn().details]
         assert "human_verification" in names
         assert any(
@@ -141,7 +142,7 @@ class TestStrictModePropagatesThroughMain:
 
 class TestForceLatex:
     def test_default_skips_without_running_pdflatex(self):
-        v.FORCE_LATEX = False
+        cfg.FORCE_LATEX = False
         r = _check("paper_latex_compiles")()
         assert r.passed is True
         assert any("SKIPPED" in (d.message or "") for d in r.details), (
@@ -190,3 +191,81 @@ class TestFlagsAreReadAsGlobals:
             f"working: the check keeps an import-time copy and always takes its "
             f"default branch."
         )
+
+    @pytest.mark.parametrize("check_name", [
+        "parameter_provenance", "axiom_closure_allowlist",
+        "provenance_doi_in_registry", "bundle_source_freshness",
+        "bibitem_title_primary_source", "theorem_name_embedded_citations",
+        "paper_latex_compiles", "notebook_exec",
+    ])
+    def test_check_reaches_the_flag_through_the_config_module(self, check_name):
+        """The flag must be reached as `_cfg.<FLAG>`, never as a bare global.
+
+        ⚠️ THE TEST ABOVE IS NOT SUFFICIENT, and finding that out is why this one
+        exists. `co_names` records names used for BOTH `LOAD_GLOBAL` and
+        `LOAD_ATTR`, so a module doing `from validate import STRICT_MODE` still
+        shows `STRICT_MODE` in `co_names` — it is a global lookup, merely
+        resolving against the WRONG module's namespace. The value is frozen at
+        import time, `--strict` becomes a no-op, and the guard written for
+        exactly that hazard stays green.
+
+        Requiring `_cfg` in `co_names` closes it: an import-time copy would be a
+        bare global with no `_cfg` attribute access anywhere in the function.
+        """
+        fn = _check(check_name)
+        assert "_cfg" in fn.__code__.co_names, (
+            f"`{check_name}` does not reach its runtime flag through the config "
+            f"module. A bare global (or an import-time copy) is frozen at import "
+            f"time once the checks are split across modules — see ADR-009 H5."
+        )
+
+
+class TestNoCheckModuleShadowsAFlag:
+    """No module in the suite may bind a flag in its OWN namespace.
+
+    This is the cross-module form of the H5 hazard, and it is the one a
+    `co_names` assertion cannot see. `from validation._config import STRICT_MODE`
+    at the top of a check module creates `that_module.STRICT_MODE` — a copy that
+    `main()` will never update. Asserting the attribute is ABSENT catches it
+    regardless of how the function body then reads it.
+    """
+
+    _FLAGS = ("STRICT_MODE", "FORCE_LATEX", "FORCE_NOTEBOOK_REEXEC")
+
+    def _suite_modules(self):
+        """Every loaded module belonging to the validation suite, except the two
+        that legitimately own the flags (`validation._config` defines them;
+        `validate` is where `main()` assigns them)."""
+        import validation
+        out = []
+        for name, mod in list(sys.modules.items()):
+            if mod is None:
+                continue
+            if name == "validate" or name.startswith("validation"):
+                if name in ("validate", "validation._config"):
+                    continue
+                out.append((name, mod))
+        return out
+
+    def test_no_suite_module_carries_a_flag_copy(self):
+        offenders = [
+            f"{name}.{flag}"
+            for name, mod in self._suite_modules()
+            for flag in self._FLAGS
+            if hasattr(mod, flag)
+        ]
+        assert not offenders, (
+            f"module(s) hold an import-time COPY of a runtime flag: {offenders}. "
+            f"`main()` assigns `validation._config.<FLAG>`, so these copies stay "
+            f"at their default forever and the flag silently becomes a no-op. "
+            f"Use `from validation import _config as _cfg` + `_cfg.<FLAG>`."
+        )
+
+    def test_validate_itself_no_longer_defines_them(self):
+        """`validate` used to own these. It must not still, or two writers exist
+        and whichever a check happens to read decides the behaviour."""
+        for flag in self._FLAGS:
+            assert not hasattr(v, flag), (
+                f"`validate.{flag}` still exists alongside "
+                f"`validation._config.{flag}` — two sources of truth for one flag."
+            )
