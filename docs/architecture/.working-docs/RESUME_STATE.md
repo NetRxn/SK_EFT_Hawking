@@ -55,7 +55,7 @@ direction authorized, contingent on architecture review + operator visibility).
 |---|---|
 | **0 — characterization harness** | ✅ **COMPLETE.** 3 guards + the harness, all mutation-verified |
 | **1 — anchors + helpers, file stays put** | ✅ **COMPLETE.** `CHARACTERIZATION HELD — 49 checks identical` |
-| 2 — package split | **IN PROGRESS.** Framework layer done; H1 genuinely closed; **2 of 8 check modules extracted** (`notebooks`, `physics`) |
+| 2 — package split | **IN PROGRESS.** Framework layer done; H1 genuinely closed; **4 of 8 check modules extracted**; validate.py 7900 → 5894 lines |
 | 3 — semantic fixes | not started; list in ADR-009 §Deferred (8 items) |
 
 ### Phase 2 — what remains, concretely
@@ -65,11 +65,23 @@ mechanical move itself, module by module, per the assignment table in
 [validation-module-migration-notes.md §4](validation-module-migration-notes.md):
 
 ✅ `checks/notebooks.py` — **DONE** (`970e946e`), `CHARACTERIZATION HELD — 49 identical`.
-✅ `checks/physics.py` — **DONE** (`e42b902e`), 9 checks + `_parse_latex_number`; 6 of the frozen 33 names.
-   Use either as the template; the recipe below is proven, not theoretical.
+✅ `checks/physics.py` — **DONE** (`e42b902e`), 9 checks + `_parse_latex_number`.
+✅ `checks/graph_atlas.py` — **DONE** (`f620dc84`), 3 checks; one contiguous block.
+✅ `checks/freshness.py` — **DONE** (`06d34f1f`), 6 checks + the 3 `_*_is_stale` cores.
+   Use any of them as the template; the recipe below is proven, not theoretical.
 
-⬜ `lean_substrate.py` · `papers_prose.py` · `citations.py` · `bundles_readiness.py` ·
-`graph_atlas.py` · `freshness.py`
+⬜ `lean_substrate.py` (the big one — 15 of its internals are in the frozen surface) ·
+`papers_prose.py` · `citations.py` · `bundles_readiness.py`
+
+⚠️ **STRUCTURAL TESTS GO STALE WHEN CODE MOVES.** Three so far were scoped to
+`scripts/validate.py` alone and had to be widened to `validation/**/*.py`: the H1 `__file__`
+guard, `test_inventory_index_autogen`'s decorator scan, and my own sort-position test (which also
+had to learn that `from validation.checks import ...` IS a registration). **Before each move, grep
+`tests/` for anything that reads `scripts/validate.py` as source and check its scope.**
+
+⚠️ **The frozen surface was measured with a predicate that later became wrong.** The first scan
+filtered `module == "validate"` while one test file still said `scripts.validate`, hiding 20 of 54
+names. Re-run the scan whenever an import spelling changes.
 
 ⚠️ **NO MODULE-LEVEL PATH ALIASES in a check module** — `PAPERS_DIR = _H.PAPERS_DIR` is an import-time
 copy, the same shape H5 forbids for flags. It looks harmless because paths are never reassigned in
