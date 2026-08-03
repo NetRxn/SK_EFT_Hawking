@@ -155,27 +155,39 @@ class TestExternalSurface:
         Exactly one use is legitimate — the bootstrap that puts `scripts/` and the
         repo root on `sys.path` before any sibling import can happen. It cannot
         itself come from `validate_helpers`, since that is what it makes importable.
+
+        SCOPE GROWS WITH THE PACKAGE. This scans `validate.py` **and every**
+        `validation/**/*.py`. Scanning only `validate.py` would have made the guard
+        obsolete the moment the first check module landed — a guard whose coverage
+        silently stops tracking the code it guards is this same defect class, one
+        level up.
         """
         import ast
-        src = (SK_ROOT / "scripts" / "validate.py").read_text()
-        tree = ast.parse(src)
+        scanned = [SK_ROOT / "scripts" / "validate.py"]
+        scanned += sorted((SK_ROOT / "scripts" / "validation").rglob("*.py"))
+        assert len(scanned) > 1, "no validation package modules found — scope is wrong"
 
-        offenders = []
-        for node in ast.walk(tree):
-            if isinstance(node, ast.Name) and node.id == "__file__":
-                offenders.append(node.lineno)
+        problems: list[str] = []
+        for path in scanned:
+            tree = ast.parse(path.read_text())
+            used = [n.lineno for n in ast.walk(tree)
+                    if isinstance(n, ast.Name) and n.id == "__file__"]
+            # The ONE legitimate use: the sys.path bootstrap in `validate.py`. It
+            # cannot come from `validate_helpers`, being what makes it importable.
+            bootstrap = [
+                n.lineno for n in tree.body
+                if isinstance(n, ast.Assign)
+                and any(getattr(t, "id", "") == "_BOOTSTRAP_SCRIPT_DIR" for t in n.targets)
+            ]
+            for ln in sorted(set(used) - set(bootstrap)):
+                problems.append(f"{path.relative_to(SK_ROOT)}:{ln}")
 
-        bootstrap = [
-            n.lineno for n in tree.body
-            if isinstance(n, ast.Assign)
-            and any(getattr(t, "id", "") == "_BOOTSTRAP_SCRIPT_DIR" for t in n.targets)
-        ]
-        stray = sorted(set(offenders) - set(bootstrap))
-        assert not stray, (
-            f"`__file__` is used at line(s) {stray} outside the sys.path bootstrap. "
-            f"Any path derived from it retargets when the code moves into "
-            f"`validation/checks/`, and the failure is SILENT for checks that treat "
-            f"a missing artifact as PASS. Derive from `validate_helpers` instead "
+        assert not problems, (
+            f"`__file__` is used outside the sys.path bootstrap at: {problems}. "
+            f"Any path derived from it retargets once the code lives under "
+            f"`validation/checks/` — `parent.parent` becomes `scripts/validation` — "
+            f"and the failure is SILENT for every check that treats a missing "
+            f"artifact as PASS. Derive from `validate_helpers` instead "
             f"(`_H.LEAN_DIR`, `_H.DOCS_DIR`, `_H.SRC_DIR`, `_H.PAPERS_DIR`, …)."
         )
 
