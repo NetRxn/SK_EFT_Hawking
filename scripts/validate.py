@@ -76,26 +76,37 @@ from typing import Callable, Dict, List, Optional
 # Path resolution
 # ═══════════════════════════════════════════════════════════════════════
 
-SCRIPT_DIR = Path(__file__).resolve().parent
-PROJECT_ROOT = SCRIPT_DIR.parent
-SRC_DIR = PROJECT_ROOT / "src"
-LEAN_DIR = PROJECT_ROOT / "lean" / "SKEFTHawking"
-NOTEBOOKS_DIR = PROJECT_ROOT / "notebooks"
+# Bootstrap only — the minimum needed to make sibling modules importable. Every
+# other path below is an ALIAS of `validate_helpers`, which owns the anchor.
+_BOOTSTRAP_SCRIPT_DIR = Path(__file__).resolve().parent
+sys.path.insert(0, str(_BOOTSTRAP_SCRIPT_DIR.parent))   # repo root, so `src.*` imports
+if str(_BOOTSTRAP_SCRIPT_DIR) not in sys.path:          # siblings (tests import this module)
+    sys.path.insert(0, str(_BOOTSTRAP_SCRIPT_DIR))
+
+from bundle_registry import BUNDLE_CODES as _REGISTRY_BUNDLE_CODES  # noqa: E402
+# ADR-009 Phase 1: shared path anchors + artifact loaders. Owns WHERE things are
+# and HOW they are read; each call site keeps its OWN verdict on absence (H4).
+import validate_helpers as _H  # noqa: E402
+
+# ── Path anchors — ALIASES, not independent derivations (ADR-009 H1) ─────
+# These were each computed from `Path(__file__)`. That is safe while this file
+# lives at `scripts/validate.py` and silently wrong the moment it becomes
+# `scripts/validate/__init__.py`: `PROJECT_ROOT` would resolve to `scripts/`,
+# every artifact lookup would miss, every check would take its "absent" branch,
+# and the suite would go GREEN having measured nothing. Aliasing a single anchor
+# in `validate_helpers` (which stays at `scripts/`) makes the Phase-2 move
+# provably path-neutral instead of a silent catastrophe.
+SCRIPT_DIR = _H.SCRIPT_DIR
+PROJECT_ROOT = _H.PROJECT_ROOT
+SRC_DIR = _H.SRC_DIR
+LEAN_DIR = _H.LEAN_DIR
+NOTEBOOKS_DIR = _H.NOTEBOOKS_DIR
 # Local (git-ignored) skip-cache for CHECK 11 notebook execution: maps each
 # vetted notebook to a content hash so unchanged, previously-passed notebooks
 # are not re-executed. Mirrors the Lean `extract_lean_deps.py` hash-skip.
 NOTEBOOK_EXEC_CACHE = NOTEBOOKS_DIR / ".notebook_exec_cache.json"
-PAPERS_DIR = PROJECT_ROOT / "papers"
-REPORTS_DIR = PROJECT_ROOT / "docs" / "validation" / "reports"
-
-# Ensure src is importable
-sys.path.insert(0, str(PROJECT_ROOT))
-
-# Ensure sibling scripts/ modules are importable (validate.py is imported as a
-# module by tests/, not only run as __main__).
-if str(SCRIPT_DIR) not in sys.path:
-    sys.path.insert(0, str(SCRIPT_DIR))
-from bundle_registry import BUNDLE_CODES as _REGISTRY_BUNDLE_CODES  # noqa: E402
+PAPERS_DIR = _H.PAPERS_DIR
+REPORTS_DIR = _H.DOCS_DIR / "validation" / "reports"
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -283,12 +294,8 @@ def check_placeholder_not_cited() -> CheckResult:
     any_fail = False
     n_drafts = 0
 
-    for paper_dir in sorted(PAPERS_DIR.iterdir()):
-        if not paper_dir.is_dir():
-            continue
-        tex = paper_dir / "paper_draft.tex"
-        if not tex.exists():
-            continue
+    for tex in _H.all_paper_drafts():          # ALL drafts (bundles + legacy), 64 today
+        paper_dir = tex.parent
         n_drafts += 1
         try:
             text = tex.read_text()
@@ -357,10 +364,8 @@ def check_disclosure_consistency() -> CheckResult:
     details: List[Detail] = []
     any_fail = False
     n_drafts = 0
-    for paper_dir in sorted(PAPERS_DIR.iterdir()):
-        tex = paper_dir / "paper_draft.tex"
-        if not (paper_dir.is_dir() and tex.exists()):
-            continue
+    for tex in _H.all_paper_drafts():          # ALL drafts (bundles + legacy)
+        paper_dir = tex.parent
         n_drafts += 1
         try:
             text = tex.read_text()
@@ -448,8 +453,6 @@ def check_proxy_body_audit() -> CheckResult:
     the proof. A flagged decl is COMPLIANT iff registered in
     ``MODELING_ASSUMPTION_THEOREMS`` (with a reason + disclosure pointer) or
     already a ``PLACEHOLDER_THEOREMS`` stub. Substrate Integrity Gates W2."""
-    import sys as _sys
-    _sys.path.insert(0, str(Path(__file__).parent))
     from build_graph import _scan_lean_theorem_bodies
     from src.core.constants import PLACEHOLDER_LEAN_NAMES
     try:
@@ -568,10 +571,12 @@ def check_tracked_hypothesis_ledger() -> CheckResult:
     HYPOTHESIS_REGISTRY = getattr(_c, "HYPOTHESIS_REGISTRY", {})
     NON_LB = getattr(_c, "TRACKED_HYPOTHESIS_NON_LOAD_BEARING", {})
 
-    deps_path = PROJECT_ROOT / "lean" / "lean_deps.json"
-    if not deps_path.exists():
+    # TODO(semantic-review, ADR-009 Phase 3): absence -> PASS here, but -> FAIL in
+    # prose_theorem_reference_coverage / theorem_name_embedded_citations. Five checks
+    # pass on a missing lean_deps.json and two fail. Unify deliberately, not by refactor.
+    if not _H.lean_deps_present():
         return CheckResult(passed=True, details=[Detail("lean_deps", True, "no lean_deps.json")])
-    deps = json.loads(deps_path.read_text())
+    deps = _H.load_lean_deps()
 
     # 1) Prop-valued tracked-hypothesis defs/structures (codomain Prop, tracked name)
     tracked: dict = {}  # short name -> module
@@ -615,8 +620,6 @@ def check_tracked_hypotheses_fresh() -> CheckResult:
     ``counts_fresh``/``tables_fresh``: if the on-disk markdown drifts from the
     registry render, regenerate it (so it can never silently diverge — the prior
     two-disjoint-ledgers failure)."""
-    import sys as _sys
-    _sys.path.insert(0, str(Path(__file__).parent))
     try:
         import render_tracked_hypotheses as _r
     except Exception as e:  # pragma: no cover
@@ -821,8 +824,6 @@ def _lean_decl_proof_body(short_name: str, module: str):
     maps to ``LEAN_DIR/<Path>/<To>/<Module>.lean``. Reads a single file."""
     if not module:
         return None
-    import sys as _sys
-    _sys.path.insert(0, str(SCRIPT_DIR))
     try:
         from build_graph import _scan_lean_theorem_bodies
     except Exception:  # pragma: no cover - import guard
@@ -887,12 +888,13 @@ def check_formula_grounding() -> CheckResult:
     HARD-FAIL: placeholder-grounded refs. ADVISORY: dangling (unresolved) refs —
     a stale-name drift backlog the gate surfaces (FormulaRefSweep follow-up)."""
     from src.core.constants import PLACEHOLDER_LEAN_NAMES
-    formulas_path = PROJECT_ROOT / "src" / "core" / "formulas.py"
-    deps_path = PROJECT_ROOT / "lean" / "lean_deps.json"
-    if not formulas_path.exists() or not deps_path.exists():
+    formulas_path = _H.SRC_DIR / "core" / "formulas.py"
+    # TODO(semantic-review, ADR-009 Phase 3): absence -> PASS (see the note at
+    # tracked_hypothesis_ledger; the eight loaders disagree).
+    if not formulas_path.exists() or not _H.lean_deps_present():
         return CheckResult(passed=True, details=[Detail("inputs", True, "formulas.py / lean_deps.json absent")])
 
-    deps = json.loads(deps_path.read_text())
+    deps = _H.load_lean_deps()
     names, dotted, shorts, by_short, by_full = set(), set(), set(), {}, {}
     for d in deps:
         n = d.get("name", "")
@@ -1044,8 +1046,8 @@ def check_vacuous_statement_audit() -> CheckResult:
         from src.core.constants import VACUOUS_STATEMENT_BASELINE as BASELINE
     except ImportError:
         BASELINE = frozenset()
-    deps_path = PROJECT_ROOT / "lean" / "lean_deps.json"
-    if not deps_path.exists():
+    # TODO(semantic-review, ADR-009 Phase 3): absence -> PASS (loaders disagree).
+    if not _H.lean_deps_present():
         return CheckResult(passed=True, details=[Detail("inputs", True, "lean_deps.json absent")])
 
     exempt = set(PLACEHOLDER_LEAN_NAMES.keys())
@@ -1053,7 +1055,7 @@ def check_vacuous_statement_audit() -> CheckResult:
         if v.get("reason") and v.get("discloses"):
             exempt.add(v.get("lean_name", k))
 
-    deps = json.loads(deps_path.read_text())
+    deps = _H.load_lean_deps()
     new_hard: List[tuple] = []
     grandfathered: List[str] = []
     advisory: List[tuple] = []
@@ -1127,11 +1129,10 @@ def check_nogo_substrate_integrity() -> CheckResult:
     KERNEL = {"propext", "Classical.choice", "Quot.sound"}
     _ND = re.compile(r"\._native\.native_decide")
 
-    deps_path = PROJECT_ROOT / "lean" / "lean_deps.json"
-    if not deps_path.exists():
+    # TODO(semantic-review, ADR-009 Phase 3): absence -> PASS (loaders disagree).
+    if not _H.lean_deps_present():
         return CheckResult(passed=True, details=[Detail("inputs", True, "lean_deps.json absent")])
-    deps = json.loads(deps_path.read_text())
-    by_name = {d.get("name", ""): d for d in deps}
+    by_name = {d.get("name", ""): d for d in _H.load_lean_deps()}
 
     def _kernel_pure(rec: dict) -> bool:
         core = set(rec.get("axiom_deps_core", []))
@@ -2606,11 +2607,8 @@ def check_paper_provenance() -> CheckResult:
                 name = line.split()[1].split("(")[0].split(":")[0].strip()
                 lean_names.add(name)
 
-    for paper_dir in sorted(PAPERS_DIR.iterdir()):
-        tex_file = paper_dir / "paper_draft.tex"
-        if not tex_file.exists():
-            continue
-
+    for tex_file in _H.all_paper_drafts():     # ALL drafts (bundles + legacy)
+        paper_dir = tex_file.parent
         tex = tex_file.read_text()
 
         # Check 1: \\texttt{theorem_name} refs exist in Lean
@@ -2861,7 +2859,7 @@ def check_parameter_provenance() -> CheckResult:
 COUNTS_JSON_PATH = PROJECT_ROOT / "docs" / "counts.json"
 COUNTS_TEX_PATH = PROJECT_ROOT / "docs" / "counts.tex"
 _COUNTS_SOURCES = [
-    PROJECT_ROOT / "lean" / "lean_deps.json",
+    _H.LEAN_DEPS_PATH,
     PROJECT_ROOT / "src" / "core" / "constants.py",
     PROJECT_ROOT / "src" / "core" / "visualizations.py",
 ]
@@ -2970,7 +2968,7 @@ _TABLES_SOURCES = [
     PROJECT_ROOT / "src" / "core" / "constants.py",
     PROJECT_ROOT / "src" / "core" / "transonic_background.py",
     PROJECT_ROOT / "src" / "core" / "provenance.py",
-    PROJECT_ROOT / "lean" / "lean_deps.json",
+    _H.LEAN_DEPS_PATH,
     PROJECT_ROOT / "docs" / "WAVE_EXECUTION_PIPELINE.md",
     PROJECT_ROOT / "scripts" / "paper_tables" / "__init__.py",
     PROJECT_ROOT / "scripts" / "paper_tables" / "sources.py",
@@ -3195,7 +3193,7 @@ def check_numerical_literals() -> CheckResult:
     # L1-L3, E1, E2, F) unscanned. Filed as a Stage-13 QI candidate in two
     # consecutive rounds before being fixed. Use the same `*/` form the bundle-aware
     # checks already use.
-    for tex_path in sorted(PAPERS_DIR.glob("*/paper_draft.tex")):
+    for tex_path in _H.all_paper_drafts():     # ALL drafts (bundles + legacy)
         paper_name = tex_path.parent.name
         try:
             text = tex_path.read_text()
@@ -3272,7 +3270,6 @@ def check_graph_integrity() -> CheckResult:
     """
     roster_details = []
     try:
-        sys.path.insert(0, str(SCRIPT_DIR))
         from build_graph import _infer_bundle_from_text
         try:
             from bundle_registry import VALID_BUNDLE_TARGETS as _roster
@@ -3573,7 +3570,6 @@ def check_atlas_integrity() -> CheckResult:
     ``apex_not_closed`` leg is ACTIVE as of Phase 2 (apexes = HEADLINE-tier open targets from the
     hypothesis registry; ADR-005 D-H)."""
     try:
-        sys.path.insert(0, str(SCRIPT_DIR))
         import atlas_view
         from src.core.constants import AXIOM_METADATA, HYPOTHESIS_REGISTRY
         lean_deps = atlas_view.load_lean_deps_file()
@@ -3710,7 +3706,6 @@ def check_atlas_hypothesis_discipline() -> CheckResult:
     This check just reports the distribution so ``/debrief`` can SEE scatter developing without
     auto-failing."""
     try:
-        sys.path.insert(0, str(SCRIPT_DIR))
         import atlas_view
         atlas = atlas_view.build_atlas(atlas_view.load_lean_deps_file())
     except Exception as exc:  # noqa: BLE001
@@ -3778,7 +3773,7 @@ def check_count_literals() -> CheckResult:
     # Glob widened 2026-07-31: `paper*/` matched only `paperNN_<slug>/`, so every
     # publication bundle's count literals were ungated and desynchronized silently on
     # each substrate edit. See check_numerical_literals for the same fix.
-    paper_tex_files = sorted(PAPERS_DIR.glob("*/paper_draft.tex"))
+    paper_tex_files = _H.all_paper_drafts()     # ALL drafts (bundles + legacy)
     details = []
     total_findings = 0
 
@@ -3865,6 +3860,39 @@ def check_count_literals() -> CheckResult:
 # and would have caught all three, since their evidence names another round's artifacts.
 
 
+# ── Recurrence matcher — module scope so tests can reach the REAL implementation ──
+# These were function-locals until 2026-08-03 (ADR-009 Phase 0, Guard 3). The consequence
+# was that `tests/test_bundle_formulas_d11_d12.py::TestRecurrenceThresholdAgainstFrozenPairs`
+# — the test whose whole purpose is to hold this threshold to a frozen labelled set —
+# could not import them, so it RE-IMPLEMENTED `norm()` locally and re-hardcoded the
+# threshold. The production matcher could have been deleted or inverted and that test would
+# still have passed. It asserted nothing about this code.
+#
+# The calibration history lives with the check body below, where the decision was made; do
+# not restate it here. `_MIN_TITLE` / `_MIN_OVERLAP` / `_norm` inside the check are aliases
+# of these, so the two can never diverge.
+_RECURRENCE_MIN_TITLE = 12     # see the check body for why
+_RECURRENCE_MIN_OVERLAP = 0.40  # Jaccard over token sets; see the check body for the derivation
+
+
+def _recurrence_norm(s: str) -> str:
+    """Normalize a finding label for recurrence comparison.
+
+    Strips markup, lowercases, drops non-alphanumerics, then removes leading
+    section-number and severity-word tokens — a recurrence appears under a DIFFERENT
+    number in a later round (round 8's 5.1 recurring as round 9's 3.2), so leading
+    numbers are noise in exactly the case the check exists for.
+    """
+    s = re.sub(r'[`*_\[\]]', '', str(s or '')).lower()
+    s = re.sub(r'[^a-z0-9 ]+', ' ', s)
+    toks = s.split()
+    while toks and (re.fullmatch(r'[0-9]+([a-z0-9]*)?', toks[0])
+                    or toks[0] in ('blocker', 'required', 'recommended', 'critical',
+                                   'major', 'minor', 'advisory', 'regression')):
+        toks.pop(0)
+    return " ".join(toks)
+
+
 @register_check("recurrence_reopens_closures",
                 "A closure is not contradicted by a later review raising the same finding")
 def check_recurrence_reopens_closures() -> CheckResult:
@@ -3881,7 +3909,6 @@ def check_recurrence_reopens_closures() -> CheckResult:
     A hit is reported against the CLOSURE, not the new finding: the new finding is correct,
     and it is the closure that is now false.
     """
-    sys.path.insert(0, str(SCRIPT_DIR))
     try:
         from build_graph import extract_review_finding_nodes
     except ImportError as exc:
@@ -3909,7 +3936,7 @@ def check_recurrence_reopens_closures() -> CheckResult:
     # Measured on the same 4,210 pairs: median 0.00, p99 0.20, max 0.67 — and the single
     # pair at 0.67 is a TRUE recurrence ("israel third law parenthetical", closed then
     # re-raised in a later round). 0.50 sits in the empty band between p99 and that pair.
-    _MIN_TITLE = 12          # below this a title carries too few tokens to compare
+    _MIN_TITLE = _RECURRENCE_MIN_TITLE   # below this a title carries too few tokens to compare
     # ⚠️ RE-DERIVED 2026-08-01 (D11 round-13 N1). Switching the primitive from prefix to
     # Jaccard was right; I then kept a 0.50 threshold that I had measured on a sweep whose
     # pairing rules were NOT the check's own. Measured with the check's `_norm`, its
@@ -3924,7 +3951,7 @@ def check_recurrence_reopens_closures() -> CheckResult:
     #
     # 0.40 sits between p99 (0.200) and the top pair (0.429), which is a TRUE stale closure:
     # 1530:D11:4.1 closed, 2220:D11:4.6 open, both about PAPER_DRAFT_MAPPING.md:109.
-    _MIN_OVERLAP = 0.40      # Jaccard over token sets
+    _MIN_OVERLAP = _RECURRENCE_MIN_OVERLAP   # Jaccard over token sets
     #
     # ⚠️ THIS MATCHER IS WEAK, and its limits are measured — but an earlier version of this
     # comment said it "cannot do its job", which round 14 disproved: driving the ledger off
@@ -3955,21 +3982,15 @@ def check_recurrence_reopens_closures() -> CheckResult:
     # producing that maximum, so it was unreachable on arrival. Thresholds on a
     # self-remediating corpus must be calibrated against frozen labelled pairs.
 
-    def _norm(s: str) -> str:
-        s = re.sub(r'[`*_\[\]]', '', str(s or '')).lower()
-        s = re.sub(r'[^a-z0-9 ]+', ' ', s)
-        toks = s.split()
-        # Drop leading section-number and severity-word tokens. A recurrence appears under
-        # a DIFFERENT number in a later round — round 8's 5.1 recurring as round 9's 3.2 —
-        # so comparing prefixes that begin with the number is fragile in exactly the case
-        # the check exists for. Verified with a planted probe whose label minted as
-        # "1.1 1.1 blocker ..." against a source of "1.1 blocker ...": the prefix agreement
-        # was near zero for two identical findings.
-        while toks and (re.fullmatch(r'[0-9]+([a-z0-9]*)?', toks[0])
-                        or toks[0] in ('blocker', 'required', 'recommended', 'critical',
-                                       'major', 'minor', 'advisory', 'regression')):
-            toks.pop(0)
-        return " ".join(toks)
+    # Drops leading section-number and severity-word tokens. A recurrence appears under
+    # a DIFFERENT number in a later round — round 8's 5.1 recurring as round 9's 3.2 —
+    # so comparing prefixes that begin with the number is fragile in exactly the case
+    # the check exists for. Verified with a planted probe whose label minted as
+    # "1.1 1.1 blocker ..." against a source of "1.1 blocker ...": the prefix agreement
+    # was near zero for two identical findings.
+    # Implementation is `_recurrence_norm` at module scope (ADR-009 Phase 0, Guard 3) so
+    # the frozen-pairs test binds to the real matcher instead of a copy of it.
+    _norm = _recurrence_norm
 
     findings = extract_review_finding_nodes()
     closed, open_ = [], []
@@ -4011,7 +4032,20 @@ def check_recurrence_reopens_closures() -> CheckResult:
             if cid not in _had_candidate:
                 _had_candidate.add(cid)
                 compared += 1
-            if len(_a & _b) / len(_a | _b) >= _MIN_OVERLAP:
+            if len(_a & _b) / len(_a | _b) < _MIN_OVERLAP:
+                continue
+            # Section-number agreement as a tie-breaker (D12 round-14 finding 14.4). The
+            # guard's FIRST live D12 effect was a false positive: it held 1524:8.2 open
+            # against 1823:8.4 at exactly j = 2/5 = 0.400, carried entirely by the shared
+            # phrase "fails open" — two different guards that both failed open, not one
+            # finding recurring. A real recurrence is the SAME finding restated, and this
+            # corpus numbers findings by class, so a recurrence overwhelmingly keeps its
+            # section number (round 14: 8.3 -> 8.3 is the true pair; 8.2 -> 8.4 is not).
+            # Marginal scores need that corroboration; strong scores do not.
+            if (len(_a & _b) / len(_a | _b) < _MIN_OVERLAP + 0.10
+                    and cid.rsplit(':', 1)[-1] != oid.rsplit(':', 1)[-1]):
+                continue
+            if True:
                 hits += 1
                 details.append(Detail(
                     cid, False,
@@ -4142,7 +4176,6 @@ def check_review_docs_mint_findings() -> CheckResult:
             not _RESOLVED_HEADING.search(m.group(0))
             for m in _SEVERITY_HEADING.finditer(text))
 
-    sys.path.insert(0, str(SCRIPT_DIR))
     try:
         from build_graph import extract_review_finding_nodes
     except ImportError as exc:
@@ -4278,7 +4311,6 @@ def check_bundle_metadata_matches_graph() -> CheckResult:
     metadata was hand-edited, or whose readiness run was skipped after new findings
     landed, fails here rather than being quoted as evidence of readiness.
     """
-    sys.path.insert(0, str(SCRIPT_DIR))
     try:
         from bundle_readiness import (MAPPING_DOC, parse_mapping,
                                       load_findings_by_paper,
@@ -4339,6 +4371,41 @@ def check_bundle_metadata_matches_graph() -> CheckResult:
             bad.append(f"advisories_open={meta.get('advisories_open')} live={live_adv}")
         if meta.get("readiness") != agg.get("readiness"):
             bad.append(f"readiness={meta.get('readiness')!r} live={agg.get('readiness')!r}")
+        # ── `stage13_status: green` is illegal while blockers are open ──────────────
+        # Added 2026-08-03 (publication-readiness audit). The three comparisons above
+        # assert that metadata AGREES WITH the graph. They cannot catch the state 14 of
+        # 21 bundles are in right now, because that state is internally CONSISTENT: the
+        # metadata says `blockers_open: 37` and the graph says 37, so they agree — while
+        # the same file also says `stage13_status: "green"`.
+        #
+        # `stage13_status` is asserted by an agent hand-editing JSON (the only automated
+        # write is `bundle_append.py`'s green->pending DEMOTION on lift); no code path
+        # promotes it, and until now nothing in this repo read it. So the one direction
+        # that matters for publication safety was unguarded.
+        #
+        # The remedy is quoted verbatim from this project's own reviewer,
+        # `papers/AutomatedReviews/2026-07-31-1652-internal-adversarial/D11.md:227`:
+        # "a bundle with `blockers_open > 0` must not carry `stage13_status: 'green'`".
+        # A mutation test proving the hole was already committed at
+        # `2026-08-01-0009-internal-adversarial/D11.md:179` (flip pending->green =>
+        # "PASS <-- missed"). The test existed; the guard did not.
+        #
+        # Compared against the LIVE count, not `meta["blockers_open"]`: hand-editing the
+        # count to 0 to make this pass would trip the `blockers_open` comparison above,
+        # so both legs have to be defeated rather than one.
+        if str(meta.get("stage13_status", "")).strip().lower() == "green" \
+                and live_blockers > 0:
+            bad.append(
+                f"stage13_status='green' while {live_blockers} blocker(s) are open — "
+                f"Stage 13 is GREEN only when no blocking finding remains "
+                f"(BUNDLE_LIFT_PROCEDURE.md §12)")
+        # NOT asserted here: `stage13_redo_required`. The same reviewer paired it with the
+        # rule above, but the two are independent: `redo_required` means "new content was
+        # appended since the last review" (written by `bundle_append.py`), NOT "blockers
+        # are open". A bundle can correctly carry blockers with `redo_required: false` when
+        # the blockers came from the review itself rather than from a later lift. Asserting
+        # it would repeat the `freshness_stale` mistake recorded immediately below —
+        # inferring a field's meaning from the workflow step that mentions it.
         # NOT asserted here: `freshness_stale`. D12 Stage-13 round-8 reported that seven
         # bundles set it false with blockers open, citing
         # LATE_PHASE6_ABSORPTION_PROTOCOL.md. I implemented that assertion and it was
@@ -4610,7 +4677,6 @@ def check_readiness_verdicts_agree() -> CheckResult:
     direction that matters: a bundle the heatmap calls RED (open blocking
     findings) must NOT be green or yellow at the submission gate.
     """
-    sys.path.insert(0, str(SCRIPT_DIR))
     try:
         from build_graph import build_graph_json
         from bundle_readiness import (MAPPING_DOC, parse_mapping,
@@ -4743,7 +4809,6 @@ def check_readiness_submission_gate() -> CheckResult:
     submission, run `validate.py --strict` (future flag) or grep for
     'readiness-status: red' in archived reports.
     """
-    sys.path.insert(0, str(SCRIPT_DIR))
     try:
         from build_graph import build_graph_json
     except ImportError as exc:
@@ -5081,7 +5146,7 @@ def check_citation_primary_sources_present() -> CheckResult:
     details: List[Detail] = []
     all_pass = True
 
-    paper_tex_files = sorted(PAPERS_DIR.glob("*/paper_draft.tex"))
+    paper_tex_files = _H.all_paper_drafts()     # ALL drafts (bundles + legacy)
     if not paper_tex_files:
         return CheckResult(passed=False, error="No papers/*/paper_draft.tex found")
 
@@ -5585,7 +5650,6 @@ def check_bundle_source_freshness() -> CheckResult:
     Phase 7a sub-wave 7a.1.4 deliverable. Schema reference:
     `docs/BUNDLE_DIRECTORY_SCHEMA.md`.
     """
-    sys.path.insert(0, str(SCRIPT_DIR))
     try:
         from check_bundle_source_freshness import check as _run_check
     except ImportError as exc:
@@ -6152,8 +6216,6 @@ def check_bundle_registry_consistency() -> CheckResult:
         )
 
     # ── Leg B: every consumer's key set == the registry's ────────────────
-    if str(SCRIPT_DIR) not in sys.path:
-        sys.path.insert(0, str(SCRIPT_DIR))
 
     n_attrs = 0
     leg_b_ok = True
@@ -6519,7 +6581,7 @@ def check_axiom_count_prose_consistency() -> CheckResult:
     n_warn = 0
     n_scanned = 0
 
-    for tex in sorted(PAPERS_DIR.glob("*/paper_draft.tex")):
+    for tex in _H.all_paper_drafts():           # ALL drafts (bundles + legacy)
         n_scanned += 1
         try:
             text = tex.read_text()
@@ -6713,8 +6775,10 @@ def _load_lean_name_index() -> dict:
     if _LEAN_NAME_INDEX_CACHE is not None:
         return _LEAN_NAME_INDEX_CACHE
 
-    deps_path = PROJECT_ROOT / "lean" / "lean_deps.json"
-    entries = json.loads(deps_path.read_text())
+    # NOTE: unguarded by design — this helper is only reached from checks that have
+    # already established lean_deps.json exists. Preserved as-is (ADR-009 H4): making
+    # it tolerant here would silently change four callers' behaviour.
+    entries = _H.load_lean_deps()
     names = set()
     shorts = set()
     dotted_suffixes = set()
@@ -6952,11 +7016,13 @@ def check_prose_theorem_reference_coverage() -> CheckResult:
     unresolved → filter/disclaimer/registry classes → 1 documented
     waiver). Run ``--json`` for machine-readable per-bundle findings.
     """
-    deps_path = PROJECT_ROOT / "lean" / "lean_deps.json"
-    if not deps_path.exists():
+    # TODO(semantic-review, ADR-009 Phase 3): absence -> FAIL here, but -> PASS in the
+    # four substrate checks above. This is the stricter, arguably correct policy; the
+    # divergence is preserved deliberately rather than unified by a refactor.
+    if not _H.lean_deps_present():
         return CheckResult(
             passed=False,
-            error=(f"missing {deps_path}; refresh via `cd lean && lake build "
+            error=(f"missing {_H.LEAN_DEPS_PATH}; refresh via `cd lean && lake build "
                    f"SKEFTHawking.ExtractDeps` or validate.py --check graph_integrity"),
         )
     index = _load_lean_name_index()
@@ -7175,11 +7241,12 @@ def check_theorem_name_embedded_citations() -> CheckResult:
     no-go (cited in D5) passes via the post-remediation
     Verlinde2017dSEmergent + HalenkaMiller2020 bibitems.
     """
-    deps_path = PROJECT_ROOT / "lean" / "lean_deps.json"
-    if not deps_path.exists():
+    # TODO(semantic-review, ADR-009 Phase 3): absence -> FAIL (see the note in
+    # prose_theorem_reference_coverage; five sibling checks PASS instead).
+    if not _H.lean_deps_present():
         return CheckResult(
             passed=False,
-            error=(f"missing {deps_path}; refresh via `cd lean && lake build "
+            error=(f"missing {_H.LEAN_DEPS_PATH}; refresh via `cd lean && lake build "
                    f"SKEFTHawking.ExtractDeps`"),
         )
 
@@ -7190,7 +7257,7 @@ def check_theorem_name_embedded_citations() -> CheckResult:
                            error=f"CITATION_REGISTRY unavailable: {exc}")
 
     surname_lexicon = _registry_surnames()
-    entries = json.loads(deps_path.read_text())
+    entries = _H.load_lean_deps()
     year_decls: dict = {}  # short_name → pairs dict
     for e in entries:
         n = e.get("name", "")
@@ -7319,8 +7386,6 @@ def check_inventory_index_autogen_fresh() -> CheckResult:
 
     Runs the generator's ``compute_stale`` logic in-process (no shelling out).
     """
-    if str(SCRIPT_DIR) not in sys.path:
-        sys.path.insert(0, str(SCRIPT_DIR))
     try:
         from update_inventory_index import compute_stale
     except ImportError as exc:
@@ -7397,11 +7462,12 @@ def check_lean_docstring_refs_resolve() -> CheckResult:
     import difflib
     import subprocess
 
-    deps_path = PROJECT_ROOT / "lean" / "lean_deps.json"
-    if not deps_path.exists():
+    # TODO(semantic-review, ADR-009 Phase 3): absence -> PASS *with a warning* — a third
+    # distinct policy, alongside the five silent PASSes and two FAILs.
+    if not _H.lean_deps_present():
         return CheckResult(passed=True,
                            details=[Detail("skipped", True, "lean_deps.json absent", warning=True)])
-    decls = json.loads(deps_path.read_text())
+    decls = _H.load_lean_deps()
     full = {d["name"] for d in decls}
     short: dict[str, str] = {}
     for d in decls:
@@ -7618,8 +7684,8 @@ def check_paper_toolchain_pin_drift() -> CheckResult:
                    "SKIPPED — lean-toolchain / lakefile.toml pin not parseable",
                    warning=True)])
 
-    drafts = sorted(PAPERS_DIR.glob("*/paper_draft.tex"))
-    drafts += sorted(PAPERS_DIR.glob("*/preprint_draft.md"))
+    drafts = _H.all_paper_drafts()              # ALL drafts (bundles + legacy)
+    drafts += sorted(PAPERS_DIR.glob("*/preprint_draft.md"))   # 1 file today
     if not drafts:
         return CheckResult(passed=True, details=[
             Detail("scan", True, "no paper drafts found — nothing to check")])

@@ -1,0 +1,137 @@
+"""Shared helpers for the validation suite — ADR-009 Phase 1.
+
+WHAT THIS IS FOR
+----------------
+`scripts/validate.py` had grown 8 independent `lean_deps.json` load sites, 3
+mutually inconsistent paper-draft scoping idioms, and 13 redundant `sys.path`
+mutations. Each duplicate was individually reasonable and collectively a defect:
+the 8 loaders disagree about what a MISSING `lean_deps.json` means (five treat it
+as PASS, two as FAIL, one as a warning, one is unguarded and raises), and no
+reader of any single check can see that.
+
+This module owns **where things are and how they are read**. It deliberately does
+NOT own **what their absence means** — see the policy note below.
+
+THE POLICY LINE (ADR-009 H4) — READ BEFORE EXTENDING
+----------------------------------------------------
+A single `load_lean_deps()` that also decided the missing-file verdict would
+silently unify eight checks' behaviour in one commit. That is a semantic change
+wearing a mechanical disguise, and it is how a cleanup turns five live gates into
+no-ops.
+
+So the split is:
+
+* **Here**: path resolution and parsing. `load_lean_deps()` RAISES on absence.
+* **At each call site**: the guard, unchanged, returning that check's own
+  `CheckResult` exactly as it did before.
+
+Every call site therefore still reads `if not lean_deps_present(): return <its own
+verdict>`. The divergence stays visible and is marked for the Phase-3 semantic
+review, rather than being erased by a refactor nobody reviewed as a behaviour
+change.
+
+NO MEMOIZATION — this is load-bearing, not an oversight
+-------------------------------------------------------
+`load_lean_deps()` re-reads and re-parses the 70 MB file on every call, which is
+what the eight inline sites do today. Caching it across a run would be a
+BEHAVIOUR CHANGE, not an optimisation:
+
+`counts_fresh` (registration position ~30) shells out to `update_counts.py`,
+which calls `extract_lean_deps.load_lean_deps()` and can REGENERATE
+`lean/lean_deps.json` mid-run. The readers at positions ~55/56/58
+(`prose_theorem_reference_coverage`, `theorem_name_embedded_citations`,
+`lean_docstring_refs_resolve`) currently observe the regenerated file; readers at
+~5/7/8/9 observed the pre-regeneration one. A cache would freeze whichever was
+read first and silently change what the later checks validate against.
+
+Note also that these sites read the file DIRECTLY rather than through
+`extract_lean_deps.load_lean_deps()`, so they never trigger the hash-guarded
+refresh. That is preserved here. Caching is a Phase-3 candidate, reviewed as
+semantics, together with the shared-graph-handle item.
+"""
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+# ── The single path anchor (ADR-009 H1) ──────────────────────────────────
+# Every path in the suite derives from these two. When `validate.py` becomes
+# `scripts/validate/` in Phase 2, `Path(__file__).parent` shifts by one level and
+# a per-module anchor would silently retarget PROJECT_ROOT into `scripts/` —
+# where every artifact lookup misses and every check takes its "absent" branch,
+# turning the whole suite green while measuring nothing. Anchoring once, here,
+# means that failure has exactly one place to be fixed.
+SCRIPT_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = SCRIPT_DIR.parent
+
+SRC_DIR = PROJECT_ROOT / "src"
+LEAN_DIR = PROJECT_ROOT / "lean" / "SKEFTHawking"
+LEAN_DEPS_PATH = PROJECT_ROOT / "lean" / "lean_deps.json"
+NOTEBOOKS_DIR = PROJECT_ROOT / "notebooks"
+PAPERS_DIR = PROJECT_ROOT / "papers"
+DOCS_DIR = PROJECT_ROOT / "docs"
+COUNTS_JSON_PATH = DOCS_DIR / "counts.json"
+COUNTS_TEX_PATH = DOCS_DIR / "counts.tex"
+
+
+# ── lean_deps.json ───────────────────────────────────────────────────────
+
+def lean_deps_present() -> bool:
+    """True if `lean/lean_deps.json` exists. Call sites use this to keep their
+    OWN missing-file verdict (see the policy note in the module docstring)."""
+    return LEAN_DEPS_PATH.exists()
+
+
+def load_lean_deps() -> list[dict]:
+    """Parse `lean/lean_deps.json` and return its declaration records.
+
+    RAISES `FileNotFoundError` if absent — deliberately. Deciding what absence
+    means belongs to the caller; see the module docstring. Reads the file
+    directly, without the hash-guarded refresh in
+    `extract_lean_deps.load_lean_deps()`, matching what the inline sites did.
+    """
+    return json.loads(LEAN_DEPS_PATH.read_text())
+
+
+# ── counts.json ──────────────────────────────────────────────────────────
+
+def counts_present() -> bool:
+    return COUNTS_JSON_PATH.exists()
+
+
+def load_counts() -> dict:
+    """Parse `docs/counts.json`. Raises on absence / malformed JSON."""
+    return json.loads(COUNTS_JSON_PATH.read_text())
+
+
+# ── paper drafts ─────────────────────────────────────────────────────────
+# TWO functions, never one with a flag. The scopes differ by design and the
+# difference is load-bearing: `prose_theorem_reference_coverage` is deliberately
+# bundle-only (documented in its own docstring), while the prose-hygiene checks
+# cover every draft on disk. A single `paper_drafts(bundles_only=False)` would
+# make that distinction an argument someone can get wrong, which is exactly how
+# D10 shipped for a month outside the one gate that catches Lean-name drift.
+
+def all_paper_drafts() -> list[Path]:
+    """Every `papers/*/paper_draft.tex` on disk — bundles AND legacy per-paper
+    drafts (64 today). Sorted for stable iteration order."""
+    if not PAPERS_DIR.exists():
+        return []
+    return sorted(PAPERS_DIR.glob("*/paper_draft.tex"))
+
+
+def bundle_drafts(bundle_codes) -> list[tuple[str, Path]]:
+    """`(code, path)` for each publication-bundle draft that exists on disk.
+
+    Scope is the 21 roster codes only. `bundle_codes` is passed in rather than
+    imported so this module stays independent of `bundle_registry` — the roster's
+    single source of truth is gated separately by
+    `check_bundle_registry_consistency`, and importing it here would add a second
+    consumer that gate would then have to know about.
+    """
+    out: list[tuple[str, Path]] = []
+    for code in bundle_codes:
+        tex = PAPERS_DIR / code / "paper_draft.tex"
+        if tex.exists():
+            out.append((code, tex))
+    return out

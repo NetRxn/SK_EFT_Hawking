@@ -19,11 +19,22 @@ the kernel and is a bug in `formulas.py`, not a discovery.
 
 import math
 import pathlib
+import sys
 
 import numpy as np
 import pytest
 
 from src.core import formulas as F
+
+# ADR-009 Phase 0, Guard 3: bind to the REAL recurrence matcher. Until 2026-08-03 the
+# frozen-pairs test below re-implemented `norm()` locally and re-hardcoded the threshold,
+# so it asserted nothing about `validate.py` — the production matcher could have been
+# deleted and this file would still have passed.
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent / "scripts"))
+from validate import (  # noqa: E402
+    _RECURRENCE_MIN_OVERLAP,
+    _recurrence_norm,
+)
 
 
 # ══════════════════════════════════════════════════════════════════════════
@@ -681,23 +692,22 @@ class TestRecurrenceThresholdAgainstFrozenPairs:
     unreachable on arrival, three times, each measured honestly. A threshold on a
     self-remediating corpus cannot be calibrated against that corpus.
 
-    These pairs are frozen. If a change to `_norm` or the threshold stops separating them,
-    this fails regardless of what the live ledger happens to contain today.
+    These pairs are frozen. If a change to `_recurrence_norm` or the threshold stops
+    separating them, this fails regardless of what the live ledger happens to contain today.
+
+    ⚠️ This class re-implemented the matcher until 2026-08-03 (ADR-009 Phase 0, Guard 3).
+    `_norm` and `_MIN_OVERLAP` were function-locals inside `check_recurrence_reopens_closures`
+    and therefore unimportable, so this test carried a COPY — and asserted nothing whatever
+    about the production code it claimed to calibrate. It now binds to the real
+    `validate._recurrence_norm` and `validate._RECURRENCE_MIN_OVERLAP`; a change to either
+    is now visible here, which is the entire point of a frozen-pairs fixture.
     """
 
     @staticmethod
     def _overlap(a: str, b: str) -> float:
-        import re as _re
-        def norm(s):
-            s = _re.sub(r'[`*_\[\]]', '', s).lower()
-            s = _re.sub(r'[^a-z0-9 ]+', ' ', s)
-            toks = s.split()
-            while toks and (_re.fullmatch(r'[0-9]+([a-z0-9]*)?', toks[0]) or toks[0] in
-                            ('blocker', 'required', 'recommended', 'critical', 'major',
-                             'minor', 'advisory', 'regression')):
-                toks.pop(0)
-            return set(toks)
-        A, B = norm(a), norm(b)
+        """Jaccard over token sets, using the PRODUCTION normalizer."""
+        A = set(_recurrence_norm(a).split())
+        B = set(_recurrence_norm(b).split())
         return len(A & B) / len(A | B) if A and B else 0.0
 
     def _fixture(self):
@@ -744,9 +754,11 @@ class TestRecurrenceThresholdAgainstFrozenPairs:
         """Pins the actual detection rate so it cannot be overstated in a summary line."""
         fx = self._fixture()
         pos = [self._overlap(a, b) for a, b in fx["positives"]]
-        SHIPPED = 0.40
-        detected = sum(1 for x in pos if x >= SHIPPED)
+        # The SHIPPED threshold, imported — not a copy. A tuning of the guard now moves
+        # this test, which is what makes the pin meaningful.
+        detected = sum(1 for x in pos if x >= _RECURRENCE_MIN_OVERLAP)
         assert detected == 0, (
-            f"{detected}/{len(pos)} frozen recurrences now detected at {SHIPPED}; update "
-            f"this pin and the guard's docstring, which currently says it detects none")
+            f"{detected}/{len(pos)} frozen recurrences now detected at "
+            f"{_RECURRENCE_MIN_OVERLAP}; update this pin and the guard's docstring, which "
+            f"currently says it detects none")
 
