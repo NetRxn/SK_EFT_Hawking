@@ -230,10 +230,19 @@ scripts/validation/
   helpers/                       # (not yet created — validate_helpers.py covers Phase 1's needs)
     tex.py                       # _strip_tex_comments, _line_of, shared regexes
   checks/
-    lean_substrate.py            # formulas, placeholder_not_cited, disclosure_consistency, proxy_body_audit,
-                                 #   tracked_hypothesis_*, formula_grounding, vacuous_statement_audit,
-                                 #   nogo_substrate_integrity, native_decide_regression, lean_source, lean_build,
-                                 #   axiom_closure_allowlist, elaboration_knob_watchlist, lean_docstring_refs_resolve
+    lean_substrate.py            # SUBSTANCE gates (R1-R3): formulas, placeholder_not_cited,
+                                 #   disclosure_consistency, proxy_body_audit, tracked_hypothesis_ledger,
+                                 #   tracked_hypotheses_fresh, formula_grounding, vacuous_statement_audit,
+                                 #   nogo_substrate_integrity  + the type-thinness classifier they share
+    lean_toolchain.py            # BUILD + TRUST SURFACE: native_decide_regression, theorems, lean_source,
+                                 #   lean_build, axiom_closure_allowlist, elaboration_knob_watchlist,
+                                 #   lean_docstring_refs_resolve
+                                 # ⚠️ SPLIT FROM lean_substrate 2026-08-03. As one module the assignment
+                                 #   above measured ~1,580 lines, which fails the criterion the whole split
+                                 #   exists to satisfy — every file readable in one pass (D1). The two halves
+                                 #   share NO helpers, which is the seam confirming itself: one asks "does
+                                 #   this theorem prove anything", the other "does it build and what does it
+                                 #   trust". `theorems` lands in lean_toolchain; the table never assigned it.
     physics.py                   # numerical, identities, physical_bounds, cross_path_consistency, cgl_fdr,
                                  #   quantum_network, paper_table, d1_hierarchy_table, f_hierarchy_claims
     papers_prose.py              # count_literals, numerical_literals, axiom_count_prose_consistency,

@@ -1,0 +1,578 @@
+"""Lean build, trust-surface and name-resolution checks — ADR-009 Phase 2.
+
+`native_decide_regression` (the ADR-002 kernel-trust ratchet), `theorems` (registry
+counts), `lean_source`, `lean_build`, `axiom_closure_allowlist` (Invariant #15
+backstop), `elaboration_knob_watchlist` (advisory perf/portability) and
+`lean_docstring_refs_resolve` (rename-drift in Lean docstrings).
+
+WHY THIS IS A SEPARATE MODULE FROM `lean_substrate`
+---------------------------------------------------
+The migration plan assigned all of these to one `lean_substrate.py`. Measured, that
+module would be ~1,580 lines — which fails the criterion the split exists to
+satisfy: **every file readable in one pass** (ADR-009 D1). Splitting on the real
+seam instead: `lean_substrate` holds the SUBSTANCE gates (R1-R3 — does a theorem
+prove anything, is an assumption disclosed), and this module holds everything about
+the BUILD and the TRUST SURFACE (does it compile, what axioms does it lean on, do
+its names still resolve). The two share no helpers, which is the seam confirming
+itself. `docs/architecture/.working-docs/validation-module-migration-notes.md` §4
+is updated to match.
+
+`theorems` lands here because the migration table never assigned it and it is a
+registry-count check, not a substance gate.
+
+MOVED VERBATIM — extracted by script from AST-verified ranges. No body edited, no
+policy unified, no threshold retuned (ADR-009 D4). `axiom_closure_allowlist` reads
+`_cfg.STRICT_MODE` by ATTRIBUTE (H5); paths are `_H.<NAME>` at each use, never
+module-level aliases and never from `__file__` (H1). The two `Path(...)` calls here
+construct from `LEAN_PROJECT_DIR` and are unrelated to the anchor.
+
+`check_theorem_count`, `check_lean_source` and `check_atlas_integrity`'s siblings
+are in the frozen external surface; `validate` re-exports every moved name
+(ADR-009 D2 item 8).
+"""
+from __future__ import annotations
+
+import json
+import re
+import subprocess
+from pathlib import Path
+from typing import Dict, List
+
+import validate_helpers as _H
+from validation import _config as _cfg
+from validation._registry import CheckResult, Detail, register_check
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# CHECK 1f: native_decide trust-surface regression (R4)
+# ═══════════════════════════════════════════════════════════════════════
+
+@register_check(
+    "native_decide_regression",
+    "native_decide decl-closure does not silently grow past its ceiling (R4; ADR-002)")
+def check_native_decide_regression() -> CheckResult:
+    """The native_decide kernel-trust surface (decl-closure — ADR-002's metric,
+    in docs/counts.json `lean.native_decide_decl_closure`) may only DECREASE
+    without review. A wave that ADDS trust surface must bump
+    `NATIVE_DECIDE_DECL_CLOSURE_CEILING` (constants.py) in the same commit with a
+    rationale, so the increase is visible (no silent growth). Elimination policy
+    is owned by ADR-002. Substrate Integrity Gates W5."""
+    from src.core.constants import NATIVE_DECIDE_DECL_CLOSURE_CEILING as CEIL
+    counts_path = _H.PROJECT_ROOT / "docs" / "counts.json"
+    if not counts_path.exists():
+        return CheckResult(passed=True, details=[Detail("counts", True, "counts.json absent")])
+    lean = json.loads(counts_path.read_text()).get("lean", {})
+    cur = lean.get("native_decide_decl_closure")
+    if cur is None:
+        return CheckResult(passed=True, details=[Detail(
+            "metric", True, "native_decide_decl_closure not yet in counts.json — run update_counts.py",
+            warning=True)])
+    clusters = lean.get("native_decide_clusters", {})
+    if cur > CEIL:
+        return CheckResult(passed=False, details=[Detail(
+            "ceiling", False,
+            f"native_decide decl-closure {cur} EXCEEDS ceiling {CEIL} — a wave grew the "
+            f"kernel-trust surface. Eliminate (ADR-002) or bump NATIVE_DECIDE_DECL_CLOSURE_CEILING "
+            f"with a rationale. Clusters: {clusters}")])
+    msg = f"native_decide decl-closure {cur} ≤ ceiling {CEIL}"
+    if cur < CEIL:
+        msg += f" (down {CEIL - cur}; consider lowering the ceiling). Clusters: {clusters}"
+    return CheckResult(passed=True, details=[Detail("ceiling", True, msg, warning=(cur < CEIL))])
+
+
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# CHECK 5: Theorem registry
+# ═══════════════════════════════════════════════════════════════════════
+
+@register_check("theorems", "Theorem registry has 322 entries and is self-consistent")
+def check_theorem_count() -> CheckResult:
+    from src.core.constants import ARISTOTLE_THEOREMS, TOTAL_THEOREMS
+
+    details = []
+    all_pass = True
+
+    for name, (actual, expected) in {
+        "TOTAL_THEOREMS": (TOTAL_THEOREMS, 322),
+        "len(ARISTOTLE_THEOREMS)": (len(ARISTOTLE_THEOREMS), 322),
+    }.items():
+        ok = actual == expected
+        details.append(Detail(name, ok, f"actual={actual}, expected={expected}"))
+        if not ok:
+            all_pass = False
+
+    ok = TOTAL_THEOREMS == len(ARISTOTLE_THEOREMS)
+    details.append(Detail("consistency", ok,
+                          f"TOTAL={TOTAL_THEOREMS}, dict={len(ARISTOTLE_THEOREMS)}"))
+    if not ok:
+        all_pass = False
+
+    return CheckResult(passed=all_pass, details=details)
+
+
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# CHECK 7: Lean theorem names appear in .lean source files
+# ═══════════════════════════════════════════════════════════════════════
+
+@register_check("lean_source", "Key theorem names found in Lean source files")
+def check_lean_source() -> CheckResult:
+    if not _H.LEAN_DIR.exists():
+        return CheckResult(passed=False, error=f"Lean directory not found: {_H.LEAN_DIR}")
+
+    # Collect all identifiers declared as theorem/lemma/def
+    lean_idents = set()
+    for lf in _H.LEAN_DIR.glob("*.lean"):
+        try:
+            content = lf.read_text()
+            lean_idents.update(re.findall(r'(?:theorem|lemma|def)\s+(\w+)', content))
+        except Exception:
+            pass
+
+    # Map Python registry names to expected Lean identifiers
+    # (some differ by naming convention)
+    spot_checks = {
+        # Phase 1-2
+        'dampingRate_eq_zero_iff': 'dampingRate_eq_zero_iff',
+        'dispersive_bound': 'dispersive_correction_bound',
+        'firstOrder_correction_zero_iff': 'firstOrder_correction_zero_iff',
+        'acoustic_metric_determinant': 'acousticMetric_det',
+        'secondOrder_count': 'secondOrder_count',
+        # Phase 4 (Aristotle batch b1ea2eb7)
+        'fracton_exceeds_standard_general': 'fracton_exceeds_standard_general',
+        'binomial_strict_mono': 'binomial_strict_mono',
+        'dof_gap_positive_2_through_8': 'dof_gap_positive_2_through_8',
+        'evading_one_breaks_nogo': 'evading_one_breaks_nogo',
+        'ep_distinguishes_phases': 'ep_distinguishes_phases',
+        'obstructions_individually_sufficient': 'obstructions_individually_sufficient',
+    }
+
+    details = []
+    all_pass = True
+
+    for registry_name, lean_name in spot_checks.items():
+        ok = lean_name in lean_idents
+        details.append(Detail(registry_name, ok,
+                              f"Lean ident '{lean_name}' {'found' if ok else 'NOT found'}"))
+        if not ok:
+            all_pass = False
+
+    return CheckResult(passed=all_pass, details=details)
+
+
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# CHECK 9: Lean build (optional, requires `lake` on PATH)
+# ═══════════════════════════════════════════════════════════════════════
+
+@register_check("lean_build", "Lean project builds cleanly (requires lake)")
+def check_lean_build() -> CheckResult:
+    """
+    Run `lake build` on the Lean project.
+
+    Lake discovery order:
+      1. LAKE_PATH env var  (explicit path to lake binary)
+      2. ~/.elan/bin/lake   (standard elan install location)
+      3. System PATH         (global install)
+
+    Lean project directory:
+      1. LEAN_PROJECT_DIR env var  (override for mono-repo layouts)
+      2. _H.PROJECT_ROOT / "lean"     (default, same repo)
+
+    The check looks for lakefile.lean OR lakefile.toml (Lean 4 / Lake v4+).
+    """
+    import shutil
+    import os
+
+    # ── Resolve lake binary ──
+    lake_bin = os.environ.get("LAKE_PATH")
+
+    if not lake_bin:
+        # Try ~/.elan/bin/lake (standard elan install)
+        elan_lake = Path.home() / ".elan" / "bin" / "lake"
+        if elan_lake.is_file():
+            lake_bin = str(elan_lake)
+
+    if not lake_bin:
+        lake_bin = shutil.which("lake")
+
+    if not lake_bin:
+        return CheckResult(
+            passed=True,
+            details=[Detail("lake", True,
+                            "SKIPPED — lake not found. Set LAKE_PATH or install elan "
+                            "(https://github.com/leanprover/elan)")],
+        )
+
+    # ── Resolve Lean project directory ──
+    lean_root = Path(os.environ.get("LEAN_PROJECT_DIR", _H.PROJECT_ROOT / "lean"))
+
+    has_lakefile = (
+        (lean_root / "lakefile.lean").exists()
+        or (lean_root / "lakefile.toml").exists()
+    )
+    if not has_lakefile:
+        return CheckResult(
+            passed=True,
+            details=[Detail("lakefile", True,
+                            f"SKIPPED — no lakefile.{{lean,toml}} in {lean_root}")],
+        )
+
+    # ── Run lake build ──
+    details = [Detail("lake_bin", True, lake_bin),
+               Detail("lean_root", True, str(lean_root))]
+
+    try:
+        result = subprocess.run(
+            [lake_bin, "build"],
+            cwd=str(lean_root),
+            capture_output=True, text=True, timeout=600,
+        )
+        ok = result.returncode == 0
+        if ok:
+            # Count jobs from output like "Build completed successfully (2254 jobs)."
+            # or "ℹ [2254/2254] ..." lines in stderr + stdout
+            combined = result.stderr + result.stdout
+            job_match = (
+                re.search(r'(\d+) jobs?\)', combined)
+                or re.search(r'\[(\d+)/\1\]', combined)  # [N/N] = final job
+            )
+            jobs = job_match.group(1) if job_match else "cached"
+            msg = f"build succeeded ({jobs} jobs)"
+        else:
+            msg = result.stderr[-500:]
+        details.append(Detail("lake_build", ok, msg))
+        return CheckResult(passed=ok, details=details)
+    except subprocess.TimeoutExpired:
+        details.append(Detail("lake_build", False, "timeout (600s)"))
+        return CheckResult(passed=False, details=details)
+    except Exception as e:
+        return CheckResult(passed=False, details=details, error=str(e))
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# CHECK: Axiom-closure allow-list (AI-Defect-Defense-Layer P4, Invariant #15)
+# ═══════════════════════════════════════════════════════════════════════
+
+@register_check(
+    "axiom_closure_allowlist",
+    "Every SKEFTHawking declaration's transitive axiom closure is on the standard "
+    "kernel axioms + the AXIOM_METADATA allow-list (Invariant #15 backstop)",
+)
+def check_axiom_closure_allowlist() -> CheckResult:
+    """
+    AI-Defect-Defense-Layer P4. Runs the ``AxiomAudit`` Lean executable
+    (interpreted, reusing the memoized ``AxiomClosure`` machinery that backs
+    ``ExtractDeps``) to obtain the transitive *non-core* axiom closure of every
+    ``SKEFTHawking.*`` declaration, and verifies each axiom lies in the allow-list
+
+        {propext, Classical.choice, Quot.sound} ∪ AXIOM_METADATA.keys()
+
+    Posture (WARN-first, retrofit): a non-allow-listed axiom is an advisory
+    warning by default and a hard failure under ``--strict`` (paper-submission
+    gating), mirroring ``parameter_provenance``. ``native_decide``-generated
+    compiler-trust axioms (per-declaration ``*._native.native_decide.ax_*``) are
+    recognised as a distinct *accepted* category and reported for visibility —
+    they are not declared project ``axiom``s, so ``counts.json`` reports
+    ``Axioms: 0`` while this check surfaces the genuine trust surface.
+
+    Shares the underlying Lean executable with the lean4 plugin's
+    ``/check-axioms`` (``lean/SKEFTHawking/AxiomAudit.lean``): discipline defined
+    once, invoked interactively at ``/lean4:checkpoint`` and non-interactively here.
+    """
+    import shutil
+    import os
+
+    # ── Resolve lake (mirror check_lean_build) ──
+    lake_bin = os.environ.get("LAKE_PATH")
+    if not lake_bin:
+        elan_lake = Path.home() / ".elan" / "bin" / "lake"
+        if elan_lake.is_file():
+            lake_bin = str(elan_lake)
+    if not lake_bin:
+        lake_bin = shutil.which("lake")
+    if not lake_bin:
+        return CheckResult(passed=True, details=[
+            Detail("lake", True, "SKIPPED — lake not found. Set LAKE_PATH or install elan")])
+
+    lean_root = Path(os.environ.get("LEAN_PROJECT_DIR", _H.PROJECT_ROOT / "lean"))
+    audit_src = lean_root / "SKEFTHawking" / "AxiomAudit.lean"
+    if not audit_src.exists():
+        return CheckResult(passed=True, details=[
+            Detail("axiom_audit_src", True, f"SKIPPED — {audit_src} not found")])
+
+    # ── Allow-list ──
+    try:
+        from src.core.constants import AXIOM_METADATA  # type: ignore
+        metadata_keys = set(AXIOM_METADATA.keys())
+    except Exception:
+        metadata_keys = set()
+    allowlist = {"propext", "Classical.choice", "Quot.sound"} | metadata_keys
+
+    # ── Run AxiomAudit (interpreted; native link exceeds macOS arg limits) ──
+    try:
+        result = subprocess.run(
+            [lake_bin, "env", "lean", "--run", "SKEFTHawking/AxiomAudit.lean"],
+            cwd=str(lean_root), capture_output=True, text=True, timeout=600,
+        )
+    except subprocess.TimeoutExpired:
+        return CheckResult(passed=True, details=[
+            Detail("axiom_audit_run", True, "SKIPPED — AxiomAudit timed out (600s)", warning=True)])
+    except Exception as exc:  # noqa: BLE001
+        return CheckResult(passed=True, details=[
+            Detail("axiom_audit_run", True, f"SKIPPED — {exc}", warning=True)])
+
+    if result.returncode != 0:
+        return CheckResult(passed=True, details=[
+            Detail("axiom_audit_run", True,
+                   f"SKIPPED — AxiomAudit exited {result.returncode}: {result.stderr[-300:]}",
+                   warning=True)])
+
+    try:
+        closures: Dict[str, List[str]] = json.loads(result.stdout.strip() or "{}")
+    except json.JSONDecodeError as exc:
+        return CheckResult(passed=True, details=[
+            Detail("axiom_audit_parse", True,
+                   f"SKIPPED — could not parse AxiomAudit output ({exc})", warning=True)])
+
+    def is_native_decide(ax: str) -> bool:
+        return "native_decide" in ax or ax in ("Lean.ofReduceBool", "Lean.trustCompiler")
+
+    native_decls: set[str] = set()
+    unexpected: Dict[str, List[str]] = {}
+    for decl, axes in closures.items():
+        if "native_decide" in decl:
+            continue  # the per-declaration native-axiom self-entries
+        bad: List[str] = []
+        for ax in axes:
+            if ax in allowlist:
+                continue
+            if is_native_decide(ax):
+                native_decls.add(decl)
+                continue
+            bad.append(ax)
+        if bad:
+            unexpected[decl] = sorted(set(bad))
+
+    details = [Detail("allowlist_size", True,
+                      f"{len(allowlist)} allow-listed axioms "
+                      f"(3 core + {len(metadata_keys)} AXIOM_METADATA)")]
+
+    if native_decls:
+        details.append(Detail(
+            "native_decide", True,
+            f"{len(native_decls)} declaration(s) transitively use `native_decide` "
+            f"(compiler-trust axiom) — accepted Lean mechanism, flagged for visibility "
+            f"(counts.json 'Axioms: 0' counts only declared `axiom`s)",
+            warning=True))
+
+    strict = _cfg.STRICT_MODE
+    if unexpected:
+        sample = list(unexpected.items())[:10]
+        msg = (f"{len(unexpected)} declaration(s) carry a non-allow-listed axiom "
+               f"({'FAIL under --strict' if strict else 'WARN-first'} — add to "
+               f"AXIOM_METADATA or discharge): "
+               + "; ".join(f"{d} → {','.join(ax)}" for d, ax in sample))
+        details.append(Detail("unexpected_axioms", not strict, msg, warning=not strict))
+        return CheckResult(passed=not strict, details=details)
+
+    details.append(Detail(
+        "allowlist", True,
+        "no declaration carries a non-allow-listed, non-native_decide axiom "
+        "(Invariant #15 backstop clean)"))
+    return CheckResult(passed=True, details=details)
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# CHECK: Elaboration-knob watchlist (perf / upstream-portability, NOT soundness)
+# ═══════════════════════════════════════════════════════════════════════
+
+@register_check(
+    "elaboration_knob_watchlist",
+    "Watchlist (advisory): proof-body maxRecDepth / synthInstance knobs — a "
+    "performance / Mathlib-CI-portability signal, NOT a soundness or axiom-closure issue",
+)
+def check_elaboration_knob_watchlist() -> CheckResult:
+    """
+    Surfaces every ``set_option maxRecDepth`` / ``synthInstance.maxSize`` /
+    ``synthInstance.maxHeartbeats`` in SKEFTHawking Lean source.
+
+    WHY THIS IS SEPARATE FROM ``axiom_closure_allowlist`` (the soundness gate):
+    these are *elaboration-time* knobs. They only let the front-end search deeper /
+    wider before giving up; the **kernel independently re-checks the final term** and
+    never reads them, so they add NOTHING to the axiom closure (no ``Lean.ofReduceBool``)
+    and stay kernel-pure ``{propext, Classical.choice, Quot.sound}``. Mathlib uses
+    ``maxRecDepth`` routinely. The genuine trust surface (``native_decide`` →
+    ``Lean.ofReduceBool``) is gated by ``axiom_closure_allowlist``; THIS check is a
+    NON-FAILING watchlist for the only real downside — a ``decide`` heavy enough to
+    need a knob is also a slow KERNEL reduction, which Mathlib CI's speed budget may
+    reject. So each hit is an upstream-portability candidate (consider a structural
+    reproof IF upstreaming that lemma), never a correctness concern. Always passes.
+
+    NB ``maxHeartbeats`` in proof bodies is forbidden outright by Invariant #10
+    (architecture discipline) and is enforced elsewhere; it is intentionally not in
+    this advisory list.
+    """
+    import re
+
+    lean_dir = _H.PROJECT_ROOT / "lean" / "SKEFTHawking"
+    if not lean_dir.exists():
+        return CheckResult(passed=True, details=[
+            Detail("lean_src", True, f"SKIPPED — {lean_dir} not found")])
+
+    pat = re.compile(
+        r"set_option\s+(maxRecDepth|synthInstance\.maxSize|synthInstance\.maxHeartbeats)\s+(\d+)")
+    hits: List[Detail] = []
+    for f in sorted(lean_dir.rglob("*.lean")):
+        if "/.lake/" in str(f):
+            continue
+        for i, line in enumerate(f.read_text(errors="replace").splitlines(), 1):
+            m = pat.search(line)
+            if m:
+                rel = f.relative_to(_H.PROJECT_ROOT)
+                hits.append(Detail(f"{rel}:{i}", True, f"{m.group(1)} {m.group(2)}", warning=True))
+
+    summary = Detail(
+        "watchlist", True,
+        f"{len(hits)} proof-body elaboration-knob site(s) — perf/upstream-CI watchlist, "
+        "kernel-pure (NOT a soundness/axiom-closure issue; that is axiom_closure_allowlist)",
+        warning=bool(hits))
+    return CheckResult(passed=True, details=[summary] + hits)
+
+
+# ---------------------------------------------------------------------------
+# Lean docstring reference drift (Stage-14 QI, 2026-07-28)
+# ---------------------------------------------------------------------------
+# Structural prevention for the failure class that produced BLOCKER 1.1 of the
+# Phase-6EA Stage-13 review: a Lean module docstring naming a project declaration
+# that no longer exists, because the declaration was renamed and the prose was not.
+#
+# `prose_theorem_reference_coverage` already guards this for *bundle drafts*
+# (papers/<bundle>/paper_draft.tex). Nothing guarded Lean docstrings themselves,
+# and the class has a live generator: it fired the same day a lead rename landed.
+#
+# Low-noise by construction. A backticked snake_case token is reported only when it
+# (a) fails to resolve in lean_deps.json, AND (b) closely resembles a name that DOES
+# resolve — i.e. it looks like rename drift rather than a Mathlib or tactic name.
+# That is precisely the observed failure shape and it keeps Mathlib references,
+# tactic names and local binders out of the result.
+_DOCSTRING_STRICT_FAMILIES = ("SKEFTHawking.Detection.", "SKEFTHawking.Electrothermal.",
+                              "SKEFTHawking.Control.", "SKEFTHawking.GrapheneBand.")
+_DOCSTRING_TOKEN_RE = re.compile(r"`([A-Za-z][A-Za-z0-9_']*)`")
+# Covers `/-- … -/` doc comments, `/-! … -/` section comments AND plain `/- … -/` module
+# headers. The module-header case was previously unscanned, which let a load-bearing
+# reference to a nonexistent `combined_floor_add_strictly_sharper` sit in
+# `Control/CompositeReadoutCeilings.lean`'s header through five adversarial reviews.
+_DOCSTRING_BLOCK_RE = re.compile(r"/-[-!]?(.*?)-/", re.DOTALL)
+
+
+@register_check("lean_docstring_refs_resolve",
+                "Lean docstring `backticked` project names resolve (rename-drift guard)")
+def check_lean_docstring_refs_resolve() -> CheckResult:
+    """Flag Lean docstrings naming a project declaration that does not exist.
+
+    Round-1 design used a `difflib` near-match filter to suppress noise. A regression
+    test against the ACTUAL blocker showed that silently defeated the check: the real
+    rename pair (`poisson_avgError_floor_equalRates` vs
+    `poisson_avgError_equalRates_eq_half`) scores below any cutoff loose enough to stay
+    quiet. So the near-match is now used only to enrich the message, never to gate it.
+
+    Noise is controlled the honest way instead: a token is exempt if it is a Mathlib
+    declaration name (short-name set built from the pinned Mathlib source) or a common
+    tactic/keyword. Inside the strict families — the new, clean module families — any
+    surviving unresolvable token is a FAIL. Elsewhere it is advisory, so the legacy
+    backlog is reported without blocking.
+    """
+    import difflib
+    import subprocess
+
+    # TODO(semantic-review, ADR-009 Phase 3): absence -> PASS *with a warning* — a third
+    # distinct policy, alongside the five silent PASSes and two FAILs.
+    if not _H.lean_deps_present():
+        return CheckResult(passed=True,
+                           details=[Detail("skipped", True, "lean_deps.json absent", warning=True)])
+    decls = _H.load_lean_deps()
+    full = {d["name"] for d in decls}
+    short: dict[str, str] = {}
+    for d in decls:
+        short.setdefault(d["name"].rsplit(".", 1)[-1], d["name"])
+    known = set(short) | full
+
+    mathlib_dir = _H.PROJECT_ROOT / "lean" / ".lake" / "packages" / "mathlib" / "Mathlib"
+    mathlib_names: set[str] = set()
+    if mathlib_dir.exists():
+        try:
+            out = subprocess.run(
+                ["grep", "-rhoE",
+                 r"^(private |protected |noncomputable )*"
+                 r"(theorem|lemma|def|abbrev|instance|structure|inductive|class) "
+                 r"+[A-Za-z_][A-Za-z0-9_']*",
+                 str(mathlib_dir)],
+                capture_output=True, text=True, timeout=180).stdout
+            mathlib_names = {ln.split()[-1] for ln in out.splitlines() if ln.split()}
+        except Exception:
+            mathlib_names = set()
+
+    # A docstring may deliberately name a declaration that does NOT exist — e.g. recording a
+    # route that was rejected, retracted, or consciously not shipped. Those are the opposite of
+    # drift (they are the record that keeps someone from re-adding it), so exempt an occurrence
+    # whose surrounding sentence disclaims it. Mirrors the disclaimer exemption in
+    # `prose_theorem_reference_coverage`.
+    disclaim = re.compile(
+        r"(NOT shipped|not shipped|deliberately|does not exist|do(es)? NOT exist|retracted|"
+        r"rejected|REJECTED|banned|settled-dead|superseded|dropped|no longer|would have been|"
+        r"is wrong|was wrong|non-existent|nonexistent)", re.IGNORECASE)
+    exempt = {"set_option", "maxHeartbeats", "native_decide", "norm_num", "field_simp",
+              "ring_nf", "simp_rw", "noncomm_ring", "push_cast", "linear_combination",
+              "match_scalars", "fun_prop", "positivity", "gcongr", "gauss_sum"}
+
+    details: list[Detail] = []
+    n_fail = n_adv = 0
+    for path in sorted((_H.PROJECT_ROOT / "lean" / "SKEFTHawking").rglob("*.lean")):
+        rel_mod = str(path.relative_to(_H.PROJECT_ROOT / "lean" / "SKEFTHawking"))
+        module = "SKEFTHawking." + rel_mod.removesuffix(".lean").replace("/", ".")
+        strict = module.startswith(_DOCSTRING_STRICT_FAMILIES)
+        src = path.read_text(errors="ignore")
+        seen: set[str] = set()
+        for block in _DOCSTRING_BLOCK_RE.findall(src):
+            for tok in _DOCSTRING_TOKEN_RE.findall(block):
+                if tok in seen or tok in known or tok in mathlib_names or tok in exempt:
+                    continue
+                if "_" not in tok or len(tok) < 6 or not any(c.islower() for c in tok):
+                    continue
+                seen.add(tok)
+                # Disclaimed-in-context ⇒ intentional record of an absent name, not drift.
+                pos = block.index(tok)
+                if disclaim.search(block[max(0, pos - 400): pos + 400]):
+                    continue
+                near = difflib.get_close_matches(tok, short.keys(), n=1, cutoff=0.6)
+                hint = f"; nearest existing is `{near[0]}`" if near else ""
+                rel = path.relative_to(_H.PROJECT_ROOT)
+                line = src[:src.index(tok)].count("\n") + 1 if tok in src else 0
+                if strict:
+                    n_fail += 1
+                    details.append(Detail(
+                        f"drift:{module}:{tok}", False,
+                        f"{rel}:{line} — docstring names `{tok}`, which resolves to NO "
+                        f"declaration and is not a Mathlib name{hint}. Update the prose or "
+                        f"restore the name.",
+                    ))
+                else:
+                    n_adv += 1
+                    details.append(Detail(
+                        f"drift-advisory:{module}:{tok}", True,
+                        f"{rel}:{line} — docstring names `{tok}` (unresolved{hint}) — "
+                        f"advisory outside the strict families.",
+                        warning=True,
+                    ))
+    details.insert(0, Detail(
+        "summary", True,
+        f"scanned all SKEFTHawking Lean docstrings against {len(short)} project + "
+        f"{len(mathlib_names)} Mathlib names — {n_fail} FAIL(s) in the strict families, "
+        f"{n_adv} advisory elsewhere",
+        warning=bool(n_adv),
+    ))
+    return CheckResult(passed=(n_fail == 0), details=details)
