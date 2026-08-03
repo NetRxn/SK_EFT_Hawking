@@ -5,7 +5,12 @@ Covers the deterministic pattern logic of W1 (`placeholder_not_cited`) and W2
 registry invariants the gates rely on. Fast (no Lean, no I/O beyond imports).
 """
 import re
+import sys
 from pathlib import Path
+
+# `scripts/` on the path so this file imports `validate` under the SAME module
+# name every other test uses. See the note below the imports.
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from src.core.constants import (
     PLACEHOLDER_THEOREMS,
@@ -13,7 +18,7 @@ from src.core.constants import (
     PLACEHOLDER_TOTAL_COUNT,
     MODELING_ASSUMPTION_THEOREMS,
 )
-from scripts.validate import (
+from validate import (
     _STRUCTURAL_NAME_RE,
     _TRIVIAL_BODY_RES,
     _NONTRIVIAL_MARKER_RE,
@@ -24,6 +29,29 @@ from scripts.validate import (
     _TRACKED_PROP_NAME_RE,
     _parse_formula_lean_refs,
 )
+
+# ⚠️ These nine import sites read `from scripts.validate import ...` until
+# 2026-08-03. Because `pythonpath = ["."]` makes `scripts/validate.py` reachable
+# as `scripts.validate`, while every other test reaches it as `validate`, that
+# loaded the module TWICE — two distinct module objects, each executing the
+# `@register_check` decorators, each with its own caches and its own copies of
+# what used to be module-global flags.
+#
+# It was invisible for as long as every piece of that state was per-module: two
+# registries of 59 each looked exactly like one registry of 59 from either side.
+# It stopped being invisible when `_CHECKS` moved to the shared
+# `validation._registry` singleton (ADR-009 Phase 2) — both loads then appended to
+# the SAME list and the registry contract failed at 118 checks with duplicate
+# names. The extraction did not create the defect; it made an existing one
+# observable, which is the argument for the package boundary in miniature.
+#
+# It was never harmless. Two module identities also meant `validate.CheckResult`
+# and `scripts.validate.CheckResult` were different classes, so `isinstance`
+# across the boundary silently returned False, and before `validation._config`
+# existed a `--strict` set on one had no effect on the other.
+#
+# `tests/test_validate_public_surface.py::test_validate_is_loaded_exactly_once`
+# now guards this. Import `validate`, never `scripts.validate`.
 
 
 # ── Registry invariants (W1 / W2) ──────────────────────────────────────
@@ -199,7 +227,7 @@ def test_formula_ref_parser_drops_artifacts():
 def test_no_formula_grounded_on_placeholder():
     """Invariant #4 content-grounding: no formula cites a True/placeholder stub.
     Invokes the real check (which resolution-gates before classifying)."""
-    from scripts.validate import check_formula_grounding
+    from validate import check_formula_grounding
     res = check_formula_grounding()
     assert res.passed, "a formula is grounded on a placeholder/True stub"
     # the hard-fail dimension is placeholder-grounding; dangling refs are advisory
@@ -234,7 +262,7 @@ def test_scanner_yields_lemmas_not_just_theorems():  # C1
 
 
 def test_new_trivial_body_patterns_fire_but_spare_genuine_bundles():  # C2
-    from scripts.validate import _TRIVIAL_BODY_RES, _NONTRIVIAL_MARKER_RE
+    from validate import _TRIVIAL_BODY_RES, _NONTRIVIAL_MARKER_RE
 
     def istriv(b):
         n = " ".join(b.split())
@@ -252,7 +280,7 @@ def test_new_trivial_body_patterns_fire_but_spare_genuine_bundles():  # C2
 
 
 def test_hedge_is_claim_specific_not_stray_word():  # H2
-    from scripts.validate import _VERIFY_CLAIM_RE, _HEDGE_CLAIM_RE
+    from validate import _VERIFY_CLAIM_RE, _HEDGE_CLAIM_RE
     attack = ("We formally verify Z(Vec_G)=Rep(D(G)) for all G in Lean. "
               "The CLI stub script is separate; arithmetic modulo p.")
     assert _VERIFY_CLAIM_RE.search(attack)
@@ -269,7 +297,7 @@ def test_non_load_bearing_registry_exists():  # L1
 
 # ── SIG gate hardening: blind-spot reconciliation (2026-06-13) ──────────
 
-from scripts.validate import (  # noqa: E402
+from validate import (  # noqa: E402
     _thin_type_label, _THIN_HARD, _is_autogen_decl,
     _OVERCLAIM_VERB_RE, _LEDGER_HEDGE_RE,
     check_vacuous_statement_audit, check_proxy_body_audit,
@@ -367,7 +395,7 @@ def test_r07_atlas_integrity_apex_and_dep_legs():
     """The strengthened atlas_integrity check passes and reflects R-07:
     3 apexes explicitly discharged (producer-verified), all dependent_theorems
     FQNs resolve (no phantom)."""
-    from scripts.validate import check_atlas_integrity
+    from validate import check_atlas_integrity
     result = check_atlas_integrity()
     assert result.passed, [(d.name, d.message) for d in result.details if not d.passed]
     by_name = {d.name: d for d in result.details}
@@ -379,7 +407,7 @@ def test_r07_atlas_integrity_apex_and_dep_legs():
 
 def test_r05_grounding_kind_registry_and_helpers():
     from src.core.constants import FORMULA_GROUNDING_KIND
-    from scripts.validate import _is_vacuous_identity_wrapper
+    from validate import _is_vacuous_identity_wrapper
     for k in ("wrt_S2xS1_eq_rank", "dd_simples_count"):
         assert FORMULA_GROUNDING_KIND[k]["kind"] == "definitional-record"
     # dd_simples_count-shape: `P → P` with a reflexive body -> vacuous idwrap.
@@ -393,7 +421,7 @@ def test_r05_grounding_kind_registry_and_helpers():
 
 
 def test_r05_formula_grounding_passes_live():
-    from scripts.validate import check_formula_grounding
+    from validate import check_formula_grounding
     r = check_formula_grounding()
     assert r.passed, [(d.name, d.message) for d in r.details if not d.passed]
 
@@ -402,7 +430,7 @@ def test_r05_gate_fails_if_definitional_record_relabeled_derivation(monkeypatch)
     """The gate must FAIL if someone re-labels a definitional record as a
     derivation, for BOTH shapes: the identity wrapper (auto-detected) and the
     rfl-definitional equality (source-proof-confirmed)."""
-    from scripts.validate import check_formula_grounding
+    from validate import check_formula_grounding
     from src.core import constants as C
     base = dict(C.FORMULA_GROUNDING_KIND)
 

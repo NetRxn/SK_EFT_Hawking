@@ -67,10 +67,10 @@ import subprocess
 import sys
 import tempfile
 import time
-from dataclasses import dataclass, field, asdict
+from dataclasses import asdict          # `dataclass`/`field` moved with the result types
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Callable, Dict, List, Optional
+from typing import Dict, List, Optional  # `Callable` moved with `register_check`
 
 # ═══════════════════════════════════════════════════════════════════════
 # Path resolution
@@ -114,58 +114,26 @@ REPORTS_DIR = _H.DOCS_DIR / "validation" / "reports"
 
 
 # ═══════════════════════════════════════════════════════════════════════
-# Data structures
+# Data structures + registry — RE-EXPORTED from `validation._registry`
 # ═══════════════════════════════════════════════════════════════════════
-
-@dataclass
-class Detail:
-    """Single sub-check result."""
-    name: str
-    passed: bool
-    message: str = ""
-    warning: bool = False  # True = passed but with advisory warning (⚠)
-
-
-@dataclass
-class CheckResult:
-    """Result of one top-level check."""
-    passed: bool
-    details: List[Detail] = field(default_factory=list)
-    error: Optional[str] = None
-
-
-@dataclass
-class CheckSpec:
-    """Registered check metadata."""
-    name: str
-    description: str
-    func: Callable[[], CheckResult]
-
-
-# Global registry
-_CHECKS: List[CheckSpec] = []
-
-# Strict mode flag — set by CLI --strict. Tightens advisory warnings to hard
-# failures for paper-submission gating (currently used by parameter_provenance
-# and provenance_doi_in_registry).
-
-# Force flag — set by CLI --force-notebooks. Bypasses the CHECK 11 notebook
-# skip-cache and re-executes every notebook (use after a kernel / dependency
-# upgrade that could change execution outcomes without changing notebook
-# content). Default False: unchanged, previously-vetted notebooks are skipped.
-
-# Force flag — set by CLI --force-latex OR when `paper_latex_compiles` is the
-# explicitly selected `--check`. The latex-compile check is slow (pdflatex ×
-# all bundle drafts), so it SKIPS in the default full run unless one of these
-# is set. Default False.
-
-
-def register_check(name: str, description: str):
-    """Decorator to register a validation check."""
-    def decorator(func: Callable[[], CheckResult]) -> Callable[[], CheckResult]:
-        _CHECKS.append(CheckSpec(name=name, description=description, func=func))
-        return func
-    return decorator
+# These moved out so that `validation/checks/*.py` can import them without
+# importing `validate`, which would be a cycle (validate imports the check
+# modules for their registration side-effect). See `validation/_registry.py`.
+#
+# ⚠️ `_CHECKS` is re-exported BY BINDING, and that is load-bearing: registration
+# appends to it and `_apply_canonical_order()` sorts it in place, so this name and
+# `validation._registry._CHECKS` must remain THE SAME list. Never rebind it
+# (`_CHECKS = [...]`) — that yields two registries, one filled by registration and
+# a different one iterated by `run_checks` / `--list`, and since `all([])` is True
+# the suite would report success while running fewer checks.
+#
+# The re-export itself is required by ADR-009 D2 item 8: nine test files and
+# `scripts/sync_manifest.py` import names from `validate` directly.
+# `tests/test_validate_public_surface.py` freezes the full 33-name surface and
+# asserts the `_CHECKS` identity above.
+from validation._registry import (  # noqa: E402
+    Detail, CheckResult, CheckSpec, _CHECKS, register_check,
+)
 
 
 # ═══════════════════════════════════════════════════════════════════════

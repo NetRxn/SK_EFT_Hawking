@@ -60,6 +60,38 @@ Nine checks are structurally non-snapshottable: they shell out, execute
 notebooks, or rewrite tracked artifacts, so run N+1 legitimately differs from
 run N. Forcing them into a snapshot would produce a harness that cries wolf,
 which is worse than one with a stated gap.
+
+KNOWN INTERACTION: `graph_integrity` MOVES WHEN YOU EDIT `tests/`
+------------------------------------------------------------------
+`build_graph.extract_python_test_nodes()` mints one graph node per `def test_*`
+in `tests/test_*.py`, plus VERIFIES edges from the names each test references.
+So **adding a test changes `graph_integrity`'s `graph_size` and `orphan_nodes`
+details** — and a refactor of this suite edits tests in nearly every commit.
+Expect this comparison to report `graph_integrity` diffs that are not refactor
+damage.
+
+`graph_integrity` is deliberately NOT quarantined for it. It is one of the few
+checks that would actually notice a mechanical refactor breaking artifact
+resolution, and scrubbing the counts would discard that. Attribute instead —
+the arithmetic closes exactly, every time it has been done:
+
+    nodes   += one per new `def test_*`
+    edges   += one per (test, resolvable-name) pair, deduped
+    orphans += one per new test with no resolvable name,
+               plus one per existing test that LOST its last edge
+
+Worked example (2026-08-03, the `_registry` extraction): +5 nodes / +3 edges /
++2 orphans = 5 new tests in one new file contributing 4 edges, minus 1 edge from
+retargeting `v.STRICT_MODE` to `cfg.STRICT_MODE` in an existing test.
+
+⚠️ When attributing, diff against the tree the BASELINE was taken from, not
+against `HEAD` — they diverge as soon as you commit mid-phase, and using HEAD
+silently under-counts (it did, once, and briefly looked like unexplained drift).
+
+Most of these edges are spurious anyway: the resolver matches a test's
+`referenced_names` against Lean short names with no alias guard, so `v` (from
+`import validate as v`) resolves to a Lean structure field. See ADR-009
+§Deferred item 7 — filed, not fixed, because it changes what a gate measures.
 """
 from __future__ import annotations
 

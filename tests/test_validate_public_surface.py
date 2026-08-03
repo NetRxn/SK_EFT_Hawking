@@ -133,6 +133,43 @@ class TestExternalSurface:
             "checks would silently vanish from the run. Re-export by binding, never by copy."
         )
 
+    def test_validate_is_loaded_exactly_once(self):
+        """`validate.py` must have ONE module identity in the interpreter.
+
+        `pythonpath = ["."]` makes `scripts/validate.py` importable both as
+        `validate` (what nine test files use, via a `sys.path` insert) and as
+        `scripts.validate`. Doing both loads the file TWICE into two distinct
+        module objects — and `tests/test_substrate_integrity_gates.py` did exactly
+        that until 2026-08-03.
+
+        That was survivable only while every piece of shared state was per-module:
+        two registries of 59 read identically to one registry of 59. Once `_CHECKS`
+        moved to the shared `validation._registry` singleton, both copies appended
+        to the same list — 118 checks, duplicate names, broken execution order.
+
+        And it was never actually harmless: two identities also mean
+        `validate.CheckResult` and `scripts.validate.CheckResult` are different
+        classes (so `isinstance` across them is False), and two copies of any
+        module-global — which is what `--strict` was before `validation._config`.
+
+        Asserted on `sys.modules` rather than by grepping imports, so it catches
+        any route to a second identity, including `importlib` by file path.
+        """
+        loaded = sorted(
+            name for name, mod in sys.modules.items()
+            if mod is not None
+            and getattr(mod, "__file__", None)
+            and Path(mod.__file__).name == "validate.py"
+            and Path(mod.__file__).parent.name == "scripts"
+        )
+        assert loaded == ["validate"], (
+            f"`scripts/validate.py` is loaded under {len(loaded)} module names: "
+            f"{loaded}. Two identities means two registries, two sets of caches, "
+            f"and result classes that fail `isinstance` across the boundary. "
+            f"Import it as `validate` (add `scripts/` to sys.path), never as "
+            f"`scripts.validate`."
+        )
+
     def test_surface_has_no_unexpected_public_additions(self):
         """A cheap drift signal: new PUBLIC names on `validate` are usually a sign
         that something meant for a check module landed on the framework instead."""
