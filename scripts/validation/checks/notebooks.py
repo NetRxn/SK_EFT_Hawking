@@ -42,14 +42,13 @@ import validate_helpers as _H
 from validation import _config as _cfg
 from validation._registry import CheckResult, Detail, register_check
 
-# Path aliases — see the import rules above.
-NOTEBOOKS_DIR = _H.NOTEBOOKS_DIR
-SRC_DIR = _H.SRC_DIR
+# NO LOCAL PATH ALIASES — reach `_H.<NAME>` at each use. See the note in
+# `checks/physics.py` for the defect a module-level copy causes under monkeypatch.
 
 #: Local (git-ignored) skip-cache for the notebook-execution check: maps each
 #: vetted notebook to a content hash so unchanged, previously-passed notebooks are
 #: not re-executed. Mirrors the Lean `extract_lean_deps.py` hash-skip.
-NOTEBOOK_EXEC_CACHE = NOTEBOOKS_DIR / ".notebook_exec_cache.json"
+NOTEBOOK_EXEC_CACHE = _H.NOTEBOOKS_DIR / ".notebook_exec_cache.json"
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -70,7 +69,7 @@ def check_notebook_isolation() -> CheckResult:
     details = []
     all_pass = True
 
-    for nb_path in sorted(NOTEBOOKS_DIR.glob("*.ipynb")):
+    for nb_path in sorted(_H.NOTEBOOKS_DIR.glob("*.ipynb")):
         try:
             with open(nb_path) as f:
                 nb = json.load(f)
@@ -117,7 +116,7 @@ def check_viz_consistency() -> CheckResult:
 
     # ── Discover visualizations.py figure functions ──
     viz_functions = set()
-    viz_path = SRC_DIR / "core" / "visualizations.py"
+    viz_path = _H.SRC_DIR / "core" / "visualizations.py"
     if viz_path.exists():
         try:
             tree = ast.parse(viz_path.read_text())
@@ -138,7 +137,7 @@ def check_viz_consistency() -> CheckResult:
         known_hex = set()
 
     # ── Scan notebooks ──
-    for nb_path in sorted(NOTEBOOKS_DIR.glob("*.ipynb")):
+    for nb_path in sorted(_H.NOTEBOOKS_DIR.glob("*.ipynb")):
         try:
             with open(nb_path) as f:
                 nb = json.load(f)
@@ -210,7 +209,7 @@ def _src_core_fingerprint() -> str:
     full re-vet (a formulas/constants edit can change notebook outcomes without
     changing notebook content)."""
     hasher = hashlib.sha256()
-    src_core = SRC_DIR / "core"
+    src_core = _H.SRC_DIR / "core"
     if src_core.is_dir():
         for fp in sorted(src_core.glob("*.py")):
             hasher.update(fp.read_bytes())
@@ -275,7 +274,7 @@ def check_notebook_execution() -> CheckResult:
     new_passed: Dict[str, str] = {}
     n_skipped = 0
 
-    for nb_path in sorted(NOTEBOOKS_DIR.glob("*.ipynb")):
+    for nb_path in sorted(_H.NOTEBOOKS_DIR.glob("*.ipynb")):
         try:
             with open(nb_path) as f:
                 nb = nbformat.read(f, as_version=4)
@@ -299,7 +298,7 @@ def check_notebook_execution() -> CheckResult:
                 nb,
                 timeout=120,          # per-cell timeout
                 kernel_name="python3",
-                resources={"metadata": {"path": str(NOTEBOOKS_DIR)}},
+                resources={"metadata": {"path": str(_H.NOTEBOOKS_DIR)}},
             )
             client.execute()
 

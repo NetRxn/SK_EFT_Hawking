@@ -26,7 +26,8 @@ SK_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(SK_ROOT))
 sys.path.insert(0, str(SK_ROOT / "scripts"))
 
-import validate as v  # noqa: E402
+import validate as v
+import validate_helpers as _H  # noqa: E402
 from validate import _parse_latex_number, check_d1_hierarchy_table  # noqa: E402
 from scripts.gen_d1_hierarchy_table import (  # noqa: E402
     compute_bec_hierarchy,
@@ -109,7 +110,7 @@ class TestParseLatexNumber:
 class TestGatePasses:
     def test_passes_on_generated_draft(self, tmp_path, monkeypatch):
         root = _write_draft(tmp_path, _generated_draft_body())
-        monkeypatch.setattr(v, "PAPERS_DIR", root)
+        monkeypatch.setattr(_H, "PAPERS_DIR", root)
         result = check_d1_hierarchy_table()
         assert result.passed, [d for d in result.details if not d.passed]
         # every sub-detail green
@@ -124,7 +125,7 @@ class TestGatePasses:
 class TestGateFailsOnStale:
     def test_fails_on_stale_draft(self, tmp_path, monkeypatch):
         root = _write_draft(tmp_path, _STALE_BODY)
-        monkeypatch.setattr(v, "PAPERS_DIR", root)
+        monkeypatch.setattr(_H, "PAPERS_DIR", root)
         result = check_d1_hierarchy_table()
         assert not result.passed
         failed = {d.name for d in result.details if not d.passed}

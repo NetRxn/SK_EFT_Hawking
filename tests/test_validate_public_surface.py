@@ -191,6 +191,52 @@ class TestExternalSurface:
             f"(`_H.LEAN_DIR`, `_H.DOCS_DIR`, `_H.SRC_DIR`, `_H.PAPERS_DIR`, …)."
         )
 
+    def test_no_check_module_aliases_a_path(self):
+        """A check module must not bind a `validate_helpers` path at module level.
+
+        `PAPERS_DIR = _H.PAPERS_DIR` in a check module is an import-time COPY — the
+        same shape as `from validate import STRICT_MODE`, which H5 forbids for
+        flags. Paths are never reassigned in production, so the copy looks harmless;
+        it is not harmless for the tests that monkeypatch a temp tree to seed a
+        defect.
+
+        Found the hard way on 2026-08-03: `test_f_hierarchy_claims` patches
+        `PAPERS_DIR` and asserts the check FAILS on a stale draft. Once
+        `check_f_hierarchy_claims` moved into `checks/physics.py` and read a local
+        alias, the patch no longer reached it — the real, correct draft was read and
+        the check passed. It failed loudly only because that test asserts
+        `not passed`; a positive-control test would have gone silently vacuous,
+        which is this project's signature failure.
+
+        The rule is therefore the same as for flags: ONE owner, reached by attribute
+        at call time. `validate.py` itself is exempt — its aliases predate the split
+        and shrink to nothing as checks move out.
+        """
+        import ast
+        offenders = []
+        for path in sorted((SK_ROOT / "scripts" / "validation").rglob("*.py")):
+            tree = ast.parse(path.read_text())
+            for node in tree.body:                      # module level only
+                if not isinstance(node, ast.Assign):
+                    continue
+                val = node.value
+                # `X = _H.SOMETHING` — a bare attribute copy off the helpers module
+                if (isinstance(val, ast.Attribute)
+                        and isinstance(val.value, ast.Name)
+                        and val.value.id in ("_H", "validate_helpers")):
+                    for t in node.targets:
+                        offenders.append(
+                            f"{path.relative_to(SK_ROOT)}:{node.lineno} "
+                            f"{getattr(t, 'id', '?')} = _H.{val.attr}")
+        assert not offenders, (
+            f"check module(s) bind a path by value: {offenders}. That is an "
+            f"import-time copy; a test monkeypatching the owner will not reach the "
+            f"check, and the seeded defect goes unseen. Use `_H.<NAME>` at each use "
+            f"site instead. (Deriving a NEW path from one — e.g. "
+            f"`CACHE = _H.NOTEBOOKS_DIR / 'x.json'` — is a different expression and "
+            f"is allowed, but note it freezes the same way if the base is patched.)"
+        )
+
     def test_validate_is_loaded_exactly_once(self):
         """`validate.py` must have ONE module identity in the interpreter.
 

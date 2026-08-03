@@ -25,7 +25,8 @@ SK_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(SK_ROOT))
 sys.path.insert(0, str(SK_ROOT / "scripts"))
 
-import validate as v  # noqa: E402
+import validate as v
+import validate_helpers as _H  # noqa: E402
 from validate import check_f_hierarchy_claims  # noqa: E402
 
 
@@ -95,7 +96,7 @@ class TestGatePasses:
                                for d in result.details if not d.passed]
 
     def test_passes_on_fixed_synthetic(self, tmp_path, monkeypatch):
-        monkeypatch.setattr(v, "PAPERS_DIR", _write_F(tmp_path, _FIXED_F))
+        monkeypatch.setattr(_H, "PAPERS_DIR", _write_F(tmp_path, _FIXED_F))
         result = check_f_hierarchy_claims()
         assert result.passed, [(d.name, d.message)
                                for d in result.details if not d.passed]
@@ -104,7 +105,7 @@ class TestGatePasses:
 
 class TestGateFailsOnStale:
     def test_fails_on_stale(self, tmp_path, monkeypatch):
-        monkeypatch.setattr(v, "PAPERS_DIR", _write_F(tmp_path, _STALE_F))
+        monkeypatch.setattr(_H, "PAPERS_DIR", _write_F(tmp_path, _STALE_F))
         result = check_f_hierarchy_claims()
         assert not result.passed
         failed = {d.name for d in result.details if not d.passed}
@@ -119,7 +120,7 @@ class TestGateFailsOnStale:
         # false-positive the Heidelberg hierarchy delta_disp anchor.
         body = (r"the corresponding values are $\delta_{\mathrm{disp}} "
                 r"\approx -19\%$, subdominant.")
-        monkeypatch.setattr(v, "PAPERS_DIR", _write_F(tmp_path, body))
+        monkeypatch.setattr(_H, "PAPERS_DIR", _write_F(tmp_path, body))
         result = check_f_hierarchy_claims()
         # not found -> fails (as expected), but never as a -19% PASS
         assert not result.passed
