@@ -55,7 +55,7 @@ direction authorized, contingent on architecture review + operator visibility).
 |---|---|
 | **0 — characterization harness** | ✅ **COMPLETE.** 3 guards + the harness, all mutation-verified |
 | **1 — anchors + helpers, file stays put** | ✅ **COMPLETE.** `CHARACTERIZATION HELD — 49 checks identical` |
-| 2 — package split | **IN PROGRESS.** Framework layer done (`_config`, `_registry`, ordering); **0 of 8 check modules extracted** |
+| 2 — package split | **IN PROGRESS.** Framework layer done; H1 genuinely closed; **1 of 8 check modules extracted** (`notebooks`) |
 | 3 — semantic fixes | not started; list in ADR-009 §Deferred (8 items) |
 
 ### Phase 2 — what remains, concretely
@@ -64,8 +64,20 @@ The framework layer is done and the import cycle that blocked extraction is gone
 mechanical move itself, module by module, per the assignment table in
 [validation-module-migration-notes.md §4](validation-module-migration-notes.md):
 
-`checks/lean_substrate.py` · `physics.py` · `papers_prose.py` · `citations.py` ·
-`bundles_readiness.py` · `graph_atlas.py` · `freshness.py` · `notebooks.py`
+✅ `checks/notebooks.py` — **DONE** (`970e946e`), `CHARACTERIZATION HELD — 49 identical`. Use it as the
+template; the recipe below is proven, not theoretical.
+
+⬜ `lean_substrate.py` · `physics.py` · `papers_prose.py` · `citations.py` · `bundles_readiness.py` ·
+`graph_atlas.py` · `freshness.py`
+
+⚠️ **Two checks are unassigned in the migration notes' §4 table** — `theorems` and
+`paper_toolchain_pin_drift`. Assign them deliberately (suggest `lean_substrate` and `papers_prose`) and
+update §4; do not let them fall through the split.
+
+**Extract by SCRIPT from AST-verified line ranges, never by retyping.** That is what makes "moved
+verbatim" checkable. The `notebooks` extraction did: AST → exact `(start,end)` per decorated def →
+splice out (highest range first, so indices stay valid) → write the module with the three-import-rules
+header → insert the import + re-export block above `_apply_canonical_order()`.
 
 **Per-module loop — do NOT batch several modules into one unverified move:**
 1. Move the check bodies verbatim. No body edited, no policy unified, no threshold touched, no
@@ -152,6 +164,18 @@ next piece is defective too, and attack it before trusting it.
 **And run the WHOLE fast suite, not the tests you just wrote.** Removing `validate.STRICT_MODE` broke the
 one pre-existing test of strict mode; targeted runs stayed green and the 2.5-minute full suite caught it
 immediately.
+
+**A failing test is NOT evidence that a guard fired.** Twice in one session a mutation run reported
+"caught" when the test had actually failed to *collect* — once a stray docstring quote (SyntaxError),
+once a mutation using a name the target module does not import (NameError). Both produced false
+confidence in a guard that had not been exercised at all. Every mutation harness must distinguish
+**"the guard's assertion fired"** from **"the mutation broke the import"**, and the mutation itself must
+be something a person would plausibly write — importable, and realistic. The `notebooks` extraction's
+harness does both; copy it.
+
+**Guard scope must grow with the code it guards.** The H1 test scanned only `validate.py`; it would have
+gone blind the moment the first check module landed. It now walks `validation/**/*.py`. When you add a
+module directory, check every structural guard's scope before trusting a green run.
 
 **Phase 1 delivered** (all verified behaviour-preserving against a pre-change baseline):
 - `scripts/validate_helpers.py` — the single path anchor + artifact loaders.
