@@ -129,8 +129,36 @@ Ordered by how much a wrong answer costs today:
    `ComputationCorrectness` verdict can move. 16 tests, 6 mutations, clean negative control.
    ⚠️ **The filed finding was wrong in four ways** — count, consumer, function name, effort. See the new
    standing lesson in the map's §9: *re-measure a finding's scope before fixing it, even your own.*
-5. No `UNEVALUATED` state — ~20 sites encode "could not measure" as PASS.
-6. `count_literals` ⊂ `axiom_count_prose_consistency` — same predicate, one hard-fails, one cannot fail.
+5. No `UNEVALUATED` state. ⚠️ **Re-shaped 2026-08-04 by a full read of all 11 check modules.** The
+   "~20 sites" estimate is in the right ballpark (~11 return `passed=True` from an `except`; the
+   missing-artifact class adds roughly as many again), **but the framing was wrong**: the fix is
+   almost certainly NOT a new `CheckResult` state. `passed` is consumed by `print_results`,
+   `archive_results`, the `--json` payload (a D2 CONTRACT item), `gate_precheck.py` and
+   `pre-commit-sync.sh` — a third state is a contract break. And the project has **already converted
+   ~60% of the population by hand**, each with a written reason: `bundle_metadata_matches_graph`,
+   `readiness_verdicts_agree`, `readiness_submission_gate`, `review_docs_mint_findings`,
+   `recurrence_reopens_closures`, `native_decide_regression`, `notebook_stored_outputs_current`
+   (empty glob → FAIL) and both of `graph_integrity`'s inner guards all FAIL on cannot-measure.
+   **Treat item 5 as finishing that per-site sweep, with the readiness/graph family as the template**
+   — or decline the type change with this measurement. The remaining PASS-on-cannot-measure sites
+   are concentrated in `axiom_closure_allowlist` (5 separate PASS returns — no lake, no source,
+   timeout, non-zero rc, unparseable JSON), `paper_latex_compiles` (2), `paper_toolchain_pin_drift`
+   (2), `inventory_index_autogen_fresh` (2), and the import guards in `notebooks`,
+   `bundle_figure_integrity`, `tracked_hypotheses_fresh`, `bibitem_title_primary_source`.
+   Two are annotated in-body as the H1-SILENT sites: `accepted_findings_carry_rationale` (missing
+   ledger → PASS) and `citation_primary_sources_present`'s duplicate-key guard (exception → advisory).
+6. ⛔ **`count_literals` ⊂ `axiom_count_prose_consistency` — THE PREMISE IS FALSE. Read both
+   2026-08-04.** Neither half of the filing survives. (a) `count_literals` is no longer "incapable of
+   failing" — §Deferred item 3 made it a ratchet against `COUNT_LITERAL_CEILING` (`c3456a23`).
+   (b) They are **not the same predicate**: `count_literals` ratchets the *density* of literal
+   counts ("N theorems", "N modules", "N sorry") and never compares them to anything;
+   `axiom_count_prose_consistency` performs a **value comparison against computed truth**
+   (`docs/counts.json` → `lean.axioms`) with a ±120-char historical-attribution window and a
+   negation guard, hard-failing only when prose asserts a live axiom while the count is 0. Merging
+   them would DESTROY the comparison-to-truth. The real finding is the inverse and is worth
+   shipping: **`axiom_count_prose_consistency` is the model `count_literals` should be raised to** —
+   compare each literal against its `counts.tex` macro value, rather than only counting literals.
+   Disposition: DECLINE the merge with this measurement; consider the strengthening separately.
 7. `--strict` reaches no automated caller, so every strict-only leg is dead code. ⚠️ **Filed as "two
    gates" (`axiom_closure_allowlist`, `bundle_source_freshness`); re-measured 2026-08-04 by AST at
    SIX** — those two plus `parameter_provenance`, `provenance_doi_in_registry`,
