@@ -1,10 +1,13 @@
 # ADR-009 — Validation-suite modularization and the mutation-test obligation
 
-- **Status:** **PROPOSED (2026-08-03).** Direction authorized in principle by the project owner on
-  2026-08-03 ("as long as you take it that direction, it's authorized"), explicitly **contingent on this
-  architecture document being reviewed first**, on operator visibility during execution, and on the standing
-  rule that no core-infrastructure file may be modified by an agent that has not read it in full directly.
-  No implementation may begin before acceptance and Phase-0 completion.
+- **Status:** ✅ **ACCEPTED (2026-08-04).** Direction authorized in principle by the project owner on
+  2026-08-03 ("as long as you take it that direction, it's authorized"), contingent on this document being
+  reviewed first, on operator visibility during execution, and on the standing rule that no
+  core-infrastructure file may be modified by an agent that has not read it in full directly. **All four
+  phases are delivered and all eight §Deferred items dispositioned** — see the status block in §Deferred.
+  Phases 0–2 were verified behaviour-preserving at every boundary (`CHARACTERIZATION HELD — 49 checks
+  identical`); Phase 3's semantic fixes deliberately changed verdicts, each shipped with a
+  both-directions mutation test or declined with the measurement that justifies declining.
 - **Decider:** John Roehm (project owner) — raised the concern that `scripts/validate.py` "has exploded in
   terms of ad-hoc edits", is "too big to read directly in one go", and that "agents were just adding to it
   without reading what already exists"; directed that the validation layer become "a legit module rather

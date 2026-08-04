@@ -1,12 +1,18 @@
 # QA / QI Infrastructure Map
 
-**Status:** production artifact. First map of the complete quality layer — code, agents, hooks, artifacts,
-gates, and human decision points.
-**Date:** 2026-08-03.
-**Basis:** `scripts/validate.py` read in full (7,778 lines at read time) by the author; four read-only
+**Status:** production artifact. Map of the complete quality layer — code, agents, hooks, artifacts,
+gates, and human decision points. **Reflects the ADR-009 delivered state.**
+**Date:** first written 2026-08-03; **brought to the delivered state 2026-08-04.**
+**Basis:** `scripts/validate.py` read in full (7,778 lines at first writing) by the author; four read-only
 reconnaissance sweeps over the artifact-generation, readiness/bundle, agent/hook/register, and
 test-coverage subsystems; **every load-bearing claim independently verified against source by the author.**
 Where a reconnaissance claim did not survive verification it is marked and corrected in §8.
+
+**2026-08-04 re-basis.** Read in full on the ADR-009 branch: `validate.py` (post-split), all **twelve**
+`validation/checks/*.py`, `validate_helpers.py`, `extract_lean_deps.py`, `readiness_gates.py`,
+`bundle_readiness.py`, `gate_precheck.py` and `pre-commit-sync.sh`. Every figure below is either measured
+on that date or explicitly marked historical. `build_graph.py` is **not** among them — claims about it
+here rest on caller analysis and its own in-source comments, and are marked where they appear.
 
 **Companion documents:** [ADR-009](../adrs/ADR-009-validation-suite-modularization.md) (the validation-suite
 decision) · [ADR-004](../adrs/ADR-004-substrate-integrity-gates.md) (R1–R5) ·
@@ -83,31 +89,38 @@ flowchart TB
 
 Red-outlined nodes carry the enforcement defects in §6.
 
-> **Plane ③ was split by ADR-009 Phase 2 (complete 2026-08-03).** `scripts/validate.py` was a single
-> 7,900-line file when this map was first written. It is now **720 lines of framework** — result-type and
-> check re-exports, the `_CHECKS` registry, `_CANONICAL_ORDER`, `run_checks`, reporting, the CLI, and
-> `BUNDLE_CODES` for the roster gate — with **all 59 check bodies** in eleven modules under
-> `scripts/validation/checks/`, none over ~1,080 lines, each readable in one pass:
+> **Plane ③ is the ADR-009 delivered state (Phases 0–3 complete 2026-08-04).** `scripts/validate.py` was a
+> single 7,900-line file when this map was first written. It is now **~740 lines of framework** —
+> result-type and check re-exports, the `_CHECKS` registry, `_CANONICAL_ORDER`, `run_checks`, reporting,
+> the CLI, and `BUNDLE_CODES` for the roster gate — with **all 59 check bodies** in **twelve** modules
+> under `scripts/validation/checks/`. Sizes measured 2026-08-04; the largest is `citations` at **965**:
 >
 > | module | checks | | module | checks |
 > |---|---|---|---|---|
-> | `lean_substrate` | 9 — R1–R3 substance gates | | `papers_prose` | 6 — prose vs the numbers |
-> | `lean_toolchain` | 7 — build + trust surface | | `prose_lean_refs` | 2 — do cited names resolve |
-> | `citations` | 4 — provenance + primary sources | | `bundles_readiness` | 6 — metadata · gates · roster |
-> | `freshness` | 6 — the artifact regenerators | | `reviews` | 4 — the supersession ledger |
-> | `physics` | 9 | | `graph_atlas` | 3 |
-> | `notebooks` | 3 | | | |
+> | `physics` | 9 | | `lean_substrate` | 6 — name/body/prose-gated substance |
+> | `lean_toolchain` | 7 — build + trust surface | | `papers_prose` | 6 — prose vs the numbers |
+> | `bundles_readiness` | 6 — metadata · gates · roster | | `freshness` | 6 — the artifact regenerators |
+> | `citations` | 4 — provenance + primary sources | | `reviews` | 4 — the supersession ledger |
+> | `graph_atlas` | 3 | | `lean_statements` | 3 — does the STATEMENT prove anything |
+> | `notebooks` | 3 | | `prose_lean_refs` | 2 — do cited names resolve |
+>
+> **`lean_statements` was split from `lean_substrate` on 2026-08-04** (the latter measured 1,079). The seam
+> is the one `lean_substrate`'s own header argued: the type-thinness classifier is name- and
+> tactic-agnostic *by design*, because `proxy_body_audit` is name-gated and excludes `norm_num`/`decide`
+> bodies, so a theorem whose STATEMENT proves nothing slips past it. Three candidate partitions were
+> scored for shared module-level names before choosing; all three shared none, and this one is the only
+> balanced split. ⚠️ It sets **no line-count threshold** — `citations` (965) and `bundles_readiness` (904)
+> sit in the same band and are not defects.
 >
 > Shared layers: `validation/_registry.py` (result types + registry), `_config.py` (the three runtime
-> flags), `_tex.py` (LaTeX scanning), and `scripts/validate_helpers.py` (the single path anchor). Each has
-> **one owner, reached by attribute at call time** — never imported by value, which is what makes a flag or
-> a monkeypatched path actually reach the check that reads it.
+> flags), `_tex.py` (LaTeX scanning), and `scripts/validate_helpers.py` (the single path anchor, plus
+> `ensure_lean_deps_fresh`). Each has **one owner, reached by attribute at call time** — never imported by
+> value, which is what makes a flag or a monkeypatched path actually reach the check that reads it.
 >
-> **Nothing here changes what any check measures.** Verified against a baseline taken before any Phase-2
-> work: **48 of 49 characterized checks byte-identical**, the sole difference being `graph_integrity`'s
-> node count, which moves by exactly the 13 guard tests the migration added. §6's enforcement reality is
-> therefore unchanged by the split — the semantic fixes are **Phase 3** (ADR-009 §Deferred), still pending,
-> and §7's pattern is still live.
+> **The structural moves changed nothing any check measures**, verified at every boundary against a
+> baseline taken before the move — most recently `CHARACTERIZATION HELD — 49 checks identical` across the
+> `lean_statements` split. **The Phase-3 semantic fixes DID change verdicts, deliberately**, and §6 and §7
+> below are rewritten to the post-fix reality rather than the state this map first recorded.
 
 ---
 
@@ -295,6 +308,19 @@ referenced. Measured at repair: **61 of 64 papers RED, verdict `True`** — whic
 `stage13_status: green` with open blockers. It now reports RED as RED, and `validate.py` fails on it by
 design.
 
+**What actually fails today — measured, not inferred.** A full run on the ADR-009 branch 2026-08-04
+(`docs/validation/reports/validation_20260804T174135Z.json`, 447 s): **57 of 59 passed, 2 failed, 1,053
+warnings.** Both failures are intentional, and **neither is clearable by infrastructure work**:
+
+| red check | why | who clears it |
+|---|---|---|
+| `readiness_submission_gate` | *"0 green / 3 yellow / **61 red** across 64 papers"* — the identical measurement it used to print while returning PASS | the publication workstream, per paper |
+| `bundle_metadata_matches_graph` | **14 of 21 bundles** assert `stage13_status: "green"` with open blockers | the publication workstream. ⚠️ **Not fixable by re-running `bundle_readiness.py`** — `write_metadata_counts` owns `blockers_open`/`advisories_open`/`readiness` and deliberately does **not** write `stage13_status`, which is hand-asserted |
+
+For contrast, the last pre-refactor run (2026-08-01, main-equivalent) reported **58 of 59 passing** on the
+same tree the publication audit found unsubmittable with 80 P0 findings. **The suite going from 58/59 green
+to 57/59 red is the deliverable**, not a regression.
+
 **Claims enforcement, has none.** `docs/AI-DEFECT-DEFENSE-LAYER.md` names
 `scripts/pre_commit_hook.sh` and `scripts/install_pre_commit.sh` as its Tier-1 implementation. **Verified:
 both absent.** Of its nine named Tier-2 checks, one is registered. Pipeline Invariant #16 cites the document
@@ -302,12 +328,23 @@ as canonical — under a filename that is also wrong.
 
 ### Test protection over the gates themselves
 
-| | at first mapping | now |
+| | at first mapping | now (2026-08-04) |
 |---|---|---|
-| Checks with a test that would **fail on a seeded defect** | **5** of 59 | **5** of 59 — unchanged |
+| Checks with a test that would **fail on a seeded defect** | **5** of 59 | **10** of 59 |
 | Checks tested only by `assert result.passed` on the live tree | 11 | 11 |
-| Checks with **no test at all** | 37 | 37 |
+| Checks with **no test at all** | 37 | 32 |
 | Tests asserting the check **count or registration order** | **0** | **25** (three suites) |
+| Tests freezing the **cannot-measure population** | 0 | **3** |
+
+The five that gained a both-directions test are the ones Phase 3 repaired:
+`readiness_submission_gate`, `native_decide_regression`, `count_literals`, `numerical_literals` and
+`paper_latex_compiles` (`tests/test_readiness_submission_gate.py`, `test_native_decide_ratchet.py`,
+`test_always_pass_dispositions.py`). Each ships assertions in both directions and was mutation-verified.
+
+⚠️ **"Named in a test" is not coverage.** All 59 checks appear in
+`test_validate_registry_contract.py`'s frozen list, so a scan for check names reports 59/59 and means
+nothing. The row above counts only tests that would FAIL on a seeded defect — the distinction this
+map's §7 exists to enforce.
 
 A check rewritten to `return CheckResult(passed=True, details=[])` still passes all eleven green-only tests.
 
@@ -331,21 +368,32 @@ Six independent mechanisms, one shape: **absence of measurement rendered as succ
 
 | Mechanism | Reports | Actually |
 |---|---|---|
-| ~~`readiness_submission_gate`~~ | ~~pass~~ | **FIXED 2026-08-03** — hard-fails on any blocked gate; 11 tests, 5 mutations |
-| ~~`paper_latex_compiles`~~ | ~~pass~~ | **FIXED 2026-08-03** — hard-fails on a real compile failure; D3 was failing silently |
+| ~~`readiness_submission_gate`~~ | ~~pass~~ | ✅ **FIXED 2026-08-03** — hard-fails on any blocked gate; 11 tests, 5 mutations |
+| ~~`paper_latex_compiles`~~ | ~~pass~~ | ✅ **FIXED 2026-08-03** — hard-fails on a real compile failure; D3 was failing silently |
+| ~~the population's silent growth~~ | ~~unbounded~~ | ✅ **RATCHETED 2026-08-04** — `tests/test_cannot_measure_baseline.py` freezes the 22 `(check, kind)` pairs that return PASS on cannot-measure and fails in **both** directions: a new one, or a converted one left stale in the baseline. Measured: **60 cannot-measure sites, 35 FAIL / 25 PASS (58% converted)** |
+| ~~split `lean_deps` readers~~ | ~~consistent~~ | ✅ **FIXED 2026-08-04** — five readers ran before `counts_fresh` (29) and three after, so on a wave close they validated *different extractions*. `validate.main()` now takes one snapshot up front (full runs only; `--check` is exempt because the commit gate forbids ExtractDeps) |
 | `check_bundle_source_freshness` | "fresh: all N source paper(s)…" | returns `None` for sourceless keys, compares zero files, **writes `freshness_stale: false`** |
-| `evaluate_all_gates` | `open` | any evaluator exception |
+| `evaluate_all_gates` | `open` | any evaluator exception → `state='open'`, which `paper_aggregate_state` maps to **YELLOW, not RED** (`readiness_gates.py:759-765`; confirmed in source 2026-08-04) |
+| `_blocked_p1_gates_by_paper` | no downgrade | returns `{}` on **any** exception (`bundle_readiness.py:274-299`), silently dropping the P1-gate downgrade that stops a bundle rendering GREEN — through the error path of the function added to fix that very defect |
 | `harness_lock` on contention | "regenerate: succeeded" | wrote derived artifacts from stale input |
 | AI-Defense Tier 1 | documented as implemented | files do not exist |
 
-**One of the six is now closed, and the shape of the fix is the template for the rest:** the verdict must
-be *derived* from what the check measured, never asserted alongside it. In every remaining row the check
-computes the right answer and then discards it.
+**Four of the eight rows are now closed, and the shape of the fix is the template for the rest:** the
+verdict must be *derived* from what the check measured, never asserted alongside it. In every remaining row
+the code computes the right answer and then discards it.
 
-The type system permits it: `CheckResult.passed` is a bare `bool` with no `UNEVALUATED` state. The concept
-exists in three hand-patched sites whose comments state the principle exactly — *"a readiness guard that
-cannot load its own dependency reports 'no disagreement found' — indistinguishable from agreement"* — but
-it does not exist in the types.
+**On the type system — the obvious fix was tried and rejected, with the measurement.** `CheckResult.passed`
+is a bare `bool` with no `UNEVALUATED` state, and adding one was ADR-009 §Deferred item 4. It is
+**DECLINED**: `passed` is D2 contract item 5 — the `--json` payload, `gate_precheck.py` and
+`pre-commit-sync.sh` all read it — so a third state is a contract break, not a local refactor. Converting
+the 25 PASS sites wholesale is likewise declined: five are *optional toolchain absent* (failing a build
+because pdfminer is missing is its own defect), three are advisory by design, eight are the H4 `lean_deps`
+divergence deliberately kept visible, and two are the annotated H1-silent sites.
+
+**So the pattern is now bounded rather than eliminated**, which is the honest outcome: the population is
+frozen and every addition must be a recorded decision. The two rows above that live in the *readiness*
+layer (`evaluate_all_gates`, `_blocked_p1_gates_by_paper`) are outside that ratchet's reach — neither
+returns a `CheckResult`, so the scanner cannot see them — and closing them is publication-workstream work.
 
 ---
 
