@@ -415,8 +415,11 @@ Identified during the read; explicitly **not** part of Phases 0–2.
 > "ADR-009 Phase 3 item 1". Working trackers may order by cost — that is useful — but every cross-reference
 > must carry the §Deferred ordinal.
 >
-> **Status, verified 2026-08-04: 6 of 8 dispositioned** — items **1, 2, 3, 7** fixed; items **5** and
-> **6** DECLINED, each with the measurement that justifies declining. Open: **0** and **4**.
+> **Status, verified 2026-08-04: 7 of 8 dispositioned** — items **1, 2, 3, 7** fixed; item **0** fixed
+> in its first half (one lean_deps snapshot per full run) with its second half (shared graph handle)
+> DECLINED on measurement; items **5** and **6** DECLINED, each with the measurement that justifies
+> declining. **Open: 4** (no `UNEVALUATED` state) — and note its population spans three layers, not just
+> the check modules.
 >
 > **Every open item's scope figure is UNVERIFIED and must be re-measured before it is fixed** (item 7's
 > filing was wrong four independent ways; item 6's "two gates" is already measured at six — see below).
@@ -464,6 +467,55 @@ Identified during the read; explicitly **not** part of Phases 0–2.
    **Not implemented here:** it is a semantic + ordering change (H3) and needs its own review and
    mutation test.
 
+   ---
+   **✅ FIRST HALF FIXED 2026-08-04 — one snapshot per full run.** `validate.main()` now calls
+   `validate_helpers.ensure_lean_deps_fresh()` once, before any check runs, so all eight readers observe
+   the same extraction. **Scope is full runs only, and that is load-bearing:** the obvious fix —
+   refreshing inside `load_lean_deps()` — would have broken the commit gate, which runs
+   `--check native_decide_regression` and states plainly (`scripts/pre-commit-sync.sh:72-74` and its
+   header) that it must NEVER run the 30-minute ExtractDeps. `test_check_run_does_not_refresh` exists to
+   stop that being reintroduced. Cost measured: the hash guard is **46 ms** against **150 ms** for one
+   parse of the 70 MB artifact; when a refresh IS needed the run already paid for it at position 29.
+   8 tests, 4 mutations each run and each caught, clean negative control.
+
+   **⛔ SECOND HALF (shared graph handle) — DECLINED 2026-08-04, with the measurement.**
+
+   *Measured, replacing this ADR's own estimate.* §Context above said `build_graph_json()` runs
+   "≈8 full extraction passes … ~15 s per build". Instrumented on this branch: **5 invocations totalling
+   45.4 s**, at ~9.4 s each, across the four builder checks (`graph_integrity` 1, `bundle_metadata_matches_graph`
+   1, `readiness_verdicts_agree` 2, `readiness_submission_gate` 1). Output is deterministic — two
+   consecutive builds gave identical node and link counts. So the ceiling on this optimisation is
+   ~36 s off a 447 s run: **8%**, not the ~27% the original figure implied.
+
+   *Safety is not the blocker — ordering already permits it.* Every graph builder (33, 41, 43, 44) runs
+   AFTER the last regenerator (`claim_clusters_fresh`, 31), and with the first half in place
+   `lean_deps.json` cannot change mid-run either. Measured: no builder precedes a regenerator.
+
+   *The blocker is that memoizing INSIDE `build_graph_json` is documented-wrong, and the correct pattern
+   already exists one layer up.* `scripts/provenance_dashboard.py` caches the graph at the CALLER, with a
+   `_graph_fingerprint()` over the canonical inputs (~0.5 ms of `stat` calls) plus `_GRAPH_CACHE_LOCK`,
+   and records why the cache cannot go inside the builder: *"build_graph_json isn't thread-safe against
+   itself (it mutates module-scoped `_LEAN_AMBIGUITY_SEEN` and `_LEAN_SHORT_INDEX`)."* Confirmed in
+   source — `_LEAN_SHORT_INDEX` (`build_graph.py:116`), `_TEST_MODULE_ALIASES` (`:131`) and
+   `_LEAN_AMBIGUITY_SEEN` (`:164`) are module-level and `.clear()`ed on every build. A process-lifetime
+   memo would also be wrong for the dashboard (a threaded long-lived server) and for the slow test suite,
+   both of which legitimately rebuild.
+
+   *A correct validate-side handle is a three-module API change.* The callers nest —
+   `bundle_metadata_matches_graph` → `aggregate_by_bundle` → `_blocked_p1_gates_by_paper` →
+   `build_graph_json` — so a cache in `validate.py` cannot intercept them without monkeypatching
+   production code. Doing it properly means threading a graph handle through
+   `bundle_readiness.aggregate_by_bundle`, `_blocked_p1_gates_by_paper` and
+   `readiness_gates.evaluate_all_gates`. **That is a wide signature change across the subsystem the entire
+   readiness layer depends on, to recover 8% of one command's runtime.** Not worth it now.
+
+   *Residue, if runtime ever matters:* adopt the dashboard's pattern — a fingerprinted, lock-guarded
+   handle at the caller, invalidated on input mtime — never a memo inside the builder.
+   ⚠️ **`scripts/build_graph.py` has NOT been read in full by this author.** This decline rests on caller
+   analysis, the measurements above and the dashboard's documented constraint. **Implementing the handle
+   later requires that full read first**, per the standing rule.
+
+   ---
    **(d) The guard that should have caught this is narrower than its name.**
    `tests/test_validate_registry_contract.py::test_regenerators_precede_their_consumers` asserts only
    `counts_fresh` against `_COUNTS_CONSUMERS = ('axiom_count_prose_consistency',

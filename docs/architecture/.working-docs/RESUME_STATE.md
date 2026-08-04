@@ -196,7 +196,7 @@ Governed by [ADR-009](../../adrs/ADR-009-validation-suite-modularization.md) (st
 | **0 — characterization harness** | ✅ COMPLETE. 3 guards + the harness, all mutation-verified |
 | **1 — anchors + helpers, file stays put** | ✅ COMPLETE. `CHARACTERIZATION HELD — 49 checks identical` |
 | **2 — package split** | ✅ COMPLETE 2026-08-03. 11 modules, 0 checks left in `validate.py`. 48/49 byte-identical vs the pre-Phase-2 baseline |
-| **3 — semantic fixes** | **IN PROGRESS — 6 of 8 dispositioned.** §Deferred **1, 2, 3, 7** fixed; **5, 6** DECLINED with measurements; **0, 4** open |
+| **3 — semantic fixes** | **IN PROGRESS — 7 of 8 dispositioned.** §Deferred **1, 2, 3, 7** fixed; **0** fixed (1st half) + DECLINED (2nd half); **5, 6** DECLINED with measurements. **Open: 4** |
 
 ### ⚠️ Numbering: cite ADR-009 §Deferred's own 0–7, always
 
@@ -238,12 +238,23 @@ and are now orphans — their only graph coverage was fabricated. That is the ho
 
 ---
 
-**⬜ Item 0 — memoize `load_lean_deps()` + a shared graph handle. Reviewed TOGETHER.**
-Both change what a check observes once the `*_fresh` checks regenerate artifacts mid-run. Measured
-surface: **8 `load_lean_deps()` call sites** across the check modules and **3 `build_graph_json()` call
-sites** (`readiness_verdicts_agree`, `readiness_submission_gate`, `graph_integrity` — which additionally
-triggers `graph_integrity.run_integrity_checks()`'s own independent extraction). ≈8 full extraction passes
-and ≈20 parses of a 70 MB file per suite run today.
+**✅ Item 0 — DISPOSITIONED 2026-08-04. First half FIXED, second half DECLINED.**
+*It was never a caching question.* Measured: `counts_fresh` at position **29**, with **five** lean_deps
+readers before it (4, 6, 7, 8, 9) and **three** after (54, 55, 57), and nothing refreshing the artifact in
+between. On a wave close the two groups validated different extractions inside one run — including the
+`native_decide_regression` ratchet, which exists to notice trust surface the *current* wave added.
+- **FIXED:** `validate.main()` calls `validate_helpers.ensure_lean_deps_fresh()` once before any check.
+  ⚠️ **Full runs only** — refreshing inside `load_lean_deps()` would fire the 30-min ExtractDeps inside
+  the commit gate, which `pre-commit-sync.sh:72-74` forbids. `test_check_run_does_not_refresh` guards it.
+  Guard cost 46 ms vs 150 ms for one parse. 8 tests, 4 mutations run and caught.
+- **DECLINED (shared graph handle):** measured **5 invocations / 45.4 s** at ~9.4 s each — a ~36 s saving
+  on a 447 s run (**8%**), not the ~27% the ADR's "≈8 passes × 15 s" implied. Ordering already permits
+  caching (no builder precedes a regenerator), but memoizing *inside* `build_graph_json` is
+  documented-wrong: it mutates module-scoped `_LEAN_SHORT_INDEX` / `_TEST_MODULE_ALIASES` /
+  `_LEAN_AMBIGUITY_SEEN`, which is why `provenance_dashboard.py` caches at the CALLER with a fingerprint
+  and a lock. A correct validate-side handle needs signature changes across `bundle_readiness` and
+  `readiness_gates`. Residue: adopt the dashboard's pattern if runtime ever matters.
+  ⚠️ `build_graph.py` NOT read in full — implementing this later requires that read first.
 
 **⬜ Item 4 — no `UNEVALUATED` result state. ⚠️ RE-SHAPED 2026-08-04 by a full read of all 11 modules.**
 The "~20 sites" estimate is in the right ballpark (~11 return `passed=True` from an `except`; the
