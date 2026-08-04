@@ -46,12 +46,15 @@ THE BASELINE IS FROZEN HERE, NOT COMPUTED FROM PRODUCTION — the same reasoning
 `test_validate_public_surface.py`: a test that derives its expectation from the
 thing under test asserts nothing.
 
-⚠️ TWO LAYERS ARE OUT OF THIS TEST'S SCOPE and are recorded in ADR-009 item 4:
-`readiness_gates.evaluate_all_gates` turns an evaluator exception into
-`state='open'`, which `paper_aggregate_state` maps to YELLOW not RED; and
-`bundle_readiness._blocked_p1_gates_by_paper` returns `{}` on any exception,
-silently dropping the P1 downgrade. Both are the same shape one layer up, and
-neither returns a `CheckResult`, so this scanner cannot see them.
+⚠️ TWO LAYERS ARE OUT OF THIS TEST'S SCOPE — neither returns a `CheckResult`, so
+this scanner cannot see them. Both were CLOSED by `5228ed6d` on 2026-08-04:
+`readiness_gates.evaluate_all_gates` now records an evaluator exception as
+`state='blocked'` (it was `'open'`, which `paper_aggregate_state` maps to YELLOW,
+not RED), and `bundle_readiness._blocked_p1_gates_by_paper` now returns `None`
+rather than `{}` so `aggregate_by_bundle` withholds GREEN when the gates could not
+be computed. Their own guard is `tests/test_readiness_cannot_measure.py`.
+(This paragraph described both as live defects until 2026-08-04 — audit finding
+QI-20; the fix landed after this docstring was written.)
 
 MUTATION-VERIFIED 2026-08-04, both directions:
   * add a new `except: return CheckResult(passed=True, ...)` to a check

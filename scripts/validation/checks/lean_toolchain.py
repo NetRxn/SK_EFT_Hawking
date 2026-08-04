@@ -545,7 +545,16 @@ def check_lean_docstring_refs_resolve() -> CheckResult:
     """
     import difflib
 
-    # TODO(semantic-review, ADR-009 Phase 3): absence -> PASS *with a warning* — a third
+    # ⚠️ These were `TODO(semantic-review, ADR-009 Phase 3)` until 2026-08-04
+    # (audit finding QI-15). Phase 3 is COMPLETE and its §Deferred item 4
+    # explicitly DECLINED converting these sites wholesale: 5 are
+    # optional-toolchain-absent, 3 advisory by design, 8 are this `lean_deps`
+    # divergence kept VISIBLE on purpose, 2 are the annotated H1-silent sites.
+    # A TODO pointing at a finished phase reads as unfinished work; the
+    # population is frozen instead by `tests/test_cannot_measure_baseline.py`,
+    # which fails both on a NEW silent PASS and on a converted site left stale
+    # in the baseline.
+    # H4 DIVERGENCE, deliberately preserved (ADR-009 §Deferred item 4 — DECLINED). absence -> PASS *with a warning* — a third
     # distinct policy, alongside the five silent PASSes and two FAILs.
     if not _H.lean_deps_present():
         return CheckResult(passed=True,

@@ -4,13 +4,25 @@
 `readiness_verdicts_agree`, `readiness_submission_gate`, `bundle_consistency`,
 `bundle_registry_consistency`.
 
-⚠️ **`readiness_submission_gate` IS INVERTED AND CANNOT BLOCK.** It fails only when
-ZERO `ReadinessGate` nodes exist, and passes when it measures RED — the marker is in
-its own body (`# WARN not FAIL during rollout`), and the `--strict` path its
-docstring promises was never built. This is why 14 bundles sat at
-`stage13_status: green` with open blockers. It is ADR-009 §Deferred item 1 and the
-highest-cost item in Phase 3. **The move changes nothing about it**; do not "fix" it
-during a mechanical phase.
+✅ **`readiness_submission_gate` HARD-FAILS. Repaired 2026-08-03 (ADR-009 §Deferred
+item 2).** It is one of the two checks `validate.py` is deliberately RED on, and
+that is the instrument working.
+
+⚠️ This header asserted the OPPOSITE — *"IS INVERTED AND CANNOT BLOCK … do not 'fix'
+it during a mechanical phase"* — for a day after the repair landed, because the
+header was written during Phase 2 and the Phase-3 fix did not come back to it
+(audit finding QI-12). A module header that tells a reader a working guard is
+broken is the same defect class as a guard that cannot fire: both leave the
+reader's model wrong in the direction of false confidence. It also cited the wrong
+ordinal — the inversion is §Deferred item **2**; item 1 is the `native_decide`
+ratchet (QI-16).
+
+For the record, what was wrong before the repair: it failed only when ZERO
+`ReadinessGate` nodes existed and PASSED when it measured RED, marked solely by an
+inline `# WARN not FAIL during rollout`, with a `--strict` path its docstring
+promised and its body never referenced. Measured at repair: **61 of 64 papers RED,
+verdict `True`** — which is why 14 bundles sat at `stage13_status: green` with open
+blockers.
 
 `readiness_verdicts_agree` is the cross-check that exists BECAUSE of that: two
 subsystems compute a per-bundle verdict from different inputs, and nothing compared
@@ -521,7 +533,7 @@ def check_readiness_submission_gate() -> CheckResult:
     priority-2 gate is `blocked`. Priority-2 `needs-recheck`/`open` are advisory
     warnings and do not fail the check.
 
-    ⚠️ **THIS CHECK WAS INVERTED UNTIL 2026-08-03 (ADR-009 §Deferred item 1).** It
+    ⚠️ **THIS CHECK WAS INVERTED UNTIL 2026-08-03 (ADR-009 §Deferred item 2).** It
     classified papers into green/yellow/red exactly as it does now, emitted a
     per-paper detail saying "N blocked: ...", and then returned `passed=True`
     unconditionally — with `# WARN not FAIL during rollout` as the only marker. So

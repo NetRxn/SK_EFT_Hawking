@@ -294,7 +294,16 @@ def check_formula_grounding() -> CheckResult:
     a stale-name drift backlog the gate surfaces (FormulaRefSweep follow-up)."""
     from src.core.constants import PLACEHOLDER_LEAN_NAMES
     formulas_path = _H.SRC_DIR / "core" / "formulas.py"
-    # TODO(semantic-review, ADR-009 Phase 3): absence -> PASS (see the note at
+    # ⚠️ These were `TODO(semantic-review, ADR-009 Phase 3)` until 2026-08-04
+    # (audit finding QI-15). Phase 3 is COMPLETE and its §Deferred item 4
+    # explicitly DECLINED converting these sites wholesale: 5 are
+    # optional-toolchain-absent, 3 advisory by design, 8 are this `lean_deps`
+    # divergence kept VISIBLE on purpose, 2 are the annotated H1-silent sites.
+    # A TODO pointing at a finished phase reads as unfinished work; the
+    # population is frozen instead by `tests/test_cannot_measure_baseline.py`,
+    # which fails both on a NEW silent PASS and on a converted site left stale
+    # in the baseline.
+    # H4 DIVERGENCE, deliberately preserved (ADR-009 §Deferred item 4 — DECLINED). absence -> PASS (see the note at
     # tracked_hypothesis_ledger; the eight loaders disagree).
     if not formulas_path.exists() or not _H.lean_deps_present():
         return CheckResult(passed=True, details=[Detail("inputs", True, "formulas.py / lean_deps.json absent")])
@@ -451,7 +460,7 @@ def check_vacuous_statement_audit() -> CheckResult:
         from src.core.constants import VACUOUS_STATEMENT_BASELINE as BASELINE
     except ImportError:
         BASELINE = frozenset()
-    # TODO(semantic-review, ADR-009 Phase 3): absence -> PASS (loaders disagree).
+    # H4 DIVERGENCE, deliberately preserved (ADR-009 §Deferred item 4 — DECLINED). absence -> PASS (loaders disagree).
     if not _H.lean_deps_present():
         return CheckResult(passed=True, details=[Detail("inputs", True, "lean_deps.json absent")])
 
@@ -534,7 +543,7 @@ def check_nogo_substrate_integrity() -> CheckResult:
     KERNEL = {"propext", "Classical.choice", "Quot.sound"}
     _ND = re.compile(r"\._native\.native_decide")
 
-    # TODO(semantic-review, ADR-009 Phase 3): absence -> PASS (loaders disagree).
+    # H4 DIVERGENCE, deliberately preserved (ADR-009 §Deferred item 4 — DECLINED). absence -> PASS (loaders disagree).
     if not _H.lean_deps_present():
         return CheckResult(passed=True, details=[Detail("inputs", True, "lean_deps.json absent")])
     by_name = {d.get("name", ""): d for d in _H.load_lean_deps()}

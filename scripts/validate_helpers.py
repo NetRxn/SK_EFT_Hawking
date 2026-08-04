@@ -30,24 +30,31 @@ verdict>`. The divergence stays visible and is marked for the Phase-3 semantic
 review, rather than being erased by a refactor nobody reviewed as a behaviour
 change.
 
-NO MEMOIZATION — this is load-bearing, not an oversight
--------------------------------------------------------
-`load_lean_deps()` re-reads and re-parses the 70 MB file on every call, which is
-what the eight inline sites do today. Caching it across a run would be a
-BEHAVIOUR CHANGE, not an optimisation:
+NO MEMOIZATION — still true, but NOT for the reason first written here
+----------------------------------------------------------------------
+`load_lean_deps()` re-reads and re-parses the 70 MB file on every call, and it
+stays that way. It reads the file DIRECTLY rather than through
+`extract_lean_deps.load_lean_deps()`, so it never triggers that function's
+hash-guarded refresh — deliberate, and preserved.
 
-`counts_fresh` (registration position ~30) shells out to `update_counts.py`,
-which calls `extract_lean_deps.load_lean_deps()` and can REGENERATE
-`lean/lean_deps.json` mid-run. The readers at positions ~55/56/58
-(`prose_theorem_reference_coverage`, `theorem_name_embedded_citations`,
-`lean_docstring_refs_resolve`) currently observe the regenerated file; readers at
-~5/7/8/9 observed the pre-regeneration one. A cache would freeze whichever was
-read first and silently change what the later checks validate against.
+⚠️ **This section described the pre-fix world as current until 2026-08-04 (audit
+finding QI-18).** It said the readers at ~55/56/58 "currently observe the
+regenerated file" while those at ~5/7/8/9 "observed the pre-regeneration one", and
+concluded that caching was a Phase-3 candidate. That divergence was CLOSED by
+ADR-009 §Deferred item 0: `validate.main()` now calls
+:func:`ensure_lean_deps_fresh` once, before any check runs, so all eight readers
+observe one snapshot. The exact positions are measured in that function's own
+docstring, sixty lines below — and this section contradicted it inside the same
+file, which is precisely the shape a reader cannot resolve without going to the
+code.
 
-Note also that these sites read the file DIRECTLY rather than through
-`extract_lean_deps.load_lean_deps()`, so they never trigger the hash-guarded
-refresh. That is preserved here. Caching is a Phase-3 candidate, reviewed as
-semantics, together with the shared-graph-handle item.
+What remains true: a cache here would still be a behaviour change rather than an
+optimisation, because `counts_fresh` shells out to `update_counts.py`, which *can*
+rewrite `lean/lean_deps.json` mid-run. With the up-front refresh in place the hash
+guard makes that a no-op in practice, but the ordering hazard is structural and the
+cache would freeze whichever state was read first. The remaining performance item
+is the shared GRAPH handle, which ADR-009 §Deferred item 0 **DECLINED** on
+measurement (8% of one command's runtime against a three-module signature change).
 """
 from __future__ import annotations
 

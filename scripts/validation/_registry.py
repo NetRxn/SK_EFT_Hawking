@@ -23,8 +23,13 @@ from the suite, exactly like `validation._config`.
 
 RE-EXPORT, DO NOT COPY
 ----------------------
-`validate` re-exports these names (ADR-009 D2 item 8 — 33 names are imported from
-`validate` by nine test files and one production script). For `_CHECKS` that
+`validate` re-exports these names (ADR-009 D2 item 8). The authoritative list is
+`EXPECTED_SURFACE` in `tests/test_validate_public_surface.py` — **54 names**, not
+the "33" this docstring claimed until 2026-08-04 (audit QI-17). That figure came
+from an AST scan that filtered on `module == "validate"` while
+`tests/test_substrate_integrity_gates.py` still spelled its imports
+`scripts.validate`, so the whole file and every name it reached were invisible.
+Do not restate the size here; point at the frozen list. For `_CHECKS` that
 re-export is safe **only because it binds the same list object**: registration
 appends to it and `_apply_canonical_order()` sorts it in place, so both bindings
 observe every mutation.
@@ -54,10 +59,16 @@ class Detail:
 class CheckResult:
     """Result of one top-level check.
 
-    NOTE `passed` is a bare `bool` with no third state, so ~20 sites across the
-    suite encode "could not measure" as PASS. That is a known defect with its own
-    review item (ADR-009 §Deferred item 4, `UNEVALUATED`); it is deliberately NOT
-    changed by the mechanical move.
+    NOTE `passed` is a bare `bool` with no third state. Measured 2026-08-04 across
+    the 59 checks: **60 cannot-measure return sites — 35 FAIL and 25 PASS**, the
+    latter collapsing to **22 (check, kind) pairs**. (This docstring said "~20
+    sites" — audit QI-17; the figure is now computed, not estimated.)
+
+    ADR-009 §Deferred item 4 **DECLINED** adding an `UNEVALUATED` state: `passed`
+    is D2 contract item 5, read by the `--json` payload, `gate_precheck.py` and
+    `pre-commit-sync.sh`, so a third state is a contract break rather than a local
+    refactor. The population is instead FROZEN by
+    `tests/test_cannot_measure_baseline.py`, which fails in both directions.
     """
     passed: bool
     details: List[Detail] = field(default_factory=list)

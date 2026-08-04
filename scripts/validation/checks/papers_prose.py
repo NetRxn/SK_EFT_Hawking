@@ -14,11 +14,19 @@ asks *do the names it cites resolve in the Lean library*. They shared exactly on
 3-line helper, `_line_of`, which now lives in `validation/_tex.py` along with
 `_strip_tex_comments` — below both, rather than imported across a sibling boundary.
 
-⚠️ `paper_latex_compiles` and `paper_toolchain_pin_drift` are two of the eight
-ALWAYS-PASS checks (ADR-009 §Deferred item 3). `paper_latex_compiles` returns
-`passed=True` even after a real compile failure, and is skipped entirely unless
-`_cfg.FORCE_LATEX`. Both are dispositioned in Phase 3; the move changes nothing
-about them.
+`paper_latex_compiles` and `paper_toolchain_pin_drift` were two of the eight
+ALWAYS-PASS checks; ADR-009 §Deferred item 3 dispositioned them in OPPOSITE
+directions and this header must not blur them:
+
+* `paper_latex_compiles` was a DEFECT and now **hard-fails** on a fatal compile
+  error. It is still slow-gated behind `_cfg.FORCE_LATEX`, so a default full run
+  skips it — skipped is not the same as advisory.
+* `paper_toolchain_pin_drift` is **advisory by design** and stays that way: a
+  stale pin in a draft is a publication decision for Stage 13, not a defect.
+
+⚠️ This header said both "return `passed=True` even after a real compile failure"
+until 2026-08-04 (audit finding QI-13), which was false for the first and made the
+two look like one disposition.
 
 `paper_toolchain_pin_drift` was UNASSIGNED in the migration table and is placed
 here deliberately: it scans paper drafts for stale version literals.
@@ -195,9 +203,14 @@ def check_numerical_literals() -> CheckResult:
 
     Counterpart to CHECK 17 count_literals. Values with physical units
     should come from auto-generated tables/*.tex files, not be
-    hand-coded in the body. WARN-level during retrofit; flip to FAIL
-    once every paper uses `\\input{tables/...}` for its numerical
-    content.
+    hand-coded in the body.
+
+    RATCHET, not advisory (ADR-009 §Deferred item **3**, 2026-08-03). The debt is
+    frozen at ``NUMERICAL_LITERAL_CEILING`` and any NEW inline literal FAILS.
+    ⚠️ This docstring said "WARN-level during retrofit; flip to FAIL once every
+    paper uses \\input{tables/...}" until 2026-08-04 (audit finding QI-14) — a
+    promise the check could no longer keep, since the corpus grew from 15 papers
+    to 64 and the target receded faster than it was approached.
     """
     if not _H.PAPERS_DIR.exists():
         return CheckResult(passed=True, details=[
@@ -253,7 +266,7 @@ def check_numerical_literals() -> CheckResult:
             warning=(len(findings) > 0),
         ))
 
-    # ── RATCHET (ADR-009 Phase 3 item 2) — reasoning in check_count_literals.
+    # ── RATCHET (ADR-009 §Deferred item 3) — reasoning in check_count_literals.
     from src.core.constants import NUMERICAL_LITERAL_CEILING as _CEIL
     over = total_findings > _CEIL
     details.insert(0, Detail(
@@ -283,8 +296,15 @@ def check_count_literals() -> CheckResult:
     (\\totaltheorems, \\leanmodules, \\sorrycount, etc.) so stale counts
     can't ship. This check greps every paper_draft.tex for patterns like
     "N theorems", "N Lean modules", etc., and WARNs when found outside
-    of an \\input context. WARN-level during the retrofit period; will
-    escalate to FAIL once all 15 papers use macros.
+    of an \\input context.
+
+    RATCHET, not advisory (ADR-009 §Deferred item **3**, 2026-08-03). The debt is
+    frozen at ``COUNT_LITERAL_CEILING`` and any NEW count literal FAILS.
+    ⚠️ This docstring said it "will escalate to FAIL once all 15 papers use macros"
+    until 2026-08-04 (audit finding QI-14). That condition was written when the
+    corpus HAD 15 papers; it now has 64, so the escalation could never trigger —
+    the check promised a future it had made unreachable. Freezing the debt keeps
+    the promise today rather than deferring it again.
     """
     if not _H.PAPERS_DIR.exists():
         return CheckResult(passed=True, details=[
@@ -347,7 +367,7 @@ def check_count_literals() -> CheckResult:
             f"{status_prefix}{len(findings)} count-literal matches: {sample}{suffix}",
             warning=True,
         ))
-    # ── RATCHET (ADR-009 Phase 3 item 2) ────────────────────────────────────
+    # ── RATCHET (ADR-009 §Deferred item 3) ──────────────────────────────────
     # Was `passed=True` under "WARN-only until retrofit complete". The retrofit's
     # condition — "once all 15 papers use macros" — was written when the corpus had
     # 15 papers; it now has 64, so the target receded faster than it was approached
@@ -375,11 +395,11 @@ def check_count_literals() -> CheckResult:
 
 
 @register_check("paper_latex_compiles",
-                "Bundle drafts compile under pdflatex (advisory; slow — "
-                "pass --force-latex or --check paper_latex_compiles)")
+                "Bundle drafts compile under pdflatex (HARD-FAILS on a fatal "
+                "error; slow — pass --force-latex or --check paper_latex_compiles)")
 def check_paper_latex_compiles() -> CheckResult:
-    """Advisory, slow-gated: actually compile each bundle draft with
-    ``pdflatex`` and flag fatal (``! ``-marked) breakage.
+    """Slow-gated compile gate: actually compile each bundle draft with
+    ``pdflatex`` and HARD-FAIL on fatal (``! ``-marked) breakage.
 
     Why this exists: the 2026-06-10 paper15 incident — 108 fatal LaTeX
     errors injected by unescaped ``&``/``_`` and an executed ``\\input{}``
@@ -392,10 +412,13 @@ def check_paper_latex_compiles() -> CheckResult:
       - **Slow-gated**: SKIPPED in the default full run (pdflatex × all
         bundles is minutes). Runs only when ``--force-latex`` is passed or
         ``paper_latex_compiles`` is the explicitly selected ``--check``.
-      - **Advisory**: always ``passed=True``. A failing compile surfaces as
-        a ⚠ WARN, never a hard suite failure — transient toolchain/package
-        gaps must not block development. A persistent WARN is the signal to
-        investigate.
+      - **Blocking**: a fatal compile error FAILS the check. Repaired
+        2026-08-03 (ADR-009 §Deferred item **3**); it previously computed the
+        verdict and discarded it. Transient toolchain gaps cannot reach this
+        branch — pdflatex-missing and the slow-gate skip both return above —
+        so what remains is a draft a working pdflatex could not compile.
+        ⚠️ This bullet read "**Advisory**: always ``passed=True``" for a day
+        after the repair (audit finding QI-13).
 
     One non-stop pass per draft (enough to surface fatal breakage; full
     reference/citation resolution is out of scope for a build gate).
@@ -466,7 +489,7 @@ def check_paper_latex_compiles() -> CheckResult:
             f"compile:{code}", False,
             f"{code}: {cnt} — first: {first}"))
 
-    # ── FIXED 2026-08-03 (ADR-009 Phase 3 item 2) ───────────────────────────────
+    # ── FIXED 2026-08-03 (ADR-009 §Deferred item 3) ─────────────────────────────
     # This returned `passed=True` unconditionally, under "Advisory: never block the
     # suite on a compile WARN". It computed `all_pass` from the failure list and then
     # DISCARDED it — the QA/QI map §7 shape exactly: the check works out the right

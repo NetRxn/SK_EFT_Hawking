@@ -54,8 +54,15 @@ double-counted one multi-line `@register_check` decorator. Caught before it reac
 
 Every `validate.py:NNNN` citation in the map and in ADR-009 is anchored to the file **as read at 7,778
 lines**. The `stage13_status` guard shipped 2026-08-03 inserted 35 lines at `:4355`, so the live file is
-**7,813** and citations after that point carry a **+35 offset**. ADR-009 documents this inline; Phase 1
-re-anchors mechanically and deletes the note.
+**7,813** at the time.
+
+⚠️ **The re-anchor never happened, and it is now MOOT** (audit finding QI-26). This paragraph ended
+"Phase 1 re-anchors mechanically and deletes the note". Phase 1 did not, and Phase 2 then moved all 59
+check bodies out of `validate.py`, which is now ~740 lines of framework — so every citation to a CHECK
+BODY is dangling by construction. **Locate the check by NAME in its `validation/checks/*.py` module.**
+Citations to the framework (registry, `run_checks`, reporting, CLI, `main`) still resolve, at new line
+numbers. Silently renumbering ~25 citations across a module boundary was judged a larger correctness risk
+than stating plainly that they are historical; ADR-009's line-citation preamble carries the same note.
 
 ---
 

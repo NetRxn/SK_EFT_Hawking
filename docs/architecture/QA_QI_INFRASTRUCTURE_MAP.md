@@ -11,17 +11,20 @@ Where a reconnaissance claim did not survive verification it is marked and corre
 **2026-08-04 re-basis.** Read in full on the ADR-009 branch: `validate.py` (post-split), all **twelve**
 `validation/checks/*.py`, `validate_helpers.py`, `extract_lean_deps.py`, `readiness_gates.py`,
 `bundle_readiness.py`, `gate_precheck.py` and `pre-commit-sync.sh`. Every figure below is either measured
-on that date or explicitly marked historical. `build_graph.py` is **not** among them — claims about it
-here rest on caller analysis and its own in-source comments, and are marked where they appear.
+on that date or explicitly marked historical.
 
-> 🔴 **PARTIALLY SUPERSEDED — read the audit alongside this map.** A full direct read of the whole
-> QA/QI surface on 2026-08-04 found items this map records incorrectly, notably in **§4** (the
-> `evaluate_all_gates` note) and **§7** (both readiness-layer rows, and "four of the eight rows are
-> now closed" — it is **six**; both were closed by `5228ed6d` after this map was written). Each is
-> tracked by finding id in
-> **[`docs/audits/2026-08-04-qa-qi-infrastructure/README.md`](../audits/2026-08-04-qa-qi-infrastructure/README.md)**
-> (QI-22 for this file). Correct this map as those items land; do not quote a figure below without
-> checking the tracker first.
+✅ **`scripts/build_graph.py` (4,207 lines) has NOW been read in full** — later the same day, for the
+QA/QI infrastructure audit. This note previously flagged it as the one unread dependency whose claims
+rested on caller analysis; that caveat is discharged. The read immediately found QI-01 (two
+non-recursive `*.lean` globs, one of them starving P1 Gate 5) and QI-03 (three divergent `Lean:`-ref
+parsers), neither of which caller analysis could have surfaced.
+
+> 🟡 **CORRECTED 2026-08-04 against a full read of the whole QA/QI surface** — including
+> `scripts/build_graph.py`, which the re-basis note above records as NOT read and which has since been
+> read in full. §4, §7 and §1's mermaid carried claims that a later commit had already invalidated
+> (audit finding QI-22); each is now marked inline. **A live remediation tracker governs this file:**
+> **[`docs/audits/2026-08-04-qa-qi-infrastructure/README.md`](../audits/2026-08-04-qa-qi-infrastructure/README.md)**.
+> Check it before quoting any figure below — this map is a snapshot, the tracker is the state.
 
 **Companion documents:** [ADR-009](../adrs/ADR-009-validation-suite-modularization.md) (the validation-suite
 decision) · [QA/QI infrastructure audit 2026-08-04](../audits/2026-08-04-qa-qi-infrastructure/README.md)
@@ -57,7 +60,7 @@ flowchart TB
 
     subgraph V["③ VALIDATION — mechanical"]
         VAL["validate.py — framework<br/>registry · order · CLI · re-exports"]
-        VCK["validation/checks/*.py<br/>59 checks · 11 modules"]
+        VCK["validation/checks/*.py<br/>59 checks · 12 modules"]
         GI["graph_integrity.py"]
         RG["readiness_gates.py<br/>11 gates × N papers"]
         BR["bundle_readiness.py<br/>→ heatmap + metadata counts"]
@@ -235,9 +238,12 @@ A worked example of the standing lesson in §9: *the named blast radius is a cla
 | 10 | FirstClaimVerification | 2 | ❌ | counts `first-claim` tags; the ledger node type **does not exist** |
 | 11 | FixPropagation | 2→**1** | ✅ | open blocking findings; **self-promotes to P1 when blocking** |
 
-**`evaluate_all_gates` converts any evaluator exception into `state='open'` — never `blocked`.** A crashing
-gate is indistinguishable from a clean one. `READINESS_GATES.md` documents gates 9 and 10 as blocking; they
-cannot.
+✅ **`evaluate_all_gates` now records an evaluator exception as `state='blocked'`** (fixed `5228ed6d`,
+2026-08-04). It previously used `state='open'`, which `paper_aggregate_state` maps to YELLOW rather than
+RED — so a gate that CRASHED was indistinguishable from a mild advisory. Measured before the change:
+0 exceptions across 704 evaluations, so it is a no-op today and guards a future evaluator bug.
+⚠️ This paragraph asserted the defect as live until 2026-08-04 (audit finding QI-22).
+`READINESS_GATES.md` still documents gates 9 and 10 as blocking; they cannot.
 
 ---
 
@@ -383,14 +389,16 @@ Six independent mechanisms, one shape: **absence of measurement rendered as succ
 | ~~the population's silent growth~~ | ~~unbounded~~ | ✅ **RATCHETED 2026-08-04** — `tests/test_cannot_measure_baseline.py` freezes the 22 `(check, kind)` pairs that return PASS on cannot-measure and fails in **both** directions: a new one, or a converted one left stale in the baseline. Measured: **60 cannot-measure sites, 35 FAIL / 25 PASS (58% converted)** |
 | ~~split `lean_deps` readers~~ | ~~consistent~~ | ✅ **FIXED 2026-08-04** — five readers ran before `counts_fresh` (29) and three after, so on a wave close they validated *different extractions*. `validate.main()` now takes one snapshot up front (full runs only; `--check` is exempt because the commit gate forbids ExtractDeps) |
 | `check_bundle_source_freshness` | "fresh: all N source paper(s)…" | returns `None` for sourceless keys, compares zero files, **writes `freshness_stale: false`** |
-| `evaluate_all_gates` | `open` | any evaluator exception → `state='open'`, which `paper_aggregate_state` maps to **YELLOW, not RED** (`readiness_gates.py:759-765`; confirmed in source 2026-08-04) |
-| `_blocked_p1_gates_by_paper` | no downgrade | returns `{}` on **any** exception (`bundle_readiness.py:274-299`), silently dropping the P1-gate downgrade that stops a bundle rendering GREEN — through the error path of the function added to fix that very defect |
+| ~~`evaluate_all_gates`~~ | ~~`open`~~ | ✅ **FIXED 2026-08-04** (`5228ed6d`) — an evaluator exception now yields `state='blocked'`, not `open`-which-aggregates-to-YELLOW. 0 exceptions across 704 evaluations at the fix, so it guards a future bug rather than a live one |
+| ~~`_blocked_p1_gates_by_paper`~~ | ~~no downgrade~~ | ✅ **FIXED 2026-08-04** (`5228ed6d`) — returns `None` rather than `{}` when the gates cannot be computed, and `aggregate_by_bundle` now withholds GREEN in that case. `{}` and "could not compute" no longer share a value |
 | `harness_lock` on contention | "regenerate: succeeded" | wrote derived artifacts from stale input |
 | AI-Defense Tier 1 | documented as implemented | files do not exist |
 
-**Four of the eight rows are now closed, and the shape of the fix is the template for the rest:** the
+**Six of the eight rows are now closed, and the shape of the fix is the template for the rest:** the
 verdict must be *derived* from what the check measured, never asserted alongside it. In every remaining row
 the code computes the right answer and then discards it.
+⚠️ This read "Four" until 2026-08-04 (audit finding QI-22) — the two readiness-layer rows were closed by
+`5228ed6d` after this section was written.
 
 **On the type system — the obvious fix was tried and rejected, with the measurement.** `CheckResult.passed`
 is a bare `bool` with no `UNEVALUATED` state, and adding one was ADR-009 §Deferred item 4. It is
@@ -401,9 +409,14 @@ because pdfminer is missing is its own defect), three are advisory by design, ei
 divergence deliberately kept visible, and two are the annotated H1-silent sites.
 
 **So the pattern is now bounded rather than eliminated**, which is the honest outcome: the population is
-frozen and every addition must be a recorded decision. The two rows above that live in the *readiness*
-layer (`evaluate_all_gates`, `_blocked_p1_gates_by_paper`) are outside that ratchet's reach — neither
-returns a `CheckResult`, so the scanner cannot see them — and closing them is publication-workstream work.
+frozen and every addition must be a recorded decision. The two rows in the *readiness* layer
+(`evaluate_all_gates`, `_blocked_p1_gates_by_paper`) remain outside that ratchet's reach — neither returns
+a `CheckResult`, so the scanner cannot see them — but both are now **fixed**, with
+`tests/test_readiness_cannot_measure.py` as their guard.
+⚠️ This paragraph said closing them "is publication-workstream work" until 2026-08-04. That disposition
+was wrong, and the commit that closed them says so: they are code defects with no dependency on any roster
+or paper decision. "Publication workstream" had become a disposal chute for decisions not yet made
+(audit finding QI-22).
 
 ---
 

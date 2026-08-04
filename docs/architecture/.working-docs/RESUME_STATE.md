@@ -5,13 +5,14 @@ without re-deriving it. Read this first, then the linked documents.
 
 > ## ✅ ADR-009 IS DELIVERED — ⚠️ AND **NOT MERGED** (2026-08-04)
 > Phases 0–3 complete, **all 8 §Deferred items dispositioned**, ADR-009 **ACCEPTED**. The branch is
-> **`infra/adr-009-validation-modularization`, 51 ahead of `main` and 0 behind — NOT merged.**
+> **`infra/adr-009-validation-modularization`, 56 ahead of `main` and 0 behind — NOT merged.**
 > ⚠️ *This block claimed "merged to `main`" until 2026-08-04. That was false and is corrected here;
 > verify with `git merge-base --is-ancestor HEAD main` before repeating any merge claim.*
 > Verified on the branch HEAD: **59 checks** in **12** modules under `scripts/validation/checks/`,
 > `validate.py` registers **0**; `--list` 59; unknown `--check` exits 2; `BUNDLE_CODES` 21; largest
-> module 965 lines; fast suite **5055 passed / 5 skipped / 0 failed**; `validate.py` **57/59 with
+> module 965 lines; fast suite **5080 passed / 5 skipped / 0 failed**; `validate.py` **57/59 with
 > 2 intentional reds**. Characterization **HELD** at every structural boundary.
+> ⚠️ These figures move as remediation lands — re-measure, do not quote.
 >
 > **Both red checks belong to the publication workstream.** The two readiness-layer cannot-measure
 > sites (`evaluate_all_gates`, `_blocked_p1_gates_by_paper`) were **CLOSED by `5228ed6d`**, after the
@@ -148,7 +149,7 @@ result was merely CONSISTENT with it. A verification that cannot distinguish the
 launders the claim instead of testing it.)*
 
 **`infra/adr-009-validation-modularization`** — ALL infrastructure work, off main until every phase is done
-(operator ruling 2026-08-03). **35 commits ahead of main, 0 behind** (34 before this file's own commit).
+(operator ruling 2026-08-03). **56 commits ahead of main, 0 behind** — re-count with `git rev-list --count main..HEAD` rather than trusting this number; it was "35" and stale by 20 within a day (audit finding QI-24).
 Recent:
 
 ```
@@ -182,7 +183,7 @@ characterization baseline after any unstash.**
 | frozen external surface | **54** | `EXPECTED_SURFACE` in `tests/test_validate_public_surface.py` |
 | characterization quarantine | **10** → 59 − 10 = **49** characterized | `QUARANTINE` in `tests/validate_characterization.py` |
 | bundle roster | **21** | `scripts/bundle_registry.py` → `BUNDLE_CODES` |
-| fast suite | **5039 passed, 5 skipped, 0 failed** in 166 s | `uv run python -m pytest tests/ -q` |
+| fast suite | **5080 passed, 5 skipped, 0 failed** in ~195 s | `uv run python -m pytest tests/ -q` — was 5039, then 5055, then 5080 as guards landed; re-run, do not quote |
 
 ⚠️ **Two git gotchas learned here.**
 1. The pre-commit hook runs `sync.py --fast` and **restages** `SK_EFT_Hawking_Inventory_Index.md`,
@@ -202,7 +203,7 @@ portfolio re-assessment (ADR-010). ADR-008 onboarding third, deferred by decisio
 
 | Workstream | Deliverable | State |
 |---|---|---|
-| **W1 — ADR-009** | validation-suite modularization + the mutation-test obligation | **ACTIVE.** Phases 0–2 complete; Phase 3 at **4 of 8** |
+| **W1 — ADR-009** | validation-suite modularization + the mutation-test obligation | ✅ **DELIVERED.** Phases 0–3 complete, all 8 §Deferred dispositioned. ⚠️ Post-delivery audit found 27 further items — see the tracker |
 | **W2 — ADR-010** | portfolio purpose / distribution / late-phase absorption — **a DOCUMENT** | **CHARTER AUTHORED 2026-08-04**, analysis pending W1 |
 | W3 — ADR-008 | Claude-Code onboarding | DEFERRED. `tangential-items.md` T2 |
 
@@ -216,7 +217,7 @@ it rather than re-deriving them here.** No manuscript edits and no `PAPER_STRATE
 
 ## Workstream 1 — ADR-009 (ACTIVE)
 
-Governed by [ADR-009](../../adrs/ADR-009-validation-suite-modularization.md) (status: PROPOSED).
+Governed by [ADR-009](../../adrs/ADR-009-validation-suite-modularization.md) (status: **ACCEPTED** 2026-08-04; this line said PROPOSED — audit finding QI-24).
 
 | Phase | State |
 |---|---|
@@ -340,21 +341,21 @@ partition.
 > alternative is a long tail of re-discovering the same facts. Budget the read; do not start without it.
 
 **Read in full on this branch, 2026-08-04:**
-`scripts/validate.py` (720) + all 11 `scripts/validation/checks/*.py` (7,934) = **8,654**, plus
-`scripts/readiness_gates.py` (781), `scripts/bundle_readiness.py` (783), `scripts/gate_precheck.py` (62)
-and `tests/test_validate_public_surface.py` (448) — **10,728 lines total.**
+`scripts/validate.py` + all **12** `scripts/validation/checks/*.py`, plus `readiness_gates.py`,
+`bundle_readiness.py`, `gate_precheck.py` and `tests/test_validate_public_surface.py`.
 
-**NOT yet read** (read before touching): `scripts/build_graph.py` (~4,200 — **item 0 modifies it**),
-`scripts/validate_helpers.py` (137 — item 0), `scripts/graph_integrity.py`,
-`tests/validate_characterization.py` (grepped only).
+✅ **THE "NOT yet read" LIST IS NOW EMPTY** (2026-08-04, audit finding QI-24). The QA/QI infrastructure
+audit read the remainder in full — **`scripts/build_graph.py` (4,207)**, `validate_helpers.py`,
+`graph_integrity.py` and `tests/validate_characterization.py` — ~17,700 lines across the whole surface.
+`build_graph.py` was the one ADR-009 §Deferred item 0 named as a precondition for the shared-graph-handle
+work; that precondition is discharged, and reading it immediately surfaced QI-01 and QI-03, neither of
+which caller analysis had found.
 
-Per-check-module sizes:
-`lean_substrate` 1,079 · `citations` 965 · `bundles_readiness` 904 · `papers_prose` 862 ·
-`prose_lean_refs` 777 · `physics` 714 · `freshness` 688 · `lean_toolchain` 627 · `graph_atlas` 512 ·
-`reviews` 465 · `notebooks` 341.
-
-⚠️ **`lean_substrate.py` at 1,079 lines fails D1's own "readable in one pass" criterion.** Split it on a
-seam where the halves share no helpers, or record in the ADR why no such seam exists.
+Per-module sizes drift on every commit — read them with `wc -l scripts/validation/checks/*.py` rather
+than from this file. ✅ The `lean_substrate` split this section demanded was DONE (`b896cd6d`): the
+type-thinness classifier and its three consumers moved to `lean_statements`, and `citations` is now the
+largest module. (This paragraph still listed `lean_substrate` at 1,079 with a ⚠️ to split it — audit
+finding QI-24.)
 
 ⚠️ **Do not assert what a check does from its `--list` description or its docstring.** That error was made
 once in this workstream and caught by the operator: a claim that "no check can validate a hand-typed
@@ -516,8 +517,12 @@ publication schedule is the flexible variable; claim strength is not.
 
 ## Live state / gotchas
 
-- **The suite is RED on the BRANCH, by design — not on `main`.** `main` carries no infra code at all
-  (verified above), so nothing there fires. On `infra/adr-009-…`, `readiness_submission_gate` (item 2)
+- **The suite is RED on the BRANCH, by design — not on `main`.** ⚠️ The reason given here was "`main`
+  carries no infra code at all", which is **FALSE** and is corrected in the Git-layout section above:
+  `main` carries the entire working validation suite with all 59 checks. What `main` lacks is the
+  `scripts/validation/` package and the `stage13_status` guard (zero occurrences there). The checks
+  themselves run on `main` today — three of them simply cannot fail there, which is the defect this
+  branch repairs. (Audit finding QI-24: the false line survived here after being corrected 40 lines up.) On `infra/adr-009-…`, `readiness_submission_gate` (item 2)
   and the `stage13_status` guard inside `bundle_metadata_matches_graph` both fail; `paper_latex_compiles`
   fails on D3's 2 fatal LaTeX errors. The operator has confirmed they **expect** gates and bundles to go
   red as remediation applies. Suppressing any of them is forbidden.

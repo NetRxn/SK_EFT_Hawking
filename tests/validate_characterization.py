@@ -15,9 +15,13 @@ intended change you can name, or refactor damage.
 WHY IT IS NOT A COMMITTED GOLDEN
 --------------------------------
 A checked-in snapshot of `passed` values would be stale within days. The repo is
-mid-remediation, `validate.py` is deliberately RED on `main` (the 2026-08-03
-`stage13_status` guard fires on 14 of 21 bundles), and the operator expects more
-gates to go red as remediation lands. A permanent fixture would become a
+mid-remediation, `validate.py` is deliberately RED **on this branch**, and the
+operator expects more gates to go red as remediation lands.
+
+⚠️ This read "RED on `main`" until 2026-08-04 (audit finding QI-19). It is not:
+the `stage13_status` guard lives on `infra/adr-009-validation-modularization`, and
+`main`'s `validate.py` contains **zero** `stage13_status` occurrences. ADR-009's
+Consequences section carries the same correction. A permanent fixture would become a
 maintenance tax that gets updated reflexively — which is how a test stops
 asserting anything. This is a characterization harness in the refactoring sense:
 a temporary net, taken minutes apart, over an otherwise-unchanged tree.
@@ -56,9 +60,11 @@ all three are quarantined below, so it cannot arise.
 
 QUARANTINE
 ----------
-Nine checks are structurally non-snapshottable: they shell out, execute
+**Ten** checks are structurally non-snapshottable: they shell out, execute
 notebooks, or rewrite tracked artifacts, so run N+1 legitimately differs from
-run N. Forcing them into a snapshot would produce a harness that cries wolf,
+run N. (This said "Nine" until 2026-08-04 — audit finding QI-19.
+`bundle_source_freshness` was added when the harness was built and the prose was
+not updated. `QUARANTINE` below is authoritative; do not restate its size.) Forcing them into a snapshot would produce a harness that cries wolf,
 which is worse than one with a stated gap.
 
 KNOWN INTERACTION: `graph_integrity` MOVES WHEN YOU EDIT `tests/`
@@ -88,10 +94,13 @@ retargeting `v.STRICT_MODE` to `cfg.STRICT_MODE` in an existing test.
 against `HEAD` — they diverge as soon as you commit mid-phase, and using HEAD
 silently under-counts (it did, once, and briefly looked like unexplained drift).
 
-Most of these edges are spurious anyway: the resolver matches a test's
-`referenced_names` against Lean short names with no alias guard, so `v` (from
-`import validate as v`) resolves to a Lean structure field. See ADR-009
-§Deferred item 7 — filed, not fixed, because it changes what a gate measures.
+⚠️ The paragraph that stood here said those edges "are spurious anyway" because
+the resolver had "no alias guard", and cited ADR-009 §Deferred item 7 as "filed,
+not fixed". **Item 7 was FIXED on 2026-08-03** (audit finding QI-19): 144 of 536
+Lean-targeted VERIFIES edges were fabricated and are gone, and two rules now gate
+that branch. The attribution arithmetic above is unaffected — it never depended on
+whether the edges were genuine — but a reader should not be told a closed defect
+is open.
 """
 from __future__ import annotations
 

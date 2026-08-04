@@ -261,6 +261,12 @@ scripts/validation/
 
 Roughly 250 lines of framework + eight domain modules averaging ~900. Every module fits in one read.
 
+⚠️ **AS BUILT: TWELVE modules, not eight** (audit finding QI-25). Three were split beyond this plan during
+Phase 2 — `lean_substrate`/`lean_toolchain`, `papers_prose`/`prose_lean_refs`,
+`bundles_readiness`/`reviews` — and a fourth, `lean_statements`, was split from `lean_substrate` on
+2026-08-04. Each split was measured first and taken on a seam where the halves share no module-level
+names. The layout above is the PLAN; `scripts/validation/checks/` is the state.
+
 **Deliberately NOT changed in the move:** no check body is edited, no policy unified, no always-pass flipped,
 no threshold touched. The diff should be almost entirely moves plus import rewrites.
 
@@ -313,7 +319,11 @@ Identified while reading; **not** part of the mechanical work.
 > the shared graph handle, is referenced in §8 below but was never given a numbered slot here — that is
 > the eighth item). **Cite Phase-3 work by the §Deferred ordinal, never by `RESUME_STATE.md`'s list**,
 > which is the same eight in *cost order* — a different permutation that has already produced two
-> mis-citations. Status 2026-08-04: **items 1, 2, 3, 7 DONE; 0, 4, 5, 6 open.**
+> mis-citations. **Status: ALL EIGHT DISPOSITIONED (2026-08-04).** Fixed: **1, 2, 7**, and **4** (its
+> generator closed with a ratchet, its type change declined). Item **0** fixed in its first half (one
+> `lean_deps` snapshot per full run), second half declined on measurement. Dispositioned per-check: **3**.
+> Declined with measurements: **5**, **6**.
+> ⚠️ This line read "items 1, 2, 3, 7 DONE; 0, 4, 5, 6 open" until 2026-08-04 (audit finding QI-25).
 
 1. **`native_decide_regression` reads a possibly-stale `counts.json`** (H3). Ratchet ordering defect, in a
    commit-gate check.

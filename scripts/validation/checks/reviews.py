@@ -418,6 +418,32 @@ def check_review_docs_mint_findings() -> CheckResult:
     return CheckResult(passed=empty == 0, details=details)
 
 
+# ── NOT SHIPPED: `ledger_evidence_names_its_finding` ────────────────────────────────
+# D12 round-13 BLOCKER 13.1 found three ledger records that close a finding their evidence
+# does not describe, and nothing detects it. I built a guard requiring the evidence to share
+# a content word with the finding's title, and MEASURED it before shipping: it flags 40
+# records, and the ones I sampled are correct. Example —
+# `2026-04-28-...:paper40_higher_curvature:2.1`, whose evidence reads "CrossPaperConsistency
+# gate verifies sampled cross-paper bibitems match character-for-character on load-bearing
+# fields". That describes the FIX; the title describes the DEFECT; well-written evidence
+# routinely shares no vocabulary with the finding it closes.
+#
+# So the premise is wrong, not the threshold, and a guard that flags 40 correct records is
+# worse than no guard — that is the lesson this session has taught eleven times. The three
+# real mis-keys were caught by a reviewer READING them, which is not a test I can currently
+# mechanise. Recording the gap rather than shipping a check that manufactures work.
+#
+# What would work, and is not built: require the record to name the artifact it changed
+# (a file path) and verify that path appears in the cited commit's diff. That is mechanical
+# and would have caught all three, since their evidence names another round's artifacts.
+#
+# (Moved here from `scripts/validate.py` on 2026-08-04 — audit finding QI-26b. It was
+# stranded under a `# CHECK 18: Readiness submission gate` header whose body had been
+# extracted, so a genuinely useful design record was filed under an unrelated check in
+# a file that no longer contains any check. Its nearest kin is the ledger-rationale
+# gate below.)
+
+
 @register_check("accepted_findings_carry_rationale",
                 "Every `accepted` supersession record justifies acceptance in writing")
 def check_accepted_findings_carry_rationale() -> CheckResult:

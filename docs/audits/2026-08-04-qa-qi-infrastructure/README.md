@@ -1,7 +1,12 @@
 # QA/QI Infrastructure Audit — 2026-08-04
 
-**Status:** 🔴 **ACTIVE — remediation in progress.** This is the live tracker; update the
-checkboxes in §3 as work lands and keep the measurement column honest.
+**Status:** 🟡 **W-A / W-B / W-C COMPLETE — W-D remains.** 26 of 27 findings closed; the one open
+item is QI-27 (D5: mutation tests for 43 checks + a mechanical gate). This is the live tracker —
+update the checkboxes in §3 as work lands and keep the measurement column honest.
+
+**Verified at the last increment:** fast suite **5080 passed / 5 skipped / 0 failed**;
+characterization **HELD — 49 checks identical** across W-B and W-C; the two W-A behaviour changes
+each attributed in full. Branch **56 commits ahead of `main`, 0 behind — NOT merged.**
 
 **Scope.** The complete QA/QI enforcement surface on `infra/adr-009-validation-modularization`:
 `scripts/validate.py`, all 12 `scripts/validation/**`, `scripts/validate_helpers.py`,
@@ -33,17 +38,19 @@ itself and finds the residue. See
 0 failed**, `validate.py` 57/59 with 2 intentional reds. The shared-helper layer is genuine and its
 policy line (*"this module owns where things are, not what their absence means"*) is held in code.
 
-**What is not done is the layer underneath the check verdicts**, in four kinds:
+**What was not done is the layer underneath the check verdicts.** Four kinds, all now closed except
+the last:
 
-1. **One live enforcement hole** — a third of the Lean substrate is unscanned by five glob sites
-   (QI-01). Measured verdict movement today: **zero**; the exposure is latent, not live.
-2. **Duplicated predicates** across subsystems that a check requires to agree (QI-02, QI-03).
-3. **Dead and doubled code** in the enforcement path (QI-05 … QI-11).
-4. **Documentation that contradicts the code it describes** — including three in-code headers that
-   tell a reader a repaired check is still broken (QI-12 … QI-26).
+1. ✅ **One live enforcement hole** — a third of the Lean substrate unscanned by **six** glob sites
+   (QI-01). Measured verdict movement: **zero**, so it closed a latent hole rather than surfacing
+   live debt.
+2. ✅ **Duplicated predicates** across subsystems a check requires to agree (QI-02, QI-03).
+3. ✅ **Dead and doubled code** in the enforcement path (QI-05 … QI-11).
+4. ✅ **Documentation contradicting the code it describes** — including three in-code headers telling
+   a reader a repaired check was still broken (QI-12 … QI-26b).
 
-Plus the standing obligation ADR-009 itself calls the disease: **D5 has no mechanical enforcement
-and 32 of 59 checks have no test at all** (QI-27).
+⬜ **Remaining: the standing obligation ADR-009 itself calls the disease** — **D5 has no mechanical
+enforcement, and 32 of 59 checks have no test at all** (QI-27).
 
 ---
 
@@ -59,7 +66,11 @@ those. What this read finds is the same shape one layer down:
 | `bundles_readiness.py` header | *"readiness_submission_gate IS INVERTED AND CANNOT BLOCK … do not fix it"* | it was fixed on 2026-08-03 and hard-fails |
 | `paper_latex_compiles` `--list` text + docstring | "advisory; always passes" | hard-fails since 2026-08-03 |
 | ADR-009 §Deferred, map §4/§7, RESUME_STATE | two readiness sites "remain open BY SCOPE" | both closed by `5228ed6d` |
-| RESUME_STATE headline | "the branch merged to `main`" | 51 ahead, 0 behind — **not merged** |
+| RESUME_STATE headline | "the branch merged to `main`" | not merged — a cold session reads this first |
+
+**All six rows are now corrected.** They are kept as the record of what the documents said, because
+the pattern matters more than any individual line: every one of them was written true and became
+false when a later commit landed without returning to it.
 
 **A document that describes a repaired guard as broken is the same defect class as a guard that
 cannot fire** — both make the reader's model of the system wrong in the direction of false
@@ -156,60 +167,44 @@ Legend: ⬜ open · 🔄 in progress · ✅ done (with the verifying evidence na
 - [x] **QI-05** ✅ **FIXED 2026-08-04.** `readiness_gates._eval_citation_integrity` — `paper_key`
       computed from `meta.topic`/`name`, then overwritten on the next line by the `paper['id']` form
       every other evaluator uses. Dead assignment removed.
-- [ ] **QI-06** `build_graph.py:3381` — `for node_id in node_ids: pass`, a dead loop over ~30k ids.
-- [ ] **QI-07** `reviews.py:217` — vestigial `if True:`.
-- [ ] **QI-08** `citations.py:895-897` — `summary_passed` computed, then unconditionally overwritten.
-- [ ] **QI-09** `reviews._carries_findings` — same `any()` computed twice (`findall` then `finditer`).
-- [ ] **QI-10** Dead imports: `numpy` in `citations._lookup_provenance_value`, `importlib` in
-      `notebooks.check_viz_consistency`.
-- [ ] **QI-11** 🔄 **PARTIAL.** Local imports shadowing a module-level import.
-      ✅ `readiness_gates.py` done — it had **four** function-local `re` imports and no module-level
-      one; now one module-level `import re`, all four removed (one, `import re as _re`, was fully
-      dead after QI-02).
-      ⬜ Remaining: `bundles_readiness` (importlib/hashlib/tempfile) · `citations` (ast/re ×2) ·
-      `lean_toolchain` (re/subprocess); plus lake-resolution duplicated verbatim between
-      `check_lean_build` and `check_axiom_closure_allowlist`, and `_H.LEAN_DIR` re-derived inline
-      4× in `lean_toolchain.py`.
-
-### W-C — documentation vs code
-
-- [ ] **QI-12** `bundles_readiness.py` module header declares `readiness_submission_gate` inverted
-      and instructs the reader not to fix it. Repaired 2026-08-03.
-- [ ] **QI-13** `paper_latex_compiles`: `@register_check` description, docstring, and module header
-      all say "advisory / always passes". It hard-fails.
-- [ ] **QI-14** `count_literals` / `numerical_literals` docstrings still say "WARN-level during
-      retrofit"; both are ratchets.
-- [ ] **QI-15** 7 `TODO(semantic-review, ADR-009 Phase 3)` markers pointing at a completed phase
-      whose §Deferred item 4 **declined** that sweep.
-- [ ] **QI-16** 5 wrong §Deferred ordinals in code comments — the exact collision ADR-009 §Deferred
-      warns about, live in the source (`bundles_readiness` ×2 say "item 1" for item 2;
-      `papers_prose` ×3 say "Phase 3 item 2" for item 3).
-- [ ] **QI-17** `_registry.py` says "33 names" (real surface: 54) and "~20 sites" (measured: 25 PASS
-      sites / 22 pairs).
-- [ ] **QI-18** `validate_helpers.py`'s NO-MEMOIZATION section describes the pre-item-0 reader
-      divergence as current, contradicting `ensure_lean_deps_fresh` 60 lines below in the same file.
-- [ ] **QI-19** `validate_characterization.py`: "Nine checks" (QUARANTINE has 10); "`validate.py` is
-      deliberately RED on `main`" (main has **zero** `stage13_status`); "§Deferred item 7 — filed,
-      not fixed" (fixed 2026-08-03).
-- [ ] **QI-20** `test_cannot_measure_baseline.py` docstring describes both readiness-layer sites as
-      live defects; both closed by `5228ed6d`.
-- [ ] **QI-21** ADR-009 §Deferred status block + item 4 record the two readiness sites as open /
-      out-of-scope by design. Closed.
-- [ ] **QI-22** `QA_QI_INFRASTRUCTURE_MAP.md` §4 (`evaluate_all_gates` → never `blocked`) and §7
-      (both rows open; "**four** of the eight rows are now closed" → **six**). Also §1 mermaid says
-      "11 modules" against the body's "twelve".
-- [ ] **QI-23** `RESUME_STATE.md` headline claims the branch **merged to `main`** — 51 ahead,
-      0 behind. Line 508 repeats "main carries no infra code", which lines 125–128 of the same file
-      correct as "MATERIALLY WRONG".
-- [ ] **QI-24** `RESUME_STATE.md` internal drift: "Phase 3 at 4 of 8" vs "8 of 8"; ADR status
-      "PROPOSED" (ACCEPTED); "35 commits ahead" (51); fast suite 5039 (5055); "all 11 check modules"
-      (12); `lean_substrate` 1,079 (521) with a ⚠️ to split it (already split, `b896cd6d`).
-- [ ] **QI-25** `validation-module-migration-notes.md` §7 "items 0, 4, 5, 6 open" (all
-      dispositioned); §4 target layout describes "eight domain modules" (12).
-- [ ] **QI-26** `qa-qi-map-verification-log.md` states "Phase 1 re-anchors mechanically and deletes
-      the note" as future work; ADR-009 records that it never happened and is moot.
-- [ ] **QI-26b** `validate.py` extraction scars: 6 orphaned `CHECK NN` section headers standing over
-      empty bodies, and a `CLI` header ~157 lines above the actual CLI.
+- [x] **QI-06** ✅ **FIXED 2026-08-04.** `build_graph.extract_cites_theorem_edges` — `for node_id in node_ids: pass`, a dead loop over ~46,700 ids.
+- [x] **QI-07** ✅ **FIXED 2026-08-04.** `reviews.check_recurrence_reopens_closures` — vestigial `if True:`.
+- [x] **QI-08** ✅ **FIXED 2026-08-04.** `citations.check_bibitem_title_primary_source` — `summary_passed` computed then overwritten by a no-op `if`; its comment ALSO claimed DROP-WORD flags fail in default mode, which the body contradicts. Both corrected.
+- [x] **QI-09** ✅ **FIXED 2026-08-04.** `reviews._carries_findings` — the same `any()` computed twice (`findall` then `finditer`); `_SEVERITY_HEADING` has only non-capturing groups so the two legs were identical. Proved equivalent over all **273** review documents before collapsing.
+- [x] **QI-10** ✅ **FIXED 2026-08-04.** Dead imports: `numpy` in `citations._lookup_provenance_value`, `importlib` in `notebooks.check_viz_consistency`.
+- [x] **QI-11** ✅ **FIXED 2026-08-04.** Import and path hygiene, AST-verified rather than grepped.
+      Module-level `json` (citations), `re` and `BUNDLE_CODES` (bundles_readiness) never referenced —
+      the four `re.` grep hits in the latter are all PROSE ("re-exported", "elsewhere."), which is why
+      this was settled by AST. **7 function-local imports** shadowing a module-level one removed across
+      `citations` / `bundles_readiness` / `lean_toolchain` / `readiness_gates`; **zero remain
+      suite-wide**. `_H.LEAN_DIR` was re-derived as `_H.PROJECT_ROOT / "lean" / "SKEFTHawking"` at
+      **5 sites** — same value, second definition, so a test monkeypatching the anchor reached some
+      sites and not others (the by-value hazard H1/H5 exist to prevent, one level down); verified
+      identical before collapsing. Incidentally this made `lean_toolchain`'s module header true again.
+      ⬜ **Not done:** the lake-resolution block duplicated verbatim between `check_lean_build` and
+      `check_axiom_closure_allowlist` — a genuine 6-line copy, but extracting it touches two checks'
+      early-return behaviour and belongs with their mutation tests in W-D.
+- [x] **QI-12** ✅ **FIXED 2026-08-04.** `bundles_readiness.py` header declared `readiness_submission_gate` inverted and told the reader not to fix it. Rewritten; it hard-fails.
+- [x] **QI-13** ✅ **FIXED 2026-08-04.** `paper_latex_compiles` — `--list` description, docstring opener, Posture bullet and module header all said "advisory / always passes". All four corrected; it hard-fails.
+- [x] **QI-14** ✅ **FIXED 2026-08-04.** `count_literals` / `numerical_literals` docstrings still promised a future escalation ("once all 15 papers use macros") that the 64-paper corpus had made unreachable. Both now describe the ratchet.
+- [x] **QI-15** ✅ **FIXED 2026-08-04.** 7 `TODO(semantic-review, ADR-009 Phase 3)` markers re-labelled as the deliberate H4 divergence they are — the phase is complete and item 4 DECLINED the sweep.
+- [x] **QI-16** ✅ **FIXED 2026-08-04.** 4 wrong §Deferred ordinals corrected (`papers_prose` ×3 said "Phase 3 item 2" for item 3; `bundles_readiness` said item 1 for item 2). `lean_toolchain`'s "item 1" was already correct and was left.
+- [x] **QI-17** ✅ **FIXED 2026-08-04.** `_registry.py` "33 names" → point at `EXPECTED_SURFACE` (54); "~20 sites" → the measured 60 sites / 25 PASS / 22 pairs, with item 4's DECLINE recorded.
+- [x] **QI-18** ✅ **FIXED 2026-08-04.** `validate_helpers.py`'s NO-MEMOIZATION section described the pre-item-0 reader divergence as current, contradicting `ensure_lean_deps_fresh` sixty lines below in the same file.
+- [x] **QI-19** ✅ **FIXED 2026-08-04.** `validate_characterization.py` — "RED on `main`" (main has zero `stage13_status`), "Nine checks" (QUARANTINE has 10), "item 7 filed, not fixed" (fixed 2026-08-03).
+- [x] **QI-20** ✅ **FIXED 2026-08-04.** `test_cannot_measure_baseline.py` docstring described both readiness sites as live defects; both closed by `5228ed6d`.
+- [x] **QI-21** ✅ **FIXED 2026-08-04.** ADR-009 §Deferred status block and item 4 recorded the two readiness sites as open/out-of-scope. Also discharged item 0's "`build_graph.py` has NOT been read" precondition.
+- [x] **QI-22** ✅ **FIXED 2026-08-04.** QA/QI map §4, §7 (both rows + "four of eight" → six), §1 mermaid (11 → 12 modules), the re-basis note's build_graph caveat, and the superseded banner.
+- [x] **QI-23** ✅ **FIXED 2026-08-04.** `RESUME_STATE.md`'s headline claimed the branch was **merged
+      to `main`**. It is not — currently **56 ahead, 0 behind**. A cold session reads that block
+      first, so the false claim was the highest-cost item in the whole audit. Corrected, with
+      `git merge-base --is-ancestor HEAD main` inline so the claim is re-checkable rather than
+      re-inherited. The companion line at the foot of the file ("`main` carries no infra code at all")
+      — which had survived 40 lines below its own correction — is fixed under QI-24.
+- [x] **QI-24** ✅ **FIXED 2026-08-04.** RESUME_STATE internal drift: W1 status, ADR status PROPOSED, commit count, suite count, module sizes, the NOT-yet-read list, and the "main carries no infra code" line that survived 40 lines below its own correction.
+- [x] **QI-25** ✅ **FIXED 2026-08-04.** `validation-module-migration-notes.md` §7 "items 0,4,5,6 open" → all eight dispositioned; §4 "eight domain modules" → twelve as built.
+- [x] **QI-26** ✅ **FIXED 2026-08-04.** `qa-qi-map-verification-log.md` promised a Phase-1 citation re-anchor that never happened and is now moot.
+- [x] **QI-26b** ✅ **FIXED 2026-08-04.** `validate.py` extraction scars: 5 orphaned `CHECK NN`/`CLI` headers removed, the `Shared helpers` header relabelled to what actually sits under it, blank-line runs collapsed (743 → 635 lines). The stranded `NOT SHIPPED: ledger_evidence_names_its_finding` design note was REHOMED to `reviews.py` beside its nearest kin rather than deleted.
 
 ### W-D — the standing obligation (D5)
 
@@ -266,28 +261,31 @@ function's AST span"* — these cost time here and will cost it again otherwise.
 
 ## 4c. Resume point
 
-**W-A is complete** (QI-01 · QI-02 · QI-03 · QI-04), plus QI-05 and the
-`readiness_gates` half of QI-11. Three commits on
-`infra/adr-009-validation-modularization`. Fast suite **5080 passed / 5 skipped / 0 failed**;
-every characterization delta attributed; no check verdict moved by any of it.
+**W-A, W-B and W-C are complete** — 27 of 28 findings closed across six commits on
+`infra/adr-009-validation-modularization`. Fast suite **5080 passed / 5 skipped / 0 failed**.
+Characterization **HELD (49 identical)** across both mechanical passes; the two W-A behaviour changes
+were each attributed in full (+114 PlaceholderMarker nodes, +4 VERIFIED_BY edges closing 4 broken
+provenance chains) and **no check verdict moved by any of it**.
 
-**Next, in order:**
+**Next and last: W-D — QI-27.** Mutation tests for the 43 checks that lack one (32 untested +
+11 green-only), plus a registered gate so D5 stops being prose. Operator ruling 2026-08-04: all
+checks need tests before this branch is ready for PR review.
 
-1. **W-B** — QI-06 … QI-10 and the rest of QI-11. Pure dead-code and DRY removal; no verdict
-   should move, so any characterization delta is a signal to stop and attribute.
-2. **W-C** — QI-12 … QI-26b. Documentation vs code. Start with the three in-code headers
-   (QI-12, QI-13, QI-14): those actively tell a reader a repaired check is still broken, which is
-   the highest-cost kind of staleness. ⚠️ Re-measure each figure against HEAD rather than copying
-   from this file — several already moved during W-A (the suite is 5080 now, not 5055; PlaceholderMarker
-   is 707, not 593).
-3. **W-D** — QI-27. The 43 checks needing mutation tests, plus a registered gate so D5 stops being
-   prose. Read the 15 unread test files first (~3,170 lines); they are the only part of the QA/QI
-   surface this audit did **not** read in full, and they define the house patterns to mirror.
+**Read these first** — they are the only part of the QA/QI surface this audit did NOT read in full,
+and they define the house patterns to mirror: the 15 unread test files (~3,170 lines), starting with
+`test_validate_public_surface.py`, `test_readiness_submission_gate.py` and
+`test_native_decide_ratchet.py` (the three Phase-3 repairs shipped both-directions tests worth
+copying).
+
+**Carry into W-D:** the lake-resolution duplication noted under QI-11 — extracting it changes two
+checks' early-return behaviour, so it belongs with their mutation tests rather than in a
+mechanical pass.
 
 **Standing rules for anyone continuing this** (all learned the hard way in §4b): scope every mutation
 to the target function's AST span; restore it by writing back saved bytes, never `git checkout`;
 never run the characterization harness while editing the code it reads; and when a mutation is *not*
-caught, that is a finding about the guard, not a formality to wave through.
+caught, that is a finding about the guard, not a formality to wave through — it deleted a redundant
+guard from my own QI-03 fix.
 
 ## 5. Companion documents
 

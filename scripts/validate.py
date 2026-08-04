@@ -135,76 +135,6 @@ from validation._registry import (  # noqa: E402
 )
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# ═══════════════════════════════════════════════════════════════════════
-# CHECK 17b: Inline numerical literals outside \input{} blocks (Phase 5v)
-# ═══════════════════════════════════════════════════════════════════════
-
-
-
-
-
-
-
-# ═══════════════════════════════════════════════════════════════════════
-# CHECK 17: Count literals in paper .tex (Phase 5v Wave 1b)
-# ═══════════════════════════════════════════════════════════════════════
-
-
-
-
-
-# ═══════════════════════════════════════════════════════════════════════
-# CHECK 18: Readiness submission gate (Phase 5v Wave 4)
-# ═══════════════════════════════════════════════════════════════════════
-
-# ── NOT SHIPPED: `ledger_evidence_names_its_finding` ────────────────────────────────
-# D12 round-13 BLOCKER 13.1 found three ledger records that close a finding their evidence
-# does not describe, and nothing detects it. I built a guard requiring the evidence to share
-# a content word with the finding's title, and MEASURED it before shipping: it flags 40
-# records, and the ones I sampled are correct. Example —
-# `2026-04-28-...:paper40_higher_curvature:2.1`, whose evidence reads "CrossPaperConsistency
-# gate verifies sampled cross-paper bibitems match character-for-character on load-bearing
-# fields". That describes the FIX; the title describes the DEFECT; well-written evidence
-# routinely shares no vocabulary with the finding it closes.
-#
-# So the premise is wrong, not the threshold, and a guard that flags 40 correct records is
-# worse than no guard — that is the lesson this session has taught eleven times. The three
-# real mis-keys were caught by a reviewer READING them, which is not a test I can currently
-# mechanise. Recording the gap rather than shipping a check that manufactures work.
-#
-# What would work, and is not built: require the record to name the artifact it changed
-# (a file path) and verify that path appears in the cited commit's diff. That is mechanical
-# and would have caught all three, since their evidence names another round's artifacts.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # ═══════════════════════════════════════════════════════════════════════
 # Execution order (ADR-009 H3)
 # ═══════════════════════════════════════════════════════════════════════
@@ -417,24 +347,13 @@ def archive_results(results: Dict[str, CheckResult]) -> Path:
     return json_path
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 # ═══════════════════════════════════════════════════════════════════════
-# Shared helpers for the prose-consistency checks (CHECK 24–26)
-# (Stage 14 follow-through from the 2026-06-05 external-review remediation;
-#  record: temporary/working-docs/reviews/papers/2026-06-05-Perplexity/
-#  REMEDIATION_TRIAGE_2026-06-10.md, Wave-5 process items a/b/c.)
+# BUNDLE_CODES re-export — required by the roster gate (ADR-009 H2)
 # ═══════════════════════════════════════════════════════════════════════
+# ⚠️ This header read "Shared helpers for the prose-consistency checks (CHECK 24–26)"
+# until 2026-08-04 (audit finding QI-26b). Those helpers moved to
+# `validation/checks/papers_prose.py` and `prose_lean_refs.py` in Phase 2; what
+# remains under it is the BUNDLE_CODES re-export, which is unrelated.
 
 #: Bundle codes per docs/PAPER_STRATEGY.md, from THE roster source of truth
 #: (scripts/bundle_registry.py). Re-exported under the historical name because
@@ -446,33 +365,6 @@ def archive_results(results: Dict[str, CheckResult]) -> Path:
 #: its 2026-06-30 first lift and 2026-07-30. A short tuple does not error; it
 #: just checks fewer bundles and reports a clean pass.
 BUNDLE_CODES = _REGISTRY_BUNDLE_CODES
-
-
-# ═══════════════════════════════════════════════════════════════════════
-# Bundle-roster single-source-of-truth gate
-# ═══════════════════════════════════════════════════════════════════════
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# ═══════════════════════════════════════════════════════════════════════
-# CLI
-# ═══════════════════════════════════════════════════════════════════════
-
-
-
-
 
 
 # ═══════════════════════════════════════════════════════════════════════

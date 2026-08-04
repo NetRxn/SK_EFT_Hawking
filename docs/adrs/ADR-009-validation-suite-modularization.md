@@ -422,8 +422,10 @@ Identified during the read; explicitly **not** part of Phases 0–2.
 > closed with a ratchet, its type change declined). Item **0** fixed in its first half (one lean_deps
 > snapshot per full run), second half (shared graph handle) DECLINED on measurement. Dispositioned
 > individually: **3**. DECLINED with measurements: **5**, **6**.
-> ⚠️ Two readiness-layer sites recorded under item 4 remain open BY SCOPE — they belong to the
-> publication workstream, not to this ADR.
+> ✅ **The two readiness-layer sites recorded under item 4 were CLOSED by `5228ed6d` (2026-08-04)**,
+> after this block was written. They were dispositioned twice as "publication workstream", which the
+> fixing commit calls out as wrong: they are code defects in `readiness_gates.py` and
+> `bundle_readiness.py` with no dependency on any roster or paper decision. Audit finding QI-21.
 >
 > **Every open item's scope figure is UNVERIFIED and must be re-measured before it is fixed** (item 7's
 > filing was wrong four independent ways; item 6's "two gates" is already measured at six — see below).
@@ -517,9 +519,16 @@ Identified during the read; explicitly **not** part of Phases 0–2.
 
    *Residue, if runtime ever matters:* adopt the dashboard's pattern — a fingerprinted, lock-guarded
    handle at the caller, invalidated on input mtime — never a memo inside the builder.
-   ⚠️ **`scripts/build_graph.py` has NOT been read in full by this author.** This decline rests on caller
-   analysis, the measurements above and the dashboard's documented constraint. **Implementing the handle
-   later requires that full read first**, per the standing rule.
+   ✅ **`scripts/build_graph.py` (4,207 lines) HAS NOW been read in full** — 2026-08-04, for the QA/QI
+   infrastructure audit. This clause recorded the read as the precondition for ever implementing the
+   handle; that precondition is discharged, and the decline itself is UNCHANGED — the read confirmed the
+   module-scoped state it rests on (`_LEAN_SHORT_INDEX`, `_TEST_MODULE_ALIASES`, `_LEAN_AMBIGUITY_SEEN`,
+   each `.clear()`ed per build) and found no cheaper seam.
+
+   The read also measured the redundancy behind the cost figure: `extract_formula_nodes` runs **3×** and
+   `extract_lean_declaration_nodes` **2×** per build, plus `extract_python_test_nodes` **2×** — which is
+   where a caller-side handle would actually pay, and is recorded in the audit's §4 residue rather than
+   acted on here.
 
    ---
    **(d) The guard that should have caught this is narrower than its name.**
@@ -606,13 +615,21 @@ Identified during the read; explicitly **not** part of Phases 0–2.
    A third test guards the scanner seam, since a scan that matched nothing would make both assertions
    vacuous. 3 tests, 3 mutations run and caught, clean negative control.
 
-   ⚠️ **Two layers remain outside the ratchet's reach** and are recorded here rather than silently
-   omitted: `readiness_gates.evaluate_all_gates` (`:759-765`) turns an evaluator exception into
-   `state='open'`, which `paper_aggregate_state` maps to **yellow, not red**; and
-   `bundle_readiness._blocked_p1_gates_by_paper` (`:274-299`) returns `{}` on any exception, silently
-   dropping the P1 downgrade that stops a bundle rendering GREEN. Neither returns a `CheckResult`, so the
-   scanner cannot see them. Closing those is a readiness-layer change and belongs with the publication
-   workstream.
+   ✅ **Two layers sit outside the ratchet's reach — and both were CLOSED by `5228ed6d`
+   (2026-08-04), after this item was written** (audit finding QI-21).
+   `readiness_gates.evaluate_all_gates` turned an evaluator exception into `state='open'`, which
+   `paper_aggregate_state` maps to **yellow, not red** — so a gate that CRASHED rendered as a mild
+   advisory; it now records `blocked` with the exception named. `bundle_readiness._blocked_p1_gates_by_paper`
+   returned `{}` on any exception, silently dropping the P1 downgrade that stops a bundle rendering
+   GREEN; it now returns `None`, and `aggregate_by_bundle` withholds GREEN when the gates are
+   unverified. Neither returns a `CheckResult`, so `tests/test_cannot_measure_baseline.py` still
+   cannot see them — `tests/test_readiness_cannot_measure.py` is their guard.
+
+   ⚠️ This note said closing them "belongs with the publication workstream". That disposition was
+   wrong and the fixing commit says so: they are code defects with no dependency on any roster or
+   paper decision. Measured before the change: **0 evaluator exceptions across 704 evaluations**
+   (64 papers × 11 gates), so the fix is a no-op on the current tree and guards a future evaluator
+   bug — which is exactly when a silent downgrade does the most damage.
 
    ---
    *Original filing, kept for the record:* the "roughly twenty sites" figure in §Context is in the right
