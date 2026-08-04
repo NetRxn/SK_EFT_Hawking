@@ -316,7 +316,11 @@ dismissed.
 
 ---
 
-## Workstream 2 — ADR-010 (CHARTER AUTHORED, ANALYSIS PENDING)
+## Workstream 2 — ADR-010 (CHARTER AUTHORED, ANALYSIS PENDING — **A SEPARATE GOAL**)
+
+⛔ **NOT part of the ADR-009 goal.** Operator ruling 2026-08-04: the infrastructure goal stays laser-focused
+on W1, and ADR-010's analysis is armed as its own goal afterwards. Do not begin it inside the W1 loop, and
+do not treat W1's closure as authorization to start it.
 
 **Read [ADR-010](../../adrs/ADR-010-publication-portfolio-reassessment.md) first — it holds the operator's
 verbatim framing, the verified constraints, and the open questions.** Summary only, here:
