@@ -16,6 +16,44 @@ without re-deriving it. Read this first, then the linked documents.
 
 ---
 
+## Working rules for this workstream
+
+Read these before the state below; they govern how every increment is built.
+
+**1. Read before you write.** Do not modify a file you have not read in full, directly, in your current
+context — a compaction resets that. Scope the read to what you are changing plus its blast radius, traced
+through consumers (imports, the frozen external surface, `_ROSTER_CONSUMERS`, the pre-commit gate), not
+by a fixed file list. Core infra here: `scripts/validate.py`, `scripts/validation/**`,
+`scripts/validate_helpers.py`, `scripts/build_graph.py`.
+
+**2. Judge a check by its body.** A check's `--list` description and its docstring state intent, not
+behaviour. Where the two differ, the body wins — several checks in this suite carry docstrings that
+describe a stricter guard than the code implements.
+
+**3. Measure before you fix, and label the evidence.** Every claim is *measured this session*,
+*historical*, or *inherited from a document*. A filed finding's count, named consumer and effort estimate
+are claims; take the measurement yourself and record it alongside the original. A measurement is scoped
+by a predicate — when the thing that predicate keyed on changes, the measurement is void.
+
+**4. Make verifications discriminating.** Before accepting a check as confirmation, ask what it would
+look like if the claim were false. If the answer is "the same", it confirms nothing.
+
+**5. Separate mechanical from semantic.** A structural move edits no check body, unifies no policy,
+retunes no threshold, flips no verdict. Semantic changes ship one at a time, each independently reviewed.
+
+**6. Both directions, or it is not a test.** Every new or modified check ships a mutation test that fires
+on a seeded defect and stays silent on correct data. Scope each mutation to the target function's AST
+span, and distinguish "the assertion fired" from "the mutation broke the import".
+
+**7. Guards are never weakened to make the suite green.** A red gate where remediation has not landed is
+the instrument working. Where a claim is unsupported, build the substrate that makes it true or prove it
+cannot be.
+
+**8. Attribute every characterization delta** to a named cause. "Probably the new tests" is not an
+attribution.
+
+---
+
 ## Git layout (verified 2026-08-04)
 
 **`main`** — `c2b597e1 docs(audit): publication-readiness assessment of all 21 bundles`.
