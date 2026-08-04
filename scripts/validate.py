@@ -490,6 +490,7 @@ from validation.checks import graph_atlas as _checks_graph_atlas  # noqa: E402
 from validation.checks import freshness as _checks_freshness      # noqa: E402
 from validation.checks import lean_toolchain as _checks_lean_toolchain  # noqa: E402
 from validation.checks import lean_substrate as _checks_lean_substrate  # noqa: E402
+from validation.checks import lean_statements as _checks_lean_statements  # noqa: E402
 from validation.checks import papers_prose as _checks_papers_prose      # noqa: E402
 from validation.checks import prose_lean_refs as _checks_prose_refs     # noqa: E402
 from validation.checks import citations as _checks_citations           # noqa: E402
@@ -546,9 +547,10 @@ check_disclosure_consistency = _checks_lean_substrate.check_disclosure_consisten
 check_proxy_body_audit = _checks_lean_substrate.check_proxy_body_audit
 check_tracked_hypothesis_ledger = _checks_lean_substrate.check_tracked_hypothesis_ledger
 check_tracked_hypotheses_fresh = _checks_lean_substrate.check_tracked_hypotheses_fresh
-check_formula_grounding = _checks_lean_substrate.check_formula_grounding
-check_vacuous_statement_audit = _checks_lean_substrate.check_vacuous_statement_audit
-check_nogo_substrate_integrity = _checks_lean_substrate.check_nogo_substrate_integrity
+# ── moved to checks/lean_statements.py 2026-08-04 (statement-level analysis) ──
+check_formula_grounding = _checks_lean_statements.check_formula_grounding
+check_vacuous_statement_audit = _checks_lean_statements.check_vacuous_statement_audit
+check_nogo_substrate_integrity = _checks_lean_statements.check_nogo_substrate_integrity
 # Regexes + pure cores imported directly by tests/test_substrate_integrity_gates.py
 _tex_name_pattern = _checks_lean_substrate._tex_name_pattern
 _VERIFY_CLAIM_RE = _checks_lean_substrate._VERIFY_CLAIM_RE
@@ -559,12 +561,12 @@ _STRUCTURAL_NAME_RE = _checks_lean_substrate._STRUCTURAL_NAME_RE
 _TRIVIAL_BODY_RES = _checks_lean_substrate._TRIVIAL_BODY_RES
 _NONTRIVIAL_MARKER_RE = _checks_lean_substrate._NONTRIVIAL_MARKER_RE
 _TRACKED_PROP_NAME_RE = _checks_lean_substrate._TRACKED_PROP_NAME_RE
-_THIN_HARD = _checks_lean_substrate._THIN_HARD
+_THIN_HARD = _checks_lean_statements._THIN_HARD
 _is_prop_codomain = _checks_lean_substrate._is_prop_codomain
-_is_autogen_decl = _checks_lean_substrate._is_autogen_decl
-_thin_type_label = _checks_lean_substrate._thin_type_label
-_is_vacuous_identity_wrapper = _checks_lean_substrate._is_vacuous_identity_wrapper
-_parse_formula_lean_refs = _checks_lean_substrate._parse_formula_lean_refs
+_is_autogen_decl = _checks_lean_statements._is_autogen_decl
+_thin_type_label = _checks_lean_statements._thin_type_label
+_is_vacuous_identity_wrapper = _checks_lean_statements._is_vacuous_identity_wrapper
+_parse_formula_lean_refs = _checks_lean_statements._parse_formula_lean_refs
 
 check_paper_provenance = _checks_papers_prose.check_paper_provenance
 check_numerical_literals = _checks_papers_prose.check_numerical_literals
