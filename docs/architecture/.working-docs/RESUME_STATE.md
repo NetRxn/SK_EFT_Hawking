@@ -56,7 +56,7 @@ direction authorized, contingent on architecture review + operator visibility).
 | **0 — characterization harness** | ✅ **COMPLETE.** 3 guards + the harness, all mutation-verified |
 | **1 — anchors + helpers, file stays put** | ✅ **COMPLETE.** `CHARACTERIZATION HELD — 49 checks identical` |
 | **2 — package split** | ✅ **COMPLETE 2026-08-03.** 11 modules, 0 checks left in validate.py (7900 → 720). 48/49 checks byte-identical vs the pre-Phase-2 baseline |
-| 3 — semantic fixes | not started; list in ADR-009 §Deferred (8 items) |
+| 3 — semantic fixes | **IN PROGRESS.** 1 of 8 done (the inverted submission gate) |
 
 ### Phase 2 — COMPLETE
 
@@ -92,8 +92,12 @@ Each is a **separate reviewed change** that ships with a mutation test proving b
 a seeded defect, silent on correct data (D5). Never batch them with a mechanical move.
 
 Ordered by how much a wrong answer costs today:
-1. `readiness_submission_gate` is **inverted** — fails only when zero gate nodes exist, and its `--strict`
-   path was never built. 14 RED bundles never fired it.
+1. ✅ **DONE** (`fd470314`) — `readiness_submission_gate` was **inverted**: it failed only when zero gate
+   nodes existed and passed when it measured RED. 61 of 64 papers were RED with verdict `True`. Four
+   defects fixed (verdict, per-paper details, summary, fail-open ImportError); two pure cores extracted;
+   11 tests, 5 mutations, clean negative control. **`validate.py` is now RED on this check by design.**
+   ⚠️ Harness lesson from it: scope every mutation to the target function's AST span. Two mutations read
+   as MISSED because `str.replace(…, 1)` hit the FIRST match in the file — inside a *different* function.
 2. The **8 always-pass checks** — disposition each. Three are honestly advisory; `paper_latex_compiles`
    and `readiness_submission_gate` are not.
 3. `native_decide_regression` reads a `counts.json` that `counts_fresh` regenerates ~20 positions later —

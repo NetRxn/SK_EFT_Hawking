@@ -265,11 +265,14 @@ flowchart TB
 uncommitted, so **a fresh clone has no mechanical gate at all.** The web-egress guard is the one
 unambiguously fail-closed control in the system.
 
-**Reports but never blocks.** Eight checks are structurally incapable of returning `passed=False` —
-including `readiness_submission_gate`, which is **inverted**: it fails only when *zero* `ReadinessGate` nodes
-exist and passes when it measures RED (`# WARN not FAIL during rollout`). Its docstring promises a
-`--strict` path that was never built. This is why 14 bundles sat at `stage13_status: green` with open
-blockers.
+**Reports but never blocks.** Eight checks were structurally incapable of returning `passed=False`.
+**Seven remain** — `readiness_submission_gate` was repaired 2026-08-03 (ADR-009 Phase 3 item 1) and now
+hard-fails when any paper has a blocked gate. It had been **inverted**: failing only when *zero*
+`ReadinessGate` nodes existed and passing when it measured RED, marked only by an inline
+`# WARN not FAIL during rollout`, with a `--strict` path its docstring promised and the body never
+referenced. Measured at repair: **61 of 64 papers RED, verdict `True`** — which is why 14 bundles sat at
+`stage13_status: green` with open blockers. It now reports RED as RED, and `validate.py` fails on it by
+design.
 
 **Claims enforcement, has none.** `docs/AI-DEFECT-DEFENSE-LAYER.md` names
 `scripts/pre_commit_hook.sh` and `scripts/install_pre_commit.sh` as its Tier-1 implementation. **Verified:
@@ -307,12 +310,16 @@ Six independent mechanisms, one shape: **absence of measurement rendered as succ
 
 | Mechanism | Reports | Actually |
 |---|---|---|
-| `readiness_submission_gate` | pass | fails only when it *cannot* measure; passes when it measures RED |
+| ~~`readiness_submission_gate`~~ | ~~pass~~ | **FIXED 2026-08-03** — hard-fails on any blocked gate; 11 tests, 5 mutations |
 | `check_bundle_source_freshness` | "fresh: all N source paper(s)…" | returns `None` for sourceless keys, compares zero files, **writes `freshness_stale: false`** |
 | `paper_latex_compiles` | pass | skipped by default; `passed=True` even after a real compile failure |
 | `evaluate_all_gates` | `open` | any evaluator exception |
 | `harness_lock` on contention | "regenerate: succeeded" | wrote derived artifacts from stale input |
 | AI-Defense Tier 1 | documented as implemented | files do not exist |
+
+**One of the six is now closed, and the shape of the fix is the template for the rest:** the verdict must
+be *derived* from what the check measured, never asserted alongside it. In every remaining row the check
+computes the right answer and then discards it.
 
 The type system permits it: `CheckResult.passed` is a bare `bool` with no `UNEVALUATED` state. The concept
 exists in three hand-patched sites whose comments state the principle exactly — *"a readiness guard that
