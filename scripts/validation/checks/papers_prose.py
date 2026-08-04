@@ -256,16 +256,25 @@ def check_numerical_literals() -> CheckResult:
             warning=(len(findings) > 0),
         ))
 
+    # ── RATCHET (ADR-009 Phase 3 item 2) — reasoning in check_count_literals.
+    from src.core.constants import NUMERICAL_LITERAL_CEILING as _CEIL
+    over = total_findings > _CEIL
     details.insert(0, Detail(
-        "summary", True,
+        "summary", not over,
         f"{total_findings} inline literals across papers; "
-        f"{total_inputs} \\input{{tables/}} references in use "
-        f"(WARN-level during retrofit)",
-        warning=(total_findings > 0),
+        f"{total_inputs} \\input{{tables/}} references in use (ceiling {_CEIL})"
+        + (f" — EXCEEDS by {total_findings - _CEIL}" if over
+           else f" — {_CEIL - total_findings} below; lower the ceiling" if total_findings < _CEIL
+           else ""),
+        warning=(total_findings > 0 and not over),
     ))
-
-    # WARN-only until retrofit is complete; never hard-fails.
-    return CheckResult(passed=True, details=details)
+    if over:
+        details.insert(1, Detail(
+            "ratchet", False,
+            f"inline unit-bearing literal total grew to {total_findings}, above the "
+            f"frozen ceiling {_CEIL}. Move it into \\input{{tables/...}} (Invariant #1), "
+            f"or raise NUMERICAL_LITERAL_CEILING with a rationale."))
+    return CheckResult(passed=not over, details=details)
 
 
 @register_check("count_literals",
@@ -341,16 +350,31 @@ def check_count_literals() -> CheckResult:
             f"{status_prefix}{len(findings)} count-literal matches: {sample}{suffix}",
             warning=True,
         ))
-
+    # ── RATCHET (ADR-009 Phase 3 item 2) ────────────────────────────────────
+    # Was `passed=True` under "WARN-only until retrofit complete". The retrofit's
+    # condition — "once all 15 papers use macros" — was written when the corpus had
+    # 15 papers; it now has 64, so the target receded faster than it was approached
+    # and the check could never fail. Its own docstring promised escalation, so it is
+    # NOT permanently advisory and is not walked back: the existing debt is frozen and
+    # any NEW literal fails. Same shape as NATIVE_DECIDE_DECL_CLOSURE_CEILING.
+    from src.core.constants import COUNT_LITERAL_CEILING as _CEIL
+    over = total_findings > _CEIL
     details.insert(0, Detail(
-        "summary", True,
+        "summary", not over,
         f"{total_findings} count-literal matches across {len(paper_tex_files)} papers "
-        f"(WARN-level; retrofit to \\input{{counts.tex}} + macros)",
-        warning=(total_findings > 0),
+        f"(ceiling {_CEIL})"
+        + (f" — EXCEEDS by {total_findings - _CEIL}" if over
+           else f" — {_CEIL - total_findings} below; lower the ceiling" if total_findings < _CEIL
+           else ""),
+        warning=(total_findings > 0 and not over),
     ))
-
-    # CHECK 17 is WARN-only until retrofit complete — never hard-fail
-    return CheckResult(passed=True, details=details)
+    if over:
+        details.insert(1, Detail(
+            "ratchet", False,
+            f"count-literal total grew to {total_findings}, above the frozen ceiling "
+            f"{_CEIL}. Move the new value into a counts.tex macro (Invariants #1/#2), "
+            f"or raise COUNT_LITERAL_CEILING in the same commit with a rationale."))
+    return CheckResult(passed=not over, details=details)
 
 
 @register_check("paper_latex_compiles",
@@ -433,7 +457,6 @@ def check_paper_latex_compiles() -> CheckResult:
             else:
                 n_ok += 1
 
-    all_pass = True
     details.append(Detail(
         "summary",
         len(failed) == 0,
@@ -441,14 +464,29 @@ def check_paper_latex_compiles() -> CheckResult:
         f"({n_missing} missing draft(s) skipped) — {len(failed)} with fatal errors"
     ))
     for code, n_fatal, first in failed:
-        all_pass = False
         cnt = "timeout" if n_fatal < 0 else f"{n_fatal} fatal"
         details.append(Detail(
             f"compile:{code}", False,
-            f"{code}: {cnt} — first: {first}", warning=True))
+            f"{code}: {cnt} — first: {first}"))
 
-    # Advisory: never block the suite on a compile WARN.
-    return CheckResult(passed=True, details=details)
+    # ── FIXED 2026-08-03 (ADR-009 Phase 3 item 2) ───────────────────────────────
+    # This returned `passed=True` unconditionally, under "Advisory: never block the
+    # suite on a compile WARN". It computed `all_pass` from the failure list and then
+    # DISCARDED it — the QA/QI map §7 shape exactly: the check works out the right
+    # answer and throws it away.
+    #
+    # The stated justification was that transient toolchain gaps must not block
+    # development. That case is already handled ABOVE by two early returns: pdflatex
+    # missing, and the slow-gate skip when `_cfg.FORCE_LATEX` is false (which is the
+    # default, so a normal full run is unaffected by this change). What remains when
+    # we reach here is a draft that a working pdflatex could not compile — which is
+    # a real defect, and the incident this check was built for (108 fatal errors
+    # injected by unescaped & / _ in generated tables) is exactly that.
+    #
+    # Measured at the moment of the fix: 20/21 clean, **D3 fails with 2 fatal errors
+    # ("! Undefined control sequence")** — reported as a passing ⚠ WARN for as long
+    # as the check has existed.
+    return CheckResult(passed=len(failed) == 0, details=details)
 
 
 # ═══════════════════════════════════════════════════════════════════════

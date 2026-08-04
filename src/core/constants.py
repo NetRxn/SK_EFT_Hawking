@@ -2400,6 +2400,35 @@ FORMULA_GROUNDING_KIND: dict[str, dict[str, str]] = {
 NATIVE_DECIDE_DECL_CLOSURE_CEILING = 546  # 2026-06-13 (post-6AO; was 852→587 at ADR-002 cleanup)
 
 # ════════════════════════════════════════════════════════════════════
+# PAPER-LITERAL RATCHETS (ADR-009 Phase 3 item 2, 2026-08-03)
+#
+# `count_literals` and `numerical_literals` both shipped as WARN-only with the
+# same promise in their docstrings: *"WARN-level during the retrofit period; will
+# escalate to FAIL once all 15 papers use macros."*
+#
+# The retrofit never completed and the corpus grew from 15 papers to 64, so the
+# escalation condition receded faster than it was approached. Two checks were
+# therefore structurally incapable of failing, indefinitely, while reporting a
+# growing number of findings — the QA/QI map's §7 pattern with a deadline that
+# never arrives.
+#
+# Disposition: **neither is permanently advisory, so neither is walked back.**
+# They become RATCHETS instead, the same shape as the native_decide ceiling above:
+# the existing debt is frozen and visible, and any NEW literal fails the check.
+# That makes the promise real today rather than conditional on a cleanup nobody
+# scheduled, and it does not require the corpus to be fixed first.
+#
+# Lowering these is the goal; a wave that removes literals should lower them in
+# the same commit. RAISING one is a deliberate act that must carry a rationale —
+# and per Invariant #1/#2 the fix is almost always to move the value into
+# `\input{tables/...}` or a `counts.tex` macro instead.
+#
+# Measured 2026-08-03 on all 64 drafts. Enforced by
+# `validate.py --check count_literals` / `--check numerical_literals`.
+COUNT_LITERAL_CEILING = 107      # hardcoded "N theorems/modules/sorry" in paper prose
+NUMERICAL_LITERAL_CEILING = 116  # inline unit-bearing values outside \input{tables/}
+
+# ════════════════════════════════════════════════════════════════════
 # VACUOUS-STATEMENT BASELINE (identity-pinned ratchet; SIG gate hardening 2026-06-13)
 #
 # `validate.py --check vacuous_statement_audit` (type-thin: reflexive `Eq X X`) and

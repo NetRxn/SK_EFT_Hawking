@@ -266,7 +266,12 @@ uncommitted, so **a fresh clone has no mechanical gate at all.** The web-egress 
 unambiguously fail-closed control in the system.
 
 **Reports but never blocks.** Eight checks were structurally incapable of returning `passed=False`.
-**Seven remain** — `readiness_submission_gate` was repaired 2026-08-03 (ADR-009 Phase 3 item 1) and now
+**Four remain, all four deliberately advisory with a stated reason** (`elaboration_knob_watchlist`,
+`paper_toolchain_pin_drift`, `viz_consistency`, `inventory_index_autogen_fresh` — dispositioned
+individually in ADR-009 §Deferred item 3). Of the four that were defects: `paper_latex_compiles` computed
+its verdict and discarded it (**measured: D3 fails with 2 fatal LaTeX errors**), and `count_literals` /
+`numerical_literals` were WARN-only pending a retrofit whose target — "all 15 papers" — receded as the
+corpus grew to 64; both are now ratchets. And — `readiness_submission_gate` was repaired 2026-08-03 (ADR-009 Phase 3 item 1) and now
 hard-fails when any paper has a blocked gate. It had been **inverted**: failing only when *zero*
 `ReadinessGate` nodes existed and passing when it measured RED, marked only by an inline
 `# WARN not FAIL during rollout`, with a `--strict` path its docstring promised and the body never
@@ -311,8 +316,8 @@ Six independent mechanisms, one shape: **absence of measurement rendered as succ
 | Mechanism | Reports | Actually |
 |---|---|---|
 | ~~`readiness_submission_gate`~~ | ~~pass~~ | **FIXED 2026-08-03** — hard-fails on any blocked gate; 11 tests, 5 mutations |
+| ~~`paper_latex_compiles`~~ | ~~pass~~ | **FIXED 2026-08-03** — hard-fails on a real compile failure; D3 was failing silently |
 | `check_bundle_source_freshness` | "fresh: all N source paper(s)…" | returns `None` for sourceless keys, compares zero files, **writes `freshness_stale: false`** |
-| `paper_latex_compiles` | pass | skipped by default; `passed=True` even after a real compile failure |
 | `evaluate_all_gates` | `open` | any evaluator exception |
 | `harness_lock` on contention | "regenerate: succeeded" | wrote derived artifacts from stale input |
 | AI-Defense Tier 1 | documented as implemented | files do not exist |

@@ -373,11 +373,29 @@ Identified during the read; explicitly **not** part of Phases 0–2.
 2. `readiness_submission_gate` is **inverted** (`:4770-4836`): it fails only when zero `ReadinessGate` nodes
    exist and passes when it measures RED (`:4830`, `# WARN not FAIL during rollout`). Its docstring promises a
    `--strict` path (`:4756`) that was **never built** — `STRICT_MODE` is not referenced in the function.
-3. The eight always-pass checks — decide per check whether that is intended: `paper_latex_compiles`
-   (`:6347`), `paper_toolchain_pin_drift` (`:7675`), `count_literals` (`:3841`), `numerical_literals`
-   (`:3252`), `viz_consistency` (`:2325`), `elaboration_knob_watchlist` (`:2077`),
-   `inventory_index_autogen_fresh` (`:7358`), `readiness_submission_gate` (`:4836`). Three are honestly
-   advisory by design; at least two are not.
+3. ✅ **DISPOSITIONED 2026-08-03.** The eight always-pass checks, decided individually. Four were
+   defects and are fixed; four are honestly advisory and stay that way. The distinction is not
+   "does it fail" — it is **whether the check's own reasoning survives contact with what it measures.**
+
+   | check | disposition | why |
+   |---|---|---|
+   | `readiness_submission_gate` | **FIXED** (item 1) | Inverted. 61 of 64 papers RED, verdict `True`. |
+   | `paper_latex_compiles` | **FIXED** — hard-fails | Computed `all_pass` and discarded it. Its stated reason (transient toolchain gaps) is already handled by two earlier returns — missing `pdflatex`, and the slow-gate skip. What reaches the verdict is a draft a working `pdflatex` could not compile. **Measured: D3 fails with 2 fatal `! Undefined control sequence`.** |
+   | `count_literals` | **FIXED** — ratchet | "WARN-level until all 15 papers use macros." The corpus is 64 papers; the target receded faster than it was approached. Frozen at `COUNT_LITERAL_CEILING = 107`; new literals fail. |
+   | `numerical_literals` | **FIXED** — ratchet | Same shape. `NUMERICAL_LITERAL_CEILING = 116`. |
+   | `elaboration_knob_watchlist` | **advisory — keep** | The best-reasoned advisory in the suite. `maxRecDepth` / `synthInstance` are *elaboration-time* knobs; the kernel re-checks the final term and never reads them, so they add nothing to the axiom closure. Mathlib uses them routinely. The only real cost — a `decide` heavy enough to need a knob is a slow kernel reduction — is an upstreaming consideration, not a soundness one. 46 sites, all kernel-pure. |
+   | `paper_toolchain_pin_drift` | **advisory — keep** | A stale pin in a DRAFT is a publication decision, not a defect: does this paper re-verify under the new pin (update the literal), or does it record the pin it was actually verified under (keep it, and say so)? A gate that auto-failed would push authors toward find-and-replace, silently asserting the former for every draft. It reports; Stage 13 decides. |
+   | `viz_consistency` | **advisory — keep** | Notebook figure-tracking hygiene — untagged `.show()`, hardcoded `COLORS` hex. Real signal, but it grades authoring style in exploratory notebooks, and the artifacts that ship are gated by `bundle_figure_integrity` (legibility floor + render drift), which *can* fail. |
+   | `inventory_index_autogen_fresh` | **advisory — keep** | A stale doc index is documentation hygiene, and the generator is one command away. It also *cannot* silently rot: `sync.py --fast` regenerates it on every commit, so staleness is transient by construction. Currently clean. |
+
+   **A ratchet, not a walk-back.** `count_literals` and `numerical_literals` both promised escalation in
+   their own docstrings, so declaring them permanently advisory would be exactly the prose walk-back this
+   project forbids. Freezing the debt and failing on growth makes the promise real *today* without
+   requiring the retrofit to finish first — and it is the house idiom already
+   (`NATIVE_DECIDE_DECL_CLOSURE_CEILING`, `VACUOUS_STATEMENT_BASELINE`).
+
+   **Live consequence:** `paper_latex_compiles` now fails on D3. That is a genuine publication blocker
+   for that bundle and belongs to the paper-remediation workstream, not to this ADR.
 4. No `UNEVALUATED` result state (`:105-119`).
 5. `count_literals` ⊂ `axiom_count_prose_consistency` — same predicate shape split by subject, one
    hard-failing and one incapable of failing.
@@ -402,6 +420,18 @@ Identified during the read; explicitly **not** part of Phases 0–2.
    is fabricated evidence in a gate. **Fix is one line** (apply an alias allow-list, or require the ref to be
    undotted, before Lean resolution) — deliberately NOT done here: it changes what a gate measures, which is
    Phase 3, and mixing that into a mechanical phase is what this ADR forbids.
+
+   **⚠️ The same subsystem also DROPS real coverage, found 2026-08-03 while attributing a Phase-3
+   characterization delta.** `extract_python_test_nodes` mints its node id as
+   `test:<module>::<function>` — **the class is not in the key** — and dedupes on it. So two tests with the
+   same method name in different classes of one file collide, and every one after the first is silently
+   discarded. Measured corpus-wide: **4,416 `def test_*` in `tests/` produce 4,350 PythonTest nodes — 66
+   tests missing.** It surfaced because a new 9-test file minted 7 nodes.
+
+   So the graph's coverage picture is wrong in *both* directions at once — inflated by alias-resolved
+   phantom edges, deflated by dropped nodes — and `ComputationCorrectness` consumes the result. Fix both
+   together (include the class in the id, or fall back to `lineno`), with a test that asserts the node
+   count equals the `def test_*` count.
 
 ---
 
