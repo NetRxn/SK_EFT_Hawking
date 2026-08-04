@@ -170,7 +170,11 @@ flowchart LR
     classDef drop fill:#fdecea,stroke:#c0392b,color:#7b241c
 ```
 
-**Five silent-drop points**, ranked by observed damage:
+**Silent-drop points**, ranked by observed damage. (A sixth, outside this pipeline, was found and fixed
+2026-08-03: `extract_python_test_nodes` keyed its id on `module::function` with the class omitted and
+deduped on it, dropping **66 of 4,416** test nodes — and those nodes are what feed the VERIFIES coverage
+edges Gate 4 reads. Combined with the still-open alias defect in `extract_test_verifies_edges`, which
+*fabricates* edges from names like `np.kron`, the coverage picture was wrong in both directions at once.)
 
 1. A finding with neither `inferred_paper` nor `inferred_bundle` is dropped from bundle aggregation.
 2. `_emit` is a **no-op when the FLAGS target is absent** from `node_ids` — no log. This produced the D11 false-green.
