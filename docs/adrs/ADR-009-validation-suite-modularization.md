@@ -415,7 +415,8 @@ Identified during the read; explicitly **not** part of Phases 0–2.
 > "ADR-009 Phase 3 item 1". Working trackers may order by cost — that is useful — but every cross-reference
 > must carry the §Deferred ordinal.
 >
-> **Status, verified 2026-08-04: 4 of 8 done** — items **1, 2, 3, 7**. Open: **0, 4, 5, 6**.
+> **Status, verified 2026-08-04: 6 of 8 dispositioned** — items **1, 2, 3, 7** fixed; items **5** and
+> **6** DECLINED, each with the measurement that justifies declining. Open: **0** and **4**.
 >
 > **Every open item's scope figure is UNVERIFIED and must be re-measured before it is fixed** (item 7's
 > filing was wrong four independent ways; item 6's "two gates" is already measured at six — see below).
@@ -497,6 +498,21 @@ Identified during the read; explicitly **not** part of Phases 0–2.
    `notebooks`, `bundle_figure_integrity`, `tracked_hypotheses_fresh` and `bibitem_title_primary_source`.
    Two are annotated in-body as the **H1-silent** sites: `accepted_findings_carry_rationale` (missing
    ledger → PASS) and `citation_primary_sources_present`'s duplicate-key guard (exception → advisory).
+
+   ⚠️ **THE POPULATION IS LARGER THAN THE CHECK MODULES.** Reading the readiness stack in full
+   (2026-08-04) found the same shape in two layers this item had not considered, and any sweep must
+   cover them or it will close the item while leaving the pattern intact:
+   - **`readiness_gates.evaluate_all_gates` (`:759-765`)** wraps every evaluator in `try/except` and on
+     exception sets `state='open'`. `paper_aggregate_state` maps `open` to **yellow, not red** — so an
+     evaluator that throws yields a NON-BLOCKING gate. `_eval_citation_integrity` does the same
+     deliberately when `paper_draft.tex` is unreadable (`:147-150`).
+   - **`bundle_readiness._blocked_p1_gates_by_paper` (`:274-299`)** catches *any* exception and returns
+     `{}`, with the comment *"callers treat that as 'no downgrade'"*. A graph-build failure therefore
+     silently removes the P1-gate downgrade that stops a bundle rendering GREEN — the exact defect its
+     own docstring says it was added to fix, reachable through its error path.
+
+   These are the same class as `QA_QI_INFRASTRUCTURE_MAP.md` §7's `evaluate_all_gates | open | any
+   evaluator exception` row, now confirmed in source rather than inherited.
 5. ⛔ **`count_literals` ⊂ `axiom_count_prose_consistency` — THE PREMISE IS FALSE.** Both bodies read
    2026-08-04; neither half of this filing survives.
    - `count_literals` is **no longer "incapable of failing"** — item 3 converted it to a ratchet against
@@ -512,15 +528,51 @@ Identified during the read; explicitly **not** part of Phases 0–2.
    worth shipping separately: *`axiom_count_prose_consistency` is the model `count_literals` should be
    raised to* — compare each literal against its `counts.tex` macro value rather than merely counting
    literals. That is new work, not a merge, and needs its own review.
-6. `--strict` is passed by no automated caller — not the commit hook, not `gate_precheck.py` — so every
-   strict-only leg in the suite is dead code in practice.
-   ⚠️ **Filed as "two gates" (`axiom_closure_allowlist`, `bundle_source_freshness`). Re-measured
-   2026-08-04 by AST: SIX registered checks read `_cfg.STRICT_MODE`** — those two plus
-   `parameter_provenance`, `provenance_doi_in_registry`, `bibitem_title_primary_source` and
-   `theorem_name_embedded_citations`. The fix must still partition them: a check whose *only* failure
-   path is strict-only is unreachable, whereas one that merely *promotes an advisory* under `--strict`
-   still fails on its own terms by default. That partition is the first step of this item, not an
-   assumption to inherit — the filed "two" conflated the two categories.
+6. ✅ **DISPOSITIONED 2026-08-04 — DECLINED as filed; a narrower residue recorded.** The filing said
+   `--strict` reaches no automated caller, "making two gates unreachable in practice". The premise is
+   true; **the inference is not**, and the count was wrong.
+
+   **(a) Six checks read `_cfg.STRICT_MODE`, not two** (AST-measured): the filed
+   `axiom_closure_allowlist` and `bundle_source_freshness`, plus `parameter_provenance`,
+   `provenance_doi_in_registry`, `bibitem_title_primary_source` and `theorem_name_embedded_citations`.
+
+   **(b) `--strict` is not dead code — it is the documented Paper Submission Gate.**
+   `WAVE_EXECUTION_PIPELINE.md:72` defines it (*"Checked before arXiv/journal submission, not at
+   Stage 1"*) and Invariant #12 (`:685`) calls the flag *"mandatory at the Paper Submission Gate"*. That
+   no automated caller passes it is **by design**: it gates a submission decision, not a build.
+
+   **(c) The submission gate IS collected and mechanized — as the eleven ReadinessGates**, evaluated by
+   `scripts/readiness_gates.py` and surfaced by `readiness_submission_gate`, which §Deferred item 2
+   repaired to hard-fail. So the concern behind this item — "nothing enforces submission readiness
+   automatically" — is already answered by a different subsystem than the one the filing was looking at.
+
+   **What the code actually shows** (each evaluator read 2026-08-04):
+
+   | strict consumer | strict-only concern | covered by a ReadinessGate? |
+   |---|---|---|
+   | `parameter_provenance` | params lack `human_verified_date` | **YES** — `_eval_parameter_provenance` (P1) blocks on exactly this |
+   | `provenance_doi_in_registry` | `PARAMETER_PROVENANCE` DOIs → `CITATION_REGISTRY` | No — `CitationIntegrity` runs bibitem → registry, the opposite direction |
+   | `bibitem_title_primary_source` | registry title vs cached PDF page-1 | No — no gate compares titles to PDFs |
+   | `theorem_name_embedded_citations` | author+year embedded in decl names → bibliography | No — `CitationIntegrity` is bibitem coverage only |
+   | `axiom_closure_allowlist` | non-allow-listed axioms in a declaration's closure | No — `AssumptionDisclosure` covers hypotheses *named in prose* |
+   | `bundle_source_freshness` | source paper newer than `last_lift` | No — `NumericalFreshness` (P2) covers REPORTS staleness, inline literals and table staleness |
+
+   ⚠️ **"Redundant" would be too strong for the one covered row.** The gate blocks on parameters a paper
+   `DEPENDS_ON`; the strict check scans the whole `PARAMETER_PROVENANCE` registry excluding `PROJECTED`
+   tier. The gate is per-paper, the check is global — the *submission-blocking effect* is already
+   achieved for any parameter a paper actually uses, and the strict leg additionally covers registry
+   entries no paper depends on yet.
+
+   **Disposition: DECLINE.** There is no defect to fix here. `--strict` is a correctly-designed
+   submission-time mode; the automated submission gate exists and now blocks.
+
+   **Residue, recorded and NOT built** (`REMEDIATION_PLAN.md` §6a: identify → establish existing
+   coverage by reading the code → describe the residue → request approval → only then build): **five
+   strict legs enforce concerns that no ReadinessGate covers**, and because nothing automated passes
+   `--strict`, those five are exercised only if a human runs the flag. Whether to (i) add gates for
+   them, (ii) mechanize a submission-gate runner that passes `--strict`, or (iii) accept them as
+   human-run submission checks, is an operator decision and belongs with the publication workstream, not
+   with this ADR.
 7. ✅ **DONE 2026-08-03 — both halves.** **`build_graph`'s Lean-side VERIFIES resolver manufactured
    coverage from library aliases.** Found while attributing a characterization diff.
    `extract_verifies_edges` (`build_graph.py:3634`; earlier revisions of this ADR called it
