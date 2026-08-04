@@ -400,3 +400,48 @@ class TestExternalSurface:
             f"framework module's public surface is {sorted(expected)}; anything else "
             f"belongs in a check or helper module. If this is deliberate, add it here."
         )
+
+
+class TestGraphTestNodeCoverage:
+    """Every `def test_*` must reach the graph — ADR-009 §Deferred item 7.
+
+    `extract_python_test_nodes` minted its id as `test:<module>::<function>` with
+    the CLASS OMITTED and deduped on it, so two tests sharing a method name in
+    different classes of one file collided and every one after the first was
+    silently discarded — no log, no counter. Measured at the fix: **4,416
+    `def test_*` produced 4,350 nodes; 66 tests were missing from the graph.**
+
+    These nodes are the source of the VERIFIES edges that
+    `ReadinessGate: ComputationCorrectness` reads as test-coverage evidence, so a
+    dropped node is missing coverage in a gate. This asserts the invariant the
+    id scheme has to preserve: one node per test function, no silent loss.
+    """
+
+    def test_every_test_function_becomes_a_node(self):
+        import ast
+        sys.path.insert(0, str(SK_ROOT / "scripts"))
+        from build_graph import extract_python_test_nodes
+
+        defs = 0
+        for f in sorted((SK_ROOT / "tests").glob("test_*.py")):
+            try:
+                tree = ast.parse(f.read_text())
+            except SyntaxError:
+                continue
+            defs += sum(1 for n in ast.walk(tree)
+                        if isinstance(n, ast.FunctionDef) and n.name.startswith("test_"))
+
+        nodes = extract_python_test_nodes()
+        assert len(nodes) == defs, (
+            f"{defs} `def test_*` in tests/ but {len(nodes)} PythonTest nodes — "
+            f"{defs - len(nodes)} silently dropped. Almost certainly a node-id "
+            f"collision: the id must distinguish same-named methods in different "
+            f"classes (ADR-009 §Deferred item 7)."
+        )
+
+    def test_node_ids_are_unique(self):
+        sys.path.insert(0, str(SK_ROOT / "scripts"))
+        from build_graph import extract_python_test_nodes
+        nodes = extract_python_test_nodes()
+        ids = [n["id"] for n in nodes]
+        assert len(set(ids)) == len(ids), "duplicate PythonTest node ids"

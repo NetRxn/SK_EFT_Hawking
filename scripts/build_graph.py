@@ -1337,6 +1337,31 @@ def _classify_test_function(fn: _ast.FunctionDef,
     return 'unknown', sorted(names)
 
 
+def _iter_test_functions(tree):
+    """Yield ``(function_node, enclosing_class_name_or_None)`` for every
+    ``def test_*`` in a parsed test module, in source order.
+
+    Replaces a bare ``ast.walk`` + ``isinstance(FunctionDef)`` scan, which found
+    the same functions but carried no class context — so the caller could not
+    disambiguate two identically-named methods in different classes. Descends into
+    nested classes (a real pattern in this suite) and into function bodies, so the
+    set of functions found is identical to the old walk; only the context is new.
+    """
+    for node in _ast.walk(tree):
+        if not isinstance(node, _ast.ClassDef):
+            continue
+        for sub in _ast.walk(node):
+            if isinstance(sub, _ast.FunctionDef) and sub.name.startswith('test_'):
+                yield sub, node.name
+    # Module-level tests (and tests nested in plain functions) carry no class.
+    in_class = {id(sub) for node in _ast.walk(tree) if isinstance(node, _ast.ClassDef)
+                for sub in _ast.walk(node) if isinstance(sub, _ast.FunctionDef)}
+    for node in _ast.walk(tree):
+        if (isinstance(node, _ast.FunctionDef) and node.name.startswith('test_')
+                and id(node) not in in_class):
+            yield node, None
+
+
 def extract_python_test_nodes() -> list[dict]:
     """PythonTest — test functions with test_kind classification.
 
@@ -1366,11 +1391,34 @@ def extract_python_test_nodes() -> list[dict]:
             continue
         module = test_file.stem  # e.g. "test_formulas"
         imports = _extract_imports(tree)
-        for node in _ast.walk(tree):
-            if isinstance(node, _ast.FunctionDef) and node.name.startswith('test_'):
+        # ── Class-qualified ids (fixed 2026-08-03, ADR-009 §Deferred item 7) ──
+        # The id was `test:<module>::<function>` with the CLASS OMITTED, and the
+        # loop deduped on it. So two tests sharing a method name in different
+        # classes of one file collided, and every one after the first was silently
+        # discarded — no log, no counter. Measured corpus-wide at the fix:
+        # **4,416 `def test_*` in tests/ produced 4,350 PythonTest nodes; 66 tests
+        # were missing from the graph.** It surfaced when a new 9-test file minted 7.
+        #
+        # That matters because these nodes are the source of the VERIFIES
+        # coverage edges that `ReadinessGate: ComputationCorrectness` reads. Paired
+        # with the alias-resolution defect in `extract_test_verifies_edges` (which
+        # FABRICATES edges from `np.kron`-style names), the graph's coverage picture
+        # was wrong in both directions at once.
+        #
+        # The id now mirrors pytest's own nodeid shape, `file::Class::method`.
+        # Safe to change: it is constructed here and nowhere else, consumed only
+        # within the same build, and persisted nowhere — `write_graph_to_pg` is a
+        # full delete-and-rewrite, and neither the supersession ledger nor bundle
+        # metadata references a `test:` id.
+        for node, class_name in _iter_test_functions(tree):
                 test_kind, refs = _classify_test_function(node, imports)
-                test_id = f'test:{module}::{node.name}'
+                qualifier = f'{class_name}::' if class_name else ''
+                test_id = f'test:{module}::{qualifier}{node.name}'
                 if test_id in seen_ids:
+                    # Now genuinely a duplicate definition, not a name collision
+                    # across classes. Log it rather than dropping in silence.
+                    logger.warning("PythonTest: duplicate id %s in %s — skipping",
+                                   test_id, test_file.name)
                     continue
                 seen_ids.add(test_id)
                 nodes.append({

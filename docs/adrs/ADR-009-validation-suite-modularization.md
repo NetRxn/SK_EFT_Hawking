@@ -428,10 +428,18 @@ Identified during the read; explicitly **not** part of Phases 0–2.
    discarded. Measured corpus-wide: **4,416 `def test_*` in `tests/` produce 4,350 PythonTest nodes — 66
    tests missing.** It surfaced because a new 9-test file minted 7 nodes.
 
-   So the graph's coverage picture is wrong in *both* directions at once — inflated by alias-resolved
-   phantom edges, deflated by dropped nodes — and `ComputationCorrectness` consumes the result. Fix both
-   together (include the class in the id, or fall back to `lineno`), with a test that asserts the node
-   count equals the `def test_*` count.
+   So the graph's coverage picture was wrong in *both* directions at once — inflated by alias-resolved
+   phantom edges, deflated by dropped nodes — and `ComputationCorrectness` consumes the result.
+
+   ✅ **The dropped-node half is FIXED (2026-08-03).** The id now mirrors pytest's own nodeid shape,
+   `test:<module>::<Class>::<method>`, and a genuine duplicate logs a warning instead of vanishing.
+   **4,416 defs → 4,416 nodes, 66 recovered.** Safe to change: the id is constructed in exactly one place,
+   consumed only within the same build, and persisted nowhere (`write_graph_to_pg` is delete-and-rewrite;
+   neither the supersession ledger nor bundle metadata references a `test:` id).
+   `TestGraphTestNodeCoverage` asserts node count == `def test_*` count, mutation-verified.
+
+   **The fabricated-edge half remains open** — that one changes what a gate *measures* rather than
+   restoring data it was already entitled to, so it keeps its own review.
 
 ---
 
