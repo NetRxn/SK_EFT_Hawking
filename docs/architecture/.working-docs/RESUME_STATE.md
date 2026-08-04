@@ -3,19 +3,36 @@
 **Last updated:** 2026-08-04. Written so any session (or a post-compaction continuation) can pick this up
 without re-deriving it. Read this first, then the linked documents.
 
-> **Every figure in this file is either (a) re-verified on the date shown, or (b) explicitly marked as a
-> historical measurement.** That distinction is load-bearing: five stale counts in this tracker and in
-> ADR-009 cost a full session to find and correct on 2026-08-04. A number in prose is a cache with no
-> invalidation protocol — where an authoritative definition exists, this file now points at it instead of
-> restating its size.
+> **Every figure in this file is either (a) re-verified on the date shown, (b) marked as a historical
+> measurement, or (c) marked as INHERITED from a document and not independently checked.** That third
+> class is the one that bites: on 2026-08-04 three claims were written in a declarative voice while
+> actually being inherited — most seriously "main has no infra code", which is false (see below). A
+> number in prose is a cache with no invalidation protocol; where an authoritative definition exists,
+> this file points at it instead of restating its size.
+>
+> **The failure mode to watch for is not "unverified" — it is "verified adjacent".** Running a check
+> whose result is merely CONSISTENT with a claim, and reporting that as confirmation. Every verification
+> must be able to distinguish the claim from its neighbours, or it is not a verification.
 
 ---
 
 ## Git layout (verified 2026-08-04)
 
 **`main`** — `c2b597e1 docs(audit): publication-readiness assessment of all 21 bundles`.
-The completed assessment only. **No infra code**: `main`'s `scripts/validate.py` is **7,765 lines**, has
-**no** `scripts/validation/` package, and contains **zero** `stage13_status` hits. Verified 2026-08-04.
+
+⚠️ **This entry read "No infra code" until 2026-08-04. That was MATERIALLY WRONG and is corrected here.**
+**`main` carries the ENTIRE working validation infrastructure** — `scripts/validate.py` at **7,765 lines
+with all 59 checks registered**, 105 files under `scripts/`, 140 under `tests/`. Verified 2026-08-04.
+**ADR-009 is a REFACTOR of working code, not a greenfield build**, and every plan must be read that way.
+
+What `main` does NOT have is this branch's work: no `scripts/validation/` package (the Phase-2 split), and
+no `stage13_status` guard (zero hits). The checks themselves all exist there and run today — three of them
+simply **cannot fail** on `main`, which is the defect this branch repairs.
+
+*(How the error happened, because the shape matters: the false line was inherited from an earlier revision
+of this file, then "confirmed" by a narrow check — no `validation/` package, no `stage13_status` — whose
+result was merely CONSISTENT with it. A verification that cannot distinguish the claim from its neighbours
+launders the claim instead of testing it.)*
 
 **`infra/adr-009-validation-modularization`** — ALL infrastructure work, off main until every phase is done
 (operator ruling 2026-08-03). **35 commits ahead of main, 0 behind** (34 before this file's own commit).
@@ -147,7 +164,9 @@ The "~20 sites" estimate is in the right ballpark (~11 return `passed=True` from
 missing-artifact class adds roughly as many again) — **but the framing was wrong. Do NOT add a third
 `CheckResult` state.** `passed` is consumed by `print_results`, `archive_results`, the `--json` payload
 (**a D2 CONTRACT item**), `gate_precheck.py` and `pre-commit-sync.sh`; a third state is a contract break.
-And the project has **already hand-converted ~60 % of the population**, each with a written reason:
+And the project has **already hand-converted a substantial share of the population** (⚠️ an earlier
+revision said "~60 %" — that figure was never computed and is withdrawn; **counting the two populations
+exactly is step 1 of this item**), each with a written reason:
 `bundle_metadata_matches_graph`, `readiness_verdicts_agree`, `readiness_submission_gate`,
 `review_docs_mint_findings`, `recurrence_reopens_closures`, `native_decide_regression`,
 `notebook_stored_outputs_current` (empty glob → FAIL) and both of `graph_integrity`'s inner guards all

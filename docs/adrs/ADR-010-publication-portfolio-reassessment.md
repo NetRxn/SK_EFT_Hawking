@@ -3,9 +3,27 @@
 - **Status:** **PROPOSED — CHARTER ACCEPTED, ANALYSIS PENDING (2026-08-04).**
   This document was authored *before* the analysis it commissions, deliberately: the operator's framing
   and constraints were given in a live session and would otherwise be lost at the next compaction.
-  §Context and §Constraints are **verified against source** and are durable. §Decision states the
-  *criteria and method* the re-assessment must satisfy. §Open records what is **not** decided — most
-  importantly the roster number, which is **not** to be assumed.
+  §Decision states the *criteria and method* the re-assessment must satisfy. §Open records what is
+  **not** decided — most importantly the roster number, which is **not** to be assumed.
+
+  > ⚠️ **EVIDENCE CLASS — corrected 2026-08-04. An earlier revision of this line claimed "§Context and
+  > §Constraints are verified against source", and that was FALSE for §Context.**
+  >
+  > - **§Constraints C1–C3 are VERIFIED** by the author, 2026-08-04, by reading
+  >   `scripts/validation/checks/bundles_readiness.py`, `scripts/bundle_registry.py`,
+  >   `SYNTHESIS.md` §5 and `CROSS-portfolio-coherence.md` §6.4, and by executing `BUNDLE_CODES`.
+  >   The Invariant-#14 and `PAPER_STRATEGY.md:341` findings in §Context are likewise verified directly.
+  > - **Everything else in §Context is INHERITED from the 2026-08-01 audit and has NOT been
+  >   independently checked** — the ~340 un-homed modules, the 8 closed phases, the 162 `PinPlus*` +
+  >   ~88 Smith/Wu counts, ~181 pp vs ~475 pp, D6/D9's 78 shared theorems, D4 §9 = 62 % of D8, the 16
+  >   stub sections, and the whole late-phase-absorption mechanism (**`check_bundle_source_freshness.py`
+  >   has not been read by this author**).
+  >
+  > The audit is a strong source and its figures are probably right. **They are still claims, not
+  > measurements, and this ADR's own §Constraints C4 forbids recommending on that basis.** Re-measuring
+  > each one is the analysis's FIRST task, not a footnote to it — the same discipline recorded in
+  > `QA_QI_INFRASTRUCTURE_MAP.md` §9, which this workstream has now violated three times and caught
+  > three times.
   **No roster change, no `PAPER_STRATEGY.md` edit and no manuscript edit is authorized by this ADR.**
 - **Decider:** John Roehm (project owner). Direction given 2026-08-04:
   > *"My intent is to publish the strongest form of any paper we deliver. I've noticed that the naming
