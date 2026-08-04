@@ -70,9 +70,13 @@ Three distinct problems are conflated under "the file is too big":
 
 A concurrent publication-readiness audit established the consequence: **the project's quality
 instrumentation reports absence-of-measurement as success.** Eight checks are structurally incapable of
-returning `passed=False`; two more can fail only under `--strict`, which no automated caller passes; and
-roughly twenty sites encode "could not measure" as PASS. `CheckResult.passed` is a bare `bool` (`:105-119`)
-with no third state, though the concept exists in comments and in three hand-patched sites.
+returning `passed=False`; some can fail only under `--strict`, which no automated caller passes; and
+roughly twenty sites encode "could not measure" as PASS. `CheckResult.passed` is a bare `bool` with no
+third state, though the concept exists in comments and in three hand-patched sites.
+*(This paragraph originally said "two more" for the `--strict` set. Re-measured 2026-08-04: **six**
+registered checks read `_cfg.STRICT_MODE`, of which three are fully strict-gated and three merely promote
+an advisory — see §Deferred item 6. The "eight always-pass" and "roughly twenty" figures are the
+2026-08-03 measurements and are addressed by §Deferred items 3 and 4 respectively.)*
 
 **Splitting the file addresses (1) and (2). It does not address (3), and (3) is the disease.** A refactor
 that lands without the mutation-test obligation would relieve the symptom while leaving the generator
@@ -261,7 +265,10 @@ import `_CANONICAL_ORDER`, or it would assert only that production agrees with i
 > only part of the registry is evidence of nothing.
 
 **H4 — the eight `lean_deps.json` loaders disagree on missing-file policy** — five PASS (`:571`, `:892`,
-`:1047`, `:1130`, `:7413` with a warning), two FAIL (`:6968`, `:7191`), one unguarded (`:6729`). A single
+`:1047`, `:1130`, `:7413` with a warning), two FAIL (`:6968`, `:7191`), one unguarded (`:6729`).
+*(That tally is the **2026-08-03 pre-fix** state. Measured 2026-08-04, after item 1 converted
+`native_decide_regression` to FAIL: **4 silent PASS · 1 PASS-with-warning · 3 FAIL**. This divergence is
+§Deferred item 4's core population.)* A single
 extracted loader silently unifies eight checks' behaviour. *Mitigation:* the helper takes an explicit
 `on_missing` policy per call site reproducing today's behaviour exactly, each marked
 `TODO(semantic-review)`. The same applies to draft scoping: `bundle_drafts()` (21 drafts) and
@@ -357,10 +364,15 @@ Precedent exists: `_tp_scan_lines` (`:7573`) was extracted as a pure core specif
   Intended.
 
 **Already realized.** The `stage13_status` guard was added to `check_bundle_metadata_matches_graph`
-(`validate.py:4355`) on 2026-08-03 under separate operator approval, making `stage13_status: "green"` illegal
-while blockers are open. It fires on 14 of 21 bundles, passes 7 live negative controls, and reproduces the
-mutation recorded as missed at `2026-08-01-0009-internal-adversarial/D11.md:179`. **`validate.py` is
-consequently RED on `main` until those bundles are remediated** — the dial working as intended.
+on 2026-08-03 under separate operator approval, making `stage13_status: "green"` illegal while blockers are
+open. It fires on 14 of 21 bundles, passes 7 live negative controls, and reproduces the mutation recorded as
+missed at `2026-08-01-0009-internal-adversarial/D11.md:179`.
+
+⚠️ **CORRECTED 2026-08-04.** This clause read *"`validate.py` is consequently RED on `main`"*. **It is not.**
+The guard lives on `infra/adr-009-validation-modularization`; `main`'s `validate.py` contains **zero**
+`stage13_status` occurrences (verified 2026-08-04). `main` runs all 59 checks and is unaffected by this
+guard until the branch merges. The suite is red **on the branch** — which is the dial working as intended,
+one merge earlier than this clause implied.
 
 **Risk if not done.** The next check is written against a file no agent can read, on ~80% untested surface,
 at a documented base rate of roughly one inert guard per two rounds of adversarial review. The instrumentation
@@ -463,9 +475,43 @@ Identified during the read; explicitly **not** part of Phases 0–2.
 
    **Live consequence:** `paper_latex_compiles` now fails on D3. That is a genuine publication blocker
    for that bundle and belongs to the paper-remediation workstream, not to this ADR.
-4. No `UNEVALUATED` result state (`:105-119`).
-5. `count_literals` ⊂ `axiom_count_prose_consistency` — same predicate shape split by subject, one
-   hard-failing and one incapable of failing.
+4. **No `UNEVALUATED` result state.** ⚠️ **RE-SHAPED 2026-08-04 by a full read of all eleven check
+   modules.** The "roughly twenty sites" figure in §Context is in the right ballpark — ~11 return
+   `passed=True` from an `except` handler, and the missing-artifact class adds roughly as many again —
+   **but the framing was wrong. Do not add a third `CheckResult` state.** `passed` is consumed by
+   `print_results`, `archive_results`, the `--json` payload (**D2 contract item 5**), `gate_precheck.py`
+   and `pre-commit-sync.sh`; a third state is a contract break.
+
+   More importantly, the project has **already hand-converted a substantial share of the population** to
+   FAIL-on-cannot-measure, each with the reasoning written in-body: `bundle_metadata_matches_graph`,
+   `readiness_verdicts_agree`, `readiness_submission_gate`, `review_docs_mint_findings`,
+   `recurrence_reopens_closures`, `native_decide_regression`, `notebook_stored_outputs_current` (empty
+   glob → FAIL) and both of `graph_integrity`'s inner guards. **Treat this item as finishing that per-site
+   sweep, with the readiness/graph family as the template — or decline the type change with the
+   measurement.** *(Counting both populations exactly is step 1; an intermediate note claimed "~60 %",
+   which was never computed and is withdrawn.)*
+
+   Remaining PASS-on-cannot-measure sites concentrate in `axiom_closure_allowlist` (**five** separate PASS
+   returns — no lake, no source file, timeout, non-zero rc, unparseable JSON), `paper_latex_compiles` (2),
+   `paper_toolchain_pin_drift` (2), `inventory_index_autogen_fresh` (2), plus the import guards in
+   `notebooks`, `bundle_figure_integrity`, `tracked_hypotheses_fresh` and `bibitem_title_primary_source`.
+   Two are annotated in-body as the **H1-silent** sites: `accepted_findings_carry_rationale` (missing
+   ledger → PASS) and `citation_primary_sources_present`'s duplicate-key guard (exception → advisory).
+5. ⛔ **`count_literals` ⊂ `axiom_count_prose_consistency` — THE PREMISE IS FALSE.** Both bodies read
+   2026-08-04; neither half of this filing survives.
+   - `count_literals` is **no longer "incapable of failing"** — item 3 converted it to a ratchet against
+     `COUNT_LITERAL_CEILING`, in this same ADR.
+   - They are **not the same predicate.** `count_literals` ratchets the *density* of literal counts
+     ("N theorems", "N modules", "N sorry") and compares them to nothing.
+     `axiom_count_prose_consistency` performs a **value comparison against computed truth**
+     (`docs/counts.json` → `lean.axioms`) with a ±120-char historical-attribution window and a
+     preceding-negation guard, hard-failing only when prose asserts a live axiom while the count is 0.
+     **Merging them would destroy the comparison-to-truth.**
+
+   **Disposition: DECLINE the merge**, on the measurement above. The inverse is the real finding and is
+   worth shipping separately: *`axiom_count_prose_consistency` is the model `count_literals` should be
+   raised to* — compare each literal against its `counts.tex` macro value rather than merely counting
+   literals. That is new work, not a merge, and needs its own review.
 6. `--strict` is passed by no automated caller — not the commit hook, not `gate_precheck.py` — so every
    strict-only leg in the suite is dead code in practice.
    ⚠️ **Filed as "two gates" (`axiom_closure_allowlist`, `bundle_source_freshness`). Re-measured
