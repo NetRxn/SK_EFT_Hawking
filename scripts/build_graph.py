@@ -115,6 +115,21 @@ _AUTOGEN_SHORT_RE = re.compile(
 # instead of silent drops.
 _LEAN_SHORT_INDEX: dict[str, list[str]] = {}
 
+# Populated by extract_python_test_nodes; consumed by extract_verifies_edges.
+# Maps a test module stem -> the names bound by `import X [as y]` in that file.
+# Same pattern as _LEAN_SHORT_INDEX above: derived during node extraction and
+# read by an edge extractor, rather than stored on every one of ~4,400 test
+# nodes (it is a property of the FILE, not of each test in it).
+#
+# A name bound by `import` denotes a Python MODULE and can never be a reference
+# to a Lean declaration — which is exactly what the VERIFIES resolver needs to
+# know. Names bound by `from M import a` are deliberately NOT recorded here:
+# those are symbols, and a project symbol legitimately mirrors a Lean short name
+# (the naming correspondence the Lean branch exists to follow). `from src.core
+# import formulas as F` is a from-import, so the formula branch's `F.` alias
+# path is unaffected.
+_TEST_MODULE_ALIASES: dict[str, set[str]] = {}
+
 
 def discover_paper_draft_paths(papers_dir: Path) -> list[Path]:
     """All publication-target paper drafts on disk: every ``papers/*/paper_draft.tex``.
@@ -1256,6 +1271,26 @@ def _extract_imports(tree: _ast.AST) -> set[str]:
     return names
 
 
+def _extract_module_aliases(tree: _ast.AST) -> set[str]:
+    """Return the names bound by ``import X`` / ``import X as y`` in a module.
+
+    A strict subset of :func:`_extract_imports`, which also collects
+    ``from M import a``. The two forms bind different kinds of thing and the
+    VERIFIES resolver has to tell them apart — see ``_TEST_MODULE_ALIASES``.
+
+    Walks the whole tree, not just module scope, because a function-scoped
+    ``import numpy as np`` binds a module just as surely as a top-level one
+    (``_extract_imports`` already walks the whole tree for the same reason,
+    despite its docstring saying "module scope").
+    """
+    names: set[str] = set()
+    for node in _ast.walk(tree):
+        if isinstance(node, _ast.Import):
+            for alias in node.names:
+                names.add((alias.asname or alias.name).split('.')[0])
+    return names
+
+
 def _classify_assertion(node: _ast.AST) -> str | None:
     """Classify a single assertion AST node by its test_kind.
 
@@ -1382,6 +1417,7 @@ def extract_python_test_nodes() -> list[dict]:
 
     nodes = []
     seen_ids: set[str] = set()
+    _TEST_MODULE_ALIASES.clear()
     for test_file in sorted(tests_dir.glob("test_*.py")):
         try:
             source = test_file.read_text()
@@ -1391,6 +1427,7 @@ def extract_python_test_nodes() -> list[dict]:
             continue
         module = test_file.stem  # e.g. "test_formulas"
         imports = _extract_imports(tree)
+        _TEST_MODULE_ALIASES[module] = _extract_module_aliases(tree)
         # ── Class-qualified ids (fixed 2026-08-03, ADR-009 §Deferred item 7) ──
         # The id was `test:<module>::<function>` with the CLASS OMITTED, and the
         # loop deduped on it. So two tests sharing a method name in different
@@ -1400,10 +1437,11 @@ def extract_python_test_nodes() -> list[dict]:
         # were missing from the graph.** It surfaced when a new 9-test file minted 7.
         #
         # That matters because these nodes are the source of the VERIFIES
-        # coverage edges that `ReadinessGate: ComputationCorrectness` reads. Paired
-        # with the alias-resolution defect in `extract_test_verifies_edges` (which
-        # FABRICATES edges from `np.kron`-style names), the graph's coverage picture
-        # was wrong in both directions at once.
+        # coverage edges that `ReadinessGate: ComputationCorrectness` reads — a
+        # dropped node takes its formula-targeted edges with it. Paired with the
+        # alias-resolution defect in `extract_verifies_edges` (which FABRICATED
+        # 144 Lean-targeted edges from `np.all`-style names; fixed 2026-08-03),
+        # the graph's coverage picture was wrong in both directions at once.
         #
         # The id now mirrors pytest's own nodeid shape, `file::Class::method`.
         # Safe to change: it is constructed here and nowhere else, consumed only
@@ -3671,6 +3709,8 @@ def extract_verifies_edges(node_ids: set) -> list[dict]:
         if test['id'] not in node_ids:
             continue
         test_kind = test.get('meta', {}).get('test_kind', 'unknown')
+        module_aliases = _TEST_MODULE_ALIASES.get(
+            test.get('meta', {}).get('module', ''), frozenset())
         for raw in test.get('meta', {}).get('referenced_names', []):
             # Try Formula first, bare name then module-qualified
             target = formula_name_to_id.get(raw)
@@ -3681,8 +3721,49 @@ def extract_verifies_edges(node_ids: set) -> list[dict]:
             if target is None:
                 target = param_name_to_id.get(raw)
             if target is None:
-                # Try Lean short-name resolution (returns None if ambiguous/missing)
-                lean_id = _resolve_lean_short(raw, node_ids)
+                # ── Lean resolution, GUARDED (ADR-009 §Deferred item 7) ──────
+                # This branch used to call `_resolve_lean_short(raw, ...)`
+                # unguarded, and that function falls back to matching the TAIL
+                # of a dotted name against Lean short names. The formula index
+                # above has carried an alias allow-list against exactly this
+                # hazard since D12 round-9 — "a blanket tail fallback would let
+                # `np.sum` or `math.exp` match a formula named `sum` or `exp`,
+                # manufacturing coverage that does not exist". The Lean branch
+                # had no equivalent, so precisely that happened.
+                #
+                # Measured on the live graph at the fix: **144 of 536
+                # Lean-targeted VERIFIES edges were fabricated** — `np.all` (58)
+                # -> `FaultTolerance.Pauli.all`, `v` (21, from `import validate
+                # as v`) -> `EWMassMatrixInputs.v`, `np.diag` (11) ->
+                # `IsCharQ.diag`, `np.dot` -> `KMM.Col.dot`, `mx.eval` ->
+                # `IntFundamentalClass.eval`, `PARAMETER_PROVENANCE.get` ->
+                # `NeutrinoMixing.get`, and so on. All 17 Lean declarations that
+                # lost an edge lost EVERY edge they had, i.e. none of them had
+                # any genuine coverage mixed in.
+                # (ADR-009 recorded 10; that figure was measured from a sample
+                # of five example names and understated the count 14-fold.)
+                #
+                # Two rules, one principle — a VERIFIES edge must rest on a name
+                # the test actually wrote, not on a suffix of one:
+                #   * a ref rooted at a MODULE ALIAS is a Python module
+                #     reference, never a Lean declaration (`np`, `mx`, `sp`,
+                #     `time`, `v`, `ext`);
+                #   * a DOTTED ref is a Python attribute access, so it may
+                #     resolve only as a full Lean name, never by its tail.
+                #     (No ref on disk resolves this way today; the leg is kept
+                #     so a genuine `SKEFTHawking.Foo.bar` reference still works.)
+                #
+                # Formula- and param-targeted edges are provably untouched: this
+                # branch runs only when both indexes already missed, so it can
+                # neither add nor remove one. Verified empirically — 1,390
+                # non-Lean edges before and after, bit-identical — which is why
+                # no ReadinessGate:ComputationCorrectness verdict can move.
+                lean_id = None
+                if f'lean:{raw}' in node_ids:
+                    lean_id = f'lean:{raw}'
+                elif '.' not in raw and raw not in module_aliases:
+                    # (returns None if ambiguous/missing)
+                    lean_id = _resolve_lean_short(raw, node_ids)
                 if lean_id is not None:
                     target = lean_id
             if target is None or target not in node_ids:

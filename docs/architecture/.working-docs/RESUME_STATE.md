@@ -56,7 +56,7 @@ direction authorized, contingent on architecture review + operator visibility).
 | **0 — characterization harness** | ✅ **COMPLETE.** 3 guards + the harness, all mutation-verified |
 | **1 — anchors + helpers, file stays put** | ✅ **COMPLETE.** `CHARACTERIZATION HELD — 49 checks identical` |
 | **2 — package split** | ✅ **COMPLETE 2026-08-03.** 11 modules, 0 checks left in validate.py (7900 → 720). 48/49 checks byte-identical vs the pre-Phase-2 baseline |
-| 3 — semantic fixes | **IN PROGRESS.** 3 of 8 done + the graph node-id half of item 7 |
+| 3 — semantic fixes | **IN PROGRESS.** 4 of 8 done (item 7 now complete, both halves) |
 
 ### Phase 2 — COMPLETE
 
@@ -105,14 +105,25 @@ Ordered by how much a wrong answer costs today:
 3. ✅ **DONE** (`<this commit>`) — `native_decide_regression` now measures `lean_deps.json` directly.
    Reordering could not have fixed it: the commit gate invokes the check in ISOLATION, so `counts_fresh`
    never runs there at all.
-4. **Fabricated VERIFIES edges** (§Deferred item 7) — `np.kron` → `Curvature.kron`, `v` →
-   `EWMassMatrixInputs.v`. 10 of 534. One-line alias guard; changes what a gate measures.
+4. ✅ **DONE** (`<this commit>`) — fabricated VERIFIES edges. **144 of 536** Lean-targeted edges were
+   phantom, not the 10 the ADR recorded. Two independent rules, each mutation-verified as load-bearing:
+   a ref rooted at a **module alias** (`import X`) is a Python module, never a Lean declaration (kills
+   bare `v`, `m`, `time` *and* every `np.*`); a **dotted** ref may resolve only as a full Lean name,
+   never by its tail (kills `PARAMETER_PROVENANCE.get` and five `CANDIDATE_*.basic_viability` refs
+   collapsing onto one field). Formula/param edges bit-identical (1,390 → 1,390), so no
+   `ComputationCorrectness` verdict can move. 16 tests, 6 mutations, clean negative control.
+   ⚠️ **The filed finding was wrong in four ways** — count, consumer, function name, effort. See the new
+   standing lesson in the map's §9: *re-measure a finding's scope before fixing it, even your own.*
 5. No `UNEVALUATED` state — ~20 sites encode "could not measure" as PASS.
 6. `count_literals` ⊂ `axiom_count_prose_consistency` — same predicate, one hard-fails, one cannot fail.
 7. `--strict` reaches no automated caller, so two gates are unreachable in practice.
 8. Memoizing `load_lean_deps()` + a shared graph handle — **reviewed together**, because both change what
    a check observes once the `*_fresh` checks regenerate artifacts mid-run (≈8 extractions / ≈20 parses of
    a 70 MB file per run today).
+
+**Live finding from item 7, for the record:** 135 PythonTest nodes lost their last edge and are now
+orphans — their *only* graph coverage was fabricated. That is the honest picture arriving, not a
+regression. 16 Lean declarations likewise became orphans (they had no other edges at all).
 
 **Phase 2 so far** — three pieces of scaffolding, each of which had to be repaired after being built:
 

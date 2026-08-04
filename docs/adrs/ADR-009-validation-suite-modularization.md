@@ -411,46 +411,85 @@ Identified during the read; explicitly **not** part of Phases 0–2.
 5. `count_literals` ⊂ `axiom_count_prose_consistency` — same predicate shape split by subject, one
    hard-failing and one incapable of failing.
 6. `--strict` is passed by no automated caller, making two gates unreachable in practice.
-7. **`build_graph`'s Lean-side VERIFIES resolver manufactures coverage from library aliases.**
-   Found 2026-08-03 while attributing a characterization diff. `extract_test_verifies_edges`
-   (`build_graph.py:3587`) resolves each of a test's `referenced_names` against Formula, Parameter, then
-   **Lean short names**. The *formula* branch is deliberately guarded — `_FORMULA_MODULE_ALIASES` restricts
-   dotted tails to `{F, formulas, src.core.formulas}`, with a comment stating that a blanket tail fallback
+7. ✅ **DONE 2026-08-03 — both halves.** **`build_graph`'s Lean-side VERIFIES resolver manufactured
+   coverage from library aliases.** Found while attributing a characterization diff.
+   `extract_verifies_edges` (`build_graph.py:3634`; earlier revisions of this ADR called it
+   `extract_test_verifies_edges`, a name that has never existed) resolves each of a test's
+   `referenced_names` against Formula, Parameter, then **Lean short names**. The *formula* branch is
+   deliberately guarded — `_FORMULA_MODULE_ALIASES` restricts dotted tails to
+   `{F, formulas, src.core.formulas}`, with a comment stating that a blanket tail fallback
    "would let `np.sum` or `math.exp` match a formula named `sum` or `exp`, manufacturing coverage that does
-   not exist". **The Lean branch has no equivalent guard**, so exactly that happens. Measured on the live
-   graph: **10 of the 534 Lean-targeted VERIFIES edges are fabricated** this way — `np.kron` →
-   `Curvature.kron`, `np.all` → `FaultTolerance.Pauli.all`, `np.diag` → `IsCharQ.diag`, `sp.binomial` →
-   `FractonHydro.binomial`, and `v` (the conventional `import validate as v` alias) →
-   `ScalarRungInterpretation.EWMassMatrixInputs.v`.
-   Most collisions are silently spared only by AMBIGUITY — the resolver skips names with ≥2 candidates, and
-   the run log shows `np.sum`, `np.conj`, `math.e`, `re.compile`, `sp.I` all being *attempted*. A name that
-   happens to be unique gets through. So the protection is accidental, and it weakens as the Lean library
-   grows more unique short names.
-   Impact: `ReadinessGate: ComputationCorrectness` reads these edges as test-coverage evidence, so a Lean
-   declaration can read as tested because an unrelated test called a NumPy function. Small in count, but it
-   is fabricated evidence in a gate. **Fix is one line** (apply an alias allow-list, or require the ref to be
-   undotted, before Lean resolution) — deliberately NOT done here: it changes what a gate measures, which is
-   Phase 3, and mixing that into a mechanical phase is what this ADR forbids.
+   not exist". **The Lean branch had no equivalent guard**, so exactly that happened.
 
-   **⚠️ The same subsystem also DROPS real coverage, found 2026-08-03 while attributing a Phase-3
-   characterization delta.** `extract_python_test_nodes` mints its node id as
-   `test:<module>::<function>` — **the class is not in the key** — and dedupes on it. So two tests with the
-   same method name in different classes of one file collide, and every one after the first is silently
-   discarded. Measured corpus-wide: **4,416 `def test_*` in `tests/` produce 4,350 PythonTest nodes — 66
+   **⚠️ Two claims in the original filing were wrong, and both were corrected by measuring rather than
+   by re-reading the note.**
+
+   - **The count was understated 14-fold.** This item recorded "10 of the 534". The real figure is
+     **144 of 536** — the original was a sample of five example names, not a sum. Measured by
+     partitioning every ref that reaches the Lean branch: `np.all` (58) → `FaultTolerance.Pauli.all`,
+     `v` (21, the conventional `import validate as v`) → `EWMassMatrixInputs.v`, `np.diag` (11) →
+     `IsCharQ.diag`, `np.dot` (10) → `KMM.Col.dot`, `mx.eval` (8) → `IntFundamentalClass.eval`,
+     `CITATION_REGISTRY.get` / `PARAMETER_PROVENANCE.get` (8) → `NeutrinoMixing.get`, and 18 more.
+   - **`ComputationCorrectness` was named as the consumer and is not one.** That gate iterates
+     `formula_ids` and reads `idx.incoming(fid, 'VERIFIES')` for `formula:` targets only
+     (`readiness_gates.py:283-294`) — it never sees a Lean-targeted edge. The real consumers are
+     `last_modified.py`'s `PROPAGATION_EDGE_TYPES` (VERIFIES propagates a test file's mtime onto the Lean
+     node, feeding the Wave-10c change-bus and sentence-freshness check) and any human or dashboard
+     reading the graph's Lean coverage picture. So the defect was *staleness pollution plus fabricated
+     evidence in the graph*, not a wrong gate verdict — a smaller blast radius than filed, and worth
+     recording as such rather than leaving the stronger claim standing.
+
+   The protection that did exist was accidental: collisions are spared only by AMBIGUITY — the resolver
+   skips names with ≥2 candidates, and the run log shows `np.sum`, `np.conj`, `math.e`, `re.compile`,
+   `sp.I` all being *attempted*. A name that happens to be unique gets through, so the guard weakened as
+   the Lean library grew more unique short names.
+
+   **The fix was not one line.** The filing proposed "an alias allow-list, or require the ref to be
+   undotted". Neither alone suffices: `v` is undotted, and there is no Python alias that means "Lean", so
+   an allow-list has nothing to list. The measurement showed the two failure modes are independent and
+   need one rule each:
+   - a ref rooted at a **module alias** (`import X [as y]`) denotes a Python module and can never be a
+     Lean declaration — this is what kills bare `v`, `m`, `time`, `ext` *and* every `np.*`/`mx.*`/`sp.*`;
+   - a **dotted** ref is a Python attribute access, so it may resolve only as a full Lean name, never by
+     its tail — this is what kills `PARAMETER_PROVENANCE.get` and the five distinct
+     `CANDIDATE_*.basic_viability` refs that all collapsed onto one Lean field.
+
+   Both mutation-verified as load-bearing: dropping either rule alone is CAUGHT. Module aliases are
+   recorded during test-node extraction into `_TEST_MODULE_ALIASES` (the `_LEAN_SHORT_INDEX` pattern —
+   a property of the file, so not stored on all 4,400 test nodes). `from M import a` is deliberately NOT
+   recorded: those symbols are the Python↔Lean naming correspondence the branch exists to follow, and
+   `from src.core import formulas as F` is a from-import, so the formula branch's `F.` path is untouched.
+
+   **Why it was safe to land mid-remediation:** the Lean branch runs only after the Formula and Parameter
+   indexes have both missed, so it can neither add nor remove a formula- or param-targeted edge. Verified
+   empirically — **1,390 non-Lean edges before and after, bit-identical** — which is what makes "no
+   `ComputationCorrectness` verdict can move" a measurement rather than an argument.
+
+   Characterization: one check moved, fully attributed. `graph_integrity` **+16 nodes** (the 16 tests in
+   the new guard file), **−144 edges** (the fabricated set exactly; zero added), **+167 orphans** = 135
+   PythonTests that lost their last edge + 16 Lean declarations that lost their last edge + the 16 new
+   test nodes, with **0 nodes leaving** the orphan set. That 135 is the honest picture arriving: those
+   tests' only graph coverage was fabricated. All 17 Lean declarations that lost an edge lost *every*
+   edge they had — none had genuine coverage mixed in, which is the strongest evidence the partition is
+   the right one. 16 tests, 6 mutations all caught, clean negative control.
+
+   **⚠️ The same subsystem also DROPPED real coverage**, found while attributing a Phase-3
+   characterization delta. `extract_python_test_nodes` minted its node id as
+   `test:<module>::<function>` — **the class is not in the key** — and deduped on it. So two tests with the
+   same method name in different classes of one file collided, and every one after the first was silently
+   discarded. Measured corpus-wide: **4,416 `def test_*` in `tests/` produced 4,350 PythonTest nodes — 66
    tests missing.** It surfaced because a new 9-test file minted 7 nodes.
 
    So the graph's coverage picture was wrong in *both* directions at once — inflated by alias-resolved
-   phantom edges, deflated by dropped nodes — and `ComputationCorrectness` consumes the result.
+   phantom edges, deflated by dropped nodes. Unlike the fabricated edges, the dropped nodes *did* reach
+   `ComputationCorrectness`: a dropped node takes its formula-targeted edges with it.
 
-   ✅ **The dropped-node half is FIXED (2026-08-03).** The id now mirrors pytest's own nodeid shape,
+   ✅ **The dropped-node half was fixed first (2026-08-03).** The id now mirrors pytest's own nodeid shape,
    `test:<module>::<Class>::<method>`, and a genuine duplicate logs a warning instead of vanishing.
    **4,416 defs → 4,416 nodes, 66 recovered.** Safe to change: the id is constructed in exactly one place,
    consumed only within the same build, and persisted nowhere (`write_graph_to_pg` is delete-and-rewrite;
    neither the supersession ledger nor bundle metadata references a `test:` id).
    `TestGraphTestNodeCoverage` asserts node count == `def test_*` count, mutation-verified.
-
-   **The fabricated-edge half remains open** — that one changes what a gate *measures* rather than
-   restoring data it was already entitled to, so it keeps its own review.
 
 ---
 

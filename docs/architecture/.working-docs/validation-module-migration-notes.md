@@ -327,12 +327,18 @@ Identified while reading; **not** part of the mechanical work.
    hard-fails, one cannot fail. Candidates to merge into one parameterized check.
 6. **`--strict` is passed by nothing automated** — not the commit hook, not `gate_precheck.py`. Two gates
    (`axiom_closure_allowlist`, `bundle_source_freshness`) are therefore unreachable in practice.
-7. **Fabricated VERIFIES edges from library aliases** (`build_graph.py:3587`, found 2026-08-03). The Lean
-   short-name branch of the test-coverage resolver has no alias guard, though the formula branch beside it
-   has one with a comment explaining exactly this risk. 10 of 534 Lean-targeted VERIFIES edges are false —
-   `np.kron` → `Curvature.kron`, `v` → `EWMassMatrixInputs.v`, etc. Feeds the ComputationCorrectness gate as
-   coverage evidence. One-line fix, Phase 3 (it changes what a gate measures). Full detail: ADR-009
-   §Deferred item 7.
+7. ✅ **DONE 2026-08-03 — fabricated VERIFIES edges from library aliases** (`extract_verifies_edges`,
+   `build_graph.py:3634`). The Lean short-name branch of the test-coverage resolver had no alias guard,
+   though the formula branch beside it has one with a comment explaining exactly this risk. **144 of 536**
+   Lean-targeted edges were false — `np.all` → `FaultTolerance.Pauli.all`, `v` → `EWMassMatrixInputs.v`.
+   Two rules now gate it (module-alias roots, and no tail-resolution of dotted refs); both mutation-verified
+   as load-bearing.
+   ⚠️ **Three things in this entry as originally filed were wrong**, and each was caught by measuring
+   instead of re-reading: the count (10, a sample of five names, understated 14×), the consumer
+   (ComputationCorrectness reads `formula:` targets only — the real consumer is `last_modified.py`'s
+   VERIFIES propagation), and the function name (`extract_test_verifies_edges` has never existed).
+   "One-line fix" was also wrong — the two failure modes are independent and neither rule catches the
+   other's cases. Full detail: ADR-009 §Deferred item 7.
 
 **Correction to an earlier claim of mine:** I reported `atlas_hypothesis_discipline` as contradicting its own
 "NEVER a gate" description. Reading it, the `passed=False` at `:3717` is in the **exception handler** — it

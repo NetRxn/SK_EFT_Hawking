@@ -173,8 +173,18 @@ flowchart LR
 **Silent-drop points**, ranked by observed damage. (A sixth, outside this pipeline, was found and fixed
 2026-08-03: `extract_python_test_nodes` keyed its id on `module::function` with the class omitted and
 deduped on it, dropping **66 of 4,416** test nodes — and those nodes are what feed the VERIFIES coverage
-edges Gate 4 reads. Combined with the still-open alias defect in `extract_test_verifies_edges`, which
-*fabricates* edges from names like `np.kron`, the coverage picture was wrong in both directions at once.)
+edges Gate 4 reads, so a dropped node took its formula-targeted edges with it.)
+
+**The VERIFIES resolver was wrong in both directions at once**, and both are now fixed (ADR-009 §Deferred
+item 7). Against the dropped nodes above, `extract_verifies_edges` *fabricated* Lean-targeted edges by
+resolving the **tail** of a Python name against Lean short names — `np.all` → `FaultTolerance.Pauli.all`,
+`v` (from `import validate as v`) → `EWMassMatrixInputs.v`. **144 of 536** Lean-targeted edges were
+phantom; all 17 declarations that lost an edge lost every edge they had. Two rules now gate the branch: a
+ref rooted at a **module alias** is a Python module, never a Lean declaration; and a **dotted** ref may
+resolve only as a full Lean name, never by its tail. ⚠️ **Gate 4 was named as the victim and is not one** —
+it reads `formula:` targets only, so it never saw these edges. The consumer that did is
+`last_modified.py`'s VERIFIES propagation, which stamped an unrelated test file's mtime onto Lean nodes.
+A worked example of the standing lesson in §9: *the named blast radius is a claim, not a measurement.*
 
 1. A finding with neither `inferred_paper` nor `inferred_bundle` is dropped from bundle aggregation.
 2. `_emit` is a **no-op when the FLAGS target is absent** from `node_ids` — no log. This produced the D11 false-green.
@@ -385,6 +395,15 @@ those citations describe is unchanged — every phase boundary is verified `CHAR
 
 **Audit trail.** How each claim was established, which reconnaissance findings were rejected, and the
 author's own corrected measurements: `.working-docs/qa-qi-map-verification-log.md`.
+
+⚠️ **Standing lesson — a filed finding's blast radius is a claim, not a measurement.** ADR-009 §Deferred
+item 7 was filed with a count (10), a consumer (`ComputationCorrectness`), a function name
+(`extract_test_verifies_edges`) and an effort estimate ("one line"). Re-measured at the fix, **all four
+were wrong**: 144, `last_modified.py`, `extract_verifies_edges`, and two independent rules neither of
+which catches the other's cases. Nothing had drifted — the entry was written from a sample and never
+summed. Every finding in this map and in ADR-009 §Deferred carries the same risk, so **re-measure the
+scope before fixing, even when you wrote the finding yourself.** The fix is only as good as the partition
+it rests on, and a partition inherited from prose is not a partition.
 
 **Out of scope, verified non-overlapping.** The Codex control plane (`scripts/lean_slots/*`, `.codex/*`,
 ADR-008) has **zero references** to `validate.py`, `register_check`, `gate_precheck`, `bundle_readiness`, or
