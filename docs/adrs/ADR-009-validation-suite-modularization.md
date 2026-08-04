@@ -429,7 +429,9 @@ Identified during the read; explicitly **not** part of Phases 0–2.
 > filing was wrong four independent ways; item 6's "two gates" is already measured at six — see below).
 > That is the §9 standing lesson in the map, and it applies to this list first.
 
-0. **Memoizing `load_lean_deps()` is a behaviour change, not an optimisation** — discovered while
+0. ✅ **DISPOSITIONED 2026-08-04 — first half FIXED (one lean_deps snapshot per full run), second half
+   DECLINED on measurement (shared graph handle).** Detail below.
+   **Memoizing `load_lean_deps()` is a behaviour change, not an optimisation** — discovered while
    writing the Phase-1 helper. The eight sites re-read and re-parse the 70 MB file on every call, and that
    is load-bearing: `counts_fresh` shells out to `update_counts.py`, which can **regenerate
    `lean/lean_deps.json` mid-run**. A cache would freeze whichever state was read first. These sites read

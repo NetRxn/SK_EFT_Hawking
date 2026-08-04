@@ -3,6 +3,21 @@
 **Last updated:** 2026-08-04. Written so any session (or a post-compaction continuation) can pick this up
 without re-deriving it. Read this first, then the linked documents.
 
+> ## ✅ ADR-009 IS DELIVERED (2026-08-04)
+> Phases 0–3 complete, **all 8 §Deferred items dispositioned**, ADR-009 **ACCEPTED**, and the branch
+> merged to `main`. Verified on the merged HEAD: **59 checks** in **12** modules under
+> `scripts/validation/checks/`, `validate.py` registers **0**; `--list` 59; unknown `--check` exits 2;
+> `BUNDLE_CODES` 21; largest module 965 lines; fast suite **5050 passed / 5 skipped / 0 failed**;
+> `validate.py` **57/59 with 2 intentional reds**. Characterization **HELD** at every structural boundary.
+>
+> **What remains is NOT infrastructure work** — see “The current failing set” below. Both red checks
+> belong to the publication workstream, and the two readiness-layer cannot-measure sites
+> (`evaluate_all_gates`, `_blocked_p1_gates_by_paper`) are recorded in ADR-009 §Deferred item 4 as
+> out-of-scope by design.
+>
+> Next: the fresh-context adversarial review of the split suite and the dispositions, then ADR-010
+> (a separate goal — see the fence below).
+
 > **Every figure in this file is either (a) re-verified on the date shown, (b) marked as a historical
 > measurement, or (c) marked as INHERITED from a document and not independently checked.** That third
 > class is the one that bites: on 2026-08-04 three claims were written in a declarative voice while
@@ -47,8 +62,9 @@ nothing"**, and it is the audit's central finding (`SYNTHESIS.md` §2).
 
 ### The current failing set — MEASURED 2026-08-04 (AC6)
 
-`docs/validation/reports/validation_20260804T174135Z.json`, run on this branch, 447 s:
-**57 of 59 passed, 2 failed, 1053 warnings.** Both failures are intentional and neither is clearable by
+`docs/validation/reports/validation_20260804T184002Z.json`, run on the final HEAD, 334 s:
+**57 of 59 passed, 2 failed, 1,053 warnings** — identical failing set to the 17:41 run, re-verified after
+the item-0 fix and the `lean_statements` split. Both failures are intentional and neither is clearable by
 infrastructure work:
 
 | check | why it is red | who clears it |
