@@ -84,6 +84,38 @@ OUTPUT_JSON = PROJECT_ROOT / "docs" / "counts.json"
 OUTPUT_TEX = PROJECT_ROOT / "docs" / "counts.tex"
 
 
+
+def is_native_decide_axiom(a) -> bool:
+    """True if an axiom name is a `native_decide` compiler-trust axiom.
+
+    ⚠️ ONE definition, deliberately. This predicate existed in two places —
+    nested inside this module's counts computation, and again as
+    `is_native_decide` inside `axiom_closure_allowlist` — which is the same
+    duplicate-policy shape as the eight divergent `lean_deps.json` loaders
+    ADR-009 H4 catalogues. A third copy was about to be written for
+    `native_decide_regression` (ADR-009 Phase 3 item 3); it imports this instead.
+    """
+    s = str(a)
+    return "native_decide" in s or s in ("Lean.ofReduceBool", "Lean.trustCompiler")
+
+
+def native_decide_decls(data):
+    """Declarations whose transitive axiom closure touches a `native_decide` axiom.
+
+    THE ADR-002 kernel-trust-surface population. A pure function of
+    `lean_deps.json`, which is why `native_decide_regression` can compute the
+    ratchet metric from the upstream source rather than from `docs/counts.json`
+    — the latter is written by this script at registration position ~29, long
+    after that check runs at ~9, and is not written at all when the check is
+    invoked in isolation by the commit gate.
+    """
+    return [
+        d for d in data
+        if any(is_native_decide_axiom(a) for a in
+               (d.get("axiom_deps_project") or []) + (d.get("axiom_deps_core") or []))
+    ]
+
+
 def count_lean(deps_path: Path, preloaded: list | None = None) -> dict:
     """Extract Lean counts from lean_deps.json (authoritative, environment-based).
 
@@ -122,15 +154,7 @@ def count_lean(deps_path: Path, preloaded: list | None = None) -> dict:
     # the authoritative count is the DECL-CLOSURE — declarations whose transitive
     # axiom closure includes a native_decide compiler-trust axiom — NOT the source
     # call-site count. This mirrors `validate.py --check axiom_closure_allowlist`.
-    def _is_nd_axiom(a) -> bool:
-        s = str(a)
-        return "native_decide" in s or s in ("Lean.ofReduceBool", "Lean.trustCompiler")
-
-    nd_decls = [
-        d for d in data
-        if any(_is_nd_axiom(a) for a in
-               (d.get("axiom_deps_project") or []) + (d.get("axiom_deps_core") or []))
-    ]
+    nd_decls = native_decide_decls(data)
     nd_clusters: dict = {}
     for d in nd_decls:
         m = d.get("module", "")

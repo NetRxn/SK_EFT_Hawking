@@ -56,7 +56,7 @@ direction authorized, contingent on architecture review + operator visibility).
 | **0 — characterization harness** | ✅ **COMPLETE.** 3 guards + the harness, all mutation-verified |
 | **1 — anchors + helpers, file stays put** | ✅ **COMPLETE.** `CHARACTERIZATION HELD — 49 checks identical` |
 | **2 — package split** | ✅ **COMPLETE 2026-08-03.** 11 modules, 0 checks left in validate.py (7900 → 720). 48/49 checks byte-identical vs the pre-Phase-2 baseline |
-| 3 — semantic fixes | **IN PROGRESS.** 1 of 8 done (the inverted submission gate) |
+| 3 — semantic fixes | **IN PROGRESS.** 3 of 8 done + the graph node-id half of item 7 |
 
 ### Phase 2 — COMPLETE
 
@@ -98,10 +98,13 @@ Ordered by how much a wrong answer costs today:
    11 tests, 5 mutations, clean negative control. **`validate.py` is now RED on this check by design.**
    ⚠️ Harness lesson from it: scope every mutation to the target function's AST span. Two mutations read
    as MISSED because `str.replace(…, 1)` hit the FIRST match in the file — inside a *different* function.
-2. The **8 always-pass checks** — disposition each. Three are honestly advisory; `paper_latex_compiles`
-   and `readiness_submission_gate` are not.
-3. `native_decide_regression` reads a `counts.json` that `counts_fresh` regenerates ~20 positions later —
-   a stale ratchet in one of only three commit-gate checks.
+2. ✅ **DONE** (`c3456a23`) — all 8 dispositioned individually. 4 were defects (fixed:
+   `readiness_submission_gate`, `paper_latex_compiles`, and ratchets for `count_literals` /
+   `numerical_literals`); 4 are honestly advisory with recorded reasons. **`paper_latex_compiles` now fails
+   on D3 — 2 fatal LaTeX errors, a real publication blocker for that bundle.**
+3. ✅ **DONE** (`<this commit>`) — `native_decide_regression` now measures `lean_deps.json` directly.
+   Reordering could not have fixed it: the commit gate invokes the check in ISOLATION, so `counts_fresh`
+   never runs there at all.
 4. **Fabricated VERIFIES edges** (§Deferred item 7) — `np.kron` → `Curvature.kron`, `v` →
    `EWMassMatrixInputs.v`. 10 of 534. One-line alias guard; changes what a gate measures.
 5. No `UNEVALUATED` state — ~20 sites encode "could not measure" as PASS.

@@ -51,33 +51,82 @@ from validation._registry import CheckResult, Detail, register_check
     "native_decide_regression",
     "native_decide decl-closure does not silently grow past its ceiling (R4; ADR-002)")
 def check_native_decide_regression() -> CheckResult:
-    """The native_decide kernel-trust surface (decl-closure — ADR-002's metric,
-    in docs/counts.json `lean.native_decide_decl_closure`) may only DECREASE
-    without review. A wave that ADDS trust surface must bump
-    `NATIVE_DECIDE_DECL_CLOSURE_CEILING` (constants.py) in the same commit with a
-    rationale, so the increase is visible (no silent growth). Elimination policy
-    is owned by ADR-002. Substrate Integrity Gates W5."""
+    """The native_decide kernel-trust surface may only DECREASE without review.
+
+    A wave that ADDS trust surface must bump `NATIVE_DECIDE_DECL_CLOSURE_CEILING`
+    in the same commit with a rationale, so the increase is visible. Elimination
+    policy is owned by ADR-002; this is only the regression backstop. Substrate
+    Integrity Gates W5.
+
+    ⚠️ **READS `lean_deps.json`, NOT `docs/counts.json` (fixed 2026-08-03, ADR-009
+    §Deferred item 1).** The metric is a pure function of the declaration data, and
+    `update_counts.py` merely records it. Reading the recording had two failure
+    modes, and reordering the suite could only have fixed one:
+
+    * In a full run this check sits at canonical position ~9 and `counts_fresh`
+      regenerates `counts.json` at ~29, so the ratchet compared a snapshot taken
+      before the current wave's Lean changes.
+    * In the **commit gate** it is one of only three checks invoked, in ISOLATION —
+      `counts_fresh` never runs at all, at the one moment the ratchet can hard-block
+      `main`. No ordering of the suite reaches that case.
+
+    `lean_deps.json` is also the stronger source: its staleness key is a **content
+    hash** of `**/*.lean`, where `counts.json` is mtime-based (QA/QI map §2).
+
+    `counts.json` is still compared, as a **staleness signal** rather than as the
+    measurement — a disagreement now means the recording is behind the substrate,
+    which is worth surfacing rather than silently inheriting.
+    """
     from src.core.constants import NATIVE_DECIDE_DECL_CLOSURE_CEILING as CEIL
-    counts_path = _H.PROJECT_ROOT / "docs" / "counts.json"
-    if not counts_path.exists():
-        return CheckResult(passed=True, details=[Detail("counts", True, "counts.json absent")])
-    lean = json.loads(counts_path.read_text()).get("lean", {})
-    cur = lean.get("native_decide_decl_closure")
-    if cur is None:
-        return CheckResult(passed=True, details=[Detail(
-            "metric", True, "native_decide_decl_closure not yet in counts.json — run update_counts.py",
-            warning=True)])
-    clusters = lean.get("native_decide_clusters", {})
-    if cur > CEIL:
+
+    if not _H.lean_deps_present():
+        # FAIL, not pass. This is a ratchet in the commit gate; "I could not find the
+        # substrate" is not evidence that the trust surface did not grow.
         return CheckResult(passed=False, details=[Detail(
+            "lean_deps", False,
+            "lean/lean_deps.json absent — the native_decide trust surface could not be "
+            "measured, so this ratchet is UNVERIFIED, not passing. Refresh with "
+            "`cd lean && lake build SKEFTHawking.ExtractDeps`.")])
+
+    from update_counts import native_decide_decls
+    decls = native_decide_decls(_H.load_lean_deps())
+    cur = len(decls)
+
+    details: List[Detail] = []
+
+    # counts.json as a staleness signal only — never as the measurement.
+    try:
+        recorded = json.loads(_H.COUNTS_JSON_PATH.read_text())["lean"]["native_decide_decl_closure"]
+    except (OSError, KeyError, ValueError):
+        recorded = None
+    if recorded is not None and recorded != cur:
+        details.append(Detail(
+            "counts_drift", True,
+            f"docs/counts.json records {recorded} but the live substrate has {cur} — "
+            f"counts.json is behind lean_deps.json. The ratchet below uses the LIVE "
+            f"value; run `scripts/update_counts.py` to resync the recording.",
+            warning=True))
+
+    if cur > CEIL:
+        clusters = {}
+        for d in decls:
+            m = str(d.get("module", ""))
+            clusters[m.split(".")[1] if "." in m else m] = \
+                clusters.get(m.split(".")[1] if "." in m else m, 0) + 1
+        top = ", ".join(f"{k}={v}" for k, v in
+                        sorted(clusters.items(), key=lambda kv: -kv[1])[:6])
+        details.append(Detail(
             "ceiling", False,
             f"native_decide decl-closure {cur} EXCEEDS ceiling {CEIL} — a wave grew the "
-            f"kernel-trust surface. Eliminate (ADR-002) or bump NATIVE_DECIDE_DECL_CLOSURE_CEILING "
-            f"with a rationale. Clusters: {clusters}")])
-    msg = f"native_decide decl-closure {cur} ≤ ceiling {CEIL}"
+            f"kernel-trust surface. Eliminate (ADR-002) or bump "
+            f"NATIVE_DECIDE_DECL_CLOSURE_CEILING with a rationale. Densest modules: {top}"))
+        return CheckResult(passed=False, details=details)
+
+    msg = f"native_decide decl-closure {cur} <= ceiling {CEIL} (measured from lean_deps.json)"
     if cur < CEIL:
-        msg += f" (down {CEIL - cur}; consider lowering the ceiling). Clusters: {clusters}"
-    return CheckResult(passed=True, details=[Detail("ceiling", True, msg, warning=(cur < CEIL))])
+        msg += f" (down {CEIL - cur}; consider lowering the ceiling)"
+    details.append(Detail("ceiling", True, msg, warning=(cur < CEIL)))
+    return CheckResult(passed=True, details=details)
 
 
 
@@ -338,8 +387,8 @@ def check_axiom_closure_allowlist() -> CheckResult:
             Detail("axiom_audit_parse", True,
                    f"SKIPPED — could not parse AxiomAudit output ({exc})", warning=True)])
 
-    def is_native_decide(ax: str) -> bool:
-        return "native_decide" in ax or ax in ("Lean.ofReduceBool", "Lean.trustCompiler")
+    # ONE definition of this predicate, in update_counts (the ADR-002 metric's owner).
+    from update_counts import is_native_decide_axiom as is_native_decide
 
     native_decls: set[str] = set()
     unexpected: Dict[str, List[str]] = {}

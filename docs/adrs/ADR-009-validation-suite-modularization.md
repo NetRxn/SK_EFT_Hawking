@@ -369,7 +369,18 @@ Identified during the read; explicitly **not** part of Phases 0–2.
    what the later checks validate against. Note also that these sites read the file **directly**, never
    through `extract_lean_deps.load_lean_deps()`, so they never trigger its hash-guarded refresh. Any caching
    must be reviewed together with the shared-graph-handle item (both change what a check observes).
-1. `native_decide_regression` reads a possibly-stale `counts.json` (H3 ordering).
+1. ✅ **DONE 2026-08-03.** `native_decide_regression` read a possibly-stale `counts.json`. **Reordering
+   could not have fixed it:** in a full run the check sits at ~9 and `counts_fresh` rewrites the file at
+   ~29, but in the **commit gate** it is one of only three checks invoked, in ISOLATION, so `counts_fresh`
+   never runs at all — and that is the one moment the ratchet can hard-block `main`. Fixed at the source
+   instead: the metric is a pure function of `lean_deps.json`, which `update_counts.py` merely records, so
+   the check now computes it directly. `lean_deps.json` is also the stronger input — content-hash staleness
+   vs `counts.json`'s mtime. `counts.json` is still compared, as a **staleness signal** rather than as the
+   measurement. Measured at the fix: `counts.json` was already stale, and the two values happened to agree
+   at 546 — which is why the defect had never produced a wrong verdict, and why it survived.
+   Also deduplicated the `native_decide` axiom predicate, which existed in two places and was about to be
+   written a third time; one definition now lives in `update_counts` (the ADR-002 metric's owner).
+   15 tests, 5 mutations, clean negative control.
 2. `readiness_submission_gate` is **inverted** (`:4770-4836`): it fails only when zero `ReadinessGate` nodes
    exist and passes when it measures RED (`:4830`, `# WARN not FAIL during rollout`). Its docstring promises a
    `--strict` path (`:4756`) that was **never built** — `STRICT_MODE` is not referenced in the function.
