@@ -89,8 +89,69 @@ def load_lean_deps() -> list[dict]:
     means belongs to the caller; see the module docstring. Reads the file
     directly, without the hash-guarded refresh in
     `extract_lean_deps.load_lean_deps()`, matching what the inline sites did.
+
+    Whole-run freshness is the job of :func:`ensure_lean_deps_fresh`, called once
+    by `validate.main()` for a FULL run. Doing it per-call here would fire an
+    ExtractDeps inside `--check native_decide_regression`, which the commit gate
+    forbids (see that function's docstring).
     """
     return json.loads(LEAN_DEPS_PATH.read_text())
+
+
+def ensure_lean_deps_fresh() -> tuple[bool, str]:
+    """Hash-guarded refresh of `lean/lean_deps.json`. Returns `(refreshed, note)`.
+
+    WHY THIS EXISTS — the readers disagreed with each other
+    -------------------------------------------------------
+    Measured 2026-08-04 against the live registry: `counts_fresh` sits at position
+    **29**, and the eight `lean_deps.json` readers straddle it — **five before**
+    (`tracked_hypothesis_ledger` 4, `formula_grounding` 6, `vacuous_statement_audit` 7,
+    `nogo_substrate_integrity` 8, `native_decide_regression` 9) and **three after**
+    (`prose_theorem_reference_coverage` 54, `theorem_name_embedded_citations` 55,
+    `lean_docstring_refs_resolve` 57).
+
+    Nothing refreshed the file before position 29, and `load_lean_deps()` reads it
+    directly with no hash guard. So on exactly the runs where Lean changed — a wave
+    close — the first five validated the PREVIOUS extraction while the last three
+    validated the fresh one, inside a single run. Among the five is the
+    `native_decide_regression` ratchet: a ratchet measuring the previous wave's
+    substrate cannot see the trust surface the current wave added, which is the one
+    thing it exists to catch.
+
+    A cache would not have fixed that — it would have frozen one of the two states.
+    Refreshing once, up front, makes all eight observe the same snapshot.
+
+    SCOPE IS DELIBERATELY "FULL RUN ONLY"
+    -------------------------------------
+    `validate.main()` calls this only when no `--check` filter is given.
+    `scripts/pre-commit-sync.sh` runs `--check native_decide_regression` in the commit
+    gate and states plainly that it must NEVER run the 30-minute ExtractDeps
+    (`:72-74`, and the file header: *"INCREMENTAL lean guard — never the 30-min clean
+    ExtractDeps"*). Refreshing inside `load_lean_deps()` would have violated that.
+
+    COST IS ZERO WHEN NOTHING CHANGED, AND NOT NEW WHEN IT DID
+    ----------------------------------------------------------
+    The guard is a SHA-256 over every `.lean` source: **46 ms** measured, against
+    **150 ms** for one parse of the 70 MB artifact. When a refresh IS needed, a full
+    run already pays for that same extraction at position 29 via `counts_fresh` →
+    `update_counts.py`; this moves the cost earlier, it does not add it.
+
+    Degrades to a no-op (never raises) if `extract_lean_deps` is unavailable, so a
+    partial checkout behaves exactly as before.
+    """
+    try:
+        import extract_lean_deps
+    except ImportError as exc:  # pragma: no cover - partial checkout
+        return False, f"skipped — extract_lean_deps unavailable ({exc})"
+    try:
+        if not extract_lean_deps._needs_refresh():
+            return False, "lean_deps.json already fresh (hash matches .lean sources)"
+        extract_lean_deps._run_extraction()
+        return True, "lean_deps.json refreshed before any check read it"
+    except Exception as exc:  # noqa: BLE001
+        # NEVER fail the run here. Each check keeps its own missing/stale verdict
+        # (H4); this is a best-effort freshening, not a gate.
+        return False, f"refresh attempted and failed ({type(exc).__name__}: {exc})"
 
 
 # ── counts.json ──────────────────────────────────────────────────────────

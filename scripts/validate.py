@@ -681,6 +681,22 @@ Examples:
               file=sys.stderr)
         return 2
 
+    # ── ONE lean_deps snapshot per full run (ADR-009 §Deferred item 0) ──────
+    # Eight checks read `lean/lean_deps.json`; five of them run BEFORE
+    # `counts_fresh` (position 29) regenerates it and three run after, so on a
+    # wave close the two groups validated different extractions inside one run.
+    # Refreshing once here — hash-guarded, 46 ms when nothing changed — makes the
+    # whole run observe a single snapshot.
+    #
+    # FULL RUNS ONLY. `--check` must stay byte-identical: the commit gate runs
+    # `--check native_decide_regression` and `scripts/pre-commit-sync.sh:72-74`
+    # states it must NEVER trigger the 30-minute ExtractDeps. See
+    # `validate_helpers.ensure_lean_deps_fresh` for the full reasoning.
+    if not args.check:
+        refreshed, note = _H.ensure_lean_deps_fresh()
+        if refreshed or not args.json:
+            print(f"  lean_deps: {note}", file=sys.stderr)
+
     t0 = time.monotonic()
     results = run_checks(check_filter=args.check)
     elapsed = time.monotonic() - t0
