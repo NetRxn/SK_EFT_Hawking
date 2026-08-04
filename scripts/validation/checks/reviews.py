@@ -214,14 +214,17 @@ def check_recurrence_reopens_closures() -> CheckResult:
             if (len(_a & _b) / len(_a | _b) < _MIN_OVERLAP + 0.10
                     and cid.rsplit(':', 1)[-1] != oid.rsplit(':', 1)[-1]):
                 continue
-            if True:
-                hits += 1
-                details.append(Detail(
-                    cid, False,
-                    f"closed on {cdate}, but {oid} ({odate}) raises the same finding and is "
-                    f"open. The later review is the evidence; the CLOSURE is what is now "
-                    f"false. Reopen it or record why the recurrence is a different defect."))
-                break
+            # A surviving pair is a recurrence: every filter above has passed.
+            # (A vestigial `if True:` wrapped this block until 2026-08-04 — audit
+            # QI-07 — left over from a condition that migrated into the `continue`
+            # guards above it.)
+            hits += 1
+            details.append(Detail(
+                cid, False,
+                f"closed on {cdate}, but {oid} ({odate}) raises the same finding and is "
+                f"open. The later review is the evidence; the CLOSURE is what is now "
+                f"false. Reopen it or record why the recurrence is a different defect."))
+            break
 
     # Report what was COMPARED, not what was collected. The previous summary printed
     # `len(closed)` — 552 — while the loop's severity filter meant 148 were actually
@@ -340,10 +343,17 @@ def check_review_docs_mint_findings() -> CheckResult:
     _RESOLVED_HEADING = re.compile(r'PASS|RESOLVED|resolved', re.I)
 
     def _carries_findings(text: str) -> bool:
+        """True if any severity-labelled heading is NOT a PASS/RESOLVED note.
+
+        ⚠️ This was `any(... findall ...) or any(... finditer ...)` until 2026-08-04
+        (audit QI-09). `_SEVERITY_HEADING` has only non-capturing groups, so
+        `findall` yields the same full-match strings `finditer` yields via
+        `m.group(0)` — the two legs were the identical predicate computed twice and
+        OR-ed with itself. Scanning the review corpus twice per document, to reach a
+        conclusion the first leg already had.
+        """
         return any(not _RESOLVED_HEADING.search(h)
-                   for h in _SEVERITY_HEADING.findall(text) or []) or any(
-            not _RESOLVED_HEADING.search(m.group(0))
-            for m in _SEVERITY_HEADING.finditer(text))
+                   for h in _SEVERITY_HEADING.findall(text))
 
     try:
         from build_graph import extract_review_finding_nodes

@@ -32,14 +32,20 @@ import ast
 import hashlib
 import importlib
 import json
-import re
 import tempfile
 from pathlib import Path
 from typing import List
 
 import validate_helpers as _H
 from validation._registry import CheckResult, Detail, register_check
-from bundle_registry import BUNDLE_CODES  # noqa: E402  the roster's owner (H2)
+
+# ⚠️ `import re` and `from bundle_registry import BUNDLE_CODES` stood here and were
+# NEVER referenced (removed 2026-08-04, audit QI-11). The roster gate below reads
+# `registry.BUNDLE_CODES` off its own `import bundle_registry as registry`, so the
+# module-level name was dead — and its `# the roster's owner (H2)` comment implied
+# an H2 obligation that this import was not in fact carrying. H2's actual
+# requirement is that **`validate`** expose `BUNDLE_CODES`, which `validate.py`
+# satisfies directly; `_ROSTER_CONSUMERS` below still asserts it.
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -68,8 +74,7 @@ def check_bundle_figure_integrity() -> CheckResult:
 
     Floor is 8.0 pt. Skips cleanly when kaleido is unavailable.
     """
-    import importlib
-
+    # (`import importlib` stood here, shadowing the module-level import — audit QI-11.)
     details: List[Detail] = []
     try:
         viz = importlib.import_module("src.core.visualizations")
@@ -155,7 +160,7 @@ def check_bundle_figure_integrity() -> CheckResult:
             # byte-compare is sensitive to renderer version. A mismatch is worth
             # surfacing, not worth blocking a whole validation run on.
             try:
-                import hashlib, tempfile, os as _os
+                import os as _os   # hashlib/tempfile are module-level (audit QI-11)
                 with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
                     tmp_path = tmp.name
                 fig.write_image(tmp_path, scale=3)

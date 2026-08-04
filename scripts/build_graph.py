@@ -3462,14 +3462,14 @@ def extract_cites_theorem_edges(node_ids: set) -> list[dict]:
     # index built on first need.
     # The cheapest approach: pull the subset of nodes with type
     # 'LeanTheorem' and keep their IDs as an acceptance set.
-    theorem_ids = set()
-    for node_id in node_ids:
-        # Fast path: we only need to know which IDs are LeanTheorem.
-        # The node_ids set doesn't carry type info, so we need to
-        # reconstruct. Do one pass via extract_lean_declaration_nodes
-        # (cached by lru of the lean_deps.json load).
-        pass
-    # One-shot: get the theorem-only ID set
+    # `node_ids` carries no type information, so the LeanTheorem subset is
+    # reconstructed from the declaration extractor.
+    #
+    # ⚠️ A `for node_id in node_ids: pass` loop stood here until 2026-08-04 (audit
+    # QI-06) — an empty pass over every id in the graph (~46,700 today), left behind
+    # when the "fast path" it was sketching was abandoned in favour of the one-shot
+    # below. It computed nothing and its comment described an approach the code did
+    # not take.
     _lean_nodes = extract_lean_declaration_nodes()
     theorem_ids = {n['id'] for n in _lean_nodes if n['type'] == 'LeanTheorem'}
 

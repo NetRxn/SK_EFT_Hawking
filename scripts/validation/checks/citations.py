@@ -27,7 +27,6 @@ Import rules as elsewhere: framework from `validation._registry`, paths as
 from __future__ import annotations
 
 import ast
-import json
 import re
 from typing import List
 
@@ -205,7 +204,7 @@ def check_parameter_provenance() -> CheckResult:
 
 def _lookup_provenance_value(prov_key, experiments, atoms, polariton_platforms):
     """Look up the actual value in constants for a provenance key like 'Steinhauer.omega_perp'."""
-    import numpy as np
+    # (`import numpy as np` stood here and was never used — removed 2026-08-04, audit QI-10.)
     from src.core.constants import HBAR, K_B, A_BOHR, POLARITON_MASS
 
     # Fundamental constants
@@ -285,8 +284,8 @@ def check_citation_primary_sources_present() -> CheckResult:
     Bibkeys absent from CITATION_REGISTRY surface as FAIL — that's already a
     CitationIntegrity violation, not a Wave 1 concern, but worth reporting.
     """
-    import ast
-    import re
+    # (`import ast` / `import re` stood here, shadowing the module-level imports —
+    #  removed 2026-08-04, audit QI-11.)
     from src.core.citations import CITATION_REGISTRY, bibkey_phase
     from src.core.workspace import find_workspace
 
@@ -735,7 +734,7 @@ def check_bibitem_title_primary_source() -> CheckResult:
     wave_4a_sakharov_lambda_substrate_refactor_close.md` documents the
     BLOCKER pattern this check guards against.
     """
-    import re
+    # (`import re` stood here, shadowing the module-level import — audit QI-11.)
     from src.core.citations import CITATION_REGISTRY
     from src.core.workspace import find_workspace
 
@@ -889,12 +888,20 @@ def check_bibitem_title_primary_source() -> CheckResult:
     n_not_found = len(not_found_flags)
     n_extract_failed = len(extract_failed)
 
-    # In strict mode, both drift classes fail; in default mode, only
-    # DROP-WORD flags fail (high-confidence BLOCKER pattern), NOT-FOUND
-    # is advisory only.
-    summary_passed = _cfg.STRICT_MODE is False or (n_drop_word == 0 and n_not_found == 0)
-    if not _cfg.STRICT_MODE:
-        summary_passed = True  # Always pass in default mode
+    # Under `--strict` BOTH drift classes fail. In default mode NOTHING fails here:
+    # DROP-WORD and NOT-FOUND are both surfaced as ⚠ warnings.
+    #
+    # ⚠️ Two corrections, 2026-08-04 (audit QI-08). The code read:
+    #     summary_passed = _cfg.STRICT_MODE is False or (n_drop_word == 0 and ...)
+    #     if not _cfg.STRICT_MODE:
+    #         summary_passed = True
+    # The `if` was a NO-OP — it can only fire when `STRICT_MODE` is False, which is
+    # exactly the case where the first line has already produced `True`. And the
+    # comment above it claimed "in default mode, only DROP-WORD flags fail", which
+    # the body contradicts: the per-finding Details carry `passed=not STRICT_MODE`,
+    # so in default mode a DROP-WORD hit passes too. The comment now describes what
+    # the code does.
+    summary_passed = not _cfg.STRICT_MODE or (n_drop_word == 0 and n_not_found == 0)
 
     details.append(Detail(
         "summary",

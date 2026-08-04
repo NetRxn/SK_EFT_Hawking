@@ -351,7 +351,7 @@ def check_proxy_body_audit() -> CheckResult:
     except ImportError:
         BASELINE = frozenset()
 
-    lean_dir = _H.PROJECT_ROOT / "lean" / "SKEFTHawking"
+    lean_dir = _H.LEAN_DIR   # audit QI-11: one owner
     if not lean_dir.exists():
         return CheckResult(passed=True, details=[Detail("lean_dir", True, "no lean dir")])
 
@@ -473,7 +473,7 @@ def check_tracked_hypothesis_ledger() -> CheckResult:
             tracked[short] = d.get("module", "")
 
     # 2) which are CONSUMED as a binder `( ident : Name` anywhere in the source
-    lean_dir = _H.PROJECT_ROOT / "lean" / "SKEFTHawking"
+    lean_dir = _H.LEAN_DIR   # audit QI-11: one owner
     src = "\n".join(
         f.read_text(errors="ignore") for f in lean_dir.rglob("*.lean"))
     consumed = set()

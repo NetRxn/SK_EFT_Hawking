@@ -471,9 +471,11 @@ def check_elaboration_knob_watchlist() -> CheckResult:
     (architecture discipline) and is enforced elsewhere; it is intentionally not in
     this advisory list.
     """
-    import re
-
-    lean_dir = _H.PROJECT_ROOT / "lean" / "SKEFTHawking"
+    # `_H.LEAN_DIR` is the owner of this path (audit QI-11). Re-deriving it as
+    # `_H.PROJECT_ROOT / "lean" / "SKEFTHawking"` gave the same value but a second
+    # definition, so a test monkeypatching the anchor reached some sites and not
+    # others — the by-value hazard H1/H5 exist to prevent, one level down.
+    lean_dir = _H.LEAN_DIR
     if not lean_dir.exists():
         return CheckResult(passed=True, details=[
             Detail("lean_src", True, f"SKIPPED — {lean_dir} not found")])
@@ -542,7 +544,6 @@ def check_lean_docstring_refs_resolve() -> CheckResult:
     backlog is reported without blocking.
     """
     import difflib
-    import subprocess
 
     # TODO(semantic-review, ADR-009 Phase 3): absence -> PASS *with a warning* — a third
     # distinct policy, alongside the five silent PASSes and two FAILs.
@@ -586,8 +587,8 @@ def check_lean_docstring_refs_resolve() -> CheckResult:
 
     details: list[Detail] = []
     n_fail = n_adv = 0
-    for path in sorted((_H.PROJECT_ROOT / "lean" / "SKEFTHawking").rglob("*.lean")):
-        rel_mod = str(path.relative_to(_H.PROJECT_ROOT / "lean" / "SKEFTHawking"))
+    for path in sorted(_H.LEAN_DIR.rglob("*.lean")):
+        rel_mod = str(path.relative_to(_H.LEAN_DIR))
         module = "SKEFTHawking." + rel_mod.removesuffix(".lean").replace("/", ".")
         strict = module.startswith(_DOCSTRING_STRICT_FAMILIES)
         src = path.read_text(errors="ignore")

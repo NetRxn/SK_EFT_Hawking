@@ -110,7 +110,7 @@ def check_viz_consistency() -> CheckResult:
     of the COLORS dict from constants.py.
     """
     import ast
-    import importlib
+    # (`import importlib` stood here and was never used — removed 2026-08-04, audit QI-10.)
 
     details = []
 
