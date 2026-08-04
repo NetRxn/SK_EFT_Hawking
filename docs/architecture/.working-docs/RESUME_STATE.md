@@ -45,10 +45,22 @@ output. It did not *measure*: a substantial subset was structurally incapable of
 verdict, so green carried no information. The accurate framing is **"reports success while measuring
 nothing"**, and it is the audit's central finding (`SYNTHESIS.md` §2).
 
-⚠️ **No full `validate.py` run exists since the branch opened on 2026-08-03 — zero archived reports.**
-The current failing set is therefore UNKNOWN and must be measured, not inherited. When you do measure it:
-`counts_fresh`, `tables_fresh` and `claim_clusters_fresh` **regenerate tracked artifacts mid-run**, so a
-full run mutates the working tree. Check `git status` afterwards and stage deliberately.
+### The current failing set — MEASURED 2026-08-04 (AC6)
+
+`docs/validation/reports/validation_20260804T174135Z.json`, run on this branch, 447 s:
+**57 of 59 passed, 2 failed, 1053 warnings.** Both failures are intentional and neither is clearable by
+infrastructure work:
+
+| check | why it is red | who clears it |
+|---|---|---|
+| `readiness_submission_gate` | *"0 green / 3 yellow / **61 red** across 64 papers"* — the same measurement it used to report while returning PASS. Now it fails, per §Deferred item 2. | the publication workstream, per paper |
+| `bundle_metadata_matches_graph` | **14 of 21 bundles** carry `stage13_status: "green"` with open blockers (D1 37, F 23, D2/I2 19, D5 17, I1/I3/L2 16, D7 12, D3 7, L3 6, E1 5, L1 2, D4 1). | the publication workstream — ⚠️ **NOT fixable by re-running `bundle_readiness.py`**: `write_metadata_counts` owns `blockers_open`/`advisories_open`/`readiness`, and deliberately does **not** write `stage13_status`. That field is hand-asserted; only `bundle_append.py`'s green→pending demotion touches it. |
+
+The 1,053 warnings are advisory by design (pin drift, count/numerical literals under their ceilings,
+orphan nodes, uncited bibitems).
+
+⚠️ A full run **mutates the working tree**: `counts_fresh`, `tables_fresh` and `claim_clusters_fresh`
+regenerate tracked artifacts mid-run. Check `git status` afterwards and stage deliberately.
 
 ---
 
@@ -184,7 +196,7 @@ Governed by [ADR-009](../../adrs/ADR-009-validation-suite-modularization.md) (st
 | **0 — characterization harness** | ✅ COMPLETE. 3 guards + the harness, all mutation-verified |
 | **1 — anchors + helpers, file stays put** | ✅ COMPLETE. `CHARACTERIZATION HELD — 49 checks identical` |
 | **2 — package split** | ✅ COMPLETE 2026-08-03. 11 modules, 0 checks left in `validate.py`. 48/49 byte-identical vs the pre-Phase-2 baseline |
-| **3 — semantic fixes** | **IN PROGRESS — 4 of 8.** §Deferred **1, 2, 3, 7** done; **0, 4, 5, 6** open |
+| **3 — semantic fixes** | **IN PROGRESS — 6 of 8 dispositioned.** §Deferred **1, 2, 3, 7** fixed; **5, 6** DECLINED with measurements; **0, 4** open |
 
 ### ⚠️ Numbering: cite ADR-009 §Deferred's own 0–7, always
 
@@ -264,15 +276,25 @@ comparison-to-truth.** Disposition: **DECLINE the merge** with this measurement.
 finding and is worth shipping separately — *`axiom_count_prose_consistency` is the model `count_literals`
 should be raised to*: compare each literal against its `counts.tex` macro value, not merely count them.
 
-**⬜ Item 6 — `--strict` reaches no automated caller, so every strict-only leg is dead code.**
-⚠️ Filed as "two gates"; **re-measured 2026-08-04 by AST at SIX** checks reading `_cfg.STRICT_MODE`.
-First step is the partition the filing conflated:
-- **Fully strict-gated (unreachable today):** `bibitem_title_primary_source` (default mode forces
-  `summary_passed = True`), `theorem_name_embedded_citations` (entirely advisory by default), and
-  `axiom_closure_allowlist`'s unexpected-axiom leg (`passed = not strict`).
-- **Merely promotes an advisory** (still fails on its own terms by default): `parameter_provenance`
-  (human-verification leg only), `provenance_doi_in_registry` (`missing_doi` leg only —
-  `missing_cited_bibkeys` always fails), `bundle_source_freshness` (WARN→FAIL promotion).
+**✅ Item 6 — DECLINED 2026-08-04, after reading `readiness_gates.py` (781) and `bundle_readiness.py`
+(783) in full.** Filed as "`--strict` reaches no automated caller, making two gates unreachable in
+practice". Premise true; **count wrong (six, not two) and inference wrong.**
+- **`--strict` is the documented Paper Submission Gate**, not dead code — `WAVE_EXECUTION_PIPELINE.md:72`
+  (*"checked before arXiv/journal submission, not at Stage 1"*), Invariant #12 at `:685` calls it
+  mandatory there. No automated caller passes it **by design**: it gates a submission decision.
+- **The automated submission gate already exists** — the eleven ReadinessGates in `readiness_gates.py`
+  (`GATES` table + `evaluate_all_gates`), surfaced by `readiness_submission_gate`, which item 2 repaired
+  to hard-fail. ⚠️ *I spent a cycle looking for a missing runner that has existed since Phase 5v Wave 4.
+  Map the subsystem before concluding it is absent.*
+- **Per-consumer coverage, mapped against the evaluators:** 1 of 6 covered
+  (`_eval_parameter_provenance` blocks on exactly the `human_verified_date` predicate that
+  `parameter_provenance --strict` promotes); 5 not covered — provenance DOIs→registry,
+  bibitem-title-vs-PDF, author+year in decl names, axiom closures, bundle lift freshness.
+  *"Redundant" is too strong even for the covered row:* the gate is per-paper `DEPENDS_ON`, the check is
+  whole-registry minus `PROJECTED`.
+- **Residue, recorded and NOT built** (`REMEDIATION_PLAN.md` §6a): those five strict legs are exercised
+  only if a human passes the flag. Whether to add gates, mechanize a submission runner, or accept them
+  as human-run is an **operator decision belonging to the publication workstream.**
 
 ⚠️ **Re-measure every open item's scope before fixing it.** Item 7's filing was wrong four independent
 ways; item 6's "two" is six; item 5's premise is false outright. A partition inherited from prose is not a
@@ -280,9 +302,20 @@ partition.
 
 ### The full read — DONE 2026-08-04, and what it covers
 
-**`scripts/validate.py` (720) + all 11 `scripts/validation/checks/*.py` = 8,654 lines, read in full.**
-Operator rule: **core infra may only be modified by an agent that has read the file directly, and a fresh
-session must redo the read after a compaction.** Budget for it. Per-module sizes:
+> ⛔ **OPERATING MANDATE (operator, 2026-08-04): you are UNAUTHORIZED to work on a file you have not read
+> in full, and the authorization RESETS AT EVERY COMPACTION.** This is not advisory. It exists because the
+> alternative is a long tail of re-discovering the same facts. Budget the read; do not start without it.
+
+**Read in full on this branch, 2026-08-04:**
+`scripts/validate.py` (720) + all 11 `scripts/validation/checks/*.py` (7,934) = **8,654**, plus
+`scripts/readiness_gates.py` (781), `scripts/bundle_readiness.py` (783), `scripts/gate_precheck.py` (62)
+and `tests/test_validate_public_surface.py` (448) — **10,728 lines total.**
+
+**NOT yet read** (read before touching): `scripts/build_graph.py` (~4,200 — **item 0 modifies it**),
+`scripts/validate_helpers.py` (137 — item 0), `scripts/graph_integrity.py`,
+`tests/validate_characterization.py` (grepped only).
+
+Per-check-module sizes:
 `lean_substrate` 1,079 · `citations` 965 · `bundles_readiness` 904 · `papers_prose` 862 ·
 `prose_lean_refs` 777 · `physics` 714 · `freshness` 688 · `lean_toolchain` 627 · `graph_atlas` 512 ·
 `reviews` 465 · `notebooks` 341.
