@@ -208,12 +208,41 @@ Legend: ⬜ open · 🔄 in progress · ✅ done (with the verifying evidence na
 
 ### W-D — the standing obligation (D5)
 
-- [ ] **QI-27** D5 — *"every new or modified check ships a mutation test proving both directions"* —
-      is **prose with no mechanical enforcement**. No registered check and no test asserts it.
-      Coverage (inherited from `QA_QI_INFRASTRUCTURE_MAP.md` §6, not re-measured here):
-      **10 of 59** checks have a test that would fail on a seeded defect; **11** are green-only;
-      **32 have no test at all**. Operator ruling 2026-08-04: **all checks need tests.**
-      Sequenced after W-A/B/C so tests are written against corrected code.
+- [ ] **QI-27** 🔄 **IN PROGRESS.** D5 — *"every new or modified check ships a mutation test proving
+      both directions"* — shipped as **prose with no enforcement**. ADR-009 §Context names this as the
+      one of its three problems that *"caused the damage"*.
+
+      ✅ **The obligation is now MECHANICAL:** `tests/test_d5_mutation_obligation.py`. Every registered
+      check must appear in exactly one of `MUTATION_VERIFIED` (naming the test, with the mutation
+      recorded) or `AWAITING_MUTATION_TEST`; a new check declaring neither **fails on arrival**. The
+      backlog is ratcheted at `AWAITING_CEILING`, and a companion test asserts the ceiling EQUALS the
+      backlog so there is no headroom — the exact defect found in `ledger_ids_resolve`, which sat at 67
+      against a population of 66 and so admitted one new dangling record silently. A seam guard rejects
+      a `MUTATION_VERIFIED` entry whose named test does not mention the check, so promoting a name out
+      of the backlog cannot be free. 6 tests, 3 mutations caught, clean negative control.
+
+      ⚠️ **Why a registry and not a scanner — measured, not assumed.** Of the test files covering the
+      five Phase-3 repairs, **none** carries a mutation marker in its source: the mutation runs are
+      recorded in commit messages and in ADR-009, because a mutation is an act performed against the
+      tree, not an artifact left in it. A scanner would have to infer "both directions" from test
+      structure — the kind of proxy that produced `recurrence_reopens_closures`' three mis-calibrations
+      and the eight inert guards. A registry that must be edited deliberately is honest.
+
+      ⬜ **The remaining work is the backlog itself: 54 checks await a both-directions test.**
+      Seeded `MUTATION_VERIFIED` with the 5 the ADR documents (`readiness_submission_gate`,
+      `native_decide_regression`, `paper_latex_compiles`, `count_literals`, `numerical_literals`).
+      ⚠️ The map's §6 figures do not sum (10 + 11 + 32 = 53, not 59) and were **not** used to seed this;
+      only checks with a mutation documented in the ADR or a commit were admitted. Measured
+      independently: **16 checks are named in no real test file at all** —
+      `accepted_findings_carry_rationale`, `atlas_hypothesis_discipline`, `bundle_figure_integrity`,
+      `bundle_metadata_matches_graph`, `claim_clusters_fresh`, `cross_path_consistency`,
+      `elaboration_knob_watchlist`, `lean_docstring_refs_resolve`, `notebook_stored_outputs_current`,
+      `paper_provenance`, `physical_bounds`, `review_docs_mint_findings`, `review_severity_declared`,
+      `tables_fresh`, `tracked_hypotheses_fresh`, `viz_consistency` — and those are the natural place
+      to start, since they have no scaffolding at all.
+
+      **Lower `AWAITING_CEILING` in the same commit as every test you add**, or the ratchet stops
+      biting.
 
 ---
 

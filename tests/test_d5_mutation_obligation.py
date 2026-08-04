@@ -1,0 +1,218 @@
+"""D5 — the mutation-test obligation, made MECHANICAL. Audit finding QI-27.
+
+ADR-009 §Context names three problems and says plainly which one did the damage:
+
+    1. No shared-helper layer.        -> fixed by Phase 1
+    2. The file exceeds one read.     -> fixed by Phase 2
+    3. **No mutation-test discipline. This is the one that caused the damage.**
+
+D5 is the answer to (3): *"a new or modified check MUST ship with a test
+demonstrating BOTH directions — it FAILS on a seeded defect, and it stays SILENT
+on correct data."* It shipped as **prose**. Nothing enforced it, so the suite grew
+to 59 checks with, by the map's own count, ten that would fail on a seeded defect.
+
+WHY THIS IS A CURATED REGISTRY AND NOT A SCANNER
+------------------------------------------------
+The obvious implementation — scan the tests for a mutation marker — does not work,
+and that was **measured** before this file was written. Of the test files covering
+the five Phase-3 repairs, **none** carries a mutation marker in its source: the
+mutation runs are recorded in COMMIT MESSAGES and in ADR-009 §Deferred, because a
+mutation is an act performed against the tree, not an artifact left in it.
+
+A scanner would therefore have to infer "both directions" from test structure,
+which is exactly the kind of proxy this project keeps getting burned by — cf.
+`recurrence_reopens_closures`, whose threshold was calibrated three times against a
+predicate that could not fire, and the eight shipped guards ADR-009 §Context lists.
+**A registry that must be edited deliberately is honest; a scanner that guesses is
+the failure mode wearing a lab coat.**
+
+WHAT THIS FILE ENFORCES
+-----------------------
+1. **Every registered check is ACCOUNTED FOR** — it appears in exactly one of
+   `MUTATION_VERIFIED` or `AWAITING_MUTATION_TEST`. A new check that declares
+   neither fails on arrival. This is the leg that makes D5 binding: you cannot add
+   a check without stating whether it is tested.
+2. **The backlog may only SHRINK.** `AWAITING_CEILING` ratchets it, in the house
+   idiom (`VACUOUS_STATEMENT_BASELINE`, `NATIVE_DECIDE_DECL_CLOSURE_CEILING`,
+   `COUNT_LITERAL_CEILING`, `test_cannot_measure_baseline`).
+3. **A `MUTATION_VERIFIED` entry cannot be fictional** — the test file it names
+   must exist and must actually mention the check. That is the seam guard; without
+   it, moving a name from the backlog to the verified list would be free.
+
+⚠️ **THIS FILE DOES NOT PROVE A TEST IS GOOD.** It proves the project has made a
+DECISION about every check and cannot silently add an untested one. Raising the
+verified count is the real work (audit W-D); this stops the population growing
+while that happens. Do not read a green run here as coverage.
+
+MUTATION-VERIFIED 2026-08-04, both directions:
+  * register a check absent from both lists -> test_every_check_is_accounted_for FAILS
+  * move a name to MUTATION_VERIFIED naming a test that does not mention it
+        -> test_verified_entries_name_a_real_test FAILS
+  * add a name to AWAITING beyond the ceiling -> test_backlog_only_shrinks FAILS
+Clean negative control: unmutated tree, all pass.
+"""
+from __future__ import annotations
+
+import sys
+from pathlib import Path
+
+SK_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(SK_ROOT / "scripts"))
+sys.path.insert(0, str(SK_ROOT))
+
+TESTS_DIR = SK_ROOT / "tests"
+
+
+#: check name -> the test file that mutation-verifies it, and what the mutation was.
+#: An entry here is a CLAIM that someone seeded a defect and watched the test fail.
+#: Add one only when that has actually been done — the evidence lives in the commit.
+MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
+    # ── ADR-009 §Deferred item 2 — the inverted submission gate ──
+    "readiness_submission_gate": (
+        "test_readiness_submission_gate.py",
+        "11 tests / 5 mutations at the repair; pure cores `classify_readiness` and "
+        "`partition_readiness` extracted so the verdict is testable against synthetic "
+        "gates instead of a 15-second graph build",
+    ),
+    # ── ADR-009 §Deferred item 1 — the native_decide ratchet ──
+    "native_decide_regression": (
+        "test_native_decide_ratchet.py",
+        "15 tests / 5 mutations; the metric now reads lean_deps.json directly rather "
+        "than the counts.json recording of it",
+    ),
+    # ── ADR-009 §Deferred item 3 — the always-pass dispositions ──
+    "paper_latex_compiles": (
+        "test_always_pass_dispositions.py",
+        "computed its verdict and discarded it; now hard-fails. D3's 2 fatal LaTeX "
+        "errors were the live instance",
+    ),
+    "count_literals": (
+        "test_always_pass_dispositions.py",
+        "WARN-only against a retreating target; now a ratchet on COUNT_LITERAL_CEILING",
+    ),
+    "numerical_literals": (
+        "test_always_pass_dispositions.py",
+        "same shape; now a ratchet on NUMERICAL_LITERAL_CEILING",
+    ),
+}
+
+#: Checks with no both-directions test yet. **This list may only shrink.**
+#: Emptying it is audit workstream W-D; see
+#: `docs/audits/2026-08-04-qa-qi-infrastructure/README.md` (QI-27).
+AWAITING_MUTATION_TEST: frozenset[str] = frozenset({
+    "formulas", "placeholder_not_cited", "disclosure_consistency", "proxy_body_audit",
+    "tracked_hypothesis_ledger", "tracked_hypotheses_fresh", "formula_grounding",
+    "vacuous_statement_audit", "nogo_substrate_integrity", "numerical", "identities",
+    "paper_table", "d1_hierarchy_table", "f_hierarchy_claims", "theorems", "notebooks",
+    "lean_source", "cgl_fdr", "lean_build", "axiom_closure_allowlist",
+    "elaboration_knob_watchlist", "bundle_figure_integrity", "viz_consistency",
+    "notebook_exec", "physical_bounds", "cross_path_consistency", "paper_provenance",
+    "parameter_provenance", "counts_fresh", "tables_fresh", "claim_clusters_fresh",
+    "graph_integrity", "atlas_integrity", "atlas_hypothesis_discipline",
+    "recurrence_reopens_closures", "review_severity_declared", "review_docs_mint_findings",
+    "accepted_findings_carry_rationale", "bundle_metadata_matches_graph",
+    "notebook_stored_outputs_current", "readiness_verdicts_agree",
+    "citation_primary_sources_present", "provenance_doi_in_registry", "bundle_consistency",
+    "bundle_source_freshness", "bibitem_title_primary_source", "quantum_network",
+    "bundle_registry_consistency", "axiom_count_prose_consistency",
+    "prose_theorem_reference_coverage", "theorem_name_embedded_citations",
+    "inventory_index_autogen_fresh", "lean_docstring_refs_resolve",
+    "paper_toolchain_pin_drift",
+})
+
+#: The ratchet. Measured 2026-08-04. It may be LOWERED, never raised.
+AWAITING_CEILING = 54
+
+
+def _registered() -> list[str]:
+    import validate
+    return [spec.name for spec in validate._CHECKS]
+
+
+class TestEveryCheckIsAccountedFor:
+    """The leg that makes D5 binding: a new check must DECLARE its test status."""
+
+    def test_every_check_is_accounted_for(self):
+        registered = set(_registered())
+        declared = set(MUTATION_VERIFIED) | AWAITING_MUTATION_TEST
+
+        undeclared = sorted(registered - declared)
+        assert not undeclared, (
+            f"{len(undeclared)} registered check(s) declare no D5 status: {undeclared}. "
+            f"ADR-009 D5 requires every new or modified check to ship a test that FAILS "
+            f"on a seeded defect and stays SILENT on correct data. Add it to "
+            f"MUTATION_VERIFIED (naming the test, once you have actually run the "
+            f"mutation) or — if you are knowingly deferring — to AWAITING_MUTATION_TEST "
+            f"AND lower nothing, which will trip the ceiling and force the decision to "
+            f"be explicit. Silence is the one option D5 does not allow."
+        )
+
+        stale = sorted(declared - registered)
+        assert not stale, (
+            f"{len(stale)} name(s) declared here are not registered checks: {stale}. "
+            f"A check was renamed or removed and its D5 entry was left behind, so this "
+            f"file now asserts something about nothing."
+        )
+
+    def test_the_two_lists_are_disjoint(self):
+        both = sorted(set(MUTATION_VERIFIED) & AWAITING_MUTATION_TEST)
+        assert not both, (
+            f"{both} appear in BOTH lists. A check is either mutation-verified or it is "
+            f"not; carrying it in both makes the backlog count meaningless."
+        )
+
+
+class TestBacklogOnlyShrinks:
+    """The ratchet. Same idiom as VACUOUS_STATEMENT_BASELINE."""
+
+    def test_backlog_only_shrinks(self):
+        n = len(AWAITING_MUTATION_TEST)
+        assert n <= AWAITING_CEILING, (
+            f"{n} checks await a mutation test, above the frozen ceiling of "
+            f"{AWAITING_CEILING}. A check was added without one. Write the test, or "
+            f"raise AWAITING_CEILING in the same commit with a stated reason — which "
+            f"is a decision on the record rather than a drift."
+        )
+
+    def test_the_ceiling_tracks_the_backlog(self):
+        """A ceiling far above the population is headroom in which the ratchet does
+        nothing — the exact defect found in `ledger_ids_resolve`, which sat at 67
+        against a population of 66 and so admitted one new dangling record silently.
+        """
+        n = len(AWAITING_MUTATION_TEST)
+        assert AWAITING_CEILING == n, (
+            f"AWAITING_CEILING is {AWAITING_CEILING} but the backlog is {n}. Every unit "
+            f"of slack is a check that can be added untested without failing anything. "
+            f"When you remove a name from the backlog, lower the ceiling in the same "
+            f"commit so the ratchet keeps biting at exactly one."
+        )
+
+
+class TestVerifiedEntriesAreReal:
+    """A MUTATION_VERIFIED entry must point at a test that exists and mentions the
+    check. Without this, promoting a name out of the backlog costs nothing."""
+
+    def test_verified_entries_name_a_real_test(self):
+        import re
+
+        broken = []
+        for check, (test_file, _why) in sorted(MUTATION_VERIFIED.items()):
+            path = TESTS_DIR / test_file
+            if not path.is_file():
+                broken.append(f"{check}: {test_file} does not exist")
+                continue
+            if not re.search(rf"\b{re.escape(check)}\b", path.read_text()):
+                broken.append(f"{check}: {test_file} never mentions it")
+        assert not broken, (
+            "MUTATION_VERIFIED entries that do not check out: " + "; ".join(broken)
+            + ". An entry here is a claim that a defect was seeded and the named test "
+              "failed; it must at minimum point at a test that exercises the check."
+        )
+
+    def test_every_verified_entry_records_why(self):
+        thin = sorted(c for c, (_f, why) in MUTATION_VERIFIED.items() if len(why.strip()) < 30)
+        assert not thin, (
+            f"{thin} carry no substantive note on what the mutation was. The note is the "
+            f"only durable record — the mutation itself lives in a commit message and "
+            f"cannot be re-run from this file."
+        )
