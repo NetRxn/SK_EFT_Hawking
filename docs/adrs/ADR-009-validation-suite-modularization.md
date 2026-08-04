@@ -415,11 +415,12 @@ Identified during the read; explicitly **not** part of Phases 0–2.
 > "ADR-009 Phase 3 item 1". Working trackers may order by cost — that is useful — but every cross-reference
 > must carry the §Deferred ordinal.
 >
-> **Status, verified 2026-08-04: 7 of 8 dispositioned** — items **1, 2, 3, 7** fixed; item **0** fixed
-> in its first half (one lean_deps snapshot per full run) with its second half (shared graph handle)
-> DECLINED on measurement; items **5** and **6** DECLINED, each with the measurement that justifies
-> declining. **Open: 4** (no `UNEVALUATED` state) — and note its population spans three layers, not just
-> the check modules.
+> **Status, verified 2026-08-04: ALL 8 DISPOSITIONED.** Fixed: **1, 2, 7**, and **4** (the generator
+> closed with a ratchet, its type change declined). Item **0** fixed in its first half (one lean_deps
+> snapshot per full run), second half (shared graph handle) DECLINED on measurement. Dispositioned
+> individually: **3**. DECLINED with measurements: **5**, **6**.
+> ⚠️ Two readiness-layer sites recorded under item 4 remain open BY SCOPE — they belong to the
+> publication workstream, not to this ADR.
 >
 > **Every open item's scope figure is UNVERIFIED and must be re-measured before it is fixed** (item 7's
 > filing was wrong four independent ways; item 6's "two gates" is already measured at six — see below).
@@ -570,10 +571,48 @@ Identified during the read; explicitly **not** part of Phases 0–2.
 
    **Live consequence:** `paper_latex_compiles` now fails on D3. That is a genuine publication blocker
    for that bundle and belongs to the paper-remediation workstream, not to this ADR.
-4. **No `UNEVALUATED` result state.** ⚠️ **RE-SHAPED 2026-08-04 by a full read of all eleven check
-   modules.** The "roughly twenty sites" figure in §Context is in the right ballpark — ~11 return
-   `passed=True` from an `except` handler, and the missing-artifact class adds roughly as many again —
-   **but the framing was wrong. Do not add a third `CheckResult` state.** `passed` is consumed by
+4. ✅ **DISPOSITIONED 2026-08-04 — the type change DECLINED, the generator CLOSED with a ratchet.**
+
+   **Measured, replacing the filed estimate.** AST scan across the 59 checks: **60 cannot-measure return
+   sites — 35 FAIL (58 %, already converted) and 25 PASS**, the latter collapsing to **22 (check, kind)
+   pairs**. The filed "roughly twenty sites encode could not measure as PASS" was close; it is now
+   computed rather than asserted. *(An intermediate note here claimed "~60 % already converted" before
+   anything had been counted; the measured figure is 58 %, but the claim was withdrawn as uncomputed at
+   the time and is restated now only because it has been measured.)*
+
+   **DECLINED: adding an `UNEVALUATED` state.** `CheckResult.passed` is **D2 contract item 5** — the
+   `--json` payload consumed by `gate_precheck.py` and `pre-commit-sync.sh` reads it — so a third state
+   is a contract break, not a local refactor.
+
+   **DECLINED: converting the 22 wholesale.** They are not uniformly defects, and unifying them in one
+   commit is precisely the "semantic change wearing a mechanical disguise" H4 forbids. Five are *optional
+   toolchain absent* (`notebook_exec`/nbclient, `bibitem_title_primary_source`/pdfminer,
+   `bundle_figure_integrity`/kaleido, `notebook_stored_outputs_current`, `tracked_hypotheses_fresh`) —
+   failing a build because an optional dependency is missing is its own defect. Three are **advisory by
+   design**, dispositioned individually in item 3 and deliberately kept. Eight are the **H4 `lean_deps`
+   divergence**, marked `TODO(semantic-review)` so it stays visible. Two are the annotated **H1-silent**
+   sites.
+
+   **✅ FIXED: the generator is closed.** `tests/test_cannot_measure_baseline.py` freezes the 22 pairs and
+   fails on growth — the house ratchet idiom (`VACUOUS_STATEMENT_BASELINE`,
+   `NATIVE_DECIDE_DECL_CLOSURE_CEILING`, `COUNT_LITERAL_CEILING`). A NEW silent PASS fails until someone
+   adds it deliberately with a reason in the check body; a site converted to FAIL fails the *other*
+   direction until it is removed from the baseline, so the ratchet tightens instead of leaving headroom.
+   A third test guards the scanner seam, since a scan that matched nothing would make both assertions
+   vacuous. 3 tests, 3 mutations run and caught, clean negative control.
+
+   ⚠️ **Two layers remain outside the ratchet's reach** and are recorded here rather than silently
+   omitted: `readiness_gates.evaluate_all_gates` (`:759-765`) turns an evaluator exception into
+   `state='open'`, which `paper_aggregate_state` maps to **yellow, not red**; and
+   `bundle_readiness._blocked_p1_gates_by_paper` (`:274-299`) returns `{}` on any exception, silently
+   dropping the P1 downgrade that stops a bundle rendering GREEN. Neither returns a `CheckResult`, so the
+   scanner cannot see them. Closing those is a readiness-layer change and belongs with the publication
+   workstream.
+
+   ---
+   *Original filing, kept for the record:* the "roughly twenty sites" figure in §Context is in the right
+   ballpark — ~11 return `passed=True` from an `except` handler, and the missing-artifact class adds
+   roughly as many again — **but the framing was wrong. Do not add a third `CheckResult` state.** `passed` is consumed by
    `print_results`, `archive_results`, the `--json` payload (**D2 contract item 5**), `gate_precheck.py`
    and `pre-commit-sync.sh`; a third state is a contract break.
 

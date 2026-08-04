@@ -196,7 +196,7 @@ Governed by [ADR-009](../../adrs/ADR-009-validation-suite-modularization.md) (st
 | **0 — characterization harness** | ✅ COMPLETE. 3 guards + the harness, all mutation-verified |
 | **1 — anchors + helpers, file stays put** | ✅ COMPLETE. `CHARACTERIZATION HELD — 49 checks identical` |
 | **2 — package split** | ✅ COMPLETE 2026-08-03. 11 modules, 0 checks left in `validate.py`. 48/49 byte-identical vs the pre-Phase-2 baseline |
-| **3 — semantic fixes** | **IN PROGRESS — 7 of 8 dispositioned.** §Deferred **1, 2, 3, 7** fixed; **0** fixed (1st half) + DECLINED (2nd half); **5, 6** DECLINED with measurements. **Open: 4** |
+| **3 — semantic fixes** | ✅ **COMPLETE — 8 of 8 dispositioned.** Fixed: **1, 2, 4, 7**; **0** fixed (1st half) + DECLINED (2nd half); **3** dispositioned per-check; **5, 6** DECLINED with measurements |
 
 ### ⚠️ Numbering: cite ADR-009 §Deferred's own 0–7, always
 
@@ -256,25 +256,20 @@ between. On a wave close the two groups validated different extractions inside o
   `readiness_gates`. Residue: adopt the dashboard's pattern if runtime ever matters.
   ⚠️ `build_graph.py` NOT read in full — implementing this later requires that read first.
 
-**⬜ Item 4 — no `UNEVALUATED` result state. ⚠️ RE-SHAPED 2026-08-04 by a full read of all 11 modules.**
-The "~20 sites" estimate is in the right ballpark (~11 return `passed=True` from an `except`; the
-missing-artifact class adds roughly as many again) — **but the framing was wrong. Do NOT add a third
-`CheckResult` state.** `passed` is consumed by `print_results`, `archive_results`, the `--json` payload
-(**a D2 CONTRACT item**), `gate_precheck.py` and `pre-commit-sync.sh`; a third state is a contract break.
-And the project has **already hand-converted a substantial share of the population** (⚠️ an earlier
-revision said "~60 %" — that figure was never computed and is withdrawn; **counting the two populations
-exactly is step 1 of this item**), each with a written reason:
-`bundle_metadata_matches_graph`, `readiness_verdicts_agree`, `readiness_submission_gate`,
-`review_docs_mint_findings`, `recurrence_reopens_closures`, `native_decide_regression`,
-`notebook_stored_outputs_current` (empty glob → FAIL) and both of `graph_integrity`'s inner guards all
-FAIL on cannot-measure. **Treat this as finishing that per-site sweep, with the readiness/graph family as
-the template — or DECLINE the type change with this measurement.** Remaining PASS-on-cannot-measure sites
-concentrate in `axiom_closure_allowlist` (**5** separate PASS returns — no lake, no source, timeout,
-non-zero rc, unparseable JSON), `paper_latex_compiles` (2), `paper_toolchain_pin_drift` (2),
-`inventory_index_autogen_fresh` (2), plus the import guards in `notebooks`, `bundle_figure_integrity`,
-`tracked_hypotheses_fresh`, `bibitem_title_primary_source`. Two are annotated in-body as the **H1-SILENT**
-sites: `accepted_findings_carry_rationale` (missing ledger → PASS) and `citation_primary_sources_present`'s
-duplicate-key guard (exception → advisory).
+**✅ Item 4 — DISPOSITIONED 2026-08-04. Type change DECLINED, generator CLOSED.**
+*Measured:* **60 cannot-measure return sites across the 59 checks — 35 FAIL (58% converted), 25 PASS**,
+collapsing to **22 (check, kind) pairs**. The filed "~20 sites" was close; it is now computed.
+- **DECLINED — an `UNEVALUATED` state.** `CheckResult.passed` is D2 contract item 5 (`--json`,
+  `gate_precheck.py`, `pre-commit-sync.sh` all read it). A third state is a contract break.
+- **DECLINED — converting the 22 wholesale.** 5 are optional-toolchain-absent, 3 advisory by design
+  (item 3), 8 the H4 `lean_deps` divergence kept visible, 2 the annotated H1-silent sites. Unifying them
+  in one commit is the "semantic change wearing a mechanical disguise" H4 forbids.
+- **✅ FIXED — `tests/test_cannot_measure_baseline.py`** freezes the 22 and fails on growth (house ratchet
+  idiom). Fires both ways: a new silent PASS fails until added deliberately; a site converted to FAIL
+  fails until removed, so the ratchet tightens. A third test guards the scanner seam. 3 mutations caught.
+- ⚠️ **Out of the ratchet's reach, by scope:** `evaluate_all_gates` (exception → `open` → YELLOW not RED)
+  and `_blocked_p1_gates_by_paper` (exception → `{}` → P1 downgrade dropped). Neither returns a
+  `CheckResult`. Readiness-layer work → publication workstream.
 
 **⛔ Item 5 — `count_literals` ⊂ `axiom_count_prose_consistency`: THE PREMISE IS FALSE.** Both read
 2026-08-04; neither half survives. (a) `count_literals` is no longer "incapable of failing" — item 3 made
