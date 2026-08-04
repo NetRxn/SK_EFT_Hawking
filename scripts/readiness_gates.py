@@ -759,10 +759,24 @@ def evaluate_all_gates(graph: dict) -> list[GateResult]:
             try:
                 r = evaluator(paper, idx)
             except Exception as exc:
+                # BLOCKED, not `open` (2026-08-04). `paper_aggregate_state` maps
+                # `open` to YELLOW and only `blocked` to RED, so an evaluator that
+                # CRASHED used to render as a mild advisory — the gate reported
+                # "not evaluated" in a shape a reader takes as "nothing serious".
+                # That is the QA_QI_INFRASTRUCTURE_MAP §7 pattern (absence of
+                # measurement rendered as success) living in the readiness layer.
+                # An evaluator that cannot run has not cleared its paper.
+                #
+                # Measured before the change: 0 evaluator exceptions across
+                # 704 evaluations (64 papers x 11 gates), so this is a no-op on
+                # the current tree and pure future-proofing — the failure it
+                # guards against is a NEW evaluator bug, which is exactly when a
+                # silent downgrade would do the most damage.
                 paper_key = paper['id'].replace('paper:', '', 1)
                 r = GateResult(gate=gate_name, paper=paper_key, priority=prio,
-                               state='open',
-                               notes=f'evaluator error: {exc}')
+                               state='blocked',
+                               blockers=[f'evaluator raised {type(exc).__name__}'],
+                               notes=f'evaluator error (UNVERIFIED, not passing): {exc}')
             r.last_evaluated = now
             results.append(r)
     return results

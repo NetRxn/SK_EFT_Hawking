@@ -283,9 +283,22 @@ def _blocked_p1_gates_by_paper() -> dict[str, list[str]]:
     simply had no obligation to agree with the gate, which is exactly the shape of the
     round-6 8.1 defect one layer over.
 
-    Returns an empty mapping (never raises) if the graph is unavailable, and callers
-    treat that as "no downgrade" — the graph is already a hard dependency of
-    `load_findings_by_paper`, so an outage there fails loudly upstream.
+    Returns ``None`` — NOT ``{}`` — when the gates could not be computed, and
+    `aggregate_by_bundle` refuses to issue GREEN in that case.
+
+    ⚠️ **CORRECTED 2026-08-04.** This returned ``{}`` on ANY exception, documented as
+    *"callers treat that as 'no downgrade'"*, justified by "the graph is already a hard
+    dependency of `load_findings_by_paper`, so an outage there fails loudly upstream".
+    That reasoning does not hold: `load_findings_by_paper` calls
+    `extract_review_finding_nodes`, **not** `build_graph_json`, so a failure *inside*
+    `build_graph_json` or a NEW evaluator bug in `evaluate_all_gates` was swallowed
+    here and nowhere else. The P1-gate downgrade then silently vanished and a bundle
+    could render 🟢 GREEN — through the error path of the very function added to stop
+    that (D6 and D10 were the live instances it was written for).
+
+    `{}` and "could not compute" are different facts and must not share a value; that
+    is the same `UNEVALUATED`-vs-`clear` conflation `QA_QI_INFRASTRUCTURE_MAP` §7
+    names as the systemic pattern.
     """
     try:
         from readiness_gates import evaluate_all_gates
@@ -295,8 +308,10 @@ def _blocked_p1_gates_by_paper() -> dict[str, list[str]]:
             if r.state == "blocked" and r.priority == 1:
                 out.setdefault(r.paper, []).append(r.gate)
         return out
-    except Exception:
-        return {}
+    except Exception as exc:  # noqa: BLE001 — reported, never silently absorbed
+        print(f"[WARN] P1-gate downgrade could not be computed "
+              f"({type(exc).__name__}: {exc}) — GREEN will be withheld", file=sys.stderr)
+        return None
 
 
 def aggregate_by_bundle(
@@ -362,10 +377,19 @@ def aggregate_by_bundle(
             readiness, readiness_display = "GREEN", "GREEN"
 
         # GREEN must survive every P1 gate, not only the finding-derived ones.
-        gate_block = sorted(blocked_p1.get(b, []))
-        if readiness == "GREEN" and gate_block:
-            readiness = "YELLOW"
-            readiness_display = f"YELLOW (P1 gate blocked: {', '.join(gate_block)})"
+        # `blocked_p1 is None` means the gates could NOT be computed — which is not
+        # the same as "no gate is blocked", so GREEN is withheld rather than granted
+        # by default (2026-08-04; see `_blocked_p1_gates_by_paper`).
+        if blocked_p1 is None:
+            gate_block = []
+            if readiness == "GREEN":
+                readiness = "YELLOW"
+                readiness_display = "YELLOW (P1 gates UNVERIFIED — could not be computed)"
+        else:
+            gate_block = sorted(blocked_p1.get(b, []))
+            if readiness == "GREEN" and gate_block:
+                readiness = "YELLOW"
+                readiness_display = f"YELLOW (P1 gate blocked: {', '.join(gate_block)})"
 
         by_bundle[b] = {
             "sources": sorted(sources),
