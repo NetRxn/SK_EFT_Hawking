@@ -125,8 +125,11 @@ REPORTS_DIR = _H.DOCS_DIR / "validation" / "reports"
 #
 # The re-export itself is required by ADR-009 D2 item 8: nine test files and
 # `scripts/sync_manifest.py` import names from `validate` directly.
-# `tests/test_validate_public_surface.py` freezes the full 33-name surface and
-# asserts the `_CHECKS` identity above.
+# `tests/test_validate_public_surface.py` freezes the full external surface and
+# asserts the `_CHECKS` identity above. That file's `EXPECTED_SURFACE` is the
+# AUTHORITATIVE list — do not restate its size here. (This comment read "the full
+# 33-name surface" until 2026-08-04; the real surface is 54, and ADR-009 D2 item 8
+# carries the same stale figure with the account of how the measurement was voided.)
 from validation._registry import (  # noqa: E402
     Detail, CheckResult, CheckSpec, _CHECKS, register_check,
 )
@@ -638,8 +641,10 @@ Examples:
     parser.add_argument("--list", action="store_true", help="List available checks")
     parser.add_argument(
         "--strict", action="store_true",
-        help=("Promote paper-submission advisory warnings to hard failures "
-              "(parameter_provenance, provenance_doi_in_registry). Used at the "
+        help=("Promote paper-submission advisory warnings to hard failures. "
+              "Read by 6 checks: parameter_provenance, provenance_doi_in_registry, "
+              "bibitem_title_primary_source, theorem_name_embedded_citations, "
+              "axiom_closure_allowlist, bundle_source_freshness. Used at the "
               "paper-submission gate, not at Stage-1 development.")
     )
     parser.add_argument(
