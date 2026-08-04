@@ -104,7 +104,29 @@ Legend: ⬜ open · 🔄 in progress · ✅ done (with the verifying evidence na
       `validation/_tex.find_inline_numerical_literals`, imported by both. `_tex` imports nothing from
       the suite, so `readiness_gates` importing it cannot close a cycle with
       `bundles_readiness → readiness_gates`. Verified: D1 yields 13 literals before and after.
-- [ ] **QI-03** ⚠️ **RE-SCOPED 2026-08-04 — my own filing was wrong; do NOT unify these.**
+- [x] **QI-03** ✅ **FIXED 2026-08-04, after the filing was refuted by measurement.** See the
+      re-scoping note below — it is kept verbatim because the correction is the point.
+      **What landed:** `_clean_lean_ref` is the single owner; it now strips a leading dot and keeps
+      Lean prime names while staying `\w`-based so Unicode identifiers survive.
+      `extract_verified_by_edges` no longer carries its own parser.
+      **Measured:** refs 509 → **514** (+5, every one resolves; 0 newly rejected; dangling unchanged
+      at 4, so no `formula_grounding` movement). VERIFIED_BY **529 → 533**. Characterization:
+      +8 nodes (the guard file's 8 tests), +4 edges, **broken_chains 40 → 36** — four formulas gained
+      their first verification link. No check verdict moved.
+      **Guard:** `tests/test_lean_ref_normalizer.py`, 19 tests, 4 AST-scoped mutations caught.
+      ⚠️ **A fifth mutation was NOT caught, and that is recorded on purpose.** My first draft carried
+      a separate `any(c in tok for c in "{}*/\\")` rejection; mutating it to `if False:` failed no
+      test, because the `\w` fullmatch below already rejects those characters. It was **deleted** —
+      shipping a guard that cannot fire, inside the audit that exists to delete them, would have been
+      the same defect one layer down.
+      ⬜ **Residue, not fixed:** `_parse_formula_lean_refs` (the `formula_grounding` gate) still
+      disagrees with the graph label on **55 names**, though `_clean_lean_ref`'s docstring claims it
+      mirrors that function. The gate is currently clean (0 dangling), so reconciling it carries
+      verdict risk with no demonstrated defect behind it yet. Needs its own measured increment.
+
+  <details><summary>Original filing, kept as the record of what was wrong</summary>
+
+  ⚠️ **RE-SCOPED 2026-08-04 — my own filing was wrong; do NOT unify these blindly.**
       Filed as "three implementations, unify behind one owner". **Measured, that fix is a
       regression.** The three are `build_graph._clean_lean_ref` (509 refs),
       `build_graph.extract_verified_by_edges`'s inline `split('(')[0].split(' ')[0]` (538), and
@@ -122,6 +144,8 @@ Legend: ⬜ open · 🔄 in progress · ✅ done (with the verifying evidence na
       parentheticals, junk rejection) written as its own reviewed increment with a mutation test and
       an attributed edge delta — not folded into a mechanical pass. Mixing them is what the ADR
       forbids. **Scope figures above are measured; the original filing's was not.**
+
+  </details>
 - [x] **QI-04** ✅ **FIXED 2026-08-04.** `bundle_readiness._blocked_p1_gates_by_paper` was annotated
       `-> dict[str, list[str]]` while returning `None` on its exception path — a type lie in the
       function whose `None`-vs-`{}` distinction is the entire point of `5228ed6d`. Now
@@ -239,6 +263,31 @@ function's AST span"* — these cost time here and will cost it again otherwise.
   could have flagged it. Where a finding is "N places do X wrong", ship the scan, not just the count.
 - **Do not run the characterization harness concurrently with edits to the code it is reading.** It
   executes checks in-process against the live tree; an edit mid-run silently corrupts the snapshot.
+
+## 4c. Resume point
+
+**W-A is complete** (QI-01 · QI-02 · QI-03 · QI-04), plus QI-05 and the
+`readiness_gates` half of QI-11. Three commits on
+`infra/adr-009-validation-modularization`. Fast suite **5080 passed / 5 skipped / 0 failed**;
+every characterization delta attributed; no check verdict moved by any of it.
+
+**Next, in order:**
+
+1. **W-B** — QI-06 … QI-10 and the rest of QI-11. Pure dead-code and DRY removal; no verdict
+   should move, so any characterization delta is a signal to stop and attribute.
+2. **W-C** — QI-12 … QI-26b. Documentation vs code. Start with the three in-code headers
+   (QI-12, QI-13, QI-14): those actively tell a reader a repaired check is still broken, which is
+   the highest-cost kind of staleness. ⚠️ Re-measure each figure against HEAD rather than copying
+   from this file — several already moved during W-A (the suite is 5080 now, not 5055; PlaceholderMarker
+   is 707, not 593).
+3. **W-D** — QI-27. The 43 checks needing mutation tests, plus a registered gate so D5 stops being
+   prose. Read the 15 unread test files first (~3,170 lines); they are the only part of the QA/QI
+   surface this audit did **not** read in full, and they define the house patterns to mirror.
+
+**Standing rules for anyone continuing this** (all learned the hard way in §4b): scope every mutation
+to the target function's AST span; restore it by writing back saved bytes, never `git checkout`;
+never run the characterization harness while editing the code it reads; and when a mutation is *not*
+caught, that is a finding about the guard, not a formality to wave through.
 
 ## 5. Companion documents
 
