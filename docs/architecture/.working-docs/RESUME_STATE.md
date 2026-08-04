@@ -16,6 +16,42 @@ without re-deriving it. Read this first, then the linked documents.
 
 ---
 
+## The measured baseline — what "the suite was green" actually meant
+
+**This is the evidence the whole workstream rests on. It is a committed artifact, not a characterization.**
+
+`docs/validation/reports/validation_20260801T055521Z.json` — the last full `validate.py` run, 2026-08-01,
+**before this branch existed**, so main-equivalent:
+
+> **58 of 59 checks passed. One failed.**
+
+Run concurrently with the publication-readiness audit, which found **no bundle submittable, best grade C−,
+80 P0 findings.** Same tree, same day. What the individual checks reported in that run:
+
+| check | verdict | its own summary line |
+|---|---|---|
+| `readiness_submission_gate` | **PASS** | *"0 green / 3 yellow / **61 red** across 64 papers"* |
+| `paper_latex_compiles` | **PASS** | *"SKIPPED (slow)"* — never compiled anything |
+| `count_literals` | **PASS** | *"107 count-literal matches … WARN-level during retrofit"* |
+| `numerical_literals` | **PASS** | *"116 inline literals … WARN-level during retrofit"* |
+| `bundle_source_freshness` | **PASS** | *"0 FAIL / 11 WARN / 12 PASS"* |
+| `bundle_metadata_matches_graph` | FAIL | the one real failure |
+
+**Read the first row twice.** The check computed the RED verdict, printed it, and returned `True`. That is
+the defect this workstream exists to fix, preserved in an artifact rather than argued from.
+
+**So: never describe the pre-refactor suite as "working".** It *ran* — all 59 checks executed and produced
+output. It did not *measure*: a substantial subset was structurally incapable of returning a failing
+verdict, so green carried no information. The accurate framing is **"reports success while measuring
+nothing"**, and it is the audit's central finding (`SYNTHESIS.md` §2).
+
+⚠️ **No full `validate.py` run exists since the branch opened on 2026-08-03 — zero archived reports.**
+The current failing set is therefore UNKNOWN and must be measured, not inherited. When you do measure it:
+`counts_fresh`, `tables_fresh` and `claim_clusters_fresh` **regenerate tracked artifacts mid-run**, so a
+full run mutates the working tree. Check `git status` afterwards and stage deliberately.
+
+---
+
 ## Working rules for this workstream
 
 Read these before the state below; they govern how every increment is built.
