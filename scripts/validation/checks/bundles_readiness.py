@@ -457,78 +457,117 @@ def check_readiness_verdicts_agree() -> CheckResult:
     return CheckResult(passed=disagreements == 0, details=details)
 
 
+# ── Pure core, extracted for testability (ADR-009 D5) ────────────────────────
+#: Gate states that count as a hard blocker for submission.
+_READY_BLOCKED = "blocked"
+
+
+def classify_readiness(gates: List[dict]) -> dict:
+    """Group ReadinessGate nodes per paper. Pure: no graph build, no I/O.
+
+    Extracted in Phase 3 so the submission verdict can be mutation-tested against
+    synthetic gates instead of a 15-second graph build over the live tree. Same
+    precedent as `_tp_scan_lines`.
+
+    A paper is submission-ready iff every P1 gate is `passed` and no P2 gate is
+    `blocked`. P2 `needs-recheck`/`open` are advisory.
+    """
+    from collections import defaultdict
+    per_paper: dict = defaultdict(lambda: {
+        'p1_blocked': [], 'p2_blocked': [], 'p2_advisory': [],
+        'passed': [], 'open': [],
+    })
+    for g in gates:
+        m = g['meta']
+        entry = (m['gate'], m['state'], m.get('notes', ''))
+        bucket = per_paper[m['paper']]
+        if m['state'] == 'passed':
+            bucket['passed'].append(entry)
+        elif m['priority'] == 1 and m['state'] == _READY_BLOCKED:
+            bucket['p1_blocked'].append(entry)
+        elif m['priority'] == 2 and m['state'] == _READY_BLOCKED:
+            bucket['p2_blocked'].append(entry)
+        elif m['priority'] == 2 and m['state'] in ('needs-recheck', 'open'):
+            bucket['p2_advisory'].append(entry)
+        else:
+            bucket['open'].append(entry)
+    return dict(per_paper)
+
+
+def partition_readiness(per_paper: dict) -> tuple[list, list, list]:
+    """(green, yellow, red). RED = any blocked gate, P1 or P2 — the blocking set."""
+    green, yellow, red = [], [], []
+    for paper, s in sorted(per_paper.items()):
+        if s['p1_blocked'] or s['p2_blocked']:
+            red.append(paper)
+        elif s['p2_advisory'] or s['open']:
+            yellow.append(paper)
+        else:
+            green.append(paper)
+    return green, yellow, red
+
+
 @register_check("readiness_submission_gate",
                 "Every paper has all P1 readiness gates passed (Phase 5v Wave 4)")
 def check_readiness_submission_gate() -> CheckResult:
-    """CHECK 18: Aggregate per-paper readiness state.
+    """Aggregate per-paper readiness state, and FAIL when a paper is not ready.
 
-    Iterates every Paper node's 11 ReadinessGate instances. A paper is
-    submission-ready iff ALL priority-1 gates are `passed` and no
-    priority-2 gate is `blocked`. Priority-2 `needs-recheck`/`open` are
-    advisory warnings.
+    A paper is submission-ready iff ALL priority-1 gates are `passed` and no
+    priority-2 gate is `blocked`. Priority-2 `needs-recheck`/`open` are advisory
+    warnings and do not fail the check.
 
-    The check is WARN-only during the readiness rollout — existing drafts
-    will light up red (as intended) until remediation lands. To block
-    submission, run `validate.py --strict` (future flag) or grep for
-    'readiness-status: red' in archived reports.
+    ⚠️ **THIS CHECK WAS INVERTED UNTIL 2026-08-03 (ADR-009 §Deferred item 1).** It
+    classified papers into green/yellow/red exactly as it does now, emitted a
+    per-paper detail saying "N blocked: ...", and then returned `passed=True`
+    unconditionally — with `# WARN not FAIL during rollout` as the only marker. So
+    the only state in which it could fail was **zero gate nodes**, i.e. it failed
+    when it could not measure and passed when it measured RED. Measured at the
+    moment of the fix: **61 of 64 papers RED, verdict `True`.**
+
+    Its docstring also promised that `validate.py --strict` would block submission.
+    `STRICT_MODE` was never referenced in the body. That promise is now obsolete
+    rather than unbuilt: the check hard-fails by default, which is what its own name
+    and registered description have always claimed. (`--strict` remains unreachable
+    in practice anyway — no automated caller passes it; §Deferred item 6.)
+
+    The rollout the comment deferred to is over: `stage13_status` is now guarded,
+    the bundles are in active remediation, and the operator's standing expectation
+    is that gates go red as remediation applies. A gate that cannot go red is not a
+    gate.
     """
     try:
         from build_graph import build_graph_json
     except ImportError as exc:
-        return CheckResult(passed=True, details=[
-            Detail("import", True, f"build_graph not available ({exc}); skipping",
-                   warning=True),
+        # FAIL, not skip. Matches the reasoning already written into this module's
+        # sibling `readiness_verdicts_agree`: a readiness guard that cannot load its
+        # own dependency reports "no problem found", which is indistinguishable from
+        # agreement. This branch returned passed=True until 2026-08-03.
+        return CheckResult(passed=False, details=[
+            Detail("import", False,
+                   f"build_graph unavailable ({exc}) — the submission gate could not "
+                   f"be evaluated, so its verdict is UNVERIFIED, not passing"),
         ])
 
     graph = build_graph_json()
     gates = [n for n in graph.get('nodes', []) if n['type'] == 'ReadinessGate']
     if not gates:
-        # FAIL, not warn (D12 round-8 BLOCKER 8.2). Zero gate nodes is not "no problems
-        # found" — it is the gate system being absent, which is the only state in which
-        # every bundle trivially satisfies it.
+        # Zero gate nodes is not "no problems found" — it is the gate system being
+        # absent, the only state in which every bundle trivially satisfies it.
         return CheckResult(passed=False, details=[
             Detail("gates", False,
                    "NO ReadinessGate nodes exist. The submission gate has nothing to "
                    "evaluate, so its verdict is vacuous — treat as unverified, not passing."),
         ])
 
-    # Aggregate per-paper
-    from collections import defaultdict
-    per_paper: dict[str, dict] = defaultdict(lambda: {
-        'p1_blocked': [], 'p2_blocked': [], 'p2_advisory': [],
-        'passed': [], 'open': [],
-    })
-    for g in gates:
-        m = g['meta']
-        paper = m['paper']
-        entry = (m['gate'], m['state'], m.get('notes', ''))
-        if m['state'] == 'passed':
-            per_paper[paper]['passed'].append(entry)
-        elif m['priority'] == 1 and m['state'] == 'blocked':
-            per_paper[paper]['p1_blocked'].append(entry)
-        elif m['priority'] == 2 and m['state'] == 'blocked':
-            per_paper[paper]['p2_blocked'].append(entry)
-        elif m['priority'] == 2 and m['state'] in ('needs-recheck', 'open'):
-            per_paper[paper]['p2_advisory'].append(entry)
-        else:
-            per_paper[paper]['open'].append(entry)
-
-    # Classification
-    green, yellow, red = [], [], []
-    for paper, state in sorted(per_paper.items()):
-        if state['p1_blocked'] or state['p2_blocked']:
-            red.append(paper)
-        elif state['p2_advisory'] or state['open']:
-            yellow.append(paper)
-        else:
-            green.append(paper)
+    per_paper = classify_readiness(gates)
+    green, yellow, red = partition_readiness(per_paper)
+    ok = not red
 
     details = [
-        Detail("summary", True,
+        Detail("summary", ok,
                f"{len(green)} green / {len(yellow)} yellow / {len(red)} red "
                f"across {len(per_paper)} papers"),
     ]
-
     for paper in green:
         details.append(Detail(paper, True, "all 11 gates passed"))
     for paper in yellow:
@@ -542,13 +581,12 @@ def check_readiness_submission_gate() -> CheckResult:
         s = per_paper[paper]
         blockers = s['p1_blocked'] + s['p2_blocked']
         details.append(Detail(
-            paper, True,  # WARN not FAIL during rollout
+            paper, False,
             f"{len(blockers)} blocked: "
             f"{', '.join(g for g,_,_ in blockers[:5])}"
-            + (f" (+{len(blockers)-5} more)" if len(blockers) > 5 else ""),
-            warning=True))
+            + (f" (+{len(blockers)-5} more)" if len(blockers) > 5 else "")))
 
-    return CheckResult(passed=True, details=details)
+    return CheckResult(passed=ok, details=details)
 
 
 # ═══════════════════════════════════════════════════════════════════════
