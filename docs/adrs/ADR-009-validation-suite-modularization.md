@@ -793,6 +793,29 @@ Identified during the read; explicitly **not** part of Phases 0–2.
 
 ---
 
+## Post-delivery audit (2026-08-04)
+
+A full direct read of the **entire** QA/QI surface — including `scripts/build_graph.py` (4,207 lines),
+which §Deferred item 0 names as a precondition for the shared-graph-handle work and which
+`RESUME_STATE.md` had recorded as never read — was completed on 2026-08-04 and is tracked at
+**[`docs/audits/2026-08-04-qa-qi-infrastructure/README.md`](../audits/2026-08-04-qa-qi-infrastructure/README.md)**.
+
+It confirms this ADR's delivery independently (59 checks / 12 modules / 54-name surface / 5055 tests
+green / 57-of-59 with the two intentional reds) and records **27 open items** the phases did not
+reach. Two bear directly on this document and are corrected there rather than silently here:
+
+- **§Deferred item 4's** two readiness-layer sites (`evaluate_all_gates`,
+  `_blocked_p1_gates_by_paper`) are recorded above as remaining open **BY SCOPE**. They were
+  **CLOSED by `5228ed6d`** on 2026-08-04 — after this document was finalized. Audit finding QI-21.
+- **Five code comments cite the wrong §Deferred ordinal** — the exact numbering collision the
+  §Deferred preamble warns about, now live in the source. Audit finding QI-16.
+
+The audit also finds one live enforcement hole this ADR's phases did not surface: five
+`glob("*.lean")` sites scan 1,373 of 2,039 Lean files, so
+`build_graph.extract_placeholder_marker_nodes` mints no node for **112 placeholder theorems** that
+P1 Gate 5 reads (QI-01). Measured verdict movement on the current tree is **zero** — the exposure is
+latent. That class had already been fixed once, in `freshness.py`, and was not swept.
+
 ## References
 
 - `scripts/validate.py` — read in full 2026-08-03; all line citations above verified against that read.

@@ -3,20 +3,31 @@
 **Last updated:** 2026-08-04. Written so any session (or a post-compaction continuation) can pick this up
 without re-deriving it. Read this first, then the linked documents.
 
-> ## ✅ ADR-009 IS DELIVERED (2026-08-04)
-> Phases 0–3 complete, **all 8 §Deferred items dispositioned**, ADR-009 **ACCEPTED**, and the branch
-> merged to `main`. Verified on the merged HEAD: **59 checks** in **12** modules under
-> `scripts/validation/checks/`, `validate.py` registers **0**; `--list` 59; unknown `--check` exits 2;
-> `BUNDLE_CODES` 21; largest module 965 lines; fast suite **5050 passed / 5 skipped / 0 failed**;
-> `validate.py` **57/59 with 2 intentional reds**. Characterization **HELD** at every structural boundary.
+> ## ✅ ADR-009 IS DELIVERED — ⚠️ AND **NOT MERGED** (2026-08-04)
+> Phases 0–3 complete, **all 8 §Deferred items dispositioned**, ADR-009 **ACCEPTED**. The branch is
+> **`infra/adr-009-validation-modularization`, 51 ahead of `main` and 0 behind — NOT merged.**
+> ⚠️ *This block claimed "merged to `main`" until 2026-08-04. That was false and is corrected here;
+> verify with `git merge-base --is-ancestor HEAD main` before repeating any merge claim.*
+> Verified on the branch HEAD: **59 checks** in **12** modules under `scripts/validation/checks/`,
+> `validate.py` registers **0**; `--list` 59; unknown `--check` exits 2; `BUNDLE_CODES` 21; largest
+> module 965 lines; fast suite **5055 passed / 5 skipped / 0 failed**; `validate.py` **57/59 with
+> 2 intentional reds**. Characterization **HELD** at every structural boundary.
 >
-> **What remains is NOT infrastructure work** — see “The current failing set” below. Both red checks
-> belong to the publication workstream, and the two readiness-layer cannot-measure sites
-> (`evaluate_all_gates`, `_blocked_p1_gates_by_paper`) are recorded in ADR-009 §Deferred item 4 as
-> out-of-scope by design.
+> **Both red checks belong to the publication workstream.** The two readiness-layer cannot-measure
+> sites (`evaluate_all_gates`, `_blocked_p1_gates_by_paper`) were **CLOSED by `5228ed6d`**, after the
+> documents below were written — several still record them as open (audit finding QI-21/QI-22).
 >
-> Next: the fresh-context adversarial review of the split suite and the dispositions, then ADR-010
-> (a separate goal — see the fence below).
+> ## 🔴 INFRASTRUCTURE WORK REMAINS — read the audit first
+> A full direct read of the entire QA/QI surface (~17,700 lines, including `build_graph.py`, which
+> this file had recorded as never read) was completed 2026-08-04 and found **27 open items** across
+> four workstreams: one live enforcement hole, duplicated predicates, dead code, and documentation
+> that contradicts the code it describes — plus D5's missing mechanical enforcement (32 of 59 checks
+> have no test at all).
+>
+> **➡️ [`docs/audits/2026-08-04-qa-qi-infrastructure/README.md`](../../audits/2026-08-04-qa-qi-infrastructure/README.md)
+> is the live tracker. Read it before touching the validation suite, and update its checkboxes as
+> work lands.** Operator ruling 2026-08-04: all of it is in scope, and **all checks need tests**,
+> before this branch is ready for PR review.
 
 > **Every figure in this file is either (a) re-verified on the date shown, (b) marked as a historical
 > measurement, or (c) marked as INHERITED from a document and not independently checked.** That third
@@ -528,6 +539,10 @@ publication schedule is the flexible variable; claim strength is not.
 ## Reading order for a cold start
 
 1. **This file.**
+1b. **[`docs/audits/2026-08-04-qa-qi-infrastructure/README.md`](../../audits/2026-08-04-qa-qi-infrastructure/README.md)
+   — the live QA/QI remediation tracker (27 open items, W-A…W-D). Read it before any validation-suite
+   work; several figures in the documents below are superseded by it and are flagged there by
+   finding id.**
 2. `docs/adrs/ADR-009-validation-suite-modularization.md` — the decision, H1–H5, D2's 8 contract items,
    §Deferred 0–7 (the canonical numbering).
 3. `docs/architecture/QA_QI_INFRASTRUCTURE_MAP.md` — the whole quality layer; **§6 (enforcement reality)

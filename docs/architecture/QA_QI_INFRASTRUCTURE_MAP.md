@@ -14,8 +14,18 @@ Where a reconnaissance claim did not survive verification it is marked and corre
 on that date or explicitly marked historical. `build_graph.py` is **not** among them — claims about it
 here rest on caller analysis and its own in-source comments, and are marked where they appear.
 
+> 🔴 **PARTIALLY SUPERSEDED — read the audit alongside this map.** A full direct read of the whole
+> QA/QI surface on 2026-08-04 found items this map records incorrectly, notably in **§4** (the
+> `evaluate_all_gates` note) and **§7** (both readiness-layer rows, and "four of the eight rows are
+> now closed" — it is **six**; both were closed by `5228ed6d` after this map was written). Each is
+> tracked by finding id in
+> **[`docs/audits/2026-08-04-qa-qi-infrastructure/README.md`](../audits/2026-08-04-qa-qi-infrastructure/README.md)**
+> (QI-22 for this file). Correct this map as those items land; do not quote a figure below without
+> checking the tracker first.
+
 **Companion documents:** [ADR-009](../adrs/ADR-009-validation-suite-modularization.md) (the validation-suite
-decision) · [ADR-004](../adrs/ADR-004-substrate-integrity-gates.md) (R1–R5) ·
+decision) · [QA/QI infrastructure audit 2026-08-04](../audits/2026-08-04-qa-qi-infrastructure/README.md)
+(the live remediation tracker) · [ADR-004](../adrs/ADR-004-substrate-integrity-gates.md) (R1–R5) ·
 [ADR-002](../adrs/ADR-002-native-decide-policy.md) · [ADR-005](../adrs/ADR-005-derived-proof-atlas.md) ·
 [ADR-007](../adrs/ADR-007-kernel-nogo-ledger-and-negative-frontier.md) ·
 `docs/audits/2026-08-01-publication-readiness/SYNTHESIS.md`.
