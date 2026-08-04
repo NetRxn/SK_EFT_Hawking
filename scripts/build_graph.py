@@ -374,6 +374,12 @@ def _lean_ref_resolution_index() -> frozenset:
     return frozenset(forms)
 
 
+#: Tokens that appear where a declaration name would but name no declaration.
+#: `pending` is the project's own placeholder; the rest are what authors write when
+#: there is nothing to cite.
+_LEAN_REF_NON_NAMES = frozenset({"pending", "n/a", "na", "none", "tbd"})
+
+
 def _clean_lean_ref(ref: str) -> str | None:
     """Normalise a raw ``Lean:`` docstring token to a bare declaration name, or
     return ``None`` if the token is not a declaration-name claim at all.
@@ -394,10 +400,40 @@ def _clean_lean_ref(ref: str) -> str | None:
     head = re.sub(r"\(.*?\)", "", head).strip()
     if not head:
         return None
-    tok = head.split()[0].rstrip(".;,").strip()
-    if not re.fullmatch(r"[A-Za-z_][\w.]*", tok) or len(tok) <= 2:
+    # ⚠️ `.lstrip('.')` and the `'` in the character class are BOTH fixes from
+    # 2026-08-04 (audit finding QI-03), each measured:
+    #
+    #   * A LEADING DOT is the docstring's suffix idiom — `.dean_adiabatic` means
+    #     `QuasiOneDReduction.dean_adiabatic`. Rejecting it dropped 3 real names.
+    #   * A LEAN PRIME NAME (`haldaneD_diracK'`) is a perfectly ordinary
+    #     declaration. The old class `[\w.]` has no apostrophe, so every primed
+    #     name was silently discarded — 2 more.
+    #
+    # All five newly-accepted names RESOLVE against `lean_deps.json`, and nothing
+    # previously accepted is now rejected, so this strictly widens correct
+    # coverage: 509 -> 514 refs, dangling unchanged at 4.
+    #
+    # ⚠️ The class stays `\w`-based, NOT `[A-Za-z0-9]`. A first draft of this fix
+    # spelled it out in ASCII and thereby dropped `BHEntropyMicroscopic.HorizonMTCBC.γ_immirzi`
+    # and `c₄_pos` — Lean identifiers are Unicode, and `\w` already matches them.
+    # Measuring the candidate against the live refs is what caught that.
+    tok = head.split()[0].rstrip(".;,").strip().lstrip(".")
+    if not tok or tok.lower() in _LEAN_REF_NON_NAMES:
         return None
-    if tok.endswith(".lean") or tok == "pending" or tok.startswith("_"):
+    # This single `fullmatch` is what rejects the structural junk the unguarded
+    # inline parser in `extract_verified_by_edges` used to hand to
+    # `_resolve_lean_short` — `16}_num`, `N/A`, `…falsifier_*`, bare numerals.
+    # `\w` matches none of `{ } * / \`, and the leading `[A-Za-z_]` kills anything
+    # starting with a digit.
+    #
+    # ⚠️ A separate `any(c in tok for c in "{}*/\\")` guard sat here briefly and was
+    # REMOVED on measurement: mutating it to `if False:` changed no verdict and
+    # failed no test, i.e. it could never be the sole reason a token was rejected.
+    # A guard that cannot fire is the thing this audit exists to delete, and
+    # shipping one inside the fix would have been the same defect one layer down.
+    if not re.fullmatch(r"[A-Za-z_][\w.']*", tok) or len(tok) <= 2:
+        return None
+    if tok.endswith(".lean") or tok.startswith("_"):
         return None
     if re.fullmatch(r"[A-Z][A-Z0-9]{0,4}", tok):  # matrix-element labels (K0E0)
         return None
@@ -2946,8 +2982,23 @@ def extract_verified_by_edges(node_ids: set) -> list[dict]:
             continue
         lean_refs = fnode.get('meta', {}).get('lean_refs', [])
         for ref in lean_refs:
-            # Clean up: ref might be "theorem_name (Module.lean)" or just "theorem_name"
-            clean_ref = ref.split('(')[0].strip().split(' ')[0].strip()
+            # ⚠️ ONE normalizer (2026-08-04, audit finding QI-03). This line used to
+            # be its own parser — `ref.split('(')[0].strip().split(' ')[0].strip()` —
+            # with NO rejection step at all, while `_clean_lean_ref` sat 2,500 lines
+            # above doing the job properly. Measured: it fed **33 junk tokens** into
+            # `_resolve_lean_short`, among them `'N/A'`, `'K0E0'`, `'2'`, `'3'`,
+            # `'16}_num'` and `'…falsifier_*'`.
+            #
+            # An unguarded short-name resolver fed unfiltered tokens is exactly the
+            # mechanism of section-Deferred item 7, where tail-resolution
+            # manufactured 144 phantom Lean VERIFIES edges. The formula branch of
+            # that same resolver has carried an alias allow-list against this hazard
+            # since D12 round-9; this branch had nothing.
+            #
+            # `_clean_lean_ref` is now the single owner and was fixed in the same
+            # pass to stop rejecting leading-dot refs and Lean prime names — so this
+            # switch does not trade junk rejection for lost coverage.
+            clean_ref = _clean_lean_ref(ref)
             if not clean_ref:
                 continue
             lean_id = _resolve_lean_short(clean_ref, node_ids)
