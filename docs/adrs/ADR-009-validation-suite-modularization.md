@@ -424,12 +424,54 @@ Identified during the read; explicitly **not** part of Phases 0–2.
 
 0. **Memoizing `load_lean_deps()` is a behaviour change, not an optimisation** — discovered while
    writing the Phase-1 helper. The eight sites re-read and re-parse the 70 MB file on every call, and that
-   is load-bearing: `counts_fresh` (position ~30) shells out to `update_counts.py`, which can **regenerate
-   `lean/lean_deps.json` mid-run**. Readers at ~5/7/8/9 observe the pre-regeneration file; readers at
-   ~55/56/58 observe the regenerated one. A cache would freeze whichever was read first and silently change
-   what the later checks validate against. Note also that these sites read the file **directly**, never
-   through `extract_lean_deps.load_lean_deps()`, so they never trigger its hash-guarded refresh. Any caching
-   must be reviewed together with the shared-graph-handle item (both change what a check observes).
+   is load-bearing: `counts_fresh` shells out to `update_counts.py`, which can **regenerate
+   `lean/lean_deps.json` mid-run**. A cache would freeze whichever state was read first. These sites read
+   the file **directly**, never through `extract_lean_deps.load_lean_deps()`, so they never trigger its
+   hash-guarded refresh. Any caching must be reviewed together with the shared-graph-handle item.
+
+   ---
+   **⚠️ MEASURED 2026-08-04 — the item is bigger than caching, and the estimates above are now exact.**
+
+   **(a) The split is 5 before / 3 after, and the regenerator sits between them.** Positions measured from
+   the live registry: `counts_fresh` at **29**; readers BEFORE it at **4** `tracked_hypothesis_ledger`,
+   **6** `formula_grounding`, **7** `vacuous_statement_audit`, **8** `nogo_substrate_integrity`,
+   **9** `native_decide_regression`; readers AFTER it at **54** `prose_theorem_reference_coverage`,
+   **55** `theorem_name_embedded_citations`, **57** `lean_docstring_refs_resolve`. (The filed "~5/7/8/9"
+   and "~55/56/58" were right.)
+
+   **(b) Regeneration is hash-gated, so it fires only when a `.lean` source actually changed.**
+   `extract_lean_deps._needs_refresh()` compares a stored hash against `compute_lean_hash()`, a SHA-256
+   over every `.lean` file under `SKEFTHawking/` (recursive). Verified empirically 2026-08-04: running
+   `update_counts.py` refreshed `docs/counts.json` while leaving `lean/lean_deps.json` untouched (mtime
+   unchanged at 2026-08-03T14:29) — because no Lean source had changed. Note `counts_fresh`'s OWN
+   staleness predicate is **mtime**-based and far easier to trip, so the common case is
+   "counts regenerates, lean_deps does not".
+
+   **(c) The consequence is a live inconsistency, not merely a caching hazard.** Nothing refreshes
+   `lean/lean_deps.json` before position 29, and `validate_helpers.load_lean_deps()` reads it directly
+   with no hash guard. So on exactly the runs where Lean changed — a wave close — the five checks at
+   4/6/7/8/9 validate the **previous** extraction, while the three at 54/55/57 validate the fresh one.
+   Those five include the `native_decide_regression` ratchet (§Deferred item 1) and the substance gates
+   `formula_grounding` / `vacuous_statement_audit` / `nogo_substrate_integrity`. A ratchet that measures
+   the previous wave's substrate cannot see the trust surface the current wave added, which is the one
+   thing it exists to catch.
+
+   **So the question is not "may we cache?" — the readers already disagree, and a cache would merely pick
+   one of the two states.** The candidate fix is therefore ordering/refresh, not caching: refresh
+   `lean_deps.json` ONCE before any reader (or route the early readers through the hash-guarded loader),
+   after which memoization becomes safe *and* the suite becomes internally consistent. Cost is zero on a
+   run with no Lean change, and one extraction on a wave close — which is precisely when it is wanted.
+   **Not implemented here:** it is a semantic + ordering change (H3) and needs its own review and
+   mutation test.
+
+   **(d) The guard that should have caught this is narrower than its name.**
+   `tests/test_validate_registry_contract.py::test_regenerators_precede_their_consumers` asserts only
+   `counts_fresh` against `_COUNTS_CONSUMERS = ('axiom_count_prose_consistency',
+   'inventory_index_autogen_fresh')` — **`docs/counts.json` consumers only**. It has no knowledge of
+   `lean_deps.json` consumers, so the 5-before-the-regenerator arrangement passes it. `tables_fresh` and
+   `claim_clusters_fresh` are declared in `_REGENERATORS` but are never asserted against any consumer;
+   that tuple appears only in an error message. Widening this property is part of item 0's fix, and it
+   **will fail on the current ordering** — which is the point.
 1. ✅ **DONE 2026-08-03.** `native_decide_regression` read a possibly-stale `counts.json`. **Reordering
    could not have fixed it:** in a full run the check sits at ~9 and `counts_fresh` rewrites the file at
    ~29, but in the **commit gate** it is one of only three checks invoked, in ISOLATION, so `counts_fresh`
