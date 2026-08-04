@@ -271,8 +271,8 @@ def resolve_stage13_reviews(*, backfill: bool) -> dict[str, dict]:
     return out
 
 
-def _blocked_p1_gates_by_paper() -> dict[str, list[str]]:
-    """Bundle/paper key -> names of its BLOCKED priority-1 ReadinessGates.
+def _blocked_p1_gates_by_paper() -> dict[str, list[str]] | None:
+    """Bundle/paper key -> names of its BLOCKED priority-1 ReadinessGates, or None.
 
     Added 2026-07-31 (self-audit, corroborated by D12 Stage-13 round-7 finding 8.2).
     This module's verdict is computed from review findings ONLY, so it cannot see the

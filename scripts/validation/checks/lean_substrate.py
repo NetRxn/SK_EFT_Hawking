@@ -72,7 +72,12 @@ def check_formulas_to_theorems() -> CheckResult:
     lean_dir = _H.LEAN_DIR          # was Path(__file__).parent.parent — ADR-009 H1
     all_lean_names = set(ARISTOTLE_THEOREMS.keys())
     if lean_dir.exists():
-        for lean_file in lean_dir.glob('*.lean'):
+        # ⚠️ rglob, NOT glob (fixed 2026-08-04, audit finding QI-01). `glob` read
+        # 1,373 of 2,039 files, so any mapped theorem that lives in a package
+        # would be reported "Not in Lean source or ARISTOTLE_THEOREMS" while
+        # existing. A false failure rather than a false pass, but the set this
+        # check resolves against was two-thirds of the library.
+        for lean_file in lean_dir.rglob('*.lean'):
             for line in lean_file.read_text().splitlines():
                 if line.startswith('theorem '):
                     name = line.split()[1].split('(')[0].split(':')[0].strip()

@@ -10,8 +10,16 @@ deleted the comments would silently shift every reported line number.
 
 `_strip_tex_comments` is in the frozen external surface
 (`tests/test_validate_prose_checks.py`), so `validate` re-exports it from here.
+
+`find_inline_numerical_literals` lives here for a different reason — see its own
+docstring. It is imported by `scripts/readiness_gates.py`, which sits OUTSIDE this
+package. That direction is safe precisely because this module imports nothing from
+the suite (same property as `_config` and `_registry`), so it cannot close a cycle
+with `validation.checks.bundles_readiness → readiness_gates`.
 """
 from __future__ import annotations
+
+import re
 
 
 def _strip_tex_comments(text: str) -> str:
@@ -45,3 +53,61 @@ def _strip_tex_comments(text: str) -> str:
 def _line_of(text: str, offset: int) -> int:
     """1-based line number of a character offset."""
     return text.count("\n", 0, offset) + 1
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# Inline unit-bearing numerical literals — ONE definition, two consumers
+# ═══════════════════════════════════════════════════════════════════════
+# Audit finding QI-02. This predicate existed TWICE, byte-identical: as
+# `papers_prose._NUMERICAL_LITERAL_RE` (feeding the `numerical_literals` check) and
+# as an inline `lit_re` inside `readiness_gates._eval_numerical_freshness` (feeding
+# P2 Gate 9). Verified identical — same pattern string, same flags, and both wrapped
+# in the same two-step strip — before they were merged, so the merge is provably
+# behaviour-preserving.
+#
+# Two copies of one predicate is not merely duplication here: `validate.py --check
+# readiness_verdicts_agree` exists to assert that the finding-derived verdict and the
+# gate-derived verdict AGREE. Tuning one copy and not the other would make the two
+# subsystems disagree by construction, and the check built to catch disagreement
+# would be reporting on a difference someone introduced in its own blind spot.
+
+#: A literal with a physical unit that belongs in an `\input{tables/...}` file
+#: rather than hand-typed in body prose (Invariant #1).
+NUMERICAL_LITERAL_RE = re.compile(
+    r'(?<!\\)\b(\d+\.\d+|\d+(?:\.\d+)?e[+-]?\d+)\s*'
+    r'(~?)\\?(?:'
+    r'(?:mu|\\mu)\s*m\b|'
+    r'nK\b|'
+    r'mK\b|'
+    r'\\mathrm\{[a-zA-Z]+\}|'
+    r's\^?(?:-|\{-|\^{-)1\}?|'
+    r'mm/s\b|'
+    r'\\mu m\b|'
+    r'\\times\s*10\^'
+    r')',
+    re.IGNORECASE,
+)
+
+_INPUT_TABLES_RE = re.compile(r'\\input\{tables/[^}]+\}')
+_CAPTION_RE = re.compile(r'\\caption\{[^}]*\}', re.DOTALL)
+
+
+def find_inline_numerical_literals(text: str) -> tuple[str, list]:
+    """Return ``(stripped_text, matches)`` for unit-bearing literals in BODY prose.
+
+    Two regions are removed before scanning, and both exclusions are deliberate:
+
+    * ``\\input{tables/...}`` — generated tables own their own literals; that is the
+      mechanism this check exists to push authors toward, so counting them would
+      penalise compliance.
+    * ``\\caption{...}`` — captions legitimately quote reference values from primary
+      sources ("290 s^-1") to situate the paper against them.
+
+    ``stripped_text`` is returned alongside the matches because a caller reporting
+    line numbers must count them in the SAME string the offsets index into. Counting
+    them in the original would shift every reported line by the length of whatever
+    was stripped above it.
+    """
+    stripped = _INPUT_TABLES_RE.sub('', text)
+    stripped = _CAPTION_RE.sub('', stripped)
+    return stripped, list(NUMERICAL_LITERAL_RE.finditer(stripped))

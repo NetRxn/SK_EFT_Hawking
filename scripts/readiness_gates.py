@@ -34,11 +34,20 @@ payloads that `build_graph.extract_readiness_gate_nodes()` can emit.
 from __future__ import annotations
 
 import logging
+import re
 from collections import defaultdict
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Callable, Literal
+
+# ONE definition of the inline-literal predicate, shared with the
+# `numerical_literals` check (audit QI-02). `validation._tex` imports nothing from
+# the validation suite — same leaf property as `_config` / `_registry` — so this
+# import cannot close a cycle with `validation.checks.bundles_readiness →
+# readiness_gates`. Reaching this module requires `scripts/` on `sys.path`, which is
+# already true of every importer of `readiness_gates` itself.
+from validation._tex import find_inline_numerical_literals
 
 logger = logging.getLogger(__name__)
 
@@ -138,8 +147,11 @@ def _eval_citation_integrity(paper: dict, idx: GraphIndex) -> GateResult:
     registered. (DOI fetch-and-verify is deferred to Stage 13; this is
     the registry-coverage check.)
     """
-    import re
-    paper_key = paper['meta'].get('topic') or paper['name'] or ''
+    # ⚠️ A dead first assignment was removed here 2026-08-04 (audit QI-05):
+    # `paper_key = paper['meta'].get('topic') or paper['name'] or ''` was computed
+    # and then overwritten on the very next line by the `paper['id']` form. Every
+    # other evaluator uses only the `paper['id']` form, which is the correct one —
+    # `meta.topic` is a description, not a key.
     paper_key = paper['id'].replace('paper:', '', 1)
     r = GateResult(gate='CitationIntegrity', paper=paper_key, priority=1)
 
@@ -350,7 +362,6 @@ def _eval_lean_proof_substance(paper: dict, idx: GraphIndex) -> GateResult:
     Fail if any Lean theorem this paper cites (via VERIFIED_BY reverse
     lookup from its grounding Formulas) also has a PlaceholderMarker node.
     """
-    import re
     paper_key = paper['id'].replace('paper:', '', 1)
     r = GateResult(gate='LeanProofSubstance', paper=paper_key, priority=1)
 
@@ -517,7 +528,6 @@ def _eval_production_run_health(paper: dict, idx: GraphIndex) -> GateResult:
 
     # Detect "MC evidence" claim without backing success
     tex = idx.paper_tex(paper_key)
-    import re
     mc_claim = bool(re.search(r'\b(Monte\s+Carlo\s+evidence|MC\s+evidence)\b', tex, re.IGNORECASE))
     success_runs = [r_ for r_ in relevant_runs
                     if r_.get('meta', {}).get('status') == 'success']
@@ -558,7 +568,6 @@ def _eval_numerical_freshness(paper: dict, idx: GraphIndex) -> GateResult:
     just count metrics. Evaluation considers both count-level and
     table-level freshness.
     """
-    import re as _re
     paper_key = paper['id'].replace('paper:', '', 1)
     r = GateResult(gate='NumericalFreshness', paper=paper_key, priority=2)
 
@@ -567,19 +576,19 @@ def _eval_numerical_freshness(paper: dict, idx: GraphIndex) -> GateResult:
     stale_reports = [e for e in reports if e.get('stale')]
 
     # --- 2. Inline numerical literals outside \input{tables/...} ---
+    # ⚠️ ONE OWNER (2026-08-04, audit finding QI-02). This block used to carry its
+    # own byte-identical copy of the pattern AND of the two-step strip that
+    # `validation/checks/papers_prose.py` uses for the `numerical_literals` check.
+    # Both feed a per-paper verdict, and `validate.py --check
+    # readiness_verdicts_agree` exists to assert those verdicts agree — so tuning
+    # one copy would have made the two subsystems disagree by construction, in the
+    # blind spot of the check written to detect disagreement. Verified identical
+    # (pattern string and flags) before merging, so this is behaviour-preserving.
     tex = idx.paper_tex(paper_key)
     inline_literals = 0
     if tex:
-        stripped = _re.sub(r'\\input\{tables/[^}]+\}', '', tex)
-        stripped = _re.sub(r'\\caption\{[^}]*\}', '', stripped, flags=_re.DOTALL)
-        lit_re = _re.compile(
-            r'(?<!\\)\b(\d+\.\d+|\d+(?:\.\d+)?e[+-]?\d+)\s*(~?)\\?(?:'
-            r'(?:mu|\\mu)\s*m\b|nK\b|mK\b|\\mathrm\{[a-zA-Z]+\}|'
-            r's\^?(?:-|\{-|\^{-)1\}?|mm/s\b|\\mu m\b|\\times\s*10\^'
-            r')',
-            _re.IGNORECASE,
-        )
-        inline_literals = len(lit_re.findall(stripped))
+        _, _lit_matches = find_inline_numerical_literals(tex)
+        inline_literals = len(_lit_matches)
 
     # --- 3. Autogen table staleness (table-level freshness) ---
     tables_dir = PAPERS_DIR / paper_key / 'tables'

@@ -622,7 +622,14 @@ def check_quantum_network() -> CheckResult:
     """Cross-checks the `src/core/formulas.py` quantum-network mirror against the
     closed-form identities/bounds proven in `lean/SKEFTHawking/QuantumNetwork/*.lean`
     (Phases 6AA–6AD), and confirms the referenced Lean theorem names exist in that
-    subdirectory (CHECK 1 only globs the top-level package)."""
+    subdirectory.
+
+    ⚠️ The parenthetical here used to read "CHECK 1 only globs the top-level
+    package", which was this check's stated reason for re-scanning `QuantumNetwork/`
+    itself. That is no longer true — `check_formulas_to_theorems` scans the whole
+    tree as of 2026-08-04 (audit QI-01). The QN-specific name assertions below are
+    still worth keeping (they pin an explicit expected roster rather than a
+    resolution set), but they are no longer compensating for a blind CHECK 1."""
     from src.core import formulas as F
 
     details: List[Detail] = []
@@ -700,7 +707,13 @@ def check_quantum_network() -> CheckResult:
     ]
     if qn_dir.exists():
         names = set()
-        for lf in qn_dir.glob("*.lean"):
+        # rglob for the same reason as every other Lean scan (audit QI-01).
+        # `QuantumNetwork/` is flat today (104 files, no subdirectories), so this is
+        # a no-op right now — but this check FAILS on a theorem it cannot find, so
+        # the day someone adds a package here the non-recursive form would report
+        # real theorems missing. Found by the structural leg of
+        # `tests/test_lean_scan_coverage.py`, not by the manual sweep.
+        for lf in qn_dir.rglob("*.lean"):
             for line in lf.read_text().splitlines():
                 s = line.strip()
                 if s.startswith("theorem ") or s.startswith("lemma "):

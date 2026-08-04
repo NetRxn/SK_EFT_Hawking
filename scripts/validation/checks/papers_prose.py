@@ -40,7 +40,12 @@ from typing import List
 import validate_helpers as _H
 from validation import _config as _cfg
 from validation._registry import CheckResult, Detail, register_check
-from validation._tex import _line_of, _strip_tex_comments
+from validation._tex import (
+    NUMERICAL_LITERAL_RE,
+    _line_of,
+    _strip_tex_comments,
+    find_inline_numerical_literals,
+)
 
 
 # Fatal-error markers in a pdflatex .log. A `! ` line is TeX's universal
@@ -49,23 +54,13 @@ from validation._tex import _line_of, _strip_tex_comments
 # undefined-citation / overfull-box warnings are NOT fatal and are ignored.
 _LATEX_FATAL_RE = re.compile(r"^! ", re.MULTILINE)
 
-# Patterns that strongly suggest a hardcoded numerical literal with a
-# physical unit. Any such literal in paper prose should move into an
-# auto-generated tables/*.tex file so it stays pipeline-derived.
-_NUMERICAL_LITERAL_RE = re.compile(
-    r'(?<!\\)\b(\d+\.\d+|\d+(?:\.\d+)?e[+-]?\d+)\s*'
-    r'(~?)\\?(?:'
-    r'(?:mu|\\mu)\s*m\b|'
-    r'nK\b|'
-    r'mK\b|'
-    r'\\mathrm\{[a-zA-Z]+\}|'
-    r's\^?(?:-|\{-|\^{-)1\}?|'
-    r'mm/s\b|'
-    r'\\mu m\b|'
-    r'\\times\s*10\^'
-    r')',
-    re.IGNORECASE,
-)
+# The unit-bearing-literal predicate moved to `validation/_tex.py` on 2026-08-04
+# (audit finding QI-02). It was duplicated byte-identically inside
+# `readiness_gates._eval_numerical_freshness`, and the two feed verdicts that
+# `readiness_verdicts_agree` requires to agree — so a divergence between the copies
+# would have been introduced in that check's blind spot. `_NUMERICAL_LITERAL_RE` is
+# kept as an alias because it is a module-level name this suite's tests reach.
+_NUMERICAL_LITERAL_RE = NUMERICAL_LITERAL_RE
 
 # Patterns that strongly suggest a hardcoded count literal in paper prose.
 # Each pattern captures (\d+) together with a domain noun; the assumption
@@ -101,9 +96,15 @@ def check_paper_provenance() -> CheckResult:
     details = []
     all_pass = True
 
-    # Build set of all Lean theorem names
+    # Build set of all Lean theorem names.
+    # ⚠️ rglob, NOT glob (fixed 2026-08-04, audit finding QI-01). `glob` covered
+    # 1,373 of 2,039 files, hiding 5,469 theorem names in subdirectories. This
+    # check FAILS on a `\texttt{}` reference it cannot resolve, so the error
+    # direction was toward false positives — a draft citing a theorem in
+    # `QuantumNetwork/` or `FaultTolerance/` would have been reported as citing a
+    # nonexistent theorem. No draft did, which is why it never fired.
     lean_names = set()
-    for lean_file in _H.LEAN_DIR.glob("*.lean"):
+    for lean_file in _H.LEAN_DIR.rglob("*.lean"):
         for line in lean_file.read_text().splitlines():
             if line.startswith("theorem "):
                 name = line.split()[1].split("(")[0].split(":")[0].strip()
@@ -224,18 +225,14 @@ def check_numerical_literals() -> CheckResult:
         input_count = len(re.findall(r'\\input\{tables/[^}]+\}', text))
         total_inputs += input_count
 
-        # Strip everything inside \input{tables/...} sections (the
-        # generated files have their own literals, we trust those).
-        # Also strip captions (they often cite reference values like
-        # "290 s^-1" for comparison — those are intentional literals
-        # documenting the paper's relationship to primary sources).
-        stripped = re.sub(r'\\input\{tables/[^}]+\}', '', text)
-        stripped = re.sub(r'\\caption\{[^}]*\}', '', stripped, flags=re.DOTALL)
-
-        # Find numerical literals with physical units in the remainder
+        # Strip `\input{tables/...}` and `\caption{}` regions, then scan the
+        # remainder. Both the stripping and the pattern now live in
+        # `validation/_tex.find_inline_numerical_literals` — the SAME function P2
+        # Gate 9 calls, so the two verdicts cannot drift apart (audit QI-02).
+        stripped, matches = find_inline_numerical_literals(text)
         findings = []
-        for m in _NUMERICAL_LITERAL_RE.finditer(stripped):
-            line_no = stripped.count("\n", 0, m.start()) + 1
+        for m in matches:
+            line_no = _line_of(stripped, m.start())
             findings.append((line_no, m.group(0).strip()))
 
         if not findings:

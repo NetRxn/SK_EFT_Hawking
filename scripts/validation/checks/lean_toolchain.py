@@ -171,9 +171,15 @@ def check_lean_source() -> CheckResult:
     if not _H.LEAN_DIR.exists():
         return CheckResult(passed=False, error=f"Lean directory not found: {_H.LEAN_DIR}")
 
-    # Collect all identifiers declared as theorem/lemma/def
+    # Collect all identifiers declared as theorem/lemma/def.
+    # ⚠️ rglob, NOT glob (fixed 2026-08-04, audit finding QI-01). `glob` saw 1,373
+    # of 2,039 Lean files, so 7,695 declared identifiers in subdirectories were
+    # invisible. The direction of that error is toward FALSE FAILURES here (a
+    # spot-check name that moved into a package would report "NOT found" while
+    # existing), so it was latent rather than live — but a name-resolution check
+    # that cannot see a third of the library is not measuring what it claims.
     lean_idents = set()
-    for lf in _H.LEAN_DIR.glob("*.lean"):
+    for lf in _H.LEAN_DIR.rglob("*.lean"):
         try:
             content = lf.read_text()
             lean_idents.update(re.findall(r'(?:theorem|lemma|def)\s+(\w+)', content))

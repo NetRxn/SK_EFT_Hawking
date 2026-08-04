@@ -225,9 +225,16 @@ def compute_source_hash() -> str:
         PROJECT_ROOT / "scripts" / "review_figures.py",
     ])
 
-    # Add Lean files
+    # Add Lean files.
+    # ⚠️ rglob, NOT glob (fixed 2026-08-04, audit finding QI-01). This was
+    # `glob("*.lean")`, which sees only the 1,373 top-level modules out of 2,039 —
+    # so a change confined to a SUBDIRECTORY (FaultTolerance/, QuantumNetwork/,
+    # APSEta/, Detection/, …) did not move the source hash at all, and this hash is
+    # the graph's staleness key. 33% of the Lean tree could drift without the graph
+    # noticing. Same class as ADR-004 W7 finding M2, which fixed exactly this in
+    # `validation/checks/freshness.py:_counts_is_stale` and was never swept here.
     if LEAN_DIR.is_dir():
-        lean_files = sorted(LEAN_DIR.glob("*.lean"))
+        lean_files = sorted(LEAN_DIR.rglob("*.lean"))
         source_files.extend(lean_files)
 
     for fp in source_files:
@@ -2148,12 +2155,39 @@ def extract_placeholder_marker_nodes() -> list[dict]:
     nodes = []
     seen_ids: set[str] = set()
 
-    for lean_file in sorted(LEAN_DIR.glob("*.lean")):
+    # ⚠️ rglob, NOT glob (fixed 2026-08-04, audit finding QI-01). This scanned only
+    # the 1,373 top-level modules of 2,039, so **112 placeholder-bodied theorems in
+    # SUBDIRECTORIES minted no PlaceholderMarker node** — e.g.
+    # `APSEta/Predicate.lean::isSakharovConsistent_BECAcoustic`. P1 Gate 5
+    # (LeanProofSubstance) decides by membership in exactly these nodes, so a paper
+    # citing a subdirectory placeholder passed the gate against an empty set. The
+    # gate reported "no placeholder theorems cited" having never looked at a third
+    # of the library — the absence-of-measurement shape, inside a P1 gate.
+    #
+    # Measured at the fix: verdict movement on the current tree is **ZERO**. No
+    # paper cites any of the 112 by `\texttt` name; exactly one
+    # (`readoutDecayProb_eq_cohGamma`) is reachable through a formula VERIFIED_BY
+    # ref, and no paper's `key_claims` ground on that formula
+    # (`teleport_avg_fidelity`). So this closes a latent hole rather than surfacing
+    # live debt — the same posture as the `evaluate_all_gates` repair in `5228ed6d`.
+    # Expect +114 PlaceholderMarker nodes in the graph_integrity characterization.
+    for lean_file in sorted(LEAN_DIR.rglob("*.lean")):
         try:
             source = lean_file.read_text()
         except (OSError, UnicodeDecodeError):
             continue
-        module_name = lean_file.stem  # e.g. "RokhlinBridge"
+        # `module_name` is the DOTTED Lean module path (`APSEta.Predicate`), which is
+        # what `SKEFTHawking.<module>.<thm>` should mirror; `rel_path` is the on-disk
+        # location and must stay a real path, not the dotted form.
+        #
+        # Keying on the bare `lean_file.stem` is not safe once subdirectories are in
+        # scope: `A/Foo.lean` and `B/Foo.lean` would mint the same id and `seen_ids`
+        # would silently drop the second — reintroducing here the
+        # class-omitted-from-the-key defect that lost 66 PythonTest nodes
+        # (ADR-009 §Deferred item 7).
+        _rel = lean_file.relative_to(LEAN_DIR)
+        module_name = ".".join(_rel.with_suffix("").parts)
+        rel_path = f'lean/SKEFTHawking/{_rel.as_posix()}'
         for thm_name, line_no, body in _scan_lean_theorem_bodies(source):
             if thm_name in placeholder_short_names:
                 continue
@@ -2177,11 +2211,11 @@ def extract_placeholder_marker_nodes() -> list[dict]:
                 'label': thm_name,
                 'name': thm_name,
                 'verification': 'unverified',
-                'detail': f'{module_name}.lean:{line_no} — body matches {pattern_label!r}',
+                'detail': f'{rel_path}:{line_no} — body matches {pattern_label!r}',
                 'meta': {
                     'module': module_name,
                     'lean_full_name': full_name,
-                    'lean_file': f'lean/SKEFTHawking/{module_name}.lean',
+                    'lean_file': rel_path,
                     'line': line_no,
                     'body_pattern': pattern_label,
                     'body_preview': body[:200],
