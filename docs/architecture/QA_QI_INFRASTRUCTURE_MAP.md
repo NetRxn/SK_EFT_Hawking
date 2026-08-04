@@ -254,8 +254,8 @@ flowchart TB
         EG["web-egress guard<br/>FAIL-CLOSED, 2 layers"]
     end
     subgraph SOFT["⚠ REPORTS, NEVER BLOCKS"]
-        AP["8 always-pass checks incl.<br/>readiness_submission_gate<br/>paper_latex_compiles<br/>paper_toolchain_pin_drift"]
-        ST["2 --strict-only gates —<br/>nothing passes --strict"]
+        AP["4 always-pass checks, all<br/>deliberately advisory<br/>(was 8; 4 were defects, fixed)"]
+        ST["6 checks with a --strict-only leg —<br/>nothing passes --strict"]
         S14["Stage 14 QI — advisory by design"]
     end
     subgraph NONE["❌ CLAIMS ENFORCEMENT, HAS NONE"]
@@ -285,7 +285,9 @@ unambiguously fail-closed control in the system.
 individually in ADR-009 §Deferred item 3). Of the four that were defects: `paper_latex_compiles` computed
 its verdict and discarded it (**measured: D3 fails with 2 fatal LaTeX errors**), and `count_literals` /
 `numerical_literals` were WARN-only pending a retrofit whose target — "all 15 papers" — receded as the
-corpus grew to 64; both are now ratchets. And — `readiness_submission_gate` was repaired 2026-08-03 (ADR-009 Phase 3 item 1) and now
+corpus grew to 64; both are now ratchets. And — `readiness_submission_gate` was repaired 2026-08-03 (ADR-009 **§Deferred item 2**;
+cited here as "Phase 3 item 1" until 2026-08-04 — that was `RESUME_STATE`'s cost-ordering, not the ADR's
+canonical numbering) and now
 hard-fails when any paper has a blocked gate. It had been **inverted**: failing only when *zero*
 `ReadinessGate` nodes existed and passing when it measured RED, marked only by an inline
 `# WARN not FAIL during rollout`, with a `--strict` path its docstring promised and the body never

@@ -309,6 +309,12 @@ test must demonstrate both directions: fires on the defect, silent on correct da
 
 Identified while reading; **not** part of the mechanical work.
 
+> ⚠️ **These 1–7 match ADR-009 §Deferred's canonical 1–7** (its item **0**, memoizing `load_lean_deps()` +
+> the shared graph handle, is referenced in §8 below but was never given a numbered slot here — that is
+> the eighth item). **Cite Phase-3 work by the §Deferred ordinal, never by `RESUME_STATE.md`'s list**,
+> which is the same eight in *cost order* — a different permutation that has already produced two
+> mis-citations. Status 2026-08-04: **items 1, 2, 3, 7 DONE; 0, 4, 5, 6 open.**
+
 1. **`native_decide_regression` reads a possibly-stale `counts.json`** (H3). Ratchet ordering defect, in a
    commit-gate check.
 2. **`readiness_submission_gate` is inverted** (`:4770-4836`): fails only when zero `ReadinessGate` nodes
@@ -325,8 +331,13 @@ Identified while reading; **not** part of the mechanical work.
    comments and three hand-patched sites (`:4302`, `:4317`, `:4330`) — it does not exist in the type system.
 5. **`count_literals` ⊂ `axiom_count_prose_consistency`** — same predicate shape, split by subject; one
    hard-fails, one cannot fail. Candidates to merge into one parameterized check.
-6. **`--strict` is passed by nothing automated** — not the commit hook, not `gate_precheck.py`. Two gates
-   (`axiom_closure_allowlist`, `bundle_source_freshness`) are therefore unreachable in practice.
+6. **`--strict` is passed by nothing automated** — not the commit hook, not `gate_precheck.py`, so every
+   strict-only leg is dead code in practice. ⚠️ **Filed as "two gates"
+   (`axiom_closure_allowlist`, `bundle_source_freshness`); re-measured 2026-08-04 by AST at SIX**
+   registered checks reading `_cfg.STRICT_MODE` — those two plus `parameter_provenance`,
+   `provenance_doi_in_registry`, `bibitem_title_primary_source`, `theorem_name_embedded_citations`.
+   Partition "unreachable without `--strict`" from "merely promotes an advisory" first; the filed
+   figure conflated them.
 7. ✅ **DONE 2026-08-03 — fabricated VERIFIES edges from library aliases** (`extract_verifies_edges`,
    `build_graph.py:3634`). The Lean short-name branch of the test-coverage resolver had no alias guard,
    though the formula branch beside it has one with a comment explaining exactly this risk. **144 of 536**

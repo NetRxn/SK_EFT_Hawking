@@ -1,28 +1,35 @@
 # Resume state — infrastructure + publication remediation
 
-**Last updated:** 2026-08-03. Written so any session (or a post-compaction continuation) can pick this up
+**Last updated:** 2026-08-04. Written so any session (or a post-compaction continuation) can pick this up
 without re-deriving it. Read this first, then the linked documents.
 
 ---
 
-## Git layout (as of 2026-08-03)
+## Git layout (verified 2026-08-04)
 
 **`main`** — `c2b597e1 docs(audit): publication-readiness assessment of all 21 bundles`.
 The completed assessment only. No infra code.
 
 **`infra/adr-009-validation-modularization`** — all infrastructure work, off main until every phase is
-done and ready to merge (operator ruling 2026-08-03):
+done and ready to merge (operator ruling 2026-08-03). **31 commits ahead of main, 0 behind.** HEAD:
 
 ```
-a41f8573  feat(egress): whitelist isa-afp.org + path-scoped prover repos
-50ac26d5  docs(adr): ADR-009 + QA/QI infrastructure map
-cdb81f7e  feat(validate): ADR-009 Phases 0-1 — characterization harness + shared helpers
-cc943091  docs(reviews): Stage-13 bundle review documents, 2026-08-01
-8cde34a0  feat(validate): decouple execution order from import order (H3)  ← mechanism was DEFECTIVE
-436bc3a2  feat(validate): Phase 2 — one flag owner (_config), and FIX the ordering mechanism
-2fd89d59  fix(tests): repair the strict-mode prose test; freeze validate's external surface
-9886ecf4  refactor(validate): extract result types + registry to validation/_registry
+cc797605  fix(graph): stop fabricating 144 Lean VERIFIES edges — §Deferred item 7 (complete)
+9532ba76  fix(validate): native_decide ratchet measures live substrate — §Deferred item 1
+01117b08  docs(architecture): record the sixth silent-drop point in the map's §3
+cb9e1dcd  fix(graph): stop silently dropping 66 test nodes — §Deferred item 7 (half)
+c3456a23  fix(validate): disposition the always-pass checks — §Deferred item 3
+fd470314  fix(validate): readiness_submission_gate can finally fail — §Deferred item 2
+2ced308d  refactor(validate): extract citations, reviews, bundles_readiness — Phase 2 complete
 ```
+
+Working tree carries two pre-existing, deliberately untouched entries: `M lean/lean_deps.json.hash`
+and `?? docs/dev-loops/proposals/prose-bridged-claims-gate.md`.
+
+**Live measurements, all re-verified 2026-08-04:** `validate.py --list` = **59**; `validate.py` = **720**
+lines with **zero** registered checks (its 5 `@register_check` hits are all comments/docstrings);
+`_apply_canonical_order()` at `:618`, below the check-module import block (`:484-494`) ✅;
+frozen external surface = **54**; full fast suite **5039 passed, 5 skipped, 0 failed** in 166 s.
 
 Untracked and deliberately NOT committed: `docs/dev-loops/proposals/prose-bridged-claims-gate.md` — an
 operator-filed DRAFT awaiting the operator's own go/no-go. Not this workstream's to land.
@@ -91,6 +98,14 @@ seed a defect.
 Each is a **separate reviewed change** that ships with a mutation test proving both directions — fires on
 a seeded defect, silent on correct data (D5). Never batch them with a mechanical move.
 
+⚠️ **The list below is ordered by COST, which is a different permutation from ADR-009 §Deferred's own
+0–7 numbering — and §Deferred's numbering is the canonical one for cross-references.** Two documents
+already mis-cited across the two schemes. Mapping (this list → §Deferred): 1→**2**, 2→**3**, 3→**1**,
+4→**7**, 5→**4**, 6→**5**, 7→**6**, 8→**0**.
+
+⚠️ **Re-measure every open item's scope before fixing it.** Item 4's filing was wrong in four independent
+ways; item 7's "two gates" is measured at **six**. A partition inherited from prose is not a partition.
+
 Ordered by how much a wrong answer costs today:
 1. ✅ **DONE** (`fd470314`) — `readiness_submission_gate` was **inverted**: it failed only when zero gate
    nodes existed and passed when it measured RED. 61 of 64 papers were RED with verdict `True`. Four
@@ -116,7 +131,12 @@ Ordered by how much a wrong answer costs today:
    standing lesson in the map's §9: *re-measure a finding's scope before fixing it, even your own.*
 5. No `UNEVALUATED` state — ~20 sites encode "could not measure" as PASS.
 6. `count_literals` ⊂ `axiom_count_prose_consistency` — same predicate, one hard-fails, one cannot fail.
-7. `--strict` reaches no automated caller, so two gates are unreachable in practice.
+7. `--strict` reaches no automated caller, so every strict-only leg is dead code. ⚠️ **Filed as "two
+   gates" (`axiom_closure_allowlist`, `bundle_source_freshness`); re-measured 2026-08-04 by AST at
+   SIX** — those two plus `parameter_provenance`, `provenance_doi_in_registry`,
+   `bibitem_title_primary_source`, `theorem_name_embedded_citations`. First step is partitioning
+   "unreachable without `--strict`" from "merely promotes an advisory under `--strict`"; the filed
+   figure conflated them.
 8. Memoizing `load_lean_deps()` + a shared graph handle — **reviewed together**, because both change what
    a check observes once the `*_fresh` checks regenerate artifacts mid-run (≈8 extractions / ≈20 parses of
    a 70 MB file per run today).
@@ -241,21 +261,49 @@ piped `tail` will report exit 0 for a command that never ran. (Caught once alrea
   threshold, now fails the frozen-pairs test — and the counterfactual (restoring the old local copy) is
   MISSED, which is the defect this guard removes.
 - ⬜ **Golden per-check `--json` snapshots.** Normalize `elapsed_seconds`, sort details, `PYTHONHASHSEED=0`.
-  **Quarantine nine non-snapshottable checks:** `lean_build`, `notebook_exec`,
-  `notebook_stored_outputs_current`, `paper_latex_compiles`, `counts_fresh`, `tables_fresh`,
-  `claim_clusters_fresh`, `tracked_hypotheses_fresh`, `bundle_figure_integrity`.
+  **Quarantine TEN non-snapshottable checks** (planned as nine; `bundle_source_freshness` was added when
+  the harness was built): `lean_build`, `notebook_exec`, `notebook_stored_outputs_current`,
+  `paper_latex_compiles`, `counts_fresh`, `tables_fresh`, `claim_clusters_fresh`,
+  `tracked_hypotheses_fresh`, `bundle_figure_integrity`, `bundle_source_freshness`.
+  **59 − 10 = 49** — which is what every `CHARACTERIZATION HELD — 49 checks identical` line means.
+  Authoritative set: `QUARANTINE` in `tests/validate_characterization.py` (verified 2026-08-04).
 
 ### Workstream 2 — paper prose (SPECIFIED, NOT STARTED)
 
 Fully documented; runnable by any session from the documents alone.
-`docs/audits/2026-08-01-publication-readiness/` — `SYNTHESIS.md` (verdict, 80 P0s, the systemic finding),
-`REMEDIATION_PLAN.md` (BUILD / CORRECT-TO-SUBSTRATE / FACTUAL triage), `bundles/*.md` (13 reports).
+`docs/audits/2026-08-01-publication-readiness/` — `SYNTHESIS.md` (verdict, **80 P0s**, the systemic
+finding), `REMEDIATION_PLAN.md` (BUILD / CORRECT-TO-SUBSTRATE / FACTUAL triage), plus **10 bundle
+reports** in `bundles/` and **3 `CROSS-*.md`** cross-cutting reports — 13 auditors, 13 documents, but
+only ten of them per-bundle. (Filed here as "13 reports"; corrected 2026-08-04.)
+
+⚠️ **The two documents use DIFFERENT vocabularies and are not interchangeable.** "P0" is a severity
+label used in `SYNTHESIS.md` §1 and in the per-finding tables of `CROSS-*.md` / `bundles/*.md`
+(`X-11`, `X-14`, …). **`REMEDIATION_PLAN.md` contains the string "P0" zero times** — it re-triages the
+Class-1 findings into **BUILD (B1–B8) / CORRECT-TO-SUBSTRATE (5 items) / FACTUAL (4 items)**, and its §0
+explains why: `SYNTHESIS.md` §6 Phase 1 was *mis-posed*, pricing the walk-back as the fix. So a task
+phrased "remediate every P0 in REMEDIATION_PLAN.md" names a set that document does not define. Track
+**B1–B8 + the CORRECT/FACTUAL queues** against `REMEDIATION_PLAN.md`, and the **80 P0s** against
+`SYNTHESIS.md` + the finding tables.
 
 **Governing posture:** [[feedback-remediation-build-dont-walkback]] — fix with substance, not prose.
 Publication schedule is the flexible variable; claim strength is not.
 
-**Roster decision:** 21 → 14 (author's call, operator delegated). Proposed merges recorded in the
-session that produced `SYNTHESIS.md`; not yet written into `PAPER_STRATEGY.md`.
+**Roster decision — ⛔ OPEN, and the "21 → 14" recorded here was UNSUPPORTED (corrected 2026-08-04).**
+Nothing on disk backs 14. The audit's own recommendation is **21 → 16**, stated twice and in detail:
+`SYNTHESIS.md` §5 **D-1** ("Roster consolidation, 21 → 16") and `CROSS-portfolio-coherence.md` §6.4
+("**Recommended roster — 16 targets**", with a full per-target table). The merges are
+**D6+D9+D12 → D6★**, **D10+D11 → D10★**, **E1+E2 → E★**, **D7 folded into D1**, **D4 §9 → D8** —
+21 − 5 = 16.
+
+Worse, **`14` is one of the stale roster counts the audit itself files as a defect**: finding **X-11**
+(P0) records that manuscripts state the roster as *14, 15 and 17*, and `PAPER_STRATEGY.md:341` still
+carries "All 14 bundles have shipped…" from 2026-05-07. Writing 21 → 14 into `PAPER_STRATEGY.md` would
+encode the very drift the audit found. Live registry (`scripts/bundle_registry.py` → `BUNDLE_CODES`) is
+**21**, verified 2026-08-04.
+
+`SYNTHESIS.md` §5 lists D-1 among the **decisions required from the operator** — *"These gate the
+remediation plan; everything else I can execute."* **Do not assume a number.** Default to the audit's
+**16** if forced to proceed, and say so explicitly wherever it is written down.
 
 ### Workstream 3 — ADR-008 (DEFERRED BY DECISION)
 

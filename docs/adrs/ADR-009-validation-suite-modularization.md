@@ -24,14 +24,20 @@
   (atlas and no-go gates, likewise in scope);
   `docs/architecture/.working-docs/` (migration working notes).
 
-> **Line-citation baseline.** Every `validate.py:NNNN` citation below is anchored to the file **as read on
-> 2026-08-03 at 7,778 lines**. The `stage13_status` guard shipped the same day (§Consequences) inserted 35
-> lines at `:4355`, so the file is now **7,813** lines and **every citation after `:4355` is +35 from the
-> live file** — e.g. `readiness_submission_gate` is cited here at `:4744` and lives at `:4779`; the
-> `# WARN not FAIL during rollout` line is cited at `:4830` and lives at `:4865`. Citations at or before
-> `:4355` are unchanged. This note exists rather than a hand-rewrite because silently renumbering 25
-> citations is a larger correctness risk than stating the offset. **Phase 1 should re-anchor them once,
-> mechanically, and delete this note.**
+> **Line-citation baseline — ⚠️ THE CITATIONS BELOW NO LONGER RESOLVE. Read them as names, not lines.**
+> Every `validate.py:NNNN` citation in this document is anchored to the file **as read on 2026-08-03 at
+> 7,778 lines** (7,813 after the `stage13_status` guard inserted 35 lines at `:4355`). **Phase 2 has since
+> moved all 59 check bodies out**, and `scripts/validate.py` is now **720 lines** of framework, so every
+> citation to a CHECK BODY is dangling: locate the check **by name** in its `scripts/validation/checks/*.py`
+> module instead. Citations to the framework itself (`Detail`/`CheckResult`, the registry, `run_checks`,
+> reporting, the CLI, `main`) still resolve in `validate.py`, at new line numbers.
+>
+> This note originally read *"Phase 1 should re-anchor them once, mechanically, and delete this note."*
+> **That did not happen through Phases 1 and 2, and re-anchoring is now moot** — the citations' target file
+> no longer contains the code. Deliberately not hand-rewritten: silently renumbering ~25 citations across a
+> module boundary is a larger correctness risk than stating plainly that they are historical. **The
+> behaviour each citation describes is unchanged** — every phase boundary verified `CHARACTERIZATION HELD`.
+> `QA_QI_INFRASTRUCTURE_MAP.md` §9 carries the same warning for the map's own citations.
 
 ---
 
@@ -145,10 +151,32 @@ The following are invariant across every phase, verified by the Phase-0 harness 
 5. `--json` payload schema unchanged — `gate_precheck.py` and `pre-commit-sync.sh` parse it.
 6. `--check <name>` behaves as today for all 59, including the `FORCE_LATEX` side-effect at `:7719`.
 7. No new import-time side effects; registration remains the only one.
-8. **The 33-name external surface of `validate` stays reachable as `validate.<name>`.** Added 2026-08-03,
+8. **The 54-name external surface of `validate` stays reachable as `validate.<name>`.** Added 2026-08-03,
    measured by AST across `tests/` and `scripts/` — and it is the constraint most likely to break the
    extraction, because items 1–7 are all satisfied by a split that nonetheless makes every one of these
    `ImportError`:
+
+   > **⚠️ CORRECTED 2026-08-04 — this item was filed as "33-name" and the real surface is 54.** The
+   > enumeration below (16 + 17 + `BUNDLE_CODES`) is the FIRST measurement and is kept verbatim as the
+   > record of what was missed. That AST scan filtered on `node.module == "validate"`, but
+   > `tests/test_substrate_integrity_gates.py` still spelled its imports `from scripts.validate import …`
+   > at the time — so the whole file, and every name it reaches, was invisible. **20 names were missed**,
+   > fifteen of them internals of the then-unextracted `lean_substrate` module (`_STRUCTURAL_NAME_RE`,
+   > `_TRIVIAL_BODY_RES`, `_thin_type_label`, `_is_vacuous_identity_wrapper` and friends) — i.e. the
+   > omission would have bitten precisely on the largest remaining extraction. The spelling was then
+   > fixed (it was loading `validate.py` under a second module identity — see
+   > `test_validate_is_loaded_exactly_once`) and **the scan was not re-run**, so the frozen list sat at
+   > 34 while the real surface was 54.
+   >
+   > **The authoritative list is `EXPECTED_SURFACE` in `tests/test_validate_public_surface.py`** —
+   > 21 check functions + 32 private helpers + `BUNDLE_CODES` = **54**, verified 2026-08-04. That file,
+   > not this clause, is what the extraction is held to.
+   >
+   > The generalisable lesson, and the reason this is a correction rather than a silent renumber:
+   > **a measurement is scoped by a predicate, and fixing the thing the predicate keyed on invalidates
+   > the measurement.** Re-run the scan whenever an import spelling changes. Same class as §Deferred
+   > item 7's four-way miscount.
+
    - **16 check functions imported by name** — `check_formulas_to_theorems`, `check_numerical_consistency`,
      `check_theorem_count`, `check_lean_source`, `check_notebook_isolation`, `check_formula_identities`,
      `check_paper_table_consistency`, `check_d1_hierarchy_table`, `check_f_hierarchy_claims`,
@@ -263,11 +291,16 @@ one config object accessed by attribute; never imported by value.
     `--json --check formula_grounding` diff in exactly one line (`elapsed_seconds`). Normalize by dropping
     that key, sorting `details` by name, scrubbing subprocess job counts, and pinning `PYTHONHASHSEED=0`
     (13 unsorted `glob`/`iterdir` sites plus set-derived comprehensions can otherwise permute detail order).
-  - **Nine checks are structurally non-snapshottable and must be quarantined, not forced:** `lean_build`,
+  - **Ten checks are structurally non-snapshottable and must be quarantined, not forced:** `lean_build`,
     `notebook_exec`, `notebook_stored_outputs_current`, `paper_latex_compiles`, `counts_fresh`,
-    `tables_fresh`, `claim_clusters_fresh`, `tracked_hypotheses_fresh`, `bundle_figure_integrity`. They shell
-    out, execute notebooks, or rewrite tracked artifacts, so run *N+1* legitimately differs from run *N*.
-    Snapshotting the remaining ~50 covers 37 currently-untested checks against mechanical damage.
+    `tables_fresh`, `claim_clusters_fresh`, `tracked_hypotheses_fresh`, `bundle_figure_integrity`, and
+    `bundle_source_freshness`. They shell out, execute notebooks, or rewrite tracked artifacts, so run
+    *N+1* legitimately differs from run *N*. **59 − 10 = 49 characterized checks**, which is what every
+    `CHARACTERIZATION HELD — 49 checks identical` line in the working notes refers to; the quarantine set
+    is authoritative in `QUARANTINE` in `tests/validate_characterization.py`, verified 2026-08-04.
+    *(Filed here as nine; `bundle_source_freshness` was added when the harness was built, and this clause
+    was not updated.)* Snapshotting the remaining 49 covers 37 currently-untested checks against
+    mechanical damage.
   - **A snapshot detects change, not inertness.** It must ship with D5, or the refactor is validated by the
     same "it still passes" reasoning that produced eight inert guards.
 - **Phase 1 — anchors and helpers, file stays put.** `_paths.py` + `helpers/` introduced in place; the 8
@@ -361,6 +394,21 @@ everything and Phase 1 moves no files.
 
 Identified during the read; explicitly **not** part of Phases 0–2.
 
+> **⚠️ THIS NUMBERING (0–7) IS CANONICAL. Cite Phase-3 work as "§Deferred item N" using it.**
+> Added 2026-08-04 because three documents were numbering the same eight items three different ways —
+> this list 0–7, `validation-module-migration-notes.md` §7 as 1–7 (+ a referenced "item 0"), and
+> `RESUME_STATE.md` as 1–8 in *cost order*, which is a different permutation again. The collision already
+> produced two live defects: item 3's table cross-referenced the `readiness_submission_gate` fix as
+> "item 1" when item 1 is the `native_decide` fix, and `QA_QI_INFRASTRUCTURE_MAP.md` §6 calls the same fix
+> "ADR-009 Phase 3 item 1". Working trackers may order by cost — that is useful — but every cross-reference
+> must carry the §Deferred ordinal.
+>
+> **Status, verified 2026-08-04: 4 of 8 done** — items **1, 2, 3, 7**. Open: **0, 4, 5, 6**.
+>
+> **Every open item's scope figure is UNVERIFIED and must be re-measured before it is fixed** (item 7's
+> filing was wrong four independent ways; item 6's "two gates" is already measured at six — see below).
+> That is the §9 standing lesson in the map, and it applies to this list first.
+
 0. **Memoizing `load_lean_deps()` is a behaviour change, not an optimisation** — discovered while
    writing the Phase-1 helper. The eight sites re-read and re-parse the 70 MB file on every call, and that
    is load-bearing: `counts_fresh` (position ~30) shells out to `update_counts.py`, which can **regenerate
@@ -381,16 +429,24 @@ Identified during the read; explicitly **not** part of Phases 0–2.
    Also deduplicated the `native_decide` axiom predicate, which existed in two places and was about to be
    written a third time; one definition now lives in `update_counts` (the ADR-002 metric's owner).
    15 tests, 5 mutations, clean negative control.
-2. `readiness_submission_gate` is **inverted** (`:4770-4836`): it fails only when zero `ReadinessGate` nodes
-   exist and passes when it measures RED (`:4830`, `# WARN not FAIL during rollout`). Its docstring promises a
-   `--strict` path (`:4756`) that was **never built** — `STRICT_MODE` is not referenced in the function.
+2. ✅ **DONE 2026-08-03** (`fd470314`). `readiness_submission_gate` was **inverted**: it failed only when
+   zero `ReadinessGate` nodes existed and **passed when it measured RED**, marked only by an inline
+   `# WARN not FAIL during rollout`. Its docstring promised a `--strict` path that was **never built** —
+   `STRICT_MODE` was not referenced anywhere in the function. Measured at repair: **61 of 64 papers RED,
+   verdict `True`** — which is why 14 bundles sat at `stage13_status: green` with open blockers.
+   Four distinct defects fixed (the verdict, the per-paper details, the summary line, and a fail-OPEN
+   `ImportError` handler); two pure cores extracted to be testable; 11 tests, 5 mutations, clean negative
+   control. **`validate.py` is RED on this check by design** until the bundles are remediated.
+   ⚠️ Harness lesson from it, now standing: **scope every mutation to the target function's AST span.**
+   Two mutations read as MISSED because `str.replace(…, 1)` hit the first textual match in the file —
+   inside a *different* function.
 3. ✅ **DISPOSITIONED 2026-08-03.** The eight always-pass checks, decided individually. Four were
    defects and are fixed; four are honestly advisory and stay that way. The distinction is not
    "does it fail" — it is **whether the check's own reasoning survives contact with what it measures.**
 
    | check | disposition | why |
    |---|---|---|
-   | `readiness_submission_gate` | **FIXED** (item 1) | Inverted. 61 of 64 papers RED, verdict `True`. |
+   | `readiness_submission_gate` | **FIXED** (item **2**) | Inverted. 61 of 64 papers RED, verdict `True`. |
    | `paper_latex_compiles` | **FIXED** — hard-fails | Computed `all_pass` and discarded it. Its stated reason (transient toolchain gaps) is already handled by two earlier returns — missing `pdflatex`, and the slow-gate skip. What reaches the verdict is a draft a working `pdflatex` could not compile. **Measured: D3 fails with 2 fatal `! Undefined control sequence`.** |
    | `count_literals` | **FIXED** — ratchet | "WARN-level until all 15 papers use macros." The corpus is 64 papers; the target receded faster than it was approached. Frozen at `COUNT_LITERAL_CEILING = 107`; new literals fail. |
    | `numerical_literals` | **FIXED** — ratchet | Same shape. `NUMERICAL_LITERAL_CEILING = 116`. |
@@ -410,7 +466,15 @@ Identified during the read; explicitly **not** part of Phases 0–2.
 4. No `UNEVALUATED` result state (`:105-119`).
 5. `count_literals` ⊂ `axiom_count_prose_consistency` — same predicate shape split by subject, one
    hard-failing and one incapable of failing.
-6. `--strict` is passed by no automated caller, making two gates unreachable in practice.
+6. `--strict` is passed by no automated caller — not the commit hook, not `gate_precheck.py` — so every
+   strict-only leg in the suite is dead code in practice.
+   ⚠️ **Filed as "two gates" (`axiom_closure_allowlist`, `bundle_source_freshness`). Re-measured
+   2026-08-04 by AST: SIX registered checks read `_cfg.STRICT_MODE`** — those two plus
+   `parameter_provenance`, `provenance_doi_in_registry`, `bibitem_title_primary_source` and
+   `theorem_name_embedded_citations`. The fix must still partition them: a check whose *only* failure
+   path is strict-only is unreachable, whereas one that merely *promotes an advisory* under `--strict`
+   still fails on its own terms by default. That partition is the first step of this item, not an
+   assumption to inherit — the filed "two" conflated the two categories.
 7. ✅ **DONE 2026-08-03 — both halves.** **`build_graph`'s Lean-side VERIFIES resolver manufactured
    coverage from library aliases.** Found while attributing a characterization diff.
    `extract_verifies_edges` (`build_graph.py:3634`; earlier revisions of this ADR called it
