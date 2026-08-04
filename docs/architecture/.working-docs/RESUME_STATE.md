@@ -55,77 +55,36 @@ direction authorized, contingent on architecture review + operator visibility).
 |---|---|
 | **0 — characterization harness** | ✅ **COMPLETE.** 3 guards + the harness, all mutation-verified |
 | **1 — anchors + helpers, file stays put** | ✅ **COMPLETE.** `CHARACTERIZATION HELD — 49 checks identical` |
-| 2 — package split | **IN PROGRESS.** Framework layer done; H1 genuinely closed; **6 of 9 check modules extracted**; validate.py 7900 → 4369 lines |
+| **2 — package split** | ✅ **COMPLETE 2026-08-03.** 11 modules, 0 checks left in validate.py (7900 → 720). 48/49 checks byte-identical vs the pre-Phase-2 baseline |
 | 3 — semantic fixes | not started; list in ADR-009 §Deferred (8 items) |
 
-### Phase 2 — what remains, concretely
+### Phase 2 — COMPLETE
 
-The framework layer is done and the import cycle that blocked extraction is gone. What is left is the
-mechanical move itself, module by module, per the assignment table in
-[validation-module-migration-notes.md §4](validation-module-migration-notes.md):
+Eleven modules under `scripts/validation/checks/`; `validate.py` is 720 lines of framework with **zero**
+registered checks. Shared layers: `_registry` (result types + registry), `_config` (flags), `_tex` (LaTeX),
+`validate_helpers` (paths). Every phase boundary verified; end-to-end, **48 of 49 characterized checks are
+byte-identical to the pre-Phase-2 baseline**, the one difference being `graph_integrity`'s node count moving
+by exactly the 13 guard tests added.
 
-✅ `checks/notebooks.py` — **DONE** (`970e946e`), `CHARACTERIZATION HELD — 49 identical`.
-✅ `checks/physics.py` — **DONE** (`e42b902e`), 9 checks + `_parse_latex_number`.
-✅ `checks/graph_atlas.py` — **DONE** (`f620dc84`), 3 checks; one contiguous block.
-✅ `checks/freshness.py` — **DONE** (`06d34f1f`), 6 checks + the 3 `_*_is_stale` cores.
-✅ `checks/lean_toolchain.py` — **DONE** (`22fe203b`), 7 checks. **Split out of the planned
-   `lean_substrate`**, which measured ~1,580 lines and failed D1's readable-in-one-pass criterion.
-   The two halves share no helpers. `theorems` was assigned here (the table never assigned it).
-✅ `checks/lean_substrate.py` — **DONE** (`218a74ca`), 9 checks + the type-thinness classifier;
-   **20 re-exported names**, the largest surface footprint of any module.
-   Use any of them as the template; the recipe below is proven, not theoretical.
+**Three modules were split beyond the §4 plan**, each measured before the fact and each on a seam where the
+halves share no helpers: `lean_substrate`/`lean_toolchain` (~1,580 combined), `papers_prose`/`prose_lean_refs`
+(~1,507), `bundles_readiness`/`reviews` (~1,250). §4's table is a plan; D1's *readable in one pass* is the
+requirement. The two checks the table never assigned — `theorems` and `paper_toolchain_pin_drift` — are in
+`lean_toolchain` and `papers_prose`.
 
-⬜ `papers_prose.py` · `citations.py` · `bundles_readiness.py`  — and `paper_toolchain_pin_drift`
-   is still unassigned in §4 (suggest `papers_prose`).
+**The guards that made it safe**, all mutation-verified in both directions, all in
+`tests/test_validate_{registry_contract,public_surface,flag_propagation}.py`:
+registry count + order · every check has a declared execution position · the sort runs after the last
+registration (counting `from validation.checks import …` as a registration) · flags reach their checks and
+no module shadows one · no module derives a path from `__file__` · no module aliases a path by value ·
+**no module references a name left behind in validate.py** · one module identity for `validate.py` ·
+the frozen 54-name external surface.
 
-**Split a module when it exceeds one readable pass.** The §4 table is a plan, not scripture; D1's
-criterion is the requirement. Measure the block before extracting, split on a seam where the two
-halves share no helpers, and update §4 with the reasoning.
-
-⚠️ **STRUCTURAL TESTS GO STALE WHEN CODE MOVES.** Three so far were scoped to
-`scripts/validate.py` alone and had to be widened to `validation/**/*.py`: the H1 `__file__`
-guard, `test_inventory_index_autogen`'s decorator scan, and my own sort-position test (which also
-had to learn that `from validation.checks import ...` IS a registration). **Before each move, grep
-`tests/` for anything that reads `scripts/validate.py` as source and check its scope.**
-
-⚠️ **The frozen surface was measured with a predicate that later became wrong.** The first scan
-filtered `module == "validate"` while one test file still said `scripts.validate`, hiding 20 of 54
-names. Re-run the scan whenever an import spelling changes.
-
-⚠️ **NO MODULE-LEVEL PATH ALIASES in a check module** — `PAPERS_DIR = _H.PAPERS_DIR` is an import-time
-copy, the same shape H5 forbids for flags. It looks harmless because paths are never reassigned in
-production, and it is not: a test monkeypatching the owner to seed a defect no longer reaches the check.
-Cost me a real failure on `physics.py`. Reach `_H.<NAME>` at each use; tests patch
-`validate_helpers.<NAME>`. Guard: `test_no_check_module_aliases_a_path`.
-
-⚠️ **Two checks are unassigned in the migration notes' §4 table** — `theorems` and
-`paper_toolchain_pin_drift`. Assign them deliberately (suggest `lean_substrate` and `papers_prose`) and
-update §4; do not let them fall through the split.
-
-**Extract by SCRIPT from AST-verified line ranges, never by retyping.** That is what makes "moved
-verbatim" checkable. The `notebooks` extraction did: AST → exact `(start,end)` per decorated def →
-splice out (highest range first, so indices stay valid) → write the module with the three-import-rules
-header → insert the import + re-export block above `_apply_canonical_order()`.
-
-**Per-module loop — do NOT batch several modules into one unverified move:**
-1. Move the check bodies verbatim. No body edited, no policy unified, no threshold touched, no
-   always-pass flipped (ADR-009 D4 — Phases 1–2 are provably behaviour-preserving or they are nothing).
-2. Import `register_check` / `CheckResult` / `Detail` from `validation._registry`, paths from
-   `validate_helpers`, flags as `_cfg.<FLAG>` — **never** by value (H5).
-3. Re-export every moved name from `scripts/validate.py`. The frozen 33-name list is in
-   `tests/test_validate_public_surface.py`; two of them are consumed by `scripts/sync_manifest.py`, a
-   production script, not by tests.
-4. Move `_apply_canonical_order()` below the check-module import block once that block exists — this is
-   what turns "after all registrations" from positional into structural, and retires the H3 hazard.
-5. Verify: full fast suite (~2.5 min), `--list` (59, canonical order), `--strict` rc 0→1, then
-   characterization. **`graph_integrity` will move if you touched `tests/` — attribute it, don't
-   dismiss it**; the arithmetic and the HEAD-vs-baseline trap are documented in
-   `tests/validate_characterization.py`.
-6. Commit per module, so any single move is revertible.
-
-**Phase 2 is done when** `scripts/validate.py` is framework-only (~400 lines: result-type re-exports,
-`_CANONICAL_ORDER`, `run_checks`, reporting, `archive_results`, CLI, `BUNDLE_CODES`) and every check body
-lives in a `validation/checks/*.py` that fits in one read.
+⚠️ **The last two were each written because the failure had already happened.** Stranded module-level
+constants (`_COUNT_LITERAL_PATTERNS`, `_NUMERICAL_LITERAL_RE`, `_LATEX_FATAL_RE`) passed the entire
+4,986-test suite and were caught only by the characterization harness, because only it invokes every check.
+And a module-level `PAPERS_DIR = _H.PAPERS_DIR` silently defeated two tests that monkeypatch a temp tree to
+seed a defect.
 
 ### Phase 3 — semantic fixes (ADR-009 §Deferred, 8 items)
 

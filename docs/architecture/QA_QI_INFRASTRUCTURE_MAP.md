@@ -41,7 +41,7 @@ flowchart TB
 
     subgraph V["③ VALIDATION — mechanical"]
         VAL["validate.py — framework<br/>registry · order · CLI · re-exports"]
-        VCK["validation/checks/*.py<br/>59 checks, 6 of 9 modules"]
+        VCK["validation/checks/*.py<br/>59 checks · 11 modules"]
         GI["graph_integrity.py"]
         RG["readiness_gates.py<br/>11 gates × N papers"]
         BR["bundle_readiness.py<br/>→ heatmap + metadata counts"]
@@ -83,17 +83,31 @@ flowchart TB
 
 Red-outlined nodes carry the enforcement defects in §6.
 
-> **Plane ③ is mid-migration (ADR-009 Phase 2).** `scripts/validate.py` was a single 7,900-line file when
-> this map was first written; it is now **4,369 lines of framework** — result-type and check re-exports, the
-> `_CHECKS` registry, `_CANONICAL_ORDER`, `run_checks`, reporting and the CLI — with the check bodies moving
-> into `scripts/validation/checks/*.py`. **37 of 59 checks have moved** across six modules
-> (`lean_substrate` 1079, `physics` 714, `freshness` 688, `lean_toolchain` 578, `graph_atlas` 512,
-> `notebooks` 341); 22 remain, targeted at `papers_prose`, `citations` and `bundles_readiness`.
+> **Plane ③ was split by ADR-009 Phase 2 (complete 2026-08-03).** `scripts/validate.py` was a single
+> 7,900-line file when this map was first written. It is now **720 lines of framework** — result-type and
+> check re-exports, the `_CHECKS` registry, `_CANONICAL_ORDER`, `run_checks`, reporting, the CLI, and
+> `BUNDLE_CODES` for the roster gate — with **all 59 check bodies** in eleven modules under
+> `scripts/validation/checks/`, none over ~1,080 lines, each readable in one pass:
 >
-> Runtime flags live in `validation/_config.py` and result types in `validation/_registry.py`, each with a
-> single owner reached by attribute at call time. **None of this changes what any check measures** — every
-> phase boundary is verified `CHARACTERIZATION HELD — 49 checks identical`, and §6's enforcement reality is
-> therefore unchanged by the split. The semantic fixes are Phase 3 (ADR-009 §Deferred), still pending.
+> | module | checks | | module | checks |
+> |---|---|---|---|---|
+> | `lean_substrate` | 9 — R1–R3 substance gates | | `papers_prose` | 6 — prose vs the numbers |
+> | `lean_toolchain` | 7 — build + trust surface | | `prose_lean_refs` | 2 — do cited names resolve |
+> | `citations` | 4 — provenance + primary sources | | `bundles_readiness` | 6 — metadata · gates · roster |
+> | `freshness` | 6 — the artifact regenerators | | `reviews` | 4 — the supersession ledger |
+> | `physics` | 9 | | `graph_atlas` | 3 |
+> | `notebooks` | 3 | | | |
+>
+> Shared layers: `validation/_registry.py` (result types + registry), `_config.py` (the three runtime
+> flags), `_tex.py` (LaTeX scanning), and `scripts/validate_helpers.py` (the single path anchor). Each has
+> **one owner, reached by attribute at call time** — never imported by value, which is what makes a flag or
+> a monkeypatched path actually reach the check that reads it.
+>
+> **Nothing here changes what any check measures.** Verified against a baseline taken before any Phase-2
+> work: **48 of 49 characterized checks byte-identical**, the sole difference being `graph_integrity`'s
+> node count, which moves by exactly the 13 guard tests the migration added. §6's enforcement reality is
+> therefore unchanged by the split — the semantic fixes are **Phase 3** (ADR-009 §Deferred), still pending,
+> and §7's pattern is still live.
 
 ---
 
