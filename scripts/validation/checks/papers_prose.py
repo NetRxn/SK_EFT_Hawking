@@ -43,10 +43,11 @@ import shutil
 import subprocess
 import tempfile
 from pathlib import Path
-from typing import List
+from typing import Dict, List
 
 import validate_helpers as _H
 from validation import _config as _cfg
+from validation import _memo
 from validation._registry import CheckResult, Detail, register_check
 from validation._tex import (
     NUMERICAL_LITERAL_RE,
@@ -396,12 +397,62 @@ def check_count_literals() -> CheckResult:
     return CheckResult(passed=not over, details=details)
 
 
+#: Local (git-ignored) per-draft compile cache: bundle code -> content hash of the
+#: draft's full input closure at its last clean compile. Mirrors
+#: `NOTEBOOK_EXEC_CACHE` and the `extract_lean_deps.py` hash-skip.
+LATEX_COMPILE_CACHE = "papers/.latex_compile_cache.json"
+
+#: `\input{...}` / `\include{...}` / `\includegraphics[...]{...}` — the three ways a
+#: draft pulls in a file whose content can change whether it compiles.
+_TEX_INPUT_RE = re.compile(
+    r"\\(?:input|include)\s*\{([^}]+)\}"
+    r"|\\includegraphics\s*(?:\[[^\]]*\])?\s*\{([^}]+)\}")
+
+
+def _draft_input_closure(tex: Path, _seen: set | None = None) -> list[Path]:
+    """Every file whose content can change this draft's compile outcome.
+
+    Resolves ``\\input``/``\\include`` recursively (LaTeX's own ``.tex``-extension
+    default applied when the reference has no suffix) and ``\\includegraphics``
+    one level, plus any ``*.bib`` sitting beside the draft. Cycle-guarded via
+    ``_seen``.
+
+    Deliberately a SUPERSET where it is uncertain: an unresolvable reference is
+    still recorded as a path, so the file appearing later moves the hash. Over-
+    hashing costs a needless recompile; under-hashing skips a broken draft, and
+    only one of those two failures is silent.
+    """
+    seen = _seen if _seen is not None else set()
+    if tex in seen:
+        return []
+    seen.add(tex)
+    closure = [tex]
+    try:
+        body = tex.read_text(errors="replace")
+    except OSError:
+        return closure
+    if _seen is None:  # top level only — siblings, not per-\input
+        closure.extend(sorted(tex.parent.glob("*.bib")))
+    for m in _TEX_INPUT_RE.finditer(body):
+        ref = (m.group(1) or m.group(2) or "").strip()
+        if not ref:
+            continue
+        target = (tex.parent / ref).resolve()
+        if m.group(1) and not target.suffix:
+            target = target.with_suffix(".tex")
+        if m.group(1) and target.suffix == ".tex":
+            closure.extend(_draft_input_closure(target, seen))
+        else:
+            closure.append(target)
+    return closure
+
+
 @register_check("paper_latex_compiles",
                 "Bundle drafts compile under pdflatex (HARD-FAILS on a fatal "
-                "error; slow — pass --force-latex or --check paper_latex_compiles)")
+                "error; per-draft content-hash cache — --force-latex recompiles all)")
 def check_paper_latex_compiles() -> CheckResult:
-    """Slow-gated compile gate: actually compile each bundle draft with
-    ``pdflatex`` and HARD-FAIL on fatal (``! ``-marked) breakage.
+    """Compile each bundle draft with ``pdflatex`` and HARD-FAIL on fatal
+    (``! ``-marked) breakage.
 
     Why this exists: the 2026-06-10 paper15 incident — 108 fatal LaTeX
     errors injected by unescaped ``&``/``_`` and an executed ``\\input{}``
@@ -411,16 +462,27 @@ def check_paper_latex_compiles() -> CheckResult:
     durable, but a compile gate prevents the next such regression.
 
     Posture:
-      - **Slow-gated**: SKIPPED in the default full run (pdflatex × all
-        bundles is minutes). Runs only when ``--force-latex`` is passed or
-        ``paper_latex_compiles`` is the explicitly selected ``--check``.
+      - **Always on, change-scoped.** ⚠️ CHANGED 2026-08-05. This was
+        *slow-gated*: without ``--force-latex`` it returned ``passed=True``
+        with detail "SKIPPED (slow)", so a plain ``validate.py`` reported this
+        check green while D3 carried two fatal errors. A gate whose default is
+        not to measure is the audit's central defect class, and the "slow"
+        premise was never re-measured: pdflatex × 21 bundle drafts is **16.6 s**,
+        not the "minutes" the docstring claimed. With the per-draft cache below
+        an unchanged corpus costs ~0 s, so there is nothing left to gate on.
       - **Blocking**: a fatal compile error FAILS the check. Repaired
         2026-08-03 (ADR-009 §Deferred item **3**); it previously computed the
-        verdict and discarded it. Transient toolchain gaps cannot reach this
-        branch — pdflatex-missing and the slow-gate skip both return above —
-        so what remains is a draft a working pdflatex could not compile.
-        ⚠️ This bullet read "**Advisory**: always ``passed=True``" for a day
-        after the repair (audit finding QI-13).
+        verdict and discarded it. Transient toolchain gaps cannot reach that
+        branch — pdflatex-missing returns above — so what remains is a draft a
+        working pdflatex could not compile. ⚠️ This bullet read "**Advisory**:
+        always ``passed=True``" for a day after the repair (audit finding QI-13).
+
+    **Per-draft cache**: a draft whose full input closure
+    (:func:`_draft_input_closure` — the ``.tex``, everything it ``\\input``s
+    transitively, its figures, its ``.bib``) hashes to the value recorded at its
+    last CLEAN compile is skipped. Only clean compiles are recorded and a failure
+    evicts, so a broken draft recompiles every run until it is fixed.
+    ``--force-latex`` bypasses the cache entirely.
 
     One non-stop pass per draft (enough to surface fatal breakage; full
     reference/citation resolution is out of scope for a build gate).
@@ -430,12 +492,6 @@ def check_paper_latex_compiles() -> CheckResult:
     """
     details: List[Detail] = []
 
-    if not _cfg.FORCE_LATEX:
-        return CheckResult(passed=True, details=[Detail(
-            "skipped", True,
-            "SKIPPED (slow) — pass --force-latex or "
-            "--check paper_latex_compiles to compile all bundle drafts")])
-
     pdflatex = shutil.which("pdflatex")
     if pdflatex is None:
         return CheckResult(passed=True, details=[Detail(
@@ -444,13 +500,33 @@ def check_paper_latex_compiles() -> CheckResult:
 
     n_ok = 0
     n_missing = 0
+    n_cached = 0
     failed: List[tuple[str, int, str]] = []  # (code, n_fatal, first_error)
+
+    cache_path = _H.PROJECT_ROOT / LATEX_COMPILE_CACHE
+    prev_clean: Dict[str, str] = {}
+    if not _cfg.FORCE_LATEX:
+        try:
+            loaded = json.loads(cache_path.read_text())
+            if isinstance(loaded, dict):
+                prev_clean = loaded.get("clean", {}) or {}
+        except (OSError, json.JSONDecodeError):
+            prev_clean = {}   # fail-safe: an unreadable cache compiles everything
+    new_clean: Dict[str, str] = {}
 
     for code in BUNDLE_CODES:
         tex = _H.PAPERS_DIR / code / "paper_draft.tex"
         if not tex.is_file():
             n_missing += 1
             continue
+
+        closure_hash = _memo.files_fingerprint(_draft_input_closure(tex))
+        if not _cfg.FORCE_LATEX and prev_clean.get(code) == closure_hash:
+            n_cached += 1
+            n_ok += 1
+            new_clean[code] = closure_hash
+            continue
+
         paper_dir = tex.parent
         with tempfile.TemporaryDirectory(prefix=f"latexchk_{code}_") as out_dir:
             try:
@@ -478,13 +554,33 @@ def check_paper_latex_compiles() -> CheckResult:
                 failed.append((code, len(fatal), first))
             else:
                 n_ok += 1
+                new_clean[code] = closure_hash
 
+    # Only clean compiles are recorded, so a failing draft never acquires a key and
+    # recompiles every run until fixed. Written even when nothing changed: the file
+    # is how a fresh checkout starts warming.
+    if not _cfg.FORCE_LATEX:
+        try:
+            cache_path.write_text(json.dumps(
+                {"clean": new_clean}, indent=2, sort_keys=True))
+        except OSError:
+            pass
+
+    # "clean", not "compiled clean": `n_ok` counts cached drafts too, and a detail
+    # line that says a draft compiled when nothing ran is the same overstatement
+    # this check's own history is about.
     details.append(Detail(
         "summary",
         len(failed) == 0,
-        f"{n_ok}/{n_ok + len(failed)} bundle drafts compiled clean "
-        f"({n_missing} missing draft(s) skipped) — {len(failed)} with fatal errors"
+        f"{n_ok}/{n_ok + len(failed)} bundle drafts clean "
+        f"({n_cached} from cache, {n_ok - n_cached} freshly compiled, "
+        f"{n_missing} missing draft(s) skipped) — {len(failed)} with fatal errors"
     ))
+    if n_cached:
+        details.append(Detail(
+            "skip_cache", True,
+            f"{n_cached} draft(s) unchanged since their last clean compile — "
+            f"not recompiled; --force-latex recompiles all"))
     for code, n_fatal, first in failed:
         cnt = "timeout" if n_fatal < 0 else f"{n_fatal} fatal"
         details.append(Detail(
@@ -498,9 +594,9 @@ def check_paper_latex_compiles() -> CheckResult:
     # answer and throws it away.
     #
     # The stated justification was that transient toolchain gaps must not block
-    # development. That case is already handled ABOVE by two early returns: pdflatex
-    # missing, and the slow-gate skip when `_cfg.FORCE_LATEX` is false (which is the
-    # default, so a normal full run is unaffected by this change). What remains when
+    # development. That case is handled ABOVE by the pdflatex-missing early return.
+    # (It was also handled by the slow-gate skip, which is gone as of 2026-08-05 —
+    # that "safety" was the check declining to measure at all.) What remains when
     # we reach here is a draft that a working pdflatex could not compile — which is
     # a real defect, and the incident this check was built for (108 fatal errors
     # injected by unescaped & / _ in generated tables) is exactly that.

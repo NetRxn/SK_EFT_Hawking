@@ -68,12 +68,19 @@ def main(argv=None) -> int:
     # concern (the official wave-gate validate / /sync), not this cheap pre-dispatch guard.
     for chk in STAGE_CHECKS[stage]:
         if chk == "__full__":
-            # --force-latex is NOT optional here (added 2026-08-05). Without it
-            # `paper_latex_compiles` returns PASS with detail "SKIPPED (slow)", so
-            # "full green over Stages 1-12" was achievable with a draft that does not
-            # compile — and D3 does not, with 2 fatal errors, today. The "slow" premise
-            # is also stale: measured 16.8s for all bundle drafts, against an
-            # adversarial-review dispatch this gate exists to protect.
+            # --force-latex here now means "recompile every draft, ignoring the
+            # per-draft content-hash cache" — 16.6 s, cheap insurance immediately
+            # before an Opus reviewer dispatch.
+            #
+            # ⚠️ It meant something else when it was added earlier on 2026-08-05:
+            # back then it ENABLED the check at all, because `paper_latex_compiles`
+            # was slow-gated and returned PASS with detail "SKIPPED (slow)" by
+            # default — so "full green over Stages 1-12" was achievable with a draft
+            # that does not compile, and D3 does not, with 2 fatal errors. The slow
+            # gate is gone (the compile is always on and change-scoped), so this flag
+            # is no longer load-bearing for CORRECTNESS here; it is a deliberate
+            # belt-and-braces re-measure at the gate. Do not remove it on the grounds
+            # that "the check runs anyway" without re-reading that history.
             rc |= _run(["scripts/validate.py", "--force-latex", "--no-archive"])
         elif chk == "__strict__":
             rc |= _run(["scripts/validate.py", "--strict", "--force-latex",

@@ -54,11 +54,21 @@ STRICT_MODE: bool = False
 #: return cached verdicts without executing anything.
 FORCE_NOTEBOOK_REEXEC: bool = False
 
-#: Run the slow-gated `paper_latex_compiles` check. Set from `--force-latex`, or
-#: automatically when that check is the explicitly selected `--check` (otherwise
-#: `--check paper_latex_compiles` would skip the very check it names). A
-#: silently-stuck `False` makes it skip forever.
+#: Recompile every bundle draft, bypassing `paper_latex_compiles`' per-draft
+#: content-hash cache. Set from `--force-latex`.
+#:
+#: ⚠️ MEANING CHANGED 2026-08-05. This used to *enable* the check at all: without
+#: it `paper_latex_compiles` returned `passed=True` with detail "SKIPPED (slow)".
+#: That is how the suite reported green while D3 carried two fatal compile errors
+#: — a check whose default was not to measure. The compile is now always on and
+#: costs ~0 s when no draft moved (see `validation/_memo.py`), so this flag now
+#: only forces a re-compile of unchanged drafts.
 FORCE_LATEX: bool = False
+
+#: Bypass the expensive-check memo (`validation/_memo.py`) and re-measure
+#: everything. Set from `--no-memo`; also implied by `--strict`, so the Paper
+#: Submission Gate never reads a cached verdict.
+NO_MEMO: bool = False
 
 #: Unattended-runner mode. Set from `--ci`. Read by `validate.main()` (NOT by any
 #: check body) to skip the checks whose premise does not hold on a fresh clone, and
@@ -86,8 +96,13 @@ CI_SKIP: dict[str, str] = {
                     "Content is covered by `paper_table`, which parses the shipped "
                     "table (QI-31)",
     "claim_clusters_fresh": "same mtime premise; shells to cluster_detect.py",
-    "notebook_exec": "the skip-cache is gitignored, so a runner always executes all "
-                     "91 notebooks; belongs to the nightly tier",
+    "notebook_exec": "the per-notebook skip-cache is gitignored, so a fresh runner "
+                     "executes all 91 from cold. On a workstation this check is "
+                     "already change-scoped twice over (the skip-cache, plus "
+                     "scripts/pre-commit-notebooks.sh executing only STAGED "
+                     "notebooks), and `notebooks/` moved in 3 of the last 400 "
+                     "commits — so the cost is an artifact of the runner, not of "
+                     "the check",
 }
 
 #: The coverage floor for `--ci`. **This is the point of the mode.**

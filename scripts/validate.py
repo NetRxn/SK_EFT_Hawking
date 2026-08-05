@@ -549,9 +549,16 @@ Examples:
     )
     parser.add_argument(
         "--force-latex", action="store_true",
-        help=("Run the slow paper_latex_compiles check (pdflatex × all bundle "
-              "drafts). Default skips it; it also auto-runs when selected via "
-              "--check paper_latex_compiles.")
+        help=("Recompile EVERY bundle draft, bypassing paper_latex_compiles' "
+              "per-draft content-hash cache. The compile itself is no longer "
+              "opt-in (it used to skip by default, which is how the suite stayed "
+              "green over a draft with fatal errors).")
+    )
+    parser.add_argument(
+        "--no-memo", action="store_true",
+        help=("Re-measure the expensive checks instead of reusing a cached PASS "
+              "keyed on their inputs (axiom_closure_allowlist, "
+              "lean_docstring_refs_resolve). Implied by --strict.")
     )
     parser.add_argument(
         "--ci", action="store_true",
@@ -565,7 +572,8 @@ Examples:
     _cfg.CI_MODE = args.ci
     _cfg.STRICT_MODE = args.strict
     _cfg.FORCE_NOTEBOOK_REEXEC = args.force_notebooks
-    _cfg.FORCE_LATEX = args.force_latex or args.check == "paper_latex_compiles"
+    _cfg.FORCE_LATEX = args.force_latex
+    _cfg.NO_MEMO = args.no_memo
 
     if args.list:
         print("Available checks:")

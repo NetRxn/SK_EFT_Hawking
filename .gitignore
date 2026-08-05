@@ -69,6 +69,13 @@ rust/target/*
 # validate.py CHECK 11 notebook-exec skip-cache (local, env-dependent vetted state)
 notebooks/.notebook_exec_cache.json
 
+# validate.py change-scoping caches (local, machine-dependent vetted state — same
+# posture as the notebook skip-cache above and the lean/.lean_*_cache.json set).
+# NEVER tracked: a shared cache would let one workstation's vetted state answer for
+# another's tree.
+papers/.latex_compile_cache.json
+docs/validation/.check_memo.json
+
 # LaTeX build artifacts
 *.aux
 *.log

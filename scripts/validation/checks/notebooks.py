@@ -272,6 +272,33 @@ def check_notebook_execution() -> CheckResult:
     (~25 min) — the dominant ``validate.py`` slowness. Pass ``--force-notebooks``
     to bypass the cache and re-execute everything (e.g. after a kernel /
     dependency upgrade that changes outcomes without changing content).
+
+    ⛔ SETTLED, DO NOT REBUILD (2026-08-05): **per-notebook `src/` scoping**, so
+    that a `src/` edit re-executes only the notebooks importing the changed
+    module, instead of discarding the whole cache. Built and measured, then
+    reverted — it barely moves on this repo's real edit distribution:
+
+      * Blast radius under EXACT module-level dependency closure, measured by
+        really editing each file: ``src/core/formulas.py`` → **91/91** notebooks;
+        ``src/vestigial/hs_rhmc_mlx.py``, ``src/wkb/spectrum.py``,
+        ``src/second_order/coefficients.py`` → **82/91** each;
+        ``src/resurgence/bdg_self_energy.py`` → 0/91.
+      * Even a NON-core edit invalidates 82 of 91, because every notebook imports
+        ``src.core`` and its re-exports pull the domain packages back in — which
+        Pipeline Invariants #1–#3 make structural, not incidental (`constants` /
+        `formulas` / `visualizations` are canonical and everything imports them).
+      * On `main` since 2026-03-01, **62 of 340** `src/` commits avoid `src/core/`
+        entirely. So exact beats coarse by ~10 %, on ~1 % of commits.
+
+    ⚠️ A first pass justified the revert with *"0 of 42 `src/` commits avoid
+    `src/core/`"* — measured on the ADR-009 **infra branch**, which is not how this
+    repo normally works (normal work is Lean, or paper/notebook). That claim is
+    false on `main`. The decision rests on the STRUCTURAL measurement above, which
+    does not depend on the window.
+
+    A notebook whose physics inputs moved genuinely must re-run. The scoped version
+    passed its own tests and produced 8 distinct fingerprints, which is exactly how
+    machinery that does nothing manages to look like it works.
     """
     import nbformat
 

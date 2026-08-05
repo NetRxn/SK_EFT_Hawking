@@ -34,13 +34,47 @@ the "~17", one level up: a summary that loses the property the reader needs.
 | R3-C1 | "all 59 mutation-verified" false; seam guard defeatable by prose | — | ✅ fixed + retracted |
 | R3-C2 | QI-30's criterion applied to one check, never swept | 4 of 59 swept | 🔧 **PARTIAL** — ratcheted (`FIXTURE_ONLY_CEILING=55`), not swept |
 | R4-C1…C4 | the four checks that cannot fail | — | ✅ QI-31…QI-34 |
-| **R5-C1** | **no CI — nothing runs the 59 checks automatically** | no `.github/workflows`; hook = 3 of 59, fail-open, `main`-only | ⬜ **OPEN — operator-deferred** |
+| **R5-C1** | **no CI — nothing runs the 59 checks automatically** | no `.github/workflows`; hook = 3 of 59, fail-open, `main`-only | 🔁 **RE-DIAGNOSED** — see below |
 | **R5-C2** | **figure *content* unverified; Stage 9 has no gate** | **137 specs, 118 with `physics_checks=[]`, 0 runners**; only the dashboard reads the report; `bundle_figure_integrity` still filtered to `d11_/d12_` | ⬜ **OPEN** |
 | **R5-C3** | **nothing recomputes a paper-quoted number from its formula** | `threshold_arithmetic`: **0 files, not registered** | ⬜ **OPEN** |
 | **R5-C4** | **nothing checks a cited theorem's STATEMENT supports the prose** | `theorem_quoted_bound_matches_lean_literal`: **0 files, not registered** | ⬜ **OPEN** |
 | **R5-C5** | **citation *content* verification inert; both replacements never shipped** | `bibitem_registry_character_match`, `citation_bibkey_form_matches_metadata`: **0 files each, not registered** | ⬜ **OPEN** |
 
-R5's own words on why these are Critical rather than Important — worth quoting, because the
+### R5-C1 re-diagnosed (2026-08-05, v2 — after operator pushback)
+
+The finding is real; **"add CI" was the wrong remedy, and my first answer took it at face
+value.** v1 of `CI_DEFAULTS_ASSESSMENT.md` proposed an ~11-minute per-push job and a
+~45-minute nightly. Re-measured against the harness that exists:
+
+- `scripts/pre-commit-notebooks.sh` already executes **only the staged `.ipynb`**, and
+  `notebook_exec` already carries a per-notebook content-hash skip-cache. The nightly's whole
+  cost was an artifact of running on a fresh clone where that cache is gitignored — and
+  `notebooks/` moved in **49 of the 5,814 commits on `main` since 2026-03-01 (0.84 %)**.
+- The per-push job re-ran what `pre-commit-sync.sh`, `gate_precheck s9/s10/s13` and
+  `wave-close` already run. Same depth twice, not defence in depth.
+
+The genuine defect underneath: **every stage of this harness is change-scoped except the
+expensive one.** `validate.py` full runs all 59 checks regardless of the diff, including 198 s
+of Lean-substrate checks that re-derive the same answer on every re-run within a gate cycle.
+(⚠️ An earlier draft justified this with *"the Lean tree does not move in 53 % of commits"* —
+measured on THIS infra branch. On `main` it moves in **78 %**, so the memo's value is the
+repeat run and the paper/doc-side wave, not "half of all runs".) The gate that
+could not be scoped had already started opting out — `paper_latex_compiles` was slow-gated into
+returning PASS-without-compiling, which is why D3's two fatal errors were invisible.
+
+Remedied by change-scoping rather than scheduling: `scripts/validation/_memo.py` (input-
+fingerprint memo, applied to the two Lean checks — **171.6 s → 0.1 s** measured) and a per-draft
+LaTeX compile cache that let the slow gate be **deleted**. Full suite, `validate.py
+--no-archive`: **317.8 s → 134.2 s**, and the LaTeX compile now actually runs (it was skipping). Guards on the "PASS without
+measuring" hazard: production-seeded key tests, PASS-only caching with eviction on FAIL, the
+body's own source in every key, a visible skip line, and `--strict` bypassing the memo outright.
+
+`validate.py --ci` + the coverage floor are retained and tested — the right mode for an
+on-demand fresh-clone check, which is the one thing a runner could add that the local harness
+cannot. **No workflow file, no schedule**; that remains the operator's call, and the fresh-clone
+mtime blocker (below, §1 of the assessment) must be fixed before any runner is useful.
+
+R5's own words on why C2–C5 are Critical rather than Important — worth quoting, because the
 severity is the part that got lost:
 
 - **C3** — *"a paper claiming `G > 0.01` where the correct value was `0.5` (factor 50), with a

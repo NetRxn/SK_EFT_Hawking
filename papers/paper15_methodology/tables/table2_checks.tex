@@ -47,7 +47,7 @@
 39 & \texttt{paper\_provenance} & Paper figure references resolve and no placeholder bibliography ships \\
 40 & \texttt{numerical\_literals} & Paper .tex files free of inline numerical literals outside \texttt{\textbackslash input\{\}} blocks \\
 41 & \texttt{count\_literals} & Paper .tex files reference counts via \texttt{\textbackslash input\{counts.tex\}} macros, not literals \\
-42 & \texttt{paper\_latex\_compiles} & Bundle drafts compile under pdflatex (HARD-FAILS on a fatal error; slow --- pass --force-latex or --check paper\_latex\_compiles) \\
+42 & \texttt{paper\_latex\_compiles} & Bundle drafts compile under pdflatex (HARD-FAILS on a fatal error; per-draft content-hash cache --- --force-latex recompiles all) \\
 43 & \texttt{axiom\_count\_prose\_consistency} & Paper prose axiom-count claims agree with docs/counts.json \\
 44 & \texttt{paper\_toolchain\_pin\_drift} & Advisory (Class TP): paper-draft toolchain/Mathlib pins match lean-toolchain + lakefile.toml \\
 45 & \texttt{numerical} & Experimental parameters match reference values \\

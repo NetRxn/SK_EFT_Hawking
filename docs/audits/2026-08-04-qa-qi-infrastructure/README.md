@@ -272,6 +272,14 @@ Legend: ⬜ open · 🔄 in progress · ✅ done (with the verifying evidence na
       reproduced it in the same session — which is the strongest available argument for its own rule:
       *a number in prose is a cache with no invalidation protocol.*
       **Corrected in:** this tracker (§4c + the close banner) and `RESUME_STATE.md`.
+      🔁 **SUPERSEDED 2026-08-05 — and by its own rule.** The sentence above,
+      *"`paper_latex_compiles` PASSES, and correctly: it sits behind the slow gate"*, is now
+      false: the slow gate is **gone** (the compile is always on, change-scoped by a per-draft
+      content-hash cache), so a default `validate.py` is red on D3's two fatal errors. Reading
+      it back a day later: calling the skip *correct* was the weakest line in this entry. It was
+      a check declining to measure, which is the defect class the whole audit is about — the
+      measurement was right and the adjective was wrong. Left standing above rather than edited,
+      with this note, because that is what this entry is for.
 
 - [x] **QI-30** ✅ **FIXED 2026-08-04 — `theorems` was vacuous in ALL THREE legs.**
       §4 recorded this as a cosmetic residual (*"hardcodes 322 in three places"*). Reading it

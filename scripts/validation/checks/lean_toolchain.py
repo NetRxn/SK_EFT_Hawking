@@ -40,6 +40,7 @@ from typing import Dict, List
 
 import validate_helpers as _H
 from validation import _config as _cfg
+from validation import _memo
 from validation._registry import CheckResult, Detail, register_check
 
 
@@ -422,6 +423,18 @@ def check_lean_build() -> CheckResult:
     "Every SKEFTHawking declaration's transitive axiom closure is on the standard "
     "kernel axioms + the AXIOM_METADATA allow-list (Invariant #15 backstop)",
 )
+@_memo.memoize_check(
+    "axiom_closure_allowlist",
+    lambda: _memo.memo_key(
+        _memo.lean_source_fingerprint(),
+        _memo.toolchain_pin_fingerprint(),
+        _memo.files_fingerprint([
+            _H.PROJECT_ROOT / "src" / "core" / "constants.py",   # AXIOM_METADATA
+            _H.PROJECT_ROOT / "scripts" / "update_counts.py",    # is_native_decide_axiom
+        ]),
+    ),
+    "Lean sources, toolchain pins, AXIOM_METADATA",
+)
 def check_axiom_closure_allowlist() -> CheckResult:
     """
     AI-Defect-Defense-Layer P4. Runs the ``AxiomAudit`` Lean executable
@@ -442,6 +455,19 @@ def check_axiom_closure_allowlist() -> CheckResult:
     Shares the underlying Lean executable with the lean4 plugin's
     ``/check-axioms`` (``lean/SKEFTHawking/AxiomAudit.lean``): discipline defined
     once, invoked interactively at ``/lean4:checkpoint`` and non-interactively here.
+
+    MEMOIZED (2026-08-05): measured **145.4 s**, the single most expensive check in
+    the suite. Over all 5,814 commits on `main` since 2026-03-01, `lean/` moved in
+    **78 %** — so on a Lean wave this MUST re-measure and the memo saves nothing, by
+    design. It pays on the repeat: re-running `validate.py` after a doc / paper /
+    count fix, which is what a `/goal` loop does until the gate is green.
+    (⚠️ An earlier draft read "47 %" off 400 commits of this infra branch — not a
+    representative window.) The key names every input that can move the
+    verdict: the Lean sources (`AxiomAudit` reads the built environment, which
+    derives from them), the toolchain/Mathlib pin set, `AXIOM_METADATA`, and
+    `update_counts.is_native_decide_axiom` — plus this body's own source, which
+    `_memo.memoized` folds in for every memoized check. ``--strict`` bypasses the
+    memo entirely, so the Paper Submission Gate always re-measures.
     """
     lake_bin = _resolve_lake()
     if not lake_bin:
@@ -623,8 +649,21 @@ _DOCSTRING_BLOCK_RE = re.compile(r"/-[-!]?(.*?)-/", re.DOTALL)
 
 @register_check("lean_docstring_refs_resolve",
                 "Lean docstring `backticked` project names resolve (rename-drift guard)")
+@_memo.memoize_check(
+    "lean_docstring_refs_resolve",
+    lambda: _memo.memo_key(_memo.lean_source_fingerprint(),
+                           _memo.toolchain_pin_fingerprint()),
+    "Lean sources and the Mathlib pin",
+)
 def check_lean_docstring_refs_resolve() -> CheckResult:
     """Flag Lean docstrings naming a project declaration that does not exist.
+
+    MEMOIZED (2026-08-05): measured **52.8 s**, second-most-expensive check in the
+    suite, because it greps the pinned Mathlib source tree to build the exemption
+    set. Its inputs are the Lean sources (the docstrings themselves, and
+    `lean_deps.json`, which derives from them) and the pinned Mathlib — the latter
+    keyed through `lakefile.toml` / `lean-toolchain` / `lake-manifest.json` rather
+    than by hashing several GB of Mathlib source.
 
     Round-1 design used a `difflib` near-match filter to suppress noise. A regression
     test against the ACTUAL blocker showed that silently defeated the check: the real

@@ -136,10 +136,30 @@ class TestLatexCompileVerdict:
         r = self._run(tmp_path, monkeypatch, {"D1": self.GOOD, "D2": self.BAD})
         assert r.passed is False
 
-    def test_skipped_when_not_forced_still_passes(self, tmp_path, monkeypatch):
-        """The slow gate must stay a pass — a default full run is unaffected by
-        this change, which is what makes it safe to land mid-remediation."""
+    def test_an_unforced_run_still_compiles_and_still_fails_on_a_bad_draft(
+            self, tmp_path, monkeypatch):
+        """⚠️ REPLACES `test_skipped_when_not_forced_still_passes`, deliberately.
+
+        That test asserted *"the slow gate must stay a pass — a default full run
+        is unaffected by this change, which is what makes it safe to land
+        mid-remediation."* True when written, and the right call for landing item
+        3 without collateral. But it froze the escape hatch in place: a default
+        `validate.py` reported `paper_latex_compiles` green over **D3's two fatal
+        errors**, because the default was not to compile at all.
+
+        Re-measured before removing it, not assumed: pdflatex × 21 bundle drafts
+        is **16.6 s**, and with the per-draft content-hash cache an unchanged
+        corpus is ~0 s. The premise was cost; the cost is not there.
+
+        So the contract is now the opposite one — WITHOUT `--force-latex` the
+        check still compiles, and still fails on a bad draft."""
+        monkeypatch.setattr(_H, "PAPERS_DIR", _papers(tmp_path, {"D1": self.BAD}))
+        monkeypatch.setattr(pp, "BUNDLE_CODES", ("D1",))
+        monkeypatch.setattr(pp, "LATEX_COMPILE_CACHE", "nonexistent/.cache.json")
         monkeypatch.setattr(_cfg, "FORCE_LATEX", False)
         r = pp.check_paper_latex_compiles()
-        assert r.passed is True
-        assert any("SKIPPED" in (d.message or "") for d in r.details)
+        assert r.passed is False, (
+            "an unforced run passed over a draft with fatal LaTeX errors. The "
+            "slow gate is back, and with it the false PASS over D3.")
+        assert any(d.name == "compile:D1" for d in r.details), (
+            "the check reported a verdict without naming the draft it compiled")

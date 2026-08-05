@@ -225,8 +225,17 @@ scripts/validate_helpers.py      # THE path anchor + artifact loaders (H1, H4). 
 scripts/validation/
   __init__.py                    # package docstring only — no re-exports, no import side effects.
                                  #   ⚠️ Execution order does NOT live here (see H3 below).
-  _config.py                     # STRICT_MODE / FORCE_LATEX / FORCE_NOTEBOOK_REEXEC (H5).  ✅ SHIPPED
+  _config.py                     # STRICT_MODE / FORCE_LATEX / FORCE_NOTEBOOK_REEXEC / NO_MEMO /
+                                 #   CI_MODE (H5).  ✅ SHIPPED
                                  #   Reached as `_cfg.<FLAG>`; never imported by value.
+  _memo.py                       # ✅ SHIPPED 2026-08-05. Input-fingerprint memo for the two
+                                 #   expensive Lean checks (measured 171.6s -> 0.1s). NOT part of
+                                 #   the ADR-009 split — added after it, and listed here because
+                                 #   this tree is the package's map and a module missing from the
+                                 #   map is how the next reader's model goes wrong.
+                                 #   ⚠️ It makes a check report PASS WITHOUT MEASURING, so read
+                                 #   its module docstring before touching a key: the guards are
+                                 #   the design, not the caching.
   helpers/                       # (not yet created — validate_helpers.py covers Phase 1's needs)
     tex.py                       # _strip_tex_comments, _line_of, shared regexes
   checks/
@@ -259,7 +268,13 @@ scripts/validation/
     notebooks.py                 # notebooks, notebook_exec, viz_consistency
 ```
 
-Roughly 250 lines of framework + eight domain modules averaging ~900. Every module fits in one read.
+⚠️ **The tree above is the PLAN, not the build.** As shipped there are **twelve** check modules,
+not the nine drawn above: the plan's list is missing `lean_statements.py`, `prose_lean_refs.py` and
+`reviews.py`, which were split out as the assignments proved too large. Measured 2026-08-05:
+**8,969 lines across 12 modules, averaging ~750** — the D1 criterion (every module readable in one
+pass) holds, but the estimate below it did not survive the build.
+
+Roughly 250 lines of framework + twelve domain modules averaging ~750. Every module fits in one read.
 
 ⚠️ **AS BUILT: TWELVE modules, not eight** (audit finding QI-25). Three were split beyond this plan during
 Phase 2 — `lean_substrate`/`lean_toolchain`, `papers_prose`/`prose_lean_refs`,

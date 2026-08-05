@@ -60,7 +60,17 @@ from validation import _config as cfg  # noqa: E402
 
 
 def _check(name: str):
-    return next(s.func for s in v._CHECKS if s.name == name)
+    """The registered callable for `name`, unwrapped past any memo wrapper.
+
+    ⚠️ `_memo.unwrap` is load-bearing here, not tidiness. The two guards below
+    INSPECT the returned function — `co_names` for `_cfg`, and its globals for the
+    flag. `axiom_closure_allowlist` is memoized as of 2026-08-05, and a bare
+    wrapper reads no flags at all: both guards would inspect the wrapper, find
+    nothing, and the `_cfg`-attribute one would fail while the `co_names` one
+    passed vacuously. The flag lives in the body; so must the inspection.
+    """
+    from validation import _memo
+    return _memo.unwrap(next(s.func for s in v._CHECKS if s.name == name))
 
 
 @pytest.fixture(autouse=True)
@@ -141,26 +151,41 @@ class TestStrictModePropagatesThroughMain:
 # ────────────────────────────────────────────────────────────────────────
 
 class TestForceLatex:
-    def test_default_skips_without_running_pdflatex(self):
-        cfg.FORCE_LATEX = False
-        r = _check("paper_latex_compiles")()
-        assert r.passed is True
-        assert any("SKIPPED" in (d.message or "") for d in r.details), (
-            "paper_latex_compiles no longer reports its slow-gate skip. If it "
-            "now runs by default that is a deliberate change; if it silently "
-            "reports nothing, FORCE_LATEX has been severed."
+    """⚠️ CONTRACT REVERSED 2026-08-05, deliberately.
+
+    These two tests used to assert that `paper_latex_compiles` **skips by
+    default** ("SKIPPED (slow)", `passed=True`) and that `--check
+    paper_latex_compiles` auto-enables `FORCE_LATEX` to work around that skip.
+    Both were faithful tests of the behaviour — and the behaviour was the defect:
+    a plain `validate.py` reported this check green while D3 carried two fatal
+    compile errors, because the default was not to measure.
+
+    Adjudicated rather than overridden. The stated premise was cost, and the cost
+    was never re-measured: pdflatex × 21 bundle drafts is **16.6 s**, not the
+    "minutes" the docstring claimed, and with the per-draft content-hash cache an
+    unchanged corpus costs ~0 s. With the premise gone the skip has no defence, so
+    the compile is now always on and `--force-latex` means only "recompile
+    unchanged drafts too". The behavioural coverage lives in
+    `tests/test_validation_memo.py::TestLatexCompileCache`.
+    """
+
+    def test_the_slow_gate_gate_is_gone(self):
+        """The specific shape that produced the false PASS: an early return keyed
+        on `FORCE_LATEX` being false."""
+        src = (SK_ROOT / "scripts" / "validation" / "checks" / "papers_prose.py").read_text()
+        body = src.split("def check_paper_latex_compiles", 1)[1]
+        assert "if not _cfg.FORCE_LATEX:\n        return CheckResult" not in body, (
+            "paper_latex_compiles has re-acquired an early return on FORCE_LATEX. "
+            "That is the slow-gate that reported PASS over D3's two fatal errors "
+            "for as long as the check existed."
         )
 
-    def test_selecting_the_check_by_name_auto_enables_it(self):
-        """`validate.py:7754` sets FORCE_LATEX when the check is selected
-        explicitly — otherwise `--check paper_latex_compiles` would skip the very
-        check it names. Asserted against the source because the behavioural test
-        would run pdflatex over 21 drafts."""
-        src = (SK_ROOT / "scripts" / "validate.py").read_text()
-        assert 'args.force_latex or args.check == "paper_latex_compiles"' in src, (
-            "the auto-enable clause is gone; `--check paper_latex_compiles` "
-            "would now skip itself and report PASS."
-        )
+    def test_force_latex_still_reaches_the_check(self):
+        """The flag survives, with its new meaning — bypass the cache. If this
+        name were severed the cache could never be forced past."""
+        fn = _check("paper_latex_compiles")
+        assert "FORCE_LATEX" in fn.__code__.co_names
+        assert "_cfg" in fn.__code__.co_names
 
 
 # ────────────────────────────────────────────────────────────────────────
