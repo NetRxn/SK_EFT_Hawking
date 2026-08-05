@@ -455,7 +455,13 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
         "3 mutations. The DROP-WORD path needed its own leg: a wholly different page-1 "
         "title takes the NOT-FOUND branch, so the DROP-WORD detail's rendering was "
         "untested until a fixture reproduced the actual BLOCKER — a title matching "
-        "closely but missing one word",
+        "closely but missing one word. QI-33 added 3 more, all CAUGHT (incl. reverting "
+        "the strict verdict to its old NOT-FOUND-promoting form), plus a PRODUCTION "
+        "probe: a real single-word drift added to CITATION_REGISTRY turns `--strict` "
+        "red (8 vs the frozen ceiling 7). ⚠️ Measured limitation, from a probe that "
+        "came back MISSED first: DROP-WORD only fires when the REST of the title "
+        "matches page 1, so an entry already flagged NOT-FOUND absorbs further drift "
+        "silently — 58 live entries are in that state",
     ),
     # bundles_readiness.py: 28 tests / 14 mutations — the LAST module. This is where
     # false green lives: five separate handlers here were converted from fail-open to

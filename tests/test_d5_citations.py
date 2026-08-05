@@ -251,7 +251,13 @@ class TestBibitemTitlePrimarySource:
 
     TITLE = "Entanglement harvesting in relativistic Bose-Einstein condensate"
 
-    def _run(self, tmp_path, monkeypatch, *, title, page1, strict=False):
+    def _run(self, tmp_path, monkeypatch, *, title, page1, strict=False, ceiling=0):
+        """`ceiling` defaults to 0 — a fixture asserts the behaviour of a NEW drifted
+        title, and the live `BIBITEM_TITLE_DRIFT_CEILING` freezes 7 inherited ones
+        (audit QI-33). Leaving it at the live value would have made every case here
+        pass on the slack rather than on the logic."""
+        from src.core import constants as _const
+        monkeypatch.setattr(_const, "BIBITEM_TITLE_DRIFT_CEILING", ceiling)
         ws = tmp_path / "ws"
         rel = "Lit-Search/Phase-1/primary-sources/Ref2014.pdf"
         p = ws / rel
@@ -282,15 +288,53 @@ class TestBibitemTitlePrimarySource:
         assert r.passed is True
         assert any(d.warning for d in r.details)
 
-    def test_a_drifted_title_fails_under_strict(self, tmp_path, monkeypatch):
-        """ADR-009 item 6 measured this as a strict leg NO ReadinessGate covers —
-        no gate compares titles to PDFs — so it runs only if a human passes the flag."""
+    def test_a_NOT_FOUND_flag_stays_advisory_even_under_strict(self, tmp_path, monkeypatch):
+        """⚠️ INVERTED 2026-08-05 (audit QI-33). This test asserted that `--strict`
+        promotes a NOT-FOUND flag to a FAIL, and the code did — while the check's
+        docstring and the comment beside the verdict line both call NOT-FOUND advisory
+        *because it is false-positive-prone*: page 1 is often a journal cover, a chapter
+        intro, or heavy metadata, and the title simply is not on it.
+
+        That contradiction was harmless only for as long as nothing passed `--strict`.
+        `gate_precheck.py submission` became that caller on 2026-08-04, and the live
+        corpus carries **58 NOT-FOUND against 7 DROP-WORD** — so the submission gate
+        would have gone red on 58 entries the check itself declines to call defects.
+        A gate that fires on correct data is a gate that gets switched off."""
         r = self._run(tmp_path, monkeypatch,
                       title="Entanglement harvesting in a relativistic BEC with extra words here",
                       page1="Some header\nCompletely different published title\nAuthors",
                       strict=True)
-        assert r.passed is False, (
-            "--strict did not promote a title-drift finding to a FAIL")
+        assert r.passed is True, (
+            "--strict promoted a NOT-FOUND flag to a FAIL; NOT-FOUND is advisory in "
+            "BOTH modes by design and the corpus carries 58 of them")
+        assert any(d.name.startswith("not_found:") for d in r.details)
+
+    def test_a_pdfminer_whitespace_artifact_is_not_a_drift_flag(self, tmp_path, monkeypatch):
+        """`pdfminer` splits words across line breaks, so a verbatim-correct title can
+        arrive as `quasi distillation` for `quasidistillation` — and that produced a
+        DROP-WORD flag, the check's HIGH-CONFIDENCE class, for an entry with nothing
+        wrong with it. Measured: 2 of 9 live flags were this artifact
+        (`Horodecki1999`, `ElingGuedensJacobson2006fR`). A high-confidence class that
+        is 22 % extraction noise is not high-confidence."""
+        r = self._run(tmp_path, monkeypatch,
+                      title="General teleportation channel and quasidistillation",
+                      page1="Preprint\nGeneral teleportation channel and quasi distillation\nAuthors",
+                      strict=True)
+        assert r.passed is True, [(d.name, d.message) for d in r.details if not d.passed]
+        assert not any(d.name.startswith("drop_word:") for d in r.details), (
+            "a whitespace artifact was reported as single-word title drift")
+
+    def test_the_live_drift_ceiling_has_ZERO_headroom(self):
+        """The ratchet's value is that it is measured AT the corpus. A ceiling with
+        slack admits new drift silently — the failure this check's sibling
+        `recurrence_reopens_closures` demonstrated three times. Runs against the REAL
+        registry, so raising the ceiling to buy a green submission gate fails here."""
+        from src.core.constants import BIBITEM_TITLE_DRIFT_CEILING as ceil
+        r = ck.check_bibitem_title_primary_source()
+        n = len([d for d in r.details if d.name.startswith("drop_word:")])
+        assert n == ceil, (
+            f"the live registry carries {n} DROP-WORD drift flag(s) but the ceiling is "
+            f"{ceil}. If titles were corrected, LOWER the ceiling in the same commit.")
 
     def test_a_single_dropped_word_is_a_DROP_WORD_flag(self, tmp_path, monkeypatch):
         """The BLOCKER pattern verbatim, and a DIFFERENT code path from the test
@@ -315,7 +359,9 @@ class TestBibitemTitlePrimarySource:
         strict = self._run(tmp_path, monkeypatch, title=registered,
                            page1=f"Preprint\n{published}\nAuthors, 2014\nAbstract...",
                            strict=True)
-        assert strict.passed is False
+        assert strict.passed is False, (
+            "a NEW DROP-WORD flag past the frozen ceiling did not fail under --strict; "
+            "this is the one class the submission gate is supposed to block on")
         d = next(d for d in strict.details if d.name.startswith("drop_word:"))
         assert d.passed is False and not d.warning, (
             "under --strict a DROP-WORD finding must RENDER as a failure, not with an "

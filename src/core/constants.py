@@ -1414,6 +1414,31 @@ ARISTOTLE_REGISTRY_UNRESOLVED_CEILING = 14
 #: Repairing the 81 is paper substance, scoped to ADR-010, not to ADR-009.
 LEGACY_DRAFT_UNRESOLVED_REF_CEILING = 81
 
+#: Registry bibitem titles that differ from their cached PDF's page-1 title by exactly
+#: one word (the check's HIGH-CONFIDENCE drift class). Frozen 2026-08-05 (audit QI-33).
+#:
+#: `bibitem_title_primary_source` was one of the four checks the PR review found unable
+#: to fail: its verdict line read `not STRICT_MODE or (...)`, and until 2026-08-05 no
+#: caller passed `--strict`. `gate_precheck.py submission` is now that caller, which
+#: made the check's strict semantics load-bearing for the first time — and they were
+#: wrong in the other direction: they promoted the NOT-FOUND class (62 live entries the
+#: check's own docstring calls false-positive-prone, because page 1 is often a journal
+#: cover) to a hard failure alongside DROP-WORD (9). Strict now promotes DROP-WORD only.
+#:
+#: Of those 9, two were `pdfminer` whitespace artifacts and are repaired by the
+#: whitespace-insensitive containment leg. The remaining 7 are real registry-vs-published
+#: differences worth correcting — `GovindarajanKaulSuneeta2001` registers "entropy of
+#: the BTZ black hole" where the published title has no "the"; `Turyshev2026DESI`'s
+#: registered title is a stub. Correcting them against their published sources is paper
+#: substance -> ADR-010.
+#:
+#: A RATCHET (the house idiom). CITATION_REGISTRY is corpus-wide, so an unratcheted bar
+#: blocks submission of every paper on a drifted title used by any other — a gate firing
+#: on work nobody was asked to do. Inherited drift is frozen and itemised; a NEW drifted
+#: title fails the submission gate. **Lower this as titles are corrected; raising it
+#: needs a stated reason in the same commit.**
+BIBITEM_TITLE_DRIFT_CEILING = 7
+
 # ═══════════════════════════════════════════════════════════════════════
 # Axiom metadata — historical record (all axioms now removed)
 # ═══════════════════════════════════════════════════════════════════════

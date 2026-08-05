@@ -719,8 +719,21 @@ def check_bibitem_title_primary_source() -> CheckResult:
 
     Default mode: advisory WARN per finding (the check passes overall;
     individual mismatches are surfaced for author review). Strict mode
-    (`validate.py --strict`) promotes mismatches to FAIL — for use at
-    paper-submission gate.
+    (`validate.py --strict`, reached via `gate_precheck.py submission`)
+    promotes the **DROP-WORD class only** to FAIL, and only above the frozen
+    `BIBITEM_TITLE_DRIFT_CEILING`.
+
+    ⚠️ Corrected 2026-08-05 (audit QI-33). Strict promoted NOT-FOUND too, while
+    this docstring and the code's own comments call NOT-FOUND advisory *because
+    it is false-positive-prone* — page 1 is frequently a journal cover or a
+    metadata block and the title is simply not on it. Live: 58 NOT-FOUND against
+    7 DROP-WORD. That contradiction was inert only while nothing passed
+    `--strict`; the submission gate became that caller the day before.
+
+    ⚠️ MEASURED LIMITATION. DROP-WORD requires the REST of the title to match
+    page 1, so an entry already flagged NOT-FOUND absorbs further drift without
+    raising anything. 58 live entries are in that state, and this check must not
+    be quoted as covering them.
 
     Skips:
     - Entries with `inprep: True` (no external primary source).
@@ -841,6 +854,21 @@ def check_bibitem_title_primary_source() -> CheckResult:
         if norm_title in norm_page:
             continue
 
+        # WHITESPACE-INSENSITIVE containment (added 2026-08-05, audit QI-33).
+        # `pdfminer` splits and joins words in ways the publisher did not: a title
+        # set across a line break arrives as `quasi distillation` for
+        # `quasidistillation`, and a two-column page-1 header can interleave the
+        # title's own characters. Both produced DROP-WORD flags — the check's
+        # HIGH-CONFIDENCE class — for entries whose title is verbatim correct.
+        # Measured over the live registry: 2 of 9 flags were this artifact
+        # (`Horodecki1999`, `ElingGuedensJacobson2006fR`).
+        #
+        # Scoped deliberately as a containment test, not a normalisation change:
+        # collapsing whitespace globally would also erase the word boundaries the
+        # DROP-WORD signal depends on.
+        if norm_title.replace(" ", "") in norm_page.replace(" ", ""):
+            continue
+
         # Secondary signal: try dropping a single word from the registry
         # title — if any single-word drop makes it a substring, that is
         # the BLOCKER drift pattern (e.g., registry has "in a relativistic"
@@ -901,7 +929,30 @@ def check_bibitem_title_primary_source() -> CheckResult:
     # the body contradicts: the per-finding Details carry `passed=not STRICT_MODE`,
     # so in default mode a DROP-WORD hit passes too. The comment now describes what
     # the code does.
-    summary_passed = not _cfg.STRICT_MODE or (n_drop_word == 0 and n_not_found == 0)
+    # ⚠️ TWO FURTHER CORRECTIONS, 2026-08-05 (audit QI-33).
+    #
+    # (1) NOT-FOUND was promoted to a hard failure under `--strict`, while the comment
+    #     eight lines up and the docstring both call it advisory *because it is
+    #     false-positive-prone* — page 1 is often a journal cover, a chapter intro, or
+    #     heavy metadata, and the title simply is not on it. Live: **62 NOT-FOUND**
+    #     against 9 DROP-WORD. `--strict` now had a caller (`gate_precheck submission`,
+    #     added the day before), so this would have made the submission gate red on 62
+    #     entries the check itself declines to call defects — a gate that fires on
+    #     correct data, which is a gate that gets switched off. `--strict` now promotes
+    #     the HIGH-CONFIDENCE DROP-WORD class only; NOT-FOUND stays advisory in both
+    #     modes, as documented.
+    #
+    # (2) DROP-WORD is RATCHETED rather than absolute. Measured after the
+    #     whitespace-insensitive repair above: 7 flags remain, and they are real
+    #     registry-vs-published differences ("entropy of the BTZ black hole" where the
+    #     published title has no "the"; `Turyshev2026DESI`'s title is a stub). They are
+    #     worth fixing — that is exactly the BLOCKER pattern this check was built for —
+    #     but CITATION_REGISTRY is corpus-wide, so an unratcheted bar blocks submission
+    #     of every paper on a drifted title used by any other. Repairing the 7 against
+    #     their published sources is paper substance -> ADR-010. A NEW one fails today.
+    from src.core.constants import BIBITEM_TITLE_DRIFT_CEILING as _DRIFT_CEIL
+    over_ceiling = n_drop_word > _DRIFT_CEIL
+    summary_passed = not _cfg.STRICT_MODE or not over_ceiling
 
     details.append(Detail(
         "summary",
@@ -913,17 +964,18 @@ def check_bibitem_title_primary_source() -> CheckResult:
         f"skipped: {skipped_inprep} inprep, {skipped_textbook} textbook, "
         f"{skipped_no_pdf} non-pdf cache, {skipped_no_title} no-title, "
         f"{skipped_missing_cache} cache-missing"
-        + (" (strict mode: drift flags promoted to FAIL)" if _cfg.STRICT_MODE else ""),
-        warning=(n_drop_word > 0 or n_not_found > 0) and not _cfg.STRICT_MODE,
+        + (f" (strict mode: DROP-WORD promoted to FAIL above the frozen ceiling "
+           f"{_DRIFT_CEIL}; NOT-FOUND stays advisory)" if _cfg.STRICT_MODE else ""),
+        warning=(n_drop_word > 0 or n_not_found > 0) and summary_passed,
     ))
 
     # DROP-WORD findings: high-confidence drift (the BLOCKER class)
     for bibkey, msg, pdf_excerpt in drop_word_flags[:20]:
         details.append(Detail(
             f"drop_word:{bibkey}",
-            _cfg.STRICT_MODE is False,
+            not over_ceiling or not _cfg.STRICT_MODE,
             f"{msg} — pdf-page1≈{pdf_excerpt!r}",
-            warning=not _cfg.STRICT_MODE,
+            warning=not (_cfg.STRICT_MODE and over_ceiling),
         ))
     if len(drop_word_flags) > 20:
         details.append(Detail(
