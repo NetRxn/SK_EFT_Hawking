@@ -160,3 +160,85 @@ class TestGateRosterIsRatcheted:
             f"P1/P2 split changed to {len(p1)}/{len(p2)}. "
             f"`readiness_submission_gate` blocks on P1 only, so moving a gate "
             f"between tiers changes what can ship.")
+
+
+class TestVacuousPassesAreCorroborated:
+    """⚠️ Operator ruling, 2026-08-05: a vacuous pass is right when the paper
+    genuinely *carries nothing the gate checks*, and wrong when "there's a
+    predictable thing that should be working that's being skipped" — because this
+    infrastructure exists so that **a referee's concern is never something the
+    author is left to discover unaided.**
+
+    Applying that: of the four gates with an explicit empty-population PASS,
+    `CitationIntegrity` and `AssumptionDisclosure` already cross-check the paper's
+    own `.tex` (so their empty case is corroborated *not applicable*).
+    `ParameterProvenance` and `NarrativeGrounding` did not — their populations come
+    from GRAPH edges, so empty meant either "nothing to check" or "extraction
+    failed", and they passed either way.
+
+    MEASURED after corroborating: **17 of 64 papers** (D1, D3, D4, D5, E1, E2, …)
+    were passing `ParameterProvenance` vacuously while their drafts carry
+    unit-bearing numerical literals; they now read NOT ESTABLISHED (`open`). **41**
+    are genuinely not-applicable and still pass. Zero papers changed colour — the
+    aggregate stayed 0 green / 3 yellow / 61 red and `readiness_verdicts_agree`
+    still passes — so this is strictly more information, not a new alarm.
+
+    ⚠️ My first measurement of this said **58**, and it was an artifact:
+    `find_inline_numerical_literals` returns `(stripped_text, matches)` — a 2-tuple,
+    always truthy — so the branch fired for every paper regardless of content. The
+    test `test_a_draft_with_no_numbers_still_passes_as_NOT_APPLICABLE` caught it.
+    """
+
+    def _paper(self, key="paper1_sk_eft"):
+        return {"id": f"paper:{key}", "type": "Paper", "name": key, "meta": {}}
+
+    def _idx_with_tex(self, tex, monkeypatch):
+        idx = rg.GraphIndex(_empty_graph())
+        monkeypatch.setattr(type(idx), "paper_tex", lambda self, k: tex, raising=False)
+        return idx
+
+    def test_numbers_with_no_parameter_edges_is_NOT_ESTABLISHED(self, monkeypatch):
+        """FIRES ON THE DEFECT: a draft carrying unit-bearing literals with zero
+        parameter edges must not read as provenance-clean."""
+        idx = self._idx_with_tex(r"The condensate density is $1.2 \times 10^{14}$ cm$^{-3}$ "
+                                 r"and the temperature 50 nK.", monkeypatch)
+        r = rg._eval_parameter_provenance(self._paper(), idx)
+        assert r.state == "open", (
+            f"a draft with unit-bearing numbers and NO parameter edges reported "
+            f"{r.state!r} — the gate verified nothing and said so to nobody")
+        assert "NOT ESTABLISHED" in r.notes
+
+    def test_a_draft_with_no_numbers_still_passes_as_NOT_APPLICABLE(self, monkeypatch):
+        """SILENT ON CORRECT DATA — the operator's "carries nothing the gate
+        checks" case. A genuinely parameter-free paper must not be nagged."""
+        idx = self._idx_with_tex("A purely formal note with no measured quantities.",
+                                 monkeypatch)
+        r = rg._eval_parameter_provenance(self._paper(), idx)
+        assert r.state == "passed"
+        assert "not applicable" in r.notes
+
+    def test_narrative_grounding_surfaces_an_unextracted_abstract(self, monkeypatch):
+        """A draft WITH an abstract but zero ProseClaim nodes means prose
+        extraction never ran for it — the gate examined nothing."""
+        idx = self._idx_with_tex(r"\begin{abstract}We show a large effect.\end{abstract}",
+                                 monkeypatch)
+        r = rg._eval_narrative_grounding(self._paper(), idx)
+        assert r.state == "open"
+        assert "NOT ESTABLISHED" in r.notes
+
+    def test_narrative_grounding_passes_when_there_is_no_abstract(self, monkeypatch):
+        idx = self._idx_with_tex("No abstract block here.", monkeypatch)
+        r = rg._eval_narrative_grounding(self._paper(), idx)
+        assert r.state == "passed"
+
+    def test_the_corroborated_gates_read_the_draft(self):
+        """Structural backstop against the production source: both gates must
+        actually consult `paper_tex`. A behavioural test using a stubbed index
+        stays green even if the production call is removed."""
+        src = (SK_ROOT / "scripts" / "readiness_gates.py").read_text()
+        for fn in ("_eval_parameter_provenance", "_eval_narrative_grounding"):
+            body = src.split(f"def {fn}", 1)[1].split("\ndef ", 1)[0]
+            assert "paper_tex" in body, (
+                f"{fn} no longer cross-checks the draft — its empty-population "
+                f"PASS is uncorroborated again, and cannot tell 'not applicable' "
+                f"from 'extraction failed'")

@@ -253,8 +253,41 @@ def _eval_parameter_provenance(paper: dict, idx: GraphIndex) -> GateResult:
 
     r.evidence.append(f'{len(param_ids)} parameters depended on; {len(verified)} human-verified')
     if not param_ids:
-        r.state = 'passed'
-        r.notes = 'no parameter dependencies declared'
+        # ⚠️ CORROBORATE BEFORE PASSING VACUOUSLY (2026-08-05, PR-review pass 2).
+        # `param_ids` comes from GRAPH edges, so an empty list means either "this
+        # paper genuinely depends on no parameters" or "the extraction failed to
+        # link them" — and this branch could not tell them apart. It passed either
+        # way, so a physics paper full of numbers whose parameters were never
+        # linked read as PROVENANCE-CLEAN.
+        #
+        # That is exactly the case a referee raises and the author should not have
+        # to discover unaided, which is what this gate family exists for. So:
+        # cross-check the paper's OWN .tex, as `_eval_citation_integrity` already
+        # does. Unit-bearing numerical literals with zero parameter edges is a
+        # linkage failure, not a clean bill.
+        #
+        # `open`, not `blocked`: the paper may be fine and the GRAPH at fault, so
+        # this surfaces to the reviewer (YELLOW) without reddening a corpus where
+        # 61 papers are already red. "Not established" is the honest state.
+        tex = idx.paper_tex(paper_key)
+        # ⚠️ Returns (stripped_text, matches) — a 2-tuple, ALWAYS truthy. My first
+        # draft wrote `literals = find_inline_numerical_literals(tex)` and tested it
+        # for truth, so this branch fired for every paper regardless of content, and
+        # the "58 papers carry unit-bearing numbers" figure I reported was an
+        # artifact of tuple truthiness, not a measurement. The sibling caller at
+        # :635 already unpacks correctly.
+        _, literals = find_inline_numerical_literals(tex) if tex else ("", [])
+        if literals:
+            r.state = 'open'
+            r.notes = (f'NOT ESTABLISHED — no parameter dependencies in the graph, but '
+                       f'the draft carries {len(literals)} unit-bearing numerical '
+                       f'literal(s). Either the paper declares no parameters (clean) or '
+                       f'the extraction did not link them (nothing was checked).')
+            r.evidence.append(f'{len(literals)} unit-bearing literals in the draft')
+        else:
+            r.state = 'passed'
+            r.notes = ('no parameter dependencies declared, and the draft carries no '
+                       'unit-bearing numerical literals — genuinely not applicable')
     elif unverified:
         # Treat as blocked for submission but acceptable during draft
         r.blockers = [p.replace('param:', '', 1) for p in unverified[:20]]
@@ -495,8 +528,26 @@ def _eval_narrative_grounding(paper: dict, idx: GraphIndex) -> GateResult:
         r.state = 'blocked'
         r.notes = f'{len(unsupported)} "interesting" prose claims lack formal support'
     elif not interesting:
-        r.state = 'passed'
-        r.notes = 'no interesting prose claims flagged'
+        # ⚠️ CORROBORATE (2026-08-05, PR-review pass 2) — same shape as
+        # ParameterProvenance above. `prose_claims` are GRAPH nodes filtered by
+        # `meta.paper`, so zero of them means either "the abstract makes no
+        # interesting claims" or "the abstract was never extracted". A paper whose
+        # prose was never ingested passed NarrativeGrounding cleanly.
+        #
+        # A draft with an abstract but NO ProseClaim nodes at all is an extraction
+        # gap: the gate verified nothing. `open`, so the reviewer sees it.
+        tex = idx.paper_tex(paper_key)
+        has_abstract = bool(tex) and '\\begin{abstract}' in tex
+        if has_abstract and not prose_claims:
+            r.state = 'open'
+            r.notes = ('NOT ESTABLISHED — the draft has an abstract but NO ProseClaim '
+                       'nodes exist for it, so no narrative claim was examined. Either '
+                       'the abstract makes no interesting claims (clean) or prose '
+                       'extraction did not run for this paper (nothing was checked).')
+        else:
+            r.state = 'passed'
+            r.notes = ('no interesting prose claims flagged'
+                       + ('' if prose_claims else ' (and the draft has no abstract block)'))
     else:
         r.state = 'passed'
         r.notes = 'all interesting claims have SUPPORTS edges'
