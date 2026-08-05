@@ -482,32 +482,22 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
     ),
 }
 
-#: Checks with no both-directions test yet. **This list may only shrink.**
-#: Emptying it is audit workstream W-D; see
-#: `docs/audits/2026-08-04-qa-qi-infrastructure/README.md` (QI-27).
-AWAITING_MUTATION_TEST: frozenset[str] = frozenset({
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-})
+#: Checks with no both-directions test yet. **EMPTY as of 2026-08-04, and it may
+#: only shrink** — so adding a name here is not a deferral, it breaks the ceiling
+#: immediately. That is the intended cost: with the backlog at zero there is no
+#: longer a queue for an untested check to join.
+#:
+#: If you genuinely must defer one, raise `AWAITING_CEILING` in the same commit with
+#: a stated reason. That is a decision on the record rather than a drift, which is the
+#: whole point of the ratchet — but it also un-does the property this file now holds.
+AWAITING_MUTATION_TEST: frozenset[str] = frozenset()
 
-#: The ratchet. Measured 2026-08-04. It may be LOWERED, never raised.
-#: History: 54 (seeded) -> 50 (reviews.py) -> 44 (lean_substrate.py)
-#: -> 35 (physics.py) -> 29 (lean_statements.py + notebooks.py) -> 23 (freshness.py) -> 17 (lean_toolchain.py) -> 14 (graph_atlas.py) -> 11 (papers_prose.py) -> 9 (prose_lean_refs.py) -> 5 (citations.py) -> 0 (bundles_readiness.py). EMPTY.
+#: The ratchet. It may be LOWERED, never raised (see above).
+#: History, one step per module as audit workstream W-D worked the backlog down:
+#:   54 (seeded) -> 50 reviews -> 44 lean_substrate -> 35 physics
+#:   -> 29 lean_statements + notebooks -> 23 freshness -> 17 lean_toolchain
+#:   -> 14 graph_atlas -> 11 papers_prose -> 9 prose_lean_refs -> 5 citations
+#:   -> 0 bundles_readiness.  **EMPTY.**
 AWAITING_CEILING = 0
 
 
