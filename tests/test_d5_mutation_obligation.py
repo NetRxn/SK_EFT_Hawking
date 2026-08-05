@@ -378,6 +378,23 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
         "QI-27 — dropping the third-party exemption and widening the mathlib context "
         "are both CAUGHT",
     ),
+    # prose_lean_refs.py: 12 tests / 8 mutations. Covers the step the pre-existing
+    # test_validate_prose_checks.py could not: it exercises the pure cores thoroughly
+    # but reaches the CHECKS only through a live-tree smoke test, so the propagation
+    # from "the core found a problem" to "the check FAILS" was untested.
+    "prose_theorem_reference_coverage": (
+        "test_d5_prose_lean_refs.py",
+        "4 mutations incl. `all(...)` -> `any(...)` on the disclaimer exemption — one "
+        "disclaimed mention must not excuse a bare one elsewhere in the same draft. "
+        "The missing-lean_deps FAIL (the strict side of the H4 divergence) is pinned",
+    ),
+    "theorem_name_embedded_citations": (
+        "test_d5_prose_lean_refs.py",
+        "4 mutations. TWO were MISSED until the tests asserted the DETAIL as well as "
+        "the verdict: the strict branch only sets how a finding RENDERS (the verdict "
+        "comes from a separate line), and the no-inferable-author skip changes no "
+        "verdict at all, so its emitted detail is the only observable",
+    ),
 }
 
 #: Checks with no both-directions test yet. **This list may only shrink.**
@@ -398,15 +415,15 @@ AWAITING_MUTATION_TEST: frozenset[str] = frozenset({
     "citation_primary_sources_present", "provenance_doi_in_registry", "bundle_consistency",
     "bibitem_title_primary_source", 
     "bundle_registry_consistency", 
-    "prose_theorem_reference_coverage", "theorem_name_embedded_citations",
+    
     
     
 })
 
 #: The ratchet. Measured 2026-08-04. It may be LOWERED, never raised.
 #: History: 54 (seeded) -> 50 (reviews.py) -> 44 (lean_substrate.py)
-#: -> 35 (physics.py) -> 29 (lean_statements.py + notebooks.py) -> 23 (freshness.py) -> 17 (lean_toolchain.py) -> 14 (graph_atlas.py) -> 11 (papers_prose.py).
-AWAITING_CEILING = 11
+#: -> 35 (physics.py) -> 29 (lean_statements.py + notebooks.py) -> 23 (freshness.py) -> 17 (lean_toolchain.py) -> 14 (graph_atlas.py) -> 11 (papers_prose.py) -> 9 (prose_lean_refs.py).
+AWAITING_CEILING = 9
 
 
 def _registered() -> list[str]:
