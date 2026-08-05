@@ -123,14 +123,53 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
         "(`evidence`/`rationale`/`note`) exercised, and the missing-ledger H1-silent site "
         "pinned so converting it to FAIL updates this test and the baseline together",
     ),
+    # lean_substrate.py: 34 tests / 12 mutations. One MISSED on the first pass, and it
+    # found a live defect (QI-28): six of nine `_LEDGER_HEDGE_RE` alternatives were
+    # stems closed with `\b` and could not match an inflected form, so correct
+    # bookkeeping prose would be flagged as an overclaim. The check was green and its
+    # test was green while a sixth of its logic could not execute.
+    "formulas": (
+        "test_d5_lean_substrate.py",
+        "2 mutations: the Lean-name resolution set, and `rglob` -> `glob` (the QI-01 "
+        "class at this call site). Reads the check's own `mapping` literal from the AST "
+        "so the fixture cannot go stale as formulas are added",
+    ),
+    "placeholder_not_cited": (
+        "test_d5_lean_substrate.py",
+        "2 mutations: the offender record, and the `_HEDGE_CLAIM_RE` conjunct — the "
+        "latter is what separates an honest statement-level disclosure from an "
+        "Invariant #9 overclaim. LaTeX-escaped-underscore and tex_signature legs too",
+    ),
+    "disclosure_consistency": (
+        "test_d5_lean_substrate.py",
+        "3 mutations incl. BOTH conjuncts separately, which is how QI-28 surfaced. "
+        "Pins `proven` as a deliberate NON-overclaim verb so it is not tightened back in",
+    ),
+    "proxy_body_audit": (
+        "test_d5_lean_substrate.py",
+        "2 mutations: the flag, and the `reason`+`discloses` completeness rule that "
+        "stops a bare whitelist entry being a free pass. Legs for lemma-scanning "
+        "(finding C1), subdirectory recursion, and baseline visibility",
+    ),
+    "tracked_hypothesis_ledger": (
+        "test_d5_lean_substrate.py",
+        "`gap` -> `[]` caught; consumption-gating and the Prop-codomain exclusion "
+        "exercised; the missing-lean_deps H4 divergence pinned as a known divergence",
+    ),
+    "tracked_hypotheses_fresh": (
+        "test_d5_lean_substrate.py",
+        "`if old == new` -> `if True` caught; plus a leg asserting the check does NOT "
+        "write the generated doc (ADR-004 W7 M1 — a check that repairs the tree makes "
+        "the drift invisible in review)",
+    ),
 }
 
 #: Checks with no both-directions test yet. **This list may only shrink.**
 #: Emptying it is audit workstream W-D; see
 #: `docs/audits/2026-08-04-qa-qi-infrastructure/README.md` (QI-27).
 AWAITING_MUTATION_TEST: frozenset[str] = frozenset({
-    "formulas", "placeholder_not_cited", "disclosure_consistency", "proxy_body_audit",
-    "tracked_hypothesis_ledger", "tracked_hypotheses_fresh", "formula_grounding",
+    
+    "formula_grounding",
     "vacuous_statement_audit", "nogo_substrate_integrity", "numerical", "identities",
     "paper_table", "d1_hierarchy_table", "f_hierarchy_claims", "theorems", "notebooks",
     "lean_source", "cgl_fdr", "lean_build", "axiom_closure_allowlist",
@@ -149,8 +188,8 @@ AWAITING_MUTATION_TEST: frozenset[str] = frozenset({
 })
 
 #: The ratchet. Measured 2026-08-04. It may be LOWERED, never raised.
-#: History: 54 (seeded) -> 50 (reviews.py).
-AWAITING_CEILING = 50
+#: History: 54 (seeded) -> 50 (reviews.py) -> 44 (lean_substrate.py).
+AWAITING_CEILING = 44
 
 
 def _registered() -> list[str]:

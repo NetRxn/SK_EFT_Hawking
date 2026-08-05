@@ -244,6 +244,35 @@ Legend: ⬜ open · 🔄 in progress · ✅ done (with the verifying evidence na
       **Lower `AWAITING_CEILING` in the same commit as every test you add**, or the ratchet stops
       biting.
 
+      **Progress.** Ceiling history: 54 (seeded) → 50 (`reviews.py`) → 44 (`lean_substrate.py`).
+
+- [x] **QI-28** ✅ **FIXED 2026-08-04 — found BY the D5 work, not by reading.**
+      `lean_substrate._LEDGER_HEDGE_RE` listed nine honest-framing alternatives for a bookkeeping
+      theorem. Six of them (`tabulat`, `aggregat`, `enumerat`, `bookkeep`, `summari[sz]`, and the
+      `tall`-stem) were written as **stems but closed with `\b`**, so they could match only the bare
+      stem — a form nobody writes. Measured: `tabulated`, `tabulates`, `aggregates`, `enumerates`,
+      `bookkeeping`, `summarizes` all failed to match. Only `record(s|ed)?`, `tallies` and
+      `classification ledger` worked.
+      **Direction matters:** a hedge SUPPRESSES a flag, so the dead alternatives meant correct
+      bookkeeping prose would be flagged as an Invariant-#9-style overclaim — a guard firing on
+      correct data, which this project holds to be *worse than no guard* (the standing rule recorded
+      in `reviews.py`'s own not-shipped `ledger_evidence_names_its_finding` note).
+      **Measured verdict movement: 0.** 21 disclosed definitional/vacuous_proxy theorems across the
+      64-draft corpus produce **0 overclaim-verb windows** today, so 0 flags before and 0 after —
+      latent, closed rather than surfaced (same posture as QI-01 and `5228ed6d`).
+      **How it was found:** the mutation dropping the `_LEDGER_HEDGE_RE` conjunct was **MISSED**.
+      The hedge test used *"records the closure"*, which carries no overclaim verb, so the FIRST
+      conjunct short-circuited and the hedge was never reached. Strengthening the test to put both
+      in one window exposed the dead alternatives.
+      **Guard:** `test_a_ledger_hedge_beside_an_overclaim_verb_suppresses` (behavioural) plus
+      `test_every_hedge_alternative_can_match_an_inflected_form` (structural — protects the next
+      alternative someone adds, not just the ones there now, per the §4b lesson).
+
+      ⚠️ **This is the first defect the D5 obligation FOUND rather than documented**, and it makes
+      the case for the obligation better than the ADR does: the check was green, its test was green,
+      and a sixth of its logic could not execute. It is also the second time in this audit that a
+      *missed* mutation was the informative result — the first deleted dead code from the QI-03 fix.
+
 ---
 
 ## 4. Recorded, not scheduled

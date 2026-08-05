@@ -219,9 +219,28 @@ _OVERCLAIM_VERB_RE = re.compile(
     r"\b(establish(es|ed)?|demonstrat(es|ed)?|guarante(es|ed)|confirm(s|ed))\b",
     re.IGNORECASE)
 # Honest framings for a bookkeeping / definitional theorem near its name.
+#
+# ⚠️ FIVE OF NINE ALTERNATIVES COULD NOT MATCH ANYTHING (fixed 2026-08-04, audit
+# QI-28). The pattern was `\b(record(s|ed)?|tabulat|aggregat|enumerat|bookkeep|
+# tallies|classification\s+ledger|summari[sz])\b` — stems written for prefix
+# matching, but closed with `\b`. A trailing word boundary after `tabulat`
+# requires the next character to be a non-word one, so `tabulated`, `tabulates`,
+# `aggregates`, `enumerates`, `bookkeeping` and `summarizes` all FAILED to match
+# while the bare stems (which never occur in prose) were the only accepted forms.
+# Measured: 6 of the 9 alternatives matched no inflected form at all.
+#
+# Direction of the defect: a hedge SUPPRESSES a flag, so a dead alternative means
+# prose that should be exempt gets FLAGGED — a guard firing on correct data, which
+# this project holds to be worse than no guard. Measured on the live corpus at the
+# fix: 0 overclaim-verb windows, so 0 flags before and 0 after. The hole was
+# LATENT, and this closes it rather than moving a verdict (same posture as QI-01).
+#
+# Found by mutation, not by reading: dropping the `_LEDGER_HEDGE_RE` conjunct
+# failed no test, because the hedge test used "records" — which fails the
+# OVERCLAIM conjunct first, so the hedge was never exercised.
 _LEDGER_HEDGE_RE = re.compile(
-    r"\b(record(s|ed)?|tabulat|aggregat|enumerat|bookkeep|tallies|"
-    r"classification\s+ledger|summari[sz])\b", re.IGNORECASE)
+    r"\b(record|tabulat|aggregat|enumerat|bookkeep|tall(y|ies)|"
+    r"classification\s+ledger|summari[sz])", re.IGNORECASE)
 
 
 @register_check(
