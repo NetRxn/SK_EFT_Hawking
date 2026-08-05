@@ -40,9 +40,24 @@ WHAT THIS FILE ENFORCES
    it, moving a name from the backlog to the verified list would be free.
 
 ⚠️ **THIS FILE DOES NOT PROVE A TEST IS GOOD.** It proves the project has made a
-DECISION about every check and cannot silently add an untested one. Raising the
-verified count is the real work (audit W-D); this stops the population growing
-while that happens. Do not read a green run here as coverage.
+DECISION about every check and cannot silently add an untested one. Do not read a
+green run here as coverage — read the named test.
+
+**STATUS 2026-08-04: THE BACKLOG IS EMPTY. All 59 registered checks are
+mutation-verified, `AWAITING_MUTATION_TEST` is empty and `AWAITING_CEILING` is 0.**
+
+That changes what this file is for. It was written to stop the untested population
+GROWING while audit W-D worked it down; with the backlog at zero the ceiling now
+holds the line at 100%, and the first check added without a both-directions test
+fails on arrival rather than being absorbed into a backlog. Adding a name to
+`AWAITING_MUTATION_TEST` is no longer a deferral — it breaks the ceiling
+immediately, which is the intended cost.
+
+⚠️ **A `MUTATION_VERIFIED` entry is a claim, and claims decay.** Each names the test
+and what was mutated; the mutation runs themselves live in the commits. If you
+change a check's logic, its recorded mutations no longer describe the code — re-run
+them rather than trusting the entry. The seam guard below only proves the named test
+EXISTS and mentions the check.
 
 MUTATION-VERIFIED 2026-08-04, both directions:
   * register a check absent from both lists -> test_every_check_is_accounted_for FAILS
@@ -426,6 +441,45 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
         "untested until a fixture reproduced the actual BLOCKER — a title matching "
         "closely but missing one word",
     ),
+    # bundles_readiness.py: 28 tests / 14 mutations — the LAST module. This is where
+    # false green lives: five separate handlers here were converted from fail-open to
+    # fail-closed, and each is a leg, because reverting one restores a check that still
+    # LOOKS like it is working.
+    "bundle_metadata_matches_graph": (
+        "test_d5_bundles_readiness.py",
+        "4 mutations. The stage13_status green-with-blockers rule is the guard whose "
+        "own committed mutation record reads `PASS <-- missed` (the test existed, the "
+        "guard did not). A separate leg isolates the COUNT comparison, which was not "
+        "load-bearing while the green rule carried the verdict",
+    ),
+    "readiness_verdicts_agree": (
+        "test_d5_bundles_readiness.py",
+        "5 mutations incl. the REVERSE direction (heatmap GREEN while a P1 gate is "
+        "blocked — live on D6) and the GLOBAL zero-gate guard, isolated with an "
+        "all-GREEN roster where nothing else inspects the gate population. That empty "
+        "population is the round-8 state: evaluate_all_gates renamed, every readiness "
+        "check green with nothing to check",
+    ),
+    "bundle_consistency": (
+        "test_d5_bundles_readiness.py",
+        "the cross-bundle cluster scan caught; a missing index FAILS and names the "
+        "command that builds it, and exact-match clusters are consistent by "
+        "construction so flagging them would manufacture work",
+    ),
+    "bundle_registry_consistency": (
+        "test_d5_bundles_readiness.py",
+        "3 mutations across legs B and C. Leg C is the STRUCTURAL guard — a literal "
+        "roster planted in a new scripts/*.py is detected, and a sub-threshold grouping "
+        "is not. Also pins ADR-009 H2: removing the `validate`/BUNDLE_CODES consumer "
+        "entry is PROHIBITED",
+    ),
+    "bundle_figure_integrity": (
+        "test_d5_bundles_readiness.py",
+        "a missing shipped PNG FAILS rather than skipping; the 8.0pt legibility floor "
+        "is pinned from the AST so it cannot be quietly lowered to make a figure pass. "
+        "Stage-9 round 5 found this checker had ZERO consumers repo-wide — honest but "
+        "not binding",
+    ),
 }
 
 #: Checks with no both-directions test yet. **This list may only shrink.**
@@ -437,15 +491,15 @@ AWAITING_MUTATION_TEST: frozenset[str] = frozenset({
     
     
     
-    "bundle_figure_integrity", 
     
     
     
-    "bundle_metadata_matches_graph",
-    "readiness_verdicts_agree",
-    "bundle_consistency",
     
-    "bundle_registry_consistency", 
+    
+    
+    
+    
+    
     
     
     
@@ -453,8 +507,8 @@ AWAITING_MUTATION_TEST: frozenset[str] = frozenset({
 
 #: The ratchet. Measured 2026-08-04. It may be LOWERED, never raised.
 #: History: 54 (seeded) -> 50 (reviews.py) -> 44 (lean_substrate.py)
-#: -> 35 (physics.py) -> 29 (lean_statements.py + notebooks.py) -> 23 (freshness.py) -> 17 (lean_toolchain.py) -> 14 (graph_atlas.py) -> 11 (papers_prose.py) -> 9 (prose_lean_refs.py) -> 5 (citations.py).
-AWAITING_CEILING = 5
+#: -> 35 (physics.py) -> 29 (lean_statements.py + notebooks.py) -> 23 (freshness.py) -> 17 (lean_toolchain.py) -> 14 (graph_atlas.py) -> 11 (papers_prose.py) -> 9 (prose_lean_refs.py) -> 5 (citations.py) -> 0 (bundles_readiness.py). EMPTY.
+AWAITING_CEILING = 0
 
 
 def _registered() -> list[str]:
