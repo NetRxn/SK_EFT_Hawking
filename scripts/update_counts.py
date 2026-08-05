@@ -93,7 +93,7 @@ def is_native_decide_axiom(a) -> bool:
     `is_native_decide` inside `axiom_closure_allowlist` — which is the same
     duplicate-policy shape as the eight divergent `lean_deps.json` loaders
     ADR-009 H4 catalogues. A third copy was about to be written for
-    `native_decide_regression` (ADR-009 Phase 3 item 3); it imports this instead.
+    `native_decide_regression` (ADR-009 §Deferred item 1); it imports this instead.
     """
     s = str(a)
     return "native_decide" in s or s in ("Lean.ofReduceBool", "Lean.trustCompiler")

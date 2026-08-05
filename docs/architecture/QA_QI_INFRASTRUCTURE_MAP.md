@@ -308,7 +308,7 @@ flowchart TB
 uncommitted, so **a fresh clone has no mechanical gate at all.** The web-egress guard is the one
 unambiguously fail-closed control in the system.
 
-**Reports but never blocks.** Eight checks were structurally incapable of returning `passed=False`.
+**Reports but never blocks.** Eight checks were structurally incapable of returning `passed=False`. ⚠️ **That is a SYNTACTIC lower bound, not the population.** It was produced by an AST scan for a literal `passed=False`; `theorems` returned one syntactically while being unreachable in every leg (audit QI-30), so it was counted as capable and was not. A semantic-reachability re-measurement has not been run.
 **Four remain, all four deliberately advisory with a stated reason** (`elaboration_knob_watchlist`,
 `paper_toolchain_pin_drift`, `viz_consistency`, `inventory_index_autogen_fresh` — dispositioned
 individually in ADR-009 §Deferred item 3). Of the four that were defects: `paper_latex_compiles` computed

@@ -108,7 +108,7 @@ class TestVerdictFollowsClassification:
         r = self._verdict(gates, monkeypatch)
         assert r.passed is False, (
             "the submission gate reported PASS with a blocked P1 gate — it is "
-            "inverted again (ADR-009 §Deferred item 1)")
+            "inverted again (ADR-009 §Deferred item 2)")
 
     def test_the_failing_paper_carries_a_failing_detail(self, monkeypatch):
         """A red paper must not be reported as a passing detail with a warning

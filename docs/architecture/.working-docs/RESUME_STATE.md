@@ -18,14 +18,18 @@ without re-deriving it. Read this first, then the linked documents.
 > sites (`evaluate_all_gates`, `_blocked_p1_gates_by_paper`) were **CLOSED by `5228ed6d`**, after the
 > documents below were written — several still record them as open (audit finding QI-21/QI-22).
 >
-> ## ✅ THE QA/QI INFRASTRUCTURE AUDIT IS COMPLETE — 31 of 31 findings closed
+> ## 🔴 THE QA/QI INFRASTRUCTURE AUDIT IS **REOPENED** — 31 closed, 4 OPEN Criticals
 > A full direct read of the entire QA/QI surface (~17,700 lines, including `build_graph.py`, which
 > this file had recorded as never read) was completed 2026-08-04. It found **31 findings** across
 > four workstreams — one live enforcement hole, duplicated predicates, dead code, documentation
 > contradicting the code it describes, and D5's missing mechanical enforcement — and **all are now
 > closed**.
 >
-> **The load-bearing result: every one of the 59 checks is mutation-verified in both directions.**
+> ⚠️ **RETRACTED: "every one of the 59 checks is mutation-verified in both directions."**
+> PR review 2026-08-05 found FOUR checks that carry a MUTATION_VERIFIED entry, a passing
+> both-directions test, and **no ability to fail in production** (QI-31…QI-34). What the
+> registry certifies is that a decision was recorded and the named test references the check
+> in code — not that the check can fail. Read the tracker before quoting any coverage number.
 > `AWAITING_MUTATION_TEST` is empty and its ceiling is **0**, so a new check that ships without a
 > both-directions test **fails on arrival**. That discharges ADR-009 D5, the obligation its own
 > §Context calls *"the one that caused the damage"* — it had shipped as prose, and 32 of 59 checks
@@ -159,7 +163,7 @@ result was merely CONSISTENT with it. A verification that cannot distinguish the
 launders the claim instead of testing it.)*
 
 **`infra/adr-009-validation-modularization`** — ALL infrastructure work, off main until every phase is done
-(operator ruling 2026-08-03). **56 commits ahead of main, 0 behind** — re-count with `git rev-list --count main..HEAD` rather than trusting this number; it was "35" and stale by 20 within a day (audit finding QI-24).
+(operator ruling 2026-08-03). **76 commits ahead of main, 0 behind** — re-count with `git rev-list --count main..HEAD` rather than trusting this number; it was "35" and stale by 20 within a day (audit finding QI-24).
 Recent:
 
 ```
@@ -213,7 +217,7 @@ portfolio re-assessment (ADR-010). ADR-008 onboarding third, deferred by decisio
 
 | Workstream | Deliverable | State |
 |---|---|---|
-| **W1 — ADR-009** | validation-suite modularization + the mutation-test obligation | ✅ **DELIVERED.** Phases 0–3 complete, all 8 §Deferred dispositioned. ⚠️ Post-delivery audit found 27 further items — see the tracker |
+| **W1 — ADR-009** | validation-suite modularization + the mutation-test obligation | ✅ **DELIVERED.** Phases 0–3 complete, all 8 §Deferred dispositioned. ⚠️ Post-delivery audit found 31 findings, ALL CLOSED — see the tracker |
 | **W2 — ADR-010** | portfolio purpose / distribution / late-phase absorption — **a DOCUMENT** | **CHARTER AUTHORED 2026-08-04**, analysis pending W1 |
 | W3 — ADR-008 | Claude-Code onboarding | DEFERRED. `tangential-items.md` T2 |
 
@@ -293,7 +297,9 @@ between. On a wave close the two groups validated different extractions inside o
   `_LEAN_AMBIGUITY_SEEN`, which is why `provenance_dashboard.py` caches at the CALLER with a fingerprint
   and a lock. A correct validate-side handle needs signature changes across `bundle_readiness` and
   `readiness_gates`. Residue: adopt the dashboard's pattern if runtime ever matters.
-  ⚠️ `build_graph.py` NOT read in full — implementing this later requires that read first.
+  ✅ `build_graph.py` HAS been read in full (2026-08-04, QA/QI audit) — that precondition is
+  discharged. The DECLINE itself is unchanged: the read confirmed the module-scoped state it
+  rests on and found no cheaper seam.
 
 **✅ Item 4 — DISPOSITIONED 2026-08-04. Type change DECLINED, generator CLOSED.**
 *Measured:* **60 cannot-measure return sites across the 59 checks — 35 FAIL (58% converted), 25 PASS**,
@@ -306,9 +312,17 @@ collapsing to **22 (check, kind) pairs**. The filed "~20 sites" was close; it is
 - **✅ FIXED — `tests/test_cannot_measure_baseline.py`** freezes the 22 and fails on growth (house ratchet
   idiom). Fires both ways: a new silent PASS fails until added deliberately; a site converted to FAIL
   fails until removed, so the ratchet tightens. A third test guards the scanner seam. 3 mutations caught.
-- ⚠️ **Out of the ratchet's reach, by scope:** `evaluate_all_gates` (exception → `open` → YELLOW not RED)
-  and `_blocked_p1_gates_by_paper` (exception → `{}` → P1 downgrade dropped). Neither returns a
-  `CheckResult`. Readiness-layer work → publication workstream.
+- ✅ **CLOSED by `5228ed6d` (2026-08-04) — the "by scope" disposition was WRONG.**
+  `evaluate_all_gates` (exception → `open` → YELLOW not RED) and `_blocked_p1_gates_by_paper`
+  (exception → `{}` → P1 downgrade dropped) are code defects in the readiness layer with no
+  dependency on any roster or paper decision. Neither returns a `CheckResult`, so
+  `test_cannot_measure_baseline.py` still cannot see them — `tests/test_readiness_cannot_measure.py`
+  is their guard. Audit finding QI-21.
+  ⚠️ This bullet read *"Out of the ratchet's reach, by scope … → publication workstream"* until
+  2026-08-05 — **290 lines below the banner that had already corrected it.** The identical
+  "survived 40 lines below its own correction" shape QI-24 fixed once in this same file, and the
+  audit's §2 table named this document for this exact row while asserting all six rows were
+  corrected. Only the banner had been.
 
 **⛔ Item 5 — `count_literals` ⊂ `axiom_count_prose_consistency`: THE PREMISE IS FALSE.** Both read
 2026-08-04; neither half survives. (a) `count_literals` is no longer "incapable of failing" — item 3 made

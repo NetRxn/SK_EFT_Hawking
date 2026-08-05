@@ -1,4 +1,4 @@
-"""ADR-009 Phase 3 item 3 — the native_decide ratchet measures live substrate.
+"""ADR-009 §Deferred item 1 — the native_decide ratchet measures live substrate.
 
 `native_decide_regression` read `docs/counts.json`. The metric is a pure function
 of `lean_deps.json`; `update_counts.py` merely records it. Reading the recording

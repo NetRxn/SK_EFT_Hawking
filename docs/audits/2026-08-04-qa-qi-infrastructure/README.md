@@ -1,6 +1,16 @@
 # QA/QI Infrastructure Audit — 2026-08-04
 
-**Status:** ✅ **COMPLETE — all 31 findings closed (W-A / W-B / W-C / W-D / W-E).**
+**Status:** 🔴 **NOT COMPLETE — REOPENED 2026-08-05 by multi-agent PR review.** 31 findings closed;
+**4 new Criticals (QI-31…QI-34) are OPEN and block merge.** All four are checks that **cannot fail**
+— the exact class this audit was convened to find, missed by it, and then "mutation-verified" by
+W-D's own tests.
+
+⚠️ **RETRACTED: "all 59 checks are mutation-verified in both directions."** That headline stood in
+this file, `RESUME_STATE.md` and ADR-009. What the D5 registry actually certifies is *"a decision was
+recorded for every check, and the named test references it in code"* — which is what
+`test_d5_mutation_obligation.py`'s own docstring says at §"THIS FILE DOES NOT PROVE A TEST IS GOOD."
+The stronger reading was mine and it was wrong. Four checks carry a `MUTATION_VERIFIED` entry, a
+passing both-directions test, **and no ability to fail in production.**
 *(31 = QI-01…QI-30 plus the QI-26b sub-finding. Counted as CHECKBOX ENTRIES in §3, not as the
 highest ordinal — the original filing said "27", which was the highest number at the time while
 the board already carried 28 entries. Re-count the boxes; do not read the last id.)* This remains the
@@ -279,9 +289,85 @@ Legend: ⬜ open · 🔄 in progress · ✅ done (with the verifying evidence na
       **Shipped as a RATCHET** (`ARISTOTLE_REGISTRY_UNRESOLVED_CEILING = 14`), not a hard fail: the
       house idiom, and it closes the generator without turning a registry cleanup into a red build.
       `validate.py --check theorems` still PASSES, now with the debt visible.
+      ✅ **THE CRITERION HAS NOW BEEN SWEPT (2026-08-05, PR review C2).** QI-30 introduced
+      *"a mutation caught against a patched fixture does not establish that the check can fail in
+      production"* and then recorded it as residue without applying it — the audit's own most-repeated
+      failure shape (cf. QI-01: *"already fixed once in `freshness.py` and not swept"*). Swept:
+      **module-level `assert`s across `src/` and `scripts/` = 10, of which exactly ONE governs a
+      check's inputs** (`constants.py:1372`, pinning `ARISTOTLE_PROVED_COUNT`). Two registered checks
+      read the names it pins — `theorems` (this finding) and `formulas`. `formulas` is **not** the
+      same shape: its failure path is a mapped theorem missing from the Lean name set, which the
+      assert does not gate, so it can fail in production. The other nine asserts are in `phase6p_*`
+      compiler scripts and gate no check.
+      **Result: the mechanism is unique and QI-30 was its only instance.** The criterion still
+      generalises — *a test that patches something invariant in production proves nothing about
+      production* — and is worth applying to any future check whose only failure path runs through
+      a compile-time-pinned constant.
+
       **Guard:** 7 tests / 4 mutations, plus a structural leg forbidding any comparison against an
       integer literal in the check body — which is why the display cap is a named `_SAMPLE` rather
       than an inline `8`.
+
+### W-F — OPEN: found by PR review 2026-08-05, block merge
+
+⚠️ **All four are the QI-30 shape, and all four were "verified" by W-D.** The lesson QI-30 recorded
+and I did not apply as a sweep — *seed the defect in the PRODUCTION artifact, not in a monkeypatched
+fixture* — is what would have caught every one.
+
+- [ ] **QI-31** 🔴 **`paper_table` never reads the paper.** `physics.py` resolves
+      `papers/paper1_first_order/paper_draft.tex` and uses it **only for `.exists()`**; the "paper"
+      side of the comparison is a hardcoded dict in the check body. Editing Paper 1's Table 1 to any
+      wrong value cannot fail the one check registered to catch exactly that.
+      **Measured: 11 of its 12 cells are byte-identical to `numerical`'s table**, compared against the
+      same `get_all_experiments()` source — the QI-30 "same comparison written twice" shape verbatim.
+      Only `Steinhauer.T_H` differs (5.78e-12 vs 6.0e-12), inside the 5% tolerance.
+      ⚠️ My D5 test seeded the defect on the **solver** side and wrote a fixture `.tex` containing the
+      literal string `"draft"` — no table at all — while its docstring claimed *"the published table
+      and the code disagree, which is the entire purpose of the check."*
+      **Fix:** parse the cells from the `.tex` as `d1_hierarchy_table` already does, and delete the
+      duplicated dict.
+
+- [ ] **QI-32** 🔴 **`paper_provenance`'s theorem-reference leg examines 0 of 1,963 candidates.**
+      `re.findall(r'\\texttt\{([a-z_][a-zA-Z0-9_]*)\}')` cannot cross a backslash, and LaTeX writes
+      underscores inside `\texttt{}` as `\_`. **Measured across all 64 drafts: 480 raw matches, 0
+      containing `_`, against 1,963 `\texttt{}` blocks that contain an escaped underscore** — i.e.
+      every real Lean theorem name. The 2,039-file `rglob` building a 19,108-name set is consumed by
+      nothing.
+      ⚠️ **This is the leg QI-01 "fixed."** The `glob`→`rglob` repair was applied to a leg that cannot
+      fire, and my QI-01 verdict-movement measurement of "zero" was true for that reason.
+      ⚠️ My D5 fixtures used raw `\texttt{real_theorem}` — the one input shape the check can parse and
+      the shape no real draft uses.
+      `paper_provenance` is one of four checks `gate_precheck.py s10` runs.
+
+- [ ] **QI-33** 🔴 **`bibitem_title_primary_source` cannot fail, and is suppressing 9 live flags.**
+      `summary_passed = not _cfg.STRICT_MODE or (...)` reduces to the literal `True` in every
+      automated run, and no caller passes `--strict`. Run live: **PASS with 9 DROP-WORD flags** — the
+      BLOCKER class it exists to detect. Confirmed samples include `Berti2025` and `DESI2024`
+      (registry titles carrying words absent from the cached PDF page 1), and `Turyshev2026DESI`,
+      which reads as a citation pointing at a different paper.
+      It is **not** in ADR-009 §Deferred item 3's disposition table, so it was never consciously
+      ruled advisory.
+
+- [ ] **QI-34** 🔴 **`recurrence_reopens_closures`' threshold is above its live maximum — the FOURTH
+      mis-calibration.** `_RECURRENCE_MIN_OVERLAP = 0.40`. **Measured on the live corpus: 7,489
+      candidate pairs, max Jaccard 0.3750.** Zero pairs can clear it; the `+0.10` section-number
+      tie-breaker tightens it further. Live output `213 compared / 0 contradicted` is the only
+      reachable result.
+      The in-body comment still cites a justifying 0.429 pair that no longer exists in the corpus —
+      the check's own documented failure mode (*"a constant set just under the live maximum by the
+      same commit that repaired the pair producing that maximum"*), for the fourth time.
+      ⚠️ My replacement test used synthetic fixtures scoring **Jaccard 1.0**, which is as disconnected
+      from the live distribution as the re-implemented matcher it replaced.
+      **Fix:** calibrate against the measured distribution (p99 0.200 / max 0.375) **and** add a test
+      asserting the live corpus max stays below the threshold by a stated margin, or the next corpus
+      shift silently re-deadens it.
+
+⬜ **Also open, filed not fixed:** ~17 Important findings from the same review — including
+`cross_path_consistency`'s two legs routing through the same function, `paper_latex_compiles`
+unreachable from every automated caller (18s when forced, so the "slow gate" rationale is stale),
+the three freshness regenerators that regenerate-then-pass and can never fail on staleness,
+`atlas_view.py`'s `SystemExit` aborting the remaining ~24 checks, and `notebook_exec`'s unsigned
+skip-cache. See the review record.
 
 ### W-D — the standing obligation (D5)
 

@@ -8,6 +8,31 @@
   Phases 0–2 were verified behaviour-preserving at every boundary (`CHARACTERIZATION HELD — 49 checks
   identical`); Phase 3's semantic fixes deliberately changed verdicts, each shipped with a
   both-directions mutation test or declined with the measurement that justifies declining.
+
+  > ⚠️ **CORRECTED 2026-08-04 (PR review). "Behaviour-preserving" above is not unqualified —
+  > Phase 0–1 carried at least one deliberate SEMANTIC change.** Commit `cdb81f7e`
+  > (*"ADR-009 Phases 0-1 — characterization harness + shared helpers"*) added a new suppression
+  > branch to `recurrence_reopens_closures`: a marginal Jaccard score now additionally requires the
+  > two findings' section numbers to agree (`reviews.py`, the `_MIN_OVERLAP + 0.10` band). Verified
+  > against the pre-branch base — the branch point has **zero** occurrences of that condition, so it
+  > was introduced by that commit, not moved by it. Its message mentions only *"de-nested the
+  > recurrence matcher"*.
+  >
+  > This is a **verdict-moving change to a guard whose threshold this project has already had to
+  > re-calibrate three times**, landed in the same commit as a mechanical helper extraction —
+  > exactly what D4 requires Phases 1–2 to exclude and what §Alternatives 2 rejects outright.
+  > The `CHARACTERIZATION HELD` result for that boundary is therefore load-bearing on the fact that
+  > **no live finding pair happened to sit in the 0.40–0.50 band**, not on the change being inert
+  > by construction. That is a weaker claim than the sentence above makes.
+  >
+  > The `stage13_status` guard (§Consequences) is the other Phase-0–1-era semantic addition, but it
+  > was landed under separate operator approval and is recorded as such. The tie-breaker was not.
+  > It is now covered by `tests/test_d5_reviews.py::…test_a_marginal_score_needs_the_section_number_to_agree`
+  > — **40 commits after it shipped**, which is the gap this correction exists to record.
+  >
+  > History is not being rewritten. What is corrected is the claim: read Phases 0–2 as
+  > *"behaviour-preserving except for two recorded semantic additions, one of which was not
+  > flagged at the time."*
 - **Decider:** John Roehm (project owner) — raised the concern that `scripts/validate.py` "has exploded in
   terms of ad-hoc edits", is "too big to read directly in one go", and that "agents were just adding to it
   without reading what already exists"; directed that the validation layer become "a legit module rather
@@ -718,8 +743,22 @@ Identified during the read; explicitly **not** part of Phases 0–2.
    achieved for any parameter a paper actually uses, and the strict leg additionally covers registry
    entries no paper depends on yet.
 
-   **Disposition: DECLINE.** There is no defect to fix here. `--strict` is a correctly-designed
-   submission-time mode; the automated submission gate exists and now blocks.
+   **Disposition: DECLINE THE FILED REMEDY.** `--strict` is a correctly-designed submission-time
+   mode, and the automated submission gate exists and now blocks — so the filing's premise
+   ("`--strict` is dead code") is wrong and its count was wrong.
+
+   ⚠️ **CORRECTED 2026-08-04 (PR review). This clause read "There is no defect to fix here," which
+   its own next paragraph contradicts.** Five of the six strict legs enforce concerns **no
+   ReadinessGate covers**, nothing automated passes the flag, and there is no CI at all
+   (verified: no `.github/workflows`, no submission-gate runner in `scripts/`). Meanwhile
+   `WAVE_EXECUTION_PIPELINE.md` Invariant #12 calls `--strict` *"mandatory at the Paper Submission
+   Gate"* and `scripts/check_bundle_source_freshness.py` says its rule is enforced *"via
+   `validate.py --strict`."*
+
+   An invariant declared mandatory with nothing that runs it is a **gap in enforcement**, even
+   though the decision about what to do (add gates / mechanize a runner / accept them as
+   human-run) is the operator's. Say that, rather than "no defect": the residue below is
+   unenforced, not merely unbuilt.
 
    **Residue, recorded and NOT built** (`REMEDIATION_PLAN.md` §6a: identify → establish existing
    coverage by reading the code → describe the residue → request approval → only then build): **five
@@ -839,7 +878,10 @@ same discipline as §Deferred item 7's four-way miscount.)*
 
 ## ✅ D5 — the standing obligation is DISCHARGED (2026-08-04)
 
-**D5 shipped as prose and is now mechanical AND satisfied.** `tests/test_d5_mutation_obligation.py`
+**D5 shipped as prose and is now mechanical. It is NOT yet satisfied.**
+⚠️ *Corrected 2026-08-05:* PR review found four checks with a `MUTATION_VERIFIED` entry that
+cannot fail in production (audit QI-31…QI-34). The obligation's MECHANISM is in place and
+holds; the claim that all 59 are verified in both directions is retracted. `tests/test_d5_mutation_obligation.py`
 requires every registered check to declare its test status, and as of the QA/QI audit's workstream
 W-D **all 59 checks are mutation-verified** — `AWAITING_MUTATION_TEST` is empty and its ceiling is
 **0**, so the next check added without a both-directions test fails on arrival rather than being

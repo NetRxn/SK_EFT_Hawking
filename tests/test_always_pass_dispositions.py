@@ -1,7 +1,7 @@
-"""ADR-009 Phase 3 item 2 — the three always-pass checks that were defects.
+"""ADR-009 §Deferred item 3 — the three always-pass checks that were defects.
 
 Eight checks were structurally incapable of returning `passed=False`.
-`readiness_submission_gate` was item 1. Of the seven that remained, four are
+`readiness_submission_gate` was §Deferred item 2. Of the seven that remained, four are
 **honestly advisory with a stated reason** and stay that way (see the ADR's
 disposition table); three were not, and are fixed here:
 
@@ -124,7 +124,7 @@ class TestLatexCompileVerdict:
         r = self._run(tmp_path, monkeypatch, {"D1": self.BAD})
         assert r.passed is False, (
             "a draft with fatal LaTeX errors reported PASS — the verdict is being "
-            "discarded again (ADR-009 Phase 3 item 2)")
+            "discarded again (ADR-009 §Deferred item 3)")
         # ...and rendered as a FAILURE, not a ⚠. The original emitted
         # `passed=False, warning=True`, which print_results shows with a warning
         # glyph — a failing item that reads as advisory, one layer down from the
