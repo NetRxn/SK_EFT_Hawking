@@ -78,7 +78,33 @@ def _is_kernel_pure(rec: dict) -> bool:
             and core.issubset(KERNEL_AXIOMS) and not _has_sorry(rec))
 
 
+#: Lean-synthesised declarations: structure eliminators, match arms, internal
+#: proof obligations. They are compiler artifacts, never mathematical content.
+_AUTOGEN_RE = re.compile(
+    r"\.(casesOn|recOn|rec|ctorIdx|toCtorIdx|match_\d[\d_]*|proof_\d[\d_]*|noConfusion\w*|below|"
+    r"ibelow|brecOn|binductionOn|sizeOf\w*|injEq|eq_def)\b|\._(sunfold|eq_\d[\d_]*|proof_\d[\d_]*)")
+
+
 def _is_obstruction(rec: dict) -> bool:
+    # ⚠️ AUTO-GENERATED DECLARATIONS ARE NEVER OBSTRUCTIONS (2026-08-05, PR-review
+    # pass 2, R6-M1). Both tests below match against a FULLY QUALIFIED name, so a
+    # declaration inside e.g. `SKEFTHawking.DarkEnergyObstructionPrinciple` matched
+    # on its NAMESPACE. That swept in Lean-synthesised artifacts:
+    # `EmergentDarkEnergyModel.casesOn`, `.ctorIdx`, `.match_1_1` were all being
+    # ranked on the atlas NEGATIVE FRONTIER — the view a `/goal` loop consults to
+    # steer away from provably-dead paths.
+    #
+    # MEASURED at the fix: 577 classified OBSTRUCTION; 284 justified by the leaf
+    # name or a negated type; 293 by namespace alone, of which **68 were
+    # auto-generated** (44 `def` + 24 `theorem`). Excluding those is not a policy
+    # change — a structure eliminator is not a mathematical claim of any kind.
+    #
+    # The remaining 225 (genuine declarations that live in a no-go namespace) are
+    # left classified: whether "lives in `BCJNoGo`" should itself imply OBSTRUCTION
+    # is a real design question, and answering it by editing a regex would be
+    # deciding it silently. Filed for an explicit call.
+    if _AUTOGEN_RE.search(rec.get("name", "")):
+        return False
     if _NOGO_RE.search(rec.get("name", "")) or _NOGO_RE.search(rec.get("module", "")):
         return True
     t = (rec.get("type") or "").lstrip()

@@ -8,8 +8,8 @@ _Source: 26103 theorem nodes, 48 tracked open assumptions, 72 IMPLIES edges._
 
 | | count |
 |---|---:|
-| ✅ TRUE (proved) | 25673 |
-| ⛔ OBSTRUCTION (no-go) | 430 |
+| ✅ TRUE (proved) | 25693 |
+| ⛔ OBSTRUCTION (no-go) | 410 |
 | ❓ open (tracked assumptions) | 48 |
 | ★ apex (headline open targets) | 1 |
 

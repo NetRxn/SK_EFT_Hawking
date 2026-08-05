@@ -499,3 +499,55 @@ class TestInferBundleFromTextIsActuallyTested:
         """`(?=$|[-_.])` — 'D1abc' is not bundle D1."""
         assert self._infer("D1abc.md") is None
         assert self._infer("Ffoo.md") is None
+
+
+def build_graph_atlas_is_obstruction(rec):
+    """Reach the production predicate through its owning module."""
+    import atlas_view
+    return atlas_view._is_obstruction(rec)
+
+
+class TestAutogenIsNotAnObstruction:
+    """⚠️ PR-review pass 2, R6-M1. `_is_obstruction` tests a FULLY QUALIFIED name,
+    so anything inside a namespace like `DarkEnergyObstructionPrinciple` matched on
+    its namespace — including Lean-synthesised artifacts.
+
+    Measured at the fix: **577** declarations classified OBSTRUCTION; 284 justified
+    by the leaf name or a negated type; 293 by namespace alone, of which **68 were
+    auto-generated** (44 `def`, 24 `theorem`). Those were being ranked on the atlas
+    NEGATIVE FRONTIER — the view a `/goal` loop reads to steer away from dead paths.
+
+    ⚠️ This count has been measured four times across two review passes (pass 1:
+    29 from 3 modules; the lead's re-count: same; R6: 144 from 14; here: 577/293/68).
+    They disagree because each used a different predicate, not because the data
+    moved. Assert against the predicate, and state it.
+    """
+
+    def _rec(self, name, module="SKEFTHawking.Foo", typ="Prop", kind="theorem"):
+        return {"name": name, "module": module, "type": typ, "kind": kind}
+
+    def test_structure_eliminators_in_a_nogo_namespace_are_NOT_obstructions(self):
+        """FIRES ON THE SEEDED DEFECT: drop the `_AUTOGEN_RE` guard and these are
+        classified as mathematical obstructions."""
+        ns = "SKEFTHawking.DarkEnergyObstructionPrinciple"
+        for leaf in ("EmergentDarkEnergyModel.casesOn",
+                     "EmergentDarkEnergyModel.ctorIdx",
+                     "EmergentDarkEnergyModel.recOn",
+                     "H_Something_falsified.match_1_1"):
+            rec = self._rec(f"{ns}.{leaf}", module=ns)
+            assert build_graph_atlas_is_obstruction(rec) is False, (
+                f"{leaf} classified as an OBSTRUCTION — it is a Lean-synthesised "
+                f"artifact, not a mathematical claim")
+
+    def test_a_REAL_nogo_declaration_is_still_an_obstruction(self):
+        """SILENT ON CORRECT DATA — the exclusion must not blind the frontier."""
+        rec = self._rec("SKEFTHawking.SoftTheorems.DissipativeNoGo.dissipative_no_go",
+                        module="SKEFTHawking.SoftTheorems.DissipativeNoGo")
+        assert build_graph_atlas_is_obstruction(rec) is True
+
+    def test_a_negated_type_is_still_an_obstruction(self):
+        rec = self._rec("SKEFTHawking.Foo.some_lemma", typ="¬ P")
+        assert build_graph_atlas_is_obstruction(rec) is True
+
+    def test_an_ordinary_theorem_is_not(self):
+        assert build_graph_atlas_is_obstruction(self._rec("SKEFTHawking.Foo.bar")) is False
