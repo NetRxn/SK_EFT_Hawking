@@ -1,12 +1,21 @@
 # QA/QI Infrastructure Audit — 2026-08-04
 
-**Status:** 🟡 **W-A / W-B / W-C COMPLETE — W-D remains.** 26 of 27 findings closed; the one open
-item is QI-27 (D5: mutation tests for 43 checks + a mechanical gate). This is the live tracker —
-update the checkboxes in §3 as work lands and keep the measurement column honest.
+**Status:** ✅ **COMPLETE — all 28 findings closed (W-A / W-B / W-C / W-D).** This remains the
+tracker; keep the measurement column honest if anything reopens.
 
-**Verified at the last increment:** fast suite **5080 passed / 5 skipped / 0 failed**;
-characterization **HELD — 49 checks identical** across W-B and W-C; the two W-A behaviour changes
-each attributed in full. Branch **56 commits ahead of `main`, 0 behind — NOT merged.**
+**The headline result: `AWAITING_MUTATION_TEST` is EMPTY.** All **59 registered checks are
+mutation-verified** in both directions, and `AWAITING_CEILING` is **0** — so the next check added
+without a both-directions test fails on arrival rather than being absorbed into a backlog. ADR-009
+D5, the obligation its own §Context calls *"the one that caused the damage"*, is discharged.
+
+**Verified at close:** fast suite **5398 passed / 5 skipped / 0 failed** (5055 at audit open,
+5086 at W-C close); `validate.py` **57 of 59**, the two reds unchanged and both owned by the
+publication workstream. Branch **NOT merged** — verify with
+`git merge-base --is-ancestor HEAD main` rather than inheriting this line.
+
+**Scale of W-D:** ~330 new tests across 11 files, **~150 AST-scoped mutations**. Roughly a third
+came back **MISSED on first run**, and *in every case the finding was real* — either the guard was
+inert or the test was. That ratio, not the final green, is the argument for D5.
 
 **Scope.** The complete QA/QI enforcement surface on `infra/adr-009-validation-modularization`:
 `scripts/validate.py`, all 12 `scripts/validation/**`, `scripts/validate_helpers.py`,
@@ -49,8 +58,9 @@ the last:
 4. ✅ **Documentation contradicting the code it describes** — including three in-code headers telling
    a reader a repaired check was still broken (QI-12 … QI-26b).
 
-⬜ **Remaining: the standing obligation ADR-009 itself calls the disease** — **D5 has no mechanical
-enforcement, and 32 of 59 checks have no test at all** (QI-27).
+5. ✅ **The standing obligation ADR-009 itself calls the disease** — D5 had no mechanical
+   enforcement and 32 of 59 checks had no test at all. Both closed (QI-27): the obligation is a
+   registered gate, and the untested population is **zero**.
 
 ---
 
@@ -208,9 +218,9 @@ Legend: ⬜ open · 🔄 in progress · ✅ done (with the verifying evidence na
 
 ### W-D — the standing obligation (D5)
 
-- [ ] **QI-27** 🔄 **IN PROGRESS.** D5 — *"every new or modified check ships a mutation test proving
-      both directions"* — shipped as **prose with no enforcement**. ADR-009 §Context names this as the
-      one of its three problems that *"caused the damage"*.
+- [x] **QI-27** ✅ **CLOSED 2026-08-04 — the backlog is EMPTY.** D5 — *"every new or modified check
+      ships a mutation test proving both directions"* — shipped as **prose with no enforcement**.
+      ADR-009 §Context names it as the one of its three problems that *"caused the damage"*.
 
       ✅ **The obligation is now MECHANICAL:** `tests/test_d5_mutation_obligation.py`. Every registered
       check must appear in exactly one of `MUTATION_VERIFIED` (naming the test, with the mutation
@@ -228,23 +238,42 @@ Legend: ⬜ open · 🔄 in progress · ✅ done (with the verifying evidence na
       structure — the kind of proxy that produced `recurrence_reopens_closures`' three mis-calibrations
       and the eight inert guards. A registry that must be edited deliberately is honest.
 
-      ⬜ **The remaining work is the backlog itself: 54 checks await a both-directions test.**
-      Seeded `MUTATION_VERIFIED` with the 5 the ADR documents (`readiness_submission_gate`,
-      `native_decide_regression`, `paper_latex_compiles`, `count_literals`, `numerical_literals`).
-      ⚠️ The map's §6 figures do not sum (10 + 11 + 32 = 53, not 59) and were **not** used to seed this;
-      only checks with a mutation documented in the ADR or a commit were admitted. Measured
-      independently: **16 checks are named in no real test file at all** —
-      `accepted_findings_carry_rationale`, `atlas_hypothesis_discipline`, `bundle_figure_integrity`,
-      `bundle_metadata_matches_graph`, `claim_clusters_fresh`, `cross_path_consistency`,
-      `elaboration_knob_watchlist`, `lean_docstring_refs_resolve`, `notebook_stored_outputs_current`,
-      `paper_provenance`, `physical_bounds`, `review_docs_mint_findings`, `review_severity_declared`,
-      `tables_fresh`, `tracked_hypotheses_fresh`, `viz_consistency` — and those are the natural place
-      to start, since they have no scaffolding at all.
+      ✅ **THE BACKLOG IS EMPTY.** Seeded at **54** awaiting (only the 5 the ADR documents were
+      admitted as verified; the map's §6 figures do not sum — 10 + 11 + 32 = 53, not 59 — and were
+      deliberately **not** used). Worked down module by module, lowering `AWAITING_CEILING` in the
+      same commit as each batch:
 
-      **Lower `AWAITING_CEILING` in the same commit as every test you add**, or the ratchet stops
-      biting.
+      | ceiling | module | tests | mutations |
+      |---:|---|---:|---:|
+      | 54 → 50 | `reviews.py` | 22 | 8 |
+      | 50 → 44 | `lean_substrate.py` | 34 | 12 |
+      | 44 → 35 | `physics.py` (+ d1/f reinforcement) | 27 (+4) | 14 |
+      | 35 → 29 | `lean_statements.py` + `notebooks.py` | 43 | 16 |
+      | 29 → 23 | `freshness.py` | 37 | 13 |
+      | 23 → 17 | `lean_toolchain.py` | 34 | 14 |
+      | 17 → 14 | `graph_atlas.py` | 26 | 11 |
+      | 14 → 11 | `papers_prose.py` | 20 | 12 |
+      | 11 → 9 | `prose_lean_refs.py` | 12 | 8 |
+      | 9 → 5 | `citations.py` | 25 | 12 |
+      | **5 → 0** | `bundles_readiness.py` | 28 | 14 |
 
-      **Progress.** Ceiling history: 54 (seeded) → 50 (`reviews.py`) → 44 (`lean_substrate.py`).
+      ⚠️ **ROUGHLY A THIRD OF ALL MUTATIONS CAME BACK MISSED ON FIRST RUN — and every one was a
+      real finding.** That is the durable result, more than the final green. The pattern split
+      three ways, and all three recur:
+      1. **The GUARD was inert** — QI-28 (six dead hedge alternatives).
+      2. **The TEST was vacuous** — a `1e-16` float "jitter" that is bit-identical to the original;
+         a placeholder fixture typed `True` so an INDEPENDENT rule caught it and the branch under
+         test never fired; a marginal-band pair measured at 0.36 when the threshold is 0.40.
+      3. **The mutated line was genuinely redundant** — the `notebook_exec` cache-load conjunct, and
+         the `bundle_metadata` missing-blob branch. Both LEFT IN PLACE and explicitly **not counted
+         as verified**, because an unverifiable line must not be recorded as verified in either
+         direction.
+
+      ⚠️ **Three checks the ADR credits as already covered were weaker than claimed** —
+      `d1_hierarchy_table` and `f_hierarchy_claims` (verdict-propagation mutations MISSED: their
+      stale fixtures are wrong four ways at once, so no single ground carried the verdict) and the
+      prose pair (pure cores well tested, but the CHECKS reached only through a live-tree smoke
+      test, leaving the core→verdict step untested). Verified, not inherited.
 
 - [x] **QI-28** ✅ **FIXED 2026-08-04 — found BY the D5 work, not by reading.**
       `lean_substrate._LEDGER_HEDGE_RE` listed nine honest-framing alternatives for a bookkeeping
@@ -335,33 +364,35 @@ function's AST span"* — these cost time here and will cost it again otherwise.
 - **Do not run the characterization harness concurrently with edits to the code it is reading.** It
   executes checks in-process against the live tree; an edit mid-run silently corrupts the snapshot.
 
-## 4c. Resume point
+## 4c. State at close
 
-**W-A, W-B and W-C are complete** — 27 of 28 findings closed across six commits on
-`infra/adr-009-validation-modularization`. Fast suite **5080 passed / 5 skipped / 0 failed**.
-Characterization **HELD (49 identical)** across both mechanical passes; the two W-A behaviour changes
-were each attributed in full (+114 PlaceholderMarker nodes, +4 VERIFIED_BY edges closing 4 broken
-provenance chains) and **no check verdict moved by any of it**.
+**All four workstreams complete — 28 of 28 findings closed** on
+`infra/adr-009-validation-modularization`. Fast suite **5398 passed / 5 skipped / 0 failed**
+(5055 at audit open). Every mechanical pass verified **CHARACTERIZATION HELD — 49 checks identical**;
+the behaviour changes were each attributed in full (+114 `PlaceholderMarker` nodes, +4 `VERIFIED_BY`
+edges closing 4 broken provenance chains) and **no check verdict moved by any of it**.
 
-**Next and last: W-D — QI-27.** Mutation tests for the 43 checks that lack one (32 untested +
-11 green-only), plus a registered gate so D5 stops being prose. Operator ruling 2026-08-04: all
-checks need tests before this branch is ready for PR review.
+**Two deferred items were closed where they belonged, not where they were found:**
+- the **QI-11 lake-resolution duplication** landed with `lean_toolchain`'s mutation tests, because
+  extracting it changes two checks' early-return path (ADR-009 D4 forbids mixing that into a
+  mechanical pass). Only the resolution is shared; each caller keeps its own SKIP message, and a
+  test asserts the two stayed different.
+- **QI-28** was found BY the D5 work and fixed in the same commit as the tests that caught it.
 
-**Read these first** — they are the only part of the QA/QI surface this audit did NOT read in full,
-and they define the house patterns to mirror: the 15 unread test files (~3,170 lines), starting with
-`test_validate_public_surface.py`, `test_readiness_submission_gate.py` and
-`test_native_decide_ratchet.py` (the three Phase-3 repairs shipped both-directions tests worth
-copying).
+**What is genuinely still open, and is NOT this audit's to close:**
+- The branch is **not merged**. Re-check with `git merge-base --is-ancestor HEAD main`.
+- `validate.py` is **57 of 59**. Both reds (`paper_latex_compiles` on D3's fatal LaTeX errors, and
+  `readiness_submission_gate` on unremediated bundles) are the dial working as designed and belong
+  to the publication workstream.
+- The §4 residuals below are **recorded, not scheduled** — read them before assuming they are
+  oversights.
 
-**Carry into W-D:** the lake-resolution duplication noted under QI-11 — extracting it changes two
-checks' early-return behaviour, so it belongs with their mutation tests rather than in a
-mechanical pass.
-
-**Standing rules for anyone continuing this** (all learned the hard way in §4b): scope every mutation
-to the target function's AST span; restore it by writing back saved bytes, never `git checkout`;
-never run the characterization harness while editing the code it reads; and when a mutation is *not*
-caught, that is a finding about the guard, not a formality to wave through — it deleted a redundant
-guard from my own QI-03 fix.
+**Standing rules for anyone extending this** (all learned the hard way; see §4b): scope every
+mutation to the target function's AST span; restore it by writing back saved bytes, **never**
+`git checkout`, and **delete the cached bytecode afterwards**; never run the characterization
+harness while editing the code it reads; and when a mutation is *not* caught, that is a finding —
+about the guard, or about the test, or about a line that should not be counted as verified. It was
+never once a formality here.
 
 ## 5. Companion documents
 

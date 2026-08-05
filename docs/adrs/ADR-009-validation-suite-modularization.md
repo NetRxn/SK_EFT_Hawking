@@ -817,9 +817,9 @@ which §Deferred item 0 names as a precondition for the shared-graph-handle work
 `RESUME_STATE.md` had recorded as never read — was completed on 2026-08-04 and is tracked at
 **[`docs/audits/2026-08-04-qa-qi-infrastructure/README.md`](../audits/2026-08-04-qa-qi-infrastructure/README.md)**.
 
-It confirms this ADR's delivery independently (59 checks / 12 modules / 54-name surface / 5055 tests
-green / 57-of-59 with the two intentional reds) and records **27 open items** the phases did not
-reach. Two bear directly on this document and are corrected there rather than silently here:
+It confirms this ADR's delivery independently (59 checks / 12 modules / 54-name surface / 57-of-59
+with the two intentional reds) and records **28 findings** the phases did not reach. Two bear
+directly on this document and are corrected there rather than silently here:
 
 - **§Deferred item 4's** two readiness-layer sites (`evaluate_all_gates`,
   `_blocked_p1_gates_by_paper`) are recorded above as remaining open **BY SCOPE**. They were
@@ -827,11 +827,43 @@ reach. Two bear directly on this document and are corrected there rather than si
 - **Five code comments cite the wrong §Deferred ordinal** — the exact numbering collision the
   §Deferred preamble warns about, now live in the source. Audit finding QI-16.
 
-The audit also finds one live enforcement hole this ADR's phases did not surface: five
+The audit also finds one live enforcement hole this ADR's phases did not surface: **six**
 `glob("*.lean")` sites scan 1,373 of 2,039 Lean files, so
-`build_graph.extract_placeholder_marker_nodes` mints no node for **112 placeholder theorems** that
-P1 Gate 5 reads (QI-01). Measured verdict movement on the current tree is **zero** — the exposure is
-latent. That class had already been fixed once, in `freshness.py`, and was not swept.
+`build_graph.extract_placeholder_marker_nodes` mints no `PlaceholderMarker` node for the placeholder
+theorems P1 Gate 5 reads (QI-01; the count moved 593 → 707). Measured verdict movement on the
+current tree is **zero** — the exposure is latent. That class had already been fixed once, in
+`freshness.py`, and was not swept.
+*(Filed as five sites; the sixth was found by the guard's STRUCTURAL leg, not by the manual grep
+sweep, because its receiver is named `qn_dir`. Corrected here rather than silently renumbered —
+same discipline as §Deferred item 7's four-way miscount.)*
+
+## ✅ D5 — the standing obligation is DISCHARGED (2026-08-04)
+
+**D5 shipped as prose and is now mechanical AND satisfied.** `tests/test_d5_mutation_obligation.py`
+requires every registered check to declare its test status, and as of the QA/QI audit's workstream
+W-D **all 59 checks are mutation-verified** — `AWAITING_MUTATION_TEST` is empty and its ceiling is
+**0**, so the next check added without a both-directions test fails on arrival rather than being
+absorbed into a backlog.
+
+This closes the problem §Context names as *"the one that caused the damage"*. The measurements that
+justified it are worth keeping: at the time of this ADR, **16 checks were TESTED, 6 PARTIAL, 37
+UNTESTED**, eleven of the sixteen asserted only `result.passed` on the live tree, and **exactly five**
+would have failed on a seeded defect.
+
+⚠️ **The discipline found defects that reading did not**, which is the argument for it:
+- **QI-28** — six of nine `_LEDGER_HEDGE_RE` alternatives in `disclosure_consistency` were stems
+  closed with `\b` and could not match a single inflected form. The check was green, its test was
+  green, and a sixth of its logic could not execute.
+- Three verdict-propagation mutations in `d1_hierarchy_table` / `f_hierarchy_claims` — the two checks
+  §Context credits among the five genuinely-covered ones — came back **MISSED**, because their stale
+  fixtures are wrong in four independent ways at once and no single ground carried the verdict.
+- A harness defect: a same-length mutation restored inside one second leaves a valid-looking `.pyc`,
+  so later runs import mutated bytecode from a `git status`-clean tree. Every verdict recorded before
+  the fix was re-run from a cleared cache; all held.
+
+Roughly a third of all mutations initially came back MISSED, and in every case the finding was real —
+either the guard was inert or the test was. That ratio is the case for D5 stated better than this
+document states it.
 
 ## References
 

@@ -5,12 +5,12 @@ without re-deriving it. Read this first, then the linked documents.
 
 > ## ✅ ADR-009 IS DELIVERED — ⚠️ AND **NOT MERGED** (2026-08-04)
 > Phases 0–3 complete, **all 8 §Deferred items dispositioned**, ADR-009 **ACCEPTED**. The branch is
-> **`infra/adr-009-validation-modularization`, 56 ahead of `main` and 0 behind — NOT merged.**
+> **`infra/adr-009-validation-modularization`, 69 ahead of `main` and 0 behind — NOT merged.**
 > ⚠️ *This block claimed "merged to `main`" until 2026-08-04. That was false and is corrected here;
 > verify with `git merge-base --is-ancestor HEAD main` before repeating any merge claim.*
 > Verified on the branch HEAD: **59 checks** in **12** modules under `scripts/validation/checks/`,
 > `validate.py` registers **0**; `--list` 59; unknown `--check` exits 2; `BUNDLE_CODES` 21; largest
-> module 965 lines; fast suite **5080 passed / 5 skipped / 0 failed**; `validate.py` **57/59 with
+> module 965 lines; fast suite **5398 passed / 5 skipped / 0 failed**; `validate.py` **57/59 with
 > 2 intentional reds**. Characterization **HELD** at every structural boundary.
 > ⚠️ These figures move as remediation lands — re-measure, do not quote.
 >
@@ -18,17 +18,27 @@ without re-deriving it. Read this first, then the linked documents.
 > sites (`evaluate_all_gates`, `_blocked_p1_gates_by_paper`) were **CLOSED by `5228ed6d`**, after the
 > documents below were written — several still record them as open (audit finding QI-21/QI-22).
 >
-> ## 🔴 INFRASTRUCTURE WORK REMAINS — read the audit first
+> ## ✅ THE QA/QI INFRASTRUCTURE AUDIT IS COMPLETE — 28 of 28 findings closed
 > A full direct read of the entire QA/QI surface (~17,700 lines, including `build_graph.py`, which
-> this file had recorded as never read) was completed 2026-08-04 and found **27 open items** across
-> four workstreams: one live enforcement hole, duplicated predicates, dead code, and documentation
-> that contradicts the code it describes — plus D5's missing mechanical enforcement (32 of 59 checks
-> have no test at all).
+> this file had recorded as never read) was completed 2026-08-04. It found **28 findings** across
+> four workstreams — one live enforcement hole, duplicated predicates, dead code, documentation
+> contradicting the code it describes, and D5's missing mechanical enforcement — and **all are now
+> closed**.
+>
+> **The load-bearing result: every one of the 59 checks is mutation-verified in both directions.**
+> `AWAITING_MUTATION_TEST` is empty and its ceiling is **0**, so a new check that ships without a
+> both-directions test **fails on arrival**. That discharges ADR-009 D5, the obligation its own
+> §Context calls *"the one that caused the damage"* — it had shipped as prose, and 32 of 59 checks
+> had no test at all.
+>
+> ⚠️ **Roughly a third of the ~150 mutations came back MISSED on first run, and every one was a real
+> finding** — an inert guard, a vacuous test, or a line that should not be counted as verified.
+> Do not read the final green as the result; the ratio is the result.
 >
 > **➡️ [`docs/audits/2026-08-04-qa-qi-infrastructure/README.md`](../../audits/2026-08-04-qa-qi-infrastructure/README.md)
-> is the live tracker. Read it before touching the validation suite, and update its checkboxes as
-> work lands.** Operator ruling 2026-08-04: all of it is in scope, and **all checks need tests**,
-> before this branch is ready for PR review.
+> is the tracker and stays authoritative. Read it before touching the validation suite** — in
+> particular its §4 residuals (recorded, deliberately NOT scheduled) and its §4b harness lessons,
+> which will cost time again otherwise.
 
 > **Every figure in this file is either (a) re-verified on the date shown, (b) marked as a historical
 > measurement, or (c) marked as INHERITED from a document and not independently checked.** That third
@@ -183,7 +193,7 @@ characterization baseline after any unstash.**
 | frozen external surface | **54** | `EXPECTED_SURFACE` in `tests/test_validate_public_surface.py` |
 | characterization quarantine | **10** → 59 − 10 = **49** characterized | `QUARANTINE` in `tests/validate_characterization.py` |
 | bundle roster | **21** | `scripts/bundle_registry.py` → `BUNDLE_CODES` |
-| fast suite | **5080 passed, 5 skipped, 0 failed** in ~195 s | `uv run python -m pytest tests/ -q` — was 5039, then 5055, then 5080 as guards landed; re-run, do not quote |
+| fast suite | **5398 passed, 5 skipped, 0 failed** in ~197 s | `uv run python -m pytest tests/ -q` — 5039 → 5055 → 5080 → 5398 as guards and the D5 suites landed; re-run, do not quote |
 
 ⚠️ **Two git gotchas learned here.**
 1. The pre-commit hook runs `sync.py --fast` and **restages** `SK_EFT_Hawking_Inventory_Index.md`,
@@ -545,7 +555,7 @@ publication schedule is the flexible variable; claim strength is not.
 
 1. **This file.**
 1b. **[`docs/audits/2026-08-04-qa-qi-infrastructure/README.md`](../../audits/2026-08-04-qa-qi-infrastructure/README.md)
-   — the live QA/QI remediation tracker (27 open items, W-A…W-D). Read it before any validation-suite
+   — the QA/QI remediation tracker (28 findings, W-A…W-D, all CLOSED). Read it before any validation-suite
    work; several figures in the documents below are superseded by it and are flagged there by
    finding id.**
 2. `docs/adrs/ADR-009-validation-suite-modularization.md` — the decision, H1–H5, D2's 8 contract items,

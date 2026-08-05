@@ -344,18 +344,34 @@ as canonical — under a filename that is also wrong.
 
 ### Test protection over the gates themselves
 
-| | at first mapping | now (2026-08-04) |
-|---|---|---|
-| Checks with a test that would **fail on a seeded defect** | **5** of 59 | **10** of 59 |
-| Checks tested only by `assert result.passed` on the live tree | 11 | 11 |
-| Checks with **no test at all** | 37 | 32 |
-| Tests asserting the check **count or registration order** | **0** | **25** (three suites) |
-| Tests freezing the **cannot-measure population** | 0 | **3** |
+| | at first mapping | after ADR-009 Ph. 0–3 | now (2026-08-04, audit W-D) |
+|---|---|---|---|
+| Checks with a test that would **fail on a seeded defect** | **5** of 59 | 10 of 59 | ✅ **59 of 59** |
+| Checks tested only by `assert result.passed` on the live tree | 11 | 11 | **0** |
+| Checks with **no test at all** | 37 | 32 | **0** |
+| Tests asserting the check **count or registration order** | **0** | **25** (three suites) | 25 |
+| Tests freezing the **cannot-measure population** | 0 | **3** | 3 |
+| Checks whose D5 status is **undeclared** | n/a | n/a | **0 — impossible; a new one fails on arrival** |
 
-The five that gained a both-directions test are the ones Phase 3 repaired:
+⚠️ **The middle column's figures do NOT sum to 59** (10 + 11 + 32 = 53). They are three separately
+measured populations, not a partition, and the audit deliberately did **not** use them to seed
+`tests/test_d5_mutation_obligation.py` — only checks with a mutation documented in the ADR or a
+commit were admitted there. Kept as the record of what the map said.
+
+The five that gained a both-directions test in Phase 3 are the ones it repaired:
 `readiness_submission_gate`, `native_decide_regression`, `count_literals`, `numerical_literals` and
 `paper_latex_compiles` (`tests/test_readiness_submission_gate.py`, `test_native_decide_ratchet.py`,
 `test_always_pass_dispositions.py`). Each ships assertions in both directions and was mutation-verified.
+
+**The remaining 54 landed in audit workstream W-D** (`tests/test_d5_*.py`, ~330 tests / ~150 AST-scoped
+mutations), and the obligation is now mechanical: `tests/test_d5_mutation_obligation.py` requires every
+registered check to declare its D5 status, with the untested backlog ratcheted at **0**.
+
+⚠️ **Two of the ten credited above were weaker than this table claimed.** `d1_hierarchy_table` and
+`f_hierarchy_claims` DO fail on their stale fixtures — but three verdict-propagation mutations came back
+**MISSED**, because each fixture is wrong in four independent ways at once and no single ground carries
+the verdict. Both were reinforced with isolated-defect legs. *"Has a test that fails on a seeded defect"
+is a weaker property than it sounds; the mutation is what establishes it.*
 
 ⚠️ **"Named in a test" is not coverage.** All 59 checks appear in
 `test_validate_registry_contract.py`'s frozen list, so a scan for check names reports 59/59 and means
@@ -372,9 +388,14 @@ module from deriving a path from `__file__` or aliasing one by value, hold `vali
 identity, and freeze the 54-name external surface. Every one is mutation-verified in both directions.
 
 That is the migration's safety net, and it is not test coverage of the checks themselves. **Raising the
-per-check number is D5's standing obligation** — every new or modified check ships a mutation test — and it
-is the work that closes the §7 pattern. The split makes it tractable (a domain module fits in one read); it
-does not perform it.
+per-check number was D5's standing obligation** — every new or modified check ships a mutation test — and it
+is the work that closes the §7 pattern. The split made it tractable (a domain module fits in one read); it
+did not perform it.
+
+✅ **It has since been performed** (audit 2026-08-04, workstream W-D): all 59 checks are mutation-verified
+and the obligation is enforced by `tests/test_d5_mutation_obligation.py`. The split's contribution was real
+and is worth naming precisely — each domain module fits in one read, which is what made writing a
+per-check test for 54 checks a tractable exercise rather than an archaeological one.
 
 ---
 
