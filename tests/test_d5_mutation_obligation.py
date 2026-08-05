@@ -290,6 +290,47 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
         "ADVISORY BY DESIGN (item 3), so both directions are on the WARNING. A leg pins "
         "that a raising generator can never fail the suite",
     ),
+    # lean_toolchain.py: 34 tests / 14 mutations. Also CLOSES the QI-11 residue — the
+    # lake-resolution block duplicated in check_lean_build and
+    # check_axiom_closure_allowlist now has one owner. Deferred to W-D on purpose: it
+    # changes two checks' early-return path, which ADR-009 D4 forbids mixing into a
+    # mechanical pass. Only the RESOLUTION is shared; each caller keeps its own SKIP
+    # message, and a test asserts the two messages stayed DIFFERENT (H4's policy line).
+    "theorems": (
+        "test_d5_lean_toolchain.py",
+        "2 mutations; also pins the three-way agreement of the hardcoded expected count "
+        "(registered description + two dict entries) — a known residual, asserted as "
+        "AGREEING rather than as a value, which would just be a fourth copy",
+    ),
+    "lean_source": (
+        "test_d5_lean_toolchain.py",
+        "2 mutations incl. `rglob` -> `glob`; the non-recursive form hid 7,695 declared "
+        "identifiers, so a spot-check name moved into a package read as NOT found",
+    ),
+    "lean_build": (
+        "test_d5_lean_toolchain.py",
+        "`ok = result.returncode == 0` -> True caught; timeout fails rather than passes; "
+        "the no-lakefile SKIP is pinned as a deliberate optional-toolchain PASS (item 4)",
+    ),
+    "axiom_closure_allowlist": (
+        "test_d5_lean_toolchain.py",
+        "3 mutations incl. the `--strict` promotion (H5) and the native_decide category. "
+        "The AXIOM_METADATA escape is exercised, since the rule is DISCLOSURE not ban",
+    ),
+    "elaboration_knob_watchlist": (
+        "test_d5_lean_toolchain.py",
+        "ADVISORY BY DESIGN (item 3 — kernel re-checks the term and never reads these "
+        "knobs), so both directions are on the WARNING. A leg pins that maxHeartbeats is "
+        "deliberately NOT watched here — Invariant #10 bans it outright elsewhere, and "
+        "listing it would read as 'allowed with a warning'",
+    ),
+    "lean_docstring_refs_resolve": (
+        "test_d5_lean_toolchain.py",
+        "5 mutations incl. narrowing the block regex back to `/-- … -/`, which is the gap "
+        "that hid a reference to a nonexistent declaration in a module header through "
+        "five adversarial reviews. Strict-family vs advisory and the disclaimer exemption "
+        "both exercised; the missing-lean_deps THIRD H4 policy (pass-with-warning) pinned",
+    ),
 }
 
 #: Checks with no both-directions test yet. **This list may only shrink.**
@@ -299,9 +340,9 @@ AWAITING_MUTATION_TEST: frozenset[str] = frozenset({
     
     
     
-    "theorems", 
-    "lean_source", "lean_build", "axiom_closure_allowlist",
-    "elaboration_knob_watchlist", "bundle_figure_integrity", 
+    
+    
+    "bundle_figure_integrity", 
     "paper_provenance",
     "parameter_provenance", 
     "graph_integrity", "atlas_integrity", "atlas_hypothesis_discipline",
@@ -311,14 +352,14 @@ AWAITING_MUTATION_TEST: frozenset[str] = frozenset({
     "bibitem_title_primary_source", 
     "bundle_registry_consistency", "axiom_count_prose_consistency",
     "prose_theorem_reference_coverage", "theorem_name_embedded_citations",
-    "lean_docstring_refs_resolve",
+    
     "paper_toolchain_pin_drift",
 })
 
 #: The ratchet. Measured 2026-08-04. It may be LOWERED, never raised.
 #: History: 54 (seeded) -> 50 (reviews.py) -> 44 (lean_substrate.py)
-#: -> 35 (physics.py) -> 29 (lean_statements.py + notebooks.py) -> 23 (freshness.py).
-AWAITING_CEILING = 23
+#: -> 35 (physics.py) -> 29 (lean_statements.py + notebooks.py) -> 23 (freshness.py) -> 17 (lean_toolchain.py).
+AWAITING_CEILING = 17
 
 
 def _registered() -> list[str]:

@@ -43,6 +43,40 @@ from validation import _config as _cfg
 from validation._registry import CheckResult, Detail, register_check
 
 
+# ── Lake / Lean-project resolution — ONE owner (audit QI-11 residue, closed with W-D) ──
+# These six lines sat verbatim in BOTH `check_lean_build` and
+# `check_axiom_closure_allowlist`. Deliberately shared LATE rather than in the Phase-2
+# mechanical pass: extracting it changes two checks' early-return path, so ADR-009 D4
+# required it to land with the mutation tests that prove the paths are unchanged
+# (`tests/test_d5_lean_toolchain.py::TestLakeResolution`).
+#
+# ⚠️ ONLY THE RESOLUTION IS SHARED — NOT THE POLICY. Each caller keeps its own SKIP
+# message and its own early return, because they differ and the difference belongs to
+# the check. That is `validate_helpers`' policy line (ADR-009 H4) applied one level
+# down: this owns WHERE lake is, never WHAT ITS ABSENCE MEANS. A single helper that
+# also returned the CheckResult would silently unify two checks' behaviour, which is
+# the exact shape H4 exists to prevent.
+
+def _resolve_lake() -> str | None:
+    """The `lake` binary: `LAKE_PATH`, then `~/.elan/bin/lake`, then `PATH`."""
+    import os
+    import shutil
+    lake_bin = os.environ.get("LAKE_PATH")
+    if not lake_bin:
+        elan_lake = Path.home() / ".elan" / "bin" / "lake"
+        if elan_lake.is_file():
+            lake_bin = str(elan_lake)
+    if not lake_bin:
+        lake_bin = shutil.which("lake")
+    return lake_bin or None
+
+
+def _resolve_lean_root() -> Path:
+    """The Lean project directory: `LEAN_PROJECT_DIR`, else `<project>/lean`."""
+    import os
+    return Path(os.environ.get("LEAN_PROJECT_DIR", _H.PROJECT_ROOT / "lean"))
+
+
 # ═══════════════════════════════════════════════════════════════════════
 # CHECK 1f: native_decide trust-surface regression (R4)
 # ═══════════════════════════════════════════════════════════════════════
@@ -239,21 +273,7 @@ def check_lean_build() -> CheckResult:
 
     The check looks for lakefile.lean OR lakefile.toml (Lean 4 / Lake v4+).
     """
-    import shutil
-    import os
-
-    # ── Resolve lake binary ──
-    lake_bin = os.environ.get("LAKE_PATH")
-
-    if not lake_bin:
-        # Try ~/.elan/bin/lake (standard elan install)
-        elan_lake = Path.home() / ".elan" / "bin" / "lake"
-        if elan_lake.is_file():
-            lake_bin = str(elan_lake)
-
-    if not lake_bin:
-        lake_bin = shutil.which("lake")
-
+    lake_bin = _resolve_lake()
     if not lake_bin:
         return CheckResult(
             passed=True,
@@ -263,7 +283,7 @@ def check_lean_build() -> CheckResult:
         )
 
     # ── Resolve Lean project directory ──
-    lean_root = Path(os.environ.get("LEAN_PROJECT_DIR", _H.PROJECT_ROOT / "lean"))
+    lean_root = _resolve_lean_root()
 
     has_lakefile = (
         (lean_root / "lakefile.lean").exists()
@@ -338,22 +358,12 @@ def check_axiom_closure_allowlist() -> CheckResult:
     ``/check-axioms`` (``lean/SKEFTHawking/AxiomAudit.lean``): discipline defined
     once, invoked interactively at ``/lean4:checkpoint`` and non-interactively here.
     """
-    import shutil
-    import os
-
-    # ── Resolve lake (mirror check_lean_build) ──
-    lake_bin = os.environ.get("LAKE_PATH")
-    if not lake_bin:
-        elan_lake = Path.home() / ".elan" / "bin" / "lake"
-        if elan_lake.is_file():
-            lake_bin = str(elan_lake)
-    if not lake_bin:
-        lake_bin = shutil.which("lake")
+    lake_bin = _resolve_lake()
     if not lake_bin:
         return CheckResult(passed=True, details=[
             Detail("lake", True, "SKIPPED — lake not found. Set LAKE_PATH or install elan")])
 
-    lean_root = Path(os.environ.get("LEAN_PROJECT_DIR", _H.PROJECT_ROOT / "lean"))
+    lean_root = _resolve_lean_root()
     audit_src = lean_root / "SKEFTHawking" / "AxiomAudit.lean"
     if not audit_src.exists():
         return CheckResult(passed=True, details=[
