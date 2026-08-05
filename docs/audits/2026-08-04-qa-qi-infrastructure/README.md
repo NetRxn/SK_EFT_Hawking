@@ -1,6 +1,9 @@
 # QA/QI Infrastructure Audit — 2026-08-04
 
-**Status:** ✅ **COMPLETE — all 28 findings closed (W-A / W-B / W-C / W-D).** This remains the
+**Status:** ✅ **COMPLETE — all 29 findings closed (W-A / W-B / W-C / W-D).**
+*(29 = QI-01…QI-28 plus the QI-26b sub-finding. Counted as CHECKBOX ENTRIES in §3, not as the
+highest ordinal — the original filing said "27", which was the highest number at the time while
+the board already carried 28 entries. Re-count the boxes; do not read the last id.)* This remains the
 tracker; keep the measurement column honest if anything reopens.
 
 **The headline result: `AWAITING_MUTATION_TEST` is EMPTY.** All **59 registered checks are
@@ -44,11 +47,11 @@ itself and finds the residue. See
 **ADR-009's delivery is real and holds under inspection.** Independently re-verified on HEAD:
 59 checks across 12 modules, `validate.py` registers 0, `--list` 59, unknown `--check` exits 2,
 `BUNDLE_CODES` 21, `EXPECTED_SURFACE` 54, `QUARANTINE` 10, fast suite **5055 passed / 5 skipped /
-0 failed**, `validate.py` 57/59 with 2 intentional reds. The shared-helper layer is genuine and its
-policy line (*"this module owns where things are, not what their absence means"*) is held in code.
+0 failed** *(at audit open; 5398 at close)*, `validate.py` 57/59 with 2 intentional reds. The
+shared-helper layer is genuine and its policy line (*"this module owns where things are, not what
+their absence means"*) is held in code.
 
-**What was not done is the layer underneath the check verdicts.** Four kinds, all now closed except
-the last:
+**What was not done is the layer underneath the check verdicts.** Five kinds, **all now closed**:
 
 1. ✅ **One live enforcement hole** — a third of the Lean substrate unscanned by **six** glob sites
    (QI-01). Measured verdict movement: **zero**, so it closed a latent hole rather than surfacing
@@ -366,7 +369,7 @@ function's AST span"* — these cost time here and will cost it again otherwise.
 
 ## 4c. State at close
 
-**All four workstreams complete — 28 of 28 findings closed** on
+**All four workstreams complete — 29 of 29 findings closed** on
 `infra/adr-009-validation-modularization`. Fast suite **5398 passed / 5 skipped / 0 failed**
 (5055 at audit open). Every mechanical pass verified **CHARACTERIZATION HELD — 49 checks identical**;
 the behaviour changes were each attributed in full (+114 `PlaceholderMarker` nodes, +4 `VERIFIED_BY`

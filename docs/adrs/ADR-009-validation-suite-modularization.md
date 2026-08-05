@@ -818,7 +818,7 @@ which §Deferred item 0 names as a precondition for the shared-graph-handle work
 **[`docs/audits/2026-08-04-qa-qi-infrastructure/README.md`](../audits/2026-08-04-qa-qi-infrastructure/README.md)**.
 
 It confirms this ADR's delivery independently (59 checks / 12 modules / 54-name surface / 57-of-59
-with the two intentional reds) and records **28 findings** the phases did not reach. Two bear
+with the two intentional reds) and records **29 findings** the phases did not reach (QI-01…QI-28 plus the QI-26b sub-finding; count the board's entries, not the last ordinal — the first filing said "27" by reading the highest id). Two bear
 directly on this document and are corrected there rather than silently here:
 
 - **§Deferred item 4's** two readiness-layer sites (`evaluate_all_gates`,
