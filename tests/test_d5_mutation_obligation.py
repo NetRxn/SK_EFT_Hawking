@@ -354,6 +354,30 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
         "fail-on-cannot-measure. ADR-009 Alternatives note 3 records a reconnaissance "
         "agent misreading exactly that as a contradiction",
     ),
+    # papers_prose.py: 20 tests / 10 mutations (+2 on the pin-drift core).
+    "paper_provenance": (
+        "test_d5_papers_prose.py",
+        "5 mutations incl. `rglob` -> `glob` (QI-01 at this call site — `glob` hid "
+        "5,469 theorem names, and this check FAILS on an unresolvable reference, so a "
+        "draft citing a QuantumNetwork theorem would have read as citing a phantom) and "
+        "the LaTeX-comment strip that keeps cleanup records from false-positiving",
+    ),
+    "axiom_count_prose_consistency": (
+        "test_d5_papers_prose.py",
+        "5 mutations on the pure core `_axiom_prose_findings`. ADR-009 item 5 holds "
+        "this up as the MODEL the literal checks should reach, because it compares "
+        "prose to COMPUTED TRUTH. Its value is in the exclusions, so each is a leg: "
+        "historical attribution, preceding negation, per-wave deltas, word-numeral "
+        "plurals, comment stripping with offsets preserved",
+    ),
+    "paper_toolchain_pin_drift": (
+        "test_validate_toolchain_pin_drift.py",
+        "ADVISORY BY DESIGN (item 3 — a stale pin in a DRAFT is a publication decision, "
+        "and auto-failing would push authors toward find-and-replace). Pre-existing "
+        "test of the extracted pure core `_tp_scan_lines`; mutation-verified under "
+        "QI-27 — dropping the third-party exemption and widening the mathlib context "
+        "are both CAUGHT",
+    ),
 }
 
 #: Checks with no both-directions test yet. **This list may only shrink.**
@@ -366,23 +390,23 @@ AWAITING_MUTATION_TEST: frozenset[str] = frozenset({
     
     
     "bundle_figure_integrity", 
-    "paper_provenance",
+    
     "parameter_provenance", 
     
     "bundle_metadata_matches_graph",
     "readiness_verdicts_agree",
     "citation_primary_sources_present", "provenance_doi_in_registry", "bundle_consistency",
     "bibitem_title_primary_source", 
-    "bundle_registry_consistency", "axiom_count_prose_consistency",
+    "bundle_registry_consistency", 
     "prose_theorem_reference_coverage", "theorem_name_embedded_citations",
     
-    "paper_toolchain_pin_drift",
+    
 })
 
 #: The ratchet. Measured 2026-08-04. It may be LOWERED, never raised.
 #: History: 54 (seeded) -> 50 (reviews.py) -> 44 (lean_substrate.py)
-#: -> 35 (physics.py) -> 29 (lean_statements.py + notebooks.py) -> 23 (freshness.py) -> 17 (lean_toolchain.py) -> 14 (graph_atlas.py).
-AWAITING_CEILING = 14
+#: -> 35 (physics.py) -> 29 (lean_statements.py + notebooks.py) -> 23 (freshness.py) -> 17 (lean_toolchain.py) -> 14 (graph_atlas.py) -> 11 (papers_prose.py).
+AWAITING_CEILING = 11
 
 
 def _registered() -> list[str]:
