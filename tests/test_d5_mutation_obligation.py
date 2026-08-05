@@ -213,6 +213,47 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
         "2 mutations: the identity propagation, and `rglob` -> `glob` — this is the SIXTH "
         "QI-01 site, the one the manual grep sweep missed because its receiver is `qn_dir`",
     ),
+    # lean_statements.py (24 tests / 10 mutations) + notebooks.py (19 tests / 6).
+    # Two MISSED on the first pass, both fixed by strengthening the TEST, not the code:
+    # a placeholder fixture typed `True` was caught by the thin-grounded rule instead
+    # (so the placeholder branch was never load-bearing), and a simple-arg identity
+    # wrapper never reached R-05 leg B for the same reason.
+    "formula_grounding": (
+        "test_d5_lean_statements.py",
+        "5 mutations across dangling refs, the placeholder branch, thin-grounding and "
+        "R-05 legs A/B/C. The wrapper fixture uses a COMPOUND arg deliberately: a "
+        "simple-arg wrapper is caught by the thin rule first, so leg B would be untested",
+    ),
+    "vacuous_statement_audit": (
+        "test_d5_lean_statements.py",
+        "2 mutations: the hard-fail append and the baseline branch. Legs for autogen "
+        "exclusion, the `_DEFINITIONAL` suffix, ground-arith staying advisory, and the "
+        "compound-reflexive elision guard that prevents a false-positive class",
+    ),
+    "nogo_substrate_integrity": (
+        "test_d5_lean_statements.py",
+        "3 mutations: absent backing (Hole B), kernel-purity, and vacuity (Hole A). "
+        "Also pins that `native_decide` closure entries are NOT counted as project "
+        "axioms — that is ADR-002's ratchet, not a taint here",
+    ),
+    "notebooks": (
+        "test_d5_notebooks.py",
+        "2 mutations: the violation verdict and the parse-error branch. Legs prove the "
+        "predicate is `def NAME(` and not the bare name, so correct notebooks that USE "
+        "the physics are not flagged",
+    ),
+    "viz_consistency": (
+        "test_d5_notebooks.py",
+        "ADVISORY BY DESIGN (ADR-009 item 3), so the two directions are on the WARNING, "
+        "not the verdict: 2 mutations dropping the untagged-.show() and hardcoded-hex "
+        "warnings, both caught. A leg pins the advisory disposition itself",
+    ),
+    "notebook_exec": (
+        "test_d5_notebooks.py",
+        "2 mutations on the skip-cache. Legs prove a FAILED notebook is never recorded "
+        "as vetted, that --force-notebooks bypasses the cache (H5), and that a src/core "
+        "edit invalidates it — the last is the cache's worst possible failure",
+    ),
 }
 
 #: Checks with no both-directions test yet. **This list may only shrink.**
@@ -220,12 +261,12 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
 #: `docs/audits/2026-08-04-qa-qi-infrastructure/README.md` (QI-27).
 AWAITING_MUTATION_TEST: frozenset[str] = frozenset({
     
-    "formula_grounding",
-    "vacuous_statement_audit", "nogo_substrate_integrity", 
-    "theorems", "notebooks",
+    
+    
+    "theorems", 
     "lean_source", "lean_build", "axiom_closure_allowlist",
-    "elaboration_knob_watchlist", "bundle_figure_integrity", "viz_consistency",
-    "notebook_exec", "paper_provenance",
+    "elaboration_knob_watchlist", "bundle_figure_integrity", 
+    "paper_provenance",
     "parameter_provenance", "counts_fresh", "tables_fresh", "claim_clusters_fresh",
     "graph_integrity", "atlas_integrity", "atlas_hypothesis_discipline",
     "bundle_metadata_matches_graph",
@@ -240,8 +281,8 @@ AWAITING_MUTATION_TEST: frozenset[str] = frozenset({
 
 #: The ratchet. Measured 2026-08-04. It may be LOWERED, never raised.
 #: History: 54 (seeded) -> 50 (reviews.py) -> 44 (lean_substrate.py)
-#: -> 35 (physics.py).
-AWAITING_CEILING = 35
+#: -> 35 (physics.py) -> 29 (lean_statements.py + notebooks.py).
+AWAITING_CEILING = 29
 
 
 def _registered() -> list[str]:
