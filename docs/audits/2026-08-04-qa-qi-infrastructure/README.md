@@ -310,6 +310,30 @@ Legend: ⬜ open · 🔄 in progress · ✅ done (with the verifying evidence na
 
 ### W-F — OPEN: found by PR review 2026-08-05, block merge
 
+⚠️ **PROVENANCE, measured 2026-08-05 — NONE of these is a branch regression.** The question
+"did this used to work?" was asked and answered against git history, because the disposition
+differs entirely: a regression means the refactor broke it, an inherited defect means the guard
+was decoration from the start and the audit convened to find that missed it.
+
+| finding | on `main` too? | first broken | verdict |
+|---|---|---|---|
+| QI-31 `paper_table` | **yes, identical** | never worked — 12 sampled commits to 2026-05-01 show zero `read_text` in its body | **inherited** |
+| QI-32 `paper_provenance` | **yes, identical regex** | `b0461531`, **2026-03-26** — dead ~4.5 months | **inherited** |
+| QI-33 `bibitem_title` | **yes, and more explicit** — `main` carried a literal `summary_passed = True  # Always pass in default mode` | since the check existed | **inherited** |
+| QI-34 `recurrence` threshold | branch-era constant, but the *class* is documented 3× before this branch | 4th mis-calibration | **inherited class** |
+| `paper_latex_compiles` | **`main` was WORSE** — computed `all_pass` and returned `passed=True` unconditionally | — | **branch IMPROVED it** (item 3); the remaining slow-gate skip is inherited |
+
+**Checks registered: 59 on `main`, 59 on the branch. None dropped, none added** (verified by AST on
+both sides — a raw decorator-text count reads 61 on `main` because two appear in prose).
+
+⚠️ **This makes the finding worse, not better.** The refactor did not break these; it inherited them,
+and **this audit was convened specifically to find guards that cannot fire and did not find them.**
+`paper_provenance` is the sharper case: QI-01 "fixed" its Lean scan, and the measured
+verdict-movement of **zero** — which I reported as evidence the exposure was latent — was in fact
+evidence the leg had been dead since March.
+
+
+
 ⚠️ **All four are the QI-30 shape, and all four were "verified" by W-D.** The lesson QI-30 recorded
 and I did not apply as a sweep — *seed the defect in the PRODUCTION artifact, not in a monkeypatched
 fixture* — is what would have caught every one.
