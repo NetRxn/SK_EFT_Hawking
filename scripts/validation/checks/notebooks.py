@@ -204,14 +204,44 @@ def check_viz_consistency() -> CheckResult:
 # ═══════════════════════════════════════════════════════════════════════
 
 def _src_core_fingerprint() -> str:
-    """SHA-256 (16 hex) of all ``src/core/*.py`` — the physics the notebooks
-    import. Any change invalidates the whole CHECK 11 skip-cache, forcing a
-    full re-vet (a formulas/constants edit can change notebook outcomes without
-    changing notebook content)."""
+    """SHA-256 (16 hex) of all ``src/**/*.py`` — the physics the notebooks import.
+    Any change invalidates the whole CHECK 11 skip-cache, forcing a full re-vet
+    (a formulas/constants edit can change notebook outcomes without changing
+    notebook content).
+
+    ⚠️ SCOPE WIDENED 2026-08-05 (PR-review R4-I10). This hashed
+    ``src/core/*.py`` only — 11 of 177 files — while its own docstring claimed
+    it covered "the physics the notebooks import".
+
+    MEASURED across all 91 notebooks: they import **26 distinct `src.*`
+    packages** over 293 import sites. `src.core` accounts for 215; the other
+    **78 sites reach `src.wkb`, `src.adw`, `src.vestigial`, `src.chirality`,
+    `src.higher_curvature`** and twenty-one more. So an edit to any of them left
+    every unchanged notebook SKIPPED as "previously vetted" while the physics it
+    executes had changed underneath — the skip-cache's whole premise inverted for
+    73 % of the import surface.
+
+    This is the QI-01 scope class one directory over: a fingerprint that names a
+    population narrower than the thing it claims to fingerprint. `rglob` rather
+    than a wider glob list, so a new `src/` package is covered on arrival instead
+    of when someone remembers.
+
+    Cost: hashing 177 files instead of 11, once per run. The real cost is that
+    the cache now invalidates when it should have been invalidating all along.
+
+    NOTE, deliberately not guarded: there is no `__pycache__` exclusion here
+    because compiled bytecode is `.pyc` and `rglob("*.py")` does not match it —
+    verified, not assumed. A first draft of this fix carried such a guard plus a
+    test that "proved" it by writing a `.py` file INSIDE `__pycache__`, which
+    cannot occur; the mutation removing the guard came back MISSED and that is
+    how the fixture was caught being fictional. Widen the pattern beyond `*.py`
+    and the exclusion becomes necessary — until then it would be dead code
+    reading as a safeguard.
+    """
     hasher = hashlib.sha256()
-    src_core = _H.SRC_DIR / "core"
-    if src_core.is_dir():
-        for fp in sorted(src_core.glob("*.py")):
+    src = _H.SRC_DIR
+    if src.is_dir():
+        for fp in sorted(src.rglob("*.py")):
             hasher.update(fp.read_bytes())
     return hasher.hexdigest()[:16]
 

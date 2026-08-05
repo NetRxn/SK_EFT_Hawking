@@ -239,6 +239,40 @@ class TestNotebookExecution:
         assert r.passed is False, "a notebook that raised during execution passed"
         assert any("NameError" in (d.message or "") for d in r.details)
 
+    def test_an_edit_OUTSIDE_src_core_invalidates_the_skip_cache(self, tmp_path,
+                                                                 monkeypatch):
+        """FIRES ON THE SEEDED DEFECT — PR-review R4-I10, fixed 2026-08-05.
+
+        `_src_core_fingerprint` hashed `src/core/*.py` only — **11 of 177 files** —
+        while its docstring claimed it covered "the physics the notebooks import".
+
+        MEASURED over all 91 notebooks: they import **26 distinct `src.*` packages**
+        across 293 import sites. `src.core` is 215 of them; the other **78 reach
+        `src.wkb`, `src.adw`, `src.vestigial`, `src.chirality`, `src.higher_curvature`**
+        and 21 more. So editing any of those left every unchanged notebook SKIPPED as
+        "previously vetted" while the physics it executes had changed underneath.
+
+        The fingerprint must move when `src/wkb/spectrum.py` moves. This is the QI-01
+        scope class one directory over: a fingerprint naming a population narrower than
+        the thing it claims to fingerprint.
+        """
+        src = tmp_path / "src"
+        (src / "core").mkdir(parents=True)
+        (src / "core" / "constants.py").write_text("C = 1\n")
+        (src / "wkb").mkdir(parents=True)
+        wkb = src / "wkb" / "spectrum.py"
+        wkb.write_text("def spectrum(): return 1\n")
+        monkeypatch.setattr(_H, "SRC_DIR", src)
+        before = nb._src_core_fingerprint()
+
+        wkb.write_text("def spectrum(): return 2\n")   # physics changed
+        after = nb._src_core_fingerprint()
+        assert before != after, (
+            "an edit to src/wkb/spectrum.py did not move the notebook skip-cache "
+            "fingerprint — every unchanged notebook stays 'previously vetted' while "
+            "the physics it executes has changed (R4-I10)")
+
+
     def test_a_failing_notebook_is_not_recorded_as_vetted(self, tmp_path, monkeypatch):
         """The subtle half: a failure must NOT enter the skip-cache, or the next run
         skips it and the failure disappears until someone edits the notebook."""
