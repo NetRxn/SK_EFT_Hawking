@@ -32,6 +32,13 @@ without re-deriving it. Read this first, then the linked documents.
 > both-directions test, and **no ability to fail in production** (QI-31…QI-34). What the
 > registry certifies is that a decision was recorded and the named test references the check
 > in code — not that the check can fail. Read the tracker before quoting any coverage number.
+>
+> ⚠️ **The four are FIXED (2026-08-05)** — `17bbe234`, `2dc856ec`, `865db716`, `637d1184` — each
+> re-verified by seeding the defect in the **production artifact**, not a fixture. **The retraction
+> above still stands for the other 55.** Not one of the four was fixed by widening a constant: two
+> were reading the wrong artifact, one the wrong FIELD of the right one, and one promoted the class
+> its own docstring calls advisory. The prescribed "recalibrate the threshold" for `recurrence`
+> would have been its fourth mis-tuning.
 > `AWAITING_MUTATION_TEST` is empty and its ceiling is **0**, so a new check that ships without a
 > both-directions test **fails on arrival**. That discharges ADR-009 D5, the obligation its own
 > §Context calls *"the one that caused the damage"* — it had shipped as prose, and 32 of 59 checks

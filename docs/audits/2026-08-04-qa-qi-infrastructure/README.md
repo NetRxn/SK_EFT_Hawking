@@ -3,10 +3,14 @@
 **➡️ START HERE: [`PR_REVIEW_2026-08-05.md`](PR_REVIEW_2026-08-05.md)** — the six-reviewer PR review,
 its verdict (DO NOT MERGE), the measured state, and the ordered resume point.
 
-**Status:** 🔴 **NOT COMPLETE — REOPENED 2026-08-05 by multi-agent PR review.** 31 findings closed;
-**4 new Criticals (QI-31…QI-34) are OPEN and block merge.** All four are checks that **cannot fail**
-— the exact class this audit was convened to find, missed by it, and then "mutation-verified" by
-W-D's own tests.
+**Status:** 🟠 **MERGE BLOCKERS CLEARED 2026-08-05; the review's Important findings remain open.**
+35 findings closed — **QI-31…QI-34, the four Criticals that blocked merge, are FIXED** (see §W-F),
+each verified by a probe seeded in the PRODUCTION artifact rather than a fixture. All four were
+checks that **could not fail** — the exact class this audit was convened to find, missed by it, and
+then "mutation-verified" by W-D's own tests. ~17 Important findings from the same review are filed,
+not fixed; the reviewer-6 findings (the human-verification write path, a RED test hidden behind the
+`slow` marker, silent severity downgrades, the 11 untested gate evaluators) are recorded in the
+review file and are **not** merge blockers.
 
 ⚠️ **RETRACTED: "all 59 checks are mutation-verified in both directions."** That headline stood in
 this file, `RESUME_STATE.md` and ADR-009. What the D5 registry actually certifies is *"a decision was
@@ -311,7 +315,34 @@ Legend: ⬜ open · 🔄 in progress · ✅ done (with the verifying evidence na
       integer literal in the check body — which is why the display cap is a named `_SAMPLE` rather
       than an inline `8`.
 
-### W-F — OPEN: found by PR review 2026-08-05, block merge
+### W-F — ✅ CLOSED 2026-08-05: the four merge blockers found by PR review
+
+All four are fixed, and each was verified by the criterion that found them —
+**seed the defect in the PRODUCTION artifact, not in a monkeypatched fixture** (QI-30).
+Every one now has a probe that turns the live check red:
+
+| finding | production probe | result |
+|---|---|---|
+| QI-31 | a drifted cell / a rules-only table / a deleted row in the shipped `table1_experimental_params.tex` | rc=1 (×3) |
+| QI-32 | a new unresolved `\texttt{}` reference added to `papers/paper12_polariton/paper_draft.tex` | 82 vs ceiling 81 → rc=1 |
+| QI-33 | a real single-word title drift added to `CITATION_REGISTRY` | 8 vs ceiling 7 → rc=1 under `--strict` |
+| QI-34 | a real recurrence written into `papers/AutomatedReviews/` | 1 contradicted → rc=1 |
+
+**Not one of the four was fixed by widening a constant.** QI-31 and QI-32 were reading the
+wrong artifact; QI-34 was reading the wrong FIELD of the right one; QI-33's strict branch was
+promoting the class its own docstring calls advisory. Where inherited debt could not be repaired
+on this branch, it is frozen at a **zero-headroom ratchet** with a test asserting the live corpus
+sits exactly at the ceiling — `LEGACY_DRAFT_UNRESOLVED_REF_CEILING = 81`,
+`BIBITEM_TITLE_DRIFT_CEILING = 7` — so raising one to buy a green run fails.
+
+⚠️ **Two fixture defects surfaced while fixing these, and both are the same shape as the
+findings.** `test_d5_reviews._finding` modelled a ReviewFinding node carrying `label` and no
+`name`, so no test in that file could have shown the check reading the truncated field; and its
+marginal-band pair scored 0.4444, which the new threshold excludes outright, so both of that
+test's legs would have passed with the tie-breaker never exercised. A band-anchored fixture goes
+vacuous the moment the band moves.
+
+#### Original filing (2026-08-05)
 
 ⚠️ **PROVENANCE, measured 2026-08-05 — NONE of these is a branch regression.** The question
 "did this used to work?" was asked and answered against git history, because the disposition
@@ -341,7 +372,7 @@ evidence the leg had been dead since March.
 and I did not apply as a sweep — *seed the defect in the PRODUCTION artifact, not in a monkeypatched
 fixture* — is what would have caught every one.
 
-- [ ] **QI-31** 🔴 **`paper_table` never reads the paper.** `physics.py` resolves
+- [x] **QI-31** 🔴 **`paper_table` never reads the paper.** `physics.py` resolves
       `papers/paper1_first_order/paper_draft.tex` and uses it **only for `.exists()`**; the "paper"
       side of the comparison is a hardcoded dict in the check body. Editing Paper 1's Table 1 to any
       wrong value cannot fail the one check registered to catch exactly that.
@@ -353,8 +384,9 @@ fixture* — is what would have caught every one.
       and the code disagree, which is the entire purpose of the check."*
       **Fix:** parse the cells from the `.tex` as `d1_hierarchy_table` already does, and delete the
       duplicated dict.
+      ✅ **CLOSED `17bbe234`** — now parses the shipped `tables/table1_experimental_params.tex` in three legs (the draft `\input`s it; every cell against the canonical evaluator at ONE unit in the cell's last printed place; every declared row present). 15 real cell comparisons replace 12 tautologies. The duplicated dict is deleted.
 
-- [ ] **QI-32** 🔴 **`paper_provenance`'s theorem-reference leg examines 0 of 1,963 candidates.**
+- [x] **QI-32** 🔴 **`paper_provenance`'s theorem-reference leg examines 0 of 1,963 candidates.**
       `re.findall(r'\\texttt\{([a-z_][a-zA-Z0-9_]*)\}')` cannot cross a backslash, and LaTeX writes
       underscores inside `\texttt{}` as `\_`. **Measured across all 64 drafts: 480 raw matches, 0
       containing `_`, against 1,963 `\texttt{}` blocks that contain an escaped underscore** — i.e.
@@ -365,8 +397,9 @@ fixture* — is what would have caught every one.
       ⚠️ My D5 fixtures used raw `\texttt{real_theorem}` — the one input shape the check can parse and
       the shape no real draft uses.
       `paper_provenance` is one of four checks `gate_precheck.py s10` runs.
+      ✅ **CLOSED `2dc856ec`** — the leg is REMOVED, not revived: resolving a Lean name cited in prose is `prose_lean_refs`'s question and that check owns a real extractor and resolver. Its scope grew instead, from 21 bundles to all 64 drafts: the 43 legacy drafts are now measured (774 candidates, 81 unresolved across 23 drafts) under a zero-headroom ratchet. Repairing the 81 is ADR-010.
 
-- [ ] **QI-33** 🔴 **`bibitem_title_primary_source` cannot fail, and is suppressing 9 live flags.**
+- [x] **QI-33** 🔴 **`bibitem_title_primary_source` cannot fail, and is suppressing 9 live flags.**
       `summary_passed = not _cfg.STRICT_MODE or (...)` reduces to the literal `True` in every
       automated run, and no caller passes `--strict`. Run live: **PASS with 9 DROP-WORD flags** — the
       BLOCKER class it exists to detect. Confirmed samples include `Berti2025` and `DESI2024`
@@ -374,8 +407,9 @@ fixture* — is what would have caught every one.
       which reads as a citation pointing at a different paper.
       It is **not** in ADR-009 §Deferred item 3's disposition table, so it was never consciously
       ruled advisory.
+      ✅ **CLOSED `637d1184`** — `--strict` gained a caller in `2577fdbc`, which made the strict branch load-bearing and exposed that it promoted NOT-FOUND (58 live, advisory by design) alongside DROP-WORD (7). Strict now promotes DROP-WORD only; 2 of the 9 flags were `pdfminer` whitespace artifacts and are repaired; the remaining 7 are ratcheted.
 
-- [ ] **QI-34** 🔴 **`recurrence_reopens_closures`' threshold is above its live maximum — the FOURTH
+- [x] **QI-34** 🔴 **`recurrence_reopens_closures`' threshold is above its live maximum — the FOURTH
       mis-calibration.** `_RECURRENCE_MIN_OVERLAP = 0.40`. **Measured on the live corpus: 7,489
       candidate pairs, max Jaccard 0.3750.** Zero pairs can clear it; the `+0.10` section-number
       tie-breaker tightens it further. Live output `213 compared / 0 contradicted` is the only
@@ -388,6 +422,7 @@ fixture* — is what would have caught every one.
       **Fix:** calibrate against the measured distribution (p99 0.200 / max 0.375) **and** add a test
       asserting the live corpus max stays below the threshold by a stated margin, or the next corpus
       shift silently re-deadens it.
+      ✅ **CLOSED `865db716`** — NOT a fourth tuning. The node already carried `name: heading[:200]` next to `label: heading[:50]` and the check read the truncated one; open findings whose heading is a RESOLUTION NOTICE (the corpus's top three scores, every one a closure matched against its own “**RESOLVED**” restatement) are now excluded. Corpus max 0.375 → 0.267, a true restatement 0.500 → 0.900, separation 1.33× → **3.37×**. 0.45 chosen inside the resulting empty band, not from the live maximum. The frozen fixture pairs are still not separated and the guard is still weak — it is now weak with a margin.
 
 ⬜ **Also open, filed not fixed:** ~17 Important findings from the same review — including
 `cross_path_consistency`'s two legs routing through the same function, `paper_latex_compiles`

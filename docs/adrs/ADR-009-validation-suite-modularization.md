@@ -881,7 +881,16 @@ same discipline as §Deferred item 7's four-way miscount.)*
 **D5 shipped as prose and is now mechanical. It is NOT yet satisfied.**
 ⚠️ *Corrected 2026-08-05:* PR review found four checks with a `MUTATION_VERIFIED` entry that
 cannot fail in production (audit QI-31…QI-34). The obligation's MECHANISM is in place and
-holds; the claim that all 59 are verified in both directions is retracted. `tests/test_d5_mutation_obligation.py`
+holds; the claim that all 59 are verified in both directions is retracted.
+
+⚠️ *All four are now FIXED* (`17bbe234`, `2dc856ec`, `865db716`, `637d1184`), each re-verified by
+seeding the defect in the **production artifact** rather than a fixture — and that criterion is the
+lasting correction, not the four repairs. **The retraction above still stands for the other 55:**
+what the registry certifies is that a decision was recorded and the named test references the check
+in code, which is weaker than "can fail in production." Do not restore the stronger reading until
+the QI-30 sweep has run across all 59.
+
+`tests/test_d5_mutation_obligation.py`
 requires every registered check to declare its test status, and as of the QA/QI audit's workstream
 W-D **all 59 checks are mutation-verified** — `AWAITING_MUTATION_TEST` is empty and its ceiling is
 **0**, so the next check added without a both-directions test fails on arrival rather than being
