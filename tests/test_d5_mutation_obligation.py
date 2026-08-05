@@ -254,6 +254,42 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
         "as vetted, that --force-notebooks bypasses the cache (H5), and that a src/core "
         "edit invalidates it — the last is the cache's worst possible failure",
     ),
+    # freshness.py: 37 tests / 13 mutations. The three regenerators are QUARANTINED from
+    # the characterization harness (they mutate the tree), so a real test is the only
+    # protection they have ever had.
+    "counts_fresh": (
+        "test_d5_freshness.py",
+        "3 mutations on `_counts_is_stale` incl. `rglob` -> `glob` — ADR-004 W7 M2, the "
+        "ORIGINAL instance of the QI-01 class. A failed/unrunnable generator fails the "
+        "check rather than reading as fresh",
+    ),
+    "tables_fresh": (
+        "test_d5_freshness.py",
+        "2 mutations incl. `min` -> `max` over output mtimes: taking the NEWEST output "
+        "would let one regenerated table vouch for a stale set",
+    ),
+    "claim_clusters_fresh": (
+        "test_d5_freshness.py",
+        "2 mutations; the v1/v2 discriminator exercised so a v1 review cannot trigger "
+        "regeneration it does not govern",
+    ),
+    "notebook_stored_outputs_current": (
+        "test_d5_freshness.py",
+        "6 mutations. One leg per reviewer-demonstrated bypass of an earlier version: "
+        "stale figure title (round-7), moved scalar marker (round-8), base64-vs-list "
+        "asymmetry (round-8), length-only digest (round-9), narrow MIME allow-list "
+        "(round-10), hand-edited SVG (round-12), plus the empty-scope FAIL",
+    ),
+    "bundle_source_freshness": (
+        "test_d5_freshness.py",
+        "the `--strict` WARN->FAIL promotion caught; that is the only behaviour a bug "
+        "could silently disable, and STRICT_MODE is read by attribute (H5)",
+    ),
+    "inventory_index_autogen_fresh": (
+        "test_d5_freshness.py",
+        "ADVISORY BY DESIGN (item 3), so both directions are on the WARNING. A leg pins "
+        "that a raising generator can never fail the suite",
+    ),
 }
 
 #: Checks with no both-directions test yet. **This list may only shrink.**
@@ -267,22 +303,22 @@ AWAITING_MUTATION_TEST: frozenset[str] = frozenset({
     "lean_source", "lean_build", "axiom_closure_allowlist",
     "elaboration_knob_watchlist", "bundle_figure_integrity", 
     "paper_provenance",
-    "parameter_provenance", "counts_fresh", "tables_fresh", "claim_clusters_fresh",
+    "parameter_provenance", 
     "graph_integrity", "atlas_integrity", "atlas_hypothesis_discipline",
     "bundle_metadata_matches_graph",
-    "notebook_stored_outputs_current", "readiness_verdicts_agree",
+    "readiness_verdicts_agree",
     "citation_primary_sources_present", "provenance_doi_in_registry", "bundle_consistency",
-    "bundle_source_freshness", "bibitem_title_primary_source", 
+    "bibitem_title_primary_source", 
     "bundle_registry_consistency", "axiom_count_prose_consistency",
     "prose_theorem_reference_coverage", "theorem_name_embedded_citations",
-    "inventory_index_autogen_fresh", "lean_docstring_refs_resolve",
+    "lean_docstring_refs_resolve",
     "paper_toolchain_pin_drift",
 })
 
 #: The ratchet. Measured 2026-08-04. It may be LOWERED, never raised.
 #: History: 54 (seeded) -> 50 (reviews.py) -> 44 (lean_substrate.py)
-#: -> 35 (physics.py) -> 29 (lean_statements.py + notebooks.py).
-AWAITING_CEILING = 29
+#: -> 35 (physics.py) -> 29 (lean_statements.py + notebooks.py) -> 23 (freshness.py).
+AWAITING_CEILING = 23
 
 
 def _registered() -> list[str]:
