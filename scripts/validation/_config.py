@@ -59,3 +59,46 @@ FORCE_NOTEBOOK_REEXEC: bool = False
 #: `--check paper_latex_compiles` would skip the very check it names). A
 #: silently-stuck `False` makes it skip forever.
 FORCE_LATEX: bool = False
+
+#: Unattended-runner mode. Set from `--ci`. Read by `validate.main()` (NOT by any
+#: check body) to skip the checks whose premise does not hold on a fresh clone, and
+#: to enforce a coverage floor.
+#:
+#: WHY A MODE AND NOT A CHECK LIST: a hardcoded list in a workflow file drifts from
+#: the registry silently — the failure this audit found in `EXPECTED_CHECKS`,
+#: `_REGENERATORS` and `validation_checks()`. The exclusions live next to the code
+#: that justifies them.
+#:
+#: MEASURED, and this is the whole reason the mode exists: on a real `git clone`
+#: of this branch, `docs/counts.json` is written BEFORE `src/`, `lean/` and
+#: `papers/` — so all four of `counts_fresh`'s staleness criteria read STALE on an
+#: untouched checkout, and it shells out to `update_counts.py` (1800 s timeout,
+#: needs `lake`). mtime freshness is a workstation convenience; on a runner it is
+#: noise that costs half an hour.
+CI_MODE: bool = False
+
+#: Checks skipped under `--ci`, each with the reason. Kept HERE rather than in a
+#: workflow file so the justification travels with the exclusion.
+CI_SKIP: dict[str, str] = {
+    "counts_fresh": "mtime-based; every criterion reads stale on a fresh clone, then "
+                    "shells to update_counts.py (1800s, needs lake)",
+    "tables_fresh": "same mtime premise; shells to render_paper_tables.py (300s). "
+                    "Content is covered by `paper_table`, which parses the shipped "
+                    "table (QI-31)",
+    "claim_clusters_fresh": "same mtime premise; shells to cluster_detect.py",
+    "notebook_exec": "the skip-cache is gitignored, so a runner always executes all "
+                     "91 notebooks; belongs to the nightly tier",
+}
+
+#: The coverage floor for `--ci`. **This is the point of the mode.**
+#:
+#: Dropping the Lean toolchain from a runner makes the suite ~200 s faster and stops
+#: 7 checks that read `lean_deps.json` plus 3 that shell to `lake` from measuring
+#: anything — while the run still reports green. That is "absence of measurement
+#: rendered as success" reintroduced at the CI layer, which is the finding this
+#: entire audit exists to close.
+#:
+#: So `--ci` FAILS when fewer checks execute than this. A missing toolchain becomes a
+#: red build reading "48 of 55 ran", not a green tick. Lower it only with a stated
+#: reason, exactly like every other ratchet in this codebase.
+CI_MIN_CHECKS_RUN: int = 55

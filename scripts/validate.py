@@ -553,8 +553,16 @@ Examples:
               "drafts). Default skips it; it also auto-runs when selected via "
               "--check paper_latex_compiles.")
     )
+    parser.add_argument(
+        "--ci", action="store_true",
+        help=("Unattended-runner mode: skip the checks whose premise does not hold on "
+              "a fresh clone (the three mtime regenerators + notebook_exec), never "
+              "archive, and FAIL if fewer than CI_MIN_CHECKS_RUN checks actually ran. "
+              "Does NOT imply --strict: that is the submission gate (Invariant #12).")
+    )
     args = parser.parse_args(argv)
 
+    _cfg.CI_MODE = args.ci
     _cfg.STRICT_MODE = args.strict
     _cfg.FORCE_NOTEBOOK_REEXEC = args.force_notebooks
     _cfg.FORCE_LATEX = args.force_latex or args.check == "paper_latex_compiles"
@@ -595,6 +603,18 @@ Examples:
     results = run_checks(check_filter=args.check)
     elapsed = time.monotonic() - t0
 
+    # ── `--ci`: drop the checks whose premise does not hold on a runner ────────
+    # Applied HERE rather than inside the checks so no check body learns about CI —
+    # a check that behaves differently under CI is a check whose CI result means
+    # something different from its local result, which is how a green build stops
+    # being evidence. The exclusions and their reasons live in `_config.CI_SKIP`.
+    ci_skipped: list = []
+    if _cfg.CI_MODE and not args.check:
+        for name in list(results):
+            if name in _cfg.CI_SKIP:
+                del results[name]
+                ci_skipped.append(name)
+
     if args.json:
         payload = {
             "elapsed_seconds": round(elapsed, 2),
@@ -622,11 +642,32 @@ Examples:
         print_results(results)
         print(f"  Completed in {elapsed:.1f}s")
 
-    if not args.no_archive and not args.json and not args.check:
+    if not args.no_archive and not args.json and not args.check and not args.ci:
         path = archive_results(results)
         print(f"\n  Archived to: {path}")
 
     all_passed = all(r.passed for r in results.values())
+
+    # ── The coverage floor. THIS is the point of `--ci`. ──────────────────────
+    # Dropping the Lean toolchain from a runner makes the suite ~200 s faster and
+    # stops 7 lean_deps readers plus 3 `lake` shell-outs from measuring anything —
+    # while the run still reports green. That is "absence of measurement rendered
+    # as success" reintroduced one layer up, which is the finding this whole audit
+    # exists to close. A green tick over 48 of 59 is worse than no CI, because it
+    # manufactures confidence.
+    if _cfg.CI_MODE and not args.check:
+        n_ran = len(results)
+        if ci_skipped:
+            print(f"\n  --ci: skipped {len(ci_skipped)} check(s) whose premise does not "
+                  f"hold on a fresh clone: {', '.join(sorted(ci_skipped))}", file=sys.stderr)
+        if n_ran < _cfg.CI_MIN_CHECKS_RUN:
+            print(f"\n  ✗ CI COVERAGE FLOOR: {n_ran} check(s) ran, floor is "
+                  f"{_cfg.CI_MIN_CHECKS_RUN}. The suite got SMALLER, not greener — most "
+                  f"likely the Lean toolchain is absent, which silently disables the "
+                  f"lean_deps readers. Install it on the runner, or lower "
+                  f"CI_MIN_CHECKS_RUN with a stated reason.", file=sys.stderr)
+            return 1
+
     return 0 if all_passed else 1
 
 
