@@ -23,6 +23,8 @@ import json
 import sys
 from pathlib import Path
 
+import pytest
+
 SK_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(SK_ROOT / "scripts"))
 sys.path.insert(0, str(SK_ROOT))
@@ -314,6 +316,76 @@ class TestAtlasIntegrity:
             raise RuntimeError("bad lean_deps")
         monkeypatch.setattr(atlas_view, "load_lean_deps_file", _boom)
         assert ga.check_atlas_integrity().passed is False
+
+    def test_a_MISSING_lean_deps_does_not_kill_the_interpreter(self, tmp_path,
+                                                               monkeypatch):
+        """⚠️ `atlas_view.load_lean_deps_file` raised `SystemExit` (PR review, fixed
+        2026-08-05). `SystemExit` derives from `BaseException`, so it is NOT caught by
+        `except Exception` — and BOTH handlers on the path are `except Exception`:
+        `check_atlas_integrity`'s own, and `validate.run_checks`'s.
+
+        Measured: `atlas_integrity` is check 35 of 59, so a missing `lean_deps.json`
+        did not fail the atlas check — it terminated the interpreter and **the other 24
+        checks never ran**, with no report distinguishing that from a clean exit.
+
+        The test asserts the exception TYPE at the source, because that is the whole
+        defect: a library function taking a decision that belongs to the CLI boundary.
+        `test_no_check_path_raises_SystemExit` below holds the class."""
+        import atlas_view
+        monkeypatch.setattr(atlas_view, "LEAN_DEPS_PATH", tmp_path / "absent.json")
+        with pytest.raises(FileNotFoundError):
+            atlas_view.load_lean_deps_file()
+        # ...and the check contains it rather than dying.
+        r = ga.check_atlas_integrity()
+        assert r.passed is False
+        assert "lean_deps.json not found" in (r.error or "")
+
+    def test_no_check_path_raises_SystemExit(self):
+        """The CLASS, not the instance — the discipline QI-01 established after its
+        `glob` fix turned out to be one of six sites.
+
+        A `sys.exit()` / `raise SystemExit` anywhere reachable from a check bypasses
+        every `except Exception` in the suite and silently truncates the run. This
+        asserts there is none outside a `if __name__ == "__main__"` guard, across every
+        `scripts/*.py` module the check package imports.
+
+        Measured when written: exactly one violation (`atlas_view.load_lean_deps_file`,
+        fixed) and one correct site (`graph_integrity.main`, inside `main()`, which no
+        check calls)."""
+        import ast
+        import re as _re
+        scripts_dir = Path(__file__).resolve().parent.parent / "scripts"
+        imported: set = set()
+        for f in (scripts_dir / "validation" / "checks").glob("*.py"):
+            for m in _re.finditer(r"^\s*(?:import|from)\s+([A-Za-z_][\w.]*)",
+                                  f.read_text(), _re.M):
+                imported.add(m.group(1).split(".")[0])
+
+        offenders: list[str] = []
+        for name in sorted(imported):
+            p = scripts_dir / f"{name}.py"
+            if not p.is_file():
+                continue
+            tree = ast.parse(p.read_text())
+            guards = [(n.lineno, n.end_lineno) for n in ast.walk(tree)
+                      if isinstance(n, ast.If) and "__name__" in ast.unparse(n.test)]
+            # A `main()`-only exit is the CLI boundary and is correct; only flag sites a
+            # check could reach.
+            mains = [(n.lineno, n.end_lineno) for n in ast.walk(tree)
+                     if isinstance(n, ast.FunctionDef) and n.name == "main"]
+            def _inside(ln, spans):
+                return any(a <= ln <= b for a, b in spans)
+            for n in ast.walk(tree):
+                bad = (isinstance(n, ast.Raise) and n.exc is not None
+                       and "SystemExit" in ast.unparse(n.exc)) or (
+                      isinstance(n, ast.Call)
+                      and ast.unparse(n.func) in ("sys.exit", "exit"))
+                if bad and not _inside(n.lineno, guards) and not _inside(n.lineno, mains):
+                    offenders.append(f"{name}.py:{n.lineno}")
+        assert not offenders, (
+            f"SystemExit/sys.exit reachable from a check: {offenders}. These bypass "
+            f"`except Exception` in both check_* and validate.run_checks and truncate "
+            f"the suite silently — raise a normal exception and convert at the CLI.")
 
 
 class TestAtlasHypothesisDiscipline:

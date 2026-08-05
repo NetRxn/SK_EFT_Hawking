@@ -276,9 +276,25 @@ def build_atlas(lean_deps: list[dict], hyp_registry: dict | None = None,
 
 
 def load_lean_deps_file() -> list[dict]:
-    """Read lean_deps.json directly (does NOT trigger re-extraction)."""
+    """Read lean_deps.json directly (does NOT trigger re-extraction).
+
+    ⚠️ RAISES `FileNotFoundError`, NOT `SystemExit` (changed 2026-08-05, PR review).
+    It raised `SystemExit`, which derives from `BaseException` and is therefore NOT
+    caught by `except Exception`. Both handlers on the path are `except Exception`:
+    `graph_atlas.check_atlas_integrity`'s own, and `validate.run_checks`'s. So a
+    missing `lean_deps.json` did not fail the atlas check — it **terminated the
+    interpreter mid-suite**. `atlas_integrity` is check 35 of 59, so the other
+    **24 checks after it never ran**, and the run ended with no report distinguishing
+    that from a clean exit.
+
+    This is the `sys.exit()`-in-a-library antipattern: a control-flow decision that
+    belongs to the CLI boundary, taken inside a function four call-frames deep. `main()`
+    below converts it back at the boundary, where it is correct.
+    """
     if not LEAN_DEPS_PATH.exists():
-        raise SystemExit(f"lean_deps.json not found at {LEAN_DEPS_PATH} — run extraction first.")
+        raise FileNotFoundError(
+            f"lean_deps.json not found at {LEAN_DEPS_PATH} — run extraction first "
+            f"(`cd lean && lake build SKEFTHawking.ExtractDeps`).")
     with open(LEAN_DEPS_PATH) as f:
         return json.load(f)
 
@@ -292,7 +308,17 @@ def main(argv: list[str] | None = None) -> int:
                          "atlas_view.boundary.json) — post-compaction freshness; NEVER the tracked file")
     a = ap.parse_args(argv)
 
-    atlas = build_atlas(load_lean_deps_file())
+    # The CLI boundary is where "stop the process" is a correct decision, so the
+    # conversion lives here rather than inside `load_lean_deps_file` (see its
+    # docstring: raising SystemExit from a library killed validate.py mid-suite,
+    # taking 24 checks with it).
+    try:
+        lean_deps = load_lean_deps_file()
+    except FileNotFoundError as exc:
+        print(str(exc), file=sys.stderr)
+        return 2
+
+    atlas = build_atlas(lean_deps)
     s = atlas["summary"]
     print("Derived Proof Atlas (Phase 2: tracks + apexes)")
     print(f"  theorem nodes : {s['theorem_nodes']}")
