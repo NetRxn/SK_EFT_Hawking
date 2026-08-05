@@ -325,7 +325,7 @@ referenced. Measured at repair: **61 of 64 papers RED, verdict `True`** — whic
 design.
 
 **What actually fails today — measured, not inferred.** A full run on the ADR-009 branch 2026-08-04
-(`docs/validation/reports/validation_20260804T174135Z.json`, 447 s): **57 of 59 passed, 2 failed, 1,053
+(`docs/validation/reports/validation_20260804T174135Z.json`, 447 s): **57 of 59 *(2026-08-04; now 56 of 59 — the LaTeX slow gate was deleted 2026-08-05)* passed, 2 failed, 1,053
 warnings.** Both failures are intentional, and **neither is clearable by infrastructure work**:
 
 | red check | why | who clears it |
@@ -346,7 +346,7 @@ as canonical — under a filename that is also wrong.
 
 | | at first mapping | after ADR-009 Ph. 0–3 | now (2026-08-04, audit W-D) |
 |---|---|---|---|
-| Checks with a test that would **fail on a seeded defect** | **5** of 59 | 10 of 59 | ✅ **59 of 59** |
+| Checks with a test that would **fail on a seeded defect** | **5** of 59 | 10 of 59 | ⚠️ **4 of 59 production-seeded** (55 fixture-only — `FIXTURE_ONLY_CEILING`) |
 | Checks tested only by `assert result.passed` on the live tree | 11 | 11 | **0** |
 | Checks with **no test at all** | 37 | 32 | **0** |
 | Tests asserting the check **count or registration order** | **0** | **25** (three suites) | 25 |
@@ -392,7 +392,7 @@ per-check number was D5's standing obligation** — every new or modified check 
 is the work that closes the §7 pattern. The split made it tractable (a domain module fits in one read); it
 did not perform it.
 
-✅ **It has since been performed** (audit 2026-08-04, workstream W-D): all 59 checks are mutation-verified
+⚠️ **RETRACTED 2026-08-05 (PR-review pass 2, reviewer R3).** This read *"It has since been performed (audit 2026-08-04, workstream W-D): all 59 checks are mutation-verified"*. The retraction was written elsewhere on 2026-08-04 and **this file was edited by the retraction commit `9a2a757f` without correcting it** — one unrelated line changed instead. The branch's own ratchet contradicts it: `FIXTURE_ONLY_CEILING = 55`, i.e. **4 of 59 are production-seeded**; the other 55 are caught only against a patched fixture, which QI-30 establishes proves nothing about production
 and the obligation is enforced by `tests/test_d5_mutation_obligation.py`. The split's contribution was real
 and is worth naming precisely — each domain module fits in one read, which is what made writing a
 per-check test for 54 checks a tractable exercise rather than an archaeological one.

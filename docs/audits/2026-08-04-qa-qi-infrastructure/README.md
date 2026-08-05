@@ -28,13 +28,13 @@ highest ordinal — the original filing said "27", which was the highest number 
 the board already carried 28 entries. Re-count the boxes; do not read the last id.)* This remains the
 tracker; keep the measurement column honest if anything reopens.
 
-**The headline result: `AWAITING_MUTATION_TEST` is EMPTY.** All **59 registered checks are
+**The headline result as originally written: `AWAITING_MUTATION_TEST` is EMPTY.** ⚠️ **This sentence is the very claim retracted above, re-asserted 11 lines later** — found by PR-review pass 2 (R3-MAJ3). What is true: all 59 have *a* mutation test; only **4** seed the defect into the PRODUCTION artifact, which is the criterion QI-30 established. Read the next clause as scoped to fixture-level mutation. All **59 registered checks are
 mutation-verified** in both directions, and `AWAITING_CEILING` is **0** — so the next check added
 without a both-directions test fails on arrival rather than being absorbed into a backlog. ADR-009
 D5, the obligation its own §Context calls *"the one that caused the damage"*, is discharged.
 
 **Verified at close:** fast suite **5398 passed / 5 skipped / 0 failed** (5055 at audit open,
-5086 at W-C close); **`CHARACTERIZATION HELD — 49 checks identical`**; `validate.py` **57 of 59** in
+5086 at W-C close); **`CHARACTERIZATION HELD — 49 checks identical`**; `validate.py` **57 of 59 *(2026-08-04; now 56 of 59 — the LaTeX slow gate was deleted 2026-08-05)*** in
 317.8 s, both reds owned by the publication workstream and **both re-identified by name** (QI-29 —
 the documented pair was wrong). Branch **NOT merged** — verify
 with `git merge-base --is-ancestor HEAD main` rather than inheriting this line.
@@ -616,7 +616,7 @@ edges closing 4 broken provenance chains) and **no check verdict moved by any of
 
 **What is genuinely still open, and is NOT this audit's to close:**
 - The branch is **not merged**. Re-check with `git merge-base --is-ancestor HEAD main`.
-- `validate.py` is **57 of 59**. The two reds are **`bundle_metadata_matches_graph`** (14 of 21
+- `validate.py` is **57 of 59 *(2026-08-04; now 56 of 59 — the LaTeX slow gate was deleted 2026-08-05)***. The two reds are **`bundle_metadata_matches_graph`** (14 of 21
   bundles assert `stage13_status: green` with blockers open) and **`readiness_submission_gate`**
   (61 of 64 papers RED). Both are the dial working as designed and belong to the publication
   workstream. ⚠️ *Not* `paper_latex_compiles` — see QI-29.

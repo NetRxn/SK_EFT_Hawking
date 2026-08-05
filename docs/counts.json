@@ -1,5 +1,5 @@
 {
-  "generated": "2026-08-05T11:04:11.748749",
+  "generated": "2026-08-05T11:52:32.849469",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
     "total_declarations": 40262,
@@ -2045,7 +2045,7 @@
   "python": {
     "python_modules": 137,
     "test_files": 165,
-    "pytest_cases": 5601,
+    "pytest_cases": 5611,
     "notebooks": 91,
     "papers": 42,
     "figures": 170

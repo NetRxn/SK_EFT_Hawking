@@ -74,6 +74,30 @@ class CheckResult:
     details: List[Detail] = field(default_factory=list)
     error: Optional[str] = None
 
+    #: False when the check RETURNED WITHOUT MEASURING — a missing artifact, an
+    #: absent toolchain, an unparseable input. Added 2026-08-05 after PR-review
+    #: pass 2, where **six reviewers** independently found the same root cause:
+    #: nothing could distinguish "measured and passed" from "could not measure, so
+    #: said PASS". Two guards were built on `len(results)` and on `passed`, and
+    #: both were therefore blind:
+    #:
+    #:   * `--ci`'s coverage floor counted checks *invoked* — `run_checks` inserts
+    #:     an entry for every spec including on exception — so `n_ran` was
+    #:     identically 55 against a floor of 55 and could never fire;
+    #:   * `_memo` cached a `SKIPPED — lake not found` PASS under a key
+    #:     byte-identical to the real measurement's, and replayed it after the
+    #:     toolchain came back (trigger: the repo's own `rm -rf .lake/build` step).
+    #:
+    #: ⚠️ THIS IS A SEPARATE FIELD, NOT A THIRD VALUE OF `passed`, and that is
+    #: deliberate. ADR-009 §Deferred item 4 declined an `UNEVALUATED` *passed*
+    #: state because `passed` is D2 contract item 5, read by the `--json` payload,
+    #: `gate_precheck.py` and `pre-commit-sync.sh`; a third value would break them.
+    #: An additive field with a True default leaves every existing reader correct.
+    #:
+    #: Setting it False does NOT change `passed`. A cannot-measure branch that
+    #: returns PASS keeps returning PASS — it just stops counting as evidence.
+    measured: bool = True
+
 
 @dataclass
 class CheckSpec:

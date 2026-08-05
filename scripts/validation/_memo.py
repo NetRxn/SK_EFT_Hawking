@@ -35,14 +35,21 @@ survives the very change it should have caught.
 
 Four structural guards, in order of how much they carry:
 
-1. **The key includes the check function's own source** (`source_fingerprint`).
-   Editing the check — including editing what it reads — invalidates every entry.
-   This is the guard that makes the others recoverable rather than permanent.
-2. **`tests/test_validation_memo.py` seeds a real change into each declared input,
-   in the production tree, and asserts the key moves.** Per QI-30: a mutation
-   caught against a patched fixture proves nothing about production.
-3. **Only PASS is cached.** A failing check re-runs every time, so a red check can
-   never be memoized away, and a fix is never masked by a stale failure.
+1. **The key includes the check's whole defining MODULE plus its own body**
+   (`source_fingerprint` + `_fn_source_fingerprint`). ⚠️ Until 2026-08-05 this
+   hashed only the `def`, so module-level constants — including the
+   FAIL-vs-advisory switch — were outside the key (reviewer R1).
+2. **`tests/test_validation_memo.py::TestCheckKeysSpanTheirInputs` seeds a real
+   change into each declared input, in the production tree, and asserts **THIS
+   CHECK'S key** moves.** ⚠️ Until 2026-08-05 the tests seeded the fingerprint
+   HELPERS and never asserted any check's key called them — reviewer R2 deleted
+   `lean_source_fingerprint()` from a live key_fn and the suite returned
+   `24 passed`. QI-30's criterion, violated inside the tests written to satisfy it.
+3. **A NON-MEASUREMENT IS NEVER CACHED** (`CheckResult.measured`), and only PASS
+   is stored. ⚠️ "Only PASS is cached" alone was **defeated by a category error**:
+   a fail-open SKIP *is* a PASS. Five reviewers independently showed a
+   `SKIPPED — lake not found` verdict being stored under a key byte-identical to
+   the real measurement's and replayed after the toolchain returned.
 4. **The skip is VISIBLE, and the whole report is replayed** — a memo hit emits a
    `Detail` saying so (like `notebook_exec`'s `skip_cache` line) *and* re-emits
    every detail of the cached run. Caching only the verdict would have deleted
@@ -50,6 +57,11 @@ Four structural guards, in order of how much they carry:
    from every run after the first — real trust-surface signal, silently narrowed.
 
 Plus two blunt escapes: `--no-memo`, and `--strict` implying it (see `memoized`).
+⚠️ Those escapes bind the `paper_latex_compiles` per-draft cache too, as of
+2026-08-05 — it was gated on `--force-latex` alone while this docstring claimed
+the submission gate always re-measures for both (reviewer R4-I1). Two caches with
+two bypass rules and one docstring covering both is how a guarantee goes false
+without anyone editing it.
 
 FAIL-SAFE DIRECTION
 -------------------
@@ -131,18 +143,52 @@ def tree_fingerprint(root: Path, pattern: str = "**/*") -> str:
 
 
 def source_fingerprint(fn: Callable) -> str:
-    """Digest of a function's own source text — guard 1 above. Applied
+    """Digest of the check's **whole defining module** — guard 1 above. Applied
     automatically to every memoized body by :func:`memoized`; callers do not
     (and must not need to) add it themselves.
 
-    `inspect.getsource` can raise for a function with no retrievable source (a
-    C-level or exec'd callable). That returns a sentinel that varies per call, so
-    the key never matches and the check always runs: fail-safe, not fail-quiet.
+    ⚠️ WIDENED 2026-08-05 from `getsource(fn)` to `getsource(getmodule(fn))`.
+    `inspect.getsource` on a *function* returns only that function's own text, so
+    every module-level constant, regex and helper it reads sat OUTSIDE the key —
+    while this docstring claimed to cover *"editing the check, including editing
+    what it reads"*. Demonstrated by reviewer R1 and reproduced with a
+    line-count-preserving edit to `_DOCSTRING_STRICT_FAMILIES`, the constant that
+    decides **FAIL vs advisory** for `lean_docstring_refs_resolve`:
+
+        key before: 2b0ae907a6a826e9
+        key after : 2b0ae907a6a826e9      <- identical
+
+    i.e. flipping a check's fail-vs-warn switch left its cached verdict standing.
+    Module granularity costs extra invalidation (an unrelated edit to a sibling
+    check re-runs this one) and that is the correct direction to be wrong in.
+
+    Falls back to the function's own source, then to a per-call sentinel that can
+    never match — fail-safe, not fail-quiet.
+    """
+    for target in (inspect.getmodule(fn), fn):
+        try:
+            if target is not None:
+                return hashlib.sha256(
+                    inspect.getsource(target).encode("utf-8")).hexdigest()[:16]
+        except (OSError, TypeError):
+            continue
+    return f"\0NOSOURCE:{id(fn)}"
+
+
+def _fn_source_fingerprint(fn: Callable) -> str:
+    """The body's OWN text, hashed alongside the module-level digest.
+
+    Both are needed and neither suffices. Module granularity alone (the R1-MAJ3
+    fix) makes two checks defined in the same module share a source component —
+    `axiom_closure_allowlist` and `lean_docstring_refs_resolve` both live in
+    `lean_toolchain.py` — so the body would stop contributing identity at all.
+    Function granularity alone was the R1-MAJ3 defect: module-level constants,
+    including the FAIL-vs-advisory switch, sat outside the key.
     """
     try:
         return hashlib.sha256(inspect.getsource(fn).encode("utf-8")).hexdigest()[:16]
     except (OSError, TypeError):
-        return f"\0NOSOURCE:{id(fn)}"
+        return f"\0NOFNSRC:{id(fn)}"
 
 
 def lean_source_fingerprint() -> str:
@@ -154,8 +200,20 @@ def lean_source_fingerprint() -> str:
     before the next extract, it holds the digest of the PREVIOUS tree. Keying on
     it would skip exactly the run that should have caught the edit. Recomputing
     costs 0.42 s and cannot be stale.
+
+    ⚠️ THE ROOT AGGREGATE IS A SIBLING, NOT A CHILD (fixed 2026-08-05, reviewer
+    R6). `lean/SKEFTHawking.lean` — 5,226 lines, the file whose `import` lines
+    decide which modules are in the environment `AxiomAudit` actually walks — sits
+    NEXT TO `lean/SKEFTHawking/`, so `glob("**/*.lean")` over the directory missed
+    it entirely (verified: 2,039 files matched, the root file not among them).
+    Adding or removing an `import SKEFTHawking.Foo` therefore changed the verified
+    surface without moving the key. It is hashed explicitly below.
     """
-    return tree_fingerprint(_H.PROJECT_ROOT / "lean" / "SKEFTHawking", "**/*.lean")
+    lean = _H.PROJECT_ROOT / "lean"
+    return memo_key(
+        tree_fingerprint(lean / "SKEFTHawking", "**/*.lean"),
+        files_fingerprint([lean / "SKEFTHawking.lean"]),
+    )
 
 
 def toolchain_pin_fingerprint() -> str:
@@ -240,7 +298,7 @@ def memoized(name: str, key: str, compute: Callable[[], CheckResult],
     # own source is part of every key, unconditionally. A caller that forgot it would
     # get a cache surviving an edit to the very check it caches — and a guard you can
     # forget to apply is the parallel-list failure this codebase keeps re-finding.
-    key = memo_key(key, source_fingerprint(compute))
+    key = memo_key(key, source_fingerprint(compute), _fn_source_fingerprint(compute))
 
     # ONE entry per check, keyed on the LAST passing state — not a keyed history.
     # Consequence, deliberate: reverting a file to a previously-vetted state MISSES
@@ -263,6 +321,27 @@ def memoized(name: str, key: str, compute: Callable[[], CheckResult],
                     + [Detail(*d) for d in hit.get("details", [])])
 
     result = compute()
+
+    # ⛔ A NON-MEASUREMENT IS NEVER CACHED. Added 2026-08-05 after PR-review pass 2,
+    # where FIVE reviewers independently demonstrated the hole this closes.
+    #
+    # Guard 3 below was written as "only PASS is cached, so a red check always
+    # re-runs". It was defeated by a category error: **a fail-open SKIP IS a PASS.**
+    # `axiom_closure_allowlist` has six branches returning `passed=True` without
+    # measuring (lake absent, AxiomAudit.lean absent, timeout, exception, non-zero
+    # exit, unparseable output). Each was stored as a genuine verdict, under a key
+    # BYTE-IDENTICAL to the one holding the real measurement — so restoring the
+    # toolchain replayed the skip in 0.07 s instead of re-measuring, indefinitely.
+    #
+    # The trigger needed no adversary: `rm -rf .lake/build && lake build ...` is the
+    # project's own published clean-baseline step, and any `validate.py` in between
+    # poisoned the cache with a skip that outlived the rebuild.
+    if not result.measured:
+        if not bypass:                       # also evict any stale green under this key
+            entries = _load()
+            if entries.pop(name, None) is not None:
+                _store(entries)
+        return result
 
     # Only PASS is recorded, and a FAIL actively evicts: a check that starts
     # failing must not leave a stale green key behind for the next run to find.
@@ -304,6 +383,24 @@ def memoize_check(name: str, key_fn: Callable[[], str], what: str):
         wrapper.__qualname__ = body.__qualname__
         wrapper.__doc__ = body.__doc__
         wrapper.__memo_body__ = body            # type: ignore[attr-defined]
+        # EXPOSED SO TESTS CAN SEED **THIS CHECK'S KEY**, not a helper it might not
+        # call. Added 2026-08-05: reviewer R2 deleted `lean_source_fingerprint()`
+        # from `axiom_closure_allowlist`'s key_fn in production — the outcome
+        # `tests/test_validation_memo.py` itself calls "the single worst outcome
+        # this cache can produce" — and the suite returned `24 passed`. The tests
+        # asserted the FINGERPRINT HELPERS move when their inputs move, and never
+        # that any check's key calls them. A guard one level away from what it
+        # protects is the same defect as a check one level away from what it
+        # measures. `TestCheckKeysSpanTheirInputs` now seeds through here.
+        wrapper.__memo_key_fn__ = key_fn        # type: ignore[attr-defined]
+        # The COMPLETE key. `key_fn()` alone is NOT it — `memoized` folds in the
+        # module and body digests — and a test seeding through `key_fn` would miss
+        # exactly the inputs guard 1 covers. Found while writing those tests: the
+        # module-constant probe read unchanged against `key_fn` and changed against
+        # this.
+        wrapper.__memo_full_key__ = (                      # type: ignore[attr-defined]
+            lambda: memo_key(key_fn(), source_fingerprint(body),
+                             _fn_source_fingerprint(body)))
         return wrapper
     return deco
 

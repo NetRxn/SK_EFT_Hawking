@@ -19,8 +19,10 @@ ALWAYS-PASS checks; ADR-009 §Deferred item 3 dispositioned them in OPPOSITE
 directions and this header must not blur them:
 
 * `paper_latex_compiles` was a DEFECT and now **hard-fails** on a fatal compile
-  error. It is still slow-gated behind `_cfg.FORCE_LATEX`, so a default full run
-  skips it — skipped is not the same as advisory.
+  error, on EVERY run. ⚠️ This bullet read "it is still slow-gated behind
+  `_cfg.FORCE_LATEX`, so a default full run skips it" until 2026-08-05 — written
+  true, then left standing when that same day's commit deleted the slow gate in
+  THIS FILE. `--force-latex` now only bypasses the per-draft content-hash cache.
 * `paper_toolchain_pin_drift` is **advisory by design** and stays that way: a
   stale pin in a draft is a publication decision for Stage 13, not a defect.
 
@@ -38,6 +40,7 @@ use (never a module-level alias, never from `__file__` — H1); flags by attribu
 from __future__ import annotations
 
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -503,9 +506,18 @@ def check_paper_latex_compiles() -> CheckResult:
     n_cached = 0
     failed: List[tuple[str, int, str]] = []  # (code, n_fatal, first_error)
 
+    # ⚠️ THE BYPASS SET MUST MATCH `_memo`'s (fixed 2026-08-05, reviewer R4-I1).
+    # This cache was gated on `_cfg.FORCE_LATEX` alone, so `--strict`, `--no-memo`
+    # and `SKEFT_VALIDATION_NO_MEMO=1` all read it — while `_memo`'s docstring
+    # claimed, for both caches, that the Paper Submission Gate "always re-measures".
+    # Two caches with two different bypass rules and one docstring covering both is
+    # exactly how a guarantee becomes false without anyone editing it.
+    _bypass_cache = (_cfg.FORCE_LATEX or _cfg.NO_MEMO or _cfg.STRICT_MODE
+                     or os.environ.get("SKEFT_VALIDATION_NO_MEMO") == "1")
+
     cache_path = _H.PROJECT_ROOT / LATEX_COMPILE_CACHE
     prev_clean: Dict[str, str] = {}
-    if not _cfg.FORCE_LATEX:
+    if not _bypass_cache:
         try:
             loaded = json.loads(cache_path.read_text())
             if isinstance(loaded, dict):
@@ -521,7 +533,7 @@ def check_paper_latex_compiles() -> CheckResult:
             continue
 
         closure_hash = _memo.files_fingerprint(_draft_input_closure(tex))
-        if not _cfg.FORCE_LATEX and prev_clean.get(code) == closure_hash:
+        if not _bypass_cache and prev_clean.get(code) == closure_hash:
             n_cached += 1
             n_ok += 1
             new_clean[code] = closure_hash
@@ -559,7 +571,7 @@ def check_paper_latex_compiles() -> CheckResult:
     # Only clean compiles are recorded, so a failing draft never acquires a key and
     # recompiles every run until fixed. Written even when nothing changed: the file
     # is how a fresh checkout starts warming.
-    if not _cfg.FORCE_LATEX:
+    if not _bypass_cache:
         try:
             cache_path.write_text(json.dumps(
                 {"clean": new_clean}, indent=2, sort_keys=True))

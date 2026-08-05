@@ -321,6 +321,12 @@ def latex_env(monkeypatch, tmp_path):
     """Point the cache at a temp file and stub pdflatex. The stub writes no log,
     which the check reads as a clean compile — so a `subprocess.run` call means
     'this draft was compiled', and its absence means 'cached'."""
+    # The latex cache now honours the same bypass set as _memo (R4-I1), and
+    # conftest sets SKEFT_VALIDATION_NO_MEMO=1 suite-wide — so without this the
+    # cache is permanently bypassed and every "is it cached?" assertion is vacuous.
+    monkeypatch.delenv("SKEFT_VALIDATION_NO_MEMO", raising=False)
+    monkeypatch.setattr(_cfg, "NO_MEMO", False)
+    monkeypatch.setattr(_cfg, "STRICT_MODE", False)
     monkeypatch.setattr(pp.shutil, "which", lambda _: "/usr/bin/pdflatex")
     monkeypatch.setattr(pp, "LATEX_COMPILE_CACHE", str(tmp_path.name) + "/c.json")
     monkeypatch.setattr(pp._H, "PROJECT_ROOT", tmp_path.parent, raising=False)
@@ -408,3 +414,142 @@ class TestLatexCompileCache:
         recorded = set(json.loads(cache.read_text())["clean"])
         assert recorded <= set(BUNDLE_CODES)
         assert recorded, "nothing was recorded, so the warm-run test is vacuous"
+
+
+# ══════════════════════════════════════════════════════════════════════════
+# The tests PR-review pass 2 proved were missing
+# ══════════════════════════════════════════════════════════════════════════
+
+class TestCheckKeysSpanTheirInputs:
+    """⚠️ THIS CLASS EXISTS BECAUSE `TestKeyCoversItsInputs` ABOVE DOES NOT DO
+    WHAT IT SAYS.
+
+    Reviewer R2 (PR-review pass 2) deleted `lean_source_fingerprint()` from
+    `axiom_closure_allowlist`'s `key_fn` **in production** — producing precisely
+    the outcome this file's own docstring calls *"the single worst outcome this
+    cache can produce"* — and the suite returned **24 passed**. The class above
+    seeds the fingerprint HELPERS and asserts they move. Nothing asserted that any
+    check's key actually CALLS them.
+
+    That is QI-30's criterion violated inside the tests written to satisfy it: a
+    mutation caught one level away from the artifact proves nothing about the
+    artifact. These tests seed through `__memo_key_fn__` — the real key of the
+    real registered check.
+    """
+
+    def _key_fn(self, name):
+        """The COMPLETE key. ⚠️ `__memo_key_fn__` alone is NOT it — `memoized`
+        folds in the module and body digests — so seeding through it would miss
+        precisely the inputs guard 1 covers. My first draft of this class did
+        exactly that and the module-constant probe read UNCHANGED."""
+        fn = next(s.func for s in validate._CHECKS if s.name == name)
+        kf = getattr(fn, "__memo_full_key__", None)
+        assert kf is not None, f"{name} is memoized but exposes no __memo_full_key__"
+        return kf
+
+    @pytest.mark.parametrize("check", ["axiom_closure_allowlist",
+                                       "lean_docstring_refs_resolve"])
+    def test_a_real_lean_edit_moves_THIS_CHECKS_key(self, check):
+        """FIRES ON A PRODUCTION SEED. Both memoized checks answer questions about
+        the Lean substrate; if a `.lean` edit does not move their key, each returns
+        a cached verdict across a substrate change."""
+        victim = sorted((SK_ROOT / "lean" / "SKEFTHawking").glob("*.lean"))[0]
+        before, after = _seeded(victim, b"\n-- key-span probe\n", self._key_fn(check))
+        assert before != after, (
+            f"editing {victim.name} did not move {check}'s OWN key. The check can "
+            f"return a cached PASS across a Lean substrate change.")
+
+    @pytest.mark.parametrize("check", ["axiom_closure_allowlist",
+                                       "lean_docstring_refs_resolve"])
+    def test_the_ROOT_AGGREGATE_moves_THIS_CHECKS_key(self, check):
+        """`lean/SKEFTHawking.lean` is a SIBLING of `lean/SKEFTHawking/`, so the
+        directory glob missed it (reviewer R6). It is the file whose `import` lines
+        decide which modules are in the environment `AxiomAudit` walks — 5,226
+        lines that were outside the key."""
+        root = SK_ROOT / "lean" / "SKEFTHawking.lean"
+        if not root.is_file():
+            pytest.skip("root aggregate absent")
+        before, after = _seeded(root, b"\n-- key-span probe\n", self._key_fn(check))
+        assert before != after, (
+            f"editing the root aggregate did not move {check}'s key; adding or "
+            f"removing an `import` changes the verified surface invisibly.")
+
+    def test_AXIOM_METADATA_moves_the_axiom_checks_key(self):
+        """`AXIOM_METADATA` *is* the allow-list the check compares against."""
+        before, after = _seeded(SK_ROOT / "src" / "core" / "constants.py",
+                                b"\n# key-span probe\n",
+                                self._key_fn("axiom_closure_allowlist"))
+        assert before != after
+
+    def test_a_module_level_constant_moves_the_key(self):
+        """Reviewer R1: `source_fingerprint` hashed only the `def`'s own text, so
+        module-level constants — including `_DOCSTRING_STRICT_FAMILIES`, the
+        FAIL-vs-advisory switch — sat outside the key. Seeded in place so line
+        numbers do not shift (a line-count change moves the digest for an unrelated
+        reason, which is how the lead's first reproduction wrongly cleared it)."""
+        mod = SK_ROOT / "scripts" / "validation" / "checks" / "lean_toolchain.py"
+        orig = mod.read_bytes()
+        kf = self._key_fn("lean_docstring_refs_resolve")
+        before = kf()
+        try:
+            txt = orig.decode()
+            mutated = txt.replace('_DOCSTRING_STRICT_FAMILIES = (',
+                                  '_DOCSTRING_STRICT_FAMILIES = ("ZZZ",', 1)
+            assert mutated.count("\n") == txt.count("\n"), "probe changed line count"
+            mod.write_text(mutated)
+            after = kf()
+        finally:
+            mod.write_bytes(orig)
+        assert mod.read_bytes() == orig
+        assert before != after, (
+            "a module-level constant edit left the key unchanged — flipping a "
+            "check's fail-vs-warn switch would not invalidate its cached verdict")
+
+
+class TestNonMeasurementIsNeverCached:
+    """The hole five reviewers found: a fail-open SKIP *is* a PASS, so guard 3
+    ('only PASS is cached') stored it and replayed it after the cause was fixed."""
+
+    def _skip(self):
+        return CheckResult(passed=True, measured=False,
+                           details=[Detail("lake", True, "SKIPPED — lake not found")])
+
+    def test_a_cannot_measure_pass_is_not_stored(self, live_memo):
+        _memo.memoized("c", "k", self._skip, "i")
+        stored = json.loads(live_memo.read_text())["entries"] if live_memo.exists() else {}
+        assert not stored, (
+            "a check that returned PASS WITHOUT MEASURING was cached. Restoring "
+            "the toolchain would then replay the skip instead of measuring.")
+
+    def test_it_runs_again_next_time(self, live_memo):
+        calls = []
+        body = lambda: calls.append(1) or self._skip()   # noqa: E731
+        _memo.memoized("c", "k", body, "i")
+        _memo.memoized("c", "k", body, "i")
+        assert len(calls) == 2
+
+    def test_a_cannot_measure_result_EVICTS_an_earlier_real_pass(self, live_memo):
+        """The dangerous ordering: measured PASS cached, then the toolchain goes
+        away under the SAME key. The stale green must not survive."""
+        _memo.memoized("c", "k", _ok, "i")
+        assert json.loads(live_memo.read_text())["entries"].get("c")
+        _memo.memoized("c", "k", self._skip, "i")
+        assert "c" not in json.loads(live_memo.read_text())["entries"]
+
+    def test_the_real_check_declares_non_measurement(self):
+        """PRODUCTION, not a fixture: with no toolchain, the live check must report
+        `measured=False`. If it reports True the memo will cache it again."""
+        import os as _os
+        from validation.checks import lean_toolchain as lt
+        env = dict(LEAN_PROJECT_DIR="/nonexistent", LAKE_PATH="/nonexistent")
+        old = {k: _os.environ.get(k) for k in env}
+        try:
+            _os.environ.update(env)
+            r = _memo.unwrap(lt.check_axiom_closure_allowlist)()
+        finally:
+            for k, v in old.items():
+                _os.environ.pop(k, None) if v is None else _os.environ.__setitem__(k, v)
+        assert r.passed is True, "unexpected: absence should stay fail-open"
+        assert r.measured is False, (
+            "the live check returned PASS and claimed it MEASURED, with no Lean "
+            "toolchain present — the memo will cache a non-measurement again")

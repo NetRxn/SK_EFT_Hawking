@@ -98,7 +98,7 @@ nothing"**, and it is the audit's central finding (`SYNTHESIS.md` §2).
 ### The current failing set — MEASURED 2026-08-04 (AC6)
 
 `docs/validation/reports/validation_20260804T184002Z.json`, run on the final HEAD, 334 s:
-**57 of 59 passed, 2 failed, 1,053 warnings** — identical failing set to the 17:41 run, re-verified after
+**57 of 59 passed, 2 failed, 1,053 warnings** *(as of 2026-08-04; since 2026-08-05 a default run is **56 of 59, 3 failed** — `paper_latex_compiles` joined the reds when its slow gate was deleted)* — identical failing set to the 17:41 run, re-verified after
 the item-0 fix and the `lean_statements` split. Both failures are intentional and neither is clearable by
 infrastructure work:
 
@@ -273,7 +273,7 @@ read as MISSED because `str.replace(…, 1)` hit the first textual match, inside
 Four were defects (fixed: `readiness_submission_gate`, `paper_latex_compiles`, plus ratchets for
 `count_literals` / `numerical_literals`); four are honestly advisory with recorded reasons.
 **`paper_latex_compiles` fails on D3 under `--force-latex` — 2 fatal LaTeX errors**, a real publication blocker owned by W2.
-⚠️ **It is NOT one of `validate.py`'s two reds in a default run** (audit QI-29). It sits behind the slow gate and reports *"SKIPPED (slow) — pass `--force-latex`"*, so a default run counts it as a PASS. Measured on a full run 2026-08-04: the two reds are **`bundle_metadata_matches_graph`** (14 of 21 bundle blobs assert `stage13_status: green` with blockers open) and **`readiness_submission_gate`** (0 green / 3 yellow / 61 red across 64 papers). Three documents named the wrong pair — the D3 claim was written true and left standing after the flag context moved.
+⚠️ **SUPERSEDED 2026-08-05 — and this line is now the exhibit.** It read: *"It is NOT one of `validate.py`'s two reds in a default run (audit QI-29). It sits behind the slow gate and reports 'SKIPPED (slow)', so a default run counts it as a PASS."* **The slow gate was deleted on 2026-08-05** and `paper_latex_compiles` is now a **third default red** on D3's two fatal errors. QI-29 was the finding *"a claim written true and left standing after the surrounding behaviour moved"* — and its own correction suffered exactly that, because the author of the change updated one file's entry and did not sweep. Reviewer R3 found it. Measured on a full run 2026-08-04: the two reds are **`bundle_metadata_matches_graph`** (14 of 21 bundle blobs assert `stage13_status: green` with blockers open) and **`readiness_submission_gate`** (0 green / 3 yellow / 61 red across 64 papers). Three documents named the wrong pair — the D3 claim was written true and left standing after the flag context moved.
 
 **✅ Item 7 — `build_graph`'s coverage picture was wrong in BOTH directions** (`cb9e1dcd` + `cc797605`).
 *Dropped nodes:* the node id omitted the class, so same-named methods in different classes collided —

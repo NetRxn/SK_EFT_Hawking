@@ -664,16 +664,36 @@ Examples:
     # exists to close. A green tick over 48 of 59 is worse than no CI, because it
     # manufactures confidence.
     if _cfg.CI_MODE and not args.check:
-        n_ran = len(results)
+        # ⚠️ COUNTS MEASUREMENTS, NOT INVOCATIONS (fixed 2026-08-05).
+        #
+        # This read `n_ran = len(results)`, and `run_checks` inserts an entry for
+        # EVERY registered spec — including from its `except` handler. So `n_ran`
+        # was identically `59 - len(CI_SKIP)` = 55 against a floor of 55, and
+        # `55 < 55` is never true: the floor could not fire, on any input.
+        #
+        # SIX reviewers found this independently in PR-review pass 2, and one
+        # identified why it was invisible: `test_ci_mode.py`'s zero-headroom test
+        # asserts `CI_MIN_CHECKS_RUN == len(_CHECKS) - len(CI_SKIP)` — the very
+        # definition of the quantity being compared — so the guard and its test
+        # were jointly self-sealing. A green tick over 48 of 59 is worse than no
+        # CI because it manufactures confidence; a floor that cannot fire is worse
+        # still, because it manufactures confidence *in the guard*.
+        measured = [n for n, r in results.items() if r.measured]
+        unmeasured = sorted(n for n, r in results.items() if not r.measured)
+        n_ran = len(measured)
         if ci_skipped:
             print(f"\n  --ci: skipped {len(ci_skipped)} check(s) whose premise does not "
                   f"hold on a fresh clone: {', '.join(sorted(ci_skipped))}", file=sys.stderr)
+        if unmeasured:
+            print(f"\n  --ci: {len(unmeasured)} check(s) returned WITHOUT MEASURING "
+                  f"(absent artifact or toolchain): {', '.join(unmeasured)}",
+                  file=sys.stderr)
         if n_ran < _cfg.CI_MIN_CHECKS_RUN:
-            print(f"\n  ✗ CI COVERAGE FLOOR: {n_ran} check(s) ran, floor is "
-                  f"{_cfg.CI_MIN_CHECKS_RUN}. The suite got SMALLER, not greener — most "
-                  f"likely the Lean toolchain is absent, which silently disables the "
-                  f"lean_deps readers. Install it on the runner, or lower "
-                  f"CI_MIN_CHECKS_RUN with a stated reason.", file=sys.stderr)
+            print(f"\n  ✗ CI COVERAGE FLOOR: {n_ran} of {len(results)} check(s) actually "
+                  f"MEASURED, floor is {_cfg.CI_MIN_CHECKS_RUN}. The suite got SMALLER, "
+                  f"not greener — most likely the Lean toolchain is absent, which "
+                  f"silently disables the lean_deps readers. Install it on the runner, "
+                  f"or lower CI_MIN_CHECKS_RUN with a stated reason.", file=sys.stderr)
             return 1
 
     return 0 if all_passed else 1

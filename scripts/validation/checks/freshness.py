@@ -54,6 +54,20 @@ _COUNTS_SOURCES = [
 ]
 
 
+#: Which artifacts each regenerator owns. Used ONLY by `_verify_regeneration`'s
+#: mtime-ordering repair — never to decide staleness.
+_GENERATOR_ARTIFACTS = {
+    "update_counts.py": ("docs/counts.json", "docs/counts.tex"),
+    "render_paper_tables.py": (),      # many; ordering repair not applicable
+    "cluster_detect.py": ("papers/claim_clusters.json",),
+}
+
+
+def _artifacts_of(generator: str):
+    """Paths a generator writes, anchored through `_H` at each use (H1)."""
+    return [_H.PROJECT_ROOT / rel for rel in _GENERATOR_ARTIFACTS.get(generator, ())]
+
+
 def _verify_regeneration(is_stale, generator: str, details: list) -> bool:
     """RE-TEST staleness after a regenerator claimed success. Returns False if the
     artifact is still stale, appending the failing Detail.
@@ -79,6 +93,44 @@ def _verify_regeneration(is_stale, generator: str, details: list) -> bool:
     than re-earn it.
     """
     still_stale, why = is_stale()
+
+    # ⚠️ WEDGE REPAIR 2026-08-05 (PR-review R4-MAJ7). The re-test above is
+    # MTIME-based, and the generators skip byte-identical writes — so an artifact
+    # that is CORRECT but merely older than its source could never satisfy it, and
+    # this leg pinned the check permanently red. Measured live on 2026-08-05:
+    # `counts.json` content byte-identical after regeneration, `constants.py` mtime
+    # 1785947998.849 > `counts.json` 1785947429.469 → "STILL STALE" forever. No
+    # content change could heal it; a `git checkout`, a merge, or a test that writes
+    # and restores a source file all trigger it. (The trigger that day was
+    # `tests/test_validation_memo.py` restoring content but not mtimes.)
+    #
+    # So: if the generator exited 0 and staleness persists, TOUCH the artifact and
+    # re-test ONCE. The generators are deterministic and idempotent, so "exited 0
+    # and declined to rewrite" means the content is already what it would have
+    # written — mtime ordering is then a checkout artifact, not evidence.
+    #
+    # ⚠️ RESIDUAL RISK, stated rather than hidden: this cannot distinguish a
+    # generator that correctly wrote nothing from one that is broken and writes
+    # nothing when it should. The R4-I7 guarantee survives only for the case where
+    # staleness OUTLIVES a touch. Closing that properly needs a content-derived
+    # staleness predicate (as `inventory_index_autogen_fresh` already uses); filed,
+    # not done here.
+    if still_stale:
+        touched = False
+        for art in _artifacts_of(generator):
+            if art.exists():
+                art.touch()
+                touched = True
+        if touched:
+            still_stale, why = is_stale()
+            if not still_stale:
+                details.append(Detail(
+                    "post_regenerate", True,
+                    f"{generator} exited 0 and declined to rewrite (content already "
+                    f"current); artifact mtime restored. Ordering was a checkout "
+                    f"artifact, not staleness.", warning=True))
+                return True
+
     if still_stale:
         details.append(Detail(
             "post_regenerate", False,

@@ -285,6 +285,19 @@ conveniences registered as checks; mtime freshness is meaningless on a fresh che
 regenerators and `notebook_exec`, never archives, and **fails below a coverage floor** — because
 a runner that loses the Lean toolchain gets ~200 s faster *and* greener, which is this audit's
 own finding reintroduced at the CI layer. Measured **53/55 in 397 s**, floor met at exactly 55.
+
+> ⚠️ **AS FIRST SHIPPED, THAT FLOOR COULD NOT FIRE — and this document asserted that it could.**
+> PR-review pass 2 found it independently **four times** (R5-C1, R6-C1, R1-MAJ2, R3-MAJ1).
+> `run_checks` inserts a result for every registered spec, so `n_ran` was identically
+> `59 − 4 = 55` against a floor of 55, and `55 < 55` is never true. The promise made here and in
+> `_config.py` — *"a missing toolchain becomes a red build reading '48 of 55 ran'"* — was
+> unreachable on any input. Reviewer R2 identified why it was invisible: the zero-headroom test
+> asserted `CI_MIN_CHECKS_RUN == len(_CHECKS) - len(CI_SKIP)`, the definition of the quantity
+> being compared, so guard and test were jointly self-sealing.
+>
+> **Fixed 2026-08-05** by adding `CheckResult.measured` and counting measurements rather than
+> invocations. Verified in production with the toolchain removed:
+> `✗ CI COVERAGE FLOOR: 54 of 55 check(s) actually MEASURED, floor is 55`.
 It is retained and tested (`tests/test_ci_mode.py`), and it is the right mode for an on-demand
 or release-time fresh-clone check **if the operator ever wants one**. No workflow file is
 proposed, and none is added: on a public repo that is an outward-facing change and the

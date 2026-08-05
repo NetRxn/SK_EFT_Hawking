@@ -471,13 +471,13 @@ def check_axiom_closure_allowlist() -> CheckResult:
     """
     lake_bin = _resolve_lake()
     if not lake_bin:
-        return CheckResult(passed=True, details=[
+        return CheckResult(passed=True, measured=False, details=[
             Detail("lake", True, "SKIPPED — lake not found. Set LAKE_PATH or install elan")])
 
     lean_root = _resolve_lean_root()
     audit_src = lean_root / "SKEFTHawking" / "AxiomAudit.lean"
     if not audit_src.exists():
-        return CheckResult(passed=True, details=[
+        return CheckResult(passed=True, measured=False, details=[
             Detail("axiom_audit_src", True, f"SKIPPED — {audit_src} not found")])
 
     # ── Allow-list ──
@@ -495,14 +495,14 @@ def check_axiom_closure_allowlist() -> CheckResult:
             cwd=str(lean_root), capture_output=True, text=True, timeout=600,
         )
     except subprocess.TimeoutExpired:
-        return CheckResult(passed=True, details=[
+        return CheckResult(passed=True, measured=False, details=[
             Detail("axiom_audit_run", True, "SKIPPED — AxiomAudit timed out (600s)", warning=True)])
     except Exception as exc:  # noqa: BLE001
-        return CheckResult(passed=True, details=[
+        return CheckResult(passed=True, measured=False, details=[
             Detail("axiom_audit_run", True, f"SKIPPED — {exc}", warning=True)])
 
     if result.returncode != 0:
-        return CheckResult(passed=True, details=[
+        return CheckResult(passed=True, measured=False, details=[
             Detail("axiom_audit_run", True,
                    f"SKIPPED — AxiomAudit exited {result.returncode}: {result.stderr[-300:]}",
                    warning=True)])
@@ -510,7 +510,7 @@ def check_axiom_closure_allowlist() -> CheckResult:
     try:
         closures: Dict[str, List[str]] = json.loads(result.stdout.strip() or "{}")
     except json.JSONDecodeError as exc:
-        return CheckResult(passed=True, details=[
+        return CheckResult(passed=True, measured=False, details=[
             Detail("axiom_audit_parse", True,
                    f"SKIPPED — could not parse AxiomAudit output ({exc})", warning=True)])
 
@@ -691,7 +691,7 @@ def check_lean_docstring_refs_resolve() -> CheckResult:
     # H4 DIVERGENCE, deliberately preserved (ADR-009 §Deferred item 4 — DECLINED). absence -> PASS *with a warning* — a third
     # distinct policy, alongside the five silent PASSes and two FAILs.
     if not _H.lean_deps_present():
-        return CheckResult(passed=True,
+        return CheckResult(passed=True, measured=False,
                            details=[Detail("skipped", True, "lean_deps.json absent", warning=True)])
     decls = _H.load_lean_deps()
     full = {d["name"] for d in decls}

@@ -113,7 +113,12 @@ CI_SKIP: dict[str, str] = {
 #: rendered as success" reintroduced at the CI layer, which is the finding this
 #: entire audit exists to close.
 #:
-#: So `--ci` FAILS when fewer checks execute than this. A missing toolchain becomes a
+#: ⚠️ COUNTS MEASUREMENTS, NOT INVOCATIONS (fixed 2026-08-05). As first written the
+#: floor compared `len(results)`, which `run_checks` fills for every registered spec —
+#: so it was identically 55 against a floor of 55 and could never fire. Four reviewers
+#: found that independently. `validate.main()` now counts `r.measured`.
+#:
+#: So `--ci` FAILS when fewer checks MEASURE than this. A missing toolchain becomes a
 #: red build reading "48 of 55 ran", not a green tick. Lower it only with a stated
 #: reason, exactly like every other ratchet in this codebase.
 CI_MIN_CHECKS_RUN: int = 55
