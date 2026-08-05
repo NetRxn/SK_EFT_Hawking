@@ -54,6 +54,44 @@ _COUNTS_SOURCES = [
 ]
 
 
+def _verify_regeneration(is_stale, generator: str, details: list) -> bool:
+    """RE-TEST staleness after a regenerator claimed success. Returns False if the
+    artifact is still stale, appending the failing Detail.
+
+    ⚠️ ADDED 2026-08-05 (PR-review R4-I7). All three regenerators measured staleness
+    ONCE — before shelling out — and then never asked again. Their only `passed=False`
+    paths were subprocess failures (non-zero rc, `FileNotFoundError`, timeout). So the
+    one outcome they could not report is the one worth reporting: **a generator that
+    exits 0 having written nothing, or having written something still stale.**
+
+    Live proof from the review's own run, unchanged at HEAD before this fix:
+
+        counts_fresh  detail 1: "stale: constants.py newer than counts.json"
+                      detail 2: "update_counts.py succeeded"
+                      verdict : PASS
+
+    These were self-healing scripts wearing the interface of gates. Re-testing costs
+    one mtime comparison and changes nothing on the happy path — a generator that did
+    its job leaves the artifact fresh.
+
+    Deliberately ONE helper for all three: the same defect in three copies is what
+    this audit keeps finding, and a fourth regenerator should inherit the fix rather
+    than re-earn it.
+    """
+    still_stale, why = is_stale()
+    if still_stale:
+        details.append(Detail(
+            "post_regenerate", False,
+            f"{generator} exited 0 but the artifact is STILL STALE ({why}). A "
+            f"generator reporting success while writing nothing usable is the failure "
+            f"this leg exists for — the pre-regeneration staleness measurement cannot "
+            f"see it."))
+        return False
+    details.append(Detail("post_regenerate", True,
+                          f"{generator} output verified fresh"))
+    return True
+
+
 def _counts_is_stale() -> tuple[bool, str]:
     """Return (stale, reason). Stale if counts.json is missing or older
     than any of _COUNTS_SOURCES, or if counts.tex is missing."""
@@ -114,6 +152,8 @@ def check_counts_fresh() -> CheckResult:
                 return CheckResult(passed=False, details=details)
             details.append(Detail("regenerate", True,
                                   "update_counts.py succeeded"))
+            if not _verify_regeneration(_counts_is_stale, "update_counts.py", details):
+                return CheckResult(passed=False, details=details)
         except (FileNotFoundError, subprocess.TimeoutExpired) as exc:
             details.append(Detail("regenerate", False,
                                   f"update_counts.py not runnable: {exc}"))
@@ -226,6 +266,8 @@ def check_tables_fresh() -> CheckResult:
             tables_written = result.stdout.strip().splitlines()[-1] if result.stdout.strip() else '0 tables'
             details.append(Detail("regenerate", True,
                                   f"render_paper_tables.py succeeded: {tables_written}"))
+            if not _verify_regeneration(_tables_is_stale, "render_paper_tables.py", details):
+                return CheckResult(passed=False, details=details)
         except (FileNotFoundError, subprocess.TimeoutExpired) as exc:
             details.append(Detail("regenerate", False,
                                   f"render_paper_tables.py not runnable: {exc}"))
@@ -311,6 +353,9 @@ def check_claim_clusters_fresh() -> CheckResult:
             tail = (result.stderr or '').strip().splitlines()
             details.append(Detail("regenerate", True,
                                   tail[-1] if tail else "cluster_detect.py succeeded"))
+            if not _verify_regeneration(_claim_clusters_is_stale,
+                                        "cluster_detect.py", details):
+                return CheckResult(passed=False, details=details)
         except (FileNotFoundError, subprocess.TimeoutExpired) as exc:
             details.append(Detail("regenerate", False,
                                   f"cluster_detect.py not runnable: {exc}"))

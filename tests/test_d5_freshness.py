@@ -168,6 +168,51 @@ class TestTablesFreshness:
         fr.check_tables_fresh()
         assert runner.calls, "a tables.py newer than its output did not regenerate"
 
+    def test_a_LYING_generator_fails(self, tmp_path, monkeypatch):
+        """FIRES ON THE SEEDED DEFECT — PR-review R4-I7, fixed 2026-08-05.
+
+        The one outcome these three checks could not report: a generator that exits 0
+        **having written nothing**. Staleness was measured ONCE, before shelling out,
+        and never asked again; the only `passed=False` paths were subprocess failures
+        (non-zero rc, `FileNotFoundError`, timeout). Live proof from the review's own
+        run, unchanged at HEAD before the fix:
+
+            counts_fresh  detail 1: "stale: constants.py newer than counts.json"
+                          detail 2: "update_counts.py succeeded"
+                          verdict : PASS
+
+        The `_Ran` stub reproduces exactly that: rc=0, no side effect on the tree. So
+        the artifact is still stale afterwards, and the check must now say so instead
+        of reporting the generator's own exit code as the answer.
+        """
+        self._papers(tmp_path, monkeypatch, spec_mtime=3000, out_mtime=1000)
+        r = fr.check_tables_fresh()
+        assert r.passed is False, (
+            "the regenerator exited 0 and wrote nothing; the table is still stale and "
+            "the check passed — it is reporting the generator's exit code, not the "
+            "artifact's state")
+        assert any(d.name == "post_regenerate" and not d.passed for d in r.details)
+
+    def test_a_generator_that_actually_works_still_passes(self, tmp_path, monkeypatch):
+        """SILENT ON CORRECT DATA, and the leg that keeps the fix from being a
+        regression: re-testing must change nothing on the happy path. A generator that
+        does its job leaves the artifact fresh."""
+        papers = tmp_path / "papers"
+        _touch(papers / "paper1_x" / "tables.py", 3000)
+        _touch(papers / "paper1_x" / "tables" / "t1.tex", 1000)
+        monkeypatch.setattr(_H, "PAPERS_DIR", papers)
+        monkeypatch.setattr(fr, "_TABLES_SOURCES", [])
+
+        def _renders(cmd, **kw):
+            _touch(papers / "paper1_x" / "tables" / "t1.tex", 9000)
+            class _R:
+                returncode, stdout, stderr = 0, "1 tables", ""
+            return _R()
+        monkeypatch.setattr(fr.subprocess, "run", _renders)
+        r = fr.check_tables_fresh()
+        assert r.passed is True, [(d.name, d.message) for d in r.details if not d.passed]
+        assert any(d.name == "post_regenerate" and d.passed for d in r.details)
+
     def test_a_spec_with_no_output_is_stale(self, tmp_path, monkeypatch):
         """A spec that has never been rendered is the most stale state there is —
         and the easiest one to read as 'nothing to do'."""
