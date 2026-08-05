@@ -1,7 +1,7 @@
 # QA/QI Infrastructure Audit — 2026-08-04
 
-**Status:** ✅ **COMPLETE — all 29 findings closed (W-A / W-B / W-C / W-D).**
-*(29 = QI-01…QI-28 plus the QI-26b sub-finding. Counted as CHECKBOX ENTRIES in §3, not as the
+**Status:** ✅ **COMPLETE — all 30 findings closed (W-A / W-B / W-C / W-D).**
+*(30 = QI-01…QI-29 plus the QI-26b sub-finding. Counted as CHECKBOX ENTRIES in §3, not as the
 highest ordinal — the original filing said "27", which was the highest number at the time while
 the board already carried 28 entries. Re-count the boxes; do not read the last id.)* This remains the
 tracker; keep the measurement column honest if anything reopens.
@@ -12,8 +12,9 @@ without a both-directions test fails on arrival rather than being absorbed into 
 D5, the obligation its own §Context calls *"the one that caused the damage"*, is discharged.
 
 **Verified at close:** fast suite **5398 passed / 5 skipped / 0 failed** (5055 at audit open,
-5086 at W-C close); **`CHARACTERIZATION HELD — 49 checks identical`**; `validate.py` **57 of 59**,
-the two reds unchanged and both owned by the publication workstream. Branch **NOT merged** — verify
+5086 at W-C close); **`CHARACTERIZATION HELD — 49 checks identical`**; `validate.py` **57 of 59** in
+317.8 s, both reds owned by the publication workstream and **both re-identified by name** (QI-29 —
+the documented pair was wrong). Branch **NOT merged** — verify
 with `git merge-base --is-ancestor HEAD main` rather than inheriting this line.
 
 ⚠️ **How that characterization was taken matters, and the first attempt was wrong.** The natural
@@ -228,6 +229,28 @@ Legend: ⬜ open · 🔄 in progress · ✅ done (with the verifying evidence na
 - [x] **QI-26** ✅ **FIXED 2026-08-04.** `qa-qi-map-verification-log.md` promised a Phase-1 citation re-anchor that never happened and is now moot.
 - [x] **QI-26b** ✅ **FIXED 2026-08-04.** `validate.py` extraction scars: 5 orphaned `CHECK NN`/`CLI` headers removed, the `Shared helpers` header relabelled to what actually sits under it, blank-line runs collapsed (743 → 635 lines). The stranded `NOT SHIPPED: ledger_evidence_names_its_finding` design note was REHOMED to `reviews.py` beside its nearest kin rather than deleted.
 
+### W-E — found at close
+
+- [x] **QI-29** ✅ **FIXED 2026-08-04 — the documented red checks were the wrong pair.**
+      Three documents (and every status report in this session) named `validate.py`'s two failures as
+      `paper_latex_compiles` *"on D3's 2 fatal LaTeX errors"* and `readiness_submission_gate`.
+      **Measured on a full run at close (317.8 s):** the failures are
+      **`bundle_metadata_matches_graph`** (14 of 21 bundle blobs assert `stage13_status: green` while
+      blockers are open — ADR-009 §Consequences predicted exactly "fires on 14 of 21") and
+      **`readiness_submission_gate`** (0 green / 3 yellow / **61 red** across 64 papers).
+      **`paper_latex_compiles` PASSES**, and correctly: it sits behind the slow gate and reports
+      *"SKIPPED (slow) — pass `--force-latex`"* unless forced. Its D3 failure is real but reachable
+      only under `--force-latex`, which no default run passes.
+      **Why this is a finding and not a typo:** it is the §2 pattern exactly — a claim written true
+      (D3 *was* the live failure when item 3 landed, under the flag that was set at the time) and
+      left standing after the surrounding behaviour moved. A reader planning remediation would have
+      gone to D3's LaTeX and never touched the 14 bundle blobs that are actually red.
+      ⚠️ **I inherited it rather than measuring it, and repeated it in four status reports before the
+      closing `validate.py` run contradicted me.** The audit spent workstream W-C on this class and I
+      reproduced it in the same session — which is the strongest available argument for its own rule:
+      *a number in prose is a cache with no invalidation protocol.*
+      **Corrected in:** this tracker (§4c + the close banner) and `RESUME_STATE.md`.
+
 ### W-D — the standing obligation (D5)
 
 - [x] **QI-27** ✅ **CLOSED 2026-08-04 — the backlog is EMPTY.** D5 — *"every new or modified check
@@ -399,9 +422,10 @@ edges closing 4 broken provenance chains) and **no check verdict moved by any of
 
 **What is genuinely still open, and is NOT this audit's to close:**
 - The branch is **not merged**. Re-check with `git merge-base --is-ancestor HEAD main`.
-- `validate.py` is **57 of 59**. Both reds (`paper_latex_compiles` on D3's fatal LaTeX errors, and
-  `readiness_submission_gate` on unremediated bundles) are the dial working as designed and belong
-  to the publication workstream.
+- `validate.py` is **57 of 59**. The two reds are **`bundle_metadata_matches_graph`** (14 of 21
+  bundles assert `stage13_status: green` with blockers open) and **`readiness_submission_gate`**
+  (61 of 64 papers RED). Both are the dial working as designed and belong to the publication
+  workstream. ⚠️ *Not* `paper_latex_compiles` — see QI-29.
 - The §4 residuals below are **recorded, not scheduled** — read them before assuming they are
   oversights.
 

@@ -18,9 +18,9 @@ without re-deriving it. Read this first, then the linked documents.
 > sites (`evaluate_all_gates`, `_blocked_p1_gates_by_paper`) were **CLOSED by `5228ed6d`**, after the
 > documents below were written — several still record them as open (audit finding QI-21/QI-22).
 >
-> ## ✅ THE QA/QI INFRASTRUCTURE AUDIT IS COMPLETE — 29 of 29 findings closed
+> ## ✅ THE QA/QI INFRASTRUCTURE AUDIT IS COMPLETE — 30 of 30 findings closed
 > A full direct read of the entire QA/QI surface (~17,700 lines, including `build_graph.py`, which
-> this file had recorded as never read) was completed 2026-08-04. It found **29 findings** across
+> this file had recorded as never read) was completed 2026-08-04. It found **30 findings** across
 > four workstreams — one live enforcement hole, duplicated predicates, dead code, documentation
 > contradicting the code it describes, and D5's missing mechanical enforcement — and **all are now
 > closed**.
@@ -259,7 +259,8 @@ read as MISSED because `str.replace(…, 1)` hit the first textual match, inside
 **✅ Item 3 — the eight always-pass checks, dispositioned individually** (`c3456a23`).
 Four were defects (fixed: `readiness_submission_gate`, `paper_latex_compiles`, plus ratchets for
 `count_literals` / `numerical_literals`); four are honestly advisory with recorded reasons.
-**`paper_latex_compiles` now fails on D3 — 2 fatal LaTeX errors**, a real publication blocker owned by W2.
+**`paper_latex_compiles` fails on D3 under `--force-latex` — 2 fatal LaTeX errors**, a real publication blocker owned by W2.
+⚠️ **It is NOT one of `validate.py`'s two reds in a default run** (audit QI-29). It sits behind the slow gate and reports *"SKIPPED (slow) — pass `--force-latex`"*, so a default run counts it as a PASS. Measured on a full run 2026-08-04: the two reds are **`bundle_metadata_matches_graph`** (14 of 21 bundle blobs assert `stage13_status: green` with blockers open) and **`readiness_submission_gate`** (0 green / 3 yellow / 61 red across 64 papers). Three documents named the wrong pair — the D3 claim was written true and left standing after the flag context moved.
 
 **✅ Item 7 — `build_graph`'s coverage picture was wrong in BOTH directions** (`cb9e1dcd` + `cc797605`).
 *Dropped nodes:* the node id omitted the class, so same-named methods in different classes collided —
@@ -555,7 +556,7 @@ publication schedule is the flexible variable; claim strength is not.
 
 1. **This file.**
 1b. **[`docs/audits/2026-08-04-qa-qi-infrastructure/README.md`](../../audits/2026-08-04-qa-qi-infrastructure/README.md)
-   — the QA/QI remediation tracker (29 findings, W-A…W-D, all CLOSED). Read it before any validation-suite
+   — the QA/QI remediation tracker (30 findings, W-A…W-E, all CLOSED). Read it before any validation-suite
    work; several figures in the documents below are superseded by it and are flagged there by
    finding id.**
 2. `docs/adrs/ADR-009-validation-suite-modularization.md` — the decision, H1–H5, D2's 8 contract items,
