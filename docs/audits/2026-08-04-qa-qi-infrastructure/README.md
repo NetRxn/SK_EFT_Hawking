@@ -309,6 +309,24 @@ function's AST span"* — these cost time here and will cost it again otherwise.
   invalidated a 6-minute characterization run that was reading the file concurrently. Restore a
   mutation by writing back the exact bytes you saved, never by reverting the file. The AST-span rule
   covers applying a mutation; it says nothing about undoing one, and that is where this went wrong.
+- **⚠️ RESTORING THE SOURCE DOES NOT UNDO A MUTATION — THE `.pyc` OUTLIVES IT.** The most
+  dangerous harness defect found in this audit, because it corrupts results *silently and in
+  either direction*. CPython decides a cached bytecode file is current from the source's
+  **(mtime-in-seconds, size)**. A mutation that preserves LENGTH — `"if not m:"` → `"if False:"`,
+  both 9 characters — and is restored **within the same second** (a fast pytest run takes 0.07 s)
+  leaves a `__pycache__` entry that still looks valid. Every subsequent process then imports
+  **mutated bytecode from a clean-looking, `git status`-clean tree.**
+  Observed 2026-08-04: it produced an `AttributeError` in `test_f_hierarchy_claims` whose
+  traceback was *impossible* against the source on disk — `m` was `None` immediately after
+  `if not m: continue` — and it reproduced on a stashed tree, so it read convincingly as a
+  pre-existing repo defect rather than as contamination from a mutation run minutes earlier.
+  It would just as easily have produced a **false CAUGHT** (a test failing against poisoned
+  bytecode, credited to the mutation under test) or a **false MISSED**.
+  **Rule: a mutation harness must delete the target's cached bytecode after restoring it, and
+  bump the source mtime.** Every mutation verdict recorded in this audit before the fix was
+  re-run from a cleared cache; all 19 held, so nothing recorded here rests on a poisoned run.
+  ⚠️ The same trap applies to *any* tooling that writes a source file, runs it, and writes it
+  back — not just this harness.
 - **A structural leg is worth more than a count leg, and they are not substitutes.** The count
   assertion for QI-01 protects the six sites that exist. The structural scan found a **seventh
   receiver name** the manual sweep missed and is what would have caught the defect originally —

@@ -139,6 +139,71 @@ class TestGateFailsOnStale:
         assert any(n.startswith("crossover") for n in failed)
 
 
+def _corrupt_cell(body: str, platform: str, idx: int, new: str) -> str:
+    """Replace exactly one `&`-separated cell of one platform's table row.
+
+    The point is ISOLATION: everything else in the draft stays canonical, so the
+    verdict can only move through the cell being corrupted.
+    """
+    out = []
+    for chunk in body.split(r"\\"):
+        if platform in chunk and "&" in chunk:
+            cells = chunk.split("&")
+            cells[idx] = f" {new} "
+            chunk = "&".join(cells)
+        out.append(chunk)
+    return r"\\".join(out)
+
+
+class TestEachFailureGroundCarriesTheVerdictAlone:
+    """D5 REINFORCEMENT (audit QI-27). `TestGateFailsOnStale` above uses the
+    historical stale draft, which is wrong in FOUR independent ways at once —
+    magnitudes, dominance label, and crossover. That makes it a good regression
+    fixture and a poor mutation target: killing any single ground's contribution
+    to `all_pass` leaves the verdict `False` via the other three.
+
+    Measured 2026-08-04: `all_pass = all_pass and ok` -> `all_pass = all_pass`
+    was **MISSED** by the whole file, in both the table loop and the crossover
+    loop. The magnitude comparisons could have stopped affecting the verdict
+    entirely while every test stayed green.
+
+    Each test below corrupts exactly ONE thing in an otherwise-canonical draft,
+    so the verdict has a single path to travel and the mutation is load-bearing.
+    """
+
+    def test_a_wrong_magnitude_alone_fails(self, tmp_path, monkeypatch):
+        body = _corrupt_cell(_generated_draft_body(), "Steinhauer", 2,
+                             r"$-9.99\times10^{-3}$")
+        monkeypatch.setattr(_H, "PAPERS_DIR", _write_draft(tmp_path, body))
+        result = check_d1_hierarchy_table()
+        assert not result.passed, (
+            "a wrong δ_disp magnitude, with everything else canonical, did not "
+            "move the verdict — the table comparison no longer reaches `all_pass`")
+        failed = {d.name for d in result.details if not d.passed}
+        assert failed == {"Steinhauer.delta_disp"}, (
+            f"expected exactly one failing detail, got {sorted(failed)} — the "
+            f"fixture is no longer isolating a single ground")
+
+    def test_a_wrong_crossover_coefficient_alone_fails(self, tmp_path, monkeypatch):
+        """Only the quoted `Y` in `≈ Y T_H` is wrong; the ln-argument still
+        matches a canonical δ_diss, so `crossover[i].delta_diss_match` passes and
+        the verdict must travel through the coefficient comparison alone."""
+        heid = compute_bec_hierarchy()["Heidelberg"]
+        diss_tex = fmt_sci_latex(heid["delta_diss"]).strip("$")
+        good = (r"$\omega_\times \approx T_H \ln(2/" + diss_tex + r") "
+                r"\approx " + f"{heid['ln_arg']:.2f}" + r"\, T_H$")
+        bad = (r"$\omega_\times \approx T_H \ln(2/" + diss_tex + r") "
+               r"\approx " + f"{heid['ln_arg'] * 2:.2f}" + r"\, T_H$")
+        body = _generated_draft_body().replace(good, bad)
+        assert body != _generated_draft_body(), "crossover substitution did not apply"
+        monkeypatch.setattr(_H, "PAPERS_DIR", _write_draft(tmp_path, body))
+        result = check_d1_hierarchy_table()
+        assert not result.passed, (
+            "a wrong crossover coefficient alone did not move the verdict")
+        failed = {d.name for d in result.details if not d.passed}
+        assert failed == {"crossover[0].coefficient"}, sorted(failed)
+
+
 class TestGenerator:
     def test_idempotent(self):
         assert compute_bec_hierarchy() == compute_bec_hierarchy()

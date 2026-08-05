@@ -162,6 +162,57 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
         "write the generated doc (ADR-004 W7 M1 — a check that repairs the tree makes "
         "the drift invisible in review)",
     ),
+    # physics.py: 27 new tests (test_d5_physics.py) / 10 mutations, plus 4 isolated-defect
+    # legs added to the two pre-existing both-directions files after THREE
+    # verdict-propagation mutations came back MISSED there — the stale fixtures are wrong
+    # in four ways at once, so no single ground carried the verdict alone.
+    "numerical": (
+        "test_d5_physics.py",
+        "`ok = rel_err <= tolerance` -> True caught; the 5% tolerance exercised on both "
+        "sides (4% passes, 6% fails) so the constant is load-bearing. Reference table read "
+        "from the check's own AST",
+    ),
+    "identities": (
+        "test_d5_physics.py",
+        "the identity-failure propagation caught; the acoustic-mode vanishing and the "
+        "per-identity exception guard each exercised independently",
+    ),
+    "paper_table": (
+        "test_d5_physics.py",
+        "`ok = rel_err <= tolerance` -> True caught; missing-draft fails rather than skips",
+    ),
+    "d1_hierarchy_table": (
+        "test_d1_hierarchy_table.py",
+        "pre-existing stale-draft fixture PLUS QI-27 isolated-defect legs. 3 mutations; "
+        "`all_pass = all_pass and ok` was MISSED until the isolated legs landed, because "
+        "the historical stale draft fails on four independent grounds at once",
+    ),
+    "f_hierarchy_claims": (
+        "test_f_hierarchy_claims.py",
+        "same shape as d1: 3 mutations, with `all_pass = all_pass and ok` MISSED until a "
+        "leg corrupted ONE value in an otherwise-correct draft so the anchor still matched "
+        "and the verdict had to travel through the value comparison",
+    ),
+    "cgl_fdr": (
+        "test_d5_physics.py",
+        "3 mutations: the Einstein relation, the first-order BEC FDR, and the even-order "
+        "noise-count pattern — each verifier wired independently",
+    ),
+    "physical_bounds": (
+        "test_d5_physics.py",
+        "the bound-failure propagation caught; negative temperature, a perturbative "
+        "correction above 1, and the conditional shot-count floor each exercised",
+    ),
+    "cross_path_consistency": (
+        "test_d5_physics.py",
+        "`ok = rel_diff < 0.005` -> True caught; both comparison paths (delta_diss and "
+        "decoherence) shown to move the verdict independently",
+    ),
+    "quantum_network": (
+        "test_d5_physics.py",
+        "2 mutations: the identity propagation, and `rglob` -> `glob` — this is the SIXTH "
+        "QI-01 site, the one the manual grep sweep missed because its receiver is `qn_dir`",
+    ),
 }
 
 #: Checks with no both-directions test yet. **This list may only shrink.**
@@ -170,17 +221,17 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
 AWAITING_MUTATION_TEST: frozenset[str] = frozenset({
     
     "formula_grounding",
-    "vacuous_statement_audit", "nogo_substrate_integrity", "numerical", "identities",
-    "paper_table", "d1_hierarchy_table", "f_hierarchy_claims", "theorems", "notebooks",
-    "lean_source", "cgl_fdr", "lean_build", "axiom_closure_allowlist",
+    "vacuous_statement_audit", "nogo_substrate_integrity", 
+    "theorems", "notebooks",
+    "lean_source", "lean_build", "axiom_closure_allowlist",
     "elaboration_knob_watchlist", "bundle_figure_integrity", "viz_consistency",
-    "notebook_exec", "physical_bounds", "cross_path_consistency", "paper_provenance",
+    "notebook_exec", "paper_provenance",
     "parameter_provenance", "counts_fresh", "tables_fresh", "claim_clusters_fresh",
     "graph_integrity", "atlas_integrity", "atlas_hypothesis_discipline",
     "bundle_metadata_matches_graph",
     "notebook_stored_outputs_current", "readiness_verdicts_agree",
     "citation_primary_sources_present", "provenance_doi_in_registry", "bundle_consistency",
-    "bundle_source_freshness", "bibitem_title_primary_source", "quantum_network",
+    "bundle_source_freshness", "bibitem_title_primary_source", 
     "bundle_registry_consistency", "axiom_count_prose_consistency",
     "prose_theorem_reference_coverage", "theorem_name_embedded_citations",
     "inventory_index_autogen_fresh", "lean_docstring_refs_resolve",
@@ -188,8 +239,9 @@ AWAITING_MUTATION_TEST: frozenset[str] = frozenset({
 })
 
 #: The ratchet. Measured 2026-08-04. It may be LOWERED, never raised.
-#: History: 54 (seeded) -> 50 (reviews.py) -> 44 (lean_substrate.py).
-AWAITING_CEILING = 44
+#: History: 54 (seeded) -> 50 (reviews.py) -> 44 (lean_substrate.py)
+#: -> 35 (physics.py).
+AWAITING_CEILING = 35
 
 
 def _registered() -> list[str]:
