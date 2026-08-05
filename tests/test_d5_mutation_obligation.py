@@ -38,10 +38,19 @@ WHAT THIS FILE ENFORCES
 3. **A `MUTATION_VERIFIED` entry cannot be fictional** — the test file it names
    must exist and must actually mention the check. That is the seam guard; without
    it, moving a name from the backlog to the verified list would be free.
+4. **The fixture-only population is COUNTED and may only shrink** —
+   `PRODUCTION_SEEDED` / `FIXTURE_ONLY_CEILING`, added 2026-08-05. See the block
+   above that set for why; the short version is that (1)–(3) were all satisfied by
+   four checks that could not fail in production.
 
 ⚠️ **THIS FILE DOES NOT PROVE A TEST IS GOOD.** It proves the project has made a
 DECISION about every check and cannot silently add an untested one. Do not read a
 green run here as coverage — read the named test.
+
+⚠️ **NOR DOES IT PROVE A CHECK CAN FAIL.** That is a different claim and it now has
+its own ratchet: 4 of 59 checks have been seen to fail against a defect written into
+the real artifact they read. The other 55 have not. Obligation (4) exists because
+obligations (1)–(3) read as completeness while that gap was invisible.
 
 **STATUS 2026-08-04: THE BACKLOG IS EMPTY. All 59 registered checks are
 mutation-verified, `AWAITING_MUTATION_TEST` is empty and `AWAITING_CEILING` is 0.**
@@ -523,6 +532,58 @@ AWAITING_MUTATION_TEST: frozenset[str] = frozenset()
 AWAITING_CEILING = 0
 
 
+#: ══ THE SECOND OBLIGATION: was the defect seeded in a PRODUCTION artifact? ══
+#:
+#: Added 2026-08-05 after PR review found FOUR checks (QI-31…QI-34) carrying a
+#: `MUTATION_VERIFIED` entry, a passing both-directions test, and **no ability to fail
+#: in production**. Every one had been "verified" against a monkeypatched fixture that
+#: used an input shape the real corpus does not contain:
+#:
+#:   * `paper_table` — fixture wrote a `paper_draft.tex` containing the literal string
+#:     `"draft"`; the check never opened a table, and neither did the test.
+#:   * `paper_provenance` — fixture wrote `\texttt{ghost_theorem}`; LaTeX writes
+#:     `\texttt{ghost\_theorem}`, the one spelling the regex could not match.
+#:   * `recurrence_reopens_closures` — synthetic labels scoring Jaccard 1.0 against a
+#:     live corpus whose maximum was 0.375, below the threshold.
+#:   * `bibitem_title_primary_source` — the strict branch was exercised by a fixture
+#:     while no caller anywhere passed `--strict`.
+#:
+#: QI-30 stated the criterion — *a mutation caught against a patched fixture does not
+#: establish that the check can fail in production* — and it was filed as residue
+#: instead of applied as a sweep. This is the sweep, made mechanical: a name enters
+#: `PRODUCTION_SEEDED` only when someone has written a defect into the REAL artifact
+#: the check reads and watched `validate.py --check <name>` go red.
+#:
+#: ⚠️ Membership is DELIBERATELY conservative. An entry absent from this set is not a
+#: claim that the check is broken — it is the absence of a claim that it works, which
+#: is the distinction the four blockers turned on. Erring toward absent overstates the
+#: remaining work; the opposite error is what produced them.
+PRODUCTION_SEEDED: frozenset[str] = frozenset({
+    # QI-31: a drifted cell / a rules-only table / a deleted row written into
+    # `papers/paper1_first_order/tables/table1_experimental_params.tex` -> rc=1 each.
+    "paper_table",
+    # QI-32: a new unresolved `\texttt{}` reference added to
+    # `papers/paper12_polariton/paper_draft.tex` -> 82 vs ceiling 81 -> rc=1.
+    "prose_theorem_reference_coverage",
+    # QI-33: a real single-word title drift added to `CITATION_REGISTRY`
+    # ("in the Periodically Driven") -> 8 vs ceiling 7 -> rc=1 under `--strict`.
+    "bibitem_title_primary_source",
+    # QI-34: a real recurrence written into `papers/AutomatedReviews/` -> 1
+    # contradicted -> rc=1.
+    "recurrence_reopens_closures",
+})
+
+#: The ratchet, in the same idiom as `AWAITING_CEILING`: the number of registered
+#: checks NOT yet production-seeded. **It may be LOWERED, never raised.**
+#:
+#: 55 of 59 as of 2026-08-05. That number is the honest state of the sweep the PR
+#: review's resume point lists as its top item, and it is deliberately large: it counts
+#: every check for which nobody has yet demonstrated a production failure, not every
+#: check that is broken. Lower it one check at a time, each with the probe recorded in
+#: the commit — the same way the 54-entry `AWAITING_MUTATION_TEST` backlog went to zero.
+FIXTURE_ONLY_CEILING = 55
+
+
 def _registered() -> list[str]:
     import validate
     return [spec.name for spec in validate._CHECKS]
@@ -585,6 +646,71 @@ class TestBacklogOnlyShrinks:
             f"When you remove a name from the backlog, lower the ceiling in the same "
             f"commit so the ratchet keeps biting at exactly one."
         )
+
+
+class TestProductionSeedingRatchet:
+    """The second obligation (2026-08-05): a check that has never been seen to fail
+    against a defect in a PRODUCTION artifact is not known to be able to fail.
+
+    This class does NOT verify that any seeding happened — nothing in a repository can,
+    because a mutation is an act performed against the tree and not an artifact left in
+    it (the same reason `MUTATION_VERIFIED` is a curated registry and not a scanner).
+    What it enforces is that the population of un-seeded checks is COUNTED, VISIBLE and
+    may only shrink. Before this existed, the number was zero-and-unstated, and four
+    checks that could not fail sat inside it.
+    """
+
+    def test_production_seeded_names_are_registered_checks(self):
+        """A name here must be a live check. Otherwise the ratchet can be satisfied by
+        a typo — the shape `ledger_ids_resolve` shipped and `graph_integrity` had to
+        find."""
+        unknown = sorted(PRODUCTION_SEEDED - set(_registered()))
+        assert not unknown, (
+            f"PRODUCTION_SEEDED names checks that are not registered: {unknown}. "
+            f"A ratchet counting names nobody runs counts nothing.")
+
+    def test_a_production_seeded_check_is_also_mutation_verified(self):
+        """Seeding a production defect is strictly stronger than the fixture-level
+        obligation, so the weaker claim must already be on the record. A name that
+        appeared only here would leave `MUTATION_VERIFIED` looking complete while a
+        check bypassed it."""
+        orphan = sorted(PRODUCTION_SEEDED - set(MUTATION_VERIFIED))
+        assert not orphan, (
+            f"production-seeded but not in MUTATION_VERIFIED: {orphan}")
+
+    def test_the_fixture_only_population_only_shrinks(self):
+        """The ratchet itself."""
+        n = len(set(_registered()) - PRODUCTION_SEEDED)
+        assert n <= FIXTURE_ONLY_CEILING, (
+            f"{n} registered checks have never been seeded in a production artifact, "
+            f"above the frozen ceiling of {FIXTURE_ONLY_CEILING}. A check was added "
+            f"whose verification is fixture-only. Seed the defect in the real artifact "
+            f"it reads and record the probe in the commit, or raise "
+            f"FIXTURE_ONLY_CEILING with a stated reason — which is a decision on the "
+            f"record rather than a drift.")
+
+    def test_the_ceiling_has_ZERO_headroom(self):
+        """Slack in a ratchet is the ratchet not working. Measured precedent:
+        `ledger_ids_resolve` sat at 67 against a population of 66 and silently admitted
+        one new dangling record; `recurrence_reopens_closures` was set above its own
+        corpus maximum three times."""
+        n = len(set(_registered()) - PRODUCTION_SEEDED)
+        assert FIXTURE_ONLY_CEILING == n, (
+            f"FIXTURE_ONLY_CEILING is {FIXTURE_ONLY_CEILING} but {n} checks are "
+            f"fixture-only. When you seed one in production, LOWER the ceiling in the "
+            f"same commit so the ratchet keeps biting at exactly one.")
+
+    def test_the_four_PR_REVIEW_blockers_are_seeded(self):
+        """The regression pin. These are the four that carried a MUTATION_VERIFIED
+        entry, a passing both-directions test, and no ability to fail in production
+        (QI-31…QI-34). Each now has a probe against the real artifact; dropping one
+        from this set without recording why is how the claim would decay back."""
+        expected = {"paper_table", "prose_theorem_reference_coverage",
+                    "bibitem_title_primary_source", "recurrence_reopens_closures"}
+        missing = sorted(expected - PRODUCTION_SEEDED)
+        assert not missing, (
+            f"{missing} were the PR-review merge blockers and their production probes "
+            f"are recorded in commits 17bbe234 / 2dc856ec / 865db716 / 637d1184")
 
 
 class TestVerifiedEntriesAreReal:
