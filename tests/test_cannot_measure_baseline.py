@@ -25,8 +25,15 @@ The 22 are not uniformly defects, and converting them wholesale would be the
 
 * Some are legitimately *optional toolchain absent* — `notebook_exec` (nbclient),
   `bibitem_title_primary_source` (pdfminer), `bundle_figure_integrity` (kaleido),
-  `notebook_stored_outputs_current`, `tracked_hypotheses_fresh`. Failing a build
-  because an optional dependency is missing is its own defect.
+  `notebook_stored_outputs_current`. Failing a build because an optional dependency
+  is missing is its own defect.
+
+  ⚠️ `tracked_hypotheses_fresh` WAS on that list and did not belong there (removed
+  2026-08-05, PR-review R4-I4). `render_tracked_hypotheses` is a first-party module
+  in `scripts/`, not an optional dependency, and its handler was a bare
+  `except Exception` returning PASS — so an import-time `AssertionError` from
+  `constants.py`'s Aristotle-count assert greened the hypothesis-drift gate. An
+  optional-toolchain exemption had been extended to a first-party import.
 * Three are **advisory by design**, dispositioned individually in §Deferred item 3
   and deliberately kept: `elaboration_knob_watchlist`, `paper_toolchain_pin_drift`,
   `inventory_index_autogen_fresh`.
@@ -99,7 +106,6 @@ CANNOT_MEASURE_PASS_BASELINE = frozenset({
     ('placeholder_not_cited', 'missing-input'),
     ('proxy_body_audit', 'missing-input'),
     ('review_severity_declared', 'missing-input'),
-    ('tracked_hypotheses_fresh', 'exception'),
     ('tracked_hypothesis_ledger', 'missing-input'),
     ('vacuous_statement_audit', 'missing-input'),
 })

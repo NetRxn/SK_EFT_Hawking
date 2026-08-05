@@ -557,10 +557,31 @@ def check_tracked_hypotheses_fresh() -> CheckResult:
     ``counts_fresh``/``tables_fresh``: if the on-disk markdown drifts from the
     registry render, regenerate it (so it can never silently diverge — the prior
     two-disjoint-ledgers failure)."""
+    # ⚠️ FAILS CLOSED (changed 2026-08-05, PR-review R4-I4). This was
+    # `except Exception: return CheckResult(passed=True, ...)`, so ANY breakage while
+    # importing the renderer converted a drift gate into a silent green.
+    #
+    # `render_tracked_hypotheses` is a first-party module in `scripts/`, not an
+    # optional dependency — the five deliberate `passed=True` skips ADR-009 §Deferred
+    # item 4 preserves are all optional TOOLCHAIN absences (pdfminer, lake, nbclient),
+    # which is a different thing. Its absence is a defect, not an environment.
+    #
+    # VALIDATED, not reasoned: `constants.py:1372` asserts the Aristotle count at
+    # IMPORT time, so adding a registry entry without updating the count raises
+    # `AssertionError` — not `ImportError` — while this module is being imported.
+    # Measured before the fix: that returned `passed=True` with the detail
+    # "renderer unavailable: Expected 322 Aristotle-proved theorems, got 323".
+    # A registry edit that trips a real invariant greened the hypothesis-drift gate.
     try:
         import render_tracked_hypotheses as _r
-    except Exception as e:  # pragma: no cover
-        return CheckResult(passed=True, details=[Detail("import", True, f"renderer unavailable: {e}", warning=True)])
+    except Exception as e:
+        return CheckResult(passed=False, details=[Detail(
+            "import", False,
+            f"render_tracked_hypotheses could not be imported ({type(e).__name__}: {e}) "
+            f"— the tracked-hypotheses doc could not be compared against "
+            f"HYPOTHESIS_REGISTRY, so this gate is UNVERIFIED, not passing. Note that "
+            f"an import-time assert in src/core/constants.py surfaces here as an "
+            f"AssertionError, not an ImportError.")])
     new = _r.render()
     doc = _r.DOC_PATH
     old = doc.read_text() if doc.exists() else ""

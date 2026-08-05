@@ -293,6 +293,8 @@ class TestNogoSubstrateIntegrity:
                             core=("propext", "sorryAx"))], self.REG)
         assert r.passed is False
 
+
+
     def test_a_self_discharging_backing_fails(self, tmp_path, monkeypatch):
         """Hole A: a no-go backed by `True` or a reflexive equality blocks nothing,
         while presenting as machine-enforced."""
@@ -301,19 +303,56 @@ class TestNogoSubstrateIntegrity:
         assert r.passed is False
         assert any("VACUOUS" in (d.message or "") for d in r.details)
 
-    def test_native_decide_is_not_counted_as_a_project_axiom(self, tmp_path, monkeypatch):
-        """`native_decide` closure entries are filtered deliberately — they are
-        ADR-002's concern, tracked by its own ratchet, not a taint here."""
+    # ⚠️ TWO TESTS WERE REVERSED HERE ON 2026-08-05 (PR-review R4-I5), and both were
+    # mine, written 2026-08-04. Each asserted a deliberate design decision; the
+    # reviewer disputed both and I judge the reviewer right. The originals read:
+    #
+    #   test_native_decide_is_not_counted_as_a_project_axiom
+    #     "`native_decide` closure entries are filtered deliberately — they are
+    #      ADR-002's concern, tracked by its own ratchet, not a taint here."
+    #   test_an_entry_with_no_backing_theorem_is_advisory
+    #     "A construction-level no-go may legitimately have no theorem. Hard-failing
+    #      it would make the registry unusable for that class."
+    #
+    # Why they are wrong, in the project's own terms:
+    #
+    # * ADR-002's ratchet counts native_decide USES. It does not stop one from backing
+    #   a no-go, and CLAUDE.md's bar is explicit — the target axiom set is
+    #   `{propext, Classical.choice, Quot.sound}` — while `atlas_view._is_kernel_pure`
+    #   states outright that "native_decide is policy-OK but not strictly kernel-pure".
+    #   The check's own failure message says a tainted refutation "is not
+    #   self-enforcing". A no-go is the one artifact whose whole purpose is to be
+    #   handed to a fresh-context worker INSTEAD of re-deriving the obstacle, so it is
+    #   the one place the strict reading has to hold. Aligning the check with the
+    #   stated bar; not inventing a new one.
+    #
+    # * The "construction-level no-go" class the second test protects is hypothetical:
+    #   0 of 45 live entries have empty backing. And CLAUDE.md already routes exactly
+    #   that class elsewhere — "Policy / route / preference bans (not kernel-encodable)
+    #   stay prose in docs/dev-loops/SETTLED_FORKS.md". An unbacked entry in the
+    #   KERNEL registry is a prose ban filed in the machine-enforced store.
+    #
+    # Both changes were measured to be latent before landing (0 affected entries), so
+    # neither turns a live population red.
+
+    def test_a_native_decide_backing_is_NOT_kernel_pure(self, tmp_path, monkeypatch):
+        """REVERSED — see the block above. Measured: 546 live declarations use
+        `native_decide`; **0 of the registry's 126 backing theorems do**."""
         r = self._run(tmp_path, monkeypatch,
                       [_rec("SKEFTHawking.M.refutation",
                             project=("SKEFTHawking.M.refutation._native.native_decide",))],
                       self.REG)
-        assert r.passed is True
+        assert r.passed is False, (
+            "a native_decide-backed no-go scored kernel-pure; `Lean.ofReduceBool` is "
+            "in its trust surface and CLAUDE.md's bar excludes it")
 
-    def test_an_entry_with_no_backing_theorem_is_advisory(self, tmp_path, monkeypatch):
-        """A construction-level no-go may legitimately have no theorem. Hard-failing
-        it would make the registry unusable for that class."""
+    def test_an_entry_with_no_backing_theorem_FAILS(self, tmp_path, monkeypatch):
+        """REVERSED — see the block above. This was the escape hatch on Invariant #17:
+        an unbacked entry returned PASS, so adding one bought a pass in the registry
+        that exists precisely to make a blocker machine-enforced."""
         r = self._run(tmp_path, monkeypatch, [],
                       {"fork-y": {"fork_id": "fork-y", "backing_theorems": []}})
-        assert r.passed is True
-        assert any(d.name == "fork-y" and d.warning for d in r.details)
+        assert r.passed is False, (
+            "a KERNEL_NOGO_REGISTRY entry with no backing theorem passed — Invariant "
+            "#17's escape hatch is open again")
+        assert any(d.name == "fork-y" and not d.passed for d in r.details)

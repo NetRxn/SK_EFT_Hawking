@@ -549,20 +549,57 @@ def check_nogo_substrate_integrity() -> CheckResult:
     by_name = {d.get("name", ""): d for d in _H.load_lean_deps()}
 
     def _kernel_pure(rec: dict) -> bool:
+        """Strict kernel purity for a NO-GO's backing theorem.
+
+        ⚠️ TWO CORRECTIONS, 2026-08-05 (PR-review R4-I5), both validated against the
+        live substrate before changing:
+
+        (a) `native_decide` axioms were STRIPPED from the project-axiom list before
+            the test, so a `native_decide`-backed refutation scored kernel-pure. That
+            contradicts the bar this project states everywhere else: CLAUDE.md's
+            target set is `{propext, Classical.choice, Quot.sound}`, and
+            `atlas_view._is_kernel_pure` says in as many words that *"native_decide is
+            policy-OK but not strictly kernel-pure"*. A no-go is a self-enforcing
+            blocker — the one place the stricter reading has to hold.
+            Measured: **546 declarations use native_decide; 0 of the registry's 126
+            backing theorems do.** So this was LATENT, and it is fixed while it is.
+
+        (b) The `sorryAx` conjunct was DEAD. `KERNEL` does not contain `sorryAx`, so
+            `core.issubset(KERNEL)` is already False whenever `sorryAx` is in the core
+            set — verified exhaustively over the live substrate: no record can satisfy
+            the first conjunct and fail the third. Rather than delete the intent, it
+            now also scans `axiom_deps_project`, where nothing was checking for it at
+            all. A dead conjunct that reads as a second safeguard is worse than none.
+        """
         core = set(rec.get("axiom_deps_core", []))
-        proj = [a for a in rec.get("axiom_deps_project", []) if not _ND.search(a)]
+        proj = list(rec.get("axiom_deps_project", []))
         return (core.issubset(KERNEL) and not proj
-                and not any("sorryAx" in a for a in rec.get("axiom_deps_core", [])))
+                and not any("sorryAx" in a for a in core | set(proj)))
 
     details: List[Detail] = []
     hard = False
     for fork_id, e in sorted(REG.items()):
         bts = e.get("backing_theorems", []) or []
         if not bts:
+            # ⚠️ WAS A FREE PASS (fixed 2026-08-05, PR-review R4-I5). An entry with no
+            # backing theorem returned `passed=True` and `continue`d — the escape hatch
+            # on Invariant #17, whose whole content is that a machine-enforced no-go is
+            # backed by a kernel-pure refutation. Adding an unbacked entry bought a
+            # pass, and the registry is exactly where a prose hope would be laundered
+            # into a "self-enforcing blocker".
+            #
+            # Measured before changing: **0 of 45 entries have empty backing**, so this
+            # closes the hatch at zero cost rather than turning a live population red.
+            # If a construction-level no-go genuinely cannot carry a theorem, that needs
+            # an explicit exemption field and a stated reason — not a silent branch.
+            hard = True
             details.append(Detail(
-                fork_id, True,
-                "registry entry carries NO backing theorem (construction-level no-go?) — advisory",
-                warning=True))
+                fork_id, False,
+                "registry entry carries NO backing theorem. Invariant #17 is that a "
+                "KERNEL_NOGO_REGISTRY entry is backed by a kernel-pure refutation; an "
+                "unbacked entry is a prose hope wearing a machine-enforced label. Add "
+                "the theorem, or remove the entry and record the fork in "
+                "docs/dev-loops/SETTLED_FORKS.md where prose bans belong."))
             continue
         for bt in bts:
             rec = by_name.get(bt)
