@@ -1,5 +1,8 @@
 # QA/QI Infrastructure Audit — 2026-08-04
 
+**➡️ START HERE: [`PR_REVIEW_2026-08-05.md`](PR_REVIEW_2026-08-05.md)** — the six-reviewer PR review,
+its verdict (DO NOT MERGE), the measured state, and the ordered resume point.
+
 **Status:** 🔴 **NOT COMPLETE — REOPENED 2026-08-05 by multi-agent PR review.** 31 findings closed;
 **4 new Criticals (QI-31…QI-34) are OPEN and block merge.** All four are checks that **cannot fail**
 — the exact class this audit was convened to find, missed by it, and then "mutation-verified" by

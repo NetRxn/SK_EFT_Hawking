@@ -19,6 +19,8 @@ without re-deriving it. Read this first, then the linked documents.
 > documents below were written — several still record them as open (audit finding QI-21/QI-22).
 >
 > ## 🔴 THE QA/QI INFRASTRUCTURE AUDIT IS **REOPENED** — 31 closed, 4 OPEN Criticals
+> **➡️ Read [`docs/audits/2026-08-04-qa-qi-infrastructure/PR_REVIEW_2026-08-05.md`](../../audits/2026-08-04-qa-qi-infrastructure/PR_REVIEW_2026-08-05.md) FIRST** — six-reviewer PR
+> review, verdict **DO NOT MERGE**, measured state and the ordered resume point.
 > A full direct read of the entire QA/QI surface (~17,700 lines, including `build_graph.py`, which
 > this file had recorded as never read) was completed 2026-08-04. It found **31 findings** across
 > four workstreams — one live enforcement hole, duplicated predicates, dead code, documentation
