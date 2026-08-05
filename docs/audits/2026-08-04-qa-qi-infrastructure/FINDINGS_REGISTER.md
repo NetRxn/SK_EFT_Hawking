@@ -1,0 +1,154 @@
+# PR-review findings register — all 53 actionable non-Critical
+
+**Source of truth:** [`reviewer-reports/`](reviewer-reports/) — the six reviewers' own
+words. This file is the tracker; when the two disagree, the report wins.
+
+**Status legend:** ✅ fixed · 🔧 in progress · ⬜ open · 🔁 superseded/duplicate ·
+❌ **not reproduced** (the filed claim was measured and is wrong as stated)
+
+> ⚠️ **Every entry below was RE-MEASURED before being actioned**, per the standing rule
+> that a filed finding's count, consumer and effort are *claims*. Several did not survive
+> that: the counts in R6-M1 and my own re-count of it were both wrong in different
+> directions, and R4-I1's stated mechanism is not what the code does. Those are marked ❌
+> with the measurement, not silently dropped.
+
+---
+
+## R4 — enforcement efficacy (11 Important) — the reviewer who returned "No"
+
+| id | finding | status |
+|---|---|---|
+| R4-I1 | `cross_path_consistency`'s two legs "are one assertion" | ❌ **not reproduced as stated** — see below |
+| R4-I2 | `paper_latex_compiles` unreachable from every automated caller | ✅ `2577fdbc` — `s13` now passes `--force-latex` |
+| R4-I3 | the 14 unresolved `ARISTOTLE_THEOREMS` keys still launder into `all_lean_names` | ✅ `b4a2d367` |
+| R4-I4 | `tracked_hypotheses_fresh` bare-`except` fail-open | ✅ `0077714a` |
+| R4-I5 | `nogo_substrate_integrity`: empty-backing free pass, dead `sorryAx` conjunct, `native_decide` stripped | ✅ `0077714a` |
+| R4-I6 | two advertised `formula_grounding` legs are dead | ⬜ open |
+| R4-I7 | the three freshness regenerators cannot fail on staleness | ✅ `1a7f016d` |
+| R4-I8 | `readiness_verdicts_agree`'s reverse leg is unreachable | ⬜ open |
+| R4-I9 | `atlas_integrity` `SystemExit` aborts the suite | ✅ `4ca3ff4b` |
+| R4-I10 | `notebook_exec` skip-cache fingerprint too narrow | ✅ `dd195033` |
+| R4-I11 | six `--strict` legs have no automated caller | ✅ `2577fdbc` — new `gate_precheck submission` stage |
+
+### ❌ R4-I1 — measured, and the mechanism is not the one filed
+
+The claim: leg 2 compares `decoherence_parameter(Γ,κ)` against `summ['delta_k_at_T_H']`,
+which is itself `decoherence_parameter(Γ,κ)` — *"the same function"*, so the legs
+*"cannot fail independently."*
+
+Measured on the live platform:
+
+```
+leg1  direct   = 6.021424108396742e-07   spectrum = 6.021448963045517e-07
+leg2  formulas = 1.2042848216793483e-06  spectrum = 1.2042897926091034e-06
+identical right-hand sides: False        identical left-hand sides: False
+```
+
+`decoherence_parameter` returns `2Γ/κ`, so leg 2 is leg 1 scaled by 2 **on both sides** —
+and the two sides differ in the 6th significant digit, i.e. the spectrum path computes its
+own `Γ_H` rather than reusing the caller's. Leg 2 therefore *does* constrain
+`decoherence_parameter`'s factor of 2, which leg 1 does not.
+
+**The real defect is different and still worth fixing:** leg 1's reference side is an
+INLINE re-implementation (`gamma_eff * (T_H/c_s)**2 / kappa`) rather than a call to the
+canonical `formulas.py` entry point, so it cannot detect drift in the canonical formula —
+in a check registered as *"catches duplicate implementations that drift apart"*, which
+thereby introduces a third one. Re-filed on that basis; **⬜ open**.
+
+---
+
+## R1 — architecture and correctness (6 Important)
+
+| id | finding | status |
+|---|---|---|
+| R1-I2 | `bundle_registry_consistency` Leg C lost a third of its scope (`glob`→`rglob`) | ✅ `6c89beaa` |
+| R1-I3 | a behaviour change shipped inside the phase ADR-009 D4 requires to be behaviour-preserving | ✅ ADR corrected in the QI sweep |
+| R1-I4 | `_iter_test_functions` double-yields on nested classes | ⬜ open — **and the on-disk note contradicts the reviewer** (see §Contradictions) |
+| R1-I5 | `build_graph`'s comment asserts `readiness_gates` imports only stdlib; it now imports `validation._tex` | ⬜ open |
+| R1-I6 | `test_regenerators_precede_their_consumers` never widened; `_REGENERATORS` names two members it never asserts | ⬜ open |
+| R1-I7 | merge to `main` turns the wave-close gate red | ✅ decided by operator: merge readiness first |
+
+## R2 — test quality (5 Important)
+
+| id | finding | status |
+|---|---|---|
+| R2-I3 | `test_validate_flag_propagation` asserts an exact source substring | ⬜ open |
+| R2-I4 | `test_d5_lean_toolchain` pins message *text* and asserts two strings merely differ | ⬜ open |
+| R2-I5 | the D5 seam guard is satisfiable by a docstring | ✅ fixed in the QI sweep |
+| R2-I6 | `AWAITING_*` — two constants in the same file asserted to agree | ⬜ open (judged defensible; see the reviewer's own hedge) |
+| R2-I7 | `EXPECTED_CHECKS` ordering freeze duplicates `_CANONICAL_ORDER` | ⬜ open |
+
+## R3 — deferred scope (9 Important)
+
+| id | finding | status |
+|---|---|---|
+| R3-I1 | QI-16 marked FIXED; 4 wrong §Deferred ordinals remain outside `scripts/validation/` | ⬜ open |
+| R3-I2 | `RESUME_STATE.md` still carries three claims the audit says it corrected | ⬜ open |
+| R3-I3 | §Deferred item 6's "no defect to fix here" overstates its own measurement | ✅ superseded — `--strict` now has a caller |
+| R3-I4 | QI-15 removed 8 `TODO(semantic-review)` markers without recording a per-site decision | ⬜ open |
+| R3-I5 | the BinOp path-alias gap; `_PHYSLIB_DIR` is the one unpinned site | ⬜ open |
+| R3-I6 | QI-01's fix is Lean-only; `extract_python_test_nodes` was the same class | ✅ `6c89beaa` |
+| R3-I7 | the map's five documented silent-drop points are neither findings nor residuals | ⬜ open |
+| R3-I8 | `provenance_dashboard`'s exclusion from the QI-01 guard is asserted, not measured | ⬜ open |
+| R3-I9 | the "eight always-pass checks" population is a syntactic lower bound | ⬜ open |
+
+## R5 — coverage adequacy (6 Important)
+
+| id | finding | status |
+|---|---|---|
+| R5-I1 | Invariant #10 has no enforcement and **22 live violations** | 🔧 measured: 22 confirmed, in 4 files, all `theorem` |
+| R5-I2 | notebook stored-output correctness covers 2 of 91 | ⬜ ADR-010 (operator decision (b)) |
+| R5-I3 | LaTeX gate opt-in **and** no BibTeX, so undefined citations are undetected | ✅ half (`2577fdbc`); ⬜ **BibTeX half open** |
+| R5-I4 | no scan for LLM artifacts / placeholder strings in TeX | ⬜ open |
+| R5-I5 | headline certainty-calibration has no mechanism | ⬜ open |
+| R5-I6 | Invariants #1/#2/#3 enforced for notebooks only; **177 `src/` modules unscanned** | ⬜ open |
+
+## R6 — test appropriateness (16, unlabelled)
+
+| id | finding | status |
+|---|---|---|
+| R6-M1 | atlas negative frontier mis-derived; CLI and web export unfiltered; the digest's filter untested | 🔧 measured — **29 on the frontier**, from 3 modules |
+| R6-M2 | `NarrativeGrounding` is a change-detector for five historical overclaims | ⬜ open |
+| R6-M3 | numeric-claim protection is anchored regressions; captions stripped before scanning | ⬜ open |
+| R6-M4 | eleven tests assert data the test itself declared | ⬜ open |
+| R6-M5 | a decoy fixture in `test_d5_prose_lean_refs` | ⬜ open |
+| R6-M6 | a test whose docstring denies what it is (**R2 called the same file a strength**) | ⬜ open — needs adjudication |
+| R6-M8 | the 11 readiness-gate evaluators have zero direct tests | ⬜ open |
+| R6-M9 | the graph extractor suite is unit-shaped, empty-tolerant, deselected | ✅ RED-test half `4a16826e`; ⬜ structural half open |
+| R6-S1 | Stage-13 finding → gate: no end-to-end test | ⬜ open |
+| R6-S3 | no headings-minted reconciliation (partial loss is invisible) | ⬜ open |
+| R6-S4 | `find_stage13_review_evidence` decides whether Stage 13 happened, untested, and writes back | ⬜ open |
+| R6-S5 | `gate_precheck` had zero tests | ✅ `2577fdbc`; ⬜ `review_runner` half open |
+| R6-S6 | display↔gate agreement untested in both directions | ⬜ open |
+| R6-S7 | real-data baselines absent for ~9 of 13 d5 files | ⬜ open |
+| — | the human-verification write path is a stub | ⬜ open — **highest value remaining** |
+| — | severity typos silently downgrade | ✅ `4a16826e` |
+
+---
+
+## Contradictions between the on-disk summary and the reviewer
+
+These need a decision, not just recovery. In each case the summary records the version
+the reviewer **rejected**:
+
+1. **`_iter_test_functions`** — the summary says the current behaviour "is the correct
+   behaviour, so this is a latent-but-guarded shape rather than a defect." R1-I4 *and*
+   R3-M4 both say it double-**mints**, and that `TestGraphTestNodeCoverage` would fail
+   with a *negative* count and misdiagnose it as a drop.
+2. **BinOp path-alias gap** — summary: "a known, deliberate limit, not an oversight."
+   R3-I5: "**NO — should be a defect.** Same shape as QI-11," and `_PHYSLIB_DIR` is
+   unpinned.
+3. **README §4c** — "All four workstreams complete — 29 of 29 findings closed" / "5398
+   passed". R3-M1 measured five workstreams, 31 findings, 5401 passed. **Still stale.**
+4. **The hedge-regex guard** (`test_d5_lean_substrate.py:302-330`) — R2 lists it as a
+   *strength*; R6-M6 says it is a hardcoded fixture list whose docstring denies what it
+   is. Direct reviewer-vs-reviewer disagreement, unresolved.
+
+## Also not in this register
+
+**48 Minor findings** (R1 #8–15, R2 #8–12, R3 M1–M6, R4 M1–M10, R5 M0–M4) live only in
+[`reviewer-reports/`](reviewer-reports/). Several are substantive measurements, e.g.
+R4's: `parameter_provenance` leg 4 is **82 % blind** (169 of 206 silent `None`) while
+printing *"All provenance values match code"*; `citation_primary_sources_present` covers
+**69 of 652** entries; `disclosure_consistency` has never had a non-zero candidate
+population.

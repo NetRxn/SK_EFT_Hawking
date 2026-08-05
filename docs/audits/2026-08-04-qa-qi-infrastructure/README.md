@@ -1,6 +1,11 @@
 # QA/QI Infrastructure Audit — 2026-08-04
 
-**➡️ START HERE: [`PR_REVIEW_2026-08-05.md`](PR_REVIEW_2026-08-05.md)** — the six-reviewer PR review,
+**➡️ START HERE: [`FINDINGS_REGISTER.md`](FINDINGS_REGISTER.md)** — all **53** actionable
+non-Critical findings with status, and [`reviewer-reports/`](reviewer-reports/) — the six
+reviewers' own words, recovered verbatim 2026-08-05. ⚠️ The *"~17 Important"* figure that
+stood in this file was never derived from the artifact and is wrong by ~3×.
+
+**Then: [`PR_REVIEW_2026-08-05.md`](PR_REVIEW_2026-08-05.md)** — the six-reviewer PR review,
 its verdict (DO NOT MERGE), the measured state, and the ordered resume point.
 
 **Status:** 🟠 **MERGE BLOCKERS CLEARED 2026-08-05; the review's Important findings remain open.**
