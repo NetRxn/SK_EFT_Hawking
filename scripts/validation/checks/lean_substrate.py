@@ -70,7 +70,29 @@ def check_formulas_to_theorems() -> CheckResult:
 
     # Build set of all Lean theorem names (Aristotle-proved + manually proved)
     lean_dir = _H.LEAN_DIR          # was Path(__file__).parent.parent — ADR-009 H1
-    all_lean_names = set(ARISTOTLE_THEOREMS.keys())
+    #
+    # ⚠️ SUBTRACT THE UNRESOLVED REGISTRY KEYS (2026-08-05, PR-review R4-I3).
+    # `ARISTOTLE_THEOREMS` is hand-maintained and its keys are unioned into the set
+    # this check resolves formula references against — so a key naming no Lean
+    # declaration LAUNDERS a nonexistent theorem into the valid-name set, and a
+    # formula grounded on it reports as grounded. QI-30 ratcheted the count of such
+    # keys, which closed the generator; the existing 14 kept laundering.
+    #
+    # Measured 2026-08-05: 14 of 322 keys resolve to nothing, and **none of the 14 is
+    # currently a mapping target**, so the exposure was LATENT, not live — the same
+    # posture as QI-01, and filed the same way rather than downgraded for it.
+    #
+    # `_H.unresolved_aristotle_keys` is the single owner shared with
+    # `check_theorem_count`'s ratchet; a second resolver here could disagree with the
+    # ratchet about which keys are stale, which is the failure this fix exists to end.
+    try:
+        _stale_keys = set(_H.unresolved_aristotle_keys())
+    except FileNotFoundError:
+        # Absence is not evidence the registry is clean. Keep the STRICTER behaviour:
+        # no subtraction means no laundering-suppression, so fall back to the full
+        # key set rather than silently trusting it — and say so in the details below.
+        _stale_keys = set()
+    all_lean_names = set(ARISTOTLE_THEOREMS.keys()) - _stale_keys
     if lean_dir.exists():
         # ⚠️ rglob, NOT glob (fixed 2026-08-04, audit finding QI-01). `glob` read
         # 1,373 of 2,039 files, so any mapped theorem that lives in a package

@@ -233,10 +233,11 @@ def check_theorem_count() -> CheckResult:
             "against the substrate, so this ratchet is UNVERIFIED, not passing. "
             "Refresh with `cd lean && lake build SKEFTHawking.ExtractDeps`.")])
 
-    full = {d.get("name", "") for d in _H.load_lean_deps()}
-    short = {n.rsplit(".", 1)[-1] for n in full if n}
-    unresolved = sorted(k for k in ARISTOTLE_THEOREMS
-                        if k not in short and k not in full)
+    # ONE OWNER (2026-08-05, PR-review R4-I3). The resolver moved to
+    # `validate_helpers.unresolved_aristotle_keys` because
+    # `check_formulas_to_theorems` must SUBTRACT exactly this set, and a second
+    # copy there is the duplication shape this audit keeps finding.
+    unresolved = _H.unresolved_aristotle_keys()
 
     details: List[Detail] = [Detail(
         "registry_size", True,

@@ -158,7 +158,73 @@ class TestFormulasToTheorems:
         monkeypatch.setattr(_H, "LEAN_DIR", _lean_tree(tmp_path, {}))
         monkeypatch.setattr(_c, "ARISTOTLE_THEOREMS",
                             {n: {} for n in self._all_theorem_names()})
+        monkeypatch.setattr(_H, "unresolved_aristotle_keys", list)
         assert ls.check_formulas_to_theorems().passed is True
+
+    def test_a_STALE_registry_key_cannot_launder_a_nonexistent_theorem(
+            self, tmp_path, monkeypatch):
+        """FIRES ON THE SEEDED DEFECT — PR-review R4-I3, fixed 2026-08-05.
+
+        This check unions `ARISTOTLE_THEOREMS`' KEYS into the set it resolves formula
+        references against. The registry is hand-maintained, so a key naming no Lean
+        declaration launders a nonexistent theorem into that set and a formula
+        grounded on it reports as grounded.
+
+        QI-30 ratcheted the COUNT of such keys, which closed the generator. It did not
+        close the hole: the 14 already there kept laundering. Measured 2026-08-05, and
+        stated honestly — **none of the 14 is currently a mapping target**, so the
+        exposure was LATENT, not live. Same posture as QI-01, filed the same way.
+
+        The fixture reproduces the live shape exactly: the Lean tree is EMPTY, and the
+        registry's only key is a mapped theorem name that resolves to nothing. Before
+        the fix the check passed; the theorem exists nowhere at all."""
+        target = self._all_theorem_names()[0]
+        monkeypatch.setattr(_H, "LEAN_DIR", _lean_tree(tmp_path, {}))
+        monkeypatch.setattr(_c, "ARISTOTLE_THEOREMS",
+                            {n: {} for n in self._all_theorem_names()})
+        # ...and `theorems`' ratchet has established this key names nothing.
+        monkeypatch.setattr(_H, "unresolved_aristotle_keys", lambda: [target])
+        r = ls.check_formulas_to_theorems()
+        assert r.passed is False, (
+            f"{target!r} resolves to NO Lean declaration — `theorems` says so — and "
+            f"the formula citing it still reported as grounded. The registry key "
+            f"laundered a nonexistent theorem into the valid-name set (R4-I3)")
+
+    def test_an_ABSENT_substrate_does_not_suppress_the_subtraction_silently(
+            self, tmp_path, monkeypatch):
+        """Cannot-measure is not success, at the new seam too. If `lean_deps.json` is
+        gone, `unresolved_aristotle_keys` raises and no key can be subtracted — the
+        check must not therefore treat the whole registry as verified. It falls back
+        to the full key set, which is the STRICTER direction (no suppression), and the
+        `theorems` ratchet fails separately on the same absence."""
+        monkeypatch.setattr(_H, "LEAN_DIR", _lean_tree(tmp_path, {}))
+        monkeypatch.setattr(_c, "ARISTOTLE_THEOREMS",
+                            {n: {} for n in self._all_theorem_names()})
+
+        def _boom():
+            raise FileNotFoundError("lean_deps.json absent")
+        monkeypatch.setattr(_H, "unresolved_aristotle_keys", _boom)
+        r = ls.check_formulas_to_theorems()
+        assert r.passed is True, (
+            "a missing substrate turned this check red; the fallback must be the "
+            "pre-fix behaviour, with `theorems` owning the absence verdict")
+
+    def test_the_resolver_has_ONE_owner(self):
+        """`check_theorem_count` ratchets the stale-key count and this check subtracts
+        it — they must agree about WHICH keys are stale. A second resolver in either
+        module could disagree with the ratchet about the very set the ratchet counts,
+        which is the duplication shape this audit keeps finding (`_recurrence_norm`,
+        `_SEVERITY_DECL_MAP`, `NUMERICAL_LITERAL_RE`)."""
+        import re as _re
+        for mod, fn in (("lean_toolchain", "check_theorem_count"),
+                        ("lean_substrate", "check_formulas_to_theorems")):
+            src = (Path(ls.__file__).parent / f"{mod}.py").read_text()
+            body = src[src.index(f"def {fn}("):]
+            assert "unresolved_aristotle_keys" in body[:6000], (
+                f"{mod}.{fn} no longer routes through the shared resolver")
+            assert not _re.search(r'\{d\.get\("name", ""\) for d in', body[:6000]), (
+                f"{mod}.{fn} re-implements the lean_deps name index locally — it must "
+                f"use `_H.unresolved_aristotle_keys()` so both sides agree")
 
     def test_a_docstring_that_drops_its_theorem_fails(self, tmp_path, monkeypatch):
         """The OTHER direction of the same invariant: the theorem exists, but the

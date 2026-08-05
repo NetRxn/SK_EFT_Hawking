@@ -203,3 +203,34 @@ def bundle_drafts(bundle_codes) -> list[tuple[str, Path]]:
         if tex.exists():
             out.append((code, tex))
     return out
+
+
+def unresolved_aristotle_keys() -> list[str]:
+    """`ARISTOTLE_THEOREMS` keys that name NO declaration in `lean_deps.json`.
+
+    ONE OWNER, deliberately (added 2026-08-05, PR-review R4-I3). Two checks need
+    this set and they need the SAME set:
+
+    * `lean_toolchain.check_theorem_count` ratchets its size, so a new stale key
+      fails; and
+    * `lean_substrate.check_formulas_to_theorems` must SUBTRACT it, because that
+      check unions the registry's keys into `all_lean_names` — the set it resolves
+      formula references against. A key naming nothing therefore launders a
+      nonexistent theorem into the valid-name set, and a formula grounded on it
+      passes. Ratcheting the count closed the generator; it did not close the hole.
+
+    A second copy of this resolver in the second call site is exactly the shape the
+    audit keeps finding (`_recurrence_norm`, `_SEVERITY_DECL_MAP`, the duplicated
+    `NUMERICAL_LITERAL_RE`), so it lives here — `validate_helpers` is the
+    shared-helper home and is outside the check package, so neither module imports
+    a sibling.
+
+    RAISES `FileNotFoundError` via :func:`load_lean_deps` when the substrate is
+    absent. Callers decide what absence means; both current callers treat it as
+    UNVERIFIED rather than clean.
+    """
+    from src.core.constants import ARISTOTLE_THEOREMS
+
+    full = {d.get("name", "") for d in load_lean_deps()}
+    short = {n.rsplit(".", 1)[-1] for n in full if n}
+    return sorted(k for k in ARISTOTLE_THEOREMS if k not in short and k not in full)
