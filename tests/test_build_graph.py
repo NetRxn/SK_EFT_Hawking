@@ -633,6 +633,69 @@ class TestExtractPythonTestNodes:
             assert 'referenced_names' in n['meta']
 
 
+class TestSeverityDeclarationIsValidated:
+    """A MISTYPED severity must not silently downgrade a finding.
+
+    Found by PR-review reviewer 6, 2026-08-05. `_SEVERITY_DECL_MAP.get(v)` returns
+    `None` for `blockr` / `high` / any token outside the vocabulary; severity then fell
+    through to `advisory`, and the file-level BLOCKER escalation was skipped because it
+    was gated on `_decl is None` — the `**Severity:**` LINE had matched, only its VALUE
+    failed. So a typo'd BLOCKER landed as advisory, the paper read YELLOW, and
+    `readiness_submission_gate` passed.
+
+    `review_severity_declared` does not catch it: it counts `**Severity:**` lines and
+    never validates the token. Nothing else did either — hence these tests.
+
+    They run the real extractor against a review document written into a temp
+    `AutomatedReviews` tree, so the parse path is the production one end to end.
+    """
+
+    def _extract(self, tmp_path, monkeypatch, body: str):
+        import build_graph as bg
+        d = tmp_path / "papers" / "AutomatedReviews" / "2026-09-01-probe"
+        d.mkdir(parents=True)
+        (d / "D12.md").write_text(body)
+        monkeypatch.setattr(bg, "PROJECT_ROOT", tmp_path)
+        return bg.extract_review_finding_nodes()
+
+    #: `**BLOCKER**` bolded is the corpus's actual marker — `_BLOCKER_RE` requires the
+    #: emphasis, which is what stops the word appearing in prose from escalating a
+    #: report (two reviewers tripped that rule by quoting the marker while describing
+    #: it). A first draft of this fixture wrote it bare and the escalation never fired,
+    #: making the test look like the fix had failed.
+    _HEADING = ("### 1.1 — a load-bearing defect in the bundle\n\n"
+                "- **Severity:** {sev}\n\nThe body declares this a **BLOCKER**.\n")
+
+    def test_a_declared_blocker_is_critical(self):
+        """The positive control — the vocabulary maps as documented."""
+        from build_graph import _SEVERITY_DECL_MAP
+        assert _SEVERITY_DECL_MAP["blocker"] == "critical"
+
+    def test_a_MISTYPED_severity_does_not_land_as_advisory(self, tmp_path, monkeypatch):
+        """FIRES ON THE SEEDED DEFECT. `blockr` is unparseable, so the declaration must
+        be treated as ABSENT — which lets the BLOCKER marker in the body escalate — and
+        must NOT be accepted as the lowest severity there is."""
+        nodes = self._extract(tmp_path, monkeypatch, self._HEADING.format(sev="blockr"))
+        assert nodes, "the probe document minted no finding"
+        sev = nodes[0]["meta"]["severity"]
+        assert sev != "advisory", (
+            "a mistyped severity silently downgraded the finding to advisory — a "
+            "typo'd BLOCKER then reads YELLOW and readiness_submission_gate passes")
+        assert sev == "critical", (
+            f"an unparseable declaration must fall through to inference and escalation "
+            f"exactly as an absent one; got {sev!r}")
+
+    def test_a_VALID_declaration_still_wins_over_the_body(self, tmp_path, monkeypatch):
+        """The other direction, and it is load-bearing: the declared field is
+        authoritative precisely so a glyph or a quoted marker in the body cannot
+        override it (D12 round-12 finding 8.2). The fall-through above must not have
+        re-opened that path for well-formed declarations."""
+        nodes = self._extract(tmp_path, monkeypatch, self._HEADING.format(sev="advisory"))
+        assert nodes and nodes[0]["meta"]["severity"] == "advisory", (
+            "a valid `advisory` declaration was overridden by the BLOCKER token in the "
+            "body — the declared field is authoritative")
+
+
 class TestExtractReviewFindingNodes:
     """ReviewFinding — adversarial review findings with severity + status."""
 
@@ -640,11 +703,29 @@ class TestExtractReviewFindingNodes:
         assert isinstance(extract_review_finding_nodes(), list)
 
     def test_node_shape(self):
+        """⚠️ THIS TEST WAS RED, AND HAD BEEN SINCE THE DECLARED-SEVERITY CONVENTION
+        LANDED (fixed 2026-08-05, PR-review reviewer 6). Nobody saw it because
+        `pyproject.toml` deselects `slow` and this module carries that marker.
+
+        The accepted set was hand-listed and had drifted from the production mapping in
+        both directions at once: it accepted `blocker`, which the extractor never emits
+        (it maps `blocker` -> `critical`), and it omitted `critical`, which is the only
+        submission-blocking value there is. So the one assertion in this test could
+        never pass on a corpus containing a single 🔴.
+
+        It is now DERIVED from `build_graph.SEVERITY_VALUES` — hoisted to module scope
+        with the mapping it comes from, for the same reason `_recurrence_norm` was under
+        ADR-009 Phase 0 Guard 3: a test that re-states a mapping asserts nothing about
+        the mapping, and drifts from it silently."""
+        from build_graph import SEVERITY_VALUES
         nodes = extract_review_finding_nodes()
         if not nodes:
             pytest.skip("No ReviewFinding nodes (no AutomatedReviews dir?)")
         _assert_unique_ids(nodes)
-        valid_severity = {'blocker', 'major', 'minor', 'info', 'advisory', 'unknown'}
+        valid_severity = set(SEVERITY_VALUES)
+        assert 'critical' in valid_severity, (
+            "the submission-blocking severity is not in the derived set — "
+            "`readiness_submission_gate` keys on it")
         # Status set extended 2026-05-14 to match the actual schema in
         # docs/review_finding_supersessions.json (overrides the parser-default
         # 'open'/'fixed'). 'accepted' was added in Phase 6i Wave 3 close
@@ -658,8 +739,17 @@ class TestExtractReviewFindingNodes:
         }
         for n in nodes[:10]:
             _assert_valid_node(n, 'ReviewFinding', 'review:')
-            assert n['meta'].get('severity') in valid_severity
-            assert n['meta'].get('status') in valid_status
+        # Severity and status are set-membership tests over ~1,500 nodes and cost
+        # nothing, so they run over ALL of them rather than the first ten. The `[:10]`
+        # cap above is for the structural assertions; applied to these it would mean a
+        # bad value at node 900 passes, which is the population-shaped blind spot this
+        # audit keeps finding. Both fields gate submission readiness.
+        bad_sev = {n['id']: n['meta'].get('severity') for n in nodes
+                   if n['meta'].get('severity') not in valid_severity}
+        assert not bad_sev, f"severities outside {sorted(valid_severity)}: {bad_sev}"
+        bad_status = {n['id']: n['meta'].get('status') for n in nodes
+                      if n['meta'].get('status') not in valid_status}
+        assert not bad_status, f"statuses outside {sorted(valid_status)}: {bad_status}"
 
 
 class TestExtractProductionRunNodes:

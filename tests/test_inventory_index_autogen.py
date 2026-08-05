@@ -169,7 +169,7 @@ class TestValidateCheckRegistered:
 
 
 class TestValidationChecksTableIsNotEmpty:
-    """`paper_tables.sources.validation_checks()` feeds Paper 15's Table 2.
+    r"""`paper_tables.sources.validation_checks()` feeds Paper 15's Table 2.
 
     ⚠️ **It shipped EMPTY for 40+ commits.** It AST-parsed `scripts/validate.py`
     alone; ADR-009 Phase 2 moved all 59 check bodies into

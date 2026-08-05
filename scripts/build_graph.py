@@ -1538,6 +1538,25 @@ _SEV_GLYPHS = {
     '🔵': 'minor',
 }
 
+#: Reviewer vocabulary -> the severity a node carries. **Module scope, deliberately**
+#: (2026-08-05): it was a function-local literal inside
+#: `extract_review_finding_nodes`, so nothing outside could bind it — and
+#: `test_build_graph.py::TestExtractReviewFindingNodes::test_node_shape` hand-listed a
+#: DIFFERENT set. That test accepted `blocker`, which this map never emits, and omitted
+#: `critical`, which is the only submission-blocking value. It has been RED since the
+#: declared-severity convention landed, invisible because `pyproject.toml` deselects
+#: `slow`. Same fix, same reason, as `_recurrence_norm` under ADR-009 Phase 0 Guard 3:
+#: a test that re-states a mapping asserts nothing about the mapping.
+_SEVERITY_DECL_MAP = {
+    'blocker': 'critical', 'critical': 'critical',
+    'required': 'major', 'major': 'major',
+    'recommended': 'minor', 'minor': 'minor',
+    'advisory': 'advisory', 'info': 'advisory',
+}
+
+#: Every severity a ReviewFinding node can carry, derived rather than restated.
+SEVERITY_VALUES = frozenset(_SEVERITY_DECL_MAP.values()) | frozenset(_SEV_GLYPHS.values())
+
 # Section heading pattern for Master Checklist / Comprehensive / Citation
 # review formats:
 #   `### N.N — Paper X — ...`        (Master Checklist)
@@ -1777,13 +1796,21 @@ def extract_review_finding_nodes() -> list[dict]:
             _decl = re.search(r'^[-*]\s*\*\*Severity:?\*\*:?\s*([A-Za-z]+)',
                               body[:1200], re.MULTILINE | re.IGNORECASE)
             severity = None
+            _decl_unrecognised = False
             if _decl:
                 _v = _decl.group(1).strip().lower()
-                _MAP = {'blocker': 'critical', 'critical': 'critical',
-                        'required': 'major', 'major': 'major',
-                        'recommended': 'minor', 'minor': 'minor',
-                        'advisory': 'advisory', 'info': 'advisory'}
-                severity = _MAP.get(_v)
+                severity = _SEVERITY_DECL_MAP.get(_v)
+                # ⚠️ AN UNRECOGNISED DECLARED VALUE IS NOT A DECLARATION (2026-08-05).
+                # `_MAP.get()` returned None for a typo (`blockr`, `high`), severity fell
+                # through to `advisory`, and the file-level BLOCKER escalation below was
+                # skipped because it is gated on `_decl is None` — the LINE matched, only
+                # its value failed. A mistyped BLOCKER therefore landed as advisory -> the
+                # paper reads YELLOW -> `readiness_submission_gate` passes.
+                # `review_severity_declared` does not catch it either: it counts
+                # `**Severity:**` LINES and never validates the token.
+                # An unparseable declaration now behaves exactly as an absent one, so
+                # inference and escalation both still run.
+                _decl_unrecognised = severity is None
             if severity is None:
                 severity = 'advisory'
                 # The HEADING is authoritative for the fallback; the body is a last resort
@@ -1815,7 +1842,7 @@ def extract_review_finding_nodes() -> list[dict]:
             # it was introduced to replace. Two reviewers also tripped the file-level rule
             # on their own reports by quoting the marker while describing it, escalating
             # entire clean rounds.
-            if _decl is None:
+            if _decl is None or _decl_unrecognised:
                 if _BLOCKER_RE.search(heading) or _BLOCKER_RE.search(body[:1000]):
                     severity = 'critical'
                 elif file_has_critical_marker:

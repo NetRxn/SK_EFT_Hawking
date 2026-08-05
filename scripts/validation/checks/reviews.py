@@ -352,10 +352,27 @@ def check_review_severity_declared() -> CheckResult:
 
     _SEV_LINE = re.compile(r'^[-*]\s*\*\*Severity:?\*\*', re.M | re.I)
     _HEADING = re.compile(r'^#{3,5}\s+\S', re.M)
+    # ⚠️ VALUE VALIDATION, added 2026-08-05 (PR-review reviewer 6). This check counted
+    # `**Severity:**` LINES and never looked at what they said — so `- **Severity:**
+    # blockr` satisfied it completely, while `build_graph` could not map the token and
+    # the finding landed as `advisory`. A typo'd BLOCKER then read YELLOW and
+    # `readiness_submission_gate` passed. The line count is the weaker half of the
+    # obligation; the vocabulary is the other half, and this check owns both.
+    _SEV_VALUE = re.compile(r'^[-*]\s*\*\*Severity:?\*\*:?\s*([A-Za-z]+)', re.M | re.I)
 
     details: list[Detail] = []
     bad = 0
+    bad_value = 0
     checked = 0
+    try:
+        from build_graph import _SEVERITY_DECL_MAP
+        vocabulary = set(_SEVERITY_DECL_MAP)
+    except ImportError as exc:      # cannot-measure is not success
+        return CheckResult(passed=False, details=[Detail(
+            "import", False,
+            f"build_graph._SEVERITY_DECL_MAP unavailable ({exc}) — the accepted "
+            f"vocabulary is unknown, so this check cannot validate anything")])
+
     for md in sorted(reviews_dir.glob("*/*.md")):
         date = md.parent.name[:10]
         if date < _CUTOFF:
@@ -374,12 +391,23 @@ def check_review_severity_declared() -> CheckResult:
                 f"From {_CUTOFF} every finding must declare its severity explicitly: "
                 f"severity drives the blocking-closure bar, and inferring it from a glyph "
                 f"lets it be changed without leaving a trace."))
+        unknown = sorted({v for v in _SEV_VALUE.findall(text)
+                          if v.strip().lower() not in vocabulary})
+        if unknown:
+            bad_value += 1
+            details.append(Detail(
+                f"{md.relative_to(_H.PROJECT_ROOT)}:vocabulary", False,
+                f"declares severity value(s) `build_graph` cannot map: {unknown}. "
+                f"Accepted: {sorted(vocabulary)}. An unmappable token is not a "
+                f"declaration — the finding falls back to inference, and a mistyped "
+                f"BLOCKER lands advisory while this check's line count reads clean."))
 
     details.insert(0, Detail(
-        "summary", bad == 0,
+        "summary", bad == 0 and bad_value == 0,
         f"{checked} review document(s) dated >= {_CUTOFF} checked; {bad} with findings "
-        f"that do not declare severity (earlier documents keep glyph inference)"))
-    return CheckResult(passed=bad == 0, details=details)
+        f"that do not declare severity, {bad_value} declaring an unmappable severity "
+        f"value (earlier documents keep glyph inference)"))
+    return CheckResult(passed=(bad == 0 and bad_value == 0), details=details)
 
 
 @register_check("review_docs_mint_findings",

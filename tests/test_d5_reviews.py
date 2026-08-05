@@ -315,6 +315,44 @@ class TestReviewSeverityDeclared:
         assert "0 review document(s)" in \
             next(d for d in r.details if d.name == "summary").message
 
+    #: A well-formed LINE carrying a token `build_graph` cannot map. Satisfies the
+    #: line-count leg completely.
+    MISTYPED = ("### 1.1 — the mapping row is stale\n"
+                "- **Severity:** blockr\n\nbody\n")
+
+    def test_a_MISTYPED_severity_value_fails(self, tmp_path, monkeypatch):
+        """FIRES ON THE SEEDED DEFECT — added 2026-08-05 (PR-review reviewer 6).
+
+        This check counted `**Severity:**` LINES and never read what they said, so
+        `blockr` satisfied it fully — while `build_graph._SEVERITY_DECL_MAP.get()`
+        returned `None`, the finding fell back to `advisory`, the paper read YELLOW and
+        `readiness_submission_gate` passed. The line count is the weaker half of the
+        obligation; the vocabulary is the other half and this check owns both."""
+        _patch_roots(monkeypatch, _reviews_tree(
+            tmp_path, {f"{self.CUTOFF_DIR}/D11.md": self.MISTYPED}))
+        r = rv.check_review_severity_declared()
+        assert r.passed is False, (
+            "a severity token `build_graph` cannot map passed the declaration check — "
+            "a mistyped BLOCKER lands advisory and nothing says so")
+        assert any("vocabulary" in d.name for d in r.details)
+
+    def test_the_accepted_vocabulary_is_DERIVED_from_build_graph(self, tmp_path,
+                                                                 monkeypatch):
+        """The vocabulary must come from the mapping that consumes it, not a copy.
+        Every token `build_graph` maps must pass here — otherwise this check and the
+        extractor disagree about what a valid declaration is, which is how the
+        hand-listed severity set in `test_build_graph.py` sat RED for weeks."""
+        from build_graph import _SEVERITY_DECL_MAP
+        doc = "".join(
+            f"### {i}.1 — finding\n- **Severity:** {tok}\n\nbody\n\n"
+            for i, tok in enumerate(sorted(_SEVERITY_DECL_MAP), start=1))
+        _patch_roots(monkeypatch, _reviews_tree(
+            tmp_path, {f"{self.CUTOFF_DIR}/D11.md": doc}))
+        r = rv.check_review_severity_declared()
+        assert r.passed is True, (
+            "a token build_graph maps was rejected here: "
+            f"{[(d.name, d.message) for d in r.details if not d.passed]}")
+
 
 class TestReviewDocsMintFindings:
     """A review producing zero graph nodes is a parser failure — never evidence of a
