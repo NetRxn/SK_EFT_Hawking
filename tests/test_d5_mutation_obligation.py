@@ -331,6 +331,29 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
         "five adversarial reviews. Strict-family vs advisory and the disclaimer exemption "
         "both exercised; the missing-lean_deps THIRD H4 policy (pass-with-warning) pinned",
     ),
+    # graph_atlas.py: 26 tests / 11 mutations.
+    "graph_integrity": (
+        "test_d5_graph_atlas.py",
+        "5 mutations. One leg per documented defect in its own comment history: the "
+        "two-digit roster round-trip, the STRENGTHENED flags-its-own-bundle predicate "
+        "(the weak version survived three reviewer mutations), the second leg for "
+        "findings whose inference FAILS, the 66-vs-67 ledger baseline headroom, and BOTH "
+        "exception handlers converted from fail-open to fail-closed",
+    ),
+    "atlas_integrity": (
+        "test_d5_graph_atlas.py",
+        "6 mutations across all five legs. Includes the R-07 suffixed-discharge "
+        "recognition (without it, CORRECT closures report as bogus) and the "
+        "phantom-vs-namespace-drift split (a stale FQN prefix is not a nonexistent "
+        "target, and conflating them would make the gate unusable)",
+    ),
+    "atlas_hypothesis_discipline": (
+        "test_d5_graph_atlas.py",
+        "INFO-ONLY BY DESIGN (ADR-007 PD-2) — pinned that it never gates however bad "
+        "the distribution, AND that its one `passed=False` is the exception handler, a "
+        "fail-on-cannot-measure. ADR-009 Alternatives note 3 records a reconnaissance "
+        "agent misreading exactly that as a contradiction",
+    ),
 }
 
 #: Checks with no both-directions test yet. **This list may only shrink.**
@@ -345,7 +368,7 @@ AWAITING_MUTATION_TEST: frozenset[str] = frozenset({
     "bundle_figure_integrity", 
     "paper_provenance",
     "parameter_provenance", 
-    "graph_integrity", "atlas_integrity", "atlas_hypothesis_discipline",
+    
     "bundle_metadata_matches_graph",
     "readiness_verdicts_agree",
     "citation_primary_sources_present", "provenance_doi_in_registry", "bundle_consistency",
@@ -358,8 +381,8 @@ AWAITING_MUTATION_TEST: frozenset[str] = frozenset({
 
 #: The ratchet. Measured 2026-08-04. It may be LOWERED, never raised.
 #: History: 54 (seeded) -> 50 (reviews.py) -> 44 (lean_substrate.py)
-#: -> 35 (physics.py) -> 29 (lean_statements.py + notebooks.py) -> 23 (freshness.py) -> 17 (lean_toolchain.py).
-AWAITING_CEILING = 17
+#: -> 35 (physics.py) -> 29 (lean_statements.py + notebooks.py) -> 23 (freshness.py) -> 17 (lean_toolchain.py) -> 14 (graph_atlas.py).
+AWAITING_CEILING = 14
 
 
 def _registered() -> list[str]:
