@@ -14,6 +14,59 @@ words. This file is the tracker; when the two disagree, the report wins.
 
 ---
 
+## ⛔ CRITICALS — status (asked and answered 2026-08-05: **five are OPEN**)
+
+Nine Criticals were filed across the six reviewers. Four (R4's) became QI-31…QI-34 and are
+fixed; R1's, R2's and R3-C1 are fixed. **R5 filed five under the heading "Critical gaps (a
+wrong artifact can ship)" and all five are open.**
+
+⚠️ **I under-recorded them.** They went onto disk in `PR_REVIEW_2026-08-05.md` §3 as *"What
+has NO enforcement at all"* — a list of gaps — and the resume point routed them to ADR-010 as
+*"the unshipped correspondence checks"*. R5's own framing was **Critical**, each with a stated
+likelihood and blast radius. Severity was dropped in transcription. That is the same defect as
+the "~17", one level up: a summary that loses the property the reader needs.
+
+| id | Critical | verified 2026-08-05 | status |
+|---|---|---|---|
+| R1-C1 | published paper table shipped EMPTY | — | ✅ `6c89beaa` |
+| R2-C1 | `test_an_illegible_figure_fails` vacuous; `if pt < FLOOR_PT:` had zero coverage | — | ✅ fixed |
+| R2-C2 | `test_the_legibility_floor_is_8pt` textbook change-detector | — | ✅ deleted |
+| R3-C1 | "all 59 mutation-verified" false; seam guard defeatable by prose | — | ✅ fixed + retracted |
+| R3-C2 | QI-30's criterion applied to one check, never swept | 4 of 59 swept | 🔧 **PARTIAL** — ratcheted (`FIXTURE_ONLY_CEILING=55`), not swept |
+| R4-C1…C4 | the four checks that cannot fail | — | ✅ QI-31…QI-34 |
+| **R5-C1** | **no CI — nothing runs the 59 checks automatically** | no `.github/workflows`; hook = 3 of 59, fail-open, `main`-only | ⬜ **OPEN — operator-deferred** |
+| **R5-C2** | **figure *content* unverified; Stage 9 has no gate** | **137 specs, 118 with `physics_checks=[]`, 0 runners**; only the dashboard reads the report; `bundle_figure_integrity` still filtered to `d11_/d12_` | ⬜ **OPEN** |
+| **R5-C3** | **nothing recomputes a paper-quoted number from its formula** | `threshold_arithmetic`: **0 files, not registered** | ⬜ **OPEN** |
+| **R5-C4** | **nothing checks a cited theorem's STATEMENT supports the prose** | `theorem_quoted_bound_matches_lean_literal`: **0 files, not registered** | ⬜ **OPEN** |
+| **R5-C5** | **citation *content* verification inert; both replacements never shipped** | `bibitem_registry_character_match`, `citation_bibkey_form_matches_metadata`: **0 files each, not registered** | ⬜ **OPEN** |
+
+R5's own words on why these are Critical rather than Important — worth quoting, because the
+severity is the part that got lost:
+
+- **C3** — *"a paper claiming `G > 0.01` where the correct value was `0.5` (factor 50), with a
+  companion photon count wrong by 25×; the drift propagated across 4 sites and survived a full
+  per-paper Stage-13 review."*
+- **C4** — *"prose said 'formally bounded at ≤1.8%'; the Lean theorem is a generic algebraic
+  envelope and the 1.8% lives in a **docstring**. Blast radius: severe — it converts a
+  formal-verification claim into an unsupported one, which is the project's headline
+  differentiator."*
+- **C5** — *"fabricated/mis-targeted citations are the single most-documented LLM authoring
+  defect, and the project already had the paper40 incident (a hallucinated arXiv ID pointing at
+  a graph-NN paper). Blast radius: severe; **this is a one-strike arXiv trigger**."*
+- **C2** — *"a figure that plots the wrong quantity under a confident caption is exactly the
+  arXiv-moderation failure mode, and the project already documented this end-to-end."*
+
+**None of the five is a merge blocker for this branch** — every one is a pre-existing absence,
+not a regression, and none makes the suite red. They are submission blockers. The distinction
+matters and was not being drawn: the branch is safe to merge; the *corpus* is not safe to
+submit.
+
+Two have a cheap first cut R5 costed itself: C2's `d11_/d12_` filter deletion (~3 lines) and
+C5's `citation_bibkey_form_matches_metadata` (1–2 h, and it catches two named real cases,
+`KaulMajumdar1998` and `SextyWetterich2009`).
+
+---
+
 ## R4 — enforcement efficacy (11 Important) — the reviewer who returned "No"
 
 | id | finding | status |
