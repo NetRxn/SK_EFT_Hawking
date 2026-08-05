@@ -194,7 +194,11 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
     ),
     "paper_table": (
         "test_d5_physics.py",
-        "`ok = rel_err <= tolerance` -> True caught; missing-draft fails rather than skips",
+        "REWRITTEN under QI-31 — the check now parses the SHIPPED table. 5 code "
+        "mutations CAUGHT (cell comparison -> True; verdict propagation; the "
+        "empty-table, dropped-row and \\input-wiring guards), AND 3 mutations seeded "
+        "in the PRODUCTION artifact itself (drifted cell / rules-with-no-rows / "
+        "dropped row) each turn `validate.py --check paper_table` red",
     ),
     "d1_hierarchy_table": (
         "test_d1_hierarchy_table.py",

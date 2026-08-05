@@ -37,6 +37,23 @@ same-length mutation restored inside one second survives a source restore).
   | `numerical`: `ok = rel_err <= tolerance` -> `ok = True`       | `…perturbed…` |
   | `identities`: `if not ok: all_pass = False` -> `pass`         | `…wrong_identity…` |
   | `paper_table`: `ok = rel_err <= tolerance` -> `ok = True`     | `…drifted…` |
+
+RE-VERIFIED 2026-08-05 after the QI-31 rewrite — 5 code mutations, all CAUGHT, clean
+negative control, PLUS three seeded in the PRODUCTION artifact (QI-30's criterion: a
+mutation caught against a patched fixture does not establish that the check can fail in
+production, so the shipped `table1_experimental_params.tex` was edited in place and
+`validate.py --check paper_table` run against it).
+
+  | mutation                                                      | caught by |
+  |---|---|
+  | `ok = abs(shipped - expected) <= tol` -> `ok = True`           | `…drifted_cell…` |
+  | `if not ok: all_pass = False` -> `pass`                        | `…drifted_cell…` |
+  | `if len(rows) < 2:` -> `if False:`                             | `…RULES_AND_NO_ROWS…` |
+  | `if missing_rows:` -> `if False:`                              | `…row_dropped…` |
+  | the `\\input`-wiring guard -> unreachable                       | `…does_not_INPUT…` |
+  | PRODUCTION table: `101.9` -> `101.8`                           | rc=1 |
+  | PRODUCTION table: replaced by rules with no data rows          | rc=1 |
+  | PRODUCTION table: κ row deleted                                | rc=1 |
   | `cgl_fdr`: `if not ok: all_pass = False` (einstein) -> `pass` | `…einstein…` |
   | `cgl_fdr`: `ok = counts == {…}` -> `ok = True`                | `…noise_count…` |
   | `physical_bounds`: `if not passed: all_pass = False` -> `pass`| `…negative_temperature…` |
@@ -200,33 +217,123 @@ class TestFormulaIdentities:
 
 
 class TestPaperTableConsistency:
-    """Paper 1's Table 1 against solver output. Note the table's Steinhauer κ/T_H are
-    MODEL values (tanh profile), deliberately not the published step-potential ones."""
+    """Paper 1's SHIPPED Table 1 against the canonical solver output.
 
-    def _patch(self, tmp_path, monkeypatch, **kw):
-        from src.core import constants
+    ⚠️ REWRITTEN 2026-08-05 with the check (audit QI-31). The previous fixture
+    monkeypatched `get_all_experiments` to return values derived from the check's
+    OWN hardcoded dict, wrote a `paper_draft.tex` containing the literal string
+    `"draft"`, and asserted agreement. It passed because both sides of the
+    comparison came from the same literal — and it could not have failed for the
+    reason the check exists, because neither the check nor the test ever opened a
+    table.
+
+    The fixture is now the REAL shipped artifacts — `paper_draft.tex` and
+    `tables/table1_experimental_params.tex` copied byte-for-byte — against the
+    REAL canonical evaluator, with the defect seeded by editing the copied table.
+    That makes the positive control identical to production, and every negative
+    a one-edit distance from it. Nothing here is monkeypatched except the papers
+    root the copies live under.
+    """
+
+    #: The production artifacts. Read, not reconstructed: a hand-written fixture
+    #: table would drift from the renderer's format and the test would then be
+    #: measuring the fixture.
+    _REAL_DIR = SK_ROOT / "papers" / "paper1_first_order"
+
+    def _stage(self, tmp_path, monkeypatch, *, table_text: str | None = None,
+               draft_text: str | None = None):
+        """Copy the real paper + rendered table into `tmp_path`, optionally with
+        one of the two replaced by a perturbed variant. Returns the paper dir."""
         d = tmp_path / "paper1_first_order"
-        d.mkdir(parents=True, exist_ok=True)
-        (d / "paper_draft.tex").write_text("draft")
+        (d / "tables").mkdir(parents=True, exist_ok=True)
+        real_draft = (self._REAL_DIR / "paper_draft.tex").read_text()
+        real_table = (self._REAL_DIR / "tables"
+                      / "table1_experimental_params.tex").read_text()
+        (d / "paper_draft.tex").write_text(
+            real_draft if draft_text is None else draft_text)
+        (d / "tables" / "table1_experimental_params.tex").write_text(
+            real_table if table_text is None else table_text)
         monkeypatch.setattr(_H, "PAPERS_DIR", tmp_path)
-        table = _literal_in_check("check_paper_table_consistency", "paper_table")
-        monkeypatch.setattr(constants, "get_all_experiments",
-                            lambda: _fake_experiments(table, **kw))
+        return d
 
-    def test_matching_values_pass(self, tmp_path, monkeypatch):
-        """SILENT ON CORRECT DATA."""
-        self._patch(tmp_path, monkeypatch)
+    def _real_table(self) -> str:
+        return (self._REAL_DIR / "tables"
+                / "table1_experimental_params.tex").read_text()
+
+    def test_the_shipped_table_passes(self, tmp_path, monkeypatch):
+        """SILENT ON CORRECT DATA — and this is the production comparison, not a
+        fixture's self-agreement: every cell is the shipped digit string, every
+        reference is the live evaluator."""
+        self._stage(tmp_path, monkeypatch)
         r = ph.check_paper_table_consistency()
         assert r.passed is True, [(d.name, d.message) for d in r.details if not d.passed]
-        assert r.details
+        # 5 rows x 3 platforms; a check that silently compared nothing would
+        # still report passed=True.
+        cells = [d for d in r.details if "." in d.name]
+        assert len(cells) == 15, f"expected 15 cell comparisons, got {len(cells)}"
 
-    def test_a_drifted_table_value_fails(self, tmp_path, monkeypatch):
-        """FIRES ON THE SEEDED DEFECT — the published table and the code disagree,
-        which is the entire purpose of the check."""
-        self._patch(tmp_path, monkeypatch, scale={"Heidelberg.T_H": 1.5})
+    def test_a_drifted_cell_fails(self, tmp_path, monkeypatch):
+        """FIRES ON THE SEEDED DEFECT — one stale digit in the SHIPPED table, which
+        is exactly what an un-regenerated `\\input{}` leaves behind."""
+        table = self._real_table().replace("& 101.9 &", "& 101.8 &")
+        assert "101.8" in table, "the κ row's Heidelberg cell moved; re-anchor"
+        self._stage(tmp_path, monkeypatch, table_text=table)
         r = ph.check_paper_table_consistency()
         assert r.passed is False
-        assert {d.name for d in r.details if not d.passed} == {"Heidelberg.T_H"}
+        assert {d.name for d in r.details if not d.passed} == {r"Heidelberg.$\kappa$"}
+
+    def test_a_drift_inside_one_ulp_still_passes(self, tmp_path, monkeypatch):
+        """The tolerance is one unit in the cell's last printed place, NOT a byte
+        comparison — a check that failed on the renderer's own rounding would be
+        switched off within a week. κ_Heidelberg is 101.926, so a correctly-rounded
+        cell is at most 0.5 ulp away and the 1-ulp band leaves exactly 2x headroom;
+        `102.0` (0.074 away) sits inside it and must NOT fail. `101.8` — used by the
+        drift test above at 0.126 — sits outside, which is the band's whole point."""
+        table = self._real_table().replace("& 101.9 &", "& 102.0 &")
+        self._stage(tmp_path, monkeypatch, table_text=table)
+        r = ph.check_paper_table_consistency()
+        assert r.passed is True, [(d.name, d.message) for d in r.details if not d.passed]
+
+    def test_a_table_shipped_WITH_RULES_AND_NO_ROWS_fails(self, tmp_path, monkeypatch):
+        """The class that shipped for 40+ commits undetected: `table2_checks.tex`
+        rendered its `tabular` envelope with zero data rows while paper 15
+        `\\input`-ed it and compiled clean. `tables_fresh` compares mtimes and saw
+        nothing. Leg A is the guard that failure needed."""
+        self._stage(tmp_path, monkeypatch, table_text=(
+            "\\begin{tabular}{lcccc}\n\\hline\n\\hline\n\\end{tabular}\n"))
+        r = ph.check_paper_table_consistency()
+        assert r.passed is False
+        assert any(d.name == "table_present" and not d.passed for d in r.details)
+
+    def test_a_row_dropped_from_the_table_fails(self, tmp_path, monkeypatch):
+        """Leg C. Without it, deleting a row shrinks the comparison population and
+        the check reports PASS on the cells that remain — the same shape as the
+        seven guards this audit found reporting success over an empty set."""
+        table = "\n".join(ln for ln in self._real_table().splitlines()
+                          if "Surface gravity" not in ln)
+        self._stage(tmp_path, monkeypatch, table_text=table)
+        r = ph.check_paper_table_consistency()
+        assert r.passed is False
+        assert any(d.name == "rows_declared" and not d.passed for d in r.details)
+
+    def test_a_table_the_draft_does_not_INPUT_fails(self, tmp_path, monkeypatch):
+        """An orphaned rendered table proves nothing about the paper. If the draft
+        stops `\\input`-ing it, the check must say so rather than keep auditing a
+        file no reader will ever see."""
+        draft = (self._REAL_DIR / "paper_draft.tex").read_text().replace(
+            "\\input{tables/table1_experimental_params.tex}", "")
+        self._stage(tmp_path, monkeypatch, draft_text=draft)
+        r = ph.check_paper_table_consistency()
+        assert r.passed is False
+        assert any(d.name == "input_wiring" and not d.passed for d in r.details)
+
+    def test_a_missing_table_fails_rather_than_passing(self, tmp_path, monkeypatch):
+        """Cannot-measure is not success."""
+        d = self._stage(tmp_path, monkeypatch)
+        (d / "tables" / "table1_experimental_params.tex").unlink()
+        r = ph.check_paper_table_consistency()
+        assert r.passed is False
+        assert any(d_.name == "table_present" and not d_.passed for d_ in r.details)
 
     def test_a_missing_draft_fails_rather_than_passing(self, tmp_path, monkeypatch):
         """Cannot-measure is not success. This check already gets it right — pinned
