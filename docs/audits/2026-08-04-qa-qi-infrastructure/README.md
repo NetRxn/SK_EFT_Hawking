@@ -12,9 +12,18 @@ without a both-directions test fails on arrival rather than being absorbed into 
 D5, the obligation its own §Context calls *"the one that caused the damage"*, is discharged.
 
 **Verified at close:** fast suite **5398 passed / 5 skipped / 0 failed** (5055 at audit open,
-5086 at W-C close); `validate.py` **57 of 59**, the two reds unchanged and both owned by the
-publication workstream. Branch **NOT merged** — verify with
-`git merge-base --is-ancestor HEAD main` rather than inheriting this line.
+5086 at W-C close); **`CHARACTERIZATION HELD — 49 checks identical`**; `validate.py` **57 of 59**,
+the two reds unchanged and both owned by the publication workstream. Branch **NOT merged** — verify
+with `git merge-base --is-ancestor HEAD main` rather than inheriting this line.
+
+⚠️ **How that characterization was taken matters, and the first attempt was wrong.** The natural
+move — record the "before" snapshot in a `git worktree` at the pre-session commit — is invalid here:
+a fresh worktree lacks the gitignored artifacts (`lean/lean_deps.json`, the notebook skip-cache), so
+every Lean check takes its absent branch and the diff is noise dressed as signal. It was discarded
+unrun. The valid form reverts **only the two source files this session changed** in place, on the
+same tree with every artifact present, snapshots, then writes the saved bytes back and clears the
+bytecode. Reporting the worktree diff as "HELD" would have been the *verified-adjacent* failure
+`RESUME_STATE` warns about: running a check whose result is merely CONSISTENT with the claim.
 
 **Scale of W-D:** ~330 new tests across 11 files, **~150 AST-scoped mutations**. Roughly a third
 came back **MISSED on first run**, and *in every case the finding was real* — either the guard was
@@ -359,6 +368,12 @@ function's AST span"* — these cost time here and will cost it again otherwise.
   re-run from a cleared cache; all 19 held, so nothing recorded here rests on a poisoned run.
   ⚠️ The same trap applies to *any* tooling that writes a source file, runs it, and writes it
   back — not just this harness.
+- **⚠️ A `git worktree` is the WRONG place to take a "before" characterization.** A fresh worktree
+  has no gitignored artifacts — `lean/lean_deps.json`, the notebook skip-cache — so every Lean check
+  takes its artifact-absent branch and the comparison reports a large diff that says nothing about
+  the code change. Revert only the changed SOURCE files in place instead, on the tree that has the
+  artifacts, then write the saved bytes back and clear the bytecode. Caught before the run here, but
+  it would have produced a confident, wrong "HELD".
 - **A structural leg is worth more than a count leg, and they are not substitutes.** The count
   assertion for QI-01 protects the six sites that exist. The structural scan found a **seventh
   receiver name** the manual sweep missed and is what would have caught the defect originally —
