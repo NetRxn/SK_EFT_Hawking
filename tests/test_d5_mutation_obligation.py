@@ -395,6 +395,37 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
         "comes from a separate line), and the no-inferable-author skip changes no "
         "verdict at all, so its emitted detail is the only observable",
     ),
+    # citations.py: 25 tests / 12 mutations. THREE of the six `--strict` consumers live
+    # here, which makes this module the centre of ADR-009 item 6. That item declined the
+    # filed complaint but recorded a residue: five strict legs enforce concerns NO
+    # ReadinessGate covers, and nothing automated passes --strict, so they run only when
+    # a human does. Each strict promotion is a leg.
+    "parameter_provenance": (
+        "test_d5_citations.py",
+        "6 mutations across coverage, LLM verification, value consistency, null-value "
+        "conflicts, the --strict human-verification promotion, and the PROJECTED-tier "
+        "exemption (demanding human verification of a projection would ask someone to "
+        "confirm a number with no measurement behind it)",
+    ),
+    "provenance_doi_in_registry": (
+        "test_d5_citations.py",
+        "3 mutations. Pins the deliberate ASYMMETRY: an unregistered DOI is advisory "
+        "(strict-gated) while an unresolvable `cited_bibkeys` entry fails in BOTH modes, "
+        "because that one is an explicit reference. Case-insensitive DOI matching too",
+    ),
+    "citation_primary_sources_present": (
+        "test_d5_citations.py",
+        "the cite-regex narrowing to bare `\\cite{}` is CAUGHT — a narrowed regex "
+        "silently shrinks the scanned population. inprep and pre-DOI-textbook exemptions "
+        "exercised; no-drafts fails rather than passes",
+    ),
+    "bibitem_title_primary_source": (
+        "test_d5_citations.py",
+        "3 mutations. The DROP-WORD path needed its own leg: a wholly different page-1 "
+        "title takes the NOT-FOUND branch, so the DROP-WORD detail's rendering was "
+        "untested until a fixture reproduced the actual BLOCKER — a title matching "
+        "closely but missing one word",
+    ),
 }
 
 #: Checks with no both-directions test yet. **This list may only shrink.**
@@ -408,12 +439,12 @@ AWAITING_MUTATION_TEST: frozenset[str] = frozenset({
     
     "bundle_figure_integrity", 
     
-    "parameter_provenance", 
+    
     
     "bundle_metadata_matches_graph",
     "readiness_verdicts_agree",
-    "citation_primary_sources_present", "provenance_doi_in_registry", "bundle_consistency",
-    "bibitem_title_primary_source", 
+    "bundle_consistency",
+    
     "bundle_registry_consistency", 
     
     
@@ -422,8 +453,8 @@ AWAITING_MUTATION_TEST: frozenset[str] = frozenset({
 
 #: The ratchet. Measured 2026-08-04. It may be LOWERED, never raised.
 #: History: 54 (seeded) -> 50 (reviews.py) -> 44 (lean_substrate.py)
-#: -> 35 (physics.py) -> 29 (lean_statements.py + notebooks.py) -> 23 (freshness.py) -> 17 (lean_toolchain.py) -> 14 (graph_atlas.py) -> 11 (papers_prose.py) -> 9 (prose_lean_refs.py).
-AWAITING_CEILING = 9
+#: -> 35 (physics.py) -> 29 (lean_statements.py + notebooks.py) -> 23 (freshness.py) -> 17 (lean_toolchain.py) -> 14 (graph_atlas.py) -> 11 (papers_prose.py) -> 9 (prose_lean_refs.py) -> 5 (citations.py).
+AWAITING_CEILING = 5
 
 
 def _registered() -> list[str]:
