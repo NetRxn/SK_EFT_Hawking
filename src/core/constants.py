@@ -1373,6 +1373,21 @@ assert ARISTOTLE_PROVED_COUNT == 322, f"Expected 322 Aristotle-proved theorems, 
 # Backwards compatibility alias
 TOTAL_THEOREMS = ARISTOTLE_PROVED_COUNT
 
+#: Registry entries that name no Lean declaration. Frozen 2026-08-04 (audit QI-30).
+#:
+#: `ARISTOTLE_THEOREMS` is hand-maintained, and `validate.py`'s `formulas` check unions
+#: its KEYS into the set of "valid Lean theorem names" — so a stale entry launders a
+#: nonexistent theorem into that set and a formula can be reported as grounded on it.
+#: Measured at the freeze: **14 of 322 keys resolve to nothing** in `lean_deps.json` or
+#: the Lean source (the `DG_inst*` family plus `DG_basis_mul` and `fock_space_finite_dim`
+#: — an Aristotle batch whose Lean was later restructured).
+#:
+#: A RATCHET, not a walk-back (the house idiom — cf. `VACUOUS_STATEMENT_BASELINE`,
+#: `NATIVE_DECIDE_DECL_CLOSURE_CEILING`, `COUNT_LITERAL_CEILING`). Existing debt is
+#: frozen and visible; a NEW stale entry fails. **Lower this as entries are repaired;
+#: raising it needs a stated reason in the same commit.**
+ARISTOTLE_REGISTRY_UNRESOLVED_CEILING = 14
+
 # ═══════════════════════════════════════════════════════════════════════
 # Axiom metadata — historical record (all axioms now removed)
 # ═══════════════════════════════════════════════════════════════════════

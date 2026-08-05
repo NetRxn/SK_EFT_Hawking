@@ -313,9 +313,11 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
     # message, and a test asserts the two messages stayed DIFFERENT (H4's policy line).
     "theorems": (
         "test_d5_lean_toolchain.py",
-        "2 mutations; also pins the three-way agreement of the hardcoded expected count "
-        "(registered description + two dict entries) — a known residual, asserted as "
-        "AGREEING rather than as a value, which would just be a fourth copy",
+        "⚠️ REWRITTEN under QI-30 — all three of its previous legs were VACUOUS (two "
+        "unreachable behind constants.py's import-time assert, one a tautology), and my "
+        "first pass only pinned that the three hardcoded copies agreed. 4 mutations "
+        "against the replacement, which resolves every registry key to a real Lean "
+        "declaration and ratchets the 14 that do not",
     ),
     "lean_source": (
         "test_d5_lean_toolchain.py",

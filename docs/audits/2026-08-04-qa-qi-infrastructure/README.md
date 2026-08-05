@@ -1,7 +1,7 @@
 # QA/QI Infrastructure Audit — 2026-08-04
 
-**Status:** ✅ **COMPLETE — all 30 findings closed (W-A / W-B / W-C / W-D).**
-*(30 = QI-01…QI-29 plus the QI-26b sub-finding. Counted as CHECKBOX ENTRIES in §3, not as the
+**Status:** ✅ **COMPLETE — all 31 findings closed (W-A / W-B / W-C / W-D / W-E).**
+*(31 = QI-01…QI-30 plus the QI-26b sub-finding. Counted as CHECKBOX ENTRIES in §3, not as the
 highest ordinal — the original filing said "27", which was the highest number at the time while
 the board already carried 28 entries. Re-count the boxes; do not read the last id.)* This remains the
 tracker; keep the measurement column honest if anything reopens.
@@ -251,6 +251,38 @@ Legend: ⬜ open · 🔄 in progress · ✅ done (with the verifying evidence na
       *a number in prose is a cache with no invalidation protocol.*
       **Corrected in:** this tracker (§4c + the close banner) and `RESUME_STATE.md`.
 
+- [x] **QI-30** ✅ **FIXED 2026-08-04 — `theorems` was vacuous in ALL THREE legs.**
+      §4 recorded this as a cosmetic residual (*"hardcodes 322 in three places"*). Reading it
+      properly on challenge showed the duplication was the least of it. The check asserted:
+
+      | leg | verdict |
+      |---|---|
+      | `TOTAL_THEOREMS == 322` | **unreachable** — `constants.py:1372` asserts the count at IMPORT, so a wrong value raises `AssertionError` before the body runs (demonstrated) |
+      | `len(ARISTOTLE_THEOREMS) == 322` | same assertion, same unreachability, written twice |
+      | `TOTAL_THEOREMS == len(ARISTOTLE_THEOREMS)` | **a tautology** — `TOTAL_THEOREMS = ARISTOTLE_PROVED_COUNT = len(ARISTOTLE_THEOREMS)` |
+
+      So a check registered as *"has 322 entries and is self-consistent"* asserted nothing, and had
+      been green since it was written for exactly that reason. It is one of the 59.
+      ⚠️ **And my W-D mutations on it were misleading.** They were CAUGHT — but only because the
+      tests monkeypatched the constants, bypassing the import assert. *A mutation caught against a
+      patched fixture does not establish that the check can fail in production.* That distinction is
+      new to this audit's vocabulary and is the residue worth carrying forward.
+
+      **The count invariant is KEPT and not duplicated:** `constants.py` owns it and enforces it
+      harder than a check can (an unimportable module). The check now does the thing nothing did —
+      **resolve every `ARISTOTLE_THEOREMS` key against the Lean substrate.** That matters because
+      `check_formulas_to_theorems` unions those KEYS into its valid-Lean-name set, so a stale key
+      launders a nonexistent theorem into it and a formula grounded on that theorem reads as verified.
+      **Measured: 14 of 322 keys resolve to nothing** in `lean_deps.json` *or* the Lean source (the
+      `DG_inst*` family, `DG_basis_mul`, `fock_space_finite_dim` — an Aristotle batch whose Lean was
+      later restructured).
+      **Shipped as a RATCHET** (`ARISTOTLE_REGISTRY_UNRESOLVED_CEILING = 14`), not a hard fail: the
+      house idiom, and it closes the generator without turning a registry cleanup into a red build.
+      `validate.py --check theorems` still PASSES, now with the debt visible.
+      **Guard:** 7 tests / 4 mutations, plus a structural leg forbidding any comparison against an
+      integer literal in the check body — which is why the display cap is a named `_SAMPLE` rather
+      than an inline `8`.
+
 ### W-D — the standing obligation (D5)
 
 - [x] **QI-27** ✅ **CLOSED 2026-08-04 — the backlog is EMPTY.** D5 — *"every new or modified check
@@ -348,8 +380,9 @@ Known residuals — reported so they are not re-discovered, deliberately **not**
   (`freshness._COUNTS_SOURCES`, `_TABLES_SOURCES`, `CLAIM_CLUSTERS_PATH`;
   `prose_lean_refs._PHYSLIB_DIR`; `notebooks.NOTEBOOK_EXEC_CACHE`). **The guard documents this in its
   own assertion message** — a known, deliberate limit, not an oversight.
-- **`check_theorem_count` hardcodes `322` in three places** (the registered description and two dict
-  entries) — a hand-typed count inside the validation suite. Already noted in `RESUME_STATE.md`.
+- ~~**`check_theorem_count` hardcodes `322` in three places**~~ — **PROMOTED to a defect and FIXED:
+  see QI-30.** Recording it as a cosmetic residual was itself the error; reading it properly showed
+  all three of the check's legs were vacuous, not merely duplicated.
 - **Graph build cost.** `extract_formula_nodes` runs 3× and `extract_lean_declaration_nodes` 2× per
   build, plus `extract_python_test_nodes` 2×. This is the substance behind ADR-009 §Deferred item 0's
   **declined** shared-graph-handle (measured there: 5 invocations / 45.4 s / 8% of a run).

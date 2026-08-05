@@ -18,9 +18,9 @@ without re-deriving it. Read this first, then the linked documents.
 > sites (`evaluate_all_gates`, `_blocked_p1_gates_by_paper`) were **CLOSED by `5228ed6d`**, after the
 > documents below were written — several still record them as open (audit finding QI-21/QI-22).
 >
-> ## ✅ THE QA/QI INFRASTRUCTURE AUDIT IS COMPLETE — 30 of 30 findings closed
+> ## ✅ THE QA/QI INFRASTRUCTURE AUDIT IS COMPLETE — 31 of 31 findings closed
 > A full direct read of the entire QA/QI surface (~17,700 lines, including `build_graph.py`, which
-> this file had recorded as never read) was completed 2026-08-04. It found **30 findings** across
+> this file had recorded as never read) was completed 2026-08-04. It found **31 findings** across
 > four workstreams — one live enforcement hole, duplicated predicates, dead code, documentation
 > contradicting the code it describes, and D5's missing mechanical enforcement — and **all are now
 > closed**.
@@ -556,7 +556,7 @@ publication schedule is the flexible variable; claim strength is not.
 
 1. **This file.**
 1b. **[`docs/audits/2026-08-04-qa-qi-infrastructure/README.md`](../../audits/2026-08-04-qa-qi-infrastructure/README.md)
-   — the QA/QI remediation tracker (30 findings, W-A…W-E, all CLOSED). Read it before any validation-suite
+   — the QA/QI remediation tracker (31 findings, W-A…W-E, all CLOSED). Read it before any validation-suite
    work; several figures in the documents below are superseded by it and are flagged there by
    finding id.**
 2. `docs/adrs/ADR-009-validation-suite-modularization.md` — the decision, H1–H5, D2's 8 contract items,

@@ -59,74 +59,114 @@ def _lean_tree(tmp_path: Path, files: dict[str, str]) -> Path:
 
 
 class TestTheoremCount:
-    """The registry-count check. Its expected value is HARDCODED in three places —
-    see `test_the_expected_count_is_hardcoded_in_three_places` for why that matters."""
+    """The Aristotle registry resolves against the Lean substrate.
 
-    def test_a_consistent_registry_passes(self, monkeypatch):
+    ⚠️ **This class replaces one that pinned three hardcoded copies of `322`.** That
+    was treating a symptom: audit QI-30 established that all three legs of the old
+    check were VACUOUS — two unreachable (constants.py asserts the count at import,
+    so a wrong value raises before the check body runs) and one a tautology
+    (`TOTAL_THEOREMS` IS `len(ARISTOTLE_THEOREMS)` by definition). Asserting that
+    three copies of an unreachable literal agree with each other is a test of nothing.
+
+    ⚠️ **And my earlier mutations on it were misleading.** They were CAUGHT — but only
+    because the tests monkeypatched `TOTAL_THEOREMS`/`ARISTOTLE_THEOREMS`, which
+    bypasses the import-time assert. They proved the arithmetic responded to inputs
+    the check could never actually receive. *A mutation caught against a patched
+    fixture does not establish that the check can fail in production.*
+    """
+
+    def _run(self, tmp_path, monkeypatch, *, registry, decls, ceiling=14):
+        p = tmp_path / "lean_deps.json"
+        p.write_text(json.dumps([{"name": n, "type": "P", "kind": "theorem"}
+                                 for n in decls]))
+        monkeypatch.setattr(_H, "LEAN_DEPS_PATH", p)
+        monkeypatch.setattr(_c, "ARISTOTLE_THEOREMS", {k: "run" for k in registry})
+        monkeypatch.setattr(_c, "ARISTOTLE_REGISTRY_UNRESOLVED_CEILING", ceiling)
+        return lt.check_theorem_count()
+
+    def test_a_fully_resolving_registry_passes(self, tmp_path, monkeypatch):
         """SILENT ON CORRECT DATA."""
-        expected = self._expected()
-        monkeypatch.setattr(_c, "TOTAL_THEOREMS", expected)
-        monkeypatch.setattr(_c, "ARISTOTLE_THEOREMS", {f"t{i}": {} for i in range(expected)})
-        r = lt.check_theorem_count()
+        r = self._run(tmp_path, monkeypatch, registry=["thm_a", "thm_b"],
+                      decls=["SKEFTHawking.M.thm_a", "SKEFTHawking.M.thm_b"], ceiling=0)
         assert r.passed is True, [(d.name, d.message) for d in r.details if not d.passed]
+        assert any("every Aristotle registry entry resolves" in (d.message or "")
+                   for d in r.details)
 
-    def test_a_count_below_the_expected_value_fails(self, monkeypatch):
-        """FIRES ON THE SEEDED DEFECT."""
-        expected = self._expected()
-        monkeypatch.setattr(_c, "TOTAL_THEOREMS", expected - 1)
-        monkeypatch.setattr(_c, "ARISTOTLE_THEOREMS",
-                            {f"t{i}": {} for i in range(expected - 1)})
-        assert lt.check_theorem_count().passed is False
+    def test_a_stale_entry_past_the_ceiling_fails(self, tmp_path, monkeypatch):
+        """FIRES ON THE SEEDED DEFECT — and this is the defect that matters:
+        `check_formulas_to_theorems` unions these KEYS into its valid-Lean-name set,
+        so a stale key launders a nonexistent theorem into it and a formula grounded
+        on that theorem is reported as verified."""
+        r = self._run(tmp_path, monkeypatch, registry=["thm_a", "ghost_thm"],
+                      decls=["SKEFTHawking.M.thm_a"], ceiling=0)
+        assert r.passed is False, (
+            "a registry entry naming no Lean declaration passed — it is laundered "
+            "into `formulas`' valid-name set")
+        assert any(d.name == "unresolved" and "ghost_thm" in (d.message or "")
+                   for d in r.details)
 
-    def test_a_registry_inconsistent_with_its_total_fails(self, monkeypatch):
-        """The `consistency` leg: `TOTAL_THEOREMS` and the dict must agree with each
-        other, not merely each with the literal."""
-        expected = self._expected()
-        monkeypatch.setattr(_c, "TOTAL_THEOREMS", expected)
-        monkeypatch.setattr(_c, "ARISTOTLE_THEOREMS",
-                            {f"t{i}": {} for i in range(expected - 1)})
+    def test_frozen_debt_at_the_ceiling_passes_but_stays_visible(self, tmp_path, monkeypatch):
+        """The ratchet, not a walk-back. Existing debt is reported as a warning so it
+        cannot quietly become permanent; only GROWTH fails."""
+        r = self._run(tmp_path, monkeypatch, registry=["ghost_thm"], decls=[], ceiling=1)
+        assert r.passed is True
+        d = next(d for d in r.details if d.name == "unresolved")
+        assert d.warning and "frozen debt" in (d.message or "")
+
+    def test_repairing_an_entry_asks_for_the_ceiling_to_be_LOWERED(self, tmp_path, monkeypatch):
+        """A ceiling above the population is headroom in which a new stale entry hides
+        — the exact defect found in `ledger_ids_resolve` (67 against 66). The check
+        must ASK to be tightened rather than silently accept the slack."""
+        # ONE stale entry against a ceiling of 3 — i.e. two were repaired since the
+        # freeze. The nudge only makes sense while debt remains; a fully-clean registry
+        # takes the "every entry resolves" branch instead.
+        r = self._run(tmp_path, monkeypatch, registry=["thm_a", "ghost_thm"],
+                      decls=["SKEFTHawking.M.thm_a"], ceiling=3)
+        assert r.passed is True
+        assert any(d.name == "ratchet" and "lower" in (d.message or "").lower()
+                   for d in r.details)
+
+    def test_a_fully_qualified_registry_key_also_resolves(self, tmp_path, monkeypatch):
+        """Keys are short names today, but a fully-qualified one must not read as
+        stale — that would flag a correct entry."""
+        r = self._run(tmp_path, monkeypatch, registry=["SKEFTHawking.M.thm_a"],
+                      decls=["SKEFTHawking.M.thm_a"], ceiling=0)
+        assert r.passed is True
+
+    def test_a_missing_lean_deps_FAILS(self, tmp_path, monkeypatch):
+        """Cannot-measure is not success. Matches `native_decide_regression`, the
+        suite's other ratchet: not finding the substrate is not evidence the registry
+        is clean."""
+        monkeypatch.setattr(_H, "LEAN_DEPS_PATH", tmp_path / "absent.json")
         r = lt.check_theorem_count()
         assert r.passed is False
-        assert any(d.name == "consistency" and not d.passed for d in r.details)
+        assert any("UNVERIFIED" in (d.message or "") for d in r.details)
 
-    @staticmethod
-    def _expected() -> int:
-        src = Path(lt.__file__).read_text()
-        fn = next(n for n in ast.walk(ast.parse(src))
-                  if isinstance(n, ast.FunctionDef) and n.name == "check_theorem_count")
-        lits = sorted({n.value for n in ast.walk(fn)
-                       if isinstance(n, ast.Constant) and isinstance(n.value, int)
-                       and n.value > 1})
-        assert len(lits) == 1, (
-            f"expected exactly one integer literal in check_theorem_count, found {lits}")
-        return lits[0]
+    def test_the_count_invariant_is_owned_by_constants_not_duplicated_here(self):
+        """QI-30's structural half. The count assertion lives in `constants.py` as an
+        import-time `assert`, which is STRICTER than a check (it makes the module
+        unimportable). Restating it in the check body was duplication with no owner
+        and, because the import fires first, was unreachable.
 
-    def test_the_expected_count_is_hardcoded_in_three_places(self):
-        """⚠️ PINS A KNOWN RESIDUAL, not a desired design (audit §4, also noted in
-        RESUME_STATE): the expected theorem count is a hand-typed literal appearing in
-        the registered DESCRIPTION and in two dict entries. Nothing derives it from
-        `docs/counts.json`, so bumping the substrate means editing three strings and
-        the check silently measures the old target if you miss one.
-
-        This test asserts they still AGREE. It deliberately does not assert a value —
-        that would be a fourth copy. Deriving the count from `counts.json` is the real
-        fix and is out of this audit's scope.
+        This asserts the duplication has not crept back. It targets COMPARISONS
+        against an integer literal, not every integer in the body — display slices
+        like `unresolved[:8]` are formatting, not assertions, and a scan that flagged
+        them would be a guard firing on correct code.
         """
+        import ast as _ast
         src = Path(lt.__file__).read_text()
-        tree = ast.parse(src)
-        fn = next(n for n in ast.walk(tree)
-                  if isinstance(n, ast.FunctionDef) and n.name == "check_theorem_count")
-        body_lits = [n.value for n in ast.walk(fn)
-                     if isinstance(n, ast.Constant) and isinstance(n.value, int)
-                     and n.value > 1]
-        assert len(body_lits) == 2 and body_lits[0] == body_lits[1], (
-            f"check_theorem_count's two expected-count literals disagree: {body_lits}")
-        desc = next(s.description for s in __import__("validate")._CHECKS
-                    if s.name == "theorems")
-        assert str(body_lits[0]) in desc, (
-            f"the registered description says {desc!r} but the body checks "
-            f"{body_lits[0]} — the third copy has drifted, and `--list` now advertises "
-            f"a target the check does not enforce")
+        fn = next(n for n in _ast.walk(_ast.parse(src))
+                  if isinstance(n, _ast.FunctionDef) and n.name == "check_theorem_count")
+        compared = [c.value for node in _ast.walk(fn) if isinstance(node, _ast.Compare)
+                    for c in node.comparators
+                    if isinstance(c, _ast.Constant) and isinstance(c.value, int)
+                    and not isinstance(c.value, bool) and c.value > 1]
+        assert not compared, (
+            f"check_theorem_count compares against hardcoded integer literal(s) "
+            f"{compared}. The count invariant is owned by src/core/constants.py's "
+            f"import-time assert; a copy here is UNREACHABLE (the import raises first) "
+            f"and is what made all three of this check's original legs vacuous — QI-30. "
+            f"A threshold belongs in a named constant, not in the comparison.")
 
 
 class TestLeanSource:

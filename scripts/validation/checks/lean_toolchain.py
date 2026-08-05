@@ -169,29 +169,113 @@ def check_native_decide_regression() -> CheckResult:
 # CHECK 5: Theorem registry
 # ═══════════════════════════════════════════════════════════════════════
 
-@register_check("theorems", "Theorem registry has 322 entries and is self-consistent")
+@register_check(
+    "theorems",
+    "Aristotle registry entries resolve to real Lean declarations (ratcheted)")
 def check_theorem_count() -> CheckResult:
-    from src.core.constants import ARISTOTLE_THEOREMS, TOTAL_THEOREMS
+    """CHECK: every `ARISTOTLE_THEOREMS` key names a declaration that EXISTS.
 
-    details = []
-    all_pass = True
+    ⚠️ **REWRITTEN 2026-08-04 — all three of its previous legs were vacuous (audit
+    QI-30).** It read:
 
-    for name, (actual, expected) in {
-        "TOTAL_THEOREMS": (TOTAL_THEOREMS, 322),
-        "len(ARISTOTLE_THEOREMS)": (len(ARISTOTLE_THEOREMS), 322),
-    }.items():
-        ok = actual == expected
-        details.append(Detail(name, ok, f"actual={actual}, expected={expected}"))
-        if not ok:
-            all_pass = False
+        TOTAL_THEOREMS            == 322
+        len(ARISTOTLE_THEOREMS)   == 322
+        TOTAL_THEOREMS            == len(ARISTOTLE_THEOREMS)
 
-    ok = TOTAL_THEOREMS == len(ARISTOTLE_THEOREMS)
-    details.append(Detail("consistency", ok,
-                          f"TOTAL={TOTAL_THEOREMS}, dict={len(ARISTOTLE_THEOREMS)}"))
-    if not ok:
-        all_pass = False
+    * The third is a **tautology**: `constants.py` defines
+      `ARISTOTLE_PROVED_COUNT = len(ARISTOTLE_THEOREMS)` and `TOTAL_THEOREMS` is an
+      alias of it, so the two sides are the same expression. It could not fail.
+    * The first two are **unreachable**: `constants.py` already `assert`s that count
+      at IMPORT time, so a wrong count raises before this function's body runs — and
+      they are the same comparison written twice, since both operands are that one
+      value.
 
-    return CheckResult(passed=all_pass, details=details)
+    So a check registered as *"has 322 entries and is self-consistent"* asserted
+    nothing, and had been green since it was written for that reason. The count
+    invariant is real and is KEPT — it just belongs to `constants.py`, which enforces
+    it more strictly (an import-time failure) than a check ever could. Restating it
+    here was duplication with no owner.
+
+    **What is checked instead is the thing nothing checked.** `ARISTOTLE_THEOREMS` is
+    hand-maintained, and `check_formulas_to_theorems` unions its KEYS into
+    `all_lean_names` — the set it resolves formula references against. A stale key
+    therefore launders a nonexistent theorem into that set, and a formula grounded on
+    it passes. Measured at the rewrite: **14 of 322 keys resolve to no declaration**
+    in `lean_deps.json` or the Lean source.
+
+    Ratcheted at `ARISTOTLE_REGISTRY_UNRESOLVED_CEILING`, the house idiom: the frozen
+    debt is reported as a warning, a NEW stale entry fails. That keeps this from
+    turning a documentation-grade cleanup into a red build while still closing the
+    generator.
+
+    The FUNCTION NAME is deliberately unchanged: it is in the frozen 54-name external
+    surface (ADR-009 D2 item 8) and `tests/test_cross_validation.py` imports it by
+    name. Renaming it is a contract change and belongs to its own increment.
+    """
+    from src.core.constants import (ARISTOTLE_THEOREMS,
+                                    ARISTOTLE_REGISTRY_UNRESOLVED_CEILING as CEIL)
+
+    #: How many stale names to name in a detail before summarising. A DISPLAY cap —
+    #: named rather than inlined so it is never mistaken for a threshold, and so the
+    #: guard in `test_d5_lean_toolchain.py` can forbid literal comparisons outright
+    #: instead of carving out an exception it would then have to keep correct.
+    _SAMPLE = 8
+
+    # FAIL, not pass, on a missing substrate — matching `native_decide_regression`,
+    # the suite's other ratchet. "I could not find the Lean" is not evidence that the
+    # registry is clean. This is a NEW lean_deps reader and so does not widen the H4
+    # divergence ADR-009 §Deferred item 4 declined to unify; it adopts the stricter
+    # policy the ADR calls arguably correct.
+    if not _H.lean_deps_present():
+        return CheckResult(passed=False, details=[Detail(
+            "lean_deps", False,
+            "lean/lean_deps.json absent — the Aristotle registry could not be resolved "
+            "against the substrate, so this ratchet is UNVERIFIED, not passing. "
+            "Refresh with `cd lean && lake build SKEFTHawking.ExtractDeps`.")])
+
+    full = {d.get("name", "") for d in _H.load_lean_deps()}
+    short = {n.rsplit(".", 1)[-1] for n in full if n}
+    unresolved = sorted(k for k in ARISTOTLE_THEOREMS
+                        if k not in short and k not in full)
+
+    details: List[Detail] = [Detail(
+        "registry_size", True,
+        f"{len(ARISTOTLE_THEOREMS)} Aristotle-proved theorem(s) registered "
+        f"(the count itself is asserted at import by src/core/constants.py, which "
+        f"fails harder than this check could)")]
+
+    if len(unresolved) > CEIL:
+        details.append(Detail(
+            "unresolved", False,
+            f"{len(unresolved)} registry entries resolve to NO Lean declaration, above "
+            f"the frozen ceiling of {CEIL}. A stale key is laundered into "
+            f"`check_formulas_to_theorems`' valid-name set, so a formula can be reported "
+            f"as grounded on a theorem that does not exist. Fix the name, drop the entry, "
+            f"or lower/raise ARISTOTLE_REGISTRY_UNRESOLVED_CEILING with a reason: "
+            f"{', '.join(unresolved[:_SAMPLE])}"))
+        return CheckResult(passed=False, details=details)
+
+    if unresolved:
+        details.append(Detail(
+            "unresolved", True,
+            f"{len(unresolved)} registry entries resolve to no Lean declaration "
+            f"(frozen debt, ceiling {CEIL}; no growth): "
+            f"{', '.join(unresolved[:_SAMPLE])}"
+            + (f" (+{len(unresolved) - _SAMPLE} more)"
+               if len(unresolved) > _SAMPLE else ""),
+            warning=True))
+        if len(unresolved) < CEIL:
+            details.append(Detail(
+                "ratchet", True,
+                f"{CEIL - len(unresolved)} entry/entries repaired since the freeze — "
+                f"lower ARISTOTLE_REGISTRY_UNRESOLVED_CEILING to {len(unresolved)}",
+                warning=True))
+    else:
+        details.append(Detail(
+            "unresolved", True,
+            "every Aristotle registry entry resolves to a real Lean declaration"))
+
+    return CheckResult(passed=True, details=details)
 
 
 
