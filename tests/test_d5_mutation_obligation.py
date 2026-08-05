@@ -119,7 +119,11 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
         "4 mutations: the hit counter, the date rule, the same-bundle rule and the "
         "section-number tie-breaker, each caught by a distinct leg. Synthetic findings "
         "throughout — this check's threshold was mis-calibrated three times against the "
-        "live self-remediating corpus",
+        "live self-remediating corpus. QI-34 added the `name`-vs-truncated-`label` leg, "
+        "both directions of the resolution-notice exemption, and a PRODUCTION probe: a "
+        "real recurrence written into papers/AutomatedReviews/ turns the check red "
+        "(0.857 on `name` against the 0.45 threshold, where the same pair scored "
+        "exactly 0.400 against the old 0.40 — at the threshold, not above it)",
     ),
     "review_severity_declared": (
         "test_d5_reviews.py",

@@ -41,7 +41,27 @@ from validation._registry import CheckResult, Detail, register_check
 # not restate it here. `_MIN_TITLE` / `_MIN_OVERLAP` / `_norm` inside the check are aliases
 # of these, so the two can never diverge.
 _RECURRENCE_MIN_TITLE = 12     # see the check body for why
-_RECURRENCE_MIN_OVERLAP = 0.40  # Jaccard over token sets; see the check body for the derivation
+_RECURRENCE_MIN_OVERLAP = 0.45  # Jaccard over token sets; see the check body for the derivation
+
+#: A later review's heading that ANNOUNCES a fix is confirmation of the closure, not
+#: evidence against it (added 2026-08-05, audit finding QI-34). Every finding is born
+#: `open` by the birth-status invariant — including the "✅ FIXED — <restated finding>"
+#: entries a later round writes to record that a prior finding was remediated. Those
+#: restatements are near-verbatim by construction, so they are the HIGHEST-scoring
+#: pairs in the corpus and every one of them is a false positive: measured, the top
+#: three matches under heading-based comparison (0.643 / 0.500 / 0.438) are all a
+#: closure paired with its own resolution notice.
+#:
+#: ⚠️ This is NOT a revival of heading-parse closure — the mechanism removed in D12
+#: round 11 because it let a document close its own findings by wording. Nothing here
+#: changes any status: the finding stays `open` in the graph and to every other
+#: consumer. It states only that a heading asserting "this was fixed" does not
+#: CONTRADICT the ledger record saying the same thing. The residual exposure is that
+#: wording a genuine recurrence as a resolution notice would suppress a hit here; it
+#: would not close anything, and `review_docs_mint_findings` still sees the finding.
+_RECURRENCE_RESOLUTION_NOTICE_RE = re.compile(
+    r'✅|✓|\bRESOLVED\b|\bFIXED\b|\bverified clean\b|\bNO ACTION\b|\bnot a defect\b',
+    re.IGNORECASE)
 
 
 def _recurrence_norm(s: str) -> str:
@@ -150,6 +170,39 @@ def check_recurrence_reopens_closures() -> CheckResult:
     # just under the live corpus maximum by the same commit that repaired the pair
     # producing that maximum, so it was unreachable on arrival. Thresholds on a
     # self-remediating corpus must be calibrated against frozen labelled pairs.
+    #
+    # ══ 2026-08-05, audit finding QI-34 — the fourth tuning is NOT a tuning ══
+    #
+    # The finding as filed: threshold 0.40 sits above the live corpus maximum 0.375 over
+    # 7,489 pairs, so the guard cannot fail in production. **Partly true, and the
+    # capability half is overstated** — measured, a realistic restatement of a real
+    # finding scores 0.500 on `label` and would fire. What is true is that the corpus
+    # max is 0.375, so the guard is silent today; and that 1.33x of separation between
+    # "silent on this corpus" and "fires on a true recurrence" is not a working margin.
+    #
+    # A fifth constant would have been the fourth instance of the QI above. The comment
+    # four paragraphs up already named the real fix — "the full finding text carried on
+    # the node" — and the text was ALREADY THERE: the node carries `name: heading[:200]`
+    # next to `label: heading[:50]`, and this check read the shorter field. The change is
+    # therefore to the SUBSTRATE, not to a threshold:
+    #
+    #   * match on `name`, so a truncation artifact stops being a token (`heading[:50]`
+    #     cut `falsifier` to `falsifie` and `the` to `t`, which is why two headings
+    #     differing in one word scored only 0.500);
+    #   * exclude open findings whose heading is a RESOLUTION NOTICE — those are the
+    #     corpus's top three scores (0.643 / 0.500 / 0.438) and all three are a closure
+    #     paired against its own "**RESOLVED**" restatement.
+    #
+    # Result, same pairing rules, same normalizer: corpus max 0.375 -> **0.267**; a true
+    # restatement 0.500 -> **0.900**; separation 1.33x -> **3.37x**. 0.45 sits in the
+    # empty band with 1.7x clearance above the corpus and 2x below a true hit — it is the
+    # first of these constants NOT chosen by looking at the live maximum.
+    #
+    # The frozen-pairs fixture still scores 0.188 / 0.000 / 0.071 and is still not
+    # separated: those three are heavy rewordings, and this change does not claim to
+    # reach them. `TestRecurrenceThresholdAgainstFrozenPairs` therefore still passes,
+    # unchanged, and the guard's coverage is still partial. What changed is that it is
+    # now weak with a margin instead of weak without one.
 
     # Drops leading section-number and severity-word tokens. A recurrence appears under
     # a DIFFERENT number in a later round — round 8's 5.1 recurring as round 9's 3.2 —
@@ -161,12 +214,36 @@ def check_recurrence_reopens_closures() -> CheckResult:
     # the frozen-pairs test binds to the real matcher instead of a copy of it.
     _norm = _recurrence_norm
 
+    # ⚠️ MATCH ON `name`, NOT `label` (changed 2026-08-05, audit finding QI-34).
+    #
+    # `label` is `f'{section_num} {heading[:50]}'`. Fifty characters truncates
+    # mid-word, and the fragment counts as a token: two headings that differ only in
+    # one word scored 0.500 because `_norm` produced `'falsifie'` and `'t'` from the
+    # cut. The in-body comment below concluded that "improving it needs the full
+    # finding text carried on the node, not a wider constant" — and the full text was
+    # ALREADY on the node. `build_graph.extract_review_finding_nodes` emits
+    # `name: heading[:200]` alongside `label`; this check simply read the wrong field.
+    #
+    # Measured on the live corpus with the check's own pairing rules, and this is the
+    # whole justification for the switch:
+    #
+    #   field                 corpus max      a realistic restatement    separation
+    #   label  (heading[:50])   0.375                0.500                  1.33x
+    #   name   (heading[:200])  0.267*               0.900                  3.37x
+    #
+    #   (* after the resolution-notice exclusion above; 0.643 without it, and that
+    #      0.643 pair is a closure matched against its own "**RESOLVED**" notice.)
+    #
+    # `name + detail[:400]` was measured too and is WORSE — body boilerplate dilutes
+    # the vocabulary that carries the signal (median rises 0.043 -> 0.104 while the
+    # max falls 0.643 -> 0.427). More text is not the axis; less TRUNCATION is.
     findings = extract_review_finding_nodes()
     closed, open_ = [], []
     for f in findings:
         m = f.get("meta") or {}
-        rec = (m.get("review_date", ""), _norm(f.get("label", "")), f["id"], m.get("severity"),
-               m.get("inferred_bundle") or m.get("inferred_paper"))
+        text = f.get("name") or f.get("label", "")
+        rec = (m.get("review_date", ""), _norm(text), f["id"], m.get("severity"),
+               m.get("inferred_bundle") or m.get("inferred_paper"), text)
         if not rec[1] or len(rec[1]) < _MIN_TITLE:
             continue
         (closed if m.get("status") in ("fixed", "accepted") else open_).append(rec)
@@ -176,11 +253,12 @@ def check_recurrence_reopens_closures() -> CheckResult:
     compared = 0
     _had_candidate: set = set()
     skipped_short = sum(1 for f in findings
-                        if len(_norm(f.get("label", ""))) < _MIN_TITLE)
-    for cdate, ctext, cid, csev, cbundle in closed:
+                        if len(_norm(f.get("name") or f.get("label", ""))) < _MIN_TITLE)
+    skipped_notice = 0
+    for cdate, ctext, cid, csev, cbundle, _craw in closed:
         if csev not in ("critical", "major"):
             continue
-        for odate, otext, oid, _, obundle in open_:
+        for odate, otext, oid, _, obundle, oraw in open_:
             # Same bundle only. Reviews share heading boilerplate across bundles, so a D2
             # closure matching an I2 finding's title is a template collision, not a
             # recurrence — measured: the two hits before this constraint were exactly that
@@ -188,6 +266,12 @@ def check_recurrence_reopens_closures() -> CheckResult:
             if cbundle is None or obundle is None or cbundle != obundle:
                 continue
             if odate <= cdate:
+                continue
+            # A later heading that ANNOUNCES the fix confirms the closure; it does not
+            # contradict it. See `_RECURRENCE_RESOLUTION_NOTICE_RE` — these restatements
+            # are near-verbatim by construction and were the corpus's top three scores.
+            if _RECURRENCE_RESOLUTION_NOTICE_RE.search(oraw):
+                skipped_notice += 1
                 continue
             _a, _b = set(ctext.split()), set(otext.split())
             if not _a or not _b:
@@ -235,9 +319,9 @@ def check_recurrence_reopens_closures() -> CheckResult:
         f"{compared} blocking-severity closure(s) compared against {len(open_)} open "
         f"finding(s) from later same-bundle reviews; {hits} contradicted by a recurrence. "
         f"NOT compared: {len(closed) - compared} non-blocking closure(s), and "
-        f"{skipped_short} finding(s) whose normalised title is under {_MIN_TITLE} chars "
-        f"(labels are truncated to heading[:50] upstream, so short titles are a real "
-        f"coverage limit, not a rounding detail)"))
+        f"{skipped_short} finding(s) whose normalised title is under {_MIN_TITLE} chars, "
+        f"and {skipped_notice} pairing(s) whose later finding is a resolution notice "
+        f"(a heading announcing the fix confirms the closure; it does not contradict it)"))
     return CheckResult(passed=hits == 0, details=details)
 
 

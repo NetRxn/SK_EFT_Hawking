@@ -78,10 +78,21 @@ def _patch_roots(monkeypatch, root):
 
 
 def _finding(fid: str, label: str, *, date: str, status: str, severity: str = "critical",
-             bundle: str | None = "D11", review_file: str | None = None) -> dict:
+             bundle: str | None = "D11", review_file: str | None = None,
+             name: str | None = None) -> dict:
+    """A ReviewFinding node in the shape `build_graph` actually emits.
+
+    ⚠️ `name` was absent here until 2026-08-05 (audit QI-34). Production nodes carry
+    BOTH `label` (`f'{section} {heading[:50]}'`) and `name` (`heading[:200]`), and the
+    check matched on the truncated one — a defect this fixture could not have shown,
+    because it modelled a node that has only one of the two. `name` defaults to
+    `label` so the existing cases are unchanged; the cases that turn on the
+    distinction pass it explicitly.
+    """
     return {
         "id": fid,
         "label": label,
+        "name": label if name is None else name,
         "meta": {
             "review_date": date,
             "status": status,
@@ -170,11 +181,15 @@ class TestRecurrenceReopensClosures:
         positive: two different guards that both 'failed open', matched at exactly 0.400
         on that shared phrase. A marginal score under a different section number is not
         a recurrence."""
-        # MEASURED, not chosen: Jaccard 0.4444, inside the marginal band
+        # MEASURED, not chosen: Jaccard 0.5000, inside the marginal band
         # [_MIN_OVERLAP, _MIN_OVERLAP + 0.10) where the tie-breaker engages. Picking
         # these by eye is how this check's threshold was mis-set three times.
+        # (Re-measured 2026-08-05 for the 0.40 -> 0.45 move under QI-34: the previous
+        # pair scored 0.4444, which the new threshold excludes outright, so BOTH legs
+        # passed and the tie-breaker was no longer exercised at all. A band-anchored
+        # fixture must move when the band moves — this one silently went vacuous.)
         a = "readiness gate reports green stale roster"
-        b = "readiness gate reports green blocked bundle metadata"
+        b = "readiness gate reports green stale blocked bundle metadata drift"
         marginal = [
             _finding("led:D11:8.2", a, date="2026-07-01", status="fixed"),
             _finding("rev:D11:8.4", b, date="2026-07-15", status="open"),
@@ -188,6 +203,56 @@ class TestRecurrenceReopensClosures:
             _finding("rev:D11:8.2", b, date="2026-07-15", status="open"),
         ]
         assert self._run(monkeypatch, same_number).passed is False
+
+    def test_the_matcher_reads_name_NOT_the_truncated_label(self, monkeypatch):
+        """QI-34's substrate fix, pinned. `label` is `heading[:50]`, and 50 characters
+        cut mid-word: `falsifier` becomes `falsifie`, `the` becomes `t`, and those
+        fragments count as tokens. Two headings differing in ONE word therefore scored
+        0.500 on `label` against 0.900 on `name` — and `name` was on the node all along.
+
+        The two sides here are IDENTICAL for the first 50 characters and diverge after,
+        so a matcher still reading `label` sees 1.0 and fires. Reading `name`, they are
+        different findings and it must stay silent."""
+        head = "the readiness gate reports a bundle green while its "
+        assert len(head) >= 50
+        a = head + "roster is stale and its blockers are open"
+        b = head + "companion notebook stores outputs from before the fix"
+        r = self._run(monkeypatch, [
+            _finding("led:D11:4.1", a[:50], date="2026-07-01", status="fixed", name=a),
+            _finding("rev:D11:4.2", b[:50], date="2026-07-15", status="open", name=b),
+        ])
+        assert r.passed is True, (
+            "two findings sharing only a 50-character opening were reported as a "
+            "recurrence — the matcher is reading the truncated `label` again (QI-34)")
+
+    def test_a_later_RESOLUTION_NOTICE_does_not_contradict_the_closure(self, monkeypatch):
+        """The false-positive class QI-34 removed, and it was the corpus's LOUDEST
+        signal: every finding is born `open`, including the "✅ FIXED — <restated
+        finding>" entries a later round writes to record a remediation. Those are
+        near-verbatim by construction, so on the live corpus the top three scores
+        (0.643 / 0.500 / 0.438) were all a closure matched against its own resolution
+        notice. Firing there would have made the guard's first three hits all wrong."""
+        r = self._run(monkeypatch, [
+            _finding("led:D11:4.1", self.LABEL, date="2026-07-01", status="fixed"),
+            _finding("rev:D11:4.1", self.LABEL, date="2026-07-15", status="open",
+                     name="✅ FIXED — " + self.LABEL),
+        ])
+        assert r.passed is True, (
+            "a later review CONFIRMING the fix was counted as contradicting it")
+        assert "resolution notice" in \
+            next(d for d in r.details if d.name == "summary").message
+
+    def test_the_resolution_exemption_does_not_swallow_a_real_recurrence(self, monkeypatch):
+        """The other direction, and the reason the exemption is scoped to the heading:
+        a later finding that restates the defect WITHOUT announcing a fix must still
+        fire. Otherwise the exemption is a blanket amnesty rather than a semantic one."""
+        r = self._run(monkeypatch, [
+            _finding("led:D11:4.1", self.LABEL, date="2026-07-01", status="fixed"),
+            _finding("rev:D11:4.1", self.LABEL, date="2026-07-15", status="open",
+                     name="🔴 BLOCKER — still open: " + self.LABEL),
+        ])
+        assert r.passed is False, (
+            "a genuine restatement was excused by the resolution-notice exemption")
 
     def test_a_short_title_is_reported_as_a_coverage_limit(self, monkeypatch):
         """Labels are truncated to `heading[:50]` upstream, so titles under
