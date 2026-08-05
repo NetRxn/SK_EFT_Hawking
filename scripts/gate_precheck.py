@@ -27,7 +27,21 @@ STAGE_CHECKS = {
     # (which must be side-effect-free + repeatable, runnable on every gate) would dirty the
     # working tree each time. `validate.py --check viz_consistency` validates the figure/viz
     # layer without any write.
-    "s9":  ["viz_consistency"],
+    # ⚠️ `bundle_figure_integrity` added 2026-08-05 (PR-review pass 2, R5-MAJ2).
+    # s9 ran EXACTLY ONE check — `viz_consistency` — whose body ends
+    # `# Always passes — these are advisory warnings` / `return CheckResult(
+    # passed=True, ...)`. So the deterministic precheck guarding an expensive Opus
+    # figure-reviewer dispatch returned rc=0 unconditionally: a gate that cannot
+    # fail is not a gate. `viz_consistency` is advisory BY DESIGN and stays — the
+    # defect was s9 having nothing else, not that check's disposition.
+    #
+    # `bundle_figure_integrity` is the right companion: it re-renders each bundle
+    # figure and compares, and checks legibility at typeset size, so it fails on
+    # exactly what would waste the review (a stale or unreadable figure). Verified
+    # side-effect-free before adding — a precheck runs before every dispatch and
+    # must not dirty the tree, which is why `review_figures.py --check` is still
+    # excluded (it rewrites tracked `figures/structural_checks.json`).
+    "s9":  ["viz_consistency", "bundle_figure_integrity"],
     "s10": ["paper_provenance", "tables_fresh", "placeholder_not_cited",
             "citation_primary_sources_present"],
     "s13": ["__full__"],  # validate.py full green over 1-12 (with --force-latex; see below)

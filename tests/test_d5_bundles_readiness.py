@@ -484,3 +484,77 @@ class TestBundleFigureIntegrity:
         r = bru.check_bundle_figure_integrity()
         assert r.passed is True
         assert any(d.name == "skipped" and d.warning for d in r.details)
+
+
+class TestFigureRegistryIsActuallyDerived:
+    """⚠️ PR-review pass 2, R4-MAJ3. `bundle_figure_integrity` derives its figure
+    roster from `review_figures.FIGURE_REGISTRY` *"rather than hand-maintained"*,
+    with a hardcoded 7-figure literal as the fallback if the registry is
+    unreadable.
+
+    The derivation raised on EVERY run, so the fallback always fired: production
+    used the hand-maintained list the block exists to replace, and — because the
+    derived list happens to equal the fallback today — nothing looked wrong. The
+    guarantee that a NEW d11_/d12_ figure gets picked up automatically was dead,
+    and would have been discovered only when a new figure shipped unguarded.
+
+    Cause: `importlib.util.module_from_spec` does not register the module in
+    `sys.modules`, and Python 3.12+ `@dataclass` dereferences
+    `sys.modules.get(cls.__module__).__dict__` while probing for `KW_ONLY`.
+    `review_figures.FigureSpec` is a dataclass, so out-of-band execution could
+    never succeed.
+
+    A `try/except Exception` around an import is invisible by construction — the
+    only way to see it is to perform the load and assert it works.
+    """
+
+    def _load_review_figures(self):
+        import importlib.util as ilu
+        import sys as _sys
+        import validate_helpers as _H
+        spec = ilu.spec_from_file_location(
+            "_review_figures_probe", _H.SCRIPT_DIR / "review_figures.py")
+        mod = ilu.module_from_spec(spec)
+        _sys.modules[spec.name] = mod          # the line whose absence was the bug
+        try:
+            spec.loader.exec_module(mod)
+        finally:
+            _sys.modules.pop(spec.name, None)
+        return mod
+
+    def test_review_figures_loads_out_of_band(self):
+        """FIRES ON THE SEEDED DEFECT: drop the `sys.modules` registration in
+        `bundles_readiness.py` and the check silently reverts to its literal."""
+        mod = self._load_review_figures()
+        assert hasattr(mod, "FIGURE_REGISTRY"), (
+            "review_figures.py executed but exposes no FIGURE_REGISTRY — the "
+            "derivation in bundle_figure_integrity would fall back silently")
+        assert len(mod.FIGURE_REGISTRY) > 100, (
+            f"FIGURE_REGISTRY has only {len(mod.FIGURE_REGISTRY)} specs; the "
+            f"registry is the population the roster is derived FROM, so a "
+            f"collapsed one makes the derivation vacuous")
+
+    def test_the_check_source_registers_the_module_before_exec(self):
+        """Structural backstop. The behavioural test above loads the module
+        ITSELF, so it stays green even if `bundles_readiness.py` loses the line —
+        a test one level away from the artifact, which is this audit's own
+        recurring defect. This asserts against the production source."""
+        import validate_helpers as _H
+        src = (_H.SCRIPT_DIR / "validation" / "checks" / "bundles_readiness.py").read_text()
+        block = src.split("spec_from_file_location", 1)[1].split("exec_module", 1)[0]
+        assert "sys.modules[" in block.replace("_sys", "sys"), (
+            "bundle_figure_integrity execs review_figures.py without registering "
+            "it in sys.modules first — @dataclass will raise AttributeError and "
+            "the check will silently use its hardcoded 7-figure fallback (R4-MAJ3)")
+
+    def test_the_derived_roster_matches_what_production_uses(self):
+        """The derived roster must be non-empty and consist of real registry
+        names — otherwise `if _derived:` falls through to the literal."""
+        mod = self._load_review_figures()
+        derived = {}
+        for fs in mod.FIGURE_REGISTRY:
+            if fs.name.startswith(("d11_", "d12_")):
+                derived.setdefault(fs.name.split("_")[0].upper(), []).append(fs.name)
+        assert derived, ("no d11_/d12_ specs in FIGURE_REGISTRY — the derivation "
+                         "raises RuntimeError and falls back to the literal")
+        assert set(derived) == {"D11", "D12"}

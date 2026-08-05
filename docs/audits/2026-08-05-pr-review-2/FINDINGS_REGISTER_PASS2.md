@@ -363,9 +363,29 @@ including `if result.returncode != 0`. R4 ran it with `LAKE_PATH=/nonexistent/la
 PASS-SKIP under key `667d2fce…`, and showed that key is **byte-identical to the one holding the
 developer's real measurement**. Restore lake → the next run replays the skip in **0.07 s**.
 
-**The trigger is the repo's own documented procedure**, not an adversary: `rm -rf .lake/build &&
-lake build SKEFTHawking.ExtractDeps` is the published clean-baseline step, and any `validate.py`
-run between the two halves poisons the cache with a skip that then outlives the rebuild.
+**⚠️ TRIGGER RE-DERIVED 2026-08-05 (operator correction) — I had this wrong.** R4 and I both
+framed the trigger as the published clean-baseline step, `rm -rf .lake/build && lake build
+SKEFTHawking.ExtractDeps`, and I repeated it in the fix commit. **That step is deliberately
+rare** — toolchain bumps and major structural changes only, per `feedback_clean_rebuild_cadence`
+— so it is a poor headline and overstates how often this fires.
+
+The real trigger is more mundane: **any environment where `lake` is not resolvable when
+`validate.py` runs.** `_resolve_lake()` tries `LAKE_PATH`, then `~/.elan/bin/lake`, then `PATH`;
+`scripts/pre-commit-sync.sh:56` guards `command -v lake` *precisely because* "git hooks run in a
+minimal env (GUI clients / non-login shells) where uv/lake are NOT on PATH". Live candidates:
+
+- a **worktree slot** (`.claude/worktrees/wt1|2|3` all exist) running validate without elan on PATH;
+- a GUI-launched or non-login shell;
+- a fresh clone before `elan` setup;
+- a mis-set `LAKE_PATH`.
+
+⚠️ The commit gate itself is **not** a poisoning path — `pre-commit-sync.sh` runs only three
+named checks (`formula_grounding`, `placeholder_not_cited`, `native_decide_regression`), none
+memoized.
+
+**Severity is unchanged and does not depend on the frequency claim:** once it happens the green
+verdict is permanent and silent, surviving until some unrelated input moves the key. What
+changes is that I should not have led with a rare procedure as the motivating case.
 
 ### R4-I1 — `--strict` does NOT bypass the LaTeX cache ✅ **CONFIRMED — my guarantee is wrong as written**
 
@@ -503,6 +523,43 @@ detected.** That is the R6 mismatch thesis, demonstrated rather than argued.
 
 **R2 verdict: YES WITH FIXES** — *"nothing makes anything worse than `main`, which had no guard
 in these positions at all."*
+
+---
+
+## ✅ FIXED — round 2 (2026-08-05, after the Criticals)
+
+| id | finding | resolution |
+|---|---|---|
+| **R4-MAJ3** | `bundle_figure_integrity` raised on every run → always used its hardcoded 7-figure fallback | ✅ `module_from_spec` doesn't register in `sys.modules`, and py3.12+ `@dataclass` dereferences `sys.modules.get(cls.__module__)`. Registered before `exec_module`; `FIGURE_REGISTRY` now loads (**137 specs**). ⚠️ Coverage is still **7** — the `d11_/d12_` filter is R5-C2 → ADR-010. What is restored is the anti-drift guarantee: a NEW d11/d12 figure is picked up instead of silently omitted. Seeded-defect test added and **verified to fire** by removing the line in production. |
+| **R5-MAJ2** | `gate_precheck s9` ran one check that always passes | ✅ added `bundle_figure_integrity` (verified side-effect-free first — a precheck runs before every dispatch and must not dirty the tree). `viz_consistency` stays advisory by design; the defect was s9 having nothing else. |
+| **R5-MAJ3** | Invariant #10 unenforced, with a green test pinning the gap | ✅ enforced in `elaboration_knob_watchlist` behind `MAXHEARTBEATS_PROOF_BODY_CEILING = 22` (zero headroom). The pinning test is **replaced by its inverse**, plus a silent-on-correct-data test and a live zero-headroom test. |
+| **R5-MAJ1** | `--write` reported success while writing nothing | ✅ now raises `NotImplementedError` naming the working alternative. ❌ **R5's framing corrected** — see below. |
+
+### ⚠️ R5-MAJ1 was OVERSTATED, and the correction matters
+
+R5 filed *"no working way to satisfy it"* and *"there is no writer of `human_verified_date`
+anywhere"*. **Re-measured: `scripts/wave2_flip_provenance.py:178` is a real writer**
+(`PROV_PATH.write_text`). The `--strict` provenance gate **is** satisfiable — through the
+bulk-flip script, not through the dashboard. What is genuinely broken is narrower: the
+dashboard's `--write` was a no-op that printed success, and its confirm button mutates memory
+then renders a green `HUMAN VERIFIED` badge for a change that is never persisted.
+
+### ⚠️ The Invariant-#10 count: measured three times, lead wrong twice
+
+| measurement | value | verdict |
+|---|---|---|
+| R5 (reviewer) | **22** | ✅ correct |
+| lead, "correcting" R5 with a looser attribution scan | 23 | ❌ wrong |
+| lead, explaining the gap as "22 bare + 1 `synthInstance.`" | 23 | ❌ **wrong twice** — there are **zero** `synthInstance.maxHeartbeats` sites in the tree |
+| enforced predicate (attached to `theorem`/`lemma`/`example`) | **22** | ✅ frozen as the ceiling |
+
+31 bare `set_option maxHeartbeats` lines exist in total; the other 9 attach to no
+theorem/lemma/example within 12 lines — file-level blocks, or the **tactic-bodied `def` limb of
+Invariant #10 that this check does not yet cover** (documented in the check body, not hidden).
+
+*A count is meaningless without its predicate.* I re-measured a reviewer's number, got a
+different one, invented a reconciliation for the difference, and was wrong about both. The
+reviewer was right the whole time.
 
 ---
 

@@ -333,9 +333,12 @@ def memoized(name: str, key: str, compute: Callable[[], CheckResult],
     # BYTE-IDENTICAL to the one holding the real measurement — so restoring the
     # toolchain replayed the skip in 0.07 s instead of re-measuring, indefinitely.
     #
-    # The trigger needed no adversary: `rm -rf .lake/build && lake build ...` is the
-    # project's own published clean-baseline step, and any `validate.py` in between
-    # poisoned the cache with a skip that outlived the rebuild.
+    # The trigger is any environment where `lake` is not resolvable when validate
+    # runs: a worktree slot without elan on PATH, a GUI/non-login shell (which is
+    # exactly why `pre-commit-sync.sh` guards `command -v lake`), a fresh clone, a
+    # mis-set LAKE_PATH. ⚠️ NOT the `rm -rf .lake/build` clean rebuild — an earlier
+    # draft of this comment led with that, but per `feedback_clean_rebuild_cadence`
+    # it is deliberately rare (toolchain bumps only) and was a bad headline.
     if not result.measured:
         if not bypass:                       # also evict any stale green under this key
             entries = _load()

@@ -394,15 +394,58 @@ class TestElaborationKnobWatchlist:
         assert not r.details[0].warning
         assert "0 proof-body" in (r.details[0].message or "")
 
-    def test_maxHeartbeats_is_deliberately_not_watched_here(self, tmp_path, monkeypatch):
-        """Invariant #10 forbids `maxHeartbeats` in a proof body OUTRIGHT and is
-        enforced elsewhere. Listing it here would double-report it as advisory, which
-        would read as 'allowed with a warning'."""
+    def test_maxHeartbeats_in_a_proof_body_is_now_ENFORCED(self, tmp_path, monkeypatch):
+        """⚠️ THIS TEST IS THE INVERSE OF THE ONE IT REPLACES, AND THAT IS THE POINT.
+
+        It read `test_maxHeartbeats_is_deliberately_not_watched_here`, asserting
+        `"0 proof-body"`, and its docstring said: *"Invariant #10 forbids
+        `maxHeartbeats` in a proof body OUTRIGHT and is enforced elsewhere."*
+
+        **It was enforced nowhere.** `rg maxHeartbeats scripts/` returned only this
+        check's own docstring and its exclusion list, while the substrate carried
+        22 live violations. So the branch shipped a GREEN TEST whose docstring told
+        the next reader the gap was correct — the strongest form of this audit's
+        central defect, and closing the gap required breaking a passing test.
+
+        Found by reviewer R5 (PR-review pass 2, R5-MAJ3).
+        """
         monkeypatch.setattr(_H, "LEAN_DIR", _lean_tree(
-            tmp_path, {"M.lean": "set_option maxHeartbeats 400000 in\n"}))
+            tmp_path, {"M.lean": "set_option maxHeartbeats 400000 in\n"
+                                 "theorem t : True := by trivial\n"}))
         monkeypatch.setattr(_H, "PROJECT_ROOT", tmp_path)
+        monkeypatch.setattr(lt, "MAXHEARTBEATS_PROOF_BODY_CEILING", 0)
         r = lt.check_elaboration_knob_watchlist()
-        assert "0 proof-body" in (r.details[0].message or "")
+        assert r.passed is False, (
+            "a proof-body `maxHeartbeats` above the ceiling did not fail the check "
+            "— Invariant #10 is unenforced again")
+        inv = next(d for d in r.details if d.name == "invariant_10")
+        assert "1 `maxHeartbeats` site" in inv.message
+
+    def test_a_file_level_set_option_is_not_counted_as_a_proof_body(
+            self, tmp_path, monkeypatch):
+        """SILENT ON CORRECT DATA. The predicate is "attached to a
+        theorem/lemma/example", so a bare file-level `set_option` with no
+        declaration under it must not count — otherwise the ratchet drifts on
+        something Invariant #10 does not name."""
+        monkeypatch.setattr(_H, "LEAN_DIR", _lean_tree(
+            tmp_path, {"M.lean": "set_option maxHeartbeats 400000\n\n-- nothing\n"}))
+        monkeypatch.setattr(_H, "PROJECT_ROOT", tmp_path)
+        monkeypatch.setattr(lt, "MAXHEARTBEATS_PROOF_BODY_CEILING", 0)
+        r = lt.check_elaboration_knob_watchlist()
+        assert r.passed is True
+
+    def test_the_ceiling_has_ZERO_HEADROOM_against_the_live_tree(self):
+        """House ratchet idiom, measured against production: slack is a ratchet
+        that cannot fire. ⚠️ This number was measured three times during pass 2 and
+        the lead was wrong twice — see the constant's docstring."""
+        r = lt.check_elaboration_knob_watchlist()
+        inv = next(d for d in r.details if d.name == "invariant_10")
+        n = int(inv.message.split()[0])
+        assert n == lt.MAXHEARTBEATS_PROOF_BODY_CEILING, (
+            f"{n} live violation(s) against a ceiling of "
+            f"{lt.MAXHEARTBEATS_PROOF_BODY_CEILING}. If it dropped, LOWER the "
+            f"ceiling in the same commit; if it rose, decompose into `have` "
+            f"sub-lemmas — raising the ceiling is a decision, not a fix.")
 
 
 class TestLeanDocstringRefsResolve:

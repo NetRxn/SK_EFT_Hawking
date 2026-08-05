@@ -108,9 +108,24 @@ def check_bundle_figure_integrity() -> CheckResult:
     # unreadable.
     try:
         import importlib.util as _ilu
+        import sys as _sys
         _spec = _ilu.spec_from_file_location(
             "_review_figures", _H.SCRIPT_DIR / "review_figures.py")
         _rf = _ilu.module_from_spec(_spec)
+        # ⚠️ REGISTER BEFORE EXEC (fixed 2026-08-05, PR-review R4-MAJ3). Without
+        # this the block raised `AttributeError: 'NoneType' object has no attribute
+        # '__dict__'` on EVERY run, so the `except` below always fired and the
+        # "derived from FIGURE_REGISTRY rather than hand-maintained" guarantee was
+        # dead — production always used the hardcoded 7-figure literal, i.e. the
+        # very hand-maintained list this block exists to replace.
+        #
+        # Cause: `module_from_spec` does NOT put the module in `sys.modules`, and
+        # Python 3.12+ `@dataclass` dereferences `sys.modules.get(cls.__module__)`
+        # while probing for `KW_ONLY`. `review_figures.py` defines `FigureSpec` as a
+        # dataclass, so executing it out-of-band could never succeed.
+        #
+        # Reproduced directly before fixing, not inferred from the fallback firing.
+        _sys.modules[_spec.name] = _rf
         _spec.loader.exec_module(_rf)
         _derived: dict[str, list] = {}
         for fs in _rf.FIGURE_REGISTRY:

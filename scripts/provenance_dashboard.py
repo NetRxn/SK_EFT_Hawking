@@ -5447,9 +5447,24 @@ def main():
     args = parser.parse_args()
 
     if args.write:
-        print("Write mode: updating provenance.py with verification state...")
-        # TODO: implement file rewriting
-        return
+        # ⚠️ FAIL LOUD (2026-08-05, PR-review pass 2, R5-MAJ1). This printed
+        # "Write mode: updating provenance.py with verification state..." and
+        # returned 0 having written NOTHING — a command reporting success for work
+        # it did not do, which is this audit's defect class wearing a CLI.
+        #
+        # ⚠️ R5 filed this as "Invariant #8's human-verification tier has no working
+        # way to satisfy it". Re-measured: that is OVERSTATED.
+        # `scripts/wave2_flip_provenance.py` is a real writer
+        # (`PROV_PATH.write_text`, :178) and the gate IS satisfiable through it.
+        # What is broken is this path, and the dashboard's confirm button, which
+        # mutates in memory and then renders a green HUMAN VERIFIED badge for a
+        # change that is never persisted.
+        raise NotImplementedError(
+            "`--write` was never implemented: it printed a success message and "
+            "returned without writing provenance.py. Use "
+            "`scripts/wave2_flip_provenance.py`, which does persist "
+            "`human_verified_date`. Tracked as R5-MAJ1 in "
+            "docs/audits/2026-08-05-pr-review-2/FINDINGS_REGISTER_PASS2.md.")
 
     app.config['PG_SYNC_ENABLED'] = not args.no_pg_sync
 

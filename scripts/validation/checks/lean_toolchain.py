@@ -562,6 +562,34 @@ def check_axiom_closure_allowlist() -> CheckResult:
     return CheckResult(passed=True, details=details)
 
 
+#: Zero-headroom ratchet for Invariant #10 (`set_option maxHeartbeats` in a proof
+#: body). MEASURED 2026-08-05 by the predicate below: **22** sites attached to a
+#: `theorem`/`lemma`/`example`, across 4 files.
+#:
+#: ⚠️ THIS COUNT WAS MEASURED THREE TIMES AND I WAS WRONG TWICE. Reviewer R5 filed
+#: 22. I "corrected" it to 23 with a looser attribution scan, then explained the
+#: gap as "22 bare + 1 `synthInstance.maxHeartbeats`" — but there are **zero**
+#: `synthInstance.maxHeartbeats` sites in the tree, so that explanation was also
+#: wrong. R5's 22 was right both times.
+#:
+#: The lesson is the one this audit keeps re-learning: a count is meaningless
+#: without its predicate. The enforced predicate is stated in the check body, and
+#: **31** bare `set_option maxHeartbeats` lines exist in total — the other 9
+#: attach to no theorem/lemma/example within 12 lines (file-level blocks, or the
+#: uncovered tactic-bodied-`def` limb).
+#:
+#: This may only DECREASE. The discharge is Invariant #10's own remedy — a
+#: heartbeat wall means the proof architecture is wrong, so decompose into `have`
+#: sub-lemmas — not raising the number. Raising it is a decision that must be
+#: stated in the same commit.
+#:
+#: ⚠️ Until 2026-08-05 this invariant had NO enforcement anywhere, while
+#: `elaboration_knob_watchlist` excluded bare `maxHeartbeats` from its pattern on
+#: the stated grounds that it was "forbidden outright" — i.e. handled elsewhere.
+#: It was handled nowhere, and a test asserted the exclusion was deliberate.
+MAXHEARTBEATS_PROOF_BODY_CEILING = 22
+
+
 # ═══════════════════════════════════════════════════════════════════════
 # CHECK: Elaboration-knob watchlist (perf / upstream-portability, NOT soundness)
 # ═══════════════════════════════════════════════════════════════════════
@@ -603,22 +631,88 @@ def check_elaboration_knob_watchlist() -> CheckResult:
 
     pat = re.compile(
         r"set_option\s+(maxRecDepth|synthInstance\.maxSize|synthInstance\.maxHeartbeats)\s+(\d+)")
+
+    # ⚠️ INVARIANT #10 IS NOW ENFORCED HERE (2026-08-05, PR-review pass 2, R5-MAJ3).
+    # Bare `maxHeartbeats` was deliberately EXCLUDED from `pat` above, and the
+    # comment justifying that said it is "forbidden outright by Invariant #10" —
+    # i.e. handled elsewhere. **It was handled nowhere.** `rg maxHeartbeats scripts/`
+    # returned only this check's own docstring and exclusion list, while the
+    # substrate carried 23 live violations across 4 files.
+    #
+    # Worse, the branch had PINNED the gap: `15edc340` added
+    # `test_maxHeartbeats_is_deliberately_not_watched_here`, whose docstring
+    # asserts the invariant "is enforced elsewhere". Closing the gap therefore
+    # broke a green test that said the gap was correct — the strongest form of this
+    # audit's core defect. That test is rewritten alongside this change.
+    #
+    # RATCHETED, not hard-failed on day one: 23 violations exist and a bare FAIL
+    # would redden the suite on pre-existing debt with no discharge path. The house
+    # idiom applies — freeze the measured population at zero headroom and only let
+    # it shrink. Decomposing those proofs into `have` sub-lemmas is the discharge
+    # (Invariant #10's own remedy), tracked in the pass-2 register.
+    # BOTH forms, because Invariant #10 names both: WAVE_EXECUTION_PIPELINE.md:675
+    # — "No `set_option maxHeartbeats` or `set_option synthInstance.maxHeartbeats`
+    # in any theorem, lemma, example, or def whose body is produced by tactics."
+    # ⚠️ Reviewer R5 filed 22 and the lead first "corrected" it to 23; both were
+    # measuring different things — 22 bare + 1 `synthInstance.` = 23, and the
+    # invariant forbids all 23.
+    proof_body_re = re.compile(r"set_option\s+(?:synthInstance\.)?maxHeartbeats\s+(\d+)")
+    decl_re = re.compile(
+        r"^\s*(?:@\[[^\]]*\]\s*)?(?:private |protected |noncomputable |partial |unsafe )*"
+        r"(theorem|lemma|example)\b")
+
     hits: List[Detail] = []
+    violations: List[Detail] = []
     for f in sorted(lean_dir.rglob("*.lean")):
         if "/.lake/" in str(f):
             continue
-        for i, line in enumerate(f.read_text(errors="replace").splitlines(), 1):
+        lines = f.read_text(errors="replace").splitlines()
+        rel = f.relative_to(_H.PROJECT_ROOT)
+        for i, line in enumerate(lines, 1):
             m = pat.search(line)
             if m:
-                rel = f.relative_to(_H.PROJECT_ROOT)
-                hits.append(Detail(f"{rel}:{i}", True, f"{m.group(1)} {m.group(2)}", warning=True))
+                hits.append(Detail(f"{rel}:{i}", True, f"{m.group(1)} {m.group(2)}",
+                                   warning=True))
+            mh = proof_body_re.search(line)
+            if mh:
+                # Attach it to the declaration it precedes. Only theorem/lemma/example
+                # count: Invariant #10 exempts O(project-size) metaprograms, and a
+                # file-level `set_option` block is reported separately below.
+                attaches_to = None
+                for nxt in lines[i:i + 12]:
+                    d = decl_re.match(nxt)
+                    if d:
+                        attaches_to = d.group(1)
+                        break
+                # ⚠️ KNOWN NARROWING, stated not hidden: Invariant #10 also covers a
+                # `def`/`noncomputable def` whose body is TACTIC-PRODUCED. Deciding
+                # that needs real parsing (`:= by` vs a term body, across line
+                # breaks), so this leg covers only theorem/lemma/example, which are
+                # unambiguous. A tactic-bodied `def` carrying a heartbeat override
+                # is therefore NOT caught yet — tracked in the pass-2 register.
+                if attaches_to:
+                    violations.append(Detail(
+                        f"{rel}:{i}", False,
+                        f"maxHeartbeats {mh.group(1)} on a `{attaches_to}` — Invariant #10 "
+                        f"forbids it in a proof body; decompose into `have` sub-lemmas"))
 
+    over = len(violations) > MAXHEARTBEATS_PROOF_BODY_CEILING
     summary = Detail(
         "watchlist", True,
         f"{len(hits)} proof-body elaboration-knob site(s) — perf/upstream-CI watchlist, "
         "kernel-pure (NOT a soundness/axiom-closure issue; that is axiom_closure_allowlist)",
         warning=bool(hits))
-    return CheckResult(passed=True, details=[summary] + hits)
+    inv10 = Detail(
+        "invariant_10", not over,
+        f"{len(violations)} `maxHeartbeats` site(s) in a proof body "
+        f"(ceiling {MAXHEARTBEATS_PROOF_BODY_CEILING})"
+        + (f" — EXCEEDS by {len(violations) - MAXHEARTBEATS_PROOF_BODY_CEILING}" if over
+           else f" — {MAXHEARTBEATS_PROOF_BODY_CEILING - len(violations)} below; LOWER THE "
+                f"CEILING in the same commit" if len(violations) < MAXHEARTBEATS_PROOF_BODY_CEILING
+           else ""),
+        warning=(bool(violations) and not over))
+    return CheckResult(passed=not over,
+                       details=[summary, inv10] + violations + hits)
 
 
 # ---------------------------------------------------------------------------
