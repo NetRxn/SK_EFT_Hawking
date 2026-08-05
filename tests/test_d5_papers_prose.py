@@ -49,50 +49,56 @@ def _lean(tmp_path: Path, files: dict[str, str]) -> Path:
 
 
 class TestPaperProvenance:
-    """Every `\\texttt{theorem_name}` in a draft resolves to a real Lean theorem;
-    figures exist; no placeholder bibliography."""
+    """Figures referenced by a draft exist on disk; no placeholder figure box or
+    bibliography entry ships.
+
+    ⚠️ THE FOUR THEOREM-REFERENCE TESTS WERE DELETED 2026-08-05 with the leg they
+    covered (audit finding QI-32), and the reason is worth more than the tests were.
+
+    They passed. They were both-directions. They were mutation-verified on
+    2026-08-04 — and the leg they certified had been incapable of matching a single
+    reference in the production corpus since 2026-03-26.
+
+    The regex was `\\\\texttt\\{([a-z_][a-zA-Z0-9_]*)\\}`, whose character class cannot
+    cross a backslash. LaTeX escapes `_` as `\\_`, so every real reference is written
+    `\\texttt{ghost\\_theorem}` and never matched. These fixtures wrote
+    `\\texttt{ghost_theorem}` — a spelling that does not survive `pdflatex` and
+    therefore does not occur in any draft. The fixture used the only spelling under
+    which the leg worked.
+
+    That is QI-30's criterion stated from the other side: *a mutation caught against
+    a patched fixture does not establish that the check can fail in production.*
+    Four green tests over a dead guard is the exact failure this audit exists to
+    find, and it was found by measuring the corpus (480 raw matches, **0** with `_`,
+    against 1,963 blocks containing `\\_`), not by running the tests again.
+
+    Lean-name resolution now lives entirely in `prose_lean_refs`, which unescapes
+    `\\_`; its legacy-draft leg and ratchet are covered in
+    `test_d5_prose_lean_refs.py`.
+    """
 
     def _run(self, tmp_path, monkeypatch, drafts, lean_files=None):
         monkeypatch.setattr(_H, "PAPERS_DIR", _papers(tmp_path, drafts))
         monkeypatch.setattr(_H, "LEAN_DIR", _lean(tmp_path, lean_files or {}))
         return pp.check_paper_provenance()
 
-    def test_a_resolving_reference_passes(self, tmp_path, monkeypatch):
+    def test_a_clean_draft_passes(self, tmp_path, monkeypatch):
         """SILENT ON CORRECT DATA."""
         r = self._run(tmp_path, monkeypatch,
-                      {"D1": r"See \texttt{real_theorem} for the bound."},
-                      {"M.lean": "theorem real_theorem : True := trivial\n"})
+                      {"D1": r"See \texttt{real\_theorem} for the bound."}, {})
         assert r.passed is True, [(d.name, d.message) for d in r.details if not d.passed]
 
-    def test_a_nonexistent_theorem_reference_fails(self, tmp_path, monkeypatch):
-        """FIRES ON THE SEEDED DEFECT — a paper citing a theorem that does not exist."""
+    def test_an_ESCAPED_underscore_reference_is_no_longer_this_check_s_business(
+            self, tmp_path, monkeypatch):
+        """The regression pin for QI-32. A draft citing a nonexistent theorem in the
+        form LaTeX actually produces must NOT be silently reported here as verified —
+        this check no longer claims to resolve theorem names at all, and a future
+        re-introduction that once again cannot see `\\_` would fail this test."""
         r = self._run(tmp_path, monkeypatch,
-                      {"D1": r"See \texttt{ghost_theorem} for the bound."},
-                      {"M.lean": "theorem real_theorem : True := trivial\n"})
-        assert r.passed is False, (
-            "a draft citing a nonexistent Lean theorem passed — the paper→Lean "
-            "reference chain is unenforced")
-        assert any("Not in Lean" in (d.message or "") for d in r.details)
-
-    def test_a_theorem_in_a_subdirectory_resolves(self, tmp_path, monkeypatch):
-        """QI-01 at this call site. `glob` covered 1,373 of 2,039 files, hiding 5,469
-        theorem names — and this check FAILS on a reference it cannot resolve, so a
-        draft citing a theorem in `QuantumNetwork/` would have been reported as citing
-        a nonexistent one. No draft did, which is why it never fired."""
-        r = self._run(tmp_path, monkeypatch,
-                      {"D1": r"See \texttt{deep_theorem} for the bound."},
-                      {"Pkg/Nested/M.lean": "theorem deep_theorem : True := trivial\n"})
-        assert r.passed is True, (
-            "a theorem in a SUBDIRECTORY read as missing — the name scan is "
-            "non-recursive again (audit QI-01)")
-
-    def test_a_single_word_texttt_is_not_treated_as_a_theorem(self, tmp_path, monkeypatch):
-        """The `'_' in r` filter. `\\texttt{sorry}` or `\\texttt{lake}` is prose
-        formatting, not a theorem reference; without the filter every such use would
-        be reported as a missing theorem."""
-        r = self._run(tmp_path, monkeypatch,
-                      {"D1": r"Run \texttt{lake} with zero \texttt{sorry}."}, {})
-        assert r.passed is True
+                      {"D1": r"See \texttt{ghost\_theorem} for the bound."}, {})
+        assert not any("theorem_refs" in d.name for d in r.details), (
+            "paper_provenance is reporting on theorem references again — if that leg "
+            "is revived it must handle the `\\_` escape, which is the whole of QI-32")
 
     def test_an_fbox_placeholder_figure_fails(self, tmp_path, monkeypatch):
         r = self._run(tmp_path, monkeypatch,

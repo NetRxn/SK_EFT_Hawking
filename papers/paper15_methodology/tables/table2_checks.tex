@@ -44,7 +44,7 @@
 36 & \texttt{notebooks} & Notebooks import physics from src.core, no re-implementation \\
 37 & \texttt{viz\_consistency} & Notebook visualizations use imported physics and consistent style \\
 38 & \texttt{notebook\_exec} & All notebooks execute without errors \\
-39 & \texttt{paper\_provenance} & Paper numerical claims trace to computations within 0.5\% \\
+39 & \texttt{paper\_provenance} & Paper figure references resolve and no placeholder bibliography ships \\
 40 & \texttt{numerical\_literals} & Paper .tex files free of inline numerical literals outside \texttt{\textbackslash input\{\}} blocks \\
 41 & \texttt{count\_literals} & Paper .tex files reference counts via \texttt{\textbackslash input\{counts.tex\}} macros, not literals \\
 42 & \texttt{paper\_latex\_compiles} & Bundle drafts compile under pdflatex (HARD-FAILS on a fatal error; slow --- pass --force-latex or --check paper\_latex\_compiles) \\
@@ -52,7 +52,7 @@
 44 & \texttt{paper\_toolchain\_pin\_drift} & Advisory (Class TP): paper-draft toolchain/Mathlib pins match lean-toolchain + lakefile.toml \\
 45 & \texttt{numerical} & Experimental parameters match reference values \\
 46 & \texttt{identities} & Mathematical identities and boundary conditions hold \\
-47 & \texttt{paper\_table} & Paper 1 Table 1 values match solver output \\
+47 & \texttt{paper\_table} & Paper 1's SHIPPED Table 1 cells match the canonical solver output \\
 48 & \texttt{d1\_hierarchy\_table} & D1 BEC hierarchy table + crossover match the canonical evaluator \\
 49 & \texttt{f\_hierarchy\_claims} & Flagship F inline Heidelberg BEC corrections match the canonical evaluator \\
 50 & \texttt{cgl\_fdr} & CGL FDR derivation produces correct results \\

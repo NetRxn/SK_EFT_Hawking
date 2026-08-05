@@ -98,45 +98,47 @@ from bundle_registry import BUNDLE_CODES  # noqa: E402
 # ═══════════════════════════════════════════════════════════════════════
 
 @register_check("paper_provenance",
-                "Paper numerical claims trace to computations within 0.5%")
+                "Paper figure references resolve and no placeholder bibliography ships")
 def check_paper_provenance() -> CheckResult:
-    """Verify paper theorem references exist in Lean and figures are present."""
+    """Verify every draft's `\\includegraphics{}` resolves on disk and no draft
+    ships a placeholder figure box or bibliography entry. All 64 drafts.
+
+    ⚠️ THE THEOREM-REFERENCE LEG WAS REMOVED 2026-08-05 (audit finding QI-32).
+    It read:
+
+        texttt_refs = re.findall(r'\\\\texttt\\{([a-z_][a-zA-Z0-9_]*)\\}', tex)
+        theorem_refs = [r for r in texttt_refs if '_' in r]
+
+    and the character class cannot cross a backslash — but LaTeX escapes `_` as
+    `\\_`, so a reference to `wen_adw_factor` is written `\\texttt{wen\\_adw\\_factor}`
+    and never matched. `theorem_refs` was therefore the subset of matches
+    containing an underscore, of a population that by construction contained
+    none. Measured across all 64 drafts: **480 raw matches, 0 with `_`, against
+    1,963 `\\texttt{}` blocks containing `\\_`.** The leg had been empty since the
+    regex landed on 2026-03-26, and it FAILED loudly on nothing for five months
+    while printing "N theorem references verified" for zero references.
+
+    ⚠️ It is also the leg audit finding QI-01 "fixed": the `glob`→`rglob` repair
+    was applied to a population that was already empty, and the "verdict movement:
+    zero" recorded then as evidence the exposure was latent was in fact evidence
+    the leg was dead.
+
+    It is NOT revived here. Resolving a Lean name cited in prose is
+    `prose_lean_refs`'s question, not this module's — this module asks whether the
+    prose agrees with the numbers (ADR-009's stated seam) — and `prose_lean_refs`
+    already owns a real extractor (`\\_`-unescaping, candidate filter) and a real
+    resolver (Mathlib / PhysLib / private namespaces, disclaimer and negation
+    context, documented waivers) where this leg had a raw `theorem `-line grep.
+    The 43 legacy drafts this leg nominally covered are picked up by that check's
+    new legacy leg, under a measured ratchet. See
+    `check_prose_theorem_reference_coverage`.
+    """
     details = []
     all_pass = True
-
-    # Build set of all Lean theorem names.
-    # ⚠️ rglob, NOT glob (fixed 2026-08-04, audit finding QI-01). `glob` covered
-    # 1,373 of 2,039 files, hiding 5,469 theorem names in subdirectories. This
-    # check FAILS on a `\texttt{}` reference it cannot resolve, so the error
-    # direction was toward false positives — a draft citing a theorem in
-    # `QuantumNetwork/` or `FaultTolerance/` would have been reported as citing a
-    # nonexistent theorem. No draft did, which is why it never fired.
-    lean_names = set()
-    for lean_file in _H.LEAN_DIR.rglob("*.lean"):
-        for line in lean_file.read_text().splitlines():
-            if line.startswith("theorem "):
-                name = line.split()[1].split("(")[0].split(":")[0].strip()
-                lean_names.add(name)
 
     for tex_file in _H.all_paper_drafts():     # ALL drafts (bundles + legacy)
         paper_dir = tex_file.parent
         tex = tex_file.read_text()
-
-        # Check 1: \\texttt{theorem_name} refs exist in Lean
-        texttt_refs = re.findall(r'\\texttt\{([a-z_][a-zA-Z0-9_]*)\}', tex)
-        theorem_refs = [r for r in texttt_refs if '_' in r]
-        missing = [r for r in theorem_refs if r not in lean_names]
-        if missing:
-            all_pass = False
-            details.append(Detail(
-                f"{paper_dir.name}/theorem_refs", False,
-                f"Not in Lean: {missing}"
-            ))
-        elif theorem_refs:
-            details.append(Detail(
-                f"{paper_dir.name}/theorem_refs", True,
-                f"{len(theorem_refs)} theorem references verified"
-            ))
 
         # Check 2: No \\fbox placeholder figures
         if '\\fbox{\\parbox' in tex:

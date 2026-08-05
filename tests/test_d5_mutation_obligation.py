@@ -378,10 +378,13 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
     # papers_prose.py: 20 tests / 10 mutations (+2 on the pin-drift core).
     "paper_provenance": (
         "test_d5_papers_prose.py",
-        "5 mutations incl. `rglob` -> `glob` (QI-01 at this call site — `glob` hid "
-        "5,469 theorem names, and this check FAILS on an unresolvable reference, so a "
-        "draft citing a QuantumNetwork theorem would have read as citing a phantom) and "
-        "the LaTeX-comment strip that keeps cleanup records from false-positiving",
+        "figure resolution (incl. the extension-append leg) and the LaTeX-comment "
+        "strip that keeps cleanup records from false-positiving. ⚠️ The "
+        "theorem-reference leg was DELETED under QI-32: its regex could not cross the "
+        "`\\_` LaTeX escape and had matched 0 references since 2026-03-26, so the "
+        "`rglob` -> `glob` mutation recorded here on 2026-08-04 was CAUGHT against a "
+        "fixture using a spelling no draft contains. Lean-name resolution now belongs "
+        "entirely to `prose_theorem_reference_coverage`",
     ),
     "axiom_count_prose_consistency": (
         "test_d5_papers_prose.py",
@@ -407,7 +410,10 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
         "test_d5_prose_lean_refs.py",
         "4 mutations incl. `all(...)` -> `any(...)` on the disclaimer exemption — one "
         "disclaimed mention must not excuse a bare one elsewhere in the same draft. "
-        "The missing-lean_deps FAIL (the strict side of the H4 divergence) is pinned",
+        "The missing-lean_deps FAIL (the strict side of the H4 divergence) is pinned. "
+        "QI-32 added the LEGACY leg (43 non-bundle drafts, previously covered only by "
+        "`paper_provenance`'s dead regex): 3 further mutations CAUGHT, plus one seeded "
+        "in a PRODUCTION draft, plus a zero-headroom assertion on the live ceiling",
     ),
     "theorem_name_embedded_citations": (
         "test_d5_prose_lean_refs.py",

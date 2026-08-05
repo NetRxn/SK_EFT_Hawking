@@ -1388,6 +1388,32 @@ TOTAL_THEOREMS = ARISTOTLE_PROVED_COUNT
 #: raising it needs a stated reason in the same commit.**
 ARISTOTLE_REGISTRY_UNRESOLVED_CEILING = 14
 
+#: Unresolved `\texttt{}` Lean references in the 43 LEGACY per-paper drafts.
+#: Frozen 2026-08-05 (audit QI-32).
+#:
+#: `prose_theorem_reference_coverage` scoped itself to the 21 publication bundles by
+#: a documented decision — legacy drafts are historical snapshots superseded by the
+#: bundles. The leg that nominally covered them lived in `paper_provenance`, whose
+#: `\texttt{}` regex could not cross the `\_` LaTeX escape and so matched **zero**
+#: references for five months. Removing a dead guard and leaving 43 drafts at zero
+#: coverage would be a walk-back, so the population is measured instead: **774
+#: candidate references across the 43 drafts, of which 81 resolve to nothing**,
+#: concentrated in 23 drafts (paper44_riemannian_connection alone carries 23).
+#:
+#: The 81 are a MIXED population and this number must not be quoted as 81 drifted
+#: theorem names. The check itemises them; inspection shows some are genuine drift
+#: (`fdr_noise_bound_rar`, `cc_reproduced`) and some are Mathlib lemmas the resolver
+#: cannot recognise unqualified (`pow_pos`, `abs_neg`, `map_sub`) — a resolver gap
+#: the bundle leg never exposed because bundle prose qualifies its Mathlib names.
+#: Both classes ratchet the same way, which is why the ceiling is on the total.
+#:
+#: A RATCHET, not advisory (cf. `ARISTOTLE_REGISTRY_UNRESOLVED_CEILING`,
+#: `VACUOUS_STATEMENT_BASELINE`, `COUNT_LITERAL_CEILING`). Existing debt is frozen
+#: and itemised; a NEW unresolved reference in a legacy draft FAILS. **Lower this as
+#: drafts are repaired; raising it needs a stated reason in the same commit.**
+#: Repairing the 81 is paper substance, scoped to ADR-010, not to ADR-009.
+LEGACY_DRAFT_UNRESOLVED_REF_CEILING = 81
+
 # ═══════════════════════════════════════════════════════════════════════
 # Axiom metadata — historical record (all axioms now removed)
 # ═══════════════════════════════════════════════════════════════════════

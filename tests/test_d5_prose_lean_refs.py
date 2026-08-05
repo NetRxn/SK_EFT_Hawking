@@ -128,6 +128,82 @@ class TestProseTheoremReferenceCoverage:
         assert any(d.name.startswith("waived:I1:") and d.warning for d in r.details), (
             "a documented waiver was applied SILENTLY — every use must surface")
 
+    def test_a_LEGACY_draft_reference_is_measured_not_ignored(
+            self, tmp_path, monkeypatch):
+        """The QI-32 leg. 43 non-bundle drafts had NO Lean-name coverage: the leg that
+        nominally covered them lived in `paper_provenance` and its regex could not
+        cross the `\\_` LaTeX escape, so it matched zero references for five months.
+
+        Note the fixture writes `\\texttt{ghost\\_theorem}` — the form `pdflatex`
+        actually produces. The deleted leg's fixtures wrote the unescaped form, which
+        is why they were green over a dead guard."""
+        _index(monkeypatch)
+        root = _bundle(tmp_path, monkeypatch, "D1", "no references here.")
+        (root / "paper9_legacy").mkdir(parents=True)
+        (root / "paper9_legacy" / "paper_draft.tex").write_text(
+            r"We rely on \texttt{ghost\_theorem} for the bound.")
+        monkeypatch.setattr(plr, "_resolve_prose_ref", lambda t, i: "ABSENT")
+        monkeypatch.setattr(plr, "_prose_occurrence_disclaimed", lambda s, o: False)
+        r = plr.check_prose_theorem_reference_coverage()
+        assert any(d.name == "legacy:paper9_legacy" for d in r.details), (
+            "a legacy draft's unresolved reference was not measured at all — the "
+            "`\\_`-escaped form is the only form the corpus contains (QI-32)")
+
+    def test_the_legacy_ratchet_fails_above_the_ceiling(self, tmp_path, monkeypatch):
+        """FIRES ON THE SEEDED DEFECT. Inherited legacy debt is frozen, not tolerated:
+        one NEW unresolved reference past the ceiling must turn the check red. Without
+        this the leg is a report, and a report blocks nothing."""
+        _index(monkeypatch)
+        root = _bundle(tmp_path, monkeypatch, "D1", "no references here.")
+        (root / "paper9_legacy").mkdir(parents=True)
+        (root / "paper9_legacy" / "paper_draft.tex").write_text(
+            r"We rely on \texttt{ghost\_theorem} for the bound.")
+        monkeypatch.setattr(plr, "_resolve_prose_ref", lambda t, i: "ABSENT")
+        monkeypatch.setattr(plr, "_prose_occurrence_disclaimed", lambda s, o: False)
+        from src.core import constants
+        monkeypatch.setattr(constants, "LEGACY_DRAFT_UNRESOLVED_REF_CEILING", 0)
+        r = plr.check_prose_theorem_reference_coverage()
+        assert r.passed is False, (
+            "1 unresolved legacy reference against a ceiling of 0 did not fail — "
+            "the ratchet does not propagate to the verdict")
+        assert any(d.name == "legacy_ratchet" and not d.passed for d in r.details)
+
+    def test_the_legacy_ratchet_is_SILENT_at_the_ceiling(self, tmp_path, monkeypatch):
+        """The other direction, and the one that keeps the gate switched on. Inherited
+        debt sitting exactly AT the frozen ceiling must not fail — repairing the 81 is
+        ADR-010 scope, and a gate that fires on work nobody has been asked to do gets
+        turned off."""
+        _index(monkeypatch)
+        root = _bundle(tmp_path, monkeypatch, "D1", "no references here.")
+        (root / "paper9_legacy").mkdir(parents=True)
+        (root / "paper9_legacy" / "paper_draft.tex").write_text(
+            r"We rely on \texttt{ghost\_theorem} for the bound.")
+        monkeypatch.setattr(plr, "_resolve_prose_ref", lambda t, i: "ABSENT")
+        monkeypatch.setattr(plr, "_prose_occurrence_disclaimed", lambda s, o: False)
+        from src.core import constants
+        monkeypatch.setattr(constants, "LEGACY_DRAFT_UNRESOLVED_REF_CEILING", 1)
+        r = plr.check_prose_theorem_reference_coverage()
+        assert r.passed is True, [(d.name, d.message) for d in r.details if not d.passed]
+
+    def test_the_live_legacy_ceiling_has_ZERO_headroom(self):
+        """The ratchet's whole value is that it is measured AT the corpus, not above
+        it. A ceiling with slack admits new debt silently — the failure mode
+        `recurrence_reopens_closures` demonstrated three times, where a constant was
+        set beyond what the data could reach and the guard could never fire.
+
+        Runs against the REAL corpus, not a fixture: this is the assertion that would
+        catch the ceiling being raised to buy a green run."""
+        from src.core.constants import LEGACY_DRAFT_UNRESOLVED_REF_CEILING as ceil
+        r = plr.check_prose_theorem_reference_coverage()
+        summary = next(d for d in r.details if d.name == "legacy_ratchet")
+        import re as _re
+        m = _re.search(r"(\d+) unresolved", summary.message or "")
+        assert m, f"legacy_ratchet message shape changed: {summary.message!r}"
+        assert int(m.group(1)) == ceil, (
+            f"the live corpus carries {m.group(1)} unresolved legacy references but "
+            f"the ceiling is {ceil}. If the corpus improved, LOWER the ceiling in the "
+            f"same commit — headroom is how a ratchet stops ratcheting.")
+
     def test_a_missing_lean_deps_FAILS(self, tmp_path, monkeypatch):
         """⚠️ The H4 divergence, from the STRICT side: absence is FAIL here and PASS
         in the four substrate checks. ADR-009 §Deferred item 4 DECLINED unifying them;

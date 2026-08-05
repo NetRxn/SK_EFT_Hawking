@@ -515,19 +515,83 @@ def check_prose_theorem_reference_coverage() -> CheckResult:
                 f"lean/lean_deps.json (no disclaimer context; Class-TN drift)",
             ))
 
+    # ── LEGACY LEG (added 2026-08-05, audit finding QI-32) ──────────────────
+    # The 43 non-bundle drafts. `paper_provenance` nominally covered these; its
+    # `\texttt{}` regex could not cross the `\_` LaTeX escape, so it matched ZERO
+    # references from 2026-03-26 onward while reporting "N verified". Deleting that
+    # leg and leaving 43 drafts uncovered would be a walk-back, so the population is
+    # measured here instead, with the SAME extractor and resolver the bundle leg
+    # uses — one owner for the question.
+    #
+    # RATCHETED, not per-item failing: these are historical snapshots superseded by
+    # the bundles (the scope decision in this docstring stands), and turning 81
+    # inherited references red would fire the gate on work nobody is doing. Repairing
+    # them is paper substance → ADR-010. What is NOT tolerated is a new one.
+    legacy_fail = 0
+    legacy_cand = 0
+    legacy_drafts = 0
+    legacy_by_draft: dict = {}
+    for tex in _H.all_paper_drafts():
+        name = tex.parent.name
+        if name in set(BUNDLE_CODES):
+            continue
+        legacy_drafts += 1
+        source = tex.read_text()
+        by_token = {}
+        for tok, off in _extract_prose_lean_candidates(source):
+            by_token.setdefault(tok, []).append(off)
+        legacy_cand += len(by_token)
+        for tok, offsets in sorted(by_token.items()):
+            if tok in _PROSE_REF_ALLOWLIST:
+                continue
+            verdict = _resolve_prose_ref(tok, index)
+            if verdict in ("OK", "MATHLIB", "PRIVATE", "PHYSLIB", "DRIFTED"):
+                continue
+            if all(_prose_occurrence_disclaimed(source, off) for off in offsets):
+                continue
+            legacy_fail += 1
+            legacy_by_draft.setdefault(name, []).append(tok)
+
+    from src.core.constants import LEGACY_DRAFT_UNRESOLVED_REF_CEILING as _CEIL
+    legacy_over = legacy_fail > _CEIL
+    if legacy_over:
+        details.append(Detail(
+            "legacy_ratchet", False,
+            f"{legacy_fail} unresolved reference(s) across {legacy_drafts} legacy "
+            f"drafts exceeds the frozen ceiling of {_CEIL}. A NEW unresolved "
+            f"\\texttt{{}} Lean reference was added to a legacy draft. Fix it, or "
+            f"raise LEGACY_DRAFT_UNRESOLVED_REF_CEILING in src/core/constants.py "
+            f"with a stated reason in the same commit."))
+    else:
+        details.append(Detail(
+            "legacy_ratchet", True,
+            f"{legacy_drafts} legacy drafts / {legacy_cand} candidate references — "
+            f"{legacy_fail} unresolved, at or under the frozen ceiling {_CEIL} "
+            f"(inherited debt, itemised below; repair is ADR-010 scope)",
+            warning=legacy_fail > 0))
+    for dname, toks in sorted(legacy_by_draft.items(),
+                              key=lambda kv: (-len(kv[1]), kv[0]))[:12]:
+        details.append(Detail(
+            f"legacy:{dname}", not legacy_over,
+            f"{len(toks)} unresolved: {sorted(toks)[:6]}"
+            + (f" (+{len(toks) - 6} more)" if len(toks) > 6 else ""),
+            warning=not legacy_over))
+
     details.insert(0, Detail(
         "summary",
-        n_fail == 0,
+        n_fail == 0 and not legacy_over,
         f"{n_bundles} bundle drafts scanned / {n_candidates} candidate "
         f"Lean references — {n_fail} unresolved FAIL(s) / {n_drift} "
-        f"drifted advisory / {n_waived} waived (documented)",
+        f"drifted advisory / {n_waived} waived (documented); plus "
+        f"{legacy_drafts} legacy drafts / {legacy_cand} candidates / "
+        f"{legacy_fail} unresolved vs ceiling {_CEIL}",
     ))
     if n_fail == 0 and n_drift == 0 and n_waived == 0:
         details.append(Detail(
             "all_resolved", True,
             "Every bundle-draft Lean reference resolves against lean_deps.json",
         ))
-    return CheckResult(passed=(n_fail == 0), details=details)
+    return CheckResult(passed=(n_fail == 0 and not legacy_over), details=details)
 
 
 # ═══════════════════════════════════════════════════════════════════════
