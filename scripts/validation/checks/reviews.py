@@ -261,7 +261,7 @@ def check_review_severity_declared() -> CheckResult:
     """
     _CUTOFF = "2026-08-01"   # documents dated on/after this must declare severity
 
-    reviews_dir = _H.PROJECT_ROOT / "papers" / "AutomatedReviews"
+    reviews_dir = _H.PAPERS_DIR / "AutomatedReviews"   # one owner (audit QI-11)
     if not reviews_dir.is_dir():
         return CheckResult(passed=True, details=[
             Detail("scope", True, "no review directory", warning=True)])
@@ -375,7 +375,7 @@ def check_review_docs_mint_findings() -> CheckResult:
         if rf:
             minted[rf] = minted.get(rf, 0) + 1
 
-    reviews_dir = _H.PROJECT_ROOT / "papers" / "AutomatedReviews"
+    reviews_dir = _H.PAPERS_DIR / "AutomatedReviews"   # one owner (audit QI-11)
     details: list[Detail] = []
     empty = 0
     checked = 0

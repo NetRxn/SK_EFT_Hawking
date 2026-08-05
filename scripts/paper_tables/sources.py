@@ -445,28 +445,48 @@ def validation_checks() -> list[dict]:
     Returns rows with: number, name, description.
     """
     import ast as _ast
-    validate_py = PROJECT_ROOT / "scripts" / "validate.py"
-    if not validate_py.exists():
+
+    # ⚠️ SOURCES ARE THE WHOLE SUITE, NOT `validate.py` (fixed 2026-08-04).
+    # This read `scripts/validate.py` alone. ADR-009 Phase 2 moved all 59 check
+    # bodies into `scripts/validation/checks/*.py`, so from commit `c3456a23` this
+    # returned **[]** and Paper 15's Table 2 shipped as an EMPTY TABULAR — header
+    # rules and no rows — while `paper_draft.tex:136` still `\input`s it.
+    #
+    # `tables_fresh` regenerated the file and PASSED throughout, because it compares
+    # MTIMES and never content: a generator whose source set silently emptied looks
+    # exactly like a generator with nothing to do.
+    #
+    # This is the ADR's own thesis turned on the ADR — *a measurement is scoped by a
+    # predicate, and fixing the thing the predicate keyed on voids the measurement*
+    # (D2 item 8's correction). `tests/test_inventory_index_autogen.py` widened the
+    # IDENTICAL scan two commits earlier and this consumer was not swept.
+    sources = [PROJECT_ROOT / "scripts" / "validate.py"]
+    sources += sorted((PROJECT_ROOT / "scripts" / "validation").rglob("*.py"))
+    sources = [p for p in sources if p.exists()]
+    if not sources:
         return []
 
     # AST-based extraction: robust to multi-line decorators, implicit
     # string concatenation in descriptions, and trailing commas — the
     # earlier single-string-literal regex silently dropped 4 of the
     # registered checks (found 2026-06-10 during the I1 methodology sync).
-    tree = _ast.parse(validate_py.read_text())
-    found: list[tuple[int, str, str]] = []
-    for node in _ast.walk(tree):
-        if not isinstance(node, (_ast.FunctionDef, _ast.AsyncFunctionDef)):
-            continue
-        for dec in node.decorator_list:
-            if (isinstance(dec, _ast.Call)
-                    and isinstance(dec.func, _ast.Name)
-                    and dec.func.id == 'register_check'
-                    and len(dec.args) >= 2
-                    and isinstance(dec.args[0], _ast.Constant)
-                    and isinstance(dec.args[1], _ast.Constant)):
-                found.append((dec.lineno, str(dec.args[0].value), str(dec.args[1].value)))
+    found: list[tuple[str, int, str, str]] = []
+    for src in sources:
+        tree = _ast.parse(src.read_text())
+        for node in _ast.walk(tree):
+            if not isinstance(node, (_ast.FunctionDef, _ast.AsyncFunctionDef)):
+                continue
+            for dec in node.decorator_list:
+                if (isinstance(dec, _ast.Call)
+                        and isinstance(dec.func, _ast.Name)
+                        and dec.func.id == 'register_check'
+                        and len(dec.args) >= 2
+                        and isinstance(dec.args[0], _ast.Constant)
+                        and isinstance(dec.args[1], _ast.Constant)):
+                    found.append((src.name, dec.lineno,
+                                  str(dec.args[0].value), str(dec.args[1].value)))
     found.sort()
+    found = [(ln, name, desc) for _f, ln, name, desc in found]
     import re as _re
     rows = []
     for idx, (_, name, desc) in enumerate(found, start=1):

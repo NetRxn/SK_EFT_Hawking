@@ -49,8 +49,8 @@ from validation._registry import CheckResult, Detail, register_check
 
 _COUNTS_SOURCES = [
     _H.LEAN_DEPS_PATH,
-    _H.PROJECT_ROOT / "src" / "core" / "constants.py",
-    _H.PROJECT_ROOT / "src" / "core" / "visualizations.py",
+    _H.SRC_DIR / "core" / "constants.py",
+    _H.SRC_DIR / "core" / "visualizations.py",
 ]
 
 
@@ -153,10 +153,10 @@ def check_counts_fresh() -> CheckResult:
 # ═══════════════════════════════════════════════════════════════════════
 
 _TABLES_SOURCES = [
-    _H.PROJECT_ROOT / "src" / "core" / "formulas.py",
-    _H.PROJECT_ROOT / "src" / "core" / "constants.py",
-    _H.PROJECT_ROOT / "src" / "core" / "transonic_background.py",
-    _H.PROJECT_ROOT / "src" / "core" / "provenance.py",
+    _H.SRC_DIR / "core" / "formulas.py",
+    _H.SRC_DIR / "core" / "constants.py",
+    _H.SRC_DIR / "core" / "transonic_background.py",
+    _H.SRC_DIR / "core" / "provenance.py",
     _H.LEAN_DEPS_PATH,
     _H.PROJECT_ROOT / "docs" / "WAVE_EXECUTION_PIPELINE.md",
     _H.PROJECT_ROOT / "scripts" / "paper_tables" / "__init__.py",
@@ -239,7 +239,7 @@ def check_tables_fresh() -> CheckResult:
 # CHECK 15d: Cross-paper ClaimCluster freshness (Phase 5v Wave 10f)
 # ═══════════════════════════════════════════════════════════════════════
 
-CLAIM_CLUSTERS_PATH = _H.PROJECT_ROOT / "papers" / "claim_clusters.json"
+CLAIM_CLUSTERS_PATH = _H.PAPERS_DIR / "claim_clusters.json"
 
 
 def _claim_clusters_is_stale() -> tuple[bool, str]:

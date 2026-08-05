@@ -368,30 +368,113 @@ class TestBundleRegistryConsistency:
 
 
 class TestBundleFigureIntegrity:
-    """Figures must be legible at typeset size. Stage-9 round 3 found figures
-    printing at 2–3 pt against 10 pt body text while looking fine as PNGs; round 5
-    then found the checker had ZERO consumers repo-wide — honest but not binding."""
+    """Figures must be legible at typeset size. Stage-9 round 3 found figures printing
+    at 2–3 pt against 10 pt body text while looking fine as PNGs; round 5 then found
+    the checker had ZERO consumers repo-wide — honest but not binding.
+
+    ⚠️ **The first version of this class did not test that.** It patched
+    `bundle_figure_typeset_pt` and then pointed `PAPERS_DIR` at an empty tmp tree — so
+    every PNG was absent, the check took its `missing_png` branch and `continue`d, and
+    the patched function was never called. It asserted `passed is False` and passed,
+    for a reason unrelated to its name, while `if pt < FLOOR_PT:` had no coverage at
+    all. Found by review, 2026-08-04.
+
+    The fixture below builds a COMPLETE bundle — a real PNG on disk and a stub figure
+    function reachable through the derived spec roster — so the legibility branch is
+    actually reached. `_typeset_calls` proves it: a test that does not invoke the stub
+    is not testing the floor.
+    """
+
+    def _bundle(self, tmp_path, monkeypatch, *, pt, with_png=True):
+        """Build papers/D11/figures/<name>.png + a spec roster + a stub renderer."""
+        import src.core.visualizations as viz
+
+        calls = []
+
+        def _typeset(fig):
+            calls.append(fig)
+            return pt
+        monkeypatch.setattr(viz, "bundle_figure_typeset_pt", _typeset)
+
+        class _Fig:
+            def write_image(self, path, scale=1):
+                Path(path).write_bytes(b"\x89PNG-fresh")
+        monkeypatch.setattr(viz, "fig_d11_stub", lambda: _Fig(), raising=False)
+
+        # The check derives its roster from scripts/review_figures.py's FIGURE_REGISTRY,
+        # loading it BY PATH from _H.SCRIPT_DIR — so a stand-in there controls the specs
+        # without touching the real registry.
+        scripts = tmp_path / "scripts"
+        scripts.mkdir(parents=True, exist_ok=True)
+        (scripts / "review_figures.py").write_text(
+            "from types import SimpleNamespace\n"
+            "FIGURE_REGISTRY = [SimpleNamespace(name='d11_stub', function='fig_d11_stub')]\n")
+        monkeypatch.setattr(_H, "SCRIPT_DIR", scripts)
+
+        papers = tmp_path / "papers"
+        figs = papers / "D11" / "figures"
+        figs.mkdir(parents=True, exist_ok=True)
+        if with_png:
+            (figs / "d11_stub.png").write_bytes(b"\x89PNG-shipped")
+        monkeypatch.setattr(_H, "PAPERS_DIR", papers)
+        monkeypatch.setattr(_H, "PROJECT_ROOT", tmp_path)
+        return calls
 
     def test_an_illegible_figure_fails(self, tmp_path, monkeypatch):
-        """FIRES ON THE SEEDED DEFECT."""
-        import src.core.visualizations as viz
-        monkeypatch.setattr(viz, "bundle_figure_typeset_pt", lambda fig: 3.0)
-        monkeypatch.setattr(bru, "_H", _H)
-        papers = tmp_path / "papers"
-        monkeypatch.setattr(_H, "PAPERS_DIR", papers)
+        """FIRES ON THE SEEDED DEFECT — 3 pt against a 10 pt body, the Stage-9 round-3
+        condition. This is the leg that gives `if pt < FLOOR_PT:` its coverage."""
+        calls = self._bundle(tmp_path, monkeypatch, pt=3.0)
         r = bru.check_bundle_figure_integrity()
-        # Every PNG is absent under tmp_path, so the check fails on missing artefacts —
-        # which is itself the right answer, and is asserted separately below.
-        assert r.passed is False
+        assert calls, (
+            "bundle_figure_typeset_pt was never called — the check short-circuited "
+            "before the legibility branch, so this test is not testing the floor")
+        assert r.passed is False, "a 3pt figure passed the legibility floor"
+        assert any(d.name.startswith("illegible:") for d in r.details), \
+            [d.name for d in r.details]
+
+    def test_a_legible_figure_passes(self, tmp_path, monkeypatch):
+        """SILENT ON CORRECT DATA — and the other side of the floor, so the comparison
+        is pinned by BEHAVIOUR rather than by asserting the constant's value."""
+        calls = self._bundle(tmp_path, monkeypatch, pt=9.0)
+        r = bru.check_bundle_figure_integrity()
+        assert calls, "the legibility branch was not reached"
+        assert r.passed is True, [(d.name, d.message) for d in r.details if not d.passed]
+        assert any(d.name.startswith("legible:") for d in r.details)
+        assert not any(d.name.startswith("illegible:") for d in r.details)
+
+    def test_the_floor_sits_between_those_two_values(self, tmp_path, monkeypatch):
+        """Replaces an AST assertion that `FLOOR_PT == 8.0`, which was a pure
+        change-detector: raising the floor to 9 pt is an IMPROVEMENT and would have
+        broken it while catching no defect.
+
+        The property that actually matters is that the floor lies in the band where
+        3 pt fails and 9 pt passes — which survives a deliberate tightening to 8.5,
+        and fails if someone quietly drops it to 2.
+        """
+        assert self._bundle(tmp_path, monkeypatch, pt=3.0) is not None
+        assert bru.check_bundle_figure_integrity().passed is False
+        monkeypatch.undo()
+        self._bundle(tmp_path, monkeypatch, pt=9.0)
+        assert bru.check_bundle_figure_integrity().passed is True
 
     def test_a_missing_shipped_png_fails(self, tmp_path, monkeypatch):
         """A bundle figure that does not exist on disk cannot have been reviewed, and
         the bundle ships it. Skipping would make absence indistinguishable from
-        agreement — the module's recurring defect."""
-        monkeypatch.setattr(_H, "PAPERS_DIR", tmp_path / "papers")
+        agreement — this module's recurring defect."""
+        self._bundle(tmp_path, monkeypatch, pt=9.0, with_png=False)
         r = bru.check_bundle_figure_integrity()
         assert r.passed is False
         assert any(d.name.startswith("missing_png:") for d in r.details)
+
+    def test_a_missing_render_function_fails(self, tmp_path, monkeypatch):
+        """A spec naming a function `visualizations.py` does not export is a broken
+        roster, not a clean run."""
+        import src.core.visualizations as viz
+        self._bundle(tmp_path, monkeypatch, pt=9.0)
+        monkeypatch.delattr(viz, "fig_d11_stub")
+        r = bru.check_bundle_figure_integrity()
+        assert r.passed is False
+        assert any(d.name.startswith("missing_fn:") for d in r.details)
 
     def test_it_skips_cleanly_when_the_helper_is_absent(self, monkeypatch):
         """Optional-toolchain absence is a deliberate PASS (ADR-009 item 4) — but only
@@ -401,18 +484,3 @@ class TestBundleFigureIntegrity:
         r = bru.check_bundle_figure_integrity()
         assert r.passed is True
         assert any(d.name == "skipped" and d.warning for d in r.details)
-
-    def test_the_legibility_floor_is_8pt(self, tmp_path, monkeypatch):
-        """Pinned so the floor cannot be quietly lowered to make a figure pass.
-        8 pt against 10 pt body text is the stated standard."""
-        import ast as _ast
-        src = Path(bru.__file__).read_text()
-        fn = next(n for n in _ast.walk(_ast.parse(src))
-                  if isinstance(n, _ast.FunctionDef)
-                  and n.name == "check_bundle_figure_integrity")
-        floors = [n.value for n in _ast.walk(fn)
-                  if isinstance(n, _ast.Assign)
-                  and any(getattr(t, "id", None) == "FLOOR_PT" for t in n.targets)]
-        assert floors and floors[0].value == 8.0, (
-            f"the legibility floor moved to {floors[0].value if floors else '?'} — "
-            f"8.0 pt against 10 pt body text is the standard Stage-9 round 3 set")

@@ -884,7 +884,13 @@ def check_bundle_registry_consistency() -> CheckResult:
     # ── Leg C: no re-hardcoded roster literals under scripts/ ────────────
     offenders: List[str] = []
     n_scanned = 0
-    for py in sorted(_H.SCRIPT_DIR.glob("*.py")):
+    # ⚠️ rglob (fixed 2026-08-04). `glob("*.py")` stopped at `scripts/`, so the 12
+    # check modules ADR-009 Phase 2 created under `scripts/validation/checks/` were
+    # OUTSIDE the scan — a re-hardcoded roster written in a check module was invisible
+    # to the very gate whose purpose is stopping the roster being hardcoded again.
+    # Same class as QI-01 and as the `paper_tables` consumer: a scan scoped to a
+    # directory the code has since moved out of.
+    for py in sorted(_H.SCRIPT_DIR.rglob("*.py")):
         if py.name in _ROSTER_LITERAL_ALLOWLIST:
             continue
         try:

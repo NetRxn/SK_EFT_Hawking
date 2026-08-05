@@ -422,8 +422,13 @@ class TestGraphTestNodeCoverage:
         sys.path.insert(0, str(SK_ROOT / "scripts"))
         from build_graph import extract_python_test_nodes
 
+        # ⚠️ rglob, matching the extractor (fixed 2026-08-04). Both sides used the
+        # SAME non-recursive glob, so the equality held VACUOUSLY: 12 files and 30
+        # `def test_*` under `tests/e2e/` were absent from both the count and the
+        # nodes, and this assertion agreed that nothing was missing. A count test
+        # that shares its scope bug with the code it checks confirms the bug.
         defs = 0
-        for f in sorted((SK_ROOT / "tests").glob("test_*.py")):
+        for f in sorted((SK_ROOT / "tests").rglob("test_*.py")):
             try:
                 tree = ast.parse(f.read_text())
             except SyntaxError:

@@ -166,3 +166,47 @@ class TestValidateCheckRegistered:
         assert "inventory_index_autogen_fresh" in names, (
             "check not AST-parseable as a two-string register_check decorator "
             f"across {len(sources)} suite source file(s)")
+
+
+class TestValidationChecksTableIsNotEmpty:
+    """`paper_tables.sources.validation_checks()` feeds Paper 15's Table 2.
+
+    ⚠️ **It shipped EMPTY for 40+ commits.** It AST-parsed `scripts/validate.py`
+    alone; ADR-009 Phase 2 moved all 59 check bodies into
+    `scripts/validation/checks/*.py`, so from `c3456a23` it returned `[]` and
+    `papers/paper15_methodology/tables/table2_checks.tex` rendered as a tabular with
+    rules and no rows — while the paper still `\input`s it.
+
+    Nothing caught it: `tables_fresh` compares MTIMES, never content, so a generator
+    whose source set silently emptied is indistinguishable from one with nothing to do.
+
+    The assertion is tied to the LIVE registry rather than to a frozen number, so it
+    tracks checks being added or removed and only fails when the generator and the
+    suite disagree — which is the actual invariant.
+    """
+
+    def test_the_row_count_equals_the_registered_check_count(self):
+        import sys
+        from pathlib import Path
+        root = Path(__file__).resolve().parent.parent
+        sys.path.insert(0, str(root / "scripts"))
+        from paper_tables.sources import validation_checks
+        import validate
+
+        rows = validation_checks()
+        assert len(rows) == len(validate._CHECKS), (
+            f"validation_checks() returned {len(rows)} rows for "
+            f"{len(validate._CHECKS)} registered checks. Paper 15 Table 2 is "
+            f"generated from this; a mismatch means the generator's source set no "
+            f"longer covers where the checks live (it read only scripts/validate.py "
+            f"until 2026-08-04, and shipped an EMPTY table).")
+
+    def test_every_row_carries_a_name_and_a_description(self):
+        import sys
+        from pathlib import Path
+        root = Path(__file__).resolve().parent.parent
+        sys.path.insert(0, str(root / "scripts"))
+        from paper_tables.sources import validation_checks
+        for r in validation_checks():
+            assert r.get("name", "").strip(), r
+            assert r.get("description", "").strip(), r

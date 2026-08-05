@@ -208,7 +208,7 @@ def _load_lean_name_index() -> dict:
             dotted_suffixes.add(".".join(segs[i:]))
 
     modules = set()
-    counts_path = _H.PROJECT_ROOT / "docs" / "counts.json"
+    counts_path = _H.COUNTS_JSON_PATH   # one owner (audit QI-11); was re-derived
     if counts_path.exists():
         try:
             modules = set(

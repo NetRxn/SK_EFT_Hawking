@@ -571,8 +571,42 @@ class TestVerifiedEntriesAreReal:
     """A MUTATION_VERIFIED entry must point at a test that exists and mentions the
     check. Without this, promoting a name out of the backlog costs nothing."""
 
-    def test_verified_entries_name_a_real_test(self):
+    @staticmethod
+    def _code_only(src: str) -> str:
+        """Source with DOCSTRINGS REMOVED, unparsed.
+
+        ⚠️ Why stripping them matters. This guard originally matched raw file text,
+        so an entry was satisfied by the check's name appearing in a module
+        docstring — and these files describe every check they cover in prose.
+        Measured 2026-08-04: **3 of 59 entries were satisfied by prose alone**, and
+        one of those (`axiom_count_prose_consistency`) turned out never to invoke its
+        registered check at all, only a pure core. Promoting a fictional entry cost
+        one line of prose; it now costs a call.
+        """
+        import ast
+
+        tree = ast.parse(src)
+        for node in ast.walk(tree):
+            body = getattr(node, "body", None)
+            if isinstance(body, list) and body and isinstance(body[0], ast.Expr) \
+                    and isinstance(body[0].value, ast.Constant) \
+                    and isinstance(body[0].value.value, str):
+                body.pop(0)
+        return ast.unparse(tree)
+
+    def test_verified_entries_name_a_test_that_calls_the_check(self):
+        """The seam guard: the named test must reference the check IN CODE.
+
+        The reference is resolved from the live registry (`spec.func.__name__`), not
+        guessed as `check_<name>` — several registered names differ from their
+        function (`theorems` → `check_theorem_count`, `identities` →
+        `check_formula_identities`, `formulas` → `check_formulas_to_theorems`), and a
+        guard that guessed would report those as fictional while they are covered.
+        """
         import re
+
+        import validate
+        func_of = {spec.name: spec.func.__name__ for spec in validate._CHECKS}
 
         broken = []
         for check, (test_file, _why) in sorted(MUTATION_VERIFIED.items()):
@@ -580,12 +614,18 @@ class TestVerifiedEntriesAreReal:
             if not path.is_file():
                 broken.append(f"{check}: {test_file} does not exist")
                 continue
-            if not re.search(rf"\b{re.escape(check)}\b", path.read_text()):
-                broken.append(f"{check}: {test_file} never mentions it")
+            code = self._code_only(path.read_text())
+            fn = func_of.get(check)
+            if not ((fn and re.search(rf"\b{re.escape(fn)}\b", code))
+                    or re.search(rf"\b{re.escape(check)}\b", code)):
+                broken.append(
+                    f"{check}: {test_file} never references it outside a docstring "
+                    f"(looked for `{fn}` and `{check}`)")
         assert not broken, (
             "MUTATION_VERIFIED entries that do not check out: " + "; ".join(broken)
-            + ". An entry here is a claim that a defect was seeded and the named test "
-              "failed; it must at minimum point at a test that exercises the check."
+            + ". An entry here claims a defect was seeded and the named test FAILED. "
+              "It must at minimum point at a test whose CODE exercises the check — a "
+              "mention in prose is not coverage."
         )
 
     def test_every_verified_entry_records_why(self):

@@ -646,7 +646,7 @@ def check_axiom_count_prose_consistency() -> CheckResult:
     across D5 + 10 legacy drafts (paper4/6/7/9/11/12/17/18/20/21/26),
     all fixed in the same commit that ships this check.
     """
-    counts_path = _H.PROJECT_ROOT / "docs" / "counts.json"
+    counts_path = _H.COUNTS_JSON_PATH   # one owner (audit QI-11); was re-derived
     if not counts_path.exists():
         return CheckResult(passed=False,
                            error=f"missing {counts_path}; run scripts/update_counts.py")

@@ -17,6 +17,7 @@ MUTATION-VERIFIED 2026-08-04 — 9 mutations, all CAUGHT, clean negative control
 """
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
 
@@ -204,3 +205,85 @@ class TestAxiomCountProseConsistency:
         text = "line one\n% a comment\nthe sole axiom is here\n"
         f = pp._axiom_prose_findings(text, 0)
         assert f and f[0]["line"] == 3, f"expected line 3, got {f[0]['line'] if f else None}"
+
+
+class TestAxiomCountProseConsistencyCheckBody:
+    """The registered CHECK, not just its pure core.
+
+    ⚠️ **Added after review, 2026-08-04.** The class above exercises
+    `_axiom_prose_findings` thoroughly — but nothing invoked
+    `check_axiom_count_prose_consistency` itself, so the check's own body was
+    untested: the `counts.json` read, the draft iteration, the fail/warn split, and
+    the verdict. `MUTATION_VERIFIED` nonetheless listed the check, and the seam guard
+    accepted it because the name appeared in a module docstring.
+
+    *Testing a pure core is not testing the check that calls it.* The core can be
+    perfect while the caller reads the wrong key, iterates the wrong files, or
+    discards the result — which is the exact defect class ADR-009 §Deferred item 3
+    found in `paper_latex_compiles` (it computed `all_pass` and returned `True`).
+    """
+
+    def _run(self, tmp_path, monkeypatch, *, drafts, axioms=0, counts=None):
+        docs = tmp_path / "docs"
+        docs.mkdir(parents=True, exist_ok=True)
+        (docs / "counts.json").write_text(
+            counts if counts is not None else json.dumps({"lean": {"axioms": axioms}}))
+        monkeypatch.setattr(_H, "COUNTS_JSON_PATH", docs / "counts.json")
+        monkeypatch.setattr(_H, "PAPERS_DIR", _papers(tmp_path, drafts))
+        return pp.check_axiom_count_prose_consistency()
+
+    def test_a_clean_corpus_passes(self, tmp_path, monkeypatch):
+        """SILENT ON CORRECT DATA."""
+        r = self._run(tmp_path, monkeypatch,
+                      drafts={"D1": "The construction assumes nothing unusual."})
+        assert r.passed is True, [(d.name, d.message) for d in r.details if not d.passed]
+        assert any(d.name == "all_consistent" for d in r.details)
+
+    def test_a_stale_single_axiom_claim_fails_the_CHECK(self, tmp_path, monkeypatch):
+        """FIRES ON THE SEEDED DEFECT — through the check, not the core. This is the
+        leg that proves the core's finding actually reaches the verdict."""
+        r = self._run(tmp_path, monkeypatch,
+                      drafts={"D1": "The theory rests on one true axiom."}, axioms=0)
+        assert r.passed is False, (
+            "the core reported a hard finding and the CHECK still passed — the "
+            "verdict is being discarded (the paper_latex_compiles defect shape)")
+        assert any(d.name.startswith("stale_axiom_claim:D1:") for d in r.details)
+
+    def test_an_advisory_mismatch_does_not_fail_the_check(self, tmp_path, monkeypatch):
+        """The fail/warn split lives in the CHECK, not the core — the core only
+        labels findings. A numeric plural mismatch must warn, never block."""
+        r = self._run(tmp_path, monkeypatch,
+                      drafts={"D1": "The construction uses 3 axioms."}, axioms=0)
+        assert r.passed is True
+        assert any(d.name.startswith("axiom_count_mismatch:") and d.warning
+                   for d in r.details)
+
+    def test_the_axiom_count_is_read_from_counts_json(self, tmp_path, monkeypatch):
+        """The same prose flips verdict with the COMPUTED count — which is what makes
+        this a comparison against truth rather than a literal scan (ADR-009 item 5's
+        reason for declining the merge with `count_literals`)."""
+        prose = {"D1": "The theory rests on one true axiom."}
+        assert self._run(tmp_path, monkeypatch, drafts=prose, axioms=0).passed is False
+        assert self._run(tmp_path, monkeypatch, drafts=prose, axioms=1).passed is True
+
+    def test_every_draft_is_scanned_not_just_the_first(self, tmp_path, monkeypatch):
+        """Iteration is the check's job. A loop that broke early would leave later
+        drafts unexamined while reporting a clean run."""
+        r = self._run(tmp_path, monkeypatch, drafts={
+            "D1": "Nothing to see.",
+            "D2": "The theory rests on one true axiom."}, axioms=0)
+        assert r.passed is False
+        assert any(d.name.startswith("stale_axiom_claim:D2:") for d in r.details)
+        assert "2 paper drafts" in next(d for d in r.details if d.name == "summary").message
+
+    def test_a_missing_counts_json_fails_rather_than_passes(self, tmp_path, monkeypatch):
+        """Cannot-measure is not success: with no computed count there is nothing to
+        compare prose against."""
+        monkeypatch.setattr(_H, "COUNTS_JSON_PATH", tmp_path / "absent.json")
+        monkeypatch.setattr(_H, "PAPERS_DIR", _papers(tmp_path, {"D1": "x"}))
+        r = pp.check_axiom_count_prose_consistency()
+        assert r.passed is False and "update_counts" in (r.error or "")
+
+    def test_an_unreadable_counts_json_fails(self, tmp_path, monkeypatch):
+        r = self._run(tmp_path, monkeypatch, drafts={"D1": "x"}, counts="{not json")
+        assert r.passed is False and "counts.json" in (r.error or "")

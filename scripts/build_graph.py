@@ -1461,7 +1461,10 @@ def extract_python_test_nodes() -> list[dict]:
     nodes = []
     seen_ids: set[str] = set()
     _TEST_MODULE_ALIASES.clear()
-    for test_file in sorted(tests_dir.glob("test_*.py")):
+    # ⚠️ rglob (fixed 2026-08-04). `glob` stopped at the top level, so 12 files /
+    # 30 `def test_*` under `tests/e2e/` minted NO PythonTest node and any VERIFIES
+    # coverage they carry was invisible to Gate 4. The QI-01 class, in Python.
+    for test_file in sorted(tests_dir.rglob("test_*.py")):
         try:
             source = test_file.read_text()
             tree = _ast.parse(source, filename=str(test_file))
@@ -1523,7 +1526,7 @@ def extract_python_test_nodes() -> list[dict]:
         kind_counts = _C(n['meta']['test_kind'] for n in nodes)
         logger.info("PythonTest extraction: %d tests across %d files (%s)",
                     len(nodes),
-                    len(list(tests_dir.glob("test_*.py"))),
+                    len(list(tests_dir.rglob("test_*.py"))),
                     ", ".join(f"{k}={v}" for k, v in kind_counts.most_common()))
     return nodes
 

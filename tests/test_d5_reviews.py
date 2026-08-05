@@ -68,6 +68,15 @@ def _reviews_tree(tmp_path: Path, docs: dict[str, str]) -> Path:
     return root
 
 
+def _patch_roots(monkeypatch, root):
+    """Both anchors. `reviews_dir` derives from `_H.PAPERS_DIR` (one owner, QI-11) while
+    the reported paths are relative to `_H.PROJECT_ROOT`, so a test patching only one
+    reads the REAL corpus through the other — the by-value hazard, one level out."""
+    monkeypatch.setattr(_H, "PROJECT_ROOT", root)
+    monkeypatch.setattr(_H, "PAPERS_DIR", root / "papers")
+    return root
+
+
 def _finding(fid: str, label: str, *, date: str, status: str, severity: str = "critical",
              bundle: str | None = "D11", review_file: str | None = None) -> dict:
     return {
@@ -212,7 +221,7 @@ class TestReviewSeverityDeclared:
 
     def test_a_missing_severity_line_fails(self, tmp_path, monkeypatch):
         """FIRES ON THE SEEDED DEFECT."""
-        monkeypatch.setattr(_H, "PROJECT_ROOT", _reviews_tree(
+        _patch_roots(monkeypatch, _reviews_tree(
             tmp_path, {f"{self.CUTOFF_DIR}/D11.md": self.UNDECLARED}))
         r = rv.check_review_severity_declared()
         assert r.passed is False, (
@@ -221,7 +230,7 @@ class TestReviewSeverityDeclared:
 
     def test_a_declared_severity_passes(self, tmp_path, monkeypatch):
         """SILENT ON CORRECT DATA."""
-        monkeypatch.setattr(_H, "PROJECT_ROOT", _reviews_tree(
+        _patch_roots(monkeypatch, _reviews_tree(
             tmp_path, {f"{self.CUTOFF_DIR}/D11.md": self.DECLARED}))
         r = rv.check_review_severity_declared()
         assert r.passed is True, [(d.name, d.message) for d in r.details if not d.passed]
@@ -229,12 +238,12 @@ class TestReviewSeverityDeclared:
     def test_documents_before_the_cutoff_keep_glyph_inference(self, tmp_path, monkeypatch):
         """~1400 findings predate the convention. The cutoff is the honest boundary;
         a blanket rule would be churn with no provenance value."""
-        monkeypatch.setattr(_H, "PROJECT_ROOT", _reviews_tree(
+        _patch_roots(monkeypatch, _reviews_tree(
             tmp_path, {f"{self.LEGACY_DIR}/D11.md": self.UNDECLARED}))
         assert rv.check_review_severity_declared().passed is True
 
     def test_a_document_with_no_findings_is_not_penalised(self, tmp_path, monkeypatch):
-        monkeypatch.setattr(_H, "PROJECT_ROOT", _reviews_tree(
+        _patch_roots(monkeypatch, _reviews_tree(
             tmp_path, {f"{self.CUTOFF_DIR}/notes.md": "# Notes\n\nprose only\n"}))
         r = rv.check_review_severity_declared()
         assert r.passed is True
@@ -255,7 +264,7 @@ class TestReviewDocsMintFindings:
     REL = "papers/AutomatedReviews/2026-08-15-stage13/D11.md"
 
     def _run(self, tmp_path, monkeypatch, docs, findings):
-        monkeypatch.setattr(_H, "PROJECT_ROOT", _reviews_tree(tmp_path, docs))
+        _patch_roots(monkeypatch, _reviews_tree(tmp_path, docs))
         monkeypatch.setattr(build_graph, "extract_review_finding_nodes", lambda: findings)
         return rv.check_review_docs_mint_findings()
 
@@ -290,7 +299,7 @@ class TestReviewDocsMintFindings:
     def test_a_failing_extractor_fails_rather_than_passes(self, tmp_path, monkeypatch):
         def _boom():
             raise RuntimeError("graph build failed")
-        monkeypatch.setattr(_H, "PROJECT_ROOT", _reviews_tree(tmp_path, {}))
+        _patch_roots(monkeypatch, _reviews_tree(tmp_path, {}))
         monkeypatch.setattr(build_graph, "extract_review_finding_nodes", _boom)
         r = rv.check_review_docs_mint_findings()
         assert r.passed is False
