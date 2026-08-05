@@ -94,6 +94,35 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
         "test_always_pass_dispositions.py",
         "same shape; now a ratchet on NUMERICAL_LITERAL_CEILING",
     ),
+    # ── Audit QI-27 W-D — the backlog, emptied module by module ──
+    # reviews.py: 22 tests / 8 mutations, all caught, clean negative control. Four of the
+    # eight mutate a FILTER rather than the verdict (the date rule, the same-bundle rule,
+    # the section-number tie-breaker, the PASS/RESOLVED exclusion) — a suite asserting
+    # only `passed is False` on one dirty fixture would have missed every one.
+    "recurrence_reopens_closures": (
+        "test_d5_reviews.py",
+        "4 mutations: the hit counter, the date rule, the same-bundle rule and the "
+        "section-number tie-breaker, each caught by a distinct leg. Synthetic findings "
+        "throughout — this check's threshold was mis-calibrated three times against the "
+        "live self-remediating corpus",
+    ),
+    "review_severity_declared": (
+        "test_d5_reviews.py",
+        "`n_sev < n_head` -> `n_sev < 0` caught; plus a pre-cutoff leg so the historical "
+        "glyph-inference boundary cannot be silently widened into a blanket rule",
+    ),
+    "review_docs_mint_findings": (
+        "test_d5_reviews.py",
+        "2 mutations: the zero-minted verdict, and `_carries_findings` forced True — the "
+        "latter is the content-scoping rule that two earlier scopings got wrong in "
+        "opposite directions",
+    ),
+    "accepted_findings_carry_rationale": (
+        "test_d5_reviews.py",
+        "`len(why) < MIN_CHARS` -> False caught; all three historical field spellings "
+        "(`evidence`/`rationale`/`note`) exercised, and the missing-ledger H1-silent site "
+        "pinned so converting it to FAIL updates this test and the baseline together",
+    ),
 }
 
 #: Checks with no both-directions test yet. **This list may only shrink.**
@@ -109,8 +138,7 @@ AWAITING_MUTATION_TEST: frozenset[str] = frozenset({
     "notebook_exec", "physical_bounds", "cross_path_consistency", "paper_provenance",
     "parameter_provenance", "counts_fresh", "tables_fresh", "claim_clusters_fresh",
     "graph_integrity", "atlas_integrity", "atlas_hypothesis_discipline",
-    "recurrence_reopens_closures", "review_severity_declared", "review_docs_mint_findings",
-    "accepted_findings_carry_rationale", "bundle_metadata_matches_graph",
+    "bundle_metadata_matches_graph",
     "notebook_stored_outputs_current", "readiness_verdicts_agree",
     "citation_primary_sources_present", "provenance_doi_in_registry", "bundle_consistency",
     "bundle_source_freshness", "bibitem_title_primary_source", "quantum_network",
@@ -121,7 +149,8 @@ AWAITING_MUTATION_TEST: frozenset[str] = frozenset({
 })
 
 #: The ratchet. Measured 2026-08-04. It may be LOWERED, never raised.
-AWAITING_CEILING = 54
+#: History: 54 (seeded) -> 50 (reviews.py).
+AWAITING_CEILING = 50
 
 
 def _registered() -> list[str]:
