@@ -219,7 +219,7 @@ def check_numerical_literals() -> CheckResult:
     to 64 and the target receded faster than it was approached.
     """
     if not _H.PAPERS_DIR.exists():
-        return CheckResult(passed=True, details=[
+        return CheckResult(passed=True, measured=False, details=[
             Detail("papers_dir", True, "papers/ not found; skipping", warning=True),
         ])
 
@@ -313,7 +313,7 @@ def check_count_literals() -> CheckResult:
     the promise today rather than deferring it again.
     """
     if not _H.PAPERS_DIR.exists():
-        return CheckResult(passed=True, details=[
+        return CheckResult(passed=True, measured=False, details=[
             Detail("papers_dir", True, "papers/ directory not found; skipping",
                    warning=True),
         ])
@@ -497,7 +497,7 @@ def check_paper_latex_compiles() -> CheckResult:
 
     pdflatex = shutil.which("pdflatex")
     if pdflatex is None:
-        return CheckResult(passed=True, details=[Detail(
+        return CheckResult(passed=True, measured=False, details=[Detail(
             "toolchain", True,
             "SKIPPED — pdflatex not on PATH (install a TeX distribution)")])
 
@@ -938,12 +938,12 @@ def check_paper_toolchain_pin_drift() -> CheckResult:
     try:
         live_ver, live_rev = _tp_live_pins()
     except Exception as exc:  # defensive: an advisory never breaks the suite
-        return CheckResult(passed=True, details=[
+        return CheckResult(passed=True, measured=False, details=[
             Detail("pins", True, f"SKIPPED — could not read live pins: {exc}",
                    warning=True)])
 
     if live_ver is None or live_rev is None:
-        return CheckResult(passed=True, details=[
+        return CheckResult(passed=True, measured=False, details=[
             Detail("pins", True,
                    "SKIPPED — lean-toolchain / lakefile.toml pin not parseable",
                    warning=True)])

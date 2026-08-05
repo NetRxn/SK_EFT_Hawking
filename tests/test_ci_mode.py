@@ -194,3 +194,46 @@ class TestCiIsNotStrict:
                             lambda r: called.append(r) or Path("x"))
         _run(["--ci"])
         assert not called, "--ci archived a report"
+
+
+class TestCommitGateCheckNamesAreReal:
+    """⚠️ PR-review pass 2, R1. `scripts/pre-commit-sync.sh:96` hardcodes three
+    check names and never validates them against the registry:
+
+        for c in formula_grounding placeholder_not_cited native_decide_regression
+
+    `run_check` maps an unknown name to **SKIP, which never blocks** (rc2 →
+    "could not run — skipping, not blocking"). So renaming any of the three
+    silently disarms the only gate that can hard-block `main`, and the commit
+    output says "skipping" rather than "unknown check".
+
+    `CI_SKIP` already has exactly this guard (`test_the_skipped_checks_are_REAL`).
+    The commit gate — which is strictly more load-bearing, being the sole
+    enforcing mechanical gate on `main` — did not.
+    """
+
+    def _gate_names(self):
+        import re
+        from pathlib import Path
+        sh = (Path(__file__).resolve().parent.parent
+              / "scripts" / "pre-commit-sync.sh").read_text()
+        m = re.search(r"^for c in ([A-Za-z0-9_ ]+); do", sh, re.MULTILINE)
+        assert m, ("could not find the check loop in pre-commit-sync.sh — if it "
+                   "was restructured, re-point this guard rather than deleting it")
+        return m.group(1).split()
+
+    def test_the_scan_finds_the_loop(self):
+        """Guard the seam: an empty name list makes the assertion below vacuous."""
+        names = self._gate_names()
+        assert len(names) >= 3, f"only found {names}"
+
+    def test_every_commit_gate_check_is_registered(self):
+        """FIRES ON A SEEDED DEFECT: rename any of the three in the registry (or
+        in the hook) and this fails — instead of the hook silently skipping."""
+        registered = {s.name for s in validate._CHECKS}
+        unknown = [n for n in self._gate_names() if n not in registered]
+        assert not unknown, (
+            f"pre-commit-sync.sh runs check name(s) that are NOT registered: "
+            f"{unknown}. `run_check` maps an unknown name to SKIP, which never "
+            f"blocks — so the only mechanical gate on `main` is silently disarmed "
+            f"for those checks.")

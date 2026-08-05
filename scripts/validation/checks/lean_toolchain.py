@@ -362,7 +362,7 @@ def check_lean_build() -> CheckResult:
     lake_bin = _resolve_lake()
     if not lake_bin:
         return CheckResult(
-            passed=True,
+            passed=True, measured=False,
             details=[Detail("lake", True,
                             "SKIPPED — lake not found. Set LAKE_PATH or install elan "
                             "(https://github.com/leanprover/elan)")],
@@ -377,7 +377,7 @@ def check_lean_build() -> CheckResult:
     )
     if not has_lakefile:
         return CheckResult(
-            passed=True,
+            passed=True, measured=False,
             details=[Detail("lakefile", True,
                             f"SKIPPED — no lakefile.{{lean,toml}} in {lean_root}")],
         )
@@ -626,7 +626,7 @@ def check_elaboration_knob_watchlist() -> CheckResult:
     # others — the by-value hazard H1/H5 exist to prevent, one level down.
     lean_dir = _H.LEAN_DIR
     if not lean_dir.exists():
-        return CheckResult(passed=True, details=[
+        return CheckResult(passed=True, measured=False, details=[
             Detail("lean_src", True, f"SKIPPED — {lean_dir} not found")])
 
     pat = re.compile(

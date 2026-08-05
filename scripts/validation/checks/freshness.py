@@ -763,7 +763,7 @@ def check_inventory_index_autogen_fresh() -> CheckResult:
     try:
         from update_inventory_index import compute_stale
     except ImportError as exc:
-        return CheckResult(passed=True, details=[
+        return CheckResult(passed=True, measured=False, details=[
             Detail("import", True,
                    f"SKIPPED — update_inventory_index not importable: {exc}",
                    warning=True)])
@@ -771,7 +771,7 @@ def check_inventory_index_autogen_fresh() -> CheckResult:
     try:
         stale, summary = compute_stale()
     except Exception as exc:  # defensive: never fail the suite on an advisory
-        return CheckResult(passed=True, details=[
+        return CheckResult(passed=True, measured=False, details=[
             Detail("compute", True,
                    f"SKIPPED — compute_stale raised: {exc}", warning=True)])
 

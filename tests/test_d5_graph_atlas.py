@@ -440,3 +440,62 @@ class TestAtlasHypothesisDiscipline:
             raise RuntimeError("bad")
         monkeypatch.setattr(atlas_view, "load_lean_deps_file", _boom)
         assert ga.check_atlas_hypothesis_discipline().passed is False
+
+
+class TestInferBundleFromTextIsActuallyTested:
+    """⚠️ PR-review pass 2, R2-MAJ3 — the sharpest coverage finding of the pass.
+
+    `_infer_bundle_from_text` appeared in `tests/` ONLY as a monkeypatch target
+    (`lambda t: t`), i.e. every test that touched it replaced it. R2 restored the
+    genuine historical regression verbatim — `D\\d{1,2}` narrowed back to `D[1-9]`,
+    the bug that made 'D12' match as 'D1' — and the full suite returned **5,482
+    passed, byte-identical to baseline.**
+
+    That bug was not hypothetical. Per this module's own comment block: with no
+    bundle resolved, the paper-key text matcher fired instead and minted **FALSE
+    `FLAGS` edges** — a D11 finding attributed to `paper18_doublon_gate`, a D12
+    finding to `paper3_` — and D12 rendered "Blockers 0" while carrying 36 open
+    findings.
+
+    So: 59 of 59 checks are protected against deletion, and the one regression
+    that actually happened was invisible. These tests close that.
+    """
+
+    def _infer(self, name):
+        return build_graph._infer_bundle_from_text(name)
+
+    def test_two_digit_bundles_do_not_truncate(self):
+        """FIRES ON THE HISTORICAL REGRESSION. Narrow the pattern to `D[1-9]` and
+        'D12' resolves to 'D1' — findings land on the wrong bundle."""
+        assert self._infer("D12.md") == "D12"
+        assert self._infer("D11_r2.md") == "D11"
+        assert self._infer("D10-figures.md") == "D10"
+
+    def test_single_digit_bundles_still_resolve(self):
+        """SILENT ON CORRECT DATA — the greedy fix must not break the common case."""
+        assert self._infer("D1.md") == "D1"
+        assert self._infer("D2_r1.md") == "D2"
+        assert self._infer("D9.md") == "D9"
+
+    def test_non_D_rosters_resolve(self):
+        for stem, want in [("F_r1.md", "F"), ("I1-figures.md", "I1"),
+                           ("L3.md", "L3"), ("E2_r1.md", "E2")]:
+            assert self._infer(stem) == want, stem
+
+    def test_a_code_outside_the_roster_is_REJECTED_not_invented(self):
+        """The roster check is what makes `\\d{1,2}` safe: a widened numeric
+        pattern must not be able to invent bundles."""
+        assert self._infer("D99.md") is None
+        assert self._infer("D0.md") is None
+
+    def test_a_legacy_paper_name_does_not_match(self):
+        """Older reviews are `paperN_slug.md` and must fall through to the
+        paper-key matcher — matching them here is how a finding gets attributed
+        to a bundle it has nothing to do with."""
+        assert self._infer("paper18_doublon_gate.md") is None
+        assert self._infer("phase6x_item_G.md") is None
+
+    def test_the_boundary_is_enforced(self):
+        """`(?=$|[-_.])` — 'D1abc' is not bundle D1."""
+        assert self._infer("D1abc.md") is None
+        assert self._infer("Ffoo.md") is None

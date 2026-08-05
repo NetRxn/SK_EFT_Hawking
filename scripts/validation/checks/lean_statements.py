@@ -306,7 +306,7 @@ def check_formula_grounding() -> CheckResult:
     # H4 DIVERGENCE, deliberately preserved (ADR-009 §Deferred item 4 — DECLINED). absence -> PASS (see the note at
     # tracked_hypothesis_ledger; the eight loaders disagree).
     if not formulas_path.exists() or not _H.lean_deps_present():
-        return CheckResult(passed=True, details=[Detail("inputs", True, "formulas.py / lean_deps.json absent")])
+        return CheckResult(passed=True, measured=False, details=[Detail("inputs", True, "formulas.py / lean_deps.json absent")])
 
     deps = _H.load_lean_deps()
     names, dotted, shorts, by_short, by_full = set(), set(), set(), {}, {}
@@ -462,7 +462,7 @@ def check_vacuous_statement_audit() -> CheckResult:
         BASELINE = frozenset()
     # H4 DIVERGENCE, deliberately preserved (ADR-009 §Deferred item 4 — DECLINED). absence -> PASS (loaders disagree).
     if not _H.lean_deps_present():
-        return CheckResult(passed=True, details=[Detail("inputs", True, "lean_deps.json absent")])
+        return CheckResult(passed=True, measured=False, details=[Detail("inputs", True, "lean_deps.json absent")])
 
     exempt = set(PLACEHOLDER_LEAN_NAMES.keys())
     for k, v in MODELING_ASSUMPTION_THEOREMS.items():
@@ -545,7 +545,7 @@ def check_nogo_substrate_integrity() -> CheckResult:
 
     # H4 DIVERGENCE, deliberately preserved (ADR-009 §Deferred item 4 — DECLINED). absence -> PASS (loaders disagree).
     if not _H.lean_deps_present():
-        return CheckResult(passed=True, details=[Detail("inputs", True, "lean_deps.json absent")])
+        return CheckResult(passed=True, measured=False, details=[Detail("inputs", True, "lean_deps.json absent")])
     by_name = {d.get("name", ""): d for d in _H.load_lean_deps()}
 
     def _kernel_pure(rec: dict) -> bool:

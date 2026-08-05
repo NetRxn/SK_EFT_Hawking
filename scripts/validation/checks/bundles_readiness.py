@@ -91,12 +91,12 @@ def check_bundle_figure_integrity() -> CheckResult:
     try:
         viz = importlib.import_module("src.core.visualizations")
     except Exception as exc:  # pragma: no cover - import guard
-        return CheckResult(passed=True, details=[Detail(
+        return CheckResult(passed=True, measured=False, details=[Detail(
             "skipped", True, f"visualizations import failed ({exc}) — skipped",
             warning=True)])
 
     if not hasattr(viz, "bundle_figure_typeset_pt"):
-        return CheckResult(passed=True, details=[Detail(
+        return CheckResult(passed=True, measured=False, details=[Detail(
             "skipped", True, "bundle_figure_typeset_pt absent — skipped",
             warning=True)])
 

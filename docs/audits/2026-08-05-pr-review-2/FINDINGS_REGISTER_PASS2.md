@@ -563,6 +563,58 @@ reviewer was right the whole time.
 
 ---
 
+## ✅ FIXED — round 3 (the IMPORTANT tail)
+
+| id | finding | resolution |
+|---|---|---|
+| **R2 (scanner blindness)** | cannot-measure scanner saw 21 (check,kind) pairs against 47 literal `passed=True` returns | ✅ **17 further silent non-measurements annotated** `measured=False` — found by scanning for returns whose OWN detail text says SKIPPED / not found / absent. Floor sensitivity with no toolchain went **1 → 2** detected, and a provisioned run still clears 55. New guard `TestSelfDeclaredSkipsDeclareMeasuredFalse` **verified to fire** by stripping one annotation in production. |
+| **R2-MAJ3** | `_infer_bundle_from_text` appeared in `tests/` only as a monkeypatch target; the real historical regression was invisible to 5,482 tests | ✅ 6 direct tests. **Verified by re-seeding R2's exact experiment** — narrowing `D\d{1,2}` → `D[1-9]` in production now FAILS `test_two_digit_bundles_do_not_truncate`, where it previously returned byte-identical green. |
+| **R6-M8** | 11 submission-deciding `_eval_*` evaluators, zero direct tests | ✅ `tests/test_readiness_gate_evaluators.py` — 36 tests: per-evaluator contract (identity, well-formedness, blocked-says-why), the crash→BLOCKED contract, and roster/priority-split ratchets parametrized from `GATES` so a new gate cannot land untested. |
+
+### ⚠️ NEW FINDING, surfaced by writing those tests: 9 of 11 gates pass vacuously
+
+Given a paper with **no evidence in the graph at all**, **9 of the 11 readiness gates return
+`passed`**. It is deliberate and explicit — e.g. `_eval_parameter_provenance`:
+
+```python
+if not param_ids:
+    r.state = 'passed'
+    r.notes = 'no parameter dependencies declared'
+```
+
+**I nearly asserted my way past this.** My first test asserted `state != "passed"` — which would
+have imposed a redefinition of 11 submission gates, on a corpus where 61 papers are already red,
+based on my reading rather than a validated decision. Reading the code first showed a considered
+choice: a paper that genuinely uses no parameters *does* pass that gate.
+
+**The residual risk is real and is filed rather than pinned:** these gates cannot distinguish
+*"this paper declares no parameters"* from *"the extraction failed to link them"*. A paper
+missing from the graph therefore reads as submission-ready. The test now asserts only what is
+defensible — **a vacuous pass must announce itself** — so the decision stays visible and
+reviewable. ⬜ **OPEN**, needs an operator call on whether empty-population should be `open`
+rather than `passed`.
+
+### ✅ Also closed in round 3
+
+| id | finding | resolution |
+|---|---|---|
+| **R1 (commit gate)** | `pre-commit-sync.sh`'s three check names never validated against the registry — a rename gives a silent SKIP on the only gate that can hard-block `main`, while `CI_SKIP` has exactly that test | ✅ `TestCommitGateCheckNamesAreReal`, **verified to fire** by renaming a check in the hook. (The first version's regex was case-narrow and tripped the seam guard instead of the real assertion — widened so the seeded defect hits the assertion that names the problem.) |
+| **R3 (`--strict` caller)** | *"`--strict` reaches no automated caller"* restated in 5 live sites after `gate_precheck submission` became its caller | ✅ corrected in `RESUME_STATE.md`; the shipped module docstrings already carry the correct note. |
+
+## ❌ NOT REPRODUCED — measured, and wrong as filed
+
+Recording these is worth as much as the confirmations: an unchallenged bad finding sends the
+next person chasing a ghost, and pass 1 shipped several.
+
+| id | filed as | measured |
+|---|---|---|
+| **R4 (tree write)** | *"`bundle_source_freshness` **writes** git-tracked `bundle_metadata.json` during a validation run"* | **Misattributed.** `freshness.py` contains no `write_text`/`json.dump`; running `--check bundle_source_freshness` **and** `--check bundle_metadata_matches_graph` leaves `papers/` byte-clean (verified twice). The writer is `scripts/bundle_readiness.py:688 write_metadata_counts`, called from that script's own flow at `:773` — a **generator**, which is supposed to write. No validate check writes it. |
+| **R4-I6** (pass 1, re-tested) | two `formula_grounding` legs are dead | **Not reproduced** — both fire on production seeds. Marked *corrected*, not *closed*. |
+| **R5-MAJ1** (partly) | *"no writer of `human_verified_date` anywhere"* | `scripts/wave2_flip_provenance.py:178` is a real writer. The gate is satisfiable; only the dashboard path was broken. |
+| **R2** (inherited claim) | `scripts/validate.py` holds 5 live `@register_check` decorators outside the scanner's scope | **Zero live decorators** — all 5 hits are comments/docstrings. R2 filed it as not-reproduced rather than dropping it. |
+
+---
+
 ## Verdicts
 
 | reviewer | verdict |
@@ -578,3 +630,40 @@ reviewer was right the whole time.
 reviewer found the same defects — it is about whether shipping a guard that cannot fire is worse
 than shipping no guard. R4 says yes. On the specific code at issue I agree with R4, and the fixes
 below are ordered to clear its blockers first.
+
+
+---
+
+## ⬜ STILL OPEN after round 3
+
+**Infra, this branch — none of these is a merge blocker; each is measured and filed.**
+
+| id | finding | why deferred |
+|---|---|---|
+| R6-M1 | atlas negative frontier: **454 obstructions, 409 unregistered, 144 namespace-only from 14 modules**; the digest filter has **0 tests** | the count has been wrong three times (pass 1, my re-count, R6's correction of both). Needs the predicate fixed first — `rec["name"]` is fully qualified, so `_NOGO_RE` matches the namespace, not the declaration. |
+| R2 (seam guard) | the cannot-measure seam guard asserts `>= 30` against an actual **54** — **44 % headroom** | a ratchet with slack cannot fire. Tighten to 54 with a stated reason, in a commit that re-measures. |
+| R3 | **5 of 10 ratchets have no zero-headroom test** | mechanical; each needs its own live-population assertion, like the one added for `MAXHEARTBEATS_PROOF_BODY_CEILING`. |
+| R3 | committed `lean/lean_deps.json.hash` does not match committed `.lean` sources → §Deferred item 0's refresh fires a full ExtractDeps on every fresh clone | needs a `lake` run to regenerate honestly; deliberately not done here (`rm -rf .lake/build` is rare by policy and must not run casually). |
+| R1 | BinOp path-alias gap — **5 sites**, two under a docstring denying they exist | H1 hardening; mechanical. |
+| R1 | Paper 15 Table 2 numbered by source-file name, i.e. by the ordering H3 declares non-semantic | paper-side; pairs with the ADR-010 sweep. |
+| R4-I1 | `cross_path_consistency`'s two legs produce **bit-identical** `rel_diff` (`4.127685699545415e-06`) and both skip to `passed=True, details=[]` | the mechanism differs from pass 1's filing; needs a decision on what the second leg is *for*. |
+| R4-I8 | `readiness_verdicts_agree`'s reverse leg is dead **by construction** — GREEN is demoted whenever a P1 gate blocks, and 0 of 704 gates are ever blocked at P2 | needs a semantics decision, not a code fix. |
+| R4-I7 / R4-I10 | re-opened: displaced onto the wrong predicate; half-closed | re-measure before re-fixing. |
+| **new** | **9 of 11 readiness gates pass vacuously on an empty population** — cannot distinguish "declares no parameters" from "extraction failed to link them" | ⛔ **needs an operator call**: should empty-population be `open` rather than `passed`? Changing it moves verdicts on a corpus where 61 papers are already red. |
+
+**Submission blockers → ADR-010** (operator routing, unchanged): R5-C2 figure content (**124 PNGs
+across 49 dirs, 29 with no `FIGURE_REGISTRY` spec at all** — worse than pass 1 measured, and
+deleting the `d11_/d12_` filter takes coverage 7→95 but still leaves 29 invisible), R5-C3 number
+recomputation, R5-C4 theorem-statement correspondence, R5-C5 citation content. Plus D3's two fatal
+LaTeX errors, and the ~40 open items from pass 1.
+
+## Process findings against this review itself
+
+1. **Six reviewers shared one working tree.** R4 observed three check bodies stubbed to
+   `passed=True` and `papers/D1/paper_draft.tex` truncated to zero bytes mid-run; R3 noted the
+   same hazard and took its measurements on a clean tree; R1 caught a leftover stub in
+   `prose_lean_refs.py` that the lead then reverted. **Next pass: one worktree per reviewer**, and
+   seeding reviewers restore in a `finally`.
+2. **The severity vocabulary mandate worked.** Pass 1's sixth reviewer invented its own scheme and
+   its 16 findings counted as zero; pass 2's R6 returned 19 findings correctly labelled.
+3. **Reports-to-disk worked.** Pass 1 lost 53 findings to the transcript. Pass 2 has six files.

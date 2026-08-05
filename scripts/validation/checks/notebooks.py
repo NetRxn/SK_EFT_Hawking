@@ -310,7 +310,7 @@ def check_notebook_execution() -> CheckResult:
         from nbclient import NotebookClient
     except ImportError:
         return CheckResult(
-            passed=True,
+            passed=True, measured=False,
             details=[Detail("nbclient", True,
                             "SKIPPED — nbclient not installed. "
                             "Install with: pip install nbclient")],

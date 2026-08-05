@@ -345,7 +345,7 @@ finding and is worth shipping separately — *`axiom_count_prose_consistency` is
 should be raised to*: compare each literal against its `counts.tex` macro value, not merely count them.
 
 **✅ Item 6 — DECLINED 2026-08-04, after reading `readiness_gates.py` (781) and `bundle_readiness.py`
-(783) in full.** Filed as "`--strict` reaches no automated caller, making two gates unreachable in
+(783) in full.** Filed as "`--strict` reaches no automated caller, making two gates unreachable in ⚠️ **[NO LONGER TRUE as of 2026-08-05: `gate_precheck.py submission` calls `validate.py --strict --force-latex`, and reviewer R3 found this claim restated in 5 live sites including two shipped module docstrings, contradicting `constants.py`'s own correct note]** in
 practice". Premise true; **count wrong (six, not two) and inference wrong.**
 - **`--strict` is the documented Paper Submission Gate**, not dead code — `WAVE_EXECUTION_PIPELINE.md:72`
   (*"checked before arXiv/journal submission, not at Stage 1"*), Invariant #12 at `:685` calls it

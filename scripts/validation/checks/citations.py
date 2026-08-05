@@ -761,7 +761,7 @@ def check_bibitem_title_primary_source() -> CheckResult:
         from pdfminer.high_level import extract_text  # type: ignore
     except ImportError:
         return CheckResult(
-            passed=True,
+            passed=True, measured=False,
             details=[Detail(
                 "skipped",
                 True,

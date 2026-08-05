@@ -208,3 +208,84 @@ class TestCannotMeasureBaseline:
             "CANNOT_MEASURE_PASS_BASELINE so the ratchet tightens instead of leaving "
             "headroom for a new silent PASS to be filed in their place."
         )
+
+
+# ══════════════════════════════════════════════════════════════════════════
+# `measured=False` coverage — PR-review pass 2
+# ══════════════════════════════════════════════════════════════════════════
+
+import re as _re
+
+#: A return whose own detail text says it skipped. If a check tells the reader it
+#: could not measure, it must tell `--ci`'s coverage floor and `_memo` the same
+#: thing — otherwise the floor counts it as evidence and the memo caches it.
+_SKIP_WORDS = _re.compile(
+    r"SKIPPED|not found|absent|not installed|missing|unreadable|could not", _re.IGNORECASE)
+
+
+def _self_declared_skips():
+    """(file, line, check, declares_measured_False) for every `passed=True` return
+    whose text says it skipped."""
+    out = []
+    for path in sorted(CHECKS_DIR.glob("*.py")):
+        src = path.read_text()
+        tree = ast.parse(src)
+        for fn in (n for n in ast.walk(tree) if isinstance(n, ast.FunctionDef)):
+            name = next(
+                (d.args[0].value for d in fn.decorator_list
+                 if isinstance(d, ast.Call) and getattr(d.func, "id", "") == "register_check"),
+                None)
+            if not name:
+                continue
+            for node in ast.walk(fn):
+                if not isinstance(node, ast.Return) or not isinstance(node.value, ast.Call):
+                    continue
+                if getattr(node.value.func, "id", "") != "CheckResult":
+                    continue
+                kws = {k.arg: k.value for k in node.value.keywords}
+                p = kws.get("passed")
+                if not (isinstance(p, ast.Constant) and p.value is True):
+                    continue
+                seg = ast.get_source_segment(src, node.value) or ""
+                if not _SKIP_WORDS.search(seg):
+                    continue
+                m = kws.get("measured")
+                declares = isinstance(m, ast.Constant) and m.value is False
+                out.append((path.name, node.lineno, name, declares))
+    return out
+
+
+class TestSelfDeclaredSkipsDeclareMeasuredFalse:
+    """⚠️ PR-review pass 2. `CheckResult.measured` exists because nothing could
+    distinguish "measured and passed" from "could not measure, so said PASS" — a
+    gap that made BOTH guards built on it blind (`--ci`'s floor could not fire;
+    `_memo` cached a `SKIPPED — lake not found` verdict and replayed it after the
+    toolchain returned).
+
+    Annotating the sites is only half the fix. Without this test the next
+    fail-open branch lands unannotated and the floor silently loses a check —
+    which is precisely how the population being ratcheted here got out of step in
+    the first place (the older AST scanner sees 21 (check,kind) pairs against 47
+    literal `passed=True` returns).
+    """
+
+    def test_the_scan_finds_a_real_population(self):
+        """Guard the seam: a scanner matching nothing makes the assertion below
+        pass vacuously — the exact failure this file exists to prevent."""
+        sites = _self_declared_skips()
+        assert len(sites) >= 15, (
+            f"only {len(sites)} self-declared skip sites found; the scan is not "
+            f"seeing real code (did `CheckResult` get aliased, or the modules move?)")
+
+    def test_every_self_declared_skip_declares_measured_False(self):
+        """FIRES ON A SEEDED DEFECT: add a `return CheckResult(passed=True,
+        details=[Detail(..., 'SKIPPED — no toolchain')])` without `measured=False`
+        and this fails."""
+        missing = [(f, ln, n) for f, ln, n, ok in _self_declared_skips() if not ok]
+        assert not missing, (
+            f"{len(missing)} check return(s) tell the READER they skipped but not "
+            f"the coverage floor:\n"
+            + "\n".join(f"  {f}:{ln}  {n}" for f, ln, n in missing)
+            + "\n\nAdd `measured=False` to that CheckResult. A PASS that measured "
+              "nothing must not count toward CI_MIN_CHECKS_RUN, and `_memo` must "
+              "refuse to cache it.")
