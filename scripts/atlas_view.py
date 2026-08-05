@@ -82,7 +82,7 @@ def _is_kernel_pure(rec: dict) -> bool:
 #: proof obligations. They are compiler artifacts, never mathematical content.
 _AUTOGEN_RE = re.compile(
     r"\.(casesOn|recOn|rec|ctorIdx|toCtorIdx|match_\d[\d_]*|proof_\d[\d_]*|noConfusion\w*|below|"
-    r"ibelow|brecOn|binductionOn|sizeOf\w*|injEq|eq_def)\b|\._(sunfold|eq_\d[\d_]*|proof_\d[\d_]*)")
+    r"ibelow|brecOn|binductionOn|sizeOf\w*|injEq|eq_def)\b|\.mk\.(inj|injEq|sizeOf\w*)\b|\._(sunfold|eq_\d[\d_]*|proof_\d[\d_]*)")
 
 
 def _is_obstruction(rec: dict) -> bool:
