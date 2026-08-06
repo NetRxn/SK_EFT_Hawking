@@ -106,18 +106,10 @@ def iter_v2_paper_dirs() -> Iterator[tuple[str, Path]]:
     if not PAPERS_ROOT.exists():
         return
     for p in sorted(PAPERS_ROOT.iterdir()):
-        # ⚠️ The population is "has a v2 claims_review", which is what the two checks
-        # below already test. An earlier `p.name.startswith('paper')` filter sat here
-        # and silently excluded **every one of the 19 PUBLICATION BUNDLES** (D1…D12,
-        # E1/E2, I1–I3, L1–L3), because their directories are named `D1`, not
-        # `paper1_*`. `bundle_consistency` — the check whose whole purpose is
-        # cross-BUNDLE numerical agreement — was therefore verifying 29 legacy
-        # snapshot drafts and **zero bundle members**.
-        #
-        # Found by PR-review pass 3 (R1), re-measured here: 49 claims_review.json on
-        # disk, 19 in bundle dirs, all 19 excluded. Do not re-add a name filter — the
-        # directory naming convention is not the population predicate. (The v2-schema
-        # check below still excludes F, which is v1.)
+        # ⚠️ The population is "has a v2 claims_review" — exactly what the two checks
+        # below test. Do NOT add a directory-name filter: publication bundles are named
+        # `D1`, `F`, `I2`, legacy drafts `paper1_*`, and a name predicate silently drops
+        # whichever convention it does not anticipate. (F is excluded on schema: it is v1.)
         if not p.is_dir():
             continue
         cr = p / 'claims_review.json'

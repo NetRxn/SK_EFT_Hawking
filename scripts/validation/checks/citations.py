@@ -149,25 +149,17 @@ def check_parameter_provenance() -> CheckResult:
 
     # --- 4. Consistency: provenance value matches actual constant ---
     #
-    # ⚠️ This leg was BLIND TO A 10× ERROR IN ℏ until 2026-08-05 (PR-review pass 3,
-    # R4 CRITICAL, reproduced by the lead with a production-seeded mutation). Two
-    # independent narrowings composed:
+    # Enforces Pipeline Invariant #8's value half: the provenance registry and the code
+    # constant must agree.
     #
-    #   (a) the denominator was `max(abs(actual), 1e-30)`, a divide-by-zero guard.
-    #       For any quantity SMALLER than 1e-30 it returns the floor, which silently
-    #       turns the RELATIVE test into an ABSOLUTE one. ℏ = 1.05e-34, so seeding
-    #       the registry with 1.054571817e-33 (ten times the constant) computed
-    #       rel_err = 9.49e-04 against a 1e-3 threshold and PASSED. The true relative
-    #       error is 9.0 — the guard was wrong by four orders of magnitude.
-    #       Measured tolerated drift before the fix: HBAR 9.48×, POLARITON_MASS 14.3×.
+    # ⚠️ The comparison must stay GENUINELY RELATIVE. Several project constants are far
+    # below 1e-30 (ℏ = 1.05e-34), so a `max(abs(actual), eps)` divide-by-zero guard would
+    # silently turn this into an ABSOLUTE test and tolerate order-of-magnitude drift.
+    # `actual == 0` is the only case needing special handling; handle it explicitly rather
+    # than by flooring every denominator.
     #
-    #   (b) `_lookup_provenance_value` returns None for 169 of 206 entries — no code
-    #       counterpart — and each was skipped in silence, so the success message
-    #       "All provenance values match code" described 37 comparisons, not 206.
-    #
-    # Pipeline Invariant #8 is the reason this check exists; both halves are now fixed:
-    # the comparison is genuinely relative, and the unresolvable population is counted,
-    # reported and RATCHETED so it can only shrink.
+    # Entries with no comparable code value are COUNTED and RATCHETED, never skipped in
+    # silence — the success message must state the denominator it actually compared.
     mismatches = []
     null_values = []
     unresolvable = []

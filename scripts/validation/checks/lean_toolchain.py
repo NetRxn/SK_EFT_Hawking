@@ -896,13 +896,9 @@ _LEAN_IMPORT_RE = re.compile(r"^import\s+(SKEFTHawking[\w.]*)", re.M)
 
 #: Modules deliberately outside the library, each with a stated reason. This is a
 #: RATCHET: it may only shrink. Adding a name here needs the reason in the same commit.
-UNREACHABLE_MODULE_EXCEPTIONS = {
-    "SKEFTHawking.SingularConnSquareCrossReal":
-        "Carries the project's only live `sorry` (:39, an `all_goals sorry` at :112), "
-        "committed as 'DR Harness wip'. Importing it would put a sorry in the library "
-        "and — correctly — hard-block commits to main. Nothing imports it, so it is "
-        "isolated. Discharge the proof or delete the module; do not silently import it.",
-}
+#: Empty is the target state — a module that cannot justify an entry belongs in the
+#: import graph.
+UNREACHABLE_MODULE_EXCEPTIONS: dict[str, str] = {}
 
 
 def _lean_exe_roots() -> set:

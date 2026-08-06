@@ -20,16 +20,13 @@ Resolution is deliberately tiered — project declaration, Mathlib namespace,
 Dropping the PhysLib tier turns every correct PhysLib reference into a false FAIL,
 which is what happened to D10 the moment it entered `BUNDLE_CODES`.
 
-⚠️ **"Verbatim" means THREE syntactic forms, and the corpus uses all three.**
-`\\texttt{}`; a preamble one-argument alias for it (D8 and D9 write every
-reference as `\\lean{}`); and `\\verb|...|` (D6 writes 235 of those against 25
-`\\texttt`). Matching only the first left **564 references beyond the check while
-it reported PASS** on a candidate count that read as thorough. Each form was
-found separately, on 2026-08-05, during the ADR-010 measurement pass — the
-second while re-measuring un-homed modules, the third minutes later while
-re-measuring the D6/D9 overlap claim. If a fourth appears, it will be for the
-same reason: **the count of things scanned is not evidence that the population
-was reached.**
+⚠️ **"Verbatim" means SEVERAL syntactic forms, and the corpus uses all of them.**
+`\\texttt{}`; a preamble one-argument alias for it (D8/D9 write `\\lean{}`, D11/D12
+`\\thm{}`, D12 also `\\mthm{}` — an alias of an alias); and `\\verb|...|` (D6's
+usual form). Detection is therefore STRUCTURAL — brace-matched macro bodies plus a
+fixpoint over aliases — never a list of known macro names. Extend the structure, not
+an enumeration: a count of spans scanned is not evidence that the population was
+reached.
 
 Import rules as in every module here; `theorem_name_embedded_citations` reads
 `_cfg.STRICT_MODE` by attribute (H5). MOVED VERBATIM otherwise.
@@ -57,12 +54,8 @@ from bundle_registry import BUNDLE_CODES  # noqa: E402  — see papers_prose.
 
 _PROSE_TEXTTT_RE = re.compile(r"\\texttt\{([^{}]+)\}")
 # A draft may route every Lean reference through a preamble alias for `\texttt`
-# rather than writing `\texttt` at each site. D8 and D9 both do
-# (`\newcommand{\lean}[1]{\texttt{#1}}`), which put **288 Lean references beyond
-# this check's reach while it reported PASS** — the branch's own defect class
-# (absence of measurement rendered as success), found by the ADR-010 measurement
-# pass 2026-08-05. Discover the aliases from the preamble rather than hardcoding
-# `\lean`, so the next bundle that defines `\leanref` does not reopen the hole.
+# rather than writing `\texttt` at each site. Aliases are DISCOVERED from the
+# preamble, never hardcoded, so a bundle that defines `\leanref` is covered on arrival.
 #: Primitive LaTeX commands that typeset their argument as code.
 _PROSE_VERBATIM_PRIMITIVES = frozenset({
     "texttt", "mathtt", "verb", "url", "path", "code", "lstinline",
@@ -77,11 +70,10 @@ _PROSE_NEWCOMMAND_HEAD_RE = re.compile(
 def _newcommand_defs(tex_source: str) -> dict:
     """``{macro name: body}`` for every one-argument ``\\newcommand`` in the source.
 
-    The body is extracted by **brace matching**, not by regex. An earlier version
-    required the body to be exactly ``{\\texttt{#1}}``, which silently excluded
-    D11's and D12's ``\\newcommand{\\thm}[1]{{\\def\\_{\\char`\\_\\allowbreak}\\texttt{#1}}}``
-    — a line-breaking wrapper around the same thing. **336 references** in two
-    publication bundles sat outside the check because of that shape mismatch.
+    The body is extracted by **brace matching**, not by regex, because a body may wrap
+    the verbatim macro in arbitrary balanced markup — D11/D12's
+    ``\\newcommand{\\thm}[1]{{\\def\\_{\\char`\\_\\allowbreak}\\texttt{#1}}}`` is a
+    line-breaking wrapper around ``\\texttt``. Match the STRUCTURE, not a body shape.
     """
     out = {}
     for m in _PROSE_NEWCOMMAND_HEAD_RE.finditer(tex_source):
@@ -106,9 +98,8 @@ def _prose_verbatim_macros(tex_source: str) -> frozenset:
     qualifies too (D12 defines ``\\mthm`` as ``\\thm{#1}`` and ``\\thm`` in terms of
     ``\\texttt``).
 
-    Structural rather than shape-matching, deliberately: the previous two repairs
-    both enumerated the forms then in evidence (``\\lean``, then ``\\verb``) and each
-    was overtaken within hours by a form nobody had enumerated. Unit-testable core.
+    Structural rather than shape-matching, deliberately — an enumeration of known
+    macro names goes stale the moment a draft defines a new one. Unit-testable core.
     """
     defs = _newcommand_defs(tex_source)
     known = set(_PROSE_VERBATIM_PRIMITIVES)
@@ -133,13 +124,9 @@ def _prose_verbatim_re(tex_source: str) -> re.Pattern:
     return re.compile(r"\\(?:" + "|".join(map(re.escape, names)) + r")\{([^{}]+)\}")
 
 
-# The THIRD verbatim form, and the one that hid the most. `\verb|name|` takes an
-# arbitrary delimiter rather than braces, so neither the `\texttt` regex nor the
-# alias regex above sees it. D6 writes **235** `\verb` spans against 25 `\texttt`
-# — roughly 90 % of its Lean references — and D2, L1 and L3 add more.
-# Found 2026-08-05 immediately after the `\lean{}` fix, while re-measuring the
-# audit's "D6 and D9 share 78 identical Lean theorems" claim: D6 appeared to name
-# only 9 declarations because its references are `\verb`.
+# `\verb|name|` takes an arbitrary delimiter rather than braces, so neither the
+# brace-form regex nor the alias fixpoint reaches it. It needs its own matcher.
+# D6 writes most of its Lean references this way; D2, L1 and L3 use it too.
 _PROSE_VERB_RE = re.compile(r"\\verb\*?(?P<d>[^A-Za-z0-9\s*])(?P<body>.*?)(?P=d)")
 
 
@@ -166,10 +153,7 @@ _PROSE_MATHLIB_PREFIXES = (
     "Filter.", "Topology.", "AddCircle.", "RingQuot.", "Module.",
     "Submodule.", "Subgroup.", "MonoidHom.", "ContinuousMap.",
     "CartanMatrix.", "IsCyclotomicExtension.",
-    # Surfaced 2026-08-05 when the `\texttt` alias fix (see
-    # _PROSE_VERBATIM_ALIAS_DEF_RE) made paper14's `\lean{}` references visible.
-    # Both are Mathlib CategoryTheory names the prose itself attributes to
-    # Mathlib ("Mathlib's \lean{Rigid.Basic} module").
+    # Mathlib CategoryTheory namespaces the corpus cites by their bare names.
     "ObjectProperty.", "Rigid.",
 )
 # Empirically-built allowlist (calibrated 2026-06-10 on the 18 bundle
@@ -187,17 +171,13 @@ _PROSE_REF_ALLOWLIST = {
     "continuous_const", "zeta_spec", "ring_nf", "simp_rw",
     "exact_mod_cast", "decide_eq_true", "by_contra", "push_neg",
     "field_simp", "fin_cases",
-    # Surfaced 2026-08-05 when `\verb` spans became visible (D6 writes 235 of
-    # them). Both are bare Mathlib lemmas D6's own prose attributes to Mathlib;
-    # both VERIFIED present in the pinned source rather than taken on the prose's
-    # word — Mathlib/Analysis/SpecialFunctions/BinaryEntropy.lean:139 and
-    # Mathlib/Analysis/LocallyConvex/Separation.lean:197.
+    # Bare Mathlib lemmas, each verified present in the pinned source:
+    # Analysis/SpecialFunctions/BinaryEntropy.lean:139 and
+    # Analysis/LocallyConvex/Separation.lean:197.
     "binEntropy_lt_log_two", "geometric_hahn_banach_compact_closed",
-    # Surfaced 2026-08-05 when the `\thm`/`\mthm` wrapped-alias fix made D11/D12's
-    # 336 references visible. Both are Mathlib names D12's prose attributes to
-    # Mathlib ("Mathlib carries a sub-Gaussian Chernoff bound at our own pin");
-    # both VERIFIED in the pinned source — Probability/Moments/SubGaussian.lean:334
-    # and Probability/Decision/Risk/Basic.lean:236.
+    # Bare Mathlib names, each verified present in the pinned source:
+    # Probability/Moments/SubGaussian.lean:334 and
+    # Probability/Decision/Risk/Basic.lean:236.
     "HasSubgaussianMGF.measure_ge_le", "bayesRisk_le_bayesRisk_comp",
     # project infrastructure identifiers (validate.py checks, cluster /
     # sentence-state schema fields) described in the I1 infrastructure

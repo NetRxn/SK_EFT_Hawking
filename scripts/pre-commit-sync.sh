@@ -65,19 +65,10 @@ if git diff --cached --name-only --diff-filter=ACM | grep -q '\.lean$'; then
   # existed). Instead trust the build we just ran: Lean reports a genuine sorry in a built
   # declaration (and replays it for cached modules), so the build log is the precise signal.
   #
-  # ⚠️ QUOTE STYLE IS LOAD-BEARING — this guard was INERT until 2026-08-05.
-  # It matched the fixed string "declaration uses 'sorry'" with STRAIGHT quotes (0x27).
-  # Lean v4.32.0 emits BACKTICKS (0x60): declaration uses `sorry`. Confirmed by `od -c` on a
-  # real build log, and by running this guard's own expression against a log that genuinely
-  # contained the warning: NO MATCH. So the project's first line of defence against a sorry —
-  # the one that hard-blocks `main` — could not fire for ANY module. `main` carries the same
-  # bug, so it predates ADR-009; which toolchain bump broke it was not established.
-  # Found while verifying PR-review pass 3 C2; see
-  # docs/audits/2026-08-05-pr-review-3/VERIFIED-C2-sorry-guard.md.
-  #
-  # Now a quote-AGNOSTIC extended regex, so a future change of quoting style degrades to a
-  # false positive (loud, fixable) rather than to silence (invisible, and it was invisible for
-  # an unknown number of months). Do NOT re-narrow this to a fixed string.
+  # ⚠️ QUOTE STYLE IS LOAD-BEARING. Lean v4.32.0 emits BACKTICKS — declaration uses `sorry`
+  # — and the quoting has changed across toolchains. Match it quote-AGNOSTICALLY so a future
+  # change degrades to a false positive (loud, fixable) rather than to silence. Do NOT
+  # re-narrow this to a fixed string.
   _SORRY_RE="declaration uses .?sorry.?"
   if [ -f /tmp/skeft-lean.$$ ] && grep -qE "$_SORRY_RE" /tmp/skeft-lean.$$; then
     echo "ERROR: genuine 'sorry' in a built lean/SKEFTHawking declaration (lake reported it)."
@@ -93,10 +84,8 @@ if git diff --cached --name-only --diff-filter=ACM | grep -q '\.lean$'; then
   #     Also print the REASON: "stale" alone reads like breakage, when the overwhelmingly common
   #     cause is benign — `git merge` of a worker branch stamps the merged .lean files with mtime=now,
   #     so a counts regen followed by a merge is *correctly* stale again.
-  #     COST, MEASURED 2026-08-06: `scripts/update_counts.py` on a WARM .lake cache is
-  #     **3 min 14 s** (184 s user) — not the "30 min" this comment and CLAUDE.md both used to
-  #     assert. That figure was never measured, was ~10x too high, and was being used to defer
-  #     regeneration. A cold/clean ExtractDeps is a different and much rarer case; don't conflate.
+  #     COST (measured 2026-08-06, warm .lake cache): `scripts/update_counts.py` = 3 min 14 s.
+  #     A cold/clean ExtractDeps is a separate, much rarer case — keep the two distinct.
   _cs=$(uv run python -c "
 import sys; sys.path.insert(0,'scripts')
 import validate

@@ -166,23 +166,16 @@ def check(write_metadata: bool = False) -> list[dict]:
             p for p, a in assignments.items()
             if bundle in a["bundle_destinations"]
         ])
-        # A source naming a directory that does not exist is UNMEASURABLE, not
-        # fresh. `_latest_source_mtime` returns None for a missing directory, and
-        # the staleness loop below skips every None — so before this split, a
-        # bundle all of whose sources were absent fell through to the `else`
-        # branch and announced "fresh: all 1 source paper(s) older than last_lift"
-        # over a population of zero.
+        # A source naming a directory that does not exist is UNMEASURABLE, not fresh.
+        # `_latest_source_mtime` returns None for a missing directory and the staleness
+        # loop skips every None, so absent sources must be split out BEFORE the verdict —
+        # otherwise a bundle whose sources are all absent reports freshness over an empty
+        # population. Phase-sourced bundles (D6-D12, I2, I3) declare synthetic tokens
+        # like `_phase6t_lean_only` that name no directory, so this is the normal case
+        # for them, not an edge case.
         #
-        # That is not hypothetical: D6-D12's sources are synthetic tokens
-        # (`_phase6t_lean_only`, `D9_initial_draft`, ...) that name no directory
-        # at all, and portfolio-wide 89 of 180 assignments are absent. NINE
-        # bundles - D6..D12 plus I2 and I3 - had a 100 % vacuous freshness PASS.
-        # Measured 2026-08-05, ADR-010 measurement pass, docs/audits/
-        # 2026-08-05-adr010-measurement/MEASUREMENTS.md M6.
-        #
-        # This is the house rule from ADR-009: absence of measurement must never
-        # render as success (`CheckResult.measured`,
-        # docs/architecture/CHECK_AUTHORING_GUIDE.md §2.1).
+        # House rule (ADR-009): absence of measurement must never render as success.
+        # See docs/architecture/CHECK_AUTHORING_GUIDE.md §2.1.
         absent_sources = [s for s in sources if not (PAPERS_DIR / s).is_dir()]
         measurable = [s for s in sources if s not in set(absent_sources)]
 
