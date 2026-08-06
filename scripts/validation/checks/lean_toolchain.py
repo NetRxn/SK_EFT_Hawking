@@ -32,6 +32,8 @@ are in the frozen external surface; `validate` re-exports every moved name
 """
 from __future__ import annotations
 
+import tomllib
+
 import json
 import re
 import subprocess
@@ -891,7 +893,6 @@ def check_lean_docstring_refs_resolve() -> CheckResult:
 # cases then in evidence; a derived allowlist cannot go stale when a root is added.
 # ═══════════════════════════════════════════════════════════════════════
 
-_LEAN_EXE_ROOT_RE = re.compile(r'^\s*root\s*=\s*"([^"]+)"', re.M)
 _LEAN_IMPORT_RE = re.compile(r"^import\s+(SKEFTHawking[\w.]*)", re.M)
 
 #: Modules deliberately outside the library, each with a stated reason. This is a
@@ -904,17 +905,52 @@ UNREACHABLE_MODULE_EXCEPTIONS: dict[str, str] = {}
 def _lean_exe_roots() -> set:
     """Module names declared as `[[lean_exe]] root = ...` in lakefile.toml.
 
-    Derived, not hardcoded: a new exe root is legitimately outside the library and
-    must not require editing this check.
+    PARSED as TOML, not regexed: a regex over `root = "..."` also matches the key
+    inside any other table, and misses the single-quoted and multi-line forms TOML
+    permits. `tomllib` is the format's own parser.
     """
     lakefile = _H.PROJECT_ROOT / "lean" / "lakefile.toml"
     if not lakefile.is_file():
         return set()
-    return set(_LEAN_EXE_ROOT_RE.findall(lakefile.read_text(errors="replace")))
+    try:
+        with lakefile.open("rb") as fh:
+            data = tomllib.load(fh)
+    except (OSError, tomllib.TOMLDecodeError):
+        return set()
+    exes = data.get("lean_exe") or []
+    if isinstance(exes, dict):
+        exes = [exes]
+    return {e["root"] for e in exes if isinstance(e, dict) and isinstance(e.get("root"), str)}
+
+
+def _built_modules() -> set:
+    """Modules recorded in `lean_deps.json` — i.e. built AS OF THE LAST EXTRACTION.
+
+    ⚠️ **Corroboration only. NOT the primary source, and the reason is timing.**
+    `lean_deps.json` is a generated artifact that LAGS the tree: delete an import now
+    and the module stays recorded as built until the next extraction, so a check keyed
+    on it cannot see a module that was orphaned *this commit* — which is the whole
+    event this check exists to catch. Verified by mutation on 2026-08-06: sourcing
+    reachability from here made the guard silent on a removed import.
+
+    "Use the real infrastructure" is right in general and wrong here: the build record
+    answers *what was compiled last time*, and the question is *what does the tree
+    declare now*. Same subject, different tense.
+    """
+    try:
+        return {r["module"] for r in _H.load_lean_deps() if r.get("module")}
+    except Exception:
+        return set()
 
 
 def _root_reachable_modules() -> set:
-    """Transitive closure of `import SKEFTHawking.*` from the root aggregate."""
+    """PRIMARY — the transitive `import SKEFTHawking.*` closure from the root aggregate.
+
+    Reads the CURRENT source, which is the only thing that reflects an orphaning the
+    moment it happens. It does re-implement Lake's resolution, which is a real cost;
+    `_built_modules()` cross-checks it so a divergence is visible rather than assumed
+    away.
+    """
     lean = _H.PROJECT_ROOT / "lean"
     root = lean / "SKEFTHawking.lean"
     if not root.is_file():
@@ -961,6 +997,19 @@ def check_lean_modules_in_build_graph() -> CheckResult:
         f"{len(disk)} module files on disk / {len(disk & reachable)} reachable from the "
         f"root aggregate / {len(exe_roots & disk)} declared exe root(s) / "
         f"{len(UNREACHABLE_MODULE_EXCEPTIONS)} documented exception(s)")]
+
+    # Cross-check against the build record. A module recorded built but no longer
+    # import-reachable means the record is stale relative to the tree — worth saying,
+    # never worth silencing the primary with.
+    built = _built_modules()
+    if built:
+        stale = sorted((built & disk) - reachable - exe_roots)
+        if stale:
+            details.append(Detail(
+                "build_record_lag", True,
+                f"{len(stale)} module(s) recorded in lean_deps.json but no longer "
+                f"reachable — the record predates a removed import; regenerate counts: "
+                f"{', '.join(stale[:5])}", warning=True))
 
     for name, why in sorted(UNREACHABLE_MODULE_EXCEPTIONS.items()):
         if name in disk and name not in reachable:

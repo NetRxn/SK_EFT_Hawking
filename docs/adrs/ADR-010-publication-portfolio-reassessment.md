@@ -391,6 +391,39 @@ destination or a written reason they have none. "No home" is an acceptable outco
 publication of the substrate, not a paper"* is a legitimate disposition — but it must be a decision, not
 an omission.
 
+### D5a — INTAKE ARCHITECTURE (operator authorization, 2026-08-06)
+
+The operator has **authorized shifting publication content and strategy** — including re-tiering
+(a "D" whose substrate is really a letter) — to distribute correctly and to map the **entire
+roadmap portfolio** into the publication strategy. This supersedes the earlier "no roster change
+authorized" line **for content/strategy**; §C1's machine-roster change-set discipline still binds.
+
+The stated requirement is not a one-time re-sort. It is that **new roadmaps in arbitrary domains
+must onboard ergonomically** — absorbing into existing work or creating a publication — **without
+breaking the structure ADR-010 builds**.
+
+**Design (full working: `docs/architecture/.working-docs/PUBLICATION_INTAKE_DESIGN.md`).** A
+bundle **declares its apex theorems**; its substrate is the **derived transitive closure** of
+those apexes from `lean_deps.json` (verified computable: one real theorem yields 1 128 deps across
+72 modules, zero extraction timeouts). Absorption, un-homed detection, cross-bundle overlap and —
+critically — **content sufficiency** all become consequences of that single join.
+
+This is what makes **tier a function of substrate shape**: one apex over a shallow closure is a
+letter; several interlocking apexes over a deep closure is a deep paper. That is the inversion
+§Context's mechanism finding demands, and it is why the earlier "arc map" idea is **RETRACTED** —
+measured, neither directories nor name prefixes partition the substrate, so an arc map would be a
+hand-maintained heuristic.
+
+⚠️ **Unsolved, operator-flagged:** the atlas/apex concept postdates papers/bundles, and there is
+**no streamlined way to create apex nodes when a new roadmap or phase is built out**. Proposed
+hook is **wave close** — the moment of maximum author context. Retrofitting existing bundles is
+authorized **only with full per-bundle context review** (contributing roadmaps, cited Lean,
+claims record), one bundle at a time.
+
+⚠️ **Hard constraint:** closures, apexes and un-homed substrate must **emit graph nodes/edges** so
+human review of the final product is not a secondary conversation. Read `scripts/build_graph.py`'s
+extractor contract before fixing the shape.
+
 ### D6 — Late-phase absorption is repaired, not merely described
 
 The analysis specifies: how a sourceless bundle (D6–D12 today) acquires a working freshness trigger; what

@@ -303,3 +303,36 @@ class TestScopeSubstrate:
         assert rc == 0
         assert "paper-corpus" in err, (
             "exiting 0 without saying why turns a scoped gate into a silent one")
+
+
+class TestScopePartitionIsTotal:
+    """`--scope substrate` decides what BLOCKS. An unclassified check module would
+    default to "substrate" and silently acquire the power to veto a Lean wave close —
+    so the partition must be total, and a new module must fail rather than default.
+    """
+
+    def test_every_check_module_is_classified(self):
+        mods = validate._check_modules()
+        known = validate._PAPER_SIDE_MODULES | validate._SUBSTRATE_SIDE_MODULES
+        assert not (mods - known), (
+            f"check module(s) in neither side of the --scope partition: "
+            f"{sorted(mods - known)}. Add each to _PAPER_SIDE_MODULES or "
+            f"_SUBSTRATE_SIDE_MODULES in validate.py — defaulting is how a paper-side "
+            f"check silently gains the power to block a pure-Lean wave.")
+
+    def test_the_partition_names_no_module_that_does_not_exist(self):
+        mods = validate._check_modules()
+        known = validate._PAPER_SIDE_MODULES | validate._SUBSTRATE_SIDE_MODULES
+        assert not (known - mods), (
+            f"the partition names module(s) that own no registered check: "
+            f"{sorted(known - mods)} — stale entries make the totality assertion above "
+            f"weaker than it looks.")
+
+    def test_the_two_sides_are_disjoint(self):
+        assert not (validate._PAPER_SIDE_MODULES & validate._SUBSTRATE_SIDE_MODULES)
+
+    def test_a_memoized_check_is_attributed_to_its_REAL_module(self):
+        """`memoize_check` rebinds `__module__` to `_memo`. Attributing by the wrapper
+        would classify every memoized check by where the DECORATOR lives."""
+        assert validate._leaf_module_of("axiom_closure_allowlist") == "lean_toolchain", (
+            "a memoized check is being attributed to the memo wrapper, not its own module")

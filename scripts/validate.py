@@ -307,9 +307,24 @@ def print_results(results: Dict[str, CheckResult]) -> None:
 #: substrate. Derived from the module a check is DEFINED in — deliberately not a
 #: hand-listed set of check names, which would be a parallel list that drifts
 #: (the defect class this suite keeps finding).
+#: Which check-module belongs to which side. The CLASSIFICATION of an individual check
+#: is derived (from its defining module, via the registry), but this partition is a
+#: judgement and is declared. It must be TOTAL: `tests/test_ci_mode.py` asserts every
+#: module owning a registered check appears in exactly one side, so a new check module
+#: fails loudly rather than defaulting to "substrate" and silently gaining the power to
+#: block a Lean wave.
 _PAPER_SIDE_MODULES = frozenset({
     "papers_prose", "prose_lean_refs", "citations", "bundles_readiness", "reviews",
 })
+_SUBSTRATE_SIDE_MODULES = frozenset({
+    "lean_substrate", "lean_toolchain", "lean_statements", "physics",
+    "graph_atlas", "freshness", "notebooks",
+})
+
+
+def _check_modules() -> set:
+    """Leaf module name of every module that owns a registered check."""
+    return {_defining_module(sp.func) for sp in _CHECKS}
 
 
 def _spec_of(name: str):
@@ -317,11 +332,22 @@ def _spec_of(name: str):
     return next((sp for sp in _CHECKS if sp.name == name), None)
 
 
+def _defining_module(func) -> str:
+    """Leaf name of the module a check function is DEFINED in.
+
+    Unwraps the memo decorator: a memoized check's `__module__` is `_memo`, the
+    wrapper's home, not the check's. `_memo.memoize_check` exposes `__memo_body__`
+    for exactly this.
+    """
+    body = getattr(func, "__memo_body__", None) or func
+    return body.__module__.rsplit(".", 1)[-1]
+
+
 def _leaf_module_of(name: str) -> str:
     """Leaf name of the module a check is DEFINED in — derived from the registry, so a
     check that moves module carries its classification with it."""
     sp = _spec_of(name)
-    return (sp.func.__module__.rsplit(".", 1)[-1]) if sp is not None else ""
+    return _defining_module(sp.func) if sp is not None else ""
 
 
 def _print_failure_provenance(results: Dict[str, CheckResult]) -> None:
