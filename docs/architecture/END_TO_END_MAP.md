@@ -187,19 +187,26 @@ Plane detail: [`../audits/2026-08-06-e2e-map/PLANE-lean.md`](../audits/2026-08-0
   - ✅ **V** The real safety check is step 3, and it is correctly built: `kernel_pure` is
     computed over **target decls only** (`:719-721`) from the `sorryAx` primitive in
     `axiom_deps_core` — scoped right, and toolchain-independent.
-  - ⚠️ **U** Remaining genuine question: step 2's `lake build SKEFTHawking.ExtractDeps`
-    compiles the `.olean` but the JSON is written by `scripts/extract_lean_deps.py`, and
-    `_load_lean_deps()` (`:189`) reads the file with no staleness check — so step 3 may read
-    pre-graft data. **To verify:** run a graft and compare `lean_deps.json` mtime across it.
+  - ✅ **V** **Step 2 does not refresh `lean_deps.json`, so step 3 reads pre-graft data.**
+    `ExtractDeps.lean:538` streams its output to stdout by design ("Streaming avoids an
+    O(n²) multi-MB string rebuild"); the file is written only by
+    `scripts/extract_lean_deps.py:157` (`JSON_PATH.write_text(...)`), which the gauntlet
+    never invokes. `lake build SKEFTHawking.ExtractDeps` compiles the `.olean` and nothing
+    more, and `_load_lean_deps()` reads the file with no staleness check.
+    **Consequence, stated precisely:** `kernel_pure` — the gauntlet's one live safety
+    check — is computed from the axiom closure as of the *previous* extraction. For a graft
+    it is the pre-graft view. This is the item on this plane worth fixing.
   - **Open design question, not a defect:** should `zero_sorry` be scoped to target decls
     (matching `kernel_pure`) rather than the whole library? As written it can only ever be
     vacuous or hostile to partial fills.
 - ❌ **X** *"`PLACEHOLDER_TOTAL_COUNT` has zero consumers."* **False** — it is imported at
   `tests/test_substrate_integrity_gates.py:18` and asserted at `:60`.
-  ⚠️ **U** But the substance survives the correction: that assertion reads
-  `PLACEHOLDER_TOTAL_COUNT == len(PLACEHOLDER_THEOREMS) == 26` — a tautology (`len(X) ==
-  len(X)`) plus a hardcoded literal — and never reads `docs/counts.json`. Invariant #9
-  requires the registry to match `counts.json theorems_placeholder`.
+  ✅ **V** But the substance survives the correction: `tests/test_substrate_integrity_gates.py:60`
+  reads `assert PLACEHOLDER_TOTAL_COUNT == len(PLACEHOLDER_THEOREMS) == 26`, and
+  `constants.py:2454` defines `PLACEHOLDER_TOTAL_COUNT = len(PLACEHOLDER_THEOREMS)` — so the
+  first comparison is `len(X) == len(X)`, and the rest is a hardcoded literal. Neither reads
+  `docs/counts.json`. Invariant #9 requires the registry to match
+  `counts.json theorems_placeholder`.
   ✅ **V** **Nothing compares them.** `theorems_placeholder` is *written* by
   `update_counts.py:217` and *read* by `build_graph.py:2339` and
   `update_inventory_index.py:152` — every consumer displays it; none checks it against
@@ -374,9 +381,12 @@ and the figures/tables detail in the same directory.
   only of `## Closed Items` and explicitly describes Open Items as auto-derived. Current
   state ✅**V**: **10 Open / 13 Closed**.
   ⚠️ **U** The narrower live finding: with all 11 gate-ids closed and `unclassified` skipped
-  (`qi_register.py:165,170-171` — ✅**V** those lines read as described), the derivation
-  returns nothing, so **Stage 14 can no longer surface a new QI item**. **To verify:** run
-  the clustering in memory against current findings and confirm it returns `[]`.
+  (`qi_register.py:165,170-171` — ✅**V** those lines read as described), the derivation may
+  return nothing, so Stage 14 could no longer surface a new QI item.
+  ⚠️ **Not reproducible as reported:** the survey said it rendered the register in memory,
+  but `qi_register` exposes no `load_findings`, so that method could not be repeated.
+  **To verify:** call the module's real finding-loading entry point (read its `main`) and
+  check whether `cluster_findings` returns `[]` against the live graph.
 - ❌ **X** *"The dashboard cannot satisfy Invariant #8"* — **materially narrowed, and it was
   the item this map briefly flagged as its most severe.** ✅**V** the dashboard's confirm
   action does mutate an in-memory dict (`provenance_dashboard.py:1272-1274`) and its
