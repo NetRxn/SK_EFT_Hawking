@@ -80,6 +80,11 @@ def _is_kernel_pure(rec: dict) -> bool:
 
 #: Lean-synthesised declarations: structure eliminators, match arms, internal
 #: proof obligations. They are compiler artifacts, never mathematical content.
+#: Kinds that can carry a mathematical CLAIM. A namespace match promotes only
+#: these; `def`/`structure`/`instance`/`inductive` in a no-go namespace are the
+#: apparatus the no-go argument is about, not the argument.
+_CLAIM_KINDS = frozenset({"theorem", "lemma", "example"})
+
 _AUTOGEN_RE = re.compile(
     r"\.(casesOn|recOn|rec|ctorIdx|toCtorIdx|match_\d[\d_]*|proof_\d[\d_]*|noConfusion\w*|below|"
     r"ibelow|brecOn|binductionOn|sizeOf\w*|injEq|eq_def)\b|\.mk\.(inj|injEq|sizeOf\w*)\b|\._(sunfold|eq_\d[\d_]*|proof_\d[\d_]*)")
@@ -105,8 +110,29 @@ def _is_obstruction(rec: dict) -> bool:
     # deciding it silently. Filed for an explicit call.
     if _AUTOGEN_RE.search(rec.get("name", "")):
         return False
-    if _NOGO_RE.search(rec.get("name", "")) or _NOGO_RE.search(rec.get("module", "")):
+
+    # ⚠️ NAMESPACE MATCHES CLASSIFY ONLY CLAIM-BEARING KINDS (2026-08-05, operator
+    # ruling on R6-M1). The negative frontier exists to tell a `/goal` loop "this
+    # path is provably dead, here is the false statement" — so what belongs on it
+    # is **the argument that proves the negative**, not the apparatus the argument
+    # is built from.
+    #
+    # Both tests below match a FULLY QUALIFIED name, so a declaration inside e.g.
+    # `SKEFTHawking.DarkEnergyObstructionPrinciple` matched on its NAMESPACE. Of the
+    # 223 such matches, 134 are `theorem` (steps in the negative argument, kept) and
+    # 89 are apparatus — `def` 82, `structure` 4, `instance` 2, `inductive` 1, e.g.
+    # `IsViable`, `gibbsDuhemEvaded`, `EmergentDarkEnergyModel`. Those are the MODEL
+    # the argument is ABOUT; ranking them dilutes the frontier so the actual
+    # refutation competes with its own definitions for a top-8 digest slot.
+    #
+    # A declaration whose OWN leaf name says no-go, or whose type is negated, is
+    # still classified whatever its kind — this narrows namespace inference only.
+    name = rec.get("name", "")
+    leaf = name.rsplit(".", 1)[-1]
+    if _NOGO_RE.search(leaf):
         return True
+    if _NOGO_RE.search(name) or _NOGO_RE.search(rec.get("module", "")):
+        return rec.get("kind", "") in _CLAIM_KINDS
     t = (rec.get("type") or "").lstrip()
     return t.startswith("¬") or t.startswith("Not ") or t.startswith("Not(")
 

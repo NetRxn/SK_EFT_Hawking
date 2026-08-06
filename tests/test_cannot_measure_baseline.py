@@ -174,7 +174,13 @@ class TestCannotMeasureBaseline:
         """Guard the seam: if the scanner silently matched nothing, both
         assertions below would pass vacuously."""
         sites = scan_cannot_measure_sites()
-        assert len(sites) >= 30, (
+        # ⚠️ RAISED 30 -> 54 on 2026-08-05 (PR-review pass 2, R2). Measured live
+        # population: **54** (check, kind) pairs. A floor of 30 left **44 % headroom**
+        # — a ratchet with slack cannot fire, which is the same defect the ratchets
+        # themselves exist to prevent, sitting in the guard that protects them.
+        # Zero headroom: if the population legitimately shrinks, LOWER this in the
+        # same commit and say why.
+        assert len(sites) >= 54, (
             f"the AST scan found only {len(sites)} cannot-measure sites across "
             f"{CHECKS_DIR}; it matched almost nothing, so the ratchet below is "
             f"vacuous. Did the check modules move, or `CheckResult` get aliased?"

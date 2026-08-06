@@ -85,7 +85,8 @@ def _notebooks(tmp_path: Path, monkeypatch, files: dict[str, str]) -> Path:
     for name, body in files.items():
         (d / name).write_text(body)
     monkeypatch.setattr(_H, "NOTEBOOKS_DIR", d)
-    monkeypatch.setattr(nb, "NOTEBOOK_EXEC_CACHE", d / ".notebook_exec_cache.json")
+    monkeypatch.setattr(nb, "notebook_exec_cache",
+                        lambda _d=d: _d / ".notebook_exec_cache.json")
     return d
 
 
@@ -278,7 +279,7 @@ class TestNotebookExecution:
         skips it and the failure disappears until someone edits the notebook."""
         _FakeClient.raised = "ValueError: boom"
         self._run(tmp_path, monkeypatch, {"a.ipynb": self.NB})
-        cache = json.loads(nb.NOTEBOOK_EXEC_CACHE.read_text())
+        cache = json.loads(nb.notebook_exec_cache().read_text())
         assert cache["passed"] == {}, (
             f"a FAILED notebook was recorded as vetted ({cache['passed']}) — the next "
             f"run would skip it and the failure would vanish")
@@ -325,16 +326,23 @@ class TestNotebookExecution:
             "a src/core edit did not invalidate the notebook skip-cache — notebooks "
             "would be vouched for against physics they never ran against")
 
-    def test_the_cache_path_is_derived_from_the_notebooks_dir(self):
-        """Pins the `NOTEBOOK_EXEC_CACHE = _H.NOTEBOOKS_DIR / …` coupling.
+    def test_the_cache_path_FOLLOWS_a_patched_notebooks_dir(self, tmp_path, monkeypatch):
+        """⚠️ STRENGTHENED 2026-08-05 (PR-review pass 2, R3-I5 / R1).
 
-        This module-level BinOp is the known gap in
-        `test_no_check_module_aliases_a_path` (documented in that guard's own assertion
-        message; audit §4 residuals). It is benign in production because paths are never
-        reassigned — but a test that patches only `_H.NOTEBOOKS_DIR` would write the
-        cache into the REAL notebooks directory. Asserting the relationship here means
-        that if the derivation changes, this fails rather than a future test silently
-        polluting the repo.
+        This asserted the *static* coupling `NOTEBOOK_EXEC_CACHE = _H.NOTEBOOKS_DIR /
+        …`, and its own docstring named the reason it had to: the module-level BinOp
+        was an import-time COPY, so *"a test that patches only `_H.NOTEBOOKS_DIR`
+        would write the cache into the REAL notebooks directory."* The test existed to
+        COMPENSATE for the gap rather than to close it.
+
+        The gap is closed — `notebook_exec_cache()` resolves through `_H` at call
+        time — so this now asserts the property that was actually wanted: patch the
+        anchor, and the cache path follows.
         """
-        assert nb.NOTEBOOK_EXEC_CACHE.parent == _H.NOTEBOOKS_DIR
-        assert nb.NOTEBOOK_EXEC_CACHE.name == ".notebook_exec_cache.json"
+        assert nb.notebook_exec_cache().parent == _H.NOTEBOOKS_DIR
+        assert nb.notebook_exec_cache().name == ".notebook_exec_cache.json"
+        monkeypatch.setattr(_H, "NOTEBOOKS_DIR", tmp_path / "fixture_notebooks")
+        assert nb.notebook_exec_cache().parent == tmp_path / "fixture_notebooks", (
+            "the cache path did NOT follow a patched anchor — it is an import-time "
+            "copy again, and a test using a fixture would write into the real "
+            "notebooks directory")

@@ -114,6 +114,10 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
         "test_always_pass_dispositions.py",
         "WARN-only against a retreating target; now a ratchet on COUNT_LITERAL_CEILING",
     ),
+    "bundle_tables_use_pipeline": (
+        "test_d5_papers_prose.py",
+        "raise the ceiling above the measured population -> the ratchet stops "
+        "firing; drop a hand-written tabular into a bundle draft -> summary FAILS"),
     "numerical_literals": (
         "test_always_pass_dispositions.py",
         "same shape; now a ratchet on NUMERICAL_LITERAL_CEILING",
@@ -559,6 +563,9 @@ AWAITING_CEILING = 0
 #: is the distinction the four blockers turned on. Erring toward absent overstates the
 #: remaining work; the opposite error is what produced them.
 PRODUCTION_SEEDED: frozenset[str] = frozenset({
+    # 2026-08-05: a hand-written `\\begin{tabular}` appended to the REAL
+    # `papers/D2/paper_draft.tex` -> 5 vs ceiling 4 -> rc=1; restored, back to PASS.
+    "bundle_tables_use_pipeline",
     # QI-31: a drifted cell / a rules-only table / a deleted row written into
     # `papers/paper1_first_order/tables/table1_experimental_params.tex` -> rc=1 each.
     "paper_table",

@@ -106,7 +106,13 @@ SRC_DIR = _H.SRC_DIR
 LEAN_DIR = _H.LEAN_DIR
 NOTEBOOKS_DIR = _H.NOTEBOOKS_DIR
 PAPERS_DIR = _H.PAPERS_DIR
-REPORTS_DIR = _H.DOCS_DIR / "validation" / "reports"
+def _reports_dir():
+    # ⚠️ H1: resolved AT EACH USE, not bound at import. A module-level
+    # `X = _H.ANCHOR / "..."` is an import-time COPY: a test monkeypatching the
+    # anchor does not reach it, so the check silently reads the PRODUCTION tree
+    # while the test believes it is reading a fixture. Converted 2026-08-05
+    # (PR-review pass 2, R3-I5 / R1).
+    return _H.DOCS_DIR / "validation" / "reports"
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -170,7 +176,7 @@ _CANONICAL_ORDER: tuple[str, ...] = (
     'elaboration_knob_watchlist', 'bundle_figure_integrity', 'viz_consistency',
     'notebook_exec', 'physical_bounds', 'cross_path_consistency',
     'paper_provenance', 'parameter_provenance', 'counts_fresh',
-    'tables_fresh', 'claim_clusters_fresh', 'numerical_literals',
+    'tables_fresh', 'claim_clusters_fresh', 'numerical_literals', 'bundle_tables_use_pipeline',
     'graph_integrity', 'atlas_integrity', 'atlas_hypothesis_discipline',
     'count_literals', 'recurrence_reopens_closures', 'review_severity_declared',
     'review_docs_mint_findings', 'accepted_findings_carry_rationale',
@@ -333,11 +339,11 @@ def _print_failure_provenance(results: Dict[str, CheckResult]) -> None:
 
 def archive_results(results: Dict[str, CheckResult]) -> Path:
     """Write timestamped JSON + text report to docs/validation/reports/."""
-    REPORTS_DIR.mkdir(parents=True, exist_ok=True)
+    _reports_dir().mkdir(parents=True, exist_ok=True)
     ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
 
     # JSON report
-    json_path = REPORTS_DIR / f"validation_{ts}.json"
+    json_path = _reports_dir() / f"validation_{ts}.json"
     payload = {
         "timestamp": ts,
         "project_root": str(PROJECT_ROOT),
@@ -367,7 +373,7 @@ def archive_results(results: Dict[str, CheckResult]) -> Path:
         json.dump(payload, f, indent=2, cls=_Encoder)
 
     # Text report (human-readable)
-    txt_path = REPORTS_DIR / f"validation_{ts}.txt"
+    txt_path = _reports_dir() / f"validation_{ts}.txt"
     lines = [
         f"SK-EFT Hawking Validation Report",
         f"Generated: {ts}",
@@ -441,7 +447,7 @@ from validation.checks import bundles_readiness as _checks_bundles     # noqa: E
 check_notebook_isolation = _checks_notebooks.check_notebook_isolation
 check_viz_consistency = _checks_notebooks.check_viz_consistency
 check_notebook_execution = _checks_notebooks.check_notebook_execution
-NOTEBOOK_EXEC_CACHE = _checks_notebooks.NOTEBOOK_EXEC_CACHE
+notebook_exec_cache = _checks_notebooks.notebook_exec_cache
 _src_core_fingerprint = _checks_notebooks._src_core_fingerprint
 _notebook_code_hash = _checks_notebooks._notebook_code_hash
 
@@ -472,7 +478,7 @@ _tables_is_stale = _checks_freshness._tables_is_stale      # scripts/sync_manife
 _claim_clusters_is_stale = _checks_freshness._claim_clusters_is_stale
 COUNTS_JSON_PATH = _checks_freshness._H.COUNTS_JSON_PATH
 COUNTS_TEX_PATH = _checks_freshness._H.COUNTS_TEX_PATH
-CLAIM_CLUSTERS_PATH = _checks_freshness.CLAIM_CLUSTERS_PATH
+claim_clusters_path = _checks_freshness.claim_clusters_path
 
 check_native_decide_regression = _checks_lean_toolchain.check_native_decide_regression
 check_theorem_count = _checks_lean_toolchain.check_theorem_count

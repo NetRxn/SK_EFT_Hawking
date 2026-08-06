@@ -47,23 +47,24 @@
 39 & \texttt{paper\_provenance} & Paper figure references resolve and no placeholder bibliography ships \\
 40 & \texttt{numerical\_literals} & Paper .tex files free of inline numerical literals outside \texttt{\textbackslash input\{\}} blocks \\
 41 & \texttt{count\_literals} & Paper .tex files reference counts via \texttt{\textbackslash input\{counts.tex\}} macros, not literals \\
-42 & \texttt{paper\_latex\_compiles} & Bundle drafts compile under pdflatex (HARD-FAILS on a fatal error; per-draft content-hash cache --- --force-latex recompiles all) \\
-43 & \texttt{axiom\_count\_prose\_consistency} & Paper prose axiom-count claims agree with docs/counts.json \\
-44 & \texttt{paper\_toolchain\_pin\_drift} & Advisory (Class TP): paper-draft toolchain/Mathlib pins match lean-toolchain + lakefile.toml \\
-45 & \texttt{numerical} & Experimental parameters match reference values \\
-46 & \texttt{identities} & Mathematical identities and boundary conditions hold \\
-47 & \texttt{paper\_table} & Paper 1's SHIPPED Table 1 cells match the canonical solver output \\
-48 & \texttt{d1\_hierarchy\_table} & D1 BEC hierarchy table + crossover match the canonical evaluator \\
-49 & \texttt{f\_hierarchy\_claims} & Flagship F inline Heidelberg BEC corrections match the canonical evaluator \\
-50 & \texttt{cgl\_fdr} & CGL FDR derivation produces correct results \\
-51 & \texttt{physical\_bounds} & All computed quantities within physical bounds \\
-52 & \texttt{cross\_path\_consistency} & Different code paths agree within 0.5\%/1\% tolerance \\
-53 & \texttt{quantum\_network} & QN Python formulas satisfy the QuantumNetwork Lean theorem identities \\
-54 & \texttt{prose\_theorem\_reference\_coverage} & Bundle-draft \texttt{} Lean references resolve in lean\_deps.json \\
-55 & \texttt{theorem\_name\_embedded\_citations} & Declaration names embedding author+year have matching bibliography entries \\
-56 & \texttt{recurrence\_reopens\_closures} & A closure is not contradicted by a later review raising the same finding \\
-57 & \texttt{review\_severity\_declared} & Review documents from the cutoff forward declare each finding's severity \\
-58 & \texttt{review\_docs\_mint\_findings} & Every bundle Stage-13 review document mints at least one ReviewFinding node \\
-59 & \texttt{accepted\_findings\_carry\_rationale} & Every `accepted` supersession record justifies acceptance in writing \\
+42 & \texttt{bundle\_tables\_use\_pipeline} & Bundle drafts source tables from the pipeline (\texttt{\textbackslash input\{tables/\}}), not hand-written tabulars (ratcheted) \\
+43 & \texttt{paper\_latex\_compiles} & Bundle drafts compile under pdflatex (HARD-FAILS on a fatal error; per-draft content-hash cache --- --force-latex recompiles all) \\
+44 & \texttt{axiom\_count\_prose\_consistency} & Paper prose axiom-count claims agree with docs/counts.json \\
+45 & \texttt{paper\_toolchain\_pin\_drift} & Advisory (Class TP): paper-draft toolchain/Mathlib pins match lean-toolchain + lakefile.toml \\
+46 & \texttt{numerical} & Experimental parameters match reference values \\
+47 & \texttt{identities} & Mathematical identities and boundary conditions hold \\
+48 & \texttt{paper\_table} & Paper 1's SHIPPED Table 1 cells match the canonical solver output \\
+49 & \texttt{d1\_hierarchy\_table} & D1 BEC hierarchy table + crossover match the canonical evaluator \\
+50 & \texttt{f\_hierarchy\_claims} & Flagship F inline Heidelberg BEC corrections match the canonical evaluator \\
+51 & \texttt{cgl\_fdr} & CGL FDR derivation produces correct results \\
+52 & \texttt{physical\_bounds} & All computed quantities within physical bounds \\
+53 & \texttt{cross\_path\_consistency} & Different code paths agree within 0.5\%/1\% tolerance \\
+54 & \texttt{quantum\_network} & QN Python formulas satisfy the QuantumNetwork Lean theorem identities \\
+55 & \texttt{prose\_theorem\_reference\_coverage} & Bundle-draft \texttt{} Lean references resolve in lean\_deps.json \\
+56 & \texttt{theorem\_name\_embedded\_citations} & Declaration names embedding author+year have matching bibliography entries \\
+57 & \texttt{recurrence\_reopens\_closures} & A closure is not contradicted by a later review raising the same finding \\
+58 & \texttt{review\_severity\_declared} & Review documents from the cutoff forward declare each finding's severity \\
+59 & \texttt{review\_docs\_mint\_findings} & Every bundle Stage-13 review document mints at least one ReviewFinding node \\
+60 & \texttt{accepted\_findings\_carry\_rationale} & Every `accepted` supersession record justifies acceptance in writing \\
 \hline
 \end{tabular}

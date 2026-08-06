@@ -287,7 +287,13 @@ def _lean_source_declares(short: str) -> bool:
 
 
 _PHYSLIB_SOURCE_CACHE: Optional[str] = None
-_PHYSLIB_DIR = _H.PROJECT_ROOT / "lean" / ".lake" / "packages" / "Physlib"
+def _physlib_dir():
+    # ⚠️ H1: resolved AT EACH USE, not bound at import. A module-level
+    # `X = _H.ANCHOR / "..."` is an import-time COPY: a test monkeypatching the
+    # anchor does not reach it, so the check silently reads the PRODUCTION tree
+    # while the test believes it is reading a fixture. Converted 2026-08-05
+    # (PR-review pass 2, R3-I5 / R1).
+    return _H.PROJECT_ROOT / "lean" / ".lake" / "packages" / "Physlib"
 
 
 def _physlib_declares(short: str) -> bool:
@@ -312,11 +318,11 @@ def _physlib_declares(short: str) -> bool:
     """
     global _PHYSLIB_SOURCE_CACHE
     if _PHYSLIB_SOURCE_CACHE is None:
-        if not _PHYSLIB_DIR.exists():
+        if not _physlib_dir().exists():
             _PHYSLIB_SOURCE_CACHE = ""
         else:
             chunks = []
-            for lf in sorted(_PHYSLIB_DIR.rglob("*.lean")):
+            for lf in sorted(_physlib_dir().rglob("*.lean")):
                 try:
                     src = lf.read_text()
                 except OSError:

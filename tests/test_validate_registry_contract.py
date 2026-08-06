@@ -56,7 +56,7 @@ EXPECTED_CHECKS = [
     'elaboration_knob_watchlist', 'bundle_figure_integrity', 'viz_consistency',
     'notebook_exec', 'physical_bounds', 'cross_path_consistency',
     'paper_provenance', 'parameter_provenance', 'counts_fresh',
-    'tables_fresh', 'claim_clusters_fresh', 'numerical_literals',
+    'tables_fresh', 'claim_clusters_fresh', 'numerical_literals', 'bundle_tables_use_pipeline',
     'graph_integrity', 'atlas_integrity', 'atlas_hypothesis_discipline',
     'count_literals', 'recurrence_reopens_closures', 'review_severity_declared',
     'review_docs_mint_findings', 'accepted_findings_carry_rationale',

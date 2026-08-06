@@ -765,22 +765,48 @@ def check_cross_path_consistency() -> CheckResult:
         if not ok:
             all_pass = False
 
-    # --- Compare decoherence: spectrum_summary vs formulas.py ---
+    # --- Decoherence: the DEFINITIONAL factor-of-2 relation ---
+    #
+    # ⚠️ REWRITTEN 2026-08-05 (PR-review pass 2, R4-I1). This leg used to read
+    # "decoherence: spectrum vs formulas" and compare `delta_k_at_T_H` against
+    # `decoherence_parameter(Gamma_H, kappa)`. It could NEVER disagree with the leg
+    # above it, and the mechanism is exact rather than approximate:
+    #
+    #   decoherence_parameter(G, k) = 2G/k          (formulas.py)
+    #   delta_k_at_T_H              = 2 * delta_diss_at_T_H
+    #
+    # so BOTH sides of this comparison were exactly 2x both sides of the first, and
+    # `|a-b|/a` is scale-invariant. Measured: both legs produced rel_diff =
+    # 4.127685699545415e-06, **bit-identical**. Two details, one assertion — read by
+    # a reviewer as two independent cross-path confirmations.
+    #
+    # What it can honestly test is the factor-of-2 relation ITSELF, which is a real
+    # invariant (`delta_k = 2 * delta_diss`) and would catch a spectrum that
+    # computed the two inconsistently. That is what it now asserts. A genuinely
+    # independent second path for `delta_k` would be better still and is NOT
+    # invented here — see the pass-2 register.
     dk_spectrum = summ['delta_k_at_T_H']
-    Gamma_H = gamma_eff * (platform.T_H / platform.c_s)**2
-    dk_formulas = decoherence_parameter(Gamma_H, platform.kappa)
+    dd_spectrum = summ['delta_diss_at_T_H']
 
-    if dk_spectrum > 0 and dk_formulas > 0:
-        rel_diff = abs(dk_spectrum - dk_formulas) / dk_spectrum
-        ok = rel_diff < 0.005
+    if dk_spectrum > 0 and dd_spectrum > 0:
+        ratio = dk_spectrum / dd_spectrum
+        ok = abs(ratio - 2.0) < 0.005
         details.append(Detail(
-            "decoherence: spectrum vs formulas",
+            "decoherence: delta_k = 2 x delta_diss (definitional)",
             ok,
-            f"spectrum={dk_spectrum:.4e}, formulas={dk_formulas:.4e}, "
-            f"rel_diff={rel_diff:.4f}"
+            f"delta_k={dk_spectrum:.4e}, delta_diss={dd_spectrum:.4e}, "
+            f"ratio={ratio:.6f} (expected 2.0)"
         ))
         if not ok:
             all_pass = False
+    else:
+        # Absence is not agreement: a spectrum reporting zero for either quantity
+        # means this relation was NOT tested (the old leg skipped silently here).
+        details.append(Detail(
+            "decoherence: delta_k = 2 x delta_diss (definitional)", False,
+            f"NOT TESTED — delta_k={dk_spectrum:.4e}, delta_diss={dd_spectrum:.4e}; "
+            f"a non-positive value means the relation was never evaluated"))
+        all_pass = False
 
     # Note: WKB platform uses natural units (c_s=1, kappa=1) while
     # BECParameters uses SI. Dimensionless ratios (delta_diss, decoherence)

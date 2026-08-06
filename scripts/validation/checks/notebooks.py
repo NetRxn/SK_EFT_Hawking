@@ -23,7 +23,7 @@ THE THREE IMPORT RULES for every module in this package
   never `from ... import FORCE_NOTEBOOK_REEXEC` — an imported copy freezes at import
   time and the flag silently becomes a no-op (ADR-009 H5).
 
-`NOTEBOOK_EXEC_CACHE` lives here because `notebook_exec` is its only consumer. It
+`notebook_exec_cache()` lives here because `notebook_exec` is its only consumer. It
 is re-exported from `validate` anyway, since the migration contract preserves the
 module's external surface rather than reasoning case-by-case about who might be
 reading what (ADR-009 D2 item 8).
@@ -48,7 +48,13 @@ from validation._registry import CheckResult, Detail, register_check
 #: Local (git-ignored) skip-cache for the notebook-execution check: maps each
 #: vetted notebook to a content hash so unchanged, previously-passed notebooks are
 #: not re-executed. Mirrors the Lean `extract_lean_deps.py` hash-skip.
-NOTEBOOK_EXEC_CACHE = _H.NOTEBOOKS_DIR / ".notebook_exec_cache.json"
+def notebook_exec_cache():
+    # ⚠️ H1: resolved AT EACH USE, not bound at import. A module-level
+    # `X = _H.ANCHOR / "..."` is an import-time COPY: a test monkeypatching the
+    # anchor does not reach it, so the check silently reads the PRODUCTION tree
+    # while the test believes it is reading a fixture. Converted 2026-08-05
+    # (PR-review pass 2, R3-I5 / R1).
+    return _H.NOTEBOOKS_DIR / ".notebook_exec_cache.json"
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -320,9 +326,9 @@ def check_notebook_execution() -> CheckResult:
     # all); --force-notebooks ignores it entirely.
     src_fp = _src_core_fingerprint()
     prev_passed: Dict[str, str] = {}
-    if NOTEBOOK_EXEC_CACHE.is_file() and not _cfg.FORCE_NOTEBOOK_REEXEC:
+    if notebook_exec_cache().is_file() and not _cfg.FORCE_NOTEBOOK_REEXEC:
         try:
-            loaded = json.loads(NOTEBOOK_EXEC_CACHE.read_text())
+            loaded = json.loads(notebook_exec_cache().read_text())
             if isinstance(loaded, dict) and loaded.get("src_fingerprint") == src_fp:
                 prev_passed = loaded.get("passed", {}) or {}
         except (json.JSONDecodeError, OSError):
@@ -383,7 +389,7 @@ def check_notebook_execution() -> CheckResult:
 
     # Persist the updated cache (only currently-existing, vetted notebooks).
     try:
-        NOTEBOOK_EXEC_CACHE.write_text(json.dumps(
+        notebook_exec_cache().write_text(json.dumps(
             {"src_fingerprint": src_fp, "passed": new_passed},
             indent=2, sort_keys=True))
     except OSError:

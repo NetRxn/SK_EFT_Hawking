@@ -333,7 +333,13 @@ def check_tables_fresh() -> CheckResult:
 # CHECK 15d: Cross-paper ClaimCluster freshness (Phase 5v Wave 10f)
 # ═══════════════════════════════════════════════════════════════════════
 
-CLAIM_CLUSTERS_PATH = _H.PAPERS_DIR / "claim_clusters.json"
+def claim_clusters_path():
+    # ⚠️ H1: resolved AT EACH USE, not bound at import. A module-level
+    # `X = _H.ANCHOR / "..."` is an import-time COPY: a test monkeypatching the
+    # anchor does not reach it, so the check silently reads the PRODUCTION tree
+    # while the test believes it is reading a fixture. Converted 2026-08-05
+    # (PR-review pass 2, R3-I5 / R1).
+    return _H.PAPERS_DIR / "claim_clusters.json"
 
 
 def _claim_clusters_is_stale() -> tuple[bool, str]:
@@ -362,9 +368,9 @@ def _claim_clusters_is_stale() -> tuple[bool, str]:
             v2_files.append(cr)
     if not v2_files:
         return False, "no v2 claims_review.json files"
-    if not CLAIM_CLUSTERS_PATH.exists():
+    if not claim_clusters_path().exists():
         return True, f"{len(v2_files)} v2 paper(s), no claim_clusters.json"
-    cluster_mtime = CLAIM_CLUSTERS_PATH.stat().st_mtime
+    cluster_mtime = claim_clusters_path().stat().st_mtime
     for f in v2_files:
         if f.stat().st_mtime > cluster_mtime:
             return True, f"{f.parent.name}/claims_review.json newer than claim_clusters.json"
@@ -416,9 +422,9 @@ def check_claim_clusters_fresh() -> CheckResult:
         details.append(Detail("staleness", True, reason))
 
     # Summarize current cluster state when present
-    if CLAIM_CLUSTERS_PATH.exists():
+    if claim_clusters_path().exists():
         try:
-            data = json.loads(CLAIM_CLUSTERS_PATH.read_text())
+            data = json.loads(claim_clusters_path().read_text())
             n_clusters = data.get('cluster_count', 0)
             n_papers = len(data.get('paper_coverage') or [])
             details.append(Detail(

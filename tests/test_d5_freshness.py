@@ -260,7 +260,7 @@ class TestClaimClustersFreshness:
         if with_cluster:
             _touch(cp, cluster_mtime, json.dumps({"cluster_count": 1,
                                                   "paper_coverage": ["paper1_x"]}))
-        monkeypatch.setattr(fr, "CLAIM_CLUSTERS_PATH", cp)
+        monkeypatch.setattr(fr, "claim_clusters_path", lambda _p=cp: _p)
         runner = _Ran()
         monkeypatch.setattr(fr.subprocess, "run", runner)
         return runner
@@ -295,7 +295,7 @@ class TestClaimClustersFreshness:
 
     def test_an_unreadable_cluster_file_fails(self, tmp_path, monkeypatch):
         self._setup(tmp_path, monkeypatch, review_mtime=1000, cluster_mtime=2000)
-        fr.CLAIM_CLUSTERS_PATH.write_text("{not json")
+        fr.claim_clusters_path().write_text("{not json")
         assert fr.check_claim_clusters_fresh().passed is False
 
 
@@ -585,5 +585,5 @@ class TestPathAliasCoupling:
         assert all(p.is_absolute() for p in fr._COUNTS_SOURCES)
 
     def test_claim_clusters_path_sits_under_papers(self):
-        assert fr.CLAIM_CLUSTERS_PATH.parent == _H.PROJECT_ROOT / "papers"
-        assert fr.CLAIM_CLUSTERS_PATH.name == "claim_clusters.json"
+        assert fr.claim_clusters_path().parent == _H.PROJECT_ROOT / "papers"
+        assert fr.claim_clusters_path().name == "claim_clusters.json"
