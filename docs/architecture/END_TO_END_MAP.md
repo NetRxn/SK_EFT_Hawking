@@ -91,6 +91,10 @@ recorded.
   exist there. The roadmap layer — where scope, waves, and (per §2 above) the graph schema
   itself are declared — is entirely unmechanized. This is the single largest ungated seam
   in the map.
+  ✅ **V** The one code path that *reads* a roadmap fails open:
+  `.claude/plugins/skeft-qa/scripts/notebook_lib.py:201-204` wraps the read in
+  `except Exception: return None`, so an unreadable or absent roadmap is indistinguishable
+  from one with nothing to say.
 
 **Concern (author, ✅V):** the schema lives in a *phase roadmap*, a *working doc*, and a
 `docs/` file that disagrees with itself — not in `docs/architecture/`. That placement is a
@@ -130,8 +134,16 @@ Contract in both `CLAUDE.md`s (the Stop hook is a GO signal, never coercion) and
   names the slash command `/skeft-qa:trace`, and ✅**V** it does not exist (6 commands on
   disk, `trace` not among them). A mandatory-read doc promises tooling never built — a doc
   defect, not a broken control path.
-- ⚠️ **U** The ≤4k `/goal` prompt cap is prose-only; `harness_common.py:631` appends
-  unbounded. **To verify:** read `:600-640` and look for a length guard.
+- ❌ **X** *"The ≤4k `/goal` prompt cap is prose-only; the payload appends unbounded."*
+  **Refuted.** ✅**V** there is a real, enforced budget:
+  `ADDITIONAL_CONTEXT_LIMIT = 10000` (`harness_common.py:208`),
+  `PAYLOAD_MAX_CHARS = ADDITIONAL_CONTEXT_LIMIT - _WRAPPER_RESERVE` (`:219`), and the
+  assembly loop admits a block only `if len("\n\n".join(parts + [block])) <
+  PAYLOAD_MAX_CHARS` (`:651`) — "included whole only if it fits, never required, never
+  truncated mid-text" (`:620`). The specific 4k figure was **deliberately retired**:
+  `:218` records *"zero payload-budget pressure (CORE_MAX_CHARS retired)"*. `:204` further
+  documents that Claude Code does not truncate but writes overflow to a session file and
+  hands the model a path. A retired constant read as an unenforced one.
 
 ---
 
@@ -318,9 +330,15 @@ and the figures/tables detail in the same directory.
 - ✅ **V** **The "Stages 9 and 10 before 13" hard gate has no enforcement point.**
   `papers/D6/bundle_metadata.json` reads `stage9_status: not_started`,
   `stage10_status: skeleton`, `stage13_status: green`. Read directly.
-- ⚠️ **U** Only the **adversarial** reviewer's output re-enters the machine; the figure- and
-  claims-reviewer outputs reach no gate. **To verify:** read
-  `build_graph.extract_review_finding_nodes` and check which report formats its regex parses.
+- ✅ **V** **The finding extractor parses one report dialect.**
+  `extract_review_finding_nodes` scans `papers/AutomatedReviews/<date>/*.md` for
+  *"numbered `### N.N — ...` headings with severity glyphs (🔴/🟡/🔵)"* — the
+  **adversarial** reviewer's format. A report written in another dialect yields no
+  `ReviewFinding` nodes, hence no `FLAGS` edges, hence no gate movement.
+  ⚠️ **U** the corollary — that the figure- and claims-reviewer bundle outputs are in fact
+  written in a different dialect (letter-coded classes, no `- **Severity:**`) and so reach
+  no gate. **To verify:** open one `claims_review.json` / bundle figure report and test it
+  against the heading + glyph pattern.
 - ✅ **V** **Nothing in the codebase writes a `stage*_status` to `green`.** The only
   writers set `"pending"`: `bundle_append.py:321,323,325` and
   `bundle_source_manifest.py:129-131`. Every green in `papers/*/bundle_metadata.json` is
