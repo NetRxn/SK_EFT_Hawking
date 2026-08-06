@@ -30,5 +30,47 @@
     "FixPropagation"
   ],
   "readiness": "RED",
-  "readiness_last_computed": "2026-08-01"
+  "readiness_last_computed": "2026-08-01",
+  "apex_theorems": [
+    {
+      "name": "SKEFTHawking.wang_bridge_full_chain",
+      "claims": "abstract headline \u2014 the full Wang chain: SM fermion content + the 24|c_- framing constraint force N_f = 0 mod 3",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.wang_sixteen_convergence",
+      "claims": "\u00a75 \u2014 the 16-convergence, where the fermion count and the Rokhlin/eta constraint meet",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.fermion_count_gives_central_charge",
+      "claims": "\u00a72 \u2014 c_- = 8 N_f DERIVED from the 16 left-handed Weyl components, not posited",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.central_charge_fractional_without_nu_R",
+      "claims": "\u00a72 \u2014 without nu_R the central charge is fractional: a formal argument for right-handed neutrinos from modular invariance alone",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.A1.ext_dims_substantive",
+      "claims": "\u00a74 \u2014 dim Ext^n_{A(1)}(F_2,F_2) = 1,2,2,2,3,4 for n = 0..5, from the explicit minimal free resolution",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.A1.ext_computation_summary",
+      "claims": "\u00a74 \u2014 the machine-checked Ext-over-A(1) computation through degree 5, the Letter's algebraic-kernel contribution",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.SmoothSpinManifold4.rokhlin",
+      "claims": "\u00a75 \u2014 Rokhlin divisibility 16 | sigma over the SmoothSpinManifold4 interface; CONDITIONAL by disclosure (the 2 | sigma/8 topological input is a tracked hypothesis, and must be \u2014 16 | sigma is false for general even-unimodular forms, e.g. Freedman's E_8)",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.eight_dvd_latticeSig",
+      "claims": "\u00a75 \u2014 the machine-checked algebraic half, 8 | sigma for an even unimodular form",
+      "declared": "2026-08-06"
+    }
+  ]
 }

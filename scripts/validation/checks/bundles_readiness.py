@@ -1018,7 +1018,8 @@ def check_bundle_registry_consistency() -> CheckResult:
 #: full-context-review condition (ADR-010 §D5a), so this started at the maximum by design.
 #: 21 -> 20: D6 retrofitted 2026-08-06 (11 apexes; docs/audits/2026-08-06-d6-retrofit/).
 #: 20 -> 19: D9 retrofitted 2026-08-06 (25 apexes, one per claim of its five-layer abstract).
-UNDECLARED_APEX_CEILING = 19
+#: 19 -> 18: L2 retrofitted 2026-08-06 (8 apexes).
+UNDECLARED_APEX_CEILING = 18
 
 
 @register_check(

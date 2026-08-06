@@ -141,13 +141,37 @@ Seeded from existing prose references (a **lower bound** — no apexes are decla
 
 - **As §3 predicted:** L1 (1 module, depth 1) and L3 (5, depth 3) are genuinely shallow; D9
   (142 modules, depth 18) and D8 (289, depth 24) are genuinely deep.
-- **Against the roster:** **L2 is a letter on a deep-paper substrate** (39 modules, depth 14 —
-  more than nine of the twelve D bundles), and **D7 (6 modules) and D1 (18) are shaped like
-  letters.**
+- **Against the roster:** **D7 (6 modules) and D1 (18) are shaped like letters**, and L2 carries a
+  deep substrate (39 modules, depth 14) for a PRL.
 
-That is the re-tiering signal, arriving as a measurement rather than an impression. It says where
-to look; it does **not** decide anything, because tier is also a claim about audience and framing,
-not only about substrate.
+That is a signal about where to look; it does **not** decide anything, because tier is also a claim
+about audience and framing, not only about substrate.
+
+### ⚠️ Correction after the first three retrofits — depth is NOT the tier discriminator
+
+§3 proposed *"one apex over a shallow closure is a letter; several interlocking apexes over a deep
+closure is a deep paper."* Measured against real apex declarations, that rule **misses a third case
+and gets it backwards**:
+
+| bundle | apexes | closure | modules | depth | **apexes / closure** |
+|---|---|---|---|---|---|
+| D6 | 11 | 51 | 4 | 3 | **22 %** |
+| D9 | 25 | 623 | 68 | 12 | **4 %** |
+| L2 | 8 | 430 | 40 | 14 | **2 %** |
+
+**L2 is a letter with a deep substrate, and that is entirely legitimate** — a PRL making one crisp
+claim (`N_f ≡ 0 mod 3`) resting on 430 declarations of algebraic topology (Ext over `A(1)`, Rokhlin,
+spin manifolds) is a good letter, not a mis-tiered deep paper. My earlier reading of "L2 is a letter
+on a deep-paper substrate" as a *problem* was wrong.
+
+The discriminator that survives contact with the data is the **ratio**: a deep paper's apexes sit
+atop a large derived body (D9, 4 %); a letter's single claim can also sit atop a large body (L2,
+2 %). What stands out is the **opposite** shape — **D6's apexes are 22 % of its own substrate**,
+i.e. its claims very nearly *are* the substrate, resting on almost nothing derived beneath them.
+
+So: **depth measures how much machinery a claim rests on; the apex/closure ratio measures whether a
+bundle has substrate underneath its claims at all.** The second is the one that flags a thin
+bundle. Neither decides tier by itself.
 
 ## 9. Heuristic surfaces still open (the "arc-like" audit)
 
