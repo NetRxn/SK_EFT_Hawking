@@ -65,7 +65,7 @@ EXPECTED_CHECKS = [
     'citation_primary_sources_present', 'provenance_doi_in_registry',
     'bundle_consistency', 'bundle_source_freshness',
     'bibitem_title_primary_source', 'quantum_network',
-    'bundle_registry_consistency', 'paper_latex_compiles',
+    'bundle_registry_consistency', 'bundle_apex_resolves', 'paper_latex_compiles',
     'axiom_count_prose_consistency', 'prose_theorem_reference_coverage',
     'theorem_name_embedded_citations', 'inventory_index_autogen_fresh',
     'lean_docstring_refs_resolve', 'paper_toolchain_pin_drift',

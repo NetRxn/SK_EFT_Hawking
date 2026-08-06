@@ -142,18 +142,36 @@ on substrate and an over-count of apexes. It says where to look. It does not nam
 | `bundle_closure_freshness` | a bundle's closure content-hash moved since its last lift → absorption due (**content hash, not mtime** — the trigger the D6 branch turns on) |
 | `substrate_homing_ratchet` | un-homed count rises without an entry saying why |
 
-⚠️ **`bundle_apex_resolves` must fail on an EMPTY apex list, not pass it.** Every content-facing
+⚠️ **`bundle_apex_resolves` must not pass vacuously on an empty apex list.** Every content-facing
 predicate on this branch was `∀x ∈ S(draft). P(x)` with the draft supplying `S`, making the whole
-system **monotone in emptiness** (H1). A bundle with no apexes must read `UNMEASURABLE`, never
-`clean`. This is the single most important line in this document.
+system **monotone in emptiness** (H1). This is the single most important line in this document.
+
+**How it is enforced, and why not by `measured=False`.** The first draft set `measured=False` when
+nothing was declared. That is wrong: `measured` means *the check could not run* — an absent
+artifact or toolchain — and it feeds the `--ci` coverage floor, whose job is to catch an
+under-provisioned runner. All 21 metadata files are present and readable; the check runs fine and
+returns a definite result. Reporting `measured=False` would have told the floor the runner was one
+check short and masked a real provisioning failure by one.
+
+So the teeth come from **the house ratchet instead**: `UNDECLARED_APEX_CEILING = 21` hard-fails
+when the undeclared count RISES, the per-bundle detail says substrate UNKNOWN rather than summing
+it to zero, and the substantive `apexes_resolve` detail reads `UNMEASURABLE` instead of claiming a
+resolution it never performed. Every bundle retrofitted lowers the ceiling in the same commit; 0 is
+the target. `measured=False` is reserved for the one branch that genuinely cannot measure — no
+bundle metadata on disk at all.
 
 ## 5. Sequencing
 
-1. Derivation module + overlay + `CLAIMS_APEX` extractor. With no apexes declared, every
-   declaration is un-homed — **and that is the honest reading**, not a failure to fix by seeding
-   apexes automatically.
-2. `bundle_apex_resolves` (+ its emptiness semantics) and its tests.
-3. Retrofit **one** bundle end-to-end under §3b as a proof of the flow. D6 or L2 — D6 because its
+1. ✅ **BUILT** — `scripts/bundle_closure.py` (derivation), `_overlay_closure` +
+   `extract_claims_apex_edges` in `build_graph.py`. With no apexes declared, all 32 744 project
+   declarations are un-homed and all 21 bundles report `closure_measurable: false` — **that is the
+   honest reading**, not a failure to paper over by seeding apexes automatically.
+2. ✅ **BUILT** — `bundle_apex_resolves` (registered, in `_CANONICAL_ORDER` after the roster gate)
+   plus 28 tests in `tests/test_bundle_closure.py`. It hard-fails on an apex naming no live
+   declaration, on an apex that is not a theorem, and on the undeclared count rising above
+   `UNDECLARED_APEX_CEILING = 21`. `--ci`'s coverage floor moved 57 → 58 in the same commit, per
+   the zero-headroom ratchet.
+3. ⏭️ **NEXT** — retrofit **one** bundle end-to-end under §3b as a proof of the flow. D6 or L2 — D6 because its
    entanglement with D9 (Jaccard 0.482) is the portfolio question, L2 because its substrate depth
    (39 modules, depth 14) contradicts its tier.
 4. Only then the remaining bundles, one at a time.

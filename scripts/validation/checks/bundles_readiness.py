@@ -998,3 +998,136 @@ def check_bundle_registry_consistency() -> CheckResult:
     )
 
     return CheckResult(passed=all_pass, details=details)
+
+
+
+
+#: How many bundles may still declare NO apex theorems. **A RATCHET — it only goes down,
+#: and 0 is the target.** Every bundle retrofitted under ADR-010 §D5a lowers it by one, in
+#: the same commit.
+#:
+#: ⚠️ This is the instrument that keeps `bundle_apex_resolves` from being vacuous. Its
+#: substantive predicate is "every declared apex resolves to a live theorem", a universal
+#: over a set the bundles supply — so with nothing declared it is true of nothing, which
+#: is the monotone-in-emptiness shape that made a whole family of content-facing checks on
+#: this branch unable to fail (PR-review pass 2, H1). Counting the empty ones and refusing
+#: to let that count RISE is what gives the check teeth on day one.
+#:
+#: 21 = every bundle on disk, measured 2026-08-06, when the closure machinery shipped and
+#: no apexes had yet been declared. Declaration is gated on the operator's per-bundle
+#: full-context-review condition (ADR-010 §D5a), so this starts at the maximum by design.
+UNDECLARED_APEX_CEILING = 21
+
+
+@register_check(
+    "bundle_apex_resolves",
+    "Every apex theorem a bundle declares names a live Lean theorem, and the "
+    "undeclared-bundle count does not rise (publication-intake closure)")
+def check_bundle_apex_resolves() -> CheckResult:
+    """Gate the ONE hand-maintained input to the bundle substrate closure.
+
+    A bundle declares its apex theorems in `papers/<bundle>/bundle_metadata.json`; its
+    substrate is the derived transitive closure of those apexes and therefore cannot
+    drift. That puts the whole drift risk in a handful of names per bundle — which is
+    exactly what this check reads.
+
+    Three hard failures:
+
+    * an apex naming **no live declaration** (a rename, a deletion, a typo). The closure
+      silently shrinks and the bundle looks smaller rather than broken.
+    * an apex resolving to something **other than a theorem**. A bundle claims results; a
+      `def` or `structure` is machinery the results are stated over, and seeding a closure
+      from one pulls in the definition's dependencies while claiming nothing.
+    * the **undeclared-bundle count rising** above `UNDECLARED_APEX_CEILING`.
+
+    ⚠️ The third is not decoration, it is what makes the other two non-vacuous. "Every
+    declared apex resolves" is a universal over a bundle-supplied set, so today — with
+    nothing declared anywhere — it holds of nothing. A check in that shape reports a clean
+    pass over an absence, which is the exact defect this branch exists to remove. The
+    ratchet measures the absence directly and refuses to let it grow, and the per-bundle
+    detail says UNKNOWN rather than summing the missing substrate to zero.
+    """
+    import bundle_closure
+
+    details: List[Detail] = []
+    all_pass = True
+
+    def check(name: str, passed: bool, msg: str, warning: bool = False) -> None:
+        nonlocal all_pass
+        details.append(Detail(name, passed, msg, warning=warning))
+        if not passed and not warning:
+            all_pass = False
+
+    papers_root = _H.PROJECT_ROOT / "papers"
+    declarations = bundle_closure.load_apex_declarations(papers_root)
+    if not declarations:
+        # No bundle metadata at all — the input is ABSENT, not empty. This is the one
+        # branch that genuinely cannot measure.
+        return CheckResult(
+            passed=True, measured=False,
+            details=[Detail("papers_present", True,
+                            f"no bundle metadata under {papers_root} — nothing to measure",
+                            warning=True)])
+
+    unreadable = sorted(b for b, d in declarations.items() if d.get("unreadable"))
+    check("metadata_readable", not unreadable,
+          f"{len(declarations)} bundle metadata files parse"
+          if not unreadable else
+          "unreadable bundle_metadata.json (an undeclared bundle, not an absent one): "
+          f"{unreadable}")
+
+    declared = {b: d for b, d in declarations.items() if d["declared"] and d["apexes"]}
+    undeclared = sorted(set(declarations) - set(declared))
+
+    check("undeclared_does_not_rise", len(undeclared) <= UNDECLARED_APEX_CEILING,
+          f"{len(undeclared)} of {len(declarations)} bundle(s) declare no apexes "
+          f"(ceiling {UNDECLARED_APEX_CEILING}; substrate UNKNOWN, not empty)"
+          + (f": {', '.join(undeclared)}" if undeclared else "")
+          if len(undeclared) <= UNDECLARED_APEX_CEILING else
+          f"undeclared bundles rose to {len(undeclared)}, above the ratchet's "
+          f"{UNDECLARED_APEX_CEILING}: {', '.join(undeclared)}",
+          warning=bool(undeclared) and len(undeclared) <= UNDECLARED_APEX_CEILING)
+
+    if not declared:
+        # Nothing to resolve — say so, rather than reporting a vacuous pass on the
+        # substantive predicate. The ratchet above is what carries this check today.
+        details.append(Detail(
+            "apexes_resolve", True,
+            f"UNMEASURABLE — no bundle declares `{bundle_closure.APEX_KEY}`, so there is "
+            "no apex to resolve; the undeclared-count ratchet is this check's only live "
+            "assertion until the first bundle is retrofitted",
+            warning=True))
+        return CheckResult(passed=all_pass, details=details)
+
+    records = bundle_closure.load_records()
+    closures = bundle_closure.build_closures(records, declarations)
+
+    unresolved = {b: c.unresolved_apexes for b, c in closures.items()
+                  if c.unresolved_apexes}
+    check("apexes_resolve", not unresolved,
+          f"{sum(len(d['apexes']) for d in declared.values())} declared apexes across "
+          f"{len(declared)} bundle(s) all name live declarations"
+          if not unresolved else
+          f"declared apexes naming no live declaration: {unresolved}")
+
+    non_theorem = {b: c.non_theorem_apexes for b, c in closures.items()
+                   if c.non_theorem_apexes}
+    check("apexes_are_theorems", not non_theorem,
+          "every declared apex is a theorem"
+          if not non_theorem else
+          "declared apexes that are not theorems (a bundle claims results, not "
+          f"definitions): {non_theorem}")
+
+    # Closure shape, always WITH its truncation — a size published alone reads complete.
+    for b, c in sorted(closures.items()):
+        if not c.measurable:
+            continue
+        details.append(Detail(
+            f"closure_{b}", True,
+            f"{len(c.apexes)} apex(es) → {len(c.closure)} declarations across "
+            f"{len(c.modules)} modules, depth {c.max_depth}"
+            + (f" ⚠ {c.truncated_private} walk(s) stopped at a private declaration"
+               if c.truncated_private else ""),
+            warning=bool(c.truncated_private)))
+
+    return CheckResult(passed=all_pass, details=details)

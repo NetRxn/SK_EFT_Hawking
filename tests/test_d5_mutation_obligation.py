@@ -91,6 +91,16 @@ TESTS_DIR = SK_ROOT / "tests"
 #: An entry here is a CLAIM that someone seeded a defect and watched the test fail.
 #: Add one only when that has actually been done — the evidence lives in the commit.
 MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
+    "bundle_apex_resolves": (
+        "test_bundle_closure.py",
+        "28 tests. Production-seeded BOTH directions in the real "
+        "`papers/D6/bundle_metadata.json`: a dangling `apex_theorems` entry -> FAIL naming "
+        "it; the live `GaugingQEC.gaugingQEC_auxQubit_overhead_le` -> PASS with a real "
+        "closure (1 apex -> 3 declarations, depth 1); reverted, back to PASS. Also mutated "
+        "the production body — defeating the `UNDECLARED_APEX_CEILING` comparison fails "
+        "`test_the_undeclared_count_RISING_is_a_hard_failure`, which is the assertion that "
+        "keeps the check non-vacuous while no bundle has declared apexes",
+    ),
     "lean_modules_in_build_graph": (
         "test_d5_lean_toolchain.py",
         "6 tests; production-seeded by deleting `import SKEFTHawking.AtlasAttr` (a true "
@@ -571,6 +581,9 @@ AWAITING_CEILING = 0
 #: is the distinction the four blockers turned on. Erring toward absent overstates the
 #: remaining work; the opposite error is what produced them.
 PRODUCTION_SEEDED: frozenset[str] = frozenset({
+    # 2026-08-06: `apex_theorems` written into the REAL `papers/D6/bundle_metadata.json`
+    # — a dangling name -> rc=1; a live theorem -> PASS with a real closure; reverted.
+    "bundle_apex_resolves",
     # `import SKEFTHawking.AtlasAttr` deleted from the real `lean/SKEFTHawking.lean`
     # -> 1 orphan -> rc=1; restored, back to PASS.
     "lean_modules_in_build_graph",

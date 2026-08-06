@@ -155,5 +155,23 @@ size is reported**, or it becomes another absence rendered as success.
 5. **New, must carry into the design** — report the private-truncation caveat alongside any
    closure count.
 
-§7 Q3 (apex declarations are hand-maintained) is unchanged and remains a build item: an
-apex must be checkable against a live declaration, and that machinery now exists.
+§7 Q3 (apex declarations are hand-maintained) is unchanged, and is now **gated**:
+`bundle_apex_resolves` fails on an apex naming no live declaration or naming a non-theorem.
+
+---
+
+## Reproducing these numbers
+
+The probe scripts were scratchpad-only, deliberately — a measurement is not an instrument. What
+shipped instead is `scripts/bundle_closure.py`, which computes the same closures from **declared
+apexes** rather than prose references:
+
+```bash
+uv run python scripts/bundle_closure.py          # table + un-homed summary
+uv run python scripts/bundle_closure.py --json   # machine-readable
+```
+
+Today it prints an empty table and names all 21 bundles as UNMEASURABLE, because none has declared
+apexes yet. **That is the honest reading of the current state**, and the difference between it and
+the tables above is exactly the difference between *what the drafts cite* and *what the bundles
+claim* — which is the gap the retrofit closes, one bundle at a time.

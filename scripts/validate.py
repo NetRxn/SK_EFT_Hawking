@@ -190,7 +190,10 @@ _CANONICAL_ORDER: tuple[str, ...] = (
     'citation_primary_sources_present', 'provenance_doi_in_registry',
     'bundle_consistency', 'bundle_source_freshness',
     'bibitem_title_primary_source', 'quantum_network',
-    'bundle_registry_consistency', 'paper_latex_compiles',
+    # `bundle_apex_resolves` follows the roster gate and precedes the prose checks: it
+    # gates the ONE hand-maintained input to the derived substrate closure, so a reader
+    # needs its verdict before any per-bundle substrate figure downstream.
+    'bundle_registry_consistency', 'bundle_apex_resolves', 'paper_latex_compiles',
     'axiom_count_prose_consistency', 'prose_theorem_reference_coverage',
     'theorem_name_embedded_citations', 'inventory_index_autogen_fresh',
     'lean_docstring_refs_resolve', 'paper_toolchain_pin_drift',
@@ -603,6 +606,7 @@ check_readiness_verdicts_agree = _checks_bundles.check_readiness_verdicts_agree
 check_readiness_submission_gate = _checks_bundles.check_readiness_submission_gate
 check_bundle_consistency = _checks_bundles.check_bundle_consistency
 check_bundle_registry_consistency = _checks_bundles.check_bundle_registry_consistency
+check_bundle_apex_resolves = _checks_bundles.check_bundle_apex_resolves
 
 
 # ═══════════════════════════════════════════════════════════════════════

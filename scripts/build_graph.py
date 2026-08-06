@@ -3975,6 +3975,10 @@ def extract_all_edges(node_ids: set) -> list[dict]:
     edges.extend(extract_cites_source_edges(node_ids))
     edges.extend(extract_cites_theorem_edges(node_ids))
 
+    # ADR-010 — publication intake. The bundle's DECLARED apexes; its substrate is the
+    # derived closure, which `_overlay_closure` annotates rather than materialises.
+    edges.extend(extract_claims_apex_edges(node_ids))
+
     # Phase 5v Wave 10b — sentence-level prose audit edges
     edges.extend(extract_backed_by_edges(node_ids))
     edges.extend(extract_logged_by_edges(node_ids))
@@ -4165,6 +4169,122 @@ def write_graph_to_pg(graph: dict) -> None:
 # Full graph builder
 # ═══════════════════════════════════════════════════════════════════════
 
+def extract_claims_apex_edges(node_ids: set) -> list[dict]:
+    """CLAIMS_APEX: Paper -> LeanTheorem — the results a bundle says it establishes.
+
+    The ONLY hand-maintained half of the publication-intake design (`apex_theorems` in
+    `papers/<bundle>/bundle_metadata.json`); the substrate is derived from these by
+    `_overlay_closure` below and cannot drift. Small by construction — a handful per
+    bundle — which is why it can be real edges where the closure cannot.
+
+    An apex naming no live declaration is dropped here and FAILS `bundle_apex_resolves`;
+    this extractor does not invent a node for it, because a dangling apex must surface as
+    a broken declaration rather than as a graph node with nothing behind it.
+    """
+    sys.path.insert(0, str(SCRIPT_DIR))
+    try:
+        import bundle_closure
+    except ImportError as exc:  # noqa: BLE001
+        logger.warning("bundle_closure not importable (%s); no CLAIMS_APEX edges", exc)
+        return []
+
+    edges: list[dict] = []
+    unresolved = 0
+    declarations = bundle_closure.load_apex_declarations(PROJECT_ROOT / "papers")
+    for bundle, decl in sorted(declarations.items()):
+        src = f'paper:{bundle}'
+        if src not in node_ids:
+            continue
+        for name in decl["apexes"]:
+            tgt = f'lean:{name}'
+            if tgt not in node_ids:
+                unresolved += 1
+                continue
+            edges.append({'source': src, 'target': tgt, 'type': 'CLAIMS_APEX'})
+    if edges or unresolved:
+        logger.info("CLAIMS_APEX edges: emitted %d (unresolved: %d)", len(edges), unresolved)
+    return edges
+
+
+def _overlay_closure(nodes: list[dict]) -> None:
+    """Overlay the DERIVED bundle substrate closure onto Lean, module and Paper nodes IN
+    PLACE: ``meta.homed_by / home_count / closure_*``.
+
+    A VIEW, not a store — exactly like `_overlay_atlas`, and for the same reason. The
+    implication DAG is already the existing ``USES`` edges; materialising closure
+    membership as edges would add roughly 10 k links to a graph whose default is 14 040,
+    to render one view. Annotation costs nothing and gives the dashboard everything:
+    colour the substrate by `homed_by`, filter `home_count == 0` for the un-homed map,
+    size a bundle by `closure_size`.
+
+    ⚠️ `closure_truncated_private` travels with every closure size. `ExtractDeps` omits
+    `private` declarations, so a walk reaching one stops; a size published without it
+    reads as complete when it is not.
+
+    Fail-soft: an error logs and skips, and the graph still builds.
+
+    Cost, measured 2026-08-06: the full build goes **10.2 s → 10.9 s**. `load_lean_deps` is
+    uncached, so this re-reads the 71 MB record set exactly as `_overlay_atlas` does. If the
+    build ever needs trimming, hoisting ONE load through both overlays is the change to
+    make — not dropping either annotation.
+    """
+    try:
+        sys.path.insert(0, str(SCRIPT_DIR))
+        import bundle_closure
+        records = bundle_closure.load_records()
+        declarations = bundle_closure.load_apex_declarations(PROJECT_ROOT / "papers")
+        closures = bundle_closure.build_closures(records, declarations)
+        homed = bundle_closure.homing_index(closures)
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("closure overlay skipped (%s)", exc)
+        return
+
+    module_homes: dict[str, set] = {}
+    for bundle, bc in closures.items():
+        for mod in bc.modules:
+            module_homes.setdefault(mod, set()).add(bundle)
+
+    annotated = 0
+    for nd in nodes:
+        nid = nd.get("id", "")
+        m = nd.setdefault("meta", {})
+        if nid.startswith("lean:"):
+            bundles = homed.get(nid[5:])
+            if bundles is None:
+                continue
+            m["homed_by"] = bundles
+            m["home_count"] = len(bundles)
+            annotated += 1
+        elif nid.startswith("module:"):
+            bundles = module_homes.get(nid[7:])
+            if bundles is None:
+                continue
+            m["homed_by"] = sorted(bundles)
+            m["home_count"] = len(bundles)
+            annotated += 1
+        elif nid.startswith("paper:"):
+            bc = closures.get(nid[6:])
+            if bc is None:
+                continue
+            m["apex_declared"] = bc.declared
+            m["apex_count"] = len(bc.apexes)
+            # UNMEASURABLE, not empty — a bundle that never said what it claims has an
+            # UNKNOWN substrate, and a 0 here would read as "rests on nothing".
+            m["closure_measurable"] = bc.measurable
+            if bc.measurable:
+                m["closure_size"] = len(bc.closure)
+                m["closure_modules"] = len(bc.modules)
+                m["closure_max_depth"] = bc.max_depth
+                m["closure_truncated_private"] = bc.truncated_private
+            annotated += 1
+
+    n_unhomed = sum(1 for nd in nodes
+                    if nd.get("id", "").startswith("lean:")
+                    and not nd.get("meta", {}).get("homed_by"))
+    logger.info("closure overlay: annotated %d nodes; %d Lean nodes un-homed",
+                annotated, n_unhomed)
+
+
 def _overlay_atlas(nodes: list[dict]) -> None:
     """Overlay the derived proof-atlas classification (ADR-005 Phase 1a) onto existing Lean +
     Hypothesis nodes IN PLACE: ``meta.atlas_kind / atlas_status / frontier_impact / native_decide``.
@@ -4226,6 +4346,7 @@ def build_graph_json(*, sync_pg: bool = False) -> dict:
     node_ids = {n['id'] for n in nodes}
     edges = extract_all_edges(node_ids)
     _overlay_atlas(nodes)  # ADR-005: annotate Lean/Hypothesis nodes with derived atlas trust-state
+    _overlay_closure(nodes)  # ADR-010: annotate which bundle(s) claim each declaration
 
     # Phase 5v Waves 10b/10c — verification change-bus + freshness propagation.
     # Use the canonical {nodes, links} shape (D3 convention; matches

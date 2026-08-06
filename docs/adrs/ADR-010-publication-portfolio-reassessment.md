@@ -424,6 +424,41 @@ claims record), one bundle at a time.
 human review of the final product is not a secondary conversation. Read `scripts/build_graph.py`'s
 extractor contract before fixing the shape.
 
+#### D5a status — measured and partly BUILT (2026-08-06)
+
+**Three of the design's four open questions are closed by measurement**
+(`docs/audits/2026-08-06-closure-probe/FINDINGS.md`; the probe reproduces §M4(a)'s independent
+**D6 ∩ D9 = 78** exactly before anything rests on it):
+
+- **Overlap is meaningful after all.** 70 % of homed declarations sit in exactly ONE bundle's
+  closure and maximum ubiquity across 21 bundles is **7**. No shared-foundations blob, so raw
+  closure is already distinctive — `name_deps_project` is project-closed (0 of 279 602 edges leave
+  `SKEFTHawking`), which excludes Mathlib upstream.
+- **Un-homed ≈ 1 400 modules, robustly.** Closure homes 631 modules where §M2's loose rule homed
+  636 and its strict rule 406 — two unrelated mechanisms landing within 2 of each other. Closure
+  homes **2.3×** what direct reference does (631 vs 275).
+- **Closures cross bundles sparsely.** D6∩D9 Jaccard **0.482** — the one entangled pair, and the
+  pair the portfolio decision turns on — against 0.146 / 0.135 / 0.000 elsewhere.
+
+**Closure shape flags three targets whose tier does not match their substrate:** **L2** is a letter
+on a deep-paper substrate (39 modules, depth 14), and **D7** and **D1** are shaped like letters.
+That is a signal about where to look under D4, not a decision — tier is also a claim about audience.
+
+**Built:** `scripts/bundle_closure.py` (derivation), `bundle_apex_resolves` (gate on the one
+hand-maintained input), and the graph integration §D5a's hard constraint requires — `CLAIMS_APEX`
+edges plus a closure **overlay** on Lean/module/Paper nodes, following `_overlay_atlas`'s
+view-not-store precedent rather than adding ~10 k links to a 14 040-edge graph. Shape and remaining
+sequencing: `docs/architecture/.working-docs/PUBLICATION_INTAKE_SHAPE.md`.
+
+**Nothing is declared yet, deliberately.** All 21 bundles report `closure_measurable: false` — an
+undeclared bundle's substrate is **UNKNOWN, not empty**, and the check returns `measured=False`
+rather than a clean pass. Apex retrofit stays gated on the operator's per-bundle full-context
+review condition above.
+
+⚠️ **Closure truncates at `private` declarations** — `ExtractDeps` omits them, so 553 distinct
+targets (1 278 edges, 0.46 %) stop a walk. Bounded, but `closure_truncated_private` travels with
+every published closure size; a size reported alone reads as complete when it is not.
+
 ### D6 — Late-phase absorption is repaired, not merely described
 
 The analysis specifies: how a sourceless bundle (D6–D12 today) acquires a working freshness trigger; what

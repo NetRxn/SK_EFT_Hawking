@@ -9,6 +9,7 @@ Single source of truth for the consumers of this schema:
 - `scripts/bundle_append.py` — absorbs new source into bundle; updates `change_log.md` + `append_log.json` + `bundle_metadata.json`
 - `scripts/check_bundle_source_freshness.py` — `validate.py --check bundle_source_freshness` (CHECK 22)
 - `scripts/datastar_bundles.py` — feeds dashboard "Bundles" tab from `bundle_metadata.json`
+- `scripts/bundle_closure.py` — derives each bundle's substrate from its declared `apex_theorems`; `validate.py --check bundle_apex_resolves`
 - `docs/BUNDLE_LIFT_PROCEDURE.md` — canonical 14-step lift workflow (consumes the schema)
 - `docs/LATE_PHASE6_ABSORPTION_PROTOCOL.md` — robustness protocol (consumes the schema)
 
@@ -87,6 +88,30 @@ papers/<bundle>/
 | `audit_log_path` | string | path | created at init |
 | `supersession_ledger_anchor` | string | path | created at init; canonical `docs/review_finding_supersessions.json` |
 | `notes` | string \| null | freeform | optional human notes (e.g., "I2 ships software-only pending Mathlib upstream") |
+| `apex_theorems` | list \| absent | `["<fqn>"]` or `[{"name", "claims", "declared"}]` | **hand-declared** — the results this bundle claims (ADR-010 §D5a) |
+
+#### `apex_theorems` — the one hand-maintained input to the substrate closure
+
+The bundle's substrate is the **derived transitive closure** of these apexes over
+`name_deps_project` (`scripts/bundle_closure.py`), so nothing about the substrate is declared and
+nothing about it can drift. That concentrates the whole drift risk into these few names, which is
+why `validate.py --check bundle_apex_resolves` gates them: an apex naming no live declaration, or
+naming something other than a theorem, fails the suite.
+
+It lives **here**, per bundle, rather than in a central registry, because merging two bundles must
+concatenate apex lists and splitting must partition them — co-located lists do that by moving a
+file.
+
+⚠️ **Absent is UNKNOWN, not empty.** A bundle that has never declared apexes has an *unknown*
+substrate; the closure machinery reports `closure_measurable: false` and publishes no size, and
+`bundle_apex_resolves` counts it against `UNDECLARED_APEX_CEILING` (a ratchet: 21 today, 0 is the
+target). Writing `"apex_theorems": []` to quiet a tool is therefore not a fix — it asserts the
+bundle claims nothing.
+
+Declaring apexes for an existing bundle requires **full per-bundle context review** — contributing
+roadmaps, the Lean cited, the claims record — one bundle at a time (ADR-010 §D5a, operator
+condition). For new work the intended moment is **wave close**, where the author context is
+already loaded.
 
 ### Aggregate verdict (computed, not stored)
 
