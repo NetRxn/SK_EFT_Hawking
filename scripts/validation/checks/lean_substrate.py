@@ -601,24 +601,42 @@ def check_tracked_hypotheses_fresh() -> CheckResult:
     "lean_zero_sorry",
     "Pipeline Invariant #4 — no declaration's axiom closure contains `sorryAx`")
 def check_lean_zero_sorry() -> CheckResult:
-    """The project's most load-bearing invariant, which had **no `validate.py` gate**.
+    """Pipeline Invariant #4 — *"every Lean theorem has a proof (zero sorry)"* — asserted
+    UNCONDITIONALLY and cheaply.
 
-    Invariant #4 is *"every formula has a Lean theorem; every Lean theorem has a proof
-    (zero sorry)"*. `sorry_declarations` was computed by `update_counts.py` and RENDERED in
-    five places — `counts.json`, `counts.tex`, the inventory index, the dashboard, the
-    freshness evidence string — and **compared to zero nowhere**.
+    ⚠️ **Read this before quoting the gap this check closes.** A first draft of this
+    docstring claimed the invariant "had no `validate.py` gate" and that "nothing else
+    covered it". **That was wrong**, and the error is instructive: it came from grepping
+    the check modules for `sorry` (which finds nothing, because no check mentions the
+    word) instead of asking which check would *detect* one.
 
-    Nothing else covered it:
+    **`axiom_closure_allowlist` already detects it.** A `sorry` elaborates to `sorryAx`,
+    which enters the transitive axiom closure of every dependent declaration; that check
+    runs the `AxiomAudit` Lean executable over all `SKEFTHawking.*` declarations and flags
+    any axiom outside `{propext, Classical.choice, Quot.sound} ∪ AXIOM_METADATA`. `sorryAx`
+    is in neither set, so it is flagged.
 
-    * `lake build` **exits 0 on a `sorry`** — it is a warning, not an error — so
-      `check_lean_build` cannot catch one.
-    * `pre-commit-sync.sh`'s guard is real (it greps lake's own
+    What this check adds is therefore **posture and cost**, not detection:
+
+    * `axiom_closure_allowlist` is **WARN-first by design** — `passed=not strict`, so on a
+      default run a `sorry` is an advisory warning and the suite stays green. It hard-fails
+      only under `--strict` (the paper-submission gate). This check hard-fails always.
+    * That check is the **most expensive in the suite at 145 s** and is skipped whenever
+      `lake` is absent. This one reads `counts.json` and costs ~0 s, so the invariant is
+      asserted on every run including environments with no Lean toolchain.
+
+    The other two paths, verified rather than assumed:
+
+    * `lake build` **exits 0 on a `sorry`** — measured, not relayed: a probe file
+      containing `theorem t : 1 + 1 = 3 := by sorry` compiles with
+      ``warning: declaration uses `sorry` `` and **exit code 0**. So `check_lean_build`,
+      which tests only `returncode == 0`, cannot catch one.
+    * `pre-commit-sync.sh`'s guard is sound in substance (it greps lake's own
       ``declaration uses `sorry` `` output, not the source), but it is **warn-only off
-      `main`** by design, `.lean`-diff-scoped, and fail-open when `lake` is absent. This
-      branch has been off `main` for its entire 140-commit life.
+      `main`** by design, `.lean`-diff-scoped, and fail-open when `lake` is absent.
 
-    So the invariant was enforced by policy and by a hook that deliberately does not block
-    here, and by no instrument that runs in the suite.
+    So the honest statement is: the invariant was **detected but not enforced** on a
+    default run. This check makes it enforced.
 
     **Source is Lean's own axiom closure, not a source scan.** `update_counts` counts
     declarations whose `axiom_deps_core` contains a `sorry` marker — a `sorry` elaborates
