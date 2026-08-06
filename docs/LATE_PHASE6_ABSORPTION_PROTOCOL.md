@@ -83,7 +83,23 @@ uv run python scripts/validate.py --check bundle_source_freshness
 
 Effects:
 - New source rows appear in each affected bundle's `source_manifest.md`.
-- `validate.py --check bundle_source_freshness` flags affected bundles `freshness-stale=true` and sets `bundle_metadata.json.freshness_stale=true`.
+- `validate.py --check bundle_source_freshness` flags affected bundles `freshness-stale=true`.
+
+> ⚠️ **THE STAGE-C TRIGGER DOES NOT FIRE FOR PHASE-SOURCED BUNDLES — read this before relying on it.**
+> The trigger compares **source-paper mtimes** under `papers/<source>/` to `last_lift`. Bundles whose
+> `PAPER_DRAFT_MAPPING.md` entries are synthetic tokens (`_phase6t_lean_only`, `D9_initial_draft`, …)
+> name no directory, so there is nothing to compare: **D6–D12, I2 and I3 — nine bundles — have no
+> working freshness trigger**, and portfolio-wide 89 of 180 source assignments name an absent
+> directory. Those bundles now report `UNMEASURABLE` rather than `fresh`, so the gap is visible, but
+> it is **not closed**: nothing watches Lean-module mtimes, which is what a phase-sourced bundle
+> actually depends on. Building that trigger is ADR-010 D6 and is gated on operator approval per
+> `REMEDIATION_PLAN.md` §6a.
+>
+> ⚠️ `freshness_stale` is **no longer written during validation**. `check_bundle_source_freshness.check()`
+> is pure by default — a check must not mutate the artifact it checks, and this one wrote its own
+> verdict into the file the dashboard and this protocol read. The CLI entry point still writes it
+> (`write_metadata=True`), so refreshing the flag is now an explicit action rather than a side
+> effect of running the suite.
 
 ### Stage D — Branch by bundle state
 
