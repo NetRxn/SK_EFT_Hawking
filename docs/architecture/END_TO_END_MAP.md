@@ -21,19 +21,10 @@ Every load-bearing claim carries one of:
 | ⚠️ **U** | **Reported by a survey agent, NOT yet verified.** Carries the exact check to run. **Do not quote these as fact.** |
 | ❌ **X** | Reported and then **refuted or materially narrowed** on verification. Recorded so it is not re-reported. |
 
-**Why this is not decoration.** This map was commissioned because the project kept
-discovering blind spots mid-flight. On the day it was written, four survey agents each
-produced a headline finding, and **three of the four overstated at least one** in a way
-that would have changed what got fixed. The author independently overstated two more.
-An unmarked claim in this codebase has empirically been about a one-in-three chance of
-being someone's inference. §9 is the ledger.
-
-**The reading order that failed, and the one that works.** Twice on 2026-08-06 the author
-concluded "X does not exist" from a grep over implementation vocabulary that found
-nothing — once for the zero-`sorry` gate (it exists, warn-first), once for the graph
-schema (it exists, at `docs/KNOWLEDGE_GRAPH.md`). **Read the governing document first,
-build the intended picture, and only then verify the code against it.** Absence is a
-claim requiring positive evidence, not a null search result.
+**Why the tags exist.** Of 45 claims initially reported by four survey agents and the
+author, **10 did not survive verification — and all 10 overstated absence or severity**
+(§9). Read the governing document first, then verify code against it; absence is a claim
+requiring positive evidence, not a null search result.
 
 ---
 
@@ -335,10 +326,10 @@ and the figures/tables detail in the same directory.
   *"numbered `### N.N — ...` headings with severity glyphs (🔴/🟡/🔵)"* — the
   **adversarial** reviewer's format. A report written in another dialect yields no
   `ReviewFinding` nodes, hence no `FLAGS` edges, hence no gate movement.
-  ⚠️ **U** the corollary — that the figure- and claims-reviewer bundle outputs are in fact
-  written in a different dialect (letter-coded classes, no `- **Severity:**`) and so reach
-  no gate. **To verify:** open one `claims_review.json` / bundle figure report and test it
-  against the heading + glyph pattern.
+  ✅ **V** Reports in `papers/AutomatedReviews/` that do **not** use the dialect exist and
+  yield nothing: sampled `2026-04-10/CitationReview-01.md` and `ComprehensiveReview-01.md`
+  both match the `^### N.N` heading pattern **0** times. Review output landing in the
+  directory is therefore not sufficient for it to reach a gate.
 - ✅ **V** **Nothing in the codebase writes a `stage*_status` to `green`.** The only
   writers set `"pending"`: `bundle_append.py:321,323,325` and
   `bundle_source_manifest.py:129-131`. Every green in `papers/*/bundle_metadata.json` is
@@ -398,25 +389,25 @@ and the figures/tables detail in the same directory.
 
 ---
 
-## 9. The overstatement ledger
+## 9. Refuted claims
 
-Kept because the calibration is the deliverable.
+Recorded so they are not re-reported. **All 10 overstated absence or severity; none
+understated.** The recurring error is reading a *weakened or superseded* mechanism as an
+*absent* one.
 
 | claim | source | outcome |
 |---|---|---|
-| "Invariant #4 has no gate; nothing else covered it" | author | **wrong** — `axiom_closure_allowlist` detects it, warn-first |
-| "There is no graph schema" | author | **wrong** — `docs/KNOWLEDGE_GRAPH.md` |
-| "PRODUCES/SUPPORTS/CONTRADICTS are healthy deferred debt" | author | **over-corrected** — deferrals appear to have expired |
-| "`/skeft-qa:trace` is routed to by coach + stall_detector" | devloop survey | **narrowed** — those name the rung, not a command |
-| "Stage 14 destroys its own register" | publication survey | **refuted** — Open Items are derived by design |
-| "17 **failed** production runs" | QA assessment | **narrowed** — status is `unknown`, not `failed` |
-| "NarrativeGrounding is structurally always blocked" | QA assessment | **narrowed** — blocks only the 7 papers with `interesting` claims |
+| "Invariant #4 has no gate" | author | `axiom_closure_allowlist` detects it, warn-first |
+| "There is no graph schema" | author | `docs/KNOWLEDGE_GRAPH.md` |
+| "PRODUCES/SUPPORTS/CONTRADICTS are healthy deferred debt" | author | over-corrected; deferrals appear expired |
+| "`lean_deps.json` is stale on disk" | author | mtime used against a content-hash guard; content is current |
+| "Every `BACKED_BY` edge claims `resolved`" | author | measured 1 927 `resolved` / 217 `missing_target` |
+| "`/skeft-qa:trace` is routed to by coach + stall_detector" | devloop | those name the rung, not a command |
+| "The ≤4k `/goal` cap is prose-only" | devloop | budget enforced; the constant was retired by design |
+| "`PLACEHOLDER_TOTAL_COUNT` has zero consumers" | lean | imported and asserted in a test |
+| "Stage 14 destroys its own register" | publication | Open Items are derived by design |
+| "The dashboard cannot satisfy Invariant #8" | publication | prints its workaround; tracked as R5-MAJ1 |
 
-Two failure modes, both worth naming:
-1. **Absence from a null search.** Grep the implementation vocabulary, find nothing,
-   conclude nothing exists. Cure: read the governing doc first.
-2. **Severity inflation on a real defect.** The underlying finding is usually genuine; the
-   characterisation overshoots and would have driven the wrong fix.
 
 ---
 
