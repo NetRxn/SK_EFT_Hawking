@@ -172,7 +172,12 @@ _CANONICAL_ORDER: tuple[str, ...] = (
     'native_decide_regression', 'numerical', 'identities',
     'paper_table', 'd1_hierarchy_table', 'f_hierarchy_claims',
     'theorems', 'notebooks', 'lean_source',
-    'cgl_fdr', 'lean_build', 'axiom_closure_allowlist',
+    # `lean_modules_in_build_graph` precedes `lean_build` and everything that reads
+    # lean_deps.json, and the position is semantic: it answers "is the population the
+    # rest of this suite measures actually the whole project?". A red here means every
+    # downstream count, the atlas and the axiom closure are computed over a proper
+    # subset — so the reader needs it BEFORE they trust any of them.
+    'cgl_fdr', 'lean_modules_in_build_graph', 'lean_build', 'axiom_closure_allowlist',
     'elaboration_knob_watchlist', 'bundle_figure_integrity', 'viz_consistency',
     'notebook_exec', 'physical_bounds', 'cross_path_consistency',
     'paper_provenance', 'parameter_provenance', 'counts_fresh',

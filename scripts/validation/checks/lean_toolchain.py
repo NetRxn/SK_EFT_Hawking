@@ -869,3 +869,116 @@ def check_lean_docstring_refs_resolve() -> CheckResult:
         warning=bool(n_adv),
     ))
     return CheckResult(passed=(n_fail == 0), details=details)
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# CHECK: every project .lean is IN THE BUILD GRAPH
+#
+# The gap this closes, measured 2026-08-05 (PR-review pass 3):
+#   2,039 module files on disk, 2,011 reachable from `lean/SKEFTHawking.lean`,
+#   28 not. `lakefile.toml` declares the library with NO `globs`, so Lake builds
+#   the root plus its transitive imports only. A file nothing imports is built by
+#   nothing, indexed by nothing, counted by nothing, and guarded by nothing.
+#
+# What was hiding in there: the project's ONLY live `sorry`, and TWO modules that
+# did not compile at all — one of which asserts "Kernel-pure" in its own docstring.
+# Every instrument reported them as ABSENT rather than UNVERIFIED, which is the
+# branch's signature defect (absence of measurement rendered as success) at the
+# most load-bearing layer there is.
+#
+# The exe-root allowlist is PARSED FROM `lakefile.toml`, not hardcoded. Three
+# repairs on this branch were overtaken within hours because they enumerated the
+# cases then in evidence; a derived allowlist cannot go stale when a root is added.
+# ═══════════════════════════════════════════════════════════════════════
+
+_LEAN_EXE_ROOT_RE = re.compile(r'^\s*root\s*=\s*"([^"]+)"', re.M)
+_LEAN_IMPORT_RE = re.compile(r"^import\s+(SKEFTHawking[\w.]*)", re.M)
+
+#: Modules deliberately outside the library, each with a stated reason. This is a
+#: RATCHET: it may only shrink. Adding a name here needs the reason in the same commit.
+UNREACHABLE_MODULE_EXCEPTIONS = {
+    "SKEFTHawking.SingularConnSquareCrossReal":
+        "Carries the project's only live `sorry` (:39, an `all_goals sorry` at :112), "
+        "committed as 'DR Harness wip'. Importing it would put a sorry in the library "
+        "and — correctly — hard-block commits to main. Nothing imports it, so it is "
+        "isolated. Discharge the proof or delete the module; do not silently import it.",
+}
+
+
+def _lean_exe_roots() -> set:
+    """Module names declared as `[[lean_exe]] root = ...` in lakefile.toml.
+
+    Derived, not hardcoded: a new exe root is legitimately outside the library and
+    must not require editing this check.
+    """
+    lakefile = _H.PROJECT_ROOT / "lean" / "lakefile.toml"
+    if not lakefile.is_file():
+        return set()
+    return set(_LEAN_EXE_ROOT_RE.findall(lakefile.read_text(errors="replace")))
+
+
+def _root_reachable_modules() -> set:
+    """Transitive closure of `import SKEFTHawking.*` from the root aggregate."""
+    lean = _H.PROJECT_ROOT / "lean"
+    root = lean / "SKEFTHawking.lean"
+    if not root.is_file():
+        return set()
+
+    def imports_of(mod: str):
+        p = lean / (mod.replace(".", "/") + ".lean")
+        if not p.is_file():
+            return []
+        return _LEAN_IMPORT_RE.findall(p.read_text(errors="replace"))
+
+    seen, stack = set(), list(_LEAN_IMPORT_RE.findall(root.read_text(errors="replace")))
+    while stack:
+        m = stack.pop()
+        if m in seen:
+            continue
+        seen.add(m)
+        stack.extend(imports_of(m))
+    return seen
+
+
+@register_check("lean_modules_in_build_graph",
+                "Every project .lean module is reachable from the root aggregate "
+                "(else it is built, indexed, counted and guarded by nothing)")
+def check_lean_modules_in_build_graph() -> CheckResult:
+    """Compare the FILESYSTEM to the import graph — the join nothing else makes."""
+    src = _H.PROJECT_ROOT / "lean" / "SKEFTHawking"
+    if not src.is_dir():
+        return CheckResult(passed=False, measured=False, details=[Detail(
+            "scope", False, "SKIPPED — lean/SKEFTHawking/ absent; UNVERIFIED, not passing")])
+
+    disk = {"SKEFTHawking." + str(p.relative_to(src)).removesuffix(".lean").replace("/", ".")
+            for p in src.rglob("*.lean")}
+    if not disk:
+        return CheckResult(passed=False, measured=False, details=[Detail(
+            "scope", False, "SKIPPED — no .lean files found; UNVERIFIED, not passing")])
+
+    reachable = _root_reachable_modules()
+    exe_roots = _lean_exe_roots()
+    orphans = sorted(disk - reachable - exe_roots - set(UNREACHABLE_MODULE_EXCEPTIONS))
+
+    details = [Detail(
+        "population", True,
+        f"{len(disk)} module files on disk / {len(disk & reachable)} reachable from the "
+        f"root aggregate / {len(exe_roots & disk)} declared exe root(s) / "
+        f"{len(UNREACHABLE_MODULE_EXCEPTIONS)} documented exception(s)")]
+
+    for name, why in sorted(UNREACHABLE_MODULE_EXCEPTIONS.items()):
+        if name in disk and name not in reachable:
+            details.append(Detail(f"exception:{name.rsplit('.', 1)[-1]}", True, why, warning=True))
+
+    if orphans:
+        details.append(Detail(
+            "orphans", False,
+            f"{len(orphans)} module(s) exist on disk but are reachable from NOTHING — so they "
+            f"are never compiled, never enter lean_deps.json, and are invisible to the sorry "
+            f"and axiom guards. Add an `import` to lean/SKEFTHawking.lean, or record the module "
+            f"in UNREACHABLE_MODULE_EXCEPTIONS with a reason: {', '.join(orphans[:8])}"
+            + (f" (+{len(orphans) - 8} more)" if len(orphans) > 8 else "")))
+    else:
+        details.append(Detail("orphans", True, "no orphaned modules — the filesystem and the "
+                                               "import graph agree"))
+    return CheckResult(passed=not orphans, details=details)

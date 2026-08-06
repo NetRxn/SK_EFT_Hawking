@@ -72,9 +72,13 @@ noncomputable def subspaceChainsCmplx (X : TopCat) (S : Set ↑X) :
 reusable leg builder for the small-chains Mayer–Vietoris short exact sequence. -/
 noncomputable def subInclCmplx (X : TopCat) {A B : Set ↑X} (h : A ⊆ B) :
     subspaceChainsCmplx X A ⟶ subspaceChainsCmplx X B :=
-  ChainComplex.ofHom _ _ _ _ _ _
+  ChainComplex.ofHom
     (fun n => ModuleCat.ofHom (Submodule.inclusion (subspaceChains_mono h n)))
-    (fun n => by rw [← ModuleCat.ofHom_comp, ← ModuleCat.ofHom_comp]; congr 1)
+    (fun n => by
+      -- `.d` comes from `ChainComplex.of`, so it must be unfolded before the two
+      -- `ofHom`s can be fused; the old `rw [← ofHom_comp, ← ofHom_comp]` could not
+      -- find its pattern because the differential was still opaque.
+      simp [subspaceChainsCmplx, ChainComplex.of_d, ← ModuleCat.ofHom_comp]; rfl)
 
 /-- The degree-`n` component of `subInclCmplx` is the submodule inclusion. -/
 @[simp] theorem subInclCmplx_f (X : TopCat) {A B : Set ↑X} (h : A ⊆ B) (n : ℕ) :
@@ -118,9 +122,12 @@ of the Mayer–Vietoris short exact sequence). -/
 noncomputable def subToMvUnionInclCmplx (X : TopCat) (U V W : Set ↑X)
     (hW : ∀ n, subspaceChains W n ≤ mvUnionChains U V n) :
     subspaceChainsCmplx X W ⟶ mvUnionChainsCmplx X U V :=
-  ChainComplex.ofHom _ _ _ _ _ _
+  ChainComplex.ofHom
     (fun n => ModuleCat.ofHom (Submodule.inclusion (hW n)))
-    (fun n => by rw [← ModuleCat.ofHom_comp, ← ModuleCat.ofHom_comp]; congr 1)
+    (fun n => by
+      -- As above, but this leg crosses TWO complexes, so both must be unfolded.
+      simp [subspaceChainsCmplx, mvUnionChainsCmplx, ChainComplex.of_d,
+        ← ModuleCat.ofHom_comp]; rfl)
 
 /-- The degree-`n` component of `subToMvUnionInclCmplx`. -/
 @[simp] theorem subToMvUnionInclCmplx_f (X : TopCat) (U V W : Set ↑X)
@@ -210,8 +217,12 @@ theorem biprod_total_apply (X : TopCat) (U V : Set ↑X) (n : ℕ)
         (((biprod.snd (X := subspaceChainsCmplx X U) (Y := subspaceChainsCmplx X V)).f n).hom y) = y := by
   have h := congrArg (fun (φ : (subspaceChainsCmplx X U ⊞ subspaceChainsCmplx X V) ⟶ _) =>
     ((φ.f n).hom) y) (biprod.total (X := subspaceChainsCmplx X U) (Y := subspaceChainsCmplx X V))
+  -- `h` arrives with the sum still under a single `ModuleCat.Hom.hom`; the goal has it
+  -- distributed over `+` and `≫`. `hom_add` / `hom_comp` are what push the coercion
+  -- through, and they are not in the `only` set the previous form used.
   simpa only [HomologicalComplex.add_f_apply, HomologicalComplex.comp_f, ConcreteCategory.comp_apply,
-    HomologicalComplex.id_f, ModuleCat.id_apply] using h
+    HomologicalComplex.id_f, ModuleCat.id_apply, ModuleCat.hom_add, ModuleCat.hom_comp,
+    LinearMap.add_apply, LinearMap.comp_apply] using h
 
 /-- `fst (f x) = x` viewed in `C(U)` (the first leg of the diagonal `f x = (x, x)`). -/
 theorem mvSesMap1_fst (X : TopCat) (U V : Set ↑X) (n : ℕ) (x : subspaceChains (U ∩ V) n) :
