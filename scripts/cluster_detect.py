@@ -101,11 +101,18 @@ def sha8(s: str) -> str:
 
 # ── Sentence iteration ─────────────────────────────────────────────────────
 
-def iter_v2_paper_dirs() -> Iterator[tuple[str, Path]]:
-    """Yield (paper_id, paper_dir) for every paper with a v2 claims_review."""
-    if not PAPERS_ROOT.exists():
+def iter_v2_paper_dirs(papers_root: Path | None = None) -> Iterator[tuple[str, Path]]:
+    """Yield (paper_id, paper_dir) for every paper with a v2 claims_review.
+
+    `papers_root` is a parameter so callers can supply the root they are anchored to
+    (ADR-009 H1: a module-level path derived from `__file__` is an import-time copy,
+    and a caller that monkeypatches its own anchor would otherwise be silently routed
+    back to the real tree). Defaults to this script's own root for CLI use.
+    """
+    root = papers_root if papers_root is not None else PAPERS_ROOT
+    if not root.exists():
         return
-    for p in sorted(PAPERS_ROOT.iterdir()):
+    for p in sorted(root.iterdir()):
         # ⚠️ The population is "has a v2 claims_review" — exactly what the two checks
         # below test. Do NOT add a directory-name filter: publication bundles are named
         # `D1`, `F`, `I2`, legacy drafts `paper1_*`, and a name predicate silently drops

@@ -91,6 +91,14 @@ TESTS_DIR = SK_ROOT / "tests"
 #: An entry here is a CLAIM that someone seeded a defect and watched the test fail.
 #: Add one only when that has actually been done — the evidence lives in the commit.
 MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
+    "lean_modules_in_build_graph": (
+        "test_d5_lean_toolchain.py",
+        "6 tests; production-seeded by deleting `import SKEFTHawking.AtlasAttr` (a true "
+        "LEAF) from the real root aggregate -> red, green on restore. A non-leaf is a bad "
+        "probe: a module another module imports stays transitively reachable and the check "
+        "correctly stays green. Also asserts the exe-root allowlist is DERIVED from "
+        "lakefile.toml by removing the declaration and requiring the verdict to flip",
+    ),
     # ── ADR-009 §Deferred item 2 — the inverted submission gate ──
     "readiness_submission_gate": (
         "test_readiness_submission_gate.py",
@@ -563,6 +571,9 @@ AWAITING_CEILING = 0
 #: is the distinction the four blockers turned on. Erring toward absent overstates the
 #: remaining work; the opposite error is what produced them.
 PRODUCTION_SEEDED: frozenset[str] = frozenset({
+    # `import SKEFTHawking.AtlasAttr` deleted from the real `lean/SKEFTHawking.lean`
+    # -> 1 orphan -> rc=1; restored, back to PASS.
+    "lean_modules_in_build_graph",
     # 2026-08-05: a hand-written `\\begin{tabular}` appended to the REAL
     # `papers/D2/paper_draft.tex` -> 5 vs ceiling 4 -> rc=1; restored, back to PASS.
     "bundle_tables_use_pipeline",

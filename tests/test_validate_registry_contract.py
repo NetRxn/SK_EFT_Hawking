@@ -52,7 +52,7 @@ EXPECTED_CHECKS = [
     'native_decide_regression', 'numerical', 'identities',
     'paper_table', 'd1_hierarchy_table', 'f_hierarchy_claims',
     'theorems', 'notebooks', 'lean_source',
-    'cgl_fdr', 'lean_build', 'axiom_closure_allowlist',
+    'cgl_fdr', 'lean_modules_in_build_graph', 'lean_build', 'axiom_closure_allowlist',
     'elaboration_knob_watchlist', 'bundle_figure_integrity', 'viz_consistency',
     'notebook_exec', 'physical_bounds', 'cross_path_consistency',
     'paper_provenance', 'parameter_provenance', 'counts_fresh',

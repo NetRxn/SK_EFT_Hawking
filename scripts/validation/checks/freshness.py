@@ -358,7 +358,10 @@ def _claim_clusters_is_stale() -> tuple[bool, str]:
     # generator it watches, and then reports "fresh" over the very files both are missing.
     # Importing the iterator keeps the population definable in exactly one place.
     from cluster_detect import iter_v2_paper_dirs
-    v2_files: list[Path] = [d / 'claims_review.json' for _pid, d in iter_v2_paper_dirs()]
+    v2_files: list[Path] = [
+        d / 'claims_review.json'
+        for _pid, d in iter_v2_paper_dirs(_H.PAPERS_DIR)   # H1: anchor at each use
+    ]
     if not v2_files:
         return False, "no v2 claims_review.json files"
     if not claim_clusters_path().exists():

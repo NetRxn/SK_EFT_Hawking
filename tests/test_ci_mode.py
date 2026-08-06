@@ -166,6 +166,28 @@ class TestCoverageFloor:
             f"runner executes {expected} ({len(validate._CHECKS)} registered minus "
             f"{len(_cfg.CI_SKIP)} skipped). Update it in the same commit as the check.")
 
+    @pytest.mark.slow
+    def test_the_LIVE_floor_matches_what_a_REAL_run_MEASURES(self):
+        """The half the assertion above cannot cover.
+
+        `registered - skipped` is the DEFINITION of the floor, so comparing the floor to
+        it can only catch an arithmetic slip. What it cannot see is a check that
+        registers, is not skipped, and still contributes nothing — one that returns
+        `measured=False` because a toolchain went missing. That is precisely the failure
+        the floor exists to catch, and it needs the real registry EXECUTED, not counted.
+
+        Slow by necessity: it runs the suite.
+        """
+        import validate as _v
+        results = _v.run_checks(skip=_cfg.CI_SKIP)
+        measured = [n for n, r in results.items() if r.measured]
+        unmeasured = sorted(n for n, r in results.items() if not r.measured)
+        assert len(measured) >= _cfg.CI_MIN_CHECKS_RUN, (
+            f"a real run MEASURED {len(measured)} checks against a floor of "
+            f"{_cfg.CI_MIN_CHECKS_RUN}. Unmeasured: {unmeasured}. Either the environment "
+            f"is under-provisioned or a check silently stopped measuring — the floor "
+            f"exists to make that visible rather than green.")
+
 
 class TestCiIsNotStrict:
 

@@ -517,3 +517,73 @@ class TestLeanDocstringRefsResolve:
         r = lt.check_lean_docstring_refs_resolve()
         assert r.passed is True
         assert r.details[0].warning
+
+
+class TestLeanModulesInBuildGraph:
+    """`lean_modules_in_build_graph` — the filesystem/import-graph join.
+
+    A module on disk that no import reaches is compiled by nothing, indexed by nothing
+    and guarded by nothing, so its content is invisible to every other check in the
+    suite. This is the one check whose failure means the population all the others
+    measure is a proper subset of the project.
+    """
+
+    def _tree(self, tmp_path, monkeypatch, modules, root_imports, lakefile=""):
+        src = tmp_path / "lean" / "SKEFTHawking"
+        src.mkdir(parents=True)
+        for m in modules:
+            p = src / (m.replace(".", "/") + ".lean")
+            p.parent.mkdir(parents=True, exist_ok=True)
+            p.write_text("-- test module\n")
+        (tmp_path / "lean" / "SKEFTHawking.lean").write_text(
+            "".join(f"import SKEFTHawking.{m}\n" for m in root_imports))
+        (tmp_path / "lean" / "lakefile.toml").write_text(lakefile)
+        monkeypatch.setattr(_H, "PROJECT_ROOT", tmp_path)
+        return src
+
+    def test_an_unreachable_module_FAILS(self, tmp_path, monkeypatch):
+        """FIRES ON THE SEEDED DEFECT."""
+        self._tree(tmp_path, monkeypatch, ["A", "B"], ["A"])
+        monkeypatch.setattr(lt, "UNREACHABLE_MODULE_EXCEPTIONS", {})
+        r = lt.check_lean_modules_in_build_graph()
+        assert r.passed is False
+        assert any(d.name == "orphans" and not d.passed for d in r.details)
+
+    def test_full_coverage_is_SILENT(self, tmp_path, monkeypatch):
+        self._tree(tmp_path, monkeypatch, ["A", "B"], ["A", "B"])
+        monkeypatch.setattr(lt, "UNREACHABLE_MODULE_EXCEPTIONS", {})
+        assert lt.check_lean_modules_in_build_graph().passed is True
+
+    def test_transitive_imports_count_as_reachable(self, tmp_path, monkeypatch):
+        """`B` reached only via `A` is reachable — the closure, not the direct list."""
+        src = self._tree(tmp_path, monkeypatch, ["A", "B"], ["A"])
+        (src / "A.lean").write_text("import SKEFTHawking.B\n")
+        monkeypatch.setattr(lt, "UNREACHABLE_MODULE_EXCEPTIONS", {})
+        assert lt.check_lean_modules_in_build_graph().passed is True
+
+    def test_exe_roots_are_DERIVED_from_the_lakefile(self, tmp_path, monkeypatch):
+        """An exe root is legitimately outside the library, and the allowlist must come
+        from `lakefile.toml` — a hardcoded list goes stale the moment a root is added."""
+        self._tree(tmp_path, monkeypatch, ["A", "Tool"], ["A"],
+                   lakefile='[[lean_exe]]\nname = "tool"\nroot = "SKEFTHawking.Tool"\n')
+        monkeypatch.setattr(lt, "UNREACHABLE_MODULE_EXCEPTIONS", {})
+        assert lt.check_lean_modules_in_build_graph().passed is True
+        # ...and the same tree WITHOUT the declaration must fail, or the allowlist is
+        # not actually being read.
+        (tmp_path / "lean" / "lakefile.toml").write_text("")
+        assert lt.check_lean_modules_in_build_graph().passed is False
+
+    def test_an_absent_source_dir_is_UNMEASURABLE_not_passing(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(_H, "PROJECT_ROOT", tmp_path)
+        r = lt.check_lean_modules_in_build_graph()
+        assert r.passed is False and r.measured is False
+
+    def test_the_LIVE_tree_agrees_with_its_import_graph(self):
+        """PRODUCTION-SEEDED (QI-30). Runs against the real tree: a fixture proves the
+        predicate, not that the corpus satisfies it. Mutation-verified by deleting
+        `import SKEFTHawking.AtlasAttr` (a true leaf) from the real root aggregate — red,
+        and green on restore. NOTE a non-leaf is a bad probe: removing a module that
+        another module imports leaves it transitively reachable and correctly stays green.
+        """
+        r = lt.check_lean_modules_in_build_graph()
+        assert r.passed, [d.message for d in r.details if not d.passed]
