@@ -348,10 +348,12 @@ and the figures/tables detail in the same directory.
   *"numbered `### N.N — ...` headings with severity glyphs (🔴/🟡/🔵)"* — the
   **adversarial** reviewer's format. A report written in another dialect yields no
   `ReviewFinding` nodes, hence no `FLAGS` edges, hence no gate movement.
-  ✅ **V** Reports in `papers/AutomatedReviews/` that do **not** use the dialect exist and
-  yield nothing: sampled `2026-04-10/CitationReview-01.md` and `ComprehensiveReview-01.md`
-  both match the `^### N.N` heading pattern **0** times. Review output landing in the
-  directory is therefore not sufficient for it to reach a gate.
+  ✅ **V** **Bundle-level Stage-13 reports do not use the dialect and reach no gate.**
+  `papers/AutomatedReviews/2026-04-29-bundle-stage13/D1.md`: **0** `### N.N` headings,
+  **0** severity glyphs. Same for the older `2026-04-10/` reviews. So review output landing
+  in the directory is not sufficient to become a `ReviewFinding` — and the *bundle* profile,
+  which is the Phase-7 review path for all 21 publication targets, produces nothing the
+  gates can see.
 - ✅ **V** **Nothing in the codebase writes a `stage*_status` to `green`.** The only
   writers set `"pending"`: `bundle_append.py:321,323,325` and
   `bundle_source_manifest.py:129-131`. Every green in `papers/*/bundle_metadata.json` is
@@ -395,13 +397,19 @@ and the figures/tables detail in the same directory.
   stated.** Invariant #13 (`WAVE_EXECUTION_PIPELINE.md:687`) promises verbatim preservation
   only of `## Closed Items` and explicitly describes Open Items as auto-derived. Current
   state ✅**V**: **10 Open / 13 Closed**.
-  ⚠️ **U** The narrower live finding: with all 11 gate-ids closed and `unclassified` skipped
-  (`qi_register.py:165,170-171` — ✅**V** those lines read as described), the derivation may
-  return nothing, so Stage 14 could no longer surface a new QI item.
-  ⚠️ **Not reproducible as reported:** the survey said it rendered the register in memory,
-  but `qi_register` exposes no `load_findings`, so that method could not be repeated.
-  **To verify:** call the module's real finding-loading entry point (read its `main`) and
-  check whether `cluster_findings` returns `[]` against the live graph.
+  ✅ **V** **Stage 14 detects nothing.** `qi_register.py --stats` (read-only) returns
+  `{"findings_total": 1561, "qi_items_detected": 0, "items": []}`. With all 11 gate-ids in
+  Closed Items and `unclassified` skipped (`:165,170-171`), the derivation is saturated
+  shut: **1 561 findings produce 0 QI items.**
+  **This resolves the earlier dispute in a third position.** The survey said the regenerator
+  "destroys its own register, violating Invariant #13"; I refuted that, because #13 makes
+  Open Items derived by design. Both were wrong. Open Items *are* derived — and the
+  derivation now yields **nothing**, so regenerating would replace the **10** current Open
+  items with `_(none)_` and they are **not reproducible**, precisely because the derivation
+  that would rebuild them returns zero. Not a contract violation; a degenerate derivation
+  whose output happens to be destructive.
+  **Consequence:** the Stage-13 → Stage-14 escalation path — the mechanism by which a
+  recurring paper-level defect becomes a tracked process item — cannot fire at all.
 - ❌ **X** *"The dashboard cannot satisfy Invariant #8"* — **materially narrowed, and it was
   the item this map briefly flagged as its most severe.** ✅**V** the dashboard's confirm
   action does mutate an in-memory dict (`provenance_dashboard.py:1272-1274`) and its
