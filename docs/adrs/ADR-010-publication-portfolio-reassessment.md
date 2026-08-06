@@ -1,29 +1,38 @@
 # ADR-010 — Publication portfolio: purpose, distribution, and late-phase absorption
 
-- **Status:** **PROPOSED — CHARTER ACCEPTED, ANALYSIS PENDING (2026-08-04).**
+- **Status:** **PROPOSED — CHARTER ACCEPTED; MEASUREMENT PASS COMPLETE, ANALYSIS IN PROGRESS (2026-08-05).**
   This document was authored *before* the analysis it commissions, deliberately: the operator's framing
   and constraints were given in a live session and would otherwise be lost at the next compaction.
   §Decision states the *criteria and method* the re-assessment must satisfy. §Open records what is
   **not** decided — most importantly the roster number, which is **not** to be assumed.
 
-  > ⚠️ **EVIDENCE CLASS — corrected 2026-08-04. An earlier revision of this line claimed "§Context and
-  > §Constraints are verified against source", and that was FALSE for §Context.**
+  > ✅ **EVIDENCE CLASS — the re-measurement this box demanded is DONE, 2026-08-05.**
+  > Full working, with every predicate stated:
+  > [`docs/audits/2026-08-05-adr010-measurement/MEASUREMENTS.md`](../audits/2026-08-05-adr010-measurement/MEASUREMENTS.md).
   >
-  > - **§Constraints C1–C3 are VERIFIED** by the author, 2026-08-04, by reading
-  >   `scripts/validation/checks/bundles_readiness.py`, `scripts/bundle_registry.py`,
-  >   `SYNTHESIS.md` §5 and `CROSS-portfolio-coherence.md` §6.4, and by executing `BUNDLE_CODES`.
-  >   The Invariant-#14 and `PAPER_STRATEGY.md:341` findings in §Context are likewise verified directly.
-  > - **Everything else in §Context is INHERITED from the 2026-08-01 audit and has NOT been
-  >   independently checked** — the ~340 un-homed modules, the 8 closed phases, the 162 `PinPlus*` +
-  >   ~88 Smith/Wu counts, ~181 pp vs ~475 pp, D6/D9's 78 shared theorems, D4 §9 = 62 % of D8, the 16
-  >   stub sections, and the whole late-phase-absorption mechanism (**`check_bundle_source_freshness.py`
-  >   has not been read by this author**).
+  > The prior revision recorded that **§Context's figures were inherited from the 2026-08-01 audit and
+  > never independently checked**, and that re-measuring them was *"the analysis's FIRST task, not a
+  > footnote to it."* Six were re-measured. The verdict is **not** that the audit was unreliable — it
+  > is that **three of the six meant something different from what this ADR inherited**:
   >
-  > The audit is a strong source and its figures are probably right. **They are still claims, not
-  > measurements, and this ADR's own §Constraints C4 forbids recommending on that basis.** Re-measuring
-  > each one is the analysis's FIRST task, not a footnote to it — the same discipline recorded in
-  > `QA_QI_INFRASTRUCTURE_MAP.md` §9, which this workstream has now violated three times and caught
-  > three times.
+  > | inherited | measured | consequence |
+  > |---|---|---|
+  > | Tier-1 ~181 pp vs ~475 pp | ✅ **186 / 480 pp** | holds; §Context (a)–(d) below now say *why* |
+  > | ~340 un-homed modules | ❌ **1 403–1 633 of 2 039** | low by 4–5×; D5's scope is far larger |
+  > | 162 `PinPlus*` + ~88 Smith/Wu | ❌ **2 914** + **409** | low by ~18×; conclusion (zero `papers/` hits) stands |
+  > | D6/D9 share 78 theorems | ✅ **78, exactly** | the merge case for D6+D9 is real |
+  > | D4 §9 = 62 % of D8 | ⚠️ **true, but a SIZE ratio** | texts share **0.1 %**; not duplication — see C3 |
+  > | 16 stub sections / 7 bundles | ✅ **17 / 8** — but ≤ 8 % of any bundle | immaterial; drop from remediation |
+  >
+  > **Two further findings came out of the pass and are not in the audit at all:** the fill-vs-charter
+  > gradient that identifies the D-tier mechanism (§Context), and the fact that the absorption
+  > instrument's failure has a *different cause* than the audit assigned it (§Context, M6).
+  >
+  > **The re-measurement was also, three times, a correction of the measurer.** Reading only
+  > `\texttt{}` — the assumption the validation suite itself shipped — made D8 and D9 look like they
+  > referenced **zero** Lean modules, and made D6 ∩ D9 come out **0** instead of 78. Filing "the audit
+  > is wrong" off that would have killed the best-evidenced merge in the portfolio. Fixed in
+  > `c7148779` and `c5f384b4`; see §Consequences.
   **No roster change, no `PAPER_STRATEGY.md` edit and no manuscript edit is authorized by this ADR.**
 - **Decider:** John Roehm (project owner). Direction given 2026-08-04:
   > *"My intent is to publish the strongest form of any paper we deliver. I've noticed that the naming
@@ -48,7 +57,10 @@
   [`docs/LATE_PHASE6_ABSORPTION_PROTOCOL.md`](../LATE_PHASE6_ABSORPTION_PROTOCOL.md) ·
   [`docs/audits/2026-08-01-publication-readiness/`](../audits/2026-08-01-publication-readiness/)
   (SYNTHESIS · REMEDIATION_PLAN · CROSS-portfolio-coherence · CROSS-absorbability-and-strategy-drift ·
-  CROSS-build-integrity · 10 per-bundle reports) · `scripts/bundle_registry.py` (the machine roster) ·
+  CROSS-build-integrity · 10 per-bundle reports) ·
+  [`docs/audits/2026-08-05-adr010-measurement/MEASUREMENTS.md`](../audits/2026-08-05-adr010-measurement/MEASUREMENTS.md)
+  (**this ADR's own evidence base** — every §Context figure re-measured with its predicate stated) ·
+  `scripts/bundle_registry.py` (the machine roster) ·
   Pipeline Invariant #14 (`WAVE_EXECUTION_PIPELINE.md:689`).
 
 ---
@@ -59,23 +71,78 @@
 
 **Late work keeps being authorized into Tier-1 "deep" containers that then never reach their charter.**
 The roster grew 13 → 14 → 15 → 16 → 17 → 18 → 20 → 21 by successive authorizations
-(`PAPER_STRATEGY.md:27` records the full chain), each adding a *depth* paper. Measured at the audit:
-**Tier-1 aggregate is ~181 pp against a ~475 pp charter** (`SYNTHESIS.md` §1). A 40 pp target ships as
-11. Only **D3** meets its page target — and D3 is the one bundle that does not compile.
+(`PAPER_STRATEGY.md:27` records the full chain), each adding a *depth* paper. Re-measured 2026-08-05:
+**Tier-1 aggregate is 186 pp against a 480 pp charter — 39 %** (the audit's ~181/~475 reproduces). A
+40 pp target ships as 10; D7's ships as **3**. Only **D3** meets its page target, and it does so at less
+than half the corpus's words-per-page — see (d). *(D3's LaTeX no longer fails: the undefined `\Imm` was
+fixed under ADR-009 and all 21 bundles now compile clean, so the audit's "the one bundle that does not
+compile" is superseded.)*
 
 This is a *structural* outcome, not a series of individual authoring failures, and the re-assessment must
-name the mechanism rather than the symptom. Three candidate generators are already documented and each
-must be evaluated:
+name the mechanism rather than the symptom. Three candidate generators were documented. **The
+2026-08-05 measurement pass adjudicates between them** — generator 1 is the primary, 3 is its enabler,
+and 2 explains a different symptom than the one it was assigned to.
 
-1. **Authorization has no content floor.** Invariant #14 requires user authorization to add a bundle
-   target, but nothing at authorization time asserts that substrate exists to fill it. A bundle is
-   created, then hopefully filled.
-2. **`BUNDLE_LIFT_PROCEDURE` §3a inserts one section stub per source.** `SYNTHESIS.md` §3 Class 4
-   identifies this as what "manufactures the stitched lift" — D3 is 30 sections at a median of 262 words,
-   with `source_manifest.md` mapping sources 1:1 onto 22 of them. The procedure produces *shape* without
-   producing *content*.
-3. **Nothing measures the gap continuously.** Page-count vs charter is computed nowhere; it surfaced only
-   when a human read the drafts.
+1. **Authorization has no content floor. ← PRIMARY, now evidenced.** Invariant #14 requires user
+   authorization to add a bundle target, but nothing at authorization time asserts that substrate exists
+   to fill it. A bundle is created, then hopefully filled.
+2. **`BUNDLE_LIFT_PROCEDURE` §3a inserts one section stub per source.** Real, but it explains *shape*,
+   and the bundle it best describes — D3, 30 sections, 205 w/pp against a ~550 corpus norm — is the one
+   bundle that **exceeds** its page charter. §3a is therefore the generator of *padding*, not of the
+   shortfall. Both need controls, and they are different controls.
+3. **Nothing measures the gap continuously.** Confirmed: page-count vs charter is computed nowhere. This
+   is what lets generator 1 run undetected for the ~15 months between authorization and review.
+
+### The measurement that identifies the mechanism
+
+Fill fraction against charter, by tier (2026-08-05, freshly recompiled PDFs):
+
+| tier | n | actual | charter | **fill** | words / bundle |
+|---|---|---|---|---|---|
+| 0 — flagship | 1 | 23 pp | 150 pp | **15 %** | 12 421 |
+| 1 — **deep** | 12 | 186 pp | 480 pp | **39 %** | **6 290** |
+| 2 — PRL | 3 | 11 pp | 12 pp | 92 % | 2 011 |
+| 3 — infrastructure | 3 | 56 pp | 55 pp | **102 %** | **7 184** |
+| 4 — experimental | 2 | 10 pp | 6 pp | **167 %** | 2 689 |
+
+Three things follow, none of which is in the audit:
+
+**(a) Fill is monotone in charter size, and only the big containers miss.** Every tier with a small
+charter is filled or overfilled. Any explanation running through author effort has to explain why effort
+correlates *inversely* with container size.
+
+**(b) The "deep" tier is not deeper than the infrastructure tier.** By words rather than typeset length,
+D-tier bundles average **6 290** and I-tier bundles **7 184**. The tier that exists to be long carries
+*less* prose per bundle than the tier that exists to document tooling.
+
+**(c) The charter number is a tier template, not an estimate.** **Nine of the twelve** D-tier bundles
+carry the *identical* `~40pp` charter. A number nine bundles share was not derived from nine different
+substrates.
+
+> **The mechanism, in one line.** The charter page number is assigned **by tier convention at
+> authorization time, before any substrate is measured**, and delivered length is essentially
+> uncorrelated with it — ~9–23 pp for everything that is not a 4 pp letter, whether the charter says 15
+> or 150. So the operator's *"naming convention keeps pulling into D"* is not a naming accident:
+> **D is the tier whose template default is largest, so anything routed there automatically acquires a
+> ~40 pp charter it was never sized against.** The shortfall is created at authorization, not at
+> authoring.
+
+**(d) A page-count floor alone would score the portfolio backwards.** D3 meets 118 % of its charter at
+**205 w/pp** — under half the corpus norm — across 30 sections averaging 403 words. D4 is the same
+pattern at 245 w/pp. Whatever control D3 specifies must be **density-aware**, or the stitched lift ranks
+as the healthiest bundle in the portfolio. It currently does.
+
+### The substrate attachment is worse than the length gap
+
+Declaration-level references that resolve to real project theorems, per bundle:
+
+| D12 | D10 | D7 | D6 | D8 | D9 | D3 |
+|---|---|---|---|---|---|---|
+| **0** | 3 | 20 | 175 | 39 | 169 | 175 |
+
+**D11 and D12 reference zero Lean declarations.** D10 references three. Meanwhile **1 403–1 633 of the
+2 039** Lean modules reach no bundle draft at all. The late D-tier containers are not merely short —
+several are barely attached to the substrate they were authorized to present.
 
 ### The strategy document predates most of what was delivered
 
@@ -88,22 +155,65 @@ that needs fixing."*
 
 ### Work that has no home
 
-- **~340 kernel-verified Lean modules across 10 arcs appear in no bundle draft**, plus **8 fully-closed
-  phases** (6h, 6j, 6k, 6l, 6q, 6r, 6r′, 6s) with no bundle home (`SYNTHESIS.md` §3 Class 6).
-- Includes the **entire Pin⁺ ℤ/16 arc** (162 `PinPlus*` + ~88 Smith/Wu declarations, zero `papers/` hits)
-  and the **whole `GenericSUd*` SU(d) substrate that D8 advertises as its headline**.
-- **16 manifest-claimed sections across 7 bundles are commented-out stubs sitting after the
-  bibliography** while `append_log.json` still counts them (`SYNTHESIS.md` §3 Class 4). D1 has four, so
-  part of its 73 % shortfall is self-inflicted commenting rather than missing work.
+- **1 403–1 633 of the 2 039 Lean modules appear in no bundle draft** — measured 2026-08-05 as a band
+  between a deliberately generous and a strict homing predicate, because the honest answer is bracketed.
+  The inherited *"~340"* is low by **4–5×**, and had **no recoverable predicate and no backing check**:
+  `bundle_lean_module_coverage`, which `SYNTHESIS.md` §5 says *"surfaces the ~340 unlifted modules"*,
+  **does not exist**.
+- The **8 fully-closed phases** (6h, 6j, 6k, 6l, 6q, 6r, 6r′, 6s) all have roadmaps, but *"a phase has
+  no bundle home"* is **not machine-answerable today** — nothing joins a phase to a bundle except
+  `PAPER_DRAFT_MAPPING.md`, whose late-phase entries name directories that do not exist (see below). D5
+  should therefore be keyed to **modules**, which are measurable, not phases, which are not.
+- The **entire Pin⁺ ℤ/16 arc** is un-homed and is far larger than the audit believed: **2 914
+  `PinPlus*`** declarations across 180 modules (not 162) and **409 Smith/Wu** (not ~88), with **zero**
+  `papers/` hits — that half of the claim is confirmed exactly.
+- **`GenericSUd*` — the audit was wrong on the letter and right on the substance.** D8 *does* reference
+  it, five times, but every reference is to a **file** (`\lean{GenericSUdQuantitative.lean}`) plus one
+  glob, `\lean{FKLW/GenericSUd*}`. Against **556 declarations across 106 modules**, D8's advertised
+  headline substrate reaches the manuscript as four filenames and a wildcard.
+- **17 commented-out stub sections across 8 bundles sit after the bibliography** (the audit's "16 across
+  7" reproduces). ⚠️ **But the sub-claim that D1's *"73 % shortfall is self-inflicted commenting"* does
+  not survive:** the commented regions hold **95–437 words each**, ≤ 8 % of any bundle's live text.
+  Restoring all four of D1's would move it from 25 % of charter to ~27 %. These are placeholder headings,
+  not withheld content — **drop this from the remediation plan; it is a distractor.**
 
 ### Late-phase absorption is structurally dead for the newer half of the roster
 
-`LATE_PHASE6_ABSORPTION_PROTOCOL`'s Stage-C trigger **does not fire for D6–D12**: every bundle authorized
-since D6 is *sourceless* (no entries in `PAPER_DRAFT_MAPPING.md`), and nothing tracks Lean-module mtimes.
-The instrument that was supposed to notice is `check_bundle_source_freshness.py`, which returns `None`
-for sourceless keys and skips — reporting *"fresh: all 1 source paper(s) older than last_lift"* for a
-comparison it never performed (`SYNTHESIS.md` §2). So the newest, fastest-growing arcs are precisely the
-ones with no absorption path.
+`LATE_PHASE6_ABSORPTION_PROTOCOL`'s Stage-C trigger **does not fire for the late bundles** — the audit's
+observation, confirmed. **Its stated mechanism is wrong, and the correct one is worse.**
+
+The audit said *"every bundle authorized since D6 is sourceless (no entries in
+`PAPER_DRAFT_MAPPING.md`)."* Every one of D6–D12 **has** entries: D6 has 3, D8 has 13, the rest 1 each.
+
+What is actually true (`check_bundle_source_freshness.py` read in full, 2026-08-05 — the prior revision
+of this ADR recorded that its author had **not** read it): those entries are **synthetic tokens naming
+directories that do not exist** — `_phase6t_lean_only`, `D9_initial_draft`, `D12_initial_draft`.
+`_latest_source_mtime()` returns `None` for a missing directory, the staleness loop skips every `None`,
+and control falls to the `else` branch, which announces
+
+> `fresh: all 1 source paper(s) older than last_lift (2026-06-10)` — `passed=True`, `warning=False`
+
+**a freshness verdict computed over zero measurable sources.** That is the exact string the audit quoted;
+it read it as evidence of *no sources* when it is evidence of *unmeasurable sources silently scored as
+fresh*. This is ADR-009's defect class — **absence of measurement rendered as success** — living inside
+the absorption instrument.
+
+**Scope is wider than the audit's: nine bundles, not seven** — D6–D12 **plus I2 and I3**. Portfolio-wide,
+**89 of 180 source assignments (49 %) name a directory that does not exist**, so even the bundles that
+*do* fire were computing over roughly half a population (D3 reported "5 of 31"; it is truthfully 5 of 22).
+
+**A second, independent defect in the same instrument: it is self-triggering.** `_latest_source_mtime()`
+takes the max mtime of *every* file under a source directory, so it counts **generated** artifacts as
+author activity. The only file in `papers/paper1_first_order/` modified since June is
+`tables/table1_experimental_params.tex` — a generated table — and that alone is what marks D1
+`freshness-stale`. LaTeX `.aux`/`.log`/`.pdf` output does the same. **The instrument reports its own side
+effects as evidence that an author changed something**, and per `VALIDATION_GATE_TOPOLOGY.md` §3 a gate
+that fires on correct work gets switched off.
+
+The vacuous-PASS half is **fixed** (`9f62deaa`): an absent source directory now reports `UNMEASURABLE` at
+WARN rather than claiming freshness, which converts nine false greens into a visible gap. The trigger the
+late bundles actually need — one that watches **Lean-module** mtimes — is a **new instrument** and stays
+gated behind D6 / `REMEDIATION_PLAN.md` §6a's approval step. Not built.
 
 ### Two documents disagree with the live roster
 
@@ -168,6 +278,30 @@ The proposed merges: **D6+D9+D12 → D6★** (device/network certification stack
 21 − 5 = 16. Rationale: the two largest duplication findings (D6/D9 sharing 78 identical Lean theorems;
 D4 §9 = 62 % of the entire D8 manuscript, with both papers asserting priority over it) **are boundary
 failures between bundles that should not be separate**.
+
+> ⚠️ **CORRECTED 2026-08-05 — this rationale calls them "the two largest duplication findings", and only
+> one of them is a duplication finding.**
+>
+> - **D6/D9 is duplication, and the number is exact.** Measured: D6 and D9 share **85 resolved
+>   declaration references, of which exactly 78 are theorems** — **48.6 % of D6's** corpus and **50.3 %
+>   of D9's**. Two Tier-1 bundles targeting the same journal, each naming half its Lean corpus in common
+>   with the other. **The strongest single result in the measurement pass, and the merge case for D6+D9
+>   stands on it.**
+> - **D4 §9 / D8 is NOT duplication.** The audit's own wording is *"3 206 words, which is 62 % of D8's
+>   entire 5 186-word manuscript"* — **a comparison of lengths**, which this ADR inherited as a measure
+>   of shared content. Measured directly, they share **3 of 38 declaration references** and **5 of 3 979
+>   text shingles (0.1 %)**. They are **independently written treatments of the same subject over almost
+>   disjoint substrate.**
+>
+> **The two therefore need different remedies, and the recommendation must not fuse them.** Merging
+> D6+D9 deletes a duplicated corpus. Merging D4 §9 into D8 would delete almost nothing, because there is
+> almost nothing shared — what is actually wrong there is a **priority and attribution conflict**: two
+> containers claiming the same *topic* while backing it with different theorems. That is resolved by
+> deciding who owns the claim and re-pointing the other, not by concatenation.
+>
+> A third pattern surfaced that the audit did not record, and it is **containment, not overlap**:
+> **D3 ⊃ L3** (53 % of L3's references) and **D3 ⊃ L1** (62 % of L1's). That is the normal
+> letter/long-paper relationship rather than a defect, but it bears on §Open item 3 (L1's disposition).
 
 The audit also records what it would *not* do: *"shrink the targets to match the current drafts… would be
 the walk-back this project's own remediation posture forbids."*
@@ -300,6 +434,51 @@ last evaluated whole before Phases 6AA–6EE existed.
 suite red in seven consumers at once and, worse, can be "fixed" by editing the registry to match a stale
 consumer — re-fragmenting the single source of truth the gate exists to protect.
 
+### What the measurement pass cost, and what it bought (2026-08-05)
+
+The pass could not be completed without repairing three instruments, because each was **reporting PASS
+over a population it never reached** — the same defect class ADR-009 exists to close, found three more
+times outside the validation suite's own guards:
+
+| commit | defect | scale |
+|---|---|---|
+| `c7148779` | `prose_theorem_reference_coverage` read only `\texttt{}`; D8/D9 route every Lean reference through `\newcommand{\lean}[1]{\texttt{#1}}` | **288** references unscanned |
+| `c5f384b4` | same check could not see `\verb`; D6 writes **235** of those against 25 `\texttt` | **276** more, and it surfaced 2 real unresolved D6 references |
+| `9f62deaa` | `check_bundle_source_freshness` scored an **absent** source directory as fresh | **9** bundles with a fully vacuous freshness PASS |
+
+Candidate references scanned went **671 → 1 051**. Every one of the 380 newly-visible bundle references
+**resolves**: the drafts were sound and the instrument was blind, which is the more dangerous of the two
+failures because it is invisible from the outside.
+
+> **The lesson, stated so it generalizes.** All three were found the same way — not by auditing the
+> checks, but by **measuring the corpus independently and noticing the two numbers disagreed.** The
+> check's own summary is what made it look thorough: *"21 bundle drafts scanned / 671 candidate Lean
+> references"* reads as coverage. It was 671 of 1 051. **A count of what was scanned is not evidence
+> that the population was reached**, and no amount of guarding *inside* an instrument detects an
+> instrument pointed at the wrong set.
+>
+> This is also why C4's *"read the substrate directly"* is load-bearing rather than ceremonial. Three
+> times in one pass my own measurement inherited the check's blind spot and produced a confident wrong
+> answer — D8 and D9 referencing "zero" Lean modules, and **D6 ∩ D9 = 0** against the audit's 78.
+> Filing that as "the audit is wrong" would have destroyed the best-evidenced merge in the portfolio on
+> the strength of a broken regex.
+
+### What remains before this ADR can recommend
+
+The measurement pass discharges the EVIDENCE CLASS gate; it does **not** discharge D2, D4 or D5, all of
+which require reading manuscript content the pass deliberately did not read (C4). Outstanding:
+
+1. **D2** — per-target re-derived purpose statements, from the manuscripts.
+2. **D4** — the per-target merge/split/retire recommendation. The evidence now supports **D6+D9** on its
+   own merits and **does not** support the D4→D8 merge as stated; the other three proposed merges
+   (D6+D9+**D12**, D10+D11, E1+E2) are **untested** — D11 and D12 reference zero Lean declarations, so a
+   merge argument for them cannot be built from substrate overlap and must be built some other way.
+3. **D5** — homing dispositions for **1 403–1 633** modules, not ~340. The scope is 4–5× what the
+   charter assumed, which may itself change the shape of the answer (a per-arc disposition rather than a
+   per-module one).
+4. **D6 step 4** — operator approval for the Lean-module-mtime absorption trigger.
+5. **D7** — the roster-drift change-set, unchanged.
+
 ---
 
 ## Alternatives considered
@@ -331,5 +510,7 @@ consumer — re-fragmenting the single source of truth the gate exists to protec
 - `scripts/bundle_registry.py` — the machine roster; `parse_strategy_roster()` is Leg A's parser.
 - `scripts/validation/checks/bundles_readiness.py:745` — `bundle_registry_consistency`, the three-leg gate.
 - `docs/WAVE_EXECUTION_PIPELINE.md:689` — Invariant #14, carrying the stale 18-target enum.
+- `docs/audits/2026-08-05-adr010-measurement/MEASUREMENTS.md` — M1–M6, the re-measurement pass that
+  discharges the EVIDENCE CLASS gate.
 - `docs/architecture/.working-docs/RESUME_STATE.md` — the live tracker for both workstreams.
 - [ADR-009](ADR-009-validation-suite-modularization.md) — must close and merge first.
