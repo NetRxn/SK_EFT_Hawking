@@ -212,6 +212,54 @@ class TestProseTheoremReferenceCoverage:
         assert plr.check_prose_theorem_reference_coverage().passed is False
 
 
+class TestTexttExAliasesAreScanned:
+    """The `\\texttt` ALIAS hole — found by the ADR-010 measurement pass, 2026-08-05.
+
+    D8, D9 and paper14 route every Lean reference through a preamble alias
+    (`\\newcommand{\\lean}[1]{\\texttt{#1}}`) instead of writing `\\texttt` at each
+    site. The extractor matched the literal `\\texttt` only, so **288 references sat
+    beyond the check while it reported PASS on "21 bundle drafts scanned"** — this
+    branch's own defect class, absence of measurement rendered as success, and the
+    reason `CHECK_AUTHORING_GUIDE.md` §2.5 says a scan needs a population guard.
+
+    The check's own summary count is what made it look covered: 671 candidates read
+    as thorough. It was 671 out of 889.
+    """
+
+    def test_alias_definitions_are_discovered(self):
+        src = r"\newcommand{\lean}[1]{\texttt{#1}}" "\n" r"\newcommand{\thm}[1]{\mathtt{#1}}"
+        assert plr._prose_verbatim_macros(src) == frozenset({"texttt", "lean", "thm"})
+
+    def test_a_draft_with_no_alias_is_unchanged(self):
+        assert plr._prose_verbatim_macros(r"\section{x} \texttt{a_b}") == frozenset({"texttt"})
+
+    def test_alias_uses_become_candidates(self):
+        src = (r"\newcommand{\lean}[1]{\texttt{#1}}"
+               "\n" r"We prove \lean{avgGateFidelity\_eq} and \texttt{plain\_ref}.")
+        toks = {t for t, _o in plr._extract_prose_lean_candidates(src)}
+        assert "avgGateFidelity_eq" in toks, (
+            "an aliased reference was not extracted — the alias hole is back")
+        assert "plain_ref" in toks, "literal \\texttt extraction regressed"
+
+    def test_the_LIVE_D9_draft_has_its_alias_refs_scanned(self):
+        """PRODUCTION-SEEDED (QI-30). Asserted against the real `papers/D9/paper_draft.tex`,
+        not a fixture — a fixture proves the regex works, not that the corpus is reached.
+        Reverting the alias support drops this from ~170 to ~10 and fails here.
+        """
+        tex = (SK_ROOT / "papers" / "D9" / "paper_draft.tex")
+        if not tex.is_file():                      # pragma: no cover - corpus present in-repo
+            import pytest
+            pytest.skip("D9 draft absent")
+        src = tex.read_text(errors="replace")
+        assert "lean" in plr._prose_verbatim_macros(src), (
+            "D9 no longer defines a \\texttt alias — re-derive this test's premise "
+            "rather than deleting it")
+        toks = {t for t, _o in plr._extract_prose_lean_candidates(src)}
+        assert len(toks) > 100, (
+            f"only {len(toks)} candidate references extracted from D9, which carries "
+            f"~192 \\lean{{}} sites — the alias hole has reopened")
+
+
 class TestTheoremNameEmbeddedCitations:
     """A declaration name embedding an author+year asserts a citation; the
     bibliography must carry it."""

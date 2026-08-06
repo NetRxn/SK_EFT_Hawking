@@ -1,7 +1,9 @@
 """Prose → Lean name resolution — ADR-009 Phase 2.
 
 `prose_theorem_reference_coverage` (every `\\texttt{}` Lean reference in a bundle
-draft resolves to a real declaration) and `theorem_name_embedded_citations`
+draft — **including references written through a preamble alias for `\\texttt`,
+which is how D8, D9 and paper14 write all of theirs** — resolves to a real
+declaration) and `theorem_name_embedded_citations`
 (a declaration name embedding author+year has a matching bibliography entry).
 
 Split from `papers_prose`; see that module's header for the seam. This half owns
@@ -45,6 +47,32 @@ from bundle_registry import BUNDLE_CODES  # noqa: E402  — see papers_prose.
 # ═══════════════════════════════════════════════════════════════════════
 
 _PROSE_TEXTTT_RE = re.compile(r"\\texttt\{([^{}]+)\}")
+# A draft may route every Lean reference through a preamble alias for `\texttt`
+# rather than writing `\texttt` at each site. D8 and D9 both do
+# (`\newcommand{\lean}[1]{\texttt{#1}}`), which put **288 Lean references beyond
+# this check's reach while it reported PASS** — the branch's own defect class
+# (absence of measurement rendered as success), found by the ADR-010 measurement
+# pass 2026-08-05. Discover the aliases from the preamble rather than hardcoding
+# `\lean`, so the next bundle that defines `\leanref` does not reopen the hole.
+_PROSE_VERBATIM_ALIAS_DEF_RE = re.compile(
+    r"\\(?:newcommand|renewcommand|providecommand)\s*\{?\s*\\([A-Za-z]+)\s*\}?"
+    r"\s*\[1\]\s*\{\s*\\(?:texttt|mathtt|verb|url|path|code)\s*\{\s*#1\s*\}\s*\}")
+
+
+def _prose_verbatim_macros(tex_source: str) -> frozenset:
+    """Names of preamble macros that are one-argument aliases for ``\\texttt``.
+
+    Always includes ``texttt`` itself. Unit-testable core of the alias fix.
+    """
+    return frozenset({"texttt"} | set(_PROSE_VERBATIM_ALIAS_DEF_RE.findall(tex_source)))
+
+
+def _prose_verbatim_re(tex_source: str) -> re.Pattern:
+    """The ``\\texttt``-or-alias span regex for one draft."""
+    names = sorted(_prose_verbatim_macros(tex_source), key=len, reverse=True)
+    return re.compile(r"\\(?:" + "|".join(map(re.escape, names)) + r")\{([^{}]+)\}")
+
+
 _PROSE_UNESCAPE_RE = re.compile(r"\\([_\\&%$#{}~^])")
 _PROSE_IDENT_RE = re.compile(
     r"^[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)*$")
@@ -68,6 +96,11 @@ _PROSE_MATHLIB_PREFIXES = (
     "Filter.", "Topology.", "AddCircle.", "RingQuot.", "Module.",
     "Submodule.", "Subgroup.", "MonoidHom.", "ContinuousMap.",
     "CartanMatrix.", "IsCyclotomicExtension.",
+    # Surfaced 2026-08-05 when the `\texttt` alias fix (see
+    # _PROSE_VERBATIM_ALIAS_DEF_RE) made paper14's `\lean{}` references visible.
+    # Both are Mathlib CategoryTheory names the prose itself attributes to
+    # Mathlib ("Mathlib's \lean{Rigid.Basic} module").
+    "ObjectProperty.", "Rigid.",
 )
 # Empirically-built allowlist (calibrated 2026-06-10 on the 18 bundle
 # drafts; iterate when calibration surfaces a new non-Lean idiom class):
@@ -83,7 +116,7 @@ _PROSE_REF_ALLOWLIST = {
     "mul_nonneg", "mul_self_nonneg", "sq_nonneg", "le_refl",
     "continuous_const", "zeta_spec", "ring_nf", "simp_rw",
     "exact_mod_cast", "decide_eq_true", "by_contra", "push_neg",
-    "field_simp",
+    "field_simp", "fin_cases",
     # project infrastructure identifiers (validate.py checks, cluster /
     # sentence-state schema fields) described in the I1 infrastructure
     # paper and the F flagship process section
@@ -136,7 +169,9 @@ _PROSE_REF_WAIVERS = {
 
 def _extract_prose_lean_candidates(tex_source: str) -> list:
     """Extract candidate Lean-identifier tokens from ``\\texttt{...}``
-    blocks (unit-testable core for CHECK 25).
+    blocks — **and from any preamble one-argument alias for it**, e.g.
+    D8/D9's ``\\newcommand{\\lean}[1]{\\texttt{#1}}`` (unit-testable core
+    for CHECK 25).
 
     Returns ``[(token, match_start_offset), ...]`` for tokens that pass
     the candidate filter: identifier-shaped, contains ``_`` or ``.``,
@@ -145,7 +180,7 @@ def _extract_prose_lean_candidates(tex_source: str) -> list:
     length ≥ 4, no leading/trailing underscore.
     """
     out = []
-    for m in _PROSE_TEXTTT_RE.finditer(tex_source):
+    for m in _prose_verbatim_re(tex_source).finditer(tex_source):
         tok = _PROSE_UNESCAPE_RE.sub(r"\1", m.group(1)).strip()
         if len(tok) < 4:
             continue
@@ -393,7 +428,8 @@ def _resolve_prose_ref(token: str, index: dict) -> str:
 
 
 @register_check("prose_theorem_reference_coverage",
-                "Bundle-draft \\texttt{} Lean references resolve in lean_deps.json")
+                "Bundle-draft \\texttt{} Lean references (and preamble aliases "
+                "for it, e.g. D8/D9's \\lean{}) resolve in lean_deps.json")
 def check_prose_theorem_reference_coverage() -> CheckResult:
     """Prevent the ``wen_adw_factor_6000`` failure class from the
     2026-06-05 external review: bundle prose naming a Lean declaration

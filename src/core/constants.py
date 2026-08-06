@@ -1411,8 +1411,15 @@ ARISTOTLE_REGISTRY_UNRESOLVED_CEILING = 14
 #: `VACUOUS_STATEMENT_BASELINE`, `COUNT_LITERAL_CEILING`). Existing debt is frozen
 #: and itemised; a NEW unresolved reference in a legacy draft FAILS. **Lower this as
 #: drafts are repaired; raising it needs a stated reason in the same commit.**
-#: Repairing the 81 is paper substance, scoped to ADR-010, not to ADR-009.
-LEGACY_DRAFT_UNRESOLVED_REF_CEILING = 81
+#: Repairing the remainder is paper substance, scoped to ADR-010, not to ADR-009.
+#:
+#: **81 → 79, lowered 2026-08-05 (ADR-010 measurement pass).** Making D8/D9/paper14's
+#: `\lean{}` alias references visible (see `_PROSE_VERBATIM_ALIAS_DEF_RE`) surfaced four
+#: paper14 tokens, all false positives of the candidate filter — three Mathlib
+#: CategoryTheory names the prose itself attributes to Mathlib (`ObjectProperty.*`,
+#: `Rigid.Basic`) and one tactic (`fin_cases`). Fixing the filter rather than raising the
+#: ceiling net-removed two. The +218 newly-visible BUNDLE references all resolve.
+LEGACY_DRAFT_UNRESOLVED_REF_CEILING = 79
 
 #: Registry bibitem titles that differ from their cached PDF's page-1 title by exactly
 #: one word (the check's HIGH-CONFIDENCE drift class). Frozen 2026-08-05 (audit QI-33).
