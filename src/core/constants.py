@@ -1419,7 +1419,14 @@ ARISTOTLE_REGISTRY_UNRESOLVED_CEILING = 14
 #: CategoryTheory names the prose itself attributes to Mathlib (`ObjectProperty.*`,
 #: `Rigid.Basic`) and one tactic (`fin_cases`). Fixing the filter rather than raising the
 #: ceiling net-removed two. The +218 newly-visible BUNDLE references all resolve.
-LEGACY_DRAFT_UNRESOLVED_REF_CEILING = 79
+#: **79 → 80, raised 2026-08-06 with cause.** `ARISTOTLE_THEOREMS` keys naming no live
+#: declaration were withdrawn from the prose resolver's whitelist: such a key is a claim
+#: that a Lean theorem exists, so whitelisting it let prose cite a non-existent theorem
+#: and resolve. 14 keys are in that state (the population
+#: `ARISTOTLE_REGISTRY_UNRESOLVED_CEILING` already tracks); exactly one is cited by a
+#: draft — `fock_space_finite_dim` in legacy paper7_chirality_formal. This is
+#: newly-VISIBLE pre-existing debt, not new debt, and no BUNDLE cites a dead key.
+LEGACY_DRAFT_UNRESOLVED_REF_CEILING = 80
 
 #: Provenance entries with no comparable value in code (`_lookup_provenance_value`
 #: returns None, or the value is non-numeric). Frozen 2026-08-05 at the live count.

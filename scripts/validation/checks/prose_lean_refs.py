@@ -328,6 +328,18 @@ def _load_lean_name_index() -> dict:
                 registry_keys.update(reg.keys())
             elif isinstance(reg, (list, set, tuple)):
                 registry_keys.update(reg)
+        # ⚠️ An `ARISTOTLE_THEOREMS` key is a CLAIM that a Lean theorem of that name
+        # exists — unlike the other registries, whose keys are parameter/axiom/
+        # hypothesis names that legitimately have no declaration. A key naming no live
+        # declaration is drift, and whitelisting it here would let prose cite a theorem
+        # that does not exist and still resolve. Those keys are already enumerated by
+        # `ARISTOTLE_REGISTRY_UNRESOLVED_CEILING`; withdraw them from the whitelist so
+        # the two ratchets cannot disagree about the same names.
+        _aristotle = getattr(_c, "ARISTOTLE_THEOREMS", None)
+        if isinstance(_aristotle, dict):
+            registry_keys -= {
+                k for k in _aristotle
+                if k not in names and k not in shorts and k not in dotted_suffixes}
     except Exception:
         pass  # registry resolution is a bonus source, never a blocker
     try:
