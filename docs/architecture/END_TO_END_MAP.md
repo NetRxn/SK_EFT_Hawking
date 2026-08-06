@@ -86,10 +86,11 @@ recorded.
 - ✅ **V** **The schema doc contradicts itself.** `:54` says 26 node types, `:129` says 25
   edge types, but `:312` says *"Extracts 13 node types + 11 edge types"* and `:341` says 13
   again. Checked by reading all four lines.
-- ⚠️ **U** **Nothing validates a roadmap.** Agent reports 0 of 65 checks read
-  `docs/roadmaps/`, the sole code reader `notebook_lib.py:200` fails open, and the
-  prescribed `<wave>_close.md` files number zero on disk.
-  **To verify:** `grep -rl "roadmaps" scripts/validation/checks/` and `ls docs/roadmaps/*_close.md`.
+- ✅ **V** **Nothing validates a roadmap.** Measured: **0** of the check modules under
+  `scripts/validation/checks/` reference `docs/roadmaps/`, and **0** `*_close.md` files
+  exist there. The roadmap layer — where scope, waves, and (per §2 above) the graph schema
+  itself are declared — is entirely unmechanized. This is the single largest ungated seam
+  in the map.
 
 **Concern (author, ✅V):** the schema lives in a *phase roadmap*, a *working doc*, and a
 `docs/` file that disagrees with itself — not in `docs/architecture/`. That placement is a
@@ -150,13 +151,26 @@ Plane detail: [`../audits/2026-08-06-e2e-map/PLANE-lean.md`](../audits/2026-08-0
   failing only under `--strict`. `lake build` **exits 0 on a `sorry`** (measured directly:
   a probe `theorem t : 1 + 1 = 3 := by sorry` emits ``declaration uses `sorry` `` and
   returns 0). Closed 2026-08-06 by `lean_zero_sorry`, which hard-fails always.
-- ⚠️ **U** The Aristotle verification gauntlet's kernel-purity leg reads an unrefreshed
-  `lean_deps.json` and invokes validate **without `--strict`** (`aristotle_submit.py:714,719,725`).
-  **To verify:** read those three lines and confirm the ordering.
-- ⚠️ **U** Invariant #9's registry-completeness clause is unenforced: `PLACEHOLDER_TOTAL_COUNT`
-  (`constants.py:2454`) has zero consumers. **To verify:** `grep -rn PLACEHOLDER_TOTAL_COUNT`.
-- ⚠️ **U** `tests/test_lean_integrity.py:172` uses non-recursive `glob` — 666 of 2 038 files
-  never scanned. **To verify:** read that line.
+- ✅ **V** **The Aristotle gauntlet's kernel-purity leg reads stale data, and its backstop
+  runs in WARN mode.** Read at `src/core/aristotle_submit.py:713-726`: step 2 runs
+  `lake build SKEFTHawking.ExtractDeps`, which compiles the `.olean` but does **not**
+  regenerate `lean_deps.json`; step 3 then calls `_load_lean_deps()` on that unrefreshed
+  file to decide `res.kernel_pure`; step 4 invokes `validate.py --check
+  axiom_closure_allowlist --check native_decide_regression` **without `--strict`**, and
+  `axiom_closure_allowlist` is warn-first (§4 above), so the authoritative gate cannot fail
+  the graft. The auto-revert therefore rests on a purity verdict computed from pre-graft
+  data.
+- ❌ **X** *"`PLACEHOLDER_TOTAL_COUNT` has zero consumers."* **False** — it is imported at
+  `tests/test_substrate_integrity_gates.py:18` and asserted at `:60`.
+  ⚠️ **U** But the substance survives the correction: that assertion reads
+  `PLACEHOLDER_TOTAL_COUNT == len(PLACEHOLDER_THEOREMS) == 26` — a tautology (`len(X) ==
+  len(X)`) plus a hardcoded literal — and never reads `docs/counts.json`. Invariant #9
+  requires the registry to match `counts.json theorems_placeholder`. **To verify:** confirm
+  no check compares the two.
+- ✅ **V** `tests/test_lean_integrity.py:172` uses `lean_dir.glob("*.lean")` — **not**
+  `rglob` — so every module in a subdirectory is unscanned. Read directly. The same
+  non-recursive-glob defect that `compute_lean_hash`'s docstring records having fixed
+  elsewhere.
 
 ---
 
@@ -251,9 +265,11 @@ and the figures/tables detail in the same directory.
   unrunnable generator. It is a self-healing regenerator wearing a gate's interface.
   ⚠️ **U** the scope half — table globs are `paper*_*`, so no bundle is covered.
   **To verify:** `ls papers/D*/tables/` and check the glob at `:260-271`.
-- ⚠️ **U** 137 `physics_checks` declared in `review_figures.py` are never evaluated.
-  **To verify:** `grep -n "physics_checks" scripts/review_figures.py` and confirm no reader
-  in `run_structural_checks`.
+- ✅ **V** **The 137 declared `physics_checks` are inert strings.** Every `FigureSpec`
+  declares assertions like `mach_crosses_one`, `T_H_dominates`, `curves_cross` — and the
+  only read of the field anywhere is `scripts/review_figures.py:2818`, which copies it into
+  the review manifest for a downstream LLM. Nothing evaluates them. The structural checks
+  that DO run cover trace counts, axis labels, NaN/Inf and palette — not physics.
 
 ---
 
