@@ -1434,6 +1434,17 @@ LEGACY_DRAFT_UNRESOLVED_REF_CEILING = 79
 #: reason in the same commit.
 PROVENANCE_UNRESOLVABLE_CEILING = 169
 
+#: Legacy (non-bundle) `papers/*/paper_draft.tex` that do not compile under pdflatex.
+#: Frozen 2026-08-06 at the measured live count.
+#:
+#: `paper_latex_compiles` previously iterated BUNDLE_CODES only, so the legacy corpus —
+#: which includes `paper15_methodology`, the draft whose fatal-error incident is the
+#: reason the check exists — was never compiled by it.
+#:
+#: A RATCHET: bundles hard-fail, legacy drafts are frozen and may only shrink. A NEW
+#: broken legacy draft FAILS; raising this needs a stated reason in the same commit.
+LEGACY_DRAFT_LATEX_BROKEN_CEILING = 14
+
 #: Registry bibitem titles that differ from their cached PDF's page-1 title by exactly
 #: one word (the check's HIGH-CONFIDENCE drift class). Frozen 2026-08-05 (audit QI-33).
 #:

@@ -424,11 +424,18 @@ def _eval_lean_proof_substance(paper: dict, idx: GraphIndex) -> GateResult:
     placeholder_labels = {n['name']
                           for n in idx.by_type.get('PlaceholderMarker', [])}
 
-    # Theorems cited by short name in prose
+    # Theorems cited by short name in prose.
+    #
+    # ⚠️ Reuse the shared extractor — do NOT re-implement this. Bundle drafts write Lean
+    # references in several verbatim forms (`\texttt{}`, preamble aliases such as D8/D9's
+    # `\lean{}` and D11/D12's `\thm{}`/`\mthm{}`, and `\verb`), and a `\texttt`-only regex
+    # reaches a small fraction of them. `_extract_prose_lean_candidates` discovers the
+    # forms structurally and applies the project's Lean-identifier candidate filter, so
+    # this gate and `prose_theorem_reference_coverage` cannot drift apart.
+    from validation.checks.prose_lean_refs import _extract_prose_lean_candidates
     tex = idx.paper_tex(paper_key)
-    referenced_short_names = set(
-        re.findall(r'\\texttt\{([A-Za-z_][A-Za-z0-9_]*)\}', tex)
-    )
+    referenced_short_names = {tok.rsplit('.', 1)[-1]
+                              for tok, _offset in _extract_prose_lean_candidates(tex)}
 
     # Which cited theorems resolve to a placeholder?
     flagged = []

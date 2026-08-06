@@ -312,6 +312,7 @@ class TestMemoizedSetIsFrozen:
 # `paper_latex_compiles` — the per-draft cache
 # ══════════════════════════════════════════════════════════════════════════
 
+import validate_helpers as _H
 from validation.checks import papers_prose as pp  # noqa: E402
 from bundle_registry import BUNDLE_CODES  # noqa: E402
 
@@ -407,12 +408,23 @@ class TestLatexCompileCache:
             "a draft with fatal compile errors was cached as clean")
         assert r2.passed is False
 
-    def test_the_cache_records_only_real_bundle_codes(self, latex_env, monkeypatch):
+    def test_the_cache_records_only_real_paper_dirs(self, latex_env, monkeypatch):
+        """The cache key must be a directory that actually exists under `papers/`.
+
+        The population is bundles AND legacy drafts — the check compiles both (bundles
+        hard-fail, legacy ratchets), so a bundles-only assertion would now be wrong.
+        What must still hold is that every recorded key names a real paper directory:
+        a key that matches nothing can never be invalidated and would pin a stale
+        clean-verdict forever.
+        """
         calls, cache = latex_env
         monkeypatch.setattr(_cfg, "FORCE_LATEX", False)
         pp.check_paper_latex_compiles()
         recorded = set(json.loads(cache.read_text())["clean"])
-        assert recorded <= set(BUNDLE_CODES)
+        on_disk = {d.name for d in _H.PAPERS_DIR.iterdir()
+                   if d.is_dir() and (d / "paper_draft.tex").is_file()}
+        assert recorded <= on_disk, (
+            f"cache keys naming no paper dir: {sorted(recorded - on_disk)}")
         assert recorded, "nothing was recorded, so the warm-run test is vacuous"
 
 

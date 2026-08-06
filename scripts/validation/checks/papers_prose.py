@@ -527,8 +527,9 @@ def check_bundle_tables_use_pipeline() -> CheckResult:
 
 
 @register_check("paper_latex_compiles",
-                "Bundle drafts compile under pdflatex (HARD-FAILS on a fatal "
-                "error; per-draft content-hash cache — --force-latex recompiles all)")
+                "Every papers/*/paper_draft.tex compiles under pdflatex — bundles "
+                "HARD-FAIL, legacy drafts ratchet; per-draft content-hash cache "
+                "(--force-latex recompiles all)")
 def check_paper_latex_compiles() -> CheckResult:
     """Compile each bundle draft with ``pdflatex`` and HARD-FAIL on fatal
     (``! ``-marked) breakage.
@@ -602,7 +603,18 @@ def check_paper_latex_compiles() -> CheckResult:
             prev_clean = {}   # fail-safe: an unreadable cache compiles everything
     new_clean: Dict[str, str] = {}
 
-    for code in BUNDLE_CODES:
+    # Bundles hard-fail; LEGACY drafts ratchet. Both are compiled: this check exists
+    # because of a fatal-error incident in `paper15_methodology`, which is a legacy
+    # draft, so a bundle-only population cannot see the very class it was built for.
+    legacy_failed: List[tuple] = []
+    legacy_codes = sorted(
+        d.name for d in _H.PAPERS_DIR.iterdir()
+        if d.is_dir() and d.name not in set(BUNDLE_CODES)
+        and (d / "paper_draft.tex").is_file())
+
+    for code in list(BUNDLE_CODES) + legacy_codes:
+        is_bundle = code in set(BUNDLE_CODES)
+        sink = failed if is_bundle else legacy_failed
         tex = _H.PAPERS_DIR / code / "paper_draft.tex"
         if not tex.is_file():
             n_missing += 1
@@ -627,10 +639,10 @@ def check_paper_latex_compiles() -> CheckResult:
                     cwd=paper_dir, capture_output=True, timeout=180,
                 )
             except subprocess.TimeoutExpired:
-                failed.append((code, -1, "compile timed out (>180s)"))
+                sink.append((code, -1, "compile timed out (>180s)"))
                 continue
             except Exception as exc:  # noqa: BLE001 — advisory: never hard-error
-                failed.append((code, -1, f"compile invocation failed: {exc}"))
+                sink.append((code, -1, f"compile invocation failed: {exc}"))
                 continue
             log_path = Path(out_dir) / "paper_draft.log"
             log = log_path.read_text(errors="replace") if log_path.is_file() else ""
@@ -639,7 +651,7 @@ def check_paper_latex_compiles() -> CheckResult:
                 # Capture the first "! ..." error line for the report.
                 m = re.search(r"^(! .*)$", log, re.MULTILINE)
                 first = m.group(1).strip()[:90] if m else "(see log)"
-                failed.append((code, len(fatal), first))
+                sink.append((code, len(fatal), first))
             else:
                 n_ok += 1
                 new_clean[code] = closure_hash
@@ -654,15 +666,36 @@ def check_paper_latex_compiles() -> CheckResult:
         except OSError:
             pass
 
+    from src.core.constants import LEGACY_DRAFT_LATEX_BROKEN_CEILING as _LEG_CEIL
+    if len(legacy_failed) > _LEG_CEIL:
+        details.append(Detail(
+            "legacy_ratchet", False,
+            f"{len(legacy_failed)} legacy draft(s) fail to compile, above the frozen "
+            f"ceiling of {_LEG_CEIL}. A NEW legacy draft was broken — commonly by an "
+            f"unescaped character in a GENERATED table, which is how this check's "
+            f"originating incident happened. Fix it, or raise "
+            f"LEGACY_DRAFT_LATEX_BROKEN_CEILING in src/core/constants.py with a stated "
+            f"reason in the same commit. Broken: "
+            f"{', '.join(c for c, _n, _f in legacy_failed)}"))
+    elif legacy_failed:
+        details.append(Detail(
+            "legacy_ratchet", True,
+            f"{len(legacy_failed)} legacy draft(s) fail to compile, at or under the "
+            f"frozen ceiling {_LEG_CEIL} (inherited debt; repair is ADR-010 scope): "
+            f"{', '.join(c for c, _n, _f in legacy_failed)}", warning=True))
+
     # "clean", not "compiled clean": `n_ok` counts cached drafts too, and a detail
     # line that says a draft compiled when nothing ran is the same overstatement
     # this check's own history is about.
     details.append(Detail(
         "summary",
         len(failed) == 0,
-        f"{n_ok}/{n_ok + len(failed)} bundle drafts clean "
-        f"({n_cached} from cache, {n_ok - n_cached} freshly compiled, "
-        f"{n_missing} missing draft(s) skipped) — {len(failed)} with fatal errors"
+        f"{n_ok}/{n_ok + len(failed) + len(legacy_failed)} drafts clean "
+        f"({len(BUNDLE_CODES) - len(failed)}/{len(BUNDLE_CODES)} bundles, "
+        f"{len(legacy_codes) - len(legacy_failed)}/{len(legacy_codes)} legacy) — "
+        f"{n_cached} from cache, {n_ok - n_cached} freshly compiled, "
+        f"{n_missing} missing skipped; {len(failed)} BUNDLE failure(s), "
+        f"{len(legacy_failed)} legacy (ratcheted)"
     ))
     if n_cached:
         details.append(Detail(
@@ -692,7 +725,11 @@ def check_paper_latex_compiles() -> CheckResult:
     # Measured at the moment of the fix: 20/21 clean, **D3 fails with 2 fatal errors
     # ("! Undefined control sequence")** — reported as a passing ⚠ WARN for as long
     # as the check has existed.
-    return CheckResult(passed=len(failed) == 0, details=details)
+    # BOTH legs bind: a bundle failure, and a legacy ratchet BREACH. Returning only
+    # `len(failed) == 0` would compute the legacy verdict and discard it — the same
+    # shape this check's own history is about, one leg further in.
+    _legacy_breach = len(legacy_failed) > _LEG_CEIL
+    return CheckResult(passed=(len(failed) == 0 and not _legacy_breach), details=details)
 
 
 # ═══════════════════════════════════════════════════════════════════════
