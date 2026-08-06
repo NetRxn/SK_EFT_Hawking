@@ -237,11 +237,20 @@ def _apply_canonical_order() -> None:
 
 def run_checks(
     check_filter: Optional[str] = None,
+    skip: "Optional[frozenset[str]]" = None,
 ) -> Dict[str, CheckResult]:
-    """Run all (or one) registered checks, return results keyed by name."""
+    """Run all (or one) registered checks, return results keyed by name.
+
+    `skip` names checks NOT to execute. It must be applied HERE, before the call —
+    filtering results afterwards runs every check and then deletes its answer, which
+    avoids none of the cost the skip exists to avoid and silently discards a real
+    failure.
+    """
     results = {}
     for spec in _CHECKS:
         if check_filter and spec.name != check_filter:
+            continue
+        if skip and spec.name in skip:
             continue
         try:
             results[spec.name] = spec.func()
@@ -660,15 +669,17 @@ Examples:
     #
     # FULL RUNS ONLY. `--check` must stay byte-identical: the commit gate runs
     # `--check native_decide_regression` and `scripts/pre-commit-sync.sh:72-74`
-    # states it must NEVER trigger the 30-minute ExtractDeps. See
+    # states it must NEVER trigger the heavy ExtractDeps pass. See
     # `validate_helpers.ensure_lean_deps_fresh` for the full reasoning.
     if not args.check:
         refreshed, note = _H.ensure_lean_deps_fresh()
         if refreshed or not args.json:
             print(f"  lean_deps: {note}", file=sys.stderr)
 
+    # `--ci` skips are applied at the CALL, not to the results: see run_checks.
+    _ci_skip = _cfg.CI_SKIP if (_cfg.CI_MODE and not args.check) else None
     t0 = time.monotonic()
-    results = run_checks(check_filter=args.check)
+    results = run_checks(check_filter=args.check, skip=_ci_skip)
     elapsed = time.monotonic() - t0
 
     # ── `--ci`: drop the checks whose premise does not hold on a runner ────────
@@ -676,12 +687,7 @@ Examples:
     # a check that behaves differently under CI is a check whose CI result means
     # something different from its local result, which is how a green build stops
     # being evidence. The exclusions and their reasons live in `_config.CI_SKIP`.
-    ci_skipped: list = []
-    if _cfg.CI_MODE and not args.check:
-        for name in list(results):
-            if name in _cfg.CI_SKIP:
-                del results[name]
-                ci_skipped.append(name)
+    ci_skipped: list = sorted(_ci_skip) if _ci_skip else []
 
     if args.json:
         payload = {

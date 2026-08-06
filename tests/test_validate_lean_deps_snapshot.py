@@ -127,7 +127,7 @@ class TestMainWiring:
         calls = []
         monkeypatch.setattr(_H, "ensure_lean_deps_fresh",
                             lambda: (calls.append(1), (False, "stub"))[1])
-        monkeypatch.setattr(v, "run_checks", lambda check_filter=None: {})
+        monkeypatch.setattr(v, "run_checks", lambda check_filter=None, skip=None: {})
         monkeypatch.setattr(v, "print_results", lambda results: None)
         return calls
 

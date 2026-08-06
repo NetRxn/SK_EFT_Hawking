@@ -132,7 +132,7 @@ def ensure_lean_deps_fresh() -> tuple[bool, str]:
     -------------------------------------
     `validate.main()` calls this only when no `--check` filter is given.
     `scripts/pre-commit-sync.sh` runs `--check native_decide_regression` in the commit
-    gate and states plainly that it must NEVER run the 30-minute ExtractDeps
+    gate and states plainly that it must NEVER run the heavy ExtractDeps pass
     (`:72-74`, and the file header: *"INCREMENTAL lean guard — never the 30-min clean
     ExtractDeps"*). Refreshing inside `load_lean_deps()` would have violated that.
 
