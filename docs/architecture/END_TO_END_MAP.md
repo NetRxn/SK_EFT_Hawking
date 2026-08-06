@@ -282,9 +282,13 @@ Schema: `docs/KNOWLEDGE_GRAPH.md`. Plane detail:
   layer above — every node at epoch-zero — that enrichment pass demonstrably does not
   execute, so **every** `BACKED_BY` edge claims `resolved` regardless of its real state.
   The two findings compound: neither is visible from the other alone.
-- ⚠️ **U** The dashboard re-implements the per-paper verdict rule and the gate roster.
-  **To verify:** compare `provenance_dashboard.py` `_classify_paper` against
-  `bundles_readiness.classify_readiness`.
+- ✅ **V** **The gate roster and the per-paper verdict rule are each implemented twice.**
+  Roster: `readiness_gates.GATES` vs `provenance_dashboard.py:5140` `GATE_DEFS`, whose own
+  comment calls itself *"the canonical list of the 11 readiness gates"* — two things cannot
+  both be canonical. Verdict: `bundles_readiness.classify_readiness:552` /
+  `partition_readiness:584` vs `provenance_dashboard.py:5194` `_classify_paper`.
+  Neither pair is cross-checked, and the dashboard is the surface a human reads before
+  signing off — so the copy most likely to be believed is the one nothing validates.
 
 ---
 
@@ -308,14 +312,19 @@ and the figures/tables detail in the same directory.
   therefore a hand edit — which is how D6 sits at `stage13_status: green` with
   `stage9_status: not_started` (§8 above). The reviewer agents that would earn a green
   have no write path to the field they gate on.
-- ⚠️ **U** Figure drift is detected by content hash but **advisory only**, and scoped to
-  D11/D12 (`bundles_readiness.py:189-202,131-135`). **To verify:** read those lines.
+- ✅ **V** **Figure coverage is two bundles wide.** `bundles_readiness.py:132` filters the
+  registry with `if not fs.name.startswith(("d11_", "d12_")): continue`, so of 137
+  registered figures only the D11/D12 ones are checked at all — and within those, the
+  drift comparison is emitted `warning=True`, i.e. advisory. Legibility is the only
+  blocking figure assertion, and it too is D11/D12-scoped.
 - ✅ **V** **`tables_fresh` cannot fail on staleness.** `freshness.py:329` is
   `return CheckResult(passed=True, details=details)`; the stale branch appends a `Detail`
   and falls through to it. The only `passed=False` exits are a non-zero subprocess or an
   unrunnable generator. It is a self-healing regenerator wearing a gate's interface.
-  ⚠️ **U** the scope half — table globs are `paper*_*`, so no bundle is covered.
-  **To verify:** `ls papers/D*/tables/` and check the glob at `:260-271`.
+  ✅ **V** the scope half: **9 `tables.py` files exist, every one under a legacy
+  `paperNN_*` directory — zero of the 21 publication bundles is wired to the table
+  pipeline.** So the freshness machinery, even if it could fail, would not cover a single
+  publication target.
 - ✅ **V** **The 137 declared `physics_checks` are inert strings.** Every `FigureSpec`
   declares assertions like `mach_crosses_one`, `T_H_dominates`, `curves_cross` — and the
   only read of the field anywhere is `scripts/review_figures.py:2818`, which copies it into
