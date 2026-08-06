@@ -434,9 +434,44 @@ def check_readiness_verdicts_agree() -> CheckResult:
     # BUNDLE_READINESS_HEATMAP.md with NarrativeGrounding blocked. GREEN is what a
     # reader takes as "ready", so it must survive every P1 gate, including the ones
     # the heatmap does not model (it counts findings only).
+    # ⚠️ THE LEG RUNS; ITS *DISAGREEMENT BRANCH* IS WHAT CANNOT FIRE
+    # (2026-08-05, PR-review pass 2, R4-I8).
+    #
+    # R4 filed this as "dead by construction" and I restated that before measuring.
+    # Both wrong: `reverse_coverage` reports **1 GREEN bundle cross-checked** on the
+    # live tree — the loop executes and correctly finds no disagreement. What is
+    # unreachable is only the `if bundle in blocked_at_gate` branch, and only while
+    # the producer keeps demoting GREEN.
+    #
+    # (Third time this session a "dead code" claim resolved to "runs, but one branch
+    # is unreachable". The two are not the same finding and do not have the same fix.)
+    #
+    # The chronology decides whether to delete it:
+    #
+    #   2026-07-31  this leg added, because `aggregate_by_bundle` was GATE-BLIND —
+    #               D6 rendered GREEN in the heatmap with NarrativeGrounding blocked.
+    #   2026-08-04  `5228ed6d` made the producer gate-AWARE
+    #               (`bundle_readiness._blocked_p1_gates_by_paper`), so GREEN is now
+    #               demoted whenever a P1 gate blocks.
+    #
+    # So: **a later fix to the producer silently made a consumer's guard unable to
+    # fire**, and nobody noticed. It is kept because it guards a regression the
+    # codebase has demonstrably occupied — remove the gate-awareness from the
+    # producer and this branch fires again. Deleting it would trade a live safety net
+    # for tidiness.
+    #
+    # What was wrong was the SILENCE. `checked` did not distinguish the two
+    # directions, so the summary read "17 heatmap-RED bundles cross-checked, 0
+    # disagreements" and a reader concluded both directions had been exercised. The
+    # reverse coverage is now reported explicitly, and
+    # `tests/test_d5_bundles_readiness.py` asserts the producer invariant that makes
+    # this leg inert — so a regression there fails fast at unit level instead of
+    # waiting for this slow cross-check to notice.
+    reverse_checked = 0
     for bundle, agg in sorted(by_bundle.items()):
         if str(agg.get('readiness', '')).upper() != 'GREEN':
             continue
+        reverse_checked += 1
         if bundle in blocked_at_gate:
             disagreements += 1
             details.append(Detail(
@@ -447,6 +482,17 @@ def check_readiness_verdicts_agree() -> CheckResult:
                 f"not be issued while any P1 gate is blocked"))
         else:
             checked += 1
+
+    details.append(Detail(
+        "reverse_coverage", True,
+        f"reverse direction (GREEN heatmap ⇒ no blocked P1 gate): {reverse_checked} "
+        f"GREEN bundle(s) cross-checked"
+        + ("" if reverse_checked else
+           " — NONE, so this direction asserted nothing this run")
+        + ". Its disagreement branch cannot fire while `aggregate_by_bundle` itself "
+          "demotes GREEN on a blocked P1 gate; retained as the regression guard for "
+          "that producer behaviour",
+        warning=not reverse_checked))
 
     for bundle, agg in sorted(by_bundle.items()):
         if str(agg.get('readiness', '')).upper() != 'RED':

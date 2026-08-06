@@ -558,3 +558,62 @@ class TestFigureRegistryIsActuallyDerived:
         assert derived, ("no d11_/d12_ specs in FIGURE_REGISTRY — the derivation "
                          "raises RuntimeError and falls back to the literal")
         assert set(derived) == {"D11", "D12"}
+
+
+class TestProducerDemotesGreenOnBlockedP1:
+    """⚠️ PR-review pass 2, R4-I8 — the invariant that makes
+    `readiness_verdicts_agree`'s reverse branch unreachable, asserted where it
+    lives instead of being relied on implicitly.
+
+    The chronology matters:
+
+      2026-07-31  the reverse leg was added to `readiness_verdicts_agree` because
+                  `aggregate_by_bundle` was GATE-BLIND — D6 rendered GREEN in the
+                  heatmap while `NarrativeGrounding` was blocked.
+      2026-08-04  `5228ed6d` made the producer gate-AWARE, demoting GREEN whenever
+                  a P1 gate blocks.
+
+    A fix to the producer silently removed a consumer guard's ability to fire, and
+    nobody noticed. The guard is retained (it protects against a regression this
+    codebase has actually occupied), but relying on a slow graph-building
+    cross-check to notice a producer regression is the wrong layer. This asserts it
+    directly, in milliseconds.
+
+    ⚠️ Note what R4 filed and I initially repeated: "dead by construction". Measured,
+    the leg RUNS — 1 GREEN bundle cross-checked on the live tree. Only its
+    disagreement branch is unreachable. "Dead code" and "reachable code with an
+    unreachable branch" are different findings with different fixes.
+    """
+
+    def test_the_producer_consults_blocked_P1_gates(self):
+        """FIRES ON A SEEDED DEFECT: delete the `_blocked_p1_gates_by_paper()` call
+        from `aggregate_by_bundle` and the heatmap can issue GREEN over a blocked
+        P1 gate again — the exact D6 defect."""
+        import ast
+        import validate_helpers as _H
+        src = (_H.SCRIPT_DIR / "bundle_readiness.py").read_text()
+        fn = next(n for n in ast.walk(ast.parse(src))
+                  if isinstance(n, ast.FunctionDef) and n.name == "aggregate_by_bundle")
+        # ⚠️ AST, NOT a substring scan. My first version tested
+        # `"_blocked_p1_gates_by_paper" in body` and PASSED against a seeded
+        # regression, because the function body carries the name in a COMMENT:
+        #     # by default (2026-08-04; see `_blocked_p1_gates_by_paper`).
+        # That is "seam guard defeatable by prose" — pass 1's R3-C1 — reproduced in
+        # a guard written to prevent a different defect. Assert the CALL.
+        calls = {getattr(c.func, "id", "") for c in ast.walk(fn) if isinstance(c, ast.Call)}
+        assert "_blocked_p1_gates_by_paper" in calls, (
+            "aggregate_by_bundle no longer consults blocked P1 gates — the heatmap "
+            "can render GREEN for a bundle whose P1 gate is blocked (the 2026-07-31 "
+            "D6 defect). readiness_verdicts_agree's reverse branch is the backstop, "
+            "but it needs a full graph build to notice; this is the fast layer.")
+
+    def test_the_helper_exists_and_returns_a_mapping(self):
+        """Guard the seam: the assertion above is a source scan, so it stays green
+        if the function is renamed to a stub. Check the real callable."""
+        import bundle_readiness as br
+        fn = getattr(br, "_blocked_p1_gates_by_paper", None)
+        assert callable(fn), "_blocked_p1_gates_by_paper is gone or not callable"
+        out = fn()
+        assert isinstance(out, dict), (
+            f"_blocked_p1_gates_by_paper returned {type(out).__name__}; "
+            f"aggregate_by_bundle indexes it by paper key")

@@ -667,3 +667,81 @@ LaTeX errors, and the ~40 open items from pass 1.
 2. **The severity vocabulary mandate worked.** Pass 1's sixth reviewer invented its own scheme and
    its 16 findings counted as zero; pass 2's R6 returned 19 findings correctly labelled.
 3. **Reports-to-disk worked.** Pass 1 lost 53 findings to the transcript. Pass 2 has six files.
+
+
+---
+
+## Round 4 — the three operator-referred decisions, resolved
+
+### 1. Vacuous passes — operator ruling applied gate by gate ✅
+
+*"If the paper carries nothing the gate is checking, pass is probably right. If there's a
+predictable thing that should be working that's being skipped, that's another story. A referee's
+concern shouldn't be something the user is left to discover on their own."*
+
+Of the four gates with an explicit empty-population PASS, **two already corroborate** against the
+paper's own `.tex` (`CitationIntegrity` counts `\bibitem` and returns `open` if the tex is
+unreadable; `AssumptionDisclosure` likewise) — their empty case is genuine *not-applicable*.
+
+**Two did not**, taking their population from graph edges, so empty meant *either* "nothing to
+check" *or* "extraction failed" — and they passed either way. Both now cross-check the draft:
+
+| gate | corroboration | measured |
+|---|---|---|
+| `ParameterProvenance` | unit-bearing numerical literals in the draft | **41 genuinely not-applicable** · **17 NOT ESTABLISHED** (D1, D3, D4, D5, E1, E2…) · 6 blocked |
+| `NarrativeGrounding` | an `\begin{abstract}` block with zero ProseClaim nodes | 0 newly surfaced — fine in practice, guard retained |
+
+`open`, not `blocked` — the paper may be fine and the *graph* at fault, so it reaches the
+reviewer as YELLOW without reddening a corpus already at 61 red. **Aggregate unchanged**
+(0 green / 3 yellow / 61 red); `readiness_verdicts_agree` still 0 disagreements.
+
+⚠️ **My first measurement said 58 and was an artifact.** `find_inline_numerical_literals` returns
+`(stripped_text, matches)` — a 2-tuple, always truthy — so the branch fired for every paper. My
+own test caught it. The sibling caller already unpacked correctly.
+
+### 2. Namespace-only obstructions — RECOMMENDATION (not applied, awaiting the call)
+
+Operator steer: *"the argument that proves the negative is the critical piece."* That decides it.
+
+The negative frontier exists to tell a `/goal` loop *"this path is provably dead, here is the
+false statement"*. What belongs there is the **argument**, not the apparatus it is built from.
+
+Of **223** namespace-only classifications: **134 `theorem`** · **89 apparatus** (`def` 82,
+`structure` 4, `instance` 2, `inductive` 1) — e.g. `IsViable`, `gibbsDuhemEvaded`,
+`naturalTcAttractor`, `EmergentDarkEnergyModel`.
+
+**Recommend excluding apparatus kinds, keeping theorems: 507 → 418, all 134 negative-argument
+theorems retained.** It sharpens ranking — the actual refutation stops competing with its own
+definitions for a top-8 digest slot. One-line predicate.
+
+✅ Applied meanwhile (unambiguous bug, not policy): the `mk.inj` autogen family was still
+classified as obstructions. 511 → 507.
+
+### 3. `readiness_verdicts_agree`'s reverse leg — RESOLVED, and R4's diagnosis was wrong ✅
+
+R4 filed *"dead by construction"*. **Measured: the leg RUNS** — `reverse_coverage` reports **1
+GREEN bundle cross-checked** on the live tree. Only its `if bundle in blocked_at_gate` **branch**
+is unreachable. *(Third time this session a "dead code" claim resolved to "reachable code with an
+unreachable branch" — different finding, different fix.)*
+
+The chronology decides the disposition:
+
+| | |
+|---|---|
+| 2026-07-31 | leg added, because `aggregate_by_bundle` was **gate-blind** — D6 rendered GREEN with `NarrativeGrounding` blocked |
+| 2026-08-04 | `5228ed6d` made the producer **gate-aware**, demoting GREEN on a blocked P1 gate |
+
+So **a fix to the producer silently removed a consumer guard's ability to fire.** Call: **keep
+it** — it guards a regression the codebase has demonstrably occupied — but fix the *silence*.
+`checked` did not separate the directions, so the summary read "17 cross-checked, 0
+disagreements" and a reader concluded both directions were exercised.
+
+Now: reverse coverage is reported explicitly, and `TestProducerDemotesGreenOnBlockedP1` asserts
+the producer invariant **at unit level in milliseconds**, instead of relying on a slow
+graph-building cross-check to notice a producer regression.
+
+⚠️ **That guard's first version did not fire on the seeded regression.** It scanned for the
+helper's *name* in the function body — which appears there **in a comment**
+(`# by default (2026-08-04; see \\`_blocked_p1_gates_by_paper\\`)`). "Seam guard defeatable by
+prose" is pass 1's own **R3-C1**, reproduced in a guard written against a different defect.
+Rewritten to assert the **call** via AST; re-seeded, and it now fails as intended.
