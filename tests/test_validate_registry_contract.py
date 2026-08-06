@@ -46,7 +46,7 @@ import validate as v  # noqa: E402
 
 # Frozen 2026-08-03 against `validate.py --list`, in registration order.
 EXPECTED_CHECKS = [
-    'formulas', 'placeholder_not_cited', 'disclosure_consistency',
+    'formulas', 'lean_zero_sorry', 'placeholder_not_cited', 'disclosure_consistency',
     'proxy_body_audit', 'tracked_hypothesis_ledger', 'tracked_hypotheses_fresh',
     'formula_grounding', 'vacuous_statement_audit', 'nogo_substrate_integrity',
     'native_decide_regression', 'numerical', 'identities',
@@ -57,7 +57,8 @@ EXPECTED_CHECKS = [
     'notebook_exec', 'physical_bounds', 'cross_path_consistency',
     'paper_provenance', 'parameter_provenance', 'counts_fresh',
     'tables_fresh', 'claim_clusters_fresh', 'numerical_literals', 'bundle_tables_use_pipeline',
-    'graph_integrity', 'atlas_integrity', 'atlas_hypothesis_discipline',
+    'graph_integrity', 'gate_edge_types_are_emitted', 'atlas_integrity',
+    'atlas_hypothesis_discipline',
     'count_literals', 'recurrence_reopens_closures', 'review_severity_declared',
     'review_docs_mint_findings', 'accepted_findings_carry_rationale',
     'bundle_metadata_matches_graph', 'notebook_stored_outputs_current',

@@ -595,3 +595,67 @@ def check_tracked_hypotheses_fresh() -> CheckResult:
         "tracked_hypotheses", False,
         "docs/PERMANENT_TRACKED_HYPOTHESES.md is STALE vs HYPOTHESIS_REGISTRY — "
         "run `python scripts/render_tracked_hypotheses.py` and commit the regenerated doc")])
+
+
+@register_check(
+    "lean_zero_sorry",
+    "Pipeline Invariant #4 — no declaration's axiom closure contains `sorryAx`")
+def check_lean_zero_sorry() -> CheckResult:
+    """The project's most load-bearing invariant, which had **no `validate.py` gate**.
+
+    Invariant #4 is *"every formula has a Lean theorem; every Lean theorem has a proof
+    (zero sorry)"*. `sorry_declarations` was computed by `update_counts.py` and RENDERED in
+    five places — `counts.json`, `counts.tex`, the inventory index, the dashboard, the
+    freshness evidence string — and **compared to zero nowhere**.
+
+    Nothing else covered it:
+
+    * `lake build` **exits 0 on a `sorry`** — it is a warning, not an error — so
+      `check_lean_build` cannot catch one.
+    * `pre-commit-sync.sh`'s guard is real (it greps lake's own
+      ``declaration uses `sorry` `` output, not the source), but it is **warn-only off
+      `main`** by design, `.lean`-diff-scoped, and fail-open when `lake` is absent. This
+      branch has been off `main` for its entire 140-commit life.
+
+    So the invariant was enforced by policy and by a hook that deliberately does not block
+    here, and by no instrument that runs in the suite.
+
+    **Source is Lean's own axiom closure, not a source scan.** `update_counts` counts
+    declarations whose `axiom_deps_core` contains a `sorry` marker — a `sorry` elaborates
+    to `sorryAx`, which propagates into the axiom closure of everything depending on it.
+    A `grep` for `sorry` over `.lean` files is the wrong instrument and is known to be:
+    tried on this project it returned **11 docstring false positives** ("Zero sorry. Zero
+    axioms.") while missing nothing real — the reason the pre-commit guard reads lake's
+    output instead.
+    """
+    details: List[Detail] = []
+    counts_path = _H.COUNTS_JSON_PATH
+    if not counts_path.exists():
+        return CheckResult(passed=True, measured=False, details=[Detail(
+            "counts_present", True,
+            f"{counts_path} absent — run update_counts.py; nothing to measure",
+            warning=True)])
+    try:
+        lean = json.loads(counts_path.read_text())["lean"]
+    except (json.JSONDecodeError, KeyError, TypeError) as exc:
+        return CheckResult(passed=True, measured=False, details=[Detail(
+            "counts_parse", True, f"counts.json unreadable ({exc})", warning=True)])
+
+    if "sorry_declarations" not in lean:
+        # The field going missing must not read as zero — that is the same
+        # absence-as-success shape this check exists to close.
+        return CheckResult(passed=False, details=[Detail(
+            "field_present", False,
+            "counts.json has no `lean.sorry_declarations` field, so the invariant cannot "
+            "be evaluated — regenerate with update_counts.py")])
+
+    n_decl = int(lean.get("sorry_declarations") or 0)
+    n_thm = int(lean.get("sorry_theorems") or 0)
+    details.append(Detail(
+        "zero_sorry", n_decl == 0,
+        f"0 of {lean.get('total_declarations', '?')} declarations carry `sorryAx` in "
+        f"their axiom closure"
+        if n_decl == 0 else
+        f"{n_decl} declaration(s) carry `sorryAx` in their axiom closure "
+        f"({n_thm} of them theorems) — Pipeline Invariant #4 is violated"))
+    return CheckResult(passed=n_decl == 0, details=details)

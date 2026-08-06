@@ -510,3 +510,124 @@ def check_atlas_hypothesis_discipline() -> CheckResult:
                 ", ".join(f"{m}={c}" for m, c in top)) if by_mod else "no tracked hypotheses"),
     ]
     return CheckResult(passed=True, details=details)   # INFO-ONLY: never fails the build
+
+
+#: Edge types a readiness gate may query while NO extractor emits them. Empty is the
+#: target state, and the ratchet is the point: an entry here is a gate that returns a
+#: verdict it did not compute.
+#:
+#: ⚠️ Both current entries are LIVE DEFECTS, kept only so the check reports them without
+#: turning the whole suite red before the gates are repaired. `readiness_gates.py` queries
+#: `PRODUCES` (Gate 8 ProductionRunHealth) and `SUPPORTS` (Gates 7/12 NarrativeGrounding,
+#: FirstClaimSupport); `build_graph.py` emits neither, and the live graph contains zero of
+#: each. Measured 2026-08-06: 18 ProductionRun nodes (17 status `unknown`) with ZERO
+#: outgoing edges, so ProductionRunHealth's run-linkage leg cannot fire; and 9
+#: `interesting` ProseClaims across 7 papers with zero outgoing edges, so
+#: NarrativeGrounding blocks exactly those 7 — including D6, D8 and D10, whose ONLY P1
+#: blocker it is — and passes vacuously for every other paper. One dead edge type
+#: produces a false blocker and a silent pass at the same time.
+#: `CONTRADICTS` is a THIRD instance, found by this check on its first run and NOT by the
+#: audit that prompted it — which is the argument for deriving the population rather than
+#: enumerating it. `extract_contradiction_nodes` is a documented stub (`return []`), so the
+#: live graph holds 0 `Contradiction` nodes and 0 `CONTRADICTS` edges, and Gate
+#: `ContradictionFree` computes `total = 0` and passes for every paper, always.
+#: The lone `CONTRADICTS` string in `build_graph.py` is inside that stub's docstring.
+GATE_EDGE_TYPES_WITHOUT_EMITTERS: dict[str, str] = {
+    "PRODUCES": "readiness_gates Gate 8 (ProductionRunHealth); no extractor emits it",
+    "SUPPORTS": "readiness_gates Gates 7/12 (NarrativeGrounding, FirstClaimSupport); "
+                "no extractor emits it",
+    "CONTRADICTS": "readiness_gates ContradictionFree; extract_contradiction_nodes is a "
+                   "stub returning [], so the gate passes unconditionally",
+}
+
+
+@register_check(
+    "gate_edge_types_are_emitted",
+    "Every edge type a readiness gate queries is actually emitted by a graph extractor")
+def check_gate_edge_types_are_emitted() -> CheckResult:
+    """A gate that queries an edge type nothing emits does not measure anything.
+
+    Both halves are wrong, and they arrive together. Where the gate's default is `passed`,
+    the missing edge makes it pass unconditionally — absence of measurement rendered as
+    success, the defect this whole audit exists to close, inside the P1 submission set.
+    Where the default is `blocked`, it manufactures a blocker no evidence supports, and a
+    bundle sits red for a reason nobody can act on.
+
+    DERIVED on both sides, deliberately. The consumed set is read by walking
+    `readiness_gates.py`'s AST for `idx.outgoing(...)` / `idx.incoming(...)` literals; the
+    emitted set is read by walking `build_graph.py`'s AST for `'type': <literal>` in the
+    edge dicts. Hand-listing either side is how the NEXT gate ships unguarded — the same
+    enumerate-vs-derive failure the reachability and autogen work removed elsewhere.
+    """
+    import ast
+
+    details: List[Detail] = []
+    gates_py = _H.SCRIPT_DIR / "readiness_gates.py"
+    graph_py = _H.SCRIPT_DIR / "build_graph.py"
+    if not gates_py.exists() or not graph_py.exists():
+        return CheckResult(passed=True, measured=False, details=[Detail(
+            "sources_present", True,
+            "readiness_gates.py or build_graph.py absent — nothing to measure",
+            warning=True)])
+
+    consumed: dict[str, int] = {}
+    tree = ast.parse(gates_py.read_text())
+    for node in ast.walk(tree):
+        if (isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute)
+                and node.func.attr in ("outgoing", "incoming")):
+            for arg in node.args:
+                if isinstance(arg, ast.Constant) and isinstance(arg.value, str) \
+                        and arg.value.isupper():
+                    consumed.setdefault(arg.value, node.lineno)
+
+    emitted: set[str] = set()
+    gtree = ast.parse(graph_py.read_text())
+    for node in ast.walk(gtree):
+        if not isinstance(node, ast.Dict):
+            continue
+        for k, v in zip(node.keys, node.values):
+            if (isinstance(k, ast.Constant) and k.value == "type"
+                    and isinstance(v, ast.Constant) and isinstance(v.value, str)):
+                emitted.add(v.value)
+    # An extractor may also build the literal into a variable it appends; catch the
+    # `edges.append({... 'type': X})` shape above plus any bare uppercase assignment to a
+    # name ending in _TYPE, which is the other idiom in this file.
+    for node in ast.walk(gtree):
+        if isinstance(node, ast.Assign) and isinstance(node.value, ast.Constant) \
+                and isinstance(node.value.value, str) and node.value.value.isupper():
+            for t in node.targets:
+                if isinstance(t, ast.Name) and t.id.endswith("_TYPE"):
+                    emitted.add(node.value.value)
+
+    if not consumed or not emitted:
+        return CheckResult(passed=True, measured=False, details=[Detail(
+            "ast_scan", True,
+            f"AST scan found {len(consumed)} consumed / {len(emitted)} emitted edge types "
+            "— one side is empty, so the comparison would be vacuous", warning=True)])
+
+    dead = {t: ln for t, ln in sorted(consumed.items()) if t not in emitted}
+    known = set(GATE_EDGE_TYPES_WITHOUT_EMITTERS)
+    new = {t: ln for t, ln in dead.items() if t not in known}
+    fixed = sorted(known - set(dead))
+
+    details.append(Detail(
+        "populations_derived", True,
+        f"{len(consumed)} edge type(s) queried by gates, {len(emitted)} emitted by "
+        f"extractors — both read from the AST, neither hand-listed"))
+
+    details.append(Detail(
+        "no_new_dead_edge_type", not new,
+        f"{len(dead)} gate-queried edge type(s) have no emitter, all disclosed: "
+        f"{sorted(dead)}"
+        if not new else
+        f"gate queries an edge type NO extractor emits, so the gate returns a verdict it "
+        f"did not compute: {new} (disclosed already: {sorted(known)})",
+        warning=bool(dead) and not new))
+
+    if fixed:
+        details.append(Detail(
+            "stale_disclosure", False,
+            f"{fixed} is listed in GATE_EDGE_TYPES_WITHOUT_EMITTERS but IS now emitted — "
+            f"remove it, or the ratchet stops biting on the ones that remain"))
+
+    return CheckResult(passed=not new and not fixed, details=details)

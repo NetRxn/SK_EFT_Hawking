@@ -87,6 +87,17 @@ _PRESENCE_CALLS = frozenset({
 #: could not measure. FROZEN 2026-08-04. Adding an entry is a decision: say in
 #: the check's own body why absence is not a failure there.
 CANNOT_MEASURE_PASS_BASELINE = frozenset({
+    # Added 2026-08-06 with the two post-QA-assessment guards. Both pass-on-absence
+    # branches carry `measured=False`, so they stop counting as evidence rather than
+    # manufacturing one — and in BOTH checks the substantive absence is a hard FAIL,
+    # not a pass: `lean_zero_sorry` FAILS when counts.json exists but has lost the
+    # `sorry_declarations` field (a dropped field must not read as zero), and
+    # `gate_edge_types_are_emitted` FAILS on any undisclosed dead edge type. What
+    # passes here is only the case where the FILE the check reads is absent entirely,
+    # which is an environment fact, not a verdict about the tree.
+    ('gate_edge_types_are_emitted', 'missing-input'),
+    ('lean_zero_sorry', 'exception'),
+    ('lean_zero_sorry', 'missing-input'),
     ('accepted_findings_carry_rationale', 'missing-input'),
     ('axiom_closure_allowlist', 'exception'),
     ('axiom_closure_allowlist', 'missing-input'),

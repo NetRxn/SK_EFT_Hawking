@@ -91,6 +91,20 @@ TESTS_DIR = SK_ROOT / "tests"
 #: An entry here is a CLAIM that someone seeded a defect and watched the test fail.
 #: Add one only when that has actually been done — the evidence lives in the commit.
 MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
+    "lean_zero_sorry": (
+        "test_qa_gate_integrity.py",
+        "4 tests; production-seeded in the REAL `docs/counts.json` — sorry_declarations=1 "
+        "-> rc=1 naming the violation; DELETING the field -> rc=1 (it must not read as "
+        "zero, which is the absence-as-success shape); reverted, back to PASS",
+    ),
+    "gate_edge_types_are_emitted": (
+        "test_qa_gate_integrity.py",
+        "5 tests; verified against PRODUCTION on its first run, unmodified: it found "
+        "`CONTRADICTS` — a third dead edge type the audit that prompted it did not "
+        "report — and failed the suite until it was disclosed with evidence. Both "
+        "directions tested: an undisclosed dead type fails, and a STALE disclosure (an "
+        "edge type listed dead that IS emitted) fails too",
+    ),
     "bundle_apex_resolves": (
         "test_bundle_closure.py",
         "28 tests. Production-seeded BOTH directions in the real "
@@ -581,6 +595,12 @@ AWAITING_CEILING = 0
 #: is the distinction the four blockers turned on. Erring toward absent overstates the
 #: remaining work; the opposite error is what produced them.
 PRODUCTION_SEEDED: frozenset[str] = frozenset({
+    # 2026-08-06: sorry_declarations=1, then the field DELETED, in the real
+    # docs/counts.json -> rc=1 each; reverted.
+    "lean_zero_sorry",
+    # 2026-08-06: no seeding needed — it fired on the UNMODIFIED production tree,
+    # finding CONTRADICTS. A defect found without a mutation is the strongest form.
+    "gate_edge_types_are_emitted",
     # 2026-08-06: `apex_theorems` written into the REAL `papers/D6/bundle_metadata.json`
     # — a dangling name -> rc=1; a live theorem -> PASS with a real closure; reverted.
     "bundle_apex_resolves",

@@ -166,7 +166,7 @@ from validation._registry import (  # noqa: E402
 # must NOT import this one; otherwise it would assert only that production agrees
 # with itself.
 _CANONICAL_ORDER: tuple[str, ...] = (
-    'formulas', 'placeholder_not_cited', 'disclosure_consistency',
+    'formulas', 'lean_zero_sorry', 'placeholder_not_cited', 'disclosure_consistency',
     'proxy_body_audit', 'tracked_hypothesis_ledger', 'tracked_hypotheses_fresh',
     'formula_grounding', 'vacuous_statement_audit', 'nogo_substrate_integrity',
     'native_decide_regression', 'numerical', 'identities',
@@ -182,7 +182,8 @@ _CANONICAL_ORDER: tuple[str, ...] = (
     'notebook_exec', 'physical_bounds', 'cross_path_consistency',
     'paper_provenance', 'parameter_provenance', 'counts_fresh',
     'tables_fresh', 'claim_clusters_fresh', 'numerical_literals', 'bundle_tables_use_pipeline',
-    'graph_integrity', 'atlas_integrity', 'atlas_hypothesis_discipline',
+    'graph_integrity', 'gate_edge_types_are_emitted', 'atlas_integrity',
+    'atlas_hypothesis_discipline',
     'count_literals', 'recurrence_reopens_closures', 'review_severity_declared',
     'review_docs_mint_findings', 'accepted_findings_carry_rationale',
     'bundle_metadata_matches_graph', 'notebook_stored_outputs_current',
@@ -607,6 +608,8 @@ check_readiness_submission_gate = _checks_bundles.check_readiness_submission_gat
 check_bundle_consistency = _checks_bundles.check_bundle_consistency
 check_bundle_registry_consistency = _checks_bundles.check_bundle_registry_consistency
 check_bundle_apex_resolves = _checks_bundles.check_bundle_apex_resolves
+check_lean_zero_sorry = _checks_lean_substrate.check_lean_zero_sorry
+check_gate_edge_types_are_emitted = _checks_graph_atlas.check_gate_edge_types_are_emitted
 
 
 # ═══════════════════════════════════════════════════════════════════════
