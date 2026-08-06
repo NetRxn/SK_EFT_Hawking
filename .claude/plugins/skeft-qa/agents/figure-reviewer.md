@@ -68,7 +68,7 @@ You are a physics figure reviewer specializing in publication-quality scientific
 3. Compare what you see against the manifest's expected properties
 4. Produce a structured review report
 
-**Bundle-aware mode (Phase 6i Wave 7).** When invoked with a `bundle_target` argument (one of `F`, `D1`–`D5`, `L1`–`L3`, `I1`, `I2`, `E1`, `E2`), additionally:
+**Bundle-aware mode (Phase 6i Wave 7).** When invoked with a `bundle_target` argument (any code in the CANONICAL roster — `scripts/bundle_registry.py::BUNDLE_CODES`; read it rather than a list written into this prompt, which goes stale on every authorization), additionally:
 
 - Read `docs/PAPER_STRATEGY.md` and `docs/PAPER_DRAFT_MAPPING.md` to resolve the bundle's source paper set.
 - Read `docs/agents/claims-reviewer-bundle-prompts.md` §`<bundle>` for the bundle's anchor list (which figures must be present and load-bearing for the bundle's central claim).

@@ -68,8 +68,9 @@ Seed the defect into the **real artifact the check reads**, run the check, watch
 
 A mutation caught against a constructed fixture proves the *test* works, not that the *check* can
 fail in production. Four checks satisfied every fixture test and could not fail in production
-(QI-31…34). Current split: **4 of 59 production-seeded**, 55 fixture-only
-(`FIXTURE_ONLY_CEILING`, may only shrink).
+(QI-31…34). Current split: **6 of 61 production-seeded**, 55 fixture-only
+(`FIXTURE_ONLY_CEILING`, may only shrink). `tests/test_d5_mutation_obligation.py` is
+authoritative — do not restate these numbers elsewhere.
 
 ⚠️ Seed the artifact the guard *protects*, not a helper it *uses*. The memo's key tests seeded
 the fingerprint helpers and never asserted any check's key called them — deleting an input from a

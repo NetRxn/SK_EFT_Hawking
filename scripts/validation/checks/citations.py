@@ -17,9 +17,10 @@ cannot opt a bibkey out.
 
 Three of these read `_cfg.STRICT_MODE` by ATTRIBUTE (H5) — `parameter_provenance`
 gates paper submission on human verification, `provenance_doi_in_registry` and
-`bibitem_title_primary_source` promote advisories to failures. ⚠️ `--strict` is
-passed by NO automated caller (ADR-009 §Deferred item 6), so those strict paths are
-unreachable in practice today; that is a Phase-3 disposition, unchanged by the move.
+`bibitem_title_primary_source` promote advisories to failures. `--strict` is passed
+by `gate_precheck.py submission`, the Paper Submission Gate (Invariant #12) — it is
+deliberately NOT passed at wave close, where promoting an in-progress bundle's normal
+WARNs to failures would fire the gate on correct work.
 
 Import rules as elsewhere: framework from `validation._registry`, paths as
 `_H.<NAME>` at each use, flags by attribute. MOVED VERBATIM otherwise.

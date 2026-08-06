@@ -15,7 +15,7 @@ landscape this subsystem exists to close).
 
 ## 1. The one-sentence shape
 
-`scripts/validate.py` is a **framework** (~720 lines, zero registered checks); the **59 checks**
+`scripts/validate.py` is a **framework** (zero registered checks); the **61 checks**
 live in twelve modules under `scripts/validation/checks/`; three framework modules
 (`_registry`, `_config`, `_memo`) and one shared helper (`_tex`) sit below both, and
 `scripts/validate_helpers.py` is the single path anchor.
@@ -28,7 +28,7 @@ scripts/validation/
   _config.py                     # runtime flags, reached by ATTRIBUTE (H5)
   _memo.py                       # input-fingerprint memo for expensive checks
   _tex.py                        # shared LaTeX helpers
-  checks/                        # 12 modules, 59 checks, ~8,969 lines
+  checks/                        # 12 modules, 61 checks
     lean_substrate.py            #   substance gates (R1-R3)
     lean_toolchain.py            #   build + trust surface
     lean_statements.py           #   statement-level substance

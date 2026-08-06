@@ -606,7 +606,7 @@ Implications + strategic-positioning notes per phase, `docs/stakeholder/Phase<N>
 ## 11. Scripts (~65 in `scripts/`)
 
 **Validation + counts:**
-- `scripts/validate.py` — full validation suite (21 checks); `--list` enumerates; `--check <name>` runs one.
+- `scripts/validate.py` — full validation suite (61 checks); `--list` enumerates; `--check <name>` runs one.
 - `scripts/update_counts.py` — regenerates `docs/counts.json` (re-runs `extract_lean_deps.py` if Lean source hashes changed).
 - `scripts/extract_lean_deps.py` — extracts Lean declaration taxonomy + axiom dependencies (via `ExtractDeps.lean`).
 - `scripts/graph_integrity.py` — graph-integrity checks for the knowledge graph.

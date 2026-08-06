@@ -90,7 +90,7 @@ flowchart TB
 
     subgraph V["③ VALIDATION — mechanical"]
         VAL["validate.py — framework<br/>registry · order · CLI · re-exports"]
-        VCK["validation/checks/*.py<br/>59 checks · 12 modules"]
+        VCK["validation/checks/*.py<br/>61 checks · 12 modules"]
         GI["graph_integrity.py"]
         RG["readiness_gates.py<br/>11 gates × N papers"]
         BR["bundle_readiness.py<br/>→ heatmap + metadata counts"]
@@ -135,7 +135,7 @@ Red-outlined nodes carry the enforcement defects in §6.
 > **Plane ③ is the ADR-009 delivered state (Phases 0–3 complete 2026-08-04).** `scripts/validate.py` was a
 > single 7,900-line file when this map was first written. It is now **~740 lines of framework** —
 > result-type and check re-exports, the `_CHECKS` registry, `_CANONICAL_ORDER`, `run_checks`, reporting,
-> the CLI, and `BUNDLE_CODES` for the roster gate — with **all 59 check bodies** in **twelve** modules
+> the CLI, and `BUNDLE_CODES` for the roster gate — with **all 61 check bodies** in **twelve** modules
 > under `scripts/validation/checks/`. Sizes measured 2026-08-04; the largest is `citations` at **965**:
 >
 > | module | checks | | module | checks |
@@ -314,7 +314,7 @@ flowchart TB
     end
     subgraph SOFT["⚠ REPORTS, NEVER BLOCKS"]
         AP["4 always-pass checks, all<br/>deliberately advisory<br/>(was 8; 4 were defects, fixed)"]
-        ST["6 checks with a --strict-only leg —<br/>nothing passes --strict"]
+        ST["6 checks with a --strict-only leg —<br/>gate_precheck submission passes --strict"]
         S14["Stage 14 QI — advisory by design"]
     end
     subgraph NONE["❌ CLAIMS ENFORCEMENT, HAS NONE"]
@@ -403,7 +403,7 @@ registered check to declare its D5 status, with the untested backlog ratcheted a
 the verdict. Both were reinforced with isolated-defect legs. *"Has a test that fails on a seeded defect"
 is a weaker property than it sounds; the mutation is what establishes it.*
 
-⚠️ **"Named in a test" is not coverage.** All 59 checks appear in
+⚠️ **"Named in a test" is not coverage.** All 61 checks appear in
 `test_validate_registry_contract.py`'s frozen list, so a scan for check names reports 59/59 and means
 nothing. The row above counts only tests that would FAIL on a seeded defect — the distinction this
 map's §7 exists to enforce.
@@ -422,7 +422,7 @@ per-check number was D5's standing obligation** — every new or modified check 
 is the work that closes the §7 pattern. The split made it tractable (a domain module fits in one read); it
 did not perform it.
 
-⚠️ **RETRACTED 2026-08-05 (PR-review pass 2, reviewer R3).** This read *"It has since been performed (audit 2026-08-04, workstream W-D): all 59 checks are mutation-verified"*. The retraction was written elsewhere on 2026-08-04 and **this file was edited by the retraction commit `9a2a757f` without correcting it** — one unrelated line changed instead. The branch's own ratchet contradicts it: `FIXTURE_ONLY_CEILING = 55`, i.e. **4 of 59 are production-seeded**; the other 55 are caught only against a patched fixture, which QI-30 establishes proves nothing about production
+⚠️ **RETRACTED 2026-08-05 (PR-review pass 2, reviewer R3).** This read *"It has since been performed (audit 2026-08-04, workstream W-D): all 61 checks are mutation-verified"*. The retraction was written elsewhere on 2026-08-04 and **this file was edited by the retraction commit `9a2a757f` without correcting it** — one unrelated line changed instead. The branch's own ratchet contradicts it: `FIXTURE_ONLY_CEILING = 55`, i.e. **4 of 59 are production-seeded**; the other 55 are caught only against a patched fixture, which QI-30 establishes proves nothing about production
 and the obligation is enforced by `tests/test_d5_mutation_obligation.py`. The split's contribution was real
 and is worth naming precisely — each domain module fits in one read, which is what made writing a
 per-check test for 54 checks a tractable exercise rather than an archaeological one.
