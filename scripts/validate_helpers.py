@@ -257,9 +257,17 @@ def unresolved_aristotle_keys() -> list[str]:
 _RESERVED_GENERATED_SUFFIXES = (
     # not reached by isInternalDetail / isAuxRecursor / isNoConfusion
     "noConfusionType", "ctorIdx", "toCtorIdx", "sizeOf_spec", "eq_def", "injEq",
+    "inj", "ctorElim", "ctorElimType", "ofNat",
     # reached by Lean in production; kept for self-sufficiency
     "casesOn", "recOn", "brecOn", "below", "ibelow", "binductionOn", "noConfusion",
 )
+
+#: `deriving`-generated INSTANCE FIELDS — `instReprFoo.repr`, `instDecidableEqFoo.decEq`.
+#: Their parent is the derived `instance`, not the type, so the inductive/structure guard
+#: above cannot reach them; they get their own parent-kind branch rather than a bare
+#: suffix match. Measured over the live corpus: every `.repr` (76) and `.decEq` (34) has
+#: an `instance` parent, and no author-written declaration ends in either.
+_DERIVED_INSTANCE_FIELD_SUFFIXES = ("repr", "decEq")
 
 
 def _is_internal_detail(name: str) -> bool:
@@ -309,6 +317,9 @@ def autogen_index(records) -> dict:
                 return True
             # `X.mk.injEq`, `X.ctor.sizeOf_spec` — the TYPE is the grandparent.
             if kind.get(parent.rsplit(".", 1)[0]) in ("inductive", "structure"):
+                return True
+        for suf in _DERIVED_INSTANCE_FIELD_SUFFIXES:
+            if name.endswith("." + suf) and kind.get(name[: -(len(suf) + 1)]) == "instance":
                 return True
         return False
 

@@ -92,22 +92,21 @@ LEAN_KIND_TO_TYPE: dict[str, str] = {
     'opaque': 'LeanDef',
 }
 
-# Lean auto-generated helper names (recursors, eliminators, boilerplate).
-# ExtractDeps filters .ctorInfo/.recInfo/.quotInfo, but Lean also emits
-# per-type helpers classified as theorems/defs: `noConfusion`, `casesOn`,
-# `recOn`, `sizeOf_spec`, injectivity lemmas, `match_N`, etc. These carry no
-# research content and would otherwise pollute the graph with ~2,100 noise
-# nodes, crowding out the ~3,600 substantive declarations.
-_AUTOGEN_SHORT_RE = re.compile(
-    r'^('
-    r'noConfusion(Type)?|casesOn|recOn|sizeOf_spec|'
-    r'ctorIdx|ctorElim(Type)?|toCtorIdx|'
-    r'elim|inj|injEq|'
-    r'match_\d+|eq_\d+|'
-    r'repr|toString|decEq|fromNat|ofNat|'
-    r'below|brecOn|binductionOn'
-    r')$'
-)
+# Lean auto-generated helpers (recursors, eliminators, `deriving` boilerplate) carry no
+# research content and would crowd the substantive declarations out of the graph.
+#
+# Which declarations those ARE is decided by `validate_helpers.autogen_index` — Lean's own
+# predicates via the `autogen` field `ExtractDeps` emits, plus a parent-kind-guarded suffix
+# supplement — so the graph, the atlas overlay and `validate.py` classify one population one
+# way. Build it once per `lean_deps` load: it needs the whole record set to resolve parents,
+# which is exactly what a per-name test cannot do.
+
+
+def _autogen_lookup(declarations) -> dict:
+    """`{name: is_compiler_generated}` for this record set (see `autogen_index`)."""
+    sys.path.insert(0, str(SCRIPT_DIR))
+    from validate_helpers import autogen_index
+    return autogen_index(declarations)
 
 # Populated by extract_lean_declaration_nodes; consumed by
 # _resolve_lean_short() in edge extractors. Maps short name -> list of full
@@ -585,6 +584,7 @@ def extract_lean_declaration_nodes() -> list[dict]:
     )
 
     declarations = load_lean_deps()
+    autogen = _autogen_lookup(declarations)
 
     nodes = []
     seen_ids = set()
@@ -603,7 +603,7 @@ def extract_lean_declaration_nodes() -> list[dict]:
         short_name = full_name.rsplit('.', 1)[-1] if '.' in full_name else full_name
 
         # Skip Lean auto-generated helpers (noConfusion, casesOn, match_N, etc.).
-        if _AUTOGEN_SHORT_RE.match(short_name):
+        if autogen.get(full_name):
             _dropped_autogen += 1
             continue
 
@@ -2853,17 +2853,19 @@ def extract_module_nodes() -> list[dict]:
     """
     from scripts.extract_lean_deps import load_lean_deps
 
+    declarations = load_lean_deps()
+    autogen = _autogen_lookup(declarations)
+
     counts: dict[str, int] = {}
     kinds: dict[str, dict[str, int]] = {}
-    for decl in load_lean_deps():
+    for decl in declarations:
         mod = decl.get('module', '')
         if not mod:
             continue
         kind = decl.get('kind', '')
         if LEAN_KIND_TO_TYPE.get(kind) is None:
             continue
-        short = (decl.get('name', '') or '').rsplit('.', 1)[-1]
-        if _AUTOGEN_SHORT_RE.match(short):
+        if autogen.get(decl.get('name', '')):
             continue
         counts[mod] = counts.get(mod, 0) + 1
         kinds.setdefault(mod, {})

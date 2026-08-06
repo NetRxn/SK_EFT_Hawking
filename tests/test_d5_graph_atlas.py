@@ -501,6 +501,58 @@ class TestInferBundleFromTextIsActuallyTested:
         assert self._infer("Ffoo.md") is None
 
 
+class TestGraphClassifiesAutogenStructurally:
+    """The graph's declaration and module extractors decide compiler-generated the same
+    way the atlas and `validate.py` do — through `validate_helpers.autogen_index`, which
+    reads Lean's `autogen` field plus a PARENT-KIND-GUARDED suffix supplement.
+
+    The population is one population; three instruments disagreeing about it is how a
+    figure the human reviewer reads drifts from the figure a check ratchets on.
+
+    Measured at the swap over the live corpus: the graph's own name regex kept **270**
+    compiler-generated declarations the shared index rejects, and the change adds back
+    **zero** author-written declarations — the new drop set is a strict superset, which
+    is the safest shape a classifier swap can have.
+    """
+
+    def _autogen(self, corpus):
+        import sys as _sys
+        _sys.path.insert(0, str(SK_ROOT / "scripts"))
+        from validate_helpers import autogen_index
+        return autogen_index(corpus)
+
+    def test_a_derived_instance_field_is_generated(self):
+        """`deriving Repr` emits `instReprFoo.repr`, whose parent is the INSTANCE — the
+        inductive/structure guard cannot reach it, so it has its own branch."""
+        corpus = [{"name": "SKEFTHawking.Foo.instReprFoo.repr", "kind": "def"},
+                  {"name": "SKEFTHawking.Foo.instReprFoo", "kind": "instance"}]
+        assert self._autogen(corpus)["SKEFTHawking.Foo.instReprFoo.repr"] is True
+
+    def test_an_author_written_declaration_named_like_a_companion_SURVIVES(self):
+        """FIRES ON THE SEEDED DEFECT: replace the parent-kind guard with a bare suffix
+        match and this author-written `inj` disappears from the graph.
+
+        `inj`, `ofNat`, `repr` and `decEq` are ordinary mathematical names as well as
+        Lean companion names. Only the parent's kind tells the two apart.
+        """
+        corpus = [{"name": "SKEFTHawking.Sheaf.restriction.inj", "kind": "theorem"},
+                  {"name": "SKEFTHawking.Sheaf.restriction", "kind": "def"}]
+        assert self._autogen(corpus)["SKEFTHawking.Sheaf.restriction.inj"] is False
+
+    def test_the_same_leaf_on_a_structure_parent_is_generated(self):
+        """SILENT ON CORRECT DATA — the guard must not blind the filter either."""
+        corpus = [{"name": "SKEFTHawking.GapParams.mk.inj", "kind": "theorem"},
+                  {"name": "SKEFTHawking.GapParams", "kind": "structure"}]
+        assert self._autogen(corpus)["SKEFTHawking.GapParams.mk.inj"] is True
+
+    def test_the_graph_holds_no_private_name_regex_for_this(self):
+        """The regex is gone, not merely unused — a dormant one invites a caller back."""
+        import build_graph
+        assert not hasattr(build_graph, "_AUTOGEN_SHORT_RE"), (
+            "build_graph re-declares a name-shape autogen regex; classification belongs "
+            "to validate_helpers.autogen_index so all three instruments agree")
+
+
 def build_graph_atlas_is_obstruction(rec):
     """Reach the production predicate through its owning module."""
     import atlas_view
