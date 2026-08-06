@@ -116,7 +116,10 @@ Contract in both `CLAUDE.md`s (the Stop hook is a GO signal, never coercion) and
   copy by **70 lines**, and **none** contains `_PATH_WHITELIST` (3 occurrences in repo) or
   `isa-afp` (1 in repo). Verified by direct `diff` and `grep -c` against all three.
   A fail-closed control is enforcing older policy than the one in git, and **no drift
-  detector exists**.
+  detector exists**. ⚠️ **Not a defect to patch:** the project owner deploys plugin changes
+  on merge-to-main plus a deliberate plugin refresh, as a unit — piecemeal cache edits are
+  explicitly not wanted while infrastructure is in flight. Recorded so the *absence of a
+  drift detector* is not confused with the *deployment model*.
 - ✅ **V** `_read_active_issues` (`.claude/plugins/skeft-qa/scripts/harness_common.py:237`)
   has **zero callers** repo-wide. The writer (`scripts/system2_register.py:360`) is live and
   tested. So `active_issues.json` is written every harvest and read by nothing, while
@@ -137,29 +140,57 @@ Contract in both `CLAUDE.md`s (the Stop hook is a GO signal, never coercion) and
 Spec: `WAVE_EXECUTION_PIPELINE.md` Stages 3a/3b/4/5 + Invariants #4, #9, #10, #15, #16, #17.
 Plane detail: [`../audits/2026-08-06-e2e-map/PLANE-lean.md`](../audits/2026-08-06-e2e-map/PLANE-lean.md).
 
-- ✅ **V** 🔴 **Extraction scope can go stale silently.** `compute_lean_hash()`
+- ✅ **V** **Extraction scope has a latent staleness gap.** `compute_lean_hash()`
   (`scripts/extract_lean_deps.py:61`) hashes `lean/SKEFTHawking/**/*.lean` — 2 038 files —
   but **not `lean/SKEFTHawking.lean`**, the root aggregate that alone decides which modules
-  are extracted. Measured 2026-08-06: aggregate mtime **15:44**, `lean_deps.json` **13:17**,
-  `_needs_refresh()` → **False**. It was stale at the time of writing.
-  The docstring documents an *earlier* fix that widened the walk to subdirectories — it
-  went deeper and never went **up**. Same class as the 25 orphaned modules repaired by hand
-  earlier the same day (`566c0fa1`).
+  are extracted. A content change to the aggregate (adding or removing an import — i.e.
+  changing the extraction scope) therefore does not invalidate the cache.
+  The docstring documents an *earlier* fix that widened the walk to subdirectories: it went
+  deeper and never went **up**. Same class as the 25 orphaned modules repaired by hand on
+  2026-08-06 (`566c0fa1`).
+- ❌ **X** *(author's error)* This map first said the file **was stale on disk**. **Refuted.**
+  That was inferred from mtime ordering — and the guard is **content-hash**, not mtime, so
+  mtime proves nothing. Checked properly: `lean_deps.json` holds **2 036 modules** against
+  **1 962** imported by the aggregate (the only import absent from extraction is
+  `SKEFTHawking.AxiomClosure`, infrastructure). The content is current. The gap above is
+  **latent**, not live — a distinction that changes whether anyone needs to act today.
 - ✅ **V** **Invariant #4 (zero `sorry`) was detected but not enforced** on a default run.
   `axiom_closure_allowlist` DOES catch a `sorry` (`sorryAx` enters the axiom closure and is
   outside the allowlist) but is WARN-first — `passed=not strict` (`lean_toolchain.py`), hard-
   failing only under `--strict`. `lake build` **exits 0 on a `sorry`** (measured directly:
   a probe `theorem t : 1 + 1 = 3 := by sorry` emits ``declaration uses `sorry` `` and
   returns 0). Closed 2026-08-06 by `lean_zero_sorry`, which hard-fails always.
-- ✅ **V** **The Aristotle gauntlet's kernel-purity leg reads stale data, and its backstop
-  runs in WARN mode.** Read at `src/core/aristotle_submit.py:713-726`: step 2 runs
-  `lake build SKEFTHawking.ExtractDeps`, which compiles the `.olean` but does **not**
-  regenerate `lean_deps.json`; step 3 then calls `_load_lean_deps()` on that unrefreshed
-  file to decide `res.kernel_pure`; step 4 invokes `validate.py --check
-  axiom_closure_allowlist --check native_decide_regression` **without `--strict`**, and
-  `axiom_closure_allowlist` is warn-first (§4 above), so the authoritative gate cannot fail
-  the graft. The auto-revert therefore rests on a purity verdict computed from pre-graft
-  data.
+- **Aristotle — the design is sound; one conjunct is inert, and "fixing" it naively would
+  break the workflow.** ADR-006 is explicit that the toolchain divergence is an accepted
+  risk *because* "**the verify-then-graft gauntlet (D2) is the safety mechanism**"
+  (`ADR-006:85`), so the gauntlet's soundness carries that decision.
+
+  The operating workflow, per the project owner: *a hard roadmap item is attempted by hand
+  for significant effort; a file with `sorry`s is created and submitted; **we pull in what
+  we can**.* **Partial fills are the expected outcome, not a failure.**
+
+  - ✅ **V** `GauntletResult.passed` ANDs five conjuncts (`aristotle_submit.py:686-689`),
+    one being `zero_sorry`, which is set from a **whole-library** `lake build` scan
+    (`:705-707`) matching the fixed string `"declaration uses 'sorry'"` — straight quotes.
+    Lean v4.32.0 emits **backticks** (measured directly), and the project documents exactly
+    this hazard at `scripts/pre-commit-sync.sh:68-71` — *"QUOTE STYLE IS LOAD-BEARING …
+    Do NOT re-narrow this to a fixed string"* — where the hook correctly uses
+    `declaration uses .?sorry.?`. So `zero_sorry` is currently **inert**: always equal to
+    `build_ok`.
+  - ❌ **X** *(author's error)* First written up as a safety hole. **It is not.** Had the
+    pattern matched, the conjunct would reject **any** graft leaving a `sorry` anywhere in
+    the library — i.e. every legitimate partial fill — and auto-revert it. The inert
+    conjunct is closer to the intended behaviour than a working one would be.
+  - ✅ **V** The real safety check is step 3, and it is correctly built: `kernel_pure` is
+    computed over **target decls only** (`:719-721`) from the `sorryAx` primitive in
+    `axiom_deps_core` — scoped right, and toolchain-independent.
+  - ⚠️ **U** Remaining genuine question: step 2's `lake build SKEFTHawking.ExtractDeps`
+    compiles the `.olean` but the JSON is written by `scripts/extract_lean_deps.py`, and
+    `_load_lean_deps()` (`:189`) reads the file with no staleness check — so step 3 may read
+    pre-graft data. **To verify:** run a graft and compare `lean_deps.json` mtime across it.
+  - **Open design question, not a defect:** should `zero_sorry` be scoped to target decls
+    (matching `kernel_pure`) rather than the whole library? As written it can only ever be
+    vacuous or hostile to partial fills.
 - ❌ **X** *"`PLACEHOLDER_TOTAL_COUNT` has zero consumers."* **False** — it is imported at
   `tests/test_substrate_integrity_gates.py:18` and asserted at `:60`.
   ⚠️ **U** But the substance survives the correction: that assertion reads
