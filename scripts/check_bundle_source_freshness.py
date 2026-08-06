@@ -155,11 +155,48 @@ def check() -> list[dict]:
             p for p, a in assignments.items()
             if bundle in a["bundle_destinations"]
         ])
+        # A source naming a directory that does not exist is UNMEASURABLE, not
+        # fresh. `_latest_source_mtime` returns None for a missing directory, and
+        # the staleness loop below skips every None — so before this split, a
+        # bundle all of whose sources were absent fell through to the `else`
+        # branch and announced "fresh: all 1 source paper(s) older than last_lift"
+        # over a population of zero.
+        #
+        # That is not hypothetical: D6-D12's sources are synthetic tokens
+        # (`_phase6t_lean_only`, `D9_initial_draft`, ...) that name no directory
+        # at all, and portfolio-wide 89 of 180 assignments are absent. NINE
+        # bundles - D6..D12 plus I2 and I3 - had a 100 % vacuous freshness PASS.
+        # Measured 2026-08-05, ADR-010 measurement pass, docs/audits/
+        # 2026-08-05-adr010-measurement/MEASUREMENTS.md M6.
+        #
+        # This is the house rule from ADR-009: absence of measurement must never
+        # render as success (`CheckResult.measured`,
+        # docs/architecture/CHECK_AUTHORING_GUIDE.md §2.1).
+        absent_sources = [s for s in sources if not (PAPERS_DIR / s).is_dir()]
+        measurable = [s for s in sources if s not in set(absent_sources)]
+
         stale_sources: list[tuple[str, datetime]] = []
-        for src in sources:
+        for src in measurable:
             mt = _latest_source_mtime(src)
             if mt is not None and mt > last_lift:
                 stale_sources.append((src, mt))
+
+        if sources and not measurable:
+            sample = ", ".join(sources[:3])
+            extra = f" ... and {len(sources) - 3} more" if len(sources) > 3 else ""
+            findings.append({
+                "bundle": bundle,
+                "passed": True,
+                "warning": True,
+                "message": (
+                    f"UNMEASURABLE: all {len(sources)} declared source(s) name a "
+                    f"directory absent from papers/ ({sample}{extra}); freshness is "
+                    f"NOT established for this bundle — the Stage-C absorption "
+                    f"trigger cannot fire. Phase-sourced bundles need a "
+                    f"Lean-module-mtime trigger (ADR-010 D6)."
+                ),
+            })
+            continue
 
         if stale_sources:
             sample = ", ".join(
@@ -175,8 +212,8 @@ def check() -> list[dict]:
                 "passed": True,
                 "warning": True,
                 "message": (
-                    f"freshness-stale: {len(stale_sources)} of {len(sources)} "
-                    f"source paper(s) modified after last_lift "
+                    f"freshness-stale: {len(stale_sources)} of {len(measurable)} "
+                    f"measurable source paper(s) modified after last_lift "
                     f"({last_lift.strftime('%Y-%m-%d')}); "
                     f"sample: {sample}{extra}"
                 ),
@@ -193,8 +230,11 @@ def check() -> list[dict]:
                 "passed": True,
                 "warning": False,
                 "message": (
-                    f"fresh: all {len(sources)} source paper(s) older than "
-                    f"last_lift ({last_lift.strftime('%Y-%m-%d')})"
+                    f"fresh: all {len(measurable)} measurable source paper(s) "
+                    f"older than last_lift ({last_lift.strftime('%Y-%m-%d')})"
+                    + (f"; {len(absent_sources)} further declared source(s) name "
+                       f"an absent directory and were NOT measured"
+                       if absent_sources else "")
                 ),
             })
             # Clear stale flag if previously set

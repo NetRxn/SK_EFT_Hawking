@@ -526,6 +526,57 @@ class TestBundleSourceFreshness:
         assert r.passed is True
         assert any(d.name == "scope" for d in r.details)
 
+    def test_an_absent_source_directory_is_UNMEASURABLE_not_fresh(self, tmp_path, monkeypatch):
+        """FIRES ON THE SEEDED DEFECT. `_latest_source_mtime` returns None for a
+        missing directory and the staleness loop skips every None — so a bundle whose
+        sources all name absent directories used to fall through to the `else` branch
+        and announce "fresh: all 1 source paper(s) older than last_lift" over a
+        population of ZERO. Absence of measurement rendered as success, in the
+        absorption instrument itself (ADR-010 measurement pass M6, 2026-08-05).
+        """
+        import check_bundle_source_freshness as m
+        papers = tmp_path / "papers"
+        (papers / "B1").mkdir(parents=True)
+        (papers / "B1" / "bundle_metadata.json").write_text(
+            json.dumps({"last_lift": "2026-01-01T00:00:00Z"}))
+        monkeypatch.setattr(m, "PAPERS_DIR", papers)
+        monkeypatch.setattr(m, "MAPPING_DOC", tmp_path / "map.md")
+        (tmp_path / "map.md").write_text("unused — parse_mapping is stubbed")
+        monkeypatch.setitem(
+            sys.modules, "bundle_migration",
+            type(sys)("bundle_migration"))
+        sys.modules["bundle_migration"].parse_mapping = (
+            lambda _t: {"ghost_source": {"bundle_destinations": ["B1"]}})
+        monkeypatch.setitem(sys.modules, "sentence_state", type(sys)("sentence_state"))
+        sys.modules["sentence_state"]._VALID_BUNDLE_TARGETS = {"B1"}
+
+        msg = next(f for f in m.check() if f["bundle"] == "B1")["message"]
+        assert "UNMEASURABLE" in msg, (
+            f"a bundle whose only source names an absent directory reported {msg!r} — "
+            f"the vacuous-freshness hole is back")
+        assert "fresh:" not in msg
+
+    def test_the_LIVE_corpus_reports_no_vacuous_freshness(self):
+        """PRODUCTION-SEEDED (QI-30). Run against the real `papers/` and the real
+        `PAPER_DRAFT_MAPPING.md`, because a fixture proves the branch exists, not that
+        the corpus reaches it. Nine live bundles (D6-D12, I2, I3) declare sources that
+        are synthetic tokens naming no directory; every one of them must say so rather
+        than claim freshness.
+        """
+        import check_bundle_source_freshness as m
+        by_bundle = {}
+        for f in m.check():
+            by_bundle.setdefault(f["bundle"], []).append(f["message"])
+        for code in ("D6", "D7", "D8", "D9", "D10", "D11", "D12", "I2", "I3"):
+            msgs = by_bundle.get(code)
+            if not msgs:                       # pragma: no cover - bundle present in-repo
+                continue
+            assert not any(msg.startswith("fresh:") for msg in msgs), (
+                f"{code} claims freshness, but all of its declared sources name "
+                f"directories absent from papers/ — re-derive this test's premise if "
+                f"real source directories were finally created for it, rather than "
+                f"deleting the assertion")
+
     def test_an_unavailable_module_fails_rather_than_passes(self, monkeypatch):
         import builtins
         real = builtins.__import__
