@@ -104,7 +104,7 @@ inventory — **keep it synced** as you ship, but you needn't read it whole on b
 # Python (uv-managed, Python >= 3.14)
 uv sync                                       # install/sync deps
 uv run python -m pytest tests/ -v             # fast tests (~2.5 min; deselects 'slow')
-uv run python -m pytest tests/ -m slow -v     # slow tests (~10 min: Lean ExtractDeps + graph)
+uv run python -m pytest tests/ -m slow -v     # slow tests (Lean ExtractDeps + graph)
 uv run python -m pytest tests/ -m '' -v       # everything — before PR / submission / wave close
 uv run python scripts/validate.py             # full validation suite (59 checks; --list is authoritative)
 uv run python scripts/validate.py --list      # list checks; --check <name> runs one

@@ -2,7 +2,7 @@
 # L2 mechanical-sync commit gate (public-safe). Chained AFTER the leak-guard by the
 # canonical installer. FAIL-OPEN by design: a missing toolchain or a transient crash
 # NEVER blocks a commit. Auto-fixes cheap staleness; INCREMENTAL lean guard (never
-# the 30-min clean ExtractDeps — that's /skeft-qa:sync); HARD-BLOCKS only genuine
+# the clean ExtractDeps — that's /skeft-qa:sync); HARD-BLOCKS only genuine
 # SOUNDNESS breakage, and only on `main`.
 set -uo pipefail
 
@@ -83,7 +83,7 @@ if git diff --cached --name-only --diff-filter=ACM | grep -q '\.lean$'; then
     echo "ERROR: genuine 'sorry' in a built lean/SKEFTHawking declaration (lake reported it)."
     [ "$BRANCH" = "main" ] && { grep -nE "$_SORRY_RE" /tmp/skeft-lean.$$ | head -10; exit 1; } || echo "(off-main: warn only)"
   fi
-  # counts.json is now stale vs .lean — but its regen IS the 30-min ExtractDeps, so do
+  # counts.json is now stale vs .lean — but its regen IS the ExtractDeps pass, so do
   # NOT run it here. Staleness is a METRIC, not soundness → WARN even on `main` (review
   # MAJOR); never block a routine .lean commit (that would stall the /goal loop).
   #     PERF: ask `validate._counts_is_stale()` DIRECTLY. The old form called
@@ -93,6 +93,10 @@ if git diff --cached --name-only --diff-filter=ACM | grep -q '\.lean$'; then
   #     Also print the REASON: "stale" alone reads like breakage, when the overwhelmingly common
   #     cause is benign — `git merge` of a worker branch stamps the merged .lean files with mtime=now,
   #     so a counts regen followed by a merge is *correctly* stale again.
+  #     COST, MEASURED 2026-08-06: `scripts/update_counts.py` on a WARM .lake cache is
+  #     **3 min 14 s** (184 s user) — not the "30 min" this comment and CLAUDE.md both used to
+  #     assert. That figure was never measured, was ~10x too high, and was being used to defer
+  #     regeneration. A cold/clean ExtractDeps is a different and much rarer case; don't conflate.
   _cs=$(uv run python -c "
 import sys; sys.path.insert(0,'scripts')
 import validate

@@ -26,14 +26,14 @@
 <!-- AUTOGEN:counts-table BEGIN -->
 | Metric | Value |
 |---|---:|
-| Lean declarations (total) | 40262 |
-| Lean theorems (total) | 26103 |
-| Lean theorems (substantive) | 26077 |
+| Lean declarations (total) | 40668 |
+| Lean theorems (total) | 26355 |
+| Lean theorems (substantive) | 26329 |
 | Lean theorems (placeholder `True := trivial`) | 26 |
-| Lean modules | 2012 |
-| Lean definitions | 12657 |
-| Lean structures | 472 |
-| Lean instances | 929 |
+| Lean modules | 2036 |
+| Lean definitions | 12793 |
+| Lean structures | 479 |
+| Lean instances | 939 |
 | Lean inductives | 101 |
 | Lean axioms | **0** (project-local) |
 | Lean sorries | **0** |
@@ -41,7 +41,7 @@
 | Aristotle runs | 44 |
 | Python source modules | 137 |
 | Test files | 167 |
-| pytest cases | 5685 |
+| pytest cases | 5694 |
 | Figures (PNG) | 170 |
 | Notebooks | 91 |
 | Papers (drafts) | 42 |
@@ -108,7 +108,7 @@ For the public narrative of what the project does, see `README.md`. Key story ar
 **936 Lean modules** (per `docs/counts.json` regen 2026-06-10 PM; the jump from 751 at 2026-05-30 reflects (i) the FKLW Ross-Selinger / KMM / grid-synth corpus growth across Phases 6AM→6AO, and (ii) the `QuantumNetwork/` build-out — 103 modules now — across Phases 6AF→6AQ) under `lean/SKEFTHawking/`. Grouped by subdirectory or topical family.
 
 <!-- AUTOGEN:per-family-counts BEGIN -->
-**Per-family verified counts** (from grouping `lean.module_names`): FKLW 373, QuantumNetwork 104, SymTFT 43, DKMBootstrap 12, QuantumCrooks 11, GloriosoLiu 9, CrooksAnalogHawking 8, SymTFTAudit 8, TopologicalBand 8, APSEta 7, FaultTolerance 7, Detection 6, Itô 6, LDP 6, Schellekens 6, DoubleCopy 5, Resurgence 5, SoftTheorems 5, Carrollian 4, Control 4, GrapheneBand 4, ETH 3, Electrothermal 3, CrossBridges 2, MathlibAux 1; remaining **1362 top-level** modules under `lean/SKEFTHawking/` directly. For full per-module theorem counts + key results, see `SK_EFT_Hawking_Inventory.md` Section 2. For the canonical module-name list, see `docs/counts.json` field `lean.module_names`.
+**Per-family verified counts** (from grouping `lean.module_names`): FKLW 377, QuantumNetwork 104, SymTFT 46, FaultTolerance 16, DKMBootstrap 12, QuantumCrooks 11, GloriosoLiu 9, CrooksAnalogHawking 8, SymTFTAudit 8, TopologicalBand 8, APSEta 7, Detection 6, Itô 6, LDP 6, Schellekens 6, DoubleCopy 5, Resurgence 5, SoftTheorems 5, Carrollian 4, Control 4, GrapheneBand 4, ETH 3, Electrothermal 3, CrossBridges 2, MathlibAux 1; remaining **1370 top-level** modules under `lean/SKEFTHawking/` directly. For full per-module theorem counts + key results, see `SK_EFT_Hawking_Inventory.md` Section 2. For the canonical module-name list, see `docs/counts.json` field `lean.module_names`.
 <!-- AUTOGEN:per-family-counts END -->
 
 ### 3.1 Subdirectory families (sub-packages)
@@ -141,9 +141,10 @@ For the public narrative of what the project does, see `README.md`. Key story ar
 
 | Family | Modules |
 |---|---:|
-| `FKLW` | 373 |
+| `FKLW` | 377 |
 | `QuantumNetwork` | 104 |
-| `SymTFT` | 43 |
+| `SymTFT` | 46 |
+| `FaultTolerance` | 16 |
 | `DKMBootstrap` | 12 |
 | `QuantumCrooks` | 11 |
 | `GloriosoLiu` | 9 |
@@ -151,7 +152,6 @@ For the public narrative of what the project does, see `README.md`. Key story ar
 | `SymTFTAudit` | 8 |
 | `TopologicalBand` | 8 |
 | `APSEta` | 7 |
-| `FaultTolerance` | 7 |
 | `Detection` | 6 |
 | `Itô` | 6 |
 | `LDP` | 6 |
@@ -166,8 +166,8 @@ For the public narrative of what the project does, see `README.md`. Key story ar
 | `Electrothermal` | 3 |
 | `CrossBridges` | 2 |
 | `MathlibAux` | 1 |
-| _(top-level)_ | 1362 |
-| **Total** | **2012** |
+| _(top-level)_ | 1370 |
+| **Total** | **2036** |
 <!-- AUTOGEN:family-count-table END -->
 
 ### 3.2 Topical groupings (top-level `.lean` files)
