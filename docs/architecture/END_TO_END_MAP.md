@@ -209,12 +209,17 @@ Schema: `docs/KNOWLEDGE_GRAPH.md`. Plane detail:
   **expired deferral**: Wave 4 shipped without `PRODUCES`, and `Phase5v_Roadmap.md:442`
   defers the *rendering*, not the emitter. **To verify:** read the Wave-4 close section of
   `Phase5v_Roadmap.md` and confirm `PRODUCES` was in scope and not delivered.
-- ⚠️ **U** The sentence layer is blind to all 19 publication bundles —
-  `build_graph._iter_paper_dirs:2386` filters `startswith('paper')`. **To verify:** read
-  that line; compare with `cluster_detect.py:115` which uses a bare `iterdir()`.
-- ⚠️ **U** `Sentence.verification` and `BACKED_BY.link_state` are declared and never
-  derived (`build_graph.py:2667` hardcodes `'resolved'`). **To verify:** read `:2667` and
-  count non-null `verification` in a built graph.
+- ✅ **V** **The sentence layer is blind to every publication bundle.**
+  `build_graph.py:2386` reads `if d.is_dir() and d.name.startswith('paper')`, so the
+  bundle directories — `D*`, `E*`, `F`, `I*`, `L*` — are skipped entirely. Read directly.
+  This is the same `startswith('paper')` filter that was removed from `cluster_detect.py`
+  and the freshness guard earlier on this branch; `build_graph` was missed.
+- ✅ **V** **`BACKED_BY.link_state` is hardcoded, and the pass meant to fix it never runs.**
+  `build_graph.py:2667` emits `'link_state': 'resolved',  # enriched post-hoc by
+  last_modified pass`. Read directly. Combined with the verified inertness of the freshness
+  layer above — every node at epoch-zero — that enrichment pass demonstrably does not
+  execute, so **every** `BACKED_BY` edge claims `resolved` regardless of its real state.
+  The two findings compound: neither is visible from the other alone.
 - ⚠️ **U** The dashboard re-implements the per-paper verdict rule and the gate roster.
   **To verify:** compare `provenance_dashboard.py` `_classify_paper` against
   `bundles_readiness.classify_readiness`.
@@ -240,9 +245,12 @@ and the figures/tables detail in the same directory.
   **To verify:** `grep -rn "stage13_status" scripts/`.
 - ⚠️ **U** Figure drift is detected by content hash but **advisory only**, and scoped to
   D11/D12 (`bundles_readiness.py:189-202,131-135`). **To verify:** read those lines.
-- ⚠️ **U** `tables_fresh` cannot fail on staleness — mtime-only, and it returns
-  `passed=True` unconditionally (`freshness.py:329`); table globs are `paper*_*`, so **zero
-  of 21 bundles** are covered. **To verify:** read `:274-329` and `ls papers/D*/tables/`.
+- ✅ **V** **`tables_fresh` cannot fail on staleness.** `freshness.py:329` is
+  `return CheckResult(passed=True, details=details)`; the stale branch appends a `Detail`
+  and falls through to it. The only `passed=False` exits are a non-zero subprocess or an
+  unrunnable generator. It is a self-healing regenerator wearing a gate's interface.
+  ⚠️ **U** the scope half — table globs are `paper*_*`, so no bundle is covered.
+  **To verify:** `ls papers/D*/tables/` and check the glob at `:260-271`.
 - ⚠️ **U** 137 `physics_checks` declared in `review_figures.py` are never evaluated.
   **To verify:** `grep -n "physics_checks" scripts/review_figures.py` and confirm no reader
   in `run_structural_checks`.
@@ -269,11 +277,15 @@ and the figures/tables detail in the same directory.
   (`qi_register.py:165,170-171` — ✅**V** those lines read as described), the derivation
   returns nothing, so **Stage 14 can no longer surface a new QI item**. **To verify:** run
   the clustering in memory against current findings and confirm it returns `[]`.
-- ⚠️ **U** The dashboard cannot satisfy Invariant #8 — `provenance_dashboard.py:1275`
-  mutates memory only and `--write` raises `NotImplementedError` (`:5468`), so human
-  verification cannot be persisted from the UI. **To verify:** read both lines.
-  **If true this is the highest-severity item in the map**, because human provenance
-  verification is the stated gate on paper submission.
+- ❌ **X** *"The dashboard cannot satisfy Invariant #8"* — **materially narrowed, and it was
+  the item this map briefly flagged as its most severe.** ✅**V** the dashboard's confirm
+  action does mutate an in-memory dict (`provenance_dashboard.py:1272-1274`) and its
+  `--write` path does decline to persist — **but it prints exactly why, and names the
+  working route**: *"returned without writing provenance.py. Use
+  `scripts/wave2_flip_provenance.py`, which does persist `human_verified_date`. Tracked as
+  R5-MAJ1 in docs/audits/2026-08-05-pr-review-2/FINDINGS_REGISTER_PASS2.md"*
+  (`:5464-5468`). So Invariant #8 **is** satisfiable, by a different tool, and the gap is
+  already a tracked finding with an owner. A UX limitation, not a broken invariant.
 
 ---
 
