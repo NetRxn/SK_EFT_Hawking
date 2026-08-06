@@ -135,6 +135,18 @@ Operator asked how much else rests on name-matching rather than real infrastruct
 | H4 | `_PAPER_SIDE_MODULES` hand-listed | **FIXED** — partition now total + enforced; also fixed memoized checks being attributed to the `_memo` wrapper |
 | H5 | prose candidate filter runs BEFORE resolution | **FIXED** — resolve first, judge only what fails |
 
+⚠️ **H5 shipped a 5× SUITE REGRESSION on the first attempt — read before touching the
+resolver.** `_resolve_prose_ref`'s last two tiers (`_lean_source_declares`,
+`_physlib_declares`) each substring-search the WHOLE concatenated Lean/PhysLib source.
+Removing the shape filter sent 2 568 of 5 384 tokens into a full-corpus scan apiece and
+took the suite **320 s → 1 569 s**. I did not notice; the operator did.
+
+The property actually wanted is narrower: a token resolving against the NAME INDEX
+(cheap set lookups) must never be filtered first. The source scan is a last-resort tier
+and may be reserved for tokens that failed the cheap tiers AND look like identifiers.
+`_resolve_prose_ref(…, deep=False)` stops before those tiers. **Baseline is ~320 s —
+time the suite explicitly after touching this, don't eyeball it.**
+
 **H3 result — the regex was wrong in BOTH directions, and closures now inherit a
 structural answer.** `ExtractDeps` emits an `autogen` field computed from Lean's own
 predicates (`Name.isInternalDetail`, `isAuxRecursor`, `isNoConfusion`). Measured against
