@@ -105,23 +105,49 @@ Closures, apex declarations and un-homed substrate must **emit graph nodes and e
 check output. **Read the extractor contract in `scripts/build_graph.py` BEFORE designing the
 shape** — this was not done as of writing.
 
-## 7. Open questions to settle before building
+## 7. Open questions — THREE OF FOUR NOW SETTLED BY MEASUREMENT
 
-1. **Distinctive vs raw closure.** Everything sits on singular-homology foundations, so raw
-   intersection says every bundle overlaps everything. D6/D9 sharing *named* theorems is a
-   different fact from sharing foundations. Overlap is meaningless until this is defined.
-2. **Un-homed will be loud initially.** Substrate supporting no apex is genuinely un-homed —
-   that is the point, but expect a large first reading.
-3. **Apex declarations are hand-maintained.** Small, but real, and must be checkable that an apex
-   resolves to a live theorem (machinery now exists).
-4. **Does an apex's closure cross bundles legitimately?** If yes the map is many-to-many and the
-   ergonomics change. Check before drafting.
+Measured 2026-08-06 across all 21 bundles; full numbers and method in
+**`docs/audits/2026-08-06-closure-probe/FINDINGS.md`**. The probe reproduces M4(a)'s
+independent **D6 ∩ D9 = 78** exactly, so the resolution path is sound before anything rests on it.
 
-## 8. Cheapest next step (needs no approval)
+1. ~~**Distinctive vs raw closure.**~~ **CLOSED — the worry was unfounded; drop the
+   complication.** 70 % of homed declarations appear in exactly ONE bundle's closure, and
+   **maximum ubiquity across 21 bundles is 7, reached by one declaration**. There is no
+   shared-foundations blob, so raw closure is already distinctive and no second definition is
+   needed. *Why*: `name_deps_project` is **project-closed** (verified — 0 of 279 602 edges leave
+   `SKEFTHawking`), so Mathlib, the genuinely universal substrate, is excluded upstream.
+2. ~~**Un-homed will be loud.**~~ **CLOSED — ~1 400 modules, and the number is robust.** Closure
+   homes **631** modules; M2's loose name-based rule homed 636 and its strict rule 406. Two
+   mechanisms with nothing in common — substring presence vs dependency reachability — land
+   within 2 modules of each other. Closure homes **2.3×** what direct reference does (631 vs 275),
+   which is the design paying for itself.
+3. **Apex declarations are hand-maintained.** UNCHANGED, still a build item — an apex must be
+   checkable against a live declaration (machinery now exists).
+4. ~~**Does a closure cross bundles?**~~ **CLOSED — yes, sparsely.** D6∩D9 Jaccard **0.482** (the
+   one genuinely entangled pair — the same pair the portfolio decision turns on), D4∩D8 0.146,
+   D8∩D9 0.135, L2∩D9 **0**. Many-to-many, but not a mesh.
 
-Compute closures for a few current bundles from their existing prose references and see whether
-the numbers separate the letters from the deep papers the way §3 predicts. If they do, the design
-is real; if not, that is learned before anyone commits. The autogen fix has LANDED, so closure numbers now rest on Lean's classification rather than a regex.
+⚠️ **New constraint the probe surfaced — closure has bounded holes.** 12.4 % of dependency edges
+name a declaration absent from `lean_deps.json` and the walk stops there. Almost all are
+proof-internal artifacts and constructors (leaves — nothing lost), but **553 distinct `_private.*`
+declarations (1 278 edges, 0.46 %) are genuinely lossy**: `ExtractDeps` omits `private`
+declarations, so a closure routing through one truncates silently. **State this wherever a closure
+size is reported** — unstated, it is another absence rendered as success.
+
+## 8. ✅ DONE — closure shape separates most bundles, and flags three
+
+Seeded from existing prose references (a **lower bound** — no apexes are declared yet):
+
+- **As §3 predicted:** L1 (1 module, depth 1) and L3 (5, depth 3) are genuinely shallow; D9
+  (142 modules, depth 18) and D8 (289, depth 24) are genuinely deep.
+- **Against the roster:** **L2 is a letter on a deep-paper substrate** (39 modules, depth 14 —
+  more than nine of the twelve D bundles), and **D7 (6 modules) and D1 (18) are shaped like
+  letters.**
+
+That is the re-tiering signal, arriving as a measurement rather than an impression. It says where
+to look; it does **not** decide anything, because tier is also a claim about audience and framing,
+not only about substrate.
 
 ## 9. Heuristic surfaces still open (the "arc-like" audit)
 
@@ -134,6 +160,27 @@ Operator asked how much else rests on name-matching rather than real infrastruct
 | H3 | autogen declarations detected by NAME PATTERN (`_AUTOGEN_RE`) | **FIXED** — see below |
 | H4 | `_PAPER_SIDE_MODULES` hand-listed | **FIXED** — partition now total + enforced; also fixed memoized checks being attributed to the `_memo` wrapper |
 | H5 | prose candidate filter runs BEFORE resolution | **FIXED** — resolve first, judge only what fails |
+| H3′ | **`build_graph.py` kept its OWN autogen name regex** | **FIXED 2026-08-06** — see below |
+
+**H3′ — the same defect survived H3 in the one place §6 cares most about.** H3 fixed
+`ExtractDeps`, `atlas_view` and `validate.py`, but `build_graph.py` carried an independent
+`_AUTOGEN_SHORT_RE` deciding which declarations become graph nodes and what a module node's
+`declaration_count` says. So the **graph — the artifact human review actually reads** — was
+classifying one population differently from the checks that ratchet on it.
+
+Both call sites now go through `validate_helpers.autogen_index`, and the regex is **deleted**, not
+merely unused. Measured over the live corpus: the new drop set is a **strict superset** of the old
+— **270** compiler-generated declarations removed from the graph, **0** author-written declarations
+affected. Four of them were being ranked as OBSTRUCTIONS on the atlas negative frontier
+(`X.mk.inj` inside no-go namespaces — the exact R6-M1 defect class), so the frontier a `/goal` loop
+reads to steer away from dead paths goes 403 → 399.
+
+The residue the regex caught and Lean's public predicates do not (`inj`, `ctorElim`,
+`ctorElimType`, `ofNat` — plus `repr`/`decEq`, whose parent is the *derived instance*, needing
+their own branch) was added to the supplement **under the parent-kind guard**, verified against the
+corpus: every `.repr` (76) and `.decEq` (34) has an `instance` parent; all 419 `.inj` have an
+inductive/structure parent or grandparent. A bare suffix match would delete an author-written
+`Sheaf.restriction.inj` — which is what the deleted regex did.
 
 ⚠️ **H5 shipped a 5× SUITE REGRESSION on the first attempt — read before touching the
 resolver.** `_resolve_prose_ref`'s last two tiers (`_lean_source_declares`,
