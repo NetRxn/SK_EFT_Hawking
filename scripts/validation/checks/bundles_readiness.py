@@ -1017,7 +1017,8 @@ def check_bundle_registry_consistency() -> CheckResult:
 #: no apexes had yet been declared. Declaration is gated on the operator's per-bundle
 #: full-context-review condition (ADR-010 §D5a), so this started at the maximum by design.
 #: 21 -> 20: D6 retrofitted 2026-08-06 (11 apexes; docs/audits/2026-08-06-d6-retrofit/).
-UNDECLARED_APEX_CEILING = 20
+#: 20 -> 19: D9 retrofitted 2026-08-06 (25 apexes, one per claim of its five-layer abstract).
+UNDECLARED_APEX_CEILING = 19
 
 
 @register_check(

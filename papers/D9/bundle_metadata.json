@@ -60,5 +60,132 @@
   "open_findings": 0,
   "blocked_p1_gates": [],
   "readiness": "GREEN",
-  "readiness_last_computed": "2026-07-31"
+  "readiness_last_computed": "2026-07-31",
+  "apex_theorems": [
+    {
+      "name": "SKEFTHawking.QuantumNetwork.diamondDist_eq_choiSDP",
+      "claims": "\u00a72 \u2014 the full Watrous Choi-SDP primal=dual identity, proven unconditionally",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.exists_diamondDist_eq",
+      "claims": "\u00a72 \u2014 the diamond-distance supremum is ATTAINED by an optimal input state",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.one_sub_sqrtFidelity_le_traceDist",
+      "claims": "\u00a72 \u2014 Fuchs-van de Graaf lower bound 1-F <= D",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.traceDist_le_sqrt_one_sub_sqrtFidelity_sq",
+      "claims": "\u00a72 \u2014 Fuchs-van de Graaf upper bound D <= sqrt(1-F^2), purification-free",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.diamondDist_ge_choi_traceNorm",
+      "claims": "\u00a72 \u2014 Choi sandwich, lower side",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.diamondDist_le_choi_opNorm",
+      "claims": "\u00a72 \u2014 Choi sandwich, upper side",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.diamondDist_errorBasisKraus_eq",
+      "claims": "\u00a72 \u2014 exact diamond distance for any unitary-error-basis channel (Pauli, two-qubit, Weyl are instances)",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.diamondDist_genAmpDamp_bracket",
+      "claims": "\u00a72 \u2014 the two-sided bracket where the channel is NOT covariant (thermal amplitude damping)",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.quantum_fannes_audenaert_sharp",
+      "claims": "\u00a73 \u2014 the sharp unconditional Audenaert continuity bound with constant log(d-1)",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.vonNeumannEntropy_subadditive",
+      "claims": "\u00a73 \u2014 subadditivity of the von Neumann entropy",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.no_local_distillation_to_bellPair",
+      "claims": "\u00a73 \u2014 one-shot distillation no-go from the negativity monotone",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.logNegB_ncopy_localKraus_le",
+      "claims": "\u00a73 \u2014 the regularized n-copy distillation-rate bound E_D <= E_N",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.swapChain_fidelity_envelope",
+      "claims": "\u00a74 \u2014 the model-independent end-to-end fidelity envelope for Werner swap chains",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.decayInclusive_fidelity_envelope",
+      "claims": "\u00a74 \u2014 its memory-decoherence-inclusive generalization",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.bbpsswRecurrence_gt",
+      "claims": "\u00a74 \u2014 BBPSSW distillability: purification strictly increases fidelity on (1/2,1)",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.teleportAvgFidelity_horodecki_unconditional",
+      "claims": "\u00a74 \u2014 Horodecki teleportation fidelity, unconditional (Haar-Pauli integral discharged)",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.bb84_positiveKey_fidelity_threshold",
+      "claims": "\u00a74 \u2014 BB84 positive key iff F_e2e above the PROVEN (not hardcoded) crossover",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.FlowNetwork.maxFlow_eq_minCut",
+      "claims": "\u00a74 \u2014 network capacity max-flow/min-cut strong duality, built in-project",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.erasureBound_le_plobBound",
+      "claims": "\u00a74 \u2014 the erasure repeaterless ceiling against the PLOB form",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.avgGateFidelity_coherenceChannel_antitone",
+      "claims": "\u00a75 \u2014 the coherence-limited average-gate-fidelity ceiling is monotone in gate duration",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.diamondDist_coherence_after_control_le",
+      "claims": "\u00a75 \u2014 composed coherence-after-control gate bound",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.avgGateFidelity_diamondDist_two_sided",
+      "claims": "\u00a75 \u2014 the randomized-benchmarking-style two-sided certificate",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.diamondDist_spamBitFlip_eq",
+      "claims": "\u00a75 \u2014 SPAM readout bit-flip: diamond distance is exactly the readout error probability",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.avgAssignmentError_combined_floor",
+      "claims": "\u00a75 \u2014 the combined relaxation+thermal readout assignment-error floor",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.expNeg_enclosure",
+      "claims": "\u00a76 \u2014 the rational enclosure bracketing every decaying-exponential operating point",
+      "declared": "2026-08-06"
+    }
+  ]
 }
