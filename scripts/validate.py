@@ -279,7 +279,56 @@ def print_results(results: Dict[str, CheckResult]) -> None:
         print("  \033[32mALL CHECKS PASSED\033[0m")
     else:
         print("  \033[31mSOME CHECKS FAILED\033[0m")
+        _print_failure_provenance(results)
     print(f"{'═'*70}\n")
+
+
+#: Check modules whose subject is the PAPER CORPUS rather than the Lean/Python
+#: substrate. Derived from the module a check is DEFINED in — deliberately not a
+#: hand-listed set of check names, which would be a parallel list that drifts
+#: (the defect class this suite keeps finding).
+_PAPER_SIDE_MODULES = frozenset({
+    "papers_prose", "prose_lean_refs", "citations", "bundles_readiness", "reviews",
+})
+
+
+def _print_failure_provenance(results: Dict[str, CheckResult]) -> None:
+    """Split the failures into paper-corpus vs substrate, and say so.
+
+    WHY THIS EXISTS (2026-08-05). `gate_precheck.py s13` runs the FULL suite before
+    dispatching an expensive Stage-13 reviewer, so closing a **pure-Lean wave** can
+    be blocked by paper-corpus state the wave never touched. The rationale for
+    running everything is sound — do not spend reviewer budget on a known-bad tree
+    — but "the tree is clean" was being reported as one undifferentiated verdict.
+
+    ⚠️ This changes NOTHING about what runs or what blocks. A `--scope` flag that
+    skipped the 23 paper-side checks would be a filter that silently narrows the
+    population, which is precisely the defect class this suite exists to catch. The
+    fix for an unreadable verdict is to make it readable, not to shrink it.
+    """
+    by_name = {spec.name: spec for spec in _CHECKS}
+    paper, substrate = [], []
+    for name, cr in results.items():
+        if cr.passed:
+            continue
+        spec = by_name.get(name)
+        mod = getattr(spec.func, "__module__", "") if spec else ""
+        leaf = mod.rsplit(".", 1)[-1]
+        (paper if leaf in _PAPER_SIDE_MODULES else substrate).append(name)
+    if not (paper and substrate) and not paper:
+        return
+    print()
+    if substrate:
+        print(f"  \033[31m✗ SUBSTRATE ({len(substrate)}):\033[0m "
+              f"{', '.join(sorted(substrate))}")
+    else:
+        print("  \033[32m✓ SUBSTRATE: clean\033[0m — no Lean/Python-side failure")
+    if paper:
+        print(f"  \033[33m● PAPER CORPUS ({len(paper)}):\033[0m "
+              f"{', '.join(sorted(paper))}")
+        print("    These concern the paper corpus, not the Lean/Python substrate. A "
+              "Lean-only wave\n    cannot have caused them — see "
+              "docs/architecture/VALIDATION_GATE_TOPOLOGY.md §2.")
 
 
 def archive_results(results: Dict[str, CheckResult]) -> Path:

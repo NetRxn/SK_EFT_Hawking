@@ -41,7 +41,7 @@
 | Aristotle runs | 44 |
 | Python source modules | 137 |
 | Test files | 166 |
-| pytest cases | 5662 |
+| pytest cases | 5673 |
 | Figures (PNG) | 170 |
 | Notebooks | 91 |
 | Papers (drafts) | 42 |

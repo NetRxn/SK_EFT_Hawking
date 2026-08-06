@@ -98,7 +98,7 @@ Three distinct problems are conflated under "the file is too big":
 
 A concurrent publication-readiness audit established the consequence: **the project's quality
 instrumentation reports absence-of-measurement as success.** Eight checks are structurally incapable of
-returning `passed=False`; some can fail only under `--strict`, which no automated caller passes; and
+returning `passed=False`; some can fail only under `--strict` (which had no automated caller when this was written — `gate_precheck.py submission` became one on 2026-08-05); and
 roughly twenty sites encode "could not measure" as PASS. `CheckResult.passed` is a bare `bool` with no
 third state, though the concept exists in comments and in three hand-patched sites.
 *(This paragraph originally said "two more" for the `--strict` set. Re-measured 2026-08-04: **six**

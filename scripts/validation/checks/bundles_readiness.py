@@ -343,8 +343,17 @@ def check_bundle_metadata_matches_graph() -> CheckResult:
             details.append(Detail(
                 bundle, False,
                 f"metadata disagrees with the live graph: {'; '.join(bad)}. "
-                f"Re-run `uv run python scripts/bundle_readiness.py`, which writes these "
-                f"fields; do not hand-edit them."))
+                + ("⚠️ `stage13_status` is NOT written by `bundle_readiness.py` — that "
+                   "script owns blockers_open / advisories_open / open_findings / "
+                   "blocked_p1_gates / readiness only. `stage13_status` is set by the "
+                   "Stage-13 review cycle (BUNDLE_LIFT_PROCEDURE.md §§8–10), so a green "
+                   "value here is a claim about a PAST review that newly-minted blockers "
+                   "have since contradicted. Re-run Stage 13 for this bundle (or set "
+                   "`stage13_redo_required`) — re-running the counts writer will NOT "
+                   "clear it."
+                   if any("stage13_status" in b for b in bad) else
+                   "Re-run `uv run python scripts/bundle_readiness.py`, which writes "
+                   "these fields; do not hand-edit them.")))
 
     details.insert(0, Detail(
         "summary", drift == 0,
@@ -605,8 +614,11 @@ def check_readiness_submission_gate() -> CheckResult:
     Its docstring also promised that `validate.py --strict` would block submission.
     `STRICT_MODE` was never referenced in the body. That promise is now obsolete
     rather than unbuilt: the check hard-fails by default, which is what its own name
-    and registered description have always claimed. (`--strict` remains unreachable
-    in practice anyway — no automated caller passes it; §Deferred item 6.)
+    and registered description have always claimed. (⚠️ this parenthetical read "`--strict`
+    remains unreachable in practice anyway — no automated caller passes it" until
+    2026-08-05. It is FALSE: `scripts/gate_precheck.py submission` runs
+    `validate.py --strict --force-latex`. §Deferred item 6's disposition stands; its
+    no-caller sub-clause does not.)
 
     The rollout the comment deferred to is over: `stage13_status` is now guarded,
     the bundles are in active remediation, and the operator's standing expectation

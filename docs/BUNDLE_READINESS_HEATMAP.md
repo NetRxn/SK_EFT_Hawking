@@ -1,6 +1,6 @@
 # Bundle Readiness Heatmap
 
-**Auto-generated:** 2026-08-01
+**Auto-generated:** 2026-08-06
 **Tool:** `scripts/bundle_readiness.py --heatmap`
 
 **Companion to:** `docs/READINESS_GATES.md` (per-paper) — the per-bundle analog. Phase 6i Wave 7.4 deliverable; GREEN semantics tightened 2026-06-10 (S5 closure — see legend).
@@ -43,6 +43,10 @@
 | **E2** | 4 | 4 | 21 | 0 | 15 advisory, 6 minor | 2026-06-10 | 🟡 YELLOW |
 
 † review date backfilled from on-disk review evidence; the evidence path is recorded in the bundle's `bundle_metadata.json` `last_stage13_review_source` field.
+
+### Per-bundle caveats
+
+- **D12** — non-enum `stage13_status` in `papers/D12/bundle_metadata.json` (surfaced verbatim): "pending-redo"
 
 ## Gate × Bundle distribution (open findings)
 

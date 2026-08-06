@@ -1,8 +1,38 @@
 # QA / QI Infrastructure Map
 
 **Status:** production artifact. Map of the complete quality layer — code, agents, hooks, artifacts,
-gates, and human decision points. **Reflects the ADR-009 delivered state.**
-**Date:** first written 2026-08-03; **brought to the delivered state 2026-08-04.**
+gates, and human decision points. **Reflects the ADR-009 delivered state + the 2026-08-05
+change-scoping work.**
+**Date:** first written 2026-08-03; brought to the delivered state 2026-08-04; **re-based 2026-08-05.**
+
+> ## 📍 Where to look — this map is the DEFECT LANDSCAPE, not the architecture
+>
+> Three companion production documents were added 2026-08-05, because until then the only
+> accounts of the validation subsystem were a *decision record* and a *migration note in
+> `.working-docs/`* — neither of which is where a reader should have to look for the
+> architecture of a live system.
+>
+> | question | document |
+> |---|---|
+> | how is the subsystem **built** — modules, contracts, hazards, the memo | [`VALIDATION_ARCHITECTURE.md`](VALIDATION_ARCHITECTURE.md) |
+> | **when** does each gate run, and what does it block | [`VALIDATION_GATE_TOPOLOGY.md`](VALIDATION_GATE_TOPOLOGY.md) |
+> | what obligations does a **new check** inherit | [`CHECK_AUTHORING_GUIDE.md`](CHECK_AUTHORING_GUIDE.md) |
+> | **what is broken and why** — the defect classes | **this file** |
+> | the decision + §Deferred 0–7 + addendum II | `docs/adrs/ADR-009-validation-suite-modularization.md` |
+>
+> ### 2026-08-05 re-basis — what changed under this map
+>
+> * **`scripts/validation/_memo.py`** — input-fingerprint memo for the two expensive Lean checks
+>   (`axiom_closure_allowlist` **171.6 s → 0.1 s**). Full suite **317.8 s → 134.2 s**.
+> * **`paper_latex_compiles`** — per-draft content-hash cache, and its **slow gate deleted**. It
+>   had returned `passed=True` with `SKIPPED (slow)` by default; a fatal LaTeX error in D3 was
+>   invisible until 2026-08-05, and is now fixed (21/21 compile clean).
+> * **`CheckResult.measured`** — new additive field distinguishing *measured and passed* from
+>   *could not measure*. `--ci`'s coverage floor counts measurements; `_memo` refuses to cache a
+>   non-measurement. **24 return sites** now declare it.
+> * **PR-review pass 2** (six reviewers, `docs/audits/2026-08-05-pr-review-2/`): five
+>   YES-WITH-FIXES, one **NO**. Every CRITICAL and MAJOR closed. The blockers were the
+>   change-scoping code above, failing in this map's own §7 pattern — see the note there.
 **Basis:** `scripts/validate.py` read in full (7,778 lines at first writing) by the author; four read-only
 reconnaissance sweeps over the artifact-generation, readiness/bundle, agent/hook/register, and
 test-coverage subsystems; **every load-bearing claim independently verified against source by the author.**
@@ -403,10 +433,28 @@ per-check test for 54 checks a tractable exercise rather than an archaeological 
 
 Six independent mechanisms, one shape: **absence of measurement rendered as success.**
 
+> ### ⚠️ 2026-08-05 — the pattern recurred INSIDE the guards written against it
+>
+> PR-review pass 2 found three fresh instances, all in the change-scoping code landed that day,
+> all caught by seeding the defect into production rather than by a green suite:
+>
+> | mechanism | reported | actually |
+> |---|---|---|
+> | `--ci`'s **coverage floor** | "the suite cannot silently shrink" | counted checks **invoked**, not measured — `run_checks` fills a result for every spec, so `n_ran ≡ 55` against a floor of 55 and it **could never fire**. Found independently by **4** reviewers. ✅ fixed via `CheckResult.measured` |
+> | `_memo` | "only PASS is cached, so a red check always re-runs" | **a fail-open SKIP *is* a PASS** — it cached `SKIPPED — lake not found` under a key byte-identical to the real measurement and replayed it after the toolchain returned. **5** reviewers. ✅ fixed: non-measurements are never cached, and evict |
+> | the memo's **key tests** | "production-seeded, per QI-30" | seeded the fingerprint **helpers**, never asserting any check's key called them — deleting an input from a live `key_fn` returned `24 passed`. ✅ fixed: `TestCheckKeysSpanTheirInputs` seeds through the real key |
+>
+> **The generalisable lesson, and the reason this box is in §7 rather than a changelog:** all four
+> memo guards policed *how the cache is used*; none audited *whether the key spans the inputs*.
+> **Guarding at the wrong layer is indistinguishable from guarding, right up until the
+> measurement.** A seventh mechanism belongs on the list below in spirit: *a guard whose test
+> asserts its own definition* — `test_ci_mode.py` asserted `CI_MIN_CHECKS_RUN == len(_CHECKS) -
+> len(CI_SKIP)`, which is what made the floor unfireable and invisible at once.
+
 | Mechanism | Reports | Actually |
 |---|---|---|
 | ~~`readiness_submission_gate`~~ | ~~pass~~ | ✅ **FIXED 2026-08-03** — hard-fails on any blocked gate; 11 tests, 5 mutations |
-| ~~`paper_latex_compiles`~~ | ~~pass~~ | ✅ **FIXED 2026-08-03** — hard-fails on a real compile failure; D3 was failing silently |
+| ~~`paper_latex_compiles`~~ | ~~pass~~ | ✅ **FIXED 2026-08-03** — hard-fails on a real compile failure. ⚠️ It remained *slow-gated* (default `SKIPPED (slow)` → PASS) until **2026-08-05**, so D3's fatal error stayed invisible to a default run for two more days; the gate is now deleted and D3 is fixed (**21/21 compile clean**) |
 | ~~the population's silent growth~~ | ~~unbounded~~ | ✅ **RATCHETED 2026-08-04** — `tests/test_cannot_measure_baseline.py` freezes the 22 `(check, kind)` pairs that return PASS on cannot-measure and fails in **both** directions: a new one, or a converted one left stale in the baseline. Measured: **60 cannot-measure sites, 35 FAIL / 25 PASS (58% converted)** |
 | ~~split `lean_deps` readers~~ | ~~consistent~~ | ✅ **FIXED 2026-08-04** — five readers ran before `counts_fresh` (29) and three after, so on a wave close they validated *different extractions*. `validate.main()` now takes one snapshot up front (full runs only; `--check` is exempt because the commit gate forbids ExtractDeps) |
 | `check_bundle_source_freshness` | "fresh: all N source paper(s)…" | returns `None` for sourceless keys, compares zero files, **writes `freshness_stale: false`** |
