@@ -130,3 +130,66 @@ is not. Stated rather than assumed.
    exe/metaprogram roots and ratchet the rest, or import the ~24 research modules and fix what
    surfaces (starting with this `sorry`, and with 12 `FaultTolerance/*` modules that have never
    been compiled at all).
+
+---
+
+## F4 — "ours or a dependency?" and "is ExtractDeps failing?" — both answered by execution
+
+**All 28 are OURS.** Every one resolves to a file under `lean/SKEFTHawking/`. The dependencies
+live in a different tree entirely and were never in the scanned population:
+
+| tree | modules | in scope? |
+|---|---|---|
+| `lean/SKEFTHawking/` — **ours** | **2 039** | yes — the population under discussion |
+| `lean/.lake/packages/mathlib/` | 8 795 | no |
+| `lean/.lake/packages/Physlib/` | 676 | no |
+
+**`ExtractDeps` is NOT failing.** Measured: of the 2 011 modules reachable from the root
+aggregate, **0 are missing from `lean_deps.json`**. The single entry in `lean_deps.json` that is
+not reachable is `SKEFTHawking.ExtractDeps` itself, which appears because it walks the environment
+including its own module. Extraction is faithful to the environment it is handed.
+
+**The gap is one layer up, and nothing checks it.** The environment is defined by
+`lean/SKEFTHawking.lean` — a **hand-maintained list of 1 938 `import` lines** — and no instrument
+compares that list to the filesystem. A module that exists on disk but was never added to the root
+is built by nothing, indexed by nothing, counted by nothing, and reported by nothing.
+
+### It leaks in arc-sized clusters, chronically
+
+First-appearance dates of the 28 (`git log --diff-filter=A`):
+
+| date | modules | arc |
+|---|---|---|
+| 2026-04-04 | 1 | `ExtractDeps` (legitimate exe root) |
+| 2026-05-12 | **11** | the **entire `FaultTolerance` arc**, in one day |
+| 2026-05-20 → 05-28 | 6 | `FKLW` ×4, `AxiomAudit`, `AxiomClosure` |
+| 2026-06-20 → 06-22 | 5 | `Singular*`, `AtlasAttr` |
+| 2026-07-13 | 2 | `Singular*` |
+| **2026-07-27** | **3** | `SymTFT` ×3 — nine days before this audit |
+
+Not a recent regression and not a one-off: a steady leak, usually a whole arc at a time, which is
+the signature of a wave shipping without its root-aggregate import.
+
+### What is actually inside — established by building all 24 non-exe modules
+
+| result | count |
+|---|---|
+| build clean | **22** |
+| **fail to compile** | **2** — `FKLW/BinaryTetrahedral` (`:743` `rewrite` failed to find pattern), `SingularChainComplexCat` (**6+** errors: *Function expected*, *Not a definitional equality*, *Type mismatch*, three `rfl` failures) |
+| additional `sorry`s beyond F1 | **0** (Lean-reported, quote-agnostic match) |
+
+⚠️ **`SingularChainComplexCat`'s own docstring claims "Kernel-pure"** while the module does not
+typecheck. This is the `verify-substrate-strength-not-docstrings` failure in its purest form.
+
+⚠️ **Neither broken module was EVER imported by the root** — `git log -S "import ..."` on
+`lean/SKEFTHawking.lean` returns **0 commits** for both. So they were never in a build graph and
+**it is unknown whether they ever compiled.** The error shapes (`rewrite` pattern-miss, repeated
+`rfl` failures) are consistent with Mathlib-bump fallout, and the project bumped to v4.32.0 on
+2026-07-29 — **but that is a hypothesis, not a finding.** Confirming it needs a build at the
+pre-bump pin, which was not run.
+
+### The headline, stated plainly
+
+**~24 research modules of our own have never been compiled even once. Two of them do not compile.
+Every instrument in the project reports them as *absent* rather than as *unverified*.** That is
+the difference between a gap the system knows about and one it cannot see.
