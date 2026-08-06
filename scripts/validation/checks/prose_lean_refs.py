@@ -63,17 +63,68 @@ _PROSE_TEXTTT_RE = re.compile(r"\\texttt\{([^{}]+)\}")
 # (absence of measurement rendered as success), found by the ADR-010 measurement
 # pass 2026-08-05. Discover the aliases from the preamble rather than hardcoding
 # `\lean`, so the next bundle that defines `\leanref` does not reopen the hole.
-_PROSE_VERBATIM_ALIAS_DEF_RE = re.compile(
-    r"\\(?:newcommand|renewcommand|providecommand)\s*\{?\s*\\([A-Za-z]+)\s*\}?"
-    r"\s*\[1\]\s*\{\s*\\(?:texttt|mathtt|verb|url|path|code)\s*\{\s*#1\s*\}\s*\}")
+#: Primitive LaTeX commands that typeset their argument as code.
+_PROSE_VERBATIM_PRIMITIVES = frozenset({
+    "texttt", "mathtt", "verb", "url", "path", "code", "lstinline",
+})
+#: `\newcommand{\X}[1]{` — the HEAD only. The body is taken by brace matching,
+#: because a body may itself contain balanced braces (see `_newcommand_defs`).
+_PROSE_NEWCOMMAND_HEAD_RE = re.compile(
+    r"\\(?:newcommand|renewcommand|providecommand)\*?\s*\{?\s*\\([A-Za-z]+)\s*\}?"
+    r"\s*(?:\[1\])\s*\{")
+
+
+def _newcommand_defs(tex_source: str) -> dict:
+    """``{macro name: body}`` for every one-argument ``\\newcommand`` in the source.
+
+    The body is extracted by **brace matching**, not by regex. An earlier version
+    required the body to be exactly ``{\\texttt{#1}}``, which silently excluded
+    D11's and D12's ``\\newcommand{\\thm}[1]{{\\def\\_{\\char`\\_\\allowbreak}\\texttt{#1}}}``
+    — a line-breaking wrapper around the same thing. **336 references** in two
+    publication bundles sat outside the check because of that shape mismatch.
+    """
+    out = {}
+    for m in _PROSE_NEWCOMMAND_HEAD_RE.finditer(tex_source):
+        depth, i, n = 1, m.end(), len(tex_source)
+        while i < n and depth:
+            c = tex_source[i]
+            if c == "\\":
+                i += 2
+                continue
+            depth += (c == "{") - (c == "}")
+            i += 1
+        if not depth:
+            out[m.group(1)] = tex_source[m.end():i - 1]
+    return out
 
 
 def _prose_verbatim_macros(tex_source: str) -> frozenset:
-    """Names of preamble macros that are one-argument aliases for ``\\texttt``.
+    """Names of macros that typeset their argument verbatim, in THIS draft.
 
-    Always includes ``texttt`` itself. Unit-testable core of the alias fix.
+    Always includes ``texttt``. A macro qualifies when its body applies a known
+    verbatim macro to ``#1`` — computed to a **fixpoint**, so an alias of an alias
+    qualifies too (D12 defines ``\\mthm`` as ``\\thm{#1}`` and ``\\thm`` in terms of
+    ``\\texttt``).
+
+    Structural rather than shape-matching, deliberately: the previous two repairs
+    both enumerated the forms then in evidence (``\\lean``, then ``\\verb``) and each
+    was overtaken within hours by a form nobody had enumerated. Unit-testable core.
     """
-    return frozenset({"texttt"} | set(_PROSE_VERBATIM_ALIAS_DEF_RE.findall(tex_source)))
+    defs = _newcommand_defs(tex_source)
+    known = set(_PROSE_VERBATIM_PRIMITIVES)
+    changed = True
+    while changed:
+        changed = False
+        for name, body in defs.items():
+            if name in known:
+                continue
+            if any(re.search(r"\\" + re.escape(k) + r"\s*\{\s*#1\s*\}", body)
+                   for k in known):
+                known.add(name)
+                changed = True
+    # `verb` is matched by `_PROSE_VERB_RE` (delimiter syntax, not braces) and
+    # must not enter the brace-form alternation.
+    return frozenset({"texttt"} | (known & set(defs)) | (known - _PROSE_VERBATIM_PRIMITIVES))
 
 
 def _prose_verbatim_re(tex_source: str) -> re.Pattern:
@@ -142,6 +193,12 @@ _PROSE_REF_ALLOWLIST = {
     # word — Mathlib/Analysis/SpecialFunctions/BinaryEntropy.lean:139 and
     # Mathlib/Analysis/LocallyConvex/Separation.lean:197.
     "binEntropy_lt_log_two", "geometric_hahn_banach_compact_closed",
+    # Surfaced 2026-08-05 when the `\thm`/`\mthm` wrapped-alias fix made D11/D12's
+    # 336 references visible. Both are Mathlib names D12's prose attributes to
+    # Mathlib ("Mathlib carries a sub-Gaussian Chernoff bound at our own pin");
+    # both VERIFIED in the pinned source — Probability/Moments/SubGaussian.lean:334
+    # and Probability/Decision/Risk/Basic.lean:236.
+    "HasSubgaussianMGF.measure_ge_le", "bayesRisk_le_bayesRisk_comp",
     # project infrastructure identifiers (validate.py checks, cluster /
     # sentence-state schema fields) described in the I1 infrastructure
     # paper and the F flagship process section
@@ -458,9 +515,8 @@ def _resolve_prose_ref(token: str, index: dict) -> str:
 
 
 @register_check("prose_theorem_reference_coverage",
-                "Bundle-draft verbatim Lean references — \\texttt{}, preamble "
-                "aliases for it (D8/D9's \\lean{}), and \\verb (D6) — resolve "
-                "in lean_deps.json")
+                "Bundle-draft Lean references in any verbatim form (texttt, a "
+                "preamble alias for it, or verb) resolve in lean_deps.json")
 def check_prose_theorem_reference_coverage() -> CheckResult:
     """Prevent the ``wen_adw_factor_6000`` failure class from the
     2026-06-05 external review: bundle prose naming a Lean declaration

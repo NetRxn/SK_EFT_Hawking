@@ -37,6 +37,18 @@ def _format_sci(x: float, precision: int = 1) -> str:
     return f'${mantissa} \\times 10^{{{exp_int}}}$'
 
 
+#: Control sequences a check description may use and have typeset as LaTeX. Every
+#: other `\command` is rendered as literal code by `_neutralize_unsafe_macro`.
+#: Keep this SMALL — it is an allowlist precisely so that an unknown macro fails
+#: safe (typesets oddly) rather than fatally (aborts pdflatex). Entries must be
+#: defined by every document that `\input`s a generated table, i.e. plain LaTeX or
+#: the shared preamble — NOT a macro one bundle happens to define.
+_TABLE_DESC_SAFE_MACROS = frozenset({
+    'texttt', 'textbf', 'textit', 'emph', 'textbackslash',
+    'leq', 'geq', 'times', 'to', 'ldots', 'dots',
+})
+
+
 def _escape_latex_text(s: str) -> str:
     """Escape the LaTeX-special characters that recur in machine-parsed
     prose (stage names, gate text, check names/descriptions) but are
@@ -499,7 +511,28 @@ def validation_checks() -> list[dict]:
         def _neutralize_input(m: 're.Match[str]') -> str:
             arg = m.group(1).replace('_', r'\_')
             return r'\texttt{\textbackslash input\{' + arg + r'\}}'
+
+        def _neutralize_unsafe_macro(m: 're.Match[str]') -> str:
+            name = m.group(1)
+            if name in _TABLE_DESC_SAFE_MACROS:
+                return m.group(0)
+            return r'\texttt{\textbackslash ' + name + r'}'
         desc = _re.sub(r'\\input\{([^}]*)\}', _neutralize_input, desc)
+        # ...and then EVERY other control sequence that is not known-safe in the
+        # target document. The `\input` case above neutralized one known-dangerous
+        # command and trusted the rest; that is an enumerate-the-dangers policy, and
+        # it failed on 2026-08-05 when a check description was edited to mention
+        # `\texttt{}`, `\lean{}` and `\verb` as prose. `\lean` is undefined in
+        # paper15 and a bare `\verb ` takes the following space as its delimiter, so
+        # pdflatex aborted with "Undefined control sequence / no output PDF" — the
+        # SECOND time a check description has broken this exact compile (see the
+        # 2026-06-10 underscore note below).
+        #
+        # Inverted to an allowlist: a description is PROSE written for humans, and
+        # the renderer must make it safe rather than requiring every future author to
+        # know which macros this document defines. Anything outside the safe set
+        # typesets as literal code.
+        desc = _re.sub(r'\\([A-Za-z]+)', _neutralize_unsafe_macro, desc)
         # LaTeX-sanitize check descriptions: escape the special characters
         # (#, &, %, _) that aren't already escaped, then map non-ASCII
         # operators. _escape_latex_text leaves backslashes/braces alone so
