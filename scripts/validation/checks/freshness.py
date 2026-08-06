@@ -353,19 +353,19 @@ def _claim_clusters_is_stale() -> tuple[bool, str]:
     """
     if not _H.PAPERS_DIR.exists():
         return False, "no papers/ dir"
-    v2_files: list[Path] = []
-    for p in _H.PAPERS_DIR.iterdir():
-        if not p.is_dir() or not p.name.startswith('paper'):
-            continue
-        cr = p / 'claims_review.json'
-        if not cr.exists():
-            continue
-        try:
-            data = json.loads(cr.read_text())
-        except json.JSONDecodeError:
-            continue
-        if isinstance(data.get('sentences'), list):
-            v2_files.append(cr)
+    # ⚠️ REUSE THE GENERATOR'S OWN POPULATION. This function used to re-implement the
+    # predicate, and carried the SAME `p.name.startswith('paper')` narrowing that
+    # `cluster_detect.iter_v2_paper_dirs` carried — so both the generator and the
+    # freshness check that watches it were blind to the same 19 publication bundles
+    # (their dirs are `D1`, not `paper1_*`). The check reported "fresh" over a
+    # population that excluded every bundle, and kept reporting it while the artifact
+    # was genuinely stale: 3 clusters on disk against 7 the generator produces.
+    #
+    # Two copies of one predicate is the defect. Importing the generator's iterator
+    # means a future change to the population can only be made in one place.
+    # PR-review pass 3 (R1) found the generator half; this half was found by fixing it.
+    from cluster_detect import iter_v2_paper_dirs
+    v2_files: list[Path] = [d / 'claims_review.json' for _pid, d in iter_v2_paper_dirs()]
     if not v2_files:
         return False, "no v2 claims_review.json files"
     if not claim_clusters_path().exists():

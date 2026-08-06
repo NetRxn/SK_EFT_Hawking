@@ -1,9 +1,81 @@
 {
-  "cluster_count": 3,
+  "cluster_count": 7,
   "clusters": [
     {
       "confidence": 1.0,
-      "constructed_at": "2026-05-04T17:04:44Z",
+      "constructed_at": "2026-08-06T05:29:55Z",
+      "constructed_by": "cluster_detect.py:exact",
+      "human_confirmed_at": null,
+      "id": "claim_cluster:exact:07278724",
+      "label": "Formalization was carried out in \\Lean{}~4 against Mathlib and PhysLib.",
+      "match_kind": "exact",
+      "member_papers": [
+        "D11",
+        "D12"
+      ],
+      "members": [
+        "sentence:D11:acknowledgments:07278724",
+        "sentence:D12:acknowledgments:07278724"
+      ],
+      "normalized_hash": "07278724"
+    },
+    {
+      "confidence": 1.0,
+      "constructed_at": "2026-08-06T05:29:55Z",
+      "constructed_by": "cluster_detect.py:exact",
+      "human_confirmed_at": null,
+      "id": "claim_cluster:exact:fd6e89cf",
+      "label": "We thank the Mathlib and PhysLib communities for the underlying libraries.",
+      "match_kind": "exact",
+      "member_papers": [
+        "D11",
+        "D12"
+      ],
+      "members": [
+        "sentence:D11:acknowledgments:fd6e89cf",
+        "sentence:D12:acknowledgments:fd6e89cf"
+      ],
+      "normalized_hash": "fd6e89cf"
+    },
+    {
+      "confidence": 1.0,
+      "constructed_at": "2026-08-06T05:29:55Z",
+      "constructed_by": "cluster_detect.py:exact",
+      "human_confirmed_at": null,
+      "id": "claim_cluster:exact:732a88c6",
+      "label": "The remainder of this paper is organized as follows.",
+      "match_kind": "exact",
+      "member_papers": [
+        "I1",
+        "paper33_ewbg_chirality_wall"
+      ],
+      "members": [
+        "sentence:I1:introduction:732a88c6",
+        "sentence:paper33_ewbg_chirality_wall:intro:732a88c6"
+      ],
+      "normalized_hash": "732a88c6"
+    },
+    {
+      "confidence": 1.0,
+      "constructed_at": "2026-08-06T05:29:55Z",
+      "constructed_by": "cluster_detect.py:exact",
+      "human_confirmed_at": null,
+      "id": "claim_cluster:exact:40e3f093",
+      "label": "The result is reproducible in two layers.",
+      "match_kind": "exact",
+      "member_papers": [
+        "L1",
+        "L3"
+      ],
+      "members": [
+        "sentence:L1:discussion:40e3f093",
+        "sentence:L3:discussion:40e3f093"
+      ],
+      "normalized_hash": "40e3f093"
+    },
+    {
+      "confidence": 1.0,
+      "constructed_at": "2026-08-06T05:29:55Z",
       "constructed_by": "cluster_detect.py:exact",
       "human_confirmed_at": null,
       "id": "claim_cluster:exact:d2c6aaa3",
@@ -23,7 +95,7 @@
     },
     {
       "confidence": 1.0,
-      "constructed_at": "2026-05-04T17:04:44Z",
+      "constructed_at": "2026-08-06T05:29:55Z",
       "constructed_by": "cluster_detect.py:exact",
       "human_confirmed_at": null,
       "id": "claim_cluster:exact:ce92f4a9",
@@ -45,7 +117,7 @@
     },
     {
       "confidence": 0.9,
-      "constructed_at": "2026-05-04T17:04:44Z",
+      "constructed_at": "2026-08-06T05:29:55Z",
       "constructed_by": "cluster_detect.py:normalized",
       "human_confirmed_at": null,
       "id": "claim_cluster:norm:fb60352a",
@@ -62,9 +134,14 @@
       "normalized_hash": "fb60352a"
     }
   ],
-  "constructed_at": "2026-05-04T17:04:44Z",
+  "constructed_at": "2026-08-06T05:29:55Z",
   "constructed_by": "cluster_detect.py:all",
   "paper_coverage": [
+    "D11",
+    "D12",
+    "I1",
+    "L1",
+    "L3",
     "paper10_modular_generation",
     "paper11_quantum_group",
     "paper16_wrt_tqft",
