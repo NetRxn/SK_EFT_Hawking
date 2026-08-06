@@ -121,8 +121,7 @@ shape** — this was not done as of writing.
 
 Compute closures for a few current bundles from their existing prose references and see whether
 the numbers separate the letters from the deep papers the way §3 predicts. If they do, the design
-is real; if not, that is learned before anyone commits. **Do this before the autogen fix lands or
-re-run after — closure numbers inherit `_AUTOGEN_RE` (see §9).**
+is real; if not, that is learned before anyone commits. The autogen fix has LANDED, so closure numbers now rest on Lean's classification rather than a regex.
 
 ## 9. Heuristic surfaces still open (the "arc-like" audit)
 
@@ -132,9 +131,32 @@ Operator asked how much else rests on name-matching rather than real infrastruct
 |---|---|---|
 | H1 | lakefile exe roots parsed by regex | **FIXED** — `tomllib` |
 | H2 | module reachability by regex import-walk | **KEPT DELIBERATELY** — see below |
-| H3 | **autogen declarations detected by NAME PATTERN** (`_AUTOGEN_RE`) | **OPEN — do this first** |
+| H3 | autogen declarations detected by NAME PATTERN (`_AUTOGEN_RE`) | **FIXED** — see below |
 | H4 | `_PAPER_SIDE_MODULES` hand-listed | **FIXED** — partition now total + enforced; also fixed memoized checks being attributed to the `_memo` wrapper |
-| H5 | prose candidate filter runs BEFORE resolution | **OPEN** |
+| H5 | prose candidate filter runs BEFORE resolution | **FIXED** — resolve first, judge only what fails |
+
+**H3 result — the regex was wrong in BOTH directions, and closures now inherit a
+structural answer.** `ExtractDeps` emits an `autogen` field computed from Lean's own
+predicates (`Name.isInternalDetail`, `isAuxRecursor`, `isNoConfusion`). Measured against
+the regex it replaced: they agreed on **barely half** the population — the regex **missed
+~2 300** (mostly `X.eq_1`, whose name carries no leading underscore) and **over-claimed
+~2 700** (`ctorIdx`, `noConfusionType`, `sizeOf_spec`).
+
+Lean's three PUBLIC predicates do not reach the reserved-suffix residue, and
+`isReservedName` is `private opaque` so it cannot be called. `validate_helpers.autogen_index`
+adds a supplement for those suffixes **guarded structurally** — the parent (or grandparent,
+for `X.mk.injEq`) must have `kind` `inductive` or `structure`, read from `lean_deps.json`.
+A bare suffix match would misclassify an author-written `Foo.injEq`.
+
+Totals: Lean predicates alone 4 948; with the guarded supplement **7 236**. Project
+author-written declarations: **33 221**. `atlas_view.py` now consumes the flag; the atlas
+rebuilds identically (432 obstructions), so this is a correctness fix with no behaviour
+change — the safest possible outcome for a classifier swap.
+
+⚠️ **Cold vs warm re-extraction, measured 2026-08-06.** Editing `ExtractDeps.lean`
+invalidates the per-decl JSON cache (its pin hashes that file), so this was the COLD path:
+**23 min 14 s**, against **3 min 14 s** warm. Budget accordingly — any future `ExtractDeps`
+edit pays the cold cost.
 
 **H2 — a proposed "fix" that was WRONG, recorded so it is not retried.** Sourcing reachability
 from `lean_deps.json` looked strictly better (ground truth from the real build). It **broke the

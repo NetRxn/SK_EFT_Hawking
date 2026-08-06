@@ -234,3 +234,87 @@ def unresolved_aristotle_keys() -> list[str]:
     full = {d.get("name", "") for d in load_lean_deps()}
     short = {n.rsplit(".", 1)[-1] for n in full if n}
     return sorted(k for k in ARISTOTLE_THEOREMS if k not in short and k not in full)
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# Compiler-generated vs author-written declarations
+# ═══════════════════════════════════════════════════════════════════════
+
+#: Suffixes Lean reserves for declarations it generates alongside an inductive or
+#: structure. Lean's own `isReservedName` is `private opaque`, so it cannot be called
+#: from `ExtractDeps`; these are the residue its three PUBLIC predicates
+#: (`Name.isInternalDetail`, `isAuxRecursor`, `isNoConfusion`) do not reach.
+#:
+#: ⚠️ Never matched on the name alone — `_autogen_supplement` requires the PARENT to be
+#: an `inductive` or `structure`, which is read from `lean_deps.json`'s `kind`. A bare
+#: suffix match would classify an author-written `Foo.injEq` as generated.
+#: The first group is the residue Lean's public predicates do NOT reach. The second is
+#: redundant with them in production (verified: `casesOn` 580/580, `recOn` 577/577,
+#: `noConfusion` 923/923 all carry `autogen`) and is listed anyway so this lookup is
+#: SELF-SUFFICIENT — it then also classifies correctly against a `lean_deps.json` that
+#: predates the `autogen` field, rather than silently returning "author-written" for
+#: every eliminator in the tree.
+_RESERVED_GENERATED_SUFFIXES = (
+    # not reached by isInternalDetail / isAuxRecursor / isNoConfusion
+    "noConfusionType", "ctorIdx", "toCtorIdx", "sizeOf_spec", "eq_def", "injEq",
+    # reached by Lean in production; kept for self-sufficiency
+    "casesOn", "recOn", "brecOn", "below", "ibelow", "binductionOn", "noConfusion",
+)
+
+
+def _is_internal_detail(name: str) -> bool:
+    """Faithful port of Lean's `Name.isInternalDetail` (Lean/Data/Name.lean:147).
+
+    ⚠️ This is NOT a heuristic dressed as one. `isInternalDetail` is defined in Lean as a
+    predicate ON THE NAME — `_`-prefixed, or `eq_` / `match_` / `proof_` / `omega_`
+    followed only by digits and underscores, or a numeric component. Reproducing that
+    definition is reproducing Lean, and it lets this lookup classify a record that has no
+    `autogen` field. The parts of the classification that are NOT name-based
+    (`isAuxRecursor`, `isNoConfusion`) are exactly the parts that require the field.
+    """
+    for comp in name.split("."):
+        if comp.startswith("_") or comp.isdigit():
+            return True
+        for pre in ("eq_", "match_", "proof_", "omega_"):
+            if comp.startswith(pre):
+                rest = comp[len(pre):]
+                if rest and all(c.isdigit() or c == "_" for c in rest):
+                    return True
+    return False
+
+
+def autogen_index(records) -> dict:
+    """`{declaration name: True/False}` — is it COMPILER-GENERATED?
+
+    Primary source is the `autogen` field `ExtractDeps` emits, computed from Lean's own
+    predicates. Measured against the name-pattern regex this replaces: the two agreed on
+    barely half the population — the regex MISSED ~2 300 (mostly `X.eq_1`, whose name
+    carries no leading underscore) and OVER-CLAIMED ~2 700. Every count that filtered on
+    that regex inherited both errors.
+
+    Adds the structurally-guarded suffix supplement described above (~2 300 more).
+    Build it ONCE per `lean_deps` load and pass it around; it needs the whole record set
+    to resolve parents.
+    """
+    kind = {r["name"]: r.get("kind") for r in records if r.get("name")}
+
+    def supplement(name: str) -> bool:
+        if _is_internal_detail(name):
+            return True
+        for suf in _RESERVED_GENERATED_SUFFIXES:
+            if not name.endswith("." + suf):
+                continue
+            parent = name[: -(len(suf) + 1)]
+            if kind.get(parent) in ("inductive", "structure"):
+                return True
+            # `X.mk.injEq`, `X.ctor.sizeOf_spec` — the TYPE is the grandparent.
+            if kind.get(parent.rsplit(".", 1)[0]) in ("inductive", "structure"):
+                return True
+        return False
+
+    out = {}
+    for r in records:
+        n = r.get("name")
+        if n:
+            out[n] = bool(r.get("autogen")) or supplement(n)
+    return out

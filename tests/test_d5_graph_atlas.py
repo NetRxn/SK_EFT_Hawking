@@ -504,7 +504,20 @@ class TestInferBundleFromTextIsActuallyTested:
 def build_graph_atlas_is_obstruction(rec):
     """Reach the production predicate through its owning module."""
     import atlas_view
-    return atlas_view._is_obstruction(rec)
+    # Exercise the PRODUCTION classification path, not a stand-in for it.
+    #
+    # A real record carries `autogen` from ExtractDeps (Lean's own predicates), and the
+    # reserved-suffix residue Lean's public predicates miss (`ctorIdx`,
+    # `noConfusionType`, `sizeOf_spec`) is resolved by `autogen_index`, which needs the
+    # PARENT's kind. So build the minimal corpus that gives it one: the declaration plus
+    # its parent as an inductive — which is what the tree actually looks like.
+    import sys as _sys
+    _sys.path.insert(0, str(SK_ROOT / "scripts"))
+    from validate_helpers import autogen_index  # noqa: E402
+    name = rec.get("name", "")
+    parent = name.rsplit(".", 1)[0] if "." in name else name
+    corpus = [rec, {"name": parent, "kind": "inductive"}]
+    return atlas_view._is_obstruction(rec, autogen_index(corpus))
 
 
 class TestAutogenIsNotAnObstruction:

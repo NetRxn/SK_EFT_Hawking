@@ -241,36 +241,63 @@ def _extract_prose_lean_candidates(tex_source: str) -> list:
     no path separators or file suffixes, not ALL-CAPS (Python registry
     constants), not an MCP tool name (``lean_*``), not a dated doc-tag,
     length ≥ 4, no leading/trailing underscore.
+
+    ⚠️ Kept as the SHAPE-FILTERED view for callers that want "things that look like Lean
+    names" (`readiness_gates` Gate 5). The COVERAGE CHECK does not use it — it resolves
+    `_prose_verbatim_tokens` first and applies the shape filter only to what fails.
     """
-    out = []
+    return [(t, o) for t, o in _prose_verbatim_tokens(tex_source)
+            if _prose_token_is_reportable(t)]
+
+
+def _prose_verbatim_tokens(tex_source: str) -> list:
+    """EVERY token in a verbatim span — unescaped and stripped, nothing else.
+
+    No judgement here, deliberately. `check_prose_theorem_reference_coverage` RESOLVES
+    each token against the name index first, and only a token that fails to resolve is
+    then passed through `_prose_token_is_reportable`. Filtering before resolving can
+    drop a real reference before anyone looks at it.
+    """
     spans = [(m.group(1), m.start())
              for m in _prose_verbatim_re(tex_source).finditer(tex_source)]
     spans += [(m.group("body"), m.start())
               for m in _PROSE_VERB_RE.finditer(tex_source)]
+    out = []
     for raw, start in spans:
         tok = _PROSE_UNESCAPE_RE.sub(r"\1", raw).strip()
-        if len(tok) < 4:
-            continue
-        if "_" not in tok and "." not in tok:
-            continue
-        if "/" in tok or "\\" in tok or any(c.isspace() for c in tok):
-            continue
-        if tok.endswith(_PROSE_FILE_SUFFIXES):
-            continue
-        if tok.startswith(("src.", "tests.", "scripts.", "docs.")):
-            continue
-        if tok.startswith("lean_"):  # lean-lsp MCP tool names (I3 §tooling)
-            continue
-        if tok.endswith("_") or tok.startswith("_"):
-            continue
-        if not _PROSE_IDENT_RE.match(tok):
-            continue
-        if tok.replace("_", "").replace(".", "").isupper():
-            continue  # CITATION_REGISTRY-style Python constants
-        if _PROSE_DOC_TAG_RE.search(tok):
-            continue  # memory-note / working-doc dated tags
-        out.append((tok, start))
+        if tok:
+            out.append((tok, start))
     return out
+
+
+def _prose_token_is_reportable(tok: str) -> bool:
+    """Is an UNRESOLVED token worth a human's attention, or is it ordinary prose?
+
+    ⚠️ Pure judgement — run it ONLY on tokens that already failed to resolve. Applied
+    earlier it becomes a filter on the population, and a mis-shaped rule then silently
+    removes real references from the count instead of merely quieting the report.
+    """
+    if len(tok) < 4:
+        return False
+    if "_" not in tok and "." not in tok:
+        return False
+    if "/" in tok or "\\" in tok or any(c.isspace() for c in tok):
+        return False
+    if tok.endswith(_PROSE_FILE_SUFFIXES):
+        return False
+    if tok.startswith(("src.", "tests.", "scripts.", "docs.")):
+        return False
+    if tok.startswith("lean_"):  # lean-lsp MCP tool names (I3 §tooling)
+        return False
+    if tok.endswith("_") or tok.startswith("_"):
+        return False
+    if not _PROSE_IDENT_RE.match(tok):
+        return False
+    if tok.replace("_", "").replace(".", "").isupper():
+        return False  # CITATION_REGISTRY-style Python constants
+    if _PROSE_DOC_TAG_RE.search(tok):
+        return False  # memory-note / working-doc dated tags
+    return True
 
 
 _LEAN_NAME_INDEX_CACHE: Optional[dict] = None
@@ -455,7 +482,7 @@ def _physlib_declares(short: str) -> bool:
     return re.search(pat, _PHYSLIB_SOURCE_CACHE) is not None
 
 
-def _resolve_prose_ref(token: str, index: dict) -> str:
+def _resolve_prose_ref(token: str, index: dict, deep: bool = True) -> str:
     """Resolve a candidate token against the Lean name index.
 
     Returns one of:
@@ -499,6 +526,14 @@ def _resolve_prose_ref(token: str, index: dict) -> str:
                     or mod.endswith(f".{head}")):
                 return "OK"
         return "DRIFTED"
+    if not deep:
+        # `deep=False` stops before the two SOURCE-SCANNING tiers. Each is a substring
+        # search over the whole concatenated Lean / PhysLib source, so running them for
+        # every token in every verbatim span costs minutes: 2 568 of 5 384 tokens reach
+        # this point, and most are ordinary prose. Callers resolve cheaply first and
+        # only come back with `deep=True` for a token that both failed the cheap tiers
+        # AND looks like an identifier.
+        return "UNRESOLVED_SHALLOW"
     if _lean_source_declares(short):
         return "PRIVATE"
     if _physlib_declares(short):
@@ -588,19 +623,34 @@ def check_prose_theorem_reference_coverage() -> CheckResult:
             continue
         n_bundles += 1
         source = tex.read_text()
-        cands = _extract_prose_lean_candidates(source)
-        # Collapse to per-token occurrence lists
+        # ⚠️ RESOLVE FIRST, JUDGE SECOND. Every token in a verbatim span is resolved
+        # against the name index; the shape filter runs only on what fails to resolve,
+        # to decide whether an unresolved token is a drifted reference or ordinary
+        # prose. Filtering first makes the filter a gate on the POPULATION, where a
+        # mis-shaped rule removes real references from the count rather than merely
+        # quieting a report — and a population that silently shrinks is this suite's
+        # signature defect.
         by_token: dict = {}
-        for tok, off in cands:
+        for tok, off in _prose_verbatim_tokens(source):
             by_token.setdefault(tok, []).append(off)
-        n_candidates += len(by_token)
 
         for tok, offsets in sorted(by_token.items()):
             if tok in _PROSE_REF_ALLOWLIST:
+                n_candidates += 1
                 continue
+            verdict = _resolve_prose_ref(tok, index, deep=False)
+            if verdict in ("OK", "MATHLIB", "PRIVATE", "PHYSLIB"):
+                n_candidates += 1      # a resolved token IS a reference, whatever its shape
+                continue
+            if not _prose_token_is_reportable(tok):
+                continue               # unresolved AND not identifier-shaped: prose
+            # Identifier-shaped and unresolved by the cheap tiers — now it is worth the
+            # source scan.
             verdict = _resolve_prose_ref(tok, index)
             if verdict in ("OK", "MATHLIB", "PRIVATE", "PHYSLIB"):
+                n_candidates += 1
                 continue
+            n_candidates += 1
             if verdict == "DRIFTED":
                 n_drift += 1
                 details.append(Detail(
@@ -659,15 +709,23 @@ def check_prose_theorem_reference_coverage() -> CheckResult:
         legacy_drafts += 1
         source = tex.read_text()
         by_token = {}
-        for tok, off in _extract_prose_lean_candidates(source):
+        for tok, off in _prose_verbatim_tokens(source):   # resolve first — see above
             by_token.setdefault(tok, []).append(off)
-        legacy_cand += len(by_token)
         for tok, offsets in sorted(by_token.items()):
             if tok in _PROSE_REF_ALLOWLIST:
+                legacy_cand += 1
+                continue
+            verdict = _resolve_prose_ref(tok, index, deep=False)
+            if verdict in ("OK", "MATHLIB", "PRIVATE", "PHYSLIB", "DRIFTED"):
+                legacy_cand += 1
+                continue
+            if not _prose_token_is_reportable(tok):
                 continue
             verdict = _resolve_prose_ref(tok, index)
             if verdict in ("OK", "MATHLIB", "PRIVATE", "PHYSLIB", "DRIFTED"):
+                legacy_cand += 1
                 continue
+            legacy_cand += 1
             if all(_prose_occurrence_disclaimed(source, off) for off in offsets):
                 continue
             legacy_fail += 1

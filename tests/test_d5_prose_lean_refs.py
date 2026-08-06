@@ -62,7 +62,7 @@ class TestProseTheoremReferenceCoverage:
         """SILENT ON CORRECT DATA."""
         _index(monkeypatch)
         _bundle(tmp_path, monkeypatch, "D1", r"See \texttt{real_theorem}.")
-        monkeypatch.setattr(plr, "_resolve_prose_ref", lambda t, i: "OK")
+        monkeypatch.setattr(plr, "_resolve_prose_ref", lambda t, i, deep=True: "OK")
         r = plr.check_prose_theorem_reference_coverage()
         assert r.passed is True, [(d.name, d.message) for d in r.details if not d.passed]
 
@@ -71,7 +71,7 @@ class TestProseTheoremReferenceCoverage:
         could not have: its check-level tests only ever run against a compliant tree."""
         _index(monkeypatch)
         _bundle(tmp_path, monkeypatch, "D1", r"See \texttt{ghost_theorem}.")
-        monkeypatch.setattr(plr, "_resolve_prose_ref", lambda t, i: "ABSENT")
+        monkeypatch.setattr(plr, "_resolve_prose_ref", lambda t, i, deep=True: "ABSENT")
         r = plr.check_prose_theorem_reference_coverage()
         assert r.passed is False, (
             "an unresolvable bundle-draft reference did not fail the check — the "
@@ -84,7 +84,7 @@ class TestProseTheoremReferenceCoverage:
         _index(monkeypatch)
         _bundle(tmp_path, monkeypatch, "D1",
                 r"The theorem \texttt{ghost_theorem} was renamed in Phase 6.")
-        monkeypatch.setattr(plr, "_resolve_prose_ref", lambda t, i: "ABSENT")
+        monkeypatch.setattr(plr, "_resolve_prose_ref", lambda t, i, deep=True: "ABSENT")
         assert plr.check_prose_theorem_reference_coverage().passed is True
 
     def test_the_exemption_requires_EVERY_occurrence_to_be_disclaimed(
@@ -102,7 +102,7 @@ class TestProseTheoremReferenceCoverage:
                 + r"We rely on \texttt{ghost_theorem} for the bound.")
         assert len(filler) > 2 * plr._PROSE_DISCLAIMER_WINDOW
         _bundle(tmp_path, monkeypatch, "D1", body)
-        monkeypatch.setattr(plr, "_resolve_prose_ref", lambda t, i: "ABSENT")
+        monkeypatch.setattr(plr, "_resolve_prose_ref", lambda t, i, deep=True: "ABSENT")
         assert plr.check_prose_theorem_reference_coverage().passed is False, (
             "a BARE occurrence was excused by a disclaimed one elsewhere in the same "
             "draft — the exemption must require every occurrence")
@@ -112,7 +112,7 @@ class TestProseTheoremReferenceCoverage:
         a phantom. Hard-failing it would conflate the two."""
         _index(monkeypatch)
         _bundle(tmp_path, monkeypatch, "D1", r"See \texttt{Other.real_theorem}.")
-        monkeypatch.setattr(plr, "_resolve_prose_ref", lambda t, i: "DRIFTED")
+        monkeypatch.setattr(plr, "_resolve_prose_ref", lambda t, i, deep=True: "DRIFTED")
         r = plr.check_prose_theorem_reference_coverage()
         assert r.passed is True
         assert any(d.name.startswith("drifted:") and d.warning for d in r.details)
@@ -122,7 +122,7 @@ class TestProseTheoremReferenceCoverage:
         own comment, and an invisible waiver is how that cap gets exceeded."""
         _index(monkeypatch)
         _bundle(tmp_path, monkeypatch, "I1", r"See \texttt{gap_solution_bounded}.")
-        monkeypatch.setattr(plr, "_resolve_prose_ref", lambda t, i: "ABSENT")
+        monkeypatch.setattr(plr, "_resolve_prose_ref", lambda t, i, deep=True: "ABSENT")
         r = plr.check_prose_theorem_reference_coverage()
         assert r.passed is True
         assert any(d.name.startswith("waived:I1:") and d.warning for d in r.details), (
@@ -142,7 +142,7 @@ class TestProseTheoremReferenceCoverage:
         (root / "paper9_legacy").mkdir(parents=True)
         (root / "paper9_legacy" / "paper_draft.tex").write_text(
             r"We rely on \texttt{ghost\_theorem} for the bound.")
-        monkeypatch.setattr(plr, "_resolve_prose_ref", lambda t, i: "ABSENT")
+        monkeypatch.setattr(plr, "_resolve_prose_ref", lambda t, i, deep=True: "ABSENT")
         monkeypatch.setattr(plr, "_prose_occurrence_disclaimed", lambda s, o: False)
         r = plr.check_prose_theorem_reference_coverage()
         assert any(d.name == "legacy:paper9_legacy" for d in r.details), (
@@ -158,7 +158,7 @@ class TestProseTheoremReferenceCoverage:
         (root / "paper9_legacy").mkdir(parents=True)
         (root / "paper9_legacy" / "paper_draft.tex").write_text(
             r"We rely on \texttt{ghost\_theorem} for the bound.")
-        monkeypatch.setattr(plr, "_resolve_prose_ref", lambda t, i: "ABSENT")
+        monkeypatch.setattr(plr, "_resolve_prose_ref", lambda t, i, deep=True: "ABSENT")
         monkeypatch.setattr(plr, "_prose_occurrence_disclaimed", lambda s, o: False)
         from src.core import constants
         monkeypatch.setattr(constants, "LEGACY_DRAFT_UNRESOLVED_REF_CEILING", 0)
@@ -178,7 +178,7 @@ class TestProseTheoremReferenceCoverage:
         (root / "paper9_legacy").mkdir(parents=True)
         (root / "paper9_legacy" / "paper_draft.tex").write_text(
             r"We rely on \texttt{ghost\_theorem} for the bound.")
-        monkeypatch.setattr(plr, "_resolve_prose_ref", lambda t, i: "ABSENT")
+        monkeypatch.setattr(plr, "_resolve_prose_ref", lambda t, i, deep=True: "ABSENT")
         monkeypatch.setattr(plr, "_prose_occurrence_disclaimed", lambda s, o: False)
         from src.core import constants
         monkeypatch.setattr(constants, "LEGACY_DRAFT_UNRESOLVED_REF_CEILING", 1)

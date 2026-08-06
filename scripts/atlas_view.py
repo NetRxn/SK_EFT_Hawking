@@ -85,12 +85,19 @@ def _is_kernel_pure(rec: dict) -> bool:
 #: apparatus the no-go argument is about, not the argument.
 _CLAIM_KINDS = frozenset({"theorem", "lemma", "example"})
 
-_AUTOGEN_RE = re.compile(
-    r"\.(casesOn|recOn|rec|ctorIdx|toCtorIdx|match_\d[\d_]*|proof_\d[\d_]*|noConfusion\w*|below|"
-    r"ibelow|brecOn|binductionOn|sizeOf\w*|injEq|eq_def)\b|\.mk\.(inj|injEq|sizeOf\w*)\b|\._(sunfold|eq_\d[\d_]*|proof_\d[\d_]*)")
+# Compiler-generated declarations come from `lean_deps.json`'s `autogen` field, which
+# `ExtractDeps` computes with Lean's own predicates. A name-pattern regex used to live
+# here; measured against Lean it agreed on barely half the population, MISSING ~2 300
+# (mostly `X.eq_1`, whose name carries no leading underscore) and OVER-CLAIMING ~2 700.
+# `validate_helpers.autogen_index` builds the lookup, including the structurally-guarded
+# supplement for the reserved suffixes Lean's public predicates do not reach.
+#: Populated per `build_atlas` call from THAT call's records. `_is_obstruction` takes it
+#: as an ARGUMENT rather than reading this — a classifier that silently depends on
+#: module-global state gives a caller the wrong answer with no signal.
+_AUTOGEN: dict = {}
 
 
-def _is_obstruction(rec: dict) -> bool:
+def _is_obstruction(rec: dict, autogen: dict | None = None) -> bool:
     # ⚠️ AUTO-GENERATED DECLARATIONS ARE NEVER OBSTRUCTIONS (2026-08-05, PR-review
     # pass 2, R6-M1). Both tests below match against a FULLY QUALIFIED name, so a
     # declaration inside e.g. `SKEFTHawking.DarkEnergyObstructionPrinciple` matched
@@ -108,7 +115,11 @@ def _is_obstruction(rec: dict) -> bool:
     # left classified: whether "lives in `BCJNoGo`" should itself imply OBSTRUCTION
     # is a real design question, and answering it by editing a regex would be
     # deciding it silently. Filed for an explicit call.
-    if _AUTOGEN_RE.search(rec.get("name", "")):
+    # Primary signal is the record's OWN `autogen` field (emitted by ExtractDeps from
+    # Lean's predicates), so a single record is self-describing. `autogen` supplies the
+    # structurally-guarded supplement, which needs the whole corpus to resolve parents.
+    name = rec.get("name", "")
+    if rec.get("autogen") or (autogen or _AUTOGEN).get(name, False):
         return False
 
     # ⚠️ NAMESPACE MATCHES CLASSIFY ONLY CLAIM-BEARING KINDS (2026-08-05, operator
@@ -139,7 +150,7 @@ def _is_obstruction(rec: dict) -> bool:
 
 def classify_theorem(rec: dict) -> tuple[str, str]:
     """Return ``(atlas_kind, atlas_status)`` for a theorem record."""
-    kind = "OBSTRUCTION" if _is_obstruction(rec) else "TRUE"
+    kind = "OBSTRUCTION" if _is_obstruction(rec, _AUTOGEN) else "TRUE"
     if _genuine_project_axioms(rec):
         status = "AXIOM_TAINTED"   # genuine project axiom — atlas_integrity cross-refs AXIOM_METADATA
     elif _has_sorry(rec):
@@ -173,6 +184,13 @@ _CLOSED_HYP_STATUSES = ("DISCHARGED", "SUPERSEDED")
 def build_atlas(lean_deps: list[dict], hyp_registry: dict | None = None,
                 axiom_metadata: dict | None = None) -> dict:
     """Compute the derived atlas view. Pure given its inputs (registries default to the project's)."""
+    # Autogen lookup is rebuilt per call from THESE records, so the function stays pure
+    # given its inputs — a module-level cache would leak one caller's corpus into another's.
+    global _AUTOGEN
+    sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
+    from validate_helpers import autogen_index  # noqa: E402
+    _AUTOGEN = autogen_index(lean_deps)
+
     if hyp_registry is None or axiom_metadata is None:
         sys.path.insert(0, str(PROJECT_ROOT))
         from src.core.constants import HYPOTHESIS_REGISTRY, AXIOM_METADATA  # noqa: E402
