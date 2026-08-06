@@ -110,9 +110,9 @@ C5's `citation_bibkey_form_matches_metadata` (1–2 h, and it catches two named 
 | R4-I3 | the 14 unresolved `ARISTOTLE_THEOREMS` keys still launder into `all_lean_names` | ✅ `b4a2d367` |
 | R4-I4 | `tracked_hypotheses_fresh` bare-`except` fail-open | ✅ `0077714a` |
 | R4-I5 | `nogo_substrate_integrity`: empty-backing free pass, dead `sorryAx` conjunct, `native_decide` stripped | ✅ `0077714a` |
-| R4-I6 | two advertised `formula_grounding` legs are dead | ⬜ open |
+| R4-I6 | two advertised `formula_grounding` legs are dead | ❌ **NOT REPRODUCED** (pass 2, R4) — both legs fire on production seeds. Residual is a 2-of-522 grounding-kind population. Marked *corrected*, not closed. |
 | R4-I7 | the three freshness regenerators cannot fail on staleness | ✅ `1a7f016d` |
-| R4-I8 | `readiness_verdicts_agree`'s reverse leg is unreachable | ⬜ open |
+| R4-I8 | `readiness_verdicts_agree`'s reverse leg is unreachable | ✅ **RESOLVED 2026-08-05** (`f53765a4`) — and the diagnosis was wrong: the leg RUNS (1 GREEN bundle cross-checked); only its disagreement *branch* is unreachable, because `5228ed6d` made the producer gate-aware. Leg kept as a regression guard; reverse coverage now reported; producer invariant asserted at unit level. |
 | R4-I9 | `atlas_integrity` `SystemExit` aborts the suite | ✅ `4ca3ff4b` |
 | R4-I10 | `notebook_exec` skip-cache fingerprint too narrow | ✅ `dd195033` |
 | R4-I11 | six `--strict` legs have no automated caller | ✅ `2577fdbc` — new `gate_precheck submission` stage |
@@ -183,7 +183,7 @@ thereby introduces a third one. Re-filed on that basis; **⬜ open**.
 
 | id | finding | status |
 |---|---|---|
-| R5-I1 | Invariant #10 has no enforcement and **22 live violations** | 🔧 measured: 22 confirmed, in 4 files, all `theorem` |
+| R5-I1 | Invariant #10 has no enforcement and **22 live violations** | ✅ **ENFORCED 2026-08-05** (`2512c36e`) — `MAXHEARTBEATS_PROOF_BODY_CEILING = 22`, zero headroom; the test that PINNED the gap was replaced by its inverse. The tactic-bodied-`def` limb is documented as not yet covered. |
 | R5-I2 | notebook stored-output correctness covers 2 of 91 | ⬜ ADR-010 (operator decision (b)) |
 | R5-I3 | LaTeX gate opt-in **and** no BibTeX, so undefined citations are undetected | ✅ half (`2577fdbc`); ⬜ **BibTeX half open** |
 | R5-I4 | no scan for LLM artifacts / placeholder strings in TeX | ⬜ open |
@@ -194,7 +194,7 @@ thereby introduces a third one. Re-filed on that basis; **⬜ open**.
 
 | id | finding | status |
 |---|---|---|
-| R6-M1 | atlas negative frontier mis-derived; CLI and web export unfiltered; the digest's filter untested | 🔧 measured — **29 on the frontier**, from 3 modules |
+| R6-M1 | atlas negative frontier mis-derived; CLI and web export unfiltered; the digest's filter untested | 🔧 **PARTIAL 2026-08-05** — 68 auto-generated declarations (`.casesOn`/`.ctorIdx`/`match_N_M`/`mk.inj`) removed from OBSTRUCTION (577→507, `8027e522`+`5993a454`). The namespace-vs-leaf **policy** (223 remaining: 134 theorem, 89 apparatus) is an operator decision — recommendation filed. |
 | R6-M2 | `NarrativeGrounding` is a change-detector for five historical overclaims | ⬜ open |
 | R6-M3 | numeric-claim protection is anchored regressions; captions stripped before scanning | ⬜ open |
 | R6-M4 | eleven tests assert data the test itself declared | ⬜ open |

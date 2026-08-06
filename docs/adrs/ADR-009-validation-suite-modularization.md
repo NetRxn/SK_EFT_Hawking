@@ -720,6 +720,10 @@ Identified during the read; explicitly **not** part of Phases 0–2.
    `WAVE_EXECUTION_PIPELINE.md:72` defines it (*"Checked before arXiv/journal submission, not at
    Stage 1"*) and Invariant #12 (`:685`) calls the flag *"mandatory at the Paper Submission Gate"*. That
    no automated caller passes it is **by design**: it gates a submission decision, not a build.
+   ⚠️ **SUPERSEDED 2026-08-05:** `--strict` now HAS an automated caller —
+   `scripts/gate_precheck.py submission` runs `validate.py --strict --force-latex`. The
+   disposition (declined as filed) stands; the sub-clause "no automated caller" does not.
+   Reviewer R3 found the same sentence restated in five live sites.
 
    **(c) The submission gate IS collected and mechanized — as the eleven ReadinessGates**, evaluated by
    `scripts/readiness_gates.py` and surfaced by `readiness_submission_gate`, which §Deferred item 2
@@ -928,3 +932,62 @@ document states it.
   that recorded the hole as `PASS <-- missed`.
 - Commits `edd9878d`, `221cb6c9`, `ad844e42`, `b6830c7d`, `5073276a`, `055083ad`, `bcbeee6b` — the
   inert-guard history motivating D5.
+
+---
+
+## Post-delivery addendum II — change-scoping and PR-review pass 2 (2026-08-05)
+
+Work landed after the §Deferred set closed. Recorded here because the ADR is the entry point for
+this subsystem, and a reader who stops at "8 of 8 dispositioned" would otherwise meet
+`_memo.py`, `CheckResult.measured` and `--ci` with no account of why they exist.
+
+### What landed
+
+| | |
+|---|---|
+| `scripts/validation/_memo.py` | input-fingerprint memo for the two expensive Lean checks. `axiom_closure_allowlist` **171.6 s → 0.1 s** when the substrate has not moved. |
+| `paper_latex_compiles` | per-draft content-hash cache, and **the slow gate deleted**. It had returned `passed=True` with `SKIPPED (slow)` by default — which is why D3's two fatal LaTeX errors were invisible to a default run. It is now a **third default red**, correctly. |
+| `CheckResult.measured` | additive field distinguishing "measured and passed" from "could not measure". |
+| `--ci` + coverage floor | unattended-runner mode; the floor counts **measurements, not invocations**. |
+| Full suite | **317.8 s → 134.2 s**, with the LaTeX compile now actually running. |
+
+### Why `measured` is a separate field and not a third `passed` state
+
+§Deferred item 4 **declined** an `UNEVALUATED` value of `passed`, because `passed` is D2 contract
+item 5 — read by the `--json` payload, `gate_precheck.py` and `pre-commit-sync.sh`. That
+objection is specific to changing `passed`'s domain. An **additive field defaulting to `True`**
+leaves every existing reader correct, so it does not attract the same objection. Item 4's
+disposition stands.
+
+### What pass 2 found, and the lesson worth keeping
+
+Six reviewers ran against the whole branch. Verdicts: five YES-WITH-FIXES, **R4 NO**. The
+blockers were not pre-existing — they were the change-scoping code above, failing in this
+project's own signature way:
+
+* **`--ci`'s coverage floor could not fire.** `run_checks` writes a result for every registered
+  spec, so `n_ran` was identically `59 − 4 = 55` against a floor of 55. **Four** reviewers found
+  it independently. R2 identified why it was invisible: the zero-headroom test asserted
+  `CI_MIN_CHECKS_RUN == len(_CHECKS) - len(CI_SKIP)` — the definition of the quantity being
+  compared — so guard and test were jointly self-sealing.
+* **`_memo` cached a fail-open SKIP as a genuine PASS** and replayed it after the toolchain
+  returned. **Five** reviewers. The guard "only PASS is cached" was defeated by a category
+  error: *a fail-open SKIP is a PASS*.
+* **The tests written to satisfy QI-30's production-seeded criterion seeded the fingerprint
+  HELPERS**, never any check's key. Deleting an input from a live `key_fn` returned `24 passed`.
+
+> **The generalisable lesson.** All four guards policed *how the cache is used*; none audited
+> *whether the key spans the inputs*. Guarding at the wrong layer is indistinguishable from
+> guarding, right up until the measurement.
+
+Both registers are the detail: `docs/audits/2026-08-04-qa-qi-infrastructure/FINDINGS_REGISTER.md`
+(pass 1, 53 findings) and `docs/audits/2026-08-05-pr-review-2/FINDINGS_REGISTER_PASS2.md`
+(pass 2, six reviewer reports written to disk by the reviewers themselves — pass 1's lived only
+in the transcript and 53 findings were nearly lost).
+
+### Process finding against the review itself
+
+Six reviewers shared one working tree. R4 observed three check bodies stubbed to `passed=True`
+and `papers/D1/paper_draft.tex` truncated to zero bytes mid-run; R1 caught a leftover stub in
+`prose_lean_refs.py`. **Next pass: one worktree per reviewer**, and seeding reviewers must
+restore in a `finally`.
