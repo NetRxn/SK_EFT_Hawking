@@ -1,9 +1,7 @@
 """Prose → Lean name resolution — ADR-009 Phase 2.
 
-`prose_theorem_reference_coverage` (every `\\texttt{}` Lean reference in a bundle
-draft — **including references written through a preamble alias for `\\texttt`,
-which is how D8, D9 and paper14 write all of theirs** — resolves to a real
-declaration) and `theorem_name_embedded_citations`
+`prose_theorem_reference_coverage` (every verbatim Lean reference in a bundle
+draft resolves to a real declaration) and `theorem_name_embedded_citations`
 (a declaration name embedding author+year has a matching bibliography entry).
 
 Split from `papers_prose`; see that module's header for the seam. This half owns
@@ -21,6 +19,17 @@ Resolution is deliberately tiered — project declaration, Mathlib namespace,
 `private` decl found in source, then the resolved **PhysLib** Lake dependency.
 Dropping the PhysLib tier turns every correct PhysLib reference into a false FAIL,
 which is what happened to D10 the moment it entered `BUNDLE_CODES`.
+
+⚠️ **"Verbatim" means THREE syntactic forms, and the corpus uses all three.**
+`\\texttt{}`; a preamble one-argument alias for it (D8 and D9 write every
+reference as `\\lean{}`); and `\\verb|...|` (D6 writes 235 of those against 25
+`\\texttt`). Matching only the first left **564 references beyond the check while
+it reported PASS** on a candidate count that read as thorough. Each form was
+found separately, on 2026-08-05, during the ADR-010 measurement pass — the
+second while re-measuring un-homed modules, the third minutes later while
+re-measuring the D6/D9 overlap claim. If a fourth appears, it will be for the
+same reason: **the count of things scanned is not evidence that the population
+was reached.**
 
 Import rules as in every module here; `theorem_name_embedded_citations` reads
 `_cfg.STRICT_MODE` by attribute (H5). MOVED VERBATIM otherwise.
@@ -73,6 +82,16 @@ def _prose_verbatim_re(tex_source: str) -> re.Pattern:
     return re.compile(r"\\(?:" + "|".join(map(re.escape, names)) + r")\{([^{}]+)\}")
 
 
+# The THIRD verbatim form, and the one that hid the most. `\verb|name|` takes an
+# arbitrary delimiter rather than braces, so neither the `\texttt` regex nor the
+# alias regex above sees it. D6 writes **235** `\verb` spans against 25 `\texttt`
+# — roughly 90 % of its Lean references — and D2, L1 and L3 add more.
+# Found 2026-08-05 immediately after the `\lean{}` fix, while re-measuring the
+# audit's "D6 and D9 share 78 identical Lean theorems" claim: D6 appeared to name
+# only 9 declarations because its references are `\verb`.
+_PROSE_VERB_RE = re.compile(r"\\verb\*?(?P<d>[^A-Za-z0-9\s*])(?P<body>.*?)(?P=d)")
+
+
 _PROSE_UNESCAPE_RE = re.compile(r"\\([_\\&%$#{}~^])")
 _PROSE_IDENT_RE = re.compile(
     r"^[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)*$")
@@ -117,6 +136,12 @@ _PROSE_REF_ALLOWLIST = {
     "continuous_const", "zeta_spec", "ring_nf", "simp_rw",
     "exact_mod_cast", "decide_eq_true", "by_contra", "push_neg",
     "field_simp", "fin_cases",
+    # Surfaced 2026-08-05 when `\verb` spans became visible (D6 writes 235 of
+    # them). Both are bare Mathlib lemmas D6's own prose attributes to Mathlib;
+    # both VERIFIED present in the pinned source rather than taken on the prose's
+    # word — Mathlib/Analysis/SpecialFunctions/BinaryEntropy.lean:139 and
+    # Mathlib/Analysis/LocallyConvex/Separation.lean:197.
+    "binEntropy_lt_log_two", "geometric_hahn_banach_compact_closed",
     # project infrastructure identifiers (validate.py checks, cluster /
     # sentence-state schema fields) described in the I1 infrastructure
     # paper and the F flagship process section
@@ -169,9 +194,10 @@ _PROSE_REF_WAIVERS = {
 
 def _extract_prose_lean_candidates(tex_source: str) -> list:
     """Extract candidate Lean-identifier tokens from ``\\texttt{...}``
-    blocks — **and from any preamble one-argument alias for it**, e.g.
-    D8/D9's ``\\newcommand{\\lean}[1]{\\texttt{#1}}`` (unit-testable core
-    for CHECK 25).
+    blocks, **from any preamble one-argument alias for it** (D8/D9's
+    ``\\newcommand{\\lean}[1]{\\texttt{#1}}``), **and from ``\\verb`` spans**
+    (D6 writes 235 of those against 25 ``\\texttt``) — unit-testable core
+    for CHECK 25.
 
     Returns ``[(token, match_start_offset), ...]`` for tokens that pass
     the candidate filter: identifier-shaped, contains ``_`` or ``.``,
@@ -180,8 +206,12 @@ def _extract_prose_lean_candidates(tex_source: str) -> list:
     length ≥ 4, no leading/trailing underscore.
     """
     out = []
-    for m in _prose_verbatim_re(tex_source).finditer(tex_source):
-        tok = _PROSE_UNESCAPE_RE.sub(r"\1", m.group(1)).strip()
+    spans = [(m.group(1), m.start())
+             for m in _prose_verbatim_re(tex_source).finditer(tex_source)]
+    spans += [(m.group("body"), m.start())
+              for m in _PROSE_VERB_RE.finditer(tex_source)]
+    for raw, start in spans:
+        tok = _PROSE_UNESCAPE_RE.sub(r"\1", raw).strip()
         if len(tok) < 4:
             continue
         if "_" not in tok and "." not in tok:
@@ -202,7 +232,7 @@ def _extract_prose_lean_candidates(tex_source: str) -> list:
             continue  # CITATION_REGISTRY-style Python constants
         if _PROSE_DOC_TAG_RE.search(tok):
             continue  # memory-note / working-doc dated tags
-        out.append((tok, m.start()))
+        out.append((tok, start))
     return out
 
 
@@ -428,8 +458,9 @@ def _resolve_prose_ref(token: str, index: dict) -> str:
 
 
 @register_check("prose_theorem_reference_coverage",
-                "Bundle-draft \\texttt{} Lean references (and preamble aliases "
-                "for it, e.g. D8/D9's \\lean{}) resolve in lean_deps.json")
+                "Bundle-draft verbatim Lean references — \\texttt{}, preamble "
+                "aliases for it (D8/D9's \\lean{}), and \\verb (D6) — resolve "
+                "in lean_deps.json")
 def check_prose_theorem_reference_coverage() -> CheckResult:
     """Prevent the ``wen_adw_factor_6000`` failure class from the
     2026-06-05 external review: bundle prose naming a Lean declaration

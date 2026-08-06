@@ -241,6 +241,34 @@ class TestTexttExAliasesAreScanned:
             "an aliased reference was not extracted — the alias hole is back")
         assert "plain_ref" in toks, "literal \\texttt extraction regressed"
 
+    def test_verb_spans_become_candidates(self):
+        r"""The third form. `\verb|x|` takes an arbitrary delimiter, so neither the
+        `\texttt` regex nor the alias regex sees it."""
+        toks = {t for t, _o in plr._extract_prose_lean_candidates(
+            r"proves \verb|bbpsswRecurrence_gt| and \verb+endToEndFidelity.eq+ here")}
+        assert "bbpsswRecurrence_gt" in toks
+        assert "endToEndFidelity.eq" in toks, "a non-| \\verb delimiter was missed"
+
+    def test_verb_does_not_swallow_across_two_spans(self):
+        r"""A greedy `\verb` regex would match from the first delimiter to the LAST,
+        merging two references into one unparseable token and silently dropping both."""
+        toks = {t for t, _o in plr._extract_prose_lean_candidates(
+            r"\verb|first_ref| and text and \verb|second_ref|")}
+        assert toks == {"first_ref", "second_ref"}, toks
+
+    def test_the_LIVE_D6_draft_has_its_verb_refs_scanned(self):
+        r"""PRODUCTION-SEEDED (QI-30). D6 writes 235 `\verb` spans against 25
+        `\texttt`, so before this it contributed ~9 candidates and looked covered."""
+        tex = (SK_ROOT / "papers" / "D6" / "paper_draft.tex")
+        if not tex.is_file():                      # pragma: no cover - corpus in-repo
+            import pytest
+            pytest.skip("D6 draft absent")
+        toks = {t for t, _o in plr._extract_prose_lean_candidates(
+            tex.read_text(errors="replace"))}
+        assert len(toks) > 80, (
+            f"only {len(toks)} candidates extracted from D6, which carries ~235 "
+            f"\\verb sites — the \\verb hole has reopened")
+
     def test_the_LIVE_D9_draft_has_its_alias_refs_scanned(self):
         """PRODUCTION-SEEDED (QI-30). Asserted against the real `papers/D9/paper_draft.tex`,
         not a fixture — a fixture proves the regex works, not that the corpus is reached.
