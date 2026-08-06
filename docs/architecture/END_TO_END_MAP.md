@@ -196,8 +196,12 @@ Plane detail: [`../audits/2026-08-06-e2e-map/PLANE-lean.md`](../audits/2026-08-0
   ⚠️ **U** But the substance survives the correction: that assertion reads
   `PLACEHOLDER_TOTAL_COUNT == len(PLACEHOLDER_THEOREMS) == 26` — a tautology (`len(X) ==
   len(X)`) plus a hardcoded literal — and never reads `docs/counts.json`. Invariant #9
-  requires the registry to match `counts.json theorems_placeholder`. **To verify:** confirm
-  no check compares the two.
+  requires the registry to match `counts.json theorems_placeholder`.
+  ✅ **V** **Nothing compares them.** `theorems_placeholder` is *written* by
+  `update_counts.py:217` and *read* by `build_graph.py:2339` and
+  `update_inventory_index.py:152` — every consumer displays it; none checks it against
+  `PLACEHOLDER_TOTAL_COUNT`. The registry-completeness clause of Invariant #9 has no
+  enforcement anywhere.
 - ✅ **V** `tests/test_lean_integrity.py:172` uses `lean_dir.glob("*.lean")` — **not**
   `rglob` — so every module in a subdirectory is unscanned. Read directly. The same
   non-recursive-glob defect that `compute_lean_hash`'s docstring records having fixed
@@ -278,10 +282,21 @@ Schema: `docs/KNOWLEDGE_GRAPH.md`. Plane detail:
   is well-formed, and nothing in the system compares them.
 - ✅ **V** **`BACKED_BY.link_state` is hardcoded, and the pass meant to fix it never runs.**
   `build_graph.py:2667` emits `'link_state': 'resolved',  # enriched post-hoc by
-  last_modified pass`. Read directly. Combined with the verified inertness of the freshness
-  layer above — every node at epoch-zero — that enrichment pass demonstrably does not
-  execute, so **every** `BACKED_BY` edge claims `resolved` regardless of its real state.
-  The two findings compound: neither is visible from the other alone.
+  last_modified pass`. Read directly.
+  ❌ **X** *(author's error, caught on re-measurement)* This first said **every**
+  `BACKED_BY` edge therefore claims `resolved`. **Wrong.** Measured on a built graph:
+  `resolved` **1 927**, `missing_target` **217** — the extractor does derive
+  `missing_target` for unresolvable targets, so the `:2667` literal is one branch, not a
+  blanket. I read a hardcoded literal as the whole story without measuring the output.
+  ✅ **V** What survives, and is the real finding: the schema declares **five** link states
+  (`resolved` / `llm_verified_only` / `human_verified` / `stale` / `missing_target`) and
+  only **two** are ever produced. The three that encode *verification* — the entire point
+  of the field — are never emitted, because the enrichment pass that would set them belongs
+  to the freshness layer verified inert above.
+- ✅ **V** **`Sentence.verification` is never derived.** All **2 116** Sentence nodes carry
+  `verification: None`. The sentence layer is the declared ratification axis for human
+  verification (`sentence_kg_schema_delta.md` §3.4); it currently records no verification
+  state for any sentence in the project.
 - ✅ **V** **The gate roster and the per-paper verdict rule are each implemented twice.**
   Roster: `readiness_gates.GATES` vs `provenance_dashboard.py:5140` `GATE_DEFS`, whose own
   comment calls itself *"the canonical list of the 11 readiness gates"* — two things cannot
