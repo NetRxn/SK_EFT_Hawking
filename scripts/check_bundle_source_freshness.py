@@ -78,8 +78,19 @@ def _latest_source_mtime(source: str) -> datetime | None:
     return datetime.fromtimestamp(latest, timezone.utc)
 
 
-def check() -> list[dict]:
+def check(write_metadata: bool = False) -> list[dict]:
     """Run the freshness check across all bundle directories.
+
+    ⚠️ **PURE BY DEFAULT.** `write_metadata=False` means this never touches the tree.
+    A CHECK MUST NOT MUTATE THE ARTIFACT IT CHECKS: `bundle_metadata.json` is what the
+    dashboard and `LATE_PHASE6_ABSORPTION_PROTOCOL` read as the absorption trigger, so
+    a validate.py run (or a pytest run, which imports this) writing its own verdict
+    into it makes the instrument its own upstream. Verified 2026-08-05: forcing D1's
+    `freshness_stale` to a wrong value and calling `check()` silently rewrote the
+    tracked file. PR-review pass 3, R4.
+
+    `scripts/check_bundle_source_freshness.py` invoked as a CLI passes True, so the
+    dashboard-refresh capability is preserved and is now an explicit, named action.
 
     Returns a list of finding dicts, each:
       {
@@ -219,11 +230,12 @@ def check() -> list[dict]:
                 ),
             })
             # Set freshness_stale=true in metadata so dashboard reflects it
-            try:
-                md["freshness_stale"] = True
-                md_path.write_text(json.dumps(md, indent=2) + "\n")
-            except OSError:
-                pass
+            if write_metadata:
+                try:
+                    md["freshness_stale"] = True
+                    md_path.write_text(json.dumps(md, indent=2) + "\n")
+                except OSError:
+                    pass
         else:
             findings.append({
                 "bundle": bundle,
@@ -238,7 +250,7 @@ def check() -> list[dict]:
                 ),
             })
             # Clear stale flag if previously set
-            if md.get("freshness_stale"):
+            if write_metadata and md.get("freshness_stale"):
                 md["freshness_stale"] = False
                 try:
                     md_path.write_text(json.dumps(md, indent=2) + "\n")
@@ -251,7 +263,7 @@ def check() -> list[dict]:
 def main() -> int:
     """Standalone CLI: run the check, print findings, exit 0 always
     (advisory). Return non-zero only on hard errors."""
-    findings = check()
+    findings = check(write_metadata=True)
     if not findings:
         print("CHECK 22 (bundle_source_freshness): no bundle directories "
               "found; pre-Phase-7-execution state — skip.")

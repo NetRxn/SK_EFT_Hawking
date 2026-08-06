@@ -148,8 +148,30 @@ def check_parameter_provenance() -> CheckResult:
                               "All parameters human-verified — paper submission unblocked"))
 
     # --- 4. Consistency: provenance value matches actual constant ---
+    #
+    # ⚠️ This leg was BLIND TO A 10× ERROR IN ℏ until 2026-08-05 (PR-review pass 3,
+    # R4 CRITICAL, reproduced by the lead with a production-seeded mutation). Two
+    # independent narrowings composed:
+    #
+    #   (a) the denominator was `max(abs(actual), 1e-30)`, a divide-by-zero guard.
+    #       For any quantity SMALLER than 1e-30 it returns the floor, which silently
+    #       turns the RELATIVE test into an ABSOLUTE one. ℏ = 1.05e-34, so seeding
+    #       the registry with 1.054571817e-33 (ten times the constant) computed
+    #       rel_err = 9.49e-04 against a 1e-3 threshold and PASSED. The true relative
+    #       error is 9.0 — the guard was wrong by four orders of magnitude.
+    #       Measured tolerated drift before the fix: HBAR 9.48×, POLARITON_MASS 14.3×.
+    #
+    #   (b) `_lookup_provenance_value` returns None for 169 of 206 entries — no code
+    #       counterpart — and each was skipped in silence, so the success message
+    #       "All provenance values match code" described 37 comparisons, not 206.
+    #
+    # Pipeline Invariant #8 is the reason this check exists; both halves are now fixed:
+    # the comparison is genuinely relative, and the unresolvable population is counted,
+    # reported and RATCHETED so it can only shrink.
     mismatches = []
     null_values = []
+    unresolvable = []
+    compared = 0
     for prov_key, entry in PARAMETER_PROVENANCE.items():
         if entry['value'] is None:
             null_values.append(prov_key)
@@ -158,13 +180,46 @@ def check_parameter_provenance() -> CheckResult:
         # Look up actual value
         actual = _lookup_provenance_value(prov_key, EXPERIMENTS, ATOMS,
                                           POLARITON_PLATFORMS)
-        if actual is not None:
-            try:
-                rel_err = abs(float(actual) - float(entry['value'])) / max(abs(float(actual)), 1e-30)
-                if rel_err > 0.001:
-                    mismatches.append(f"{prov_key}: registry={entry['value']}, code={actual}")
-            except (TypeError, ValueError):
-                pass  # non-numeric (e.g., string params)
+        if actual is None:
+            unresolvable.append(prov_key)
+            continue
+        try:
+            a = float(actual)
+            r = float(entry['value'])
+        except (TypeError, ValueError):
+            unresolvable.append(prov_key)   # non-numeric (e.g. string params)
+            continue
+        compared += 1
+        # Genuinely relative. `a == 0` is the only case the old floor was defending
+        # against, and it is handled explicitly rather than by contaminating every
+        # small-magnitude comparison.
+        if a == 0.0:
+            if r != 0.0:
+                mismatches.append(f"{prov_key}: registry={r}, code=0")
+            continue
+        rel_err = abs(a - r) / abs(a)
+        if rel_err > 0.001:
+            mismatches.append(
+                f"{prov_key}: registry={r}, code={a} (rel_err={rel_err:.3g})")
+
+    from src.core.constants import PROVENANCE_UNRESOLVABLE_CEILING as _UNRES_CEIL
+    if len(unresolvable) > _UNRES_CEIL:
+        all_pass = False
+        details.append(Detail(
+            "value_coverage", False,
+            f"{len(unresolvable)} of {len(PARAMETER_PROVENANCE)} provenance entries have "
+            f"no comparable code value, above the frozen ceiling {_UNRES_CEIL}. A NEW "
+            f"un-comparable entry was added. Wire it to its constant, or raise "
+            f"PROVENANCE_UNRESOLVABLE_CEILING in src/core/constants.py with a stated "
+            f"reason in the same commit. Newest: {', '.join(sorted(unresolvable)[:3])}"))
+    else:
+        details.append(Detail(
+            "value_coverage", True,
+            f"{compared} of {len(PARAMETER_PROVENANCE)} provenance values compared "
+            f"against code; {len(unresolvable)} have no code counterpart "
+            f"(at or under the frozen ceiling {_UNRES_CEIL} — inherited debt, "
+            f"repair is ADR-010 scope)",
+            warning=bool(unresolvable)))
 
     if null_values:
         all_pass = False
@@ -181,7 +236,7 @@ def check_parameter_provenance() -> CheckResult:
         ))
     elif not null_values:
         details.append(Detail("value_consistency", True,
-                              "All provenance values match code"))
+                              f"all {compared} comparable provenance values match code"))
 
     # --- 5. Tier appropriateness ---
     tier_issues = []

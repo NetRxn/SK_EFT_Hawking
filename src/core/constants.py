@@ -1421,6 +1421,19 @@ ARISTOTLE_REGISTRY_UNRESOLVED_CEILING = 14
 #: ceiling net-removed two. The +218 newly-visible BUNDLE references all resolve.
 LEGACY_DRAFT_UNRESOLVED_REF_CEILING = 79
 
+#: Provenance entries with no comparable value in code (`_lookup_provenance_value`
+#: returns None, or the value is non-numeric). Frozen 2026-08-05 at the live count.
+#:
+#: Until this date these were skipped IN SILENCE, and the check's success message read
+#: "All provenance values match code" while describing 37 comparisons out of 206. The
+#: same commit fixed a divide-by-zero guard that had turned the relative comparison
+#: absolute below 1e-30 — a 10x error in HBAR passed (PR-review pass 3, R4 CRITICAL).
+#:
+#: A RATCHET, not advisory. Existing debt is frozen; a NEW un-comparable entry FAILS.
+#: **Lower this as entries are wired to their constants**; raising it needs a stated
+#: reason in the same commit.
+PROVENANCE_UNRESOLVABLE_CEILING = 169
+
 #: Registry bibitem titles that differ from their cached PDF's page-1 title by exactly
 #: one word (the check's HIGH-CONFIDENCE drift class). Frozen 2026-08-05 (audit QI-33).
 #:
