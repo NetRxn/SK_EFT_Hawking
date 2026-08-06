@@ -1015,8 +1015,9 @@ def check_bundle_registry_consistency() -> CheckResult:
 #:
 #: 21 = every bundle on disk, measured 2026-08-06, when the closure machinery shipped and
 #: no apexes had yet been declared. Declaration is gated on the operator's per-bundle
-#: full-context-review condition (ADR-010 §D5a), so this starts at the maximum by design.
-UNDECLARED_APEX_CEILING = 21
+#: full-context-review condition (ADR-010 §D5a), so this started at the maximum by design.
+#: 21 -> 20: D6 retrofitted 2026-08-06 (11 apexes; docs/audits/2026-08-06-d6-retrofit/).
+UNDECLARED_APEX_CEILING = 20
 
 
 @register_check(

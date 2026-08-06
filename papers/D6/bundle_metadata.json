@@ -26,5 +26,62 @@
     "NarrativeGrounding"
   ],
   "readiness": "YELLOW",
-  "readiness_last_computed": "2026-07-31"
+  "readiness_last_computed": "2026-07-31",
+  "apex_theorems": [
+    {
+      "name": "SKEFTHawking.FaultTolerance.GaugingQEC.wave_6v_1_substantive_closure",
+      "claims": "\u00a73 \u2014 Williamson-Yoder gauging-QEC: linear-polylog overhead, the quadratic-class falsifier, and the W=4 numerical witness, bundled",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.FaultTolerance.GaugingQEC.williamsonYoder_beats_quadratic_for_W_ge_two",
+      "claims": "\u00a73 \u2014 point-wise contrast: the W-Y protocol genuinely improves on the naive quadratic baseline",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.FaultTolerance.APMLdpcHashingBound.wave_6v_5_substantive_closure",
+      "claims": "\u00a74 \u2014 APM-LDPC: QuEra-Harvard-MIT rate above 1/2, the exactly-half falsifier, and the hashing-bound witness, bundled",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.FaultTolerance.APMLdpcHashingBound.apmLdpc_quEraHarvard_not_achievable_at_one_half_noise",
+      "claims": "\u00a74 (Wave 6v.5b) \u2014 falsifier at maximum-entropy noise: capacity vanishes, so no positive-rate code is achievable",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.FaultTolerance.APMLdpcHashingBound.apmLdpc_hashing_bound_at_zero_noise",
+      "claims": "\u00a74 (Wave 6v.5b) \u2014 the substantive Komoto-Kasai-form witness at p=0 in the Shannon-entropy predicate",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.FaultTolerance.ShorTGateCount.shor_ecc256_tgate_count_le",
+      "claims": "\u00a75 \u2014 the headline: a circuit within Google's ECC-256 Toffoli budget fits the corresponding T-gate budget after exact Toffoli->7T decomposition",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.FaultTolerance.ShorTGateCount.shor_ecc256_falls_within_megagate_envelope_at_1G",
+      "claims": "\u00a75 \u2014 both configurations sit inside the 10^9 T-gate FT-QC envelope with concrete headroom",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.FaultTolerance.ShorTGateCount.wave_6v_2_substantive_closure",
+      "claims": "\u00a75 \u2014 the ECC-256 T-gate budget, the envelope, and the qubit-T trade-off, bundled",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.FaultTolerance.WStateQFT.n_qubit_w_state_basis_strictly_smaller_than_full_hilbert",
+      "claims": "\u00a76 \u2014 the substantive separation: the W-state QFT measurement basis (n) is exponentially smaller than the full Hilbert basis (2^n)",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.FaultTolerance.WStateQFT.wState_basis_isCyclotomic_at_QCyc_sizes",
+      "claims": "\u00a76 (Wave 6v.6b) \u2014 the QFT basis is cyclotomic at the project's QCyc_n substrate sizes {5,8,16,40,80}",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.FaultTolerance.WStateQFT.wave_6v_6_substantive_closure",
+      "claims": "\u00a76 \u2014 separation, concrete witnesses, and the primitive-root cyclotomic witness, bundled",
+      "declared": "2026-08-06"
+    }
+  ]
 }
