@@ -259,6 +259,23 @@ Schema: `docs/KNOWLEDGE_GRAPH.md`. Plane detail:
   bundle directories — `D*`, `E*`, `F`, `I*`, `L*` — are skipped entirely. Read directly.
   This is the same `startswith('paper')` filter that was removed from `cluster_detect.py`
   and the freshness guard earlier on this branch; `build_graph` was missed.
+  ✅ **V** **Measured cost:** **2 116** `Sentence` nodes materialise against **3 432** v2
+  sentences on disk — **1 316 lost**, precisely the bundle population that filter excludes.
+- ✅ **V** 🔴 **The audit-trail layer produces nothing, and fails silently.**
+  `AuditEvent` nodes: **0**. `LOGGED_BY` edges: **0**. Yet the source data exists —
+  **20 `papers/*/audit_log.jsonl` files, 239 records**.
+  The cause is a **producer/consumer schema mismatch**: `extract_audit_event_nodes`
+  (`build_graph.py`) requires a top-level `id` — `eid = ev.get('id'); if not eid: continue`
+  — while the records the reviewer agents actually write carry `stage`, `severity`,
+  `bundle_target`, `timestamp`, `reviewer`, `round`, `section`, `category`, `finding`,
+  `figure`. `id` is not among the ten most common keys. Essentially every record is skipped.
+  It is silent **twice**: the skip emits nothing, and the summary log is guarded by
+  `if nodes:` — so an extraction yielding zero prints no line at all. Absence rendered as
+  *silence*, a variant of the branch's signature defect.
+  **This is the concrete cost of §2's finding that nothing validates conformance to the
+  declared schema.** Both halves are individually "working": the agents write well-formed
+  audit records, the extractor reads well-formed records. They disagree about which shape
+  is well-formed, and nothing in the system compares them.
 - ✅ **V** **`BACKED_BY.link_state` is hardcoded, and the pass meant to fix it never runs.**
   `build_graph.py:2667` emits `'link_state': 'resolved',  # enriched post-hoc by
   last_modified pass`. Read directly. Combined with the verified inertness of the freshness
