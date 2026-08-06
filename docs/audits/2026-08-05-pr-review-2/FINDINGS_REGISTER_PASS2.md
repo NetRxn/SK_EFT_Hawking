@@ -745,3 +745,49 @@ helper's *name* in the function body — which appears there **in a comment**
 (`# by default (2026-08-04; see \\`_blocked_p1_gates_by_paper\\`)`). "Seam guard defeatable by
 prose" is pass 1's own **R3-C1**, reproduced in a guard written against a different defect.
 Rewritten to assert the **call** via AST; re-seeded, and it now fails as intended.
+
+
+---
+
+## Round 4 — the three referred items, CLOSED (2026-08-05)
+
+| item | resolution |
+|---|---|
+| **Obstruction policy** (operator-referred) | ✅ **APPLIED.** Namespace matches promote only claim-bearing kinds. 507 → 418; all 134 theorems kept, 89 apparatus dropped. A leaf name that itself says no-go still classifies regardless of kind — the 12 non-theorem survivors are all that form. Three atlas consumers still PASS. |
+| **Tables pipeline** (operator ruling: *"if a table is used in a bundle, it needs the table pipeline"*) | ✅ **ENFORCED** — new `bundle_tables_use_pipeline`, ratcheted at 4, zero headroom. **PRODUCTION-SEEDED.** Measured: **zero of 21 bundles have a `tables.py`**; 3 carry hand-written tabulars (D1 1, E1 1, L2 2). |
+| **Infra residue** (operator: *"map the blast radius, be certain of dx and fix"*) | ✅ all four closed — see below. |
+
+### Residue, item by item
+
+| | diagnosis | fix |
+|---|---|---|
+| seam guard | `>= 30` against a live **54** — 44 % headroom, a ratchet that cannot fire *inside the guard protecting the ratchets*. R2 was right. | tightened to 54 |
+| zero-headroom tests | all ten ceilings correct **by hand**, **none** with a test | `tests/test_ratchets_have_zero_headroom.py`, 6 checks, reads population and ceiling from each check's own report rather than recomputing. Verified by seeding `COUNT_LITERAL_CEILING` 107 → 150. |
+| **R4-I1** `cross_path_consistency` | exact, not approximate: `decoherence_parameter = 2Γ/κ` and `delta_k = 2·delta_diss`, so both sides of leg 2 were **exactly 2× both sides of leg 1**, and \|a−b\|/a is scale-invariant → bit-identical `rel_diff` = 4.127685699545415e-06. **Two details, one assertion.** | leg 2 now asserts the definitional relation `delta_k = 2·delta_diss` — a real invariant that DOES fire (seeding `2.0 → 3.0` fails it). Its cannot-measure branch now FAILS instead of skipping silently. |
+| **R3-I5 / R1** BinOp aliases | 4 module-level `X = _H.ANCHOR / "..."` import-time copies | converted to call-time resolution; **0 remain**. The notebooks test's own docstring named the hazard it was compensating for; it now asserts the stronger property (patch the anchor, the path follows). |
+
+### ⚠️ Process finding — five failures that were NOT regressions
+
+Five suite failures traced to **stale `.pyc`**. Inline `cp`-based mutation restores wrote the same
+size and second-granularity mtime, so CPython reused the mutated bytecode — the
+`(mtime_seconds, size)` validity trap. The earlier `mutate.py` harness deleted `__pycache__`;
+ad-hoc restores did not. **A working `cross_path_consistency` fix was nearly reported as broken.**
+Restore protocol must drop `__pycache__`.
+
+---
+
+## FINAL STATE (2026-08-05)
+
+| | |
+|---|---|
+| suite | **5,566 passed / 5 skipped / 0 failed** |
+| `validate.py` | **58 / 60**, `✓ SUBSTRATE: clean` |
+| remaining reds | both **paper corpus**, both correctly attributed |
+| tree | clean |
+
+`bundle_metadata_matches_graph` — 14 bundles assert `stage13_status='green'` with open blockers.
+That field is owned by the **Stage-13 review cycle**, not `bundle_readiness.py`; the resolution is
+re-running Stage 13, and it is corpus work.
+`readiness_submission_gate` — 0 green / 3 yellow / 61 red across 64 papers. Genuine corpus state.
+
+**Both are ADR-010 / Phase-7 work.** The substrate is clean.
