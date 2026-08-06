@@ -215,7 +215,7 @@ class TestVacuousPassesAreCorroborated:
                                  monkeypatch)
         r = rg._eval_parameter_provenance(self._paper(), idx)
         assert r.state == "passed"
-        assert "not applicable" in r.notes
+        assert "no inline unit-bearing literals" in r.notes
 
     def test_narrative_grounding_surfaces_an_unextracted_abstract(self, monkeypatch):
         """A draft WITH an abstract but zero ProseClaim nodes means prose

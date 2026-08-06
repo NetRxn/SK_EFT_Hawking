@@ -286,8 +286,18 @@ def _eval_parameter_provenance(paper: dict, idx: GraphIndex) -> GateResult:
             r.evidence.append(f'{len(literals)} unit-bearing literals in the draft')
         else:
             r.state = 'passed'
-            r.notes = ('no parameter dependencies declared, and the draft carries no '
-                       'unit-bearing numerical literals — genuinely not applicable')
+            # ⚠️ "no INLINE literals", which is narrower than "no numbers". By design
+            # `find_inline_numerical_literals` strips `\input{tables/...}` and
+            # `\caption{}` — generated tables are the compliant mechanism, so counting
+            # them would penalise compliance. MEASURED 2026-08-05: **31 of 64 drafts**
+            # read as literal-free while pulling numbers through `\input`. For
+            # generated tables that is defensible (their provenance is structural, from
+            # `render_paper_tables.py`), and `counts.tex` carries counts rather than
+            # experimental parameters — but it is NOT the same claim as "this paper uses
+            # no parameters", so do not word it that way.
+            r.notes = ('no parameter dependencies declared, and no inline unit-bearing '
+                       'literals in body prose (numbers arriving via \input{tables/} or '
+                       'counts.tex are structurally sourced and not counted here)')
     elif unverified:
         # Treat as blocked for submission but acceptable during draft
         r.blockers = [p.replace('param:', '', 1) for p in unverified[:20]]
