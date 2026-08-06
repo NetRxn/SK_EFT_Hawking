@@ -147,3 +147,69 @@ re-derivation: M1 page counts, M4a's 78 shared theorems (the D6+D9 merge case), 
 `pages` then drops it; `bundle_metadata.lean_modules_referenced` written `[]` and read by nothing;
 `chain_canonicalize`'s 121 `theorem-absent`; `PAPER_DEPENDENCIES`; the bundle anchor lists), and
 H2's five seams.
+
+---
+
+# REMEDIATION — closed 2026-08-06
+
+Every CRITICAL and MAJOR is closed. Each was **re-verified by the lead before being
+fixed** — three did not reproduce as filed, and two of those were the reviewer measuring
+the right defect with the wrong mechanism.
+
+## CRITICALs
+
+| id | resolution | commit |
+|---|---|---|
+| C1 `\thm`/`\mthm` alias — 336 refs unscanned | Verbatim detection is now **structural**: brace-matched macro bodies plus a fixpoint over aliases-of-aliases. 671 → **1 280** candidate references. | `39e7ac3a` |
+| C2 27 modules outside the build graph | 2 broken modules repaired, 25 imported, 1 deleted (below). New `lean_modules_in_build_graph` joins the filesystem to the import graph; exe-root allowlist **parsed from `lakefile.toml`**. **Zero exceptions.** | `566c0fa1` `ffb64183` |
+| C3 `parameter_provenance` blind to a 10× ℏ drift | Denominator was `max(abs(actual), 1e-30)` — an absolute test below 1e-30. Now genuinely relative; the 169 un-comparable entries are counted and ratcheted instead of skipped in silence. | `37cf835a` |
+| C4 freshness check mutated 9 tracked files | `check()` is **pure by default**; the CLI passes `write_metadata=True`. R4's specific reproduction did not hold — the writes are content no-ops while values agree — but the mechanism was real and was proved directly. | `37cf835a` |
+| C5 606 registry keys whitelisting non-existent theorems | Dead `ARISTOTLE_THEOREMS` keys withdrawn, derived by intersecting the registry against the live index. Ceiling 79 → 80, cause recorded. *(R3 said "before `lean_deps`"; it is after — the finding stands regardless.)* | `21724ad1` |
+| C6 ADR-010 "D11/D12 reference zero" | **FALSE** — an extraction artifact. D11 = 95 declarations, D12 = 132. Claim withdrawn. | `ef866bda` |
+| C7 ADR-010 "audit's ~340 low by 4–5×" | **A UNIT SWAP.** The audit said 162 `PinPlus*.lean` **modules**; there are **164**. The audit was right. | `ef866bda` |
+
+## MAJORs
+
+`compute_lean_hash` blind to the root aggregate · `cluster_detect` excluding all 19 bundles
+(*and the freshness guard watching it carried the same predicate*) · `readiness_gates` Gate 5
+`\texttt`-only (105 names seen vs 778) · `paper_latex_compiles` bundle-only (14 of 43 legacy
+drafts fatally broken while it reported 21/21) · `CI_SKIP` running checks then deleting results ·
+the self-sealing CI-floor test · `gate_precheck s13` unable to pass for any wave · plugin roster
+13 codes vs 21 · 2 dead `--check` names in a reviewer prompt.
+
+## Found during remediation, not by any reviewer
+
+- **The pre-commit `sorry` guard was INERT.** It matched `declaration uses 'sorry'` with straight
+  quotes; Lean v4.32.0 emits backticks. Verified by running the guard's own expression against a
+  log that genuinely contained the warning: no match. `main` carries the same bug. (`8a08889e`)
+- **The project's only live `sorry`** sat in `SingularConnSquareCrossReal`, a duplicate of an
+  already-proven theorem on the route `SETTLED_FORKS` bans and `3ea6b739` hard-reverted. It
+  survived that revert **only because it was orphaned** — the revert could not see it for the same
+  reason no instrument could. Deleted after reading both candidate files in full; the sibling
+  `CloseUncond` was **kept**, because reading it showed two general reusable lemmas the earlier
+  delete-both recommendation would have destroyed.
+- **The counts regen costs 3 min 14 s, not the "~30 min"** asserted in four places and used to
+  defer regeneration.
+- **Nothing enforced plugin↔code references.** New `tests/test_plugin_prompt_code_refs.py`.
+
+## Instrument errors by the lead, recorded
+
+Four times a probe returned the wrong answer and was caught by re-checking rather than accepted:
+a non-leaf module whose import removal left it transitively reachable; a LaTeX defect seeded after
+`\end{document}`; an advisory check used as a negative control; and a script-path test that
+resolved only against the repo root when prompts legitimately reference the plugin's own.
+
+## State at close
+
+| | |
+|---|---|
+| `pytest` | **5 588 passed / 5 skipped / 0 failed** |
+| `validate.py` | **59/61**, `✓ SUBSTRATE: clean` |
+| remaining reds | `bundle_metadata_matches_graph`, `readiness_submission_gate` — both paper-corpus, both ADR-010 work **on this branch** |
+| `lake build` | 0 errors, **0 sorries**, 2038 modules = 2036 reachable + 2 exe roots |
+| tree | clean, 132 commits ahead, **unmerged** |
+
+**Open, deliberately:** R5's remaining MINOR doc items; the 14 broken legacy drafts (frozen by
+`LEGACY_DRAFT_LATEX_BROKEN_CEILING`); H1's absent content-sufficiency and substrate-attachment
+checks. All are paper-corpus work, which lands on this branch so the infrastructure is validated
+by use before it is merged.
