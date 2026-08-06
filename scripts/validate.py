@@ -196,7 +196,7 @@ _CANONICAL_ORDER: tuple[str, ...] = (
     # needs its verdict before any per-bundle substrate figure downstream.
     'bundle_registry_consistency', 'bundle_apex_resolves', 'paper_latex_compiles',
     'axiom_count_prose_consistency', 'prose_theorem_reference_coverage',
-    'theorem_name_embedded_citations', 'inventory_index_autogen_fresh',
+    'theorem_name_embedded_citations', 'inventory_index_autogen_fresh', 'architecture_inventory_fresh',
     'lean_docstring_refs_resolve', 'paper_toolchain_pin_drift',
 )
 
@@ -610,6 +610,7 @@ check_bundle_registry_consistency = _checks_bundles.check_bundle_registry_consis
 check_bundle_apex_resolves = _checks_bundles.check_bundle_apex_resolves
 check_lean_zero_sorry = _checks_lean_substrate.check_lean_zero_sorry
 check_gate_edge_types_are_emitted = _checks_graph_atlas.check_gate_edge_types_are_emitted
+check_architecture_inventory_fresh = _checks_freshness.check_architecture_inventory_fresh
 
 
 # ═══════════════════════════════════════════════════════════════════════

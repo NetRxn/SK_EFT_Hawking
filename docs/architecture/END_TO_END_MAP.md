@@ -1,0 +1,313 @@
+# End-to-end map — roadmap to signed-off publication
+
+**Status: IN PROGRESS, and deliberately shipped incomplete.** Written 2026-08-06.
+
+This is the narrative half of the architecture map. The **census** half —
+every check, gate, hook, agent, command, graph type, registry and bundle — is
+[`SURFACE_INVENTORY.md`](SURFACE_INVENTORY.md), which is *derived* by
+`scripts/architecture_inventory.py` and gated by `validate.py --check
+architecture_inventory_fresh`. Counts belong there, not here; a number written into a
+narrative is a number that rots.
+
+---
+
+## 0. How to read this file — the provenance tags are the point
+
+Every load-bearing claim carries one of:
+
+| tag | meaning |
+|---|---|
+| ✅ **V** | **Verified by the author against the implementation**, with the command or `file:line` that establishes it. Quote these. |
+| ⚠️ **U** | **Reported by a survey agent, NOT yet verified.** Carries the exact check to run. **Do not quote these as fact.** |
+| ❌ **X** | Reported and then **refuted or materially narrowed** on verification. Recorded so it is not re-reported. |
+
+**Why this is not decoration.** This map was commissioned because the project kept
+discovering blind spots mid-flight. On the day it was written, four survey agents each
+produced a headline finding, and **three of the four overstated at least one** in a way
+that would have changed what got fixed. The author independently overstated two more.
+An unmarked claim in this codebase has empirically been about a one-in-three chance of
+being someone's inference. §9 is the ledger.
+
+**The reading order that failed, and the one that works.** Twice on 2026-08-06 the author
+concluded "X does not exist" from a grep over implementation vocabulary that found
+nothing — once for the zero-`sorry` gate (it exists, warn-first), once for the graph
+schema (it exists, at `docs/KNOWLEDGE_GRAPH.md`). **Read the governing document first,
+build the intended picture, and only then verify the code against it.** Absence is a
+claim requiring positive evidence, not a null search result.
+
+---
+
+## 1. The spine
+
+```mermaid
+flowchart TB
+    RM["① ROADMAP<br/>docs/roadmaps/PhaseNX_Roadmap.md<br/>hand-written · nothing validates it ⚠️U"]
+    GOAL["② DEV LOOP<br/>/goal + skeft-qa harness<br/>5 hooks · 4 events · fail-open"]
+    LEAN["③ LEAN<br/>MCP loop → lake build → Aristotle fallback"]
+    EXT["④ EXTRACTION<br/>ExtractDeps.lean → lean_deps.json<br/>THE chokepoint"]
+    VAL["⑤ VALIDATION<br/>validate.py · 65 checks · 12 modules"]
+    GRAPH["⑥ GRAPH + ATLAS<br/>build_graph.py · atlas_view.py<br/>schema: docs/KNOWLEDGE_GRAPH.md"]
+    PAPER["⑦ AUTHORING<br/>bundle lift · figures · tables"]
+    REV["⑧ REVIEW<br/>Stage 9 figure · 10 claims · 13 adversarial"]
+    GATE["⑨ GATES<br/>readiness_gates.py · 11 gates × N papers"]
+    HUMAN["⑩ HUMAN<br/>dashboard :8050 · submission gate"]
+
+    RM --> GOAL --> LEAN --> EXT
+    EXT --> VAL & GRAPH
+    GRAPH --> GATE
+    LEAN --> PAPER --> REV --> GATE --> HUMAN
+    VAL --> HUMAN
+    HUMAN -.->|"supersession ledger"| GATE
+    REV -.->|"QI candidates"| RM
+
+    classDef gap stroke:#c0392b,stroke-width:3px
+    class RM,GATE gap
+```
+
+**The one structural fact worth internalising:** ④ is a chokepoint. Everything
+quantitative downstream — counts, the atlas, the graph, the frontier — derives from
+`lean/lean_deps.json`. Below that node drift is structurally impossible. Above it,
+every hand-maintained registry is a surface that can rot, and the map's job is to say
+which ones are gated.
+
+---
+
+## 2. ① Roadmap → wave authorization
+
+Waves are declared in `docs/roadmaps/Phase<N><X>_Roadmap.md`. The roadmap is where a
+phase's scope, its waves, and — importantly — **schema and design decisions** are
+recorded.
+
+- ✅ **V** The **graph schema is declared in `docs/KNOWLEDGE_GRAPH.md`** (§Graph Schema:
+  "Node Types (26)" at `:54`, "Edge Types (25)" at `:129`), with a **"Wired in"** column
+  naming the wave that was to implement each edge. `temporary/working-docs/sentence_kg_schema_delta.md`
+  is a *delta* to it (`:5` names `docs/KNOWLEDGE_GRAPH.md` as the affected doc).
+  `docs/roadmaps/Phase5v_Roadmap.md:311` carries a parallel edge table.
+- ✅ **V** **The schema doc contradicts itself.** `:54` says 26 node types, `:129` says 25
+  edge types, but `:312` says *"Extracts 13 node types + 11 edge types"* and `:341` says 13
+  again. Checked by reading all four lines.
+- ⚠️ **U** **Nothing validates a roadmap.** Agent reports 0 of 65 checks read
+  `docs/roadmaps/`, the sole code reader `notebook_lib.py:200` fails open, and the
+  prescribed `<wave>_close.md` files number zero on disk.
+  **To verify:** `grep -rl "roadmaps" scripts/validation/checks/` and `ls docs/roadmaps/*_close.md`.
+
+**Concern (author, ✅V):** the schema lives in a *phase roadmap*, a *working doc*, and a
+`docs/` file that disagrees with itself — not in `docs/architecture/`. That placement is a
+plausible root cause of "we don't know our own system": the canonical statement of the
+graph's shape is somewhere nobody looks.
+
+---
+
+## 3. ② The `/goal` development loop
+
+Contract in both `CLAUDE.md`s (the Stop hook is a GO signal, never coercion) and
+`docs/dev-loops/HARNESS_GUIDE.md`. Implementation in `.claude/plugins/skeft-qa/`.
+
+✅ **V** Five hooks across four events, from the plugin manifest (see
+[`SURFACE_INVENTORY.md`](SURFACE_INVENTORY.md#hooks), derived): `SessionStart`
+(re-inject), `PreCompact` (stage durable artifacts), `SessionEnd` (marker cleanup),
+`PreToolUse(AskUserQuestion)` (question guard → coach), `PreToolUse(WebSearch|WebFetch)`
+(egress guard — the only **fail-closed** one). Plus one git `pre-commit`.
+
+- ✅ **V** 🔴 **The running egress guard is not the committed one.** All **three** cached
+  plugin builds under `~/.claude/plugins/cache/skeft-local/skeft-qa/{57c1067d9d23,
+  25e3d4971d89, 5885890e36b1}/scripts/harness_web_egress_guard.py` differ from the repo
+  copy by **70 lines**, and **none** contains `_PATH_WHITELIST` (3 occurrences in repo) or
+  `isa-afp` (1 in repo). Verified by direct `diff` and `grep -c` against all three.
+  A fail-closed control is enforcing older policy than the one in git, and **no drift
+  detector exists**.
+- ✅ **V** `_read_active_issues` (`.claude/plugins/skeft-qa/scripts/harness_common.py:237`)
+  has **zero callers** repo-wide. The writer (`scripts/system2_register.py:360`) is live and
+  tested. So `active_issues.json` is written every harvest and read by nothing, while
+  `HARNESS_GUIDE.md:161` and three other surfaces describe it as feeding the re-injection.
+- ❌ **X** *"`/skeft-qa:trace` is routed to by `coach.md:26` and selected by
+  `stall_detector.py:113`."* **Narrowed.** Those two name the *rung* ("E — forensic
+  arc-trace"); neither invokes a command. Only `docs/dev-loops/PRE_DECISIONS.md:42,128`
+  names the slash command `/skeft-qa:trace`, and ✅**V** it does not exist (6 commands on
+  disk, `trace` not among them). A mandatory-read doc promises tooling never built — a doc
+  defect, not a broken control path.
+- ⚠️ **U** The ≤4k `/goal` prompt cap is prose-only; `harness_common.py:631` appends
+  unbounded. **To verify:** read `:600-640` and look for a length guard.
+
+---
+
+## 4. ③④ Lean formalization and the extraction chokepoint
+
+Spec: `WAVE_EXECUTION_PIPELINE.md` Stages 3a/3b/4/5 + Invariants #4, #9, #10, #15, #16, #17.
+Plane detail: [`../audits/2026-08-06-e2e-map/PLANE-lean.md`](../audits/2026-08-06-e2e-map/PLANE-lean.md).
+
+- ✅ **V** 🔴 **Extraction scope can go stale silently.** `compute_lean_hash()`
+  (`scripts/extract_lean_deps.py:61`) hashes `lean/SKEFTHawking/**/*.lean` — 2 038 files —
+  but **not `lean/SKEFTHawking.lean`**, the root aggregate that alone decides which modules
+  are extracted. Measured 2026-08-06: aggregate mtime **15:44**, `lean_deps.json` **13:17**,
+  `_needs_refresh()` → **False**. It was stale at the time of writing.
+  The docstring documents an *earlier* fix that widened the walk to subdirectories — it
+  went deeper and never went **up**. Same class as the 25 orphaned modules repaired by hand
+  earlier the same day (`566c0fa1`).
+- ✅ **V** **Invariant #4 (zero `sorry`) was detected but not enforced** on a default run.
+  `axiom_closure_allowlist` DOES catch a `sorry` (`sorryAx` enters the axiom closure and is
+  outside the allowlist) but is WARN-first — `passed=not strict` (`lean_toolchain.py`), hard-
+  failing only under `--strict`. `lake build` **exits 0 on a `sorry`** (measured directly:
+  a probe `theorem t : 1 + 1 = 3 := by sorry` emits ``declaration uses `sorry` `` and
+  returns 0). Closed 2026-08-06 by `lean_zero_sorry`, which hard-fails always.
+- ⚠️ **U** The Aristotle verification gauntlet's kernel-purity leg reads an unrefreshed
+  `lean_deps.json` and invokes validate **without `--strict`** (`aristotle_submit.py:714,719,725`).
+  **To verify:** read those three lines and confirm the ordering.
+- ⚠️ **U** Invariant #9's registry-completeness clause is unenforced: `PLACEHOLDER_TOTAL_COUNT`
+  (`constants.py:2454`) has zero consumers. **To verify:** `grep -rn PLACEHOLDER_TOTAL_COUNT`.
+- ⚠️ **U** `tests/test_lean_integrity.py:172` uses non-recursive `glob` — 666 of 2 038 files
+  never scanned. **To verify:** read that line.
+
+---
+
+## 5. ⑤ Validation
+
+Architecture: [`VALIDATION_ARCHITECTURE.md`](VALIDATION_ARCHITECTURE.md) ·
+when each gate runs: [`VALIDATION_GATE_TOPOLOGY.md`](VALIDATION_GATE_TOPOLOGY.md) ·
+what a new check owes: [`CHECK_AUTHORING_GUIDE.md`](CHECK_AUTHORING_GUIDE.md) ·
+defect landscape: [`QA_QI_INFRASTRUCTURE_MAP.md`](QA_QI_INFRASTRUCTURE_MAP.md).
+
+✅ **V** 65 checks in 12 modules, execution order semantic (the `*_fresh` regenerators
+rewrite artifacts later checks read). Roster derived in
+[`SURFACE_INVENTORY.md`](SURFACE_INVENTORY.md#validation-checks).
+
+The suite's defining discipline, and its live guards, are documented in the companion
+files above; this map does not restate them. The one addition worth naming here is that
+**`measured` is a separate field from `passed`** — a check that could not measure keeps
+returning `passed` but stops counting as evidence, which is what makes the `--ci` coverage
+floor meaningful.
+
+---
+
+## 6. ⑥ Graph, atlas, dashboard — the trust layer
+
+Schema: `docs/KNOWLEDGE_GRAPH.md`. Plane detail:
+[`../audits/2026-08-06-e2e-map/PLANE-graph.md`](../audits/2026-08-06-e2e-map/PLANE-graph.md).
+
+- ✅ **V** **Schema conformance, measured by diffing the doc against the AST:**
+
+  | | |
+  |---|---|
+  | edge types **declared** (`KNOWLEDGE_GRAPH.md:129`) | 25 |
+  | edge types **emitted** (`build_graph.py`) | 22 |
+  | declared, never emitted | `CONTRADICTS`, `IMPACTED_BY`, `PRODUCES`, `SUPERSEDES`, `SUPPORTS` |
+  | emitted, never declared | `CLAIMS_APEX`, `USES` |
+
+  ⚠️ Note on the author's own contribution: **`CLAIMS_APEX` was added to the graph on
+  2026-08-06 without updating the schema doc.** The map's author produced schema drift
+  while mapping schema drift.
+- ✅ **V** 🔴 **The freshness layer is entirely inert.** All **47 341** graph nodes carry
+  `last_modified = '1970-01-01T00:00:00Z'` — one distinct value across the whole graph.
+  A declared input, `docs/verification_log.jsonl`, does not exist.
+  `Phase5v_Roadmap.md:823` calls this "the highest-value capability".
+- ✅ **V** Three of the five unemitted edge types are **queried by readiness gates**
+  (`PRODUCES`, `SUPPORTS`, `CONTRADICTS`), so those gates return verdicts they did not
+  compute. Guarded since 2026-08-06 by `validate.py --check gate_edge_types_are_emitted`,
+  which derives both populations by AST and fails on any undisclosed dead type.
+- ❌ **X** *(author's own error, corrected twice)* First reported as "a wiring accident";
+  then over-corrected to "healthy documented deferral". ⚠️ **U** The survey's position —
+  **expired deferral**: Wave 4 shipped without `PRODUCES`, and `Phase5v_Roadmap.md:442`
+  defers the *rendering*, not the emitter. **To verify:** read the Wave-4 close section of
+  `Phase5v_Roadmap.md` and confirm `PRODUCES` was in scope and not delivered.
+- ⚠️ **U** The sentence layer is blind to all 19 publication bundles —
+  `build_graph._iter_paper_dirs:2386` filters `startswith('paper')`. **To verify:** read
+  that line; compare with `cluster_detect.py:115` which uses a bare `iterdir()`.
+- ⚠️ **U** `Sentence.verification` and `BACKED_BY.link_state` are declared and never
+  derived (`build_graph.py:2667` hardcodes `'resolved'`). **To verify:** read `:2667` and
+  count non-null `verification` in a built graph.
+- ⚠️ **U** The dashboard re-implements the per-paper verdict rule and the gate roster.
+  **To verify:** compare `provenance_dashboard.py` `_classify_paper` against
+  `bundles_readiness.classify_readiness`.
+
+---
+
+## 7. ⑦⑧ Authoring and review
+
+Spec: `WAVE_EXECUTION_PIPELINE.md` Stages 9/10/13 · `docs/BUNDLE_LIFT_PROCEDURE.md`
+(frozen 14-step Stage-10) · `docs/LATE_PHASE6_ABSORPTION_PROTOCOL.md` ·
+`docs/BUNDLE_DIRECTORY_SCHEMA.md`. Plane detail:
+[`../audits/2026-08-06-e2e-map/PLANE-publication.md`](../audits/2026-08-06-e2e-map/PLANE-publication.md)
+and the figures/tables detail in the same directory.
+
+- ✅ **V** **The "Stages 9 and 10 before 13" hard gate has no enforcement point.**
+  `papers/D6/bundle_metadata.json` reads `stage9_status: not_started`,
+  `stage10_status: skeleton`, `stage13_status: green`. Read directly.
+- ⚠️ **U** Only the **adversarial** reviewer's output re-enters the machine; the figure- and
+  claims-reviewer outputs reach no gate. **To verify:** read
+  `build_graph.extract_review_finding_nodes` and check which report formats its regex parses.
+- ⚠️ **U** Nothing writes `stage*_status` to green or clears `stage13_redo_required`; the
+  only writers are `bundle_source_manifest.py:129-132` and `bundle_append.py:317-325`.
+  **To verify:** `grep -rn "stage13_status" scripts/`.
+- ⚠️ **U** Figure drift is detected by content hash but **advisory only**, and scoped to
+  D11/D12 (`bundles_readiness.py:189-202,131-135`). **To verify:** read those lines.
+- ⚠️ **U** `tables_fresh` cannot fail on staleness — mtime-only, and it returns
+  `passed=True` unconditionally (`freshness.py:329`); table globs are `paper*_*`, so **zero
+  of 21 bundles** are covered. **To verify:** read `:274-329` and `ls papers/D*/tables/`.
+- ⚠️ **U** 137 `physics_checks` declared in `review_figures.py` are never evaluated.
+  **To verify:** `grep -n "physics_checks" scripts/review_figures.py` and confirm no reader
+  in `run_structural_checks`.
+
+---
+
+## 8. ⑨⑩ Gates and human sign-off
+
+✅ **V** 11 gates (8 × P1, 3 × P2) — roster derived in
+[`SURFACE_INVENTORY.md`](SURFACE_INVENTORY.md#readiness-gates).
+
+- ✅ **V** `NarrativeGrounding` blocks exactly the papers carrying an `interesting`
+  ProseClaim — **9 such claims across 7 papers** — and passes vacuously for every other
+  paper, because `SUPPORTS` has no emitter. It is the sole P1 blocker on D6, D8 and D10.
+  Measured against a built graph.
+- ✅ **V** `ProductionRunHealth`'s run-linkage leg cannot fire: **18 ProductionRun nodes,
+  zero outgoing edges** (17 status `unknown`, 1 `success`). Its second leg — a prose regex
+  for "Monte Carlo evidence" — can still block.
+- ❌ **X** *"Stage 14 destroys its own register, violating Invariant #13."* **Refuted as
+  stated.** Invariant #13 (`WAVE_EXECUTION_PIPELINE.md:687`) promises verbatim preservation
+  only of `## Closed Items` and explicitly describes Open Items as auto-derived. Current
+  state ✅**V**: **10 Open / 13 Closed**.
+  ⚠️ **U** The narrower live finding: with all 11 gate-ids closed and `unclassified` skipped
+  (`qi_register.py:165,170-171` — ✅**V** those lines read as described), the derivation
+  returns nothing, so **Stage 14 can no longer surface a new QI item**. **To verify:** run
+  the clustering in memory against current findings and confirm it returns `[]`.
+- ⚠️ **U** The dashboard cannot satisfy Invariant #8 — `provenance_dashboard.py:1275`
+  mutates memory only and `--write` raises `NotImplementedError` (`:5468`), so human
+  verification cannot be persisted from the UI. **To verify:** read both lines.
+  **If true this is the highest-severity item in the map**, because human provenance
+  verification is the stated gate on paper submission.
+
+---
+
+## 9. The overstatement ledger
+
+Kept because the calibration is the deliverable.
+
+| claim | source | outcome |
+|---|---|---|
+| "Invariant #4 has no gate; nothing else covered it" | author | **wrong** — `axiom_closure_allowlist` detects it, warn-first |
+| "There is no graph schema" | author | **wrong** — `docs/KNOWLEDGE_GRAPH.md` |
+| "PRODUCES/SUPPORTS/CONTRADICTS are healthy deferred debt" | author | **over-corrected** — deferrals appear to have expired |
+| "`/skeft-qa:trace` is routed to by coach + stall_detector" | devloop survey | **narrowed** — those name the rung, not a command |
+| "Stage 14 destroys its own register" | publication survey | **refuted** — Open Items are derived by design |
+| "17 **failed** production runs" | QA assessment | **narrowed** — status is `unknown`, not `failed` |
+| "NarrativeGrounding is structurally always blocked" | QA assessment | **narrowed** — blocks only the 7 papers with `interesting` claims |
+
+Two failure modes, both worth naming:
+1. **Absence from a null search.** Grep the implementation vocabulary, find nothing,
+   conclude nothing exists. Cure: read the governing doc first.
+2. **Severity inflation on a real defect.** The underlying finding is usually genuine; the
+   characterisation overshoots and would have driven the wrong fix.
+
+---
+
+## 10. What remains
+
+- **~15 ⚠️U claims** above, each with its check. Verify, retag, and delete the ⚠️ marker.
+- Fold in the four plane reports under `docs/audits/2026-08-06-e2e-map/` once their claims
+  are verified.
+- Two **intended-vs-actual** sections not yet written: what the pipeline *says* Stages 1–14
+  do versus what runs, and the harness's intended vs actual re-injection payload.
+- ✅**V** Known drift in the law itself, to reconcile: `WAVE_EXECUTION_PIPELINE.md:5` says
+  "these 12 stages" (there are 14); `:317` says "Checks (16 total)" (65); `:80` and `:689`
+  freeze the roster at "18 targets" (21); `:191` says "we run 4.29.1" (live
+  `lean-toolchain` is **v4.32.0**); `:529` says there is "no separate per-repo CLAUDE.md"
+  (there is one).

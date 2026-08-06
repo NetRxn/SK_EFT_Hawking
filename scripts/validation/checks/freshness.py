@@ -785,3 +785,75 @@ def check_inventory_index_autogen_fresh() -> CheckResult:
                    warning=True)])
     return CheckResult(passed=True, details=[
         Detail("freshness", True, summary)])
+
+
+@register_check(
+    "architecture_inventory_fresh",
+    "docs/architecture/SURFACE_INVENTORY.md matches a fresh derivation from the code")
+def check_architecture_inventory_fresh() -> CheckResult:
+    """The end-to-end architecture map is split into a NARRATIVE and a CENSUS, and this
+    gates the census.
+
+    `docs/architecture/END_TO_END_MAP.md` explains how work moves from a roadmap to a
+    signed-off publication; `SURFACE_INVENTORY.md` lists *what exists* — every check, gate,
+    hook, agent, command, graph type, registry and bundle — derived by
+    `scripts/architecture_inventory.py` from the artifact that owns each population.
+
+    The split exists because narrative counts rot, provably and repeatedly here:
+    `WAVE_EXECUTION_PIPELINE.md` still opens "these 12 stages" against a live 14 and lists
+    "Checks (16 total)" against a live 64; Invariant #14 freezes the roster at "18 targets"
+    against a live 21. Each was true when written. A map nobody can trust is worse than no
+    map, because it is quoted.
+
+    So the census is regenerated, never hand-edited, and this check fails when the tracked
+    file no longer matches a fresh run. Regenerate with:
+
+        uv run python scripts/architecture_inventory.py --write
+
+    ⚠️ Deliberately NOT auto-regenerating, unlike its neighbours in this module. A change in
+    the inventory means the SYSTEM changed shape — a check appeared, a gate moved, an agent
+    was added — and that should be seen and committed by a person, not silently absorbed
+    into a passing run. `counts_fresh` auto-regenerates because a count moving is routine;
+    the surface moving is not.
+    """
+    inv = _H.SCRIPT_DIR / "architecture_inventory.py"
+    doc = _H.DOCS_DIR / "architecture" / "SURFACE_INVENTORY.md"
+    if not inv.exists():
+        return CheckResult(passed=True, measured=False, details=[Detail(
+            "generator_present", True, f"{inv} absent — nothing to measure", warning=True)])
+    if not doc.exists():
+        return CheckResult(passed=False, details=[Detail(
+            "doc_present", False,
+            f"{doc} is missing — run `uv run python scripts/architecture_inventory.py "
+            f"--write`. An absent census is not a fresh one.")])
+
+    import importlib.util
+    import sys as _sys
+    spec = importlib.util.spec_from_file_location("_arch_inventory", inv)
+    mod = importlib.util.module_from_spec(spec)
+    _sys.modules[spec.name] = mod   # register BEFORE exec — dataclasses probe sys.modules
+    try:
+        spec.loader.exec_module(mod)
+        fresh = mod.render(mod.collect())
+    except Exception as exc:  # noqa: BLE001
+        return CheckResult(passed=False, details=[Detail(
+            "derivation_runs", False,
+            f"architecture_inventory.py failed to derive the surface ({exc}) — the census "
+            f"cannot be confirmed, which is a failure, not a skip")])
+
+    current = doc.read_text()
+    if current == fresh:
+        return CheckResult(passed=True, details=[Detail(
+            "inventory_fresh", True,
+            f"{doc.name} matches a fresh derivation ({len(fresh.splitlines())} lines)")])
+
+    cur_lines, new_lines = current.splitlines(), fresh.splitlines()
+    first = next((i for i, (a, b) in enumerate(zip(cur_lines, new_lines)) if a != b),
+                 min(len(cur_lines), len(new_lines)))
+    return CheckResult(passed=False, details=[Detail(
+        "inventory_fresh", False,
+        f"{doc.name} is STALE — the system's surface changed and the census did not. "
+        f"First divergence at line {first + 1}: tracked "
+        f"{cur_lines[first][:90] if first < len(cur_lines) else '<eof>'!r} vs derived "
+        f"{new_lines[first][:90] if first < len(new_lines) else '<eof>'!r}. "
+        f"Run `uv run python scripts/architecture_inventory.py --write`.")])

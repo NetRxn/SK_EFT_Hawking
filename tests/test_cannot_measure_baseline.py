@@ -95,6 +95,10 @@ CANNOT_MEASURE_PASS_BASELINE = frozenset({
     # `gate_edge_types_are_emitted` FAILS on any undisclosed dead edge type. What
     # passes here is only the case where the FILE the check reads is absent entirely,
     # which is an environment fact, not a verdict about the tree.
+    # The one branch where the DERIVATION itself is impossible: no generator script, so
+    # there is nothing to compare the census against. A missing or hand-edited census is a
+    # hard FAIL, not this.
+    ('architecture_inventory_fresh', 'missing-input'),
     ('gate_edge_types_are_emitted', 'missing-input'),
     ('lean_zero_sorry', 'exception'),
     ('lean_zero_sorry', 'missing-input'),

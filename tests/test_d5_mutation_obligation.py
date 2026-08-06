@@ -91,6 +91,13 @@ TESTS_DIR = SK_ROOT / "tests"
 #: An entry here is a CLAIM that someone seeded a defect and watched the test fail.
 #: Add one only when that has actually been done — the evidence lives in the commit.
 MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
+    "architecture_inventory_fresh": (
+        "test_architecture_inventory.py",
+        "Production-seeded in the REAL docs/architecture/SURFACE_INVENTORY.md: appending one "
+        "HTML comment -> rc=1 naming the first divergent line; regenerated -> PASS. It also "
+        "fired on its own arrival unprompted (adding the check moved the derived count 64 -> "
+        "65, so the tracked census went stale in the same commit that created it)",
+    ),
     "lean_zero_sorry": (
         "test_qa_gate_integrity.py",
         "4 tests; production-seeded in the REAL `docs/counts.json` — sorry_declarations=1 "
@@ -595,6 +602,8 @@ AWAITING_CEILING = 0
 #: is the distinction the four blockers turned on. Erring toward absent overstates the
 #: remaining work; the opposite error is what produced them.
 PRODUCTION_SEEDED: frozenset[str] = frozenset({
+    # 2026-08-06: an HTML comment appended to the real SURFACE_INVENTORY.md -> rc=1.
+    "architecture_inventory_fresh",
     # 2026-08-06: sorry_declarations=1, then the field DELETED, in the real
     # docs/counts.json -> rc=1 each; reverted.
     "lean_zero_sorry",
