@@ -285,9 +285,12 @@ and the figures/tables detail in the same directory.
 - ⚠️ **U** Only the **adversarial** reviewer's output re-enters the machine; the figure- and
   claims-reviewer outputs reach no gate. **To verify:** read
   `build_graph.extract_review_finding_nodes` and check which report formats its regex parses.
-- ⚠️ **U** Nothing writes `stage*_status` to green or clears `stage13_redo_required`; the
-  only writers are `bundle_source_manifest.py:129-132` and `bundle_append.py:317-325`.
-  **To verify:** `grep -rn "stage13_status" scripts/`.
+- ✅ **V** **Nothing in the codebase writes a `stage*_status` to `green`.** The only
+  writers set `"pending"`: `bundle_append.py:321,323,325` and
+  `bundle_source_manifest.py:129-131`. Every green in `papers/*/bundle_metadata.json` is
+  therefore a hand edit — which is how D6 sits at `stage13_status: green` with
+  `stage9_status: not_started` (§8 above). The reviewer agents that would earn a green
+  have no write path to the field they gate on.
 - ⚠️ **U** Figure drift is detected by content hash but **advisory only**, and scoped to
   D11/D12 (`bundles_readiness.py:189-202,131-135`). **To verify:** read those lines.
 - ✅ **V** **`tables_fresh` cannot fail on staleness.** `freshness.py:329` is
