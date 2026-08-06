@@ -15,7 +15,8 @@ wave?"* had no answerable home.
 |---|---|---|---|---|
 | **0 — commit** | every `git commit` | leak/IP guard (staged diff) · `pre-commit-notebooks.sh` (**only staged `.ipynb`**) · `pre-commit-sync.sh`: incremental `lake build` if `.lean` staged, then **3 named checks** | **fail-open**; hard-blocks on `main` only | <1 s + build |
 | **1 — reviewer prechecks** | before dispatching an LLM reviewer | `gate_precheck.py s9` (2 checks) · `s10` (4 checks) | yes — do not spend reviewer budget on a stale tree | seconds |
-| **2 — wave close** | `/skeft-qa:wave-close` | `sync.py --full`, then `gate_precheck.py s13` = **full suite + `--force-latex`** | yes — no Stage-13 dispatch on a red tree | ~2–3 min |
+| **2 — wave close (paper)** | `/skeft-qa:wave-close` | `sync.py --full`, then `gate_precheck.py s13` = **full suite + `--force-latex`** | yes — no Stage-13 dispatch on a red tree | ~2–3 min |
+| **2 — wave close (Lean)** | same, for a wave that touched no `papers/` | `gate_precheck.py s13-lean` = the **same suite**, exit code scoped to the substrate | yes, on substrate reds only | ~2–3 min |
 | **3 — submission** | before arXiv/journal | `gate_precheck.py submission` = full suite **+ the six `--strict` legs** | yes | ~8 min |
 | **— CI** | *none* | deliberately no scheduled runner | n/a | n/a |
 
@@ -29,13 +30,21 @@ The three checks at tier 0 are `formula_grounding`, `placeholder_not_cited`,
 **At tier 0: no.** Commits run three named checks, all Lean/substrate-side. A red in
 `paper_latex_compiles` or `readiness_submission_gate` cannot block a commit.
 
-**At tier 2: yes, and this is a known sharp edge.** `gate_precheck s13` runs the *whole* suite, so
-closing a **pure-Lean wave** can be blocked by paper-corpus state that the wave never touched.
+**At tier 2: use `s13-lean`.** `gate_precheck s13` runs the *whole* suite, so closing a
+**pure-Lean wave** was blocked by paper-corpus state the wave never touched — and since two
+corpus-wide reds are currently open (`bundle_metadata_matches_graph`,
+`readiness_submission_gate`), plain `s13` cannot pass for **any** wave, Lean or paper.
 
-⚠️ **This is deliberate but under-scoped.** The rationale is sound — Stage 13 dispatches an
-expensive fresh-context reviewer, and doing so on a tree with known-bad artifacts wastes it. But
-"the tree is clean" is currently interpreted as *every check green*, including checks about
-bundles unrelated to the wave. A Lean wave should not be gated on D3's LaTeX.
+`s13-lean` runs the **identical** suite and prints the **identical** failures; only the exit code
+is scoped, via `validate.py --scope substrate`. Nothing is skipped and nothing is hidden — a Lean
+wave still sees that the corpus is red, it just is not blocked by it. Use plain `s13` for a wave
+that touched `papers/`, and wherever the corpus itself is the deliverable.
+
+⚠️ **`--scope` is deliberately absent from `submission`.** That gate is scope-blind by design:
+nothing ships while any part of the tree is red. And the flag scopes only what BLOCKS — a flag
+that scoped what is *measured* would be the defect this suite exists to catch wearing a
+convenience label, which is why `test_ci_mode.py::TestScopeSubstrate` asserts that a substrate
+failure still blocks and that non-blocking failures are still reported.
 
 **Current state of the paper-side reds** (2026-08-05), so the sharp edge is at least legible:
 
@@ -50,6 +59,7 @@ bundles unrelated to the wave. A Lean wave should not be gated on D3's LaTeX.
 | flag | effect | who passes it |
 |---|---|---|
 | `--strict` | promotes 6 submission advisories to hard failures; **implies `--no-memo`** | `gate_precheck submission` only |
+| `--scope substrate` | paper-corpus failures still run and print, but do not set the exit code | `gate_precheck s13-lean` |
 | `--force-latex` | recompiles every bundle draft, bypassing the per-draft cache | `gate_precheck s13` / `submission` |
 | `--no-memo` | re-measures the memoized Lean checks | manual, or implied by `--strict` |
 | `--ci` | skips the 3 mtime regenerators + `notebook_exec`; enforces the coverage floor; never archives | nothing today |

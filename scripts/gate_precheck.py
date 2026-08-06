@@ -46,6 +46,23 @@ STAGE_CHECKS = {
             "citation_primary_sources_present"],
     "s13": ["__full__"],  # validate.py full green over 1-12 (with --force-latex; see below)
 
+    # ── s13-lean: the same gate, scoped to the substrate (added 2026-08-06) ───────
+    # `s13` runs the FULL suite, so a PURE-LEAN wave's Stage-13 dispatch is vetoed by
+    # paper-corpus state the wave never touched. `VALIDATION_GATE_TOPOLOGY.md` §2
+    # recorded that as a known sharp edge; it is now load-bearing, because two
+    # corpus-wide reds (`bundle_metadata_matches_graph`, `readiness_submission_gate`)
+    # mean plain `s13` cannot pass for ANY wave, Lean or paper.
+    #
+    # `s13-lean` runs the IDENTICAL suite and prints the identical failures — only the
+    # EXIT CODE is scoped, via `validate.py --scope substrate`. Nothing is skipped and
+    # nothing is hidden: a Lean wave still sees the paper corpus is red, it just is not
+    # blocked by it.
+    #
+    # Use `s13` for a wave that TOUCHED papers/, and at any point where the corpus
+    # itself is the deliverable. `--scope` is deliberately absent from `submission`:
+    # that gate is scope-blind by design.
+    "s13-lean": ["__substrate__"],
+
     # ── The Paper Submission Gate (added 2026-08-05) ──────────────────────────────
     # `WAVE_EXECUTION_PIPELINE.md` Invariant #12 calls `--strict` *"mandatory at the
     # Paper Submission Gate"*, and :72 spells the gate as a `--strict` invocation — but
@@ -96,6 +113,9 @@ def main(argv=None) -> int:
             # belt-and-braces re-measure at the gate. Do not remove it on the grounds
             # that "the check runs anyway" without re-reading that history.
             rc |= _run(["scripts/validate.py", "--force-latex", "--no-archive"])
+        elif chk == "__substrate__":
+            rc |= _run(["scripts/validate.py", "--scope", "substrate",
+                        "--force-latex", "--no-archive"])
         elif chk == "__strict__":
             rc |= _run(["scripts/validate.py", "--strict", "--force-latex",
                         "--no-archive"])

@@ -312,6 +312,18 @@ _PAPER_SIDE_MODULES = frozenset({
 })
 
 
+def _spec_of(name: str):
+    """The registered CheckSpec for `name`, or None."""
+    return next((sp for sp in _CHECKS if sp.name == name), None)
+
+
+def _leaf_module_of(name: str) -> str:
+    """Leaf name of the module a check is DEFINED in — derived from the registry, so a
+    check that moves module carries its classification with it."""
+    sp = _spec_of(name)
+    return (sp.func.__module__.rsplit(".", 1)[-1]) if sp is not None else ""
+
+
 def _print_failure_provenance(results: Dict[str, CheckResult]) -> None:
     """Split the failures into paper-corpus vs substrate, and say so.
 
@@ -630,6 +642,14 @@ Examples:
               "lean_docstring_refs_resolve). Implied by --strict.")
     )
     parser.add_argument(
+        "--scope", choices=("all", "substrate"), default="all",
+        help=("Which failures bind the EXIT CODE. `all` (default) is unchanged: any "
+              "failure fails. `substrate` fails only on Lean/Python-side checks — "
+              "paper-corpus failures are still RUN and still PRINTED, they just do not "
+              "block. For a pure-Lean wave close, whose Stage-13 dispatch a red in "
+              "another bundle's LaTeX should not veto. Never use it at the submission "
+              "gate: `--strict` is that gate and is deliberately scope-blind."))
+    parser.add_argument(
         "--ci", action="store_true",
         help=("Unattended-runner mode: skip the checks whose premise does not hold on "
               "a fresh clone (the three mtime regenerators + notebook_exec), never "
@@ -762,6 +782,16 @@ Examples:
                   f"or lower CI_MIN_CHECKS_RUN with a stated reason.", file=sys.stderr)
             return 1
 
+    if args.scope == "substrate" and not all_passed:
+        blocking = [n for n, r in results.items()
+                    if not r.passed
+                    and getattr(_spec_of(n), "func", None) is not None
+                    and _leaf_module_of(n) not in _PAPER_SIDE_MODULES]
+        if not blocking:
+            print("\n  \033[33m--scope substrate:\033[0m the only failures are paper-corpus; "
+                  "exiting 0. They are REAL and still listed above — this flag changes what "
+                  "BLOCKS, never what is measured or reported.", file=sys.stderr)
+            return 0
     return 0 if all_passed else 1
 
 

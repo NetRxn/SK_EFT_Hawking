@@ -18,8 +18,8 @@
   > | inherited | measured | consequence |
   > |---|---|---|
   > | Tier-1 ~181 pp vs ~475 pp | ✅ **186 / 480 pp** | holds; §Context (a)–(d) below now say *why* |
-  > | ~340 un-homed modules | ❌ **1 403–1 633 of 2 039** | low by 4–5×; D5's scope is far larger |
-  > | 162 `PinPlus*` + ~88 Smith/Wu | ❌ **2 914** + **409** | low by ~18×; conclusion (zero `papers/` hits) stands |
+  > | ~340 un-homed modules | ⚠️ **different unit** — see CORRECTION below | the un-homed population is large, but the ❌ verdict is withdrawn |
+  > | 162 `PinPlus*` modules | ✅ **164 files** — the audit was RIGHT | the earlier ❌ compared declarations to modules |
   > | D6/D9 share 78 theorems | ✅ **78, exactly** | the merge case for D6+D9 is real |
   > | D4 §9 = 62 % of D8 | ⚠️ **true, but a SIZE ratio** | texts share **0.1 %**; not duplication — see C3 |
   > | 16 stub sections / 7 bundles | ✅ **17 / 8** — but ≤ 8 % of any bundle | immaterial; drop from remediation |
@@ -28,11 +28,25 @@
   > gradient that identifies the D-tier mechanism (§Context), and the fact that the absorption
   > instrument's failure has a *different cause* than the audit assigned it (§Context, M6).
   >
-  > **The re-measurement was also, three times, a correction of the measurer.** Reading only
-  > `\texttt{}` — the assumption the validation suite itself shipped — made D8 and D9 look like they
-  > referenced **zero** Lean modules, and made D6 ∩ D9 come out **0** instead of 78. Filing "the audit
-  > is wrong" off that would have killed the best-evidenced merge in the portfolio. Fixed in
-  > `c7148779` and `c5f384b4`; see §Consequences.
+  > ⚠️ **CORRECTION 2026-08-06 — two figures above were WRONG, both mine.** Full working:
+  > [`MEASUREMENTS.md` §CORRECTIONS](../audits/2026-08-05-adr010-measurement/MEASUREMENTS.md).
+  >
+  > 1. **"D11 and D12 reference zero Lean declarations" is FALSE** — an extraction artifact. Both
+  >    route every reference through a `\thm{}` wrapper the extractor could not see. Re-measured:
+  >    **D11 = 95 declarations / 22 modules, D12 = 132 / 13.** No bundle references zero. The
+  >    inference that late authorization yields substrate-detached containers is WITHDRAWN.
+  > 2. **"the audit's ~340 is low by 4–5×" was a UNIT SWAP.** The audit said 162 `PinPlus*.lean`
+  >    **modules**; there are **164** — a 1.2 % difference. The re-measurement compared
+  >    **declarations** to **modules** and reported the ratio as the audit's error.
+  >
+  > **The re-measurement was, repeatedly, a correction of the measurer.** Reading only `\texttt{}`
+  > — the assumption the validation suite itself shipped — made D8/D9 look like they referenced
+  > **zero** Lean modules and made D6 ∩ D9 come out **0** instead of 78. Filing "the audit is wrong"
+  > off that would have killed the best-evidenced merge in the portfolio. Fixed across `c7148779`,
+  > `c5f384b4` and `39e7ac3a`; see §Consequences.
+  >
+  > **What survives both corrections: M1's length finding, M4a's 78 shared theorems, M5 and M6 —
+  > so the D6+D9 merge case, which the portfolio decision actually turns on, is untouched.**
   **No roster change, no `PAPER_STRATEGY.md` edit and no manuscript edit is authorized by this ADR.**
 - **Decider:** John Roehm (project owner). Direction given 2026-08-04:
   > *"My intent is to publish the strongest form of any paper we deliver. I've noticed that the naming
@@ -140,9 +154,11 @@ Declaration-level references that resolve to real project theorems, per bundle:
 |---|---|---|---|---|---|---|
 | **0** | 3 | 20 | 175 | 39 | 169 | 175 |
 
-**D11 and D12 reference zero Lean declarations.** D10 references three. Meanwhile **1 403–1 633 of the
-2 039** Lean modules reach no bundle draft at all. The late D-tier containers are not merely short —
-several are barely attached to the substrate they were authorized to present.
+⚠️ **WITHDRAWN 2026-08-06 — this paragraph was an extraction artifact.** It read "D11 and D12
+reference zero Lean declarations. D10 references three." Re-measured after the verbatim repairs:
+**D6 = 153, D7 = 11, D8 = 37, D9 = 150, D10 = 34, D11 = 95, D12 = 132** declarations. No bundle
+references zero; the thinnest is D7 at 11. There is no substrate-attachment finding here, and the
+length finding in M1 stands on its own without it.
 
 ### The strategy document predates most of what was delivered
 

@@ -259,3 +259,47 @@ class TestCommitGateCheckNamesAreReal:
             f"{unknown}. `run_check` maps an unknown name to SKIP, which never "
             f"blocks — so the only mechanical gate on `main` is silently disarmed "
             f"for those checks.")
+
+
+class TestScopeSubstrate:
+    """`--scope substrate` — what BLOCKS a pure-Lean wave close.
+
+    `gate_precheck s13` runs the full suite, so a Lean wave's Stage-13 dispatch was
+    vetoed by paper-corpus state it never touched. The flag scopes the EXIT CODE only:
+    every check still runs and every failure is still printed. A flag that hid failures
+    would be the defect this suite exists to catch, wearing a convenience label.
+    """
+
+    def _registry(self, monkeypatch, failing_module_of):
+        """Registry whose checks fail, each attributed to a chosen defining module."""
+        specs = []
+        for name, mod in failing_module_of.items():
+            fn = (lambda: CheckResult(passed=False, details=[]))
+            fn.__module__ = f"validation.checks.{mod}"
+            specs.append(CheckSpec(name=name, description=name, func=fn))
+        monkeypatch.setattr(validate, "_CHECKS", specs, raising=False)
+        monkeypatch.setattr(validate._H, "ensure_lean_deps_fresh", lambda: (False, "stub"))
+
+    def test_paper_only_failures_do_not_block(self, monkeypatch):
+        self._registry(monkeypatch, {"p1": "papers_prose", "p2": "bundles_readiness"})
+        rc, _ = _run(["--scope", "substrate", "--no-archive"])
+        assert rc == 0
+
+    def test_a_substrate_failure_STILL_blocks(self, monkeypatch):
+        """FIRES ON THE SEEDED DEFECT — the assertion that keeps the flag honest."""
+        self._registry(monkeypatch, {"p1": "papers_prose", "s1": "lean_toolchain"})
+        rc, _ = _run(["--scope", "substrate", "--no-archive"])
+        assert rc == 1, "a substrate failure was masked by --scope substrate"
+
+    def test_the_default_scope_is_unchanged(self, monkeypatch):
+        self._registry(monkeypatch, {"p1": "papers_prose"})
+        rc, _ = _run(["--no-archive"])
+        assert rc == 1, "--scope defaults to `all`; paper failures must still block"
+
+    def test_the_failures_are_still_REPORTED_when_not_blocking(self, monkeypatch):
+        """Scoping what blocks must never scope what is measured or shown."""
+        self._registry(monkeypatch, {"p1": "papers_prose"})
+        rc, err = _run(["--scope", "substrate", "--no-archive"])
+        assert rc == 0
+        assert "paper-corpus" in err, (
+            "exiting 0 without saying why turns a scoped gate into a silent one")
