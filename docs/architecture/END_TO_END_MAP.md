@@ -315,6 +315,21 @@ Schema: `docs/KNOWLEDGE_GRAPH.md`. Plane detail:
   Neither pair is cross-checked, and the dashboard is the surface a human reads before
   signing off — so the copy most likely to be believed is the one nothing validates.
 
+- ✅ **V** 🔴 **The Postgres + AGE mirror is schema-complete and data-empty.** Connected to
+  the live `sk_eft_graph` container (`host=localhost port=5433 dbname=sk_eft_provenance`,
+  credentials read from `build_graph.py:4081`): AGE **1.6.0**, graphs `sk_eft` and
+  `private_rd_kg`, **25 vertex labels + 20 edge labels** created — scaffolding that matches
+  the graph's type set. All 25 vertex labels query cleanly (**0 errors**) and return a
+  **combined 2 vertices** — one `Formula`, one AGE-internal `_ag_label_vertex` — against
+  **47 341** nodes in the JSON graph.
+  Not a bug, a consequence: the write is **opt-in** (`build_graph_json(*, sync_pg=False)`,
+  `:4329`; `--sync-pg` at `:4412`) and is evidently not run routinely.
+  ⚠️ **The risk is the READ path.** `provenance_dashboard.py:152` honours
+  `SK_EFT_GRAPH_SOURCE=pg`. Setting it today serves a near-empty graph from a mirror whose
+  labels all exist, so nothing looks obviously wrong — an empty result from a well-formed
+  schema is indistinguishable from a graph that genuinely holds nothing. Same
+  absence-reads-as-data shape as the audit-log layer, one storage tier down.
+
 ---
 
 ## 7. ⑦⑧ Authoring and review
