@@ -422,3 +422,45 @@ to fix unverified prose.** A pass that edits while it verifies does not converge
 Steps 2 and 3 are small and bounded. Interleaving them, as every pass so far has done, is what
 keeps the target moving. No code required — this is process, and it is why coverage stalled.
 
+---
+
+### D5. The bundle readiness signal is inverted — OPEN (CRITICAL)
+
+Full analysis: [`docs/audits/2026-08-07-publication-readiness/`](../../audits/2026-08-07-publication-readiness/README.md).
+
+- **What:** `readiness` is GREEN iff 0 blockers ∧ ≤5 advisories ∧ a recorded Stage-13 review.
+  Blockers derive from `ReviewFinding` nodes, which are minted by reviews. A bundle never
+  reviewed has no findings and qualifies for GREEN.
+- **Measured:** non-RED bundles average **31** sentences reviewed; RED bundles average **71**.
+  The one GREEN bundle (D9) has **0**. The most-reviewed bundle (I1, 290) is RED.
+- **Fix shape (needs code):** the bundle layer needs the distinction `CheckResult.measured`
+  already gives the check layer (ADR-009 D2). A bundle with no `claims_review.json` must be
+  UNMEASURED, never GREEN. Plus: a check that every bundle HAS a claims review; an enforcement
+  point for Stage-9/10-before-13; `stage13_review_doc` recording the review KIND (a 16-anchor
+  attribution sweep currently satisfies the same field as a full adversarial pass); and either
+  writers for `stage*_status` or their removal.
+
+### D6. Corpus-wide Lean pin drift in paper drafts — OPEN
+
+- **Measured:** **8 of 21 bundles** cite a stale Lean version against the live `4.32.0` —
+  D6/D9/D10/L2 (`4.29.1`), E1/E2/I3 (`4.29.0`), I1 (`4.28.0` *and* `4.29.0`). Plus 8 legacy
+  drafts; **16 total**.
+- **Why it matters:** for bundles whose claim is reproducible kernel-checking, a wrong pin means
+  a referee's reproduction attempt fails and reads as a broken substrate.
+- ⚠️ **Scan on the Lean version string only.** A hex-pattern scan for Mathlib revs collides with
+  ISBNs, Aristotle run IDs and dates, and manufactures findings.
+- **Fix shape (needs code):** drafts should cite the pin through a generated macro, as they
+  already do for project-wide counts, plus a check asserting no draft names a non-current pin.
+
+### D7. No mechanism assesses whether prose serves a reader — OPEN
+
+- **Verified absent:** zero validation checks for readability/style, zero reviewer agents briefed
+  on it, zero mentions in `WAVE_EXECUTION_PIPELINE.md`.
+- **Measured consequences:** 171 sentences over 60 words across 21 drafts; 7 bundles contain a
+  sentence over 100 words (max **179**); em-dash density spans **11×** within the corpus
+  (L1 36/1000 → D9 391/1000) and the gradient tracks bundle recency.
+- **Fix shape (needs code):** a readability ratchet in the house idiom calibrated against L1/D1;
+  a `prose-reviewer` agent as the fourth reviewer; a gate before Stage 13.
+- ⚠️ **The decider must not be the generator.** Metrics computed independently of the rewriter,
+  and human calibration on a sample.
+
