@@ -28,7 +28,7 @@ its own recorded check. A compound sentence is not one entry — it is one entry
 |---|---|---|
 | `README.md` | index table · two rules · scope boundary | ✅ **VERIFIED** — 8 atoms, all checked |
 | `SURFACE_INVENTORY.md` | header prose · derivation sources (tables are derived + gated) | ⛔ **BLOCKED** — atom 2 false; fix needs a generator edit (TODO **B7**) |
-| `VALIDATION_ARCHITECTURE.md` | §1–§6 | TODO |
+| `VALIDATION_ARCHITECTURE.md` | §1–§6 | ✅ **VERIFIED** — 22 atoms, 1 corrected |
 | `CHECK_AUTHORING_GUIDE.md` | thesis · §1–§6 | TODO |
 | `VALIDATION_GATE_TOPOLOGY.md` | §1–§7 | TODO |
 | `QA_QI_INFRASTRUCTURE_MAP.md` | §1–§6 | TODO |
@@ -137,3 +137,36 @@ defect. Those are not doc-history and do not prime a false belief about current 
 cannot be corrected, because it is emitted by the generator rather than stored in the tracked
 file. Marked BLOCKED rather than passed, and rather than silently narrowed to the atoms that
 do pass.
+
+
+---
+
+## V3 — `VALIDATION_ARCHITECTURE.md` — VERIFIED (22 atoms, 1 correction)
+
+| # | atom | decided by | result |
+|---:|---|---|---|
+| 1 | **SET:** `validate.py` registers ZERO checks | AST walk for `@register_check`-decorated `FunctionDef` | **none** ✓ (grep shows 5 hits — all comments; the AST is the decider) |
+| 2 | Checks live in domain modules under `scripts/validation/checks/` | directory listing | 12 modules ✓ |
+| 3 | **SET:** framework modules are `_registry`, `_config`, `_memo` | listing of `scripts/validation/_*.py` | those three + `_tex` + `__init__.py` (19 lines, **0 definitions** — a package marker) ✓ |
+| 4 | `_tex` is the shared helper | same listing | ✓ |
+| 5 | **SET:** `validate_helpers.py` is THE single path anchor | count anchors there; count check modules deriving their own root | 8 anchors; **0** modules derive their own ✓ |
+| 6 | **SET:** the 12 modules named in the tree block == the 12 on disk | `diff` of extracted names vs `ls` | **sets identical** ✓ |
+| 7 | ADR-009 D1 set the criterion "every module readable in one pass" | `ADR-009:150,165` | states exactly that ✓ |
+| 8 | The modules deliberately share no line threshold | `wc -l` across the 12 | 404–1140, no threshold ✓ |
+| 9 | **SET:** `CheckResult` fields are exactly `passed`,`details`,`error`,`measured` | `dataclasses.fields` | exact ✓ |
+| 10 | `passed` is D2 contract item 5 | `ADR-009:622` | states it ✓ |
+| 11 | **SET:** `passed` is read by the `--json` payload, `gate_precheck.py`, `pre-commit-sync.sh` | grep each consumer; read `run_check()`; read `main()`'s return | ❌ **CORRECTED** — `gate_precheck.py`'s only `passed` is in a **comment** (`:33`); it consumes `returncode` (`:87`). `pre-commit-sync.sh` consumes `rc`. Both are **exit-code** consumers; `validate.py:846` derives the code as `0 if all_passed else 1`. Only the `--json` payload reads the field |
+| 12 | §Deferred item 4 declined `UNEVALUATED` | `ADR-009:956` | states it ✓ |
+| 13 | **SET:** two consumers depend on `measured` | `validate.py:801-803` (`--ci` floor); `_memo.py:342` | exactly those two ✓ |
+| 14 | `@register_check` appends to `_registry._CHECKS` | `_registry.py:123` | `_CHECKS.append(CheckSpec(...))` ✓ |
+| 15 | `validate` re-exports the SAME list object | `validate._CHECKS is _registry._CHECKS` | `True` ✓ |
+| 16 | `test_validate_public_surface.py` asserts that identity | `:167` | asserts it ✓ |
+| 17 | `_CANONICAL_ORDER` declares order; `_apply_canonical_order()` sorts in place | `validate.py:168,205-216` | `_CHECKS.sort(key=…)` ✓ |
+| 18 | **SET:** the regenerators live in `freshness.py` | AST: registered checks in that module containing `subprocess.run` | exactly `counts_fresh`, `tables_fresh`, `claim_clusters_fresh` ✓ |
+| 19 | **SET:** ADR-009 D3 identifies five hazards, H1–H5 | `ADR-009:235` heading + the five `**HN —**` blocks | five ✓ (H2 restored to the table this pass) |
+| 20 | Each hazard's named enforcing test exists and enforces it | read each test body | all five ✓ |
+| 21 | **SET:** the memo is applied to exactly two checks | `_memo.unwrap(spec.func) is not spec.func` over the registry | `axiom_closure_allowlist`, `lean_docstring_refs_resolve` ✓ |
+| 22 | §6's four coverage-gap statements | read each named check | ✓ (corrected in an earlier round; re-checked here) |
+
+**NOT-AN-ASSERTION:** §5's *"Measure rather than quote"* and §3's *"They are not style rules"* —
+guidance, no truth value.

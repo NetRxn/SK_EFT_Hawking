@@ -62,8 +62,13 @@ class CheckResult:
 ```
 
 `passed` is a **bare bool with no third state**, deliberately: it is contract item 5 of ADR-009
-D2, read by the `--json` payload, `gate_precheck.py` and `pre-commit-sync.sh`. §Deferred item 4
-declined an `UNEVALUATED` value for exactly that reason.
+D2, and §Deferred item 4 declined an `UNEVALUATED` value for that reason.
+
+Its consumer surface is one direct reader and two indirect: the `--json` payload reads the
+field itself, while `gate_precheck.py` and `pre-commit-sync.sh` consume the **process exit
+code**, which `validate.main()` derives as `0 if all(r.passed for r in results) else 1`. A third
+state therefore forces an exit-code mapping decision on both, which is why it is a contract
+change rather than a local refactor.
 
 **`measured` is a separate additive field, not a third `passed` value.** It answers a different
 question — *did this check look at anything?* — and defaulting it `True` leaves every existing
@@ -110,13 +115,11 @@ that is the *mechanism*. `test_regenerators_precede_their_consumers` proves the 
 `counts_fresh` runs before every check that reads `docs/counts.json`, with the consumer set
 **derived by AST** from the check bodies rather than declared.
 
-⚠️ **It was a hand-written tuple naming two consumers, and that was the bug.** The real
-population was larger, and three undeclared readers ran *before* the regenerator — including
-`lean_zero_sorry`, the Invariant #4 gate, which therefore evaluated the previous extraction on
-any run over changed Lean sources. `counts_fresh` now runs first, and a new consumer
-registered ahead of it fails the derived assertion on arrival rather than silently reading
-stale counts. A body that reaches `counts.json` through a helper without naming it is still
-invisible to the scan — an accepted limit, stated in both the test and the production comment.
+`counts_fresh` runs first in `_CANONICAL_ORDER`, so a consumer registered ahead of it fails
+the derived assertion on arrival rather than silently reading stale counts.
+
+⚠️ **Accepted limit:** a check body that reaches `counts.json` through a helper, without
+naming it, is invisible to the AST scan. Stated in both the test and the production comment.
 
 ## 4. Runtime flags (`_config.py`)
 
