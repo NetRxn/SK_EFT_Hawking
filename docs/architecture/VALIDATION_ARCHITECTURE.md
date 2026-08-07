@@ -1,29 +1,24 @@
 # Validation subsystem — architecture
 
-**Production document.** The durable description of how `validate.py` and
-`scripts/validation/` are built and why. Written 2026-08-05, after ADR-009 completed, because
-the only accounts of this subsystem were a *decision record* (`ADR-009`) and a *migration note*
-in `.working-docs/` — neither of which is where a reader should have to look for the
-architecture of a live system.
+**Living document.** Start at [`README.md`](README.md). States no counts — the check roster
+is in [`SURFACE_INVENTORY.md`](SURFACE_INVENTORY.md#validation-checks).
+
+The durable description of how `validate.py` and `scripts/validation/` are built and why.
 
 **Companions:** [`VALIDATION_GATE_TOPOLOGY.md`](VALIDATION_GATE_TOPOLOGY.md) (when each gate
-runs and what it blocks) · [`CHECK_AUTHORING_GUIDE.md`](CHECK_AUTHORING_GUIDE.md) (obligations a
-new check inherits) · [`QA_QI_INFRASTRUCTURE_MAP.md`](QA_QI_INFRASTRUCTURE_MAP.md) (the defect
-landscape this subsystem exists to close).
+runs, what it blocks, what each computes) · [`CHECK_AUTHORING_GUIDE.md`](CHECK_AUTHORING_GUIDE.md)
+(obligations a new check inherits, and the systemic-pattern ledger) ·
+[`QA_QI_INFRASTRUCTURE_MAP.md`](QA_QI_INFRASTRUCTURE_MAP.md) (the quality layer's interior) ·
+[`END_TO_END_MAP.md`](END_TO_END_MAP.md) (the spine).
 
 ---
 
 ## 1. The one-sentence shape
 
-`scripts/validate.py` is a **framework** (zero registered checks); the checks live in
-twelve modules under `scripts/validation/checks/`; three framework modules
+`scripts/validate.py` is a **framework** (zero registered checks); the checks live in domain
+modules under `scripts/validation/checks/`; three framework modules
 (`_registry`, `_config`, `_memo`) and one shared helper (`_tex`) sit below both, and
 `scripts/validate_helpers.py` is the single path anchor.
-
-> **The check roster is [`SURFACE_INVENTORY.md`](SURFACE_INVENTORY.md#validation-checks)**,
-> derived from the registry and gated by `validate.py --check architecture_inventory_fresh`.
-> A count written into this file is a count that rots — this document said **61** from
-> 2026-08-05 until 2026-08-06, while the registry had grown to **65**.
 
 ```
 scripts/validate.py              # framework: CLI, run_checks, print_results, ordering
@@ -33,7 +28,7 @@ scripts/validation/
   _config.py                     # runtime flags, reached by ATTRIBUTE (H5)
   _memo.py                       # input-fingerprint memo for expensive checks
   _tex.py                        # shared LaTeX helpers
-  checks/                        # 12 modules; roster in SURFACE_INVENTORY.md
+  checks/                        # domain modules; roster in SURFACE_INVENTORY.md
     lean_substrate.py            #   substance gates (R1-R3)
     lean_toolchain.py            #   build + trust surface
     lean_statements.py           #   statement-level substance
@@ -48,9 +43,10 @@ scripts/validation/
     reviews.py                   #   review-document integrity
 ```
 
-**Why the framework/check split.** A single 7,900-line `validate.py` made every check's
+**Why the framework/check split.** A single monolithic `validate.py` made every check's
 dependencies implicit and made "does this file fit in one read" unanswerable. ADR-009 D1 set the
-criterion: **every module readable in one pass.** As built: 12 modules averaging ~750 lines.
+criterion: **every module readable in one pass**, and that is the criterion a new module is held
+to — not a line threshold, which the modules deliberately do not share.
 
 ## 2. The framework contract
 
@@ -87,8 +83,8 @@ filling one and `run_checks` iterating the other, and `all([]) is True`, so the 
 report success over nothing. `tests/test_validate_public_surface.py` asserts the identity.
 
 **Execution order is data, not import order** (hazard H3). `validate._CANONICAL_ORDER` declares
-it and `_apply_canonical_order()` sorts in place. This matters because three checks in
-`freshness.py` *regenerate artifacts other checks read* — their position relative to their
+it and `_apply_canonical_order()` sorts in place. This matters because the regenerators in
+`freshness.py` *rewrite artifacts other checks read* — their position relative to their
 consumers is semantic.
 
 ## 3. The four hazards, and how each is structurally prevented
@@ -98,7 +94,7 @@ These are ADR-009 D3. They are not style rules; each names a failure the project
 | | hazard | rule | enforced by |
 |---|---|---|---|
 | **H1** | a path derived from `__file__` resolves to `scripts/validation/checks/`, so every artifact lookup silently misses | reach paths as `_H.<NAME>` **at each use** — never a module-level alias, never from `__file__` | `test_no_check_derives_a_path_from___file__` |
-| **H3** | import order silently becomes execution order | `_CANONICAL_ORDER` owns it | `test_regenerators_precede_their_consumers` |
+| **H3** | import order silently becomes execution order | `_CANONICAL_ORDER` owns it | `test_every_registered_check_has_a_declared_position` + `test_the_sort_runs_after_the_last_registration` |
 | **H4** | the same missing artifact means different things in different checks; a shared helper would unify them silently | helpers own *where a thing is*, **never what its absence means** | `test_cannot_measure_baseline` freezes the divergent policies |
 | **H5** | `from validate import STRICT_MODE` binds a **copy** at import time; `--strict` becomes a silent no-op | reach flags by **attribute** on `_config` | `test_validate_flag_propagation` |
 
@@ -106,11 +102,21 @@ These are ADR-009 D3. They are not style rules; each names a failure the project
 `LOAD_GLOBAL` and `LOAD_ATTR`, so an import-time copy still appears there. The guard additionally
 requires `_cfg` in `co_names` — an imported copy has no attribute access to show.
 
+⚠️ **H3's ordering is enforced as a MECHANISM, not as a dependency graph.** The two tests above
+prove every registered check has a declared position and that the sort runs after the last
+registration. The separate `test_regenerators_precede_their_consumers` asserts that
+`counts_fresh` precedes its consumers — but it iterates a **hand-written tuple**
+(`_COUNTS_CONSUMERS`), and measured against the registry that tuple is a strict subset of the
+checks that actually read `docs/counts.json`. So the *mechanism* is guarded; the *specific
+regenerator-before-consumer property* is guarded only for the declared pairs. Tracked as **B1**
+in [`.working-docs/ARCHITECTURE_TODOs.md`](.working-docs/ARCHITECTURE_TODOs.md), with the
+measured consumer set and the reason the exposure is bounded.
+
 ## 4. Runtime flags (`_config.py`)
 
 | flag | set by | meaning |
 |---|---|---|
-| `STRICT_MODE` | `--strict` | promote submission advisories to hard failures; read by 6 checks |
+| `STRICT_MODE` | `--strict` | promote submission advisories to hard failures |
 | `FORCE_LATEX` | `--force-latex` | recompile every bundle draft, bypassing the per-draft cache |
 | `FORCE_NOTEBOOK_REEXEC` | `--force-notebooks` | bypass the notebook skip-cache |
 | `NO_MEMO` | `--no-memo` | bypass the expensive-check memo; **implied by `--strict`** |
@@ -118,17 +124,18 @@ requires `_cfg` in `co_names` — an imported copy has no attribute access to sh
 
 ## 5. Change-scoping: `_memo.py` and the per-draft LaTeX cache
 
-Measured 2026-08-05: the suite cost **332.6 s**, and **43 of 55 checks finished under one
-second**. The cost was three checks. Two caches now scope them to what changed:
+Almost every check finishes in well under a second; the suite's cost is concentrated in a
+couple of them. Two caches scope those to what changed:
 
 * **`_memo.py`** — a check's verdict is reused only while a fingerprint of *every input it reads*
-  is unchanged since its last PASS. Applied to `axiom_closure_allowlist` (**171.6 s → 0.1 s**)
-  and `lean_docstring_refs_resolve`.
+  is unchanged since its last PASS. Applied to `axiom_closure_allowlist` and
+  `lean_docstring_refs_resolve`.
 * **`paper_latex_compiles`** — per-draft content-hash cache over the draft's full `\input`
   closure. With the cost gone, its **slow gate was deleted**: it had returned `passed=True` with
-  `SKIPPED (slow)` by default, which is why a fatal LaTeX error in D3 was invisible for months.
+  `SKIPPED (slow)` by default, which is why a fatal LaTeX error was invisible for months.
 
-Full suite: **317.8 s → 134.2 s**, with the LaTeX compile now actually running.
+Measure rather than quote: `validate.py` prints its own elapsed time, and `--no-memo` gives the
+cold number.
 
 ### The hazard, and why the guards are where they are
 
@@ -143,20 +150,39 @@ subsystem exists to close. It is sound only if the key spans every input.
 5. `--no-memo`, and `--strict` implying it; `tests/conftest.py` disables the memo suite-wide so
    no monkeypatched test can poison a developer's cache.
 
-> ⚠️ **The lesson worth carrying.** The first version had four guards, and PR-review pass 2 found
-> three holes anyway. All four guards policed *how the cache is used*; none audited *whether the
-> key spans the inputs*. **Guarding at the wrong layer is indistinguishable from guarding, right
-> up until the measurement.**
+> ⚠️ **The first version had four guards and a review pass found three holes anyway.** The
+> generalisable lesson that came out of it is stated once, in
+> [`CHECK_AUTHORING_GUIDE.md` §5](CHECK_AUTHORING_GUIDE.md#5-the-systemic-pattern--the-shapes-it-has-actually-taken),
+> which owns the systemic-pattern ledger. Read it before adding a guard to anything here.
 
 ## 6. What this subsystem does not do
 
-- It does not verify **figure content**, recompute **paper-quoted numbers** from their formulas,
-  check that a **cited theorem's statement** supports the prose, or verify **citation content**.
-  Those are absent checks (pass-1 R5-C2…C5), routed to ADR-010.
-- It does not run in CI. There is deliberately **no scheduled runner** — see
-  `docs/audits/2026-08-04-qa-qi-infrastructure/CI_DEFAULTS_ASSESSMENT.md`.
+⚠️ **These are coverage GAPS, not absences.** An earlier revision of this section flatly
+said the suite does not recompute paper-quoted numbers or verify citation content. Both were
+wrong — checks exist for each; what is true is that their coverage is **per-artifact and
+partial** rather than corpus-wide. Stated precisely:
+
+- **Figure physics is unverified.** `bundle_figure_integrity` compares a bundle figure against
+  a fresh render and asserts typeset legibility — real assertions, but structural. The
+  `physics_checks` each `FigureSpec` declares (`mach_crosses_one`, `T_H_dominates`, …) are read
+  only to be copied into the review manifest for a downstream LLM; nothing evaluates them.
+- **Paper-quoted numbers are recomputed, for a few artifacts.** `paper_table` parses the
+  *rendered* table the draft actually `\input`s and holds every cell to the canonical evaluator
+  at the cell's own displayed precision; `d1_hierarchy_table` and `f_hierarchy_claims` do the
+  same for their targets. There is no general mechanism that recomputes an arbitrary number
+  quoted in arbitrary prose.
+- **Citation content is verified, for cached PDFs.** `bibitem_title_primary_source` extracts
+  page-1 text from the primary-source cache and compares it to the registry title, catching
+  word-level drift. Entries with no cached PDF are outside its reach.
+- **A cited theorem's STATEMENT is still unverified.** `prose_theorem_reference_coverage`
+  resolves the *name* against `lean_deps.json`; nothing checks that the theorem's statement
+  supports the sentence citing it. This one is a genuine absence, routed to ADR-010.
+
+It does not run in CI. There is deliberately **no scheduled runner** (verified: no
+`.github/workflows/`) — see
+`docs/audits/2026-08-04-qa-qi-infrastructure/CI_DEFAULTS_ASSESSMENT.md`.
 
 ---
 
-*Sources: ADR-009 (decision + §Deferred 0–7 + addendum II), `docs/audits/2026-08-04-qa-qi-infrastructure/`
-(pass 1), `docs/audits/2026-08-05-pr-review-2/` (pass 2).*
+*Decision record: [ADR-009](../adrs/ADR-009-validation-suite-modularization.md) (decision +
+§Deferred + addenda). The audit passes that produced these rules are under `docs/audits/`.*

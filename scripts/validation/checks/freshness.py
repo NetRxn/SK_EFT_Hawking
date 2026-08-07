@@ -34,6 +34,7 @@ by value would freeze it at import time and silently make `--strict` a no-op (H5
 from __future__ import annotations
 
 import json
+import re
 import subprocess
 from pathlib import Path
 from typing import Dict, List
@@ -800,10 +801,10 @@ def check_architecture_inventory_fresh() -> CheckResult:
     `scripts/architecture_inventory.py` from the artifact that owns each population.
 
     The split exists because narrative counts rot, provably and repeatedly here:
-    `WAVE_EXECUTION_PIPELINE.md` still opens "these 12 stages" against a live 14 and lists
-    "Checks (16 total)" against a live 64; Invariant #14 freezes the roster at "18 targets"
-    against a live 21. Each was true when written. A map nobody can trust is worse than no
-    map, because it is quoted.
+    `WAVE_EXECUTION_PIPELINE.md` still opens "these 12 stages" against a longer live stage
+    list, quotes a check total from an earlier era, and freezes the roster at a bundle count
+    that predates the bundles authorized since. Each was true when written. A map nobody can
+    trust is worse than no map, because it is quoted.
 
     So the census is regenerated, never hand-edited, and this check fails when the tracked
     file no longer matches a fresh run. Regenerate with:
@@ -841,19 +842,83 @@ def check_architecture_inventory_fresh() -> CheckResult:
             f"architecture_inventory.py failed to derive the surface ({exc}) — the census "
             f"cannot be confirmed, which is a failure, not a skip")])
 
+    details: List[Detail] = []
+    all_pass = True
+
+    # ── Leg 2: no narrative in docs/architecture/ may state a census count ──────
+    #
+    # Regenerating the census fixes the census. It does NOTHING about a count written
+    # into a narrative, and that is where every contradiction this directory has
+    # produced actually lived: one map said 61 checks, another 59, the registry had 65,
+    # and one sentence in one file managed to say 61 and 59 at once.
+    #
+    # Re-syncing them by hand is the lowest-value work in the repository and it recurs
+    # on every addition. The fix is not to chase them — it is to make a count OUTSIDE
+    # the derived file a hard failure, so there is nothing to chase. A narrative that
+    # needs a magnitude links to SURFACE_INVENTORY.md instead.
+    #
+    # The noun set is deliberately narrow: ONLY populations SURFACE_INVENTORY owns. A
+    # doc may still write "the four hazards" or "two caches" — those are stable
+    # structural facts nothing else derives, and banning them would make this gate fire
+    # on correct work, which per VALIDATION_GATE_TOPOLOGY §3 is how a gate gets
+    # switched off.
+    arch_dir = doc.parent
+    census_nouns = (r"checks?|gates?|hooks?|agents?|commands?|bundles?|"
+                    r"node types?|edge types?|validation modules?")
+    # (?<![-\w]) — a digit preceded by a hyphen is part of a NAME, not a count:
+    # "Tier-2 checks" is the tier's name and must not read as "2 checks". `registries`
+    # is deliberately absent from the nouns: "rebinding creates two registries" describes
+    # a bug mechanism, not the census's registry table.
+    count_re = re.compile(
+        r"(?<![-\w])(?:\d[\d,]*|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)\b"
+        r"[\s*_`]*(?:" + census_nouns + r")\b",
+        re.IGNORECASE)
+    offenders: list[str] = []
+    scanned = 0
+    for md in sorted(arch_dir.glob("*.md")):
+        if md.name == doc.name:      # the census is where counts BELONG
+            continue
+        scanned += 1
+        for i, line in enumerate(md.read_text().splitlines(), 1):
+            if line.lstrip().startswith(">") and "SURFACE_INVENTORY" in line:
+                continue             # a pointer AT the census may name what it holds
+            m = count_re.search(line)
+            if m:
+                offenders.append(f"{md.name}:{i} {m.group(0).strip()!r}")
+
+    # A scan that matched nothing because it walked nothing passes vacuously (D5 §2.5).
+    if scanned == 0:
+        all_pass = False
+        details.append(Detail(
+            "narratives_scanned", False,
+            f"no narrative .md found beside {doc.name} — the no-counts leg walked an "
+            f"empty population, which is not evidence that it holds"))
+    else:
+        details.append(Detail(
+            "no_counts_in_narratives", not offenders,
+            f"{scanned} narrative doc(s) in {arch_dir.name}/ state no census count"
+            if not offenders else
+            f"census count(s) written into a narrative — move the number to "
+            f"{doc.name} and link to it, or name the mechanism instead of the "
+            f"magnitude: {offenders[:6]}"))
+        if offenders:
+            all_pass = False
+
     current = doc.read_text()
     if current == fresh:
-        return CheckResult(passed=True, details=[Detail(
+        details.insert(0, Detail(
             "inventory_fresh", True,
-            f"{doc.name} matches a fresh derivation ({len(fresh.splitlines())} lines)")])
+            f"{doc.name} matches a fresh derivation ({len(fresh.splitlines())} lines)"))
+        return CheckResult(passed=all_pass, details=details)
 
     cur_lines, new_lines = current.splitlines(), fresh.splitlines()
     first = next((i for i, (a, b) in enumerate(zip(cur_lines, new_lines)) if a != b),
                  min(len(cur_lines), len(new_lines)))
-    return CheckResult(passed=False, details=[Detail(
+    details.insert(0, Detail(
         "inventory_fresh", False,
         f"{doc.name} is STALE — the system's surface changed and the census did not. "
         f"First divergence at line {first + 1}: tracked "
         f"{cur_lines[first][:90] if first < len(cur_lines) else '<eof>'!r} vs derived "
         f"{new_lines[first][:90] if first < len(new_lines) else '<eof>'!r}. "
-        f"Run `uv run python scripts/architecture_inventory.py --write`.")])
+        f"Run `uv run python scripts/architecture_inventory.py --write`."))
+    return CheckResult(passed=False, details=details)

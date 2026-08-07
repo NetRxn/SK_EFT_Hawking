@@ -1,11 +1,15 @@
 # Authoring a validation check — the obligations you inherit
 
-**Production document.** Written 2026-08-05. Every rule below exists because the project shipped
-its violation; the citation after each is the incident, not a style preference.
+**Living document.** Start at [`README.md`](README.md). States no counts — the check roster is
+in [`SURFACE_INVENTORY.md`](SURFACE_INVENTORY.md).
 
-**Companions:** [`VALIDATION_ARCHITECTURE.md`](VALIDATION_ARCHITECTURE.md) ·
-[`VALIDATION_GATE_TOPOLOGY.md`](VALIDATION_GATE_TOPOLOGY.md) ·
-[`QA_QI_INFRASTRUCTURE_MAP.md`](QA_QI_INFRASTRUCTURE_MAP.md)
+Every rule below exists because the project shipped its violation; the citation after each is
+the incident, not a style preference.
+
+**Companions:** [`VALIDATION_ARCHITECTURE.md`](VALIDATION_ARCHITECTURE.md) (how the suite is
+built) · [`VALIDATION_GATE_TOPOLOGY.md`](VALIDATION_GATE_TOPOLOGY.md) (when gates run, what
+each computes) · [`QA_QI_INFRASTRUCTURE_MAP.md`](QA_QI_INFRASTRUCTURE_MAP.md) (the quality
+layer's interior) · [`END_TO_END_MAP.md`](END_TO_END_MAP.md) (the spine).
 
 ---
 
@@ -14,8 +18,8 @@ its violation; the citation after each is the incident, not a style preference.
 > **Absence of measurement rendered as success.**
 
 A check that reports PASS while measuring nothing is worse than no check: it manufactures
-confidence. Two audit passes found it in eleven distinct forms, including **inside the guards
-written to prevent it**. Everything below is a consequence.
+confidence. Repeated audit passes have found it in many distinct forms, including **inside
+the guards written to prevent it**. Everything below is a consequence.
 
 ## 1. Skeleton
 
@@ -49,8 +53,8 @@ returned. Five reviewers, independently. The guard "only PASS is cached" was def
 ### 2.2 Never discard a computed verdict
 
 Compute `all_pass` and then `return CheckResult(passed=True, ...)` is the single most common form
-here — eight checks shipped it. If a leg cannot block yet, say so in the message and ratchet it;
-do not throw the answer away.
+here, and it has shipped repeatedly. If a leg cannot block yet, say so in the message and
+ratchet it; do not throw the answer away.
 
 ### 2.3 Ratchets carry ZERO headroom
 
@@ -67,14 +71,13 @@ population**, never against the formula.
 Seed the defect into the **real artifact the check reads**, run the check, watch it fail, restore.
 
 A mutation caught against a constructed fixture proves the *test* works, not that the *check* can
-fail in production. Four checks satisfied every fixture test and could not fail in production
-(QI-31…34).
+fail in production. Checks have satisfied every fixture test and still been unable to fail in
+production (QI-31…34).
 
 `tests/test_d5_mutation_obligation.py` is authoritative for the split, and **this guide does not
-restate it** — the sentence that used to sit here said *"6 of 61 production-seeded"* while
-declaring the test file authoritative in the same breath, and by 2026-08-06 the live values were
-**10 of 65**. Read `PRODUCTION_SEEDED` and `FIXTURE_ONLY_CEILING` there; the ceiling may only
-shrink.
+restate it** — the sentence that used to sit here quoted the numbers while declaring the test
+file authoritative in the same breath, and then went stale. Read `PRODUCTION_SEEDED` and
+`FIXTURE_ONLY_CEILING` there; the ceiling may only shrink.
 
 ⚠️ Seed the artifact the guard *protects*, not a helper it *uses*. The memo's key tests seeded
 the fingerprint helpers and never asserted any check's key called them — deleting an input from a
@@ -98,8 +101,8 @@ its name **in a comment** and passed over a seeded regression. Use `ast`, and as
 ### 2.7 Register the mutation obligation
 
 Add the check to `MUTATION_VERIFIED` (with the test that proves it) or `AWAITING_MUTATION_TEST` in
-`tests/test_d5_mutation_obligation.py`. The backlog is **empty** and `AWAITING_CEILING` is 0 — so
-adding a name there breaks the ceiling immediately. That is the intended cost.
+`tests/test_d5_mutation_obligation.py`. The backlog is ratcheted at its live floor, so adding a
+name to it breaks the ceiling in the same commit. That is the intended cost.
 
 ## 3. Where the check goes
 
@@ -128,7 +131,55 @@ uv run python -m pytest tests/ -q                               # nothing regres
 # then: seed the defect in production, watch it fail, restore
 ```
 
-## 5. The failure modes, as a checklist
+## 5. The systemic pattern — the shapes it has actually taken
+
+Independent mechanisms, one shape: **absence of measurement rendered as success.** This
+ledger is the empirical backing for §1–§4; each row is a mechanism that reported health over
+a population it never reached.
+
+**The status column is load-bearing** — read it before quoting a row. Most of these are
+repaired, and a reader who takes the table as a list of live defects will chase ghosts. Each
+`fixed` claim below was re-verified against the code, not inherited.
+
+| mechanism | reported | actually | status |
+|---|---|---|---|
+| `readiness_submission_gate` | pass | **inverted** — failed only when *zero* gate nodes existed, and passed when it measured RED | **fixed** — returns `passed=False` on any blocked gate |
+| `paper_latex_compiles` | pass | computed its verdict and discarded it; then remained *slow-gated* to a default SKIP, so a fatal LaTeX error stayed invisible for months | **fixed** — verdict derived; slow gate deleted |
+| `--ci`'s coverage floor | "the suite cannot silently shrink" | counted checks **invoked**, not measured — `run_checks` fills a result for every spec, so the count was identically the floor and it **could never fire** | **fixed** — counts `CheckResult.measured` |
+| `_memo` | "only PASS is cached, so a red check re-runs" | **a fail-open SKIP *is* a PASS** — it cached `SKIPPED — lake not found` under a key byte-identical to the real measurement and replayed it after the toolchain returned | **fixed** — `_memo` refuses to cache a non-measurement |
+| the memo's key tests | "production-seeded" | seeded the fingerprint **helpers**, never asserting any check's key called them — deleting an input from a live `key_fn` still passed | **fixed** — `TestCheckKeysSpanTheirInputs` seeds through the real key |
+| `test_ci_mode.py`'s floor test | "the floor is asserted" | asserted the floor against **its own definition**, which is what made it unfireable and invisible at once | **fixed** — no formula assertion remains |
+| `check_bundle_source_freshness` | "fresh: all N source paper(s)…" | returned `None` for sourceless keys, compared zero files, and **wrote `freshness_stale: false`** | **fixed** — an absent source directory now reports UNMEASURABLE |
+| `evaluate_all_gates` | `open` | an evaluator that CRASHED aggregated to YELLOW, indistinguishable from a mild advisory | **fixed** — an evaluator exception records `state='blocked'` |
+| `_blocked_p1_gates_by_paper` | `{}` | "could not compute" and "nothing blocked" shared one value | **fixed** — returns `None`, and GREEN is withheld in that case |
+| the dead-edge guard | "derived on both sides" | its emitted-set scan collected **node** types too, so its population was wider than its subject and it could not fail on the case it was built for | **fixed** — the scan is scoped structurally to dicts carrying `source`/`target` |
+| `harness_lock` on contention | "regenerate: succeeded" | the caller treats a skipped regeneration as a completed one — mechanism in [`QA_QI_INFRASTRUCTURE_MAP.md` §2](QA_QI_INFRASTRUCTURE_MAP.md#2-artifact-generation--writers-triggers-staleness-keys) | 🔴 **OPEN** |
+| AI-Defense Tier 1 | documented as implemented | `scripts/pre_commit_hook.sh` and `scripts/install_pre_commit.sh` do not exist | 🔴 **OPEN** |
+
+**The generalisable lesson, and why it is here rather than in a changelog:** in the memo's
+case all four guards policed *how the cache is used*; none audited *whether the key spans the
+inputs*. **Guarding at the wrong layer is indistinguishable from guarding, right up until the
+measurement.**
+
+**The shape of every fix above is the same:** the verdict must be *derived* from what the
+check measured, never asserted alongside it — in each repaired row the code had computed the
+right answer and then discarded it.
+
+⚠️ **The two open rows are a different shape, and neither is fixed by that move.**
+`harness_lock` computes nothing to discard: it correctly reports that another process holds
+the lock, and the defect is that its *callers* treat "skipped" as "regenerated". AI-Defense
+Tier 1 is not a measurement failure at all — it is a document describing files that were
+never written. Both are tracked in
+[`.working-docs/ARCHITECTURE_TODOs.md`](.working-docs/ARCHITECTURE_TODOs.md).
+
+⚠️ **The obvious type-system fix was tried and rejected, with the measurement.**
+`CheckResult.passed` is a bare `bool` with no `UNEVALUATED` state, and adding one was ADR-009
+§Deferred item 4. **DECLINED**: `passed` is a D2 contract item — the `--json` payload,
+`gate_precheck.py` and `pre-commit-sync.sh` all read it — so a third state is a contract break,
+not a local refactor. `measured` was added as a *separate additive field* instead, precisely
+so every existing reader stayed correct.
+
+## 6. The failure modes, as a checklist
 
 - [ ] a leg that cannot fire on any input
 - [ ] a computed verdict discarded
