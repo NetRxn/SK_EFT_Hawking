@@ -92,9 +92,6 @@ consumers is semantic.
 These are ADR-009 D3, which identifies **five**. They are not style rules; each names a
 failure the project has shipped.
 
-⚠️ An earlier revision of this section was titled *"the four hazards"* and silently omitted
-**H2** — visible in the numbering, which skipped from H1 to H3. H2 is live, not retired.
-
 | | hazard | rule | enforced by |
 |---|---|---|---|
 | **H1** | a path derived from `__file__` resolves to `scripts/validation/checks/`, so every artifact lookup silently misses | reach paths as `_H.<NAME>` **at each use** — never a module-level alias, never from `__file__` | `test_no_check_derives_a_path_from___file__` |
@@ -166,10 +163,8 @@ subsystem exists to close. It is sound only if the key spans every input.
 
 ## 6. What this subsystem does not do
 
-⚠️ **These are coverage GAPS, not absences.** An earlier revision of this section flatly
-said the suite does not recompute paper-quoted numbers or verify citation content. Both were
-wrong — checks exist for each; what is true is that their coverage is **per-artifact and
-partial** rather than corpus-wide. Stated precisely:
+⚠️ **These are coverage GAPS, not absences.** A check exists for most of them; what is true
+is that coverage is **per-artifact and partial** rather than corpus-wide:
 
 - **Figure physics is unverified.** `bundle_figure_integrity` compares a bundle figure against
   a fresh render and asserts typeset legibility — real assertions, but structural. The

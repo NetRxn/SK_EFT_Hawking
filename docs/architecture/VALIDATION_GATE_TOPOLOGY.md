@@ -67,12 +67,10 @@ SUBSTRATE and PAPER CORPUS, which is the same partition this section is about.
 the **normal** state of an in-progress bundle. A strict wave-close gate would go red on
 correct work mid-wave, and **a gate that fires on correct work gets switched off.**
 
-⚠️ **No invariant scopes `--strict` suite-wide.** An earlier revision of this section said
-*"`--strict` is scoped to submission by Pipeline Invariant #12."* That is an overread:
-Invariant #12 governs `provenance_doi_in_registry` and says `--strict` is *mandatory at the
-Paper Submission Gate* **for that check**. It states a local rule, not a global policy. The
-suite-wide scoping is a property of `gate_precheck.py` — which passes `--strict` at
-`submission` and nowhere else — not of any invariant.
+⚠️ **No invariant scopes `--strict` suite-wide.** The scoping is a property of
+`gate_precheck.py`, which passes `--strict` at `submission` and nowhere else. Pipeline
+Invariant #12 mandates `--strict` at the Paper Submission Gate for
+`provenance_doi_in_registry` specifically — a rule scoped to that single check, not a global policy.
 
 ## 4. What each readiness gate actually computes
 
@@ -99,8 +97,9 @@ they return verdicts they did not compute. Guarded by
 AST and fails on any dead type not disclosed there. `READINESS_GATES.md` still documents the
 P2 gates as blocking; they cannot.
 
-An evaluator that **raises** records `state='blocked'`, not `open` — `open` aggregates to
-YELLOW, so a crashed gate used to be indistinguishable from a mild advisory.
+An evaluator that **raises** records `state='blocked'`, not `open`. This matters because
+`open` aggregates to YELLOW: a crashed gate recorded as `open` is indistinguishable from a
+mild advisory.
 
 ## 5. Enforcement reality — what actually blocks
 

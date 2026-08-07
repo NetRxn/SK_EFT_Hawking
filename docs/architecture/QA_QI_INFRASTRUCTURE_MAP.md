@@ -16,8 +16,8 @@ is derived and gated. This document names *mechanisms*; magnitudes are looked up
 > [`VALIDATION_GATE_TOPOLOGY.md`](VALIDATION_GATE_TOPOLOGY.md); the systemic-pattern ledger
 > and the obligations a check inherits are in
 > [`CHECK_AUTHORING_GUIDE.md`](CHECK_AUTHORING_GUIDE.md); how the suite is built is in
-> [`VALIDATION_ARCHITECTURE.md`](VALIDATION_ARCHITECTURE.md). This file used to restate all
-> three, and its copies went stale while reading as authoritative.
+> [`VALIDATION_ARCHITECTURE.md`](VALIDATION_ARCHITECTURE.md). Those documents own their
+> tables; this one does not duplicate them.
 
 ---
 
@@ -109,10 +109,10 @@ is the load-bearing column:** content-hash and content-compare are sound; mtime 
 | `figures/provenance_graph.json` | `build_graph --out` | **none** | **no** |
 
 **The root-aggregate clause in row 1 is load-bearing.** `lean/SKEFTHawking.lean` sits one
-level *above* the hashed subtree and alone decides which modules are in scope for
-extraction, so hashing only the subtree left the single edit that changes scope invisible
-to the cache. An earlier repair had widened the walk from `glob` to `rglob` — it went
-*deeper* and never went *up*.
+level *above* the hashed subtree and alone decides which modules are in scope for extraction.
+A hash covering only the subtree would leave the single edit that changes scope — adding or
+removing an import there — invisible to the cache. Widening the subtree walk does not address
+this: the gap is one level up, not deeper.
 
 **Concurrency.** `harness_lock.regen_lock` is **skip-and-use-cache, never block-and-wait**:
 a bounded poll, then yield `False`. On skip, `load_lean_deps()` silently returns the stale
@@ -166,7 +166,7 @@ flowchart LR
 **`FixPropagation` is the only evaluator that reads FLAGS.** Every other gate is blind to
 review findings.
 
-### The dialect question — narrow, but no longer single
+### The dialect question — narrow, and the live risk is a NEW form
 
 `_REVIEW_SECTION_RE` accepts the heading forms actually found on disk: numeric (`### 1.1 —`),
 `Class N`, `Anchor N`, `R-N`, `V.N`, `F-N`, `BLOCKER N.N`, and multi-level numbering. It was
@@ -177,13 +177,11 @@ reviews invisible.
 style outside the accepted set mints nothing, silently — drop point (5) above. Review output
 landing in the directory is still not *sufficient* to become a finding.
 
-⚠️ **Do not repeat the claim that bundle-level Stage-13 reports reach no gate.** It was
-inherited from a survey report, was already stale when written into this directory, and is
-false: `review_docs_mint_findings` passes across every document carrying an unresolved
-severity-labelled heading, and bundle-era reviews are the largest single source of
-`ReviewFinding` nodes in the graph. Documents whose severities appear only inside
-PASS/RESOLVED notes are deliberately *skipped*, not failed — which is what an earlier reading
-mistook for "produces nothing."
+**Bundle-level Stage-13 reports reach the gates.** They are the largest single source of
+`ReviewFinding` nodes in the graph, and `review_docs_mint_findings` passes across every
+document carrying an unresolved severity-labelled heading. A document whose severities appear
+only inside PASS/RESOLVED notes carries no open findings and is deliberately **skipped**, not
+failed.
 
 ### A worked example of why a filed blast radius is a claim
 

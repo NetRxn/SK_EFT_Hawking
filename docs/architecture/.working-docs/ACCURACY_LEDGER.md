@@ -76,3 +76,45 @@ silently skipped.
 ⚠️ **Atom 4 is the one that matters methodologically.** It is a SET claim, and the previous
 pass's failure mode was verifying named members without verifying completeness. Checked by
 counting emitted legs, not by confirming three named legs exist.
+
+
+---
+
+## Corrections applied to the seven documents
+
+The seven production documents state current fact only. Everything below was found false or
+error-priming and **removed from them**; this table is the sole record.
+
+### Round 1 — false claims replaced by the correct statement
+
+| document | claim removed | what is true | evidence |
+|---|---|---|---|
+| `END_TO_END_MAP` §7, `QA_QI` §3 | bundle-level Stage-13 reports "reach no gate"; the publication-target review path "produces nothing the gates can see" | bundle-era reviews are the **largest** source of `ReviewFinding` nodes | `review_docs_mint_findings` passes over 135 docs, 0 mint zero; D12 203, D11 124, I2 69, I1 63, D2 61, D1 58, D4 54, L2 41 |
+| `VALIDATION_GATE_TOPOLOGY` §5, `CHECK_AUTHORING_GUIDE` §5 | "Pipeline Invariant #16 cites the AI-Defense doc as canonical, under a filename that is also wrong" | Invariant #16 is the tracked-hypothesis registry; the pipeline law never cites that doc; the filename is correct. The real defect is that the doc declares its **own** `## Pipeline Invariant #16` at `:162` | `WAVE_EXECUTION_PIPELINE.md:695`; repo-wide grep for the doc's name |
+| `VALIDATION_GATE_TOPOLOGY` §3 | "`--strict` is scoped to submission by Pipeline Invariant #12" | scoping is a property of `gate_precheck.py`; #12 mandates `--strict` for `provenance_doi_in_registry` only | `WAVE_EXECUTION_PIPELINE.md:685`; `gate_precheck.py` STAGES |
+| `VALIDATION_ARCHITECTURE` §3 | "the four hazards … These are ADR-009 D3" | D3 declares **five**; H2 is live | `ADR-009:235`; `_ROSTER_CONSUMERS` at `bundles_readiness.py:815`; `EXPECTED_DYNAMIC` in `test_validate_public_surface.py` |
+| `VALIDATION_ARCHITECTURE` §6 | the suite "does not recompute paper-quoted numbers" / "verify citation content" | both are done, per-artifact and partial | `check_paper_table_consistency`; `check_bibitem_title_primary_source` |
+| `END_TO_END_MAP` §4 | `lean_zero_sorry` "hard-fails always" | no `--strict` leg, so the verdict is never softened; two cannot-measure branches return `passed=True, measured=False` | `lean_substrate.py` `check_lean_zero_sorry` |
+
+### Round 2 — error-priming narrative removed (goal criterion 7)
+
+Statements that were *true* but reproduced a false claim in order to negate it. A reader can
+absorb the vivid claim and miss the correction, so the production documents no longer carry
+any of it.
+
+| document | removed |
+|---|---|
+| `END_TO_END_MAP` §7 | "An earlier revision of this map said bundle-level Stage-13 reports 'reach no gate' … That is false." |
+| `QA_QI` §3 | "Do not repeat the claim that bundle-level Stage-13 reports reach no gate." |
+| `QA_QI` header | "This file used to restate all three, and its copies went stale while reading as authoritative." |
+| `QA_QI` §2 | "An earlier repair had widened the walk from `glob` to `rglob` — it went deeper and never went up." |
+| `QA_QI` §3 | heading "narrow, but no longer single" → "narrow, and the live risk is a NEW form" |
+| `CHECK_AUTHORING_GUIDE` §2.4 | "the sentence that used to sit here quoted the numbers … and then went stale" |
+| `VALIDATION_GATE_TOPOLOGY` §3 | "An earlier revision of this section said …That is an overread" |
+| `VALIDATION_GATE_TOPOLOGY` §4 | "a crashed gate **used to be** indistinguishable" → present-tense statement of why `blocked` is used |
+| `VALIDATION_ARCHITECTURE` §3 | "An earlier revision was titled 'the four hazards' and silently omitted H2" |
+| `VALIDATION_ARCHITECTURE` §6 | "An earlier revision of this section flatly said … Both were wrong" |
+
+**Kept deliberately:** facts about the *system's* past that are load-bearing for reading its
+present state — e.g. `gapped_interface_axiom` **was retired**, which is why citing it is a
+defect. Those are not doc-history and do not prime a false belief about current behaviour.

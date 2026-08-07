@@ -227,15 +227,9 @@ The finding→gate pipeline and its silent drops are in
 - ⚠️ **A review written in an unrecognised heading style mints nothing, silently.** The
   extractor's accepted forms, and why the risk is a NEW form rather than the existing corpus,
   are in [`QA_QI_INFRASTRUCTURE_MAP.md` §3](QA_QI_INFRASTRUCTURE_MAP.md#the-dialect-question--narrow-but-no-longer-single).
-
-  ⚠️ **An earlier revision of this map said bundle-level Stage-13 reports "reach no gate" and
-  that the publication-target review path "produces nothing the gates can see." That is
-  false.** Verified: `review_docs_mint_findings` passes across every document carrying an
-  unresolved severity-labelled heading, and bundle-era reviews are the *largest* source of
-  `ReviewFinding` nodes in the graph — D12, D11, I2, I1, D2, D1, D4 and L2 all carry
-  substantial minted populations. The claim was inherited from a survey report, was already
-  stale when this map was first written, and was not checked. Recorded so it is not
-  re-reported.
+  Bundle-era reviews reach the gates: they are the largest source of `ReviewFinding` nodes in
+  the graph, and `review_docs_mint_findings` passes across every document carrying an
+  unresolved severity-labelled heading.
 - **Figure checking is scoped to a subset of bundles**, and within it the drift comparison is
   advisory; legibility is the only blocking figure assertion. Note that most of the figure
   registry is legacy `paperNN_` figures, so the uncovered *bundle* population is much smaller
