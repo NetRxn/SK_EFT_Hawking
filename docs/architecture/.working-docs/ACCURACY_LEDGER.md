@@ -39,10 +39,10 @@ otherwise.**
 | `QA_QI_INFRASTRUCTURE_MAP.md` | 69 | 86 | **80%** |
 | `VALIDATION_GATE_TOPOLOGY.md` | 43 | 69 | **62%** |
 | `CHECK_AUTHORING_GUIDE.md` | 28 | 54 | **52%** |
-| `END_TO_END_MAP.md` | 42 | 80 | **53%** |
+| `END_TO_END_MAP.md` | 58 | 80 | **73%** |
 | `VALIDATION_ARCHITECTURE.md` | 39 | 54 | **72%** |
 | `SURFACE_INVENTORY.md` | 6 | — | generated (see below) |
-| **total** | **242** | **361** | **≈67%** |
+| **total** | **258** | **361** | **≈71%** |
 
 `SURFACE_INVENTORY.md` is emitted wholesale by `scripts/architecture_inventory.py`. Its 155
 load-bearing lines are derived data, decided by one check — regenerate and diff, which
@@ -92,8 +92,8 @@ converge — which is why the remaining work below is stated as a queue, not a c
 
 ### Remaining work
 
-**119 load-bearing units carry no row.** Concentrated in `END_TO_END_MAP.md` (38),
-`CHECK_AUTHORING_GUIDE.md` (26) and `VALIDATION_GATE_TOPOLOGY.md` (26). Verify at the granularity above:
+**103 load-bearing units carry no row.** Concentrated in `CHECK_AUTHORING_GUIDE.md` (26),
+`VALIDATION_GATE_TOPOLOGY.md` (26) and `END_TO_END_MAP.md` (22). Verify at the granularity above:
 one proposition per row, a decider (never a proxy), completeness for set claims, and the actual
 subject for any number-cited invariant or ADR.
 
@@ -115,7 +115,7 @@ Status is per-ATOM, never per-document. A document is not certified; its enumera
 | `CHECK_AUTHORING_GUIDE.md` | 24 atoms, 1 corrected, 4 reframed | 4 atoms, 0 corrected | 28 | **26** |
 | `VALIDATION_GATE_TOPOLOGY.md` | 38 atoms, 1 corrected | 5 atoms, 0 corrected | 43 | 26 |
 | `QA_QI_INFRASTRUCTURE_MAP.md` | 48 atoms, 2 corrected | 21 atoms, 5 corrected | 69 | 17 |
-| `END_TO_END_MAP.md` | 34 atoms, 0 corrected | V9: 8 atoms, 5 now-false | 42 | **38** |
+| `END_TO_END_MAP.md` | 34 atoms, 0 corrected | V9: 8 · V11: 16, 1 corrected | 58 | 22 |
 
 ⚠️ **`END_TO_END_MAP.md` has the largest uncovered surface and the fewest recorded
 corrections.** Zero corrections over 34 atoms is not evidence that the other 46 units are
@@ -649,3 +649,49 @@ it. The atom is *where each statement lives*, and only reading both texts decide
 **Coverage after V10:** `VALIDATION_ARCHITECTURE.md` 22 → **39 atoms** of 54 load-bearing
 units (41% → **72%**). The remaining 15 are §1's tree-block lines and §3's hazard-table cells,
 each already covered in aggregate by V3 atoms 6 and 19–20 but not enumerated individually.
+
+---
+
+## V11 — `END_TO_END_MAP.md` §§1–7 remainder — 16 atoms, 1 corrected
+
+### §1 — the spine
+
+| # | atom | decided by | result |
+|---|---|---|---|
+| M1 | **SET:** everything quantitative downstream derives from `lean_deps.json` — counts, atlas, graph, frontier | each generator read for a `lean_deps` / `load_lean_deps` reference | `update_counts.py` ✓ · `atlas_view.py` ✓ · `build_graph.py` ✓ · the frontier reads `atlas_view.json`, so it derives **transitively** ✓ — set complete |
+| M2 | ① has no mechanization | V7 atoms 1–2 re-confirmed: no check module references `docs/roadmaps/` | ✓ |
+| M3 | ⑨ contains gates returning verdicts they did not compute | `gate_edge_types_are_emitted` + the dead-edge set | `PRODUCES`/`SUPPORTS`/`CONTRADICTS` unemitted ✓ |
+| M4 | *"Below that node drift is structurally impossible"* | — | **NOT-AN-ASSERTION** — a design characterisation of the chokepoint, not a falsifiable claim about a specific artifact |
+| M5 | *"This is the single largest ungated seam in the map"* | — | **NOT-AN-ASSERTION** — a ranking judgement; "largest" has no defined metric here |
+
+### §4 — Lean and the chokepoint
+
+| # | atom | decided by | result |
+|---|---|---|---|
+| M6 | **NUMBER-CITED SET:** §4 cites Invariants #4, #9, #10, #15, #16, #17 — each resolves to the subject §4 uses it for | the law's `## Pipeline Invariants` section, each number read | #4 formula content-grounding **and** *"Every Lean theorem has a proof (zero sorry)"* · #9 placeholders non-load-bearing · #10 no heartbeat overrides · #15 axiom sign-off · #16 tracked-hypothesis registry · #17 kernel no-go ✓ all six |
+| M7 | Invariant #4 covers zero-`sorry`, so *"Invariant #4 (zero `sorry`)"* is a correct citation | #4's body, read in full | *"Every Lean theorem has a proof (zero sorry)"* ✓ |
+| M8 | `lake build` exits 0 on a `sorry` | the tier-0 gate's implementation | `pre-commit-sync.sh` must grep lake's **stdout** for `declaration uses .?sorry.?` and `exit 1` itself — it would be unnecessary if the exit code carried it ✓ |
+| M9 | `axiom_closure_allowlist` catches `sorryAx` warn-first only | `lean_toolchain.py:550-557` | `strict = _cfg.STRICT_MODE`; `Detail(..., not strict, warning=not strict)` ✓ |
+| M10 | The gauntlet's `zero_sorry` conjunct is inert | V7 atom 13 re-confirmed | fixed-string quote style the toolchain does not emit ✓ |
+| M11 | Invariant #9's registry-completeness clause has no enforcement | V7 atom 16 | nothing compares `PLACEHOLDER_TOTAL_COUNT` to `counts.json` ✓ |
+
+### §5–§6
+
+| # | atom | decided by | result |
+|---|---|---|---|
+| M12 | `measured` is a separate field from `passed`, and that is what makes the `--ci` floor meaningful | `CheckResult` fields; the floor's branch | V3 atoms 9/13 + V10 A1 ✓ |
+| M13 | `KNOWLEDGE_GRAPH.md` carries an **Emitted?** column naming each unemitted edge type and the gate that queries it | the schema doc's table header and rows | column present, rows name the gates ✓ |
+| M14 | The three unemitted edge types are `PRODUCES`, `SUPPORTS`, `CONTRADICTS` | V7 atom 20, fresh build's edge-type set | none present ✓ |
+
+### §7
+
+| # | atom | decided by | result |
+|---|---|---|---|
+| M15 | ~~"Stage 10" means two different things; tracked as B6~~ | the law's Stage-10 body | ❌ **FALSE** — the law carries a scope note: claims review is a **sub-gate inside** Stage 10, and *"there is no second Stage 10."* B6 is closed; the collision does not exist. Statement replaced |
+| M16 | `stage10_status` and `gate_precheck.py s10` use the narrower sub-gate sense | the field's writers; `gate_precheck`'s `s10` step list | both key on the claims-review gate ✓ |
+
+⚠️ **M15 is the same perishability hazard as V9.** §7 cited an open tracker item that closed the
+same day. An atom recording a defect is invalidated by the fix, and nothing re-opens it — this
+is the second instance inside `docs/architecture/` in one pass.
+
+**Coverage after V11:** `END_TO_END_MAP.md` 42 → **58 atoms** of 80 (53% → **73%**).

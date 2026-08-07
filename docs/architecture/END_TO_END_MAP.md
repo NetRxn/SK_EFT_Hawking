@@ -207,13 +207,12 @@ edge type that has no emitter and the gate that queries it.
 Spec: `WAVE_EXECUTION_PIPELINE.md` Stages 9/10/13 · `docs/BUNDLE_LIFT_PROCEDURE.md` ·
 `docs/LATE_PHASE6_ABSORPTION_PROTOCOL.md` · `docs/BUNDLE_DIRECTORY_SCHEMA.md`.
 
-⚠️ **"Stage 10" means two different things, and this map uses the bundle sense.**
-`WAVE_EXECUTION_PIPELINE.md` names **Stage 10 = PAPER DRAFT**, with claims review as a
-sub-step *after* Stage 10 and before Stage 11 — it is not a numbered stage there.
-`BUNDLE_LIFT_PROCEDURE.md` names **Stage 10 = claims review**, and that is the sense carried
-by the `stage10_status` metadata field and by `gate_precheck.py s10`. Everything below uses
-the bundle sense, because that is what the machinery keys on. Tracked as **B6** in
-[`.working-docs/ARCHITECTURE_TODOs.md`](.working-docs/ARCHITECTURE_TODOs.md).
+**"Stage 10" names one stage, and this map uses its claims-review gate.**
+`WAVE_EXECUTION_PIPELINE.md` names **Stage 10 = PAPER DRAFT** and carries claims review as a
+**sub-gate inside** it — the stage does not close until that review is clean.
+`BUNDLE_LIFT_PROCEDURE.md` §9, the `stage10_status` metadata field and `gate_precheck.py s10`
+all use "Stage 10" for that sub-gate: the same stage narrowed to its exit condition. Everything
+below uses that narrower sense, because it is what the machinery keys on.
 The finding→gate pipeline and its silent drops are in
 [`QA_QI_INFRASTRUCTURE_MAP.md`](QA_QI_INFRASTRUCTURE_MAP.md#3-the-review-pipeline--how-a-finding-becomes-a-gate).
 
