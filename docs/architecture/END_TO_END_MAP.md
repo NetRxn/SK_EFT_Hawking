@@ -53,8 +53,11 @@ return verdicts they did not compute. Everything in between is substantially sou
 
 ## 2. ① Roadmap → wave authorization
 
-Waves are declared in `docs/roadmaps/Phase<N><X>_Roadmap.md`. The roadmap is where a phase's
-scope, its waves, and design decisions are recorded.
+Waves are declared in `docs/roadmaps/`. Most files follow `Phase<N><X>_Roadmap.md`, but the
+directory also holds topic roadmaps (`FormulaRefSweep_Roadmap.md`), bundle-discharge roadmaps
+(`D10_Discharge_Roadmap.md`), lab notebooks and plans — **do not scope a search for a wave to
+the `Phase*` prefix.** The roadmap is where a phase's scope, its waves, and design decisions
+are recorded.
 
 **Nothing validates a roadmap.** No check module references `docs/roadmaps/`, and no
 `*_close.md` files exist there. The roadmap layer — where scope and waves are declared — is

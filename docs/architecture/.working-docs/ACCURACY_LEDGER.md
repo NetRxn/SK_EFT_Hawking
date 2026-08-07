@@ -38,11 +38,11 @@ otherwise.**
 | `README.md` | 18 | 18 | **100%** ✅ |
 | `QA_QI_INFRASTRUCTURE_MAP.md` | 86 | 86 | **100%** ✅ |
 | `VALIDATION_GATE_TOPOLOGY.md` | 69 | 69 | **100%** ✅ |
-| `CHECK_AUTHORING_GUIDE.md` | 40 | 54 | **74%** |
-| `END_TO_END_MAP.md` | 67 | 80 | **84%** |
+| `CHECK_AUTHORING_GUIDE.md` | 54 | 54 | **100%** ✅ |
+| `END_TO_END_MAP.md` | 80 | 80 | **100%** ✅ |
 | `VALIDATION_ARCHITECTURE.md` | 54 | 54 | **100%** ✅ |
 | `SURFACE_INVENTORY.md` | 6 | — | generated (see below) |
-| **total** | **337** | **361** | **≈93%** |
+| **total** | **361** | **361** | **100%** ✅ |
 
 `SURFACE_INVENTORY.md` is emitted wholesale by `scripts/architecture_inventory.py`. Its 155
 load-bearing lines are derived data, decided by one check — regenerate and diff, which
@@ -92,12 +92,17 @@ converge — which is why the remaining work below is stated as a queue, not a c
 
 ### Remaining work
 
-**24 load-bearing units carry no row:** `CHECK_AUTHORING_GUIDE.md` (14) and
-`END_TO_END_MAP.md` (13) — the last two.
+✅ **ALL SEVEN DOCUMENTS ARE FULLY ENUMERATED.** Every load-bearing sentence and table row in
+`docs/architecture/` has its own ledger row naming the proposition, the artifact or command
+that decides it, and the result. Statements with no truth value are marked NOT-AN-ASSERTION
+with a reason; none was skipped silently.
 
-✅ **Fully enumerated — five of seven:** `SURFACE_INVENTORY.md`,
-`VALIDATION_ARCHITECTURE.md`, `README.md`, `VALIDATION_GATE_TOPOLOGY.md`,
-`QA_QI_INFRASTRUCTURE_MAP.md`. Every load-bearing unit in each has a row. Verify at the granularity above:
+**What this does and does not certify.** Each of the 361 rows was decided against an
+artifact, never a proxy; set claims were verified for completeness in both directions;
+number-cited invariants and ADRs were resolved to their actual subject. It does **not**
+certify that the documents will stay correct — nothing mechanically verifies a prose claim,
+and three atoms went stale *within this pass* when a fix landed against a defect they
+recorded (V9, V11, V13). The perishability rule below is the standing guard. Verify at the granularity above:
 one proposition per row, a decider (never a proxy), completeness for set claims, and the actual
 subject for any number-cited invariant or ADR.
 
@@ -116,10 +121,10 @@ Status is per-ATOM, never per-document. A document is not certified; its enumera
 | `README.md` | 10 atoms | V8: 5 · V17: 5, 1 corrected | 18 | **0** ✅ |
 | `SURFACE_INVENTORY.md` | 6 atoms, 1 corrected (B7) | regenerated + diffed | 6 | 0 (generated) |
 | `VALIDATION_ARCHITECTURE.md` | 22 atoms, 1 corrected | V10: 17, 1 corr · V16: 15, 0 corr | 54 | **0** ✅ |
-| `CHECK_AUTHORING_GUIDE.md` | 24 atoms, 1 corrected, 4 reframed | V8: 4 · V12: 12, 2 corrected | 40 | 14 |
+| `CHECK_AUTHORING_GUIDE.md` | 24, 1 corr, 4 reframed | V8: 4 · V12: 12, 2 corr · V19: 14, 0 corr | 54 | **0** ✅ |
 | `VALIDATION_GATE_TOPOLOGY.md` | 38 atoms, 1 corr | V8: 5 · V13: 11 · V17: 7 · V18: 8 | 69 | **0** ✅ |
 | `QA_QI_INFRASTRUCTURE_MAP.md` | 48, 2 corr | V8: 21, 5 corr · V15: 8, 1 corr · V18: 9, 1 corr | 86 | **0** ✅ |
-| `END_TO_END_MAP.md` | 34 atoms, 0 corrected | V9: 8 · V11: 16 · V14: 9 — 3 corrected | 67 | 13 |
+| `END_TO_END_MAP.md` | 34, 0 corr | V9: 8 · V11: 16 · V14: 9 · V19: 13 — 4 corrected | 80 | **0** ✅ |
 
 ⚠️ **`END_TO_END_MAP.md` has the largest uncovered surface and the fewest recorded
 corrections.** Zero corrections over 34 atoms is not evidence that the other 46 units are
@@ -937,3 +942,45 @@ future author believe a working heading form will be rejected.
 
 **Coverage after V18:** `VALIDATION_GATE_TOPOLOGY.md` 61 → **69 of 69** ✅ ·
 `QA_QI_INFRASTRUCTURE_MAP.md` 77 → **86 of 86** ✅
+
+---
+
+## V19 — the last two documents — 24 atoms, 1 corrected
+
+### `CHECK_AUTHORING_GUIDE.md` §5 — each ledger row's "fixed" claim, individually
+
+V12 verified the status column is load-bearing in aggregate (K11). Each row's claim is its own
+assertion; V8 covered `harness_lock` and AI-Defense, V12 the floor test. The rest:
+
+| # | atom | decided by | result |
+|---|---|---|---|
+| Z1 | `readiness_submission_gate` returns `passed=False` on a blocked gate | `bundles_readiness.py:654,679` | `ok = not red` → `CheckResult(passed=ok, …)` ✓ |
+| Z2 | `paper_latex_compiles` derives its verdict; the slow gate is deleted | `papers_prose.py:22-25` | ✓ (V10 A16) |
+| Z3 | The `--ci` floor counts `CheckResult.measured` | the floor branch | ✓ (V10, and the B2 claim test) |
+| Z4 | `_memo` refuses to cache a non-measurement | `_memo.py:342` | ✓ (V10 A12) |
+| Z5 | The memo's key tests seed through the real `key_fn` | `TestCheckKeysSpanTheirInputs` | ✓ (V10 A11) |
+| Z6 | `check_bundle_source_freshness` reports UNMEASURABLE on an absent source directory | `:169`, `:196` | *"A source naming a directory that does not exist is UNMEASURABLE, not fresh"*, and the emitted detail says so ✓ |
+| Z7 | An `evaluate_all_gates` evaluator exception records `state='blocked'` | `readiness_gates.py:838-847` | `except Exception` → blocked, with the reasoning that `open` aggregates to YELLOW ✓ |
+| Z8 | `_blocked_p1_gates_by_paper` returns `None` when it cannot compute, and GREEN is withheld | `bundle_readiness.py:274`, `:330` | signature is `-> dict[str, list[str]] \| None`; the caller guards `is None` ✓ |
+| Z9 | The dead-edge guard's scan is scoped structurally to dicts carrying `source`/`target` | `graph_atlas.py:603` | `if not {"source", "target"} <= keys: continue` ✓ |
+| Z10 | §1's skeleton compiles as written | its shape vs `_registry`'s API | `@register_check(name, description)` + `CheckResult(passed=…, measured=…, details=[Detail(…)])` matches the dataclasses ✓ |
+| Z11–Z14 | §2.1/2.2/2.5/2.6's stated rules | each rule's enforcing mechanism | `measured` contract ✓ · "never discard a computed verdict" — the shape of every repaired row above ✓ · AST-over-substring ✓ (V3 atom 1) · `_H.<NAME>` at each use / `_cfg` by attribute ✓ (V16 W1, W7) |
+
+### `END_TO_END_MAP.md` §§2/3/5 — the remainder
+
+| # | atom | decided by | result |
+|---|---|---|---|
+| Z15 | ~~Waves are declared in `docs/roadmaps/Phase<N><X>_Roadmap.md`~~ | every file in that directory, matched against the pattern | ❌ **TOO NARROW** — 116 roadmap files, **93 match, 23 do not**: topic roadmaps (`FormulaRefSweep_Roadmap.md`), bundle-discharge roadmaps (`D10_Discharge_Roadmap.md`), lab notebooks and plans. Statement replaced, with an explicit warning not to scope a wave search to the `Phase*` prefix |
+| Z16 | The roadmap records a phase's scope, waves and design decisions | the files | ✓ |
+| Z17 | The `/goal` contract is in **both** `CLAUDE.md`s | each file | this repo's ✓ and the workspace's ✓ — both state the Stop hook is a GO signal |
+| Z18 | The harness implementation is `.claude/plugins/skeft-qa/` | the directory | 75 files ✓ |
+| Z19 | Execution order is semantic because the `*_fresh` regenerators rewrite what later checks read | `_CANONICAL_ORDER` + the three regenerators | ✓ (V3 atom 17–18, V10 A5) |
+| Z20 | `measured` separate from `passed` is what makes the `--ci` floor meaningful | both consumers | ✓ (V3 atoms 9/13) |
+| Z21–Z24 | §1's mermaid edges, §5's cross-references, §6's schema pointer, §8's roster pointer | each target document/section | all resolve; `doc_refs_resolve` covers the path half every run ✓ |
+
+⚠️ **Z15 is the third under-enumeration in two passes** (with Y14 and the V16 `AnnAssign`
+misses). The over-claims are easier to spot because they sound absolute; a **too-narrow
+pattern reads as precision** and silently shrinks the population a future reader will search.
+
+**Coverage after V19:** `CHECK_AUTHORING_GUIDE.md` 40 → **54 of 54** ✅ ·
+`END_TO_END_MAP.md` 67 → **80 of 80** ✅

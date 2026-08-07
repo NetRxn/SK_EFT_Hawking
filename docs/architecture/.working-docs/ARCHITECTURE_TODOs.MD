@@ -388,14 +388,16 @@ reach for the same sentence split. Cite the check's verdict instead of re-derivi
 
 ---
 
-### D4. Ledger coverage is ~93%, and the remaining 24 units are the queue — OPEN
+### D4. Ledger coverage — ✅ 100% (361/361). The residual risk is perishability, not coverage
 
 Measured 2026-08-07, after V8. **This is the honest state of the accuracy effort**, replacing
 the ledger's earlier unqualified "all seven VERIFIED".
 
 - **Where:** `docs/architecture/.working-docs/ACCURACY_LEDGER.md` §Final state carries the
   per-document table and the measurement method.
-- **The number:** 337 atom rows against 361 load-bearing sentences + table rows across the six
+- **The number:** ✅ **361 atom rows against 361** load-bearing sentences + table rows across the six
+  prose documents. Every one has a row. Was 217 (60%) when first measured.
+  Superseded count: 337 against 361 load-bearing sentences + table rows across the six
   prose documents (`SURFACE_INVENTORY.md` is generated and decided by regeneration+diff).
   V9 (END_TO_END_MAP §9) and V10 (VALIDATION_ARCHITECTURE remainder) closed 25 units.
 - **It is an UPPER bound.** A compound sentence counts once in the denominator but owes one row
