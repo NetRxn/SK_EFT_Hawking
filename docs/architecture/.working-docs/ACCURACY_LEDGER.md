@@ -30,7 +30,7 @@ its own recorded check. A compound sentence is not one entry — it is one entry
 | `SURFACE_INVENTORY.md` | header prose · derivation sources (tables are derived + gated) | ⛔ **BLOCKED** — atom 2 false; fix needs a generator edit (TODO **B7**) |
 | `VALIDATION_ARCHITECTURE.md` | §1–§6 | ✅ **VERIFIED** — 22 atoms, 1 corrected |
 | `CHECK_AUTHORING_GUIDE.md` | thesis · §1–§6 | ✅ **VERIFIED** — 24 atoms, 1 corrected, 4 reframed |
-| `VALIDATION_GATE_TOPOLOGY.md` | §1–§7 | TODO |
+| `VALIDATION_GATE_TOPOLOGY.md` | §1–§7 | ✅ **VERIFIED** — 27 atoms, 1 corrected |
 | `QA_QI_INFRASTRUCTURE_MAP.md` | §1–§6 | TODO |
 | `END_TO_END_MAP.md` | §1–§9 | TODO |
 
@@ -210,3 +210,46 @@ superseded accusation is not.
 `SKIPPED (slow)` in `papers_prose.py` returns a hit, which reads as "the slow gate is still
 there". An AST read of the function shows the hit is inside the **docstring**; the executable
 body carries no skip gate. The claim is `fixed`, and the substring would have said otherwise.
+
+
+---
+
+## V5 — `VALIDATION_GATE_TOPOLOGY.md` — VERIFIED (27 atoms, 1 correction)
+
+| # | atom | decided by | result |
+|---:|---|---|---|
+| 1 | Tier 0 runs a leak/IP guard on the staged diff | `.git/hooks/pre-commit` | contains `IP guard` / `LEAK` ✓ |
+| 2 | `pre-commit-notebooks.sh` fires only on staged `.ipynb` | its `STAGED_NBS` guard | ✓ |
+| 3 | Tier 0 exits 0 in a worktree | `pre-commit-sync.sh:17-24` | worktree-detect → skip ✓ |
+| 4 | Tier 0 tolerates missing `uv` | `:35` `command -v uv \|\| …` | ✓ |
+| 5 | Tier 0 never blocks on a check crash | `run_check()` maps non-0/1 → `SKIP` | ✓ |
+| 6 | Tier 0 hard-blocks on `main` only | 3 `[ "$BRANCH" = "main" ]` guards | ✓ |
+| 7 | Tier 1 = `gate_precheck.py s9` · `s10` | `STAGES` dict `:44-46` | ✓ |
+| 8 | Tier 2 `s13` = full suite **+ `--force-latex`** | `STAGES:47` + `:115` | passes `--force-latex` ✓ |
+| 9 | Tier 2 `s13-lean` = same suite, exit scoped | `STAGES:64` `__substrate__` + `:117` `--scope substrate` | ✓ |
+| 10 | Tier 3 `submission` passes `--strict` | `:120` | ✓ |
+| 11 | No scheduled CI runner | no `.github/workflows/` | ✓ |
+| 12 | `TestScopeSubstrate` asserts a substrate failure still blocks AND non-blocking failures are still reported | its two test names | both present ✓ |
+| 13 | **SET:** `--ci` skips the mtime regenerators + `notebook_exec` | `_config.CI_SKIP` | exactly `counts_fresh`, `tables_fresh`, `claim_clusters_fresh`, `notebook_exec` ✓ |
+| 14 | `--ci` enforces a coverage floor | `CI_MIN_CHECKS_RUN` present | ✓ |
+| 15 | `--ci` never archives | `validate.py:790` `… and not args.ci` | ✓ |
+| 16 | `--strict` implies `--no-memo` | `_memo.py:293` `bypass = (_cfg.NO_MEMO or _cfg.STRICT_MODE` | ✓ |
+| 17 | `--strict` is passed only by the submission gate | grep `gate_precheck.py` | one call site ✓ |
+| 18 | Invariant #12 governs `provenance_doi_in_registry`, not `--strict` globally | `WAVE_EXECUTION_PIPELINE.md:685` | ✓ |
+| 19–29 | **The 11 gate rows' "what it actually computes"** | one `inspect.getsource` read per evaluator | all 11 match, incl. gate 4's exact `{bounds,unknown}` and gate 6's `lower()` ✓ |
+| 30 | **SET:** exactly the three named edge types have no emitter | `gate_edge_types_are_emitted` | `CONTRADICTS`, `PRODUCES`, `SUPPORTS` ✓ |
+| 31 | `READINESS_GATES.md` documents the P2 gates as blocking; they cannot | its `**Blocks on any:**` sections vs the evaluators' assigned states | doc has the section; evaluators emit only `needs-recheck`/`passed` ✓ |
+| 32 | An evaluator that raises records `state='blocked'` | `readiness_gates.py:854` | ✓ |
+| 33 | **SET:** the web-egress guard is the ONE fail-closed hook | inspect every hook's command in `hooks.json` | 1 of 5 is fail-closed ✓ |
+| 34 | AI-Defense Tier-1's two named scripts are absent | `os.path.exists` | both absent ✓ |
+| 35 | **CORRECTED:** "`stage9_status` / `stage10_status` are read by nothing" | grep across `scripts/ src/ tests/` | ❌ **FALSE** — `bundle_append.py:322-325` reads both and demotes a `green` to `pending`. What is true: **no gate or check** reads them (0 files under `validation/checks/`, `readiness_gates.py`, `gate_precheck.py`) |
+| 36 | Nothing writes a `stage*_status` to `green` | grep every assignment | 4 writes, all `"pending"` ✓ |
+| 37 | **SET:** §6's six field-ownership rows | `write_metadata_counts` body; `check_bundle_source_freshness`; `apex_theorems` writers | all six ✓ (`apex_theorems`: no script writes it) |
+| 38 | §7's two expensive checks are the memoized/cached pair | `_memo.unwrap` over the registry | ✓ |
+
+**NOT-AN-ASSERTION:** §2's framing question, and §7's *"Measure rather than quote"* — guidance.
+
+⚠️ **Atom 35 is a scope-of-search failure, not a reading failure.** An earlier check searched
+only `validation/checks/` and `gate_precheck.py`, found nothing, and the claim was written as
+"read by nothing". Widening to `scripts/ src/ tests/` found the real reader immediately. The
+narrow search was *true* about its own scope and false as stated.

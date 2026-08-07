@@ -126,15 +126,17 @@ was ever written. It is a **proposal that reads as a description** — committed
 draft, and never built.
 
 ⚠️ It also declares its own **"Pipeline Invariant #16"**, which **collides** with the real
-Invariant #16 (the tracked-hypothesis registry). Two different rules share one number in two
-documents. Nothing in the pipeline law cites the AI-Defense document at all — an earlier
-revision of this section said Invariant #16 cited it "under a filename that is also wrong",
-and both halves of that were false. Tracked as **A2** in
-[`.working-docs/ARCHITECTURE_TODOs.md`](.working-docs/ARCHITECTURE_TODOs.md).
+Invariant #16 (the tracked-hypothesis registry). Two different rules share one number across
+two documents, and nothing in the pipeline law cites the AI-Defense document at all. Tracked
+as **A2** in [`.working-docs/ARCHITECTURE_TODOs.md`](.working-docs/ARCHITECTURE_TODOs.md).
 
-Also claiming enforcement and having none: the Stage-9 verdict has no machine reader, and
-`stage9_status` / `stage10_status` are read by nothing. Nothing in the codebase writes any
-`stage*_status` to `green` — every green is a hand edit, which is how a bundle can sit at
+Also claiming enforcement and having none: **no gate or check reads `stage9_status` or
+`stage10_status`.** They are not inert — `bundle_append.py` reads both and demotes a `green`
+to `pending` when new content lands in the bundle — but nothing *gates* on them, so the
+"Stages 9 and 10 before 13" rule has no enforcement point.
+
+Nothing in the codebase writes any `stage*_status` to `green`; the only writers set
+`"pending"`. Every green is therefore a hand edit, which is how a bundle can sit at
 `stage13_status: green` with `stage9_status: not_started`.
 
 ## 6. Field ownership — who writes what
