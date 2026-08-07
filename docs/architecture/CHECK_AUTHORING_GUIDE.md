@@ -154,7 +154,7 @@ repaired, and a reader who takes the table as a list of live defects will chase 
 | `_blocked_p1_gates_by_paper` | `{}` | "could not compute" and "nothing blocked" shared one value | **fixed** — returns `None`, and GREEN is withheld in that case |
 | the dead-edge guard | "derived on both sides" | its emitted-set scan collected **node** types too, so its population was wider than its subject and it could not fail on the case it was built for | **fixed** — the scan is scoped structurally to dicts carrying `source`/`target` |
 | `harness_lock` on contention | "regenerate: succeeded" | callers discarded the lock's contention signal and reported success over work that did not happen | **fixed** — `sync.py` prints `sync INCOMPLETE` naming the skipped artifacts; `load_lean_deps()` warns with the blast radius |
-| AI-Defense Tier 1 | an *"Implementation:"* line names two scripts | neither script exists; the document is an unbuilt proposal headed "Canonical Specification" | 🔴 **OPEN** |
+| AI-Defense Tier 1 | an *"Implementation:"* line named two scripts | neither script was written; the document described a system nobody had built | **fixed** — retitled a design proposal, with a measured coverage map; the one uncovered soundness item (`@[csimp]`) is named as such |
 
 **The generalisable lesson, and why it is here rather than in a changelog:** in the memo's
 case all four guards policed *how the cache is used*; none audited *whether the key spans the
@@ -165,10 +165,11 @@ measurement.**
 check measured, never asserted alongside it — in each repaired row the code had computed the
 right answer and then discarded it.
 
-⚠️ **The open row is a different shape, and the "derive the verdict" move does not fix it.**
-AI-Defense Tier 1 is not a measurement failure at all — it is a document describing files that
-were never written. Tracked in
-[`.working-docs/ARCHITECTURE_TODOs.md`](.working-docs/ARCHITECTURE_TODOs.md).
+⚠️ **The AI-Defense row was a different shape, and "derive the verdict" was never its fix.**
+It was not a measurement failure at all — it was a document describing files nobody had
+written, which is why the repair was editorial (say what it is, map what covers it) rather than
+a code change. A specification and a description are not interchangeable, and a document that
+blurs them gets quoted as evidence.
 
 The `harness_lock` row is worth keeping visible even though it is fixed: the lock itself was
 always correct, and the defect lived entirely in what its *callers* did with an honest signal.

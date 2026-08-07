@@ -62,7 +62,34 @@ See **B2**.
   **no lock at all**. Separate from A1's caller defect; not addressed here.
 - **Documented in:** `QA_QI_INFRASTRUCTURE_MAP.md` §2, `CHECK_AUTHORING_GUIDE.md` §5.
 
-### A2. AI-Defense Tier 1 names files that do not exist — VERIFIED-OPEN
+### A2. AI-Defense Tier 1 names files that do not exist — ✅ CLOSED (editorial), 1 item BUILDABLE
+
+✅ **Disposition taken: reframe + coverage-map + renumber.** Building the document as written
+was rejected — most of it had already shipped by other names, so building it would have created
+second mechanisms beside working ones (the exact failure the architecture rules exist to
+prevent).
+
+- Retitled **Design Proposal**, with a status admonition at the top saying it does not describe
+  the running system and must not be cited as evidence a control exists.
+- New **§Coverage** section measured against the live registry: `axiom_closure_allowlist`
+  shipped verbatim; `bundle_lean_refs_resolve` → `prose_theorem_reference_coverage`;
+  `bundle_latex_compile_clean_citations` → `paper_latex_compiles`; the `maxHeartbeats` and
+  `native_decide` Tier-1 items are enforced by Invariant #10's ratchet and
+  `native_decide_regression`. Partials and absences are marked as such.
+- **Invariant collision removed.** The proposal's rule is now explicitly UNNUMBERED, with a note
+  that numbers are allocated only in `WAVE_EXECUTION_PIPELINE.md` (#15 axiom sign-off, #16
+  tracked-hypothesis registry, #17 kernel no-go).
+- Fixed a dangling self-reference to `docs/AI_DEFECT_DEFENSE.md` (never existed) and a stale
+  `physics-qa` plugin name (`skeft-qa`).
+
+⚠️ **One item is genuinely unguarded and is a SOUNDNESS item, not a style one:** `@[csimp]`
+without a justification comment. `csimp` appears **nowhere** in `scripts/` or `tests/`, and the
+attribute can smuggle an axiom past the kernel's usual guarantees (`leanprover/lean4` #7463).
+Two citation-metadata checks (`citation_bibkey_form_matches_metadata`, the author/venue half of
+`bibitem_registry_character_match`) are the other real gaps. **These three are the entire
+buildable residue** — carried forward as new work, not as this item.
+
+**Superseded original text:**
 
 - **Where:** `docs/AI-DEFECT-DEFENSE-LAYER.md` names `scripts/pre_commit_hook.sh` and
   `scripts/install_pre_commit.sh` as its Tier-1 implementation.
@@ -130,7 +157,7 @@ See **B2**.
   Residual, stated in both the test and the production comment: a body reaching
   `counts.json` through a helper without naming it is invisible to the scan.
 
-### B2. No mechanism verifies the *accuracy* of any architecture document — PARTIALLY CLOSED 2026-08-07
+### B2. No mechanism verifies the *accuracy* of any architecture document — ✅ CLOSED
 
 - **What:** `validate.py --check architecture_inventory_fresh` gates two things: the census
   matches a fresh derivation, and no narrative states a census count. **Nothing verifies a
@@ -144,12 +171,20 @@ See **B2**.
   Mutation-verified both ways — a renamed script fails it, and shrinking the exception set
   below a still-absent reference fails it. Build trees (`.lake`) are excluded or the scan
   costs minutes instead of a second.
-- ⏭️ **Fix 2 NOT built:** claim-level assertions for load-bearing findings. This is the
-  one that would actually verify a *description*, and it is a substantial build — one
-  assertion per finding, each of which is the thing the finding claims. Still the standing
-  risk.
-- ⚠️ **What fix 1 does NOT cover:** a reference that resolves but whose surrounding sentence
-  is false. Every error found in the 2026-08-07 accuracy pass was of that kind.
+- ✅ **Fix 2 BUILT** — `tests/test_architecture_claims.py`, 10 executable assertions over the
+  load-bearing claims. The design that made it tractable: **bind to the sentence AND the code
+  fact**. Each test asserts its claim is still present verbatim *and* asserts the code fact;
+  rewording the claim fails it, changing the code fails it. Mutation-verified both ways —
+  `five` → `four` in the hazard sentence fails the doc leg; `.measured` → `.passed` in
+  `_memo.py` fails the code leg.
+  ⚠️ Two of the ten were written as PROXIES first (a text window around a constant; a
+  line-shape scan for `--strict`) and both were WRONG — replaced by AST/table deciders. The
+  file's own docstring carries that warning, because a proxy here manufactures errors rather
+  than merely missing them.
+  Coverage is partial by design: the claims a reader would act on.
+- **The gap fix 1 left:** a reference that resolves but whose surrounding sentence is false.
+  Every error found in the 2026-08-07 accuracy pass was of that kind, and fix 2 is the answer
+  to it — for the claims it covers. Outside that set, direct reading remains the only guard.
 - **Interim mitigation, in place:** this pass verifies each claim by direct read and records
   the verification method alongside it, so a later reader can re-run the same check.
 

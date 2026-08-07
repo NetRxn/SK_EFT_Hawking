@@ -40,8 +40,20 @@ That check enforces three things, and the third is the only mechanical guard on 
    naming a file precisely to say it is missing) live in an explicit, reasoned exception set
    in the check.
 
-⚠️ **Nothing verifies a prose claim.** A description can be fluent, well-cited, and wrong,
-and the suite will stay green. That is why rule 2 exists.
+⚠️ **No check verifies a prose claim** — a description can be fluent, well-cited, and wrong,
+and the suite stays green. That is why rule 2 exists, and why the load-bearing claims are
+additionally pinned by executable assertions in
+[`tests/test_architecture_claims.py`](../../tests/test_architecture_claims.py).
+
+**Those assertions bind in both directions, which is the whole design.** Each one asserts (a)
+that its claim's sentence is still present in the document, verbatim, and (b) the code fact
+that makes it true. Reword the claim and the test fails, forcing re-verification; change the
+code and the test fails, forcing the document to follow. A one-way assertion rots the moment
+somebody rephrases the sentence — which is exactly how the claims corrected on 2026-08-07
+survived: each was true when written, and nothing re-read it afterwards.
+
+Coverage there is deliberately partial — the claims a reader would *act on*, not every
+sentence. Adding one is cheap; choosing which is the work.
 
 This is not tidiness. Chasing counts across narrative documents is the lowest-value work
 this repository does, it recurs every time anything is added, and it has repeatedly

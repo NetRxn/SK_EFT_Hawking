@@ -1,8 +1,20 @@
-# AI-Defect Defense Layer — Canonical Specification
+# AI-Defect Defense Layer — Design Proposal (partially superseded)
 
 This document defines the three-tier defense layer that backstops the SK-EFT Hawking pipeline against the AI-generated-content failure classes documented by Mathlib's April 2026 contribution-guidelines update and arXiv's three-stage 2025–2026 moderation actions (CS moratorium Oct 2025, Math endorsement tightening Dec 2025 / Jan 2026, Dietterich one-year ban May 2026). The layer is structured as pre-commit hook → `validate.py` check → reviewer-agent residue, with explicit promotion of LLM-caught defects to deterministic prevention wherever feasible.
 
-**Implementation:** Tier 1 lives in `scripts/pre_commit_hook.sh` (installed into `.git/hooks/pre-commit` via `scripts/install_pre_commit.sh`). Tier 2 lives in `scripts/validate.py` as named checks. Tier 3 lives in the existing `physics-qa` plugin agents with a new prep-brief consumed before each invocation. Pipeline Invariant #16 (below) codifies the cross-tier discipline.
+> ⚠️ **STATUS: this is a PROPOSAL, not a description of the running system.** It was
+> written as a design and never built as specified. Read §Coverage below **first** — it
+> maps every proposed control to what actually guards that ground today, and most of the
+> substance has since shipped by other names and through other mechanisms. Nothing here
+> should be cited as evidence that a control exists.
+
+**Proposed implementation (unbuilt as written).** Tier 1 as a committed
+`scripts/pre_commit_hook.sh` plus an idempotent `scripts/install_pre_commit.sh`; Tier 2 as
+named `validate.py` checks; Tier 3 as a prep-brief consumed by the reviewer agents (which
+ship in the `skeft-qa` plugin). Neither Tier-1 script was written. The commit gate that
+does exist is `scripts/pre-commit-sync.sh` plus a local, uncommitted `.git/hooks/pre-commit`
+— a different design, documented in
+[`docs/architecture/VALIDATION_GATE_TOPOLOGY.md`](architecture/VALIDATION_GATE_TOPOLOGY.md).
 
 ## Status model
 
@@ -13,6 +25,42 @@ This is a defense layer, not a new readiness gate. The three tiers map onto the 
 - **Tier 3** (reviewer agents) fires at Stages 9, 10, 13 — applied to the irreducible semantic residue, with a pre-review briefing of which deterministic checks have already cleared.
 
 Tiers 1 and 2 are deterministic; Tier 3 is LLM-judgment-only. Tier 1+2 must be green before Tier 3 may run — see Pipeline Invariant #16.
+
+---
+
+## Coverage — what actually guards this ground
+
+Measured against the live check registry, not inherited from this document's own claims.
+Read this before treating any Tier below as a description of the system.
+
+### Tier 2 — proposed check → what exists
+
+| proposed check | today |
+|---|---|
+| `axiom_closure_allowlist` | ✅ **shipped under this exact name.** Every declaration's transitive axiom closure is held to an allowlist |
+| `bundle_lean_refs_resolve` | ✅ covered by `prose_theorem_reference_coverage` — bundle-draft Lean references in any verbatim form — and `lean_docstring_refs_resolve` for the docstring direction |
+| `bundle_latex_compile_clean_citations` | ✅ covered by `paper_latex_compiles`, which compiles every bundle draft (its slow-gate default SKIP is gone) |
+| `bibitem_registry_character_match` | ◐ **partial.** `bibitem_title_primary_source` compares the registry title to page-1 text of the cached PDF. Authors, journal, volume and page are not compared by any check |
+| `threshold_arithmetic` | ◐ **partial, by artifact not by rule.** `paper_table`, `d1_hierarchy_table` and `f_hierarchy_claims` hold their targets to the canonical evaluator at displayed precision. There is no general mechanism that recomputes an arbitrary number quoted in arbitrary prose |
+| `citation_bibkey_form_matches_metadata` | ❌ not built. `theorem_name_embedded_citations` checks a different thing — declaration names embedding author+year |
+| `theorem_quoted_bound_matches_lean_literal` | ❌ not built, and named as a genuine absence in [`VALIDATION_ARCHITECTURE.md` §6](architecture/VALIDATION_ARCHITECTURE.md#6-what-this-subsystem-does-not-do): a cited theorem's *statement* is unverified |
+| `mathlib_linter_clean` | ❌ not built; no `lintDriver` is configured |
+| `viz_log_axis_hrect_safety` | ❌ not built (`viz_consistency` covers imported-physics and style, not this) |
+
+### Tier 1 — proposed token check → what exists
+
+| proposed | today |
+|---|---|
+| `set_option maxHeartbeats` in a proof body | ✅ **enforced** — Invariant #10, via a zero-headroom ratchet in `lean_toolchain.py`, alongside the advisory `elaboration_knob_watchlist` for the kernel-irrelevant knobs |
+| `native_decide` justification | ✅ covered by `native_decide_regression` (decl-closure ratchet), which the commit gate runs |
+| `^axiom` needs `AXIOM_METADATA` | ✅ Invariant #15 (axiom sign-off) plus `axiom_closure_allowlist`; the allowlist is the mechanical half |
+| `decreasing_by sorry` | ✅ subsumed by `lean_zero_sorry` — Invariant #4 fails on `sorry` anywhere in a closure |
+| forbidden placeholder strings in TeX | ◐ `paper_provenance` catches a placeholder bibliography; the general LLM-artifact string list is not scanned |
+| **`@[csimp]` without a justification comment** | ❌ **not guarded anywhere** — zero occurrences of `csimp` across `scripts/` and `tests/`. This is the one genuinely uncovered soundness item in the whole proposal: `@[csimp]` can smuggle an axiom past the kernel's usual guarantees (`leanprover/lean4` issue #7463). If any part of this document is built, build this |
+| `unsafe` / `partial def` scope limits | ❌ not gated by a check (`lean_verify` surfaces them interactively) |
+
+**The residue worth building is small and specific**: the `@[csimp]` guard, and the two
+citation-metadata checks. The rest is either shipped, partial-by-design, or superseded.
 
 ---
 
@@ -159,11 +207,18 @@ The `/lean4:check-axioms` slash command and `validate.py --check axiom_closure_a
 
 ---
 
-## Pipeline Invariant #16
+## Proposed pipeline invariant — UNNUMBERED
 
-Append to `WAVE_EXECUTION_PIPELINE.md`'s Pipeline Invariants section:
+⚠️ **This carries no invariant number, deliberately.** The numbered invariants are
+allocated in `WAVE_EXECUTION_PIPELINE.md`, which is their only registry: **#15** is axiom
+sign-off, **#16** is the tracked-hypothesis registry, **#17** is the kernel no-go registry.
+A proposal does not hold a number — it would be allocated the next free one at the point
+it is built and appended there, and until then any number written here is a collision
+waiting to be quoted.
 
-> **16. Every commit passes the three-tier AI-defect-defense layer.** Tier 1 pre-commit hooks fire automatically on `git commit`; Tier 2 `validate.py` checks fire at Stage 7 and at the submission gate; Tier 3 reviewer agents fire at Stages 9 / 10 / 13 only on artifacts that have already cleared Tier 1 + Tier 2. Tier 3 agents MUST NOT be invoked on artifacts with open Tier 1 / Tier 2 failures — the agents are residue-only and may not be used as a fix-Tier-2 cycle. Tier 2 checks grow (never shrink) as new defect classes surface, following the QI-register promotion pattern: every LLM-caught defect class that appears twice becomes a candidate for promotion to a Tier 2 check on the next wave. The lean4 plugin's interactive workflows (`/lean4:check-axioms`, `/lean4:checkpoint`, `/lean4:review`) are the developer-facing equivalent of Tiers 1 + 2 and may be invoked at any time during a session; CI does not depend on developer use of the plugin. See `docs/AI_DEFECT_DEFENSE.md` for the canonical specification.
+Proposed language, were this built:
+
+> **16. Every commit passes the three-tier AI-defect-defense layer.** Tier 1 pre-commit hooks fire automatically on `git commit`; Tier 2 `validate.py` checks fire at Stage 7 and at the submission gate; Tier 3 reviewer agents fire at Stages 9 / 10 / 13 only on artifacts that have already cleared Tier 1 + Tier 2. Tier 3 agents MUST NOT be invoked on artifacts with open Tier 1 / Tier 2 failures — the agents are residue-only and may not be used as a fix-Tier-2 cycle. Tier 2 checks grow (never shrink) as new defect classes surface, following the QI-register promotion pattern: every LLM-caught defect class that appears twice becomes a candidate for promotion to a Tier 2 check on the next wave. The lean4 plugin's interactive workflows (`/lean4:check-axioms`, `/lean4:checkpoint`, `/lean4:review`) are the developer-facing equivalent of Tiers 1 + 2 and may be invoked at any time during a session; CI does not depend on developer use of the plugin. See this document for the design.
 
 ### Pipeline-stage edits
 

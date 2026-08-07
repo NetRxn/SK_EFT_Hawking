@@ -125,16 +125,22 @@ new silent PASS, or a converted one left stale in the baseline.
 scan for a literal `passed=False`; a check can satisfy that scan while being unreachable in
 every leg. A semantic-reachability re-measurement has never been run.
 
-**Claims enforcement, has none.** `docs/AI-DEFECT-DEFENSE-LAYER.md` is headed *"Canonical
-Specification"* and carries an **"Implementation:"** line naming `scripts/pre_commit_hook.sh`
-and `scripts/install_pre_commit.sh`. **Both are absent**, and none of its named Tier-2 checks
-was ever written. It is a **proposal that reads as a description** — committed once, as a
-draft, and never built.
+**Claimed enforcement, mostly delivered elsewhere.** `docs/AI-DEFECT-DEFENSE-LAYER.md` now
+declares itself a **design proposal** and carries a measured **§Coverage** map: neither of its
+two named Tier-1 scripts was ever written, and the commit gate that exists
+(`pre-commit-sync.sh` + a local uncommitted hook) is a different design. Most of its substance
+shipped under other names — `axiom_closure_allowlist` verbatim,
+`prose_theorem_reference_coverage` for the Lean-reference arm, `paper_latex_compiles` for the
+citation-compile arm, Invariant #10's ratchet for the heartbeat arm.
 
-⚠️ It also declares its own **"Pipeline Invariant #16"**, which **collides** with the real
-Invariant #16 (the tracked-hypothesis registry). Two different rules share one number across
-two documents, and nothing in the pipeline law cites the AI-Defense document at all. Tracked
-as **A2** in [`.working-docs/ARCHITECTURE_TODOs.md`](.working-docs/ARCHITECTURE_TODOs.md).
+⚠️ **One item in it is genuinely unguarded and is a soundness item:** `@[csimp]` without a
+justification comment. `csimp` appears nowhere in `scripts/` or `tests/`, and the attribute can
+smuggle an axiom past the kernel's usual guarantees. If any of that document is built, that is
+the piece.
+
+The proposal's invariant is deliberately **unnumbered** — numbers are allocated only in
+`WAVE_EXECUTION_PIPELINE.md`, where #15/#16/#17 are axiom sign-off, the tracked-hypothesis
+registry and the kernel no-go registry.
 
 Also claiming enforcement and having none: **no gate or check reads `stage9_status` or
 `stage10_status`.** They are not inert — `bundle_append.py` reads both and demotes a `green`
