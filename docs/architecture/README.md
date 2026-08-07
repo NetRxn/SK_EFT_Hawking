@@ -29,6 +29,20 @@ Decisions live in [`../adrs/`](../adrs/); the graph schema in
 `validate.py --check architecture_inventory_fresh`. **No other document in this directory
 may state a count** — link to the census instead.
 
+That check enforces three things, and the third is the only mechanical guard on doc
+*accuracy* that exists:
+
+1. the census matches a fresh derivation;
+2. no narrative states a census count;
+3. **every path-like reference in a narrative resolves to a file that exists.** It cannot
+   check whether a description is *true*, but it catches the way these documents actually
+   rot — a rename or a deletion the prose never followed. Deliberate absences (a document
+   naming a file precisely to say it is missing) live in an explicit, reasoned exception set
+   in the check.
+
+⚠️ **Nothing verifies a prose claim.** A description can be fluent, well-cited, and wrong,
+and the suite will stay green. That is why rule 2 exists.
+
 This is not tidiness. Chasing counts across narrative documents is the lowest-value work
 this repository does, it recurs every time anything is added, and it has repeatedly
 produced documents that contradict themselves *and each other* while reading as

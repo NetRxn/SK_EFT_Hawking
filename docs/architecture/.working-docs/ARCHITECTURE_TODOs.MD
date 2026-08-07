@@ -69,7 +69,7 @@ See **B2**.
 
 ## B. Found during this pass, not previously documented
 
-### B1. The counts-ordering guard's population is hand-listed and incomplete — OPEN
+### B1. The counts-ordering guard's population is hand-listed and incomplete — ✅ FIXED 2026-08-07
 
 - **Where:** `tests/test_validate_registry_contract.py:80` `_COUNTS_CONSUMERS`
 - **What:** the tuple declares **two** consumers (`axiom_count_prose_consistency`,
@@ -97,10 +97,15 @@ See **B2**.
 - **Why it is a defect anyway:** this is the failure mode
   `CHECK_AUTHORING_GUIDE.md` §6 lists as *"a hand-maintained list parallel to a registry"*,
   inside the test that enforces ADR-009 hazard H3.
-- **Fix shape (not authorized yet):** derive the consumer set by AST rather than declaring
-  it, exactly as `gate_edge_types_are_emitted` derives its two populations.
+- ✅ **FIXED.** `_COUNTS_CONSUMERS` is replaced by `_counts_consumers()`, which derives the
+  set by AST over the registered check bodies, and `counts_fresh` moved to the FRONT of
+  `_CANONICAL_ORDER` so it precedes every reader. Production comment in `validate.py`
+  corrected — it carried the same incomplete pair. Mutation-verified: restoring the old
+  position fails the derived assertion, which the hand-written tuple could not see.
+  Residual, stated in both the test and the production comment: a body reaching
+  `counts.json` through a helper without naming it is invisible to the scan.
 
-### B2. No mechanism verifies the *accuracy* of any architecture document — OPEN
+### B2. No mechanism verifies the *accuracy* of any architecture document — PARTIALLY CLOSED 2026-08-07
 
 - **What:** `validate.py --check architecture_inventory_fresh` gates two things: the census
   matches a fresh derivation, and no narrative states a census count. **Nothing verifies a
@@ -108,11 +113,18 @@ See **B2**.
 - **Evidence this matters:** `QA_QI_INFRASTRUCTURE_MAP.md` drifted out of sync within days
   of being written and contradicted itself inside a single sentence, with a green suite
   throughout.
-- **Candidate fix, cheapest first (not authorized yet):**
-  1. Every backticked code reference in `docs/architecture/` must resolve to a real file,
-     script, symbol, check name, gate name or test. Fully mechanical; catches the rename and
-     deletion paths that actually rot these documents.
-  2. Claim-level assertions for load-bearing findings.
+- ✅ **Fix 1 BUILT** — `architecture_inventory_fresh` gained a `doc_refs_resolve` leg:
+  every path-like backticked reference across the directory must resolve against the tree,
+  with a reasoned exception set for documents that name an absent file deliberately.
+  Mutation-verified both ways — a renamed script fails it, and shrinking the exception set
+  below a still-absent reference fails it. Build trees (`.lake`) are excluded or the scan
+  costs minutes instead of a second.
+- ⏭️ **Fix 2 NOT built:** claim-level assertions for load-bearing findings. This is the
+  one that would actually verify a *description*, and it is a substantial build — one
+  assertion per finding, each of which is the thing the finding claims. Still the standing
+  risk.
+- ⚠️ **What fix 1 does NOT cover:** a reference that resolves but whose surrounding sentence
+  is false. Every error found in the 2026-08-07 accuracy pass was of that kind.
 - **Interim mitigation, in place:** this pass verifies each claim by direct read and records
   the verification method alongside it, so a later reader can re-run the same check.
 

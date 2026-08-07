@@ -37,38 +37,38 @@ checks read. See `validate._CANONICAL_ORDER`.
 
 | # | check | module | what it asserts |
 |---:|---|---|---|
-| 0 | `formulas` | `lean_substrate` | Python formulas reference valid Lean theorems |
-| 1 | `lean_zero_sorry` | `lean_substrate` | Pipeline Invariant #4 — no declaration's axiom closure contains `sorryAx` |
-| 2 | `placeholder_not_cited` | `lean_substrate` | Placeholder (True := trivial) theorems are not cited as verified in any paper (Invariant #9) |
-| 3 | `disclosure_consistency` | `lean_substrate` | No paper presents a disclosed definitional/vacuous_proxy theorem as 'establishing' a result (#9) |
-| 4 | `proxy_body_audit` | `lean_substrate` | Structurally-named theorems are not proved by a trivial 'defining-the-conclusion' body (R2) |
-| 5 | `tracked_hypothesis_ledger` | `lean_substrate` | Every consumed tracked-hypothesis Prop is registered in HYPOTHESIS_REGISTRY (Invariant #16, R3) |
-| 6 | `tracked_hypotheses_fresh` | `lean_substrate` | docs/PERMANENT_TRACKED_HYPOTHESES.md is up-to-date vs HYPOTHESIS_REGISTRY (auto-regen) |
-| 7 | `formula_grounding` | `lean_statements` | Every formulas.py Lean reference resolves to a real, non-placeholder theorem (Invariant #4, R1) |
-| 8 | `vacuous_statement_audit` | `lean_statements` | No project theorem/lemma has a content-thin (reflexive / tautological) statement (R2 type-companion) |
-| 9 | `nogo_substrate_integrity` | `lean_statements` | Every provably-false no-go has a live, kernel-pure, non-vacuous backing theorem (Invariant #17, ADR-007 N-C) |
-| 10 | `native_decide_regression` | `lean_toolchain` | native_decide decl-closure does not silently grow past its ceiling (R4; ADR-002) |
-| 11 | `numerical` | `physics` | Experimental parameters match reference values |
-| 12 | `identities` | `physics` | Mathematical identities and boundary conditions hold |
-| 13 | `paper_table` | `physics` | Paper 1's SHIPPED Table 1 cells match the canonical solver output |
-| 14 | `d1_hierarchy_table` | `physics` | D1 BEC hierarchy table + crossover match the canonical evaluator |
-| 15 | `f_hierarchy_claims` | `physics` | Flagship F inline Heidelberg BEC corrections match the canonical evaluator |
-| 16 | `theorems` | `lean_toolchain` | Aristotle registry entries resolve to real Lean declarations (ratcheted) |
-| 17 | `notebooks` | `notebooks` | Notebooks import physics from src.core, no re-implementation |
-| 18 | `lean_source` | `lean_toolchain` | Key theorem names found in Lean source files |
-| 19 | `cgl_fdr` | `physics` | CGL FDR derivation produces correct results |
-| 20 | `lean_modules_in_build_graph` | `lean_toolchain` | Every project .lean module is reachable from the root aggregate (else it is built, indexed, counted and guarded by nothing) |
-| 21 | `lean_build` | `lean_toolchain` | Lean project builds cleanly (requires lake) |
-| 22 | `axiom_closure_allowlist` | `lean_toolchain` | Every SKEFTHawking declaration's transitive axiom closure is on the standard kernel axioms + the AXIOM_METADATA allow-list (Invariant #15 backstop) |
-| 23 | `elaboration_knob_watchlist` | `lean_toolchain` | Watchlist (advisory): proof-body maxRecDepth / synthInstance knobs — a performance / Mathlib-CI-portability signal, NOT a soundness or axiom-closure issue |
-| 24 | `bundle_figure_integrity` | `bundles_readiness` | Bundle figures match a fresh render and are legible at typeset size |
-| 25 | `viz_consistency` | `notebooks` | Notebook visualizations use imported physics and consistent style |
-| 26 | `notebook_exec` | `notebooks` | All notebooks execute without errors |
-| 27 | `physical_bounds` | `physics` | All computed quantities within physical bounds |
-| 28 | `cross_path_consistency` | `physics` | Different code paths agree within 0.5%/1% tolerance |
-| 29 | `paper_provenance` | `papers_prose` | Paper figure references resolve and no placeholder bibliography ships |
-| 30 | `parameter_provenance` | `citations` | Every experimental parameter has verified provenance |
-| 31 | `counts_fresh` | `freshness` | counts.json / counts.tex are up-to-date vs. sources |
+| 0 | `counts_fresh` | `freshness` | counts.json / counts.tex are up-to-date vs. sources |
+| 1 | `formulas` | `lean_substrate` | Python formulas reference valid Lean theorems |
+| 2 | `lean_zero_sorry` | `lean_substrate` | Pipeline Invariant #4 — no declaration's axiom closure contains `sorryAx` |
+| 3 | `placeholder_not_cited` | `lean_substrate` | Placeholder (True := trivial) theorems are not cited as verified in any paper (Invariant #9) |
+| 4 | `disclosure_consistency` | `lean_substrate` | No paper presents a disclosed definitional/vacuous_proxy theorem as 'establishing' a result (#9) |
+| 5 | `proxy_body_audit` | `lean_substrate` | Structurally-named theorems are not proved by a trivial 'defining-the-conclusion' body (R2) |
+| 6 | `tracked_hypothesis_ledger` | `lean_substrate` | Every consumed tracked-hypothesis Prop is registered in HYPOTHESIS_REGISTRY (Invariant #16, R3) |
+| 7 | `tracked_hypotheses_fresh` | `lean_substrate` | docs/PERMANENT_TRACKED_HYPOTHESES.md is up-to-date vs HYPOTHESIS_REGISTRY (auto-regen) |
+| 8 | `formula_grounding` | `lean_statements` | Every formulas.py Lean reference resolves to a real, non-placeholder theorem (Invariant #4, R1) |
+| 9 | `vacuous_statement_audit` | `lean_statements` | No project theorem/lemma has a content-thin (reflexive / tautological) statement (R2 type-companion) |
+| 10 | `nogo_substrate_integrity` | `lean_statements` | Every provably-false no-go has a live, kernel-pure, non-vacuous backing theorem (Invariant #17, ADR-007 N-C) |
+| 11 | `native_decide_regression` | `lean_toolchain` | native_decide decl-closure does not silently grow past its ceiling (R4; ADR-002) |
+| 12 | `numerical` | `physics` | Experimental parameters match reference values |
+| 13 | `identities` | `physics` | Mathematical identities and boundary conditions hold |
+| 14 | `paper_table` | `physics` | Paper 1's SHIPPED Table 1 cells match the canonical solver output |
+| 15 | `d1_hierarchy_table` | `physics` | D1 BEC hierarchy table + crossover match the canonical evaluator |
+| 16 | `f_hierarchy_claims` | `physics` | Flagship F inline Heidelberg BEC corrections match the canonical evaluator |
+| 17 | `theorems` | `lean_toolchain` | Aristotle registry entries resolve to real Lean declarations (ratcheted) |
+| 18 | `notebooks` | `notebooks` | Notebooks import physics from src.core, no re-implementation |
+| 19 | `lean_source` | `lean_toolchain` | Key theorem names found in Lean source files |
+| 20 | `cgl_fdr` | `physics` | CGL FDR derivation produces correct results |
+| 21 | `lean_modules_in_build_graph` | `lean_toolchain` | Every project .lean module is reachable from the root aggregate (else it is built, indexed, counted and guarded by nothing) |
+| 22 | `lean_build` | `lean_toolchain` | Lean project builds cleanly (requires lake) |
+| 23 | `axiom_closure_allowlist` | `lean_toolchain` | Every SKEFTHawking declaration's transitive axiom closure is on the standard kernel axioms + the AXIOM_METADATA allow-list (Invariant #15 backstop) |
+| 24 | `elaboration_knob_watchlist` | `lean_toolchain` | Watchlist (advisory): proof-body maxRecDepth / synthInstance knobs — a performance / Mathlib-CI-portability signal, NOT a soundness or axiom-closure issue |
+| 25 | `bundle_figure_integrity` | `bundles_readiness` | Bundle figures match a fresh render and are legible at typeset size |
+| 26 | `viz_consistency` | `notebooks` | Notebook visualizations use imported physics and consistent style |
+| 27 | `notebook_exec` | `notebooks` | All notebooks execute without errors |
+| 28 | `physical_bounds` | `physics` | All computed quantities within physical bounds |
+| 29 | `cross_path_consistency` | `physics` | Different code paths agree within 0.5%/1% tolerance |
+| 30 | `paper_provenance` | `papers_prose` | Paper figure references resolve and no placeholder bibliography ships |
+| 31 | `parameter_provenance` | `citations` | Every experimental parameter has verified provenance |
 | 32 | `tables_fresh` | `freshness` | Paper tables (tables/*.tex) are up-to-date vs. pipeline sources |
 | 33 | `claim_clusters_fresh` | `freshness` | papers/claim_clusters.json is up-to-date vs. v2 claims_review.json files |
 | 34 | `numerical_literals` | `papers_prose` | Paper .tex files free of inline numerical literals outside \input{} blocks |

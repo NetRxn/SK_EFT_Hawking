@@ -46,6 +46,7 @@ import validate as v  # noqa: E402
 
 # Frozen 2026-08-03 against `validate.py --list`, in registration order.
 EXPECTED_CHECKS = [
+    'counts_fresh',
     'formulas', 'lean_zero_sorry', 'placeholder_not_cited', 'disclosure_consistency',
     'proxy_body_audit', 'tracked_hypothesis_ledger', 'tracked_hypotheses_fresh',
     'formula_grounding', 'vacuous_statement_audit', 'nogo_substrate_integrity',
@@ -55,7 +56,7 @@ EXPECTED_CHECKS = [
     'cgl_fdr', 'lean_modules_in_build_graph', 'lean_build', 'axiom_closure_allowlist',
     'elaboration_knob_watchlist', 'bundle_figure_integrity', 'viz_consistency',
     'notebook_exec', 'physical_bounds', 'cross_path_consistency',
-    'paper_provenance', 'parameter_provenance', 'counts_fresh',
+    'paper_provenance', 'parameter_provenance',
     'tables_fresh', 'claim_clusters_fresh', 'numerical_literals', 'bundle_tables_use_pipeline',
     'graph_integrity', 'gate_edge_types_are_emitted', 'atlas_integrity',
     'atlas_hypothesis_discipline',
@@ -77,7 +78,37 @@ EXPECTED_CHECKS = [
 # order against their consumers is the part of the ordering that is semantic
 # rather than incidental.
 _REGENERATORS = ('counts_fresh', 'tables_fresh', 'claim_clusters_fresh')
-_COUNTS_CONSUMERS = ('axiom_count_prose_consistency', 'inventory_index_autogen_fresh')
+def _counts_consumers() -> set[str]:
+    """Registered checks whose body reads `docs/counts.json`, DERIVED by AST.
+
+    ⚠️ This was a hand-written tuple naming two checks. Measured 2026-08-07, the real
+    population was larger, and THREE of the undeclared readers ran BEFORE the
+    regenerator — including `lean_zero_sorry`, the Invariant #4 gate. The tuple was
+    the failure mode `CHECK_AUTHORING_GUIDE.md` §6 lists as *"a hand-maintained list
+    parallel to a registry"*, sitting inside the test that enforces ADR-009 hazard H3.
+
+    Deriving it means a check that starts reading counts.json is covered on arrival,
+    with no edit here. A body that reaches counts.json through a helper rather than
+    naming it is still invisible — an accepted limit, and the reason the production
+    comment in `_CANONICAL_ORDER` states the ordering intent in prose too.
+    """
+    import ast
+    consumers: set[str] = set()
+    checks_dir = SK_ROOT / "scripts" / "validation" / "checks"
+    for path in sorted(checks_dir.glob("*.py")):
+        src = path.read_text()
+        for node in ast.walk(ast.parse(src)):
+            if not isinstance(node, ast.FunctionDef):
+                continue
+            names = [d for d in node.decorator_list
+                     if isinstance(d, ast.Call)
+                     and getattr(d.func, "id", None) == "register_check"]
+            if not names:
+                continue
+            body = ast.get_source_segment(src, node) or ""
+            if "COUNTS_JSON_PATH" in body or "counts.json" in body:
+                consumers.add(names[0].args[0].value)
+    return consumers
 
 
 class TestRegistryContract:
@@ -106,7 +137,11 @@ class TestRegistryContract:
         deliberate reordering that updates EXPECTED_CHECKS without noticing
         this consequence."""
         order = {s.name: i for i, s in enumerate(v._CHECKS)}
-        for consumer in _COUNTS_CONSUMERS:
+        consumers = _counts_consumers() - {'counts_fresh'}
+        assert consumers, (
+            "AST scan found no counts.json consumers — the scan has silently "
+            "narrowed, and a scan that matches nothing passes vacuously.")
+        for consumer in sorted(consumers):
             assert order['counts_fresh'] < order[consumer], (
                 f"`counts_fresh` (idx {order['counts_fresh']}) must run before "
                 f"`{consumer}` (idx {order[consumer]}), which reads the "

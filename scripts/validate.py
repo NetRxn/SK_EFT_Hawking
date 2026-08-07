@@ -146,10 +146,18 @@ from validation._registry import (  # noqa: E402
 # ═══════════════════════════════════════════════════════════════════════
 #
 # Registration order is SEMANTIC, not cosmetic: `counts_fresh`, `tables_fresh` and
-# `claim_clusters_fresh` shell out and REGENERATE artifacts that later checks read
-# (`axiom_count_prose_consistency` and `inventory_index_autogen_fresh` both consume
-# `docs/counts.json`). `run_checks` iterates `_CHECKS` in order, so what a later
-# check observes depends on what ran before it.
+# `claim_clusters_fresh` shell out and REGENERATE artifacts that later checks read.
+# `run_checks` iterates `_CHECKS` in order, so what a later check observes depends on
+# what ran before it.
+#
+# ⚠️ This comment used to name TWO consumers of `docs/counts.json`, and so did the test
+# that enforced the ordering. Measured 2026-08-07, the real population was larger and
+# three of the undeclared readers ran BEFORE the regenerator — `lean_zero_sorry` (the
+# Invariant #4 gate), `native_decide_regression` and `axiom_closure_allowlist`. Naming a
+# consumer set in prose is the same hand-maintained-list failure the suite exists to
+# catch, so the set is now DERIVED by AST in
+# `tests/test_validate_registry_contract.py::_counts_consumers`, and `counts_fresh` runs
+# first. Do not re-enumerate consumers here.
 #
 # Until now that order was an EMERGENT PROPERTY of where each `@register_check`
 # happened to sit in one 7,800-line file. That is fine while there is one file and
@@ -166,6 +174,15 @@ from validation._registry import (  # noqa: E402
 # must NOT import this one; otherwise it would assert only that production agrees
 # with itself.
 _CANONICAL_ORDER: tuple[str, ...] = (
+    # `counts_fresh` FIRST — it regenerates `docs/counts.json`, and three checks that
+    # read it (`lean_zero_sorry`, `native_decide_regression`, `axiom_closure_allowlist`)
+    # used to run BEFORE it. On a run over a tree whose Lean sources had changed, the
+    # Invariant #4 gate evaluated the PREVIOUS extraction. Moved 2026-08-07; the
+    # consumer set is now DERIVED by AST in the ordering test, so a new consumer
+    # registered ahead of it fails rather than silently reading stale counts.
+    # Safe to run first: it depends on `lean_deps.json`, which `main()` already
+    # snapshots via `ensure_lean_deps_fresh()` before any check runs.
+    'counts_fresh',
     'formulas', 'lean_zero_sorry', 'placeholder_not_cited', 'disclosure_consistency',
     'proxy_body_audit', 'tracked_hypothesis_ledger', 'tracked_hypotheses_fresh',
     'formula_grounding', 'vacuous_statement_audit', 'nogo_substrate_integrity',
@@ -180,7 +197,7 @@ _CANONICAL_ORDER: tuple[str, ...] = (
     'cgl_fdr', 'lean_modules_in_build_graph', 'lean_build', 'axiom_closure_allowlist',
     'elaboration_knob_watchlist', 'bundle_figure_integrity', 'viz_consistency',
     'notebook_exec', 'physical_bounds', 'cross_path_consistency',
-    'paper_provenance', 'parameter_provenance', 'counts_fresh',
+    'paper_provenance', 'parameter_provenance',
     'tables_fresh', 'claim_clusters_fresh', 'numerical_literals', 'bundle_tables_use_pipeline',
     'graph_integrity', 'gate_edge_types_are_emitted', 'atlas_integrity',
     'atlas_hypothesis_discipline',

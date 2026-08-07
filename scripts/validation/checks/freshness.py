@@ -865,12 +865,14 @@ def check_architecture_inventory_fresh() -> CheckResult:
     arch_dir = doc.parent
     census_nouns = (r"checks?|gates?|hooks?|agents?|commands?|bundles?|"
                     r"node types?|edge types?|validation modules?")
-    # (?<![-\w]) — a digit preceded by a hyphen is part of a NAME, not a count:
-    # "Tier-2 checks" is the tier's name and must not read as "2 checks". `registries`
-    # is deliberately absent from the nouns: "rebinding creates two registries" describes
-    # a bug mechanism, not the census's registry table.
+    # (?<![-#\w]) — a digit preceded by a hyphen or a hash is part of a NAME or an
+    # ORDINAL, never a count. "Tier-2 checks" is the tier's name; "Invariant #4 gate"
+    # is the invariant's number. Both were false positives on correct prose, and per
+    # VALIDATION_GATE_TOPOLOGY §3 a gate that fires on correct work gets switched off.
+    # `registries` is deliberately absent from the nouns: "rebinding creates two
+    # registries" describes a bug mechanism, not the census's registry table.
     count_re = re.compile(
-        r"(?<![-\w])(?:\d[\d,]*|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)\b"
+        r"(?<![-#\w])(?:\d[\d,]*|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)\b"
         r"[\s*_`]*(?:" + census_nouns + r")\b",
         re.IGNORECASE)
     offenders: list[str] = []
@@ -902,6 +904,87 @@ def check_architecture_inventory_fresh() -> CheckResult:
             f"{doc.name} and link to it, or name the mechanism instead of the "
             f"magnitude: {offenders[:6]}"))
         if offenders:
+            all_pass = False
+
+    # ── Leg 3: every path-like reference in a narrative must RESOLVE ──────────
+    #
+    # The rot path for these documents is a rename or a deletion: the prose keeps
+    # naming `scripts/foo.py` long after it became `scripts/bar.py`, and nothing
+    # notices because prose is not compiled. This is the cheapest mechanical guard on
+    # doc ACCURACY that exists — it cannot check whether a description is true, but it
+    # can check that everything the description names is still there.
+    #
+    # Deliberate absences are real and must not be forced out of the prose: the maps
+    # name `scripts/pre_commit_hook.sh` precisely to say it does NOT exist, and name
+    # runtime artifacts that a clean tree has never created. Those live in an explicit
+    # exception set with a reason each, ratcheted — the set may SHRINK (when the thing
+    # gets built, or the reference is dropped) and a new entry is a deliberate decision.
+    deliberately_absent = {
+        # AI-Defense Tier 1 names these as its implementation; both are absent, and
+        # saying so is the finding. See ARCHITECTURE_TODOs A2.
+        "scripts/pre_commit_hook.sh",
+        "scripts/install_pre_commit.sh",
+        # Declared input to the (inert) freshness layer; never created. END_TO_END_MAP §6.
+        # Runtime artifacts: written during a /goal loop, absent in a clean tree.
+        "docs/verification_log.jsonl",
+        "active_issues.json",
+        "blocked_questions.jsonl",
+    }
+    pathish = re.compile(r"^[A-Za-z_][\w./-]*\.(?:py|sh|md|json|lean|tex|jsonl|toml|yml)$")
+    roots = ("scripts", "docs", "tests", "src", "papers", "lean", "figures",
+             "temporary", "notebooks", ".claude/plugins/skeft-qa")
+    # `.lake` holds the whole Mathlib build tree — tens of thousands of files that no
+    # architecture document references. Walking it turns a sub-second scan into minutes.
+    skip_parts = {".lake", ".git", "__pycache__", "node_modules", ".pytest_cache"}
+    known: set[str] = set()
+    bases: set[str] = set()
+    for r in roots:
+        base = _H.PROJECT_ROOT / r
+        if not base.is_dir():
+            continue
+        for f in base.rglob("*"):
+            if not f.is_file() or skip_parts & set(f.parts):
+                continue
+            try:
+                rel = f.relative_to(_H.PROJECT_ROOT).as_posix()
+            except ValueError:
+                continue
+            known.add(rel)
+            bases.add(f.name)
+    for f in _H.PROJECT_ROOT.glob("*"):
+        if f.is_file():
+            known.add(f.name)
+            bases.add(f.name)
+
+    dangling: list[str] = []
+    n_refs = 0
+    for md in sorted(arch_dir.glob("*.md")):
+        for tok in sorted(set(re.findall(r"`([^`\n]+)`", md.read_text()))):
+            tok = tok.strip()
+            if not pathish.match(tok) or tok in deliberately_absent:
+                continue
+            n_refs += 1
+            if tok in known or tok in bases:
+                continue
+            if any(k.endswith("/" + tok) for k in known):
+                continue
+            dangling.append(f"{md.name}: {tok}")
+
+    if n_refs == 0:
+        all_pass = False
+        details.append(Detail(
+            "doc_refs_resolve", False,
+            "no path-like reference found in any narrative — the scan matched nothing, "
+            "which is not evidence that every reference resolves"))
+    else:
+        details.append(Detail(
+            "doc_refs_resolve", not dangling,
+            f"{n_refs} path-like reference(s) across {arch_dir.name}/ all resolve "
+            f"({len(deliberately_absent)} documented-absent refs exempt)"
+            if not dangling else
+            f"reference(s) naming a file that does not exist — a rename or deletion "
+            f"the prose did not follow: {dangling[:6]}"))
+        if dangling:
             all_pass = False
 
     current = doc.read_text()

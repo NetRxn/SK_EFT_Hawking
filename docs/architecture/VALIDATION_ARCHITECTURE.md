@@ -102,15 +102,19 @@ These are ADR-009 D3. They are not style rules; each names a failure the project
 `LOAD_GLOBAL` and `LOAD_ATTR`, so an import-time copy still appears there. The guard additionally
 requires `_cfg` in `co_names` — an imported copy has no attribute access to show.
 
-⚠️ **H3's ordering is enforced as a MECHANISM, not as a dependency graph.** The two tests above
-prove every registered check has a declared position and that the sort runs after the last
-registration. The separate `test_regenerators_precede_their_consumers` asserts that
-`counts_fresh` precedes its consumers — but it iterates a **hand-written tuple**
-(`_COUNTS_CONSUMERS`), and measured against the registry that tuple is a strict subset of the
-checks that actually read `docs/counts.json`. So the *mechanism* is guarded; the *specific
-regenerator-before-consumer property* is guarded only for the declared pairs. Tracked as **B1**
-in [`.working-docs/ARCHITECTURE_TODOs.md`](.working-docs/ARCHITECTURE_TODOs.md), with the
-measured consumer set and the reason the exposure is bounded.
+**H3 is enforced on two axes, and both are structural.** The two tests above prove every
+registered check has a declared position and that the sort runs after the last registration —
+that is the *mechanism*. `test_regenerators_precede_their_consumers` proves the *dependency*:
+`counts_fresh` runs before every check that reads `docs/counts.json`, with the consumer set
+**derived by AST** from the check bodies rather than declared.
+
+⚠️ **It was a hand-written tuple naming two consumers, and that was the bug.** The real
+population was larger, and three undeclared readers ran *before* the regenerator — including
+`lean_zero_sorry`, the Invariant #4 gate, which therefore evaluated the previous extraction on
+any run over changed Lean sources. `counts_fresh` now runs first, and a new consumer
+registered ahead of it fails the derived assertion on arrival rather than silently reading
+stale counts. A body that reaches `counts.json` through a helper without naming it is still
+invisible to the scan — an accepted limit, stated in both the test and the production comment.
 
 ## 4. Runtime flags (`_config.py`)
 
