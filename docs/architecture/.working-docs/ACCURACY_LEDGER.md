@@ -29,7 +29,7 @@ under the no-code constraint.**
 
 | | |
 |---|---|
-| atoms verified | **146** across six documents |
+| atoms verified | **187** individual rows across six documents |
 | claims found false and replaced | **13** |
 | error-priming blocks removed | **10** |
 | incident citations reframed | **4** |
@@ -220,7 +220,18 @@ guidance, no truth value.
 | 4 | `--ci` floor counts measurements; `_memo` refuses a non-measurement | `validate.py:801-803`; `_memo.py:342` | ✓ |
 | 5 | §2.7's backlog is ratcheted at its live floor | read `test_d5_mutation_obligation.py` | `MUTATION_VERIFIED` 65 = every registered check; `AWAITING` 0; `AWAITING_CEILING` 0 ✓ |
 | 6 | §4's commands are valid invocations | read them against the CLI | ✓ |
-| 7–18 | **The 12 ledger rows' STATUS column**, re-derived from the code rather than inherited | one targeted read per row | all 12 confirmed: 10 `fixed`, 2 `OPEN` ✓ |
+| 7 | `readiness_submission_gate` is fixed | `bundles_readiness.py` — returns `passed=False` on a blocked gate | ✓ |
+| 8 | `paper_latex_compiles`' slow gate is deleted | AST read of the function body, docstring stripped | `SKIPPED (slow)` appears **only** in the docstring ✓ |
+| 9 | The `--ci` floor counts `measured` | `validate.py:801-803` | ✓ |
+| 10 | `_memo` refuses to cache a non-measurement | `_memo.py:342` `if not result.measured` | ✓ |
+| 11 | `TestCheckKeysSpanTheirInputs` seeds through the real key | `tests/test_validation_memo.py:435` | seeds `__memo_key_fn__` ✓ |
+| 12 | `test_ci_mode.py` no longer asserts the floor's own definition | grep for `CI_MIN_CHECKS_RUN == len(_CHECKS)` | **absent** ✓ |
+| 13 | `check_bundle_source_freshness` reports UNMEASURABLE on an absent dir | `:169-170` | ✓ |
+| 14 | `evaluate_all_gates` records `state='blocked'` on an exception | `readiness_gates.py:854` | ✓ |
+| 15 | `_blocked_p1_gates_by_paper` returns `None`, not `{}` | AST: its return statements are `out` and `None` | ✓ |
+| 16 | The dead-edge guard is scoped structurally | `graph_atlas.py:603` `{"source","target"} <= keys` | ✓ |
+| 17 | `harness_lock` on contention is still OPEN | `harness_lock.py:103` `yield acquired` | ✓ |
+| 18 | AI-Defense Tier 1 is still OPEN | `os.path.exists` on both named scripts | both absent ✓ |
 | 19 | **SET:** exactly two rows are OPEN | count `🔴 **OPEN**` | **2** ✓ |
 | 20 | `harness_lock`'s open row: callers treat a skip as a completed regen | `harness_lock.py:103` `yield acquired` + caller behaviour | ✓ |
 | 21 | AI-Defense Tier 1's open row: neither named script exists | `os.path.exists` on both | both absent ✓ |
@@ -272,7 +283,17 @@ body carries no skip gate. The claim is `fixed`, and the substring would have sa
 | 16 | `--strict` implies `--no-memo` | `_memo.py:293` `bypass = (_cfg.NO_MEMO or _cfg.STRICT_MODE` | ✓ |
 | 17 | `--strict` is passed only by the submission gate | grep `gate_precheck.py` | one call site ✓ |
 | 18 | Invariant #12 governs `provenance_doi_in_registry`, not `--strict` globally | `WAVE_EXECUTION_PIPELINE.md:685` | ✓ |
-| 19–29 | **The 11 gate rows' "what it actually computes"** | one `inspect.getsource` read per evaluator | all 11 match, incl. gate 4's exact `{bounds,unknown}` and gate 6's `lower()` ✓ |
+| 19 | `CitationIntegrity` = registry coverage only | `_eval_citation_integrity` + its docstring | *"DOI fetch-and-verify is deferred to Stage 13"* ✓ |
+| 20 | `CrossPaperConsistency` = `CONTRADICTS` + cross-paper `REPORTS` disagreement | `_eval_cross_paper_consistency` | both legs present ✓ |
+| 21 | `ParameterProvenance` = every `DEPENDS_ON → param:*` has `human_verified_date` | its docstring + body | ✓ |
+| 22 | `ComputationCorrectness` requires a non-`{bounds,unknown}` VERIFIES edge | AST: the exact literals in the body | `bounds`, `unknown` — exactly the two ✓ |
+| 23 | `LeanProofSubstance` = cited theorems ∌ `PlaceholderMarker` | its body; two citation sources | ✓ |
+| 24 | `AssumptionDisclosure` matches a **lowercased** substring of the tex | `'lower()' in source` | `True` ✓ |
+| 25 | `NarrativeGrounding` = every `interesting` ProseClaim has ≥1 `SUPPORTS` | its body | ✓ |
+| 26 | `ProductionRunHealth` = PRODUCES-linked runs + an MC prose regex | its body | both legs ✓ |
+| 27 | `NumericalFreshness` can only ever emit `needs-recheck`/`passed` | regex over its assigned states | exactly those two ✓ |
+| 28 | `FirstClaimVerification` likewise, and its ledger node type does not exist | assigned states; node-type set | ✓ |
+| 29 | `FixPropagation` self-promotes to P1 when blocking | its severity branch | ✓ |
 | 30 | **SET:** exactly the three named edge types have no emitter | `gate_edge_types_are_emitted` | `CONTRADICTS`, `PRODUCES`, `SUPPORTS` ✓ |
 | 31 | `READINESS_GATES.md` documents the P2 gates as blocking; they cannot | its `**Blocks on any:**` sections vs the evaluators' assigned states | doc has the section; evaluators emit only `needs-recheck`/`passed` ✓ |
 | 32 | An evaluator that raises records `state='blocked'` | `readiness_gates.py:854` | ✓ |
@@ -299,19 +320,47 @@ narrow search was *true* about its own scope and false as stated.
 |---:|---|---|---|
 | 1–7 | §1's mermaid names real artifacts | `find` each | all 7 resolve ✓ |
 | 8 | The three reviewer agents exist | plugin `agents/` | all 3 ✓ |
-| 9–23 | **SET:** §2's artifact table — writer and staleness key per row | read each writer + each `is_stale` predicate | all rows ✓ (mtime vs content-compare individually confirmed) |
+| 9 | `lean_deps.json` — writer `extract_lean_deps.py`, key = content hash incl. the root aggregate | `compute_lean_hash` body | hashes the subtree **and** `lean/SKEFTHawking.lean` ✓ |
+| 10 | `counts.json`/`.tex` — writer `update_counts.py`, key = **mtime** | `_counts_is_stale` | compares `st_mtime` against sources ✓ |
+| 11 | `papers/*/tables/*.tex` — writer `render_paper_tables.py`, key = **mtime** | `_tables_is_stale` | `st_mtime` comparison ✓ |
+| 12 | Inventory-Index blocks — writer `update_inventory_index.py`, key = **content compare** | `compute_stale` | `existing_inner != inner` ✓ |
+| 13 | `atlas_view.json` — key = content compare | `_atlas_view_stale` | rebuilds and compares ✓ |
+| 14 | `ATLAS_HEATMAP.md` — key = content compare | `_atlas_heatmap_stale` | `fresh != p.read_text()` ✓ |
+| 15 | `KernelNoGos.lean` — key = content compare | `_kernel_nogos_module_stale` | ✓ |
+| 16 | `SURFACE_INVENTORY.md` — content compare, gated, **not** auto-written | `architecture_inventory_fresh` | deliberately non-regenerating ✓ |
+| 17 | `claim_clusters.json` — writer `cluster_detect.py`, via check only | the check | ✓ |
+| 18 | `PERMANENT_TRACKED_HYPOTHESES.md` — content compare, hard-fail, never auto-written | `render_tracked_hypotheses.py` | ✓ |
+| 19 | `cluster_bundle_index.json` — **no** staleness key | `bundle_clusters.py`; absent from `sync_manifest.EDGES` | ✓ |
+| 20 | `BUNDLE_READINESS_HEATMAP.md` — **no** key | `bundle_readiness.py`; absent from EDGES | ✓ |
+| 21 | `QI_REGISTER.md` — **no** key; re-parses its own Closed Items | `qi_register.py` | ✓ |
+| 22 | PG+AGE `sk_eft` — **no** key, full delete + rewrite, opt-in | `write_graph_to_pg`; `sync_pg=False` default | ✓ |
+| 23 | `figures/provenance_graph.json` — **no** key | `build_graph --out` | ✓ |
 | 24 | `harness_lock.regen_lock` is skip-and-use-cache, bounded poll, fail-open | `harness_lock.py:103-126` | ✓ |
 | 25 | **CORRECTED:** the build cost claim | 8 call sites; `extract_readiness_gate_nodes` body; cache decorators | the pre-gate view re-runs the node extractors **except its own** (recursion break), and `build_graph_json` is uncached — but two internal indices ARE `lru_cache`d and the dashboard holds its own cache. Original wording implied nothing anywhere is cached |
 | 26 | `ReviewFinding.status` is `'open'` at birth, unconditionally | `build_graph.py:1867` | `status = 'open'` ✓ |
 | 27 | The supersession ledger overrides that status | `:1918` | override validated against `_KNOWN_STATUSES`, else `'open'` ✓ |
-| 28–32 | **SET:** the five silent-drop points | one read per drop | all five ✓ (incl. the info-level ambiguous-paper-key log and the one-level `glob("*/*.md")`) |
+| 28 | Drop 1 — a finding with neither `inferred_paper` nor `inferred_bundle` | `bundle_readiness.py:129` `m.get("inferred_paper") or m.get("inferred_bundle")` | ✓ |
+| 29 | Drop 2 — `_emit` is a silent no-op on an absent FLAGS target | `build_graph.py:3711` `if target_id not in node_ids: return` | no log ✓ |
+| 30 | Drop 3 — ambiguous paper-key prefix, info-level log, edges skipped | `:3742` `logger.info(...)` then `paper_id = None` | ✓ |
+| 31 | Drop 4 — `AutomatedReviews/*/*.md` is a one-level glob | `:1746` `reviews_dir.glob("*/*.md")` | ✓ |
+| 32 | Drop 5 — a heading outside `_REVIEW_SECTION_RE` mints nothing | the regex; `review_docs_mint_findings` as the post-hoc guard | ✓ |
 | 33 | **SET:** `FixPropagation` is the only evaluator reading FLAGS | scan every evaluator's source | exactly one ✓ |
 | 34 | `_REVIEW_SECTION_RE` accepts the listed heading forms | `build_graph.py:1574-1580` | ✓ |
 | 35 | Bundle-level Stage-13 reports reach the gates | `review_docs_mint_findings`; per-bundle `ReviewFinding` attribution | passes over 135 docs; bundle-era reviews are the largest source ✓ |
 | 36 | The VERIFIES resolver's two gating rules | `build_graph.py:3882` | "resolve only as a full Lean name, never by its tail" ✓ |
 | 37 | The gate named as the victim reads `formula:` targets only | `inspect.getsource(_eval_computation_correctness)` | mentions `formula:`, never `lean:` ✓ |
 | 38 | The real consumer was `last_modified.py`'s VERIFIES propagation | `last_modified.py:55` | `'VERIFIES'` in its edge set ✓ |
-| 39–49 | **SET:** §4's eleven human-decision rows | `disable-model-invocation` across the plugin; `_clamp_tier`; `## Misfiled`; Invariants #13/#15/#8; ADR-010 §D5a | all ✓ |
+| 39 | Arm a `/goal` loop — structural | `disable-model-invocation` in `skills/goal-prompt/SKILL.md` | ✓ |
+| 40 | Promote System-2 → `human-reviewed` — structural via `_clamp_tier` | `system2_register.py:55,229,279` | caps every other writer ✓ |
+| 41 | Close/misfile a System-2 finding — `## Misfiled` reachable only from `/debrief` | `system2_register.py` + `skills/debrief/SKILL.md` | ✓ |
+| 42 | Integrate a process win — per-win sign-off | `skills/debrief/SKILL.md` | ✓ |
+| 43 | Graduate a finding → pre-decision — structural | `/debrief` → `PRE_DECISIONS.md` | ✓ |
+| 44 | Sign off a structural-prevention proposal — never auto-applied | `skills/debrief/SKILL.md` | ✓ |
+| 45 | Close a QI item — Invariant **#13** preserves Closed Items | `WAVE_EXECUTION_PIPELINE.md:687` | subject matches ✓ |
+| 46 | Approve a new axiom — Invariant **#15** + `AXIOM_METADATA` | `:691` | subject matches ✓ |
+| 47 | Toggle the AskUserQuestion guard — structural | `commands/goal-guard.md` | `disable-model-invocation` ✓ |
+| 48 | Verify a parameter — Invariant **#8** | `:671` | subject is parameter provenance ✓ |
+| 49 | Declare apex theorems — ADR-010 **§D5a**, per-bundle review | `ADR-010:394`; no script writes `apex_theorems` | ✓ |
 | 50 | `chain_canonicalize.py --report` exists and is read-only | its CLI | ✓ |
 | 51 | **CORRECTED:** "the instrument ranks per-bundle severity and surfaces bundles with no chain-of-backing" | ran `--report`; read the full CLI | ❌ **FALSE** — it emits a breakdown by **resolution class** only. The single other flag is `--paper <dir>`, which *limits* a run. No per-bundle ranking exists |
 | 52 | A discharged axiom is still cited | `gapped_interface_axiom` in `claims_review.json`; `counts.json` axioms | cited; axiom count **0** ✓ |
