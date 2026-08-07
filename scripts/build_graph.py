@@ -2378,13 +2378,26 @@ def extract_count_metric_nodes() -> list[dict]:
 # ═══════════════════════════════════════════════════════════════════════
 
 def _iter_paper_dirs():
-    """Yield (paper_key, paper_dir_path) for every papers/paper*_*/ directory."""
-    papers_root = PROJECT_ROOT / "papers"
-    if not papers_root.is_dir():
-        return
-    for d in sorted(papers_root.iterdir()):
-        if d.is_dir() and d.name.startswith('paper'):
-            yield d.name, d
+    """Yield (key, dir) for every legacy `papers/paper*_*/` draft AND every
+    publication-bundle directory (`D1`…`D12`, `L1`–`L3`, `I1`–`I3`, `E1`, `E2`, `F`).
+
+    ⚠️ **This must route through `discover_paper_draft_paths`, and until 2026-08-06 it
+    did not.** That helper's own docstring states the contract — *"All node/edge
+    extractors route through this one helper so discovery cannot drift between them"* —
+    and this function was the one that didn't, keeping a bare ``startswith('paper')``
+    that predated the bundle roster. It is the sole directory iterator behind the
+    Sentence layer, the BACKED_BY chain, the AuditEvent log and LOGGED_BY, so the drift
+    was expensive: **20 of 49 `claims_review.json` files — 1 316 of 3 432 v2 sentences —
+    were invisible to the graph.** Measured 2026-08-06
+    (`docs/architecture/END_TO_END_MAP.md` §6).
+
+    Deriving the population from the artifact (a directory holding a `paper_draft.tex`)
+    rather than from a NAME is the point: a name filter has to be widened every time the
+    roster grows, and the failure is silent each time. This picks up `paper*_*` drafts,
+    all 21 bundles and `note_rt_ch_bounds` with no list to maintain.
+    """
+    for tex_path in discover_paper_draft_paths(PROJECT_ROOT / "papers"):
+        yield tex_path.parent.name, tex_path.parent
 
 
 def _load_claims_review(paper_dir: Path) -> dict | None:

@@ -15,10 +15,15 @@ landscape this subsystem exists to close).
 
 ## 1. The one-sentence shape
 
-`scripts/validate.py` is a **framework** (zero registered checks); the **61 checks**
-live in twelve modules under `scripts/validation/checks/`; three framework modules
+`scripts/validate.py` is a **framework** (zero registered checks); the checks live in
+twelve modules under `scripts/validation/checks/`; three framework modules
 (`_registry`, `_config`, `_memo`) and one shared helper (`_tex`) sit below both, and
 `scripts/validate_helpers.py` is the single path anchor.
+
+> **The check roster is [`SURFACE_INVENTORY.md`](SURFACE_INVENTORY.md#validation-checks)**,
+> derived from the registry and gated by `validate.py --check architecture_inventory_fresh`.
+> A count written into this file is a count that rots — this document said **61** from
+> 2026-08-05 until 2026-08-06, while the registry had grown to **65**.
 
 ```
 scripts/validate.py              # framework: CLI, run_checks, print_results, ordering
@@ -28,7 +33,7 @@ scripts/validation/
   _config.py                     # runtime flags, reached by ATTRIBUTE (H5)
   _memo.py                       # input-fingerprint memo for expensive checks
   _tex.py                        # shared LaTeX helpers
-  checks/                        # 12 modules, 61 checks
+  checks/                        # 12 modules; roster in SURFACE_INVENTORY.md
     lean_substrate.py            #   substance gates (R1-R3)
     lean_toolchain.py            #   build + trust surface
     lean_statements.py           #   statement-level substance

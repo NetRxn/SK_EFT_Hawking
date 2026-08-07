@@ -291,28 +291,48 @@ Schema: `docs/KNOWLEDGE_GRAPH.md`. Plane detail:
   never built, and the gate's apparent success became the evidence that it was complete.
   This is the sharpest single lesson in the map: **a gate that fires is not a gate that
   measures what it claims to.**
-- ✅ **V** **The sentence layer is blind to every publication bundle.**
-  `build_graph.py:2386` reads `if d.is_dir() and d.name.startswith('paper')`, so the
-  bundle directories — `D*`, `E*`, `F`, `I*`, `L*` — are skipped entirely. Read directly.
-  This is the same `startswith('paper')` filter that was removed from `cluster_detect.py`
+- ✅ **FIXED 2026-08-06** — `_iter_paper_dirs` now routes through
+  `discover_paper_draft_paths`, the helper whose own docstring already declared the
+  contract it was violating: *"All node/edge extractors route through this one helper so
+  discovery cannot drift between them."* Measured after: **3 432 of 3 432** v2 sentences
+  on disk materialise — zero loss — and `BACKED_BY` rises 2 144 → 3 442. The population is
+  now defined by the **artifact** (a directory holding a `paper_draft.tex`), not by a name,
+  so a new bundle needs no edit. Guarded by
+  `tests/test_build_graph.py::TestPaperDirDiscoveryIsSingleSourced`, three tests,
+  **production-seeded**: reintroducing the filter fails all three. `graph_integrity`,
+  `bundle_consistency` and `readiness_verdicts_agree` all still pass;
+  `bundle_metadata_matches_graph` still fails at its documented 14 of 21. Original finding
+  retained below.
+- ✅ **V** **The sentence layer was blind to every publication bundle.**
+  `build_graph.py:2386` read `if d.is_dir() and d.name.startswith('paper')`, so the
+  bundle directories — `D*`, `E*`, `F`, `I*`, `L*` — were skipped entirely.
+  This is the same `startswith('paper')` filter removed from `cluster_detect.py`
   and the freshness guard earlier on this branch; `build_graph` was missed.
-  ✅ **V** **Measured cost:** **2 116** `Sentence` nodes materialise against **3 432** v2
-  sentences on disk — **1 316 lost**, precisely the bundle population that filter excludes.
-- ✅ **V** 🔴 **The audit-trail layer produces nothing, and fails silently.**
-  `AuditEvent` nodes: **0**. `LOGGED_BY` edges: **0**. Yet the source data exists —
-  **20 `papers/*/audit_log.jsonl` files, 239 records**.
-  The cause is a **producer/consumer schema mismatch**: `extract_audit_event_nodes`
-  (`build_graph.py`) requires a top-level `id` — `eid = ev.get('id'); if not eid: continue`
-  — while the records the reviewer agents actually write carry `stage`, `severity`,
-  `bundle_target`, `timestamp`, `reviewer`, `round`, `section`, `category`, `finding`,
-  `figure`. `id` is not among the ten most common keys. Essentially every record is skipped.
-  It is silent **twice**: the skip emits nothing, and the summary log is guarded by
-  `if nodes:` — so an extraction yielding zero prints no line at all. Absence rendered as
-  *silence*, a variant of the branch's signature defect.
-  **This is the concrete cost of §2's finding that nothing validates conformance to the
-  declared schema.** Both halves are individually "working": the agents write well-formed
-  audit records, the extractor reads well-formed records. They disagree about which shape
-  is well-formed, and nothing in the system compares them.
+  ✅ **V** **Measured cost:** **2 116** `Sentence` nodes materialised against **3 432** v2
+  sentences on disk — **1 316 lost**, precisely the bundle population that filter excluded.
+- ❌ **X** *(author's error — the cause was misattributed)* This map said the audit-trail
+  layer was empty because of a **producer/consumer schema mismatch**: that
+  `extract_audit_event_nodes` requires a top-level `id` the reviewer agents never write.
+  **Wrong on the proximate cause, and wrong about what the records are.**
+  ✅ **V** All **20** `audit_log.jsonl` files live in **bundle** directories — **none** in
+  `paper*` — so the directory filter above dropped them before the `id` check could run.
+  I named the second of two barriers and never checked the first.
+  ✅ **V** And the records are not mis-shaped `AuditEvent`s; **238 of 239 are not
+  `AuditEvent`s at all.** `scripts/sentence_state.py` is the declared sole writer, and its
+  `_make_audit_event` emits exactly what the extractor reads — `id` / `label` /
+  `meta{actor,target_id,action,…}`. Exactly **one** record on disk has that shape; it now
+  materialises, with its `LOGGED_BY` edge, and passes `graph_integrity`'s immutability
+  interlock. The other 238 are free-form **Stage-9/10/13 review session logs** the reviewer
+  agents independently adopted the same filename for.
+  **So "reconciling the schemas" would have been the wrong fix**, and expensively so:
+  coercing those 238 into nodes would have manufactured 238 `audit_event_missing_logged_by`
+  and 238 `audit_event_malformed_actor` violations, since they carry neither `target_id`
+  nor `actor`. Skipping them is correct. What is genuinely wrong is that two unrelated
+  record genres share one filename with nothing validating either — a naming collision,
+  not a schema disagreement.
+  ✅ **V** The **silence** survives as a real defect: the summary log is guarded by
+  `if nodes:`, so an extraction yielding zero printed no line at all. Absence rendered as
+  *silence*, the branch's signature shape.
 - ✅ **V** **`BACKED_BY.link_state` is hardcoded, and the pass meant to fix it never runs.**
   `build_graph.py:2667` emits `'link_state': 'resolved',  # enriched post-hoc by
   last_modified pass`. Read directly.
@@ -330,13 +350,25 @@ Schema: `docs/KNOWLEDGE_GRAPH.md`. Plane detail:
   `verification: None`. The sentence layer is the declared ratification axis for human
   verification (`sentence_kg_schema_delta.md` §3.4); it currently records no verification
   state for any sentence in the project.
-- ✅ **V** **The gate roster and the per-paper verdict rule are each implemented twice.**
+- ✅ **FIXED 2026-08-06** — the roster is now **derived**, and the verdict rule now has an
+  **arbiter**. `GATE_DEFS` is built from `readiness_gates.GATES`; only the column
+  abbreviation, which has no meaning to the evaluator, stays dashboard-local. Output is
+  byte-identical to the list it replaced. The verdict pair was deliberately **not** merged —
+  importing a `validation/checks/` module into the dashboard would register checks as an
+  import side effect, coupling the trust surface to the validation registry to remove a
+  six-line function. Instead `tests/test_graph_dashboard.py` asserts the two agree
+  **exhaustively**: the verdict depends only on which `(priority, state)` pairs are present,
+  so all 255 non-empty subsets of the 8 possible pairs is the complete space, not a sample.
+  All three guards are mutation-verified. Original finding retained below.
+- ✅ **V** **The gate roster and the per-paper verdict rule were each implemented twice.**
   Roster: `readiness_gates.GATES` vs `provenance_dashboard.py:5140` `GATE_DEFS`, whose own
-  comment calls itself *"the canonical list of the 11 readiness gates"* — two things cannot
+  comment called itself *"the canonical list of the 11 readiness gates"* — two things cannot
   both be canonical. Verdict: `bundles_readiness.classify_readiness:552` /
   `partition_readiness:584` vs `provenance_dashboard.py:5194` `_classify_paper`.
-  Neither pair is cross-checked, and the dashboard is the surface a human reads before
-  signing off — so the copy most likely to be believed is the one nothing validates.
+  Neither pair was cross-checked, and the dashboard is the surface a human reads before
+  signing off — so the copy most likely to be believed was the one nothing validated.
+  ✅ **V** Measured at the fix: the two verdict rules **agreed** on all 255 cases. The
+  defect was the absent arbiter, not a live divergence.
 
 - ✅ **V** 🔴 **The Postgres + AGE mirror is schema-complete and data-empty.** Connected to
   the live `sk_eft_graph` container (`host=localhost port=5433 dbname=sk_eft_provenance`,

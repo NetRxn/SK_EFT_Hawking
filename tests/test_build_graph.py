@@ -193,6 +193,75 @@ class TestExtractPaperNodes:
         assert legacy <= found
 
 
+class TestPaperDirDiscoveryIsSingleSourced:
+    """`_iter_paper_dirs` must agree with `discover_paper_draft_paths`.
+
+    `discover_paper_draft_paths`'s docstring states the contract — *"All node/edge
+    extractors route through this one helper so discovery cannot drift between them"* —
+    and until 2026-08-06 `_iter_paper_dirs` was the one that did not, keeping a bare
+    `startswith('paper')` predating the bundle roster. It gates the Sentence layer, the
+    BACKED_BY chain, AuditEvent and LOGGED_BY, so the drift cost **1 316 of 3 432 v2
+    sentences** — every bundle's prose, invisible to the graph and therefore to every
+    gate reading it.
+
+    These two tests fail on the reintroduction of ANY name filter on that path.
+    """
+
+    def test_iter_paper_dirs_equals_the_canonical_discovery(self):
+        from build_graph import _iter_paper_dirs
+
+        iterated = {key for key, _ in _iter_paper_dirs()}
+        canonical = {p.parent.name for p in discover_paper_draft_paths(PAPERS_DIR)}
+        assert iterated == canonical, (
+            "_iter_paper_dirs has drifted from discover_paper_draft_paths; "
+            f"missing={canonical - iterated} extra={iterated - canonical}"
+        )
+
+    def test_iter_paper_dirs_reaches_the_bundles_and_the_note(self):
+        """The population a name filter would silently drop, named explicitly.
+
+        `note_rt_ch_bounds` is here deliberately: it is neither `paper*`-prefixed nor a
+        registered bundle code, so it is exactly what a roster-based filter misses. It
+        already had a Paper node — the Paper extractor used the wider population all
+        along, which is what made the disagreement invisible.
+        """
+        from build_graph import _iter_paper_dirs
+
+        iterated = {key for key, _ in _iter_paper_dirs()}
+        for name in ('D1', 'D6', 'D12', 'L2', 'I1', 'E1', 'F', 'note_rt_ch_bounds'):
+            if (PAPERS_DIR / name / "paper_draft.tex").exists():
+                assert name in iterated, f"{name} unreachable from _iter_paper_dirs"
+
+    def test_every_v2_sentence_on_disk_becomes_a_node(self):
+        """Population reach, measured end-to-end rather than asserted structurally.
+
+        This is the assertion whose absence let the defect live: the extractor was
+        internally consistent and simply never opened 20 of the 49 files. Comparing the
+        node count to the artifact count is the only form that could have caught it.
+        """
+        import json
+
+        from build_graph import extract_sentence_nodes
+
+        on_disk = set()
+        for cr in sorted(PAPERS_DIR.glob("*/claims_review.json")):
+            try:
+                data = json.loads(cr.read_text())
+            except (json.JSONDecodeError, OSError):
+                continue
+            if 'sentences' not in data:  # v1 schema is deliberately ignored
+                continue
+            on_disk.update(s['id'] for s in data['sentences'] if s.get('id'))
+
+        assert on_disk, "no v2 claims_review sentences found — the test itself is vacuous"
+
+        emitted = {n['id'] for n in extract_sentence_nodes() if n['type'] == 'Sentence'}
+        assert on_disk <= emitted, (
+            f"{len(on_disk - emitted)} v2 sentence(s) on disk never became nodes; "
+            f"e.g. {sorted(on_disk - emitted)[:3]}"
+        )
+
+
 class TestExtractPaperClaimNodes:
     """Tests for extract_paper_claim_nodes()."""
 

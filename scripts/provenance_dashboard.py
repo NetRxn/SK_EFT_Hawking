@@ -5133,23 +5133,46 @@ def api_qi():
 
 # ── Readiness tab — shared metadata + SSE render helpers (Wave 9h) ──
 #
-# GATE_DEFS is the canonical list of the 11 readiness gates in display
-# order. The Datastar-driven tab reads this from the server rather than
-# duplicating it in JS (the previous port carried two parallel copies).
+# GATE_DEFS is the readiness tab's (name, priority, abbrev) display roster. The
+# Datastar-driven tab reads it from the server rather than duplicating it in JS
+# (the previous port carried two parallel copies).
+#
+# ⚠️ **Name and priority are DERIVED from `readiness_gates.GATES`, and until
+# 2026-08-06 they were not.** This block was a hand-written copy whose own comment
+# called it *"the canonical list of the 11 readiness gates"* — while
+# `readiness_gates.GATES` is the roster that actually evaluates them. Two things
+# cannot both be canonical, and the copy most likely to be believed was the one on
+# the surface a human reads before signing off, validated by nothing. A gate renamed
+# or re-prioritised upstream would have silently rendered here at its old priority.
+#
+# Only the **abbreviation** is genuinely dashboard-local — it is column-header
+# display text with no meaning to the evaluator — so only it is written down here.
+# A gate added upstream without an abbreviation falls back to its own name rather
+# than vanishing from the tab; `tests/test_graph_dashboard.py` asserts the roster
+# agreement and the abbreviation coverage in both directions.
 
-GATE_DEFS: list[tuple[str, int, str]] = [
-    ('CitationIntegrity',       1, 'Cit'),
-    ('CrossPaperConsistency',   1, 'XPaper'),
-    ('ParameterProvenance',     1, 'Param'),
-    ('ComputationCorrectness',  1, 'Comp'),
-    ('LeanProofSubstance',      1, 'LeanP'),
-    ('AssumptionDisclosure',    1, 'Assum'),
-    ('NarrativeGrounding',      1, 'Narr'),
-    ('ProductionRunHealth',     1, 'ProdRun'),
-    ('NumericalFreshness',      2, 'Num'),
-    ('FirstClaimVerification',  2, '1st'),
-    ('FixPropagation',          2, 'Fix'),
-]
+_GATE_ABBREV: dict[str, str] = {
+    'CitationIntegrity':       'Cit',
+    'CrossPaperConsistency':   'XPaper',
+    'ParameterProvenance':     'Param',
+    'ComputationCorrectness':  'Comp',
+    'LeanProofSubstance':      'LeanP',
+    'AssumptionDisclosure':    'Assum',
+    'NarrativeGrounding':      'Narr',
+    'ProductionRunHealth':     'ProdRun',
+    'NumericalFreshness':      'Num',
+    'FirstClaimVerification':  '1st',
+    'FixPropagation':          'Fix',
+}
+
+
+def _build_gate_defs() -> list[tuple[str, int, str]]:
+    """(name, priority, abbrev) for every gate the evaluator actually runs."""
+    from readiness_gates import GATES
+    return [(name, prio, _GATE_ABBREV.get(name, name)) for name, prio, _ev in GATES]
+
+
+GATE_DEFS: list[tuple[str, int, str]] = _build_gate_defs()
 
 
 def _readiness_build_data() -> dict:
