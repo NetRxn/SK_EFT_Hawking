@@ -79,11 +79,47 @@ pgrep -fl lean-lsp-mcp
 Heavy `lake build` / floor checks use the **Bash** tool, not these MCP servers, so trimming them
 never affects builds. Killed servers do not respawn within a session.
 
+## Architecture documents — read before designing, update before shipping
+
+**[`docs/architecture/`](docs/architecture/README.md) is the canonical description of this
+system.** Start at its `README.md`, which owns the index and the ownership table.
+
+Three rules, and they are not style preferences — each exists because its violation shipped
+and cost a multi-day recovery:
+
+1. **Read before you design.** Before adding a check, a gate, an extractor, an edge type, or
+   any new infrastructure, read the document that owns that surface. The recurring failure is
+   building a second mechanism beside one that already exists — a third prose→Lean resolver, a
+   second gate roster, a hand-listed consumer set parallel to a registry.
+2. **Update before you ship, in the same commit.** A design change lands in these documents
+   **before** the code that implements it. A doc written afterwards is a changelog; only one
+   written first is a specification. If a change makes a statement in these files wrong, fixing
+   that statement is part of the change, not follow-up work.
+3. **Never write a count into a narrative.** Every census figure — checks, gates, hooks,
+   agents, commands, node/edge types, registries, bundles — lives **only** in the derived
+   [`SURFACE_INVENTORY.md`](docs/architecture/SURFACE_INVENTORY.md). This is machine-enforced:
+   `validate.py --check architecture_inventory_fresh` fails on a census count found in any
+   narrative there. Name the *mechanism*, not the *magnitude*, and link to the census.
+
+⚠️ **Why this is a hard requirement.** These documents drifted out of sync **within 24 hours**
+of being written, twice — one map stated two different check totals inside a single sentence,
+and two maps asserted a review path was dead that had been repaired before they were authored.
+A wrong architecture document is worse than none, because it gets quoted. **Nothing
+mechanically verifies a prose claim** (tracked as B2 in
+`docs/architecture/.working-docs/ARCHITECTURE_TODOs.MD`), so the discipline is the guard.
+
+Remediation items found in these documents but requiring code go in
+[`ARCHITECTURE_TODOs.MD`](docs/architecture/.working-docs/ARCHITECTURE_TODOs.MD) — enumerated
+with paths and context, not silently fixed in passing.
+
+---
+
 ## When-to-read references (progressive disclosure)
 
 | Read **before…** | Document |
 |---|---|
 | any work (the law: 14 stages, no skipping) | [WAVE_EXECUTION_PIPELINE.md](docs/WAVE_EXECUTION_PIPELINE.md) |
+| designing or changing ANY infrastructure | [docs/architecture/README.md](docs/architecture/README.md) — see the three rules above |
 | understanding the tree / build / architecture | [README.md](README.md) |
 | changing anything — quick module/Lean/counts map | [SK_EFT_Hawking_Inventory_Index.md](SK_EFT_Hawking_Inventory_Index.md) |
 | any Aristotle session | [docs/references/Theorm_Proving_Aristotle_Lean.md](docs/references/Theorm_Proving_Aristotle_Lean.md) |
