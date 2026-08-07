@@ -388,21 +388,22 @@ reach for the same sentence split. Cite the check's verdict instead of re-derivi
 
 ---
 
-### D4. Ledger coverage is ~83%, and the remaining 63 units are the queue — OPEN
+### D4. Ledger coverage is ~85%, and the remaining 53 units are the queue — OPEN
 
 Measured 2026-08-07, after V8. **This is the honest state of the accuracy effort**, replacing
 the ledger's earlier unqualified "all seven VERIFIED".
 
 - **Where:** `docs/architecture/.working-docs/ACCURACY_LEDGER.md` §Final state carries the
   per-document table and the measurement method.
-- **The number:** 298 atom rows against 361 load-bearing sentences + table rows across the six
+- **The number:** 308 atom rows against 361 load-bearing sentences + table rows across the six
   prose documents (`SURFACE_INVENTORY.md` is generated and decided by regeneration+diff).
   V9 (END_TO_END_MAP §9) and V10 (VALIDATION_ARCHITECTURE remainder) closed 25 units.
 - **It is an UPPER bound.** A compound sentence counts once in the denominator but owes one row
   per clause — the granularity failure this ledger exists to prevent. True coverage is lower.
-- **The queue, worst first:** `VALIDATION_ARCHITECTURE.md` 15 uncovered ·
-  `VALIDATION_GATE_TOPOLOGY.md` 15 · `CHECK_AUTHORING_GUIDE.md` 14 · `END_TO_END_MAP.md` 13 ·
-  `QA_QI_INFRASTRUCTURE_MAP.md` 9 · `README.md` 3. **V9–V15 closed 81 units.**
+- **The queue, worst first:** `VALIDATION_GATE_TOPOLOGY.md` 15 uncovered ·
+  `CHECK_AUTHORING_GUIDE.md` 14 · `END_TO_END_MAP.md` 13 · `QA_QI_INFRASTRUCTURE_MAP.md` 9 ·
+  `README.md` 3. **V9–V16 closed 91 units**, and `VALIDATION_ARCHITECTURE.md` is now fully
+  enumerated.
 - ⚠️ **`END_TO_END_MAP.md` is the least verified, not the cleanest.** It records zero
   corrections over 34 atoms, which reads as health; it is 43% coverage of a document no other
   mechanism checks.

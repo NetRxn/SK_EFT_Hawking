@@ -40,9 +40,9 @@ otherwise.**
 | `VALIDATION_GATE_TOPOLOGY.md` | 54 | 69 | **78%** |
 | `CHECK_AUTHORING_GUIDE.md` | 40 | 54 | **74%** |
 | `END_TO_END_MAP.md` | 67 | 80 | **84%** |
-| `VALIDATION_ARCHITECTURE.md` | 39 | 54 | **72%** |
+| `VALIDATION_ARCHITECTURE.md` | 54 | 54 | **100%** ✅ |
 | `SURFACE_INVENTORY.md` | 6 | — | generated (see below) |
-| **total** | **298** | **361** | **≈83%** |
+| **total** | **308** | **361** | **≈85%** |
 
 `SURFACE_INVENTORY.md` is emitted wholesale by `scripts/architecture_inventory.py`. Its 155
 load-bearing lines are derived data, decided by one check — regenerate and diff, which
@@ -92,9 +92,12 @@ converge — which is why the remaining work below is stated as a queue, not a c
 
 ### Remaining work
 
-**63 load-bearing units carry no row:** `VALIDATION_ARCHITECTURE.md` (15),
-`VALIDATION_GATE_TOPOLOGY.md` (15), `CHECK_AUTHORING_GUIDE.md` (14),
-`END_TO_END_MAP.md` (13), `QA_QI_INFRASTRUCTURE_MAP.md` (9), `README.md` (3). Verify at the granularity above:
+**53 load-bearing units carry no row:** `VALIDATION_GATE_TOPOLOGY.md` (15),
+`CHECK_AUTHORING_GUIDE.md` (14), `END_TO_END_MAP.md` (13),
+`QA_QI_INFRASTRUCTURE_MAP.md` (9), `README.md` (3).
+
+✅ **`VALIDATION_ARCHITECTURE.md` and `SURFACE_INVENTORY.md` are fully enumerated** — every
+load-bearing unit has a row. They are the first two to reach it. Verify at the granularity above:
 one proposition per row, a decider (never a proxy), completeness for set claims, and the actual
 subject for any number-cited invariant or ADR.
 
@@ -112,7 +115,7 @@ Status is per-ATOM, never per-document. A document is not certified; its enumera
 |---|---|---|---:|---:|
 | `README.md` | 10 atoms | 5 atoms, 0 corrected | 15 | 3 |
 | `SURFACE_INVENTORY.md` | 6 atoms, 1 corrected (B7) | regenerated + diffed | 6 | 0 (generated) |
-| `VALIDATION_ARCHITECTURE.md` | 22 atoms, 1 corrected | V10: 17 atoms, 1 corrected | 39 | 15 |
+| `VALIDATION_ARCHITECTURE.md` | 22 atoms, 1 corrected | V10: 17, 1 corr · V16: 15, 0 corr | 54 | **0** ✅ |
 | `CHECK_AUTHORING_GUIDE.md` | 24 atoms, 1 corrected, 4 reframed | V8: 4 · V12: 12, 2 corrected | 40 | 14 |
 | `VALIDATION_GATE_TOPOLOGY.md` | 38 atoms, 1 corrected | V8: 5 · V13: 11, 1 corrected | 54 | 15 |
 | `QA_QI_INFRASTRUCTURE_MAP.md` | 48 atoms, 2 corrected | V8: 21, 5 corr · V15: 8, 1 corr | 77 | 9 |
@@ -816,3 +819,42 @@ re-derives a claim and finds it false must mark the earlier row, or the audit tr
 both. This is the ledger's own version of the perishability hazard in V9/V11/V13.
 
 **Coverage after V15:** `QA_QI_INFRASTRUCTURE_MAP.md` 69 → **77 atoms** of 86 (80% → **90%**).
+
+---
+
+## V16 — `VALIDATION_ARCHITECTURE.md` §1 tree + §3 hazard table, per row — 15 atoms, 0 corrected
+
+V3 verified these two structures **in aggregate** (atom 6: the 12 module names match disk;
+atoms 19–20: five hazards, each enforcer read). Requirement 2 wants one row per assertion, so
+each row is enumerated here.
+
+### §3 — each hazard's named enforcer, individually
+
+| # | atom | decided by | result |
+|---|---|---|---|
+| W1 | H1's enforcer is a real test | AST of `tests/` | `test_no_check_derives_a_path_from___file__` **defined** in `test_validate_public_surface.py` ✓ |
+| W2 | H2's enforcer names `_ROSTER_CONSUMERS` and it exists | exhaustive search, then the file | **defined** at `bundles_readiness.py:813` as an *annotated* assignment — a `NAME *=` pattern misses it, and reports it absent |
+| W3 | H2's Leg B does what the row says | `bundles_readiness.py:862`, `:925-954` | *"every module in `_ROSTER_CONSUMERS` exposes …"*, and the loop asserts each ✓ |
+| W4 | H2's second enforcer `EXPECTED_DYNAMIC` exists | AST | **defined** in `test_validate_public_surface.py` ✓ |
+| W5 | H3's two enforcers are real tests | AST | `test_every_registered_check_has_a_declared_position` and `test_the_sort_runs_after_the_last_registration`, both **defined** in `test_validate_registry_contract.py` ✓ |
+| W6 | H4's enforcer exists | AST + file | `test_cannot_measure_baseline` ✓ |
+| W7 | H5's enforcer exists | AST + file | `test_validate_flag_propagation` ✓ |
+
+⚠️ **W2 is the fourth measurement this pass defeated by an annotated assignment.** `X: T = v`
+is invisible to both a `^X\s*=` grep and an `ast.Assign`-only walk. Match `AnnAssign` too, or
+the audit reports a live symbol missing.
+
+### §1 — each module's description
+
+| # | atom | decided by | result |
+|---|---|---|---|
+| W8 | **SET:** every module named in the tree hosts registered checks | `spec.func.__module__` grouped over the live registry | **12 of 12 non-empty**; none is a description of an empty file ✓ |
+| W9–W14 | each Lean/physics/paper module's description matches what it hosts | the check names in each | `lean_substrate` 7 (`lean_zero_sorry`, `placeholder_not_cited`) · `lean_toolchain` 6 (`native_decide_regression`, `lean_source`) · `lean_statements` 3 (`formula_grounding`, `vacuous_statement_audit`) · `physics` 9 (`numerical`, `identities`) · `papers_prose` 7 (`paper_provenance`, `numerical_literals`) · `prose_lean_refs` 2 (`prose_theorem_reference_coverage`) ✓ |
+| W15 | each remaining module's description matches what it hosts | same | `citations` 4 (`parameter_provenance`, `provenance_doi_in_registry`) · `bundles_readiness` 7 · `graph_atlas` 4 (`graph_integrity`, `atlas_integrity`) · `freshness` 7 (`counts_fresh`, `tables_fresh`) · `notebooks` 3 · `reviews` 5 ✓ |
+
+**Note, not a defect:** grouping the live registry by `__module__` also yields `_memo`, because
+the memo decorator rewraps a check's function. The tree block correctly lists `_memo.py` as a
+*framework* module rather than a checks module; the extra key is an artifact of the wrapper.
+
+**Coverage after V16:** `VALIDATION_ARCHITECTURE.md` 39 → **54 atoms** of 54 — **fully
+enumerated**. Every load-bearing unit in this document now has a row.
