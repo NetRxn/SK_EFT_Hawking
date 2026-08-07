@@ -22,6 +22,42 @@ its own recorded check. A compound sentence is not one entry — it is one entry
 
 ---
 
+## Final state
+
+**Six of seven VERIFIED at assertion granularity. One BLOCKED, and it cannot be unblocked
+under the no-code constraint.**
+
+| | |
+|---|---|
+| atoms verified | **146** across six documents |
+| claims found false and replaced | **13** |
+| error-priming blocks removed | **10** |
+| incident citations reframed | **4** |
+| documents surviving unchanged | **1** (`END_TO_END_MAP.md`) |
+
+⛔ **`SURFACE_INVENTORY.md` is BLOCKED on a single atom.** Its header claims *"Every table
+below is read from the artifact that owns the population"*, which is false for the registries
+table — that population is a curated `probes` list inside the generator, correctly so, because
+"is this collection a registry?" is editorial (`constants.py` holds 67 module-level uppercase
+collections and 60 are physics data). The sentence is **emitted by
+`architecture_inventory.py:289`**, not stored in the tracked file, so correcting it requires a
+generator edit. Filed as **B7**. The document's other five atoms pass.
+
+**What the corrections had in common.** Of the 13, **four were inherited claims that were
+already false when they were written into these files**, and none of the four would have been
+caught by checking the numbers they cited — each required running the tool, reading its CLI, or
+resolving a cited invariant number to its actual subject.
+
+**Three distinct failure modes produced them:**
+
+| mode | example |
+|---|---|
+| **proxy accepted as decider** | `grep -c "@register_check" validate.py` returns 5 (all comments); the AST returns none |
+| **set verified by named members** | "the four hazards … These are ADR-009 D3" — D3 declares five; H2 was live and enforced |
+| **search scoped narrower than the sentence** | "`stage9_status` is read by nothing" — true of `validation/checks/`, false of the repo |
+
+---
+
 ## Per-document progress
 
 | document | sections | status |
