@@ -91,6 +91,15 @@ TESTS_DIR = SK_ROOT / "tests"
 #: An entry here is a CLAIM that someone seeded a defect and watched the test fail.
 #: Add one only when that has actually been done — the evidence lives in the commit.
 MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
+    "chain_backing_targets_resolve": (
+        "test_d5_reviews.py",
+        "Production-seeded in the REAL papers/D3/claims_review.json: one chain link naming "
+        "SKEFTHawking.ThisDeclarationDoesNotExist.seeded_defect -> rc=1 at 157 vs a ceiling "
+        "of 156, naming the worst offenders; restored from saved bytes -> PASS. Also carries "
+        "a zero-headroom test asserting the ceiling against the LIVE measured count (not its "
+        "own definition) and a seam test that an empty corpus FAILS rather than passing "
+        "vacuously",
+    ),
     "architecture_inventory_fresh": (
         "test_architecture_inventory.py",
         "Production-seeded in the REAL docs/architecture/SURFACE_INVENTORY.md: appending one "
@@ -602,6 +611,9 @@ AWAITING_CEILING = 0
 #: is the distinction the four blockers turned on. Erring toward absent overstates the
 #: remaining work; the opposite error is what produced them.
 PRODUCTION_SEEDED: frozenset[str] = frozenset({
+    # 2026-08-07: a dangling theorem link appended to the real papers/D3/claims_review.json
+    # -> rc=1; restored from saved bytes.
+    "chain_backing_targets_resolve",
     # 2026-08-06: an HTML comment appended to the real SURFACE_INVENTORY.md -> rc=1.
     "architecture_inventory_fresh",
     # 2026-08-06: sorry_declarations=1, then the field DELETED, in the real

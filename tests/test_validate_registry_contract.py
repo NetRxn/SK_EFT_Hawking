@@ -62,6 +62,7 @@ EXPECTED_CHECKS = [
     'atlas_hypothesis_discipline',
     'count_literals', 'recurrence_reopens_closures', 'review_severity_declared',
     'review_docs_mint_findings', 'accepted_findings_carry_rationale',
+    'chain_backing_targets_resolve',
     'bundle_metadata_matches_graph', 'notebook_stored_outputs_current',
     'readiness_verdicts_agree', 'readiness_submission_gate',
     'citation_primary_sources_present', 'provenance_doi_in_registry',

@@ -296,7 +296,7 @@ def _eval_parameter_provenance(paper: dict, idx: GraphIndex) -> GateResult:
             # experimental parameters — but it is NOT the same claim as "this paper uses
             # no parameters", so do not word it that way.
             r.notes = ('no parameter dependencies declared, and no inline unit-bearing '
-                       'literals in body prose (numbers arriving via \input{tables/} or '
+                       r'literals in body prose (numbers arriving via \input{tables/} or '
                        'counts.tex are structurally sourced and not counted here)')
     elif unverified:
         # Treat as blocked for submission but acceptable during draft

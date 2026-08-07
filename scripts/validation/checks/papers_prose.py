@@ -463,7 +463,7 @@ BUNDLE_HANDWRITTEN_TABLE_CEILING = 4
                 "Bundle drafts source tables from the pipeline (\\input{tables/}), "
                 "not hand-written tabulars (ratcheted)")
 def check_bundle_tables_use_pipeline() -> CheckResult:
-    """A publication-target bundle must take tabular content from the table
+    r"""A publication-target bundle must take tabular content from the table
     pipeline rather than hand-authoring it.
 
     WHY (git archaeology, `68899aef` 2026-04-15, the pipeline's originating commit):

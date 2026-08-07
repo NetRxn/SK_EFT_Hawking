@@ -177,7 +177,34 @@ Not an architecture document, so corrected here rather than in place.
 - **Superseded fix shape:** correct the prose to the computed behaviour, or raise the evaluators to the
   documented behaviour. The second is a scope decision, not a doc edit.
 
-### B4. A discharged axiom and a FALSE theorem are still cited in chain-of-backing — OPEN
+### B4. Chain-of-backing links name Lean targets that do not exist — ✅ GATED (backlog ratcheted)
+
+✅ **Guard built:** `validate.py --check chain_backing_targets_resolve` (`reviews.py`),
+production-seeded-mutation verified, registered in `MUTATION_VERIFIED` + `PRODUCTION_SEEDED`.
+Ratchets the unresolved population at its live value so it can only shrink, and names the worst
+papers every run.
+
+⚠️ **Re-measurement changed this item materially — read this before quoting the numbers below.**
+
+1. **The 61 and 24 were string counts, not links.** The chain-link population is **20** links
+   naming these two declarations, of which 16 carry no `link_state` at all (4 are already
+   marked `missing_target`).
+2. **Neither name appears in any `.tex`.** The exposure is a fictitious audit trail, not a
+   manuscript claim resting on a retired axiom. Where `paper5_adw_gap` mentions
+   `gap_solution_bounded` in prose, it does so to report it *disproved by counterexample* —
+   an honest negative claim.
+3. **`gap_solution_bounded` is not a false theorem — it is not a declaration.** It sits inside
+   a `/- … -/` comment block in `TetradGapEquation.lean`.
+4. **The real defect is ~8× larger than this item described:** **156** unresolved
+   theorem/axiom/lemma chain links, **114** distinct targets, **21** papers/bundles. A naive
+   resolver reports 515; the difference is module targets, short names, Lean core axioms and
+   hand-written notation variants, all legitimate.
+
+**Remaining work (separate from this item):** the 156-link backlog is data remediation across
+21 papers, not an infrastructure fix. It is bounded and visible now; clearing it means
+retargeting or `missing_target`-labelling each link, and lowering the ceiling as it falls.
+
+**Superseded original text:**
 
 - **`gapped_interface_axiom`** — retired; the project's axiom count is **0** (verified in
   `docs/counts.json`). Still referenced **61 times across 14** `papers/*/claims_review.json`

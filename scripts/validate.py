@@ -203,6 +203,7 @@ _CANONICAL_ORDER: tuple[str, ...] = (
     'atlas_hypothesis_discipline',
     'count_literals', 'recurrence_reopens_closures', 'review_severity_declared',
     'review_docs_mint_findings', 'accepted_findings_carry_rationale',
+    'chain_backing_targets_resolve',
     'bundle_metadata_matches_graph', 'notebook_stored_outputs_current',
     'readiness_verdicts_agree', 'readiness_submission_gate',
     'citation_primary_sources_present', 'provenance_doi_in_registry',
@@ -615,6 +616,7 @@ check_recurrence_reopens_closures = _checks_reviews.check_recurrence_reopens_clo
 check_review_severity_declared = _checks_reviews.check_review_severity_declared
 check_review_docs_mint_findings = _checks_reviews.check_review_docs_mint_findings
 check_accepted_findings_carry_rationale = _checks_reviews.check_accepted_findings_carry_rationale
+check_chain_backing_targets_resolve = _checks_reviews.check_chain_backing_targets_resolve
 _recurrence_norm = _checks_reviews._recurrence_norm
 _RECURRENCE_MIN_TITLE = _checks_reviews._RECURRENCE_MIN_TITLE
 _RECURRENCE_MIN_OVERLAP = _checks_reviews._RECURRENCE_MIN_OVERLAP

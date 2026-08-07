@@ -250,9 +250,16 @@ Two genuine failure shapes are severe enough to name:
 
 - **A discharged axiom is still cited.** `gapped_interface_axiom` was retired; the project's
   axiom count is zero.
-- **A theorem commented out as FALSE is still cited.** `gap_solution_bounded` sits in
-  `TetradGapEquation.lean` under the note *"This theorem is FALSE as originally stated."*
-  One citation is a documented waiver — I1 cites it deliberately as history.
+- **A name that is not a declaration is still cited.** `gap_solution_bounded` sits in
+  `TetradGapEquation.lean` inside a comment block, under the note *"This theorem is FALSE as
+  originally stated"* — so it is not merely false, it is not a declaration at all. One
+  citation is a documented waiver: I1 cites it deliberately as history.
+
+⚠️ **Both live in `claims_review.json` chains, not in the manuscripts.** Neither name appears
+in any `.tex` under `papers/`, and where a draft mentions `gap_solution_bounded` in prose it
+does so to report it as *disproved by automated counterexample*. So the exposure is a
+fictitious audit trail, not a published claim resting on a retired axiom — a real defect, and
+a different one.
 
 `--report` emits a breakdown by **resolution class** — `resolved` / `suggested` / `invalid` /
 `unresolvable`, each split into named sub-kinds with example links. `--paper <dir>` limits the
@@ -260,8 +267,21 @@ run to one paper directory. It does **not** rank bundles, and it does not by its
 bundles with no chain-of-backing or bundles for which Stage 10 never ran; those are answered
 by inspecting which directories carry a `claims_review.json` at all.
 
-**Nothing gates on any of this.** The instrument exists, produces the right answer, and is
-connected to nothing that can stop a submission — the systemic pattern
+**Target existence is now gated; the rest of the report still is not.**
+`validate.py --check chain_backing_targets_resolve` fails when a chain link of kind
+theorem/axiom/lemma names a target that resolves against no population — project declaration,
+module, Lean core axiom, or external root — after normalizing the hand-written notation
+variants. It is a **ratchet at the live measured backlog**, so the standing population is
+reported by paper every run and can only shrink.
+
+⚠️ **The resolver is the whole check, and a naive one manufactures findings.** Membership in
+declaration names alone reports more than three times the true figure: most of the difference
+is legitimate module targets, short names, kernel axioms, and `module:X` / `X (module)`
+notation. Resolve against every population a target may name, and normalize first.
+
+The rest of `--report`'s output — resolution classes, suggested retargets — still gates on
+nothing. The instrument produces the right answer and is connected to nothing that can stop a
+submission: the systemic pattern
 ([`CHECK_AUTHORING_GUIDE`](CHECK_AUTHORING_GUIDE.md)), inside the subsystem built to detect
 exactly that pattern in the papers.
 

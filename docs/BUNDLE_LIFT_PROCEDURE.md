@@ -293,7 +293,9 @@ All four must succeed before bundle close. Commit the regenerated `docs/BUNDLE_R
 ## Cross-references
 
 - `WAVE_EXECUTION_PIPELINE.md` Stage 9 ↔ §8 (figure review)
-- `WAVE_EXECUTION_PIPELINE.md` Stage 10 ↔ §9 (claims review)
+- `WAVE_EXECUTION_PIPELINE.md` Stage 10 ↔ §9 — §9 covers Stage 10's **claims-review gate**;
+  the drafting half of Stage 10 is §§3–7 of this procedure, which Stage 10 names as *the*
+  Phase-7+ implementation of itself. "Stage 10" throughout this document is that gate.
 - `WAVE_EXECUTION_PIPELINE.md` Stage 13 ↔ §10 (adversarial review)
 - `docs/BUNDLE_DIRECTORY_SCHEMA.md` — `bundle_metadata.json` + `append_log.json` schemas
 - `docs/agents/claims-reviewer-bundle-prompts.md` — per-bundle Stage-13 anchor list

@@ -480,3 +480,60 @@ class TestAcceptedFindingsCarryRationale:
         assert any(d.warning for d in r.details), (
             "if this site stops passing on a missing ledger, that is an improvement — "
             "update this test and tests/test_cannot_measure_baseline.py together")
+
+
+class TestChainBackingTargetsResolve:
+    """`chain_backing_targets_resolve` — the audit trail must point at Lean names that exist.
+
+    ⚠️ **This class deliberately departs from this module's synthetic-input policy above,
+    and the reason is specific.** That policy exists because the other four checks read a
+    self-remediating corpus, where `assert check().passed is True` passes whether the check
+    works or not. This check is a RATCHET, so the live corpus is not incidental to it — the
+    measured population IS the subject. A synthetic corpus would prove the resolver parses
+    JSON and nothing about whether 156 is the true figure or whether the ceiling can fire.
+
+    So: the mutation is seeded into the REAL `papers/D3/claims_review.json` and written back
+    from saved bytes (never `git checkout`), and the ceiling is asserted against the LIVE
+    measured value rather than its own definition. When the backlog is legitimately
+    remediated this class fails — that is the ratchet working, and the fix is to lower
+    `UNRESOLVED_CHAIN_LINK_CEILING` in the same commit that does the remediation.
+    """
+
+    def test_a_dangling_link_seeded_into_the_real_corpus_fails(self):
+        target = _H.PAPERS_DIR / "D3" / "claims_review.json"
+        original = target.read_text(encoding="utf-8")
+        assert rv.check_chain_backing_targets_resolve().passed is True, (
+            "baseline must be green, or this mutation proves nothing")
+        try:
+            doc = json.loads(original)
+            doc["sentences"][0].setdefault("chain_proposed", {}).setdefault("links", []).append(
+                {"kind": "theorem",
+                 "target": "SKEFTHawking.ThisDeclarationDoesNotExist.seeded_defect"})
+            target.write_text(json.dumps(doc, indent=2), encoding="utf-8")
+            r = rv.check_chain_backing_targets_resolve()
+            assert r.passed is False, "one dangling link past the ceiling must fail the check"
+            assert any("seeded_defect" not in d.message for d in r.details)
+        finally:
+            target.write_text(original, encoding="utf-8")
+        assert rv.check_chain_backing_targets_resolve().passed is True, "restore failed"
+
+    def test_the_ceiling_carries_no_headroom(self):
+        """A ratchet above the population cannot fire. Assert against the LIVE measured
+        value, never against the constant's own definition (guide §2.3)."""
+        r = rv.check_chain_backing_targets_resolve()
+        detail = next(d for d in r.details if d.name == "unresolved")
+        live = int(detail.message.split()[0])
+        assert live == rv.UNRESOLVED_CHAIN_LINK_CEILING, (
+            f"live unresolved count {live} != ceiling {rv.UNRESOLVED_CHAIN_LINK_CEILING}; "
+            f"if the backlog shrank, LOWER the ceiling — headroom makes it unfireable")
+
+    def test_absent_lean_deps_is_unverified_not_passing(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(_H, "LEAN_DEPS_PATH", tmp_path / "nonexistent.json")
+        r = rv.check_chain_backing_targets_resolve()
+        assert r.passed is False and r.measured is False
+
+    def test_an_empty_corpus_fails_rather_than_passing_vacuously(self, tmp_path, monkeypatch):
+        """The seam guard (§2.5): a scan that matches nothing must not report health."""
+        monkeypatch.setattr(_H, "PAPERS_DIR", tmp_path)
+        r = rv.check_chain_backing_targets_resolve()
+        assert r.passed is False, "zero links reached is a resolver/path defect, not a clean corpus"
