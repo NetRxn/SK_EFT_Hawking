@@ -273,13 +273,18 @@ each gate computes, and what actually blocks:
 
 ---
 
-## 9. Known drift in the process law
+## 9. Why the process law names owners instead of values
 
-`WAVE_EXECUTION_PIPELINE.md` is the law, and it disagrees with the tree in several places: a
-stage count that predates the current stage list, a check count, a frozen roster enum that
-cannot legally hold the bundles authorized since it was written, a toolchain version, and a
-claim that no per-repo `CLAUDE.md` exists.
+`WAVE_EXECUTION_PIPELINE.md` is the law, and it cites the artifact that owns each fact rather
+than copying the fact: `validate.BUNDLE_CODES` for the bundle roster, `lean/lean-toolchain` for
+the toolchain pin, `validate.py --list` for the check roster. Its stage count is tied to the
+`## Stage N` headings that define it.
 
 **The mechanism is the finding:** *a rule text that enumerates a roster is a hardcoded roster.*
-`bundle_registry_consistency` Leg C exists because that pattern is known-bad in code; the same
-discipline has not been applied to prose. Tracked as ADR-010 §D7.
+`bundle_registry_consistency` Leg C exists because that pattern is known-bad in code, and the
+law is written to the same discipline — an enumerated roster in prose goes stale exactly as an
+enumerated roster in code does, but nothing fails when it happens.
+
+⚠️ **Prose rosters have no mechanical guard.** `architecture_inventory_fresh`'s
+`no_counts_in_narratives` leg covers `docs/architecture/` only; the law is outside its scope.
+The discipline there rests on authors naming owners. Tracked as ADR-010 §D7.

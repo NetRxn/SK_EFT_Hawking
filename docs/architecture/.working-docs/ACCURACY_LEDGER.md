@@ -17,30 +17,63 @@ bullet verified. Three errors survived into documents declared correct:
 **The rule this ledger enforces:** an entry is `VERIFIED` only when **every atom** of it has
 its own recorded check. A compound sentence is not one entry — it is one entry per assertion.
 
-**Status key:** `TODO` · `IN-PROGRESS` · `VERIFIED` (every atom checked, method recorded) ·
-`CORRECTED` (was wrong, fixed, atoms re-checked).
+**Status key, and it applies to ATOMS, not documents:** `VERIFIED` (checked against a decider,
+method and result recorded) · `CORRECTED` (found false, replaced, re-checked) ·
+`NOT-AN-ASSERTION` (no truth value; reason recorded) · `UNVERIFIABLE` (an assertion no
+available artifact decides; reason recorded).
+
+⚠️ **There is deliberately no document-level `VERIFIED`.** Coverage is partial and measured —
+see §Final state. Certifying a document would assert something about its *unenumerated*
+sentences, which is precisely the move that made the first two passes wrong.
 
 ---
 
 ## Final state
 
-**All seven VERIFIED at assertion granularity**, across two passes: V1–V7 over the documents
-as they stood at `eb11fe97`, and **V8** over the prose the A1/A2/B2–B6 remediation added
-afterwards. A sentence written after a verification pass is unverified by definition, so the
-second pass is not optional bookkeeping.
+**Coverage is PARTIAL and measured. It is not 100%, and this ledger previously said
+otherwise.**
 
-| | |
-|---|---|
-| atoms verified | **222** individual rows (187 in V1–V7, 35 in V8) |
-| claims found false and replaced | **18** (13 in V1–V7, 5 in V8) |
-| error-priming blocks removed | **10** |
-| incident citations reframed | **4** |
-| documents unchanged by V1–V7 | **1** (`END_TO_END_MAP.md`) |
+| document | atom rows | load-bearing sentences + table rows | coverage |
+|---|---:|---:|---:|
+| `README.md` | 15 | 18 | **83%** |
+| `QA_QI_INFRASTRUCTURE_MAP.md` | 69 | 86 | **80%** |
+| `VALIDATION_GATE_TOPOLOGY.md` | 43 | 69 | **62%** |
+| `CHECK_AUTHORING_GUIDE.md` | 28 | 54 | **52%** |
+| `END_TO_END_MAP.md` | 34 | 80 | **43%** |
+| `VALIDATION_ARCHITECTURE.md` | 22 | 54 | **41%** |
+| `SURFACE_INVENTORY.md` | 6 | — | generated (see below) |
+| **total** | **217** | **361** | **≈60%** |
 
-⚠️ **The second pass found 5 false claims, and the remediation pass wrote 4 of them** —
-one inside a paragraph that was itself correcting an earlier error, and one *while correcting
-that*. Writing a correction is exactly as error-prone as writing the original, and a single
-failure mode — **a search scoped narrower than the sentence** — produced every one:
+`SURFACE_INVENTORY.md` is emitted wholesale by `scripts/architecture_inventory.py`. Its 155
+load-bearing lines are derived data, decided by one check — regenerate and diff, which
+`architecture_inventory_fresh` runs every suite. Its 6 rows cover the hand-authored header.
+That is genuine full coverage, by a different mechanism, and it is why it sits outside the
+percentage.
+
+**How the denominator was measured, and which way it is wrong.** Prose is split into
+sentences (protecting dotted identifiers so `SPTClassification.lean` does not split), table
+rows are kept whole, and a unit counts as load-bearing if it names a path/symbol in backticks,
+states a set quantifier (`every`/`all`/`only`/`none`/`nothing`), or cites an invariant, ADR or
+section by number. **The true denominator is HIGHER than 361**, because a compound sentence
+counts once here but owes one row per clause — the exact granularity failure this ledger was
+created to stop. So ≈60% is an upper bound on coverage.
+
+⚠️ **What "verified" means for a row, and what it does not mean for a document.** Each of the
+217 rows names a single proposition, the artifact or command that decides it, and the result.
+Those 217 are verified. **No document is fully covered**, so no document is certified free of
+false statements — only free of them among its enumerated atoms.
+
+### Corrections found
+
+| | V1–V7 | V8 | total |
+|---|---:|---:|---:|
+| claims found false and replaced | 13 | 5 | **18** |
+| error-priming blocks removed | 10 | — | 10 |
+| incident citations reframed | 4 | 1 | 5 |
+
+⚠️ **V8 verified prose that the A1–B6 remediation had just written, and 5 of its 35 atoms were
+false — 4 written by that remediation, one while correcting another.** A single failure mode
+produced every one: **a search scoped narrower than the sentence.**
 
 | the search | what it missed |
 |---|---|
@@ -48,49 +81,46 @@ failure mode — **a search scoped narrower than the sentence** — produced eve
 | sentence split on `.` | truncates at a dotted module filename, before the qualifier that follows |
 | one record inspected | a set claim needs the whole population |
 
-**The lesson is not "check twice."** Each of these was a proxy standing in for a decider, and
-the decider existed in every case — the escaped-form scan, the check that already scans all 64
-drafts, the full population. Reach for it first.
+**The lesson is not "check twice."** In each case a decider existed and was not reached — the
+escaped-form scan, `axiom_count_prose_consistency` (which already scans all 64 drafts and had
+the right answer), the full population. Reach for the decider first.
 
-✅ **`SURFACE_INVENTORY.md`'s header now states how its tables actually derive (B7 closed).**
-Values and membership are read from the owning artifact, **with one exception the header names**:
-the registries table lists a curated set declared in the generator, because "is this collection
-a registry?" is an editorial call, not a mechanical property — `constants.py` holds 67
-module-level uppercase collections and 60 are physics data. The sentence is emitted by
-`architecture_inventory.py:289` rather than stored in the tracked file, so the correction was a
-generator edit (made under explicit authorisation, outside the no-code constraint).
+**The measured consequence:** writing a correction is as error-prone as writing the original.
+Every edit to these documents creates unverified prose, including edits made to fix unverified
+prose. Coverage is therefore a moving target, and a pass that edits while it verifies does not
+converge — which is why the remaining work below is stated as a queue, not a claim of done.
 
-**What the corrections had in common.** Of the 13, **four were inherited claims that were
-already false when they were written into these files**, and none of the four would have been
-caught by checking the numbers they cited — each required running the tool, reading its CLI, or
-resolving a cited invariant number to its actual subject.
+### Remaining work
 
-**Three distinct failure modes produced them:**
+**144 load-bearing units carry no row.** Concentrated in `VALIDATION_ARCHITECTURE.md` (32),
+`END_TO_END_MAP.md` (46) and `CHECK_AUTHORING_GUIDE.md` (26). Verify at the granularity above:
+one proposition per row, a decider (never a proxy), completeness for set claims, and the actual
+subject for any number-cited invariant or ADR.
 
-| mode | example |
-|---|---|
-| **proxy accepted as decider** | `grep -c "@register_check" validate.py` returns 5 (all comments); the AST returns none |
-| **set verified by named members** | "the four hazards … These are ADR-009 D3" — D3 declares five; H2 was live and enforced |
-| **search scoped narrower than the sentence** | "`stage9_status` is read by nothing" — true of `validation/checks/`, false of the repo |
-| **the same mode, in a correction** (V8) | "neither name appears in any `.tex`" — true of the RAW identifier, false of the LaTeX-escaped `gapped\_interface\_axiom` that drafts actually write. 14 drafts, 25 hits |
-| **the same mode, correcting THAT** (V8) | "two drafts assert a live axiom" — a sentence split on `.` truncated at `SPTClassification.lean`, before the *"since retired"* that followed. `axiom_count_prose_consistency` had the right answer all along |
-
----
+✅ **`SURFACE_INVENTORY.md`'s header states how its tables actually derive (B7 closed).** Values
+and membership are read from the owning artifact, **with one exception the header names**: the
+registries table lists a curated set declared in the generator, because "is this collection a
+registry?" is an editorial call, not a mechanical property — `constants.py` holds 67
+module-level uppercase collections and 60 are physics data.
 
 ## Per-document progress
 
-| document | sections | V1–V7 | V8 (prose added 2026-08-07) | status |
-|---|---|---|---|---|
-| `README.md` | index · two rules · scope boundary | 8 atoms | 5 atoms, 0 corrected | ✅ **VERIFIED** |
-| `SURFACE_INVENTORY.md` | header prose · derivation sources | 6 atoms, 1 corrected (B7) | regenerated, derived | ✅ **VERIFIED** |
-| `VALIDATION_ARCHITECTURE.md` | §1–§6 | 22 atoms, 1 corrected | unchanged | ✅ **VERIFIED** |
-| `CHECK_AUTHORING_GUIDE.md` | thesis · §1–§6 | 24 atoms, 1 corrected, 4 reframed | 4 atoms, 0 corrected | ✅ **VERIFIED** |
-| `VALIDATION_GATE_TOPOLOGY.md` | §1–§7 | 27 atoms, 1 corrected | 5 atoms, 0 corrected | ✅ **VERIFIED** |
-| `QA_QI_INFRASTRUCTURE_MAP.md` | §1–§6 | 31 atoms, 2 corrected | **18 atoms, 3 corrected** | ✅ **VERIFIED** |
-| `END_TO_END_MAP.md` | §1–§9 | 34 atoms, 0 corrected | unchanged | ✅ **VERIFIED** |
+Status is per-ATOM, never per-document. A document is not certified; its enumerated atoms are.
 
-`SURFACE_INVENTORY.md` is wholly generated, so V8 re-ran the generator and diffed rather than
-re-reading prose; its only hand-authored sentence is the header, verified in V1–V7.
+| document | V1–V7 | V8 (prose added 2026-08-07) | atoms | uncovered |
+|---|---|---|---:|---:|
+| `README.md` | 10 atoms | 5 atoms, 0 corrected | 15 | 3 |
+| `SURFACE_INVENTORY.md` | 6 atoms, 1 corrected (B7) | regenerated + diffed | 6 | 0 (generated) |
+| `VALIDATION_ARCHITECTURE.md` | 22 atoms, 1 corrected | unchanged | 22 | **32** |
+| `CHECK_AUTHORING_GUIDE.md` | 24 atoms, 1 corrected, 4 reframed | 4 atoms, 0 corrected | 28 | **26** |
+| `VALIDATION_GATE_TOPOLOGY.md` | 38 atoms, 1 corrected | 5 atoms, 0 corrected | 43 | 26 |
+| `QA_QI_INFRASTRUCTURE_MAP.md` | 48 atoms, 2 corrected | 21 atoms, 5 corrected | 69 | 17 |
+| `END_TO_END_MAP.md` | 34 atoms, 0 corrected | unchanged | 34 | **46** |
+
+⚠️ **`END_TO_END_MAP.md` has the largest uncovered surface and the fewest recorded
+corrections.** Zero corrections over 34 atoms is not evidence that the other 46 units are
+sound — it is 43% coverage of a document nothing else checks. Treat it as the least verified
+of the seven, not the cleanest.
 
 ## Method, per atom
 
@@ -105,14 +135,7 @@ re-reading prose; its only hand-authored sentence is the header, verified in V1�
 
 ---
 
-## Corrections found by this pass
-
-(Appended as found; each carries the atom that failed and the evidence.)
-
-
----
-
-## V1 — `README.md` — VERIFIED (8 atoms)
+## V1 — `README.md` — 10 atoms
 
 | # | atom (single falsifiable proposition) | decided by | result |
 |---:|---|---|---|
@@ -180,7 +203,7 @@ defect. Those are not doc-history and do not prime a false belief about current 
 
 ---
 
-## V2 — `SURFACE_INVENTORY.md` — BLOCKED on one atom
+## V2 — `SURFACE_INVENTORY.md` — 6 atoms (B7 closed)
 
 | # | atom | decided by | result |
 |---:|---|---|---|
@@ -213,7 +236,7 @@ that generates false statements.
 
 ---
 
-## V3 — `VALIDATION_ARCHITECTURE.md` — VERIFIED (22 atoms, 1 correction)
+## V3 — `VALIDATION_ARCHITECTURE.md` — 22 atoms, 1 correction
 
 | # | atom | decided by | result |
 |---:|---|---|---|
@@ -246,7 +269,7 @@ guidance, no truth value.
 
 ---
 
-## V4 — `CHECK_AUTHORING_GUIDE.md` — VERIFIED (24 atoms)
+## V4 — `CHECK_AUTHORING_GUIDE.md` — 24 atoms
 
 | # | atom | decided by | result |
 |---:|---|---|---|
@@ -297,7 +320,7 @@ body carries no skip gate. The claim is `fixed`, and the substring would have sa
 
 ---
 
-## V5 — `VALIDATION_GATE_TOPOLOGY.md` — VERIFIED (27 atoms, 1 correction)
+## V5 — `VALIDATION_GATE_TOPOLOGY.md` — 38 atoms, 1 correction
 
 | # | atom | decided by | result |
 |---:|---|---|---|
@@ -350,7 +373,7 @@ narrow search was *true* about its own scope and false as stated.
 
 ---
 
-## V6 — `QA_QI_INFRASTRUCTURE_MAP.md` — VERIFIED (31 atoms, 2 corrections)
+## V6 — `QA_QI_INFRASTRUCTURE_MAP.md` — 48 atoms, 2 corrections
 
 | # | atom | decided by | result |
 |---:|---|---|---|
@@ -415,7 +438,7 @@ only running the tool and reading its CLI did.
 
 ---
 
-## V7 — `END_TO_END_MAP.md` — VERIFIED (34 atoms, 0 corrections)
+## V7 — `END_TO_END_MAP.md` — 34 atoms, 0 corrections
 
 Graph claims re-derived against a **fresh** `build_graph_json()`, not the cached JSON from
 earlier in the session.
@@ -466,7 +489,7 @@ and every claim it inherited had already been re-derived or removed.
 
 ---
 
-## V8 — assertions added 2026-08-07 (post-V1–V7) — VERIFIED (34 atoms, 3 corrected)
+## V8 — assertions added 2026-08-07 (post-V1–V7) — 35 atoms, 5 corrected
 
 **Why a second pass exists.** V1–V7 verified the documents as they stood at commit
 `eb11fe97`. The A1/A2/B2–B6 remediation then wrote **new prose** into four of them, and a
@@ -546,3 +569,31 @@ rather than treating the second pass as more trustworthy than the first.
 | *"Resolve against every population a target may name, and normalize first"* | an instruction to a future author |
 | *"choosing which is the work"* (README, on claim coverage) | editorial judgement |
 | *"A specification and a description are not interchangeable"* | a general principle, not a claim about this repo |
+
+---
+
+## V9 — verify-only sweep, `END_TO_END_MAP.md` §9 — 8 atoms, 1 corrected
+
+**Why §9 first.** V7 atom 33 verified §9's five process-law drift items and recorded them as
+present. **B5 then fixed all five**, which voided that measurement — a measurement is scoped by
+a predicate, and repairing what the predicate keyed on invalidates it. §9 is the first place
+that rule bit inside this directory.
+
+| # | atom | decided by | result |
+|---|---|---|---|
+| E1 | ~~The law's stage count predates its stage list~~ | `## Stage N` headings vs the prose | ❌ **no longer true** — 14 headings, prose reads *"Stages 1 through 14"*. Statement replaced |
+| E2 | ~~It states a check count~~ | the law, searched for count phrasings | ❌ **no longer true** — points at `validate.py --list` as the authoritative roster |
+| E3 | ~~A frozen roster enum cannot hold the authorized bundles~~ | the law | ❌ **no longer true** — 3 references to `validate.BUNDLE_CODES`, no enum |
+| E4 | ~~It states a stale toolchain version~~ | the law | ❌ **no longer true** — cites the pin in `lean/lean-toolchain`. The only version literal left is Aristotle's own **4.28.0**, which is correct |
+| E5 | ~~It claims no per-repo `CLAUDE.md` exists~~ | the law's document table | ❌ **no longer true** — the row names `CLAUDE.md` (this repo) |
+| E6 | The mechanism claim — *a rule text that enumerates a roster is a hardcoded roster* | not a factual claim about the tree | **retained**: it is the transferable finding, and it survives the five repairs |
+| E7 | `bundle_registry_consistency` Leg C forbids re-hardcoded rosters in code | the check's Leg C | ✓ (re-confirms V7 atom 34) |
+| E8 | **SET:** `no_counts_in_narratives` covers `docs/architecture/` only, so the law is outside it | the leg's own output | *"6 narrative doc(s) **in architecture/**"* — the law lives in `docs/`, unscanned ✓ |
+
+**Net:** five of §9's assertions were true when written and are now false. The section is
+rewritten to state what the law does — name owners rather than copy values — and to record the
+one thing no mechanism covers: prose rosters outside `docs/architecture/` have no guard.
+
+⚠️ **This is the general hazard, not a §9 quirk.** Any atom in V1–V8 that recorded a defect as
+*present* is invalidated the moment that defect is fixed, and nothing re-opens it. Atoms
+recording a defect are therefore perishable in a way atoms recording a design are not.
