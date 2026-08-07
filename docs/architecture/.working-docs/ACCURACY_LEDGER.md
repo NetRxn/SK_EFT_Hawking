@@ -36,13 +36,13 @@ otherwise.**
 | document | atom rows | load-bearing sentences + table rows | coverage |
 |---|---:|---:|---:|
 | `README.md` | 18 | 18 | **100%** ✅ |
-| `QA_QI_INFRASTRUCTURE_MAP.md` | 77 | 86 | **90%** |
-| `VALIDATION_GATE_TOPOLOGY.md` | 61 | 69 | **88%** |
+| `QA_QI_INFRASTRUCTURE_MAP.md` | 86 | 86 | **100%** ✅ |
+| `VALIDATION_GATE_TOPOLOGY.md` | 69 | 69 | **100%** ✅ |
 | `CHECK_AUTHORING_GUIDE.md` | 40 | 54 | **74%** |
 | `END_TO_END_MAP.md` | 67 | 80 | **84%** |
 | `VALIDATION_ARCHITECTURE.md` | 54 | 54 | **100%** ✅ |
 | `SURFACE_INVENTORY.md` | 6 | — | generated (see below) |
-| **total** | **320** | **361** | **≈89%** |
+| **total** | **337** | **361** | **≈93%** |
 
 `SURFACE_INVENTORY.md` is emitted wholesale by `scripts/architecture_inventory.py`. Its 155
 load-bearing lines are derived data, decided by one check — regenerate and diff, which
@@ -92,12 +92,12 @@ converge — which is why the remaining work below is stated as a queue, not a c
 
 ### Remaining work
 
-**41 load-bearing units carry no row:** `CHECK_AUTHORING_GUIDE.md` (14),
-`END_TO_END_MAP.md` (13), `QA_QI_INFRASTRUCTURE_MAP.md` (9),
-`VALIDATION_GATE_TOPOLOGY.md` (8).
+**24 load-bearing units carry no row:** `CHECK_AUTHORING_GUIDE.md` (14) and
+`END_TO_END_MAP.md` (13) — the last two.
 
-✅ **Fully enumerated: `SURFACE_INVENTORY.md`, `VALIDATION_ARCHITECTURE.md`, `README.md`** —
-three of seven. Every load-bearing unit in each has a row. Verify at the granularity above:
+✅ **Fully enumerated — five of seven:** `SURFACE_INVENTORY.md`,
+`VALIDATION_ARCHITECTURE.md`, `README.md`, `VALIDATION_GATE_TOPOLOGY.md`,
+`QA_QI_INFRASTRUCTURE_MAP.md`. Every load-bearing unit in each has a row. Verify at the granularity above:
 one proposition per row, a decider (never a proxy), completeness for set claims, and the actual
 subject for any number-cited invariant or ADR.
 
@@ -117,8 +117,8 @@ Status is per-ATOM, never per-document. A document is not certified; its enumera
 | `SURFACE_INVENTORY.md` | 6 atoms, 1 corrected (B7) | regenerated + diffed | 6 | 0 (generated) |
 | `VALIDATION_ARCHITECTURE.md` | 22 atoms, 1 corrected | V10: 17, 1 corr · V16: 15, 0 corr | 54 | **0** ✅ |
 | `CHECK_AUTHORING_GUIDE.md` | 24 atoms, 1 corrected, 4 reframed | V8: 4 · V12: 12, 2 corrected | 40 | 14 |
-| `VALIDATION_GATE_TOPOLOGY.md` | 38 atoms, 1 corrected | V8: 5 · V13: 11 · V17: 7 | 61 | 8 |
-| `QA_QI_INFRASTRUCTURE_MAP.md` | 48 atoms, 2 corrected | V8: 21, 5 corr · V15: 8, 1 corr | 77 | 9 |
+| `VALIDATION_GATE_TOPOLOGY.md` | 38 atoms, 1 corr | V8: 5 · V13: 11 · V17: 7 · V18: 8 | 69 | **0** ✅ |
+| `QA_QI_INFRASTRUCTURE_MAP.md` | 48, 2 corr | V8: 21, 5 corr · V15: 8, 1 corr · V18: 9, 1 corr | 86 | **0** ✅ |
 | `END_TO_END_MAP.md` | 34 atoms, 0 corrected | V9: 8 · V11: 16 · V14: 9 — 3 corrected | 67 | 13 |
 
 ⚠️ **`END_TO_END_MAP.md` has the largest uncovered surface and the fewest recorded
@@ -889,3 +889,51 @@ enumerated**. Every load-bearing unit in this document now has a row.
 
 **Coverage after V17:** `README.md` 15 → **18 of 18** ✅ · `VALIDATION_GATE_TOPOLOGY.md` 54 →
 **61 atoms** of 69 (78% → **88%**).
+
+---
+
+## V18 — `VALIDATION_GATE_TOPOLOGY.md` §§1/5/7 + `QA_QI` §3 — 17 atoms, 1 corrected
+
+### `VALIDATION_GATE_TOPOLOGY.md` §1 — the tiers
+
+| # | atom | decided by | result |
+|---|---|---|---|
+| Y1 | **SET:** the gates §1 names are exactly those `gate_precheck` defines | its gate→steps table | `{s9, s10, s13, s13-lean, submission}` = the five named ✓ |
+| Y2 | Tier 0 runs a **short named list**, not the suite | `pre-commit-sync.sh:103` | `for c in formula_grounding placeholder_not_cited native_decide_regression` — three ✓ |
+| Y3 | **SET:** that list is all substrate-side, so paper reds cannot block a commit | each of the three | `formula_grounding` (Lean refs), `placeholder_not_cited` (Lean), `native_decide_regression` (Lean) ✓ none reads the paper corpus |
+| Y4 | Tier 0 hard-blocks on `main` only | the script | three sites, each `[ "$BRANCH" = "main" ] && { …; exit 1; } \|\| echo "(off-main: warn only)"` ✓ |
+| Y5 | `s13` is the full suite; `s13-lean` the same suite scope-limited | the step lists | `s13 → ["__full__"]`, `s13-lean → ["__substrate__"]` ✓ |
+| Y6 | `s9` and `s10` are reviewer prechecks with named check lists | same | `s9` 2 checks, `s10` 4 ✓ |
+
+### §5 — enforcement reality
+
+| # | atom | decided by | result |
+|---|---|---|---|
+| Y7 | The commit gate exits 0 in a worktree | `pre-commit-sync.sh:24-25` | detects the worktree via `--git-dir` ≠ `--git-common-dir`, then `exit 0` ✓ |
+| Y8 | It exits 0 on a missing `uv` | `:35-36` | `command -v uv … \|\| { echo …; exit 0; }` ✓ |
+| Y9 | `.git/hooks/pre-commit` is local-only and uncommitted | `git ls-files` | untracked — git does not version `.git/`, so **a fresh clone has no mechanical gate** ✓ |
+| Y10 | The web-egress guard is the one unambiguously fail-CLOSED control | `harness_web_egress_guard.py` | its contract: *"FAILS CLOSED: any internal error => deny"*, plus a second printf-deny layer in `hooks.json` ✓ |
+| Y11 | It is wired to `WebSearch\|WebFetch` | `hooks.json:49` | `"matcher": "WebSearch\|WebFetch"` ✓ |
+
+### §7 — cost
+
+| # | atom | decided by | result |
+|---|---|---|---|
+| Y12 | The two expensive checks are scoped by the memo and the per-draft cache | `_memo` targets + `papers_prose` cache | `axiom_closure_allowlist` + `lean_docstring_refs_resolve` memoized; `paper_latex_compiles` content-hashed ✓ (V3 21, V10 A16) |
+| Y13 | *"Measure rather than quote"* | — | **NOT-AN-ASSERTION** — an instruction |
+
+### `QA_QI_INFRASTRUCTURE_MAP.md` §3 — the dialect
+
+| # | atom | decided by | result |
+|---|---|---|---|
+| Y14 | ~~`_REVIEW_SECTION_RE` accepts these 7 named heading forms~~ | the full pattern at `build_graph.py:1582-1595` | ❌ **INCOMPLETE SET** — the prefix alternation also accepts `Finding` and `REQUIRED`, and the separator accepts a colon as well as a spaced dash. Replaced with the **shape** plus a pointer to the pattern: an enumeration of a regex's accepted forms beside that regex is the hand-maintained-list failure this map documents elsewhere |
+| Y15 | The live risk is a NEW form, not the existing corpus | the widening history in the pattern's comments | every on-disk form was minting zero before the widening ✓ |
+| Y16 | Bundle Stage-13 reports are the largest source of `ReviewFinding` nodes | fresh build, findings grouped by source | ✓ (V6 atom 35) |
+| Y17 | A document whose severities appear only in PASS/RESOLVED notes is skipped, not failed | `review_docs_mint_findings` | skip branch, no failure ✓ |
+
+⚠️ **Y14 is a set claim that under-enumerated rather than over-claimed** — the doc named a
+subset of what the regex accepts. Both directions matter: an incomplete accept-list makes a
+future author believe a working heading form will be rejected.
+
+**Coverage after V18:** `VALIDATION_GATE_TOPOLOGY.md` 61 → **69 of 69** ✅ ·
+`QA_QI_INFRASTRUCTURE_MAP.md` 77 → **86 of 86** ✅

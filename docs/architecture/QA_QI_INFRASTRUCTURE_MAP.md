@@ -178,10 +178,13 @@ review findings.
 
 ### The dialect question — narrow, and the live risk is a NEW form
 
-`_REVIEW_SECTION_RE` accepts the heading forms actually found on disk: numeric (`### 1.1 —`),
-`Class N`, `Anchor N`, `R-N`, `V.N`, `F-N`, `BLOCKER N.N`, and multi-level numbering. It was
-widened after a round in which every form on disk was minting **zero** findings, making real
-reviews invisible.
+`_REVIEW_SECTION_RE` accepts a **shape**, not a list: a 3-to-5-level heading, an optional
+keyword prefix, an identifier of up to three dot-parts with an optional letter block and letter
+suffixes, and a separator restricted to a spaced em/en dash or a colon. `build_graph.py` carries
+the pattern and the on-disk forms that drove each widening; **read it there rather than
+re-enumerating the forms here** — a list of accepted forms beside a regex is the
+hand-maintained-list failure this map documents elsewhere. It was widened after a round in
+which every form on disk minted **zero** findings, making real reviews invisible.
 
 **So the live risk is a NEW form, not the existing corpus.** A review written in a heading
 style outside the accepted set mints nothing, silently — drop point (5) above. Review output
