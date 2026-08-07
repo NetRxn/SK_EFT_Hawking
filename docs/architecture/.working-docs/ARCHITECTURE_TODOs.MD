@@ -212,7 +212,7 @@ document, so a reader is being handed five wrong facts before any work starts.
 - **Fix shape:** rename one of them, or have the law name claims review as its own stage.
   A decision, not a doc edit.
 
-### B7. `SURFACE_INVENTORY.md`'s header overstates how its own tables are derived — OPEN
+### B7. `SURFACE_INVENTORY.md`'s header overstates how its own tables are derived — ✅ CLOSED
 
 **This is a doc-accuracy defect whose fix requires a CODE edit, so it is filed rather than
 made.** The sentence is emitted by the generator, not written in the tracked file.
@@ -241,10 +241,10 @@ made.** The sentence is emitted by the generator, not written in the tracked fil
 - **One genuine omission to consider while editing:** `citations.PAPER_TO_PHASE` is a
   module-level mapping not in the probe list. Whether it counts as a tracked registry is the
   same editorial call.
-- **Consequence for the accuracy goal:** `SURFACE_INVENTORY.md` **cannot be marked VERIFIED**
-  while this sentence stands, and the fix is a `.py` edit that the accuracy pass's constraint
-  forbids. Recommended wording is drafted and clause-by-clause verified in `ACCURACY_LEDGER.md`
-  under V2 — it needs only authorisation to apply.
+- ✅ **CLOSED.** The header now distinguishes VALUES (read from the owning artifact, all seven
+  derivations) from MEMBERSHIP (derived in six, curated in one, and says which). Re-verified
+  clause by clause; the exception count is measured. The curation itself was deliberately left
+  alone — mechanising it would flood the table with lattice constants.
 
 ---
 

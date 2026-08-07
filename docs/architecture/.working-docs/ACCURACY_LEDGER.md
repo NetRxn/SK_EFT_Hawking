@@ -169,31 +169,25 @@ defect. Those are not doc-history and do not prime a false belief about current 
 | 5 | "No timestamp is recorded here on purpose" | grep for `YYYY-MM-DD` in the file | 0 hits ✓ |
 | 6 | The narrative companion is `END_TO_END_MAP.md` | link resolves; that file is the narrative | ✓ |
 
-**Atom 2 is FALSE and remains in the file.** The header claims *"Every table below is read
-from the artifact that owns the population"*. Measured by AST over all seven derivation
-functions: table **values** are read from the owning artifact in all seven, but table
-**membership** is derived in six and **curated** in one — `registries()` iterates a
-hand-written `probes` list.
+**Atom 2 — CORRECTED (B7).** The header conflated two different properties. It now reads:
 
-The curation is correct and must not be mechanised: `constants.py` holds 67 module-level
-uppercase collections, 60 of which are physics data. Which collections count as tracked
-registries is editorial. **The defect is the sentence, not the design.**
+> *"Each table's VALUES are read from the artifact that owns them … Their MEMBERSHIP is derived
+> the same way, with one exception: the registries table lists a curated set named in the
+> generator, because which collections count as tracked registries is an editorial call, not a
+> mechanical property."*
 
-⛔ **This document cannot reach VERIFIED under this pass's constraint.** The sentence is
-emitted at `scripts/architecture_inventory.py:289`, not stored in the tracked file, so the
-only fix is a `.py` edit — and editing the tracked file instead fails `inventory_fresh`.
-The constraint is *"no new code … update markdown only"*, with no exception clause.
+Re-verified by AST over all seven derivation functions: **values** target the owning artifact
+in all seven; **membership** is derived in six and curated in one (`registries()`'s `probes`
+list). "One exception" is a counted claim.
 
-**Recommended wording, for whoever is authorised to make it:** separate the two properties the
-sentence conflates — *"Each table's VALUES are read from the artifact that owns them … Their
-MEMBERSHIP is derived the same way, with one exception: the registries table lists a curated
-set named in the generator, because which collections count as tracked registries is an
-editorial call, not a mechanical property."* That wording was drafted and verified clause by
-clause against the code before being reverted.
+The curation is correct and was deliberately NOT mechanised: `constants.py` holds 67
+module-level uppercase collections and 60 are physics data (`A1_EXT_DIMENSIONS`,
+`ADW_2D_MODEL`, lattice scans). Which collections count as tracked registries is editorial.
+**The defect was the sentence, not the design.**
 
-⚠️ **Until then, a fresh-context reader should treat that one header sentence as untrue.**
-Every table in the file is correct; only the sentence describing how the registries table is
-populated overstates it.
+The fix is a one-string change to `scripts/architecture_inventory.py`, since the text is
+emitted rather than stored — applied under explicit operator authorisation to correct code
+that generates false statements.
 
 ---
 
