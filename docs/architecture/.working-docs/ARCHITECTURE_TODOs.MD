@@ -452,15 +452,23 @@ Full analysis: [`docs/audits/2026-08-01-publication-readiness/`](../../audits/20
 
 ### D6. Corpus-wide Lean pin drift in paper drafts — OPEN
 
-- **Measured:** **8 of 21 bundles** cite a stale Lean version against the live `4.32.0` —
-  D6/D9/D10/L2 (`4.29.1`), E1/E2/I3 (`4.29.0`), I1 (`4.28.0` *and* `4.29.0`). Plus 8 legacy
-  drafts; **16 total**.
-- **Why it matters:** for bundles whose claim is reproducible kernel-checking, a wrong pin means
-  a referee's reproduction attempt fails and reads as a broken substrate.
-- ⚠️ **Scan on the Lean version string only.** A hex-pattern scan for Mathlib revs collides with
-  ISBNs, Aristotle run IDs and dates, and manufactures findings.
-- **Fix shape (needs code):** drafts should cite the pin through a generated macro, as they
-  already do for project-wide counts, plus a check asserting no draft names a non-current pin.
+⚠️ **A CHECK ALREADY MEASURES THIS — do not re-measure by hand.**
+`validate.py --check paper_toolchain_pin_drift` (Class TP, advisory) resolves both the Lean
+version *and* the Mathlib rev against `lean-toolchain` + `lakefile.toml`.
+
+- **Measured by the check:** **29 pin-drift sites + 5 capability-claim sites across 65 drafts**,
+  touching **11 bundles** — D2, D6, D9, D10, D11, D12, E1, E2, I1, I3, L2 — plus legacy drafts
+  (`paper44`, `paper5`, `paper6`, `paper7`) and `phase6AA_qnetwork_preprint`.
+- ⚠️ A hand scan on the Lean version string alone reports **8** bundles and misses every Mathlib
+  rev (`c4843367`, `5e932f97`, `8850ed93`), because a hex scan collides with ISBNs and Aristotle
+  run IDs. The check disambiguates; a manual scan cannot. **Never quote a hand count here.**
+- **Capability claims are a distinct class the check separates:** a sentence asserting what the
+  *pinned* Mathlib does or does not provide can be flipped by a pin bump — `D6:327`, `D6:787`.
+- **Why it matters:** for bundles claiming reproducible kernel-checking, a wrong pin means a
+  referee's reproduction fails and reads as a broken substrate.
+- **The residue is not measurement, it is (a) gating** — the check is advisory, so nothing fails
+  on pin drift — **and (b) prevention**: drafts should cite the pin through a generated macro as
+  they already do for counts. Both need approval per §6a.
 
 ### D7. No mechanism assesses whether prose serves a reader — OPEN
 
@@ -488,4 +496,20 @@ Full analysis: [`docs/audits/2026-08-01-publication-readiness/`](../../audits/20
   question→document map from `README.md`'s table and asserting each target document contains a
   section answering it — heading-level at minimum, so the check is structural rather than a
   keyword proxy. This is the missing completeness half of the doc-accuracy guard.
+
+### D9. The AI-disclosure template asserts unbacked numerical traceability — OPEN (claim integrity)
+
+- **Where:** `docs/DISCLOSURE_TEXT.md:27-29`, `:42-43`; carried by **11 drafts** (D1, D2, D3, D4,
+  D5, D9, E1, L2 among them).
+- **The claim:** *"all numerical claims trace to the repository's computation pipeline through its
+  automated validation checks."*
+- **The project's own checks contradict it:** `numerical_literals` = 116 inline literals,
+  `count_literals` = 107 hard-coded counts across 64 papers; D9 has no `claims_review.json`.
+- ⚠️ **Root cause of the worst instance:** `\substantivetheorems{}` is **project-scoped** and used
+  as if **paper-scoped**, so D1's abstract claims 26,077 verified theorems for a 114-theorem chain
+  (~230×) and *auto-inflates* as the library grows. The anti-drift macro is the overclaim's source.
+- **Fix shape:** template first (the traceability clause states only what is true), then per-bundle;
+  and `\substantivetheorems{}` needs a per-bundle scoping — which is `SYNTHESIS.md` §6 Phase 0
+  item 6, **withdrawn pending §6a approval**. Do not build it.
+- Full working: `docs/audits/2026-08-01-publication-readiness/ADDENDUM-2026-08-07.md` §A5.
 

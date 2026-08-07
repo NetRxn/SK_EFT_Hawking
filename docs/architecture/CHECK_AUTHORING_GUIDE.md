@@ -186,7 +186,7 @@ A guard that reports accurately can still produce absence-as-success one layer u
 
 ⚠️ **The obvious type-system fix was tried and rejected, with the measurement.**
 `CheckResult.passed` is a bare `bool` with no `UNEVALUATED` state, and adding one was ADR-009
-§Deferred item 4. **DECLINED**: `passed` is a D2 contract item. The `--json` payload reads the
+§Deferred item 4. **DECLINED**: `passed` is an ADR-009 D2 contract item. The `--json` payload reads the
 field; `gate_precheck.py` and `pre-commit-sync.sh` consume the **exit code** that
 `validate.main()` derives from it. A third state forces an exit-code mapping decision on both,
 so it is a contract change rather than a local refactor. `measured` was added as a *separate

@@ -16,6 +16,14 @@ defect — fix it rather than working around it.
 | **When** does each gate run, what does it block, and what does each gate actually compute? | [`VALIDATION_GATE_TOPOLOGY.md`](VALIDATION_GATE_TOPOLOGY.md) |
 | I am writing a new check — what do I owe? | [`CHECK_AUTHORING_GUIDE.md`](CHECK_AUTHORING_GUIDE.md) |
 | Which derived artifact has which writer and staleness key? How does a review finding become a gate? Where does a human actually decide? | [`QA_QI_INFRASTRUCTURE_MAP.md`](QA_QI_INFRASTRUCTURE_MAP.md) |
+| What are we publishing, what state is it in, and what is outstanding? | [`PUBLICATION_PORTFOLIO_MAP.md`](PUBLICATION_PORTFOLIO_MAP.md) |
+
+⚠️ **`D` is overloaded across this project — always qualify it.** Five namespaces share the
+prefix: publication bundles (`D1`–`D12`), ADR-010's decisions (`§D1`–`§D7`, `§D5a`), ADR-009's
+(`D1`–`D3`), the operator decisions in the 2026-08-01 audit's `SYNTHESIS.md` §5 (`D-1`–`D-6`), and
+the items in [`.working-docs/ARCHITECTURE_TODOs.MD`](.working-docs/ARCHITECTURE_TODOs.MD)
+(`D1`–`D8`). Write `ADR-010 §D5a`, `ADR-009 D2`, `SYNTHESIS D-1`, `TODO-D5`; reserve a bare `D6`
+for the bundle.
 
 Decisions live in [`../adrs/`](../adrs/); the graph schema in
 [`../KNOWLEDGE_GRAPH.md`](../KNOWLEDGE_GRAPH.md); the process law in
