@@ -521,19 +521,47 @@ class TestChainBackingTargetsResolve:
         """A ratchet above the population cannot fire. Assert against the LIVE measured
         value, never against the constant's own definition (guide §2.3)."""
         r = rv.check_chain_backing_targets_resolve()
-        detail = next(d for d in r.details if d.name == "unresolved")
+        detail = next(d for d in r.details if d.name == "unresolvable")
         live = int(detail.message.split()[0])
         assert live == rv.UNRESOLVED_CHAIN_LINK_CEILING, (
             f"live unresolved count {live} != ceiling {rv.UNRESOLVED_CHAIN_LINK_CEILING}; "
             f"if the backlog shrank, LOWER the ceiling — headroom makes it unfireable")
 
-    def test_absent_lean_deps_is_unverified_not_passing(self, tmp_path, monkeypatch):
-        monkeypatch.setattr(_H, "LEAN_DEPS_PATH", tmp_path / "nonexistent.json")
+    def test_an_unbuildable_graph_is_unverified_not_passing(self, monkeypatch):
+        """The check's only heavy dependency is chain_canonicalize's GraphIndex. If it cannot
+        be built, the verdict is UNVERIFIED — never a pass."""
+        import chain_canonicalize as _cc
+
+        def _boom():
+            raise RuntimeError("seeded: graph unavailable")
+
+        monkeypatch.setattr(_cc, "GraphIndex", _boom)
         r = rv.check_chain_backing_targets_resolve()
         assert r.passed is False and r.measured is False
 
-    def test_an_empty_corpus_fails_rather_than_passing_vacuously(self, tmp_path, monkeypatch):
-        """The seam guard (§2.5): a scan that matches nothing must not report health."""
-        monkeypatch.setattr(_H, "PAPERS_DIR", tmp_path)
+    def test_an_empty_corpus_fails_rather_than_passing_vacuously(self, monkeypatch):
+        """The seam guard (§2.5): a scan that matches nothing must not report health.
+
+        Seeded at `_iter_links`, which is the check's population source now that resolution
+        is delegated — patching a path anchor would no longer reach it."""
+        import chain_canonicalize as _cc
+
+        monkeypatch.setattr(_cc, "_iter_links", lambda: iter(()))
         r = rv.check_chain_backing_targets_resolve()
         assert r.passed is False, "zero links reached is a resolver/path defect, not a clean corpus"
+
+    def test_this_check_owns_no_resolver(self):
+        """The reconciliation guard. An earlier draft carried its own normalizer and membership
+        test beside `chain_canonicalize`'s — a second resolver for one population, disagreeing
+        with the real one (156 vs 121). Assert the duplication cannot return."""
+        import ast
+        src = (SK_ROOT / "scripts" / "validation" / "checks" / "reviews.py").read_text()
+        tree = ast.parse(src)
+        local = [n.name for n in ast.walk(tree)
+                 if isinstance(n, ast.FunctionDef)
+                 and ("resolve" in n.name or "normalize" in n.name)
+                 and n.name != "check_chain_backing_targets_resolve"]
+        assert local == [], (
+            f"reviews.py defines its own resolution helpers {local} — resolution belongs to "
+            f"chain_canonicalize.canonicalize_link, and a second resolver will disagree with it")
+        assert "canonicalize_link" in src, "the check must call the shared resolver"

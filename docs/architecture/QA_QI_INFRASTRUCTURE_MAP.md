@@ -294,16 +294,23 @@ bundles with no chain-of-backing or bundles for which Stage 10 never ran; those 
 by inspecting which directories carry a `claims_review.json` at all.
 
 **Target existence is now gated; the rest of the report still is not.**
-`validate.py --check chain_backing_targets_resolve` fails when a chain link of kind
-theorem/axiom/lemma names a target that resolves against no population — project declaration,
-module, Lean core axiom, or external root — after normalizing the hand-written notation
-variants. It is a **ratchet at the live measured backlog**, so the standing population is
-reported by paper every run and can only shrink.
+`validate.py --check chain_backing_targets_resolve` calls
+`chain_canonicalize.canonicalize_link` over `_iter_links` and fails when the unresolvable count
+exceeds its ratchet, so the standing population is reported by paper every run and can only
+shrink.
 
-⚠️ **The resolver is the whole check, and a naive one manufactures findings.** Membership in
-declaration names alone reports more than three times the true figure: most of the difference
-is legitimate module targets, short names, kernel axioms, and `module:X` / `X (module)`
-notation. Resolve against every population a target may name, and normalize first.
+⚠️ **The check owns no resolver, deliberately.** `canonicalize_link` is the project's single
+resolver for chain links; a check carrying its own would be a second resolver beside a working
+one, and it would disagree — an earlier draft did exactly that and reported a third more
+unresolvable links than the real resolver, because it could not resolve module targets, short
+names or constant aliases. `tests/test_d5_reviews.py` asserts by AST that no resolution helper
+is defined here. **If resolution is wrong, fix `chain_canonicalize`; both consumers improve.**
+
+⚠️ **The ratchet is a do-not-grow guard, not a defect count.** `canonicalize_link` skips
+ambiguous short names — `zero` resolves to 12 candidates, `A` to 9, `F` to 8 — and counts them
+`theorem-absent`, so some fraction of the population is a name-resolution artifact rather than a
+missing theorem. Shrinking the count means either fixing a citation or disambiguating a name;
+both are improvements.
 
 The rest of `--report`'s output — resolution classes, suggested retargets — still gates on
 nothing. The instrument produces the right answer and is connected to nothing that can stop a

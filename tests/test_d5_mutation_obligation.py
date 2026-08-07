@@ -95,7 +95,7 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
         "test_d5_reviews.py",
         "Production-seeded in the REAL papers/D3/claims_review.json: one chain link naming "
         "SKEFTHawking.ThisDeclarationDoesNotExist.seeded_defect -> rc=1 at 157 vs a ceiling "
-        "of 156, naming the worst offenders; restored from saved bytes -> PASS. Also carries "
+        "of 121, naming the worst offenders; restored from saved bytes -> PASS. Also carries "
         "a zero-headroom test asserting the ceiling against the LIVE measured count (not its "
         "own definition) and a seam test that an empty corpus FAILS rather than passing "
         "vacuously",

@@ -613,125 +613,95 @@ def check_accepted_findings_carry_rationale() -> CheckResult:
     return CheckResult(passed=not bad, details=details)
 
 
-# ── Chain-of-backing resolvability (B4) ───────────────────────────────────────────────
+# ── Chain-of-backing resolvability ────────────────────────────────────────────────────
 #
-# A `claims_review.json` sentence record carries a chain of backing links — the audit trail
-# tying a manuscript sentence to the substrate that supports it. A link of kind
-# theorem/axiom/lemma names a Lean target. Nothing verified that the target EXISTS until this
-# check: `chain_canonicalize.py --report` could surface it, but no gate consumed the report,
-# so a sentence could cite `gapped_interface_axiom` (discharged 2026-05-19) or
-# `gap_solution_bounded` (a commented-out block, never a declaration) and read as backed.
+# A `claims_review.json` sentence carries a chain of backing links tying a manuscript sentence
+# to the substrate. A link of kind theorem/axiom/lemma names a Lean target, and nothing GATED on
+# those targets existing — `chain_canonicalize.py --report` measured them and no check consumed
+# the report.
 #
-# ⚠️ THE RESOLVER IS THE WHOLE CHECK, and a naive one manufactures findings rather than
-# finding them. Measured on the live corpus, membership-in-declaration-names alone reports
-# 515 unresolved links; the true figure is 156. The difference is entirely legitimate targets
-# the naive test cannot see:
-#   * MODULE targets — `SKEFTHawking.IsingBraiding` is a module, not a declaration (247 links)
-#   * SHORT names — `gap_solution_monotone` for `SKEFTHawking.TetradGapEquation....` (785)
-#   * Lean CORE axioms — `propext`, `Classical.choice`, `Quot.sound`, never project decls
-#   * NOTATION variants — `module:X`, `X (module)`, `X (module, 20 decls)` (89 more, once
-#     normalized) — reviewers wrote these by hand across three years of review rounds.
-# Resolve against every population a target may legitimately name, and normalize first.
-_CORE_AXIOMS = frozenset({"propext", "Classical.choice", "Quot.sound",
-                          "Lean.trustCompiler", "Lean.ofReduceBool"})
-# Roots owned by Mathlib/Lean/PhysLib: real names this repo does not index.
-_EXTERNAL_ROOTS = frozenset({
-    "Mathlib", "Nat", "Int", "Real", "Complex", "Finset", "Matrix", "List", "Set",
-    "Function", "Polynomial", "MeasureTheory", "Filter", "Topology", "Metric", "PhysLib"})
-_CHAIN_KEYS = ("chain_proposed", "chain_verified", "chain")
+# ⚠️ THIS CHECK OWNS NO RESOLVER. `chain_canonicalize.canonicalize_link` is the project's single
+# resolver for chain links; this check builds its `GraphIndex`, iterates its `_iter_links`, and
+# counts what it returns. An earlier draft of this check carried its own normalizer and
+# membership test — a second resolver beside a working one, which is the
+# hand-maintained-list-parallel-to-a-registry failure the suite exists to catch. It also
+# disagreed: 156 unresolvable against the real resolver's 121, because the local version could
+# not resolve module refs, short names or constant aliases. **Do not reintroduce a local
+# resolver. If resolution is wrong, fix `chain_canonicalize` and both consumers improve.**
+#
+# ⚠️ THE CEILING IS A KNOWN UPPER BOUND. `canonicalize_link` skips ambiguous short names
+# (`zero` → 12 candidates, `A` → 9, `F` → 8) and counts them `theorem-absent`, so some fraction
+# of the population is a name-resolution artifact rather than a missing theorem. The 2026-08-01
+# audit records this caveat against the same figure. The ratchet is therefore a
+# **do-not-grow** guard, not a defect count: shrinking it means either fixing a citation or
+# disambiguating a name, and both are improvements.
+
+#: Zero-headroom ratchet: unresolvable theorem/axiom/lemma chain links, measured 2026-08-07
+#: with `canonicalize_link`. Matches `chain_canonicalize.py --report`'s independent figure.
+#: May only be LOWERED.
+UNRESOLVED_CHAIN_LINK_CEILING = 121
+
 _LEAN_LINK_KINDS = frozenset({"theorem", "axiom", "lemma"})
-
-# ZERO headroom: the live measured count of unresolved links (2026-08-07). A ratchet above
-# the population cannot fire. This may only ever be LOWERED — see the module docstring rule.
-UNRESOLVED_CHAIN_LINK_CEILING = 156
-
-
-def _normalize_chain_target(raw: str) -> str:
-    """Strip the hand-written notation variants that accumulated across review rounds."""
-    t = (raw or "").strip()
-    t = re.sub(r"^(module|theorem|axiom|lemma|decl)\s*:\s*", "", t)
-    t = re.sub(r"\s*\((module|axiom)[^)]*\)$", "", t)
-    return t.strip()
-
-
-def _chain_target_resolves(target: str, names: set, modules: set, short: set) -> bool:
-    t = _normalize_chain_target(target)
-    if not t:
-        return False
-    if t in names or t in _CORE_AXIOMS or t in modules:
-        return True
-    if t.rsplit(".", 1)[-1] in short:
-        return True
-    if ("SKEFTHawking." + t) in modules or t in {m.rsplit(".", 1)[-1] for m in modules}:
-        return True
-    return t.split(".", 1)[0] in _EXTERNAL_ROOTS
 
 
 @register_check("chain_backing_targets_resolve",
                 "Every Lean target named in a claims-review chain of backing exists")
 def check_chain_backing_targets_resolve() -> CheckResult:
-    """Catch a sentence whose audit trail points at a Lean name that is not there.
+    """Gate the resolver that `chain_canonicalize --report` already runs but never blocks on.
 
-    Fails when the unresolved-link count exceeds the ratchet, i.e. when a review round ADDS
-    a dangling reference. The standing backlog is reported every run, named by paper, so it
-    is visible rather than merely bounded.
+    Fails when the unresolvable count exceeds the ratchet — i.e. when a review round ADDS a
+    dangling reference. The standing population is reported by paper every run.
     """
-    if not _H.lean_deps_present():
+    try:
+        import chain_canonicalize as _cc
+    except ImportError as exc:
         return CheckResult(passed=False, measured=False, details=[Detail(
-            "lean_deps", False,
-            "SKIPPED — lean_deps.json absent, so no target could be resolved; the chain "
-            "backing is UNVERIFIED, not passing")])
+            "resolver", False,
+            f"SKIPPED — chain_canonicalize unimportable ({exc}); the chain backing is "
+            f"UNVERIFIED, not passing")])
 
-    deps = _H.load_lean_deps()
-    names = {d["name"] for d in deps if d.get("name")}
-    modules = {d["module"] for d in deps if d.get("module")}
-    short = {n.rsplit(".", 1)[-1] for n in names}
+    try:
+        idx = _cc.GraphIndex()
+    except Exception as exc:  # graph build is the check's only heavy dependency
+        return CheckResult(passed=False, measured=False, details=[Detail(
+            "graph", False,
+            f"SKIPPED — could not build the graph index ({exc}); UNVERIFIED, not passing")])
 
     total = 0
-    unresolved: dict[str, int] = {}
+    unresolvable: dict[str, int] = {}
     by_paper: dict[str, int] = {}
-    for path in sorted(_H.PAPERS_DIR.rglob("claims_review.json")):
-        try:
-            doc = json.loads(path.read_text())
-        except (json.JSONDecodeError, OSError):
+    for paper, _sid, kind, target in _cc._iter_links():
+        if kind not in _LEAN_LINK_KINDS:
             continue
-        for sent in doc.get("sentences", []) or []:
-            for key in _CHAIN_KEYS:
-                for link in ((sent.get(key) or {}).get("links") or []):
-                    if link.get("kind") not in _LEAN_LINK_KINDS:
-                        continue
-                    total += 1
-                    tgt = str(link.get("target", ""))
-                    if not _chain_target_resolves(tgt, names, modules, short):
-                        norm = _normalize_chain_target(tgt) or "<empty>"
-                        unresolved[norm] = unresolved.get(norm, 0) + 1
-                        by_paper[path.parent.name] = by_paper.get(path.parent.name, 0) + 1
+        total += 1
+        if _cc.canonicalize_link(kind, target, idx).status == _cc.UNRESOLVABLE:
+            unresolvable[target] = unresolvable.get(target, 0) + 1
+            by_paper[paper] = by_paper.get(paper, 0) + 1
 
-    details = []
-    # Guard the seam (§2.5): a scan that matched nothing passes vacuously.
+    # Guard the seam: a scan that matched nothing passes vacuously.
     if total == 0:
         return CheckResult(passed=False, details=[Detail(
             "population", False,
             "no theorem/axiom/lemma chain links found across papers/**/claims_review.json — "
-            "the scan reached nothing, which is a resolver or path defect, not a clean corpus")])
-    details.append(Detail("population", True,
-                          f"{total} Lean chain-of-backing link(s) across the corpus"))
+            "the scan reached nothing, which is a path or iterator defect, not a clean corpus")])
 
-    n_bad = sum(unresolved.values())
-    worst = sorted(by_paper.items(), key=lambda kv: -kv[1])[:8]
+    details = [Detail("population", True,
+                      f"{total} Lean chain-of-backing link(s), resolved by "
+                      f"chain_canonicalize.canonicalize_link")]
+    n_bad = sum(unresolvable.values())
     within = n_bad <= UNRESOLVED_CHAIN_LINK_CEILING
+    worst = sorted(by_paper.items(), key=lambda kv: -kv[1])[:8]
     details.append(Detail(
-        "unresolved", within,
-        f"{n_bad} link(s) name a target that does not resolve, across {len(unresolved)} "
-        f"distinct target(s) in {len(by_paper)} paper(s) "
-        f"(ceiling {UNRESOLVED_CHAIN_LINK_CEILING}); worst: "
+        "unresolvable", within,
+        f"{n_bad} link(s) unresolvable, across {len(unresolvable)} distinct target(s) in "
+        f"{len(by_paper)} paper(s) (ceiling {UNRESOLVED_CHAIN_LINK_CEILING}); worst: "
         + ", ".join(f"{p}={c}" for p, c in worst)))
     if not within:
-        for tgt, cnt in sorted(unresolved.items(), key=lambda kv: -kv[1])[:20]:
-            details.append(Detail("target", False, f"{cnt}x unresolved: {tgt}"))
+        for tgt, cnt in sorted(unresolvable.items(), key=lambda kv: -kv[1])[:20]:
+            details.append(Detail("target", False, f"{cnt}x unresolvable: {tgt}"))
     elif n_bad < UNRESOLVED_CHAIN_LINK_CEILING:
         details.append(Detail(
             "ratchet", True,
-            f"backlog fell to {n_bad} — lower UNRESOLVED_CHAIN_LINK_CEILING to match, "
+            f"population fell to {n_bad} — lower UNRESOLVED_CHAIN_LINK_CEILING to match, "
             f"or the ratchet regains headroom and stops being able to fire"))
     return CheckResult(passed=within, details=details)

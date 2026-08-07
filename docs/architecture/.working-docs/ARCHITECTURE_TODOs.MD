@@ -230,14 +230,17 @@ papers every run.
    an honest negative claim.
 3. **`gap_solution_bounded` is not a false theorem — it is not a declaration.** It sits inside
    a `/- … -/` comment block in `TetradGapEquation.lean`.
-4. **The real defect is ~8× larger than this item described:** **156** unresolved
-   theorem/axiom/lemma chain links, **114** distinct targets, **21** papers/bundles. A naive
-   resolver reports 515; the difference is module targets, short names, Lean core axioms and
-   hand-written notation variants, all legitimate.
+4. **The real defect is larger than this item described, and the figure is now reconciled:**
+   **121** unresolvable theorem/axiom/lemma chain links, **60** distinct targets, **25** papers —
+   measured by `chain_canonicalize.canonicalize_link`, matching `--report`'s independent count.
+   ⚠️ An earlier pass reported 156 from a resolver written locally in the check; that resolver
+   was deleted and the check now calls the shared one. **Never quote 156.**
 
-**Remaining work (separate from this item):** the 156-link backlog is data remediation across
-21 papers, not an infrastructure fix. It is bounded and visible now; clearing it means
-retargeting or `missing_target`-labelling each link, and lowering the ceiling as it falls.
+**Remaining work (separate from this item):** the 121-link backlog is data remediation across
+25 papers, not an infrastructure fix. ⚠️ It is an **upper bound**: `canonicalize_link` counts
+ambiguous short names (`zero` → 12 candidates) as `theorem-absent`, so part of the population is
+a naming artifact. Clearing it means retargeting a citation or disambiguating a name, and
+lowering the ceiling as it falls.
 
 **Superseded original text:**
 
