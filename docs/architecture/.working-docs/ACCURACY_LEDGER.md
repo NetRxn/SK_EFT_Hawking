@@ -35,14 +35,14 @@ otherwise.**
 
 | document | atom rows | load-bearing sentences + table rows | coverage |
 |---|---:|---:|---:|
-| `README.md` | 15 | 18 | **83%** |
+| `README.md` | 18 | 18 | **100%** ✅ |
 | `QA_QI_INFRASTRUCTURE_MAP.md` | 77 | 86 | **90%** |
-| `VALIDATION_GATE_TOPOLOGY.md` | 54 | 69 | **78%** |
+| `VALIDATION_GATE_TOPOLOGY.md` | 61 | 69 | **88%** |
 | `CHECK_AUTHORING_GUIDE.md` | 40 | 54 | **74%** |
 | `END_TO_END_MAP.md` | 67 | 80 | **84%** |
 | `VALIDATION_ARCHITECTURE.md` | 54 | 54 | **100%** ✅ |
 | `SURFACE_INVENTORY.md` | 6 | — | generated (see below) |
-| **total** | **308** | **361** | **≈85%** |
+| **total** | **320** | **361** | **≈89%** |
 
 `SURFACE_INVENTORY.md` is emitted wholesale by `scripts/architecture_inventory.py`. Its 155
 load-bearing lines are derived data, decided by one check — regenerate and diff, which
@@ -92,12 +92,12 @@ converge — which is why the remaining work below is stated as a queue, not a c
 
 ### Remaining work
 
-**53 load-bearing units carry no row:** `VALIDATION_GATE_TOPOLOGY.md` (15),
-`CHECK_AUTHORING_GUIDE.md` (14), `END_TO_END_MAP.md` (13),
-`QA_QI_INFRASTRUCTURE_MAP.md` (9), `README.md` (3).
+**41 load-bearing units carry no row:** `CHECK_AUTHORING_GUIDE.md` (14),
+`END_TO_END_MAP.md` (13), `QA_QI_INFRASTRUCTURE_MAP.md` (9),
+`VALIDATION_GATE_TOPOLOGY.md` (8).
 
-✅ **`VALIDATION_ARCHITECTURE.md` and `SURFACE_INVENTORY.md` are fully enumerated** — every
-load-bearing unit has a row. They are the first two to reach it. Verify at the granularity above:
+✅ **Fully enumerated: `SURFACE_INVENTORY.md`, `VALIDATION_ARCHITECTURE.md`, `README.md`** —
+three of seven. Every load-bearing unit in each has a row. Verify at the granularity above:
 one proposition per row, a decider (never a proxy), completeness for set claims, and the actual
 subject for any number-cited invariant or ADR.
 
@@ -113,11 +113,11 @@ Status is per-ATOM, never per-document. A document is not certified; its enumera
 
 | document | V1–V7 | V8 (prose added 2026-08-07) | atoms | uncovered |
 |---|---|---|---:|---:|
-| `README.md` | 10 atoms | 5 atoms, 0 corrected | 15 | 3 |
+| `README.md` | 10 atoms | V8: 5 · V17: 5, 1 corrected | 18 | **0** ✅ |
 | `SURFACE_INVENTORY.md` | 6 atoms, 1 corrected (B7) | regenerated + diffed | 6 | 0 (generated) |
 | `VALIDATION_ARCHITECTURE.md` | 22 atoms, 1 corrected | V10: 17, 1 corr · V16: 15, 0 corr | 54 | **0** ✅ |
 | `CHECK_AUTHORING_GUIDE.md` | 24 atoms, 1 corrected, 4 reframed | V8: 4 · V12: 12, 2 corrected | 40 | 14 |
-| `VALIDATION_GATE_TOPOLOGY.md` | 38 atoms, 1 corrected | V8: 5 · V13: 11, 1 corrected | 54 | 15 |
+| `VALIDATION_GATE_TOPOLOGY.md` | 38 atoms, 1 corrected | V8: 5 · V13: 11 · V17: 7 | 61 | 8 |
 | `QA_QI_INFRASTRUCTURE_MAP.md` | 48 atoms, 2 corrected | V8: 21, 5 corr · V15: 8, 1 corr | 77 | 9 |
 | `END_TO_END_MAP.md` | 34 atoms, 0 corrected | V9: 8 · V11: 16 · V14: 9 — 3 corrected | 67 | 13 |
 
@@ -858,3 +858,34 @@ the memo decorator rewraps a check's function. The tree block correctly lists `_
 
 **Coverage after V16:** `VALIDATION_ARCHITECTURE.md` 39 → **54 atoms** of 54 — **fully
 enumerated**. Every load-bearing unit in this document now has a row.
+
+---
+
+## V17 — `README.md` final 3 + `VALIDATION_GATE_TOPOLOGY.md` §3 — 12 atoms, 1 corrected
+
+### `README.md` — completing the enumeration
+
+| # | atom | decided by | result |
+|---|---|---|---|
+| X1 | ~~"…exactly how the claims corrected on 2026-08-07 survived"~~ | requirements 7 + 8 | ❌ **audit-trail content in a production document**, and a date in a file whose own first rule forbids dated snapshots. Reframed to the forward failure mode: *a claim is true when written, and nothing re-reads it afterwards* |
+| X2 | Neither map restates the other's tables | markdown table rows in each | `END_TO_END_MAP` **0** table rows, `QA_QI` **30**, **0** rows shared ✓ |
+| X3 | The "not tidiness" paragraph and the rule-of-thumb | — | **NOT-AN-ASSERTION** — a rationale and a heuristic |
+| X4 | Rule 2, *"design is written here first"* | — | **NOT-AN-ASSERTION** — a policy this repo adopts, not a claim about the tree |
+| X5 | *"They overlap by design at exactly one point"* | — | **NOT-AN-ASSERTION** — a design characterisation; "one point" names no countable artifact |
+
+✅ **`README.md` is now fully enumerated** — 18 of 18 load-bearing units.
+
+### `VALIDATION_GATE_TOPOLOGY.md` §3 — the flag table, row by row
+
+| # | atom | decided by | result |
+|---|---|---|---|
+| X6 | `--strict` promotes submission advisories and implies `--no-memo` | `validate.py`'s strict path | sets `NO_MEMO` ✓ (V10 A9) |
+| X7 | `--scope substrate` prints paper failures but does not set the exit code | `validate.py:838-844` | `if args.scope == "substrate" and not all_passed:` → prints, exit unchanged ✓ |
+| X8 | `--force-latex` bypasses the per-draft cache only | `papers_prose.py:22-25` | the slow gate is gone; the flag bypasses the content-hash cache ✓ (V10 A16) |
+| X9 | `--no-memo` re-measures the memoized checks | `_memo` bypass path | ✓ (V3 atom 21, V10 A10–A15) |
+| X10 | **SET:** `--ci` skips exactly *the mtime regenerators + `notebook_exec`* | `_config.CI_SKIP` | `{counts_fresh, tables_fresh, claim_clusters_fresh, notebook_exec}` — the three mtime regenerators plus that one ✓ exact |
+| X11 | `--ci` never archives | `validate.py:792` | `if not args.no_archive and … and not args.ci:` ✓ |
+| X12 | `--force-notebooks` bypasses the notebook skip-cache | `_config.FORCE_NOTEBOOK_REEXEC` + its consumer | ✓ (V10 A7–A8) |
+
+**Coverage after V17:** `README.md` 15 → **18 of 18** ✅ · `VALIDATION_GATE_TOPOLOGY.md` 54 →
+**61 atoms** of 69 (78% → **88%**).

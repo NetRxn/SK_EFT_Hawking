@@ -49,8 +49,8 @@ additionally pinned by executable assertions in
 that its claim's sentence is still present in the document, verbatim, and (b) the code fact
 that makes it true. Reword the claim and the test fails, forcing re-verification; change the
 code and the test fails, forcing the document to follow. A one-way assertion rots the moment
-somebody rephrases the sentence — which is exactly how the claims corrected on 2026-08-07
-survived: each was true when written, and nothing re-read it afterwards.
+somebody rephrases the sentence, which is the failure mode these documents are most prone to:
+a claim is true when written, and nothing re-reads it afterwards.
 
 Coverage there is deliberately partial — the claims a reader would *act on*, not every
 sentence. Adding one is cheap; choosing which is the work.
