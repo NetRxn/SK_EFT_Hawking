@@ -37,12 +37,12 @@ otherwise.**
 |---|---:|---:|---:|
 | `README.md` | 15 | 18 | **83%** |
 | `QA_QI_INFRASTRUCTURE_MAP.md` | 69 | 86 | **80%** |
-| `VALIDATION_GATE_TOPOLOGY.md` | 43 | 69 | **62%** |
+| `VALIDATION_GATE_TOPOLOGY.md` | 54 | 69 | **78%** |
 | `CHECK_AUTHORING_GUIDE.md` | 40 | 54 | **74%** |
 | `END_TO_END_MAP.md` | 58 | 80 | **73%** |
 | `VALIDATION_ARCHITECTURE.md` | 39 | 54 | **72%** |
 | `SURFACE_INVENTORY.md` | 6 | — | generated (see below) |
-| **total** | **270** | **361** | **≈75%** |
+| **total** | **281** | **361** | **≈78%** |
 
 `SURFACE_INVENTORY.md` is emitted wholesale by `scripts/architecture_inventory.py`. Its 155
 load-bearing lines are derived data, decided by one check — regenerate and diff, which
@@ -92,8 +92,9 @@ converge — which is why the remaining work below is stated as a queue, not a c
 
 ### Remaining work
 
-**91 load-bearing units carry no row.** Concentrated in `VALIDATION_GATE_TOPOLOGY.md` (26),
-`END_TO_END_MAP.md` (22), `QA_QI_INFRASTRUCTURE_MAP.md` (17) and `CHECK_AUTHORING_GUIDE.md` (14). Verify at the granularity above:
+**80 load-bearing units carry no row:** `END_TO_END_MAP.md` (22), `QA_QI_INFRASTRUCTURE_MAP.md`
+(17), `VALIDATION_ARCHITECTURE.md` (15), `VALIDATION_GATE_TOPOLOGY.md` (15),
+`CHECK_AUTHORING_GUIDE.md` (14), `README.md` (3). Verify at the granularity above:
 one proposition per row, a decider (never a proxy), completeness for set claims, and the actual
 subject for any number-cited invariant or ADR.
 
@@ -113,7 +114,7 @@ Status is per-ATOM, never per-document. A document is not certified; its enumera
 | `SURFACE_INVENTORY.md` | 6 atoms, 1 corrected (B7) | regenerated + diffed | 6 | 0 (generated) |
 | `VALIDATION_ARCHITECTURE.md` | 22 atoms, 1 corrected | V10: 17 atoms, 1 corrected | 39 | 15 |
 | `CHECK_AUTHORING_GUIDE.md` | 24 atoms, 1 corrected, 4 reframed | V8: 4 · V12: 12, 2 corrected | 40 | 14 |
-| `VALIDATION_GATE_TOPOLOGY.md` | 38 atoms, 1 corrected | 5 atoms, 0 corrected | 43 | 26 |
+| `VALIDATION_GATE_TOPOLOGY.md` | 38 atoms, 1 corrected | V8: 5 · V13: 11, 1 corrected | 54 | 15 |
 | `QA_QI_INFRASTRUCTURE_MAP.md` | 48 atoms, 2 corrected | 21 atoms, 5 corrected | 69 | 17 |
 | `END_TO_END_MAP.md` | 34 atoms, 0 corrected | V9: 8 · V11: 16, 1 corrected | 58 | 22 |
 
@@ -732,3 +733,34 @@ of error in these documents: not a stale fact, but advice that is wrong.
 | K12 | §6's checklist items | — | **NOT-AN-ASSERTION** — nine imperatives ("a leg that cannot fire on any input"), a review aid with no truth value |
 
 **Coverage after V12:** `CHECK_AUTHORING_GUIDE.md` 28 → **40 atoms** of 54 (52% → **74%**).
+
+---
+
+## V13 — `VALIDATION_GATE_TOPOLOGY.md` remainder — 11 atoms, 1 corrected
+
+### §4 — what each gate actually computes
+
+| # | atom | decided by | result |
+|---|---|---|---|
+| T1 | **SET:** §4's gate table population equals `readiness_gates.GATES` | extracted names vs the live roster | **11 = 11, sets identical** ✓ complete |
+| T2 | **SET:** every priority in the table matches the roster | per-row comparison | **0 mismatches** ✓ |
+| T3 | ~~`CitationIntegrity` is registry-coverage-only **contra its doc**~~ | `READINESS_GATES.md` as it now stands | ❌ **FALSE** — that doc now states *"This gate is registry COVERAGE, not content verification"* and routes each content claim to the check that verifies it. The gate's computation is unchanged; the *contra* is gone. Statement replaced |
+| T4 | `AssumptionDisclosure` matches a **lowercased substring** of the tex | `_eval_assumption_disclosure:486-494` | `idx.paper_tex(...).lower()`, key and human name both `.lower()` ✓ heuristic as described |
+| T5 | `ProductionRunHealth`'s `PRODUCES` leg is dead and the **prose regex** is what fires | `_eval_production_run_health:590` vs `:599` | queries `PRODUCES` (unemitted) and separately `re.search(r'\b(Monte\s+Carlo\s+evidence\|MC\s+evidence)\b', …)` ✓ |
+| T6 | `FixPropagation` **self-promotes** to P1 when blocking | `_eval_fix_propagation:795` | `r.priority = 1` ✓ |
+
+### §6 — field ownership
+
+⚠️ **Every row here was checked by READING, after a grep suggested three were wrong.** A
+reference is not a write: `bundle_readiness.py` mentions `freshness_stale` three times and
+writes it zero times. Counting occurrences would have produced three false corrections.
+
+| # | atom | decided by | result |
+|---|---|---|---|
+| T7 | `bundle_readiness.write_metadata_counts` exists and owns the counts fields | `bundle_readiness.py:688` | `def write_metadata_counts(...)` ✓ |
+| T8 | `freshness_stale` is **not** written by `bundle_readiness.py` | its three references, read | all three are **comments**, one stating *"`freshness_stale` is deliberately NOT written here"* ✓ |
+| T9 | `freshness_stale` is owned by `check_bundle_source_freshness.py` | that script | writes it ✓ |
+| T10 | `apex_theorems` is written by a human, never a script | the only script naming it | `architecture_inventory.py:264` **reads** it (`.get("apex_theorems")`) for its census table; no script writes it to `bundle_metadata.json` ✓ |
+| T11 | The §6 thesis — *"a check telling you to run a script that cannot fix the field"* | — | **NOT-AN-ASSERTION** — a statement of the table's purpose |
+
+**Coverage after V13:** `VALIDATION_GATE_TOPOLOGY.md` 43 → **54 atoms** of 69 (62% → **78%**).

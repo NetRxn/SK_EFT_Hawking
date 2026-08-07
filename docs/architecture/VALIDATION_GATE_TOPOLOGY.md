@@ -79,7 +79,7 @@ What matters here is the gap between a gate's *name* and its *computation*.
 
 | gate | P | can block? | what it actually computes |
 |---|---|---|---|
-| `CitationIntegrity` | 1 | ✅ | `\bibitem{}` keys ⊆ `PrimarySource` nodes. **Registry coverage only** — no DOI/title/author match, contra its doc |
+| `CitationIntegrity` | 1 | ✅ | `\bibitem{}` keys ⊆ `PrimarySource` nodes. **Registry coverage only** — no DOI/title/author match; `READINESS_GATES.md` says the same and routes each content claim to the check that does verify it |
 | `CrossPaperConsistency` | 1 | ✅ | `CONTRADICTS` edges (**no emitter**) + cross-paper `REPORTS` value disagreement |
 | `ParameterProvenance` | 1 | ✅ | every `DEPENDS_ON → param:*` has `human_verified_date` |
 | `ComputationCorrectness` | 1 | ✅ | grounded formulas have a non-`{bounds,unknown}` `VERIFIES` edge |
