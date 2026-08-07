@@ -279,7 +279,7 @@ document, so a reader is being handed five wrong facts before any work starts.
 - **Fix shape:** the same one this directory adopted — a rule should name the registry, not
   restate its contents. Tracked in ADR-010 §D7 as part of the roster change-set.
 
-### B6. "Stage 10" names two different things — OPEN
+### B6. "Stage 10" names two different things — ✅ CLOSED
 
 - **`docs/WAVE_EXECUTION_PIPELINE.md:388`** — `## Stage 10: PAPER DRAFT`. Claims review is a
   **sub-step** described at `:407` as *"runs after Stage 10, before Stage 11"* — it is not a
@@ -292,8 +292,17 @@ document, so a reader is being handed five wrong facts before any work starts.
   `stage10_status: skeleton` will believe it reports draft-writing progress. It reports claims
   review. The architecture documents now state which sense they use; the two source documents
   still disagree with each other.
-- **Fix shape:** rename one of them, or have the law name claims review as its own stage.
-  A decision, not a doc edit.
+- ✅ **CLOSED — neither rename was needed; the premise was wrong.** Re-reading the law showed
+  claims review is not a rival Stage 10 but a **sub-gate INSIDE** Stage 10: its sub-section at
+  `:407` sits within the Stage-10 body, and Stage 10's own exit gate requires *"paper claims
+  review has zero FAIL"*. So "Stage 10" in `BUNDLE_LIFT_PROCEDURE` and `gate_precheck s10` is
+  the same stage narrowed to its exit condition — there is no second Stage 10 and nothing to
+  renumber.
+- Both documents now say so explicitly: a scope note under the law's Stage 10 heading, and a
+  corrected cross-reference in `BUNDLE_LIFT_PROCEDURE` (whose `Stage 10 ↔ §9` line asserted an
+  equivalence too narrow — §9 is the gate, §§3–7 are the drafting half).
+- **Superseded fix shape:** rename one of them, or have the law name claims review as its own
+  stage. Not required; the numbering was already consistent.
 
 ### B7. `SURFACE_INVENTORY.md`'s header overstates how its own tables are derived — ✅ CLOSED
 
