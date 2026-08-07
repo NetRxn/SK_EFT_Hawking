@@ -119,7 +119,9 @@ that is the *mechanism*. `test_regenerators_precede_their_consumers` proves the 
 the derived assertion on arrival rather than silently reading stale counts.
 
 ⚠️ **Accepted limit:** a check body that reaches `counts.json` through a helper, without
-naming it, is invisible to the AST scan. Stated in both the test and the production comment.
+naming it, is invisible to the AST scan. The limit is stated in the test that derives the
+population; the production comment beside `_CANONICAL_ORDER` states the ordering intent and
+forbids re-enumerating consumers there.
 
 ## 4. Runtime flags (`_config.py`)
 

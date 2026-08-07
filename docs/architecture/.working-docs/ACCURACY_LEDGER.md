@@ -39,10 +39,10 @@ otherwise.**
 | `QA_QI_INFRASTRUCTURE_MAP.md` | 69 | 86 | **80%** |
 | `VALIDATION_GATE_TOPOLOGY.md` | 43 | 69 | **62%** |
 | `CHECK_AUTHORING_GUIDE.md` | 28 | 54 | **52%** |
-| `END_TO_END_MAP.md` | 34 | 80 | **43%** |
-| `VALIDATION_ARCHITECTURE.md` | 22 | 54 | **41%** |
+| `END_TO_END_MAP.md` | 42 | 80 | **53%** |
+| `VALIDATION_ARCHITECTURE.md` | 39 | 54 | **72%** |
 | `SURFACE_INVENTORY.md` | 6 | — | generated (see below) |
-| **total** | **217** | **361** | **≈60%** |
+| **total** | **242** | **361** | **≈67%** |
 
 `SURFACE_INVENTORY.md` is emitted wholesale by `scripts/architecture_inventory.py`. Its 155
 load-bearing lines are derived data, decided by one check — regenerate and diff, which
@@ -92,8 +92,8 @@ converge — which is why the remaining work below is stated as a queue, not a c
 
 ### Remaining work
 
-**144 load-bearing units carry no row.** Concentrated in `VALIDATION_ARCHITECTURE.md` (32),
-`END_TO_END_MAP.md` (46) and `CHECK_AUTHORING_GUIDE.md` (26). Verify at the granularity above:
+**119 load-bearing units carry no row.** Concentrated in `END_TO_END_MAP.md` (38),
+`CHECK_AUTHORING_GUIDE.md` (26) and `VALIDATION_GATE_TOPOLOGY.md` (26). Verify at the granularity above:
 one proposition per row, a decider (never a proxy), completeness for set claims, and the actual
 subject for any number-cited invariant or ADR.
 
@@ -111,11 +111,11 @@ Status is per-ATOM, never per-document. A document is not certified; its enumera
 |---|---|---|---:|---:|
 | `README.md` | 10 atoms | 5 atoms, 0 corrected | 15 | 3 |
 | `SURFACE_INVENTORY.md` | 6 atoms, 1 corrected (B7) | regenerated + diffed | 6 | 0 (generated) |
-| `VALIDATION_ARCHITECTURE.md` | 22 atoms, 1 corrected | unchanged | 22 | **32** |
+| `VALIDATION_ARCHITECTURE.md` | 22 atoms, 1 corrected | V10: 17 atoms, 1 corrected | 39 | 15 |
 | `CHECK_AUTHORING_GUIDE.md` | 24 atoms, 1 corrected, 4 reframed | 4 atoms, 0 corrected | 28 | **26** |
 | `VALIDATION_GATE_TOPOLOGY.md` | 38 atoms, 1 corrected | 5 atoms, 0 corrected | 43 | 26 |
 | `QA_QI_INFRASTRUCTURE_MAP.md` | 48 atoms, 2 corrected | 21 atoms, 5 corrected | 69 | 17 |
-| `END_TO_END_MAP.md` | 34 atoms, 0 corrected | unchanged | 34 | **46** |
+| `END_TO_END_MAP.md` | 34 atoms, 0 corrected | V9: 8 atoms, 5 now-false | 42 | **38** |
 
 ⚠️ **`END_TO_END_MAP.md` has the largest uncovered surface and the fewest recorded
 corrections.** Zero corrections over 34 atoms is not evidence that the other 46 units are
@@ -597,3 +597,55 @@ one thing no mechanism covers: prose rosters outside `docs/architecture/` have n
 ⚠️ **This is the general hazard, not a §9 quirk.** Any atom in V1–V8 that recorded a defect as
 *present* is invalidated the moment that defect is fixed, and nothing re-opens it. Atoms
 recording a defect are therefore perishable in a way atoms recording a design are not.
+
+---
+
+## V10 — `VALIDATION_ARCHITECTURE.md`, uncovered remainder — 17 atoms, 1 corrected
+
+Closes the 32-unit gap recorded in D4 for this document. Verify-only sweep first; the single
+correction was applied after the sweep, per D4's separation rule.
+
+### §2 — the framework contract
+
+| # | atom | decided by | result |
+|---|---|---|---|
+| A1 | `run_checks` fills a result for **every** spec, including from its `except` handler | `validate.py:272-280` | `for spec in _CHECKS:` … `except Exception` → `results[spec.name] = CheckResult(passed=False, …)` ✓ — this is why the `--ci` floor had to count `measured`, not `len(results)` |
+| A2 | H5's guard requires **`_cfg`** in `co_names`, not just the flag name | `test_validate_flag_propagation.py:241` | `assert "_cfg" in fn.__code__.co_names` ✓ |
+| A3 | H5's stated reason: `co_names` records both `LOAD_GLOBAL` and `LOAD_ATTR` | same file `:230-237` | states it verbatim ✓ |
+| A4 | `test_regenerators_precede_their_consumers` derives the consumer set by AST | `test_validate_registry_contract.py:_counts_consumers` | AST-derived, with a non-empty guard at `:143` ✓ |
+| A5 | `counts_fresh` runs **first** in `_CANONICAL_ORDER` | the live list | index **0** ✓ |
+| A6 | ~~The accepted limit is stated in **both** the test and the production comment~~ | exhaustive grep of `scripts/`, then both texts read | ❌ **FALSE** — stated in the TEST only (`:92-94`). The production comment at `validate.py:148-160` states the ordering intent and *"Do not re-enumerate consumers here"*, not the limit. The test's own sentence says the production comment states **the ordering intent**; the doc read that as the limit. Statement replaced |
+
+⚠️ **A6 is requirement 3's failure mode exactly:** the limit is real and the test does state it,
+so the true half carried an unchecked clause. Verifying "is the limit real?" would have passed
+it. The atom is *where each statement lives*, and only reading both texts decides it.
+
+### §4 — runtime flags
+
+| # | atom | decided by | result |
+|---|---|---|---|
+| A7 | **SET:** the table's five flags are exactly the runtime flags | AST of `_config.py` (`Assign` **and** `AnnAssign`) vs the table | all 5 declared; the only other uppercase names are `CI_MIN_CHECKS_RUN` and `CI_SKIP` — a floor constant and a skip list, not flags ✓ complete |
+| A8 | **SET:** each flag's CLI switch exists | `validate.py` argument parser | `--strict`, `--force-latex`, `--force-notebooks`, `--no-memo`, `--ci` all present ✓ |
+| A9 | `--strict` implies `--no-memo` | `validate.py` | sets `NO_MEMO` on the strict path ✓ |
+
+### §5 — the memo's five guards
+
+| # | atom | decided by | result |
+|---|---|---|---|
+| A10 | Guard 1 — the key spans the **whole defining module** plus the body | `_memo.py:150` | `getsource(getmodule(fn))`, widened from `getsource(fn)` 2026-08-05 ✓ |
+| A11 | Guard 2 — `TestCheckKeysSpanTheirInputs` seeds each input **in the production tree** | `test_validation_memo.py:440` | seeds through the real `key_fn` ✓ |
+| A12 | Guard 3 — a non-measurement is never cached | `_memo.py:342` | `if not result.measured:` → no store ✓ |
+| A13 | Guard 3b — it also **evicts** a stale green under the same key | `_memo.py:343-345` | `entries.pop(name, None)` ✓ |
+| A14 | Guard 4 — a hit replays the full detail list | `_memo.py:318-321` | rebuilds every `Detail` from the hit ✓ |
+| A15 | Guard 5 — `conftest.py` disables the memo suite-wide | `tests/conftest.py:26` | `os.environ["SKEFT_VALIDATION_NO_MEMO"] = "1"` ✓ |
+| A16 | `paper_latex_compiles` caches per draft over the full `\input` closure, and its slow gate is deleted | `papers_prose.py:403-404` + `:22-25` | per-draft content hash of the input closure; the slow gate is gone and `--force-latex` now bypasses only the cache ✓ |
+
+### §6
+
+| # | atom | decided by | result |
+|---|---|---|---|
+| A17 | There is no scheduled CI runner | filesystem | `.github/workflows` **does not exist** ✓ |
+
+**Coverage after V10:** `VALIDATION_ARCHITECTURE.md` 22 → **39 atoms** of 54 load-bearing
+units (41% → **72%**). The remaining 15 are §1's tree-block lines and §3's hazard-table cells,
+each already covered in aggregate by V3 atoms 6 and 19–20 but not enumerated individually.
