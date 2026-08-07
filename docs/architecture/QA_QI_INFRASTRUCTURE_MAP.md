@@ -115,10 +115,20 @@ removing an import there — invisible to the cache. Widening the subtree walk d
 this: the gap is one level up, not deeper.
 
 **Concurrency.** `harness_lock.regen_lock` is **skip-and-use-cache, never block-and-wait**:
-a bounded poll, then yield `False`. On skip, `load_lean_deps()` silently returns the stale
-file, and downstream generators write `counts.json` / `counts.tex` / `atlas_view.json` from
-stale input **and report success**. The lock also fails *open* on any internal error. The
-suite's auto-regenerating freshness checks shell out **with no lock at all**.
+a bounded poll, then yield `False`. The lock reports contention honestly; what matters is what
+each caller does with that signal.
+
+- `load_lean_deps()` logs a **WARNING** naming the blast radius — counts, atlas, graph and
+  axiom-closure results for that run reflect the previous extraction — and proceeds on the
+  existing file.
+- `sync.py` records every skipped artifact and prints **`sync INCOMPLETE`**, naming them.
+  Its exit code stays 0, deliberately: another process is doing the work, so failing the
+  caller would be wrong.
+
+On an internal error the lock fails *open* by yielding `True`, i.e. it proceeds with the
+regeneration — the safe direction, and not to be confused with the contention path.
+
+⚠️ The suite's auto-regenerating freshness checks shell out **with no lock at all**.
 
 **Cost.** `build_graph_json()` is called from several checks in one validate run, and each
 call internally re-runs the node extractors **except its own** — plus a full edge pass —

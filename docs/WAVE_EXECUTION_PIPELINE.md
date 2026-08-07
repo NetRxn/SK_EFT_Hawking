@@ -2,7 +2,7 @@
 
 **Authoritative reference for executing any wave of work in the SK-EFT Hawking project.**
 
-Every wave — whether adding new physics, extending formalization, or producing experimental predictions — follows these 12 stages in strict order. Each stage has a gate that must pass before proceeding. Skipping stages or reordering causes rework and allows errors to propagate downstream.
+Every wave — whether adding new physics, extending formalization, or producing experimental predictions — follows Stages 1 through 14 below, in strict order. Each stage has a gate that must pass before proceeding. Skipping stages or reordering causes rework and allows errors to propagate downstream.
 
 ---
 
@@ -188,7 +188,7 @@ All Stage-4 steps use the canonical CLI `scripts/submit_to_aristotle.py` (subcom
 - When re-submitting a previously-failed target without a **materially changed state** (the CLI's manifest dedup refuses an identical closure unless `--force`)
 - When some sorries are still monolithic (50+ terms) — decompose first via Stage 3a scaffolding, THEN submit
 
-**Toolchain note:** Aristotle runs Lean/Mathlib **4.28.0**; we run **4.29.1**. The mismatch is a known, tolerated risk — the verification gauntlet (4d) rejects anything that does not build + kernel-verify on our toolchain, so a mismatch costs a *run*, not substrate integrity. No local 4.28.0 pre-build is required.
+**Toolchain note:** Aristotle runs Lean/Mathlib **4.28.0**; we run the pin in `lean/lean-toolchain` (with Mathlib/PhysLib matched in `lean/lakefile.toml`), which is ahead of it. The mismatch is a known, tolerated risk — the verification gauntlet (4d) rejects anything that does not build + kernel-verify on our toolchain, so a mismatch costs a *run*, not substrate integrity. No local 4.28.0 pre-build is required.
 
 **Pre-requisite:** Read `docs/references/Theorm_Proving_Aristotle_Lean.md` before every Aristotle session.
 
@@ -314,7 +314,7 @@ uv run python -m pytest tests/ -v
 uv run python scripts/validate.py
 ```
 
-**Checks (16 total):**
+**The core cross-layer checks** (`validate.py --list` is the authoritative roster):
 1. `formulas` — Python formulas reference valid Lean theorems
 2. `numerical` — Experimental parameters match reference values
 3. `identities` — Mathematical identities and boundary conditions
@@ -332,7 +332,7 @@ uv run python scripts/validate.py
 15. `parameter_provenance` — All parameters have verified provenance
 16. `graph_integrity` — Knowledge graph integrity: orphans, conflicts, broken chains, axiom classification, PG+AGE sync
 
-(The suite has grown well beyond these 16 — run `validate.py --list` for the full set, including the bundle/citation/freshness checks and the **Substrate Integrity Gates (ADR-004, R1–R5)** below.)
+The suite is substantially larger than this core: `--list` also covers the bundle/citation/freshness checks and the **Substrate Integrity Gates (ADR-004, R1–R5)** below.
 
 **Substrate Integrity Gates (ADR-004 — semantic, not just syntactic, presence):**
 - `placeholder_not_cited` (R5, Invariant #9) — no paper presents a `True := trivial` placeholder as formally verified (matches `lean_name` + `tex_signature`).
@@ -526,7 +526,8 @@ Adding a new paper table:
 | **Code** | `src/core/constants.py` | Phase summary in header |
 | **Root** | `README.md` | Project tree, architecture description |
 | **Root** | `SK_EFT_Hawking_Inventory.md` | Module descriptions, section content |
-| **Root** | `../CLAUDE.md` (workspace root) | Architecture, conventions (project guidance lives in the workspace CLAUDE.md; no separate per-repo CLAUDE.md) |
+| **Root** | `CLAUDE.md` (this repo) | Bootstrap: when-to-read map, Lean loop rules, invariants, conventions |
+| **Root** | `../CLAUDE.md` (workspace root) | Workspace layout, public/private repo boundary, cross-repo rules |
 | **Docs** | `docs/RESEARCH_STATUS_OVERVIEW.md` | Proof Chains, strategic situation, module inventory |
 | **Stakeholder** | `docs/stakeholder/companion_guide.md` | Status table + content synthesis |
 | **Stakeholder** | `docs/stakeholder/Phase<N>_Implications.md` | Content for this phase |
@@ -686,7 +687,7 @@ These must hold at ALL times, not just at wave completion:
 
 13. **Stage 14 QI register is auto-regen + manually-curated, never wiped.** `scripts/qi_register.py` regenerates `docs/QI_REGISTER.md` on each invocation, but (a) only emits a QI item to the **Open Items** section when the QI item's `qi-<gate>` ID is NOT already present in the existing **Closed Items** section, AND (b) the underlying `ReviewFinding` nodes have `meta.status == 'open'` (Wave-6 status filter; per-finding `fixed`/`accepted` overrides are honored via `docs/review_finding_supersessions.json`). The regenerator preserves the manually-curated `## Closed Items` block verbatim across regenerations (block-by-`### qi-*` heading). New QI items surfaced by adversarial review (Stage 13) are added under `## Open Items` automatically by the next regen; closure is achieved by manually editing `docs/QI_REGISTER.md` to move the block under `## Closed Items` with an `evidence_on_close` field, or by ledger-superseding all the underlying findings.
 
-14. **Every paper-shaped output lifts into a `PAPER_STRATEGY.md` bundle.** Every new draft, section addition, or notebook companion identifies its target bundle (one of `F`, `D1`–`D9`, `L1`–`L3`, `I1`–`I3`, `E1`, `E2` — 18 targets as of the 2026-06-10 D9 authorization; roster history: 13 → I3 → D6 → D7 → D8 → D9) at Stage 1 and records it in `docs/PAPER_DRAFT_MAPPING.md` (append-only) at Stage 12. No new stand-alone paper drafts are created without explicit user authorization to add a further bundle target beyond the current roster. The schema additions in `scripts/sentence_state.py` (`bundle_destination`, `bundle_section_hint`, `lift_action`) propagate the bundle assignment to every prose-state sentence; `scripts/bundle_migration.py` provides the migration; `scripts/bundle_clusters.py` projects per-paper bundle assignments onto claim clusters at `papers/cluster_bundle_index.json`. Per-bundle Stage-13 readiness is summarized in `docs/BUNDLE_READINESS_HEATMAP.md`; cross-bundle consistency is enforced by `validate.py --check bundle_consistency`. Phase 6i Wave 7 deliverable.
+14. **Every paper-shaped output lifts into a `PAPER_STRATEGY.md` bundle.** Every new draft, section addition, or notebook companion identifies its target bundle (one of the codes in `validate.BUNDLE_CODES`, which is the roster's single source of truth — `docs/PAPER_STRATEGY.md` carries the per-target charters) at Stage 1 and records it in `docs/PAPER_DRAFT_MAPPING.md` (append-only) at Stage 12. No new stand-alone paper drafts are created without explicit user authorization to add a further bundle target beyond the current roster. The schema additions in `scripts/sentence_state.py` (`bundle_destination`, `bundle_section_hint`, `lift_action`) propagate the bundle assignment to every prose-state sentence; `scripts/bundle_migration.py` provides the migration; `scripts/bundle_clusters.py` projects per-paper bundle assignments onto claim clusters at `papers/cluster_bundle_index.json`. Per-bundle Stage-13 readiness is summarized in `docs/BUNDLE_READINESS_HEATMAP.md`; cross-bundle consistency is enforced by `validate.py --check bundle_consistency`. Phase 6i Wave 7 deliverable.
 
 15. **Every new project-local `axiom` requires explicit user sign-off.** Policy locked-in 2026-05-12 post-Phase-6p strengthening Pass 2. A deep-research return recommending "ship as predicate-substrate AXIOM" is advisory only; no axiom ships without explicit user approval. **Every new axiom must come with**: (a) a discharge plan in the wave roadmap (a future wave that produces a substantive constructive proof), OR (b) a documented argument that no constructive proof is feasible in current Mathlib4 (substrate scout, ~500 LoC infrastructure absent, etc.). The project's posture is **axioms are temporary scaffolding, not permanent commitments**. The pre-Phase-6p axiom count was 1 (`gapped_interface_axiom`, `SPTClassification.lean`); Phase 6p added 2 (`bridge_axiom_FKLW`, `sk_axiom_Dawson_Nielsen`) on DR-only authority; both are post-hoc scheduled for discharge via Phase 6p Waves 2c (Aharonov-Arad ~430 LoC) + 2d (Dawson-Nielsen ~550 LoC). **Quality bar:** standard kernel only on headline theorems; all axioms eventually discharged.
 
@@ -727,7 +728,7 @@ When incorporating results from deep research (LLM-generated analysis in `Lit-Se
 ```bash
 # Full validation (run from SK_EFT_Hawking/ root)
 uv run python -m pytest tests/ -v                    # All tests
-uv run python scripts/validate.py                    # All 16 checks
+uv run python scripts/validate.py                    # the whole suite (--list to enumerate)
 uv run python scripts/review_figures.py              # Generate figures + structural checks
 cd lean && lake build                                 # Lean build
 

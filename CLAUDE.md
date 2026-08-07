@@ -142,7 +142,7 @@ uv sync                                       # install/sync deps
 uv run python -m pytest tests/ -v             # fast tests (~2.5 min; deselects 'slow')
 uv run python -m pytest tests/ -m slow -v     # slow tests (Lean ExtractDeps + graph)
 uv run python -m pytest tests/ -m '' -v       # everything — before PR / submission / wave close
-uv run python scripts/validate.py             # full validation suite (61 checks; --list is authoritative)
+uv run python scripts/validate.py             # full validation suite (--list enumerates it)
 uv run python scripts/validate.py --list      # list checks; --check <name> runs one
 uv run python scripts/review_figures.py       # PNGs + structural figure checks
 uv run python scripts/provenance_dashboard.py # provenance command center (localhost:8050)

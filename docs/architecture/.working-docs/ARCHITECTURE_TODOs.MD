@@ -42,7 +42,7 @@ See **B2**.
 
 ## A. Defects the documents describe, confirmed still live
 
-### A1. `harness_lock` contention silently yields stale derived artifacts — VERIFIED-OPEN
+### A1. `harness_lock` contention silently yields stale derived artifacts — ✅ CLOSED
 
 - **Where:** `scripts/harness_lock.py:103` `regen_lock()`
 - **What:** bounded non-blocking poll, then `yield False` on contention. The context manager
@@ -53,7 +53,13 @@ See **B2**.
 - **Verified:** read `regen_lock` in full this pass. On an internal exception it yields
   `True` (proceed with the regen) — that direction is safe and must not be conflated with
   the contention path, which is the one that produces stale output.
-- **Also:** the suite's auto-regenerating freshness checks shell out with **no lock at all**.
+- ✅ **CLOSED.** The lock was never the defect — it reports contention honestly. Fixed at both
+  callers: `sync.py` now tracks skipped artifacts and prints `sync INCOMPLETE — N artifact(s)
+  left stale`, naming them (exit code stays 0 by design: another process is doing the work);
+  `load_lean_deps()` raises the skip from INFO to **WARNING** and names the blast radius —
+  counts, atlas, graph and axiom closure for that run reflect the previous extraction.
+- ⚠️ **Residue, unchanged:** the suite's auto-regenerating freshness checks shell out with
+  **no lock at all**. Separate from A1's caller defect; not addressed here.
 - **Documented in:** `QA_QI_INFRASTRUCTURE_MAP.md` §2, `CHECK_AUTHORING_GUIDE.md` §5.
 
 ### A2. AI-Defense Tier 1 names files that do not exist — VERIFIED-OPEN
@@ -149,7 +155,7 @@ See **B2**.
 
 ---
 
-### B3. `docs/READINESS_GATES.md` describes gates that cannot do what it says — OPEN
+### B3. `docs/READINESS_GATES.md` describes gates that cannot do what it says — ✅ CLOSED
 
 Not an architecture document, so corrected here rather than in place.
 
@@ -161,7 +167,14 @@ Not an architecture document, so corrected here rather than in place.
 - **Gates 9 and 10** (`NumericalFreshness`, `FirstClaimVerification`) each carry a
   **"Blocks on any:"** section. Verified by reading both evaluators: the only states either
   assigns are `needs-recheck` and `passed`. Neither can block.
-- **Fix shape:** correct the prose to the computed behaviour, or raise the evaluators to the
+- ✅ **CLOSED — prose corrected to the computed behaviour** (raising the evaluators was not
+  taken: `FirstClaimLedger` does not exist, and Gate 9's teeth already live in `tables_fresh`).
+  Gate 1 now states that it is registry COVERAGE and carries a table routing each content
+  claim to the check that verifies it (`bibitem_title_primary_source`,
+  `citation_primary_sources_present`, `provenance_doi_in_registry`) or to Stage 13 where none
+  does. Gates 9 and 10 disclose their reachable states (`passed` / `needs-recheck`). The
+  submission section now separates the human GREEN policy from the narrower mechanized rule.
+- **Superseded fix shape:** correct the prose to the computed behaviour, or raise the evaluators to the
   documented behaviour. The second is a scope decision, not a doc edit.
 
 ### B4. A discharged axiom and a FALSE theorem are still cited in chain-of-backing — OPEN
@@ -177,7 +190,15 @@ Not an architecture document, so corrected here rather than in place.
   on a retired axiom and a known-false theorem. Detected by
   `scripts/chain_canonicalize.py --report`; **nothing gates on it.**
 
-### B5. `docs/WAVE_EXECUTION_PIPELINE.md` — the process LAW disagrees with the tree — OPEN
+### B5. `docs/WAVE_EXECUTION_PIPELINE.md` — the process LAW disagrees with the tree — ✅ CLOSED
+
+✅ All five corrected, each re-measured against the owning artifact first. Where a fact was a
+census or a pin, the fix names the **owner** instead of copying the value — `validate.BUNDLE_CODES`
+for the roster, `lean/lean-toolchain` for the pin, `validate.py --list` for the check roster — so
+the same drift cannot recur. The stage count is now tied to the Stage headings that define it.
+(The 16 enumerated check names were verified to still resolve; only the "(16 total)" framing was
+wrong, so the list stayed and its claim to completeness went.) `CLAUDE.md`'s own "61 checks" was
+the same class and was de-hardcoded in the same pass.
 
 Each verified by direct read during this pass. The law is a mandatory-read bootstrap
 document, so a reader is being handed five wrong facts before any work starts.

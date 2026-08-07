@@ -94,8 +94,14 @@ What matters here is the gap between a gate's *name* and its *computation*.
 ⚠️ **The edge types marked *no emitter* above are queried and never produced**, so
 they return verdicts they did not compute. Guarded by
 `validate.py --check gate_edge_types_are_emitted`, which derives both populations from the
-AST and fails on any dead type not disclosed there. `READINESS_GATES.md` still documents the
-P2 gates as blocking; they cannot.
+AST and fails on any dead type not disclosed there.
+
+⚠️ **"can block" here means the mechanized check, not the policy.** `NumericalFreshness`
+and `FirstClaimVerification` have `passed` and `needs-recheck` as their only reachable
+states, so neither can fail `readiness_submission_gate`, which counts only P1-not-passed
+and P2-`blocked`. The submission *policy* in `READINESS_GATES.md` is stricter — it requires
+GREEN, which a `needs-recheck` gate withholds — and that stricter rule is enforced by the
+operator, not the suite. Both documents state this gap; neither should be read alone.
 
 An evaluator that **raises** records `state='blocked'`, not `open`. This matters because
 `open` aggregates to YELLOW: a crashed gate recorded as `open` is indistinguishable from a

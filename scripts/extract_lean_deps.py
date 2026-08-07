@@ -122,9 +122,16 @@ def _run_extraction() -> None:
 
     with harness_lock.regen_lock("lean_deps") as got:
         if not got:
-            logger.info(
-                "lean_deps regen already in progress (lock held by another process) — "
-                "using existing cache"
+            # ⚠️ WARNING, not INFO. A skip means this process is about to read a
+            # lean_deps.json it KNOWS is stale — `_needs_refresh()` already returned True.
+            # Everything downstream (counts, the atlas, the graph, the axiom closure) is then
+            # computed from the previous extraction. At INFO this was invisible under the
+            # default logging level, so a caller could not tell a refreshed run from a skipped
+            # one (ARCHITECTURE_TODOs A1).
+            logger.warning(
+                "lean_deps is STALE and its regen is held by another process — proceeding on "
+                "the PREVIOUS extraction. Counts, atlas, graph and axiom-closure results from "
+                "this run reflect the older tree; re-run once the other process finishes."
             )
             return
         _run_extraction_locked()

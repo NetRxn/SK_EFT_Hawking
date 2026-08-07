@@ -153,7 +153,7 @@ repaired, and a reader who takes the table as a list of live defects will chase 
 | `evaluate_all_gates` | `open` | an evaluator that CRASHED aggregated to YELLOW, indistinguishable from a mild advisory | **fixed** — an evaluator exception records `state='blocked'` |
 | `_blocked_p1_gates_by_paper` | `{}` | "could not compute" and "nothing blocked" shared one value | **fixed** — returns `None`, and GREEN is withheld in that case |
 | the dead-edge guard | "derived on both sides" | its emitted-set scan collected **node** types too, so its population was wider than its subject and it could not fail on the case it was built for | **fixed** — the scan is scoped structurally to dicts carrying `source`/`target` |
-| `harness_lock` on contention | "regenerate: succeeded" | the caller treats a skipped regeneration as a completed one — mechanism in [`QA_QI_INFRASTRUCTURE_MAP.md` §2](QA_QI_INFRASTRUCTURE_MAP.md#2-artifact-generation--writers-triggers-staleness-keys) | 🔴 **OPEN** |
+| `harness_lock` on contention | "regenerate: succeeded" | callers discarded the lock's contention signal and reported success over work that did not happen | **fixed** — `sync.py` prints `sync INCOMPLETE` naming the skipped artifacts; `load_lean_deps()` warns with the blast radius |
 | AI-Defense Tier 1 | an *"Implementation:"* line names two scripts | neither script exists; the document is an unbuilt proposal headed "Canonical Specification" | 🔴 **OPEN** |
 
 **The generalisable lesson, and why it is here rather than in a changelog:** in the memo's
@@ -165,12 +165,14 @@ measurement.**
 check measured, never asserted alongside it — in each repaired row the code had computed the
 right answer and then discarded it.
 
-⚠️ **The two open rows are a different shape, and neither is fixed by that move.**
-`harness_lock` computes nothing to discard: it correctly reports that another process holds
-the lock, and the defect is that its *callers* treat "skipped" as "regenerated". AI-Defense
-Tier 1 is not a measurement failure at all — it is a document describing files that were
-never written. Both are tracked in
+⚠️ **The open row is a different shape, and the "derive the verdict" move does not fix it.**
+AI-Defense Tier 1 is not a measurement failure at all — it is a document describing files that
+were never written. Tracked in
 [`.working-docs/ARCHITECTURE_TODOs.md`](.working-docs/ARCHITECTURE_TODOs.md).
+
+The `harness_lock` row is worth keeping visible even though it is fixed: the lock itself was
+always correct, and the defect lived entirely in what its *callers* did with an honest signal.
+A guard that reports accurately can still produce absence-as-success one layer up.
 
 ⚠️ **The obvious type-system fix was tried and rejected, with the measurement.**
 `CheckResult.passed` is a bare `bool` with no `UNEVALUATED` state, and adding one was ADR-009
