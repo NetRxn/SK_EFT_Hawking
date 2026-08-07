@@ -61,10 +61,19 @@ ratchet it; do not throw the answer away.
 A threshold above the current population cannot fire. Measure the live value, set the ceiling to
 exactly it, and add a test asserting the two agree.
 
-⚠️ **A ratchet whose test asserts its own definition is self-sealing.** A floor asserted as
-`CI_MIN_CHECKS_RUN == len(_CHECKS) - len(CI_SKIP)` compares the quantity to its own definition,
-which *guarantees* it can never fire — unfireable and invisible at once. Assert against the
-**live measured population**, never against the formula.
+⚠️ **Assert against what the code DOES, not against what it counted.** The distinction is
+narrow and the two forms look alike:
+
+- **Self-sealing.** Comparing the floor to the number of checks that *ran*, where `run_checks`
+  fills a result for every spec — the count is identically `registered - skipped`, so the
+  assertion is an identity and can never fire. Unfireable and invisible at once.
+- **A working ratchet.** Comparing a **hardcoded constant** to `len(_CHECKS) - len(CI_SKIP)`.
+  This fires the moment the roster changes without the constant, which is exactly its job.
+
+So the formula is not the problem; comparing a quantity to *the same expression that produced
+it* is. What no formula can catch is a check that registers, is not skipped, and still measures
+nothing — that needs the registry **executed** and `measured` counted, which is why the floor
+carries a second, slow test that does precisely that.
 
 ### 2.4 Prove it with a PRODUCTION-seeded mutation (QI-30)
 
@@ -148,7 +157,7 @@ repaired, and a reader who takes the table as a list of live defects will chase 
 | `--ci`'s coverage floor | "the suite cannot silently shrink" | counted checks **invoked**, not measured — `run_checks` fills a result for every spec, so the count was identically the floor and it **could never fire** | **fixed** — counts `CheckResult.measured` |
 | `_memo` | "only PASS is cached, so a red check re-runs" | **a fail-open SKIP *is* a PASS** — it cached `SKIPPED — lake not found` under a key byte-identical to the real measurement and replayed it after the toolchain returned | **fixed** — `_memo` refuses to cache a non-measurement |
 | the memo's key tests | "production-seeded" | seeded the fingerprint **helpers**, never asserting any check's key called them — deleting an input from a live `key_fn` still passed | **fixed** — `TestCheckKeysSpanTheirInputs` seeds through the real key |
-| `test_ci_mode.py`'s floor test | "the floor is asserted" | asserted the floor against **its own definition**, which is what made it unfireable and invisible at once | **fixed** — no formula assertion remains |
+| `test_ci_mode.py`'s floor test | "the floor is asserted" | asserted the floor against **its own definition**, which is what made it unfireable and invisible at once | **fixed** — the hardcoded constant is now held to the live derived population, so a new check fails it on arrival, and a second (slow) test EXECUTES the registry and counts `measured` — the half no formula can cover |
 | `check_bundle_source_freshness` | "fresh: all N source paper(s)…" | returned `None` for sourceless keys, compared zero files, and **wrote `freshness_stale: false`** | **fixed** — an absent source directory now reports UNMEASURABLE |
 | `evaluate_all_gates` | `open` | an evaluator that CRASHED aggregated to YELLOW, indistinguishable from a mild advisory | **fixed** — an evaluator exception records `state='blocked'` |
 | `_blocked_p1_gates_by_paper` | `{}` | "could not compute" and "nothing blocked" shared one value | **fixed** — returns `None`, and GREEN is withheld in that case |

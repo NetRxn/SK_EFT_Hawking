@@ -38,11 +38,11 @@ otherwise.**
 | `README.md` | 15 | 18 | **83%** |
 | `QA_QI_INFRASTRUCTURE_MAP.md` | 69 | 86 | **80%** |
 | `VALIDATION_GATE_TOPOLOGY.md` | 43 | 69 | **62%** |
-| `CHECK_AUTHORING_GUIDE.md` | 28 | 54 | **52%** |
+| `CHECK_AUTHORING_GUIDE.md` | 40 | 54 | **74%** |
 | `END_TO_END_MAP.md` | 58 | 80 | **73%** |
 | `VALIDATION_ARCHITECTURE.md` | 39 | 54 | **72%** |
 | `SURFACE_INVENTORY.md` | 6 | — | generated (see below) |
-| **total** | **258** | **361** | **≈71%** |
+| **total** | **270** | **361** | **≈75%** |
 
 `SURFACE_INVENTORY.md` is emitted wholesale by `scripts/architecture_inventory.py`. Its 155
 load-bearing lines are derived data, decided by one check — regenerate and diff, which
@@ -92,8 +92,8 @@ converge — which is why the remaining work below is stated as a queue, not a c
 
 ### Remaining work
 
-**103 load-bearing units carry no row.** Concentrated in `CHECK_AUTHORING_GUIDE.md` (26),
-`VALIDATION_GATE_TOPOLOGY.md` (26) and `END_TO_END_MAP.md` (22). Verify at the granularity above:
+**91 load-bearing units carry no row.** Concentrated in `VALIDATION_GATE_TOPOLOGY.md` (26),
+`END_TO_END_MAP.md` (22), `QA_QI_INFRASTRUCTURE_MAP.md` (17) and `CHECK_AUTHORING_GUIDE.md` (14). Verify at the granularity above:
 one proposition per row, a decider (never a proxy), completeness for set claims, and the actual
 subject for any number-cited invariant or ADR.
 
@@ -112,7 +112,7 @@ Status is per-ATOM, never per-document. A document is not certified; its enumera
 | `README.md` | 10 atoms | 5 atoms, 0 corrected | 15 | 3 |
 | `SURFACE_INVENTORY.md` | 6 atoms, 1 corrected (B7) | regenerated + diffed | 6 | 0 (generated) |
 | `VALIDATION_ARCHITECTURE.md` | 22 atoms, 1 corrected | V10: 17 atoms, 1 corrected | 39 | 15 |
-| `CHECK_AUTHORING_GUIDE.md` | 24 atoms, 1 corrected, 4 reframed | 4 atoms, 0 corrected | 28 | **26** |
+| `CHECK_AUTHORING_GUIDE.md` | 24 atoms, 1 corrected, 4 reframed | V8: 4 · V12: 12, 2 corrected | 40 | 14 |
 | `VALIDATION_GATE_TOPOLOGY.md` | 38 atoms, 1 corrected | 5 atoms, 0 corrected | 43 | 26 |
 | `QA_QI_INFRASTRUCTURE_MAP.md` | 48 atoms, 2 corrected | 21 atoms, 5 corrected | 69 | 17 |
 | `END_TO_END_MAP.md` | 34 atoms, 0 corrected | V9: 8 · V11: 16, 1 corrected | 58 | 22 |
@@ -695,3 +695,40 @@ same day. An atom recording a defect is invalidated by the fix, and nothing re-o
 is the second instance inside `docs/architecture/` in one pass.
 
 **Coverage after V11:** `END_TO_END_MAP.md` 42 → **58 atoms** of 80 (53% → **73%**).
+
+---
+
+## V12 — `CHECK_AUTHORING_GUIDE.md` remainder — 12 atoms, 2 corrected
+
+⚠️ **Both corrections are in prose written or reviewed earlier the same day**, and both would
+have taught a future author to *remove a working guard*. This is the highest-consequence class
+of error in these documents: not a stale fact, but advice that is wrong.
+
+### §2 — the obligations
+
+| # | atom | decided by | result |
+|---|---|---|---|
+| K1 | ~~A floor asserted as `CI_MIN_CHECKS_RUN == len(_CHECKS) - len(CI_SKIP)` **guarantees it can never fire**~~ | `test_ci_mode.py:163-167`, read, and its observed behaviour | ❌ **FALSE** — that is the live assertion, and it **fired** on 2026-08-07 when a check was added (`CI_MIN_CHECKS_RUN is 61 but a fully-provisioned runner executes 62`). Self-sealing is comparing the floor to the number that *ran* (identically `registered - skipped` because `run_checks` fills every spec), not comparing a **hardcoded constant** to that expression. Statement replaced with the distinction |
+| K2 | ~~The floor test is fixed because **no formula assertion remains**~~ | same test | ❌ **FALSE** — a formula assertion remains at `:163`. What was added is a second, `slow` test that **executes** the registry and counts `measured`. The test's own docstring says `registered - skipped` *"is the DEFINITION of the floor, so comparing the floor to it can only catch an arithmetic slip"* — the guide read that as removal. Statement replaced |
+| K3 | The floor's second test executes the registry and counts `measured` | `test_the_LIVE_floor_matches_what_a_REAL_run_MEASURES` | runs `run_checks`, filters `r.measured` ✓ |
+| K4 | `test_cannot_measure_baseline.py` fails in **both** directions | the two test bodies | `test_no_new_silent_pass` (`:208`) and `test_baseline_has_no_stale_entries` (`:222`, *"FIRES in the other direction"*) ✓ |
+| K5 | `AWAITING_CEILING` ratchets the backlog so adding a name breaks it in the same commit | `test_d5_mutation_obligation.py:584` | `AWAITING_CEILING = 0`, with `AWAITING_MUTATION_TEST` empty ✓ zero headroom |
+| K6 | **SET:** `PRODUCTION_SEEDED` and `FIXTURE_ONLY_CEILING` both exist there | AST of module-level constants | present, alongside `MUTATION_VERIFIED`, `AWAITING_MUTATION_TEST`, `AWAITING_CEILING` ✓ |
+| K7 | The guide does not restate the mutation split | the guide's §2.4 text | defers to the test file and names the two constants ✓ |
+
+### §3 — where the check goes
+
+| # | atom | decided by | result |
+|---|---|---|---|
+| K8 | **SET:** the module table's population equals the modules on disk | extracted names vs `ls scripts/validation/checks/*.py` | **12 = 12, sets identical**, no extras either way ✓ complete |
+
+### §4–§6
+
+| # | atom | decided by | result |
+|---|---|---|---|
+| K9 | §4's two commands are runnable as written | `validate.py --check <name> --no-archive`; `pytest tests/ -q` | both used throughout this pass ✓ |
+| K10 | §4's third step is the production-seeded mutation, stated as prose not a command | the block | ✓ consistent with §2.4 |
+| K11 | §5's ledger status column is load-bearing (most rows are repaired) | the table | 10 of 12 rows `fixed`, 1 open, 1 kept-visible ✓ |
+| K12 | §6's checklist items | — | **NOT-AN-ASSERTION** — nine imperatives ("a leg that cannot fire on any input"), a review aid with no truth value |
+
+**Coverage after V12:** `CHECK_AUTHORING_GUIDE.md` 28 → **40 atoms** of 54 (52% → **74%**).
