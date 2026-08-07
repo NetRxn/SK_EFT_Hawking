@@ -193,20 +193,26 @@ document carrying an unresolved severity-labelled heading. A document whose seve
 only inside PASS/RESOLVED notes carries no open findings and is deliberately **skipped**, not
 failed.
 
-### A worked example of why a filed blast radius is a claim
+### Re-measure a filed finding before you fix it
 
-The VERIFIES resolver was wrong in both directions at once. It **dropped** test nodes by
-keying ids on `module::function` with the class omitted, and it **fabricated** Lean-targeted
-edges by resolving the *tail* of a Python name against Lean short names — `np.all` →
-`FaultTolerance.Pauli.all`. Two rules now gate the branch: a ref rooted at a **module
-alias** is a Python module, never a Lean declaration; and a **dotted** ref may resolve only
-as a full Lean name, never by its tail.
+**A finding's count, consumer and effort estimate are claims, not measurements** — including
+findings this project filed itself. An entry written from a sample and never summed reads
+exactly like one written from a full count.
 
-⚠️ The gate named as the victim was not one — it reads `formula:` targets only. The real
-consumer was `last_modified.py`'s VERIFIES propagation, which stamped an unrelated test
-file's mtime onto Lean nodes. The finding's count, consumer, function name and effort
-estimate were **all four wrong**, and nothing had drifted: the entry was written from a
-sample and never summed.
+The VERIFIES resolver is the worked example. Two rules gate it, each closing a direction the
+resolver could fail in: a ref rooted at a **module alias** is a Python module, never a Lean
+declaration (without this it fabricated Lean-targeted edges, resolving the *tail* of a Python
+name against Lean short names — `np.all` → `FaultTolerance.Pauli.all`); and a **dotted** ref
+resolves only as a full Lean name, never by its tail (without this it dropped test nodes,
+keying ids on `module::function` with the class omitted).
+
+**Its consumer is `last_modified.py`'s VERIFIES propagation**, where a bad edge stamps an
+unrelated test file's mtime onto Lean nodes. No readiness gate consumes it — the gates read
+`formula:` targets only.
+
+⚠️ **A measurement is scoped by a predicate, and fixing what that predicate keyed on voids
+it.** Re-derive the number, the consumer and the blast radius against the current tree before
+acting on any of them.
 
 ---
 
@@ -255,11 +261,28 @@ Two genuine failure shapes are severe enough to name:
   originally stated"* — so it is not merely false, it is not a declaration at all. One
   citation is a documented waiver: I1 cites it deliberately as history.
 
-⚠️ **Both live in `claims_review.json` chains, not in the manuscripts.** Neither name appears
-in any `.tex` under `papers/`, and where a draft mentions `gap_solution_bounded` in prose it
-does so to report it as *disproved by automated counterexample*. So the exposure is a
-fictitious audit trail, not a published claim resting on a retired axiom — a real defect, and
-a different one.
+⚠️ **Search for these names in their LaTeX-escaped form.** A draft writes
+`gapped\_interface\_axiom`, so a scan for the raw identifier reports zero manuscript hits and
+is wrong: the name is in 14 drafts, and `gap\_solution\_bounded` is in I1's.
+
+Read in the drafts, the two names split cleanly:
+
+- **Most manuscript mentions are accurate history.** D2, D4, D5, F, L2, `paper8` and
+  `paper21` all state the conversion — *"formerly `axiom gapped_interface_axiom`, converted to
+  a tracked `Prop` on 2026-05-19"* — and I1 describes `gap_solution_bounded` as a
+  commented-out stub. Naming a retired thing as retired is correct, not drift.
+- **No draft states either as live.** Every one of the 25 mentions carries a historical
+  qualifier — *"formerly"*, *"since retired into the tracked Prop `TPFConjecture`"*,
+  *"was refactored"*. `validate.py --check axiom_count_prose_consistency` scans all 64 drafts
+  against `docs/counts.json` (`lean.axioms = 0`) and reports zero stale claims.
+
+⚠️ **Splitting these sentences on `.` gives the wrong answer**, because the qualifier usually
+follows a dotted Lean module filename — the split truncates at that dot, before the qualifier,
+and a present-tense claim appears where none exists. Cite `axiom_count_prose_consistency`'s verdict rather than
+re-deriving one.
+
+So the manuscript prose is sound, and the defect is confined to the **chain links**: a
+fictitious audit trail, gated by the check above.
 
 `--report` emits a breakdown by **resolution class** — `resolved` / `suggested` / `invalid` /
 `unresolvable`, each split into named sub-kinds with example links. `--paper <dir>` limits the

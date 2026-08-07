@@ -350,3 +350,39 @@ made.** The sentence is emitted by the generator, not written in the tracked fil
   returns `passed=True, measured=False` when counts are absent or unparseable — the
   documented cannot-measure contract. Coupled to **B1**.
 - **Not a defect today:** tier 0 catches `sorry` independently from lake's own output.
+
+---
+
+### D1. ~~Legacy drafts assert a retired axiom~~ — WITHDRAWN, no defect exists
+
+Filed and withdrawn within the same pass. `paper18_doublon_gate` and `paper20_scalar_rung` both
+carry *"since retired into the tracked Prop `TPFConjecture`"*; the qualifier follows a
+`SPTClassification.lean` filename, and a regex that splits sentences on `.` truncates before it.
+`validate.py --check axiom_count_prose_consistency` scans all 64 drafts against
+`docs/counts.json` and reports **0 stale claims**. The check was right.
+
+**Kept as an entry deliberately:** the next person to scan paper prose for Lean identifiers will
+reach for the same sentence split. Cite the check's verdict instead of re-deriving one.
+
+### D2. Chain-link scans must use the LaTeX-escaped identifier — OPEN (documentation of a trap)
+
+- **What:** a draft writes `gapped\_interface\_axiom`, never the raw identifier. Any scan of
+  `papers/**/*.tex` for a Lean name that does not unescape `\_` reports **zero hits and is
+  wrong**. This produced a false claim in `QA_QI_INFRASTRUCTURE_MAP.md` (V8 atom Q10).
+- **Who is exposed:** any future check or audit correlating Lean names with manuscript prose.
+  `prose_theorem_reference_coverage` already handles verbatim forms — **verify it unescapes**
+  before assuming the trap is closed there.
+- **Fix shape:** a shared unescape helper for prose-vs-Lean correlation, so each new consumer
+  does not rediscover this. Needs code.
+
+### D3. `I1`'s line-number citation for the disproved stub is off — OPEN (minor)
+
+- **Where:** `papers/I1/paper_draft.tex:494` and `:512` — *"a commented-out stub at
+  lines~307--321"*, and `:493` — the live theorem at *"lines~329--345"*.
+- **Actual:** the `/- … -/` block spans **311–325**; `gap_solution_monotone` is at **333**.
+- **It is a systematic 4-line offset, not a typo** — both citations are short by exactly 4, so
+  the file gained four lines above that point after I1 was written. Any other line-number
+  citation into this file is likely off by the same amount.
+- **Fix shape:** cite the block by declaration name rather than by line. A line number in prose
+  is invalidated by any edit above it and nothing checks it. Paper content.
+

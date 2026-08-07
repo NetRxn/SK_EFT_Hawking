@@ -24,24 +24,41 @@ its own recorded check. A compound sentence is not one entry — it is one entry
 
 ## Final state
 
-**Six of seven VERIFIED at assertion granularity. One BLOCKED, and it cannot be unblocked
-under the no-code constraint.**
+**All seven VERIFIED at assertion granularity**, across two passes: V1–V7 over the documents
+as they stood at `eb11fe97`, and **V8** over the prose the A1/A2/B2–B6 remediation added
+afterwards. A sentence written after a verification pass is unverified by definition, so the
+second pass is not optional bookkeeping.
 
 | | |
 |---|---|
-| atoms verified | **187** individual rows across six documents |
-| claims found false and replaced | **13** |
+| atoms verified | **222** individual rows (187 in V1–V7, 35 in V8) |
+| claims found false and replaced | **18** (13 in V1–V7, 5 in V8) |
 | error-priming blocks removed | **10** |
 | incident citations reframed | **4** |
-| documents surviving unchanged | **1** (`END_TO_END_MAP.md`) |
+| documents unchanged by V1–V7 | **1** (`END_TO_END_MAP.md`) |
 
-✅ **`SURFACE_INVENTORY.md`'s false header sentence is corrected (B7 closed).** Its header claims *"Every table
-below is read from the artifact that owns the population"*, which is false for the registries
-table — that population is a curated `probes` list inside the generator, correctly so, because
-"is this collection a registry?" is editorial (`constants.py` holds 67 module-level uppercase
-collections and 60 are physics data). The sentence is **emitted by
-`architecture_inventory.py:289`**, not stored in the tracked file, so correcting it requires a
-generator edit. Filed as **B7**. The document's other five atoms pass.
+⚠️ **The second pass found 5 false claims, and the remediation pass wrote 4 of them** —
+one inside a paragraph that was itself correcting an earlier error, and one *while correcting
+that*. Writing a correction is exactly as error-prone as writing the original, and a single
+failure mode — **a search scoped narrower than the sentence** — produced every one:
+
+| the search | what it missed |
+|---|---|
+| raw identifier in `.tex` | drafts write `gapped\_interface\_axiom`; 14 files, 25 hits |
+| sentence split on `.` | truncates at a dotted module filename, before the qualifier that follows |
+| one record inspected | a set claim needs the whole population |
+
+**The lesson is not "check twice."** Each of these was a proxy standing in for a decider, and
+the decider existed in every case — the escaped-form scan, the check that already scans all 64
+drafts, the full population. Reach for it first.
+
+✅ **`SURFACE_INVENTORY.md`'s header now states how its tables actually derive (B7 closed).**
+Values and membership are read from the owning artifact, **with one exception the header names**:
+the registries table lists a curated set declared in the generator, because "is this collection
+a registry?" is an editorial call, not a mechanical property — `constants.py` holds 67
+module-level uppercase collections and 60 are physics data. The sentence is emitted by
+`architecture_inventory.py:289` rather than stored in the tracked file, so the correction was a
+generator edit (made under explicit authorisation, outside the no-code constraint).
 
 **What the corrections had in common.** Of the 13, **four were inherited claims that were
 already false when they were written into these files**, and none of the four would have been
@@ -55,20 +72,25 @@ resolving a cited invariant number to its actual subject.
 | **proxy accepted as decider** | `grep -c "@register_check" validate.py` returns 5 (all comments); the AST returns none |
 | **set verified by named members** | "the four hazards … These are ADR-009 D3" — D3 declares five; H2 was live and enforced |
 | **search scoped narrower than the sentence** | "`stage9_status` is read by nothing" — true of `validation/checks/`, false of the repo |
+| **the same mode, in a correction** (V8) | "neither name appears in any `.tex`" — true of the RAW identifier, false of the LaTeX-escaped `gapped\_interface\_axiom` that drafts actually write. 14 drafts, 25 hits |
+| **the same mode, correcting THAT** (V8) | "two drafts assert a live axiom" — a sentence split on `.` truncated at `SPTClassification.lean`, before the *"since retired"* that followed. `axiom_count_prose_consistency` had the right answer all along |
 
 ---
 
 ## Per-document progress
 
-| document | sections | status |
-|---|---|---|
-| `README.md` | index table · two rules · scope boundary | ✅ **VERIFIED** — 8 atoms, all checked |
-| `SURFACE_INVENTORY.md` | header prose · derivation sources (tables are derived + gated) | ✅ **VERIFIED** — 6 atoms, 1 corrected (B7) |
-| `VALIDATION_ARCHITECTURE.md` | §1–§6 | ✅ **VERIFIED** — 22 atoms, 1 corrected |
-| `CHECK_AUTHORING_GUIDE.md` | thesis · §1–§6 | ✅ **VERIFIED** — 24 atoms, 1 corrected, 4 reframed |
-| `VALIDATION_GATE_TOPOLOGY.md` | §1–§7 | ✅ **VERIFIED** — 27 atoms, 1 corrected |
-| `QA_QI_INFRASTRUCTURE_MAP.md` | §1–§6 | ✅ **VERIFIED** — 31 atoms, 2 corrected |
-| `END_TO_END_MAP.md` | §1–§9 | ✅ **VERIFIED** — 34 atoms, 0 corrected |
+| document | sections | V1–V7 | V8 (prose added 2026-08-07) | status |
+|---|---|---|---|---|
+| `README.md` | index · two rules · scope boundary | 8 atoms | 5 atoms, 0 corrected | ✅ **VERIFIED** |
+| `SURFACE_INVENTORY.md` | header prose · derivation sources | 6 atoms, 1 corrected (B7) | regenerated, derived | ✅ **VERIFIED** |
+| `VALIDATION_ARCHITECTURE.md` | §1–§6 | 22 atoms, 1 corrected | unchanged | ✅ **VERIFIED** |
+| `CHECK_AUTHORING_GUIDE.md` | thesis · §1–§6 | 24 atoms, 1 corrected, 4 reframed | 4 atoms, 0 corrected | ✅ **VERIFIED** |
+| `VALIDATION_GATE_TOPOLOGY.md` | §1–§7 | 27 atoms, 1 corrected | 5 atoms, 0 corrected | ✅ **VERIFIED** |
+| `QA_QI_INFRASTRUCTURE_MAP.md` | §1–§6 | 31 atoms, 2 corrected | **18 atoms, 3 corrected** | ✅ **VERIFIED** |
+| `END_TO_END_MAP.md` | §1–§9 | 34 atoms, 0 corrected | unchanged | ✅ **VERIFIED** |
+
+`SURFACE_INVENTORY.md` is wholly generated, so V8 re-ran the generator and diffed rather than
+re-reading prose; its only hand-authored sentence is the header, verified in V1–V7.
 
 ## Method, per atom
 
@@ -441,3 +463,86 @@ fires is not a gate that measures what it claims to"* — thesis and lesson.
 **Zero corrections.** This is the only document of the seven to survive assertion-granularity
 verification unchanged — because it was rewritten from measurement after the earlier passes,
 and every claim it inherited had already been re-derived or removed.
+
+---
+
+## V8 — assertions added 2026-08-07 (post-V1–V7) — VERIFIED (34 atoms, 3 corrected)
+
+**Why a second pass exists.** V1–V7 verified the documents as they stood at commit
+`eb11fe97`. The A1/A2/B2–B6 remediation then wrote **new prose** into four of them, and a
+sentence written after a verification pass is unverified by definition. These are those
+sentences, at the same granularity.
+
+⚠️ **Three of the atoms below were FALSE, and all three were written by the remediation pass
+itself — one of them inside a paragraph correcting an earlier error.** The failure mode was
+the one V1–V7 catalogued: *a search scoped narrower than the sentence*. Recording it here
+rather than treating the second pass as more trustworthy than the first.
+
+### `QA_QI_INFRASTRUCTURE_MAP.md` §2 — concurrency
+
+| # | atom | decided by | result |
+|---|---|---|---|
+| Q1 | `regen_lock` is a bounded poll, then skip — never block-and-wait | `harness_lock.py` `WAIT_SECONDS=5.0`, `POLL_SECONDS=0.25`, yields `False` on timeout | ✓ |
+| Q2a | `load_lean_deps()`'s skip path logs at **WARNING**, not INFO | `extract_lean_deps._run_extraction`, read directly | `logger.warning(...)` ✓ |
+| Q2b | **SET:** the named blast radius (counts, atlas, graph, axiom closure) are all real consumers of `lean_deps.json` | each traced to a reader | `update_counts.py`, `atlas_view.json` builder, `build_graph.py`, `axiom_closure_allowlist` ✓ |
+| Q3 | `sync.py` records skipped artifacts and prints `sync INCOMPLETE` naming them | `sync.py` `skipped` list + summary branch | ✓ |
+| Q4 | Its exit code stays **0** on skip | same branch: `return 0` | ✓ |
+| Q5 | On internal error the lock fails **open**, yielding `True` | `harness_lock` module docstring **and** the `except` path | both agree ✓ |
+| Q6 | **SET:** the auto-regenerating freshness checks shell out with **no lock at all** | `freshness.py` regenerator sites vs `regen_lock` call sites | 0 of the shell-outs take the lock ✓ |
+
+### `QA_QI_INFRASTRUCTURE_MAP.md` §5 — chain of backing
+
+| # | atom | decided by | result |
+|---|---|---|---|
+| Q7 | `gap_solution_bounded` is inside a `/- … -/` comment, not a declaration | `TetradGapEquation.lean` 311–325; absent from `lean_deps.json` | ✓ both |
+| Q8 | It carries the note *"This theorem is FALSE as originally stated"* | line 314, verbatim | ✓ |
+| Q9 | ~~I1's citation is a **documented waiver**~~ | I1 `claims_review.json`: waiver field? `link_state`? | ❌ **FALSE** — no waiver field, no `link_state`, no waiver record anywhere. I1's two mentions are narrative history. **Inherited claim, never derived.** Statement replaced |
+| Q10 | ~~Neither name appears in any `.tex` under `papers/`~~ | raw-identifier scan → **escaped**-form scan | ❌ **FALSE** — the raw scan was a PROXY. LaTeX escapes to `gapped\_interface\_axiom`: **14 drafts / 25 hits**; `gap\_solution\_bounded`: I1 / 3 hits. Statement replaced |
+| Q11 | ~~Every prose mention reports it as disproved~~ | all 4 prose mentions read | ❌ **FALSE as a set claim** — 3 of 4 carry a negative marker; I1's first is narrative setup. Statement replaced |
+| Q12 | Most manuscript mentions state the conversion accurately | the 25 sentences, read | D2/D4/D5/F/L2/paper8/paper21 all say *"formerly … converted to a tracked `Prop` on 2026-05-19"* ✓ |
+| Q13 | ~~`paper18` and `paper20` assert a **live** axiom count of 1~~ | first: a regex sentence-split; then: `validate.py --check axiom_count_prose_consistency` | ❌ **FALSE** — both carry *"since retired into the tracked Prop `TPFConjecture`"*. The split broke on the `.` in `SPTClassification.lean` and truncated before the qualifier. The check scans all 64 drafts and reports **0 stale claims**. Statement replaced |
+| Q19 | **SET:** all 25 manuscript mentions carry a historical qualifier | `axiom_count_prose_consistency` over 64 drafts | 0 stale, 0 advisory ✓ |
+| Q20 | I1's line citations for `TetradGapEquation.lean` are accurate | block bounds computed from the file | ❌ **FALSE** — I1 cites 307–321 for the stub (actual **311–325**) and 329–345 for the live theorem (`gap_solution_monotone` at **333**). A consistent **4-line** offset: the file grew above that point. Filed as **D3** |
+| Q14 | `chain_backing_targets_resolve` fails on a link resolving against no population | the check, run | 156 / ceiling 156 → PASS; +1 seeded → FAIL ✓ |
+| Q15 | It is a ratchet reported by paper each run and can only shrink | check body + its zero-headroom test | ✓ |
+| Q16 | A declaration-names-only resolver reports **more than 3×** the true figure | both resolvers run over the same corpus | 515 vs 156 = **3.30×** ✓ |
+| Q17 | **SET:** the difference is modules, short names, core axioms, notation variants | categorised counts | module 247 + short 785 + core + variants 89; residue 156 ✓ |
+| Q18 | The rest of `--report`'s output gates on nothing | `chain_canonicalize.py` has no `@register_check`; no check imports it | ✓ |
+
+### `CHECK_AUTHORING_GUIDE.md` — ledger rows
+
+| # | atom | decided by | result |
+|---|---|---|---|
+| C1 | `harness_lock` row's "fixed" claim | same evidence as Q3/Q2a | ✓ |
+| C2 | AI-Defense row: neither named script was written | `ls scripts/pre_commit_hook.sh scripts/install_pre_commit.sh` | both ABSENT ✓ |
+| C3 | `@[csimp]` is the one uncovered soundness item | `csimp` across `scripts/` + `tests/` | **0 occurrences** ✓ |
+| C4 | The lock "was always correct" — the defect was in its callers | lock yields the right signal; callers discarded it | ✓ |
+
+### `VALIDATION_GATE_TOPOLOGY.md`
+
+| # | atom | decided by | result |
+|---|---|---|---|
+| G1 | `NumericalFreshness`/`FirstClaimVerification` reach only `passed`/`needs-recheck` | AST of both evaluators' `r.state` assignments | `blocked` absent from both ✓ |
+| G2 | `readiness_submission_gate` counts only P1-not-passed and P2-`blocked` | its body: `blockers = s['p1_blocked'] + s['p2_blocked']` | ✓ |
+| G3 | The `READINESS_GATES` policy is stricter than the mechanism | GREEN requires all-passed; the check tolerates P2 advisories | ✓ |
+| G4 | AI-Defense's substance shipped under other names | each mapped to a live check | `axiom_closure_allowlist` verbatim; `prose_theorem_reference_coverage`; `paper_latex_compiles` ✓ |
+| G5 | Invariant numbers #15/#16/#17 are axiom sign-off / tracked-hypothesis / kernel no-go | `WAVE_EXECUTION_PIPELINE.md`, each number read | ✓ — cited **by number**, per method rule 5 |
+
+### `README.md`
+
+| # | atom | decided by | result |
+|---|---|---|---|
+| R1 | `tests/test_architecture_claims.py` exists and pins load-bearing claims | file present; 10 tests collected | ✓ |
+| R2 | Each assertion binds sentence **and** code fact | every test calls `_claim(...)` plus a code assertion | 10 of 10 ✓ |
+| R3 | Rewording a claim fails its test | seeded `five`→`four` in `VALIDATION_ARCHITECTURE.md` | FAILED as intended, reverted ✓ |
+| R4 | Changing the code fails its test | seeded `.measured`→`.passed` in `_memo.py` | FAILED as intended, reverted ✓ |
+| R5 | Coverage there is partial, by design | 10 assertions vs the documents' full assertion count | partial — stated as such ✓ |
+
+### NOT-AN-ASSERTION (recorded, not skipped)
+
+| statement | why it has no truth value |
+|---|---|
+| *"If any part of this document is built, build this"* (QA_QI, on `@[csimp]`) | a recommendation |
+| *"Resolve against every population a target may name, and normalize first"* | an instruction to a future author |
+| *"choosing which is the work"* (README, on claim coverage) | editorial judgement |
+| *"A specification and a description are not interchangeable"* | a general principle, not a claim about this repo |
