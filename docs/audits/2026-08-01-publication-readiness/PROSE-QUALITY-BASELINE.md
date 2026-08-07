@@ -62,7 +62,7 @@ L1 36). Prose became more machine-shaped as the corpus grew.
 **4. D9 is worst on every axis simultaneously** — highest em-dash density, median sentence 34
 words against a corpus norm of 22, p90 of 63, and 11% of its sentences over 60 words. It is also
 the least-reviewed bundle and the only GREEN one. See
-[`READINESS-SIGNAL-FAILURE.md`](READINESS-SIGNAL-FAILURE.md).
+[`PROMOTION-PATH-AND-SIGNAL.md`](PROMOTION-PATH-AND-SIGNAL.md).
 
 ## Interpretation
 

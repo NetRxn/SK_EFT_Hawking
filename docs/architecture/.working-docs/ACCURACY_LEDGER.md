@@ -984,3 +984,33 @@ pattern reads as precision** and silently shrinks the population a future reader
 
 **Coverage after V19:** `CHECK_AUTHORING_GUIDE.md` 40 → **54 of 54** ✅ ·
 `END_TO_END_MAP.md` 67 → **80 of 80** ✅
+
+---
+
+## V20 — `END_TO_END_MAP.md` §8, the promotion path — 9 atoms, 1 corrected
+
+⚠️ **This section did not exist when V7/V9/V11/V14 verified this document at 80/80.** The
+operator asked how a bundle reaches submission-ready and the answer was in no architecture
+document, while `README.md:14` assigns exactly that question here.
+
+**The limit this exposes.** Assertion-granularity verification asks *"is every sentence here
+true?"* It cannot ask *"is every sentence that should be here, here?"* Both documents were 100%
+accurate — `README` about which document owns the question, `END_TO_END_MAP` about everything it
+did say — and the requirement was entirely absent. **The ledger is a soundness check with no
+completeness dimension**, and no required-content contract exists for these documents. Filed as
+a control gap in `ARCHITECTURE_TODOs.MD`.
+
+| # | atom | decided by | result |
+|---|---|---|---|
+| S1 | Transition 1 — creation writes `"pending"` ×3 | `bundle_source_manifest.py:129-131` | ✓ |
+| S2 | **Transition 2 — `"pending"` → `"green"` has no actor** | every `stage*_status` write, whole repo (not `scripts/` only) | only writers are S1 and S3; **no `"green"` assignment exists** ✓ |
+| S3 | Transition 3 — append demotes green → `"pending"` | `bundle_append.py:320-325` | ✓ |
+| S4 | Transition 4 — findings → `blockers_open`/`readiness` | `bundle_readiness.write_metadata_counts:688` | ✓ |
+| S5 | The §12 exit condition is six conjuncts | `BUNDLE_LIFT_PROCEDURE.md` §12 | `stage9/10/13 == green` · `blockers_open == 0` · `stage13_redo_required == false` · `freshness_stale == false` ✓ |
+| S6 | ~~The readiness formula has no unreviewed-guard~~ | `bundle_readiness.py:370-391`, read in full | ❌ **FALSE** — `not review_recorded → YELLOW (unreviewed)` is evaluated *before* GREEN, and GREEN is withdrawn on a blocked **or uncomputable** P1 gate. The real defect is that `review_recorded` does not discriminate review KIND: any `stage13_review_doc` satisfies it, so a 16-anchor attribution sweep counts as a full adversarial pass. Statement replaced |
+| S7 | The green-with-blockers guard exists and compares the LIVE count | `bundles_readiness.py:321` | added 2026-08-03; compares recomputed blockers, so hand-editing the stored count trips the other leg ✓ |
+| S8 | The ordering rule (9,10 before 13) remains unenforced | no check reads the fields to gate | D6 is the live case: `stage9: not_started`, `stage10: skeleton`, `stage13: green`, 0 blockers — satisfies S7, violates the rule ✓ |
+| S9 | **SET:** the status enum has drifted | declared vs observed | declared `pending\|green\|red` (+`yellow` for s13) at `Phase7a_Roadmap.md:91-93`; live corpus uses **5** values — `green`, `pending`, `pending-redo`, `skeleton`, `not_started` — **3 undeclared** ✓ |
+
+⚠️ **S6 is the fourth over-claim this session produced by reading a mechanism partially.** The
+formula's first two branches were not read before it was characterised. Read the whole function.

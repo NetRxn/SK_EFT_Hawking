@@ -221,11 +221,9 @@ The finding→gate pipeline and its silent drops are in
 
 **Live gaps:**
 
-- **The "Stages 9 and 10 before 13" hard gate has no enforcement point.** A bundle can sit at
-  `stage13_status: green` with `stage9_status: not_started`.
-- **Nothing in the codebase writes a `stage*_status` to `green`.** The only writers set
-  `"pending"`. Every green is a hand edit, and the reviewer agents that would earn one have no
-  write path to the field they gate on.
+- **The two `stage*_status` gaps — the missing promotion actor and the unenforced ordering rule
+  — are stated with their transitions and their guards in [§8](#8--gates-and-human-sign-off).**
+  Read them there; this section does not restate them.
 - ⚠️ **A review written in an unrecognised heading style mints nothing, silently.** The
   extractor's accepted forms, and why the risk is a NEW form rather than the existing corpus,
   are in [`QA_QI_INFRASTRUCTURE_MAP.md` §3](QA_QI_INFRASTRUCTURE_MAP.md#the-dialect-question--narrow-but-no-longer-single).
@@ -256,6 +254,70 @@ Roster and priorities: [`SURFACE_INVENTORY.md`](SURFACE_INVENTORY.md#readiness-g
 each gate computes, and what actually blocks:
 [`VALIDATION_GATE_TOPOLOGY.md`](VALIDATION_GATE_TOPOLOGY.md). Where a human decides:
 [`QA_QI_INFRASTRUCTURE_MAP.md`](QA_QI_INFRASTRUCTURE_MAP.md#4-human-decision-points).
+
+### The promotion path — how a bundle reaches submission-ready
+
+**This is the state machine, and its most important property is that one transition has no
+actor.** Two fields move independently: the three `stage*_status` fields, hand-owned; and the
+derived `readiness`/`blockers_open` fields, script-owned.
+
+| # | transition | performed by |
+|---|---|---|
+| 1 | bundle created → `stage9/10/13_status = "pending"` | `bundle_source_manifest.py:129-131` |
+| 2 | **`"pending"` → `"green"` on any of the three stages** | ⛔ **nothing** — see below |
+| 3 | `"green"` → `"pending"` when new content is appended | `bundle_append.py:320-325` |
+| 4 | findings → `blockers_open`, `open_findings`, `readiness` | `bundle_readiness.write_metadata_counts` |
+| 5 | all conditions met → submission | operator runs `gate_precheck.py submission` |
+
+**Exit condition** (`BUNDLE_LIFT_PROCEDURE.md` §12) — iterate §8→§9→§10→§11 until all six hold:
+`stage9_status == "green"` · `stage10_status == "green"` · `stage13_status == "green"` ·
+`blockers_open == 0` · `stage13_redo_required == false` · `freshness_stale == false`.
+
+**The derived verdict** (`bundle_readiness.py:370-391`), in evaluation order:
+
+```
+n_blockers > 0            → RED
+not review_recorded       → YELLOW (unreviewed)
+open_findings > 5         → YELLOW
+otherwise                 → GREEN
+  …then GREEN is withdrawn if a P1 gate is blocked,
+     or if the P1 gates could not be computed at all
+```
+
+⚠️ **Transition 2 is unimplemented.** No code path in the repository writes `"green"` to any
+`stage*_status`; the only writers set `"pending"`. **Every green in the corpus is a hand edit.**
+The reviewer agents that would earn one have no write path to the field they gate on, so the
+stage that a reviewer completes and the field that records it are connected only by an operator
+editing JSON.
+
+This is why bundle status cannot currently be read as evidence of review. It is not a defect in
+any one component — the transition was never specified, so it was never built.
+
+**What IS enforced.** Two guards, both real:
+
+- `stage13_status == "green"` with **live** blockers > 0 is illegal
+  (`bundles_readiness.py:321`, added 2026-08-03). It compares against the recomputed count, not
+  the stored one, so hand-editing `blockers_open` to 0 trips the other leg instead.
+- `readiness` withholds GREEN when a P1 gate is blocked **or when the P1 gates could not be
+  computed** — "could not compute" and "nothing blocked" are deliberately not the same value
+  (`_blocked_p1_gates_by_paper` returns `None`, and the caller withholds).
+
+**What is NOT enforced, precisely.** The ordering rule — Stages 9 and 10 GREEN before 13 —
+stated as a hard pre-condition in `BUNDLE_LIFT_PROCEDURE.md` §10. Nothing reads the fields to
+gate on it. A bundle can therefore satisfy the green-with-blockers guard while violating the
+ordering rule, which is the state D6 is in: `stage9: not_started`, `stage10: skeleton`,
+`stage13: green`, 0 blockers.
+
+⚠️ **`review_recorded` does not discriminate review KIND or SCOPE.** The formula's
+`not review_recorded → YELLOW (unreviewed)` branch is sound, but any document referenced by
+`stage13_review_doc` satisfies it — a targeted 16-anchor attribution sweep counts the same as a
+full adversarial pass. That, not an absent unreviewed-guard, is how a bundle whose Stage 10 never
+ran reaches GREEN.
+
+**The status enum has drifted.** `Phase7a_Roadmap.md:91-93` declares
+`pending | green | red` (plus `yellow` for stage 13). The live corpus uses **five** values —
+`green`, `pending`, `pending-redo`, `skeleton`, `not_started` — three of them undeclared.
+`BUNDLE_READINESS_HEATMAP.md` surfaces non-enum values verbatim rather than rejecting them.
 
 **Live gaps:**
 

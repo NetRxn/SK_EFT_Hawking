@@ -426,13 +426,20 @@ keeps the target moving. No code required — this is process, and it is why cov
 
 ### D5. The bundle readiness signal is inverted — OPEN (CRITICAL)
 
-Full analysis: [`docs/audits/2026-08-07-publication-readiness/`](../../audits/2026-08-07-publication-readiness/README.md).
+Full analysis: [`docs/audits/2026-08-01-publication-readiness/`](../../audits/2026-08-01-publication-readiness/ADDENDUM-2026-08-07.md).
 
 - **What:** `readiness` is GREEN iff 0 blockers ∧ ≤5 advisories ∧ a recorded Stage-13 review.
   Blockers derive from `ReviewFinding` nodes, which are minted by reviews. A bundle never
   reviewed has no findings and qualifies for GREEN.
 - **Measured:** non-RED bundles average **31** sentences reviewed; RED bundles average **71**.
   The one GREEN bundle (D9) has **0**. The most-reviewed bundle (I1, 290) is RED.
+- ⚠️ **Stated precisely:** the formula DOES guard the unreviewed case
+  (`not review_recorded → YELLOW`) and withholds GREEN on a blocked or uncomputable P1 gate. The
+  defect is that `review_recorded` does not discriminate review KIND — a 16-anchor attribution
+  sweep satisfies `stage13_review_doc` exactly as a full adversarial pass does.
+- **Also OPEN: transition 2 of the promotion path has no actor.** No code writes `"green"` to any
+  `stage*_status`; reviewer agents have no write path. State machine now documented in
+  `END_TO_END_MAP.md` §8. The status enum has drifted: 3 of 5 live values are undeclared.
 - **Fix shape (needs code):** the bundle layer needs the distinction `CheckResult.measured`
   already gives the check layer (ADR-009 D2). A bundle with no `claims_review.json` must be
   UNMEASURED, never GREEN. Plus: a check that every bundle HAS a claims review; an enforcement
@@ -463,4 +470,19 @@ Full analysis: [`docs/audits/2026-08-07-publication-readiness/`](../../audits/20
   a `prose-reviewer` agent as the fourth reviewer; a gate before Stage 13.
 - ⚠️ **The decider must not be the generator.** Metrics computed independently of the rewriter,
   and human calibration on a sample.
+
+### D8. No required-content contract for the architecture documents — OPEN
+
+- **What:** `README.md`'s ownership table declares which question each document must answer.
+  Nothing verifies that it does. `README.md:14` assigns *"how does work get from a roadmap to a
+  signed-off publication?"* to `END_TO_END_MAP.md`, which contained no promotion path at all
+  until 2026-08-07 — while both documents were verified 100% accurate at assertion granularity.
+- **Why the ledger cannot catch it:** assertion-granularity verification is a **soundness**
+  check. It asks whether every sentence present is true; it cannot ask whether a required
+  sentence is absent. A hard requirement can be wholly missing with the suite, the ledger and
+  `architecture_inventory_fresh` all green.
+- **Fix shape (needs code):** a fourth leg on `architecture_inventory_fresh` deriving the
+  question→document map from `README.md`'s table and asserting each target document contains a
+  section answering it — heading-level at minimum, so the check is structural rather than a
+  keyword proxy. This is the missing completeness half of the doc-accuracy guard.
 
