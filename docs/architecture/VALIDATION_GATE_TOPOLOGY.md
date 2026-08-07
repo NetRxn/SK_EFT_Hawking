@@ -62,10 +62,17 @@ SUBSTRATE and PAPER CORPUS, which is the same partition this section is about.
 | `--ci` | skips the mtime regenerators + `notebook_exec`; enforces the coverage floor; never archives | nothing today |
 | `--force-notebooks` | bypasses the notebook skip-cache | manual, after a kernel/dependency change |
 
-`--strict` is scoped to submission by Pipeline Invariant #12, and the reason is concrete:
+`--strict` is passed only by the submission gate, and the reason is concrete:
 `bundle_source_freshness` WARNs whenever a source paper moved after its last bundle lift —
 the **normal** state of an in-progress bundle. A strict wave-close gate would go red on
 correct work mid-wave, and **a gate that fires on correct work gets switched off.**
+
+⚠️ **No invariant scopes `--strict` suite-wide.** An earlier revision of this section said
+*"`--strict` is scoped to submission by Pipeline Invariant #12."* That is an overread:
+Invariant #12 governs `provenance_doi_in_registry` and says `--strict` is *mandatory at the
+Paper Submission Gate* **for that check**. It states a local rule, not a global policy. The
+suite-wide scoping is a property of `gate_precheck.py` — which passes `--strict` at
+`submission` and nowhere else — not of any invariant.
 
 ## 4. What each readiness gate actually computes
 

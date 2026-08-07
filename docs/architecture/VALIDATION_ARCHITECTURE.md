@@ -87,13 +87,18 @@ it and `_apply_canonical_order()` sorts in place. This matters because the regen
 `freshness.py` *rewrite artifacts other checks read* — their position relative to their
 consumers is semantic.
 
-## 3. The four hazards, and how each is structurally prevented
+## 3. The hazards, and how each is structurally prevented
 
-These are ADR-009 D3. They are not style rules; each names a failure the project has shipped.
+These are ADR-009 D3, which identifies **five**. They are not style rules; each names a
+failure the project has shipped.
+
+⚠️ An earlier revision of this section was titled *"the four hazards"* and silently omitted
+**H2** — visible in the numbering, which skipped from H1 to H3. H2 is live, not retired.
 
 | | hazard | rule | enforced by |
 |---|---|---|---|
 | **H1** | a path derived from `__file__` resolves to `scripts/validation/checks/`, so every artifact lookup silently misses | reach paths as `_H.<NAME>` **at each use** — never a module-level alias, never from `__file__` | `test_no_check_derives_a_path_from___file__` |
+| **H2** | the roster gate asserts on a module named exactly `validate`, so a split that renames or hollows it breaks the gate silently | `validate` must keep exposing `BUNDLE_CODES` | `bundle_registry_consistency` Leg B (`_ROSTER_CONSUMERS`) + `EXPECTED_DYNAMIC` in `test_validate_public_surface.py` |
 | **H3** | import order silently becomes execution order | `_CANONICAL_ORDER` owns it | `test_every_registered_check_has_a_declared_position` + `test_the_sort_runs_after_the_last_registration` |
 | **H4** | the same missing artifact means different things in different checks; a shared helper would unify them silently | helpers own *where a thing is*, **never what its absence means** | `test_cannot_measure_baseline` freezes the divergent policies |
 | **H5** | `from validate import STRICT_MODE` binds a **copy** at import time; `--strict` becomes a silent no-op | reach flags by **attribute** on `_config` | `test_validate_flag_propagation` |
