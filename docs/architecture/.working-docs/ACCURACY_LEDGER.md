@@ -39,10 +39,10 @@ otherwise.**
 | `QA_QI_INFRASTRUCTURE_MAP.md` | 69 | 86 | **80%** |
 | `VALIDATION_GATE_TOPOLOGY.md` | 54 | 69 | **78%** |
 | `CHECK_AUTHORING_GUIDE.md` | 40 | 54 | **74%** |
-| `END_TO_END_MAP.md` | 58 | 80 | **73%** |
+| `END_TO_END_MAP.md` | 67 | 80 | **84%** |
 | `VALIDATION_ARCHITECTURE.md` | 39 | 54 | **72%** |
 | `SURFACE_INVENTORY.md` | 6 | — | generated (see below) |
-| **total** | **281** | **361** | **≈78%** |
+| **total** | **290** | **361** | **≈80%** |
 
 `SURFACE_INVENTORY.md` is emitted wholesale by `scripts/architecture_inventory.py`. Its 155
 load-bearing lines are derived data, decided by one check — regenerate and diff, which
@@ -92,9 +92,9 @@ converge — which is why the remaining work below is stated as a queue, not a c
 
 ### Remaining work
 
-**80 load-bearing units carry no row:** `END_TO_END_MAP.md` (22), `QA_QI_INFRASTRUCTURE_MAP.md`
-(17), `VALIDATION_ARCHITECTURE.md` (15), `VALIDATION_GATE_TOPOLOGY.md` (15),
-`CHECK_AUTHORING_GUIDE.md` (14), `README.md` (3). Verify at the granularity above:
+**71 load-bearing units carry no row:** `QA_QI_INFRASTRUCTURE_MAP.md` (17),
+`VALIDATION_ARCHITECTURE.md` (15), `VALIDATION_GATE_TOPOLOGY.md` (15),
+`CHECK_AUTHORING_GUIDE.md` (14), `END_TO_END_MAP.md` (13), `README.md` (3). Verify at the granularity above:
 one proposition per row, a decider (never a proxy), completeness for set claims, and the actual
 subject for any number-cited invariant or ADR.
 
@@ -116,7 +116,7 @@ Status is per-ATOM, never per-document. A document is not certified; its enumera
 | `CHECK_AUTHORING_GUIDE.md` | 24 atoms, 1 corrected, 4 reframed | V8: 4 · V12: 12, 2 corrected | 40 | 14 |
 | `VALIDATION_GATE_TOPOLOGY.md` | 38 atoms, 1 corrected | V8: 5 · V13: 11, 1 corrected | 54 | 15 |
 | `QA_QI_INFRASTRUCTURE_MAP.md` | 48 atoms, 2 corrected | 21 atoms, 5 corrected | 69 | 17 |
-| `END_TO_END_MAP.md` | 34 atoms, 0 corrected | V9: 8 · V11: 16, 1 corrected | 58 | 22 |
+| `END_TO_END_MAP.md` | 34 atoms, 0 corrected | V9: 8 · V11: 16 · V14: 9 — 3 corrected | 67 | 13 |
 
 ⚠️ **`END_TO_END_MAP.md` has the largest uncovered surface and the fewest recorded
 corrections.** Zero corrections over 34 atoms is not evidence that the other 46 units are
@@ -764,3 +764,25 @@ writes it zero times. Counting occurrences would have produced three false corre
 | T11 | The §6 thesis — *"a check telling you to run a script that cannot fix the field"* | — | **NOT-AN-ASSERTION** — a statement of the table's purpose |
 
 **Coverage after V13:** `VALIDATION_GATE_TOPOLOGY.md` 43 → **54 atoms** of 69 (62% → **78%**).
+
+---
+
+## V14 — `END_TO_END_MAP.md` §§7–8 — 9 atoms, 1 corrected
+
+| # | atom | decided by | result |
+|---|---|---|---|
+| N1 | **SET:** the only writers of `stage*_status` are `bundle_source_manifest.py` and `bundle_append.py` | every assignment across `scripts/` | 2 writers ✓ complete |
+| N2 | **SET:** nothing writes any `stage*_status` to `"green"` | the literal values assigned | `bundle_source_manifest` initialises `"pending"` ×3; `bundle_append` demotes green→`"pending"` ×3. **No `"green"` assignment exists** ✓ |
+| N3 | *"Stages 9 and 10 before 13"* has no enforcement point | no check reads the fields to gate | `bundle_append.py:320-325` reads them to DEMOTE, never to block ✓ |
+| N4 | `tables_fresh` cannot fail on staleness | `freshness.py:301-330` | stale → `Detail(..., True, ..., warning=True)` then falls through to `return CheckResult(passed=True, ...)` ✓ |
+| N5 | Only a non-zero subprocess or an unverified regeneration fails it | same body | `passed=False` at `:318`, `:323`, `:327` only ✓ |
+| N6 | **SET:** every `tables.py` on disk is under a legacy `paperNN_*` directory | `find papers -name tables.py` | **9 files, all `paperNN_*`; zero under a bundle directory** ✓ complete |
+| N7 | **NUMBER-CITED:** §8's *"Invariant #8"* resolves to parameter provenance | the law's invariant list | *"Every experimental parameter has verified provenance."* ✓ — matches the dashboard/provenance context §8 uses it in |
+| N8 | ~~Legibility is the **only** blocking figure assertion~~ | `bundle_figure_integrity`'s `n_fail` increments | ❌ **FALSE** — **four** legs block: `missing_fn`, `missing_png`, `render_error`, `illegible`. Only `drift` carries `warning=True`. Statement replaced |
+| N9 | The drift comparison is advisory | the `drift:` Detail | `warning=True` ✓ |
+
+⚠️ **N8 is a set claim that was verified by its named member.** Legibility *does* block, so
+confirming it would pass; the atom is *"the only"*, which needs every `n_fail` increment
+enumerated. This is requirement 4 exactly, and it survived four prior passes over this file.
+
+**Coverage after V14:** `END_TO_END_MAP.md` 58 → **67 atoms** of 80 (73% → **84%**).

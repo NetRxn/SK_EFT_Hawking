@@ -230,7 +230,8 @@ The finding→gate pipeline and its silent drops are in
   the graph, and `review_docs_mint_findings` passes across every document carrying an
   unresolved severity-labelled heading.
 - **Figure checking is scoped to a subset of bundles**, and within it the drift comparison is
-  advisory; legibility is the only blocking figure assertion. Note that most of the figure
+  the advisory leg. Four legs block: a missing figure function, a missing PNG, a render
+  failure, and illegibility. Note that most of the figure
   registry is legacy `paperNN_` figures, so the uncovered *bundle* population is much smaller
   than the registry size suggests — check the registry rather than assuming either extreme.
 - **`tables_fresh` cannot fail on staleness.** Its stale branch appends a `Detail` and falls
