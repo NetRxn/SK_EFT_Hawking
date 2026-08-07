@@ -61,8 +61,27 @@ See **B2**.
 - **Where:** `docs/AI-DEFECT-DEFENSE-LAYER.md` names `scripts/pre_commit_hook.sh` and
   `scripts/install_pre_commit.sh` as its Tier-1 implementation.
 - **Verified this pass:** both **absent** from the tree.
-- **Compounding:** Pipeline Invariant #16 cites that document as canonical, under a filename
-  that is also wrong.
+- ❌ **CORRECTED 2026-08-07 — an inherited claim that was doubly false.** This read
+  *"Pipeline Invariant #16 cites that document as canonical, under a filename that is also
+  wrong."* Neither half holds: the real Invariant #16
+  (`WAVE_EXECUTION_PIPELINE.md:695`) is the **tracked-hypothesis registry**, the pipeline law
+  does **not reference the AI-Defense document under any name**, and the filename is correct.
+- ✅ **The real compounding defect, verified:** the document declares its **own**
+  `## Pipeline Invariant #16` (`:162`), colliding with the live Invariant #16. Two unrelated
+  rules share one number across two documents. Also verified: all five of its named Tier-2
+  checks (`threshold_arithmetic`, `theorem_quoted_bound_matches_lean_literal`,
+  `bibitem_registry_character_match`, `citation_bibkey_form_matches_metadata`,
+  `bundle_latex_compile_clean_citations`) appear in **zero** code files.
+- **Git history:** committed exactly once, as `7530fc13 "AI-Defect Defense layer draft"`. It
+  is a **proposal**, and its own header (*"Canonical Specification"*) plus an
+  *"Implementation:"* line are what make it read as a description of a live system.
+- **Disposition (research complete, aligned with intent):** do **not** build a parallel
+  Tier-1 hook beside `pre-commit-sync.sh`. Its highest-value intents were independently
+  implemented under other names — `axiom` → `AXIOM_METADATA` is Invariant #15 +
+  `axiom_closure_allowlist`; `native_decide` is `native_decide_regression` (ADR-002). Re-frame
+  the document as a proposal carrying a **coverage map** (intent → the existing machinery that
+  already meets it, or "residue, unbuilt"), renumber its invariant, and implement only the
+  genuine residue. The `csimp` guard has no coverage anywhere and is the clearest residue.
 - **Documented in:** `VALIDATION_GATE_TOPOLOGY.md` §5, `CHECK_AUTHORING_GUIDE.md` §5.
 
 ---

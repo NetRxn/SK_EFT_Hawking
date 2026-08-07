@@ -113,10 +113,18 @@ new silent PASS, or a converted one left stale in the baseline.
 scan for a literal `passed=False`; a check can satisfy that scan while being unreachable in
 every leg. A semantic-reachability re-measurement has never been run.
 
-**Claims enforcement, has none.** `docs/AI-DEFECT-DEFENSE-LAYER.md` names
-`scripts/pre_commit_hook.sh` and `scripts/install_pre_commit.sh` as its Tier-1
-implementation. **Both are absent.** Nearly all of its named Tier-2 checks were never written.
-Pipeline Invariant #16 cites the document as canonical — under a filename that is also wrong.
+**Claims enforcement, has none.** `docs/AI-DEFECT-DEFENSE-LAYER.md` is headed *"Canonical
+Specification"* and carries an **"Implementation:"** line naming `scripts/pre_commit_hook.sh`
+and `scripts/install_pre_commit.sh`. **Both are absent**, and none of its named Tier-2 checks
+was ever written. It is a **proposal that reads as a description** — committed once, as a
+draft, and never built.
+
+⚠️ It also declares its own **"Pipeline Invariant #16"**, which **collides** with the real
+Invariant #16 (the tracked-hypothesis registry). Two different rules share one number in two
+documents. Nothing in the pipeline law cites the AI-Defense document at all — an earlier
+revision of this section said Invariant #16 cited it "under a filename that is also wrong",
+and both halves of that were false. Tracked as **A2** in
+[`.working-docs/ARCHITECTURE_TODOs.md`](.working-docs/ARCHITECTURE_TODOs.md).
 
 Also claiming enforcement and having none: the Stage-9 verdict has no machine reader, and
 `stage9_status` / `stage10_status` are read by nothing. Nothing in the codebase writes any

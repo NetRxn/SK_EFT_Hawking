@@ -154,7 +154,7 @@ repaired, and a reader who takes the table as a list of live defects will chase 
 | `_blocked_p1_gates_by_paper` | `{}` | "could not compute" and "nothing blocked" shared one value | **fixed** — returns `None`, and GREEN is withheld in that case |
 | the dead-edge guard | "derived on both sides" | its emitted-set scan collected **node** types too, so its population was wider than its subject and it could not fail on the case it was built for | **fixed** — the scan is scoped structurally to dicts carrying `source`/`target` |
 | `harness_lock` on contention | "regenerate: succeeded" | the caller treats a skipped regeneration as a completed one — mechanism in [`QA_QI_INFRASTRUCTURE_MAP.md` §2](QA_QI_INFRASTRUCTURE_MAP.md#2-artifact-generation--writers-triggers-staleness-keys) | 🔴 **OPEN** |
-| AI-Defense Tier 1 | documented as implemented | `scripts/pre_commit_hook.sh` and `scripts/install_pre_commit.sh` do not exist | 🔴 **OPEN** |
+| AI-Defense Tier 1 | an *"Implementation:"* line names two scripts | neither script exists; the document is an unbuilt proposal headed "Canonical Specification" | 🔴 **OPEN** |
 
 **The generalisable lesson, and why it is here rather than in a changelog:** in the memo's
 case all four guards policed *how the cache is used*; none audited *whether the key spans the
