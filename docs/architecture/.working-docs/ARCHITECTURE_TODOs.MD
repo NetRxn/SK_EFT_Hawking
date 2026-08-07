@@ -212,6 +212,38 @@ document, so a reader is being handed five wrong facts before any work starts.
 - **Fix shape:** rename one of them, or have the law name claims review as its own stage.
   A decision, not a doc edit.
 
+### B7. `SURFACE_INVENTORY.md`'s header overstates how its own tables are derived — OPEN
+
+**This is a doc-accuracy defect whose fix requires a CODE edit, so it is filed rather than
+made.** The sentence is emitted by the generator, not written in the tracked file.
+
+- **Where:** `scripts/architecture_inventory.py:289` emits
+  *"Every table below is read from the artifact that owns the population — the check registry,
+  the gate roster, the plugin manifest, the AST of the graph builder."*
+- **Why it is wrong, in two ways:**
+  1. **The named source list is incomplete.** Measured, the eight tables draw on six kinds of
+     source: `validate._CHECKS`; `readiness_gates.GATES`; `build_graph.SHAPE_MAP` **plus** the
+     AST of `build_graph.py` and of `readiness_gates.py`; the plugin `hooks/hooks.json`
+     manifest plus git hooks on disk; agent/command `.md` frontmatter; module attribute probes;
+     and `bundle_registry` plus `papers/*/bundle_metadata.json`.
+  2. **"Every table" is false for the registries table.** `registries()` iterates a
+     **hand-written `probes` list** of ten names. Its population is curated in the generator,
+     not read from an owning artifact.
+- **The curation is CORRECT and should not be "fixed" into a derivation.** Measured:
+  `src/core/constants.py` holds **67** module-level uppercase collections; the other 60 are
+  physics data (`A1_EXT_DIMENSIONS`, `ADW_2D_MODEL`, …), not registries. "Is this collection a
+  registry?" is an editorial judgement, and the function's own docstring says so —
+  *"HAND-MAINTAINED is the point."* Deriving it mechanically would flood the table with
+  lattice-scan constants.
+- **So the fix is to the SENTENCE, not the mechanism:** state that most tables are read from
+  the artifact that owns the population, and that the registries table is a deliberately
+  curated list of the hand-maintained surfaces worth tracking.
+- **One genuine omission to consider while editing:** `citations.PAPER_TO_PHASE` is a
+  module-level mapping not in the probe list. Whether it counts as a tracked registry is the
+  same editorial call.
+- **Consequence for the accuracy goal:** `SURFACE_INVENTORY.md` **cannot be marked VERIFIED**
+  while this sentence stands. Recorded in `ACCURACY_LEDGER.md` as the one atom blocking it.
+
 ---
 
 ## C. Watch list
