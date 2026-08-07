@@ -36,13 +36,13 @@ otherwise.**
 | document | atom rows | load-bearing sentences + table rows | coverage |
 |---|---:|---:|---:|
 | `README.md` | 15 | 18 | **83%** |
-| `QA_QI_INFRASTRUCTURE_MAP.md` | 69 | 86 | **80%** |
+| `QA_QI_INFRASTRUCTURE_MAP.md` | 77 | 86 | **90%** |
 | `VALIDATION_GATE_TOPOLOGY.md` | 54 | 69 | **78%** |
 | `CHECK_AUTHORING_GUIDE.md` | 40 | 54 | **74%** |
 | `END_TO_END_MAP.md` | 67 | 80 | **84%** |
 | `VALIDATION_ARCHITECTURE.md` | 39 | 54 | **72%** |
 | `SURFACE_INVENTORY.md` | 6 | — | generated (see below) |
-| **total** | **290** | **361** | **≈80%** |
+| **total** | **298** | **361** | **≈83%** |
 
 `SURFACE_INVENTORY.md` is emitted wholesale by `scripts/architecture_inventory.py`. Its 155
 load-bearing lines are derived data, decided by one check — regenerate and diff, which
@@ -92,9 +92,9 @@ converge — which is why the remaining work below is stated as a queue, not a c
 
 ### Remaining work
 
-**71 load-bearing units carry no row:** `QA_QI_INFRASTRUCTURE_MAP.md` (17),
-`VALIDATION_ARCHITECTURE.md` (15), `VALIDATION_GATE_TOPOLOGY.md` (15),
-`CHECK_AUTHORING_GUIDE.md` (14), `END_TO_END_MAP.md` (13), `README.md` (3). Verify at the granularity above:
+**63 load-bearing units carry no row:** `VALIDATION_ARCHITECTURE.md` (15),
+`VALIDATION_GATE_TOPOLOGY.md` (15), `CHECK_AUTHORING_GUIDE.md` (14),
+`END_TO_END_MAP.md` (13), `QA_QI_INFRASTRUCTURE_MAP.md` (9), `README.md` (3). Verify at the granularity above:
 one proposition per row, a decider (never a proxy), completeness for set claims, and the actual
 subject for any number-cited invariant or ADR.
 
@@ -115,7 +115,7 @@ Status is per-ATOM, never per-document. A document is not certified; its enumera
 | `VALIDATION_ARCHITECTURE.md` | 22 atoms, 1 corrected | V10: 17 atoms, 1 corrected | 39 | 15 |
 | `CHECK_AUTHORING_GUIDE.md` | 24 atoms, 1 corrected, 4 reframed | V8: 4 · V12: 12, 2 corrected | 40 | 14 |
 | `VALIDATION_GATE_TOPOLOGY.md` | 38 atoms, 1 corrected | V8: 5 · V13: 11, 1 corrected | 54 | 15 |
-| `QA_QI_INFRASTRUCTURE_MAP.md` | 48 atoms, 2 corrected | 21 atoms, 5 corrected | 69 | 17 |
+| `QA_QI_INFRASTRUCTURE_MAP.md` | 48 atoms, 2 corrected | V8: 21, 5 corr · V15: 8, 1 corr | 77 | 9 |
 | `END_TO_END_MAP.md` | 34 atoms, 0 corrected | V9: 8 · V11: 16 · V14: 9 — 3 corrected | 67 | 13 |
 
 ⚠️ **`END_TO_END_MAP.md` has the largest uncovered surface and the fewest recorded
@@ -424,7 +424,7 @@ narrow search was *true* about its own scope and false as stated.
 | 50 | `chain_canonicalize.py --report` exists and is read-only | its CLI | ✓ |
 | 51 | **CORRECTED:** "the instrument ranks per-bundle severity and surfaces bundles with no chain-of-backing" | ran `--report`; read the full CLI | ❌ **FALSE** — it emits a breakdown by **resolution class** only. The single other flag is `--paper <dir>`, which *limits* a run. No per-bundle ranking exists |
 | 52 | A discharged axiom is still cited | `gapped_interface_axiom` in `claims_review.json`; `counts.json` axioms | cited; axiom count **0** ✓ |
-| 53 | A FALSE theorem is still cited, with an I1 waiver | `TetradGapEquation.lean:314` note; `papers/I1/claims_review.json` | note present; I1's record documents it as history ✓ |
+| 53 | ⚠️ **SUPERSEDED by V8 Q9/Q11 — do not quote this row.** It recorded I1's citation as a *documented waiver*; re-derivation found no waiver field, no `link_state`, and no waiver record anywhere. I1's two mentions are narrative history, and `gap_solution_bounded` is not a false theorem but a commented-out block — not a declaration at all. The V8 rows are authoritative |
 | 54 | **SET:** nothing gates on the chain instrument | grep `validation/checks/`, `readiness_gates.py`, `gate_precheck.py` | **0** references ✓ |
 | 55 | **SET:** the Codex control plane has zero references to the five named modules | grep `scripts/lean_slots/`, `.codex/` | 0 for all five ✓ |
 
@@ -786,3 +786,33 @@ confirming it would pass; the atom is *"the only"*, which needs every `n_fail` i
 enumerated. This is requirement 4 exactly, and it survived four prior passes over this file.
 
 **Coverage after V14:** `END_TO_END_MAP.md` 58 → **67 atoms** of 80 (73% → **84%**).
+
+---
+
+## V15 — `QA_QI_INFRASTRUCTURE_MAP.md` §§1/6 + ledger integrity — 8 atoms, 1 corrected
+
+| # | atom | decided by | result |
+|---|---|---|---|
+| P1 | **SET:** every artifact name in §1's mermaid resolves in the tree | all 17 names, resolved by basename | **17 of 17** ✓ complete (they are labels, not paths — resolving them as repo-root paths reports 13 false failures) |
+| P2 | ~~§6: a filed item's four fields *"were wrong"*~~ | requirement 7 | ❌ **retraction narrative in a production document.** Reframed to the forward rule: each field of a finding is its own assertion, and an entry written from a sample reads exactly like one that was counted |
+| P3 | **SET:** the Codex control plane has zero references to the five named surfaces | `scripts/lean_slots/` + `.codex/` searched for each | `validate.py` 0 · `register_check` 0 · `gate_precheck` 0 · `bundle_readiness` 0 · `build_graph` 0 ✓ |
+| P4 | **SEAM GUARD for P3** — the searched directories are non-empty | `find` | `scripts/lean_slots` 11 files, `.codex` 7 files ✓ — the zero is a measurement, not an empty scan |
+| P5 | §6's *"re-measure the scope before fixing"* | — | **NOT-AN-ASSERTION** — an instruction to a future author |
+
+### Ledger integrity
+
+| # | atom | decided by | result |
+|---|---|---|---|
+| P6 | V6 row 53 and V8 Q9 contradicted each other | both rows, read | ❌ V6 recorded I1's citation as a *documented waiver* ✓; V8 re-derived and found **no waiver anywhere**. Row 53 now carries a SUPERSEDED marker naming V8 Q9/Q11 as authoritative |
+| P7 | No other V1–V7 row is contradicted by V8–V14 | each correction cross-checked against the earlier passes | row 53 was the only collision ✓ |
+| P8 | The requirement-7 scan pattern was too narrow | re-run with `(was\|were\|had been\|used to be) (wrong\|false\|incorrect\|stale)` etc. | the original matched `was wrong` and missed **`were wrong`** — one live hit in §6. All seven now scan **0** under the wider pattern ✓ |
+
+⚠️ **P8 is a proxy failure inside the audit of proxy failures.** A requirement-7 scan is only
+as good as its pattern, and a clean result from a narrow pattern is indistinguishable from a
+clean document. The wider pattern is recorded here so the next scan starts from it.
+
+⚠️ **P6 establishes that ledger rows can go stale against each other.** A later pass that
+re-derives a claim and finds it false must mark the earlier row, or the audit trail asserts
+both. This is the ledger's own version of the perishability hazard in V9/V11/V13.
+
+**Coverage after V15:** `QA_QI_INFRASTRUCTURE_MAP.md` 69 → **77 atoms** of 86 (80% → **90%**).

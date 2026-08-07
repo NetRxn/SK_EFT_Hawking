@@ -312,14 +312,15 @@ exactly that pattern in the papers.
 
 ## 6. The standing lesson
 
-⚠️ **A filed finding's blast radius is a claim, not a measurement.** A deferred item was
-filed with a count, a consumer, a function name and an effort estimate. Re-measured at the
-fix, **all four were wrong** — and nothing had drifted; the entry was written from a sample
-and never summed.
+⚠️ **A filed finding's blast radius is a claim, not a measurement.** A finding carries a
+count, a consumer, a function name and an effort estimate, and each of those is an assertion
+in its own right — an entry written from a sample rather than a sum reads exactly like one
+that was counted.
 
 **Re-measure the scope before fixing, even when you wrote the finding yourself.** A fix is
 only as good as the partition it rests on, and a partition inherited from prose is not a
-partition.
+partition. Re-derive the count, the consumer and the blast radius against the current tree
+before acting on any of them.
 
 **Out of scope, verified non-overlapping.** The Codex control plane (`scripts/lean_slots/*`,
 `.codex/*`, ADR-008) has zero references to `validate.py`, `register_check`,
