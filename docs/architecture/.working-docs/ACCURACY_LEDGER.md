@@ -32,7 +32,7 @@ its own recorded check. A compound sentence is not one entry — it is one entry
 | `CHECK_AUTHORING_GUIDE.md` | thesis · §1–§6 | ✅ **VERIFIED** — 24 atoms, 1 corrected, 4 reframed |
 | `VALIDATION_GATE_TOPOLOGY.md` | §1–§7 | ✅ **VERIFIED** — 27 atoms, 1 corrected |
 | `QA_QI_INFRASTRUCTURE_MAP.md` | §1–§6 | ✅ **VERIFIED** — 31 atoms, 2 corrected |
-| `END_TO_END_MAP.md` | §1–§9 | TODO |
+| `END_TO_END_MAP.md` | §1–§9 | ✅ **VERIFIED** — 34 atoms, 0 corrected |
 
 ## Method, per atom
 
@@ -290,3 +290,55 @@ wiring"*, and §6's *"re-measure the scope before fixing"* — thesis and guidan
 hand measurement that reported per-bundle numbers, and was rewritten as a capability of the
 instrument. The instrument never had it. Verifying the *numbers* would not have caught this —
 only running the tool and reading its CLI did.
+
+
+---
+
+## V7 — `END_TO_END_MAP.md` — VERIFIED (34 atoms, 0 corrections)
+
+Graph claims re-derived against a **fresh** `build_graph_json()`, not the cached JSON from
+earlier in the session.
+
+| # | atom | decided by | result |
+|---:|---|---|---|
+| 1 | **SET:** no check module references `docs/roadmaps/` | grep `validation/checks/` | **0** ✓ |
+| 2 | **SET:** no `*_close.md` exists under `docs/roadmaps/` | glob | **0** ✓ |
+| 3 | `notebook_lib.py` wraps the roadmap read in `except Exception: return None` | `:201-205` | ✓ |
+| 4 | The graph schema lives in `KNOWLEDGE_GRAPH.md`, with a delta and a roadmap table outside `docs/architecture/` | all three paths | ✓ |
+| 5 | **SET:** every hook fails open except the egress guard | every hook command in `hooks.json` | 1 of 5 fail-closed ✓ |
+| 6 | The cached plugin builds differ from the repo copy; no drift detector | `diff` all three caches; grep for a detector | 79-line diffs; none contains `_PATH_WHITELIST` ✓ |
+| 7 | **SET:** `_read_active_issues` has zero callers | grep repo-wide | all hits are the same `def` across worktree copies ✓ |
+| 8 | `PRE_DECISIONS.md` names `/skeft-qa:trace`, which does not exist | the doc; `commands/` listing | named; 6 commands, `trace` absent ✓ |
+| 9 | `lean_zero_sorry` never softens the verdict | its source — no `_cfg.STRICT` reference | ✓ |
+| 10 | It reads `docs/counts.json`, returning `measured=False` when absent/unparseable | two early-return branches | ✓ |
+| 11 | Tier 0 catches `sorry` independently, via a quote-agnostic regex | `pre-commit-sync.sh:72` `declaration uses .?sorry.?` | ✓ |
+| 12 | ADR-006 states the gauntlet is the safety mechanism for the toolchain divergence | `ADR-006:85` verbatim | ✓ |
+| 13 | `zero_sorry` is inert — fixed-string quote style the toolchain does not emit | `aristotle_submit.py`; measured Lean output | ✓ |
+| 14 | `kernel_pure` is computed over target decls only | `aristotle_submit.py:719-721` | ✓ |
+| 15 | The gauntlet regenerates `lean_deps.json` before judging | its step 2 | calls `load_lean_deps()` ✓ |
+| 16 | **SET:** nothing compares `PLACEHOLDER_TOTAL_COUNT` to `counts.json` | grep every consumer | none compares ✓ |
+| 17 | **SET:** `last_modified` is one value across the whole graph | fresh build | **1** distinct: the epoch ✓ |
+| 18 | `docs/verification_log.jsonl` does not exist | filesystem | absent ✓ |
+| 19 | `Phase5v_Roadmap.md` calls the freshness layer "the highest-value capability" | `:823` verbatim | ✓ |
+| 20 | **SET:** `PRODUCES`/`SUPPORTS`/`CONTRADICTS` are emitted nowhere | fresh build's edge-type set | none present ✓ |
+| 21 | `PRODUCES` was deferred to Wave 4 | `Phase5v_Roadmap.md:220` | *"PRODUCES edges deferred to Wave 4 where run-to-claim mapping is curated"* ✓ |
+| 22 | **SET:** the string appears nowhere from the Wave-4 close onward | close heading located at `:363`; all `PRODUCES` at 94/220/311 | all **before** the close ✓ |
+| 23 | The PG mirror is schema-complete and data-empty | live AGE query | **48** labels, **1** vertex ✓ |
+| 24 | `provenance_dashboard.py` honours `SK_EFT_GRAPH_SOURCE=pg` | `:152` | ✓ |
+| 25 | **SET:** `BACKED_BY.link_state` produces two of five declared states | fresh build | `resolved`, `missing_target` only ✓ |
+| 26 | **SET:** `Sentence.verification` is never derived | fresh build | every value `None` ✓ |
+| 27 | `sentence_state.py` is the declared sole writer of AuditEvent records | `KNOWLEDGE_GRAPH.md:197`; the script's own header | *"written EXCLUSIVELY via"* ✓ |
+| 28 | The skipped records carry neither `target_id` nor `actor` | scan all `audit_log.jsonl` | 1 of 239 has the writer's shape ✓ |
+| 29 | **SET:** nothing validates either genre | grep `validation/checks/` for `audit_log` | **0** ✓ |
+| 30 | `ProductionRun` nodes have no outgoing edges | fresh build | **0 of 18** ✓ |
+| 31 | Stage 14 derives zero QI items | `qi_register.py --stats` | `findings_total` 1561, `qi_items_detected` **0** ✓ |
+| 32 | The dashboard prints the working route for Invariant #8 | `provenance_dashboard.py:5488` | names `wave2_flip_provenance.py` ✓ |
+| 33 | **SET:** §9's five process-law drift items | one measurement each | *12 stages* vs **14** headings · *Checks (16 total)* · *18 targets* enum vs **21** live incl. D10–D12 · *we run 4.29.1* vs **v4.32.0** · *no per-repo CLAUDE.md* vs one that **exists** — all five ✓ |
+| 34 | `bundle_registry_consistency` Leg C forbids re-hardcoded rosters | the check's Leg C | ✓ |
+
+**NOT-AN-ASSERTION:** §1's *"the two ends are the weak ones"* and the §6 lesson *"a gate that
+fires is not a gate that measures what it claims to"* — thesis and lesson.
+
+**Zero corrections.** This is the only document of the seven to survive assertion-granularity
+verification unchanged — because it was rewritten from measurement after the earlier passes,
+and every claim it inherited had already been re-derived or removed.
