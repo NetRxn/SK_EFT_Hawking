@@ -35,7 +35,7 @@ under the no-code constraint.**
 | incident citations reframed | **4** |
 | documents surviving unchanged | **1** (`END_TO_END_MAP.md`) |
 
-⛔ **`SURFACE_INVENTORY.md` is BLOCKED on a single atom.** Its header claims *"Every table
+⚠️ **`SURFACE_INVENTORY.md` carries one known-false sentence, and its fix is deliberately deferred.** Its header claims *"Every table
 below is read from the artifact that owns the population"*, which is false for the registries
 table — that population is a curated `probes` list inside the generator, correctly so, because
 "is this collection a registry?" is editorial (`constants.py` holds 67 module-level uppercase
@@ -63,7 +63,7 @@ resolving a cited invariant number to its actual subject.
 | document | sections | status |
 |---|---|---|
 | `README.md` | index table · two rules · scope boundary | ✅ **VERIFIED** — 8 atoms, all checked |
-| `SURFACE_INVENTORY.md` | header prose · derivation sources (tables are derived + gated) | ⛔ **BLOCKED** — atom 2 false; fix needs a generator edit (TODO **B7**) |
+| `SURFACE_INVENTORY.md` | header prose · derivation sources (tables are derived + gated) | ✅ **VERIFIED-WITH-DEFERRED-FIX** — 5 of 6 atoms pass; atom 2 is false, its fix is non-markdown and is **enumerated as B7 per the operator's standing instruction**, not made |
 | `VALIDATION_ARCHITECTURE.md` | §1–§6 | ✅ **VERIFIED** — 22 atoms, 1 corrected |
 | `CHECK_AUTHORING_GUIDE.md` | thesis · §1–§6 | ✅ **VERIFIED** — 24 atoms, 1 corrected, 4 reframed |
 | `VALIDATION_GATE_TOPOLOGY.md` | §1–§7 | ✅ **VERIFIED** — 27 atoms, 1 corrected |
@@ -169,10 +169,21 @@ defect. Those are not doc-history and do not prime a false belief about current 
 | 5 | "No timestamp is recorded here on purpose" | grep for `YYYY-MM-DD` in the file | 0 hits ✓ |
 | 6 | The narrative companion is `END_TO_END_MAP.md` | link resolves; that file is the narrative | ✓ |
 
-**Atom 2 is why this document is not VERIFIED.** Under the no-code constraint the sentence
-cannot be corrected, because it is emitted by the generator rather than stored in the tracked
-file. Marked BLOCKED rather than passed, and rather than silently narrowed to the atoms that
-do pass.
+**Atom 2's disposition is DIRECTED, not unresolved.** The sentence is emitted by
+`architecture_inventory.py:289`, so correcting it is a `.py` edit, not a markdown one. The
+operating instruction for this pass is explicit that *"any and all issues that require
+remediation (i.e., not markdown file updates) must be enumerated & documented"* — so
+enumerating it as **B7** IS the specified handling, not a failure to complete.
+
+The document is therefore recorded as **VERIFIED-WITH-DEFERRED-FIX**: five atoms pass, the
+sixth is false, known, precisely located, and carries recommended wording in B7. It is not
+marked plain VERIFIED, because that would assert a false sentence is true; and it is no longer
+marked BLOCKED, because nothing is waiting on discovery — only on authorization to touch one
+string in a generator.
+
+⚠️ **A fresh-context reader should treat that one header sentence as untrue** until B7 lands.
+Every table in the file is correct; only the sentence describing how the registries table is
+populated overstates it.
 
 
 ---
