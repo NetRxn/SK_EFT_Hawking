@@ -264,10 +264,22 @@ Schema: `docs/KNOWLEDGE_GRAPH.md`. Plane detail:
   compute. Guarded since 2026-08-06 by `validate.py --check gate_edge_types_are_emitted`,
   which derives both populations by AST and fails on any undisclosed dead type.
 - ❌ **X** *(author's own error, corrected twice)* First reported as "a wiring accident";
-  then over-corrected to "healthy documented deferral". ⚠️ **U** The survey's position —
-  **expired deferral**: Wave 4 shipped without `PRODUCES`, and `Phase5v_Roadmap.md:442`
-  defers the *rendering*, not the emitter. **To verify:** read the Wave-4 close section of
-  `Phase5v_Roadmap.md` and confirm `PRODUCES` was in scope and not delivered.
+  then over-corrected to "healthy documented deferral". ✅ **V** **Settled: an expired
+  deferral, and the mechanism that hid it is the interesting part.**
+  `Phase5v_Roadmap.md:220` defers `PRODUCES` edges *to Wave 4* ("where run-to-claim mapping
+  is curated"). `:363` closes **"Wave 4 — Readiness state machine — DONE 2026-04-15"**, and
+  from that heading onward the string `PRODUCES` appears **nowhere** in the roadmap — not in
+  Wave 4's scope, not in its close. The deferral target shipped without the deferred item
+  and without recording that it hadn't.
+
+  **Why nobody noticed for four months:** Wave 4's own close reports
+  *"ProductionRunHealth: Paper 6 (MC claim without successful run — the exact April
+  finding)"* — the gate **fired**, and looked correct. But it fired through its **secondary
+  prose-regex leg** (`re.search(r'Monte\s+Carlo\s+evidence', tex)`), not through the
+  `PRODUCES` edges it was designed around. A working fallback masked a primary path that was
+  never built, and the gate's apparent success became the evidence that it was complete.
+  This is the sharpest single lesson in the map: **a gate that fires is not a gate that
+  measures what it claims to.**
 - ✅ **V** **The sentence layer is blind to every publication bundle.**
   `build_graph.py:2386` reads `if d.is_dir() and d.name.startswith('paper')`, so the
   bundle directories — `D*`, `E*`, `F`, `I*`, `L*` — are skipped entirely. Read directly.
