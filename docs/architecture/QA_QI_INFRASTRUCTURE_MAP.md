@@ -120,10 +120,10 @@ file, and downstream generators write `counts.json` / `counts.tex` / `atlas_view
 stale input **and report success**. The lock also fails *open* on any internal error. The
 suite's auto-regenerating freshness checks shell out **with no lock at all**.
 
-**Cost.** `build_graph_json()` runs several times per validate run, and each run internally
-re-executes every node extractor plus a full edge pass inside
-`extract_readiness_gate_nodes` to break the gate↔graph recursion. There is no shared graph
-handle.
+**Cost.** `build_graph_json()` is called from several checks in one validate run, and each
+call internally re-runs the node extractors **except its own** — plus a full edge pass —
+inside `extract_readiness_gate_nodes`, which builds a pre-gate graph view to break the
+gate↔graph recursion. `build_graph_json` itself is not cached, so the whole build repeats per call. (Two internal name indices are `lru_cache`d, and the dashboard keeps its own graph cache — neither is shared with the validate path.)
 
 ---
 
@@ -244,8 +244,11 @@ Two genuine failure shapes are severe enough to name:
   `TetradGapEquation.lean` under the note *"This theorem is FALSE as originally stated."*
   One citation is a documented waiver — I1 cites it deliberately as history.
 
-The instrument also ranks per-bundle severity, and surfaces bundles with **no chain-of-backing
-at all** and bundles for which Stage 10 never ran.
+`--report` emits a breakdown by **resolution class** — `resolved` / `suggested` / `invalid` /
+`unresolvable`, each split into named sub-kinds with example links. `--paper <dir>` limits the
+run to one paper directory. It does **not** rank bundles, and it does not by itself surface
+bundles with no chain-of-backing or bundles for which Stage 10 never ran; those are answered
+by inspecting which directories carry a `claims_review.json` at all.
 
 **Nothing gates on any of this.** The instrument exists, produces the right answer, and is
 connected to nothing that can stop a submission — the systemic pattern

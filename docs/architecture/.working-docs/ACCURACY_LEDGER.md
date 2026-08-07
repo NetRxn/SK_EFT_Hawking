@@ -31,7 +31,7 @@ its own recorded check. A compound sentence is not one entry — it is one entry
 | `VALIDATION_ARCHITECTURE.md` | §1–§6 | ✅ **VERIFIED** — 22 atoms, 1 corrected |
 | `CHECK_AUTHORING_GUIDE.md` | thesis · §1–§6 | ✅ **VERIFIED** — 24 atoms, 1 corrected, 4 reframed |
 | `VALIDATION_GATE_TOPOLOGY.md` | §1–§7 | ✅ **VERIFIED** — 27 atoms, 1 corrected |
-| `QA_QI_INFRASTRUCTURE_MAP.md` | §1–§6 | TODO |
+| `QA_QI_INFRASTRUCTURE_MAP.md` | §1–§6 | ✅ **VERIFIED** — 31 atoms, 2 corrected |
 | `END_TO_END_MAP.md` | §1–§9 | TODO |
 
 ## Method, per atom
@@ -253,3 +253,40 @@ body carries no skip gate. The claim is `fixed`, and the substring would have sa
 only `validation/checks/` and `gate_precheck.py`, found nothing, and the claim was written as
 "read by nothing". Widening to `scripts/ src/ tests/` found the real reader immediately. The
 narrow search was *true* about its own scope and false as stated.
+
+
+---
+
+## V6 — `QA_QI_INFRASTRUCTURE_MAP.md` — VERIFIED (31 atoms, 2 corrections)
+
+| # | atom | decided by | result |
+|---:|---|---|---|
+| 1–7 | §1's mermaid names real artifacts | `find` each | all 7 resolve ✓ |
+| 8 | The three reviewer agents exist | plugin `agents/` | all 3 ✓ |
+| 9–23 | **SET:** §2's artifact table — writer and staleness key per row | read each writer + each `is_stale` predicate | all rows ✓ (mtime vs content-compare individually confirmed) |
+| 24 | `harness_lock.regen_lock` is skip-and-use-cache, bounded poll, fail-open | `harness_lock.py:103-126` | ✓ |
+| 25 | **CORRECTED:** the build cost claim | 8 call sites; `extract_readiness_gate_nodes` body; cache decorators | the pre-gate view re-runs the node extractors **except its own** (recursion break), and `build_graph_json` is uncached — but two internal indices ARE `lru_cache`d and the dashboard holds its own cache. Original wording implied nothing anywhere is cached |
+| 26 | `ReviewFinding.status` is `'open'` at birth, unconditionally | `build_graph.py:1867` | `status = 'open'` ✓ |
+| 27 | The supersession ledger overrides that status | `:1918` | override validated against `_KNOWN_STATUSES`, else `'open'` ✓ |
+| 28–32 | **SET:** the five silent-drop points | one read per drop | all five ✓ (incl. the info-level ambiguous-paper-key log and the one-level `glob("*/*.md")`) |
+| 33 | **SET:** `FixPropagation` is the only evaluator reading FLAGS | scan every evaluator's source | exactly one ✓ |
+| 34 | `_REVIEW_SECTION_RE` accepts the listed heading forms | `build_graph.py:1574-1580` | ✓ |
+| 35 | Bundle-level Stage-13 reports reach the gates | `review_docs_mint_findings`; per-bundle `ReviewFinding` attribution | passes over 135 docs; bundle-era reviews are the largest source ✓ |
+| 36 | The VERIFIES resolver's two gating rules | `build_graph.py:3882` | "resolve only as a full Lean name, never by its tail" ✓ |
+| 37 | The gate named as the victim reads `formula:` targets only | `inspect.getsource(_eval_computation_correctness)` | mentions `formula:`, never `lean:` ✓ |
+| 38 | The real consumer was `last_modified.py`'s VERIFIES propagation | `last_modified.py:55` | `'VERIFIES'` in its edge set ✓ |
+| 39–49 | **SET:** §4's eleven human-decision rows | `disable-model-invocation` across the plugin; `_clamp_tier`; `## Misfiled`; Invariants #13/#15/#8; ADR-010 §D5a | all ✓ |
+| 50 | `chain_canonicalize.py --report` exists and is read-only | its CLI | ✓ |
+| 51 | **CORRECTED:** "the instrument ranks per-bundle severity and surfaces bundles with no chain-of-backing" | ran `--report`; read the full CLI | ❌ **FALSE** — it emits a breakdown by **resolution class** only. The single other flag is `--paper <dir>`, which *limits* a run. No per-bundle ranking exists |
+| 52 | A discharged axiom is still cited | `gapped_interface_axiom` in `claims_review.json`; `counts.json` axioms | cited; axiom count **0** ✓ |
+| 53 | A FALSE theorem is still cited, with an I1 waiver | `TetradGapEquation.lean:314` note; `papers/I1/claims_review.json` | note present; I1's record documents it as history ✓ |
+| 54 | **SET:** nothing gates on the chain instrument | grep `validation/checks/`, `readiness_gates.py`, `gate_precheck.py` | **0** references ✓ |
+| 55 | **SET:** the Codex control plane has zero references to the five named modules | grep `scripts/lean_slots/`, `.codex/` | 0 for all five ✓ |
+
+**NOT-AN-ASSERTION:** §1's *"well-designed in its architecture and substantially broken in its
+wiring"*, and §6's *"re-measure the scope before fixing"* — thesis and guidance.
+
+⚠️ **Atom 51 is the third inherited claim to fail in this pass.** It came from a 2026-08-03
+hand measurement that reported per-bundle numbers, and was rewritten as a capability of the
+instrument. The instrument never had it. Verifying the *numbers* would not have caught this —
+only running the tool and reading its CLI did.
