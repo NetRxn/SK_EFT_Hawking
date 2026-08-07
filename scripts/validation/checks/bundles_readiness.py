@@ -1019,7 +1019,11 @@ def check_bundle_registry_consistency() -> CheckResult:
 #: 21 -> 20: D6 retrofitted 2026-08-06 (11 apexes; docs/audits/2026-08-06-d6-retrofit/).
 #: 20 -> 19: D9 retrofitted 2026-08-06 (25 apexes, one per claim of its five-layer abstract).
 #: 19 -> 18: L2 retrofitted 2026-08-06 (8 apexes).
-UNDECLARED_APEX_CEILING = 18
+#: 18 -> 17: D12 retrofitted 2026-08-06 (11 apexes, one per claim of its abstract;
+#:           docs/audits/2026-08-06-d12-retrofit/FINDINGS.md). Chosen because ADR-010
+#:           §What-remains item 2 lists the D6+D9+D12 merge as UNTESTED — with D6 and D9
+#:           already declared, D12 makes the three-way overlap computable.
+UNDECLARED_APEX_CEILING = 17
 
 
 @register_check(

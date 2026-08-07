@@ -171,10 +171,22 @@ bundle metadata on disk at all.
    declaration, on an apex that is not a theorem, and on the undeclared count rising above
    `UNDECLARED_APEX_CEILING = 21`. `--ci`'s coverage floor moved 57 → 58 in the same commit, per
    the zero-headroom ratchet.
-3. ⏭️ **NEXT** — retrofit **one** bundle end-to-end under §3b as a proof of the flow. D6 or L2 — D6 because its
-   entanglement with D9 (Jaccard 0.482) is the portfolio question, L2 because its substrate depth
-   (39 modules, depth 14) contradicts its tier.
-4. Only then the remaining bundles, one at a time.
+3. ✅ **DONE** — four bundles retrofitted under §3b, ceiling **21 → 17**:
+   **D6** (11 apexes → 51 decls / 4 modules, depth 3) · **D9** (25 → 623 / 68, depth 12) ·
+   **L2** (8 → 430 / 40, depth 14) · **D12** (11 → 147 / 14, depth 6).
+   The flow is proven, and it has already paid: D12 was chosen to test ADR-010's untested
+   **D6+D9+D12** merge, and the closure says D12 is not part of it (D6∩D12 = 0, D9∩D12 = 3).
+   More importantly the retrofit **relocated** the D6/D9 finding — the audit's 78 shared theorems
+   reproduce exactly, but the two bundles' *declared* closures are **disjoint**: D6 cites 133
+   declarations from D9's namespace and claims none of them, covering only **19 %** of its own
+   citations with its own apexes. Borrowing, not duplication.
+   Full working: [`../../audits/2026-08-06-d12-retrofit/FINDINGS.md`](../../audits/2026-08-06-d12-retrofit/FINDINGS.md).
+4. ⏭️ **NEXT** — the remaining 17, one at a time. **D11** is the highest-value next: it is the other
+   half of ADR-010's second untested merge (D10+D11), and its "references zero declarations" premise
+   was withdrawn the same day D12's was (D11 = 95 declarations / 22 modules).
+   ⚠️ **Method, learned on D12:** `grep` for a theorem name in a draft returns 0 — drafts escape
+   underscores inside `\thm{}`. Resolve references with the underscore-aware scan, never a bare grep.
+   This is the same artifact class behind ADR-010's two withdrawn figures.
 5. The wave-close hook (§3a) — last, because it should encode a flow already proven by hand.
 
 Re-tiering decisions wait on step 4. Closure shape says where to look; tier is also a claim about
