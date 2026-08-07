@@ -46,9 +46,9 @@ invocations*, and `_memo` **refuses to cache a non-measurement**.
 substrate is fine. `tests/test_cannot_measure_baseline.py` freezes the population that passes
 anyway, and a new silent PASS fails on arrival.
 
-*(Why: `_memo` cached a `SKIPPED — lake not found` PASS and replayed it after the toolchain
-returned. Five reviewers, independently. The guard "only PASS is cached" was defeated because
-**a fail-open SKIP is a PASS**.)*
+*(The failure this prevents: a cache whose guard is "only PASS is cached" is defeated by a
+fail-open SKIP, because **a fail-open SKIP is a PASS**. It gets stored under a key
+byte-identical to the real measurement and replayed once the toolchain returns.)*
 
 ### 2.2 Never discard a computed verdict
 
@@ -61,10 +61,10 @@ ratchet it; do not throw the answer away.
 A threshold above the current population cannot fire. Measure the live value, set the ceiling to
 exactly it, and add a test asserting the two agree.
 
-⚠️ **A ratchet whose test asserts its own definition is self-sealing.** `test_ci_mode.py`
-asserted `CI_MIN_CHECKS_RUN == len(_CHECKS) - len(CI_SKIP)` — the definition of the quantity being
-compared — which *guaranteed* the floor could never fire. Assert against the **live measured
-population**, never against the formula.
+⚠️ **A ratchet whose test asserts its own definition is self-sealing.** A floor asserted as
+`CI_MIN_CHECKS_RUN == len(_CHECKS) - len(CI_SKIP)` compares the quantity to its own definition,
+which *guarantees* it can never fire — unfireable and invisible at once. Assert against the
+**live measured population**, never against the formula.
 
 ### 2.4 Prove it with a PRODUCTION-seeded mutation (QI-30)
 
@@ -78,17 +78,18 @@ production (QI-31…34).
 not restate it.** Read `PRODUCTION_SEEDED` and `FIXTURE_ONLY_CEILING` there; the ceiling may
 only shrink.
 
-⚠️ Seed the artifact the guard *protects*, not a helper it *uses*. The memo's key tests seeded
-the fingerprint helpers and never asserted any check's key called them — deleting an input from a
-live `key_fn` returned `24 passed`.
+⚠️ Seed the artifact the guard *protects*, not a helper it *uses*. A key test that seeds the
+fingerprint helpers, without asserting that any check's key calls them, passes while an input is
+deleted from a live `key_fn`.
 
 ### 2.5 Guard the seam — a scan that matches nothing passes vacuously
 
 Any check that greps, globs or walks needs a companion assertion that the population is non-empty
 and plausible.
 
-⚠️ **A source-substring scan is defeatable by prose.** A guard asserting a helper is called found
-its name **in a comment** and passed over a seeded regression. Use `ast`, and assert the **call**.
+⚠️ **A source-substring scan is defeatable by prose.** A guard that asserts a helper is called
+by searching the source finds the name **in a comment** and passes over a seeded regression. Use
+`ast`, and assert the **call**.
 
 ### 2.6 Reach paths and flags correctly (H1 / H5)
 
@@ -173,10 +174,11 @@ never written. Both are tracked in
 
 ⚠️ **The obvious type-system fix was tried and rejected, with the measurement.**
 `CheckResult.passed` is a bare `bool` with no `UNEVALUATED` state, and adding one was ADR-009
-§Deferred item 4. **DECLINED**: `passed` is a D2 contract item — the `--json` payload,
-`gate_precheck.py` and `pre-commit-sync.sh` all read it — so a third state is a contract break,
-not a local refactor. `measured` was added as a *separate additive field* instead, precisely
-so every existing reader stayed correct.
+§Deferred item 4. **DECLINED**: `passed` is a D2 contract item. The `--json` payload reads the
+field; `gate_precheck.py` and `pre-commit-sync.sh` consume the **exit code** that
+`validate.main()` derives from it. A third state forces an exit-code mapping decision on both,
+so it is a contract change rather than a local refactor. `measured` was added as a *separate
+additive field* instead, precisely so every existing reader stayed correct.
 
 ## 6. The failure modes, as a checklist
 

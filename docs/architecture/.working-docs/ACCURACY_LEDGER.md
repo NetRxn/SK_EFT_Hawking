@@ -29,7 +29,7 @@ its own recorded check. A compound sentence is not one entry — it is one entry
 | `README.md` | index table · two rules · scope boundary | ✅ **VERIFIED** — 8 atoms, all checked |
 | `SURFACE_INVENTORY.md` | header prose · derivation sources (tables are derived + gated) | ⛔ **BLOCKED** — atom 2 false; fix needs a generator edit (TODO **B7**) |
 | `VALIDATION_ARCHITECTURE.md` | §1–§6 | ✅ **VERIFIED** — 22 atoms, 1 corrected |
-| `CHECK_AUTHORING_GUIDE.md` | thesis · §1–§6 | TODO |
+| `CHECK_AUTHORING_GUIDE.md` | thesis · §1–§6 | ✅ **VERIFIED** — 24 atoms, 1 corrected, 4 reframed |
 | `VALIDATION_GATE_TOPOLOGY.md` | §1–§7 | TODO |
 | `QA_QI_INFRASTRUCTURE_MAP.md` | §1–§6 | TODO |
 | `END_TO_END_MAP.md` | §1–§9 | TODO |
@@ -170,3 +170,43 @@ do pass.
 
 **NOT-AN-ASSERTION:** §5's *"Measure rather than quote"* and §3's *"They are not style rules"* —
 guidance, no truth value.
+
+
+---
+
+## V4 — `CHECK_AUTHORING_GUIDE.md` — VERIFIED (24 atoms)
+
+| # | atom | decided by | result |
+|---:|---|---|---|
+| 1 | **SET:** §2 contains exactly seven obligations | count `### 2.N` headings | **7** ✓ |
+| 2 | **SET:** §3 routes every check module | names in the guide `comm`'d against `ls checks/` | every module routed ✓ |
+| 3 | `test_cannot_measure_baseline.py` fails in BOTH directions | read its test names | `test_no_new_silent_pass` + `test_baseline_has_no_stale_entries` ✓ |
+| 4 | `--ci` floor counts measurements; `_memo` refuses a non-measurement | `validate.py:801-803`; `_memo.py:342` | ✓ |
+| 5 | §2.7's backlog is ratcheted at its live floor | read `test_d5_mutation_obligation.py` | `MUTATION_VERIFIED` 65 = every registered check; `AWAITING` 0; `AWAITING_CEILING` 0 ✓ |
+| 6 | §4's commands are valid invocations | read them against the CLI | ✓ |
+| 7–18 | **The 12 ledger rows' STATUS column**, re-derived from the code rather than inherited | one targeted read per row | all 12 confirmed: 10 `fixed`, 2 `OPEN` ✓ |
+| 19 | **SET:** exactly two rows are OPEN | count `🔴 **OPEN**` | **2** ✓ |
+| 20 | `harness_lock`'s open row: callers treat a skip as a completed regen | `harness_lock.py:103` `yield acquired` + caller behaviour | ✓ |
+| 21 | AI-Defense Tier 1's open row: neither named script exists | `os.path.exists` on both | both absent ✓ |
+| 22 | **CORRECTED:** `passed` "read by the `--json` payload, `gate_precheck.py` and `pre-commit-sync.sh`" | grep each consumer; read `run_check()`; read `main()` | ❌ same error as `VALIDATION_ARCHITECTURE` atom 11, **propagated**. One direct reader; two exit-code consumers |
+| 23 | ADR-009 §Deferred item 4 declined `UNEVALUATED` | `ADR-009:956` | ✓ |
+| 24 | §6's checklist | 9 items | **NOT-AN-ASSERTION** — a checklist, no truth value |
+
+### Reframed for criterion 7 — incidents that accused a currently-correct file
+
+Four citations named a live artifact as *having* a defect it no longer has. Each now states the
+**anti-pattern** without asserting the current state of a named file. The pedagogy the document
+declares in its header ("the citation after each is the incident") is preserved; the
+superseded accusation is not.
+
+| § | named artifact | was asserted | now |
+|---|---|---|---|
+| 2.1 | `_memo` | "cached a `SKIPPED — lake not found` PASS and replayed it" | states the shape: a fail-open SKIP is a PASS |
+| 2.3 | `test_ci_mode.py` | "asserted `CI_MIN_CHECKS_RUN == len(_CHECKS) - len(CI_SKIP)`" | states the self-sealing form, unattributed |
+| 2.4 | "the memo's key tests" | "seeded the fingerprint helpers … returned `24 passed`" | states the failure mode of such a test |
+| 2.5 | a guard | "found its name **in a comment** and passed" | states it in the present, as a property of substring scans |
+
+⚠️ **Row 2 of the ledger table is a worked example of criterion 3.** A substring search for
+`SKIPPED (slow)` in `papers_prose.py` returns a hit, which reads as "the slow gate is still
+there". An AST read of the function shows the hit is inside the **docstring**; the executable
+body carries no skip gate. The claim is `fixed`, and the substring would have said otherwise.
