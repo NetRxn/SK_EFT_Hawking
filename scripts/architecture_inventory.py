@@ -82,6 +82,39 @@ def _string_constants_in_calls(path: Path, attrs: set[str]) -> dict[str, int]:
     return out
 
 
+def _emitted_edge_types(graph_py: Path) -> set[str]:
+    """Edge types `build_graph.py` emits, scoped STRUCTURALLY.
+
+    An edge dict is one carrying `source` and `target` alongside `type`. Node dicts
+    use the same `type` key, so a scan keyed on `type` alone collects the whole node
+    taxonomy too — 40 "edge types" against a true 22 (measured 2026-08-06).
+
+    This function previously did that wide scan and then **subtracted the node types
+    afterwards**, which produced the right list by cancellation rather than by scope,
+    and left two live hazards: an edge type sharing a name with a node type would be
+    silently dropped from `edges_emitted`, and — worse — the
+    `edges_consumed_but_never_emitted` comparison ran against the *unsubtracted* set,
+    so such an edge would read as emitted and its gate would never be reported dead.
+
+    `validate.py --check gate_edge_types_are_emitted` derives the same population and
+    `tests/test_architecture_inventory.py` asserts the two agree, so the census and
+    the gate cannot drift apart.
+    """
+    emitted: set[str] = set()
+    for node in ast.walk(ast.parse(graph_py.read_text())):
+        if not isinstance(node, ast.Dict):
+            continue
+        keys = {k.value for k in node.keys
+                if isinstance(k, ast.Constant) and isinstance(k.value, str)}
+        if not {"source", "target"} <= keys:
+            continue
+        for k, v in zip(node.keys, node.values):
+            if (isinstance(k, ast.Constant) and k.value == "type"
+                    and isinstance(v, ast.Constant) and isinstance(v.value, str)):
+                emitted.add(v.value)
+    return emitted
+
+
 def graph_types() -> dict:
     """Node types, emitted edge types, and edge types the gates CONSUME.
 
@@ -89,21 +122,12 @@ def graph_types() -> dict:
     a gate returning a verdict it did not compute (see `gate_edge_types_are_emitted`).
     """
     import build_graph
-    emitted: set[str] = set()
-    gtree = ast.parse((SCRIPT_DIR / "build_graph.py").read_text())
-    for node in ast.walk(gtree):
-        if isinstance(node, ast.Dict):
-            for k, v in zip(node.keys, node.values):
-                if (isinstance(k, ast.Constant) and k.value == "type"
-                        and isinstance(v, ast.Constant) and isinstance(v.value, str)):
-                    emitted.add(v.value)
+    emitted: set[str] = _emitted_edge_types(SCRIPT_DIR / "build_graph.py")
     consumed = _string_constants_in_calls(
         SCRIPT_DIR / "readiness_gates.py", {"outgoing", "incoming"})
-    node_types = sorted(build_graph.SHAPE_MAP)
-    edge_emitted = sorted(t for t in emitted if t not in set(node_types))
     return {
-        "node_types": node_types,
-        "edges_emitted": edge_emitted,
+        "node_types": sorted(build_graph.SHAPE_MAP),
+        "edges_emitted": sorted(emitted),
         "edges_consumed_by_gates": sorted(consumed),
         "edges_consumed_but_never_emitted": sorted(
             t for t in consumed if t not in emitted),

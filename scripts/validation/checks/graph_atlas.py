@@ -585,6 +585,23 @@ def check_gate_edge_types_are_emitted() -> CheckResult:
     for node in ast.walk(gtree):
         if not isinstance(node, ast.Dict):
             continue
+        # An EDGE dict, structurally: it carries `source` and `target` alongside
+        # `type`. Without that clause this scan also collected every NODE dict's
+        # `'type'`, since node dicts use the same key — 40 "emitted edge types"
+        # against a true 22, the extra 18 being `Paper`, `Formula`, `AuditEvent`
+        # and the rest of the node taxonomy (measured 2026-08-06).
+        #
+        # It read as harmless because no CamelCase node-type name collides with a
+        # gate-queried edge name today, so the verdict was right by luck rather
+        # than by scope. That is the failure mode this check exists to catch,
+        # in the check itself: a guard whose population is wider than its
+        # subject cannot fail on the case it was built for — here, an edge type
+        # that never gets emitted but shares a name with some node type would
+        # read as emitted forever.
+        keys = {k.value for k in node.keys
+                if isinstance(k, ast.Constant) and isinstance(k.value, str)}
+        if not {"source", "target"} <= keys:
+            continue
         for k, v in zip(node.keys, node.values):
             if (isinstance(k, ast.Constant) and k.value == "type"
                     and isinstance(v, ast.Constant) and isinstance(v.value, str)):

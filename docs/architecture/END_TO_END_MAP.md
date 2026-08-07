@@ -74,9 +74,16 @@ recorded.
   naming the wave that was to implement each edge. `temporary/working-docs/sentence_kg_schema_delta.md`
   is a *delta* to it (`:5` names `docs/KNOWLEDGE_GRAPH.md` as the affected doc).
   `docs/roadmaps/Phase5v_Roadmap.md:311` carries a parallel edge table.
-- ✅ **V** **The schema doc contradicts itself.** `:54` says 26 node types, `:129` says 25
-  edge types, but `:312` says *"Extracts 13 node types + 11 edge types"* and `:341` says 13
-  again. Checked by reading all four lines.
+- ✅ **FIXED 2026-08-06** — the schema doc's counts now point at the derived census, its
+  edge tables carry an **Emitted?** column naming each dead type and the gate that queries
+  it, and the two live-but-undeclared types are documented: `CLAIMS_APEX` (ADR-010) and
+  `USES` (opt-in behind `SK_EFT_INCLUDE_USES`, ~40k edges — a cost gate, not drift).
+- ✅ **V** **The schema doc contradicted itself, four ways.** `:54` said 26 node types and
+  `:129` said 25 edge types, while `:312` said *"Extracts 13 node types + 11 edge types"*.
+  A sub-heading read *"readiness-system edges (8)"* over a **10**-row table. Checked by
+  reading each line. The `:341` "13 node types" is **not** a fourth contradiction on
+  re-reading — it is scoped to the Phase-1.5 *Lean declaration* taxonomy, a different
+  population; recorded here because this map first listed it as one.
 - ✅ **V** **Nothing validates a roadmap.** Measured: **0** of the check modules under
   `scripts/validation/checks/` reference `docs/roadmaps/`, and **0** `*_close.md` files
   exist there. The roadmap layer — where scope, waves, and (per §2 above) the graph schema
@@ -274,6 +281,27 @@ Schema: `docs/KNOWLEDGE_GRAPH.md`. Plane detail:
   (`PRODUCES`, `SUPPORTS`, `CONTRADICTS`), so those gates return verdicts they did not
   compute. Guarded since 2026-08-06 by `validate.py --check gate_edge_types_are_emitted`,
   which derives both populations by AST and fails on any undisclosed dead type.
+- ✅ **FIXED 2026-08-06** 🔴 **The guard against dead edge types was itself scoped wider
+  than its subject — and so was the census.** Found by noticing the two disagreed: the
+  check reported **40** emitted edge types, `SURFACE_INVENTORY.md` reported **22**, and the
+  built graph actually carries **20**. Cause: both scanned every `{'type': …}` dict in
+  `build_graph.py`, and **node** dicts carry that key too, so the whole node taxonomy —
+  `Paper`, `Formula`, `AuditEvent`, 18 in all — counted as emitted edge types. The census
+  then subtracted the node types afterwards, reaching the right list **by cancellation
+  rather than by scope**.
+  Two live hazards followed, neither visible in any count: an edge type sharing a name with
+  a node type would be dropped from the census, and the check's
+  `consumed_but_never_emitted` comparison ran against the **unsubtracted** set — so such an
+  edge type would read as emitted and **its gate would never be reported dead**, which is
+  the single thing this check exists to detect.
+  Both now scope structurally (an edge dict is one carrying `source` and `target`), the
+  derivation has one owner, and `tests/test_architecture_inventory.py::`
+  `TestEdgeTypeDerivationHasOneOwner` is the arbiter — three tests, each mutation-verified
+  against a different variant of the defect. Emitted is now **22** on both sides; no verdict
+  changed.
+  **This is the fourth root cause in its purest form** — a guard whose population is wider
+  than its subject cannot fail on the case it was built for. It was right by luck: no
+  CamelCase node-type name happens to collide with a gate-queried edge name *today*.
 - ❌ **X** *(author's own error, corrected twice)* First reported as "a wiring accident";
   then over-corrected to "healthy documented deferral". ✅ **V** **Settled: an expired
   deferral, and the mechanism that hid it is the interesting part.**

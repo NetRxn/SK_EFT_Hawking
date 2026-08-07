@@ -139,3 +139,55 @@ class TestTheFreshnessCheck:
         monkeypatch.setattr(validate_helpers, "SCRIPT_DIR", tmp_path)
         res = check()
         assert res.measured is False
+
+
+class TestEdgeTypeDerivationHasOneOwner:
+    """The census and the gate check derive "emitted edge types" separately.
+
+    They disagreed until 2026-08-06 — the census reported **22**, the check
+    reported **40** — because both scanned every `{'type': ...}` dict in
+    `build_graph.py` (node dicts carry that key too) and only the census
+    subtracted the node taxonomy afterwards. Right answer by cancellation, not by
+    scope. Both now scope structurally on `source`/`target`; these tests are the
+    arbiter that keeps them together.
+    """
+
+    def test_census_and_gate_check_agree(self, inv_mod):
+        from validation.checks.graph_atlas import check_gate_edge_types_are_emitted
+
+        census = set(inv_mod.graph_types()["edges_emitted"])
+        result = check_gate_edge_types_are_emitted()
+        line = next(d.message for d in result.details
+                    if d.name == "populations_derived")
+        # "11 edge type(s) queried by gates, 22 emitted by extractors — ..."
+        gate_n = int(line.split("queried by gates,")[1].split("emitted")[0].strip())
+        assert gate_n == len(census), (
+            f"the gate check derives {gate_n} emitted edge types, the census "
+            f"derives {len(census)} — two AST scans of one population disagreeing"
+        )
+
+    def test_no_node_type_is_reported_as_an_edge_type(self, inv_mod):
+        """The concrete symptom of the wide scan, asserted directly."""
+        import build_graph
+
+        gt = inv_mod.graph_types()
+        leaked = set(gt["edges_emitted"]) & set(build_graph.SHAPE_MAP)
+        assert leaked == set(), f"node type(s) reported as edge types: {sorted(leaked)}"
+
+    def test_the_scan_is_structural_not_subtractive(self, inv_mod, tmp_path):
+        """A node type that ALSO names an edge type must survive as an edge type.
+
+        This is the case the old subtract-node-types approach got wrong and that no
+        count comparison can catch, since both derivations were wrong the same way.
+        """
+        src = tmp_path / "fake_graph.py"
+        src.write_text(
+            "nodes.append({'id': 'x', 'type': 'Formula', 'meta': {}})\n"
+            "edges.append({'source': 'a', 'target': 'b', 'type': 'Formula'})\n"
+            "edges.append({'source': 'a', 'target': 'b', 'type': 'REAL_EDGE'})\n"
+        )
+        emitted = inv_mod._emitted_edge_types(src)
+        assert emitted == {"Formula", "REAL_EDGE"}, (
+            "an edge type sharing a node type's name was dropped — the scan is "
+            "still subtractive rather than structural"
+        )
