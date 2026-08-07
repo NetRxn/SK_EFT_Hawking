@@ -143,7 +143,13 @@ Contract in both `CLAUDE.md`s (the Stop hook is a GO signal, never coercion) and
 Spec: `WAVE_EXECUTION_PIPELINE.md` Stages 3a/3b/4/5 + Invariants #4, #9, #10, #15, #16, #17.
 Plane detail: [`../audits/2026-08-06-e2e-map/PLANE-lean.md`](../audits/2026-08-06-e2e-map/PLANE-lean.md).
 
-- ✅ **V** **Extraction scope has a latent staleness gap.** `compute_lean_hash()`
+- ✅ **FIXED 2026-08-06** — `compute_lean_hash` now digests the root aggregate too
+  (unconditionally: an absent aggregate contributes `b"<absent>"`, so deleting it moves the
+  hash rather than reading as "nothing changed"). Verified: an aggregate-only edit moves the
+  hash and reverting restores it. The one-time re-extraction it triggered reproduced
+  `lean_deps.json` **byte-identically** — the data was already correct; only the guard was
+  blind. Original finding retained below.
+- ✅ **V** **Extraction scope had a latent staleness gap.** `compute_lean_hash()`
   (`scripts/extract_lean_deps.py:61`) hashes `lean/SKEFTHawking/**/*.lean` — 2 038 files —
   but **not `lean/SKEFTHawking.lean`**, the root aggregate that alone decides which modules
   are extracted. A content change to the aggregate (adding or removing an import — i.e.
@@ -187,7 +193,12 @@ Plane detail: [`../audits/2026-08-06-e2e-map/PLANE-lean.md`](../audits/2026-08-0
   - ✅ **V** The real safety check is step 3, and it is correctly built: `kernel_pure` is
     computed over **target decls only** (`:719-721`) from the `sorryAx` primitive in
     `axiom_deps_core` — scoped right, and toolchain-independent.
-  - ✅ **V** **Step 2 does not refresh `lean_deps.json`, so step 3 reads pre-graft data.**
+  - ✅ **FIXED 2026-08-06** — step 2 now calls `extract_lean_deps.load_lean_deps()`, which
+    regenerates the JSON, instead of `lake build SKEFTHawking.ExtractDeps`, which only
+    compiled the `.olean`. A refresh that raises now sets `kernel_pure = False` and returns,
+    so a failed refresh cannot fall through to the stale read it was meant to prevent.
+    Original finding retained below.
+  - ✅ **V** **Step 2 did not refresh `lean_deps.json`, so step 3 read pre-graft data.**
     `ExtractDeps.lean:538` streams its output to stdout by design ("Streaming avoids an
     O(n²) multi-MB string rebuild"); the file is written only by
     `scripts/extract_lean_deps.py:157` (`JSON_PATH.write_text(...)`), which the gauntlet
