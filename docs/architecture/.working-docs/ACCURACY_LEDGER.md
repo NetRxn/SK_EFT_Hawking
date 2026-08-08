@@ -1607,3 +1607,41 @@ would show presence, prove it can — and state the scope the probe actually cov
 that reports it.* Its three corollaries, each bought with a correction: **the marker field is
 `axiom_deps_project`**; **a probe's scope is part of its finding**; **the probe for a sibling
 relationship is the bundle name, not a shared theorem name.**
+
+---
+
+## V40 — the L2 FINDINGS backfill — 7 atoms, 0 corrected
+
+L2 declared its apexes before this retrofit began and so had no FINDINGS doc. Enumerating the
+population (21 bundles vs 19 docs) found it — **a spot-check of any of the seventeen would not
+have**. Written so DONE item 2 holds for all 21.
+
+**P** = perishable, **D** = durable.
+
+| # | atom | decider | result |
+|---|---|---|---|
+| R1 | L2's draft is 489 lines and was read in full | the file | ✓ |
+| R2 | L2's closure shape | the derived closure | **430 decls / 40 modules / depth 14** — the only Letter with a deep closure (L1 d1, E2 d1, L3 d2, E1 d2) (D) |
+| R3 | why R2 is not a defect | which apex carries it | one apex, `SmoothSpinManifold4.rokhlin`, pulls ~90% — the Hasse–Minkowski / theta-modularity / lattice tower L2 built to *discharge* `8 ∣ σ` rather than assume it. The draft says so (D) |
+| R4 | **D2 declares L2 a splash companion** | `papers/D2/paper_draft.tex`, **bundle-name** probe | ✓ *"The **PRL splash companion** [L2] **compresses this material to four pages**; here we expose the algebraic core."* **Fourth declared pair** (D) |
+| R5 | **SET: `native_decide` carriers in L2's closure, vs what the abstract names** | `axiom_deps_project`, both directions | ✓ **exactly 6** — `d1_d2_zero`…`d4_d5_zero`, `chain_complex_property`, `ext_computation_summary` — which is precisely the abstract's *"`dₙ·dₙ₊₁ = 0` for `n=1,…,4` via `native_decide` on explicit `𝔽₂` matrices"* (D) |
+| R6 | *"the formerly asserted `gapped_interface_axiom` is now a tracked Prop `TPFConjecture`"* | the declaration index | ✓ `gapped_interface_axiom` **absent**; `TPFConjecture` present as a **`def`**; **zero** declarations of kind `axiom` project-wide, so `\axiomcount = 0` is derived and true (D) |
+| R7 | L2's pin claims (`v4.29.1`, `5e932f97`) | the existing `paper_toolchain_pin_drift` check | ✓ already reported at **L2:12, 387, 396**. Existing coverage; nothing filed (D) |
+
+⚠️ **R4 carries a new observation worth more than the pair itself.** D2 states that a hypothesis
+**listed as open in the L2 splash** it has since *"substantively discharged … at the dimensional
+level."* **A declared pair can diverge in hypothesis status, not only in length** — the deep paper
+moved and the Letter did not. Same class as TODO-D20 (E2 corrected, E1 not): **shared content
+drifting because only one member of a declared pair was revised.** Two instances now, in two
+different pairs.
+
+⚠️ **R5 is the exact inverse of the error V26 corrected.** L2 declares a `native_decide`-carrying
+theorem as an apex *and* names the fact in its abstract; the V26 error was my claiming no
+load-bearing `native_decide` existed anywhere. **The corpus was more careful than the audit.**
+
+⚠️ **NOT VERIFIED, stated per C4:** *"builds in ∼30 s on commodity hardware."* Not measured — a
+build-time claim is not a closure question and measuring it was not in scope.
+
+✅ **Fourth data point for the restated TODO-D9:** L2 uses project-scoped macros for an explicitly
+*library-state* claim (*"library state: … theorems across … modules, … axioms"*) — **correct
+usage**, like E1's, unlike D1's and D5's.
