@@ -512,6 +512,8 @@ version *and* the Mathlib rev against `lean-toolchain` + `lakefile.toml`.
   is **not D1's substrate** — it is the population of the nine 1+1D BEC modules over which §7.2's
   reuse fraction is computed, a different set for a different purpose. D1's substrate is its apex
   closure: **249 declarations**. Use that ratio; do not carry the old one forward.
+- **Also in D1, after the D7 reassignment:** D1's measured substrate is **171** declarations, not
+  the 249 first recorded. Use 171.
 - **Also in D5:** its abstract states `\substantivetheorems` and `\totaltheorems` for D5's own
   content. D5's measured substrate is **216** declarations. Same project-scoped-macro defect.
 - **Also in D1, same class:** the draft does not say which of the project's two counting
@@ -754,3 +756,25 @@ violated for the fifth time in this workstream.
 - **Fix shape:** repoint to `sec:cfl` and `sec:penrose`, the sections that carry the content.
   Prose-only.
 - Full working: `docs/audits/2026-08-07-d3-retrofit/FINDINGS.md` §3.
+
+### D18. `prose_theorem_reference_coverage` misses backtick-quoted theorem names — OPEN (coverage gap)
+
+- **The defect it let through:** `papers/D7/paper_draft.tex:127` names its own headline as
+  `` `analog\_hawking\_quantum\_advantage\_demarcation' `` — a theorem that **does not exist**.
+  The live names are `analog_hawking_fourCycleFree_demarcation` and
+  `analog_hawking_tree_simulable_demarcation`. Verified underscore-aware and **seeded** (the same
+  probe returns PRESENT for the real name).
+- **Existing coverage, read not assumed:** `prose_theorem_reference_coverage` runs green and
+  **does not report D7 at all**. Its extractor keys on `\texttt{...}`; D7 uses backtick-apostrophe
+  `` `name' `` quoting, so the reference is never seen. **The check works; its input filter is
+  narrower than the drafts' quoting conventions.**
+- **Residue:** unknown. Only D7's instance is confirmed. A scan of how many drafts use non-`texttt`
+  quoting for theorem names has NOT been run — doing so is itself the first half of the fix.
+- **Fix shape, two options:** (a) widen the extractor to accept `` `name' ``, `\verb|name|` and
+  `\lean{name}` (D8 uses the last); or (b) normalise the drafts to `\texttt{}`. (a) is a check
+  change and (b) is a prose change; **both need approval under §6a. Nothing built.**
+- ⚠️ **This is the failure mode the goal's standing constraint targets from the other side:** the
+  rule is *check whether a check already measures it*. Here one does — and the useful finding was
+  that its **scope** is narrower than its name suggests. **"A check exists" and "the check covers
+  this input" are different claims.**
+- Full working: `docs/audits/2026-08-07-d7-retrofit/FINDINGS.md` §3.

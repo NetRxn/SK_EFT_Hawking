@@ -1061,7 +1061,11 @@ def check_bundle_registry_consistency() -> CheckResult:
 #:           depth 24. RESOLVES the D4->D8 declaration conflict on the drafts' own
 #:           instructions — 4 GenericSU2 apexes moved D4 -> D8, and D4's closure fell
 #:           753 -> 620 as a result, corroborating the reassignment.
-UNDECLARED_APEX_CEILING = 8
+#: 8 -> 7:   D7 retrofitted 2026-08-07 (14 apexes; docs/audits/2026-08-07-d7-retrofit/
+#:           FINDINGS.md). SECOND declaration conflict resolved: D1 §8.2 had declared
+#:           D7's entire headline as a cross-check; 6 apexes moved D1 -> D7 (D1's
+#:           closure 249 -> 171). D7's draft is five-sevenths placeholder sections.
+UNDECLARED_APEX_CEILING = 7
 
 
 @register_check(

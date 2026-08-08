@@ -5,8 +5,8 @@ comes due when every bundle is declared; until then this file records, for each 
 whether the closure evidence **supports** it, **refutes** it, or **does not decide** it, plus any
 **boundary failure** named under §D2's rule.
 
-**Status:** 13 of 21 bundles declared (D1, D2, D3, D4, D5, D6, D8, D9, D10, D11, D12, F, L2).
-8 undeclared: D7, E1, E2, I1, I2, I3, L1, L3. **Every "not decided" below is a
+**Status:** 14 of 21 bundles declared (D1, D2, D3, D4, D5, D6, D7, D8, D9, D10, D11, D12, F, L2).
+7 undeclared: E1, E2, I1, I2, I3, L1, L3. **Every "not decided" below is a
 statement about what is measurable today, not a verdict.**
 
 **Method.** Each row is an intersection of *declared apex closures* over `name_deps_project`,
@@ -128,10 +128,25 @@ Recorded because §D4 asks for evidence, and an intersection nobody proposed is 
 | **D10** | ⚠️ **PARTIAL** | §5.3's contractivity result is not statable without D9's `QuantumNetwork.*` — 50 declarations. The DFT and NEGF pillars are wholly D10's own, so the *target* is viable; one of its three headline layers is not self-contained. |
 | **D6** | ⚠️ **PARTIAL** | Cites 133 declarations from D9's namespace while claiming ~19 % of its own citations. |
 | **D4** | ⚠️ **YES, both directions** | *Inbound:* §§7–8 consume D3's `H_HorizonBoundaryCondition` (22 shared declarations) — mutual and acknowledged. *Outbound:* §9's `GenericSU2` layer ships D8's chartered content. |
-| D1, D2, D3, D5, D8, D11, D12, L2 | **No** | Each states its purpose on its own substrate. D11 is the strongest case: zero intersection with every other declared bundle. |
-| D7, E1, E2, I1, I2, I3, L1, L3 | **not yet measurable** | undeclared |
+| D1, D2, D3, D5, D7, D8, D11, D12, L2 | **No** | Each states its purpose on its own substrate. D11 is the strongest case: zero intersection with every other declared bundle. |
+| E1, E2, I1, I2, I3, L1, L3 | **not yet measurable** | undeclared |
 
 ---
+
+## 3b. Declaration conflicts found and resolved (not merges — ownership)
+
+Two bundles' apex lists overlapped on content a *third* reading showed belonged to one of them.
+Both were resolved by reading the second draft in full and letting the drafts' own framing decide,
+with the closure as independent corroboration.
+
+| conflict | resolution | corroboration | signal strength |
+|---|---|---|---|
+| **D4 / D8** — four `GenericSU2` apexes | → **D8**. D8 cedes Fibonacci to D4 *in words, twice*; D4 named the Clifford+T layer only in a module list | D4's closure fell **753 → 620**, modules **61 → 43** | **strong** — a draft ceding explicitly |
+| **D1 / D7** — six demarcation apexes | → **D7**. D7's title, abstract and §§2–6 are the content; D1 §8.2 is an *"Independent cross-check"* subsection | D1's closure fell **249 → 171**, modules **18 → 12** | ⚠️ **weaker** — neither draft mentions the other; the decision rests on document position, and should be revisited if the operator reads D1 §8.2 as load-bearing |
+
+**The rule both instances produce:** *the container that develops content owns it; the container
+that cites it in a cross-check subsection does not.* **Record the strength of the signal** — a
+draft that cedes in words is stronger evidence than document position.
 
 ## 4. What this file must NOT be read as
 

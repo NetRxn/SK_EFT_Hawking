@@ -189,18 +189,18 @@ check compares against reality. Sizes are recorded so a silent shrink is visible
 | `provenance.PAPER_DEPENDENCIES` | 17 |
 | `citations.CITATION_REGISTRY` | 652 |
 
-## Publication roster — 21 bundles, 13 with declared apexes
+## Publication roster — 21 bundles, 14 with declared apexes
 
 | bundle | tier | apexes | title |
 |---|---:|---:|---|
 | `F` | 0 | 29 | Fluid-Based Approaches to Fundamental Physics — A Formally V |
-| `D1` | 1 | 41 | Analog Hawking across three platforms |
+| `D1` | 1 | 35 | Analog Hawking across three platforms |
 | `D2` | 1 | 47 | Anomaly constraints on SM particle content |
 | `D3` | 1 | 89 | Emergent gravity through BH thermodynamics |
 | `D4` | 1 | 62 | Topological quantum computation foundations |
 | `D5` | 1 | 70 | Dark sector under substrate constraints |
 | `D6` | 1 | 11 | Formally Verified Fault-Tolerant Quantum Computation Substra |
-| `D7` | 1 | — | Classical Simulability and Quantum Advantage via Tensor Netw |
+| `D7` | 1 | 14 | Classical Simulability and Quantum Advantage via Tensor Netw |
 | `D8` | 1 | 35 | Kernel-Verified Universal Quantum Gate Compilation — Alphabe |
 | `D9` | 1 | 25 | Kernel-Verified Quantum-Network and Device-Characterization  |
 | `D10` | 1 | 33 | Kernel-Verified Foundations of Computational Quantum Chemist |

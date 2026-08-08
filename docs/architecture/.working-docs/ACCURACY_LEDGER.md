@@ -1333,3 +1333,31 @@ set deliberately at D4's retrofit ("revisit when D8 is read") rather than resolv
 and the resolution came from the drafts saying who owns what, with the closure as independent
 corroboration. **A conflict recorded and deferred cost one line; a conflict guessed would have
 cost a wrong ownership assignment in two bundles.**
+
+---
+
+## V32 — the D7 apex retrofit — 8 atoms, 1 PRIOR declaration corrected
+
+**P** = perishable, **D** = durable.
+
+| # | atom | decider | result |
+|---|---|---|---|
+| J1 | D7's draft is 339 lines and was read in full | the file | ✓ |
+| J2 | **Five of seven sections are square-bracket placeholders** | every section, enumerated | ✓ §§2–6; only abstract, intro and discussion carry prose (P) |
+| J3 | ❌ **CORRECTS the D1 declaration.** Six apexes are D7's, not D1's | **both drafts** — D7's title/abstract/§§2–6 vs D1's §8.2 *"Independent cross-check"* | ✓ reassigned; D1's closure **249 → 171**, modules **18 → 12** (P) |
+| J4 | ⚠️ J3's signal is **weaker** than the D4→D8 case | both drafts | ✓ D8 explicitly ceded Fibonacci **in words**; here neither draft mentions the other and the decision rests on **document position**. Recorded as revisitable (D) |
+| J5 | `analog_hawking_quantum_advantage_demarcation` does not exist | corpus scan, underscore-aware, **seeded** with the real name | ✓ ABSENT; the seed returns PRESENT (P) |
+| J6 | `prose_theorem_reference_coverage` does not report D7 | the check, run | ✓ its extractor keys on `\texttt{}`; D7 uses `` `name' `` (D) |
+| J7 | §2 declares zero apexes, correctly | the section | ✓ it describes 24 theorems in aggregate and **names none**; no named statement, no apex (D) |
+| J8 | `analog_hawking_simulable_BEC_instance` is absent, exactly as D7 says | the corpus | ✓ the draft's own negative claim verifies (D) |
+
+⚠️ **J6 is the standing constraint hitting from the other side.** The rule is *check whether a
+check already measures it*. One does — and the finding was that its **scope** is narrower than its
+name. **"A check exists" and "the check covers this input" are different claims**, and only the
+second licenses trusting a green result. Filed as TODO-D18; nothing built (§6a).
+
+⚠️ **J3/J4 together are the rule the remaining bundles inherit:** *the container that develops
+content owns it; the container that cites it in a cross-check subsection does not.* Second
+instance today. **But record the strength of the signal** — a draft that cedes in words (D8) is
+stronger evidence than document position (D7), and the weaker one should say so rather than
+present both as equally settled.

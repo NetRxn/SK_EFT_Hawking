@@ -267,8 +267,17 @@ bundle metadata on disk at all.
    ⚠️ **A conflict recorded and deferred cost one line; guessing it would have cost a wrong
    ownership assignment in two bundles.** Flag conflicts at the first retrofit; resolve them at
    the second, when both drafts are readable.
-4. ⏭️ **NEXT** — the remaining 8: **D7**, then the I tier (I1, I2, I3), then L1/L3 and E1/E2.
-   E1+E2 is the last open ADR-010 §D4 merge question and becomes measurable when either is declared.
+3i. ✅ **DONE 2026-08-07** — **D7**, ceiling 8→7 (14 apexes → 93 decls / 8 modules). **Second
+   declaration conflict resolved**: D1 §8.2 had declared D7's entire headline as a cross-check;
+   six apexes moved D1 → D7, and D1's closure fell 249 → 171. D7's draft is **five-sevenths
+   square-bracket placeholders** — not overclaiming, unwritten. Also found a dangling theorem name
+   in the sentence naming D7's own headline, which `prose_theorem_reference_coverage` misses
+   because its extractor keys on `\texttt{}` and D7 uses backtick quoting (TODO-D18).
+   Full working: [`../../audits/2026-08-07-d7-retrofit/FINDINGS.md`](../../audits/2026-08-07-d7-retrofit/FINDINGS.md).
+   ⚠️ **"A check exists" and "the check covers this input" are different claims.** Only the second
+   licenses trusting a green result.
+4. ⏭️ **NEXT** — the remaining 7: the I tier (**I1**, I2, I3), then L1/L3, then **E1/E2** — the
+   last open ADR-010 §D4 merge question, measurable as soon as either is declared.
    ⚠️ **Method, learned on D12 and re-confirmed on D11:** `grep` for a theorem name in a draft
    returns 0 — drafts escape underscores inside `\thm{}`. Resolve references with the
    underscore-aware scan, **seeded with a known-present name first**, never a bare grep.

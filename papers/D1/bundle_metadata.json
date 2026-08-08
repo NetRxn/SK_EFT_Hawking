@@ -175,36 +175,6 @@
       "name": "SKEFTHawking.GrapheneNoiseFormula.snr_independent_of_sigma_Q",
       "claims": "\u00a77.6 \u2014 the Lorenz-cancellation theorem: the SNR is independent of sigma_Q, which is what turns the measured Wiedemann-Franz violation into a cross-check of the noise prediction",
       "declared": "2026-08-07"
-    },
-    {
-      "name": "SKEFTHawking.KibbleZurekUnruh.surface_gravity_bounds_kzm_exponent",
-      "claims": "\u00a78.2 \u2014 the Kibble-Zurek-Unruh bridge: the KZM-corrected horizon-crossing rate is strictly below the bare WKB-corrected rate, simultaneously consuming mu < 1, 1 - delta_k > 0 and kappa > 0",
-      "declared": "2026-08-07"
-    },
-    {
-      "name": "SKEFTHawking.BPLDPSimulability.fourCycleFree_nonneg_iff_ldp_rate_zero",
-      "claims": "\u00a78.2 \u2014 the BP-LDP biconditional: the loop-correction LDP rate vanishes iff the factor graph is four-cycle-free with non-negative weights",
-      "declared": "2026-08-07"
-    },
-    {
-      "name": "SKEFTHawking.ChernBridge.crystalline_eq_quasicrystalline_iff_c1_zero",
-      "claims": "\u00a78.2 \u2014 the Chern-bridge biconditional. NOTE: D11 \u00a78 explicitly carves this module out as a categorical Chebyshev marker, a different object from its Bloch-band invariant, and names D1 as the bundle that describes it in Chern language",
-      "declared": "2026-08-07"
-    },
-    {
-      "name": "SKEFTHawking.AnalogHawkingDemarcation.analog_hawking_fourCycleFree_demarcation",
-      "claims": "\u00a78.2 \u2014 the falsifiable two-axis classical-simulability demarcation, combining the BP-LDP biconditional with the Chern bridge",
-      "declared": "2026-08-07"
-    },
-    {
-      "name": "SKEFTHawking.AnalogHawkingDemarcation.analog_hawking_tree_simulable_demarcation",
-      "claims": "\u00a78.2 \u2014 the end-to-end tree-side statement: genuine tree-ness plus synchronous BP convergence in diameter-many sweeps",
-      "declared": "2026-08-07"
-    },
-    {
-      "name": "SKEFTHawking.AnalogHawkingDemarcation.not_fourCycleFreeNonneg_or_nonzero_c1_implies_not_simulable",
-      "claims": "\u00a78.2 \u2014 the contrapositive, giving the screen-failure regime explicitly",
-      "declared": "2026-08-07"
     }
   ],
   "tier": 1,

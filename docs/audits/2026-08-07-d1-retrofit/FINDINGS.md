@@ -12,7 +12,12 @@ counting theorems, plus a full run of `scripts/count_theorem_reuse.py`.
 
 ## 1. What was declared
 
-**41 apexes → 249 declarations across 18 modules, depth 3, zero private truncations.**
+**35 apexes → 171 declarations across 12 modules, depth 2, zero private truncations.**
+
+⚠️ **As first declared this was 41 apexes → 249 declarations / 18 modules.** Six §8 apexes were
+**reassigned to D7** at D7's retrofit later the same day: D1 §8.2 presents them as an *"independent
+cross-check"*, while D7's title, abstract and §§2–6 are about them. Full working:
+`docs/audits/2026-08-07-d7-retrofit/FINDINGS.md` §2.
 
 | § | layer | apexes |
 |---|---|---|
@@ -21,7 +26,7 @@ counting theorems, plus a full run of `scripts/count_theorem_reuse.py`.
 | §4 | exact-WKB connection and the three non-perturbative effects | 9 |
 | §6 | polariton platform | 3 |
 | §7 | graphene Dirac fluid: block-diagonalisation, noise spectrum, WF cross-check | 7 |
-| §8 | Kibble–Zurek–Unruh cross-check and the simulability demarcation | 6 |
+| §8 | Kibble–Zurek–Unruh cross-check and the simulability demarcation | **0** (6 reassigned to D7) |
 
 **D1 ∩ every other declared bundle = 0** (D6, D9, D10, D11, D12, L2). Notably that includes
 `ChernBridge`, which **D11's own §8 carves out** as "a categorical Chebyshev marker that a
@@ -37,7 +42,7 @@ D11 disclaims it — and the two closures agree.
 | **Audience** | The analog-gravity experimental community across three platforms — cold-atom BEC, polariton microcavity, graphene Dirac fluid — plus theorists working dissipative EFT. |
 | **Venue** | PRD long article, per the metadata; the three-platform scope and the exact-WKB apparatus need the length. |
 | **The claim only this container can make** | **That the analog-Hawking prediction is a consequence of horizon kinematics rather than of microscopic constitution — made quantitative.** Per-platform predictions exist separately (the draft cites five wave drafts); what is D1's alone is the unified architecture: *one* SK-EFT machine, three platforms spanning ten orders of magnitude in `T_H`, three distinct leading observables, and a measured theorem-reuse fraction as the universality metric. |
-| **Substrate** | 18 modules, 249 declarations, depth 3: `AcousticMetric`, `HawkingUniversality`, `SecondOrderSK`, `SKDoubling`, `CGLTransform`, `WKBConnection`, `PolaritonTier1`, `DiracFluidMetric`, `DiracFluidWKB`, `QuasiOneDReduction`, `GrapheneNoiseFormula`, `KibbleZurekUnruh`, `AnalogHawkingDemarcation`, `BPLDPSimulability`, `ChernBridge`, and others. **249 is the honest denominator for the abstract's project-scoped theorem figure** (§2). |
+| **Substrate** | 12 modules, 171 declarations, depth 2 (after the D7 reassignment): `AcousticMetric`, `HawkingUniversality`, `SecondOrderSK`, `SKDoubling`, `CGLTransform`, `WKBConnection`, `PolaritonTier1`, `DiracFluidMetric`, `DiracFluidWKB`, `QuasiOneDReduction`, `GrapheneNoiseFormula`, and others. The simulability-demarcation modules are **D7's**. **171 is the honest denominator for the abstract's project-scoped theorem figure** (§2). |
 | **Honest size vs charter** | 1,234 lines against ~40pp — short, and §4 names part of the gap: four registered `Lift-section` events contributed zero words. |
 | **Boundary failure?** | **No.** D1 ∩ every other declared bundle = 0. It cites E1, E2, I1 and F, but every citation is a forward reference from a self-contained argument. Notably D1 claims `ChernBridge`, which **D11 explicitly disclaims** and attributes to a companion bundle — the two closures agree, which is the ideal case. |
 
@@ -49,7 +54,7 @@ D1's abstract says: *"End-to-end, `\substantivetheorems{}` Lean theorems are mac
 That macro is **project-scoped** (live value in `docs/counts.tex`) and auto-inflates as the
 library grows — the defect TODO-D9 records.
 
-**The measured closure of everything D1 claims is 249 declarations.** That is the number a
+**The measured closure of everything D1 claims is 171 declarations** (249 before the D7 reassignment). That is the number a
 reader of *this* abstract is entitled to. The ratio is roughly two orders of magnitude, and it
 grows every time an unrelated wave lands.
 
@@ -57,7 +62,7 @@ grows every time an unrelated wave lands.
 substrate** — it is the population of the *nine 1+1D BEC modules* over which §7.2's reuse
 fraction is computed, which is a different set for a different purpose. Both numbers describe
 real things; neither was the bundle's substrate, because nothing measured it until now. Update
-TODO-D9's arithmetic to 249 rather than carrying the old ratio forward.
+TODO-D9's arithmetic to 171 rather than carrying the old ratio forward.
 
 ---
 
