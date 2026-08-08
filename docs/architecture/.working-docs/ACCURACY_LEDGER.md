@@ -1392,3 +1392,29 @@ wrong measurement this session.
 four failure modes the pipeline exists to prevent, one of which is *"a parameter whose value was
 inherited from a prior draft and had drifted."* **I1's own infrastructure figures are that failure
 mode, in the paper that names it.**
+
+---
+
+## V34 — the I2 apex retrofit — 6 atoms, 0 corrected
+
+**P** = perishable, **D** = durable.
+
+| # | atom | decider | result |
+|---|---|---|---|
+| L1 | I2's draft is 1,016 lines and was read in full | the file | ✓ |
+| L2 | **SET: every per-theorem purity claim I2 makes, in BOTH directions** | `axiom_deps_project` on each named theorem — the field that carries the marker | ✓ `verlinde_k3_full` and `verlinde_k5_full` **no marker** (draft: "no native_decide"); `fib_pentagon` **marker present** (draft: "by native_decide"); `fib_hexagon_R_vacuum` **no marker** (draft: "kernel-pure"). **4/4 correct** (D) |
+| L3 | The instrument was validated on the same run | `fib_pentagon` returning `True` | ✓ — the V26 discipline applied (D) |
+| L4 | I2 names 21 theorems; 20 are citations | every `\texttt{}` token resolved | ✓ the 21st is a `Collar.…sum_nonneg` collision with a bare-named Mathlib lemma (D) |
+| L5 | The declared closure (223/10) is smaller than the described library (27 modules, ~949 decls) | the closure vs the abstract | ✓ **not a discrepancy** — I2 names theorems only for the components it exhibits, and discloses the rest by per-module counts (D) |
+| L6 | **SET:** I2 ∩ every other declared bundle | all fifteen | ✓ D4 **6**, F **5**, rest **0** — I2 supplying, never consuming (D) |
+
+⚠️ **L2 is the strongest disclosure instance measured, and it is the mixed direction that makes
+it so.** D8 claims corpus-wide purity and verifies; D4 discloses `native_decide` where it uses it.
+**I2 claims "kernel-pure here, `native_decide` there" in adjacent subsections and is right on
+both counts.** A claim that discriminates is worth more than a claim that generalises, because
+only the discriminating one can be wrong in two directions.
+
+⚠️ **L5 records an interpretive rule, NOT-AN-ASSERTION about the artifact:** *for a library paper,
+closure size measures citation practice, not artifact size.* I2's 223 is what it names; its
+per-module prose table is the better figure for the library's extent — and that table is
+hand-maintained prose no check covers (same class as TODO-D10, recorded not filed).

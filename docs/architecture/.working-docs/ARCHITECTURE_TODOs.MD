@@ -661,7 +661,8 @@ violated for the fifth time in this workstream.
   commented-out stubs after its bibliography — and **D4 adds three more** (*SymTFT audit
   substrate*, *Lindbladian S-matrix axiomatization NO-GO*, *ETH-α productive-value refutation
   tableau*) — **D5 adds two more**, and **I1 adds three** (Quantum Crooks no-go, APS η-invariant
-  sidebar, ETH-α refutation tableau) — so the pattern spans **six** bundles. The named
+  sidebar, ETH-α refutation tableau), and **I2 adds one** — so the pattern spans **seven**
+  bundles. The named
   content is substantial and unpublished anywhere: a Kerr-Schild double-copy on Petrov-D acoustic
   geometry with a three-obstruction BCJ no-go, an APS η-invariant substrate for analog horizons,
   an Itô/LDP cross-bridge, and a dissipative-SK-EFT bootstrap-uniqueness no-go.

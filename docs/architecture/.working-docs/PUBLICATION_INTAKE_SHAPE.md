@@ -287,8 +287,17 @@ bundle metadata on disk at all.
    from subject matter (D2/D3, its case studies' home bundles), then measured it: **D1 30, F 26,
    D2 1, D3 0**. Subject matter does not predict dependency structure. **Run the closure before
    writing the table.**
-4. ⏭️ **NEXT** — the remaining 6: **I2**, **I3**, then L1/L3, then **E1/E2** — the last open
-   ADR-010 §D4 merge question, measurable as soon as either is declared.
+3k. ✅ **DONE 2026-08-07** — **I2**, ceiling 6→5 (20 apexes → 223 decls / 10 modules). **Every
+   per-theorem purity claim verifies, in BOTH directions**: SU(2)_k *"no `native_decide`"* — true;
+   `fib_pentagon` *"by `native_decide`"* — true; the hexagons *"kernel-pure"* — true. A claim that
+   **discriminates** is worth more than one that generalises, because only the discriminating one
+   can be wrong in two directions.
+   Full working: [`../../audits/2026-08-07-i2-retrofit/FINDINGS.md`](../../audits/2026-08-07-i2-retrofit/FINDINGS.md).
+   ⚠️ **For a library paper, closure size measures CITATION PRACTICE, not artifact size.** I2's
+   declared 223 is what it names; its 27-module / ~949-declaration library is disclosed in
+   per-module prose. Do not read one as the other.
+4. ⏭️ **NEXT** — the remaining 5: **I3**, then L1/L3, then **E1/E2** — the last open ADR-010 §D4
+   merge question, measurable as soon as either is declared.
    ⚠️ **Method, learned on D12 and re-confirmed on D11:** `grep` for a theorem name in a draft
    returns 0 — drafts escape underscores inside `\thm{}`. Resolve references with the
    underscore-aware scan, **seeded with a known-present name first**, never a bare grep.

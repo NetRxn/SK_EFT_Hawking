@@ -1069,7 +1069,10 @@ def check_bundle_registry_consistency() -> CheckResult:
 #:           FINDINGS.md). The METHODOLOGY paper describes the pipeline at about half
 #:           its current size: 33 checks vs a live 66, 15 invariants vs #17, 17 bundles
 #:           vs 21, toolchain v4.29.0 vs v4.32.0.
-UNDECLARED_APEX_CEILING = 6
+#: 6 -> 5:   I2 retrofitted 2026-08-07 (20 apexes; docs/audits/2026-08-07-i2-retrofit/
+#:           FINDINGS.md). Every per-theorem purity claim VERIFIES, in both directions:
+#:           SU(2)_k "no native_decide" true, fib_pentagon "by native_decide" true.
+UNDECLARED_APEX_CEILING = 5
 
 
 @register_check(
