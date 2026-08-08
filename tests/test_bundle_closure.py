@@ -187,6 +187,13 @@ class TestTheCheck:
         """The substantive predicate is a universal over a bundle-supplied set, so with
         nothing declared it holds of nothing. The check must SAY that, not report a
         resolution it never performed."""
+        # Pin the ceiling to the seeded state, as the sibling ratchet test does. This
+        # assertion is about `apexes_resolve` saying UNMEASURABLE; the ratchet value is
+        # incidental, and it is DESIGNED to fall (it reached 0 on 2026-08-07 when the
+        # last bundle declared). Reading the live ceiling here couples a semantics test
+        # to a number whose whole purpose is to move.
+        import validation.checks.bundles_readiness as mod
+        monkeypatch.setattr(mod, "UNDECLARED_APEX_CEILING", 1)
         self._papers(monkeypatch, tmp_path, {"D1": {"bundle_target": "D1"}})
         res = check()
         resolve = next(d for d in res.details if d.name == "apexes_resolve")
