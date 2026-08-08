@@ -1,5 +1,357 @@
 {
   "bundle_target": "D5",
+  "apex_theorems": [
+    {
+      "name": "SKEFTHawking.ADWMechanism.critical_coupling_pos",
+      "claims": "\u00a72.2 \u2014 ADW critical-coupling positivity underwriting the Volovik tetrad self-tuning CC claim \u2014 critical_coupling_pos",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.BBN.at_least_three_phase5x_candidates_bbn_conformant",
+      "claims": "\u00a74 \u2014 BBN classification of the five Phase-5x DM candidates via the N_eff channel \u2014 at_least_three_phase5x_candidates_bbn_conformant",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.BBN.bbn_violators_share_n_eff_failure_mode",
+      "claims": "\u00a74 \u2014 BBN classification of the five Phase-5x DM candidates via the N_eff channel \u2014 bbn_violators_share_n_eff_failure_mode",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.CausalSetDarkEnergy.barrow_bound_gap_at_least_40_percent",
+      "claims": "\u00a78 Track A (causal-set DE) \u2014 NO-GO at R5 plus the three publishable structural caveats \u2014 barrow_bound_gap_at_least_40_percent",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.CausalSetDarkEnergy.barrow_bound_prescription_dependent",
+      "claims": "\u00a78 Track A (causal-set DE) \u2014 NO-GO at R5 plus the three publishable structural caveats \u2014 barrow_bound_prescription_dependent",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.CausalSetDarkEnergy.bdg_sigma_lambda_alpha_bdg_over_sqrt_v",
+      "claims": "\u00a78 Track A (causal-set DE) \u2014 NO-GO at R5 plus the three publishable structural caveats \u2014 bdg_sigma_lambda_alpha_bdg_over_sqrt_v",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.CausalSetDarkEnergy.bdg_sigma_lambda_decreasing",
+      "claims": "\u00a78 Track A (causal-set DE) \u2014 NO-GO at R5 plus the three publishable structural caveats \u2014 bdg_sigma_lambda_decreasing",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.CausalSetDarkEnergy.causet_dalembertian_4d_gradient_instability",
+      "claims": "\u00a78 Track A (causal-set DE) \u2014 NO-GO at R5 plus the three publishable structural caveats \u2014 causet_dalembertian_4d_gradient_instability",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.CausalSetDarkEnergy.everpresent_lambda_tier4_sharpening_factor_100x",
+      "claims": "\u00a78 Track A (causal-set DE) \u2014 NO-GO at R5 plus the three publishable structural caveats \u2014 everpresent_lambda_tier4_sharpening_factor_100x",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.CausalSetDarkEnergy.fDESI_R5_sharpened_below_1em4",
+      "claims": "\u00a78 Track A (causal-set DE) \u2014 NO-GO at R5 plus the three publishable structural caveats \u2014 fDESI_R5_sharpened_below_1em4",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.CausalSetDarkEnergy.fDESI_R5_sharpened_below_raw",
+      "claims": "\u00a78 Track A (causal-set DE) \u2014 NO-GO at R5 plus the three publishable structural caveats \u2014 fDESI_R5_sharpened_below_raw",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.CausalSetDarkEnergy.gibbs_duhem_inapplicable_causal_set_robust_under_prescriptions",
+      "claims": "\u00a78 Track A (causal-set DE) \u2014 NO-GO at R5 plus the three publishable structural caveats \u2014 gibbs_duhem_inapplicable_causal_set_robust_under_prescriptions",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.CausalSetDarkEnergy.track_a_fully_no_go_at_r5",
+      "claims": "\u00a78 Track A (causal-set DE) \u2014 NO-GO at R5 plus the three publishable structural caveats \u2014 track_a_fully_no_go_at_r5",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.CausalSetDarkEnergy.track_a_outside_gibbs_duhem_domain",
+      "claims": "\u00a78 Track A (causal-set DE) \u2014 NO-GO at R5 plus the three publishable structural caveats \u2014 track_a_outside_gibbs_duhem_domain",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.DKMBootstrap.polariton_inherits_graphene_uniqueness_result",
+      "claims": "\u00a713 \u2014 the platform cross-inheritance result named in the discussion \u2014 polariton_inherits_graphene_uniqueness_result",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.DarkEnergyObstructionPrinciple.viability_iff_all_four",
+      "claims": "\u00a79 \u2014 the Phase-5y four-factor viability machinery the Track-B closures call through \u2014 viability_iff_all_four",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.DarkSectorClassificationExtension.class_0_membership_robust_under_admissible_prescriptions",
+      "claims": "\u00a712 \u2014 the unified 7-class Gibbs-Duhem taxonomy and 3-tier applicability gradient \u2014 class_0_membership_robust_under_admissible_prescriptions",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.DarkSectorClassificationExtension.class_c_admits_orthogonality_failure_witness",
+      "claims": "\u00a712 \u2014 the unified 7-class Gibbs-Duhem taxonomy and 3-tier applicability gradient \u2014 class_c_admits_orthogonality_failure_witness",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.DarkSectorClassificationExtension.gd_binds_only_for_class_c_and_class_d",
+      "claims": "\u00a712 \u2014 the unified 7-class Gibbs-Duhem taxonomy and 3-tier applicability gradient \u2014 gd_binds_only_for_class_c_and_class_d",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.DarkSectorClassificationExtension.kss_unique_class_a",
+      "claims": "\u00a712 \u2014 the unified 7-class Gibbs-Duhem taxonomy and 3-tier applicability gradient \u2014 kss_unique_class_a",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.DarkSectorClassificationExtension.phase6m_class_admits_tier_assignment",
+      "claims": "\u00a712 \u2014 the unified 7-class Gibbs-Duhem taxonomy and 3-tier applicability gradient \u2014 phase6m_class_admits_tier_assignment",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.DarkSectorClassificationExtension.phase6m_mechanism_count",
+      "claims": "\u00a712 \u2014 the unified 7-class Gibbs-Duhem taxonomy and 3-tier applicability gradient \u2014 phase6m_mechanism_count",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.DarkSectorClassificationExtension.track_a_uniform_class_0",
+      "claims": "\u00a712 \u2014 the unified 7-class Gibbs-Duhem taxonomy and 3-tier applicability gradient \u2014 track_a_uniform_class_0",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.DarkSectorClassificationExtension.track_b_class_decomposition",
+      "claims": "\u00a712 \u2014 the unified 7-class Gibbs-Duhem taxonomy and 3-tier applicability gradient \u2014 track_b_class_decomposition",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.DarkSectorClassificationExtension.track_c_highest_survival",
+      "claims": "\u00a712 \u2014 the unified 7-class Gibbs-Duhem taxonomy and 3-tier applicability gradient \u2014 track_c_highest_survival",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.DarkSectorSynthesis.phase5x_candidates_viability_matrix",
+      "claims": "\u00a72 \u2014 the Phase-5x candidate viability matrix. \u26a0\ufe0f The draft labels this MCC (machine-checked classification): Lean verifies the consistency of hand-assigned flags, not the underlying bound \u2014 phase5x_candidates_viability_matrix",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EntropicGravityDarkEnergy.all_quantitative_bounds_disfavoured",
+      "claims": "\u00a79 Track B \u2014 the 8/8 unanimous entropic-gravity NO-GO, the bundle's substantive new claim \u2014 all_quantitative_bounds_disfavoured",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EntropicGravityDarkEnergy.barrow_aic_delta_below_jeffreys_decisive",
+      "claims": "\u00a79 Track B \u2014 the 8/8 unanimous entropic-gravity NO-GO, the bundle's substantive new claim \u2014 barrow_aic_delta_below_jeffreys_decisive",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EntropicGravityDarkEnergy.barrow_hde_disfavoured_information_criteria_luciano_paliathanasis_saridakis",
+      "claims": "\u00a79 Track B \u2014 the 8/8 unanimous entropic-gravity NO-GO, the bundle's substantive new claim \u2014 barrow_hde_disfavoured_information_criteria_luciano_paliathanasis_saridakis",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EntropicGravityDarkEnergy.both_decisive_bayes_bounds_exceed_jeffreys_decisive",
+      "claims": "\u00a79 Track B \u2014 the 8/8 unanimous entropic-gravity NO-GO, the bundle's substantive new claim \u2014 both_decisive_bayes_bounds_exceed_jeffreys_decisive",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EntropicGravityDarkEnergy.cadoni_tuveri_dec_no_go_via_gd_theorem_w_eq_minus_1",
+      "claims": "\u00a79 Track B \u2014 the 8/8 unanimous entropic-gravity NO-GO, the bundle's substantive new claim \u2014 cadoni_tuveri_dec_no_go_via_gd_theorem_w_eq_minus_1",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EntropicGravityDarkEnergy.dec_cpl_excluded_from_desi_dr2_1sigma",
+      "claims": "\u00a79 Track B \u2014 the 8/8 unanimous entropic-gravity NO-GO, the bundle's substantive new claim \u2014 dec_cpl_excluded_from_desi_dr2_1sigma",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EntropicGravityDarkEnergy.dec_fails_orthogonality_principle",
+      "claims": "\u00a79 Track B \u2014 the 8/8 unanimous entropic-gravity NO-GO, the bundle's substantive new claim \u2014 dec_fails_orthogonality_principle",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EntropicGravityDarkEnergy.entropic_gravity_no_go_count_eight",
+      "claims": "\u00a79 Track B \u2014 the 8/8 unanimous entropic-gravity NO-GO, the bundle's substantive new claim \u2014 entropic_gravity_no_go_count_eight",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EntropicGravityDarkEnergy.entropic_gravity_seven_genuine_per_candidate_falsifiers",
+      "claims": "\u00a79 Track B \u2014 the 8/8 unanimous entropic-gravity NO-GO, the bundle's substantive new claim \u2014 entropic_gravity_seven_genuine_per_candidate_falsifiers",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EntropicGravityDarkEnergy.hde_event_horizon_no_go_w_a_sign_mismatch_3sigma",
+      "claims": "\u00a79 Track B \u2014 the 8/8 unanimous entropic-gravity NO-GO, the bundle's substantive new claim \u2014 hde_event_horizon_no_go_w_a_sign_mismatch_3sigma",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EntropicGravityDarkEnergy.hossenfelder_verlinde_no_go_post_yoon_guha",
+      "claims": "\u00a79 Track B \u2014 the 8/8 unanimous entropic-gravity NO-GO, the bundle's substantive new claim \u2014 hossenfelder_verlinde_no_go_post_yoon_guha",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EntropicGravityDarkEnergy.hossenfelder_verlinde_residual_no_go_cmb_absent_cold_dark_matter",
+      "claims": "\u00a79 Track B \u2014 the 8/8 unanimous entropic-gravity NO-GO, the bundle's substantive new claim \u2014 hossenfelder_verlinde_residual_no_go_cmb_absent_cold_dark_matter",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EntropicGravityDarkEnergy.odintsov_donofrio_paul_omega_k_no_go_logB_15_to_17",
+      "claims": "\u00a79 Track B \u2014 the 8/8 unanimous entropic-gravity NO-GO, the bundle's substantive new claim \u2014 odintsov_donofrio_paul_omega_k_no_go_logB_15_to_17",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EntropicGravityDarkEnergy.padmanabhan_cosmin_no_go_no_scalar_perturbation_theory",
+      "claims": "\u00a79 Track B \u2014 the 8/8 unanimous entropic-gravity NO-GO, the bundle's substantive new claim \u2014 padmanabhan_cosmin_no_go_no_scalar_perturbation_theory",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EntropicGravityDarkEnergy.r_d_anchoring_partial_rescue_does_not_save_class_b_or_class_d",
+      "claims": "\u00a79 Track B \u2014 the 8/8 unanimous entropic-gravity NO-GO, the bundle's substantive new claim \u2014 r_d_anchoring_partial_rescue_does_not_save_class_b_or_class_d",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EntropicGravityDarkEnergy.r_d_independent_count_eight",
+      "claims": "\u00a79 Track B \u2014 the 8/8 unanimous entropic-gravity NO-GO, the bundle's substantive new claim \u2014 r_d_independent_count_eight",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EntropicGravityDarkEnergy.tsallis_hde_no_go_bayes_factor_tyagi_haridasu_basak",
+      "claims": "\u00a79 Track B \u2014 the 8/8 unanimous entropic-gravity NO-GO, the bundle's substantive new claim \u2014 tsallis_hde_no_go_bayes_factor_tyagi_haridasu_basak",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EntropicGravityDarkEnergy.verlinde_2017_no_go_via_cluster_mass_densities_halenka_miller",
+      "claims": "\u00a79 Track B \u2014 the 8/8 unanimous entropic-gravity NO-GO, the bundle's substantive new claim \u2014 verlinde_2017_no_go_via_cluster_mass_densities_halenka_miller",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EquivalencePrinciple.vestigial_phase_eta_violates_microscope_bound",
+      "claims": "\u00a76 \u2014 the EP classification; vestigial-only violation \u2014 vestigial_phase_eta_violates_microscope_bound",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FangGuTorsionDM.fg_cdm_obstruction",
+      "claims": "\u00a72.3 \u2014 the FG torsion CDM obstruction; the draft cites this as a DERIVED example (traceless T^munu), not MCC \u2014 fg_cdm_obstruction",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GibbsDuhemTheorem.gibbs_duhem_obstruction_main",
+      "claims": "\u00a78.1 \u2014 the Phase-5y Gibbs-Duhem obstruction, shown INAPPLICABLE to causal-set DE across all four sprinkling prescriptions \u2014 gibbs_duhem_obstruction_main",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.JacobsonThermoGRDarkEnergy.SakharovExtended.flsBEC_depletion_strictly_between_zero_and_one",
+      "claims": "\u00a710/\u00a711 Track C (Jacobson thermo-GR, highest survival) + the Sakharov 4-criterion cross-bridge \u2014 flsBEC_depletion_strictly_between_zero_and_one",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.JacobsonThermoGRDarkEnergy.SakharovExtended.flsBEC_lambda_j_neq_lambda_hk_real",
+      "claims": "\u00a710/\u00a711 Track C (Jacobson thermo-GR, highest survival) + the Sakharov 4-criterion cross-bridge \u2014 flsBEC_lambda_j_neq_lambda_hk_real",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.JacobsonThermoGRDarkEnergy.SakharovExtended.sakharov_criterion_implies_lambda_j_eq_lambda_hk_real",
+      "claims": "\u00a710/\u00a711 Track C (Jacobson thermo-GR, highest survival) + the Sakharov 4-criterion cross-bridge \u2014 sakharov_criterion_implies_lambda_j_eq_lambda_hk_real",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.JacobsonThermoGRDarkEnergy.SakharovExtended.sakharov_depletion_factor_relation",
+      "claims": "\u00a710/\u00a711 Track C (Jacobson thermo-GR, highest survival) + the Sakharov 4-criterion cross-bridge \u2014 sakharov_depletion_factor_relation",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.JacobsonThermoGRDarkEnergy.SakharovExtended.volovikJannes_he3a_depletion_eq_one",
+      "claims": "\u00a710/\u00a711 Track C (Jacobson thermo-GR, highest survival) + the Sakharov 4-criterion cross-bridge \u2014 volovikJannes_he3a_depletion_eq_one",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.JacobsonThermoGRDarkEnergy.SakharovExtended.volovikJannes_he3a_lambda_j_eq_lambda_hk_real",
+      "claims": "\u00a710/\u00a711 Track C (Jacobson thermo-GR, highest survival) + the Sakharov 4-criterion cross-bridge \u2014 volovikJannes_he3a_lambda_j_eq_lambda_hk_real",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.JacobsonThermoGRDarkEnergy.SakharovExtended.volovikJannes_vs_flsBEC_depletion_asymmetry",
+      "claims": "\u00a710/\u00a711 Track C (Jacobson thermo-GR, highest survival) + the Sakharov 4-criterion cross-bridge \u2014 volovikJannes_vs_flsBEC_depletion_asymmetry",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.JacobsonThermoGRDarkEnergy.SakharovExtended.wave_4a_4_honest_one_way_closure",
+      "claims": "\u00a710/\u00a711 Track C (Jacobson thermo-GR, highest survival) + the Sakharov 4-criterion cross-bridge \u2014 wave_4a_4_honest_one_way_closure",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.JacobsonThermoGRDarkEnergy.f_R_hu_sawicki_no_go_via_dolgov_kawasaki_or_chameleon",
+      "claims": "\u00a710/\u00a711 Track C (Jacobson thermo-GR, highest survival) + the Sakharov 4-criterion cross-bridge \u2014 f_R_hu_sawicki_no_go_via_dolgov_kawasaki_or_chameleon",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.JacobsonThermoGRDarkEnergy.f_R_starobinsky_DE_directly_preferred_over_lambda_cdm",
+      "claims": "\u00a710/\u00a711 Track C (Jacobson thermo-GR, highest survival) + the Sakharov 4-criterion cross-bridge \u2014 f_R_starobinsky_DE_directly_preferred_over_lambda_cdm",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.JacobsonThermoGRDarkEnergy.finazzi_liberati_sindoni_bec_violates_universal_coupling",
+      "claims": "\u00a710/\u00a711 Track C (Jacobson thermo-GR, highest survival) + the Sakharov 4-criterion cross-bridge \u2014 finazzi_liberati_sindoni_bec_violates_universal_coupling",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.JacobsonThermoGRDarkEnergy.hu_sawicki_fails_orthogonality_principle",
+      "claims": "\u00a710/\u00a711 Track C (Jacobson thermo-GR, highest survival) + the Sakharov 4-criterion cross-bridge \u2014 hu_sawicki_fails_orthogonality_principle",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.JacobsonThermoGRDarkEnergy.kss_de_partial_viable_under_lv_egj_path_a",
+      "claims": "\u00a710/\u00a711 Track C (Jacobson thermo-GR, highest survival) + the Sakharov 4-criterion cross-bridge \u2014 kss_de_partial_viable_under_lv_egj_path_a",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.JacobsonThermoGRDarkEnergy.lovelock_cpl_excluded_from_desi_dr2_1sigma",
+      "claims": "\u00a710/\u00a711 Track C (Jacobson thermo-GR, highest survival) + the Sakharov 4-criterion cross-bridge \u2014 lovelock_cpl_excluded_from_desi_dr2_1sigma",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.JacobsonThermoGRDarkEnergy.lovelock_de_no_go_under_causality_respecting_alpha_2_at_quintom_b_box_edge",
+      "claims": "\u00a710/\u00a711 Track C (Jacobson thermo-GR, highest survival) + the Sakharov 4-criterion cross-bridge \u2014 lovelock_de_no_go_under_causality_respecting_alpha_2_at_quintom_b_box_edge",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.JacobsonThermoGRDarkEnergy.sakharov_induced_gravity_criterion_implies_lambda_j_eq_lambda_hk",
+      "claims": "\u00a710/\u00a711 Track C (Jacobson thermo-GR, highest survival) + the Sakharov 4-criterion cross-bridge \u2014 sakharov_induced_gravity_criterion_implies_lambda_j_eq_lambda_hk",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.JacobsonThermoGRDarkEnergy.track_c_at_least_5_cleared_r5",
+      "claims": "\u00a710/\u00a711 Track C (Jacobson thermo-GR, highest survival) + the Sakharov 4-criterion cross-bridge \u2014 track_c_at_least_5_cleared_r5",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.JacobsonThermoGRDarkEnergy.unimodular_reformulation_admits_track_c_survivors",
+      "claims": "\u00a710/\u00a711 Track C (Jacobson thermo-GR, highest survival) + the Sakharov 4-criterion cross-bridge \u2014 unimodular_reformulation_admits_track_c_survivors",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.JacobsonThermoGRDarkEnergy.volovik_jannes_he3a_satisfies_sakharov_criterion",
+      "claims": "\u00a710/\u00a711 Track C (Jacobson thermo-GR, highest survival) + the Sakharov 4-criterion cross-bridge \u2014 volovik_jannes_he3a_satisfies_sakharov_criterion",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.JacobsonThermoGRDarkEnergy.volovik_jannes_substrate_anchors_sakharov_criterion",
+      "claims": "\u00a710/\u00a711 Track C (Jacobson thermo-GR, highest survival) + the Sakharov 4-criterion cross-bridge \u2014 volovik_jannes_substrate_anchors_sakharov_criterion",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.SFDMMergerForecast.delta_rho_monotone_in_mach_sfdm",
+      "claims": "\u00a72.4 \u2014 the BK superfluid-DM cluster-merger forecast (the 'money plot') \u2014 delta_rho_monotone_in_mach_sfdm",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.SFDMMergerForecast.sfdm_offset_step_function",
+      "claims": "\u00a72.4 \u2014 the BK superfluid-DM cluster-merger forecast (the 'money plot') \u2014 sfdm_offset_step_function",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.StrongCPTopologicalDE.zhitnitsky_DE_far_below_planck",
+      "claims": "\u00a75 \u2014 Zhitnitsky topological DE, parameter-free given Lambda_QCD and M_P \u2014 zhitnitsky_DE_far_below_planck",
+      "declared": "2026-08-07"
+    }
+  ],
   "tier": 1,
   "title": "Dark sector under substrate constraints",
   "target_journal": "PRD",

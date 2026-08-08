@@ -1279,3 +1279,29 @@ identical structural problem — a theorem whose content sits in a definition �
 oppositely. **The corpus already contains the fix for its own worst claim-integrity finding.**
 Looking for the good instance of a defect pattern is cheaper than designing a remedy, and this
 pass found one only because the retrofit reads whole drafts rather than diffs.
+
+---
+
+## V30 — the D5 apex retrofit — 7 atoms, 0 corrected
+
+**P** = perishable, **D** = durable.
+
+| # | atom | decider | result |
+|---|---|---|---|
+| G1 | D5's draft is 1,527 lines and was read in full | the file | ✓ |
+| G2 | **SET:** D5 ∩ every other declared bundle | D1, D2, D3, D4, D6, D9, D10, D11, D12, F, L2 — all eleven | ✓ D3 **11**, F **17**, rest **0** — both are D5 *supplying*, not consuming (D) |
+| G3 | D5's closure is the flattest measured: 70 apexes → 216 declarations, depth 3 | the closure, against D4 (66 → 753, depth 13) and D2 (47 → 516, depth 11) | ✓ (D) |
+| G4 | G3 **corroborates** the draft rather than contradicting it | §2.3's MCC definition and §9's aggregator/proof-load separation | ✓ a verdict has almost no substrate beneath it, and the draft says so up front (D) |
+| G5 | D5 defines and applies a three-way Derived / MCC / Heuristic taxonomy | the draft, including a figure caption that labels its own figure MCC | ✓ the strongest disclosure instrument in the corpus (D) |
+| G6 | **NOT FILED:** D5 and F cite Pipeline Invariant #14 for two different rules | `WAVE_EXECUTION_PIPELINE.md:693`, read in full | ✓ **both correct** — #14's body contains both the authorization rule and the `bundle_destination` schema clause. Nothing to file (D) |
+| G7 | D5's abstract states project-scoped `\substantivetheorems` for its own content | the abstract vs the closure | ✓ measured substrate is **216** — TODO-D9's defect, second instance (P) |
+
+⚠️ **NOT-AN-ASSERTION.** *"Apex-to-closure ratio is a genre signal, not a quality metric"* is an
+**interpretive rule for reading future measurements**, not a proposition about the corpus. It is
+recorded because D11's high ratio was read as a prose signal and D5's would be misread the same
+way; **compare ratios only within a genre.**
+
+⚠️ **G6 is the first probe this session that was scoped correctly BEFORE the conclusion was
+written**, and it is the reason nothing was filed. Two drafts citing one invariant for two rules
+is exactly the shape of a real defect; reading the invariant took one call and dissolved it.
+**The V26 and V27 corrections both cost more than that call would have.**

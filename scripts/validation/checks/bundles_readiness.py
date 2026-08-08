@@ -1052,7 +1052,11 @@ def check_bundle_registry_consistency() -> CheckResult:
 #:           truncated walk (90). Makes the D4->D8 boundary concrete: D4 and D8 name
 #:           the SAME GenericSU2 Clifford+T theorem. D4 ∩ D6 = 0, though F says D6
 #:           absorbed D4's Solovay-Kitaev headline.
-UNDECLARED_APEX_CEILING = 10
+#: 10 -> 9:  D5 retrofitted 2026-08-07 (70 apexes; docs/audits/2026-08-07-d5-retrofit/
+#:           FINDINGS.md). Flattest closure measured (216 decls, depth 3) because its
+#:           theorems are VERDICTS — corroborating the draft's own MCC self-labelling.
+#:           Apex-to-closure ratio is a genre signal, not a quality metric.
+UNDECLARED_APEX_CEILING = 9
 
 
 @register_check(

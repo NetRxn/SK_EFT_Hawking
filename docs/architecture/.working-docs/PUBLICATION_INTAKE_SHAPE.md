@@ -249,9 +249,17 @@ bundle metadata on disk at all.
    `Prop` by module-qualified identifier with a one-line closure path, including one since
    discharged. And F is wrong about D3 in **both** directions in one document, so a drift audit
    that only hunts overclaims finds half the drift.
-4. ⏭️ **NEXT** — the remaining 12. **D2** first: it is the other half of TODO-D16, and its
-   closure is what turns the `N_f`-identity measurement from module-level into closure-level.
-   Then **D4**, **D5**, then the L/I/E tiers.
+3g. ✅ **DONE 2026-08-07** — **D2** (47 apexes, ceiling 12→11), **D4** (66, 11→10), **D5**
+   (70, 10→9). D2 narrowed TODO-D16 against my own filing (a Witt-invariant bridge D3↔D2 DOES
+   exist). D4 made the D4→D8 boundary concrete (D4 and D8 name the same `GenericSU2` theorem) and
+   found that **D4 ∩ D6 = 0** though F says D6 absorbed D4's SK headline. D5 supplied the corpus's
+   best disclosure instrument — a three-way **Derived / MCC / Heuristic** taxonomy applied against
+   itself — which with D4's point-of-use sentence is the fix TODO-D12 needs.
+   ⚠️ **Apex-to-closure ratio is a GENRE signal, not a quality metric.** D11's high ratio was a
+   prose signal; D5's flat closure (216 decls, depth 3) is what a register of verdicts looks like,
+   and its own MCC labelling says so. Compare only within a genre.
+4. ⏭️ **NEXT** — the remaining 9: **D8** (it closes the D4→D8 question and is the only bundle whose
+   retrofit can resolve a declaration conflict already on record), then D7, then the I/L/E tiers.
    ⚠️ **Method, learned on D12 and re-confirmed on D11:** `grep` for a theorem name in a draft
    returns 0 — drafts escape underscores inside `\thm{}`. Resolve references with the
    underscore-aware scan, **seeded with a known-present name first**, never a bare grep.

@@ -512,6 +512,8 @@ version *and* the Mathlib rev against `lean-toolchain` + `lakefile.toml`.
   is **not D1's substrate** — it is the population of the nine 1+1D BEC modules over which §7.2's
   reuse fraction is computed, a different set for a different purpose. D1's substrate is its apex
   closure: **249 declarations**. Use that ratio; do not carry the old one forward.
+- **Also in D5:** its abstract states `\substantivetheorems` and `\totaltheorems` for D5's own
+  content. D5's measured substrate is **216** declarations. Same project-scoped-macro defect.
 - **Also in D1, same class:** the draft does not say which of the project's two counting
   conventions its `114` uses (source-level vs the `lean_deps` extraction, which additionally counts
   equation lemmas and gives 194 for the same modules). D11's draft discloses both explicitly and
@@ -575,6 +577,13 @@ version *and* the Mathlib rev against `lean-toolchain` + `lakefile.toml`.
   `WRTInvariant.wrtS2xS1` as `C.n` directly … the companion theorem `wrt_S2xS1_eq_rank` is a
   definitional sanity-check (`rfl` on the definitional unfolding), **not a proof of the
   Verlinde-formula chain**."* Copy that sentence's shape.
+- ✅ **And D5 supplies the other half — a TAXONOMY, which is the stronger instrument.** D5 §2.3
+  defines three labels and applies them corpus-wide: **Derived** (*"the conclusion does not reduce
+  to the statement by `rfl` or `decide` on hand-assigned constants"*), **MCC / machine-checked
+  classification** (*"the proof verifies internal consistency of an author-supplied lookup table …
+  does not independently re-derive the underlying physics bound"*), and **Heuristic / Empirical**.
+  It applies them against itself, including in a figure caption. **D4 gives the point-of-use
+  sentence; D5 gives the decision rule and the vocabulary. TODO-D12's fix wants both.**
 - **Fix shape, two options, prose-only vs. real work:** (1) narrow the claim — the layer is an
   axiomatized HK/Levy–Lieb interface plus its formal consequences; or (2) construct one
   `DensityVariational`/`GroundStateData` instance from §4.1's Hamiltonian, which would make the
@@ -640,7 +649,7 @@ violated for the fifth time in this workstream.
   more** — *"SymTFT audit substrate"* and *"APS η-invariant cross-bridge to Z16 Dai-Freed"*, both
   commented-out stubs after its bibliography — and **D4 adds three more** (*SymTFT audit
   substrate*, *Lindbladian S-matrix axiomatization NO-GO*, *ETH-α productive-value refutation
-  tableau*) — so the pattern spans **four** bundles. The named
+  tableau*) — and **D5 adds two more** — so the pattern spans **five** bundles. The named
   content is substantial and unpublished anywhere: a Kerr-Schild double-copy on Petrov-D acoustic
   geometry with a three-obstruction BCJ no-go, an APS η-invariant substrate for analog horizons,
   an Itô/LDP cross-bridge, and a dissipative-SK-EFT bootstrap-uniqueness no-go.
