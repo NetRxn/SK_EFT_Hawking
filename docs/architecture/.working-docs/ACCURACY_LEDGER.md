@@ -1014,3 +1014,52 @@ a control gap in `ARCHITECTURE_TODOs.MD`.
 
 ⚠️ **S6 is the fourth over-claim this session produced by reading a mechanism partially.** The
 formula's first two branches were not read before it was characterised. Read the whole function.
+
+---
+
+## V21 — the D11 apex retrofit — 10 atoms, 0 corrected
+
+Not a document-accuracy pass: these are the load-bearing facts the D11 retrofit
+(`docs/audits/2026-08-07-d11-retrofit/FINDINGS.md`) rests on, recorded so a later reader can
+tell which of them are **perishable**. Atoms recording a *defect* (P) die when the defect is
+fixed; atoms recording a *measurement of a design* (D) survive.
+
+| # | atom | decided by | result |
+|---|---|---|---|
+| W1 | D11's draft is 670 lines and was read in full before any apex was declared | the file | ✓ |
+| W2 | Every one of the 73 declared apexes names a live **theorem** | `validate.py --check bundle_apex_resolves` | ✓ 128 apexes across 5 bundles resolve |
+| W3 | **SET:** the closure's module set equals `update_counts.py`'s hand-listed `_D11_MODULES` | both directions, not just containment | ✓ 22 = 22, zero difference either way (D — the agreement is the design's point; the hand-list is TODO-D10) |
+| W4 | D11's closure intersects **every** other declared bundle's closure in zero declarations | D6, D9, D12, L2 — all four, not a sample | ✓ (D) |
+| W5 | 89 of 502 roster declarations lie outside the closure | derived, both numbers recomputed | ✓ (P — shrinks as the draft absorbs them) |
+| W6 | ≈69 of those are content, after subtracting 12 structure fields/projections and 4 `congr_simp` | kind + parent-kind of each | ✓ (P) |
+| W7 | Those 69 appear **nowhere** in the D11 draft | **underscore-aware** scan, seeded with two known-present names first | ✓ — a raw-identifier grep would have returned a false zero (P) |
+| W8 | Nor in **any** other draft | 10 representatives × all 65 `papers/**/*.tex`, underscore-aware | ✓ none found (P) |
+| W9 | `bernal_mexicanHat_witness` exists and is cited nowhere, while the conditional it inhabits **is** cited | the draft + the module | ✓ TODO-D11 (P) |
+| W10 | 4 `congr_simp` declarations are classed author-written by the autogen index | the records | ✓ — a measurement artifact, not D11 content; subtracted explicitly rather than silently |
+
+⚠️ **W10 is the counterpart to the V16 `AnnAssign` misses**: there, a scan classed live things
+as absent; here, an index classes generated things as authored. Both inflate or deflate a
+population that a later claim is stated over. **Subtract the artifact in the open, in the same
+sentence as the number** — a clean-looking count with an unstated exclusion is the failure mode.
+
+---
+
+## V22 — the D10 apex retrofit — 8 atoms, 0 corrected
+
+Same convention as V21: **P** = perishable (records a defect), **D** = durable (records a design).
+
+| # | atom | decided by | result |
+|---|---|---|---|
+| X1 | D10's draft is 315 lines and was read in full before any apex was declared | the file | ✓ |
+| X2 | `molecularHamiltonian_essSelfAdjoint` is **unconditional** as the abstract claims | the **statement**, not the prose describing it | ✓ takes `N`, `m`, `0 < m`, nuclei only; no tracked `Prop`; axioms exactly the three classical ones (D) |
+| X3 | `traceDist_lindblad_monotone` carries **no** disclosed CPTP-realization argument | the statement | ✓ (D) |
+| X4 | `coulomb_isRelBounded` **produces** the bound rather than assuming it | the statement | ✓ existential in `(a, b)` with `a < 1` (D) |
+| X5 | **SET:** `GroundStateData`, `DensityVariational`, `LevyLiebData` have **no inhabitant** | every declaration in the tree whose type mentions each — all three, not a sample | ✓ only auto-generated projections/eliminators and the theorems stated over an arbitrary instance (P) |
+| X6 | Those theorems reduce to their structures' own fields | the **full Lean source** of all three modules, read directly — not the extracted signature | ✓ `ciInf_le` + `nondegen` + `ground`; `rw [hn]; linarith` against `decomp` (P) |
+| X7 | The Lean discloses this and the manuscript does not | both, side by side | ✓ `HohenbergKohnUniqueness.lean:19-21`, `HohenbergKohnVariational.lean:26-27` vs the abstract's novelty sentence (P) |
+| X8 | **SET:** D10 ∩ every other declared bundle | D6, D9, D11, D12, L2 — all five | ✓ D11 **0**, D9 **50**, D12 1, D6 0, L2 0 (D) |
+
+⚠️ **X2/X3 are the atoms that make X5–X7 usable.** Reading a boldest-claim statement *before*
+reading the layer that fails is what separates "one layer overclaims" from "the bundle
+overclaims" — and only the first is true. A finding that does not measure the parts that hold is
+not a measurement, it is a verdict.

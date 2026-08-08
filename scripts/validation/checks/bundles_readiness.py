@@ -1023,7 +1023,15 @@ def check_bundle_registry_consistency() -> CheckResult:
 #:           docs/audits/2026-08-06-d12-retrofit/FINDINGS.md). Chosen because ADR-010
 #:           §What-remains item 2 lists the D6+D9+D12 merge as UNTESTED — with D6 and D9
 #:           already declared, D12 makes the three-way overlap computable.
-UNDECLARED_APEX_CEILING = 17
+#: 17 -> 16: D11 retrofitted 2026-08-07 (73 apexes; docs/audits/2026-08-07-d11-retrofit/
+#:           FINDINGS.md). The apex count is high because the draft is written as a
+#:           theorem catalogue — 73 statements are presented as results across five
+#:           independent layers. Its closure reaches NOTHING outside its own modules,
+#:           so D11 borrows from no other bundle.
+#: 16 -> 15: D10 retrofitted 2026-08-07 (33 apexes; docs/audits/2026-08-07-d10-retrofit/
+#:           FINDINGS.md). Chosen to close ADR-010's second untested merge, and it does:
+#:           D10 ∩ D11 = 0, while D10 ∩ D9 = 50. The pairing was adjacency, not content.
+UNDECLARED_APEX_CEILING = 15
 
 
 @register_check(

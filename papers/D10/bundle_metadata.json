@@ -1,5 +1,172 @@
 {
   "bundle_target": "D10",
+  "apex_theorems": [
+    {
+      "name": "SKEFTHawking.NEGF.retardedArg_isUnit",
+      "claims": "\u00a73.1 \u2014 the retarded argument (E + i*eta - H - Sigma) is invertible for eta > 0, so the retarded Green's function is well-defined",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.NEGF.gAdvanced_eq_conjTranspose",
+      "claims": "\u00a73.1 \u2014 the advanced Green's function is the conjugate transpose of the retarded one",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.NEGF.spectralFn_eq_gR_broadening_gA",
+      "claims": "ABSTRACT + \u00a73.1 \u2014 the fundamental NEGF spectral relation A = G^R Gamma G^A",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.NEGF.spectralFn_posSemidef",
+      "claims": "\u00a73.1 \u2014 the spectral function is positive semidefinite: the operator-level statement of a non-negative density of states",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.NEGF.transmission_isReal",
+      "claims": "\u00a73.2 \u2014 the Meir-Wingreen transmission is real for Hermitian lead broadenings",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.NEGF.transmission_nonneg",
+      "claims": "\u00a73.2 \u2014 and non-negative for positive-semidefinite broadenings, i.e. a genuine transmission probability, established without a dual-norm characterization Mathlib lacks",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.NEGF.landauer_conductance_def",
+      "claims": "ABSTRACT + \u00a73.2 \u2014 the Landauer-Buttiker linear-response conductance G = G0 * integral T(E) (-d_E f) dE",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.NEGF.fermiWindow_integral_eq_one",
+      "claims": "\u00a73.2 \u2014 the Fermi window integrates to unity for beta > 0",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.NEGF.landauerConductance_const_transmission'",
+      "claims": "\u00a73.2 \u2014 the wide-band (energy-independent transmission) limit G = G0*T0, unconditionally, for positive temperature",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.NEGF.channelConductance_le_quantum",
+      "claims": "ABSTRACT + \u00a73.3 \u2014 the quantum bound G <= n*G0 for n channels with transmissions in [0,1]",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.NEGF.conductance_quantization",
+      "claims": "\u00a73.3 \u2014 equality G = n*G0 when every channel is fully open",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.NEGF.conductance_quantization_falsifier",
+      "claims": "ABSTRACT + \u00a73.3 \u2014 the explicit falsifier: a conductance strictly exceeding n*G0 is impossible. The bound is stated as a refutation, not as an unmet inequality",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.NEGF.two_channel_no_three_quanta",
+      "claims": "\u00a73.3 \u2014 the concrete norm_num-backed witness: a two-channel point contact cannot carry three conductance quanta",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.NEGF.channelConductance_eq_landauer",
+      "claims": "\u00a73.3 \u2014 the certificate ties back to the integral picture of the Landauer formula",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.DFT.molecularHamiltonian_essSelfAdjoint",
+      "claims": "ABSTRACT HEADLINE + \u00a74.1 \u2014 UNCONDITIONAL essential self-adjointness of the molecular many-body Coulomb Hamiltonian. Verified: the statement takes N, m, 0 < m and the nuclei only \u2014 no analytic-hypothesis argument, no tracked Prop. Concrete operator (QuantumMechanics.SpaceDQuantumSystem.kineticOperator.closure + potentialOperator)",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.DFT.molecularPotentialOperator_isSymmetric",
+      "claims": "\u00a74.1 \u2014 discharged input (i): the potential's symmetry, reduced to measurability of the Coulomb sum",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.DFT.kineticOperator_isSelfAdjoint_closure",
+      "claims": "\u00a74.1 \u2014 discharged input (ii): kinetic essential self-adjointness, via the momentum-square operator's self-adjoint closure and the dense-range criterion",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.DFT.coulomb_isRelBounded",
+      "claims": "ABSTRACT + \u00a74.1 \u2014 discharged input (iii): the Coulomb relative bound a < 1, proven by an in-tree Fourier-Kato development rather than assumed. Existential in (a, b), so the bound is produced, not supplied",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.DFT.IsRelBounded.extend_to_closure",
+      "claims": "\u00a74.1 \u2014 Mathlib-grade infrastructure built for this bundle: the graph-limit relative-boundedness extension from a core to the operator's closure",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.DFT.hohenberg_kohn_uniqueness",
+      "claims": "ABSTRACT + \u00a74.2 \u2014 HK-I as a variational reductio. STRUCTURAL: the two strict Rayleigh-Ritz inequalities are HYPOTHESES, not conclusions, and GroundStateData has no inhabitant in the tree. The Lean docstring discloses this; the manuscript does not",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.DFT.hohenberg_kohn_density_injective",
+      "claims": "\u00a74.2 \u2014 the contrapositive: density injectivity. Same structural caveat",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.DFT.hohenberg_kohn_variational",
+      "claims": "ABSTRACT + \u00a74.2 \u2014 HK-II, the density variational principle with its equality characterization. STRUCTURAL: proved from the DensityVariational fields (bddBelow, ground, nondegen) by ciInf_le; the structure has no inhabitant in the tree",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.DFT.levyLieb_functional",
+      "claims": "ABSTRACT + \u00a74.3 \u2014 the Levy-Lieb constrained-search functional is a lower bound for the kinetic-plus-interaction energy of any state with the given density. STRUCTURAL: ciInf_le over LevyLiebData, which has no inhabitant in the tree",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.DFT.levyLieb_eq_HK_on_vrep",
+      "claims": "\u00a74.3 \u2014 agreement with the Hohenberg-Kohn functional on v-representable densities. Same structural caveat",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.OpenSystems.lindblad_generator_CP",
+      "claims": "ABSTRACT + \u00a75.1 \u2014 complete positivity of the GKSL DISSIPATOR via the PhysLib Choi route. The draft is explicit that the full generator is only conditionally completely positive",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.OpenSystems.gksl_canonical_form",
+      "claims": "ABSTRACT + \u00a75.2 \u2014 the GKSL structure theorem: the explicit pointwise action of the generator",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.OpenSystems.gksl_trace_preserving",
+      "claims": "\u00a75.2 \u2014 trace preservation, tr L(rho) = 0 for every rho: what makes the propagator map density matrices to density matrices",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.OpenSystems.lindblad_propagator_zero",
+      "claims": "\u00a75.3 \u2014 the propagator at t = 0 is the identity",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.OpenSystems.lindblad_semigroup",
+      "claims": "ABSTRACT + \u00a75.3 \u2014 the semigroup law Lambda_t Lambda_s = Lambda_(t+s), via the matrix exponential of the VECTORIZED non-Hermitian Liouvillian (not a Hermitian functional calculus, which does not apply)",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.OpenSystems.traceDist_lindblad_monotone",
+      "claims": "\u00a75.3 \u2014 trace-distance contractivity (data processing), UNCONDITIONALLY. Verified: the statement takes H Hermitian, the jump operators, 0 <= t and two Hermitian states \u2014 no disclosed CPTP-realization argument. The Kraus realization is extracted, not assumed",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.OpenSystems.dampedTwoLevel_generator_decay_rate",
+      "claims": "\u00a75.4 \u2014 the amplitude-damping instance: the excited-state population rate is read off the canonical form as (L rho)_11 = -gamma rho_11",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.OpenSystems.dampedTwoLevel_population_solves_rate",
+      "claims": "\u00a75.4 \u2014 p0 exp(-gamma t) solves that rate equation",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.OpenSystems.dampedTwoLevel_decay_envelope",
+      "claims": "\u00a75.4 \u2014 the decay factor admits a kernel-only RATIONAL enclosure 1 - gamma t <= exp(-gamma t) <= 1/(1 + gamma t), with a norm_num operating point. No floating-point evaluation anywhere",
+      "declared": "2026-08-07"
+    }
+  ],
   "tier": 1,
   "title": "Kernel-Verified Foundations of Computational Quantum Chemistry & Open-System Dynamics",
   "target_journal": "PRD | PRX Quantum | J. Chem. Phys.",
@@ -19,7 +186,7 @@
   "stage13_review_doc": "docs/review_finding_supersessions.json#review:2026-06-30:D10-stage13",
   "audit_log_path": "papers/D10/audit_log.jsonl",
   "supersession_ledger_anchor": "docs/review_finding_supersessions.json",
-  "notes": "First content-lift 2026-06-30, draft-GREEN. Stage 9 GREEN (n/a — no figures in the initial tight synthesis draft; theory paper). Stage 10 claims review GREEN: 0 FAIL / 0 WARN. Stage 13 adversarial review: 0 BLOCKER, 4 MAJOR, 2 MINOR — pass criterion (0 BLOCKER) met; all 4 MAJOR fixed and recorded in the supersession ledger (M1/M2 citation-author corrections; M3/M4 disclosed-hypothesis honesty). #print axioms-verified kernel-pure across all three layers; no project-local axioms. Disclosed tracked-Props (6BB hkin/hrel/bddBelow; 6BC hreal) carry discharge plans. Draft is a tight 4pp synthesis; expansion toward the ~40pp target + figures is future work.",
+  "notes": "First content-lift 2026-06-30, draft-GREEN. Stage 9 GREEN (n/a \u2014 no figures in the initial tight synthesis draft; theory paper). Stage 10 claims review GREEN: 0 FAIL / 0 WARN. Stage 13 adversarial review: 0 BLOCKER, 4 MAJOR, 2 MINOR \u2014 pass criterion (0 BLOCKER) met; all 4 MAJOR fixed and recorded in the supersession ledger (M1/M2 citation-author corrections; M3/M4 disclosed-hypothesis honesty). #print axioms-verified kernel-pure across all three layers; no project-local axioms. Disclosed tracked-Props (6BB hkin/hrel/bddBelow; 6BC hreal) carry discharge plans. Draft is a tight 4pp synthesis; expansion toward the ~40pp target + figures is future work.",
   "open_findings": 3,
   "blocked_p1_gates": [
     "NarrativeGrounding"

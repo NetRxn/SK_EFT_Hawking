@@ -149,6 +149,17 @@ the D6/D9 finding: the shared theorems reproduce, but their *declared* closures 
 disjoint — D6 cites declarations from D9's namespace and claims almost none of them. Borrowing, not
 duplication, and a different fix from a merge.
 
+**Both merge questions ADR-010 left untested are now answered, and both by disconfirmation.**
+D12 does not belong with D6+D9, and D10 shares *no* substrate with D11 — that pairing tracked the
+order the two were authorized, not their content. D10's real coupling is to D9, which its own
+prose acknowledges in the section that uses it but not in its novelty carve-out.
+
+**The retrofit also finds what a closure alone cannot.** Reading a draft in full against its
+statements — not against the prose describing them — surfaced two claim-integrity results the
+dependency graph is blind to: a bundle whose manuscript omits a sixth of its own proved substrate,
+and a bundle whose first-ever-formalization claim rests on theorems stated over structures with no
+inhabitant, where the Lean source discloses the gap and the manuscript does not.
+
 **Where a measurement and an audit conclusion disagree, the measurement is the evidence and the
 audit conclusion is the hypothesis it tested.** Per-bundle working is under
 `docs/audits/2026-08-*-*-retrofit/`.

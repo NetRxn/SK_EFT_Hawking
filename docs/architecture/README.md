@@ -21,9 +21,15 @@ defect — fix it rather than working around it.
 ⚠️ **`D` is overloaded across this project — always qualify it.** Five namespaces share the
 prefix: publication bundles (`D1`–`D12`), ADR-010's decisions (`§D1`–`§D7`, `§D5a`), ADR-009's
 (`D1`–`D3`), the operator decisions in the 2026-08-01 audit's `SYNTHESIS.md` §5 (`D-1`–`D-6`), and
-the items in [`.working-docs/ARCHITECTURE_TODOs.MD`](.working-docs/ARCHITECTURE_TODOs.MD)
-(`D1`–`D8`). Write `ADR-010 §D5a`, `ADR-009 D2`, `SYNTHESIS D-1`, `TODO-D5`; reserve a bare `D6`
+the `D`-prefixed items in
+[`.working-docs/ARCHITECTURE_TODOs.MD`](.working-docs/ARCHITECTURE_TODOs.MD).
+Write `ADR-010 §D5a`, `ADR-009 D2`, `SYNTHESIS D-1`, `TODO-D5`; reserve a bare `D6`
 for the bundle.
+
+The TODO list is numbered sequentially and has now grown past the bundle roster's lowest
+numbers, so **some TODO identifiers collide outright with bundle names** — `TODO-D11` is a
+citation defect *in* bundle D11, and `TODO-D10` is about a hand-listed module roster, not
+about bundle D10. The `TODO-` prefix is the only thing separating them; never drop it.
 
 Decisions live in [`../adrs/`](../adrs/); the graph schema in
 [`../KNOWLEDGE_GRAPH.md`](../KNOWLEDGE_GRAPH.md); the process law in

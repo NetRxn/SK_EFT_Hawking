@@ -189,7 +189,7 @@ check compares against reality. Sizes are recorded so a silent shrink is visible
 | `provenance.PAPER_DEPENDENCIES` | 17 |
 | `citations.CITATION_REGISTRY` | 652 |
 
-## Publication roster — 21 bundles, 4 with declared apexes
+## Publication roster — 21 bundles, 6 with declared apexes
 
 | bundle | tier | apexes | title |
 |---|---:|---:|---|
@@ -203,8 +203,8 @@ check compares against reality. Sizes are recorded so a silent shrink is visible
 | `D7` | 1 | — | Classical Simulability and Quantum Advantage via Tensor Netw |
 | `D8` | 1 | — | Kernel-Verified Universal Quantum Gate Compilation — Alphabe |
 | `D9` | 1 | 25 | Kernel-Verified Quantum-Network and Device-Characterization  |
-| `D10` | 1 | — | Kernel-Verified Foundations of Computational Quantum Chemist |
-| `D11` | 1 | — | Kernel-Verified Topological Band Theory & Metamaterial Subst |
+| `D10` | 1 | 33 | Kernel-Verified Foundations of Computational Quantum Chemist |
+| `D11` | 1 | 73 | Kernel-Verified Topological Band Theory & Metamaterial Subst |
 | `D12` | 1 | 11 | Kernel-Verified Detector & Readout Metrology — From Photon S |
 | `L1` | 2 | — | GW170817 / vestigial-graviton |
 | `L2` | 2 | 8 | Three generations from modular invariance |

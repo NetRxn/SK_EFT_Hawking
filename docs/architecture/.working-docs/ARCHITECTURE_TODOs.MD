@@ -513,3 +513,57 @@ version *and* the Mathlib rev against `lean-toolchain` + `lakefile.toml`.
   item 6, **withdrawn pending §6a approval**. Do not build it.
 - Full working: `docs/audits/2026-08-01-publication-readiness/ADDENDUM-2026-08-07.md` §A5.
 
+### D10. `_D11_MODULES` is hand-listed where the closure now derives it — OPEN (duplication)
+
+- **Where:** `scripts/update_counts.py:398-406` hand-lists 22 module names to generate
+  `\dxiModules`, `\dxiLines`, `\dxiTheorems`, `\dxiDefs`, `\dxiDepsTheorems` for D11's substrate
+  paragraph.
+- **What changed:** D11's apex closure (2026-08-07) reaches **exactly** those 22 modules — no
+  module outside the list, no listed module unreached. The derived answer and the hand-maintained
+  one now agree, which is the moment to delete the hand-maintained one.
+- **Why it matters:** the roster is the same class of artifact the apex model exists to remove — a
+  hand-listed set that silently goes stale when a module is added, renamed or split. A new D11
+  module today would be counted by nobody and noticed by nothing.
+- **Fix shape:** derive the module set from `bundle_closure.build_closures(...)["D11"].modules`.
+  ⚠️ The *counting rule* must not change with it — the source-level rule (line-prefix, outside
+  block comments, `abbrev` included) is stated in the draft's own prose and audited by its Stage-13
+  history, and `lean_deps.json` counts differently on purpose (`\dxiDepsTheorems`).
+- **Do not build without §6a approval.** Full working:
+  `docs/audits/2026-08-07-d11-retrofit/FINDINGS.md` §2.
+
+### D11. D11 §6.4 cites a conditional without its non-vacuity witness — OPEN (minor, prose)
+
+- **Where:** `papers/D11/paper_draft.tex:462-464`.
+- **The gap:** the Mexican-hat result is stated *at nonzero bias* and cites `bernal_mexicanHat`,
+  which carries that hypothesis explicitly. `bernal_mexicanHat_witness` — the theorem showing the
+  antecedent is inhabited — exists in `GrapheneBand/BernalBilayer` and is cited nowhere, so the
+  draft leaves the conditional's non-vacuity unevidenced.
+- **Why it is worth fixing:** §2.2 of the same draft is careful to state `latticeChern_Uwit`
+  against the `latticeChern_trivial` fixture for exactly this reason. The discipline is the
+  bundle's own; this is one place it lapsed.
+- **Fix shape:** one clause in §6.4. Prose change — operator's call under ADR-010 C5.
+- Full working: `docs/audits/2026-08-07-d11-retrofit/FINDINGS.md` §3.
+
+
+### D12. D10 §4.2–§4.3 claim a first-ever DFT formalization over uninhabited structures — OPEN (CRITICAL, claim integrity)
+
+- **Where:** `papers/D10/paper_draft.tex` abstract (`:39`) and §4.2–§4.3 (`:199-219`).
+- **The gap:** `hohenberg_kohn_uniqueness`, `hohenberg_kohn_variational`, `levyLieb_functional`
+  and `levyLieb_eq_HK_on_vrep` are stated over `GroundStateData`, `DensityVariational` and
+  `LevyLiebData` — three structures with **no inhabitant anywhere in the tree** — and reduce to
+  those structures' own fields (`ciInf_le` + `nondegen`; `rw; linarith` against `decomp`). The
+  strict Rayleigh–Ritz inequalities of HK-I are **hypotheses**, not conclusions. Nothing connects
+  any of them to §4.1's molecular Hamiltonian.
+- **Why it is CRITICAL:** the abstract claims *"the first formalizations of … Hohenberg–Kohn/
+  Levy–Lieb DFT … in any proof assistant"*. That is the sentence a referee tests first.
+- ⚠️ **The Lean already discloses it and the paper does not.**
+  `HohenbergKohnUniqueness.lean:19-21` names the variational inequalities as the load-bearing
+  inputs; `HohenbergKohnVariational.lean:26-27` says the module is not connected to
+  `molecularHamiltonian_essSelfAdjoint`. The defect is entirely in the manuscript.
+- **Not a correctness defect.** Every theorem is true and kernel-pure, and §4.1's *unconditional*
+  molecular self-adjointness is verified genuine (takes no analytic-hypothesis argument).
+- **Fix shape, two options, prose-only vs. real work:** (1) narrow the claim — the layer is an
+  axiomatized HK/Levy–Lieb interface plus its formal consequences; or (2) construct one
+  `DensityVariational`/`GroundStateData` instance from §4.1's Hamiltonian, which would make the
+  present claim true. Operator's call under ADR-010 C5. **The current prose is not a third option.**
+- Full working: `docs/audits/2026-08-07-d10-retrofit/FINDINGS.md` §3.

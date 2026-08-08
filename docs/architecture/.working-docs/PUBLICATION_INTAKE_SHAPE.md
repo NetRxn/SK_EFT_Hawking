@@ -169,8 +169,10 @@ bundle metadata on disk at all.
 2. ✅ **BUILT** — `bundle_apex_resolves` (registered, in `_CANONICAL_ORDER` after the roster gate)
    plus 28 tests in `tests/test_bundle_closure.py`. It hard-fails on an apex naming no live
    declaration, on an apex that is not a theorem, and on the undeclared count rising above
-   `UNDECLARED_APEX_CEILING = 21`. `--ci`'s coverage floor moved 57 → 58 in the same commit, per
-   the zero-headroom ratchet.
+   `UNDECLARED_APEX_CEILING` — which shipped at the maximum (every bundle on disk) by design, so
+   the gate had teeth on day one. `--ci`'s coverage floor moved 57 → 58 in the same commit, per
+   the zero-headroom ratchet. **The ceiling's live value and its full descent are in the ratchet
+   comment above the constant; never copy it here.**
 3. ✅ **DONE** — four bundles retrofitted under §3b, ceiling **21 → 17**:
    **D6** (11 apexes → 51 decls / 4 modules, depth 3) · **D9** (25 → 623 / 68, depth 12) ·
    **L2** (8 → 430 / 40, depth 14) · **D12** (11 → 147 / 14, depth 6).
@@ -181,11 +183,37 @@ bundle metadata on disk at all.
    declarations from D9's namespace and claims none of them, covering only **19 %** of its own
    citations with its own apexes. Borrowing, not duplication.
    Full working: [`../../audits/2026-08-06-d12-retrofit/FINDINGS.md`](../../audits/2026-08-06-d12-retrofit/FINDINGS.md).
-4. ⏭️ **NEXT** — the remaining 17, one at a time. **D11** is the highest-value next: it is the other
-   half of ADR-010's second untested merge (D10+D11), and its "references zero declarations" premise
-   was withdrawn the same day D12's was (D11 = 95 declarations / 22 modules).
-   ⚠️ **Method, learned on D12:** `grep` for a theorem name in a draft returns 0 — drafts escape
-   underscores inside `\thm{}`. Resolve references with the underscore-aware scan, never a bare grep.
+3b. ✅ **DONE 2026-08-07** — **D11**, ceiling **17 → 16** (73 apexes → 413 decls / 22 modules,
+   depth 6). Chosen as the other half of ADR-010's second untested merge (D10+D11). Three results:
+   its closure's module set **equals** `update_counts.py`'s hand-listed `_D11_MODULES` in both
+   directions, so that roster is now derivable (TODO-D10); its closure intersects **every** other
+   declared bundle in **zero** declarations, so no merge or homing question arises from its
+   dependency shape; and ≈69 author-written declarations in its own modules — in three coherent
+   families — are named in **no draft in the portfolio**, which locates D11's charter-length
+   shortfall in the writing rather than in the physics.
+   Full working: [`../../audits/2026-08-07-d11-retrofit/FINDINGS.md`](../../audits/2026-08-07-d11-retrofit/FINDINGS.md).
+   ⚠️ **A high apex-to-closure ratio is a prose signal.** D9 declares 25 apexes over a
+   623-declaration closure; D11 declares 73 over 413, because its draft introduces nearly every
+   theorem by name in running prose. That ratio is computable before anyone reads a draft.
+3c. ✅ **DONE 2026-08-07** — **D10**, ceiling **16 → 15** (33 apexes → 311 decls / 17 modules,
+   depth 13). It **closes ADR-010's second untested merge**: `D10 ∩ D11 = 0` — no shared
+   substrate at all, so the pairing was authorization adjacency, not content. Where D10 actually
+   couples is **D9** (50 declarations, all in `QuantumNetwork.*`, every one of them claimed by
+   D9's own apexes — borrowing *with* attribution available, unlike the D6→D9 case).
+   It also found a CRITICAL claim gap the closure alone would not have shown: §4.2–§4.3 claim the
+   first-ever Hohenberg–Kohn/Levy–Lieb formalization over three structures with **no inhabitant
+   in the tree**, while §4.1's unconditional molecular self-adjointness verifies genuine.
+   Full working: [`../../audits/2026-08-07-d10-retrofit/FINDINGS.md`](../../audits/2026-08-07-d10-retrofit/FINDINGS.md).
+   ⚠️ **Method:** read the *statement*, not the prose describing it — and read the **full Lean
+   source** of a module before judging its strength. §4.1's "unconditional" and §5.3's
+   "discharged" both survive that test; §4.2's "constructive reductio" does not.
+4. ⏭️ **NEXT** — the remaining 15, one at a time. Both of ADR-010's named merge questions are now
+   answered, so the queue is no longer merge-driven: take the bundles whose claims are most
+   exposed. **D1** is the natural next — it carries the `\substantivetheorems{}` overclaim
+   (TODO-D9's root cause), which an apex closure makes directly measurable.
+   ⚠️ **Method, learned on D12 and re-confirmed on D11:** `grep` for a theorem name in a draft
+   returns 0 — drafts escape underscores inside `\thm{}`. Resolve references with the
+   underscore-aware scan, **seeded with a known-present name first**, never a bare grep.
    This is the same artifact class behind ADR-010's two withdrawn figures.
 5. The wave-close hook (§3a) — last, because it should encode a flow already proven by hand.
 
