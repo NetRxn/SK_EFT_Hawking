@@ -366,6 +366,13 @@ The suite is substantially larger than this core: `--list` also covers the bundl
 uv run python scripts/review_figures.py
 ```
 
+**Bundle figure adequacy (ADR-011 Phase 4).** A bundle must carry the figures its tier owes
+a reader: `validate.py --check bundle_figure_adequacy`. This exists because the lift
+procedure only ever *migrated* figures that already existed, so **9 of 21 bundles shipped
+zero**, and neither Stage 9 nor `paper_provenance` could object — both are vacuously true
+over an empty figure set. A figure that is planned but not yet drawn is declared with
+`\figuredeferred{id}{reason}` rather than omitted silently.
+
 **Gate:** All PNGs generated with zero failures. All registered figures have corresponding functions.
 
 ---

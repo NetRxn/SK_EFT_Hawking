@@ -2060,3 +2060,25 @@ generator optimises against any checklist it can see. Stated in both files.
 **NOT-AN-ASSERTION.** The frequency table in `prohibited-patterns.md` (~45–55% paired asides,
 ~30–45% colon-substitutes) is the six sweep agents' judgment aggregated across disjoint file
 sets, not a measurement I re-derived. It is labelled as field evidence in the reference.
+
+## V54 — ADR-011 Phase 4a: Gate 13, and a bibliography that was never compiled — 7 atoms, 1 AUDIT CLAIM REFUTED
+
+| # | Proposition | Decider | Verbatim result |
+|---|---|---|---|
+| 1 | 9 of 21 bundles ship zero figures | corpus scan | **CONFIRMED** — F, D1, D2, D3, D4, D6, D7, D10, I3. Reproduces the audit exactly |
+| 2 | The audit's Gate-14 leg *"bibliography with `\bibitem` count > 0 … catches D8 and D10"* | read of both drafts | **REFUTED.** Both carry `\bibliography{bibliography}` + a real `.bib`; the leg would have flagged two bundles that have a bibliography, by a different mechanism. Not implemented as specified |
+| 3 | …but D8's citations resolve | `pdftotext` on the rendered PDF | **NO — 26 rendered as `[?]`, and NO reference list at all.** Its text reads *"poly-logarithmically in 1/ε [? ? ? ]"* |
+| 4 | The compile gate could see that | read of `compile_one` | **NO.** It counted `??` (unresolved `\ref`) and never `[?]` (apsrev4-2's unresolved `\cite`). D8 reported **OK** with every citation broken |
+| 5 | Root cause | grep for `bibtex` across the compile paths | **No compile path ran bibtex at all.** A draft using `\bibliography{}` never got a `.bbl` |
+| 6 | Running bibtex fixes it | recompile after the change | first attempt still 26: bibtex runs with `cwd=out` where the `.aux` is, but the `.bib` files live beside the draft, so it silently found no database. With `BIBINPUTS` set ⇒ **0 unresolved, bibliography rendered** |
+| 7 | Nothing regressed corpus-wide | `--all` with the cache cleared | 46/64. **D3 is the only failing bundle**, on its pre-existing 3 unresolved `\ref`s; the other 17 are legacy drafts. D8 moved from *hidden* failure to genuine pass |
+
+**⚠️ A REPORTING ERROR OF MINE, CORRECTED.** I first said "all 21 bundles pass" from a `grep`
+over the background job's output file. That file was tail-truncated by the invoking command, so
+the grep matched nothing and I read absence as success. The gate cache is the authoritative
+record and says D3 fails. **An empty grep result is not evidence of absence when the input may be
+truncated** — the same class as the round-8 defect this suite exists to catch.
+
+**NOT-AN-ASSERTION.** The tier figure floors (0→8, 1→4, 2→1, 3→2, 4→1) are the audit's proposed
+backstop, not a measured requirement. They apply only until a bundle declares a charter figure
+plan, at which point the comparison should be against the plan.

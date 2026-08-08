@@ -475,6 +475,83 @@ def check_bundle_prose_em_dash_free() -> CheckResult:
     return CheckResult(passed=total == 0, details=details)
 
 
+#: Minimum figure count by tier, the backstop the 2026-08-01 audit specified for use
+#: until every bundle carries a charter figure plan. A review article and a four-page
+#: letter do not owe a reader the same number of figures.
+_FIGURE_FLOOR_BY_TIER = {0: 8, 1: 4, 2: 1, 3: 2, 4: 1}
+
+
+@register_check("bundle_figure_adequacy",
+                "Every bundle carries at least the figures its tier owes a reader")
+def check_bundle_figure_adequacy() -> CheckResult:
+    """CHECK (ADR-011 Phase 4, Gate 13): a bundle has figures a referee expects.
+
+    **Nine of twenty-one bundles ship ZERO figures**, the flagship among them, and the
+    cause is structural rather than editorial: `BUNDLE_LIFT_PROCEDURE` §6 is titled
+    *figure MIGRATION* and its first instruction is to copy figures from the source
+    papers. **No step in the procedure ever planned a figure.** If the contributing
+    sources had none, the bundle has none, and nothing objected.
+
+    ⚠️ **Stage 9 could not object either, and that is the sharper defect.** Its pass
+    criterion is *"ALL figures PASS, no FAIL, no MINOR"*, which over an empty set is
+    vacuously true — `papers/D10/bundle_metadata.json` recorded `stage9_status: green`
+    for a bundle with no figures at all. `paper_provenance` is equally blind: it
+    validates that `\\includegraphics` targets exist, so a draft with no
+    `\\includegraphics` is trivially clean. Two gates over the same hole, both green.
+
+    The tier floor is a backstop, not the intended instrument. Once a bundle declares a
+    charter figure plan the check should compare against *that* — every planned figure
+    resolving to an `\\includegraphics` or an explicit `\\figuredeferred{id}{reason}` —
+    and the floor becomes the case for a bundle whose plan is not yet written.
+    """
+    details: List[Detail] = []
+    try:
+        import bundle_registry as registry
+        codes = list(registry.BUNDLE_CODES)
+    except Exception as exc:  # noqa: BLE001
+        return CheckResult(passed=False, measured=False, details=[Detail(
+            "roster", False,
+            f"could not read the bundle roster ({exc}) — UNVERIFIED, not passing")])
+
+    checked = short = 0
+    for code in codes:
+        tex = _H.PAPERS_DIR / code / "paper_draft.tex"
+        md = _read_metadata(code)
+        if not tex.is_file() or md is None:
+            continue
+        checked += 1
+        body = _TEX_COMMENT_RE.sub("", tex.read_text(errors="replace"))
+        n_fig = len(re.findall(r"\\begin\{figure", body))
+        n_def = len(re.findall(r"\\figuredeferred\{", body))
+        tier = md.get("tier")
+        floor = _FIGURE_FLOOR_BY_TIER.get(tier)
+        if floor is None:
+            details.append(Detail(
+                code, True, f"tier {tier!r} has no declared figure floor — UNMEASURED",
+                warning=True))
+            continue
+        if n_fig + n_def < floor:
+            short += 1
+            details.append(Detail(
+                code, False,
+                f"{n_fig} figure(s)"
+                + (f" + {n_def} declared-deferred" if n_def else "")
+                + f" against a tier-{tier} floor of {floor}"
+                + (" — a bundle with no figures is a charter defect, not a style choice"
+                   if n_fig == 0 else "")))
+
+    if checked == 0:
+        details.insert(0, Detail(
+            "population", False,
+            "no bundle draft was read — this check is UNVERIFIED, not passing"))
+        return CheckResult(passed=False, measured=False, details=details)
+
+    details.insert(0, Detail(
+        "summary", short == 0,
+        f"{checked} bundle(s) checked against their tier figure floor, {short} short"))
+    return CheckResult(passed=short == 0, details=details)
+
+
 #: A fix NARRATING ITSELF to the reader (ADR-011 Phase 3, F-05).
 #:
 #: ⚠️ **These match the ACT, not the vocabulary, and that distinction is the whole

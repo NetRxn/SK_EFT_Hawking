@@ -83,6 +83,28 @@ def _record_gate(name: str, ok: bool, pages: int | None) -> None:
         pass               # a cache that cannot be written is a slow run, not a failure
 
 
+def _unresolved_markers(txt: str) -> int:
+    """Count what a READER would see as an unresolved pointer in the rendered PDF.
+
+    Two distinct markers, and counting only the first was a live hole:
+
+      * ``??``  — LaTeX's unresolved \\ref.
+      * ``[?]`` — apsrev4-2's unresolved \\cite. Renders as ``[? ? ?]`` for a
+        multi-citation.
+
+    ⚠️ **This gate counted only ``??`` until 2026-08-08, and D8 passed it while
+    shipping 26 citations rendered as ``[?]`` and NO bibliography section at all** —
+    its text reads *"...poly-logarithmically in 1/ε [? ? ? ]"*. The root cause was
+    that no compile path ran ``bibtex``, so a draft using ``\\bibliography{...}``
+    never got a ``.bbl``; that is fixed in :func:`compile_one`. This function is the
+    detection half, and it is separate on purpose: the pipeline can regress again,
+    and a gate that cannot see a broken citation is worse than a missing one.
+
+    A bare ``?`` is deliberately NOT matched — it is ordinary punctuation.
+    """
+    return len(re.findall(r"\?\?", txt)) + len(re.findall(r"\[\s*\?[\s?]*\]", txt))
+
+
 def _reproducible_env(tex: Path) -> dict:
     """pdflatex environment that makes the output byte-reproducible.
 
@@ -210,7 +232,12 @@ def compile_one(bundle_dir: Path, keep: bool = False,
     out = Path(tempfile.mkdtemp(prefix=f"skeft-{bundle_dir.name}-"))
     try:
         env = _reproducible_env(tex)
-        for _ in range(PASSES):
+        # A draft using `\bibliography{...}` needs bibtex between passes, or every
+        # citation renders as `[?]` and NO reference list is produced at all.
+        # ⚠️ Nothing ran bibtex before 2026-08-08, so D8 shipped 26 `[?]` citations and
+        # no bibliography while this gate reported OK — see `_unresolved_markers`.
+        needs_bibtex = bool(re.search(r"\\bibliography\{", tex.read_text(errors="replace")))
+        for i in range(PASSES):
             subprocess.run(
                 [pdflatex, "-interaction=nonstopmode", "-no-shell-escape",
                  f"-output-directory={out}", "-jobname=paper_draft",
@@ -225,6 +252,20 @@ def compile_one(bundle_dir: Path, keep: bool = False,
                 env=env,
                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
                 timeout=300, check=False)
+            if needs_bibtex and i == 0 and shutil.which("bibtex"):
+                # After pass 1 the .aux holds the \citation records bibtex needs; the
+                # remaining passes then resolve the numbers it writes into the .bbl.
+                #
+                # ⚠️ BIBINPUTS is REQUIRED, not optional. bibtex must run with cwd=out
+                # (that is where the .aux is), but the .bib files live beside the draft,
+                # so without this it silently finds no database and every citation stays
+                # `[?]` — the same end state as not running bibtex at all, which is how
+                # this was first mis-diagnosed as "bibtex does not help".
+                bibenv = dict(env)
+                bibenv["BIBINPUTS"] = f"{bundle_dir}:{bibenv.get('BIBINPUTS', '')}"
+                subprocess.run(["bibtex", "paper_draft"], cwd=out, env=bibenv,
+                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                               timeout=120, check=False)
 
         log = out / "paper_draft.log"
         pdf = out / "paper_draft.pdf"
@@ -256,7 +297,7 @@ def compile_one(bundle_dir: Path, keep: bool = False,
         if shutil.which("pdftotext"):
             txt = subprocess.run(["pdftotext", str(pdf), "-"],
                                  capture_output=True, text=True, timeout=120).stdout
-            unresolved = txt.count("??")
+            unresolved = _unresolved_markers(txt)
 
         pages: str | int = "?"
         if shutil.which("pdfinfo"):

@@ -1128,3 +1128,76 @@ class TestBundleReaderFacingVoice:
         self._setup(tmp_path, monkeypatch,
                     {"D1": "Convergence is reached at round 3 of the iteration.\n"})
         assert bru.check_bundle_reader_facing_voice().passed
+
+
+class TestBundleFigureAdequacy:
+    """A bundle carries at least the figures its tier owes a reader (ADR-011 Phase 4).
+
+    Nine of 21 bundles ship zero figures, the flagship among them, because
+    `BUNDLE_LIFT_PROCEDURE` §6 only ever MIGRATED figures that already existed in the
+    sources. No step planned one.
+    """
+
+    def _setup(self, tmp_path, monkeypatch, bundles):
+        import bundle_registry as registry
+        papers = tmp_path / "papers"
+        for code, (tier, body) in bundles.items():
+            (papers / code).mkdir(parents=True, exist_ok=True)
+            (papers / code / "paper_draft.tex").write_text(body)
+            (papers / code / "bundle_metadata.json").write_text(
+                json.dumps({"bundle_target": code, "tier": tier}))
+        monkeypatch.setattr(_H, "PAPERS_DIR", papers)
+        monkeypatch.setattr(_H, "PROJECT_ROOT", tmp_path)
+        monkeypatch.setattr(registry, "BUNDLE_CODES", tuple(bundles))
+
+    @staticmethod
+    def _figs(n):
+        return "".join("\\begin{figure}x\\end{figure}\n" for _ in range(n))
+
+    def test_a_bundle_meeting_its_floor_passes(self, tmp_path, monkeypatch):
+        """SILENT ON CORRECT DATA."""
+        self._setup(tmp_path, monkeypatch, {"D1": (1, self._figs(4))})
+        assert bru.check_bundle_figure_adequacy().passed
+
+    def test_zero_figures_fails_and_says_why(self, tmp_path, monkeypatch):
+        """The live case for 9 of 21 bundles, F included."""
+        self._setup(tmp_path, monkeypatch, {"F": (0, "no figures here\n")})
+        r = bru.check_bundle_figure_adequacy()
+        assert not r.passed
+        assert "charter defect" in r.details[1].message
+
+    def test_the_floor_is_TIER_dependent(self, tmp_path, monkeypatch):
+        """A four-page letter and a review article do not owe the same count. One
+        figure passes at tier 2 and fails at tier 0, asserted together so a flat
+        floor cannot satisfy this test."""
+        self._setup(tmp_path, monkeypatch,
+                    {"L1": (2, self._figs(1)), "F": (0, self._figs(1))})
+        r = bru.check_bundle_figure_adequacy()
+        assert not r.passed
+        named = {d.name for d in r.details if not d.passed}
+        assert "F" in named and "L1" not in named
+
+    def test_a_declared_deferral_counts_toward_the_floor(self, tmp_path, monkeypatch):
+        r"""`\figuredeferred{id}{reason}` is an explicit, reviewable statement that a
+        planned figure is not yet drawn. That is categorically different from a
+        bundle that never planned one, and must not be punished identically."""
+        self._setup(tmp_path, monkeypatch,
+                    {"L1": (2, "\\figuredeferred{f1}{awaiting the L=8 run}\n")})
+        assert bru.check_bundle_figure_adequacy().passed
+
+    def test_an_unknown_tier_is_UNMEASURED_not_passing_silently(
+            self, tmp_path, monkeypatch):
+        self._setup(tmp_path, monkeypatch, {"X1": (99, "nothing\n")})
+        r = bru.check_bundle_figure_adequacy()
+        assert any("UNMEASURED" in d.message for d in r.details)
+
+    def test_figures_in_a_COMMENT_do_not_count(self, tmp_path, monkeypatch):
+        """A commented-out figure is not in the document a reader receives."""
+        self._setup(tmp_path, monkeypatch,
+                    {"L1": (2, "% \\begin{figure}old\\end{figure}\n")})
+        assert not bru.check_bundle_figure_adequacy().passed
+
+    def test_an_empty_population_is_UNVERIFIED_not_passing(self, tmp_path, monkeypatch):
+        self._setup(tmp_path, monkeypatch, {})
+        r = bru.check_bundle_figure_adequacy()
+        assert not r.passed and not r.measured

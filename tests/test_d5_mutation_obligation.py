@@ -535,6 +535,21 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
         "the green rule that used to live here. Plus the missing-blob and "
         "uncomputable-aggregate fail-closed legs",
     ),
+    "bundle_figure_adequacy": (
+        "test_d5_bundles_readiness.py",
+        "7 mutations (ADR-011 Phase 4, Gate 13). Nine of 21 bundles ship ZERO figures, "
+        "the flagship included, because `BUNDLE_LIFT_PROCEDURE` §6 only ever MIGRATED "
+        "figures that already existed in the sources and no step ever planned one. Stage "
+        "9 could not object either: its criterion is \"ALL figures PASS\", vacuously "
+        "true over an empty set, which is how D10 recorded `stage9_status: green` with "
+        "no figures at all. Legs: a bundle meeting its floor passes; zero figures fails "
+        "and names the cause; the floor is TIER-dependent, asserted with one figure "
+        "passing at tier 2 and failing at tier 0 in the SAME run so a flat floor cannot "
+        "satisfy it; a declared `\\figuredeferred` counts (an explicit reviewable "
+        "deferral is not the same defect as never planning one); an unknown tier is "
+        "UNMEASURED; a commented-out figure does not count; empty population is "
+        "UNVERIFIED",
+    ),
     "bundle_reader_facing_voice": (
         "test_d5_bundles_readiness.py",
         "13 mutations (ADR-011 Phase 3, F-05). Matches the ACT of a fix narrating "
@@ -750,6 +765,10 @@ PRODUCTION_SEEDED: frozenset[str] = frozenset({
     # ordinary scholarship, and only the paper narrating its OWN edit history is the
     # defect. Restored byte-identical.
     "bundle_reader_facing_voice",
+    # 2026-08-08 (ADR-011 Phase 4): L1 carries 1 figure and passes at tier 2. Retiering
+    # it to 0 in the REAL `papers/L1/bundle_metadata.json` -> rc=1 naming L1 against the
+    # tier-0 floor of 8, short count 11 -> 12. Restored byte-identical.
+    "bundle_figure_adequacy",
 })
 
 #: The ratchet, in the same idiom as `AWAITING_CEILING`: the number of registered

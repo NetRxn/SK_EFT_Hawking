@@ -165,7 +165,32 @@ Manual / scripted task (no script wraps this yet — defer to ad-hoc `bibtool` i
 - Resolve bibkey collisions per Phase 6m citation-merge precedent: prefer the entry already in `CITATION_REGISTRY`; flag conflicts in the bundle's `change_log.md`.
 - Re-run `validate.py --check citation_primary_sources_present` to ensure every absorbed bibkey resolves to a primary-source cache file.
 
-### §6. Figure migration
+### §6. Figure realisation (was: migration) — F-03
+
+⚠️ **This step used to be pure transport, and that is why 9 of 21 bundles ship zero
+figures.** Its instruction was to copy figures from the contributing sources; if they had
+none, the bundle got none, and **no step anywhere in this procedure ever planned a figure.**
+
+Stage 9 could not object either: its criterion is *"ALL figures PASS, no FAIL, no MINOR"*,
+which over an empty set is vacuously true. `papers/D10/bundle_metadata.json` recorded
+`stage9_status: green` for a bundle with no figures. `paper_provenance` is equally blind —
+it validates that `\includegraphics` targets exist, so a draft with none is trivially clean.
+Two gates over the same hole, both green.
+
+**The step now owns the figure set, not just its transport.** Every figure the bundle needs
+either exists in `papers/<X>/figures/`, or is declared deferred with a reason a reviewer can
+weigh:
+
+```latex
+\figuredeferred{fig:rhmc-binder}{awaiting the L=8 m→0 production run}
+```
+
+Enforced by `validate.py --check bundle_figure_adequacy`. Until a bundle carries a charter
+figure plan the check applies a **tier floor** as the backstop (Tier 0 ≥ 8, Tier 1 ≥ 4,
+Tier 3 ≥ 2, Tier 2/4 ≥ 1); once the plan exists the comparison should be against *it*, with
+the floor covering only bundles whose plan is not yet written.
+
+### §6a. Migrating figures that already exist
 
 - Copy each source's referenced figures from `papers/<source>/figures/` into `papers/<X>/figures/`.
 - Preserve `# viz-ref:` tags on the corresponding figure entries (else CHECK 6 / `viz_consistency` flags drift).
