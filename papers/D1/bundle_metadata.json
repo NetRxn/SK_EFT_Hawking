@@ -1,5 +1,212 @@
 {
   "bundle_target": "D1",
+  "apex_theorems": [
+    {
+      "name": "SKEFTHawking.SecondOrderSK.deltaDissFromTransport_eq",
+      "claims": "\u00a72.2 \u2014 the foundational closed form delta_diss = (gamma_1 + gamma_2) kappa / c_s^2, the leading dissipative correction to the Hawking spectrum",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.AcousticMetric.acousticMetric_det",
+      "claims": "\u00a72.4 \u2014 acoustic-metric backbone: the determinant. Reused unchanged in 2+1D graphene (c_s -> v_F/sqrt 2) and so load-bearing for the cross-platform reuse claim",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.AcousticMetric.acoustic_metric_lorentzian",
+      "claims": "\u00a72.4 \u2014 acoustic-metric backbone: Lorentzian signature",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.AcousticMetric.acousticMetric_inv_correct",
+      "claims": "\u00a72.4 \u2014 acoustic-metric backbone: the inverse metric",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.AcousticMetric.hawking_temp_from_surface_gravity",
+      "claims": "\u00a72.4 \u2014 T_H from the surface gravity; the relation every platform's temperature rests on",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.HawkingUniversality.hawking_universality",
+      "claims": "\u00a71 + \u00a77.2 \u2014 the universality theorem the paper's central question is posed against: T_H = hbar kappa / 2 pi k_B controls the spectrum independently of the microscopic fluid",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.SecondOrderSK.firstOrder_count",
+      "claims": "ABSTRACT + \u00a73.1 \u2014 the transport-coefficient counting formula at N = 1, count(1) = 2. \u26a0\ufe0f Closed `by decide` (kernel-checked), NOT by native_decide as \u00a73.1 states",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.SecondOrderSK.secondOrder_count",
+      "claims": "\u00a73.1 \u2014 count(2) = 2 without parity asymmetry. Same `by decide` correction",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.SecondOrderSK.secondOrder_count_with_parity",
+      "claims": "\u00a73.1 \u2014 the parity-graded count vanishes. Same `by decide` correction",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.SecondOrderSK.thirdOrder_count",
+      "claims": "\u00a73.1 \u2014 count(3) matches floor((N+1)/2) + 1. Same `by decide` correction",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.SecondOrderSK.fullSecondOrder_uniqueness",
+      "claims": "ABSTRACT + \u00a73.2 \u2014 positivity forces gamma_{2,1} + gamma_{2,2} = 0, reducing four free second-order parameters to three",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.SKDoubling.firstOrder_KMS_optimal",
+      "claims": "ABSTRACT + \u00a73.3 \u2014 KMS optimality: positivity is equivalent to i_1 >= 0 and i_2 >= 0, so no hidden inequalities constrain the transport coefficients. Closed by Aristotle",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.SKDoubling.firstOrder_altSign_uniqueness_test",
+      "claims": "\u00a73.3 \u2014 the companion stress test: parameter-space points that fail when the axiom is relaxed",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.CGLTransform.einstein_relation",
+      "claims": "\u00a73.4 \u2014 the Einstein relation, first link of the algebraic-KMS => CGL-FDR chain",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.CGLTransform.cgl_fdr_general",
+      "claims": "ABSTRACT + \u00a73.4 \u2014 the CGL master fluctuation-dissipation relation. This is what makes the KMS-mandated noise floor a THEOREM rather than an assumption",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.CGLTransform.cgl_implies_secondOrderKMS",
+      "claims": "\u00a73.4 \u2014 the chain closes: CGL FDR implies second-order KMS",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.WKBConnection.turning_point_shift_pos_iff",
+      "claims": "\u00a74.1 \u2014 the complex turning-point shift is positive iff the dissipative correction is non-zero. Exact to all orders in the SK-EFT",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.WKBConnection.standard_unitarity_recovered",
+      "claims": "\u00a74.2 \u2014 standard unitarity is recovered in the Gamma_H -> 0 limit",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.WKBConnection.unitarity_deficit_eq_decoherence",
+      "claims": "ABSTRACT + \u00a74.3 \u2014 NON-PERTURBATIVE EFFECT 1: |alpha|^2 - |beta|^2 = 1 - delta_k. The final state of the analog Hawking process is not pure",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.WKBConnection.decoherence_nonneg",
+      "claims": "\u00a74.3 \u2014 the decoherence parameter is non-negative",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.WKBConnection.decoherence_zero_iff",
+      "claims": "\u00a74.3 \u2014 it vanishes exactly in the zero-dissipation limit",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.WKBConnection.noise_floor_nonneg",
+      "claims": "ABSTRACT + \u00a74.4 \u2014 NON-PERTURBATIVE EFFECT 2: the FDR-mandated noise floor is non-negative \u2014 present even with zero Hawking radiation",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.WKBConnection.noise_floor_eq_delta_diss",
+      "claims": "\u00a74.4 \u2014 that floor equals delta_k/2 = Gamma_H/kappa; mandatory by KMS, not tunable",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.WKBConnection.occupation_reduces_to_beta_sq",
+      "claims": "\u00a74.5 \u2014 the total occupation is |beta|^2 plus the floor",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.WKBConnection.noise_dominates_when_beta_small",
+      "claims": "ABSTRACT + \u00a74.5 \u2014 NON-PERTURBATIVE EFFECT 3: the spectral floor \u2014 the crossover above which the noise floor dominates the exponentially-decaying Hawking term",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.PolaritonTier1.attenuation_ge_one",
+      "claims": "\u00a76.3 \u2014 spatial attenuation >= 1 everywhere, the foundation under the stimulated-Hawking gain analysis",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.PolaritonTier1.attenuation_mono_Gamma",
+      "claims": "\u00a76.3 \u2014 attenuation is monotone in the decay rate",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.PolaritonTier1.attenuation_eq_one_at_zero_decay",
+      "claims": "\u00a76.3 \u2014 recovery at zero decay",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.DiracFluidMetric.diracFluidMetric_y_offdiag_zero",
+      "claims": "\u00a77.1 \u2014 the 2+1D metric BLOCK-DIAGONALISES: the y off-diagonal vanishes, so the (t,x) sector reproduces the 1+1D structure exactly. This is what makes the reuse claim possible",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.DiracFluidMetric.diracFluidMetric_gyy",
+      "claims": "\u00a77.1 \u2014 the decoupled y-sector component",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.QuasiOneDReduction.quasi1D_validity_bound",
+      "claims": "\u00a77.1 \u2014 the algebraic-envelope bound on the off-diagonal corrections (<= 1.8% at the Dean device parameters)",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.DiracFluidWKB.soundSpeed_lt_vF",
+      "claims": "\u00a77.3 \u2014 the Dirac fluid is SUBLUMINAL, which is what eliminates the trans-Planckian problem that afflicts BEC analog Hawking",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.DiracFluidWKB.dean_lowest_channel_above_four_omega_H",
+      "claims": "\u00a77.3 \u2014 the cleanest detection band sits below the first transverse-mode resonance, so the quasi-1D reduction is preserved where it is used",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GrapheneNoiseFormula.fdt_consistency",
+      "claims": "ABSTRACT + \u00a77.5 \u2014 the closed-form noise spectrum's two independent derivations (Keldysh FDT and Landauer-Buttiker) agree, certified at the Lean level",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GrapheneNoiseFormula.snr_independent_of_sigma_Q",
+      "claims": "\u00a77.6 \u2014 the Lorenz-cancellation theorem: the SNR is independent of sigma_Q, which is what turns the measured Wiedemann-Franz violation into a cross-check of the noise prediction",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.KibbleZurekUnruh.surface_gravity_bounds_kzm_exponent",
+      "claims": "\u00a78.2 \u2014 the Kibble-Zurek-Unruh bridge: the KZM-corrected horizon-crossing rate is strictly below the bare WKB-corrected rate, simultaneously consuming mu < 1, 1 - delta_k > 0 and kappa > 0",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.BPLDPSimulability.fourCycleFree_nonneg_iff_ldp_rate_zero",
+      "claims": "\u00a78.2 \u2014 the BP-LDP biconditional: the loop-correction LDP rate vanishes iff the factor graph is four-cycle-free with non-negative weights",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.ChernBridge.crystalline_eq_quasicrystalline_iff_c1_zero",
+      "claims": "\u00a78.2 \u2014 the Chern-bridge biconditional. NOTE: D11 \u00a78 explicitly carves this module out as a categorical Chebyshev marker, a different object from its Bloch-band invariant, and names D1 as the bundle that describes it in Chern language",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.AnalogHawkingDemarcation.analog_hawking_fourCycleFree_demarcation",
+      "claims": "\u00a78.2 \u2014 the falsifiable two-axis classical-simulability demarcation, combining the BP-LDP biconditional with the Chern bridge",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.AnalogHawkingDemarcation.analog_hawking_tree_simulable_demarcation",
+      "claims": "\u00a78.2 \u2014 the end-to-end tree-side statement: genuine tree-ness plus synchronous BP convergence in diameter-many sweeps",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.AnalogHawkingDemarcation.not_fourCycleFreeNonneg_or_nonzero_c1_implies_not_simulable",
+      "claims": "\u00a78.2 \u2014 the contrapositive, giving the screen-failure regime explicitly",
+      "declared": "2026-08-07"
+    }
+  ],
   "tier": 1,
   "title": "Analog Hawking across three platforms",
   "target_journal": "PRD",

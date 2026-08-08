@@ -1031,7 +1031,10 @@ def check_bundle_registry_consistency() -> CheckResult:
 #: 16 -> 15: D10 retrofitted 2026-08-07 (33 apexes; docs/audits/2026-08-07-d10-retrofit/
 #:           FINDINGS.md). Chosen to close ADR-010's second untested merge, and it does:
 #:           D10 ∩ D11 = 0, while D10 ∩ D9 = 50. The pairing was adjacency, not content.
-UNDECLARED_APEX_CEILING = 15
+#: 15 -> 14: D1 retrofitted 2026-08-07 (41 apexes; docs/audits/2026-08-07-d1-retrofit/
+#:           FINDINGS.md). Supplies the honest denominator for TODO-D9's
+#:           \substantivetheorems{} overclaim: D1's measured closure is 249 declarations.
+UNDECLARED_APEX_CEILING = 14
 
 
 @register_check(

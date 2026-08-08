@@ -506,8 +506,16 @@ version *and* the Mathlib rev against `lean-toolchain` + `lakefile.toml`.
 - **The project's own checks contradict it:** `numerical_literals` = 116 inline literals,
   `count_literals` = 107 hard-coded counts across 64 papers; D9 has no `claims_review.json`.
 - ⚠️ **Root cause of the worst instance:** `\substantivetheorems{}` is **project-scoped** and used
-  as if **paper-scoped**, so D1's abstract claims 26,077 verified theorems for a 114-theorem chain
-  (~230×) and *auto-inflates* as the library grows. The anti-drift macro is the overclaim's source.
+  as if **paper-scoped**, so D1's abstract states the whole library's theorem count as its own and
+  *auto-inflates* as the library grows. The anti-drift macro is the overclaim's source.
+- 📐 **Denominator corrected 2026-08-07.** This item read *"a 114-theorem chain (~230×)"*. The 114
+  is **not D1's substrate** — it is the population of the nine 1+1D BEC modules over which §7.2's
+  reuse fraction is computed, a different set for a different purpose. D1's substrate is its apex
+  closure: **249 declarations**. Use that ratio; do not carry the old one forward.
+- **Also in D1, same class:** the draft does not say which of the project's two counting
+  conventions its `114` uses (source-level vs the `lean_deps` extraction, which additionally counts
+  equation lemmas and gives 194 for the same modules). D11's draft discloses both explicitly and
+  names the one it uses — borrow that sentence when fixing this item.
 - **Fix shape:** template first (the traceability clause states only what is true), then per-bundle;
   and `\substantivetheorems{}` needs a per-bundle scoping — which is `SYNTHESIS.md` §6 Phase 0
   item 6, **withdrawn pending §6a approval**. Do not build it.
@@ -567,3 +575,39 @@ version *and* the Mathlib rev against `lean-toolchain` + `lakefile.toml`.
   `DensityVariational`/`GroundStateData` instance from §4.1's Hamiltonian, which would make the
   present claim true. Operator's call under ADR-010 C5. **The current prose is not a third option.**
 - Full working: `docs/audits/2026-08-07-d10-retrofit/FINDINGS.md` §3.
+
+### D13. D1 discloses a `native_decide` dependency it does not have — OPEN (claim integrity)
+
+- **Where:** `papers/D1/paper_draft.tex` §3.1 — *"the small-N cases N = 1, 2, 3 are independently
+  closed by `native_decide` in `SecondOrderSK.firstOrder_count`, `secondOrder_count`,
+  `secondOrder_count_with_parity`, `thirdOrder_count`."*
+- **The fact:** all four are proved **`by decide`** (`SecondOrderSK.lean:260, 272, 285, 937`);
+  their own docstrings say *"Use decide."*; their axiom profile is exactly
+  `{propext, Classical.choice, Quot.sound}`; and **`Lean.ofReduceBool` — the axiom a
+  `native_decide` proof necessarily carries — appears on ZERO declarations project-wide.**
+- **Why it matters:** `decide` is kernel-checked, `native_decide` is not. The draft is
+  volunteering a trust weakness it does not have, in the place a referee looks for one. D11's
+  draft states the distinction correctly, so the project knows it.
+- ⚠️ **Blocks an ADR-010 open item.** The `native_decide` disclosure posture cannot be settled
+  from the drafts while at least one draft's disclosure does not describe its own substrate.
+- **Fix shape:** one sentence in §3.1 — `decide`, kernel-checked, and say so. Prose-only.
+- Full working: `docs/audits/2026-08-07-d1-retrofit/FINDINGS.md` §3.
+
+### D14. D1's append log records four `Lift-section` events that inserted no content — OPEN
+
+- **Where:** `papers/D1/append_log.json`, the four 2026-05-06 events sourcing
+  `_phase6n_W1a_lean_only` (§3), `_phase6n_W2c_lean_only` (§5), `_phase6n_W2b_lean_only` (§6) and
+  `_phase6o_W1a_lean_only` (§6).
+- **What is in the manuscript:** four commented-out headings after `\end{thebibliography}`, each
+  carrying `TODO: lift content` plus two further unresolved TODOs. Zero rendered words.
+- **The named content is substantial:** a kinematic-dispersive geometric envelope with a
+  closed-form `γ_n`; an LDP linear-response framework; a quantum-Crooks no-go landscape; boostless
+  / Carrollian soft theorems with a Strominger-triangle closure.
+- **Commenting the stubs out was correct** and is documented (2026-05-06 Session 2 — they were
+  empty artefacts of `bundle_append.py`'s default insertion). The defect is that the **log still
+  reads `Lift-section`**, so any count of absorptions taken from it over-counts D1 by four.
+- **Fix shape:** two parts, and they are different decisions. (a) Bookkeeping: the log needs a
+  lift action that means *registered, not lifted* — a schema change, so §6a applies. (b) Content:
+  whether to lift the four waves is an ADR-010 C5 scope call, and it bears on D1's charter-length
+  shortfall.
+- Full working: `docs/audits/2026-08-07-d1-retrofit/FINDINGS.md` §4.

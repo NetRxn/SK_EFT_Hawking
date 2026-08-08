@@ -207,10 +207,22 @@ bundle metadata on disk at all.
    ⚠️ **Method:** read the *statement*, not the prose describing it — and read the **full Lean
    source** of a module before judging its strength. §4.1's "unconditional" and §5.3's
    "discharged" both survive that test; §4.2's "constructive reductio" does not.
-4. ⏭️ **NEXT** — the remaining 15, one at a time. Both of ADR-010's named merge questions are now
-   answered, so the queue is no longer merge-driven: take the bundles whose claims are most
-   exposed. **D1** is the natural next — it carries the `\substantivetheorems{}` overclaim
-   (TODO-D9's root cause), which an apex closure makes directly measurable.
+3d. ✅ **DONE 2026-08-07** — **D1**, ceiling **15 → 14** (41 apexes → 249 decls / 18 modules,
+   depth 3). Taken for its exposure rather than for a merge: it carries TODO-D9's
+   `\substantivetheorems{}` overclaim, and the closure supplies the honest denominator —
+   **249**, not the 114 that item's arithmetic had been using (114 is §7.2's *reuse* population,
+   a different set). Two new findings: §3.1 discloses a `native_decide` dependency the substrate
+   **does not have** (all four counting theorems are `by decide`; `Lean.ofReduceBool` appears on
+   zero declarations project-wide), which blocks ADR-010's `native_decide` posture item; and four
+   `Lift-section` events in the append log inserted **zero** manuscript content.
+   Full working: [`../../audits/2026-08-07-d1-retrofit/FINDINGS.md`](../../audits/2026-08-07-d1-retrofit/FINDINGS.md).
+   ⚠️ **Near-miss worth carrying:** the extraction and the draft disagreed on §7.2's population
+   (194 vs 114) and the draft was right — the two are the project's two counting conventions.
+   **Run the tool a claim names before filing against it**, especially when the contradicting
+   number is already in hand.
+4. ⏭️ **NEXT** — the remaining 14, one at a time. Both of ADR-010's named merge questions are
+   answered and the most-exposed abstract is measured, so order by exposure: the bundles whose
+   drafts make the strongest novelty or completeness claims relative to what anyone has counted.
    ⚠️ **Method, learned on D12 and re-confirmed on D11:** `grep` for a theorem name in a draft
    returns 0 — drafts escape underscores inside `\thm{}`. Resolve references with the
    underscore-aware scan, **seeded with a known-present name first**, never a bare grep.

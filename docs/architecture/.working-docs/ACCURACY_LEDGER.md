@@ -1063,3 +1063,31 @@ Same convention as V21: **P** = perishable (records a defect), **D** = durable (
 reading the layer that fails is what separates "one layer overclaims" from "the bundle
 overclaims" — and only the first is true. A finding that does not measure the parts that hold is
 not a measurement, it is a verdict.
+
+---
+
+## V23 — the D1 apex retrofit — 7 atoms, 1 near-miss withdrawn before filing
+
+**P** = perishable (records a defect), **D** = durable (records a design).
+
+| # | atom | decided by | result |
+|---|---|---|---|
+| Y1 | D1's draft is 1,234 lines and was read in full, including everything after the bibliography | the file | ✓ — the four empty lifts are *only* visible after `\end{thebibliography}` |
+| Y2 | D1's measured substrate is its apex closure | the closure | ✓ 249 declarations / 18 modules / depth 3 (D) |
+| Y3 | The abstract's theorem figure is the **project-scoped** macro | `counts.tex` + the abstract | ✓ TODO-D9's defect, now with a real denominator (P) |
+| Y4 | **SET:** all four counting theorems are `by decide`, not `native_decide` | all four, read in source; then the axiom profiles; then the project-wide `Lean.ofReduceBool` population | ✓ zero declarations carry it — there is no load-bearing `native_decide` anywhere (P) |
+| Y5 | **SET:** four `Lift-section` events produced zero manuscript content | all 13 append-log events enumerated, each matched to the draft | ✓ four of them (P) |
+| Y6 | **SET:** D1 ∩ every other declared bundle | D6, D9, D10, D11, D12, L2 — all six | ✓ 0 each (D) |
+| Y7 | D1 claims `ChernBridge`, which D11 explicitly disclaims and attributes to a companion bundle | both drafts + both closures | ✓ the two agree (D) |
+
+⚠️ **The near-miss, recorded because it nearly shipped.** The `lean_deps` extraction attributes
+**194** author-written theorems to §7.2's nine modules against the draft's **114** — an apparent
+80-theorem understatement in a load-bearing reuse claim. Running
+`scripts/count_theorem_reuse.py` reproduces **114 / 106 / 8 → 92.98%** exactly, module by module:
+the two figures are the project's two counting conventions, and the draft's is right.
+
+**The seductive number is the one already in hand.** An extraction was open, a claim was in front
+of me, and they disagreed — which is a reason to run the tool the claim names, not to file. This
+is `feedback-remeasure-filed-findings-before-fixing` in its other direction: not *re-measure a
+filed finding*, but *re-measure before filing at all*, especially when the contradicting number
+cost nothing to produce.
