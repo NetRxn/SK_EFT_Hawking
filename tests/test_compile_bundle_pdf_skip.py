@@ -117,3 +117,57 @@ class TestForce:
         monkeypatch.setattr(cbp.shutil, "which", lambda n: None)  # stop before pdflatex
         cbp.compile_one(draft, force=True)
         assert not called, "_up_to_date must not even be consulted under --force"
+
+
+class TestReproducibleOutput:
+    """The skip alone cannot take PDF churn to zero, because a draft that FAILS the
+    gate must recompile every run. It stops dirtying the tree only if the recompile
+    is byte-reproducible.
+
+    MEASURED before the fix: two back-to-back `--force` compiles of an unchanged D3
+    differed in 58 bytes (`/CreationDate` + `/ModDate`), then in 56 more (`/ID`).
+    After: zero, across a full `--all --force` of all 64 drafts.
+    """
+
+    def test_the_source_date_is_pinned_to_the_input_closure(self, draft):
+        env = cbp._reproducible_env(draft / "paper_draft.tex")
+        assert env["FORCE_SOURCE_DATE"] == "1"
+        newest = int(max(p.stat().st_mtime
+                         for p in cbp._H.draft_input_closure(draft / "paper_draft.tex")
+                         if p.is_file()))
+        assert env["SOURCE_DATE_EPOCH"] == str(newest)
+
+    def test_the_date_is_STABLE_across_calls_on_unchanged_sources(self, draft):
+        """The whole point: identical content ⇒ identical stamp ⇒ identical bytes."""
+        tex = draft / "paper_draft.tex"
+        assert (cbp._reproducible_env(tex)["SOURCE_DATE_EPOCH"]
+                == cbp._reproducible_env(tex)["SOURCE_DATE_EPOCH"])
+
+    def test_the_date_MOVES_when_an_input_changes(self, draft):
+        """Pinned, not frozen — a real edit must still restamp, or the date would
+        become a lie about when the document was last written."""
+        tex = draft / "paper_draft.tex"
+        before = cbp._reproducible_env(tex)["SOURCE_DATE_EPOCH"]
+        _touch_newer(tex, draft / "paper_draft.pdf")
+        assert cbp._reproducible_env(tex)["SOURCE_DATE_EPOCH"] != before
+
+    def test_an_unreadable_closure_still_yields_a_usable_env(self, draft, monkeypatch):
+        """Never raise out of the env builder — a compile that cannot be made
+        reproducible must still compile."""
+        monkeypatch.setattr(cbp._H, "draft_input_closure",
+                            lambda t, _s=None: (_ for _ in ()).throw(OSError("boom")))
+        env = cbp._reproducible_env(draft / "paper_draft.tex")
+        assert env["SOURCE_DATE_EPOCH"].isdigit()
+
+    def test_the_trailer_id_is_zeroed_on_the_command_line(self, draft, monkeypatch):
+        r"""`\pdftrailerid{}` must be passed per-invocation, not required of every
+        draft: pdfTeX derives `/ID` independently of SOURCE_DATE_EPOCH, so without it
+        an unchanged draft still rewrites 56 bytes."""
+        seen = {}
+        monkeypatch.setattr(cbp.shutil, "which", lambda n: "/usr/bin/" + n)
+        monkeypatch.setattr(cbp.subprocess, "run",
+                            lambda argv, **kw: seen.setdefault("argv", argv))
+        cbp.compile_one(draft, force=True)
+        joined = " ".join(seen.get("argv", []))
+        assert r"\pdftrailerid{}" in joined
+        assert "-jobname=paper_draft" in joined, "output must stay paper_draft.pdf"

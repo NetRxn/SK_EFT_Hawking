@@ -1930,3 +1930,26 @@ forever, leaving two-thirds of the churn unaddressed. Moved to one sidecar cover
 **NOT-AN-ASSERTION.** "mtime, not content hash" is a design choice with a stated failure mode
 (`touch` recompiles needlessly), not a claim about the tree. `--force` is the escape the operator
 made a condition of approval.
+
+## V49 — ADR-011 Phase 2c: byte-reproducible PDF output — 5 atoms, 0 corrected
+
+Answering the operator's question — *"pdf churn should go to zero next right? or is there
+something different about the 16?"* Nothing is different about the 16: they are the drafts that
+FAIL the compile gate and therefore must recompile every run. The churn was not caused by them
+being special; it was caused by recompiles not being reproducible.
+
+| # | Proposition | Decider | Verbatim result |
+|---|---|---|---|
+| 1 | The residual churn is entirely non-content | `cmp -l` on two `--force` compiles of unchanged D3 | **58 bytes**, all inside `/CreationDate` + `/ModDate` |
+| 2 | `SOURCE_DATE_EPOCH` + `FORCE_SOURCE_DATE` pin those two | re-measure | dates pinned (`D:20260806023829Z`) — **but 56 bytes still differed** |
+| 3 | The remainder is the PDF trailer `/ID` | byte-offset inspection at the first difference | `/ID [<B84EE6AF…> …]` vs `[<B37641DC…> …]` — pdfTeX derives it independently of the source date |
+| 4 | `\pdftrailerid{}` closes it | two isolated `pdflatex` runs, fixed epoch | **byte-identical.** Passed on the command line with `-jobname=paper_draft`, so no draft has to carry it |
+| 5 | The gate verdict is unaffected by the changed invocation | D3 before/after | `FAIL pages=59 overfull=73 tex_errors=0 unresolved_refs_in_pdf=3` — identical. The reproducibility change moves bytes, not verdicts |
+
+**End-to-end: `--all` twice ⇒ 0 tracked PDFs dirty. `--all --force` on all 64 ⇒ 0.** Churn is
+gone, including for the 17 drafts that cannot be skipped.
+
+**NOT-AN-ASSERTION.** Pinning the stamp to the newest input mtime rather than to a constant is a
+choice: the date still means "when this document was last edited" and is stable across recompiles,
+but it is not reproducible across machines with different mtimes. Local churn is what was asked
+for; cross-machine reproducibility was not, and is not claimed.
