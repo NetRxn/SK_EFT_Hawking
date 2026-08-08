@@ -1555,3 +1555,55 @@ makes a project-scoped claim (*"independent of platform parameters"*). With L3's
 derived `\bhThermoTotal` and D1/D5's project-macro-for-bundle-figure, the three cases show
 **TODO-D9's defect is scope mismatch, not macro use** — and a remediation keyed on "uses a macro"
 would break E1. Restated in the TODO.
+
+---
+
+## V39 — the E2 apex retrofit (final bundle) — 9 atoms, 0 corrected
+
+**P** = perishable, **D** = durable.
+
+| # | atom | decider | result |
+|---|---|---|---|
+| Q1 | E2's draft is 579 lines and was read in full | the file | ✓ |
+| Q2 | E2's retraction — *"`ChernBridge.lean:68` defines `categoricalChernExpansion c0 c1 := [c0, c1]`, a two-term Chebyshev expansion"* | the file, read before repeating the claim | ✓ exact (D) |
+| Q3 | E2's **correction of its own retraction** — *"`ChernBridge.lean:14` frames the crystalline limit as a Brillouin-zone Chern number reducing to a sum"* | the same file's docstring | ✓ exact. **Both layers of a nested self-correction check** (D) |
+| Q4 | **E1 still carries the retracted phrase** | `grep "topological Chern coefficient" papers/*/paper_draft.tex` | ⚠️ **E1:410** does; E2:422 is the retraction. The 2026-08-01 correction landed in one letter of a shared paragraph → TODO-D20 (D) |
+| Q5 | E2's closure is kernel-clean | `axiom_deps_core` / `_project` over the closure | ✓ exactly the three standard axioms; 0 `native_decide` (D) |
+| Q6 | **SET: `E1 ∩ E2` closure** | both declared closures | ✓ **5 declarations**, all in `AcousticMetric` + `Basic` — the platform-**independent** `T_H` binding. Apex overlap **1**, and it is that binding (D) |
+| Q7 | **SET: shared platform modules between E1 and E2** | both module sets, both directions | ✓ **none.** E1-only 6 modules, E2-only 4 (D) |
+| Q8 | `DKMBootstrap.E1E2CrossBridge` — the module named for the relationship | its declaration list | ⚠️ holds `platform_kms_qualities_pairwise_distinct` + three per-platform quality theorems. **It proves the platforms are distinct** (D) |
+| Q9 | E2's pin claims (`v4.29.0` / `8850ed93`, ×4) | the existing `paper_toolchain_pin_drift` check | ✓ already reported at **E2:484, 485, 488, 489**. Existing coverage; nothing filed, nothing built (D) |
+
+⚠️ **NOT VERIFIED, stated per C4:** §2's *"`DiracFluidWKB.toExactWKB` … is checked in ~93% of the
+transferred Lean theorems."* No derivation of 93% was found and none was constructed — building one
+would be new infrastructure under §6a. **Recorded as unverified, not as wrong.**
+
+⚠️ **NOT RESOLVED, deliberately:** E2 §3's `Γ_H = (η/s T)(κ/c_s)² ≈ 0.3 s⁻¹`, `δ_diss ≈ 10⁻¹³` is
+the reserved **`graphene Γ_H`** STOP-AND-ASK item. Noted where it lives; not adjudicated.
+
+✅ **Q6–Q8 complete DONE item 4.** The E1+E2 merge is **REFUTED at the substrate level** — shared
+closure is only the universal temperature binding, platform substrates are disjoint, and the sole
+formal cross-bridge establishes *difference*. It is **NOT DECIDED editorially**, and the ledger says
+so explicitly: two ~580-line letters addressed to different experimental groups is an
+audience-and-submission question no dependency measurement can settle. **No recommendation is made
+on any of the four proposed merges.**
+
+---
+
+## Retrofit close-out — what the twenty-one bundles cost in corrections
+
+Three assertions were made and later corrected during this retrofit, and all three failed the
+**same** way — an absence filed without a probe proven able to show presence:
+
+1. **V26** — `Lean.ofReduceBool` absent from `axiom_deps_core` ⇒ "no load-bearing `native_decide`".
+   Wrong field; the marker lives in `axiom_deps_project`. Three existing guards said so.
+2. **V27/TODO-D16** — "no D3 gravity-side declaration reaches the anomaly-side tree **at all**".
+   Right probe, over-wide reporting scope; `D2 ∩ D3 = 3`.
+3. **V37/O7** — "neither draft mentions the other" (L1/D3). Probe was a theorem-token grep; the
+   sentence says *"Bundle~L1"*.
+
+**The standing rule, in its final form:** *before filing an absence, name the field or tool that
+would show presence, prove it can — and state the scope the probe actually covered in the sentence
+that reports it.* Its three corollaries, each bought with a correction: **the marker field is
+`axiom_deps_project`**; **a probe's scope is part of its finding**; **the probe for a sibling
+relationship is the bundle name, not a shared theorem name.**

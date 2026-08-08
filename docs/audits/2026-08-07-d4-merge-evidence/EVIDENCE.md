@@ -5,8 +5,8 @@ comes due when every bundle is declared; until then this file records, for each 
 whether the closure evidence **supports** it, **refutes** it, or **does not decide** it, plus any
 **boundary failure** named under §D2's rule.
 
-**Status:** 19 of 21 bundles declared — all but E1 and E2.
-2 undeclared: E1, E2. **Every "not decided" below is a
+**Status: ALL 21 bundles declared.** `UNDECLARED_APEX_CEILING = 0`. Every merge question below
+is measured from both sides. **Every "not decided" below is a
 statement about what is measurable today, not a verdict.**
 
 **Method.** Each row is an intersection of *declared apex closures* over `name_deps_project`,
@@ -131,7 +131,7 @@ Recorded because §D4 asks for evidence, and an intersection nobody proposed is 
 | **D6** | ⚠️ **PARTIAL** | Cites 133 declarations from D9's namespace while claiming ~19 % of its own citations. |
 | **D4** | ⚠️ **YES, both directions** | *Inbound:* §§7–8 consume D3's `H_HorizonBoundaryCondition` (22 shared declarations) — mutual and acknowledged. *Outbound:* §9's `GenericSU2` layer ships D8's chartered content. |
 | D1, D2, D3, D5, D7, D8, D11, D12, I1, I2, I3, L2 | **No** | Each states its purpose on its own substrate. D11 is the strongest case: zero intersection with every other declared bundle. |
-| E1, E2 | **not yet measurable** | undeclared |
+| — | all bundles declared | — |
 
 ---
 
@@ -227,4 +227,64 @@ reassigned**, which remains correct for the corrected reason.
 **Method note carried forward:** the probe that shows a sibling relationship is a search of the
 other draft for the **bundle name**, not for shared theorem names. Theorem-token greps miss prose
 that says "Bundle~L1".
+
+---
+
+## 7. E1 + E2 — the last open merge question, measured 2026-08-07
+
+Both sides declared, so the closure is finally an instrument here rather than a blank.
+
+| measurement | value |
+|---|---|
+| `E1 ∩ E2` closure | **5 declarations**, entirely in `AcousticMetric` + `Basic` |
+| what those five are | the platform-**independent** `T_H = ħκ/2πk_B` binding and its dependencies |
+| apex overlap | **1** — `hawking_temp_from_surface_gravity`, i.e. exactly that binding |
+| E1-only / E2-only declarations | **31 / 7** |
+| E1-only modules | `PolaritonTier1`, `DKMBootstrap/{PolaritonF3Bound, HorizonTransportBootstrap, SKEFTSpecialization, Predicates, E1E2CrossBridge}` |
+| E2-only modules | `DiracFluidMetric`, `DiracFluidWKB`, `GrapheneHawking`, `GrapheneNoiseFormula` |
+| shared **platform** modules | **none** |
+
+⚠️ **The module named for the relationship argues against it.** `DKMBootstrap.E1E2CrossBridge` — in
+E1's closure, never named by E2 — holds `bec_kms_quality_approximate`,
+`polariton_kms_quality_effective_only`, `graphene_kms_quality_strong`, and
+`platform_kms_qualities_pairwise_distinct`. **The one Lean module built to relate the two platforms
+proves their KMS qualities are pairwise distinct.**
+
+**Substrate level: REFUTED.** Two letters sharing only the universal temperature binding, with
+disjoint platform substrates and a formal cross-bridge that establishes difference. A merged bundle
+would be two disjoint substrates under one cover.
+
+**Editorial level: NOT DECIDED — and the closure is the wrong instrument.** Both are ~580-line
+Tier-4 letters with parallel structure, addressed to **different experimental groups** (Paris-LKB;
+Dean–Kim–Lucas), each with its own *Request to the … team* section. One two-platform letter versus
+two one-platform letters is an audience-and-submission question no dependency measurement can
+settle.
+
+⚠️ **Context that belongs with the decision, not a recommendation:** **D1 already holds the
+one-paper-three-platforms position** — *"a unified, formally verified treatment of analog Hawking
+radiation across three condensed-matter platforms"* — and names E1 and E2 *"companion experimental
+letters [that] carry the experimental-team-targeted implementations."* A merged E1+E2 would sit
+between D1's unified treatment and the per-device letters D1 says exist to be per-device.
+
+---
+
+## 8. Summary of the four proposed merges — evidence complete, NO recommendation made
+
+| proposed merge | closure evidence | status |
+|---|---|---|
+| **D6 + D9** | supported, but the content F attributes to D6 is D8's, and `D4 ∩ D6 = D8 ∩ D6 = 0` | supported-but-**RELOCATED**; §2 |
+| **D10 + D11** | **REFUTED** — §3 | REFUTED |
+| **D4 → D8** | resolved at declaration level by both drafts' own words; four apexes moved, closure fell 753→620 | **RESOLVED**; merge still not recommended — §3 |
+| **E1 + E2** | **REFUTED at substrate level**; NOT DECIDED editorially — §7 | REFUTED / NOT DECIDED |
+
+**Not among the four, recorded because the measurements surfaced them:**
+
+- **L1/D3, L3/D3, E1/D1, E2/D1 are DECLARED companion pairs** — deep bundle and splash/experimental
+  letter, each named in the deep bundle's own prose. Shared apexes are the design; the ownership
+  rule has no jurisdiction. §6.
+- **`L1 disposition`** remains a reserved STOP-AND-ASK, now correctly framed as a question about
+  whether to run splash companions at all — applying equally to L1 and L3.
+
+**No recommendation is made on any of the four.** Per the goal's DONE item 4, the evidence is
+assembled and the decision is the operator's.
 

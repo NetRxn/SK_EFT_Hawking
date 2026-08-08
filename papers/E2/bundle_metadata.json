@@ -1,5 +1,37 @@
 {
   "bundle_target": "E2",
+  "apex_theorems": [
+    {
+      "name": "SKEFTHawking.DiracFluidWKB.dean_lowest_channel_above_four_omega_H",
+      "claims": "§2/§5 the load-bearing quasi-1D guarantee: the lowest transverse channel exceeds 4ω_H across the whole integration window",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.DiracFluidMetric.diracFluidMetric_y_offdiag_zero",
+      "claims": "§2 the y-row off-diagonals of the 2+1D acoustic metric vanish — the block-diagonalization",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.DiracFluidMetric.diracFluidMetric_gyy",
+      "claims": "§2 the yy block reduces to the conformal factor",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GrapheneHawking.graphene_T_eff_positive",
+      "claims": "§3 T_eff = T_H(1 + δ_disp) is positive for D² < 6/π",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GrapheneNoiseFormula.fdt_consistency",
+      "claims": "§4 the closed-form noise PSD's algebraic identity — the draft discloses this certifies the closed form, NOT the two-route equivalence",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.AcousticMetric.hawking_temp_from_surface_gravity",
+      "claims": "§1 the name-binding of T_H = ħκ/2πk_B to surface gravity; disclosed as a rfl-discharge with the substantive content upstream",
+      "declared": "2026-08-07"
+    }
+  ],
   "tier": 4,
   "title": "Dean-Kim-Lucas graphene letter",
   "target_journal": "PRL | PRR",

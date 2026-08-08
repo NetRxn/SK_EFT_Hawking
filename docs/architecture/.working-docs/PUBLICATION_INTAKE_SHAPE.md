@@ -326,8 +326,19 @@ bundle metadata on disk at all.
    ✅ **`\bhThermoTotal` is the working fix template for TODO-D9/D10**: bundle-scoped, derived
    per-module by `update_counts.py`, exact against source (20 = 20), cannot drift.
    Full working: [`../../audits/2026-08-07-l3-retrofit/FINDINGS.md`](../../audits/2026-08-07-l3-retrofit/FINDINGS.md).
-4. ⏭️ **NEXT** — the last two: **E1** and **E2** — and E1+E2 is the final open ADR-010 §D4 merge
-   question, measurable as soon as both are declared.
+3o. ✅ **DONE 2026-08-07** — **E2**, ceiling 1→**0**. **ALL 21 BUNDLES DECLARE APEXES; the ADR-010
+   §D5a retrofit is COMPLETE.** E2 is the smallest closure in the portfolio (6 apexes → 12 decls /
+   6 modules / depth 1). Its nested self-correction — a retraction that then narrows itself, both
+   layers verified against `ChernBridge.lean` — is the strongest honesty artifact in the corpus;
+   ⚠️ but E1 still carries the phrase E2 retracts (TODO-D20).
+   ✅ **The last open §D4 merge question is measured**: `E1 ∩ E2 = 5` declarations, all of it the
+   *universal* `T_H` binding; platform substrates disjoint; and `DKMBootstrap.E1E2CrossBridge` —
+   the module named for the relationship — proves the platforms' KMS qualities **pairwise
+   distinct**. **REFUTED at the substrate level, NOT DECIDED editorially.** No recommendation made.
+   Full working: [`../../audits/2026-08-07-e2-retrofit/FINDINGS.md`](../../audits/2026-08-07-e2-retrofit/FINDINGS.md)
+   and [`../../audits/2026-08-07-d4-merge-evidence/EVIDENCE.md`](../../audits/2026-08-07-d4-merge-evidence/EVIDENCE.md) §7–§8.
+4. ⏭️ **NEXT** — the retrofit is complete. What remains is the operator's: the six reserved
+   STOP-AND-ASK items, and the §D4 dispositions on the evidence now assembled.
    ⚠️ **Method, learned on D12 and re-confirmed on D11:** `grep` for a theorem name in a draft
    returns 0 — drafts escape underscores inside `\thm{}`. Resolve references with the
    underscore-aware scan, **seeded with a known-present name first**, never a bare grep.

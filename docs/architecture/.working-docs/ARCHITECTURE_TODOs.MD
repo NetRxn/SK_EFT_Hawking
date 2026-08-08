@@ -862,3 +862,27 @@ theorems, named by neither.
 direction (prose names that do not resolve); a *proved-but-unnamed* measure would be new
 infrastructure and needs approval — and TODO-D14/D18 already queue related coverage questions.
 
+### D20. E1 still carries the `c₁` description E2 retracts — OPEN (cross-bundle inconsistency)
+
+**Found:** 2026-08-07, E2 apex retrofit (`docs/audits/2026-08-07-e2-retrofit/FINDINGS.md` §3).
+
+**Defect.** E1 and E2 carry the same Phase-6w demarcation paragraph. The 2026-08-01 D11 Stage-13
+correction (rounds 10/12/13, finding 4.1) landed in **E2 only**.
+
+- `papers/E2/paper_draft.tex:421–433` retracts the wording *"the topological Chern coefficient of
+  the graphene moiré band-structure"*, on the grounds that `ChernBridge.lean:68` defines
+  `categoricalChernExpansion c0 c1 := ⟨[c0, c1]⟩` — a two-term Chebyshev expansion — and the module
+  makes no graphene or moiré claim. **Verified against the file: correct.**
+- `papers/E1/paper_draft.tex:410` still reads *"AND the topological Chern coefficient `c₁` of the
+  underlying condensate vanishes"*, and continues *"falls in the topologically-trivial regime
+  (`c₁ = 0` for the polariton fluid's effective Hamiltonian)."*
+
+**Fix shape.** Port E2's corrected wording into E1 — `c₁` is the **second Chebyshev expansion
+coefficient of the categorical marker**, not a Bloch-band or Chern invariant. Note that E2's
+correction is *itself* narrowed (the module **does** invoke a Brillouin-zone reading at
+`ChernBridge.lean:14`), so port the narrowed form, not the first version.
+
+**Existing coverage:** none — no registered check compares prose across bundles that share a lifted
+paragraph. Per §6a nothing was built; the residue (a cross-bundle shared-paragraph consistency
+measure) would be new infrastructure and needs approval.
+

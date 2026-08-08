@@ -189,7 +189,7 @@ check compares against reality. Sizes are recorded so a silent shrink is visible
 | `provenance.PAPER_DEPENDENCIES` | 17 |
 | `citations.CITATION_REGISTRY` | 652 |
 
-## Publication roster — 21 bundles, 20 with declared apexes
+## Publication roster — 21 bundles, 21 with declared apexes
 
 | bundle | tier | apexes | title |
 |---|---:|---:|---|
@@ -213,5 +213,5 @@ check compares against reality. Sizes are recorded so a silent shrink is visible
 | `I2` | 3 | 20 | Verified statistical estimators + lean-tensor-categories |
 | `I3` | 3 | 12 | Verified Stochastic Calculus for Mathlib4 — Stochastic Integ |
 | `E1` | 4 | 7 | Paris-LKB polariton letter |
-| `E2` | 4 | — | Dean-Kim-Lucas graphene letter |
+| `E2` | 4 | 6 | Dean-Kim-Lucas graphene letter |
 

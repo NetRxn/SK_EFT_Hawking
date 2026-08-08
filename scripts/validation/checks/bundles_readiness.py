@@ -1090,7 +1090,11 @@ def check_bundle_registry_consistency() -> CheckResult:
 #:           FINDINGS.md). THIRD declared companion pair -- D1's abstract calls E1 and E2
 #:           "companion experimental letters" -- and the first found DELIBERATELY, by
 #:           running the bundle-name probe the L3 correction prescribed.
-UNDECLARED_APEX_CEILING = 1
+#: 1 -> 0:   E2 retrofitted 2026-08-07 (6 apexes; docs/audits/2026-08-07-e2-retrofit/
+#:           FINDINGS.md). ALL 21 BUNDLES NOW DECLARE APEXES -- the ADR-010 D5a retrofit
+#:           is complete. The ceiling is now a true ratchet: any bundle added without
+#:           declared apexes fails this check immediately.
+UNDECLARED_APEX_CEILING = 0
 
 
 @register_check(
