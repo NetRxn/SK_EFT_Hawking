@@ -1527,3 +1527,31 @@ the other draft for the **bundle name**, not for shared theorem names.*
 ✅ **NOT-AN-ASSERTION, recorded as a reusable template:** `\bhThermoTotal` is what TODO-D9 and
 TODO-D10 are asking for and it already works — bundle-scoped, derived per-module, exact. The defect
 in D1/D5 is not "a macro" but "a *project*-scoped macro used as a bundle figure."
+
+---
+
+## V38 — the E1 apex retrofit — 7 atoms, 0 corrected
+
+**P** = perishable, **D** = durable.
+
+| # | atom | decider | result |
+|---|---|---|---|
+| P1 | E1's draft is 583 lines and was read in full | the file | ✓ |
+| P2 | **E1 is a declared companion of D1** | `papers/D1/paper_draft.tex` searched for the **bundle name** | ✓ D1's abstract: *"**Companion experimental letters E1 (Paris-LKB polariton) and E2 (Dean-Kim-Lucas graphene)** carry the experimental-team-targeted implementations."* **Third declared pair; first found deliberately** (D) |
+| P3 | **SET: E1 apexes declared by no other bundle** | all twenty bundles' apex lists | ✓ exactly **2** — `polariton_tier1_fails_tmds` and `polariton_dkm_f3_holds_at_pump_below_threshold`, both labelled by E1's own inline provenance as its Wave-6v deliverables (D) |
+| P4 | E1's closure is kernel-clean | `axiom_deps_core` / `axiom_deps_project` over the closure | ✓ exactly the three standard axioms; 0 `native_decide` (D) |
+| P5 | E1's toolchain-pin claims (*"v4.29.0, Mathlib `8850ed93`"*, twice) are stale | **the existing `paper_toolchain_pin_drift` check**, run rather than reimplemented | ✓ stale — live pin **v4.32.0 / `81a5d257`**; the check names **E1:449, 453, 454** at line granularity. **Existing coverage; nothing filed, nothing built** (D) |
+| P6 | corpus-wide pin drift | the same check | **29 pin-drift + 5 capability-claim sites across 65 drafts** — the live figure. The bump memory's "32 sites" is superseded and not quoted (P) |
+| P7 | `\axiomcount` resolves to 0 | `docs/counts.tex` | ✓ the project carries no project-local axioms, so E1's *"0 axiom"* is derived and true (P) |
+
+✅ **P2 is the L3 correction paying off immediately.** The prescribed probe — *search the sibling
+draft for the **bundle name**, not for shared theorem names* — found a pair a theorem-token grep
+would have missed for the third time: D1's sentence says "E1", not `attenuation_ge_one`.
+**A method fix is worth more than the finding that produced it.**
+
+⚠️ **NOT-AN-ASSERTION, a correction to TODO-D9's shape rather than a claim about E1:** E1 uses the
+*project*-scoped `\substantivetheorems` / `\leanmodules` macros **correctly**, because its sentence
+makes a project-scoped claim (*"independent of platform parameters"*). With L3's bundle-scoped
+derived `\bhThermoTotal` and D1/D5's project-macro-for-bundle-figure, the three cases show
+**TODO-D9's defect is scope mismatch, not macro use** — and a remediation keyed on "uses a macro"
+would break E1. Restated in the TODO.

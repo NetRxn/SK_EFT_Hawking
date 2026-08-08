@@ -1086,7 +1086,11 @@ def check_bundle_registry_consistency() -> CheckResult:
 #:           DECLARED splash/deep companion pairs ("character-for-character identical",
 #:           D3 §8) -- so the shared apexes are the design, not a collision. Corrects the
 #:           L1 finding, which filed that absence without a probe that could show presence.
-UNDECLARED_APEX_CEILING = 2
+#: 2 -> 1:   E1 retrofitted 2026-08-07 (7 apexes; docs/audits/2026-08-07-e1-retrofit/
+#:           FINDINGS.md). THIRD declared companion pair -- D1's abstract calls E1 and E2
+#:           "companion experimental letters" -- and the first found DELIBERATELY, by
+#:           running the bundle-name probe the L3 correction prescribed.
+UNDECLARED_APEX_CEILING = 1
 
 
 @register_check(

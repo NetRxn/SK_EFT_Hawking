@@ -692,6 +692,12 @@ violated for the fifth time in this workstream.
 - **§7's D6 checklist is stale in the other direction:** six boxes, all unchecked, including
   waves 6v.2 / 6v.5 / 6v.6 — all of which have shipped and appear in D6's own declared apexes.
   At least four of six are done.
+- ⚠️ **RESTATED 2026-08-07 (E1 retrofit): the defect is SCOPE MISMATCH, not macro use.** Three
+  data points now fix the shape — D1/D5 use a **project**-scoped macro for a **bundle** figure
+  (wrong); L3 uses a **bundle**-scoped derived macro for a bundle figure (the template); **E1 uses
+  a project-scoped macro for a genuinely project-scoped claim** (*"the Lean 4 verification of the
+  underlying chain … is independent of platform parameters"*) — correct as written, and **must not
+  be swept up in a fix**. Any remediation must key on what the sentence claims, not on the macro.
 - ✅ **The fix template already exists, in L3 (found 2026-08-07).** `\bhThermoTotal` is derived
   per-module by `update_counts.py` (`_module_thm_count("BHThermodynamicsFourLaws.lean")`), is
   **bundle-scoped**, and is exact against the source (20 = 20). **A bundle-scoped derived macro is
