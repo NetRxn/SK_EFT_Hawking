@@ -570,6 +570,11 @@ version *and* the Mathlib rev against `lean-toolchain` + `lakefile.toml`.
   `molecularHamiltonian_essSelfAdjoint`. The defect is entirely in the manuscript.
 - **Not a correctness defect.** Every theorem is true and kernel-pure, and §4.1's *unconditional*
   molecular self-adjointness is verified genuine (takes no analytic-hypothesis argument).
+- ✅ **The fix template exists in the corpus.** D4 §5 handles the identical structural situation —
+  a theorem whose content sits in a definition — and says so at the point of use: *"We **define**
+  `WRTInvariant.wrtS2xS1` as `C.n` directly … the companion theorem `wrt_S2xS1_eq_rank` is a
+  definitional sanity-check (`rfl` on the definitional unfolding), **not a proof of the
+  Verlinde-formula chain**."* Copy that sentence's shape.
 - **Fix shape, two options, prose-only vs. real work:** (1) narrow the claim — the layer is an
   axiomatized HK/Levy–Lieb interface plus its formal consequences; or (2) construct one
   `DensityVariational`/`GroundStateData` instance from §4.1's Hamiltonian, which would make the
@@ -633,7 +638,9 @@ violated for the fifth time in this workstream.
   **seven** more empty `Lift-section` events (6n W1a → §6, 6n W2c → §3, 6o W1a → §3, 6o W1b → §6,
   6o W3b → §6, 6o W1c → §10, 6o W2a → §17), out of 26 `Lift-section` events total. **D2 adds two
   more** — *"SymTFT audit substrate"* and *"APS η-invariant cross-bridge to Z16 Dai-Freed"*, both
-  commented-out stubs after its bibliography — so the pattern spans **three** bundles. The named
+  commented-out stubs after its bibliography — and **D4 adds three more** (*SymTFT audit
+  substrate*, *Lindbladian S-matrix axiomatization NO-GO*, *ETH-α productive-value refutation
+  tableau*) — so the pattern spans **four** bundles. The named
   content is substantial and unpublished anywhere: a Kerr-Schild double-copy on Petrov-D acoustic
   geometry with a three-obstruction BCJ no-go, an APS η-invariant substrate for analog horizons,
   an Itô/LDP cross-bridge, and a dissipative-SK-EFT bootstrap-uniqueness no-go.

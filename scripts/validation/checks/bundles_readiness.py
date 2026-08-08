@@ -1047,7 +1047,12 @@ def check_bundle_registry_consistency() -> CheckResult:
 #:           exist (3 shared GenerationConstraint declarations); it is the Sakharov
 #:           N_f identity specifically that has no witness. Also L2 ∩ D2 = 391 of
 #:           L2's 430.
-UNDECLARED_APEX_CEILING = 11
+#: 11 -> 10: D4 retrofitted 2026-08-07 (66 apexes; docs/audits/2026-08-07-d4-retrofit/
+#:           FINDINGS.md). Largest closure yet (753 decls / 61 modules) and the most
+#:           truncated walk (90). Makes the D4->D8 boundary concrete: D4 and D8 name
+#:           the SAME GenericSU2 Clifford+T theorem. D4 ∩ D6 = 0, though F says D6
+#:           absorbed D4's Solovay-Kitaev headline.
+UNDECLARED_APEX_CEILING = 10
 
 
 @register_check(

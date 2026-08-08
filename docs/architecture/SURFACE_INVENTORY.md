@@ -189,7 +189,7 @@ check compares against reality. Sizes are recorded so a silent shrink is visible
 | `provenance.PAPER_DEPENDENCIES` | 17 |
 | `citations.CITATION_REGISTRY` | 652 |
 
-## Publication roster — 21 bundles, 10 with declared apexes
+## Publication roster — 21 bundles, 11 with declared apexes
 
 | bundle | tier | apexes | title |
 |---|---:|---:|---|
@@ -197,7 +197,7 @@ check compares against reality. Sizes are recorded so a silent shrink is visible
 | `D1` | 1 | 41 | Analog Hawking across three platforms |
 | `D2` | 1 | 47 | Anomaly constraints on SM particle content |
 | `D3` | 1 | 89 | Emergent gravity through BH thermodynamics |
-| `D4` | 1 | — | Topological quantum computation foundations |
+| `D4` | 1 | 66 | Topological quantum computation foundations |
 | `D5` | 1 | — | Dark sector under substrate constraints |
 | `D6` | 1 | 11 | Formally Verified Fault-Tolerant Quantum Computation Substra |
 | `D7` | 1 | — | Classical Simulability and Quantum Advantage via Tensor Netw |

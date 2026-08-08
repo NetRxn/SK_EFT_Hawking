@@ -1252,3 +1252,30 @@ container for?"*, which the closure cannot decide and which therefore never surf
 measurement. **A DONE condition whose output is not a measurement is the one a measurement-driven
 loop drops.** The fix that stuck was writing the purpose statement into D2's FINDINGS *before* its
 findings sections, so the next bundle's template already contains it.
+
+---
+
+## V29 — the D4 apex retrofit — 8 atoms, 0 corrected
+
+**P** = perishable, **D** = durable.
+
+| # | atom | decider | result |
+|---|---|---|---|
+| E1 | D4's draft is 1,584 lines and was read in full, including §9 (appended after the original synthesis) | the file | ✓ — §9 carries the Solovay–Kitaev content and the whole D4→D8 finding |
+| E2 | **SET:** D4 ∩ every other declared bundle | D1, D2, D3, D6, D9, D10, D11, D12, F, L2 — all ten | ✓ F **73**, D3 **22**, D2 **3**, D12 **3**, rest **0** (D) |
+| E3 | **`D4 ∩ D6 = 0`** despite F listing D6 as absorbing D4's SK headline | D6's declared apex list, enumerated in full | ✓ none of D6's eleven is SK-related (P) |
+| E4 | **SET:** which drafts name the four FKLW headline theorems | underscore-aware scan over **all 21** drafts, not a sample | ✓ three are D4-only; `…cliffordT_strict_constructive_tight_unconditional` is named by **D4 and D8** (P) |
+| E5 | D4's WRT theorems are labelled definitional encodings in the prose, at the point of use | the draft against the Lean | ✓ `rfl`-discharged and said to be — the template TODO-D12 needs (D) |
+| E6 | `H_HorizonBoundaryCondition` is shown **satisfiable**, not just stated | `fibonacci_horizon_satisfies_H_HorizonBoundaryCondition` | ✓ — a five-field Prop with a witness is not vacuous (D) |
+| E7 | Both figure-eight theorems genuinely use `native_decide`, as the draft says | `axiom_deps_project` markers | ✓ (D) |
+| E8 | 90 walks stopped at a `private` declaration — the highest measured | the closure | ✓ reported with the size, never separately (D) |
+
+⚠️ **NOT-AN-ASSERTION.** *"Only D4's claim is backed by a declared closure"* is a statement about
+**what is measurable today**, not about who should own the substrate. D8 is undeclared; when it is
+read, E4's overlap becomes a declaration conflict to resolve, not a fact about entitlement.
+
+⚠️ **E5 is the pass's most transferable result and it is a positive one.** D4 and D10 face the
+identical structural problem — a theorem whose content sits in a definition — and handle it
+oppositely. **The corpus already contains the fix for its own worst claim-integrity finding.**
+Looking for the good instance of a defect pattern is cheaper than designing a remedy, and this
+pass found one only because the retrofit reads whole drafts rather than diffs.

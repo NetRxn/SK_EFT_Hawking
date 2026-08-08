@@ -5,8 +5,8 @@ comes due when every bundle is declared; until then this file records, for each 
 whether the closure evidence **supports** it, **refutes** it, or **does not decide** it, plus any
 **boundary failure** named under §D2's rule.
 
-**Status:** 10 of 21 bundles declared (D1, D2, D3, D6, D9, D10, D11, D12, F, L2).
-11 undeclared: D4, D5, D7, D8, E1, E2, I1, I2, I3, L1, L3. **Every "not decided" below is a
+**Status:** 11 of 21 bundles declared (D1, D2, D3, D4, D6, D9, D10, D11, D12, F, L2).
+10 undeclared: D5, D7, D8, E1, E2, I1, I2, I3, L1, L3. **Every "not decided" below is a
 statement about what is measurable today, not a verdict.**
 
 **Method.** Each row is an intersection of *declared apex closures* over `name_deps_project`,
@@ -48,11 +48,33 @@ Both undeclared. No closure exists for either, so nothing is measurable. ⚠️ 
 is D1, whose closure is now known (249 declarations / 18 modules); the E1/E2 question becomes
 measurable as soon as either is declared.
 
-### D4 → D8 — **NOT DECIDED**
+### D4 → D8 — **EVIDENCE RECORDED, still NOT DECIDED** (D4 declared 2026-08-07; D8 undeclared)
 
-Both undeclared. The 2026-08-01 audit's evidence pass reported that the evidence *"does not
-support the D4→D8 merge as stated"*; that predates any closure for either bundle and is not
-reproduced here. ⚠️ **Do not quote the audit's verdict as a closure measurement** — it is not one.
+**D4 §9 ships the complete quantitative Solovay–Kitaev substrate** — F.21 density, the
+Dawson–Nielsen length bound, the eight-module Phase-6t `FKLW/` pipeline, and the Path-A
+constructive compiler across three ε-regimes. **D8's charter is the alphabet-agnostic SU(d)
+generalisation**, which is the `FKLW/GenericSU2` layer.
+
+Underscore-aware scan over all 21 drafts:
+
+| theorem | named by |
+|---|---|
+| `solovayKitaev_dawson_nielsen_quantitative_fibonacci_strict` | **D4 only** |
+| `fibonacci_density_F21_unconditional` | **D4 only** |
+| `skLengthExponent` | **D4 only** |
+| `…quantitative_cliffordT_strict_constructive_tight_unconditional` | **D4 *and* D8** |
+
+**Two drafts name the same theorem as their own substrate.** That is the boundary in concrete
+form. ⚠️ Four `GenericSU2` apexes are declared for D4 because D4's draft names them; **if D8's
+draft claims them too, one of the two lists is wrong** — revisit at D8's retrofit.
+
+**A third claimant, unbacked:** F §7 lists as D6 absorption item (ii) *"the Phase 6t quantitative
+Solovay–Kitaev tight-ε headline retroactively absorbed as the canonical universal-compilation
+primitive."* **D6 declares no Solovay–Kitaev apex** — its eleven are gauging-QEC, APM-LDPC, Shor
+T-counts and W-state QFT — and **`D4 ∩ D6 = 0`**. Only D4's claim is backed by a declared closure.
+
+⚠️ **Do not quote the 2026-08-01 audit's "does not support D4→D8 as stated" as a closure
+measurement** — it predates any closure for either bundle.
 
 ---
 
@@ -67,6 +89,9 @@ Recorded because §D4 asks for evidence, and an intersection nobody proposed is 
 | **F ∩ D1** | **27** | |
 | **D2 ∩ D3** | **3** | All `GenerationConstraint`, reached by exactly one D3 apex (`horizon_wittTrivial_iff_three_generations`). The Witt bridge — see TODO-D16. |
 | **D2 ∩ D12** | 3 | All `PauliMatrices`. Shared low-level infrastructure; decides nothing. |
+| **D4 ∩ F** | **73** | `QCyc16` 19, `BHEntropyMicroscopic` 17, `FigureEightKnot` 16. |
+| **D4 ∩ D3** | **22** | The horizon-MTC cross-bridge — mutual and acknowledged in both drafts. |
+| **D4 ∩ D2** | 3 | Only `PauliMatrices`. ⚠️ **Not** the Drinfeld-centre bridge both drafts describe. |
 | **D10 ∩ D12** | 1 | Ditto. |
 | all other declared pairs | **0** | D1, D3, D6, D9, D10, D11, F, L2 are otherwise mutually disjoint at declaration level. |
 
@@ -82,8 +107,9 @@ Recorded because §D4 asks for evidence, and an intersection nobody proposed is 
 | **F** | ⚠️ **YES — by genre** | 126 of its 221 declarations are D3's. A survey's purpose is *definitionally* unstatable without its siblings' substrate, so the rule here is diagnosing the genre rather than a defect. **The actionable consequence is sequencing: F cannot be redrafted until the bundles it surveys are measured.** |
 | **D10** | ⚠️ **PARTIAL** | §5.3's contractivity result is not statable without D9's `QuantumNetwork.*` — 50 declarations. The DFT and NEGF pillars are wholly D10's own, so the *target* is viable; one of its three headline layers is not self-contained. |
 | **D6** | ⚠️ **PARTIAL** | Cites 133 declarations from D9's namespace while claiming ~19 % of its own citations. |
+| **D4** | ⚠️ **YES, both directions** | *Inbound:* §§7–8 consume D3's `H_HorizonBoundaryCondition` (22 shared declarations) — mutual and acknowledged. *Outbound:* §9's `GenericSU2` layer ships D8's chartered content. |
 | D1, D2, D3, D11, D12, L2 | **No** | Each states its purpose on its own substrate. D11 is the strongest case: zero intersection with every other declared bundle. |
-| D4, D5, D7, D8, E1, E2, I1, I2, I3, L1, L3 | **not yet measurable** | undeclared |
+| D5, D7, D8, E1, E2, I1, I2, I3, L1, L3 | **not yet measurable** | undeclared |
 
 ---
 

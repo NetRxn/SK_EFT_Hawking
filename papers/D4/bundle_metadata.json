@@ -1,5 +1,337 @@
 {
   "bundle_target": "D4",
+  "apex_theorems": [
+    {
+      "name": "SKEFTHawking.uq_K_mul_Kinv",
+      "claims": "\u00a72.1 \u2014 Uq(sl2) Hopf relation: K K^-1 = 1",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.uq_Kinv_mul_K",
+      "claims": "\u00a72.1 \u2014 and its mirror",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.uq_KE",
+      "claims": "\u00a72.1 \u2014 K E K^-1 = q^2 E",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.uq_KF",
+      "claims": "\u00a72.1 \u2014 K F K^-1 = q^-2 F",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.uq_serre",
+      "claims": "\u00a72.1 \u2014 the quantum Serre relations",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.IsingBraiding.hexagon_I",
+      "claims": "\u00a73.2 \u2014 hexagon coherence 1 of 6",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.IsingBraiding.hexagon_II",
+      "claims": "\u00a73.2 \u2014 hexagon 2 of 6",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.IsingBraiding.hexagon_III",
+      "claims": "\u00a73.2 \u2014 hexagon 3 of 6",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.IsingBraiding.hexagon_pss_psi",
+      "claims": "\u00a73.2 \u2014 hexagon 4 of 6",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.IsingBraiding.hexagon_pss_one",
+      "claims": "\u00a73.2 \u2014 hexagon 5 of 6",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.IsingBraiding.hexagon_spp",
+      "claims": "\u00a73.2 \u2014 hexagon 6 of 6; ABSTRACT claims all six",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.IsingBraiding.ribbon_ss_1",
+      "claims": "\u00a73.2 \u2014 ribbon equation 1 of 4",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.IsingBraiding.ribbon_ss_psi",
+      "claims": "\u00a73.2 \u2014 ribbon 2 of 4",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.IsingBraiding.ribbon_sp_sigma",
+      "claims": "\u00a73.2 \u2014 ribbon 3 of 4",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.IsingBraiding.ribbon_pp_1",
+      "claims": "\u00a73.2 \u2014 ribbon 4 of 4",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.IsingBraiding.R_product",
+      "claims": "\u00a73.1 \u2014 the R-matrix product identity in Q(zeta_16)",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.IsingBraiding.R1_sq",
+      "claims": "\u00a73.1 \u2014 R-matrix square, vacuum channel",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.IsingBraiding.Rpsi_sq",
+      "claims": "\u00a73.1 \u2014 R-matrix square, psi channel",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.IsingBraiding.gauss_sum",
+      "claims": "\u00a73.2 \u2014 the explicit Ising Gauss sum completing the braided structure",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.IsingBraiding.trefoil_eq_neg_sqrt2",
+      "claims": "ABSTRACT + \u00a73.3 \u2014 the closed-form trefoil invariant = -sqrt 2, the primary non-trivial knot calculation",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.IsingBraiding.hopf_link_matches_S_matrix",
+      "claims": "\u00a73.4 \u2014 the Hopf-link invariant equals S_ab/D: the calibration that the algebraically derived modular S-matrix agrees with the diagrammatic expectation value",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FigureEightKnot.figure_eight_trace_neg_one",
+      "claims": "\u00a73.5 \u2014 the unnormalised figure-eight quantum trace = -1 in Q(zeta_16), via native_decide",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FigureEightKnot.figure_eight_normalized",
+      "claims": "\u00a73.5 \u2014 the normalised RT invariant RT(4_1, sigma) = -1/sqrt 2. Also via native_decide, and the draft says so",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.s3_anyon_count",
+      "claims": "\u00a74.3 \u2014 |Irr(D(S3))| = 8, the non-abelian anyon spectrum",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.class_equation",
+      "claims": "\u00a74.3 \u2014 the S3 class equation 1 + 3 + 2 = 6",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.centralizer_order_formula",
+      "claims": "\u00a74.3 \u2014 centraliser orders per conjugacy class",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.s3_global_dim_sq",
+      "claims": "\u00a74.3 \u2014 D^2 = 36 = |S3|^2",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.A3_is_nonabelian",
+      "claims": "\u00a74.3 \u2014 the non-abelian sub-spectrum, part 1",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.B_anyons_dim_3",
+      "claims": "\u00a74.3 \u2014 quantum dimension 3 anyons, part 2",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.s3_center_summary",
+      "claims": "\u00a74.3 \u2014 the closure over the Z(Vec_S3) ~ Rep(D(S3)) spectrum. The non-abelian extension lives natively in D4; D2 \u00a73.4 consumes only the abelian toric-code anchor",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.wrt_S2xS1_eq_rank",
+      "claims": "\u00a75.1 \u2014 Z_WRT(S^2 x S^1) = rk(C). \u26a0\ufe0f DEFINITIONAL ENCODING: the draft states this is an `rfl` sanity-check on the definitional unfolding, NOT a proof of the Verlinde-formula chain, which it says is deferred pending Mathlib",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.wrt_S3_formula",
+      "claims": "\u00a75.2 \u2014 Z_WRT(S^3) = p+/D^2. \u26a0\ufe0f Also definitional (`rfl`-discharged), encoding the Kirby-colour normalisation rather than proving Kirby-move invariance. The draft names Kirby-move invariance as the principal deferred WRT item",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FermiHubbardDimer.dark_state_in_kernel",
+      "claims": "\u00a76.1 \u2014 the dark-state vector lies in the singlet-sector kernel",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FermiHubbardDimer.darkVec_ne_zero",
+      "claims": "\u00a76.1 \u2014 and is non-trivial at nondegenerate parameters. \u26a0\ufe0f The Berry-phase / adiabatic-drag equivalence (T13-T15) is EXPLICITLY DEFERRED in the module and in the draft",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.QECHolographyBridge.HPCode.one_le_globalDimSq",
+      "claims": "\u00a77.1 \u2014 the boundary condition fixes 1 <= D^2",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.QECHolographyBridge.HPCode.scramblingTimeBound_nonneg",
+      "claims": "\u00a77.1 \u2014 scrambling-time positivity guard",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.QECHolographyBridge.HPCode.codeDistance_nonneg",
+      "claims": "\u00a77.1 \u2014 code-distance positivity",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.QECHolographyBridge.HPCode.code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class",
+      "claims": "ABSTRACT + \u00a77.2 \u2014 THE central QEC biconditional: code-distance scaling matches anyonic fusion iff the fusion algebra is admissible. The face-3 anchor of 'one MTC, four faces'",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.QECHolographyBridge.HPCode.recovery_at_scrambling_bound",
+      "claims": "\u00a77.3 \u2014 at the scrambling bound, boundary entropy plus code distance saturate the Hayden-Preskill recovery condition",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.QECHolographyBridge.HPCode.horizon_BC_implies_HP_admissible",
+      "claims": "\u00a77.4 \u2014 the horizon boundary condition implies admissibility",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.QECHolographyBridge.HPCode.nonabelian_anyon_implies_codeDistance_pos",
+      "claims": "\u00a77.4 \u2014 non-abelian anyon support implies positive code distance",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.QECHolographyBridge.trivialAbelian_violates_admissibility",
+      "claims": "ABSTRACT + \u00a77.5 \u2014 the constructive falsifier: a trivially abelian MTC violates admissibility. Connects directly to D3 \u00a77's abelian_MTC_falsifies_H_HorizonBoundaryCondition",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.QECHolographyBridge.fibonacci_HPCode_codeDistance_lt_log_two",
+      "claims": "\u00a77.6 \u2014 the Fibonacci-anyon quantitative benchmark",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.QECHolographyBridge.fibonacci_HPCode_scramblingTimeBound_pos",
+      "claims": "\u00a77.6 \u2014 its scrambling-time positivity",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.BHEntropyMicroscopic.fibonacci_horizon_satisfies_H_HorizonBoundaryCondition",
+      "claims": "\u00a77.1 \u2014 the boundary-condition bundle is SATISFIABLE, witnessed on the Fibonacci horizon. This is what stops the five-field Prop from being vacuous",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.RTCasiniHuertaBounds.rt_entropy_pos",
+      "claims": "\u00a78.1 \u2014 RT entropy positivity on the MTC substrate",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.RTCasiniHuertaBounds.rt_kaulMajumdar_gap_at_reduced_area_two",
+      "claims": "\u00a78.1 \u2014 the Kaul-Majumdar matching at the reduced-area-2 critical point",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.RTCasiniHuertaBounds.rt_eq_kaulMajumdar_iff_trivial_reduced_area",
+      "claims": "ABSTRACT + \u00a78.3 \u2014 THE knife-edge biconditional: RT entropy equals the Kaul-Majumdar microscopic entropy iff the reduced area trivialises. Face 4 of 'one MTC, four faces', and D4 identifies it as the mathematical underpinning of D3 \u00a77's abelian-MTC falsifier",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FKLW.fibonacci_density_F21_unconditional",
+      "claims": "\u00a79.1 \u2014 F.21 UNCONDITIONAL: the Fibonacci braid image is dense in SU(2). Closed by a Cartan-closed-subgroup attack; the discrete branch excluded by an Aharonov-Arad cardinality argument",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FKLW.OneParameterSubgroupSU2.Y_h_norm_le_half_pi_norm_sub_one",
+      "claims": "\u00a79.4 \u2014 Mathlib-PR-quality SU(2) matrix-log Lipschitz bound, via the analytically-tight Jordan inequality",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FKLW.GroupCommutatorNearIdentity.groupCommutator_stability_nearIdentity",
+      "claims": "\u00a79.3 Wave 1 \u2014 group-commutator stability near the identity",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.MatrixBCHCubic.bch_order_2_cubic_thm",
+      "claims": "\u00a79.3 Wave 1 \u2014 the order-2 BCH cubic bound. The draft flags its constant 320 as loose by Dawson-Nielsen's own analysis",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FKLW.SolovayKitaevLengthBound.three_lt_skLengthExponent",
+      "claims": "\u00a79.2 \u2014 the exponent sentinel c > 3",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FKLW.SolovayKitaevLengthBound.skLengthExponent_lt_four",
+      "claims": "\u00a79.2 \u2014 and c < 4, closing the open interval around log5/log(3/2)",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FKLW.SolovayKitaevLengthBound.skLengthAtEpsilon_unconditional",
+      "claims": "\u00a79.3 Wave 5 \u2014 the asymptotic length-at-precision headline, discharged unconditionally",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FKLW.SolovayKitaevQuantitative.solovayKitaev_dawson_nielsen_quantitative_fibonacci_strict",
+      "claims": "ABSTRACT + \u00a79.2 \u2014 THE quantitative Solovay-Kitaev headline: error <= epsilon AND polylog length bundled at the SAME algorithmic compile level, unlike weaker existence-only forms",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FKLW.SolovayKitaevPathA.skApproxC_succ",
+      "claims": "\u00a79.4 \u2014 the Path-A recursion unfolding, making the Dawson-Nielsen composition visible at the Lean term level rather than as an existential certificate",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FKLW.SolovayKitaevPathA.SkApproxCSuperQuadraticBound_holds",
+      "claims": "\u00a79.4 \u2014 the super-quadratic shrinkage bound discharged at the calibrated K_compose = 1024, kernel-only",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FKLW.SolovayKitaevPathA.Y_h_eq_zero_in_regime_implies_eq_one",
+      "claims": "\u00a79.4 \u2014 Y_h injectivity in the near-identity regime, closing the invalid branch",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FKLW.SolovayKitaevPathA.solovayKitaev_dawson_nielsen_quantitative_fibonacci_strict_constructive_unconditional",
+      "claims": "\u00a79.4 \u2014 the constructive compiler, loose-epsilon regime, unconditional",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FKLW.SolovayKitaevPathA.solovayKitaev_dawson_nielsen_quantitative_fibonacci_strict_constructive_tight",
+      "claims": "\u00a79.4 \u2014 the constructive compiler on the TIGHT-epsilon regime, bundling error and length at the same level. The draft's primacy claim rests on this one",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FKLW.GenericSU2.cliffordT_accPt_one_unconditional",
+      "claims": "\u00a79 substrate \u2014 Clifford+T accumulation at the identity. \u26a0\ufe0f ALPHABET-AGNOSTIC: this is D8's chartered territory (Solovay-Kitaev across SU(d)), shipped inside D4's tree",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FKLW.GenericSU2.solovayKitaev_dawson_nielsen_quantitative_cliffordT_strict_concrete_constructive_unconditional",
+      "claims": "\u00a79 substrate \u2014 quantitative SK for the CLIFFORD+T alphabet, constructive, unconditional. \u26a0\ufe0f Same boundary note",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FKLW.GenericSU2.solovayKitaev_dawson_nielsen_quantitative_cliffordT_strict_constructive_tight_unconditional",
+      "claims": "\u00a79 substrate \u2014 the tight-regime Clifford+T variant. \u26a0\ufe0f Same boundary note",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FKLW.GenericSU2.solovayKitaev_dawson_nielsen_quantitative_trappedIon_strict_constructive_tight_unconditional",
+      "claims": "\u00a79 substrate \u2014 the TRAPPED-ION alphabet variant. \u26a0\ufe0f Same boundary note. Three alphabets beyond Fibonacci ship here, which is the D4->D8 boundary question in concrete form",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FKLW.GenericSU2.valid_branch_K_chain_le_K_compose_numeric_generic",
+      "claims": "\u00a79.4 \u2014 the Mathlib-PR-quality numerical calibration chain underwriting K_proof <= 788 against K_compose = 1024, margin >= 236",
+      "declared": "2026-08-07"
+    }
+  ],
   "tier": 1,
   "title": "Topological quantum computation foundations",
   "target_journal": "Comm. Math. Phys. | PRX Quantum",
