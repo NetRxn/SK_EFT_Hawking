@@ -78,5 +78,6 @@
     "ceiling": 3750,
     "source": "PRL author guide (3750 word equivalents: text + 300/figure + tables + captions + refs)"
   },
-  "compiled_pages": 4
+  "compiled_pages": 4,
+  "compile_gate_ok": true
 }

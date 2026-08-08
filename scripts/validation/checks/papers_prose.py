@@ -405,51 +405,6 @@ def check_count_literals() -> CheckResult:
 #: `NOTEBOOK_EXEC_CACHE` and the `extract_lean_deps.py` hash-skip.
 LATEX_COMPILE_CACHE = "papers/.latex_compile_cache.json"
 
-#: `\input{...}` / `\include{...}` / `\includegraphics[...]{...}` — the three ways a
-#: draft pulls in a file whose content can change whether it compiles.
-_TEX_INPUT_RE = re.compile(
-    r"\\(?:input|include)\s*\{([^}]+)\}"
-    r"|\\includegraphics\s*(?:\[[^\]]*\])?\s*\{([^}]+)\}")
-
-
-def _draft_input_closure(tex: Path, _seen: set | None = None) -> list[Path]:
-    """Every file whose content can change this draft's compile outcome.
-
-    Resolves ``\\input``/``\\include`` recursively (LaTeX's own ``.tex``-extension
-    default applied when the reference has no suffix) and ``\\includegraphics``
-    one level, plus any ``*.bib`` sitting beside the draft. Cycle-guarded via
-    ``_seen``.
-
-    Deliberately a SUPERSET where it is uncertain: an unresolvable reference is
-    still recorded as a path, so the file appearing later moves the hash. Over-
-    hashing costs a needless recompile; under-hashing skips a broken draft, and
-    only one of those two failures is silent.
-    """
-    seen = _seen if _seen is not None else set()
-    if tex in seen:
-        return []
-    seen.add(tex)
-    closure = [tex]
-    try:
-        body = tex.read_text(errors="replace")
-    except OSError:
-        return closure
-    if _seen is None:  # top level only — siblings, not per-\input
-        closure.extend(sorted(tex.parent.glob("*.bib")))
-    for m in _TEX_INPUT_RE.finditer(body):
-        ref = (m.group(1) or m.group(2) or "").strip()
-        if not ref:
-            continue
-        target = (tex.parent / ref).resolve()
-        if m.group(1) and not target.suffix:
-            target = target.with_suffix(".tex")
-        if m.group(1) and target.suffix == ".tex":
-            closure.extend(_draft_input_closure(target, seen))
-        else:
-            closure.append(target)
-    return closure
-
-
 #: Hand-written `\begin{tabular}` blocks still in publication-target bundle drafts.
 #: MEASURED 2026-08-05: **4** across 3 bundles — D1 (1), E1 (1), L2 (2). Zero
 #: headroom; this may only shrink.
@@ -558,7 +513,7 @@ def check_paper_latex_compiles() -> CheckResult:
         always ``passed=True``" for a day after the repair (audit finding QI-13).
 
     **Per-draft cache**: a draft whose full input closure
-    (:func:`_draft_input_closure` — the ``.tex``, everything it ``\\input``s
+    (:func:`validate_helpers.draft_input_closure` — the ``.tex``, everything it ``\\input``s
     transitively, its figures, its ``.bib``) hashes to the value recorded at its
     last CLEAN compile is skipped. Only clean compiles are recorded and a failure
     evicts, so a broken draft recompiles every run until it is fixed.
@@ -620,7 +575,7 @@ def check_paper_latex_compiles() -> CheckResult:
             n_missing += 1
             continue
 
-        closure_hash = _memo.files_fingerprint(_draft_input_closure(tex))
+        closure_hash = _memo.files_fingerprint(_H.draft_input_closure(tex))
         if not _bypass_cache and prev_clean.get(code) == closure_hash:
             n_cached += 1
             n_ok += 1

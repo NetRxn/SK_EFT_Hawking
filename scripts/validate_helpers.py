@@ -59,6 +59,7 @@ measurement (8% of one command's runtime against a three-module signature change
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 
 # ── The single path anchor (ADR-009 H1) ──────────────────────────────────
@@ -329,3 +330,61 @@ def autogen_index(records) -> dict:
         if n:
             out[n] = bool(r.get("autogen")) or supplement(n)
     return out
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# LaTeX draft input closure — promoted here 2026-08-08 (ADR-011 Phase 2b)
+# ═══════════════════════════════════════════════════════════════════════
+
+#: `\input{...}` / `\include{...}` / `\includegraphics[...]{...}` — the three ways a
+#: draft pulls in a file whose content can change whether, and how, it compiles.
+TEX_INPUT_RE = re.compile(
+    r"\\(?:input|include)\s*\{([^}]+)\}"
+    r"|\\includegraphics\s*(?:\[[^\]]*\])?\s*\{([^}]+)\}")
+
+
+def draft_input_closure(tex: Path, _seen: set | None = None) -> list[Path]:
+    """Every file whose content can change this draft's compile outcome.
+
+    Resolves ``\\input``/``\\include`` recursively (LaTeX's own ``.tex``-extension
+    default applied when the reference has no suffix) and ``\\includegraphics`` one
+    level, plus any ``*.bib`` sitting beside the draft. Cycle-guarded via ``_seen``.
+
+    Deliberately a SUPERSET where it is uncertain: an unresolvable reference is still
+    recorded as a path, so the file appearing later moves the hash. Over-hashing costs
+    a needless recompile; under-hashing skips a broken draft, and only one of those two
+    failures is silent.
+
+    **Lives here because three subsystems now ask the same question** — is this draft's
+    compiled output still current? `paper_latex_compiles` hashes this closure for its
+    per-draft cache, `bundle_manuscript_length` compares the PDF's mtime against it, and
+    `compile_bundle_pdf.py` skips a recompile on it. Three copies of "which files change
+    this draft" would disagree the first time someone added `\\includesvg`, and the
+    disagreement would be invisible: each consumer would look right on its own.
+
+    Consistent with this module's policy line — it resolves WHERE things are, and says
+    nothing about what a stale or missing artifact MEANS. Each caller decides that.
+    """
+    seen = _seen if _seen is not None else set()
+    if tex in seen:
+        return []
+    seen.add(tex)
+    closure = [tex]
+    try:
+        body = tex.read_text(errors="replace")
+    except OSError:
+        return closure
+    if _seen is None:  # top level only — siblings, not per-\input
+        closure.extend(sorted(tex.parent.glob("*.bib")))
+    for m in TEX_INPUT_RE.finditer(body):
+        ref = (m.group(1) or m.group(2) or "").strip()
+        if not ref:
+            continue
+        target = (tex.parent / ref).resolve()
+        if m.group(1) and not target.suffix:
+            target = target.with_suffix(".tex")
+        if m.group(1) and target.suffix == ".tex":
+            closure.extend(draft_input_closure(target, seen))
+        else:
+            closure.append(target)
+    return closure

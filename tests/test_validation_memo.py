@@ -347,7 +347,7 @@ class TestLatexCompileCache:
         tex = SK_ROOT / "papers" / "D1" / "paper_draft.tex"
         if not tex.is_file():
             pytest.skip("D1 draft absent")
-        closure = pp._draft_input_closure(tex)
+        closure = _H.draft_input_closure(tex)
         assert tex in closure
         assert any(p.name == "counts.tex" for p in closure), (
             f"the input closure of D1 is {[p.name for p in closure]} — it does "
@@ -360,7 +360,7 @@ class TestLatexCompileCache:
             pytest.skip("D1 draft absent")
         before, after = _seeded(
             tex, b"\n% memo probe\n",
-            lambda: _memo.files_fingerprint(pp._draft_input_closure(tex)))
+            lambda: _memo.files_fingerprint(_H.draft_input_closure(tex)))
         assert before != after
 
     def test_an_unchanged_draft_is_not_recompiled(self, latex_env, monkeypatch):

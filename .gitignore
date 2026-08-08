@@ -74,6 +74,7 @@ notebooks/.notebook_exec_cache.json
 # NEVER tracked: a shared cache would let one workstation's vetted state answer for
 # another's tree.
 papers/.latex_compile_cache.json
+papers/.compile_gate_cache.json
 docs/validation/.check_memo.json
 
 # LaTeX build artifacts

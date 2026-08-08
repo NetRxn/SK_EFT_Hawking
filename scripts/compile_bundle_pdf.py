@@ -25,6 +25,11 @@ Usage
     uv run python scripts/compile_bundle_pdf.py --all
     uv run python scripts/compile_bundle_pdf.py D12 --keep-artifacts   # debugging
 
+A draft whose PDF is already newer than every file feeding it is SKIPPED; pass
+`--force` to recompile regardless. Without the skip this script recompiled all 64
+drafts on every run, so every run dirtied ~45 tracked PDFs whether or not anything
+had changed.
+
 Exit code is non-zero if any bundle fails the gate (TeX error, unresolved reference
 in the RENDERED pdf, or a missing PDF).
 """
@@ -39,6 +44,9 @@ import sys
 import tempfile
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import validate_helpers as _H  # noqa: E402
+
 REPO = Path(__file__).resolve().parent.parent
 PAPERS = REPO / "papers"
 PASSES = 3  # revtex4-2 + hyperref: 2 to settle refs, a 3rd to settle page-dependent ones
@@ -51,7 +59,95 @@ def _bundle_dirs(names: list[str] | None) -> list[Path]:
                   if d.is_dir() and (d / "paper_draft.tex").is_file())
 
 
-def compile_one(bundle_dir: Path, keep: bool = False) -> tuple[bool, str, int | None]:
+#: Last compile verdict per draft, for EVERY `papers/<dir>` — the 21 bundles and the 43
+#: legacy drafts alike. Gitignored, like the sibling `.latex_compile_cache.json`: it is
+#: a local build cache, and a verdict from another machine's TeX install is not evidence
+#: about this one.
+GATE_CACHE = "papers/.compile_gate_cache.json"
+
+
+def _gate_cache() -> dict:
+    try:
+        loaded = json.loads((REPO / GATE_CACHE).read_text())
+        return loaded if isinstance(loaded, dict) else {}
+    except (OSError, json.JSONDecodeError):
+        return {}          # unreadable cache recompiles everything — fail-safe
+
+
+def _record_gate(name: str, ok: bool, pages: int | None) -> None:
+    cache = _gate_cache()
+    cache[name] = {"ok": ok, "pages": pages}
+    try:
+        (REPO / GATE_CACHE).write_text(json.dumps(cache, indent=2, sort_keys=True) + "\n")
+    except OSError:
+        pass               # a cache that cannot be written is a slow run, not a failure
+
+
+def _pdf_pages(pdf: Path) -> int | None:
+    """Page count of an existing PDF, or `None` if it cannot be read."""
+    if not shutil.which("pdfinfo") or not pdf.is_file():
+        return None
+    try:
+        info = subprocess.run(["pdfinfo", str(pdf)], capture_output=True,
+                              text=True, timeout=60).stdout
+    except (subprocess.SubprocessError, OSError):
+        return None
+    m = re.search(r"Pages:\s+(\d+)", info)
+    return int(m.group(1)) if m else None
+
+
+def _up_to_date(bundle_dir: Path, tex: Path) -> tuple[bool, int | None]:
+    """`(skip?, page count)` — may this draft's compile be skipped?
+
+    Two conditions, and the second is the one that matters:
+
+    1. the on-disk PDF is newer than every file in
+       `validate_helpers.draft_input_closure(tex)` — the single definition of "which
+       files change this draft", shared with `paper_latex_compiles`'s per-draft hash and
+       `bundle_manuscript_length`'s staleness test; **and**
+    2. **the last recorded verdict for this draft was a PASS** (`GATE_CACHE`).
+
+    ⚠️ **Condition 2 exists because skipping asserts the gate passed.** Without it, a
+    draft that genuinely FAILS the gate — D3 has 3 unresolved references in the rendered
+    PDF — would be reported `SKIPPED` and counted as passing on every run after the
+    first, because its PDF is perfectly fresh. A freshness heuristic that converts a
+    standing FAIL into a PASS is a gate that stops firing, which is the defect class this
+    repository keeps rediscovering (`viz_consistency` returning unconditional `True`;
+    Stage 9's "ALL figures PASS" over an empty set). A failing draft therefore recompiles
+    every run and keeps saying so.
+
+    ⚠️ **mtime, not content hash.** `touch`ing a source recompiles needlessly; that is
+    the cheap failure. The expensive one — a source edited without its mtime moving —
+    cannot happen through an editor. `--force` is the escape hatch for every case this
+    heuristic gets wrong, and is what to reach for when in any doubt.
+
+    The verdict lives in one sidecar covering **all 64 drafts**, not in
+    `bundle_metadata.json`, which only the 21 bundles have. Keying the skip off the
+    metadata blob meant the 43 legacy drafts could never record a verdict and so
+    recompiled forever — and since pdflatex stamps a creation date into the PDF, every
+    recompile rewrites the bytes. That is the churn this skip exists to stop, and
+    two-thirds of it sat outside the store.
+
+    Errs toward RECOMPILING everywhere else too: an unreadable closure, a missing PDF, or
+    no recorded verdict all return `False`.
+    """
+    pdf = bundle_dir / "paper_draft.pdf"
+    if not pdf.is_file():
+        return False, None
+    if _gate_cache().get(bundle_dir.name, {}).get("ok") is not True:
+        return False, None   # no recorded PASS -> no basis to skip
+    try:
+        newest = max(p.stat().st_mtime
+                     for p in _H.draft_input_closure(tex) if p.is_file())
+    except (OSError, ValueError):
+        return False, None
+    if pdf.stat().st_mtime < newest:
+        return False, None
+    return True, _pdf_pages(pdf)
+
+
+def compile_one(bundle_dir: Path, keep: bool = False,
+                force: bool = False) -> tuple[bool, str, int | None]:
     """Compile one bundle. Returns (passed, one-line report, page count or None).
 
     ⚠️ The page count used to be computed here and thrown away — it reached the
@@ -73,6 +169,12 @@ def compile_one(bundle_dir: Path, keep: bool = False) -> tuple[bool, str, int | 
     pdflatex = shutil.which("pdflatex")
     if pdflatex is None:
         return True, f"{bundle_dir.name}: SKIPPED (pdflatex not on PATH)", None
+
+    if not force:
+        fresh, pages = _up_to_date(bundle_dir, tex)
+        if fresh:
+            return True, (f"{bundle_dir.name}: SKIPPED (up to date) "
+                          f"pages={pages if pages is not None else '?'}"), pages
 
     out = Path(tempfile.mkdtemp(prefix=f"skeft-{bundle_dir.name}-"))
     try:
@@ -148,7 +250,7 @@ def compile_one(bundle_dir: Path, keep: bool = False) -> tuple[bool, str, int | 
             shutil.rmtree(out, ignore_errors=True)
 
 
-def _persist_pages(bundle_dir: Path, pages: int | None) -> None:
+def _persist_pages(bundle_dir: Path, pages: int | None, ok: bool | None = None) -> None:
     """Record `compiled_pages` in the bundle's metadata — CLI-only, by design.
 
     `bundle_manuscript_length` does NOT read this field; it measures the PDF
@@ -167,9 +269,13 @@ def _persist_pages(bundle_dir: Path, pages: int | None) -> None:
         md = json.loads(meta.read_text())
     except (OSError, json.JSONDecodeError):
         return
-    if md.get("compiled_pages") == pages:
+    if md.get("compiled_pages") == pages and md.get("compile_gate_ok") == ok:
         return
     md["compiled_pages"] = pages
+    # The gate verdict, so `_up_to_date` can refuse to skip a draft that last FAILED.
+    # A skip asserts the gate passed; without a recorded pass there is no basis for it.
+    if ok is not None:
+        md["compile_gate_ok"] = ok
     # ⚠️ `ensure_ascii=False` is REQUIRED, not cosmetic. These blobs carry `§` and `—`
     # in their apex `claims` strings; the default re-encodes every one as `\uXXXX`,
     # which rewrites ~450 lines of a file this function means to touch by one field.
@@ -184,19 +290,27 @@ def main() -> int:
     ap.add_argument("--all", action="store_true", help="every bundle with a paper_draft.tex")
     ap.add_argument("--keep-artifacts", action="store_true",
                     help="keep the temp build dir and print its path")
+    ap.add_argument("--force", action="store_true",
+                    help="recompile even when the PDF is newer than every input "
+                         "(bypasses the mtime skip; use whenever in doubt)")
     args = ap.parse_args()
 
     if not args.bundles and not args.all:
         ap.error("name at least one bundle, or pass --all")
 
+    def skipped(rep: str) -> bool:
+        return 'SKIPPED' in rep
+
     dirs = _bundle_dirs(None if args.all else args.bundles)
     failed = 0
     for d in dirs:
-        ok, report, pages = compile_one(d, keep=args.keep_artifacts)
+        ok, report, pages = compile_one(d, keep=args.keep_artifacts, force=args.force)
         print(report)
         if not ok:
             failed += 1
-        _persist_pages(d, pages)
+        _persist_pages(d, pages, ok)
+        if not skipped(report):
+            _record_gate(d.name, ok, pages)
     print(f"\n{len(dirs) - failed}/{len(dirs)} bundle(s) passed the compile gate")
     return 1 if failed else 0
 

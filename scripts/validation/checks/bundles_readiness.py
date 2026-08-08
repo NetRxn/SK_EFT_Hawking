@@ -505,16 +505,14 @@ def _measure_manuscript(code: str):
     length gate is to catch a draft that grew or shrank since anyone last looked.
 
     Staleness is judged against the draft's full input closure — the `.tex`, everything
-    it `\\input`s transitively, its figures and its `.bib`. That closure is computed by
-    `papers_prose._draft_input_closure`, imported rather than re-derived: a second
-    "which files can change this draft" implementation is precisely the duplication
-    `chain_canonicalize` nearly acquired (`REMEDIATION_PLAN.md` §5b). Local import
-    because no check module imports another at module level today; promote the helper
-    to `validate_helpers` if a third consumer appears.
+    it `\\input`s transitively, its figures and its `.bib` — via
+    `validate_helpers.draft_input_closure`, the single copy. It was promoted there when
+    `compile_bundle_pdf.py` became its third consumer; a second "which files can change
+    this draft" implementation is precisely the duplication `chain_canonicalize` nearly
+    acquired (`REMEDIATION_PLAN.md` §5b).
     """
     import shutil
     import subprocess
-    from validation.checks.papers_prose import _draft_input_closure
 
     paper_dir = _H.PAPERS_DIR / code
     tex, pdf = paper_dir / "paper_draft.tex", paper_dir / "paper_draft.pdf"
@@ -524,7 +522,7 @@ def _measure_manuscript(code: str):
         return None, None, ("no compiled PDF — run `uv run python "
                             f"scripts/compile_bundle_pdf.py {code}`")
     try:
-        newest = max(p.stat().st_mtime for p in _draft_input_closure(tex) if p.is_file())
+        newest = max(p.stat().st_mtime for p in _H.draft_input_closure(tex) if p.is_file())
     except (OSError, ValueError):
         return None, None, "input closure unreadable"
     if pdf.stat().st_mtime < newest:

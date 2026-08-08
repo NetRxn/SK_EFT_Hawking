@@ -1903,3 +1903,30 @@ notification (cf. memory `feedback_harness_cli_cwd_fails_open`).
 **NOT-AN-ASSERTION.** `KINDS_SUFFICIENT_FOR_GREEN = {full-adversarial}` is a policy choice, not a
 measured fact. It follows the audit's finding that `review_recorded` cannot distinguish evidence
 kinds, but which kinds *should* earn a green is a decision, and it is recorded here as one.
+
+## V48 — ADR-011 Phase 2b: the recompile skip (operator-approved) — 7 atoms, 1 SELF-CAUGHT
+
+| # | Proposition | Decider | Verbatim result |
+|---|---|---|---|
+| 1 | The promoted `draft_input_closure` behaves identically to the original | side-by-side on 4 real drafts | D3 2/2, D11 7/7, D12 5/5, I1 9/9 — **sorted path lists identical**. Verified BEFORE rewiring any consumer |
+| 2 | `compile_bundle_pdf.py` had no cache and recompiled unconditionally | read of `compile_one` + `main` | no skip path existed. CONFIRMED — the operator's inference was right, and restoring PDFs deferred churn rather than avoiding it |
+| 3 | pdflatex output is not byte-stable across runs | two full `--all` runs on unchanged sources | 45 tracked PDFs dirty each time ⇒ a creation timestamp is embedded. This is why the churn was permanent, not one-time |
+| 4 | The skip covers all 64 drafts, not just the 21 bundles | `--all`, twice | run 2 skipped **47 of 64** — exactly the 47 that pass the gate. PDF churn **45 → 16** |
+| 5 | A draft that FAILS the gate is never skipped | D3, run twice | `FAIL … unresolved_refs_in_pdf=3` both times. D3 recompiles forever, by design |
+| 6 | A draft that PASSES records its verdict then skips | D11, run twice | `OK` then `SKIPPED (up to date) pages=9` |
+| 7 | A module-level `X = _H.Y` alias is forbidden in a check module | `test_validate_public_surface` | my alias was rejected by the existing contract; removed, call site reaches `_H` by attribute |
+
+**⚠️ SELF-CAUGHT BEFORE SHIPPING — the skip masked a standing FAIL.** The first implementation
+returned `passed=True` on skip, so D3 — which genuinely fails with 3 unresolved references and whose
+PDF is perfectly fresh — would have reported `SKIPPED` and been counted as passing on every run
+after the first. A freshness heuristic that converts a standing FAIL into a PASS is a gate that
+stops firing. Fixed by requiring a **recorded PASS** before a skip is permitted; the load-bearing
+test asserts it.
+
+**⚠️ SECOND CORRECTION, same change.** The verdict was first stored in `bundle_metadata.json`,
+which only the 21 bundles have — so the 43 legacy drafts could never record one and recompiled
+forever, leaving two-thirds of the churn unaddressed. Moved to one sidecar covering all 64.
+
+**NOT-AN-ASSERTION.** "mtime, not content hash" is a design choice with a stated failure mode
+(`touch` recompiles needlessly), not a claim about the tree. `--force` is the escape the operator
+made a condition of approval.

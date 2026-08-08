@@ -79,7 +79,8 @@ papers/<bundle>/
 | `title` | string | freeform | created at init from `PAPER_STRATEGY.md` |
 | `target_journal` | string | freeform (e.g., `"PRL"`, `"PRD"`, `"CPC \| Phys. Rep."`) | created at init from `PAPER_STRATEGY.md` |
 | `length_target` | object \| null | `{unit, floor, ceiling, source}` — see below | **hand-declared** (ADR-011 §Phase 1) |
-| `compiled_pages` | int \| null | ≥1 | `compile_bundle_pdf.py` on every successful compile |
+| `compiled_pages` | int \| null | ≥1 | `compile_bundle_pdf.py` on every compile |
+| `compile_gate_ok` | bool \| null | — | `compile_bundle_pdf.py`; the last gate verdict. **A `true` here is what licenses the recompile skip** — a draft whose last verdict was FAIL recompiles every run, because skipping asserts the gate passed |
 | `phase7_subphase` | string | `7a`, `7b`, `7c`, ... | set by `bundle_source_manifest.py` based on roadmap |
 | `stage{9,10,13}_status` | string | `green` \| `yellow` \| `red` \| `pending` \| `pending-redo` \| `skeleton` \| `not_started` | **`scripts/record_review.py`** (ADR-011 Phase 2); `pending` also at init, and on append |
 | `stage13_review_kind` | string \| null | `full-adversarial` \| `attribution-sweep` \| `section-scoped` \| `figure-only` | `record_review.py`; required for any Stage-13 verdict |

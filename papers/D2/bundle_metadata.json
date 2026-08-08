@@ -269,5 +269,6 @@
     "ceiling": 45,
     "source": "PAPER_STRATEGY.md §6"
   },
-  "compiled_pages": 11
+  "compiled_pages": 11,
+  "compile_gate_ok": true
 }
