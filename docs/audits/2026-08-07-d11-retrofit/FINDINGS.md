@@ -44,6 +44,19 @@ written — see §5.
 
 ---
 
+## 1b. ADR-010 §D2 purpose statement — re-derived from the draft and the Lean
+
+| field | statement |
+|---|---|
+| **Audience** | Condensed-matter theorists working on topological band structure, phononics, non-Hermitian optics and metamaterials, plus the formal-methods community — the second group because the *method* is the transferable part. |
+| **Venue** | PRD \| PRX Quantum \| PRB per the metadata. PRB is the honest fit: the content is band theory and effective-medium physics, not high-energy. |
+| **The claim only this container can make** | **That machine-checked condensed-matter conclusions do not need continuum differential geometry.** Every layer replaces an analytic construction with a discrete or algebraic certificate a kernel can check outright — an FHS lattice Chern number instead of a curvature integral, rational inequalities instead of a spectral gap, two computed eigenspaces instead of a Jordan form, an ordering plus an exact gap instead of a homogenization limit — and in each case the replacement still reaches the physical conclusion. No sibling makes this claim: D4 and D6 use category theory and QEC, D10 uses PhysLib's unbounded-operator API. D11 deliberately uses neither. |
+| **Substrate** | 22 modules, 413 declarations, depth 6, 47 private truncations: `TopologicalBand/*` (8), `GrapheneBand/*` (4), `AcousticBlochOperator`, `PhononicBandGap`, `BandGapEnclosure`, `MaxwellGarnett`, `EffectiveMediumBounds`, `EffectiveModuli`, `ExceptionalPoint`, `NonHermitianBloch`, `NonHermitianWinding`, `BlochBundle`. **The closure reproduces `update_counts.py`'s hand-listed `_D11_MODULES` exactly, both directions** (TODO-D10). |
+| **Honest size vs charter** | 670 lines against a ~40pp Tier-1 charter — materially short, and §3 locates the shortfall precisely: **≈69 proved declarations in D11's own modules are named in no draft in the portfolio.** The physics exists; the manuscript does not report it. |
+| **Boundary failure?** | **No, and emphatically so.** D11's closure intersects every other declared bundle in **zero** declarations. Its purpose is statable, and its substrate reachable, entirely on its own. |
+
+---
+
 ## 2. What the closure confirmed
 
 **The derived module set is exactly the hand-maintained roster — both directions, zero

@@ -1226,3 +1226,29 @@ bundle reaches W," and the second does not follow from the first.
 ⚠️ **Both corrections this session ran in the same direction — I under-credited the corpus.** The
 `native_decide` error made the library look purer than it is; this one made it look less connected
 than it is. **Findings that diminish the object are not automatically the conservative choice.**
+
+---
+
+## V28 — DONE-condition backfill: purpose statements + the §D4 evidence ledger
+
+Not a measurement pass. Two DONE-condition items were being skipped and are now discharged for
+every bundle declared so far.
+
+| # | atom | decider | result |
+|---|---|---|---|
+| C1 | **SET:** every bundle I declared now carries an ADR-010 §D2 purpose statement | all five earlier FINDINGS docs (D11, D10, D1, F, D3) plus D2's — enumerated, not sampled | ✓ 6 of 6 |
+| C2 | Each states all five required fields: audience, venue, the claim only this container can make, substrate, honest size vs charter | the §D2 text, field by field | ✓ plus an explicit boundary-failure verdict, which §D2 also requires |
+| C3 | **SET:** boundary failures named where they exist | every declared bundle | ✓ **F** (by genre — a survey's purpose is definitionally unstatable without siblings), **D10** (partial — §5.3 needs D9), **D6** (partial — borrows 133, claims ~19 %); the other six: no |
+| C4 | §D4 evidence assembled for all four named proposals, recommendation NOT made | `docs/audits/2026-08-07-d4-merge-evidence/EVIDENCE.md` | ✓ D6+D9 supported-but-relocated · D6+D9+D12 refuted · D10+D11 refuted · E1+E2 and D4→D8 **not decided** (both undeclared) |
+| C5 | Every "0" in that ledger against an undeclared bundle is marked **unmeasurable, not empty** | the file's §4 | ✓ — and the warning is not theoretical: D3 ∩ D2 read as unmeasurable-0 and turned out to be **3** |
+
+⚠️ **NOT-AN-ASSERTION.** *"F cannot be redrafted until the bundles it surveys are measured"* is a
+**sequencing recommendation**, not a proposition with a truth value. It is recorded as guidance in
+the SHAPE queue and the §D4 ledger, and it is the operator's to accept or reject.
+
+⚠️ **Why these were missed for five bundles.** The FINDINGS docs answered *"what did the closure
+show?"* — the interesting question — while §D2's purpose statement answers *"what is this
+container for?"*, which the closure cannot decide and which therefore never surfaced as a
+measurement. **A DONE condition whose output is not a measurement is the one a measurement-driven
+loop drops.** The fix that stuck was writing the purpose statement into D2's FINDINGS *before* its
+findings sections, so the next bundle's template already contains it.

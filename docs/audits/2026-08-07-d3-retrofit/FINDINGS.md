@@ -26,6 +26,19 @@ independently (`apexes_are_theorems`).
 
 ---
 
+## 1b. ADR-010 §D2 purpose statement — re-derived from the draft and the Lean
+
+| field | statement |
+|---|---|
+| **Audience** | Emergent-gravity and induced-gravity theorists, black-hole thermodynamicists, and readers who want a substrate's predictive boundary stated rather than gestured at. |
+| **Venue** | PRD long article. At 2,885 lines it is the closest in the portfolio to actually being one. |
+| **The claim only this container can make** | **That a single heat-kernel calibration propagates across six observables without an additional dial** — Newton's constant, GW propagation, the Bekenstein–Hawking prefactor, the BCH regime-partition mass, the emergent cosmological constant, and Einstein–Cartan torsion — and that **three quantitative closures force the ADW route** rather than selecting it by fiat. The draft is explicit that *"this single-coefficient propagation is the synthesis-level claim that no individual source paper makes end-to-end."* |
+| **Substrate** | 37 modules, 332 declarations, depth 3, 5 private truncations — from `ADWMechanism` and `HeatKernelExpansion` through `GravitationalWaves`, `BHEntropyMicroscopic`, `BHThermodynamicsFourLaws`, `HorizonWittBoundary`, `InducedGravityEntropy`, `GammaStirling`, the QCD register (`CenterSymmetryConfinement`, `ChiralSSB_QCD`, `CFLChiralLagrangian`) and the five Lorentzian-geometry appendix modules. |
+| **Honest size vs charter** | 2,885 lines against ~50pp for the heaviest Tier-1 — the closest to charter of any bundle measured so far, and its §28.3 tracked-hypothesis registry is the disclosure standard the others should copy. Seven registered `Lift-section` events nonetheless contributed zero words (§4). |
+| **Boundary failure?** | **No.** D3's purpose is statable entirely on its own substrate; its apexes reach all 37 modules unaided. It *supplies* substrate to F (126 declarations) and shares 3 with D2 through the Witt bridge, but consumes nothing it does not claim. |
+
+---
+
 ## 2. ⚠️ The finding: "the substrate is one object" is asserted, never formalized
 
 The program's architectural claim — stated in D3 §1, D3 §28.1, and elevated by F to *"the
@@ -62,10 +75,22 @@ Everything else in D3 that carries this much weight ships a theorem.
 from [Roehm2026Modular]"* — a citation to a companion paper. F §1.4 and §12.1 state it flatly as
 an identity and label it F's own novel contribution. Filed as **TODO-D16**.
 
-⚠️ **Not yet measurable:** D2 and L2 are undeclared, so `D3 ∩ D2` cannot be computed. The
-dependency check above is independent of declaration and already answers the question at module
-granularity — no D3 gravity-side declaration reaches the anomaly-side tree at all — but the
-closure-level confirmation waits on D2's retrofit.
+❌ **CORRECTED 2026-08-07 (D2 retrofit) — the last sentence of the table above was too broad.**
+It read *"no D3 gravity-side declaration reaches the anomaly-side tree at all."* **False.**
+D2's closure makes it measurable: **D2 ∩ D3 = 3**, all in `SKEFTHawking.GenerationConstraint`,
+and a per-apex walk over all 89 of D3's apexes shows exactly one reaches them —
+**`horizon_wittTrivial_iff_three_generations`**. D3 §7.3's own prose (*"ties the horizon boundary
+condition to the program's three-generation result through the same Witt invariant"*) **is
+witnessed.**
+
+**The narrower claim survives and is the one this section should have made:** the Sakharov
+`N_f` is a *Dirac-flavour count in a heat-kernel expansion*; the `N_f` in `c₋ = 8 N_f` is a
+*generation count*; those two are what F asserts identical, and **that** has no witness — the
+Sakharov/heat-kernel chain (19 declarations / 4 modules) intersects D2 in **0** and never reaches
+`GenerationConstraint`. The bridge that exists runs through the horizon central charge.
+
+The probe was right; the sentence covering it was not. Full working:
+`docs/audits/2026-08-07-d2-retrofit/FINDINGS.md` §3, ledger V27 B2.
 
 ---
 

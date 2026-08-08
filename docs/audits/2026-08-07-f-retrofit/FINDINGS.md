@@ -26,6 +26,19 @@ entries and its substrate-identity synthesis claim — not everything its siblin
 
 ---
 
+## 1b. ADR-010 §D2 purpose statement — re-derived from the draft and the Lean
+
+| field | statement |
+|---|---|
+| **Audience** | Readers who want the whole program in one document — referees assessing the portfolio, and researchers deciding which sibling to read. |
+| **Venue** | Living Rev. Relativity \| Phys. Rep., per the metadata. A review venue is right; the length is not yet. |
+| **The claim only this container can make** | **The substrate-identity synthesis** — that one ADW object with `N_f = 16` drives the emergent-gravity, analog-Hawking, anomaly and dark-sector threads, and that the cross-thread identities close without an additional mechanism. F says this is *"structurally absent from any individual sibling bundle,"* and that is true: no sibling holds more than one thread. ⚠️ **It is also the claim with the weakest backing** — TODO-D16 records that the Sakharov-`N_f` half of it has no Lean witness. |
+| **Substrate** | 27 modules, 221 declarations, depth 5. Overwhelmingly its siblings': **F ∩ D3 = 126**, F ∩ D1 = 27, and **zero** against D6, D9, D10, D11, D12, L2. |
+| **Honest size vs charter** | 2,494 lines against a Tier-0 charter of ~80–150pp — the largest absolute shortfall in the portfolio, and compounded by §2: the document surveys a 17-bundle program when 21 exist. |
+| **Boundary failure?** | ⚠️ **Yes — and by construction, which is why it must be stated rather than treated as a defect.** A survey's purpose *cannot* be stated without its siblings' substrate; 126 of its 221 declarations are D3's. §D2's rule names this a boundary failure, and for F the honest reading is that the rule is diagnosing the genre. The actionable consequence is sequencing: **F cannot be redrafted until the bundles it surveys are measured**, which makes the retrofit its prerequisite. |
+
+---
+
 ## 2. ⚠️ The flagship's architecture section is four bundles out of date
 
 F states its scope repeatedly and consistently: *"the sixteen sibling-bundle threads"*,

@@ -30,6 +30,19 @@ D11 disclaims it — and the two closures agree.
 
 ---
 
+## 1b. ADR-010 §D2 purpose statement — re-derived from the draft and the Lean
+
+| field | statement |
+|---|---|
+| **Audience** | The analog-gravity experimental community across three platforms — cold-atom BEC, polariton microcavity, graphene Dirac fluid — plus theorists working dissipative EFT. |
+| **Venue** | PRD long article, per the metadata; the three-platform scope and the exact-WKB apparatus need the length. |
+| **The claim only this container can make** | **That the analog-Hawking prediction is a consequence of horizon kinematics rather than of microscopic constitution — made quantitative.** Per-platform predictions exist separately (the draft cites five wave drafts); what is D1's alone is the unified architecture: *one* SK-EFT machine, three platforms spanning ten orders of magnitude in `T_H`, three distinct leading observables, and a measured theorem-reuse fraction as the universality metric. |
+| **Substrate** | 18 modules, 249 declarations, depth 3: `AcousticMetric`, `HawkingUniversality`, `SecondOrderSK`, `SKDoubling`, `CGLTransform`, `WKBConnection`, `PolaritonTier1`, `DiracFluidMetric`, `DiracFluidWKB`, `QuasiOneDReduction`, `GrapheneNoiseFormula`, `KibbleZurekUnruh`, `AnalogHawkingDemarcation`, `BPLDPSimulability`, `ChernBridge`, and others. **249 is the honest denominator for the abstract's project-scoped theorem figure** (§2). |
+| **Honest size vs charter** | 1,234 lines against ~40pp — short, and §4 names part of the gap: four registered `Lift-section` events contributed zero words. |
+| **Boundary failure?** | **No.** D1 ∩ every other declared bundle = 0. It cites E1, E2, I1 and F, but every citation is a forward reference from a self-contained argument. Notably D1 claims `ChernBridge`, which **D11 explicitly disclaims** and attributes to a companion bundle — the two closures agree, which is the ideal case. |
+
+---
+
 ## 2. The honest denominator for TODO-D9
 
 D1's abstract says: *"End-to-end, `\substantivetheorems{}` Lean theorems are machine-verified."*

@@ -30,6 +30,19 @@ established. `lindbladGenerator` and `lindbladLiouvillian` are `def`s and exclud
 
 ---
 
+## 1b. ADR-010 §D2 purpose statement — re-derived from the draft and the Lean
+
+| field | statement |
+|---|---|
+| **Audience** | Electronic-structure and open-quantum-systems practitioners who rely on NEGF/Landauer, DFT and GKSL as settled foundations, plus formal-methods researchers looking for a reusable reference layer. |
+| **Venue** | PRD \| PRX Quantum \| J. Chem. Phys. J. Chem. Phys. is the honest fit for the DFT and open-system content. |
+| **The claim only this container can make** | **A single verified stack across three pillars of the simulation literature that are normally formalised — if at all — separately**: NEGF transport, DFT foundations, and Lindblad dynamics. The claim that survives strongest scrutiny is §4.1's *unconditional* essential self-adjointness of the molecular many-body Coulomb Hamiltonian, with all three analytic inputs discharged. No sibling covers this ground. |
+| **Substrate** | 17 modules, 311 declarations, depth 13: `NEGFGreenFunction`, `LandauerConductance`, `NEGFTransportCertificate`, `MolecularHamiltonian`, `KineticEssentialSelfAdjoint`, `CoulombRelativeBound`, `HohenbergKohnUniqueness`, `HohenbergKohnVariational`, `LevyLiebFunctional`, `LindbladGenerator`, `GKSLStructure`, `LindbladSemigroup`, `LindbladCPSemigroup`, `DampedTwoLevel`, plus `QuantumNetwork.{MixedState, CPTPChannel, NumericalBounds}`. |
+| **Honest size vs charter** | 315 lines against a ~40pp Tier-1 charter — the largest proportional shortfall in the portfolio. The bundle's own metadata says so: *"a tight 4pp synthesis; expansion toward the ~40pp target + figures is future work."* |
+| **Boundary failure?** | ⚠️ **Partial, and it must be named.** §5.3's contractivity result is not statable without D9's substrate — **50 declarations in `QuantumNetwork.*`, every one claimed by D9's apexes.** D10's *purpose* survives (the DFT and NEGF pillars are wholly its own), but one of its three headline layers rests on a sibling's container. Per §D2's rule this is a boundary failure of the **partial** kind: the target is viable, one section is not self-contained. |
+
+---
+
 ## 2. ✅ ADR-010's second untested merge is answered: **D10 ∩ D11 = 0**
 
 ADR-010 §What-remains pairs D10 with D11 as an untested merge candidate. Both are now declared,
