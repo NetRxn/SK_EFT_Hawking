@@ -1196,3 +1196,33 @@ makes it look worse.** Every widening step should have lowered confidence, not r
 **Before filing an absence, name the field or tool that would show presence, and prove it can —
 by finding a known-present instance with it.** An absence measured with an instrument never
 demonstrated to detect the thing is not evidence.
+
+---
+
+## V27 — the D2 apex retrofit — 7 atoms, 1 PRIOR atom corrected
+
+**P** = perishable, **D** = durable.
+
+| # | atom | decided by | result |
+|---|---|---|---|
+| B1 | D2's draft is 1,403 lines and was read in full, including the commented stubs after the bibliography | the file | ✓ |
+| B2 | ❌ **CORRECTS V25 A4's scope.** V25 said *"no D3 gravity-side declaration reaches the anomaly-side tree at all"* | **D2 ∩ D3**, then a per-apex closure walk over **all 89** of D3's apexes | **FALSE as stated** — 3 shared `GenerationConstraint` declarations, reached by exactly one apex, `horizon_wittTrivial_iff_three_generations`. D3 §7.3's prose claim is witnessed (P) |
+| B3 | The **narrowed** claim: the Sakharov `N_f` identity has no witness | the Sakharov/heat-kernel chain walked separately — 19 decls / 4 modules | ✓ ∩ D2 = **0**, never reaches `GenerationConstraint` (P) |
+| B4 | **SET:** D2 ∩ every other declared bundle | D1, D3, D6, D9, D10, D11, D12, F, L2 — all nine | ✓ L2 **391**, D3 **3**, D12 **3**, rest **0** (D) |
+| B5 | L2 is a near-subset of D2 | set difference both ways | ✓ 391 of L2's 430 inside D2; the 39 outside are the Ext modules + `WangBridge` (D) |
+| B6 | D2's `native_decide` disclosure is TRUE | the draft against the corpus figure | ✓ consistent with the 546-declaration closure — this is the draft that caught V26 (D) |
+| B7 | `dai_freed_spin_z4` is disclaimed by D2 as a trivially-discharged placeholder, matching F's disposition | both drafts | ✓ excluded from apexes on the drafts' own instruction (D) |
+
+⚠️ **B2 is a different failure from V26, and the distinction is the point.** V26 was a **wrong
+instrument** — a field that could not detect the thing. B2 was a **right probe reported at wrong
+scope**: I searched D3's *calibration* modules and wrote the conclusion about D3's *gravity side*.
+Both produced a false absence; only one would have been caught by seeding a known-present
+instance.
+
+**The rule B2 adds:** *state the scope the probe actually covered, in the sentence that reports
+it.* "No declaration in modules X, Y, Z reaches W" is a different claim from "nothing in this
+bundle reaches W," and the second does not follow from the first.
+
+⚠️ **Both corrections this session ran in the same direction — I under-credited the corpus.** The
+`native_decide` error made the library look purer than it is; this one made it look less connected
+than it is. **Findings that diminish the object are not automatically the conservative choice.**

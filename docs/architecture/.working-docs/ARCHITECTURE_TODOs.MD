@@ -631,7 +631,9 @@ violated for the fifth time in this workstream.
   reads `Lift-section`**, so any count of absorptions taken from it over-counts D1 by four.
 - ⚠️ **BROADENED 2026-08-07 — eleven events across two bundles.** D3's `append_log.json` records
   **seven** more empty `Lift-section` events (6n W1a → §6, 6n W2c → §3, 6o W1a → §3, 6o W1b → §6,
-  6o W3b → §6, 6o W1c → §10, 6o W2a → §17), out of 26 `Lift-section` events total. The named
+  6o W3b → §6, 6o W1c → §10, 6o W2a → §17), out of 26 `Lift-section` events total. **D2 adds two
+  more** — *"SymTFT audit substrate"* and *"APS η-invariant cross-bridge to Z16 Dai-Freed"*, both
+  commented-out stubs after its bibliography — so the pattern spans **three** bundles. The named
   content is substantial and unpublished anywhere: a Kerr-Schild double-copy on Petrov-D acoustic
   geometry with a three-obstruction BCJ no-go, an APS η-invariant substrate for analog horizons,
   an Itô/LDP cross-bridge, and a dissipative-SK-EFT bootstrap-uniqueness no-go.
@@ -689,11 +691,24 @@ violated for the fifth time in this workstream.
 - **Where:** `papers/D3/paper_draft.tex` §1 and §28.1; `papers/F/paper_draft.tex` abstract, §1.4,
   §6.1 and §12.1 — where F elevates it to *"the synthesis claim NEW to this flagship, absent from
   any individual sibling bundle and load-bearing for the architectural argument."*
-- **Three measurements, none finding a link** (2026-08-07): **D3 ∩ D1 = 0** at closure level; **no**
-  declaration in D3's heat-kernel / linearised-EFE / coefficient-match modules depends on any
-  `Z16*`, `Modular*`, `SPT*` or `Chirality*` module; and **no** declaration anywhere bridges an
-  `N_f` to an anomaly/modular/generation count (the three near-misses are lattice-signature and
-  SymTFT theorems about `16 ∣ σ`, a different statement).
+- ❌ **NARROWED 2026-08-07 after D2's retrofit — the original filing was too broad.** It said *"no
+  D3 gravity-side declaration reaches the anomaly-side tree at all."* **False.** D2's closure makes
+  it measurable: **D2 ∩ D3 = 3**, all in `SKEFTHawking.GenerationConstraint`
+  (`div_24_8n_implies_div_3_n`, `div_3_n_implies_div_24_8n`, `generation_constraint_iff`), and a
+  per-apex walk over all 89 of D3's apexes shows exactly one reaches them:
+  **`horizon_wittTrivial_iff_three_generations`**. D3 §7.3's prose — *"ties the horizon boundary
+  condition to the program's three-generation result through the same Witt invariant"* — **is
+  witnessed.**
+- **What still stands, and it is the claim this item should always have made:** the `N_f` in the
+  **Sakharov coefficient** is a *Dirac-flavour count in a heat-kernel expansion*; the `N_f` in
+  `c₋ = 8 N_f` is a *generation count*. **Those two are what F asserts to be identical, and that
+  has no witness.** Measured: the Sakharov/heat-kernel chain (5 apexes → 19 declarations across
+  `HeatKernelExpansion`, `LinearizedEFE`, `MicroscopicCoefficientMatch`, `EinsteinCartanExtension`)
+  intersects D2's closure in **0** and never reaches `GenerationConstraint`. The bridge that exists
+  runs through the horizon central charge, not through the Sakharov coefficient.
+- **Also measured:** D3 ∩ D1 = 0; no declaration anywhere bridges the *Sakharov* `N_f` to an
+  anomaly/modular/generation count (the three near-misses are lattice-signature and SymTFT theorems
+  about `16 ∣ σ`, a different statement).
 - ⚠️ **This does NOT say the claim is false.** Two formalizations of different facets of one
   physical object can have disjoint proof DAGs; a shared declaration is a sufficient witness for
   identity, not a necessary one. **It says the claim is unformalized in a corpus whose selling
@@ -706,9 +721,10 @@ violated for the fifth time in this workstream.
   substrate could ship; or (b) **scope the prose** to what is actually established: the same
   numeral appears in both derivations, and the identification is a modelling claim. Operator's
   call under ADR-010 C5.
-- ⚠️ **Not yet fully measurable:** D2 and L2 are undeclared, so `D3 ∩ D2` cannot be computed. The
-  module-level dependency check is independent of declaration and already answers it, but the
-  closure-level confirmation waits on D2's retrofit — **re-run it there.**
+- ✅ **Re-run at D2's retrofit, as this item required — and it changed the finding.** The lesson:
+  a narrow probe (D3's *calibration* modules) was reported at wide scope (D3's *gravity side*).
+  The probe was right; the sentence covering it was not. Full working:
+  `docs/audits/2026-08-07-d2-retrofit/FINDINGS.md` §3.
 - Full working: `docs/audits/2026-08-07-d3-retrofit/FINDINGS.md` §2.
 
 ### D17. D3's tracked-hypothesis registry contains two dangling `\ref`s — OPEN (minor)

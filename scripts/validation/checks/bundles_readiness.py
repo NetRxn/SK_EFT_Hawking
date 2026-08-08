@@ -1042,7 +1042,12 @@ def check_bundle_registry_consistency() -> CheckResult:
 #:           FINDINGS.md) — the heaviest bundle. D3 ∩ F = 126 (F's substrate is largely
 #:           D3's) but D3 ∩ D1 = 0: the program's "the substrate is one object"
 #:           synthesis claim has no Lean witness.
-UNDECLARED_APEX_CEILING = 12
+#: 12 -> 11: D2 retrofitted 2026-08-07 (47 apexes; docs/audits/2026-08-07-d2-retrofit/
+#:           FINDINGS.md). Narrowed TODO-D16 — a Witt-invariant bridge D3<->D2 DOES
+#:           exist (3 shared GenerationConstraint declarations); it is the Sakharov
+#:           N_f identity specifically that has no witness. Also L2 ∩ D2 = 391 of
+#:           L2's 430.
+UNDECLARED_APEX_CEILING = 11
 
 
 @register_check(
