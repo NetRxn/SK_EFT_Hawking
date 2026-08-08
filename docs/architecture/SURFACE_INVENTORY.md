@@ -152,7 +152,7 @@ success; for a `blocked` default it is a blocker no evidence supports. Guarded b
 | claude-code | `PreToolUse` | `WebSearch|WebFetch` | `uv run --no-sync python "${CLAUDE_PLUGIN_ROOT}/scripts/harness_web_egress_guard.py" || printf '%s' '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionR` |
 | git | `pre-commit` | `-` | `.git/hooks/pre-commit` |
 
-## Agents — 8
+## Agents — 9
 
 | agent | model | purpose |
 |---|---|---|
@@ -163,6 +163,7 @@ success; for a `blocked` default it is a blocker no evidence supports. Guarded b
 | [`harvest-consolidator`](../../.claude/plugins/skeft-qa/agents/harvest-consolidator.md) | opus | Consolidate harvest-extractor candidates into the System-2 register — register-AWARE filing & combining. Dispatched by the harvest skill. |
 | [`harvest-extractor`](../../.claude/plugins/skeft-qa/agents/harvest-extractor.md) | haiku | Extract dev-process/harness signal from a /goal transcript span — including the pre-vs-post-compact delta across boundaries. Dispatched by the harvest skill. |
 | [`lean-worker`](../../.claude/plugins/skeft-qa/agents/lean-worker.md) | inherit | Prove ONE independent Lean 4 sub-chain in a pre-built parallel worktree slot. The lead assigns you a slot N (wt1/wt2/wt3); you get your OWN fast, build-isolated lean-lsp via mcp__l |
+| [`prose-reviewer`](../../.claude/plugins/skeft-qa/agents/prose-reviewer.md) | opus | Use this agent to read a publication bundle draft start to finish as a referee at its named venue would, and report where the manuscript fails to carry a reader. This is the fourth |
 | [`research-scout`](../../.claude/plugins/skeft-qa/agents/research-scout.md) | inherit | Read-only web reconnaissance for a goal-mode loop. Given ONE focused, already-sanitized research question, find the answer in whitelisted scholarly sources and return a STRUCTURED, |
 
 ## Commands — 6

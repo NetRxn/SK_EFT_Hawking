@@ -2038,3 +2038,25 @@ E2's two nested scope corrections both survive with their `ChernBridge.lean` lin
 
 **NOT-AN-ASSERTION.** "13 hits" and "90 hits" are measurements of today's corpus, not durable
 facts. Both move as drafts change, which is the point of the gate.
+
+## V53 — ADR-011 Phase 5: the authoring skill and the fourth reviewer — 6 atoms, 0 corrected
+
+| # | Proposition | Decider | Verbatim result |
+|---|---|---|---|
+| 1 | The pipeline has reviewers but no authoring guidance | read of the plugin + lift procedure | 3 reviewer agents, 0 authoring surfaces. Drafting rules lived in `BUNDLE_LIFT_PROCEDURE` §7 as a bookkeeping checklist. The operator's diagnosis was right |
+| 2 | `references/` is an established convention here, not an invention | `ls` over `skills/` | `goal-dev` and `goal-prompt` both carry one |
+| 3 | The new skill meets the `plugin-dev` criteria the others miss | re-audit of all 7 skills | `paper-authoring`: **661 words, third-person description, 0 second-person, 0 broken refs.** The other six all fail the third-person rule; `goal-prompt` is 2,784 words with 2 broken reference links |
+| 4 | `SURFACE_INVENTORY` picks up new plugin components without hand-editing | regenerate + diff | 2 insertions, both automatic. The hand-maintained `README.md` rosters do NOT, and were updated by hand |
+| 5 | The new components break nothing | plugin suite + repo suite | `.claude/plugins/skeft-qa/tests/` 156 passed; repo 5,757 passed |
+| 6 | Stage 10 gains a sub-gate without renumbering | design check against C1 | `prose-reviewer` lands at lift §7.5 inside Stage 10. No `stage*_status` field, `gate_precheck` name, or paper-15 table row changes |
+
+**The design decision worth recording** is the resolution of the operator's shared-reference
+proposal against C5 (*the decider must not be the generator*): **shared floor, divergent
+ceiling.** Both surfaces read `prohibited-patterns.md`, so a rule cannot mean one thing while
+writing and another while reviewing. The reviewer alone carries reader-outcome questions
+(*where would a reader stop*), and the author is deliberately never given them, because a
+generator optimises against any checklist it can see. Stated in both files.
+
+**NOT-AN-ASSERTION.** The frequency table in `prohibited-patterns.md` (~45–55% paired asides,
+~30–45% colon-substitutes) is the six sweep agents' judgment aggregated across disjoint file
+sets, not a measurement I re-derived. It is labelled as field evidence in the reference.

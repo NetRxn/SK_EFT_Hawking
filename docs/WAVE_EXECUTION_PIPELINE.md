@@ -452,6 +452,18 @@ The agent reports:
 
 Results saved to `papers/paper<N>/claims_review.json`.
 
+**Stage 10 has two review sub-gates, and the read-through comes first.** The claims review
+below is one; the whole-document read-through (`prose-reviewer`, ADR-011 Phase 5) is the
+other, and it runs before both it and Stage 9 — see `BUNDLE_LIFT_PROCEDURE.md` §7.5.
+Neither is a stage of its own: **there is no Stage 10a and no renumbering**, because the
+stage numbers are load-bearing in four places (the `stage{9,10,13}_status` fields, the
+`gate_precheck.py` vocabulary, paper 15's Table 1, and every document citing "Stage 13").
+
+Drafting guidance lives in the `skeft-qa:paper-authoring` skill. It is the generative
+counterpart to the reviewer, and both read the same
+`references/prohibited-patterns.md` so a rule cannot mean one thing while writing and
+another while reviewing. The reviewer alone carries reader-outcome questions.
+
 **Reader-facing voice (ADR-011 Phase 3).** Two prohibitions apply to every draft, both
 deterministic and both enforced:
 

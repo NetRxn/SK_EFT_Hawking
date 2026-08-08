@@ -209,6 +209,40 @@ This is the substantive bundle work. The `\section` skeleton from §3 is just st
 
 **Reviewer scope (per user direction 2026-05-01):** Stages 9 / 10 / 13 (§§8–10 below) review the **bundle paper**, not the source per-paper drafts. Findings on `papers/paperN_*/` are not in Phase 7's scope; per-paper material that gets synthesized into a bundle is reviewed via the bundle's own stage triple.
 
+### §7.5. Whole-document read-through (mandatory, before §8) — F-04
+
+**Skill (drafting):** `skeft-qa:paper-authoring`. Read it, and its
+`references/prohibited-patterns.md`, **before** authoring §7, not after.
+
+**Agent (review):** `prose-reviewer`. One pass, reading the draft start to finish as a
+referee at the venue named in `bundle_metadata.json.target_journal` who has never seen the
+repository. It answers five questions and blocks on any `no`: does the abstract lead with
+the result; does each section advance a single argument; is every symbol defined before use;
+is any sentence addressed to a reviewer or to a prior draft rather than to a reader; is the
+compiled length within the charter's budget.
+
+**Its output is a restructuring instruction, not a finding list.** That is why it is not the
+adversarial-reviewer, whose output is findings-only by design.
+
+**Why here.** §§8–10 verify that the manuscript is *true*: figures render, claims trace to
+theorems, citations support their sentences. Nothing asks whether it *lands*. Sending an
+unreadable draft to Stage 13 spends the most expensive reviewer in the pipeline on prose
+defects.
+
+**Deterministic floor, run first** (cheap, and it stops the agent wasting a pass on what a
+regex can find):
+
+```bash
+uv run python scripts/validate.py --check bundle_prose_em_dash_free \
+    --check bundle_reader_facing_voice --check bundle_manuscript_length
+```
+
+⚠️ **The floor is not the review.** Both the skill and the agent read the same
+`prohibited-patterns.md`, so a rule cannot drift between writing and review; but the agent
+additionally carries reader-outcome questions the author is deliberately **not** given,
+because a generator optimises against any checklist it can see. A reviewer briefed entirely
+off the author's rules would pass anything the author produced.
+
 ### §8. Stage 9 — figure review (LLM visual review)
 
 **Agent:** `skeft-qa:figure-reviewer` (plugin agent at `.claude/plugins/skeft-qa/agents/figure-reviewer.md`).

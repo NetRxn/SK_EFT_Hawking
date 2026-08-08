@@ -21,6 +21,7 @@ notebook is finalized.
 | `adversarial-reviewer` | Fresh-context paper audit against the readiness-gate taxonomy: wrong-target citations, parameter drift, placeholder theorems cited as verified, cross-paper contradictions, narrative overclaims, stale counts, production-run health. Emits `ReviewFinding` records; BLOCKER findings reopen the relevant gate. |
 | `claims-reviewer` | Sentence-level prose audit with chain-of-backing + verdict across five finding classes (arithmetic / toolchain-pin / pipeline-vs-prose / theorem-name drift, hypothesis-disclosure gap). Reconciles prior findings instead of silently superseding. |
 | `figure-reviewer` | Visual review of generated figures (after `review_figures.py`) for rendering quality, physics accuracy, and style. |
+| `prose-reviewer` | **The fourth reviewer.** Reads a bundle draft start to finish as a referee at its named venue: does the abstract lead with the result, does each section advance a single argument, where would a reader stop. The other three ask *does it render*, *is it backed*, *is it wrong*; none asks whether it lands. Output is a RESTRUCTURING INSTRUCTION, not a finding list. Runs at lift §7.5, before Stage 9. |
 
 `adversarial-reviewer` and `claims-reviewer` accept a `bundle_target` argument for
 bundle-aware Stage-13 review (anchors in `docs/agents/claims-reviewer-bundle-prompts.md`).
@@ -40,6 +41,7 @@ Explore/Plan/review subagents or non-dev interactive sessions.
 |---|---|---|
 | `/skeft-qa:goal-prompt` | you (user-only) | **Goal-mode LAUNCH + the always-on posture core** (re-attaches after compaction). On invocation it composes the `/goal` condition + registers the session (8-field marker, incl. `question_guard:true`). You then run native `/goal`. *Authoring only — in-loop dev guidance is `goal-dev`.* |
 | `/skeft-qa:goal-dev` | you **or** the loop | **The in-loop development skill** — MCP-first proof loop, kernel-purity rules, the worktree fan-out flow, a symptom-indexed Lean friction catalog. Invoke while developing; its `references/` load on demand. |
+| `/skeft-qa:paper-authoring` | you **or** the loop | **The drafting counterpart to `prose-reviewer`.** House voice, venue conventions, and the prohibited-pattern floor for `papers/<bundle>/paper_draft.tex`. Its `references/prohibited-patterns.md` is a MANDATORY read before drafting and is SHARED with the reviewer, so a rule cannot drift between writing and review. |
 | `/skeft-qa:sync` | you **or** the loop | Mechanical Stage-12 sync (counts/tables/deps/citation cache) in one command. Idempotent, regen-lock-serialized. |
 | `/skeft-qa:wave-close` | you **or** the loop | Deterministic per-wave close: prereq checks → dispatch the fresh-context review → record `*_close.md`. |
 | `/skeft-qa:harvest` | scheduled task / 2nd-session `/loop` | Off-hot-loop System-2 harvest: Haiku extract → **register-aware Opus consolidate** (files/combines into the four-section `SYSTEM2_REGISTER.md`: re-open recurring closed, group semi-related, route real wins → Process Wins, misfile noise). Never inside a `/goal` session. |
