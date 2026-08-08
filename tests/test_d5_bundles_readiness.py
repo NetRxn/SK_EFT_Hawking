@@ -1201,3 +1201,92 @@ class TestBundleFigureAdequacy:
         self._setup(tmp_path, monkeypatch, {})
         r = bru.check_bundle_figure_adequacy()
         assert not r.passed and not r.measured
+
+
+class TestBundleStructuralCoherence:
+    """A structural floor plus a section ceiling (ADR-011 Phase 4, Gate 14).
+
+    Deliberately much narrower than the audit specified, because two of its four legs
+    did not survive measurement. Both rejections are pinned by tests below, so a later
+    author cannot reinstate them without a failing test explaining why they were dropped.
+    """
+
+    def _setup(self, tmp_path, monkeypatch, bundles):
+        import bundle_registry as registry
+        papers = tmp_path / "papers"
+        for code, (tier, body) in bundles.items():
+            (papers / code).mkdir(parents=True, exist_ok=True)
+            (papers / code / "paper_draft.tex").write_text(body)
+            (papers / code / "bundle_metadata.json").write_text(
+                json.dumps({"bundle_target": code, "tier": tier}))
+        monkeypatch.setattr(_H, "PAPERS_DIR", papers)
+        monkeypatch.setattr(_H, "PROJECT_ROOT", tmp_path)
+        monkeypatch.setattr(registry, "BUNDLE_CODES", tuple(bundles))
+
+    _OK = ("\\begin{abstract}x\\end{abstract}\n\\section{Introduction}\n"
+           "\\section{Conclusions}\n\\bibitem{a}x\n")
+
+    def test_a_well_formed_draft_passes(self, tmp_path, monkeypatch):
+        self._setup(tmp_path, monkeypatch, {"D1": (1, self._OK)})
+        assert bru.check_bundle_structural_coherence().passed
+
+    def test_a_missing_abstract_fails(self, tmp_path, monkeypatch):
+        self._setup(tmp_path, monkeypatch,
+                    {"D1": (1, "\\section{Introduction}\n\\section{Conclusions}\n\\bibitem{a}x\n")})
+        assert not bru.check_bundle_structural_coherence().passed
+
+    def test_a_closing_section_may_sit_BEFORE_a_methods_section(
+            self, tmp_path, monkeypatch):
+        """MY OWN FALSE POSITIVE, pinned. Testing only the LAST section reported 10 of
+        21 bundles as having no conclusion when every one of them has one: papers end
+        with `Methods and tools disclosure`, `Verification status`, `Code Availability`.
+        """
+        self._setup(tmp_path, monkeypatch, {"D1": (1,
+            "\\begin{abstract}x\\end{abstract}\n\\section{Introduction}\n"
+            "\\section{Synthesis and outlook}\n\\section{Methods and tools disclosure}\n"
+            "\\bibitem{a}x\n")})
+        assert bru.check_bundle_structural_coherence().passed
+
+    def test_no_closing_section_anywhere_fails(self, tmp_path, monkeypatch):
+        self._setup(tmp_path, monkeypatch, {"D1": (1,
+            "\\begin{abstract}x\\end{abstract}\n\\section{Introduction}\n"
+            "\\section{Results}\n\\section{Tables}\n\\bibitem{a}x\n")})
+        assert not bru.check_bundle_structural_coherence().passed
+
+    def test_EITHER_bibliography_mechanism_is_accepted(self, tmp_path, monkeypatch):
+        r"""THE AUDIT LEG THIS REPLACES. Its spec — "bibliography with `\bibitem` count
+        > 0 … alone catches D8 and D10" — would flag two bundles that are correct: both
+        use `\bibliography{}` + a real `.bib`."""
+        self._setup(tmp_path, monkeypatch, {"D8": (1,
+            "\\begin{abstract}x\\end{abstract}\n\\section{Introduction}\n"
+            "\\section{Conclusions}\n\\cite{a}\n\\bibliography{bibliography}\n")})
+        assert bru.check_bundle_structural_coherence().passed
+
+    def test_citing_with_NO_bibliography_at_all_fails(self, tmp_path, monkeypatch):
+        self._setup(tmp_path, monkeypatch, {"D1": (1,
+            "\\begin{abstract}x\\end{abstract}\n\\section{Introduction}\n"
+            "\\section{Conclusions}\n\\cite{a}\n")})
+        assert not bru.check_bundle_structural_coherence().passed
+
+    def test_the_section_ceiling_fires(self, tmp_path, monkeypatch):
+        """D3's live state: 31 top-level sections in a 30-50pp article."""
+        body = ("\\begin{abstract}x\\end{abstract}\n"
+                + "".join(f"\\section{{S{i}}}\n" for i in range(30))
+                + "\\section{Conclusions}\n\\bibitem{a}x\n")
+        self._setup(tmp_path, monkeypatch, {"D3": (1, body)})
+        r = bru.check_bundle_structural_coherence()
+        assert not r.passed and "table of contents" in r.details[1].message
+
+    def test_a_review_article_is_EXEMPT_from_the_section_ceiling(
+            self, tmp_path, monkeypatch):
+        """Tier 0 is a review; a long section list is its correct shape."""
+        body = ("\\begin{abstract}x\\end{abstract}\n"
+                + "".join(f"\\section{{S{i}}}\n" for i in range(30))
+                + "\\section{Conclusions}\n\\bibitem{a}x\n")
+        self._setup(tmp_path, monkeypatch, {"F": (0, body)})
+        assert bru.check_bundle_structural_coherence().passed
+
+    def test_an_empty_population_is_UNVERIFIED_not_passing(self, tmp_path, monkeypatch):
+        self._setup(tmp_path, monkeypatch, {})
+        r = bru.check_bundle_structural_coherence()
+        assert not r.passed and not r.measured

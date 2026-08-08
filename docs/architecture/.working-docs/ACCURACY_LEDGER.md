@@ -2082,3 +2082,21 @@ truncated** — the same class as the round-8 defect this suite exists to catch.
 **NOT-AN-ASSERTION.** The tier figure floors (0→8, 1→4, 2→1, 3→2, 4→1) are the audit's proposed
 backstop, not a measured requirement. They apply only until a bundle declares a charter figure
 plan, at which point the comparison should be against the plan.
+
+## V55 — ADR-011 Phase 4b: Gate 14, narrowed by measurement — 5 atoms, 2 REJECTIONS pinned
+
+| # | Proposition | Decider | Verbatim result |
+|---|---|---|---|
+| 1 | The audit's sedimentation ratio `n_sections/n_sources` is implementable | corpus measurement | **NO.** It divides by *registered* sources and a sourceless bundle has one synthetic key, so **D9 scores 9.0 with nine sections while D3 — 31 sections, 114 subsections, the actual case — scores 0.97.** It ranks them backwards. Not implemented |
+| 2 | Sedimentation is therefore untreated | read of the mechanism | No: it is addressed at its *cause*, `bundle_append.py` inserting a section per registered source. That fix needs charters and is filed as TODO-D26, blocked on the roster decision |
+| 3 | A closing section can be found by testing the last `\section` | my first implementation, measured | **NO — 10 of 21 bundles reported as lacking a conclusion when all 21 have one.** Papers legitimately end with *Methods and tools disclosure*, *Verification status*, *Code Availability*. Widened to the last three |
+| 4 | The remaining legs discriminate | the check on the live corpus | **1 of 21 fails: D3, on the section ceiling.** The floor legs (abstract, bibliography, closing section) pass everywhere and are regression guards, which is how they are described rather than sold as findings |
+| 5 | The check responds to production data | seeded into real `papers/L3` | renaming its closing section *"Discussion"* → *"Further remarks"* ⇒ rc=1 naming L3 and printing the three sections examined; 1 → 2 short. Restored byte-identical |
+
+**Both rejections are pinned by tests**, so a later author reinstating either meets a failing
+test that explains why it was dropped: `test_EITHER_bibliography_mechanism_is_accepted` and
+`test_a_closing_section_may_sit_BEFORE_a_methods_section`.
+
+**NOT-AN-ASSERTION.** The tier section ceiling of 20 is a judgment about readability, not a
+measured threshold. Tier 0 is exempt because a review's shape is legitimately a long section
+list.

@@ -535,6 +535,20 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
         "the green rule that used to live here. Plus the missing-blob and "
         "uncomputable-aggregate fail-closed legs",
     ),
+    "bundle_structural_coherence": (
+        "test_d5_bundles_readiness.py",
+        "9 mutations (ADR-011 Phase 4, Gate 14). Deliberately NARROWER than the audit "
+        "specified, and two tests pin the rejected legs so they cannot be reinstated "
+        "silently: (a) the `\\bibitem`-count leg would flag D8 and D10, which are "
+        "correct and use `\\bibliography{}` + a real .bib, so EITHER mechanism is "
+        "accepted; (b) my own closing-section false positive — testing only the LAST "
+        "section reported 10 of 21 bundles as having no conclusion when all 21 have one, "
+        "because papers end with Methods / Verification status / Code Availability. Legs: "
+        "well-formed passes; missing abstract fails; a closing section BEFORE a methods "
+        "section passes; none anywhere fails; citing with no bibliography by either "
+        "mechanism fails; the section ceiling fires on D3's 31; a Tier-0 review is EXEMPT "
+        "from it; empty population is UNVERIFIED",
+    ),
     "bundle_figure_adequacy": (
         "test_d5_bundles_readiness.py",
         "7 mutations (ADR-011 Phase 4, Gate 13). Nine of 21 bundles ship ZERO figures, "
@@ -769,6 +783,10 @@ PRODUCTION_SEEDED: frozenset[str] = frozenset({
     # it to 0 in the REAL `papers/L1/bundle_metadata.json` -> rc=1 naming L1 against the
     # tier-0 floor of 8, short count 11 -> 12. Restored byte-identical.
     "bundle_figure_adequacy",
+    # 2026-08-08 (ADR-011 Phase 4): renamed L3's real closing section "Discussion" to
+    # "Further remarks" in `papers/L3/paper_draft.tex` -> rc=1 naming L3 and printing the
+    # three sections it looked at; short count 1 -> 2. Restored byte-identical.
+    "bundle_structural_coherence",
 })
 
 #: The ratchet, in the same idiom as `AWAITING_CEILING`: the number of registered

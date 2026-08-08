@@ -66,7 +66,7 @@ EXPECTED_CHECKS = [
     'bundle_metadata_matches_graph', 'bundle_stage13_claim_consistent',
     'bundle_manuscript_length', 'bundle_reviewer_stage_ordering',
     'bundle_prose_em_dash_free', 'bundle_reader_facing_voice',
-    'bundle_figure_adequacy',
+    'bundle_figure_adequacy', 'bundle_structural_coherence',
     'notebook_stored_outputs_current',
     'readiness_verdicts_agree', 'readiness_submission_gate',
     'citation_primary_sources_present', 'provenance_doi_in_registry',

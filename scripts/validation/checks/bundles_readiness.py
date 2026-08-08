@@ -475,6 +475,104 @@ def check_bundle_prose_em_dash_free() -> CheckResult:
     return CheckResult(passed=total == 0, details=details)
 
 
+#: Section-count ceiling by tier. A 30–50 pp article with more than twenty top-level
+#: sections is a table of contents, not an argument. Tier 0 (a review) is exempt.
+_SECTION_CEILING_BY_TIER = {1: 20, 2: 20, 3: 20, 4: 20}
+
+#: A closing section, by the names this corpus actually uses. Deliberately wide: it is a
+#: presence floor, and a false positive here would demand a rename for no reader benefit.
+_CLOSING_SECTION_RE = re.compile(
+    r"conclu|discuss|outlook|summar|synthesis|lessons|future work", re.I)
+
+#: How far from the end a closing section may sit. Papers legitimately end with
+#: "Methods and tools disclosure", "Verification status" or "Code Availability", so
+#: testing only the LAST section reports 10 of 21 bundles as lacking a conclusion when
+#: every one of them has one. Measured 2026-08-08 before this window was widened.
+_CLOSING_WITHIN_LAST = 3
+
+
+@register_check("bundle_structural_coherence",
+                "Every bundle has a closing section, a bibliography, and a readable section count")
+def check_bundle_structural_coherence() -> CheckResult:
+    """CHECK (ADR-011 Phase 4, Gate 14): the shape a referee expects, deterministically.
+
+    **Deliberately much narrower than the 2026-08-01 audit specified**, because two of its
+    four legs did not survive being measured:
+
+    - ⚠️ **The sedimentation ratio is not implementable as written.** The audit proposes
+      `n_sections / n_sources`, failing above 0.8. That divides by *registered* sources,
+      and a sourceless bundle has one synthetic key, so **D9 scores 9.0 with nine sections
+      while D3 — the actual sedimentation case, 31 sections and 114 subsections — scores
+      0.97.** The metric ranks them backwards. Sedimentation is real and is addressed at
+      its cause in `BUNDLE_LIFT_PROCEDURE` §3 (registering a source must not create a
+      section), not by this ratio.
+    - ⚠️ **The `\\bibitem`-count leg would flag two bundles that are correct.** The audit
+      says it "alone catches D8 and D10"; both carry `\\bibliography{}` + a real `.bib`.
+      This check accepts either mechanism.
+
+    What is left is a **structural floor**: three properties with no legitimate exception,
+    and a section ceiling. The floor passes on all 21 bundles today and exists as a
+    regression guard, which is the honest description of it — a draft that loses its
+    bibliography or its conclusion has a defect a reader meets immediately.
+
+    **Whether each section advances an argument is NOT decidable here** and belongs to the
+    `prose-reviewer` (F-04 question 2). Section *length* is likewise left to it: 400 words
+    is an arbitrary line, and "Code Availability" is legitimately short.
+    """
+    details: List[Detail] = []
+    try:
+        import bundle_registry as registry
+        codes = list(registry.BUNDLE_CODES)
+    except Exception as exc:  # noqa: BLE001
+        return CheckResult(passed=False, measured=False, details=[Detail(
+            "roster", False,
+            f"could not read the bundle roster ({exc}) — UNVERIFIED, not passing")])
+
+    checked = bad = 0
+    for code in codes:
+        tex = _H.PAPERS_DIR / code / "paper_draft.tex"
+        md = _read_metadata(code)
+        if not tex.is_file() or md is None:
+            continue
+        checked += 1
+        body = _TEX_COMMENT_RE.sub("", tex.read_text(errors="replace"))
+        secs = re.findall(r"\\section\*?\{([^}]*)\}", body)
+        faults = []
+
+        if not re.search(r"\\begin\{abstract\}", body):
+            faults.append("no abstract")
+        # Either bibliography mechanism is correct; see the docstring.
+        if not re.search(r"\\bibitem|\\bibliography\{", body):
+            if re.search(r"\\cite[a-z]*\{", body):
+                faults.append("cites sources but has no bibliography by either mechanism")
+        if secs and not any(_CLOSING_SECTION_RE.search(s)
+                            for s in secs[-_CLOSING_WITHIN_LAST:]):
+            faults.append(
+                f"no closing section among the last {_CLOSING_WITHIN_LAST} "
+                f"({', '.join(repr(s[:34]) for s in secs[-_CLOSING_WITHIN_LAST:])})")
+        ceiling = _SECTION_CEILING_BY_TIER.get(md.get("tier"))
+        if ceiling is not None and len(secs) > ceiling:
+            faults.append(
+                f"{len(secs)} top-level sections against a tier-{md.get('tier')} ceiling "
+                f"of {ceiling} — a section list this long is a table of contents rather "
+                f"than an argument")
+
+        if faults:
+            bad += 1
+            details.append(Detail(code, False, "; ".join(faults)))
+
+    if checked == 0:
+        details.insert(0, Detail(
+            "population", False,
+            "no bundle draft was read — this check is UNVERIFIED, not passing"))
+        return CheckResult(passed=False, measured=False, details=details)
+
+    details.insert(0, Detail(
+        "summary", bad == 0,
+        f"{checked} bundle(s) checked for structural floor + section ceiling, {bad} short"))
+    return CheckResult(passed=bad == 0, details=details)
+
+
 #: Minimum figure count by tier, the backstop the 2026-08-01 audit specified for use
 #: until every bundle carries a charter figure plan. A review article and a four-page
 #: letter do not owe a reader the same number of figures.

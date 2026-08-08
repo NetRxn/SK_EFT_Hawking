@@ -1088,3 +1088,19 @@ elsewhere. Needs approval.
   round-trip through each writer is byte-stable. Needs approval per §6a.
 - ⚠️ **Do not "fix" by re-escaping.** The on-disk form is the readable one and is what
   `write_metadata_counts` — the most frequent writer — produces.
+
+### D26. F-02 (a source registration must not create a section) is unbuilt — OPEN
+
+**Deferred by dependency, not by judgment.** ADR-011 Phase 4.
+
+- **What:** `bundle_append.py` inserts a `\section` skeleton per registered source, which is
+  the *mechanism* behind sedimentation. D3 carries 31 top-level sections and 114
+  subsections; `bundle_structural_coherence` catches the symptom at a ceiling of 20.
+- **Why it is not built:** the fix is `--charter-section <name>`, validated against a
+  `CHARTER.md` that does not exist yet. Charters carry a venue and a length commitment, and
+  ADR-010's four merge proposals (D6+D9, D10+D11, E1+E2, D4→D8) are still open, so authoring
+  21 of them now means re-authoring them after the roster decision.
+- ⚠️ **Do not "fix" by removing the skeleton insertion alone.** Appends would then produce
+  no structural anchor at all, and `append_log.json`'s `bundle_section_inserted` — which the
+  absorption protocol reads — becomes meaningless.
+- **Unblocked by:** the roster decision (ADR-010 §Open item 1).
