@@ -1485,3 +1485,45 @@ that discharges the sentence is simply unnamed.
 ✅ **NOT-AN-ASSERTION, recorded as a genre observation:** L1's depth-1 single-module closure is
 *correct*, not thin. A one-equation refutation against a published bound has nothing to stack.
 Per V30's rule, ratios compare only within genre — and L1 is the first instance of its genre.
+
+---
+
+## V37 — the L3 apex retrofit — 8 atoms, **1 CORRECTED** (a prior V36 atom)
+
+**P** = perishable, **D** = durable.
+
+| # | atom | decider | result |
+|---|---|---|---|
+| O1 | L3's draft is 445 lines and was read in full | the file | ✓ |
+| O2 | *"`\bhThermoTotal` theorems and lemmas"* (macro = 20) | source `theorem`/`lemma` keyword count | ✓ **20 = 20**, and the macro is **derived** by `update_counts.py` per-module, so it cannot drift (D) |
+| O3 | *"zero `sorry`, zero new axioms, zero `maxHeartbeats`"* | closure axioms + the file | ✓ core = exactly the three standard axioms; 0 `native_decide`; 0 heartbeat overrides (D) |
+| O4 | *"`backreaction.py` (line 449) … evolves the full coupled-ODE system rather than assuming the exponential form"* | `src/wkb/backreaction.py:447–451` | ✓ the file's own docstring says exactly that (D) |
+| O5 | *"the four laws are NOT bundled into a single Lean Prop structure `H_BCH`"* | the module's structures | ✓ no `H_BCH`; two per-regime predicates exist, which is what *"separate theorems and predicates"* describes. **Re-measured, NOT filed** (D) |
+| O6 | **SET: bundles declaring `BHThermodynamicsFourLaws` theorems** | every bundle's apex list, both directions | L3 13, D3 4 (3 shared), F 1 (shared). Same triangle as L1's (D) |
+| **O7** | ⚠️ **CORRECTS V36/N7's stated basis** — *"neither draft mentions the other"* (L1/D3) | `papers/D3/paper_draft.tex` read directly | ❌ **FALSE.** D3 §7: *"**Bundle L1 ships the same content as a four-page Physical Review Letters splash**"*; D3 §8, subsection ***Cross-bundle anchor to L3***: *"character-for-character identical."* **Both pairs are DECLARED splash/deep companions** (D) |
+| O8 | **SET: L3 standalone theorems named nowhere in L3** | 18 standalone vs every `\texttt{}`/`\verb` token | **5** — but **2 are named by D3**, the declared deep companion. Genuine TODO-D19 residue: the 2 `wave*_bridge_*`, named by neither (D) |
+
+### ⚠️ The correction, stated fully
+
+**What was wrong.** V36/N7 recorded the L1/D3 apex overlap as an undecided *conflict* whose
+resolution "rests on document position," on the stated basis that neither draft mentions the other.
+D3 mentions L1 by name, in prose, and calls the duplication deliberate.
+
+**What changes.** The overlap is not a collision — it is a splash/deep publication pair. **The
+ownership rule (*develops → owns; cites in a cross-check → does not*) presumes the containers make
+different claims. A splash/deep pair makes the same claim at two lengths on purpose, so shared
+apexes are correct and neither container cedes.** The rule has no jurisdiction there.
+
+**What does not change.** Nothing was reassigned — still correct, now for the corrected reason. And
+`L1 disposition` remains a reserved STOP-AND-ASK: whether to *publish* splash companions is a
+charter decision, applying equally to L1 and L3.
+
+**How it happened, and the standing rule it re-teaches.** I compared apex lists and grepped D3 for
+`GravitationalWaves` / `c_GW`. The sentence that shows presence says *"Bundle~L1"* and matched
+neither. **This is V26 verbatim: before filing an absence, name the probe that would show presence
+and prove it can.** Carried forward as method: *the probe for a sibling relationship is a search of
+the other draft for the **bundle name**, not for shared theorem names.*
+
+✅ **NOT-AN-ASSERTION, recorded as a reusable template:** `\bhThermoTotal` is what TODO-D9 and
+TODO-D10 are asking for and it already works — bundle-scoped, derived per-module, exact. The defect
+in D1/D5 is not "a macro" but "a *project*-scoped macro used as a bundle figure."

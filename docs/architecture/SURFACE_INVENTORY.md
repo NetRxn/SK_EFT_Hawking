@@ -189,7 +189,7 @@ check compares against reality. Sizes are recorded so a silent shrink is visible
 | `provenance.PAPER_DEPENDENCIES` | 17 |
 | `citations.CITATION_REGISTRY` | 652 |
 
-## Publication roster — 21 bundles, 18 with declared apexes
+## Publication roster — 21 bundles, 19 with declared apexes
 
 | bundle | tier | apexes | title |
 |---|---:|---:|---|
@@ -208,7 +208,7 @@ check compares against reality. Sizes are recorded so a silent shrink is visible
 | `D12` | 1 | 11 | Kernel-Verified Detector & Readout Metrology — From Photon S |
 | `L1` | 2 | 11 | GW170817 / vestigial-graviton |
 | `L2` | 2 | 8 | Three generations from modular invariance |
-| `L3` | 2 | — | BCH four laws by regime |
+| `L3` | 2 | 13 | BCH four laws by regime |
 | `I1` | 3 | 6 | Verification methodology with worked cases |
 | `I2` | 3 | 20 | Verified statistical estimators + lean-tensor-categories |
 | `I3` | 3 | 12 | Verified Stochastic Calculus for Mathlib4 — Stochastic Integ |

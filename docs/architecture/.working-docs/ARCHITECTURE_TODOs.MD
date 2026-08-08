@@ -692,6 +692,11 @@ violated for the fifth time in this workstream.
 - **§7's D6 checklist is stale in the other direction:** six boxes, all unchecked, including
   waves 6v.2 / 6v.5 / 6v.6 — all of which have shipped and appear in D6's own declared apexes.
   At least four of six are done.
+- ✅ **The fix template already exists, in L3 (found 2026-08-07).** `\bhThermoTotal` is derived
+  per-module by `update_counts.py` (`_module_thm_count("BHThermodynamicsFourLaws.lean")`), is
+  **bundle-scoped**, and is exact against the source (20 = 20). **A bundle-scoped derived macro is
+  the answer to both this item and TODO-D10** — D1/D5 abuse the *project*-scoped `\totaltheorems`
+  for a bundle figure; F/I1/I3 hand-type roster numbers. L3 shows the working shape.
 - **Third bundle with a stale roster number (2026-08-07, I3 retrofit).** I3's bibliography
   self-cites *"SK--EFT Hawking 14-bundle publication architecture"*; I1 §2 says 17; F says 17.
   Three different wrong numbers in three bundles, all citing the same `PAPER_STRATEGY.md`. The
@@ -839,6 +844,13 @@ states in prose (`|γ| ≤ 10⁻³⁰` does not lift the falsification —
 `vestigial_dispersion_below_ligo_at_inspiral_peak`), and the sentence cites a **different** module
 (`SecondOrderSK.lean`, which does carry `GammaH` but not that theorem). The prose reads as argued
 where it is in fact proved.
+
+**Negative control — do NOT count splash/deep division as this defect (added 2026-08-07, L3).**
+L3 leaves five standalone theorems unnamed, but **two of them are named by D3**, its declared deep
+companion (`M_c_pos`, `four_laws_consistent_with_acoustic_regime`). A four-page Letter naming fewer
+theorems than its deep companion is correct, not defective. The pattern this TODO tracks is
+*proved content **no** container names*; L3's genuine residue is only the two `wave*_bridge_*`
+theorems, named by neither.
 
 **Not a check.** Per §6a nothing was built. `prose_theorem_reference_coverage` measures the reverse
 direction (prose names that do not resolve); a *proved-but-unnamed* measure would be new

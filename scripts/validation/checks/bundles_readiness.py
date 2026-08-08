@@ -1081,7 +1081,12 @@ def check_bundle_registry_consistency() -> CheckResult:
 #:           for a falsification Letter. THIRD declaration conflict (D3 and F both declare
 #:           L1's theorems) but NOTHING was reassigned: this one is the reserved
 #:           `L1 disposition` STOP-AND-ASK, recorded as evidence, not resolved.
-UNDECLARED_APEX_CEILING = 3
+#: 3 -> 2:   L3 retrofitted 2026-08-07 (13 apexes; docs/audits/2026-08-07-l3-retrofit/
+#:           FINDINGS.md). Reading D3's draft directly showed BOTH L1/D3 and L3/D3 are
+#:           DECLARED splash/deep companion pairs ("character-for-character identical",
+#:           D3 §8) -- so the shared apexes are the design, not a collision. Corrects the
+#:           L1 finding, which filed that absence without a probe that could show presence.
+UNDECLARED_APEX_CEILING = 2
 
 
 @register_check(

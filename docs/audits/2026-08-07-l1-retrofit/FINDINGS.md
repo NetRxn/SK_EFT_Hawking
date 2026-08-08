@@ -61,7 +61,28 @@ the definition — machinery named as machinery, not results. The D11 declaratio
 
 ---
 
-## 3. ⚠️ A third declaration conflict — and unlike the first two, this one is a STOP-AND-ASK
+## 3. ⚠️ CORRECTED 2026-08-07 (at L3's retrofit) — this is a DECLARED splash/deep pair, not a conflict
+
+> **Correction.** This section originally recorded the L1/D3 overlap as an undecided *conflict*, on
+> the stated basis that *"neither draft mentions the other."* **That basis was false.** Reading
+> `papers/D3/paper_draft.tex` directly — which this retrofit did not do — finds D3 §7 saying:
+> ***"Bundle L1 ships the same content as a four-page Physical Review Letters splash; the same
+> numerical anchors are shared."*** D3 says the same of L3 in a subsection headed *Cross-bundle
+> anchor to L3*, calling the two *"character-for-character identical."*
+>
+> **The shared declarations are the design.** The ownership rule (*develops → owns; cites → does
+> not*) presumes the containers make *different* claims; a splash/deep pair makes the same claim at
+> two lengths on purpose, so the rule has no jurisdiction and neither container should cede.
+>
+> **Unchanged:** `L1 disposition` remains a reserved STOP-AND-ASK — but it is a decision about a
+> deliberate publication strategy, not an adjudication of an accidental overlap. And nothing was
+> reassigned, which remains correct, now for the corrected reason.
+>
+> **The lesson (V26, again):** the probe that would have shown presence was a search of the sibling
+> draft for the **bundle name**, not the theorem name. Filing an absence still requires naming a
+> probe that can show presence. Full working: `docs/audits/2026-08-07-l3-retrofit/FINDINGS.md` §3.
+
+### As originally recorded
 
 **D3 declares 8 `GravitationalWaves` apexes; F declares 3. Five of D3's and all three of F's are
 theorems L1 also declares.** L1's whole closure — 18 declarations in one module — sits inside
@@ -78,11 +99,12 @@ exactly the correctness-push biconditional and the tracked-hypothesis bundle. Th
 headline itself — both endpoint falsifiers, the bundled corollary, the disjointness theorem and its
 frame-independent form — is **already declared by D3 and F**.*
 
-⚠️ **I resolved the D4→D8 and D1→D7 conflicts; I am NOT resolving this one, and the difference is
-principled.** Those two moved apexes between containers whose existence was settled — the drafts'
-own words (D8) or document position (D1 §8.2 vs D7's title) decided them, and the closure
-corroborated. **Here the question is whether L1 exists as a container at all**, which is the
-`L1 disposition` item the goal reserves. Under ADR-010 C5 the schedule is flexible and the claim
+⚠️ **I resolved the D4→D8 and D1→D7 conflicts; I am NOT resolving this one.** ⚠️ *The original
+justification below is superseded by the correction at the head of this section — D3 does mention
+L1, and the pair is declared.* Those two moved apexes between containers whose existence was
+settled — the drafts' own words (D8) or document position (D1 §8.2 vs D7's title) decided them, and
+the closure corroborated. **Here the question is whether L1 exists as a container at all**, which is
+the `L1 disposition` item the goal reserves. Under ADR-010 C5 the schedule is flexible and the claim
 strength is not: reassigning here would *pre-decide* a charter question by moving declarations.
 **Nothing was reassigned.** The duplicate declarations stand, deliberately, as the evidence.
 

@@ -315,8 +315,19 @@ bundle metadata on disk at all.
    unlike D4→D8 and D1→D7, this asks whether the container exists, which is the reserved
    `L1 disposition` item. Recorded as evidence in EVIDENCE.md §6.
    Full working: [`../../audits/2026-08-07-l1-retrofit/FINDINGS.md`](../../audits/2026-08-07-l1-retrofit/FINDINGS.md).
-4. ⏭️ **NEXT** — the remaining 3: **L3**, then **E1/E2** — the last open ADR-010 §D4 merge
-   question, measurable as soon as either is declared.
+3n. ✅ **DONE 2026-08-07** — **L3**, ceiling 3→2 (13 apexes → 28 decls / 1 module / depth 2).
+   ⚠️ **This retrofit CORRECTED the L1 finding.** Reading D3's draft directly shows D3 names *both*
+   splashes — §7 for L1, a subsection headed *Cross-bundle anchor to L3* for L3, calling them
+   *"character-for-character identical."* **L1/D3 and L3/D3 are DECLARED splash/deep pairs; the
+   shared apexes are the design, not a collision.** The ownership rule presumes containers make
+   *different* claims and has no jurisdiction over a splash/deep pair. The L1 finding had filed
+   "neither draft mentions the other" without a probe that could show presence — the V26 rule; the
+   probe is a search for the **bundle name**, not the theorem name.
+   ✅ **`\bhThermoTotal` is the working fix template for TODO-D9/D10**: bundle-scoped, derived
+   per-module by `update_counts.py`, exact against source (20 = 20), cannot drift.
+   Full working: [`../../audits/2026-08-07-l3-retrofit/FINDINGS.md`](../../audits/2026-08-07-l3-retrofit/FINDINGS.md).
+4. ⏭️ **NEXT** — the last two: **E1** and **E2** — and E1+E2 is the final open ADR-010 §D4 merge
+   question, measurable as soon as both are declared.
    ⚠️ **Method, learned on D12 and re-confirmed on D11:** `grep` for a theorem name in a draft
    returns 0 — drafts escape underscores inside `\thm{}`. Resolve references with the
    underscore-aware scan, **seeded with a known-present name first**, never a bare grep.

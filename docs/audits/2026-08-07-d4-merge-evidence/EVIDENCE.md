@@ -5,8 +5,8 @@ comes due when every bundle is declared; until then this file records, for each 
 whether the closure evidence **supports** it, **refutes** it, or **does not decide** it, plus any
 **boundary failure** named under §D2's rule.
 
-**Status:** 18 of 21 bundles declared (D1–D12, F, I1, I2, I3, L1, L2).
-3 undeclared: E1, E2, L3. **Every "not decided" below is a
+**Status:** 19 of 21 bundles declared — all but E1 and E2.
+2 undeclared: E1, E2. **Every "not decided" below is a
 statement about what is measurable today, not a verdict.**
 
 **Method.** Each row is an intersection of *declared apex closures* over `name_deps_project`,
@@ -131,7 +131,7 @@ Recorded because §D4 asks for evidence, and an intersection nobody proposed is 
 | **D6** | ⚠️ **PARTIAL** | Cites 133 declarations from D9's namespace while claiming ~19 % of its own citations. |
 | **D4** | ⚠️ **YES, both directions** | *Inbound:* §§7–8 consume D3's `H_HorizonBoundaryCondition` (22 shared declarations) — mutual and acknowledged. *Outbound:* §9's `GenericSU2` layer ships D8's chartered content. |
 | D1, D2, D3, D5, D7, D8, D11, D12, I1, I2, I3, L2 | **No** | Each states its purpose on its own substrate. D11 is the strongest case: zero intersection with every other declared bundle. |
-| E1, E2, L3 | **not yet measurable** | undeclared |
+| E1, E2 | **not yet measurable** | undeclared |
 
 ---
 
@@ -163,7 +163,7 @@ draft that cedes in words is stronger evidence than document position.
 
 ---
 
-## 6. L1 / D3 / F — a declaration conflict recorded as EVIDENCE, deliberately not resolved
+## 6. L1 / D3 and L3 / D3 — DECLARED splash/deep pairs (⚠️ corrected 2026-08-07)
 
 **Found 2026-08-07 at L1's retrofit** (`docs/audits/2026-08-07-l1-retrofit/FINDINGS.md` §3). Not one
 of the four proposed merges; it bears on the reserved **`L1 disposition`** STOP-AND-ASK item.
@@ -200,7 +200,31 @@ closure corroborating. **This one asks whether L1 exists as a container at all**
 does not reach that far, and under ADR-010 C5 moving declarations here would pre-decide a charter.
 The duplicate declarations stand as the evidence.
 
-**Status: NOT DECIDED — reserved to the `L1 disposition` item.** The evidence above is the input;
-the decision is not mine. If L1 stands, the six unique theorems are its spine and D3/F should cede
-the other five. If L1 folds into D3, D3 already declares most of it.
+### ⚠️ CORRECTION, 2026-08-07 at L3's retrofit — this is not a collision
+
+The framing above ("conflict", "decided by document position") rested on the claim that **neither
+draft mentions the other**. Reading `papers/D3/paper_draft.tex` directly disproves it:
+
+> §7: *"**Bundle L1 ships the same content as a four-page Physical Review Letters splash**; the same
+> numerical anchors are shared."*
+>
+> §8, subsection ***Cross-bundle anchor to L3***: *"…appear identically in Bundle L3, which ships the
+> regime-partition statement as a four-page Physical Review Letters splash. **The Lean theorem name
+> and numerical anchors are character-for-character identical.**"*
+
+**L3 measures the same way** — 13 apexes → 28 declarations in one module; D3 declares 4
+`BHThermodynamicsFourLaws` apexes, 3 of them L3's; F declares 1, also L3's.
+
+**Both L1/D3 and L3/D3 are declared splash/deep companion pairs. Shared apexes are the design.**
+The ownership rule presumes the containers make *different* claims; a splash/deep pair makes the
+same claim at two lengths deliberately, so the rule has no jurisdiction and neither should cede.
+
+**Status: NOT A MERGE QUESTION.** The reserved `L1 disposition` item stands, but it is now a
+question about a deliberate publication strategy — whether to run splash companions at all, which
+would apply equally to L1 and L3 — not an adjudication of an accidental overlap. **Nothing
+reassigned**, which remains correct for the corrected reason.
+
+**Method note carried forward:** the probe that shows a sibling relationship is a search of the
+other draft for the **bundle name**, not for shared theorem names. Theorem-token greps miss prose
+that says "Bundle~L1".
 

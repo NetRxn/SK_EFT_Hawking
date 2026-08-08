@@ -1,5 +1,72 @@
 {
   "bundle_target": "L3",
+  "apex_theorems": [
+    {
+      "name": "SKEFTHawking.BHThermodynamicsFourLaws.regime_partition_criterion",
+      "claims": "the correctness-push theorem: the sign of dT_H/dt flips at M_c, combining the classifier with the four falsifiers",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.BHThermodynamicsFourLaws.classify_Schwarzschild_iff",
+      "claims": "§2 classifier iff-theorem: classify = Schwarzschild ↔ M > M_c",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.BHThermodynamicsFourLaws.classify_ADWExtremality_iff",
+      "claims": "§2 classifier iff-theorem: classify = ADWExtremality ↔ M < M_c",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.BHThermodynamicsFourLaws.classify_Boundary_iff",
+      "claims": "§2 classifier iff-theorem: classify = Boundary ↔ M = M_c",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.BHThermodynamicsFourLaws.T_H_schwarzschild_pos",
+      "claims": "Schwarzschild branch: T_H = 1/(8πM) is positive",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.BHThermodynamicsFourLaws.T_H_schwarzschild_strict_decreasing",
+      "claims": "Schwarzschild branch: T_H strictly decreasing in M, hence dT_H/dt > 0 under dM/dt < 0",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.BHThermodynamicsFourLaws.T_H_acoustic_evolution_pos",
+      "claims": "BEC-acoustic branch: the exponential alias is positive",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.BHThermodynamicsFourLaws.T_H_acoustic_evolution_at_zero",
+      "claims": "BEC-acoustic branch: the alias reproduces T_H^(0) at t = 0",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.BHThermodynamicsFourLaws.T_H_acoustic_evolution_strict_decreasing",
+      "claims": "the load-bearing BEC-acoustic sign claim: T_H strictly decreasing in t (Balbinot 2005 grounded)",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.BHThermodynamicsFourLaws.falsifier_acoustic_decay_form",
+      "claims": "falsifier: the strictly-decreasing acoustic claim cannot be reproduced by a non-decreasing form",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.BHThermodynamicsFourLaws.falsifier_schwarzschild_heating",
+      "claims": "falsifier: the positive heating rate on the M > M_c branch",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.BHThermodynamicsFourLaws.falsifier_third_law_form",
+      "claims": "falsifier: the third-law slot is not vacuous-true — the t → ∞ approach is required",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.BHThermodynamicsFourLaws.falsifier_alpha_ADW_dependence",
+      "claims": "falsifier: δ_ADW must depend on α_ADW via the Wave-9 ansatz, not be a free parameter",
+      "declared": "2026-08-07"
+    }
+  ],
   "tier": 2,
   "title": "BCH four laws by regime",
   "target_journal": "PRL",
