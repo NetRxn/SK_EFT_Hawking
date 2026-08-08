@@ -392,6 +392,89 @@ def check_bundle_stage13_claim_consistent() -> CheckResult:
     return CheckResult(passed=bad == 0, details=details)
 
 
+#: An em-dash: the LaTeX ligature (EXACTLY three hyphens) or the literal character.
+#:
+#: ⚠️ **The lookarounds are the whole check.** `--` is an EN-DASH and is MANDATORY
+#: scientific typography — `Bose--Einstein`, `Bekenstein--Hawking`, `SK--EFT`,
+#: `Kaul--Majumdar`, page ranges. The corpus carries **1,121 of them**. A pattern that
+#: did not require exactly-three would flag 1,862 occurrences and be WRONG about 1,121,
+#: and "fixing" those would corrupt every compound eponym in the program. One line
+#: carries both: `observables---also drives the SK--EFT`.
+_EM_DASH_RE = re.compile(r"(?<!-)---(?!-)|—")
+
+#: `%` that is not `\%`. Comments never reach a reader, so an em-dash inside one is not
+#: an authorship signal; the sweep left several in place deliberately.
+_TEX_COMMENT_RE = re.compile(r"(?<!\\)%.*")
+
+
+@register_check("bundle_prose_em_dash_free",
+                "No bundle draft contains an em-dash in prose a reader will see")
+def check_bundle_prose_em_dash_free() -> CheckResult:
+    """CHECK (ADR-011 Phase 3): zero em-dashes in rendered manuscript prose.
+
+    **A trust signal, not a style preference**, and that is why the target is zero rather
+    than a ratcheted rate (operator direction, 2026-08-08): *an em-dash immediately
+    signals AI authorship to a human reader in 2026, and decreases trust.* One is as
+    disqualifying as forty, so a density threshold would measure the wrong thing.
+
+    **Measured before the sweep: 741 across the corpus** (621 `---` + 120 literal `—`),
+    with **0 of 21 bundles clean**. Removing them was a rewrite rather than a
+    substitution — an em-dash usually joins two clauses, and the right replacement is a
+    colon, a semicolon, parentheses, or a full stop depending on the job it was doing.
+    Six agents read every occurrence in context; the sentence shapes that generate them
+    are recorded in the authoring skill's `references/prohibited-patterns.md`.
+
+    ⚠️ **This check CANNOT see the regression it is most likely to cause.** It counts
+    exactly-three hyphens, so an author who over-corrects to "no dashes at all" and
+    breaks `Bose--Einstein` passes it silently. That rule lives in the authoring
+    reference, where a human reads it, because no scan distinguishes a missing en-dash
+    from a compound word.
+
+    Comments are stripped: `%` text never reaches a reader, so an em-dash there is not an
+    authorship signal.
+    """
+    details: List[Detail] = []
+    try:
+        import bundle_registry as registry
+        codes = list(registry.BUNDLE_CODES)
+    except Exception as exc:  # noqa: BLE001
+        return CheckResult(passed=False, measured=False, details=[Detail(
+            "roster", False,
+            f"could not read the bundle roster ({exc}) — UNVERIFIED, not passing")])
+
+    checked = total = 0
+    for code in codes:
+        tex = _H.PAPERS_DIR / code / "paper_draft.tex"
+        if not tex.is_file():
+            continue
+        checked += 1
+        hits = []
+        for i, line in enumerate(tex.read_text(errors="replace").splitlines(), 1):
+            body = _TEX_COMMENT_RE.sub("", line)
+            n = len(_EM_DASH_RE.findall(body))
+            if n:
+                hits.append((i, n, body.strip()[:90]))
+        if hits:
+            n = sum(h[1] for h in hits)
+            total += n
+            details.append(Detail(
+                code, False,
+                f"{n} em-dash(es) on {len(hits)} line(s); first at "
+                f"{tex.relative_to(_H.PROJECT_ROOT)}:{hits[0][0]} — {hits[0][2]!r}"))
+
+    if checked == 0:
+        details.insert(0, Detail(
+            "population", False,
+            "no bundle draft was read — this check is UNVERIFIED, not passing"))
+        return CheckResult(passed=False, measured=False, details=details)
+
+    details.insert(0, Detail(
+        "summary", total == 0,
+        f"{checked} bundle draft(s) scanned, {total} em-dash(es) in reader-visible prose "
+        f"(target 0; en-dashes are mandatory and deliberately untouched)"))
+    return CheckResult(passed=total == 0, details=details)
+
+
 #: Reviewer-stage status values the tree actually uses. `Phase7a_Roadmap.md:91-93`
 #: declares three (`pending`/`green`/`red`, plus `yellow` for stage 13); the live corpus
 #: also carries `pending-redo`, `skeleton` and `not_started`. Declared here rather than

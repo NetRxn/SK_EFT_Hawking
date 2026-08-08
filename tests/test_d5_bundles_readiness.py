@@ -929,3 +929,95 @@ class TestBundleReviewerStageOrdering:
         """
         self._setup(tmp_path, monkeypatch, {"D1": self._b()})   # ordering fine
         assert bru.check_bundle_reviewer_stage_ordering().passed
+
+
+class TestBundleProseEmDashFree:
+    """Zero em-dashes in prose a reader will see (ADR-011 Phase 3).
+
+    A trust signal rather than a style rate — one em-dash is as disqualifying as
+    forty — so the target is zero and there is no ratchet.
+
+    The tests are weighted toward what this check must NOT do. Flagging an en-dash
+    would be far worse than missing an em-dash: `--` is mandatory typography, the
+    corpus carries 1,121 of them, and "fixing" those would corrupt every compound
+    eponym in the program.
+    """
+
+    def _setup(self, tmp_path, monkeypatch, drafts):
+        import bundle_registry as registry
+        papers = tmp_path / "papers"
+        for code, text in drafts.items():
+            (papers / code).mkdir(parents=True, exist_ok=True)
+            if text is not None:
+                (papers / code / "paper_draft.tex").write_text(text)
+        monkeypatch.setattr(_H, "PAPERS_DIR", papers)
+        monkeypatch.setattr(_H, "PROJECT_ROOT", tmp_path)
+        monkeypatch.setattr(registry, "BUNDLE_CODES", tuple(drafts))
+
+    # ── what it must NOT flag ────────────────────────────────────────────
+    def test_an_EN_dash_is_never_flagged(self, tmp_path, monkeypatch):
+        """THE LOAD-BEARING TEST. Every one of these is correct typography."""
+        self._setup(tmp_path, monkeypatch, {"D1":
+            "Bose--Einstein and Bekenstein--Hawking, SK--EFT, Kaul--Majumdar, pp. 10--15.\n"})
+        r = bru.check_bundle_prose_em_dash_free()
+        assert r.passed, [d.message for d in r.details]
+
+    def test_both_dashes_on_ONE_line_are_told_apart(self, tmp_path, monkeypatch):
+        """Taken from the live corpus: `observables---also drives the SK--EFT`.
+        The em-dash must be caught and the en-dash left alone."""
+        self._setup(tmp_path, monkeypatch,
+                    {"D1": "observables---also drives the SK--EFT bound.\n"})
+        r = bru.check_bundle_prose_em_dash_free()
+        assert not r.passed
+        assert "1 em-dash" in r.details[0].message
+
+    def test_a_hyphen_is_never_flagged(self, tmp_path, monkeypatch):
+        self._setup(tmp_path, monkeypatch,
+                    {"D1": "A well-known kernel-pure large-N limit.\n"})
+        assert bru.check_bundle_prose_em_dash_free().passed
+
+    def test_four_hyphens_are_not_an_em_dash(self, tmp_path, monkeypatch):
+        """`----` is a rule or ASCII art, not punctuation. The right-lookahead
+        exists for this; without it a decorative separator reads as an em-dash."""
+        self._setup(tmp_path, monkeypatch, {"D1": "A table rule ---- here.\n"})
+        assert bru.check_bundle_prose_em_dash_free().passed
+
+    def test_an_em_dash_inside_a_COMMENT_is_not_flagged(self, tmp_path, monkeypatch):
+        """Comments never reach a reader, so they carry no authorship signal.
+        The sweep deliberately left several in place."""
+        self._setup(tmp_path, monkeypatch,
+                    {"D1": "%% Section 3 --- lifted from phase6v\nClean prose here.\n"})
+        assert bru.check_bundle_prose_em_dash_free().passed
+
+    def test_an_ESCAPED_percent_is_not_a_comment(self, tmp_path, monkeypatch):
+        r"""`\%` is a literal percent sign in rendered text, so an em-dash after it
+        IS visible. Treating it as a comment would blind the check to real prose."""
+        self._setup(tmp_path, monkeypatch,
+                    {"D1": r"A 50\% improvement --- and it renders." + "\n"})
+        assert not bru.check_bundle_prose_em_dash_free().passed
+
+    # ── what it must flag ────────────────────────────────────────────────
+    def test_the_ligature_form_is_flagged(self, tmp_path, monkeypatch):
+        self._setup(tmp_path, monkeypatch, {"D1": "The result --- surprisingly --- holds.\n"})
+        r = bru.check_bundle_prose_em_dash_free()
+        assert not r.passed and "2 em-dash" in r.details[0].message
+
+    def test_the_UNICODE_form_is_flagged(self, tmp_path, monkeypatch):
+        """120 of the corpus's 741 were literal characters, not ligatures — a check
+        matching only `---` would have missed one in six."""
+        self._setup(tmp_path, monkeypatch, {"D1": "The result — surprisingly — holds.\n"})
+        assert not bru.check_bundle_prose_em_dash_free().passed
+
+    def test_the_report_names_a_findable_location(self, tmp_path, monkeypatch):
+        """A count alone is not actionable across a 2,500-line draft."""
+        self._setup(tmp_path, monkeypatch, {"D1": "clean\nclean\nhere --- it is\n"})
+        r = bru.check_bundle_prose_em_dash_free()
+        assert ":3" in r.details[1].message
+
+    # ── population ───────────────────────────────────────────────────────
+    def test_an_empty_population_is_UNVERIFIED_not_passing(self, tmp_path, monkeypatch):
+        """SEAM GUARD — zero em-dashes found across zero drafts is not cleanliness."""
+        self._setup(tmp_path, monkeypatch, {})
+        r = bru.check_bundle_prose_em_dash_free()
+        assert not r.passed and not r.measured
+        assert any(d.name == "population" for d in r.details)

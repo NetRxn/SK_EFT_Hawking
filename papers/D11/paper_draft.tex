@@ -35,12 +35,10 @@
 \author{John Roehm}
 
 \begin{abstract}
-Topological band theory is usually formalized on top of continuum differential geometry ---
-connections, curvature, and the bundle machinery that carries them. We show that machine-checked
+Topological band theory is usually formalized on top of continuum differential geometry: connections, curvature, and the bundle machinery that carries them. We show that machine-checked
 condensed-matter conclusions do not need it. Working in \Lean{} against Mathlib, we build band
 theory and effective-medium physics out of discrete, kernel-checkable invariants and exact
-rational enclosures, with no floating-point arithmetic anywhere and no differential-geometric
-prerequisites --- which Mathlib does not have at the pinned revision, and which we have not
+rational enclosures, with no floating-point arithmetic anywhere and no differential-geometric prerequisites, which Mathlib does not have at the pinned revision, and which we have not
 found in any proof assistant.
 
 The central object is an integer-valued lattice Chern number on a discretized Brillouin torus,
@@ -71,10 +69,7 @@ tracked-hypothesis propositions.
 \section{Introduction}
 \label{sec:intro}
 
-Topological band theory rests on a small number of structural results --- the identification of the
-quantized Hall conductance with a Chern number~\cite{TKNN1982}, the geometric phase that underlies
-it~\cite{Berry1984}, and the demonstration that a nonzero Chern number survives at zero net magnetic
-flux~\cite{Haldane1988} --- that are derived once and then relied upon across an enormous downstream
+Topological band theory rests on a small number of structural results (the identification of the quantized Hall conductance with a Chern number~\cite{TKNN1982}, the geometric phase that underlies it~\cite{Berry1984}, and the demonstration that a nonzero Chern number survives at zero net magnetic flux~\cite{Haldane1988}) that are derived once and then relied upon across an enormous downstream
 literature in condensed matter, photonics and acoustics. A formally verified statement of each,
 machine-checked to the logical kernel, would provide a reusable and unambiguous reference layer.
 
@@ -82,22 +77,19 @@ The obstacle is that the textbook route to a Chern number runs through Chern--We
 integrates a curvature two-form over a closed manifold and appeals to de~Rham cohomology to see that
 the result is an integer. In Mathlib that route is not merely unformalized; it is
 \emph{structurally unavailable}. As of Mathlib revision \texttt{81a5d257} (toolchain
-\texttt{v4.32.0}), Mathlib has differential forms on normed spaces --- with the manifold version an
-explicit in-source TODO --- and the Poincar\'e lemma only for $1$-forms on convex sets. It has no
+\texttt{v4.32.0}), Mathlib has differential forms on normed spaces (with the manifold version an explicit in-source TODO) and the Poincar\'e lemma only for $1$-forms on convex sets. It has no
 integration of forms over manifolds, no de~Rham cohomology, and no characteristic classes. Every one
 of the four ingredients the Chern--Weil argument needs is missing.
 
 Our response is to take the other route. The Fukui--Hatsugai--Suzuki (FHS)
 construction~\cite{FukuiHatsugaiSuzuki2005} computes a Chern number on a \emph{discretized}
 Brillouin zone from link variables and plaquette phases, and produces an integer by construction
-rather than by an integrality theorem. Formalized, it needs no manifolds, no forms and no cohomology
---- only the arithmetic of principal branches on a finite torus. Section~\ref{sec:lattice} shows that
+rather than by an integrality theorem. Formalized, it needs no manifolds, no forms and no cohomology: only the arithmetic of principal branches on a finite torus. Section~\ref{sec:lattice} shows that
 this is enough to obtain both integrality and gauge invariance unconditionally, and
 Section~\ref{sec:graphene} shows it is enough to certify a nontrivial Chern number for a named
 physical model.
 
-The same discipline --- replace an analytic argument by a discrete or algebraic one that a kernel can
-check --- organizes the rest of the bundle. A band gap becomes a pair of rational inequalities
+The same discipline (replace an analytic argument by a discrete or algebraic one that a kernel can check) organizes the rest of the bundle. A band gap becomes a pair of rational inequalities
 (Section~\ref{sec:phononic}). A $\mathcal{PT}$ transition becomes a biconditional on a secular
 determinant, and an exceptional point becomes a comparison of two explicitly computed eigenspaces
 rather than a Jordan decomposition (Section~\ref{sec:nonhermitian}). Effective-medium theory becomes
@@ -110,8 +102,7 @@ statement. We are equally explicit about what we did \emph{not} prove: Section~\
 records that Berry curvature and the bulk--boundary correspondence are \emph{deferred}, not shipped
 in conditional form, and that our claimed novelty carries four mandatory carve-outs.
 
-\paragraph{Substrate summary.} The bundle comprises \dxiModules{} root-imported modules ---
-\dxiLines{} lines, \dxiTheorems{} theorems and lemmas, \dxiDefs{} definitions and structures,
+\paragraph{Substrate summary.} The bundle comprises \dxiModules{} root-imported modules: \dxiLines{} lines, \dxiTheorems{} theorems and lemmas, \dxiDefs{} definitions and structures,
 counted at source level. The counting rule is stated so it is reproducible, on both sides: a
 declaration is counted when a line begins with \texttt{theorem} or \texttt{lemma} (for the first
 figure), or with \texttt{def}, \texttt{noncomputable def}, \texttt{abbrev} or \texttt{structure}
@@ -120,7 +111,7 @@ figure), or with \texttt{def}, \texttt{noncomputable def}, \texttt{abbrev} or \t
 clause is not a technicality: docstrings in this corpus routinely discuss declarations in prose, so a
 line such as ``\texttt{theorem X is the sharper form}'' inside a \texttt{/-- ... -/} block matches
 the surface pattern without being a declaration. Omitting the clause overcounts by four in the
-present tree --- and two of those four are docstring sentences written by this bundle's own
+present tree, and two of those four are docstring sentences written by this bundle's own
 Stage-13 remediations, so the discrepancy grows with every review round rather than staying fixed. The two \texttt{abbrev}s are \thm{Torus} and
 \thm{LinkField}; we include them because \thm{Torus} is cited in this paper and excluding it would
 make a cited object uncountable under our own rule. Every figure in this paragraph is generated
@@ -156,8 +147,7 @@ vanish.
 
 \subsection{Integrality and gauge invariance, unconditionally}
 
-With \thm{latticeChern} defined as minus the sum of \thm{plaquetteBranch} over the torus --- a sum of
-integers, hence an integer \emph{by construction} --- the substantive theorem is that this integer
+With \thm{latticeChern} defined as minus the sum of \thm{plaquetteBranch} over the torus (a sum of integers, hence an integer \emph{by construction}), the substantive theorem is that this integer
 carries the total plaquette phase,
 \begin{equation}
 \sum_k \thm{plaquetteArg}(k) \;=\; 2\pi \cdot \thm{latticeChern},
@@ -168,8 +158,7 @@ decomposition. Gauge invariance is \thm{latticeChern\_gaugeInvariant}, via
 \thm{plaquette\_gaugeTransform}.
 
 This is deliberately a statement about link \emph{data}, not about a physical band. The bridge is
-\thm{AdmissibleBandFrame}, a structure carrying a normalized state field and --- as an explicit
-field --- the requirement that nearest-neighbour overlaps do not vanish. We stress that this is a
+\thm{AdmissibleBandFrame}, a structure carrying a normalized state field and, as an explicit field, the requirement that nearest-neighbour overlaps do not vanish. We stress that this is a
 genuine hypothesis and not a consequence of a spectral gap: a gapped band can still have a vanishing
 overlap between adjacent sampled frames, which is exactly the situation in which the discrete
 construction fails to track the continuum object. Given the structure,
@@ -179,8 +168,7 @@ one or two lines each.
 For non-vacuity, \thm{latticeChern\_Uwit} exhibits a link field on a $2\times2$ torus whose lattice
 Chern number is $1$, against the negative fixture \thm{latticeChern\_trivial}, which is $0$ for the
 constant field. The complementary vanishing criterion
-\thm{blochLatticeChern\_eq\_zero\_of\_narrow\_D} says that a frame with no phase frustration --- all
-nearest-neighbour overlap arguments below $\pi/4$ in absolute value --- cannot wind.
+\thm{blochLatticeChern\_eq\_zero\_of\_narrow\_D} says that a frame with no phase frustration (all nearest-neighbour overlap arguments below $\pi/4$ in absolute value) cannot wind.
 
 \subsection{What connects this to a Hamiltonian}
 
@@ -228,9 +216,7 @@ The spectral content is stronger than an eigenvalue exhibition.
 On the concrete crystal $(m_1,m_2,\kappa,a) = (1,2,1,1)$ we obtain
 $\omega^2_\pm = \tfrac{3}{2} \pm \sqrt{\tfrac{5}{4} + \cos k}$, and hence
 \thm{phononic\_band\_gap\_exists}: there exist $\mathrm{lo} < \mathrm{hi}$ bracketing the two
-branches for all $k$, witnessed at $\mathrm{lo} = 1$ and $\mathrm{hi} = 2$. Both edges are attained
---- \thm{branchMinus\_at\_pi} and \thm{branchPlus\_at\_pi} evaluate to exactly $1$ and $2$ at
-$k = \pi$ --- so the gap is the true one and not a loose bracket; see Fig.~\ref{fig:phononic}.
+branches for all $k$, witnessed at $\mathrm{lo} = 1$ and $\mathrm{hi} = 2$. Both edges are attained (\thm{branchMinus\_at\_pi} and \thm{branchPlus\_at\_pi} evaluate to exactly $1$ and $2$ at $k = \pi$), so the gap is the true one and not a loose bracket; see Fig.~\ref{fig:phononic}.
 
 The existence statement has a strictly stronger companion. \thm{band\_gap\_falsifier} says that
 \emph{any} real $\omega^2$ annihilating the secular determinant strictly inside the gap yields a
@@ -283,8 +269,7 @@ eigenvalue-splitting analysis above.
 \caption{Left: Maxwell--Garnett effective permittivity inside its constituent bounds, with the
 certified point $(\varepsilon_h,\varepsilon_i,f) = (1,4,\tfrac12)$ giving exactly $2$, strictly
 inside $[1,4]$ (\thm{effectiveMedium\_worked\_point\_strict}). Right: the Voigt and Reuss
-elastic \emph{averages} --- not bounds on a physical $M_{\rm eff}$, see \S\ref{sec:effmedium} ---
-with their \emph{exact} arithmetic-minus-harmonic gap (\thm{voigt\_sub\_reuss\_eq}).}
+elastic \emph{averages} (not bounds on a physical $M_{\rm eff}$; see \S\ref{sec:effmedium}) with their \emph{exact} arithmetic-minus-harmonic gap (\thm{voigt\_sub\_reuss\_eq}).}
 \label{fig:effmedium}
 \end{figure*}
 
@@ -297,7 +282,7 @@ zero-fill sanity check.
 The bound we actually prove is the elementary \emph{constituent} bracket
 $\varepsilon_h \le \varepsilon_{\rm eff} \le \varepsilon_i$
 (\thm{effectiveMedium\_constituent\_bounds}), for a physical composite
-$0 < \varepsilon_h \le \varepsilon_i$ at fill fraction $0 \le f \le 1$ --- and the ordering
+$0 < \varepsilon_h \le \varepsilon_i$ at fill fraction $0 \le f \le 1$, and the ordering
 hypothesis is load-bearing rather than a relabeling, since Maxwell--Garnett is not symmetric under
 exchanging host and inclusion. Away from the degenerate endpoints the bracket is \emph{strict}:
 \thm{effectiveMedium\_constituent\_bounds\_strict} gives
@@ -330,8 +315,7 @@ would read $4 \le 1.6$ and the chain is false. (Typeset unconditionally in every
 This is an
 ordering of the two \emph{averages} together with constituent bounds; no effective modulus of a
 composite appears in the statement. The classical Voigt--Reuss bracket $M_{\rm R} \le M_{\rm eff}
-\le M_{\rm V}$ is a claim about a physical $M_{\rm eff}$ and is \emph{not} formalized here ---
-the same distinction, and for the same reason, as the constituent-versus-Hashin--Shtrikman one
+\le M_{\rm V}$ is a claim about a physical $M_{\rm eff}$ and is \emph{not} formalized here: the same distinction, and for the same reason, as the constituent-versus-Hashin--Shtrikman one
 above. The Hashin--Shtrikman elastic bounds~\cite{HashinShtrikman1963} refine that physical
 bracket, not this ordering. The sharpest statement here is
 \thm{voigt\_sub\_reuss\_eq}, which gives the arithmetic-minus-harmonic gap \emph{exactly}
@@ -342,12 +326,10 @@ M_{\rm V} - M_{\rm R} \;=\; \frac{f(1-f)(M_1-M_2)^2}{(1-f)M_2 + fM_1},
 rather than only as the inequality $M_{\rm V} \ge M_{\rm R}$, which was all that was formalized
 at the time the module header already asserted the exact identity.
 
-\paragraph{Route disclosure.} This section is deliberately \emph{algebraic}. The analytic route ---
-two-scale convergence and periodic homogenization --- was not attempted. Mathlib carries Sobolev
+\paragraph{Route disclosure.} This section is deliberately \emph{algebraic}. The analytic route (two-scale convergence and periodic homogenization) was not attempted. Mathlib carries Sobolev
 inequalities but no two-scale convergence, and PhysLib's optics directory is by its own docstring a
 placeholder. Two-scale convergence is, to our knowledge, formalized in \emph{no} proof assistant, so
-this is a choice between two equally unformalized routes in which the algebraic one was tractable ---
-not the avoidance of an existing formalization. The
+this is a choice between two equally unformalized routes in which the algebraic one was tractable, not the avoidance of an existing formalization. The
 nearest substrate an analytic route would need is the Lax--Milgram theorem, for which a detailed
 proof prepared for Coq formalization is available~\cite{BoldoLaxMilgram2016} and a Coq development
 followed.
@@ -362,7 +344,7 @@ inversion window $|m| < 3\sqrt{3}$ is shaded. Right: the certified lattice Chern
 $t = t_2 = 1$, $\varphi = \pi/2$ on a $4\times4$ torus. The point $m = 5$ lies \emph{inside} the
 analytic window yet reads $C = 0$: mass inversion is \emph{not sufficient} at fixed grid size, which
 is the half that is theorem-backed (\thm{haldane\_massInversion\_not\_sufficient\_at\_N4}).
-Necessity is \emph{not} certified --- it rests on the single sample $m = 6$ --- so the figure
+Necessity is \emph{not} certified (it rests on the single sample $m = 6$), so the figure
 makes no necessity claim at all. The flip location $\approx 3.3177$ is computed by
 \texttt{haldane\_flip\_location}, a bisection on the ported invariant, and is labelled in the figure
 as numerical rather than certified.}
@@ -378,7 +360,7 @@ The honeycomb structure factor is \thm{structureFactor}, entering the $d\cdot\si
 cones are inequivalent: \thm{diracK'\_ne\_recip\_translate\_diracK} shows one is not a
 reciprocal-lattice translate of the other.
 
-The generality question --- which coordinate charts are admissible --- is answered by
+The generality question (which coordinate charts are admissible) is answered by
 \thm{isHoneycombChart\_of\_neighbours}: the honeycomb's own neighbour geometry \emph{forces} the
 chart, with \thm{chart\_len\_sq\_of\_neighbours} fixing the primitive-vector length in terms of the
 carbon--carbon distance. Section~\ref{sec:refutations} explains why this is stated as a forcing
@@ -409,8 +391,7 @@ absolute mass (\thm{gapped\_dirac\_gap\_eq}), shown to be the model minimum by
 The Haldane model~\cite{Haldane1988} adds a next-nearest-neighbour complex hopping, formalized via
 \thm{haldaneNNN} and bridged to the physical neighbour sum by \thm{haldaneNNN\_eq\_nnnSum}. Because
 \thm{haldaneNNN\_diracK} and \thm{haldaneNNN\_diracK'} take opposite values, the two cones acquire
-\emph{opposite} masses (\thm{haldaneD\_diracK}, \thm{haldaneD\_diracK'}) --- the entire mechanism ---
-with gaps \thm{haldane\_gap\_diracK} and the inversion criterion
+\emph{opposite} masses (\thm{haldaneD\_diracK}, \thm{haldaneD\_diracK'}), the entire mechanism, with gaps \thm{haldane\_gap\_diracK} and the inversion criterion
 \thm{haldane\_mass\_inversion\_iff}.
 
 Sampling on a $4\times4$ torus and feeding the result through the machinery of
@@ -432,12 +413,10 @@ formalities: \thm{haldane1\_pos} checks the north-pole condition at all sixteen 
 
 The companion values are as important as the headline.
 \thm{haldane\_trivial\_phase\_chern\_zero} gives $C = 0$ at $m = 6$, outside the analytic window. And
-\thm{haldane\_massInversion\_not\_sufficient\_at\_N4} gives $C = 0$ at $m = 5$ --- which is
-\emph{inside} the window $|m| < 3\sqrt{3} \approx 5.196$ (\thm{haldane\_window\_bounds}). At this
-grid size the invariant flips \emph{numerically} near $|m| \approx 3.3177$ --- a bisection on a
-Python port of the same FHS construction (\texttt{haldane\_lattice\_chern},
+\thm{haldane\_massInversion\_not\_sufficient\_at\_N4} gives $C = 0$ at $m = 5$, which is \emph{inside} the window $|m| < 3\sqrt{3} \approx 5.196$ (\thm{haldane\_window\_bounds}). At this
+grid size the invariant flips \emph{numerically} near $|m| \approx 3.3177$: a bisection on a Python port of the same FHS construction (\texttt{haldane\_lattice\_chern},
 \texttt{haldane\_flip\_location} in \texttt{formulas.py}, pinned against the three Lean-certified
-masses by regression test), with no Lean backing for the crossing itself --- so on roughly a third of
+masses by regression test), with no Lean backing for the crossing itself, so on roughly a third of
 the analytic window
 the masses have inverted while the $4\times4$ invariant still reads zero (Fig.~\ref{fig:haldane}).
 Section~\ref{sec:refutations} records what we did about that.
@@ -446,8 +425,7 @@ Independently, the Berry phase around a cone is exact rather than enclosed:
 \thm{coneBerryPhase\_pi} gives $\pi$ for the diamond loop, with \thm{coneWinding\_two\_pi} recording
 increments summing to $2\pi$, against the contrast pair \thm{flatLoopBerryPhase\_zero} and
 \thm{flatWinding\_zero} for a loop enclosing no degeneracy. The honest limitation, stated in the
-source: the increments are certified non-marginal --- each keeps a margin from the branch cut
-(\thm{coneWinding\_increments\_off\_branch\_cut}) --- but not certified alias-free.
+source: the increments are certified non-marginal (each keeps a margin from the branch cut, \thm{coneWinding\_increments\_off\_branch\_cut}) but not certified alias-free.
 
 \subsection{Bilayer graphene}
 
@@ -455,7 +433,7 @@ The Bernal-stacked bilayer required Mathlib-grade infrastructure: \thm{det\_fin\
 ships determinant expansions only through \texttt{Matrix.det\_fin\_three}. With it, \thm{bernal\_det\_eq}
 collapses the $4\times4$ secular determinant to a single real quadratic, and
 \thm{bernal\_eigenvector\_iff} confirms its roots are genuine Bloch eigenvectors. The results split by bias, and the
-split is load-bearing rather than presentational --- an earlier version of this sentence chained
+split is load-bearing rather than presentational: an earlier version of this sentence chained
 them all as though they held together, which they cannot (corrected 2026-08-01, D11 Stage-13
 round-14 finding 6.2). \emph{At zero bias} ($u = 0$): the chirality relation
 \thm{bernal\_chirality\_two} is exact and the low-energy behaviour is bracketed globally by
@@ -481,7 +459,7 @@ than an invariance result: the correct generality is that the physical neighbour
 the chart, not that any chart will do.
 
 \paragraph{The spectrum does not determine a multi-band model.} Our first bilayer Hamiltonian
-carried a conjugated off-diagonal block --- the wrong model. It passed every gate we had: the
+carried a conjugated off-diagonal block: the wrong model. It passed every gate we had: the
 determinant identity, the gap theorem, the enclosure, kernel purity, the \texttt{sorry} count and the
 full validation suite. What exposed it was an eigenvector-level quantity.
 \thm{bernal\_chirality\_two} gives the exact chirality relation for the correct model, while
@@ -489,12 +467,11 @@ full validation suite. What exposed it was an eigenvector-level quantity.
 refutation \thm{bernal\_spectrum\_not\_determine\_model} then certifies, as a four-way conjunction,
 that the swapped model is Hermitian at all parameters, that the two secular determinants agree at
 all parameters, that the two Hamiltonians are nonetheless distinct at $f = i$, and that
-$i^2 \neq i\,\bar{\imath}$ --- the last being the arithmetic fact that separates the chirality
+$i^2 \neq i\,\bar{\imath}$, the last being the arithmetic fact that separates the chirality
 coefficients $f^2$ and $f\bar{f}$ which the spectrum cannot see.
 
 We regard this as the bundle's most transferable result, and it has changed our standing practice:
-for any multi-band Hamiltonian, ship at least one eigenvector-level invariant --- a winding number, a
-Berry phase, a chirality relation --- verified against the primary source. A determinant-level gate
+for any multi-band Hamiltonian, ship at least one eigenvector-level invariant (a winding number, a Berry phase, a chirality relation) verified against the primary source. A determinant-level gate
 cannot certify that a model has been correctly identified, and ours did not.
 
 \paragraph{A retracted classification.} We previously shipped a theorem asserting that the lattice
@@ -509,11 +486,9 @@ masses invert'' at a fixed grid size.
 
 \paragraph{What is deferred, and not shipped conditionally.} Berry curvature is not formalized here:
 neither a Berry connection nor a Berry curvature occurs anywhere in this development. The
-band-theoretic bulk--boundary correspondence is likewise absent from this bundle --- not shipped
-conditionally on a disclosed hypothesis, but simply not undertaken. (A carve-out symmetric with the
+band-theoretic bulk--boundary correspondence is likewise absent from this bundle: not shipped conditionally on a disclosed hypothesis, but simply not undertaken. (A carve-out symmetric with the
 \texttt{ChernBridge} one below: this group's tree does contain categorical bulk--boundary objects in
-its SymTFT modules. They are a different construct --- an algebraic condensation statement, not a
-band-theoretic edge-mode count --- and we name them rather than let the absence claim stand
+its SymTFT modules. They are a different construct (an algebraic condensation statement, not a band-theoretic edge-mode count), and we name them rather than let the absence claim stand
 unqualified against our own tree.) The continuum invariant is deferred on the infrastructure
 grounds set out in Section~\ref{sec:intro}. Our earlier planning documents described this thread as
 including Berry curvature and a conditional bulk--boundary result; that description did not match the
@@ -525,46 +500,39 @@ they sample the Dirac points where the $d$-vector is purely longitudinal and the
 degenerates. This is a real constraint on which grids may be used, not a cosmetic one.
 
 \paragraph{Novelty, with carve-outs.} We are aware of no \emph{prior} formalization, in any proof
-assistant, of a Chern number or a Chern class \emph{of a vector bundle} --- the topological
-invariant --- nor of an acoustic or phononic band structure, an exceptional point, a
+assistant, of a Chern number or a Chern class \emph{of a vector bundle} (the topological invariant), nor of an acoustic or phononic band structure, an exceptional point, a
 $\mathcal{PT}$ transition, a Maxwell--Garnett constituent enclosure, a Wiener or
 Hashin--Shtrikman-type effective-medium bound, a honeycomb band structure, or the Haldane model.
-(Stated in the past tense deliberately: the present paper formalizes six of these
-eight --- the acoustic band structure, the exceptional point, the $\mathcal{PT}$ transition, the
-Maxwell--Garnett enclosure, the honeycomb band structure and the Haldane model --- so a present-tense
+(Stated in the past tense deliberately: the present paper formalizes six of these eight (the acoustic band structure, the exceptional point, the $\mathcal{PT}$ transition, the Maxwell--Garnett enclosure, the honeycomb band structure and the Haldane model), so a present-tense
 universal negative would be self-refuting. Two of the eight
 are \emph{not} delivered here and are listed for the absence claim only: the vector-bundle Chern class
 (Section~\ref{sec:lattice}'s invariant is the Fukui--Hatsugai--Suzuki lattice quantity, not proved
 equal to it) and the Wiener/Hashin--Shtrikman families, which Section~\ref{sec:effmedium} states
 explicitly are not formalized in this development.) One carve-out is our own: this group's \texttt{ChernBridge} module defines a categorical
 Chebyshev \emph{marker} that a companion bundle describes in Chern language. It is a different
-object from the Bloch-band invariant reported here --- an algebraic marker, not an integral of
-curvature over a bundle --- and we flag it rather than let the absence claim stand unqualified
+object from the Bloch-band invariant reported here (an algebraic marker, not an integral of curvature over a bundle), and we flag it rather than let the absence claim stand unqualified
 against our own tree. The Mathlib statements are pinned to revision \texttt{81a5d257} and were
 verified by direct inspection of that checkout rather than from documentation; every occurrence of
 the string \texttt{Chern} in Mathlib is in fact \texttt{Chernoff}. Every PhysLib claim in this paper is
 likewise pinned, to revision \texttt{c4843367}, and verified against that checkout. Four carve-outs
 are mandatory.
 
-First, PhysLib does formalize a tight-binding chain --- but a one-dimensional, single-band, gapless
+First, PhysLib does formalize a tight-binding chain, but a one-dimensional, single-band, gapless
 one whose Brillouin zone is a real interval, with no multi-band Bloch matrix, no gap, no Berry
 quantity and no topological invariant. Second, Cubical Agda has independently formalized synthetic
 cohomology including cup products, the Gysin sequence, and the cohomology rings of the spheres, the
 torus, the Klein bottle, the real and complex projective \emph{planes}, and infinite real projective
 space~\cite{LjungstromMortberg2024}. That development's \S4.4 is ``The Thom isomorphism and the Gysin
-sequence'', and its Gysin map is stated as $(-)\smile e$ with $e$ constructed per fibration ---
-the Euler class in substance, though the words ``Euler'' and ``Chern'' do not appear in it. Our
+sequence'', and its Gysin map is stated as $(-)\smile e$ with $e$ constructed per fibration: the Euler class in substance, though the words ``Euler'' and ``Chern'' do not appear in it. Our
 claim is therefore narrower than ``the machinery is absent'': it is that no assistant
 \emph{defines the Chern classes of a vector bundle}, which is a different object from a
 per-fibration Euler class. (Corrected 2026-07-31: three earlier drafts of this sentence named
-``the cohomology ring of $\mathbb{CP}^\infty$'', which that development does not contain --- its
-infinite projective space is the \emph{real} one, whose ring is the Stiefel--Whitney substrate
+``the cohomology ring of $\mathbb{CP}^\infty$'', which that development does not contain: its infinite projective space is the \emph{real} one, whose ring is the Stiefel--Whitney substrate
 $H^*(\mathbb{RP}^\infty;\mathbb{Z}/2)$, not the $\mathbb{Z}[c_1]$ from which Chern classes are
 defined. The substitution made the carve-out concede more than the source supports.) Third, Isabelle/HOL formalizes winding
 numbers, Cauchy indices and the argument principle~\cite{LiPaulson2018}, which is the nearest
 machinery to our non-Hermitian winding content and to any index-theoretic reading of bulk--boundary.
-Fourth, the Lax--Milgram theorem --- the backbone of elliptic-PDE well-posedness and so of any
-analytic homogenization route --- has a detailed proof prepared for Coq
+Fourth, the Lax--Milgram theorem (the backbone of elliptic-PDE well-posedness and so of any analytic homogenization route) has a detailed proof prepared for Coq
 formalization~\cite{BoldoLaxMilgram2016}, with a Coq development following it. We also note the formal-proof energy-benchmarking work of Ugwuanyi
 \emph{et al.}~\cite{LeanLJ2025} as the nearest ``periodic lattice in Lean'' precedent, though it is
 not band theory.
@@ -578,9 +546,7 @@ and Coq; for those two systems we say only that we are not aware of relevant wor
 
 \section{Conclusion}
 
-The five layers reported here share a method rather than a subject. In each, a construction that is
-ordinarily analytic --- an integral of curvature, a spectral gap, a Jordan decomposition, a
-homogenization limit --- was replaced by a discrete or algebraic certificate that a kernel can check
+The five layers reported here share a method rather than a subject. In each, a construction that is ordinarily analytic (an integral of curvature, a spectral gap, a Jordan decomposition, a homogenization limit) was replaced by a discrete or algebraic certificate that a kernel can check
 outright, and in each case the replacement was strong enough to reach the physical conclusion. The
 lattice Chern number is an integer by construction rather than by a theorem; the band gap is a pair
 of rational inequalities with attained edges and a general falsifier; the exceptional point is a

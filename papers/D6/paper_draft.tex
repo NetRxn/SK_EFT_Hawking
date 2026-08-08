@@ -37,9 +37,9 @@ We collect the project's formal-verification substrate for the
 fault-tolerant quantum-computation frontier into a single, self-contained
 Lean-4-anchored exposition. The bundle assembles four interlocking
 kernel-verified results: (i)~the Williamson--Yoder
-gauging-of-logical-operators overhead bound — a logical-measurement
+gauging-of-logical-operators overhead bound (a logical-measurement
 auxiliary-qubit count linear in the operator weight up to a
-polylogarithmic factor — formalised against the project's existing
+polylogarithmic factor), formalised against the project's existing
 gauging machinery; (ii)~the Phase~6t quantitative Solovay--Kitaev tight-
 $\varepsilon$ headline, lifted into the substrate as the canonical
 compilation primitive for the universal gate set; (iii)~the
@@ -58,7 +58,7 @@ compilation to universal logic.
 The substrate is closed under standard Lean kernel axioms only
 ($[\mathrm{propext}, \mathrm{Classical.choice}, \mathrm{Quot.sound}]$);
 zero new project-local axioms are introduced. We highlight the
-contrast structure that makes each substantive ship non-vacuous —
+contrast structure that makes each substantive ship non-vacuous:
 each kernel-verified achievement is paired with a falsifier that
 fails the corresponding baseline.
 \end{abstract}
@@ -86,14 +86,14 @@ kernel-verified substrate.
 Formal verification of quantum software is an active field, and the
 positioning of this bundle against it must be precise. VOQC/SQIR in
 Coq~\cite{Hietala2020VOQC} verifies \emph{equivalence-preserving}
-optimizations of quantum circuits --- a certified compiler pass
+optimizations of quantum circuits: a certified compiler pass
 guaranteeing that the optimized circuit denotes the same unitary as
 its input. Qbricks~\cite{Chareton2021Qbricks} provides a deductive
 (Why3-based) verification framework for parametrized
 circuit-building quantum programs, with certified case studies
 including quantum phase estimation and Grover search. The broader
-verified-quantum-programs landscape --- quantum Hoare logics and
-tool support across Coq, Isabelle, Why3, and dedicated systems ---
+verified-quantum-programs landscape (quantum Hoare logics and
+tool support across Coq, Isabelle, Why3, and dedicated systems)
 is surveyed by Lewis, Soudjani, and Zuliani~\cite{Lewis2021VerifQC}.
 These efforts certify that a \emph{given circuit or program computes
 what it should}. None of them targets the fault-tolerance substrate
@@ -101,8 +101,8 @@ itself: quantitative QEC resource-overhead bounds, fault-tolerant
 logical-measurement protocols, \emph{approximation} compilation
 (bounded-error synthesis toward a target unitary, as opposed to
 equivalence-preserving rewriting), and density/universality of the
-compiled gate set. D6's contribution --- to our knowledge the first
-of its kind --- is that chain, kernel-checked end to end in Lean~4:
+compiled gate set. D6's contribution, to our knowledge the first
+of its kind, is that chain, kernel-checked end to end in Lean~4:
 the gauging-of-logical-operators overhead bound
 (\textsection\ref{sec:gaugingQEC}), the asymptotically-optimal-code
 substrate (\textsection\ref{sec:apmldpc}), the single-shot W-state
@@ -117,7 +117,7 @@ theory has already costed and approved.
 publication architecture (per the program's internal paper-strategy
 document) as a Tier~1 deep-paper
 sibling to D4
-(``Topological Quantum Computation --- First Machine-Verified
+(``Topological Quantum Computation: First Machine-Verified
 Foundations''). D4 retains its Fibonacci-anyon / topological-foundations
 focus; D6 covers the fault-tolerant-computation substrate. All four
 headline sections (\textsection\textsection~\ref{sec:gaugingQEC},
@@ -133,8 +133,8 @@ protocol-level verified quantum-network substrate
 
 The universal-compilation primitive consumed throughout this bundle is the
 quantitative Solovay--Kitaev tight-$\varepsilon$ headline. As of 2026-05-31 the
-canonical home of that primitive --- and of the alphabet-agnostic,
-arbitrary-dimension $\mathrm{SU}(d)$ compilation theory it instantiates --- is
+canonical home of that primitive (and of the alphabet-agnostic,
+arbitrary-dimension $\mathrm{SU}(d)$ compilation theory it instantiates) is
 the sibling bundle \textbf{D8} (\emph{Kernel-Verified Universal Quantum Gate
 Compilation}; consolidating Phase 6p/6t/6u/6x/6x$'$/6y/6z, authorized 2026-05-31
 per Pipeline Invariant~\#14). D6 \emph{consumes} D8's quantitative
@@ -176,7 +176,7 @@ declarations:
 \item \verb|williamsonYoderAuxQubits|: a $\mathbb{N} \to \mathbb{N}$
   function realising the bound, encoded as
   $\auxQubits(W) := W \cdot (\lfloor \log_2 W \rfloor + 1)$. This is
-  the substantive Lean witness — a concrete protocol implementing
+  the substantive Lean witness: a concrete protocol implementing
   the bound, not just an existential claim.
 \item \verb|IsLinearPolylogOverhead|: the predicate
   $\exists C,\ \forall W \geq 1,\ \auxQubits(W) \leq
@@ -187,10 +187,10 @@ declarations:
 \item \verb|naiveQuadraticAuxQubits|: the prior-schemes baseline
   $\auxQubits(W) := W^2$ for contrast.
 \item \verb|williamsonYoder_beats_quadratic_for_W_ge_two|:
-  substantive contrast — $\auxQubits^{\rm WY}(W) \leq W^2$ for any
+  substantive contrast: $\auxQubits^{\rm WY}(W) \leq W^2$ for any
   positive $W$ (the W-Y protocol genuinely improves over naive
   quadratic, not just a relabeling).
-\item \verb|quadraticOverhead_not_linear|: the \emph{falsifier} —
+\item \verb|quadraticOverhead_not_linear| is the \emph{falsifier}:
   the quadratic-overhead class is NOT contained in the strict-linear
   class. For any constant $C$, the witness $W = C+1$ gives
   $(C+1)^2 = C^2 + 2C + 1 > C^2 + C = C \cdot (C+1)$, so the linear
@@ -198,7 +198,7 @@ declarations:
   Eq.~\eqref{eq:wy_bound} is unavoidable for any scheme that includes
   the quadratic baseline.
 \item \verb|gaugingQEC_strictly_improves_over_quadratic_at_large_W|:
-  numerical witness at $W = 4$ — Williamson-Yoder gives
+  numerical witness at $W = 4$: Williamson-Yoder gives
   $4 \cdot 3 = 12$ auxiliary qubits, naive gives $4 \cdot 4 = 16$,
   a 25\% reduction at this concrete weight; the improvement factor
   grows logarithmically with $W$.
@@ -261,7 +261,7 @@ The Lean substrate ships in
   Harvard-MIT code has rate $580/1152 \approx 0.5035 > 1/2$
   (\verb|decide|/\verb|norm_num|-discharged).
 \item \verb|exactlyHalfRateCode k hk|: the rate-exactly-$1/2$
-  code $[[2k, k]]$ — substantive falsifier-class instance.
+  code $[[2k, k]]$: substantive falsifier-class instance.
 \item \verb|exactlyHalfRateCode_not_above_half|: the substantive
   non-vacuity check that \verb|IsRateAboveHalf| is a STRICT
   inequality, not a $\leq$.
@@ -280,7 +280,7 @@ $p$, the quantum capacity is bounded above by the Shannon-capacity
 The Komoto-Kasai 2025
 result~\cite{KomotoKasai2025APMLDPCHashingBound} establishes that
 APM-LDPC code families approach this bound with decoding cost
-linear in the physical-qubit count — closing a 25-year gap between
+linear in the physical-qubit count, closing a 25-year gap between
 achievability statements and known constructions. The Lean
 substrate ships:
 \begin{itemize}
@@ -289,11 +289,11 @@ substrate ships:
 \item \verb|apmLdpc_hashing_bound_at_own_rate|: trivial witness
   ($c$ at $H_{\rm bound} = c.{\rm rate}$).
 \item \verb|apmLdpc_quEraHarvard_approaches_hashing_bound|:
-  substantive witness — the QuEra-Harvard-MIT code's rate
+  substantive witness: the QuEra-Harvard-MIT code's rate
   $580/1152$ is achievable up to the representative Komoto-Kasai
   threshold $53/100$ (= $0.53$), which substantively exceeds the
   code's rate. The representative $0.53$ corresponds approximately
-  to $C_{\rm hash}(p)$ at depolarizing $p \approx 0.10$ — a regime
+  to $C_{\rm hash}(p)$ at depolarizing $p \approx 0.10$, a regime
   the QuEra-Harvard-MIT-class codes target.
 \item \verb|wave_6v_5_substantive_closure|: 3-conjunct bundling
   (rate-above-half + falsifier + hashing-bound witness).
@@ -304,13 +304,13 @@ The Wave 6v.5 hashing-bound predicate `IsHashingBoundAchievable c H\_bound`
 ships with `H\_bound` parameterized over rational thresholds. Post-scout,
 the substantive Komoto-Kasai form ships:
 \begin{itemize}
-\item \texttt{H\_2 (p : $\mathbb{R}$) := Real.binEntropy p / Real.log 2}
-  --- the base-2 wrapper of Mathlib's natural-log
+\item \texttt{H\_2 (p : $\mathbb{R}$) := Real.binEntropy p / Real.log 2}:
+  the base-2 wrapper of Mathlib's natural-log
   \texttt{Real.binEntropy} (which is in
   \texttt{Mathlib/Analysis/SpecialFunctions/BinaryEntropy.lean}).
 \item Structural theorems \texttt{H\_2\_zero}, \texttt{H\_2\_nonneg},
   \texttt{H\_2\_one\_half} ($= 1$, max-entropy), \texttt{H\_2\_le\_one}.
-\item \texttt{IsHashingBoundAchievableAt c (p : $\mathbb{R}$)}\,$:=$\,$c.{\rm rate} \leq 1 - H_2\,p$ ---
+\item \texttt{IsHashingBoundAchievableAt c (p : $\mathbb{R}$)}\,$:=$\,$c.{\rm rate} \leq 1 - H_2\,p$:
   the substantive Komoto-Kasai-form predicate.
 \item \texttt{apmLdpc\_hashing\_bound\_at\_zero\_noise}: substantive
   corner-case witness at $p = 0$ ($1 - H_2(0) = 1$; every code
@@ -327,7 +327,7 @@ that requires real-interval-arithmetic substrate currently absent
 from Mathlib v4.29.1. The structural ship above is non-vacuous at the
 substrate-class boundary.
 
-\subsection{Sub-wave coda — substrate connection to existing
+\subsection{Sub-wave coda: substrate connection to existing
 project LDP}
 
 The hashing-bound predicate consumes the project's existing
@@ -375,24 +375,24 @@ gate set. Composing the two gives the kernel-verified T-gate budget:
 The Lean substrate ships in
 \verb|lean/SKEFTHawking/FaultTolerance/ShorTGateCount.lean|:
 \begin{itemize}
-\item \verb|bravyiKitaevToffoliT n := 7 * n| — the BK
+\item \verb|bravyiKitaevToffoliT n := 7 * n|: the BK
   decomposition's T-cost function.
 \item \verb|ECC256Config| inductive with two constructors
   \verb|config1200| and \verb|config1450|, plus
   \verb|googleShorECC256ToffoliBound| and
   \verb|googleShorECC256TGateBound|.
-\item \verb|shor_ecc256_tgate_count_le| — the headline theorem:
+\item \verb|shor_ecc256_tgate_count_le| is the headline theorem:
   any circuit fitting the Babbush Toffoli budget for a given
   configuration, after BK decomposition, fits the corresponding
   T-gate budget.
 \item \verb|googleShorECC256TGateBound_config1200_eq| and
-  \verb|_config1450_eq| — concrete numerical evaluations
+  \verb|_config1450_eq|: concrete numerical evaluations
   (630M / 490M).
 \item \verb|shor_ecc256_falls_within_megagate_envelope_at_1G|
-  — substantive contrast: both configurations sit inside the natural
+  is a substantive contrast: both configurations sit inside the natural
   $10^9$ T-gate FT-QC budget envelope with concrete headroom
   (370M / 510M).
-\item \verb|config1450_T_strictly_less_than_config1200| — the
+\item \verb|config1450_T_strictly_less_than_config1200| is the
   qubit-T trade-off witness: spending $+250$ logical qubits saves
   $140M$ T-gates.
 \item \verb|wave_6v_2_substantive_closure| bundling all three.
@@ -400,7 +400,7 @@ The Lean substrate ships in
 Kernel-only; zero new project-local axioms; zero tracked Props.
 Substantive content: the headline 630M T-gate bound is a CONCRETE
 numerical claim, not asymptotic, not conditional on any unspecified
-compilation overhead — it combines Google's Toffoli budget (a deep
+compilation overhead; it combines Google's Toffoli budget (a deep
 optimisation result; $\sim 10\times$ improvement over prior
 estimates) and BK's exact 7-factor (an algebraic-Clifford-hierarchy
 result) into a single resource estimate at the headline scale.
@@ -412,7 +412,7 @@ To our knowledge, this is the first kernel-verified end-to-end
 ECC-256 Shor T-gate-count upper bound in any proof assistant. The
 substrate consumes only the Bravyi-Kitaev exact decomposition (no
 continuous-rotation approximation), so no Solovay-Kitaev
-compilation overhead is added — D6~\textsection\ref{sec:sk}'s SK
+compilation overhead is added; D6~\textsection\ref{sec:sk}'s SK
 substrate is consumed elsewhere in the bundle (D6~\textsection\ref{sec:wstate}
 on the W-state QFT in $\mathbb{Q}(\zeta_N)$), not here.
 
@@ -435,7 +435,7 @@ canonical cyclic-shift-symmetric multipartite entangled state
 where $Z_n$ is the cyclic-shift operator. The Z$_n$ symmetry means
 that single-shot projective measurement in the QFT$_n$ eigenbasis
 yields one of $n$ outcomes (the cyclic-shift label $k \in \{0, 1,
-\ldots, n-1\}$) with eigenvalues $\zeta_n^k$ — the $n$-th roots
+\ldots, n-1\}$) with eigenvalues $\zeta_n^k$, the $n$-th roots
 of unity. The natural number field for the QFT$_n$ measurement basis
 is therefore the $n$-th cyclotomic field $\mathbb{Q}(\zeta_n)$.
 
@@ -446,7 +446,7 @@ $n = 5$ the natural field is the project's existing
 \verb|QCyc5| substrate; for $n = 8$ it is contained in
 \verb|QCyc16|; for $n = 40$ it is exactly the
 \verb|QCyc40| FibonacciQutrit / T-gate-compiler natural number
-field — the same cyclotomic substrate \textsection~\ref{sec:sk}'s
+field, the same cyclotomic substrate \textsection~\ref{sec:sk}'s
 quantitative Solovay-Kitaev tight-$\varepsilon$ headline operates on.
 
 \subsection{Formal substrate}
@@ -456,12 +456,12 @@ The Lean substrate ships in
 \begin{itemize}
 \item \verb|WStateCyclicShiftDecomposition n| structure (Prop
   $n \geq 2$).
-\item \verb|nQubitWStateBasisSize n := n| — the W-state QFT
+\item \verb|nQubitWStateBasisSize n := n|: the W-state QFT
   basis size equals the qubit count $n$, NOT the full Hilbert
   dimension $2^n$.
-\item \verb|fullHilbertDim n := 2^n| — for contrast.
+\item \verb|fullHilbertDim n := 2^n|: for contrast.
 \item \verb|n_qubit_w_state_basis_strictly_smaller_than_full_hilbert|
-  — substantive exponential-vs-polynomial separation:
+  is a substantive exponential-vs-polynomial separation:
   $n < 2^n$ for $n \geq 1$ (the QFT measurement basis is
   \emph{exponentially smaller} than the full Hilbert basis).
 \item Concrete witnesses at project-substrate sizes:
@@ -480,9 +480,9 @@ The Lean substrate ships in
   \texttt{CyclotomicField.isCyclotomicExtension} +
   \texttt{Nat.cast\_ne\_zero} plumbing.
 \item \texttt{wState\_basis\_isCyclotomic\_at\_QCyc\_sizes} concrete
-  witness bundle at $n \in \{5, 8, 16, 40, 80\}$ — the project's
+  witness bundle at $n \in \{5, 8, 16, 40, 80\}$, the project's
   existing QCyc\_n cyclotomic-substrate sizes.
-\item \verb|wave_6v_6_substantive_closure| — 3-conjunct bundle (the
+\item \verb|wave_6v_6_substantive_closure|: 3-conjunct bundle (the
   third conjunct is now genuinely non-vacuous: a primitive 40-th
   root of unity in $\mathbb{Q}(\zeta_{40})$).
 \end{itemize}
@@ -491,7 +491,7 @@ Kernel-only; zero new project-local axioms; zero tracked Props.
 \subsection{Cross-bridge to D6 §\ref{sec:sk} (Solovay-Kitaev)}
 
 The W-state QFT decomposition is \emph{exact} at the cyclotomic
-level — no continuous-rotation approximation is needed when the
+level: no continuous-rotation approximation is needed when the
 gate set already contains the $n$-th roots of unity (e.g., the
 Q($\zeta_{40}$) Fibonacci-qutrit substrate). When the target gate
 set is finite (Clifford+T or Fibonacci), the Phase~6t quantitative
@@ -509,23 +509,23 @@ Building on the W-state measurement primitive above, Phases~6AA--6AD ship a
 self-contained verified substrate for entanglement-based quantum-network
 protocols under \verb|lean/SKEFTHawking/QuantumNetwork/| (17 kernel-only
 modules). Working in the Bell-diagonal / Werner fidelity-parameter
-representation — explicit real-parameter expressions rather than density
-matrices — it proves the load-bearing fidelity-composition identities and a
+representation (explicit real-parameter expressions rather than density
+matrices), it proves the load-bearing fidelity-composition identities and a
 model-independent end-to-end \emph{fidelity envelope}:
 \begin{itemize}
-\item \verb|fiberTransmission_eq_exp_neg_attenuationNp| — the
+\item \verb|fiberTransmission_eq_exp_neg_attenuationNp|: the
   dB$\leftrightarrow$Np attenuation-convention identity
   $10^{-\alpha_{\mathrm{dB}}L/10} = e^{-\alpha_{\mathrm{Np}}L}$ with
   $\alpha_{\mathrm{Np}} = \alpha_{\mathrm{dB}}\ln 10/10$ (resolving the
   literature ``0.046'' convention: Np/km, not dB/km).
 \item \verb|wernerSwapFidelity| $F_{\mathrm{out}} = F_1F_2 + (1-F_1)(1-F_2)/3$
   (Briegel--D\"ur--Cirac--Zoller) with monotone composition.
-\item \verb|bbpsswRecurrence_gt| — the BBPSSW distillability flagship: on
+\item \verb|bbpsswRecurrence_gt| is the BBPSSW distillability flagship: on
   $F \in (1/2,1)$ purification strictly increases fidelity, the entire
   statement collapsing to the single cubic $(1-F)(2F-1)(4F-1) > 0$;
   \verb|dejmps_werner_fidelity_increase| is the DEJMPS analogue (with the
   diagonal $(00,11)$ Pauli-error pairing).
-\item \verb|fortescueLoYield| — the Fortescue--Lo finite-round W-state
+\item \verb|fortescueLoYield|: the Fortescue--Lo finite-round W-state
   random-pair yield $D/(D+1)$, proved to surpass the single-copy
   specified-pair bound $2/3$ for $D \geq 3$ (the $=1$ asymptotic equality is
   an open conjecture and is \emph{not} claimed).
@@ -535,7 +535,7 @@ model-independent end-to-end \emph{fidelity envelope}:
   per-link fidelity $F \in [1/4,1]$, the end-to-end fidelity provably lies in
   $[1/4,1]$, monotone in $F$ and antitone in chain length.
 \end{itemize}
-The envelope is \emph{model-independent} — a property of the fidelity (on which
+The envelope is \emph{model-independent}: a property of the fidelity (on which
 the standard network simulators agree~\cite{ChungHajdusekVanMeter2025QNetSimXval})
 rather than of connection-model-dependent timing. Kernel-only; zero new project-local axioms.
 
@@ -546,7 +546,7 @@ real-parameter representation. (i)~\emph{Memory decoherence:}
 $F(t)=F\,e^{-2t/\tau}+(1-e^{-2t/\tau})/4$, which cleanly \emph{multiplies the Werner
 parameter by} $e^{-2t/\tau}$ (\verb|memoryDegraded_wernerParam|); the capstone
 \verb|decayInclusive_fidelity_envelope| bounds the end-to-end fidelity of a $k$-swap
-chain of memory-degraded links in $[1/4,1]$ given $F\in[1/4,1]$, $t\ge 0$, $\tau>0$ —
+chain of memory-degraded links in $[1/4,1]$ given $F\in[1/4,1]$, $t\ge 0$, $\tau>0$:
 the realistic-network generalization. (ii)~\emph{General Bell-diagonal inputs:} the
 Klein-4 ($\mathbb{Z}_2\times\mathbb{Z}_2$) convolution swap map
 \verb|bellDiagSwapA|--\verb|D| with normalization
@@ -571,7 +571,7 @@ $h_2(e)<1/2$, \verb|bb84KeyRate_strictAntiOn| gives strict decrease in the error
 \verb|bb84_crossover_exists| produces a genuine crossover $e^\ast\in(0,1/2)$ with $r(e^\ast)=0$
 via the intermediate-value theorem, and \verb|bb84_positiveKey_fidelity_threshold| composes
 this with the Phase-6AB end-to-end QBER (positive key iff $F_{e2e}>1-e^\ast$). The decimal
-$e^\ast\approx 0.11$ is never asserted---it is the implicit root of $h_2(e)=1/2$.
+$e^\ast\approx 0.11$ is never asserted; it is the implicit root of $h_2(e)=1/2$.
 (ii)~\emph{Multipartite GHZ-vs-W (Fortescue--Lo Thm 3.5):}
 \verb|w3_beats_ghz_randomization_advantage| proves W$_3$'s randomization advantage over its
 specified-pair single-copy bound ($2/3$) is strictly positive (reducing to the shipped
@@ -609,7 +609,7 @@ map with normalization, nonnegativity, and pure-target fixed point; a monotone s
 increase on the phase-flip-only sub-basin (\verb|dejmps_increase_phaseFlipOnly|); and a
 verified non-monotonicity witness (\verb|dejmps_single_step_can_decrease|,
 $(3/5,0,0,2/5)\mapsto 13/25<3/5$) showing that $\lambda_{00}>1/2$ does not guarantee a
-single-step increase --- the full asymptotic basin rests on Macchiavello's non-monotone
+single-step increase; the full asymptotic basin rests on Macchiavello's non-monotone
 argument and is cited, not formalized. A Python numeric mirror, three figures, and a
 cross-validation gate (\verb|scripts/validate.py --check quantum_network|) accompany the
 Lean substrate. Kernel-only; \emph{zero} new project-local axioms.
@@ -629,12 +629,12 @@ characteristic-polynomial / root-multiset argument; hence \verb|traceNorm_densit
 \paragraph{Phase~6AF: the analytic core, discharged.} The metric, fidelity, and
 data-processing layer that Phase~6AE deferred is now proven kernel-pure, bypassing the
 machinery the 6AE note flagged as absent (no von Neumann / Ky Fan / polar decomposition needed):
-\emph{(i)} the \textbf{trace-norm triangle} $\|A+B\|_1\le\|A\|_1+\|B\|_1$ --- both the Hermitian
+\emph{(i)} the \textbf{trace-norm triangle} $\|A+B\|_1\le\|A\|_1+\|B\|_1$: both the Hermitian
 case (\verb|traceNorm_hermitian_triangle|, via the positive-eigenvalue-sum decomposition
 $\|H\|_1=2\sum\max(\lambda_i,0)-\mathrm{tr}\,H$ and a projection bound) and the \emph{general}
 non-Hermitian case (\verb|traceNorm_triangle|, via the Hermitian dilation
 $[\,0\ A;\ A^{\dagger}\ 0\,]$ over the doubled index $\iota\oplus\iota$, whose singular values
-double $A$'s --- proven through the fact that the trace norm is a function of the characteristic
+double $A$'s, proven through the fact that the trace norm is a function of the characteristic
 polynomial alone); hence $D(\rho,\sigma)$ is a genuine \textbf{metric}
 (\verb|traceDist_triangle|) lying in $[0,1]$ (\verb|traceDist_mem_Icc|).
 \emph{(ii)} the \textbf{operator modulus} $|A|=\sqrt{A^{\dagger}A}$ with $\|A\|_1=\mathrm{tr}\,|A|$.
@@ -656,7 +656,7 @@ channel $\Phi\otimes\mathrm{id}$ is again CPTP (\verb|isKrausChannel_tensorKraus
 Kronecker mixed-product identities), the supremum is well defined from boundedness alone
 (\texttt{Real.sSup} needs no attainment, every term lying in $[0,1]$ as the stabilized outputs are
 density operators); it is proven nonnegative, $\le 1$, symmetric, zero on the diagonal, and
-\textbf{satisfying the triangle inequality} --- hence a genuine $[0,1]$-valued distinguishability
+\textbf{satisfying the triangle inequality}; hence a genuine $[0,1]$-valued distinguishability
 \emph{metric} on channels (\verb|diamondDist_nonneg|, \verb|diamondDist_le_one|,
 \verb|diamondDist_comm|, \verb|diamondDist_self|, \verb|diamondDist_triangle|).
 \emph{(vii)} the \textbf{fidelity range and the Fuchs--van de Graaf lower bound}: $F(\rho,\sigma)\le1$
@@ -664,10 +664,10 @@ density operators); it is proven nonnegative, $\le 1$, symmetric, zero on the di
 the absent Schatten-2 / matrix-H\"older layer), and the \textbf{Fuchs--van de Graaf lower bound}
 $1-F\le D$ (\verb|one_sub_sqrtFidelity_le_traceDist|, a Powers--St\o rmer argument routed through a
 matrix dual-norm bound $\mathrm{Re}\,\mathrm{tr}(HR)\le\|H\|_1$ for the sign operator $\mathrm{sgn}(S)$
-and the positive/negative-part identity $\mathrm{tr}(\sqrt{\rho}\,P)\ge\mathrm{tr}\,P^2$ --- with
+and the positive/negative-part identity $\mathrm{tr}(\sqrt{\rho}\,P)\ge\mathrm{tr}\,P^2$, with
 the non-commuting $|S|\le\sqrt{\rho}+\sqrt{\sigma}$ Loewner step \emph{removed}, not assumed).
 \emph{(viii)} \textbf{diamond-distance attainment}: the supremum is \emph{achieved} by an optimal
-input density operator (\verb|exists_diamondDist_eq|) --- so $\mathrm{diamondDist}$ is a genuine
+input density operator (\verb|exists_diamondDist_eq|), so $\mathrm{diamondDist}$ is a genuine
 maximum, not merely a least upper bound. The binding ingredient is \textbf{continuity of the
 trace norm} (\verb|continuous_traceNorm|), obtained not from per-eigenvalue continuity (individual
 eigenvalues are discontinuous at crossings) but from the elementary Lipschitz bound
@@ -682,10 +682,10 @@ $\Omega=\tfrac1n|\Omega\rangle\langle\Omega|$ is a density operator
 (\verb|isDensityOperator_maxEntangled|, a rank-one PSD outer product with $\mathrm{tr}=1$), and
 evaluating the least-upper-bound property \verb|le_diamondDist| at it gives
 $\mathrm{diamondDist}(\Phi_1,\Phi_2)\ge D\bigl((\Phi_1\otimes\mathrm{id})\Omega,(\Phi_2\otimes
-\mathrm{id})\Omega\bigr)$ --- the primal (one-sided) half of the Watrous Choi-SDP characterization,
+\mathrm{id})\Omega\bigr)$: the primal (one-sided) half of the Watrous Choi-SDP characterization,
 at its canonical primal feasible point, with no SDP duality required.
 \emph{(x)} the \textbf{Fuchs--van de Graaf UPPER bound} $D(\rho,\sigma)\le\sqrt{1-F(\rho,\sigma)^2}$
-(\verb|traceDist_le_sqrt_one_sub_sqrtFidelity_sq|) --- proven \emph{purification-free} via the
+(\verb|traceDist_le_sqrt_one_sub_sqrtFidelity_sq|): proven \emph{purification-free} via the
 Holevo--Helstrom + classical-Fuchs--van de Graaf route, sidestepping Uhlmann's purification theorem
 (absent from Mathlib). The engine is the sharp \textbf{Schatten-2 Cauchy--Schwarz}
 $\|A\,B\|_1\le\|A\|_F\|B\|_F$ (\verb|traceNorm_mul_le|), itself built without Schatten/polar/SVD
@@ -699,7 +699,7 @@ $D^2\le1-F^2$. Both Fuchs--van de Graaf bounds and $F\le1$ are now proven.
 (\verb|diamondDist_le_choi_opNorm|): $\mathrm{diamondDist}(\Phi_1,\Phi_2)\le
 n\,\|J(\Phi_1)-J(\Phi_2)\|_\infty$ (sharp constant $d=n$, the $\ell^2$-operator norm).
 Together with the primal lower bound (ix) this \emph{sandwiches} the diamond distance by the
-Choi matrix --- the formalizable content of the Watrous Choi-SDP characterization, needing no
+Choi matrix: the formalizable content of the Watrous Choi-SDP characterization, needing no
 conic strong duality. The proof is purification- and SDP-free: for the (Hermiticity-preserving,
 trace-annihilating) difference $\Delta=\Phi_1-\Phi_2$ the output $T=(\Delta\otimes\mathrm{id})\rho$
 is traceless, so $\|T\|_1=2\,\mathrm{eigPosSum}(T)=2\,\mathrm{tr}(P_+T)$ for the positive
@@ -710,8 +710,8 @@ an explicit $N N^{\!H}$ factorization through the PSD square roots of $W,\rho$),
 $\mathrm{tr}\,M(P_+,\rho)=\mathrm{tr}(P_+(\mathbf1\otimes\rho_X))\le n$. The operator-norm bound
 $\mathrm{tr}(J\cdot M)\le\|J\|_\infty\,\mathrm{tr}\,M$ uses only the Loewner bound
 $J\le\|J\|_\infty\mathbf1$ (\verb|norm_smul_one_sub_self_posSemidef|).
-The \emph{full} primal$=$dual Choi-SDP (Watrous) \emph{equality} --- previously the one documented
-frontier here --- has since been proven unconditionally (Phase~6AI, \verb|diamondDist_eq_choiSDP|;
+The \emph{full} primal$=$dual Choi-SDP (Watrous) \emph{equality} (previously the one documented
+frontier here) has since been proven unconditionally (Phase~6AI, \verb|diamondDist_eq_choiSDP|;
 see below), so both one-sided sandwiching bounds and their common limit are now closed.
 Kernel-only; \emph{zero} new project-local axioms.
 
@@ -720,7 +720,7 @@ functional-analytic bricks; Phase~6AG makes them operational. \emph{(i)} the \te
 sandwich} (\verb|diamondDist_ge_choi_traceNorm|): $\mathrm{diamondDist}(\Phi_1,\Phi_2)\ge
 \tfrac{1}{2n}\|J(\Phi_1)-J(\Phi_2)\|_1$, which paired with the operator-norm upper bound (xi)
 brackets the diamond distance by the Choi matrix in both directions,
-$\tfrac{1}{2n}\|J_1-J_2\|_1\le\|\cdot\|_\diamond\le n\|J_1-J_2\|_\infty$ --- the formalizable content
+$\tfrac{1}{2n}\|J_1-J_2\|_1\le\|\cdot\|_\diamond\le n\|J_1-J_2\|_\infty$: the formalizable content
 of the Watrous Choi-SDP characterization, needing no conic strong duality. Proven from the
 maximally-entangled primal point ($(\Phi_i\otimes\mathrm{id})\Omega=\tfrac1n J(\Phi_i)$ up to the
 trace-norm-invariant tensor-factor swap), with a reusable PSD-square-root uniqueness lemma
@@ -742,7 +742,7 @@ maximally-entangled input is not optimal; the certified lower bound \verb|diamon
 aligned with the $\pm\gamma$ diagonal Choi entries ($\|J(\Phi_\gamma)-J(\mathrm{id})\|_1\ge2\gamma$).
 \emph{(iv)} \textbf{fidelity\,$\leftrightarrow$\,diamond bridges} (\verb|GateFidelityBridge.lean|):
 composing the shipped Fuchs--van de Graaf state bound with the diamond least-upper-bound property gives,
-for every stabilized input, $1-\sqrt{F\!\big((\Phi_1\otimes\mathrm{id})\rho,(\Phi_2\otimes\mathrm{id})\rho\big)}\le\mathrm{diamondDist}(\Phi_1,\Phi_2)$ --- a small diamond distance certifies uniformly
+for every stabilized input, $1-\sqrt{F\!\big((\Phi_1\otimes\mathrm{id})\rho,(\Phi_2\otimes\mathrm{id})\rho\big)}\le\mathrm{diamondDist}(\Phi_1,\Phi_2)$: a small diamond distance certifies uniformly
 high input--output fidelity. \emph{(iv$'$)} \textbf{the general-$d$ average-gate $=$ entanglement-fidelity
 identity} (\verb|GateFidelity.lean|, \verb|avgGateFidelity_eq|): for every CPTP (Kraus) channel $\Phi$ on a
 $d$-dimensional system,
@@ -751,22 +751,22 @@ $d$-dimensional system,
   F_{\mathrm{avg}}(\Phi)=\frac{1}{|S^{2d-1}|}\!\int_{S^{2d-1}}\!\!\sum_k|\langle\psi|K_k|\psi\rangle|^2\,d\sigma(\psi),\quad
   F_e(\Phi)=\frac1{d^2}\sum_k|\operatorname{tr}K_k|^2 .
 \]
-This is the bench-data$\to$worst-case bridge --- it converts an averaged benchmark (e.g.\ a
+This is the bench-data$\to$worst-case bridge; it converts an averaged benchmark (e.g.\ a
 randomized-benchmarking fidelity) into the entanglement fidelity that feeds the diamond-distance
 certificate of \emph{(iv)}. We had previously flagged this as deferred pending Weingarten /
 unitary-$2$-design moment formulas absent from the pinned \textsf{Mathlib}; it is instead proven
 \emph{constructively}, with no twirl machinery, by computing the degree-$(2,2)$ complex sphere moment
 $\int_{S^{2d-1}}\bar\psi_p\psi_q\bar\psi_r\psi_s\,d\sigma=(\delta_{pq}\delta_{rs}+\delta_{ps}\delta_{qr})\,|S^{2d-1}|/(d(d+1))$
-(\verb|complexSphereTensor|) along the Gaussian$\to$sphere route --- one-dimensional Gaussian moments,
+(\verb|complexSphereTensor|) along the Gaussian$\to$sphere route: one-dimensional Gaussian moments,
 the multivariate Wick/Isserlis tensor, a homogeneous polar reduction, and the
-$\mathbb C^d\cong\mathbb R^{2d}$ realification --- then contracting it against the Kraus matrices
+$\mathbb C^d\cong\mathbb R^{2d}$ realification; then contracting it against the Kraus matrices
 (\verb|sphere_braKet_normSq|) and collapsing the dimension factor through trace preservation
 $\sum_k\operatorname{tr}(K_k^\dagger K_k)=d$ (\verb|kraus_normSq_sum|). The unitary-$2$-design second moment
 is thus obtained as a theorem rather than imported. \emph{(v)} \textbf{the Watrous
 weak-dual upper bound} (\verb|DiamondNormDual.lean|, \verb|diamondDist_le_dual_witness|): for any
 witness $W\succeq0$ with $W\succeq J(\Phi_1)-J(\Phi_2)$ (L\"owner order),
 $\mathrm{diamondDist}(\Phi_1,\Phi_2)\le\|\mathrm{Tr}_2 W\|_\infty$. Crucially this is the \emph{weak}-duality
-direction of the Watrous SDP, which --- unlike the primal\,$=$\,dual \emph{strong}-duality form --- needs
+direction of the Watrous SDP, which (unlike the primal\,$=$\,dual \emph{strong}-duality form) needs
 \emph{no} conic strong duality (no Slater point, minimax, or Fenchel conjugate): any feasible $W$ bounds
 the diamond distance. The previously-shipped $n\|J_1-J_2\|_\infty$ bound is recovered as the trivial
 witness $W=\|C\|\,\mathbf1$ (then $\mathrm{Tr}_2W=n\|C\|\,\mathbf1$), so this strictly generalizes it; a
@@ -780,7 +780,7 @@ $\gamma/2\le\mathrm{diamondDist}(\Phi_\gamma,\mathrm{id})\le\gamma+1-\sqrt{1-\ga
 (\verb|diamondDist_ampDamp_le|). Kernel-only; \emph{zero} new project-local axioms.
 
 \paragraph{Phase~6AI: Watrous diamond-norm SDP strong duality (closed).} The one item the 6AF/6AG
-sandwich left open --- the \emph{full} primal$=$dual Choi-SDP \emph{equality} --- is now proven
+sandwich left open (the \emph{full} primal$=$dual Choi-SDP \emph{equality}) is now proven
 \emph{unconditionally} and kernel-pure (\verb|DiamondSDPDuality.lean|,
 \verb|diamondDist_eq_choiSDP|): $\mathrm{diamondDist}(\Phi_1,\Phi_2)=\inf\{\|\mathrm{Tr}_2 W\|_\infty
 : W\succeq0,\ W\succeq J(\Phi_1)-J(\Phi_2)\}$, the Watrous SDP. The earlier ``needs conic strong
@@ -800,7 +800,7 @@ complement $X=\sqrt\rho\,K\sqrt\sigma$ with $\|K\|\le1$, attainment
 Stinespring, purification, or Lieb concavity. From it: \emph{(i)} \textbf{Uhlmann monotonicity for an
 arbitrary trace-preserving Kraus channel} (\verb|sqrtFidelity_krausMap_ge_psd_inputs|):
 $F(\Phi\rho,\Phi\sigma)\ge F(\rho,\sigma)$ for \emph{all} density operators (no full-rank assumption on
-inputs \emph{or} outputs) and \emph{any} trace-preserving $\Phi$ --- the textbook data-processing
+inputs \emph{or} outputs) and \emph{any} trace-preserving $\Phi$: the textbook data-processing
 inequality in full generality. Both halves of the Alberti characterization are positive-semidefinite
 valid: the forward bound (\verb|re_trace_block_le_sqrtFidelity_psd|) by $\varepsilon$-regularization
 along the \emph{commuting} ray $\rho+\varepsilon\mathbf1$ (fixed eigenbasis $\Rightarrow$
@@ -809,7 +809,7 @@ square-root uniqueness, no functional calculus on the bare matrix algebra), and 
 (\verb|exists_block_re_trace_eq_sqrtFidelity_psd|) via a \emph{general unitary polar witness} obtained as
 a compactness limit of the invertible-case polar unitaries (the singular polar partial isometry extends
 to a unitary), the block feasibility coming from the $\mathrm{diag}(\sqrt\rho,\sqrt\sigma)$ congruence of
-$\big[\begin{smallmatrix}\mathbf1&W\\W^\dagger&\mathbf1\end{smallmatrix}\big]\succeq0$ --- no Schur
+$\big[\begin{smallmatrix}\mathbf1&W\\W^\dagger&\mathbf1\end{smallmatrix}\big]\succeq0$: no Schur
 complement, no invertibility. The optimal witness is transported to the channel outputs by the sum of
 $(K_k\!\oplus\!K_k)$-congruences of the block with the trace preserved by $\sum_kK_k^\dagger K_k=\mathbf1$.
 \emph{(ii)} \textbf{joint concavity} of $(\rho,\sigma)\mapsto F$ (\verb|sqrtFidelity_jointly_concave|)
@@ -817,7 +817,7 @@ and \textbf{L\"owner monotonicity} $\rho\preceq\rho'\Rightarrow F(\rho,\sigma)\l
 (\verb|sqrtFidelity_mono_left|), both direct consequences of the max-of-linear Alberti form. \emph{(iii)}
 the \textbf{fidelity-domain network chain} (\verb|sqrtFidelity_applyChain_ge_psd|): for \emph{all}
 density operators and \emph{any} chain of trace-preserving Kraus channels, the root fidelity to a target
-reference is non-decreasing along the chain --- the fully general mirror of \verb|traceDist_applyChain_le|
+reference is non-decreasing along the chain: the fully general mirror of \verb|traceDist_applyChain_le|
 in the \emph{opposite} monotone direction ($D\downarrow$, $F\uparrow$), consistent with
 Fuchs--van de Graaf. Kernel-only; \emph{zero} new project-local axioms.
 
@@ -825,7 +825,7 @@ Fuchs--van de Graaf. Kernel-only; \emph{zero} new project-local axioms.
 \emph{consistency} (bounds a channel quantity must satisfy), Phase~6AK adds \emph{physical-limit}
 substrate: closed-form ceilings an achievable quantity provably cannot cross. The first
 (\verb|CoherenceFidelity.lean|) computes the average gate fidelity of the \textbf{coherence channel}
-$\Phi_t=\mathcal A_\gamma\circ\mathcal D_p$ --- amplitude damping with $\gamma=1-e^{-t/T_1}$ composed
+$\Phi_t=\mathcal A_\gamma\circ\mathcal D_p$: amplitude damping with $\gamma=1-e^{-t/T_1}$ composed
 after dephasing with $p=(1-e^{-t/T_2})/2$, the standard $T_1/T_2$ model of a duration-$t$ qubit gate.
 Contracting the four Kraus traces and feeding the result through the 6AG identity
 \verb|avgGateFidelity_eq| collapses both fidelities to a \textbf{sum of decaying exponentials}
@@ -864,8 +864,8 @@ Their Choi-block orthogonality follows from the cube-root geometric identity
 $\sum_{x<3}\omega^{e x}=3\,[\,3\mid e\,]$, giving a unitary error basis on $\mathbb C^3$ and hence, for any
 qutrit generalised-Pauli channel with nonnegative weights summing to one,
 $\|\Phi_p-\mathrm{id}\|_\diamond = 1-p_{00}$ (\verb|diamondDist_weylKraus_eq|). As a named instance, the
-pure cyclic-shift leakage channel --- identity with probability $1-q$, shift $X=W_{1,0}$ (mapping each
-computational level to the next) with probability $q$ --- has diamond distance to the identity exactly
+pure cyclic-shift leakage channel (identity with probability $1-q$, shift $X=W_{1,0}$, mapping each
+computational level to the next, with probability $q$) has diamond distance to the identity exactly
 equal to the leakage probability $q$ (\verb|diamondDist_shiftLeakage_eq|), the population leaving any
 fixed level. Kernel-only; \emph{zero} new project-local axioms.
 
@@ -877,26 +877,26 @@ of the four Bell states (\verb|pt2_bellBlock|). Hence a Bell-diagonal state $\rh
 ($P_i=\tfrac12 B_i$) has partial-transpose eigenvalues $\mu_j(p)=p_j-\tfrac12 y_j\sum_i y_i p_i$, trace
 norm $\|\rho(p)^\Gamma\|_1=\sum_j|\mu_j|$, and \textbf{negativity}
 $N(\rho)=\tfrac12(\sum_j|\mu_j|-1)$ (\verb|negativityBellDiag_eq|), which is nonnegative and vanishes
-exactly when every $\mu_j\ge0$ --- the \textbf{PPT (positive-partial-transpose) separability criterion}
+exactly when every $\mu_j\ge0$: the \textbf{PPT (positive-partial-transpose) separability criterion}
 (\verb|ppt_bellDiagState_iff|). For the Werner state of singlet fraction $F$ the negativity is
 $(2F-1)/2$ for $F\ge\tfrac12$ (\verb|negativityBellDiag_werner|) and the state is PPT exactly at
-$F\le\tfrac12$ (\verb|ppt_werner_iff|) --- the same $\tfrac12$ threshold as the BBPSSW/DEJMPS
+$F\le\tfrac12$ (\verb|ppt_werner_iff|): the same $\tfrac12$ threshold as the BBPSSW/DEJMPS
 distillability cutoff. The operational reading (negativity upper-bounds the distillable entanglement and
 two-way key rate) is the standard Vidal--Werner citation; the Lean content is the \emph{exact computed
 measure}. Kernel-only; \emph{zero} new project-local axioms.
 
 A follow-on (\verb|NegativityMonotone.lean|) promotes the negativity from a computed number to a proven
 \textbf{entanglement monotone}. The second-qubit partial transpose commutes with a local operation on the
-first qubit --- $T_B((M\otimes\mathbf1)\rho(M\otimes\mathbf1)^\dagger)=(M\otimes\mathbf1)T_B(\rho)
+first qubit: $T_B((M\otimes\mathbf1)\rho(M\otimes\mathbf1)^\dagger)=(M\otimes\mathbf1)T_B(\rho)
 (M\otimes\mathbf1)^\dagger$ (\verb|pt2_conj_kronOne|), since $M$ acts only on the $A$ indices and $T_B$
-permutes only the $B$ indices --- so a local $A$-channel commutes with $T_B$ (\verb|pt2_krausMap_localA|).
+permutes only the $B$ indices, so a local $A$-channel commutes with $T_B$ (\verb|pt2_krausMap_localA|).
 Composing this with the already-established trace-norm contractivity under any CPTP channel
 ($\|\Phi(X)\|_1\le\|X\|_1$, \verb|traceNorm_krausMap_le|) gives
 $\|(\Phi_A\otimes\mathrm{id})\rho)^\Gamma\|_1\le\|\rho^\Gamma\|_1$ (\verb|traceNorm_pt2_localKraus_le|):
 the negativity cannot increase under a local operation on one party. With the exact Bell-pair value
 $\|(\Phi^+)^\Gamma\|_1=2$ this yields a genuine \textbf{one-shot distillation no-go}: a state with
 $\|\rho^\Gamma\|_1<2$ (negativity below the Bell-pair value $\tfrac12$) cannot be converted into a Bell
-pair by any local operation on one party (\verb|no_local_distillation_to_bellPair|) --- the honest,
+pair by any local operation on one party (\verb|no_local_distillation_to_bellPair|): the honest,
 axiom-free operational content of ``local operations cannot create entanglement,'' with no LOCC
 abstraction and no asymptotic machinery. Kernel-only; \emph{zero} new project-local axioms.
 
@@ -914,12 +914,12 @@ Kernel-only; \emph{zero} new project-local axioms.
 A continuity follow-on (\verb|NegativityContinuity.lean|) shows the negativity is \textbf{Lipschitz in
 trace distance}. The partial transpose, while not trace-norm-preserving, is trace-norm \emph{bounded}:
 $\|X^\Gamma\|_1\le 2\|X\|_1$ (\verb|traceNorm_pt2_le|). This decomposes into already-shipped bounds plus
-one elementary lemma --- $T_B$ permutes matrix entries, hence preserves the Frobenius norm
+one elementary lemma: $T_B$ permutes matrix entries, hence preserves the Frobenius norm
 (\verb|norm_pt2|), so $\|X^\Gamma\|_1\le\sqrt{\mathrm{card}}\,\|X^\Gamma\|_F=2\|X\|_F\le2\|X\|_1$ via
 \verb|traceNorm_le_sqrt_card_mul_norm| and \verb|frobenius_le_traceNorm| ($\mathrm{card}=4$, $\sqrt4=2$).
 With the reverse triangle inequality this gives
 $|\,\|\rho^\Gamma\|_1-\|\sigma^\Gamma\|_1\,|\le 4\,D(\rho,\sigma)$
-(\verb|abs_traceNorm_pt2_sub_le_traceDist|) --- the negativity is $2$-Lipschitz in the trace distance
+(\verb|abs_traceNorm_pt2_sub_le_traceDist|): the negativity is $2$-Lipschitz in the trace distance
 $D=\tfrac12\|\rho-\sigma\|_1$. Kernel-only; \emph{zero} new project-local axioms.
 
 A capstone follow-on lifts the two-qubit negativity machinery to an \textbf{arbitrary bipartite system}
@@ -960,7 +960,7 @@ relation underlying fault tolerance. For a physical error rate $p$, threshold $p
 $A$, the distance-$d$ logical error bound $A\,(p/p_{th})^{\lfloor(d+1)/2\rfloor}$ has the two
 load-bearing threshold properties: below threshold ($p\le p_{th}$) it is monotone \emph{decreasing} in
 the code distance (\verb|logicalErrorBound_antitone_distance|), and strictly below threshold
-($p<p_{th}$) it tends to $0$ as the distance grows (\verb|logicalErrorBound_tendsto_zero|) --- the
+($p<p_{th}$) it tends to $0$ as the distance grows (\verb|logicalErrorBound_tendsto_zero|): the
 threshold theorem in its abstract code-capacity form. Neutral QEC mathematics; kernel-only;
 \emph{zero} new project-local axioms.
 
@@ -970,8 +970,8 @@ excited-state population $N$ and damping $\gamma$ (four Kraus operators; $N=0$ r
 amplitude damping). Unlike the Pauli channels it is \emph{not} covariant, so we prove a kernel-pure
 two-sided diamond bracket (\verb|diamondDist_genAmpDamp_bracket|):
 $(1-N)\gamma \le \|\Phi_{\gamma,N}-\mathrm{id}\|_\diamond \le 1$. The lower bound is exact and achievable
---- on the unentangled excited product input the output difference is the real diagonal
-$(1-N)\gamma\,(E_{(0,1)}-E_{(1,1)})$ with trace norm $2(1-N)\gamma$, the thermal de-excitation flux ---
+(on the unentangled excited product input the output difference is the real diagonal
+$(1-N)\gamma\,(E_{(0,1)}-E_{(1,1)})$ with trace norm $2(1-N)\gamma$, the thermal de-excitation flux)
 and recovers the amplitude-damping value $\gamma$ at $N=0$; the upper bound is the CPTP channel-distance
 cap (the exact value, as for amplitude damping, needs the $\sqrt{1-\gamma}$-dependent eigenvector
 witness). Kernel-only; \emph{zero} new project-local axioms.
@@ -981,12 +981,12 @@ repeaterless secret-key rate bound $-\log_2(1-\eta)$ for a lossy channel of tran
 full PLOB theorem rests on continuous-variable channel-capacity theory (relative entropy of
 entanglement of bosonic Gaussian channels) absent from current Mathlib; we therefore formalize the
 \emph{rate-bound function} $\mathrm{plobBound}(\eta)=-\log_2(1-\eta)$ and its rigorous loss-penalty
-properties --- the tractable surrogate that captures the physical content of the no-go. We prove the cap
+properties: the tractable surrogate that captures the physical content of the no-go. We prove the cap
 vanishes at total loss ($\mathrm{plobBound}(0)=0$), is strictly increasing in transmissivity
 (\verb|plobBound_strictMonoOn|), is bounded below by the linear loss penalty $\eta/\ln 2$
 (\verb|linear_le_plobBound|), and decays to $0$ along a fiber whose transmissivity falls exponentially
 with distance (\verb|plobBound_tendsto_zero_of_exp_decay|). This is the analytic behaviour of the bound
-itself, honestly scoped --- not a derivation of the PLOB theorem from quantum mechanics. Kernel-only;
+itself, honestly scoped, not a derivation of the PLOB theorem from quantum mechanics. Kernel-only;
 \emph{zero} new project-local axioms.
 
 %% ════════════════════════════════════════════════════════════════════
@@ -1006,7 +1006,7 @@ Wave~6v.6). The last of these is extended in
 model-independent end-to-end fidelity envelope for entanglement-swap
 chains, generalized to memory decoherence and general Bell-diagonal
 inputs, together with the operational metrics network operators
-care about --- the BB84 secret-key rate (with the positive-key
+care about: the BB84 secret-key rate (with the positive-key
 crossover proven, not hardcoded), the multipartite W$_3$-versus-GHZ$_3$
 randomization advantage, and the Horodecki teleportation fidelity whose
 sole analytic input (the Haar--Pauli integral $\int_{S^2}(\langle\psi|
@@ -1025,9 +1025,9 @@ $F\le1$, and \emph{both} Fuchs--van de Graaf bounds $1-F\le D\le\sqrt{1-F^2}$ (t
 proven purification-free via Holevo--Helstrom) are all proven kernel-pure. The diamond-norm
 Choi-SDP (Watrous) primal$=$dual \emph{strong-duality identity} has since been proven unconditionally
 (Phase~6AI, \verb|diamondDist_eq_choiSDP|, via the geometric Hahn--Banach / conic-Farkas separation),
-and \textbf{fully unconditional} fidelity-domain data processing --- Uhlmann monotonicity
+and \textbf{fully unconditional} fidelity-domain data processing (Uhlmann monotonicity
 $F(\Phi\rho,\Phi\sigma)\ge F(\rho,\sigma)$ for \emph{all} density operators and \emph{any} CPTP channel,
-joint concavity, L\"owner monotonicity, and the unconditional fidelity-domain network chain --- has been
+joint concavity, L\"owner monotonicity, and the unconditional fidelity-domain network chain) has been
 added (Phase~6AJ, \verb|sqrtFidelity_krausMap_ge_psd_inputs|, \verb|sqrtFidelity_applyChain_ge_psd|). The
 genuinely remaining extension
 is the full asymptotic DEJMPS convergence basin (Macchiavello's non-monotone argument), not required

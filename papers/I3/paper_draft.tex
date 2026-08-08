@@ -40,7 +40,7 @@ Large-Deviation Principles, with a Typeclass Bridge to
 Schwinger--Keldysh Effective Field Theory}
 
 \author{John Roehm}
-\date{Draft --- Phase 6o.$\zeta$ / Phase 7a, May 2026}
+\date{Draft: Phase 6o.$\zeta$ / Phase 7a, May 2026}
 
 \begin{document}
 
@@ -77,7 +77,7 @@ The library design separates substrate-data-level
 \emph{predicates} (\texttt{IsStochasticIntegral},
 \texttt{IsBrownian\-QuadraticVariationT}, \texttt{IsItoLemma},
 \texttt{IsCramerIIDUpperBound}, etc.) from the substantive
-quantitative content carried by their downstream consumers --- a
+quantitative content carried by their downstream consumers, a
 deliberate engineering choice that admits an immediate working
 substrate for the SK--EFT Hawking program's papers, a stable
 interface for further filling, and a clean single-PR-per-module
@@ -102,9 +102,9 @@ verify under the standard Lean~4 kernel plus
 \texttt{lean\_verify}; zero \texttt{sorry}; zero new axioms. The
 library is released under Apache~2.0 alongside the rest of the
 SK--EFT Hawking codebase. The upstream-PR cycle to Mathlib4 is
-\emph{not yet} initiated --- it is staged for the post-Phase~6o
+\emph{not yet} initiated (it is staged for the post-Phase~6o
 window per the program's explicit AI-tool-assistance disclosure
-protocol --- but each module is authored with Mathlib's naming and
+protocol), but each module is authored with Mathlib's naming and
 style conventions to ease that future PR cycle.
 \end{abstract}
 
@@ -140,7 +140,7 @@ from the Mathlib4 ecosystem as of the time this paper is drafted:
 
 \begin{enumerate}
 \item \textbf{The stochastic integral} $\int_0^t H_s\,dW_s$ in any
-  flavour --- It\^o, Stratonovich, or Wiener-style. Mathlib4 ships the
+  flavour: It\^o, Stratonovich, or Wiener-style. Mathlib4 ships the
   Lebesgue and Bochner integrals against ordinary measures and the
   conditional expectation, but neither the It\^o $L^2$-isometric
   construction (Mathlib's path of least resistance, given existing
@@ -148,7 +148,7 @@ from the Mathlib4 ecosystem as of the time this paper is drafted:
   semimartingale-integral construction is present.
 \item \textbf{The semimartingale decomposition} $X = M + A$ into a
   local martingale $M$ and a finite-variation process $A$ (Doob--Meyer
-  decomposition, modulo finite-variation indistinguishability) ---
+  decomposition, modulo finite-variation indistinguishability),
   the structural backbone of stochastic calculus and the starting
   point for It\^o's lemma in its full semimartingale generality.
 \item \textbf{It\^o's lemma} (the C${}^2$ change-of-variables formula
@@ -166,10 +166,10 @@ from the Mathlib4 ecosystem as of the time this paper is drafted:
   nor the contraction principle, nor Sanov's theorem in any of its
   finite-alphabet or method-of-types forms, nor Varadhan's lemma
   in its $L^\infty$-functional form. The stochastic-PDE / large-N
-  field-theory community --- where the LDP is the bridge between
+  field-theory community, where the LDP is the bridge between
   microscopic stochastic dynamics and macroscopic deterministic
   evolution \`a la
-  Falasco--Esposito~\cite{FalascoEsposito2025RMP} --- routinely
+  Falasco--Esposito~\cite{FalascoEsposito2025RMP}, routinely
   cites the LDP at the level of textbook results
   (Dembo--Zeitouni~\cite{DemboZeitouni1998LDT}; den
   Hollander~\cite{denHollander2000LDPs}) and pays no formalization
@@ -194,9 +194,9 @@ and Varadhan side to be cleanly cross-bridgeable to the rest of the
 SK--EFT-positivity ledger.
 
 We addressed this need by authoring the 12-module library described
-in this paper. The substantive engineering choice we made --- and the
+in this paper. The substantive engineering choice we made, and the
 choice that distinguishes the library's release scope from a more
-ambitious Mathlib4-grade construction --- is to separate
+ambitious Mathlib4-grade construction, is to separate
 \emph{substrate-data-level predicates} from the substantive quantitative
 content carried by their downstream consumers. At the predicate level,
 each of the 12 modules ships a \texttt{Prop}-typed identifier
@@ -228,9 +228,9 @@ typeclass instances populate at the predicate-substrate level and
 will lift cleanly to the substantive level without re-architecting
 the typeclass hierarchy. Fourth, the predicate-substrate scope
 admits a single-session-per-module
-authoring cadence under interactive MCP-driven Lean development ---
+authoring cadence under interactive MCP-driven Lean development,
 the cadence by which the bulk of the SK--EFT Hawking project's
-$\sim$\totaltheorems\ theorems were written --- which is approximately one
+$\sim$\totaltheorems\ theorems were written, which is approximately one
 order of magnitude faster than the cadence at which substantive
 quantitative-LDP content can responsibly be drafted.
 
@@ -265,7 +265,7 @@ It\^o's lemma, Novikov's condition, the Cram\'er upper or lower
 bound, Sanov's theorem, the contraction principle, or Varadhan's
 lemma. This library contributes predicate-level scaffolding for the
 It\^o stochastic integral, It\^o's lemma, Novikov's condition, Sanov's
-theorem, the contraction principle, and Varadhan's lemma --- extending
+theorem, the contraction principle, and Varadhan's lemma, extending
 the Mathlib4 measure-theory + probability infrastructure with the
 substrate-data-level operationalizations the SK-EFT Hawking program
 requires. (HOL Light and Mizar were not surveyed for this release; the
@@ -334,16 +334,16 @@ both the LDP \texttt{Varadhan} module (its trunk) and the
 program-internal Phase~6n Wave~2c.5c+ abstract
 \texttt{IsLDPRateFunction} typeclass at
 \texttt{CrooksAnalogHawking/LDPLinearResponse.lean} (Phase~6n
-substrate). The resulting cross-bridge --- a typeclass whose
+substrate). The resulting cross-bridge is a typeclass whose
 instance fields conjoin the LDP-rate-function predicate
 (inherited from Phase~6n Wave~2c.5c+), the
 Cram\'er i.i.d.\ upper-bound predicate, the Sanov method-of-types
 predicate, the contraction-principle predicate, and the Varadhan
-upper-bound predicate (all four LDP-side predicates carry substantive
-\texttt{Prop} bodies --- continuity plus zero-at-zero structural shape
+upper-bound predicate. All four LDP-side predicates carry substantive
+\texttt{Prop} bodies: continuity plus zero-at-zero structural shape
 for the Cram\'er upper, Sanov, Cram\'er lower, and Varadhan
-compatibilities; the inf-projection inequality plus zero-at-zero for
-the contraction principle) --- is the
+compatibilities, and the inf-projection inequality plus zero-at-zero for
+the contraction principle. This cross-bridge is the
 \S\ref{sec:ldp-compatible-skeft} substantive deliverable.
 
 \subsection{Predicate-substrate engineering pattern}
@@ -357,7 +357,7 @@ pattern:
   \texttt{def IsStochasticIntegral (H : $\R \to \R$) (W : $\R \to \R$)
     (integral : $\R \to \R$) : Prop := True}).
   Pre-Phase-6o.$\zeta$ the \texttt{Prop} body is the trivial
-  \texttt{True}; this is intentional --- the substrate-data layer
+  \texttt{True}; this is intentional: the substrate-data layer
   exists to support typeclass dispatch and downstream-consumer
   hypothesis bundling, not to assert quantitative content.
 \item A non-vacuity witness theorem demonstrating that the predicate
@@ -553,10 +553,10 @@ content (\texttt{Continuous f} and the boundary-consistency identity
 \texttt{result 0 = f (X 0) - f (X 0)}): an inhabitation of
 \texttt{IsItoLemma f X result} asserts both regularity of $f$ and
 the trivial-identity instance of It\^o's formula at the lower
-limit of integration. The full substantive cross-bridge --- proving
+limit of integration. The full substantive cross-bridge, proving
 that for finite-variation $X$ the It\^o integral term collapses to
 the ordinary Lebesgue--Stieltjes integral and the quadratic-variation
-term vanishes --- lifts when the predicate body is strengthened in
+term vanishes, lifts when the predicate body is strengthened in
 a follow-up substrate-content PR; the substrate-data shape shipped
 here is the load-bearing scaffolding on which the lift operates.
 This is the connection that makes the It\^o substrate
@@ -671,7 +671,7 @@ $f$ on Polish spaces, with the inf-projection rate function.
 \textbf{Substrate-data predicate.}
 \texttt{IsCramerLowerBoundEsscher mgf I} declares the Cram\'er
 \emph{lower} bound (the Lean name's \texttt{Esscher} suffix is
-informative --- the substantive content lifts via Esscher tilting):
+informative; the substantive content lifts via Esscher tilting):
 under appropriate conditions,
 $\liminf_{n\to\infty} \frac{1}{n} \log \mathbb{P}(\bar S_n \in U)
 \geq -\inf_{x \in U} I(x)$ for open sets $U$.
@@ -714,7 +714,7 @@ in the next section, \S\ref{sec:ldp-compatible-skeft}.
 %% §5 LDPCompatibleSKEFT cross-bridge typeclass
 %% ─────────────────────────────────────────────────────────────────
 
-\section{LDPCompatibleSKEFT --- the substantive cross-bridge typeclass}
+\section{LDPCompatibleSKEFT: the substantive cross-bridge typeclass}
 \label{sec:ldp-compatible-skeft}
 
 The substantive deliverable of the I3 bundle is the typeclass
@@ -728,7 +728,7 @@ carry refutable Prop content} (post the I3 Stage-13 fix-pass
 2026-05-11): the four LDP-side predicates
 (\texttt{IsCramerIIDUpperBound}, \texttt{IsFiniteAlphabetSanov},
 \texttt{IsContractionPrinciple}, \texttt{IsVaradhanUpperBound}) carry
-substantive structural shapes --- continuity plus zero-at-zero for
+substantive structural shapes: continuity plus zero-at-zero for
 the Cram\'er and Varadhan compatibilities, the
 inf-projection-dominance inequality plus zero-at-zero for the
 contraction principle, and non-empty-alphabet plus continuity plus
@@ -766,7 +766,7 @@ scope: an instance witnesses that all five predicates hold for the
 given $(\beta, I)$ pair. The substrate-data \texttt{Prop} bodies
 are substantive (each refutable by a concrete counterexample), but
 they do not yet encode the full quantitative content of the
-classical Cram\'er / Sanov / Varadhan theorems --- only the
+classical Cram\'er / Sanov / Varadhan theorems: only the
 load-bearing structural shapes (continuity, zero-at-origin,
 inf-projection dominance). When the full quantitative content
 lifts (\S\ref{sec:mathlib-upstream}), the typeclass instances
@@ -872,8 +872,8 @@ establishing that the closure of all six LDP modules' wave-closure
 summaries is precisely the
 \texttt{LDPCompatibleSKEFT}-instance-existence on the linear-response
 Gaussian rate function. The closure requires
-\texttt{[Fact ($\sigma^2 \neq 0$)]} --- equivalently, the underlying
-linear-response Gaussian has positive variance --- to ensure the rate
+\texttt{[Fact ($\sigma^2 \neq 0$)]} (equivalently, the underlying
+linear-response Gaussian has positive variance) to ensure the rate
 function is well-defined; \texttt{linearResponseRateFunctionCentered}
 is defined via division by $\sigma^2$, and the substantive
 \texttt{IsLDPRateFunction} instance (inherited from Phase~6n
@@ -888,8 +888,8 @@ identifier with a non-vacuity witness; the $i$th module by itself
 establishes only that the $i$th predicate is non-vacuously satisfied
 by some construction. The \emph{substantive} content of the LDP
 substrate is that the same rate function $I$ simultaneously satisfies
-\emph{all five} predicates of the program's LDP-compatibility frontier
---- and does so on a witness drawn from the program's existing
+\emph{all five} predicates of the program's LDP-compatibility frontier,
+and does so on a witness drawn from the program's existing
 content (the centered linear-response Gaussian, not a fresh
 synthetic example). The \texttt{LDPCompatibleSKEFT} instance on
 \texttt{linearResponseRateFunctionCentered} closes Phase~6n
@@ -929,7 +929,7 @@ a downstream paper can take one hypothesis at a time as the substrate
 matures, without rearchitecting downstream proofs.
 
 \begin{itemize}
-\item \textbf{D3 --- emergent gravity, dark energy, and substrate
+\item \textbf{D3: emergent gravity, dark energy, and substrate
   causality.} The Sakharov-induced-gravity criterion biconditional
   reformulation as a horizon-Crooks identity (Phase~6n Wave~2d) is
   a natural future consumer of the It\^o substrate at the
@@ -943,7 +943,7 @@ matures, without rearchitecting downstream proofs.
   substrate-cross-bridge but does not yet invoke any I3 typeclass
   in a Lean theorem.
 
-\item \textbf{D5 --- the dark sector under substrate constraints.}
+\item \textbf{D5: the dark sector under substrate constraints.}
   The Phase~6n Wave~2c Crooks-on-analog-Hawking trajectory measure
   is naturally framed at the LDP scale: the asymptotic decay rate
   of the time-reversed-vs-forward trajectory ratio is the rate
@@ -963,7 +963,7 @@ matures, without rearchitecting downstream proofs.
   invoke the I3 \texttt{LDPCompatibleSKEFT} typeclass; the absorption
   event will land at a future session.
 
-\item \textbf{E1 --- analog-Hawking experimental-platform
+\item \textbf{E1: analog-Hawking experimental-platform
   predictions.} The program's Crooks-on-analog-Hawking trajectory
   measure also feeds the E1 polariton-Hawking and BEC-Hawking
   experimental-platform predictions (Carusotto et al.\ polariton
@@ -993,10 +993,10 @@ The library is positioned for an upstream Mathlib4 PR cycle, but
 the cycle is \emph{not yet} initiated. The Phase~6o.$\zeta$ scope is
 restricted to the predicate-substrate layer; the substantive
 quantitative content is staged for the post-Phase~6o window. The
-deferral is explicit: per the program's user direction at Phase~6o
-opening, \emph{``no Mathlib PR drafts at this phase --- anything that
-might end up upstream is built internally first, using Mathlib
-naming/style conventions to make future PRs easier when authorized.''}
+deferral is deliberate: no upstream pull request is drafted at this
+stage. Material that may eventually be upstreamed is developed in-tree
+first and follows Mathlib naming and style conventions throughout, so
+that preparing a later pull request requires no structural rework.
 
 \subsection{Per-module PR scope}
 
@@ -1060,7 +1060,7 @@ PR documented as in flight there overlaps in scope with the I3
 \texttt{StochasticIntegral} module. \textbf{We have not, as of
 this release, opened any Zulip thread, GitHub issue, or PR
 coordination artifact with the Degenne et al.\ team or with the
-Mathlib maintainer community} --- coordination is currently a
+Mathlib maintainer community}: coordination is currently a
 one-way read of the public preprint and the Mathlib upstream-PR
 backlog. The coordination strategy below is therefore the project's
 \emph{intended} approach for when an upstream cycle is authorized;
@@ -1152,9 +1152,9 @@ downstream consumers and Mathlib4 reviewers can calibrate expectations.
   the post-Phase~6o window. The library is currently
   project-internal infrastructure.
 \item \textbf{Phase~6o Wave~4a is async-blocked.} The Phase~6o
-  Wave~4a substrate-derived $\Lambda_J$ vs $\Lambda_{\rm HK}$ refactor
-  --- which is a natural consumer of the I3 LDP substrate via its
-  cross-bridge into D5 §11 --- is currently blocked on a
+  Wave~4a substrate-derived $\Lambda_J$ vs $\Lambda_{\rm HK}$ refactor,
+  which is a natural consumer of the I3 LDP substrate via its
+  cross-bridge into D5 §11, is currently blocked on a
   primary-source dispatch on the Finazzi--Liberati--Sindoni
   acoustic-BEC depletion-factor literature
   (\texttt{Lit-Search/Tasks/submitted/20260508\_FLS\_BEC\_depletion\_factor\_lambda\_substrate.md}).

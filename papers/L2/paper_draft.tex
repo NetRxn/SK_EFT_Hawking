@@ -61,11 +61,11 @@ for an even-unimodular intersection form it follows from the
 machine-checked algebraic half $8 \mid \sigma$ together with the single
 topological input $2 \mid \sigma/8$ ($\hat{A}$-genus even / Guillou--Marin),
 which is carried as a disclosed tracked hypothesis. It is therefore not
-claimed unconditional --- necessarily so, since $16 \mid \sigma$ is false
+claimed unconditional: necessarily so, since $16 \mid \sigma$ is false
 for general even-unimodular forms (Freedman's $E_8$, $\sigma = 8$). Three textbook topology
-results (ko cohomology, ASS convergence, ABP splitting) --- all
+results (ko cohomology, ASS convergence, ABP splitting), all
 established results in the algebraic-topology literature, tracked
-pending Mathlib formalization rather than open problems --- enter
+pending Mathlib formalization rather than open problems, enter
 only as
 commentary on the separate bordism-group identification
 $\Omega_5^{\mathrm{Spin}^{\mathbb{Z}_4}} \cong \mathbb{Z}_{16}$. The
@@ -85,9 +85,9 @@ perturbative gauge anomalies cancel within each generation
 independently~\cite{GrossJackiw1972}. The question of why nature
 chose three rather than one, two, or four is therefore unresolved at
 the perturbative level. Wang~\cite{Wang2024} proposed that a
-\emph{global} modular constraint --- $24 \mid c_-$ on the chiral
+\emph{global} modular constraint ($24 \mid c_-$ on the chiral
 central charge of the partition function under the modular
-$T$-transformation $\tau \to \tau+1$ --- combined with the SM's
+$T$-transformation $\tau \to \tau+1$) combined with the SM's
 fermion content $c_- = 8 N_f$, forces $N_f \equiv 0 \pmod{3}$. The
 proposal recasts the empirical three-generation count as the minimal
 output of a topological consistency requirement and is therefore
@@ -207,9 +207,9 @@ generation counts.}
 \section{Machine-checked $\mathrm{Ext}^n_{A(1)}$ computation through degree 5}
 \label{sec:ext}
 
-The Rokhlin bound --- that
+The Rokhlin bound (that
 $\sigma(M) \equiv 0 \pmod{16}$ on a closed spin 4-manifold rather than
-the weaker $\sigma \equiv 0 \pmod{8}$ --- is what
+the weaker $\sigma \equiv 0 \pmod{8}$) is what
 distinguishes the $\mathbb{Z}_{16}$ anomaly classification from a
 purely $E_8$-lattice-driven $\mathbb{Z}_8$, and is now a kernel-pure
 Lean theorem (\texttt{SmoothSpinManifold4.rokhlin}; see the close of
@@ -265,7 +265,7 @@ $\mathrm{MSpin} \cong \mathrm{ko} \vee \mathrm{ko}\langle 2 \rangle
 \vee \cdots$~\cite{ABP1967}. Each is an established result in the
 algebraic-topology literature, tracked pending Mathlib
 formalization of the requisite infrastructure (spectra, the Adams
-spectral sequence, Thom spectra) --- a library gap, not an open
+spectral sequence, Thom spectra), a library gap, not an open
 problem. Each enters as standard textbook
 content cited at the bibliographic level, documenting this
 bordism-group identification; the algebraic-Ext kernel
@@ -276,7 +276,7 @@ not deferred to these citations: it is a kernel-pure Lean theorem over the
 (\texttt{SmoothSpinManifold4.rokhlin}), established from the
 even-unimodular intersection form via the machine-checked half
 $8 \mid \sigma$ (\texttt{eight\_dvd\_latticeSig}, by van der Blij
-classification --- Hasse--Minkowski and theta-modularity, both
+classification: Hasse--Minkowski and theta-modularity, both
 discharged) together with the single topological factor-of-two input
 $2 \mid \sigma/8$, which is carried as a disclosed tracked hypothesis. The
 $16$ leg is thus conditional on that input rather than unconditional, as it
@@ -307,7 +307,7 @@ machine-checked unconditional half $8 \mid \sigma$
 plus the single topological input $2 \mid \sigma/8$ (carried as a tracked
 hypothesis), with no global
 Rokhlin hypothesis and no project axiom (standard axioms only). The $16$
-leg is therefore conditional on $2 \mid \sigma/8$, not unconditional ---
+leg is therefore conditional on $2 \mid \sigma/8$, not unconditional:
 necessarily, since $16 \mid \sigma$ is false for general even-unimodular
 forms (Freedman's $E_8$, $\sigma = 8$). The enumeration of the four
 occurrences is recorded as
@@ -318,7 +318,7 @@ algebraic-topology \emph{equivalence} between (i)--(iii) via the
 string-bordism $\mathbb{Z}_{24}$ class and the associated Smith
 homomorphism; that four-way equivalence, and the bordism-group
 identification $\Omega_5^{\mathrm{Spin}^{\mathbb{Z}_4}} \cong
-\mathbb{Z}_{16}$, remain external inputs --- but the divisibility
+\mathbb{Z}_{16}$, remain external inputs, but the divisibility
 $16 \mid \sigma$ itself is no longer among them. The Kitaev
 relationship to (iv) is suggestive but not formalized.
 
@@ -331,8 +331,8 @@ invariance behave differently with respect to $\nu_R$:
 & $\mathbb{Z}_{16}$ ($\nu_R$ in) & $\mathbb{Z}_{16}$ ($\nu_R$ out) & Modular inv. \\
 \hline
 Constraint & none & $16 \mid N_f$ & $3 \mid N_f$ \\
-Minimal $N_f$ & --- & $16$ & $3$ \\
-Combined min & $\mathbf{3}$ & $\mathrm{lcm}(16,3) = \mathbf{48}$ & --- \\
+Minimal $N_f$ & -- & $16$ & $3$ \\
+Combined min & $\mathbf{3}$ & $\mathrm{lcm}(16,3) = \mathbf{48}$ & -- \\
 \hline
 \end{tabular}
 \end{center}
@@ -347,7 +347,7 @@ $N_f = \mathrm{lcm}(16,3) = 48$
 is observed, the joint constraint is direct evidence for $\nu_R$.
 The Rokhlin bound is sharp: the K3 surface saturates with
 $\sigma = -16$, while the $E_8$ manifold has $\sigma = 8$ but is not
-spin --- formalized as
+spin, formalized as
 \texttt{RokhlinBridge.rokhlin\_strictly\_stronger}: $16 \nmid 8$.
 
 %% ══════════════════════════════════════════════════════════════════

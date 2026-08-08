@@ -17,12 +17,13 @@ Networks: A Formally Verified Demarcation}
 \date{\today}
 
 \begin{abstract}
-Recent classical tensor-network methods --- belief propagation on
+Recent classical tensor-network methods have collectively
+narrowed the gap between classical and quantum many-body simulation:
+belief propagation on
 2D/3D PEPS networks (Tindall, Mello, Fishman, Stoudenmire, Sels,
 \textit{Science} \textbf{392}, 868 (2026)) and Chebyshev-TN density-
 matrix expansions on quasicrystal Hamiltonians (Antão, Sun, Fumega,
-Lado, \textit{PRL} \textbf{136}, 156601 (2026)) --- have collectively
-narrowed the gap between classical and quantum many-body simulation.
+Lado, \textit{PRL} \textbf{136}, 156601 (2026)).
 We formalize a joint substrate in the Lean~4 proof assistant and
 ship a kernel-verified \textit{simulability demarcation
 biconditional}\footnote{To the best of our knowledge after a scoped
@@ -35,14 +36,14 @@ welcome notification of prior work.}: a quantum many-body system on a
 factor graph $G$ with factor weights $f_a$ and categorical-Chern data
 $(c_0, c_1)$ is classically simulable in the combined BP / Chebyshev-
 TN regime if and only if (i) the loop-correction rate function of the
-factor graph --- the Cram\'er/Legendre transform at zero deviation of
+factor graph (the Cram\'er/Legendre transform at zero deviation of
 the log-MGF of the Bernoulli loop-presence observable whose success
-parameter is the graph's 4-cycle density --- vanishes and the factor
+parameter is the graph's 4-cycle density) vanishes and the factor
 weights are non-negative, AND (ii) the topological coefficient $c_1$
 vanishes. The zero-rate $\Leftrightarrow$ tree equivalence is proven
 from the variational definition (not definitional). Outside this
-regime --- strictly positive loop-correction rate OR non-trivial
-Chern coefficient --- quantum processors retain a structural
+regime (strictly positive loop-correction rate OR non-trivial
+Chern coefficient) quantum processors retain a structural
 simulation advantage at the level of the formalized substrate. The
 Lean substrate is fully generic over the (finite) factor-graph type
 parameters; analog-Hawking applications via the
@@ -85,8 +86,9 @@ load-bearing axes:
 
 \begin{enumerate}
 \item \textit{Zero-rate condition}: the loop-correction rate
-function of the factor graph must vanish (equivalently --- proven,
-not definitionally --- the factor graph is tree-like), and the
+function of the factor graph must vanish (equivalently, and
+provably rather than merely definitionally, the factor graph is
+tree-like), and the
 factor weights must be non-negative. The Lean implementation is a
 genuine Cram\'er/Legendre construction
 (\texttt{loopCorrectionRate}\,$G := \sup_{\theta}\,
@@ -103,7 +105,7 @@ zero-rate $\Leftrightarrow$ four-cycle-freeness equivalence
 positivity on loopy graphs
 (\texttt{loopCorrectionRate\_pos\_of\_not\_fourCycleFree}), strict
 monotonicity in loop density
-(\texttt{loopCorrectionRate\_lt\_of\_loopDensity\_lt} --- the rate
+(\texttt{loopCorrectionRate\_lt\_of\_loopDensity\_lt}: the rate
 separates loopy graphs by loop content, e.g.\ the complete
 bipartite $2{\times}2$ graph has rate $\log(4/3)$,
 kernel-checked), the exact finite-$n$ Cram\'er identity $(1-p)^n =
@@ -126,9 +128,9 @@ categorical Chern coefficient $c_1$ of the system must vanish.
 
 The biconditional `analog\_hawking\_quantum\_advantage\_demarcation'
 (Lean module \texttt{AnalogHawkingDemarcation.lean}) ties these two
-axes together at the type level. The substrate beneath it ---
-seven Lean modules across the BP-on-TN, LDP-rate-function, Chebyshev-
-TN, aperiodic-lattice, and Chern-bridge layers --- is fully generic
+axes together at the type level. The substrate beneath it
+(seven Lean modules across the BP-on-TN, LDP-rate-function, Chebyshev-
+TN, aperiodic-lattice, and Chern-bridge layers) is fully generic
 over the factor-graph type parameters and applies to any LDP-
 controlled-BP / Chebyshev-TN classification setting. Analog-Hawking
 radiation is one concrete application, formalized via the Kibble-
@@ -174,7 +176,7 @@ favorable AND $c_1 = 0$. Contrapositive yields the quantum-advantage
 regime explicitly.
 \end{itemize}
 
-\section{Belief propagation on factor graphs --- Lean substrate}
+\section{Belief propagation on factor graphs: Lean substrate}
 \label{sec:bp-substrate}
 
 [Wave 6w.2 substrate. Section content to be expanded in subsequent
@@ -279,7 +281,7 @@ with the closed form $-\log(1 - p)$, the zero-rate
 $\Leftrightarrow$ tree equivalence, strict positivity on loopy
 graphs, strict monotonicity in loop density, the exact finite-$n$
 Cram\'er identity, and the Kullback-Leibler bridge to the project
-LDP suite all proven kernel-only --- the honest residual is that
+LDP suite all proven kernel-only: the honest residual is that
 the rate attaches to the \emph{combinatorial} loop-presence
 observable (4-cycle density, the granularity of the tree
 predicate), while the attachment to the \emph{dynamical}

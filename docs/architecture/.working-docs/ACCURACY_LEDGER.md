@@ -1976,3 +1976,39 @@ implying Stage-13 artifacts that no review produced.
 (transition 2 has no actor; `review_recorded` does not discriminate kind; the ordering rule is
 unenforced) and `VALIDATION_GATE_TOPOLOGY` §5 (nothing reads `stage9_status`/`stage10_status`) and
 §6 (field ownership). Each stated a true fact that this work made untrue.
+
+## V51 — ADR-011 Phase 3: the em-dash sweep — 9 atoms, 2 of my own hypotheses REFUTED
+
+**Method.** Six Sonnet agents over disjoint bundle sets read all 741 occurrences in context and
+rewrote each. Every claim below was re-verified by me against `git show HEAD:` rather than taken
+from an agent report.
+
+| # | Proposition | Decider | Verbatim result |
+|---|---|---|---|
+| 1 | The generic AI-slop vocabulary is present in this corpus | 20 markers × 21 bundles | **REFUTED — 11 hits total, 17 of 20 markers at ZERO.** No `delve`, `tapestry`, `realm of`, `it is worth noting`, `moreover`. A denylist would have been a check that cannot fire |
+| 2 | `bundle`/`lift` are mostly legitimate mathematics (my hypothesis) | context read of all 239 + 35 | **REFUTED — `bundle` is 230 publication-architecture to 9 mathematical.** I was wrong. But `lift` is irreducibly mixed: my own context classifier misclassified in BOTH directions on its own samples, which is why the word is excluded rather than gated |
+| 3 | There is an auditable history of prose antipatterns to Pareto over | 273 review docs, 926 BLOCKERs | **NO — every one classifies to a claim-integrity gate that already has a check.** Prose was first reviewed 2026-08-01, so any wider gate extrapolates from one measurement |
+| 4 | Em-dash total, and how many bundles are clean | corpus scan | **741** (621 `---` + 120 `—`); **0 of 21** clean |
+| 5 | The en-dash population is separate and larger | corpus scan | **1,121.** A scan not requiring exactly-three would flag 1,862 and be wrong about 1,121 |
+| 6 | The sweep removed every em-dash without touching an en-dash | per-file diff vs `HEAD` | **741 → 0**; en-dash counts identical in all 21 except 4 deliberate U+2013 normalizations |
+| 7 | Nothing regressed in the build | `--all` compile | **47/64, identical to pre-sweep**; all 21 bundles pass |
+| 8 | The check responds to production data, in both directions | seeded into real `papers/D1` | em-dash ⇒ rc=1 naming `D1:3`; `Bose--Einstein` in the SAME position ⇒ PASS. Restored byte-identical |
+| 9 | A `:` in a bibitem title carries a functional risk (operator's concern) | read of the citation pipeline | **NO.** Cache files are keyed by BIBKEY (`Berti2015.pdf`), never by title; no filename derives from a title. And the registry's own title for `Roehm2026F` **already uses a colon**, so the edit moved the `.tex` toward canonical |
+
+**A third dash variant, found by an agent and not in my brief.** Literal Unicode en-dashes
+(U+2013) in rendered prose — `Kaul–Majumdar` in D3, `Chowdhury–Hartnoll–Hebbar–Khondaker` in E1.
+D3 spelled the same name both ways. Normalized to `--`; this is atom 6's only en-dash movement.
+
+**Two cases the agents correctly refused to fix, resolved by judgment:**
+- **L2's table cells** — `---` as a "not applicable" marker. Replaced with `--` rather than adding
+  a table exemption to the check: an exemption is a hole prose gets driven through, and the table
+  dash has a conventional alternative that costs nothing.
+- **I3:997** — an em-dash inside a verbatim quotation of the project's *own internal directive*.
+  The agent was right that altering a quotation falsifies it. But the defect was not punctuation:
+  a JOSS referee cannot parse "the program's user direction at Phase~6o opening". Rewritten
+  forward-facing, which removed the quote, the process narration and the em-dash together.
+
+**NOT-AN-ASSERTION.** The generative-habit analysis (six independent reports converging on
+"state a claim, interrupt it mid-clause to pre-empt a misreading, resume") is qualitative field
+evidence for `references/prohibited-patterns.md`, not a measured claim. It is recorded as the
+agents' judgment, corroborated across disjoint file sets, not as a fact about the corpus.

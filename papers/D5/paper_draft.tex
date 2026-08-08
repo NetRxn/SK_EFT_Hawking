@@ -151,7 +151,7 @@ robust under $r_d$-anchoring rescue.
 Third, to surface the structural caveats: Track~A's GD-obstruction
 inapplicability across all admissible sprinkling prescriptions, the
 Barrow-bound prescription dependence, and the Sakharov 4-criterion
-induced-gravity test in the JTGR cross-bridge --- each a publishable
+induced-gravity test in the JTGR cross-bridge, each a publishable
 short-note opportunity \emph{embedded as a D5 subsection} per Pipeline
 Invariant~\#14 (no 14th+ bundle target spawned).
 
@@ -219,7 +219,7 @@ temperature by a factor of two). Quantitatively
 versus the observed $(\SI{2.3}{\milli\electronvolt})^4$. The mechanism
 reproduces the \emph{scale} of $\rho_{\rm vac}^{1/4}$ at the meV level
 without tuning; the specific $\mathcal{O}(1)$ coefficient requires a
-full $V_{\rm eff}$ parameterization and is deferred to Phase~6 ---
+full $V_{\rm eff}$ parameterization and is deferred to Phase~6;
 see the CAUTION block in \texttt{CosmologicalConstant.lean}~L21--23. A
 prior ``$\approx 2.8$~meV'' / ``$20\%$ agreement'' claim is withdrawn
 in this revision (paper~17 Wave~10 remediation; D5 lift~2026-05-01).
@@ -250,20 +250,20 @@ The bundle inherits the paper~17 honesty discipline. Each Lean-cited
 claim is one of three types:
 
 \begin{itemize}
-\item \emph{Derived} --- the Lean theorem's proof carries non-trivial
+\item \emph{Derived}: the Lean theorem's proof carries non-trivial
   mathematical content (the conclusion does not reduce to the statement
   by \texttt{rfl} or \texttt{decide} on hand-assigned constants).
   Examples: distinct equation-of-state values for Phase~5x sectors
   (CC3/CC4/CC4'); FG torsion CDM obstruction (\texttt{fg\_cdm\_obstruction}
   from traceless $T^{\mu\nu}$).
-\item \emph{MCC (machine-checked classification)} --- the proof verifies
+\item \emph{MCC (machine-checked classification)}: the proof verifies
   internal consistency of an author-supplied lookup table or enum
   assignment. Examples: $\log_{10}\sigma_{\rm DD}(\text{candidate})
   \leq -50$ for all five Phase~5x candidates (caps hand-assigned per
   deep-research bound); SFDM vs fracton cored-profile mechanisms
   (taxonomy enum distinctness); empirical-hook ranking (priorities
   hand-assigned).
-\item \emph{Heuristic / Empirical} --- physically motivated but
+\item \emph{Heuristic / Empirical}: physically motivated but
   non-rigorous (Heuristic) or measurement-driven (Empirical).
 \end{itemize}
 
@@ -374,7 +374,7 @@ The 5-candidate $\mathcal{O}\!\left(\Delta N_{\rm eff}\right)$ tally is:
   \end{itemize}
 \end{itemize}
 
-Both violators fail through the same $N_{\rm eff}$-mediated channel ---
+Both violators fail through the same $N_{\rm eff}$-mediated channel:
 not via abundance perturbations of the light-element ratios
 $D/H$, $Y_p$, or ${}^7\!\text{Li}$, and not via late-decay
 photodissociation of helium-4. The verdict is universal in the
@@ -405,9 +405,9 @@ $\geq 3$-of-5 unconditional pass.
 The BBN-safety condition for the fracton p-wave provides the calibration
 handle for the $\mu_{\rm condensate} \gtrsim \SI{}{\mega\electronvolt}$
 constraint that anchors the §\ref{subsec:sfdm-merger} cluster-merger
-forecast. The two conditions are independent --- BBN constrains the
+forecast. The two conditions are independent (BBN constrains the
 early-time relativistic-species count; the cluster-merger forecast
-constrains the late-time gravitational signature --- but they are
+constrains the late-time gravitational signature), but they are
 mutually consistent in the BK-fiducial parameter window. The framework
 is the program's \emph{expected-falsifier}: it disqualifies $\geq 1$
 Phase~5x DM candidate upon discharge of the thermalization tracked
@@ -434,13 +434,13 @@ conditional on thermalization at $T_{\rm BBN} \approx
 \label{sec:d5-paper32_strong_cp_de}
 
 This section consolidates the paper~32 strong-CP / topological-DE deep
-paper (Phase~6c W1) into D5. It formalises a structural bridge between
-two long-standing Standard-Model puzzles --- the smallness of the QCD
-topological angle $|\theta| \lesssim 10^{-9}$ (Pendlebury~2015 neutron
-EDM) and the observed cosmological-constant energy density
+paper (Phase~6c W1) into D5. It formalises, via the
+Van Waerbeke--Zhitnitsky topological-DE mechanism, a structural bridge
+between two long-standing Standard-Model puzzles: the smallness of the
+QCD topological angle $|\theta| \lesssim 10^{-9}$ (Pendlebury~2015
+neutron EDM) and the observed cosmological-constant energy density
 $\rho_{\rm DE} \approx 2.8 \times 10^{-11}\,\text{eV}^4$
-(Planck~2018 + DESI~2024) --- via the Van Waerbeke--Zhitnitsky
-topological-DE mechanism. The bridge ships in
+(Planck~2018 + DESI~2024). The bridge ships in
 \texttt{StrongCPTopologicalDE.lean} as $8$ substantive theorems
 (macro $\strongCpDeThms{}$).
 
@@ -551,12 +551,12 @@ The 6-mechanism tally:
 \begin{itemize}
 \item \emph{Violate WEP} (and hence all three EP levels):
   \begin{itemize}
-  \item \emph{Vestigial differential coupling} --- metric and tetrad
+  \item \emph{Vestigial differential coupling}: metric and tetrad
     fields acquire different vacuum expectation values, so bosons and
     fermions couple to gravity through different effective geometries.
     Predicts $\eta = 1$ (maximal); already excluded by MICROSCOPE
     (Touboul~et~al.~2017, $\eta < 10^{-15}$ for Ti/Pt).
-  \item \emph{Vestigial relics} --- residual $\eta \sim 10^{-18}$ from
+  \item \emph{Vestigial relics}: residual $\eta \sim 10^{-18}$ from
     defect remnants in a full-tetrad phase. Sub-MICROSCOPE; at the
     projected design sensitivity for STEP-class satellite missions
     ($\eta_{\rm STEP} \sim 10^{-18}$).
@@ -691,7 +691,7 @@ $(\Lambda_{\rm UV}, N_f)$ plane, with two contour overlays: the
 = 1$ (steel-blue) and the \emph{reproduced} boundary
 $\log_{10}(\Lambda^{\rm emerg}/\Lambda_{\rm obs}) \simeq 60$ (amber).
 At $(\Lambda_{\rm UV} \simeq M_{\rm Pl},\ N_f = 16)$ the prediction
-exceeds $\Lambda_{\rm obs}$ by $> 10^{120}$ — the classical
+exceeds $\Lambda_{\rm obs}$ by $> 10^{120}$, the classical
 cosmological-constant problem reproduced in the emergent-gravity
 formulation. Lifted from paper42b.}
 \end{figure}
@@ -722,8 +722,8 @@ the DESI~DR2 + sound-horizon-anchored falsifier program at R5
   caveat: $\sigma_\Lambda$ is monotone-decreasing in volume for fixed
   $\alpha_{\rm BDG} > 0$ (\texttt{bdg\_sigma\_lambda\_alpha\_bdg\_over\_sqrt\_v}
   / \texttt{bdg\_sigma\_lambda\_decreasing}, labels CSDE7 / CSDE8).
-\item \emph{Causet d'Alembertian DE}: NO-GO via 4D gradient instability
-  --- the effective $c_s^2 < 0$ for the delta-correlated kinetic term
+\item \emph{Causet d'Alembertian DE}: NO-GO via 4D gradient instability;
+  the effective $c_s^2 < 0$ for the delta-correlated kinetic term
   drives a sub-Hubble inconsistency
   (\texttt{causet\_dalembertian\_4d\_gradient\_instability}, label CSDE4,
   in \texttt{CausalSetDarkEnergy.lean}; cross-references the
@@ -810,7 +810,7 @@ the substrate-level selection rule needed to disambiguate the four
 prescriptions. User authorization for a 14th bundle target would
 elevate this to a stand-alone Letter.
 
-\section{Phase~6m Track~B: Entropic-gravity DE (8/8 unanimous NO-GO ---
+\section{Phase~6m Track~B: Entropic-gravity DE (8/8 unanimous NO-GO;
 \emph{first complete-mechanism-family closure} in Phase~6m)}
 \label{sec:phase6m-track-b}
 
@@ -829,24 +829,25 @@ distinguishes
 \label{subsec:phase6m-track-b-bounds}
 
 The eight Track~B mechanisms split into four with explicitly-quantitative
-disfavour ledgers --- two Bayes-factor Jeffreys-decisive
-($|\!\log\mathcal{B}| \geq 5$: Tsallis~HDE, Odintsov-D'Onofrio-Paul;
-aggregated in
+disfavour ledgers and four structurally NO-GO mechanisms
+(Padmanabhan/CosMIn, Hossenfelder-Verlinde, Cadoni-Tuveri~DEC, HDE
+event-horizon). The four with ledgers are two Bayes-factor
+Jeffreys-decisive ($|\!\log\mathcal{B}| \geq 5$: Tsallis~HDE,
+Odintsov-D'Onofrio-Paul; aggregated in
 \texttt{both\_decisive\_bayes\_bounds\_exceed\_jeffreys\_decisive}), one
 $\sigma$-significance (Verlinde~2017, excluded at $>5\sigma$ by
 galaxy-cluster mass densities under nominal profile assumptions), and one
-AIC-moderate (Barrow~HDE, $\Delta\!\text{AIC} = +4.7$) --- all four
+AIC-moderate (Barrow~HDE, $\Delta\!\text{AIC} = +4.7$); all four are
 aggregated unit-coherently
 ($\sigma$ / $\log\mathcal{B}$ / $\Delta\!\text{AIC}$ / $\log\mathcal{B}$)
-in \texttt{all\_quantitative\_bounds\_disfavoured} --- and four structurally
-NO-GO mechanisms (Padmanabhan/CosMIn, Hossenfelder-Verlinde, Cadoni-Tuveri~DEC,
-HDE event-horizon). The 8 mechanism-level closures are listed first;
-two auxiliary supports for the Cadoni-Tuveri DEC entry follow.
+in \texttt{all\_quantitative\_bounds\_disfavoured}. The 8 mechanism-level
+closures are listed first; two auxiliary supports for the Cadoni-Tuveri
+DEC entry follow.
 
 \begin{itemize}
 \item \texttt{verlinde\_2017\_no\_go\_via\_cluster\_mass\_densities\_halenka\_miller}:
   Verlinde 2017~\cite{Verlinde2017dSEmergent} is excluded at $>5\sigma$
-  by galaxy-cluster mass-profile shape tests --- cores and outskirts of
+  by galaxy-cluster mass-profile shape tests: cores and outskirts of
   23 relaxed clusters with weak-lensing total-mass and X-ray gas-mass
   profiles, under nominal profile assumptions; the same analysis finds
   the exclusion weakens once profile systematics are
@@ -858,7 +859,7 @@ two auxiliary supports for the Cadoni-Tuveri DEC entry follow.
   Halenka-Miller.
 \item \texttt{padmanabhan\_cosmin\_no\_go\_no\_scalar\_perturbation\_theory}:
   Padmanabhan/CosMIn predicts exact $\Lambda$CDM with no scalar
-  perturbation theory; the closure is structural --- there is no
+  perturbation theory; the closure is structural: there is no
   Lagrangian scalar to drive sub-Hubble dynamics.
 \item \texttt{hossenfelder\_verlinde\_no\_go\_post\_yoon\_guha}:
   Hossenfelder-Verlinde dS-instability claim is no longer load-bearing
@@ -895,7 +896,7 @@ two auxiliary supports for the Cadoni-Tuveri DEC entry follow.
   falls in the Burnham-Anderson ``considerably less support'' regime
   ($\Delta\!\text{AIC} \geq 4$) but \emph{below} the conventional
   Bayes-factor Jeffreys-decisive cutoff ($\geq 5$). Methodology is
-  information-criteria (AIC) only — neither BIC nor Bayes factors —
+  information-criteria (AIC) only (neither BIC nor Bayes factors);
   the theorem-name's prior \texttt{bayes\_factor} suffix has been
   retired and replaced with the methodology-honest
   \texttt{disfavoured\_information\_criteria} form, and the historical
@@ -920,11 +921,11 @@ definitional). That is where the proof load sits, and
 records the genuine conjunction. The aggregator \texttt{entropic\_gravity\_no\_go\_count\_eight}
 records the 8/8 tally, and \texttt{r\_d\_independent\_count\_eight}
 records that each of the eight bounds carries the $r_d$-anchoring-independent
-flag (no rescue across any candidate) --- both aggregators are bookkeeping
+flag (no rescue across any candidate); both aggregators are bookkeeping
 over the per-candidate legs, a verified-consistent classification ledger
 rather than the proof load itself. The mixed-threshold aggregators
 \texttt{both\_decisive\_bayes\_bounds\_exceed\_jeffreys\_decisive}
-(2 of 4 quantitative ledgers — Tsallis, Odintsov — at
+(2 of 4 quantitative ledgers, namely Tsallis and Odintsov, at
 Bayes-factor Jeffreys-decisive) and
 \texttt{all\_quantitative\_bounds\_disfavoured} (all 4 at moderate-or-greater
 disfavour on their native scales, with Verlinde at the nominal-assumptions
@@ -1075,7 +1076,7 @@ FLS BEC extended substrate witness structurally separates
 $\lambda_J \neq \lambda_{\rm HK}$ at $\mathbb{R}$ level (JTGR14,
 \texttt{flsBEC\_lambda\_j\_neq\_lambda\_hk\_real}).
 
-\paragraph{Wave 4a.4 closure --- biconditional retired (verdict (B)).}
+\paragraph{Wave 4a.4 closure: biconditional retired (verdict (B)).}
 The deep-research return at
 \texttt{Lit-Search/Phase-6o/6o-Wave 4a FLS BEC Depletion-Factor
 $\Lambda$\_substrate Return.md} (returned 2026-05-06) closes the
@@ -1142,7 +1143,7 @@ The substrate-level evaluations are:
   $\Delta_0 \approx \SI{1.6}{\milli\kelvin}$, with $\zeta = 2$.
 \item \texttt{finazzi\_liberati\_sindoni\_bec\_violates\_universal\_coupling}:
   Finazzi-Liberati-Sindoni acoustic BEC violates condition~(ii) (universal
-  coupling) --- the BEC's superfluid phonon mode does not couple
+  coupling): the BEC's superfluid phonon mode does not couple
   universally to the substrate's effective gravitational sector at the
   required order, producing $\Lambda_J \neq \Lambda_{\rm HK}$.
 \item \texttt{volovik\_jannes\_substrate\_anchors\_sakharov\_criterion}:
@@ -1210,13 +1211,13 @@ The taxonomy supports a 3-tier applicability gradient
 (\texttt{phase6m\_class\_admits\_tier\_assignment}):
 
 \begin{itemize}
-\item \emph{Tier 1 (GD applies, NO-GO predicted)}: Classes~(c), (d) ---
-  Track~B's eight unanimous NO-GOs.
+\item \emph{Tier 1 (GD applies, NO-GO predicted)}: Classes~(c), (d),
+  i.e.\ Track~B's eight unanimous NO-GOs.
 \item \emph{Tier 2 (GD silent, alternative analytic toolkit needed)}:
-  Class~0 (causal-set DE), Class~(a) (KSS) --- the substrate
+  Class~0 (causal-set DE), Class~(a) (KSS); the substrate
   d.o.f.\ are outside GD's Lagrangian-scalar domain.
 \item \emph{Tier 3 (GD silent, geometric / cosmographic
-  applicability)}: Classes~(e), (f), (g) --- Track~C's five+ CLEARED-R5
+  applicability)}: Classes~(e), (f), (g), i.e.\ Track~C's five+ CLEARED-R5
   survivors, where the analytic verdict comes from cosmographic
   consistency rather than thermodynamic consistency.
 \end{itemize}
@@ -1233,7 +1234,7 @@ mechanically).
 
 The cross-bridge \texttt{class\_c\_admits\_orthogonality\_failure\_witness}
 provides the existential witness that Class~(c) admits a substrate
-configuration where the orthogonality principle fails --- the mechanism
+configuration where the orthogonality principle fails, the mechanism
 that DEC instantiates in the Track~B closure. This is a Derived
 content theorem (the witness is constructed explicitly, not
 \texttt{decide}-on-hardcoded-flags); it is the rigorous companion to
@@ -1242,7 +1243,7 @@ DEC's failure-of-\texttt{IsViable} via the factor-\#1 chain.
 The Phase~6m mechanism count is established by the Lean theorem
 \texttt{phase6m\_mechanism\_count}, which proves
 $|\text{allEntropicGravityCandidates}| + |\text{allJacobsonCandidates}| =
-17$ — the lengths of the two enumerated lists for Tracks~B and~C
+17$, the lengths of the two enumerated lists for Tracks~B and~C
 respectively. Track~A's four candidates enter as inductive
 \texttt{CausalSetCandidate} constructors rather than as a
 \texttt{List}, so they are not summed by \texttt{phase6m\_mechanism\_count};
@@ -1287,7 +1288,7 @@ remains at the $1\sigma$-box edge. The closure programme thus has a
 2-3-year quantitative outlook even for the conditional CLEARED-R5
 candidates.
 
-\paragraph{Polariton substrate placement — bimodal-branch resolution
+\paragraph{Polariton substrate placement: bimodal-branch resolution
 (Phase~6v.3, 2026-05-26).}
 %% Provenance: Wave 6v.3 cross-reference into D5's substrate-constraints
 %% framing. Numerical anchor: src/dkm_polariton/polariton_occupation_bound.py.
@@ -1297,9 +1298,9 @@ candidates.
 A complementary substrate-level finding that lives outside the
 dark-energy closure but completes the D5 \emph{substrate constraints
 by platform} picture: the Phase~6q DKM transport bootstrap's
-explicit open question on polariton-platform placement — left
+explicit open question on polariton-platform placement, left
 unresolved at Phase~6q close (\texttt{project\_phase6q\_complete\_2026\_05\_23}
-memory) — has been resolved by Phase~6v Wave~6v.3. The UPenn
+memory), has been resolved by Phase~6v Wave~6v.3. The UPenn
 nanocavity-polariton 4~fJ switching threshold pins the per-pulse
 per-mode photon count at $n_{\rm per\ pulse} \approx 1.44 \times 10^4$,
 some $70\times$ below the $n_{\rm threshold} \approx 10^6$ regime

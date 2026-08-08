@@ -32,8 +32,8 @@ transport coefficients ($\sigma_Q \approx 4e^2/h$, $L/L_0 > 200$)
 are adopted from the Majumdar et al.\ monolayer Dirac-fluid
 characterization as a cross-device modeling assumption for the
 bilayer nozzle regime. The predicted Hawking
-temperature is $T_H \approx \SI{2.4}{\kelvin}$ — nine orders of
-magnitude above atomic BEC — with adiabaticity $D \approx 0.23$
+temperature is $T_H \approx \SI{2.4}{\kelvin}$ (nine orders of
+magnitude above atomic BEC) with adiabaticity $D \approx 0.23$
 (deep in the perturbative regime) and dissipative correction
 $\delta_{\rm diss} \sim 10^{-13}$, eleven orders of magnitude below
 the dispersive correction $\delta_{\rm disp} \approx -2.8\%$. The
@@ -69,9 +69,9 @@ that fluid systems with sonic horizons emit thermal radiation with
 temperature set by the velocity-gradient surface gravity. The
 Geurs et al.~\cite{Geurs2025} demonstration of supersonic electron
 flow past the electronic sound barrier in a bilayer-graphene
-de~Laval nozzle — drift velocity $v > c_s \approx
+de~Laval nozzle (drift velocity $v > c_s \approx
 \SI{440}{\kilo\meter/\second}$ inside a $\SI{200}{\nano\meter}$
-throat, terminated by a viscous shock front — establishes the
+throat, terminated by a viscous shock front) establishes the
 transonic transition that is the geometric prerequisite for a
 hydrodynamic-electron sonic horizon. Ref.~\cite{Geurs2025} already
 notes the de~Laval--acoustic-black-hole analogy and an
@@ -80,18 +80,18 @@ detailed analog-Hawking spectrum and noise power spectral density
 predicted below are this Letter's theoretical development. The
 Majumdar et al.~\cite{Majumdar2025}
 measurement of quantum-critical transport at the Dirac point in
-ultra-clean monolayer graphene — universal conductance
+ultra-clean monolayer graphene (universal conductance
 $\sigma_Q \approx 4\,e^2/h$ and Wiedemann-Franz violation
 exceeding $200\times$, with $\eta/s$ within a factor of four of the
-Kovtun-Son-Starinets bound~\cite{KSS2005} (consistent with the
+Kovtun-Son-Starinets bound~\cite{KSS2005}, consistent with the
 broader hydrodynamic-strongly-coupled-fluid programme~\cite{Romatschke2010})
-— supplies the second-order
+supplies the second-order
 transport coefficients needed to predict the Hawking signal. Together
 with the Zhao et al.~\cite{Zhao2023} hydrodynamic-plasmon
 measurement constraining the conformal sound speed
 $c_s = v_F/\sqrt{2}$,
 the prerequisites for analog Hawking detection in graphene are in
-place — the transonic nozzle geometry demonstrated directly on the
+place: the transonic nozzle geometry demonstrated directly on the
 bilayer device~\cite{Geurs2025}, the quantum-critical transport
 coefficients adopted cross-device from the monolayer
 measurement~\cite{Majumdar2025}.
@@ -117,7 +117,7 @@ $c_s \approx \SI{440}{\kilo\meter/\second}$, the velocity-gradient
 surface gravity at the throat is $\kappa \approx \SI{2.0e12}{\per\second}$
 (estimated from the deep-research-derived nozzle velocity profile rather
 than the order-of-magnitude identification $c_s/L \approx \SI{2.2e12}{\per\second}$);
-this gives $T_H \approx \SI{2.4}{\kelvin}$ — nine orders of magnitude above
+this gives $T_H \approx \SI{2.4}{\kelvin}$: nine orders of magnitude above
 the atomic-BEC value of $\SI{0.35}{\nano\kelvin}$
 \cite{Steinhauer2016,deNova2019} and more than an order of magnitude
 above the exciton-polariton analog-horizon scale
@@ -162,8 +162,8 @@ $g_{yy} = \Omega^2$ that decouples. This is formally verified in
 \texttt{diracFluidMetric\_y\_offdiag\_zero} (the $y$-row off-diagonals
 vanish) and \texttt{diracFluidMetric\_gyy} (the $yy$ block reduces
 to the conformal factor). The block-diagonal structure is the key
-structural simplification: every 1+1D Hawking calculation — WKB
-connection formula, Bogoliubov coefficients, dispersive corrections —
+structural simplification: every 1+1D Hawking calculation (WKB
+connection formula, Bogoliubov coefficients, dispersive corrections)
 applies directly to the $(t,x)$ sector via the binding lemma
 \texttt{DiracFluidWKB.toExactWKB}, which is checked in
 $\sim 93\%$ of the transferred Lean theorems.
@@ -210,8 +210,8 @@ At the Dean device's high-bias electron temperature $T = \SI{150}{\kelvin}$
 (the lattice bath sits near \SI{10}{\kelvin}; under bias the electron gas
 heats to $\sim\SI{150}{\kelvin}$~\cite{Geurs2025}, and this electron
 temperature sets the carrier thermal noise),
-$l_{\rm ee} \approx \SI{51}{\nano\meter}$ gives $D \approx 0.23$ —
-deep in the perturbative regime — and
+$l_{\rm ee} \approx \SI{51}{\nano\meter}$ gives $D \approx 0.23$
+(deep in the perturbative regime) and
 $\delta_{\rm disp} \approx -2.8\%$. The effective Hawking temperature
 $T_{\rm eff} = T_H(1 + \delta_{\rm disp}) \approx \SI{2.36}{\kelvin}$
 is positive for $D^2 < 6/\pi$, formalized in
@@ -222,7 +222,7 @@ et al.~\cite{Majumdar2025} $\eta/s$ bound is reported for the
 thermal-regime effective dynamic viscosity in the cleanest
 hBN-encapsulated monolayer samples; we adopt it here for the
 Dean-equivalent
-ultra-clean bilayer-Dirac-fluid regime — a modeling assumption since
+ultra-clean bilayer-Dirac-fluid regime: a modeling assumption since
 the Dean nozzle device (Ref.~\cite{Geurs2025}, bilayer) is plausibly
 within the same
 universality class but is not itself the device measured in
@@ -236,8 +236,8 @@ horizon is
 \end{equation}
 This is eleven orders of magnitude below $\delta_{\rm disp}$, and
 the SK-EFT framework's value for graphene is therefore the
-\emph{systematic organization} of corrections — and the formal
-verification — not a specific dissipative modification of $T_H$.
+\emph{systematic organization} of corrections (and the formal
+verification), not a specific dissipative modification of $T_H$.
 
 \begin{figure}[t]
 \centering
@@ -413,8 +413,8 @@ module \texttt{AnalogHawkingDemarcation.lean}) further localizes the
 classically-simulable regime for the bilayer-graphene Dirac fluid:
 the SK-EFT-predicted Hawking spectrum at the Dean nozzle's parameters
 passes the BP-on-PEPS simulability screen iff (i) the Dirac-fluid
-factor graph is BP-LDP-favorable (four-cycle-free topology --- the
-combinatorial screen implied by tree-like structure --- + non-negative
+factor graph is BP-LDP-favorable (four-cycle-free topology, the
+combinatorial screen implied by tree-like structure, + non-negative
 factor weights) AND (ii) the second Chebyshev expansion coefficient $c_1$
 of the categorical marker vanishes.
 
@@ -424,7 +424,7 @@ It is neither: \texttt{ChernBridge.lean:68} defines
 \texttt{categoricalChernExpansion c0 c1 := [c0, c1]}, a two-term Chebyshev expansion, and
 no graphene and no moir\'e superlattice appear anywhere in that module.
 (\emph{Corrected 2026-08-01}: an earlier version of this retraction also claimed no
-Brillouin zone appears. That was false --- \texttt{ChernBridge.lean:14} frames the
+Brillouin zone appears. That was false: \texttt{ChernBridge.lean:14} frames the
 crystalline limit as a Brillouin-zone Chern number reducing to a sum. The retraction is
 therefore narrower than first written: $c_1$ is a Chebyshev coefficient and the module makes
 no graphene or moir\'e claim, but it does invoke the Brillouin-zone reading, so the
@@ -461,7 +461,7 @@ updated PRL/PRR spectrum in advance of measurement.
 The SK-EFT-predicted analog Hawking spectrum at the Dean-Kim-Lucas
 graphene-Dirac-fluid platform is a falsifiable, formally verified
 quantitative target. The Hawking temperature is $T_H \approx
-\SI{2.4}{\kelvin}$ — nine orders of magnitude above atomic BEC and
+\SI{2.4}{\kelvin}$: nine orders of magnitude above atomic BEC and
 inside the standard noise-spectroscopy operating window. The
 dispersive correction is well-controlled ($D \approx 0.23$,
 $\delta_{\rm disp} \approx -2.8\%$); the dissipative correction is

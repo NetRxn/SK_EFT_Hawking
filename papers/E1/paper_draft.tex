@@ -41,10 +41,10 @@ $\omega < \ln(3)/(2\pi)\,\kappa \approx 0.175\,\kappa$ in the
 greybody-saturation limit $\Gamma(\omega) \equiv 1$ (universal across
 $\kappa$ in that limit; the Paris-LKB low-$\omega$ regime
 $\omega \lesssim 0.3\,\kappa$ is in the perturbative window where
-$\Gamma$ is approximately flat~\cite{Finazzi2012,Jacquet2023QNM}) ---
+$\Gamma$ is approximately flat~\cite{Finazzi2012,Jacquet2023QNM}),
 yielding
 $\mathrm{SNR} \approx 11$ for $N_{\rm probe} \sim 100$ probe photons
-per mode --- a $10^3$--$10^6$ improvement over spontaneous-correlation
+per mode, a $10^3$--$10^6$ improvement over spontaneous-correlation
 detection. We emit one falsifiable spectral window:
 $\omega/\kappa \in [0.05, 0.30]$ at the smooth-horizon configuration,
 where the SK-EFT noise-floor formula is the cleanest. The Lean~4
@@ -126,15 +126,15 @@ Steep horizon (reach) & $\SI{1.1e11}{}$ & 0.93 \\
 \end{tabular}
 \end{center}
 
-The reservoir-correction protocol — adopting the measured
+The reservoir-correction protocol (adopting the measured
 $c_s = \SI{0.40}{\micro\meter/\pico\second}$ rather than the
-reservoir-free theoretical estimate of $\SI{1.0}{\micro\meter/\pico\second}$
-— was resolved via the project's Deep Research Reconciliation
+reservoir-free theoretical estimate of $\SI{1.0}{\micro\meter/\pico\second}$)
+was resolved via the project's Deep Research Reconciliation
 Protocol; three independent measurements
 \cite{Estrecho2021,Stepanov2019,Claude2023} are weighted against
 one theoretical projection~\cite{Jacquet2022}.
 
-\paragraph{Scope demarcation — Tier 1 covers GaAs / Paris-LKB
+\paragraph{Scope demarcation: Tier 1 covers GaAs / Paris-LKB
 long-lifetime polaritons, NOT ultrafast TMD-polariton nanocavities.}
 %% Provenance: this paragraph is the Wave 6v.4 deliverable.
 %% Numerical anchors trace to
@@ -159,9 +159,9 @@ polariton-decoherence rate
 \label{eq:gamma_lp_penn}
 \end{equation}
 Even paired with the \emph{most generous} polariton-family surface
-gravity — the Falque steep-horizon maximum $\kappa_{\max} =
+gravity (the Falque steep-horizon maximum $\kappa_{\max} =
 \SI{1.1e11}{\per\second}$ adopted as upper reach in
-\S2 — the validity ratio
+\S2) the validity ratio
 $\Gamma_{\rm LP} / \kappa_{\max} \approx 24.86$ exceeds the Tier-1
 perturbative-dissipation threshold $\Gamma_{\rm pol}/\kappa < 0.1$
 by a factor of nearly 250. Consequently the SK-EFT Tier-1 patch
@@ -173,12 +173,12 @@ formal statement is kernel-verified as
 \texttt{PolaritonTier1.lean} (axiom closure
 $[\mathit{propext},\;\mathit{Classical.choice},\;\mathit{Quot.sound}]$;
 no new project-local axioms; no tracked Props). This is a positive
-demarcation, not a failure of the UPenn device — which performs
-admirably for its actual purpose of nonlinear cavity QED — but
+demarcation, not a failure of the UPenn device, which performs
+admirably for its actual purpose of nonlinear cavity QED, but
 it pins which polariton physics the present paper can soundly
 claim to govern.
 
-\paragraph{DKM F3 holds at device-operating pump energies — polariton
+\paragraph{DKM F3 holds at device-operating pump energies: polariton
 inherits the graphene positive-uniqueness branch.}
 %% Provenance: this paragraph is the Wave 6v.3 deliverable on the E1 side.
 %% Numerical anchor traces to
@@ -188,7 +188,7 @@ inherits the graphene positive-uniqueness branch.}
 %% (PolaritonF3Bound.lean, kernel-only). Resolves the explicit Phase 6q
 %% open question on polariton bimodal-branch placement.
 A complementary positive scope statement comes from the Phase~6q
-Chowdhury–Hartnoll–Hebbar–Khondaker (CHHK) transport bootstrap
+Chowdhury--Hartnoll--Hebbar--Khondaker (CHHK) transport bootstrap
 substrate (\texttt{lean/SKEFTHawking/DKMBootstrap/}). The Phase~6q
 \emph{bimodal outcome} disjunction places every analog-Hawking
 platform on exactly one of two branches: (i) the
@@ -210,7 +210,7 @@ n_{\rm per\ pulse} = E_{\rm pulse} / (\hbar \omega_{\rm cav})
 some \emph{seventy times} below the $n_{\rm threshold} \approx 10^6$
 regime that breaks F3 on continuum-bosonic substrates. The Paris-LKB
 platform at $1$~nW pump over the standard 8~ps cavity-coherence time
-sits at $\approx 3.4 \times 10^{-2}$ per mode — a further seven
+sits at $\approx 3.4 \times 10^{-2}$ per mode, a further seven
 orders of magnitude below. Polariton therefore takes the \emph{same}
 branch as graphene under any device-operating pump constraint. The
 formal statement is kernel-verified as
@@ -276,7 +276,7 @@ $G(0.3\,\kappa) \approx 0.18$, $G(\kappa) \approx 0.002$. The
 single-shot $5\sigma$ threshold $G > 0.5$ (i.e.,
 $N_{\rm probe} \, G^2 \geq 25$ for $N_{\rm probe} = 100$) is crossed
 at $\omega < \ln(3)/(2\pi)\,\kappa \approx 0.175\,\kappa$, which is
-universal across $\kappa$ in the $\Gamma$-independent limit --- a
+universal across $\kappa$ in the $\Gamma$-independent limit, a
 spectral signature of the SK-EFT prediction in the perturbative
 greybody-saturation regime. Spatial attenuation is bounded below by 1 in
 \texttt{PolaritonTier1.attenuation\_ge\_one} and is monotone in
@@ -305,7 +305,7 @@ For shot-noise-limited detection,
 \end{equation}
 At $\omega = 0.1\,\kappa$ with $G \approx 1.14$, a single CW
 measurement with $N_{\rm probe} = 100$ probe photons per mode gives
-$\mathrm{SNR} \approx 11$ — a $10^3$--$10^6$ improvement over
+$\mathrm{SNR} \approx 11$, a $10^3$--$10^6$ improvement over
 spontaneous-Hawking correlation analysis, which requires
 $\sim 10^9$ repetitions to resolve correlations at the
 $5 \times 10^{-5}$ level~\cite{Grisins2016,Jacquet2022}.
@@ -404,14 +404,14 @@ classically-simulable regime for the Paris-LKB platform: the
 SK-EFT-predicted Hawking spectrum at the device's measured parameters
 passes the Tindall-Sels BP-on-PEPS simulability screen iff
 the polariton factor graph is BP-LDP-favorable
-(four-cycle-free belief-propagation topology --- the combinatorial
-screen implied by tree-like structure --- with non-negative factor
+(four-cycle-free belief-propagation topology, the combinatorial
+screen implied by tree-like structure, with non-negative factor
 weights)
 AND the topological Chern coefficient $c_1$ of the underlying
 condensate vanishes. The polariton platform, with its driven-
 dissipative two-band band-structure, falls in the topologically-trivial
 regime ($c_1 = 0$ for the polariton fluid's effective Hamiltonian),
-placing the demarcation entirely on the BP-LDP simulability axis ---
+placing the demarcation entirely on the BP-LDP simulability axis,
 a falsifiable structural property of the device geometry.
 
 %% ══════════════════════════════════════════════════════════════════

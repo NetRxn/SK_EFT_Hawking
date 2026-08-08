@@ -55,8 +55,8 @@ orders of magnitude in Hawking temperature
 $T_H \sim \SI{85}{\milli\kelvin}$ for the LKB polariton smooth-horizon
 baseline, $T_H \approx \SI{2.4}{\kelvin}$ for the Dean bilayer
 graphene nozzle), yet share a large fraction of the Lean theorem
-infrastructure (106 of 114 1+1D theorems --- approximately
-$93\%$ --- apply unchanged to graphene's 2+1D Dirac-fluid setup
+infrastructure (106 of 114 1+1D theorems, approximately
+$93\%$, apply unchanged to graphene's 2+1D Dirac-fluid setup
 with $c_s \to v_F/\sqrt{2}$; the $106/114$ partition is a
 deterministic script output over \texttt{lean/SKEFTHawking/},
 \texttt{scripts/count\_theorem\_reuse.py}). The
@@ -92,9 +92,8 @@ is encoded as the \texttt{FirstOrderKMS} Prop record (with fields
 \texttt{fdr\_i1}, \texttt{fdr\_i2}, \texttt{i3\_zero} in
 \texttt{SKDoubling.lean}); the original Prop was reformulated after
 Aristotle's counterexample $c = (0,0,0,0,0,0,0,1,0)$ exposed that
-the prior formulation constrained only four of nine field components
---- a
-methodological showcase of the value of formal verification for
+the prior formulation constrained only four of nine field components:
+a methodological showcase of the value of formal verification for
 EFT axiom design. Companion experimental letters E1 (Paris-LKB
 polariton) and E2 (Dean-Kim-Lucas graphene) carry the
 experimental-team-targeted implementations.
@@ -142,7 +141,7 @@ framework~\cite{CGL2017a,GloriosoLiu2018,Crossley2017II,Jana2020} for the
 three platforms and machine-check its predictions in Lean~4. The
 universality claim becomes the statement that 106 of 114 BEC 1+1D
 Lean theorems apply unchanged to the graphene 2+1D Dirac-fluid
-setup with $c_s \to v_F/\sqrt{2}$ --- a $93\%$ reuse fraction,
+setup with $c_s \to v_F/\sqrt{2}$, a $93\%$ reuse fraction,
 determined deterministically by
 \texttt{scripts/count\_theorem\_reuse.py}. The
 $7\%$ that does not reuse (8 theorems) comprises the explicit
@@ -347,8 +346,8 @@ K_N(\omega, \mathbf{k})
 \end{equation}
 which connects the algebraic SK axioms to the dynamical-KMS
 microscopic principle of Crossley-Glorioso-Liu. The chain of
-implications --- algebraic KMS $\Rightarrow$ Einstein relation
-$\Rightarrow$ CGL FDR $\Rightarrow$ second-order KMS --- is closed
+implications (algebraic KMS $\Rightarrow$ Einstein relation
+$\Rightarrow$ CGL FDR $\Rightarrow$ second-order KMS) is closed
 in \texttt{CGLTransform.einstein\_relation},
 \texttt{cgl\_fdr\_general}, and
 \texttt{cgl\_implies\_secondOrderKMS}. The CGL FDR is what makes
@@ -362,7 +361,7 @@ correction $\delta^{(2)}(\omega)$ vanishes identically on the
 acoustic shell ($\omega^2 = c_s^2 k^2$). It becomes nonzero only
 through Bogoliubov off-shell dispersion at order
 $\xi^2 k^2 / (c_s\, k_\text{UV})^2$. For all current BEC platforms,
-$\delta^{(2)}$ is at most $10^{-8}$--$10^{-12}$ --- below detection
+$\delta^{(2)}$ is at most $10^{-8}$--$10^{-12}$, below detection
 thresholds. This is captured in the second-order formal-claim
 infrastructure of \texttt{SecondOrderSK}.
 
@@ -402,7 +401,7 @@ Standing-wave matching across the complex turning point gives
 The recovery of standard unitarity in the $\Gamma_H \to 0$ limit is
 captured by \texttt{WKBConnection.standard\_unitarity\_recovered}.
 
-\subsection{Non-perturbative effect 1 --- modified unitarity}
+\subsection{Non-perturbative effect 1: modified unitarity}
 
 Generalised across the dissipative SK contour, the standard
 relation $|\alpha|^2 - |\beta|^2 = 1$ is replaced by
@@ -421,7 +420,7 @@ $\Gamma_H \to 0$ recovery in
 final state of the analog Hawking process is not a pure quantum
 state; environmental coupling forces a finite mixed-state weight.
 
-\subsection{Non-perturbative effect 2 --- FDR-mandated noise floor}
+\subsection{Non-perturbative effect 2: FDR-mandated noise floor}
 
 Even with $|\beta|^2 = 0$ (no Hawking radiation), the FDR
 \eqref{eq:cgl-fdr} forces a residual
@@ -435,7 +434,7 @@ the FDR cannot be turned off without violating algebraic axioms of
 the SK-EFT. The noise floor is observable as a flat baseline to
 which the Hawking spectrum sits as a Planckian increment.
 
-\subsection{Non-perturbative effect 3 --- spectral floor}
+\subsection{Non-perturbative effect 3: spectral floor}
 
 Combining \eqref{eq:modified-unitarity} and \eqref{eq:noise-floor}
 gives the total occupation number
@@ -453,7 +452,7 @@ matching the abstract expression (using
 $\delta_\text{diss} = \Gamma_H/\kappa = \delta_k/2$).
 For Heidelberg-class BEC ($\delta_\text{diss} \approx 1.59\times10^{-3}$;
 Tab.~\ref{tab:hierarchy}), $\omega_\times \approx T_H \ln(2/1.59\times10^{-3})
-\approx 7.14\, T_H$ --- well below the dispersive UV cutoff
+\approx 7.14\, T_H$, well below the dispersive UV cutoff
 ($\omega_\text{max} \approx 121\, T_H$). The
 high-frequency spectrum becomes power-law ($\omega^{-1}$ correction)
 rather than exponentially suppressed. The predicted regime is one
@@ -471,7 +470,7 @@ magnitude smaller than at Heidelberg.)
 
 \subsection{Heidelberg as the unique BEC target}
 
-Among the three BEC platforms, Heidelberg is uniquely favourable ---
+Among the three BEC platforms, Heidelberg is uniquely favourable:
 not because it is the only one whose spectral floor lies below the
 dispersive UV cutoff (all three crossovers, $\omega_\times \approx
 7$--$12\, T_H$, sit well below the cutoff $\omega_\text{max} \approx
@@ -480,8 +479,8 @@ dissipation dominates dispersion ($\delta_\text{diss}$ exceeds
 $|\delta_\text{disp}|$ by a factor $\sim 22$; Tab.~\ref{tab:hierarchy}).
 Its crossover $\omega_\times \approx 7.1\, T_H$ is the lowest of the
 three and its FDR floor $\delta_\text{diss}/2 \approx 8\times10^{-4}$ is
-the largest --- roughly $70\times$ the Steinhauer floor and $110\times$
-the Trento floor --- so the spectral floor is reached earliest along the
+the largest (roughly $70\times$ the Steinhauer floor and $110\times$
+the Trento floor), so the spectral floor is reached earliest along the
 thermal tail and appears as the largest fractional deviation. Steinhauer
 and Trento reach their floors only near $\omega_\times \approx
 11$--$12\, T_H$, where the corresponding floors
@@ -618,8 +617,8 @@ in $\Gamma$), and \texttt{attenuation\_eq\_one\_at\_zero\_decay}
 
 The shot-count comparison is striking: a single CW measurement
 with $N_\text{probe} = 100$ probe photons per mode gives
-$\mathrm{SNR} \approx 11$ at $G(0.1\kappa) \approx 1.14$ ---
-factor $10^3$--$10^6$ improvement over spontaneous-correlation
+$\mathrm{SNR} \approx 11$ at $G(0.1\kappa) \approx 1.14$,
+a factor of $10^3$--$10^6$ improvement over spontaneous-correlation
 detection, which requires $\sim 10^9$ repetitions to resolve
 correlations at the $5 \times 10^{-5}$
 level~\cite{Grisins2016,Jacquet2022}.
@@ -758,7 +757,7 @@ ratio by a factor $> 200$ in ultra-clean monolayer graphene at the
 Dirac point. As in the companion letter E2, we adopt these
 quantum-critical transport coefficients
 ($\sigma_Q \approx 4e^2/h$, $L/L_0 > 200$) for the Dean-equivalent
-bilayer-Dirac-fluid regime --- a modeling assumption, since the
+bilayer-Dirac-fluid regime, a modeling assumption, since the
 Dean nozzle device (Ref.~\cite{Geurs2025}, bilayer) is plausibly
 within the same quantum-critical universality class but is not
 itself the device measured in
@@ -769,7 +768,7 @@ that gives~\eqref{eq:graphene-noise}. This is captured in
 \texttt{GrapheneNoiseFormula.snr\_independent\_of\_sigma\_Q} (the
 Lorenz-cancellation theorem). The Wiedemann-Franz violation is
 therefore a published, calibrated cross-check of the SK-EFT noise
-prediction --- if the framework gives the correct $L/L_0 > 200$
+prediction: if the framework gives the correct $L/L_0 > 200$
 scaling, it gives the correct Hawking noise.
 
 \subsection{Detection feasibility}
@@ -847,8 +846,8 @@ quantum-advantage demarcation criterion: an analog Hawking system on
 a factor graph $G$ with factor weights $f_a$ and categorical-Chern data
 $(c_0, c_1)$ passes the BP-on-PEPS classical-simulability screen if
 and only if (i) the LDP rate function of the loop-correction terms
-vanishes (equivalently, the factor graph is four-cycle-free --- the
-combinatorial screen implied by tree-like topology --- and the
+vanishes (equivalently, the factor graph is four-cycle-free, i.e.\
+satisfies the combinatorial screen implied by tree-like topology, and the
 factor weights are non-negative) AND (ii) the topological coefficient
 $c_1$ vanishes. Lean module
 \texttt{AnalogHawkingDemarcation.lean} (Wave 6w.6, headline
@@ -862,7 +861,7 @@ fixed point in diameter-many sweeps) is
 \texttt{analog\_hawking\_tree\_simulable\_demarcation}. The
 contrapositive
 (\texttt{not\_fourCycleFreeNonneg\_or\_nonzero\_c1\_implies\_not\_simulable})
-gives the screen-failure regime explicitly --- four-cycle-bearing
+gives the screen-failure regime explicitly: four-cycle-bearing
 topology or negative factor weights, OR non-trivial
 Chern coefficient. Tindall-Sels-Aalto thus jointly bracket the
 classical-simulability boundary for the analog-Hawking platforms
@@ -1156,12 +1155,12 @@ J.~Roehm, ``Detecting Analog Hawking Radiation in the
 Bilayer-Graphene Dirac Fluid'', PRL/PRR letter (2026).
 
 \bibitem{Roehm2026F}
-J.~Roehm, ``Fluid-Based Approaches to Fundamental Physics --- A
+J.~Roehm, ``Fluid-Based Approaches to Fundamental Physics: A
 Formally Verified Survey'', RMP/Phys.~Rep.~flagship review (2026).
 
 \bibitem{Roehm2026I1}
-J.~Roehm, ``Formal Verification at Scale in Theoretical Physics
---- A Methodology with Worked Cases'', CPC methodology paper (2026).
+J.~Roehm, ``Formal Verification at Scale in Theoretical Physics:
+A Methodology with Worked Cases'', CPC methodology paper (2026).
 
 \bibitem{Roehm2026I2}
 J.~Roehm, ``Verified Statistical Estimators and the

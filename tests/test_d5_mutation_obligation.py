@@ -535,6 +535,21 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
         "the green rule that used to live here. Plus the missing-blob and "
         "uncomputable-aggregate fail-closed legs",
     ),
+    "bundle_prose_em_dash_free": (
+        "test_d5_bundles_readiness.py",
+        "10 mutations (ADR-011 Phase 3). Target ZERO, not a ratchet: an em-dash is a "
+        "binary authorship signal to a 2026 reader, so one is as disqualifying as forty. "
+        "The tests are weighted toward what it must NOT flag, because a false positive "
+        "here is far worse than a miss — `--` is MANDATORY typography and the corpus "
+        "carries 1,121 of them, so a pattern without the lookarounds would flag 1,862 "
+        "occurrences and be wrong about 1,121, corrupting every compound eponym in the "
+        "program. Legs: en-dashes never flagged; both dash kinds on ONE line told apart "
+        "(the live `observables---also drives the SK--EFT` case); hyphens and `----` "
+        "rules ignored; em-dash inside a `%` comment ignored but after an ESCAPED `\\%` "
+        "caught; both the ligature and the Unicode form caught (120 of the corpus's 741 "
+        "were literal characters, so a `---`-only check would miss one in six); the "
+        "report names a findable line; and the empty-population seam guard",
+    ),
     "bundle_reviewer_stage_ordering": (
         "test_d5_bundles_readiness.py",
         "9 mutations (ADR-011 Phase 2 = TODO-D24 = the audit's Gate 16 #2). The "
@@ -707,6 +722,13 @@ PRODUCTION_SEEDED: frozenset[str] = frozenset({
     # zero blockers. Two checks, two failure modes, one bundle that only one of them
     # sees. Restored, `cmp` byte-identical.
     "bundle_reviewer_stage_ordering",
+    # 2026-08-08 (ADR-011 Phase 3): seeded BOTH directions into the REAL
+    # `papers/D1/paper_draft.tex`. An em-dash sentence inserted at the top of the body
+    # -> rc=1 naming `papers/D1/paper_draft.tex:3`. The same sentence with an EN-dash
+    # (`Bose--Einstein`) in the identical position -> PASS. The second half is the
+    # load-bearing one: it proves the check cannot mistake mandatory typography for the
+    # thing it bans. Restored byte-identical (`cmp`).
+    "bundle_prose_em_dash_free",
 })
 
 #: The ratchet, in the same idiom as `AWAITING_CEILING`: the number of registered

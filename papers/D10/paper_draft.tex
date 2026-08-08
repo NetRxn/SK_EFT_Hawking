@@ -22,16 +22,16 @@
 \begin{abstract}
 We report a machine-checked formalization, in the \Lean{} proof assistant with Mathlib and the
 PhysLib physics library, of three pillars of the electronic-structure and open-system stack of
-computational quantum physics: (i) non-equilibrium Green's-function (NEGF) quantum transport --- the
+computational quantum physics: (i) non-equilibrium Green's-function (NEGF) quantum transport: the
 retarded/advanced Green's functions, the fundamental spectral relation $A = G^{R}\Gamma G^{A}$, the
 Landauer--B\"uttiker/Meir--Wingreen conductance, and a conductance-quantization certificate with an
-explicit falsifier; (ii) density-functional-theory (DFT) foundations --- a Kato--Rellich reduction establishing
+explicit falsifier; (ii) density-functional-theory (DFT) foundations: a Kato--Rellich reduction establishing
 \emph{unconditional} essential self-adjointness of the molecular many-body Coulomb Hamiltonian (the two formerly
-disclosed analytic inputs --- kinetic essential self-adjointness and the Coulomb relative bound $a<1$ --- are
+disclosed analytic inputs, kinetic essential self-adjointness and the Coulomb relative bound $a<1$, are
 now discharged as proven kernel-pure theorems, the latter via an in-tree Fourier--Kato development and a
 core-to-closure relative-boundedness extension), the Hohenberg--Kohn
 uniqueness and variational theorems, and the Levy--Lieb constrained-search functional;
-and (iii) open-system dynamics --- the Gorini--Kossakowski--Sudarshan--Lindblad (GKSL) generator with
+and (iii) open-system dynamics: the Gorini--Kossakowski--Sudarshan--Lindblad (GKSL) generator with
 complete positivity of its dissipator, the GKSL structure theorem, and the Markovian dynamical
 semigroup $e^{t\mathcal{L}}$ realized as a matrix exponential of the non-Hermitian Liouvillian. Every
 headline theorem is kernel-pure (axiom profile exactly $\{\texttt{propext},\,\texttt{Classical.choice},
@@ -50,8 +50,8 @@ device, material, or bath remains literature-cited.
 \label{sec:intro}
 
 Computational quantum chemistry and open-system physics rest on a small number of structural
-theorems --- the Landauer picture of coherent conductance, the Hohenberg--Kohn theorems underpinning
-density-functional theory, and the GKSL form of Markovian master equations --- that are derived once
+theorems: the Landauer picture of coherent conductance, the Hohenberg--Kohn theorems underpinning
+density-functional theory, and the GKSL form of Markovian master equations. These are derived once
 and then relied upon by an enormous downstream simulation literature. These foundations are
 mathematically nontrivial: they involve unbounded operators on infinite-dimensional Hilbert spaces
 (the molecular Coulomb Hamiltonian), variational principles over admissible densities, and complete
@@ -81,19 +81,19 @@ HOL Light, Mizar; see Ref.~\cite{survey2021} and the records archived with this 
 formalization of any of the three results. To our knowledge this is the first NEGF Green's-function and
 Landauer-\emph{conductance} transport, the first Hohenberg--Kohn/Levy--Lieb DFT, and the first Lindblad
 \emph{generator and Markovian dynamical semigroup} in any proof assistant. Two carve-outs are essential
-and we make them explicitly. First, quantum \emph{channels} --- completely-positive trace-preserving
-(CPTP) maps, Choi matrices, superoperators --- already exist in \Lean{}'s PhysLib quantum-information
+and we make them explicitly. First, quantum \emph{channels} (completely-positive trace-preserving
+(CPTP) maps, Choi matrices, superoperators) already exist in \Lean{}'s PhysLib quantum-information
 layer~\cite{leanQI2025}, in Coq's CoqQ~\cite{coqq2022}, and in Isabelle/AFP~\cite{isabelleCBO}; our
 contribution in Sec.~\ref{sec:lindblad} is the \emph{generator} $\mathcal{L} = -i[H,\cdot] + \mathcal{D}$,
 the complete positivity of the dissipator $\mathcal{D}$, and the one-parameter semigroup $e^{t\mathcal{L}}$
-built on that channel substrate --- not the static channel theory. Second, Mathlib carries a substantial
+built on that channel substrate, not the static channel theory. Second, Mathlib carries a substantial
 unbounded-operator and perturbation-theory development; our self-adjointness claim is for the
 \emph{molecular many-body Coulomb} Hamiltonian specifically, established via a Kato--Rellich argument we
 build in-tree, rather than a claim about abstract perturbation theory.
 
 \paragraph{Two-layer honesty.} Following the program's standing discipline, every claim separates a
 \emph{verified formula layer} from a \emph{cited identification layer}. The kernel verifies the algebra
-and analysis --- that the spectral function is positive semidefinite, that the Coulomb Hamiltonian is
+and analysis: that the spectral function is positive semidefinite, that the Coulomb Hamiltonian is
 essentially self-adjoint, that the dissipator is completely positive. It does \emph{not} certify that a
 given matrix is the Hamiltonian of a particular nanowire, that a given potential describes a particular
 molecule, or that a given jump operator realizes a particular bath; those identifications remain the
@@ -107,10 +107,10 @@ and PhysLib, the latter supplying the unbounded-operator resolvent and spectral 
 Secs.~\ref{sec:negf}--\ref{sec:dft} and the CPTP/Choi quantum-information layer used in
 Sec.~\ref{sec:lindblad}. We hold every headline theorem to a \emph{kernel-purity} bar: its transitive
 axiom dependency, as reported by \Lean{}'s \texttt{\#print axioms}, is exactly
-$\{\texttt{propext},\,\texttt{Classical.choice},\,\texttt{Quot.sound}\}$ --- the three standard
-classical axioms underlying Mathlib --- with \emph{no} project-local axioms, no \texttt{sorry}, no
+$\{\texttt{propext},\,\texttt{Classical.choice},\,\texttt{Quot.sound}\}$ (the three standard
+classical axioms underlying Mathlib), with \emph{no} project-local axioms, no \texttt{sorry}, no
 \texttt{native\_decide}, and no proof that relies on raising the elaborator's heartbeat limit. Several
-theorems carry \emph{disclosed tracked hypotheses} --- \Lean{} \texttt{Prop}s, not axioms --- which scope
+theorems carry \emph{disclosed tracked hypotheses} (\Lean{} \texttt{Prop}s, not axioms), which scope
 conditional content explicitly. The DFT self-adjointness apex of Sec.~\ref{sec:dft} is now
 \emph{unconditional}: its two formerly disclosed inputs, kinetic essential self-adjointness and the
 Coulomb relative bound $a<1$, are discharged as proven kernel-pure theorems, and the potential's symmetry
@@ -147,7 +147,7 @@ operator-level statement of a non-negative density of states.
 \subsection{Landauer--B\"uttiker conductance}
 The Meir--Wingreen transmission $T(E) = \mathrm{tr}(\Gamma_{L} G^{R} \Gamma_{R} G^{A})$ is verified to
 be real for Hermitian lead broadenings (\thm{transmission\_isReal}) and non-negative for
-positive-semidefinite broadenings (\thm{transmission\_nonneg}) --- i.e.\ a genuine transmission
+positive-semidefinite broadenings (\thm{transmission\_nonneg}), i.e.\ a genuine transmission
 probability, established without invoking a dual-norm characterization Mathlib lacks. The linear-response
 conductance
 \begin{equation}
@@ -177,7 +177,7 @@ first machine-checked NEGF/Landauer conductance transport in any proof assistant
 The $N$-electron molecular Coulomb Hamiltonian, with kinetic term $T$ and the electron--nucleus plus
 electron--electron Coulomb potential $V$, is an unbounded operator whose self-adjointness is the
 precondition for a real spectrum and unitary dynamics. We formalize the Kato--Rellich theorem in-tree
---- Mathlib does not supply unbounded-operator essential self-adjointness in the form required --- as a
+(Mathlib does not supply unbounded-operator essential self-adjointness in the form required) as a
 relative-boundedness criterion: if $A$ is self-adjoint and $B$ is symmetric with $A$-relative bound
 $a<1$, then $A+B$ is self-adjoint. The molecular apex \thm{molecularHamiltonian\_essSelfAdjoint}
 instantiates this for the closure of the kinetic operator plus the Coulomb potential, and is now
@@ -197,8 +197,8 @@ built in-tree). The former conditional apex is retained as the superseded
 first formalization of \emph{unconditional} self-adjointness of a molecular many-body Coulomb Hamiltonian.
 
 \subsection{Hohenberg--Kohn theorems}
-The first Hohenberg--Kohn theorem --- the ground-state density determines the external potential up to a
-constant --- is formalized as a \emph{constructive reductio} (\thm{hohenberg\_kohn\_uniqueness}), not as
+The first Hohenberg--Kohn theorem (the ground-state density determines the external potential up to a
+constant) is formalized as a \emph{constructive reductio} (\thm{hohenberg\_kohn\_uniqueness}), not as
 an axiom: two potentials sharing a ground-state density lead, through the Rayleigh--Ritz variational
 inequalities, to a contradiction. The contrapositive (\thm{hohenberg\_kohn\_density\_injective}) gives
 density injectivity directly. The second Hohenberg--Kohn theorem, the density variational principle
@@ -247,7 +247,7 @@ loss. Trace preservation is what makes the propagator map density matrices to de
 Because $\mathcal{L}$ is a superoperator and the Liouvillian is non-Hermitian, the propagator
 $\Lambda_{t} = e^{t\mathcal{L}}$ is taken as the matrix exponential of the \emph{vectorized}
 Liouvillian (\thm{lindbladLiouvillian}, via \texttt{LinearMap.toMatrix}), using Mathlib's
-\texttt{Matrix.exp} machinery --- \emph{not} a Hermitian functional calculus, which does not apply to
+\texttt{Matrix.exp} machinery, \emph{not} a Hermitian functional calculus, which does not apply to
 the non-Hermitian generator. We verify $\Lambda_{0}=\mathbf{1}$ (\thm{lindblad\_propagator\_zero}) and
 the semigroup law
 \begin{equation}
@@ -258,7 +258,7 @@ the semigroup law
 multiples $t\mathcal{L}$, $s\mathcal{L}$. Trace-distance contractivity (data processing),
 $D(\Lambda_{t}\rho,\Lambda_{t}\sigma) \le D(\rho,\sigma)$ (\thm{traceDist\_lindblad\_monotone}), follows
 from the project's CPTP data-processing inequality once the propagator is realized by a Kraus channel;
-that CPTP realization --- the content of the GKSL completely-positive-semigroup theorem --- is now
+that CPTP realization, the content of the GKSL completely-positive-semigroup theorem, is now
 \emph{discharged} rather than disclosed: the propagator is proven completely positive and trace
 preserving, so a Kraus realization is extracted, and \thm{traceDist\_lindblad\_monotone} takes no
 disclosed CPTP-realization argument. To our
@@ -278,10 +278,10 @@ rational enclosure $1-\gamma t \le e^{-\gamma t} \le 1/(1+\gamma t)$
 \section{Synthesis, scope, and limitations}
 \label{sec:synthesis}
 
-The three layers share one verified substrate --- PhysLib's unbounded-operator resolvent and spectral
+The three layers share one verified substrate (PhysLib's unbounded-operator resolvent and spectral
 theory underpins both the NEGF Green's functions of Sec.~\ref{sec:negf} and the molecular
 self-adjointness of Sec.~\ref{sec:dft}, while PhysLib's CPTP/Choi quantum-information layer underpins
-the open-system dynamics of Sec.~\ref{sec:lindblad} --- and one methodological posture, the two-layer
+the open-system dynamics of Sec.~\ref{sec:lindblad}) and one methodological posture, the two-layer
 separation of verified formula from cited identification. Together they constitute a kernel-checked
 reference layer for the structural theorems that the electronic-structure and open-system simulation
 literatures rely on.
@@ -299,8 +299,8 @@ to be the dynamics of a specific physical device beyond the cited identification
 \label{sec:conclusion}
 
 We have formalized, kernel-pure and without project-local axioms, the foundational theorems of three
-pillars of computational quantum physics --- NEGF/Landauer transport, Hohenberg--Kohn/Levy--Lieb DFT,
-and the Lindblad/GKSL open-system formalism --- in a single verified stack on \Lean{}/Mathlib/PhysLib.
+pillars of computational quantum physics (NEGF/Landauer transport, Hohenberg--Kohn/Levy--Lieb DFT,
+and the Lindblad/GKSL open-system formalism) in a single verified stack on \Lean{}/Mathlib/PhysLib.
 The molecular self-adjointness apex and the open-system contractivity are now fully unconditional, their
 formerly disclosed analytic inputs discharged as kernel-pure theorems (the Coulomb relative bound via an
 in-tree Fourier--Kato development with a core-to-closure relative-boundedness extension; the CPTP

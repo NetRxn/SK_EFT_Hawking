@@ -223,18 +223,56 @@ most of §4.5."*
    retired on 2026-07-31 as *"an mtime signal, not a readiness verdict."* §12 is being edited
    anyway; the correction lands with it.
 
-### Phase 3 — Gate 15 `bundle_reader_facing_voice` + F-05 scar-tissue prohibition
+### Phase 3 — the em-dash prohibition, and one narrow voice class
 
-**Why third.** Zero new data, deterministic, cheap, and it fires on **19 of 21 bundles** — the
-largest immediate signal per unit of build in the set. Deterministic by design so it can run on
-every commit and cannot drift (C5).
+**⚠️ RESCOPED 2026-08-08, and the measurement is why.** The phase originally proposed four
+denylist classes plus a generic AI-slop vocabulary. Both were measured before building and both
+mostly died:
 
-1. Four denylist classes — review narration, revision narration, internal process vocabulary,
-   dates-as-narration — scanned outside `\begin{comment}` and `%`.
-2. Charter-declared methodology exemptions (I1; I2/I3 for library-name terms), scoped explicitly
-   rather than by bundle name.
-3. F-05: lift §11 gains *"a fix may not narrate itself"*; §12 gains a terminal de-scarring pass.
-4. Ratcheted at the live measured value, shrink-only, per the project's ratchet discipline.
+- **The generic slop denylist would be a check that cannot fire.** Twenty markers scanned across
+  all 21 bundles: **11 hits total, 17 of the 20 at zero.** No `delve`, `tapestry`, `realm of`,
+  `testament to`, `it is worth noting`, `moreover`/`furthermore`, `in conclusion`. Whatever
+  produced this corpus does not write chatbot vocabulary. Building the denylist would have
+  produced a gate passing vacuously forever — the exact anti-pattern this suite exists to catch.
+- **The wide vocabulary class does not survive contact with the corpus.** `bundle` is 230
+  publication-architecture uses against **9 genuinely mathematical** ones, and `lift` is
+  irreducibly mixed: a context-regex classifier written to separate them misclassified in *both*
+  directions on its own samples. `sorry` is always `\texttt{sorry}` inside "zero `\texttt{sorry}`",
+  a claim about the artifact rather than scar tissue.
+- **There is no historical Pareto for prose.** 273 review documents carry 926 BLOCKER findings,
+  but the classifier buckets them to readiness gates — citations, parameters, theorem substance —
+  every one of which already has a check. **Prose style was first reviewed on 2026-08-01**, so
+  any wider prose gate would extrapolate from a single measurement.
+
+**Operator direction (2026-08-08):** be conservative; anything needing judgment to fix belongs to
+the prose agent, not to a check. What survives that line is two things.
+
+**1. `bundle_prose_em_dash_free` — target ZERO, not a ratcheted rate.**
+
+The operator's framing, which changes the disposition: *"any em-dash immediately signals AI
+authorship to human readers in 2026, and has the effect of decreasing trust."* That makes it a
+binary trust signal, not a style density. **Measured: 741 em-dashes (621 `---` + 120 literal `—`),
+and 0 of 21 bundles are clean.**
+
+⚠️ **The en-dash distinction is load-bearing and a naive check would be catastrophic.**
+`--` is MANDATORY typography — `Bose--Einstein`, `Bekenstein--Hawking`, `SK--EFT`,
+`Kaul--Majumdar`, page ranges — and there are **1,121 of them**. A scan that did not distinguish
+exactly-three from exactly-two would flag 1,862 occurrences and be wrong about 1,121. One line
+carries both: `observables---also drives the SK--EFT`.
+
+**2. `bundle_reader_facing_voice` — the review/revision narration class only** (76 hits).
+`Stage 13`, `adversarial review`, `round-N`, `the audit found`, `BLOCKER`, `previously read`,
+`an earlier draft`, `⚠`, `scope correction`. This is not a style judgment but a **category
+error**: the manuscript addressing the review process instead of a reader. The fix is deletion,
+with no version of "keep it" that is correct, which is what keeps it on the deterministic side of
+the operator's line. It is also the pattern that accumulates *between* agent reviews, one deposit
+per remediation round — so it is a regression guard, which an agent run cannot be.
+
+**3. F-05:** lift §11 gains *"a fix may not narrate itself"*; §12 gains a terminal de-scarring
+pass.
+
+**Dropped entirely and deferred to the prose agent:** the slop vocabulary, `bundle`/`lift`/`sorry`,
+sentence length, and em-dash *density* as distinct from em-dash *presence*.
 
 ### Phase 4 — Charter §2/§3 (section plan + figure plan), Gates 13/14, F-02/F-03
 
@@ -253,18 +291,61 @@ charter honestly.
    ratio, required-section set, non-empty bibliography — which alone catches D8's and D10's
    zero-`\bibitem` state).
 
-### Phase 5 — The read-through reviewer (F-04) as Stage 10's second sub-gate
+### Phase 5 — the authoring skill AND the read-through reviewer, over one shared reference set
 
-**Why fifth.** It consumes all four prior phases: a verdict socket (P2), a length budget (P1), a
-voice baseline (P3), and a section plan (P4). Built earlier it would be an agent with no way to
-record a verdict and no charter to judge against.
+**⚠️ SCOPE EXPANDED by operator direction 2026-08-08.** The phase was one deliverable, the
+reviewer. The operator identified the gap it left: *"we don't actually have a scientific paper
+authorship skill."* That is correct and is the deeper defect. The pipeline has **three reviewer
+agents and no authoring guidance** — everything about how to write is scattered through
+`BUNDLE_LIFT_PROCEDURE` §7 as a bookkeeping checklist read at lift time. A corpus with 741
+em-dashes and 541 process-narration hits is what an unguided generator produces; adding a fourth
+reviewer without an author only moves the work downstream.
 
-1. New agent `.claude/plugins/skeft-qa/agents/prose-reviewer.md`. Brief: *read start to finish as a
-   referee at the named venue who has never seen the repository.* Five blocking questions per F-04.
-2. **Output is a restructuring instruction, not a finding list** — which is precisely why it is not
-   the adversarial-reviewer, whose output is findings-only by design.
-3. Runs **before** the claims sub-gate and before Stage 9, per lift §7.5.
-4. Law: Stage 10's sub-gate structure documented; **no renumbering** (C1).
+**Why fifth.** Both consume the prior phases: a verdict socket (P2), a length budget (P1), a voice
+baseline (P3), and a section plan (P4).
+
+**1. `skills/paper-authoring/` — the generative side (new).**
+Follows the plugin's existing convention (`goal-dev`, `goal-prompt` both carry `references/`):
+
+```
+skills/paper-authoring/
+  SKILL.md
+  references/
+    prohibited-patterns.md   ← SHARED, mandatory read on drafting
+    house-voice.md
+    venue-conventions.md
+```
+
+`prohibited-patterns.md` is authored from the em-dash sweep's field evidence — six Sonnet agents
+read all 741 occurrences in context and reported the *generative habits* behind them, not just the
+symptom, so the reference prohibits the sentence shapes rather than the punctuation.
+
+Two rules it must carry, because both are failure modes the prohibition itself creates:
+- **Em-dash removal is a rewrite, not a substitution.** The dash usually joins two clauses; the
+  right fix is a colon, a semicolon, parentheses, a full stop, or restructuring, chosen by the job
+  the dash was doing. A skill saying only "no em-dashes" yields comma splices.
+- **En-dashes are REQUIRED.** An author told "no dashes" will break `Bose--Einstein`. The check
+  counts exactly-three and would not catch that regression.
+
+**2. `agents/prose-reviewer.md` — the deciding side.**
+Brief: *read start to finish as a referee at the named venue who has never seen the repository.*
+Five blocking questions per F-04. **Output is a restructuring instruction, not a finding list** —
+which is precisely why it is not the adversarial-reviewer, whose output is findings-only by design.
+Runs before the claims sub-gate and before Stage 9, per lift §7.5. Law documents Stage 10's
+sub-gate structure; **no renumbering** (C1).
+
+**3. The shared-reference design, and the collision it must resolve.**
+The operator's proposal — *"the prose reviewer and drafting agent share the references directory,
+reducing risk of divergence"* — is right, and it collides with C5 (*the decider must not be the
+generator*). A reviewer briefed entirely off the author's rule list can only check compliance with
+rules the author already followed, and would pass anything the author produced.
+
+**Resolution: shared floor, divergent ceiling.** Both read `references/prohibited-patterns.md` —
+objective, enumerable, and genuinely one source of truth, so a rule cannot drift between writing
+and review. The reviewer additionally carries a brief the author does **not** have, framed on
+reader outcome rather than rule compliance: *where would you stop reading; does the abstract lead
+with the result; does each section advance a single argument*. The author is never given those
+questions as a checklist to satisfy.
 
 ### Phase 6 — Absorption repair (F-07 parts 2–3, F-08, F-09, F-10)
 
@@ -278,6 +359,45 @@ out so it can be dropped without disturbing Phases 1–5, on which nothing here 
    from absorbing so a defective bundle stops growing.
 3. **F-09** — per-phase mapping rows, not per-bundle.
 4. **F-10** — `bundle_lean_module_coverage`: declared modules must appear in the draft.
+
+### Phase 8 — the `skeft-qa` plugin is reviewed and synchronised to intended state
+
+**Added by operator direction 2026-08-08**, on noticing staleness in `skills/wave-close/SKILL.md`
+and `skills/sync/SKILL.md` while reviewing the shared-reference design. Scope is the whole
+plugin — `agents/`, `commands/`, `hooks/`, `scripts/`, `skills/`, `tests/`, `README.md` — for
+architecture alignment and synchronisation, not just the two files that prompted it.
+
+**Measured against the `plugin-dev` skill's own criteria** (loaded 2026-08-08 at operator
+direction, so the review runs against published best practice rather than assumption):
+
+| skill | body words | 3rd-person description | 2nd-person in body | broken `references/` links |
+|---|---:|---|---:|---|
+| `goal-prompt` | 2,784 | **NO** | 1 | **2** (`lab-notebook.md`, `parallel-worktrees.md`) |
+| `harvest` | 1,105 | **NO** | 0 | — |
+| `goal-dev` | 966 | **NO** | 0 | — |
+| `sync` | 665 | **NO** | 0 | — |
+| `debrief` | 591 | **NO** | 0 | — |
+| `wave-close` | 483 | **NO** | 0 | — |
+
+Three findings fall straight out, and the third is a genuine defect rather than a style note:
+
+1. **No skill uses the third-person description form.** `plugin-dev` requires
+   *"This skill should be used when the user asks to …"* with concrete trigger phrases, because
+   the description is what decides whether a skill loads at all. Six of six miss it.
+2. **`goal-prompt` is 2,784 words** against the 1,500–2,000 target, with `references/` already
+   present — the progressive-disclosure split exists but was not used.
+3. **`goal-prompt` names two reference files that do not exist.** `references/lab-notebook.md`
+   and `references/parallel-worktrees.md` are cited in the body and absent from disk. This is
+   the same failure class as a chain-of-backing link naming a theorem that is not there
+   (TODO-B4), and the same class as `PRE_DECISIONS.md` naming a slash command never built — a
+   mandatory-read document promising material that does not exist.
+
+⚠️ **This phase is a review, not a rewrite.** The four skills at 483–1,105 words are within
+budget and their content is not in question; what is stale is metadata, cross-references and
+alignment with the tree. Findings that require content changes get filed, not fixed in passing.
+
+The new `paper-authoring` skill (Phase 5) is authored to these criteria from the start, so it
+does not join the backlog it is landing beside.
 
 ---
 

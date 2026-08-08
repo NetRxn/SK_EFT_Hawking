@@ -39,7 +39,7 @@ Ryu--Takayanagi / Casini--Huerta knife-edge
 biconditional~\cite{RyuTakayanagi2006,CasiniHuerta2009,HolzheyLarsenWilczek1994,LewkowyczMaldacena2013}
 that distinguishes generic-MTC from BH-entropy-yielding
 boundary conditions. The unifying claim is that the substrate carries a
-single MTC---the SU(2)$_k$ Chern--Simons MTC at the horizon---which
+single MTC (the SU(2)$_k$ Chern--Simons MTC at the horizon) which
 simultaneously underwrites the Bekenstein--Hawking entropy of Bundle~D3
 \S 7, the Hayden--Preskill information-recovery code structure here in
 \S 7, and the RT/Casini--Huerta entanglement-entropy structure of \S 8.
@@ -58,7 +58,7 @@ recovery to the same MTC as the boundary-entropy structure. The
 substrate's load-bearing claims here ship with Lean~4 modules at
 zero \texttt{sorry} and zero project-local axioms; two
 tracked-hypothesis Prop records carry the substrate's structural
-commitments --- \texttt{H\_HorizonBoundaryCondition} (D3, consumed in
+commitments: \texttt{H\_HorizonBoundaryCondition} (D3, consumed in
 \S 7, with its five fields itemised honestly in
 \S\ref{sec:rt-ch-bounds}) and \texttt{TPFConjecture} (D2's 4+1D
 gapped-interface conjecture, refactored from a project-local axiom
@@ -196,7 +196,7 @@ We encode the algebra in \texttt{Uqsl2.lean} with structure-of-arrays
 representation and the relations as Lean theorems
 \texttt{uq\_K\_mul\_Kinv}, \texttt{uq\_Kinv\_mul\_K},
 \texttt{uq\_KE}, \texttt{uq\_KF}, \texttt{uq\_serre}. The Hopf
-structure---coproduct, counit, antipode---ships in
+structure (coproduct, counit, antipode) ships in
 \texttt{Uqsl2Hopf.lean}.
 
 \subsection{Affine extension: $U_q(\widehat{\mathfrak{sl}_2})$}
@@ -525,13 +525,13 @@ in Bundle~D3's \texttt{BHEntropyMicroscopic.lean}, consumed here
 through the QEC-MTC cross-bridge to D3 \S 7). The Prop record has
 five fields: three substantive (\texttt{positivity}: $S \ge 0$ for
 $A \ge 0$; \texttt{areaLeading}: $0 < \kappa_{\mathrm{area}}$;
-\texttt{secondLaw}: $S_{\mathrm{horizon}}$ monotone) and --- as of the
-Wave~8 hardening (2026-06-14) --- two further \emph{real} fields carried by
+\texttt{secondLaw}: $S_{\mathrm{horizon}}$ monotone) and, as of the
+Wave~8 hardening (2026-06-14), two further \emph{real} fields carried by
 a companion \texttt{HorizonModularData} datum: \texttt{modularInvariant}
 $:= \texttt{PreModularData.modular}$ on $M.\mathrm{md}$ ($S$-matrix non-degeneracy, the data-level
 modularity from which $(ST)^3 = S^2$ follows for a genuine MTC) and
 \texttt{anomalyMatch} $:= (8 \mid c_-)$ (vanishing perturbative gravitational
-anomaly mod 8 --- the mod-8 factor of $24 = 8\times3$; not a biconditional for
+anomaly mod 8: the mod-8 factor of $24 = 8\times3$; not a biconditional for
 bounding a $\mathbb{Z}_2$ Walker--Wang bulk, cf.\ the 3-fermion $c_-\equiv4$ case).
 These replace the former \texttt{True} placeholders;
 each is independently witnessed and falsified (chiral Fibonacci/Ising
@@ -1039,8 +1039,8 @@ the strict headline
 of \S\ref{sec:fib-density-sk}.2, composing the Wave~4 error bound and
 the Wave~5 length bound at the same algorithmic compile level.
 \item \textbf{Wave~7 (\texttt{SolovayKitaevApplications.lean}, $\sim$141 LoC):}
-worked-example consumers --- e.g.\ a polylog-length T-gate
-approximation under the Fibonacci representation --- and a Phase~6u
+worked-example consumers (e.g.\ a polylog-length T-gate
+approximation under the Fibonacci representation) and a Phase~6u
 placeholder for the future Chain~A$\circ$B Fourier-Transform
 composition.
 \item \textbf{Path~A (\texttt{SolovayKitaevPathA.lean}, $\sim$2{,}565 LoC):}
@@ -1162,7 +1162,7 @@ unconditionally at zero \texttt{sorry}; the runnable constructive
 compiler ships unconditionally on the loose-$\varepsilon$ regime
 (level-0 base case), on a structural-$K$ witness (diameter bound),
 and on the calibrated tight-$\varepsilon$ regime
-(Option C $Y_h$ tightening cascade) --- giving full coverage of all
+(Option C $Y_h$ tightening cascade), giving full coverage of all
 $\varepsilon > 0$ with the canonical bundled error-and-length form
 on the tightest precisions.
 
@@ -1189,8 +1189,8 @@ identification) is unchanged.
 The Phase~6t deep-research landscape scan
 (\texttt{Lit-Search/Phase-6t/}, May 2026) confirms that no proof
 assistant has shipped a kernel-verified quantitative Solovay--Kitaev
-length bound of any form --- neither for \{H, T\}, Fibonacci anyons,
-nor an abstract universal gate set --- as of the present writing. The
+length bound of any form (neither for \{H, T\}, Fibonacci anyons,
+nor an abstract universal gate set) as of the present writing. The
 conservative claim form, that this substrate is the first
 kernel-verified quantitative Solovay--Kitaev infrastructure
 instantiated for the Fibonacci-anyon braid representation in SU(2),
@@ -1232,7 +1232,7 @@ records, not axioms. Pipeline Invariants \#10 (no
 \texttt{maxHeartbeats} in proof bodies) and \#15 (no axioms without
 explicit sign-off and discharge plan) hold across all nine modules.
 
-\paragraph{Topological-qubit substrate candidate — NbRe (Phase 6v
+\paragraph{Topological-qubit substrate candidate: NbRe (Phase 6v
 Wave 6v.8 cross-bridge).}
 %% Provenance: D4 §"topological-qubit substrate candidates" cross-bridge
 %% from D2 §"SPT material exhibits" — both populated by Wave 6v.8.
@@ -1377,9 +1377,9 @@ Chebyshev/Niven-style for Read-Rezayi, factorization-through-Clifford$+T$
 for trapped-ion lift/shift).
 
 \paragraph{Re-pointing to bundle D8 (2026-05-31).}
-The verified-compilation corpus showcased in this subsection --- the
+The verified-compilation corpus showcased in this subsection (the
 alphabet-agnostic generic substrate, its five $\mathrm{SU}(2)$ instances, and
-the Mathlib-PR portfolio --- has since been consolidated, together with the
+the Mathlib-PR portfolio) has since been consolidated, together with the
 arbitrary-dimension $\mathrm{SU}(d)$ lift (Phase 6y), the two complementary
 $\mathrm{SU}(8)$ density mechanisms (Phase 6y/6z), and the Mukhopadhyay Toffoli
 resource lower bound (Phase 6x$'$), into the dedicated Tier-1 bundle
