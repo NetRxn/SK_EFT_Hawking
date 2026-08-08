@@ -206,7 +206,7 @@ _CANONICAL_ORDER: tuple[str, ...] = (
     'chain_backing_targets_resolve',
     'bundle_metadata_matches_graph', 'bundle_stage13_claim_consistent',
     'bundle_manuscript_length', 'bundle_reviewer_stage_ordering',
-    'bundle_prose_em_dash_free',
+    'bundle_prose_em_dash_free', 'bundle_reader_facing_voice',
     'notebook_stored_outputs_current',
     'readiness_verdicts_agree', 'readiness_submission_gate',
     'citation_primary_sources_present', 'provenance_doi_in_registry',
@@ -629,6 +629,7 @@ check_bundle_stage13_claim_consistent = _checks_bundles.check_bundle_stage13_cla
 check_bundle_manuscript_length = _checks_bundles.check_bundle_manuscript_length
 check_bundle_reviewer_stage_ordering = _checks_bundles.check_bundle_reviewer_stage_ordering
 check_bundle_prose_em_dash_free = _checks_bundles.check_bundle_prose_em_dash_free
+check_bundle_reader_facing_voice = _checks_bundles.check_bundle_reader_facing_voice
 check_readiness_verdicts_agree = _checks_bundles.check_readiness_verdicts_agree
 check_readiness_submission_gate = _checks_bundles.check_readiness_submission_gate
 check_bundle_consistency = _checks_bundles.check_bundle_consistency

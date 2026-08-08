@@ -272,6 +272,25 @@ For any BLOCKER surfaced in §8 / §9 / §10:
 
 1. Reviewer agent emits BLOCKER → `audit_log.jsonl` entry (Stage 9/10) or `ReviewFinding` graph node (Stage 13).
 2. **Author** (not reviewer) fixes via direct edit to `paper_draft.tex` / `figures/` / source paper / Lean module as appropriate.
+
+   ⚠️ **A fix may not narrate itself (F-05, ADR-011 Phase 3).** The manuscript states what
+   IS true. It does not tell a referee what an earlier draft of itself said, on what date it
+   was corrected, or which review round caught it. That reader has no access to the process
+   and cannot act on it, so the text reads as a changelog pasted into a paper.
+
+   The correction history is not lost, it moves: `change_log.md` and
+   `docs/review_finding_supersessions.json` are where a later reader can actually check it,
+   and the ledger entry is required anyway by step 4.
+
+   **Removing narration is not deleting content.** A retraction is a scientific disclosure
+   and a scope correction states the correct scope; restate the substantive claim in the
+   present tense and drop only the account of the editing. Enforced by
+   `validate.py --check bundle_reader_facing_voice`.
+
+   Why this rule exists here rather than as advice: this step makes the manuscript the fix
+   surface, so every finding leaves a textual deposit, and D11/D12 ran **fourteen Stage-13
+   rounds in a single day**. The deposits accumulate *between* reviews, which is why a
+   deterministic check catches them and a periodic reviewer does not.
 3. **All-occurrence verification.** Before declaring a referential fix complete, `git grep` for the old reference across the whole bundle directory and any cross-referencing files. Filenames, theorem names, and counts often appear multiple times in a single `paper_draft.tex` (one in §2 prose, another in §5 table, another in §9 footnote). I2 sub-wave 7a.3 round-2 caught a missed second occurrence of `tests/test_jackknife.py` at line 232 after the round-1 fix had only updated line 17. The grep must be empty before claiming fixed.
 4. Append entry to `docs/review_finding_supersessions.json` with `meta.status: open → fixed | accepted` per closed finding. The entry must include deterministic-recheck evidence (file:line + replacement text) so a future fresh-context reviewer can verify the closure without re-running the agent. As of 2026-05-01 the ledger has 174 entries spanning Phase 6i + Phase 7a; the disciplined append-only pattern is what allows multi-round Stage-13 cycles to converge.
 5. Re-invoke the *same* reviewer agent in fresh context with `bundle_target=<X>`.
@@ -290,7 +309,32 @@ Repeat §8 → §9 → §10 → §11 until `bundle_metadata.json` shows:
 - `stage13_status == "green"`
 - `blockers_open == 0`
 - `stage13_redo_required == false`
-- `freshness_stale == false`
+
+⚠️ **`freshness_stale` is NOT an exit condition.** It is an mtime signal owned by
+`scripts/check_bundle_source_freshness.py`, meaning *a source paper is newer than
+`last_lift`*, and it is set and cleared from source mtimes alone on every run. Treating it as
+a readiness verdict misled two reviewers and one remediation; the correction landed in
+`LATE_PHASE6_ABSORPTION_PROTOCOL.md` on 2026-07-31 and is applied here. **The exit gate is
+`stage13_redo_required`**, which `bundle_append.py` sets on lift and no mtime writer clears.
+
+### §12a. De-scarring pass (terminal, mandatory — F-05)
+
+After the last round converges, before §13, sweep the draft for text that narrates the
+paper's own editing history and remove it, restating the substantive claim in the present
+tense. Empirically this is where the deposit is: the 14-round D11/D12 day is exactly when it
+accumulates, and one deposit per round is the mechanism.
+
+```bash
+uv run python scripts/validate.py --check bundle_reader_facing_voice --check bundle_prose_em_dash_free
+```
+
+Both must be green. The second is the em-dash prohibition: an em-dash signals AI authorship
+to a 2026 reader and costs trust, so the target is zero rather than a rate.
+
+⚠️ **Removing an em-dash is a rewrite, not a substitution**, and **`--` must never be
+touched** — it is mandatory typography (`Bose--Einstein`), the corpus carries over a thousand,
+and the check counts exactly three hyphens so it cannot see that regression. The replacement
+rules are in the authoring skill's `references/prohibited-patterns.md`.
 
 ### §13. Dashboard refresh + heatmap regen (mandatory exit step)
 

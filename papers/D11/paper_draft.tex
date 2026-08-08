@@ -310,8 +310,7 @@ For elastic moduli we ship \thm{voigtModulus}~\cite{Voigt1889} and
 $0 < M_1 \le M_2$ at fill fraction $0 \le f \le 1$}. Those hypotheses are load-bearing rather
 than a relabeling, exactly as in the electromagnetic paragraph above: at
 $(M_1, M_2, f) = (4, 1, \tfrac12)$ the harmonic average is $M_{\rm R} = 1.6$, so the first link
-would read $4 \le 1.6$ and the chain is false. (Typeset unconditionally in every draft through
-2026-07-31; rounds 7 and 10 both rated this cosmetic, and round 12 supplied the counterexample.)
+would read $4 \le 1.6$ and the chain is false.
 This is an
 ordering of the two \emph{averages} together with constituent bounds; no effective modulus of a
 composite appears in the statement. The classical Voigt--Reuss bracket $M_{\rm R} \le M_{\rm eff}
@@ -433,9 +432,8 @@ The Bernal-stacked bilayer required Mathlib-grade infrastructure: \thm{det\_fin\
 ships determinant expansions only through \texttt{Matrix.det\_fin\_three}. With it, \thm{bernal\_det\_eq}
 collapses the $4\times4$ secular determinant to a single real quadratic, and
 \thm{bernal\_eigenvector\_iff} confirms its roots are genuine Bloch eigenvectors. The results split by bias, and the
-split is load-bearing rather than presentational: an earlier version of this sentence chained
-them all as though they held together, which they cannot (corrected 2026-08-01, D11 Stage-13
-round-14 finding 6.2). \emph{At zero bias} ($u = 0$): the chirality relation
+split is load-bearing rather than presentational: the three regimes below do not chain into a
+single unconditional statement. \emph{At zero bias} ($u = 0$): the chirality relation
 \thm{bernal\_chirality\_two} is exact and the low-energy behaviour is bracketed globally by
 \thm{bernal\_lowRoot\_enclosure}. \emph{At nonzero bias} ($u \neq 0$, a hypothesis
 \thm{bernal\_mexicanHat} carries explicitly): the band minimum sits at finite momentum, with the
@@ -474,12 +472,12 @@ We regard this as the bundle's most transferable result, and it has changed our 
 for any multi-band Hamiltonian, ship at least one eigenvector-level invariant (a winding number, a Berry phase, a chirality relation) verified against the primary source. A determinant-level gate
 cannot certify that a model has been correctly identified, and ours did not.
 
-\paragraph{A retracted classification.} We previously shipped a theorem asserting that the lattice
-Chern number is nonzero exactly where the Dirac masses invert. It was deleted, for two independent
-reasons. It is false at fixed grid size, as \thm{haldane\_massInversion\_not\_sufficient\_at\_N4} now
-shows directly; and, as stated, it carried no content beyond its own hypotheses. We record the
-standing rule it produced: no statement in this corpus may be phrased as holding ``exactly where the
-masses invert'' at a fixed grid size.
+\paragraph{A classification this corpus does not make.} This corpus does not assert that the lattice
+Chern number is nonzero exactly where the Dirac masses invert, for two independent reasons. It is
+false at fixed grid size, as \thm{haldane\_massInversion\_not\_sufficient\_at\_N4} shows directly; and,
+phrased that way, the claim would carry no content beyond its own hypotheses. The standing rule this
+produces: no statement in this corpus may be phrased as holding ``exactly where the masses invert''
+at a fixed grid size.
 
 \section{Scope, deferrals and prior art}
 \label{sec:scope}
@@ -490,9 +488,8 @@ band-theoretic bulk--boundary correspondence is likewise absent from this bundle
 \texttt{ChernBridge} one below: this group's tree does contain categorical bulk--boundary objects in
 its SymTFT modules. They are a different construct (an algebraic condensation statement, not a band-theoretic edge-mode count), and we name them rather than let the absence claim stand
 unqualified against our own tree.) The continuum invariant is deferred on the infrastructure
-grounds set out in Section~\ref{sec:intro}. Our earlier planning documents described this thread as
-including Berry curvature and a conditional bulk--boundary result; that description did not match the
-tree and has been corrected. What we claim is the finite-lattice FHS invariant and its gauge
+grounds set out in Section~\ref{sec:intro}. This thread does not include Berry curvature or a
+conditional bulk--boundary result. What we claim is the finite-lattice FHS invariant and its gauge
 invariance, and the source itself disclaims equality to any continuum first Chern class.
 
 A further discretization caveat: grids whose size is divisible by three are inadmissible, because
@@ -526,10 +523,10 @@ space~\cite{LjungstromMortberg2024}. That development's \S4.4 is ``The Thom isom
 sequence'', and its Gysin map is stated as $(-)\smile e$ with $e$ constructed per fibration: the Euler class in substance, though the words ``Euler'' and ``Chern'' do not appear in it. Our
 claim is therefore narrower than ``the machinery is absent'': it is that no assistant
 \emph{defines the Chern classes of a vector bundle}, which is a different object from a
-per-fibration Euler class. (Corrected 2026-07-31: three earlier drafts of this sentence named
-``the cohomology ring of $\mathbb{CP}^\infty$'', which that development does not contain: its infinite projective space is the \emph{real} one, whose ring is the Stiefel--Whitney substrate
-$H^*(\mathbb{RP}^\infty;\mathbb{Z}/2)$, not the $\mathbb{Z}[c_1]$ from which Chern classes are
-defined. The substitution made the carve-out concede more than the source supports.) Third, Isabelle/HOL formalizes winding
+per-fibration Euler class. That development does not contain the cohomology ring of
+$\mathbb{CP}^\infty$: its infinite projective space is the \emph{real} one, whose ring is the
+Stiefel--Whitney substrate $H^*(\mathbb{RP}^\infty;\mathbb{Z}/2)$, not the $\mathbb{Z}[c_1]$ from
+which Chern classes are defined, so the carve-out claims no more than the source supports. Third, Isabelle/HOL formalizes winding
 numbers, Cauchy indices and the argument principle~\cite{LiPaulson2018}, which is the nearest
 machinery to our non-Hermitian winding content and to any index-theoretic reading of bulk--boundary.
 Fourth, the Lax--Milgram theorem (the backbone of elliptic-PDE well-posedness and so of any analytic homogenization route) has a detailed proof prepared for Coq

@@ -1021,3 +1021,110 @@ class TestBundleProseEmDashFree:
         r = bru.check_bundle_prose_em_dash_free()
         assert not r.passed and not r.measured
         assert any(d.name == "population" for d in r.details)
+
+
+class TestBundleReaderFacingVoice:
+    """A fix may not narrate itself (ADR-011 Phase 3, F-05).
+
+    The design decision under test is that these patterns match the ACT of
+    self-narration, not the vocabulary around it. The audit's proposed word denylist
+    (`Stage 13`, `reviewer`, `adversarial review`) scores 90 on this corpus with I1
+    holding 48 of them legitimately, because I1's subject matter IS the pipeline.
+    Matching the act scores 13 with I1 at zero, so no exemption exists to drift.
+    """
+
+    def _setup(self, tmp_path, monkeypatch, drafts):
+        import bundle_registry as registry
+        papers = tmp_path / "papers"
+        for code, text in drafts.items():
+            (papers / code).mkdir(parents=True, exist_ok=True)
+            (papers / code / "paper_draft.tex").write_text(text)
+        monkeypatch.setattr(_H, "PAPERS_DIR", papers)
+        monkeypatch.setattr(_H, "PROJECT_ROOT", tmp_path)
+        monkeypatch.setattr(registry, "BUNDLE_CODES", tuple(drafts))
+
+    # ── the four acts ────────────────────────────────────────────────────
+    def test_a_dated_correction_is_flagged(self, tmp_path, monkeypatch):
+        self._setup(tmp_path, monkeypatch,
+                    {"D1": "The claim holds (corrected 2026-08-01).\n"})
+        assert not bru.check_bundle_reader_facing_voice().passed
+
+    def test_an_account_of_an_earlier_draft_is_flagged(self, tmp_path, monkeypatch):
+        self._setup(tmp_path, monkeypatch,
+                    {"D1": "Three earlier drafts of this paragraph said otherwise.\n"})
+        assert not bru.check_bundle_reader_facing_voice().passed
+
+    def test_a_first_person_superseded_claim_is_flagged(self, tmp_path, monkeypatch):
+        self._setup(tmp_path, monkeypatch,
+                    {"D1": "We previously shipped a theorem asserting X.\n"})
+        assert not bru.check_bundle_reader_facing_voice().passed
+
+    def test_an_internal_review_reference_is_flagged(self, tmp_path, monkeypatch):
+        self._setup(tmp_path, monkeypatch,
+                    {"D1": "As noted (D11 Stage-13 round-14 finding 6.2) the split holds.\n"})
+        assert not bru.check_bundle_reader_facing_voice().passed
+
+    # ── what it must NOT flag: the reason the vocabulary version was rejected ──
+    def test_the_methodology_paper_describing_the_pipeline_is_CLEAN(
+            self, tmp_path, monkeypatch):
+        """THE DESIGN TEST. I1 documents the review pipeline; that is its subject.
+        A vocabulary denylist scores 48 here. Matching the ACT scores zero."""
+        self._setup(tmp_path, monkeypatch, {"I1":
+            "Stage 13 is the fresh-context adversarial-reviewer pattern. "
+            "Stage~9 runs a figure-reviewer agent, and a BLOCKER finding reopens "
+            "the gate. Reviewers cannot run the computations themselves.\n"})
+        r = bru.check_bundle_reader_facing_voice()
+        assert r.passed, [d.message for d in r.details]
+
+    def test_addressing_the_papers_own_referees_is_CLEAN(self, tmp_path, monkeypatch):
+        """I2/I3's live usage: `reviewer` meaning this paper's actual audience."""
+        self._setup(tmp_path, monkeypatch, {"I3":
+            "The disclosure protocol lets Mathlib4 reviewers calibrate expectations.\n"})
+        assert bru.check_bundle_reader_facing_voice().passed
+
+    def test_a_correction_by_OTHERS_is_CLEAN(self, tmp_path, monkeypatch):
+        """Reporting that the literature corrected something is ordinary scholarship;
+        only the paper narrating its OWN edit history is the defect."""
+        self._setup(tmp_path, monkeypatch,
+                    {"D1": "Smith corrected this coefficient in 2019.\n"})
+        assert bru.check_bundle_reader_facing_voice().passed
+
+    def test_a_lift_banner_in_a_COMMENT_is_not_flagged(self, tmp_path, monkeypatch):
+        """The provenance banners live in `%` comments and belong there."""
+        self._setup(tmp_path, monkeypatch,
+                    {"D1": "%% Lifted from phase6n — corrected 2026-07-31\nClean prose.\n"})
+        assert bru.check_bundle_reader_facing_voice().passed
+
+    # ── reporting + population ───────────────────────────────────────────
+    def test_the_report_names_the_act_and_a_findable_line(self, tmp_path, monkeypatch):
+        self._setup(tmp_path, monkeypatch,
+                    {"D1": "clean\nThe claim holds (corrected 2026-08-01).\n"})
+        msg = bru.check_bundle_reader_facing_voice().details[1].message
+        assert ":2" in msg and "stamped with its date" in msg
+
+    def test_an_empty_population_is_UNVERIFIED_not_passing(self, tmp_path, monkeypatch):
+        self._setup(tmp_path, monkeypatch, {})
+        r = bru.check_bundle_reader_facing_voice()
+        assert not r.passed and not r.measured
+
+    # ── the coverage gap a subagent found, and its guard ──────────────────
+    def test_internal_planning_documents_are_flagged(self, tmp_path, monkeypatch):
+        """A gap the four original patterns missed, reported by the de-scarring agent
+        rather than by me. Verified corpus-wide before being added: 4 hits, all
+        genuine, zero false positives."""
+        self._setup(tmp_path, monkeypatch, {"D1":
+            "Our earlier planning documents described this thread as including X.\n"})
+        assert not bru.check_bundle_reader_facing_voice().passed
+
+    def test_review_rounds_cast_as_actors_are_flagged(self, tmp_path, monkeypatch):
+        self._setup(tmp_path, monkeypatch, {"D1":
+            "Rounds 7 and 10 both rated this cosmetic, and round 12 supplied it.\n"})
+        assert not bru.check_bundle_reader_facing_voice().passed
+
+    def test_a_round_NUMBER_alone_is_not_enough(self, tmp_path, monkeypatch):
+        """`round 3` needs a review VERB beside it. A bare ordinal is legitimate in
+        numerical work (`round 3 of the iteration`), and banning it would be the
+        vocabulary mistake this check exists to avoid."""
+        self._setup(tmp_path, monkeypatch,
+                    {"D1": "Convergence is reached at round 3 of the iteration.\n"})
+        assert bru.check_bundle_reader_facing_voice().passed

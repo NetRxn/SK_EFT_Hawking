@@ -535,6 +535,20 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
         "the green rule that used to live here. Plus the missing-blob and "
         "uncomputable-aggregate fail-closed legs",
     ),
+    "bundle_reader_facing_voice": (
+        "test_d5_bundles_readiness.py",
+        "13 mutations (ADR-011 Phase 3, F-05). Matches the ACT of a fix narrating "
+        "itself, NOT the vocabulary around it, and that is the design under test: the "
+        "audit's proposed word denylist scores 90 on this corpus with I1 holding 48 "
+        "legitimately (its subject matter IS the review pipeline), and `reviewer` "
+        "splits three ways — scar tissue in F, subject matter in I1, the paper's own "
+        "audience in I2/I3. Act-matching scores 13 with I1 at ZERO, so no exemption "
+        "exists to drift. Legs: each of the seven acts fires; I1's pipeline description "
+        "and I2/I3's address to their referees stay CLEAN; a correction by OTHERS "
+        "(`Smith corrected this in 2019`) is clean; a lift banner in a comment is "
+        "ignored; a bare round ordinal is clean while a round + review-verb fires; the "
+        "report names the act and a findable line; empty population is UNVERIFIED",
+    ),
     "bundle_prose_em_dash_free": (
         "test_d5_bundles_readiness.py",
         "10 mutations (ADR-011 Phase 3). Target ZERO, not a ratchet: an em-dash is a "
@@ -729,6 +743,13 @@ PRODUCTION_SEEDED: frozenset[str] = frozenset({
     # load-bearing one: it proves the check cannot mistake mandatory typography for the
     # thing it bans. Restored byte-identical (`cmp`).
     "bundle_prose_em_dash_free",
+    # 2026-08-08 (ADR-011 Phase 3): seeded BOTH directions into the REAL
+    # `papers/D3/paper_draft.tex`. "(corrected 2026-08-01, D3 Stage-13 round-4 finding
+    # 2.1)" -> rc=1 naming D3:3. "Smith corrected this coefficient in 2019." in the
+    # IDENTICAL position -> PASS: reporting that the literature corrected something is
+    # ordinary scholarship, and only the paper narrating its OWN edit history is the
+    # defect. Restored byte-identical.
+    "bundle_reader_facing_voice",
 })
 
 #: The ratchet, in the same idiom as `AWAITING_CEILING`: the number of registered

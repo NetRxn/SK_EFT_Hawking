@@ -452,6 +452,26 @@ The agent reports:
 
 Results saved to `papers/paper<N>/claims_review.json`.
 
+**Reader-facing voice (ADR-011 Phase 3).** Two prohibitions apply to every draft, both
+deterministic and both enforced:
+
+- **No em-dash in prose a reader will see** (`validate.py --check bundle_prose_em_dash_free`).
+  An em-dash signals AI authorship to a 2026 reader and costs trust, so the target is zero
+  rather than a density. Removing one is a *rewrite*, not a substitution. **`--` is a
+  different character and is mandatory** — `Bose--Einstein`, `Schwinger--Keldysh`, page
+  ranges — and the check cannot see a broken en-dash, so that rule lives in the authoring
+  reference where a human reads it.
+- **A fix may not narrate itself** (`--check bundle_reader_facing_voice`). The manuscript
+  states what is true; it does not report what an earlier draft said, when it was corrected,
+  or which review round caught it. The history belongs in `change_log.md` and the
+  supersession ledger.
+
+Everything else about prose — length, structure, whether the argument carries — belongs to
+the read-through reviewer, not to a check. The deterministic set is deliberately narrow:
+a proposed vocabulary denylist measured 90 hits of which 48 were legitimate subject matter
+in the methodology paper, and a generic AI-slop denylist measured 11 hits across 20 markers
+with 17 at zero.
+
 **Manuscript length (ADR-011 Phase 1).** A bundle declares the size its venue requires in
 `bundle_metadata.json.length_target` (schema + semantics: `docs/BUNDLE_DIRECTORY_SCHEMA.md`),
 and `validate.py --check bundle_manuscript_length` measures the **compiled** article against it.

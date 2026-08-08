@@ -2012,3 +2012,29 @@ D3 spelled the same name both ways. Normalized to `--`; this is atom 6's only en
 "state a claim, interrupt it mid-clause to pre-empt a misreading, resume") is qualitative field
 evidence for `references/prohibited-patterns.md`, not a measured claim. It is recorded as the
 agents' judgment, corroborated across disjoint file sets, not as a fact about the corpus.
+
+## V52 — ADR-011 Phase 3b: the reader-facing-voice check — 6 atoms, design changed TWICE by measurement
+
+| # | Proposition | Decider | Verbatim result |
+|---|---|---|---|
+| 1 | The audit's word denylist is usable as specified | corpus scan | **NO — 90 hits, I1 alone holds 48.** I1 is the methodology paper, so the review pipeline is its subject matter |
+| 2 | `reviewer` has one disposition | context read across 4 bundles | **NO — three.** Scar tissue in F (`\texttt{adversarial-reviewer} agent; fresh-context Stage-13 pass`), subject matter in I1, the paper's own audience in I2/I3 (*"lets Mathlib4 reviewers calibrate expectations"*) |
+| 3 | Matching the ACT instead of the vocabulary removes the need for an exemption | corpus scan | **YES — 13 hits, 4 bundles, I1 at ZERO.** Pinned by a test asserting I1's pipeline description passes clean |
+| 4 | The four act-patterns are complete | the de-scarring agent's out-of-scope report | **NO — it found two D11 passages the patterns miss.** Both unmistakable self-narration |
+| 5 | The three added patterns false-positive nowhere | corpus scan before adding | **4 hits, all D11, all genuine, zero elsewhere.** Measured across all 21 before being trusted |
+| 6 | The check responds to production data, both directions | seeded into real `papers/D3` | *"(corrected 2026-08-01, D3 Stage-13 round-4 finding 2.1)"* ⇒ rc=1 naming D3:3; *"Smith corrected this coefficient in 2019."* in the IDENTICAL position ⇒ PASS. Restored byte-identical |
+
+**⚠️ Atom 4 is the honest one.** My pattern set was derived from examples in four bundles and had
+gaps; a subagent reading the same corpus found them. The guard is not that the first set was
+complete — it was not — but that a new pattern is measured across all 21 bundles before it is
+trusted. A test now pins the boundary explicitly: a bare `round 3` is clean (legitimate in
+numerical work) while `rounds 7 and 10 both rated` fires, so the addition did not quietly become
+the vocabulary ban that atom 1 rejected.
+
+**De-scarring content preserved, not deleted** (agent report, spot-checked): D11's retracted
+Chern/mass-inversion classification survives as a present-tense negative result with both reasons
+it fails; D12's completeness disclaimer survives with the specific non-load-bearing binder named;
+E2's two nested scope corrections both survive with their `ChernBridge.lean` line references.
+
+**NOT-AN-ASSERTION.** "13 hits" and "90 hits" are measurements of today's corpus, not durable
+facts. Both move as drafts change, which is the point of the gate.

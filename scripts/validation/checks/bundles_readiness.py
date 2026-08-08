@@ -475,6 +475,112 @@ def check_bundle_prose_em_dash_free() -> CheckResult:
     return CheckResult(passed=total == 0, details=details)
 
 
+#: A fix NARRATING ITSELF to the reader (ADR-011 Phase 3, F-05).
+#:
+#: ⚠️ **These match the ACT, not the vocabulary, and that distinction is the whole
+#: design.** The 2026-08-01 audit proposed a word denylist — `Stage 13`, `reviewer`,
+#: `adversarial review`, `BLOCKER`. Measured against the corpus that scores 90 hits, of
+#: which **I1 alone holds 48**: I1 is the methodology paper, so the review pipeline is
+#: its SUBJECT MATTER and every one of its uses is legitimate. `reviewer` splits three
+#: ways — scar tissue in F (`\texttt{adversarial-reviewer} agent; fresh-context
+#: Stage-13 pass`), subject matter in I1, and the paper's actual audience in I2/I3
+#: (*"lets reviewers calibrate effort"*, *"Mathlib4 reviewers"*). A gate over that
+#: vocabulary needs a per-bundle exemption and is really a judgment call wearing a
+#: regex, which is the prose reviewer's job.
+#:
+#: Matching the act instead scores **13 hits across 4 bundles with I1 at ZERO**, so no
+#: exemption mechanism exists to drift. No physics manuscript legitimately tells a
+#: reader what an earlier draft of itself said, or on what date and in which review
+#: round it was corrected.
+_SELF_NARRATION = (
+    (r"[Cc]orrected\s+20[0-9]{2}-[0-9]{2}-[0-9]{2}", "a correction stamped with its date"),
+    (r"(?:earlier|previous|prior)\s+(?:draft|version)s?\s+of\s+this",
+     "an account of what an earlier draft of this text said"),
+    (r"[Ww]e previously\s+\w+", "a first-person account of a superseded claim"),
+    (r"[Ss]tage-?\s?1[034][^.]{0,30}round-?\s?[0-9]+[^.]{0,20}finding",
+     "an internal review-round finding reference"),
+    # ── Added 2026-08-08 from a coverage gap the de-scarring agent found ──
+    # It reported two D11 passages that are unmistakably self-narration and that the
+    # four patterns above do not match. Both were verified corpus-wide before being
+    # added: 4 hits, all in D11, ZERO false positives elsewhere. A pattern set derived
+    # from four bundles' worth of examples will have gaps like this; the guard is that a
+    # new pattern is measured across all 21 before it is trusted, not that the first set
+    # was complete.
+    (r"[Oo]ur earlier (?:planning |internal )?documents?",
+     "an account of what the project's own internal documents said"),
+    (r"\brounds?\s+[0-9]+(?:\s+and\s+[0-9]+)?\s+(?:both\s+)?"
+     r"(?:rated|supplied|flagged|caught|raised|noted)",
+     "review rounds cast as actors in the manuscript's own history"),
+    (r"in every draft\b", "a claim about what every draft of this paper contained"),
+)
+
+
+@register_check("bundle_reader_facing_voice",
+                "No bundle draft narrates its own correction history to the reader")
+def check_bundle_reader_facing_voice() -> CheckResult:
+    """CHECK (ADR-011 Phase 3, F-05): a fix may not narrate itself.
+
+    A published paper states what IS true. It does not tell a referee what an earlier
+    draft of itself said, when it was corrected, or which review round caught it. That
+    reader has no access to the process and cannot act on it, so the text reads as a
+    repository changelog pasted into a manuscript.
+
+    **Why it accumulates, and why an agent review cannot be the guard.** The lift
+    procedure makes the manuscript the fix surface: a reviewer files a finding, the
+    author edits the prose, and each round leaves a deposit. D11 and D12 ran **fourteen
+    Stage-13 rounds in a single day**. The deposits appear *between* agent reviews, which
+    is exactly what a deterministic check catches and a periodic reviewer does not.
+
+    **Removal is not deletion.** The narration usually wraps real content: a retraction
+    is a scientific disclosure, and a scope correction states the correct scope. The
+    substantive claim is restated in the present tense and the process account is dropped;
+    per F-05, the history moves to `change_log.md` and the supersession ledger, which are
+    where a later reader can actually check it.
+
+    Comments are stripped — `%` text is not rendered, and the lift banners live there.
+    """
+    details: List[Detail] = []
+    try:
+        import bundle_registry as registry
+        codes = list(registry.BUNDLE_CODES)
+    except Exception as exc:  # noqa: BLE001
+        return CheckResult(passed=False, measured=False, details=[Detail(
+            "roster", False,
+            f"could not read the bundle roster ({exc}) — UNVERIFIED, not passing")])
+
+    checked = total = 0
+    for code in codes:
+        tex = _H.PAPERS_DIR / code / "paper_draft.tex"
+        if not tex.is_file():
+            continue
+        checked += 1
+        found = []
+        for i, line in enumerate(tex.read_text(errors="replace").splitlines(), 1):
+            body = _TEX_COMMENT_RE.sub("", line)
+            for pat, why in _SELF_NARRATION:
+                for m in re.finditer(pat, body):
+                    found.append((i, why, m.group(0)[:60]))
+        if found:
+            total += len(found)
+            i, why, txt = found[0]
+            details.append(Detail(
+                code, False,
+                f"{len(found)} self-narrating passage(s); first at "
+                f"{tex.relative_to(_H.PROJECT_ROOT)}:{i} — {why}: {txt!r}"))
+
+    if checked == 0:
+        details.insert(0, Detail(
+            "population", False,
+            "no bundle draft was read — this check is UNVERIFIED, not passing"))
+        return CheckResult(passed=False, measured=False, details=details)
+
+    details.insert(0, Detail(
+        "summary", total == 0,
+        f"{checked} bundle draft(s) scanned, {total} passage(s) narrating the paper's own "
+        f"correction history (target 0; the history belongs in change_log.md)"))
+    return CheckResult(passed=total == 0, details=details)
+
+
 #: Reviewer-stage status values the tree actually uses. `Phase7a_Roadmap.md:91-93`
 #: declares three (`pending`/`green`/`red`, plus `yellow` for stage 13); the live corpus
 #: also carries `pending-redo`, `skeleton` and `not_started`. Declared here rather than

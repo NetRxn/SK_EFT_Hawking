@@ -260,13 +260,36 @@ and 0 of 21 bundles are clean.**
 exactly-three from exactly-two would flag 1,862 occurrences and be wrong about 1,121. One line
 carries both: `observables---also drives the SK--EFT`.
 
-**2. `bundle_reader_facing_voice` — the review/revision narration class only** (76 hits).
-`Stage 13`, `adversarial review`, `round-N`, `the audit found`, `BLOCKER`, `previously read`,
-`an earlier draft`, `⚠`, `scope correction`. This is not a style judgment but a **category
-error**: the manuscript addressing the review process instead of a reader. The fix is deletion,
-with no version of "keep it" that is correct, which is what keeps it on the deterministic side of
-the operator's line. It is also the pattern that accumulates *between* agent reviews, one deposit
-per remediation round — so it is a regression guard, which an agent run cannot be.
+**2. `bundle_reader_facing_voice` — matching the ACT of self-narration, not the vocabulary.**
+
+⚠️ **Re-scoped a second time, again by measurement.** The audit specified a word denylist —
+`Stage 13`, `reviewer`, `adversarial review`, `BLOCKER`, `round-N`. Measured on the corpus that
+scores **90 hits, of which I1 alone holds 48**, because I1 is the methodology paper and the
+review pipeline is its *subject matter*. Worse, `reviewer` splits three ways:
+
+- **scar tissue** in F — *"Adversarial review (`\texttt{adversarial-reviewer}` agent;
+  fresh-context Stage-13 pass)"*, internal harness vocabulary in an RMP physics review;
+- **subject matter** in I1 — *"Stage 9 runs a figure-reviewer agent"*;
+- **the paper's actual audience** in I2/I3 — *"lets reviewers calibrate effort"*,
+  *"Mathlib4 reviewers can calibrate expectations"*.
+
+A gate over that vocabulary needs a per-bundle exemption and is a judgment call wearing a regex,
+which is exactly what the operator assigned to the prose agent.
+
+**Matching the act instead scores 13 hits across 4 bundles with I1 at ZERO**, so there is no
+exemption mechanism to maintain or drift. Four patterns, none with any legitimate use in a
+manuscript: a correction stamped with an ISO date; an account of what an earlier draft of this
+text said; a first-person superseded claim (*"We previously shipped…"*); an internal
+review-round finding reference. Live examples: *"three earlier drafts of this sentence named…"*,
+*"(corrected 2026-08-01, D11 Stage-13 round-14 finding 6.2)"*.
+
+**Removal is not deletion.** The narration wraps real content — a retraction is a scientific
+disclosure, a scope correction states the correct scope — so the substantive claim is restated
+in the present tense and only the editing account goes. Per F-05 the history moves to
+`change_log.md` and the supersession ledger, where a later reader can actually check it.
+
+It is a regression guard an agent run cannot be: the deposits accumulate *between* reviews, one
+per remediation round, and D11/D12 ran fourteen Stage-13 rounds in a single day.
 
 **3. F-05:** lift §11 gains *"a fix may not narrate itself"*; §12 gains a terminal de-scarring
 pass.

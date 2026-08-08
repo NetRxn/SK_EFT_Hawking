@@ -683,8 +683,7 @@ channel's filtered variance is white at the $\gamma = 1$ phonon PSD; \thm{IsWhit
 at the Johnson NEP, asserting the same of that channel; \thm{IsUncorrelatedAt}, asserting the two
 channels are uncorrelated so that they compose in quadrature; and \thm{IsAdmissibleFilter}.
 
-Two further binders belong in the same list and were omitted from three earlier drafts of this
-paragraph (corrected 2026-07-31): $\mu_1 - \mu_0 = \int_0^{T_w} h_f(x)\,s(x)\,dx$, which identifies
+Two further binders belong in the same list: $\mu_1 - \mu_0 = \int_0^{T_w} h_f(x)\,s(x)\,dx$, which identifies
 the threshold model's mean separation with the filtered signal integral, and
 $\sigma = \sqrt{V_{\rm tot}(h_f)}$, which identifies its noise scale with the composed variance.
 Both are hypotheses of \thm{bolometer\_error\_floor} and both are load-bearing: the theorem is
@@ -694,10 +693,9 @@ square-integrability of the template on the window, $\int_0^{T_w} s^2 < \infty$,
 counterpart of \thm{IsAdmissibleFilter}. Without it the matched budget can collapse to zero on a
 template that \thm{IsAdmissibleFilter} still admits ($s = x^{-1/2}$, $h_f = x^{1/2}$ on $[0,1]$ is such a case), and the bound fails.
 
-We deliberately do not claim this list is complete. Two earlier drafts of this paragraph asserted
-completeness at ``four'' and then at ``six''; both were wrong, and the second was wrong in
-\emph{both} directions, since $\mu_0 \le \mu_1$ is a binder of the theorem but is not load-bearing
-for this conclusion. The capstone's modelling binders \emph{include} the seven above; the theorem
+We deliberately do not claim this list is complete: $\mu_0 \le \mu_1$, for instance, is also a
+binder of the theorem, but it is not load-bearing for this conclusion and so is not counted among
+the seven above. The capstone's modelling binders \emph{include} the seven above; the theorem
 statement in \texttt{Electrothermal/BolometricFloors.lean} is the authority on the full list.
 
 \section{Conclusion}
