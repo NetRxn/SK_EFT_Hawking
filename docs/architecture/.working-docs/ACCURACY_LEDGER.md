@@ -2173,3 +2173,31 @@ later deleted as redundant.
 re-injected at every compaction boundary, so choosing what moves to `references/` changes what an
 autonomous loop re-reads after a compact. That is a behavioural change to the durability
 mechanism, not a word-count trim.
+
+---
+
+## V58 — ADR-011 Phase 7: the pipeline law rewritten — 8 atoms, 4 ACCURACY DEFECTS FOUND
+
+| # | Proposition | Decider | Verbatim result |
+|---|---|---|---|
+| 1 | The document's weight is "back-and-forth / oscillation / troubleshooting language" (the brief) | marker scan before any edit | **Only partly.** Troubleshooting voice **0**, hedging **2**, first-person **3**. The weight is **49 provenance citations** (31 ADR/TODO/audit back-refs, 18 dated incidents). It does not oscillate; it cites its own history |
+| 2 | The rewrite is stylistic | read of the full 828 lines | **NO — 4 accuracy defects.** See atoms 3–6 |
+| 3 | The Quick Reference commands are live | `argparse` structure of `submit_to_aristotle.py` | **The block invoked the ARCHIVED interface.** It carried `--priority` / `--integrate` / `--resume`; the CLI is subcommand-based (`sorries`/`stage`/`submit`/`status`/`retrieve`/`graft`/`verify`). Stage 4 in the same document calls that interface "archived and disabled" |
+| 4 | Stage 13's tier table matches the roster | `bundle_registry.TIER_OF` | **Stale.** Doc said Tier 1 = D1–D5, Tier 3 = I1–I2; registry says **Tier 1 = D1–D12**, **Tier 3 = I1–I3** |
+| 5 | The absorption-branch set is current | grep of the protocol | **Stale in two places and self-inconsistent** — one site D.1–D.3, the other D.1–D.4; the protocol ships **D.0–D.4** (D.0 added in Phase 6) |
+| 6 | Paper 15's Table 1 is unaffected by a doc rewrite | read of `paper_tables/sources.py:418` | **It parses this document's overview block.** The table had been reproducing pre-ADR-011 gate text; 6 of 13 rows were stale. Rows/stages/names identical after the rewrite; gate text corrected and regenerated |
+| 7 | Stage and invariant numbering survived | scoped re-parse | Stage headings **1–14** intact; invariants **1–17** in order. Constraint C1 (no renumbering) held |
+| 8 | No operative content was lost | token extraction, old vs law+rationale | **First pass reported 61 missing and was WRONG** (keyed on `--check <name>` and exact paths, so a check named in a table read as absent). Re-run on basenames: **31 genuinely absent**, each classified; operative ones restored; the rest are deliberate substitutions |
+
+**⚠️ ATOM 8 IS THE FOURTH NAIVE-SCAN FALSE POSITIVE IN TWO PHASES.** Same failure as V57 atoms 1, 2
+and 5: a scan keyed too narrowly reports a live thing as absent. Here it would have caused the
+opposite error from usual — not a false finding, but **false confidence in a deletion**, since I was
+using it to prove nothing was lost. The correction is the same one that has worked every time:
+re-measure on a looser key and classify by hand before acting.
+
+**Why a companion document rather than deletion.** Provenance is not decoration: the incident
+behind a rule is what stops someone re-litigating it. `docs/WAVE_PIPELINE_RATIONALE.md` keeps all of
+it, keyed by stage and invariant, and the law links to it once. Nothing was deleted.
+
+**NOT-AN-ASSERTION.** The 39% reduction is a consequence, not a target. A shorter law that misstated
+the process would be a worse outcome than the document it replaced.

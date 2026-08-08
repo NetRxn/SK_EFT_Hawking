@@ -432,6 +432,37 @@ is deleted — deleting provenance would violate the same accuracy discipline th
 outcome than the current one. The rewrite is verified against the same substrate the phases
 touched, and the word count is a consequence, not a target.
 
+**Outcome.** The law is 5,716 words (from 9,303, a 39% reduction) with dated incident references at
+**0** (from 18); the provenance moved to `docs/WAVE_PIPELINE_RATIONALE.md` (2,094 words), keyed by
+stage and invariant. Stage headings 1–14 and invariant numbers 1–17 are byte-preserved.
+
+**The rewrite found four accuracy defects, which is why this phase was not cosmetic:**
+
+1. **The Quick Reference block invoked an interface Stage 4 declares archived and disabled.** It
+   still carried the pre-ADR-006 flags (`--priority`, `--integrate`, `--resume`); the live CLI is
+   subcommand-based. An agent copying from the command block — which is exactly what a quick
+   reference is for — would have driven the disabled path.
+2. **Stage 13's bundle-tier table was stale.** It listed Tier 1 as D1–D5 and Tier 3 as I1–I2; the
+   registry has **Tier 1 = D1–D12** and **Tier 3 = I1–I3**.
+3. **The absorption-branch set was stale in two places and inconsistent between them** — one site
+   said D.1–D.3, the other D.1–D.4, and both predated branch D.0 added in Phase 6. The protocol
+   ships D.0–D.4.
+4. **Paper 15's Table 1 described gates that no longer existed.** `pipeline_stages()` parses this
+   document's overview block, so the table had been reproducing pre-ADR-011 gate text. It now reads
+   `provenance + claims + length + read-through` for Stage 10 and names figure adequacy and verdict
+   recording at Stages 8 and 9. Regenerated in this change.
+
+**Verification that nothing operative was lost.** Every file path, check name, script and CONSTANT
+in the pre-rewrite document was extracted and tested for presence in the law-plus-rationale pair.
+The first pass reported 61 missing and was wrong — the extractor keyed on `--check <name>` and on
+exact path strings, so a check named in a table and a path written more fully both read as absent.
+Re-run on basenames, 31 were genuinely gone; each was classified operative or provenance, and the
+operative ones were restored (the stakeholder and reference rows of the Stage-12 sync table,
+`PLACEHOLDER_TOTAL_COUNT`, `NATIVE_DECIDE_DECL_CLOSURE_CEILING`,
+`scripts/render_tracked_hypotheses.py`, the Invariant-14 propagation machinery, and others). What
+remains absent is deliberate: the agent invocation form replaced a file path, and `<Module>.lean`
+replaced the placeholder `Y.lean`.
+
 ### Phase 8 — the `skeft-qa` plugin is reviewed and synchronised to intended state
 
 **Added by operator direction 2026-08-08**, on noticing staleness in `skills/wave-close/SKILL.md`
@@ -562,3 +593,7 @@ for* that decision, so waiting inverts the dependency.
 - `docs/architecture/.working-docs/ARCHITECTURE_TODOs.MD` — D5, D7, D18, D24
 - `docs/adrs/ADR-010-publication-portfolio-reassessment.md` §D3, §D6, §D7
 - `docs/architecture/CHECK_AUTHORING_GUIDE.md` — the seven obligations every new check owes
+- `docs/WAVE_EXECUTION_PIPELINE.md` — the process law, rewritten by Phase 7
+- `docs/WAVE_PIPELINE_RATIONALE.md` — created by Phase 7; the provenance behind each pipeline rule
+- `.claude/plugins/skeft-qa/tests/test_plugin_surface.py` — created by Phase 8; pins the
+  plugin-surface-to-README contract that had silently drifted

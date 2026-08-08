@@ -1,32 +1,44 @@
 # Wave Execution Pipeline
 
-**Authoritative reference for executing any wave of work in the SK-EFT Hawking project.**
+**The authoritative process for executing any wave of work in the SK-EFT Hawking project.**
 
-Every wave — whether adding new physics, extending formalization, or producing experimental predictions — follows Stages 1 through 14 below, in strict order. Each stage has a gate that must pass before proceeding. Skipping stages or reordering causes rework and allows errors to propagate downstream.
+Every wave — new physics, extended formalization, experimental predictions — runs Stages 1 through
+14 in order. Each stage has a gate that must pass before the next begins. Skipping or reordering
+stages lets errors propagate downstream, where they cost more to find.
+
+This document states the rules. **Why** a rule exists lives in
+[WAVE_PIPELINE_RATIONALE.md](WAVE_PIPELINE_RATIONALE.md) — read it when a rule looks arbitrary or
+you are considering an exception. You do not need it to follow the pipeline.
+
+**Stage numbers are load-bearing and must never be renumbered.** They are consumed by
+`paper_tables/sources.py`, `gate_precheck.py`, the `stage{9,10,13}_status` metadata fields, and
+every document citing a stage by number. New review steps become sub-gates of an existing stage,
+never new numbers.
 
 ---
 
 ## Pipeline Overview
 
 ```
-Stage 1:  CONSTANTS & PARAMETERS           → Gate: imports succeed
-Stage 2:  FORMULAS                         → Gate: every function has Lean ref
+Stage 1:  CONSTANTS & PARAMETERS           → Gate: imports succeed, provenance verified
+Stage 2:  FORMULAS                         → Gate: every function has a Lean ref
 Stage 3a: LEAN — INTERACTIVE MCP LOOP      → Gate: proof closes OR decomposed to sector stubs
 Stage 3b: LEAN — SORRY REGISTRATION        → Gate: lake build compiles, SORRY_GAPS accurate
-Stage 4:  ARISTOTLE (FALLBACK)             → Gate: residual sorrys filled, lake build clean
+Stage 4:  ARISTOTLE (FALLBACK)             → Gate: residual sorrys filled, gauntlet passed
 Stage 5:  LEAN BUILD VERIFICATION          → Gate: zero sorry, counts match
 Stage 6:  PYTHON TESTS                     → Gate: all tests pass
 Stage 7:  CROSS-LAYER VALIDATION           → Gate: validate.py all checks pass
-Stage 8:  VISUALIZATIONS                   → Gate: all PNGs generated
-Stage 9:  FIGURE REVIEW                    → Gate: LLM review all PASS
-Stage 10: PAPER DRAFT                      → Gate: paper_provenance check passes
+Stage 8:  VISUALIZATIONS                   → Gate: all PNGs generated, figure adequacy met
+Stage 9:  FIGURE REVIEW                    → Gate: LLM review all PASS, verdict recorded
+Stage 10: PAPER DRAFT                      → Gate: provenance + claims + length + read-through
 Stage 11: NOTEBOOKS                        → Gate: notebook_exec + viz_consistency pass
 Stage 12: DOCUMENT SYNC                    → Gate: full validate.py passes, counts consistent
-Stage 13: ADVERSARIAL REVIEW               → Gate: fresh-context Opus sweep shows zero BLOCKERs
-Stage 14: META-PROCESS QI                  → Advisory: systemic findings logged to QI register
+Stage 13: ADVERSARIAL REVIEW               → Gate: fresh-context sweep shows zero BLOCKERs
+Stage 14: META-PROCESS QI                  → Advisory: systemic findings logged
 ```
 
-**Stage 3 is split into 3a (interactive MCP proving via `lean-lsp-mcp`) and 3b (sorry registration for residual gaps).** Most proofs should close in 3a. Stage 4 (Aristotle) is reserved for (i) sorries that survive interactive iteration with decomposition, or (ii) batch submissions in future phases where MCP iteration is impractical. See the "Lean interactive tooling (MCP)" section of `CLAUDE.md` for dev-loop details.
+Most proofs close in **3a** (interactive MCP). **Stage 4 (Aristotle) is a fallback**, for sorries
+that survive 3a with decomposition. See CLAUDE.md, "Lean development — MCP-first loop".
 
 ---
 
@@ -35,74 +47,56 @@ Stage 14: META-PROCESS QI                  → Advisory: systemic findings logge
 **Purpose:** Establish the single source of truth for all physics values.
 
 **Actions:**
-- Add new physical constants to `src/core/constants.py`
-- Add new experimental parameters to the `EXPERIMENTS` dict
-- Add new Aristotle run IDs to `ARISTOTLE_THEOREMS` as they are obtained (Stage 4)
+- Add physical constants to `src/core/constants.py`; experimental parameters to `EXPERIMENTS`
+- Add Aristotle run IDs to `ARISTOTLE_THEOREMS` as they are obtained (Stage 4)
 
 **Rules:**
-- `constants.py` is the ONLY place experimental parameters live
-- No other file may hardcode physical constants or experimental values
-- All other modules import from `constants.py`
+- `constants.py` is the ONLY place experimental parameters live. No other file hardcodes them.
+- Every value in `EXPERIMENTS`, `ATOMS`, and `POLARITON_PLATFORMS` has an entry in
+  `PARAMETER_PROVENANCE` (`src/core/provenance.py`) specifying value, unit, tier, source, detail,
+  `llm_verified_date`, `human_verified_date`.
+- Tier is one of `MEASURED`, `EXTRACTED`, `DERIVED`, `PROJECTED`, `THEORETICAL`. `PROJECTED`
+  parameters are estimates for experiments not yet performed and must be labeled as such.
+- Parameters from deep research enter with `llm_verified_date: None` and must be LLM-verified
+  against the primary source before this gate passes. See
+  [Deep Research Reconciliation](#deep-research-reconciliation-protocol).
 
-**Provenance Requirements:**
-- Every value in EXPERIMENTS, ATOMS, and POLARITON_PLATFORMS MUST have a
-  corresponding entry in `PARAMETER_PROVENANCE` (in `src/core/provenance.py`)
-- Each provenance entry MUST specify: value, unit, tier, source, detail,
-  llm_verified_date, human_verified_date
-- Tier must be one of: MEASURED, EXTRACTED, DERIVED, PROJECTED, THEORETICAL
-- PROJECTED parameters must be clearly labeled — they represent estimates for
-  experiments that have not been performed
-- Parameters from deep research (LLM outputs) enter as `llm_verified_date: None`
-  and must be LLM-verified against the primary source before the Stage 1 gate passes
-- See the [Deep Research Reconciliation Protocol](#deep-research-reconciliation-protocol) below
+**New bibitems.** Run `scripts/extract_missing_bibkeys.py`, then
+`scripts/back_fill_primary_sources.py --fetch`, then `scripts/promote_primary_sources.py`. See
+Invariant 11.
 
-**Gate:** `python -c "from src.core.constants import *"` succeeds without error
-**AND** `python scripts/validate.py --check parameter_provenance` passes
-(all LLM-verified, zero MISSING, zero NULL values).
+**Bundle target.** A wave producing paper-shaped output (new draft, section addition, notebook
+companion) identifies its target bundle here — one of the codes in `validate.BUNDLE_CODES`, the
+roster's single source of truth — and records it in `docs/PAPER_DRAFT_MAPPING.md` at Stage 12.
+See Invariant 14.
 
-**Citation Provenance:** When a wave introduces new bibitems, run
-`scripts/extract_missing_bibkeys.py` (extracts stubs from `\bibitem` blocks
-in modified papers), then `scripts/back_fill_primary_sources.py --fetch`
-(populates per-bibkey cache files under `Lit-Search/Phase-X/primary-sources/`),
-then `scripts/promote_primary_sources.py` (writes results back into
-`CITATION_REGISTRY`). The check `validate.py --check
-citation_primary_sources_present` confirms every cited bibkey resolves to
-a cache file; it is mandatory at Stage 13. See Pipeline Invariant #11.
+**Gate:** `python -c "from src.core.constants import *"` succeeds **AND**
+`validate.py --check parameter_provenance` passes (all LLM-verified, zero MISSING, zero NULL).
 
-**Paper Submission Gate:** `python scripts/validate.py --check parameter_provenance --strict`
-passes (all parameters human-verified). Checked before arXiv/journal submission, not at Stage 1.
-
-**Bundle-target identification (Phase 6i Wave 7):** when a wave produces
-paper-shaped output (a new draft, a section addition to an existing
-draft, or a notebook companion to a paper), Stage 1 also identifies
-which bundle target the wave's content lifts into per
-`docs/PAPER_STRATEGY.md` (one of the codes in `validate.BUNDLE_CODES`, the
-roster's single source of truth). The assignment is recorded in `docs/PAPER_DRAFT_MAPPING.md`
-(append-only) at Stage 12. Pipeline Invariant #14 codifies this rule:
-no new stand-alone paper drafts are created without explicit user
-authorization to add a further bundle target beyond the current roster.
+**Submission gate (not Stage 1):** `validate.py --check parameter_provenance --strict` — all
+parameters human-verified. Checked before arXiv/journal submission.
 
 ---
 
 ## Stage 2: FORMULAS
 
-**Purpose:** Implement canonical physics formulas with provenance tracking.
+**Purpose:** Implement canonical physics formulas with provenance.
 
-**Actions:**
-- Add formula implementations to `src/core/formulas.py`
-- Each function MUST have a docstring containing:
-  - The mathematical formula in plain text
-  - `Lean: <theorem_name>` — the exact name of the Lean theorem (must exist in a .lean file or be a planned sorry stub)
-  - `Aristotle: <run_id>` — the Aristotle run that proved it, or `manual` for hand proofs, or `pending` for unproved stubs
-  - `Source: <citation>` — for physics formulas derived from published work: paper citation + equation number (e.g., `Source: Corley & Jacobson, PRD 54, 1568 (1996), Eq. (4.2)`). Pure math identities and project-original results may omit this.
-- Domain-specific modules (`src/<domain>/`) import from `formulas.py` — they NEVER reimplement formulas
+**Actions:** Add implementations to `src/core/formulas.py`. Each docstring contains:
+- the mathematical formula in plain text
+- `Lean: <theorem_name>` — exact name of a real, non-placeholder Lean declaration
+- `Aristotle: <run_id>` — the proving run, or `manual`, or `pending`
+- `Source: <citation>` — paper citation plus equation number for formulas from published work
+  (e.g. `Corley & Jacobson, PRD 54, 1568 (1996), Eq. (4.2)`). Pure math identities and
+  project-original results may omit it.
 
 **Rules:**
-- `formulas.py` is the ONLY place physics formulas live
-- If a domain module needs a formula, it must be in `formulas.py` first
-- Every function must reference a Lean theorem — no unformalized formulas
+- `formulas.py` is the ONLY place physics formulas live. Domain modules import from it and never
+  reimplement.
+- Every function references a Lean theorem. No unformalized formulas.
 
-**Gate:** Every function has a `Lean:` reference. Grep confirms each referenced Lean name exists in `lean/SKEFTHawking/*.lean` (as a theorem, def, or sorry stub).
+**Gate:** Every function has a `Lean:` reference that resolves to a real declaration in
+`lean/SKEFTHawking/*.lean`.
 
 ---
 
@@ -110,142 +104,156 @@ authorization to add a further bundle target beyond the current roster.
 
 **Purpose:** Formalize physics results as machine-checkable proofs.
 
-This stage is now split into two phases: **3a (statement + first-pass proof attempt via interactive MCP tools)** and **3b (sorry registration + scaffolding for any remaining gaps)**. Most proofs should close in 3a. Stage 4 (Aristotle) is now a *fallback* for sorries that survive both.
+### 3a. Statement + interactive proof attempt
 
-### 3a. Statement + Interactive Proof Attempt
+Write statements in `lean/SKEFTHawking/<Module>.lean` with `sorry` placeholders and add
+`import SKEFTHawking.<Module>` to `lean/SKEFTHawking.lean`. **Make a serious interactive attempt
+before leaving any sorry in place.**
 
-**Actions:**
-- Write theorem statements in `lean/SKEFTHawking/<Module>.lean` with `sorry` placeholders
-- Add `import SKEFTHawking.<Module>` to the root `lean/SKEFTHawking.lean`
-- **Before leaving a sorry in place, make a serious interactive proof attempt using the `lean-lsp-mcp` tools** (see CLAUDE.md "Lean interactive tooling (MCP)" section).
-
-**Required interactive loop per sorry:**
+**Required loop per sorry:**
 1. `lean_file_outline` — orient in the file
-2. `lean_goal` at the `sorry` position — read the actual goal state
-3. Identify the proof strategy from any relevant deep research in `Lit-Search/Phase-5*/`. For non-trivial proofs (quantum groups, tensor products, bidegree decompositions, etc.), **read the relevant research document directly, in full**, before iterating on tactics. Agent-summarized research loses tactic-level detail and has caused session failures.
-4. `lean_multi_attempt` with a battery of 4–6 candidate tactic sequences. Start with simpler tactics (`noncomm_ring`, `abel`, `aesop`) and escalate to explicit rewrite chains only if needed.
-5. Iterate: read the resulting goal state for each attempt, pick the winner, write it to the file, re-inspect.
-6. If the proof requires a large decomposition (e.g., bidegree sectors, case splits), **pre-decompose into sub-lemmas with `have` statements** so each sub-goal is small (ideally ≤12 terms). Close each sub-lemma interactively via step 4.
+2. `lean_goal` at the `sorry` — read the actual goal state
+3. Identify the strategy from relevant deep research in `Lit-Search/Phase-*/`. For non-trivial
+   proofs (quantum groups, tensor products, bidegree decompositions), **read the research document
+   directly and in full.** Agent-summarized research loses tactic-level detail and has caused
+   session failures.
+4. `lean_multi_attempt` with 4–6 candidate tactic sequences. Start simple (`noncomm_ring`, `abel`,
+   `aesop`); escalate to explicit rewrite chains only if needed.
+5. Read the resulting goal state, pick the winner, write it, re-inspect.
+6. For large decompositions, **pre-decompose into `have` sub-lemmas** so each sub-goal is small
+   (ideally ≤12 terms), and close each interactively.
 
-**Theorem Quality Requirements:**
-- Every theorem must encode actual physics — no tautologies (`1 = 1`, `x = x`)
-- Hypotheses must be load-bearing, not vacuously satisfied
-- Beware Lean's total division convention (`0/0 = 0`): add strengthened variants where κ > 0 or c_s ≠ 0 is genuinely used in the proof
-- When in doubt, state the theorem in the strongest form possible
+**Theorem quality:**
+- Every theorem encodes actual physics. No tautologies.
+- Hypotheses are load-bearing, not vacuously satisfied.
+- Lean's total division convention (`0/0 = 0`) means a theorem can hold vacuously; add
+  strengthened variants where `κ > 0` or `c_s ≠ 0` is genuinely used.
+- State the theorem in the strongest form available.
 
-**Preemptive-strengthening checklist (mandatory before each theorem statement):**
+**Preemptive-strengthening checklist — run on every statement before writing it.** If you cannot
+satisfy all five, fix the statement first.
 
-The strengthening-pass memory (`feedback_post_wave_strengthening_audit.md`) catalogues six anti-patterns that recur in first-pass theorem statements. **Apply these prospectively, not as a post-wave audit.** Run the checklist on every theorem statement before writing it; if you can't satisfy all five, fix the statement first.
+1. **Bundle redundancy.** "If I drop any conjunct, does it still mean the same thing?" If yes, drop
+   it. A bundle whose conjuncts are algebraically equivalent is one theorem dressed as three.
+2. **Quantitative connection.** If the statement mentions a constant declared elsewhere
+   (`MICROSCOPE_BOUND`, `LIGO_TAU`), the numerical relationship belongs in the theorem body. Write
+   the `norm_num`-backed comparison
+   (`vestigial_phase_eta_violates_microscope_bound : (1.0 : ℝ) > 1.0e-15`), not a qualitative
+   `*_violates_*` claim alone. The numerical assertion is what makes it falsifiable.
+3. **Cross-module bridge integrity.** If the docstring references another module's theorem,
+   `import` that module and *call* the theorem in the body. An uncalled cross-reference rots.
+4. **Trivial discharge.** Could this be closed by `rfl`, `decide`, or `0 ≤ C` for any positive `C`?
+   If so, either the substantive content is elsewhere or you are shipping a tautology.
+5. **Defining the conclusion.** If defining the function as the obvious target makes the theorem
+   trivial, the substantive load is in the *definition*. Say so in the docstring, and either push
+   the content elsewhere or commit to a concrete model and document the assumption.
 
-1. **Bundle redundancy (P2):** "If I drop any conjunct, does the theorem still mean the same thing?" If yes — drop it. A 3-conjunct bundle whose conjuncts are algebraically equivalent (e.g., `satisfiesAt m WEP ∧ satisfiesAt m EEP ∧ satisfiesAt m SEP` when `violationLevel m = none`) is *one* substantive theorem dressed as three. Write the substantive form (`violationLevel m = none`) plus a separate extraction lemma if downstream needs the bundle shape.
-2. **Quantitative connection to numerical content:** "Does this statement mention a constant declared elsewhere (e.g., `MICROSCOPE_BOUND`, `LIGO_TAU`)? Is the numerical relationship part of the theorem body?" If a published bound is load-bearing, write the `norm_num`-backed comparison (`vestigial_phase_eta_violates_microscope_bound : (1.0 : ℝ) > 1.0e-15`), not a qualitative `*_violates_*` claim alone.
-3. **Cross-module bridge integrity (P6):** "Does the docstring reference another module's theorem? Am I `import`ing that module and *calling* the theorem?" Per memory `feedback_python_lean_refs_drift.md`: every cross-reference in a docstring must be backed by a Lean call in the body. If the docstring mentions `fg_cdm_obstruction`, the body should `import SKEFTHawking.FangGuTorsionDM` and write a theorem whose proof invokes it.
-4. **Trivial-discharge check (P3, P4, P5):** "Could this statement be discharged by `rfl`, `decide`, `not_lt.mpr h_disagree`, or `0 ≤ C` for any positive `C`? If yes, is the substantive content somewhere else, or am I shipping a tautology?" An axiom whose statement self-discharges via algebra (P4) is vacuous; a falsifier whose body restates its hypotheses (P5) is structural-tautology repackaging; multiplication-only theorems (P3) are not physics.
-5. **Defining-the-conclusion check:** "If I make the function `:= <obvious target>`, does the theorem become trivially `0 ≤ C/A`?" If yes, the substantive load is in the *definition*, not the theorem — be explicit about that in the docstring, and either (a) push the substantive content elsewhere (a tracked-hypothesis Prop, or a project-local infrastructure module), or (b) commit to a non-trivial concrete model and document the modeling assumption.
+A ruthless post-wave strengthening review remains mandatory; the checklist reduces its cost but
+does not replace it.
 
-**Goal:** the strengthening pass that runs at end-of-wave (`feedback_post_wave_strengthening_audit.md`) should produce **0 retroactive theorems** under both the first-pass discipline AND a ruthless post-wave review. Empirically (6b.1, 2026-04-27): first-pass discipline alone reduces cost from 12 (6c.3 baseline) to 5 (58% reduction); a ruthless post-wave review then catches the remaining 5. The discipline catches obvious patterns (∃-absorption, biconditional-tautology) but misses subtler P3/P5 (identity-function wrappers; within-own-±2σ-band tautologies; pairwise-distinctness on inductives; definitional-unfolding-as-physics). **Both passes are mandatory.**
+**Antipatterns — do not do these:**
+- `set_option maxHeartbeats` / `synthInstance.maxHeartbeats` in any proof body (Invariant 10)
+- `ring` / `ring_nf` on non-commutative rings (`Uqsl2Aff`, `Uqsl3`, `RingQuot`-based types) — use
+  `noncomm_ring` or explicit rewrites
+- monolithic `simp` / `simp_rw` over 50+ terms; `simp_rw` with rules that can cycle
+- `match_scalars` at the wrong decomposition level
+- blind `lake build` iteration on hard proofs — use the MCP loop
 
-**Antipatterns (do NOT do these — every one has been documented to fail or corrupt sessions):**
-- `set_option maxHeartbeats N` or `synthInstance.maxHeartbeats N` in any proof body (`theorem`, `lemma`, `example`, `def` with tactic-generated body). Heartbeat overrides in proofs indicate a proof-architecture problem, not a compute problem — decompose into `have` sub-lemmas. **Pipeline invariant #10.** (The `ExtractDeps.lean` metaprogram is exempt — see invariant #10 for the precise scope.)
-- `ring` / `ring_nf` on non-commutative rings (`Uqsl2Aff`, `Uqsl3`, `RingQuot`-based types). Use `noncomm_ring` or explicit rewrites.
-- Monolithic `simp` / `simp_rw` calls that try to expand and regroup 50+ terms in one pass. Always decompose via `have` sub-lemmas first.
-- `simp_rw` with rules that can form a cycle (e.g., Serre relation in both directions) — leads to infinite loops.
-- `match_scalars` at the wrong level of decomposition (when cancellation is inter-atom rather than per-atom) — produces unprovable `⊢ 1 = 0`.
-- Blind iteration via `lake build` for hard proofs. The MCP loop is ~1000× faster and gives live goal state. If MCP is not yet installed, installing it is ALWAYS cheaper than grinding on `lake build`.
+**New axioms require explicit user sign-off** and an `AXIOM_METADATA` entry. See Invariant 15.
 
-**Axiom Classification + USER SIGN-OFF (Pipeline Invariant #15):** New axioms MUST have an entry in `AXIOM_METADATA` (in `src/core/constants.py`) with `eliminability` (eliminable/hard/unknown), `discharge_wave` (target wave for substantive discharge), `discharge_estimate_loc` (estimated LoC), and `reason` fields. **AND** the user must explicitly sign off on the new axiom before it ships — DR recommendations are advisory only. See Pipeline Invariant #15 for the full policy + rationale (Phase 6p strengthening Pass 2, 2026-05-12). This surfaces in the Proof Architecture dashboard tab and the claims-reviewer agent.
+**Gate (3a):** the proof closes and `lake build` is clean for this theorem, OR it is decomposed
+into sub-lemmas with thorough `PROVIDED SOLUTION` comments and is ready for 3b.
 
-**Gate (3a):** Either the proof closes interactively and `lake build` is clean for this theorem, OR the proof has been decomposed into sub-lemmas with thorough `PROVIDED SOLUTION` comments and is ready for Stage 3b.
+### 3b. Sorry registration (only if 3a left gaps)
 
-### 3b. Sorry registration (only if 3a left residual gaps)
+- Register each remaining sorry in `src/core/aristotle_interface.py` as `SorryGap(filled=False)`
+  with a `strategy_hint` naming the sub-lemmas, helper theorems and coefficient identities needed
+- Add `PROVIDED SOLUTION` comments at each `sorry` site, referencing any relevant
+  `Lit-Search/Phase-*/` document by path
+- Keep `SORRY_GAPS` at one entry per actual `sorry` — Aristotle needs granular targets
 
-**Actions:**
-- Register each remaining sorry stub in `src/core/aristotle_interface.py` as `SorryGap(filled=False)` with a precise `strategy_hint` that names the sub-lemmas, helper theorems, and coefficient identities needed
-- Add `PROVIDED SOLUTION` comments inline at each `sorry` site, referencing any relevant `Lit-Search/Phase-5*/` deep research document by path
-- Keep the `SORRY_GAPS` registry in sync: one entry per actual `sorry` in the source (not per "group" of sorries — Aristotle needs granular targets)
-
-**Gate (3b):** `cd lean && lake build` compiles successfully (sorry warnings are expected, zero errors). `SORRY_GAPS` registry matches the lake build output exactly.
+**Gate (3b):** `cd lean && lake build` compiles (sorry warnings expected, zero errors), and
+`SORRY_GAPS` matches the build output exactly.
 
 ---
 
 ## Stage 4: ARISTOTLE (FALLBACK)
 
-**Purpose:** Fill sorry gaps that Stage 3a's interactive MCP loop could not close.
+**Purpose:** Fill sorry gaps that Stage 3a could not close.
 
-As of 2026-06-25 (**[ADR-006](adrs/ADR-006-aristotle-submission-rewrite.md)**) Stage 4 uses the **safe partial-submission + verify-then-graft** process. The pre-2026-06-25 full-project process (full upload + blind whole-file `--integrate`) is **archived and disabled** at `scripts/archive/submit_to_aristotle.py` — retained only as the Methods-of-record for prior papers, and must not be re-enabled for new work.
+Stage 4 uses **safe partial submission plus verify-then-graft** (ADR-006). All steps use the
+subcommand CLI `scripts/submit_to_aristotle.py`, a thin wrapper over `src/core/aristotle_submit.py`.
+The pre-ADR-006 flag interface is archived and **must not be re-enabled**.
 
-All Stage-4 steps use the canonical CLI `scripts/submit_to_aristotle.py` (subcommands), a thin wrapper over the engine `src/core/aristotle_submit.py`.
+**Pre-requisite:** read `docs/references/Theorm_Proving_Aristotle_Lean.md` before every session.
 
-**When to use Stage 4:**
-- Stage 3a's interactive MCP loop on `lean_multi_attempt` has been fully exhausted for the remaining sorries
-- The remaining sorries have been pre-decomposed into sector/sub-lemma `have` targets (≤12 terms each) — Aristotle handles granular targets far better than monolithic 50+ term goals
-- Every sorry has a thorough `PROVIDED SOLUTION` comment referencing relevant deep research
-- **User has explicitly authorized the submission** (the CLI enforces this via `--yes-i-authorize`). Submission is **async / non-blocking**; Aristotle runs server-side (~hours–day).
+**Use Stage 4 when:**
+- the 3a interactive loop is fully exhausted for the remaining sorries
+- those sorries are pre-decomposed into sector/sub-lemma targets (≤12 terms each)
+- every sorry has a thorough `PROVIDED SOLUTION` comment
+- **the user has explicitly authorized the submission** (enforced by `--yes-i-authorize`)
 
-**When NOT to use Stage 4:**
-- When Stage 3a hasn't been seriously attempted (the MCP loop gives a ~1000× speedup vs. `lake build` iteration)
-- When re-submitting a previously-failed target without a **materially changed state** (the CLI's manifest dedup refuses an identical closure unless `--force`)
-- When some sorries are still monolithic (50+ terms) — decompose first via Stage 3a scaffolding, THEN submit
+**Do NOT use Stage 4 when:** 3a has not been seriously attempted; a previously-failed target has
+no materially changed state (manifest dedup refuses an identical closure without `--force`); or
+some sorries are still monolithic — decompose first.
 
-**Toolchain note:** Aristotle runs Lean/Mathlib **4.28.0**; we run the pin in `lean/lean-toolchain` (with Mathlib/PhysLib matched in `lean/lakefile.toml`), which is ahead of it. The mismatch is a known, tolerated risk — the verification gauntlet (4d) rejects anything that does not build + kernel-verify on our toolchain, so a mismatch costs a *run*, not substrate integrity. No local 4.28.0 pre-build is required.
+Submission is **async and non-blocking**, which is what lets Stage 4 run inside a `/goal` loop
+without the loop blocking on Aristotle's return.
 
-**Pre-requisite:** Read `docs/references/Theorm_Proving_Aristotle_Lean.md` before every Aristotle session.
+### 4a. Stage + submit
 
-### 4a. Stage + Submit (partial, async)
-
-Submission uploads ONLY the target file's transitive `SKEFTHawking` import-closure (a minimal staged project), never the full project. A "target" is a module (`SKEFTHawking.Foo`), a path, a `*.lean` name, or a bare leaf.
+Submission uploads ONLY the target's transitive `SKEFTHawking` import closure, never the full
+project. A target is a module (`SKEFTHawking.Foo`), a path, a `*.lean` name, or a bare leaf.
 
 ```bash
-# 1. Current sorry gaps (Lean primitive: sorryAx in the kernel axiom closure):
-uv run python scripts/submit_to_aristotle.py sorries [<target>...]
-
-# 2. Stage the minimal closure and review it (no submission):
-uv run python scripts/submit_to_aristotle.py stage <target>...
-
-# 3. Submit (ASYNC — returns immediately, never --wait). Requires explicit authorization:
+uv run python scripts/submit_to_aristotle.py sorries [<target>...]        # current gaps
+uv run python scripts/submit_to_aristotle.py stage <target>...            # stage, no submit
 uv run python scripts/submit_to_aristotle.py submit <target>... --yes-i-authorize
 ```
-
-Ensure every target sorry has a `PROVIDED SOLUTION` hint in its docstring before submitting.
 
 ### 4b. Monitor
 
 ```bash
-uv run python scripts/submit_to_aristotle.py status      # recorded submissions + status
+uv run python scripts/submit_to_aristotle.py status
 source .env && export ARISTOTLE_API_KEY && uv run aristotle list --limit 5
 ```
 
-Submission is non-blocking by design — continue non-dependent work while Aristotle runs. (This is what lets Stage 4 run inside a `/goal` loop without the loop blocking on Aristotle's return.)
-
-### 4c. Retrieve and Review
+### 4c. Retrieve and review
 
 ```bash
-# Download + extract (NO integration):
-uv run python scripts/submit_to_aristotle.py retrieve <job_id>
-
-# Review the target-file diff(s) without applying anything:
-uv run python scripts/submit_to_aristotle.py graft <extracted_dir> <target>...
+uv run python scripts/submit_to_aristotle.py retrieve <job_id>            # no integration
+uv run python scripts/submit_to_aristotle.py graft <extracted_dir> <target>...   # review diff
 ```
 
-### 4d. Graft + Verify (verify-then-graft, auto-revert)
+### 4d. Graft + verify (auto-revert)
 
 ```bash
 uv run python scripts/submit_to_aristotle.py graft <extracted_dir> <target>... --apply
 ```
 
-`--apply` grafts ONLY the target file(s) — refusing if Aristotle touched any non-target closure file — then runs the **verification gauntlet**: `lake build` (zero sorry) → fresh ExtractDeps → kernel-purity/axiom audit of the target decls → `validate.py` (`axiom_closure_allowlist` + `native_decide_regression`) → tests. It **keeps the graft on pass and AUTO-REVERTS on failure**, so the tree is never left worse than found. Standalone gauntlet: `... verify <target>...`.
+`--apply` grafts ONLY the target file(s), refusing if Aristotle touched any non-target closure
+file, then runs the **verification gauntlet**: `lake build` (zero sorry) → fresh ExtractDeps →
+kernel-purity/axiom audit of the target declarations → `validate.py`
+(`axiom_closure_allowlist`, `native_decide_regression`) → tests. It **keeps the graft on pass and
+auto-reverts on failure**, so the tree is never left worse than found. Standalone gauntlet:
+`... verify <target>...`.
 
-Quality (folded into the gauntlet): the proof must exercise its hypotheses (no total-division / vacuous proofs) and be kernel-pure (no new `sorry`, no `native_decide` regression, no un-signed-off axiom). If strengthening is needed, stop and prepare a correction.
+The proof must exercise its hypotheses (no vacuous or total-division proofs) and be kernel-pure:
+no new `sorry`, no `native_decide` regression, no un-signed-off axiom.
 
-### 4e. Register (attribution)
+### 4e. Register (only after a graft is kept)
 
-Only after a graft is kept:
-- Add the run UUID to `ARISTOTLE_THEOREMS` in `src/core/constants.py`, **bumping the hardcoded `322` in the SAME commit in both places**: `constants.py` (`assert ARISTOTLE_PROVED_COUNT == 322`) and `scripts/validate.py` (CHECK 5).
-- Set `SorryGap(filled=True)` in `src/core/aristotle_interface.py` (the historical registry — append/update, never delete; `test_lean_integrity` requires ≥45 entries as provenance).
-- `uv run python scripts/update_counts.py` (regenerates `counts.json` / `\aristotleproved`); `scripts/aristotle_usage_by_bundle.py` re-derives per-bundle disclosure; reconcile `ATTRIBUTION.md`.
-- Update `formulas.py` docstrings: `Aristotle: pending` → `Aristotle: <run_id>`.
+- Add the run UUID to `ARISTOTLE_THEOREMS` (`src/core/constants.py`), **bumping the hardcoded
+  count in the SAME commit in both places**: the `assert ARISTOTLE_PROVED_COUNT == <N>` in
+  `constants.py` and CHECK 5 in `scripts/validate.py`
+- Set `SorryGap(filled=True)` in `src/core/aristotle_interface.py` — append or update, never
+  delete; the registry is provenance
+- Run `scripts/update_counts.py`; `scripts/aristotle_usage_by_bundle.py` re-derives per-bundle
+  disclosure; reconcile `ATTRIBUTION.md`
+- Update `formulas.py` docstrings: `Aristotle: pending` → `Aristotle: <run_id>`
 
-**Gate:** All sorry gaps filled (or documented as manual). `lake build` clean with zero sorry; the verification gauntlet passed.
+**Gate:** all sorry gaps filled or documented as manual; `lake build` clean with zero sorry; the
+verification gauntlet passed.
 
 ---
 
@@ -253,33 +261,24 @@ Only after a graft is kept:
 
 **Purpose:** Confirm the formalization is complete and counts are consistent.
 
-**Actions:**
 ```bash
 cd lean
-lake build                               # Library only (per defaultTargets); must complete clean
-lake build SKEFTHawking.ExtractDeps      # Library + ExtractDeps.olean (needed by graph_integrity, counts_fresh)
-grep -c "^theorem " SKEFTHawking/*.lean  # Count theorems per module
-grep -c "^axiom " SKEFTHawking/*.lean    # Count axioms
+lake build                               # library only; must complete clean
+lake build SKEFTHawking.ExtractDeps      # + ExtractDeps.olean (graph_integrity, counts_fresh)
 
-# Trustworthy clean baseline (no-cache rebuild — use after toolchain/structural changes):
+# Trustworthy clean baseline (after toolchain or structural changes):
 rm -rf .lake/build && lake build SKEFTHawking.ExtractDeps
-# ^ Single command rebuilds library + ExtractDeps.olean from scratch without
-#   triggering the macOS native-link failure. Do NOT use `lake build` alone —
-#   it leaves ExtractDeps.olean missing (breaks graph_integrity, counts_fresh).
-#   Do NOT use `lake build extractDeps` — macOS argument-length limit fails the link.
-#
-# Historical note (2026-04-22): prior to this date, the published clean-rebuild
-# procedure was just `lake build`. That produced a silent gap: the bare build
-# succeeded with the library only, and downstream tests expecting lean_deps.json
-# failed because ExtractDeps.olean was missing. An attempted fix of adding
-# extractDeps to defaultTargets triggered the macOS link failure. Correct fix:
-# single explicit command above.
 ```
 
-- Verify total theorem count matches the header comment in `constants.py`
-- Verify `ARISTOTLE_THEOREMS` count + manual count = total theorem count
+**Use exactly that rebuild command.** A bare `lake build` leaves `ExtractDeps.olean` missing and
+breaks `graph_integrity` and `counts_fresh`; `lake build extractDeps` fails the macOS
+argument-length link limit. Clean rebuilds are rare — reserve them for pin bumps and structural
+refactors, and use incremental `lake build` otherwise.
 
-**Gate:** Zero sorry. Zero errors. Theorem count matches documentation exactly.
+Verify the total theorem count matches the `constants.py` header, and that
+`ARISTOTLE_THEOREMS` count plus manual count equals the total.
+
+**Gate:** zero sorry, zero errors, theorem count matches documentation exactly.
 
 ---
 
@@ -287,62 +286,51 @@ rm -rf .lake/build && lake build SKEFTHawking.ExtractDeps
 
 **Purpose:** Validate all computations, including physical reasonableness.
 
-**Actions:**
-- Write tests in `tests/test_<domain>.py` for every new `src/` module
-- Required test categories:
-  - **Correctness:** Computed values match expected results
-  - **Edge cases:** Boundary conditions, zero inputs, limiting cases
-  - **Physical bounds:** `assert 0 < delta_diss < 1` for every perturbative correction
-  - **Cross-module consistency:** Same quantity computed by different modules agrees
-  - **Sanity bounds:** If δ < 10^-3, then shots_needed > 10^4 (small corrections need many shots)
+Write tests in `tests/test_<domain>.py` for every new `src/` module, covering:
+- **Correctness** — computed values match expected results
+- **Edge cases** — boundary conditions, zero inputs, limiting cases
+- **Physical bounds** — e.g. `assert 0 < delta_diss < 1` for every perturbative correction
+- **Cross-module consistency** — the same quantity from different modules agrees
+- **Sanity bounds** — e.g. if δ < 10⁻³ then shots_needed > 10⁴
 
 ```bash
-uv run python -m pytest tests/ -v
+uv run python -m pytest -q          # both suites: repo tests + skeft-qa plugin guards
+uv run python -m pytest tests/ -v   # repo only
 ```
 
-**Gate:** All tests pass. Every `src/` module has a corresponding test file.
+**Gate:** all tests pass; every `src/` module has a corresponding test file.
 
 ---
 
 ## Stage 7: CROSS-LAYER VALIDATION
 
-**Purpose:** Verify consistency across Python, Lean, notebooks, and papers.
+**Purpose:** Verify consistency across Python, Lean, notebooks and papers.
 
-**Actions:**
 ```bash
-uv run python scripts/validate.py
+uv run python scripts/validate.py          # --list enumerates the authoritative roster
 ```
 
-**The core cross-layer checks** (`validate.py --list` is the authoritative roster):
-1. `formulas` — Python formulas reference valid Lean theorems
-2. `numerical` — Experimental parameters match reference values
-3. `identities` — Mathematical identities and boundary conditions
-4. `paper_table` — Paper 1 Table 1 values match solver output
-5. `theorems` — Theorem registry is self-consistent
-6. `notebooks` — Notebooks import physics from src.core, no re-implementation
-7. `lean_source` — Key theorem names found in Lean source files
-8. `cgl_fdr` — CGL FDR derivation produces correct results
-9. `lean_build` — Lean project builds cleanly
-10. `viz_consistency` — Notebook viz uses imported physics, consistent style
-11. `notebook_exec` — All notebooks execute without errors
-12. `physical_bounds` — All computed quantities within physical bounds
-13. `cross_path_consistency` — Different code paths agree within 0.5%/1%
-14. `paper_provenance` — Paper numerical claims trace to computations within 0.5%
-15. `parameter_provenance` — All parameters have verified provenance
-16. `graph_integrity` — Knowledge graph integrity: orphans, conflicts, broken chains, axiom classification, PG+AGE sync
+**`validate.py --list` is the authoritative roster** of checks; do not maintain a second list.
+The core cross-layer checks are `formulas`, `numerical`, `identities`, `paper_table`, `theorems`,
+`notebooks`, `lean_source`, `cgl_fdr`, `lean_build`, `viz_consistency`, `notebook_exec`,
+`physical_bounds`, `cross_path_consistency`, `paper_provenance`, `parameter_provenance` and
+`graph_integrity`. The suite is substantially larger, covering the bundle, citation and freshness
+families as well as the substrate gates below.
 
-The suite is substantially larger than this core: `--list` also covers the bundle/citation/freshness checks and the **Substrate Integrity Gates (ADR-004, R1–R5)** below.
+**Substrate integrity gates (ADR-004) — semantic presence, not merely syntactic:**
 
-**Substrate Integrity Gates (ADR-004 — semantic, not just syntactic, presence):**
-- `placeholder_not_cited` (R5, Invariant #9) — no paper presents a `True := trivial` placeholder as formally verified (matches `lean_name` + `tex_signature`).
-- `proxy_body_audit` (R2) — no structurally-named theorem is closed by a trivial defining-the-conclusion body (`rfl`/`cases<;>rfl`/identity-return) unless disclosed in `MODELING_ASSUMPTION_THEOREMS`.
-- `tracked_hypothesis_ledger` (R3, Invariant #16) — every consumed tracked-hypothesis Prop is in `HYPOTHESIS_REGISTRY`.
-- `nogo_substrate_integrity` (ADR-007 N-C, Invariant #17) — the **negative-front mirror**: every provably-false no-go in `KERNEL_NOGO_REGISTRY` has a live, kernel-pure, non-vacuous backing theorem (blocks the atlas OBSTRUCTION Hole A/B rot). Scope: provably-false no-gos only; policy bans stay prose in `SETTLED_FORKS.md`.
-- `tracked_hypotheses_fresh` (R3) — `PERMANENT_TRACKED_HYPOTHESES.md` matches the registry (auto-regenerates).
-- `formula_grounding` (R1, Invariant #4) — every formulas.py `Lean:` ref resolves to a real, non-placeholder theorem.
-- `native_decide_regression` (R4; **Stage 5** + here) — the native_decide decl-closure does not silently grow past `NATIVE_DECIDE_DECL_CLOSURE_CEILING` (ADR-002).
+| Check | Enforces |
+|---|---|
+| `formula_grounding` | every `formulas.py` `Lean:` ref resolves to a real, non-placeholder theorem (Inv. 4) |
+| `proxy_body_audit` | no structurally-named theorem is closed by a trivial defining-the-conclusion body, unless disclosed in `MODELING_ASSUMPTION_THEOREMS` |
+| `tracked_hypothesis_ledger` | every consumed tracked-hypothesis Prop is registered (Inv. 16) |
+| `tracked_hypotheses_fresh` | `PERMANENT_TRACKED_HYPOTHESES.md` matches the registry (auto-regenerates) |
+| `placeholder_not_cited` | no paper presents a placeholder as formally verified (Inv. 9) |
+| `nogo_substrate_integrity` | every provably-false no-go has a live, kernel-pure, non-vacuous backing theorem (Inv. 17) |
+| `native_decide_regression` | the `native_decide` declaration closure does not grow past `NATIVE_DECIDE_DECL_CLOSURE_CEILING` (ADR-002; also Stage 5) |
 
-**Gate:** ALL checks pass (not just advisory warnings). Report archived to `docs/validation/reports/`.
+**Gate:** ALL checks pass, not merely advisory warnings. Report archived to
+`docs/validation/reports/`.
 
 ---
 
@@ -350,30 +338,26 @@ The suite is substantially larger than this core: `--list` also covers the bundl
 
 **Purpose:** Create publication-quality figures derived from validated computations.
 
-**Actions:**
-- Implement figure functions in `src/core/visualizations.py`
-- Each function: `def fig_<name>() -> go.Figure`
-- Register in `scripts/review_figures.py` (FigureSpec + func_map)
+- Implement figure functions in `src/core/visualizations.py` as `def fig_<name>() -> go.Figure`
+- Register in `scripts/review_figures.py` (`FigureSpec` + `func_map`)
 
 **Rules:**
 - `visualizations.py` is the ONLY place figure functions live
-- Functions MUST import data from `formulas.py` / `constants.py` / domain modules
-- NEVER hardcode physics values in figure functions
-- Use `COLORS` dict from `visualizations.py` — never hardcode hex values
-- Use `stakeholder=True` parameter for tech/stakeholder figure variants
+- Figures import data from `formulas.py` / `constants.py` / domain modules. **Never hardcode
+  physics values in a figure function.**
+- Use the `COLORS` dict; never hardcode hex values. Plotly only, colorblind-accessible blue/amber.
+- `stakeholder=True` selects the stakeholder variant
 
 ```bash
 uv run python scripts/review_figures.py
 ```
 
-**Bundle figure adequacy (ADR-011 Phase 4).** A bundle must carry the figures its tier owes
-a reader: `validate.py --check bundle_figure_adequacy`. This exists because the lift
-procedure only ever *migrated* figures that already existed, so **9 of 21 bundles shipped
-zero**, and neither Stage 9 nor `paper_provenance` could object — both are vacuously true
-over an empty figure set. A figure that is planned but not yet drawn is declared with
-`\figuredeferred{id}{reason}` rather than omitted silently.
+**Figure adequacy.** A bundle must carry the figures its tier owes a reader:
+`validate.py --check bundle_figure_adequacy`. A figure that is planned but not yet drawn is
+declared with `\figuredeferred{id}{reason}`, never omitted silently.
 
-**Gate:** All PNGs generated with zero failures. All registered figures have corresponding functions.
+**Gate:** all PNGs generated with zero failures; all registered figures have functions; figure
+adequacy met.
 
 ---
 
@@ -381,24 +365,17 @@ over an empty figure set. A figure that is planned but not yet drawn is declared
 
 **Purpose:** Catch rendering issues that automated tests cannot detect.
 
-**Actions:**
-- Run LLM figure review agent (`skeft-qa:figure-reviewer` plugin agent)
-- Fix ALL issues flagged as FAIL or MINOR in `visualizations.py`
-- Regenerate PNGs, re-review until ALL PASS
+- Run the `skeft-qa:figure-reviewer` agent
+- Fix ALL issues flagged FAIL or MINOR in `visualizations.py`, regenerate, re-review until all PASS
 - Report saved to `figures/figure_review_report.json`
 
-**Recording the verdict (ADR-011 Phase 2).** Reviewer-stage verdicts are written by
-`scripts/record_review.py`, not by hand:
+**Record the verdict with the script, never by hand:**
 
 ```bash
 uv run python scripts/record_review.py --bundle <X> --stage 9 --verdict green --doc <report>
 ```
 
-Until 2026-08-08 no code path wrote `green` to any `stage*_status` — creation set `pending`
-and append demoted `green` back to it — so every green was a hand edit and bundle status
-could not be read as evidence of review.
-
-**Gate:** All figures PASS LLM review. No FAIL, no MINOR remaining.
+**Gate:** all figures PASS. No FAIL, no MINOR remaining, verdict recorded.
 
 ---
 
@@ -406,110 +383,82 @@ could not be read as evidence of review.
 
 **Purpose:** Write the paper with full provenance for every claim.
 
-**Scope note — "Stage 10" names the whole stage, drafting *and* its claims-review gate.**
-The claims review below is a sub-gate of this stage, not a stage of its own; the stage does
-not close until it is clean. `docs/BUNDLE_LIFT_PROCEDURE.md` §9 and `gate_precheck.py s10`
-both use "Stage 10" as shorthand for that sub-gate specifically, which is the same stage
-narrowed to its exit condition — there is no second Stage 10.
+**"Stage 10" names the whole stage — drafting and its review sub-gates.** The stage does not close
+until they are clean. There is no Stage 10a and no renumbering.
 
-**Two paradigms apply, depending on phase:**
+**Two paradigms:**
+- **Phase ≤ 6X** (per-paper drafts in `papers/paperN_*/`): the actions below are canonical.
+- **Phase 7+** (bundle drafts in `papers/<bundle>/`): Stage 10 is implemented by
+  `docs/BUNDLE_LIFT_PROCEDURE.md`, the canonical 14-step lift procedure. The actions below remain
+  the substrate it draws from. Late-arriving Phase 6X waves are absorbed via
+  `docs/LATE_PHASE6_ABSORPTION_PROTOCOL.md` (Stages A–G, branches D.0–D.4).
 
-- **Phase ≤ 6X (per-paper drafts in `papers/paperN_*/`):** the actions in this section are canonical.
-- **Phase 7+ (bundle drafts in `papers/<bundle>/`, for any code in `validate.BUNDLE_CODES`):** Stage 10 is implemented by the **canonical bundle-lift procedure** documented in `docs/BUNDLE_LIFT_PROCEDURE.md` (frozen at Phase 7a sub-wave 7a.4, 2026-05-01). The bundle-lift procedure is *the* Stage 10 activity for Phase 7+; the per-paper actions below remain as the substrate framework that bundle-lift §3a/§3b draws from. Late-Phase-6 absorption events follow `docs/LATE_PHASE6_ABSORPTION_PROTOCOL.md` (Stages A–G with branches D.1/D.2/D.3/D.4).
+**Actions:**
+- Copy validated PNGs to the paper's `figures/`; use `\includegraphics`, never `\fbox` placeholders
+- Every numerical claim traces to `formulas.py` or `constants.py`
+- Every "formally verified" claim cites specific Lean theorem names; every Aristotle reference
+  includes its run ID
+- Qualitative claims (feasibility, detectability) are supported by computed quantities
+- No hardcoded numbers in the `.tex` that are not also in the computation pipeline
+- Standard phrasing for a verification claim: "X theorems in `<Module>.lean`, verified by
+  `lake build` (zero sorry). Z filled by the Aristotle automated prover [run IDs]."
 
-**Actions (per-paper paradigm; substrate for bundle paradigm):**
-- Copy validated PNGs to `papers/paper<N>_<name>/figures/`
-- Write/update `.tex` with `\includegraphics` — NEVER use `\fbox` placeholders
-- Every numerical claim must trace to `formulas.py` or `constants.py`
-- Every "formally verified" claim must cite specific Lean theorem names
-- Every Aristotle reference must include run ID
-- Use phrasing: "X theorems in Y.lean, verified by `lake build` (zero sorry). Z filled by the Aristotle automated prover [run IDs]."
-- Qualitative claims (feasibility, detectability) must be supported by computed quantities — no hallucinated optimism
-- No hardcoded numbers in tex that aren't also in the computation pipeline
+**Drafting guidance** is the `skeft-qa:paper-authoring` skill. It and the `prose-reviewer` agent
+read the same `references/prohibited-patterns.md`, so a rule cannot mean one thing while writing
+and another while reviewing.
 
-**Paper Claims Review (`skeft-qa:claims-reviewer` — runs after Stage 10, before Stage 11):**
+### Sub-gate: read-through (runs first)
 
-After writing or updating a paper draft, run the paper claims reviewer agent
-(`skeft-qa:claims-reviewer` plugin). This is analogous to the figure reviewer
-(`skeft-qa:figure-reviewer`) in Stage 9 — an LLM sweep that checks content
-accuracy, not just formatting.
+The `prose-reviewer` agent reads the draft start to finish as a referee at its named venue, and
+returns a restructuring instruction. It runs at `BUNDLE_LIFT_PROCEDURE.md` §7.5 — **before the
+claims review and before Stage 9.**
 
-The agent reads each paper's `.tex` and cross-references against:
-1. `PAPER_DEPENDENCIES` in `provenance.py` — declared formulas, Lean modules, key claims
-2. `formulas.py` — recomputes numerical values and compares to paper tables
-3. `PARAMETER_PROVENANCE` — checks all referenced parameters are verified
-4. `CITATION_REGISTRY` — checks all cited papers have valid DOIs
-5. `ARISTOTLE_THEOREMS` — checks "formally verified" claims match actual proof status
+### Sub-gate: claims review
 
-The agent reports:
-- **FAIL**: numerical value in paper disagrees with computation by >0.5%
-- **FAIL**: "formally verified" claim but theorem not in Lean or has sorry
-- **FAIL**: "formally verified" claim cites a **placeholder** theorem — a
-  `True := trivial` stub registered in `PLACEHOLDER_THEOREMS` (matched by its
-  `lean_name` OR its published-claim `tex_signature`), OR a result presented
-  as kernel-verified that is actually only a concrete-instance / statement-level
-  stub (Invariant #9; Substrate Integrity Gates R5). The deterministic backstop
-  is `validate.py --check placeholder_not_cited`; the agent additionally catches
-  the conceptual form where the paper names the claim in prose/math notation
-  rather than by the Lean decl name (the paper7 `Z(Vec_G)≅Rep(D(G))` case).
-- **FAIL**: cited reference DOI doesn't resolve or is wrong paper
-- **WARN**: parameter referenced but not human-verified (blocks submission)
-- **WARN**: qualitative claim without computed support
-- **PASS**: claim verified against computation pipeline
+Run `skeft-qa:claims-reviewer`. It cross-references the `.tex` against `PAPER_DEPENDENCIES`,
+`formulas.py`, `PARAMETER_PROVENANCE`, `CITATION_REGISTRY` and `ARISTOTLE_THEOREMS`, and reports:
 
-Results saved to `papers/paper<N>/claims_review.json`.
+- **FAIL** — a numerical value disagrees with computation by >0.5%
+- **FAIL** — a "formally verified" claim whose theorem is missing or has a `sorry`
+- **FAIL** — a "formally verified" claim citing a **placeholder** theorem, or a result presented as
+  kernel-verified that is only a concrete-instance or statement-level stub (Invariant 9)
+- **FAIL** — a cited DOI that does not resolve, or resolves to the wrong paper
+- **WARN** — a parameter referenced but not human-verified (blocks submission)
+- **WARN** — a qualitative claim without computed support
 
-**Stage 10 has two review sub-gates, and the read-through comes first.** The claims review
-below is one; the whole-document read-through (`prose-reviewer`, ADR-011 Phase 5) is the
-other, and it runs before both it and Stage 9 — see `BUNDLE_LIFT_PROCEDURE.md` §7.5.
-Neither is a stage of its own: **there is no Stage 10a and no renumbering**, because the
-stage numbers are load-bearing in four places (the `stage{9,10,13}_status` fields, the
-`gate_precheck.py` vocabulary, paper 15's Table 1, and every document citing "Stage 13").
+Results saved to `papers/<key>/claims_review.json`.
 
-Drafting guidance lives in the `skeft-qa:paper-authoring` skill. It is the generative
-counterpart to the reviewer, and both read the same
-`references/prohibited-patterns.md` so a rule cannot mean one thing while writing and
-another while reviewing. The reviewer alone carries reader-outcome questions.
+### Reader-facing voice
 
-**Reader-facing voice (ADR-011 Phase 3).** Two prohibitions apply to every draft, both
-deterministic and both enforced:
+Two prohibitions apply to every draft, both deterministic and both enforced:
 
-- **No em-dash in prose a reader will see** (`validate.py --check bundle_prose_em_dash_free`).
-  An em-dash signals AI authorship to a 2026 reader and costs trust, so the target is zero
-  rather than a density. Removing one is a *rewrite*, not a substitution. **`--` is a
-  different character and is mandatory** — `Bose--Einstein`, `Schwinger--Keldysh`, page
-  ranges — and the check cannot see a broken en-dash, so that rule lives in the authoring
-  reference where a human reads it.
-- **A fix may not narrate itself** (`--check bundle_reader_facing_voice`). The manuscript
-  states what is true; it does not report what an earlier draft said, when it was corrected,
-  or which review round caught it. The history belongs in `change_log.md` and the
-  supersession ledger.
+- **No em-dash in prose a reader will see** (`bundle_prose_em_dash_free`). The target is zero.
+  Removing one is a *rewrite*, not a substitution. **`--` is a different character and is
+  mandatory** (`Bose--Einstein`, `Schwinger--Keldysh`, page ranges); the check cannot see a broken
+  en-dash, so that rule lives in the authoring reference.
+- **A fix may not narrate itself** (`bundle_reader_facing_voice`). The manuscript states what is
+  true. It does not report what an earlier draft said, when it was corrected, or which review round
+  caught it. That history belongs in `change_log.md` and the supersession ledger.
 
-Everything else about prose — length, structure, whether the argument carries — belongs to
-the read-through reviewer, not to a check. The deterministic set is deliberately narrow:
-a proposed vocabulary denylist measured 90 hits of which 48 were legitimate subject matter
-in the methodology paper, and a generic AI-slop denylist measured 11 hits across 20 markers
-with 17 at zero.
+Everything else about prose — length, structure, whether the argument carries — belongs to the
+read-through reviewer, not to a check.
 
-**Manuscript length (ADR-011 Phase 1).** A bundle declares the size its venue requires in
-`bundle_metadata.json.length_target` (schema + semantics: `docs/BUNDLE_DIRECTORY_SCHEMA.md`),
-and `validate.py --check bundle_manuscript_length` measures the **compiled** article against it.
+### Manuscript length
 
-Both bounds are load-bearing, and they catch different failures. The ceiling catches a letter
-that has become a monograph. The **floor** catches the failure this corpus actually exhibited:
-a container declared as a deep paper whose content is a letter. Neither was measured anywhere
-before 2026-08-08 — `compile_bundle_pdf.py` computed the page count and discarded it — which is
-how two Tier-1 bundles were closed GREEN at a small fraction of their declared target.
+A bundle declares the size its venue requires in `bundle_metadata.json.length_target` (schema:
+`docs/BUNDLE_DIRECTORY_SCHEMA.md`), and `bundle_manuscript_length` measures the **compiled**
+article against it. Both bounds are load-bearing: the ceiling catches a letter that became a
+monograph, the floor catches a container declared as a deep paper whose content is a letter.
 
-`length_target: null` is a legitimate state for a bundle whose venue is still open, and it reads
-**UNMEASURED, never PASS**. So does a draft with no compiled PDF, or one whose PDF is older than
-its own input closure. Re-targeting a bundle is an edit to that field and its `source` — the
-target is data with provenance, not a constant (ADR-010 §Open item 1).
+`length_target: null` is legitimate for a bundle whose venue is still open, and reads
+**UNMEASURED, never PASS** — as does a draft with no compiled PDF, or one whose PDF is older than
+its own input closure. Re-targeting a bundle is an edit to that field and its `source`: the target
+is data with provenance, not a constant.
 
-**Gate:** `validate.py --check paper_provenance` passes for this paper
-AND paper claims review has zero FAIL
-AND `validate.py --check bundle_manuscript_length` reports this bundle inside its declared band
-(or records, by name, why it could not be measured).
+**Gate:** `validate.py --check paper_provenance` passes **AND** claims review has zero FAIL
+**AND** the read-through's restructuring instruction is resolved **AND**
+`--check bundle_manuscript_length` reports the bundle inside its declared band, or records by name
+why it could not be measured.
 
 ---
 
@@ -517,17 +466,15 @@ AND `validate.py --check bundle_manuscript_length` reports this bundle inside it
 
 **Purpose:** Create reproducible computational narratives.
 
-**Actions:**
-- **Technical notebook:** Matches paper structure, imports all physics from `src/` modules
-- **Stakeholder notebook:** Accessible language, same physics imports, teaching-oriented
-- Tag all figure cells with `# viz-ref: fig_<name>` matching `visualizations.py` function names
-- Import `COLORS` from `src.core.visualizations` (NOT `src.core.constants`)
-- No inline physics redefinition (CHECK 6 catches this)
-- No evaluative print statements in code cells (commentary goes in markdown cells)
-- Narrative text must be consistent with computed values displayed in the notebook
+- **Technical notebook** mirrors paper structure; **stakeholder notebook** uses accessible language.
+  Both import all physics from `src/`.
+- Tag figure cells `# viz-ref: fig_<name>` matching the `visualizations.py` function
+- Import `COLORS` from `src.core.visualizations`, not `src.core.constants`
+- No inline physics redefinition; no evaluative print statements in code cells (commentary goes in
+  markdown); narrative text must agree with the computed values displayed
 
-**Naming convention:** `Phase<N><letter>_<Topic>_Technical.ipynb` / `_Stakeholder.ipynb`
-- Example: `Phase3b_GaugeErasure_Technical.ipynb`
+**Naming:** `Phase<N><letter>_<Topic>_Technical.ipynb` / `_Stakeholder.ipynb` — for example
+`Phase3b_GaugeErasure_Technical.ipynb`.
 
 **Gate:** `validate.py --check notebook_exec` and `--check viz_consistency` pass.
 
@@ -535,294 +482,337 @@ AND `validate.py --check bundle_manuscript_length` reports this bundle inside it
 
 ## Stage 12: DOCUMENT SYNC
 
-**Purpose:** Ensure all project documentation reflects the current state.
-
-**Actions — run the automated pipeline, then update content-sensitive docs:**
+**Purpose:** Ensure all documentation reflects the current state.
 
 ```bash
-# Step 1: Run validate.py (triggers lean_deps.json refresh automatically if stale)
-uv run python scripts/validate.py
-
-# Step 2: Generate counts.json + counts.tex (single source of truth)
-uv run python scripts/update_counts.py
-
-# Step 3: Regenerate paper tables from per-paper tables.py specs
+uv run python scripts/validate.py           # refreshes lean_deps.json if stale
+uv run python scripts/update_counts.py      # counts.json + counts.tex
 uv run python scripts/render_paper_tables.py
 ```
 
-**Lean dependency extraction** is managed by `scripts/extract_lean_deps.py`, which:
-- Hashes all `.lean` source files to detect changes
-- Only re-runs `ExtractDeps.lean` when the hash differs from cached
-- Writes output to `lean/lean_deps.json` with a hash file at `lean/lean_deps.json.hash`
-- Is called automatically by `validate.py --check graph_integrity`
+Or run the whole mechanical sync in one command with the `skeft-qa:sync` skill.
 
-`docs/counts.json` is the authoritative source for ALL project counts.
-`docs/counts.tex` provides LaTeX macros (\totaltheorems, \sorrycount, etc.) for papers.
+`docs/counts.json` is authoritative for ALL project counts; `docs/counts.tex` provides the LaTeX
+macros. Lean dependency extraction is managed by `scripts/extract_lean_deps.py`, which re-runs
+`ExtractDeps.lean` only when the source hash changes. **Never delete `lean_deps.json.hash` to
+force a refresh** — run `update_counts.py`.
 
-**Paper tabular numerical content (Phase 5v+).** Each paper that has
-autogenerated tables declares its data sources in
-`papers/<paper_key>/tables.py` using the `Col` + `TABLES` spec format
-(see `scripts/paper_tables/__init__.py`). Each spec identifies a row
-generator from `scripts/paper_tables/sources.py` plus column layout.
-`render_paper_tables.py` walks every spec, renders a complete
-`\\begin{tabular}...\\end{tabular}` block to
-`papers/<paper_key>/tables/<spec_id>.tex`, and the paper body
-`\\input{}`s the generated file. This means tabular numerical claims
-are **structurally fresh** — the paper cannot ship a value that drifts
-from the canonical pipeline.
+**Paper tables.** Each paper with autogenerated tables declares its data sources in
+`papers/<key>/tables.py` using the `Col` + `TABLES` spec format. `render_paper_tables.py` renders
+each spec to `papers/<key>/tables/<spec_id>.tex`, and the paper body `\input{}`s it, so tabular
+numerical claims are structurally fresh. `tables_fresh` auto-regenerates stale tables;
+`numerical_literals` flags inline literals outside `\input{}` blocks.
 
-Validation + enforcement:
-- `validate.py --check tables_fresh` auto-regenerates stale tables
-  (same staleness pattern as `counts_fresh`)
-- `validate.py --check numerical_literals` flags inline numerical
-  literals outside `\\input{tables/*.tex}` blocks as WARN during
-  retrofit; escalates to FAIL once all papers use `\\input{}`
-- Readiness gate `NumericalFreshness` (gate 9) rolls both count-level
-  and table-level freshness into a single paper-submission gate
+To add a table: pick a row generator in `scripts/paper_tables/sources.py` (or add one), add the
+spec entry, replace the inline rows in `paper_draft.tex` with `\input{tables/<spec_id>.tex}`
+(keeping the `\begin{table}` caption envelope), and run
+`render_paper_tables.py --paper <key>`.
 
-Adding a new paper table:
-1. Pick a row generator from `scripts/paper_tables/sources.py` (or
-   add a new one there if the data shape is novel)
-2. Add an entry to `papers/<paper_key>/tables.py` with `columns` + the
-   `rows` callable
-3. In the paper's `paper_draft.tex`, replace inline data rows with
-   `\\input{tables/<spec_id>.tex}` (keeping the `\\begin{table}` +
-   caption envelope)
-4. Run `uv run python scripts/render_paper_tables.py --paper <key>`
+**Content-sensitive documents require judgment and must stay in sync:**
 
-**Content-sensitive docs (NOT automated — require human/LLM judgment) MUST STAY IN SYNC:**
+| Category | File | What to update |
+|---|---|---|
+| Code | `src/__init__.py`, `src/core/constants.py` | phase summary in header (not counts) |
+| Root | `README.md` | project tree, architecture description |
+| Root | `SK_EFT_Hawking_Inventory.md` | module descriptions, section content |
+| Root | `CLAUDE.md` | bootstrap map, Lean rules, invariants, conventions |
+| Root | `../CLAUDE.md` (workspace) | workspace layout, public/private boundary |
+| Docs | `docs/RESEARCH_STATUS_OVERVIEW.md` | proof chains, strategic situation |
+| Stakeholder | `docs/stakeholder/companion_guide.md` | status table + content synthesis |
+| Stakeholder | `docs/stakeholder/Phase<N>_Implications.md` | content for this phase |
+| Stakeholder | `docs/stakeholder/Phase<N>_Strategic_Positioning.md` | content for this phase |
+| Reference | `docs/Fluid-Based...Feasibility Study.md` | SK-EFT row in the validation table |
+| Reference | `docs/Fluid-Based...Critical Review v3.md` | SK-EFT row in the evidence table |
+| Inventory | `SK_EFT_Hawking_Inventory_Index.md` | counts table, section→update mapping |
 
-| Category | Files | What to update |
-|----------|-------|---------------|
-| **Code** | `src/__init__.py` | Phase summary (not counts — use counts.json) |
-| **Code** | `src/core/constants.py` | Phase summary in header |
-| **Root** | `README.md` | Project tree, architecture description |
-| **Root** | `SK_EFT_Hawking_Inventory.md` | Module descriptions, section content |
-| **Root** | `CLAUDE.md` (this repo) | Bootstrap: when-to-read map, Lean loop rules, invariants, conventions |
-| **Root** | `../CLAUDE.md` (workspace root) | Workspace layout, public/private repo boundary, cross-repo rules |
-| **Docs** | `docs/RESEARCH_STATUS_OVERVIEW.md` | Proof Chains, strategic situation, module inventory |
-| **Stakeholder** | `docs/stakeholder/companion_guide.md` | Status table + content synthesis |
-| **Stakeholder** | `docs/stakeholder/Phase<N>_Implications.md` | Content for this phase |
-| **Stakeholder** | `docs/stakeholder/Phase<N>_Strategic_Positioning.md` | Content for this phase |
-| **Reference** | `docs/Fluid-Based...Feasibility Study.md` | SK-EFT row in validation table |
-| **Reference** | `docs/Fluid-Based...Critical Review v3.md` | SK-EFT row in evidence table |
-| **Inventory** | `SK_EFT_Hawking_Inventory.md` | All sections (see Inventory_Index.md for what to update) |
-| **Inventory Index** | `SK_EFT_Hawking_Inventory_Index.md` | Counts table + section→update mapping |
+**Content accuracy is the primary concern; count agreement is a secondary mechanical check.**
+Physics descriptions must match the code, phase boundaries must match computed values, and
+feasibility claims must be supported by calculations.
 
-**Content must be consistent across all documents.** This means: physics descriptions match the code, phase boundaries match computed values, feasibility claims are supported by calculations, and all narratives reflect the current state of the research. Count agreement (theorems, tests, figures, etc.) is a secondary mechanical check — content accuracy is the primary concern.
+**Inventory maintenance.** Read `SK_EFT_Hawking_Inventory_Index.md` first to learn which sections a
+given change touches. Then: run the Index's verification commands for ground truth → update the
+Inventory's sections → update the Index's counts table and "Last synced" date → spot-check three
+recently altered sections against the codebase.
 
-### Inventory Maintenance Protocol
+Watch for: new modules absent from Section 1; new theorems missing from the Section 2 table; new
+Aristotle runs missing from Section 3; new notebooks or papers missing from Sections 4–5; formula
+changes absent from Section 10; and descriptions that still reference superseded behavior.
 
-The Inventory (`SK_EFT_Hawking_Inventory.md`) is the comprehensive source of truth. The Index (`SK_EFT_Hawking_Inventory_Index.md`) is the LLM-friendly quick reference.
+**Validation reports.** `docs/validation/reports/` is auto-generated and needs no maintenance.
+`docs/validation/lean_quality_audit.md` holds manual audit snapshots — create a new one per wave,
+never update an old one in place. `docs/validation/VALIDATION_REPORT.md` is deprecated, superseded
+by `validate.py`, and kept only for historical reference.
 
-**Before updating:** Read `SK_EFT_Hawking_Inventory_Index.md` to understand which sections need updates and the verification commands for each count.
-
-**Update procedure:**
-1. Run the verification commands from the Index's "Counts" table to get ground truth
-2. Update the Inventory's relevant sections (the Index tells you which sections to update for each type of change)
-3. Update the Index's "Counts" table
-4. Update the Index's "Last synced" date
-5. Spot-check: read 3 recently altered sections of the Inventory and verify they match the current codebase
-
-**Common staleness patterns to watch for:**
-- New modules added but not listed in Section 1
-- New Lean theorems but Section 2 table not updated
-- New Aristotle runs but Section 3 table not updated
-- New notebooks/papers but Sections 4-5 not updated
-- Formula changes in formulas.py but Section 10 not updated
-- Test count changes but Section 6 not updated
-- Descriptions that reference old behavior (e.g., "hardcoded constants" after consolidation)
-
-### Validation Reports
-
-- `docs/validation/reports/` — Timestamped archives from `validate.py` (auto-generated, no maintenance needed)
-- `docs/validation/lean_quality_audit.md` — Manual audit snapshots. Create new ones per wave; do not update old ones in place.
-- `docs/validation/VALIDATION_REPORT.md` — Deprecated; superseded by `validate.py` automated checks. Kept for historical reference only.
-
-**Gate:** `validate.py` full suite passes. Manual spot-check of 3 count-sensitive files confirms consistency.
+**Gate:** full `validate.py` passes; manual spot-check of three count-sensitive files confirms
+consistency.
 
 ---
 
 ## Stage 13: ADVERSARIAL REVIEW
 
-**Purpose:** Catch every failure class that Stages 1–12 cannot detect by construction — wrong-target citations, parameter drift from primary sources, Lean theorems cited as "verified" but discharged as placeholders, cross-paper contradictions, narrative overclaims, and production-run claims without backing evidence.
+**Purpose:** Catch the failure classes Stages 1–12 cannot detect by construction — wrong-target
+citations, parameter drift, placeholder theorems cited as verified, cross-paper contradictions,
+narrative overclaims, and production-run claims without backing evidence.
 
-This stage exists because the April 2026 external adversarial-review round found a 13-dimension problem space that slipped through the 12-stage internal pipeline. The detail is in `docs/READINESS_GATES.md` — the canonical definition of the 11 readiness gates this stage backstops.
+`docs/READINESS_GATES.md` is the canonical definition of the 11 readiness gates this stage
+backstops.
 
 **Actions:**
 
-0. **Stages 9 and 10 must be GREEN first** (`BUNDLE_LIFT_PROCEDURE.md:9`). Enforced two ways
-   since ADR-011 Phase 2: `scripts/record_review.py` refuses to record a Stage-13 green while
-   either prerequisite is unfinished, and `validate.py --check bundle_reviewer_stage_ordering`
-   catches a hand edit that bypasses it. A Stage-13 verdict also requires
-   `--kind`; only `full-adversarial` earns a green, because a targeted attribution sweep and
-   a full fresh-context pass are different evidence and the metadata previously could not
-   tell them apart.
-1. Ensure Stages 1–12 are all green (`validate.py` passes). Stage 13 is meaningful only on a codebase that passes its own internal checks.
-2. Invoke the `adversarial-reviewer` agent (`.claude/plugins/skeft-qa/agents/adversarial-reviewer.md`) with the target paper key:
-   > "Run the adversarial-reviewer on `paper<N>_<name>`"
-3. The agent runs in a fresh-context Opus window and works 8 finding-classes in order (one per readiness gate). It emits a structured markdown report at:
-   ```
-   papers/AutomatedReviews/{YYYY-MM-DD-HHMM}-internal-adversarial/{paper_key}.md
-   ```
-4. Findings are auto-picked up by `scripts/build_graph.extract_review_finding_nodes` on next graph build — each finding becomes a `ReviewFinding` node with `FLAGS` edges to the paper; `BLOCKER` findings also flip the affected `ReadinessGate` to `blocked`.
-5. Re-run `validate.py --check readiness_submission_gate` — the paper's aggregate state surfaces in the summary (green / yellow / red).
+0. **Stages 9 and 10 must be GREEN first.** `scripts/record_review.py` refuses to record a
+   Stage-13 green while either prerequisite is unfinished, and
+   `validate.py --check bundle_reviewer_stage_ordering` catches a hand edit that bypasses it. A
+   Stage-13 verdict also requires `--kind`; only `full-adversarial` earns a green.
+1. Ensure Stages 1–12 are green. Stage 13 is meaningful only on a codebase passing its own checks.
+2. Invoke the `skeft-qa:adversarial-reviewer` agent with the target key. It runs in a fresh context
+   and works the finding classes in order, emitting
+   `papers/AutomatedReviews/{YYYY-MM-DD-HHMM}-internal-adversarial/{key}.md`.
+3. Findings are picked up by `scripts/build_graph.py`'s `extract_review_finding_nodes` on the next
+   graph build.
+   Each becomes a `ReviewFinding` node with `FLAGS` edges to the paper; `BLOCKER` findings flip the
+   affected `ReadinessGate` to `blocked`.
+4. Re-run `validate.py --check readiness_submission_gate`.
 
 **Rules:**
+- One invocation = one paper per report file. Do not batch across papers.
+- **Citation findings of any kind are BLOCKER at submission time, no exceptions.**
+- A finding marked `fixed` by the author must pass a **re-invocation** showing no new BLOCKERs in
+  that class before the gate flips back to `passed`. "The author says it's fixed" is not evidence;
+  the re-run is evidence.
+- **Do NOT use Stage 13 to fix issues.** The output is findings-only. The author fixes, the author
+  re-invokes. Separating the fix and review roles is the whole reason the agent exists.
+- A systemic finding (a class affecting multiple papers, or a pipeline gap) is emitted as a
+  `## QI Candidate` section, feeding Stage 14.
 
-- One agent invocation = one paper per report file. Do not batch across papers.
-- Citation findings of any kind are **BLOCKER** at submission time, no exceptions. Two layers of citation infrastructure back this:
-  - `docs/citation_verifications.jsonl` (metadata cache) + `scripts/citation_cache.py` — amortizes Crossref / arXiv resolution at most once per 90 days per (bibkey, bibitem_hash) pair.
-  - `Lit-Search/Phase-X/primary-sources/<bibkey>.{pdf,abstract.txt,json}` (content cache) + `scripts/back_fill_primary_sources.py` — grounds every external bibitem in the actual primary source, structurally preventing the hallucinated-citation failure mode (e.g., the paper40 round-1 incident where a wrong-target arXiv ID was cited). Enforced by `validate.py --check citation_primary_sources_present`.
-- Findings marked `fixed` by the author must pass a **re-invocation** showing no new BLOCKERs in the affected class before the gate flips back to `passed`. "The author says it's fixed" is not evidence; the re-run is evidence.
-- If the agent surfaces a systemic finding (a failure class that affects multiple papers or indicates a pipeline gap), it emits a `## QI Candidate` section — that feeds Stage 14.
+**Bundle-level review.** Stage 13 may be invoked at the bundle level. `skeft-qa:claims-reviewer`
+and `skeft-qa:figure-reviewer` accept a `bundle_target` and execute the per-bundle profile from
+`docs/agents/claims-reviewer-bundle-prompts.md`:
 
-**Gate:** Every paper marked "submission-pending" has ZERO `BLOCKER` findings under `papers/AutomatedReviews/` with `status != fixed`. `validate.py --check readiness_submission_gate` shows no RED papers among submission candidates.
+| Tier | Bundles | Profile |
+|---|---|---|
+| 0 | F | review-paper style: verify cited published claims against the citation cache |
+| 1 | D1–D12 | intra-bundle consistency across lifted sections + cross-bundle bridge checks |
+| 2 | L1–L3 | stand-alone PRL depth; do not penalize absent broader scope |
+| 3 | I1–I3 | software/methodology: each worked case traces to a reproducible run ID or pinned counterexample |
+| 4 | E1, E2 | lightweight letter review + device-parameter audit |
 
-**Do NOT use Stage 13 to fix issues.** The agent output is findings-only. The author fixes; the author re-invokes. Separation of the fix-and-review roles is the whole reason the agent exists.
+`scripts/review_runner.py --bundle <target> --prep-brief` emits the review-prep brief; the review
+document goes to `papers/AutomatedReviews/<DATE>-bundle-stage13/<bundle>.md`. Aggregated readiness
+is in `docs/BUNDLE_READINESS_HEATMAP.md` (regenerated by `scripts/bundle_readiness.py`);
+cross-bundle consistency is enforced by
+`validate.py --check bundle_consistency`; bundle source freshness by `--check
+bundle_source_freshness`.
 
-**Bundle-level review (Phase 6i Wave 7).** When a wave's output lifts into a Tier 1+ bundle (Wave 7 paper-bundle architecture), Stage 13 may also be invoked at the *bundle* level rather than the per-paper level. The reviewers (`skeft-qa:claims-reviewer`, `skeft-qa:figure-reviewer`) accept a `bundle_target` argument and execute the per-bundle profile per the anchor list at `docs/agents/claims-reviewer-bundle-prompts.md`:
-
-- **Tier 0 (F):** review-paper style — verify cited published L*/D* claims against the citation cache.
-- **Tier 1 (D1–D5):** intra-bundle consistency across lifted sections + cross-bundle cross-bridge checks.
-- **Tier 2 (L1–L3):** stand-alone PRL depth; do not penalize absent broader scope; carry the bundle-specific anchor.
-- **Tier 3 (I1, I2):** software/methodology review — each worked case must trace to a reproducible Aristotle run ID or commit-pinned counterexample.
-- **Tier 4 (E1, E2):** lightweight letter review + device-parameter audit pass.
-
-The orchestrator `scripts/review_runner.py --bundle <target> --prep-brief` emits a per-bundle review-prep brief; output review document goes to `papers/AutomatedReviews/<DATE>-bundle-stage13/<bundle>.md`. Per-bundle aggregated readiness is summarized in `docs/BUNDLE_READINESS_HEATMAP.md` (auto-regenerated by `scripts/bundle_readiness.py`). Cross-bundle consistency is enforced by `validate.py --check bundle_consistency` (Phase 6i Wave 7.3) which walks `papers/cluster_bundle_index.json` (Phase 6i Wave 7.1) and flags member-sentence drift across bundle boundaries.
-
-**Bundle lift workflow (Phase 7a sub-wave 7a.1.5).** The full 14-step canonical procedure for lifting per-paper draft content into a publication bundle is documented in `docs/BUNDLE_LIFT_PROCEDURE.md`. The procedure separates Stages 9, 10, 13 as three distinct reviewer-agent invocations (no conflation), bookkeeps via `papers/<X>/bundle_metadata.json` (schema in `docs/BUNDLE_DIRECTORY_SCHEMA.md`), and is consumed by every Phase 7 sub-phase (7a–7g). Late-arriving Phase 6X waves are absorbed into already-drafted bundles via `docs/LATE_PHASE6_ABSORPTION_PROTOCOL.md` (Phase 7a sub-wave 7a.1.6 deliverable; Stages A–G with branches D.1/D.2/D.3). Bundle source freshness is enforced by `validate.py --check bundle_source_freshness` (CHECK 22; Phase 7a sub-wave 7a.1.4).
+**Gate:** every paper marked submission-pending has ZERO `BLOCKER` findings with `status != fixed`,
+and `--check readiness_submission_gate` shows no RED papers among submission candidates.
 
 ---
 
 ## Stage 14: META-PROCESS QUALITY IMPROVEMENT (advisory)
 
-**Purpose:** Surface systemic issues — recurring failure classes across papers or evidence of pipeline gaps — and track them as improvement items with owners and deadlines. Stage 13 catches paper-level issues; Stage 14 catches process-level issues.
+**Purpose:** Surface systemic issues — a failure class recurring across papers, or evidence of a
+gap the pipeline cannot enforce. Stage 13 catches paper-level issues; Stage 14 catches
+process-level ones.
 
 **Actions:**
-
-1. Scan `ReviewFinding` nodes across all papers for patterns: findings with the same `pattern_class` appearing in ≥2 papers, or findings that indicate a gate the pipeline can't enforce automatically.
-2. Emit QI items to `docs/QI_REGISTER.md` (auto-generated). Each item carries: id, pattern summary, first_observed_date, occurrence_count, pipeline_stage_affected, owner, target_date, status, evidence_on_close.
-3. User-facing report emitted to `docs/QI_REGISTER_{date}.md` on each Stage 14 run (timestamped snapshot).
-4. Dashboard "Process Health" tab surfaces open QI items + trend of findings-per-category over time.
+1. Scan `ReviewFinding` nodes for patterns: the same `pattern_class` in ≥2 papers, or findings
+   indicating a gate that cannot be automated.
+2. Emit QI items to `docs/QI_REGISTER.md`, each carrying id, pattern summary, first-observed date,
+   occurrence count, pipeline stage affected, owner, target date, status, evidence on close.
+3. Emit the timestamped snapshot `docs/QI_REGISTER_{date}.md`.
+4. The dashboard "Process Health" tab surfaces open items and the findings-per-category trend.
 
 **Rules:**
+- Stage 14 is **advisory** and never blocks submission.
+- A `severity == critical` item (a gate that allowed a correctness violation to ship) escalates to
+  a remediation wave.
+- Closed items carry `evidence_on_close` pointing to the commit or wave that remediated the pattern.
 
-- Stage 14 is **advisory** — it never blocks submission. Its purpose is feeding pipeline improvements back into Phase 5v+ work.
-- If a QI item's `severity == critical` (indicates a gate that allowed a correctness violation to ship), the item gets escalated to a Phase 5w+ remediation wave. Example: the April round's 13-dimension problem space is captured as the QI register's seed data.
-- Closed QI items have an `evidence_on_close` field pointing to the commit or wave that remediated the pattern.
+**Closure pathways.** A QI item closes by one or more of:
 
-**Closure pathways (Phase 6i convention):**
+1. **Per-finding supersession** — every underlying `ReviewFinding` gets a record in
+   `docs/review_finding_supersessions.json` flipping `meta.status` to `fixed` or `accepted`.
+2. **Structural prevention** — a wave installs durable infrastructure that prevents the class from
+   recurring. Recorded by moving the item to `## Closed Items` with `evidence_on_close` naming the
+   new infrastructure.
+3. **No-applicable-scope acceptance** — the finding's body is itself a PASS-verification or a scope
+   disclosure, accepted via supersession with no content fix.
 
-A QI item closes via one of three pathways, individually or in combination:
+**Any class with a live generator may close ONLY via structural prevention.** This covers the
+proof-substance and assumption-disclosure families (`qi-leanproofsubstance`,
+`qi-assumptiondisclosure`, `qi-gate-5-self-audit-blind-spot-on-sibling-tautologies`, and any
+successor whose pattern recurs in new modules as they ship). Per-finding supersession fixes the
+catalogued instances and leaves the generator alive.
 
-1. **Per-finding supersession.** When a wave addresses every individual `ReviewFinding` underlying a QI item (via either content fixes or stale-state confirmation), each finding gets a record in `docs/review_finding_supersessions.json` flipping `meta.status: open → fixed | accepted`. `scripts/build_graph.py:extract_review_finding_nodes` honors these overrides; `scripts/qi_register.py` then automatically excludes the QI from Open Items. Used by Phase 6i Waves 2–5 for ParameterProvenance, NarrativeGrounding, CrossPaperConsistency, LeanProofSubstance, and AssumptionDisclosure.
+**The supersession ledger is append-only.** Never remove an entry from
+`review_finding_supersessions.json`; `_introduced_by` and `superseded_by` preserve the audit trail.
 
-2. **Structural prevention.** When a wave installs durable infrastructure that prevents the failure class from recurring (e.g., the `validate.py --check citation_primary_sources_present` check + primary-sources cache pipeline added in Wave 1; the counts.tex macro pipeline + `validate.py --check counts_fresh` for CountFreshness), the QI item closes at the structural-prevention level even if the historical findings retain `status: open` in the graph. Closure is recorded by manually moving the QI item's block from `## Open Items` to `## Closed Items` in `docs/QI_REGISTER.md` with an `evidence_on_close` field naming the new infrastructure. Used by Phase 6i Wave 1 (qi-citationintegrity) and Wave 6 (qi-countfreshness).
-
-3. **No-applicable-scope acceptance.** When the underlying `ReviewFinding`'s body is itself a PASS-verification or scope-disclosure (e.g., paper27 8.1 "STATUS UNCHANGED — No production runs claimed"), the finding is accepted via supersession with no content fix. Used for advisory-class findings whose "open" classification reflects extractor heuristics rather than an actual issue.
-
-**The supersession ledger is append-only.** Once a finding is added to `docs/review_finding_supersessions.json`, never remove the entry — the schema's `_introduced_by` and per-entry `superseded_by` fields preserve the audit trail for Stage 14 historical analysis.
-
-**Closure-pathway policy for substance/disclosure classes (Substrate Integrity Gates, ADR-004, 2026-06-13).** QI items in the **proof-substance** and **assumption-disclosure** families — `qi-leanproofsubstance`, `qi-assumptiondisclosure`, `qi-gate-5-self-audit-blind-spot-on-sibling-tautologies`, and any successor whose failure class has a *live generator* (the pattern recurs in new modules as they ship) — may close **ONLY via pathway #2 (structural prevention)**, never pathway #1 (per-finding supersession). Rationale: per-finding supersession fixes the catalogued instances but leaves the generator alive, so the class recurs. This is empirical: `qi-leanproofsubstance` (closed 2026-04-29 Wave 4) and `qi-assumptiondisclosure` (closed 2026-04-29 Wave 5) were both closed via pathway #1, and the 2026-06-13 whole-substrate weakness audit found both classes recurring in post-2026-04-29 modules (the 6n/6e/5q.B/5x/5z arc). They are re-closed via the standing `validate.py` gates `proxy_body_audit` / `tracked_hypothesis_ledger` / `placeholder_not_cited` / `formula_grounding` (ADR-004 R1–R5).
-
-**Gate (advisory, no blocking):** QI register exists, is regenerated on Stage 14 runs, and is linked from the dashboard Process Health tab.
+**Gate (advisory):** the QI register exists, is regenerated on Stage 14 runs, and is linked from
+the dashboard.
 
 ---
 
 ## Pipeline Invariants
 
-These must hold at ALL times, not just at wave completion:
+These hold at ALL times, not only at wave completion. **They are cited by number across the
+codebase and must not be renumbered.**
 
-1. **`formulas.py` is canonical.** It is the ONLY place physics formulas live. All other code imports from it. No domain module reimplements a formula.
+1. **`formulas.py` is canonical.** The ONLY place physics formulas live. No domain module
+   reimplements a formula.
 
-2. **`constants.py` is canonical.** It is the ONLY place experimental parameters and the Aristotle theorem registry live. No other file hardcodes physical constants.
+2. **`constants.py` is canonical.** The ONLY place experimental parameters and the Aristotle
+   registry live. No other file hardcodes physical constants.
 
-3. **`visualizations.py` is canonical.** It is the ONLY place figure functions live. Notebooks reference figures via `# viz-ref:` tags, never reimplementing figure logic.
+3. **`visualizations.py` is canonical.** The ONLY place figure functions live. Notebooks reference
+   figures via `# viz-ref:` tags.
 
-4. **Every formula is content-grounded on a real, non-placeholder Lean theorem.** Every Lean theorem has a proof (zero sorry); no unformalized formulas in the computation pipeline. **Content-grounding (Substrate Integrity Gates R1, 2026-06-13):** a `formulas.py` `Lean:` reference must resolve to an actual declaration that is NOT a `True`/placeholder stub — a formula may not be "grounded" on a theorem that proves nothing (the δ_diss-class hazard, where a 7–9-order dimensional error hid because the old check verified only that a *named* theorem existed in a 7-function hardcoded map, not that it pertained to the formula — audit 2026-06-13 #14). Enforced by `validate.py --check formula_grounding` over ALL ~390 references (hard-fail on placeholder-grounded refs; advisory on dangling stale-name refs — the FormulaRefSweep remediation backlog). The legacy `--check formulas` (7-pair name+docstring presence) is retained as a complement.
+4. **Every formula is content-grounded on a real, non-placeholder Lean theorem**, and every Lean
+   theorem has a proof (zero sorry). A `Lean:` reference must resolve to a declaration that is not
+   a `True`/placeholder stub — a formula may not be grounded on a theorem that proves nothing.
+   Enforced by `formula_grounding` across all references (hard-fail on placeholder-grounded refs,
+   advisory on dangling stale names).
 
-5. **Every computed quantity has bounds.** Physical bounds are tested in the test suite and enforced by CHECK 12.
+5. **Every computed quantity has bounds**, tested in the suite and enforced by `physical_bounds`.
 
-6. **Every paper claim traces to computation.** Numerical claims match `formulas.py` output within 0.5%. Enforced by CHECK 14.
+6. **Every paper claim traces to computation** — numerical claims match `formulas.py` within 0.5%.
+   Enforced by `paper_provenance`.
 
-7. **Narrative derives from data.** Feasibility claims, detectability statements, and experimental reach assessments must be supported by computed quantities. "Within reach" means the computed shot count is < 10^6 and feasible=True.
+7. **Narrative derives from data.** Feasibility, detectability and experimental-reach statements
+   are supported by computed quantities. "Within reach" means the computed shot count is < 10⁶ and
+   `feasible=True`.
 
-8. **Every experimental parameter has verified provenance.** Each value in EXPERIMENTS, ATOMS, and platform dicts traces to a specific published source (paper, table/figure, page) via `PARAMETER_PROVENANCE` in `src/core/provenance.py`. Parameters from LLM research outputs are not considered verified until LLM reads the primary source. Paper submission requires human verification via the provenance dashboard. Enforced by CHECK 15.
+8. **Every experimental parameter has verified provenance** — traced to a specific published source
+   via `PARAMETER_PROVENANCE`. LLM verification unblocks computation; human verification unblocks
+   submission. Enforced by `parameter_provenance`.
 
-9. **Placeholder theorems are non-load-bearing.** Theorems proved as `True := trivial` encode no mathematical content and MUST NOT be referenced by any other proof, formula, or paper claim. They are documentation markers only. Tracked in `PLACEHOLDER_THEOREMS` in `constants.py`. Substantive theorem count = total - placeholders. Paper claims MUST cite substantive count, not total. **Automated enforcement (Substrate Integrity Gates R5, 2026-06-13):** the registry MUST be complete — every on-disk `True := trivial` decl is registered (`PLACEHOLDER_TOTAL_COUNT == docs/counts.json theorems_placeholder`), each with a `lean_name` + `category` (`content`/`docs_marker`). The "MUST NOT be cited as a paper claim" clause is enforced by `validate.py --check placeholder_not_cited` (deterministic, matching `lean_name` + an optional published-claim `tex_signature`) AND by the claims-reviewer **Class PC**. The "MUST NOT be referenced by another proof/formula" clause is enforced for formulas by `formula_grounding` (Invariant #4) and for the graph by `build_graph.py`'s `lean_name`-keyed placeholder exclusion. This clause was previously unenforced — the audit (#3) found paper7 presenting a `True`-stub general-G gauge-emergence equivalence as "end-to-end formal verification".
+9. **Placeholder theorems are non-load-bearing.** A theorem proved `True := trivial` encodes no
+   content and MUST NOT be referenced by any proof, formula or paper claim; it is a documentation
+   marker. Tracked in `PLACEHOLDER_THEOREMS`. Substantive count = total − placeholders, and paper
+   claims cite the substantive count. The registry must be complete: every on-disk `True := trivial`
+   declaration is registered with a `lean_name` and `category`, and `PLACEHOLDER_TOTAL_COUNT`
+   matches `theorems_placeholder` in `docs/counts.json`. Enforced by `placeholder_not_cited`
+   plus claims-reviewer Class PC; the "not referenced by a proof or formula" clause by
+   `formula_grounding` and the graph builder's placeholder exclusion.
 
-10. **No heartbeat overrides in proof bodies.** No `set_option maxHeartbeats` or `set_option synthInstance.maxHeartbeats` in any `theorem`, `lemma`, `example`, or `def`/`noncomputable def` whose body is produced by tactics. Proof bodies that hit the heartbeat limit are evidence that the proof architecture is wrong — the fix is `have` sub-lemma decomposition, not raising the budget. Expensive typeclass synthesis is resolved via `@[local instance]` caching, not heartbeat increases.
+10. **No heartbeat overrides in proof bodies.** No `set_option maxHeartbeats` or
+    `synthInstance.maxHeartbeats` in any `theorem`, `lemma`, `example`, or `def` whose body is
+    tactic-produced. Hitting the limit is evidence the proof architecture is wrong; the fix is
+    `have` decomposition. Expensive typeclass synthesis is resolved with `@[local instance]`
+    caching, not a larger budget.
 
-    **Exception — metaprograms.** Lean metaprograms whose work is intrinsically O(project size) may set unlimited heartbeats in their local `CoreM` / `MetaM` options when no proof-decomposition equivalent exists. The distinguishing test: the work scales with **number of declarations processed**, not with **complexity of a single proof goal**. A proof can always be decomposed into smaller goals; an environment walker cannot be decomposed into "walk fewer declarations" because the requirement is that it walks all of them.
+    **Exception — metaprograms.** A metaprogram whose work is intrinsically O(project size) may set
+    unlimited heartbeats in its local `CoreM`/`MetaM` options. `ExtractDeps.lean` is currently the
+    only such file. A new file claiming this exception must (a) be a metaprogram containing no
+    tactic-generated proofs, (b) demonstrate that its work is project-size-bound, and (c) justify
+    why no decomposition is possible, with user approval. When in doubt, the rule applies.
 
-    `ExtractDeps.lean` is currently the only such file in this project. It walks all 2,237+ declarations in the `SKEFTHawking` namespace, runs `collectAxioms` on each to compute transitive axiom closures, and pretty-prints every type signature — total work is O(declarations × per-declaration metadata cost), intrinsically exceeding the default 200K heartbeat budget. Its `maxHeartbeats := 0` lives in the `Lean.Core.Context` for its own `IO Unit` main function and does not leak to any theorem or proof in the project (it is a separate `lean_exe`, not part of `lean_lib SKEFTHawking`).
+11. **Every external bibitem has a primary-source cache file.** Each non-`inprep` entry in
+    `CITATION_REGISTRY` carries a `primary_source_path` under
+    `Lit-Search/Phase-X/primary-sources/<bibkey>.{pdf,abstract.txt,json}`. Populated by
+    `scripts/back_fill_primary_sources.py` (sidecar state
+    `docs/primary_sources_state.json`) and promoted into the registry by
+    `scripts/promote_primary_sources.py`. Enforced by `citation_primary_sources_present`, mandatory
+    at every Stage 13. **Exempt:** in-prep self-cites
+    (`inprep: True`), and canonical-textbook or pre-DOI references (entries with
+    `primary_source_path`, `doi` and `arxiv` all `None`) verified via secondary academic citations.
 
-    Any new file claiming this exception must: (a) be a metaprogram, not contain tactic-generated proofs; (b) demonstrate that its work is intrinsically project-size-bound; (c) justify why no decomposition is possible coordinate with user for approval. When in doubt, assume the rule applies and do not add the override.
+12. **Provenance DOIs resolve to the registry.** Every DOI in a `PARAMETER_PROVENANCE` source
+    resolves to a `CITATION_REGISTRY` bibkey, and every bibkey in a `cited_bibkeys` field exists.
+    Enforced by `provenance_doi_in_registry` — advisory by default, hard-fail under `--strict`,
+    which is mandatory at the submission gate.
 
-11. **Every external bibitem has a primary-source cache file.** Each non-`inprep` entry in `CITATION_REGISTRY` carries a `primary_source_path` pointing to a file under `Lit-Search/Phase-X/primary-sources/<bibkey>.{pdf,abstract.txt,json}` (per the convention in `Lit-Search/Phase-6e/primary-sources/README.md`). The cache routes via `paper_phase()` from the bibkey's first `used_in` paper. Enforced by `validate.py --check citation_primary_sources_present` and mandatory at every Stage 13. In-prep self-cites (`inprep: True`, e.g., `Roehm2026Wave*`) are exempt — they have no external primary source. **Textbook / pre-DOI exemption (Wave 6):** registry entries with `primary_source_path: None` AND `doi: None` AND `arxiv: None` are treated as canonical-textbook references (e.g., Gilkey 1995 CRC heat-equation textbook; Trautman 1973 pre-DOI Symposia Mathematica volume) verified via secondary academic citations rather than via a downloadable primary source. The script `scripts/back_fill_primary_sources.py` (with sidecar state at `docs/primary_sources_state.json`) populates the cache; `scripts/promote_primary_sources.py` writes successful fetch results back into the registry. This invariant exists because the paper40 round-1 incident (a hallucinated `CalmetCapozzielloPryer2019` arXiv ID pointing to an unrelated graph-NN paper) revealed that without a content-layer cache, agents can confabulate plausible-but-wrong citations from training-data context.
+13. **The QI register is auto-regenerated and manually curated, never wiped.**
+    `scripts/qi_register.py` emits an item to **Open Items** only when its `qi-<gate>` ID is not
+    already under **Closed Items** and the underlying findings have `meta.status == 'open'`. The
+    curated `## Closed Items` block is preserved verbatim across regenerations.
 
-12. **Provenance DOIs resolve to the registry.** Every DOI mentioned in any `PARAMETER_PROVENANCE` source must resolve to a `CITATION_REGISTRY` bibkey, and every bibkey listed in any `cited_bibkeys` field must exist in the registry. Enforced by `validate.py --check provenance_doi_in_registry` (CHECK 20). Default mode is advisory; the `--strict` flag (Phase 6i Wave 2 addition; mandatory at the Paper Submission Gate) promotes the check to a hard fail. This invariant exists to keep parameter-source attributions linked to the same citation registry that the cache pipeline (Invariant #11) operates on, so paper-level claim traceback resolves uniformly through one bibkey namespace.
+14. **Every paper-shaped output lifts into a bundle.** Every new draft, section addition or
+    notebook companion identifies its target — one of the codes in `validate.BUNDLE_CODES`, the
+    roster's single source of truth — at Stage 1 and records it in `docs/PAPER_DRAFT_MAPPING.md`
+    (append-only) at Stage 12. **No new stand-alone drafts are created without explicit user
+    authorization** to add a target beyond the current roster. `docs/PAPER_STRATEGY.md` carries the
+    per-target charters. The assignment propagates to every prose-state sentence via
+    `scripts/sentence_state.py` (`bundle_destination`, `bundle_section_hint`, `lift_action`);
+    `scripts/bundle_migration.py` provides the migration and `scripts/bundle_clusters.py` projects
+    per-paper assignments onto claim clusters at `papers/cluster_bundle_index.json`.
 
-13. **Stage 14 QI register is auto-regen + manually-curated, never wiped.** `scripts/qi_register.py` regenerates `docs/QI_REGISTER.md` on each invocation, but (a) only emits a QI item to the **Open Items** section when the QI item's `qi-<gate>` ID is NOT already present in the existing **Closed Items** section, AND (b) the underlying `ReviewFinding` nodes have `meta.status == 'open'` (Wave-6 status filter; per-finding `fixed`/`accepted` overrides are honored via `docs/review_finding_supersessions.json`). The regenerator preserves the manually-curated `## Closed Items` block verbatim across regenerations (block-by-`### qi-*` heading). New QI items surfaced by adversarial review (Stage 13) are added under `## Open Items` automatically by the next regen; closure is achieved by manually editing `docs/QI_REGISTER.md` to move the block under `## Closed Items` with an `evidence_on_close` field, or by ledger-superseding all the underlying findings.
+15. **Every new project-local `axiom` requires explicit user sign-off.** A deep-research
+    recommendation to ship an axiom is **advisory only**. Every new axiom ships with either (a) a
+    discharge plan in the wave roadmap, or (b) a documented argument that no constructive proof is
+    feasible in current Mathlib. The posture is that **axioms are temporary scaffolding, not
+    permanent commitments.** Every axiom also requires an `AXIOM_METADATA` entry with
+    `eliminability`, `discharge_wave` and `discharge_estimate_loc`, consumed by the dashboard's
+    Proof Architecture tab and by Stage 13.
 
-14. **Every paper-shaped output lifts into a `PAPER_STRATEGY.md` bundle.** Every new draft, section addition, or notebook companion identifies its target bundle (one of the codes in `validate.BUNDLE_CODES`, which is the roster's single source of truth — `docs/PAPER_STRATEGY.md` carries the per-target charters) at Stage 1 and records it in `docs/PAPER_DRAFT_MAPPING.md` (append-only) at Stage 12. No new stand-alone paper drafts are created without explicit user authorization to add a further bundle target beyond the current roster. The schema additions in `scripts/sentence_state.py` (`bundle_destination`, `bundle_section_hint`, `lift_action`) propagate the bundle assignment to every prose-state sentence; `scripts/bundle_migration.py` provides the migration; `scripts/bundle_clusters.py` projects per-paper bundle assignments onto claim clusters at `papers/cluster_bundle_index.json`. Per-bundle Stage-13 readiness is summarized in `docs/BUNDLE_READINESS_HEATMAP.md`; cross-bundle consistency is enforced by `validate.py --check bundle_consistency`. Phase 6i Wave 7 deliverable.
+16. **Every consumed tracked-hypothesis Prop is in the single registry.** A tracked hypothesis (a
+    Prop-valued `def`/`structure` named `H_*` / `*Conjecture` / `*Hypothesis` encoding an
+    undischarged claim) consumed as a binder by any theorem MUST be in `HYPOTHESIS_REGISTRY` — the
+    single source of truth for the tracked-assumption surface — or listed in
+    `TRACKED_HYPOTHESIS_NON_LOAD_BEARING` with a reason. Each entry carries `tier`, `statement`,
+    `status`, `source`, `risk` and a publication-facing `prose`.
+    `docs/PERMANENT_TRACKED_HYPOTHESES.md` is an **auto-generated view**
+    (`scripts/render_tracked_hypotheses.py`), **never hand-edited.**
+    Enforced by `tracked_hypothesis_ledger` and `tracked_hypotheses_fresh`.
+    **Scope limit:** Prop-valued struct *fields* are not auto-enumerated and are covered case by
+    case. General auto-detection is tracked debt.
 
-15. **Every new project-local `axiom` requires explicit user sign-off.** Policy locked-in 2026-05-12 post-Phase-6p strengthening Pass 2. A deep-research return recommending "ship as predicate-substrate AXIOM" is advisory only; no axiom ships without explicit user approval. **Every new axiom must come with**: (a) a discharge plan in the wave roadmap (a future wave that produces a substantive constructive proof), OR (b) a documented argument that no constructive proof is feasible in current Mathlib4 (substrate scout, ~500 LoC infrastructure absent, etc.). The project's posture is **axioms are temporary scaffolding, not permanent commitments**. The pre-Phase-6p axiom count was 1 (`gapped_interface_axiom`, `SPTClassification.lean`); Phase 6p added 2 (`bridge_axiom_FKLW`, `sk_axiom_Dawson_Nielsen`) on DR-only authority; both are post-hoc scheduled for discharge via Phase 6p Waves 2c (Aharonov-Arad ~430 LoC) + 2d (Dawson-Nielsen ~550 LoC). **Quality bar:** standard kernel only on headline theorems; all axioms eventually discharged.
-
-    **AXIOM_METADATA registration (consumer requirement from invariant #9 spirit):** every new axiom MUST have an entry in `AXIOM_METADATA` (`src/core/constants.py`) with fields `eliminability: 'planned'|'hard'|'permanent'`, `discharge_wave: '<wave-id>'` (if planned), and `discharge_estimate_loc: <int>` (if planned). The dashboard's "Proof Architecture" tab surfaces this; the claims-reviewer agent and Stage 13 adversarial review consume it.
-
-16. **Every consumed tracked-hypothesis Prop is in the single registry.** A tracked hypothesis (a Prop-valued `def`/`structure` named `H_*` / `*Conjecture` / `*Hypothesis` that encodes an undischarged claim) that is consumed as a binder `(h : P …)` by any theorem MUST be registered in `HYPOTHESIS_REGISTRY` (`src/core/constants.py`) — the **single source of truth** for the project's tracked-assumption surface — OR listed in `TRACKED_HYPOTHESIS_NON_LOAD_BEARING` with a reason. `docs/PERMANENT_TRACKED_HYPOTHESES.md` is an **auto-generated view** of the registry (`scripts/render_tracked_hypotheses.py`), never hand-edited; the prior two-hand-maintained-ledgers state held **disjoint** contents (a latent drift bug — Substrate weakness audit 2026-06-13 #2). Each registry entry carries `tier` (`headline`/`external_boundary`/`discharge_future`/`local`), `statement`, `status`, `source`, `risk`, and a publication-facing `prose`. Enforced by `validate.py --check tracked_hypothesis_ledger` (coverage, hard-fail) + `--check tracked_hypotheses_fresh` (the doc matches the registry; auto-regenerates). This generalizes the Invariant-#9 placeholder discipline to tracked-Prop assumptions. **Scope (honest, per ADR-004 W7 adversarial finding H1):** the `tracked_hypothesis_ledger` check auto-detects Prop-codomain `H_*`/`*Conjecture`/`*Hypothesis` defs consumed via a `(h : Name …)` binder. **Prop-valued struct-FIELD assumptions** (e.g. `SmoothSpinManifold4.topo` `2 ∣ σ/8`, whose codomain is not `Prop` and whose name is not `H_*`) are NOT auto-enumerated — they are covered **case-by-case** (`topo` via `rokhlin_sigma_mod_16.dependent_theorems`; `proxy_body_audit`'s `fun _ => _.field` pattern additionally catches struct-field-projection proof *bodies*). General struct-field-assumption auto-detection is tracked debt. See ADR-003/ADR-004 R3. Substrate Integrity Gates W3 (scoped W7).
-
-17. **Every provably-false settled no-go has a live, kernel-pure, non-vacuous backing theorem in the single registry.** The **negative-front mirror of #16** (ADR-007). A no-go that is *provably false / impossible* (`σ/8 ≡ Arf(q̄)` is false; a trivial-`revStr` carrier is *forced* 2-torsion) makes the bad path **unprovable** — the robust, self-enforcing form of a settled fork. Each such fork (field-authored `kernel-no-go` in `docs/dev-loops/SETTLED_FORKS.md`) MUST be encoded in `KERNEL_NOGO_REGISTRY` (`src/core/constants.py`) with `fork_id`, `backing_theorems` (FQN list), `nogo_kind` (`refutation`/`structural_forcing`/`counterexample`), and a one-line `false_statement`; each backing theorem must **exist** in `lean_deps.json`, be **kernel-pure** (`{propext, Classical.choice, Quot.sound}`), and be **non-vacuous** (not `True`/reflexive — a self-discharging no-go blocks nothing). Enforced by `validate.py --check nogo_substrate_integrity` (hard-fail on a missing/tainted/vacuous backing theorem — the Hole-A/Hole-B rot; advisory audit of refutable-but-unencoded forks). Surfaced to the swarm as the atlas **negative frontier** (`obstructions` in `atlas_view.json` → `harness_common.antifrontier_from_atlas` → the SessionStart digest + `/skeft-qa:frontier`), so fan-out is steered *away* from dead paths by machine data, not a prose count. **Scope: provably-false no-gos ONLY** — policy / route / preference bans are not false, cannot be kernel-encoded, and remain governed solely by `SETTLED_FORKS.md` prose + the count-pointer (ADR-007 N-B), unchanged. **Encode-on-settle (N-E):** discovering a kernel-checkable no-go lands the backing theorem + registry entry in the settling turn — prose-only recording of a kernel-encodable fork is itself a `nogo_substrate_integrity` finding.
+17. **Every provably-false settled no-go has a live, kernel-pure, non-vacuous backing theorem.**
+    The negative-front mirror of 16. Each kernel-no-go fork in `docs/dev-loops/SETTLED_FORKS.md`
+    is encoded in `KERNEL_NOGO_REGISTRY` with `fork_id`, `backing_theorems`, `nogo_kind`
+    (`refutation` / `structural_forcing` / `counterexample`) and a one-line `false_statement`.
+    Each backing theorem must exist in `lean_deps.json`, be kernel-pure
+    (`{propext, Classical.choice, Quot.sound}`) and be non-vacuous — a self-discharging no-go
+    blocks nothing. Enforced by `nogo_substrate_integrity`.
+    **Scope: provably-false no-gos ONLY.** Policy, route and preference bans are not false, cannot
+    be kernel-encoded, and stay in `SETTLED_FORKS.md` prose.
+    **Encode-on-settle:** discovering a kernel-checkable no-go lands its backing theorem and
+    registry entry in the settling turn. Recording such a fork in prose alone is itself a finding.
 
 ---
 
 ## Deep Research Reconciliation Protocol
 
-When incorporating results from deep research (LLM-generated analysis in `Lit-Search/`):
+When incorporating results from deep research in `Lit-Search/`:
 
-1. **Extract claims.** List every factual claim: parameter values, paper citations, experimental status assertions.
+1. **Extract every factual claim** — parameter values, citations, experimental-status assertions.
+2. **Classify each:**
+   - **VERIFIABLE** — cites a specific paper and location (table, equation, figure)
+   - **PLAUSIBLE** — consistent with known physics, no specific citation
+   - **CONFLICTING** — disagrees with another result or the codebase
+   - **UNVERIFIABLE** — no citation, or a vague one ("well-known result")
+3. **VERIFIABLE** → add to `PARAMETER_PROVENANCE`; fetch the cited paper, extract the value and an
+   excerpt, set `llm_verified_date`. Code values may update after LLM verification.
+4. **CONFLICTING** → document BOTH values with excerpts in the provenance notes and recommend a
+   resolution based on source quality ("Table I" beats "estimated from figure"). Code uses the
+   recommended value; the human resolves via the dashboard before submission.
+5. **PLAUSIBLE / UNVERIFIABLE** → may enter `constants.py` with `tier: 'PROJECTED'` and
+   `llm_verified_date: None`, clearly labeled as estimates. These are advisory warnings, not
+   failures.
+6. **Verification tasks** go in the roadmap under "Primary Source Verification".
 
-2. **Classify each claim:**
-   - **VERIFIABLE:** cites a specific paper + location (table, equation, figure)
-   - **PLAUSIBLE:** consistent with known physics but no specific citation
-   - **CONFLICTING:** disagrees with another deep research result or the codebase
-   - **UNVERIFIABLE:** no citation, or citation is vague ("well-known result")
-
-3. **For VERIFIABLE claims:** Add to `PARAMETER_PROVENANCE`. LLM fetches the cited paper and extracts the value + excerpt → `llm_verified_date` set. Code values can update after LLM verification. Human verification via dashboard gates paper submission.
-
-4. **For CONFLICTING claims:** Document BOTH values + excerpts in `PARAMETER_PROVENANCE` notes. LLM recommends resolution based on source quality (e.g., "Table I" beats "estimated from figure"). Code uses the LLM-recommended value. Human resolves via dashboard before paper submission.
-
-5. **For PLAUSIBLE/UNVERIFIABLE claims:** Can add to `constants.py` with `tier: 'PROJECTED'` and `llm_verified_date: None`. Clearly labeled as estimates. CHECK 15 flags these as advisory warnings, not hard failures (PROJECTED params are expected to lack primary sources).
-
-6. **Verification tasks** go in the roadmap under a "Primary Source Verification" section.
-
-**Rule:** Deep research claims can update code parameters after LLM verification against primary sources. Paper SUBMISSION is gated on human verification via the provenance dashboard.
+**Rule:** deep research may update code parameters after LLM verification against primary sources.
+Paper **submission** is gated on human verification via the provenance dashboard.
 
 ---
 
-## Quick Reference: Commands
+## Quick Reference
 
 ```bash
-# Full validation (run from SK_EFT_Hawking/ root)
-uv run python -m pytest tests/ -v                    # All tests
-uv run python scripts/validate.py                    # the whole suite (--list to enumerate)
-uv run python scripts/review_figures.py              # Generate figures + structural checks
-cd lean && lake build                                 # Lean build
+# Run from the SK_EFT_Hawking/ root
+uv run python -m pytest -q                      # both suites (repo + plugin guards)
+uv run python scripts/validate.py               # whole suite (--list to enumerate)
+uv run python scripts/validate.py --check <name>
+uv run python scripts/review_figures.py         # figures + structural checks
+cd lean && lake build                           # Lean build
 
-# Aristotle (read docs/references/Theorm_Proving_Aristotle_Lean.md first!)
-uv run python scripts/submit_to_aristotle.py --priority 1 --integrate
-uv run python scripts/submit_to_aristotle.py --retrieve <ID> --integrate
-uv run python scripts/submit_to_aristotle.py --resume <ID>
+# Aristotle — subcommand CLI (read docs/references/Theorm_Proving_Aristotle_Lean.md first)
+uv run python scripts/submit_to_aristotle.py sorries [<target>...]
+uv run python scripts/submit_to_aristotle.py stage <target>...
+uv run python scripts/submit_to_aristotle.py submit <target>... --yes-i-authorize
+uv run python scripts/submit_to_aristotle.py status
+uv run python scripts/submit_to_aristotle.py retrieve <job_id>
+uv run python scripts/submit_to_aristotle.py graft <extracted_dir> <target>... --apply
 
-# Individual validation checks
-uv run python scripts/validate.py --check physical_bounds
-uv run python scripts/validate.py --check cross_path_consistency
-uv run python scripts/validate.py --check paper_provenance
-uv run python scripts/validate.py --check parameter_provenance  # CHECK 15
-uv run python scripts/validate.py --list              # List all available checks
-
-# Provenance command center (human verification dashboard)
-uv run python scripts/provenance_dashboard.py         # Opens localhost:8050
+# Provenance dashboard (human verification)
+uv run python scripts/provenance_dashboard.py   # localhost:8050
 ```

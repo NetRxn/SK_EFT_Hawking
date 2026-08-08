@@ -9,7 +9,8 @@
 **Sibling docs (read on bootstrap):**
 - `README.md` — project framing (public-facing).
 - `../CLAUDE.md` (workspace root) — agent guidance and conventions; project-level guidance for SK_EFT_Hawking lives here (there is no separate per-repo `CLAUDE.md`).
-- `docs/WAVE_EXECUTION_PIPELINE.md` — 14-stage wave protocol and 15 pipeline invariants.
+- `docs/WAVE_EXECUTION_PIPELINE.md` — 14-stage wave protocol and 17 pipeline invariants (the law;
+  provenance for each rule is in `docs/WAVE_PIPELINE_RATIONALE.md`).
 - `docs/PAPER_STRATEGY.md` — 17-bundle publication architecture (D8 added 2026-05-31).
 - `docs/PERMANENT_TRACKED_HYPOTHESES.md` — load-bearing tracked Props.
 - `docs/BUNDLE_READINESS_HEATMAP.md` — per-bundle Stage-13 readiness.
@@ -386,7 +387,7 @@ Search live: `grep -rn "H_VestigialModeIsGraviton\|H_DESICompatibility\|H_RT_For
 
 ---
 
-## 6. Pipeline invariants (15)
+## 6. Pipeline invariants (17)
 
 Authority: `docs/WAVE_EXECUTION_PIPELINE.md` §"Pipeline Invariants". One-line summary each:
 
@@ -403,12 +404,14 @@ Authority: `docs/WAVE_EXECUTION_PIPELINE.md` §"Pipeline Invariants". One-line s
 11. **Every external bibitem has a primary-source cache file** under `Lit-Search/Phase-X/primary-sources/<bibkey>.{pdf,abstract.txt,json}`, enforced by CHECK 19.
 12. **Provenance DOIs resolve to the registry** — every DOI in `PARAMETER_PROVENANCE` must resolve to a `CITATION_REGISTRY` bibkey (CHECK 20).
 13. **Stage 14 QI register is auto-regen + manually-curated** — open items regenerated; closed items preserved verbatim across regens.
-14. **Every paper-shaped output lifts into a `PAPER_STRATEGY.md` bundle** (F, D1–D8, L1–L3, I1, I2, I3, E1, E2 — 17 targets) — recorded in `docs/PAPER_DRAFT_MAPPING.md`.
+14. **Every paper-shaped output lifts into a `PAPER_STRATEGY.md` bundle** — the roster is `validate.BUNDLE_CODES` (F, D1–D12, L1–L3, I1–I3, E1, E2), recorded in `docs/PAPER_DRAFT_MAPPING.md`.
 15. **Every new project-local `axiom` requires explicit user sign-off** + discharge plan or no-feasible-proof argument; `AXIOM_METADATA` registration mandatory.
+16. **Every consumed tracked-hypothesis Prop is in `HYPOTHESIS_REGISTRY`** (or `TRACKED_HYPOTHESIS_NON_LOAD_BEARING` with a reason); `PERMANENT_TRACKED_HYPOTHESES.md` is an auto-generated view, never hand-edited.
+17. **Every provably-false settled no-go has a live, kernel-pure, non-vacuous backing theorem** in `KERNEL_NOGO_REGISTRY`; policy/route bans stay prose in `SETTLED_FORKS.md`.
 
 ---
 
-## 7. Bundle status (17 publication targets)
+## 7. Bundle status (21 publication targets)
 
 Authority: `docs/PAPER_STRATEGY.md` (architecture) + `docs/PAPER_DRAFT_MAPPING.md` (per-draft → per-bundle assignment) + `docs/BUNDLE_READINESS_HEATMAP.md` (per-bundle Stage-13 readiness, auto-regen via `scripts/bundle_readiness.py --heatmap`).
 
@@ -561,7 +564,8 @@ The heatmap aggregates existing per-paper findings; a fresh-context bundle Stage
 | `docs/QI_REGISTER.md` | Stage 14 quality-improvement register (auto-regen + manually-curated). |
 | `docs/READINESS_GATES.md` | Per-paper Stage-13 readiness companion to bundle heatmap. |
 | `docs/RESEARCH_STATUS_OVERVIEW.md` | High-level research-status overview. |
-| `docs/WAVE_EXECUTION_PIPELINE.md` | 14-stage wave protocol + 15 pipeline invariants. |
+| `docs/WAVE_EXECUTION_PIPELINE.md` | 14-stage wave protocol + 17 pipeline invariants (the law). |
+| `docs/WAVE_PIPELINE_RATIONALE.md` | Why each pipeline rule exists; read on demand, not to follow the process. |
 | `docs/counts.json` | Live counts ground truth (regen via `scripts/update_counts.py`). |
 | `docs/counts.tex` | LaTeX `\input{}` counts macros for papers. |
 
