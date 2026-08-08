@@ -1038,7 +1038,11 @@ def check_bundle_registry_consistency() -> CheckResult:
 #:           FINDINGS.md) — the first Tier-0. The flagship enumerates a 17-bundle roster
 #:           and does not know D9-D12 exist; F ∩ D1 = 27 and F ∩ each of D6/D9/D10/D11/
 #:           D12/L2 = 0.
-UNDECLARED_APEX_CEILING = 13
+#: 13 -> 12: D3 retrofitted 2026-08-07 (89 apexes; docs/audits/2026-08-07-d3-retrofit/
+#:           FINDINGS.md) — the heaviest bundle. D3 ∩ F = 126 (F's substrate is largely
+#:           D3's) but D3 ∩ D1 = 0: the program's "the substrate is one object"
+#:           synthesis claim has no Lean witness.
+UNDECLARED_APEX_CEILING = 12
 
 
 @register_check(

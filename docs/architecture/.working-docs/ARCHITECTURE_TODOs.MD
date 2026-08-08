@@ -614,10 +614,20 @@ version *and* the Mathlib rev against `lean-toolchain` + `lakefile.toml`.
 - **Commenting the stubs out was correct** and is documented (2026-05-06 Session 2 — they were
   empty artefacts of `bundle_append.py`'s default insertion). The defect is that the **log still
   reads `Lift-section`**, so any count of absorptions taken from it over-counts D1 by four.
+- ⚠️ **BROADENED 2026-08-07 — eleven events across two bundles.** D3's `append_log.json` records
+  **seven** more empty `Lift-section` events (6n W1a → §6, 6n W2c → §3, 6o W1a → §3, 6o W1b → §6,
+  6o W3b → §6, 6o W1c → §10, 6o W2a → §17), out of 26 `Lift-section` events total. The named
+  content is substantial and unpublished anywhere: a Kerr-Schild double-copy on Petrov-D acoustic
+  geometry with a three-obstruction BCJ no-go, an APS η-invariant substrate for analog horizons,
+  an Itô/LDP cross-bridge, and a dissipative-SK-EFT bootstrap-uniqueness no-go.
+- ✅ **D3 handles the stubs better than D1, and the difference is the fix to copy.** Each D3 stub
+  carries an in-line note — *"Lift body content remains pending; restore `\section` + `\label`
+  once content lands"* — so a reader of the source knows the state. D1's say only that a
+  bookkeeping anchor was preserved. **The log is wrong in both.**
 - **Fix shape:** two parts, and they are different decisions. (a) Bookkeeping: the log needs a
   lift action that means *registered, not lifted* — a schema change, so §6a applies. (b) Content:
-  whether to lift the four waves is an ADR-010 C5 scope call, and it bears on D1's charter-length
-  shortfall.
+  whether to lift the eleven waves is an ADR-010 C5 scope call, and it bears on the
+  charter-length shortfall in both bundles.
 - Full working: `docs/audits/2026-08-07-d1-retrofit/FINDINGS.md` §4.
 
 ### D15. The flagship surveys a 17-bundle program; 21 exist — OPEN (CRITICAL, scope claim)
@@ -641,8 +651,59 @@ version *and* the Mathlib rev against `lean-toolchain` + `lakefile.toml`.
   *"`physics-qa:figure-reviewer`"* (plugin is **`skeft-qa`**) · *"branches D.1/D.2/D.3"*
   (branch **D.4** exists) · a hardcoded `$\sim 322$` where `\aristotleproved{}` is a macro in
   the `counts.tex` F already `\input`s — correct today, guaranteed to drift.
+- ⚠️ **Two more instances found during the D3 retrofit (2026-08-07), and they point opposite ways.**
+  (a) F **overstates**: its §6.3 bullet says the Vergeles triple *"discharges cleanly"* with no
+  caveat, while F's own §10 register says *"on the substrate's tracked-hypothesis Prop record
+  bundle"* and D3 §5.4 + §28.3 both record the one-loop calculation as OPEN. The flagship
+  contradicts itself, and the honest version is the one in the cleared register.
+  (b) F **understates**: §6.2 and §10 both call the factor-6000 Wen-ADW figure *"an informal
+  extrapolation … not separately Lean-verified at the Newton-constant level"*, but D3 ships
+  `EmergentGravityBounds.wen_adw_factor_6000`, a resolved kernel-pure theorem proving
+  `1/6202 < G_Wen/G_c < 1/6000` for every nonzero cutoff. The hedge was true when written.
 - **Fix shape:** F cannot be brought current by editing counts; the roster sections need
   rewriting against the live roster, and the §9 figures need to become macros or citations. This
   is content work under ADR-010 C5, and it is the strongest argument for retrofitting the
   remaining bundles **before** F is redrafted — F's job is to describe them.
 - Full working: `docs/audits/2026-08-07-f-retrofit/FINDINGS.md` §2, §3, §5.
+
+### D16. The program's central synthesis claim has no Lean witness — OPEN (CRITICAL, claim integrity)
+
+- **The claim:** the `N_f` in the Sakharov coefficient `G_N = 12π/(N_f Λ²)` and the `N_f = 16`
+  that fixes the Standard-Model anomaly classification are **the same `N_f`** — *"the substrate is
+  one object; its faces are the sibling bundles' worth of predictive register."*
+- **Where:** `papers/D3/paper_draft.tex` §1 and §28.1; `papers/F/paper_draft.tex` abstract, §1.4,
+  §6.1 and §12.1 — where F elevates it to *"the synthesis claim NEW to this flagship, absent from
+  any individual sibling bundle and load-bearing for the architectural argument."*
+- **Three measurements, none finding a link** (2026-08-07): **D3 ∩ D1 = 0** at closure level; **no**
+  declaration in D3's heat-kernel / linearised-EFE / coefficient-match modules depends on any
+  `Z16*`, `Modular*`, `SPT*` or `Chirality*` module; and **no** declaration anywhere bridges an
+  `N_f` to an anomaly/modular/generation count (the three near-misses are lattice-signature and
+  SymTFT theorems about `16 ∣ σ`, a different statement).
+- ⚠️ **This does NOT say the claim is false.** Two formalizations of different facets of one
+  physical object can have disjoint proof DAGs; a shared declaration is a sufficient witness for
+  identity, not a necessary one. **It says the claim is unformalized in a corpus whose selling
+  point is that its claims are formalized.**
+- **D3 is the more careful of the two:** §1 attributes the identity to *"Bundle L2, lifting
+  from [Roehm2026Modular]"* — a citation. F states it flatly and claims it as its own novelty.
+- **Fix shape, and the choice matters:** (a) **formalize it** — a theorem tying the `N_f` of the
+  heat-kernel calibration to the `N_f` of the anomaly classification would make the program's
+  headline architectural claim machine-checked, and is the highest-value single theorem the
+  substrate could ship; or (b) **scope the prose** to what is actually established: the same
+  numeral appears in both derivations, and the identification is a modelling claim. Operator's
+  call under ADR-010 C5.
+- ⚠️ **Not yet fully measurable:** D2 and L2 are undeclared, so `D3 ∩ D2` cannot be computed. The
+  module-level dependency check is independent of declaration and already answers it, but the
+  closure-level confirmation waits on D2's retrofit — **re-run it there.**
+- Full working: `docs/audits/2026-08-07-d3-retrofit/FINDINGS.md` §2.
+
+### D17. D3's tracked-hypothesis registry contains two dangling `\ref`s — OPEN (minor)
+
+- **Where:** `papers/D3/paper_draft.tex` — `sec:cfl-z3-matching` and `sec:singularity-thms` are
+  referenced and never defined, so both render as `??` in the compiled PDF.
+- **Why it is worth fixing despite being minor:** both live in **§28.3, the tracked-hypothesis
+  registry** — the mechanism D3 offers as its accountability device, closing with *"A reader with
+  auditing intent can resolve every open obligation in this list."* They are the pointers for
+  `H_TopologicalOrderBeyondLG` and `IsADWPenroseApplicable`. §24.3 uses the second one again.
+- **Fix shape:** repoint to `sec:cfl` and `sec:penrose`, the sections that carry the content.
+  Prose-only.
+- Full working: `docs/audits/2026-08-07-d3-retrofit/FINDINGS.md` §3.

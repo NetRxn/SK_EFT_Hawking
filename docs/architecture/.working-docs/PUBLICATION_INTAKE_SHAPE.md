@@ -231,10 +231,23 @@ bundle metadata on disk at all.
    Full working: [`../../audits/2026-08-07-f-retrofit/FINDINGS.md`](../../audits/2026-08-07-f-retrofit/FINDINGS.md).
    ⚠️ **Sequencing consequence:** F cannot be redrafted until the bundles it surveys are
    measured. **The retrofit is now a prerequisite for the flagship, not a parallel workstream.**
-4. ⏭️ **NEXT** — the remaining 13, one at a time. Order by what F needs: the Tier-1 deep papers
-   it surveys and mis-scopes (**D3** is the heaviest and carries most of F's apexes; **D2**,
-   **D4**, **D5** follow), then the L/I/E tiers. Each one measured is one section of the
-   flagship that can be written against evidence rather than against a snapshot.
+3f. ✅ **DONE 2026-08-07** — **D3**, ceiling **13 → 12** (89 apexes → 332 decls / 37 modules,
+   depth 3). The heaviest bundle, and it produced the retrofit's most consequential measurement:
+   **D3 ∩ F = 126** (F's substrate is largely D3's) but **D3 ∩ D1 = 0**, and three independent
+   probes find **no Lean witness** for the program's central synthesis claim that the Sakharov
+   `N_f` and the anomaly-classification `N_f = 16` are the same `N_f` (TODO-D16). The claim is
+   **unformalized, not refuted** — disjoint proof DAGs are compatible with physical identity —
+   but it is the one architectural claim the corpus asserts in prose alone.
+   Also: two dangling `\ref`s inside D3's own tracked-hypothesis registry (TODO-D17), and seven
+   more empty `Lift-section` events, bringing TODO-D14 to eleven across two bundles.
+   Full working: [`../../audits/2026-08-07-d3-retrofit/FINDINGS.md`](../../audits/2026-08-07-d3-retrofit/FINDINGS.md).
+   ⚠️ **D3 §28.3's tracked-hypothesis registry is the disclosure standard to copy** — every open
+   `Prop` by module-qualified identifier with a one-line closure path, including one since
+   discharged. And F is wrong about D3 in **both** directions in one document, so a drift audit
+   that only hunts overclaims finds half the drift.
+4. ⏭️ **NEXT** — the remaining 12. **D2** first: it is the other half of TODO-D16, and its
+   closure is what turns the `N_f`-identity measurement from module-level into closure-level.
+   Then **D4**, **D5**, then the L/I/E tiers.
    ⚠️ **Method, learned on D12 and re-confirmed on D11:** `grep` for a theorem name in a draft
    returns 0 — drafts escape underscores inside `\thm{}`. Resolve references with the
    underscore-aware scan, **seeded with a known-present name first**, never a bare grep.

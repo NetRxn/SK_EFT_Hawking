@@ -1119,3 +1119,32 @@ scan that reports only presence.
 draft misdescribing its own substrate is a prose slip; two, drafted separately, is a corpus
 pattern — and it converts an ADR-010 open *posture* question into a settled measurement. **Count
 the instances before choosing the size of the fix.**
+
+---
+
+## V25 — the D3 apex retrofit — 9 atoms, 0 corrected
+
+The heaviest bundle. **P** = perishable, **D** = durable.
+
+| # | atom | decided by | result |
+|---|---|---|---|
+| A1 | D3's draft is 2,885 lines and was read in full, including the commented material after §28 | the file | ✓ — the seven empty lifts are only visible there |
+| A2 | **SET:** every tracked-hypothesis `Prop` D3 names is a `def`/`structure`, never a theorem | all of them, by kind | ✓ — so none can be an apex, and the gate enforces it independently (D) |
+| A3 | **SET:** D3 ∩ every other declared bundle | D1, D6, D9, D10, D11, D12, F, L2 — all eight | ✓ **F 126**, everything else **0** (D) |
+| A4 | **The `N_f` identity has no Lean witness** | three independent probes: closure intersection, module-level dependency reach from D3's calibration modules into the anomaly tree, and a name-level bridge search over the whole corpus | ✓ none finds a link (P — a theorem would close it) |
+| A5 | A5's conclusion is stated as *unformalized*, not *false* | reasoning, recorded deliberately | ✓ disjoint proof DAGs are compatible with physical identity |
+| A6 | **SET:** seven `Lift-section` events produced no content | all 33 append-log events enumerated, each matched to the draft | ✓ 7 of 26 lifts (P) |
+| A7 | Two `\ref`s resolve to no `\label`, both inside §28.3 | label/ref set difference over the whole file | ✓ (P) |
+| A8 | F **overstates** D3 on the Vergeles triple and **understates** it on factor-6000 | both F passages against both D3 passages against the Lean | ✓ one in each direction (P) |
+| A9 | `Sakharov_iff_horizon_Crooks` does not exist, exactly as the draft says | the corpus | ✓ a deferral that is honestly labelled (D) |
+
+⚠️ **A8 is why "does the flagship overclaim?" is the wrong question.** F is wrong about D3 in
+**both** directions in the same document — too generous about an open hypothesis, too stingy
+about a shipped theorem. A drift audit that only looks for overclaims finds half the drift, and
+the half it misses costs the program credit it has already earned.
+
+⚠️ **A4/A5 is the pass's most important discipline point.** The measurement is strong and the
+temptation is to write "the synthesis claim is unsupported." It is not: three probes found no
+*formal* witness for a claim that may well be true physically. **State what the instrument
+measured, then state what it cannot see** — the same rule as `truncated_private` travelling with
+every closure size.
