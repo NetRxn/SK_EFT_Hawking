@@ -5,8 +5,8 @@ comes due when every bundle is declared; until then this file records, for each 
 whether the closure evidence **supports** it, **refutes** it, or **does not decide** it, plus any
 **boundary failure** named under §D2's rule.
 
-**Status:** 14 of 21 bundles declared (D1, D2, D3, D4, D5, D6, D7, D8, D9, D10, D11, D12, F, L2).
-7 undeclared: E1, E2, I1, I2, I3, L1, L3. **Every "not decided" below is a
+**Status:** 15 of 21 bundles declared (D1–D12, F, I1, L2).
+6 undeclared: E1, E2, I2, I3, L1, L3. **Every "not decided" below is a
 statement about what is measurable today, not a verdict.**
 
 **Method.** Each row is an intersection of *declared apex closures* over `name_deps_project`,
@@ -111,6 +111,8 @@ Recorded because §D4 asks for evidence, and an intersection nobody proposed is 
 | **D8 ∩ D4** | **280** | The shared Lie-algebraic core after the reassignment — `OneParameterSubgroupSU2` 108, `SU2LieAlgebra` 30. |
 | **D8 ∩ D9** | 14 | `QuantumNetwork` diamond-norm infrastructure for D8 §10, acknowledged in the text. |
 | **D8 ∩ D10** | 8 | Same layer. |
+| **I1 ∩ D1** | **30** | `SKDoubling` 27 — a methodology paper's overlap tracks its case studies' *substrate*, not their subject matter. |
+| **I1 ∩ F** | **26** | `SKDoubling`. |
 | **D5 ∩ D3** | **11** | `JacobsonThermoGRDarkEnergy` 9, `ADWMechanism` 2 — D5 supplying, not consuming. |
 | **D10 ∩ D12** | 1 | Ditto. |
 | all other declared pairs | **0** | D1, D3, D6, D9, D10, D11, F, L2 are otherwise mutually disjoint at declaration level. |
@@ -128,8 +130,8 @@ Recorded because §D4 asks for evidence, and an intersection nobody proposed is 
 | **D10** | ⚠️ **PARTIAL** | §5.3's contractivity result is not statable without D9's `QuantumNetwork.*` — 50 declarations. The DFT and NEGF pillars are wholly D10's own, so the *target* is viable; one of its three headline layers is not self-contained. |
 | **D6** | ⚠️ **PARTIAL** | Cites 133 declarations from D9's namespace while claiming ~19 % of its own citations. |
 | **D4** | ⚠️ **YES, both directions** | *Inbound:* §§7–8 consume D3's `H_HorizonBoundaryCondition` (22 shared declarations) — mutual and acknowledged. *Outbound:* §9's `GenericSU2` layer ships D8's chartered content. |
-| D1, D2, D3, D5, D7, D8, D11, D12, L2 | **No** | Each states its purpose on its own substrate. D11 is the strongest case: zero intersection with every other declared bundle. |
-| E1, E2, I1, I2, I3, L1, L3 | **not yet measurable** | undeclared |
+| D1, D2, D3, D5, D7, D8, D11, D12, I1, L2 | **No** | Each states its purpose on its own substrate. D11 is the strongest case: zero intersection with every other declared bundle. |
+| E1, E2, I2, I3, L1, L3 | **not yet measurable** | undeclared |
 
 ---
 

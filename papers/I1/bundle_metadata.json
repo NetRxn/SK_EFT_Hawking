@@ -1,5 +1,37 @@
 {
   "bundle_target": "I1",
+  "apex_theorems": [
+    {
+      "name": "SKEFTHawking.SKDoubling.firstOrder_uniqueness",
+      "claims": "\u00a73 WORKED CASE 1 \u2014 the uniqueness theorem Aristotle refuted and then closed. Aristotle returned the counterexample c = (0,...,0,1,0) against the preliminary transform-level KMSSymmetry; the strengthened algebraic FirstOrderKMS (seven relations, including i_3 = 0) closes it. The methodological claim is that a prover's FAILURE is diagnostic information",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.TetradGapEquation.gap_solution_monotone",
+      "claims": "\u00a74 WORKED CASE 2 \u2014 the corrected statement. The folklore claim gap_solution_bounded is FALSE (Aristotle produced the saturating counterexample at Delta = Lambda); what survives is monotonicity in G, plus a tracked-hypothesis bound naming the extra assumption",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EWBaryogenesisChiralityWall.sm_no_nu_R_ewbg_doubly_forbidden",
+      "claims": "\u00a75 WORKED CASE 3 \u2014 the ~50-term monolithic root goal that failed both interactive tactics and Aristotle (OUT_OF_BUDGET after six hours), and closed after a nine-fold structural decomposition. The methodological claim: the original failure was about SIZE, not difficulty",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EWBaryogenesisChiralityWall.ewbg_forbidden_iff_wall_intact_or_not_viable",
+      "claims": "\u00a75 \u2014 the sub-lemma that surfaced a HIDDEN dependency: a fourth-pillar sphaleron-rate hypothesis assumed but unrecorded in AXIOM_METADATA. A monolithic proof would have hidden it indefinitely",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EWBaryogenesisChiralityWall.sphaleronSuppression_le_one",
+      "claims": "\u00a75 \u2014 and the resolution: the implicit dependency promoted to an explicit THEOREM rather than a new axiom (the suppression factor lies in [0,1] under v/T >= 0)",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.WaveEquation1D.add_isClassicalWaveSolution",
+      "claims": "\u00a713 \u2014 the structural-Prop scoping pattern's worked case: the 1D wave equation distilled from the Einstein vacuum equations in harmonic gauge, with linearity shipped and the Mathlib-absent PDE infrastructure scoped as the gating Prop IsLocallyWellPosed rather than reinvented in-project",
+      "declared": "2026-08-07"
+    }
+  ],
   "tier": 3,
   "title": "Verification methodology with worked cases",
   "target_journal": "CPC | Phys. Rep.",

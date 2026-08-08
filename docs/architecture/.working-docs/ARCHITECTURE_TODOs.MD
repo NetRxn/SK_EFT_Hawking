@@ -386,6 +386,15 @@ reach for the same sentence split. Cite the check's verdict instead of re-derivi
 - **It is a systematic 4-line offset, not a typo** — both citations are short by exactly 4, so
   the file gained four lines above that point after I1 was written. Any other line-number
   citation into this file is likely off by the same amount.
+- ✅ **CONFIRMED LIVE and GENERALISED at I1's retrofit (2026-08-07).** The offset reproduces, and
+  the coupling holds: I1 §10 names the `prose_theorem_reference_coverage` waiver
+  (`waived:I1:gap_solution_bounded`) as *"the canonical waiver"*, so **the citation and the waiver
+  must be fixed together** — half-fixing either leaves the other wrong.
+- ⚠️ **The problem is not one citation.** I1 cites Lean and the registries by line number
+  **pervasively**: `Basic.lean:152`, `SKDoubling.lean` 244–280 / 156–168 / 367–379 / 412–439,
+  `EWBaryogenesisChiralityWall.lean:106–114`, and `constants.py` lines 2282 / 1391 / 2127 / 2329.
+  This item's own note that *"any other line-number citation into this file is likely off by the
+  same amount"* is now the general case, not a caveat.
 - **Fix shape:** cite the block by declaration name rather than by line. A line number in prose
   is invalidated by any edit above it and nothing checks it. Paper content.
 
@@ -651,7 +660,8 @@ violated for the fifth time in this workstream.
   more** — *"SymTFT audit substrate"* and *"APS η-invariant cross-bridge to Z16 Dai-Freed"*, both
   commented-out stubs after its bibliography — and **D4 adds three more** (*SymTFT audit
   substrate*, *Lindbladian S-matrix axiomatization NO-GO*, *ETH-α productive-value refutation
-  tableau*) — and **D5 adds two more** — so the pattern spans **five** bundles. The named
+  tableau*) — **D5 adds two more**, and **I1 adds three** (Quantum Crooks no-go, APS η-invariant
+  sidebar, ETH-α refutation tableau) — so the pattern spans **six** bundles. The named
   content is substantial and unpublished anywhere: a Kerr-Schild double-copy on Petrov-D acoustic
   geometry with a three-obstruction BCJ no-go, an APS η-invariant substrate for analog horizons,
   an Itô/LDP cross-bridge, and a dissipative-SK-EFT bootstrap-uniqueness no-go.
@@ -695,6 +705,16 @@ violated for the fifth time in this workstream.
   extrapolation … not separately Lean-verified at the Newton-constant level"*, but D3 ships
   `EmergentGravityBounds.wen_adw_factor_6000`, a resolved kernel-pure theorem proving
   `1/6202 < G_Wen/G_c < 1/6000` for every nonzero cutoff. The hedge was true when written.
+- ⚠️ **SECOND BUNDLE, and it lands harder: I1** (2026-08-07). The methodology paper — the one paper
+  whose subject IS the pipeline — describes it at roughly half its current size: *"thirty-three
+  registered checks"* (live **66**), *"fifteen invariants"* (they run to **#17**), *"seventeen
+  publication targets … D1–D8"* (live **21**, `D1`–`D12`), and the local toolchain as
+  *"`v4.29.0`"* (live **`v4.32.0`**). The last is not a count but a **verification claim** —
+  *"All worked-case theorems … verified to compile cleanly on the project's local 4.29.0
+  toolchain"* — asserted against a configuration that no longer exists.
+  ⚠️ **The irony is the finding.** I1 §2 opens by listing four failure modes the pipeline exists
+  to prevent, one of which is *"a parameter whose value was inherited from a prior draft and had
+  drifted."* Its own infrastructure figures are that failure mode.
 - **Fix shape:** F cannot be brought current by editing counts; the roster sections need
   rewriting against the live roster, and the §9 figures need to become macros or citations. This
   is content work under ADR-010 C5, and it is the strongest argument for retrofitting the

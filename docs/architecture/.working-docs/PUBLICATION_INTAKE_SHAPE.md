@@ -276,8 +276,19 @@ bundle metadata on disk at all.
    Full working: [`../../audits/2026-08-07-d7-retrofit/FINDINGS.md`](../../audits/2026-08-07-d7-retrofit/FINDINGS.md).
    ⚠️ **"A check exists" and "the check covers this input" are different claims.** Only the second
    licenses trusting a green result.
-4. ⏭️ **NEXT** — the remaining 7: the I tier (**I1**, I2, I3), then L1/L3, then **E1/E2** — the
-   last open ADR-010 §D4 merge question, measurable as soon as either is declared.
+3j. ✅ **DONE 2026-08-07** — **I1**, ceiling 7→6 (6 apexes → 73 decls / 7 modules). The
+   **methodology paper describes the pipeline at about half its current size**: 33 checks vs a
+   live 66, 15 invariants vs #17, 17 bundles vs 21, toolchain v4.29.0 vs v4.32.0 — the last a
+   *verification claim* against a configuration that no longer exists. I1 §2 opens by listing
+   "a parameter inherited from a prior draft that had drifted" as a failure mode the pipeline
+   prevents; its own figures are that failure mode.
+   Full working: [`../../audits/2026-08-07-i1-retrofit/FINDINGS.md`](../../audits/2026-08-07-i1-retrofit/FINDINGS.md).
+   ⚠️ **An apex's closure is what it RESTS ON, not what it is ABOUT.** I wrote I1's overlap table
+   from subject matter (D2/D3, its case studies' home bundles), then measured it: **D1 30, F 26,
+   D2 1, D3 0**. Subject matter does not predict dependency structure. **Run the closure before
+   writing the table.**
+4. ⏭️ **NEXT** — the remaining 6: **I2**, **I3**, then L1/L3, then **E1/E2** — the last open
+   ADR-010 §D4 merge question, measurable as soon as either is declared.
    ⚠️ **Method, learned on D12 and re-confirmed on D11:** `grep` for a theorem name in a draft
    returns 0 — drafts escape underscores inside `\thm{}`. Resolve references with the
    underscore-aware scan, **seeded with a known-present name first**, never a bare grep.

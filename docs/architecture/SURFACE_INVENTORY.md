@@ -189,7 +189,7 @@ check compares against reality. Sizes are recorded so a silent shrink is visible
 | `provenance.PAPER_DEPENDENCIES` | 17 |
 | `citations.CITATION_REGISTRY` | 652 |
 
-## Publication roster — 21 bundles, 14 with declared apexes
+## Publication roster — 21 bundles, 15 with declared apexes
 
 | bundle | tier | apexes | title |
 |---|---:|---:|---|
@@ -209,7 +209,7 @@ check compares against reality. Sizes are recorded so a silent shrink is visible
 | `L1` | 2 | — | GW170817 / vestigial-graviton |
 | `L2` | 2 | 8 | Three generations from modular invariance |
 | `L3` | 2 | — | BCH four laws by regime |
-| `I1` | 3 | — | Verification methodology with worked cases |
+| `I1` | 3 | 6 | Verification methodology with worked cases |
 | `I2` | 3 | — | Verified statistical estimators + lean-tensor-categories |
 | `I3` | 3 | — | Verified Stochastic Calculus for Mathlib4 — Stochastic Integ |
 | `E1` | 4 | — | Paris-LKB polariton letter |

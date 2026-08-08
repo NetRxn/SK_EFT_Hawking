@@ -1065,7 +1065,11 @@ def check_bundle_registry_consistency() -> CheckResult:
 #:           FINDINGS.md). SECOND declaration conflict resolved: D1 §8.2 had declared
 #:           D7's entire headline as a cross-check; 6 apexes moved D1 -> D7 (D1's
 #:           closure 249 -> 171). D7's draft is five-sevenths placeholder sections.
-UNDECLARED_APEX_CEILING = 7
+#: 7 -> 6:   I1 retrofitted 2026-08-07 (6 apexes; docs/audits/2026-08-07-i1-retrofit/
+#:           FINDINGS.md). The METHODOLOGY paper describes the pipeline at about half
+#:           its current size: 33 checks vs a live 66, 15 invariants vs #17, 17 bundles
+#:           vs 21, toolchain v4.29.0 vs v4.32.0.
+UNDECLARED_APEX_CEILING = 6
 
 
 @register_check(

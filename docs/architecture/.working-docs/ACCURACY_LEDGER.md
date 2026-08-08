@@ -1361,3 +1361,34 @@ content owns it; the container that cites it in a cross-check subsection does no
 instance today. **But record the strength of the signal** — a draft that cedes in words (D8) is
 stronger evidence than document position (D7), and the weaker one should say so rather than
 present both as equally settled.
+
+---
+
+## V33 — the I1 apex retrofit — 8 atoms, 1 SELF-CORRECTED before publication
+
+**P** = perishable, **D** = durable.
+
+| # | atom | decider | result |
+|---|---|---|---|
+| K1 | I1's draft is 1,875 lines and was read in full | the file | ✓ |
+| K2 | I1 names only **seven** Lean theorems in monospace; six are citations | every `\texttt{}` token resolved | ✓ the seventh is an `IntCongr.rfl` token collision (D) |
+| K3 | **SET:** I1's four infrastructure figures, each re-derived from the artifact it names | `validate.py --list`; `WAVE_EXECUTION_PIPELINE.md`; `BUNDLE_CODES`; `lean/lean-toolchain` | ✓ **33 vs 66**, **15 vs #17**, **17 vs 21**, **v4.29.0 vs v4.32.0** — all four stale (P) |
+| K4 | The toolchain item is a **verification claim**, not a count | the sentence | ✓ *"All worked-case theorems … verified to compile cleanly on the project's local 4.29.0 toolchain"* — asserted against a configuration that no longer exists (P) |
+| K5 | Nine `% TODO: substantive draft` blocks are stale | each section read | ✓ all nine sections are fully drafted (P) |
+| K6 | ❌ **SELF-CORRECTED.** I wrote the overlap table from reasoning, then measured it | the closure | **guess: D2 20 / D3 3 / F 3. Actual: D1 30, F 26, D2 1, D3 0.** Replaced before commit (P) |
+| K7 | TODO-D3's 4-line offset reproduces, and the waiver coupling holds | the file + I1 §10 | ✓ and the item generalises: I1 cites by line number in ~10 places (P) |
+| K8 | I1 publishes an unflattering number about itself | §10, §14 and the abstract | ✓ *"roughly three per ten spot-checked load-bearing attributions"* were fabricated, called *"exactly the kind of number a verification program must be willing to publish about itself"* (D) |
+
+⚠️ **K6 is the session's cleanest self-catch and the reason it is recorded rather than quietly
+fixed.** I reasoned "the case studies belong to D2 and D3, so the overlap is with D2 and D3" — and
+was wrong in shape *and* magnitude. **An apex's closure is what it RESTS ON, not what it is
+ABOUT.** `sm_no_nu_R_ewbg_doubly_forbidden` is a chirality-wall theorem whose dependency cone
+barely touches what D2 declares; `firstOrder_uniqueness` sits on the whole `SKDoubling` stack, so
+the overlap is with D1 and F. **Subject matter does not predict dependency structure — that is
+what the closure is for**, and writing the table before running it nearly published a fourth
+wrong measurement this session.
+
+⚠️ **K3/K4 is the pass's substantive finding and it is self-referential.** I1 §2 opens by naming
+four failure modes the pipeline exists to prevent, one of which is *"a parameter whose value was
+inherited from a prior draft and had drifted."* **I1's own infrastructure figures are that failure
+mode, in the paper that names it.**
