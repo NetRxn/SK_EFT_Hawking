@@ -972,3 +972,63 @@ matching *either*; the lakefile already carries it under `name = "Physlib"`. Nee
 positive"* until this lands. The genuinely stale sites found in this retrofit (E1 ×3, E2 ×4, I1 ×2,
 I3 ×1, L2 ×3, D9 ×1) were each confirmed against the live pin individually and are unaffected.
 
+### D23. `bundle_metadata_matches_graph`'s description covers 3 of its 4 legs — OPEN (interpretability)
+
+**Found:** 2026-08-07, operator question *"sounds like it should be green though."*
+
+**Defect.** The check registers as *"bundle_metadata.json finding counts equal the live graph's"*.
+Legs 1–3 are exactly that — field-equality on `blockers_open`, `advisories_open`, `readiness`, and
+they have **never** failed. Leg 4 asserts something else: `stage13_status = 'green'` is illegal while
+`live_blockers > 0`. That is a *semantic* metadata-vs-graph contradiction (metadata claims a review
+verdict the graph's findings contradict), not a count equality — so a failure is uninterpretable
+from the check's name.
+
+**Cost, demonstrated twice in one session.** The retrofit's own reporting mis-described the failure
+as count drift, and the operator correctly read the name as implying it should be green. Both
+readings follow from the description.
+
+**Not a bug.** The housing was deliberate and documented in-source: nothing else in the repo read
+`stage13_status`, the hole had a committed mutation test (`2026-08-01-0009-internal-adversarial/
+D11.md:179` — *"flip pending->green => PASS <-- missed"*), and it needed a home. The author also
+recorded what NOT to assert alongside it (`stage13_redo_required`, `freshness_stale`), which is why
+this entry is about the label rather than the logic.
+
+**Residue (NOT built — §6a).** Either split leg 4 into its own registered check (e.g.
+`bundle_stage13_claim_consistent`) or widen the registered description to name both families. Both
+are check changes and need approval.
+
+---
+
+### D24. The Stage-9/10-before-13 hard gate is unguarded — OPEN
+
+**Found:** 2026-08-07, while applying the operator's demotion.
+
+**Defect.** `BUNDLE_LIFT_PROCEDURE.md:9` states: *"Stage 13 (adversarial review) may not be invoked
+until **both** Stage 9 (figure review) AND Stage 10 (claims review) are GREEN, with all fixes from
+those stages applied."* **No check enforces the ordering.** Verified by reading
+`scripts/validation/checks/bundles_readiness.py`: it reads `stage13_status` at eight sites and
+`stage9_status` / `stage10_status` at **none**.
+
+**Measured consequence — five bundles had jumped the gate:**
+
+| bundle | `stage13_status` | `stage9_status` | `stage10_status` |
+|---|---|---|---|
+| D6 | green | **`not_started`** | `skeleton` |
+| D7 | green | **`not_started`** | green |
+| D8 | green | `pending` | `pending` |
+| D9 | green | green | `pending` |
+| I3 | green | `pending` | green |
+
+D6 is the sharpest: a Stage-13 green with figure review never started. **This is distinct from the
+stale-verdict problem leg 4 catches** — those bundles' Stage-13 greens were contradicted by *later*
+findings; these were invalid when written, because a prerequisite gate had not been passed.
+
+**Now dormant, not fixed.** The operator's 2026-08-07 demotion set every reviewer-stage `green` to
+`pending`, so no bundle currently violates the ordering. Nothing prevents a re-promotion from
+recreating it.
+
+**Residue (NOT built — §6a).** A check asserting `stage13_status = 'green' → stage9_status =
+'green' ∧ stage10_status = 'green'`. Scope it to the ordering only; per the in-source warnings on
+D23, do **not** bundle in `stage13_redo_required` or `freshness_stale`, whose meanings are owned
+elsewhere. Needs approval.
+

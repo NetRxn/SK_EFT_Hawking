@@ -3,177 +3,177 @@
   "apex_theorems": [
     {
       "name": "SKEFTHawking.SecondOrderSK.deltaDissFromTransport_eq",
-      "claims": "\u00a72.2 \u2014 the foundational closed form delta_diss = (gamma_1 + gamma_2) kappa / c_s^2, the leading dissipative correction to the Hawking spectrum",
+      "claims": "§2.2 — the foundational closed form delta_diss = (gamma_1 + gamma_2) kappa / c_s^2, the leading dissipative correction to the Hawking spectrum",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.AcousticMetric.acousticMetric_det",
-      "claims": "\u00a72.4 \u2014 acoustic-metric backbone: the determinant. Reused unchanged in 2+1D graphene (c_s -> v_F/sqrt 2) and so load-bearing for the cross-platform reuse claim",
+      "claims": "§2.4 — acoustic-metric backbone: the determinant. Reused unchanged in 2+1D graphene (c_s -> v_F/sqrt 2) and so load-bearing for the cross-platform reuse claim",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.AcousticMetric.acoustic_metric_lorentzian",
-      "claims": "\u00a72.4 \u2014 acoustic-metric backbone: Lorentzian signature",
+      "claims": "§2.4 — acoustic-metric backbone: Lorentzian signature",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.AcousticMetric.acousticMetric_inv_correct",
-      "claims": "\u00a72.4 \u2014 acoustic-metric backbone: the inverse metric",
+      "claims": "§2.4 — acoustic-metric backbone: the inverse metric",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.AcousticMetric.hawking_temp_from_surface_gravity",
-      "claims": "\u00a72.4 \u2014 T_H from the surface gravity; the relation every platform's temperature rests on",
+      "claims": "§2.4 — T_H from the surface gravity; the relation every platform's temperature rests on",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.HawkingUniversality.hawking_universality",
-      "claims": "\u00a71 + \u00a77.2 \u2014 the universality theorem the paper's central question is posed against: T_H = hbar kappa / 2 pi k_B controls the spectrum independently of the microscopic fluid",
+      "claims": "§1 + §7.2 — the universality theorem the paper's central question is posed against: T_H = hbar kappa / 2 pi k_B controls the spectrum independently of the microscopic fluid",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.SecondOrderSK.firstOrder_count",
-      "claims": "ABSTRACT + \u00a73.1 \u2014 the transport-coefficient counting formula at N = 1, count(1) = 2. \u26a0\ufe0f Closed `by decide` (kernel-checked), NOT by native_decide as \u00a73.1 states",
+      "claims": "ABSTRACT + §3.1 — the transport-coefficient counting formula at N = 1, count(1) = 2. ⚠️ Closed `by decide` (kernel-checked), NOT by native_decide as §3.1 states",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.SecondOrderSK.secondOrder_count",
-      "claims": "\u00a73.1 \u2014 count(2) = 2 without parity asymmetry. Same `by decide` correction",
+      "claims": "§3.1 — count(2) = 2 without parity asymmetry. Same `by decide` correction",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.SecondOrderSK.secondOrder_count_with_parity",
-      "claims": "\u00a73.1 \u2014 the parity-graded count vanishes. Same `by decide` correction",
+      "claims": "§3.1 — the parity-graded count vanishes. Same `by decide` correction",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.SecondOrderSK.thirdOrder_count",
-      "claims": "\u00a73.1 \u2014 count(3) matches floor((N+1)/2) + 1. Same `by decide` correction",
+      "claims": "§3.1 — count(3) matches floor((N+1)/2) + 1. Same `by decide` correction",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.SecondOrderSK.fullSecondOrder_uniqueness",
-      "claims": "ABSTRACT + \u00a73.2 \u2014 positivity forces gamma_{2,1} + gamma_{2,2} = 0, reducing four free second-order parameters to three",
+      "claims": "ABSTRACT + §3.2 — positivity forces gamma_{2,1} + gamma_{2,2} = 0, reducing four free second-order parameters to three",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.SKDoubling.firstOrder_KMS_optimal",
-      "claims": "ABSTRACT + \u00a73.3 \u2014 KMS optimality: positivity is equivalent to i_1 >= 0 and i_2 >= 0, so no hidden inequalities constrain the transport coefficients. Closed by Aristotle",
+      "claims": "ABSTRACT + §3.3 — KMS optimality: positivity is equivalent to i_1 >= 0 and i_2 >= 0, so no hidden inequalities constrain the transport coefficients. Closed by Aristotle",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.SKDoubling.firstOrder_altSign_uniqueness_test",
-      "claims": "\u00a73.3 \u2014 the companion stress test: parameter-space points that fail when the axiom is relaxed",
+      "claims": "§3.3 — the companion stress test: parameter-space points that fail when the axiom is relaxed",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.CGLTransform.einstein_relation",
-      "claims": "\u00a73.4 \u2014 the Einstein relation, first link of the algebraic-KMS => CGL-FDR chain",
+      "claims": "§3.4 — the Einstein relation, first link of the algebraic-KMS => CGL-FDR chain",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.CGLTransform.cgl_fdr_general",
-      "claims": "ABSTRACT + \u00a73.4 \u2014 the CGL master fluctuation-dissipation relation. This is what makes the KMS-mandated noise floor a THEOREM rather than an assumption",
+      "claims": "ABSTRACT + §3.4 — the CGL master fluctuation-dissipation relation. This is what makes the KMS-mandated noise floor a THEOREM rather than an assumption",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.CGLTransform.cgl_implies_secondOrderKMS",
-      "claims": "\u00a73.4 \u2014 the chain closes: CGL FDR implies second-order KMS",
+      "claims": "§3.4 — the chain closes: CGL FDR implies second-order KMS",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.WKBConnection.turning_point_shift_pos_iff",
-      "claims": "\u00a74.1 \u2014 the complex turning-point shift is positive iff the dissipative correction is non-zero. Exact to all orders in the SK-EFT",
+      "claims": "§4.1 — the complex turning-point shift is positive iff the dissipative correction is non-zero. Exact to all orders in the SK-EFT",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.WKBConnection.standard_unitarity_recovered",
-      "claims": "\u00a74.2 \u2014 standard unitarity is recovered in the Gamma_H -> 0 limit",
+      "claims": "§4.2 — standard unitarity is recovered in the Gamma_H -> 0 limit",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.WKBConnection.unitarity_deficit_eq_decoherence",
-      "claims": "ABSTRACT + \u00a74.3 \u2014 NON-PERTURBATIVE EFFECT 1: |alpha|^2 - |beta|^2 = 1 - delta_k. The final state of the analog Hawking process is not pure",
+      "claims": "ABSTRACT + §4.3 — NON-PERTURBATIVE EFFECT 1: |alpha|^2 - |beta|^2 = 1 - delta_k. The final state of the analog Hawking process is not pure",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.WKBConnection.decoherence_nonneg",
-      "claims": "\u00a74.3 \u2014 the decoherence parameter is non-negative",
+      "claims": "§4.3 — the decoherence parameter is non-negative",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.WKBConnection.decoherence_zero_iff",
-      "claims": "\u00a74.3 \u2014 it vanishes exactly in the zero-dissipation limit",
+      "claims": "§4.3 — it vanishes exactly in the zero-dissipation limit",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.WKBConnection.noise_floor_nonneg",
-      "claims": "ABSTRACT + \u00a74.4 \u2014 NON-PERTURBATIVE EFFECT 2: the FDR-mandated noise floor is non-negative \u2014 present even with zero Hawking radiation",
+      "claims": "ABSTRACT + §4.4 — NON-PERTURBATIVE EFFECT 2: the FDR-mandated noise floor is non-negative — present even with zero Hawking radiation",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.WKBConnection.noise_floor_eq_delta_diss",
-      "claims": "\u00a74.4 \u2014 that floor equals delta_k/2 = Gamma_H/kappa; mandatory by KMS, not tunable",
+      "claims": "§4.4 — that floor equals delta_k/2 = Gamma_H/kappa; mandatory by KMS, not tunable",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.WKBConnection.occupation_reduces_to_beta_sq",
-      "claims": "\u00a74.5 \u2014 the total occupation is |beta|^2 plus the floor",
+      "claims": "§4.5 — the total occupation is |beta|^2 plus the floor",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.WKBConnection.noise_dominates_when_beta_small",
-      "claims": "ABSTRACT + \u00a74.5 \u2014 NON-PERTURBATIVE EFFECT 3: the spectral floor \u2014 the crossover above which the noise floor dominates the exponentially-decaying Hawking term",
+      "claims": "ABSTRACT + §4.5 — NON-PERTURBATIVE EFFECT 3: the spectral floor — the crossover above which the noise floor dominates the exponentially-decaying Hawking term",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.PolaritonTier1.attenuation_ge_one",
-      "claims": "\u00a76.3 \u2014 spatial attenuation >= 1 everywhere, the foundation under the stimulated-Hawking gain analysis",
+      "claims": "§6.3 — spatial attenuation >= 1 everywhere, the foundation under the stimulated-Hawking gain analysis",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.PolaritonTier1.attenuation_mono_Gamma",
-      "claims": "\u00a76.3 \u2014 attenuation is monotone in the decay rate",
+      "claims": "§6.3 — attenuation is monotone in the decay rate",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.PolaritonTier1.attenuation_eq_one_at_zero_decay",
-      "claims": "\u00a76.3 \u2014 recovery at zero decay",
+      "claims": "§6.3 — recovery at zero decay",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.DiracFluidMetric.diracFluidMetric_y_offdiag_zero",
-      "claims": "\u00a77.1 \u2014 the 2+1D metric BLOCK-DIAGONALISES: the y off-diagonal vanishes, so the (t,x) sector reproduces the 1+1D structure exactly. This is what makes the reuse claim possible",
+      "claims": "§7.1 — the 2+1D metric BLOCK-DIAGONALISES: the y off-diagonal vanishes, so the (t,x) sector reproduces the 1+1D structure exactly. This is what makes the reuse claim possible",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.DiracFluidMetric.diracFluidMetric_gyy",
-      "claims": "\u00a77.1 \u2014 the decoupled y-sector component",
+      "claims": "§7.1 — the decoupled y-sector component",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.QuasiOneDReduction.quasi1D_validity_bound",
-      "claims": "\u00a77.1 \u2014 the algebraic-envelope bound on the off-diagonal corrections (<= 1.8% at the Dean device parameters)",
+      "claims": "§7.1 — the algebraic-envelope bound on the off-diagonal corrections (<= 1.8% at the Dean device parameters)",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.DiracFluidWKB.soundSpeed_lt_vF",
-      "claims": "\u00a77.3 \u2014 the Dirac fluid is SUBLUMINAL, which is what eliminates the trans-Planckian problem that afflicts BEC analog Hawking",
+      "claims": "§7.3 — the Dirac fluid is SUBLUMINAL, which is what eliminates the trans-Planckian problem that afflicts BEC analog Hawking",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.DiracFluidWKB.dean_lowest_channel_above_four_omega_H",
-      "claims": "\u00a77.3 \u2014 the cleanest detection band sits below the first transverse-mode resonance, so the quasi-1D reduction is preserved where it is used",
+      "claims": "§7.3 — the cleanest detection band sits below the first transverse-mode resonance, so the quasi-1D reduction is preserved where it is used",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.GrapheneNoiseFormula.fdt_consistency",
-      "claims": "ABSTRACT + \u00a77.5 \u2014 the closed-form noise spectrum's two independent derivations (Keldysh FDT and Landauer-Buttiker) agree, certified at the Lean level",
+      "claims": "ABSTRACT + §7.5 — the closed-form noise spectrum's two independent derivations (Keldysh FDT and Landauer-Buttiker) agree, certified at the Lean level",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.GrapheneNoiseFormula.snr_independent_of_sigma_Q",
-      "claims": "\u00a77.6 \u2014 the Lorenz-cancellation theorem: the SNR is independent of sigma_Q, which is what turns the measured Wiedemann-Franz violation into a cross-check of the noise prediction",
+      "claims": "§7.6 — the Lorenz-cancellation theorem: the SNR is independent of sigma_Q, which is what turns the measured Wiedemann-Franz violation into a cross-check of the noise prediction",
       "declared": "2026-08-07"
     }
   ],
@@ -181,9 +181,9 @@
   "title": "Analog Hawking across three platforms",
   "target_journal": "PRD",
   "phase7_subphase": "7e",
-  "stage9_status": "green",
-  "stage10_status": "green",
-  "stage13_status": "green",
+  "stage9_status": "pending",
+  "stage10_status": "pending",
+  "stage13_status": "pending",
   "stage13_redo_required": false,
   "freshness_stale": true,
   "source_manifest_last_regen": "2026-06-10T20:23:44Z",
@@ -196,7 +196,7 @@
   "stage13_review_doc": "docs/audits/stage13_attribution_sweep_2026-06-10.md#d1",
   "audit_log_path": "papers/D1/audit_log.jsonl",
   "supersession_ledger_anchor": "docs/review_finding_supersessions.json",
-  "notes": "2026-05-06 Session-2 stage10 round-4 GREEN: round-3 BLOCKER (4 post-bib section stubs from bundle_append.py) AUTO-CLOSED via deterministic recheck. 14 sentences walked / 0 blocking_issues. 6 round-3 advisories carry forward (non-blocking; pre-existing). | 2026-05-06 Session-2 stage9 Stage9 GREEN: D.2 absorption events were prose+post-bib stubs only (no new figures); pre-existing figure set unchanged. Stub commenting fix doesn't alter figures. | 2026-05-06 Session-2 stage13 round-1 RED: 4 BLOCKER (CitationIntegrity Gate 1 \u2014 wrong-title bibitems on load-bearing experimental anchors) + 1 REQUIRED. **NOTE: BLOCKERs are PRE-EXISTING substantive issues \u2014 not Session-1 absorption regressions.** Falque2025 (arXiv:2311.01392 title misattributed + initial M.\u2192K. wrong); Burkhard2025 (arXiv:2511.12339 title misattributed + initial N.\u2192M. wrong; registry also wrong); Geurs2025 (arXiv:2509.16321 title paraphrased); Majumdar2025 (arXiv:2501.03193 title misattributed + registry malformed authors=A.~Majumdar/title=et~al.). REQUIRED: spectral-floor \u03c9_\u00d7 abstract ~6 T_H vs body ~2 T_H (Heidelberg) / ~12 T_H (Steinhauer) reconciliation + off-by-factor-2 in ln(2/...) substitution. Citations 1.1+1.2 likely propagate to E1; 1.3+1.4 to E2 \u2014 re-review may need cross-bundle audit. DEFERRED TO SESSION 3 \u2014 fixes require WebFetch verification + bibitem rewrite + registry repair + abstract \u03c9_\u00d7 reconciliation. SAME FABRICATION-REGRESSION PATTERN AS D5 (4 fabricated/misattributed bibitem titles). User attention recommended for prioritization + systematic fix strategy. | 2026-05-07 Session-3 phase A bibitem fixes applied for round-1 BLOCKERs: BLOCKER 1.1 Falque2025 (initial M.\u2192K. + title arXiv-version \"Polariton Fluids as QFT Simulators on Tailored Curved Spacetimes\"); 1.2 Burkhard2025 (initial N.\u2192M. + arXiv-version title; registry repaired); 1.3 Geurs2025 (title arXiv-version); 1.4 Majumdar2025 (title arXiv-version + Nat. Phys. coordinates; registry repaired from malformed authors=A.~Majumdar/title=et~al. to full author list + correct title). LaTeX recompile clean. Round-2 S13 verification pending. | 2026-05-07 Session-3 stage13 round-3 final verification GREEN: ALL 4 round-1 BLOCKERs cleanly closed (1.1 Falque2025; 1.2 Burkhard2025; 1.3 Geurs2025 + 5-additional registry malformation sweep \u2014 6 entries fixed total, 0 et-al artifacts remaining; 1.4 Majumdar2025). Round-2 NEW finding 1.5 (5 additional malformed registry entries) ALSO closed via systematic sweep (3 WebFetch-verified, 3 marked Session-4 TODO placeholders). Carry-forward REQUIRED: spectral-floor \u03c9_\u00d7 abstract-vs-body reconciliation (author-side; out-of-scope round-3). Carry-forward Session-4 polish: WebFetch verbatim titles for Adler2024 + BRSSS2008 + Zhao2023 TODO placeholders. | 2026-06-10 attribution-content sweep (docs/audits/stage13_attribution_sweep_2026-06-10.md): GREEN after fixes. Falque method (shock-velocimetry->interferometry) + Steinhauer/deNova table relabel.",
+  "notes": "2026-05-06 Session-2 stage10 round-4 GREEN: round-3 BLOCKER (4 post-bib section stubs from bundle_append.py) AUTO-CLOSED via deterministic recheck. 14 sentences walked / 0 blocking_issues. 6 round-3 advisories carry forward (non-blocking; pre-existing). | 2026-05-06 Session-2 stage9 Stage9 GREEN: D.2 absorption events were prose+post-bib stubs only (no new figures); pre-existing figure set unchanged. Stub commenting fix doesn't alter figures. | 2026-05-06 Session-2 stage13 round-1 RED: 4 BLOCKER (CitationIntegrity Gate 1 — wrong-title bibitems on load-bearing experimental anchors) + 1 REQUIRED. **NOTE: BLOCKERs are PRE-EXISTING substantive issues — not Session-1 absorption regressions.** Falque2025 (arXiv:2311.01392 title misattributed + initial M.→K. wrong); Burkhard2025 (arXiv:2511.12339 title misattributed + initial N.→M. wrong; registry also wrong); Geurs2025 (arXiv:2509.16321 title paraphrased); Majumdar2025 (arXiv:2501.03193 title misattributed + registry malformed authors=A.~Majumdar/title=et~al.). REQUIRED: spectral-floor ω_× abstract ~6 T_H vs body ~2 T_H (Heidelberg) / ~12 T_H (Steinhauer) reconciliation + off-by-factor-2 in ln(2/...) substitution. Citations 1.1+1.2 likely propagate to E1; 1.3+1.4 to E2 — re-review may need cross-bundle audit. DEFERRED TO SESSION 3 — fixes require WebFetch verification + bibitem rewrite + registry repair + abstract ω_× reconciliation. SAME FABRICATION-REGRESSION PATTERN AS D5 (4 fabricated/misattributed bibitem titles). User attention recommended for prioritization + systematic fix strategy. | 2026-05-07 Session-3 phase A bibitem fixes applied for round-1 BLOCKERs: BLOCKER 1.1 Falque2025 (initial M.→K. + title arXiv-version \"Polariton Fluids as QFT Simulators on Tailored Curved Spacetimes\"); 1.2 Burkhard2025 (initial N.→M. + arXiv-version title; registry repaired); 1.3 Geurs2025 (title arXiv-version); 1.4 Majumdar2025 (title arXiv-version + Nat. Phys. coordinates; registry repaired from malformed authors=A.~Majumdar/title=et~al. to full author list + correct title). LaTeX recompile clean. Round-2 S13 verification pending. | 2026-05-07 Session-3 stage13 round-3 final verification GREEN: ALL 4 round-1 BLOCKERs cleanly closed (1.1 Falque2025; 1.2 Burkhard2025; 1.3 Geurs2025 + 5-additional registry malformation sweep — 6 entries fixed total, 0 et-al artifacts remaining; 1.4 Majumdar2025). Round-2 NEW finding 1.5 (5 additional malformed registry entries) ALSO closed via systematic sweep (3 WebFetch-verified, 3 marked Session-4 TODO placeholders). Carry-forward REQUIRED: spectral-floor ω_× abstract-vs-body reconciliation (author-side; out-of-scope round-3). Carry-forward Session-4 polish: WebFetch verbatim titles for Adler2024 + BRSSS2008 + Zhao2023 TODO placeholders. | 2026-06-10 attribution-content sweep (docs/audits/stage13_attribution_sweep_2026-06-10.md): GREEN after fixes. Falque method (shock-velocimetry->interferometry) + Steinhauer/deNova table relabel.",
   "open_findings": 58,
   "blocked_p1_gates": [
     "FixPropagation"

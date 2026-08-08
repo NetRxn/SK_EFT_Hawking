@@ -1817,3 +1817,41 @@ honest state — `stage9/10/13: pending-redo`, 46 blockers open — and it does 
 The 14 either re-enter Stage 9/10 → 13 per the operator's 2026-08-07 ruling, or carry a
 `stage13_status` that reflects the stale green. **That disposition is the operator's**; the retrofit
 neither made nor can clear it.
+
+---
+
+## V45 — the operator's reviewer-stage demotion — 6 atoms, 0 corrected
+
+**Operator decision, 2026-08-07: *"No bundle should be green - demotion is required."*** Applied to
+all three reviewer-stage fields. This is a change to review-state claims, made on operator
+instruction; the retrofit neither proposed nor could make it.
+
+**P** = perishable, **D** = durable.
+
+| # | atom | decider | result |
+|---|---|---|---|
+| X1 | the demotion value | `scripts/bundle_append.py:320–325` — the repo's own `green → "pending"` demotion | used verbatim rather than invented (D) |
+| X2 | scope applied | all `papers/*/bundle_metadata.json` | **52 fields across 20 bundles**: `stage9_status` 16→0 green, `stage10_status` 17→0 green, `stage13_status` 19→0 green (P) |
+| X3 | `stage13_redo_required` | deliberately untouched | unchanged (2 True / 19 False). The check's own comment records asserting it as a prior mistake — the field is owned by `bundle_append.py` and means *"new content was appended since the last review"*, not *"blockers are open"* (D) |
+| X4 | effect on the check | `validate.py --check bundle_metadata_matches_graph` | ✅ **PASS — 21 compared, 0 drift** (P) |
+| X5 | effect on the suite | full `validate.py`; `pytest tests/ -q` | **65/66** (was 64/66); only `readiness_submission_gate` remains. pytest **5,676 passed / 5 skipped**, unchanged (P) |
+| **X6** | **SET: bundles that had jumped the Stage-9/10-before-13 hard gate** | every bundle's three status fields, both directions | ⚠️ **five** — D6 (`s9 = not_started`, `s10 = skeleton`), D7 (`s9 = not_started`), D8 (`s9,s10 = pending`), D9 (`s10 = pending`), I3 (`s9 = pending`) — all with `s13 = green` (D) |
+
+⚠️ **X6 is a different defect from the one leg 4 catches, and the distinction matters for the fix.**
+Leg 4 catches a Stage-13 green *contradicted by findings filed later*. X6 is a Stage-13 green that
+was **invalid when written**, because `BUNDLE_LIFT_PROCEDURE.md:9` forbids invoking Stage 13 until
+Stages 9 and 10 are green. **No check enforces that ordering** — verified by reading
+`scripts/validation/checks/bundles_readiness.py`, which reads `stage13_status` at eight sites and
+`stage9_status`/`stage10_status` at none. → **TODO-D24**. The demotion makes it dormant, not fixed.
+
+⚠️ **TODO-D23 filed on the check's label, not its logic.** Its registered description —
+*"bundle_metadata.json finding counts equal the live graph's"* — covers legs 1–3, which have never
+failed. Leg 4 is a semantic contradiction, not a count equality, so its failure is uninterpretable
+from the name. **Cost demonstrated twice in one session**: this retrofit mis-described the failure
+as count drift, and the operator read the name as implying it should be green. Both readings follow
+from the description.
+
+✅ **What the demotion actually bought, stated plainly:** `validate.py` went 64/66 → 65/66 not by
+suppressing a check but by **making a false claim false** — 20 bundles stopped asserting a review
+verdict they had not earned. The remaining failure, `readiness_submission_gate`, is the P1-gate
+check and a separate subject.
