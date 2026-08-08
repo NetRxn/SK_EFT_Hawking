@@ -1034,7 +1034,11 @@ def check_bundle_registry_consistency() -> CheckResult:
 #: 15 -> 14: D1 retrofitted 2026-08-07 (41 apexes; docs/audits/2026-08-07-d1-retrofit/
 #:           FINDINGS.md). Supplies the honest denominator for TODO-D9's
 #:           \substantivetheorems{} overclaim: D1's measured closure is 249 declarations.
-UNDECLARED_APEX_CEILING = 14
+#: 14 -> 13: F retrofitted 2026-08-07 (29 apexes; docs/audits/2026-08-07-f-retrofit/
+#:           FINDINGS.md) — the first Tier-0. The flagship enumerates a 17-bundle roster
+#:           and does not know D9-D12 exist; F ∩ D1 = 27 and F ∩ each of D6/D9/D10/D11/
+#:           D12/L2 = 0.
+UNDECLARED_APEX_CEILING = 13
 
 
 @register_check(

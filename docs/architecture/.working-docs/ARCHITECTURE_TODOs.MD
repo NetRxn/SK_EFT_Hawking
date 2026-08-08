@@ -585,11 +585,19 @@ version *and* the Mathlib rev against `lean-toolchain` + `lakefile.toml`.
   their own docstrings say *"Use decide."*; their axiom profile is exactly
   `{propext, Classical.choice, Quot.sound}`; and **`Lean.ofReduceBool` — the axiom a
   `native_decide` proof necessarily carries — appears on ZERO declarations project-wide.**
-- **Why it matters:** `decide` is kernel-checked, `native_decide` is not. The draft is
-  volunteering a trust weakness it does not have, in the place a referee looks for one. D11's
+- ⚠️ **BROADENED 2026-08-07 — this is corpus-wide, not a D1 slip.** F §7.2 annotates
+  `FigureEightKnot.figure_eight_normalized` with `(native_decide)`; measured, it carries the
+  three classical axioms and nothing else. Two independently drafted manuscripts each volunteer
+  a `native_decide` dependency the library does not have. **The fix is a corpus sweep, not a
+  sentence.**
+- **Why it matters:** `decide` is kernel-checked, `native_decide` is not. The drafts are
+  volunteering a trust weakness they do not have, in the place a referee looks for one. D11's
   draft states the distinction correctly, so the project knows it.
-- ⚠️ **Blocks an ADR-010 open item.** The `native_decide` disclosure posture cannot be settled
-  from the drafts while at least one draft's disclosure does not describe its own substrate.
+- ✅ **RESOLVES an ADR-010 open item on the merits.** The posture question was *how much should
+  we disclose about our `native_decide` use*. The measurement answers it: **we have none** —
+  `Lean.ofReduceBool` appears on zero declarations project-wide — so there is nothing to
+  disclose, and the live defect is drafts claiming otherwise. Operator sign-off still required to
+  close the ADR item.
 - **Fix shape:** one sentence in §3.1 — `decide`, kernel-checked, and say so. Prose-only.
 - Full working: `docs/audits/2026-08-07-d1-retrofit/FINDINGS.md` §3.
 
@@ -611,3 +619,30 @@ version *and* the Mathlib rev against `lean-toolchain` + `lakefile.toml`.
   whether to lift the four waves is an ADR-010 C5 scope call, and it bears on D1's charter-length
   shortfall.
 - Full working: `docs/audits/2026-08-07-d1-retrofit/FINDINGS.md` §4.
+
+### D15. The flagship surveys a 17-bundle program; 21 exist — OPEN (CRITICAL, scope claim)
+
+- **Where:** `papers/F/paper_draft.tex` — abstract, §1.1, §1.2, §9.4, §11.1, §11.2, §12.3. The
+  claim is made seven times and consistently: *"the sixteen sibling-bundle threads"*, *"$17$
+  publication targets"*, *"Tier 1 (8 deep papers): D1 … D8"*, *"citing all 16 siblings"*.
+- **The fact:** the live roster is **21** bundles. **D9, D10, D11 and D12 appear nowhere in F.**
+  Three of them now have declared apexes and measured closures.
+- **Why CRITICAL:** this is not a stale count in a narrative — it is the paper's **scope**. A
+  survey that enumerates its contents and omits four of them is wrong about what it surveys, and
+  *"integrates the sixteen sibling threads into a single survey"* is its thesis.
+- **§11.1 compounds it:** *"the substrate program has shipped 17 bundles to reviewer-triple-closed
+  Stage-13 GREEN status."* Both halves fail — the roster is 21, and no bundle is submittable. F
+  itself is `readiness: RED` with 23 open blockers.
+- **§7's D6 checklist is stale in the other direction:** six boxes, all unchecked, including
+  waves 6v.2 / 6v.5 / 6v.6 — all of which have shipped and appear in D6's own declared apexes.
+  At least four of six are done.
+- **Same item, smaller instances (§9 infrastructure prose), each re-derived not assumed:**
+  *"29+ checks"* (live **66**) · *"Pipeline Invariants 1--14"* (they run to **#17**) ·
+  *"`physics-qa:figure-reviewer`"* (plugin is **`skeft-qa`**) · *"branches D.1/D.2/D.3"*
+  (branch **D.4** exists) · a hardcoded `$\sim 322$` where `\aristotleproved{}` is a macro in
+  the `counts.tex` F already `\input`s — correct today, guaranteed to drift.
+- **Fix shape:** F cannot be brought current by editing counts; the roster sections need
+  rewriting against the live roster, and the §9 figures need to become macros or citations. This
+  is content work under ADR-010 C5, and it is the strongest argument for retrofitting the
+  remaining bundles **before** F is redrafted — F's job is to describe them.
+- Full working: `docs/audits/2026-08-07-f-retrofit/FINDINGS.md` §2, §3, §5.

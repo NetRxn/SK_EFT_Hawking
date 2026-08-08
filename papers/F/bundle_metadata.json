@@ -1,5 +1,152 @@
 {
   "bundle_target": "F",
+  "apex_theorems": [
+    {
+      "name": "SKEFTHawking.GaugeErasure.gauge_erasure",
+      "claims": "\u00a73 \u2014 the erasure theorem: the hydrodynamic layer erases non-Abelian one-form gauge symmetry. Closure 1 of the three that force the substrate to the ADW channel",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GaugeErasure.u1_survival",
+      "claims": "\u00a73 \u2014 only U(1) survives the fluid-cell coarse-graining as a continuous one-form",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.SKDoubling.firstOrder_KMS_optimal",
+      "claims": "\u00a74.1 \u2014 the fluctuation-dissipation relation as the unique consequence of the three SK-EFT axioms at first order; the formal anchor of the platform-agnosticism claim",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.HeatKernelExpansion.G_N_from_a2_eq_G_N_sakharov",
+      "claims": "ABSTRACT + \u00a76.1 \u2014 the SINGLE Sakharov coefficient G_N = 12*pi/(N_f Lambda_UV^2) from the heat-kernel a2 coefficient. The substrate-identity claim's load-bearing object: the same N_f appears here and in D2's modular-invariance derivation",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EmergentGravityBounds.coupling_deficit",
+      "claims": "\u00a76.2 \u2014 Closure 2, the Lean-certified half: the perturbative four-fermion coupling is below G_c^ADW/1000 across the natural ranges. \u26a0\ufe0f The factor-6000 Newton-constant figure the register quotes is an informal extrapolation from this, and the draft says so",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EmergentGravityBounds.coupling_ratio_small",
+      "claims": "\u00a76.2 \u2014 the certified instance at alpha = 1/5, N_f = 4",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GravitationalWaves.natural_range_disjoint_from_ligo_window",
+      "claims": "\u00a76.2 \u2014 Closure 3: the vestigial-graviton natural range is disjoint from the GW170817 window",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GravitationalWaves.vestigial_natural_range_violates_ligo",
+      "claims": "\u00a76.2 \u2014 the violation stated directly",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GravitationalWaves.second_sound_graviton_natural_range_universally_falsified",
+      "claims": "ABSTRACT + \u00a76.2 + \u00a710 \u2014 the universal falsifier: the second-sound graviton is falsified across the whole natural-range band. F's headline FALSIFIED-register entry, shared character-for-character with L1",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.LinearizedEFE.G_N_sakharov_eq_ratio_critical_coupling",
+      "claims": "\u00a76.3 + \u00a710 \u2014 Decision Gate E.2 (heat-kernel calibration), closing the comparison against Vassilevich Eq. 4.37",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.NonlinearDiffInvariance.diff_invariance_a4_iff_dirac_basis_consistent",
+      "claims": "\u00a76.3 \u2014 Decision Gate E.3: diffeomorphism invariance through a4 holds IFF the Dirac basis is consistent",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.NonlinearDiffInvariance.pathB_residual_a4_dirac_eq_zero",
+      "claims": "\u00a710 \u2014 the E.3 residual vanishes on the Dirac fermion bundle; perturbations away from it introduce a residual linear in the perturbation",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.NonlinearEFE.precessionRatio_eq_one_iff_alpha_unity",
+      "claims": "\u00a76.3 + \u00a710 \u2014 Decision Gate E.4: the multi-channel PPN precession-ratio biconditional against Will 2014",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.BHThermodynamicsFourLaws.T_H_schwarzschild_strict_decreasing",
+      "claims": "\u00a76.4 \u2014 the BCH Hawking temperature is strictly decreasing in M on the Schwarzschild branch; the regime-partition claim L3 extracts",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.BHEntropyMicroscopic.abelian_MTC_falsifies_H_HorizonBoundaryCondition",
+      "claims": "ABSTRACT + \u00a76.5 + \u00a710 \u2014 the abelian-MTC falsifier: it is what structurally SELECTS SU(2)_k rather than leaving the MTC a phenomenological choice, and so what makes the Kaul-Majumdar -3/2 log A correction a derivation rather than a fiat",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.MicroscopicCoefficientMatch.lambdaEmergMicroscopic_at_planck_natural_far_exceeds_observed",
+      "claims": "ABSTRACT + \u00a76.6 + \u00a710 \u2014 the REPRODUCED-register entry: the emergent Lambda overshoots the observed value by >= 10^100. This is the rigorous Lean lower bound; the ~10^122 the abstract also quotes is heuristic, and the draft distinguishes them",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EinsteinCartanExtension.torsionAtCosmologicalBackground_at_planck_natural_below_kostelecky",
+      "claims": "\u00a76.7 + \u00a710 \u2014 CLEARED register: cosmological-background torsion sits ~46 orders below the Kostelecky-Russell-Tasson bound",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.BundleRiemann.bundleRiemannAux_first_bianchi_torsionfree_apply",
+      "claims": "\u00a76.8 + \u00a79.6 \u2014 the algebraic first Bianchi identity; one of the two Mathlib-upstream targets F names",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.PenroseSingularity.correctness_push_biconditional_under_applicable",
+      "claims": "\u00a76.8 \u2014 the Penrose singularity hypothesis bundle with the Riccati-focusing core",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.NoHairTheorem.noHairTheorem_statement",
+      "claims": "\u00a76.8 + \u00a79.6 \u2014 the Kerr-family no-hair theorem; the other Mathlib-upstream target",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.QECHolographyBridge.HPCode.code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class",
+      "claims": "\u00a77.1 Face 3 \u2014 the Hayden-Preskill code-distance/anyonic-fusion biconditional on the horizon MTC. The cross-bridge that makes 'one MTC, four faces' a claim rather than a slogan",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.QECHolographyBridge.fibonacci_HPCode_codeDistance_lt_log_two",
+      "claims": "\u00a77.2 \u2014 the Fibonacci-anyon quantitative benchmark on that code",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.IsingBraiding.trefoil_eq_neg_sqrt2",
+      "claims": "\u00a77.2 Face 2 \u2014 the closed-form trefoil invariant = -sqrt 2, the load-bearing WRT check",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FigureEightKnot.figure_eight_trace_neg_one",
+      "claims": "\u00a77.2 Face 2 \u2014 the figure-eight knot invariant, shipped at zero sorry",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FigureEightKnot.figure_eight_normalized",
+      "claims": "\u00a77.2 \u2014 the normalized figure-eight invariant. \u26a0\ufe0f The draft annotates this '(native_decide)'; it is NOT \u2014 its axiom profile is exactly the three classical axioms and Lean.ofReduceBool appears on zero declarations project-wide (TODO-D13)",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FermiHubbardDimer.dark_state_in_kernel",
+      "claims": "\u00a77.3 \u2014 the doublon-SWAP dark-state kernel structure. F is explicit that the full Berry-phase / SWAP-equivalence layer is DEFERRED, not shipped",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EntropicGravityDarkEnergy.both_decisive_bayes_bounds_exceed_jeffreys_decisive",
+      "claims": "ABSTRACT + \u00a78.4 + \u00a710 \u2014 the genuinely Bayes-decisive PAIR (Tsallis-aggregate + Odintsov) as a single theorem. The abstract's 'two of four quantitative mechanisms exceed Jeffreys-decisive' is this theorem, and the careful wording is load-bearing",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EntropicGravityDarkEnergy.all_quantitative_bounds_disfavoured",
+      "claims": "\u00a78.4 \u2014 the 4-conjunct MIXED-threshold aggregator, adding Verlinde at >= 5 sigma and Barrow at the information-criteria moderate level. Deliberately not stated as four decisive exclusions",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EntropicGravityDarkEnergy.r_d_independent_count_eight",
+      "claims": "\u00a78.4 \u2014 the r_d-independence count underwriting the claim that the closure survives the r_d-anchoring rescue",
+      "declared": "2026-08-07"
+    }
+  ],
   "tier": 0,
   "title": "Fluid-Based Approaches to Fundamental Physics \u2014 A Formally Verified Survey",
   "target_journal": "Living Rev. Relativity | Phys. Rep.",

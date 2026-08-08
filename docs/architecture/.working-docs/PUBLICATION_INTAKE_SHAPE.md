@@ -220,9 +220,21 @@ bundle metadata on disk at all.
    (194 vs 114) and the draft was right — the two are the project's two counting conventions.
    **Run the tool a claim names before filing against it**, especially when the contradicting
    number is already in hand.
-4. ⏭️ **NEXT** — the remaining 14, one at a time. Both of ADR-010's named merge questions are
-   answered and the most-exposed abstract is measured, so order by exposure: the bundles whose
-   drafts make the strongest novelty or completeness claims relative to what anyone has counted.
+3e. ✅ **DONE 2026-08-07** — **F**, ceiling **14 → 13**. The first Tier-0 (29 apexes → 221 decls
+   / 27 modules, depth 5). The flagship states a **17-bundle / 16-sibling** roster in seven
+   places and **does not know D9–D12 exist**; its §7 D6-absorption checklist shows six unchecked
+   boxes for work that has shipped. Measured: **F ∩ D1 = 27** and **F ∩ each of D6/D9/D10/D11/
+   D12/L2 = 0** — the flagship's declared substrate touches none of the quantum-computation,
+   detection or band-theory bundles. It also produced the **second independent** instance of the
+   `native_decide` mis-disclosure, converting TODO-D13 from a D1 slip into a corpus sweep and
+   settling ADR-010's `native_decide` posture item on the merits (there is none to disclose).
+   Full working: [`../../audits/2026-08-07-f-retrofit/FINDINGS.md`](../../audits/2026-08-07-f-retrofit/FINDINGS.md).
+   ⚠️ **Sequencing consequence:** F cannot be redrafted until the bundles it surveys are
+   measured. **The retrofit is now a prerequisite for the flagship, not a parallel workstream.**
+4. ⏭️ **NEXT** — the remaining 13, one at a time. Order by what F needs: the Tier-1 deep papers
+   it surveys and mis-scopes (**D3** is the heaviest and carries most of F's apexes; **D2**,
+   **D4**, **D5** follow), then the L/I/E tiers. Each one measured is one section of the
+   flagship that can be written against evidence rather than against a snapshot.
    ⚠️ **Method, learned on D12 and re-confirmed on D11:** `grep` for a theorem name in a draft
    returns 0 — drafts escape underscores inside `\thm{}`. Resolve references with the
    underscore-aware scan, **seeded with a known-present name first**, never a bare grep.

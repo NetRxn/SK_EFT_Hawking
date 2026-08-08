@@ -1091,3 +1091,31 @@ of me, and they disagreed — which is a reason to run the tool the claim names,
 is `feedback-remeasure-filed-findings-before-fixing` in its other direction: not *re-measure a
 filed finding*, but *re-measure before filing at all*, especially when the contradicting number
 cost nothing to produce.
+
+---
+
+## V24 — the F apex retrofit — 8 atoms, 0 corrected
+
+First Tier-0 retrofit. **P** = perishable, **D** = durable.
+
+| # | atom | decided by | result |
+|---|---|---|---|
+| Z1 | F's draft is 2,494 lines and was read in full | the file | ✓ |
+| Z2 | **SET:** F states a 17-bundle / 16-sibling roster **consistently** | every scope statement in the draft, not one | ✓ seven sites, all agreeing — so this is a considered claim, not a typo (P) |
+| Z3 | D9, D10, D11, D12 appear **nowhere** in F | full read | ✓ (P) |
+| Z4 | **SET:** F ∩ every *declared* bundle | D1, D6, D9, D10, D11, D12, L2 — all seven | ✓ D1 **27**, all others **0** (D) |
+| Z5 | F §7's D6 checklist shows six unchecked boxes for work that has shipped | the checklist vs D6's declared apexes | ✓ ≥4 of 6 stale (P) |
+| Z6 | `figure_eight_normalized` is **not** `native_decide` | its axiom profile, then the project-wide `Lean.ofReduceBool` population | ✓ zero declarations carry it — the D1 defect recurs independently (P) |
+| Z7 | **SET:** §9's five infrastructure claims | each re-derived from its own source, not from memory | ✓ 4 wrong (checks, invariants, plugin name, branch set), 1 right-but-hardcoded (P) |
+| Z8 | F's *physics* hedging is accurate where it matters | the factor-6000 scoping, the Bayes-threshold separation, the Λ bound-vs-heuristic split, the naturalness-window disclosure — each read against its theorem | ✓ all four correctly scoped (D) |
+
+⚠️ **Z8 is not politeness.** Six atoms of this pass are defects, and a reader who saw only those
+would conclude the flagship overclaims. It does not: its physics claims are hedged with more care
+than its surrounding infrastructure prose, and the two failure modes need different fixes.
+**A findings document that records only defects mis-describes its object** — the same error as a
+scan that reports only presence.
+
+⚠️ **Z6 is the second independent instance of one defect, and that changes its shape.** One
+draft misdescribing its own substrate is a prose slip; two, drafted separately, is a corpus
+pattern — and it converts an ADR-010 open *posture* question into a settled measurement. **Count
+the instances before choosing the size of the fix.**

@@ -189,11 +189,11 @@ check compares against reality. Sizes are recorded so a silent shrink is visible
 | `provenance.PAPER_DEPENDENCIES` | 17 |
 | `citations.CITATION_REGISTRY` | 652 |
 
-## Publication roster — 21 bundles, 7 with declared apexes
+## Publication roster — 21 bundles, 8 with declared apexes
 
 | bundle | tier | apexes | title |
 |---|---:|---:|---|
-| `F` | 0 | — | Fluid-Based Approaches to Fundamental Physics — A Formally V |
+| `F` | 0 | 29 | Fluid-Based Approaches to Fundamental Physics — A Formally V |
 | `D1` | 1 | 41 | Analog Hawking across three platforms |
 | `D2` | 1 | — | Anomaly constraints on SM particle content |
 | `D3` | 1 | — | Emergent gravity through BH thermodynamics |
