@@ -3,7 +3,7 @@
   "clusters": [
     {
       "confidence": 1.0,
-      "constructed_at": "2026-08-06T05:29:55Z",
+      "constructed_at": "2026-08-08T13:45:34Z",
       "constructed_by": "cluster_detect.py:exact",
       "human_confirmed_at": null,
       "id": "claim_cluster:exact:07278724",
@@ -21,7 +21,7 @@
     },
     {
       "confidence": 1.0,
-      "constructed_at": "2026-08-06T05:29:55Z",
+      "constructed_at": "2026-08-08T13:45:34Z",
       "constructed_by": "cluster_detect.py:exact",
       "human_confirmed_at": null,
       "id": "claim_cluster:exact:fd6e89cf",
@@ -39,7 +39,7 @@
     },
     {
       "confidence": 1.0,
-      "constructed_at": "2026-08-06T05:29:55Z",
+      "constructed_at": "2026-08-08T13:45:34Z",
       "constructed_by": "cluster_detect.py:exact",
       "human_confirmed_at": null,
       "id": "claim_cluster:exact:732a88c6",
@@ -57,7 +57,7 @@
     },
     {
       "confidence": 1.0,
-      "constructed_at": "2026-08-06T05:29:55Z",
+      "constructed_at": "2026-08-08T13:45:34Z",
       "constructed_by": "cluster_detect.py:exact",
       "human_confirmed_at": null,
       "id": "claim_cluster:exact:40e3f093",
@@ -75,7 +75,7 @@
     },
     {
       "confidence": 1.0,
-      "constructed_at": "2026-08-06T05:29:55Z",
+      "constructed_at": "2026-08-08T13:45:34Z",
       "constructed_by": "cluster_detect.py:exact",
       "human_confirmed_at": null,
       "id": "claim_cluster:exact:d2c6aaa3",
@@ -95,7 +95,7 @@
     },
     {
       "confidence": 1.0,
-      "constructed_at": "2026-08-06T05:29:55Z",
+      "constructed_at": "2026-08-08T13:45:34Z",
       "constructed_by": "cluster_detect.py:exact",
       "human_confirmed_at": null,
       "id": "claim_cluster:exact:ce92f4a9",
@@ -117,7 +117,7 @@
     },
     {
       "confidence": 0.9,
-      "constructed_at": "2026-08-06T05:29:55Z",
+      "constructed_at": "2026-08-08T13:45:34Z",
       "constructed_by": "cluster_detect.py:normalized",
       "human_confirmed_at": null,
       "id": "claim_cluster:norm:fb60352a",
@@ -134,7 +134,7 @@
       "normalized_hash": "fb60352a"
     }
   ],
-  "constructed_at": "2026-08-06T05:29:55Z",
+  "constructed_at": "2026-08-08T13:45:34Z",
   "constructed_by": "cluster_detect.py:all",
   "paper_coverage": [
     "D11",

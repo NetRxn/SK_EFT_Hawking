@@ -31,6 +31,7 @@ in the RENDERED pdf, or a missing PDF).
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import shutil
 import subprocess
@@ -50,15 +51,28 @@ def _bundle_dirs(names: list[str] | None) -> list[Path]:
                   if d.is_dir() and (d / "paper_draft.tex").is_file())
 
 
-def compile_one(bundle_dir: Path, keep: bool = False) -> tuple[bool, str]:
-    """Compile one bundle. Returns (passed, one-line report)."""
+def compile_one(bundle_dir: Path, keep: bool = False) -> tuple[bool, str, int | None]:
+    """Compile one bundle. Returns (passed, one-line report, page count or None).
+
+    ⚠️ The page count used to be computed here and thrown away — it reached the
+    human-readable string at the end of this function and nothing else, so
+    `ManuscriptLength` had no instrument despite one existing (audit 2026-08-01
+    §5.2: *"The instrument exists and is deliberately unwired."*). It is now
+    returned, and `main()` persists it to `bundle_metadata.json.compiled_pages`
+    so the heatmap can render a size without recompiling 21 drafts.
+
+    Returned rather than written here, because a function that both compiles and
+    mutates tracked metadata cannot be called from a read-only context — the same
+    split `check_bundle_source_freshness` had to make after it wrote its own
+    verdict into the file its readers trust.
+    """
     tex = bundle_dir / "paper_draft.tex"
     if not tex.is_file():
-        return False, f"{bundle_dir.name}: no paper_draft.tex"
+        return False, f"{bundle_dir.name}: no paper_draft.tex", None
 
     pdflatex = shutil.which("pdflatex")
     if pdflatex is None:
-        return True, f"{bundle_dir.name}: SKIPPED (pdflatex not on PATH)"
+        return True, f"{bundle_dir.name}: SKIPPED (pdflatex not on PATH)", None
 
     out = Path(tempfile.mkdtemp(prefix=f"skeft-{bundle_dir.name}-"))
     try:
@@ -73,7 +87,7 @@ def compile_one(bundle_dir: Path, keep: bool = False) -> tuple[bool, str]:
         log = out / "paper_draft.log"
         pdf = out / "paper_draft.pdf"
         if not pdf.is_file():
-            return False, f"{bundle_dir.name}: NO PDF PRODUCED"
+            return False, f"{bundle_dir.name}: NO PDF PRODUCED", None
 
         log_text = log.read_text(encoding="utf-8", errors="replace") if log.is_file() else ""
         errors = re.findall(r"^! .*$", log_text, re.M)
@@ -102,13 +116,13 @@ def compile_one(bundle_dir: Path, keep: bool = False) -> tuple[bool, str]:
                                  capture_output=True, text=True, timeout=120).stdout
             unresolved = txt.count("??")
 
-        pages = "?"
+        pages: str | int = "?"
         if shutil.which("pdfinfo"):
             info = subprocess.run(["pdfinfo", str(pdf)],
                                   capture_output=True, text=True, timeout=60).stdout
             m = re.search(r"Pages:\s+(\d+)", info)
             if m:
-                pages = m.group(1)
+                pages = int(m.group(1))
 
         shutil.copy2(pdf, bundle_dir / "paper_draft.pdf")
 
@@ -128,10 +142,39 @@ def compile_one(bundle_dir: Path, keep: bool = False) -> tuple[bool, str]:
             detail += f"\n    first error: {errors[0][:160]}"
         if keep:
             detail += f"\n    artifacts kept: {out}"
-        return ok, detail
+        return ok, detail, (pages if isinstance(pages, int) else None)
     finally:
         if not keep:
             shutil.rmtree(out, ignore_errors=True)
+
+
+def _persist_pages(bundle_dir: Path, pages: int | None) -> None:
+    """Record `compiled_pages` in the bundle's metadata — CLI-only, by design.
+
+    `bundle_manuscript_length` does NOT read this field; it measures the PDF
+    itself, because a stored number cannot be distinguished from a stale one.
+    This exists so the heatmap and dashboard can render a size without
+    recompiling 21 drafts.
+
+    `None` (no pdfinfo, or no PDF) CLEARS the field rather than leaving the
+    previous value: a compile that could not be measured must not leave a number
+    behind that reads as this compile's.
+    """
+    meta = bundle_dir / "bundle_metadata.json"
+    if not meta.is_file():
+        return
+    try:
+        md = json.loads(meta.read_text())
+    except (OSError, json.JSONDecodeError):
+        return
+    if md.get("compiled_pages") == pages:
+        return
+    md["compiled_pages"] = pages
+    # ⚠️ `ensure_ascii=False` is REQUIRED, not cosmetic. These blobs carry `§` and `—`
+    # in their apex `claims` strings; the default re-encodes every one as `\uXXXX`,
+    # which rewrites ~450 lines of a file this function means to touch by one field.
+    # Four writers disagree on this today (TODO-D25) — match the on-disk form.
+    meta.write_text(json.dumps(md, indent=2, ensure_ascii=False) + "\n")
 
 
 def main() -> int:
@@ -149,10 +192,11 @@ def main() -> int:
     dirs = _bundle_dirs(None if args.all else args.bundles)
     failed = 0
     for d in dirs:
-        ok, report = compile_one(d, keep=args.keep_artifacts)
+        ok, report, pages = compile_one(d, keep=args.keep_artifacts)
         print(report)
         if not ok:
             failed += 1
+        _persist_pages(d, pages)
     print(f"\n{len(dirs) - failed}/{len(dirs)} bundle(s) passed the compile gate")
     return 1 if failed else 0
 

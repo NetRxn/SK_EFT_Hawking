@@ -1,7 +1,7 @@
 {
   "bundle_target": "D12",
   "tier": 1,
-  "title": "Kernel-Verified Detector & Readout Metrology \u2014 From Photon Statistics to Composite Fidelity Ceilings",
+  "title": "Kernel-Verified Detector & Readout Metrology — From Photon Statistics to Composite Fidelity Ceilings",
   "target_journal": "PRX Quantum | Quantum | Phys. Rev. Applied",
   "phase7_subphase": "6EA-EE",
   "stage9_status": "pending-redo",
@@ -19,7 +19,7 @@
   "stage13_review_doc": null,
   "audit_log_path": "papers/D12/audit_log.jsonl",
   "supersession_ledger_anchor": "docs/review_finding_supersessions.json",
-  "notes": "First content-lift 2026-07-30. Stage 10 claims review GREEN (round 2): 0 FAIL across 179 sentences; |1-L| = 2 at L = 3 verified end-to-end through the Lean witnesses; every declaration in the bundle's substrate kernel-pure from axiom closures (the count is NOT frozen here \u2014 it drifts with every wave; docs/counts.tex is the generated source, and D12 Stage-13 round-7 finding 7.2 caught this field asserting 565 against a live 582). Stage 9 iterating on typeset legibility. SCOPE: novelty is the narrowed knowledge-hedged form only \u2014 the original claim was REFUTED by a live prior-art sweep (Mathlib already carries a sub-Gaussian Chernoff bound; PhysLib already carries quantum hypothesis testing). TWO PRIOR-ART CHECKS REMAIN OPEN AND BLOCK SUBMISSION: RemyDegenne/testing-lower-bounds, and Isabelle AFP + Coq infotheo. || Stage 9 GREEN at round 6 (GO verdict, 0 FAIL, 0 MAJOR, 0 MINOR, 0 publication-blocking). Reviewer mutation-tested the structural harness (3 deliberate breakages, all caught), establishing checked-and-passed rather than not-checked. Documented non-blocking residue: textangle reading direction on one rotated annotation; panel (C) omitting N_b in its subplot title (recoverable from the shared abscissa and the caption); fig-2 legend stacking single-column. Overfull hbox 4 -> 0. || TYPESETTING 2026-07-31 (round-8, CORRECTED round-9): the draft declared `prxquantum`, which this TeX Live's revtex4-2 does not implement and silently drops; switched to `prx`. The round-8 note claimed this invalidated all prior Stage-9 layout measurements \u2014 that was asserted without compiling both and is FALSE. Measured 2026-07-31 by compiling both: identical extracted text (same md5), 10 pages, 0 Overfull either way \u2014 `aps4-2.rtx` defines `\\rtx@apsprx` as a no-op, so the option changes nothing and NO prior Stage-9 measurement was invalidated. Layout numbers must still be re-measured against the journal's own class before submission.",
+  "notes": "First content-lift 2026-07-30. Stage 10 claims review GREEN (round 2): 0 FAIL across 179 sentences; |1-L| = 2 at L = 3 verified end-to-end through the Lean witnesses; every declaration in the bundle's substrate kernel-pure from axiom closures (the count is NOT frozen here — it drifts with every wave; docs/counts.tex is the generated source, and D12 Stage-13 round-7 finding 7.2 caught this field asserting 565 against a live 582). Stage 9 iterating on typeset legibility. SCOPE: novelty is the narrowed knowledge-hedged form only — the original claim was REFUTED by a live prior-art sweep (Mathlib already carries a sub-Gaussian Chernoff bound; PhysLib already carries quantum hypothesis testing). TWO PRIOR-ART CHECKS REMAIN OPEN AND BLOCK SUBMISSION: RemyDegenne/testing-lower-bounds, and Isabelle AFP + Coq infotheo. || Stage 9 GREEN at round 6 (GO verdict, 0 FAIL, 0 MAJOR, 0 MINOR, 0 publication-blocking). Reviewer mutation-tested the structural harness (3 deliberate breakages, all caught), establishing checked-and-passed rather than not-checked. Documented non-blocking residue: textangle reading direction on one rotated annotation; panel (C) omitting N_b in its subplot title (recoverable from the shared abscissa and the caption); fig-2 legend stacking single-column. Overfull hbox 4 -> 0. || TYPESETTING 2026-07-31 (round-8, CORRECTED round-9): the draft declared `prxquantum`, which this TeX Live's revtex4-2 does not implement and silently drops; switched to `prx`. The round-8 note claimed this invalidated all prior Stage-9 layout measurements — that was asserted without compiling both and is FALSE. Measured 2026-07-31 by compiling both: identical extracted text (same md5), 10 pages, 0 Overfull either way — `aps4-2.rtx` defines `\\rtx@apsprx` as a no-op, so the option changes nothing and NO prior Stage-9 measurement was invalidated. Layout numbers must still be re-measured against the journal's own class before submission.",
   "last_stage13_review_source": "backfilled-from-AutomatedReviews papers/AutomatedReviews/2026-07-31-0829-internal-adversarial/D12.md 2026-07-31",
   "open_findings": 148,
   "blocked_p1_gates": [
@@ -31,58 +31,65 @@
   "apex_theorems": [
     {
       "name": "SKEFTHawking.Detection.avgError_ge_affinity_sq",
-      "claims": "Abstract + \u00a7Poisson \u2014 Le Cam/Bhattacharyya average-error floor, valid for EVERY randomized count rule, with no false-alarm constraint and no likelihood-ratio assumption",
+      "claims": "Abstract + §Poisson — Le Cam/Bhattacharyya average-error floor, valid for EVERY randomized count rule, with no false-alarm constraint and no likelihood-ratio assumption",
       "declared": "2026-08-06"
     },
     {
       "name": "SKEFTHawking.Detection.darkBaseline_zeroFalseAlarm_load_bearing",
-      "claims": "Abstract + \u00a7Poisson \u2014 the zero-false-alarm dark-baseline optimum; its STRICT inequality is also the 'folklore floor is false-strict against a realizable counter' half",
+      "claims": "Abstract + §Poisson — the zero-false-alarm dark-baseline optimum; its STRICT inequality is also the 'folklore floor is false-strict against a realizable counter' half",
       "declared": "2026-08-06"
     },
     {
       "name": "SKEFTHawking.Detection.folklore_avgFloor_unsound_of_bright",
-      "claims": "Abstract + \u00a7Poisson \u2014 the opposite failure direction: exp(-N_diff) is exponentially FAIL-OPEN when used as an average-error screen",
+      "claims": "Abstract + §Poisson — the opposite failure direction: exp(-N_diff) is exponentially FAIL-OPEN when used as an average-error screen",
       "declared": "2026-08-06"
     },
     {
       "name": "SKEFTHawking.Detection.avgError_ge_gaussianQ_sharp",
-      "claims": "Abstract + \u00a7Poisson \u2014 Gaussian readout separation-budget floor, uniform over threshold placement",
+      "claims": "Abstract + §Poisson — Gaussian readout separation-budget floor, uniform over threshold placement",
       "declared": "2026-08-06"
     },
     {
       "name": "SKEFTHawking.Detection.enbw_mul_window_isLeast",
-      "claims": "Abstract + \u00a7Filtered-readout \u2014 realizability forces ENBW*T >= 1/2, SHARP as a least element (IsLeast, not merely a bound)",
+      "claims": "Abstract + §Filtered-readout — realizability forces ENBW*T >= 1/2, SHARP as a least element (IsLeast, not merely a bound)",
       "declared": "2026-08-06"
     },
     {
       "name": "SKEFTHawking.Detection.matchedFilter_isGreatest",
-      "claims": "Abstract + \u00a7Filtered-readout \u2014 matched filtering is optimal as a GREATEST element",
+      "claims": "Abstract + §Filtered-readout — matched filtering is optimal as a GREATEST element",
       "declared": "2026-08-06"
     },
     {
       "name": "SKEFTHawking.Detection.filteredSNR_eq_budget_iff",
-      "claims": "Abstract + \u00a7Filtered-readout \u2014 the sign-free characterization of matched-filter saturation is FALSE; equality holds iff the filter agrees a.e. with its DC average times the boxcar, a multiple that must be nonzero but need not be positive",
+      "claims": "Abstract + §Filtered-readout — the sign-free characterization of matched-filter saturation is FALSE; equality holds iff the filter agrees a.e. with its DC average times the boxcar, a multiple that must be nonzero but need not be positive",
       "declared": "2026-08-06"
     },
     {
       "name": "SKEFTHawking.Electrothermal.ETFModel.etf_stable_iff",
-      "claims": "Abstract + \u00a7Electrothermal \u2014 stability is an EXACT DICHOTOMY in the loop gain (PerturbationsDecay <-> -1 < loopGain)",
+      "claims": "Abstract + §Electrothermal — stability is an EXACT DICHOTOMY in the loop gain (PerturbationsDecay <-> -1 < loopGain)",
       "declared": "2026-08-06"
     },
     {
       "name": "SKEFTHawking.Electrothermal.ETFModel.absLoopGain_criterion_unsound",
-      "claims": "Abstract + \u00a7Electrothermal \u2014 the magnitude-only electrothermal stability criterion is UNSOUND, exhibited by two models with equal |loopGain| and opposite stability",
+      "claims": "Abstract + §Electrothermal — the magnitude-only electrothermal stability criterion is UNSOUND, exhibited by two models with equal |loopGain| and opposite stability",
       "declared": "2026-08-06"
     },
     {
       "name": "SKEFTHawking.Control.rwa_propagator_difference_bound_physical",
-      "claims": "Abstract + \u00a7Two-level control \u2014 the rotating-wave reduction is an INEQUALITY with an explicit remainder at Bloch-Siegert scale, never an equality",
+      "claims": "Abstract + §Two-level control — the rotating-wave reduction is an INEQUALITY with an explicit remainder at Bloch-Siegert scale, never an equality",
       "declared": "2026-08-06"
     },
     {
       "name": "SKEFTHawking.Control.relaxation_detector_chain_ceiling",
-      "claims": "Abstract + \u00a7Composite readout ceilings + \u00a7Conclusion \u2014 the floors propagate to end-to-end assignment-fidelity ceilings across the full chain including relaxation",
+      "claims": "Abstract + §Composite readout ceilings + §Conclusion — the floors propagate to end-to-end assignment-fidelity ceilings across the full chain including relaxation",
       "declared": "2026-08-06"
     }
-  ]
+  ],
+  "length_target": {
+    "unit": "pages",
+    "floor": 21,
+    "ceiling": 52,
+    "source": "PAPER_STRATEGY.md §6"
+  },
+  "compiled_pages": 11
 }

@@ -95,5 +95,11 @@
     "FixPropagation"
   ],
   "readiness": "RED",
-  "readiness_last_computed": "2026-07-31"
+  "readiness_last_computed": "2026-07-31",
+  "length_target": {
+    "unit": "word_equivalents",
+    "ceiling": 3750,
+    "source": "PRL author guide (3750 word equivalents: text + 300/figure + tables + captions + refs)"
+  },
+  "compiled_pages": 4
 }

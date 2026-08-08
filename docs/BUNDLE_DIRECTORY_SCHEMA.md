@@ -47,6 +47,8 @@ papers/<bundle>/
   "tier": 3,
   "title": "Verification Methodology with Worked Cases",
   "target_journal": "CPC | Phys. Rep.",
+  "length_target": {"unit": "pages", "floor": 15, "ceiling": 38, "source": "PAPER_STRATEGY.md §6"},
+  "compiled_pages": null,
   "phase7_subphase": "7a",
   "stage9_status": "pending",
   "stage10_status": "pending",
@@ -75,6 +77,8 @@ papers/<bundle>/
 | `tier` | int | `0` (F), `1` (D*), `2` (L*), `3` (I*), `4` (E*) | created at init |
 | `title` | string | freeform | created at init from `PAPER_STRATEGY.md` |
 | `target_journal` | string | freeform (e.g., `"PRL"`, `"PRD"`, `"CPC \| Phys. Rep."`) | created at init from `PAPER_STRATEGY.md` |
+| `length_target` | object \| null | `{unit, floor, ceiling, source}` — see below | **hand-declared** (ADR-011 §Phase 1) |
+| `compiled_pages` | int \| null | ≥1 | `compile_bundle_pdf.py` on every successful compile |
 | `phase7_subphase` | string | `7a`, `7b`, `7c`, ... | set by `bundle_source_manifest.py` based on roadmap |
 | `stage{9,10,13}_status` | string | `pending` \| `green` \| `yellow` \| `red` | reviewer-agent invocation (Stage 9/10/13) |
 | `stage13_redo_required` | bool | — | set `true` by `bundle_append.py` on every absorption; set `false` by Stage-13 reviewer when bundle review re-clears |
@@ -104,14 +108,38 @@ file.
 
 ⚠️ **Absent is UNKNOWN, not empty.** A bundle that has never declared apexes has an *unknown*
 substrate; the closure machinery reports `closure_measurable: false` and publishes no size, and
-`bundle_apex_resolves` counts it against `UNDECLARED_APEX_CEILING` (a ratchet: 21 today, 0 is the
-target). Writing `"apex_theorems": []` to quiet a tool is therefore not a fix — it asserts the
-bundle claims nothing.
+`bundle_apex_resolves` counts it against `UNDECLARED_APEX_CEILING` — a shrink-only ratchet, now at
+its target of **0**, so any bundle added without declared apexes fails the suite. (Read the live
+value from `scripts/validation/checks/bundles_readiness.py`, never from this sentence.) Writing
+`"apex_theorems": []` to quiet a tool is therefore not a fix — it asserts the bundle claims nothing.
 
 Declaring apexes for an existing bundle requires **full per-bundle context review** — contributing
 roadmaps, the Lean cited, the claims record — one bundle at a time (ADR-010 §D5a, operator
 condition). For new work the intended moment is **wave close**, where the author context is
 already loaded.
+
+#### `length_target` — the charter's size commitment, and the only field that can fail Gate 12
+
+```json
+"length_target": {"unit": "pages", "floor": 24, "ceiling": 60, "source": "PAPER_STRATEGY.md §6"}
+"length_target": {"unit": "word_equivalents", "ceiling": 3750, "source": "PRL author guide"}
+```
+
+- `unit` — `pages` for article-class targets, `word_equivalents` for letter-class ones (PRL counts
+  text + 300/figure + tables + captions + references, so a page count is the wrong instrument).
+- `floor` — optional. Omit where the venue has none; a letter has no floor. Where present it
+  catches **the failure a ceiling cannot**: a deep paper that is really a letter.
+- `ceiling` — required.
+- `source` — where the numbers came from, so a later reader can re-derive rather than trust them.
+
+⚠️ **`null` is UNDECLARED, not unlimited.** A bundle whose target is not yet settled records
+`"length_target": null`, and `bundle_manuscript_length` reports it **UNMEASURED — never PASS**.
+The same holds when the draft does not compile: no page count exists, so no verdict is available,
+and a check that cannot measure must say so rather than pass (ADR-009 D2).
+
+⚠️ **This is a current commitment, not a freeze.** Venues and the roster may still move
+(ADR-010 §Open item 1; operator direction 2026-08-08). Re-targeting a bundle means editing this
+field and its `source` — it is data with provenance, not a constant.
 
 ### Aggregate verdict (computed, not stored)
 

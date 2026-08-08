@@ -72,5 +72,11 @@
       "claims": "§5 — the machine-checked algebraic half, 8 | sigma for an even unimodular form",
       "declared": "2026-08-06"
     }
-  ]
+  ],
+  "length_target": {
+    "unit": "word_equivalents",
+    "ceiling": 3750,
+    "source": "PRL author guide (3750 word equivalents: text + 300/figure + tables + captions + refs)"
+  },
+  "compiled_pages": 4
 }

@@ -83,5 +83,12 @@
       "claims": "§6 — separation, concrete witnesses, and the primitive-root cyclotomic witness, bundled",
       "declared": "2026-08-06"
     }
-  ]
+  ],
+  "length_target": {
+    "unit": "pages",
+    "floor": 24,
+    "ceiling": 60,
+    "source": "PAPER_STRATEGY.md §6"
+  },
+  "compiled_pages": 12
 }

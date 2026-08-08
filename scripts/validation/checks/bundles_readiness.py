@@ -58,6 +58,30 @@ from validation._registry import CheckResult, Detail, register_check
 # an H2 obligation that this import was not in fact carrying. H2's actual
 # requirement is that **`validate`** expose `BUNDLE_CODES`, which `validate.py`
 # satisfies directly; `_ROSTER_CONSUMERS` below still asserts it.
+#
+# ⚠️ `re` is back (2026-08-08, ADR-011 Phase 1) and this time it IS referenced —
+# `_PAGES_RE` below. The 2026-08-04 removal was for a dead import, not a ban.
+
+import re
+
+#: `pdfinfo`'s page line. The rendered PDF is the only honest source for a page
+#: count: `.log` files are not trustworthy for a shared bundle (see the module
+#: docstring of `scripts/compile_bundle_pdf.py`), and a stored number cannot be
+#: told apart from a stale one.
+_PAGES_RE = re.compile(r"Pages:\s+(\d+)")
+
+
+def _read_metadata(code: str) -> dict | None:
+    """`papers/<code>/bundle_metadata.json`, or `None` if absent/unparseable.
+
+    `None` means UNKNOWN — every caller must treat it as unmeasured rather than as
+    an empty blob whose fields all read as absent-and-therefore-fine.
+    """
+    p = _H.PAPERS_DIR / code / "bundle_metadata.json"
+    try:
+        return json.loads(p.read_text())
+    except (OSError, json.JSONDecodeError):
+        return None
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -365,6 +389,147 @@ def check_bundle_stage13_claim_consistent() -> CheckResult:
         "summary", bad == 0,
         f"{checked} bundle Stage-13 claim(s) checked against the live blocker counts, "
         f"{bad} contradicted"))
+    return CheckResult(passed=bad == 0, details=details)
+
+
+def _measure_manuscript(code: str):
+    """`(value, unit, note)` for one bundle, or `(None, unit, why-not)`.
+
+    Measures the RENDERED artifact, never a stored number. `compiled_pages` exists in
+    the metadata for the dashboard's benefit, and this check deliberately does not read
+    it: a stored size is indistinguishable from a stale one, and the whole point of a
+    length gate is to catch a draft that grew or shrank since anyone last looked.
+
+    Staleness is judged against the draft's full input closure — the `.tex`, everything
+    it `\\input`s transitively, its figures and its `.bib`. That closure is computed by
+    `papers_prose._draft_input_closure`, imported rather than re-derived: a second
+    "which files can change this draft" implementation is precisely the duplication
+    `chain_canonicalize` nearly acquired (`REMEDIATION_PLAN.md` §5b). Local import
+    because no check module imports another at module level today; promote the helper
+    to `validate_helpers` if a third consumer appears.
+    """
+    import shutil
+    import subprocess
+    from validation.checks.papers_prose import _draft_input_closure
+
+    paper_dir = _H.PAPERS_DIR / code
+    tex, pdf = paper_dir / "paper_draft.tex", paper_dir / "paper_draft.pdf"
+    if not tex.is_file():
+        return None, None, "no paper_draft.tex"
+    if not pdf.is_file():
+        return None, None, ("no compiled PDF — run `uv run python "
+                            f"scripts/compile_bundle_pdf.py {code}`")
+    try:
+        newest = max(p.stat().st_mtime for p in _draft_input_closure(tex) if p.is_file())
+    except (OSError, ValueError):
+        return None, None, "input closure unreadable"
+    if pdf.stat().st_mtime < newest:
+        return None, None, ("PDF is older than the draft's input closure — the size on "
+                            "disk is not this draft's size; recompile before trusting it")
+
+    md = _read_metadata(code) or {}
+    unit = ((md.get("length_target") or {}).get("unit")) or "pages"
+    if unit == "pages":
+        if not shutil.which("pdfinfo"):
+            return None, unit, "pdfinfo not on PATH (poppler-utils)"
+        out = subprocess.run(["pdfinfo", str(pdf)], capture_output=True,
+                             text=True, timeout=60).stdout
+        m = _PAGES_RE.search(out)
+        return (int(m.group(1)) if m else None), unit, (
+            None if m else "pdfinfo reported no page count")
+
+    # word_equivalents — the PRL rule. A page count is the wrong instrument for a
+    # letter, because PRL's limit counts text PLUS a 300-word allowance per figure,
+    # so a two-figure letter that fits on 4 pages can still be over the real limit.
+    if not shutil.which("pdftotext"):
+        return None, unit, "pdftotext not on PATH (poppler-utils)"
+    body = subprocess.run(["pdftotext", str(pdf), "-"], capture_output=True,
+                          text=True, timeout=120).stdout
+    n_fig = tex.read_text(errors="replace").count(r"\begin{figure}")
+    return len(body.split()) + 300 * n_fig, unit, f"{n_fig} figure(s) at 300 words each"
+
+
+@register_check("bundle_manuscript_length",
+                "Every bundle's compiled manuscript is within its declared length target")
+def check_bundle_manuscript_length() -> CheckResult:
+    """CHECK (ADR-011 Phase 1, Gate 12): the article is the size its venue requires.
+
+    **The instrument existed and was deliberately unwired.**
+    `compile_bundle_pdf.py` computed the page count and then dropped it into a
+    human-readable string — `ok = not errors and unresolved <= 0 and not unused_opts`
+    never referenced it (audit 2026-08-01 §5.2). So *"is this manuscript the length it
+    is supposed to be"* was measured nowhere, and the audit records what that cost:
+    **D7 (16 kB, 1 subsection) and D10 (22 kB) were both closed GREEN against ~40 pp
+    targets.** Nothing in the pipeline objected, because nothing was looking.
+
+    **Both bounds carry weight, and they catch different failures.** A ceiling catches
+    a letter that has become a monograph. A *floor* catches the failure this corpus
+    actually exhibits — a container declared as a deep paper whose content is a letter.
+    Dropping the floor would make the gate agree with every one of the audit's findings.
+
+    ⚠️ **UNMEASURED is not PASS, and there are four ways to reach it** — no declared
+    target, no compiled PDF, a PDF older than the draft's input closure, or no
+    `poppler-utils`. Each is reported by name and *counted*, and the check returns
+    `measured=False` when nothing at all could be measured. A length gate that silently
+    passed the bundles it could not size would be the `Stage 9`-over-an-empty-set defect
+    (`"ALL figures PASS"` is vacuously true of zero figures) rebuilt in a new place.
+
+    `length_target: null` is therefore a live, visible state — the honest record for a
+    bundle whose venue is still open (ADR-010 §Open item 1) — and never a quiet pass.
+    """
+    details: List[Detail] = []
+    try:
+        # From the roster's OWNER, not from `validate`'s re-export — the discipline
+        # `bundle_registry_consistency` leg C exists to enforce.
+        import bundle_registry as registry
+        codes = list(registry.BUNDLE_CODES)
+    except Exception as exc:  # noqa: BLE001
+        return CheckResult(passed=False, measured=False, details=[Detail(
+            "roster", False,
+            f"could not read the bundle roster ({exc}) — UNVERIFIED, not passing")])
+
+    over, under, unmeasured, sized = [], [], [], 0
+    for code in codes:
+        md = _read_metadata(code)
+        if md is None:
+            continue
+        target = md.get("length_target")
+        if not target:
+            unmeasured.append(f"{code}: no length_target declared")
+            continue
+        value, unit, note = _measure_manuscript(code)
+        if value is None:
+            unmeasured.append(f"{code}: {note}")
+            continue
+        sized += 1
+        floor, ceiling = target.get("floor"), target.get("ceiling")
+        u = "pp" if unit == "pages" else "word-equiv"
+        if ceiling is not None and value > ceiling:
+            over.append(f"{code}: {value} {u} > ceiling {ceiling}")
+        elif floor is not None and value < floor:
+            under.append(f"{code}: {value} {u} < floor {floor} — declared as a "
+                         f"{md.get('target_journal', '?')} article, sized like a letter")
+
+    for label, rows in (("over_ceiling", over), ("under_floor", under)):
+        for r in rows:
+            details.append(Detail(label, False, r))
+    for r in unmeasured:
+        details.append(Detail("unmeasured", True, r, warning=True))
+
+    if sized == 0:
+        details.insert(0, Detail(
+            "population", False,
+            f"no bundle manuscript could be sized ({len(unmeasured)} unmeasured) — this "
+            f"check is UNVERIFIED, not passing. Compile the drafts "
+            f"(`scripts/compile_bundle_pdf.py --all`) and declare `length_target`."))
+        return CheckResult(passed=False, measured=False, details=details)
+
+    bad = len(over) + len(under)
+    details.insert(0, Detail(
+        "summary", bad == 0,
+        f"{sized} manuscript(s) sized against their declared target, {bad} outside it "
+        f"({len(over)} over ceiling, {len(under)} under floor); "
+        f"{len(unmeasured)} UNMEASURED"))
     return CheckResult(passed=bad == 0, details=details)
 
 

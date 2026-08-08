@@ -187,5 +187,12 @@
       "claims": "§6 — the rational enclosure bracketing every decaying-exponential operating point",
       "declared": "2026-08-06"
     }
-  ]
+  ],
+  "length_target": {
+    "unit": "pages",
+    "floor": 24,
+    "ceiling": 60,
+    "source": "PAPER_STRATEGY.md §6"
+  },
+  "compiled_pages": 12
 }

@@ -472,5 +472,12 @@
     "FixPropagation"
   ],
   "readiness": "RED",
-  "readiness_last_computed": "2026-07-31"
+  "readiness_last_computed": "2026-07-31",
+  "length_target": {
+    "unit": "pages",
+    "floor": 30,
+    "ceiling": 75,
+    "source": "PAPER_STRATEGY.md §6"
+  },
+  "compiled_pages": 59
 }

@@ -436,7 +436,7 @@ keeps the target moving. No code required — this is process, and it is why cov
 
 ---
 
-### D5. The bundle readiness signal is inverted — OPEN (CRITICAL)
+### D5. The bundle readiness signal is inverted — OPEN (CRITICAL) — **SCHEDULED: [ADR-011](../../adrs/ADR-011-manuscript-quality-layer.md) Phase 2**
 
 Full analysis: [`docs/audits/2026-08-01-publication-readiness/`](../../audits/2026-08-01-publication-readiness/ADDENDUM-2026-08-07.md).
 
@@ -479,7 +479,9 @@ version *and* the Mathlib rev against `lean-toolchain` + `lakefile.toml`.
   on pin drift — **and (b) prevention**: drafts should cite the pin through a generated macro as
   they already do for counts. Both need approval per §6a.
 
-### D7. No mechanism assesses whether prose serves a reader — OPEN
+### D7. No mechanism assesses whether prose serves a reader — OPEN — **SCHEDULED: [ADR-011](../../adrs/ADR-011-manuscript-quality-layer.md) Phases 3 + 5**
+
+⚠️ Not one item but two, and they must not be conflated: the **deterministic** voice ratchet is Phase 3 (Gate 15, no new data, fires on 19 of 21 today) and the **agentic** read-through reviewer is Phase 5 (F-04). Phase 5 depends on Phase 2 — an agent whose verdict lands in a `stage*_status` field that nothing writes is a fourth instance of D5, not a fix for D7.
 
 - **Verified absent:** zero validation checks for readability/style, zero reviewer agents briefed
   on it, zero mentions in `WAVE_EXECUTION_PIPELINE.md`.
@@ -1017,7 +1019,22 @@ graph shows open blockers"*. The assertion is unchanged; only its label. What la
 
 ---
 
-### D24. The Stage-9/10-before-13 hard gate is unguarded — OPEN
+### D24. The Stage-9/10-before-13 hard gate is unguarded — ✅ CLOSED 2026-08-08 as a DUPLICATE
+
+**Superseded by [ADR-011](../../adrs/ADR-011-manuscript-quality-layer.md) Phase 2**, which ships it
+with the other four sub-items of **D5**, where it already was: D5's fix shape names *"an enforcement
+point for Stage-9/10-before-13"* as one of five interlocking items, and the 2026-08-01 audit had
+already specified it as **Gate 16 assertion #2**.
+
+⚠️ **Filing it separately was itself the failure `docs/architecture/README.md` rule 1 names** — a
+second mechanism beside one that already existed. It was written on 2026-08-07 by an author who had
+read `bundles_readiness.py` but not D5, four entries above it in this file. Shipping it alone would
+have built one fifth of a mechanism and left the other four load-bearing: the ordering assertion is
+free once `stage*_status` has writers, and near-useless while every green is a hand edit.
+
+The finding below is retained verbatim as the measurement record; only its disposition changed.
+
+### D24 (original text). The Stage-9/10-before-13 hard gate is unguarded
 
 **Found:** 2026-08-07, while applying the operator's demotion.
 
@@ -1050,3 +1067,24 @@ recreating it.
 D23, do **not** bundle in `stage13_redo_required` or `freshness_stale`, whose meanings are owned
 elsewhere. Needs approval.
 
+
+### D25. Four writers of `bundle_metadata.json` disagree on `ensure_ascii` — OPEN
+
+**Found:** 2026-08-08, ADR-011 Phase 1, by causing it.
+
+- **What:** the blobs carry `§` and `—` in their apex `claims` strings.
+  `bundle_readiness.py:735` writes them with `ensure_ascii=False`; **`bundle_append.py:306/326/376/389`,
+  `bundle_source_manifest.py:146/151/156` and `bundle_readiness.py:268` all use the default `True`.**
+  Whichever tool touches a blob last decides its encoding, so the corpus oscillates between the two
+  forms and a one-field edit can rewrite ~450 lines.
+- **Measured:** seeding `length_target` through a default-`ensure_ascii` writer produced
+  **98 insertions / 91 deletions on `papers/D3/bundle_metadata.json` for a 9-line change**; rewriting
+  unescaped brought the same edit to 9 lines.
+- **Why it is not cosmetic:** a diff that large is not reviewable, and the escaped form is what a
+  reviewer would have to read the apex claims through. It also means `git diff` cannot be used to
+  see what a tool actually changed — the signal the D23/D24 work depends on.
+- **Fix shape (needs code, small):** one serializer for this file. `bundle_readiness.py:735` already
+  has the correct form; the residue is the other seven call sites plus a test asserting a
+  round-trip through each writer is byte-stable. Needs approval per §6a.
+- ⚠️ **Do not "fix" by re-escaping.** The on-disk form is the readable one and is what
+  `write_metadata_counts` — the most frequent writer — produces.

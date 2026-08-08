@@ -689,3 +689,143 @@ class TestProducerDemotesGreenOnBlockedP1:
         assert isinstance(out, dict), (
             f"_blocked_p1_gates_by_paper returned {type(out).__name__}; "
             f"aggregate_by_bundle indexes it by paper key")
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# ADR-011 Phase 1 — `bundle_manuscript_length` (Gate 12)
+# ═══════════════════════════════════════════════════════════════════════════
+
+class TestBundleManuscriptLength:
+    """The compiled article must be the size its declared venue requires.
+
+    Two distinct concerns are tested separately, because they fail differently:
+    the POLICY (is this value inside the declared band?) with the measurer stubbed,
+    and the MEASURER (may this PDF be trusted at all?) against real files. A single
+    end-to-end test of both would pass while either half was wrong.
+    """
+
+    def _setup(self, tmp_path, monkeypatch, blobs, measured=None):
+        import bundle_registry as registry
+        papers = tmp_path / "papers"
+        for code, blob in blobs.items():
+            (papers / code).mkdir(parents=True, exist_ok=True)
+            if blob is not None:
+                (papers / code / "bundle_metadata.json").write_text(json.dumps(blob))
+        monkeypatch.setattr(_H, "PAPERS_DIR", papers)
+        monkeypatch.setattr(registry, "BUNDLE_CODES", tuple(blobs))
+        if measured is not None:
+            monkeypatch.setattr(bru, "_measure_manuscript",
+                                lambda code: measured.get(code, (None, None, "stub")))
+        return papers
+
+    @staticmethod
+    def _blob(floor=24, ceiling=60, unit="pages", **kw):
+        t = {"unit": unit, "ceiling": ceiling, "source": "test"}
+        if floor is not None:
+            t["floor"] = floor
+        return {"bundle_target": "D1", "length_target": t,
+                "target_journal": "PRD", **kw}
+
+    # ── policy ────────────────────────────────────────────────────────────
+    def test_a_manuscript_inside_its_band_passes(self, tmp_path, monkeypatch):
+        """SILENT ON CORRECT DATA — the case the gate must never fire on."""
+        self._setup(tmp_path, monkeypatch, {"D1": self._blob()},
+                    measured={"D1": (40, "pages", None)})
+        r = bru.check_bundle_manuscript_length()
+        assert r.passed and r.measured
+
+    def test_over_ceiling_fails(self, tmp_path, monkeypatch):
+        self._setup(tmp_path, monkeypatch, {"D1": self._blob(ceiling=60)},
+                    measured={"D1": (61, "pages", None)})
+        r = bru.check_bundle_manuscript_length()
+        assert not r.passed
+        assert any("over_ceiling" == d.name for d in r.details)
+
+    def test_under_floor_fails(self, tmp_path, monkeypatch):
+        """The live D7 case: 3 pp declared as a ~40 pp article.
+
+        A ceiling-only gate would PASS this, and passing it is precisely how D7 and
+        D10 were closed GREEN (audit 2026-08-01 §5.4 Gate 12).
+        """
+        self._setup(tmp_path, monkeypatch, {"D7": self._blob(floor=24)},
+                    measured={"D7": (3, "pages", None)})
+        r = bru.check_bundle_manuscript_length()
+        assert not r.passed
+        assert any(d.name == "under_floor" for d in r.details)
+
+    def test_a_boundary_value_is_inside_the_band(self, tmp_path, monkeypatch):
+        """Inclusive bounds, asserted in both directions so an off-by-one shows up."""
+        self._setup(tmp_path, monkeypatch,
+                    {"A": self._blob(), "B": self._blob()},
+                    measured={"A": (24, "pages", None), "B": (60, "pages", None)})
+        assert bru.check_bundle_manuscript_length().passed
+
+    def test_a_letter_with_no_floor_is_never_under(self, tmp_path, monkeypatch):
+        """A letter has no floor; `floor: None` must not read as `floor: 0`-and-fail."""
+        self._setup(tmp_path, monkeypatch,
+                    {"L1": self._blob(floor=None, ceiling=3750,
+                                      unit="word_equivalents")},
+                    measured={"L1": (12, "word_equivalents", None)})
+        assert bru.check_bundle_manuscript_length().passed
+
+    # ── UNMEASURED is not PASS ────────────────────────────────────────────
+    def test_no_declared_target_is_unmeasured_not_passing(self, tmp_path, monkeypatch):
+        """`length_target: null` is the honest record for an undecided venue.
+
+        It must be VISIBLE and must not count as a sized manuscript — otherwise
+        deleting the field is a way to make the gate green.
+        """
+        self._setup(tmp_path, monkeypatch,
+                    {"D1": {"bundle_target": "D1", "length_target": None}},
+                    measured={"D1": (999, "pages", None)})
+        r = bru.check_bundle_manuscript_length()
+        assert not r.passed and not r.measured, "nothing sizable ⇒ UNVERIFIED"
+        assert any(d.name == "unmeasured" for d in r.details)
+
+    def test_an_all_unmeasured_population_is_UNVERIFIED_not_passing(
+            self, tmp_path, monkeypatch):
+        """SEAM GUARD. Zero sizable manuscripts must fail closed.
+
+        The failure this prevents is Stage 9's, exactly: its criterion is "ALL
+        figures PASS", which over an empty set is `True`, and that is how a
+        zero-figure bundle holds `stage9_status: green`.
+        """
+        self._setup(tmp_path, monkeypatch, {"D1": self._blob()},
+                    measured={"D1": (None, "pages", "no compiled PDF")})
+        r = bru.check_bundle_manuscript_length()
+        assert not r.passed and not r.measured
+        assert any(d.name == "population" for d in r.details)
+
+    def test_one_sizable_bundle_still_judges_that_one(self, tmp_path, monkeypatch):
+        """A mixed population is measured on what it can measure, not abandoned."""
+        self._setup(tmp_path, monkeypatch,
+                    {"D1": self._blob(), "D2": self._blob()},
+                    measured={"D1": (3, "pages", None),
+                              "D2": (None, "pages", "no compiled PDF")})
+        r = bru.check_bundle_manuscript_length()
+        assert not r.passed and r.measured, "one sized bundle ⇒ a real verdict"
+        assert any(d.name == "under_floor" for d in r.details)
+
+    # ── the measurer's trust conditions ───────────────────────────────────
+    def test_a_pdf_older_than_the_draft_is_not_trusted(self, tmp_path, monkeypatch):
+        """A stale PDF's page count is a previous draft's size.
+
+        Reported UNMEASURED rather than measured, because a number carried over
+        from an earlier draft is indistinguishable from this draft's — which is
+        also why the check does not read `compiled_pages` from the metadata.
+        """
+        papers = self._setup(tmp_path, monkeypatch, {"D1": self._blob()})
+        tex = papers / "D1" / "paper_draft.tex"
+        pdf = papers / "D1" / "paper_draft.pdf"
+        pdf.write_bytes(b"%PDF-1.4")
+        import os, time
+        tex.write_text(r"\documentclass{article}\begin{document}x\end{document}")
+        os.utime(pdf, (time.time() - 500, time.time() - 500))
+        value, _unit, note = bru._measure_manuscript("D1")
+        assert value is None and "older" in note
+
+    def test_a_missing_pdf_names_the_command_that_fixes_it(self, tmp_path, monkeypatch):
+        papers = self._setup(tmp_path, monkeypatch, {"D1": self._blob()})
+        (papers / "D1" / "paper_draft.tex").write_text("x")
+        value, _unit, note = bru._measure_manuscript("D1")
+        assert value is None and "compile_bundle_pdf.py D1" in note

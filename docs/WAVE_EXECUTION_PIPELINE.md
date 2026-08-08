@@ -441,8 +441,25 @@ The agent reports:
 
 Results saved to `papers/paper<N>/claims_review.json`.
 
+**Manuscript length (ADR-011 Phase 1).** A bundle declares the size its venue requires in
+`bundle_metadata.json.length_target` (schema + semantics: `docs/BUNDLE_DIRECTORY_SCHEMA.md`),
+and `validate.py --check bundle_manuscript_length` measures the **compiled** article against it.
+
+Both bounds are load-bearing, and they catch different failures. The ceiling catches a letter
+that has become a monograph. The **floor** catches the failure this corpus actually exhibited:
+a container declared as a deep paper whose content is a letter. Neither was measured anywhere
+before 2026-08-08 — `compile_bundle_pdf.py` computed the page count and discarded it — which is
+how two Tier-1 bundles were closed GREEN at a small fraction of their declared target.
+
+`length_target: null` is a legitimate state for a bundle whose venue is still open, and it reads
+**UNMEASURED, never PASS**. So does a draft with no compiled PDF, or one whose PDF is older than
+its own input closure. Re-targeting a bundle is an edit to that field and its `source` — the
+target is data with provenance, not a constant (ADR-010 §Open item 1).
+
 **Gate:** `validate.py --check paper_provenance` passes for this paper
-AND paper claims review has zero FAIL.
+AND paper claims review has zero FAIL
+AND `validate.py --check bundle_manuscript_length` reports this bundle inside its declared band
+(or records, by name, why it could not be measured).
 
 ---
 

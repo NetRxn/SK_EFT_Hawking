@@ -535,6 +535,22 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
         "the green rule that used to live here. Plus the missing-blob and "
         "uncomputable-aggregate fail-closed legs",
     ),
+    "bundle_manuscript_length": (
+        "test_d5_bundles_readiness.py",
+        "10 mutations (ADR-011 Phase 1, Gate 12). The instrument existed and was "
+        "unwired: `compile_bundle_pdf.py` computed the page count and dropped it into "
+        "a human-readable string, so manuscript size was measured nowhere and D7 (3 pp) "
+        "and D10 (5 pp) were closed GREEN against ~40 pp targets. Legs: SILENT inside "
+        "the band and at both inclusive boundaries; fires over ceiling; fires UNDER "
+        "FLOOR (the leg a ceiling-only gate would miss, and the one that catches the "
+        "live corpus); a letter with no floor is never under; `length_target: null` is "
+        "UNMEASURED and does NOT count as sized, so deleting the field cannot green the "
+        "gate; a mixed population still judges what it can size; a PDF older than its "
+        "own input closure is not trusted; a missing PDF names the command that fixes "
+        "it; and the seam guard — zero sizable manuscripts is UNVERIFIED, not passing, "
+        "which is Stage 9's `\"ALL figures PASS\"`-over-an-empty-set defect refused a "
+        "second home",
+    ),
     "bundle_stage13_claim_consistent": (
         "test_d5_bundles_readiness.py",
         "8 mutations. Split out of `bundle_metadata_matches_graph` on 2026-08-07 "
@@ -662,6 +678,13 @@ PRODUCTION_SEEDED: frozenset[str] = frozenset({
     # graph, still 37) and tripped `bundle_metadata_matches_graph` as well — both have to
     # be defeated, not one. Restored byte-clean (empty `git diff`).
     "bundle_stage13_claim_consistent",
+    # 2026-08-08 (ADR-011 Phase 1): `length_target.floor` raised to 200 in the REAL
+    # `papers/D3/bundle_metadata.json` — a bundle that PASSES, so the probe shows the
+    # check responding to production data rather than riding an existing failure.
+    # -> D3 named at "59 pp < floor 200". Restored and verified byte-identical (`cmp`).
+    # The probe also surfaced TODO-D25: the seeding writer's default `ensure_ascii`
+    # rewrote 189 lines for a 9-line edit.
+    "bundle_manuscript_length",
 })
 
 #: The ratchet, in the same idiom as `AWAITING_CEILING`: the number of registered

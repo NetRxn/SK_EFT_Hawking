@@ -1855,3 +1855,31 @@ from the description.
 suppressing a check but by **making a false claim false** — 20 bundles stopped asserting a review
 verdict they had not earned. The remaining failure, `readiness_submission_gate`, is the P1-gate
 check and a separate subject.
+
+## V46 — ADR-011 Phase 1: `length_target` + Gate 12 — 9 atoms, 1 SELF-CORRECTED mid-build
+
+**Scope.** Every new assertion in `ADR-011-manuscript-quality-layer.md`, the
+`BUNDLE_DIRECTORY_SCHEMA.md` and law amendments, and the `bundle_manuscript_length` check.
+
+| # | Proposition | Decider | Verbatim result |
+|---|---|---|---|
+| 1 | `PAPER_STRATEGY.md` §6 carries a venue AND a length for **all 21** bundles | direct read of §6 rows 383–403 | 21 rows, each with `Target` + `Length`. **CONFIRMED, both directions** — the population was enumerated, not sampled |
+| 2 | `target_journal` is already populated in every `bundle_metadata.json` | scripted read of all 21 | 21/21 non-null. CONFIRMED |
+| 3 | The ADR-010 §D2 purpose statements supply 3 of the charter's 5 fields | read of `docs/audits/*-retrofit/FINDINGS.md` §1b | 21/21 carry Audience · Venue · claim · Substrate · honest size. CONFIRMED |
+| 4 | `compile_bundle_pdf.py` computes the page count and discards it | read of `:105-112` then `:114` | `ok = not errors and unresolved <= 0 and not unused_opts`; `pages` reaches only the report string. CONFIRMED |
+| 5 | Renumbering the pipeline would break four consumers | read of each | `paper_tables/sources.py:418` (regenerates paper15 Table 1), `gate_precheck.py` stage names, `stage{9,10,13}_status` across 21 blobs, ~all of `docs/`. CONFIRMED |
+| 6 | No check module imports another at module level | `grep` over `scripts/validation/checks/*.py` | zero hits. CONFIRMED — hence the local import of `_draft_input_closure`, recorded in-source |
+| 7 | Gate 12 fires on the live corpus | the check, on freshly compiled PDFs | **21 sized, 0 unmeasured, 12 outside band** (1 over ceiling, 11 under floor) |
+| 8 | The audit's F-01 claim "F is 23 pp against an 80–150 pp target" | independent re-measurement | F measured at **23 pp**. CONFIRMED — a prior finding reproduced by a different instrument |
+| 9 | The check responds to production data | production-seeded mutation on real `papers/D3` | floor→200 ⇒ `D3: 59 pp < floor 200`; restored, `cmp` byte-identical |
+
+**⚠️ SELF-CORRECTED, atom 9's probe.** The seeding writer used `json.dumps(...)` with the default
+`ensure_ascii=True`, re-encoding every `§`/`—` in the apex `claims` strings and turning a 9-line
+edit into **98 insertions / 91 deletions** on one file. Caught by reading the diff rather than
+trusting the write. Fixed in `_persist_pages`, all 21 blobs rewritten unescaped, and the underlying
+inconsistency — **four writers of this file disagree on `ensure_ascii`** — filed as TODO-D25 rather
+than silently normalised.
+
+**NOT-AN-ASSERTION.** ADR-011's phase ORDER is a plan, not a claim about the tree; it has no truth
+value and is not verified here. Its *inputs* are (atoms 1–6). The 12-of-21 result at atom 7 is a
+measurement of today's corpus and will change as the corpus does — it is dated, not durable.

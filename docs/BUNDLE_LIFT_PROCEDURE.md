@@ -21,6 +21,28 @@ Canonical 14-step workflow for lifting per-paper draft content into a publicatio
 
 ## Procedure
 
+### §0. Charter — the size the container commits to (ADR-011 Phase 1)
+
+**Before any lift**, the bundle declares what it is for and how big it may be. Phase 1 of
+ADR-011 lands the size half; the section-architecture and figure-plan halves land in Phase 4
+and this section grows to meet them.
+
+Today that means `bundle_metadata.json` carries:
+
+- `target_journal` — the named venue (already present for every bundle, set at init from
+  `PAPER_STRATEGY.md`);
+- `length_target` — `{unit, floor, ceiling, source}`, per `docs/BUNDLE_DIRECTORY_SCHEMA.md`.
+  `unit` is `pages` for an article and `word_equivalents` for a letter, because PRL counts a
+  300-word allowance per figure and a page count is simply the wrong instrument for it.
+
+**Why this is §0 and not a later step.** The audit that produced it
+(`docs/audits/2026-08-01-publication-readiness/`) found the procedure had **no step that owns
+the document** — every one of §§1–14 operates at metadata, sentence, claim or artifact level.
+A size commitment made after the prose exists is a description, not a budget.
+
+⚠️ **A missing target is not permission.** `length_target: null` reports **UNMEASURED**, never
+PASS. Deleting the field cannot make `bundle_manuscript_length` green.
+
 ### §1. Pre-lift checks
 
 - Confirm 🟢/🟡 source-paper readiness via `BUNDLE_READINESS_HEATMAP.md`.
