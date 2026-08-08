@@ -1781,3 +1781,39 @@ defects D12 does not have.**
 | 4 — §D4 evidence assembled, recommendation NOT made | ✅ all four rows measured; EVIDENCE §8 summary; **no recommendation made** |
 | 5 — ledger at assertion granularity | ✅ V21–V43 |
 | 6 — `pytest` green / `validate.py` green / one bundle per commit | ⚠️ **pytest green** (5,676 passed / 5 skipped); **`validate.py` 64/66** — `bundle_metadata_matches_graph` and `readiness_submission_gate`, both red since 2026-08-01, both about `stage13_status` vs open blockers and P1 gates, **neither caused by nor closable by this work**. Per the operator's 2026-08-07 ruling their remedy runs Stage 9/10 → 13, not Stage 13 alone. One bundle per commit: ✅ |
+
+---
+
+## V44 — `bundle_metadata_matches_graph`, measured per leg — 5 atoms, 1 reporting correction
+
+Prompted by the operator: *"`bundle_metadata_matches_graph` sounds like it should be green though."*
+It does, and the reason is worth recording — the check's name describes the three legs that pass.
+
+| # | atom | decider | result |
+|---|---|---|---|
+| W1 | the check's count legs (`blockers_open`, `advisories_open`, `readiness`) | its own detail lines, every archived run | ✅ **0 failures** in all six reports inspected. `bundle_readiness.py` writes them and they stay written (D) |
+| W2 | which leg is red | the same detail lines | **all 14 drift entries are the `stage13_status='green'` while live blockers > 0 leg**, added 2026-08-03 (D) |
+| W3 | is the red correct? | the check's source comment + `BUNDLE_LIFT_PROCEDURE.md` §12 | ✅ **yes** — 14 bundles assert a Stage-13 green that later findings contradict. The comment states the design: the count legs *"cannot catch the state 14 of 21 bundles are in right now, because that state is internally CONSISTENT"* (D) |
+| W4 | **did this retrofit move it?** | drift composition across archived runs | ❌ **no** — `14 drift / 14 stage13-leg / 0 count-leg`, identical on 2026-08-04, 2026-08-05 and all three runs of 2026-08-08 (D) |
+| W5 | could it have? | `bundle_readiness.py:78` — `REVIEWS_DIR = PAPERS_DIR / "AutomatedReviews"` | ❌ **no** — findings load from `papers/AutomatedReviews/`, newest dir `2026-08-01-bundle-stage13`, six days before this work. This retrofit's docs live in `docs/audits/` and are **not** ingested (D) |
+
+⚠️ **Reporting correction, two parts.**
+1. I described the two failures together as *"about `stage13_status` vs open blockers **and P1
+   gates**"*, collapsing two checks into one phrase. `readiness_submission_gate` owns the P1 gates;
+   this check's failure is **purely** the stage13 leg.
+2. **I inferred "pre-existing, not mine" from the archived pass/fail flag.** Right conclusion,
+   lazy route: the flag would have looked identical had this work added blockers and
+   `bundle_readiness.py` rewritten the counts to match — because the count legs would then still
+   agree. **The load-bearing evidence is W4 (leg composition unchanged) and W5 (findings source
+   predates the work)**, and neither was measured until the operator pushed.
+
+**The rule this adds to the retrofit's standing set:** *a check's pass/fail flag is an aggregate.
+When attributing a failure — especially to "not my work" — measure the leg, not the flag.* This is
+the same family as V43's *a check's summary count inherits the check's blind spots*, one level up:
+V43 was about trusting a total, this is about trusting a boolean.
+
+✅ **NOT-AN-ASSERTION, recorded because it is the useful residue:** D12 is the worked example of the
+honest state — `stage9/10/13: pending-redo`, 46 blockers open — and it does **not** trip this check.
+The 14 either re-enter Stage 9/10 → 13 per the operator's 2026-08-07 ruling, or carry a
+`stage13_status` that reflects the stale green. **That disposition is the operator's**; the retrofit
+neither made nor can clear it.
