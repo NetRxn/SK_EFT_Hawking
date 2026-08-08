@@ -972,7 +972,7 @@ matching *either*; the lakefile already carries it under `name = "Physlib"`. Nee
 positive"* until this lands. The genuinely stale sites found in this retrofit (E1 ×3, E2 ×4, I1 ×2,
 I3 ×1, L2 ×3, D9 ×1) were each confirmed against the live pin individually and are unaffected.
 
-### D23. `bundle_metadata_matches_graph`'s description covers 3 of its 4 legs — OPEN (interpretability)
+### D23. `bundle_metadata_matches_graph`'s description covered 3 of its 4 legs — ✅ CLOSED 2026-08-07
 
 **Found:** 2026-08-07, operator question *"sounds like it should be green though."*
 
@@ -993,9 +993,27 @@ D11.md:179` — *"flip pending->green => PASS <-- missed"*), and it needed a hom
 recorded what NOT to assert alongside it (`stage13_redo_required`, `freshness_stale`), which is why
 this entry is about the label rather than the logic.
 
-**Residue (NOT built — §6a).** Either split leg 4 into its own registered check (e.g.
-`bundle_stage13_claim_consistent`) or widen the registered description to name both families. Both
-are check changes and need approval.
+✅ **CLOSED 2026-08-07 — operator authorized the split.** Leg 4 is now
+`bundle_stage13_claim_consistent`, registered as *"No bundle claims stage13_status='green' while the
+graph shows open blockers"*. The assertion is unchanged; only its label. What landed with it:
+
+- `bundle_metadata_matches_graph` is now exactly its description — field equality on
+  `blockers_open` / `advisories_open` / `readiness`, nothing else.
+- The shared aggregation moved to `_readiness_aggregate()`, so **both** checks fail CLOSED on an
+  import or aggregate failure rather than one inheriting the other's guard.
+- **Seam guard added to both** (authoring guide §2.5): a run that inspected zero blobs returns
+  `passed=False, measured=False`, not agreement. Neither had this before — an empty roster is the
+  round-8 state the module header warns about.
+- Position declared in `_CANONICAL_ORDER` **adjacent to its sibling**, because the two are
+  cross-braced: hand-zeroing `blockers_open` to silence the Stage-13 rule trips the counts check
+  instead, so both must be defeated rather than one.
+- **Production-seeded (guide §2.4):** `stage13_status` flipped to `"green"` in the real
+  `papers/D1/bundle_metadata.json` (37 live blockers) → `rc=1`, D1 named with the live count; the
+  cross-brace seeded in production as well; restored byte-clean. Added to `PRODUCTION_SEEDED`, so
+  `FIXTURE_ONLY_CEILING` stays 55 — one new check, one new production seed, net zero.
+- 8 fixture legs in `TestBundleStage13ClaimConsistent`, including the two silent-on-correct-data
+  cases the old housing never asserted: `pending` + blockers passes, and `green` + **zero** blockers
+  passes. The rule is green-with-blockers, not green-is-forbidden.
 
 ---
 

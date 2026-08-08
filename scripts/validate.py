@@ -204,7 +204,7 @@ _CANONICAL_ORDER: tuple[str, ...] = (
     'count_literals', 'recurrence_reopens_closures', 'review_severity_declared',
     'review_docs_mint_findings', 'accepted_findings_carry_rationale',
     'chain_backing_targets_resolve',
-    'bundle_metadata_matches_graph', 'notebook_stored_outputs_current',
+    'bundle_metadata_matches_graph', 'bundle_stage13_claim_consistent', 'notebook_stored_outputs_current',
     'readiness_verdicts_agree', 'readiness_submission_gate',
     'citation_primary_sources_present', 'provenance_doi_in_registry',
     'bundle_consistency', 'bundle_source_freshness',
@@ -622,6 +622,7 @@ _RECURRENCE_MIN_TITLE = _checks_reviews._RECURRENCE_MIN_TITLE
 _RECURRENCE_MIN_OVERLAP = _checks_reviews._RECURRENCE_MIN_OVERLAP
 check_bundle_figure_integrity = _checks_bundles.check_bundle_figure_integrity
 check_bundle_metadata_matches_graph = _checks_bundles.check_bundle_metadata_matches_graph
+check_bundle_stage13_claim_consistent = _checks_bundles.check_bundle_stage13_claim_consistent
 check_readiness_verdicts_agree = _checks_bundles.check_readiness_verdicts_agree
 check_readiness_submission_gate = _checks_bundles.check_readiness_submission_gate
 check_bundle_consistency = _checks_bundles.check_bundle_consistency

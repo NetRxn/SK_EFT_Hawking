@@ -530,10 +530,22 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
     # LOOKS like it is working.
     "bundle_metadata_matches_graph": (
         "test_d5_bundles_readiness.py",
-        "4 mutations. The stage13_status green-with-blockers rule is the guard whose "
+        "3 mutations, post-TODO-D23 split (2026-08-07): the COUNT comparison now carries "
+        "the verdict alone, so it is structurally load-bearing rather than shadowed by "
+        "the green rule that used to live here. Plus the missing-blob and "
+        "uncomputable-aggregate fail-closed legs",
+    ),
+    "bundle_stage13_claim_consistent": (
+        "test_d5_bundles_readiness.py",
+        "8 mutations. Split out of `bundle_metadata_matches_graph` on 2026-08-07 "
+        "(TODO-D23) with the assertion unchanged: the green-with-blockers guard whose "
         "own committed mutation record reads `PASS <-- missed` (the test existed, the "
-        "guard did not). A separate leg isolates the COUNT comparison, which was not "
-        "load-bearing while the green rule carried the verdict",
+        "guard did not). Legs: fires on green+blockers; SILENT on pending+blockers and "
+        "on green+zero-blockers (the rule is not green-is-forbidden); reads the LIVE "
+        "count so a hand-zeroed `blockers_open` cannot silence it, asserting the "
+        "cross-brace to the counts check in the same test; case/whitespace normalisation; "
+        "missing blob and uncomputable aggregate fail CLOSED; and the §2.5 seam guard — "
+        "an empty roster is UNVERIFIED, not passing",
     ),
     "readiness_verdicts_agree": (
         "test_d5_bundles_readiness.py",
@@ -643,6 +655,13 @@ PRODUCTION_SEEDED: frozenset[str] = frozenset({
     # QI-34: a real recurrence written into `papers/AutomatedReviews/` -> 1
     # contradicted -> rc=1.
     "recurrence_reopens_closures",
+    # 2026-08-07 (TODO-D23 split): `stage13_status` flipped to "green" in the REAL
+    # `papers/D1/bundle_metadata.json`, which carries 37 live blockers -> rc=1, D1 named
+    # with the live count. The CROSS-BRACE was seeded in production too: setting
+    # `blockers_open: 0` in the same real blob did NOT silence this check (it reads the
+    # graph, still 37) and tripped `bundle_metadata_matches_graph` as well — both have to
+    # be defeated, not one. Restored byte-clean (empty `git diff`).
+    "bundle_stage13_claim_consistent",
 })
 
 #: The ratchet, in the same idiom as `AWAITING_CEILING`: the number of registered
@@ -653,7 +672,7 @@ PRODUCTION_SEEDED: frozenset[str] = frozenset({
 #: every check for which nobody has yet demonstrated a production failure, not every
 #: check that is broken. Lower it one check at a time, each with the probe recorded in
 #: the commit — the same way the 54-entry `AWAITING_MUTATION_TEST` backlog went to zero.
-FIXTURE_ONLY_CEILING = 55
+FIXTURE_ONLY_CEILING = 55  # 2026-08-07: +1 check, +1 production seed — net unchanged
 
 
 def _registered() -> list[str]:

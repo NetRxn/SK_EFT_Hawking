@@ -95,37 +95,13 @@ class TestBundleMetadataMatchesGraph:
         r = bru.check_bundle_metadata_matches_graph()
         assert r.passed is True, [(d.name, d.message) for d in r.details if not d.passed]
 
-    def test_green_with_open_blockers_fails(self, tmp_path, monkeypatch):
-        """FIRES ON THE SEEDED DEFECT — the `stage13_status` guard. Its own committed
-        mutation record (`2026-08-01-0009-internal-adversarial/D11.md:179`) reads
-        `PASS <-- missed`: the TEST existed, the GUARD did not."""
-        _patch_readiness(monkeypatch, {"D1": _agg(blockers=2, advisories=5)})
-        self._meta(tmp_path, monkeypatch, "D1",
-                   {"blockers_open": 2, "advisories_open": 5, "readiness": "RED",
-                    "stage13_status": "green"})
-        r = bru.check_bundle_metadata_matches_graph()
-        assert r.passed is False, (
-            "stage13_status='green' with 2 open blockers passed — this is the guard "
-            "whose absence let 14 bundles sit GREEN with blockers open")
-
-    def test_the_green_rule_compares_the_LIVE_count(self, tmp_path, monkeypatch):
-        """Both legs must be defeated, not one. Hand-editing `blockers_open` to 0 to
-        make the green rule pass trips the count comparison instead."""
-        _patch_readiness(monkeypatch, {"D1": _agg(blockers=2, advisories=5)})
-        self._meta(tmp_path, monkeypatch, "D1",
-                   {"blockers_open": 0, "advisories_open": 5, "readiness": "RED",
-                    "stage13_status": "green"})
-        r = bru.check_bundle_metadata_matches_graph()
-        assert r.passed is False, (
-            "zeroing blockers_open by hand defeated BOTH legs — the green rule must "
-            "read the live count, not the metadata's own claim")
-
     def test_a_stale_count_ALONE_fails(self, tmp_path, monkeypatch):
-        """The count comparison, ISOLATED. `test_the_green_rule_compares_the_LIVE_count`
-        above sets BOTH a stale count and `stage13_status: green`, so the green rule
-        carries the verdict and the count comparison is never load-bearing there —
-        measured: mutating it away was MISSED. Here the status is `pending`, so the
-        stale count is the only path to the verdict."""
+        """The count comparison, carrying the verdict alone. Before the 2026-08-07
+        split (TODO-D23) the green rule lived in this check and a fixture that set BOTH
+        a stale count and `stage13_status: green` let the green rule carry the verdict,
+        so the count comparison was never load-bearing — measured: mutating it away was
+        MISSED. After the split this check has no other leg, which is the structural
+        version of the same guarantee."""
         _patch_readiness(monkeypatch, {"D1": _agg(blockers=2, advisories=5)})
         self._meta(tmp_path, monkeypatch, "D1",
                    {"blockers_open": 99, "advisories_open": 5, "readiness": "RED",
@@ -157,6 +133,102 @@ class TestBundleMetadataMatchesGraph:
         _patch_readiness(monkeypatch, {}, raise_aggregate=True)
         self._meta(tmp_path, monkeypatch, "D1", {"blockers_open": 0})
         r = bru.check_bundle_metadata_matches_graph()
+        assert r.passed is False
+        assert any("UNVERIFIED" in (d.message or "") for d in r.details)
+
+
+class TestBundleStage13ClaimConsistent:
+    """`bundle_stage13_claim_consistent` — split out of `bundle_metadata_matches_graph`
+    on 2026-08-07 (TODO-D23, operator authorized). The ASSERTION is unchanged and its
+    history is why it exists: its own committed mutation record
+    (`2026-08-01-0009-internal-adversarial/D11.md:179`) reads `PASS <-- missed` — the
+    TEST existed, the GUARD did not. What changed is that a failure is now reported
+    under a name that describes it."""
+
+    _meta = TestBundleMetadataMatchesGraph._meta
+
+    def test_a_pending_status_with_blockers_passes(self, tmp_path, monkeypatch):
+        """SILENT ON CORRECT DATA. Open blockers are fine; CLAIMING a green review
+        against them is not."""
+        _patch_readiness(monkeypatch, {"D1": _agg(blockers=7, advisories=2)})
+        self._meta(tmp_path, monkeypatch, "D1",
+                   {"blockers_open": 7, "advisories_open": 2, "readiness": "RED",
+                    "stage13_status": "pending"})
+        r = bru.check_bundle_stage13_claim_consistent()
+        assert r.passed is True, [(d.name, d.message) for d in r.details if not d.passed]
+
+    def test_green_with_zero_blockers_passes(self, tmp_path, monkeypatch):
+        """The rule is green-WITH-BLOCKERS, not green-is-forbidden. A bundle that
+        genuinely cleared Stage 13 must not be flagged here."""
+        _patch_readiness(monkeypatch, {"D1": _agg(blockers=0, advisories=0)})
+        self._meta(tmp_path, monkeypatch, "D1",
+                   {"blockers_open": 0, "advisories_open": 0, "readiness": "GREEN",
+                    "stage13_status": "green"})
+        r = bru.check_bundle_stage13_claim_consistent()
+        assert r.passed is True, [(d.name, d.message) for d in r.details if not d.passed]
+
+    def test_green_with_open_blockers_fails(self, tmp_path, monkeypatch):
+        """FIRES ON THE SEEDED DEFECT — the state 14 of 21 bundles were in until the
+        operator's 2026-08-07 demotion."""
+        _patch_readiness(monkeypatch, {"D1": _agg(blockers=2, advisories=5)})
+        self._meta(tmp_path, monkeypatch, "D1",
+                   {"blockers_open": 2, "advisories_open": 5, "readiness": "RED",
+                    "stage13_status": "green"})
+        r = bru.check_bundle_stage13_claim_consistent()
+        assert r.passed is False, (
+            "stage13_status='green' with 2 open blockers passed — this is the guard "
+            "whose absence let 14 bundles sit GREEN with blockers open")
+
+    def test_it_reads_the_LIVE_count_not_the_metadata_claim(self, tmp_path, monkeypatch):
+        """CROSS-BRACING, and the reason the split kept the two checks adjacent.
+        Hand-editing `blockers_open` to 0 must NOT silence this check — it reads the
+        graph. (Doing so trips `bundle_metadata_matches_graph` as well, so both have to
+        be defeated rather than one.)"""
+        _patch_readiness(monkeypatch, {"D1": _agg(blockers=2, advisories=5)})
+        self._meta(tmp_path, monkeypatch, "D1",
+                   {"blockers_open": 0, "advisories_open": 5, "readiness": "RED",
+                    "stage13_status": "green"})
+        r = bru.check_bundle_stage13_claim_consistent()
+        assert r.passed is False, (
+            "zeroing blockers_open by hand silenced the Stage-13 guard — it must read "
+            "the live count, not the metadata's own claim")
+        assert bru.check_bundle_metadata_matches_graph().passed is False, (
+            "the cross-brace is gone: the hand-edited count no longer trips the "
+            "counts check either")
+
+    def test_case_and_whitespace_do_not_evade_it(self, tmp_path, monkeypatch):
+        """`'  GREEN '` is the same claim as `'green'`."""
+        _patch_readiness(monkeypatch, {"D1": _agg(blockers=3)})
+        self._meta(tmp_path, monkeypatch, "D1",
+                   {"blockers_open": 3, "advisories_open": 0, "readiness": "RED",
+                    "stage13_status": "  GREEN "})
+        r = bru.check_bundle_stage13_claim_consistent()
+        assert r.passed is False
+
+    def test_a_missing_metadata_blob_fails_rather_than_skips(self, tmp_path, monkeypatch):
+        """A bundle with no metadata makes no Stage-13 claim, which is not the same as
+        making a consistent one."""
+        _patch_readiness(monkeypatch, {"D1": _agg(blockers=1)})
+        self._meta(tmp_path, monkeypatch, "D1", None)
+        r = bru.check_bundle_stage13_claim_consistent()
+        assert r.passed is False
+        assert any("unverified rather than consistent" in (d.message or "")
+                   for d in r.details)
+
+    def test_an_empty_population_is_UNVERIFIED_not_passing(self, tmp_path, monkeypatch):
+        """SEAM GUARD (authoring guide §2.5). An empty roster is the round-8 state:
+        every readiness check green with nothing to check."""
+        _patch_readiness(monkeypatch, {})
+        r = bru.check_bundle_stage13_claim_consistent()
+        assert r.passed is False, "a check that inspected nothing reported agreement"
+        assert r.measured is False
+        assert any("UNVERIFIED" in (d.message or "") for d in r.details)
+
+    def test_an_uncomputable_aggregate_fails_rather_than_passes(self, tmp_path, monkeypatch):
+        """FAIL, not pass: an uncomputable live verdict is not agreement."""
+        _patch_readiness(monkeypatch, {}, raise_aggregate=True)
+        self._meta(tmp_path, monkeypatch, "D1", {"stage13_status": "green"})
+        r = bru.check_bundle_stage13_claim_consistent()
         assert r.passed is False
         assert any("UNVERIFIED" in (d.message or "") for d in r.details)
 

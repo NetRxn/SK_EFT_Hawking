@@ -1,8 +1,8 @@
 """Bundle-metadata, readiness-gate and roster checks — ADR-009 Phase 2.
 
 `bundle_figure_integrity`, `bundle_metadata_matches_graph`,
-`readiness_verdicts_agree`, `readiness_submission_gate`, `bundle_consistency`,
-`bundle_registry_consistency`.
+`bundle_stage13_claim_consistent`, `readiness_verdicts_agree`,
+`readiness_submission_gate`, `bundle_consistency`, `bundle_registry_consistency`.
 
 ✅ **`readiness_submission_gate` HARD-FAILS. Repaired 2026-08-03 (ADR-009 §Deferred
 item 2).** It is one of the two checks `validate.py` is deliberately RED on, and
@@ -219,6 +219,155 @@ def check_bundle_figure_integrity() -> CheckResult:
     return CheckResult(passed=n_fail == 0, details=details)
 
 
+def _readiness_aggregate():
+    """`(by_bundle, metadata_path_fn, failure_detail)` — the live per-bundle aggregation.
+
+    Shared by the two metadata checks below. Returns `(None, None, Detail)` on any
+    failure to compute, so each caller fails CLOSED with its own subject named: an
+    uncomputable live verdict is not agreement (D12 round-8 BLOCKER 8.2).
+    """
+    try:
+        from bundle_readiness import (MAPPING_DOC, parse_mapping,
+                                      load_findings_by_paper,
+                                      resolve_stage13_reviews,
+                                      aggregate_by_bundle,
+                                      _bundle_metadata_path)
+    except ImportError as exc:
+        # FAIL, not pass (D12 Stage-13 round-8 BLOCKER 8.2). A readiness guard that cannot
+        # load its own dependency reports "no disagreement found" — indistinguishable from
+        # agreement. Demonstrated end-to-end by the round-8 reviewer: renaming
+        # `evaluate_all_gates` makes build_graph emit ZERO ReadinessGate nodes, at which
+        # point every readiness check passed green with nothing to check.
+        return None, None, Detail(
+            "import", False,
+            f"could not import the readiness machinery ({exc}) — this check is "
+            f"UNVERIFIED, not passing")
+    try:
+        by_bundle = aggregate_by_bundle(
+            parse_mapping(MAPPING_DOC.read_text()),
+            load_findings_by_paper(),
+            resolve_stage13_reviews(backfill=False))
+    except Exception as exc:
+        # FAIL, not pass: an uncomputable live verdict is not agreement.
+        return None, None, Detail(
+            "aggregate", False,
+            f"live counts could not be computed ({type(exc).__name__}: {exc}) "
+            f"— metadata is therefore UNVERIFIED, not matching")
+    return by_bundle, _bundle_metadata_path, None
+
+
+@register_check("bundle_stage13_claim_consistent",
+                "No bundle claims stage13_status='green' while the graph shows open blockers")
+def check_bundle_stage13_claim_consistent() -> CheckResult:
+    """CHECK: a metadata REVIEW-VERDICT claim contradicted by the live graph.
+
+    **Split out of `bundle_metadata_matches_graph` on 2026-08-07 (TODO-D23, operator
+    authorized).** It lived there from 2026-08-03 because nothing else in the repo read
+    `stage13_status` and the hole needed a home. The cost of that housing was measured
+    twice in one session: the check registered as *"finding counts equal the live
+    graph's"*, so when this leg fired the failure was mis-read as count drift by its own
+    author and read as spurious by the operator. Both readings follow from the
+    description. The assertion was never in question — only its label.
+
+    **Why it is a different assertion from the count comparisons.** Those compare a
+    metadata field to the same field derived from the graph: `blockers_open == live`.
+    This one compares a metadata CLAIM against a graph FACT OF ANOTHER SHAPE — the blob
+    says a past Stage-13 review returned green (i.e. no blocking finding remained) while
+    the graph carries open blockers. Both cannot be true. It is a genuine
+    metadata-vs-graph contradiction, but a semantic one, not a field equality, and that
+    is exactly why it reported badly under the old name.
+
+    The remedy is quoted verbatim from this project's own reviewer,
+    `papers/AutomatedReviews/2026-07-31-1652-internal-adversarial/D11.md:227`:
+    "a bundle with `blockers_open > 0` must not carry `stage13_status: 'green'`".
+    A mutation test proving the hole was already committed at
+    `2026-08-01-0009-internal-adversarial/D11.md:179` (flip pending->green =>
+    "PASS <-- missed"). The test existed; the guard did not.
+
+    Compared against the LIVE count, never `meta["blockers_open"]`: hand-editing the
+    count to 0 to silence this would trip `bundle_metadata_matches_graph` instead, so
+    both checks have to be defeated rather than one. That cross-bracing is the reason
+    the two stay adjacent after the split.
+
+    NOT asserted here: `stage13_redo_required`. The same reviewer paired it with the rule
+    above, but the two are independent: `redo_required` means "new content was appended
+    since the last review" (written by `bundle_append.py`), NOT "blockers are open". A
+    bundle can correctly carry blockers with `redo_required: false` when the blockers came
+    from the review itself rather than from a later lift.
+
+    NOT asserted here: `freshness_stale`. D12 Stage-13 round-8 reported that seven bundles
+    set it false with blockers open, citing LATE_PHASE6_ABSORPTION_PROTOCOL.md. That
+    assertion was implemented once and was wrong — the field is owned by
+    `scripts/check_bundle_source_freshness.py` and means "a source paper is newer than
+    last_lift", independent of blocker count. The protocol line quoted is a workflow step,
+    not the field's definition. Asserting it made two writers fight and `validate.py`
+    non-idempotent.
+
+    NOT asserted here: the Stage-9/10-before-13 ORDERING gate
+    (`BUNDLE_LIFT_PROCEDURE.md:9`). That is a different defect — a green that was invalid
+    WHEN WRITTEN because a prerequisite stage had not passed, rather than one contradicted
+    by findings filed LATER — and it is unguarded. Tracked as TODO-D24; deliberately not
+    folded in here, because bundling it would repeat the mistake this split is undoing.
+    """
+    by_bundle, meta_path, failure = _readiness_aggregate()
+    if failure is not None:
+        return CheckResult(passed=False, details=[failure])
+
+    details: list[Detail] = []
+    bad = 0
+    checked = 0
+    for bundle, agg in sorted(by_bundle.items()):
+        mp = meta_path(bundle)
+        if not mp.is_file():
+            # FAIL, not skip: a bundle with no metadata blob makes no stage13 claim, which
+            # is not the same as making a consistent one. `bundle_metadata_matches_graph`
+            # reports the same bundle for its own subject; both are UNVERIFIED here.
+            bad += 1
+            details.append(Detail(
+                bundle, False,
+                f"no bundle_metadata.json at {mp} — this bundle's Stage-13 claim does "
+                f"not exist, so it is unverified rather than consistent"))
+            continue
+        try:
+            meta = json.loads(mp.read_text())
+        except (json.JSONDecodeError, OSError) as exc:
+            bad += 1
+            details.append(Detail(bundle, False, f"metadata unreadable: {exc}"))
+            continue
+        checked += 1
+        live_blockers = agg.get("blocker_count", 0)
+        if str(meta.get("stage13_status", "")).strip().lower() == "green" \
+                and live_blockers > 0:
+            bad += 1
+            details.append(Detail(
+                bundle, False,
+                f"stage13_status='green' while {live_blockers} blocker(s) are open — "
+                f"Stage 13 is GREEN only when no blocking finding remains "
+                f"(BUNDLE_LIFT_PROCEDURE.md §12). ⚠️ `stage13_status` is NOT written by "
+                f"`bundle_readiness.py` — that script owns blockers_open / "
+                f"advisories_open / open_findings / blocked_p1_gates / readiness only. "
+                f"It is set by the Stage-13 review cycle (BUNDLE_LIFT_PROCEDURE.md "
+                f"§§8–10), so a green value here is a claim about a PAST review that "
+                f"newly-minted blockers have since contradicted. Re-running the counts "
+                f"writer will NOT clear it: the bundle re-enters at Stage 9/10 and only "
+                f"then Stage 13 (BUNDLE_LIFT_PROCEDURE.md:9 gate ordering)."))
+
+    # Seam guard (guide §2.5): a loop that inspected nothing must not report agreement.
+    if checked == 0:
+        details.insert(0, Detail(
+            "population", False,
+            "no bundle metadata blob was inspected — this check is UNVERIFIED, not "
+            "passing (an empty population is the round-8 state: every readiness check "
+            "green with nothing to check)"))
+        return CheckResult(passed=False, measured=False, details=details)
+
+    details.insert(0, Detail(
+        "summary", bad == 0,
+        f"{checked} bundle Stage-13 claim(s) checked against the live blocker counts, "
+        f"{bad} contradicted"))
+    return CheckResult(passed=bad == 0, details=details)
+
+
 @register_check("bundle_metadata_matches_graph",
                 "bundle_metadata.json finding counts equal the live graph's")
 def check_bundle_metadata_matches_graph() -> CheckResult:
@@ -235,41 +384,27 @@ def check_bundle_metadata_matches_graph() -> CheckResult:
     It compares against the same aggregation the heatmap uses, so a bundle whose
     metadata was hand-edited, or whose readiness run was skipped after new findings
     landed, fails here rather than being quoted as evidence of readiness.
-    """
-    try:
-        from bundle_readiness import (MAPPING_DOC, parse_mapping,
-                                      load_findings_by_paper,
-                                      resolve_stage13_reviews,
-                                      aggregate_by_bundle,
-                                      _bundle_metadata_path)
-    except ImportError as exc:
-        # FAIL, not pass (D12 Stage-13 round-8 BLOCKER 8.2). A readiness guard that cannot
-        # load its own dependency reports "no disagreement found" — indistinguishable from
-        # agreement. Demonstrated end-to-end by the round-8 reviewer: renaming
-        # `evaluate_all_gates` makes build_graph emit ZERO ReadinessGate nodes, at which
-        # point every readiness check passed green with nothing to check.
-        return CheckResult(passed=False, details=[
-            Detail("import", False,
-                   f"could not import the readiness machinery ({exc}) — this check is "
-                   f"UNVERIFIED, not passing")])
 
-    try:
-        by_bundle = aggregate_by_bundle(
-            parse_mapping(MAPPING_DOC.read_text()),
-            load_findings_by_paper(),
-            resolve_stage13_reviews(backfill=False))
-    except Exception as exc:
-        # FAIL, not pass: an uncomputable live verdict is not agreement.
-        return CheckResult(passed=False, details=[
-            Detail("aggregate", False,
-                   f"live counts could not be computed ({type(exc).__name__}: {exc}) "
-                   f"— metadata is therefore UNVERIFIED, not matching")])
+    **Scope, after the 2026-08-07 split (TODO-D23).** This check is now exactly what its
+    registered description says: FIELD EQUALITY between the blob and the graph, on
+    `blockers_open`, `advisories_open` and `readiness`. The fourth assertion it used to
+    carry — `stage13_status='green'` is illegal while blockers are open — is a semantic
+    contradiction rather than a count equality, and moved to
+    `bundle_stage13_claim_consistent`. Nothing about that assertion changed; it stopped
+    being reported under a name that described the other three legs.
+
+    The two remain cross-braced by design: zeroing `blockers_open` by hand to silence the
+    Stage-13 check trips THIS check instead, so both have to be defeated rather than one.
+    """
+    by_bundle, meta_path, failure = _readiness_aggregate()
+    if failure is not None:
+        return CheckResult(passed=False, details=[failure])
 
     details: list[Detail] = []
     drift = 0
     checked = 0
     for bundle, agg in sorted(by_bundle.items()):
-        mp = _bundle_metadata_path(bundle)
+        mp = meta_path(bundle)
         if not mp.is_file():
             # FAIL, not skip (D12 round-8): a bundle with no metadata blob has nothing to
             # disagree with the graph, which is not the same as agreeing with it.
@@ -296,64 +431,22 @@ def check_bundle_metadata_matches_graph() -> CheckResult:
             bad.append(f"advisories_open={meta.get('advisories_open')} live={live_adv}")
         if meta.get("readiness") != agg.get("readiness"):
             bad.append(f"readiness={meta.get('readiness')!r} live={agg.get('readiness')!r}")
-        # ── `stage13_status: green` is illegal while blockers are open ──────────────
-        # Added 2026-08-03 (publication-readiness audit). The three comparisons above
-        # assert that metadata AGREES WITH the graph. They cannot catch the state 14 of
-        # 21 bundles are in right now, because that state is internally CONSISTENT: the
-        # metadata says `blockers_open: 37` and the graph says 37, so they agree — while
-        # the same file also says `stage13_status: "green"`.
-        #
-        # `stage13_status` is asserted by an agent hand-editing JSON (the only automated
-        # write is `bundle_append.py`'s green->pending DEMOTION on lift); no code path
-        # promotes it, and until now nothing in this repo read it. So the one direction
-        # that matters for publication safety was unguarded.
-        #
-        # The remedy is quoted verbatim from this project's own reviewer,
-        # `papers/AutomatedReviews/2026-07-31-1652-internal-adversarial/D11.md:227`:
-        # "a bundle with `blockers_open > 0` must not carry `stage13_status: 'green'`".
-        # A mutation test proving the hole was already committed at
-        # `2026-08-01-0009-internal-adversarial/D11.md:179` (flip pending->green =>
-        # "PASS <-- missed"). The test existed; the guard did not.
-        #
-        # Compared against the LIVE count, not `meta["blockers_open"]`: hand-editing the
-        # count to 0 to make this pass would trip the `blockers_open` comparison above,
-        # so both legs have to be defeated rather than one.
-        if str(meta.get("stage13_status", "")).strip().lower() == "green" \
-                and live_blockers > 0:
-            bad.append(
-                f"stage13_status='green' while {live_blockers} blocker(s) are open — "
-                f"Stage 13 is GREEN only when no blocking finding remains "
-                f"(BUNDLE_LIFT_PROCEDURE.md §12)")
-        # NOT asserted here: `stage13_redo_required`. The same reviewer paired it with the
-        # rule above, but the two are independent: `redo_required` means "new content was
-        # appended since the last review" (written by `bundle_append.py`), NOT "blockers
-        # are open". A bundle can correctly carry blockers with `redo_required: false` when
-        # the blockers came from the review itself rather than from a later lift. Asserting
-        # it would repeat the `freshness_stale` mistake recorded immediately below —
-        # inferring a field's meaning from the workflow step that mentions it.
-        # NOT asserted here: `freshness_stale`. D12 Stage-13 round-8 reported that seven
-        # bundles set it false with blockers open, citing
-        # LATE_PHASE6_ABSORPTION_PROTOCOL.md. I implemented that assertion and it was
-        # wrong — the field is owned by `scripts/check_bundle_source_freshness.py` and
-        # means "a source paper is newer than last_lift", which is independent of blocker
-        # count. The protocol line quoted is a workflow step, not the field's definition.
-        # Asserting it here made two writers fight and `validate.py` non-idempotent.
         if bad:
             drift += 1
             details.append(Detail(
                 bundle, False,
                 f"metadata disagrees with the live graph: {'; '.join(bad)}. "
-                + ("⚠️ `stage13_status` is NOT written by `bundle_readiness.py` — that "
-                   "script owns blockers_open / advisories_open / open_findings / "
-                   "blocked_p1_gates / readiness only. `stage13_status` is set by the "
-                   "Stage-13 review cycle (BUNDLE_LIFT_PROCEDURE.md §§8–10), so a green "
-                   "value here is a claim about a PAST review that newly-minted blockers "
-                   "have since contradicted. Re-run Stage 13 for this bundle (or set "
-                   "`stage13_redo_required`) — re-running the counts writer will NOT "
-                   "clear it."
-                   if any("stage13_status" in b for b in bad) else
-                   "Re-run `uv run python scripts/bundle_readiness.py`, which writes "
-                   "these fields; do not hand-edit them.")))
+                f"Re-run `uv run python scripts/bundle_readiness.py`, which writes "
+                f"these fields; do not hand-edit them."))
+
+    # Seam guard (guide §2.5): a loop that compared nothing must not report agreement.
+    if checked == 0:
+        details.insert(0, Detail(
+            "population", False,
+            "no bundle metadata blob was compared — this check is UNVERIFIED, not "
+            "passing (an empty population is the round-8 state: every readiness check "
+            "green with nothing to check)"))
+        return CheckResult(passed=False, measured=False, details=details)
 
     details.insert(0, Detail(
         "summary", drift == 0,
