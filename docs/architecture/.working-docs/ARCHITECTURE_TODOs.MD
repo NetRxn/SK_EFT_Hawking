@@ -576,30 +576,45 @@ version *and* the Mathlib rev against `lean-toolchain` + `lakefile.toml`.
   present claim true. Operator's call under ADR-010 C5. **The current prose is not a third option.**
 - Full working: `docs/audits/2026-08-07-d10-retrofit/FINDINGS.md` §3.
 
-### D13. D1 discloses a `native_decide` dependency it does not have — OPEN (claim integrity)
+### D13. D1 §3.1 mis-describes four `decide` proofs as `native_decide` — OPEN (minor, prose)
 
-- **Where:** `papers/D1/paper_draft.tex` §3.1 — *"the small-N cases N = 1, 2, 3 are independently
-  closed by `native_decide` in `SecondOrderSK.firstOrder_count`, `secondOrder_count`,
-  `secondOrder_count_with_parity`, `thirdOrder_count`."*
-- **The fact:** all four are proved **`by decide`** (`SecondOrderSK.lean:260, 272, 285, 937`);
-  their own docstrings say *"Use decide."*; their axiom profile is exactly
-  `{propext, Classical.choice, Quot.sound}`; and **`Lean.ofReduceBool` — the axiom a
-  `native_decide` proof necessarily carries — appears on ZERO declarations project-wide.**
-- ⚠️ **BROADENED 2026-08-07 — this is corpus-wide, not a D1 slip.** F §7.2 annotates
-  `FigureEightKnot.figure_eight_normalized` with `(native_decide)`; measured, it carries the
-  three classical axioms and nothing else. Two independently drafted manuscripts each volunteer
-  a `native_decide` dependency the library does not have. **The fix is a corpus sweep, not a
-  sentence.**
-- **Why it matters:** `decide` is kernel-checked, `native_decide` is not. The drafts are
-  volunteering a trust weakness they do not have, in the place a referee looks for one. D11's
-  draft states the distinction correctly, so the project knows it.
-- ✅ **RESOLVES an ADR-010 open item on the merits.** The posture question was *how much should
-  we disclose about our `native_decide` use*. The measurement answers it: **we have none** —
-  `Lean.ofReduceBool` appears on zero declarations project-wide — so there is nothing to
-  disclose, and the live defect is drafts claiming otherwise. Operator sign-off still required to
-  close the ADR item.
-- **Fix shape:** one sentence in §3.1 — `decide`, kernel-checked, and say so. Prose-only.
-- Full working: `docs/audits/2026-08-07-d1-retrofit/FINDINGS.md` §3.
+⚠️ **THIS ITEM WAS FILED WRONG ON 2026-08-07 AND IS RESTATED HERE. The original text claimed
+`Lean.ofReduceBool` appears on ZERO declarations project-wide and concluded there is no
+load-bearing `native_decide` anywhere, that F had the same defect, and that ADR-010's
+`native_decide` posture item was thereby resolved. All three were false — see the correction
+below before citing anything in this item.**
+
+- **What survives, verified two ways:** `papers/D1/paper_draft.tex` §3.1 says the four counting
+  theorems are *"independently closed by `native_decide`"*. They are proved **`by decide`**
+  (`SecondOrderSK.lean:260, 272, 285, 937`), their docstrings say *"Use decide."*, and their
+  `axiom_deps_project` is **empty** — no `._native.native_decide` marker. The sentence is wrong
+  about those four theorems.
+- **Why it still matters:** `decide` is kernel-checked, `native_decide` is not. D1 understates
+  its own kernel purity in the place a referee looks.
+- **Fix shape:** one sentence in §3.1. Prose-only.
+
+#### ❌ Correction — the corpus-wide claim is WITHDRAWN
+
+| withdrawn claim | measured truth | decider |
+|---|---|---|
+| *"`Lean.ofReduceBool` appears on zero declarations project-wide"* | the field `axiom_deps_core` contains **only** `propext`, `Quot.sound`, `Classical.choice` — it never records that axiom, so its absence measured nothing | enumerate every distinct name in `axiom_deps_core` |
+| *"there is no load-bearing `native_decide` anywhere"* | **546 declarations** are in the `native_decide` closure | `validate.py --check native_decide_regression` — an **existing check** |
+| *"F §7.2's `(native_decide)` annotation is false"* | **F is correct.** `FigureEightKnot.figure_eight_normalized` is literally `:= by native_decide` (`FigureEightKnot.lean:122`) and carries `…_native.native_decide.ax_1_1` in `axiom_deps_project` | read the source; read the right field |
+| *"ADR-010's `native_decide` disclosure posture is resolved on the merits"* | **not resolved, and not mine to resolve** — it is an operator-owned open item, and the premise it was closed on was false | ADR-010 §Open |
+
+**How the error was made, because the mechanism is reusable.** The project marks `native_decide`
+in **`axiom_deps_project`** as `<decl>._native.native_decide.ax_N_M`, not in `axiom_deps_core` as
+`Lean.ofReduceBool`. Probing the wrong field returned an absence that read as a measurement.
+
+⚠️ **The project had already documented this exact trap.** `lean_statements.py:557-564` records
+that *"`native_decide` axioms were STRIPPED from the project-axiom list before the test, so a
+`native_decide`-backed refutation scored kernel-pure"*, and states the 546 figure in as many
+words. **`native_decide_regression` measures this and was never run.** That is the goal's own
+standing constraint — *before measuring anything, check whether a check already measures it* —
+violated for the fifth time in this workstream.
+
+- Full working: `docs/audits/2026-08-07-d1-retrofit/FINDINGS.md` §3 (corrected) and
+  `docs/audits/2026-08-07-f-retrofit/FINDINGS.md` §4 (withdrawn).
 
 ### D14. D1's append log records four `Lift-section` events that inserted no content — OPEN
 

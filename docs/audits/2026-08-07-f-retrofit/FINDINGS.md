@@ -71,30 +71,27 @@ shows them open.**
 
 ---
 
-## 4. ⚠️ The `native_decide` disclosure defect is corpus-wide, not a D1 slip
+## 4. ❌ WITHDRAWN — F's `native_decide` annotation is CORRECT
 
-Yesterday's D1 retrofit filed TODO-D13 against §3.1's claim that four counting theorems are
-*"closed by `native_decide`"* when they are `by decide`. **F has the same defect
-independently**: §7.2 annotates `FigureEightKnot.figure_eight_normalized` with
-`(\texttt{native\_decide})`.
+**This section originally claimed F §7.2 was wrong to annotate
+`FigureEightKnot.figure_eight_normalized` with `(native_decide)`, and generalised that into a
+corpus-wide prose defect that resolved an ADR-010 open item. Every part of that was false.**
 
-Measured: `figure_eight_normalized` carries the axiom profile
-`{propext, Classical.choice, Quot.sound}` — and **`Lean.ofReduceBool`, the axiom a
-`native_decide` proof necessarily carries, appears on ZERO declarations project-wide.**
+`FigureEightKnot.lean:122` reads `:= by native_decide`, and the declaration carries
+`…figure_eight_normalized._native.native_decide.ax_1_1` in `axiom_deps_project`. **F is right,
+and its disclosure is exactly the kind a referee should see.** The same is true of
+`figure_eight_trace_neg_one` and `IsingBraiding.trefoil_eq_neg_sqrt2`, which F also names.
 
-Two independently drafted manuscripts each volunteer a trust weakness the library does not have.
-That changes the item's shape:
+Corpus-wide, `validate.py --check native_decide_regression` — an **existing check that measures
+precisely this** — reports **546 declarations in the `native_decide` closure**, at its ceiling.
 
-- It is a **corpus-wide prose pattern**, not one author's slip, so the fix is a sweep, not a
-  sentence.
-- It **resolves** ADR-010's open *`native_decide` disclosure posture* item on the merits: there is
-  nothing to disclose. The posture question was posed as *how much should we say about our
-  `native_decide` use*; the measurement says the answer is *that we have none*, and the live
-  defect is drafts claiming otherwise.
+**The error:** I probed `axiom_deps_core` for `Lean.ofReduceBool`. That field only ever contains
+`propext`, `Quot.sound` and `Classical.choice`; the `native_decide` marker lives in
+`axiom_deps_project`. An absence in the wrong field read as a measurement. Full post-mortem in
+`ARCHITECTURE_TODOs.MD` TODO-D13 and `ACCURACY_LEDGER.md` V26.
 
-TODO-D13 is broadened accordingly rather than duplicated.
-
----
+**What this costs F:** nothing — this section is a retraction, not a finding. The §2, §3 and §5
+findings are unaffected and were derived from independent evidence.
 
 ## 5. Stale infrastructure descriptions in §9
 

@@ -1148,3 +1148,51 @@ temptation is to write "the synthesis claim is unsupported." It is not: three pr
 *formal* witness for a claim that may well be true physically. **State what the instrument
 measured, then state what it cannot see** — the same rule as `truncated_private` travelling with
 every closure size.
+
+---
+
+## V26 — ❌ CORRECTION: the `native_decide` finding was wrong, and how
+
+**Withdrawn: V23 atom Y4's generalisation and V24 atom Z6 in full.** Both are struck; the rows
+below replace them. The local half of Y4 — that D1's four counting theorems are `by decide` —
+**survives**, because it rests on reading the four proofs, not on the bad probe.
+
+| # | claim as filed | measured truth | decider |
+|---|---|---|---|
+| Y4′ | D1's four counting theorems are `by decide`, not `native_decide` | ✅ **TRUE** | the four proof bodies (`SecondOrderSK.lean:260, 272, 285, 937`) + empty `axiom_deps_project` |
+| Y4″ | ~~`Lean.ofReduceBool` appears on zero declarations project-wide → no load-bearing `native_decide` anywhere~~ | ❌ **FALSE.** `axiom_deps_core` contains **only** `propext`, `Quot.sound`, `Classical.choice`; it never records that axiom. The marker is `<decl>._native.native_decide.ax_N_M` in **`axiom_deps_project`**. **546 declarations** are in the closure | `validate.py --check native_decide_regression` |
+| Z6 | ~~F's `(native_decide)` annotation on `figure_eight_normalized` is false~~ | ❌ **FALSE. F is correct** — `FigureEightKnot.lean:122` is literally `:= by native_decide` | the source |
+| — | ~~ADR-010's `native_decide` posture item is resolved on the merits~~ | ❌ **FALSE and out of scope.** Operator-owned, untouched | ADR-010 §Open |
+
+### Why this one matters more than the error
+
+**Three separate guards existed and none was consulted.**
+
+1. `native_decide_regression` is a **registered check** that measures exactly this quantity. The
+   goal's own standing constraint — *before measuring anything, check whether a check already
+   measures it* — was violated for the fifth time in this workstream.
+2. `lean_statements.py:557-564` **documents this precise trap**: *"`native_decide` axioms were
+   STRIPPED from the project-axiom list before the test, so a `native_decide`-backed refutation
+   scored kernel-pure"*, and states the 546 figure in as many words.
+3. `reference-measurement-traps-false-absence`, written by me the previous day, says: *"a scan
+   reporting zero is a claim that needs the same scrutiny as a scan reporting a defect… Before
+   filing 'X does not exist,' seed a known-present instance and confirm the scan finds it."*
+   **Seeding one `native_decide` theorem would have caught it in one call.**
+
+### The failure mode, named precisely
+
+Not "I used a bad field." **I treated an absence in a field I had not verified was the right
+field as a measurement, and then let the strength of the conclusion license widening it** — from
+one draft's sentence, to two drafts, to a corpus-wide pattern, to closing an operator-owned ADR
+item. Each widening step made the claim more valuable and none added evidence.
+
+⚠️ **The tell was present and ignored:** the conclusion was *surprising in a flattering
+direction* — the corpus turned out purer than its own authors claimed. **A measurement that
+makes the work look better than the authors thought deserves the scrutiny reserved for one that
+makes it look worse.** Every widening step should have lowered confidence, not raised it.
+
+### Standing rule this produces
+
+**Before filing an absence, name the field or tool that would show presence, and prove it can —
+by finding a known-present instance with it.** An absence measured with an instrument never
+demonstrated to detect the thing is not evidence.

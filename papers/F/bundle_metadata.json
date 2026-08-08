@@ -123,7 +123,7 @@
     },
     {
       "name": "SKEFTHawking.FigureEightKnot.figure_eight_normalized",
-      "claims": "\u00a77.2 \u2014 the normalized figure-eight invariant. \u26a0\ufe0f The draft annotates this '(native_decide)'; it is NOT \u2014 its axiom profile is exactly the three classical axioms and Lean.ofReduceBool appears on zero declarations project-wide (TODO-D13)",
+      "claims": "\u00a77.2 \u2014 the normalized figure-eight invariant. The draft annotates this '(native_decide)' and that annotation is CORRECT (FigureEightKnot.lean:122; the declaration carries a ._native.native_decide marker in axiom_deps_project). Disclosed exactly as a referee should see it",
       "declared": "2026-08-07"
     },
     {

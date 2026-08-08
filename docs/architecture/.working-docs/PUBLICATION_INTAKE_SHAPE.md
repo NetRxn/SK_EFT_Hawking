@@ -211,10 +211,13 @@ bundle metadata on disk at all.
    depth 3). Taken for its exposure rather than for a merge: it carries TODO-D9's
    `\substantivetheorems{}` overclaim, and the closure supplies the honest denominator —
    **249**, not the 114 that item's arithmetic had been using (114 is §7.2's *reuse* population,
-   a different set). Two new findings: §3.1 discloses a `native_decide` dependency the substrate
-   **does not have** (all four counting theorems are `by decide`; `Lean.ofReduceBool` appears on
-   zero declarations project-wide), which blocks ADR-010's `native_decide` posture item; and four
-   `Lift-section` events in the append log inserted **zero** manuscript content.
+   a different set). Two new findings: §3.1 says four counting theorems are *"closed by
+   `native_decide`"* when they are `by decide` (read directly at `SecondOrderSK.lean:260, 272,
+   285, 937`, and their `axiom_deps_project` is empty); and four `Lift-section` events in the
+   append log inserted **zero** manuscript content.
+   ❌ **A corpus-wide generalisation of the first was filed and WITHDRAWN the same day** — see
+   TODO-D13. The library has **546** declarations in the `native_decide` closure, measured by the
+   existing `native_decide_regression` check.
    Full working: [`../../audits/2026-08-07-d1-retrofit/FINDINGS.md`](../../audits/2026-08-07-d1-retrofit/FINDINGS.md).
    ⚠️ **Near-miss worth carrying:** the extraction and the draft disagreed on §7.2's population
    (194 vs 114) and the draft was right — the two are the project's two counting conventions.
@@ -225,9 +228,10 @@ bundle metadata on disk at all.
    places and **does not know D9–D12 exist**; its §7 D6-absorption checklist shows six unchecked
    boxes for work that has shipped. Measured: **F ∩ D1 = 27** and **F ∩ each of D6/D9/D10/D11/
    D12/L2 = 0** — the flagship's declared substrate touches none of the quantum-computation,
-   detection or band-theory bundles. It also produced the **second independent** instance of the
-   `native_decide` mis-disclosure, converting TODO-D13 from a D1 slip into a corpus sweep and
-   settling ADR-010's `native_decide` posture item on the merits (there is none to disclose).
+   detection or band-theory bundles. ❌ **One F finding was filed and WITHDRAWN:** F §7.2's `(native_decide)` annotation on
+   `figure_eight_normalized` is **correct**, and the corpus-wide claim built on it was an artifact
+   of probing the wrong axiom field. ADR-010's `native_decide` posture item is **untouched** and
+   remains operator-owned. See TODO-D13 and ledger V26.
    Full working: [`../../audits/2026-08-07-f-retrofit/FINDINGS.md`](../../audits/2026-08-07-f-retrofit/FINDINGS.md).
    ⚠️ **Sequencing consequence:** F cannot be redrafted until the bundles it surveys are
    measured. **The retrofit is now a prerequisite for the flagship, not a parallel workstream.**

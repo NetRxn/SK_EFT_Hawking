@@ -63,19 +63,23 @@ in `SecondOrderSK.firstOrder_count`, `secondOrder_count`, `secondOrder_count_wit
 | `secondOrder_count_with_parity` | 282–285 | `by decide` |
 | `thirdOrder_count` | 935–937 | `by decide` |
 
-Their own docstrings say *"Use decide."* All four carry the axiom profile
-`{propext, Classical.choice, Quot.sound}` and nothing else. And the decisive check:
-**`Lean.ofReduceBool` — the axiom a `native_decide` proof necessarily carries — appears on ZERO
-declarations project-wide.** There is no load-bearing `native_decide` anywhere in this library.
+Their own docstrings say *"Use decide."*, and their `axiom_deps_project` is **empty** — no
+`._native.native_decide` marker. Verified two ways: the source, and the right axiom field.
 
 `decide` is checked by the kernel; `native_decide` is not. **D1 is disclosing a trust weakness it
-does not have**, and volunteering it in exactly the place a referee looks for one. D11's own
-draft states the distinction correctly (*"`decide` … is checked by the kernel and is a different
-thing from `native_decide`"*), so the project knows it; D1's sentence predates or ignores it.
+does not have on these four theorems**, in the place a referee looks for one.
 
-This also bears directly on ADR-010's open **`native_decide` disclosure posture** item: the
-posture cannot be decided from the drafts, because at least one draft's disclosure does not
-describe its own substrate. Filed as **TODO-D13**.
+❌ **CORRECTION 2026-08-07.** This section originally generalised the finding, claiming that
+`Lean.ofReduceBool` appears on zero declarations project-wide and therefore that *"there is no
+load-bearing `native_decide` anywhere in this library"*, that F had the same defect, and that
+ADR-010's `native_decide` posture item was resolved. **All false.** `axiom_deps_core` never
+records that axiom, so its absence measured nothing; the marker lives in `axiom_deps_project`;
+`validate.py --check native_decide_regression` — an existing check — reports **546 declarations**
+in the closure; and F's annotation is correct. The finding above survives because it rests on
+reading the four proofs directly, not on the bad probe. Post-mortem: `ACCURACY_LEDGER.md` V26.
+
+ADR-010's **`native_decide` disclosure posture** item is **untouched by this** and remains
+operator-owned. Filed as **TODO-D13**.
 
 ---
 
