@@ -1305,3 +1305,31 @@ way; **compare ratios only within a genre.**
 written**, and it is the reason nothing was filed. Two drafts citing one invariant for two rules
 is exactly the shape of a real defect; reading the invariant took one call and dissolved it.
 **The V26 and V27 corrections both cost more than that call would have.**
+
+---
+
+## V31 — the D8 apex retrofit — 8 atoms, 1 PRIOR declaration corrected
+
+**P** = perishable, **D** = durable.
+
+| # | atom | decider | result |
+|---|---|---|---|
+| H1 | D8's draft is 796 lines and was read in full, including the appendix inventory | the file | ✓ |
+| H2 | **D8's closure is the largest in the portfolio** | the closure, against all 12 others | ✓ **2,290** declarations / **289** modules / depth **24** / 103 truncations (D) |
+| H3 | ❌ **CORRECTS the D4 declaration.** Four `GenericSU2` apexes belong to D8, not D4 | **both drafts, read in full** — D8 §4 and §Relationship-to-companion-work cede Fibonacci to D4 *twice*; D4 named the Clifford+T/trapped-ion theorems only in a module list | ✓ reassigned (P) |
+| H4 | The reassignment is corroborated by the closure, not just by the prose | D4's closure recomputed before and after | ✓ **753 → 620** declarations, **61 → 43** modules — those four were pulling D8's whole `SU(d)` tree (D) |
+| H5 | **SET:** D8 ∩ every other declared bundle | D1, D2, D3, D4, D5, D6, D9, D10, D11, D12, F, L2 — all twelve | ✓ D4 **280**, D9 **14**, D10 **8**, D2/D12 **3** each, rest **0** (D) |
+| H6 | D8's kernel-purity claim ("zero `native_decide` in this corpus") is **true as stated** | `axiom_deps_project` over D8's closure — **the field that actually carries the marker** | ✓ **0** in D8's closure, and the same instrument found **19** in D4's on the same run (D) |
+| H7 | F's D6-absorption attribution is corrected by D8's own text | D8's §Relationship-to-companion-work vs F §7 | ✓ the primitive is D8's, not D4's — and `D8 ∩ D6 = D4 ∩ D6 = 0`, so D6's declared substrate has neither (P) |
+| H8 | D8's ancilla-free Ross–Selinger gap is carried as an explicit theorem hypothesis, never an axiom | `gridFindT_isSome_of_residual`, `rossSelinger_synth_of_residual` | ✓ and a second unconditional mechanism (KMM) ships alongside (D) |
+
+⚠️ **H6 is the V26 correction applied correctly, and the difference is worth stating.** V26 failed
+by probing a field that never carries the marker. Here the instrument was **validated on the same
+run** — it returned 19 for D4's closure — before the zero for D8 was reported. **An absence is
+only evidence once the instrument has demonstrated presence somewhere.**
+
+⚠️ **H3/H4 is the first time a *declaration* — not a finding — has been corrected.** The flag was
+set deliberately at D4's retrofit ("revisit when D8 is read") rather than resolved by guessing,
+and the resolution came from the drafts saying who owns what, with the closure as independent
+corroboration. **A conflict recorded and deferred cost one line; a conflict guessed would have
+cost a wrong ownership assignment in two bundles.**

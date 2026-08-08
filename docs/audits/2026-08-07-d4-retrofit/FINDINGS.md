@@ -12,8 +12,12 @@ FKLW headline names.
 
 ## 1. What was declared
 
-**66 apexes → 753 declarations across 61 modules, depth 13, 90 private truncations** — the
-largest closure and the most truncated walk in the portfolio so far.
+**62 apexes → 620 declarations across 43 modules, depth 13, 82 private truncations.**
+
+⚠️ **As first declared this was 66 apexes → 753 declarations / 61 modules / 90 truncations.** Four
+`GenericSU2` apexes were **reassigned to D8** at D8's retrofit later the same day (§3), and the
+closure fell accordingly. The original figures are recorded here because the *drop* is the
+evidence: those four were pulling D8's entire `SU(d)` tree into D4.
 
 | § | thread | apexes |
 |---|---|---|
@@ -24,7 +28,7 @@ largest closure and the most truncated walk in the portfolio so far.
 | §6 | doublon-SWAP substrate | 2 |
 | §7 | Hayden–Preskill QEC on the horizon MTC | 11 |
 | §8 | RT / Casini–Huerta knife-edge | 3 |
-| §9 | Fibonacci density + quantitative Solovay–Kitaev | 18 |
+| §9 | Fibonacci density + quantitative Solovay–Kitaev | 14 (was 18) |
 
 ⚠️ **90 truncated walks is the highest measured.** Any statement about D4's substrate size is a
 lower bound, and the figure travels with the number by design.
@@ -38,9 +42,9 @@ lower bound, and the figure travels with the number by design.
 | **Audience** | Topological-quantum-computation researchers and the quantum-information end of formal methods; secondarily the holography community, for §§7–8. |
 | **Venue** | Comm. Math. Phys. \| PRX Quantum, per the metadata. CMP fits §§2–5 (quantum groups, MTC, WRT); PRX Quantum fits §§7–9. **That split is itself a signal about the container.** |
 | **The claim only this container can make** | **"One MTC, four faces"** — that a single SU(2)_k Chern–Simons MTC at the horizon simultaneously supplies the Drinfeld-centre anchor for D2's anomaly classification, the WRT partition function behind D3's entropy, the Hayden–Preskill code structure, and the RT/Casini–Huerta knife-edge. No sibling holds more than one face. |
-| **Substrate** | 61 modules, 753 declarations, depth 13: `Uqsl2*`, `Uqsl3*`, `IsingBraiding`, `QCyc16`, `FigureEightKnot`, `DrinfeldDouble*`, `S3CenterAnyons`, `WRTInvariant`, `WRTComputation`, `FermiHubbardDimer`, `QECHolographyBridge`, `RTCasiniHuertaBounds`, plus the whole `FKLW/` tree (F.21 density, the eight-module Phase-6t SK pipeline, Path A, and `GenericSU2`). |
+| **Substrate** | 43 modules, 620 declarations, depth 13 (after the §3 reassignment): `Uqsl2*`, `Uqsl3*`, `IsingBraiding`, `QCyc16`, `FigureEightKnot`, `DrinfeldDouble*`, `S3CenterAnyons`, `WRTInvariant`, `WRTComputation`, `FermiHubbardDimer`, `QECHolographyBridge`, `RTCasiniHuertaBounds`, plus the **Fibonacci half** of the `FKLW/` tree (F.21 density, the eight-module Phase-6t SK pipeline, Path A). The `GenericSU2`/`SU(d)` layer is **D8's** — see §3. |
 | **Honest size vs charter** | 1,584 lines against ~40pp. Closer to charter than most, and §9 is why: it was authored later and is the densest section in the bundle. |
-| **Boundary failure?** | ⚠️ **Yes, in both directions, and they are different problems.** *Inbound:* §§7–8 consume D3's `H_HorizonBoundaryCondition` — 22 shared declarations, 17 in `BHEntropyMicroscopic`. D4's own §8 says D3 §7's falsifier "reads off" D4 §8's knife-edge, so the dependency is mutual and acknowledged. *Outbound:* §9's `GenericSU2` layer ships **D8's chartered content** — see §3. |
+| **Boundary failure?** | ⚠️ **Yes, in both directions, and they are different problems.** *Inbound:* §§7–8 consume D3's `H_HorizonBoundaryCondition` — 22 shared declarations, 17 in `BHEntropyMicroscopic`. D4's own §8 says D3 §7's falsifier "reads off" D4 §8's knife-edge, so the dependency is mutual and acknowledged. *Outbound:* §9's `GenericSU2` layer shipped **D8's chartered content**; ✅ resolved by reassignment at D8's retrofit (§3), so this direction is now closed. |
 
 ---
 
@@ -80,10 +84,14 @@ trapped-ion variants among the content it ships; D8 is chartered on exactly that
 This is the D4→D8 question stated concretely, and it is now measurable from D4's side. **Not
 decided here** — D8 is undeclared, and the disposition is the operator's under ADR-010 C5.
 
-⚠️ **The four `GenericSU2` apexes I declared for D4 are the ones to revisit when D8 is read.**
-I declared them because D4's draft names them; if D8's draft claims them too, the overlap is a
-declaration conflict rather than a shared dependency, and one of the two lists is wrong. Flagged
-rather than pre-empted.
+✅ **RESOLVED 2026-08-07 at D8's retrofit, on both drafts' own instructions.** D8 cedes Fibonacci
+to D4 explicitly, twice (*"its universality is the subject of a companion bundle"*); D4 named the
+Clifford+T/trapped-ion theorems only in a module list while D8 builds §§2–3 on them. **The four
+`GenericSU2` apexes were removed from D4 and declared under D8.** The closure corroborates it
+independently: D4 fell **753 → 620** declarations and **61 → 43** modules on their removal — they
+were pulling D8's entire `GenericSU2`/`SU(d)` tree in. `D8 ∩ D4 = 280` remains, the shared
+Lie-algebraic core, which is what an "instantiate, don't re-derive" substrate should look like.
+Full working: `docs/audits/2026-08-07-d8-retrofit/FINDINGS.md` §2.
 
 ### And a D6 absorption that is not in D6's substrate
 
@@ -93,9 +101,11 @@ tight-ε headline retroactively absorbed as the canonical universal-compilation 
 **D6 declares no Solovay–Kitaev apex.** Its eleven apexes are gauging-QEC, APM-LDPC, Shor T-counts
 and W-state QFT. **`D4 ∩ D6 = 0`** — the two bundles share no declaration at all.
 
-So three containers have a claim on one substrate: D4 ships it, D8 is chartered on its
-generalisation, and F says D6 absorbed it. Only D4's claim is currently backed by a declared
-closure. Recorded in `docs/audits/2026-08-07-d4-merge-evidence/EVIDENCE.md`.
+✅ **Corrected at D8's retrofit by D8's own text:** D8 says the sibling FT bundle *"consumes the
+quantitative Solovay–Kitaev **developed here**"* — so the primitive F attributes to D6 is **D8's**,
+not D4's. And `D8 ∩ D6 = 0` as well, so **D6's declared substrate contains neither**. F's absorption
+claim is unbacked from both directions. Recorded in
+`docs/audits/2026-08-07-d4-merge-evidence/EVIDENCE.md`.
 
 ---
 
@@ -150,6 +160,7 @@ Also honest, each checked against the Lean:
 |---|---|
 | `papers/D4/bundle_metadata.json` | `apex_theorems` added — 66 entries |
 | `scripts/validation/checks/bundles_readiness.py` | `UNDECLARED_APEX_CEILING` 11 → 10 |
+| **later, at D8's retrofit** | 4 apexes reassigned D4 → D8; closure 753 → 620, modules 61 → 43 |
 | `docs/audits/2026-08-07-d4-merge-evidence/EVIDENCE.md` | D4→D8 row upgraded from *not decided* to *evidence recorded, still not decided* |
 | `docs/architecture/.working-docs/ARCHITECTURE_TODOs.MD` | TODO-D12 gains D4's sentence as its fix template; TODO-D14 → four bundles |
 | `docs/architecture/.working-docs/ACCURACY_LEDGER.md` | V29 |

@@ -5,8 +5,8 @@ comes due when every bundle is declared; until then this file records, for each 
 whether the closure evidence **supports** it, **refutes** it, or **does not decide** it, plus any
 **boundary failure** named under §D2's rule.
 
-**Status:** 12 of 21 bundles declared (D1, D2, D3, D4, D5, D6, D9, D10, D11, D12, F, L2).
-9 undeclared: D7, D8, E1, E2, I1, I2, I3, L1, L3. **Every "not decided" below is a
+**Status:** 13 of 21 bundles declared (D1, D2, D3, D4, D5, D6, D8, D9, D10, D11, D12, F, L2).
+8 undeclared: D7, E1, E2, I1, I2, I3, L1, L3. **Every "not decided" below is a
 statement about what is measurable today, not a verdict.**
 
 **Method.** Each row is an intersection of *declared apex closures* over `name_deps_project`,
@@ -48,7 +48,7 @@ Both undeclared. No closure exists for either, so nothing is measurable. ⚠️ 
 is D1, whose closure is now known (249 declarations / 18 modules); the E1/E2 question becomes
 measurable as soon as either is declared.
 
-### D4 → D8 — **EVIDENCE RECORDED, still NOT DECIDED** (D4 declared 2026-08-07; D8 undeclared)
+### D4 → D8 — ✅ **RESOLVED AT DECLARATION LEVEL** (both declared 2026-08-07). Merge still NOT recommended here.
 
 **D4 §9 ships the complete quantitative Solovay–Kitaev substrate** — F.21 density, the
 Dawson–Nielsen length bound, the eight-module Phase-6t `FKLW/` pipeline, and the Path-A
@@ -64,14 +64,29 @@ Underscore-aware scan over all 21 drafts:
 | `skLengthExponent` | **D4 only** |
 | `…quantitative_cliffordT_strict_constructive_tight_unconditional` | **D4 *and* D8** |
 
-**Two drafts name the same theorem as their own substrate.** That is the boundary in concrete
-form. ⚠️ Four `GenericSU2` apexes are declared for D4 because D4's draft names them; **if D8's
-draft claims them too, one of the two lists is wrong** — revisit at D8's retrofit.
+**Resolved by reading D8 in full.** D8 cedes Fibonacci to D4 **explicitly, twice** (§4 and
+§Relationship-to-companion-work: *"its universality is the subject of a companion bundle, which
+this paper cites for the Fibonacci anchor and generalizes"*), while building its own §§2–3 on the
+Clifford+T / `GenericSU2` / `SU(d)` layer that D4 named only in a module list.
 
-**A third claimant, unbacked:** F §7 lists as D6 absorption item (ii) *"the Phase 6t quantitative
-Solovay–Kitaev tight-ε headline retroactively absorbed as the canonical universal-compilation
-primitive."* **D6 declares no Solovay–Kitaev apex** — its eleven are gauging-QEC, APM-LDPC, Shor
-T-counts and W-state QFT — and **`D4 ∩ D6 = 0`**. Only D4's claim is backed by a declared closure.
+| content | owner | basis |
+|---|---|---|
+| F.21 density, `…quantitative_fibonacci_strict`, Path A | **D4** | D8 cedes it; D4 §9 develops it |
+| Clifford+T, trapped-ion, `GenericSU2`, `GenericSUd` | **D8** | D8's §§2–3; D4 listed only |
+
+**Four apexes moved D4 → D8.** The closure corroborates independently: **D4 fell 753 → 620
+declarations, 61 → 43 modules**. `D8 ∩ D4 = 280` remains — the shared Lie-algebraic core
+(`OneParameterSubgroupSU2` 108, `SU2LieAlgebra` 30, `SolovayKitaevPathA` 27), which is what an
+"instantiate, don't re-derive" substrate looks like from both sides.
+
+⚠️ **This settles ownership, NOT the merge.** Two bundles sharing a substrate core by design is an
+argument for keeping them separate as much as for merging them; the disposition is the operator's.
+
+**The third claimant is corrected by D8's own text.** F §7 says D6 absorbed *"the Phase 6t
+quantitative Solovay–Kitaev tight-ε headline"*. D8 says the sibling FT bundle *"consumes the
+quantitative Solovay–Kitaev **developed here**"* — i.e. D8's, not D4's. And **`D8 ∩ D6 = 0` and
+`D4 ∩ D6 = 0`**: D6's declared substrate contains neither, so F's absorption claim is unbacked
+from both directions.
 
 ⚠️ **Do not quote the 2026-08-01 audit's "does not support D4→D8 as stated" as a closure
 measurement** — it predates any closure for either bundle.
@@ -93,6 +108,9 @@ Recorded because §D4 asks for evidence, and an intersection nobody proposed is 
 | **D4 ∩ D3** | **22** | The horizon-MTC cross-bridge — mutual and acknowledged in both drafts. |
 | **D4 ∩ D2** | 3 | Only `PauliMatrices`. ⚠️ **Not** the Drinfeld-centre bridge both drafts describe. |
 | **D5 ∩ F** | **17** | `EntropicGravityDarkEnergy` 16 — F's §8 dark-sector register is D5's. |
+| **D8 ∩ D4** | **280** | The shared Lie-algebraic core after the reassignment — `OneParameterSubgroupSU2` 108, `SU2LieAlgebra` 30. |
+| **D8 ∩ D9** | 14 | `QuantumNetwork` diamond-norm infrastructure for D8 §10, acknowledged in the text. |
+| **D8 ∩ D10** | 8 | Same layer. |
 | **D5 ∩ D3** | **11** | `JacobsonThermoGRDarkEnergy` 9, `ADWMechanism` 2 — D5 supplying, not consuming. |
 | **D10 ∩ D12** | 1 | Ditto. |
 | all other declared pairs | **0** | D1, D3, D6, D9, D10, D11, F, L2 are otherwise mutually disjoint at declaration level. |
@@ -110,8 +128,8 @@ Recorded because §D4 asks for evidence, and an intersection nobody proposed is 
 | **D10** | ⚠️ **PARTIAL** | §5.3's contractivity result is not statable without D9's `QuantumNetwork.*` — 50 declarations. The DFT and NEGF pillars are wholly D10's own, so the *target* is viable; one of its three headline layers is not self-contained. |
 | **D6** | ⚠️ **PARTIAL** | Cites 133 declarations from D9's namespace while claiming ~19 % of its own citations. |
 | **D4** | ⚠️ **YES, both directions** | *Inbound:* §§7–8 consume D3's `H_HorizonBoundaryCondition` (22 shared declarations) — mutual and acknowledged. *Outbound:* §9's `GenericSU2` layer ships D8's chartered content. |
-| D1, D2, D3, D5, D11, D12, L2 | **No** | Each states its purpose on its own substrate. D11 is the strongest case: zero intersection with every other declared bundle. |
-| D7, D8, E1, E2, I1, I2, I3, L1, L3 | **not yet measurable** | undeclared |
+| D1, D2, D3, D5, D8, D11, D12, L2 | **No** | Each states its purpose on its own substrate. D11 is the strongest case: zero intersection with every other declared bundle. |
+| D7, E1, E2, I1, I2, I3, L1, L3 | **not yet measurable** | undeclared |
 
 ---
 

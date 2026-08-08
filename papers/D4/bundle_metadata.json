@@ -307,26 +307,6 @@
       "declared": "2026-08-07"
     },
     {
-      "name": "SKEFTHawking.FKLW.GenericSU2.cliffordT_accPt_one_unconditional",
-      "claims": "\u00a79 substrate \u2014 Clifford+T accumulation at the identity. \u26a0\ufe0f ALPHABET-AGNOSTIC: this is D8's chartered territory (Solovay-Kitaev across SU(d)), shipped inside D4's tree",
-      "declared": "2026-08-07"
-    },
-    {
-      "name": "SKEFTHawking.FKLW.GenericSU2.solovayKitaev_dawson_nielsen_quantitative_cliffordT_strict_concrete_constructive_unconditional",
-      "claims": "\u00a79 substrate \u2014 quantitative SK for the CLIFFORD+T alphabet, constructive, unconditional. \u26a0\ufe0f Same boundary note",
-      "declared": "2026-08-07"
-    },
-    {
-      "name": "SKEFTHawking.FKLW.GenericSU2.solovayKitaev_dawson_nielsen_quantitative_cliffordT_strict_constructive_tight_unconditional",
-      "claims": "\u00a79 substrate \u2014 the tight-regime Clifford+T variant. \u26a0\ufe0f Same boundary note",
-      "declared": "2026-08-07"
-    },
-    {
-      "name": "SKEFTHawking.FKLW.GenericSU2.solovayKitaev_dawson_nielsen_quantitative_trappedIon_strict_constructive_tight_unconditional",
-      "claims": "\u00a79 substrate \u2014 the TRAPPED-ION alphabet variant. \u26a0\ufe0f Same boundary note. Three alphabets beyond Fibonacci ship here, which is the D4->D8 boundary question in concrete form",
-      "declared": "2026-08-07"
-    },
-    {
       "name": "SKEFTHawking.FKLW.GenericSU2.valid_branch_K_chain_le_K_compose_numeric_generic",
       "claims": "\u00a79.4 \u2014 the Mathlib-PR-quality numerical calibration chain underwriting K_proof <= 788 against K_compose = 1024, margin >= 236",
       "declared": "2026-08-07"

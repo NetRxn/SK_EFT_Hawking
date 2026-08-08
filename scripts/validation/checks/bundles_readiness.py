@@ -1056,7 +1056,12 @@ def check_bundle_registry_consistency() -> CheckResult:
 #:           FINDINGS.md). Flattest closure measured (216 decls, depth 3) because its
 #:           theorems are VERDICTS — corroborating the draft's own MCC self-labelling.
 #:           Apex-to-closure ratio is a genre signal, not a quality metric.
-UNDECLARED_APEX_CEILING = 9
+#: 9 -> 8:   D8 retrofitted 2026-08-07 (35 apexes; docs/audits/2026-08-07-d8-retrofit/
+#:           FINDINGS.md). LARGEST closure in the portfolio: 2290 decls / 289 modules /
+#:           depth 24. RESOLVES the D4->D8 declaration conflict on the drafts' own
+#:           instructions — 4 GenericSU2 apexes moved D4 -> D8, and D4's closure fell
+#:           753 -> 620 as a result, corroborating the reassignment.
+UNDECLARED_APEX_CEILING = 8
 
 
 @register_check(

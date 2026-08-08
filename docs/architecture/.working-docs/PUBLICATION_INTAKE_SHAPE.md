@@ -258,8 +258,17 @@ bundle metadata on disk at all.
    ⚠️ **Apex-to-closure ratio is a GENRE signal, not a quality metric.** D11's high ratio was a
    prose signal; D5's flat closure (216 decls, depth 3) is what a register of verdicts looks like,
    and its own MCC labelling says so. Compare only within a genre.
-4. ⏭️ **NEXT** — the remaining 9: **D8** (it closes the D4→D8 question and is the only bundle whose
-   retrofit can resolve a declaration conflict already on record), then D7, then the I/L/E tiers.
+3h. ✅ **DONE 2026-08-07** — **D8**, ceiling 9→8 (35 apexes → **2,290** decls / **289** modules /
+   depth **24** — the largest closure in the portfolio). It **resolved the D4→D8 declaration
+   conflict on both drafts' own instructions**: D8 cedes Fibonacci to D4 twice, D4 named the
+   Clifford+T layer only in a module list, so four `GenericSU2` apexes moved D4 → D8. **The closure
+   corroborated it independently — D4 fell 753 → 620 declarations, 61 → 43 modules.**
+   Full working: [`../../audits/2026-08-07-d8-retrofit/FINDINGS.md`](../../audits/2026-08-07-d8-retrofit/FINDINGS.md).
+   ⚠️ **A conflict recorded and deferred cost one line; guessing it would have cost a wrong
+   ownership assignment in two bundles.** Flag conflicts at the first retrofit; resolve them at
+   the second, when both drafts are readable.
+4. ⏭️ **NEXT** — the remaining 8: **D7**, then the I tier (I1, I2, I3), then L1/L3 and E1/E2.
+   E1+E2 is the last open ADR-010 §D4 merge question and becomes measurable when either is declared.
    ⚠️ **Method, learned on D12 and re-confirmed on D11:** `grep` for a theorem name in a draft
    returns 0 — drafts escape underscores inside `\thm{}`. Resolve references with the
    underscore-aware scan, **seeded with a known-present name first**, never a bare grep.
