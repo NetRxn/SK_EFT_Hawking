@@ -296,8 +296,17 @@ bundle metadata on disk at all.
    ⚠️ **For a library paper, closure size measures CITATION PRACTICE, not artifact size.** I2's
    declared 223 is what it names; its 27-module / ~949-declaration library is disclosed in
    per-module prose. Do not read one as the other.
-4. ⏭️ **NEXT** — the remaining 5: **I3**, then L1/L3, then **E1/E2** — the last open ADR-010 §D4
-   merge question, measurable as soon as either is declared.
+3l. ✅ **DONE 2026-08-07** — **I3**, ceiling 5→4 (12 apexes → 32 decls / 9 modules / depth 3).
+   **The smallest closure in the portfolio, and the only one that intersects NOTHING** — `I3 ∩`
+   every other declared bundle `= 0`, corroborating by an independent instrument the draft's own
+   published grep that its D3/D5/E1 cross-bridges are *designed but not yet consumed*. Its size
+   claims verify exactly (775 lines, 15 predicates, zero sorry/axioms, a retired theorem genuinely
+   absent). ⚠️ But §4 omits two of §3's four template headings for all six LDP modules, leaving
+   **13 proved theorems named nowhere** — and for a software paper an unnamed theorem is an
+   unfindable API (TODO-D19).
+   Full working: [`../../audits/2026-08-07-i3-retrofit/FINDINGS.md`](../../audits/2026-08-07-i3-retrofit/FINDINGS.md).
+4. ⏭️ **NEXT** — the remaining 4: L1/L3, then **E1/E2** — the last open ADR-010 §D4 merge
+   question, measurable as soon as either is declared.
    ⚠️ **Method, learned on D12 and re-confirmed on D11:** `grep` for a theorem name in a draft
    returns 0 — drafts escape underscores inside `\thm{}`. Resolve references with the
    underscore-aware scan, **seeded with a known-present name first**, never a bare grep.

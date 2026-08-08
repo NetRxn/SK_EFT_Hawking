@@ -1418,3 +1418,36 @@ only the discriminating one can be wrong in two directions.
 closure size measures citation practice, not artifact size.* I2's 223 is what it names; its
 per-module prose table is the better figure for the library's extent — and that table is
 hand-maintained prose no check covers (same class as TODO-D10, recorded not filed).
+
+---
+
+## V35 — the I3 apex retrofit — 8 atoms, 0 corrected
+
+**P** = perishable, **D** = durable.
+
+| # | atom | decider | result |
+|---|---|---|---|
+| M1 | I3's draft is 1,349 lines and was read in full | the file | ✓ |
+| M2 | **SET: I3 ∩ every other declared bundle** | all sixteen | ✓ **0 in every case** — the only bundle in the portfolio whose closure intersects nothing (D) |
+| M3 | §6's published grep — *"no D3, D5, or E1 Lean module currently invokes `LDPCompatibleSKEFT`"* | re-run over `lean/SKEFTHawking/` | ✓ exactly one file, `LDP/LDPCompatibleSKEFT.lean`. **M2 corroborates it by an instrument the draft knows nothing about** (D) |
+| M4 | §2.3's *"exact count 775"* lines across 12 modules | `wc -l` | ✓ **775** (D) |
+| M5 | §2.3's *"15 `Prop`-typed predicates (14 `def Is*` plus the `class`)"* | the module sources | ✓ 14 + 1 = **15** (D) |
+| M6 | *"Zero `sorry`; zero new axioms beyond `[propext, Classical.choice, Quot.sound]`"* | sources + closure's `axiom_deps_core` | ✓ zero/zero; core union is **exactly** those three; 0 `native_decide`, instrument seeded at **19** in D4's closure (D) |
+| M7 | §3.5's *"a prior redundant `wave_3b_itoBeta_5_itoLemma_closure` … was retired"* | resolution over `lean_deps.json` | ✓ **absent**; seeded — its four sibling `wave_3b_itoBeta_N_*` closures all resolve, so the probe detects presence (D) |
+| M8 | **SET: theorems in I3's twelve modules named nowhere in the draft** | full declaration list of the twelve modules vs every `\texttt{}` token | ⚠️ **13** — five LDP witnesses, five LDP per-module closures, three Itô witnesses. §4 omits two of §3's four template headings for all six modules. → TODO-D19 (D) |
+
+⚠️ **M8's second symptom, probe scope stated:** §2.3 claims *"11 per-module wave-closure summary
+theorems"*; measured **10** over the `theorem`/`lemma` declarations in the twelve module files. The
+11 counts `LDPCompatibleSKEFT` as having a per-module closure, which the same paragraph gives to
+`wave_3b_ldp_overall_closure`. Filed *with* the naming gap, not separately — one defect, two faces.
+
+⚠️ **A declaration-rule refinement, NOT-AN-ASSERTION about I3:** `LDPCompatibleSKEFT`'s five field
+projections (`ldpRateFn`, `cramerCompatible`, …) resolve with **`kind: theorem`** — a `Prop`-class
+field projection is a theorem — and so would pass `apexes_are_theorems` while being pure machinery.
+**`kind == theorem` is necessary, not sufficient.** The D11 declaration rule already excludes them
+by meaning; this is the first case where the kind check could not.
+
+✅ **The ownership call was made by the draft, not by me.** I3's *"Out-of-bundle dependency
+disclosure"* names which field is inherited from Phase 6n and which four I3 authored, so
+`linearResponseRateFunctionCentered_zero` is excluded and `…_continuous` declared on the draft's own
+instruction. First pre-empted ownership call in the retrofit.

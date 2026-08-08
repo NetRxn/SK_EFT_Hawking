@@ -692,6 +692,11 @@ violated for the fifth time in this workstream.
 - **§7's D6 checklist is stale in the other direction:** six boxes, all unchecked, including
   waves 6v.2 / 6v.5 / 6v.6 — all of which have shipped and appear in D6's own declared apexes.
   At least four of six are done.
+- **Third bundle with a stale roster number (2026-08-07, I3 retrofit).** I3's bibliography
+  self-cites *"SK--EFT Hawking 14-bundle publication architecture"*; I1 §2 says 17; F says 17.
+  Three different wrong numbers in three bundles, all citing the same `PAPER_STRATEGY.md`. The
+  live roster is **21**. This is the shape TODO-D10 (derive, don't hand-list) exists to fix, now
+  observed across bundles rather than within one.
 - **Same item, smaller instances (§9 infrastructure prose), each re-derived not assumed:**
   *"29+ checks"* (live **66**) · *"Pipeline Invariants 1--14"* (they run to **#17**) ·
   *"`physics-qa:figure-reviewer`"* (plugin is **`skeft-qa`**) · *"branches D.1/D.2/D.3"*
@@ -799,3 +804,34 @@ violated for the fifth time in this workstream.
   that its **scope** is narrower than its name suggests. **"A check exists" and "the check covers
   this input" are different claims.**
 - Full working: `docs/audits/2026-08-07-d7-retrofit/FINDINGS.md` §3.
+
+### D19. I3 §4 names no witness or wave-closure theorem for any of its six LDP modules — OPEN
+
+**Found:** 2026-08-07, I3 apex retrofit (`docs/audits/2026-08-07-i3-retrofit/FINDINGS.md` §3).
+
+**Defect.** `papers/I3/paper_draft.tex` §3 (Itô) writes every subsection to a four-part template —
+*Substrate-data predicate* / *Non-vacuity witness* / *Wave-closure summary* /
+*Mathlib-upstream-PR target*. §4 (LDP) writes only the first and the last for all six modules.
+
+**Measured consequence.** 13 proved theorems in I3's own twelve modules are named nowhere in the
+draft: five LDP witnesses, five LDP per-module wave-closures, and three Itô witnesses whose
+subsections skip the heading. Five of the twelve modules (`CramerIID`, `Sanov`, `Contraction`,
+`CramerLowerBound`, `Varadhan`) therefore appear in **no** declared closure.
+
+**Why this is worse here than in D11 or D7.** I3 is a software paper whose deliverable *is* the
+artifact. An unnamed theorem is an unfindable API — a JOSS reader wanting the Sanov witness has no
+name to search for. D11's gap was prose in a results paper; D7's sections were openly unwritten.
+
+**Same defect, second symptom.** §2.3 claims *"11 per-module wave-closure summary theorems"*;
+measured **10** (probe scope: `theorem`/`lemma` declarations in the twelve module files). The 11
+counts `LDPCompatibleSKEFT` as having a per-module closure, which the same paragraph gives to
+`wave_3b_ldp_overall_closure`.
+
+**Fix shape.** Extend §4's six subsections to §3's template, naming each witness and each
+wave-closure; the count then follows from the names rather than from hand-maintenance. No new
+Lean is required — every theorem already exists and is proved.
+
+**Not a check.** Per §6a nothing was built. `prose_theorem_reference_coverage` measures the reverse
+direction (prose names that do not resolve); a *proved-but-unnamed* measure would be new
+infrastructure and needs approval — and TODO-D14/D18 already queue related coverage questions.
+

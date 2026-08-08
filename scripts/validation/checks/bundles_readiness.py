@@ -1072,7 +1072,11 @@ def check_bundle_registry_consistency() -> CheckResult:
 #: 6 -> 5:   I2 retrofitted 2026-08-07 (20 apexes; docs/audits/2026-08-07-i2-retrofit/
 #:           FINDINGS.md). Every per-theorem purity claim VERIFIES, in both directions:
 #:           SU(2)_k "no native_decide" true, fib_pentagon "by native_decide" true.
-UNDECLARED_APEX_CEILING = 5
+#: 5 -> 4:   I3 retrofitted 2026-08-07 (12 apexes; docs/audits/2026-08-07-i3-retrofit/
+#:           FINDINGS.md). SMALLEST closure in the portfolio (32 decls / 9 modules) and
+#:           the only one intersecting NOTHING -- corroborating the draft's own published
+#:           grep that its D3/D5/E1 cross-bridges are designed but not yet consumed.
+UNDECLARED_APEX_CEILING = 4
 
 
 @register_check(
