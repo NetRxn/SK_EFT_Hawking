@@ -829,3 +829,103 @@ class TestBundleManuscriptLength:
         (papers / "D1" / "paper_draft.tex").write_text("x")
         value, _unit, note = bru._measure_manuscript("D1")
         assert value is None and "compile_bundle_pdf.py D1" in note
+
+
+class TestBundleReviewerStageOrdering:
+    """Stage 13 may not be recorded before Stages 9 and 10 are green.
+
+    `BUNDLE_LIFT_PROCEDURE.md:9` states this as a hard gate and nothing read the
+    fields until ADR-011 Phase 2 (= TODO-D24 = the 2026-08-01 audit's Gate 16 #2).
+    """
+
+    def _setup(self, tmp_path, monkeypatch, blobs):
+        import bundle_registry as registry
+        papers = tmp_path / "papers"
+        for code, blob in blobs.items():
+            (papers / code).mkdir(parents=True, exist_ok=True)
+            if blob is not None:
+                (papers / code / "bundle_metadata.json").write_text(json.dumps(blob))
+        monkeypatch.setattr(_H, "PAPERS_DIR", papers)
+        monkeypatch.setattr(registry, "BUNDLE_CODES", tuple(blobs))
+
+    @staticmethod
+    def _b(s9="green", s10="green", s13="green"):
+        return {"stage9_status": s9, "stage10_status": s10, "stage13_status": s13}
+
+    def test_green_after_both_prerequisites_passes(self, tmp_path, monkeypatch):
+        """SILENT ON CORRECT DATA — the whole point is to allow a legitimate green."""
+        self._setup(tmp_path, monkeypatch, {"D1": self._b()})
+        r = bru.check_bundle_reviewer_stage_ordering()
+        assert r.passed and r.measured
+
+    def test_the_live_D6_state_fires(self, tmp_path, monkeypatch):
+        """The exact configuration measured on 2026-08-07: a Stage-13 green with
+        figure review never started."""
+        self._setup(tmp_path, monkeypatch,
+                    {"D6": self._b(s9="not_started", s10="skeleton", s13="green")})
+        r = bru.check_bundle_reviewer_stage_ordering()
+        assert not r.passed
+        assert any("not_started" in d.message for d in r.details if d.name == "D6")
+
+    def test_either_prerequisite_alone_is_enough_to_fire(self, tmp_path, monkeypatch):
+        """Both directions — a check asserting only one conjunct would pass half of
+        the five bundles this was written for (D7 failed on 9, D9 on 10)."""
+        self._setup(tmp_path, monkeypatch,
+                    {"D7": self._b(s9="not_started"), "D9": self._b(s10="pending")})
+        r = bru.check_bundle_reviewer_stage_ordering()
+        assert not r.passed
+        named = {d.name for d in r.details if not d.passed}
+        assert {"D7", "D9"} <= named, f"only {named} reported"
+
+    def test_a_non_green_stage13_asserts_nothing(self, tmp_path, monkeypatch):
+        """The antecedent is false, so the implication holds — a bundle mid-cycle
+        with unfinished prerequisites is the NORMAL state, not a violation."""
+        self._setup(tmp_path, monkeypatch,
+                    {"D1": self._b(s9="pending", s10="pending", s13="pending")})
+        assert bru.check_bundle_reviewer_stage_ordering().passed
+
+    def test_case_and_whitespace_do_not_evade_it(self, tmp_path, monkeypatch):
+        self._setup(tmp_path, monkeypatch,
+                    {"D1": self._b(s9=" NOT_STARTED ", s13="  GREEN ")})
+        assert not bru.check_bundle_reviewer_stage_ordering().passed
+
+    def test_an_undeclared_status_value_is_a_finding(self, tmp_path, monkeypatch):
+        """A typo must not read as "not green, therefore safe".
+
+        `greeen` is not in the declared set, and silently treating an unknown string
+        as non-green is how a status enum rots: the roadmap declares three values,
+        the corpus uses seven.
+        """
+        self._setup(tmp_path, monkeypatch, {"D1": self._b(s9="greeen")})
+        r = bru.check_bundle_reviewer_stage_ordering()
+        assert not r.passed
+        assert any("not a declared status" in d.message for d in r.details)
+
+    def test_a_missing_blob_fails_rather_than_skips(self, tmp_path, monkeypatch):
+        self._setup(tmp_path, monkeypatch, {"D1": None})
+        r = bru.check_bundle_reviewer_stage_ordering()
+        assert not r.passed
+        assert any("unverified rather than correct" in d.message for d in r.details)
+
+    def test_an_empty_roster_is_UNVERIFIED_not_passing(self, tmp_path, monkeypatch):
+        """SEAM GUARD, and it is load-bearing HERE more than anywhere.
+
+        Every assertion in this check is an implication, and today NO bundle has a
+        Stage-13 green — so violations are zero on correct data and on an empty tree
+        alike. The guard is on the population read, not on violations found.
+        """
+        self._setup(tmp_path, monkeypatch, {})
+        r = bru.check_bundle_reviewer_stage_ordering()
+        assert not r.passed and not r.measured
+        assert any(d.name == "population" for d in r.details)
+
+    def test_it_is_silent_where_the_sibling_check_fires(self, tmp_path, monkeypatch):
+        """DISJOINTNESS, asserted rather than assumed.
+
+        `bundle_stage13_claim_consistent` catches a green invalidated LATER by
+        findings; this catches one invalid WHEN WRITTEN. A bundle whose stages are
+        correctly ordered but whose blockers are open is the sibling's business, and
+        this check must not double-report it.
+        """
+        self._setup(tmp_path, monkeypatch, {"D1": self._b()})   # ordering fine
+        assert bru.check_bundle_reviewer_stage_ordering().passed

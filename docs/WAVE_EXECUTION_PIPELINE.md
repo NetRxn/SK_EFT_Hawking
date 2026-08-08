@@ -380,6 +380,17 @@ uv run python scripts/review_figures.py
 - Regenerate PNGs, re-review until ALL PASS
 - Report saved to `figures/figure_review_report.json`
 
+**Recording the verdict (ADR-011 Phase 2).** Reviewer-stage verdicts are written by
+`scripts/record_review.py`, not by hand:
+
+```bash
+uv run python scripts/record_review.py --bundle <X> --stage 9 --verdict green --doc <report>
+```
+
+Until 2026-08-08 no code path wrote `green` to any `stage*_status` — creation set `pending`
+and append demoted `green` back to it — so every green was a hand edit and bundle status
+could not be read as evidence of review.
+
 **Gate:** All figures PASS LLM review. No FAIL, no MINOR remaining.
 
 ---
@@ -601,6 +612,13 @@ This stage exists because the April 2026 external adversarial-review round found
 
 **Actions:**
 
+0. **Stages 9 and 10 must be GREEN first** (`BUNDLE_LIFT_PROCEDURE.md:9`). Enforced two ways
+   since ADR-011 Phase 2: `scripts/record_review.py` refuses to record a Stage-13 green while
+   either prerequisite is unfinished, and `validate.py --check bundle_reviewer_stage_ordering`
+   catches a hand edit that bypasses it. A Stage-13 verdict also requires
+   `--kind`; only `full-adversarial` earns a green, because a targeted attribution sweep and
+   a full fresh-context pass are different evidence and the metadata previously could not
+   tell them apart.
 1. Ensure Stages 1–12 are all green (`validate.py` passes). Stage 13 is meaningful only on a codebase that passes its own internal checks.
 2. Invoke the `adversarial-reviewer` agent (`.claude/plugins/skeft-qa/agents/adversarial-reviewer.md`) with the target paper key:
    > "Run the adversarial-reviewer on `paper<N>_<name>`"

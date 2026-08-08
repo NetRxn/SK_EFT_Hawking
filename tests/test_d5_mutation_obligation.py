@@ -535,6 +535,21 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
         "the green rule that used to live here. Plus the missing-blob and "
         "uncomputable-aggregate fail-closed legs",
     ),
+    "bundle_reviewer_stage_ordering": (
+        "test_d5_bundles_readiness.py",
+        "9 mutations (ADR-011 Phase 2 = TODO-D24 = the audit's Gate 16 #2). The "
+        "`BUNDLE_LIFT_PROCEDURE.md:9` hard gate, which nothing read: five bundles held "
+        "a Stage-13 verdict with a prerequisite never run. Legs: SILENT on a legitimate "
+        "green and on a mid-cycle bundle whose Stage-13 is not green (the antecedent is "
+        "false, and that is the NORMAL state); fires on the live D6 configuration; "
+        "fires on EITHER prerequisite alone, asserted separately because D7 failed on "
+        "9 and D9 on 10; case/whitespace normalisation; an UNDECLARED status value is a "
+        "finding rather than read as not-green-therefore-safe; a missing blob fails "
+        "closed; disjointness from `bundle_stage13_claim_consistent` asserted rather "
+        "than assumed; and the seam guard, which is load-bearing HERE above all — every "
+        "assertion is an implication, so violations are zero on correct data and on an "
+        "empty tree alike, and the guard is therefore on the population READ",
+    ),
     "bundle_manuscript_length": (
         "test_d5_bundles_readiness.py",
         "10 mutations (ADR-011 Phase 1, Gate 12). The instrument existed and was "
@@ -685,6 +700,13 @@ PRODUCTION_SEEDED: frozenset[str] = frozenset({
     # The probe also surfaced TODO-D25: the seeding writer's default `ensure_ascii`
     # rewrote 189 lines for a 9-line edit.
     "bundle_manuscript_length",
+    # 2026-08-08 (ADR-011 Phase 2): D6's exact 2026-08-07 state recreated in the REAL
+    # `papers/D6/bundle_metadata.json` — stage13 green, stage9 not_started, stage10
+    # skeleton -> rc=1 naming D6. The same probe DEMONSTRATED THE DISJOINTNESS the split
+    # claims: `bundle_stage13_claim_consistent` stayed PASS throughout, because D6 has
+    # zero blockers. Two checks, two failure modes, one bundle that only one of them
+    # sees. Restored, `cmp` byte-identical.
+    "bundle_reviewer_stage_ordering",
 })
 
 #: The ratchet, in the same idiom as `AWAITING_CEILING`: the number of registered

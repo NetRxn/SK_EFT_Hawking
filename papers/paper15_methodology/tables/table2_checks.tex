@@ -8,71 +8,72 @@
 \hline
 1 & \texttt{bundle\_figure\_integrity} & Bundle figures match a fresh render and are legible at typeset size \\
 2 & \texttt{bundle\_stage13\_claim\_consistent} & No bundle claims stage13\_status='green' while the graph shows open blockers \\
-3 & \texttt{bundle\_manuscript\_length} & Every bundle's compiled manuscript is within its declared length target \\
-4 & \texttt{bundle\_metadata\_matches\_graph} & bundle\_metadata.json finding counts equal the live graph's \\
-5 & \texttt{readiness\_verdicts\_agree} & The heatmap and the submission gate return the same per-bundle verdict \\
-6 & \texttt{readiness\_submission\_gate} & Every paper has all P1 readiness gates passed (Phase 5v Wave 4) \\
-7 & \texttt{bundle\_consistency} & Cross-bundle clusters' member sentences agree on numerical content across bundle boundaries \\
-8 & \texttt{bundle\_registry\_consistency} & Publication-bundle roster has ONE source of truth (scripts/bundle\_registry.py) that every consumer derives from \\
-9 & \texttt{bundle\_apex\_resolves} & Every apex theorem a bundle declares names a live Lean theorem, and the undeclared-bundle count does not rise (publication-intake closure) \\
-10 & \texttt{parameter\_provenance} & Every experimental parameter has verified provenance \\
-11 & \texttt{citation\_primary\_sources\_present} & Every external bibitem cited in papers has a primary-source cache file \\
-12 & \texttt{provenance\_doi\_in\_registry} & PARAMETER\_PROVENANCE source DOIs resolve to CITATION\_REGISTRY bibkeys \\
-13 & \texttt{bibitem\_title\_primary\_source} & Registry titles match primary-source cache PDF page-1 titles (drift detector) \\
-14 & \texttt{counts\_fresh} & counts.json / counts.tex are up-to-date vs. sources \\
-15 & \texttt{tables\_fresh} & Paper tables (tables/*.tex) are up-to-date vs. pipeline sources \\
-16 & \texttt{claim\_clusters\_fresh} & papers/claim\_clusters.json is up-to-date vs. v2 claims\_review.json files \\
-17 & \texttt{notebook\_stored\_outputs\_current} & Bundle companion notebooks' STORED outputs equal what their code produces \\
-18 & \texttt{bundle\_source\_freshness} & Bundle source-paper mtime $\leq$ bundle last\_lift; flag stale bundles \\
-19 & \texttt{inventory\_index\_autogen\_fresh} & Advisory: SK\_EFT\_Hawking\_Inventory\_Index.md autogen blocks match docs/counts.json \\
-20 & \texttt{architecture\_inventory\_fresh} & docs/architecture/SURFACE\_INVENTORY.md matches a fresh derivation from the code \\
-21 & \texttt{graph\_integrity} & Knowledge graph integrity --- orphans, conflicts, broken chains \\
-22 & \texttt{atlas\_integrity} & Derived proof-atlas (ADR-005) is consistent: no kind conflicts, no undisclosed project axioms, open nodes registry-backed, no apex silently closed \\
-23 & \texttt{atlas\_hypothesis\_discipline} & INFO: tracked-hypothesis distribution (total / gating vs orphan-landmark / per-module) for PD-2 visibility --- NEVER a gate; the bank-or-grind discipline lives in the coach \\
-24 & \texttt{gate\_edge\_types\_are\_emitted} & Every edge type a readiness gate queries is actually emitted by a graph extractor \\
-25 & \texttt{formula\_grounding} & Every formulas.py Lean reference resolves to a real, non-placeholder theorem (Invariant \#4, R1) \\
-26 & \texttt{vacuous\_statement\_audit} & No project theorem/lemma has a content-thin (reflexive / tautological) statement (R2 type-companion) \\
-27 & \texttt{nogo\_substrate\_integrity} & Every provably-false no-go has a live, kernel-pure, non-vacuous backing theorem (Invariant \#17, ADR-007 N-C) \\
-28 & \texttt{formulas} & Python formulas reference valid Lean theorems \\
-29 & \texttt{placeholder\_not\_cited} & Placeholder (True := trivial) theorems are not cited as verified in any paper (Invariant \#9) \\
-30 & \texttt{disclosure\_consistency} & No paper presents a disclosed definitional/vacuous\_proxy theorem as 'establishing' a result (\#9) \\
-31 & \texttt{proxy\_body\_audit} & Structurally-named theorems are not proved by a trivial 'defining-the-conclusion' body (R2) \\
-32 & \texttt{tracked\_hypothesis\_ledger} & Every consumed tracked-hypothesis Prop is registered in HYPOTHESIS\_REGISTRY (Invariant \#16, R3) \\
-33 & \texttt{tracked\_hypotheses\_fresh} & docs/PERMANENT\_TRACKED\_HYPOTHESES.md is up-to-date vs HYPOTHESIS\_REGISTRY (auto-regen) \\
-34 & \texttt{lean\_zero\_sorry} & Pipeline Invariant \#4 --- no declaration's axiom closure contains `sorryAx` \\
-35 & \texttt{native\_decide\_regression} & native\_decide decl-closure does not silently grow past its ceiling (R4; ADR-002) \\
-36 & \texttt{theorems} & Aristotle registry entries resolve to real Lean declarations (ratcheted) \\
-37 & \texttt{lean\_source} & Key theorem names found in Lean source files \\
-38 & \texttt{lean\_build} & Lean project builds cleanly (requires lake) \\
-39 & \texttt{axiom\_closure\_allowlist} & Every SKEFTHawking declaration's transitive axiom closure is on the standard kernel axioms + the AXIOM\_METADATA allow-list (Invariant \#15 backstop) \\
-40 & \texttt{elaboration\_knob\_watchlist} & Watchlist (advisory): proof-body maxRecDepth / synthInstance knobs --- a performance / Mathlib-CI-portability signal, NOT a soundness or axiom-closure issue \\
-41 & \texttt{lean\_docstring\_refs\_resolve} & Lean docstring `backticked` project names resolve (rename-drift guard) \\
-42 & \texttt{lean\_modules\_in\_build\_graph} & Every project .lean module is reachable from the root aggregate (else it is built, indexed, counted and guarded by nothing) \\
-43 & \texttt{notebooks} & Notebooks import physics from src.core, no re-implementation \\
-44 & \texttt{viz\_consistency} & Notebook visualizations use imported physics and consistent style \\
-45 & \texttt{notebook\_exec} & All notebooks execute without errors \\
-46 & \texttt{paper\_provenance} & Paper figure references resolve and no placeholder bibliography ships \\
-47 & \texttt{numerical\_literals} & Paper .tex files free of inline numerical literals outside \texttt{\textbackslash input\{\}} blocks \\
-48 & \texttt{count\_literals} & Paper .tex files reference counts via \texttt{\textbackslash input\{counts.tex\}} macros, not literals \\
-49 & \texttt{bundle\_tables\_use\_pipeline} & Bundle drafts source tables from the pipeline (\texttt{\textbackslash input\{tables/\}}), not hand-written tabulars (ratcheted) \\
-50 & \texttt{paper\_latex\_compiles} & Every papers/*/paper\_draft.tex compiles under pdflatex --- bundles HARD-FAIL, legacy drafts ratchet; per-draft content-hash cache (--force-latex recompiles all) \\
-51 & \texttt{axiom\_count\_prose\_consistency} & Paper prose axiom-count claims agree with docs/counts.json \\
-52 & \texttt{paper\_toolchain\_pin\_drift} & Advisory (Class TP): paper-draft toolchain/Mathlib pins match lean-toolchain + lakefile.toml \\
-53 & \texttt{numerical} & Experimental parameters match reference values \\
-54 & \texttt{identities} & Mathematical identities and boundary conditions hold \\
-55 & \texttt{paper\_table} & Paper 1's SHIPPED Table 1 cells match the canonical solver output \\
-56 & \texttt{d1\_hierarchy\_table} & D1 BEC hierarchy table + crossover match the canonical evaluator \\
-57 & \texttt{f\_hierarchy\_claims} & Flagship F inline Heidelberg BEC corrections match the canonical evaluator \\
-58 & \texttt{cgl\_fdr} & CGL FDR derivation produces correct results \\
-59 & \texttt{physical\_bounds} & All computed quantities within physical bounds \\
-60 & \texttt{cross\_path\_consistency} & Different code paths agree within 0.5\%/1\% tolerance \\
-61 & \texttt{quantum\_network} & QN Python formulas satisfy the QuantumNetwork Lean theorem identities \\
-62 & \texttt{prose\_theorem\_reference\_coverage} & Bundle-draft Lean references in any verbatim form (texttt, a preamble alias for it, or verb) resolve in lean\_deps.json \\
-63 & \texttt{theorem\_name\_embedded\_citations} & Declaration names embedding author+year have matching bibliography entries \\
-64 & \texttt{recurrence\_reopens\_closures} & A closure is not contradicted by a later review raising the same finding \\
-65 & \texttt{review\_severity\_declared} & Review documents from the cutoff forward declare each finding's severity \\
-66 & \texttt{review\_docs\_mint\_findings} & Every bundle Stage-13 review document mints at least one ReviewFinding node \\
-67 & \texttt{accepted\_findings\_carry\_rationale} & Every `accepted` supersession record justifies acceptance in writing \\
-68 & \texttt{chain\_backing\_targets\_resolve} & Every Lean target named in a claims-review chain of backing exists \\
+3 & \texttt{bundle\_reviewer\_stage\_ordering} & No bundle records a Stage-13 verdict before Stages 9 and 10 are green \\
+4 & \texttt{bundle\_manuscript\_length} & Every bundle's compiled manuscript is within its declared length target \\
+5 & \texttt{bundle\_metadata\_matches\_graph} & bundle\_metadata.json finding counts equal the live graph's \\
+6 & \texttt{readiness\_verdicts\_agree} & The heatmap and the submission gate return the same per-bundle verdict \\
+7 & \texttt{readiness\_submission\_gate} & Every paper has all P1 readiness gates passed (Phase 5v Wave 4) \\
+8 & \texttt{bundle\_consistency} & Cross-bundle clusters' member sentences agree on numerical content across bundle boundaries \\
+9 & \texttt{bundle\_registry\_consistency} & Publication-bundle roster has ONE source of truth (scripts/bundle\_registry.py) that every consumer derives from \\
+10 & \texttt{bundle\_apex\_resolves} & Every apex theorem a bundle declares names a live Lean theorem, and the undeclared-bundle count does not rise (publication-intake closure) \\
+11 & \texttt{parameter\_provenance} & Every experimental parameter has verified provenance \\
+12 & \texttt{citation\_primary\_sources\_present} & Every external bibitem cited in papers has a primary-source cache file \\
+13 & \texttt{provenance\_doi\_in\_registry} & PARAMETER\_PROVENANCE source DOIs resolve to CITATION\_REGISTRY bibkeys \\
+14 & \texttt{bibitem\_title\_primary\_source} & Registry titles match primary-source cache PDF page-1 titles (drift detector) \\
+15 & \texttt{counts\_fresh} & counts.json / counts.tex are up-to-date vs. sources \\
+16 & \texttt{tables\_fresh} & Paper tables (tables/*.tex) are up-to-date vs. pipeline sources \\
+17 & \texttt{claim\_clusters\_fresh} & papers/claim\_clusters.json is up-to-date vs. v2 claims\_review.json files \\
+18 & \texttt{notebook\_stored\_outputs\_current} & Bundle companion notebooks' STORED outputs equal what their code produces \\
+19 & \texttt{bundle\_source\_freshness} & Bundle source-paper mtime $\leq$ bundle last\_lift; flag stale bundles \\
+20 & \texttt{inventory\_index\_autogen\_fresh} & Advisory: SK\_EFT\_Hawking\_Inventory\_Index.md autogen blocks match docs/counts.json \\
+21 & \texttt{architecture\_inventory\_fresh} & docs/architecture/SURFACE\_INVENTORY.md matches a fresh derivation from the code \\
+22 & \texttt{graph\_integrity} & Knowledge graph integrity --- orphans, conflicts, broken chains \\
+23 & \texttt{atlas\_integrity} & Derived proof-atlas (ADR-005) is consistent: no kind conflicts, no undisclosed project axioms, open nodes registry-backed, no apex silently closed \\
+24 & \texttt{atlas\_hypothesis\_discipline} & INFO: tracked-hypothesis distribution (total / gating vs orphan-landmark / per-module) for PD-2 visibility --- NEVER a gate; the bank-or-grind discipline lives in the coach \\
+25 & \texttt{gate\_edge\_types\_are\_emitted} & Every edge type a readiness gate queries is actually emitted by a graph extractor \\
+26 & \texttt{formula\_grounding} & Every formulas.py Lean reference resolves to a real, non-placeholder theorem (Invariant \#4, R1) \\
+27 & \texttt{vacuous\_statement\_audit} & No project theorem/lemma has a content-thin (reflexive / tautological) statement (R2 type-companion) \\
+28 & \texttt{nogo\_substrate\_integrity} & Every provably-false no-go has a live, kernel-pure, non-vacuous backing theorem (Invariant \#17, ADR-007 N-C) \\
+29 & \texttt{formulas} & Python formulas reference valid Lean theorems \\
+30 & \texttt{placeholder\_not\_cited} & Placeholder (True := trivial) theorems are not cited as verified in any paper (Invariant \#9) \\
+31 & \texttt{disclosure\_consistency} & No paper presents a disclosed definitional/vacuous\_proxy theorem as 'establishing' a result (\#9) \\
+32 & \texttt{proxy\_body\_audit} & Structurally-named theorems are not proved by a trivial 'defining-the-conclusion' body (R2) \\
+33 & \texttt{tracked\_hypothesis\_ledger} & Every consumed tracked-hypothesis Prop is registered in HYPOTHESIS\_REGISTRY (Invariant \#16, R3) \\
+34 & \texttt{tracked\_hypotheses\_fresh} & docs/PERMANENT\_TRACKED\_HYPOTHESES.md is up-to-date vs HYPOTHESIS\_REGISTRY (auto-regen) \\
+35 & \texttt{lean\_zero\_sorry} & Pipeline Invariant \#4 --- no declaration's axiom closure contains `sorryAx` \\
+36 & \texttt{native\_decide\_regression} & native\_decide decl-closure does not silently grow past its ceiling (R4; ADR-002) \\
+37 & \texttt{theorems} & Aristotle registry entries resolve to real Lean declarations (ratcheted) \\
+38 & \texttt{lean\_source} & Key theorem names found in Lean source files \\
+39 & \texttt{lean\_build} & Lean project builds cleanly (requires lake) \\
+40 & \texttt{axiom\_closure\_allowlist} & Every SKEFTHawking declaration's transitive axiom closure is on the standard kernel axioms + the AXIOM\_METADATA allow-list (Invariant \#15 backstop) \\
+41 & \texttt{elaboration\_knob\_watchlist} & Watchlist (advisory): proof-body maxRecDepth / synthInstance knobs --- a performance / Mathlib-CI-portability signal, NOT a soundness or axiom-closure issue \\
+42 & \texttt{lean\_docstring\_refs\_resolve} & Lean docstring `backticked` project names resolve (rename-drift guard) \\
+43 & \texttt{lean\_modules\_in\_build\_graph} & Every project .lean module is reachable from the root aggregate (else it is built, indexed, counted and guarded by nothing) \\
+44 & \texttt{notebooks} & Notebooks import physics from src.core, no re-implementation \\
+45 & \texttt{viz\_consistency} & Notebook visualizations use imported physics and consistent style \\
+46 & \texttt{notebook\_exec} & All notebooks execute without errors \\
+47 & \texttt{paper\_provenance} & Paper figure references resolve and no placeholder bibliography ships \\
+48 & \texttt{numerical\_literals} & Paper .tex files free of inline numerical literals outside \texttt{\textbackslash input\{\}} blocks \\
+49 & \texttt{count\_literals} & Paper .tex files reference counts via \texttt{\textbackslash input\{counts.tex\}} macros, not literals \\
+50 & \texttt{bundle\_tables\_use\_pipeline} & Bundle drafts source tables from the pipeline (\texttt{\textbackslash input\{tables/\}}), not hand-written tabulars (ratcheted) \\
+51 & \texttt{paper\_latex\_compiles} & Every papers/*/paper\_draft.tex compiles under pdflatex --- bundles HARD-FAIL, legacy drafts ratchet; per-draft content-hash cache (--force-latex recompiles all) \\
+52 & \texttt{axiom\_count\_prose\_consistency} & Paper prose axiom-count claims agree with docs/counts.json \\
+53 & \texttt{paper\_toolchain\_pin\_drift} & Advisory (Class TP): paper-draft toolchain/Mathlib pins match lean-toolchain + lakefile.toml \\
+54 & \texttt{numerical} & Experimental parameters match reference values \\
+55 & \texttt{identities} & Mathematical identities and boundary conditions hold \\
+56 & \texttt{paper\_table} & Paper 1's SHIPPED Table 1 cells match the canonical solver output \\
+57 & \texttt{d1\_hierarchy\_table} & D1 BEC hierarchy table + crossover match the canonical evaluator \\
+58 & \texttt{f\_hierarchy\_claims} & Flagship F inline Heidelberg BEC corrections match the canonical evaluator \\
+59 & \texttt{cgl\_fdr} & CGL FDR derivation produces correct results \\
+60 & \texttt{physical\_bounds} & All computed quantities within physical bounds \\
+61 & \texttt{cross\_path\_consistency} & Different code paths agree within 0.5\%/1\% tolerance \\
+62 & \texttt{quantum\_network} & QN Python formulas satisfy the QuantumNetwork Lean theorem identities \\
+63 & \texttt{prose\_theorem\_reference\_coverage} & Bundle-draft Lean references in any verbatim form (texttt, a preamble alias for it, or verb) resolve in lean\_deps.json \\
+64 & \texttt{theorem\_name\_embedded\_citations} & Declaration names embedding author+year have matching bibliography entries \\
+65 & \texttt{recurrence\_reopens\_closures} & A closure is not contradicted by a later review raising the same finding \\
+66 & \texttt{review\_severity\_declared} & Review documents from the cutoff forward declare each finding's severity \\
+67 & \texttt{review\_docs\_mint\_findings} & Every bundle Stage-13 review document mints at least one ReviewFinding node \\
+68 & \texttt{accepted\_findings\_carry\_rationale} & Every `accepted` supersession record justifies acceptance in writing \\
+69 & \texttt{chain\_backing\_targets\_resolve} & Every Lean target named in a claims-review chain of backing exists \\
 \hline
 \end{tabular}

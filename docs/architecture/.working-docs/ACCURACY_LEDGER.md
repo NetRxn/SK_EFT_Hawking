@@ -1883,3 +1883,23 @@ than silently normalised.
 **NOT-AN-ASSERTION.** ADR-011's phase ORDER is a plan, not a claim about the tree; it has no truth
 value and is not verified here. Its *inputs* are (atoms 1–6). The 12-of-21 result at atom 7 is a
 measurement of today's corpus and will change as the corpus does — it is dated, not durable.
+
+## V47 — ADR-011 Phase 2a: the ordering gate + the promotion writer — 6 atoms, 0 corrected
+
+| # | Proposition | Decider | Verbatim result |
+|---|---|---|---|
+| 1 | No code path writes `"green"` to any `stage*_status` | `grep` over `scripts/`, then read of every hit | 2 writers only — `bundle_source_manifest.py:129-131` (sets `pending`) and `bundle_append.py:320-325` (demotes `green`→`pending`). CONFIRMED, and it is what `record_review.py` now supplies |
+| 2 | `bundle_reviewer_stage_ordering` and `bundle_stage13_claim_consistent` are disjoint | production probe on real `papers/D6` | D6 seeded to its 2026-08-07 state ⇒ ordering **FAIL** naming D6, sibling **PASS** throughout (D6 has 0 blockers). **Disjointness demonstrated, not assumed** |
+| 3 | The ordering check passes on the clean tree | the check | 21 checked, 0 violations — the operator's demotion cleared all five historical violations |
+| 4 | `Detail`'s fields are `name`/`passed`/`message`/`warning` | read of `_registry.py:50-55` | CONFIRMED — four tests asserted `.detail`/`.ok` and failed; fixed against the source, not guessed |
+| 5 | Every refusal path in `record_review.py` fires | 5 CLI probes against a real blob | prerequisite-unfinished, wrong KIND, absent KIND, non-existent `--doc`, and the legitimate path ⇒ rc 1,1,1,1,0. Restored byte-identical |
+| 6 | A refused write leaves the blob unchanged | fixture test | byte-identical before/after — a partial write would leave a timestamp implying a rejected review happened |
+
+**⚠️ Process note, not an assertion.** A background `compile_bundle_pdf.py --all` silently ran from
+the workspace root instead of the repo and did nothing, reporting exit 0. Background commands do not
+inherit the foreground cwd. Caught by checking a PDF's mtime rather than trusting the completion
+notification (cf. memory `feedback_harness_cli_cwd_fails_open`).
+
+**NOT-AN-ASSERTION.** `KINDS_SUFFICIENT_FOR_GREEN = {full-adversarial}` is a policy choice, not a
+measured fact. It follows the audit's finding that `review_recorded` cannot distinguish evidence
+kinds, but which kinds *should* earn a green is a decision, and it is recorded here as one.

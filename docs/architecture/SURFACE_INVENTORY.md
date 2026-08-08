@@ -16,14 +16,14 @@
 **No timestamp is recorded here on purpose** — a date would make the file dirty on
 every run and turn the freshness check into noise. The tree state IS the timestamp.
 
-## Validation checks — 68, in execution order
+## Validation checks — 69, in execution order
 
 Execution order is semantic: the `*_fresh` regenerators rewrite artifacts that later
 checks read. See `validate._CANONICAL_ORDER`.
 
 | module | checks |
 |---|---:|
-| `bundles_readiness` | 9 |
+| `bundles_readiness` | 10 |
 | `physics` | 9 |
 | `lean_toolchain` | 8 |
 | `freshness` | 7 |
@@ -89,25 +89,26 @@ checks read. See `validate._CANONICAL_ORDER`.
 | 46 | `bundle_metadata_matches_graph` | `bundles_readiness` | bundle_metadata.json finding counts equal the live graph's |
 | 47 | `bundle_stage13_claim_consistent` | `bundles_readiness` | No bundle claims stage13_status='green' while the graph shows open blockers |
 | 48 | `bundle_manuscript_length` | `bundles_readiness` | Every bundle's compiled manuscript is within its declared length target |
-| 49 | `notebook_stored_outputs_current` | `freshness` | Bundle companion notebooks' STORED outputs equal what their code produces |
-| 50 | `readiness_verdicts_agree` | `bundles_readiness` | The heatmap and the submission gate return the same per-bundle verdict |
-| 51 | `readiness_submission_gate` | `bundles_readiness` | Every paper has all P1 readiness gates passed (Phase 5v Wave 4) |
-| 52 | `citation_primary_sources_present` | `citations` | Every external bibitem cited in papers has a primary-source cache file |
-| 53 | `provenance_doi_in_registry` | `citations` | PARAMETER_PROVENANCE source DOIs resolve to CITATION_REGISTRY bibkeys |
-| 54 | `bundle_consistency` | `bundles_readiness` | Cross-bundle clusters' member sentences agree on numerical content across bundle boundaries |
-| 55 | `bundle_source_freshness` | `freshness` | Bundle source-paper mtime ≤ bundle last_lift; flag stale bundles |
-| 56 | `bibitem_title_primary_source` | `citations` | Registry titles match primary-source cache PDF page-1 titles (drift detector) |
-| 57 | `quantum_network` | `physics` | QN Python formulas satisfy the QuantumNetwork Lean theorem identities |
-| 58 | `bundle_registry_consistency` | `bundles_readiness` | Publication-bundle roster has ONE source of truth (scripts/bundle_registry.py) that every consumer derives from |
-| 59 | `bundle_apex_resolves` | `bundles_readiness` | Every apex theorem a bundle declares names a live Lean theorem, and the undeclared-bundle count does not rise (publication-intake closure) |
-| 60 | `paper_latex_compiles` | `papers_prose` | Every papers/*/paper_draft.tex compiles under pdflatex — bundles HARD-FAIL, legacy drafts ratchet; per-draft content-hash cache (--force-latex recompiles all) |
-| 61 | `axiom_count_prose_consistency` | `papers_prose` | Paper prose axiom-count claims agree with docs/counts.json |
-| 62 | `prose_theorem_reference_coverage` | `prose_lean_refs` | Bundle-draft Lean references in any verbatim form (texttt, a preamble alias for it, or verb) resolve in lean_deps.json |
-| 63 | `theorem_name_embedded_citations` | `prose_lean_refs` | Declaration names embedding author+year have matching bibliography entries |
-| 64 | `inventory_index_autogen_fresh` | `freshness` | Advisory: SK_EFT_Hawking_Inventory_Index.md autogen blocks match docs/counts.json |
-| 65 | `architecture_inventory_fresh` | `freshness` | docs/architecture/SURFACE_INVENTORY.md matches a fresh derivation from the code |
-| 66 | `lean_docstring_refs_resolve` | `lean_toolchain` | Lean docstring `backticked` project names resolve (rename-drift guard) |
-| 67 | `paper_toolchain_pin_drift` | `papers_prose` | Advisory (Class TP): paper-draft toolchain/Mathlib pins match lean-toolchain + lakefile.toml |
+| 49 | `bundle_reviewer_stage_ordering` | `bundles_readiness` | No bundle records a Stage-13 verdict before Stages 9 and 10 are green |
+| 50 | `notebook_stored_outputs_current` | `freshness` | Bundle companion notebooks' STORED outputs equal what their code produces |
+| 51 | `readiness_verdicts_agree` | `bundles_readiness` | The heatmap and the submission gate return the same per-bundle verdict |
+| 52 | `readiness_submission_gate` | `bundles_readiness` | Every paper has all P1 readiness gates passed (Phase 5v Wave 4) |
+| 53 | `citation_primary_sources_present` | `citations` | Every external bibitem cited in papers has a primary-source cache file |
+| 54 | `provenance_doi_in_registry` | `citations` | PARAMETER_PROVENANCE source DOIs resolve to CITATION_REGISTRY bibkeys |
+| 55 | `bundle_consistency` | `bundles_readiness` | Cross-bundle clusters' member sentences agree on numerical content across bundle boundaries |
+| 56 | `bundle_source_freshness` | `freshness` | Bundle source-paper mtime ≤ bundle last_lift; flag stale bundles |
+| 57 | `bibitem_title_primary_source` | `citations` | Registry titles match primary-source cache PDF page-1 titles (drift detector) |
+| 58 | `quantum_network` | `physics` | QN Python formulas satisfy the QuantumNetwork Lean theorem identities |
+| 59 | `bundle_registry_consistency` | `bundles_readiness` | Publication-bundle roster has ONE source of truth (scripts/bundle_registry.py) that every consumer derives from |
+| 60 | `bundle_apex_resolves` | `bundles_readiness` | Every apex theorem a bundle declares names a live Lean theorem, and the undeclared-bundle count does not rise (publication-intake closure) |
+| 61 | `paper_latex_compiles` | `papers_prose` | Every papers/*/paper_draft.tex compiles under pdflatex — bundles HARD-FAIL, legacy drafts ratchet; per-draft content-hash cache (--force-latex recompiles all) |
+| 62 | `axiom_count_prose_consistency` | `papers_prose` | Paper prose axiom-count claims agree with docs/counts.json |
+| 63 | `prose_theorem_reference_coverage` | `prose_lean_refs` | Bundle-draft Lean references in any verbatim form (texttt, a preamble alias for it, or verb) resolve in lean_deps.json |
+| 64 | `theorem_name_embedded_citations` | `prose_lean_refs` | Declaration names embedding author+year have matching bibliography entries |
+| 65 | `inventory_index_autogen_fresh` | `freshness` | Advisory: SK_EFT_Hawking_Inventory_Index.md autogen blocks match docs/counts.json |
+| 66 | `architecture_inventory_fresh` | `freshness` | docs/architecture/SURFACE_INVENTORY.md matches a fresh derivation from the code |
+| 67 | `lean_docstring_refs_resolve` | `lean_toolchain` | Lean docstring `backticked` project names resolve (rename-drift guard) |
+| 68 | `paper_toolchain_pin_drift` | `papers_prose` | Advisory (Class TP): paper-draft toolchain/Mathlib pins match lean-toolchain + lakefile.toml |
 
 </details>
 

@@ -63,6 +63,7 @@ papers/<bundle>/
   "blockers_open": 0,
   "advisories_open": 0,
   "stage13_review_doc": null,
+  "stage13_review_kind": null,
   "audit_log_path": "papers/I1/audit_log.jsonl",
   "supersession_ledger_anchor": "docs/review_finding_supersessions.json",
   "notes": null
@@ -80,7 +81,8 @@ papers/<bundle>/
 | `length_target` | object \| null | `{unit, floor, ceiling, source}` — see below | **hand-declared** (ADR-011 §Phase 1) |
 | `compiled_pages` | int \| null | ≥1 | `compile_bundle_pdf.py` on every successful compile |
 | `phase7_subphase` | string | `7a`, `7b`, `7c`, ... | set by `bundle_source_manifest.py` based on roadmap |
-| `stage{9,10,13}_status` | string | `pending` \| `green` \| `yellow` \| `red` | reviewer-agent invocation (Stage 9/10/13) |
+| `stage{9,10,13}_status` | string | `green` \| `yellow` \| `red` \| `pending` \| `pending-redo` \| `skeleton` \| `not_started` | **`scripts/record_review.py`** (ADR-011 Phase 2); `pending` also at init, and on append |
+| `stage13_review_kind` | string \| null | `full-adversarial` \| `attribution-sweep` \| `section-scoped` \| `figure-only` | `record_review.py`; required for any Stage-13 verdict |
 | `stage13_redo_required` | bool | — | set `true` by `bundle_append.py` on every absorption; set `false` by Stage-13 reviewer when bundle review re-clears |
 | `freshness_stale` | bool | — | set `true` by CHECK 22 if any source paper modified after `last_lift`; cleared after Stage-13 re-invocation |
 | `source_manifest_last_regen` | ISO timestamp | UTC `YYYY-MM-DDTHH:MM:SSZ` | `bundle_source_manifest.py` on every run |
@@ -88,7 +90,7 @@ papers/<bundle>/
 | `last_stage{9,10,13}_review` | ISO timestamp \| null | — | reviewer-agent invocation |
 | `blockers_open` | int | ≥0 | reviewer-agent (sum across stages 9/10/13) |
 | `advisories_open` | int | ≥0 | reviewer-agent |
-| `stage13_review_doc` | string \| null | path | reviewer-agent points to latest Stage-13 doc under `papers/AutomatedReviews/<DATE>-bundle-stage13/<X>.md` |
+| `stage13_review_doc` | string \| null | path | `record_review.py`; must exist on disk. Latest Stage-13 doc under `papers/AutomatedReviews/<DATE>-bundle-stage13/<X>.md` |
 | `audit_log_path` | string | path | created at init |
 | `supersession_ledger_anchor` | string | path | created at init; canonical `docs/review_finding_supersessions.json` |
 | `notes` | string \| null | freeform | optional human notes (e.g., "I2 ships software-only pending Mathlib upstream") |
@@ -117,6 +119,29 @@ Declaring apexes for an existing bundle requires **full per-bundle context revie
 roadmaps, the Lean cited, the claims record — one bundle at a time (ADR-010 §D5a, operator
 condition). For new work the intended moment is **wave close**, where the author context is
 already loaded.
+
+#### `stage{9,10,13}_status` — who writes a `green`, and what it takes
+
+Use **`scripts/record_review.py`**. It is the only writer that produces a verdict, and it
+refuses three things a hand edit cannot be stopped from doing:
+
+- a **Stage-13 green while Stage 9 or 10 is not green** (`BUNDLE_LIFT_PROCEDURE.md:9`);
+- a **Stage-13 verdict with no `stage13_review_kind`** — a targeted attribution sweep and a
+  full fresh-context adversarial pass are different evidence, and only `full-adversarial`
+  earns a green;
+- a **`--doc` that does not exist on disk.**
+
+⚠️ **Until 2026-08-08 nothing wrote `green` at all.** Creation set `pending` and
+`bundle_append.py` demoted `green` back to `pending`; no code path produced one. Every green
+in the corpus was a hand edit, which is why bundle status could not be read as evidence of
+review (`END_TO_END_MAP.md` §8, transition 2). Hand edits remain possible — they are caught
+after the fact by `validate.py --check bundle_reviewer_stage_ordering` and
+`--check bundle_stage13_claim_consistent`, not prevented.
+
+The value set is wider than `Phase7a_Roadmap.md:91-93` declares: the live corpus also uses
+`pending-redo`, `skeleton` and `not_started`. All seven are declared in
+`_STAGE_STATUS_VALUES`, and an undeclared value is a finding rather than silently read as
+"not green, therefore safe".
 
 #### `length_target` — the charter's size commitment, and the only field that can fail Gate 12
 

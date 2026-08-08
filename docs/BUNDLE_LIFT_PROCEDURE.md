@@ -6,7 +6,7 @@ Canonical 14-step workflow for lifting per-paper draft content into a publicatio
 
 **Stages 9, 10, 13 are three distinct reviewer-agent invocations.** Each writes to its own output location; findings consolidate via the supersession ledger. Do not conflate them.
 
-**Reviewer-stage ordering is a hard gate.** Stage 13 (adversarial review) may not be invoked until **both** Stage 9 (figure review) AND Stage 10 (claims review) are GREEN, with all fixes from those stages applied. Stages 9 and 10 may run in parallel against the same bundle if the bundle has no figure-prose dependencies; otherwise sequence them. Across *different* bundles, all three stages may run in parallel — multi-bundle parallelism is encouraged when the work is independent.
+**Reviewer-stage ordering is a hard gate, and as of ADR-011 Phase 2 it is enforced.** Stage 13 (adversarial review) may not be invoked until **both** Stage 9 (figure review) AND Stage 10 (claims review) are GREEN, with all fixes from those stages applied. Verdicts are recorded with `scripts/record_review.py`, which refuses a Stage-13 green while either prerequisite is unfinished; `validate.py --check bundle_reviewer_stage_ordering` catches a hand edit that bypasses it. Stages 9 and 10 may run in parallel against the same bundle if the bundle has no figure-prose dependencies; otherwise sequence them. Across *different* bundles, all three stages may run in parallel — multi-bundle parallelism is encouraged when the work is independent.
 
 ---
 

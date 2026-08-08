@@ -330,8 +330,8 @@ def check_bundle_stage13_claim_consistent() -> CheckResult:
     NOT asserted here: the Stage-9/10-before-13 ORDERING gate
     (`BUNDLE_LIFT_PROCEDURE.md:9`). That is a different defect — a green that was invalid
     WHEN WRITTEN because a prerequisite stage had not passed, rather than one contradicted
-    by findings filed LATER — and it is unguarded. Tracked as TODO-D24; deliberately not
-    folded in here, because bundling it would repeat the mistake this split is undoing.
+    by findings filed LATER. It now has its own check, `bundle_reviewer_stage_ordering`
+    (ADR-011 Phase 2), and is deliberately not folded in here.
     """
     by_bundle, meta_path, failure = _readiness_aggregate()
     if failure is not None:
@@ -389,6 +389,110 @@ def check_bundle_stage13_claim_consistent() -> CheckResult:
         "summary", bad == 0,
         f"{checked} bundle Stage-13 claim(s) checked against the live blocker counts, "
         f"{bad} contradicted"))
+    return CheckResult(passed=bad == 0, details=details)
+
+
+#: Reviewer-stage status values the tree actually uses. `Phase7a_Roadmap.md:91-93`
+#: declares three (`pending`/`green`/`red`, plus `yellow` for stage 13); the live corpus
+#: also carries `pending-redo`, `skeleton` and `not_started`. Declared here rather than
+#: silently accepted, so an unrecognised value is a finding instead of a shrug —
+#: `skeleton` and `not_started` both read as "this stage has not run", and a check that
+#: treated an unknown string as "not green" would let a typo'd `greeen` pass as safe.
+_STAGE_STATUS_VALUES = frozenset({
+    "green", "yellow", "red", "pending", "pending-redo", "skeleton", "not_started",
+})
+
+#: The stages `stage13_status` may not overtake. `BUNDLE_LIFT_PROCEDURE.md:9`.
+_STAGE13_PREREQUISITES = ("stage9_status", "stage10_status")
+
+
+@register_check("bundle_reviewer_stage_ordering",
+                "No bundle records a Stage-13 verdict before Stages 9 and 10 are green")
+def check_bundle_reviewer_stage_ordering() -> CheckResult:
+    """CHECK (ADR-011 Phase 2, = TODO-D24 = Gate 16 assertion #2): the hard gate.
+
+    `BUNDLE_LIFT_PROCEDURE.md:9` states it as law — *"Stage 13 (adversarial review) may
+    not be invoked until **both** Stage 9 (figure review) AND Stage 10 (claims review)
+    are GREEN, with all fixes from those stages applied."* Nothing read the fields.
+
+    **What it caught when it was written by hand (2026-08-07):** five bundles held a
+    Stage-13 verdict with a prerequisite never run — D6 (`s9: not_started`,
+    `s10: skeleton`), D7 (`s9: not_started`), D8 (both `pending`), D9 (`s10: pending`,
+    and it was the portfolio's only GREEN), I3 (`s9: pending`). The operator's demotion
+    cleared all five, so this check is expected to pass on a clean tree; it exists to
+    stop the next hand-typed `green` from recreating the state.
+
+    **Distinct from `bundle_stage13_claim_consistent`, and they fail on disjoint data.**
+    That one catches a green *invalidated later* by newly-minted findings. This one
+    catches a green *invalid when written*, because a prerequisite had not passed. A
+    bundle can satisfy either and violate the other; D6 did exactly that, holding zero
+    blockers (so the other check was silent) with figure review `not_started`.
+
+    ⚠️ **The implication is vacuously true for a bundle with no Stage-13 verdict**, which
+    is every bundle today. That is why the seam guard counts *blobs compared*, not
+    violations found: a run that inspected nothing must not report agreement. Without it
+    this check would pass on an empty `papers/` tree, which is the round-8 state
+    (`evaluate_all_gates` renamed → every readiness check green with nothing to check).
+    """
+    details: list[Detail] = []
+    try:
+        import bundle_registry as registry
+        codes = list(registry.BUNDLE_CODES)
+    except Exception as exc:  # noqa: BLE001
+        return CheckResult(passed=False, measured=False, details=[Detail(
+            "roster", False,
+            f"could not read the bundle roster ({exc}) — UNVERIFIED, not passing")])
+
+    checked = 0
+    bad = 0
+    for code in codes:
+        md = _read_metadata(code)
+        if md is None:
+            bad += 1
+            details.append(Detail(
+                code, False,
+                "no readable bundle_metadata.json — this bundle's stage ordering is "
+                "unverified rather than correct"))
+            continue
+        checked += 1
+
+        raw = {f: str(md.get(f) or "").strip().lower()
+               for f in ("stage13_status",) + _STAGE13_PREREQUISITES}
+        for field, value in raw.items():
+            if value and value not in _STAGE_STATUS_VALUES:
+                bad += 1
+                details.append(Detail(
+                    code, False,
+                    f"{field}={value!r} is not a declared status "
+                    f"({', '.join(sorted(_STAGE_STATUS_VALUES))}) — an unrecognised "
+                    f"value cannot be judged 'not green', so it is a finding, not a shrug"))
+
+        if raw["stage13_status"] != "green":
+            continue   # antecedent false — nothing asserted, correctly
+        missing = [f"{f.replace('_status', '')}={raw[f] or 'absent'}"
+                   for f in _STAGE13_PREREQUISITES if raw[f] != "green"]
+        if missing:
+            bad += 1
+            details.append(Detail(
+                code, False,
+                f"stage13_status='green' while {', '.join(missing)} — Stage 13 may not "
+                f"be invoked until Stages 9 and 10 are both green "
+                f"(BUNDLE_LIFT_PROCEDURE.md:9). This verdict was invalid when written, "
+                f"not invalidated later: re-run the prerequisite stage, do not edit "
+                f"stage13_status"))
+
+    if checked == 0:
+        details.insert(0, Detail(
+            "population", False,
+            "no bundle metadata blob was read — this check is UNVERIFIED, not passing. "
+            "Every assertion here is an implication, and an implication over an empty "
+            "population is vacuously true; the guard is on the population, not the "
+            "violations"))
+        return CheckResult(passed=False, measured=False, details=details)
+
+    details.insert(0, Detail(
+        "summary", bad == 0,
+        f"{checked} bundle(s) checked for reviewer-stage ordering, {bad} violation(s)"))
     return CheckResult(passed=bad == 0, details=details)
 
 
