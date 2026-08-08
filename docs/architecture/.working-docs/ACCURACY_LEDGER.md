@@ -2122,3 +2122,54 @@ so the trap is pinned rather than remembered.
 **NOT-AN-ASSERTION.** The ambiguous-basename exclusion list (`Basic`, `Trace`, `Module`, …) is a
 judgment about which names a substring test cannot resolve, not a measurement. Widening it would
 lower the ratchet without improving anything, which the check's own message forbids.
+
+---
+
+## V57 — ADR-011 Phase 8: plugin review & sync — 8 atoms, 2 OF MY OWN FILED CLAIMS REFUTED
+
+| # | Proposition | Decider | Verbatim result |
+|---|---|---|---|
+| 1 | *(filed in ADR-011)* "Six of six skills miss the third-person description form" | re-measure with whitespace-normalised, folded-YAML-aware scan | **REFUTED — wrong by more than double.** The rule does not bind on the 2 skills carrying `disable-model-invocation: true`; `goal-dev` carries the phrase mid-sentence and was missed by a `startswith` test. **Real: 3 of 5 model-invocable skills** (`harvest`, `sync`, `wave-close`) |
+| 2 | *(filed in ADR-011)* "`goal-prompt` names two `references/` files that do not exist" | resolve the full cited path | **REFUTED.** Both are cross-skill refs — `goal-dev/references/{lab-notebook,parallel-worktrees}.md` — and both exist. The scan's regex discarded the `goal-dev/` prefix. **Zero broken reference links exist in the plugin** |
+| 3 | The README documents what ships | diff of `agents/`, `commands/`, `hooks.json` against README text | **4 of 9 agents, 4 of 6 commands, 4 of 5 hooks.** Components are auto-discovered from the filesystem, so nothing forced the README to follow |
+| 4 | The README's hook posture claim is accurate | read of `hooks.json` against the sentence *"four (all default-inert + fail-open)"* | **FALSE, and inverted on the one that matters.** The undocumented fifth hook is the web-egress guard: **unconditional and fail-CLOSED**. The blanket sentence was wrong *because* the omitted hook is the exception |
+| 5 | `/frontier` cites two scripts that do not exist | path-root disambiguation | **NO — my scan's false positive.** `scripts/atlas_{view,heatmap}.py` are repo-relative and present. But the same conflation is a real defect elsewhere: **3 bare `scripts/X.py` prose refs** name plugin scripts in a form that resolves to nothing from the repo root |
+| 6 | `prose-reviewer` cannot edit the draft it reviews | read of its frontmatter | **It could.** No `tools:` field ⇒ inherits Write/Edit/Bash. Its body's *"You do not edit"* was a request. Now `tools: ["Read","Glob","Grep"]` — read-only by construction; `compiled_pages` is present for all 21 bundles, so it needs no Bash |
+| 7 | The plugin's guards run in the workflow | `pytest --collect-only` | **They ran nowhere.** `testpaths = ["tests"]` collected **5,781 repo tests and 0 plugin tests**; no CI workflow exists and the pre-commit hook runs only IP clearance. 156 guards — incl. `test_skill_safety.py`, written to catch shipped defects — fired only when someone passed the path by hand. `testpaths` now collects both (**5,947**) |
+| 8 | The new guards have zero headroom | production-seeded, 4 mutations | undocumented agent ⇒ rc=1; agent with no `model:` ⇒ rc=1; a 6th hook added to real `hooks.json` ⇒ **2 checks** rc=1; rotted `${CLAUDE_PLUGIN_ROOT}` path ⇒ rc=1. All restored **byte-identical** |
+
+**⚠️ ATOMS 1, 2 AND 5 ARE THE LESSON, AND ALL THREE ARE MINE.** Three separate false positives in
+one phase, every one from a scan keyed too narrowly: a `startswith` where the phrase sits
+mid-sentence, a regex that discarded a path prefix, a pattern that conflated two `scripts/` roots.
+Two of them I had already *filed into ADR-011 as findings* before re-measuring. This is
+`feedback-remeasure-filed-findings-before-fixing` earning its keep — **a filed finding is a claim,
+including when I filed it** — and the same trap as V56 atom 1. The corrections are recorded in
+ADR-011 Phase 8 rather than silently overwritten.
+
+**Why the deliverable is a test and not an edit.** Fixing the README syncs it once; the drift
+returns with the next component, exactly as it did here. `tests/test_plugin_surface.py` (10 checks)
+makes the surface-to-README contract a test failure at the moment it is introduced. Note the
+derived `SURFACE_INVENTORY.md` was **correct throughout** — it listed all 5 hooks, 9 agents and
+6 commands. Only the hand-written narrative drifted, which is the whole rationale for
+architecture rule 3 ("never write a count into a narrative"). The plugin README keeps its count
+because it must stand alone when distributed; the count is now pinned by a guard instead.
+
+**A PRE-EXISTING GUARD I HAD NOT FOUND CAUGHT MY OWN EDIT.** The combined run failed on
+`tests/test_plugin_prompt_code_refs.py::test_every_referenced_script_path_exists` — a repo-side
+test that requires every `scripts/...`-shaped string in a plugin file to resolve. It was tripping
+on the literal placeholder `scripts/X.py` I had written into the new test's own docstring, and
+then a second time on `scripts/foo.py` in the note I added while fixing the first. The guard was
+right both times: a placeholder that looks like a real path is indistinguishable from a broken
+reference, which is the same defect class `test_skill_safety.py` guards for `` !`cmd` ``.
+Placeholders are now written `scripts/<name>.py`. Two consequences worth keeping:
+(a) I built a path-integrity check without first finding the repo-side one that already existed —
+the recurring "second mechanism beside one that already exists" failure architecture rule 1 names;
+(b) they are **not** duplicates and both are kept — the repo-side test accepts either root
+(permissive, broad net), while Defect 7 here requires prose to resolve from the repo root a reader
+actually stands in. The relationship is now documented in the new file's header so neither is
+later deleted as redundant.
+
+**NOT-AN-ASSERTION.** `goal-prompt` at 2,784 words is filed as TODO-D28, not fixed. Its body is
+re-injected at every compaction boundary, so choosing what moves to `references/` changes what an
+autonomous loop re-reads after a compact. That is a behavioural change to the durability
+mechanism, not a word-count trim.

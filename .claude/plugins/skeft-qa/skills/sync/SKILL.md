@@ -1,6 +1,6 @@
 ---
 name: sync
-description: Run the full mechanical Stage-12 sync (counts, tables, deps, citation cache) in one command. Use before a wave gate, or whenever counts/tables/figures may have drifted from the Lean/Python sources.
+description: This skill should be used when the user asks to "run sync", "sync the counts", "refresh the tables", "regenerate the deps", "update the citation cache", or before a wave gate whenever counts, tables, or figures may have drifted from the Lean/Python sources. Runs the full mechanical Stage-12 sync (counts, tables, deps, citation cache) in one command; idempotent and regen-lock-serialized.
 allowed-tools: Bash(git rev-parse *), Bash(cd *), Bash(uv run python *), Bash(grep *)
 ---
 

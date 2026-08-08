@@ -91,7 +91,11 @@ packages = ["src"]
 sk-eft-rhmc = { path = "rust/", editable = true }
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+# Both suites. The skeft-qa plugin's tests are deterministic content-scans that guard the
+# harness surface (shell-invocation defects, surface-vs-README drift); they were previously
+# collected only when someone passed the plugin path by hand, so nothing ran them. A bare
+# `pytest` now collects both. Passing an explicit path (`pytest tests/`) still scopes to one.
+testpaths = ["tests", ".claude/plugins/skeft-qa/tests"]
 pythonpath = ["."]
 # Default behaviour: skip tests marked `slow` (Lean ExtractDeps re-runs,
 # graph rebuilds, anything that shells out to lake / pdflatex / aristotle).

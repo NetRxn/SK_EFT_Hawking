@@ -22,6 +22,11 @@ description: >
   assistant: "Those are a floor, not a review. I'll use the prose-reviewer agent."
   </example>
 model: opus
+# Read-only BY CONSTRUCTION. The body's "you do not edit" is the whole reason this agent is
+# separate from the author; a prose grant that still carried Write/Edit/Bash would leave that
+# rule to good intentions. No Bash either: everything it needs to judge length is already in
+# `compiled_pages`, so there is no path from this agent back to the manuscript.
+tools: ["Read", "Glob", "Grep"]
 ---
 
 # Prose reviewer
@@ -52,9 +57,11 @@ Answer each with a verdict and evidence. **Block on any `no`.**
    draft, rather than to a reader of the literature?** Emit a **deletion list with line
    numbers.** The deterministic check catches known forms; you are here for the ones it
    does not know about.
-5. **Is the compiled length within the charter's budget?** Read `compiled_pages` or run
-   `scripts/compile_bundle_pdf.py <X>`, and compare against `length_target`. A deep paper
-   at letter length is not a short paper; it is an unfinished one.
+5. **Is the compiled length within the charter's budget?** Read `compiled_pages` from
+   `bundle_metadata.json` and compare against `length_target`. A deep paper at letter length
+   is not a short paper; it is an unfinished one. (You cannot run the compiler, by design.
+   If `compiled_pages` is absent, report that and stop judging length — do not guess from
+   the source.)
 
 ## What to return
 

@@ -139,9 +139,14 @@ inventory — **keep it synced** as you ship, but you needn't read it whole on b
 ```bash
 # Python (uv-managed, Python >= 3.14)
 uv sync                                       # install/sync deps
-uv run python -m pytest tests/ -v             # fast tests (~2.5 min; deselects 'slow')
+uv run python -m pytest -q                    # BOTH suites: repo tests + the skeft-qa plugin's
+                                              #   surface guards (testpaths covers both)
+uv run python -m pytest tests/ -v             # repo only, fast (~2.5 min; deselects 'slow')
 uv run python -m pytest tests/ -m slow -v     # slow tests (Lean ExtractDeps + graph)
-uv run python -m pytest tests/ -m '' -v       # everything — before PR / submission / wave close
+uv run python -m pytest -m '' -v              # everything — before PR / submission / wave close
+# Passing an explicit path scopes the run; omitting it picks up BOTH testpaths. The plugin's
+# guards (shell-invocation defects, surface-vs-README drift) previously ran only when someone
+# passed `.claude/plugins/skeft-qa/tests` by hand, so nothing ran them. Prefer the bare form.
 uv run python scripts/validate.py             # full validation suite (--list enumerates it)
 uv run python scripts/validate.py --list      # list checks; --check <name> runs one
 uv run python scripts/review_figures.py       # PNGs + structural figure checks

@@ -1125,3 +1125,53 @@ absorption items remain, both measured and both buildable:
 **Why not now:** F-07 changes what `check_bundle_source_freshness` measures for nine
 bundles at once, and this is ADR-010 §D6, which carries its own operator approval. Needs
 that sign-off, not ADR-011's.
+
+---
+
+### D28. `goal-prompt/SKILL.md` is 2,784 words against a 2,000-word target — OPEN
+
+ADR-011 Phase 8 measured the plugin's skills against the `plugin-dev` skill-development
+criteria. One exceeded budget: `skills/goal-prompt/SKILL.md` at **2,784 words** against
+`plugin-dev`'s 1,500–2,000 target (hard max 5,000, so this is over-target, not over-limit).
+
+The progressive-disclosure split it needs already exists — the skill ships
+`references/goal-prompt-authoring.md` and cites it twice — so the fix is to move detail
+down a level, not to invent structure.
+
+**Why it is not a passing edit.** `goal-prompt` is the always-on posture core: its body is
+re-injected after every compaction by `harness_reinject.py`, so what stays in `SKILL.md`
+versus what moves to `references/` changes *what an autonomous loop re-reads at every
+compaction boundary*. Moving the wrong paragraph down silently drops it out of the
+re-orientation payload. That is a behavioural change to the durability mechanism and
+deserves its own change with its own verification, not a word-count trim during a review
+pass.
+
+**Prerequisite:** identify which sections `harness_reinject.py` actually re-injects before
+moving anything. Anything on that path stays in `SKILL.md` regardless of the word budget;
+only material off it is eligible.
+
+**Not a defect:** the two `references/` links this skill was originally reported as breaking
+resolve fine — they are cross-skill references (`goal-dev/references/…`). See ADR-011
+Phase 8 for the measurement error that produced that false report.
+
+---
+
+### D29. `papers/claim_clusters.json` churns a timestamp on every validate run — OPEN (minor)
+
+Noticed while verifying ADR-011 Phase 8: a clean `validate.py` run leaves
+`papers/claim_clusters.json` modified with **8 insertions / 8 deletions, all of them
+`constructed_at`**. The cluster content is byte-identical; only the construction timestamp
+moves. The file is tracked (not gitignored).
+
+**Why it matters.** Every validate run dirties the working tree with a diff that carries no
+information, so a real change to the clustering output is camouflaged among timestamp noise,
+and anyone staging with `git add -A` commits churn. This is the same defect class as
+**TODO-T2** (the freshness check mutating nine tracked files per run), which was closed by
+making the writer content-addressed rather than time-stamped.
+
+**Fix shape (same as T2's):** have `cluster_detect.py` preserve the existing `constructed_at`
+when the cluster payload is unchanged, so the file is rewritten only on a real content change.
+
+**Not fixed in Phase 8** — it is in the clustering pipeline, not the plugin surface this phase
+scopes, and the phase's own rule is that findings needing content changes get filed rather than
+fixed in passing.

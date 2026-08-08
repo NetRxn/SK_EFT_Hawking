@@ -383,6 +383,55 @@ out so it can be dropped without disturbing Phases 1–5, on which nothing here 
 3. **F-09** — per-phase mapping rows, not per-bundle.
 4. **F-10** — `bundle_lean_module_coverage`: declared modules must appear in the draft.
 
+### Phase 7 — `WAVE_EXECUTION_PIPELINE.md` becomes a clean reader-facing law (RUNS LAST)
+
+**Operator direction, mid-Phase-2:** once the pipeline document is fully aligned with the process
+and stable, it needs a pass that removes the back-and-forth, oscillation and troubleshooting
+language. It is read by nearly every agent during development work, so it must be **lightweight,
+100% aligned, and 100% accurate**. Progressive disclosure into a companion document is permitted.
+
+**Sequenced last by construction.** Every phase in this ADR amends the pipeline document, so a
+rewrite performed earlier would be re-dirtied by the phases after it. That includes my own P1–P6
+amendments: **they are written in the current house style and are in scope for this sweep, not
+exempt from it.**
+
+**Starting measurement (2026-08-08, before any edit):** 828 lines, **9,303 words**, 51 headings,
+**53 provenance-citation sites**. The distribution is the actionable part, and it is not what the
+"oscillation language" framing would predict:
+
+| marker class | hits |
+|---|---:|
+| ADR / TODO / audit back-references | 31 |
+| dated incident references (`20NN-NN-NN`) | 18 |
+| correction / retraction / supersession phrasing | 6 |
+| first-person process voice | 3 |
+| hedging | 2 |
+| troubleshooting voice | **0** |
+
+**The document does not hedge and does not troubleshoot; it cites its own history.** It reads as an
+annotated changelog of *why* each rule exists, and that history is what makes it heavy. The sites
+are concentrated, so the rewrite is surgical rather than wholesale:
+
+| section | sites |
+|---|---:|
+| Pipeline Invariants | 15 |
+| Stage 14 (meta-process) | 10 |
+| Stage 10 (paper draft) | 6 |
+| Stage 4 (Aristotle) | 5 |
+| Stage 7 (cross-layer validation) | 4 |
+| everything else (8 sections) | 13 |
+
+Stages 1–3, 5, 6, 8, 9, 11–13 carry 0–3 sites each: **the stage body is already close to law.**
+
+**Approach:** the law states the rule; the provenance moves to progressive disclosure. A rule an
+agent must follow stays in the document; the incident that produced it, the ADR that decided it and
+the audit that found it become a reference a reader can follow when they want to know why. Nothing
+is deleted — deleting provenance would violate the same accuracy discipline this ADR is built on.
+
+⚠️ **Accuracy is the gate, not brevity.** A shorter document that misstates the process is a worse
+outcome than the current one. The rewrite is verified against the same substrate the phases
+touched, and the word count is a consequence, not a target.
+
 ### Phase 8 — the `skeft-qa` plugin is reviewed and synchronised to intended state
 
 **Added by operator direction 2026-08-08**, on noticing staleness in `skills/wave-close/SKILL.md`
@@ -393,31 +442,76 @@ architecture alignment and synchronisation, not just the two files that prompted
 **Measured against the `plugin-dev` skill's own criteria** (loaded 2026-08-08 at operator
 direction, so the review runs against published best practice rather than assumption):
 
-| skill | body words | 3rd-person description | 2nd-person in body | broken `references/` links |
-|---|---:|---|---:|---|
-| `goal-prompt` | 2,784 | **NO** | 1 | **2** (`lab-notebook.md`, `parallel-worktrees.md`) |
-| `harvest` | 1,105 | **NO** | 0 | — |
-| `goal-dev` | 966 | **NO** | 0 | — |
-| `sync` | 665 | **NO** | 0 | — |
-| `debrief` | 591 | **NO** | 0 | — |
-| `wave-close` | 483 | **NO** | 0 | — |
+| skill | model-invocable | body words | 3rd-person description | broken `references/` links |
+|---|---|---:|---|---|
+| `goal-prompt` | no (`disable-model-invocation`) | 2,784 | n/a | none |
+| `harvest` | yes | 1,105 | **NO** | none |
+| `goal-dev` | yes | 966 | yes | none |
+| `sync` | yes | 665 | **NO** | none |
+| `debrief` | no (`disable-model-invocation`) | 591 | n/a | none |
+| `wave-close` | yes | 483 | **NO** | none |
 
-Three findings fall straight out, and the third is a genuine defect rather than a style note:
+> ⚠️ **Two claims in the first draft of this table were wrong, and both were my own.** They are
+> corrected above and recorded here rather than silently overwritten, because the way they failed
+> is the reusable lesson.
+>
+> - *"Six of six skills miss the third-person form."* Two errors compounded. The scan tested
+>   `description.startswith("this skill")`, so `goal-dev` — which carries the phrase mid-sentence
+>   — read as a miss; and folded YAML (`description: >`) wraps the description across lines, so a
+>   raw substring match splits the very phrase it is looking for. The rule also does not bind on
+>   the two skills carrying `disable-model-invocation: true`, whose description is never matched
+>   against a user turn; it is a human-facing label. **Real figure: 3 of 5 model-invocable skills.**
+> - *"`goal-prompt` names two reference files that do not exist."* They are cross-skill references
+>   — `goal-dev/references/lab-notebook.md` and `.../parallel-worktrees.md` — and both exist. The
+>   scan's regex captured only the basename after `references/`, discarding the `goal-dev/` prefix
+>   that made them resolve. **No broken reference links exist anywhere in the plugin.**
+>
+> Same root cause both times, and the same one as the `lean_modules` near-miss in Phase 6: a scan
+> keyed too narrowly reports a live thing as absent, and an empty result reads as evidence. Hence
+> the mitigation below is a *test*, not an edit.
 
-1. **No skill uses the third-person description form.** `plugin-dev` requires
-   *"This skill should be used when the user asks to …"* with concrete trigger phrases, because
-   the description is what decides whether a skill loads at all. Six of six miss it.
-2. **`goal-prompt` is 2,784 words** against the 1,500–2,000 target, with `references/` already
-   present — the progressive-disclosure split exists but was not used.
-3. **`goal-prompt` names two reference files that do not exist.** `references/lab-notebook.md`
-   and `references/parallel-worktrees.md` are cited in the body and absent from disk. This is
-   the same failure class as a chain-of-backing link naming a theorem that is not there
-   (TODO-B4), and the same class as `PRE_DECISIONS.md` naming a slash command never built — a
-   mandatory-read document promising material that does not exist.
+What the review actually found, once measured correctly:
 
-⚠️ **This phase is a review, not a rewrite.** The four skills at 483–1,105 words are within
-budget and their content is not in question; what is stale is metadata, cross-references and
-alignment with the tree. Findings that require content changes get filed, not fixed in passing.
+1. **The README documented a fraction of what ships** — 4 of 9 agents, 4 of 6 commands, 4 of 5
+   hooks. Every component here is auto-discovered from the filesystem, so a new file goes live
+   the moment it lands with nothing forcing the README to follow.
+2. **The README asserted a safety posture that was false.** It described the hooks as
+   *"four (all default-inert + fail-open)"*. The undocumented fifth is the web-egress guard,
+   which is deliberately **unconditional and fail-CLOSED** — the exact opposite, and the one
+   whose posture matters most. The blanket sentence was wrong precisely because the hook it
+   omitted is the exception.
+3. **Three model-invocable skills lack the trigger form** (`harvest`, `sync`, `wave-close`).
+4. **Three bare `scripts/X.py` prose references were ambiguous.** Both the plugin and the repo
+   have a `scripts/` directory; these named plugin scripts in a form that resolves to nothing
+   from the repo root a reader is standing in.
+5. **`prose-reviewer` shipped with no `tools:` field**, so it inherited Write, Edit and Bash. Its
+   body says *"You do not edit"* — the whole reason it is separate from the author — but that was
+   a request, not an enforcement.
+6. **The entire plugin test suite ran nowhere.** `testpaths = ["tests"]` collected 5,781 repo
+   tests and zero plugin tests; there is no CI workflow and the pre-commit hook runs only IP
+   clearance. The 156 existing guards — including `test_skill_safety.py`, which exists to catch
+   shipped defects — fired only when someone passed the plugin path by hand.
+
+A seventh finding surfaced only when the combined suite first ran, and it landed on this phase's
+own work: **a repo-side guard I had not found already covered part of what I was building.**
+`tests/test_plugin_prompt_code_refs.py` requires every `scripts/...`-shaped string in a plugin file
+to resolve, and it failed on the literal placeholder in the new test's docstring. Both tests are
+kept — the repo-side one accepts either root and is the broad net; the new one requires prose to
+resolve from the repo root a reader actually stands in — and their relationship is documented in
+the new file's header so neither is later deleted as redundant. The process lesson is architecture
+rule 1: read what owns the surface *before* building on it, or you build the second mechanism
+beside one that already exists.
+
+**The fix for a drift class is a guard, not an edit.** `tests/test_plugin_surface.py` (10 checks)
+pins the surface-to-README contract: every agent, command, skill and hook script must appear in the
+README; the README's spelled-out hook count must equal what `hooks.json` wires; every
+`${CLAUDE_PLUGIN_ROOT}` path must resolve; bare `scripts/` prose must resolve from the repo root;
+every agent must state `model:` explicitly; every model-invocable skill must carry the trigger form.
+Each was production-seeded to confirm it catches its defect. `testpaths` now collects both suites.
+
+⚠️ **This phase is a review, not a rewrite.** `goal-prompt` at 2,784 words against the 1,500–2,000
+target is a real finding and is **filed as TODO-D28**, not fixed here — splitting a mandatory
+always-on posture document is a content change that deserves its own change, not a passing edit.
 
 The new `paper-authoring` skill (Phase 5) is authored to these criteria from the start, so it
 does not join the backlog it is landing beside.

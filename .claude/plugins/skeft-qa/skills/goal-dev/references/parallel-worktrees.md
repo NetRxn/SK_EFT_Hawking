@@ -29,7 +29,8 @@ each. The `lean-lsp-wt1/2/3` servers are defined in the workspace `.mcp.json` + 
 1. **Reset the slot to current `main` — do this IMMEDIATELY before dispatching *this* slot's worker**, per
    task, **not as a batch up front**. If `main` advances between the reset and the dispatch (e.g. you merged
    an earlier worker), the slot's **git tree** is left behind — and the `.lake` auto-re-clone fixes the
-   *build*, not the *tree*. Run **`/reset-slot N`** (or `scripts/reset_slot.py N`): the **guardrail-safe**
+   *build*, not the *tree*. Run **`/reset-slot N`** (or `${CLAUDE_PLUGIN_ROOT}/scripts/reset_slot.py N`):
+   the **guardrail-safe**
    `git -C .claude/worktrees/wtN checkout -B worktree-wtN main`, which **refuses if the slot holds commits not
    yet on `main`** (so unmerged work is never lost — merge/cherry-pick first, then re-run).
    - ⚠️ **Do NOT reach for `git reset --hard` / `git clean`.** Those are **denied by the auto-mode permission
