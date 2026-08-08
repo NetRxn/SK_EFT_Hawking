@@ -831,6 +831,15 @@ counts `LDPCompatibleSKEFT` as having a per-module closure, which the same parag
 wave-closure; the count then follows from the names rather than from hand-maintenance. No new
 Lean is required — every theorem already exists and is proved.
 
+**Third instance — this is a portfolio-level pattern, not three bundle-level defects.**
+D11 (~69 proved declarations named in no draft anywhere), I3 (13 in its own twelve modules), and
+now **L1** (7 of 21 in `GravitationalWaves.lean`). L1's is the sharpest single case: five of its
+seven unnamed theorems formalize the *exact* quantitative claim its §Discussion recovery-path 3
+states in prose (`|γ| ≤ 10⁻³⁰` does not lift the falsification —
+`vestigial_dispersion_below_ligo_at_inspiral_peak`), and the sentence cites a **different** module
+(`SecondOrderSK.lean`, which does carry `GammaH` but not that theorem). The prose reads as argued
+where it is in fact proved.
+
 **Not a check.** Per §6a nothing was built. `prose_theorem_reference_coverage` measures the reverse
 direction (prose names that do not resolve); a *proved-but-unnamed* measure would be new
 infrastructure and needs approval — and TODO-D14/D18 already queue related coverage questions.

@@ -5,8 +5,8 @@ comes due when every bundle is declared; until then this file records, for each 
 whether the closure evidence **supports** it, **refutes** it, or **does not decide** it, plus any
 **boundary failure** named under §D2's rule.
 
-**Status:** 17 of 21 bundles declared (D1–D12, F, I1, I2, I3, L2).
-4 undeclared: E1, E2, L1, L3. **Every "not decided" below is a
+**Status:** 18 of 21 bundles declared (D1–D12, F, I1, I2, I3, L1, L2).
+3 undeclared: E1, E2, L3. **Every "not decided" below is a
 statement about what is measurable today, not a verdict.**
 
 **Method.** Each row is an intersection of *declared apex closures* over `name_deps_project`,
@@ -131,7 +131,7 @@ Recorded because §D4 asks for evidence, and an intersection nobody proposed is 
 | **D6** | ⚠️ **PARTIAL** | Cites 133 declarations from D9's namespace while claiming ~19 % of its own citations. |
 | **D4** | ⚠️ **YES, both directions** | *Inbound:* §§7–8 consume D3's `H_HorizonBoundaryCondition` (22 shared declarations) — mutual and acknowledged. *Outbound:* §9's `GenericSU2` layer ships D8's chartered content. |
 | D1, D2, D3, D5, D7, D8, D11, D12, I1, I2, I3, L2 | **No** | Each states its purpose on its own substrate. D11 is the strongest case: zero intersection with every other declared bundle. |
-| E1, E2, L1, L3 | **not yet measurable** | undeclared |
+| E1, E2, L3 | **not yet measurable** | undeclared |
 
 ---
 
@@ -160,3 +160,47 @@ draft that cedes in words is stronger evidence than document position.
 - **Not stable.** Every "0" against an undeclared bundle is *unmeasurable*, not *empty*. Re-run
   each row when its counterpart is declared — **D3 ∩ D2 was 0-by-unmeasurability and turned out to
   be 3** once D2 was declared, which corrected a filed finding (V27 B2).
+
+---
+
+## 6. L1 / D3 / F — a declaration conflict recorded as EVIDENCE, deliberately not resolved
+
+**Found 2026-08-07 at L1's retrofit** (`docs/audits/2026-08-07-l1-retrofit/FINDINGS.md` §3). Not one
+of the four proposed merges; it bears on the reserved **`L1 disposition`** STOP-AND-ASK item.
+
+**Measured.** L1's entire closure is 18 declarations in **one** module, `GravitationalWaves.lean`,
+at depth 1. That module is already claimed by two siblings:
+
+| | apexes in `GravitationalWaves` | of which L1 also declares |
+|---|---|---|
+| **L1** | 11 | — |
+| **D3** | 8 | **5** |
+| **F** | 3 | **3** (all of F's) |
+
+**L1's declaration-level unique content is exactly two things:** the correctness-push biconditional
+`c_GW_match_iff_chi_close_to_one`, and the five-theorem `H_VestigialModeIsGraviton` tracked-hypothesis
+bundle (one discharge + four falsifiers isolating P1, P2 and P3'). **The falsification headline
+itself — both endpoint falsifiers, the bundled corollary, the disjointness theorem and its
+frame-independent form — is already declared by D3 and F.**
+
+**Which container develops it, by each draft's own framing:**
+
+- **L1** — the title, the abstract, both `theorem` environments, the figure caption's Lean witness.
+  The whole Letter is this result.
+- **D3** — one lane closure inside an emergent-gravity survey: *"Volovik's vestigial second-sound
+  graviton is falsified by GW170817 to roughly fourteen orders of magnitude"*, listed beside other
+  closed lanes. D3 additionally declares three `c_GW_*` lemmas L1 subordinates to its definition,
+  using `c_GW_at_chi_one` to close a displayed equation of its own.
+- **F** — one example of *"NO-GO results reported as first-class predictive content rather than
+  absences."* A survey citation, in a single sentence.
+
+**Why nothing was reassigned.** The D4→D8 and D1→D7 conflicts moved apexes between containers whose
+*existence* was settled, and each was decided by the drafts' own words or document position with the
+closure corroborating. **This one asks whether L1 exists as a container at all** — the ownership rule
+does not reach that far, and under ADR-010 C5 moving declarations here would pre-decide a charter.
+The duplicate declarations stand as the evidence.
+
+**Status: NOT DECIDED — reserved to the `L1 disposition` item.** The evidence above is the input;
+the decision is not mine. If L1 stands, the six unique theorems are its spine and D3/F should cede
+the other five. If L1 folds into D3, D3 already declares most of it.
+

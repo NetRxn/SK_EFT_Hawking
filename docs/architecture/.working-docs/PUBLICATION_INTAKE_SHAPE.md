@@ -305,7 +305,17 @@ bundle metadata on disk at all.
    **13 proved theorems named nowhere** — and for a software paper an unnamed theorem is an
    unfindable API (TODO-D19).
    Full working: [`../../audits/2026-08-07-i3-retrofit/FINDINGS.md`](../../audits/2026-08-07-i3-retrofit/FINDINGS.md).
-4. ⏭️ **NEXT** — the remaining 4: L1/L3, then **E1/E2** — the last open ADR-010 §D4 merge
+3m. ✅ **DONE 2026-08-07** — **L1**, ceiling 4→3 (11 apexes → 18 decls / **1 module / depth 1**,
+   the narrowest closure in the portfolio and the right shape for a falsification Letter). Every
+   size and purity claim verifies exactly (21 theorems, 49 pytest cases, zero maxHeartbeats).
+   ⚠️ **THIRD declaration conflict — and the first one deliberately left unresolved.** D3 declares
+   8 `GravitationalWaves` apexes and F declares 3; L1's whole closure sits inside territory D3
+   already claims. L1's declaration-level *unique* content is exactly the correctness-push
+   biconditional plus the five-theorem tracked-hypothesis bundle. **Nothing was reassigned** —
+   unlike D4→D8 and D1→D7, this asks whether the container exists, which is the reserved
+   `L1 disposition` item. Recorded as evidence in EVIDENCE.md §6.
+   Full working: [`../../audits/2026-08-07-l1-retrofit/FINDINGS.md`](../../audits/2026-08-07-l1-retrofit/FINDINGS.md).
+4. ⏭️ **NEXT** — the remaining 3: **L3**, then **E1/E2** — the last open ADR-010 §D4 merge
    question, measurable as soon as either is declared.
    ⚠️ **Method, learned on D12 and re-confirmed on D11:** `grep` for a theorem name in a draft
    returns 0 — drafts escape underscores inside `\thm{}`. Resolve references with the

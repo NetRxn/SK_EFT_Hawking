@@ -1076,7 +1076,12 @@ def check_bundle_registry_consistency() -> CheckResult:
 #:           FINDINGS.md). SMALLEST closure in the portfolio (32 decls / 9 modules) and
 #:           the only one intersecting NOTHING -- corroborating the draft's own published
 #:           grep that its D3/D5/E1 cross-bridges are designed but not yet consumed.
-UNDECLARED_APEX_CEILING = 4
+#: 4 -> 3:   L1 retrofitted 2026-08-07 (11 apexes; docs/audits/2026-08-07-l1-retrofit/
+#:           FINDINGS.md). Narrowest closure structurally (1 module, depth 1) -- right shape
+#:           for a falsification Letter. THIRD declaration conflict (D3 and F both declare
+#:           L1's theorems) but NOTHING was reassigned: this one is the reserved
+#:           `L1 disposition` STOP-AND-ASK, recorded as evidence, not resolved.
+UNDECLARED_APEX_CEILING = 3
 
 
 @register_check(

@@ -1451,3 +1451,37 @@ by meaning; this is the first case where the kind check could not.
 disclosure"* names which field is inherited from Phase 6n and which four I3 authored, so
 `linearResponseRateFunctionCentered_zero` is excluded and `…_continuous` declared on the draft's own
 instruction. First pre-empted ownership call in the retrofit.
+
+---
+
+## V36 — the L1 apex retrofit — 8 atoms, 0 corrected
+
+**P** = perishable, **D** = durable.
+
+| # | atom | decider | result |
+|---|---|---|---|
+| N1 | L1's draft is 391 lines and was read in full | the file | ✓ |
+| N2 | *"`GravitationalWaves.lean`, 21 theorems"* | the module's declaration list | ✓ **21** = 23 `theorem`-kind minus the 2 compiler-generated `eq_1`. The autogen marking is what makes it land exactly (D) |
+| N3 | *"zero `sorry`, zero new axioms"* | closure `axiom_deps_core` + `axiom_deps_project` | ✓ exactly `{propext, Classical.choice, Quot.sound}`; 0 `native_decide` (D) |
+| N4 | *"zero `maxHeartbeats` overrides"* | the file | ✓ 0 (D) |
+| N5 | *"49 `pytest` cases"* | `pytest --collect-only` | ✓ **49** (D) |
+| N6 | *"the compatible window has measure 4τ ≈ 1.2×10⁻¹⁴"* | arithmetic on the quoted τ | ✓ (D) |
+| N7 | **SET: bundles declaring `GravitationalWaves` theorems** | every bundle's apex list, both directions | ⚠️ **three** — L1 11, D3 8, F 3. D3 shares **5** with L1; F shares **3** (all of F's). L1's unique-at-declaration content is the biconditional + the five `H_VestigialModeIsGraviton_*` (D) |
+| N8 | **SET: L1 theorems named nowhere in the draft** | 21 module theorems vs every `\texttt{}`/`\verb` token | ⚠️ **7**, of which five formalize the §Discussion claim the prose attributes to a *different* module (D) |
+
+⚠️ **N7 is a conflict I deliberately did NOT resolve, and the reason is the durable part.** D4→D8
+and D1→D7 moved apexes between containers whose *existence* was settled; each was decided by a
+draft's own words or document position, with the closure corroborating. **N7 asks whether L1 exists
+as a container** — the reserved `L1 disposition` item. Under ADR-010 C5, reassigning would
+pre-decide a charter by moving declarations. The duplicates stand as evidence.
+**The ownership rule decides who owns content; it does not decide who exists.**
+
+⚠️ **N8 makes TODO-D19 a portfolio pattern, not a bundle defect** — third instance after D11 and I3.
+L1's is the sharpest: `vestigial_dispersion_below_ligo_at_inspiral_peak` proves, with the hypothesis
+`|γ| ≤ 1e-30` the prose quotes, exactly what §Discussion path 3 asserts — while that sentence cites
+`SecondOrderSK.lean`. The attribution is not false (`SecondOrderSK` carries `GammaH`); the theorem
+that discharges the sentence is simply unnamed.
+
+✅ **NOT-AN-ASSERTION, recorded as a genre observation:** L1's depth-1 single-module closure is
+*correct*, not thin. A one-equation refutation against a published bound has nothing to stack.
+Per V30's rule, ratios compare only within genre — and L1 is the first instance of its genre.
