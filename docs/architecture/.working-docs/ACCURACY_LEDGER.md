@@ -1733,3 +1733,51 @@ at 13 — and `bundle_metadata_matches_graph`'s *"Re-run Stage 13"* remedy line 
 its own field, not the gate order. Whether the intended prose reviewer is the installed
 `skeft-qa:claims-reviewer` is the operator's to confirm. **The apex retrofit changed no paper
 prose**, so it owes none of this.
+
+---
+
+## V43 — D12's §D2 purpose statement (closes DONE item 3) — 7 atoms, 0 corrected, 1 scope correction
+
+**P** = perishable, **D** = durable.
+
+| # | atom | decider | result |
+|---|---|---|---|
+| U1 | D12's draft is 829 lines and was read in full | the file | ✓ |
+| U2 | **D12's stated pins are current** | `lean-toolchain` + `lakefile.toml` | ✓ **all three** — toolchain `v4.32.0`, Mathlib `81a5d257`, PhysLib `c4843367`. **The only pin-current bundle in the portfolio** (D) |
+| **U3** | ⚠️ `paper_toolchain_pin_drift` nonetheless reports D12:129 as drift | **the check's source**, `_tp_scan_lines` in `scripts/validation/checks/papers_prose.py`, read before concluding | ❌ **false positive.** The scanner tests every hex on a Mathlib-mentioning line against the single `live_rev`, which `_tp_live_pins()` reads from **Mathlib's** `rev` only. D12's sentence names both libraries, so PhysLib's hash is compared against Mathlib's → **TODO-D22** (D) |
+| U4 | the same false positive elsewhere | the check's own output | `papers/D11/paper_draft.tex:546` (D) |
+| U5 | D12's kernel-purity claim | the draft's own statement of method | *"verified from the project's extracted axiom closures for **every** declaration in all thirteen modules — not from spot checks"* — the population-enumeration discipline, self-applied (D) |
+| U6 | D12's overlaps | the declared closures | `D12 ∩ D9 = 3`, `D12 ∩ D4 = 3`, all `PauliMatrices`. The one substantive dependency (POVM/Helstrom) is disclosed and correctly attributed to the project's own substrate (D) |
+| U7 | **SET: D12's self-corrections** | the draft, read in full | **four**, each naming what it previously got wrong — the class-option note, the provenance line, the γ paragraph (*"both of this paragraph's predecessors were wrong"*), and the hypothesis list (*"asserted completeness at 'four' and then at 'six'; both were wrong"*), which then **refuses to claim completeness** (D) |
+
+⚠️ **SCOPE CORRECTION to my own reporting, U3's consequence.** At E1's and E2's retrofits I quoted
+the check's *"29 pin-drift sites across 65 drafts"* as a clean corpus figure. **At least two of the
+29 are false positives.** Correct form until TODO-D22 lands: *"29 reported, ≥2 false positive."* The
+individually-confirmed stale sites (E1 ×3, E2 ×4, I1 ×2, I3 ×1, L2 ×3, D9 ×1) are unaffected —
+each was checked against the live pin one at a time, not inherited from the summary line.
+
+*This is the fourth time in the retrofit that a number was safe only once its scope was stated.
+The pattern is now general enough to name: **a check's summary count is a claim like any other, and
+inherits the check's blind spots.** "Existing coverage measures it" licenses not re-implementing the
+measurement — it does not license quoting the total without knowing what the instrument can see.*
+
+✅ **U7 records the corpus's high-water mark.** D12 corrects itself in public four times, names the
+wrong version each time, ships `\thm{}`/`\mthm{}` so its provenance claim is *checkable rather than
+asserted* (independently solving TODO-D18's problem), scopes absence to evidence rather than
+asserting it, flags two prior-art checks as **blocking**, discloses that a citation could not be
+inspected **because the repository lies outside this work's network egress policy**, and marks two
+sources read-in-abstract-only with the attribution *"provisional"*. **TODO-D12 and TODO-D19 are both
+defects D12 does not have.**
+
+---
+
+## DONE-item status after V43
+
+| item | state |
+|---|---|
+| 1 — ceiling 0, all 21 declare, gate green | ✅ 617 apexes / 21 bundles / 0 undeclared |
+| 2 — FINDINGS doc per bundle | ✅ **21 / 21** |
+| 3 — ADR-010 §D2 purpose statement per bundle | ✅ **21 / 21** — D6 and D12 backfilled 2026-08-07 |
+| 4 — §D4 evidence assembled, recommendation NOT made | ✅ all four rows measured; EVIDENCE §8 summary; **no recommendation made** |
+| 5 — ledger at assertion granularity | ✅ V21–V43 |
+| 6 — `pytest` green / `validate.py` green / one bundle per commit | ⚠️ **pytest green** (5,676 passed / 5 skipped); **`validate.py` 64/66** — `bundle_metadata_matches_graph` and `readiness_submission_gate`, both red since 2026-08-01, both about `stage13_status` vs open blockers and P1 gates, **neither caused by nor closable by this work**. Per the operator's 2026-08-07 ruling their remedy runs Stage 9/10 → 13, not Stage 13 alone. One bundle per commit: ✅ |

@@ -950,3 +950,25 @@ remediation batch.**
 `apex_theorems` keys and `docs/audits/**` — so it invalidates no bundle's review state. That was
 deliberate, and it is why the retrofit did not need to re-enter the reviewer stages at all.
 
+### D22. `paper_toolchain_pin_drift` reports a CURRENT PhysLib pin as drift — OPEN (false positive)
+
+**Found:** 2026-08-07, D12 §D2 pass (`docs/audits/2026-08-06-d12-retrofit/FINDINGS.md`).
+
+**Defect.** D12 §1 states *"Lean toolchain `v4.32.0`, Mathlib revision `81a5d257` and PhysLib
+revision `c4843367`"* — all three **current**. The check reports `papers/D12/paper_draft.tex:129 —
+c4843367` as pin drift. `papers/D11/paper_draft.tex:546` is the same case.
+
+**Cause, read in the code (`scripts/validation/checks/papers_prose.py`, `_tp_scan_lines`).** The
+scanner collects every hex literal on a line whose *context window* matches `_TP_MATHLIB_CTX_RE`,
+then tests each against the single `live_rev` returned by `_tp_live_pins()` — which reads **Mathlib's**
+`rev` from `lakefile.toml` and nothing else. A sentence naming Mathlib and PhysLib together therefore
+has the PhysLib hash compared against Mathlib's, and a correct pin is reported stale.
+
+**Residue / fix shape (NOT built — §6a).** Read PhysLib's `rev` alongside Mathlib's and accept a hex
+matching *either*; the lakefile already carries it under `name = "Physlib"`. Needs approval.
+
+⚠️ **Reporting consequence, applies now:** the check's corpus figure — *"29 pin-drift sites across
+65 drafts"* — contains at least these two false positives. Quote it as *"29 reported, ≥2 false
+positive"* until this lands. The genuinely stale sites found in this retrofit (E1 ×3, E2 ×4, I1 ×2,
+I3 ×1, L2 ×3, D9 ×1) were each confirmed against the live pin individually and are unaffected.
+
