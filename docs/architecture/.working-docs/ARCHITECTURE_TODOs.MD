@@ -703,6 +703,12 @@ violated for the fifth time in this workstream.
   **bundle-scoped**, and is exact against the source (20 = 20). **A bundle-scoped derived macro is
   the answer to both this item and TODO-D10** — D1/D5 abuse the *project*-scoped `\totaltheorems`
   for a bundle figure; F/I1/I3 hand-type roster numbers. L3 shows the working shape.
+- **FOURTH stale roster number: D6 §1.3 says *"the project's 15-bundle publication architecture"*
+  (2026-08-07, D6 §D2 pass).** With F=17, I1=17, I3=14 and D6=15, **four bundles cite four different
+  wrong numbers from the same strategy document.** Live roster: **21**.
+- **D6 §5.4 says the network substrate is *"17 kernel-only modules"*; the `QuantumNetwork` family
+  now holds 104.** True at Phase 6AA, never revised as the family grew under it. Same
+  hand-maintained-count class, same fix.
 - **D9's module count is off by one (2026-08-07, D9 retrofit).** The abstract and appendix say
   *"103 Lean modules"* in the `QuantumNetwork` family; measured **104**. Hand-maintained, same class
   as the roster numbers below, same fix (L3's bundle-scoped derived macro).
@@ -915,4 +921,32 @@ sibling-bundle claim. Restate as an identification, or build the dependency.
 dependency graph. Per §6a nothing was built; the residue would be new infrastructure needing
 approval — and it is close in kind to TODO-D19's proved-but-unnamed measure, so the two should be
 scoped together if either is approved.
+
+---
+
+## ⚠️ Remediation sequencing for the prose-fix TODOs (operator ruling, 2026-08-07)
+
+**Every TODO in the D-series that fixes paper prose — D12, D15, D17, D19, D20, D21, and the
+roster/count items — is a Stage-9/10 event before it is a Stage-13 event.**
+
+`docs/BUNDLE_LIFT_PROCEDURE.md:9` states the gate: *"Stage 13 (adversarial review) may not be
+invoked until **both** Stage 9 (figure review) AND Stage 10 (claims review) are GREEN, with all
+fixes from those stages applied."* Stage 10 is the **paper claims review** (`skeft-qa:claims-reviewer`,
+`docs/WAVE_EXECUTION_PIPELINE.md:387` / lift procedure §9) — the sentence-level prose audit. Running
+Stage 13 first is a procedure violation, not a shortcut.
+
+**So a bundle whose prose is edited to close one of these TODOs re-enters at Stage 9/10, not at 13.**
+Do not read `bundle_metadata_matches_graph`'s remedy line (*"Re-run Stage 13 for this bundle"*) as
+permission to skip ahead: that check is describing what clears its own `stage13_status` field, not
+the order of the gates.
+
+⚠️ **Whether the prose-review agent the operator intends is the currently-installed
+`claims-reviewer` is the operator's call, not an assumption to make here.** The plugin ships
+`.claude/plugins/skeft-qa/agents/claims-reviewer.md`; the operator has flagged that the prose
+reviewer under discussion may not be ready or installed. **Confirm before invoking Stage 10 on a
+remediation batch.**
+
+**The ADR-010 apex retrofit itself changed no paper prose** — only `bundle_metadata.json`
+`apex_theorems` keys and `docs/audits/**` — so it invalidates no bundle's review state. That was
+deliberate, and it is why the retrofit did not need to re-enter the reviewer stages at all.
 

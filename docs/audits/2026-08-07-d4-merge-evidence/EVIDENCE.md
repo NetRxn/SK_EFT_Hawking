@@ -302,9 +302,24 @@ included here are **the interface between the two**."*
 **D6 shares no declaration with D4, D8, or D9** — the three bundles whose content it is variously
 said to absorb or adjoin.
 
-⚠️ **A zero intersection is not by itself an argument against merging.** Two containers can be
-adjacent in subject and disjoint in substrate, which is exactly what a physical-layer /
-logical-layer split *should* look like. What it does establish: **a D6+D9 merge would be motivated
-by narrative adjacency alone — there is no substrate overlap to consolidate.** That is the
-measurement; the disposition is the operator's.
+⚠️ **CORRECTED later on 2026-08-07, after re-reading D6's own FINDINGS doc.** The line first
+written here — *"a D6+D9 merge would be motivated by narrative adjacency alone; there is no
+substrate overlap to consolidate"* — is true of the **declarations** and misleading as stated. It
+invites the reading that the two bundles are disjoint in subject. **They are not.**
+
+`docs/audits/2026-08-06-d6-retrofit/FINDINGS.md` §2, measured a day earlier, has the explanation:
+**D6 §5.4 is 44% of D6's draft and it is D9's chartered content** (Phases 6AA–6AL, absorbed into D6
+nine days before D9 existed as a home for it, and never removed). Measured at declaration level on
+2026-08-07: D6 names **133** `QuantumNetwork` theorems, **17 of them D9's own declared apexes**, and
+declares **none** of them — its 11 apexes are all in the four FT headline modules, which overlap D9
+in nothing.
+
+**The corrected statement: D6 and D9 share no declaration because D6 declares none of the shared
+content, not because the content is not shared.** D6's §2 puts it best — *"D6 and D9 do not overlap.
+§5.4 and D9 overlap, because §5.4 is D9's content."*
+
+**Status: still NOT DECIDED, and the evidence now points somewhere more specific than "merge or
+don't."** The D6 findings' §4 recommends §5.4 become a cross-reference to D9 (the idiom D6's own §2
+already uses for D8) and the un-homed AGP threshold chain be lifted into D6 instead. If that repair
+lands, the merge question dissolves rather than resolves. **No recommendation is made here.**
 

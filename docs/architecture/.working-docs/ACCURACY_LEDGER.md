@@ -1692,3 +1692,44 @@ infrastructure under §6a.
 | 4 — §D4 evidence assembled, no recommendation | ✅ **met** — all four rows measured; EVIDENCE §8 summary; no recommendation made |
 | 5 — ledger at assertion granularity | ✅ V21–V41 |
 | 6 — `validate.py` green / `pytest` green / one bundle per commit | ⚠️ **pytest green (5,676 passed / 5 skipped); `validate.py` at 64/66** — the two paper-corpus failures pre-date this work (archived reports show `bundle_metadata_matches_graph` red since 2026-08-01) and concern `stage13_status` vs open blockers, not apexes. **Not closable by this work**: the check's own remedy is re-running Stage 13 on 14 bundles. |
+
+---
+
+## V42 — D6's §D2 purpose statement + a correction to my own EVIDENCE line — 6 atoms, **1 CORRECTED**
+
+D6 had a FINDINGS doc but no ADR-010 §D2 purpose statement (DONE item 3). Written after re-reading
+`papers/D6/paper_draft.tex` (1,102 lines) in full.
+
+**P** = perishable, **D** = durable.
+
+| # | atom | decider | result |
+|---|---|---|---|
+| T1 | D6's draft is 1,102 lines and was re-read in full | the file | ✓ |
+| T2 | D6 names `QuantumNetwork` theorems it declares nothing from | resolvable `\verb`/`\texttt` tokens vs D6's apex list | ⚠️ **133 named, 0 declared.** D6's 11 apexes are all in `GaugingQEC` / `APMLdpcHashingBound` / `ShorTGateCount` / `WStateQFT` (D) |
+| T3 | of those, how many are **D9's declared apexes** | D9's apex list | ⚠️ **17** (D) |
+| T4 | `QuantumNetwork` theorems D6 names that **no** bundle declares | all 21 apex lists | **116** (D) |
+| **T5** | ⚠️ **CORRECTS my own EVIDENCE §9 line of earlier today** — *"a D6+D9 merge would be motivated by narrative adjacency alone; there is no substrate overlap to consolidate"* | `docs/audits/2026-08-06-d6-retrofit/FINDINGS.md` §2 | ❌ **misleading as stated.** True of the declarations; invites the false reading that the bundles are disjoint in *subject*. D6 §5.4 is **44% of D6's draft and is D9's chartered content**, absorbed nine days before D9 existed. **Corrected statement: D6 and D9 share no declaration because D6 declares none of the shared content, not because the content is not shared** (D) |
+| T6 | D6's two count claims | the live roster; the `QuantumNetwork` module index | ⚠️ *"15-bundle publication architecture"* — live is **21**, the **fourth** wrong roster number across four bundles; *"17 kernel-only modules"* — the family now holds **104** (D) |
+
+⚠️ **T5 is the retrofit's third correction, and the first where the right answer was already
+written down.** V26 was a wrong instrument; V37/O7 was an unrun probe; **T5 was an unread document.**
+The measurement I ran was correct and the *inference* was under-informed, because D6's own FINDINGS
+§2 — written a day earlier — had already measured the prose overlap and explained the
+declaration-level zero.
+
+**The rule this adds, narrower than the earlier two: *before quoting a fresh measurement against a
+bundle, read that bundle's own FINDINGS doc first.*** The retrofit produces the context its own
+later measurements need.
+
+⚠️ **NOT-AN-ASSERTION, recorded as scope discipline:** the 2026-08-06 figure (**78** shared) and
+today's (**17** shared) are *different probes*, not a drift — prose-vs-prose against
+prose-vs-declared-apexes. Both stand at their stated scope. Per V27, the scope is in the sentence
+that reports each.
+
+✅ **Operator ruling recorded (2026-08-07), and it governs every prose-fix TODO:** per
+`BUNDLE_LIFT_PROCEDURE.md:9`, **Stage 13 may not be invoked until Stage 9 and Stage 10 (claims
+review) are GREEN with their fixes applied.** A bundle whose prose is edited re-enters at 9/10, not
+at 13 — and `bundle_metadata_matches_graph`'s *"Re-run Stage 13"* remedy line describes what clears
+its own field, not the gate order. Whether the intended prose reviewer is the installed
+`skeft-qa:claims-reviewer` is the operator's to confirm. **The apex retrofit changed no paper
+prose**, so it owes none of this.

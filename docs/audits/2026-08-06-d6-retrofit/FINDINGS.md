@@ -32,6 +32,23 @@ D8's primitive. The closure agrees, returning 0 for that section.
 
 ---
 
+## 1b. ADR-010 §D2 purpose statement — re-derived from the draft and the Lean
+
+*Added 2026-08-07 to close DONE item 3, after re-reading `papers/D6/paper_draft.tex` (1,102 lines)
+in full. Deliberately written against the bundle **as drafted today**, not against the repaired D6
+that §4 recommends — a purpose statement for a manuscript that does not exist would be worthless.*
+
+| field | statement |
+|---|---|
+| **Audience** | Fault-tolerance architects and the formal-methods-for-QC community. The draft positions itself precisely against VOQC/SQIR and Qbricks: *"These efforts certify that a given circuit or program computes what it should. None of them targets the fault-tolerance substrate itself."* |
+| **Venue** | PRD or JHEP, per the metadata. ⚠️ **Questionable for the content.** The four headline sections are QEC resource counting, code rates, T-gate budgets and a cyclotomic measurement basis — PRX Quantum / Quantum territory, which is where its siblings D8 and D9 sit. PRD/JHEP fits nothing in the draft. |
+| **The claim only this container can make** | **An end-to-end kernel-verified chain across the FT stack — code → measurement → compiler → universal logic — rather than any one link.** The draft is explicit that the links are individually cited to their authors (Williamson–Yoder, Babbush *et al.*, Komoto–Kasai, Kyoto–Hiroshima) and that the contribution is the *composition*, machine-checked. D8 owns compilation, D9 owns network/device certification; only D6 claims the vertical chain. |
+| **Substrate** | ⚠️ **Two answers, and the gap is the bundle's central problem.** *As declared:* 4 modules, 51 declarations, depth 3 — `GaugingQEC`, `APMLdpcHashingBound`, `ShorTGateCount`, `WStateQFT`. *As described:* §5.4 additionally walks ~500 lines of `SKEFTHawking.QuantumNetwork.*`, a family D6 declares **nothing** from. |
+| **Honest size vs charter** | 1,102 lines against a Tier-1 ~40pp charter — nominally on target, but §2 shows **44% of the draft is another bundle's content**, so the honest figure for D6's own material is ~620 lines. Under charter, not over. |
+| **Boundary failure?** | ⚠️ **Yes, outbound and unresolved** — the only one of its kind in the portfolio. Every other bundle's overlap is either shared infrastructure or a *declared* companion relationship. D6 holds content D9 was later chartered for (§2), and the holding is undisclosed in D6's prose: §2's Solovay–Kitaev section models the correct idiom (a pointer saying D8 owns it), and §5.4 does not use it. |
+
+---
+
 ## 2. ⚠️ The finding: §5.4 is D9's paper, sitting inside D6
 
 D6 §5.4 (`sec:wstate:envelope`, lines 504–991 — **44 % of the draft**) presents Phases 6AA–6AK: the
@@ -136,3 +153,57 @@ not holding its own.**
 separately; the apexes above describe what D6 claims *today*, which is the honest starting point.
 
 `UNDECLARED_APEX_CEILING` 21 → 20 in the same commit.
+
+---
+
+## 5. Re-measured 2026-08-07 at the close of the retrofit — and one of my own lines corrected
+
+All 21 bundles now declare apexes, so the D6/D9 relationship is measurable at **declaration**
+level for the first time. Re-derived rather than inherited, per the goal's trap about drifted
+evidence lines.
+
+| probe (scope stated) | 2026-08-06 | 2026-08-07 |
+|---|---|---|
+| D6-named theorems ∩ **D9-named** theorems (prose vs prose) | **78**, all in §5.4 | — |
+| D6-named theorems in `QuantumNetwork.*` | 119 in §5.4 | **133** draft-wide |
+| D6-named theorems ∩ **D9's declared apexes** | not measurable (D9 undeclared) | **17** |
+| `QuantumNetwork` theorems D6 names that **no** bundle declares | — | **116** |
+| **D6's closure ∩ D9's closure** | — | **0** |
+
+⚠️ **Correction to a line I wrote in `EVIDENCE.md` §9 earlier on 2026-08-07.** On measuring
+`D9 ∩ D6 = 0` I recorded that *"a D6+D9 merge would consolidate no substrate."* That is true of the
+**declarations** and misleading as stated, because it invites the reading that the two bundles are
+simply disjoint in subject. **They are not.** This document's §2 already had the explanation:
+*"D6 and D9 do not overlap. §5.4 and D9 overlap, because §5.4 is D9's content."* The declaration-level
+zero is an **artifact of D6 declaring only its four headline sections** — the sections that overlap
+D9 in nothing — while declaring nothing from the 133 `QuantumNetwork` theorems its §5.4 describes.
+
+**The corrected statement:** *D6 and D9 share no declaration because D6 declares none of the shared
+content, not because the content is not shared.* Corrected in `EVIDENCE.md` §9.
+
+*This is the third correction in the retrofit and the first where the fix was already written down.
+The lesson is narrower than the earlier two and worth having: **before quoting a fresh measurement
+against a bundle, read that bundle's own FINDINGS doc first.** §2 was measured a day earlier and
+answered the question better.*
+
+### Two count claims, checked
+
+- **§1.3: *"D6 sits in the project's 15-bundle publication architecture."*** The live roster is
+  **21**. **Fourth bundle with a stale roster number** — F says 17, I1 says 17, I3 says 14, D6 says
+  15. Four bundles, four different wrong numbers, all citing the same strategy document → TODO-D15.
+- **§5.4: the network substrate is *"17 kernel-only modules."*** The `QuantumNetwork` family now
+  holds **104** (D9 says 103 — itself off by one). D6's 17 was true at Phase 6AA and the family grew
+  under it; the number was never revised. Recorded under TODO-D15 with the roster numbers, same
+  hand-maintained-count class, same fix (L3's bundle-scoped derived macro).
+
+### Remediation sequencing — operator ruling, 2026-08-07
+
+§4's items 1–3 all edit prose. Per `BUNDLE_LIFT_PROCEDURE.md:9`, **Stage 13 may not be invoked
+until Stage 9 (figures) and Stage 10 (claims review) are GREEN with their fixes applied** — so a
+D6 repair re-enters the pipeline at 9/10, never at 13. Whether the intended prose reviewer is the
+installed `skeft-qa:claims-reviewer` is the operator's call to confirm before a remediation batch
+runs. Recorded in `ARCHITECTURE_TODOs.MD` for the whole prose-fix TODO series.
+
+**Nothing in the apex retrofit changed D6's prose**, so none of this is owed on account of the
+retrofit itself.
+
