@@ -475,6 +475,111 @@ def check_bundle_prose_em_dash_free() -> CheckResult:
     return CheckResult(passed=total == 0, details=details)
 
 
+#: Module basenames too generic to find by substring. A hit on `Basic` proves nothing.
+_AMBIGUOUS_MODULE_BASENAMES = frozenset({
+    "Basic", "Trace", "Module", "Sum", "Spectrum", "Chain", "Concrete", "Positive",
+    "Log", "Core", "Defs", "Util", "Utils", "Main", "Types", "Lemmas",
+})
+
+#: Registered-but-absent modules, corpus-wide. **A RATCHET: may only shrink.**
+#:
+#: MEASURED 2026-08-08: **238 of 444 declared modules (54%)** are registered in a
+#: bundle's `append_log.json` as contributing and are never named in its draft. D10 and
+#: E1 declare modules and cite NONE of them; D9 is 64 absent of 77.
+#:
+#: ⚠️ **Absent is not automatically a defect, and the ratchet is why this is honest.**
+#: A module can legitimately support a cited result without being named, so a 54%
+#: absence rate more likely reflects generous registration (every module a wave touched)
+#: than incomplete drafts. What the number *does* say is that the link between declared
+#: substrate and published claim is weak, and it can only be strengthened. Lower it by
+#: citing the module or by not registering it, never by widening the ambiguous list.
+LEAN_MODULE_ABSENT_CEILING = 238
+
+
+@register_check("bundle_lean_module_coverage",
+                "Lean modules a bundle registers as contributing are named in its draft (ratcheted)")
+def check_bundle_lean_module_coverage() -> CheckResult:
+    """CHECK (ADR-011 Phase 6, F-10): declared substrate reaches the published claim.
+
+    `bundle_append.py --lean-modules` records, per append event, which Lean modules a
+    source contributed. Nothing ever compared that list to the manuscript, so a bundle
+    could register a module family and never mention it: **D10 and E1 each declare
+    modules and cite none of them.**
+
+    ⚠️ **The field is `lean_modules_referenced`, not `lean_modules`.** Probing the latter
+    reports 0 of 21 bundles declaring anything, which reads as "the data does not exist"
+    and would have retired this check as unbuildable. It is
+    `reference-measurement-traps-false-absence` exactly: a narrow key makes a live
+    population scan empty.
+
+    **Matching is underscore-aware and basename-tolerant.** Drafts escape underscores
+    inside `\\thm{}`/`\\texttt{}`, so `Foo_Bar` appears as `Foo\\_Bar` and a bare
+    substring test misses it; and a dotted module is often cited by its leaf
+    (`APSEta.He3A` as `He3A`). Both forms count.
+    """
+    details: List[Detail] = []
+    try:
+        import bundle_registry as registry
+        codes = list(registry.BUNDLE_CODES)
+    except Exception as exc:  # noqa: BLE001
+        return CheckResult(passed=False, measured=False, details=[Detail(
+            "roster", False,
+            f"could not read the bundle roster ({exc}) — UNVERIFIED, not passing")])
+
+    checked = declared = absent_total = 0
+    worst: list[tuple[int, str, list[str]]] = []
+    for code in codes:
+        log = _H.PAPERS_DIR / code / "append_log.json"
+        tex = _H.PAPERS_DIR / code / "paper_draft.tex"
+        if not log.is_file() or not tex.is_file():
+            continue
+        try:
+            events = json.loads(log.read_text()).get("events", [])
+        except (OSError, json.JSONDecodeError):
+            continue
+        mods: set[str] = set()
+        for e in events:
+            v = e.get("lean_modules_referenced") or []
+            if isinstance(v, str):
+                v = v.split(",")
+            mods |= {str(x).strip() for x in v if str(x).strip()}
+        if not mods:
+            continue
+        checked += 1
+        declared += len(mods)
+        # `\_` -> `_` so an escaped identifier matches its declared form.
+        body = tex.read_text(errors="replace").replace("\\_", "_")
+        missing = [m for m in sorted(mods)
+                   if m.split(".")[-1] not in _AMBIGUOUS_MODULE_BASENAMES
+                   and m.split(".")[-1] not in body and m not in body]
+        absent_total += len(missing)
+        if missing:
+            worst.append((len(missing), code, missing))
+
+    if checked == 0:
+        details.insert(0, Detail(
+            "population", False,
+            "no bundle declares a contributing Lean module — this check is UNVERIFIED, "
+            "not passing. The field is `lean_modules_referenced` in append_log.json"))
+        return CheckResult(passed=False, measured=False, details=details)
+
+    for n, code, missing in sorted(worst, reverse=True):
+        details.append(Detail(
+            code, True,
+            f"{n} of the modules it registers are never named in its draft "
+            f"(e.g. {', '.join(missing[:3])})", warning=True))
+
+    ok = absent_total <= LEAN_MODULE_ABSENT_CEILING
+    details.insert(0, Detail(
+        "ratchet", ok,
+        f"{absent_total} registered-but-absent module(s) across {checked} bundle(s) "
+        f"({declared} declared); ceiling {LEAN_MODULE_ABSENT_CEILING}"
+        + ("" if ok else
+           " — REGISTERED SUBSTRATE DRIFTED FURTHER FROM THE PUBLISHED CLAIM. Cite the "
+           "module or stop registering it; do not widen the ambiguous-basename list")))
+    return CheckResult(passed=ok, details=details)
+
+
 #: Section-count ceiling by tier. A 30–50 pp article with more than twenty top-level
 #: sections is a table of contents, not an argument. Tier 0 (a review) is exempt.
 _SECTION_CEILING_BY_TIER = {1: 20, 2: 20, 3: 20, 4: 20}

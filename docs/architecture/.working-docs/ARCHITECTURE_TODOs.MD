@@ -1104,3 +1104,24 @@ elsewhere. Needs approval.
   no structural anchor at all, and `append_log.json`'s `bundle_section_inserted` — which the
   absorption protocol reads — becomes meaningless.
 - **Unblocked by:** the roster decision (ADR-010 §Open item 1).
+
+### D27. F-07 (Lean-mtime freshness trigger) and F-09 (per-phase mapping rows) — OPEN
+
+ADR-011 Phase 6 shipped F-08 (branch D.0) and F-10 (`bundle_lean_module_coverage`). Two
+absorption items remain, both measured and both buildable:
+
+- **F-07 part 2 — track Lean-module mtimes.** The Stage-C freshness trigger compares
+  *source-paper* mtimes, and D6–D12/I2/I3 have synthetic source tokens naming no directory,
+  so **nine bundles have no working trigger** (they report `UNMEASURABLE`, which is honest
+  but not closed). The data to fix it exists: **18 of 21 bundles declare 444 distinct
+  modules** in `append_log.json`'s `lean_modules_referenced`. ⚠️ That field name is the trap
+  — probing `lean_modules` returns 0 of 21 and reads as "no data exists".
+- **F-07 part 3 —** promote `bundle_source_freshness` to FAIL under `--strict` at the
+  submission gate. Its docstring already anticipates this.
+- **F-09 — per-phase mapping rows.** Stage B's sourceless variant writes one row per
+  *bundle* (`_phase6EA_lean_only`), so there is no unit of absorption smaller than the whole
+  bundle. Retrofit rows for 6EA/6EB/6EC/6ED/6EE and 6CA/6CB/6CD/6CE.
+
+**Why not now:** F-07 changes what `check_bundle_source_freshness` measures for nine
+bundles at once, and this is ADR-010 §D6, which carries its own operator approval. Needs
+that sign-off, not ADR-011's.

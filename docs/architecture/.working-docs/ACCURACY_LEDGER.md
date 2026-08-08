@@ -2100,3 +2100,25 @@ test that explains why it was dropped: `test_EITHER_bibliography_mechanism_is_ac
 **NOT-AN-ASSERTION.** The tier section ceiling of 20 is a judgment about readability, not a
 measured threshold. Tier 0 is exempt because a review's shape is legitimately a long section
 list.
+
+## V56 — ADR-011 Phase 6: absorption repair — 6 atoms, 1 AUDIT CLAIM REFUTED, 1 near-miss
+
+| # | Proposition | Decider | Verbatim result |
+|---|---|---|---|
+| 1 | The audit's *"the data already exists — `bundle_append.py` takes `--lean-modules`"* | probe of `append_log.json` for `lean_modules` | **0 of 21 bundles, across 129 events.** Read alone, that retires F-07 and F-10 as unbuildable |
+| 2 | …but the probe was wrong | read of `bundle_append.py:299` | **The field is `lean_modules_referenced`.** Re-probed: **18 of 21 bundles, 444 distinct modules.** The audit's claim is true; my first measurement was the false absence |
+| 3 | Declared modules reach the draft | underscore-aware, basename-tolerant scan | **238 of 444 (54%) are registered and never named.** D10 declares 11 and cites 0; E1 declares 7 and cites 0; D9 is 64 absent of 77 |
+| 4 | 238 absences are 238 defects | judgment on the mechanism | **NO, and the check says so.** A module can support a cited result without being named, so the rate more likely reflects generous registration than incomplete drafts. Shipped as a shrink-only ratchet, not a hard fail |
+| 5 | The ratchet has zero headroom | seeded into real `papers/I3/append_log.json` | one uncited module registered ⇒ **238 → 239, rc=1** with the remediation named. Restored byte-identical |
+| 6 | D.0 is the exceptional branch | live blocker counts | **It is the normal case.** D1 carries 37 open blockers, D12 carries 46; absorbing into either makes the review loop non-convergent. Placed first in the decision table, not as a footnote |
+
+**⚠️ ATOM 1→2 IS THE NEAR-MISS AND THE LESSON.** I measured `lean_modules`, got zero across the
+whole corpus, and was one step from reporting that the audit was wrong and the phase unbuildable.
+The field is named `lean_modules_referenced`. This is
+`reference-measurement-traps-false-absence` in its purest form: **a narrow key makes a live
+population scan empty, and an empty scan reads as evidence.** The wrong-field case is now a test,
+so the trap is pinned rather than remembered.
+
+**NOT-AN-ASSERTION.** The ambiguous-basename exclusion list (`Basic`, `Trace`, `Module`, …) is a
+judgment about which names a substring test cannot resolve, not a measurement. Widening it would
+lower the ratchet without improving anything, which the check's own message forbids.

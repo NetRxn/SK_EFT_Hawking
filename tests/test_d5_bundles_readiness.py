@@ -26,6 +26,7 @@ MUTATION-VERIFIED 2026-08-04 — 12 mutations, all CAUGHT, clean negative contro
 from __future__ import annotations
 
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -1290,3 +1291,76 @@ class TestBundleStructuralCoherence:
         self._setup(tmp_path, monkeypatch, {})
         r = bru.check_bundle_structural_coherence()
         assert not r.passed and not r.measured
+
+
+class TestBundleLeanModuleCoverage:
+    """Declared substrate reaches the published claim (ADR-011 Phase 6, F-10)."""
+
+    def _setup(self, tmp_path, monkeypatch, bundles):
+        import bundle_registry as registry
+        papers = tmp_path / "papers"
+        for code, (mods, body) in bundles.items():
+            (papers / code).mkdir(parents=True, exist_ok=True)
+            (papers / code / "paper_draft.tex").write_text(body)
+            (papers / code / "append_log.json").write_text(json.dumps(
+                {"bundle_target": code,
+                 "events": [{"lean_modules_referenced": mods}]}))
+        monkeypatch.setattr(_H, "PAPERS_DIR", papers)
+        monkeypatch.setattr(registry, "BUNDLE_CODES", tuple(bundles))
+
+    def test_a_cited_module_is_not_absent(self, tmp_path, monkeypatch):
+        self._setup(tmp_path, monkeypatch, {"D1": (["ADWMechanism"], "see ADWMechanism\n")})
+        monkeypatch.setattr(bru, "LEAN_MODULE_ABSENT_CEILING", 0)
+        assert bru.check_bundle_lean_module_coverage().passed
+
+    def test_an_uncited_module_counts_against_the_ratchet(self, tmp_path, monkeypatch):
+        self._setup(tmp_path, monkeypatch, {"D1": (["ADWMechanism"], "no mention\n")})
+        monkeypatch.setattr(bru, "LEAN_MODULE_ABSENT_CEILING", 0)
+        r = bru.check_bundle_lean_module_coverage()
+        assert not r.passed and "drifted further" in r.details[0].message.lower()
+
+    def test_an_ESCAPED_underscore_still_matches(self, tmp_path, monkeypatch):
+        r"""Drafts write `Foo\_Bar` inside `\thm{}`/`\texttt{}`. A bare substring test
+        misses it and reports a cited module as absent — the trap the goal brief names.
+        """
+        self._setup(tmp_path, monkeypatch,
+                    {"D1": (["Foo_Bar"], r"\texttt{Foo\_Bar} is used" + "\n")})
+        monkeypatch.setattr(bru, "LEAN_MODULE_ABSENT_CEILING", 0)
+        assert bru.check_bundle_lean_module_coverage().passed
+
+    def test_a_DOTTED_module_may_be_cited_by_its_leaf(self, tmp_path, monkeypatch):
+        """`APSEta.He3A` is normally written `He3A` in prose."""
+        self._setup(tmp_path, monkeypatch,
+                    {"D1": (["APSEta.He3A"], "the He3A construction\n")})
+        monkeypatch.setattr(bru, "LEAN_MODULE_ABSENT_CEILING", 0)
+        assert bru.check_bundle_lean_module_coverage().passed
+
+    def test_an_ambiguous_basename_is_skipped(self, tmp_path, monkeypatch):
+        """A substring hit on `Basic` proves nothing, so it is excluded rather than
+        counted as satisfied — and excluded rather than counted as ABSENT."""
+        self._setup(tmp_path, monkeypatch, {"D1": (["Foo.Basic"], "no mention\n")})
+        monkeypatch.setattr(bru, "LEAN_MODULE_ABSENT_CEILING", 0)
+        assert bru.check_bundle_lean_module_coverage().passed
+
+    def test_the_ratchet_has_zero_headroom(self):
+        """The live value IS the ceiling, so any regression fails immediately."""
+        r = bru.check_bundle_lean_module_coverage()
+        n = int(re.search(r"(\d+) registered-but-absent", r.details[0].message).group(1))
+        assert n == bru.LEAN_MODULE_ABSENT_CEILING, (
+            f"ceiling {bru.LEAN_MODULE_ABSENT_CEILING} but live count {n} — "
+            f"a ratchet with headroom silently permits drift")
+
+    def test_the_WRONG_field_name_reports_a_false_absence(self, tmp_path, monkeypatch):
+        """PINS THE TRAP. The field is `lean_modules_referenced`; probing
+        `lean_modules` reports 0 of 21 bundles declaring anything, which reads as
+        'the data does not exist' and would retire this check as unbuildable."""
+        papers = tmp_path / "papers"
+        (papers / "D1").mkdir(parents=True)
+        (papers / "D1" / "paper_draft.tex").write_text("no mention\n")
+        (papers / "D1" / "append_log.json").write_text(json.dumps(
+            {"events": [{"lean_modules": ["ADWMechanism"]}]}))   # wrong key
+        import bundle_registry as registry
+        monkeypatch.setattr(_H, "PAPERS_DIR", papers)
+        monkeypatch.setattr(registry, "BUNDLE_CODES", ("D1",))
+        r = bru.check_bundle_lean_module_coverage()
+        assert not r.passed and not r.measured, "an empty population must be UNVERIFIED"

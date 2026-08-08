@@ -535,6 +535,21 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
         "the green rule that used to live here. Plus the missing-blob and "
         "uncomputable-aggregate fail-closed legs",
     ),
+    "bundle_lean_module_coverage": (
+        "test_d5_bundles_readiness.py",
+        "7 mutations (ADR-011 Phase 6, F-10). 238 of 444 declared modules (54%) are "
+        "registered as contributing and never named in the draft; D10 and E1 declare "
+        "modules and cite NONE. A zero-headroom ratchet rather than a hard fail, because "
+        "absent is not automatically a defect: a module can support a cited result "
+        "without being named, so the number says the declared-substrate-to-claim link is "
+        "weak and may only strengthen. Legs: a cited module is not absent; an uncited one "
+        "counts; an ESCAPED underscore still matches (drafts write `Foo\\_Bar`); a dotted "
+        "module may be cited by its leaf; an ambiguous basename is skipped rather than "
+        "counted either way; the ratchet has zero headroom against the LIVE count; and "
+        "the WRONG FIELD NAME is pinned — probing `lean_modules` instead of "
+        "`lean_modules_referenced` reports an empty population, which must be UNVERIFIED "
+        "rather than a pass",
+    ),
     "bundle_structural_coherence": (
         "test_d5_bundles_readiness.py",
         "9 mutations (ADR-011 Phase 4, Gate 14). Deliberately NARROWER than the audit "
@@ -787,6 +802,10 @@ PRODUCTION_SEEDED: frozenset[str] = frozenset({
     # "Further remarks" in `papers/L3/paper_draft.tex` -> rc=1 naming L3 and printing the
     # three sections it looked at; short count 1 -> 2. Restored byte-identical.
     "bundle_structural_coherence",
+    # 2026-08-08 (ADR-011 Phase 6): registered a module I3 does not cite into the REAL
+    # `papers/I3/append_log.json` -> 238 -> 239 against a ceiling of 238, rc=1 with the
+    # remediation named. Restored byte-identical.
+    "bundle_lean_module_coverage",
 })
 
 #: The ratchet, in the same idiom as `AWAITING_CEILING`: the number of registered
