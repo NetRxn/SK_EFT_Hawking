@@ -1645,3 +1645,50 @@ build-time claim is not a closure question and measuring it was not in scope.
 ✅ **Fourth data point for the restated TODO-D9:** L2 uses project-scoped macros for an explicitly
 *library-state* claim (*"library state: … theorems across … modules, … axioms"*) — **correct
 usage**, like E1's, unlike D1's and D5's.
+
+---
+
+## V41 — the D9 FINDINGS backfill (final bundle of the set) — 8 atoms, 0 corrected
+
+With this, **DONE item 2 holds for all 21 bundles.**
+
+**P** = perishable, **D** = durable.
+
+| # | atom | decider | result |
+|---|---|---|---|
+| S1 | D9's draft is 1,318 lines and was read in full | the file | ✓ |
+| S2 | *"over 900 kernel-checked theorems"* in `QuantumNetwork` | the declaration index, autogen excluded | ✓ **969** — true and conservatively stated (D) |
+| S3 | *"103 Lean modules"* | the same index | ⚠️ **104** — off by one, hand-maintained → TODO-D10/D15 class (D) |
+| S4 | *"no `native_decide` … trust escapes"*, *"no project-local axioms"* | `axiom_deps_project` / `_core`; kind index | ✓ **0** carriers family-wide; core union exactly the three standard axioms; **zero** `axiom`-kind declarations project-wide. Instrument seeded at 19 in D4's closure (D) |
+| **S5** | **D9's claim to consume I3's LDP foundations** (stated twice) | `D9 ∩ I3` closure **and** the two theorems' direct `name_deps_project` | ❌ **0**, and neither `fdt_rare_event_tail` nor `fdt_gallavotti_cohen` reaches any `LDP.*` / `Itô.*` declaration. Probe seeded: same measurement gives 50 for `D9 ∩ D10`, 14 for `D9 ∩ D8` → **TODO-D21** (D) |
+| S6 | **corroboration for S5 from an independent source** | I3's own draft | ✓ I3 says its cross-bridge is *"designed but not yet consumed at release time"*, and I3's closure intersects **nothing** in the portfolio. **The two drafts disagree; the substrate sides with I3** (D) |
+| S7 | `D9 ∩ D6` | both closures | **0** — and `D4 ∩ D6 = D8 ∩ D6 = 0` already. **D6 shares no declaration with any of the three bundles it is said to absorb or adjoin** → EVIDENCE §9 (D) |
+| S8 | D9's pin claims (`v4.29.1`, `5e932f97`) | the existing `paper_toolchain_pin_drift` check | ✓ already reported at **D9:1074**. Existing coverage; nothing filed (D) |
+
+⚠️ **S5 is the retrofit's cleanest cross-bundle finding, and the reason is method, not luck.** It is
+corroborated by *the other bundle's own prose* and by *two independent measurements*, and the probe
+was seeded before the absence was reported. That is the V26/V37 rule applied prospectively rather
+than learned from a correction.
+
+⚠️ **S7 is recorded as a measurement, NOT an argument.** A zero intersection does not oppose a
+merge: two containers can be adjacent in subject and disjoint in substrate, which is what a
+physical-layer / logical-layer split should look like. What it establishes is narrower and worth
+stating exactly: **a D6+D9 merge would consolidate no substrate.**
+
+⚠️ **NOT VERIFIED, stated per C4:** the appendix's claim that D9's PhysLib-touching theorems are
+*"verified by axiom audit not to depend on the one sorried declaration present in that library at
+our pin."* Auditing a dependency's internals was not done and a probe for it would be new
+infrastructure under §6a.
+
+---
+
+## Retrofit status after V41
+
+| DONE item | state |
+|---|---|
+| 1 — `UNDECLARED_APEX_CEILING == 0`, all bundles declare, gate green | ✅ **met** — 617 apexes / 21 bundles / 0 undeclared |
+| 2 — a FINDINGS doc per bundle | ✅ **met for all 21** (L2 and D9 backfilled after enumerating the population) |
+| 3 — an ADR-010 §D2 purpose statement per bundle | ⚠️ **19 of 21** — D6 and D12 have FINDINGS docs without one |
+| 4 — §D4 evidence assembled, no recommendation | ✅ **met** — all four rows measured; EVIDENCE §8 summary; no recommendation made |
+| 5 — ledger at assertion granularity | ✅ V21–V41 |
+| 6 — `validate.py` green / `pytest` green / one bundle per commit | ⚠️ **pytest green (5,676 passed / 5 skipped); `validate.py` at 64/66** — the two paper-corpus failures pre-date this work (archived reports show `bundle_metadata_matches_graph` red since 2026-08-01) and concern `stage13_status` vs open blockers, not apexes. **Not closable by this work**: the check's own remedy is re-running Stage 13 on 14 bundles. |

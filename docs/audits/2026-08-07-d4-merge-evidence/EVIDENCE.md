@@ -272,7 +272,7 @@ between D1's unified treatment and the per-device letters D1 says exist to be pe
 
 | proposed merge | closure evidence | status |
 |---|---|---|
-| **D6 + D9** | supported, but the content F attributes to D6 is D8's, and `D4 ∩ D6 = D8 ∩ D6 = 0` | supported-but-**RELOCATED**; §2 |
+| **D6 + D9** | supported, but the content F attributes to D6 is D8's; and **`D4 ∩ D6 = D8 ∩ D6 = D9 ∩ D6 = 0`** — D6 shares no declaration with any of the three | supported-but-**RELOCATED**; §2 |
 | **D10 + D11** | **REFUTED** — §3 | REFUTED |
 | **D4 → D8** | resolved at declaration level by both drafts' own words; four apexes moved, closure fell 753→620 | **RESOLVED**; merge still not recommended — §3 |
 | **E1 + E2** | **REFUTED at substrate level**; NOT DECIDED editorially — §7 | REFUTED / NOT DECIDED |
@@ -287,4 +287,24 @@ between D1's unified treatment and the per-device letters D1 says exist to be pe
 
 **No recommendation is made on any of the four.** Per the goal's DONE item 4, the evidence is
 assembled and the decision is the operator's.
+
+---
+
+## 9. D6 + D9 — the zero-intersection measurement, added 2026-08-07 at D9's retrofit
+
+D9's §Relationship paragraph draws the intended division: *"The fault-tolerant-computation bundle
+(D6) owns the logical layer — codes, measurement, gauging; the device envelopes of Sec. 4
+characterize the physical layer beneath it, and the abstract code-distance suppression theorems
+included here are **the interface between the two**."*
+
+**`D9 ∩ D6 = 0`.** The named interface (`logicalErrorBound_antitone_distance`,
+`logicalErrorBound_tendsto_zero`) sits in D9's closure and in no declaration shared with D6.
+**D6 shares no declaration with D4, D8, or D9** — the three bundles whose content it is variously
+said to absorb or adjoin.
+
+⚠️ **A zero intersection is not by itself an argument against merging.** Two containers can be
+adjacent in subject and disjoint in substrate, which is exactly what a physical-layer /
+logical-layer split *should* look like. What it does establish: **a D6+D9 merge would be motivated
+by narrative adjacency alone — there is no substrate overlap to consolidate.** That is the
+measurement; the disposition is the operator's.
 

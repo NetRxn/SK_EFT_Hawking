@@ -703,6 +703,9 @@ violated for the fifth time in this workstream.
   **bundle-scoped**, and is exact against the source (20 = 20). **A bundle-scoped derived macro is
   the answer to both this item and TODO-D10** — D1/D5 abuse the *project*-scoped `\totaltheorems`
   for a bundle figure; F/I1/I3 hand-type roster numbers. L3 shows the working shape.
+- **D9's module count is off by one (2026-08-07, D9 retrofit).** The abstract and appendix say
+  *"103 Lean modules"* in the `QuantumNetwork` family; measured **104**. Hand-maintained, same class
+  as the roster numbers below, same fix (L3's bundle-scoped derived macro).
 - **Third bundle with a stale roster number (2026-08-07, I3 retrofit).** I3's bibliography
   self-cites *"SK--EFT Hawking 14-bundle publication architecture"*; I1 §2 says 17; F says 17.
   Three different wrong numbers in three bundles, all citing the same `PAPER_STRATEGY.md`. The
@@ -885,4 +888,31 @@ correction is *itself* narrowed (the module **does** invoke a Brillouin-zone rea
 **Existing coverage:** none — no registered check compares prose across bundles that share a lifted
 paragraph. Per §6a nothing was built; the residue (a cross-bundle shared-paragraph consistency
 measure) would be new infrastructure and needs approval.
+
+### D21. D9 claims to consume I3's LDP foundations; no declaration does — OPEN
+
+**Found:** 2026-08-07, D9 apex retrofit (`docs/audits/2026-08-07-d9-retrofit/FINDINGS.md` §2).
+
+**Defect.** `papers/D9/paper_draft.tex` states twice that its rare-event tails consume the I3
+bundle's large-deviation foundations (§1 companion paragraph; §4.2 *"consuming the large-deviation
+foundations of the I3 bundle"*).
+
+**Measured three ways, all negative:** `D9 ∩ I3` closure = **0**; `fdt_rare_event_tail` and
+`fdt_gallavotti_cohen` (both in `QuantumNetwork.FDTNoiseFloor`) have **no** direct
+`name_deps_project` entry in `SKEFTHawking.LDP.*` or `SKEFTHawking.Itô.*`. Probe seeded — the same
+measurement returns 50 for `D9 ∩ D10` and 14 for `D9 ∩ D8`.
+
+✅ **Independently corroborated by the other side's prose.** I3's own draft says its cross-bridge is
+*"designed but not yet consumed at release time"*, and I3's closure intersects **nothing** in the
+portfolio. The two drafts disagree and the substrate sides with I3.
+
+**Fix shape — D9's own vocabulary supplies it.** The LDP reading of those tails is an
+**identification-layer** statement, not a formula-layer dependency. D9 invented that distinction and
+applies it rigorously to Caves, PLOB, DEJMPS and the readout models; it is not applied to its own
+sibling-bundle claim. Restate as an identification, or build the dependency.
+
+**Existing coverage:** none. No registered check compares a prose consumption claim against the
+dependency graph. Per §6a nothing was built; the residue would be new infrastructure needing
+approval — and it is close in kind to TODO-D19's proved-but-unnamed measure, so the two should be
+scoped together if either is approved.
 
