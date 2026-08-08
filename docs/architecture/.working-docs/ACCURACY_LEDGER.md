@@ -1953,3 +1953,26 @@ gone, including for the 17 drafts that cannot be skipped.
 choice: the date still means "when this document was last edited" and is stable across recompiles,
 but it is not reproducible across machines with different mtimes. Local churn is what was asked
 for; cross-machine reproducibility was not, and is not claimed.
+
+## V50 — ADR-011 Phase 2d: the readiness formula stops granting an unearned GREEN — 6 atoms
+
+| # | Proposition | Decider | Verbatim result |
+|---|---|---|---|
+| 1 | Only `bundle_readiness.py`, `provenance_dashboard.py` and `datastar_bundles.py` consume the verdict string | grep across `scripts/` + `tests/` | 3 consumers (the `rhmc_*` hits are an unrelated diagnostic). Blast radius bounded — which is why the fix WITHHOLDS GREEN inside the existing 3-value enum rather than adding a fourth |
+| 2 | This layer already has a "withhold, don't invent a value" precedent | read of `aggregate_by_bundle` + `test_readiness_cannot_measure` | two: `blocked_p1 is None` and the evaluator-crash handler. The new rules are the **third and fourth**, in the same shape |
+| 3 | The attribution-sweep problem is live, not hypothetical | read of live metadata | **D1, D2 and D3** all cite `docs/audits/stage13_attribution_sweep_2026-06-10.md` as `stage13_review_doc` |
+| 4 | D9's GREEN is withheld by the new rule | CLI run over the live tree | `YELLOW (Stage-13 evidence UNVERIFIED — kind=unrecorded; only full-adversarial earns GREEN)` — the portfolio's only GREEN, and the bundle whose Stage 10 never ran |
+| 5 | GREEN is still reachable | fixture with `kind=full-adversarial` + a `claims_review.json` | GREEN. A rule that made GREEN unreachable would be a different defect |
+| 6 | The writer and the renderer agree on what earns a green | test comparing the two frozensets | `br._KINDS_SUFFICIENT_FOR_GREEN == rr.KINDS_SUFFICIENT_FOR_GREEN`. Two enforcement points, one rule — drift would let a verdict the writer rejected still render GREEN |
+
+**⚠️ CHECKED FOR A SELF-CONFIRMING LOOP.** Running `bundle_readiness.py` writes 21 aggregation
+docs into `papers/AutomatedReviews/<today>-bundle-stage13/` — the same directory
+`find_stage13_review_evidence` scans for review evidence. Verified it is excluded rather than
+assumed: the docs carry `AGGREGATION_MARKER`, and `find_stage13_review_evidence('D9')` returns
+`None` after the run. The byproduct was removed rather than committed — 21 files dated today
+implying Stage-13 artifacts that no review produced.
+
+**Docs corrected in the same commit, because their claims are now FALSE**: `END_TO_END_MAP` §8
+(transition 2 has no actor; `review_recorded` does not discriminate kind; the ordering rule is
+unenforced) and `VALIDATION_GATE_TOPOLOGY` §5 (nothing reads `stage9_status`/`stage10_status`) and
+§6 (field ownership). Each stated a true fact that this work made untrue.

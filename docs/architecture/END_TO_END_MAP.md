@@ -264,7 +264,7 @@ derived `readiness`/`blockers_open` fields, script-owned.
 | # | transition | performed by |
 |---|---|---|
 | 1 | bundle created → `stage9/10/13_status = "pending"` | `bundle_source_manifest.py:129-131` |
-| 2 | **`"pending"` → `"green"` on any of the three stages** | ⛔ **nothing** — see below |
+| 2 | **`"pending"` → `"green"` on any of the three stages** | `scripts/record_review.py` (ADR-011 Phase 2) |
 | 3 | `"green"` → `"pending"` when new content is appended | `bundle_append.py:320-325` |
 | 4 | findings → `blockers_open`, `open_findings`, `readiness` | `bundle_readiness.write_metadata_counts` |
 | 5 | all conditions met → submission | operator runs `gate_precheck.py submission` |
@@ -284,14 +284,14 @@ otherwise                 → GREEN
      or if the P1 gates could not be computed at all
 ```
 
-⚠️ **Transition 2 is unimplemented.** No code path in the repository writes `"green"` to any
-`stage*_status`; the only writers set `"pending"`. **Every green in the corpus is a hand edit.**
-The reviewer agents that would earn one have no write path to the field they gate on, so the
-stage that a reviewer completes and the field that records it are connected only by an operator
-editing JSON.
+**Transition 2 was unimplemented until 2026-08-08.** No code path wrote `"green"` to any
+`stage*_status`; the only writers set `"pending"`, so every green in the corpus was a hand edit
+and bundle status could not be read as evidence of review. `scripts/record_review.py` is now that
+writer, and it refuses a Stage-13 green while a prerequisite stage is unfinished, a Stage-13
+verdict with no `--kind`, and a `--doc` that is not on disk.
 
-This is why bundle status cannot currently be read as evidence of review. It is not a defect in
-any one component — the transition was never specified, so it was never built.
+Hand edits remain possible and are not forbidden — they are caught after the fact by
+`bundle_reviewer_stage_ordering` and `bundle_stage13_claim_consistent`, not prevented.
 
 **What IS enforced.** Two guards, both real:
 
@@ -302,17 +302,22 @@ any one component — the transition was never specified, so it was never built.
   computed** — "could not compute" and "nothing blocked" are deliberately not the same value
   (`_blocked_p1_gates_by_paper` returns `None`, and the caller withholds).
 
-**What is NOT enforced, precisely.** The ordering rule — Stages 9 and 10 GREEN before 13 —
-stated as a hard pre-condition in `BUNDLE_LIFT_PROCEDURE.md` §10. Nothing reads the fields to
-gate on it. A bundle can therefore satisfy the green-with-blockers guard while violating the
-ordering rule, which is the state D6 is in: `stage9: not_started`, `stage10: skeleton`,
-`stage13: green`, 0 blockers.
+**The ordering rule** — Stages 9 and 10 GREEN before 13, `BUNDLE_LIFT_PROCEDURE.md` §10 — is
+enforced twice since ADR-011 Phase 2: `record_review.py` refuses to write such a verdict, and
+`validate.py --check bundle_reviewer_stage_ordering` fails on one that reaches the tree anyway.
+It is a genuinely separate assertion from the green-with-blockers guard: D6 satisfied that one
+while violating this one, holding `stage9: not_started`, `stage10: skeleton`, `stage13: green`
+and **zero** blockers.
 
-⚠️ **`review_recorded` does not discriminate review KIND or SCOPE.** The formula's
-`not review_recorded → YELLOW (unreviewed)` branch is sound, but any document referenced by
-`stage13_review_doc` satisfies it — a targeted 16-anchor attribution sweep counts the same as a
-full adversarial pass. That, not an absent unreviewed-guard, is how a bundle whose Stage 10 never
-ran reaches GREEN.
+**`review_recorded` now discriminates review KIND** (ADR-011 Phase 2d). It previously did not:
+any document referenced by `stage13_review_doc` satisfied it, so a targeted attribution sweep
+counted the same as a full adversarial pass — which is how a bundle whose Stage 10 never ran
+reached GREEN. GREEN is now withheld unless `stage13_review_kind` is `full-adversarial`, and
+withheld again when the bundle has no `claims_review.json` at all. Both follow this layer's
+existing pattern: a thing NOT MEASURED must not render as measured-and-fine.
+
+D1, D2 and D3 all cite `docs/audits/stage13_attribution_sweep_2026-06-10.md` as their Stage-13
+evidence, so the distinction is live, not hypothetical.
 
 **The status enum has drifted.** `Phase7a_Roadmap.md:91-93` declares
 `pending | green | red` (plus `yellow` for stage 13). The live corpus uses **five** values —

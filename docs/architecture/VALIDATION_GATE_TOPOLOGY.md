@@ -142,13 +142,12 @@ The proposal's invariant is deliberately **unnumbered** — numbers are allocate
 `WAVE_EXECUTION_PIPELINE.md`, where #15/#16/#17 are axiom sign-off, the tracked-hypothesis
 registry and the kernel no-go registry.
 
-Also claiming enforcement and having none: **no gate or check reads `stage9_status` or
-`stage10_status`.** They are not inert — `bundle_append.py` reads both and demotes a `green`
-to `pending` when new content lands in the bundle — but nothing *gates* on them, so the
-"Stages 9 and 10 before 13" rule has no enforcement point.
+**`stage9_status` and `stage10_status` are now read and gated** (ADR-011 Phase 2).
+`bundle_reviewer_stage_ordering` fails on a Stage-13 green recorded before either is green, and
+`record_review.py` — the writer that transition 2 previously lacked — refuses to write one.
 
-Nothing in the codebase writes any `stage*_status` to `green`; the only writers set
-`"pending"`. Every green is therefore a hand edit, which is how a bundle can sit at
+Until 2026-08-08 neither was true: nothing gated on the two fields and nothing wrote `green` to
+any `stage*_status`, so every green was a hand edit, which is how a bundle sat at
 `stage13_status: green` with `stage9_status: not_started`.
 
 ## 6. Field ownership — who writes what
@@ -158,7 +157,7 @@ A recurring failure mode is a check telling you to run a script that cannot fix 
 | field | written by | NOT written by |
 |---|---|---|
 | `blockers_open`, `advisories_open`, `open_findings`, `blocked_p1_gates`, `readiness` | `bundle_readiness.write_metadata_counts` | — |
-| `stage13_status`, `stage9_status`, `stage10_status` | the **Stage-13/9/10 review cycle** (`BUNDLE_LIFT_PROCEDURE` §§8–10) | `bundle_readiness.py` |
+| `stage13_status`, `stage9_status`, `stage10_status`, `stage13_review_kind` | **`scripts/record_review.py`** (the Stage-13/9/10 review cycle, `BUNDLE_LIFT_PROCEDURE` §§8–10) | `bundle_readiness.py` |
 | `freshness_stale` | `check_bundle_source_freshness.py` | `bundle_readiness.py` (deliberately — two writers made `validate.py` non-idempotent) |
 | `apex_theorems` | a human, under ADR-010 §D5a's per-bundle context review | any script |
 | `docs/counts.json` / `counts.tex` | `update_counts.py` | — |

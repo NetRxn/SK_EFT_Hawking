@@ -59,8 +59,8 @@
   ],
   "open_findings": 0,
   "blocked_p1_gates": [],
-  "readiness": "GREEN",
-  "readiness_last_computed": "2026-07-31",
+  "readiness": "YELLOW",
+  "readiness_last_computed": "2026-08-08",
   "apex_theorems": [
     {
       "name": "SKEFTHawking.QuantumNetwork.diamondDist_eq_choiSDP",

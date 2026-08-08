@@ -259,10 +259,11 @@
   "notes": "2026-05-06 Session-2 round-3 surfaced 1 BLOCKER (Class TN line 401) + 2 advisories. All 3 fixed via paper_draft.tex Edits + lean_deps.json regen + supersession ledger 5 entries. Round-4 re-review in flight. | 2026-05-06 round-4 re-review GREEN: all 3 round-3 findings closed cleanly (BLOCKER TN line 401 + 2 advisories). 72 sentences walked / by_verdict PASS=48 WARN=16 INFO=4 TRANSITION=4 FAIL=0. Cross-bundle L2 consistency verified. Schema validates exit 0. | Round-2 verification 2026-05-06: both BLOCKERs closed cleanly (GarciaEtxebarriaMontero2019 cite typo + Schellekens trivial-discharge prose softening). Round-1 REQUIREDs 5.1 + 5.2 also closed via prose softening. 1 NEW advisory V.8 (Lean docstring sync at Chain.lean:76-77). 2 carry-forward advisories. | 2026-06-10 attribution-content sweep (docs/audits/stage13_attribution_sweep_2026-06-10.md): GREEN. paper10 source findings (2242 ×6) superseded — all resolved on disk (unconditional 16|σ). D2 own anchors (anomaly N_f≡0 mod 3, Ext over A(1)) intact; 2315 re-review had cleared D2-level blockers.",
   "open_findings": 60,
   "blocked_p1_gates": [
-    "FixPropagation"
+    "FixPropagation",
+    "LeanProofSubstance"
   ],
   "readiness": "RED",
-  "readiness_last_computed": "2026-08-01",
+  "readiness_last_computed": "2026-08-08",
   "length_target": {
     "unit": "pages",
     "floor": 18,

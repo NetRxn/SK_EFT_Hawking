@@ -118,3 +118,70 @@ class TestUncomputableGatesWithholdGreen:
             "computation failed."
         )
         assert "UNVERIFIED" in agg["D1"]["readiness_display"]
+
+
+class TestStage13EvidenceKindWithholdsGreen:
+    """ADR-011 Phase 2d — a RECORDED review is not necessarily a review of the right
+    SCOPE.
+
+    `review_recorded` is satisfied by ANY document referenced by
+    `stage13_review_doc`, so a targeted attribution sweep counted exactly as a full
+    fresh-context adversarial pass. That is how D9 — the portfolio's only GREEN —
+    reached GREEN with its Stage 10 never run. Visible in production today: D1, D2
+    and D3 all cite `docs/audits/stage13_attribution_sweep_2026-06-10.md`.
+
+    Same shape as the two withholding rules above it: NOT MEASURED must not render as
+    measured-and-fine.
+    """
+
+    def _agg(self, monkeypatch, rev, *, claims_review=True, tmp_path=None):
+        monkeypatch.setattr(br, "_blocked_p1_gates_by_paper", lambda: {})
+        monkeypatch.setattr(br, "_VALID_BUNDLE_TARGETS", {"D1"})
+        monkeypatch.setattr(br, "resolve_stage13_reviews", lambda *, backfill: {"D1": rev})
+        if tmp_path is not None:
+            d = tmp_path / "D1"
+            d.mkdir(parents=True, exist_ok=True)
+            if claims_review:
+                (d / "claims_review.json").write_text("{}")
+            monkeypatch.setattr(br, "_bundle_metadata_path",
+                                lambda b: tmp_path / b / "bundle_metadata.json")
+        return br.aggregate_by_bundle({}, {}, {"D1": rev})["D1"]
+
+    def test_a_full_adversarial_review_still_earns_green(self, monkeypatch, tmp_path):
+        """SILENT ON CORRECT DATA — the rule must not make GREEN unreachable."""
+        out = self._agg(monkeypatch,
+                        {"date": "2026-01-01", "kind": "full-adversarial"},
+                        tmp_path=tmp_path)
+        assert out["readiness"] == "GREEN", out["readiness_display"]
+
+    def test_an_attribution_sweep_does_not(self, monkeypatch, tmp_path):
+        out = self._agg(monkeypatch,
+                        {"date": "2026-01-01", "kind": "attribution-sweep"},
+                        tmp_path=tmp_path)
+        assert out["readiness"] == "YELLOW"
+        assert "UNVERIFIED" in out["readiness_display"]
+        assert "attribution-sweep" in out["readiness_display"], "name the evidence"
+
+    def test_an_UNRECORDED_kind_does_not(self, monkeypatch, tmp_path):
+        """THE D9 CASE, exactly. Absent is UNKNOWN, not sufficient — every bundle
+        predating the field has no kind, and 'we never wrote it down' is not
+        evidence that the review was thorough."""
+        out = self._agg(monkeypatch, {"date": "2026-01-01"}, tmp_path=tmp_path)
+        assert out["readiness"] == "YELLOW"
+        assert "unrecorded" in out["readiness_display"]
+
+    def test_a_missing_claims_review_withholds_green(self, monkeypatch, tmp_path):
+        """Stage 10 leaves an artifact. No `claims_review.json` means Stage 10 did
+        not run — measured 2026-08-01 on D6 and D9, both of which had none."""
+        out = self._agg(monkeypatch,
+                        {"date": "2026-01-01", "kind": "full-adversarial"},
+                        claims_review=False, tmp_path=tmp_path)
+        assert out["readiness"] == "YELLOW"
+        assert "no claims_review.json" in out["readiness_display"]
+
+    def test_the_kind_gate_matches_the_writers(self):
+        """ONE rule, two enforcement points. `record_review.py` refuses to WRITE a
+        green on insufficient evidence and this layer refuses to RENDER one; if the
+        two sets drifted, a verdict the writer rejected could still show GREEN."""
+        import record_review as rr
+        assert br._KINDS_SUFFICIENT_FOR_GREEN == rr.KINDS_SUFFICIENT_FOR_GREEN

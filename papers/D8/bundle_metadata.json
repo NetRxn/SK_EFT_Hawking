@@ -232,10 +232,11 @@
   "notes": "fresh-authored as a synthesis-driven new composition (no per-paper-draft sources to lift; sourceless per PAPER_DRAFT_MAPPING.md, D.4 path). Substrate is the FKLW/* + Mukhopadhyay/* + SolovayKitaev* Lean module families. Late absorption 2026-06-10 (D.4 x4): Phase 6AM-W5 / 6AN-W5 / 6AO T1-T3 / 6AP-W3+W3b verified-synthesis layer (FKLW/RossSelinger/*, FKLW/CliffordTCompiler, FKLW/CompiledGateDiamond, QuantumNetwork/{KroneckerOpNorm,UnitaryDiamond,MatrixNormBridge}); stage13_redo_required=true pending the queued Stage-F reviewer triple. | 2026-06-10 attribution-content sweep (docs/audits/stage13_attribution_sweep_2026-06-10.md): GREEN. 10 anchors: 3 SUPPORTED / 7 CAVEAT(abstract-only cache) / 0 NOT-SUPPORTED. AKN Lemma 12.6 diamond bound, KMM Lagrange-4-square, GilesSelinger column lemma all full-text verified; RS deep lemmas via verbatim DR.",
   "open_findings": 14,
   "blocked_p1_gates": [
+    "LeanProofSubstance",
     "NarrativeGrounding"
   ],
   "readiness": "YELLOW",
-  "readiness_last_computed": "2026-07-31",
+  "readiness_last_computed": "2026-08-08",
   "length_target": {
     "unit": "pages",
     "floor": 27,

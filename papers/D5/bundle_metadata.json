@@ -380,10 +380,11 @@
   "open_findings": 62,
   "blocked_p1_gates": [
     "FixPropagation",
+    "LeanProofSubstance",
     "NarrativeGrounding"
   ],
   "readiness": "RED",
-  "readiness_last_computed": "2026-07-31",
+  "readiness_last_computed": "2026-08-08",
   "length_target": {
     "unit": "pages",
     "floor": 24,

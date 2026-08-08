@@ -229,6 +229,7 @@ def resolve_stage13_reviews(*, backfill: bool) -> dict[str, dict]:
     for b in sorted(_VALID_BUNDLE_TARGETS):
         rec = {
             "date": None,
+            "kind": None,
             "source": None,
             "backfilled": False,
             "backfilled_this_run": False,
@@ -246,6 +247,8 @@ def resolve_stage13_reviews(*, backfill: bool) -> dict[str, dict]:
             if raw_status not in _PLAIN_STAGE13_STATUSES:
                 rec["status_caveat"] = raw_status
 
+        if md is not None:
+            rec["kind"] = md.get("stage13_review_kind")
         if md is not None and md.get("last_stage13_review"):
             rec["date"] = str(md["last_stage13_review"])[:10]
             src = md.get("last_stage13_review_source")
@@ -269,6 +272,13 @@ def resolve_stage13_reviews(*, backfill: bool) -> dict[str, dict]:
                     rec["backfilled_this_run"] = True
         out[b] = rec
     return out
+
+
+#: Stage-13 evidence kinds that earn a GREEN readiness verdict. Mirrors
+#: `record_review.KINDS_SUFFICIENT_FOR_GREEN`; kept as a literal rather than imported so
+#: the readiness layer does not take a dependency on the writer CLI, and asserted equal
+#: to it by `tests/test_record_review.py`.
+_KINDS_SUFFICIENT_FOR_GREEN = frozenset({"full-adversarial"})
 
 
 def _blocked_p1_gates_by_paper() -> dict[str, list[str]] | None:
@@ -363,6 +373,7 @@ def aggregate_by_bundle(
 
         rev = review_info.get(b, {}) or {}
         review_recorded = bool(rev.get("date"))
+        review_kind = rev.get("kind")
 
         # Stage-13 readiness verdict (S5 closure 2026-06-10): GREEN
         # additionally requires a RECORDED fresh-context Stage-13 review.
@@ -390,6 +401,29 @@ def aggregate_by_bundle(
             if readiness == "GREEN" and gate_block:
                 readiness = "YELLOW"
                 readiness_display = f"YELLOW (P1 gate blocked: {', '.join(gate_block)})"
+
+        # ── ADR-011 Phase 2d: two more ways GREEN is WITHHELD rather than granted ──
+        # Both follow the pattern this layer already uses twice (`blocked_p1 is None`
+        # above; `evaluate_all_gates`' crash handling): a thing that was NOT MEASURED
+        # must not render as a thing that was measured and found fine.
+        if readiness == "GREEN" and review_kind not in _KINDS_SUFFICIENT_FOR_GREEN:
+            # A recorded review is not necessarily a review of the right SCOPE. Any
+            # document referenced by `stage13_review_doc` satisfies `review_recorded`,
+            # so a targeted 16-anchor attribution sweep counted exactly as a full
+            # fresh-context adversarial pass — which is how D9, the portfolio's only
+            # GREEN, reached GREEN with its Stage 10 never run.
+            readiness = "YELLOW"
+            readiness_display = (
+                f"YELLOW (Stage-13 evidence UNVERIFIED — kind="
+                f"{review_kind or 'unrecorded'}; only "
+                f"{'/'.join(sorted(_KINDS_SUFFICIENT_FOR_GREEN))} earns GREEN)")
+        elif readiness == "GREEN" and not (
+                _bundle_metadata_path(b).parent / "claims_review.json").is_file():
+            # No Stage-10 artifact at all. `chain_canonicalize --report` measured this
+            # directly on 2026-08-01: D6 and D9 have no `claims_review.json`, and F and
+            # I3 have one carrying ZERO chain links.
+            readiness = "YELLOW"
+            readiness_display = "YELLOW (Stage 10 UNVERIFIED — no claims_review.json)"
 
         by_bundle[b] = {
             "sources": sorted(sources),
