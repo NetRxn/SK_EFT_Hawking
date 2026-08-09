@@ -2186,9 +2186,19 @@ only thing separating the two claims in print.
 > all**, and 93 of those are *theorems*. A leaf theorem is not waiting for a consumer — it is
 > homed by a bundle claiming it, or not at all.
 >
-> **3. The number was never anomalous.** Corpus-wide, **29,964 of 35,754 non-autogen
-> declarations (83.8%) are un-homed**. FaultTolerance sits at **70.0%**, which is *better* than
-> the project average. A codebase that formalizes more than any one paper claims has most of its
+> **3. The number was never anomalous.** Corpus-wide, **26,985 of 32,778 non-autogen
+> declarations (82.3%) are un-homed**. FaultTolerance sits at **60.6%**, which is *far better*
+> than the project average.
+>
+> ⚠️ **THESE NUMBERS WERE WRONG UNTIL 2026-08-09, AND THE INSTRUMENT IS THE LESSON.** The first
+> pass filtered on the raw `autogen` JSON field and reported 29,964/35,754 (83.8%) and 233/333
+> (70.0%). The canonical filter is `validate_helpers.autogen_index`, which `bundle_closure`
+> itself uses (`bundle_closure.py:104-107`) and which unions the structural field with the
+> name-pattern supplement — so the raw field under-counts autogen and inflates both
+> denominators. Caught by the closure reviewer, not by me. **The verdict is unchanged and in
+> fact strengthened**: the gap between FaultTolerance and the corpus average widens from 13.8
+> points to 21.7. Reading a structural field directly when a shared resolver exists is the same
+> hand-rolled-instrument failure this branch keeps finding, here in its own refutation. A codebase that formalizes more than any one paper claims has most of its
 > declarations outside every apex closure by construction; reading that as per-subsystem debt
 > measures the substrate's breadth and calls it a defect.
 >

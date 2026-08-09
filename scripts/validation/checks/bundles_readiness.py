@@ -458,6 +458,16 @@ def check_bundle_prose_em_dash_free() -> CheckResult:
 
     Comments are stripped: `%` text never reaches a reader, so an em-dash there is not an
     authorship signal.
+
+    ⚠️ **THE POPULATION IS THE DRAFT'S `\\input` CLOSURE, NOT THE DRAFT.** It scanned
+    `paper_draft.tex` alone until 2026-08-09, and a reader does not know or care which
+    file a sentence was typed in: `papers/I1/tables/table1_stages.tex:10-11` carried two
+    reader-visible em-dashes inside a live `\\input`ed table and the gate reported I1
+    clean. Found by the closure reviewer, not by this check. `draft_input_closure` is the
+    same definition `paper_latex_compiles`, `bundle_manuscript_length` and
+    `compile_bundle_pdf` already use for "which files change this draft", so widening to
+    it costs no new notion of scope — and a check whose subject is *what a reader sees*
+    has no business stopping at a file boundary the reader cannot perceive.
     """
     details: List[Detail] = []
     try:
@@ -475,18 +485,24 @@ def check_bundle_prose_em_dash_free() -> CheckResult:
             continue
         checked += 1
         hits = []
-        for i, line in enumerate(tex.read_text(errors="replace").splitlines(), 1):
-            body = _TEX_COMMENT_RE.sub("", line)
-            n = len(_EM_DASH_RE.findall(body))
-            if n:
-                hits.append((i, n, body.strip()[:90]))
+        # Only `.tex` in the closure: it also carries `.bib` and image paths, and a
+        # bibliography entry is not manuscript prose.
+        for src in sorted({tex, *(p for p in _H.draft_input_closure(tex)
+                                  if p.suffix == ".tex" and p.is_file())}):
+            for i, line in enumerate(src.read_text(errors="replace").splitlines(), 1):
+                body = _TEX_COMMENT_RE.sub("", line)
+                n = len(_EM_DASH_RE.findall(body))
+                if n:
+                    hits.append((src, i, n, body.strip()[:90]))
         if hits:
-            n = sum(h[1] for h in hits)
+            n = sum(h[2] for h in hits)
             total += n
+            files = len({h[0] for h in hits})
             details.append(Detail(
                 code, False,
-                f"{n} em-dash(es) on {len(hits)} line(s); first at "
-                f"{tex.relative_to(_H.PROJECT_ROOT)}:{hits[0][0]} — {hits[0][2]!r}"))
+                f"{n} em-dash(es) on {len(hits)} line(s) across {files} file(s); "
+                f"first at {hits[0][0].relative_to(_H.PROJECT_ROOT)}:{hits[0][1]} "
+                f"— {hits[0][3]!r}"))
 
     if checked == 0:
         details.insert(0, Detail(

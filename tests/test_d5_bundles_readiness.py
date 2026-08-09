@@ -955,6 +955,43 @@ class TestBundleProseEmDashFree:
         monkeypatch.setattr(_H, "PROJECT_ROOT", tmp_path)
         monkeypatch.setattr(registry, "BUNDLE_CODES", tuple(drafts))
 
+    def test_an_em_dash_inside_an_INPUTED_file_is_flagged(self, tmp_path, monkeypatch):
+        r"""⚠️ THE GATE'S BLIND SPOT, found by the closure reviewer and not by the gate.
+
+        It scanned `paper_draft.tex` alone, so `papers/I1/tables/table1_stages.tex`
+        carried two reader-visible em-dashes inside a live `\input`ed table and I1
+        reported CLEAN. A reader does not know which file a sentence was typed in,
+        and a check whose subject is *what a reader sees* cannot stop at a file
+        boundary the reader cannot perceive."""
+        papers = tmp_path / "papers"
+        (papers / "D1" / "tables").mkdir(parents=True)
+        (papers / "D1" / "paper_draft.tex").write_text(
+            "Clean prose here.\n\\input{tables/t.tex}\n")
+        (papers / "D1" / "tables" / "t.tex").write_text(
+            "a & Lean --- interactive loop \\\\\n")
+        import bundle_registry as registry
+        monkeypatch.setattr(_H, "PAPERS_DIR", papers)
+        monkeypatch.setattr(_H, "PROJECT_ROOT", tmp_path)
+        monkeypatch.setattr(registry, "BUNDLE_CODES", ("D1",))
+        r = bru.check_bundle_prose_em_dash_free()
+        assert not r.passed, "an em-dash a reader sees through \\input must be flagged"
+        assert "tables/t.tex" in " ".join(d.message for d in r.details), \
+            "the finding must name the file the em-dash is actually IN"
+
+    def test_a_bib_entry_in_the_closure_is_NOT_scanned(self, tmp_path, monkeypatch):
+        """Discrimination: the closure also carries `.bib` and image paths, and a
+        bibliography entry is not manuscript prose. Only `.tex` is scanned."""
+        papers = tmp_path / "papers"
+        (papers / "D1").mkdir(parents=True)
+        (papers / "D1" / "paper_draft.tex").write_text(
+            "Clean prose.\n\\bibliography{refs}\n")
+        (papers / "D1" / "refs.bib").write_text("@article{x, title={A --- B}}\n")
+        import bundle_registry as registry
+        monkeypatch.setattr(_H, "PAPERS_DIR", papers)
+        monkeypatch.setattr(_H, "PROJECT_ROOT", tmp_path)
+        monkeypatch.setattr(registry, "BUNDLE_CODES", ("D1",))
+        assert bru.check_bundle_prose_em_dash_free().passed
+
     # ── what it must NOT flag ────────────────────────────────────────────
     def test_an_EN_dash_is_never_flagged(self, tmp_path, monkeypatch):
         """THE LOAD-BEARING TEST. Every one of these is correct typography."""

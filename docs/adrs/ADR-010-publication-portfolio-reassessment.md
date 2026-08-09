@@ -1,10 +1,26 @@
 # ADR-010 — Publication portfolio: purpose, distribution, and late-phase absorption
 
-- **Status:** **PROPOSED — CHARTER ACCEPTED; MEASUREMENT PASS COMPLETE, ANALYSIS IN PROGRESS (2026-08-05).**
+- **Status:** ✅ **ACCEPTED (2026-08-09) — the decisions this ADR was commissioned to make are made.**
+  The roster is **21** (§Open item 1, delegated by the operator and decided on evidence: every one of the
+  audit's six proposed merges was tested against the manuscripts read in full and all six fail). §D4's
+  merge/split/retire recommendation is discharged; §D6's absorption trigger shipped, with the audit's
+  mtime proposal **rejected on evidence** (§Open item 4); §D7's roster-drift change-set is applied
+  (fifteen live sites corrected 2026-08-09, TODO-D15).
+  **Two items are carried forward rather than closed here, and are named as such below:** §D2's
+  per-target re-derived purpose statements and §D5's homing dispositions for 1,403–1,633 modules. Both
+  need manuscript-scale work this ADR deliberately did not commission (C4), so leaving them open is the
+  honest state; what is retired is the *status line*, which read "ANALYSIS IN PROGRESS" for four days
+  after the analysis concluded.
+
+  <details><summary>Original status (2026-08-05), kept because it records why the document was written before its own analysis</summary>
+
+  **PROPOSED — CHARTER ACCEPTED; MEASUREMENT PASS COMPLETE, ANALYSIS IN PROGRESS (2026-08-05).**
   This document was authored *before* the analysis it commissions, deliberately: the operator's framing
   and constraints were given in a live session and would otherwise be lost at the next compaction.
   §Decision states the *criteria and method* the re-assessment must satisfy. §Open records what is
   **not** decided — most importantly the roster number, which is **not** to be assumed.
+
+  </details>
 
   > ✅ **EVIDENCE CLASS — the re-measurement this box demanded is DONE, 2026-08-05.**
   > Full working, with every predicate stated:

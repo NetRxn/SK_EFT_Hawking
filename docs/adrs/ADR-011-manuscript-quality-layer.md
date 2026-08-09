@@ -1,7 +1,19 @@
 # ADR-011 — The manuscript-quality layer and the reviewer promotion path
 
-- **Status:** 📋 **PROPOSED (2026-08-08).** Build authorized by the operator 2026-08-08
-  (*"approved to build"*), with three standing directions that shape the plan below:
+- **Status:** ✅ **ACCEPTED AND BUILT (2026-08-09).** All eight phases shipped. Gates 12–15
+  (`bundle_manuscript_length`, `bundle_figure_adequacy`, `bundle_structural_coherence`,
+  `bundle_reader_facing_voice`) are registered and running; F-02, F-03, F-05, F-07 and F-09 are
+  implemented; the promotion path, the authoring skill and the prose-reviewer are in the repo.
+
+  **Two consequences are deliberately visible rather than resolved**, because resolving them means
+  writing manuscripts rather than infrastructure: `bundle_manuscript_length` is RED for 11 bundles
+  under floor, and `bundle_figure_adequacy` is green **by declared deferral** — 42 drawn against 40
+  deferred, with 8 bundles carrying no drawn figure. Both magnitudes ride on the gates' own summary
+  lines, so neither can hide behind a colour. See `ACCURACY_LEDGER` V70 and V72; V72 records a
+  closure reviewer's charge that the figure gate's green is a scope move, and does not defend it away.
+
+  Build was authorized by the operator 2026-08-08
+  (*"approved to build"*), with three standing directions that shaped the plan below:
   1. **Flywheel ordering** — *"always prioritize steps that will pay the biggest dividends as we
      continue developing."* Phases are ordered by downstream leverage, not by shippability.
   2. **Ships as a unit** — *"All this work will ship as a unit on a merge back to main, so optimize

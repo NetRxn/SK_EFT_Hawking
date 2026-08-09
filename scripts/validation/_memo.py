@@ -125,7 +125,7 @@ def tree_fingerprint(root: Path, pattern: str = "**/*") -> str:
     """Digest of every file under ``root`` matching ``pattern``.
 
     Names are hashed alongside contents so a pure rename moves the key. Measured:
-    2,039 `lean/SKEFTHawking/**/*.lean` files in **0.42 s**, against the 198 s of
+    2,039-as-of-2026-08-04 `lean/SKEFTHawking/**/*.lean` files in **0.42 s**, against the 198 s of
     Lean checks it gates.
     """
     hasher = hashlib.sha256()
@@ -205,7 +205,7 @@ def lean_source_fingerprint() -> str:
     R6). `lean/SKEFTHawking.lean` — 5,226 lines, the file whose `import` lines
     decide which modules are in the environment `AxiomAudit` actually walks — sits
     NEXT TO `lean/SKEFTHawking/`, so `glob("**/*.lean")` over the directory missed
-    it entirely (verified: 2,039 files matched, the root file not among them).
+    it entirely (verified: 2,039-as-of-2026-08-04 files matched, the root file not among them).
     Adding or removing an `import SKEFTHawking.Foo` therefore changed the verified
     surface without moving the key. It is hashed explicitly below.
     """
