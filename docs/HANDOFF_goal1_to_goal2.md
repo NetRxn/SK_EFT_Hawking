@@ -73,9 +73,18 @@ representable and D9 sits in it. Do not read `UNMEASURED` as a mild YELLOW.
 1. **Refresh or work around the plugin** (§4), then run Stages 9 → 10 → 13 in that order.
    The Stage-9-and-10-before-13 hard gate is enforced by `bundle_reviewer_stage_ordering`;
    a Stage-13 verdict recorded ahead of them fails the check.
-2. **Clear the 14 `stage13_redo_required` flags** by re-review, not by editing the field.
+2. **Clear the 15 `stage13_redo_required` flags** by re-review, not by editing the field.
+   (This note said 14 until the closure reviewer counted 15 — its own §2 table listed 15
+   all along, so the prose contradicted the table beside it.)
 3. **The manuscript programme.** `bundle_manuscript_length` is RED for **11 bundles under
-   floor** — F needs 80pp and has 23; D7 needs 24 and has 4. This is goal 2's headline
+   floor** — F needs 80pp and has 23; D7 needs 24 and has 4.
+   ⚠️ **That count requires a fresh compile.** Run
+   `uv run python scripts/compile_bundle_pdf.py --all --force` first: the check reports
+   `UNMEASURED` for any bundle whose PDF predates its `\input` closure, and adding a
+   shared input (as goal 1 did with `docs/figuredeferred.tex`) staleness-invalidates all
+   21 at once. Measured stale, the same check reports 3 under floor and 16 UNMEASURED —
+   the closure reviewer saw exactly that and was right to flag the discrepancy. The
+   per-bundle `pp` column in §2 is likewise only meaningful on a freshly compiled tree. This is goal 2's headline
    deliverable and is roughly 150 pages of new physics manuscript plus the figures behind
    the 40 deferrals. **No floor was lowered and no `length_target` was nulled** — see §5.
 4. **Merge to main** once the above is green, with the full suite and a clean

@@ -918,9 +918,22 @@ observation that the $N_f = 16$ derived in D2 (modular framing /
 Rokhlin / 16-convergence) and the $N_f$ in the Sakharov coefficient
 $G_N^{\mathrm{Sak}} = 12\pi/(N_f\,\Lambda_{\mathrm{UV}}^{2})$ derived
 in D3 \S 17 (heat-kernel calibration on the substrate's Dirac-fermion
-bundle) are the same $N_f$. The same fermion-content count that fixes
-the Standard-Model anomaly classification also fixes the substrate's
-emergent gravitational coupling. This is one of the four substrate-identity
+bundle) are two readings of ONE fermion content, related by a fixed
+proportionality rather than identical. They are not the same number:
+\texttt{SakharovGenerationBridge.sm\_counts\_differ} proves that at
+Standard-Model content the anomaly-side count is $3$ and the
+Sakharov-side count is $24$, and
+\texttt{counts\_agree\_iff\_two\_weyl\_per\_generation} gives the exact
+condition under which they would coincide (two Weyl fields per
+generation, which the Standard Model does not satisfy). What is
+substantive, and what
+\texttt{SakharovGenerationBridge.generation\_constraint\_transfers}
+proves, is the transfer: the modular-invariance constraint
+$3 \mid N_{\mathrm{gen}}$, consumed from
+\texttt{GenerationConstraint.generation\_mod3\_constraint} rather than
+assumed, carries onto the Sakharov-side species count, so a condition derived
+from anomaly cancellation constrains the coefficient of the emergent
+Newton constant. This is one of the four substrate-identity
 threads listed in \S\ref{sec:strategic-frame} and is the F-unique
 synthesis content that none of the sibling bundles report individually.
 
@@ -2149,7 +2162,13 @@ the F-unique synthesis content:
   (D3 \S\ref{sec:emergent-gravity}) and the $N_f = 16$ that uniquely
   fixes the Standard-Model anomaly classification via
   $\mathrm{Spin}^{\mathbb{Z}_4}$ 5-bordism (D2
-  \S\ref{sec:chirality-wall-modular} with L2) are the same $N_f$.
+  \S\ref{sec:chirality-wall-modular} with L2) are two readings of one
+  fermion content, related by the per-generation Weyl count and NOT
+  equal: the anomaly-side and Sakharov-side counts are $3$ and $24$
+  at Standard-Model content
+  (\texttt{SakharovGenerationBridge.sm\_counts\_differ}). The
+  substantive thread is that the anomaly constraint \emph{transfers} to
+  the Sakharov coefficient.
 \item The SK--EFT axioms, KMS condition, and fluctuation-dissipation
   relation that close the BEC analog Hawking spectrum (D1
   \S\ref{sec:analog-hawking}) re-close on polariton (E1) and

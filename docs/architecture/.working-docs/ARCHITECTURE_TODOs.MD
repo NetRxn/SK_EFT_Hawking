@@ -440,7 +440,12 @@ reach for the same sentence split. Cite the check's verdict instead of re-derivi
 
 ---
 
-### D4. Ledger coverage — ✅ 100% (361/361). The residual risk is perishability, not coverage
+### D4. Ledger coverage — ✅ 100% (361/361) COVERED; ⚠️ the perishability queue is OPEN
+
+> **Heading corrected 2026-08-09 by the closure reviewer.** The ✅ described *coverage*,
+> which is genuinely 361/361, while the body carries an unexecuted queue and a three-step
+> Fix shape. A reader scanning headings read this as closed. Coverage is closed;
+> the queue is not, and the two are different claims.
 
 Measured 2026-08-07, after V8. **This is the honest state of the accuracy effort**, replacing
 the ledger's earlier unqualified "all seven VERIFIED".
