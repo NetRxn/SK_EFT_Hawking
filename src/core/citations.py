@@ -1756,6 +1756,28 @@ CITATION_REGISTRY = {
         'notes': 'Feistl-Schraven-Warzel multipole MW extension (Jan 2026). '
                  'arXiv + title verified 2026-04-24.',
     },
+    'Roehm2026GrapheneDeep': {
+        'authors': 'SK-EFT Hawking Research Program',
+        'title': 'Formally Verified Analog Hawking Radiation Across Three '
+                 'Platforms (bundle D1, E2 deep companion)',
+        'journal': 'in preparation',
+        'volume': None,
+        'page': None,
+        'year': 2026,
+        'doi': None,
+        'arxiv': None,
+        'doi_verified': True,
+        'inprep': True,
+        'primary_source_path': None,
+        'used_in': ['papers/E2/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Splash/deep companion self-citation, added 2026-08-09 when '
+                 'E2 was trimmed under the PRL ceiling and its nu-derivation, '
+                 'Kibble-Zurek cross-check and fig105 moved into D1. The '
+                 'citation is what makes the trim content-preserving at the '
+                 'portfolio level rather than a deletion. No external primary '
+                 'source: D1 is this program.',
+    },
     'FractonNonAbelian2025': {
         'authors': 'SK-EFT Hawking Research Program',
         'title': 'Yang-Mills incompatibility of fracton topological phases (Paper 8 companion)',
