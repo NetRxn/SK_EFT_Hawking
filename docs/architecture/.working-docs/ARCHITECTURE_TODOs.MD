@@ -1509,7 +1509,28 @@ that sign-off, not ADR-011's.
 
 ---
 
-### D28. `goal-prompt/SKILL.md` is 2,784 words against a 2,000-word target — OPEN
+### D28. `goal-prompt/SKILL.md` is 2,784 words against a 2,000-word target — ✅ DONE 2026-08-09
+
+> **2,880 → 1,430 words** (the entry's 2,784 had grown). Launch mechanics moved to
+> `references/goal-prompt-authoring.md` under *Launch mechanics*; the skill body keeps the posture
+> and a seven-step outline that names each step and points at the reference for its exact command
+> and failure mode. All six headings survive; posture and the fail-loud step-4 verification are
+> intact.
+>
+> ⚠️ **THIS ENTRY'S LOAD-BEARING HAZARD DOES NOT EXIST, and checking it was the real work.** The
+> entry says the body *"is re-injected after every compaction by `harness_reinject.py`, so what
+> stays in `SKILL.md` versus what moves to `references/` changes what an autonomous loop re-reads at
+> every compaction boundary"*. Read directly: `harness_reinject.compose_directive` builds a
+> **minimal frame** (one GO-signal line) plus `harness_common.build_reorientation_payload`
+> (RE-ANCHOR + live HEAD anchor + coaching block). **It never reads `SKILL.md`.** Its own docstring
+> says *"the full discipline is the mandated read"* — i.e. `PRE_DECISIONS.md`.
+>
+> Had the warning been taken at face value, the split would have been done timidly or not at all,
+> on a risk that isn't there.
+>
+> **The skill asserted the same falsehood about itself** in its posture heading (*"this core
+> re-attaches after every compaction"*), and that is corrected in place with what actually happens
+> and where compaction-surviving content really belongs. 166 plugin surface guards pass.
 
 ADR-011 Phase 8 measured the plugin's skills against the `plugin-dev` skill-development
 criteria. One exceeded budget: `skills/goal-prompt/SKILL.md` at **2,784 words** against
