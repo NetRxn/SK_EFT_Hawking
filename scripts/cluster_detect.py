@@ -243,6 +243,43 @@ def now_iso() -> str:
     return datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
 
 
+def _strip_timestamps(record: dict) -> dict:
+    """The record with every `constructed_at` removed — its content identity.
+
+    Two runs over an unchanged corpus differ only in these fields, so equality
+    here is the test for "nothing actually changed" (TODO-D29, same shape as the
+    TODO-T2 fix that made the freshness writer content-addressed).
+    """
+    import copy
+    r = copy.deepcopy(record)
+    r.pop('constructed_at', None)
+    for c in r.get('clusters', []):
+        c.pop('constructed_at', None)
+    return r
+
+
+def _reuse_timestamps_if_unchanged(record: dict, out_path: Path) -> dict:
+    """Carry the previous run's timestamps forward when content is identical.
+
+    Returns `record` unmodified when the file is absent or the content really
+    changed, so a genuine clustering change still re-stamps.
+    """
+    try:
+        old = json.loads(out_path.read_text(encoding='utf-8'))
+    except (OSError, ValueError):
+        return record
+    if _strip_timestamps(old) != _strip_timestamps(record):
+        return record
+    record['constructed_at'] = old.get('constructed_at', record['constructed_at'])
+    old_by_hash = {c.get('normalized_hash') or c.get('label'): c
+                   for c in old.get('clusters', [])}
+    for c in record.get('clusters', []):
+        prev = old_by_hash.get(c.get('normalized_hash') or c.get('label'))
+        if prev and 'constructed_at' in prev:
+            c['constructed_at'] = prev['constructed_at']
+    return record
+
+
 def assemble_record(clusters: list[dict], strategy: str) -> dict:
     return {
         'version': 1,
@@ -324,9 +361,21 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(out_path, 'w', encoding='utf-8') as f:
-        json.dump(record, f, indent=2, sort_keys=True)
-        f.write('\n')
+    record = _reuse_timestamps_if_unchanged(record, out_path)
+    payload = json.dumps(record, indent=2, sort_keys=True) + '\n'
+
+    # Byte-identical output is not rewritten at all. Writing it would leave the
+    # content unchanged but bump mtime, and other freshness checks key on mtime
+    # (TODO-D29; cf. TODO-T2).
+    try:
+        if out_path.read_text(encoding='utf-8') == payload:
+            logger.info("Unchanged (%d clusters) — %s left untouched",
+                        len(clusters), out_path)
+            return 0
+    except OSError:
+        pass
+
+    out_path.write_text(payload, encoding='utf-8')
     logger.info("Wrote %d clusters across %d papers → %s",
                 len(clusters), len(record['paper_coverage']), out_path)
     return 0

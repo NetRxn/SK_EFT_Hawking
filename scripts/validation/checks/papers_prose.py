@@ -955,7 +955,31 @@ def _tp_live_pins() -> tuple[str | None, str | None]:
     return version, rev
 
 
-def _tp_scan_lines(lines: list[str], live_ver: str, live_rev: str
+def _tp_live_dep_revs() -> dict[str, str]:
+    """Every `rev` currently pinned in `lakefile.toml`, keyed by dependency name.
+
+    DERIVED, not hand-listed: a `[[require]]` stanza added later is picked up
+    without editing this function. Exists because `_tp_live_pins` returns only
+    Mathlib's rev, so a sentence naming Mathlib and PhysLib together had the
+    PhysLib hash compared against Mathlib's and a CORRECT pin reported as drift
+    (TODO-D22; D11 and D12 both hit it). Citing any currently-pinned rev is
+    accurate, so the test is membership in this set, not equality with one rev.
+    """
+    revs: dict[str, str] = {}
+    try:
+        toml_text = (_H.LEAN_DIR.parent / "lakefile.toml").read_text(encoding="utf-8")
+    except OSError:
+        return revs
+    for block in toml_text.split("[[require]]")[1:]:
+        n = re.search(r'name\s*=\s*"([^"]+)"', block)
+        r = re.search(r'rev\s*=\s*"([0-9a-f]{8,40})"', block)
+        if n and r:
+            revs[n.group(1).lower()] = r.group(1)
+    return revs
+
+
+def _tp_scan_lines(lines: list[str], live_ver: str, live_rev: str,
+                   other_revs: frozenset[str] = frozenset()
                    ) -> tuple[list[tuple[int, str]], list[tuple[int, str]]]:
     """Pure core of Class TP: scan draft lines for non-live pin literals.
 
@@ -974,9 +998,11 @@ def _tp_scan_lines(lines: list[str], live_ver: str, live_rev: str
         stale_vers = {v for v in _TP_LEAN_VER_RE.findall(line) if v != live_ver}
         stale_revs: set[str] = set()
         if _TP_MATHLIB_CTX_RE.search(ctx):
+            live_set = {live_rev, *other_revs}
             stale_revs = {
                 h for h in _TP_HEX_RE.findall(line)
-                if not (live_rev.startswith(h) or h.startswith(live_rev))
+                if not any(lr.startswith(h) or h.startswith(lr)
+                           for lr in live_set if lr)
             }
 
         if not stale_vers and not stale_revs:
@@ -1005,6 +1031,10 @@ def check_paper_toolchain_pin_drift() -> CheckResult:
     """
     try:
         live_ver, live_rev = _tp_live_pins()
+        # Every other currently-pinned dep rev (PhysLib, repl, ...). Citing any
+        # of them is accurate; comparing them to Mathlib's rev is TODO-D22.
+        other_revs = frozenset(
+            v for k, v in _tp_live_dep_revs().items() if k != "mathlib")
     except Exception as exc:  # defensive: an advisory never breaks the suite
         return CheckResult(passed=True, measured=False, details=[
             Detail("pins", True, f"SKIPPED — could not read live pins: {exc}",
@@ -1031,7 +1061,8 @@ def check_paper_toolchain_pin_drift() -> CheckResult:
         except OSError:
             continue
         rel = f"papers/{draft.parent.name}/{draft.name}"
-        file_pin, file_cap = _tp_scan_lines(lines, live_ver, live_rev)
+        file_pin, file_cap = _tp_scan_lines(lines, live_ver, live_rev,
+                                            other_revs=other_revs)
         pin_hits += [f"{rel}:{ln} — {found}" for ln, found in file_pin]
         cap_hits += [f"{rel}:{ln} — {found}" for ln, found in file_cap]
 

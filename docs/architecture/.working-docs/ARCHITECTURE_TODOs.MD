@@ -995,7 +995,23 @@ remediation batch.**
 `apex_theorems` keys and `docs/audits/**` — so it invalidates no bundle's review state. That was
 deliberate, and it is why the retrofit did not need to re-enter the reviewer stages at all.
 
-### D22. `paper_toolchain_pin_drift` reports a CURRENT PhysLib pin as drift — OPEN (false positive)
+### D22. `paper_toolchain_pin_drift` reports a CURRENT PhysLib pin as drift — ✅ DONE 2026-08-09
+
+> **Reproduced first** (D11:514, D12:125 — the TODO's line numbers 546/129 had drifted with the
+> drafts; the defect had not). Fixed by `_tp_live_dep_revs()`, which parses **every** `[[require]]`
+> stanza's rev from `lakefile.toml` and is therefore DERIVED — a dep added later is covered without
+> editing the function, rather than hand-listing PhysLib beside Mathlib. A hex is drift only if it
+> prefix-matches no currently-pinned rev.
+>
+> **Corpus figure moves 29 → 27**, exactly the ≥2 this entry predicted. `_tp_live_pins` and
+> `_tp_scan_lines` keep their declared public shapes (`other_revs` is an optional keyword), and all
+> 79 pre-existing tests still pass.
+>
+> ⚠️ **A fixture error worth recording:** the first version of the new test asserted `live_ver =
+> "v4.32.0"`. `_tp_live_pins` strips the leading `v` and returns `4.32.0`, so the test failed while
+> the code was correct. Verified against the live resolver rather than assumed from the
+> `lean-toolchain` file's text. The seeded control (`test_without_the_fix_the_same_line_would_flag`)
+> proves the passing test is sensitive to the repair and not merely to a clean line.
 
 **Found:** 2026-08-07, D12 §D2 pass (`docs/audits/2026-08-06-d12-retrofit/FINDINGS.md`).
 
@@ -1199,7 +1215,18 @@ Phase 8 for the measurement error that produced that false report.
 
 ---
 
-### D29. `papers/claim_clusters.json` churns a timestamp on every validate run — OPEN (minor)
+### D29. `papers/claim_clusters.json` churns a timestamp on every validate run — ✅ DONE 2026-08-09
+
+> **Fixed on the TODO-T2 precedent, and one step further.** `cluster_detect.py` now compares the
+> payload with every `constructed_at` stripped (`_strip_timestamps`); when it matches, the prior
+> run's timestamps are carried forward (`_reuse_timestamps_if_unchanged`) AND the byte-identical
+> file is **not rewritten at all** — writing it would leave content unchanged but bump mtime, which
+> other freshness checks key on.
+>
+> **Verified both directions.** Unchanged corpus: `git hash-object` identical, mtime identical,
+> `git status` clean. Changed payload: re-stamps (asserted in
+> `tests/test_paper_provenance_v2.py::TestClusterWriterIsContentAddressed`, including the failure
+> mode that matters — a preserve-too-eagerly writer that never updates).
 
 Noticed while verifying ADR-011 Phase 8: a clean `validate.py` run leaves
 `papers/claim_clusters.json` modified with **8 insertions / 8 deletions, all of them

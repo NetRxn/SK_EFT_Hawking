@@ -2641,3 +2641,31 @@ its Tier-4 letter charter is now a harder job than it was this morning.
 **NOT-AN-ASSERTION.** L1 is not submittable. `readiness_submission_gate` remains red across the
 portfolio, the positioning paragraph has had no Stage-13 adversarial review, and the naturalness
 window it rests on is still project-adopted rather than derived, which the draft says in print.
+
+---
+
+## V68 — goal-2 opening: the list verified, and the two-instrument rule caught ME misapplying it — 3 atoms
+
+**A1 — the list is correct.** 38 entries: 28 marked OPEN + D33 (conditional, carries no status
+marker) + D35's second half = **30 work units**, matching the goal's enumeration exactly. D1 is
+WITHDRAWN (no defect: a sentence-split regex truncating before a qualifier, and
+`axiom_count_prose_consistency` was right all along) and D4 is closed at 100 %. Both predictions in
+the goal prompt — "verify it, headings lie, D4 may be closed" — were correct.
+
+**A2 — SELF-INFLICTED, and it is the rule's own failure mode.** My first pass ran two "independent"
+instruments: heading-text scan and section-body scan. They agreed on all 38 items, and **both were
+wrong about D1**, which reads `~~...~~ — WITHDRAWN, no defect exists`. They agreed because they
+shared a keyword vocabulary (`DONE|CLOSED|✅|RESOLVED`) that did not contain `WITHDRAWN`. **Two
+spellings of the same check is one instrument run twice.** The rule was satisfied on its face and
+violated in substance.
+
+**A3 — what actually resolved it.** A *positively*-keyed instrument: count headings that assert
+`OPEN` rather than headings that fail to assert closure. Absence-of-marker and presence-of-marker
+are genuinely different questions, and only the second one surfaced D33 (open work, no marker at
+all) and cleared D1.
+
+> **Sharpening of V67's rule, learned by breaking it immediately.** "Measure two ways" is not the
+> requirement; the requirement is that the two ways can *fail differently*. Before trusting
+> agreement, ask what each instrument keys on — if both key on the same vocabulary, the same file
+> region, or the same regex family, their agreement carries no information. Prefer pairing an
+> absence-test with a presence-test, or a parser with a compiler.
