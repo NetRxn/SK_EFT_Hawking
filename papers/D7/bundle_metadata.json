@@ -80,7 +80,7 @@
   "stage10_status": "pending",
   "stage13_status": "pending",
   "stage13_redo_required": true,
-  "freshness_stale": false,
+  "freshness_stale": true,
   "source_manifest_last_regen": null,
   "last_lift": "2026-05-26T20:00:00Z",
   "last_stage9_review": null,

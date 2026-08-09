@@ -189,7 +189,7 @@
   "stage13_review_doc": "docs/audits/stage13_attribution_sweep_2026-06-10.md#d8",
   "stage13_round1_doc": "papers/AutomatedReviews/2026-05-31-bundle-stage13/D8.md",
   "stage13_round1_findings": "0 BLOCKER, 2 REQUIRED (prior-art positioning vs VOQC/survey; first-claim ledger), 4 RECOMMENDED; all REQUIRED remediated, re-run GREEN",
-  "freshness_stale": false,
+  "freshness_stale": true,
   "source_manifest_last_regen": "2026-06-10T20:22:22Z",
   "last_lift": "2026-06-10T20:22:22Z",
   "last_stage10_review": "2026-05-31T14:55:00Z",
