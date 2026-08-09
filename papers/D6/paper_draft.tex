@@ -618,18 +618,35 @@ $A\,\varepsilon^2$. Before this, \verb|exRecFailureBound| was a definition
 carrying a docstring that called it a union bound; nothing proved that any
 probability satisfied it.
 
-\paragraph{What remains, stated because it is the result's real boundary.} Two
-gaps survive and neither is implicit in the Lean.
+\paragraph{The levels, composed.} \verb|ConcatenatedComposition.lean| applies
+Eq.~\eqref{eq:union-bound} inductively. The concatenation picture enters as a
+single inclusion of events, \verb|hstruct|: a level-$(L{+}1)$ extended rectangle
+fails only when some malignant pair of its level-$L$ constituents both fail.
+From that, \verb|levelFailure_le_agpSeq| derives
+\begin{equation}
+  \mu\!\left(\mathrm{fail}^{(L)}_i\right) \;\le\; \varepsilon_L,
+  \qquad \varepsilon_{L+1} = A\,\varepsilon_L^2,
+  \label{eq:composed-levels}
+\end{equation}
+level by level, and \verb|agpSeq_coe_eq_agpLevelSequence| identifies that
+sequence with \verb|agpLevelSequence|. The consequence a reader wants is
+\verb|steane_concatenated_failure_below_threshold|: below the Steane threshold, a
+genuine failure \emph{probability} --- not an abstract sequence --- satisfies
+$A_{\rm CNOT}\,P[\text{level-}L\text{ rectangle fails}] < 1$ for every $L \ge 1$,
+and \verb|concatenated_failure_double_exp| gives the double-exponential form.
+That statement's dependency closure reaches both the measure-theoretic union
+bound and the real-valued threshold chain, which is what it means for the
+recursion to be machine-checked \emph{from} the ex-Rec structure rather than
+alongside it.
 
-\emph{The levels are not yet composed.} Eq.~\eqref{eq:union-bound} is a
-single-level statement. \verb|agpLevelSequence| in \verb|Concatenation.lean| is
-still \emph{defined} by Eq.~\eqref{eq:agp-recursion} rather than derived, and the
-headline theorem's dependency closure does not reach the probabilistic layer:
-nothing yet models a level-$(L{+}1)$ extended rectangle as built from level-$L$
-rectangles, which is what would let the single-level bound be applied inductively.
-So the threshold theorem still proves the \emph{consequence} of the recursion
-from the recursion, with the single-level justification now available beside it
-rather than beneath it.
+The hypotheses are stated rather than derived, and they are the model:
+\verb|hstruct| above, pairwise independence of constituent failures, a base-level
+rate, and a constant malignant-pair count.
+\verb|levelFailure_hypotheses_satisfiable| exhibits a measure space meeting all
+four, so the result is not conditionally empty; it does not exhibit a model in
+which the bound is tight.
+
+\paragraph{What remains, stated because it is the result's real boundary.}
 
 \emph{The count is still pinned.} $A_{\rm CNOT} = 35\,235$ enters
 Eq.~\eqref{eq:acnot} as a literal from Ref.~\cite{AGP2006}~\S8.3. Deriving it

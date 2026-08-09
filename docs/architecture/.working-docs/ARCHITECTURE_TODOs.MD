@@ -1982,7 +1982,42 @@ requires reading D5's argument. **Do not add a gate for this without going throu
 defect class is real but `citation_primary_sources_present` already walks cited keys, and the right
 move may be one more leg on an existing check rather than a new one.
 
-### D35. Derive the AGP recursion instead of instantiating it at a pinned constant — ⚠️ HALF CLOSED 2026-08-09
+### D35. Derive the AGP recursion instead of instantiating it at a pinned constant — ✅ DONE 2026-08-09
+
+> **The second half landed: the levels are composed.**
+> `lean/SKEFTHawking/FaultTolerance/ConcatenatedComposition.lean` (new, kernel-pure, axioms
+> exactly `{propext, Classical.choice, Quot.sound}`, `lake build` clean):
+>
+> * `agpSeq` — the AGP level sequence over `ℝ≥0`. Chosen deliberately: `ℝ` carries a
+>   nonnegativity side condition at every induction step and `ℝ≥0∞` a finiteness one, while
+>   `ℝ≥0` coerces into both, so **one induction serves the measure side and the threshold
+>   side**. `agpSeq_coe_eq_agpLevelSequence` identifies it with `Concatenation`'s sequence.
+> * `levelFailure_le_agpSeq` — the induction. The concatenation picture enters as a single
+>   inclusion of events (`hstruct`: a level-`(L+1)` rectangle fails only when some malignant
+>   pair of its level-`L` constituents both fail), and the step is `measure_mono` into
+>   `exRecFailure_le_agpRecursionStep` at the previous level's rate.
+> * `concatenated_failure_double_exp` — `A · P[fail] ≤ (A ε₀)^{2^L}` for a genuine
+>   probability.
+> * `steane_concatenated_failure_below_threshold` — **the statement that closes the entry.**
+>   Its dependency closure reaches BOTH `MalignantUnionBound.lean` (measure-theoretic) and
+>   `AGP/Threshold.lean` (real-valued), which is what "the recursion is machine-checked from
+>   the ex-Rec structure" means operationally.
+> * `levelFailure_hypotheses_satisfiable` — non-vacuity. All four hypotheses hold at once on
+>   an explicit model, so nothing above is conditionally empty. ⚠️ It does **not** exhibit a
+>   model where the bound is tight; that needs a genuine independent product space over the
+>   circuit's locations, which is the same construction as deriving `A_CNOT`.
+>
+> ⚠️ **`agp_threshold_steane` itself did not change and could not.** It is a statement about
+> real numbers; a measure cannot appear in it. The gap closes because the *probabilistic*
+> capstone reaches both layers in one closure — stated this way so no one later "verifies"
+> the claim by looking for a measure inside the real-valued theorem.
+>
+> **Still pinned, and unchanged:** `A_CNOT = 35,235` (AGP §8.3 eq. 36), and `hstruct` /
+> `hindep` are modelling hypotheses stated as hypotheses rather than derived from a circuit.
+> D6 §7 now says all of this in print; its *"The levels, composed"* and *"What remains"*
+> paragraphs are load-bearing.
+
+<details><summary>Original entry (⚠️ HALF CLOSED 2026-08-09) — kept for the record</summary>
 
 > **The single-level step is now derived. The multi-level composition is not.** Stated this way
 > because the difference is exactly what D6 §7 may claim.
@@ -2036,6 +2071,8 @@ substantially stronger statement and the one a reader assumes on first reading.
 
 ⚠️ **Until it closes, D6 §7's scope paragraph is load-bearing and must not be trimmed.** It is the
 only thing separating the two claims in print.
+
+</details>
 
 ### D36. 307 FaultTolerance declarations still reach no bundle — OPEN
 

@@ -5220,6 +5220,7 @@ import SKEFTHawking.FaultTolerance.DoubleExp
 import SKEFTHawking.FaultTolerance.ExRec
 import SKEFTHawking.FaultTolerance.Malignant
 import SKEFTHawking.FaultTolerance.MalignantUnionBound
+import SKEFTHawking.FaultTolerance.ConcatenatedComposition
 import SKEFTHawking.FaultTolerance.StabilizerCode
 import SKEFTHawking.FaultTolerance.SteaneCode
 import SKEFTHawking.FaultTolerantUQC

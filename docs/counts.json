@@ -1,12 +1,12 @@
 {
-  "generated": "2026-08-09T12:28:00.705554",
+  "generated": "2026-08-09T13:29:45.545878",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 40701,
-    "theorems_total": 26375,
-    "theorems_substantive": 26349,
+    "total_declarations": 40710,
+    "theorems_total": 26382,
+    "theorems_substantive": 26356,
     "theorems_placeholder": 26,
-    "theorems_kernel_substantive": 26280,
+    "theorems_kernel_substantive": 26287,
     "theorems_tracked_vacuity_debt": 69,
     "theorems_vacuity_baseline": 48,
     "theorems_vacuous_proxy": 6,
@@ -15,7 +15,7 @@
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 2038,
+    "modules": 2039,
     "module_names": [
       "SKEFTHawking.A1Ext",
       "SKEFTHawking.A1ExtSubstantive",
@@ -585,6 +585,7 @@
       "SKEFTHawking.FaultTolerance.APMLdpcHashingBound",
       "SKEFTHawking.FaultTolerance.Basic",
       "SKEFTHawking.FaultTolerance.Chernoff",
+      "SKEFTHawking.FaultTolerance.ConcatenatedComposition",
       "SKEFTHawking.FaultTolerance.Concatenation",
       "SKEFTHawking.FaultTolerance.Counting",
       "SKEFTHawking.FaultTolerance.DoubleExp",
@@ -2056,7 +2057,7 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 12805,
+    "definitions": 12807,
     "structures": 480,
     "instances": 939,
     "inductives": 101,
@@ -2070,8 +2071,8 @@
   },
   "python": {
     "python_modules": 137,
-    "test_files": 176,
-    "pytest_cases": 6020,
+    "test_files": 178,
+    "pytest_cases": 6074,
     "notebooks": 91,
     "papers": 42,
     "figures": 170
