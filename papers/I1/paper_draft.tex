@@ -82,8 +82,8 @@ development via the language-server protocol, fresh-context
 adversarial review, and meta-process quality improvement), three new
 invariants (placeholder non-load-bearing, no heartbeat overrides in
 proof bodies, primary-source citation cache), the publication-bundle
-architecture that consolidates per-wave drafts into seventeen
-publication targets, and the preemptive-strengthening discipline
+architecture that consolidates per-wave drafts into the
+publication targets that frame enumerates, and the preemptive-strengthening discipline
 that reduces theorem-statement audit cost from twelve retroactive
 cuts to five and then to zero across three successive waves (with
 a mandatory ruthless post-wave review as a safety net for residual
@@ -186,7 +186,7 @@ plan, for any new project-local axiom) encodes the project's
 posture that axioms are temporary scaffolding, not permanent
 commitments (Section~\ref{sec:pipeline}). It also documents the
 publication-bundle architecture that consolidates per-wave drafts
-into seventeen publication targets and the preemptive-strengthening
+into the publication targets that frame enumerates, and the preemptive-strengthening
 discipline that reduces theorem-statement audit cost from twelve
 retroactive cuts (Phase~6c.3) to five (Phase~6b.1) and then to zero
 (Phase~6m R6) by applying strengthening rules prospectively, with
@@ -763,8 +763,10 @@ Stage~2 implements formulas with provenance metadata. Stages~3--4
 formalize and prove (interactive plus automated). Stage~5 verifies
 the formal layer compiles cleanly. Stage~6 runs Python tests.
 Stage~7 runs the automated cross-layer validation suite
-(thirty-three registered checks at the time of writing in
-June~2026, enumerated live by \texttt{validate.py --list})
+(enumerated live by \texttt{validate.py --list}; the count is
+deliberately not quoted here, because a census figure written into
+prose is stale the moment a check is added: this sentence
+read ``thirty-three'' against a live seventy-nine)
 spanning formula--theorem correspondence, parameter provenance,
 count freshness, citation integrity, and bundle consistency
 (Sections~\ref{sec:provenance} and~\ref{sec:adversarial}).
@@ -979,7 +981,7 @@ sentences are lifted into different paper bundles. Walked by
 %  - claim_clusters.json + cluster_bundle_index.json semantics
 %  - validate.py CHECK 21 (bundle_consistency) walks the registry
 %    and flags cross-bundle drift
-%  - The 14-bundle publication architecture per docs/PAPER_STRATEGY.md
+%  - The publication-bundle architecture per docs/PAPER_STRATEGY.md
 %  - The bundle_metadata.json schema (Phase 7a sub-wave 7a.1.1) and
 %    the BUNDLE_LIFT_PROCEDURE.md canonical lift workflow
 %
@@ -1035,8 +1037,8 @@ two reports agree character-for-character on the numerical content.
 The publication-bundle architecture (codified in the process
 document \texttt{docs/PAPER\_STRATEGY.md} in the public repository)
 consolidates the project's seventy-plus mapped sources (per-wave
-drafts plus Lean-only synthesis handles) into seventeen
-publication targets organized into five tiers: a flagship review
+drafts plus Lean-only synthesis handles) into the
+publication targets that frame enumerates organized into five tiers: a flagship review
 (\texttt{F}), eight themed deep papers
 (\texttt{D1}--\texttt{D8}), three PRL-style headline letters
 (\texttt{L1}--\texttt{L3}), three infrastructure papers (\texttt{I1},
@@ -1756,7 +1758,7 @@ event is the April~2026 external-adversarial-review round that
 exposed a thirteen-dimensional problem space that internal
 validation could not detect by construction. Second, the
 publication-bundle architecture that consolidates per-wave drafts
-into seventeen publication targets while preserving sentence-level
+into the publication targets that frame enumerates while preserving sentence-level
 provenance; this paper is drafted under that architecture. Third, an automated cross-bundle consistency check
 that walks a cross-bundle cluster registry and flags member-
 sentence drift across bundle boundaries, preventing the same fact

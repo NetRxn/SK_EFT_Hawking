@@ -87,7 +87,10 @@ canonical-form structure theorem, and the Markovian semigroup $e^{t\mathcal{L}}$
 (ITP) ecosystem (\Lean{}/Mathlib, Coq/Rocq, Isabelle/HOL including the Archive of Formal Proofs, Agda,
 HOL Light, Mizar; see Ref.~\cite{survey2021} and the records archived with this work) found no existing
 formalization of any of the three results. To our knowledge this is the first NEGF Green's-function and
-Landauer-\emph{conductance} transport, the first Hohenberg--Kohn/Levy--Lieb DFT, and the first Lindblad
+Landauer-\emph{conductance} transport, the first Hohenberg--Kohn/Levy--Lieb DFT \emph{statements}
+(qualified exactly as in \S\ref{sec:dft-scope} and \S1: proved over abstract data structures
+carrying the Rayleigh--Ritz inequalities as fields, \emph{not} over the molecular Hamiltonian of
+\S4.1), and the first Lindblad
 \emph{generator and Markovian dynamical semigroup} in any proof assistant. Two carve-outs are essential
 and we make them explicitly. First, quantum \emph{channels} (completely-positive trace-preserving
 (CPTP) maps, Choi matrices, superoperators) already exist in \Lean{}'s PhysLib quantum-information

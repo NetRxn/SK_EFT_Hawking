@@ -927,6 +927,21 @@ violated for the fifth time in this workstream.
 
 ### D15. The flagship surveys a 17-bundle program; 21 exist — ✅ DONE 2026-08-09 (CRITICAL)
 
+> ⚠️ **REOPENED AND RE-CLOSED 2026-08-09 by the closure reviewer.** The entry below claimed
+> "all six roster sites corrected". Measured again with a widened scan — roster-number words
+> AND digits, across all 21 drafts, not just F — **fifteen live sites remained**: F still said
+> "Sixteen sibling bundles" and carried "17-bundle" in five more places including a section
+> title and a bibitem; I1 said "seventeen publication targets" in four; D3, D4 and I3 each
+> carried a "14-bundle" bibitem; and I1 quoted "thirty-three registered checks" against a live
+> seventy-nine. **Every one is now fixed by REMOVING the census figure**, not by updating it —
+> the architecture rule is that a count belongs in the derived inventory, and a roster number
+> written into prose is stale the moment the roster moves. That is the third time this branch
+> has had to relearn it.
+>
+> **The instrument that let it through:** the original scan keyed on the six F sites the entry
+> itself enumerated. Re-scanning the corpus for the *pattern* rather than the *known list* is
+> what found the other nine. A finding's own site list is a claim like any other.
+
 > **All six roster sites corrected** (abstract, §1.2, §9.4, §11.1, §11.2, §12.3): sixteen siblings →
 > twenty, seventeenth bundle → twenty-first, Tier 1 `D1--D8` → `D1--D12`, and D9–D12 are now named
 > in the §1.2 thread enumeration they were missing from.
