@@ -564,6 +564,18 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
         "mechanism fails; the section ceiling fires on D3's 31; a Tier-0 review is EXEMPT "
         "from it; empty population is UNVERIFIED",
     ),
+    "bundle_sentence_length": (
+        "test_d5_bundles_readiness.py",
+        "4 mutations (TODO-D7 readability half). A down-only ratchet on sentences over "
+        "100 words, frozen at the LIVE count with zero headroom. Two thresholds gated "
+        "differently on purpose: >100 gates, >60 is advisory only, because gating >60 "
+        "fires on correct methods prose. ⚠️ The prose was NOT rewritten to lower the "
+        "number in the change that introduced the check — TODO-D7's own constraint is "
+        "that the decider must not be the generator. Legs: green at the frozen ratchet; "
+        "both thresholds reported and only the indefensible one gates; ceiling 0 fails, "
+        "so the gate is not inert; the ceiling equals the live measurement, so there is "
+        "no slack to absorb a regression",
+    ),
     "bundle_figure_adequacy": (
         "test_d5_bundles_readiness.py",
         "7 mutations (ADR-011 Phase 4, Gate 13). Nine of 21 bundles ship ZERO figures, "
@@ -872,6 +884,11 @@ PRODUCTION_SEEDED: frozenset[str] = frozenset({
     # 2026-08-09: edited the REAL papers/E2/bundle_counts.tex theorem count 6 -> 600
     # -> rc=1 naming E2 as stale. Restored from a scratchpad snapshot, byte-identical.
     "bundle_counts_fresh",
+    # 2026-08-09 (TODO-D7 readability half): inserted one 122-word sentence after
+    # `\maketitle` in the REAL papers/L3/paper_draft.tex -> 22 -> 23 against the frozen
+    # ratchet of 22, rc=1 naming the excess and the longest sentence. Restored from a
+    # scratchpad snapshot, byte-identical.
+    "bundle_sentence_length",
 })
 
 #: The ratchet, in the same idiom as `AWAITING_CEILING`: the number of registered
@@ -882,7 +899,7 @@ PRODUCTION_SEEDED: frozenset[str] = frozenset({
 #: every check for which nobody has yet demonstrated a production failure, not every
 #: check that is broken. Lower it one check at a time, each with the probe recorded in
 #: the commit — the same way the 54-entry `AWAITING_MUTATION_TEST` backlog went to zero.
-FIXTURE_ONLY_CEILING = 55  # 2026-08-09: +2 checks, +2 production seeds — net unchanged
+FIXTURE_ONLY_CEILING = 55  # 2026-08-09: +3 checks, +3 production seeds — net unchanged
 
 
 def _registered() -> list[str]:

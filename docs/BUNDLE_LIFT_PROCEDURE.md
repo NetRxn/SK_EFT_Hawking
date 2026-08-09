@@ -72,7 +72,7 @@ Schema: `docs/BUNDLE_DIRECTORY_SCHEMA.md`.
 
 ### §3. Initial lift / append (per source paper, OR sourceless synthesis)
 
-> **Framing (load-bearing).** Bundles are *synthesis-driven new compositions*, not stitched-together copies of source per-paper drafts. The per-paper material is **substrate** — raw research content the bundle draws from — but the bundle's narrative arc, section structure, and prose are **authored fresh** with cross-program synthesis as the goal. The `bundle_append.py` script registers a source as contributing to the bundle and inserts a structural anchor (a section heading + TODO comment) so the bookkeeping (`source_manifest.md`, `append_log.json`) stays accurate; it does NOT copy source prose. Section bodies are authored in §7 below.
+> **Framing (load-bearing).** Bundles are *synthesis-driven new compositions*, not stitched-together copies of source per-paper drafts. The per-paper material is **substrate** — raw research content the bundle draws from — but the bundle's narrative arc, section structure, and prose are **authored fresh** with cross-program synthesis as the goal. The `bundle_append.py` script registers a source as contributing to the bundle and inserts a structural anchor (a heading + TODO comment) so the bookkeeping (`source_manifest.md`, `append_log.json`) stays accurate; it does NOT copy source prose. That anchor is a `\subsection` **inside a section the bundle already argues** — registering a source does not buy a top-level section (F-02, below). Section bodies are authored in §7 below.
 
 **Two paths:**
 
@@ -85,12 +85,35 @@ uv run python scripts/bundle_append.py \
     --bundle <X> \
     --source-paper <paperN_topic> \
     --insertion-point '<§N>' \
+    --target-section '<exact title of an EXISTING top-level section>' \
     --notes "<short rationale>" \
-    --lean-modules "<comma-separated Lean module names if applicable>" \
-    [--initial-lift]
+    --lean-modules "<comma-separated Lean module names if applicable>"
 ```
 
-The first invocation per bundle uses `--initial-lift` to create the `paper_draft.tex` skeleton. Subsequent calls register additional sources without copying their content.
+The first invocation per bundle uses `--initial-lift` instead of `--target-section`, to create the `paper_draft.tex` skeleton. Subsequent calls register additional sources without copying their content.
+
+> **A source registration does not create a section (ADR-011 F-02).** Measured across
+> all bundles' `append_log.json` before this rule existed: **74 of 74 content lifts
+> created a top-level `\section`**, 28 of them into D3 — which is how D3 reached 31
+> top-level sections. A lift now names the existing section it belongs under and lands
+> as a `\subsection` inside it. `--target-section` is matched against the draft's own
+> top-level sections (exact, then case-insensitive, then unique substring); an absent
+> or ambiguous name exits nonzero and prints the draft's section list.
+>
+> Creating a new top-level section is a change to the bundle's argument structure, not
+> a side-effect of registration, so it is explicit and justified:
+>
+> ```bash
+> uv run python scripts/bundle_append.py --bundle <X> --source-paper <paperN_topic> \
+>     --insertion-point '<§N>' --new-section \
+>     --section-rationale "<why no existing section argues this>"
+> ```
+>
+> The rationale is written into the draft, `change_log.md` and `append_log.json`.
+> `--initial-lift` implies this path: a bundle with no draft has no section plan to
+> append into. ⚠️ The skeleton insertion itself is **not** optional — `append_log.json`'s
+> `bundle_section_inserted` is the anchor the absorption protocol reads, and an append
+> that inserted nothing would make that field meaningless.
 
 #### §3b. Sourceless bundle (fresh synthesis from Lean substrate; e.g. I2)
 

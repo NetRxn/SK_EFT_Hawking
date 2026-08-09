@@ -1470,42 +1470,110 @@ elsewhere. Needs approval.
 - ⚠️ **Do not "fix" by re-escaping.** The on-disk form is the readable one and is what
   `write_metadata_counts` — the most frequent writer — produces.
 
-### D26. F-02 (a source registration must not create a section) is unbuilt — OPEN
+### D26. F-02 (a source registration must not create a section) — ✅ DONE 2026-08-09
 
-**Deferred by dependency, not by judgment.** ADR-011 Phase 4.
+> **Both halves shipped: the symptom in D3, and the mechanism in `bundle_append.py`.**
+>
+> **The stated blocker did not survive re-measurement.** The entry deferred on "a
+> `CHARTER.md` that does not exist yet", blocked on ADR-010's roster decision. The roster
+> decision landed (21 bundles), and all 21 bundles already carry `bundle_target`,
+> `length_target` and `target_journal` — but more to the point, **the charter was the wrong
+> place for the section plan.** A plan stored beside the document it describes drifts from
+> it; a plan *read from* the document cannot. `--target-section` is validated against the
+> draft's own top-level sections, which buys exactly what the charter was for — you may only
+> append where the architecture already has a home, or say out loud that you are changing it
+> — with nothing to author and nothing to keep in sync.
+>
+> **The mechanism, measured.** Across all 21 bundles' `append_log.json`: **74 of 74 content
+> lifts created a top-level `\section`.** The `§§` subsection form the old `is_subsection`
+> hint recognised was used **zero** times, because nothing ever required it. 28 of the 74
+> landed in D3. A lift now takes `--target-section '<existing title>'` and lands as a
+> `\subsection` inside it; `--new-section` requires `--section-rationale`, and the reason is
+> written into the draft, `change_log.md` and `append_log.json`. `--initial-lift` implies the
+> new-section path — a bundle with no draft has no plan to append into.
+>
+> ⚠️ **The entry's warning was honoured.** The skeleton insertion was NOT removed.
+> `bundle_section_inserted` now carries the *resolved* anchor
+> (`§ <section> / §§ <subsection>`) rather than the caller's unlocatable `--insertion-point`
+> hint, which is preserved separately as `insertion_point_hint`. Measured: 127 of 129 corpus
+> events are script-written and **all 127 carry an anchor**. Exactly one event corpus-wide
+> has no `bundle_section_inserted` at all — a hand-authored `Revision` row in bundle F —
+> which is why the regression test scopes its population to script-written events instead of
+> asserting over the whole log.
+>
+> **The symptom in D3, by grouping rather than deletion.** 31 → 20 top-level sections, no
+> content removed: 11 sections demoted to subsections under 4 retitled parents (max 19
+> subsections per parent, under revtex4-2's 26-letter cap — 5 demotions into the Lorentzian
+> appendix overflowed it, which is why Penrose became a new parent rather than a sixth
+> child). D3 compiles with 0 undefined references, and `bundle_structural_coherence` — red
+> for exactly this one bundle — passes across all 21.
+>
+> **Shipped:** `scripts/bundle_append.py` (`_top_level_sections`, `_resolve_target_section`,
+> `_back_over_banner`, the two-shape `_append_section_to_draft`, CLI refusals),
+> `tests/test_bundle_append_section_policy.py` (17 checks), `papers/D3/paper_draft.tex`,
+> `docs/BUNDLE_LIFT_PROCEDURE.md` §3a, `docs/BUNDLE_DIRECTORY_SCHEMA.md`.
 
-- **What:** `bundle_append.py` inserts a `\section` skeleton per registered source, which is
-  the *mechanism* behind sedimentation. D3 carries 31 top-level sections and 114
-  subsections; `bundle_structural_coherence` catches the symptom at a ceiling of 20.
-- **Why it is not built:** the fix is `--charter-section <name>`, validated against a
-  `CHARTER.md` that does not exist yet. Charters carry a venue and a length commitment, and
-  ADR-010's four merge proposals (D6+D9, D10+D11, E1+E2, D4→D8) are still open, so authoring
-  21 of them now means re-authoring them after the roster decision.
-- ⚠️ **Do not "fix" by removing the skeleton insertion alone.** Appends would then produce
-  no structural anchor at all, and `append_log.json`'s `bundle_section_inserted` — which the
-  absorption protocol reads — becomes meaningless.
-- **Unblocked by:** the roster decision (ADR-010 §Open item 1).
+### D27. F-07 (Lean freshness trigger) and F-09 (per-phase mapping rows) — ✅ DONE 2026-08-09
 
-### D27. F-07 (Lean-mtime freshness trigger) and F-09 (per-phase mapping rows) — OPEN
-
-ADR-011 Phase 6 shipped F-08 (branch D.0) and F-10 (`bundle_lean_module_coverage`). Two
-absorption items remain, both measured and both buildable:
-
-- **F-07 part 2 — track Lean-module mtimes.** The Stage-C freshness trigger compares
-  *source-paper* mtimes, and D6–D12/I2/I3 have synthetic source tokens naming no directory,
-  so **nine bundles have no working trigger** (they report `UNMEASURABLE`, which is honest
-  but not closed). The data to fix it exists: **18 of 21 bundles declare 444 distinct
-  modules** in `append_log.json`'s `lean_modules_referenced`. ⚠️ That field name is the trap
-  — probing `lean_modules` returns 0 of 21 and reads as "no data exists".
-- **F-07 part 3 —** promote `bundle_source_freshness` to FAIL under `--strict` at the
-  submission gate. Its docstring already anticipates this.
-- **F-09 — per-phase mapping rows.** Stage B's sourceless variant writes one row per
-  *bundle* (`_phase6EA_lean_only`), so there is no unit of absorption smaller than the whole
-  bundle. Retrofit rows for 6EA/6EB/6EC/6ED/6EE and 6CA/6CB/6CD/6CE.
-
-**Why not now:** F-07 changes what `check_bundle_source_freshness` measures for nine
-bundles at once, and this is ADR-010 §D6, which carries its own operator approval. Needs
-that sign-off, not ADR-011's.
+> **Zero bundles are wholly unmeasurable.** All nine formerly-`UNMEASURABLE` bundles —
+> D6, D7, D8, D9, D10, D11, D12, I2, I3 — now carry a working Stage-C trigger.
+>
+> **Part 3 was already built.** `checks/freshness.py`'s wrapper has carried
+> `if _cfg.STRICT_MODE and warning: passed = False` all along. Verified live:
+> `validate.py --check bundle_source_freshness --strict` reports *23 FAIL / 0 WARN*.
+> Nothing was needed; the entry was wrong about its own scope.
+>
+> **THREE MEASUREMENTS CHANGED THE DESIGN, and each was a wrong first answer.**
+>
+> 1. **Registration alone would not have closed the nine.** The entry proposed
+>    `lean_modules_referenced` — 18 of 21 bundles, and re-measured here as **384 distinct
+>    names**, not 444 (444 is the per-bundle sum, which double-counts a module two bundles
+>    both register; both numbers are right about different things and neither should be
+>    "corrected" into the other). But **D6 and D7 register ZERO modules**, and those are
+>    precisely the two most in need of a trigger. The population had to include the
+>    **derived apex closure**, which is declared for all 21 — D6 at 13 modules, D7 at 8 —
+>    and cannot drift because nothing about it is hand-maintained. The trigger is the union;
+>    neither population contains the other.
+>
+> 2. **Not mtime — commit time.** ADR-010 §D6 required the audit's Lean-*mtime* proposal be
+>    *"evaluated rather than assumed"*. It does not survive evaluation: a `git checkout`, a
+>    worktree creation or a fresh clone rewrites every mtime in the tree and would mark all
+>    nine bundles stale at once for a reason unrelated to content. The trigger uses the last
+>    commit that touched the file (one `git log --name-only` pass, ~0.5 s for the whole
+>    tree), falling back to mtime only for a file git does not know about — untracked, or
+>    dirty in the working tree, both of which mean changed-and-not-yet-history.
+>
+> 3. **Resolution and dedup are load-bearing.** Names were hand-typed at lift time and
+>    arrive dotted, slash-separated, and `SKEFTHawking.`-prefixed; normalising all three
+>    takes resolution from 328 to **357 of 384**. The remaining **27 resolve to no file** —
+>    neither modules nor declarations (probed against all 40 701 records: zero hits), so
+>    they are renamed or never-created registrations. The check now *reports* them rather
+>    than silently shrinking its own population. And because the closure spells a module
+>    `SKEFTHawking.EffectiveMediumBounds` where registration spells it
+>    `EffectiveMediumBounds`, the population is keyed by resolved **path**: name-keyed, D11
+>    counted 44 modules where 22 files exist.
+>
+> **F-09 — and the entry undercounted its own population.** It named nine phases
+> (6EA–6EE, 6CA/6CB/6CD/6CE). The true figure is **twelve**: D10's 6BA/6BB/6BC carry the
+> identical defect and were not listed. All twelve now have their own
+> `_phase<X>_lean_only` row → D10 (3), D11 (5, incl. 6ED), D12 (4). **6CC deliberately has
+> no row** — it is PARKED behind 5q.G, and a row for a phase with no substrate registers an
+> absorption unit that can never be absorbed.
+>
+> **On the approval gate.** ADR-010 §Open item 4 listed *"D6 step 4 — operator approval for
+> the Lean-module-mtime absorption trigger"*. The §6a rule it invokes is *identify the
+> defect class → read the existing machinery → describe the residue → request approval*.
+> That diligence is what produced measurement 2 above: **the thing awaiting approval is not
+> the thing built.** The mtime proposal is rejected on evidence and recorded as rejected.
+>
+> **Shipped:** `scripts/check_bundle_source_freshness.py` (module index, four-spelling
+> resolver, git-commit-time map, dirty-path fallback, path-keyed union, unresolved-name
+> reporting), `docs/PAPER_DRAFT_MAPPING.md` (12 rows + totals line),
+> `tests/test_bundle_lean_freshness_trigger.py` (34 checks).
+>
+> **Residue, named rather than closed:** the 27 unresolvable registrations are data debt.
+> Repairing them means reconstructing a rename history, and guessing a mapping would be
+> worse than reporting the gap — which the check now does, per bundle, every run.
 
 ---
 

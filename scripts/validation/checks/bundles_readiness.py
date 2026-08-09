@@ -493,7 +493,12 @@ _AMBIGUOUS_MODULE_BASENAMES = frozenset({
 #: than incomplete drafts. What the number *does* say is that the link between declared
 #: substrate and published claim is weak, and it can only be strengthened. Lower it by
 #: citing the module or by not registering it, never by widening the ambiguous list.
-LEAN_MODULE_ABSENT_CEILING = 238
+#: 2026-08-09: 238 -> 236, attributed by measurement rather than assumed. **It is D10,
+#: 11 -> 9**, from the TODO-D12 prose repair naming two modules it already registered;
+#: D9 (64) and E1 (7) are unchanged. The first guess — D3's restructuring — was WRONG:
+#: swapping D3's draft for its HEAD version changes no bundle's count. Lowered because
+#: the live count fell, which is the direction the ratchet exists to allow.
+LEAN_MODULE_ABSENT_CEILING = 236
 
 
 @register_check("bundle_lean_module_coverage",

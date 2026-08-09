@@ -87,15 +87,27 @@ Effects:
 - New source rows appear in each affected bundle's `source_manifest.md`.
 - `validate.py --check bundle_source_freshness` flags affected bundles `freshness-stale=true`.
 
-> ⚠️ **THE STAGE-C TRIGGER DOES NOT FIRE FOR PHASE-SOURCED BUNDLES — read this before relying on it.**
-> The trigger compares **source-paper mtimes** under `papers/<source>/` to `last_lift`. Bundles whose
-> `PAPER_DRAFT_MAPPING.md` entries are synthetic tokens (`_phase6t_lean_only`, `D9_initial_draft`, …)
-> name no directory, so there is nothing to compare: **D6–D12, I2 and I3 — nine bundles — have no
-> working freshness trigger**, and portfolio-wide 89 of 180 source assignments name an absent
-> directory. Those bundles now report `UNMEASURABLE` rather than `fresh`, so the gap is visible, but
-> it is **not closed**: nothing watches Lean-module mtimes, which is what a phase-sourced bundle
-> actually depends on. Building that trigger is ADR-010 D6 and is gated on operator approval per
-> `REMEDIATION_PLAN.md` §6a.
+> ✅ **THE STAGE-C TRIGGER NOW FIRES FOR PHASE-SOURCED BUNDLES TOO (2026-08-09, TODO-D27).**
+> Two populations are compared to `last_lift`, and a bundle is stale if either moved.
+>
+> * **Source papers** — the latest mtime under `papers/<source>/`. Bundles whose
+>   `PAPER_DRAFT_MAPPING.md` entries are synthetic tokens (`_phase6t_lean_only`,
+>   `D9_initial_draft`, …) name no directory, so this population is empty for **D6–D12, I2
+>   and I3** and they report `source-UNMEASURABLE` on this leg. That is honest, not a gap.
+> * **Lean substrate** — the last **commit** touching each module the bundle rests on, over
+>   the union of `append_log.json`'s `lean_modules_referenced` and the bundle's **derived
+>   apex closure**. The closure is what makes the trigger universal: D6 and D7 register
+>   zero modules, so a registration-only trigger would have left the two neediest bundles
+>   unmeasured. Every one of the 21 declares apexes.
+>
+> **Commit time, not mtime.** A `git checkout`, a worktree creation or a fresh clone
+> rewrites every mtime in the tree; an mtime trigger would mark all nine stale at once for
+> a reason unrelated to content. Mtime is used only for a file git does not know about —
+> untracked, or dirty in the working tree.
+>
+> **Zero bundles are wholly `UNMEASURABLE`.** Registered module names that resolve to no
+> file are reported per bundle rather than dropped, so a renamed module cannot silently
+> shrink the population it was registered into.
 >
 > ⚠️ `freshness_stale` is **no longer written during validation**. `check_bundle_source_freshness.check()`
 > is pure by default — a check must not mutate the artifact it checks, and this one wrote its own

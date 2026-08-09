@@ -306,8 +306,15 @@ charter honestly.
 
 1. `CHARTER.md` per bundle: section architecture (6–12 sections, each with what it argues) +
    figure plan (`{id, shows, source}`), seeded from the existing §D2 purpose statements.
-2. **F-02** — `bundle_append.py --charter-section`, validated against the charter. **Registering a
-   source must never create a section.**
+2. **F-02** — **Registering a source must never create a section.** ✅ **Shipped 2026-08-09,
+   and *not* against a charter.** The plan is read off the draft's own top-level sections
+   (`bundle_append.py --target-section`), because a plan stored beside the document it
+   describes drifts from it while a plan read *from* the document cannot. This buys the same
+   validation the charter was for — you may only append where the architecture already has a
+   home, or say so explicitly via `--new-section --section-rationale` — with nothing to
+   author and nothing to keep in sync, which also retires the charter dependency that had
+   deferred this item. Measured before the change: **74 of 74 content lifts created a
+   top-level section**, 28 of them in D3. See TODO-D26.
 3. **F-03** — §6 becomes figure *realisation*; `\figuredeferred{id}{reason}`; Stage 9 stops passing
    vacuously on an empty set.
 4. **Gate 13** `bundle_figure_adequacy`, **Gate 14** `bundle_structural_coherence` (sedimentation
@@ -376,11 +383,21 @@ questions as a checklist to satisfy.
 included here because the operator's *"we'll scope everything in together"* covers it; it is called
 out so it can be dropped without disturbing Phases 1–5, on which nothing here depends.
 
-1. **F-07** — track Lean-module mtimes (the data already exists: `bundle_append.py --lean-modules`
-   writes to `append_log.json`); promote to FAIL at the submission gate.
+1. **F-07** — a Lean-substrate freshness trigger; promote to FAIL at the submission gate.
+   ✅ **Shipped 2026-08-09, and the design changed under measurement.** *Mtimes are
+   rejected* — a checkout or fresh clone rewrites the whole tree's mtimes and would mark
+   every sourceless bundle stale at once — so the signal is the last **commit** that
+   touched the file. And `append_log.json`'s registrations were **not sufficient**: D6 and
+   D7, the two bundles most in need of a trigger, register zero modules, so the population
+   is the union of the registrations and the **derived apex closure**, which is declared
+   for all 21. The submission-gate promotion needed no work; the strict-mode branch was
+   already live. See TODO-D27.
 2. **F-08** — branch **D.0**: *target unsound → home the work, do not absorb.* Decouples homing
    from absorbing so a defective bundle stops growing.
-3. **F-09** — per-phase mapping rows, not per-bundle.
+3. **F-09** — per-phase mapping rows, not per-bundle. ✅ **Shipped 2026-08-09, twelve rows
+   rather than the nine scoped here** — D10's 6BA/6BB/6BC carry the identical defect and
+   were missed. 6CC is deliberately excluded: it is PARKED, and a row for a phase with no
+   substrate registers an absorption unit that can never be absorbed.
 4. **F-10** — `bundle_lean_module_coverage`: declared modules must appear in the draft.
 
 ### Phase 7 — `WAVE_EXECUTION_PIPELINE.md` becomes a clean reader-facing law (RUNS LAST)

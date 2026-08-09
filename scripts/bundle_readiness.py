@@ -631,7 +631,10 @@ def write_heatmap(
     ]
 
     tier_map = _TIER_OF
-    icon = {"GREEN": "🟢", "YELLOW": "🟡", "RED": "🔴"}
+    # ⚪ for UNMEASURED, deliberately not 🟡: a bundle nobody measured is a
+    # different fact from a bundle measured and found short, and rendering both
+    # amber is what let an unmeasured bundle read as a merely-cautious one.
+    icon = {"GREEN": "🟢", "YELLOW": "🟡", "RED": "🔴", "UNMEASURED": "⚪"}
 
     caveat_lines: list[str] = []
     any_backfilled = False

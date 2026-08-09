@@ -664,7 +664,14 @@ which require reading manuscript content the pass deliberately did not read (C4)
 3. **D5** — homing dispositions for **1 403–1 633** modules, not ~340. The scope is 4–5× what the
    charter assumed, which may itself change the shape of the answer (a per-arc disposition rather than a
    per-module one).
-4. **D6 step 4** — operator approval for the Lean-module-mtime absorption trigger.
+4. ✅ **RESOLVED 2026-08-09 — the proposal awaiting approval was rejected on evidence, and a
+   different trigger shipped.** §D6 required the audit's Lean-module-*mtime* proposal be
+   *"evaluated rather than assumed"*. Evaluated: a `git checkout`, a worktree creation or a
+   fresh clone rewrites every mtime in the tree, so an mtime trigger marks all nine sourceless
+   bundles stale at once for a reason unrelated to content. The shipped trigger keys on the last
+   **commit** touching each module, over the union of registered modules and the **derived apex
+   closure** — the closure being what actually closes D6 and D7, which register zero modules
+   between them. All nine bundles are now measured; zero remain `UNMEASURABLE`. See TODO-D27.
 5. **D7** — the roster-drift change-set, unchanged.
 
 ---

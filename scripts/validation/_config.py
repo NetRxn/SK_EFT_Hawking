@@ -121,6 +121,6 @@ CI_SKIP: dict[str, str] = {
 #: So `--ci` FAILS when fewer checks MEASURE than this. A missing toolchain becomes a
 #: red build reading "48 of 55 ran", not a green tick. Lower it only with a stated
 #: reason, exactly like every other ratchet in this codebase.
-CI_MIN_CHECKS_RUN: int = 74  # 2026-08-08: +2 (bundle_native_decide_debt,
-                             #   bundle_todo_free_before_green, bundle_cross_references_resolve)
-                             #   — plus bundle_counts_fresh; 78 registered minus 4 CI_SKIP
+CI_MIN_CHECKS_RUN: int = 75  # 2026-08-09: +1 (bundle_sentence_length, TODO-D7's
+                             #   readability half); 79 registered minus 4 CI_SKIP.
+                             #   Previously 74 = 78 registered minus the same 4.

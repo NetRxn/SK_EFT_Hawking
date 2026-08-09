@@ -132,6 +132,14 @@ class TestStage13EvidenceKindWithholdsGreen:
 
     Same shape as the two withholding rules above it: NOT MEASURED must not render as
     measured-and-fine.
+
+    ⚠️ **These three expect `UNMEASURED`, not `YELLOW` (changed 2026-08-09, TODO-D5).**
+    Withholding GREEN was never the whole rule. Collapsing "nobody measured this" into
+    the same amber as "measured, and short" is the very conflation the class exists to
+    break — a reader who sees YELLOW believes a measurement happened. The sibling test
+    `test_green_withheld_when_unverified` still expects YELLOW and still passes,
+    because *there* the P1 gates genuinely were evaluated and came back unknown at the
+    aggregate layer rather than never having been taken.
     """
 
     def _agg(self, monkeypatch, rev, *, claims_review=True, tmp_path=None):
@@ -158,8 +166,8 @@ class TestStage13EvidenceKindWithholdsGreen:
         out = self._agg(monkeypatch,
                         {"date": "2026-01-01", "kind": "attribution-sweep"},
                         tmp_path=tmp_path)
-        assert out["readiness"] == "YELLOW"
-        assert "UNVERIFIED" in out["readiness_display"]
+        assert out["readiness"] == "UNMEASURED"
+        assert "UNMEASURED" in out["readiness_display"]
         assert "attribution-sweep" in out["readiness_display"], "name the evidence"
 
     def test_an_UNRECORDED_kind_does_not(self, monkeypatch, tmp_path):
@@ -167,7 +175,7 @@ class TestStage13EvidenceKindWithholdsGreen:
         predating the field has no kind, and 'we never wrote it down' is not
         evidence that the review was thorough."""
         out = self._agg(monkeypatch, {"date": "2026-01-01"}, tmp_path=tmp_path)
-        assert out["readiness"] == "YELLOW"
+        assert out["readiness"] == "UNMEASURED"
         assert "unrecorded" in out["readiness_display"]
 
     def test_a_missing_claims_review_withholds_green(self, monkeypatch, tmp_path):
@@ -176,7 +184,7 @@ class TestStage13EvidenceKindWithholdsGreen:
         out = self._agg(monkeypatch,
                         {"date": "2026-01-01", "kind": "full-adversarial"},
                         claims_review=False, tmp_path=tmp_path)
-        assert out["readiness"] == "YELLOW"
+        assert out["readiness"] == "UNMEASURED"
         assert "no claims_review.json" in out["readiness_display"]
 
     def test_the_kind_gate_matches_the_writers(self):

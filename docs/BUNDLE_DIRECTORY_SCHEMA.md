@@ -191,7 +191,10 @@ Append-only record of every absorption event.
       "date": "2026-04-30T13:00:00Z",
       "source_paper": "paper17_dark_sector",
       "lift_action": "Lift-section",
-      "bundle_section_inserted": "§2-§3",
+      "bundle_section_inserted": "§ Cosmological constraints / §§ SFDM cluster mergers",
+      "insertion_point_hint": "§2-§3",
+      "new_top_level_section": false,
+      "new_section_rationale": "",
       "lean_modules_referenced": [
         "DarkSectorClassification",
         "DarkSectorCausalStructure"
@@ -206,6 +209,18 @@ Append-only record of every absorption event.
 ```
 
 The `agent_run_id` is `bundle_append-<ISO timestamp>` for fully reproducible idempotency.
+
+`bundle_section_inserted` is the **resolved** anchor — the section (and, in the normal
+case, the subsection) the lift actually landed in — not the caller's `--insertion-point`
+hint, which is preserved separately as `insertion_point_hint`. The absorption protocol
+reads the anchor to find a lift, and a hint like `§13` names a position no reader can
+locate in the draft. `new_top_level_section` / `new_section_rationale` record the ADR-011
+F-02 decision: a source registration lands as a `\subsection` inside an existing section
+unless the operator explicitly said the bundle's argument structure is changing.
+
+Events written before F-02 (2026-08-09) carry the hint in `bundle_section_inserted` and
+omit the three newer fields; readers must tolerate both shapes. One hand-authored event
+(bundle F, `lift_action: "Revision"`) has no `bundle_section_inserted` at all.
 
 ---
 
