@@ -32,12 +32,26 @@ import check_bundle_source_freshness as cf  # noqa: E402
 
 SOURCELESS = ["D6", "D7", "D8", "D9", "D10", "D11", "D12", "I2", "I3"]
 
+#: ⚠️ The derived half of the population comes from the apex closure, which needs
+#: a built `lean/.lake`. Without one `_derived_lean_modules()` correctly returns
+#: `None` and every bundle reports UNMEASURED — which is the fix working, not a
+#: regression, but it makes the live-corpus tests below vacuous. They SKIP rather
+#: than fail, because "the Lean build is absent" is a different fact from "the
+#: trigger is wrong", and collapsing the two is the defect this file guards.
+_CLOSURE_AVAILABLE = cf._derived_lean_modules() is not None
+_needs_closure = pytest.mark.skipif(
+    not _CLOSURE_AVAILABLE,
+    reason="lean/.lake not built — the derived apex closure is unavailable, so "
+           "the live-corpus population cannot be measured (run "
+           "`cd lean && lake build SKEFTHawking.ExtractDeps`)")
+
 
 @pytest.fixture(scope="module")
 def findings():
     return cf.check()
 
 
+@_needs_closure
 class TestTheNineSourcelessBundlesAreNowMeasured:
     def test_no_bundle_is_wholly_unmeasurable(self, findings):
         """The state F-07 exists to end. `source-UNMEASURABLE, Lean-measured` is a
@@ -66,6 +80,7 @@ class TestTheNineSourcelessBundlesAreNowMeasured:
             "the derived closure is what closes D6/D7; if it is empty the trigger is back"
 
 
+@_needs_closure
 class TestModuleResolution:
     def test_the_dotted_path_beats_a_shared_stem(self):
         """`Basic` names five files; `Resurgence.Basic` names one. A stem-only
@@ -146,6 +161,109 @@ class TestTheTriggerUsesCommitTimeNotMtime:
         assert times["SKEFTHawking.WKBConnection"] == mtime
 
 
+class TestTheStalenessVerdictItself:
+    """⚠️ THE VERDICT, not the population. Every other test in this file asserts
+    that names resolve, that times exist, that commit-time beats mtime — all
+    properties of the *inputs*. Replacing the predicate `t > last_lift` with
+    `False`, which makes the trigger structurally incapable of ever reporting
+    staleness, left all 80 tests in this file and `test_d5_freshness.py` GREEN.
+
+    These two pin the conclusion in both directions, which is the ADR-009 D5
+    obligation: FIRES on a module that postdates the lift, SILENT on one that
+    predates it."""
+
+    def _times(self, late: bool):
+        """One module, placed either side of a fixed `last_lift`."""
+        idx = cf._lean_module_index()
+        name = "SKEFTHawking.WKBConnection"
+        path = cf._resolve_lean_module(name, idx)
+        rel = str(path.relative_to(cf.PROJECT_ROOT))
+        lift = datetime(2026, 6, 1, tzinfo=timezone.utc)
+        when = lift + timedelta(days=30 if late else -30)
+        times, _ = cf._lean_module_change_times(
+            "D7", idx, {rel: when}, set(), {name})
+        return lift, times
+
+    def test_a_module_changed_after_the_lift_is_STALE(self):
+        lift, times = self._times(late=True)
+        stale = [m for m, t in times.items() if t > lift]
+        assert stale == ["SKEFTHawking.WKBConnection"], (
+            "a module committed 30 days AFTER last_lift must be stale; got "
+            f"{times}")
+
+    def test_a_module_changed_before_the_lift_is_NOT_stale(self):
+        """The silent direction. A trigger that fires on everything carries no
+        information about which bundle needs absorption."""
+        lift, times = self._times(late=False)
+        assert [m for m, t in times.items() if t > lift] == []
+
+
+class TestADegradedInputIsUNMEASUREDNotASmallerNumber:
+    """⚠️ Each of the three Lean-leg inputs used to fall back silently, and each
+    fell back in a direction that LOOKED like a measurement.
+
+    Measured before the fix, by forcing each to its empty value:
+      * `_derived_lean_modules() -> {}`  — D5's population 29 -> 18 and its stale
+        count 7 -> 2, D9 97 -> 77 and 12 -> 7. Smaller numbers, no signal, and a
+        bundle whose only staleness came through the closure reads FRESH. This is
+        the `{}`-means-no-problem shape already removed from
+        `bundle_readiness._blocked_p1_gates_by_paper`.
+      * `_git_last_commit_times() -> {}` — every path takes the mtime branch, the
+        signal this module's header rejects by name. E2 2/8 -> 8/8 lean-stale,
+        I2 17/36 -> 36/36, L2 42/45 -> 45/45.
+      * `_dirty_lean_paths() -> set()` — a just-rewritten module reads fresh,
+        which is the exact failure the function exists to prevent, in the
+        direction of clean.
+    """
+
+    @pytest.mark.parametrize("input_name", [
+        "_git_last_commit_times", "_dirty_lean_paths", "_derived_lean_modules"])
+    def test_a_failed_input_reports_UNMEASURED_for_every_bundle(
+            self, input_name, monkeypatch):
+        monkeypatch.setattr(cf, input_name, lambda: None)
+        findings = cf.check()
+        unmeasured = [f for f in findings if "UNMEASURED" in f["message"]]
+        assert len(unmeasured) >= 21, (
+            f"{input_name} failing produced only {len(unmeasured)} UNMEASURED "
+            f"findings; every bundle's Lean leg is unmeasured when an input dies")
+
+    @pytest.mark.parametrize("input_name", [
+        "_git_last_commit_times", "_dirty_lean_paths", "_derived_lean_modules"])
+    def test_a_failed_input_fabricates_NO_staleness_number(
+            self, input_name, monkeypatch):
+        """The sharp half. A degraded input must not yield a NUMBER, because a
+        number is indistinguishable from a measurement."""
+        monkeypatch.setattr(cf, input_name, lambda: None)
+        findings = cf.check()
+        assert not [f for f in findings if f["message"].startswith("lean-stale")], \
+            f"{input_name} failing still produced a lean-stale count"
+
+    @_needs_closure
+    def test_the_healthy_path_still_measures(self):
+        """SILENT ON CORRECT DATA — the guard must not make the leg unreachable."""
+        findings = cf.check()
+        assert [f for f in findings if f["message"].startswith("lean-stale")]
+
+    def test_a_renamed_uncommitted_module_counts_as_dirty(self):
+        r"""`git status --porcelain` renders a rename as `R  old -> new`. Parsing
+        `line[3:]` whole yields `"old -> new"`, which matches no path on disk, so
+        a renamed-but-uncommitted module was invisible to the dirty check."""
+        import subprocess
+        real = subprocess.run
+        def fake(cmd, *a, **k):
+            if cmd[:2] == ["git", "status"]:
+                class R:
+                    stdout = 'R  lean/SKEFTHawking/Old.lean -> lean/SKEFTHawking/New.lean\n'
+                return R()
+            return real(cmd, *a, **k)
+        subprocess.run, saved = fake, subprocess.run
+        try:
+            assert cf._dirty_lean_paths() == {"lean/SKEFTHawking/New.lean"}
+        finally:
+            subprocess.run = saved
+
+
+@_needs_closure
 class TestPerPhaseAbsorptionRows:
     """F-09. D10, D11 and D12 each consolidated every one of their phases into a
     single `<X>_initial_draft` row, so the smallest unit of absorption was the whole

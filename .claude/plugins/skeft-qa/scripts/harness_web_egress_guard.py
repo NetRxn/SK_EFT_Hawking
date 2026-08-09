@@ -102,6 +102,22 @@ def _load_patterns():
     A `# --- label ---` line sets the category. Active rows: a `/regex/` line, or a
     bare case-insensitive literal. Blank lines and other `#` lines are inert, so the
     sample's commented placeholders stay off until copied into the local file.
+
+    ⚠️ **RAISES rather than skipping, and that is the security property.** This
+    module's contract is "any internal error => deny", and two handlers here used
+    to break it in the direction that ALLOWS:
+
+      * a malformed `/regex/` row was dropped with `except re.error: continue`,
+        so ONE TYPO removed that identifier from the guard permanently and printed
+        nothing. Measured: a local file holding `/johnroehm(/` and `SECRETPROJ`
+        loaded only `SECRETPROJ`, and a WebSearch for `/Users/johnroehm/secret`
+        was ALLOWED while the operator saw a working guard.
+      * `except FileNotFoundError: continue` is correct for `_LOCAL`, which is
+        untracked and legitimately absent. It was applied to `_SAMPLE` too — the
+        COMMITTED baseline — so the always-on denylist could vanish silently.
+        Measured: renaming the sample dropped the pattern count 11 -> 7, no signal.
+
+    Exceptions raised here propagate through `evaluate` to `main`, which denies.
     """
     out = []
     for path in (_SAMPLE, _LOCAL):
@@ -109,9 +125,13 @@ def _load_patterns():
             with open(path, encoding="utf-8") as fh:
                 lines = fh.readlines()
         except FileNotFoundError:
-            continue  # local may be absent — baseline (sample) still applies
+            if path == _LOCAL:
+                continue  # untracked; the operator may not have installed one
+            raise RuntimeError(
+                f"denylist baseline missing: {path}. It is committed and must be "
+                f"present; its absence is a broken install, not an empty denylist.")
         category = "denylisted identifier"
-        for raw in lines:
+        for lineno, raw in enumerate(lines, 1):
             line = raw.strip()
             if not line:
                 continue
@@ -123,10 +143,15 @@ def _load_patterns():
             if len(line) >= 2 and line.startswith("/") and line.endswith("/"):
                 try:
                     out.append((re.compile(line[1:-1], re.IGNORECASE), category))
-                except re.error:
-                    continue
+                except re.error as exc:
+                    raise RuntimeError(
+                        f"denylist {path}:{lineno} is not a valid regex ({exc}); "
+                        f"the row it was meant to block is UNGUARDED") from exc
             else:
                 out.append((re.compile(re.escape(line), re.IGNORECASE), category))
+    if not out:
+        raise RuntimeError(
+            "denylist loaded ZERO patterns — an empty guard cannot deny anything")
     return out
 
 
@@ -204,8 +229,11 @@ def main() -> int:
     try:
         ev = json.loads(sys.stdin.read() or "{}")
         reason = evaluate(ev)
-    except Exception:
-        _deny("[web-egress] guard internal error; failing closed.")
+    except Exception as exc:
+        # Name the cause. A bare "internal error" gave the operator no way to tell
+        # a malformed denylist row from a transient fault, and the row stays
+        # unguarded until someone notices.
+        _deny(f"[web-egress] guard internal error; failing closed: {exc}")
         return 0
     if reason is not None:
         _deny(reason)

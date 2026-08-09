@@ -5,13 +5,19 @@ THE DEFECT THIS CLOSES
 ----------------------
 `papers/D9/paper_draft.tex` states twice that its rare-event tails consume the
 I3 bundle's large-deviation foundations (§1 companion paragraph; §4.2). Measured
-2026-08-07 and re-measured 2026-08-09, three ways, all negative: the D9 ∩ I3
-closure intersection is **0**, and neither `fdt_rare_event_tail` nor
-`fdt_gallavotti_cohen` carries a single `name_deps_project` entry in
-`SKEFTHawking.LDP.*` or `SKEFTHawking.Itô.*`. The same probe returns 50 for
-D9 ∩ D10 and 14 for D9 ∩ D8, so the instrument was not the problem. I3's own
-draft agreed with the substrate rather than with D9's: it calls the cross-bridge
-*"designed but not yet consumed at release time"*.
+2026-08-07 and re-measured 2026-08-09 **before this module existed**, three ways,
+all negative: the D9 ∩ I3 closure intersection was **0**, and neither
+`fdt_rare_event_tail` nor `fdt_gallavotti_cohen` carried a single
+`name_deps_project` entry in `SKEFTHawking.LDP.*` or `SKEFTHawking.Itô.*`. The
+same probe returned 50 for D9 ∩ D10 and 14 for D9 ∩ D8, so the instrument was
+not the problem. I3's draft agreed with the substrate rather than with D9's,
+calling the cross-bridge *"designed but not yet consumed at release time"*.
+
+**With this bridge declared as a D9 apex the intersection is 11**, three of them
+in `SKEFTHawking.LDP`, and I3's draft was updated in the same commit to say one
+consumer exists. The paragraph above is the state this module closed, in the past
+tense, because a header asserting `0` in the present tense would be the module
+contradicting its own effect.
 
 WHY THIS IS A BUILD AND NOT A RETRACTION
 ----------------------------------------

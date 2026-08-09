@@ -35,6 +35,13 @@ WRITER_MODULES = [
     "bundle_readiness.py",
     "compile_bundle_pdf.py",
     "record_review.py",
+    # ⚠️ Added 2026-08-09. This one was MISSING while it wrote
+    # `json.dumps(md, indent=2)` (ensure_ascii defaulted True) into all 21
+    # `bundle_metadata.json` files under `write_metadata=True`. Every one of
+    # those carries non-ASCII in its apex `claims` strings, so a single CLI run
+    # re-escaped the corpus and reintroduced the oscillation this file closed.
+    # The AST guard below was right; the roster it ran over was incomplete.
+    "check_bundle_source_freshness.py",
 ]
 
 

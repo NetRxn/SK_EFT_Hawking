@@ -502,7 +502,7 @@ def horizon_damping_rate(gamma_1, gamma_2, kappa, c_s):
     dropped the velocity² and produced a quantity in [s·m⁻²] labelled [s⁻¹].
     Callers must use this function rather than open-coding the conversion.
 
-    Lean: SKEFTHawking.SecondOrderSK.GammaH / gammaH_def / gammaH_via_kH
+    Lean: SKEFTHawking.SecondOrderSK.GammaH, SKEFTHawking.SecondOrderSK.gammaH_def, SKEFTHawking.SecondOrderSK.gammaH_via_kH
 
     Source: original
 
@@ -535,8 +535,7 @@ def conformal_kinematic_viscosity(eta_over_sT, c_s):
     ζ = 0 by conformal symmetry — so there is no residual O(1) factor. (The
     familiar 4/3 is the d = 3 value and does not apply here.)
 
-    Lean: SKEFTHawking.DiracFluidSK.kinematicViscosity and
-          conformal_kinematic_viscosity_eq_vF_form (the c_s ↔ v_F equivalence)
+    Lean: SKEFTHawking.DiracFluidSK.kinematicViscosity, SKEFTHawking.DiracFluidSK.kinematicViscosity_eq_vF_form
 
     Source: original — Phase-5w survey §"Sound attenuation by viscosity gives
     Γ_sound ~ (η/w)k²"; Kovtun-Son-Starinets for the η/s normalisation.

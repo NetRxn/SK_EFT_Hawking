@@ -226,7 +226,8 @@ def _insertion_marker_pattern() -> re.Pattern:
 # content lifts inserted a top-level `\section`.** The `§§` subsection form the
 # old `is_subsection` hint recognised was used ZERO times, because nothing ever
 # required it — a source registration silently bought a top-level heading, and
-# 28 of those 74 landed in D3, which is exactly how it reached 31 sections.
+# 28 of those 74 landed in D3, which is exactly how it reached 31 sections —
+# before the D3 consolidation in this same branch cut it to 20.
 #
 # The fix is NOT to stop inserting a skeleton. `append_log.json`'s
 # `bundle_section_inserted` is the anchor the absorption protocol reads to find

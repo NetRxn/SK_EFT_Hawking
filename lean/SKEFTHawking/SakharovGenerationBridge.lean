@@ -13,6 +13,14 @@ MEASURED 2026-08-09, AND THE LITERAL CLAIM IS FALSE:
 
 * `HeatKernelExpansion.a0_dirac (N_f : ℝ)` counts **Dirac fermion species** in a
   heat-kernel expansion. It is real-valued and its fiducial anchor is `N_f = 15`.
+
+  ⚠️ **15 AND 24 ARE TWO CONVENTIONS, AND THE MODULE MUST SAY SO RATHER THAN
+  CARRY BOTH SILENTLY.** `15` is the *chiral*-multiplet count per the Standard
+  Model without `ν_R` (15 Weyl fields per generation, counted as species).
+  `standardModel.diracFlavourNf = 24` is the *Dirac*-pair count over three
+  generations WITH `ν_R`: `3 × 16 / 2`. They are not the same quantity, and this
+  module's business is the second. `sm_chiral_convention_differs` below states
+  the disagreement numerically so a reader cannot absorb one as the other.
 * `GenerationConstraint`'s `N_f : ℕ` counts **generations**: its own docstring
   says "each generation contributes 16 real fermions in 4D, which reduce to
   `c₋ = 8` per generation", so `c₋ = 8 N_f` is eight-per-generation, and the
@@ -36,6 +44,14 @@ content is a parameter here. Fixing it is a physics input, not a theorem.
 -/
 
 import Mathlib
+-- ⚠️ BOTH endpoints are imported, and both are CALLED below. This module exists
+-- because a claim was made without a witness; importing only `Mathlib` and
+-- re-declaring both sides locally would have reproduced that defect one level
+-- down (CLAUDE.md preemptive-strengthening rule 3, and
+-- `feedback_python_lean_refs_drift`): a rename on either endpoint would leave
+-- this file compiling and wrong.
+import SKEFTHawking.GenerationConstraint
+import SKEFTHawking.HeatKernelExpansion
 
 set_option autoImplicit false
 
@@ -130,9 +146,14 @@ then at Standard-Model per-generation content the Dirac species count is a
 multiple of `24`. -/
 theorem generation_constraint_transfers
     (c : FermionContent) (hw : c.weylPerGeneration = 16)
-    (h3 : 3 ∣ c.generations) :
+    (hpos : 0 < c.generations) (hanom : 24 ∣ (8 * (c.generations : ℤ))) :
     ∃ k : ℕ, c.diracFlavourNf = (24 * k : ℚ) := by
-  obtain ⟨k, hk⟩ := h3
+  -- ⚠️ The anomaly condition is CONSUMED, not assumed. This used to take
+  -- `3 ∣ c.generations` as a bare hypothesis — i.e. it assumed the very
+  -- constraint it advertises as transferring. `generation_mod3_constraint` is
+  -- the theorem that derives it from modular invariance, and calling it is what
+  -- makes the word "transfers" true.
+  obtain ⟨k, hk⟩ := SKEFTHawking.generation_mod3_constraint c.generations hpos hanom
   refine ⟨k, ?_⟩
   unfold FermionContent.diracFlavourNf
   rw [hw, hk]
@@ -142,7 +163,40 @@ theorem generation_constraint_transfers
 /-- Non-vacuity of the transfer: the Standard-Model content satisfies its
 hypotheses, so `generation_constraint_transfers` is not conditionally empty. -/
 theorem standardModel_satisfies_transfer_hypotheses :
-    standardModel.weylPerGeneration = 16 ∧ 3 ∣ standardModel.generations :=
-  ⟨rfl, ⟨1, rfl⟩⟩
+    standardModel.weylPerGeneration = 16 ∧ 0 < standardModel.generations ∧
+      24 ∣ (8 * (standardModel.generations : ℤ)) :=
+  ⟨rfl, by norm_num [standardModel], by decide⟩
+
+/-! ## 4. The Sakharov side, reached rather than described
+
+The header names `a0_dirac` as the coefficient the species count feeds. These two
+theorems make that a CALL: the first evaluates it at the module's own count, the
+second states the 15-vs-24 convention gap numerically so neither number can be
+quoted as the other.
+-/
+
+/-- **The species count is the argument `a0_dirac` takes.** Evaluated at
+Standard-Model content: `a₀ = 4 · 24 / (4π)²`. -/
+theorem a0_dirac_at_standardModel :
+    HeatKernelExpansion.a0_dirac ((standardModel.diracFlavourNf : ℚ) : ℝ)
+      = 4 * 24 * HeatKernelExpansion.fourPiSqInv := by
+  norm_num [HeatKernelExpansion.a0_dirac, FermionContent.diracFlavourNf, standardModel]
+
+/-- **The two conventions differ, and by how much.** `15` is the chiral-multiplet
+count without `ν_R`; `24` is the Dirac-pair count over three generations with it.
+Stated as a numeric inequality with the ratio pinned, so a future edit that
+silently swaps one for the other fails here. -/
+theorem sm_chiral_convention_differs :
+    HeatKernelExpansion.a0_dirac 15 ≠
+      HeatKernelExpansion.a0_dirac ((standardModel.diracFlavourNf : ℚ) : ℝ) ∧
+    HeatKernelExpansion.a0_dirac ((standardModel.diracFlavourNf : ℚ) : ℝ)
+      = (8 / 5 : ℝ) * HeatKernelExpansion.a0_dirac 15 := by
+  constructor
+  · simp only [HeatKernelExpansion.a0_dirac, FermionContent.diracFlavourNf, standardModel]
+    norm_num
+    exact HeatKernelExpansion.fourPiSqInv_pos.ne'
+  · simp only [HeatKernelExpansion.a0_dirac, FermionContent.diracFlavourNf, standardModel]
+    push_cast
+    ring
 
 end SKEFTHawking.SakharovGenerationBridge

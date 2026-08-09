@@ -236,10 +236,36 @@ def check_bundle_figure_integrity() -> CheckResult:
                     f"drift comparison could not run: {type(exc).__name__}: {exc}",
                     warning=True))
 
+    # ⚠️ THE SCOPE RIDES ON THE SUMMARY. This check's population is the
+    # REGISTRY-BACKED figures it can regenerate, which the `d11_`/`d12_` prefix
+    # filter above restricts to two bundles — while thirteen bundles carry
+    # figures on disk. `gate_precheck.py`'s s9 leg calls this check before a
+    # figure-reviewer dispatch, so a dispatch on D5 or I1 previously printed
+    # PASS having examined ZERO of that bundle's figures. A regenerable figure
+    # and a migrated one are different states and the check can only speak to
+    # the first; what it must not do is let the second read as covered.
+    import bundle_registry as _registry
+    _codes = set(_registry.BUNDLE_CODES)
+    on_disk = {}
+    for png in sorted(_H.PAPERS_DIR.glob("*/figures/*.png")):
+        code = png.parent.parent.name
+        if code in _codes:
+            on_disk[code] = on_disk.get(code, 0) + 1
+    uncovered = {c: n for c, n in on_disk.items() if c not in SPECS}
+    if uncovered:
+        details.insert(0, Detail(
+            "coverage", True,
+            f"{sum(uncovered.values())} figure(s) across {len(uncovered)} bundle(s) "
+            f"are NOT registry-backed and were not regenerated or measured: "
+            f"{', '.join(f'{c}:{n}' for c, n in sorted(uncovered.items()))}. "
+            f"This check speaks only to figures it can rebuild from "
+            f"`visualizations.py`; the rest are UNMEASURED here.",
+            warning=True))
     details.insert(0, Detail(
         "summary", n_fail == 0,
-        f"{n_ok + n_fail} bundle figures checked — {n_ok} legible / {n_fail} below "
-        f"the {FLOOR_PT}pt floor"))
+        f"{n_ok + n_fail} registry-backed bundle figures checked — {n_ok} legible / "
+        f"{n_fail} below the {FLOOR_PT}pt floor; {sum(on_disk.values())} figure(s) "
+        f"exist across {len(on_disk)} bundle(s)"))
     return CheckResult(passed=n_fail == 0, details=details)
 
 

@@ -188,7 +188,8 @@ def check_placeholder_not_cited() -> CheckResult:
     from src.core.constants import PLACEHOLDER_THEOREMS
 
     if not _H.PAPERS_DIR.exists():
-        return CheckResult(passed=True, details=[Detail("papers_dir", True, "no papers/ directory")])
+        return CheckResult(passed=True, measured=False, details=[Detail(
+            "papers_dir", True, "no papers/ directory — UNMEASURED, not clean")])
 
     WINDOW = 320  # verification-claim + hedge search window each side of a match.
     #               ADR-004 W7 finding H2 is addressed by tightening the HEDGE
@@ -286,7 +287,8 @@ def check_disclosure_consistency() -> CheckResult:
     modeling-assumption disclosure tier (paper-prose ↔ disclosure-category)."""
     from src.core.constants import MODELING_ASSUMPTION_THEOREMS as M
     if not _H.PAPERS_DIR.exists():
-        return CheckResult(passed=True, details=[Detail("papers_dir", True, "no papers/ directory")])
+        return CheckResult(passed=True, measured=False, details=[Detail(
+            "papers_dir", True, "no papers/ directory — UNMEASURED, not clean")])
 
     disclosed = []  # (regex, lean_name)
     for k, v in M.items():
@@ -400,7 +402,8 @@ def check_proxy_body_audit() -> CheckResult:
 
     lean_dir = _H.LEAN_DIR   # audit QI-11: one owner
     if not lean_dir.exists():
-        return CheckResult(passed=True, details=[Detail("lean_dir", True, "no lean dir")])
+        return CheckResult(passed=True, measured=False, details=[Detail(
+            "lean_dir", True, "no lean dir — UNMEASURED, not clean")])
 
     exempt = set(PLACEHOLDER_LEAN_NAMES.keys())
     # A whitelist entry is a valid disclosure ONLY if it carries `reason` AND
@@ -518,7 +521,8 @@ def check_tracked_hypothesis_ledger() -> CheckResult:
     # prose_theorem_reference_coverage / theorem_name_embedded_citations. Five checks
     # pass on a missing lean_deps.json and two fail. Unify deliberately, not by refactor.
     if not _H.lean_deps_present():
-        return CheckResult(passed=True, details=[Detail("lean_deps", True, "no lean_deps.json")])
+        return CheckResult(passed=True, measured=False, details=[Detail(
+            "lean_deps", True, "no lean_deps.json — UNMEASURED, not clean")])
     deps = _H.load_lean_deps()
 
     # 1) Prop-valued tracked-hypothesis defs/structures (codomain Prop, tracked name)

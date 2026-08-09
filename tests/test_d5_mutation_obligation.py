@@ -366,8 +366,17 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
     ),
     "bundle_source_freshness": (
         "test_d5_freshness.py",
-        "the `--strict` WARN->FAIL promotion caught; that is the only behaviour a bug "
-        "could silently disable, and STRICT_MODE is read by attribute (H5)",
+        "⚠️ RE-RECORDED 2026-08-09: this entry read 'the --strict WARN->FAIL promotion "
+        "caught; that is the ONLY behaviour a bug could silently disable', which was "
+        "true until TODO-D27 gave the check a second, independent leg. The trigger's "
+        "verdict is now mutation-covered in BOTH directions (in `test_bundle_lean_freshness_trigger.py`) (a module committed after "
+        "last_lift is stale; one committed before is not) — verified by replacing the "
+        "`t > last_lift` predicate with `False`, which previously left all 80 tests in "
+        "the two files GREEN. Plus: each of the three Lean-leg inputs failing reports "
+        "UNMEASURED for every bundle and fabricates NO staleness number; a renamed-but-"
+        "uncommitted module is seen as dirty; and the --strict promotion is unchanged. "
+        "The file's own warning at the top applies to itself — a recorded mutation set "
+        "describes the code as it was when written",
     ),
     "inventory_index_autogen_fresh": (
         "test_d5_freshness.py",

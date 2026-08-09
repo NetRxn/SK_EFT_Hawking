@@ -161,10 +161,29 @@ def _eval_citation_integrity(paper: dict, idx: GraphIndex) -> GateResult:
         r.notes = 'paper_draft.tex not readable'
         return r
 
-    bibkeys = set(re.findall(r'\\bibitem\{([^}]+)\}', tex))
+    # `\bibitem[Label]{key}` carries an optional argument; the un-bracketed form
+    # missed it entirely.
+    bibkeys = set(re.findall(r'\\bibitem(?:\[[^\]]*\])?\{([^}]+)\}', tex))
     if not bibkeys:
+        # ⚠️ NO BIBITEMS IS NOT NO CITATIONS. Measured 2026-08-09 across 67 drafts:
+        # 61 use `\bibitem`, and 3 do not — D8, D10 and paper45. D8 and D10 each
+        # carry SEVENTEEN distinct `\cite{}` keys via a bibtex `\bibliography{}`,
+        # so their registry coverage was never checked and a P1 gate reported
+        # `passed` on two Tier-1 bundles. `_eval_parameter_provenance` and
+        # `_eval_narrative_grounding` were both given this corroborate-before-
+        # passing branch on 2026-08-05; this sibling, directly above them, was not.
+        cited = set(re.findall(r'\\cite[tp]?\*?(?:\[[^\]]*\])*\{([^}]+)\}', tex))
+        cited = {k.strip() for group in cited for k in group.split(',') if k.strip()}
+        if cited:
+            r.state = 'open'
+            r.notes = (f'no \\bibitem block, but {len(cited)} distinct \\cite key(s) '
+                       f'are used — citation coverage NOT ESTABLISHED (the paper '
+                       f'cites through \\bibliography{{}}; this gate can only read '
+                       f'\\bibitem)')
+            r.evidence.append(f'{len(cited)} cited keys, 0 verifiable here')
+            return r
         r.state = 'passed'
-        r.notes = 'no bibitems (paper has no bibliography block)'
+        r.notes = 'no bibitems and no \\cite keys (paper has no bibliography)'
         return r
 
     # CITATION_REGISTRY entries via PrimarySource nodes (id = 'source:{key}')

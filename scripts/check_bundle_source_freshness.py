@@ -41,6 +41,15 @@ MAPPING_DOC = PROJECT_ROOT / "docs" / "PAPER_DRAFT_MAPPING.md"
 
 sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 
+# ⚠️ TODO-D25's serializer, and this module MUST route through it. Its two
+# `write_metadata=True` writes used `json.dumps(md, indent=2)` — default
+# `ensure_ascii=True` — into `papers/<X>/bundle_metadata.json`, and all 21 of
+# those carry non-ASCII (`§`, `—`) in their apex `claims` strings. One CLI run of
+# this script re-escaped the whole corpus and reintroduced exactly the encoding
+# oscillation D25 closed. The AST guard in `tests/test_bundle_json_serializer.py`
+# is the right mechanism; its roster simply did not name this file.
+from bundle_json import write_bundle_json  # noqa: E402
+
 
 def _parse_iso(s: str | None) -> datetime | None:
     if not s:
@@ -87,7 +96,7 @@ def _lean_module_index() -> dict[str, Path]:
     """Dotted module name → file, for every `.lean` under `SKEFTHawking/`.
 
     Both the dotted path (`ETH.Predicates`) and the bare stem (`Predicates`) are
-    keys; the dotted form wins, which is what disambiguates the four names whose
+    keys; the dotted form wins, which is what disambiguates the three names whose
     stem is shared by up to five files (`Basic` alone appears five times).
     """
     idx: dict[str, Path] = {}
@@ -110,13 +119,14 @@ def _resolve_lean_module(name: str, idx: dict[str, Path]) -> Path | None:
 
     Declared names arrive in three shapes — dotted, slash-separated, and
     `SKEFTHawking.`-prefixed — because they were typed by hand at lift time.
-    Normalising all three is what takes resolution from 328 to 357 of 384.
+    Normalising all three is what takes resolution from 327 to 357 of 384
+    (slash/prefix handling alone reaches only 330).
     """
     key = name.replace("/", ".").removeprefix("SKEFTHawking.")
     return idx.get(key) or idx.get(key.split(".")[-1])
 
 
-def _git_last_commit_times() -> dict[str, datetime]:
+def _git_last_commit_times() -> dict[str, datetime] | None:
     """Repo-relative path → last commit time, for the whole Lean tree.
 
     One `git log` pass rather than one per module: the per-file form would be
@@ -129,8 +139,17 @@ def _git_last_commit_times() -> dict[str, datetime]:
              "lean/SKEFTHawking"],
             cwd=str(PROJECT_ROOT), capture_output=True, text=True, check=True,
         ).stdout
-    except (OSError, subprocess.CalledProcessError):
-        return {}
+    except (OSError, subprocess.CalledProcessError) as exc:
+        # ⚠️ None, not {}. An empty map is indistinguishable from "no Lean file
+        # was ever committed", and every path then takes the `rel not in commits`
+        # branch and falls back to MTIME — the signal this module's own header
+        # rejects by name. Measured with the map forced empty: E2 goes 2/8 -> 8/8
+        # lean-stale, I2 17/36 -> 36/36, L2 42/45 -> 45/45. The verdict is not
+        # merely noisier, it is produced by a different instrument than the one
+        # the reader is told is running.
+        print(f"WARN: git log over the Lean tree failed ({exc}); the Lean "
+              f"freshness leg is UNMEASURED", file=sys.stderr)
+        return None
     latest: dict[str, datetime] = {}
     ts: int | None = None
     for line in out.splitlines():
@@ -144,7 +163,7 @@ def _git_last_commit_times() -> dict[str, datetime]:
     return latest
 
 
-def _dirty_lean_paths() -> set[str]:
+def _dirty_lean_paths() -> set[str] | None:
     """Repo-relative Lean paths with uncommitted changes (incl. untracked).
 
     A file edited but not committed has no commit time reflecting the edit, so
@@ -156,9 +175,25 @@ def _dirty_lean_paths() -> set[str]:
             ["git", "status", "--porcelain", "--", "lean/SKEFTHawking"],
             cwd=str(PROJECT_ROOT), capture_output=True, text=True, check=True,
         ).stdout
-    except (OSError, subprocess.CalledProcessError):
-        return set()
-    return {line[3:].strip().strip('"') for line in out.splitlines() if line[3:].strip()}
+    except (OSError, subprocess.CalledProcessError) as exc:
+        # ⚠️ None, not set(). This function's own docstring says a file edited but
+        # not committed "would be called fresh" without it — and returning the
+        # empty set does exactly that, failing in the direction of CLEAN.
+        print(f"WARN: git status over the Lean tree failed ({exc}); the Lean "
+              f"freshness leg is UNMEASURED", file=sys.stderr)
+        return None
+    dirty = set()
+    for line in out.splitlines():
+        path = line[3:].strip()
+        if not path:
+            continue
+        # `R  old -> new` is a rename; the NEW path is the one on disk. Splitting
+        # on the arrow was the difference between seeing a renamed-but-uncommitted
+        # module as dirty and not seeing it at all.
+        if " -> " in path:
+            path = path.split(" -> ", 1)[1]
+        dirty.add(path.strip().strip('"'))
+    return dirty
 
 
 def _registered_lean_modules(bundle: str) -> list[str]:
@@ -182,7 +217,7 @@ def _registered_lean_modules(bundle: str) -> list[str]:
     return sorted(seen)
 
 
-def _derived_lean_modules() -> dict[str, set[str]]:
+def _derived_lean_modules() -> dict[str, set[str]] | None:
     """`{bundle: modules}` from each bundle's declared-apex closure.
 
     ⚠️ **This is the population that made the trigger universal.** Registration
@@ -190,7 +225,9 @@ def _derived_lean_modules() -> dict[str, set[str]]:
     and D7, both sourceless — register **zero** modules, so a registration-only
     trigger would have left them UNMEASURABLE, which is the state F-07 exists to
     end. The closure is derived from `apex_theorems` over `name_deps_project`
-    and is declared for all 21, D6 at 13 modules and D7 at 8. Nothing about it
+    and is declared for all 21, D6 at 14 modules and D7 at 8 (D6 was 13 until
+    this branch added `FaultTolerance.ConcatenatedComposition` — which is the
+    property being described: the closure moved with no edit here). Nothing about it
     is hand-maintained, so nothing about it can drift.
     """
     try:
@@ -199,10 +236,18 @@ def _derived_lean_modules() -> dict[str, set[str]]:
         decls = bundle_closure.load_apex_declarations(PAPERS_DIR)
         return {b: set(c.modules)
                 for b, c in bundle_closure.build_closures(records, decls).items()}
-    except Exception:
-        # The closure needs `lean_deps.json`; its absence must not take the
-        # source-mtime half of the check down with it.
-        return {}
+    except Exception as exc:
+        # ⚠️ None, not {}. `{}` means "no bundle derives any Lean module", which
+        # is a MEASUREMENT, and it is the same `{}`-means-no-problem shape this
+        # branch already removed from `bundle_readiness._blocked_p1_gates_by_paper`.
+        # Measured with this forced empty: D5's Lean population drops 29 -> 18 and
+        # its stale count 7 -> 2, D9 97 -> 77 and 12 -> 7 — smaller numbers, no
+        # indication that the derived half did not run, and a bundle whose only
+        # staleness came through the closure reads FRESH.
+        # The source-mtime half still runs; the Lean half reports UNMEASURED.
+        print(f"WARN: apex-closure derivation failed ({exc}); the derived half of "
+              f"the Lean freshness population is UNMEASURED", file=sys.stderr)
+        return None
 
 
 def _lean_module_change_times(
@@ -309,6 +354,13 @@ def check(write_metadata: bool = False) -> list[dict]:
     lean_commits = _git_last_commit_times()
     lean_dirty = _dirty_lean_paths()
     lean_derived = _derived_lean_modules()
+    # ⚠️ Any None means an INPUT to the Lean leg could not be obtained, so the leg
+    # reports UNMEASURED for every bundle rather than reporting a number computed
+    # from a degraded signal. The source-mtime leg is independent and still runs.
+    lean_unmeasured = (
+        "git commit history unavailable" if lean_commits is None else
+        "git working-tree status unavailable" if lean_dirty is None else
+        "apex-closure derivation failed" if lean_derived is None else None)
 
     findings: list[dict] = []
     for bundle in sorted(_VALID_BUNDLE_TARGETS):
@@ -384,12 +436,24 @@ def check(write_metadata: bool = False) -> list[dict]:
         # source-fresh and Lean-stale, and scoping the trigger to the bundles
         # that happen to have no sources would make it a special case rather
         # than a measurement.
-        lean_times, lean_unresolved = _lean_module_change_times(
-            bundle, lean_idx, lean_commits, lean_dirty,
-            lean_derived.get(bundle))
-        stale_lean = sorted(
-            ((m, t) for m, t in lean_times.items() if t > last_lift),
-            key=lambda mt: mt[1], reverse=True)
+        if lean_unmeasured is not None:
+            lean_times, lean_unresolved, stale_lean = {}, [], []
+            findings.append({
+                "bundle": bundle,
+                "passed": True,
+                "warning": True,
+                "message": (
+                    f"Lean freshness leg UNMEASURED ({lean_unmeasured}) — this "
+                    f"bundle's Lean substrate was NOT compared to last_lift; the "
+                    f"source-paper leg below stands alone"),
+            })
+        else:
+            lean_times, lean_unresolved = _lean_module_change_times(
+                bundle, lean_idx, lean_commits, lean_dirty,
+                lean_derived.get(bundle))
+            stale_lean = sorted(
+                ((m, t) for m, t in lean_times.items() if t > last_lift),
+                key=lambda mt: mt[1], reverse=True)
         if lean_unresolved:
             sample = ", ".join(lean_unresolved[:3])
             extra = (f" ... and {len(lean_unresolved) - 3} more"
@@ -443,6 +507,24 @@ def check(write_metadata: bool = False) -> list[dict]:
         if sources and not measurable:
             # Sourceless, but the Lean trigger measured it — which is the whole
             # point of F-07 part 2. Verdict comes from `stale_lean` above.
+            #
+            # ⚠️ AND IT MUST SIGNAL, not merely measure. `LATE_PHASE6_ABSORPTION_
+            # PROTOCOL.md` keys Stage A on `freshness_stale=true`, and this branch
+            # `continue`s before the source-side writer below — so for exactly the
+            # nine bundles F-07 part 2 exists to serve, the trigger reached a
+            # verdict that nothing downstream could read. A measurement no
+            # consumer can see is the same defect as no measurement.
+            # ⚠️ `lean_unmeasured is None` gates BOTH directions. Caught while
+            # verifying this very fix: with the closure unavailable `stale_lean`
+            # is empty, and an ungated `elif` then CLEARED the stale flag on all
+            # nine — writing "fresh" from a leg that measured nothing. Absence of
+            # measurement is not evidence of freshness, which is the whole thesis
+            # of this module.
+            if write_metadata and lean_unmeasured is None:
+                want = bool(stale_lean)
+                if md.get("freshness_stale") != want:
+                    md["freshness_stale"] = want
+                    write_bundle_json(md_path, md)
             findings.append({
                 "bundle": bundle,
                 "passed": True,
@@ -482,7 +564,7 @@ def check(write_metadata: bool = False) -> list[dict]:
             if write_metadata:
                 try:
                     md["freshness_stale"] = True
-                    md_path.write_text(json.dumps(md, indent=2) + "\n")
+                    write_bundle_json(md_path, md)
                 except OSError:
                     pass
         else:
@@ -502,7 +584,7 @@ def check(write_metadata: bool = False) -> list[dict]:
             if write_metadata and md.get("freshness_stale"):
                 md["freshness_stale"] = False
                 try:
-                    md_path.write_text(json.dumps(md, indent=2) + "\n")
+                    write_bundle_json(md_path, md)
                 except OSError:
                     pass
 

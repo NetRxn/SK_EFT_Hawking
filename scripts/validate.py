@@ -296,7 +296,15 @@ def run_checks(
         try:
             results[spec.name] = spec.func()
         except Exception as e:
-            results[spec.name] = CheckResult(passed=False, error=str(e))
+            # ⚠️ `measured=False`, and this is the single most central place it
+            # matters. An unhandled exception is the STRONGEST "could not
+            # measure" the suite can produce, and `measured` defaults True — so
+            # a crashed check used to count toward `--ci`'s coverage floor as
+            # evidence that it ran. The verdict was never wrong (`passed=False`
+            # still fails the suite); the FLOOR was, and the floor is the guard
+            # that exists because the previous floor could not fire.
+            results[spec.name] = CheckResult(
+                passed=False, measured=False, error=str(e))
     return results
 
 
@@ -315,12 +323,21 @@ def print_results(results: Dict[str, CheckResult]) -> None:
             print(f"  ERROR: {cr.error}")
 
         for d in cr.details:
-            if d.warning:
+            # ⚠️ FAILURE IS TESTED FIRST, and the order is the whole point.
+            # `warning` and `passed` are independent axes, and the pair
+            # (passed=False, warning=True) is REAL: it is what `--strict`
+            # produces when it promotes an advisory to a failure
+            # (`checks/freshness.py`). Testing `warning` first rendered every
+            # one of those as a yellow ⚠ while `CheckResult.passed` correctly
+            # went False — so the human-readable report contradicted the exit
+            # code on exactly the runs that matter. `⚠✗` keeps both facts: this
+            # failed, and it failed by promotion rather than on its own terms.
+            if not d.passed:
+                sym = "\033[33m⚠\033[0m\033[31m✗\033[0m" if d.warning else "✗"
+            elif d.warning:
                 sym = "\033[33m⚠\033[0m"
-            elif d.passed:
-                sym = "✓"
             else:
-                sym = "✗"
+                sym = "✓"
             line = f"  {sym} {d.name}"
             if d.message:
                 line += f"  —  {d.message}"
@@ -445,12 +462,20 @@ def archive_results(results: Dict[str, CheckResult]) -> Path:
     for name, cr in results.items():
         payload["checks"][name] = {
             "passed": cr.passed,
+            # ⚠️ `measured` must cross EVERY persistence boundary. `_registry`
+            # justifies the field by naming the `--json` payload and the
+            # pre-commit consumers as the reason it exists; dropping it here
+            # re-created, in the archived historical record, exactly the state
+            # it was added to remove — a cannot-measure PASS stored
+            # byte-identically to a real one.
+            "measured": cr.measured,
             "error": cr.error,
             "details": [asdict(d) for d in cr.details],
         }
     payload["summary"] = {
         "total": len(results),
         "passed": sum(1 for r in results.values() if r.passed),
+        "measured": sum(1 for r in results.values() if r.measured),
         "failed": sum(1 for r in results.values() if not r.passed),
     }
     class _Encoder(json.JSONEncoder):
@@ -800,6 +825,7 @@ Examples:
             "checks": {
                 name: {
                     "passed": cr.passed,
+                    "measured": cr.measured,   # see archive_results
                     "error": cr.error,
                     "details": [asdict(d) for d in cr.details],
                 }
@@ -808,6 +834,7 @@ Examples:
             "summary": {
                 "total": len(results),
                 "passed": sum(1 for r in results.values() if r.passed),
+                "measured": sum(1 for r in results.values() if r.measured),
             },
         }
         class _Enc(json.JSONEncoder):
