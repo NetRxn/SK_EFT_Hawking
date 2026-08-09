@@ -378,7 +378,28 @@ reach for the same sentence split. Cite the check's verdict instead of re-derivi
 - **Fix shape:** a shared unescape helper for prose-vs-Lean correlation, so each new consumer
   does not rediscover this. Needs code.
 
-### D3. `I1`'s line-number citation for the disproved stub is off — OPEN (minor)
+### D3. `I1`'s line-number citation for the disproved stub is off — ✅ DONE 2026-08-09
+
+> **Reproduced exactly:** the `/- … -/` stub spans **311–325** (cited 307–321) and
+> `gap_solution_monotone` runs **333–349** (cited 329–345). A uniform +4, at three sites in I1
+> (`:493`, `:494`, `:512`), all corrected.
+>
+> ⚠️ **The entry's generalisation — "any other line-number citation into this file is likely off by
+> the same amount" — was CHECKED and does not hold beyond `TetradGapEquation.lean`.** Every other
+> line citation in I1 was verified against source: `Basic.lean:152` = `structure DissipativeCoeffs`
+> ✓; `SKDoubling.lean` 156–168 = `structure KMSSymmetry` ✓, 367–379 = `structure FirstOrderKMS` ✓,
+> 412–439 = `theorem firstOrder_uniqueness` ✓, 244–280 brackets the `firstOrderDissipativeAction`
+> docstring+def ✓; `EWBaryogenesisChiralityWall.lean` 106–114 = `sphaleronSuppression_le_one` ✓.
+> **The drift is local to one file, not corpus-wide.**
+>
+> ⚠️ **A measurement note:** the first extraction pass used one regex for "filename plus number"
+> and both missed the `lines~307--321` sites (no adjacent filename) and invented a hit from a date
+> (`update_counts.py:2026--6`). Enumerating by citation FORM found all nine. Fourth regex-over-
+> structured-text failure this branch.
+>
+> The waiver coupling the entry flags (`waived:I1:gap_solution_bounded`) is untouched and still
+> correct: `gap_solution_bounded` is at line 320, i.e. inside the 311–325 commented block, which is
+> exactly what the waiver documents.
 
 - **Where:** `papers/I1/paper_draft.tex:494` and `:512` — *"a commented-out stub at
   lines~307--321"*, and `:493` — the live theorem at *"lines~329--345"*.
@@ -628,7 +649,12 @@ version *and* the Mathlib rev against `lean-toolchain` + `lakefile.toml`.
 - **Do not build without §6a approval.** Full working:
   `docs/audits/2026-08-07-d11-retrofit/FINDINGS.md` §2.
 
-### D11. D11 §6.4 cites a conditional without its non-vacuity witness — OPEN (minor, prose)
+### D11. D11 §6.4 cites a conditional without its non-vacuity witness — ✅ DONE 2026-08-09
+
+> `bernal_mexicanHat_witness` confirmed live at `GrapheneBand/BernalBilayer.lean:598`. §6.4 now
+> cites it with its concrete point (γ = 1, u = 1/2, x = 3/8, E² = 1/8 < u² = 1/4), so the
+> nonzero-bias conditional is evidenced as inhabited rather than left possibly vacuous — the same
+> discipline §2.2 already applies with `latticeChern_Uwit` against `latticeChern_trivial`.
 
 - **Where:** `papers/D11/paper_draft.tex:462-464`.
 - **The gap:** the Mexican-hat result is stated *at nonzero bias* and cites `bernal_mexicanHat`,
@@ -677,7 +703,13 @@ version *and* the Mathlib rev against `lean-toolchain` + `lakefile.toml`.
   present claim true. Operator's call under ADR-010 C5. **The current prose is not a third option.**
 - Full working: `docs/audits/2026-08-07-d10-retrofit/FINDINGS.md` §3.
 
-### D13. D1 §3.1 mis-describes four `decide` proofs as `native_decide` — OPEN (minor, prose)
+### D13. D1 §3.1 mis-describes four `decide` proofs as `native_decide` — ✅ DONE 2026-08-09
+
+> **Verified two ways before editing:** the four counting theorems at `SecondOrderSK.lean` 260, 272,
+> 285 and 937 all read `:= by decide` in source, and their `axiom_deps_project` carries no
+> `._native.native_decide` marker. D1 §3.1 now says `\texttt{decide}` and states why it matters
+> (kernel-checked, not compiled-evaluated), so the bundle stops understating its own purity in the
+> place a referee looks.
 
 ⚠️ **THIS ITEM WAS FILED WRONG ON 2026-08-07 AND IS RESTATED HERE. The original text claimed
 `Lean.ofReduceBool` appears on ZERO declarations project-wide and concluded there is no
