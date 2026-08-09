@@ -17,6 +17,8 @@
 %% E1 PRL (polariton) and E2 PRL (graphene) extracted Tier-4 letters
 %% already shipped GREEN (Phase 7b sub-wave 7b.4, commit ea1d944)
 
+\input{bundle_counts}
+
 \begin{document}
 
 \title{Formally Verified Analog Hawking Radiation Across Three Platforms}
@@ -84,8 +86,8 @@ The quantum-critical transport coefficients
 ($\sigma_Q \approx 4e^2/h$, $L/L_0 > 200$) are adopted from
 Majumdar et al.'s monolayer-graphene Dirac-fluid characterization
 as a cross-device modeling assumption for the bilayer nozzle
-regime. End-to-end, \substantivetheorems{}~Lean theorems are
-machine-verified
+regime. End-to-end, \bundleTheorems{}~Lean theorems in this
+bundle's verified chain are machine-verified
 (\texttt{lake build} clean, zero \texttt{sorry},
 \aristotleproved{}~closed by the Aristotle automated prover). The substrate's first-order KMS structure
 is encoded as the \texttt{FirstOrderKMS} Prop record (with fields
@@ -936,9 +938,11 @@ the project's staged validation pipeline. A subset of the underlying
 library's theorems was closed by the Aristotle automated theorem
 prover (Harmonic); every proof is ultimately certified by the Lean~4
 kernel via \texttt{lake build} on the public repository, independently
-of any AI tool. Manuscript prose was AI-assisted and human-reviewed;
-all numerical claims trace to the repository's computation pipeline
-through its automated validation checks.
+of any AI tool. Manuscript prose was AI-assisted and human-reviewed.
+The repository's public validation suite reports, for every
+draft, any numerical value written inline in prose rather than
+sourced from a generated table; that report is the authority on
+this manuscript's numerical provenance.
 
 \begin{thebibliography}{99}
 

@@ -638,3 +638,51 @@ class TestPathAliasCoupling:
     def test_claim_clusters_path_sits_under_papers(self):
         assert fr.claim_clusters_path().parent == _H.PROJECT_ROOT / "papers"
         assert fr.claim_clusters_path().name == "claim_clusters.json"
+
+
+class TestBundleCountsFresh:
+    """`bundle_counts_fresh` — a paper's own substrate figures cannot drift.
+
+    Exists because the PROJECT-wide `\\substantivetheorems` was used for PAPER-scoped
+    claims (TODO-D9): E2 stated 26,329 against a verified chain of 6 theorems.
+    """
+
+    def test_live_tree_is_fresh(self):
+        assert fr.check_bundle_counts_fresh().passed
+
+    def test_a_hand_edited_count_is_stale(self, tmp_path, monkeypatch):
+        import render_bundle_counts as rbc
+        monkeypatch.setattr(rbc, "build", lambda: {"D1": "\\newcommand{\\bundleTheorems}{7}\n"})
+        papers = tmp_path / "papers"; (papers / "D1").mkdir(parents=True)
+        (papers / "D1" / "bundle_counts.tex").write_text("\\newcommand{\\bundleTheorems}{999}\n")
+        monkeypatch.setattr(_H, "PAPERS_DIR", papers)
+        r = fr.check_bundle_counts_fresh()
+        assert not r.passed and any(d.name == "stale:D1" for d in r.details)
+
+    def test_a_missing_file_for_a_DECLARED_bundle_fails(self, tmp_path, monkeypatch):
+        import render_bundle_counts as rbc
+        monkeypatch.setattr(rbc, "build", lambda: {"D1": "\\newcommand{\\bundleTheorems}{7}\n"})
+        papers = tmp_path / "papers"; (papers / "D1").mkdir(parents=True)
+        monkeypatch.setattr(_H, "PAPERS_DIR", papers)
+        r = fr.check_bundle_counts_fresh()
+        assert not r.passed and any(d.name == "missing:D1" for d in r.details)
+
+    def test_an_UNDECLARED_bundle_emits_no_file_and_that_is_not_a_failure(self, tmp_path, monkeypatch):
+        """PINS THE DESIGN: substrate UNKNOWN is not substrate ZERO. Emitting 0 would put
+        a confident wrong number in a manuscript."""
+        import render_bundle_counts as rbc
+        monkeypatch.setattr(rbc, "build",
+                            lambda: {"D1": "\\newcommand{\\bundleTheorems}{7}\n", "D2": None})
+        papers = tmp_path / "papers"
+        (papers / "D1").mkdir(parents=True); (papers / "D2").mkdir(parents=True)
+        (papers / "D1" / "bundle_counts.tex").write_text("\\newcommand{\\bundleTheorems}{7}\n")
+        monkeypatch.setattr(_H, "PAPERS_DIR", papers)
+        r = fr.check_bundle_counts_fresh()
+        assert r.passed and any(d.name == "undeclared" for d in r.details)
+
+    def test_an_empty_population_is_UNVERIFIED_not_fresh(self, tmp_path, monkeypatch):
+        import render_bundle_counts as rbc
+        monkeypatch.setattr(rbc, "build", lambda: {"D1": None})
+        monkeypatch.setattr(_H, "PAPERS_DIR", tmp_path / "papers")
+        r = fr.check_bundle_counts_fresh()
+        assert not r.passed and not r.measured

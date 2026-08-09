@@ -508,7 +508,50 @@ version *and* the Mathlib rev against `lean-toolchain` + `lakefile.toml`.
   section answering it — heading-level at minimum, so the check is structural rather than a
   keyword proxy. This is the missing completeness half of the doc-accuracy guard.
 
-### D9. The AI-disclosure template asserts unbacked numerical traceability — OPEN (claim integrity)
+### D9. The AI-disclosure template asserts unbacked numerical traceability — ✅ CLOSED 2026-08-09
+
+> **Both halves fixed.** Kept in full below because the measurement history is the useful part.
+>
+> **Half 1, the clause.** The unbackable sentence is gone from `docs/DISCLOSURE_TEXT.md` (both
+> variants) and from all **8** drafts that carried it (D1, D2, D3, D4, D5, D9, L2, E1). It now
+> reads: *"The repository's public validation suite reports, for every draft, any numerical value
+> written inline in prose rather than sourced from a generated table; that report is the authority
+> on this manuscript's numerical provenance."* That is true, it is checkable, and it points at
+> `numerical_literals` instead of asserting a universal over it.
+>
+> ⚠️ **A first replacement draft said "tables and figures are generated from the pipeline" and was
+> DISCARDED before it shipped**: `bundle_tables_use_pipeline` reports D1 and E1 with hand-written
+> tabulars and **zero** `\input{tables/}`. It would have replaced a false claim with a new one.
+>
+> ⚠️ **The population is 8, not the 4 a line-based `grep` reports.** The phrase wraps across a
+> newline in four drafts. Whole-file, `re.S`.
+>
+> **Half 2, the root cause.** `scripts/render_bundle_counts.py` now emits
+> `papers/<CODE>/bundle_counts.tex` per bundle from its **declared-apex closure**, defining
+> `\bundleTheorems` / `\bundleDecls` / `\bundleModules`; `bundle_counts_fresh` gates it, and
+> `render_bundle_counts.py --check` is the same derivation. **Six paper-scoped sites repointed** in
+> D1, D5, E1 (two), E2 and F.
+>
+> **The overclaim was far worse than this item recorded.** Measured per bundle against the
+> apex closure:
+>
+> | bundle | stated | honest | factor |
+> |---|---|---|---|
+> | E2 | 26 329 | **6** | **~4 400x** |
+> | E1 | 26 329 | **11** | **~2 400x** |
+> | D1 | 26 329 | **56** | ~470x |
+> | D5 | 26 329 | **81** | ~325x |
+>
+> This item's "~230x" used 249 declarations as the denominator; the honest denominator for a
+> *theorem-count* sentence is theorem-kind declarations, which is smaller again.
+>
+> ⚠️ **Four surviving `\substantivetheorems` uses are CORRECT and were deliberately left**: F's
+> four project-scoped sentences (*"Project totals"*, *"The Lean backbone of the program"*, *"The
+> Lean library currently ships"*, *"Total program output"*), D5's two counting-convention
+> sentences, and I1's. The defect was never the macro; it was using a project figure for a
+> paper-scoped claim, and the fix has to preserve the cases where the project figure is the
+> right one.
+
 
 - **Where:** `docs/DISCLOSURE_TEXT.md:27-29`, `:42-43`; carried by **11 drafts** (D1, D2, D3, D4,
   D5, D9, E1, L2 among them).

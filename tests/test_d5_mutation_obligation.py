@@ -639,6 +639,30 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
         "which is Stage 9's `\"ALL figures PASS\"`-over-an-empty-set defect refused a "
         "second home",
     ),
+    "bundle_counts_fresh": (
+        "test_d5_freshness.py",
+        "5 mutations (TODO-D9 root cause, 2026-08-09). Per-bundle substrate figures "
+        "generated from the apex closure, because the PROJECT-wide "
+        "\\substantivetheorems was used for PAPER-scoped claims: E2 stated 26 329 "
+        "against a verified chain of 6 theorems, E1 against 11. Legs: live tree fresh; "
+        "a hand-edited count is STALE and named; an absent file for a DECLARED bundle "
+        "fails; an undeclared bundle emits no file and that is NOT a failure (substrate "
+        "UNKNOWN, not zero); and an empty population is UNVERIFIED rather than fresh. "
+        "Derivation is delegated wholly to render_bundle_counts.build() so no second "
+        "resolver can disagree, per the chain_canonicalize precedent",
+    ),
+    "bundle_cross_references_resolve": (
+        "test_d5_papers_prose.py",
+        "7 mutations (2026-08-09). A `\\ref` with no `\\label` renders a literal `??` "
+        "to the reader, and NOTHING gated it: `paper_latex_compiles` hard-fails on "
+        "fatal `!` breakage only, so it reported 21/21 bundles clean on the same tree "
+        "where `compile_bundle_pdf.py D3` reported FAIL with 3 unresolved refs. Legs: "
+        "live corpus clean; a matching label passes; a dangling ref fails BY NAME; "
+        "`\\eqref`/`\\cref` are covered; a label defined in an \\input-ed generated "
+        "table counts (the false positive a draft-only scan would produce); a draft "
+        "with no references at all is UNVERIFIED rather than clean; and the ratchet "
+        "has zero headroom",
+    ),
     "bundle_native_decide_debt": (
         "test_d5_bundles_readiness.py",
         "6 mutations (ADR-010 §Open item 4, operator ratchet 2026-08-08). "
@@ -840,6 +864,14 @@ PRODUCTION_SEEDED: frozenset[str] = frozenset({
     # while L1 carries 3 comment markers -> rc=1 naming L1 and lines 384-386. Restored
     # byte-identical (verified by git hash-object).
     "bundle_todo_free_before_green",
+    # 2026-08-09: repointed one live `\ref{sec:penrose}` in the REAL
+    # papers/D3/paper_draft.tex back to the dead `sec:singularity-thms` -> rc=1 naming
+    # D3 and the label. Restored from a scratchpad snapshot, byte-identical (git
+    # hash-object). Snapshot, NOT `git checkout` -- the file had uncommitted work.
+    "bundle_cross_references_resolve",
+    # 2026-08-09: edited the REAL papers/E2/bundle_counts.tex theorem count 6 -> 600
+    # -> rc=1 naming E2 as stale. Restored from a scratchpad snapshot, byte-identical.
+    "bundle_counts_fresh",
 })
 
 #: The ratchet, in the same idiom as `AWAITING_CEILING`: the number of registered
@@ -850,7 +882,7 @@ PRODUCTION_SEEDED: frozenset[str] = frozenset({
 #: every check for which nobody has yet demonstrated a production failure, not every
 #: check that is broken. Lower it one check at a time, each with the probe recorded in
 #: the commit — the same way the 54-entry `AWAITING_MUTATION_TEST` backlog went to zero.
-FIXTURE_ONLY_CEILING = 55  # 2026-08-08: +2 checks, +2 production seeds — net unchanged
+FIXTURE_ONLY_CEILING = 55  # 2026-08-09: +2 checks, +2 production seeds — net unchanged
 
 
 def _registered() -> list[str]:

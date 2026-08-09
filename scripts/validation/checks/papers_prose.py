@@ -1058,3 +1058,121 @@ def check_paper_toolchain_pin_drift() -> CheckResult:
         warning=bool(n)))
 
     return CheckResult(passed=True, details=details)
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# CHECK: bundle cross-references resolve (a `??` in a rendered PDF)
+# ═══════════════════════════════════════════════════════════════════════
+
+_LABEL_RE = re.compile(r"\\label\{([^}]+)\}")
+_REF_RE = re.compile(r"\\(?:eq|c|C)?ref\{([^}]+)\}")
+
+
+@register_check(
+    "bundle_cross_references_resolve",
+    "Every \\ref in a bundle draft has a matching \\label somewhere in its input closure")
+def check_bundle_cross_references_resolve() -> CheckResult:
+    """CHECK: a `\\ref` with no `\\label` renders as a literal `??` to the reader.
+
+    **Found 2026-08-09 in D3**, the heaviest bundle: `\\S\\ref{sec:cfl-z3-matching}` and
+    two `\\S\\ref{sec:singularity-thms}` named labels that do not exist, so the 58-page
+    PDF carried three *"see Section ??"*. Both target sections were present under other
+    labels (`sec:cfl`, `sec:penrose`); the references had simply never been repointed.
+
+    ⚠️ **The measurement existed and reached no gate.** `compile_bundle_pdf.py` reports
+    `unresolved_refs_in_pdf` and treats a nonzero value as failure, and
+    `BUNDLE_LIFT_PROCEDURE.md` §7 forbids invoking Stage 9 until the draft *"compiles
+    cleanly"*. But `paper_latex_compiles` hard-fails on fatal `!`-marked breakage only,
+    by design and as its docstring says, so it reported **21/21 bundles clean** on the
+    same tree where a direct `compile_bundle_pdf.py D3` reported FAIL. Two instruments,
+    one corpus, opposite verdicts.
+
+    ⚠️ **And the failing verdict was already committed.** `papers/D3/bundle_metadata.json`
+    carried `compile_gate_ok: false` in tracked state. That field has one writer
+    (`compile_bundle_pdf.py`) and **no readers**, so the suite reported 21/21 clean over a
+    recorded failure sitting in the repository. A verdict nobody consumes is worse than an
+    absent one: it looks like diligence in the diff.
+
+    **Why this is a static scan and not a leg of `paper_latex_compiles`.** Two reasons,
+    and each rules out the cheaper option on its own:
+
+    * *A single pdflatex pass cannot tell the difference.* Reference resolution needs the
+      `.aux` from a prior pass, so on run one LaTeX warns `Reference ... undefined` for
+      **every** reference in the file. `paper_latex_compiles` runs one pass, so its log
+      cannot distinguish a dangling label from a not-yet-resolved one.
+    * *That check is cache-gated.* It skips any draft whose input closure is unchanged,
+      so a leg living inside it would silently not run on exactly the drafts nobody has
+      touched, which is where a stale reference survives longest.
+
+    Labels are collected across the **whole input closure** (`_H.draft_input_closure`),
+    not just the draft, so a label defined in a generated `tables/*.tex` counts. That
+    helper is the same one `paper_latex_compiles` and `bundle_manuscript_length` use, so
+    three consumers cannot disagree about which files belong to a draft.
+
+    **Zero headroom, deliberately: the corpus measured clean across all 21 bundles after
+    the D3 repair.** A ratchet with slack here would permit a `??` to reach a referee.
+
+    ⚠️ **UNMEASURABLE is not PASS.** An unreadable or absent draft is counted and named,
+    and a run that reaches no draft at all returns `measured=False`.
+    """
+    try:
+        from bundle_registry import BUNDLE_CODES as _CODES
+        codes = list(_CODES)
+    except Exception as exc:  # noqa: BLE001
+        return CheckResult(passed=False, measured=False, details=[Detail(
+            "roster", False, f"could not read the bundle roster ({exc}) — UNVERIFIED")])
+
+    details: List[Detail] = []
+    dangling: dict[str, list[str]] = {}
+    unread: List[str] = []
+    scanned = 0
+    total_refs = 0
+
+    for code in codes:
+        tex = _H.PAPERS_DIR / code / "paper_draft.tex"
+        if not tex.is_file():
+            unread.append(code)
+            continue
+        try:
+            labels: set[str] = set()
+            for f in _H.draft_input_closure(tex):
+                if f.suffix.lower() in {".tex", ".sty", ""} and f.is_file():
+                    labels |= set(_LABEL_RE.findall(f.read_text(errors="replace")))
+            body = tex.read_text(errors="replace")
+            labels |= set(_LABEL_RE.findall(body))
+            refs = _REF_RE.findall(body)
+        except OSError:
+            unread.append(code)
+            continue
+        scanned += 1
+        total_refs += len(refs)
+        missing = sorted({r for r in refs if r not in labels})
+        if missing:
+            dangling[code] = missing
+
+    if unread:
+        details.append(Detail(
+            "unread", True,
+            f"{len(unread)} bundle draft(s) could not be read, so their cross-references "
+            f"are UNKNOWN: {', '.join(sorted(unread))}", warning=True))
+
+    # Seam guard (authoring-guide §2.5): a scan that reached nothing passes vacuously.
+    if not scanned or not total_refs:
+        details.append(Detail(
+            "seam", False,
+            f"scanned {scanned} draft(s) carrying {total_refs} reference(s) — an empty "
+            f"population cannot evidence resolvable references; UNVERIFIED, not passing"))
+        return CheckResult(passed=False, measured=False, details=details)
+
+    for code, missing in sorted(dangling.items()):
+        details.append(Detail(
+            f"dangling:{code}", False,
+            f"{code}: {len(missing)} \\ref target(s) have no \\label anywhere in the "
+            f"draft's input closure, so each renders as `??` to a reader: "
+            f"{', '.join(missing)}. Repoint to the live label or add the missing one"))
+
+    details.append(Detail(
+        "summary", not dangling,
+        f"{scanned} bundle draft(s) scanned, {total_refs} reference site(s), "
+        f"{sum(len(v) for v in dangling.values())} unresolved (target 0)"))
+    return CheckResult(passed=not dangling, details=details)

@@ -1,7 +1,7 @@
-# AI Disclosure Standard — Canonical Text for All 17 Publication Bundles
+# AI Disclosure Standard — Canonical Text for Every Publication Bundle
 
-**Authority:** user decision 2026-06-10. One standard disclosure text for all 17
-bundles, vendor-level generic. The Aristotle clause is conditional and
+**Authority:** user decision 2026-06-10. One standard disclosure text for every
+bundle in the roster (`scripts/bundle_registry.py`), vendor-level generic. The Aristotle clause is conditional and
 register-derived (see §2). This document is the single source of truth for the
 disclosure block; the ad-hoc per-paper variants listed in §3 are superseded.
 
@@ -24,9 +24,11 @@ the project's staged validation pipeline. A subset of the underlying
 library's theorems was closed by the Aristotle automated theorem
 prover (Harmonic); every proof is ultimately certified by the Lean~4
 kernel via \texttt{lake build} on the public repository, independently
-of any AI tool. Manuscript prose was AI-assisted and human-reviewed;
-all numerical claims trace to the repository's computation pipeline
-through its automated validation checks.
+of any AI tool. Manuscript prose was AI-assisted and human-reviewed.
+The repository's public validation suite reports, for every
+draft, any numerical value written inline in prose rather than
+sourced from a generated table; that report is the authority on
+this manuscript's numerical provenance.
 ```
 
 ### Variant B — bundles whose content did not use Aristotle-proved theorems
@@ -39,9 +41,10 @@ used LLM-based agents (Anthropic Claude-family models) operating under
 the project's staged validation pipeline. Every proof is ultimately
 certified by the Lean~4 kernel via \texttt{lake build} on the public
 repository, independently of any AI tool. Manuscript prose was
-AI-assisted and human-reviewed; all numerical claims trace to the
-repository's computation pipeline through its automated validation
-checks.
+AI-assisted and human-reviewed. The repository's public validation
+suite reports, for every draft, any numerical value written inline in
+prose rather than sourced from a generated table; that report is the
+authority on this manuscript's numerical provenance.
 ```
 
 Assembly note: the two variants differ only in the conditional Aristotle
@@ -162,10 +165,10 @@ advisory).
 
 The disclosure names "Anthropic Claude-family models" and deliberately **does
 not** name model versions. Development spanned varied models (multiple
-Claude-family versions plus subagents); pinning version strings in 17
-manuscripts would be both inaccurate (no single version produced any bundle)
-and unmaintainable (every model change would require chasing and re-writing
-17 disclosure blocks). **Do not add version strings** to the disclosure in any
+Claude-family versions plus subagents); pinning version strings across the
+roster would be both inaccurate (no single version produced any bundle) and
+unmaintainable (every model change would require chasing and re-writing every
+disclosure block). **Do not add version strings** to the disclosure in any
 bundle. The Aristotle clause names Harmonic's Aristotle because it is a
 distinct external proving service whose runs are individually tracked in
 `ARISTOTLE_THEOREMS` (auditable per run id), not a development-loop assistant.

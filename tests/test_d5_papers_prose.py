@@ -359,3 +359,66 @@ class TestBundleTablesUsePipeline:
             f"{n} hand-written tabular(s) live against a ceiling of "
             f"{pp.BUNDLE_HANDWRITTEN_TABLE_CEILING}. If it dropped, LOWER the ceiling "
             f"in the same commit; if it rose, add the tables.py spec.")
+
+
+class TestBundleCrossReferencesResolve:
+    """`bundle_cross_references_resolve` — a `\\ref` with no `\\label` renders `??`.
+
+    Found in D3 (3 sites) on a tree where `paper_latex_compiles` reported 21/21 bundles
+    clean, because that check hard-fails on fatal `!` breakage only.
+    """
+
+    def _bundle(self, tmp_path, monkeypatch, body: str, extra: dict | None = None):
+        papers = tmp_path / "papers"
+        (papers / "D1").mkdir(parents=True)
+        (papers / "D1" / "paper_draft.tex").write_text(body)
+        for name, content in (extra or {}).items():
+            f = papers / "D1" / name
+            f.parent.mkdir(parents=True, exist_ok=True)
+            f.write_text(content)
+        import bundle_registry as registry
+        monkeypatch.setattr(_H, "PAPERS_DIR", papers)
+        monkeypatch.setattr(registry, "BUNDLE_CODES", ("D1",))
+        import validation.checks.papers_prose as m
+        monkeypatch.setattr(m, "BUNDLE_CODES", ("D1",), raising=False)
+
+    def test_live_corpus_is_clean(self):
+        r = pp.check_bundle_cross_references_resolve()
+        assert r.passed, [d.message for d in r.details if not d.passed]
+
+    def test_a_matching_label_passes(self, tmp_path, monkeypatch):
+        self._bundle(tmp_path, monkeypatch,
+                     "\\label{sec:a}\nSee \\ref{sec:a}.\n")
+        assert pp.check_bundle_cross_references_resolve().passed
+
+    def test_a_dangling_ref_fails_and_names_it(self, tmp_path, monkeypatch):
+        self._bundle(tmp_path, monkeypatch,
+                     "\\label{sec:a}\nSee \\ref{sec:ghost}.\n")
+        r = pp.check_bundle_cross_references_resolve()
+        assert not r.passed
+        assert any("sec:ghost" in d.message for d in r.details if not d.passed)
+
+    def test_eqref_and_cref_are_covered(self, tmp_path, monkeypatch):
+        self._bundle(tmp_path, monkeypatch,
+                     "\\label{eq:a}\nSee \\eqref{eq:ghost} and \\cref{eq:a}.\n")
+        r = pp.check_bundle_cross_references_resolve()
+        assert not r.passed and any("eq:ghost" in d.message for d in r.details if not d.passed)
+
+    def test_a_label_in_an_INPUT_file_counts(self, tmp_path, monkeypatch):
+        """PINS THE FALSE POSITIVE a draft-only scan would produce: generated tables
+        define labels, and the closure helper is why they are seen."""
+        self._bundle(tmp_path, monkeypatch,
+                     "\\input{tables/t1}\nSee \\ref{tab:one}.\n",
+                     extra={"tables/t1.tex": "\\label{tab:one}\n"})
+        assert pp.check_bundle_cross_references_resolve().passed
+
+    def test_an_empty_population_is_UNVERIFIED_not_clean(self, tmp_path, monkeypatch):
+        self._bundle(tmp_path, monkeypatch, "prose with no references at all\n")
+        r = pp.check_bundle_cross_references_resolve()
+        assert not r.passed and not r.measured
+
+    def test_the_ratchet_has_zero_headroom(self):
+        """Target is 0 unresolved; any regression fails on the next run."""
+        r = pp.check_bundle_cross_references_resolve()
+        summary = next(d for d in r.details if d.name == "summary")
+        assert "0 unresolved" in summary.message

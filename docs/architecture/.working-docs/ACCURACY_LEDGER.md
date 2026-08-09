@@ -2343,3 +2343,48 @@ the only thing standing between the excision and a bundle that scores better for
 that six merges failed because they were argued from counts rather than manuscripts — **and its one
 original recommendation was argued from a ledger's summary of a retrofit instead of the retrofit.**
 C4 is not satisfied by reading most of the drafts.
+
+---
+
+## V62 — closing the portfolio's sharpest claim-integrity defect (A5 / TODO-D9) — 7 atoms, 2 near-misses
+
+Scope: the AI-disclosure clause and the theorem-count overclaim beneath it. Prioritised over the
+D6 excision because it is template-level (every future bundle inherits it), small per bundle, and
+a false statement about verification inside papers whose subject is verification.
+
+| # | Proposition | Decider | Verbatim result |
+|---|---|---|---|
+| 1 | The clause is carried by 4 drafts | line-based `grep` | **WRONG — it is 8.** The phrase wraps across a newline in four drafts, and a line-oriented scan cannot see it. `re.S`, whole file |
+| 2 | The honest replacement is "tables and figures are generated from the pipeline" | `bundle_tables_use_pipeline` | **REJECTED BEFORE SHIPPING.** D1 and E1 carry hand-written tabulars and **zero** `\input{tables/}`. That sentence would have replaced a false claim with a new one |
+| 3 | The overclaim is "~230x" (this item's own figure) | per-bundle apex closure | **Far worse. E2 stated 26 329 against 6 theorems (~4 400x); E1 against 11 (~2 400x).** The old ratio used a declaration count where the sentence says *theorems* |
+| 4 | Every `\substantivetheorems` use is a defect | read all 10 sites in context | **NO — 4 are correct**, and deleting them would have been vandalism: F's *"Project totals"*, *"Lean backbone of the program"*, *"Lean library currently ships"*, *"Total program output"*, plus D5's and I1's counting-convention sentences. **The defect is a project figure in a paper-scoped sentence, not the macro** |
+| 5 | D3 compiles clean, like the other 20 bundles | `compile_bundle_pdf.py D3` | **FAIL — 3 unresolved refs**, i.e. three literal `??` in a 58-page PDF, while `paper_latex_compiles` reported **21/21 bundles clean**. Two instruments, one corpus, opposite verdicts |
+| 6 | D3's dangling refs were caused by my disclosure edit | `git stash` + recompile at HEAD | **Pre-existing, identical at HEAD.** Both targets existed under other labels (`sec:cfl`, `sec:penrose`) and had never been repointed |
+| 7 | Dangling refs are gated somewhere | read `paper_latex_compiles` | **Nothing gates them.** It hard-fails on fatal `!` breakage only, by design and as documented. `compile_bundle_pdf.py` measures the count and reaches no gate |
+| 7b | The failure was at least undetected | `grep compile_gate_ok` | **WORSE: it was RECORDED.** `papers/D3/bundle_metadata.json` carried `compile_gate_ok: false` in tracked, committed state. The field has exactly ONE writer and **ZERO readers** outside the script that writes it |
+
+**⚠️ ATOM 7b IS THE SYSTEMIC FINDING AGAIN, IN A NEW PLACE.** The audit's thesis is that this
+system's dials exist and are disconnected. Here the verdict was not merely uncomputed, it was
+**computed, written to a tracked file, and committed** — and the suite reported *21/21 bundles
+clean* over it. A recorded verdict nobody reads is indistinguishable from no verdict, except that
+it looks like diligence in the diff.
+
+**⚠️ ATOM 2 IS THE ONE WORTH KEEPING.** The instinct on finding a false claim is to replace it with
+a stronger true one, and the replacement I drafted was **false for two of the eight bundles**. The
+check that caught it is the one that already tracks the fact. **Verify the replacement against the
+same instruments you used to condemn the original** — a correction is a claim.
+
+**⚠️ ATOM 4 IS ITS MIRROR.** Having established the macro was producing a 4 400x overclaim, the
+tempting move is to purge it. Four of ten uses are exactly right, and three of those are in the
+flagship where a project total is the *subject* of the sentence. A defect class is not a token.
+
+**What shipped.** Clause replaced in the template and 8 drafts with a statement that points at
+`numerical_literals` rather than asserting a universal over it. `render_bundle_counts.py` derives
+per-bundle `\bundleTheorems` / `\bundleDecls` / `\bundleModules` from the apex closure, gated by
+`bundle_counts_fresh`. Six paper-scoped sites repointed. D3's three dangling refs repointed, and
+`bundle_cross_references_resolve` now gates the class at zero headroom across 707 reference sites.
+
+**NOT-AN-ASSERTION.** Closing TODO-D9 does not make the eight drafts' numbers *right* everywhere;
+it makes the four sentences that quoted a project total for their own content quote their own
+content. `numerical_literals` still reports **116** inline literals at a frozen ceiling, and that
+is a separate, disclosed, ratcheted debt.

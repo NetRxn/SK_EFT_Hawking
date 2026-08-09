@@ -16,7 +16,7 @@
 **No timestamp is recorded here on purpose** — a date would make the file dirty on
 every run and turn the freshness check into noise. The tree state IS the timestamp.
 
-## Validation checks — 76, in execution order
+## Validation checks — 78, in execution order
 
 Execution order is semantic: the `*_fresh` regenerators rewrite artifacts that later
 checks read. See `validate._CANONICAL_ORDER`.
@@ -25,10 +25,10 @@ checks read. See `validate._CANONICAL_ORDER`.
 |---|---:|
 | `bundles_readiness` | 17 |
 | `physics` | 9 |
+| `freshness` | 8 |
 | `lean_toolchain` | 8 |
-| `freshness` | 7 |
+| `papers_prose` | 8 |
 | `lean_substrate` | 7 |
-| `papers_prose` | 7 |
 | `reviews` | 5 |
 | `citations` | 4 |
 | `graph_atlas` | 4 |
@@ -108,14 +108,16 @@ checks read. See `validate._CANONICAL_ORDER`.
 | 65 | `bundle_apex_resolves` | `bundles_readiness` | Every apex theorem a bundle declares names a live Lean theorem, and the undeclared-bundle count does not rise (publication-intake closure) |
 | 66 | `bundle_native_decide_debt` | `bundles_readiness` | Every bundle's native_decide debt is disclosed in its draft and does not grow (ADR-002 ratchet, per-bundle) |
 | 67 | `bundle_todo_free_before_green` | `bundles_readiness` | No bundle carrying an unresolved work marker records a Stage-13 green |
-| 68 | `paper_latex_compiles` | `papers_prose` | Every papers/*/paper_draft.tex compiles under pdflatex — bundles HARD-FAIL, legacy drafts ratchet; per-draft content-hash cache (--force-latex recompiles all) |
-| 69 | `axiom_count_prose_consistency` | `papers_prose` | Paper prose axiom-count claims agree with docs/counts.json |
-| 70 | `prose_theorem_reference_coverage` | `prose_lean_refs` | Bundle-draft Lean references in any verbatim form (texttt, a preamble alias for it, or verb) resolve in lean_deps.json |
-| 71 | `theorem_name_embedded_citations` | `prose_lean_refs` | Declaration names embedding author+year have matching bibliography entries |
-| 72 | `inventory_index_autogen_fresh` | `freshness` | Advisory: SK_EFT_Hawking_Inventory_Index.md autogen blocks match docs/counts.json |
-| 73 | `architecture_inventory_fresh` | `freshness` | docs/architecture/SURFACE_INVENTORY.md matches a fresh derivation from the code |
-| 74 | `lean_docstring_refs_resolve` | `lean_toolchain` | Lean docstring `backticked` project names resolve (rename-drift guard) |
-| 75 | `paper_toolchain_pin_drift` | `papers_prose` | Advisory (Class TP): paper-draft toolchain/Mathlib pins match lean-toolchain + lakefile.toml |
+| 68 | `bundle_counts_fresh` | `freshness` | papers/<CODE>/bundle_counts.tex matches a fresh derivation from the bundle's apex closure |
+| 69 | `bundle_cross_references_resolve` | `papers_prose` | Every \ref in a bundle draft has a matching \label somewhere in its input closure |
+| 70 | `paper_latex_compiles` | `papers_prose` | Every papers/*/paper_draft.tex compiles under pdflatex — bundles HARD-FAIL, legacy drafts ratchet; per-draft content-hash cache (--force-latex recompiles all) |
+| 71 | `axiom_count_prose_consistency` | `papers_prose` | Paper prose axiom-count claims agree with docs/counts.json |
+| 72 | `prose_theorem_reference_coverage` | `prose_lean_refs` | Bundle-draft Lean references in any verbatim form (texttt, a preamble alias for it, or verb) resolve in lean_deps.json |
+| 73 | `theorem_name_embedded_citations` | `prose_lean_refs` | Declaration names embedding author+year have matching bibliography entries |
+| 74 | `inventory_index_autogen_fresh` | `freshness` | Advisory: SK_EFT_Hawking_Inventory_Index.md autogen blocks match docs/counts.json |
+| 75 | `architecture_inventory_fresh` | `freshness` | docs/architecture/SURFACE_INVENTORY.md matches a fresh derivation from the code |
+| 76 | `lean_docstring_refs_resolve` | `lean_toolchain` | Lean docstring `backticked` project names resolve (rename-drift guard) |
+| 77 | `paper_toolchain_pin_drift` | `papers_prose` | Advisory (Class TP): paper-draft toolchain/Mathlib pins match lean-toolchain + lakefile.toml |
 
 </details>
 

@@ -403,10 +403,11 @@ substantial machine assistance: Lean~4 proof drafting and iteration
 used LLM-based agents (Anthropic Claude-family models) operating under
 the project's staged validation pipeline. Every proof is ultimately
 certified by the Lean~4 kernel via \texttt{lake build} on the public
-repository, independently of any AI tool. Manuscript prose was
-AI-assisted and human-reviewed; all numerical claims trace to the
-repository's computation pipeline through its automated validation
-checks.
+repository, independently of any AI tool. Manuscript prose was AI-assisted and human-reviewed.
+The repository's public validation suite reports, for every
+draft, any numerical value written inline in prose rather than
+sourced from a generated table; that report is the authority on
+this manuscript's numerical provenance.
 
 \begin{thebibliography}{99}
 \bibitem{Wang2024}

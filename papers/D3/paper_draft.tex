@@ -2001,7 +2001,7 @@ causal structure; and \emph{(iv)} NEC closure on the substrate's
 ADW stress-energy tensor (matching \S\ref{sec:adw-gap}'s gap-equation
 energy-momentum). When all four conditions hold, the biconditional
 collapses on the Lean side via the Riccati-focusing route
-(\S\ref{sec:singularity-thms} above); when any one fails, the
+(\S\ref{sec:penrose} above); when any one fails, the
 applicability predicate is false and the biconditional is vacuously
 satisfied (the Penrose hypothesis does not engage the substrate at
 that point). To our knowledge this is the first machine-checked
@@ -2227,7 +2227,7 @@ identifier with a one-line closure path:
   Cross-bridge to Bundle~D4 \S 7 (HP-QEC consumes the same Prop record).
 \item \texttt{CFLChiralLagrangian.H\_TopologicalOrderBeyondLG}: the
   CFL-emergent-$\mathbb{Z}_3$ matching with QCD-centre $\mathbb{Z}_3$
-  beyond the Landau-Ginzburg paradigm (\S\ref{sec:cfl-z3-matching});
+  beyond the Landau-Ginzburg paradigm (\S\ref{sec:cfl});
   closes when an explicit topological-order-vs-Landau-Ginzburg
   taxonomy bridge ships, currently in flight.
 \item \texttt{ChiralSSB\_QCD.H\_TetradQuarkScalesNatural}: the tetrad
@@ -2247,7 +2247,7 @@ identifier with a one-line closure path:
   \texttt{four\_laws\_consistent\_with\_acoustic\_regime}.
 \item \texttt{PenroseSingularity.IsADWPenroseApplicable}: substrate-specific
   applicability predicate for the Penrose singularity hypothesis
-  (\S\ref{sec:singularity-thms}); the predicate requires
+  (\S\ref{sec:penrose}); the predicate requires
   (i)~ADW-substrate-scale tetrad presence, (ii)~trapped-surface
   hypothesis, (iii)~global-hyperbolicity witness, and (iv)~NEC closure
   on the ADW stress-energy. Shipped at the Lean-formalization scope as
@@ -2478,9 +2478,11 @@ the project's staged validation pipeline. A subset of the underlying
 library's theorems was closed by the Aristotle automated theorem
 prover (Harmonic); every proof is ultimately certified by the Lean~4
 kernel via \texttt{lake build} on the public repository, independently
-of any AI tool. Manuscript prose was AI-assisted and human-reviewed;
-all numerical claims trace to the repository's computation pipeline
-through its automated validation checks.
+of any AI tool. Manuscript prose was AI-assisted and human-reviewed.
+The repository's public validation suite reports, for every
+draft, any numerical value written inline in prose rather than
+sourced from a generated table; that report is the authority on
+this manuscript's numerical provenance.
 
 \begin{thebibliography}{99}
 

@@ -78,6 +78,10 @@ EXPECTED_CHECKS = [
     # after `bundle_apex_resolves` because both read the DECLARED-APEX CLOSURE, whose
     # one hand-maintained input that check gates.
     'bundle_native_decide_debt', 'bundle_todo_free_before_green',
+    # Precedes `paper_latex_compiles`: a dangling \ref is invisible to it (one
+    # pdflatex pass reports every reference undefined, and its cache skips untouched
+    # drafts), and cheap to detect statically.
+    'bundle_counts_fresh', 'bundle_cross_references_resolve',
     'paper_latex_compiles',
     'axiom_count_prose_consistency', 'prose_theorem_reference_coverage',
     'theorem_name_embedded_citations', 'inventory_index_autogen_fresh',

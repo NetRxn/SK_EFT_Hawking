@@ -11,6 +11,8 @@
 %% Source paper: paper12_polariton (companion content) + Phase 5u Wave 21 cover-letter material
 %% Phase 7b sub-wave 7b.4 — E1 lift
 
+\input{bundle_counts}
+
 \begin{document}
 
 \title{A Falsifiable Hawking Spectrum for Polariton Microcavities at the Paris-LKB Device Parameters}
@@ -49,8 +51,8 @@ detection. We emit one falsifiable spectral window:
 $\omega/\kappa \in [0.05, 0.30]$ at the smooth-horizon configuration,
 where the SK-EFT noise-floor formula is the cleanest. The Lean~4
 verification of the underlying chain
-(\substantivetheorems{}~substantive theorems /
-\leanmodules{}~modules / \axiomcount{}~axiom / \sorrycount{}~sorry)
+(\bundleTheorems{}~substantive theorems /
+\bundleModules{}~modules / \axiomcount{}~axiom / \sorrycount{}~sorry)
 is independent of platform parameters, so the
 prediction can be inverted: a measured $G(\omega)$ profile constrains
 $(c_s, \xi, \kappa)$ jointly and falsifies the SK-EFT framework if
@@ -90,8 +92,8 @@ detection pathway via CW pump-probe spectroscopy~\cite{Grisins2016}
 that bypasses the quantum-noise floor by operating at the
 classical-mean-field level; (iii) formally verified spectral formulas
 derived from a Lean~4 chain
-(\substantivetheorems{}~substantive theorems /
-\leanmodules{}~modules / \axiomcount{}~axiom /
+(\bundleTheorems{}~substantive theorems /
+\bundleModules{}~modules / \axiomcount{}~axiom /
 \sorrycount{}~sorry; \texttt{lake build} clean).
 
 %% ══════════════════════════════════════════════════════════════════
@@ -465,9 +467,11 @@ the project's staged validation pipeline. A subset of the underlying
 library's theorems was closed by the Aristotle automated theorem
 prover (Harmonic); every proof is ultimately certified by the Lean~4
 kernel via \texttt{lake build} on the public repository, independently
-of any AI tool. Manuscript prose was AI-assisted and human-reviewed;
-all numerical claims trace to the repository's computation pipeline
-through its automated validation checks.
+of any AI tool. Manuscript prose was AI-assisted and human-reviewed.
+The repository's public validation suite reports, for every
+draft, any numerical value written inline in prose rather than
+sourced from a generated table; that report is the authority on
+this manuscript's numerical provenance.
 
 \begin{thebibliography}{99}
 \bibitem{TindallMelloFishmanStoudenmireSels2026Science392}

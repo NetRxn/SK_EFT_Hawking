@@ -17,6 +17,8 @@
 % Canonical counts from scripts/update_counts.py.
 \input{../../docs/counts.tex}
 
+\input{bundle_counts}
+
 \begin{document}
 
 \title{Dark Sector under Substrate Constraints:\\
@@ -94,8 +96,9 @@ chameleon Solar-System bound at $b \approx 0.21 \gg 100\times$
 the bound; and a Phase~6e cross-bridge establishes the Sakharov
 4-criterion induced-gravity test, satisfied by Volovik--Jannes
 ${}^3\!\text{He-A}$ and falsified by Finazzi--Liberati--Sindoni acoustic
-BEC. A unified 7-class GD taxonomy organises all $\substantivetheorems$
-substantive Phase~6m theorems under a 3-tier applicability gradient.
+BEC. A unified 7-class GD taxonomy organises this bundle's
+$\bundleTheorems$ substantive theorems under a 3-tier applicability
+gradient.
 
 Honesty discipline: load-bearing claims separate \emph{derived}
 (Lean-formalized non-trivial mathematical content) from \emph{machine-checked
@@ -1332,10 +1335,11 @@ substantial machine assistance: Lean~4 proof drafting and iteration
 used LLM-based agents (Anthropic Claude-family models) operating under
 the project's staged validation pipeline. Every proof is ultimately
 certified by the Lean~4 kernel via \texttt{lake build} on the public
-repository, independently of any AI tool. Manuscript prose was
-AI-assisted and human-reviewed; all numerical claims trace to the
-repository's computation pipeline through its automated validation
-checks.
+repository, independently of any AI tool. Manuscript prose was AI-assisted and human-reviewed.
+The repository's public validation suite reports, for every
+draft, any numerical value written inline in prose rather than
+sourced from a generated table; that report is the authority on
+this manuscript's numerical provenance.
 
 \begin{thebibliography}{99}
 

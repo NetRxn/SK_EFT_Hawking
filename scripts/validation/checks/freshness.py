@@ -1005,3 +1005,91 @@ def check_architecture_inventory_fresh() -> CheckResult:
         f"{new_lines[first][:90] if first < len(new_lines) else '<eof>'!r}. "
         f"Run `uv run python scripts/architecture_inventory.py --write`."))
     return CheckResult(passed=False, details=details)
+
+
+@register_check(
+    "bundle_counts_fresh",
+    "papers/<CODE>/bundle_counts.tex matches a fresh derivation from the bundle's apex closure")
+def check_bundle_counts_fresh() -> CheckResult:
+    """CHECK: a paper's own substrate figures cannot drift from its substrate.
+
+    `\\bundleTheorems` / `\\bundleDecls` / `\\bundleModules` are generated per bundle by
+    `scripts/render_bundle_counts.py` from that bundle's declared-apex closure. They
+    exist because the **project-wide** `\\substantivetheorems` was being used for
+    **paper-scoped** claims: measured 2026-08-09, E2's verification-chain parenthetical
+    stated 26 329 against a verified chain of **6** theorems, and E1's stated the same
+    against **11** (TODO-D9).
+
+    ⚠️ **A generated macro is only as honest as its regeneration.** `\\substantivetheorems`
+    was itself introduced to stop hand-maintained counts, and it produced the portfolio's
+    largest numerical overclaim *because it grew with the library while the sentence
+    around it stayed still*. A per-bundle macro fails the same way if nothing re-derives
+    it after the apex list changes, so this check is part of the fix rather than a
+    nicety.
+
+    Delegates wholly to `render_bundle_counts.build()` — no second derivation lives here.
+    The `chain_backing_targets_resolve` precedent is the reason: a check that carried its
+    own resolver beside a working one disagreed with it and reported a third more
+    failures than the truth.
+
+    ⚠️ **A bundle with no declared apexes emits no file, and that is not a failure** — its
+    substrate is UNKNOWN, and a `0` in a manuscript would be a confident wrong number.
+    It is reported, and the missing `\\input` fails that draft's compile, which is the
+    loud path.
+    """
+    try:
+        import render_bundle_counts as rbc
+    except Exception as exc:  # noqa: BLE001
+        return CheckResult(passed=False, measured=False, details=[Detail(
+            "import", False,
+            f"could not import render_bundle_counts ({exc}) — per-bundle counts are "
+            f"UNVERIFIED, not fresh")])
+
+    try:
+        rendered = rbc.build()
+    except Exception as exc:  # noqa: BLE001
+        return CheckResult(passed=False, measured=False, details=[Detail(
+            "derive", False,
+            f"could not derive per-bundle counts ({exc}) — UNVERIFIED, not fresh")])
+
+    details: List[Detail] = []
+    stale, missing, undeclared, ok = [], [], [], 0
+    for code, body in rendered.items():
+        target = _H.PAPERS_DIR / code / "bundle_counts.tex"
+        if body is None:
+            undeclared.append(code)
+            continue
+        if not target.is_file():
+            missing.append(code)
+            continue
+        if target.read_text() != body:
+            stale.append(code)
+        else:
+            ok += 1
+
+    if undeclared:
+        details.append(Detail(
+            "undeclared", True,
+            f"{len(undeclared)} bundle(s) declare no apexes, so no counts file is emitted "
+            f"(substrate UNKNOWN, not zero): {', '.join(sorted(undeclared))}", warning=True))
+    if not ok and not stale and not missing:
+        return CheckResult(passed=False, measured=False, details=details + [Detail(
+            "seam", False,
+            "no bundle produced a counts file — an empty population cannot evidence "
+            "freshness; UNVERIFIED, not passing")])
+    for code in sorted(missing):
+        details.append(Detail(
+            f"missing:{code}", False,
+            f"{code}: bundle_counts.tex is absent while its apexes are declared — run "
+            f"scripts/render_bundle_counts.py (its draft's \\input will also fail)"))
+    for code in sorted(stale):
+        details.append(Detail(
+            f"stale:{code}", False,
+            f"{code}: bundle_counts.tex disagrees with a fresh derivation from its apex "
+            f"closure — the paper is quoting a substrate figure it no longer has. Run "
+            f"scripts/render_bundle_counts.py"))
+    details.append(Detail(
+        "summary", not (stale or missing),
+        f"{ok}/{ok + len(stale) + len(missing)} declared bundle(s) carry a current "
+        f"bundle_counts.tex"))
+    return CheckResult(passed=not (stale or missing), details=details)
