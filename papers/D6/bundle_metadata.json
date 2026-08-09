@@ -122,6 +122,26 @@
       "name": "SKEFTHawking.FaultTolerance.malignant_pair_indep_le",
       "claims": "§7 the single place independence enters: pairwise independence + per-location rate eps gives joint failure <= eps^2",
       "declared": "2026-08-09"
+    },
+    {
+      "name": "SKEFTHawking.FaultTolerance.steane_concatenated_failure_below_threshold",
+      "claims": "§7 — below the Steane threshold a genuine failure PROBABILITY (not an abstract sequence) is driven under 1 at every level; the statement whose closure reaches both the measure-theoretic union bound and the real-valued threshold chain",
+      "declared": "2026-08-09"
+    },
+    {
+      "name": "SKEFTHawking.FaultTolerance.concatenated_failure_double_exp",
+      "claims": "§7 — double-exponential suppression of the composed failure probability: A·P[level-L rectangle fails] ≤ (A ε₀)^(2^L)",
+      "declared": "2026-08-09"
+    },
+    {
+      "name": "SKEFTHawking.FaultTolerance.levelFailure_le_agpSeq",
+      "claims": "§7 — the AGP recursion derived level by level from the single-level union bound, rather than defined",
+      "declared": "2026-08-09"
+    },
+    {
+      "name": "SKEFTHawking.FaultTolerance.levelFailure_hypotheses_satisfiable",
+      "claims": "§7 — non-vacuity: the four modelling hypotheses of the composed bound hold together on an explicit measure space",
+      "declared": "2026-08-09"
     }
   ],
   "length_target": {

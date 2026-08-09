@@ -2074,18 +2074,40 @@ only thing separating the two claims in print.
 
 </details>
 
-### D36. 307 FaultTolerance declarations still reach no bundle — OPEN
+### D36. 307 FaultTolerance declarations still reach no bundle — ✅ CLOSED-NOT-A-DEFECT 2026-08-09
 
-Down from 342 after D32's lift. Fully un-homed: `Basic` 93, `StabilizerCode` 40, `NoiseModelMT` 33,
-`ExRec` 29, `Malignant` 22, `NoiseModel` 21, `Counting` 11, `Chernoff` 9, plus partial gaps in
-`APMLdpc` 15, `ShorTGateCount` 19, `SteaneCode` 7, `WStateQFT` 4, `Concatenation` 2,
-`AGP.Threshold` 1, `DoubleExp` 1.
-
-⚠️ **Most of this is not a homing failure, it is TODO-D35 wearing a different number.** Those
-declarations are un-homed *because* the theorem that would consume them does not exist yet. Homing
-them by declaring more apexes without closing D35 would inflate D6's closure without changing what
-the paper can claim, which is the metric-gaming the "monotone in emptiness" finding (PR review
-pass 3, H1) warns about from the other direction. **Close D35 first; re-measure this after.**
+> The entry said *"close D35 first; re-measure this after."* D35 closed, the re-measurement ran,
+> and **three of the entry's load-bearing claims do not survive it.**
+>
+> **1. Seventy-four of the 307 were never homeable.** The count included **autogen**
+> declarations — `noConfusionType`, `inj`, projection lemmas — which `bundle_closure` is
+> *designed* never to reach (`compute_closure` takes the autogen set precisely to skip them).
+> The entry's per-module figures decompose exactly: `Basic` 93 = 63 + 30 autogen,
+> `StabilizerCode` 40 = 32 + 8, `NoiseModelMT` 33 = 29 + 4, `Malignant` 22 = 18 + 4,
+> `NoiseModel` 21 = 17 + 4, and `Counting` 11 / `Chernoff` 9 unchanged because they have none.
+> **The real figure is 233 of 333 non-autogen declarations.**
+>
+> **2. The "TODO-D35 wearing a different number" diagnosis is refuted.** D35's composition
+> landed; declaring its four capstones as D6 apexes homed **7** declarations (240 → 233), not
+> two hundred. The reason is visible in the population: **127 of the 233 are used by nothing at
+> all**, and 93 of those are *theorems*. A leaf theorem is not waiting for a consumer — it is
+> homed by a bundle claiming it, or not at all.
+>
+> **3. The number was never anomalous.** Corpus-wide, **29,964 of 35,754 non-autogen
+> declarations (83.8%) are un-homed**. FaultTolerance sits at **70.0%**, which is *better* than
+> the project average. A codebase that formalizes more than any one paper claims has most of its
+> declarations outside every apex closure by construction; reading that as per-subsystem debt
+> measures the substrate's breadth and calls it a defect.
+>
+> **What was actually done**, and it is homing rather than inflation: D6 declares
+> `steane_concatenated_failure_below_threshold`, `concatenated_failure_double_exp`,
+> `levelFailure_le_agpSeq` and `levelFailure_hypotheses_satisfiable` as apexes. Each is a claim
+> D6 §7 now makes in print, so the closure grew because the paper's claims grew — the direction
+> the entry's own warning permits.
+>
+> **Not built, deliberately:** a corpus-wide un-homed ratchet. At 83.8% the metric has no
+> defect to guard, and a ratchet over a non-defect is instrument inflation of the kind
+> `bundle_lean_module_coverage`'s own docstring warns about.
 
 ### D37. `NUMERICAL_LITERAL_RE`'s `\times 10^` leg flags dimensionless constants — ✅ CLOSED-NOT-A-DEFECT 2026-08-09
 
