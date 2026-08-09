@@ -217,7 +217,17 @@ _CANONICAL_ORDER: tuple[str, ...] = (
     # `bundle_apex_resolves` follows the roster gate and precedes the prose checks: it
     # gates the ONE hand-maintained input to the derived substrate closure, so a reader
     # needs its verdict before any per-bundle substrate figure downstream.
-    'bundle_registry_consistency', 'bundle_apex_resolves', 'paper_latex_compiles',
+    'bundle_registry_consistency', 'bundle_apex_resolves',
+    # Both of these read the DECLARED-APEX CLOSURE, so they must follow
+    # `bundle_apex_resolves` — it gates the one hand-maintained input the closure rests
+    # on. Reporting a per-bundle compiler-trust figure derived from an apex list that
+    # does not resolve would be a measurement over a population nobody validated, which
+    # is the defect class this suite exists to close.
+    # `bundle_todo_free_before_green` reads `stage13_status`, so it also belongs after
+    # `bundle_reviewer_stage_ordering` above: a green that should never have been
+    # recorded is that check's finding, and this one should not be the first to report it.
+    'bundle_native_decide_debt', 'bundle_todo_free_before_green',
+    'paper_latex_compiles',
     'axiom_count_prose_consistency', 'prose_theorem_reference_coverage',
     'theorem_name_embedded_citations', 'inventory_index_autogen_fresh', 'architecture_inventory_fresh',
     'lean_docstring_refs_resolve', 'paper_toolchain_pin_drift',
@@ -640,6 +650,8 @@ check_readiness_submission_gate = _checks_bundles.check_readiness_submission_gat
 check_bundle_consistency = _checks_bundles.check_bundle_consistency
 check_bundle_registry_consistency = _checks_bundles.check_bundle_registry_consistency
 check_bundle_apex_resolves = _checks_bundles.check_bundle_apex_resolves
+check_bundle_native_decide_debt = _checks_bundles.check_bundle_native_decide_debt
+check_bundle_todo_free_before_green = _checks_bundles.check_bundle_todo_free_before_green
 check_lean_zero_sorry = _checks_lean_substrate.check_lean_zero_sorry
 check_gate_edge_types_are_emitted = _checks_graph_atlas.check_gate_edge_types_are_emitted
 check_architecture_inventory_fresh = _checks_freshness.check_architecture_inventory_fresh

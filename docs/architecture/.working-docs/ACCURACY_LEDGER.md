@@ -2234,3 +2234,68 @@ document made of such statements. **Repairing a defect obliges a scan for who do
 surfaces under a derived-and-gated census did not drift at all; every defect found sits in prose
 that names a roster. That is an argument for widening the mechanical guard to rosters, not for
 another manual pass — filed rather than built, because the exception set is the hard part.
+
+---
+
+## V60 — ADR-010 §D4 adjudication + the native_decide/TODO ratchets — 10 atoms, 6 INVERSIONS, 1 SELF-INFLICTED
+
+Scope: the operator delegated the final grouping call after the apex retrofit completed. Method:
+all merge-candidate manuscripts read in full (D6 1,102 lines, D9 1,318, D10 315, D11 633, L1 391,
+E1/E2 abstracts + Γ_H sections), closures re-derived live, ADR-010 C4 binding throughout.
+
+| # | Proposition | Decider | Verbatim result |
+|---|---|---|---|
+| 1 | The 2026-08-06 probe's `D6 ∩ D9` Jaccard 0.482 still holds | live closure from declared apexes | **0.000.** Not a contradiction — the probe said so itself: it seeded from *what drafts cite*, and the retrofit closed the gap to *what bundles claim*. **I nearly filed this as an inversion before reading the probe's own closing paragraph** |
+| 2 | `D6 ∩ D9 = 0` means the two are unrelated | D6's draft, read in full | **NO.** D6 §5.4 is 488 lines (44 %) of D9's corpus, naming ~20 of the same theorems. The zero is D6 declaring only the four sections that overlap D9 in nothing. **The D6 retrofit had already written this correction down a day earlier** — see the goldfish note below |
+| 3 | The audit's D6+D9 merge is therefore right | referee reading of both | **Right diagnosis, wrong remedy.** D9 strictly supersedes D6 §5.4 (strong duality with both attainments, sharp Audenaert, max-flow/min-cut); merging would bolt four FT vignettes onto a coherent device-certification paper. **Excise, don't consolidate** |
+| 4 | D6 is thin and should be demoted | `FaultTolerance` homing, live | **NO — 342 declarations in D6's own namespace reach no bundle**, incl. `ExRec` 31 and `StabilizerCode` 43, which are in neither the retrofit's list nor any bundle. D6 is holding someone else's paper and not its own |
+| 5 | D10+D11 needs a non-substrate merge argument (ADR-010's own words) | closure + both drafts | **The premise was withdrawn the next day.** `D10 ∩ D11 = 0`, and the two are methodologically *opposed*: D10 is built on PhysLib, D11's acknowledgments state it imports none and exists to show the analytic route is unnecessary |
+| 6 | PhysLib's post-bump spectral theory may make D10's Kato–Rellich redundant | grep of the resolved package at pin `c4843367` | **Refuted. `Kato`, `Rellich`, `relBound`, `RelativelyBounded` occur NOWHERE in PhysLib.** It has `IsEssentiallySelfAdjoint` as a definition + the defect-index criterion — a different and harder route for a molecular Coulomb Hamiltonian |
+| 7 | E1+E2 is an open editorial question | recompiled PDFs | **Closed by arithmetic. 5 pp each against PRL's ~4 pp** — two over-length letters cannot make one letter |
+| 8 | The graphene Γ_H defect is "in both the paper and `formulas.py`" | line 473 + its docstring | **Half wrong. `formulas.py` declares γ₁,γ₂ in [m²/s]** — m²/s × m⁻² = s⁻¹, dimensionally sound. Only E2's prose substitutes η/(sT), a *time*. Fixing the code would have broken a correct function |
+| 9 | `native_decide` disclosure is a live gap (audit D-5) | per-bundle closure ∩ carriers | **The state is clean and was unguarded.** 5 bundles carry debt (D4 19, L2 6, F 3, D2 3, I2 1) and **all 5 already disclose**; 16 measure zero, incl. every bundle claiming purity in print. Now enforced rather than lucky |
+| 10 | TODO markers can be found by scanning for `TODO\|placeholder` | sample of the hits | **NO — two populations.** `placeholder` in prose is a *disclosed technical term* here (`True := trivial` stubs, which drafts are REQUIRED to name), and D11 §1 factually describes an in-source TODO in *Mathlib*. Correct predicate: markers inside LaTeX comments. 80 real, across 10 bundles |
+
+**⚠️ ATOM 10 IS THE SIXTH NAIVE-SCAN FALSE POSITIVE IN THIS ARC, AND THE SEVENTH CAME FROM A GATE I
+WAS BUILDING.** `bundle_native_decide_debt` shipped with a third leg that hard-failed a draft
+asserting zero `native_decide` while its closure said otherwise. On first run it fired on **I2,
+wrongly**: I2's *"no `native_decide`"* is scoped to its Q(√n) subsection, and I2 separately discloses
+`fib_pentagon` *"by `native_decide` on the 512-case F-symbol catalog"* — the exact declaration
+counted. **The draft was right and my regex was wrong.** The leg is deleted, not exception-listed:
+separating a corpus-wide claim from a scoped one is a reading task, and reading tasks belong to the
+prose reviewer. What survives is narrower and true — debt cannot grow, and cannot be silent.
+
+**⚠️ ATOM 2 IS A NEAR-MISS GOLDFISH RESEED.** The D6 retrofit's §5 already contained the exact
+correction, written 2026-08-07, including the sentence *"D6 and D9 share no declaration because D6
+declares none of the shared content, not because the content is not shared."* Its own closing lesson
+is the one that saved this pass: **before quoting a fresh measurement against a bundle, read that
+bundle's FINDINGS doc first.**
+
+**⚠️ SELF-INFLICTED, and worth recording because it destroyed work.** Mutation-testing the ratchet, I
+restored `src/core/constants.py` with `git checkout` — which reverted the mutation *and* the
+uncommitted `NATIVE_DECIDE_BUNDLE_DEBT` block I had just written. The hash comparison caught it
+immediately (that is why it is in the harness) and the block was rewritten. **Mutation-test only
+committed files, or snapshot to the scratchpad first** — `git checkout` cannot distinguish a seeded
+defect from new work.
+
+**⚠️ AN EIGHTH, CAUGHT WHILE RE-CHECKING MY OWN WRITE-UP — and it is two traps in one probe.** The
+adjudication's first draft claimed D9 *"strictly supersedes"* D6 §5.4 and named three things §5.4
+*"has none of"*. **Two of the three were false**: §5.4 carries the full Watrous strong duality
+(`diamondDist_eq_choiSDP`, three mentions) and carries *more* negativity text than D9. The probe
+failed twice over: `grep -E` with `\|` searched for a **literal pipe-delimited string** rather than
+an alternation, returning 0 for D9 on content D9 plainly has; and a follow-up pattern using `.`
+between name parts could not match drafts that write `diamondDist\_eq\_choiSDP` — the
+**LaTeX-escaped-underscore trap `QA_QI_INFRASTRUCTURE_MAP` §5 already documents**, met from a new
+direction. The verdict was unchanged and the corrected justification is stronger (D9's scope
+*contains* §5.4's and adds four families it has nothing of), but the claim as first written was
+wrong and is corrected in place rather than quietly rephrased.
+
+**The through-line across all eight: every single error this pass was a MEASUREMENT error, and not
+one was a reasoning error.** The conclusions held up; the instruments did not. That is the argument
+for C4 stated as a fact about this pass rather than as a principle.
+
+**NOT-AN-ASSERTION.** The recommended roster of 20 is not the deliverable. **Six of six proposed
+merges failed against the manuscripts and the one retirement was never proposed** — so the finding
+is that the portfolio's problem was misplaced *content*, not an inflated *count*, and reassignment
+(D4→D8, D1→D7, and now D6 §5.4→D9) fixes three of the four boundary failures while changing the
+roster by zero.

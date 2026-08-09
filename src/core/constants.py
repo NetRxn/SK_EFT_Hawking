@@ -2503,6 +2503,40 @@ FORMULA_GROUNDING_KIND: dict[str, dict[str, str]] = {
 # `validate.py --check native_decide_regression`.
 NATIVE_DECIDE_DECL_CLOSURE_CEILING = 546  # 2026-06-13 (post-6AO; was 852→587 at ADR-002 cleanup)
 
+#: PER-BUNDLE `native_decide` debt — the operator's ratchet, authorized 2026-08-08:
+#: *"We are working down the native_decides, but some are thorny. they need to be
+#: disclosed to the extent they are part of the proof chain, and we should track those
+#: so that we can pay down the debt as resources become available. Ratchet system."*
+#:
+#: `NATIVE_DECIDE_DECL_CLOSURE_CEILING` above is a PROJECT-WIDE count and answers a
+#: different question. It cannot tell a reader of any one paper whether *that paper's*
+#: results rest on the compiler. This map does: the key is a bundle code, the value is
+#: how many declarations in that bundle's **declared-apex closure** carry
+#: `native_decide`. Debt is therefore attributed to the manuscript whose claims depend
+#: on it, which is the unit at which it must be disclosed and the unit at which paying
+#: it down changes what a paper may assert.
+#:
+#: Measured 2026-08-08 against all 21 declared closures. A bundle absent from this map
+#: is asserted to carry ZERO — and that assertion is enforced, not assumed, so a wave
+#: that routes compiler-trust into a clean bundle fails rather than quietly landing.
+#:
+#: **Ratchet direction: DOWN ONLY.** Lower an entry as debt is eliminated (delete it at
+#: zero). Raising one, or adding a bundle, needs a stated reason in the same commit —
+#: the same discipline as every ceiling above.
+#:
+#: ⚠️ D8 is the worked precedent for paying down rather than disclosing forever: it
+#: eliminated four `native_decide` sweeps (the largest over ~16.7 M tuples) by
+#: structural reproofs, and one of them **strengthened** the statement by dropping a
+#: hypothesis. Its draft §"Kernel purity made uniform" documents the elimination. That
+#: is the target state for every row below.
+NATIVE_DECIDE_BUNDLE_DEBT = {
+    "D4": 19,   # IsingBraiding 17, FigureEightKnot 2 — the audit's D-5 "D4's headline results"
+    "L2": 6,    # A1Resolution 5, A1Ext 1
+    "F": 3,     # FigureEightKnot 2, IsingBraiding 1 (inherited from D4's substrate)
+    "D2": 3,    # E8Lattice 3
+    "I2": 1,    # FibonacciMTC 1
+}
+
 # ════════════════════════════════════════════════════════════════════
 # PAPER-LITERAL RATCHETS (ADR-009 Phase 3 item 2, 2026-08-03)
 #

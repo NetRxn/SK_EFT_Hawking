@@ -2038,3 +2038,281 @@ def check_bundle_apex_resolves() -> CheckResult:
             warning=bool(c.truncated_private)))
 
     return CheckResult(passed=all_pass, details=details)
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# CHECK: per-bundle native_decide debt — disclosure + ratchet
+# ═══════════════════════════════════════════════════════════════════════
+
+#: LaTeX-COMMENT work markers. The `(?<!\\)%` is load-bearing: `\%` is a printed
+#: percent sign, not a comment.
+_TODO_COMMENT_RE = __import__("re").compile(r"(?<!\\)%.*\b(TODO|FIXME|XXX|TBD)\b")
+
+#: Any mention at all — the disclosure test. Deliberately permissive: a bundle that
+#: names the tactic anywhere has told its reader the compiler is in the chain, and
+#: judging whether the wording is *prominent* is the prose reviewer's job, not a
+#: regex's.
+_ND_MENTION_RE = __import__("re").compile(r"native\\?_decide", __import__("re").I)
+
+
+def _bundle_native_decide_hits() -> tuple[dict, str | None]:
+    """`{bundle: {declaration names carrying native_decide in its apex closure}}`.
+
+    Returns `({}, reason)` when the measurement cannot be made — never an empty
+    result that reads as "no debt".
+    """
+    if not _H.lean_deps_present():
+        return {}, "lean/lean_deps.json absent (refresh: cd lean && lake build SKEFTHawking.ExtractDeps)"
+    try:
+        import bundle_closure as bc
+        from update_counts import native_decide_decls
+        # `_H.load_lean_deps()` is the single loader (validate_helpers §path resolution);
+        # a second parse of the 70 MB file here would be the duplicate-load-site defect
+        # that module was written to remove.
+        nd = {d["name"] if isinstance(d, dict) else d
+              for d in native_decide_decls(_H.load_lean_deps())}
+        recs = bc.load_records()
+        closures = bc.build_closures(recs, bc.load_apex_declarations(_H.PAPERS_DIR))
+    except Exception as exc:  # noqa: BLE001
+        return {}, f"could not derive closures / native_decide set ({exc})"
+
+    # ── SEAM GUARD (authoring-guide §2.5) ──────────────────────────────────────
+    # Both populations must be non-empty, and the reason is that EITHER going empty
+    # makes this check pass while measuring nothing:
+    #   * `nd` empty ⇒ every intersection is empty ⇒ every bundle reports "clean",
+    #     which is the same sentence a genuinely clean corpus produces. The
+    #     project-wide ceiling is 546, so an empty set here means the extractor's
+    #     shape changed under us, not that the debt was paid.
+    #   * no measurable closure ⇒ nothing to intersect ⇒ "0 bundles carry debt".
+    # This is `"ALL figures PASS"` over an empty set, refused a third home.
+    if not nd:
+        return {}, ("the native_decide declaration set came back EMPTY while the "
+                    "project-wide ceiling is non-zero — `native_decide_decls` no longer "
+                    "matches lean_deps.json's shape. Every bundle would read clean")
+    measurable = {code: (c.closure & nd) for code, c in closures.items() if c.measurable}
+    if not measurable:
+        return {}, ("no bundle has a measurable apex closure, so no per-bundle debt "
+                    "could be computed — see `bundle_apex_resolves`")
+    return measurable, None
+
+
+@register_check(
+    "bundle_native_decide_debt",
+    "Every bundle's native_decide debt is disclosed in its draft and does not grow (ADR-002 ratchet, per-bundle)")
+def check_bundle_native_decide_debt() -> CheckResult:
+    """CHECK: compiler-trust debt, attributed to the manuscript that rests on it.
+
+    **`native_decide_regression` counts the project and cannot answer a reader's
+    question.** Its metric is one number over the whole corpus, so it is silent on
+    *which paper's* claims depend on the Lean compiler rather than on the kernel. A
+    reader of D4 cannot learn from it that 19 declarations in D4's own apex closure
+    are compiler-checked. This check asks that question per bundle, which is the unit
+    at which the debt must be disclosed and the unit at which paying it down changes
+    what a paper may assert.
+
+    **Two legs:**
+
+    1. **Ratchet.** A bundle's debt may not exceed its `NATIVE_DECIDE_BUNDLE_DEBT`
+       entry (absent ⇒ 0). Down-only, like every ceiling in `constants.py`.
+    2. **Disclosure.** A bundle carrying debt must name `native_decide` somewhere in
+       its draft. Deliberately permissive — whether the disclosure is *prominent
+       enough* is a prose-review judgement, and a regex that tried to grade prominence
+       would be the heuristic gate this project keeps out of the deterministic layer.
+
+    ⚠️ **A third leg was written and REMOVED, and the reason is worth keeping.** It
+    tried to hard-fail a draft that *asserts* it carries no `native_decide` while its
+    closure says otherwise — a false kernel-purity claim being exactly what a reader
+    cannot check. On first run it fired on **I2, wrongly.** I2's *"All of these proofs
+    are kernel-pure (`decide` / `norm_num` / `ring` / `linear_combination`; no
+    `native_decide`)"* is scoped to its Q(√n) and cubic-field subsection, and I2
+    separately discloses `fib_pentagon` *"by `native_decide` on the 512-case F-symbol
+    catalog"* — the exact declaration the closure counts. **The draft was right and the
+    regex was wrong**, because separating a corpus-wide claim from a scoped one is a
+    reading task, not a matching task.
+
+    Rather than grow an exception set, the leg is gone: **judging whether a disclosure
+    is honestly scoped belongs to the prose reviewer**, alongside prominence, which is
+    the same call made one paragraph up. What survives mechanically is stronger for
+    being narrow — the debt cannot grow, and it cannot be silent.
+
+    ⚠️ **Zero debt is asserted, not assumed.** A bundle absent from the map is
+    required to measure zero, so a wave that routes compiler trust into a clean
+    bundle fails here instead of landing quietly and being discovered by a referee.
+
+    ⚠️ **UNMEASURABLE is not PASS.** An undeclared bundle has no closure, so its debt
+    is UNKNOWN; it is counted and named, never scored clean.
+    """
+    from src.core.constants import NATIVE_DECIDE_BUNDLE_DEBT as DEBT
+
+    hits, err = _bundle_native_decide_hits()
+    if err:
+        return CheckResult(passed=False, measured=False, details=[Detail(
+            "measure", False,
+            f"{err} — the per-bundle compiler-trust surface is UNVERIFIED, not clean")])
+
+    details: List[Detail] = []
+    ok = True
+    try:
+        import bundle_registry as registry
+        codes = list(registry.BUNDLE_CODES)
+    except Exception as exc:  # noqa: BLE001
+        return CheckResult(passed=False, measured=False, details=[Detail(
+            "roster", False, f"could not read the bundle roster ({exc}) — UNVERIFIED")])
+
+    undeclared = [c for c in codes if c not in hits]
+    if undeclared:
+        details.append(Detail(
+            "undeclared", True,
+            f"{len(undeclared)} bundle(s) declare no apexes, so their debt is UNKNOWN "
+            f"rather than zero: {', '.join(sorted(undeclared))}",
+            warning=True))
+
+    carrying, paid = [], []
+    for code in sorted(hits):
+        n, ceil = len(hits[code]), DEBT.get(code, 0)
+        if n > ceil:
+            ok = False
+            mods = {}
+            for name in hits[code]:
+                mods[name.rsplit(".", 1)[0]] = mods.get(name.rsplit(".", 1)[0], 0) + 1
+            top = ", ".join(f"{k.split('.')[-1]}={v}" for k, v in
+                            sorted(mods.items(), key=lambda kv: -kv[1])[:4])
+            details.append(Detail(
+                f"ratchet:{code}", False,
+                f"{code}: native_decide debt {n} EXCEEDS its ceiling {ceil} — a wave routed "
+                f"compiler trust into this bundle's claimed substrate. Eliminate it "
+                f"(ADR-002; D8's draft §'Kernel purity made uniform' is the worked "
+                f"precedent) or raise NATIVE_DECIDE_BUNDLE_DEBT['{code}'] with a stated "
+                f"reason in the same commit. Densest: {top}"))
+            continue
+        if n == 0:
+            if ceil:
+                details.append(Detail(
+                    f"paid:{code}", True,
+                    f"{code}: debt is now 0 against a ceiling of {ceil} — PAID DOWN; "
+                    f"delete its NATIVE_DECIDE_BUNDLE_DEBT entry", warning=True))
+            continue
+        carrying.append(code)
+        if n < ceil:
+            paid.append(f"{code} {ceil}→{n}")
+
+        draft = _H.PAPERS_DIR / code / "paper_draft.tex"
+        try:
+            text = draft.read_text()
+        except OSError:
+            ok = False
+            details.append(Detail(
+                f"disclose:{code}", False,
+                f"{code}: carries {n} native_decide declaration(s) and its draft could not "
+                f"be read — disclosure UNVERIFIED, not assumed"))
+            continue
+        if not _ND_MENTION_RE.search(text):
+            ok = False
+            details.append(Detail(
+                f"disclose:{code}", False,
+                f"{code}: {n} declaration(s) in its apex closure rest on native_decide and the "
+                f"draft never names it. Compiler-trust in the proof chain is disclosable "
+                f"content (audit D-5); say so in the verification-status section"))
+
+    if paid:
+        details.append(Detail("progress", True,
+                              f"debt paid down since the ceiling was set: {', '.join(paid)} — "
+                              f"lower the ceiling(s)", warning=True))
+    if carrying:
+        total = sum(len(hits[c]) for c in carrying)
+        details.append(Detail(
+            "register", True,
+            f"{len(carrying)} bundle(s) carry disclosed native_decide debt, {total} declaration(s) "
+            f"total: " + ", ".join(f"{c}={len(hits[c])}" for c in carrying)))
+    clean = [c for c in sorted(hits) if not hits[c]]
+    details.append(Detail(
+        "clean", True,
+        f"{len(clean)} declared bundle(s) measure ZERO native_decide in their apex closure "
+        f"(asserted, not assumed): {', '.join(clean)}"))
+    return CheckResult(passed=ok, details=details)
+
+
+@register_check(
+    "bundle_todo_free_before_green",
+    "No bundle carrying an unresolved work marker records a Stage-13 green")
+def check_bundle_todo_free_before_green() -> CheckResult:
+    """CHECK: a draft with open TODOs may exist; it may not be declared finished.
+
+    Operator ruling, 2026-08-08: *"Papers with todos are OK in draft mode, but we
+    can't let them go green."* Drafting with markers is normal and this check does
+    not object to it — it objects only to a marker coexisting with a **green**
+    reviewer verdict, which is a bundle asserting a completed review over content
+    its own author flagged as unwritten.
+
+    ⚠️ **The predicate is LaTeX-comment markers only, and the narrowing is the whole
+    design.** A first scan keyed on `TODO|placeholder` case-insensitively across the
+    prose returned 80-odd hits per bundle and would have gated on two populations
+    that must not be conflated:
+
+    * **`placeholder` in reader-facing prose is a disclosed technical term here** — a
+      `True :=  trivial` Lean stub, governed by `placeholder_not_cited` and
+      `disclosure_consistency`. Drafts are *required* to name them. Gating on the word
+      would penalize exactly the honesty the pipeline mandates.
+    * **D11 §1 describes an in-source TODO in *Mathlib***, a factual statement about a
+      dependency, not an unfinished sentence of its own.
+
+    Neither is an unresolved work item. What is: `% TODO: lift content from …`,
+    `% TODO: substantive draft`. Those are author notes-to-self, invisible to a
+    reader, and each names work that has not been done. The negative lookbehind keeps a
+    printed (escaped) percent sign out of it.
+
+    **No exception set, deliberately** (contrast TODO-D30, where building one is the
+    hard part). A comment whose text merely *mentions* markers — e.g. one recording
+    that stubs were suppressed — trips this check, and the fix is to reword the
+    comment, a one-line edit. Pushing the burden onto unambiguous authoring is
+    cheaper and more durable than a curated allow-list that itself goes stale.
+    """
+    try:
+        import bundle_registry as registry
+        codes = list(registry.BUNDLE_CODES)
+    except Exception as exc:  # noqa: BLE001
+        return CheckResult(passed=False, measured=False, details=[Detail(
+            "roster", False, f"could not read the bundle roster ({exc}) — UNVERIFIED")])
+
+    details: List[Detail] = []
+    ok = True
+    drafting, blocked, unread = [], [], []
+    for code in codes:
+        draft = _H.PAPERS_DIR / code / "paper_draft.tex"
+        try:
+            lines = draft.read_text().splitlines()
+        except OSError:
+            unread.append(code)
+            continue
+        marks = [i for i, ln in enumerate(lines, 1) if _TODO_COMMENT_RE.search(ln)]
+        if not marks:
+            continue
+        md = _read_metadata(code) or {}
+        status = str(md.get("stage13_status", "")).lower()
+        if status == "green":
+            ok = False
+            blocked.append(code)
+            details.append(Detail(
+                f"green_with_todo:{code}", False,
+                f"{code}: stage13_status='green' with {len(marks)} unresolved work marker(s) "
+                f"at line(s) {', '.join(map(str, marks[:6]))}"
+                f"{' …' if len(marks) > 6 else ''} — a green verdict asserts a completed "
+                f"review over content the draft itself flags as unwritten. Resolve the "
+                f"markers or withdraw the green"))
+        else:
+            drafting.append(f"{code}={len(marks)}")
+
+    if unread:
+        details.append(Detail(
+            "unread", True,
+            f"{len(unread)} draft(s) could not be read, so their marker state is UNKNOWN: "
+            f"{', '.join(sorted(unread))}", warning=True))
+    if drafting:
+        details.append(Detail(
+            "drafting", True,
+            f"{len(drafting)} bundle(s) carry work markers and are correctly NOT green "
+            f"(this is allowed): " + ", ".join(sorted(drafting)), warning=True))
+    if not blocked and not unread:
+        details.append(Detail(
+            "gate", True, "no bundle records a Stage-13 green while carrying a work marker"))
+    return CheckResult(passed=ok, details=details)

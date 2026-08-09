@@ -63,7 +63,15 @@ ledger with file-and-line evidence. Its consequence for a reader:
 
 **Authoritative instead:** this directory for the machinery · `SURFACE_INVENTORY.md` for any count ·
 the audit below for portfolio state · ADR-010 for the reassessment's constraints and open items ·
-`PUBLICATION_INTAKE_SHAPE.md` for the intake model and retrofit progress.
+`PUBLICATION_INTAKE_SHAPE.md` for the intake model and retrofit progress ·
+[`../audits/2026-08-08-adr010-d4-adjudication/ADJUDICATION.md`](../audits/2026-08-08-adr010-d4-adjudication/ADJUDICATION.md)
+for the merge/split/retire decision on every proposed change, argued from the manuscripts.
+
+⚠️ **Read the adjudication before quoting a closure intersection at a merge question.** The two
+pairs it examines fail in opposite directions and the intersection number gives the wrong answer for
+both: D6+D9 share **zero** declarations and one holds 44 % of the other's paper; D4+D8 share **280**
+and are cleanly divided by an explicit cession in D8's own text. Closure measures shared
+*substrate*; a merge turns on shared *claims*, which only the drafts carry.
 
 ⚠️ **The drift ledger is itself a 2026-08-01 snapshot, and it has drifted.** Verified item by item
 2026-08-07: **three closed** (all in the process law — the roster enum and the check count now name

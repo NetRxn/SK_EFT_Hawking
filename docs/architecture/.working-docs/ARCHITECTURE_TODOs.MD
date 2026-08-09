@@ -1207,3 +1207,61 @@ explicit, reasoned exception set built from the live corpus before the check is 
 **Scope note.** `no_counts_in_narratives` covers `docs/architecture/` only. Two of the four
 instances above were outside it, so widening the *predicate* without widening the *scope* would
 have caught half of what this pass found by hand. ADR-010 §D7 tracks the scope half.
+
+### D31. E2's Γ_H is dimensionally wrong and its headline inverts — BLOCKING E2
+
+`papers/E2/paper_draft.tex` (~line 233) writes
+Γ_H = (η/(sT))(κ/c_s)², which is **s·m⁻², not a rate**. Reproduced to two significant figures
+2026-08-08: η/(sT) = 1.62e-14 s, (κ/c_s)² = 2.07e13 m⁻², product 0.33, δ_diss = 1.67e-13 — E2's
+"~10⁻¹³".
+
+⚠️ **`formulas.py` is NOT wrong**, contrary to the 2026-08-01 audit's D-6. Line 473 is
+`Gamma_H = (gamma_1 + gamma_2) * (kappa / c_s) ** 2` with γ₁,γ₂ declared **in [m²/s]**, so
+m²/s × m⁻² = s⁻¹. Only E2's prose substitutes a *time* where the pipeline defines a *kinematic
+viscosity*. **Do not "fix" the code** — it would break a correct function.
+
+**Open, and an operator physics call:** the multiplier converting η/(sT) to ν. Recommended
+ν = (η/(sT))·v_F² (v_F is the Dirac fluid's emergent light speed, the velocity in the
+momentum-density relation g = (e+p)v/v²), not c_s². δ_diss then ≈ 17 %, or ≈ 22 % with a conformal
+4/3. The c_s² route gives 3.2 %. **Not verified:** how `SecondOrderSK.GammaH` defines γ₁+γ₂ against
+the conformal sound-attenuation constant, which fixes the O(1) prefactor.
+
+**Either way δ_diss is 3–22 %, not 10⁻¹³** — comparable to δ_disp ≈ −2.8 % rather than eleven orders
+below it. E2's abstract, §3 and its conclusion that the SK-EFT's graphene value is *"the systematic
+organization of corrections … not a specific dissipative modification of T_H"* all invert.
+
+**This strengthens E2.** Corrected, graphene is the platform where the SK-EFT dissipative correction
+is *measurable*, which is the program's central claim. Per C5 the claim gets stronger, not resized.
+**E2 must not ship until this is settled.** Full working:
+`docs/audits/2026-08-08-adr010-d4-adjudication/ADJUDICATION.md` §3.
+
+### D32. D6 §5.4 excision + AGP threshold lift — must be ONE wave
+
+Adjudication §1: D6 §5.4 (lines 504–991, 44 % of the draft) is D9's chartered content, naming ~20 of
+the same theorems. The remedy is excision to a cross-reference — the idiom already exists in D6's own
+§2, a 15-line pointer ceding Solovay–Kitaev to D8.
+
+⚠️ **Excision alone drops D6 to ~7 pp**, which ADR-010 §Consequences already predicted. The refill is
+the **342 un-homed declarations in D6's own `FaultTolerance` namespace** — `AGP.Threshold`,
+`ExRec` (extended rectangles, the central AGP object), `Concatenation`, `DoubleExp`, `Counting`,
+`Malignant`, `NoiseModel(MT)`, `SteaneCode`, `StabilizerCode`, `Basic`.
+
+**Sequence both in ONE wave.** A length gate reading D6 between the two would report the repair as a
+regression. Per `BUNDLE_LIFT_PROCEDURE.md` §10 a prose repair re-enters at Stage 9/10, never at 13.
+
+Also fix while open: §1.3's "15-bundle publication architecture" (roster is 21), §5.4's "17
+kernel-only modules" (`QuantumNetwork` holds 104), the PRD venue (content is PRX Quantum / Quantum),
+and §4's claim that real-interval arithmetic is "absent from Mathlib v4.29.1" — the pin is v4.32.0
+and D9 §5 ships exactly that technique.
+
+### D33. L3's work-marker comment trips `bundle_todo_free_before_green` if L3 ever goes green
+
+`papers/L3/paper_draft.tex:442` reads
+`%% (TODO content stubs intentionally suppressed — no prose change per lift notes.)` — a note *about*
+markers, not a marker. `papers/D6/paper_draft.tex:17` is similar (`source_manifest.md (TBD)`), though
+that one arguably records real incompleteness.
+
+**Deliberately not exception-listed.** The check ships with no exception set precisely because
+curating one is the failure mode TODO-D30 describes. The fix is a one-line reword of each comment,
+owed before either bundle records a Stage-13 green. Filed rather than done here because editing a
+bundle draft is out of scope for a validation-layer change.

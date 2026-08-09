@@ -1364,3 +1364,155 @@ class TestBundleLeanModuleCoverage:
         monkeypatch.setattr(registry, "BUNDLE_CODES", ("D1",))
         r = bru.check_bundle_lean_module_coverage()
         assert not r.passed and not r.measured, "an empty population must be UNVERIFIED"
+
+
+class TestBundleNativeDecideDebt:
+    """`bundle_native_decide_debt` — the per-bundle ADR-002 ratchet (2026-08-08).
+
+    Both directions: the debt cannot grow past its ceiling, an undisclosed use fails,
+    and an unmeasurable substrate is UNVERIFIED rather than clean.
+    """
+
+    def test_live_state_passes(self):
+        assert bru.check_bundle_native_decide_debt().passed
+
+    def test_every_ceiling_has_zero_headroom(self):
+        """A ratchet with slack permits silent drift. Each declared entry must equal
+        the live measurement, so the next added use fails immediately."""
+        from src.core.constants import NATIVE_DECIDE_BUNDLE_DEBT as DEBT
+        hits, err = bru._bundle_native_decide_hits()
+        assert not err, err
+        for code, ceil in DEBT.items():
+            assert len(hits.get(code, ())) == ceil, (
+                f"{code}: ceiling {ceil} but live {len(hits.get(code, ()))} — "
+                f"headroom in a ratchet is silent permission to regress")
+
+    def test_a_bundle_absent_from_the_map_is_asserted_zero(self):
+        """Absence must mean 'proven zero', not 'unchecked'."""
+        from src.core.constants import NATIVE_DECIDE_BUNDLE_DEBT as DEBT
+        hits, err = bru._bundle_native_decide_hits()
+        assert not err, err
+        for code, names in hits.items():
+            if code not in DEBT:
+                assert not names, f"{code} carries {len(names)} uses but declares no debt"
+
+    def test_growth_past_the_ceiling_fails(self, monkeypatch):
+        """MUTATION. Lowering D4's ceiling by one must fail — the live-tree proof
+        that the ratchet leg is reachable."""
+        import src.core.constants as C
+        mutated = dict(C.NATIVE_DECIDE_BUNDLE_DEBT)
+        mutated["D4"] = mutated["D4"] - 1
+        monkeypatch.setattr(C, "NATIVE_DECIDE_BUNDLE_DEBT", mutated)
+        r = bru.check_bundle_native_decide_debt()
+        assert not r.passed
+        assert any("ratchet:D4" in d.name for d in r.details)
+
+    def test_an_undisclosed_use_fails(self, tmp_path, monkeypatch):
+        """A bundle whose closure carries debt and whose draft never names the tactic."""
+        papers = tmp_path / "papers"
+        (papers / "D4").mkdir(parents=True)
+        (papers / "D4" / "paper_draft.tex").write_text("Nothing about tactics here.\n")
+        monkeypatch.setattr(_H, "PAPERS_DIR_ORIG", getattr(_H, "PAPERS_DIR", None), raising=False)
+        real_papers = _H.PAPERS_DIR
+        monkeypatch.setattr(_H, "PAPERS_DIR", papers)
+        # closures still derive from the REAL papers dir inside the helper, so point
+        # only the draft read at the stub by restoring for the closure call.
+        orig = bru._bundle_native_decide_hits
+        monkeypatch.setattr(bru, "_bundle_native_decide_hits",
+                            lambda: ({"D4": {"a", "b"}}, None))
+        import src.core.constants as C
+        monkeypatch.setattr(C, "NATIVE_DECIDE_BUNDLE_DEBT", {"D4": 2})
+        import bundle_registry as registry
+        monkeypatch.setattr(registry, "BUNDLE_CODES", ("D4",))
+        r = bru.check_bundle_native_decide_debt()
+        assert not r.passed
+        assert any(d.name == "disclose:D4" for d in r.details)
+        monkeypatch.setattr(bru, "_bundle_native_decide_hits", orig)
+        monkeypatch.setattr(_H, "PAPERS_DIR", real_papers)
+
+    def test_an_unmeasurable_substrate_is_UNVERIFIED_not_clean(self, monkeypatch):
+        """The failure this suite exists to prevent: no measurement scoring green."""
+        monkeypatch.setattr(bru, "_bundle_native_decide_hits", lambda: ({}, "no lean_deps"))
+        r = bru.check_bundle_native_decide_debt()
+        assert not r.passed and not r.measured
+
+
+class TestBundleTodoFreeBeforeGreen:
+    """`bundle_todo_free_before_green` — operator ruling 2026-08-08: drafts may carry
+    TODOs, greens may not."""
+
+    def _bundle(self, tmp_path, monkeypatch, body: str, status: str):
+        papers = tmp_path / "papers"
+        (papers / "D1").mkdir(parents=True)
+        (papers / "D1" / "paper_draft.tex").write_text(body)
+        (papers / "D1" / "bundle_metadata.json").write_text(
+            json.dumps({"bundle": "D1", "stage13_status": status}))
+        import bundle_registry as registry
+        monkeypatch.setattr(_H, "PAPERS_DIR", papers)
+        monkeypatch.setattr(registry, "BUNDLE_CODES", ("D1",))
+
+    def test_live_state_passes(self):
+        assert bru.check_bundle_todo_free_before_green().passed
+
+    def test_a_todo_in_a_pending_draft_is_allowed(self, tmp_path, monkeypatch):
+        self._bundle(tmp_path, monkeypatch, "%% TODO: lift content\ntext\n", "pending")
+        assert bru.check_bundle_todo_free_before_green().passed
+
+    def test_a_todo_with_a_green_fails(self, tmp_path, monkeypatch):
+        self._bundle(tmp_path, monkeypatch, "%% TODO: lift content\ntext\n", "green")
+        r = bru.check_bundle_todo_free_before_green()
+        assert not r.passed
+        assert any(d.name == "green_with_todo:D1" for d in r.details)
+
+    def test_a_clean_green_passes(self, tmp_path, monkeypatch):
+        self._bundle(tmp_path, monkeypatch, "finished prose\n", "green")
+        assert bru.check_bundle_todo_free_before_green().passed
+
+    def test_the_word_placeholder_in_PROSE_is_not_a_marker(self, tmp_path, monkeypatch):
+        """PINS THE FALSE POSITIVE that a first, broader predicate produced. A
+        `True := trivial` Lean stub is a DISCLOSED concept here and drafts are required
+        to name it; gating on the word would penalize the mandated honesty."""
+        self._bundle(tmp_path, monkeypatch,
+                     "The theorem ships as a placeholder pending Mathlib.\n", "green")
+        assert bru.check_bundle_todo_free_before_green().passed
+
+    def test_a_TODO_described_in_PROSE_is_not_a_marker(self, tmp_path, monkeypatch):
+        """D11 §1 factually describes an in-source TODO in *Mathlib*. That is a
+        statement about a dependency, not unfinished work of its own."""
+        self._bundle(tmp_path, monkeypatch,
+                     "Mathlib carries the manifold version as an explicit in-source TODO.\n",
+                     "green")
+        assert bru.check_bundle_todo_free_before_green().passed
+
+    def test_an_escaped_percent_is_not_a_comment(self, tmp_path, monkeypatch):
+        r"""`\%` prints a percent sign; only a real `%` opens a LaTeX comment."""
+        self._bundle(tmp_path, monkeypatch,
+                     "A 40\\% TODO-free reduction was measured.\n", "green")
+        assert bru.check_bundle_todo_free_before_green().passed
+
+
+class TestNativeDecideSeamGuard:
+    """Authoring-guide §2.5 on `bundle_native_decide_debt`: an empty population must be
+    UNVERIFIED, because "no bundle carries debt" and "I measured nothing" print the same."""
+
+    def test_an_empty_native_decide_set_is_UNVERIFIED_not_clean(self, monkeypatch):
+        import update_counts
+        monkeypatch.setattr(update_counts, "native_decide_decls", lambda _raw: [])
+        hits, err = bru._bundle_native_decide_hits()
+        assert hits == {} and err and "EMPTY" in err
+        monkeypatch.setattr(bru, "_bundle_native_decide_hits", lambda: ({}, err))
+        r = bru.check_bundle_native_decide_debt()
+        assert not r.passed and not r.measured
+
+    def test_no_measurable_closure_is_UNVERIFIED_not_clean(self, monkeypatch):
+        import bundle_closure as bc
+        monkeypatch.setattr(bc, "build_closures", lambda *a, **k: {})
+        hits, err = bru._bundle_native_decide_hits()
+        assert hits == {} and err and "measurable apex closure" in err
+
+    def test_the_live_population_is_plausible(self):
+        """The guard is only meaningful if the real set is non-trivial."""
+        hits, err = bru._bundle_native_decide_hits()
+        assert not err, err
+        assert len(hits) >= 20, "every declared bundle should appear"
+        assert sum(len(v) for v in hits.values()) > 0, "the corpus does carry debt"

@@ -450,10 +450,15 @@ edges plus a closure **overlay** on Lean/module/Paper nodes, following `_overlay
 view-not-store precedent rather than adding ~10 k links to a 14 040-edge graph. Shape and remaining
 sequencing: `docs/architecture/.working-docs/PUBLICATION_INTAKE_SHAPE.md`.
 
-**Nothing is declared yet, deliberately.** All 21 bundles report `closure_measurable: false` — an
-undeclared bundle's substrate is **UNKNOWN, not empty**, and the check returns `measured=False`
-rather than a clean pass. Apex retrofit stays gated on the operator's per-bundle full-context
-review condition above.
+**Nothing is declared yet, deliberately** *(as of 2026-08-06)*. An undeclared bundle's substrate is
+**UNKNOWN, not empty**, and the check returns `measured=False` rather than a clean pass. Apex
+retrofit stays gated on the operator's per-bundle full-context review condition above.
+
+> ✅ **SUPERSEDED 2026-08-07 — the retrofit is COMPLETE.** All 21 bundles declare apexes,
+> `UNDECLARED_APEX_CEILING = 0`, and every apex resolves (`bundle_apex_resolves` clean). Each was
+> declared under the per-bundle full-context review this section requires, with a `FINDINGS.md`
+> per bundle under `docs/audits/2026-08-0{6,7}-*-retrofit/`. Closure is therefore measurable
+> portfolio-wide, which is what made the §D4 adjudication below possible.
 
 ⚠️ **Closure truncates at `private` declarations** — `ExtractDeps` omits them, so 553 distinct
 targets (1 278 edges, 0.46 %) stop a walk. Bounded, but `closure_truncated_private` travels with
@@ -482,18 +487,56 @@ code. Whether the same discipline should apply to prose is an open question for 
 1. **The roster number.** `SYNTHESIS.md` §5 lists D-1 among *"decisions required from the operator"*.
    The operator has explicitly **declined to dictate the spread** and asked for a recommendation instead.
    So the analysis proposes; the operator disposes. **Do not assume a number, and do not carry "14".**
-2. **Whether D10 ships the Coulomb result or waits for the DFT layer** (`SYNTHESIS.md` D-4), including
-   whether PhysLib's now-reachable spectral theory makes D10's in-tree Kato–Rellich redundant.
-3. **L1's disposition** (`SYNTHESIS.md` D-3) — re-found the falsification, restate it as a
-   project-constructed identification, or retire it. A scientific-integrity call, not a portfolio one,
-   but it changes what L1 *is*.
-4. **`native_decide` disclosure posture** (`SYNTHESIS.md` D-5) — affects what D4 and I2 may claim, hence
-   their charters.
-5. **The graphene `Γ_H` dimensional question** (`SYNTHESIS.md` D-6) — a physics adjudication that inverts
-   E2's headline and therefore bears on whether E1+E2 should merge.
+2. ✅ **ANSWERED 2026-08-08 — ship it, and the redundancy worry is refuted.**
+   `molecularHamiltonian_essSelfAdjoint` is live and kernel-pure with all three formerly-disclosed
+   inputs discharged, so there is nothing to wait for. And **PhysLib does not make the in-tree
+   Kato–Rellich redundant**: measured against the resolved package at pin `c4843367`, the strings
+   `Kato`, `Rellich`, `relBound` and `RelativelyBounded` occur **nowhere** in it. PhysLib supplies
+   `IsEssentiallySelfAdjoint` as a definition plus the von Neumann *defect-index* criterion — a
+   different and, for a molecular many-body Coulomb Hamiltonian, harder route. D10 built the
+   theorem the library does not have.
+3. ✅ **ANSWERED 2026-08-08 — retire L1 as a publication target.** Its whole closure is 18
+   declarations in one module, of which D3 already declares 5 and F 3; its 14-orders-of-magnitude
+   headline is the ratio between a **self-adopted** naturalness window (the draft says so) and a
+   measurement; and its formal content is `nlinarith`/`linarith` inequalities of the kind the
+   project's own strengthening discipline prohibits. **This retires a venue claim, not a physics
+   claim** — the falsification theorem and both falsifiers stay asserted at full strength in D3
+   and F, which already declare them, so C5 is not engaged.
+4. ✅ **ANSWERED 2026-08-08 — disclose and ratchet, per bundle.** Measured: **five bundles carry
+   `native_decide` in their declared-apex closure** (D4 19, L2 6, F 3, D2 3, I2 1 — 32 total), and
+   **all five already disclose it in prose**; the other sixteen measure zero, including every
+   bundle that claims kernel purity in print. The state was clean and unguarded, so it is now
+   enforced by `bundle_native_decide_debt` + `NATIVE_DECIDE_BUNDLE_DEBT`: debt is attributed to the
+   manuscript that rests on it, may only shrink, must be disclosed, and zero is *asserted* rather
+   than assumed. **D8 is the precedent for paying down** — it eliminated four sweeps (largest ~16.7 M
+   tuples) by structural reproof, one of which strengthened the statement by dropping a hypothesis.
+5. ⚠️ **NARROWED 2026-08-08, still an operator physics call — and it does NOT bear on the merge.**
+   E1 contains no Γ_H, δ_diss or dissipative correction at all, and the E1+E2 merge fails on length
+   independently (two 5 pp letters cannot make one 4 pp PRL). **The defect is E2-only and is real:**
+   Γ_H = (η/(sT))(κ/c_s)² is s·m⁻², not s⁻¹, reproduced to two significant figures. ⚠️ But the
+   audit's *"in both the paper and `formulas.py`"* is **half wrong** — `formulas.py` declares its
+   γ₁,γ₂ in [m²/s], so the code is dimensionally sound and only E2's prose substitutes a *time* for
+   a *kinematic viscosity*. **Open: the multiplier.** ν = (η/(sT))·v_F² is recommended over c_s²
+   (v_F is the Dirac fluid's emergent light speed, the velocity in the momentum-density relation),
+   giving δ_diss ≈ 17 % against the c_s² route's 3.2 %; the O(1) prefactor depends on how
+   `SecondOrderSK.GammaH` defines γ₁+γ₂ and is **not verified**. Either way δ_diss is 3–22 %, not
+   10⁻¹³, so it is comparable to δ_disp ≈ −2.8 % rather than eleven orders below it. **This makes
+   E2 a better Letter, not a worse one** — graphene becomes the platform where the SK-EFT's
+   dissipative correction is measurable. E2 must not ship until it is settled.
 
-Items 2–5 are recorded here because each **changes a container's charter**, so the distribution
+Items 2–5 were recorded here because each **changes a container's charter**, so the distribution
 recommendation must state its dependence on them rather than silently assuming a resolution.
+
+**Three of the four are now answered and item 1 is answered as a recommendation** (roster 20; the
+operator disposes). What remains genuinely open is **item 5's multiplier**, a physics call scoped to
+one equation in E2, blocking E2 alone.
+
+⚠️ **Every answer above states its own predicate, because three of the four turned on one.** D10's
+redundancy question inverted once PhysLib was read rather than assumed; the D10+D11 merge rested on
+a withdrawn measurement; item 5's *"and `formulas.py`"* was half wrong. **The pattern across this
+whole ADR is that the measurement, not the conclusion, is where the errors live** — which is why C4
+requires the substrate to be read directly and why each answer here names what was measured, what
+was not, and by what rule.
 
 ---
 
@@ -553,10 +596,26 @@ The measurement pass discharges the EVIDENCE CLASS gate; it does **not** dischar
 which require reading manuscript content the pass deliberately did not read (C4). Outstanding:
 
 1. **D2** — per-target re-derived purpose statements, from the manuscripts.
-2. **D4** — the per-target merge/split/retire recommendation. The evidence now supports **D6+D9** on its
-   own merits and **does not** support the D4→D8 merge as stated; the other three proposed merges
-   (D6+D9+**D12**, D10+D11, E1+E2) are **untested** — D11 and D12 reference zero Lean declarations, so a
-   merge argument for them cannot be built from substrate overlap and must be built some other way.
+2. **D4** — the per-target merge/split/retire recommendation.
+
+   > ✅ **DISCHARGED 2026-08-08 — operator delegated the grouping call; full working in
+   > [`docs/audits/2026-08-08-adr010-d4-adjudication/ADJUDICATION.md`](../audits/2026-08-08-adr010-d4-adjudication/ADJUDICATION.md).**
+   > Every proposed merge was tested against the manuscripts read in full, and **all six fail**;
+   > one retirement the audit never proposed succeeds. **Recommended roster: 20** (L1 retired), and
+   > the number is an output, not a target.
+   >
+   > ⚠️ **The sentence this box replaces carried a claim withdrawn the day after it was written** —
+   > *"D11 and D12 reference zero Lean declarations"* was an extraction artifact (see the EVIDENCE
+   > CLASS box at the top: D11 = 95 declarations / 22 modules). The D10+D11 merge was therefore
+   > never argued from evidence; it was deferred pending evidence that turned out to be wrong.
+   > Measured now: `D10 ∩ D11 = 0`, and the two manuscripts are methodologically opposed — D10 is
+   > built on PhysLib's analytic substrate, D11 imports no PhysLib and exists to show the analytic
+   > route is unnecessary.
+   >
+   > **The portfolio's problem was never the count.** It was content in the wrong containers: D6
+   > holds D9's paper (44 % of its draft), D4 held D8's apexes, D1 held D7's, L1 holds a claim D3
+   > already develops. Three of the four are fixed by **reassignment**, which changes the roster by
+   > zero. That is why 21 → 16 could only have been reached without reading the drafts.
 3. **D5** — homing dispositions for **1 403–1 633** modules, not ~340. The scope is 4–5× what the
    charter assumed, which may itself change the shape of the answer (a per-arc disposition rather than a
    per-module one).

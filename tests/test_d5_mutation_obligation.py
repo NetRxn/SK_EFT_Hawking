@@ -639,6 +639,32 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
         "which is Stage 9's `\"ALL figures PASS\"`-over-an-empty-set defect refused a "
         "second home",
     ),
+    "bundle_native_decide_debt": (
+        "test_d5_bundles_readiness.py",
+        "6 mutations (ADR-010 §Open item 4, operator ratchet 2026-08-08). "
+        "`native_decide_regression` counts the whole project and so cannot tell a "
+        "reader of any one paper whether THAT paper's claims rest on the compiler; "
+        "this attributes the debt to the manuscript whose apex closure carries it. "
+        "Legs: the live state passes; every declared ceiling has ZERO headroom; a "
+        "bundle absent from the map is asserted zero rather than unchecked; lowering "
+        "D4's ceiling by one fires the ratchet against the LIVE closure; a "
+        "debt-carrying draft that never names the tactic fails disclosure; and an "
+        "underivable closure is UNVERIFIED, not clean. A third leg (draft asserts "
+        "zero while the closure disagrees) was written and REMOVED after it fired "
+        "wrongly on I2, whose \"no native_decide\" is scoped to one subsection and "
+        "which discloses `fib_pentagon` explicitly — scope is a reading task, so it "
+        "belongs to the prose reviewer, not a regex",
+    ),
+    "bundle_todo_free_before_green": (
+        "test_d5_bundles_readiness.py",
+        "8 mutations (operator ruling 2026-08-08: drafts may carry TODOs, greens may "
+        "not). Legs: live state passes; a marker with `pending` is ALLOWED; a marker "
+        "with `green` fails naming the lines; a clean green passes; and three "
+        "false-positive pins from the first, broader predicate — `placeholder` in "
+        "prose is a DISCLOSED technical term drafts are required to name, a TODO "
+        "described in prose (D11 on Mathlib's in-source TODO) is a fact about a "
+        "dependency, and `\\%` prints a percent sign rather than opening a comment",
+    ),
     "bundle_stage13_claim_consistent": (
         "test_d5_bundles_readiness.py",
         "8 mutations. Split out of `bundle_metadata_matches_graph` on 2026-08-07 "
@@ -806,6 +832,14 @@ PRODUCTION_SEEDED: frozenset[str] = frozenset({
     # `papers/I3/append_log.json` -> 238 -> 239 against a ceiling of 238, rc=1 with the
     # remediation named. Restored byte-identical.
     "bundle_lean_module_coverage",
+    # 2026-08-08 (ADR-010 §D4): lowered NATIVE_DECIDE_BUNDLE_DEBT["D4"] 19 -> 18 against
+    # the LIVE apex closure and lean_deps.json -> rc=1 naming D4, its densest modules
+    # (IsingBraiding=17, FigureEightKnot=2) and both remediations. Restored.
+    "bundle_native_decide_debt",
+    # 2026-08-08: set `stage13_status` to "green" in the REAL papers/L1/bundle_metadata.json
+    # while L1 carries 3 comment markers -> rc=1 naming L1 and lines 384-386. Restored
+    # byte-identical (verified by git hash-object).
+    "bundle_todo_free_before_green",
 })
 
 #: The ratchet, in the same idiom as `AWAITING_CEILING`: the number of registered
@@ -816,7 +850,7 @@ PRODUCTION_SEEDED: frozenset[str] = frozenset({
 #: every check for which nobody has yet demonstrated a production failure, not every
 #: check that is broken. Lower it one check at a time, each with the probe recorded in
 #: the commit — the same way the 54-entry `AWAITING_MUTATION_TEST` backlog went to zero.
-FIXTURE_ONLY_CEILING = 55  # 2026-08-07: +1 check, +1 production seed — net unchanged
+FIXTURE_ONLY_CEILING = 55  # 2026-08-08: +2 checks, +2 production seeds — net unchanged
 
 
 def _registered() -> list[str]:

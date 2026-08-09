@@ -73,7 +73,12 @@ EXPECTED_CHECKS = [
     'citation_primary_sources_present', 'provenance_doi_in_registry',
     'bundle_consistency', 'bundle_source_freshness',
     'bibitem_title_primary_source', 'quantum_network',
-    'bundle_registry_consistency', 'bundle_apex_resolves', 'paper_latex_compiles',
+    'bundle_registry_consistency', 'bundle_apex_resolves',
+    # ADR-010 §Open items 4 + the operator's TODO ruling, both 2026-08-08. Placed
+    # after `bundle_apex_resolves` because both read the DECLARED-APEX CLOSURE, whose
+    # one hand-maintained input that check gates.
+    'bundle_native_decide_debt', 'bundle_todo_free_before_green',
+    'paper_latex_compiles',
     'axiom_count_prose_consistency', 'prose_theorem_reference_coverage',
     'theorem_name_embedded_citations', 'inventory_index_autogen_fresh',
     'architecture_inventory_fresh',

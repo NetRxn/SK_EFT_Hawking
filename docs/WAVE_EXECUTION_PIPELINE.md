@@ -563,6 +563,16 @@ backstops.
    Stage-13 green while either prerequisite is unfinished, and
    `validate.py --check bundle_reviewer_stage_ordering` catches a hand edit that bypasses it. A
    Stage-13 verdict also requires `--kind`; only `full-adversarial` earns a green.
+0b. **A draft carrying an unresolved work marker may not be green.** Drafting with
+   `% TODO:` notes is normal and permitted; recording a completed review over content the
+   author has flagged as unwritten is not. `validate.py --check bundle_todo_free_before_green`
+   enforces it, keyed on markers inside LaTeX comments only — `placeholder` in reader-facing
+   prose is a disclosed technical term this pipeline *requires* drafts to name.
+0c. **Compiler-trust debt must be disclosed and may not grow.** If a bundle's declared-apex
+   closure contains `native_decide`, its draft has to say so;
+   `validate.py --check bundle_native_decide_debt` enforces disclosure and ratchets the
+   per-bundle count in `NATIVE_DECIDE_BUNDLE_DEBT` downward only. Zero is *asserted*, so a wave
+   that routes compiler trust into a clean bundle fails here rather than at a referee.
 1. Ensure Stages 1–12 are green. Stage 13 is meaningful only on a codebase passing its own checks.
 2. Invoke the `skeft-qa:adversarial-reviewer` agent with the target key. It runs in a fresh context
    and works the finding classes in order, emitting
