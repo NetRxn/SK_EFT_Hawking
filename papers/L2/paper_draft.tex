@@ -9,7 +9,7 @@
 %% \leanmodules{}, \axiomcount{} instead of inline literals (NumericalFreshness
 %% Gate 9 — Stage-13 fix-pass 2026-05-11).
 \input{../../docs/counts.tex}
-\newcommand{\mathlibcommit}{5e932f97}
+\newcommand{\mathlibcommit}{\mathlibrev}
 
 %% Bundle: L2 (tier 2, target PRL)
 %% Source manifest: papers/L2/source_manifest.md
@@ -384,7 +384,7 @@ fractional central charge $c_- = 15/2$ is gravitationally anomalous;
 no fractional natural number exists; therefore $\nu_R$ exists if the
 modular framing-anomaly constraint applies to the SM. The full
 verification builds in $\sim 30~\mathrm{s}$ on commodity hardware
-under Lean~4 v4.29.1 against Mathlib commit \texttt{\mathlibcommit{}}
+under Lean~4 v\leantoolchain against Mathlib commit \texttt{\mathlibcommit{}}
 (library state: \totaltheorems{} theorems across \leanmodules{}
 modules, \axiomcount{} axioms, zero \texttt{sorry}; the formerly
 asserted \texttt{gapped\_interface\_axiom} is now a tracked Prop
@@ -393,7 +393,7 @@ forms for analytic number theory directly constrains the
 Standard-Model generation count.
 
 \begin{acknowledgments}
-Lean~4 proofs verified by \texttt{lake build} (v4.29.1, Mathlib
+Lean~4 proofs verified by \texttt{lake build} (v\leantoolchain, Mathlib
 commit \texttt{\mathlibcommit{}}).
 \end{acknowledgments}
 

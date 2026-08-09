@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.22)  27 APR 2026 21:03
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.22)  9 AUG 2026 11:54
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -369,11 +369,12 @@ Package bm Info: No bold for \U/msb/m/n, using \pmb.
 LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 149.
 LaTeX Info: Redefining \bm on input line 219.
 )
+(../../docs/counts.tex)
 Class revtex4-2 Info: Unrecognized LaTeX tabular. Please update this document c
-lass! (Proceeding with fingers crossed.) on input line 15.
-Class revtex4-2 Info: cite was not loaded (OK!) on input line 15.
-Class revtex4-2 Info: mcite was not loaded (OK!) on input line 15.
-Class revtex4-2 Info: multicol was not loaded (OK!) on input line 15.
+lass! (Proceeding with fingers crossed.) on input line 18.
+Class revtex4-2 Info: cite was not loaded (OK!) on input line 18.
+Class revtex4-2 Info: mcite was not loaded (OK!) on input line 18.
+Class revtex4-2 Info: multicol was not loaded (OK!) on input line 18.
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 File: l3backend-pdftex.def 2025-10-09 L3 backend support: PDF output (pdfTeX)
@@ -382,24 +383,24 @@ File: l3backend-pdftex.def 2025-10-09 L3 backend support: PDF output (pdfTeX)
 (./paper_draft.aux)
 \openout1 = `paper_draft.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
 
 (/usr/local/texlive/2026/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
@@ -423,22 +424,22 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-Package hyperref Info: Link coloring OFF on input line 15.
+Package hyperref Info: Link coloring OFF on input line 18.
 
 (./paper_draft.out) (./paper_draft.out)
 \@outlinefile=\write4
 \openout4 = `paper_draft.out'.
 
-Class revtex4-2 Info: Taking \maketitle back from hyperref on input line 15.
+Class revtex4-2 Info: Taking \maketitle back from hyperref on input line 18.
 \openout3 = `paper_draftNotes.bib'.
 
-LaTeX Font Info:    Trying to load font information for U+msa on input line 28.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 31.
 
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 28.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 31.
 
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsb.fd
@@ -449,118 +450,106 @@ Class revtex4-2 Warning: Assuming \noaffiliation for authors.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\\' on input line 49.
+(hyperref)                removing `\\' on input line 52.
 
 
-Package natbib Warning: Citation `Wetterich2004' on page 1 undefined on input l
-ine 58.
-
-
-Package natbib Warning: Citation `VladimirovDiakonov2012' on page 1 undefined o
-n input line 109.
+Underfull \hbox (badness 1286) in paragraph at lines 58--68
+\OT1/cmr/m/n/10 ite fermion-bilinear or-der pa-ram-e-ter, with a mean-
+ []
 
 [1{/usr/local/texlive/2026/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-Underfull \hbox (badness 2409) in paragraph at lines 213--217
+Underfull \hbox (badness 2409) in paragraph at lines 216--220
  \OT1/cmr/m/n/10 is large; the met-ric cor-re-la-tion length $\OML/cmm/m/it/10 
 ^^X \OMS/cmsy/m/n/10 ^^X
  []
 
-<figures/fig1_effective_potential.png, id=150, 2409.0pt x 1606.0pt>
+<figures/fig1_effective_potential.png, id=151, 2409.0pt x 1606.0pt>
 File: figures/fig1_effective_potential.png Graphic file (type png)
 <use figures/fig1_effective_potential.png>
 Package pdftex.def Info: figures/fig1_effective_potential.png  used on input li
-ne 231.
+ne 234.
 (pdftex.def)             Requested size: 246.0pt x 163.99117pt.
 [2{/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc
 }]
 
 LaTeX Warning: A float is stuck (cannot be placed); try class option [floatfix]
- on input line 263.
+ on input line 266.
 
 
-Underfull \hbox (badness 3449) in paragraph at lines 274--275
+Underfull \hbox (badness 3449) in paragraph at lines 277--278
  []\OT1/cmr/m/n/10 The tetrad and met-ric sus-cep-ti-bil-i-ties $\OML/cmm/m/it/
 10 ^^_ \OT1/cmr/m/n/10 =
  []
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 277.
+(hyperref)                removing `math shift' on input line 280.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 277.
+(hyperref)                removing `math shift' on input line 280.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 295.
+(hyperref)                removing `math shift' on input line 298.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 295.
+(hyperref)                removing `math shift' on input line 298.
 
-<figures/fig51_vestigial_binder_crossing.png, id=167, 2409.0pt x 1606.0pt>
+<figures/fig51_vestigial_binder_crossing.png, id=169, 2409.0pt x 1606.0pt>
 File: figures/fig51_vestigial_binder_crossing.png Graphic file (type png)
 <use figures/fig51_vestigial_binder_crossing.png>
 Package pdftex.def Info: figures/fig51_vestigial_binder_crossing.png  used on i
-nput line 331.
+nput line 334.
 (pdftex.def)             Requested size: 246.0pt x 163.99117pt.
-<figures/fig52_vestigial_susceptibility_split.png, id=168, 2409.0pt x 1606.0pt>
+<figures/fig52_vestigial_susceptibility_split.png, id=170, 2409.0pt x 1606.0pt>
 
 File: figures/fig52_vestigial_susceptibility_split.png Graphic file (type png)
 <use figures/fig52_vestigial_susceptibility_split.png>
 Package pdftex.def Info: figures/fig52_vestigial_susceptibility_split.png  used
- on input line 342.
+ on input line 345.
 (pdftex.def)             Requested size: 246.0pt x 163.99117pt.
-<figures/fig2_phase_diagram.png, id=169, 2409.0pt x 1606.0pt>
+<figures/fig2_phase_diagram.png, id=171, 2409.0pt x 1606.0pt>
 File: figures/fig2_phase_diagram.png Graphic file (type png)
 <use figures/fig2_phase_diagram.png>
-Package pdftex.def Info: figures/fig2_phase_diagram.png  used on input line 353
+Package pdftex.def Info: figures/fig2_phase_diagram.png  used on input line 356
 .
 (pdftex.def)             Requested size: 246.0pt x 163.99117pt.
 [3 <./figures/fig1_effective_potential.png>]
 
 LaTeX Warning: A float is stuck (cannot be placed); try class option [floatfix]
- on input line 382.
+ on input line 385.
 
 [4 <./figures/fig51_vestigial_binder_crossing.png> <./figures/fig52_vestigial_s
 usceptibility_split.png> <./figures/fig2_phase_diagram.png>]
-Underfull \hbox (badness 1264) in paragraph at lines 507--510
+Underfull \hbox (badness 1264) in paragraph at lines 510--513
 \OT1/cmr/m/n/10 i-dence for a ves-ti-gial met-ric phase in the Akama-
  []
 
 
-Underfull \hbox (badness 1975) in paragraph at lines 536--542
+Underfull \hbox (badness 1975) in paragraph at lines 539--546
  []\OT1/cmr/m/n/10 All struc-tural re-sults are for-mally ver-i-fied in
  []
 
 
-Underfull \hbox (badness 1478) in paragraph at lines 536--542
+Underfull \hbox (badness 1478) in paragraph at lines 539--546
  \OT1/cmr/m/n/10 Lean 4. This pa-per's re-sults are for-mal-ized
  []
 
 
-Underfull \hbox (badness 1292) in paragraph at lines 536--542
+Underfull \hbox (badness 1292) in paragraph at lines 539--546
  \OT1/cmr/m/n/10 in \OT1/cmtt/m/n/10 VestigialGravity.lean \OT1/cmr/m/n/10 (25 
 the-o-rems) and
  []
 
 [5]
-Underfull \hbox (badness 2495) in paragraph at lines 603--605
+Underfull \hbox (badness 2495) in paragraph at lines 607--609
  []\OT1/cmr/m/n/9 Aristotle au-to-mated the-o-rem prover, []$\OT1/cmtt/m/n/9 ht
 tps : / / www .
  []
 
-(./paper_draft.bbl)
-
-Package natbib Warning: There were undefined citations.
-
-[6] (./paper_draft.aux
-
-Package natbib Warning: Citation(s) may have changed.
-(natbib)                Rerun to get citations correct.
-
-)
+(./paper_draft.bbl) [6] (./paper_draft.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
@@ -569,10 +558,10 @@ Package rerunfilecheck Info: File `paper_draft.out' has not changed.
 (rerunfilecheck)             Checksum: 3E931515DD2892C7982AEFD89064AEFF;4542.
  ) 
 Here is how much of TeX's memory you used:
- 12340 strings out of 467525
- 182852 string characters out of 5418982
- 635698 words of memory out of 5000000
- 41028 multiletter control sequences out of 15000+600000
+ 12429 strings out of 467525
+ 184242 string characters out of 5418982
+ 637083 words of memory out of 5000000
+ 41113 multiletter control sequences out of 15000+600000
  639091 words of font info for 82 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  75i,10n,79p,632b,547s stack positions out of 10000i,1000n,20000p,200000b,200000s
@@ -599,10 +588,10 @@ dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2026/texmf-d
 ist/fonts/type1/public/amsfonts/cm/cmtt9.pfb></usr/local/texlive/2026/texmf-dis
 t/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/local/texlive/2026/texmf
 -dist/fonts/type1/public/cm-super/sfrm1000.pfb>
-Output written on paper_draft.pdf (6 pages, 771538 bytes).
+Output written on paper_draft.pdf (6 pages, 772009 bytes).
 PDF statistics:
- 353 PDF objects out of 1000 (max. 8388607)
- 287 compressed objects within 3 object streams
+ 354 PDF objects out of 1000 (max. 8388607)
+ 288 compressed objects within 3 object streams
  75 named destinations out of 1000 (max. 500000)
  229 words of extra memory for PDF output out of 10000 (max. 10000000)
 

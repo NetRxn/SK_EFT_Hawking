@@ -21,6 +21,9 @@
   frame=single,
 }
 
+%% TODO-D6: pins from generated macros, not literals.
+\input{../../docs/counts.tex}
+
 \begin{document}
 
 \title{Formal Verification of the Golterman-Shamir No-Go Conditions \\
@@ -231,7 +234,7 @@ Proved in \texttt{TPFEvasion.lean} (12 theorems, zero sorry).
 \label{fig:fock_space}
 \end{figure}
 
-The formalization uses Lean~4.29.0 with Mathlib (commit \texttt{8850ed93}).
+The formalization uses Lean~\leantoolchain{} with Mathlib (commit \texttt{\mathlibrev}).
 Key Mathlib infrastructure:
 
 \begin{itemize}

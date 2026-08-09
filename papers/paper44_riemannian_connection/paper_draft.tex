@@ -107,7 +107,7 @@ Mathlib-shaped pull request.
 \section{Introduction}\label{sec:intro}
 
 The 2025 Massot-Rothgang-Macbeth covariant-derivative library landed
-in Mathlib in early 2026 (commit \texttt{8850ed93}, files dated
+in Mathlib in early 2026 (commit \texttt{\mathlibrev}, files dated
 April 13, 2026), supplying \texttt{IsCovariantDerivativeOn},
 \texttt{CovariantDerivative}, and the torsion-tensor companion
 \cite{MassotRothgangMacbeth2025}. The HALF-ERC project's published
@@ -783,7 +783,7 @@ Jacobi identity
 \begin{equation*}
 [X, [Y, Z]]_x + [Y, [Z, X]]_x + [Z, [X, Y]]_x \;=\; 0
 \end{equation*}
-for the manifold Lie bracket. Mathlib4 at \texttt{8850ed93} ships only
+for the manifold Lie bracket. Mathlib4 at \texttt{\mathlibrev} ships only
 the Leibniz form, $[U, [V, W]]_x = [[U, V], W]_x + [V, [U, W]]_x$
 (\texttt{leibniz\_identity\_mlieBracket\_apply}). Cyclic Jacobi follows
 from one Leibniz instance plus three antisymmetry rewrites: outer
@@ -792,7 +792,7 @@ swap $[[X, Y], Z]_x = -[Z, [X, Y]]_x$ via
 section-level \texttt{mlieBracket\_swap}; and inner-negation
 distribution $[Y, -[Z, X]]_x = -[Y, [Z, X]]_x$ via the new
 \texttt{mlieBracket\_neg\_right\_apply} (which Mathlib also lacks at
-\texttt{8850ed93}). The negation-distribution lemma is itself derived
+\texttt{\mathlibrev}). The negation-distribution lemma is itself derived
 in $\sim 5$ lines from $\texttt{mlieBracket\_const\_smul\_right}$ at
 $c = (-1 : \mathbb{K})$ plus $\texttt{neg\_one\_smul}$. The slot-1
 sibling \texttt{mlieBracket\_neg\_left\_apply} ships in parallel as a
@@ -1383,13 +1383,13 @@ post-wave review.
 \bibitem{MassotRothgangMacbeth2025}
 P.~Massot, M.~Rothgang, H.~Macbeth.
 \newblock Mathlib4 covariant derivatives library.
-\newblock \emph{Mathlib4 commit 8850ed93}, April 2026.
+\newblock \emph{Mathlib4 commit \mathlibrev}, April 2026.
 \newblock \texttt{Mathlib.Geometry.Manifold.VectorBundle.CovariantDerivative.\{Basic,Torsion\}}.
 
 \bibitem{Gouezel2025}
 S.~Gou\"ezel.
 \newblock Riemannian vector bundles in Mathlib4.
-\newblock \emph{Mathlib4 commit 8850ed93}, March 2026.
+\newblock \emph{Mathlib4 commit \mathlibrev}, March 2026.
 \newblock \texttt{Mathlib.Topology.VectorBundle.Riemannian};
   \texttt{Mathlib.Geometry.Manifold.VectorBundle.Riemannian}.
 
@@ -1441,7 +1441,7 @@ W.~Klingenberg.
 \bibitem{Gouezel2024LieBracket}
 S.~Gou\"ezel.
 \newblock Lie brackets of vector fields on manifolds in Mathlib4.
-\newblock \emph{Mathlib4 commit 8850ed93}, 2024--2026.
+\newblock \emph{Mathlib4 commit \mathlibrev}, 2024--2026.
 \newblock \texttt{Mathlib.Geometry.Manifold.VectorField.LieBracket}
   (\texttt{mlieBracket}, \texttt{mlieBracket\_self},
   \texttt{mlieBracket\_swap\_apply}, \texttt{mlieBracket\_zero\_left},

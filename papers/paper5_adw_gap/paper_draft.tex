@@ -5,6 +5,9 @@
 \usepackage{hyperref}
 \usepackage{xcolor}
 
+%% TODO-D6: pins from generated macros, not literals.
+\input{../../docs/counts.tex}
+
 \begin{document}
 
 \title{Mean-field gap equation for tetrad condensation in the Akama-Diakonov-Wetterich mechanism: \\
@@ -315,8 +318,8 @@ general theorem (formalized rigor status in \texttt{FermiPointTopology.lean}:
 
 \section{Formal Verification}
 
-All structural results are formalized in Lean~4 (v4.29.0) with Mathlib
-(\texttt{8850ed93}), across three modules: \texttt{ADWMechanism.lean}
+All structural results are formalized in Lean~4 (v\leantoolchain) with Mathlib
+(\texttt{\mathlibrev}), across three modules: \texttt{ADWMechanism.lean}
 (21 theorems, zero \texttt{sorry}), \texttt{TetradGapEquation.lean}
 (23 theorems, zero \texttt{sorry}), and \texttt{EmergentGravityBounds.lean}
 (14 theorems, zero \texttt{sorry}).

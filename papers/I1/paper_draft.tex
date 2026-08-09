@@ -1179,7 +1179,7 @@ submission.
 The Aristotle service runs on a fixed Lean toolchain
 (\texttt{leanprover/lean4:v4.28.0}) with a corresponding pinned
 Mathlib commit, while the project's local toolchain is
-currently \texttt{leanprover/lean4:v4.29.0} with a separately
+currently \texttt{leanprover/lean4:v\leantoolchain} with a separately
 pinned Mathlib commit (see
 \texttt{lean/lean-toolchain} and \texttt{lean/lakefile.toml}).
 Aristotle-returned proofs that exercise a 4.29.0-only feature
@@ -1193,7 +1193,7 @@ toolchain-compatibility audit cost, and when the cost dominates
 the proof-construction cost, the interactive Stage~3a loop is
 the better tool. All worked-case theorems referenced in
 Sections~\ref{sec:case1}--\ref{sec:case3} have been verified to
-compile cleanly on the project's local 4.29.0 toolchain
+compile cleanly on the project's local \leantoolchain{} toolchain
 post-integration. The integration protocol is unchanged across the
 shift: never \texttt{--integrate} on submission, always retrieve
 first, review the diff archived in the repository under

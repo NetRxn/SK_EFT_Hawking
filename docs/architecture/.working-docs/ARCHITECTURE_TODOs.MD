@@ -511,7 +511,36 @@ Full analysis: [`docs/audits/2026-08-01-publication-readiness/`](../../audits/20
   attribution sweep currently satisfies the same field as a full adversarial pass); and either
   writers for `stage*_status` or their removal.
 
-### D6. Corpus-wide Lean pin drift in paper drafts — OPEN
+### D6. Corpus-wide Lean pin drift in paper drafts — ✅ DONE 2026-08-09
+
+> **`paper_toolchain_pin_drift` now reports 0 pin-drift and 0 capability-claim sites, from 27 + 4.**
+>
+> **Fixed structurally, not by transcription.** Re-typing 27 live values only resets the clock; the
+> v4.32.0 bump is what stranded them in the first place. `update_counts.py` now emits
+> `\leantoolchain`, `\mathlibrev` and `\physlibrev` into the generated `docs/counts.tex`, read
+> live from `lean-toolchain` + `lakefile.toml`, and every draft states its reproducibility
+> coordinate through the macro. **A future bump cannot strand a draft, because no draft holds the
+> value.** D10 additionally gained the `\input` it never had.
+>
+> **Two sites needed judgement rather than substitution.** The capability claims in
+> `phase6AA` assert what the *pinned* Mathlib provides, and renumbering one without re-checking the
+> capability is precisely the falsification the check warns about. `geometric_hahn_banach_compact_closed`
+> was **verified present at the live pin** (`Analysis/Convex/Cone/Dual.lean`) before the version was
+> updated, and the draft now records that re-verification.
+>
+> ⚠️ **Residue, stated:** `phase6AA` is Markdown and has no macro mechanism, so its pins remain
+> literal and will drift again at the next bump. Every `.tex` draft is now immune; the one `.md`
+> preprint is not.
+>
+> **Count note:** the entry says 11 bundles. Measured today it was 9 — D11 and D12 dropped out when
+> TODO-D22's fix stopped reporting a CURRENT PhysLib pin as drift. Fixing the instrument shrank the
+> corpus before the corpus was touched.
+>
+> ⚠️ **A compile failure I did NOT cause:** `paper7_chirality_formal` fails on a Unicode ι. Verified
+> by restoring the HEAD version in place and recompiling — it fails identically there. Pre-existing
+> legacy debt, covered by the legacy ratchet (14 legacy drafts, 0 bundles). The first check of this
+> ran the HEAD copy in `/tmp` without the figures directory and produced a *different* error, which
+> would have supported the wrong conclusion.
 
 ⚠️ **A CHECK ALREADY MEASURES THIS — do not re-measure by hand.**
 `validate.py --check paper_toolchain_pin_drift` (Class TP, advisory) resolves both the Lean

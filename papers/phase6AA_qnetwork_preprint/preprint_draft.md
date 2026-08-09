@@ -5,8 +5,8 @@
 `jgroehm@gmail.com`
 
 **Bridging preprint draft — SK_EFT_Hawking bundle D6 §6 (Phases 6AA–6AD).**
-*Status: draft. Kernel-only Lean 4 / Mathlib4 substrate (pin `leanprover/lean4:v4.29.1`,
-Mathlib `5e932f97`); all theorems verified with axioms ⊆ {propext, Classical.choice,
+*Status: draft. Kernel-only Lean 4 / Mathlib4 substrate (pin `leanprover/lean4:v4.32.0`,
+Mathlib `81a5d257`); all theorems verified with axioms ⊆ {propext, Classical.choice,
 Quot.sound} — no `native_decide`, no project-local axioms. Source:
 `lean/SKEFTHawking/QuantumNetwork/`. Numerics, figures, and a cross-validation gate:
 `src/core/formulas.py`, `src/core/visualizations.py`, `scripts/validate.py --check
@@ -242,7 +242,7 @@ flagged as absent (no von Neumann / Ky Fan / polar decomposition needed):
 **Choi-SDP strong duality (closed in Phase 6AI).** The **full** primal=dual diamond-norm Choi-SDP
 (Watrous) **equality** `diamondDist(Φ₁,Φ₂) = inf{‖Tr₂ W‖_∞ : W⪰0, W⪰J(Φ₁)−J(Φ₂)}`
 (`diamondDist_eq_choiSDP`, `DiamondSDPDuality.lean`) is now proven **unconditionally and kernel-pure**.
-The earlier "needs conic strong duality, absent at pin" assessment was stale: Mathlib v4.29.1 *does*
+The earlier "needs conic strong duality, absent at pin" assessment was stale: Mathlib v4.32.0 *does*
 ship the geometric Hahn–Banach / conic-Farkas separation (`geometric_hahn_banach_compact_closed`); a
 self-adjoint-matrix inner-product carrier (`HermCarrier`, `⟨A,B⟩=Re tr(AB)`, PSD self-dual cone,
 Riesz representation) turns the weak-duality gap into a separating hyperplane whose Riesz vector is the
@@ -320,7 +320,7 @@ The 6AE/6AF layer supplies functional-analytic *bricks*; Phase 6AG makes them *o
   `diamondDist(Φ₁,Φ₂) = inf{‖Tr₂ W‖_∞ : W⪰0, W⪰J(Φ₁)−J(Φ₂)}` — the **full** primal=dual Watrous SDP,
   proven **unconditionally and kernel-pure**. The chain `choiDualValue ≤ primalSDPValue ≤ diamondDist
   ≤ choiDualValue` closes via the geometric Hahn–Banach / conic-Farkas separation
-  (`geometric_hahn_banach_compact_closed`, present in Mathlib v4.29.1 despite a stale "absent" note)
+  (`geometric_hahn_banach_compact_closed`, present in Mathlib v4.32.0 despite a stale "absent" note; re-verified 2026-08-09 at the live pin in `Analysis/Convex/Cone/Dual.lean`)
   over a self-adjoint-matrix inner-product carrier (`HermCarrier`, `⟨A,B⟩=Re tr(AB)`, PSD self-dual
   cone, Riesz representation): the weak-duality gap becomes a separating hyperplane whose Riesz vector
   is the optimal dual witness. No `sorry`, no axiom.

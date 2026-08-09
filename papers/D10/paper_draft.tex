@@ -5,6 +5,11 @@
 \usepackage{amsmath, amssymb}
 \usepackage{booktabs}
 
+%% TODO-D6: reproducibility pins come from the generated macros
+%% (\leantoolchain, \mathlibrev, \physlibrev) so a toolchain bump cannot
+%% strand this draft at a stale coordinate.
+\input{../../docs/counts.tex}
+
 %% Bundle target: D10 (tier 1, journal PRD | PRX Quantum | J. Chem. Phys.)
 %% Sources: Phases 6BA (NEGF) + 6BB (DFT) + 6BC (Lindblad). Sourceless synthesis.
 %% Novelty backing: papers/D10/prior_art_novelty.md (research-scout 2026-06-30).
@@ -102,7 +107,7 @@ province of the cited physics literature and are flagged at each point of use.
 \section{Verification framework}
 \label{sec:framework}
 
-All results are \Lean{}~4 theorems checked against Mathlib (toolchain \texttt{leanprover/lean4:v4.29.1})
+All results are \Lean{}~4 theorems checked against Mathlib (toolchain \texttt{leanprover/lean4:v\leantoolchain})
 and PhysLib, the latter supplying the unbounded-operator resolvent and spectral API used in
 Secs.~\ref{sec:negf}--\ref{sec:dft} and the CPTP/Choi quantum-information layer used in
 Sec.~\ref{sec:lindblad}. We hold every headline theorem to a \emph{kernel-purity} bar: its transitive
