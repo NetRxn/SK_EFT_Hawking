@@ -888,6 +888,65 @@ def check_architecture_inventory_fresh() -> CheckResult:
             if m:
                 offenders.append(f"{md.name}:{i} {m.group(0).strip()!r}")
 
+    # ── Leg 3: no narrative may enumerate a registry AS IF COMPLETE ────────────
+    #
+    # Leg 2 guards a count; it does not guard a LIST. Every doc defect the
+    # post-ADR-011 reconciliation found was an enumerated roster in prose
+    # (ledger V59): two maps naming three reviewers when there were four, and
+    # `_VALID_BUNDLE_TARGETS`' members transcribed into schema prose.
+    # `END_TO_END_MAP` §9 already states the rule — "an enumerated roster in prose
+    # goes stale exactly as an enumerated roster in code does, but nothing fails
+    # when it happens" — and that document's own diagram then went stale by it.
+    #
+    # ⚠️ THE OBVIOUS PREDICATE IS WRONG AND WAS MEASURED BEFORE BEING BUILT.
+    # TODO-D30 proposed flagging any narrative line naming >=3 registry members.
+    # Measured against the live corpus that fires on **7 lines, all of them
+    # correct prose** — "D1, D2 and D3 all cite the same Stage-13 sweep",
+    # "D6+D9 share zero declarations" — and on **0 defects**. A gate that fires
+    # on correct work gets switched off (VALIDATION_GATE_TOPOLOGY §3).
+    #
+    # The distinguishing feature is not the enumeration, it is the TOTALISING
+    # claim wrapped around it: "the three reviewers are ...", "the existing
+    # bundles are ...". Discussing several members is not asserting the set.
+    # Measured with the totalising requirement: 0 live offenders, and both
+    # reconstructed historical defects fire.
+    from bundle_registry import BUNDLE_CODES as _BC
+    _agent_dir = _H.PROJECT_ROOT / ".claude/plugins/skeft-qa/agents"
+    _registries = {
+        "bundles": sorted(_BC),
+        "reviewers": sorted(p.stem for p in _agent_dir.glob("*.md")),
+    }
+    _roster_link_re = re.compile(
+        r"bundle_registry|SURFACE_INVENTORY|BUNDLE_CODES|plugins/skeft-qa|registry",
+        re.IGNORECASE)
+    _totalising_re = re.compile(
+        r"\b(?:the|all|every|each|only|consists? of|comprises?|namely)\b"
+        r"[^.]{0,60}\b(?:bundles?|targets?|reviewers?|agents?|codes?)\b",
+        re.IGNORECASE)
+    roster_offenders: list[str] = []
+    for _rname, _members in _registries.items():
+        if len(_members) < 3:
+            continue
+        _mem_re = re.compile(r"(?<![\w/-])("
+                             + "|".join(map(re.escape, _members)) + r")(?![\w-])")
+        for md in sorted(arch_dir.glob("*.md")):
+            if md.name == doc.name:
+                continue
+            for i, line in enumerate(md.read_text().splitlines(), 1):
+                if (len(set(_mem_re.findall(line))) >= 3
+                        and _totalising_re.search(line)
+                        and not _roster_link_re.search(line)):
+                    roster_offenders.append(f"{md.name}:{i} [{_rname}]")
+    details.append(Detail(
+        "no_rosters_in_narratives", not roster_offenders,
+        f"{scanned} narrative doc(s) enumerate no registry as if complete"
+        if not roster_offenders else
+        f"registry roster enumerated as complete in a narrative — name the "
+        f"mechanism and link its registry instead of transcribing members: "
+        f"{roster_offenders[:6]}"))
+    if roster_offenders:
+        all_pass = False
+
     # A scan that matched nothing because it walked nothing passes vacuously (D5 §2.5).
     if scanned == 0:
         all_pass = False

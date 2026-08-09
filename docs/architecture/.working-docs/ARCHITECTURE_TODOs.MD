@@ -1294,7 +1294,29 @@ when the cluster payload is unchanged, so the file is rewritten only on a real c
 scopes, and the phase's own rule is that findings needing content changes get filed rather than
 fixed in passing.
 
-### D30. `no_counts_in_narratives` guards counts but not rosters — OPEN
+### D30. `no_counts_in_narratives` guards counts but not rosters — ✅ DONE 2026-08-09
+
+> **Built as Leg 3 (`no_rosters_in_narratives`) of `architecture_inventory_fresh` — but NOT with the
+> predicate this entry proposed, and the measurement is why.**
+>
+> ⚠️ **The proposed fix shape was wrong.** This entry said to flag a narrative sentence enumerating
+> ≥3 members of a known registry without a registry link. Measured against the live corpus that
+> fires on **7 lines, every one of them correct prose** — *"D1, D2 and D3 all cite the same Stage-13
+> sweep"*, *"D6+D9 share zero declarations"* — and on **0 defects**. Shipping it would have created a
+> gate that only ever fires on correct work, which VALIDATION_GATE_TOPOLOGY §3 says is how a gate
+> gets switched off.
+>
+> **The signal is the TOTALISING claim, not the enumeration.** Discussing several members is not
+> asserting the set; *"the three reviewers are …"* and *"the existing bundles are …"* are. With a
+> totalising requirement added: **0 live offenders, and both reconstructed historical defects fire.**
+>
+> Registries are read live (`BUNDLE_CODES`, the skeft-qa agent directory), never transcribed — the
+> leg would otherwise commit the defect it exists to catch. A registry link on the line is the
+> escape hatch. Note the third original instance, *"the existing 13 bundles"*, was **already** caught
+> by Leg 2 (numeral + census noun); only the numeral-free enumerations needed this leg.
+>
+> **Seeded tests** in `tests/test_architecture_inventory.py::TestNoRostersInNarratives` reconstruct
+> both historical defects and pin the false-positive set that must stay clean.
 
 Found by the post-ADR-011 architecture reconciliation (ledger V59). Every doc defect that pass
 turned up was an **enumerated roster in prose**, and every count-shaped surface was clean —

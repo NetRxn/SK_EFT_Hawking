@@ -191,3 +191,68 @@ class TestEdgeTypeDerivationHasOneOwner:
             "an edge type sharing a node type's name was dropped — the scan is "
             "still subtractive rather than structural"
         )
+
+
+# ── TODO-D30: rosters, not just counts ────────────────────────────────────
+
+class TestNoRostersInNarratives:
+    """Leg 2 guards a census COUNT; nothing guarded a transcribed LIST. Every doc
+    defect the post-ADR-011 reconciliation found was an enumerated roster in prose.
+
+    ⚠️ The obvious predicate was measured and REJECTED. Flagging any narrative
+    line naming >=3 registry members fires on 7 lines of the live corpus, all of
+    them correct prose ("D1, D2 and D3 all cite the same Stage-13 sweep"), and on
+    0 defects. A gate that fires on correct work gets switched off
+    (VALIDATION_GATE_TOPOLOGY §3). The signal is the TOTALISING claim wrapped
+    around the enumeration, not the enumeration."""
+
+    def _fires(self, line: str) -> bool:
+        import sys, pathlib, re
+        root = pathlib.Path(__file__).resolve().parents[1]
+        sys.path.insert(0, str(root / "scripts"))
+        from bundle_registry import BUNDLE_CODES
+        agents = sorted(p.stem for p in
+                        (root / ".claude/plugins/skeft-qa/agents").glob("*.md"))
+        link = re.compile(r"bundle_registry|SURFACE_INVENTORY|BUNDLE_CODES"
+                          r"|plugins/skeft-qa|registry", re.I)
+        total = re.compile(r"\b(?:the|all|every|each|only|consists? of|comprises?"
+                           r"|namely)\b[^.]{0,60}\b(?:bundles?|targets?|reviewers?"
+                           r"|agents?|codes?)\b", re.I)
+        for members in (sorted(BUNDLE_CODES), agents):
+            mem = re.compile(r"(?<![\w/-])(" + "|".join(map(re.escape, members))
+                             + r")(?![\w-])")
+            if (len(set(mem.findall(line))) >= 3 and total.search(line)
+                    and not link.search(line)):
+                return True
+        return False
+
+    def test_seeded_reviewer_roster_fires(self):
+        """Reconstruction of the actual END_TO_END_MAP / QA_QI_MAP defect: three
+        reviewers named as the complete set when there were four."""
+        assert self._fires(
+            "The three reviewers are figure-reviewer, claims-reviewer and "
+            "adversarial-reviewer.")
+
+    def test_seeded_bundle_target_roster_fires(self):
+        """Reconstruction of the BUNDLE_DIRECTORY_SCHEMA defect."""
+        assert self._fires("_VALID_BUNDLE_TARGETS = the bundles D1, D2, D3, D4 and D5.")
+
+    def test_discussing_several_bundles_does_not_fire(self):
+        """The 7 live lines this predicate must NOT flag."""
+        for ok in [
+            "D1, D2 and D3 all cite `docs/audits/stage13_attribution_sweep.md`",
+            "D12 does not belong with D6+D9, and D10 shares no substrate with D11",
+            "D6+D9 share zero declarations; D4+D8 share 280 and D5 differs",
+        ]:
+            assert not self._fires(ok), f"false positive on correct prose: {ok!r}"
+
+    def test_a_registry_link_exempts_the_line(self):
+        """The escape hatch: cite the registry and the enumeration is sourced."""
+        assert not self._fires(
+            "The bundles D1, D2, D3 are listed in scripts/bundle_registry.py.")
+
+    def test_live_corpus_is_clean(self):
+        from validation.checks.freshness import check_architecture_inventory_fresh
+        res = check_architecture_inventory_fresh()
+        roster = [d for d in res.details if d.name == "no_rosters_in_narratives"]
+        assert roster and roster[0].passed, [d.message for d in roster]
