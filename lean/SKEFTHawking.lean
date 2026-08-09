@@ -493,6 +493,7 @@ import SKEFTHawking.LDP.Varadhan
 import SKEFTHawking.LDP.LDPCompatibleSKEFT
 import SKEFTHawking.HigherOrderSK
 import SKEFTHawking.AcousticMetric
+import SKEFTHawking.SakharovGenerationBridge
 import SKEFTHawking.SKDoubling
 import SKEFTHawking.SecondOrderSK
 import SKEFTHawking.HawkingUniversality

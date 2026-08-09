@@ -61,8 +61,10 @@ propagating across six observables) also drives the SK--EFT analog-Hawking
 content of Bundle~D1 (across BEC, polariton, and graphene Dirac-fluid
 platforms; $93\%$ Lean-theorem reuse), the chirality-wall and
 modular-invariance content of Bundle~D2
-($\mathrm{Spin}^{\mathbb{Z}_4}$ 5-bordism with $N_f = 16$ matching
-D3's Sakharov-coefficient $N_f$), the dark-sector NO-GO closures of
+($\mathrm{Spin}^{\mathbb{Z}_4}$ 5-bordism, whose generation count is
+tied to D3's Sakharov-coefficient flavour count by a fixed
+per-generation ratio rather than being equal to it; see
+\S\ref{sec:synthesis-claim}), the dark-sector NO-GO closures of
 Bundle~D5 (causal-set, entropic, and Jacobson thermodynamic-GR with
 the full Phase~6m three-track closure), and the topological
 quantum-computation foundations of Bundle~D4 (one MTC, four faces).
@@ -234,6 +236,7 @@ The substrate's predictive register is the union of these four
 partitions. \S\ref{sec:substrate-register} is the consolidated table.
 
 \subsection{Substrate-identity synthesis claim NEW to this flagship}
+\label{sec:synthesis-claim}
 
 Each sibling bundle reports its own thread; this flagship reports the
 substrate as one object. The synthesis claim NEW to F (absent from any
@@ -249,9 +252,25 @@ program's sibling threads. Concretely:
   uses the same $N_f = 16$ count that, on the modular-invariance side,
   uniquely fixes the Standard-Model anomaly classification via
   $\mathrm{Spin}^{\mathbb{Z}_4}$ 5-bordism (D2
-  \S\ref{sec:chirality-wall-modular} with L2). The $N_f$ in the
-  Sakharov coefficient and the $N_f$ in the modular-invariance
-  derivation of three SM fermion generations are the same $N_f$.
+  \S\ref{sec:chirality-wall-modular} with L2). These two counts are
+  \emph{not} the same number, and we state the relation precisely rather
+  than the identity. The Sakharov $N_f$ counts Dirac species in a
+  heat-kernel expansion and is real-valued; the modular-invariance $N_f$
+  counts generations and is the natural number constrained by
+  $3 \mid N_f$. Both are read off a single fermion content, and the
+  relation between them is fixed by the per-generation Weyl count:
+  \texttt{SakharovGenerationBridge.diracFlavourNf\_eq\_scaled\_generationNf}.
+  At Standard-Model content the two are $24$ and $3$
+  (\texttt{sm\_counts\_differ}), and they coincide only for two Weyl
+  fields per generation
+  (\texttt{counts\_agree\_iff\_two\_weyl\_per\_generation}). The
+  load-bearing direction survives and is proved: the modular-invariance
+  constraint $3 \mid \text{generations}$ transfers onto the Sakharov-side
+  species count
+  (\texttt{generation\_constraint\_transfers}), so an anomaly condition
+  does constrain the emergent Newton constant. \emph{That} is the
+  substrate-identity content (one fermion content, two derived counts),
+  and it is what this flagship claims.
 \item The same SK--EFT axioms, KMS condition, and
   fluctuation-dissipation relation that close the analog-Hawking
   spectrum on the BEC platform (D1 \S\ref{sec:analog-hawking})

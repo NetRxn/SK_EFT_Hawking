@@ -1,12 +1,12 @@
 {
-  "generated": "2026-08-09T11:52:03.808224",
+  "generated": "2026-08-09T12:18:57.827486",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 40678,
-    "theorems_total": 26364,
-    "theorems_substantive": 26338,
+    "total_declarations": 40701,
+    "theorems_total": 26375,
+    "theorems_substantive": 26349,
     "theorems_placeholder": 26,
-    "theorems_kernel_substantive": 26269,
+    "theorems_kernel_substantive": 26280,
     "theorems_tracked_vacuity_debt": 69,
     "theorems_vacuity_baseline": 48,
     "theorems_vacuous_proxy": 6,
@@ -15,7 +15,7 @@
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 2037,
+    "modules": 2038,
     "module_names": [
       "SKEFTHawking.A1Ext",
       "SKEFTHawking.A1ExtSubstantive",
@@ -1385,6 +1385,7 @@
       "SKEFTHawking.SU3k2FSymbols",
       "SKEFTHawking.SU3k2SMatrix",
       "SKEFTHawking.SU3kFusion",
+      "SKEFTHawking.SakharovGenerationBridge",
       "SKEFTHawking.ScalarRungInterpretation",
       "SKEFTHawking.Schellekens.AnomalyPolynomial",
       "SKEFTHawking.Schellekens.Chain",
@@ -2055,8 +2056,8 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 12794,
-    "structures": 479,
+    "definitions": 12805,
+    "structures": 480,
     "instances": 939,
     "inductives": 101,
     "native_decide_decl_closure": 546,
@@ -2070,7 +2071,7 @@
   "python": {
     "python_modules": 137,
     "test_files": 176,
-    "pytest_cases": 6010,
+    "pytest_cases": 6013,
     "notebooks": 91,
     "papers": 42,
     "figures": 170

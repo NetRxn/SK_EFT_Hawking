@@ -244,7 +244,7 @@ _PROSE_REF_WAIVERS = {
         "Deliberate historical reference: I1's gap-equation narrative "
         "cites the FALSE folklore theorem disproved by an Aristotle "
         "counterexample; it survives only as a commented-out stub at "
-        "TetradGapEquation.lean:307-321 (intentionally not a live "
+        "TetradGapEquation.lean:311-325 (intentionally not a live "
         "declaration). TODO: drop this waiver if the I1 narrative is "
         "restructured to use the live gap_solution_monotone name only.",
 }

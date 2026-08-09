@@ -941,7 +941,39 @@ violated for the fifth time in this workstream.
   remaining bundles **before** F is redrafted — F's job is to describe them.
 - Full working: `docs/audits/2026-08-07-f-retrofit/FINDINGS.md` §2, §3, §5.
 
-### D16. The program's central synthesis claim has no Lean witness — OPEN (CRITICAL, claim integrity)
+### D16. The program's central synthesis claim has no Lean witness — ✅ DONE 2026-08-09 (CRITICAL)
+
+> ⚠️ **The claim is not unwitnessed. As literally stated it is FALSE, and measuring it is what
+> showed that.** Read directly:
+> * `HeatKernelExpansion.a0_dirac (N_f : ℝ)` counts **Dirac species**, is real-valued, fiducial `15`.
+> * `GenerationConstraint`'s `N_f : ℕ` counts **generations** — its own docstring says "each
+>   generation contributes 16 real fermions … which reduce to `c₋ = 8` per generation" — with
+>   central theorem `3 ∣ N_f`, minimal value `3`.
+>
+> Different types, different objects, different values. No proof of identity was ever going to
+> appear, and hunting for one would have been the wrong work.
+>
+> **Substrate built rather than claim narrowed** (`lean/SKEFTHawking/SakharovGenerationBridge.lean`,
+> 6 declarations, kernel-pure `{propext, Classical.choice, Quot.sound}`):
+> * `FermionContent` — one structure carrying generations and Weyl-per-generation. **This is the
+>   precise sense in which "the substrate is one object".**
+> * `diracFlavourNf_eq_scaled_generationNf` — the bridge: the two counts are proportional, with the
+>   per-generation Weyl count as the constant. Neither is prior; both are read off the one structure.
+> * `sm_counts_differ` — at SM content the counts are `24` and `3` and are **not equal**. Numerical,
+>   so it is falsifiable rather than a remark.
+> * `counts_agree_iff_two_weyl_per_generation` — the exact condition under which the flagship's
+>   literal claim *would* have held: two Weyl fields per generation. The SM has sixteen.
+> * `generation_constraint_transfers` — **the load-bearing direction, and it survives**: the
+>   modular-invariance constraint `3 ∣ generations` transfers onto the Sakharov-side species count,
+>   so an anomaly condition does constrain the emergent Newton constant. With a non-vacuity witness.
+>
+> **F §6.1 rewritten** to claim the relation rather than the identity, citing all four theorems.
+> That is a stronger claim than the original, not a weaker one: it is proved.
+>
+> **Developed MCP-first per the lean4 skill** — `lean_diagnostic_messages` → `lean_multi_attempt` →
+> `lean_verify`, with `lake build` only as the final project gate. The goal state showed
+> `field_simp` had already reduced the hypothesis to the conclusion, so the `mul_left_cancel₀`
+> scaffolding I had written was the obstacle rather than the route.
 
 - **The claim:** the `N_f` in the Sakharov coefficient `G_N = 12π/(N_f Λ²)` and the `N_f = 16`
   that fixes the Standard-Model anomaly classification are **the same `N_f`** — *"the substrate is
