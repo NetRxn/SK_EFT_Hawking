@@ -1,5 +1,11 @@
 # Authoring a validation check — the obligations you inherit
 
+> **Answers:** I am writing a new check — what do I owe?
+>
+> *(TODO-D8: this line is the required-content contract. `README.md`'s ownership
+> table assigns this question to this document; `architecture_inventory_fresh`
+> asserts the two agree verbatim, so the assignment cannot drift silently.)*
+
 **Living document.** Start at [`README.md`](README.md). States no counts — the check roster is
 in [`SURFACE_INVENTORY.md`](SURFACE_INVENTORY.md).
 

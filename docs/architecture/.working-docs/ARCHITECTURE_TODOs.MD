@@ -616,7 +616,26 @@ version *and* the Mathlib rev against `lean-toolchain` + `lakefile.toml`.
 - ⚠️ **The decider must not be the generator.** Metrics computed independently of the rewriter,
   and human calibration on a sample.
 
-### D8. No required-content contract for the architecture documents — OPEN
+### D8. No required-content contract for the architecture documents — ✅ DONE 2026-08-09
+
+> **Built as Leg 4 of `architecture_inventory_fresh` (`documents_answer_their_question`).**
+>
+> **The contract is a declared bidirectional link compared VERBATIM, not a keyword proxy.**
+> `README.md`'s ownership table assigns a question to a document; the document must carry
+> `> **Answers:** <that exact question>`. A heading-keyword heuristic would pass on any document
+> that merely mentions the topic, which is precisely the failure this entry describes:
+> `END_TO_END_MAP.md` was assigned the promotion-path question and contained no promotion path,
+> while the suite, the ledger and this very check were all green.
+>
+> **Measured before building: 7 of 7 owned documents had no such declaration.** All seven now do.
+> `SURFACE_INVENTORY.md` is generated, so its line is **emitted by
+> `architecture_inventory.py::_owned_question`**, which reads the question out of README rather than
+> restating it — a second copy of the question is the drift this contract exists to prevent, and the
+> generator raises rather than emitting an empty contract line.
+>
+> ⚠️ **Stated so a green here is not over-read: this is a completeness FLOOR, not proof of
+> adequacy.** It catches an assignment that has drifted away from its answer. It cannot judge
+> whether the answer is any good — that remains a reader's job.
 
 - **What:** `README.md`'s ownership table declares which question each document must answer.
   Nothing verifies that it does. `README.md:14` assigns *"how does work get from a roadmap to a

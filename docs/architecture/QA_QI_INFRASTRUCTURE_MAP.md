@@ -1,5 +1,11 @@
 # QA / QI infrastructure — the quality layer's interior
 
+> **Answers:** Which derived artifact has which writer and staleness key? How does a review finding become a gate? Where does a human actually decide?
+>
+> *(TODO-D8: this line is the required-content contract. `README.md`'s ownership
+> table assigns this question to this document; `architecture_inventory_fresh`
+> asserts the two agree verbatim, so the assignment cannot drift silently.)*
+
 **Living document.** Start at [`README.md`](README.md).
 
 This opens up the subsystems the [`END_TO_END_MAP`](END_TO_END_MAP.md) spine references but

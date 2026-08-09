@@ -1,5 +1,11 @@
 # Publication portfolio — what we are publishing, its state, and which sources are safe
 
+> **Answers:** What are we publishing, what state is it in, and what is outstanding?
+>
+> *(TODO-D8: this line is the required-content contract. `README.md`'s ownership
+> table assigns this question to this document; `architecture_inventory_fresh`
+> asserts the two agree verbatim, so the assignment cannot drift silently.)*
+
 **Living document.** Start at [`README.md`](README.md). States no counts — the bundle roster is in
 [`SURFACE_INVENTORY.md`](SURFACE_INVENTORY.md).
 

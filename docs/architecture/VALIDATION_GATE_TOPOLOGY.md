@@ -1,5 +1,11 @@
 # Validation gate topology — what runs when, what it blocks, what each gate computes
 
+> **Answers:** **When** does each gate run, what does it block, and what does each gate actually compute?
+>
+> *(TODO-D8: this line is the required-content contract. `README.md`'s ownership
+> table assigns this question to this document; `architecture_inventory_fresh`
+> asserts the two agree verbatim, so the assignment cannot drift silently.)*
+
 **Living document.** Start at [`README.md`](README.md). States no counts — the gate and
 check rosters are in [`SURFACE_INVENTORY.md`](SURFACE_INVENTORY.md).
 

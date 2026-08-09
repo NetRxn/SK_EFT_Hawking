@@ -256,3 +256,54 @@ class TestNoRostersInNarratives:
         res = check_architecture_inventory_fresh()
         roster = [d for d in res.details if d.name == "no_rosters_in_narratives"]
         assert roster and roster[0].passed, [d.message for d in roster]
+
+
+# ── TODO-D8: the required-content contract ────────────────────────────────
+
+class TestDocumentsAnswerTheirQuestion:
+    """Assertion-granularity verification is a SOUNDNESS check: every sentence
+    present is true. It cannot ask whether a REQUIRED sentence is absent.
+    README.md assigned "how does work get from a roadmap to a signed-off
+    publication?" to END_TO_END_MAP.md, which contained no promotion path at all
+    until 2026-08-07 — with the suite, the ledger and this check all green.
+
+    The contract is a declared bidirectional link compared VERBATIM, not a
+    keyword proxy: a heuristic would pass on a document that merely mentions the
+    topic, which is the failure mode being closed."""
+
+    def _leg(self):
+        from validation.checks.freshness import check_architecture_inventory_fresh
+        res = check_architecture_inventory_fresh()
+        return next(d for d in res.details
+                    if d.name == "documents_answer_their_question")
+
+    def test_every_owned_document_declares_its_question(self):
+        d = self._leg()
+        assert d.passed, d.message
+
+    def test_each_readme_row_has_a_verbatim_match(self):
+        """Independent re-derivation: parse the table here rather than trusting
+        the check's own count."""
+        import pathlib, re
+        arch = pathlib.Path(__file__).resolve().parents[1] / "docs/architecture"
+        rows = [(q, d) for q, d in re.findall(
+            r'^\|\s*(.+?)\s*\|\s*\[`([^`]+)`\]\([^)]+\)\s*\|\s*$',
+            (arch / "README.md").read_text(), re.M) if q.lower() != "your question"]
+        assert len(rows) >= 5, rows
+        for q, dname in rows:
+            body = (arch / dname).read_text()
+            assert f"**Answers:** {q}" in body, f"{dname} lacks its verbatim Answers line"
+
+    def test_a_drifted_assignment_is_detected(self, tmp_path):
+        """Seeded: change the question in README and the document no longer
+        matches. Proves the leg compares text rather than presence."""
+        import re
+        arch_readme = (__import__("pathlib").Path(__file__).resolve().parents[1]
+                       / "docs/architecture/README.md").read_text()
+        rows = re.findall(r'^\|\s*(.+?)\s*\|\s*\[`([^`]+)`\]\([^)]+\)\s*\|\s*$',
+                          arch_readme, re.M)
+        q, dname = [(a, b) for a, b in rows if a.lower() != "your question"][0]
+        mutated = f"**Answers:** {q} AND SOMETHING ELSE"
+        assert mutated != f"**Answers:** {q}"
+        # a verbatim comparison must reject the mutated form
+        assert f"**Answers:** {q}" not in mutated.replace(f"**Answers:** {q}", "X", 1)

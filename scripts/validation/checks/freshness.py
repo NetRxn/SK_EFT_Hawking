@@ -947,6 +947,60 @@ def check_architecture_inventory_fresh() -> CheckResult:
     if roster_offenders:
         all_pass = False
 
+    # ── Leg 4: every owned document answers the question README assigns it ────
+    #
+    # TODO-D8. Assertion-granularity verification is a SOUNDNESS check: it asks
+    # whether every sentence present is true. It cannot ask whether a REQUIRED
+    # sentence is absent. `README.md:14` assigned "how does work get from a
+    # roadmap to a signed-off publication?" to `END_TO_END_MAP.md`, which
+    # contained no promotion path at all until 2026-08-07 — while both documents
+    # were verified 100 % accurate at assertion granularity, and the suite, the
+    # ledger and this very check were all green.
+    #
+    # The contract is a DECLARED BIDIRECTIONAL LINK, compared verbatim, not a
+    # keyword proxy: README says document X answers question Q, and X must carry
+    # `> **Answers:** Q`. A keyword heuristic would pass on a document that
+    # merely mentions the topic, which is the failure mode being closed.
+    #
+    # ⚠️ This is a completeness FLOOR, not proof of adequacy. It catches an
+    # assignment that drifted away from its answer; it cannot judge whether the
+    # answer is good. Stated so nobody reads a green here as more than it is.
+    import re as _re
+    readme_path = arch_dir / "README.md"
+    contract_bad: list[str] = []
+    n_owned = 0
+    try:
+        readme_txt = readme_path.read_text(encoding="utf-8")
+    except OSError:
+        readme_txt = ""
+    for q, dname in _re.findall(
+            r"^\|\s*(.+?)\s*\|\s*\[`([^`]+)`\]\([^)]+\)\s*\|\s*$", readme_txt, _re.M):
+        if q.lower() == "your question":
+            continue
+        n_owned += 1
+        target = arch_dir / dname
+        if not target.is_file():
+            contract_bad.append(f"{dname} (assigned but absent)")
+            continue
+        body = target.read_text(encoding="utf-8", errors="ignore")
+        if f"**Answers:** {q}" not in body:
+            contract_bad.append(f"{dname} (no verbatim Answers line)")
+    if n_owned == 0:
+        all_pass = False
+        details.append(Detail(
+            "owned_questions", False,
+            "README.md's ownership table parsed to zero rows — the completeness "
+            "leg walked an empty population, which is not evidence that it holds"))
+    else:
+        details.append(Detail(
+            "documents_answer_their_question", not contract_bad,
+            f"{n_owned} owned document(s) each declare the question README assigns them"
+            if not contract_bad else
+            f"ownership assignment without a matching answer: {contract_bad}. Add "
+            f"`> **Answers:** <question>` verbatim, or fix README's table."))
+        if contract_bad:
+            all_pass = False
+
     # A scan that matched nothing because it walked nothing passes vacuously (D5 §2.5).
     if scanned == 0:
         all_pass = False
