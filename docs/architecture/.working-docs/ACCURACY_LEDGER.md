@@ -2700,3 +2700,30 @@ stays red for 11 under-floor bundles because red is its designed output until th
 exist. Its parenthetical *"none depends on a reviewer stage"* is true of the mechanism and
 irrelevant to the remedy: the remedy is ~150 pp of manuscript, which is goal 2's headline
 deliverable. **No floor was lowered and no `length_target` was nulled.**
+
+---
+
+## V71 — the four "failures" that were my own dirty tree — 4 atoms, 1 SELF-INFLICTED NEAR-LOSS
+
+| # | Proposition | Decider | Verbatim result |
+|---|---|---|---|
+| 1 | `pytest -m ''` leaves 4 failures after the branch's work | full suite on a restored `.lake` | **4 failed / 6,247 passed** — `chain_backing_targets_resolve` at 122 against a ceiling of 121, plus two `phase6i_wave1` registry legs |
+| 2 | The +1 is a regression one of my commits introduced | bisect across `6aad2988`, `d540fd47`, `4e6f078e`, `3032bd6c` | **Every one of them GREEN at 121.** So the delta was not in any commit |
+| 3 | …therefore it is in the working tree | `git reset --hard HEAD`, re-measure | **121. Green.** The 122 came from content an accidental `git stash pop` had dropped into the tree, and the four tests pass on the committed state |
+| 4 | The bisect was harmless | `git stash list` after the loop | **NO — I dropped a stash that was not mine.** `git stash push -u` with nothing to stash is a no-op, so each paired `pop` took `stash@{0}` — an unrelated 2026-08-03 `paper-remediation WIP` (137 files). A later `git stash drop` then deleted it |
+
+**⚠️ ATOM 4 IS THE LESSON AND IT IS THE SHARPEST ONE ON THIS BRANCH.** Recovered via
+`git fsck --unreachable` → `git stash store`, and verified restored at the same 137-file
+stat. Nothing was lost. But the *method* was wrong twice over:
+
+* **`git stash push` is not a safe scratch tool for measuring an earlier commit.** It has a
+  shared, ordinal namespace (`stash@{0}`) that other work occupies, and a push that stashes
+  nothing silently shifts what the matching `pop` refers to. Use `git worktree add` for a
+  detached measurement, or measure the artifact directly (`git show <ref>:<path>`).
+* **A bisect over a dirty tree measures the tree, not the commit.** Atoms 2 and 3 together
+  say the same thing from both sides: every commit was green and the tree was not, so the
+  quantity being attributed to a commit was never a property of any commit.
+
+**NOT-AN-ASSERTION.** That the four tests will stay green is not established here; what is
+established is that they are green at `8a643c91` on a clean tree, which is the state the
+branch ships.
