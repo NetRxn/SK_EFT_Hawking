@@ -5,7 +5,7 @@
       "date": "2026-05-04T12:25:34Z",
       "source_paper": "paper10_modular_generation",
       "lift_action": "Lift-letter",
-      "bundle_section_inserted": "\u00a72",
+      "bundle_section_inserted": "§2",
       "lean_modules_referenced": [
         "ModularInvarianceConstraint",
         "WangBridge",
@@ -22,13 +22,13 @@
       "citation_count_added": 0,
       "stage13_redo_required": true,
       "agent_run_id": "bundle_append-2026-05-04T12:25:34Z",
-      "notes": "L2 PRL splash already extracted from this source; D2 \u00a72 is the FULL derivation including Ext^n_{A(1)}(F2,F2) computation + change-of-rings discharge of H2"
+      "notes": "L2 PRL splash already extracted from this source; D2 §2 is the FULL derivation including Ext^n_{A(1)}(F2,F2) computation + change-of-rings discharge of H2"
     },
     {
       "date": "2026-05-04T12:25:47Z",
       "source_paper": "paper9_sm_anomaly_drinfeld",
       "lift_action": "Lift-section",
-      "bundle_section_inserted": "\u00a73",
+      "bundle_section_inserted": "§3",
       "lean_modules_referenced": [
         "SMFermionData",
         "Z16AnomalyComputation",
@@ -41,13 +41,13 @@
       "citation_count_added": 0,
       "stage13_redo_required": true,
       "agent_run_id": "bundle_append-2026-05-04T12:25:47Z",
-      "notes": "Z16 anomaly + minimum Drinfeld center anchor (Z(Vec_Z2) toric code only); D4 \u00a74 owns full Z(Vec_S3) + D(G) Hopf"
+      "notes": "Z16 anomaly + minimum Drinfeld center anchor (Z(Vec_Z2) toric code only); D4 §4 owns full Z(Vec_S3) + D(G) Hopf"
     },
     {
       "date": "2026-05-04T12:25:47Z",
       "source_paper": "paper7_chirality_formal",
       "lift_action": "Lift-section",
-      "bundle_section_inserted": "\u00a74",
+      "bundle_section_inserted": "§4",
       "lean_modules_referenced": [
         "GoltermanShamir",
         "LatticeHamiltonian",
@@ -62,7 +62,7 @@
       "date": "2026-05-04T12:25:47Z",
       "source_paper": "paper8_chirality_master",
       "lift_action": "Lift-section",
-      "bundle_section_inserted": "\u00a74",
+      "bundle_section_inserted": "§4",
       "lean_modules_referenced": [
         "BdGHamiltonian",
         "WilsonMass",
@@ -80,13 +80,13 @@
       "citation_count_added": 0,
       "stage13_redo_required": true,
       "agent_run_id": "bundle_append-2026-05-04T12:25:47Z",
-      "notes": "Pillars 2+3 + bridges + master TPF-evasion + 1+1D/2+1D gapped-interface evidence; merges with paper7 content under unified \u00a74"
+      "notes": "Pillars 2+3 + bridges + master TPF-evasion + 1+1D/2+1D gapped-interface evidence; merges with paper7 content under unified §4"
     },
     {
       "date": "2026-05-06T15:39:51Z",
       "source_paper": "_phase6n_W1b_lean_only",
       "lift_action": "Lift-section",
-      "bundle_section_inserted": "\u00a73",
+      "bundle_section_inserted": "§3",
       "lean_modules_referenced": [
         "SymTFTAudit.WittClass",
         "SymTFTAudit.DrinfeldCenter",
@@ -104,7 +104,7 @@
       "date": "2026-05-06T15:39:54Z",
       "source_paper": "_phase6o_W2a_lean_only",
       "lift_action": "Lift-section",
-      "bundle_section_inserted": "\u00a73",
+      "bundle_section_inserted": "§3",
       "lean_modules_referenced": [
         "APSEta.Predicate",
         "APSEta.SymTFTBridge",
@@ -113,13 +113,13 @@
       "citation_count_added": 0,
       "stage13_redo_required": true,
       "agent_run_id": "bundle_append-2026-05-06T15:39:54Z",
-      "notes": "D.2 absorption: Phase 6o W2a APS-\u03b7 Witten-Yonekura \u03b7/16 mod 1 cross-bridge to Z\u2081\u2086 Dai-Freed"
+      "notes": "D.2 absorption: Phase 6o W2a APS-η Witten-Yonekura η/16 mod 1 cross-bridge to Z₁₆ Dai-Freed"
     },
     {
       "date": "2026-05-06T17:00:00Z",
       "source_paper": "_phase6o_W2b_lean_only",
       "lift_action": "Revision",
-      "bundle_section_inserted": "\u00a72.7 (NEW subsection within \u00a72 Modular generation constraint)",
+      "bundle_section_inserted": "§2.7 (NEW subsection within §2 Modular generation constraint)",
       "lean_modules_referenced": [
         "Schellekens.SpinBordism",
         "Schellekens.AnomalyPolynomial",
@@ -131,18 +131,18 @@
       "citation_count_added": 3,
       "stage13_redo_required": true,
       "agent_run_id": "phase6n_6o-absorption-pass-2026-05-06T17:00:00Z",
-      "notes": "D.3 GATE 3 absorption (Phase 6o.\u03b5, user-auth granted 2026-05-06): NEW subsection \u00a72.7 'The Schellekens chain: 24|c_- as a holomorphic-VOA classification corollary'. The 5-step structural reading: spin-bordism \u03a9_5^Spin(BG_SM) \u2192 anomaly polynomial \u2192 modular invariance \u2192 Niemeier-lattice classification (1973) \u2192 Schellekens 71-CFT enumeration (1993) \u2192 M\u00f6ller-Scheithauer 2024 geometric classification (70 algebras with non-trivial weight-1 space). 3 new bibitems added to D2: Niemeier1973, Schellekens1993, MollerScheithauer2024. All 3 also added to CITATION_REGISTRY this session. Per user direction (quality & correctness), M\u00f6ller-Scheithauer scope hedged accurately: their paper covers only the strongly-rational, weight-1-non-trivial subset (70 algebras) \u2014 the moonshine FLM VOA at trivial weight-1 is outside scope and explicitly noted as a not-applicable witness in \u00a72.7 prose. Source verification: arXiv:2112.12291 + WebSearch verification 2026-05-06; Schellekens 1993 (Comm. Math. Phys. 153, 159) verified via WebSearch + DOI cross-reference; Niemeier 1973 confirmed via standard mathematical reference (J. Number Theory 5, 142). LaTeX compile clean (9pp / 391KB). \u00a72.1-\u00a72.6 (existing modular argument + Ext computation + change-of-rings discharge) preserved unchanged. Pre-draft: temporary/working-docs/phase6o/wave_2b_schellekens_substrate.md."
+      "notes": "D.3 GATE 3 absorption (Phase 6o.ε, user-auth granted 2026-05-06): NEW subsection §2.7 'The Schellekens chain: 24|c_- as a holomorphic-VOA classification corollary'. The 5-step structural reading: spin-bordism Ω_5^Spin(BG_SM) → anomaly polynomial → modular invariance → Niemeier-lattice classification (1973) → Schellekens 71-CFT enumeration (1993) → Möller-Scheithauer 2024 geometric classification (70 algebras with non-trivial weight-1 space). 3 new bibitems added to D2: Niemeier1973, Schellekens1993, MollerScheithauer2024. All 3 also added to CITATION_REGISTRY this session. Per user direction (quality & correctness), Möller-Scheithauer scope hedged accurately: their paper covers only the strongly-rational, weight-1-non-trivial subset (70 algebras) — the moonshine FLM VOA at trivial weight-1 is outside scope and explicitly noted as a not-applicable witness in §2.7 prose. Source verification: arXiv:2112.12291 + WebSearch verification 2026-05-06; Schellekens 1993 (Comm. Math. Phys. 153, 159) verified via WebSearch + DOI cross-reference; Niemeier 1973 confirmed via standard mathematical reference (J. Number Theory 5, 142). LaTeX compile clean (9pp / 391KB). §2.1-§2.6 (existing modular argument + Ext computation + change-of-rings discharge) preserved unchanged. Pre-draft: temporary/working-docs/phase6o/wave_2b_schellekens_substrate.md."
     },
     {
       "date": "2026-05-11T19:50:00Z",
-      "source_paper": "(none \u2014 bookkeeping event)",
+      "source_paper": "(none — bookkeeping event)",
       "lift_action": "Freshness-bookkeeping",
-      "bundle_section_inserted": "(n/a \u2014 bookkeeping)",
+      "bundle_section_inserted": "(n/a — bookkeeping)",
       "lean_modules_referenced": [],
       "citation_count_added": 0,
       "stage13_redo_required": false,
       "agent_run_id": "freshness-bookkeeping-2026-05-11T19:50:00Z",
-      "notes": "2026-05-11 Stage-13-sweep freshness cleanup + inline-absorption-record: paper7_chirality_formal/paper_draft.tex edited 2026-05-11T09:50 + paper8_chirality_master/paper_draft.tex edited 2026-05-11T09:51 (substantive paper-draft edits, contents not diff-able without git). D2 own paper_draft.tex edited at 09:58 directly after, content-aligned at \u00a74 (Pillar 1 / 2+3 paragraphs grep-verified: Golterman-Shamir, TPF, Drinfeld doubles, Steenrod A(1), FK gapped-interface). Today's 09:58 D2 edit was effectively an inline absorption that bypassed the formal bundle_append.py cycle; this event formally records that absorption. Also auto-regenerated tables across the source-paper tree at 12:56 (see D1 event)."
+      "notes": "2026-05-11 Stage-13-sweep freshness cleanup + inline-absorption-record: paper7_chirality_formal/paper_draft.tex edited 2026-05-11T09:50 + paper8_chirality_master/paper_draft.tex edited 2026-05-11T09:51 (substantive paper-draft edits, contents not diff-able without git). D2 own paper_draft.tex edited at 09:58 directly after, content-aligned at §4 (Pillar 1 / 2+3 paragraphs grep-verified: Golterman-Shamir, TPF, Drinfeld doubles, Steenrod A(1), FK gapped-interface). Today's 09:58 D2 edit was effectively an inline absorption that bypassed the formal bundle_append.py cycle; this event formally records that absorption. Also auto-regenerated tables across the source-paper tree at 12:56 (see D1 event)."
     },
     {
       "date": "2026-05-12T13:00:00Z",
@@ -153,29 +153,29 @@
       "citation_count_added": 0,
       "stage13_redo_required": false,
       "agent_run_id": "first-claim-removal-bookkeeping-2026-05-12T13:00:00Z",
-      "notes": "2026-05-12 first-claim-removal: paper7_chirality_formal + paper8_chirality_master + paper10_modular_generation abstracts + body + conclusions had primacy framing rewritten to descriptive prose ('We present a formal verification of X' rather than 'the first formal verification of X'); Steenrod Ext + FK gapped-interface + Onsager-algebra wording softened. D2 bundle own draft Onsager paragraph also rewritten (dropped 'to our knowledge the first formalisation of the Onsager algebra' hedge). D2 bundle content remains aligned (paper7/paper8 absorbed material in D2 \u00a74 unchanged in substance)."
+      "notes": "2026-05-12 first-claim-removal: paper7_chirality_formal + paper8_chirality_master + paper10_modular_generation abstracts + body + conclusions had primacy framing rewritten to descriptive prose ('We present a formal verification of X' rather than 'the first formal verification of X'); Steenrod Ext + FK gapped-interface + Onsager-algebra wording softened. D2 bundle own draft Onsager paragraph also rewritten (dropped 'to our knowledge the first formalisation of the Onsager algebra' hedge). D2 bundle content remains aligned (paper7/paper8 absorbed material in D2 §4 unchanged in substance)."
     },
     {
       "date": "2026-05-31T17:24:48Z",
-      "source_paper": "(none \u2014 bookkeeping)",
+      "source_paper": "(none — bookkeeping)",
       "lift_action": "Freshness-bookkeeping",
-      "bundle_section_inserted": "(n/a \u2014 bookkeeping)",
+      "bundle_section_inserted": "(n/a — bookkeeping)",
       "lean_modules_referenced": [],
       "citation_count_added": 0,
       "stage13_redo_required": false,
       "agent_run_id": "bundle_append-bookkeeping-2026-05-31T17:24:48Z",
-      "notes": "Freshness-bookkeeping (LATE_PHASE6_ABSORPTION_PROTOCOL \u00a73d case 1): source-paper mtime drift is ENTIRELY from auto-regenerated tables/*.tex artifacts (verified: the only files newer than last_lift in each stale source are tables/*.tex; every source paper_draft.tex mtime is OLD <= last_lift; git status clean so regenerated tables match committed content byte-for-byte = zero content change). Bundle compile path is decoupled: this bundle \\input's only ../../docs/counts.tex, never any source-paper tables/ dir. No content lift warranted; no Stage-13 redo; reviewer triple remains valid (bundle stays GREEN)."
+      "notes": "Freshness-bookkeeping (LATE_PHASE6_ABSORPTION_PROTOCOL §3d case 1): source-paper mtime drift is ENTIRELY from auto-regenerated tables/*.tex artifacts (verified: the only files newer than last_lift in each stale source are tables/*.tex; every source paper_draft.tex mtime is OLD <= last_lift; git status clean so regenerated tables match committed content byte-for-byte = zero content change). Bundle compile path is decoupled: this bundle \\input's only ../../docs/counts.tex, never any source-paper tables/ dir. No content lift warranted; no Stage-13 redo; reviewer triple remains valid (bundle stays GREEN)."
     },
     {
       "date": "2026-06-10T20:24:03Z",
-      "source_paper": "(none \u2014 bookkeeping)",
+      "source_paper": "(none — bookkeeping)",
       "lift_action": "Prose-revision-bookkeeping",
-      "bundle_section_inserted": "(n/a \u2014 bookkeeping)",
+      "bundle_section_inserted": "(n/a — bookkeeping)",
       "lean_modules_referenced": [],
       "citation_count_added": 0,
       "stage13_redo_required": false,
       "agent_run_id": "bundle_append-bookkeeping-2026-06-10T20:24:03Z",
-      "notes": "2026-06-10 freshness reconciliation vs post-2026-05-31 source commits (non-paper10 scope only; paper10 deltas OWNED by active Phase 5q.B session \u2014 NOT reconciled here). Real committed deltas inspected: paper7+paper9 (5207b72b, 2026-06-10 13:12 \u2014 historical '1 axiom' snapshot prose annotated 'since retired into a tracked Prop / TPFConjecture' at 3+2 sites) and paper8 (3036ffd7, 2026-06-08 \u2014 axiomcount{} macro + TPFConjecture reframing; SPTClassification '20 theorems + 1 axiom' -> '20 theorems'). D2 verified ALREADY CONSISTENT with all of these: D2 carries the axiomcount{}/TPFConjecture framing from f6048c48 + 1bb62842 (which edited D2 in tandem), uses counts.tex macros throughout (no stale 4049/2237/170 literals \u2014 grep-verified), GoltermanShamir2026 bibitem title matches the corrected CITATION_REGISTRY title ('Symmetric mass generation and the Nielsen-Ninomiya theorem', arXiv:2603.15985), GS conditional-constraints framing present (Pillar 1), Mathlib pin 5e932f97. CHECKs 24/25/26 PASS. Source tables/*.tex + paper_draftNotes.bib mtime drift = recompile noise (git status clean; D2 inputs only ../../docs/counts.tex). ONE bundle edit this event: standard Variant-A 'Methods and tools disclosure' block installed before bibliography per docs/DISCLOSURE_TEXT.md (was clearly absent; register verdict D2=Variant A via scripts/aristotle_usage_by_bundle.py). Boilerplate only \u2014 no scientific claims added/removed; stage13 redo NOT required. pdflatex x2 clean (11 pp, 0 errors, 0 undefined refs). freshness_stale deliberately RE-SET to true after this event: paper10 (modified 2026-06-08, RESTRICTED) remains unreconciled pending Phase 5q.B supersession records."
+      "notes": "2026-06-10 freshness reconciliation vs post-2026-05-31 source commits (non-paper10 scope only; paper10 deltas OWNED by active Phase 5q.B session — NOT reconciled here). Real committed deltas inspected: paper7+paper9 (5207b72b, 2026-06-10 13:12 — historical '1 axiom' snapshot prose annotated 'since retired into a tracked Prop / TPFConjecture' at 3+2 sites) and paper8 (3036ffd7, 2026-06-08 — axiomcount{} macro + TPFConjecture reframing; SPTClassification '20 theorems + 1 axiom' -> '20 theorems'). D2 verified ALREADY CONSISTENT with all of these: D2 carries the axiomcount{}/TPFConjecture framing from f6048c48 + 1bb62842 (which edited D2 in tandem), uses counts.tex macros throughout (no stale 4049/2237/170 literals — grep-verified), GoltermanShamir2026 bibitem title matches the corrected CITATION_REGISTRY title ('Symmetric mass generation and the Nielsen-Ninomiya theorem', arXiv:2603.15985), GS conditional-constraints framing present (Pillar 1), Mathlib pin 5e932f97. CHECKs 24/25/26 PASS. Source tables/*.tex + paper_draftNotes.bib mtime drift = recompile noise (git status clean; D2 inputs only ../../docs/counts.tex). ONE bundle edit this event: standard Variant-A 'Methods and tools disclosure' block installed before bibliography per docs/DISCLOSURE_TEXT.md (was clearly absent; register verdict D2=Variant A via scripts/aristotle_usage_by_bundle.py). Boilerplate only — no scientific claims added/removed; stage13 redo NOT required. pdflatex x2 clean (11 pp, 0 errors, 0 undefined refs). freshness_stale deliberately RE-SET to true after this event: paper10 (modified 2026-06-08, RESTRICTED) remains unreconciled pending Phase 5q.B supersession records."
     }
   ]
 }

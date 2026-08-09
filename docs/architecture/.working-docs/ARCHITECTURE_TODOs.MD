@@ -1127,7 +1127,36 @@ D23, do **not** bundle in `stage13_redo_required` or `freshness_stale`, whose me
 elsewhere. Needs approval.
 
 
-### D25. Four writers of `bundle_metadata.json` disagree on `ensure_ascii` — OPEN
+### D25. Four writers of `bundle_metadata.json` disagree on `ensure_ascii` — ✅ DONE 2026-08-09
+
+> ⚠️ **The heading under-counts its own defect, in two ways, and the measurement is the finding.**
+> Not four writers but **eleven call sites across five scripts** — the entry missed
+> `compile_bundle_pdf.py:364` and `record_review.py:124` (both already correct). And not one file
+> type but two: measured across the corpus,
+>
+>     bundle_metadata.json   21 files   20 raw-unicode /  1 escaped
+>     append_log.json        20 files    2 raw-unicode / 19 escaped
+>
+> **`append_log.json` carries the identical defect with the OPPOSITE majority.** Normalising only
+> the file the entry named would have left the other free to keep oscillating.
+>
+> **Fixed:** `scripts/bundle_json.py` is now the single serializer (`dump_bundle_json` /
+> `write_bundle_json`, `ensure_ascii=False`), and all eleven sites route through it. A
+> byte-identical write is skipped so mtime does not move (the TODO-D29 discipline).
+> **20 files normalised, 227 insertions / 227 deletions, and `json.loads` before vs after is equal
+> for every one** — encoding-only, verified against `git show HEAD:<f>` rather than asserted.
+> Second normalisation pass changes nothing.
+>
+> **Test:** `tests/test_bundle_json_serializer.py` — 53 cases. Each blob is a serializer fixed
+> point; each writer module is checked **structurally via `ast`** (not grep) for a surviving
+> `write_text(json.dumps(...))`, so a future writer that open-codes the dump fails here.
+>
+> ⚠️ **A self-inflicted repair worth recording:** my first insertion of the shared import used a
+> regex for "the last top-level import", which matched the OPENING line of a parenthesised
+> `from x import (` and split the statement in two files. A second regex attempt failed the same way
+> because the line ends in `# noqa: E402`, not `(`. Resolved with `ast.parse` + `end_lineno` — the
+> real parser. Third time this session that a regex over structured text produced a confident wrong
+> edit.
 
 **Found:** 2026-08-08, ADR-011 Phase 1, by causing it.
 

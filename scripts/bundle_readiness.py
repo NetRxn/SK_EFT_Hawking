@@ -106,6 +106,7 @@ from bundle_registry import (  # noqa: E402
     BUNDLE_CODES as _BUNDLE_ORDER,
     TIER_OF as _TIER_OF,
 )
+from bundle_json import write_bundle_json  # noqa: E402
 
 
 def load_findings_by_paper() -> dict[str, list[dict]]:
@@ -268,7 +269,7 @@ def resolve_stage13_reviews(*, backfill: bool) -> dict[str, dict]:
                 if backfill and md is not None:
                     md["last_stage13_review"] = date
                     md["last_stage13_review_source"] = note
-                    md_path.write_text(json.dumps(md, indent=2) + "\n")
+                    write_bundle_json(md_path, md)
                     rec["backfilled_this_run"] = True
         out[b] = rec
     return out
@@ -766,7 +767,7 @@ def write_metadata_counts(by_bundle: dict[str, dict]) -> list[str]:
                if k != "readiness_last_computed"):
             continue
         meta.update(updates)
-        meta_path.write_text(json.dumps(meta, indent=2, ensure_ascii=False) + "\n")
+        write_bundle_json(meta_path, meta)
         changed.append(bundle)
     return changed
 

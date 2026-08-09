@@ -5,7 +5,7 @@
       "date": "2026-05-04T12:36:29Z",
       "source_paper": "paper1_first_order",
       "lift_action": "Lift-section",
-      "bundle_section_inserted": "\u00a72",
+      "bundle_section_inserted": "§2",
       "lean_modules_referenced": [
         "FirstOrderKMS",
         "CGLTransform",
@@ -22,7 +22,7 @@
       "date": "2026-05-04T12:36:29Z",
       "source_paper": "paper2_second_order",
       "lift_action": "Lift-section",
-      "bundle_section_inserted": "\u00a73",
+      "bundle_section_inserted": "§3",
       "lean_modules_referenced": [
         "SecondOrderPositivity",
         "KMSOptimality",
@@ -37,7 +37,7 @@
       "date": "2026-05-04T12:36:29Z",
       "source_paper": "paper4_wkb_connection",
       "lift_action": "Lift-section",
-      "bundle_section_inserted": "\u00a74",
+      "bundle_section_inserted": "§4",
       "lean_modules_referenced": [
         "WKBConnection",
         "WKBSpectrum",
@@ -53,7 +53,7 @@
       "date": "2026-05-04T12:36:29Z",
       "source_paper": "paper12_polariton",
       "lift_action": "Lift-companion",
-      "bundle_section_inserted": "\u00a76",
+      "bundle_section_inserted": "§6",
       "lean_modules_referenced": [
         "PolaritonTier1",
         "StimulatedHawking",
@@ -68,7 +68,7 @@
       "date": "2026-05-04T12:36:30Z",
       "source_paper": "paper16_graphene_sk_eft",
       "lift_action": "Lift-companion",
-      "bundle_section_inserted": "\u00a77",
+      "bundle_section_inserted": "§7",
       "lean_modules_referenced": [
         "DiracFluidWKB",
         "GrapheneDirac",
@@ -84,7 +84,7 @@
       "date": "2026-05-06T15:39:38Z",
       "source_paper": "_phase6n_W1a_lean_only",
       "lift_action": "Lift-section",
-      "bundle_section_inserted": "\u00a73",
+      "bundle_section_inserted": "§3",
       "lean_modules_referenced": [
         "Resurgence.KinematicDispersive",
         "Resurgence.LoopEnvelope",
@@ -93,13 +93,13 @@
       "citation_count_added": 0,
       "stage13_redo_required": true,
       "agent_run_id": "bundle_append-2026-05-06T15:39:38Z",
-      "notes": "D.2 absorption: Phase 6n W1a kinematic-dispersive geometric envelope (NOT Gevrey-1); IsGeometric predicate; closed-form \u03b3_n"
+      "notes": "D.2 absorption: Phase 6n W1a kinematic-dispersive geometric envelope (NOT Gevrey-1); IsGeometric predicate; closed-form γ_n"
     },
     {
       "date": "2026-05-06T15:39:41Z",
       "source_paper": "_phase6n_W2c_lean_only",
       "lift_action": "Lift-section",
-      "bundle_section_inserted": "\u00a75",
+      "bundle_section_inserted": "§5",
       "lean_modules_referenced": [
         "CrooksAnalogHawking.LDPLinearResponse",
         "SKEFTGallavottiCohen",
@@ -114,7 +114,7 @@
       "date": "2026-05-06T15:39:44Z",
       "source_paper": "_phase6n_W2b_lean_only",
       "lift_action": "Lift-section",
-      "bundle_section_inserted": "\u00a76",
+      "bundle_section_inserted": "§6",
       "lean_modules_referenced": [
         "QuantumCrooks.SKEFTConnection",
         "QuantumCrooks.ReservoirCoupled",
@@ -130,7 +130,7 @@
       "date": "2026-05-06T15:39:47Z",
       "source_paper": "_phase6o_W1a_lean_only",
       "lift_action": "Lift-section",
-      "bundle_section_inserted": "\u00a76",
+      "bundle_section_inserted": "§6",
       "lean_modules_referenced": [
         "SoftTheorems.Boostless",
         "SoftTheorems.Carrollian",
@@ -145,9 +145,9 @@
     },
     {
       "date": "2026-05-11T19:50:00Z",
-      "source_paper": "(none \u2014 bookkeeping event)",
+      "source_paper": "(none — bookkeeping event)",
       "lift_action": "Freshness-bookkeeping",
-      "bundle_section_inserted": "(n/a \u2014 bookkeeping)",
+      "bundle_section_inserted": "(n/a — bookkeeping)",
       "lean_modules_referenced": [],
       "citation_count_added": 0,
       "stage13_redo_required": false,
@@ -167,25 +167,25 @@
     },
     {
       "date": "2026-05-31T17:24:47Z",
-      "source_paper": "(none \u2014 bookkeeping)",
+      "source_paper": "(none — bookkeeping)",
       "lift_action": "Freshness-bookkeeping",
-      "bundle_section_inserted": "(n/a \u2014 bookkeeping)",
+      "bundle_section_inserted": "(n/a — bookkeeping)",
       "lean_modules_referenced": [],
       "citation_count_added": 0,
       "stage13_redo_required": false,
       "agent_run_id": "bundle_append-bookkeeping-2026-05-31T17:24:47Z",
-      "notes": "Freshness-bookkeeping (LATE_PHASE6_ABSORPTION_PROTOCOL \u00a73d case 1): source-paper mtime drift is ENTIRELY from auto-regenerated tables/*.tex artifacts (verified: the only files newer than last_lift in each stale source are tables/*.tex; every source paper_draft.tex mtime is OLD <= last_lift; git status clean so regenerated tables match committed content byte-for-byte = zero content change). Bundle compile path is decoupled: this bundle \\input's only ../../docs/counts.tex, never any source-paper tables/ dir. No content lift warranted; no Stage-13 redo; reviewer triple remains valid (bundle stays GREEN)."
+      "notes": "Freshness-bookkeeping (LATE_PHASE6_ABSORPTION_PROTOCOL §3d case 1): source-paper mtime drift is ENTIRELY from auto-regenerated tables/*.tex artifacts (verified: the only files newer than last_lift in each stale source are tables/*.tex; every source paper_draft.tex mtime is OLD <= last_lift; git status clean so regenerated tables match committed content byte-for-byte = zero content change). Bundle compile path is decoupled: this bundle \\input's only ../../docs/counts.tex, never any source-paper tables/ dir. No content lift warranted; no Stage-13 redo; reviewer triple remains valid (bundle stays GREEN)."
     },
     {
       "date": "2026-06-10T20:23:44Z",
-      "source_paper": "(none \u2014 bookkeeping)",
+      "source_paper": "(none — bookkeeping)",
       "lift_action": "Prose-revision-bookkeeping",
-      "bundle_section_inserted": "(n/a \u2014 bookkeeping)",
+      "bundle_section_inserted": "(n/a — bookkeeping)",
       "lean_modules_referenced": [],
       "citation_count_added": 0,
       "stage13_redo_required": false,
       "agent_run_id": "bundle_append-bookkeeping-2026-06-10T20:23:44Z",
-      "notes": "2026-06-10 source-reconciliation pass post external-review remediation: 4 flagged sources triaged \u2014 paper12_polariton + paper4_wkb_connection carry the real committed change (5207b72b axiom-retirement note: gapped_interface_axiom retired into tracked Prop TPFConjecture) with NO D1 counterpart claim (D1 axiom-count prose is macro-driven via counts.tex; all D1 'axiom' mentions are SK-EFT physics axioms); paper1_first_order + paper2_second_order are mtime-only (auto-regenerated tables byte-identical to committed content, zero commits since last_lift). Sweep themes (Geurs scope c574c1d0, 93% reuse 67157912, theorem renames 5207b72b) verified already applied in tandem to D1; Vergeles/Halenka not referenced. Standard DISCLOSURE_TEXT.md Variant A block inserted before bibliography (register-derived; pdflatex x2 clean). stage13_redo_required set true + freshness_stale deliberately retained by the reconciliation session (post-script metadata restore)."
+      "notes": "2026-06-10 source-reconciliation pass post external-review remediation: 4 flagged sources triaged — paper12_polariton + paper4_wkb_connection carry the real committed change (5207b72b axiom-retirement note: gapped_interface_axiom retired into tracked Prop TPFConjecture) with NO D1 counterpart claim (D1 axiom-count prose is macro-driven via counts.tex; all D1 'axiom' mentions are SK-EFT physics axioms); paper1_first_order + paper2_second_order are mtime-only (auto-regenerated tables byte-identical to committed content, zero commits since last_lift). Sweep themes (Geurs scope c574c1d0, 93% reuse 67157912, theorem renames 5207b72b) verified already applied in tandem to D1; Vergeles/Halenka not referenced. Standard DISCLOSURE_TEXT.md Variant A block inserted before bibliography (register-derived; pdflatex x2 clean). stage13_redo_required set true + freshness_stale deliberately retained by the reconciliation session (post-script metadata restore)."
     }
   ]
 }

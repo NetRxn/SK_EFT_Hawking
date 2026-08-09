@@ -98,6 +98,7 @@ MAPPING_DOC = PROJECT_ROOT / "docs" / "PAPER_DRAFT_MAPPING.md"
 sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 from bundle_migration import parse_mapping  # noqa: E402
 from sentence_state import _VALID_BUNDLE_TARGETS  # noqa: E402
+from bundle_json import write_bundle_json  # noqa: E402
 
 
 def _now_iso() -> str:
@@ -303,7 +304,7 @@ def _append_to_append_log(
         "notes": notes,
     }
     data["events"].append(event)
-    log_path.write_text(json.dumps(data, indent=2) + "\n")
+    write_bundle_json(log_path, data)
 
 
 def _update_metadata_post_append(bundle: str) -> None:
@@ -323,7 +324,7 @@ def _update_metadata_post_append(bundle: str) -> None:
         md["stage9_status"] = "pending"
     if md.get("stage10_status") == "green":
         md["stage10_status"] = "pending"
-    md_path.write_text(json.dumps(md, indent=2) + "\n")
+    write_bundle_json(md_path, md)
 
 
 def _append_to_change_log_bookkeeping(
@@ -373,7 +374,7 @@ def _append_to_append_log_bookkeeping(
         "notes": notes,
     }
     data["events"].append(event)
-    log_path.write_text(json.dumps(data, indent=2) + "\n")
+    write_bundle_json(log_path, data)
 
 
 def _update_metadata_post_bookkeeping(bundle: str) -> None:
@@ -386,7 +387,7 @@ def _update_metadata_post_bookkeeping(bundle: str) -> None:
     md = json.loads(md_path.read_text())
     md["last_lift"] = _now_iso()
     md["freshness_stale"] = False
-    md_path.write_text(json.dumps(md, indent=2) + "\n")
+    write_bundle_json(md_path, md)
 
 
 def _refresh_source_manifest(bundle: str) -> None:

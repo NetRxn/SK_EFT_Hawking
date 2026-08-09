@@ -5,7 +5,7 @@
       "date": "2026-06-10T20:39:59Z",
       "source_paper": "D9_initial_draft",
       "lift_action": "Synthesize",
-      "bundle_section_inserted": "\u00a71-\u00a76",
+      "bundle_section_inserted": "§1-§6",
       "lean_modules_referenced": [
         "MixedState",
         "CPTPChannel",
@@ -88,7 +88,7 @@
       "citation_count_added": 0,
       "stage13_redo_required": true,
       "agent_run_id": "bundle_append-2026-06-10T20:39:59Z",
-      "notes": "D9 initial lift (sourceless synthesis): QN + device-characterization certification substrate \u2014 authorized 2026-06-10"
+      "notes": "D9 initial lift (sourceless synthesis): QN + device-characterization certification substrate — authorized 2026-06-10"
     }
   ]
 }

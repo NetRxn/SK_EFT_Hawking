@@ -46,6 +46,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import validate_helpers as _H  # noqa: E402
+from bundle_json import write_bundle_json  # noqa: E402
 
 REPO = Path(__file__).resolve().parent.parent
 PAPERS = REPO / "papers"
@@ -361,7 +362,7 @@ def _persist_pages(bundle_dir: Path, pages: int | None, ok: bool | None = None) 
     # in their apex `claims` strings; the default re-encodes every one as `\uXXXX`,
     # which rewrites ~450 lines of a file this function means to touch by one field.
     # Four writers disagree on this today (TODO-D25) — match the on-disk form.
-    meta.write_text(json.dumps(md, indent=2, ensure_ascii=False) + "\n")
+    write_bundle_json(meta, md)
 
 
 def main() -> int:

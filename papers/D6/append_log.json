@@ -3,9 +3,9 @@
   "events": [
     {
       "date": "2026-05-31T15:37:22Z",
-      "source_paper": "(none \u2014 bookkeeping)",
+      "source_paper": "(none — bookkeeping)",
       "lift_action": "Inline-absorption-record",
-      "bundle_section_inserted": "(n/a \u2014 bookkeeping)",
+      "bundle_section_inserted": "(n/a — bookkeeping)",
       "lean_modules_referenced": [],
       "citation_count_added": 0,
       "stage13_redo_required": false,

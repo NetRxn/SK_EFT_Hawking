@@ -5,7 +5,7 @@
       "date": "2026-05-01T13:14:58Z",
       "source_paper": "paper15_methodology",
       "lift_action": "Synthesize",
-      "bundle_section_inserted": "backbone (\u00a71, \u00a72, \u00a76, \u00a77, \u00a78, \u00a79, \u00a714)",
+      "bundle_section_inserted": "backbone (§1, §2, §6, §7, §8, §9, §14)",
       "lean_modules_referenced": [],
       "citation_count_added": 5,
       "stage13_redo_required": true,
@@ -16,7 +16,7 @@
       "date": "2026-05-01T13:14:58Z",
       "source_paper": "paper44_riemannian_connection",
       "lift_action": "Synthesize-sidebar",
-      "bundle_section_inserted": "\u00a712",
+      "bundle_section_inserted": "§12",
       "lean_modules_referenced": [
         "BundleRiemann",
         "BundleRiemannAux",
@@ -32,7 +32,7 @@
       "date": "2026-05-01T13:14:58Z",
       "source_paper": "phase6f_w1_w6_substrate_rosters",
       "lift_action": "Synthesize-sidebar",
-      "bundle_section_inserted": "\u00a711",
+      "bundle_section_inserted": "§11",
       "lean_modules_referenced": [
         "ADMFormalism",
         "AlgebraicRiemann",
@@ -49,7 +49,7 @@
       "date": "2026-05-01T13:14:58Z",
       "source_paper": "phase6g_w5_structural_prop_scoping",
       "lift_action": "Synthesize-sidebar",
-      "bundle_section_inserted": "\u00a713",
+      "bundle_section_inserted": "§13",
       "lean_modules_referenced": [
         "HawkingPenroseSingularityCurveTheoretic",
         "AreaTheoremCurveTheoretic",
@@ -58,13 +58,13 @@
       "citation_count_added": 0,
       "stage13_redo_required": true,
       "agent_run_id": "phase7a-7a.2-initial-2026-05-01T13:14:58Z",
-      "notes": "Phase 6g W5 structural-Prop scoping discipline under Mathlib PDE infrastructure unavailability. 1D wave-equation Four\u00e8s-Bruhat distillation case."
+      "notes": "Phase 6g W5 structural-Prop scoping discipline under Mathlib PDE infrastructure unavailability. 1D wave-equation Fourès-Bruhat distillation case."
     },
     {
       "date": "2026-05-01T15:30:00Z",
       "source_paper": "phase7a_7a2_stub_completion",
       "lift_action": "Synthesize",
-      "bundle_section_inserted": "\u00a73, \u00a74, \u00a75, \u00a78, \u00a79, \u00a710, \u00a711, \u00a712, \u00a713",
+      "bundle_section_inserted": "§3, §4, §5, §8, §9, §10, §11, §12, §13",
       "lean_modules_referenced": [
         "SKDoubling",
         "TetradGapEquation",
@@ -92,24 +92,24 @@
       "citation_count_added": 0,
       "stage13_redo_required": true,
       "agent_run_id": "phase7a-7a.2-stubs-2026-05-01T15:30:00Z",
-      "notes": "All 9 stub sections (\u00a73-\u00a75 worked cases; \u00a78-\u00a713 substrate sidebars) authored substantively. Aristotle run IDs 270e77a0 (FirstOrderKMS), 79e07d55 (gap-bounded counterexample + nine companion gap-equation theorems), 78dcc5f4 (single-batch record 25 thms). Six anti-pattern preemptive checklist (P2-P7) and 14-stage / 14-invariant pipeline narratively complete. I1 ready for reviewer triple."
+      "notes": "All 9 stub sections (§3-§5 worked cases; §8-§13 substrate sidebars) authored substantively. Aristotle run IDs 270e77a0 (FirstOrderKMS), 79e07d55 (gap-bounded counterexample + nine companion gap-equation theorems), 78dcc5f4 (single-batch record 25 thms). Six anti-pattern preemptive checklist (P2-P7) and 14-stage / 14-invariant pipeline narratively complete. I1 ready for reviewer triple."
     },
     {
       "date": "2026-05-01T17:00:00Z",
       "source_paper": "phase7a_7a2_review_round1_fixes",
       "lift_action": "Revise",
-      "bundle_section_inserted": "\u00a75, \u00a79, \u00a711, \u00a712, \u00a76 (table file lifted), bibliography, src/core/citations.py used_in propagation",
+      "bundle_section_inserted": "§5, §9, §11, §12, §6 (table file lifted), bibliography, src/core/citations.py used_in propagation",
       "lean_modules_referenced": [],
       "citation_count_added": 0,
       "stage13_redo_required": false,
       "agent_run_id": "phase7a-7a.2-review-round1-2026-05-01T17:00:00Z",
-      "notes": "Round 1 adversarial-review remediation. BLOCKER fixes: (1.1, 1.2) removed paper15methodology + paper44riemannian bibitems and rephrased \u00a71+\u00a79+\u00a712 to drop the cites; (1.3) removed three undefined references in \u00a75 (paper10_ewbg/paper09_phaseI/paper08_topology); (3.1) \u00a75 rewritten to cite real AXIOM_METADATA entries (gapped_interface_axiom L1351, chirality_limitation_zero L1483, chiral-central-charge group L1591) instead of fictitious chirality_wall_three_pillars; (4.1) \u00a79 corrected: 78dcc5f4 is Phase 5c W1-7 multi-domain batch (S-matrix, ribbon, spin bordism, E8, restricted Uq, jackknife, Hopf), not Phase 5d gap-equation; (9.1) papers/I1/tables/table1_stages.tex hand-authored with all 14 stages. REQUIRED fixes: (1.5) used_in field propagation in src/core/citations.py for physlean/compcert/sel4/leancipilot/alphaproof; (5.1) Lit-Search/Phase-6f audit path corrected to project-root location; (6.1) Aristotle Lean 4.28 vs project 4.29 toolchain skew disclosed in \u00a79; (7.1) Phase 6f W1-W6 + W7 + W8 theorem counts reconciled to actual file counts (73 raw / 64 substantive for W1-W6; 14 for W7; 39 for W8); (7.2) Lean line ranges tightened (firstOrder_uniqueness 412-439; gap_solution_monotone 329-345; commented stub 307-321; sphaleronSuppression_le_one 106-114). Recommended fix: 5.2 speedup-claim quantification deferred; 1.4 primary-source verification of 5 bibitems deferred (out of scope for round 1; non-blocking advisory). Ready for adversarial-reviewer round 2."
+      "notes": "Round 1 adversarial-review remediation. BLOCKER fixes: (1.1, 1.2) removed paper15methodology + paper44riemannian bibitems and rephrased §1+§9+§12 to drop the cites; (1.3) removed three undefined references in §5 (paper10_ewbg/paper09_phaseI/paper08_topology); (3.1) §5 rewritten to cite real AXIOM_METADATA entries (gapped_interface_axiom L1351, chirality_limitation_zero L1483, chiral-central-charge group L1591) instead of fictitious chirality_wall_three_pillars; (4.1) §9 corrected: 78dcc5f4 is Phase 5c W1-7 multi-domain batch (S-matrix, ribbon, spin bordism, E8, restricted Uq, jackknife, Hopf), not Phase 5d gap-equation; (9.1) papers/I1/tables/table1_stages.tex hand-authored with all 14 stages. REQUIRED fixes: (1.5) used_in field propagation in src/core/citations.py for physlean/compcert/sel4/leancipilot/alphaproof; (5.1) Lit-Search/Phase-6f audit path corrected to project-root location; (6.1) Aristotle Lean 4.28 vs project 4.29 toolchain skew disclosed in §9; (7.1) Phase 6f W1-W6 + W7 + W8 theorem counts reconciled to actual file counts (73 raw / 64 substantive for W1-W6; 14 for W7; 39 for W8); (7.2) Lean line ranges tightened (firstOrder_uniqueness 412-439; gap_solution_monotone 329-345; commented stub 307-321; sphaleronSuppression_le_one 106-114). Recommended fix: 5.2 speedup-claim quantification deferred; 1.4 primary-source verification of 5 bibitems deferred (out of scope for round 1; non-blocking advisory). Ready for adversarial-reviewer round 2."
     },
     {
       "date": "2026-05-06T15:42:06Z",
       "source_paper": "_phase6n_W2b_lean_only",
       "lift_action": "Lift-section",
-      "bundle_section_inserted": "\u00a78",
+      "bundle_section_inserted": "§8",
       "lean_modules_referenced": [
         "QuantumCrooks.SKEFTConnection",
         "QuantumCrooks.ReservoirCoupled"
@@ -117,13 +117,13 @@
       "citation_count_added": 0,
       "stage13_redo_required": true,
       "agent_run_id": "bundle_append-2026-05-06T15:42:06Z",
-      "notes": "D.2 sidebar: Phase 6n W2b methodology case \u2014 typeclass-connections cross-bridge pattern; QuantumCrooks/SKEFTConnection IsReservoirCoupled non-vacuity strengthening"
+      "notes": "D.2 sidebar: Phase 6n W2b methodology case — typeclass-connections cross-bridge pattern; QuantumCrooks/SKEFTConnection IsReservoirCoupled non-vacuity strengthening"
     },
     {
       "date": "2026-05-06T15:42:10Z",
       "source_paper": "_phase6o_W2a_lean_only",
       "lift_action": "Lift-section",
-      "bundle_section_inserted": "\u00a711",
+      "bundle_section_inserted": "§11",
       "lean_modules_referenced": [
         "APSEta.Predicate",
         "APSEta.He3A",
@@ -132,13 +132,13 @@
       "citation_count_added": 0,
       "stage13_redo_required": true,
       "agent_run_id": "bundle_append-2026-05-06T15:42:10Z",
-      "notes": "D.2 sidebar: Phase 6o W2a methodology case \u2014 substrate-discovery pattern (predicate-level operationalization at Wave 2a.2 + per-substrate concrete computation at Wave 2a.3-5; \u00b3He-A unique non-degenerate cell)"
+      "notes": "D.2 sidebar: Phase 6o W2a methodology case — substrate-discovery pattern (predicate-level operationalization at Wave 2a.2 + per-substrate concrete computation at Wave 2a.3-5; ³He-A unique non-degenerate cell)"
     },
     {
       "date": "2026-05-06T15:42:59Z",
       "source_paper": "_phase6o_W3a_lean_only",
       "lift_action": "Lift-section",
-      "bundle_section_inserted": "\u00a77",
+      "bundle_section_inserted": "§7",
       "lean_modules_referenced": [
         "ETH.Predicates",
         "ETH.RefutationTableau"
@@ -146,13 +146,13 @@
       "citation_count_added": 0,
       "stage13_redo_required": true,
       "agent_run_id": "bundle_append-2026-05-06T15:42:59Z",
-      "notes": "D.2 sidebar: Phase 6o W3a methodology case \u2014 parallel-axiomatization productive-value Aristotle-driven tableau pattern (5 candidate ETH axiomatizations + 3 concrete refutation theorems)"
+      "notes": "D.2 sidebar: Phase 6o W3a methodology case — parallel-axiomatization productive-value Aristotle-driven tableau pattern (5 candidate ETH axiomatizations + 3 concrete refutation theorems)"
     },
     {
       "date": "2026-05-06T16:00:00Z",
       "source_paper": "_phase6n_W2a_lean_only",
       "lift_action": "Revision",
-      "bundle_section_inserted": "\u00a73 (substantive reframing)",
+      "bundle_section_inserted": "§3 (substantive reframing)",
       "lean_modules_referenced": [
         "GloriosoLiu.Axioms",
         "GloriosoLiu.SecondOrderProjection",
@@ -161,13 +161,13 @@
       "citation_count_added": 5,
       "stage13_redo_required": true,
       "agent_run_id": "phase6n_6o-absorption-pass-2026-05-06T16:00:00Z",
-      "notes": "D.3 GATE 1 absorption (Phase 6n.\u03b3, user-auth granted 2026-05-06): substantive reframing of \u00a73 from project-original-axiom-replaced framing to first-order-projection-of-published-Glorioso-Liu-axiomatic framing. 5 new bibitems added (CrossleyGloriosoLiu2017, GloriosoCrossleyLiu2017, GloriosoLiu2018, GloriosoLiu2018TASI, JainKovtun2024); the latter two added to CITATION_REGISTRY this session. Transport-coefficient names updated (\u03ba, \u03bd) \u2192 (\u03b3_1, \u03b3_2) to match Lean DissipativeCoeffs structure. Pedagogical punchline preserved with added explanatory clause. Source verification per user direction: each of 5 references verified via WebFetch + arXiv + JHEP DOI confirmation 2026-05-06. LaTeX compile clean (21pp / 925KB). Pre-existing GREEN reviewer-triple state reset to pending re-review per LATE_PHASE6_ABSORPTION_PROTOCOL.md \u00a7F. Pre-draft: temporary/working-docs/phase6n/6n_gamma_I1_reframing_predraft.md."
+      "notes": "D.3 GATE 1 absorption (Phase 6n.γ, user-auth granted 2026-05-06): substantive reframing of §3 from project-original-axiom-replaced framing to first-order-projection-of-published-Glorioso-Liu-axiomatic framing. 5 new bibitems added (CrossleyGloriosoLiu2017, GloriosoCrossleyLiu2017, GloriosoLiu2018, GloriosoLiu2018TASI, JainKovtun2024); the latter two added to CITATION_REGISTRY this session. Transport-coefficient names updated (κ, ν) → (γ_1, γ_2) to match Lean DissipativeCoeffs structure. Pedagogical punchline preserved with added explanatory clause. Source verification per user direction: each of 5 references verified via WebFetch + arXiv + JHEP DOI confirmation 2026-05-06. LaTeX compile clean (21pp / 925KB). Pre-existing GREEN reviewer-triple state reset to pending re-review per LATE_PHASE6_ABSORPTION_PROTOCOL.md §F. Pre-draft: temporary/working-docs/phase6n/6n_gamma_I1_reframing_predraft.md."
     },
     {
       "date": "2026-05-11T19:50:00Z",
-      "source_paper": "(none \u2014 bookkeeping event)",
+      "source_paper": "(none — bookkeeping event)",
       "lift_action": "Freshness-bookkeeping",
-      "bundle_section_inserted": "(n/a \u2014 bookkeeping)",
+      "bundle_section_inserted": "(n/a — bookkeeping)",
       "lean_modules_referenced": [],
       "citation_count_added": 0,
       "stage13_redo_required": false,
@@ -183,29 +183,29 @@
       "citation_count_added": 0,
       "stage13_redo_required": false,
       "agent_run_id": "first-claim-removal-bookkeeping-2026-05-12T13:00:00Z",
-      "notes": "2026-05-12 first-claim-removal: paper44_riemannian_connection signature-falsifier wording softened; I1 bundle own draft 'this paper is the first bundle to be drafted under the architecture' -> 'this paper is drafted under that architecture'. I1's \u00a7lessons-learned reference at line 1141 (citing a historical 'first machine-checked' claim that had unrecognized Coq prior art) is PRESERVED INTACT - it documents the failure mode that motivated Stage-13 and is load-bearing pedagogical content."
+      "notes": "2026-05-12 first-claim-removal: paper44_riemannian_connection signature-falsifier wording softened; I1 bundle own draft 'this paper is the first bundle to be drafted under the architecture' -> 'this paper is drafted under that architecture'. I1's §lessons-learned reference at line 1141 (citing a historical 'first machine-checked' claim that had unrecognized Coq prior art) is PRESERVED INTACT - it documents the failure mode that motivated Stage-13 and is load-bearing pedagogical content."
     },
     {
       "date": "2026-05-31T17:24:48Z",
-      "source_paper": "(none \u2014 bookkeeping)",
+      "source_paper": "(none — bookkeeping)",
       "lift_action": "Freshness-bookkeeping",
-      "bundle_section_inserted": "(n/a \u2014 bookkeeping)",
+      "bundle_section_inserted": "(n/a — bookkeeping)",
       "lean_modules_referenced": [],
       "citation_count_added": 0,
       "stage13_redo_required": false,
       "agent_run_id": "bundle_append-bookkeeping-2026-05-31T17:24:48Z",
-      "notes": "Freshness-bookkeeping (LATE_PHASE6_ABSORPTION_PROTOCOL \u00a73d case 1): source-paper mtime drift is ENTIRELY from auto-regenerated tables/*.tex artifacts (verified: the only files newer than last_lift in each stale source are tables/*.tex; every source paper_draft.tex mtime is OLD <= last_lift; git status clean so regenerated tables match committed content byte-for-byte = zero content change). Bundle compile path is decoupled: this bundle \\input's only ../../docs/counts.tex, never any source-paper tables/ dir. No content lift warranted; no Stage-13 redo; reviewer triple remains valid (bundle stays GREEN)."
+      "notes": "Freshness-bookkeeping (LATE_PHASE6_ABSORPTION_PROTOCOL §3d case 1): source-paper mtime drift is ENTIRELY from auto-regenerated tables/*.tex artifacts (verified: the only files newer than last_lift in each stale source are tables/*.tex; every source paper_draft.tex mtime is OLD <= last_lift; git status clean so regenerated tables match committed content byte-for-byte = zero content change). Bundle compile path is decoupled: this bundle \\input's only ../../docs/counts.tex, never any source-paper tables/ dir. No content lift warranted; no Stage-13 redo; reviewer triple remains valid (bundle stays GREEN)."
     },
     {
       "date": "2026-06-10T20:33:51Z",
-      "source_paper": "(none \u2014 bookkeeping)",
+      "source_paper": "(none — bookkeeping)",
       "lift_action": "Inline-absorption-record",
-      "bundle_section_inserted": "(n/a \u2014 bookkeeping)",
+      "bundle_section_inserted": "(n/a — bookkeeping)",
       "lean_modules_referenced": [],
       "citation_count_added": 0,
       "stage13_redo_required": false,
       "agent_run_id": "bundle_append-bookkeeping-2026-06-10T20:33:51Z",
-      "notes": "2026-06-10 methodology sync: CHECKs 27-29 (axiom_count_prose_consistency / prose_theorem_reference_coverage / theorem_name_embedded_citations; registered-name forms \u2014 note table2_checks.tex row numbers 27-29 vs validate.py internal comments CHECK 24-26), attribution-content failure class + sweep design, recorded-review semantics, disclosure standard. Substantive prose changed in paper_draft.tex (abstract, \u00a71, \u00a75, \u00a76, \u00a78, \u00a710, \u00a714) \u2014 stage13_redo_required manually set true and freshness_stale manually restored after this bookkeeping event (the bundle remains stale pending the AttributionContentSweep I1 visit)."
+      "notes": "2026-06-10 methodology sync: CHECKs 27-29 (axiom_count_prose_consistency / prose_theorem_reference_coverage / theorem_name_embedded_citations; registered-name forms — note table2_checks.tex row numbers 27-29 vs validate.py internal comments CHECK 24-26), attribution-content failure class + sweep design, recorded-review semantics, disclosure standard. Substantive prose changed in paper_draft.tex (abstract, §1, §5, §6, §8, §10, §14) — stage13_redo_required manually set true and freshness_stale manually restored after this bookkeeping event (the bundle remains stale pending the AttributionContentSweep I1 visit)."
     }
   ]
 }

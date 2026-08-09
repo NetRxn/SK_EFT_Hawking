@@ -52,6 +52,7 @@ from bundle_registry import (  # noqa: E402
     BUNDLE_TITLES as _BUNDLE_TITLES,
     TIER_OF as _TIER_OF,
 )
+from bundle_json import write_bundle_json  # noqa: E402
 
 
 def _now_iso() -> str:
@@ -143,17 +144,17 @@ def initialize_bundle_files(bundle: str, sources: list[str], *, force: bool = Fa
             "supersession_ledger_anchor": "docs/review_finding_supersessions.json",
             "notes": None,
         }
-        metadata_path.write_text(json.dumps(metadata, indent=2) + "\n")
+        write_bundle_json(metadata_path, metadata)
     else:
         metadata = json.loads(metadata_path.read_text())
         # Refresh the regen timestamp; preserve other fields.
         metadata["source_manifest_last_regen"] = now
-        metadata_path.write_text(json.dumps(metadata, indent=2) + "\n")
+        write_bundle_json(metadata_path, metadata)
 
     # append_log.json
     if force or not append_log_path.exists():
         append_log = {"bundle_target": bundle, "events": []}
-        append_log_path.write_text(json.dumps(append_log, indent=2) + "\n")
+        write_bundle_json(append_log_path, append_log)
 
     # change_log.md
     if force or not change_log_path.exists():

@@ -5,7 +5,7 @@
       "date": "2026-05-06T15:41:09Z",
       "source_paper": "_phase6n_W1b_lean_only",
       "lift_action": "Lift-section",
-      "bundle_section_inserted": "\u00a73",
+      "bundle_section_inserted": "§3",
       "lean_modules_referenced": [
         "SymTFTAudit.WittClass",
         "SymTFTAudit.DrinfeldCenter",
@@ -24,7 +24,7 @@
       "date": "2026-05-06T15:41:12Z",
       "source_paper": "_phase6o_W1a_lean_only",
       "lift_action": "Lift-section",
-      "bundle_section_inserted": "\u00a76",
+      "bundle_section_inserted": "§6",
       "lean_modules_referenced": [
         "SoftTheorems.DissipativeNoGo"
       ],
@@ -37,7 +37,7 @@
       "date": "2026-05-06T15:41:16Z",
       "source_paper": "_phase6o_W3a_lean_only",
       "lift_action": "Lift-section",
-      "bundle_section_inserted": "\u00a78",
+      "bundle_section_inserted": "§8",
       "lean_modules_referenced": [
         "ETH.Predicates",
         "ETH.ConcreteWitness",
@@ -46,13 +46,13 @@
       "citation_count_added": 0,
       "stage13_redo_required": true,
       "agent_run_id": "bundle_append-2026-05-06T15:41:16Z",
-      "notes": "D.2 absorption: Phase 6o W3a G10 ETH-\u03b1 refutation tableau (3 concrete refutation theorems: Inozemcev-Volovich gap, ETP doesn't imply Srednicki, free-cumulant doesn't imply Srednicki); RT/CH Phase 6c W5 cross-bridge"
+      "notes": "D.2 absorption: Phase 6o W3a G10 ETH-α refutation tableau (3 concrete refutation theorems: Inozemcev-Volovich gap, ETP doesn't imply Srednicki, free-cumulant doesn't imply Srednicki); RT/CH Phase 6c W5 cross-bridge"
     },
     {
       "date": "2026-05-11T19:50:00Z",
-      "source_paper": "(none \u2014 bookkeeping event)",
+      "source_paper": "(none — bookkeeping event)",
       "lift_action": "Freshness-bookkeeping",
-      "bundle_section_inserted": "(n/a \u2014 bookkeeping)",
+      "bundle_section_inserted": "(n/a — bookkeeping)",
       "lean_modules_referenced": [],
       "citation_count_added": 0,
       "stage13_redo_required": false,
@@ -74,7 +74,7 @@
       "date": "2026-05-23T08:19:09Z",
       "source_paper": "_phase6p_W2cd_lean_only",
       "lift_action": "Lift-section",
-      "bundle_section_inserted": "\u00a79",
+      "bundle_section_inserted": "§9",
       "lean_modules_referenced": [
         "SU2BCHBracketClosure",
         "OneParameterSubgroupSU2",
@@ -90,7 +90,7 @@
       "date": "2026-05-23T08:19:16Z",
       "source_paper": "_phase6t_lean_only",
       "lift_action": "Lift-section",
-      "bundle_section_inserted": "\u00a79",
+      "bundle_section_inserted": "§9",
       "lean_modules_referenced": [
         "GroupCommutator",
         "SU2BalancedCommutator",
@@ -108,9 +108,9 @@
     },
     {
       "date": "2026-05-23T18:00:00Z",
-      "source_paper": "(authored fresh \u2014 Stage 10.E manual prose)",
+      "source_paper": "(authored fresh — Stage 10.E manual prose)",
       "lift_action": "Stage10E-prose-authoring",
-      "bundle_section_inserted": "\u00a79 (Fibonacci-anyon density and quantitative Solovay-Kitaev compilation)",
+      "bundle_section_inserted": "§9 (Fibonacci-anyon density and quantitative Solovay-Kitaev compilation)",
       "lean_modules_referenced": [
         "SU2BCHBracketClosure",
         "FibSU2LieBundle",
@@ -127,13 +127,13 @@
       "citation_count_added": 3,
       "stage13_redo_required": true,
       "agent_run_id": "stage10E-authoring-2026-05-23T18:00:00Z",
-      "notes": "Stage 10.E manual prose authoring (user-authorized 2026-05-23): unified \u00a79 'Fibonacci-anyon density and quantitative Solovay-Kitaev compilation' authored fresh as synthesis-driven new composition (~5 subsections, ~3500 words LaTeX) replacing two post-bibliography D.4 sourceless skeletons (lines 947-969). \u00a79 inserted BEFORE bibliography in conventional position; original skeletons reduced to bookkeeping audit pointers. Cross-bridges to \u00a78 Synthesis 'Open problems' / 'What this paper is not' explicit (\u00a79 supersedes the Fibonacci-universality bullets). Added 3 bibitems: AharonovArad2017, DawsonNielsen2006, KitaevShenVyalyi2002. LaTeX compile clean (27pp / 368224B; only cosmetic Overfull hbox warnings). pdftotext confirms \u00a79 prose present including 'Dawson-Nielsen', 'F.21', 'skApproxC', 'log 5 / log(3/2)', 'gapped_interface_axiom'."
+      "notes": "Stage 10.E manual prose authoring (user-authorized 2026-05-23): unified §9 'Fibonacci-anyon density and quantitative Solovay-Kitaev compilation' authored fresh as synthesis-driven new composition (~5 subsections, ~3500 words LaTeX) replacing two post-bibliography D.4 sourceless skeletons (lines 947-969). §9 inserted BEFORE bibliography in conventional position; original skeletons reduced to bookkeeping audit pointers. Cross-bridges to §8 Synthesis 'Open problems' / 'What this paper is not' explicit (§9 supersedes the Fibonacci-universality bullets). Added 3 bibitems: AharonovArad2017, DawsonNielsen2006, KitaevShenVyalyi2002. LaTeX compile clean (27pp / 368224B; only cosmetic Overfull hbox warnings). pdftotext confirms §9 prose present including 'Dawson-Nielsen', 'F.21', 'skApproxC', 'log 5 / log(3/2)', 'gapped_interface_axiom'."
     },
     {
       "date": "2026-05-31T15:37:22Z",
-      "source_paper": "(none \u2014 bookkeeping)",
+      "source_paper": "(none — bookkeeping)",
       "lift_action": "Inline-absorption-record",
-      "bundle_section_inserted": "(n/a \u2014 bookkeeping)",
+      "bundle_section_inserted": "(n/a — bookkeeping)",
       "lean_modules_referenced": [],
       "citation_count_added": 0,
       "stage13_redo_required": false,
@@ -142,14 +142,14 @@
     },
     {
       "date": "2026-06-10T20:25:17Z",
-      "source_paper": "(none \u2014 bookkeeping)",
+      "source_paper": "(none — bookkeeping)",
       "lift_action": "Prose-revision-bookkeeping",
-      "bundle_section_inserted": "(n/a \u2014 bookkeeping)",
+      "bundle_section_inserted": "(n/a — bookkeeping)",
       "lean_modules_referenced": [],
       "citation_count_added": 0,
       "stage13_redo_required": false,
       "agent_run_id": "bundle_append-bookkeeping-2026-06-10T20:25:17Z",
-      "notes": "Source-paper reconciliation vs last_lift 2026-05-31: 3 flagged sources (paper11_quantum_group, paper18_doublon_gate, paper9_sm_anomaly_drinfeld) all carry REAL commits, not mtime noise \u2014 commit 5207b72b (2026-06-10) axiom-prose fixes ('1 axiom' -> retired into tracked Prop TPFConjecture) in all three drafts, plus commit 8b68fe13 paper11 tables/table1_chain.tex SU2kSMatrix.lean theorem-count regen 18->253. D4 prose verified already aligned: axiom posture fixed across D4 on 2026-05-23 (fu:D4:r4:4; abstract + section 8.5 + 9.3 + 9.5 all read 'zero project-local axioms' + TPFConjecture); D4 contains zero SU2kSMatrix per-module-count references and zero \\input of source-paper tables (compile path decoupled). No content lift required. Disclosure block (DISCLOSURE_TEXT.md Variant B, register-verified aristotle_used=no) installed in same session as a separate draft edit; pdflatex x2 clean (31pp). freshness_stale deliberately NOT cleared per reconciliation-task constraint."
+      "notes": "Source-paper reconciliation vs last_lift 2026-05-31: 3 flagged sources (paper11_quantum_group, paper18_doublon_gate, paper9_sm_anomaly_drinfeld) all carry REAL commits, not mtime noise — commit 5207b72b (2026-06-10) axiom-prose fixes ('1 axiom' -> retired into tracked Prop TPFConjecture) in all three drafts, plus commit 8b68fe13 paper11 tables/table1_chain.tex SU2kSMatrix.lean theorem-count regen 18->253. D4 prose verified already aligned: axiom posture fixed across D4 on 2026-05-23 (fu:D4:r4:4; abstract + section 8.5 + 9.3 + 9.5 all read 'zero project-local axioms' + TPFConjecture); D4 contains zero SU2kSMatrix per-module-count references and zero \\input of source-paper tables (compile path decoupled). No content lift required. Disclosure block (DISCLOSURE_TEXT.md Variant B, register-verified aristotle_used=no) installed in same session as a separate draft edit; pdflatex x2 clean (31pp). freshness_stale deliberately NOT cleared per reconciliation-task constraint."
     }
   ]
 }

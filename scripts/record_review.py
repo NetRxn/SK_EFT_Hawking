@@ -53,6 +53,7 @@ import json
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
+from bundle_json import write_bundle_json  # noqa: E402
 
 REPO = Path(__file__).resolve().parent.parent
 PAPERS = REPO / "papers"
@@ -121,7 +122,7 @@ def record(bundle: str, stage: int, verdict: str, doc: str | None,
 
     # ensure_ascii=False: these blobs carry `§`/`—` in their apex `claims` strings and
     # the default rewrites every one as `\uXXXX` (TODO-D25).
-    mp.write_text(json.dumps(md, indent=2, ensure_ascii=False) + "\n")
+    write_bundle_json(mp, md)
     suffix = f", kind={kind}" if stage == 13 else ""
     return True, f"{bundle}: stage{stage}_status = {verdict}{suffix} (recorded {now})"
 
