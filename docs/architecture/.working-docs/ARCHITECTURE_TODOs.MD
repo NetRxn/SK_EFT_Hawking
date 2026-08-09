@@ -1265,3 +1265,27 @@ that one arguably records real incompleteness.
 curating one is the failure mode TODO-D30 describes. The fix is a one-line reword of each comment,
 owed before either bundle records a Stage-13 green. Filed rather than done here because editing a
 bundle draft is out of scope for a validation-layer change.
+
+### D34. L1 cites none of the 2017 GW170817-constraint literature — OPEN, blocks L1 submission
+
+Confirmed 2026-08-09 (the point the 2026-08-08 adjudication flagged as unverified and has now
+measured): `papers/L1/paper_draft.tex` carries **10 bibitems and zero** from the body of work that
+used GW170817's `c_GW = c` bound to eliminate modified- and emergent-gravity models in 2017–2018 —
+Creminelli–Vernizzi, Ezquiaga–Zumalacárregui, Baker *et al.*, Sakstein–Jain, all PRL.
+
+L1's claim is that the bound kills **one more** kinematic identification (Volovik's vestigial
+second-sound graviton). A referee's first question is what distinguishes it from the papers that
+killed the others, and the draft does not answer it because it does not cite them.
+
+**Not a retirement ground.** The 2026-08-08 adjudication recommended retiring L1 partly on this
+basis plus two premises that turned out to be refuted (§5 of `ADJUDICATION.md`, verdict withdrawn
+2026-08-09). L1 is a **declared** PRL splash of D3 — `papers/D3:662-663` says so in print — and is
+the only bundle in the portfolio at or under its charter length.
+
+**Fix shape: a positioning paragraph plus 4–6 bibitems**, stating what the 2017 sweep covered
+(scalar-tensor, Horndeski, Einstein-aether, TeVeS) and why the vestigial identification is not in
+that set. Small, and it strengthens the Letter rather than resizing any claim.
+
+⚠️ **Check the sibling splashes for the same gap before fixing only L1.** L3/D3 and E1/E2+D1 are
+the other three declared pairs; a positioning gap in a splash is a pattern candidate, not
+necessarily a one-off. Not yet measured for them.

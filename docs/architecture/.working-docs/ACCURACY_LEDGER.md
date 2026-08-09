@@ -2299,3 +2299,47 @@ merges failed against the manuscripts and the one retirement was never proposed*
 is that the portfolio's problem was misplaced *content*, not an inflated *count*, and reassignment
 (D4→D8, D1→D7, and now D6 §5.4→D9) fixes three of the four boundary failures while changing the
 roster by zero.
+
+---
+
+## V61 — orientation pass over the audit corpus: one verdict REVERSED, one live claim-integrity defect surfaced
+
+Triggered by the operator's *"make sure you are up to speed on the relevant context including past
+audits."* Method: read the retrofit FINDINGS for every bundle V60 ruled on but had not opened
+(L1, D10, D11, E1, E2), the 2026-08-07 audit addendum, PR-review pass 3, and `REMEDIATION_PLAN` §6a.
+
+| # | Proposition (from V60 / the adjudication) | Decider | Verbatim result |
+|---|---|---|---|
+| 1 | "Retire L1 — D3 and F already declare its content" | `papers/D3:662-663` | **REFUTED. L1/D3 is a DECLARED splash/deep pair:** *"Bundle L1 ships the same content as a four-page Physical Review Letters splash."* The shared declarations are the design. **The L1 retrofit had already corrected an earlier draft of my exact argument**, recording its basis as false |
+| 2 | The overlap pattern is unusual | D1's abstract, D3 §7 | **It is the portfolio's idiom, used FOUR times** — L1/D3, L3/D3, and D1's *"Companion experimental letters E1 … and E2"*. §3 of my own adjudication treated E1/E2's identical situation as legitimate design while §5 treated L1's as redundancy — **inconsistent standards inside one document** |
+| 3 | L1 is thin (18 declarations) | L1 retrofit §1 | **Wrong instrument.** *"There is no tower beneath it and there should not be one"* — and L1 is **the only bundle at or under its charter length** |
+| 4 | The 2017 GW170817-constraint literature gap (V60 filed it UNVERIFIED) | bibliography scan | **CONFIRMED — 10 bibitems, zero from that body.** Real, and a citation fix rather than a retirement ground → TODO-D34 |
+| 5 | D10+D11 and E1+E2 keep-separate | their retrofits | **CORROBORATED independently.** E2's retrofit reached the E1+E2 answer at substrate level before I did: 5 shared declarations, all the platform-*independent* `T_H` binding |
+| 6 | The AI-disclosure clause is a closed item | whole-file scan of 21 drafts | **LIVE, and 8 bundles carry it** — D1, D2, D3, D4, D5, D9, L2, E1. **D9 carries it with no `claims_review.json`** |
+
+**⚠️ ATOM 6 IS THE NINTH MEASUREMENT TRAP, AND IT NEARLY CLOSED A LIVE DEFECT.** A line-based
+`grep` for the clause returned **4** bundles; the true number is **8**. LaTeX prose wraps, and the
+phrase *"all numerical claims trace to the / repository's computation pipeline"* straddles a newline
+in four drafts. A line-oriented scan over wrapped prose is structurally unable to see it. Had I
+stopped there I would have reported addendum item A5 as mostly fixed. **Whole-file, `re.S`.**
+
+**The defect atom 6 surfaces is the sharpest open item in the portfolio**, and V60 did not know it:
+eight manuscripts assert *"all numerical claims trace to the repository's computation pipeline
+through its automated validation checks"* while `numerical_literals` reports **116 inline literals**
+and `\substantivetheorems{}` = **26 329** — a PROJECT-wide count — is used as if paper-scoped in D1,
+D5, E1, E2, F and I1. D1's own chain is ~114 theorems. **The mechanism built to make numbers
+trustworthy is producing the portfolio's largest numerical overclaim, inside the disclosure section
+of papers whose subject is verification integrity.**
+
+**⚠️ AND THE ARCHITECTURAL FINDING THAT REFRAMES THE D6 EXCISION.** PR-review pass 3's H1: every
+content-facing predicate is universally quantified over a population *the draft itself supplies*,
+so the system is **monotone in emptiness** — *"a one-paragraph draft with no citations, no Lean
+references and no numbers is a clean run of all 60 checks and a clean review from all three LLM
+agents."* Excising D6 §5.4 makes D6 emptier, and the only guard pointing the other way is
+ADR-011 Phase 1's length **floor**. TODO-D32's one-wave sequencing is therefore not tidiness; it is
+the only thing standing between the excision and a bundle that scores better for containing less.
+
+**NOT-AN-ASSERTION.** The reversal is the finding, not the roster number. V60's own headline was
+that six merges failed because they were argued from counts rather than manuscripts — **and its one
+original recommendation was argued from a ledger's summary of a retrofit instead of the retrofit.**
+C4 is not satisfied by reading most of the drafts.

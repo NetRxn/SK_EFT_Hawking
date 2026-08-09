@@ -367,7 +367,64 @@ the manuscripts carry.
 
 ---
 
-## 5. L1 — **RETIRE as a publication target.** The claim survives; the container does not.
+## 5. L1 — ⚠️ **VERDICT REVERSED 2026-08-09. KEEP L1.** The retirement rested on refuted premises.
+
+> **This section's original verdict was RETIRE. It is withdrawn.** The reversal came from reading
+> `docs/audits/2026-08-07-l1-retrofit/FINDINGS.md` and `papers/D3/paper_draft.tex` — **neither of
+> which I had read when I wrote it.** I ruled on L1 from the D4-merge EVIDENCE ledger's *summary*
+> of the L1 retrofit rather than from the retrofit itself, which is precisely the failure the D6
+> retrofit warned about in the sentence I quoted approvingly two sections above: *"before quoting a
+> fresh measurement against a bundle, read that bundle's own FINDINGS doc first."* I did that for
+> D6 and D9 and not for L1.
+>
+> **Premise 1 — "D3 and F already declare it, so L1 is redundant" — REFUTED.** `papers/D3:662-663`
+> says in print: ***"Bundle L1 ships the same content as a four-page Physical Review Letters
+> splash; the same numerical anchors are shared."*** L1/D3 is a **declared splash/deep pair**, and
+> the shared declarations are the *design*, not an accident. The L1 retrofit had already corrected
+> an earlier draft of my exact argument, recording that its stated basis — *"neither draft mentions
+> the other"* — **was false**.
+>
+> ⚠️ **And the portfolio uses this pattern FOUR times: L1/D3, L3/D3 (D3 calls them
+> "character-for-character identical"), and E1/D1 + E2/D1 — D1's abstract names both:** *"Companion
+> experimental letters E1 (Paris-LKB polariton) and E2 (Dean-Kim-Lucas graphene)."* **I applied
+> inconsistent standards inside one document**: §3 correctly treats E1/E2's overlap with their deep
+> parent as legitimate design, while §5 treated L1's structurally identical overlap as redundancy.
+> Retiring L1 alone would break a pattern the portfolio states in print four times.
+>
+> **Premise 2 — "trivial inequalities" — PARTIALLY REFUTED.** True of the headline biconditional and
+> the two endpoint falsifiers. But L1 *uniquely* develops the five-theorem
+> `H_VestigialModeIsGraviton` bundle (one discharge + four falsifiers, which is what makes the
+> identification refutable), **proves** P3' independence with a witness sitting exactly at the
+> saturating `Δc/c = −1/2`, and carries `vestigial_dispersion_below_ligo_at_inspiral_peak`. Its
+> retrofit records the whole set verifying: 21 theorems, kernel-pure, 49 backing pytest cases.
+>
+> **Premise 3 — the naturalness window is a self-adopted prior — STANDS**, and the retrofit confirms
+> the draft discloses it *at point of use*, which is the correct handling rather than a defect.
+>
+> ⚠️ **A fact I did not have, and it cuts hard the other way: L1 is the ONLY bundle in the portfolio
+> at or under its charter length.** Every other measured bundle overshoots. In a portfolio whose
+> named pathology is under-filled containers, L1 is the one that is correctly sized.
+>
+> ⚠️ **Judging L1 by closure size was the wrong instrument, and PR-review pass 3's H1 finding says
+> why.** Every content-facing predicate here is universally quantified over a population the draft
+> supplies, so the system is *"monotone in emptiness"* and cannot distinguish *correct* from
+> *contains nothing to be wrong about*. L1's 18-declaration closure is small **because a
+> single-equation refutation has nothing to stack** — its retrofit says exactly that: *"there is no
+> tower beneath it and there should not be one."*
+>
+> ### Revised verdict
+>
+> **KEEP L1 as a Tier-2 PRL splash of D3.** The one real defect found is the prior-art gap I had
+> flagged unverified and have now confirmed: **L1 cites none of the 2017 GW170817-constraint
+> literature** (Creminelli–Vernizzi, Ezquiaga–Zumalacárregui, Baker *et al.*, Sakstein–Jain) — 10
+> bibitems, zero from that body. A Letter reporting that GW170817 kills one more kinematic
+> identification must position itself against the papers that killed the others. **That is a
+> citation fix, not a retirement.** Filed as TODO-D34.
+>
+> **Roster consequence: 21, not 20.** No merge and no retirement survives contact with the
+> manuscripts. See §6.
+
+### The original argument, retained because the reversal is the finding
 
 ADR-010 §Open item 3 offers three dispositions: *"re-found the falsification, restate it as a
 project-constructed identification, or retire it."*
@@ -429,13 +486,15 @@ absorbed into a redraft.
 | E1 + E2 → E★ | ❌ **rejected** — two 5 pp letters cannot make one 4 pp PRL; different named audiences | 0 |
 | D7 folded into D1 | ❌ **rejected** — already resolved by the D1 → D7 apex reassignment (D1 fell 249 → 171) | 0 |
 | D4 §9 → D8 | ❌ **rejected as a merge** — already resolved by moving four apexes D4 → D8 | 0 |
-| — | ✅ **L1 retired** (new; not in the audit's list) | **−1** |
+| — | ❌ **L1 retirement WITHDRAWN 2026-08-09** — §5. L1/D3 is a declared splash/deep pair, one of four in the portfolio | **0** |
 
-**Recommended roster: 20.** ⚠️ **That number is a consequence, not a target.** Six merges were
-tested against the manuscripts and every one failed; one retirement the audit never proposed
-succeeded. **A recommendation of 16 could only have been reached by not reading the drafts** — which
-is the exact failure C4 was written to prevent, and the audit itself flagged in its §7 as what it
-could not check.
+**Recommended roster: 21 — UNCHANGED.** ⚠️ **That is a consequence, not a target.** Six merges were
+tested against the manuscripts and every one failed; the one retirement not in the audit's list was
+proposed here and then **withdrawn on 2026-08-09** once L1's retrofit and D3's own text were read. **A recommendation of 16 could only have been reached by not reading the drafts** — which is the
+exact failure C4 was written to prevent, and the audit itself flagged in its §7 as what it could not
+check. ⚠️ **The withdrawn L1 retirement is the same failure at smaller scale, committed here:** it
+was argued from a ledger's summary of a retrofit instead of the retrofit, and from a closure size
+instead of a manuscript. C4 is not satisfied by reading *most* of the drafts.
 
 **The portfolio's problem was never the count.** It was that content sat in the wrong containers:
 D6 held D9's paper, D4 held D8's apexes, D1 held D7's, and L1 held a claim D3 already developed.
