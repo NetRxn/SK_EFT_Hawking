@@ -1258,25 +1258,64 @@ have caught half of what this pass found by hand. ADR-010 §D7 tracks the scope 
 2026-08-08: η/(sT) = 1.62e-14 s, (κ/c_s)² = 2.07e13 m⁻², product 0.33, δ_diss = 1.67e-13 — E2's
 "~10⁻¹³".
 
-⚠️ **`formulas.py` is NOT wrong**, contrary to the 2026-08-01 audit's D-6. Line 473 is
+✅ **PHYSICS SETTLED 2026-08-09; what remains is propagation.** No longer an operator call.
+
+**`formulas.py` is not wrong — but the 2026-08-08 note's conclusion from that was.** Line 473 is
 `Gamma_H = (gamma_1 + gamma_2) * (kappa / c_s) ** 2` with γ₁,γ₂ declared **in [m²/s]**, so
-m²/s × m⁻² = s⁻¹. Only E2's prose substitutes a *time* where the pipeline defines a *kinematic
-viscosity*. **Do not "fix" the code** — it would break a correct function.
+m²/s × m⁻² = s⁻¹ ✓. The defective expression is **`src/graphene/hawking_predictions.py:107`**:
 
-**Open, and an operator physics call:** the multiplier converting η/(sT) to ν. Recommended
-ν = (η/(sT))·v_F² (v_F is the Dirac fluid's emergent light speed, the velocity in the
-momentum-density relation g = (e+p)v/v²), not c_s². δ_diss then ≈ 17 %, or ≈ 22 % with a conformal
-4/3. The c_s² route gives 3.2 %. **Not verified:** how `SecondOrderSK.GammaH` defines γ₁+γ₂ against
-the conformal sound-attenuation constant, which fixes the O(1) prefactor.
+```python
+Gamma_H = (eta_over_s_SI / T) * (kappa / c_s) ** 2   # [K·s]/[K] × [m⁻²] = s·m⁻², labelled [s⁻¹]
+```
 
-**Either way δ_diss is 3–22 %, not 10⁻¹³** — comparable to δ_disp ≈ −2.8 % rather than eleven orders
-below it. E2's abstract, §3 and its conclusion that the SK-EFT's graphene value is *"the systematic
-organization of corrections … not a specific dissipative modification of T_H"* all invert.
+That module **re-derives the formula instead of importing the canonical path**, which is what
+Pipeline Invariant 1 exists to prevent. So the audit's D-6 was right that code is affected; it
+named the wrong file, and the 2026-08-08 correction of the filename was mistaken for a correction
+of the claim. **Two separate measurement errors, both mine, both in the instrument rather than the
+conclusion** — the pattern V60 recorded.
 
-**This strengthens E2.** Corrected, graphene is the platform where the SK-EFT dissipative correction
-is *measurable*, which is the program's central claim. Per C5 the claim gets stronger, not resized.
-**E2 must not ship until this is settled.** Full working:
-`docs/audits/2026-08-08-adr010-d4-adjudication/ADJUDICATION.md` §3.
+**The multiplier is `v_F²`, prefactor exactly 1.** Momentum density in relativistic hydrodynamics is
+`w/v_F²`, so `ν = η v_F²/w = (η/sT)·v_F²` at μ=0 where `w = Ts`. Sound attenuation carries
+`[2(d−1)/d]η + ζ`; in **d = 2** that bracket is `1·η`, and `ζ = 0` by conformal symmetry — which
+Phase-5w states outright (*"Bulk viscosity vanishes identically (ζ = 0) by conformal symmetry"*).
+Two dimensions is the one case where the shear prefactor is unity, so the O(1) flagged as unverified
+does not exist. `c_s` belongs to the dispersion, not the inertia, and already enters via `k_H = κ/c_s`.
+
+⚠️ **The 3.2 % / 17 % spread was never a physics fork.** For a conformal Dirac fluid `c_s = v_F/√2`,
+so `(η/sT)v_F² ≡ 2(η/sT)c_s²` — exactly a factor 2, as the monolayer rows show (17.3 % → 34.2 %).
+The 5.2× at the Dean device comes from pairing **monolayer** `v_F = 10⁶` with **bilayer**
+`c_s = 4.4×10⁵`, which violates `c_s = v_F/√2`; `constants.py`'s own provenance attributes the lower
+bilayer `c_s` to *"bilayer band structure"*. **Internally consistent Dean value: δ_diss ≈ 6.5 %**
+against δ_disp ≈ −2.8 % — dissipative dominates ~2.3×, headline inverts, no near-cancellation.
+
+**The corpus already answered this, and the audit said it hadn't checked.** Phase-5w gives
+`Γ_sound ~ (η/w)k² ~ 10¹⁰ s⁻¹`; E2 prints `Γ_H ≈ 0.3 s⁻¹`, **eleven orders below its own cited
+source** — the same eleven orders the draft reports as a physics result. The audit wrote *"I did not
+trace Γ_H … to Lit-Search/Phase-5w"*; tracing it is what closed the question. Tier-0 first.
+
+**Propagation set (all must move together):**
+1. `src/graphene/hawking_predictions.py:107` + its docstring derivation — import the canonical path
+   (`ν → γ₁ = γ₂ = ν/2 → formulas.compute_dissipative_correction`) rather than re-deriving.
+2. `papers/E2/paper_draft.tex` §3 Eq. (3), the *"negligible"* framing, the *"eleven orders"* line,
+   the abstract, and the conclusion's *"systematic organization … not a specific dissipative
+   modification"* — all invert.
+3. `papers/D1` §5 Table I and §7.4, which mirror the graphene row.
+4. **Fig. 103** advertises `ω_H/Γ ≈ 1.6` (Dean) and `~22` (monolayer) from **momentum relaxation**.
+   The viscous rate is the binding one and is ~15× larger at monolayer widths — the caption's
+   "improving toward ~22" narrative does not survive.
+5. `PARAMETER_PROVENANCE`: **`Dean_bilayer_nozzle.v_F` has no entry**, alone among that platform's
+   six parameters. Bilayer graphene has quadratic band touching — no emergent light cone, no `v_F`
+   in the Dirac sense — so the relation is a monolayer identity applied to a bilayer device. Add the
+   entry and the disclosure; it is an honesty obligation, not a blocker.
+
+**A result the correction hands E2 for free.** δ_disp ∝ κ² and δ_diss ∝ κ, so they cross. The
+canonical `formulas.kappa_scaling_crossover` already computes it, and the crossover lands at
+κ ≈ 8×10¹² s⁻¹ — essentially **on** the 100 nm monolayer constriction E2 already features. A
+predicted dispersive→dissipative crossover inside the accessible device window is a stronger Letter
+than the "negligible" paragraph it replaces, and it is robust to the c_s²/v_F² factor of 2.
+
+Full working: `docs/audits/2026-08-08-adr010-d4-adjudication/ADJUDICATION.md` §3 and
+ADR-010 §Open item 5.
 
 ### D32. D6 §5.4 excision + AGP threshold lift — ✅ DONE 2026-08-09 (one wave)
 

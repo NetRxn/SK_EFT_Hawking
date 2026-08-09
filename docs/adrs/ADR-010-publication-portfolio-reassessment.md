@@ -484,9 +484,18 @@ code. Whether the same discipline should apply to prose is an open question for 
 
 ## Open — NOT decided by this ADR
 
-1. **The roster number.** `SYNTHESIS.md` §5 lists D-1 among *"decisions required from the operator"*.
-   The operator has explicitly **declined to dictate the spread** and asked for a recommendation instead.
-   So the analysis proposes; the operator disposes. **Do not assume a number, and do not carry "14".**
+1. ✅ **DECIDED 2026-08-09 — the roster is 21, unchanged.** `SYNTHESIS.md` §5 listed D-1 among
+   *"decisions required from the operator"*; the operator declined to dictate the spread twice, and
+   on 2026-08-09 delegated the call outright — *"entirely your call how this gets divided up,
+   provided it's organized professionally and coherently, and lends itself to expansion / absorption
+   as new work lands over time."* **21 is the answer, and it is an output rather than a target:**
+   every one of the audit's six proposed merges was tested against the manuscripts read in full and
+   all six fail (§D4 adjudication), and the one retirement not proposed by the audit — L1 — was
+   itself reversed on evidence (item 3). The three delegated criteria are met by the *idiom*, not by
+   the number: the portfolio is organized as **splash/deep pairs** (L1/D3, L3/D3, E1/D1, E2/D1,
+   declared in print four times), which is exactly the structure that absorbs new work — a new wave
+   lands in the deep container and the splash re-points at it, with no roster change. **Do not carry
+   "14", "16" or "20".**
 2. ✅ **ANSWERED 2026-08-08 — ship it, and the redundancy worry is refuted.**
    `molecularHamiltonian_essSelfAdjoint` is live and kernel-pure with all three formerly-disclosed
    inputs discharged, so there is nothing to wait for. And **PhysLib does not make the in-tree
@@ -495,13 +504,18 @@ code. Whether the same discipline should apply to prose is an open question for 
    `IsEssentiallySelfAdjoint` as a definition plus the von Neumann *defect-index* criterion — a
    different and, for a molecular many-body Coulomb Hamiltonian, harder route. D10 built the
    theorem the library does not have.
-3. ✅ **ANSWERED 2026-08-08 — retire L1 as a publication target.** Its whole closure is 18
-   declarations in one module, of which D3 already declares 5 and F 3; its 14-orders-of-magnitude
-   headline is the ratio between a **self-adopted** naturalness window (the draft says so) and a
-   measurement; and its formal content is `nlinarith`/`linarith` inequalities of the kind the
-   project's own strengthening discipline prohibits. **This retires a venue claim, not a physics
-   claim** — the falsification theorem and both falsifiers stay asserted at full strength in D3
-   and F, which already declare them, so C5 is not engaged.
+3. ⚠️ **ANSWERED 2026-08-08 — then REVERSED 2026-08-09. KEEP L1.** The retirement argument is
+   retained in full at [`ADJUDICATION.md`](../audits/2026-08-08-adr010-d4-adjudication/ADJUDICATION.md) §5
+   because how it failed matters more than that it failed. Both premises were refuted **by a
+   document already on disk**: `papers/D3:662-663` states in print that L1 ships the same content
+   as a four-page PRL splash of D3, so the shared declarations are the *design*; and L1 is the only
+   bundle in the portfolio whose draft length matches its charter, in a portfolio whose named
+   pathology is under-filled containers. The retirement was ruled from the EVIDENCE ledger's
+   *summary* of the L1 retrofit rather than the retrofit itself — the same substitution the D6/D9
+   analysis in this ADR exists to warn against — and it applied **inconsistent standards inside one
+   document**, treating E1/E2's identical splash overlap as legitimate design and L1's as
+   redundancy. The one real defect is a prior-art gap (no 2017 GW170817-constraint citations),
+   tracked as TODO-D34.
 4. ✅ **ANSWERED 2026-08-08 — disclose and ratchet, per bundle.** Measured: **five bundles carry
    `native_decide` in their declared-apex closure** (D4 19, L2 6, F 3, D2 3, I2 1 — 32 total), and
    **all five already disclose it in prose**; the other sixteen measure zero, including every
@@ -510,26 +524,56 @@ code. Whether the same discipline should apply to prose is an open question for 
    manuscript that rests on it, may only shrink, must be disclosed, and zero is *asserted* rather
    than assumed. **D8 is the precedent for paying down** — it eliminated four sweeps (largest ~16.7 M
    tuples) by structural reproof, one of which strengthened the statement by dropping a hypothesis.
-5. ⚠️ **NARROWED 2026-08-08, still an operator physics call — and it does NOT bear on the merge.**
-   E1 contains no Γ_H, δ_diss or dissipative correction at all, and the E1+E2 merge fails on length
-   independently (two 5 pp letters cannot make one 4 pp PRL). **The defect is E2-only and is real:**
-   Γ_H = (η/(sT))(κ/c_s)² is s·m⁻², not s⁻¹, reproduced to two significant figures. ⚠️ But the
-   audit's *"in both the paper and `formulas.py`"* is **half wrong** — `formulas.py` declares its
-   γ₁,γ₂ in [m²/s], so the code is dimensionally sound and only E2's prose substitutes a *time* for
-   a *kinematic viscosity*. **Open: the multiplier.** ν = (η/(sT))·v_F² is recommended over c_s²
-   (v_F is the Dirac fluid's emergent light speed, the velocity in the momentum-density relation),
-   giving δ_diss ≈ 17 % against the c_s² route's 3.2 %; the O(1) prefactor depends on how
-   `SecondOrderSK.GammaH` defines γ₁+γ₂ and is **not verified**. Either way δ_diss is 3–22 %, not
-   10⁻¹³, so it is comparable to δ_disp ≈ −2.8 % rather than eleven orders below it. **This makes
-   E2 a better Letter, not a worse one** — graphene becomes the platform where the SK-EFT's
-   dissipative correction is measurable. E2 must not ship until it is settled.
+5. ✅ **SETTLED 2026-08-09 by reading the source the audit said it had not read — it was never an
+   open physics question.** It does not bear on the merge either way: E1 contains no Γ_H, δ_diss or
+   dissipative correction at all, and E1+E2 fails on length independently.
+
+   **The multiplier is `v_F²`, and the prefactor is exactly 1.** In relativistic hydrodynamics the
+   momentum density is `w/v_F²`, so the momentum-diffusion constant is `ν = η v_F²/w = (η/sT)·v_F²`
+   at `μ=0` where `w = Ts`. The sound-attenuation coefficient carries `[2(d−1)/d]η + ζ`, which in
+   **d = 2** is `2(1)/2 = 1` times `η`, with `ζ = 0` by conformal symmetry — a fact this project's
+   own Phase-5w survey states (*"Bulk viscosity vanishes identically (ζ = 0) by conformal
+   symmetry"*). Two dimensions is the one case where the shear prefactor is unity, so there is no
+   surviving O(1) ambiguity. `c_s` is a property of the *dispersion*, not of the inertia, and enters
+   only through `k_H = κ/c_s`, which the formula already carries; a `c_s²` multiplier is the
+   units-patch answer, not the physics answer.
+
+   ⚠️ **The 17 % vs 3.2 % spread was never a physics fork — it is an inconsistent parameter
+   pairing.** For a conformal Dirac fluid `c_s = v_F/√2` exactly, so `(η/sT)v_F² ≡ 2(η/sT)c_s²` and
+   the two routes differ by exactly **2**, as the monolayer platforms show (17.3 % → 34.2 %). The
+   5.2× seen at the Dean device comes from pairing the **monolayer** `v_F = 10⁶ m/s` with the
+   **bilayer** `c_s = 4.4×10⁵ m/s`, a pair that violates `c_s = v_F/√2` — and `constants.py`'s own
+   provenance says why, attributing the lower bilayer `c_s` to *"bilayer band structure"*. The
+   internally consistent conformal value for the Dean device is **δ_diss ≈ 6.5 %** against
+   δ_disp ≈ −2.8 %: dissipative dominates by ~2.3×, same sign inversion, no near-cancellation.
+
+   ⚠️ **Two corrections to this ADR's own earlier entry, both of which were measurement errors.**
+   (i) The 2026-08-08 note said *"`formulas.py` is dimensionally sound so only the prose is wrong."*
+   The first half is true and the conclusion is false: the defective expression is at
+   `src/graphene/hawking_predictions.py:107`, which re-derives the formula instead of importing the
+   canonical path — so the audit was right that code is affected and merely named the wrong file.
+   Pipeline Invariant 1 exists to prevent exactly this. (ii) The recommendation of `v_F²` was right
+   for the wrong reason, and the 17 % that accompanied it is an artifact.
+
+   **The source already answered it.** `Lit-Search/Phase-5w/5w-SK-EFT Hawking framework meets the
+   graphene Dirac fluid.md` gives `Γ_sound ~ (η/w)k² ~ 10¹⁰ s⁻¹`. E2 prints `Γ_H ≈ 0.3 s⁻¹` —
+   **eleven orders below its own cited source**, which is the same eleven orders the draft then
+   reports as a physics result. The audit flagged that it had not traced the derivation
+   (*"I did not trace Γ_H … to Lit-Search/Phase-5w"*); tracing it is what closed the question.
+
+   **Residual, and it is narrow:** `Dean_bilayer_nozzle.v_F` carries **no `PARAMETER_PROVENANCE`
+   entry** — alone among that platform's six parameters — and bilayer graphene has quadratic band
+   touching, so no emergent light cone and no `v_F` in the Dirac sense. The relation is a monolayer
+   identity applied to a bilayer device. That is a disclosure-and-provenance obligation, not a
+   blocker. Tracked as TODO-D31.
 
 Items 2–5 were recorded here because each **changes a container's charter**, so the distribution
 recommendation must state its dependence on them rather than silently assuming a resolution.
 
-**Three of the four are now answered and item 1 is answered as a recommendation** (roster 20; the
-operator disposes). What remains genuinely open is **item 5's multiplier**, a physics call scoped to
-one equation in E2, blocking E2 alone.
+**All five are now answered** (roster **21**, decided under operator delegation 2026-08-09). Nothing
+in this list still blocks a bundle. What items 3 and 5 leave behind is **remediation with a known
+answer** — L1's prior-art gap (TODO-D34) and E2's Γ_H propagation plus the bilayer `v_F` provenance
+(TODO-D31) — not adjudication.
 
 ⚠️ **Every answer above states its own predicate, because three of the four turned on one.** D10's
 redundancy question inverted once PhysLib was read rather than assumed; the D10+D11 merge rested on
@@ -600,9 +644,10 @@ which require reading manuscript content the pass deliberately did not read (C4)
 
    > ✅ **DISCHARGED 2026-08-08 — operator delegated the grouping call; full working in
    > [`docs/audits/2026-08-08-adr010-d4-adjudication/ADJUDICATION.md`](../audits/2026-08-08-adr010-d4-adjudication/ADJUDICATION.md).**
-   > Every proposed merge was tested against the manuscripts read in full, and **all six fail**;
-   > one retirement the audit never proposed succeeds. **Recommended roster: 20** (L1 retired), and
-   > the number is an output, not a target.
+   > Every proposed merge was tested against the manuscripts read in full, and **all six fail**.
+   > A retirement the audit never proposed — L1 — was then argued *and reversed on evidence the
+   > following day* (§Open item 3). **Roster: 21, unchanged**, and the number is an output, not a
+   > target.
    >
    > ⚠️ **The sentence this box replaces carried a claim withdrawn the day after it was written** —
    > *"D11 and D12 reference zero Lean declarations"* was an extraction artifact (see the EVIDENCE

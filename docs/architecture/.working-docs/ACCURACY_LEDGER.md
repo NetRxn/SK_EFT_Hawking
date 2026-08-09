@@ -2294,6 +2294,11 @@ wrong and is corrected in place rather than quietly rephrased.
 one was a reasoning error.** The conclusions held up; the instruments did not. That is the argument
 for C4 stated as a fact about this pass rather than as a principle.
 
+> ⚠️ **The "20" below was superseded within a day — see V61 (L1 reversed) and V65 (roster 21
+> decided). It is retained as the record of what was recommended on 2026-08-08, not as a live
+> number.** The paragraph's actual point — that the deliverable is the merge verdicts, not the
+> count — is what survived, and survived *because* the count moved and it did not.
+
 **NOT-AN-ASSERTION.** The recommended roster of 20 is not the deliverable. **Six of six proposed
 merges failed against the manuscripts and the one retirement was never proposed** — so the finding
 is that the portfolio's problem was misplaced *content*, not an inflated *count*, and reassignment
@@ -2464,3 +2469,60 @@ levels are uncomposed: nothing yet models a level-`(L+1)` rectangle as built fro
 rectangles. D6 §7 says so in the manuscript, in the paragraph headed *"What remains, stated because
 it is the result's real boundary."* **The single-level justification sits beside the threshold
 theorem, not beneath it**, and writing it up any other way would repeat the overclaim V63 caught.
+
+---
+
+## V65 — the graphene Γ_H "open physics call" was a transcription error against a source in our own corpus — 6 atoms, 2 SELF-INFLICTED
+
+**Trigger.** The operator asked what the specific question was, whether a best path existed, and —
+pointedly — *"what source materials are important … and have you read them in full? did audits cover
+the path forward on this already?"* Three of the six atoms below exist only because that last
+question was answered by reading rather than by recall.
+
+**A1 — the multiplier was never open.** ν = η v_F²/w = (η/sT)·v_F², because the momentum density in
+relativistic hydrodynamics is w/v_F². The sound-attenuation bracket [2(d−1)/d]η + ζ is **1·η in
+d = 2** with ζ = 0 by conformal symmetry, so the "O(1) prefactor, not verified" flagged twice in
+ADR-010 and TODO-D31 **does not exist**. Two dimensions is the one case where the shear prefactor
+is unity — the ambiguity was imported from the 3D textbook form (4/3).
+
+**A2 — the 3.2 %/17 % spread was an inconsistent parameter pairing, not a physics fork.** For a
+conformal Dirac fluid c_s = v_F/√2 exactly, so the two "routes" differ by exactly 2 — visible in the
+monolayer rows (17.3 % → 34.2 %). The 5.2× at the Dean device comes from pairing **monolayer**
+v_F = 10⁶ with **bilayer** c_s = 4.4×10⁵. Internally consistent Dean value: **δ_diss ≈ 6.5 %**.
+
+**A3 — SELF-INFLICTED. My own 2026-08-08 correction to the audit was itself a measurement error.**
+I wrote *"`formulas.py` is dimensionally sound, so only the prose is wrong. Do not fix the code."*
+The first clause is true; the conclusion is false. The defect is at
+`src/graphene/hawking_predictions.py:107`, a module that re-derives the formula instead of importing
+the canonical path. **I corrected the audit's filename and mistook that for correcting its claim** —
+the audit was right that code is affected. Pipeline Invariant 1 exists to prevent exactly the
+re-derivation that hid it, and grepping `formulas.py` alone could never have found it.
+
+**A4 — SELF-INFLICTED. The v_F² recommendation was right for the wrong reason.** I recommended it
+from a verbal argument about "the emergent light speed" and attached δ_diss ≈ 17 % — a number that
+is an artifact of A2's bad pairing. Right answer, wrong derivation, wrong number.
+
+**A5 — the corpus answered it, and the audit said so.** Phase-5w gives Γ_sound ~ (η/w)k² ~ 10¹⁰ s⁻¹.
+E2 prints Γ_H ≈ 0.3 s⁻¹ — **eleven orders below its own cited source**, which is the same eleven
+orders the draft reports as its physics result. The audit's calibration note read *"I did not trace
+Γ_H … to Lit-Search/Phase-5w"*, and the finding then sat as "an operator physics call" for eight
+days. **Nobody, including me, opened the file the finding itself named as unread.**
+
+**A6 — live doc defect: ADR-010 still carried the retracted L1 retirement.** V61 reversed it in
+`ADJUDICATION.md` §5; ADR-010 §Open items 1 and 3, its summary line, and the §D4 discharge box all
+still said *"retire L1 / roster 20"* — the ADR is the review surface, so the retraction had not
+reached any reader. Fixed, and the roster recorded as **21** under the operator's 2026-08-09
+delegation.
+
+> **The through-line, and it is not the same one as V60.** V60's lesson was *the errors live in the
+> measurement, not the conclusion*. V65's is narrower and sharper: **three of these six exist because
+> a document that names its own gap was trusted to have closed it.** The audit wrote down precisely
+> what it had not checked; ADR-010 carried a note saying an O(1) was unverified; TODO-D31 repeated it.
+> Each restatement made the gap look more examined. **A gap that is disclosed in writing is still a
+> gap, and disclosure is not diligence** — three passes over this finding cited the caveat and none
+> discharged it, until reading the named file took a single grep.
+
+**NOT-AN-ASSERTION.** No prose or code has been propagated yet. E2, D1 §5/§7.4,
+`hawking_predictions.py`, Fig. 103's caption and the missing `Dean_bilayer_nozzle.v_F` provenance are
+all still uncorrected, and E2 remains blocked. What changed is that the blocker is now **a known
+propagation set, not an adjudication** — TODO-D31 carries the list.
