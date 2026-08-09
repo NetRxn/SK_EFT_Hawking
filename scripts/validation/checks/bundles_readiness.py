@@ -795,6 +795,78 @@ _SELF_NARRATION = (
 )
 
 
+@register_check("bundle_sentence_length",
+                "No bundle draft grows its stock of sentences a reader must re-read to parse")
+def check_bundle_sentence_length() -> CheckResult:
+    """TODO-D7's readability half: a down-only ratchet on very long sentences.
+
+    ⚠️ **The metric is deliberately independent of any rewriter.** TODO-D7's own
+    constraint is that "the decider must not be the generator", so this counts
+    what is there and freezes it; the prose was NOT edited to lower the number in
+    the change that introduced the check. A metric shipped together with the
+    edits that satisfy it has measured nothing.
+
+    Two thresholds, gated differently on purpose:
+
+    * **>100 words — GATED.** Not a style preference. Measured 2026-08-09 at 22
+      sentences across 14 bundles, max 235 words.
+    * **>60 words — ADVISORY.** Long but defensible in a methods paragraph.
+      Gating it would fire on correct work, which VALIDATION_GATE_TOPOLOGY §3
+      says is how a gate gets switched off.
+
+    Sentence splitting runs on comment-stripped body prose with macros blanked,
+    so a `\\section{...}` or a citation does not inflate a word count.
+    """
+    from src.core.constants import (SENTENCE_OVER_100_CEILING,
+                                    SENTENCE_OVER_60_ADVISORY)
+    # Local imports: `BUNDLE_CODES` was removed from module scope as dead
+    # (audit QI-11) and reintroducing it there would revive the false H2
+    # obligation that removal note describes.
+    from bundle_registry import BUNDLE_CODES
+    from validation._tex import _strip_tex_comments
+    details: List[Detail] = []
+    over60 = 0
+    over100: list[tuple[str, int]] = []
+    scanned = 0
+    for code in sorted(BUNDLE_CODES):
+        draft = _H.PAPERS_DIR / code / "paper_draft.tex"
+        if not draft.is_file():
+            continue
+        scanned += 1
+        body = _strip_tex_comments(draft.read_text(encoding="utf-8", errors="ignore"))
+        body = body.split(r"\begin{document}")[-1].split(r"\begin{thebibliography}")[0]
+        body = re.sub(r"\\[a-zA-Z]+\*?(\[[^\]]*\])?(\{[^{}]*\})?", " ", body)
+        for sent in re.split(r"(?<=[.!?])\s+", body):
+            n = len(sent.split())
+            if n > 60:
+                over60 += 1
+            if n > 100:
+                over100.append((code, n))
+
+    if scanned == 0:
+        return CheckResult(passed=False, details=[Detail(
+            "scanned", False,
+            "no bundle draft found — an empty scan is not evidence of short prose")])
+
+    ok = len(over100) <= SENTENCE_OVER_100_CEILING
+    worst = max((n for _c, n in over100), default=0)
+    details.append(Detail(
+        "over_100_words", ok,
+        f"{len(over100)} sentence(s) over 100 words across "
+        f"{len({c for c, _n in over100})} bundle(s), longest {worst} words "
+        f"(ratchet {SENTENCE_OVER_100_CEILING}, down-only)"
+        if ok else
+        f"{len(over100)} sentence(s) over 100 words exceeds the frozen ratchet "
+        f"{SENTENCE_OVER_100_CEILING}. Shorten the new prose, or lower the ratchet "
+        f"only after shortening: longest is {worst} words."))
+    details.append(Detail(
+        "over_60_words", True,
+        f"{over60} sentence(s) over 60 words (advisory baseline "
+        f"{SENTENCE_OVER_60_ADVISORY}; not gated, see docstring)",
+        warning=over60 > SENTENCE_OVER_60_ADVISORY))
+    return CheckResult(passed=ok, details=details)
+
+
 @register_check("bundle_reader_facing_voice",
                 "No bundle draft narrates its own correction history to the reader")
 def check_bundle_reader_facing_voice() -> CheckResult:

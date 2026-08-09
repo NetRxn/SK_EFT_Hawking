@@ -2577,6 +2577,25 @@ NATIVE_DECIDE_BUNDLE_DEBT = {
 # `validate.py --check count_literals` / `--check numerical_literals`.
 COUNT_LITERAL_CEILING = 107      # hardcoded "N theorems/modules/sorry" in paper prose
 NUMERICAL_LITERAL_CEILING = 117  # inline unit-bearing values outside \input{tables/}
+
+#: Sentences over 100 words in bundle body prose (TODO-D7, the readability half).
+#:
+#: ⚠️ MEASURED 2026-08-09 AND THE PROBLEM HAD GROWN, partly from this branch's own
+#: additions. TODO-D7 recorded "7 bundles contain a sentence over 100 words (max
+#: 179)"; the live figure is 22 such sentences across 14 bundles, max 235. A
+#: sentence over 100 words is not a style preference — it is one a referee has to
+#: re-read to parse.
+#:
+#: A RATCHET, not a target. Frozen at the measured value so it can only shrink.
+#: ⚠️ The prose was deliberately NOT rewritten to lower it in the same change:
+#: TODO-D7's own constraint is that "the decider must not be the generator", and a
+#: metric introduced together with the edits that satisfy it measures nothing.
+SENTENCE_OVER_100_CEILING = 22
+
+#: Advisory companion: sentences over 60 words. Reported, not gated — 60 words is
+#: long but defensible in a methods paragraph, and gating it would fire on correct
+#: work (VALIDATION_GATE_TOPOLOGY §3). Recorded so the trend is visible.
+SENTENCE_OVER_60_ADVISORY = 199
 # ⚠️ RAISED 116 -> 117 on 2026-08-09, with the rationale this block demands.
 # D6 §7's new threshold section states the certified bound `2.73 \times 10^{-5}`
 # inside a displayed equation. That value is not a project measurement to be routed

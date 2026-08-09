@@ -579,7 +579,30 @@ version *and* the Mathlib rev against `lean-toolchain` + `lakefile.toml`.
   on pin drift — **and (b) prevention**: drafts should cite the pin through a generated macro as
   they already do for counts. Both need approval per §6a.
 
-### D7. No mechanism assesses whether prose serves a reader — OPEN — **SCHEDULED: [ADR-011](../../adrs/ADR-011-manuscript-quality-layer.md) Phases 3 + 5**
+### D7. No mechanism assesses whether prose serves a reader — ✅ DONE 2026-08-09
+
+> ⚠️ **All three "verified absent" claims are now FALSE, and two were closed by ADR-011 before this
+> pass.** Re-measured: `bundle_reader_facing_voice` exists and is green (Phase 3, Gate 15); the
+> `prose-reviewer` agent exists at `.claude/plugins/skeft-qa/agents/prose-reviewer.md` (Phase 5,
+> F-04); `WAVE_EXECUTION_PIPELINE.md` mentions the mechanism three times. Em-dash density is gated
+> separately by `bundle_prose_em_dash_free`, currently 0 across 21 drafts.
+>
+> **What was genuinely still open is the READABILITY half, and it had grown.** This entry recorded
+> *"171 sentences over 60 words … 7 bundles contain a sentence over 100 words (max 179)"*. Live
+> figures: **199 over 60, and 22 over 100 across 14 bundles, longest 235 words** — partly from this
+> branch's own additions, which is worth saying plainly.
+>
+> **Built:** `bundle_sentence_length`, a down-only ratchet (`SENTENCE_OVER_100_CEILING = 22`).
+> Over-100 is gated because a sentence a referee must re-read to parse is not a style preference;
+> over-60 is reported as an advisory baseline and deliberately **not** gated, because 60 words is
+> defensible in a methods paragraph and gating it would fire on correct work
+> (VALIDATION_GATE_TOPOLOGY §3).
+>
+> ⚠️ **The prose was NOT rewritten to lower the number in the same change.** This entry's own
+> constraint is that *"the decider must not be the generator"*, and a metric shipped together with
+> the edits that satisfy it has measured nothing. The ratchet is frozen at the measured value so it
+> can only shrink. A seeded test drops the ceiling to 0 and asserts the gate fails, so it is not
+> inert; another asserts the ceiling equals the live count, so slack cannot hide a regression.
 
 ⚠️ Not one item but two, and they must not be conflated: the **deterministic** voice ratchet is Phase 3 (Gate 15, no new data, fires on 19 of 21 today) and the **agentic** read-through reviewer is Phase 5 (F-04). Phase 5 depends on Phase 2 — an agent whose verdict lands in a `stage*_status` field that nothing writes is a fourth instance of D5, not a fix for D7.
 

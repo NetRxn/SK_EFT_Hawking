@@ -1569,3 +1569,54 @@ class TestUnmeasuredIsDistinctFromYellow:
                 if str(m.get(fld) or "") not in _STAGE_STATUS_ENUM:
                     undeclared.append(f"{md.parent.name}.{fld}={m.get(fld)!r}")
         assert undeclared == [], undeclared
+
+
+# ── TODO-D7 readability half: the sentence-length ratchet ─────────────────
+
+class TestSentenceLengthRatchet:
+    """TODO-D7 measured "171 sentences over 60 words … 7 bundles contain a
+    sentence over 100 words (max 179)" and nothing gated it. Re-measured
+    2026-08-09: 199 over 60, and 22 over 100 across 14 bundles, max 235. The
+    problem had GROWN, partly from this branch's own additions.
+
+    ⚠️ The prose was deliberately not rewritten to lower the number in the change
+    that introduced the check. TODO-D7's own constraint is that "the decider must
+    not be the generator"; a metric shipped together with the edits that satisfy
+    it has measured nothing."""
+
+    def _run(self):
+        import sys, pathlib
+        sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / "scripts"))
+        from validation.checks.bundles_readiness import check_bundle_sentence_length
+        return check_bundle_sentence_length()
+
+    def test_gate_is_green_at_the_frozen_ratchet(self):
+        res = self._run()
+        assert res.passed, [d.message for d in res.details]
+
+    def test_over_100_is_gated_and_over_60_is_not(self):
+        """Both thresholds are reported; only the indefensible one gates.
+        Gating >60 would fire on correct methods prose (GATE_TOPOLOGY §3)."""
+        res = self._run()
+        by = {d.name: d for d in res.details}
+        assert "over_100_words" in by and "over_60_words" in by
+        assert by["over_60_words"].passed, "the advisory leg must never fail the check"
+
+    def test_ratchet_is_sensitive_to_a_seeded_regression(self, monkeypatch):
+        """Lower the population by raising nothing: drop the ceiling below the
+        live count and the gate must fail. Proves it is not vacuous."""
+        import sys, pathlib
+        sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / "scripts"))
+        from src.core import constants
+        monkeypatch.setattr(constants, "SENTENCE_OVER_100_CEILING", 0)
+        res = self._run()
+        assert not res.passed, "ceiling 0 must fail — the gate would otherwise be inert"
+
+    def test_ceiling_matches_the_live_measurement(self):
+        """A ratchet frozen above the live value is slack that hides a
+        regression; frozen below it is a permanently red gate."""
+        from src.core.constants import SENTENCE_OVER_100_CEILING
+        res = self._run()
+        msg = next(d.message for d in res.details if d.name == "over_100_words")
+        live = int(msg.split()[0])
+        assert live == SENTENCE_OVER_100_CEILING, (live, SENTENCE_OVER_100_CEILING)
