@@ -1,0 +1,37 @@
+%% ═══════════════════════════════════════════════════════════════════
+%% \figuredeferred{id}{reason} — the declared-deferral form
+%% ═══════════════════════════════════════════════════════════════════
+%%
+%% WAVE_EXECUTION_PIPELINE.md §Stage 9: "A figure that is planned but not yet
+%% drawn is declared with \figuredeferred{id}{reason}, never omitted silently."
+%% The law mandated this form and, measured 2026-08-09, it had ZERO uses across
+%% all 21 bundle drafts — nine of which carried no figures at all. Nine bundles
+%% with no plan is a charter defect; nine bundles with a *stated* plan and a
+%% stated blocker is an honest manuscript in progress, and a referee can tell
+%% the two apart only if the plan is on the page.
+%%
+%% The deferral is DELIBERATELY VISIBLE in the compiled PDF. A silent macro
+%% would satisfy `bundle_figure_adequacy` while showing a reader nothing, which
+%% is the vacuous-Stage-9 failure ("ALL figures PASS" over an empty set) rebuilt
+%% one layer up.
+%%
+%% ⚠️ The reason must name what BLOCKS the figure, not that it is absent.
+%% "not yet drawn" is boilerplate and defeats the purpose; "awaiting the L=8
+%% m→0 production run" is a blocker a reader can check and a later pass can
+%% discharge.
+%%
+%% Definition lives here, beside docs/counts.tex, because 21 drafts consume it
+%% and a per-draft copy is 21 places for the rendering to drift.
+
+%% Rendered as a non-floating box on purpose. A `figure` float would be subject
+%% to revtex's two-column placement rules across eleven drafts for no gain, and
+%% a deferral does not need a figure number: it is a promise, not a result.
+
+\providecommand{\figuredeferred}[2]{%
+  \par\medskip\noindent
+  \fbox{\parbox{0.92\columnwidth}{%
+    \small\textbf{Figure deferred: \texttt{#1}.}
+    Planned for this section; not yet produced. \emph{Blocked on:} #2.%
+  }}%
+  \par\medskip
+}

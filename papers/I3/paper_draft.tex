@@ -32,6 +32,7 @@
 %%   Phase 6n Wave 2a Glorioso-Liu axiomatic + Phase 6n Wave 2c.5c+
 %%   IsLDPRateFunction typeclass).
 \input{../../docs/counts.tex}
+\input{../../docs/figuredeferred.tex}
 
 \title{Verified Stochastic Calculus and Large-Deviation Foundations
 for Lean~4 / Mathlib4: A Predicate-Substrate Library for the
@@ -436,6 +437,7 @@ the program's current Lake job count.
 %% §3 The Itô substrate
 %% ─────────────────────────────────────────────────────────────────
 
+\figuredeferred{fig:i3-module-dag}{the twelve-module dependency DAG; \texttt{lean\_deps.json} has the edges and the renderer is the missing piece}
 \section{The It\^o substrate (six modules)}
 \label{sec:ito}
 
@@ -1191,6 +1193,7 @@ substantive content rather than the tool stack used to author it.
 %% §8 Limitations and explicit deferrals
 %% ─────────────────────────────────────────────────────────────────
 
+\figuredeferred{fig:i3-upstream-map}{per-module PR scope against Mathlib's existing coverage; the Mathlib-side coverage audit is a manual survey that has not been redone since the v4.32.0 bump}
 \section{Limitations and explicit deferrals}
 \label{sec:limitations}
 

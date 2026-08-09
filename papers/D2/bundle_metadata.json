@@ -244,7 +244,7 @@
   "stage9_status": "pending",
   "stage10_status": "pending",
   "stage13_status": "pending",
-  "stage13_redo_required": false,
+  "stage13_redo_required": true,
   "freshness_stale": true,
   "source_manifest_last_regen": "2026-06-10T20:24:03Z",
   "last_lift": "2026-05-31T17:24:48Z",

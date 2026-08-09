@@ -184,7 +184,7 @@
   "stage9_status": "pending",
   "stage10_status": "pending",
   "stage13_status": "pending",
-  "stage13_redo_required": false,
+  "stage13_redo_required": true,
   "last_stage13_review": "2026-06-10T19:30:00Z",
   "stage13_review_doc": "docs/audits/stage13_attribution_sweep_2026-06-10.md#d8",
   "stage13_round1_doc": "papers/AutomatedReviews/2026-05-31-bundle-stage13/D8.md",

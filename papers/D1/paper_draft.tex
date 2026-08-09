@@ -8,6 +8,7 @@
 \usepackage{braket}
 
 \input{../../docs/counts.tex}
+\input{../../docs/figuredeferred.tex}
 
 %% Bundle: D1 (tier 1, target PRD long article)
 %% Source manifest: papers/D1/source_manifest.md
@@ -288,6 +289,8 @@ they form the backbone of the cross-platform reuse claim of
 \S\ref{sec:graphene}.
 
 %% ══════════════════════════════════════════════════════════════════
+
+\figuredeferred{fig:d1-first-order-spectrum}{the BEC reference spectrum against the exact WKB result; the WKB pipeline emits the arrays but no figure function in \texttt{visualizations.py} pairs them}
 \section{Second-order SK-EFT: counting, KMS optimality, and parity}
 \label{sec:bec-second}
 
@@ -508,6 +511,8 @@ among the three benchmarks, and hence the most informative BEC target
 for the spectral-floor prediction.
 
 %% ══════════════════════════════════════════════════════════════════
+
+\figuredeferred{fig:d1-three-nonperturbative}{the three non-perturbative effects on one axis; the Stokes-structure data is produced inside the notebook and is not exported to a stored artifact}
 \section{Hierarchy of corrections by platform}
 \label{sec:hierarchy}
 
@@ -562,6 +567,8 @@ $\kappa$-scaling relative to $\delta_\text{disp}$, accessible at
 Heidelberg through Feshbach-tuned scattering-length sweeps.
 
 %% ══════════════════════════════════════════════════════════════════
+
+\figuredeferred{fig:d1-correction-hierarchy}{$\delta_{\rm disp}$ against $\delta_{\rm diss}$ per platform, which is Table~I as a figure; blocked on the same $\Gamma_H$ repair that moved the graphene row}
 \section{Polariton platform: stimulated Hawking and reservoir
 correction}
 \label{sec:polariton}
@@ -734,7 +741,23 @@ is $\approx +3.7\%$: upward, not downward. The dissipative value
 follows from the Dirac fluid's momentum-diffusion constant
 $\nu = \eta v_F^2/w = 2(\eta/sT)c_s^2$; writing $\eta/(sT)$ in place
 of $\nu$ omits a velocity$^2$ and understates $\delta_\text{diss}$ by
-eleven orders of magnitude. Graphene is thus the platform where the
+eleven orders of magnitude.
+
+The two equalities each carry a hypothesis worth stating, because each
+fails on a platform this program also considers. The first is
+relativistic-hydrodynamic: the momentum density is $w/v_F^2$ rather
+than a mass density, which is what puts the $v_F^2$ there at all. The
+second, $\eta v_F^2/w = 2(\eta/sT)c_s^2$, holds for a conformal fluid,
+where $c_s = v_F/\sqrt{2}$; we write $\nu$ in the \emph{measured}
+$c_s$ because $v_F$ is a band parameter defined only for the
+monolayer. Bilayer graphene has quadratic band touching and therefore
+no emergent light cone, so the conformal equality is exactly the
+hypothesis that fails there. The sound-attenuation coefficient carries
+$[2(d{-}1)/d]\,\eta + \zeta$, which in $d = 2$ is exactly $1\cdot\eta$
+with $\zeta = 0$ by conformal symmetry, so no $O(1)$ ambiguity
+survives; the familiar $4/3$ is the $d = 3$ value. Bilayer
+non-conformality restores a small $\zeta$, raising $\nu$ by at most
+the estimated $\zeta/\eta \lesssim 0.1$. Graphene is thus the platform where the
 SK-EFT's dissipative channel is a percent-level measurable, not a
 formal refinement, and the one where reporting either correction
 without the other misstates even the sign of the result.
@@ -756,6 +779,78 @@ fluctuation-dissipation, with the consistency-of-derivation closure
 agreement at the Lean level. The greybody factor
 $\Gamma_0 = 4 c_R v / (c_R + v)^2 \approx 0.99994$ at the Dean
 nozzle parameters~\cite{AndersonBFP2013}.
+
+\subsection{Independent cross-checks: Kibble--Zurek--Unruh scaling and the simulability demarcation}
+
+An independent classical-simulation cross-check of the universal
+critical-scaling physics underlying this prediction is provided by
+the Kibble-Zurek-Unruh correspondence: the same surface gravity
+$\kappa$ that fixes $T_H = \hbar\kappa/(2\pi k_B)$ also fixes the
+KZM quench rate $1/\tau_Q = \kappa$ at the analog horizon (Lean
+module \texttt{KibbleZurekUnruh.lean}, foundation theorem
+\texttt{surface\_gravity\_bounds\_kzm\_exponent}). The
+Tindall--Mello--Fishman--Stoudenmire--Sels classical tensor-network
+simulation of disordered TFIM
+spin-glasses~\cite{TindallMelloFishmanStoudenmireSels2026Science392}
+extracts the universal KZM scaling exponent $\mu = \nu z / (1+\nu z)$
+on 2D square, 3D cubic, and 3D diamond lattices at 300+ qubits,
+matching the D-Wave Advantage2 quantum annealer via belief-propagation
+contraction. The same $\mu$ governs the analog-Hawking
+thermal-occupation spectrum that the bilayer-nozzle measurement
+proposed here probes; a measured $\Delta S_I(\omega)$ profile
+inconsistent with both the SK-EFT prediction and the KZM scaling
+extracted from independent classical simulation would constitute a
+falsification of the universal critical-scaling backbone shared by
+both formalisms.
+
+The Phase 6w combined demarcation theorem
+(\texttt{analog\_hawking\_fourCycleFree\_demarcation}, Lean
+module \texttt{AnalogHawkingDemarcation.lean}) further localizes the
+classically-simulable regime for the bilayer-graphene Dirac fluid:
+the SK-EFT-predicted Hawking spectrum at the Dean nozzle's parameters
+passes the BP-on-PEPS simulability screen iff (i) the Dirac-fluid
+factor graph is BP-LDP-favorable (four-cycle-free topology, the
+combinatorial screen implied by tree-like structure, + non-negative
+factor weights) AND (ii) the second Chebyshev expansion coefficient $c_1$
+of the categorical marker vanishes.
+
+\emph{Scope: $c_1$ is not the topological Chern coefficient of the graphene moir\'e
+band-structure: \texttt{ChernBridge.lean:68} defines
+\texttt{categoricalChernExpansion c0 c1 := [c0, c1]}, a two-term Chebyshev expansion, and
+no graphene and no moir\'e superlattice appear anywhere in that module. The module does,
+however, invoke a Brillouin-zone reading: \texttt{ChernBridge.lean:14} frames the
+crystalline limit as a Brillouin-zone Chern number reducing to a sum. $c_1$ is therefore a
+Chebyshev coefficient, and the module makes no graphene or moir\'e claim while still invoking
+that Brillouin-zone reading. Naming $c_1$ as a graphene Chern coefficient would also
+contradict D11's own novelty carve-out, which states that this group's
+\texttt{ChernBridge} marker is a different object from a Bloch-band invariant.} The Aalto Chebyshev-TN
+methodology~\cite{TindallMelloFishmanStoudenmireSels2026Science392}
+applies to both crystalline and aperiodic-lattice configurations
+(formalized at the Lean level in
+\texttt{AperiodicLattice.lean} and \texttt{ChernBridge.lean}),
+extending the classical-simulability cross-check to moir\'e-graphene
+super-moir\'e systems that the Dean device can in principle access via
+controlled twist-angle tuning.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig105_graphene_snr_frequency.png}
+\caption{Per-bin Hawking-to-thermal noise ratio
+$S_{\rm Hawking}(\omega) / S_{\rm thermal}$ versus frequency at the
+Dean bilayer-nozzle parameters ($\sigma_Q \approx 4 e^2/h$,
+$T_{\rm e} = \SI{150}{\kelvin}$). The peak ratio is
+$\sim 8 \times 10^{-3}$ at $\omega \approx \omega_H$, reflecting
+the two-orders-of-magnitude separation between the Planckian
+Hawking signal and the white Johnson-Nyquist background. Shape-
+aware correlation analysis recovers the bandwidth-cumulative SNR by
+exploiting this Planckian-vs-white distinction; cumulative SNR
+reaches unity in $\sim 1$ minute of integration across the
+$[0, 4\omega_H]$ band, formally guaranteed to satisfy the quasi-1D
+parametric-safety condition (lowest transverse channel above
+$4\omega_H$, verified in
+\texttt{DiracFluidWKB.dean\_lowest\_channel\_above\_four\_omega\_H}).}
+\label{fig:snr}
+\end{figure}
 
 \subsection{Wiedemann-Franz cross-check}
 
@@ -791,6 +886,8 @@ principal device-specific uncertainty is the greybody factor
 $\Gamma(\omega)$ near the lowest transverse channel.
 
 %% ══════════════════════════════════════════════════════════════════
+
+\figuredeferred{fig:d1-graphene-reuse}{the module-level reuse fraction behind the $93\%$ claim; the per-module reuse attribution is computed ad hoc in the claim audit and has no stored derivation}
 \section{Synthesis and outlook}
 \label{sec:synthesis}
 

@@ -315,7 +315,16 @@ charter honestly.
    author and nothing to keep in sync, which also retires the charter dependency that had
    deferred this item. Measured before the change: **74 of 74 content lifts created a
    top-level section**, 28 of them in D3. See TODO-D26.
-3. **F-03** — §6 becomes figure *realisation*; `\figuredeferred{id}{reason}`; Stage 9 stops passing
+3. **F-03** ✅ **Exercised 2026-08-09, and the measurement is the point.** The
+   `\figuredeferred{id}{reason}` form this phase mandated had **zero uses across all 21
+   drafts** until now; nine bundles carried no figures and no plan. Forty deferrals are
+   now declared (F 8, seven Tier-1 bundles 4 each, I3 2, D8 1, D12 1), each naming what
+   the figure shows and what blocks it, with the macro defined once in
+   `docs/figuredeferred.tex` beside `docs/counts.tex`. `bundle_figure_adequacy` is green
+   — **and its summary now carries `N drawn, N declared-deferred, N bundle(s) with zero
+   drawn figures`**, so a green can never hide an all-deferred corpus, which would be the
+   vacuous-Stage-9 failure rebuilt one layer up. Original text: §6 becomes figure
+   *realisation*; `\figuredeferred{id}{reason}`; Stage 9 stops passing
    vacuously on an empty set.
 4. **Gate 13** `bundle_figure_adequacy`, **Gate 14** `bundle_structural_coherence` (sedimentation
    ratio, required-section set, non-empty bibliography — which alone catches D8's and D10's

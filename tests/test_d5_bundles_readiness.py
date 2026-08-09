@@ -1192,6 +1192,40 @@ class TestBundleFigureAdequacy:
         r = bru.check_bundle_figure_adequacy()
         assert any("UNMEASURED" in d.message for d in r.details)
 
+    def test_a_green_cannot_hide_an_ALL_DEFERRED_corpus(self, tmp_path, monkeypatch):
+        r"""⚠️ THE GUARD ON THE GREEN (2026-08-09, coach ruling on goal item 6).
+
+        `\figuredeferred` legitimately satisfies the floor — it is the pipeline
+        law's mandated disclosure form. But a bundle that has PLANNED four figures
+        and a bundle that has DRAWN four are different states, and a summary
+        reporting only "0 short" renders them identically. That is the vacuous
+        Stage-9 failure ("ALL figures PASS" over an empty set) rebuilt one layer
+        up. The split must ride on the SUMMARY, which is the line a reader of a
+        passing run actually sees."""
+        self._setup(tmp_path, monkeypatch, {
+            "D1": (1, "".join("\\figuredeferred{f%d}{blocked on the X run}\n" % i
+                              for i in range(4))),
+        })
+        r = bru.check_bundle_figure_adequacy()
+        assert r.passed, "a fully-planned bundle still meets its floor"
+        summary = r.details[0].message
+        assert "0 drawn" in summary and "4 declared-deferred" in summary
+        assert "1 bundle(s) with zero drawn figures" in summary
+
+    def test_the_summary_counts_drawn_and_deferred_separately(
+            self, tmp_path, monkeypatch):
+        """Discrimination: the two numbers must not be one number wearing two
+        labels. Four drawn and four deferred report as 4 and 4, not 8 and 0."""
+        self._setup(tmp_path, monkeypatch, {
+            "D1": (1, self._figs(4)),
+            "D2": (1, "".join("\\figuredeferred{g%d}{blocked on the Y sweep}\n" % i
+                              for i in range(4))),
+        })
+        r = bru.check_bundle_figure_adequacy()
+        summary = r.details[0].message
+        assert "4 drawn" in summary and "4 declared-deferred" in summary
+        assert "1 bundle(s) with zero drawn figures" in summary
+
     def test_figures_in_a_COMMENT_do_not_count(self, tmp_path, monkeypatch):
         """A commented-out figure is not in the document a reader receives."""
         self._setup(tmp_path, monkeypatch,

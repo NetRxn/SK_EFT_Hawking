@@ -12,6 +12,7 @@
 %% \leanmodules{}, \axiomcount{} instead of inline literals (NumericalFreshness
 %% Gate 9 — Stage-13 fix-pass 2026-05-11).
 \input{../../docs/counts.tex}
+\input{../../docs/figuredeferred.tex}
 \newcommand{\mathlibcommit}{\mathlibrev}
 
 %% Bundle: D2 (tier 1, target PRD | JHEP)
@@ -557,6 +558,8 @@ M\"oller--Scheithauer scope; for the program's chiral-fermion
 setting it is a not-applicable witness rather than a counterexample.
 
 %% ══════════════════════════════════════════════════════════════════
+
+\figuredeferred{fig:d2-generation-lattice}{the modular-invariance constraint surface over generation count; the constraint is formalized as a divisibility predicate, so a continuous surface needs a modelling choice this draft has not made}
 \section{The SM $\mathbb{Z}_{16}$ anomaly and a categorical layer}
 \label{sec:z16-drinfeld}
 
@@ -748,6 +751,8 @@ physically relevant), pinned by the witness theorems
 \verb|pfaffianSign_at_gamma_noncentrosymmetric_singlet|.
 
 %% ══════════════════════════════════════════════════════════════════
+
+\figuredeferred{fig:d2-anomaly-classification}{the anomaly classification as a lattice diagram; blocked on the Pin$^+$ $\mathbb{Z}/16$ arc, which is 5q.H substrate still under construction}
 \section{The chirality wall: a three-pillar synthesis}
 \label{sec:chirality-wall}
 
@@ -986,6 +991,8 @@ $N_f \times 16$ Weyl-count divisibility from
 \S\ref{sec:modular}.
 
 %% ══════════════════════════════════════════════════════════════════
+
+\figuredeferred{fig:d2-chirality-wall}{the three-pillar chirality wall; F's \texttt{fig:f-chirality-three-pillar} is the same object at survey scale and the two must be drawn together}
 \section{Outlook: axiom budget, Mathlib infrastructure, and
 falsification}
 \label{sec:outlook}
@@ -1168,6 +1175,7 @@ $\sin^2 + \cos^2 = 1$ reduction of the GT central commutation
 \eqref{eq:gt-commutation} was a substantive contribution to the
 formalisation, not merely a closure of an existing skeleton.
 
+\figuredeferred{fig:d2-axiom-budget}{the axiom budget over the phase sequence; the per-phase axiom attribution is not emitted by \texttt{ExtractDeps} today}
 \section*{Methods and tools disclosure}
 The formal verification layer of this work was developed with
 substantial machine assistance: Lean~4 proof drafting and iteration

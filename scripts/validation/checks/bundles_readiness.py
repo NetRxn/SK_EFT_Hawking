@@ -722,6 +722,7 @@ def check_bundle_figure_adequacy() -> CheckResult:
             f"could not read the bundle roster ({exc}) — UNVERIFIED, not passing")])
 
     checked = short = 0
+    total_drawn = total_deferred = zero_drawn = 0
     for code in codes:
         tex = _H.PAPERS_DIR / code / "paper_draft.tex"
         md = _read_metadata(code)
@@ -731,6 +732,10 @@ def check_bundle_figure_adequacy() -> CheckResult:
         body = _TEX_COMMENT_RE.sub("", tex.read_text(errors="replace"))
         n_fig = len(re.findall(r"\\begin\{figure", body))
         n_def = len(re.findall(r"\\figuredeferred\{", body))
+        total_drawn += n_fig
+        total_deferred += n_def
+        if n_fig == 0:
+            zero_drawn += 1
         tier = md.get("tier")
         floor = _FIGURE_FLOOR_BY_TIER.get(tier)
         if floor is None:
@@ -754,9 +759,18 @@ def check_bundle_figure_adequacy() -> CheckResult:
             "no bundle draft was read — this check is UNVERIFIED, not passing"))
         return CheckResult(passed=False, measured=False, details=details)
 
+    # ⚠️ The drawn/deferred split rides on the SUMMARY, not only on the failing
+    # lines, so a green can never hide an all-deferred corpus. `\figuredeferred`
+    # is the pipeline law's honest-disclosure form and it legitimately satisfies
+    # the floor — but a bundle that has PLANNED four figures and a bundle that
+    # has DRAWN four are different states, and a gate reporting only "0 short"
+    # would render them identically. That is the vacuous-Stage-9 failure
+    # ("ALL figures PASS" over an empty set) rebuilt one layer up.
     details.insert(0, Detail(
         "summary", short == 0,
-        f"{checked} bundle(s) checked against their tier figure floor, {short} short"))
+        f"{checked} bundle(s) checked against their tier figure floor, {short} short "
+        f"— {total_drawn} drawn, {total_deferred} declared-deferred, "
+        f"{zero_drawn} bundle(s) with zero drawn figures"))
     return CheckResult(passed=short == 0, details=details)
 
 

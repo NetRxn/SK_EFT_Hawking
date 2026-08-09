@@ -79,7 +79,7 @@
   "stage9_status": "not_started",
   "stage10_status": "pending",
   "stage13_status": "pending",
-  "stage13_redo_required": false,
+  "stage13_redo_required": true,
   "freshness_stale": false,
   "source_manifest_last_regen": null,
   "last_lift": "2026-05-26T20:00:00Z",
@@ -185,6 +185,6 @@
     "ceiling": 60,
     "source": "PAPER_STRATEGY.md §6"
   },
-  "compiled_pages": 3,
+  "compiled_pages": 4,
   "compile_gate_ok": true
 }

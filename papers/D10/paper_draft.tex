@@ -9,6 +9,7 @@
 %% (\leantoolchain, \mathlibrev, \physlibrev) so a toolchain bump cannot
 %% strand this draft at a stale coordinate.
 \input{../../docs/counts.tex}
+\input{../../docs/figuredeferred.tex}
 
 %% Bundle target: D10 (tier 1, journal PRD | PRX Quantum | J. Chem. Phys.)
 %% Sources: Phases 6BA (NEGF) + 6BB (DFT) + 6BC (Lindblad). Sourceless synthesis.
@@ -134,6 +135,7 @@ Quantitative claims are backed by rational \emph{enclosures} rather than floatin
 where a transcendental such as $e^{-\gamma t}$ appears, we bracket it by rational endpoints
 (Sec.~\ref{sec:lindblad}), so the bound is itself kernel-checkable.
 
+\figuredeferred{fig:d10-verification-stack}{the PhysLib-on-Mathlib substrate stack; design only}
 \section{Non-equilibrium Green's-function transport}
 \label{sec:negf}
 
@@ -177,6 +179,7 @@ quanta (\thm{two\_channel\_no\_three\_quanta}). The certificate ties back to the
 Eq.~\eqref{eq:landauer} through \thm{channelConductance\_eq\_landauer}. To our knowledge this is the
 first machine-checked NEGF/Landauer conductance transport in any proof assistant.
 
+\figuredeferred{fig:d10-landauer-conductance}{conductance quantization against gate voltage; the certificate is formalized but no numerical transport run backs a plot}
 \section{Density-functional-theory foundations}
 \label{sec:dft}
 
@@ -256,6 +259,7 @@ substantive next step, and it is not claimed here.
 By contrast \S\ref{subsec:molecular}'s unconditional self-adjointness result takes no
 analytic hypothesis of this kind: it is a theorem about the operator itself.
 
+\figuredeferred{fig:d10-hk-uniqueness}{the Hohenberg--Kohn map as a commuting diagram; design only}
 \section{Open-system dynamics}
 \label{sec:lindblad}
 
@@ -313,6 +317,7 @@ rate equation (\thm{dampedTwoLevel\_population\_solves\_rate}); and the decay fa
 rational enclosure $1-\gamma t \le e^{-\gamma t} \le 1/(1+\gamma t)$
 (\thm{dampedTwoLevel\_decay\_envelope}), with a \texttt{norm\_num} operating point at $\gamma t = \tfrac12$.
 
+\figuredeferred{fig:d10-lindblad-decay}{the damped two-level trace-distance envelope; the decay-rate theorem is proved and the envelope needs a numerical solve that is not in the pipeline}
 \section{Synthesis, scope, and limitations}
 \label{sec:synthesis}
 

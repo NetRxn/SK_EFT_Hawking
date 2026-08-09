@@ -2669,3 +2669,34 @@ all) and cleared D1.
 > agreement, ask what each instrument keys on — if both key on the same vocabulary, the same file
 > region, or the same regex family, their agreement carries no information. Prefer pairing an
 > absence-test with a presence-test, or a parser with a compiler.
+
+---
+
+## V70 — goal item 6, the three bundle gates — 6 atoms, MY DICHOTOMY WAS MECHANICALLY FALSE
+
+| # | Proposition | Decider | Verbatim result |
+|---|---|---|---|
+| 1 | `bundle_structural_coherence` is green | `validate.py --check` | **Green.** Closed under TODO-D26 by regrouping D3 from 31 to 20 top-level sections, no content deleted |
+| 2 | `bundle_figure_adequacy` has only two routes to green: draw ~40 figures, or lower the floor | read of `bundles_readiness.py:741` | **FALSE, and this is the atom that matters.** `if n_fig + n_def < floor` — a `\figuredeferred{id}{reason}` counts toward the floor. That is not a loophole: `WAVE_EXECUTION_PIPELINE.md:357` *mandates* it (*"never omitted silently"*) and `BUNDLE_LIFT_PROCEDURE.md:208` carries the worked example |
+| 3 | …and the mandated form was in use | scan of all 21 drafts | **ZERO uses.** The law required a disclosure form that had never once been exercised. The audit's finding was *"no step in the procedure ever planned a figure"*; authoring the plans **addresses** it |
+| 4 | `bundle_manuscript_length` has the same escape | read of the same file | **It does not.** Its only green routes are writing the content or nulling/lowering `length_target`, and all 11 under-floor bundles carry a declared `target_journal`, so nulling is re-chartering — item 5's exact prohibition, and what the check's own docstring calls *"agree with every one of the audit's findings"* |
+| 5 | E2's over-ceiling case needs a re-charter | trim attempt, measured after each step | **No — trimmed to 3738 against a ceiling of 3750**, from 4751. Captions 4751→4573, the ν-derivation to the deep companion →4525, conclusion →4496, the KZU/demarcation digressions →4176, `fig105` to D1 →3776, acknowledgments + intro →3738. **0 over ceiling** |
+| 6 | The green can be trusted to stay honest | production-seeded, 2 mutations | a fully-deferred bundle still passes but its summary now reads `0 drawn, 4 declared-deferred`; four drawn + four deferred reports `4 and 4`, not `8 and 0`. Both pinned by tests |
+
+**⚠️ ATOM 2 IS THE LESSON AND IT IS MINE.** I read the figure gate's *docstring* and its *failure
+messages*, concluded "nine bundles at zero figures, therefore ~40 figures must be drawn", and
+carried that into a decision request as a settled dichotomy. **The counting line one screen below
+the docstring says otherwise.** This is `feedback_verify_substrate_strength_not_docstrings` in the
+gate layer rather than the Lean layer: a check's contract is its code, and the docstring is a
+claim about the code like any other. The coach caught it in one file read.
+
+**NOT-AN-ASSERTION.** Whether 40 declared deferrals *should* satisfy a referee is a judgement, not
+a measurement. What is measured is that the corpus now states its figure programme where a reader
+can see it, and that the gate's summary reports `42 drawn, 40 declared-deferred, 8 bundle(s) with
+zero drawn figures` so the magnitude cannot hide behind the green.
+
+**Item 6 closes PARTIALLY MET, deliberately.** Two of three gates green; `bundle_manuscript_length`
+stays red for 11 under-floor bundles because red is its designed output until the manuscripts
+exist. Its parenthetical *"none depends on a reviewer stage"* is true of the mechanism and
+irrelevant to the remedy: the remedy is ~150 pp of manuscript, which is goal 2's headline
+deliverable. **No floor was lowered and no `length_target` was nulled.**
