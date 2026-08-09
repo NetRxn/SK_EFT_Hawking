@@ -36,9 +36,16 @@ characterization as a cross-device modeling assumption for the
 bilayer nozzle regime. The predicted Hawking
 temperature is $T_H \approx \SI{2.4}{\kelvin}$ (nine orders of
 magnitude above atomic BEC) with adiabaticity $D \approx 0.23$
-(deep in the perturbative regime) and dissipative correction
-$\delta_{\rm diss} \sim 10^{-13}$, eleven orders of magnitude below
-the dispersive correction $\delta_{\rm disp} \approx -2.8\%$. The
+(deep in the perturbative regime). The two leading corrections are
+comparable and of opposite sign: a dispersive
+$\delta_{\rm disp} \approx -2.8\%$ and a viscous
+$\delta_{\rm diss} \approx +6.5\%$, the latter following from the
+Dirac fluid's momentum-diffusion constant
+$\nu = \eta v_F^2/w = 2(\eta/sT)c_s^2$. Graphene is therefore the
+one analog-gravity platform where the SK-EFT's dissipative
+correction is a percent-level, measurable shift rather than a
+formal refinement, and where the two corrections must be reported
+together because neither dominates. The
 Hawking signal manifests as excess current noise
 $\Delta S_I(\omega) = 2\hbar\omega\,\sigma_Q\,\Gamma(\omega)\,n_H(\omega)$
 derived independently from Keldysh fluctuation-dissipation and
@@ -192,9 +199,16 @@ length $L$ for monolayer (solid, $c_s = v_F/\sqrt{2}
 $c_s \approx \SI{440}{\kilo\meter/\second}$) graphene. Diamond
 markers are the Dean bilayer nozzle ($L = \SI{200}{\nano\meter}$,
 $T_H \approx \SI{2.4}{\kelvin}$) and two monolayer constriction
-projections at $L = \SI{50}{\nano\meter}$ ($T_H \approx \SI{17}{\kelvin}$,
-EFT breakdown beyond) and $L = \SI{100}{\nano\meter}$
-($T_H \approx \SI{8.7}{\kelvin}$). Horizontal lines: $T_{\rm e} =
+projections at $L = \SI{50}{\nano\meter}$ ($T_H \approx \SI{17}{\kelvin}$)
+and $L = \SI{100}{\nano\meter}$ ($T_H \approx \SI{8.7}{\kelvin}$).
+\emph{The monolayer markers show $T_H$ only.} Neither is a viable
+operating point: at \SI{100}{\nano\meter} the corrections are
+$\delta_{\rm disp} \approx -31\%$ and $\delta_{\rm diss} \approx
++35\%$, and at \SI{50}{\nano\meter} $-119\%$ and $+68\%$: both are
+outside the perturbative regime, and both with
+$\Gamma_H > \omega_H$ (Fig.~\ref{fig:diss_window}). The tractable
+window is the long-$L$ end, where the Dean device already sits.
+Horizontal lines: $T_{\rm e} =
 \SI{150}{\kelvin}$ Dean high-bias electron temperature; $T_{\rm imp} \approx
 \SI{80}{\kelvin}$ disorder scale below which hydrodynamic transport
 is robust.}
@@ -214,44 +228,87 @@ heats to $\sim\SI{150}{\kelvin}$~\cite{Geurs2025}, and this electron
 temperature sets the carrier thermal noise),
 $l_{\rm ee} \approx \SI{51}{\nano\meter}$ gives $D \approx 0.23$
 (deep in the perturbative regime) and
-$\delta_{\rm disp} \approx -2.8\%$. The effective Hawking temperature
-$T_{\rm eff} = T_H(1 + \delta_{\rm disp}) \approx \SI{2.36}{\kelvin}$
-is positive for $D^2 < 6/\pi$, formalized in
-\texttt{GrapheneHawking.graphene\_T\_eff\_positive}.
+$\delta_{\rm disp} \approx -2.8\%$. Taken alone this channel gives
+$T_H(1 + \delta_{\rm disp}) \approx \SI{2.36}{\kelvin}$, positive for
+$D^2 < 6/\pi$, formalized in
+\texttt{GrapheneHawking.graphene\_T\_eff\_positive}. The dissipative
+channel of the next subsection is of comparable magnitude and
+opposite sign, so the physical effective temperature is
+$T_{\rm eff} \approx \SI{2.52}{\kelvin}$, \emph{above} $T_H$ rather than
+below it.
 
-The dissipative correction is negligible. The Majumdar
-et al.~\cite{Majumdar2025} $\eta/s$ bound is reported for the
-thermal-regime effective dynamic viscosity in the cleanest
-hBN-encapsulated monolayer samples; we adopt it here for the
-Dean-equivalent
-ultra-clean bilayer-Dirac-fluid regime: a modeling assumption since
-the Dean nozzle device (Ref.~\cite{Geurs2025}, bilayer) is plausibly
-within the same
+The dissipative correction is comparable to the dispersive one and
+opposite in sign. The Majumdar et al.~\cite{Majumdar2025} $\eta/s$
+bound is reported for the thermal-regime effective dynamic viscosity
+in the cleanest hBN-encapsulated monolayer samples; we adopt it here
+for the Dean-equivalent ultra-clean bilayer-Dirac-fluid regime: a
+modeling assumption since the Dean nozzle device
+(Ref.~\cite{Geurs2025}, bilayer) is plausibly within the same
 universality class but is not itself the device measured in
-\cite{Majumdar2025}. With $\eta/s \approx 4 \times \hbar/(4\pi k_B)$
-and $T \approx \SI{150}{\kelvin}$, the viscous damping rate at the
-horizon is
+\cite{Majumdar2025}.
+
+The quantity the SK-EFT damping kernel requires is the
+momentum-diffusion constant $\nu$, in $\si{\meter\squared\per\second}$,
+not the relaxation time $\eta/(sT)$. In relativistic hydrodynamics the
+momentum density is $w/v_F^2$, so
 \begin{equation}
-\Gamma_H = \frac{\eta}{s\,T} \left(\frac{\kappa}{c_s}\right)^2
-\approx \SI{0.3}{\per\second}, \;\;
-\delta_{\rm diss} \approx 10^{-13}.
+\nu = \frac{\eta\,v_F^2}{w} = \frac{\eta}{s\,T}\,v_F^2
+    = 2\,\frac{\eta}{s\,T}\,c_s^2 ,
 \end{equation}
-This is eleven orders of magnitude below $\delta_{\rm disp}$, and
-the SK-EFT framework's value for graphene is therefore the
-\emph{systematic organization} of corrections (and the formal
-verification), not a specific dissipative modification of $T_H$.
+the last equality holding for a conformal fluid, where
+$c_s = v_F/\sqrt{2}$. We write $\nu$ in the \emph{measured} $c_s$
+because $v_F$ is a band parameter defined only for the monolayer:
+bilayer graphene has quadratic band touching and therefore no
+emergent light cone, and the equality above is exactly the hypothesis
+that fails there. The sound-attenuation coefficient carries
+$[2(d-1)/d]\,\eta + \zeta$; in $d = 2$ that bracket is exactly
+$1\cdot\eta$, and $\zeta = 0$ by conformal symmetry, so no $O(1)$
+ambiguity survives. (The familiar $4/3$ is the $d = 3$ value.)
+Bilayer non-conformality restores a small $\zeta$, which raises
+$\nu$ by at most the estimated $\zeta/\eta \lesssim 0.1$.
+
+With $\eta/s \approx 4 \times \hbar/(4\pi k_B)$ and
+$T \approx \SI{150}{\kelvin}$, the viscous damping rate at the horizon
+$k_H = \kappa/c_s$ is
+\begin{equation}
+\Gamma_H = \nu \left(\frac{\kappa}{c_s}\right)^2
+\approx \SI{1.3e11}{\per\second}, \;\;
+\delta_{\rm diss} = \frac{\Gamma_H}{\kappa} \approx +6.5\%.
+\end{equation}
+The two corrections therefore partially cancel, giving a net
+$T_{\rm eff}/T_H - 1 \approx +3.7\%$, a shift of the opposite sign
+to the dispersive term acting alone. Comparable corrections are not
+unique to graphene: the LKB polariton smooth-horizon configuration
+also has $\delta_{\rm disp} \approx -19\%$ against
+$\delta_{\rm diss} \approx 14\%$. What is distinctive here is that
+both are comparable \emph{and} small. At a few percent each the
+derivative expansion is well controlled, so the SK-EFT's organization
+of the two channels is a quantitative prediction rather than an
+extrapolation to the edge of its own validity, and it is the sign of
+the net shift, not merely its magnitude, that the measurement tests.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{figures/fig103_graphene_dissipation_window.png}
-\caption{Dissipation-window ratio $\omega_H/\Gamma_{\rm diss}$ for
-graphene Dirac-fluid configurations versus the Dean baseline.
-The Dean bilayer nozzle has $\omega_H/\Gamma \approx 1.6$ at the
-canonical momentum-relaxation mean-free path $l_{\rm mr} \approx
-\SI{5}{\micro\meter}$, marginal but improving with ultra-clean
-samples having longer $l_{\rm mr}$. Monolayer constrictions
-push the ratio toward $\sim 22$ at sub-$\SI{50}{\nano\meter}$ widths
-where the EFT begins to break down ($D > 1$).}
+\caption{Dissipation-window ratio $\omega_H/\Gamma_{\rm mr}$ set by
+\emph{momentum relaxation} for graphene Dirac-fluid configurations
+versus the Dean baseline. The Dean bilayer nozzle has
+$\omega_H/\Gamma_{\rm mr} \approx 1.6$ at the canonical mean-free path
+$l_{\rm mr} \approx \SI{5}{\micro\meter}$, and monolayer constrictions
+raise it toward $\sim 22$ at sub-$\SI{50}{\nano\meter}$ widths.
+\emph{Momentum relaxation is not the binding rate.} The dotted series
+is the viscous window, and it runs the other way:
+$\omega_H/\Gamma_H = 2.5$ at the Dean device, $0.46$ at
+\SI{100}{\nano\meter} and $0.23$ at
+\SI{50}{\nano\meter}. The scaling is elementary: $\omega_H \propto
+\kappa$ while $\Gamma_H = \delta_{\rm diss}\kappa \propto \kappa^2$,
+so the ratio falls as $1/\kappa \propto L$. Both monolayer
+configurations sit \emph{below unity}: the Hawking quanta are damped
+faster than they oscillate, and no spectral feature survives.
+Shrinking the constriction therefore closes the usable window rather
+than opening it, and the Dean bilayer device, the one that already
+exists, is the only configuration in this family with
+$\omega_H > \Gamma_H$.}
 \label{fig:diss_window}
 \end{figure}
 
@@ -463,8 +520,10 @@ quantitative target. The Hawking temperature is $T_H \approx
 \SI{2.4}{\kelvin}$: nine orders of magnitude above atomic BEC and
 inside the standard noise-spectroscopy operating window. The
 dispersive correction is well-controlled ($D \approx 0.23$,
-$\delta_{\rm disp} \approx -2.8\%$); the dissipative correction is
-negligible ($\delta_{\rm diss} \sim 10^{-13}$). The noise signal is
+$\delta_{\rm disp} \approx -2.8\%$) and the viscous correction is of
+comparable size and opposite sign
+($\delta_{\rm diss} \approx +6.5\%$), for a net
+$T_{\rm eff}/T_H - 1 \approx +3.7\%$. The noise signal is
 $\Delta S_I \approx \SI{e-26}{\ampere\squared/\hertz}$ peak with
 Planckian frequency dependence, distinguishable from the white
 Johnson-Nyquist background by shape-aware correlation analysis;

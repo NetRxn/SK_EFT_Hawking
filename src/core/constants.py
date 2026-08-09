@@ -256,6 +256,9 @@ GRAPHENE_PLATFORMS = {
         'alpha_eff': 0.7,              # effective coupling on hBN
         'nozzle_throat_nm': 200,       # nm (throat length L; gradient length scale)
         'channel_width_nm': 1000,      # nm (channel width W; Dean geometry, Phase 5w §2)
+        # ⚠️ DEAD LITERAL — overwritten below by l_ee = ℏv_F/(k_B T) = 50.92 nm for
+        # every platform. Retained only as the deep-research §1.4 cross-reference;
+        # no caller ever observes 51.
         'l_ee_nm': 51,                 # nm (electron-electron mean free path; deep research §1.4)
         'v_over_c_s_horizon': 0.985,   # dimensionless (flow velocity / c_s at horizon for Γ₀ ≈ 0.9994)
         'T_ambient_K': 150,            # K (cryogenic operating temperature)
@@ -1439,7 +1442,16 @@ LEGACY_DRAFT_UNRESOLVED_REF_CEILING = 80
 #: A RATCHET, not advisory. Existing debt is frozen; a NEW un-comparable entry FAILS.
 #: **Lower this as entries are wired to their constants**; raising it needs a stated
 #: reason in the same commit.
-PROVENANCE_UNRESOLVABLE_CEILING = 169
+#: 2026-08-09: 170 → 163. The resolver hand-listed ATOMS / EXPERIMENTS /
+#: POLARITON_PLATFORMS and so could not see GRAPHENE_PLATFORMS at all — all six
+#: `Dean_bilayer_nozzle.*` entries resolved to None and were absorbed into this
+#: ceiling as "inherited debt" rather than checked. Wiring the sweep to every
+#: dict-of-dicts registry in constants resolved 7 entries and immediately caught
+#: a live mismatch (`l_ee_nm` 51 vs the derived 50.92). An unresolvable entry is
+#: *counted*, not reported, so a blind resolver reads as debt rather than as a
+#: blind spot — the same failure shape as the three instruments repaired in the
+#: ADR-010 measurement pass.
+PROVENANCE_UNRESOLVABLE_CEILING = 163
 
 #: Legacy (non-bundle) `papers/*/paper_draft.tex` that do not compile under pdflatex.
 #: Frozen 2026-08-06 at the measured live count.

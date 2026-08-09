@@ -27,12 +27,12 @@
 <!-- AUTOGEN:counts-table BEGIN -->
 | Metric | Value |
 |---|---:|
-| Lean declarations (total) | 40673 |
-| Lean theorems (total) | 26360 |
-| Lean theorems (substantive) | 26334 |
+| Lean declarations (total) | 40678 |
+| Lean theorems (total) | 26364 |
+| Lean theorems (substantive) | 26338 |
 | Lean theorems (placeholder `True := trivial`) | 26 |
 | Lean modules | 2037 |
-| Lean definitions | 12793 |
+| Lean definitions | 12794 |
 | Lean structures | 479 |
 | Lean instances | 939 |
 | Lean inductives | 101 |
@@ -42,7 +42,7 @@
 | Aristotle runs | 44 |
 | Python source modules | 137 |
 | Test files | 175 |
-| pytest cases | 5931 |
+| pytest cases | 5934 |
 | Figures (PNG) | 170 |
 | Notebooks | 91 |
 | Papers (drafts) | 42 |

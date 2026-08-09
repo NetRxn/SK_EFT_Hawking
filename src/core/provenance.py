@@ -829,6 +829,38 @@ PARAMETER_PROVENANCE = {
         'human_verified_notes': 'Phase 6i Wave 2 closure: auto-flipped after categorization sweep. DOI populated and LLM-verified against the primary source. Bibkey not yet present in CITATION_REGISTRY; queued for Phase 6i Wave 4 (Lean-substance / paper-cited-bibkey audit) sweep.',
         'notes': 'Range 0.5-0.9; 0.7 is representative midpoint.',
     },
+    'Dean_bilayer_nozzle.v_F': {
+        'value': 1.0e6,
+        'unit': 'm/s',
+        'tier': 'ASSUMED',
+        'source': 'McCann & Koshino, Rep. Prog. Phys. 76, 056503 (2013) — bilayer review',
+        'detail': 'Carried in GRAPHENE_PLATFORMS as "Fermi velocity, bilayer ≈ monolayer". '
+                  'This is a MODELLING ASSUMPTION, not a measurement, and it is the one '
+                  'Dean-device parameter with no primary-source value: bilayer graphene has '
+                  'QUADRATIC band touching near K, so there is no emergent light cone and no '
+                  'v_F in the Dirac sense — the low-energy dispersion is parabolic with '
+                  'm* ≈ 0.033 m_e (see src/graphene/bilayer_eos.bilayer_effective_mass). The '
+                  '10⁶ m/s figure is the MONOLAYER value, retained because the interlayer '
+                  'hopping γ₁ ≈ 0.39 eV is defined through it (m* = γ₁/2v_F²).',
+        'doi': None,
+        'llm_verified_date': '2026-08-09',
+        'llm_verified_notes': 'Entry created 2026-08-09 during the Γ_H repair, which found this '
+                              'parameter had NO provenance entry while the platform\'s five '
+                              'others did. ⚠️ LOAD-BEARING CAVEAT: pairing this monolayer v_F '
+                              'with the MEASURED bilayer c_s = 4.4e5 m/s violates the conformal '
+                              'relation c_s = v_F/√2 that the same constants block asserts, and '
+                              'inflates the kinematic viscosity by (v_F/c_s)²/2 = 2.6×. The '
+                              'dissipative path therefore does NOT use this value: '
+                              'graphene_kinematic_viscosity is written in the measured c_s '
+                              '(ν = 2(η/sT)c_s²), which is equivalent for a conformal fluid and '
+                              'well defined for a non-conformal one. Anything that reintroduces '
+                              'v_F into a bilayer transport estimate must justify it here first.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Used for l_ee (thermal de Broglie scale) and the m* definition, not for '
+                 'momentum diffusion. See Lean DiracFluidSK.kinematicViscosity_eq_vF_form for '
+                 'the exact hypothesis (v_F² = 2c_s²) under which the two forms coincide.',
+    },
     'Dean_bilayer_nozzle.c_s': {
         'value': 4.4e5,
         'unit': 'm/s',
@@ -864,14 +896,21 @@ PARAMETER_PROVENANCE = {
         'notes': 'Required by greybody quasi-1D correction bound (Lean T5 in QuasiOneDReduction).',
     },
     'Dean_bilayer_nozzle.l_ee_nm': {
-        'value': 51,
+        'value': 50.9216,
         'unit': 'nm',
         'tier': 'EXTRACTED',
         'source': 'Phase 5w deep research §1.4 (Finazzi-Parentani regime analysis)',
         'detail': 'Electron-electron mean free path l_ee for the Dean hydrodynamic '
                   'regime. Sets the dispersive length in the Dean adiabaticity parameter '
                   'D = κ·l_ee/c_s = 0.232 (adiabatic regime D<1). Also sets the dispersive '
-                  'UV cutoff ω_max = √(κ c_s/l_ee) ≈ 4.15e12 rad/s via Macher-Parentani.',
+                  'UV cutoff ω_max = √(κ c_s/l_ee) ≈ 4.15e12 rad/s via Macher-Parentani. '
+                  '⚠️ The registry previously carried the deep research\'s rounded 51 nm. '
+                  'GRAPHENE_PLATFORMS also carries a literal 51, but that literal is DEAD: '
+                  'constants.py derives l_ee = ℏv_F/(k_B T) and overwrites every platform '
+                  'entry at import, so 50.9216 nm is the only value any caller ever sees. '
+                  'The 0.15 % gap was invisible until the provenance resolver was wired to '
+                  'GRAPHENE_PLATFORMS on 2026-08-09 — before that all six Dean parameters '
+                  'resolved to None and were counted as inherited debt rather than checked.',
         'doi': None,
         'llm_verified_date': '2026-04-22',
         'llm_verified_notes': 'Deep research cites standard hydrodynamic regime l_ee ≈ 50 nm '

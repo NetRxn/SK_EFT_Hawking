@@ -490,6 +490,67 @@ def effective_temperature_ratio(omega, c_s, kappa, D,
 # WKB turning point shift (WKBAnalysis.lean: turning_point_shift_nonzero)
 # ════════════════════════════════════════════════════════════════════
 
+def horizon_damping_rate(gamma_1, gamma_2, kappa, c_s):
+    """
+    Horizon damping rate from EFT transport coefficients.
+
+    Γ_H = (γ₁ + γ₂) · k_H²  =  (γ₁ + γ₂) · (κ/c_s)²
+
+    This is the canonical home for the identity (Pipeline Invariant 1). It was
+    previously written inline in `compute_dissipative_correction` and
+    re-derived — wrongly — in `src/graphene/hawking_predictions.py`, which
+    dropped the velocity² and produced a quantity in [s·m⁻²] labelled [s⁻¹].
+    Callers must use this function rather than open-coding the conversion.
+
+    Lean: SKEFTHawking.SecondOrderSK.GammaH / gammaH_def / gammaH_via_kH
+
+    Source: original
+
+    Args:
+        gamma_1, gamma_2: first-order transport coefficients [m²/s]
+        kappa: surface gravity [s⁻¹]
+        c_s: sound speed [m/s]
+
+    Returns:
+        Γ_H [s⁻¹]
+    """
+    if c_s <= 0:
+        return 0.0
+    return (gamma_1 + gamma_2) * (kappa / c_s) ** 2
+
+
+def conformal_kinematic_viscosity(eta_over_sT, c_s):
+    """
+    Momentum-diffusion constant of a 2+1D conformal relativistic fluid.
+
+    ν = η·v_F²/w = (η/(sT))·v_F² = 2·(η/(sT))·c_s²
+
+    The two forms are identical for a conformal fluid, where c_s = v_F/√2. The
+    c_s form is preferred because c_s is *measured* on both graphene platforms
+    while v_F is a band parameter defined only for the monolayer.
+
+    Why v_F² and not c_s² alone: in relativistic hydrodynamics the momentum
+    density is w/v_F², so ν = η/(w/v_F²). The sound-attenuation coefficient
+    carries [2(d−1)/d]·η + ζ; in **d = 2** that bracket is exactly 1·η, and
+    ζ = 0 by conformal symmetry — so there is no residual O(1) factor. (The
+    familiar 4/3 is the d = 3 value and does not apply here.)
+
+    Lean: SKEFTHawking.DiracFluidSK.kinematicViscosity and
+          conformal_kinematic_viscosity_eq_vF_form (the c_s ↔ v_F equivalence)
+
+    Source: original — Phase-5w survey §"Sound attenuation by viscosity gives
+    Γ_sound ~ (η/w)k²"; Kovtun-Son-Starinets for the η/s normalisation.
+
+    Args:
+        eta_over_sT: η/(s·T) [s] — the KSS ratio divided by temperature
+        c_s: sound speed [m/s]
+
+    Returns:
+        ν [m²/s]
+    """
+    return 2.0 * eta_over_sT * c_s ** 2
+
+
 def turning_point_shift(Gamma_H, kappa, c_s):
     """
     Imaginary part of WKB turning point shift due to dissipation.

@@ -266,19 +266,43 @@ def _lookup_provenance_value(prov_key, experiments, atoms, polariton_platforms):
         return None
     group, key = parts
 
-    # ATOMS
-    if group in atoms:
-        return atoms[group].get(key)
+    # The three registries the caller passes explicitly, then EVERY other
+    # dict-of-dicts registry in constants.
+    #
+    # ⚠️ This branch used to hand-list ATOMS / EXPERIMENTS / POLARITON_PLATFORMS
+    # only, so `GRAPHENE_PLATFORMS` was invisible: all six `Dean_bilayer_nozzle.*`
+    # entries resolved to None and sat inside the "inherited debt" ceiling,
+    # unnoticed, because an unresolvable entry is *counted* rather than *reported*.
+    # A hand-listed consumer set beside a registry is the defect class ADR-009
+    # exists to close (cf. H4), so the sweep is derived, not extended by one.
+    for registry in (atoms, experiments, polariton_platforms):
+        if group in registry:
+            return registry[group].get(key)
 
-    # EXPERIMENTS
-    if group in experiments:
-        return experiments[group].get(key)
-
-    # POLARITON_PLATFORMS
-    if group in polariton_platforms:
-        return polariton_platforms[group].get(key)
+    for reg in _dict_of_dict_registries():
+        if group in reg:
+            return reg[group].get(key)
 
     return None
+
+
+def _dict_of_dict_registries():
+    """Every module-level dict-of-dicts in `src.core.constants`.
+
+    Yields the registries a dotted provenance key could name. Non-dict values
+    and empty dicts are skipped, so a plain lookup table of scalars never
+    masquerades as a platform registry.
+    """
+    from src.core import constants as _c
+
+    for name in dir(_c):
+        if name.startswith('_'):
+            continue
+        val = getattr(_c, name, None)
+        if not isinstance(val, dict) or not val:
+            continue
+        if all(isinstance(v, dict) for v in val.values()):
+            yield val
 
 
 # ═══════════════════════════════════════════════════════════════════════

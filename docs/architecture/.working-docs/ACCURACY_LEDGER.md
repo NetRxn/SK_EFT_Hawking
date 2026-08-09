@@ -2526,3 +2526,66 @@ delegation.
 `hawking_predictions.py`, Fig. 103's caption and the missing `Dean_bilayer_nozzle.v_F` provenance are
 all still uncorrected, and E2 remains blocked. What changed is that the blocker is now **a known
 propagation set, not an adjudication** — TODO-D31 carries the list.
+
+---
+
+## V66 — TODO-D31 propagated: the repair found four sites the finding never listed — 7 atoms
+
+**A1 — the propagation set was itself under-measured.** TODO-D31 listed five sites. The wave found
+**nine**, and the four unlisted ones were the interesting ones:
+`src/graphene/bilayer_eos.bilayer_impact_on_hawking` multiplied ζ/η into a hardcoded `1e-13` and
+reported the product as *"negligible²"*; `papers/paper16_graphene_sk_eft` — the **source draft E2 was
+lifted from** — carried the defect in four passages, so the next lift would have re-imported it;
+`GrapheneHawking.lean`'s module header asserted the eleven orders as a physics finding; and
+`fig_graphene_dissipation_window` plotted the non-binding rate. **A finding's own scope is a claim,
+and this one was 55 % complete** — consistent with `feedback-remeasure-filed-findings-before-fixing`.
+
+**A2 — the resolver was blind to an entire registry.** `_lookup_provenance_value` hand-listed ATOMS /
+EXPERIMENTS / POLARITON_PLATFORMS, so **every `Dean_bilayer_nozzle.*` key resolved to `None`** and was
+absorbed into `PROVENANCE_UNRESOLVABLE_CEILING` as inherited debt. An unresolvable entry is *counted*,
+not *reported* — so a blind resolver reads as debt. Deriving the sweep from every dict-of-dicts
+registry in `constants` resolved 7 entries (170 → 163, ceiling ratcheted down) and **immediately
+caught a live mismatch the moment it could see them**: `l_ee_nm` registry 51 vs code 50.92.
+
+**A3 — and that mismatch exposed a dead literal.** `GRAPHENE_PLATFORMS['Dean_bilayer_nozzle']['l_ee_nm'] = 51`
+is overwritten at import by the derived `ℏv_F/(k_B T)`. No caller has ever seen 51; the registry
+recorded a value the code does not have. Annotated at both ends rather than deleted, so the
+deep-research cross-reference survives.
+
+**A4 — four tests asserted the defect, and each replacement is stronger than what it replaced.**
+`Γ_H/κ < 1e-10` → a two-sided band that fails both on the old defect (1.7e-13) and on double-counting;
+`δ_diss < |δ_disp|×1e-8` → the inverted relation *plus* the opposite-sign assertion;
+`T_eff < 0` as the 50 nm EFT-breakdown proxy → assertions on the individual terms, because a positive
+δ_diss can hold the *sum* positive while both terms are individually non-perturbative — a worse regime
+that the old proxy would have scored as safe; and `|n_H/n_P − 1| < 0.1` → the exact low-ω limit
+`(1+δ_disp+δ_diss)/(1−δ_k)`, verified to 1e-3. **A tolerance test encodes an era; an identity test
+encodes the physics.**
+
+**A5 — a new claim the repair produced, and it is not a restatement.** The two dissipation windows run
+in *opposite* directions in T_H: momentum relaxation improves 1.6 → 22 as the constriction tightens,
+while the viscous window falls 2.5 → 0.23. **Both monolayer configurations sit below unity** — Γ_H >
+ω_H, the quanta damped faster than they oscillate. The Dean bilayer device, the one that already
+exists, is the only configuration in the family with ω_H > Γ_H. E2's figure previously plotted only
+the improving series.
+
+**A6 — Lean.** Four kernel-pure theorems in `DiracFluidSK`, anchoring the new
+`formulas.conformal_kinematic_viscosity`. `kinematicViscosity_eq_vF_form` states the equivalence
+`2(η/sT)c_s² = (η/sT)v_F²` **under the explicit hypothesis `v_F² = 2c_s²`** — written as a hypothesis
+precisely because it is what fails for bilayer graphene. Axioms `{propext, Classical.choice, Quot.sound}`.
+
+**A7 — `Dean_bilayer_nozzle.v_F` now has provenance, tier ASSUMED.** It was the only one of that
+platform's six parameters without an entry. The entry records that it is a monolayer value carried on
+a quadratic-band device, and that the dissipative path **deliberately does not use it** — ν is written
+in the measured c_s so the unprovenanced number is off the load-bearing path entirely.
+
+> **The through-line.** V65 said a disclosed gap is still a gap. V66 is the sequel: **a filed finding's
+> scope is a measurement, and measurements decay.** TODO-D31 was written on 2026-08-08 by me, from a
+> grep, and was 55 % complete a day later — not because the code moved, but because the grep's keys
+> (`formulas.py`, `Γ_H`, `10^{-13}`) could not see a hardcoded `1e-13` inside a ζ/η product, a source
+> draft under a different bundle, or a figure that plots the wrong quantity without naming it.
+
+**NOT-AN-ASSERTION.** E2 is not clear to ship. `readiness_submission_gate` remains red, the ζ/η
+bilayer band is an estimate from a QCD analogy rather than a measurement, and the O(1) prefactor
+argument rests on the fluid being conformal — which the bilayer is not. What changed is that
+δ_diss is now derived through the canonical path with its assumptions written down, instead of
+being a dimensionally-inconsistent literal.

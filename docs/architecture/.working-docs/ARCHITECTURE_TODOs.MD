@@ -1251,7 +1251,32 @@ explicit, reasoned exception set built from the live corpus before the check is 
 instances above were outside it, so widening the *predicate* without widening the *scope* would
 have caught half of what this pass found by hand. ADR-010 §D7 tracks the scope half.
 
-### D31. E2's Γ_H is dimensionally wrong and its headline inverts — BLOCKING E2
+### D31. E2's Γ_H is dimensionally wrong and its headline inverts — ✅ DONE 2026-08-09
+
+> **Propagated in one wave. The listed set was five sites; the wave found nine** — see ledger V66.
+> Unlisted: `bilayer_eos` (hardcoded `1e-13` inside a ζ/η product), `paper16_graphene_sk_eft` (the
+> SOURCE draft E2 was lifted from, four passages), `GrapheneHawking.lean`'s module header, and
+> `fig_graphene_dissipation_window` (plotted the non-binding rate).
+>
+> **Landed:** `formulas.horizon_damping_rate` + `formulas.conformal_kinematic_viscosity` as the
+> canonical home; the graphene path now routes through them instead of re-deriving; four kernel-pure
+> Lean theorems in `DiracFluidSK` anchoring the new formula; `Dean_bilayer_nozzle.v_F` provenance
+> (tier ASSUMED, and off the load-bearing path — ν is written in the measured `c_s`); the provenance
+> resolver wired to every dict-of-dicts registry (170 → 163 unresolvable, ceiling ratcheted); E2, D1
+> and paper16 prose; both figure captions; a second series on Fig. 103.
+>
+> **Numbers:** δ_diss ≈ +6.5 % against δ_disp ≈ −2.8 % at the Dean device, net +3.7 %, T_eff **above**
+> T_H. Γ_H ≈ 1.3×10¹¹ s⁻¹, the order Phase-5w reports.
+>
+> **A claim the repair produced:** the momentum-relaxation and viscous windows run in *opposite*
+> directions, and both monolayer configurations sit below ω_H = Γ_H. Shrinking the constriction
+> closes the usable window. The Dean bilayer device is the only viable point in the family.
+>
+> ⚠️ **E2 still does not ship.** `readiness_submission_gate` is red; the ζ/η band is a QCD-analogy
+> estimate; the ζ = 0 prefactor argument assumes conformality the bilayer lacks. Those are disclosed
+> in the draft, not resolved.
+
+<details><summary>Original finding (2026-08-08), retained — its scope claim was 55 % complete</summary>
 
 `papers/E2/paper_draft.tex` (~line 233) writes
 Γ_H = (η/(sT))(κ/c_s)², which is **s·m⁻², not a rate**. Reproduced to two significant figures
@@ -1316,6 +1341,8 @@ than the "negligible" paragraph it replaces, and it is robust to the c_s²/v_F²
 
 Full working: `docs/audits/2026-08-08-adr010-d4-adjudication/ADJUDICATION.md` §3 and
 ADR-010 §Open item 5.
+
+</details>
 
 ### D32. D6 §5.4 excision + AGP threshold lift — ✅ DONE 2026-08-09 (one wave)
 
