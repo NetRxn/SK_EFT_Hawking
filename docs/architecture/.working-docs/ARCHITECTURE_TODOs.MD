@@ -848,7 +848,26 @@ violated for the fifth time in this workstream.
   Prose-only.
 - Full working: `docs/audits/2026-08-07-d3-retrofit/FINDINGS.md` §3.
 
-### D18. `prose_theorem_reference_coverage` misses backtick-quoted theorem names — OPEN (coverage gap)
+### D18. `prose_theorem_reference_coverage` misses backtick-quoted theorem names — ✅ DONE 2026-08-09
+
+> **The residue the entry said was unknown, measured:** across all drafts, Lean-ish references by
+> quoting form are `\texttt{}` 2 801 · `\verb|…|` 125 · `\lean{}` 275 · `` `name' `` 1.
+>
+> ⚠️ **400 of those 401 non-`\texttt` references were ALREADY COVERED** — the alias fixpoint
+> discovers `\lean`/`\thm`/`\mthm` structurally and `_PROSE_VERB_RE` handles `\verb`, both
+> repaired in the ADR-010 pass. A naive scan says "401 invisible"; the check's actual reach says
+> **one**. Reading the extractor beat counting the corpus.
+>
+> **That one was the whole defect:** D7 cited `` `analog\_hawking\_quantum\_advantage\_demarcation' ``,
+> a theorem that does not exist. Fixed to the real biconditional
+> `analog_hawking_simulable_iff_fourCycleFree_and_nonneg_and_c1_zero`, which is what the surrounding
+> prose actually describes (it conjoins the structural and topological axes). D7 compiles; candidates
+> 1 459 → 1 460.
+>
+> **Both halves of the fix shape landed** (the entry offered them as alternatives): the extractor
+> gained `_PROSE_TEX_QUOTE_RE` *and* the draft was normalised to `\texttt{}`. The quote form is the
+> one shape that cannot be discovered structurally — there is no macro to discover — so it needs its
+> own pattern, gated on `\_` or a dot so English quotation does not flood the candidate set.
 
 - **The defect it let through:** `papers/D7/paper_draft.tex:127` names its own headline as
   `` `analog\_hawking\_quantum\_advantage\_demarcation' `` — a theorem that **does not exist**.
@@ -1612,7 +1631,31 @@ them by declaring more apexes without closing D35 would inflate D6's closure wit
 the paper can claim, which is the metric-gaming the "monotone in emptiness" finding (PR review
 pass 3, H1) warns about from the other direction. **Close D35 first; re-measure this after.**
 
-### D37. `NUMERICAL_LITERAL_RE`'s `\times 10^` leg flags dimensionless constants — OPEN (low)
+### D37. `NUMERICAL_LITERAL_RE`'s `\times 10^` leg flags dimensionless constants — ✅ CLOSED-NOT-A-DEFECT 2026-08-09
+
+> **Re-measured as the entry demanded, and the adjudication went AGAINST narrowing.** Live
+> population, all drafts:
+>
+>     117 matches   11 fired a unit alternative
+>                  106 fired `\times 10^`  ->  46 with a unit,  60 DIMENSIONLESS
+>
+> **51 % of the predicate's own population has no unit at all.** The defect is therefore in the
+> predicate's SELF-DESCRIPTION, which read *"a literal with a physical unit"*, not in its behaviour.
+>
+> **Narrowing was rejected.** Requiring an adjacent unit would drop 60 of 117 matches at a stroke —
+> loosening a gate, which the goal forbids. And it would be wrong on the merits: a dimensionless
+> computed value (δ_disp, δ_diss) drifts from the pipeline exactly as a unit-bearing one does, so
+> "unit-bearing" was never the property being protected.
+>
+> **The real tension is a different axis** and is left where it belongs: pipeline-derived values
+> (should be generated) vs source-anchored constants that must stay literal, e.g. D6 §7's
+> `2.73 \times 10^{-5}`, simultaneously the primary source's published rigorous bound and the
+> constant asserted in `steaneAGPThreshold_gt`. That is a per-site Stage-13 judgement, not a regex
+> change. `NUMERICAL_LITERAL_CEILING` stays at 117 and stays down-only.
+>
+> **Pinned:** `tests/…::TestNumericalLiteralPopulationComposition` asserts the `\times 10^` leg
+> keeps the majority, so a future silent narrowing fails a test instead of quietly shrinking a
+> corpus figure.
 
 `NUMERICAL_LITERAL_RE` (`scripts/validation/_tex.py`) documents itself as matching *"a literal with
 a physical unit that belongs in an `\input{tables/...}` file"*. Its final alternative is a bare

@@ -71,8 +71,35 @@ def _line_of(text: str, offset: int) -> int:
 # subsystems disagree by construction, and the check built to catch disagreement
 # would be reporting on a difference someone introduced in its own blind spot.
 
-#: A literal with a physical unit that belongs in an `\input{tables/...}` file
-#: rather than hand-typed in body prose (Invariant #1).
+#: A hand-typed numeric literal in body prose that could drift from the pipeline
+#: and therefore belongs in an `\input{tables/...}` file (Invariant #1).
+#:
+#: ⚠️ THIS COMMENT SAID "a literal with a physical unit" UNTIL 2026-08-09, AND THAT
+#: WAS FALSE FOR MOST OF ITS OWN POPULATION (TODO-D37). Measured across all drafts:
+#:
+#:     117 matches total
+#:        11  fired a unit alternative (nK, mK, mu m, mm/s, s^-1, \mathrm{...})
+#:       106  fired the final `\times 10^` alternative
+#:             46 of those carry a unit after the exponent
+#:             60 of those are DIMENSIONLESS  <-- 51 % of the whole population
+#:
+#: The dimensionless majority is correction ratios (delta_disp, delta_diss),
+#: thresholds and table entries. **They are in scope deliberately.** A
+#: dimensionless computed value drifts from the pipeline exactly as a unit-bearing
+#: one does, so the freshness concern is identical; "unit-bearing" was never the
+#: property this predicate was protecting, only the property its comment claimed.
+#:
+#: TODO-D37 offered narrowing the leg to require an adjacent unit. **Rejected:** it
+#: would drop 60 of 117 matches at a stroke, which is loosening a gate rather than
+#: fixing one, and the goal forbids forcing a gate green by narrowing a check.
+#:
+#: The genuine tension D37 surfaced is a DIFFERENT axis: pipeline-derived values
+#: (should be generated) versus source-anchored constants that must stay literal —
+#: e.g. D6 §7's `2.73 \times 10^{-5}`, both the published rigorous bound of the
+#: primary source and the constant asserted in `steaneAGPThreshold_gt`. Routing a
+#: theorem's own statement through a regenerated file is the wrong direction. That
+#: distinction is a per-site Stage-13 judgement, not a regex change, and the
+#: down-only `NUMERICAL_LITERAL_CEILING` is what tracks it.
 NUMERICAL_LITERAL_RE = re.compile(
     r'(?<!\\)\b(\d+\.\d+|\d+(?:\.\d+)?e[+-]?\d+)\s*'
     r'(~?)\\?(?:'

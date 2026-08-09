@@ -112,7 +112,7 @@ checks read. See `validate._CANONICAL_ORDER`.
 | 69 | `bundle_cross_references_resolve` | `papers_prose` | Every \ref in a bundle draft has a matching \label somewhere in its input closure |
 | 70 | `paper_latex_compiles` | `papers_prose` | Every papers/*/paper_draft.tex compiles under pdflatex — bundles HARD-FAIL, legacy drafts ratchet; per-draft content-hash cache (--force-latex recompiles all) |
 | 71 | `axiom_count_prose_consistency` | `papers_prose` | Paper prose axiom-count claims agree with docs/counts.json |
-| 72 | `prose_theorem_reference_coverage` | `prose_lean_refs` | Bundle-draft Lean references in any verbatim form (texttt, a preamble alias for it, or verb) resolve in lean_deps.json |
+| 72 | `prose_theorem_reference_coverage` | `prose_lean_refs` | Bundle-draft Lean references in any verbatim form (texttt, a preamble alias for it, verb, or a TeX `name' quote) resolve in lean_deps.json |
 | 73 | `theorem_name_embedded_citations` | `prose_lean_refs` | Declaration names embedding author+year have matching bibliography entries |
 | 74 | `inventory_index_autogen_fresh` | `freshness` | Advisory: SK_EFT_Hawking_Inventory_Index.md autogen blocks match docs/counts.json |
 | 75 | `architecture_inventory_fresh` | `freshness` | docs/architecture/SURFACE_INVENTORY.md matches a fresh derivation from the code |

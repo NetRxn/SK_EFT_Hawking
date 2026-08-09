@@ -450,3 +450,94 @@ class TestGraphTestNodeCoverage:
         nodes = extract_python_test_nodes()
         ids = [n["id"] for n in nodes]
         assert len(set(ids)) == len(ids), "duplicate PythonTest node ids"
+
+
+# ── TODO-D37: the literal predicate's population composition is pinned ─────
+
+class TestNumericalLiteralPopulationComposition:
+    """`NUMERICAL_LITERAL_RE` described itself as matching "a literal with a
+    physical unit". Measured 2026-08-09, that is false for 51 % of its own
+    population: of 117 matches, 60 are dimensionless scientific notation.
+
+    D37 offered narrowing the leg to require an adjacent unit. That was rejected
+    as loosening — it would drop 60 matches at a stroke. These tests pin the
+    composition so a future narrowing shows up as a failing test rather than as
+    a quietly smaller corpus figure."""
+
+    def _measure(self):
+        import sys, pathlib, re
+        sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / "scripts"))
+        from validation._tex import find_inline_numerical_literals
+        import validate_helpers as _H
+        unit_leg = times_leg = 0
+        for tex in _H.all_paper_drafts():
+            _body, matches = find_inline_numerical_literals(tex.read_text())
+            for m in matches:
+                if '\\times' in m.group(0):
+                    times_leg += 1
+                else:
+                    unit_leg += 1
+        return unit_leg, times_leg
+
+    def test_the_times_ten_leg_carries_the_majority(self):
+        """If this inverts, someone narrowed the leg — which is the change D37
+        explicitly rejected. Re-read the D37 entry before adjusting."""
+        unit_leg, times_leg = self._measure()
+        assert times_leg > unit_leg * 3, (
+            f"unit-leg={unit_leg} times-leg={times_leg}: the `\\times 10^` leg is "
+            "supposed to dominate; a collapse here means the predicate was narrowed")
+
+    def test_dimensionless_matches_are_in_scope_not_excluded(self):
+        """A dimensionless computed value drifts exactly as a unit-bearing one
+        does. The predicate must still see scientific notation with no unit."""
+        import sys, pathlib
+        sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / "scripts"))
+        from validation._tex import NUMERICAL_LITERAL_RE
+        assert NUMERICAL_LITERAL_RE.search(r"$2.38\times10^{-5}$ the crossover"), \
+            "dimensionless scientific notation must remain in scope (TODO-D37)"
+
+    def test_ceiling_matches_the_live_population(self):
+        from src.core.constants import NUMERICAL_LITERAL_CEILING
+        unit_leg, times_leg = self._measure()
+        assert unit_leg + times_leg <= NUMERICAL_LITERAL_CEILING
+
+
+# ── TODO-D18: the TeX-quote form is extracted ─────────────────────────────
+
+class TestTexQuoteReferencesAreExtracted:
+    """`prose_theorem_reference_coverage` keyed on `\\texttt`, discovered preamble
+    aliases and `\\verb`. The bare TeX quotation `` `name' `` has no macro to
+    discover, so it was invisible — and D7 used exactly that form to cite
+    `analog_hawking_quantum_advantage_demarcation`, a theorem that does not exist.
+
+    Residue was MEASURED, not assumed: `\\verb` and `\\lean` were already covered
+    by the alias fixpoint, so of 401 non-`\\texttt` Lean-ish references only ONE
+    was genuinely unreachable."""
+
+    def _tokens(self, src):
+        import sys, pathlib
+        sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / "scripts"))
+        from validation.checks.prose_lean_refs import _prose_verbatim_tokens
+        return [t for t, _off in _prose_verbatim_tokens(src)]
+
+    def test_the_exact_defect_d7_shipped_is_now_extracted(self):
+        src = r"The biconditional `analog\_hawking\_quantum\_advantage\_demarcation' (Lean)."
+        assert "analog_hawking_quantum_advantage_demarcation" in self._tokens(src)
+
+    def test_ordinary_english_quotation_is_not_swept_in(self):
+        """Gated on `\\_` or a dot. Without the gate every quoted English word
+        becomes a candidate and the check drowns in prose."""
+        src = r"the so-called `vestigial' phase and its `second sound' mode"
+        assert self._tokens(src) == []
+
+    def test_dotted_namespace_quote_is_extracted(self):
+        src = r"see `AnalogHawkingDemarcation.analog\_hawking\_tree\_simulable\_demarcation'"
+        toks = self._tokens(src)
+        assert any(t.startswith("AnalogHawkingDemarcation.") for t in toks), toks
+
+    def test_d7_no_longer_cites_a_nonexistent_theorem(self):
+        import pathlib, re
+        d7 = (pathlib.Path(__file__).resolve().parents[1]
+              / "papers/D7/paper_draft.tex").read_text()
+        assert "analog\\_hawking\\_quantum\\_advantage\\_demarcation" not in d7
+        assert "analog\\_hawking\\_simulable\\_iff\\_fourCycleFree" in d7

@@ -22,11 +22,17 @@ which is what happened to D10 the moment it entered `BUNDLE_CODES`.
 
 ⚠️ **"Verbatim" means SEVERAL syntactic forms, and the corpus uses all of them.**
 `\\texttt{}`; a preamble one-argument alias for it (D8/D9 write `\\lean{}`, D11/D12
-`\\thm{}`, D12 also `\\mthm{}` — an alias of an alias); and `\\verb|...|` (D6's
-usual form). Detection is therefore STRUCTURAL — brace-matched macro bodies plus a
-fixpoint over aliases — never a list of known macro names. Extend the structure, not
-an enumeration: a count of spans scanned is not evidence that the population was
-reached.
+`\\thm{}`, D12 also `\\mthm{}` — an alias of an alias); `\\verb|...|` (D6's
+usual form); and the bare TeX quotation `` `name' `` with no macro at all, which
+D7 used to cite a theorem that does not exist (TODO-D18, 2026-08-09). Detection is
+therefore STRUCTURAL — brace-matched macro bodies plus a fixpoint over aliases —
+never a list of known macro names. Extend the structure, not an enumeration: a
+count of spans scanned is not evidence that the population was reached.
+
+⚠️ The quote form is the one shape that CANNOT be discovered structurally, because
+there is no macro to discover. It is matched by its own pattern, gated on an
+escaped `\\_` or a dotted namespace so that ordinary English quotation
+(`` `vestigial' ``) does not flood the candidate set.
 
 Import rules as in every module here; `theorem_name_embedded_citations` reads
 `_cfg.STRICT_MODE` by attribute (H5). MOVED VERBATIM otherwise.
@@ -128,6 +134,21 @@ def _prose_verbatim_re(tex_source: str) -> re.Pattern:
 # brace-form regex nor the alias fixpoint reaches it. It needs its own matcher.
 # D6 writes most of its Lean references this way; D2, L1 and L3 use it too.
 _PROSE_VERB_RE = re.compile(r"\\verb\*?(?P<d>[^A-Za-z0-9\s*])(?P<body>.*?)(?P=d)")
+
+# TeX quotation form `name' — no macro at all, so neither the alias fixpoint nor
+# the `\verb` matcher reaches it. Added 2026-08-09 (TODO-D18).
+#
+# ⚠️ The residue was measured, not assumed, and it is ONE reference in one draft:
+# `\verb` and `\lean` were already covered by the alias discovery above (the
+# ADR-010 measurement pass repaired those), so the 401 non-`\texttt` Lean-ish
+# refs found by a naive scan were 400 already-seen and 1 genuinely invisible.
+# That one was `analog\_hawking\_quantum\_advantage\_demarcation` in D7 — a
+# theorem that DOES NOT EXIST, which is exactly why the leg is worth having.
+#
+# Requires an escaped `\_` or a dotted namespace in the body, because bare
+# `` `word' `` is ordinary English quotation and matching it would flood the
+# candidate set with prose.
+_PROSE_TEX_QUOTE_RE = re.compile(r"`((?:[A-Za-z][\w]*)(?:\\_|\.)[\w\\_.]*)'")
 
 
 _PROSE_UNESCAPE_RE = re.compile(r"\\([_\\&%$#{}~^])")
@@ -262,6 +283,8 @@ def _prose_verbatim_tokens(tex_source: str) -> list:
              for m in _prose_verbatim_re(tex_source).finditer(tex_source)]
     spans += [(m.group("body"), m.start())
               for m in _PROSE_VERB_RE.finditer(tex_source)]
+    spans += [(m.group(1), m.start())
+              for m in _PROSE_TEX_QUOTE_RE.finditer(tex_source)]
     out = []
     for raw, start in spans:
         tok = _PROSE_UNESCAPE_RE.sub(r"\1", raw).strip()
@@ -543,7 +566,8 @@ def _resolve_prose_ref(token: str, index: dict, deep: bool = True) -> str:
 
 @register_check("prose_theorem_reference_coverage",
                 "Bundle-draft Lean references in any verbatim form (texttt, a "
-                "preamble alias for it, or verb) resolve in lean_deps.json")
+                "preamble alias for it, verb, or a TeX `name' quote) resolve in "
+                "lean_deps.json")
 def check_prose_theorem_reference_coverage() -> CheckResult:
     """Prevent the ``wen_adw_factor_6000`` failure class from the
     2026-06-05 external review: bundle prose naming a Lean declaration
