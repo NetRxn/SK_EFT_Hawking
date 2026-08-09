@@ -1690,7 +1690,29 @@ necessarily a one-off. Not yet measured for them.
 
 </details>
 
-### D38. D5's bibliography is two-thirds dead — OPEN
+### D38. D5's bibliography is two-thirds dead — ✅ DONE 2026-08-09
+
+> **18 of 27 confirmed by two agreeing instruments** (whole-body substring search and a
+> multiline-aware `\cite` parse). **Now 0 of 27.**
+>
+> ⚠️ **The diagnosis in the heading is wrong, and it inverts the fix.** The bibliography was not
+> padding and the entries were not dead: **13 of the 18 were NAMED IN PROSE with no `\cite{}`** —
+> *"Plaza-Kraiselburd 2504.05432"*, *"Tyagi-Haridasu-Basak 2504.11308"*, *"after Yoon-Guha
+> 2304.07301"*, *"(Pretko~2017)"*, *"Wang's topological order"*, *"Van Waerbeke--Zhitnitsky"*. D5 was
+> engaging its sources and failing to cite them, which is the opposite defect from listing sources it
+> never engages, and it takes the opposite fix. Dropping the entries — the other option this entry
+> offered — would have deleted real scholarship and left the prose naming phantom references.
+>
+> **All 27 now cite.** The five with no inline mention were placed on evidence: `DESI2024` beside the
+> already-cited `DESI2025` (the DR1 BAO analysis the DR2 posteriors extend); `Lean4` + `Mathlib` at
+> the first `Lean~4` body mention; `Glodkowski2024` (dissipative fracton superfluids) with the
+> fracton mechanism; and `Vergeles2025` at the ADW substrate anchor, matching how **L1** uses it —
+> as the lattice-fermion framework whose unitarity it establishes.
+>
+> **`D7` has the same shape at smaller scale (3 of 6)** and is NOT fixed here — it was measured, not
+> repaired. Filed as residue rather than silently folded in.
+>
+> D5 compiles; zero undefined citations.
 
 Measured 2026-08-09 while checking the sibling splashes for D34. `papers/D5/paper_draft.tex` has
 **27 `\bibitem` entries, 18 of whose keys never appear anywhere in the body text** — verified by

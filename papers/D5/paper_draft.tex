@@ -190,7 +190,7 @@ The Standard Model's $\mathbb{Z}_{16}$ anomaly index, computed in
 \texttt{Z16AnomalyComputation.lean} (23 theorems), forces any
 ultraviolet completion that maintains anomaly cancellation under the
 SK--EFT spin--$\mathbb{Z}_4$ structure to carry exactly $+3 \bmod 16$ of
-hidden charge. The minimal Lagrangian solutions are Wang's topological
+hidden charge. The minimal Lagrangian solutions are Wang's topological~\cite{Wan2019}
 order T-0 (a $K$-gauge TQFT with no propagating particle content) and
 three sterile Weyl fermions S-0; both are tagged by the
 \texttt{DarkSectorSynthesis.lean} substrate definitions
@@ -207,9 +207,9 @@ incompatibility theorem.
 \subsection{ADW Cosmological-constant magnitude}
 \label{subsec:adw-cc}
 
-The Abrikosov--Diakonov--Wetterich (ADW) tetrad-condensation gap
+The Abrikosov--Diakonov--Wetterich (ADW)~\cite{ADW2019,Diakonov2011,Vergeles2025} tetrad-condensation gap
 equation, formalized in \texttt{ADWMechanism.lean} and
-\texttt{CosmologicalConstant.lean}, exhibits a Volovik-style equilibrium
+\texttt{CosmologicalConstant.lean}, exhibits a Volovik-style~\cite{Volovik2006,KV2008} equilibrium
 in which the tetrad determinant self-tunes to $\Lambda_{\rm eff} = 0$ in
 perfect Minkowski vacuum. Thermal perturbation by the matter sector
 generates a residual $\rho_{\rm vac} \sim T^4$ at the de Sitter
@@ -234,7 +234,8 @@ Planck-scale period (${\sim}\SI{e-44}{\second}$), so $w_{\rm eff}$
 during any accessible epoch is $0$ (CDM-like), not phantom-crossing.
 For provenance: the quoted significances are single-parameter $w_0$
 distances of the KV effective-CDM prediction $(w_0, w_a) = (-1, 0)$
-from the DESI~DR2 $w_0 w_a$CDM posteriors~\cite{DESI2025},
+from the DESI~DR2 $w_0 w_a$CDM posteriors~\cite{DESI2025}, whose BAO
+constraints extend the DR1 analysis~\cite{DESI2024},
 $w_0 = -0.838 \pm 0.055$, $w_a = -0.62^{+0.22}_{-0.19}$
 (DESI+CMB+Pantheon$+$, Eq.~(26) of arXiv:2503.14738) and
 $w_0 = -0.752 \pm 0.057$, $w_a = -0.86^{+0.23}_{-0.20}$
@@ -438,7 +439,7 @@ conditional on thermalization at $T_{\rm BBN} \approx
 
 This section consolidates the paper~32 strong-CP / topological-DE deep
 paper (Phase~6c W1) into D5. It formalises, via the
-Van Waerbeke--Zhitnitsky topological-DE mechanism, a structural bridge
+Van Waerbeke--Zhitnitsky~\cite{VanWaerbeke2025} topological-DE mechanism, a structural bridge
 between two long-standing Standard-Model puzzles: the smallness of the
 QCD topological angle $|\theta| \lesssim 10^{-9}$ (Pendlebury~2015
 neutron EDM) and the observed cosmological-constant energy density
@@ -539,7 +540,7 @@ $\sim 2$ orders without free parameters). Lifted from paper32.}
 This section consolidates the paper~34 EP-classification deep paper
 (Phase~6c W3). The framework classifies six distinct emergent-gravity
 mechanisms by their EP-violation level, encodes the classification as
-decidable predicates in Lean~4 (\texttt{EquivalencePrinciple.lean}),
+decidable predicates in Lean~4~\cite{Lean4,Mathlib} (\texttt{EquivalencePrinciple.lean}),
 and proves the structural
 consequence that EP violation in this substrate is
 \emph{vestigial-only}: any positive EP-violation result implies vestigial
@@ -566,7 +567,7 @@ The 6-mechanism tally:
   \end{itemize}
 \item \emph{Satisfy WEP / EEP / SEP} (4 mechanisms):
   Einstein--Cartan torsion-trace coupling, fracton subdiffusion
-  (Pretko~2017), Berezhiani--Khoury Thomas--Fermi superfluid DM
+  (Pretko~2017)~\cite{Pretko2017,Glodkowski2024}, Berezhiani--Khoury~\cite{Berezhiani2015,BK2025} Thomas--Fermi superfluid DM
   (Berezhiani \& Khoury~2015), and hidden-sector $\mathbb{Z}_{16}$
   singlets. Each carries \texttt{violationLevel = none} in the
   Lean classification matrix.
@@ -866,7 +867,7 @@ DEC entry follow.
   Lagrangian scalar to drive sub-Hubble dynamics.
 \item \texttt{hossenfelder\_verlinde\_no\_go\_post\_yoon\_guha}:
   Hossenfelder-Verlinde dS-instability claim is no longer load-bearing
-  after Yoon-Guha 2304.07301 (matter+radiation FLRW stabilizes the dS
+  after Yoon-Guha 2304.07301~\cite{YoonGuha2023} (matter+radiation FLRW stabilizes the dS
   attractor; $\lambda^2 \in [1.85\!\times\!10^4, 2.26\!\times\!10^4]$
   reproduces $q \in [-0.95, -0.55]$).
 \item \texttt{cadoni\_tuveri\_dec\_no\_go\_via\_gd\_theorem\_w\_eq\_minus\_1}:
@@ -883,14 +884,14 @@ DEC entry follow.
   HDE event-horizon predicts $w_a > 0$, the wrong sign of the DESI~DR2
   best-fit at $3\sigma$.
 \item \texttt{tsallis\_hde\_no\_go\_bayes\_factor\_tyagi\_haridasu\_basak}:
-  Tyagi-Haridasu-Basak 2504.11308 reports $\Delta\!\log\mathcal{B}
+  Tyagi-Haridasu-Basak 2504.11308~\cite{TyagiHaridasuBasak2025} reports $\Delta\!\log\mathcal{B}
   \sim -8$ to $-13$ for the Gravity-Thermodynamic framework
   (DESI~DR2 + Pantheon$+$); extracted as the Tsallis-limit reading,
   $|\!\log\mathcal{B}| \gtrsim 6$ exceeds Jeffreys-decisive. The
   registry-anchored point estimate $6.2$ is conservative within the
   reported $-8$ to $-13$ aggregate range.
 \item \texttt{barrow\_hde\_disfavoured\_information\_criteria\_luciano\_paliathanasis\_saridakis}:
-  Luciano-Paliathanasis-Saridakis 2506.03019 (JHEAp 49, 100427, 2026)
+  Luciano-Paliathanasis-Saridakis 2506.03019~\cite{LucianoPaliathanasisSaridakis2506} (JHEAp 49, 100427, 2026)
   applies the Akaike Information Criterion (AIC) on the SN+BAO,
   SN+OHD+BAO joint datasets and reports a max
   $\Delta\!\text{AIC} = +4.7$ disfavouring Barrow HDE relative to
@@ -975,7 +976,7 @@ at least five CLEARED-R5 candidates
 The M3 EGJ $f(R)$ family (Eling-Guedens-Jacobson) clears DESI~DR2 at
 R5 across multiple variants, with the Exp and ArcTanh forms being the
 \emph{strongest CLEARED-R5 of any Phase~6m track}: Plaza-Kraiselburd
-2504.05432 (PRD~112, 023554, 2025) reports
+2504.05432~\cite{PlazaKraiselburd2025fR} (PRD~112, 023554, 2025) reports
 $\Delta\!\text{AIC} \simeq \Delta\!\text{BIC} \gtrsim 20$ in favour of
 the $f(R)$ form over $\Lambda$CDM
 (\texttt{f\_R\_starobinsky\_DE\_directly\_preferred\_over\_lambda\_cdm}
