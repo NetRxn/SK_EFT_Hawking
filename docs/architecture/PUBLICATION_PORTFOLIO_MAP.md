@@ -54,7 +54,7 @@ ledger with file-and-line evidence. Its consequence for a reader:
 | document | status |
 |---|---|
 | `PAPER_STRATEGY.md` | **charters and roster are current; the STATE claims are not.** Its readiness assertions, its ready-to-ship list and its sequencing section are contradicted by the live heatmap, and the sequencing section never gained the later-authorized targets. Use it for *what a bundle is for*, never for *what state it is in*. |
-| `LATE_PHASE6_ABSORPTION_PROTOCOL.md` | **stages are sound; its roster arithmetic and branch index are not.** The Stage-B authorization gate is written against a roster many targets out of date, and the stage table omits the branch every modern phase uses. |
+| `LATE_PHASE6_ABSORPTION_PROTOCOL.md` | **stages and branch index are sound; its roster arithmetic is not.** The branch index was repaired under ADR-011 Phase 6 — the stage table and the decision table now both carry every branch, including D.0 (unsound target: home the work, do not absorb) and the sourceless D.4 that modern phases use. The Stage-B authorization gate still counts bundles instead of naming the registry that owns them, so its arithmetic is a roster many targets out of date. |
 | `BUNDLE_LIFT_PROCEDURE.md` | **workflow is current and in use.** Its tier profiles name only the earliest Tier-1 and Tier-3 members, so later bundles have no defined review profile; its source-readiness pre-condition is documented and unenforced. |
 | `RESEARCH_STATUS_OVERVIEW.md` | ⛔ **do not orient from it.** Several Tier-1 bundles are absent entirely and its portfolio verdict inverts the live one. |
 | `ARXIV_DEPOSIT_PLAN.md` | ⛔ several Tier-1 bundles have **no deposit path** in it at all. |

@@ -49,6 +49,7 @@ flowchart TB
     end
 
     subgraph R["④ REVIEW — LLM agents"]
+        PR["prose-reviewer<br/>lift §7.5"]
         FR["figure-reviewer<br/>Stage 9"]
         CR["claims-reviewer<br/>Stage 10"]
         AR["adversarial-reviewer<br/>Stage 13"]
@@ -69,7 +70,7 @@ flowchart TB
     ED & CNT & ATL & BG --> VCK
     GI & RG & BR --> VCK
     VCK --> VAL
-    TEX --> FR & CR & AR
+    TEX --> PR & FR & CR & AR
     NB --> VCK
     AR & CR --> RF --> BG
     VAL --> HEAT
@@ -81,6 +82,13 @@ flowchart TB
 
 **The system is well-designed in its architecture and substantially broken in its wiring.**
 That sentence is the thesis of this whole directory, and every section below is an instance.
+
+⚠️ **`prose-reviewer` deliberately does not reach plane ④'s finding pipeline.** It runs earliest
+of the four — `BUNDLE_LIFT_PROCEDURE.md` §7.5, before Stage 9 — and returns a restructuring
+instruction rather than a finding list, so it mints no `ReviewFinding` node and gates nothing.
+That is the design: a manuscript that does not carry a reader is rewritten, not ticketed. Its
+machine-decidable floor is enforced separately, by checks, and holds whether or not the agent
+ran.
 
 ---
 

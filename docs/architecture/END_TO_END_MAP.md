@@ -25,7 +25,7 @@ flowchart TB
     VAL["⑤ VALIDATION<br/>validate.py + validation/checks/"]
     GRAPH["⑥ GRAPH + ATLAS<br/>build_graph.py · atlas_view.py"]
     PAPER["⑦ AUTHORING<br/>bundle lift · figures · tables"]
-    REV["⑧ REVIEW<br/>Stage 9 figure · 10 claims · 13 adversarial"]
+    REV["⑧ REVIEW<br/>§7.5 prose · Stage 9 figure<br/>10 claims · 13 adversarial"]
     GATE["⑨ GATES<br/>readiness_gates.py"]
     HUMAN["⑩ HUMAN<br/>dashboard · submission gate"]
 
@@ -209,6 +209,19 @@ edge type that has no emitter and the gate that queries it.
 
 Spec: `WAVE_EXECUTION_PIPELINE.md` Stages 9/10/13 · `docs/BUNDLE_LIFT_PROCEDURE.md` ·
 `docs/LATE_PHASE6_ABSORPTION_PROTOCOL.md` · `docs/BUNDLE_DIRECTORY_SCHEMA.md`.
+
+**Authoring and review are now separate surfaces with a shared reference set.** The
+`paper-authoring` skill drafts and the `prose-reviewer` agent reads, and both bind to the same
+`references/` directory inside the skill so a drafting rule and a review criterion cannot
+diverge into two standards. The reviewer runs at `BUNDLE_LIFT_PROCEDURE.md` §7.5 — **before**
+Stage 9 and before the claims sub-gate — because its output is a restructuring instruction, and
+restructuring after figures and claims have been reviewed invalidates both.
+
+It is the fourth reviewer, and the split is by question, not by stage: figure asks *does it
+render*, claims asks *is it backed*, adversarial asks *is it wrong*, prose asks *does it land*.
+Nothing before it asked the last one. Its deterministic floor — the prose rules a machine can
+decide, em-dash and reader-facing voice among them — is enforced by checks and does not depend
+on an agent running at all; the agent judges what a check cannot.
 
 **"Stage 10" names one stage, and this map uses its claims-review gate.**
 `WAVE_EXECUTION_PIPELINE.md` names **Stage 10 = PAPER DRAFT** and carries claims review as a

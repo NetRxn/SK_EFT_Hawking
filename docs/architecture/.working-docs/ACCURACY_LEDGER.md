@@ -2201,3 +2201,36 @@ it, keyed by stage and invariant, and the law links to it once. Nothing was dele
 
 **NOT-AN-ASSERTION.** The 39% reduction is a consequence, not a target. A shorter law that misstated
 the process would be a worse outcome than the document it replaced.
+
+---
+
+## V59 — post-ADR-011 architecture-doc reconciliation — 6 atoms, 5 DEFECTS, 1 SELF-INFLICTED
+
+Scope: does `docs/architecture/` still describe the system after eight ADR-011 phases landed?
+Method: last-touching commit per doc, then a targeted read of every doc whose owned surface an
+ADR-011 phase changed. Not a re-read of the directory.
+
+| # | Proposition | Decider | Verbatim result |
+|---|---|---|---|
+| 1 | Census figures drifted | `validate.py --check architecture_inventory_fresh` | **NO — clean.** `SURFACE_INVENTORY.md` is derived and gated, and it already carried `prose-reviewer`, the new checks and the new agent rows. The counts rule worked exactly as designed: nothing to chase |
+| 2 | The narrative docs drifted on counts | `no_counts_in_narratives` leg, 7 docs | **NO.** Zero census counts in any narrative. The rule holds |
+| 3 | Enumerated *rosters* in narrative drifted | read of both maps' plane/spine diagrams | **YES — 2 defects.** `END_TO_END_MAP:28` ⑧ REVIEW named 3 reviewers; `QA_QI_INFRASTRUCTURE_MAP` plane ④ named the same 3. `prose-reviewer` (Phase 5, lift §7.5) was in neither |
+| 4 | The portfolio map's drift ledger is still accurate | item-by-item re-check against the protocol | **One verdict INVERTED by our own Phase 6.** It said the absorption protocol "omits the branch every modern phase uses" — Phase 6 added D.0 and the stage + decision tables now carry D.0–D.4. The *roster-arithmetic* half of the same verdict is still true |
+| 5 | The protocol's roster arithmetic | read of Stage B + §gates | **STALE, and it is a hardcoded roster in prose:** "the existing 13 bundles … a 14th+ bundle target". Live roster is 21. Replaced with the registry owner, not a corrected number |
+| 6 | Same defect class elsewhere | grep for roster counts across `docs/*.md` | **1 further live instance.** `BUNDLE_DIRECTORY_SCHEMA:276` asserted `_VALID_BUNDLE_TARGETS` "now covers … (14 entries)" in the present tense; it is an alias re-exporting `bundle_registry.VALID_BUNDLE_TARGETS`, live at 21. The other hits (`RESEARCH_STATUS_OVERVIEW`, `ARXIV_DEPOSIT_PLAN`, `PAPER_STRATEGY` §341) are already dispositioned ⛔ in the portfolio map's ledger — known, not newly found |
+
+**⚠️ ATOM 3 IS THE FAILURE `END_TO_END_MAP` §9 ITSELF NAMES.** That section states the mechanism —
+*"an enumerated roster in prose goes stale exactly as an enumerated roster in code does, but nothing
+fails when it happens"* — and then the document's own spine diagram went stale by that exact
+mechanism, four sections above the sentence describing it. Writing the rule down does not enforce it.
+The counts rule is machine-enforced and held (atoms 1–2); the roster rule is prose and did not.
+
+**⚠️ ATOM 4 IS SELF-INFLICTED AND IS THE ONE WORTH GENERALISING.** Phase 6 repaired the branch index
+and did not re-check which *other* documents asserted it was broken. A fix silently converts every
+downstream statement about the defect into a false statement, and a drift ledger is precisely a
+document made of such statements. **Repairing a defect obliges a scan for who documented it.**
+
+**NOT-AN-ASSERTION.** Atoms 1 and 2 are the load-bearing result here, not the five defects. The
+surfaces under a derived-and-gated census did not drift at all; every defect found sits in prose
+that names a roster. That is an argument for widening the mechanical guard to rosters, not for
+another manual pass — filed rather than built, because the exception set is the hard part.

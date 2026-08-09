@@ -65,7 +65,9 @@ Phase 6X owner adds a row (or several) to `docs/PAPER_DRAFT_MAPPING.md` Table 1 
 | `paperNN_topic` | <Title> | Phase 6X W<wave> | **<Bundle> §<N>** | Lift-section |
 ```
 
-Each new source paper has explicit `bundle_destination(s)` and `lift_action`. If the new content does not fit any of the existing 13 bundles, **user authorization is required** for a 14th+ bundle target (Pipeline Invariant #14).
+Each new source paper has explicit `bundle_destination(s)` and `lift_action`. If the new content fits **no bundle in the live roster**, a new bundle target requires **user authorization** (Pipeline Invariant #14).
+
+⚠️ **The roster is owned by `scripts/bundle_registry.py`, surfaced as `validate.BUNDLE_CODES`, and censused in `docs/architecture/SURFACE_INVENTORY.md` — read it there.** This gate previously counted the bundles inline and named the next ordinal, which is a hardcoded roster wearing prose: it went stale on the first authorization it was meant to govern and then misstated the very roster a reader consults it to check. Do not restore a number here; the question the gate asks is *"is this bundle in the registry?"*, and only the registry can answer it.
 
 **Authorization gates inside Stage B:**
 - ≥1 new bundle target → user authorization
@@ -306,7 +308,7 @@ The strict-extension-layer pattern is load-bearing here: keeping the legacy `Sak
 
 The following protocol stages may require explicit user authorization before proceeding:
 
-1. **Stage B** — if Phase 6X output does not fit any of the existing 13 bundle targets (Pipeline Invariant #14, 14th+ bundle target).
+1. **Stage B** — if Phase 6X output fits no bundle in the live roster (`scripts/bundle_registry.py` / `validate.BUNDLE_CODES`), so a new bundle target is required (Pipeline Invariant #14).
 2. **Stage B** — if mapping addition overrides existing bundle assignment for a previously-mapped paper.
 3. **Stage B** — if new `Lift-flagship` row absorbs Phase 6X content directly into F without going through a Tier-1 sibling.
 4. **Stage D.3** — if revision substantially changes bundle's published-claim profile.

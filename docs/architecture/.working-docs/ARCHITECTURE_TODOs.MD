@@ -1175,3 +1175,35 @@ when the cluster payload is unchanged, so the file is rewritten only on a real c
 **Not fixed in Phase 8** — it is in the clustering pipeline, not the plugin surface this phase
 scopes, and the phase's own rule is that findings needing content changes get filed rather than
 fixed in passing.
+
+### D30. `no_counts_in_narratives` guards counts but not rosters — OPEN
+
+Found by the post-ADR-011 architecture reconciliation (ledger V59). Every doc defect that pass
+turned up was an **enumerated roster in prose**, and every count-shaped surface was clean —
+because counts are machine-enforced by `architecture_inventory_fresh`'s
+`no_counts_in_narratives` leg and rosters are not.
+
+The four instances: `END_TO_END_MAP:28` and `QA_QI_INFRASTRUCTURE_MAP` plane ④ each naming three
+reviewers when there are four; `LATE_PHASE6_ABSORPTION_PROTOCOL` Stage B naming "the existing 13
+bundles"; `BUNDLE_DIRECTORY_SCHEMA:276` enumerating `_VALID_BUNDLE_TARGETS`' members. All four are
+now written as references to their owning registry.
+
+**`END_TO_END_MAP` §9 already names this mechanism** — *"an enumerated roster in prose goes stale
+exactly as an enumerated roster in code does, but nothing fails when it happens"* — and the same
+document's spine diagram then went stale by it. The rule is written down and unenforced, which is
+the condition this TODO exists to change.
+
+**Fix shape.** Extend the leg to flag a narrative sentence that enumerates ≥3 members of a known
+registry (`bundle_registry.BUNDLE_CODES`, the plugin's agent/command/skill directories) without a
+link to that registry.
+
+**Why it is filed and not built: the exception set is the whole problem.** Legitimate partial
+enumerations are common and correct — a tier profile naming the members it actually covers, a
+dated historical footnote, a worked example, a document naming members precisely to say they are
+missing. A guard that fires on those is a guard that gets switched off, which is the failure mode
+`--strict` scoping was designed around. Needs the same treatment `doc_refs_resolve` got: an
+explicit, reasoned exception set built from the live corpus before the check is turned on.
+
+**Scope note.** `no_counts_in_narratives` covers `docs/architecture/` only. Two of the four
+instances above were outside it, so widening the *predicate* without widening the *scope* would
+have caught half of what this pass found by hand. ADR-010 §D7 tracks the scope half.

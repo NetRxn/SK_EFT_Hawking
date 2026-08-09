@@ -33,7 +33,10 @@ about bundle D10. The `TODO-` prefix is the only thing separating them; never dr
 
 Decisions live in [`../adrs/`](../adrs/); the graph schema in
 [`../KNOWLEDGE_GRAPH.md`](../KNOWLEDGE_GRAPH.md); the process law in
-[`../WAVE_EXECUTION_PIPELINE.md`](../WAVE_EXECUTION_PIPELINE.md).
+[`../WAVE_EXECUTION_PIPELINE.md`](../WAVE_EXECUTION_PIPELINE.md), whose *why* — the incident
+behind each rule — is split into [`../WAVE_PIPELINE_RATIONALE.md`](../WAVE_PIPELINE_RATIONALE.md)
+so the law reads as a law. **Change a rule and the rationale entry changes with it**: a rule
+whose stated reason no longer holds is the next rule somebody relitigates.
 
 ## The two rules
 
