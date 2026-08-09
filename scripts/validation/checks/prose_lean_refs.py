@@ -47,7 +47,7 @@ from typing import Dict, List, Optional
 import validate_helpers as _H
 from validation import _config as _cfg
 from validation._registry import CheckResult, Detail, register_check
-from validation._tex import _line_of
+from validation._tex import _line_of, unescape_tex_identifier
 
 from bundle_registry import BUNDLE_CODES  # noqa: E402  — see papers_prose.
 
@@ -151,6 +151,8 @@ _PROSE_VERB_RE = re.compile(r"\\verb\*?(?P<d>[^A-Za-z0-9\s*])(?P<body>.*?)(?P=d)
 _PROSE_TEX_QUOTE_RE = re.compile(r"`((?:[A-Za-z][\w]*)(?:\\_|\.)[\w\\_.]*)'")
 
 
+# TODO-D2: kept as a module-local name (tests reach it) but the definition is
+# the shared one, so the trap has a single owner.
 _PROSE_UNESCAPE_RE = re.compile(r"\\([_\\&%$#{}~^])")
 _PROSE_IDENT_RE = re.compile(
     r"^[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)*$")

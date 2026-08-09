@@ -138,3 +138,45 @@ def find_inline_numerical_literals(text: str) -> tuple[str, list]:
     stripped = _INPUT_TABLES_RE.sub('', text)
     stripped = _CAPTION_RE.sub('', stripped)
     return stripped, list(NUMERICAL_LITERAL_RE.finditer(stripped))
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# TODO-D2: the LaTeX-escaped-identifier trap, in ONE place
+# ═══════════════════════════════════════════════════════════════════════
+#
+# A draft writes `gapped\_interface\_axiom`, never the raw identifier. Any scan
+# of `papers/**/*.tex` for a Lean name that does not account for `\_` reports
+# ZERO HITS AND IS WRONG. That produced a false claim in
+# `QA_QI_INFRASTRUCTURE_MAP.md` (ledger V8 atom Q10).
+#
+# ⚠️ Measured 2026-08-09: the trap had ALREADY been rediscovered independently
+# by two consumers, each with its own private correct handling —
+# `prose_lean_refs._PROSE_UNESCAPE_RE` (unescape, then match) and
+# `lean_substrate._tex_name_pattern` (build an escape-tolerant pattern). Two
+# solutions to one problem in two modules is precisely the duplication this
+# entry predicted, so the helpers live here now and both call sites use them.
+#
+# Two shapes are needed because the two directions are genuinely different:
+#   * you HAVE a Lean name and want to find it in prose  -> `tex_escaped_name_pattern`
+#   * you HAVE a prose token and want the Lean name      -> `unescape_tex_identifier`
+
+#: Characters LaTeX escapes with a backslash inside an identifier.
+_TEX_ESCAPED_CHARS_RE = re.compile(r"\\([_\\&%$#{}~^])")
+
+
+def unescape_tex_identifier(token: str) -> str:
+    """A prose token with LaTeX escaping removed: ``a\\_b`` -> ``a_b``.
+
+    Use when you hold a token lifted out of a draft and want the Lean name.
+    """
+    return _TEX_ESCAPED_CHARS_RE.sub(r"\1", token)
+
+
+def tex_escaped_name_pattern(name: str) -> re.Pattern:
+    """Pattern matching `name` as a draft may write it, escaped or not.
+
+    Use when you hold a Lean name and want to find it in prose. Matching an
+    escape-tolerant pattern beats unescaping the whole document: it does not
+    disturb any other backslash in the source.
+    """
+    return re.compile(re.escape(name).replace("_", r"(?:\\_|_)"))

@@ -319,3 +319,46 @@ class TestGraphOverlay:
         assert edges == [{"source": "paper:D1", "target": f"lean:{APEX}",
                           "type": "CLAIMS_APEX"}], (
             "a dangling apex must surface as a broken declaration, not as a graph edge")
+
+
+# ── TODO-D10: the D11 module set is derived, not hand-listed ──────────────
+
+class TestD11ModuleSetIsDerived:
+    """`update_counts.py` hand-listed 22 module names to generate D11's
+    `\\dxi*` macros. D11's declared-apex closure reaches exactly those 22, so
+    the hand-maintained copy was deleted: a new D11 module would otherwise be
+    counted by nobody and noticed by nothing.
+
+    ⚠️ Only the module SET is derived. The counting rule (line-prefix, outside
+    block comments, `abbrev` included) is stated in D11's own prose and is
+    deliberately unchanged."""
+
+    def test_no_hand_listed_module_literal_survives(self):
+        """Structural: the literal roster must not come back."""
+        import pathlib
+        src = (pathlib.Path(__file__).resolve().parents[1]
+               / "scripts/update_counts.py").read_text(encoding="utf-8")
+        for gone in ("\"BlochBundle\"", "\"MaxwellGarnett\"", "\"ExceptionalPoint\""):
+            assert gone not in src, f"hand-listed D11 module {gone} reappeared"
+        assert "_d11_modules_from_closure()" in src
+
+    def test_derived_set_is_nonempty_and_path_shaped(self):
+        import sys, pathlib
+        root = pathlib.Path(__file__).resolve().parents[1]
+        sys.path.insert(0, str(root / "scripts"))
+        from update_counts import _d11_modules_from_closure
+        mods = _d11_modules_from_closure()
+        assert len(mods) >= 20, mods
+        assert all("." not in m for m in mods), "expected path form, not dotted"
+        assert any(m.startswith("GrapheneBand/") for m in mods)
+
+    def test_empty_closure_raises_rather_than_guessing(self, monkeypatch):
+        """A silent fallback is how a hand-maintained roster survives the
+        mechanism meant to replace it."""
+        import sys, pathlib, pytest
+        root = pathlib.Path(__file__).resolve().parents[1]
+        sys.path.insert(0, str(root / "scripts"))
+        import update_counts as uc, bundle_closure as bc
+        monkeypatch.setattr(bc, "build_closures", lambda *a, **k: {})
+        with pytest.raises(RuntimeError, match="D11 closure empty"):
+            uc._d11_modules_from_closure()

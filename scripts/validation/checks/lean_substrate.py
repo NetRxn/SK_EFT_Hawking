@@ -47,6 +47,7 @@ from typing import Dict, List
 
 import validate_helpers as _H
 from validation._registry import CheckResult, Detail, register_check
+from validation._tex import tex_escaped_name_pattern
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -163,8 +164,13 @@ _HEDGE_CLAIM_RE = re.compile(
 
 def _tex_name_pattern(token: str) -> "re.Pattern":
     """Regex for a Lean decl name as it can appear in LaTeX — underscores may be
-    backslash-escaped (`\\_`) inside `\\texttt{}` / prose."""
-    return re.compile(re.escape(token).replace("_", r"(?:\\_|_)"))
+    backslash-escaped (`\\_`) inside `\\texttt{}` / prose.
+
+    Delegates to the shared helper (TODO-D2). This module and `prose_lean_refs`
+    had independently rediscovered the same trap; the handling now lives in one
+    place so a third consumer inherits it instead of re-deriving it.
+    """
+    return tex_escaped_name_pattern(token)
 
 
 @register_check(

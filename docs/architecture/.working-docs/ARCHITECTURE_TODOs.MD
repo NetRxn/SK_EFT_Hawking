@@ -367,7 +367,26 @@ carry *"since retired into the tracked Prop `TPFConjecture`"*; the qualifier fol
 **Kept as an entry deliberately:** the next person to scan paper prose for Lean identifiers will
 reach for the same sentence split. Cite the check's verdict instead of re-deriving one.
 
-### D2. Chain-link scans must use the LaTeX-escaped identifier — OPEN (documentation of a trap)
+### D2. Chain-link scans must use the LaTeX-escaped identifier — ✅ DONE 2026-08-09
+
+> **The entry says to VERIFY `prose_theorem_reference_coverage` unescapes before assuming the trap is
+> closed there. Verified: it does** — `\texttt{gapped\_interface\_axiom}` extracts as
+> `gapped_interface_axiom`.
+>
+> ⚠️ **And the trap had already been rediscovered twice**, which is what the entry predicted would
+> keep happening: `prose_lean_refs._PROSE_UNESCAPE_RE` (unescape, then match) and
+> `lean_substrate._tex_name_pattern` (build an escape-tolerant pattern) are two independently-correct
+> solutions to one problem in two modules.
+>
+> **Both shapes now live in `validation/_tex.py`** — `unescape_tex_identifier` and
+> `tex_escaped_name_pattern` — because the two directions are genuinely different (name→prose vs
+> prose→name), with the false-claim history (ledger V8 atom Q10) recorded at the definition. Both
+> call sites delegate; 101 tests pass and both checks stay green.
+>
+> **Residue, stated rather than overclaimed:** a loose scan flags nine further scripts that read
+> `.tex` and handle identifiers. That scan is a weak instrument and I did **not** audit all nine —
+> two were read properly and both were already correct. A third consumer now inherits the helper
+> instead of re-deriving it, which is what this entry asked for.
 
 - **What:** a draft writes `gapped\_interface\_axiom`, never the raw identifier. Any scan of
   `papers/**/*.tex` for a Lean name that does not unescape `\_` reports **zero hits and is
@@ -660,7 +679,19 @@ version *and* the Mathlib rev against `lean-toolchain` + `lakefile.toml`.
   item 6, **withdrawn pending §6a approval**. Do not build it.
 - Full working: `docs/audits/2026-08-01-publication-readiness/ADDENDUM-2026-08-07.md` §A5.
 
-### D10. `_D11_MODULES` is hand-listed where the closure now derives it — OPEN (duplication)
+### D10. `_D11_MODULES` is hand-listed where the closure now derives it — ✅ DONE 2026-08-09
+
+> **Re-verified before deleting:** D11's declared-apex closure and the 22-name literal agree with
+> **zero difference in either direction**. That agreement is the moment to delete the
+> hand-maintained copy, and it is now `_d11_modules_from_closure()`.
+>
+> `docs/counts.tex` regenerates **byte-identical**, so the derivation reproduces the literal rather
+> than replacing it with something new. The **counting rule is untouched** — line-prefix, outside
+> block comments, `abbrev` included — as the entry requires; only the module SET is derived.
+>
+> **Fails loudly on an empty closure** rather than falling back to a literal. A silent fallback is
+> how a hand-maintained roster survives the mechanism meant to replace it, and that failure mode is
+> asserted by test.
 
 - **Where:** `scripts/update_counts.py:398-406` hand-lists 22 module names to generate
   `\dxiModules`, `\dxiLines`, `\dxiTheorems`, `\dxiDefs`, `\dxiDepsTheorems` for D11's substrate
@@ -1696,7 +1727,19 @@ kernel-only modules" (`QuantumNetwork` holds 104), the PRD venue (content is PRX
 and §4's claim that real-interval arithmetic is "absent from Mathlib v4.29.1" — the pin is v4.32.0
 and D9 §5 ships exactly that technique.
 
-### D33. L3's work-marker comment trips `bundle_todo_free_before_green` if L3 ever goes green
+### D33. L3's work-marker comment trips `bundle_todo_free_before_green` if L3 ever goes green — ✅ DONE 2026-08-09
+
+> L3:442 reworded (`TODO content stubs` → `Placeholder content stubs`) — it was a note *about*
+> markers, not a marker.
+>
+> ⚠️ **D6 was measured, and the entry's guess was wrong.** It says D6:17's `source_manifest.md (TBD)`
+> *"arguably records real incompleteness"*. It does not: `papers/D6/source_manifest.md` **exists** and
+> is a real 26-line auto-generated manifest from 2026-05-31. The `(TBD)` was stale, not honest, and
+> is replaced by the generation date. Had the guess been taken at face value the marker would have
+> been left in place as a truthful signal, when in fact it was misinforming.
+>
+> Still no exception set, which was the point: curating one is the TODO-D30 failure mode. Nine
+> bundles carry genuine work markers and are correctly not green.
 
 `papers/L3/paper_draft.tex:442` reads
 `%% (TODO content stubs intentionally suppressed — no prose change per lift notes.)` — a note *about*

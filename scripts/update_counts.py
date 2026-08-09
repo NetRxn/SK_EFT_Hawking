@@ -330,6 +330,24 @@ def count_per_section_theorems(lean_path: Path) -> dict:
     return per_section
 
 
+def _d11_modules_from_closure() -> list[str]:
+    """D11's substrate modules, derived from its declared-apex closure.
+
+    Fails LOUDLY rather than falling back to a stale literal: a silent fallback
+    is how a hand-maintained roster survives the mechanism meant to replace it.
+    """
+    import bundle_closure as _bc
+    recs = _bc.load_records()
+    closures = _bc.build_closures(recs, _bc.load_apex_declarations(PROJECT_ROOT / "papers"))
+    d11 = closures.get("D11")
+    if d11 is None or not d11.modules:
+        raise RuntimeError(
+            "D11 closure empty or absent — refusing to emit \\dxi* macros from a "
+            "guess. Check papers/D11/bundle_metadata.json apex_theorems and "
+            "lean/lean_deps.json freshness.")
+    return sorted(m.replace("SKEFTHawking.", "").replace(".", "/") for m in d11.modules)
+
+
 def read_live_pins() -> dict:
     """The live toolchain / dependency pins, read from the Lean project.
 
@@ -434,15 +452,19 @@ def generate_tex(counts: dict, path: Path, deps: list | None = None):
     # is INCLUDED and now disclosed; the two are Torus and LinkField, and Torus
     # is cited in the paper's own prose, so excluding it would make a cited
     # object uncountable under the stated rule.
-    _D11_MODULES = [
-        "BlochBundle", "AcousticBlochOperator", "PhononicBandGap", "BandGapEnclosure",
-        "MaxwellGarnett", "EffectiveMediumBounds", "EffectiveModuli",
-        "ExceptionalPoint", "NonHermitianWinding", "NonHermitianBloch",
-    ] + [f"TopologicalBand/{m}" for m in (
-        "ArgSectors", "BlochFHS", "BlochFrame", "BlochFrameOfD",
-        "FHSExamples", "FHSLatticeGauge", "FiniteTorus", "PrincipalBranch")
-    ] + [f"GrapheneBand/{m}" for m in (
-        "BernalBilayer", "DiracExpansion", "HaldaneWitness", "Honeycomb")]
+    # TODO-D10: DERIVED from D11's apex closure, not hand-listed.
+    #
+    # This was a 22-name literal. On 2026-08-07 D11's declared-apex closure came
+    # to reach exactly those 22 modules — no module outside the list, no listed
+    # module unreached — verified again 2026-08-09 with zero difference in either
+    # direction. Agreement between a derived and a hand-maintained answer is the
+    # moment to delete the hand-maintained one: a new D11 module would otherwise
+    # be counted by nobody and noticed by nothing.
+    #
+    # ⚠️ The COUNTING RULE below is unchanged and must stay unchanged — line-prefix,
+    # outside block comments, `abbrev` included. Only the module SET is derived.
+    # The rule is stated in D11's own prose and audited by its Stage-13.
+    _D11_MODULES = _d11_modules_from_closure()
 
     _thm_re = re.compile(r"^(?:@\[[^\]]*\]\s*)?(?:private\s+|protected\s+)?(?:theorem|lemma)\b")
     _def_re = re.compile(
