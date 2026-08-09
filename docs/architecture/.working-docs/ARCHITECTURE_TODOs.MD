@@ -436,7 +436,38 @@ keeps the target moving. No code required — this is process, and it is why cov
 
 ---
 
-### D5. The bundle readiness signal is inverted — OPEN (CRITICAL) — **SCHEDULED: [ADR-011](../../adrs/ADR-011-manuscript-quality-layer.md) Phase 2**
+### D5. The bundle readiness signal is inverted — ✅ DONE 2026-08-09 (CRITICAL)
+
+> ⚠️ **FIVE of this entry's SIX sub-claims were already closed by ADR-011 Phase 2, and were
+> re-measured rather than re-fixed.** Reproduced 2026-08-09:
+>
+> | sub-claim | state |
+> |---|---|
+> | "no code writes green to any `stage*_status`; reviewers have no write path" | **FALSE** — `record_review.py` is that writer |
+> | "no enforcement point for Stage-9/10-before-13" | **FALSE** — `record_review.py` refuses it and `validate.py --check bundle_reviewer_stage_ordering` catches hand edits |
+> | "`review_recorded` does not discriminate review KIND" | **FALSE** — `_KINDS_SUFFICIENT_FOR_GREEN = {"full-adversarial"}` |
+> | "a bundle with no `claims_review.json` can be GREEN" | **FALSE** — Phase 2d already withholds it |
+> | `_blocked_p1_gates_by_paper` returning `{}` on failure | **FALSE** — returns `None`, GREEN withheld |
+> | status enum drift | **TRUE, and worse than stated** |
+>
+> **What was actually left, and is now fixed:**
+>
+> 1. **The state itself.** The withheld cases rendered **YELLOW** — "measured, has issues" — when
+> the truth is "the evidence to judge does not exist". That is precisely the `CheckResult.measured`
+> distinction ADR-009 gave the check layer and this entry asked for at the bundle layer. Both
+> withholding paths now return **UNMEASURED**, and `datastar_bundles._VERDICT_ICON` renders it ⚪,
+> distinct from 🟡. **D9 — the portfolio's only ever GREEN — now reads
+> `UNMEASURED (Stage-13 evidence kind=unrecorded)`** instead of passing as merely imperfect.
+>
+> 2. **The enum guard, which was narrower than the entry said.** Not "3 of 5 values undeclared" but
+> *the guard covered `stage13` only*: `stage9_status` and `stage10_status` had **no enum check at
+> all**, and three live values (`not_started` ×2, `skeleton` ×1, `pending-redo` ×1) sat entirely
+> outside any vocabulary. All three stages are now guarded against a declared `_STAGE_STATUS_ENUM`
+> and undeclared values are recorded per bundle.
+>
+> **Not in scope and deliberately not forced:** every bundle having a Stage-10 artifact. D6 and D9
+> still have none, and running Stage 10 is goal 2. UNMEASURED is the honest rendering of that until
+> the reviewer stages run — which is the point of the state.
 
 Full analysis: [`docs/audits/2026-08-01-publication-readiness/`](../../audits/2026-08-01-publication-readiness/ADDENDUM-2026-08-07.md).
 

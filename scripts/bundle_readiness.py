@@ -90,7 +90,19 @@ _DIR_DATE_RE = re.compile(r"^(\d{4}-\d{2}-\d{2})(?:-T?(\d{3,4}))?")
 # Plain full-bundle stage13_status enum values per BUNDLE_DIRECTORY_SCHEMA.md.
 # Anything else (e.g. D6's "green_phase6AA_section (...)") is a freeform
 # caveat string and is surfaced verbatim in the heatmap.
+#: Declared `stage*_status` vocabulary. ⚠️ EXTENDED 2026-08-09 (TODO-D5): the set
+#: below covered stage13 ONLY, and three values live in the corpus were undeclared —
+#: measured `not_started` (2), `skeleton` (1), `pending-redo` (1), all of them on
+#: stage9/stage10, which had NO enum guard at all. An undeclared value on an
+#: unguarded stage is indistinguishable from a typo, and both read as "not green".
 _PLAIN_STAGE13_STATUSES = {"pending", "green", "yellow", "red", ""}
+#: The full live vocabulary, per stage. `not_started` and `skeleton` are legitimate
+#: pre-review states; `pending-redo` marks a stage invalidated by a later append.
+_STAGE_STATUS_ENUM = frozenset({
+    "pending", "green", "yellow", "red", "",
+    "not_started", "skeleton", "pending-redo",
+})
+_GUARDED_STAGE_FIELDS = ("stage9_status", "stage10_status", "stage13_status")
 
 sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 from bundle_migration import parse_mapping, MAPPING_DOC  # noqa: E402
@@ -247,6 +259,12 @@ def resolve_stage13_reviews(*, backfill: bool) -> dict[str, dict]:
             raw_status = str(md.get("stage13_status") or "")
             if raw_status not in _PLAIN_STAGE13_STATUSES:
                 rec["status_caveat"] = raw_status
+            # TODO-D5: stage9/stage10 were unguarded entirely. A value outside the
+            # declared vocabulary on ANY stage is recorded, not silently accepted.
+            off = [f"{f}={md.get(f)!r}" for f in _GUARDED_STAGE_FIELDS
+                   if str(md.get(f) or "") not in _STAGE_STATUS_ENUM]
+            if off:
+                rec["stage_status_undeclared"] = off
 
         if md is not None:
             rec["kind"] = md.get("stage13_review_kind")
@@ -413,9 +431,9 @@ def aggregate_by_bundle(
             # so a targeted 16-anchor attribution sweep counted exactly as a full
             # fresh-context adversarial pass — which is how D9, the portfolio's only
             # GREEN, reached GREEN with its Stage 10 never run.
-            readiness = "YELLOW"
+            readiness = "UNMEASURED"
             readiness_display = (
-                f"YELLOW (Stage-13 evidence UNVERIFIED — kind="
+                f"UNMEASURED (Stage-13 evidence kind="
                 f"{review_kind or 'unrecorded'}; only "
                 f"{'/'.join(sorted(_KINDS_SUFFICIENT_FOR_GREEN))} earns GREEN)")
         elif readiness == "GREEN" and not (
@@ -423,8 +441,8 @@ def aggregate_by_bundle(
             # No Stage-10 artifact at all. `chain_canonicalize --report` measured this
             # directly on 2026-08-01: D6 and D9 have no `claims_review.json`, and F and
             # I3 have one carrying ZERO chain links.
-            readiness = "YELLOW"
-            readiness_display = "YELLOW (Stage 10 UNVERIFIED — no claims_review.json)"
+            readiness = "UNMEASURED"
+            readiness_display = "UNMEASURED (Stage 10 never run — no claims_review.json)"
 
         by_bundle[b] = {
             "sources": sorted(sources),

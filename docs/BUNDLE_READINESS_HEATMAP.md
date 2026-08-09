@@ -1,6 +1,6 @@
 # Bundle Readiness Heatmap
 
-**Auto-generated:** 2026-08-08
+**Auto-generated:** 2026-08-09
 **Tool:** `scripts/bundle_readiness.py --heatmap`
 
 **Companion to:** `docs/READINESS_GATES.md` (per-paper) — the per-bundle analog. Phase 6i Wave 7.4 deliverable; GREEN semantics tightened 2026-06-10 (S5 closure — see legend).
@@ -29,7 +29,7 @@
 | **D6** | 1 | 3 | 0 | 0 | _(none)_ | 2026-06-10 † | 🟡 YELLOW (P1 gate blocked: NarrativeGrounding) |
 | **D7** | 1 | 1 | 17 | 12 | 8 critical, 4 major, 5 minor | 2026-06-10 | 🔴 RED |
 | **D8** | 1 | 13 | 14 | 0 | 8 advisory, 6 minor | 2026-06-10 | 🟡 YELLOW |
-| **D9** | 1 | 1 | 0 | 0 | _(none)_ | 2026-06-10 | 🟡 YELLOW (Stage-13 evidence UNVERIFIED — kind=unrecorded; only full-adversarial earns GREEN) |
+| **D9** | 1 | 1 | 0 | 0 | _(none)_ | 2026-06-10 | ? UNMEASURED (Stage-13 evidence kind=unrecorded; only full-adversarial earns GREEN) |
 | **D10** | 1 | 1 | 3 | 0 | 1 advisory, 2 minor | 2026-06-30 | 🟡 YELLOW (P1 gate blocked: LeanProofSubstance, NarrativeGrounding) |
 | **D11** | 1 | 1 | 86 | 23 | 18 advisory, 6 critical, 17 major, 45 minor | 2026-07-31 † | 🔴 RED |
 | **D12** | 1 | 1 | 148 | 46 | 7 advisory, 4 critical, 42 major, 95 minor | 2026-07-31 † | 🔴 RED |

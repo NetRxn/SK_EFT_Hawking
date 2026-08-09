@@ -1516,3 +1516,56 @@ class TestNativeDecideSeamGuard:
         assert not err, err
         assert len(hits) >= 20, "every declared bundle should appear"
         assert sum(len(v) for v in hits.values()) > 0, "the corpus does carry debt"
+
+
+# ── TODO-D5: UNMEASURED is not YELLOW ─────────────────────────────────────
+
+class TestUnmeasuredIsDistinctFromYellow:
+    """The bundle layer had no equivalent of `CheckResult.measured`. A bundle whose
+    Stage-10 artifact does not exist, or whose Stage-13 evidence is of the wrong
+    kind, was rendered YELLOW — "measured, has issues" — when the truth is "the
+    evidence to judge does not exist". D9 reached the portfolio's only GREEN that
+    way, with its Stage 10 never run.
+
+    ⚠️ Five of D5's six sub-claims were already closed by ADR-011 Phase 2 and were
+    re-measured before any code changed: record_review.py IS the stage-status
+    writer, bundle_reviewer_stage_ordering IS the ordering gate,
+    _KINDS_SUFFICIENT_FOR_GREEN DOES discriminate review kind, _blocked_p1_gates
+    returns None rather than {} on failure, and the missing-claims_review case was
+    already handled. What remained was the STATE, and the unguarded stage9/10 enum."""
+
+    def test_unmeasured_is_a_state_the_module_can_return(self):
+        import sys, pathlib
+        sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / "scripts"))
+        import bundle_readiness as br
+        src = pathlib.Path(br.__file__).read_text()
+        assert '"UNMEASURED"' in src
+        # and it must be reachable from BOTH withholding paths
+        assert src.count('readiness = "UNMEASURED"') >= 2
+
+    def test_icon_map_covers_unmeasured(self):
+        """A consumer that KeyErrors on the new state would push it back to '?'."""
+        import sys, pathlib
+        sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / "scripts"))
+        from datastar_bundles import _VERDICT_ICON
+        assert "UNMEASURED" in _VERDICT_ICON
+        assert _VERDICT_ICON["UNMEASURED"] != _VERDICT_ICON["YELLOW"]
+
+    def test_stage_status_enum_covers_the_live_vocabulary(self):
+        """Measured live: not_started, skeleton and pending-redo were all in the
+        corpus and all undeclared, on stages that had no enum guard at all."""
+        import sys, pathlib, json
+        root = pathlib.Path(__file__).resolve().parents[1]
+        sys.path.insert(0, str(root / "scripts"))
+        from bundle_readiness import _STAGE_STATUS_ENUM, _GUARDED_STAGE_FIELDS
+        for f in ("not_started", "skeleton", "pending-redo"):
+            assert f in _STAGE_STATUS_ENUM, f
+        assert set(_GUARDED_STAGE_FIELDS) == {
+            "stage9_status", "stage10_status", "stage13_status"}
+        undeclared = []
+        for md in sorted(root.glob("papers/*/bundle_metadata.json")):
+            m = json.loads(md.read_text(encoding="utf-8"))
+            for fld in _GUARDED_STAGE_FIELDS:
+                if str(m.get(fld) or "") not in _STAGE_STATUS_ENUM:
+                    undeclared.append(f"{md.parent.name}.{fld}={m.get(fld)!r}")
+        assert undeclared == [], undeclared

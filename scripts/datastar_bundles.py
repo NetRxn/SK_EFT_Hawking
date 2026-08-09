@@ -60,7 +60,11 @@ _BUNDLE_TITLES = complete_map(
     _SHORT_TITLE_OVERRIDES, _REGISTRY_TITLES, what="dashboard bundle titles",
 )
 
-_VERDICT_ICON = {"GREEN": "🟢", "YELLOW": "🟡", "RED": "🔴"}
+# ⚪ UNMEASURED is distinct from 🟡 YELLOW (TODO-D5): yellow says "measured,
+# has issues"; white says "the evidence to judge does not exist". Collapsing
+# them is how an unreviewed bundle came to read as merely imperfect.
+_VERDICT_ICON = {"GREEN": "🟢", "YELLOW": "🟡", "RED": "🔴",
+                 "UNMEASURED": "⚪"}
 
 
 def _latest_review_dir_for_bundle() -> Path | None:
