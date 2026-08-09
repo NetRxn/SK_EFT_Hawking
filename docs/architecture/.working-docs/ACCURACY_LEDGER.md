@@ -2786,3 +2786,27 @@ did. Recorded as a scope move, disclosed, not as a clean pass.
 judgement. What V72 records is that an independent agent, given the same tree and told to
 falsify, reached FAIL on seven conditions — and that the loop had reported the goal
 substantially met.
+
+---
+
+## V73 — the closure reviewer's en-dash finding does NOT survive re-measurement — 3 atoms
+
+| # | Proposition | Decider | Verbatim result |
+|---|---|---|---|
+| 1 | *(closure reviewer, item 3c)* "en-dash counts byte-identical in all 21 files" is refuted; the sweep took **1,121 → 1,127 in 3 files (D3, L2, E1)** — six em-dashes converted to en-dashes rather than rewritten | re-measure with `(?<!-)--(?!-)` against `c2b597e1` | **NOT REPRODUCED.** Corpus **1,125 → 1,102**, a net *fall* of 23. Per-bundle: D1 +6, D10 +5, E1 +3, L2 +2, F/D8/I3 +1 each, D3 −1, E2 −2, D6 −39 |
+| 2 | The increases are the conversions the finding describes | read every added en-dash IN CONTEXT | **No.** All are compound eponyms or numeric ranges: Tindall--Mello--Fishman--Stoudenmire--Sels, Kibble--Zurek--Unruh, Gorini--Kossakowski--Sudarshan--Lindblad, Kato--Rellich, Hohenberg--Kohn, Levy--Lieb, Rayleigh--Ritz, Chowdhury--Hartnoll--Hebbar--Khondaker, Hasse--Minkowski, `$10^{-8}$--$10^{-12}$`, `$10^3$--$10^6$`, and two L2 table cells using `--` as an empty-cell marker |
+| 3 | …so where did the increases come from | attribute per bundle | **Content this loop MOVED, not content it corrupted.** D1's +6 and E1's +3 are the E2 trim: the ν-derivation, the Kibble--Zurek--Unruh cross-check and `fig105` were relocated into their deep companions, carrying their eponyms with them. D10's +5 is the D12 scope qualification, which names Hohenberg--Kohn, Levy--Lieb and Rayleigh--Ritz |
+
+**⚠️ THE FINDING WAS PLAUSIBLE AND THE RULE IT INVOKES IS REAL.** `bundle_prose_em_dash_free`
+counts exactly-three hyphens, so an over-correction that converts `---` to `--` passes it
+silently — the check's own docstring says so. That is why the finding deserved a
+measurement rather than a dismissal. The measurement says it did not happen here.
+
+**Recorded rather than quietly dropped, because the goal's rule is symmetric:** *"a filed
+finding is a claim, mine included."* A reviewer's finding is a claim too, and withdrawing one
+on evidence is the same act as accepting one on evidence. The three bundles the finding named
+are not the three that moved.
+
+**NOT-AN-ASSERTION.** Whether an en-dash is correct at a given site is a typographic judgement
+per site; what is measured here is that every *new* en-dash sits in a compound name, a numeric
+range, or a table's empty-cell slot, and none joins two clauses.
