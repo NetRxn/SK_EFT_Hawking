@@ -46,7 +46,7 @@ A Formally Verified Survey}
 %%   one object; its faces are the sibling bundles' worth of
 %%   predictive register.
 
-We consolidate the sixteen sibling-bundle threads of the SK--EFT
+We consolidate the twenty sibling-bundle threads of the SK--EFT
 Hawking research program into a single, formally verified survey of the
 substrate-condensation approach to fundamental physics. The
 substrate's predictive register lives at the boundary partition
@@ -127,8 +127,10 @@ through the program's FKLW/horizon-MTC line (Bundles~D6, D7, and D8,
 on the fault-tolerant-computation substrate, the
 classical-simulability demarcation, and universal gate compilation
 respectively), and the methodology and verification stack itself
-(Bundles~I1, I2, and I3). This flagship review is the seventeenth
-bundle. It synthesises the sixteen sibling threads into a unified
+(Bundles~I1, I2, and I3). Four further deep bundles carry the
+quantum-network, open-system, topological-metamaterial and
+dark-sector threads (Bundles~D9--D12). This flagship review is the
+twenty-first bundle. It synthesises the twenty sibling threads into a unified
 description of the substrate's predictive register and reports the
 cross-thread identities that none of the sibling bundles report
 individually.
@@ -1378,13 +1380,16 @@ falsifier); the four pending sections remain forward-referenced.
 The D6 absorption tracking checklist (per the Phase~6v/6w strategy
 synthesis §3.5.3 task~\#8) is:
 \begin{itemize}
-\item[$\Box$] Wave~6v.2 ship (Shor T-gate counts): pending.
-\item[$\Box$] Wave~6v.5 ship (APM-LDPC + hashing bound): pending.
-\item[$\Box$] Wave~6v.6 ship (W-state QFT in $\mathbb{Q}(\zeta_N)$):
-  pending.
+\item[$\boxtimes$] Wave~6v.2 ship (Shor T-gate counts): \textbf{shipped}
+  (\texttt{ShorTGateCount.wave\_6v\_2\_substantive\_closure}, a declared D6 apex).
+\item[$\boxtimes$] Wave~6v.5 ship (APM-LDPC + hashing bound): \textbf{shipped}
+  (\texttt{APMLdpcHashingBound.wave\_6v\_5\_substantive\_closure}, a declared D6 apex).
+\item[$\boxtimes$] Wave~6v.6 ship (W-state QFT in $\mathbb{Q}(\zeta_N)$):
+  \textbf{shipped} (\texttt{WStateQFT} declarations in D6's apex closure).
 \item[$\Box$] Phase~6t SK retroactive absorption into D6 §2: pending.
 \item[$\Box$] D6 bundle-level Stage~13 adversarial-review pass at
-  Phase~6v close: pending.
+  Phase~6v close: pending. \emph{No bundle in the programme currently holds a
+  reviewer-triple GREEN; see \S\ref{sec:phase7-closeout}.}
 \item[$\Box$] F~§6 (TQC foundations) absorption of D6 summary
   sub-section: pending (this checklist item closes the loop).
 \end{itemize}
@@ -1685,11 +1690,15 @@ implicit assumptions). The reviewer's tool budget is hard-capped
 walk; partial-coverage caveats are documented in the verdict file
 when the cap is hit.
 
-The 17-bundle architecture is gated by reviewer-triple closure (Stage
+The 21-bundle architecture is gated by reviewer-triple closure (Stage
 9 figure-reviewer + Stage 10 claims-reviewer + Stage 13
 adversarial-reviewer; all three GREEN for a bundle to be marked
-closed). At F flagship close-out, all 16 sibling bundles plus this
-flagship will have passed reviewer-triple closure independently.
+closed). At F flagship close-out, all 20 sibling bundles plus this
+flagship are intended to have passed reviewer-triple closure
+independently. That gate is \emph{not} met at the time of writing:
+no bundle currently holds a reviewer-triple GREEN, and this flagship
+is itself RED with open blockers. The architecture below describes
+the intended close-out state, not the achieved one.
 
 \subsection{Algebraic-Lorentzian-geometry backbone}
 
@@ -1954,13 +1963,16 @@ target is identified.
 \label{sec:open-problems}
 
 \subsection{Phase 7 close-out summary}
+\label{sec:phase7-closeout}
 
-At the time of this flagship's submission, the substrate program has
-shipped 17 bundles to reviewer-triple-closed Stage-13 GREEN status.
-The 17 bundles ship across five tiers: Tier~0 (this flagship),
-Tier~1 (D1--D8; eight deep papers), Tier~2 (L1--L3; three PRL splashes
-extracted from D2 and D3), Tier~3 (I1--I3; three infrastructure
-papers), and Tier~4 (E1--E2; two experimental letters). The
+The substrate program comprises 21 bundles. \emph{None has yet
+reached reviewer-triple-closed Stage-13 GREEN}, and this section
+describes the intended shipping architecture rather than an achieved
+state. The 21 bundles span five tiers: Tier~0 (this flagship),
+Tier~1 (D1--D12; twelve deep papers), Tier~2 (L1--L3; three PRL
+splashes extracted from D2 and D3), Tier~3 (I1--I3; three
+infrastructure papers), and Tier~4 (E1--E2; two experimental
+letters). The
 architecture is the project's strategy
 frame~\cite{Roehm2026Strategy}.
 
@@ -1986,7 +1998,7 @@ The Tier-3 infrastructure papers (I1, I2, I3) ship in parallel with
 the Tier-1 deep papers; I2 may delay if the Mathlib upstream cycle
 extends. The Tier-4 experimental letters (E1, E2) ship with the D1
 deep paper as companion content. This flagship review (F) ships last,
-citing all 16 siblings in their Phase-7-final form.
+citing all 20 siblings in their Phase-7-final form.
 
 The submission cadence is intentionally tied to the architecture's
 internal cross-bridges: each downstream submission cites upstream
@@ -2160,7 +2172,7 @@ the three Tier-3 infrastructure papers describe the methodology (I1),
 the verified-statistics software (I2), and the LDP/It\^o substrate
 (I3); the two Tier-4 experimental letters carry per-platform
 companion content (E1 polariton, E2 graphene); and this Tier-0
-flagship review (Bundle~F) integrates the sixteen sibling threads
+flagship review (Bundle~F) integrates the twenty sibling threads
 into a single survey with substrate-identity synthesis claim. NO-GO results are reported as first-class predictive
 content rather than absences. All load-bearing claims ship with Lean
 4 modules at zero \texttt{sorry} and \axiomcount{} project-local

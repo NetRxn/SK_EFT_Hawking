@@ -41,8 +41,10 @@ complete positivity of its dissipator, the GKSL structure theorem, and the Marko
 semigroup $e^{t\mathcal{L}}$ realized as a matrix exponential of the non-Hermitian Liouvillian. Every
 headline theorem is kernel-pure (axiom profile exactly $\{\texttt{propext},\,\texttt{Classical.choice},
 \,\texttt{Quot.sound}\}$) with no project-local axioms. To our knowledge these are the first
-formalizations of NEGF/Landauer \emph{conductance} transport, of Hohenberg--Kohn/Levy--Lieb DFT, and of
-the Lindblad \emph{generator and dynamical semigroup} in any proof assistant; we are careful to
+formalizations of NEGF/Landauer \emph{conductance} transport, of the Hohenberg--Kohn/Levy--Lieb DFT
+\emph{statements} (see the scope note in \S\ref{sec:dft-scope}: those are proved over abstract data
+structures carrying the Rayleigh--Ritz inequalities as fields, not over the molecular Hamiltonian of
+\S4.1), and of the Lindblad \emph{generator and dynamical semigroup} in any proof assistant; we are careful to
 distinguish the last from the static quantum-channel/CPTP machinery that already exists in \Lean{},
 Coq, and Isabelle. Throughout we adopt a two-layer honesty discipline: the algebraic and analytic
 \emph{formulas} are verified in the kernel, while the identification of a model with a specific
@@ -179,6 +181,7 @@ first machine-checked NEGF/Landauer conductance transport in any proof assistant
 \label{sec:dft}
 
 \subsection{The molecular Hamiltonian and self-adjointness}
+\label{subsec:molecular}
 The $N$-electron molecular Coulomb Hamiltonian, with kinetic term $T$ and the electron--nucleus plus
 electron--electron Coulomb potential $V$, is an unbounded operator whose self-adjointness is the
 precondition for a real spectrum and unitary dynamics. We formalize the Kato--Rellich theorem in-tree
@@ -222,6 +225,36 @@ verify that it is a lower bound for the kinetic-plus-interaction energy of any s
 density (\thm{levyLieb\_functional}) and that it agrees with the Hohenberg--Kohn functional on
 $v$-representable densities (\thm{levyLieb\_eq\_HK\_on\_vrep}), the constrained-search infimum attained
 at the ground state.
+
+\subsection{Scope of the DFT formalization}
+\label{sec:dft-scope}
+
+We state plainly what these four theorems do and do not establish, because the
+distinction is easy to lose. \thm{hohenberg\_kohn\_uniqueness},
+\thm{hohenberg\_kohn\_variational}, \thm{levyLieb\_functional} and
+\thm{levyLieb\_eq\_HK\_on\_vrep} are proved over the abstract structures
+\thm{GroundStateData}, \thm{DensityVariational} and \thm{LevyLiebData}. Those
+structures carry the strict Rayleigh--Ritz inequalities, the non-degeneracy of the
+ground state, and the constrained-search decomposition \emph{as fields}: they are
+hypotheses of the statements, not conclusions of them. The theorems are therefore
+faithful formal renderings of the DFT \emph{arguments} --- each derives its
+conclusion from those inputs by exactly the reasoning the textbook proof uses ---
+and they are kernel-pure. They are not derivations of the inequalities from a
+Hamiltonian.
+
+Two consequences follow, and we state both. First, no inhabitant of these three
+structures is constructed anywhere in this development, so the theorems are not
+yet instantiated at any concrete system. Second, nothing connects them to
+\S\ref{subsec:molecular}'s \thm{molecularHamiltonian\_essSelfAdjoint}; the Lean
+modules say so at
+\thm{HohenbergKohnUniqueness.lean:19-21} and
+\thm{HohenbergKohnVariational.lean:26-27}, and this paper should have said so too.
+Supplying an inhabitant from the molecular Hamiltonian --- which requires the
+Rayleigh--Ritz inequalities as \emph{theorems} about that operator --- is the
+substantive next step, and it is not claimed here.
+
+By contrast \S\ref{subsec:molecular}'s unconditional self-adjointness result takes no
+analytic hypothesis of this kind: it is a theorem about the operator itself.
 
 \section{Open-system dynamics}
 \label{sec:lindblad}

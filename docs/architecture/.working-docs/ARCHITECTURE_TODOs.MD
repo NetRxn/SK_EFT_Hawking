@@ -697,7 +697,23 @@ version *and* the Mathlib rev against `lean-toolchain` + `lakefile.toml`.
 - Full working: `docs/audits/2026-08-07-d11-retrofit/FINDINGS.md` §3.
 
 
-### D12. D10 §4.2–§4.3 claim a first-ever DFT formalization over uninhabited structures — OPEN (CRITICAL, claim integrity)
+### D12. D10 §4.2–§4.3 claim a first-ever DFT formalization over uninhabited structures — ✅ DONE 2026-08-09 (CRITICAL)
+
+> **Uninhabitedness confirmed by two instruments:** a source scan for constructions returns 0 for all
+> three structures, and `lean_deps.json` shows only auto-generated projections and eliminators
+> (`.E`, `.F`, `.casesOn`, `.ctorIdx`) with **no constructor application anywhere**.
+>
+> **Fixed in the manuscript, where the defect was.** D10 gains §4.4 *Scope of the DFT formalization*
+> in the D4 §5 shape: the four theorems are faithful formal renderings of the DFT *arguments*, each
+> deriving its conclusion from the Rayleigh–Ritz inequalities and non-degeneracy that the structures
+> carry **as fields** — hypotheses, not conclusions. It states both consequences: no inhabitant is
+> constructed, and nothing connects them to §4.1's molecular Hamiltonian. The abstract's *"first
+> formalizations"* now says *"the Hohenberg–Kohn/Levy–Lieb DFT **statements**"* and points at the
+> scope note.
+>
+> **The Lean already disclosed this and the paper did not** — `HohenbergKohnUniqueness.lean:19-21`
+> and `HohenbergKohnVariational.lean:26-27`. The paper now says so too. §4.1's unconditional
+> self-adjointness is explicitly contrasted as taking no analytic hypothesis of this kind.
 
 - **Where:** `papers/D10/paper_draft.tex` abstract (`:39`) and §4.2–§4.3 (`:199-219`).
 - **The gap:** `hohenberg_kohn_uniqueness`, `hohenberg_kohn_variational`, `levyLieb_functional`
@@ -831,7 +847,30 @@ violated for the fifth time in this workstream.
   charter-length shortfall in both bundles.
 - Full working: `docs/audits/2026-08-07-d1-retrofit/FINDINGS.md` §4.
 
-### D15. The flagship surveys a 17-bundle program; 21 exist — OPEN (CRITICAL, scope claim)
+### D15. The flagship surveys a 17-bundle program; 21 exist — ✅ DONE 2026-08-09 (CRITICAL)
+
+> **All six roster sites corrected** (abstract, §1.2, §9.4, §11.1, §11.2, §12.3): sixteen siblings →
+> twenty, seventeenth bundle → twenty-first, Tier 1 `D1--D8` → `D1--D12`, and D9–D12 are now named
+> in the §1.2 thread enumeration they were missing from.
+>
+> ⚠️ **Two occurrences of "sixteen" were deliberately NOT touched** — `:756` and `:772` are *"sixteen
+> left-handed Weyl fermions per Standard-Model generation"*, a physics count that shares the word and
+> nothing else. This is the shape the entry warned about: key on what the sentence claims, not on the
+> token.
+>
+> **§11.1's compound falsehood is corrected, not softened.** It claimed the program *"has shipped 17
+> bundles to reviewer-triple-closed Stage-13 GREEN status"*. Both halves were false. It now states
+> that **none** has reached reviewer-triple GREEN and that the section describes the intended
+> shipping architecture rather than an achieved state. §9.4 gains the same correction inline.
+>
+> **§7's D6 checklist was stale in the other direction** and is now evidence-backed: waves 6v.2, 6v.5
+> and 6v.6 are marked shipped, each citing the declared D6 apex that witnesses it
+> (`ShorTGateCount.wave_6v_2_substantive_closure`, `APMLdpcHashingBound.wave_6v_5_substantive_closure`,
+> the `WStateQFT` declarations). The Stage-13 box stays unchecked and now says why.
+>
+> ⚠️ **I introduced a dangling `\ref` while fixing this** (`sec:phase7-closeout` did not exist) and
+> caught it by checking the label set before compiling — the same defect class D17 was filed for. The
+> label now exists; F compiles with zero undefined references.
 
 - **Where:** `papers/F/paper_draft.tex` — abstract, §1.1, §1.2, §9.4, §11.1, §11.2, §12.3. The
   claim is made seven times and consistently: *"the sixteen sibling-bundle threads"*, *"$17$
