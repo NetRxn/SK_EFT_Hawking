@@ -19,7 +19,7 @@
   "stage13_review_doc": "docs/audits/stage13_attribution_sweep_2026-06-10.md#d6",
   "audit_log_path": "papers/D6/audit_log.jsonl",
   "supersession_ledger_anchor": "docs/review_finding_supersessions.json",
-  "notes": "D6 bundle CREATED 2026-05-26 by Phase 6v Wave 6v.1. Per Phase 6v strategy synthesis §3.5. D6 is the 15th publication target in the project's bundle architecture (sibling to D4 'TQC foundations'; D6 covers the fault-tolerant-computation substrate side). | Wave 6v.1 ships §3 Williamson-Yoder gauging-QEC overhead bound (FIRST kernel-verified declaration under D6). Subsequent waves contribute: §2 Phase 6t quantitative Solovay-Kitaev retroactive absorption (currently bundle-orphan); §4 APM-LDPC + hashing-bound (Wave 6v.5); §5 Google/Caltech Shor T-gate counts (Wave 6v.2); §6 W-state QFT in Q(ζ_N) (Wave 6v.6). | Stage-13 adversarial review DEFERRED to Phase 6v close per user directive (single Phase-6v-close adversarial pass after all 7 waves have shipped). | 2026-06-10 attribution-content sweep (docs/audits/stage13_attribution_sweep_2026-06-10.md): GREEN after fix. BravyiKitaev '7 T per Toffoli' was misattributed (that paper is magic-state distillation) -> re-attributed to NielsenChuang2010 (number 7 correct; standard ancilla-free construction). Babbush 1200/1450+90M/70M, Williamson-Yoder linear-polylog verbatim.",
+  "notes": "D6 bundle CREATED 2026-05-26 by Phase 6v Wave 6v.1. Per Phase 6v strategy synthesis \u00a73.5. D6 is the 15th publication target in the project's bundle architecture (sibling to D4 'TQC foundations'; D6 covers the fault-tolerant-computation substrate side). | Wave 6v.1 ships \u00a73 Williamson-Yoder gauging-QEC overhead bound (FIRST kernel-verified declaration under D6). Subsequent waves contribute: \u00a72 Phase 6t quantitative Solovay-Kitaev retroactive absorption (currently bundle-orphan); \u00a74 APM-LDPC + hashing-bound (Wave 6v.5); \u00a75 Google/Caltech Shor T-gate counts (Wave 6v.2); \u00a76 W-state QFT in Q(\u03b6_N) (Wave 6v.6). | Stage-13 adversarial review DEFERRED to Phase 6v close per user directive (single Phase-6v-close adversarial pass after all 7 waves have shipped). | 2026-06-10 attribution-content sweep (docs/audits/stage13_attribution_sweep_2026-06-10.md): GREEN after fix. BravyiKitaev '7 T per Toffoli' was misattributed (that paper is magic-state distillation) -> re-attributed to NielsenChuang2010 (number 7 correct; standard ancilla-free construction). Babbush 1200/1450+90M/70M, Williamson-Yoder linear-polylog verbatim.",
   "last_stage13_review_source": "backfilled-from-audit-doc docs/audits/stage13_D6_fullbundle_2026-06-01.md 2026-06-10",
   "open_findings": 0,
   "blocked_p1_gates": [
@@ -30,66 +30,91 @@
   "apex_theorems": [
     {
       "name": "SKEFTHawking.FaultTolerance.GaugingQEC.wave_6v_1_substantive_closure",
-      "claims": "§3 — Williamson-Yoder gauging-QEC: linear-polylog overhead, the quadratic-class falsifier, and the W=4 numerical witness, bundled",
+      "claims": "\u00a73 \u2014 Williamson-Yoder gauging-QEC: linear-polylog overhead, the quadratic-class falsifier, and the W=4 numerical witness, bundled",
       "declared": "2026-08-06"
     },
     {
       "name": "SKEFTHawking.FaultTolerance.GaugingQEC.williamsonYoder_beats_quadratic_for_W_ge_two",
-      "claims": "§3 — point-wise contrast: the W-Y protocol genuinely improves on the naive quadratic baseline",
+      "claims": "\u00a73 \u2014 point-wise contrast: the W-Y protocol genuinely improves on the naive quadratic baseline",
       "declared": "2026-08-06"
     },
     {
       "name": "SKEFTHawking.FaultTolerance.APMLdpcHashingBound.wave_6v_5_substantive_closure",
-      "claims": "§4 — APM-LDPC: QuEra-Harvard-MIT rate above 1/2, the exactly-half falsifier, and the hashing-bound witness, bundled",
+      "claims": "\u00a74 \u2014 APM-LDPC: QuEra-Harvard-MIT rate above 1/2, the exactly-half falsifier, and the hashing-bound witness, bundled",
       "declared": "2026-08-06"
     },
     {
       "name": "SKEFTHawking.FaultTolerance.APMLdpcHashingBound.apmLdpc_quEraHarvard_not_achievable_at_one_half_noise",
-      "claims": "§4 (Wave 6v.5b) — falsifier at maximum-entropy noise: capacity vanishes, so no positive-rate code is achievable",
+      "claims": "\u00a74 (Wave 6v.5b) \u2014 falsifier at maximum-entropy noise: capacity vanishes, so no positive-rate code is achievable",
       "declared": "2026-08-06"
     },
     {
       "name": "SKEFTHawking.FaultTolerance.APMLdpcHashingBound.apmLdpc_hashing_bound_at_zero_noise",
-      "claims": "§4 (Wave 6v.5b) — the substantive Komoto-Kasai-form witness at p=0 in the Shannon-entropy predicate",
+      "claims": "\u00a74 (Wave 6v.5b) \u2014 the substantive Komoto-Kasai-form witness at p=0 in the Shannon-entropy predicate",
       "declared": "2026-08-06"
     },
     {
       "name": "SKEFTHawking.FaultTolerance.ShorTGateCount.shor_ecc256_tgate_count_le",
-      "claims": "§5 — the headline: a circuit within Google's ECC-256 Toffoli budget fits the corresponding T-gate budget after exact Toffoli->7T decomposition",
+      "claims": "\u00a75 \u2014 the headline: a circuit within Google's ECC-256 Toffoli budget fits the corresponding T-gate budget after exact Toffoli->7T decomposition",
       "declared": "2026-08-06"
     },
     {
       "name": "SKEFTHawking.FaultTolerance.ShorTGateCount.shor_ecc256_falls_within_megagate_envelope_at_1G",
-      "claims": "§5 — both configurations sit inside the 10^9 T-gate FT-QC envelope with concrete headroom",
+      "claims": "\u00a75 \u2014 both configurations sit inside the 10^9 T-gate FT-QC envelope with concrete headroom",
       "declared": "2026-08-06"
     },
     {
       "name": "SKEFTHawking.FaultTolerance.ShorTGateCount.wave_6v_2_substantive_closure",
-      "claims": "§5 — the ECC-256 T-gate budget, the envelope, and the qubit-T trade-off, bundled",
+      "claims": "\u00a75 \u2014 the ECC-256 T-gate budget, the envelope, and the qubit-T trade-off, bundled",
       "declared": "2026-08-06"
     },
     {
       "name": "SKEFTHawking.FaultTolerance.WStateQFT.n_qubit_w_state_basis_strictly_smaller_than_full_hilbert",
-      "claims": "§6 — the substantive separation: the W-state QFT measurement basis (n) is exponentially smaller than the full Hilbert basis (2^n)",
+      "claims": "\u00a76 \u2014 the substantive separation: the W-state QFT measurement basis (n) is exponentially smaller than the full Hilbert basis (2^n)",
       "declared": "2026-08-06"
     },
     {
       "name": "SKEFTHawking.FaultTolerance.WStateQFT.wState_basis_isCyclotomic_at_QCyc_sizes",
-      "claims": "§6 (Wave 6v.6b) — the QFT basis is cyclotomic at the project's QCyc_n substrate sizes {5,8,16,40,80}",
+      "claims": "\u00a76 (Wave 6v.6b) \u2014 the QFT basis is cyclotomic at the project's QCyc_n substrate sizes {5,8,16,40,80}",
       "declared": "2026-08-06"
     },
     {
       "name": "SKEFTHawking.FaultTolerance.WStateQFT.wave_6v_6_substantive_closure",
-      "claims": "§6 — separation, concrete witnesses, and the primitive-root cyclotomic witness, bundled",
+      "claims": "\u00a76 \u2014 separation, concrete witnesses, and the primitive-root cyclotomic witness, bundled",
       "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.FaultTolerance.AGP.agp_threshold_steane",
+      "claims": "\u00a77 the headline AGP concatenated-Steane threshold theorem: A_CNOT * eps_L <= (A_CNOT * eps)^(2^L) at every level",
+      "declared": "2026-08-09"
+    },
+    {
+      "name": "SKEFTHawking.FaultTolerance.AGP.agp_threshold_steane_strict",
+      "claims": "\u00a77 the below-threshold form: strictly below eps_0, every level L >= 1 has A_CNOT * eps_L < 1, so concatenation suppresses without bound",
+      "declared": "2026-08-09"
+    },
+    {
+      "name": "SKEFTHawking.FaultTolerance.AGP.agp_threshold_steane_numerical",
+      "claims": "\u00a77 Eq. (threshold-numeric): the certificate eps_0 > 2.73e-5 bundled with eps_0 <= 1, pinning the threshold on both sides",
+      "declared": "2026-08-09"
+    },
+    {
+      "name": "SKEFTHawking.FaultTolerance.AGP.steaneAGPThreshold_gt",
+      "claims": "\u00a77 the numerical threshold 1/35235 = 2.838e-5 > 2.73e-5, the rigorous bound rather than the heuristic 1e-4",
+      "declared": "2026-08-09"
+    },
+    {
+      "name": "SKEFTHawking.FaultTolerance.steaneMalignancyCounts_A_CNOT_le_choose_two",
+      "claims": "\u00a77 Eq. (acnot) well-formedness: A_CNOT <= binom(M,2), so the malignant-pair count cannot exceed the pairs available to it",
+      "declared": "2026-08-09"
     }
   ],
   "length_target": {
     "unit": "pages",
     "floor": 24,
     "ceiling": 60,
-    "source": "PAPER_STRATEGY.md §6"
+    "source": "PAPER_STRATEGY.md \u00a76"
   },
-  "compiled_pages": 12,
+  "compiled_pages": 7,
   "compile_gate_ok": true
 }

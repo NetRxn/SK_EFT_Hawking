@@ -2564,7 +2564,20 @@ NATIVE_DECIDE_BUNDLE_DEBT = {
 # Measured 2026-08-03 on all 64 drafts. Enforced by
 # `validate.py --check count_literals` / `--check numerical_literals`.
 COUNT_LITERAL_CEILING = 107      # hardcoded "N theorems/modules/sorry" in paper prose
-NUMERICAL_LITERAL_CEILING = 116  # inline unit-bearing values outside \input{tables/}
+NUMERICAL_LITERAL_CEILING = 117  # inline unit-bearing values outside \input{tables/}
+# ⚠️ RAISED 116 -> 117 on 2026-08-09, with the rationale this block demands.
+# D6 §7's new threshold section states the certified bound `2.73 \times 10^{-5}`
+# inside a displayed equation. That value is not a project measurement to be routed
+# through a macro: it is the constant the Lean theorem itself asserts
+# (`steaneAGPThreshold_gt : steaneAGPThreshold > 2.73e-5`) and the published rigorous
+# bound of the primary source (AGP 2006). Moving it into `counts.tex` would make a
+# theorem's own statement depend on a regenerated file.
+#
+# ⚠️ It is flagged by the `\times 10^` leg of `NUMERICAL_LITERAL_RE`, whose docstring
+# scopes the predicate to "a literal with a physical unit". An error rate is
+# dimensionless, so this is arguably a false positive of that leg rather than debt —
+# but the instrument was NOT tuned to make this wave pass. The class is filed as
+# TODO-D37 for separate adjudication, and the ceiling carries the cost meanwhile.
 
 # ════════════════════════════════════════════════════════════════════
 # VACUOUS-STATEMENT BASELINE (identity-pinned ratchet; SIG gate hardening 2026-06-13)

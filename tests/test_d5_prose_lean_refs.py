@@ -257,17 +257,29 @@ class TestTexttExAliasesAreScanned:
         assert toks == {"first_ref", "second_ref"}, toks
 
     def test_the_LIVE_D6_draft_has_its_verb_refs_scanned(self):
-        r"""PRODUCTION-SEEDED (QI-30). D6 writes 235 `\verb` spans against 25
-        `\texttt`, so before this it contributed ~9 candidates and looked covered."""
+        r"""PRODUCTION-SEEDED (QI-30). D6 is the corpus's heaviest `\verb` user, so a
+        regression in that extraction path shows up here first.
+
+        ⚠️ RECALIBRATED 2026-08-09 (TODO-D32). The threshold was `> 80`, set when D6
+        carried ~235 `\verb` spans. Excising §5.4 to a cross-reference removed most of
+        them, and the assertion failed on a HEALTHY corpus: the fixture's premise had
+        moved, not the code under test.
+
+        Re-measured on the current draft rather than guessed: **43 candidates with
+        `\verb` support, 16 with it stripped**, so the path contributes 27. A threshold
+        of 30 still fails loudly on a regression (16 < 30) while surviving ordinary
+        drafting. Re-derive these three numbers if D6 changes shape again; do not simply
+        lower the bound until it passes."""
         tex = (SK_ROOT / "papers" / "D6" / "paper_draft.tex")
         if not tex.is_file():                      # pragma: no cover - corpus in-repo
             import pytest
             pytest.skip("D6 draft absent")
         toks = {t for t, _o in plr._extract_prose_lean_candidates(
             tex.read_text(errors="replace"))}
-        assert len(toks) > 80, (
-            f"only {len(toks)} candidates extracted from D6, which carries ~235 "
-            f"\\verb sites — the \\verb hole has reopened")
+        assert len(toks) > 30, (
+            f"only {len(toks)} candidates extracted from D6, the corpus's heaviest "
+            f"\\verb user — a verb-blind scanner yields 16, so this is the \\verb "
+            f"hole reopening rather than a drafting change")
 
     def test_the_LIVE_D9_draft_has_its_alias_refs_scanned(self):
         """PRODUCTION-SEEDED (QI-30). Asserted against the real `papers/D9/paper_draft.tex`,

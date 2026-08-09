@@ -141,6 +141,29 @@ CITATION_REGISTRY = {
     # Steinhauer / analog Hawking radiation
     # ════════════════════════════════════════════════════════════════
 
+    'AGP2006': {
+        'authors': 'Aliferis, P., Gottesman, D., Preskill, J.',
+        'title': 'Quantum accuracy threshold for concatenated distance-3 codes',
+        'journal': 'Quantum Information and Computation',
+        'volume': 6,
+        'page': '97-165',
+        'year': 2006,
+        'doi': '10.48550/arXiv.quant-ph/0504218',
+        'arxiv': 'quant-ph/0504218',
+        'doi_verified': None,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/AGP2006.pdf',
+        'used_in': [
+            'lean/SKEFTHawking/FaultTolerance/AGP/Threshold.lean',
+            'lean/SKEFTHawking/FaultTolerance/Counting.lean',
+            'papers/D6/paper_draft.tex',
+        ],
+        'provides': [],
+        'notes': 'The concatenated distance-3 threshold theorem. D6 §7 takes the Steane '
+                 'CNOT malignant-pair count A_CNOT = 35,235 from §8.3, equation (36). '
+                 'Metadata verified against the arXiv abstract page 2026-08-09; the DOI '
+                 'is the arXiv DOI, no publisher DOI is listed.',
+    },
     'Steinhauer2016': {
         'authors': 'Steinhauer, J.',
         'title': 'Observation of quantum Hawking radiation and its entanglement in an analogue black hole',

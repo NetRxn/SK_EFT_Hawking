@@ -1278,7 +1278,42 @@ is *measurable*, which is the program's central claim. Per C5 the claim gets str
 **E2 must not ship until this is settled.** Full working:
 `docs/audits/2026-08-08-adr010-d4-adjudication/ADJUDICATION.md` §3.
 
-### D32. D6 §5.4 excision + AGP threshold lift — must be ONE wave
+### D32. D6 §5.4 excision + AGP threshold lift — ✅ DONE 2026-08-09 (one wave)
+
+> **Both halves landed together, as required.** D6 is 758 lines / 7 pp, from 1,102 / 12 pp.
+>
+> **Excision.** §5.4 (lines 504–991, 488 lines, 44 % of the draft) is now a 20-line
+> cross-reference ceding the channel and device-certification layer to D9, in the idiom of D6's
+> own §2 which cedes compilation to D8. The conclusion, the abstract and the bundle-architecture
+> paragraph were rewritten around the threshold result rather than the network envelope.
+>
+> **Lift.** A new §7 reports the concatenated-Steane threshold theorem (Phase 6p Wave 1b):
+> `agp_threshold_steane`, its strict below-threshold form, and the numerical certificate
+> ε₀ = 1/35,235 = 2.838e-5 > 2.73e-5. Five apexes declared, so D6's closure went
+> **51 → 86 declarations, 4 → 12 modules, depth 3 → 5**.
+>
+> ⚠️ **THE FINDING, and it changed the prose: the threshold theorem does NOT consume most of the
+> AGP chain.** Traced through `compute_closure`, its dependency closure is **27 declarations**
+> reaching `SteaneCode`, `StabilizerCode`, `Counting`, `Concatenation`, `DoubleExp` and `Basic`.
+> It reaches **none** of `ExRec`, `Malignant`, `NoiseModel`, `NoiseModelMT` or `Chernoff`.
+>
+> My first draft of §7 described the ex-Rec structure and the union bound as if the recursion
+> consumed them. **It does not.** `A_CNOT` enters as a *literal pinned to AGP §8.3 eq. (36)*, and
+> the step from the extended-rectangle structure under local stochastic noise **to** the recursion
+> ε_{L+1} ≤ A ε_L² is carried by the primary source, not by this development. The section now
+> separates "the proof chain, 27 declarations" from "the substrate the theorem does not consume",
+> and states the gap as the result's real boundary. The abstract was corrected the same way.
+>
+> **What is machine-checked is the consequence of the AGP recursion, not its derivation.** That is
+> still, to our knowledge, new, and it is a materially smaller claim than the one the first draft
+> made.
+>
+> Also fixed: the "15-bundle publication architecture" roster claim (removed, not renumbered), and
+> the venue (`prd` → `prx`; the content is QEC resource counting and thresholds).
+>
+> **Residue → TODO-D35** (derive the recursion) **and TODO-D36** (307 FaultTolerance declarations
+> still un-homed, down from 342).
+
 
 Adjudication §1: D6 §5.4 (lines 504–991, 44 % of the draft) is D9's chartered content, naming ~20 of
 the same theorems. The remedy is excision to a cross-reference — the idiom already exists in D6's own
@@ -1332,3 +1367,52 @@ that set. Small, and it strengthens the Letter rather than resizing any claim.
 ⚠️ **Check the sibling splashes for the same gap before fixing only L1.** L3/D3 and E1/E2+D1 are
 the other three declared pairs; a positioning gap in a splash is a pattern candidate, not
 necessarily a one-off. Not yet measured for them.
+
+### D35. Derive the AGP recursion instead of instantiating it at a pinned constant — OPEN
+
+D6 §7's threshold theorem instantiates ε_{L+1} ≤ A ε_L² at `A_CNOT = 35,235`, a literal pinned to
+AGP 2006 §8.3 eq. (36). The step **to** that recursion, from the extended-rectangle structure
+(`ExRec.lean`) under the local stochastic noise model (`NoiseModel.lean`, `NoiseModelMT.lean`) via
+the pair-failure union bound (`Chernoff.lean`), is not formalized: measured 2026-08-09, the
+headline theorem's closure reaches none of those four modules.
+
+**The modules it would need already exist and are kernel-clean** — this is a connection wave, not
+a construction wave. Closing it converts D6's claim from *"the consequence of the AGP recursion is
+machine-checked"* to *"the recursion is machine-checked from the ex-Rec structure"*, which is the
+substantially stronger statement and the one a reader assumes on first reading.
+
+⚠️ **Until it closes, D6 §7's scope paragraph is load-bearing and must not be trimmed.** It is the
+only thing separating the two claims in print.
+
+### D36. 307 FaultTolerance declarations still reach no bundle — OPEN
+
+Down from 342 after D32's lift. Fully un-homed: `Basic` 93, `StabilizerCode` 40, `NoiseModelMT` 33,
+`ExRec` 29, `Malignant` 22, `NoiseModel` 21, `Counting` 11, `Chernoff` 9, plus partial gaps in
+`APMLdpc` 15, `ShorTGateCount` 19, `SteaneCode` 7, `WStateQFT` 4, `Concatenation` 2,
+`AGP.Threshold` 1, `DoubleExp` 1.
+
+⚠️ **Most of this is not a homing failure, it is TODO-D35 wearing a different number.** Those
+declarations are un-homed *because* the theorem that would consume them does not exist yet. Homing
+them by declaring more apexes without closing D35 would inflate D6's closure without changing what
+the paper can claim, which is the metric-gaming the "monotone in emptiness" finding (PR review
+pass 3, H1) warns about from the other direction. **Close D35 first; re-measure this after.**
+
+### D37. `NUMERICAL_LITERAL_RE`'s `\times 10^` leg flags dimensionless constants — OPEN (low)
+
+`NUMERICAL_LITERAL_RE` (`scripts/validation/_tex.py`) documents itself as matching *"a literal with
+a physical unit that belongs in an `\input{tables/...}` file"*. Its final alternative is a bare
+`\times\s*10\^`, which matches **any** scientific notation, unit-bearing or not.
+
+Surfaced 2026-08-09 by D6 §7's `2.73 \times 10^{-5}`, a dimensionless error-rate threshold that is
+(i) the constant asserted in the Lean theorem `steaneAGPThreshold_gt`, and (ii) the published
+rigorous bound of the primary source. Routing it through a generated macro would make a theorem's
+own statement depend on a regenerated file, which is the wrong direction.
+
+⚠️ **The instrument was deliberately NOT tuned when this was found**, because tuning a predicate so
+that the change under review passes is how a gate stops meaning anything. `NUMERICAL_LITERAL_CEILING`
+absorbed the cost (116 → 117) with its rationale recorded in `constants.py`.
+
+**Adjudicate separately:** either narrow the leg to require an adjacent unit (and re-measure the
+whole 117 population, since other entries may also be dimensionless), or accept scientific notation
+as in-scope and keep the ceiling. **Re-measure before deciding** — the population was last
+characterised on 2026-08-03 and this pass did not re-derive what the other 116 are.

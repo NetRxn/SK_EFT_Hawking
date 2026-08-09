@@ -2388,3 +2388,42 @@ per-bundle `\bundleTheorems` / `\bundleDecls` / `\bundleModules` from the apex c
 it makes the four sentences that quoted a project total for their own content quote their own
 content. `numerical_literals` still reports **116** inline literals at a frozen ceiling, and that
 is a separate, disclosed, ratcheted debt.
+
+---
+
+## V63 — TODO-D32: D6 repaired in one wave, and the lift's own prose was the thing that failed review
+
+Scope: excise D6 §5.4 (D9's content, 44 % of the draft) and lift the un-homed AGP threshold chain
+in its place, sequenced as ONE wave so D6 is never measured in the gap.
+
+| # | Proposition | Decider | Verbatim result |
+|---|---|---|---|
+| 1 | §5.4 is separable | line-range read + recompile | **Yes, cleanly.** 488 lines out, a 20-line cross-reference in, D6 compiles at 7 pp with 0 unresolved refs |
+| 2 | The AGP chain is worth a Tier-1 section | read all 11 modules | **Yes.** `agp_threshold_steane` + strict form + a `norm_num`-backed certificate ε₀ = 1/35 235 = 2.838e-5 > 2.73e-5, with `A_CNOT ≤ C(M,2)` well-formedness checked rather than asserted |
+| 3 | The threshold theorem rests on the ex-Rec and noise-model machinery | `compute_closure` on the two headline theorems | **NO — and this is the finding.** Its closure is **27 declarations** over `SteaneCode`, `StabilizerCode`, `Counting`, `Concatenation`, `DoubleExp`, `Basic`. It reaches **none** of `ExRec`, `Malignant`, `NoiseModel`, `NoiseModelMT`, `Chernoff` |
+| 4 | The lift raises D6's closure toward the 342 un-homed declarations | re-measure after declaring 5 apexes | **51 → 86 decls, 4 → 12 modules, depth 3 → 5.** 307 remain un-homed, and atom 3 explains why: the theorem that would consume them does not exist yet |
+| 5 | D6's other defects | direct read | "15-bundle publication architecture" removed (roster claim, not renumbered); venue `prd` → `prx` |
+
+**⚠️ ATOM 3 CAUGHT MY OWN PROSE, WHICH IS THE POINT OF MEASURING AFTER WRITING.** The first draft of
+§7 described the extended rectangle, the malignant-pair attestation and the pair-failure union
+bound as the chain the recursion is built from. **The recursion consumes none of them.**
+`A_CNOT` enters as a literal pinned to AGP §8.3 eq. (36), and the step from the ex-Rec structure
+under local stochastic noise *to* ε_{L+1} ≤ A ε_L² is carried by the primary source. What is
+machine-checked is the **consequence** of the AGP recursion, not its derivation.
+
+The section now separates *"the proof chain, 27 declarations"* from *"the substrate the theorem
+does not consume"*, and names the gap as the result's real boundary. The abstract was corrected the
+same way. **The claim is materially smaller than the one I first wrote, and still novel.**
+
+**This is the D11 lesson from the other side.** D11 records that a wrong bilayer Hamiltonian passed
+every determinant-level gate because *"formal verification certifies that a proof is correct; it
+does not certify that the object proved about is the intended one."* Here the proof was correct and
+the *prose about what it rests on* was wrong. A dependency closure is the cheapest available check
+on that, and it is not in any gate: nothing compares a section's narrative to the closure of the
+theorems it cites.
+
+**NOT-AN-ASSERTION.** D6 is 758 lines / 7 pp against a ~40 pp Tier-1 charter, so
+`bundle_manuscript_length` will still read it as under floor. That is the correct verdict: the
+repair moved D6 from *holding another bundle's paper* to *holding its own and being short*, which
+is a better failure and an honest one. Filling it further is TODO-D35, and D35 is a proof wave, not
+a writing wave.
