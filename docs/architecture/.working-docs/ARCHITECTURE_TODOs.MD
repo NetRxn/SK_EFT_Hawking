@@ -778,7 +778,25 @@ violated for the fifth time in this workstream.
 - Full working: `docs/audits/2026-08-07-d1-retrofit/FINDINGS.md` §3 (corrected) and
   `docs/audits/2026-08-07-f-retrofit/FINDINGS.md` §4 (withdrawn).
 
-### D14. D1's append log records four `Lift-section` events that inserted no content — OPEN
+### D14. D1's append log records four `Lift-section` events that inserted no content — ✅ DONE 2026-08-09
+
+> **Measured across D1-D4: 43 `Lift-section` events, 17 of them empty.** The entry says 16; the true
+> split is D1 4 ✓, D2 2 ✓, **D3 6 (not 7)**, **D4 5 (not 3)**. Wrong in both directions.
+>
+> **Fixed additively.** Each empty event now carries `content_inserted: false` plus a note. The
+> events are real history and are NOT deleted, and **`lift_action` is deliberately unchanged** —
+> `sentence_state.py` and `bundle_source_manifest.py` parse it, so rewriting the value to
+> `Lift-section-empty` would have broken two consumers to fix a counting problem. An absorption
+> count filters on the new field: 43 total, **26 genuine**.
+>
+> ⚠️ **A false zero on the first attempt.** The first measurement keyed on `action` / `event` /
+> `type` and reported **0 Lift-section events in all four bundles** — the field is `lift_action`. The
+> raw text contained the string 7 times in D1 alone. A narrow key produces a confident absence, which
+> is the trap `reference-measurement-traps-false-absence` catalogues. Reading the schema beat guessing
+> at it.
+>
+> **The D25 serializer paid for itself here:** annotating four D1 events produced an 8-insertion /
+> 4-deletion diff instead of the ~90-line churn the pre-D25 writers would have emitted.
 
 - **Where:** `papers/D1/append_log.json`, the four 2026-05-06 events sourcing
   `_phase6n_W1a_lean_only` (§3), `_phase6n_W2c_lean_only` (§5), `_phase6n_W2b_lean_only` (§6) and
@@ -928,7 +946,17 @@ violated for the fifth time in this workstream.
   `docs/audits/2026-08-07-d2-retrofit/FINDINGS.md` §3.
 - Full working: `docs/audits/2026-08-07-d3-retrofit/FINDINGS.md` §2.
 
-### D17. D3's tracked-hypothesis registry contains two dangling `\ref`s — OPEN (minor)
+### D17. D3's tracked-hypothesis registry contains two dangling `\ref`s — ✅ CLOSED-NOT-A-DEFECT 2026-08-09
+
+> **Refuted by two instruments.** The strings `sec:cfl-z3-matching` and `sec:singularity-thms` appear
+> **nowhere** in `papers/D3/paper_draft.tex` — not as `\label`, not as `\ref`. And a two-pass
+> `pdflatex` of D3 emits **zero** `Reference ... undefined` warnings and writes the PDF. Nothing
+> renders as `??`.
+>
+> The intended targets `sec:cfl` and `sec:penrose` both exist, so had the references been present the
+> repoint would have been correct — but they are not present. Either the entry was written against a
+> draft state that has since changed, or it recorded an intended edit as an observed defect. **No
+> change made:** editing a reference that does not exist would have been the fix creating the defect.
 
 - **Where:** `papers/D3/paper_draft.tex` — `sec:cfl-z3-matching` and `sec:singularity-thms` are
   referenced and never defined, so both render as `??` in the compiled PDF.
@@ -1027,7 +1055,17 @@ theorems, named by neither.
 direction (prose names that do not resolve); a *proved-but-unnamed* measure would be new
 infrastructure and needs approval — and TODO-D14/D18 already queue related coverage questions.
 
-### D20. E1 still carries the `c₁` description E2 retracts — OPEN (cross-bundle inconsistency)
+### D20. E1 still carries the `c₁` description E2 retracts — ✅ DONE 2026-08-09
+
+> Reproduced: E1 read *"the topological Chern coefficient $c_1$ of the underlying condensate"* and
+> *"$c_1 = 0$ for the polariton fluid's effective Hamiltonian"*, while E2 had carried the D11
+> Stage-13 correction since 2026-08-01. E2's corrected paragraph is now ported into E1, adapted to
+> the polariton platform, and **carries E2's own narrowing with it** — the module *does* invoke a
+> Brillouin-zone reading at `ChernBridge.lean:14`, so the scope note says the marker is not innocent
+> of band language while still being a different object from a Bloch-band invariant. E1 compiles.
+>
+> The note records that it is ported from E2, so the two halves of a declared splash/deep pair stay
+> traceably in sync rather than accidentally identical.
 
 **Found:** 2026-08-07, E2 apex retrofit (`docs/audits/2026-08-07-e2-retrofit/FINDINGS.md` §3).
 

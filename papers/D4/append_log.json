@@ -18,7 +18,8 @@
       "citation_count_added": 0,
       "stage13_redo_required": true,
       "agent_run_id": "bundle_append-2026-05-06T15:41:09Z",
-      "notes": "D.2 absorption: Phase 6n W1b DrinfeldCenter / DeligneTensor / FreeKLinear / PseudoUnitary / categorical cc additivity (Mathlib-grade in-program builds; longest verified math chain extension)"
+      "notes": "D.2 absorption: Phase 6n W1b DrinfeldCenter / DeligneTensor / FreeKLinear / PseudoUnitary / categorical cc additivity (Mathlib-grade in-program builds; longest verified math chain extension) EMPTY LIFT (TODO-D14, annotated 2026-08-09): this event inserted a section heading but zero rendered words; the stub was correctly commented out the same day as an artefact of bundle_append.py's default insertion. `lift_action` is left as-is so existing consumers keep parsing; `content_inserted: false` is the field an absorption count must filter on.",
+      "content_inserted": false
     },
     {
       "date": "2026-05-06T15:41:12Z",
@@ -31,7 +32,8 @@
       "citation_count_added": 0,
       "stage13_redo_required": true,
       "agent_run_id": "bundle_append-2026-05-06T15:41:12Z",
-      "notes": "D.2 absorption: Phase 6o W1a Lindbladian S-matrix axiomatization NO-GO joining D4's NO-GO landscape (KMS-broken regime; cross-bridge to bootstrap-uniqueness NO-GO at structural amplitude level)"
+      "notes": "D.2 absorption: Phase 6o W1a Lindbladian S-matrix axiomatization NO-GO joining D4's NO-GO landscape (KMS-broken regime; cross-bridge to bootstrap-uniqueness NO-GO at structural amplitude level) EMPTY LIFT (TODO-D14, annotated 2026-08-09): this event inserted a section heading but zero rendered words; the stub was correctly commented out the same day as an artefact of bundle_append.py's default insertion. `lift_action` is left as-is so existing consumers keep parsing; `content_inserted: false` is the field an absorption count must filter on.",
+      "content_inserted": false
     },
     {
       "date": "2026-05-06T15:41:16Z",
@@ -46,7 +48,8 @@
       "citation_count_added": 0,
       "stage13_redo_required": true,
       "agent_run_id": "bundle_append-2026-05-06T15:41:16Z",
-      "notes": "D.2 absorption: Phase 6o W3a G10 ETH-α refutation tableau (3 concrete refutation theorems: Inozemcev-Volovich gap, ETP doesn't imply Srednicki, free-cumulant doesn't imply Srednicki); RT/CH Phase 6c W5 cross-bridge"
+      "notes": "D.2 absorption: Phase 6o W3a G10 ETH-α refutation tableau (3 concrete refutation theorems: Inozemcev-Volovich gap, ETP doesn't imply Srednicki, free-cumulant doesn't imply Srednicki); RT/CH Phase 6c W5 cross-bridge EMPTY LIFT (TODO-D14, annotated 2026-08-09): this event inserted a section heading but zero rendered words; the stub was correctly commented out the same day as an artefact of bundle_append.py's default insertion. `lift_action` is left as-is so existing consumers keep parsing; `content_inserted: false` is the field an absorption count must filter on.",
+      "content_inserted": false
     },
     {
       "date": "2026-05-11T19:50:00Z",
@@ -84,7 +87,8 @@
       "citation_count_added": 0,
       "stage13_redo_required": true,
       "agent_run_id": "bundle_append-2026-05-23T08:19:09Z",
-      "notes": "Late absorption: Phase 6p F.21 unconditional density via Cartan v4 IFT 3-direction discharge (Trotter limit + linftyOp absolute SU(2) bound)"
+      "notes": "Late absorption: Phase 6p F.21 unconditional density via Cartan v4 IFT 3-direction discharge (Trotter limit + linftyOp absolute SU(2) bound) EMPTY LIFT (TODO-D14, annotated 2026-08-09): this event inserted a section heading but zero rendered words; the stub was correctly commented out the same day as an artefact of bundle_append.py's default insertion. `lift_action` is left as-is so existing consumers keep parsing; `content_inserted: false` is the field an absorption count must filter on.",
+      "content_inserted": false
     },
     {
       "date": "2026-05-23T08:19:16Z",
@@ -104,7 +108,8 @@
       "citation_count_added": 0,
       "stage13_redo_required": true,
       "agent_run_id": "bundle_append-2026-05-23T08:19:16Z",
-      "notes": "Late absorption: Phase 6t Dawson-Nielsen quantitative SK length bound + Lean-verified reference compiler skeleton + Path A constructive variant"
+      "notes": "Late absorption: Phase 6t Dawson-Nielsen quantitative SK length bound + Lean-verified reference compiler skeleton + Path A constructive variant EMPTY LIFT (TODO-D14, annotated 2026-08-09): this event inserted a section heading but zero rendered words; the stub was correctly commented out the same day as an artefact of bundle_append.py's default insertion. `lift_action` is left as-is so existing consumers keep parsing; `content_inserted: false` is the field an absorption count must filter on.",
+      "content_inserted": false
     },
     {
       "date": "2026-05-23T18:00:00Z",

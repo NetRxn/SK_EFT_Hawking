@@ -93,7 +93,8 @@
       "citation_count_added": 0,
       "stage13_redo_required": true,
       "agent_run_id": "bundle_append-2026-05-06T15:39:38Z",
-      "notes": "D.2 absorption: Phase 6n W1a kinematic-dispersive geometric envelope (NOT Gevrey-1); IsGeometric predicate; closed-form γ_n"
+      "notes": "D.2 absorption: Phase 6n W1a kinematic-dispersive geometric envelope (NOT Gevrey-1); IsGeometric predicate; closed-form γ_n EMPTY LIFT (TODO-D14, annotated 2026-08-09): this event inserted a section heading but zero rendered words; the stub was correctly commented out the same day as an artefact of bundle_append.py's default insertion. `lift_action` is left as-is so existing consumers keep parsing; `content_inserted: false` is the field an absorption count must filter on.",
+      "content_inserted": false
     },
     {
       "date": "2026-05-06T15:39:41Z",
@@ -108,7 +109,8 @@
       "citation_count_added": 0,
       "stage13_redo_required": true,
       "agent_run_id": "bundle_append-2026-05-06T15:39:41Z",
-      "notes": "D.2 absorption: Phase 6n W2c FDR W-form GC + abstract IsLDPRateFunction; LinearResponseRateFunction"
+      "notes": "D.2 absorption: Phase 6n W2c FDR W-form GC + abstract IsLDPRateFunction; LinearResponseRateFunction EMPTY LIFT (TODO-D14, annotated 2026-08-09): this event inserted a section heading but zero rendered words; the stub was correctly commented out the same day as an artefact of bundle_append.py's default insertion. `lift_action` is left as-is so existing consumers keep parsing; `content_inserted: false` is the field an absorption count must filter on.",
+      "content_inserted": false
     },
     {
       "date": "2026-05-06T15:39:44Z",
@@ -124,7 +126,8 @@
       "citation_count_added": 0,
       "stage13_redo_required": true,
       "agent_run_id": "bundle_append-2026-05-06T15:39:44Z",
-      "notes": "D.2 absorption: Phase 6n W2b BEC + polariton quantum-Crooks landscape; Perarnau-Llobet typeclass connections"
+      "notes": "D.2 absorption: Phase 6n W2b BEC + polariton quantum-Crooks landscape; Perarnau-Llobet typeclass connections EMPTY LIFT (TODO-D14, annotated 2026-08-09): this event inserted a section heading but zero rendered words; the stub was correctly commented out the same day as an artefact of bundle_append.py's default insertion. `lift_action` is left as-is so existing consumers keep parsing; `content_inserted: false` is the field an absorption count must filter on.",
+      "content_inserted": false
     },
     {
       "date": "2026-05-06T15:39:47Z",
@@ -141,7 +144,8 @@
       "citation_count_added": 0,
       "stage13_redo_required": true,
       "agent_run_id": "bundle_append-2026-05-06T15:39:47Z",
-      "notes": "D.2 absorption: Phase 6o W1a boostless / Carrollian soft theorems on BEC + polariton; Strominger-triangle closure"
+      "notes": "D.2 absorption: Phase 6o W1a boostless / Carrollian soft theorems on BEC + polariton; Strominger-triangle closure EMPTY LIFT (TODO-D14, annotated 2026-08-09): this event inserted a section heading but zero rendered words; the stub was correctly commented out the same day as an artefact of bundle_append.py's default insertion. `lift_action` is left as-is so existing consumers keep parsing; `content_inserted: false` is the field an absorption count must filter on.",
+      "content_inserted": false
     },
     {
       "date": "2026-05-11T19:50:00Z",

@@ -247,7 +247,8 @@
       "citation_count_added": 0,
       "stage13_redo_required": true,
       "agent_run_id": "bundle_append-2026-05-06T15:40:15Z",
-      "notes": "D.2 absorption: Phase 6n W1a transport NO-GO landscape (substrate IS geometric envelope, not Gevrey-1; decouples asymptotic verdict from explicit γ_2^(loop))"
+      "notes": "D.2 absorption: Phase 6n W1a transport NO-GO landscape (substrate IS geometric envelope, not Gevrey-1; decouples asymptotic verdict from explicit γ_2^(loop)) EMPTY LIFT (TODO-D14, annotated 2026-08-09): this event inserted a section heading but zero rendered words; the stub was correctly commented out the same day as an artefact of bundle_append.py's default insertion. `lift_action` is left as-is so existing consumers keep parsing; `content_inserted: false` is the field an absorption count must filter on.",
+      "content_inserted": false
     },
     {
       "date": "2026-05-06T15:40:20Z",
@@ -263,7 +264,8 @@
       "citation_count_added": 0,
       "stage13_redo_required": true,
       "agent_run_id": "bundle_append-2026-05-06T15:40:20Z",
-      "notes": "D.2 absorption: Phase 6n W2c Crooks-on-analog-Hawking entry-point + W-form GC structural anchor + IsLDPRateFunction abstract"
+      "notes": "D.2 absorption: Phase 6n W2c Crooks-on-analog-Hawking entry-point + W-form GC structural anchor + IsLDPRateFunction abstract EMPTY LIFT (TODO-D14, annotated 2026-08-09): this event inserted a section heading but zero rendered words; the stub was correctly commented out the same day as an artefact of bundle_append.py's default insertion. `lift_action` is left as-is so existing consumers keep parsing; `content_inserted: false` is the field an absorption count must filter on.",
+      "content_inserted": false
     },
     {
       "date": "2026-05-06T15:40:23Z",
@@ -277,7 +279,8 @@
       "citation_count_added": 0,
       "stage13_redo_required": true,
       "agent_run_id": "bundle_append-2026-05-06T15:40:23Z",
-      "notes": "D.2 absorption: Phase 6o W1a analog-horizon Strominger triangle closure + ADW graviton subleading factor with Goldstone-broken-boost content"
+      "notes": "D.2 absorption: Phase 6o W1a analog-horizon Strominger triangle closure + ADW graviton subleading factor with Goldstone-broken-boost content EMPTY LIFT (TODO-D14, annotated 2026-08-09): this event inserted a section heading but zero rendered words; the stub was correctly commented out the same day as an artefact of bundle_append.py's default insertion. `lift_action` is left as-is so existing consumers keep parsing; `content_inserted: false` is the field an absorption count must filter on.",
+      "content_inserted": false
     },
     {
       "date": "2026-05-06T15:40:26Z",
@@ -294,7 +297,8 @@
       "citation_count_added": 0,
       "stage13_redo_required": true,
       "agent_run_id": "bundle_append-2026-05-06T15:40:26Z",
-      "notes": "D.2 absorption: Phase 6o W1b vestigial-graviton landscape: Kerr-Schild double-copy on Petrov-D acoustic + 3-obstruction strong-form BCJ NO-GO theorem-pair"
+      "notes": "D.2 absorption: Phase 6o W1b vestigial-graviton landscape: Kerr-Schild double-copy on Petrov-D acoustic + 3-obstruction strong-form BCJ NO-GO theorem-pair EMPTY LIFT (TODO-D14, annotated 2026-08-09): this event inserted a section heading but zero rendered words; the stub was correctly commented out the same day as an artefact of bundle_append.py's default insertion. `lift_action` is left as-is so existing consumers keep parsing; `content_inserted: false` is the field an absorption count must filter on.",
+      "content_inserted": false
     },
     {
       "date": "2026-05-06T15:40:30Z",
@@ -309,7 +313,8 @@
       "citation_count_added": 0,
       "stage13_redo_required": true,
       "agent_run_id": "bundle_append-2026-05-06T15:40:30Z",
-      "notes": "D.2 absorption: Phase 6o W3b Itô-time form W-form GC + Glorioso-Liu monotonicity cross-bridge via LDPCompatibleSKEFT typeclass"
+      "notes": "D.2 absorption: Phase 6o W3b Itô-time form W-form GC + Glorioso-Liu monotonicity cross-bridge via LDPCompatibleSKEFT typeclass EMPTY LIFT (TODO-D14, annotated 2026-08-09): this event inserted a section heading but zero rendered words; the stub was correctly commented out the same day as an artefact of bundle_append.py's default insertion. `lift_action` is left as-is so existing consumers keep parsing; `content_inserted: false` is the field an absorption count must filter on.",
+      "content_inserted": false
     },
     {
       "date": "2026-05-06T15:40:35Z",
@@ -338,7 +343,8 @@
       "citation_count_added": 0,
       "stage13_redo_required": true,
       "agent_run_id": "bundle_append-2026-05-06T15:40:38Z",
-      "notes": "D.2 absorption: Phase 6o W2a heat-kernel APS-η substrate cross-bridge (BEC + ADW parity-symmetric → η = 0; ³He-A non-degenerate cell → substantive APS boundary correction)"
+      "notes": "D.2 absorption: Phase 6o W2a heat-kernel APS-η substrate cross-bridge (BEC + ADW parity-symmetric → η = 0; ³He-A non-degenerate cell → substantive APS boundary correction) EMPTY LIFT (TODO-D14, annotated 2026-08-09): this event inserted a section heading but zero rendered words; the stub was correctly commented out the same day as an artefact of bundle_append.py's default insertion. `lift_action` is left as-is so existing consumers keep parsing; `content_inserted: false` is the field an absorption count must filter on.",
+      "content_inserted": false
     },
     {
       "date": "2026-05-06T16:30:00Z",

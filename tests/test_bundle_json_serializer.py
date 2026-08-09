@@ -104,3 +104,48 @@ class TestWriterSkipsIdenticalBytes:
         write_bundle_json(p, {"a": 1})
         assert write_bundle_json(p, {"a": 2}) is True
         assert json.loads(p.read_text(encoding="utf-8"))["a"] == 2
+
+
+# ── TODO-D14: an empty lift must not count as an absorption ───────────────
+
+class TestEmptyLiftEventsAreMarked:
+    """`append_log.json` recorded `Lift-section` for events that inserted a
+    heading and zero rendered words, so any absorption count taken from the log
+    over-counted. The events are real history and are NOT deleted; they carry
+    `content_inserted: false`, which is what a count must filter on.
+
+    ⚠️ Measured 43 Lift-section events across D1-D4, 17 of them empty. The TODO
+    said 16 (D3 7, D4 3); the true split is D3 6, D4 5."""
+
+    LOGS = ["D1", "D2", "D3", "D4"]
+
+    def test_every_lean_only_lift_is_marked_empty(self):
+        import json
+        for b in self.LOGS:
+            d = json.loads((REPO / f"papers/{b}/append_log.json").read_text(encoding="utf-8"))
+            for e in d.get("events", []):
+                if ("Lift-section" in str(e.get("lift_action", ""))
+                        and "lean_only" in str(e.get("source_paper", ""))):
+                    assert e.get("content_inserted") is False, \
+                        f"{b}: {e.get('source_paper')} not marked empty"
+
+    def test_genuine_lifts_are_not_marked(self):
+        """The flag must discriminate, not blanket-apply."""
+        import json
+        genuine = 0
+        for b in self.LOGS:
+            d = json.loads((REPO / f"papers/{b}/append_log.json").read_text(encoding="utf-8"))
+            for e in d.get("events", []):
+                if ("Lift-section" in str(e.get("lift_action", ""))
+                        and e.get("content_inserted") is not False):
+                    genuine += 1
+        assert genuine > 0, "all lifts marked empty — the flag stopped discriminating"
+
+    def test_lift_action_is_unchanged(self):
+        """`lift_action` is parsed by sentence_state and bundle_source_manifest;
+        rewriting it would break them. The new field is additive."""
+        import json
+        for b in self.LOGS:
+            d = json.loads((REPO / f"papers/{b}/append_log.json").read_text(encoding="utf-8"))
+            for e in d.get("events", []):
+                assert "Lift-section-empty" not in str(e.get("lift_action", ""))
