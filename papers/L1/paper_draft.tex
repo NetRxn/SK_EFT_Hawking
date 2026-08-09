@@ -239,6 +239,20 @@ type. The bundled corollary
 \verb|vestigial_natural_range_violates_ligo| asserts both endpoints
 fail \verb|LigoSatisfied| simultaneously.
 
+The identification hypothesis itself is refuted pointwise rather than
+only at the observable:
+\verb|H_VestigialModeIsGraviton_fails_at_natural_lower| and
+\verb|H_VestigialModeIsGraviton_fails_at_natural_upper| refute it at the
+two endpoints, and
+\verb|H_VestigialModeIsGraviton_fails_at_zero| and
+\verb|H_VestigialModeIsGraviton_fails_at_quarter| refute it at
+$\chivest \in \{0, 1/4\}$, which are outside the natural range and
+establish that the failure is not an endpoint artefact. The one value
+that survives is the singleton:
+\verb|ligo_satisfied_at_chi_one| proves \verb|LigoSatisfied| holds at
+$\chivest = 1$, and \verb|c_GW_deviation_zero_iff_chi_one| makes that
+the exact biconditional.
+
 \begin{figure}[t]
   \centering
   \includegraphics[width=0.96\columnwidth]{figures/fig_c_GW_vs_ligo_constraint.png}
@@ -326,12 +340,20 @@ is the natural venue for the disambiguation.
 the leading term in a derivative expansion. If $\chivest$ varies
 with frequency, the leading-order falsification could in principle be
 lifted by a near-cancellation in the LIGO band. The
-SK--EFT dispersion correction (formalized in
-\texttt{SecondOrderSK.lean}) is the leading frequency dependence in
-the present framework; at the project's current conservative upper
-bound $|\gamma| \leq 10^{-30}$ on $\Gamma_H/\cGW^2$ it does not lift
-the falsification, but a derivation of $\Gamma_H$ from a microscopic
-matching is open.
+SK--EFT dispersion correction is the leading frequency dependence in
+the present framework, and this path is closed in the Lean rather than
+argued: \texttt{vestigial\_dispersion\_below\_ligo\_at\_inspiral\_peak}
+proves that at the project's conservative upper bound
+$|\gamma| \leq 10^{-30}$ on $\Gamma_H/\cGW^2$ the correction at the
+$100\,\mathrm{Hz}$ inspiral peak stays inside the GW170817 tolerance,
+so it does not lift the falsification. The general form is
+\texttt{dispersion\_within\_ligo\_iff}, a biconditional exchanging the
+correction's tolerance for $|\gamma| \leq \mathrm{tol}/\omega$;
+\texttt{dispersion\_correction\_abs\_bound},
+\texttt{dispersion\_correction\_linear\_in\_gamma} and
+\texttt{dispersion\_correction\_zero\_at\_no\_dissipation} fix its
+magnitude, additivity and no-dissipation limit. A derivation of
+$\Gamma_H$ from a microscopic matching is open.
 \end{enumerate}
 
 \paragraph{Comparison to the linearized-EFE wave.} The companion

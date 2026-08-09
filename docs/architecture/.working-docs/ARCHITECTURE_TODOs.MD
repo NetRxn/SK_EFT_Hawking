@@ -1153,7 +1153,46 @@ violated for the fifth time in this workstream.
   this input" are different claims.**
 - Full working: `docs/audits/2026-08-07-d7-retrofit/FINDINGS.md` §3.
 
-### D19. I3 §4 names no witness or wave-closure theorem for any of its six LDP modules — OPEN
+### D19. I3 §4 names no witness or wave-closure theorem for any of its six LDP modules — ✅ DONE 2026-08-09
+
+> **Zero of I3's 30 module theorems are now unnamed** (was 13), and zero of
+> `GravitationalWaves.lean`'s 21 are unnamed by L1, D3 or F (was 10).
+>
+> **The entry's two counts were both wrong, in opposite directions.**
+> * *I3's per-module closures:* the draft claimed **11**, this entry re-measured **10**, and the
+>   true figure is **9** — four Itô (`StochasticIntegral`, `QuadraticVariation`,
+>   `Semimartingale`, `ItoIsometry`) plus five LDP. `Novikov.lean` and `ItoLemma.lean` carry
+>   none; `Novikov.lean` hosts the *overall* `wave_3b_ito_overall_closure`. §2.3 now says 9 + 2
+>   and points at the sections where all eleven are named, so the count follows from the names.
+> * *L1's unnamed theorems:* the entry said **7**; measured **11** unnamed by L1, of which
+>   **10** are named by no bundle at all (D3, its deep companion, names one).
+>
+> **What writing §4 to §3's template exposed, and it is worth more than the prose fix.** Each LDP
+> per-module "wave-closure" has the **same statement as its own witness** — e.g.
+> `wave_3b_ldp_alpha_1_cramerIID_closure` and `cramerIID_subGaussian_witness` are both
+> `IsCramerIIDUpperBound (fun _ => 0) (fun _ => 0)`. Two Itô closures are genuine conjunctions;
+> two are not. **Padding the LDP closures into synthetic conjunctions to match was rejected** —
+> that is the P2 bundle-redundancy anti-pattern the preemptive-strengthening discipline forbids.
+> The prose says so instead: a module with one substrate obligation has a closure that restates
+> its witness, and `Semimartingale.lean` shows what the conjunctive form looks like. A JOSS
+> reader now learns which modules carry one obligation and which carry two.
+>
+> **`linearResponseRateFunctionCentered_zero` is NOT a dangling reference** — checked before
+> "fixing" it. §2.3 cites it and it exists, in `CrooksAnalogHawking`, not in `LDP`.
+>
+> **L1's sharpest case, closed.** Recovery-path 3 argued in prose that
+> $|\gamma| \le 10^{-30}$ does not lift the falsification while citing
+> `SecondOrderSK.lean`, a module that does not carry the theorem.
+> `vestigial_dispersion_below_ligo_at_inspiral_peak` proves exactly that claim and is now named,
+> with `dispersion_within_ligo_iff` as the general biconditional and the four
+> `H_VestigialModeIsGraviton_fails_at_*` refutations plus `ligo_satisfied_at_chi_one` and
+> `c_GW_deviation_zero_iff_chi_one` naming the pointwise structure.
+>
+> **Not built, and the entry was right that it needs approval:** a *proved-but-unnamed*
+> corpus-wide check. The three instances are closed by naming; the instrument that would prevent
+> a fourth remains unbuilt and is still scoped together with TODO-D21's.
+
+<details><summary>Original entry — kept for the record</summary>
 
 **Found:** 2026-08-07, I3 apex retrofit (`docs/audits/2026-08-07-i3-retrofit/FINDINGS.md` §3).
 
@@ -1199,6 +1238,8 @@ theorems, named by neither.
 direction (prose names that do not resolve); a *proved-but-unnamed* measure would be new
 infrastructure and needs approval — and TODO-D14/D18 already queue related coverage questions.
 
+</details>
+
 ### D20. E1 still carries the `c₁` description E2 retracts — ✅ DONE 2026-08-09
 
 > Reproduced: E1 read *"the topological Chern coefficient $c_1$ of the underlying condensate"* and
@@ -1233,7 +1274,37 @@ correction is *itself* narrowed (the module **does** invoke a Brillouin-zone rea
 paragraph. Per §6a nothing was built; the residue (a cross-bundle shared-paragraph consistency
 measure) would be new infrastructure and needs approval.
 
-### D21. D9 claims to consume I3's LDP foundations; no declaration does — OPEN
+### D21. D9 claims to consume I3's LDP foundations; no declaration does — ✅ DONE 2026-08-09
+
+> **`D9 ∩ I3` went 0 → 11**, three of them in `SKEFTHawking.LDP`. The claim was made true rather
+> than narrowed, which is the posture this project holds: where a gap exists, build the substrate
+> or prove it cannot be built; do not reclassify.
+>
+> **Why building was the right call and not a stretch.** The two sides already shared their
+> object. `fdt_rare_event_tail` is positivity of `linearResponseRateFunction β σ² ·`, and I3's
+> LDP layer certifies `linearResponseRateFunctionCentered β σ²` — the *same function shifted by
+> the constant* `I(0)` — as `LDPCompatibleSKEFT`. The consumption claim was true of the physics
+> and false of the Lean.
+>
+> **Shipped:** `lean/SKEFTHawking/QuantumNetwork/FDTLDPBridge.lean` (new, kernel-pure, axioms
+> exactly `{propext, Classical.choice, Quot.sound}`, compiled clean on the first pass).
+> `fdt_rare_event_tail_is_ldp_certified` states both halves of the consumption claim for one
+> object: the function is the LDP-certified one, and its centered form is bounded strictly below
+> by `-β²σ²/8` away from the FDT-pinned mean. That constant is `-I(0)`, isolated as
+> `linearResponseRateFunction_at_zero` so the floor is a **number** rather than "some constant"
+> and a wrong centering fails it. `fdt_rare_event_tail_is_ldp_certified_witness` discharges the
+> hypotheses at `β = 0, σ² = 1, W = 1`, so the bridge is not conditionally empty.
+>
+> **Both drafts corrected, in the same commit as the Lean.** D9 §4.2 names the theorem and states
+> the eleven-declaration overlap; I3 §Cross-bridges no longer says its bridge is *"designed but
+> not yet consumed at release time"* — it now says one consumer exists and D3/D5/E1 do not, which
+> is what the substrate shows.
+>
+> **Still not built:** a check comparing a prose consumption claim against the dependency graph.
+> Per §6a that is new infrastructure needing approval, and it stays scoped with TODO-D19's
+> proved-but-unnamed measure.
+
+<details><summary>Original entry — kept for the record</summary>
 
 **Found:** 2026-08-07, D9 apex retrofit (`docs/audits/2026-08-07-d9-retrofit/FINDINGS.md` §2).
 
@@ -1261,6 +1332,8 @@ approval — and it is close in kind to TODO-D19's proved-but-unnamed measure, s
 scoped together if either is approved.
 
 ---
+
+</details>
 
 ## ⚠️ Remediation sequencing for the prose-fix TODOs (operator ruling, 2026-08-07)
 

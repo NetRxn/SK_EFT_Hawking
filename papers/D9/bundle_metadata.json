@@ -7,7 +7,7 @@
   "stage9_status": "pending",
   "stage10_status": "pending",
   "stage13_status": "pending",
-  "stage13_redo_required": false,
+  "stage13_redo_required": true,
   "freshness_stale": false,
   "source_manifest_last_regen": "2026-06-10T20:39:59Z",
   "last_lift": "2026-06-10T20:39:59Z",
@@ -186,6 +186,11 @@
       "name": "SKEFTHawking.QuantumNetwork.expNeg_enclosure",
       "claims": "§6 — the rational enclosure bracketing every decaying-exponential operating point",
       "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.fdt_rare_event_tail_is_ldp_certified",
+      "claims": "§1, §4.2 — the consumption claim, built: D9's rare-event tail is a statement about the very rate function I3's LDP layer certifies as LDPCompatibleSKEFT, with the centering constant β²σ²/8 made explicit",
+      "declared": "2026-08-09"
     }
   ],
   "length_target": {

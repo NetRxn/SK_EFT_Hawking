@@ -218,7 +218,7 @@ check compares against reality. Sizes are recorded so a silent shrink is visible
 | `D6` | 1 | 23 | Formally Verified Fault-Tolerant Quantum Computation Substra |
 | `D7` | 1 | 14 | Classical Simulability and Quantum Advantage via Tensor Netw |
 | `D8` | 1 | 35 | Kernel-Verified Universal Quantum Gate Compilation — Alphabe |
-| `D9` | 1 | 25 | Kernel-Verified Quantum-Network and Device-Characterization  |
+| `D9` | 1 | 26 | Kernel-Verified Quantum-Network and Device-Characterization  |
 | `D10` | 1 | 33 | Kernel-Verified Foundations of Computational Quantum Chemist |
 | `D11` | 1 | 73 | Kernel-Verified Topological Band Theory & Metamaterial Subst |
 | `D12` | 1 | 11 | Kernel-Verified Detector & Readout Metrology — From Photon S |

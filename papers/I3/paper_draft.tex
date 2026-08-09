@@ -400,10 +400,16 @@ The library currently ships:
   release post-Stage-13 refactor uses constructive proofs invoking
   \texttt{continuous\_const}, \texttt{le\_refl}, \texttt{rfl}, and
   similar primitive lemmas).
-\item \textbf{11 per-module wave-closure summary theorems plus 2
-  overall-wave closures} (one per It\^o / LDP namespace); the
-  \texttt{Novikov} module folds its closure into the overall
-  \texttt{wave\_3b\_ito\_overall\_closure}.
+\item \textbf{9 per-module wave-closure summary theorems plus 2
+  overall-wave closures} (one per It\^o / LDP namespace). Four It\^o
+  modules and all five substantive LDP modules carry a per-module
+  closure; \texttt{Novikov.lean} and \texttt{ItoLemma.lean} carry none,
+  \texttt{Novikov.lean} instead hosting the overall
+  \texttt{wave\_3b\_ito\_overall\_closure}, and
+  \texttt{LDPCompatibleSKEFT.lean} hosting
+  \texttt{wave\_3b\_ldp\_overall\_closure}. Every one of the eleven is
+  named in \S\ref{sec:ito} or \S\ref{sec:ldp}, so this count follows
+  from the names rather than from hand-maintenance.
 \item \textbf{1 substantive cross-bridge typeclass}
   (\texttt{LDPCompatibleSKEFT}) and one concrete-instance witness
   (\texttt{linearResponseRateFunctionCentered}). All five fields
@@ -508,6 +514,13 @@ decomposition).
 \texttt{IsDoobMeyerUnique} substrate-datas the decomposition
 uniqueness up to indistinguishability.
 
+\textbf{Non-vacuity witness.}
+\texttt{isSemimartingaleDecomposition\_zero\_witness} and
+\texttt{isDoobMeyerUnique\_zero\_witness} discharge the two predicates
+separately at the identically-zero process. This module is one of the
+two carrying more than one substrate obligation, which is why its
+wave-closure below is a genuine conjunction rather than a restatement.
+
 \textbf{Wave-closure summary.}
 \texttt{wave\_3b\_itoBeta\_3\_semimartingale\_closure}.
 
@@ -524,6 +537,10 @@ the It\^o-lemma proof in the next module.
 \texttt{IsItoIsometry H integral} declares the It\^o $L^2$-isometry:
 $\mathbb{E}\left[\,\left|\int_0^t H_s\,dW_s\right|^2\,\right]
 = \mathbb{E}\left[\int_0^t H_s^2\,ds\right]$.
+
+\textbf{Non-vacuity witness.}
+\texttt{isItoIsometry\_zero\_witness}: the zero integrand's zero
+integral satisfies the isometry, both sides being zero.
 
 \textbf{Wave-closure summary.}
 \texttt{wave\_3b\_itoBeta\_4\_itoIsometry\_closure}.
@@ -629,6 +646,18 @@ Legendre--Fenchel transform of the log-moment-generating function
 \texttt{mgf}: $I(x) = \sup_\lambda \{\lambda x - \log \mathrm{mgf}(\lambda)\}$,
 yielding the Cram\'er rate function for i.i.d.\ samples.
 
+\textbf{Non-vacuity witness.}
+\texttt{cramerIID\_subGaussian\_witness} discharges the predicate at the sub-Gaussian case at the zero log-MGF, whose Legendre--Fenchel transform is the zero rate function.
+
+\textbf{Wave-closure summary.}
+\texttt{wave\_3b\_ldp\_alpha\_1\_cramerIID\_closure}. This module carries a single substrate obligation, so
+its per-module closure restates the witness rather than conjoining
+several; \texttt{Semimartingale.lean} and
+\texttt{QuadraticVariation.lean} show the conjunctive form. The five
+LDP per-module closures are gathered by
+\texttt{wave\_3b\_ldp\_overall\_closure} in
+\texttt{LDPCompatibleSKEFT.lean}.
+
 \textbf{Mathlib-upstream-PR target.}
 \texttt{Mathlib/Probability/LDP/CramerIID.lean}.
 Substantive content: the Cram\'er upper bound for i.i.d.\
@@ -644,6 +673,18 @@ upper-bound LDP statement.
 \texttt{I} is the relative-entropy / Kullback--Leibler-divergence
 rate function for the empirical-measure LDP on a finite alphabet
 of size \texttt{n}.
+
+\textbf{Non-vacuity witness.}
+\texttt{sanov\_methodOfTypes\_witness} discharges the predicate at the binary alphabet ($n = 2$), the smallest alphabet on which the method of types is not degenerate.
+
+\textbf{Wave-closure summary.}
+\texttt{wave\_3b\_ldp\_alpha\_2\_sanov\_closure}. This module carries a single substrate obligation, so
+its per-module closure restates the witness rather than conjoining
+several; \texttt{Semimartingale.lean} and
+\texttt{QuadraticVariation.lean} show the conjunctive form. The five
+LDP per-module closures are gathered by
+\texttt{wave\_3b\_ldp\_overall\_closure} in
+\texttt{LDPCompatibleSKEFT.lean}.
 
 \textbf{Mathlib-upstream-PR target.}
 \texttt{Mathlib/Probability/LDP/Sanov.lean}.
@@ -661,6 +702,18 @@ function \texttt{I\_X} and $f$ is a continuous function, then
 $f(X_n)$ satisfies an LDP with rate function
 $I\_Y(y) = \inf_{x: f(x) = y} I\_X(x)$.
 
+\textbf{Non-vacuity witness.}
+\texttt{isContractionPrinciple\_witness} discharges the predicate at the constant map, under which the pushed-forward rate function is the zero rate function.
+
+\textbf{Wave-closure summary.}
+\texttt{wave\_3b\_ldp\_alpha\_3\_contraction\_closure}. This module carries a single substrate obligation, so
+its per-module closure restates the witness rather than conjoining
+several; \texttt{Semimartingale.lean} and
+\texttt{QuadraticVariation.lean} show the conjunctive form. The five
+LDP per-module closures are gathered by
+\texttt{wave\_3b\_ldp\_overall\_closure} in
+\texttt{LDPCompatibleSKEFT.lean}.
+
 \textbf{Mathlib-upstream-PR target.}
 \texttt{Mathlib/Probability/LDP/Contraction.lean}.
 Substantive content: the contraction principle for continuous
@@ -675,6 +728,18 @@ informative; the substantive content lifts via Esscher tilting):
 under appropriate conditions,
 $\liminf_{n\to\infty} \frac{1}{n} \log \mathbb{P}(\bar S_n \in U)
 \geq -\inf_{x \in U} I(x)$ for open sets $U$.
+
+\textbf{Non-vacuity witness.}
+\texttt{isCramerLowerBoundEsscher\_witness} discharges the predicate at the Esscher tilt at zero, where the tilted measure is the source measure.
+
+\textbf{Wave-closure summary.}
+\texttt{wave\_3b\_ldp\_beta\_1\_cramerLowerBound\_closure}. This module carries a single substrate obligation, so
+its per-module closure restates the witness rather than conjoining
+several; \texttt{Semimartingale.lean} and
+\texttt{QuadraticVariation.lean} show the conjunctive form. The five
+LDP per-module closures are gathered by
+\texttt{wave\_3b\_ldp\_overall\_closure} in
+\texttt{LDPCompatibleSKEFT.lean}.
 
 \textbf{Mathlib-upstream-PR target.}
 \texttt{Mathlib/Probability/LDP/CramerLowerBound.lean}.
@@ -693,6 +758,18 @@ upper bound: for bounded continuous $F$ and an LDP-satisfying
 sequence $X_n$,
 $\limsup_{n\to\infty} \frac{1}{n} \log \mathbb{E}[\exp(n F(X_n))]
 \leq \sup_x \{F(x) - I(x)\}$.
+
+\textbf{Non-vacuity witness.}
+\texttt{isVaradhanUpperBound\_witness} discharges the predicate at the zero test function, for which the variational formula's two sides coincide at zero.
+
+\textbf{Wave-closure summary.}
+\texttt{wave\_3b\_ldp\_beta\_2\_varadhan\_closure}. This module carries a single substrate obligation, so
+its per-module closure restates the witness rather than conjoining
+several; \texttt{Semimartingale.lean} and
+\texttt{QuadraticVariation.lean} show the conjunctive form. The five
+LDP per-module closures are gathered by
+\texttt{wave\_3b\_ldp\_overall\_closure} in
+\texttt{LDPCompatibleSKEFT.lean}.
 
 \textbf{Mathlib-upstream-PR target.}
 \texttt{Mathlib/Probability/LDP/Varadhan.lean}.
@@ -912,12 +989,13 @@ substantive-content lift stage.
 \label{sec:cross-bridges}
 
 The I3 bundle is positioned as software substrate for three of the
-program's content-bundle targets~\cite{Roehm2026Strategy}. \textbf{The
-I3 cross-bridge is designed but not yet consumed at release time:}
-\texttt{grep -rn "LDPCompatibleSKEFT" lean/SKEFTHawking/} returns
-matches only inside the I3 module itself and the master library
-\texttt{import} statement; no D3, D5, or E1 Lean module currently
-invokes \texttt{LDPCompatibleSKEFT} or any of the It\^o-substrate
+program's content-bundle targets~\cite{Roehm2026Strategy}. \textbf{One
+consumer exists; D3, D5 and E1 do not yet.} The D9 bundle's
+\texttt{fdt\_rare\_event\_tail\_is\_ldp\_certified} invokes
+\texttt{LDPCompatibleSKEFT} on the centered linear-response rate function,
+so \texttt{SKEFTHawking.LDP} declarations now appear in a downstream
+bundle's dependency closure. No D3, D5, or E1 Lean module invokes
+\texttt{LDPCompatibleSKEFT} or any of the It\^o-substrate
 predicates. The bundle is therefore freestanding from D3/D5/E1 at
 release time, and the cross-bridges below are \emph{positioned} for
 future absorption-pass adoption (per the program's late-Phase-6

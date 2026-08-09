@@ -4004,6 +4004,7 @@ import SKEFTHawking.QuantumNetwork.NetworkCapacity
 import SKEFTHawking.QuantumNetwork.NetworkCapacityStrongDuality
 -- Phase 6AN Wave 4 (2026-06-08): FDT (Johnson–Nyquist) noise floor + LDP rare-event tail (devices).
 import SKEFTHawking.QuantumNetwork.FDTNoiseFloor
+import SKEFTHawking.QuantumNetwork.FDTLDPBridge
 -- Phase 6AM W4 (2026-06-09): quantum (Callen–Welton) coth floor — QHO CanonicalEnsemble meanEnergy from PhysLib.
 import SKEFTHawking.QuantumNetwork.QuantumFDTFloor
 -- Phase 6AK Wave 6AK.3 (2026-06-03): unitary-error-basis exact diamond distance (two-qubit Pauli).

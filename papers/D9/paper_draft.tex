@@ -797,8 +797,21 @@ detector/amplifier operating points
 \lean{fdt\_noise\_floor\_bound}, \lean{fdt\_noise\_floor\_detector}),
 plus the linear-response large-deviation rare-event tail and its
 Gallavotti--Cohen-type symmetry (\lean{fdt\_rare\_event\_tail},
-\lean{fdt\_gallavotti\_cohen}), consuming the large-deviation
-foundations of the I3 bundle.
+\lean{fdt\_gallavotti\_cohen}).
+
+The consumption of the I3 bundle's large-deviation foundations is a
+dependency and not a resemblance:
+\lean{fdt\_rare\_event\_tail\_is\_ldp\_certified} states both halves for one
+object, namely that the rate function whose tail
+\lean{fdt\_rare\_event\_tail} bounds is the function I3's LDP layer certifies
+as \lean{LDPCompatibleSKEFT}, and that its centered form is bounded strictly
+below by $-\beta^2\sigma^2/8$ away from the FDT-pinned mean. That constant is
+$-I(0)$: centering subtracts the rate function's value at the no-work event
+(\lean{linearResponseRateFunction\_at\_zero}), so the uncentered tail's strict
+positivity becomes a strict floor at minus it. The theorem's dependency
+closure carries eleven declarations shared with I3, three of them in
+\texttt{SKEFTHawking.LDP}; before it was proved the shared count was zero and
+this paragraph's claim was true of the physics and false of the Lean.
 
 The quantum (Callen--Welton~\cite{CallenWelton1951}) floor is
 \emph{derived, not posited}: instantiating the PhysLib canonical-ensemble
