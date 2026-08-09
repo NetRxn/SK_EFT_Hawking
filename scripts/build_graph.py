@@ -226,7 +226,7 @@ def compute_source_hash() -> str:
 
     # Add Lean files.
     # ⚠️ rglob, NOT glob (fixed 2026-08-04, audit finding QI-01). This was
-    # `glob("*.lean")`, which sees only the 1,373 top-level modules out of 2,039-as-of-2026-08-04 —
+    # `glob("*.lean")`, which sees only the 1,373 top-level modules out of ~2,040 —
     # so a change confined to a SUBDIRECTORY (FaultTolerance/, QuantumNetwork/,
     # APSEta/, Detection/, …) did not move the source hash at all, and this hash is
     # the graph's staleness key. 33% of the Lean tree could drift without the graph
@@ -2222,7 +2222,7 @@ def extract_placeholder_marker_nodes() -> list[dict]:
     seen_ids: set[str] = set()
 
     # ⚠️ rglob, NOT glob (fixed 2026-08-04, audit finding QI-01). This scanned only
-    # the 1,373 top-level modules of 2,039-as-of-2026-08-04, so **112 placeholder-bodied theorems in
+    # the 1,373 top-level modules of ~2,040, so **112 placeholder-bodied theorems in
     # SUBDIRECTORIES minted no PlaceholderMarker node** — e.g.
     # `APSEta/Predicate.lean::isSakharovConsistent_BECAcoustic`. P1 Gate 5
     # (LeanProofSubstance) decides by membership in exactly these nodes, so a paper

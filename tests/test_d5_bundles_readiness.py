@@ -1671,7 +1671,30 @@ class TestSentenceLengthRatchet:
         res = self._run()
         by = {d.name: d for d in res.details}
         assert "over_100_words" in by and "over_60_words" in by
+        # ⚠️ The advisory leg's `passed` is a LITERAL `True` in the check body, so
+        # asserting it is vacuous — it cannot fail, and the assertion that used to
+        # live here reported coverage it did not have. The leg's real signal is its
+        # WARNING flag; that is what the two tests below pin, in both directions.
         assert by["over_60_words"].passed, "the advisory leg must never fail the check"
+
+    def test_the_advisory_WARNS_when_the_baseline_is_exceeded(self, monkeypatch):
+        """The direction that carries the signal. Drop the baseline below the live
+        count and the warning must appear."""
+        from validation.checks import bundles_readiness as br
+        import src.core.constants as C
+        monkeypatch.setattr(C, "SENTENCE_OVER_60_ADVISORY", 0)
+        by = {d.name: d for d in br.check_bundle_sentence_length().details}
+        assert by["over_60_words"].warning is True
+        assert by["over_60_words"].passed is True, "advisory must still never gate"
+
+    def test_the_advisory_is_SILENT_under_the_baseline(self, monkeypatch):
+        """The silent direction — otherwise a leg that always warns would pass the
+        test above while carrying no information."""
+        from validation.checks import bundles_readiness as br
+        import src.core.constants as C
+        monkeypatch.setattr(C, "SENTENCE_OVER_60_ADVISORY", 10_000)
+        by = {d.name: d for d in br.check_bundle_sentence_length().details}
+        assert by["over_60_words"].warning is False
 
     def test_ratchet_is_sensitive_to_a_seeded_regression(self, monkeypatch):
         """Lower the population by raising nothing: drop the ceiling below the

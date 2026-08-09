@@ -196,20 +196,30 @@ def _dirty_lean_paths() -> set[str] | None:
     return dirty
 
 
-def _registered_lean_modules(bundle: str) -> list[str]:
+def _registered_lean_modules(bundle: str) -> list[str] | None:
     """Module names this bundle's append log declares, de-duplicated.
 
     Hand-typed at lift time, so this is the weaker of the two populations — but
     not a subset of the derived one: a module can be registered as contributing
     without any apex's closure reaching it.
+
+    ⚠️ Returns `None` — not `[]` — when the log exists but cannot be read. Its
+    sibling `_derived_lean_modules` was converted to None-on-failure and this half
+    was not, so a corrupt `append_log.json` read as "this bundle registers no
+    modules". Measured with registration forced empty: I1's Lean population drops
+    35 -> 7, D1 28 -> 12, D9 97 -> 73, and the finding still reads "N of
+    <shrunken M>" with nothing to say the denominator collapsed. `[]` is kept for
+    the legitimate case where no log exists at all.
     """
     log = PAPERS_DIR / bundle / "append_log.json"
     if not log.exists():
         return []
     try:
         data = json.loads(log.read_text())
-    except (json.JSONDecodeError, OSError):
-        return []
+    except (json.JSONDecodeError, OSError) as exc:
+        print(f"  WARN: {bundle} append_log.json unreadable ({exc}); "
+              f"registered Lean modules UNMEASURED", file=sys.stderr)
+        return None
     seen: dict[str, None] = {}
     for e in data.get("events", []):
         for m in e.get("lean_modules_referenced") or []:
@@ -254,6 +264,7 @@ def _lean_module_change_times(
     bundle: str, idx: dict[str, Path],
     commits: dict[str, datetime], dirty: set[str],
     derived: set[str] | None = None,
+    registered: list[str] | None = None,
 ) -> tuple[dict[str, datetime], list[str]]:
     """`({module: last-change time}, unresolved_names)` for one bundle.
 
@@ -269,7 +280,9 @@ def _lean_module_change_times(
     """
     seen: dict[str, str] = {}          # repo-relative path -> label
     unresolved: list[str] = []
-    for name in sorted(set(_registered_lean_modules(bundle)) | set(derived or ())):
+    if registered is None:
+        registered = _registered_lean_modules(bundle) or []
+    for name in sorted(set(registered) | set(derived or ())):
         path = _resolve_lean_module(name, idx)
         if path is None:
             unresolved.append(name)
@@ -398,14 +411,29 @@ def check(write_metadata: bool = False) -> list[dict]:
 
         # Sub-finding B: source-paper mtime newer than last_lift
         if last_lift is None:
-            # Bundle initialized but never appended → freshness check
-            # is not applicable (no lifts to compare against).
-            findings.append({
-                "bundle": bundle,
-                "passed": True,
-                "warning": False,
-                "message": "bundle initialized; no lifts yet (skip)",
-            })
+            # ⚠️ TWO different facts, and collapsing them skipped the whole check
+            # for a bundle while reporting a clean, non-warning verdict that also
+            # misstated its history. `_parse_iso` returns None both when the field
+            # is absent (never appended — genuinely not applicable) and when it is
+            # present but unparseable (a corrupted or reformatted timestamp).
+            raw_lift = md.get("last_lift")
+            if raw_lift is None:
+                findings.append({
+                    "bundle": bundle,
+                    "passed": True,
+                    "warning": False,
+                    "message": "bundle initialized; no lifts yet (skip)",
+                })
+            else:
+                findings.append({
+                    "bundle": bundle,
+                    "passed": False,
+                    "warning": False,
+                    "measured": False,
+                    "message": (
+                        f"last_lift is present but unparseable ({raw_lift!r}); "
+                        f"freshness cannot be computed for this bundle"),
+                })
             continue
 
         sources = sorted([
@@ -436,21 +464,42 @@ def check(write_metadata: bool = False) -> list[dict]:
         # source-fresh and Lean-stale, and scoping the trigger to the bundles
         # that happen to have no sources would make it a special case rather
         # than a measurement.
+        lean_unmeasured_here = False
         if lean_unmeasured is not None:
             lean_times, lean_unresolved, stale_lean = {}, [], []
+            lean_unmeasured_here = True
             findings.append({
                 "bundle": bundle,
                 "passed": True,
                 "warning": True,
+                "measured": False,
                 "message": (
                     f"Lean freshness leg UNMEASURED ({lean_unmeasured}) — this "
                     f"bundle's Lean substrate was NOT compared to last_lift; the "
                     f"source-paper leg below stands alone"),
             })
         else:
-            lean_times, lean_unresolved = _lean_module_change_times(
-                bundle, lean_idx, lean_commits, lean_dirty,
-                lean_derived.get(bundle))
+            registered = _registered_lean_modules(bundle)
+            if registered is None:
+                # Half the population is unreadable, so the union is not the
+                # population — report UNMEASURED rather than a smaller number.
+                lean_times, lean_unresolved, stale_lean = {}, [], []
+                findings.append({
+                    "bundle": bundle,
+                    "passed": True,
+                    "warning": True,
+                    "measured": False,
+                    "message": (
+                        "Lean freshness leg UNMEASURED (append_log.json "
+                        "unreadable, so the registered half of the module "
+                        "population could not be read)"),
+                })
+                lean_unmeasured_here = True
+            else:
+                lean_unmeasured_here = False
+                lean_times, lean_unresolved = _lean_module_change_times(
+                    bundle, lean_idx, lean_commits, lean_dirty,
+                    lean_derived.get(bundle), registered)
             stale_lean = sorted(
                 ((m, t) for m, t in lean_times.items() if t > last_lift),
                 key=lambda mt: mt[1], reverse=True)
@@ -462,6 +511,7 @@ def check(write_metadata: bool = False) -> list[dict]:
                 "bundle": bundle,
                 "passed": True,
                 "warning": True,
+                "measured": False,
                 "message": (
                     f"{len(lean_unresolved)} of "
                     f"{len(lean_unresolved) + len(lean_times)} declared Lean "
@@ -494,12 +544,16 @@ def check(write_metadata: bool = False) -> list[dict]:
                 "bundle": bundle,
                 "passed": True,
                 "warning": True,
+                "measured": False,
                 "message": (
                     f"UNMEASURABLE: all {len(sources)} declared source(s) name a "
-                    f"directory absent from papers/ ({sample}{extra}) AND the "
-                    f"bundle declares no resolvable Lean module; freshness is "
-                    f"NOT established — the Stage-C absorption trigger cannot "
-                    f"fire on either population."
+                    f"directory absent from papers/ ({sample}{extra}) AND "
+                    + ("the Lean population was NOT RESOLVED "
+                       f"({lean_unmeasured})"
+                       if lean_unmeasured is not None else
+                       "the bundle declares no resolvable Lean module")
+                    + "; freshness is NOT established — the Stage-C absorption "
+                      "trigger cannot fire on either population."
                 ),
             })
             continue
@@ -520,7 +574,7 @@ def check(write_metadata: bool = False) -> list[dict]:
             # nine — writing "fresh" from a leg that measured nothing. Absence of
             # measurement is not evidence of freshness, which is the whole thesis
             # of this module.
-            if write_metadata and lean_unmeasured is None:
+            if write_metadata and not lean_unmeasured_here:
                 want = bool(stale_lean)
                 if md.get("freshness_stale") != want:
                     md["freshness_stale"] = want
@@ -560,33 +614,46 @@ def check(write_metadata: bool = False) -> list[dict]:
                     f"sample: {sample}{extra}"
                 ),
             })
-            # Set freshness_stale=true in metadata so dashboard reflects it
+            # Set freshness_stale=true in metadata so dashboard reflects it.
+            # ⚠️ NO `except OSError: pass`. Three writers touch this same field and
+            # this was the only one that swallowed a failed write — the finding
+            # would still print `freshness-stale` while the artifact every
+            # downstream consumer reads stayed unchanged. One policy, applied at
+            # all three: let it propagate.
             if write_metadata:
-                try:
-                    md["freshness_stale"] = True
-                    write_bundle_json(md_path, md)
-                except OSError:
-                    pass
+                md["freshness_stale"] = True
+                write_bundle_json(md_path, md)
         else:
             findings.append({
                 "bundle": bundle,
                 "passed": True,
-                "warning": False,
+                "warning": bool(stale_lean) or lean_unmeasured is not None,
                 "message": (
-                    f"fresh: all {len(measurable)} measurable source paper(s) "
+                    f"source-fresh: all {len(measurable)} measurable source paper(s) "
                     f"older than last_lift ({last_lift.strftime('%Y-%m-%d')})"
+                    + ("; the LEAN leg reports staleness above, so this bundle is "
+                       "NOT fresh overall" if stale_lean else "")
+                    + ("; the Lean leg is UNMEASURED, so freshness is not "
+                       "established" if lean_unmeasured is not None else "")
                     + (f"; {len(absent_sources)} further declared source(s) name "
                        f"an absent directory and were NOT measured"
                        if absent_sources else "")
                 ),
             })
-            # Clear stale flag if previously set
-            if write_metadata and md.get("freshness_stale"):
-                md["freshness_stale"] = False
-                try:
+            # ⚠️ THE SAME GATE AS THE SOURCELESS BRANCH, AND IT BELONGS HERE TOO.
+            # Round 1 fixed the clear-on-unmeasured bug at the sourceless site only.
+            # This branch went on clearing the flag from `not stale_sources` alone,
+            # so a bundle that is source-FRESH but Lean-STALE was written
+            # `freshness_stale=False` and the Stage-A absorption trigger never
+            # fired for it. Measured with source mtimes forced old: 12 bundles
+            # written False while the same run emitted `lean-stale` — D2 at 48 of
+            # 85 modules, L2 at 42 of 45. Forcing the git map to None reproduced
+            # it a second way. A fix applied at one of two sites is not a fix.
+            if write_metadata and not lean_unmeasured_here:
+                want = bool(stale_lean)      # sources are fresh; Lean decides
+                if md.get("freshness_stale") != want:
+                    md["freshness_stale"] = want
                     write_bundle_json(md_path, md)
-                except OSError:
-                    pass
 
     return findings
 

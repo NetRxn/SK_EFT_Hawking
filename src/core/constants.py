@@ -2590,12 +2590,35 @@ NUMERICAL_LITERAL_CEILING = 117  # inline unit-bearing values outside \input{tab
 #: ⚠️ The prose was deliberately NOT rewritten to lower it in the same change:
 #: TODO-D7's own constraint is that "the decider must not be the generator", and a
 #: metric introduced together with the edits that satisfy it measures nothing.
-SENTENCE_OVER_100_CEILING = 22
+#:
+#: ⚠️ 22 -> 20, LOWERED 2026-08-09, and the population WIDENED in the same commit —
+#: both moves strengthen the ratchet, which is the only direction permitted. The
+#: check now reads every `.tex` a draft `\input`s, not `paper_draft.tex` alone (the
+#: two sibling reader-visible-prose checks had been widened and this one had not),
+#: and it treats a table ROW as its own unit. Measured all four ways:
+#:
+#:     narrow  + rows-joined : 22   <- the old number
+#:     widened + rows-joined : 23   <- one PAST the ratchet, on an artifact
+#:     narrow  + rows-as-units: 20
+#:     widened + rows-as-units: 20  <- shipped
+#:
+#: The 23 was not debt. `papers/I1/tables/table1_stages.tex` scanned as a single
+#: 166-word "sentence" that is fourteen concatenated table rows; no reader sees it.
+#: Correcting the instrument removed two such artifacts from the narrow population
+#: too, which is why the honest new floor is 20 and not 22.
+SENTENCE_OVER_100_CEILING = 20
 
 #: Advisory companion: sentences over 60 words. Reported, not gated — 60 words is
 #: long but defensible in a methods paragraph, and gating it would fire on correct
 #: work (VALIDATION_GATE_TOPOLOGY §3). Recorded so the trend is visible.
-SENTENCE_OVER_60_ADVISORY = 199
+#:
+#: ⚠️ 199 -> 220, 2026-08-09. This is NOT prose growth and must not be read as
+#: debt: the same commit widened the population from `paper_draft.tex` to the whole
+#: `\input` closure, which added 16 hits, and made table rows their own units, which
+#: removed some. Re-baselined rather than left warning, because a permanent warning
+#: whose content is "the population definition changed" is noise. This number is
+#: advisory in both directions — it never gates.
+SENTENCE_OVER_60_ADVISORY = 220
 # ⚠️ RAISED 116 -> 117 on 2026-08-09, with the rationale this block demands.
 # D6 §7's new threshold section states the certified bound `2.73 \times 10^{-5}`
 # inside a displayed equation. That value is not a project measurement to be routed

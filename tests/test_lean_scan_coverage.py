@@ -5,7 +5,16 @@ Audit finding **QI-01** (`docs/audits/2026-08-04-qa-qi-infrastructure/README.md`
 WHAT WENT WRONG
 ---------------
 Five sites globbed ``*.lean`` instead of ``**/*.lean``. Measured 2026-08-04:
-**1,373 of 2,039** files were in scope — a third of the Lean library was invisible.
+**1,373 of ~2,040** files were in scope — a third of the Lean library was invisible.
+
+⚠️ **The numerator is the number that carries meaning; the denominator is approximate on
+purpose.** 1,373 is *structural* — it is exactly what ``glob("*.lean")`` matches, the
+top-level modules, and it does not move for the reason the corpus moves. The corpus size
+does drift every wave (2,039 → 2,042 in five days), and freezing it with a date produced a
+worse outcome than either alternative: the dating was applied at six source sites and not at
+four test sites, so one measurement read two ways in one repo. An approximate denominator
+cannot rot; if an exact one is ever wanted, derive it with
+``len(list(root.rglob("*.lean")))`` rather than writing it down.
 
 The one with teeth is ``build_graph.extract_placeholder_marker_nodes``: **112
 placeholder-bodied theorems in subdirectories minted no PlaceholderMarker node**
@@ -198,7 +207,7 @@ class TestNoEnforcementSiteUsesNonRecursiveLeanGlob:
 
         assert not offenders, (
             f"non-recursive `.glob('*.lean')` in the enforcement path: {offenders}. "
-            f"Measured 2026-08-04: that form sees 1,373 of 2,039 files, so a third "
+            f"Measured 2026-08-04: that form sees 1,373 of ~2,040 files, so a third "
             f"of the Lean library is unscanned. Use `rglob('*.lean')`. If a site "
             f"genuinely wants top-level-only, say so in a comment and add it to an "
             f"explicit exemption here rather than leaving the call bare "

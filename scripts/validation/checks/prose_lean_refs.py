@@ -151,9 +151,6 @@ _PROSE_VERB_RE = re.compile(r"\\verb\*?(?P<d>[^A-Za-z0-9\s*])(?P<body>.*?)(?P=d)
 _PROSE_TEX_QUOTE_RE = re.compile(r"`((?:[A-Za-z][\w]*)(?:\\_|\.)[\w\\_.]*)'")
 
 
-# TODO-D2: kept as a module-local name (tests reach it) but the definition is
-# the shared one, so the trap has a single owner.
-_PROSE_UNESCAPE_RE = re.compile(r"\\([_\\&%$#{}~^])")
 _PROSE_IDENT_RE = re.compile(
     r"^[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)*$")
 _PROSE_FILE_SUFFIXES = (
@@ -289,7 +286,7 @@ def _prose_verbatim_tokens(tex_source: str) -> list:
               for m in _PROSE_TEX_QUOTE_RE.finditer(tex_source)]
     out = []
     for raw, start in spans:
-        tok = _PROSE_UNESCAPE_RE.sub(r"\1", raw).strip()
+        tok = unescape_tex_identifier(raw).strip()
         if tok:
             out.append((tok, start))
     return out

@@ -51,7 +51,25 @@ RATCHETED_CHECKS = (
     "theorems",
     "elaboration_knob_watchlist",
     "bundle_tables_use_pipeline",
+    # ⚠️ Added 2026-08-09. Both were ratchets in production, both stated their
+    # ceiling in the phrasing this file already parses, and NEITHER was named by
+    # any test in the suite — `PROVENANCE_UNRESOLVABLE_CEILING = 163` and
+    # `LEGACY_DRAFT_LATEX_BROKEN_CEILING = 14`. They were invisible because the
+    # roster was hand-listed and its only guard was `len(...) >= 6`, which a
+    # never-added entry trivially satisfies. That guard is now a reconciliation
+    # (see `test_every_ceiling_constant_is_named_by_a_test`).
+    "parameter_provenance",
+    "paper_latex_compiles",
 )
+
+#: `*_CEILING` constants that are NOT zero-headroom ratchets, with the reason.
+#: Anything not here must be named by a test — that is the reconciliation.
+_NOT_A_RATCHET = {
+    # A per-tier cap on revtex4-2 letter-numbered subsections (26 is the format's
+    # own limit). A charter sits under it by design; equality would be a defect,
+    # not the goal, so zero headroom is the wrong property to assert.
+    "_SECTION_CEILING_BY_TIER",
+}
 
 _CEIL_RE = re.compile(r"ceiling\s+(\d+)", re.IGNORECASE)
 _LEAD_RE = re.compile(r"(\d+)")
@@ -93,13 +111,43 @@ class TestRatchetsHaveZeroHeadroom:
                "The population GREW past its ceiling; fix the underlying debt rather "
                "than raising the number."))
 
+    def test_every_ceiling_constant_is_named_by_a_test(self):
+        """⚠️ THE RECONCILIATION THAT REPLACED A `>= 6` FLOOR.
+
+        The old guard asserted the roster had at least six entries. A ratchet that
+        was never added satisfies that trivially, so the roster's own blind spot
+        was undetectable by the test guarding the roster. Measured 2026-08-09: 14
+        `*_CEILING` constants exist; **two were named by no test file at all**, and
+        six more were covered by ad-hoc per-check tests rather than by this roster
+        — zero-headroom enforcement living in two unreconciled mechanisms.
+
+        This derives the population from the source instead: every `*_CEILING`
+        constant must be named somewhere in `tests/`, or be declared a non-ratchet
+        with a reason. It fails when a new ceiling is added and forgotten, which is
+        the failure mode a count-based floor cannot see."""
+        import re as _re
+        roots = [SK_ROOT / "src" / "core" / "constants.py"]
+        roots += sorted((SK_ROOT / "scripts" / "validation").rglob("*.py"))
+        found = set()
+        for f in roots:
+            found |= set(_re.findall(r"^([A-Z][A-Z0-9_]*CEILING[A-Z0-9_]*)\s*=",
+                                     f.read_text(encoding="utf-8"), _re.MULTILINE))
+        found -= _NOT_A_RATCHET
+        assert found, "no ceiling constants found — the scan itself broke"
+
+        test_src = "\n".join(
+            f.read_text(encoding="utf-8") for f in sorted((SK_ROOT / "tests").rglob("*.py")))
+        orphans = sorted(c for c in found if c not in test_src)
+        assert orphans == [], (
+            f"{len(orphans)} ratchet ceiling(s) are named by NO test, so nothing "
+            f"holds them at zero headroom: {orphans}. Add the owning check to "
+            f"RATCHETED_CHECKS, or declare the constant in _NOT_A_RATCHET with a "
+            f"reason.")
+
     def test_the_covered_set_is_declared(self):
         """Guard the seam. If a ratcheted check drops out of RATCHETED_CHECKS the
         parametrization above silently shrinks and every remaining case still
         passes — the exact narrowing this suite exists to catch."""
-        assert len(RATCHETED_CHECKS) >= 6, (
-            f"only {len(RATCHETED_CHECKS)} ratcheted checks are covered; the roster "
-            f"shrank. Removing one means a ratchet lost its zero-headroom guard.")
         registered = {s.name for s in validate._CHECKS}
         missing = [c for c in RATCHETED_CHECKS if c not in registered]
         assert not missing, f"RATCHETED_CHECKS names unregistered check(s): {missing}"

@@ -499,23 +499,40 @@ class TestChainBackingTargetsResolve:
     `UNRESOLVED_CHAIN_LINK_CEILING` in the same commit that does the remediation.
     """
 
-    def test_a_dangling_link_seeded_into_the_real_corpus_fails(self):
-        target = _H.PAPERS_DIR / "D3" / "claims_review.json"
-        original = target.read_text(encoding="utf-8")
+    def test_a_dangling_link_seeded_past_the_ceiling_fails(self, monkeypatch):
+        """⚠️ Seeded at the SEAM, not into the tracked corpus.
+
+        This test used to append a dangling link to the real
+        `papers/D3/claims_review.json` and restore it in a `finally`. Inside that
+        window every concurrent reader — `validate.py`, the dashboard, a parallel
+        pytest worker, even this class's own sibling `test_the_ceiling_carries_no_
+        headroom` — measured one more unresolved link than the commit contains,
+        and a kill or timeout mid-window left the corpus permanently +1. Against a
+        ZERO-HEADROOM ratchet that makes the suite's colour depend on timing.
+
+        The class docstring's argument that the *ceiling* must be measured live
+        does not extend to the *seeding* test: this one only has to prove the
+        ceiling can fire, which the seam shows without touching a tracked file."""
+        import chain_canonicalize as _cc
+
         assert rv.check_chain_backing_targets_resolve().passed is True, (
             "baseline must be green, or this mutation proves nothing")
-        try:
-            doc = json.loads(original)
-            doc["sentences"][0].setdefault("chain_proposed", {}).setdefault("links", []).append(
-                {"kind": "theorem",
-                 "target": "SKEFTHawking.ThisDeclarationDoesNotExist.seeded_defect"})
-            target.write_text(json.dumps(doc, indent=2), encoding="utf-8")
-            r = rv.check_chain_backing_targets_resolve()
-            assert r.passed is False, "one dangling link past the ceiling must fail the check"
-            assert any("seeded_defect" not in d.message for d in r.details)
-        finally:
-            target.write_text(original, encoding="utf-8")
-        assert rv.check_chain_backing_targets_resolve().passed is True, "restore failed"
+
+        real = list(_cc._iter_links())
+        seeded = real + [("D3", "seeded-sentence", "theorem",
+                          "SKEFTHawking.ThisDeclarationDoesNotExist.seeded_defect")]
+        monkeypatch.setattr(_cc, "_iter_links", lambda: iter(seeded))
+
+        r = rv.check_chain_backing_targets_resolve()
+        assert r.passed is False, "one dangling link past the ceiling must fail the check"
+        detail = next(d for d in r.details if d.name == "unresolvable")
+        assert int(detail.message.split()[0]) == rv.UNRESOLVED_CHAIN_LINK_CEILING + 1
+
+    def test_the_seeding_test_leaves_the_corpus_byte_identical(self):
+        """The reason the rewrite above exists. Reading the tracked file after the
+        seam-seeded run must show no trace of the mutation."""
+        target = _H.PAPERS_DIR / "D3" / "claims_review.json"
+        assert "seeded_defect" not in target.read_text(encoding="utf-8")
 
     def test_the_ceiling_carries_no_headroom(self):
         """A ratchet above the population cannot fire. Assert against the LIVE measured

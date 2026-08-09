@@ -66,21 +66,36 @@ class TestCorpusIsCanonical:
 class TestEveryWriterRoutesThroughTheSerializer:
     @pytest.mark.parametrize("mod", WRITER_MODULES)
     def test_no_direct_json_dumps_to_a_bundle_blob(self, mod):
-        """Structural, via `ast` rather than grep: no `.write_text(json.dumps(...))`
+        """Structural, via `ast` rather than grep: no open-coded JSON serialization
         survives in a bundle-blob writer. A new writer added later that open-codes
-        the dump reintroduces the oscillation, and this is what catches it."""
+        the dump reintroduces the oscillation, and this is what catches it.
+
+        ⚠️ The guard used to walk only `.write_text(json.dumps(...))`. Measured:
+        rewriting a call as `with open(p, 'w') as f: json.dump(md, f, indent=2)`
+        left it GREEN — and `json.dump` carries the same `ensure_ascii=True`
+        default, so it reintroduces the exact D25 oscillation this file closed. The
+        walk is now over any `json.dump`/`json.dumps` call anywhere in the module,
+        which is the property that actually matters: these writers serialize
+        through the shared serializer or not at all."""
         src = (REPO / "scripts" / mod).read_text(encoding="utf-8")
         tree = ast.parse(src)
-        bad = []
-        for node in ast.walk(tree):
-            if not (isinstance(node, ast.Call)
-                    and isinstance(node.func, ast.Attribute)
-                    and node.func.attr == "write_text"):
-                continue
-            for arg in ast.walk(node):
-                if (isinstance(arg, ast.Attribute) and arg.attr == "dumps"
-                        and isinstance(arg.value, ast.Name) and arg.value.id == "json"):
-                    bad.append(node.lineno)
+
+        def _is_json_ser(n):
+            f = getattr(n, "func", None)
+            return (isinstance(n, ast.Call) and isinstance(f, ast.Attribute)
+                    and f.attr in {"dump", "dumps"}
+                    and isinstance(f.value, ast.Name) and f.value.id == "json")
+
+        # `print(json.dumps(...))` writes to stdout, not to a blob — the CLI's
+        # `--json` output is a legitimate consumer and encoding there is nobody's
+        # round-trip. Everything else that serializes is a candidate writer.
+        to_stdout = {id(a) for n in ast.walk(tree)
+                     if isinstance(n, ast.Call) and isinstance(n.func, ast.Name)
+                     and n.func.id == "print"
+                     for a in ast.walk(n) if _is_json_ser(a)}
+
+        bad = [n.lineno for n in ast.walk(tree)
+               if _is_json_ser(n) and id(n) not in to_stdout]
         # compile_bundle_pdf writes a non-bundle gate cache; allow it explicitly
         allowed = {"compile_bundle_pdf.py"}
         if mod in allowed:

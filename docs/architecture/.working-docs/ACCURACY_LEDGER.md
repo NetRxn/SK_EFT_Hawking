@@ -30,8 +30,12 @@ sentences, which is precisely the move that made the first two passes wrong.
 
 ## Final state
 
-**Coverage is PARTIAL and measured. It is not 100%, and this ledger previously said
-otherwise.**
+**Every enumerated unit is now covered — 361 of 361 — and that is a weaker claim than it
+looks.** ⚠️ This paragraph read "Coverage is PARTIAL ... It is not 100%" directly above a
+table showing 100% on every row, for as long as it took V9–V18 to close the queue the
+sentence described. It was true when written and nobody re-read it against the table beneath
+it. The honest statement is below: the *denominator* is an upper bound, so full coverage of
+it is not full coverage of the documents.
 
 | document | atom rows | load-bearing sentences + table rows | coverage |
 |---|---:|---:|---:|
@@ -56,7 +60,9 @@ rows are kept whole, and a unit counts as load-bearing if it names a path/symbol
 states a set quantifier (`every`/`all`/`only`/`none`/`nothing`), or cites an invariant, ADR or
 section by number. **The true denominator is HIGHER than 361**, because a compound sentence
 counts once here but owes one row per clause — the exact granularity failure this ledger was
-created to stop. So ≈60% is an upper bound on coverage.
+created to stop. **So 361/361 means "every unit the splitter identified has a row", not "every
+claim in these documents is verified".** True clause-level coverage is lower and is not
+measured; treating the 100% as the latter is the error this note exists to prevent.
 
 ⚠️ **What "verified" means for a row, and what it does not mean for a document.** Each of the
 217 rows names a single proposition, the artifact or command that decides it, and the result.

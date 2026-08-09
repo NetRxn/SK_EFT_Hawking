@@ -11,10 +11,18 @@ owns the wave-pipeline reviewer stages, the merge, and the manuscript programme.
 
 ## 1. What goal 1 closed
 
-**All 38 D-items in `docs/architecture/.working-docs/ARCHITECTURE_TODOs.MD` are closed.**
-None is left OPEN. Sixteen of the thirty were wrong about their own scope, premise or
-remedy, and three named a hazard or blocker that did not exist; each is recorded in the
-entry with the measurement that refuted it, not silently dropped.
+**All 38 D-items in `docs/architecture/.working-docs/ARCHITECTURE_TODOs.MD` are closed as
+findings — with one OPEN remainder, stated here because a heading-scanner would miss it:**
+
+> **D4 carries an OPEN remainder.** Ledger coverage is 361/361, but its *perishability
+> queue* is not executed and carries into goal 2. The D4 heading says so explicitly
+> (`✅ 100% (361/361) COVERED; ⚠️ the perishability queue is OPEN`) — a phrasing the closure
+> reviewer chose precisely so a scanner would not read D4 as wholly closed. This document
+> was that scanner, and claimed "None is left OPEN" one commit after the heading was written.
+
+Sixteen of the 38 were wrong about their own scope, premise or remedy, and **four** named a
+hazard or blocker that did not exist (D1 WITHDRAWN; D17, D36, D37 CLOSED-NOT-A-DEFECT). Each
+is recorded in the entry with the measurement that refuted it, not silently dropped.
 
 Load-bearing outcomes goal 2 should know about:
 

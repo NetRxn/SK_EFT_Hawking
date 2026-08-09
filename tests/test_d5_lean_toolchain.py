@@ -201,7 +201,7 @@ class TestLeanSource:
 
     def test_a_name_in_a_subdirectory_is_found(self, tmp_path, monkeypatch):
         """QI-01 at this call site. Under the non-recursive form this check saw 1,373
-        of 2,039 files and 7,695 declared identifiers were invisible — a spot-check
+        of ~2,040 files and 7,695 declared identifiers were invisible — a spot-check
         name that moved into a package would report NOT found while existing."""
         body = "\n".join(f"theorem {n} : True := trivial" for n in self._spot_names())
         monkeypatch.setattr(_H, "LEAN_DIR",

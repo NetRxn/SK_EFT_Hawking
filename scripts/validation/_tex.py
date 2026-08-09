@@ -154,7 +154,14 @@ def find_inline_numerical_literals(text: str) -> tuple[str, list]:
 # `prose_lean_refs._PROSE_UNESCAPE_RE` (unescape, then match) and
 # `lean_substrate._tex_name_pattern` (build an escape-tolerant pattern). Two
 # solutions to one problem in two modules is precisely the duplication this
-# entry predicted, so the helpers live here now and both call sites use them.
+# entry predicted, so the helpers live here now.
+#
+# ⚠️ AND THE SENTENCE THAT SAID "both call sites use them" WAS FALSE FOR TWO DAYS.
+# `lean_substrate` adopted `tex_escaped_name_pattern`; `prose_lean_refs` imported
+# `unescape_tex_identifier` and then kept a byte-identical local copy, so the
+# import sat dead (ruff F401) under a comment claiming tests reached it — no test
+# ever did. Corrected 2026-08-09 by the round-2 simplifier, which is the point:
+# a comment asserting a merge landed is not the merge landing.
 #
 # Two shapes are needed because the two directions are genuinely different:
 #   * you HAVE a Lean name and want to find it in prose  -> `tex_escaped_name_pattern`

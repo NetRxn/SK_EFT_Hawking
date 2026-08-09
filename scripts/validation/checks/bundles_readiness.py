@@ -433,6 +433,48 @@ _EM_DASH_RE = re.compile(r"(?<!-)---(?!-)|—")
 _TEX_COMMENT_RE = re.compile(r"(?<!\\)%.*")
 
 
+
+#: THE ONE definition of "reader-visible prose for bundle `code`".
+#:
+#: ⚠️ Three checks share this subject — em-dash freedom, reader-facing voice, and
+#: sentence length — and the closure widening landed at ONE of them. The other two
+#: kept reading `paper_draft.tex` alone, so `papers/I1/tables/table1_stages.tex`
+#: stayed invisible to both; `bundle_sentence_length` is additionally a down-only
+#: ratchet frozen over the narrow population, so every day it stayed narrow raised
+#: the cost of widening it. A reader does not know or care which file a sentence was
+#: typed in, so neither should the population.
+def _reader_visible_sources(tex: "Path") -> "list[Path]":
+    """`tex` plus every `.tex` it \input{}s, transitively, de-duplicated.
+
+    `.bib` and image members of the closure are excluded: a bibliography entry is
+    not manuscript prose.
+    """
+    return sorted({tex, *(p for p in _H.draft_input_closure(tex)
+                          if p.suffix == ".tex" and p.is_file())})
+
+
+#: Environments whose `\\` is a ROW separator, not a line break inside a sentence.
+_ROW_ENV_RE = re.compile(
+    r"\\begin\{(tabular\*?|tabularx|array|longtable|matrix|align\*?|split)\}"
+    r".*?\\end\{\1\}", re.DOTALL)
+
+
+def _rows_as_sentences(body: str) -> str:
+    """Make each table row its own unit before sentence splitting.
+
+    ⚠️ Measured 2026-08-09: without this, `papers/I1/tables/table1_stages.tex`
+    reports a single **166-word sentence** that no reader ever sees — it is fourteen
+    two-column table rows concatenated, because `\\` is not a sentence boundary to
+    the splitter. Widening the sentence-length population to the `\input` closure
+    imported that artifact and pushed the over-100 count from 22 to 23, one past a
+    down-only ratchet, for a defect that does not exist in the prose.
+    **Scoped to row environments deliberately**: splitting on every `\\` would also
+    split a genuine over-long sentence that happens to contain a line break, which
+    would hide real debt — the opposite error.
+    """
+    return _ROW_ENV_RE.sub(lambda m: m.group(0).replace("\\\\", ". "), body)
+
+
 @register_check("bundle_prose_em_dash_free",
                 "No bundle draft contains an em-dash in prose a reader will see")
 def check_bundle_prose_em_dash_free() -> CheckResult:
@@ -485,10 +527,7 @@ def check_bundle_prose_em_dash_free() -> CheckResult:
             continue
         checked += 1
         hits = []
-        # Only `.tex` in the closure: it also carries `.bib` and image paths, and a
-        # bibliography entry is not manuscript prose.
-        for src in sorted({tex, *(p for p in _H.draft_input_closure(tex)
-                                  if p.suffix == ".tex" and p.is_file())}):
+        for src in _reader_visible_sources(tex):
             for i, line in enumerate(src.read_text(errors="replace").splitlines(), 1):
                 body = _TEX_COMMENT_RE.sub("", line)
                 n = len(_EM_DASH_RE.findall(body))
@@ -530,7 +569,7 @@ _AMBIGUOUS_MODULE_BASENAMES = frozenset({
 #: E1 declare modules and cite NONE of them; D9 is 64 absent of 77.
 #:
 #: ⚠️ **Absent is not automatically a defect, and the ratchet is why this is honest.**
-#: A module can legitimately support a cited result without being named, so a 54%
+#: A module can legitimately support a cited result without being named, so a ~53%
 #: absence rate more likely reflects generous registration (every module a wave touched)
 #: than incomplete drafts. What the number *does* say is that the link between declared
 #: substrate and published claim is weak, and it can only be strengthened. Lower it by
@@ -550,8 +589,11 @@ def check_bundle_lean_module_coverage() -> CheckResult:
 
     `bundle_append.py --lean-modules` records, per append event, which Lean modules a
     source contributed. Nothing ever compared that list to the manuscript, so a bundle
-    could register a module family and never mention it: **D10 and E1 each declare
-    modules and cite none of them.**
+    could register a module family and never mention it: **E1 declares 7 modules and cites
+    none of them.** D10 was in the same state until TODO-D12's prose repair named 2 of its
+    11 — a correction recorded in the ceiling's own addendum above ("It is D10, 11 -> 9")
+    and NOT here, 15 lines below it, for two days. Same defect as D15/D36/D4: the fix
+    landed at the site the finding named and not at the second site carrying the claim.
 
     ⚠️ **The field is `lean_modules_referenced`, not `lean_modules`.** Probing the latter
     reports 0 of 21 bundles declaring anything, which reads as "the data does not exist"
@@ -894,15 +936,17 @@ def check_bundle_sentence_length() -> CheckResult:
         if not draft.is_file():
             continue
         scanned += 1
-        body = _strip_tex_comments(draft.read_text(encoding="utf-8", errors="ignore"))
-        body = body.split(r"\begin{document}")[-1].split(r"\begin{thebibliography}")[0]
-        body = re.sub(r"\\[a-zA-Z]+\*?(\[[^\]]*\])?(\{[^{}]*\})?", " ", body)
-        for sent in re.split(r"(?<=[.!?])\s+", body):
-            n = len(sent.split())
-            if n > 60:
-                over60 += 1
-            if n > 100:
-                over100.append((code, n))
+        for src in _reader_visible_sources(draft):
+            body = _strip_tex_comments(src.read_text(encoding="utf-8", errors="ignore"))
+            body = body.split(r"\begin{document}")[-1].split(r"\begin{thebibliography}")[0]
+            body = _rows_as_sentences(body)
+            body = re.sub(r"\\[a-zA-Z]+\*?(\[[^\]]*\])?(\{[^{}]*\})?", " ", body)
+            for sent in re.split(r"(?<=[.!?])\s+", body):
+                n = len(sent.split())
+                if n > 60:
+                    over60 += 1
+                if n > 100:
+                    over100.append((code, n))
 
     if scanned == 0:
         return CheckResult(passed=False, details=[Detail(
@@ -968,18 +1012,19 @@ def check_bundle_reader_facing_voice() -> CheckResult:
             continue
         checked += 1
         found = []
-        for i, line in enumerate(tex.read_text(errors="replace").splitlines(), 1):
-            body = _TEX_COMMENT_RE.sub("", line)
-            for pat, why in _SELF_NARRATION:
-                for m in re.finditer(pat, body):
-                    found.append((i, why, m.group(0)[:60]))
+        for src in _reader_visible_sources(tex):
+            for i, line in enumerate(src.read_text(errors="replace").splitlines(), 1):
+                body = _TEX_COMMENT_RE.sub("", line)
+                for pat, why in _SELF_NARRATION:
+                    for m in re.finditer(pat, body):
+                        found.append((src, i, why, m.group(0)[:60]))
         if found:
             total += len(found)
-            i, why, txt = found[0]
+            src, i, why, txt = found[0]
             details.append(Detail(
                 code, False,
                 f"{len(found)} self-narrating passage(s); first at "
-                f"{tex.relative_to(_H.PROJECT_ROOT)}:{i} — {why}: {txt!r}"))
+                f"{src.relative_to(_H.PROJECT_ROOT)}:{i} — {why}: {txt!r}"))
 
     if checked == 0:
         details.insert(0, Detail(

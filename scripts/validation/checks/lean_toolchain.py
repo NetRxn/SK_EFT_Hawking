@@ -295,7 +295,7 @@ def check_lean_source() -> CheckResult:
 
     # Collect all identifiers declared as theorem/lemma/def.
     # ⚠️ rglob, NOT glob (fixed 2026-08-04, audit finding QI-01). `glob` saw 1,373
-    # of 2,039-as-of-2026-08-04 Lean files, so 7,695 declared identifiers in subdirectories were
+    # of ~2,040 Lean files, so 7,695 declared identifiers in subdirectories were
     # invisible. The direction of that error is toward FALSE FAILURES here (a
     # spot-check name that moved into a package would report "NOT found" while
     # existing), so it was latent rather than live — but a name-resolution check
@@ -877,7 +877,7 @@ def check_lean_docstring_refs_resolve() -> CheckResult:
 # CHECK: every project .lean is IN THE BUILD GRAPH
 #
 # The gap this closes, measured 2026-08-05 (PR-review pass 3):
-#   2,039-as-of-2026-08-04 module files on disk, 2,011 reachable from `lean/SKEFTHawking.lean`,
+#   ~2,040 module files on disk, 2,011 reachable from `lean/SKEFTHawking.lean`,
 #   28 not. `lakefile.toml` declares the library with NO `globs`, so Lake builds
 #   the root plus its transitive imports only. A file nothing imports is built by
 #   nothing, indexed by nothing, counted by nothing, and guarded by nothing.

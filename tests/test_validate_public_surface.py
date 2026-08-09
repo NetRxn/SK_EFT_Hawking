@@ -235,7 +235,7 @@ class TestExternalSurface:
         to the test suite. A module-level constant — a compiled regex, a pattern
         list — sits above its check separated by a blank line, so a banner-walk that
         stops at the first non-comment line leaves it behind. The module still
-        imports and `--list` still shows 59 checks; the check raises `NameError`
+        imports and `--list` still shows every registered check (79 today); the check raises `NameError`
         only when RUN, and `run_checks` converts that into
         `CheckResult(passed=False, error=...)` rather than a crash.
 

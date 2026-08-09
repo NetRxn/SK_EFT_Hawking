@@ -189,6 +189,41 @@ class TestCoverageFloor:
             f"exists to make that visible rather than green.")
 
 
+class TestACrashedCheckIsUNMEASURED:
+    """⚠️ `run_checks`' exception handler sets `measured=False`, and NOTHING
+    tested it.
+
+    Deleting that keyword reverts a crashed check to counting as a full
+    measurement, which defeats the `--ci` coverage floor — the exact defect the
+    handler's own comment says it exists to fix. Measured: with the keyword
+    removed, 185 tests across the nine plausible files stayed green.
+    `tests/test_cannot_measure_baseline.py` is the closest guard and it is an AST
+    scan of `validation/checks/*.py` return statements, so it never reaches
+    `run_checks` at all; the only other caller in the suite runs the real registry,
+    where nothing crashes."""
+
+    def test_a_crashing_check_is_UNMEASURED_not_merely_failed(self, monkeypatch):
+        import validate as _v
+
+        def _boom():
+            raise RuntimeError("seeded crash")
+
+        spec = _v.CheckSpec("boom", "seeded", _boom)
+        monkeypatch.setattr(_v, "_CHECKS", [spec])
+        r = _v.run_checks()["boom"]
+        assert r.passed is False, "a crash must not pass"
+        assert r.measured is False, (
+            "a check that raised measured nothing; counting it toward the "
+            "coverage floor is what the floor exists to prevent")
+
+    def test_a_healthy_check_stays_MEASURED(self, monkeypatch):
+        """The silent direction — otherwise `measured=False` everywhere passes."""
+        import validate as _v
+        spec = _v.CheckSpec("fine", "seeded", lambda: _v.CheckResult(passed=True))
+        monkeypatch.setattr(_v, "_CHECKS", [spec])
+        assert _v.run_checks()["fine"].measured is True
+
+
 class TestCiIsNotStrict:
 
     def test_ci_does_not_imply_strict(self, tiny_registry, monkeypatch):

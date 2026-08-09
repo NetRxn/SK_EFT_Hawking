@@ -15,8 +15,9 @@ so the whole chain up to `AGP/Threshold.lean` proves statements about a sequence
 that is DEFINED to satisfy the recursion. Nothing connected an actual failure
 probability to `A * ε^2`.
 
-Measured 2026-08-09: `agp_threshold_steane`'s dependency closure is 33
-declarations (21 author-written after autogen filtering) and reaches none of
+Measured 2026-08-09 via `bundle_closure.compute_closure` — the canonical
+resolver, not a hand-rolled walk: `agp_threshold_steane`'s dependency closure
+walks 22 declarations, 21 of them author-written, and reaches none of
 `ExRec`, `Malignant`, `NoiseModel`, `NoiseModelMT` or `Chernoff`. (The 27 this
 comment carried until 2026-08-09 was the closure of a DIFFERENTLY NAMED theorem,
 `FaultTolerance.agp_threshold_steane_bound` in `Counting.lean`. The qualitative

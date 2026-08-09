@@ -20,9 +20,12 @@ the split is ~493 moved / ~586 remaining. Same method as the three Phase-2 split
 (`lean_substrate`/`lean_toolchain`, `papers_prose`/`prose_lean_refs`,
 `bundles_readiness`/`reviews`) — seam first, size second.
 
-⚠️ NOTE ON SIZE AS A CRITERION. 1,079 was not an outlier: `citations` (965) and
-`bundles_readiness` (904) sit in the same band. This split is justified by
-COHESION, not by line count alone; the reduction is a consequence.
+⚠️ NOTE ON SIZE AS A CRITERION. 1,079 was not an outlier *when this split ran* —
+`citations` and `bundles_readiness` sat in the same band. Both have since grown,
+and `bundles_readiness` is now the corpus's largest check module at roughly twice
+the line count this one was split at, so the sentence's original argument no longer
+holds in its own numbers; it is a candidate for the same treatment. This split is
+justified by COHESION, not by line count alone; the reduction is a consequence.
 
 FIVE OF THIS MODULE'S NAMES ARE IN THE FROZEN EXTERNAL SURFACE
 ---------------------------------------------------------------

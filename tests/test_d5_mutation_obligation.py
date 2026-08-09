@@ -9,7 +9,7 @@ ADR-009 §Context names three problems and says plainly which one did the damage
 D5 is the answer to (3): *"a new or modified check MUST ship with a test
 demonstrating BOTH directions — it FAILS on a seeded defect, and it stays SILENT
 on correct data."* It shipped as **prose**. Nothing enforced it, so the suite grew
-to 59 checks with, by the map's own count, ten that would fail on a seeded defect.
+to 59 checks (79 today) with, by the map's own count, ten that would fail on a seeded defect.
 
 WHY THIS IS A CURATED REGISTRY AND NOT A SCANNER
 ------------------------------------------------
@@ -366,17 +366,27 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
     ),
     "bundle_source_freshness": (
         "test_d5_freshness.py",
-        "⚠️ RE-RECORDED 2026-08-09: this entry read 'the --strict WARN->FAIL promotion "
-        "caught; that is the ONLY behaviour a bug could silently disable', which was "
-        "true until TODO-D27 gave the check a second, independent leg. The trigger's "
-        "verdict is now mutation-covered in BOTH directions (in `test_bundle_lean_freshness_trigger.py`) (a module committed after "
-        "last_lift is stale; one committed before is not) — verified by replacing the "
-        "`t > last_lift` predicate with `False`, which previously left all 80 tests in "
-        "the two files GREEN. Plus: each of the three Lean-leg inputs failing reports "
-        "UNMEASURED for every bundle and fabricates NO staleness number; a renamed-but-"
-        "uncommitted module is seen as dirty; and the --strict promotion is unchanged. "
-        "The file's own warning at the top applies to itself — a recorded mutation set "
-        "describes the code as it was when written",
+        "⚠️ RE-RECORDED TWICE, and the FIRST re-recording was FALSE — which is the "
+        "point of the header's warning that entries decay. It claimed the verdict was "
+        "'mutation-covered in BOTH directions ... verified by replacing the `t > "
+        "last_lift` predicate with False'. It was not: those tests called "
+        "`_lean_module_change_times` (which returns TIMES, not a verdict) and then "
+        "recomputed `t > last_lift` in the test body, so they asserted their own "
+        "arithmetic and stayed green under exactly that mutation. The only test that "
+        "fired was `.lake`-gated and SKIPS in the environment where the blindness was "
+        "first observed. A note asserting a mutation was run is what stops the next "
+        "reviewer running it. "
+        "CORRECTED 2026-08-09: BOTH verdicts are now driven through the real `check()` "
+        "over a synthetic single-bundle corpus needing no Lean build "
+        "(`test_bundle_lean_freshness_trigger.py`: `TestTheSourceStalenessVerdictItself`, "
+        "`TestTheLeanStalenessVerdictItself`). Re-verified by mutation: `mt > last_lift` "
+        "-> False fails 2 tests; the Lean predicate -> False fails 3. The SOURCE leg — "
+        "CHECK 22's original and primary job — had been entirely unpinned and nobody "
+        "had looked; that mutation left all 90 tests across both files green. Also "
+        "covered: each Lean-leg input failing reports UNMEASURED and fabricates NO "
+        "number; an unreadable append_log reports UNMEASURED rather than a shrunken "
+        "population; a source-fresh + Lean-stale bundle still writes freshness_stale=true; "
+        "a dark Lean leg writes NO flag at all; and the --strict promotion is unchanged",
     ),
     "inventory_index_autogen_fresh": (
         "test_d5_freshness.py",

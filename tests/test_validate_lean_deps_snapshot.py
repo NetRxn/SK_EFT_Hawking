@@ -95,7 +95,7 @@ class TestEnsureLeanDepsFresh:
 
         Each call site keeps its OWN missing/stale verdict (ADR-009 H4). This
         helper is a best-effort freshening, not a gate — if it raised, one
-        unavailable toolchain would take down all 59 checks.
+        unavailable toolchain would take down every check in the suite (79 today).
         """
         import extract_lean_deps as eld
 

@@ -912,7 +912,7 @@ def check_quantum_network() -> CheckResult:
     if qn_dir.exists():
         names = set()
         # rglob for the same reason as every other Lean scan (audit QI-01).
-        # `QuantumNetwork/` is flat today (104 files, no subdirectories), so this is
+        # `QuantumNetwork/` is flat today (no subdirectories), so this is
         # a no-op right now — but this check FAILS on a theorem it cannot find, so
         # the day someone adds a package here the non-recursive form would report
         # real theorems missing. Found by the structural leg of

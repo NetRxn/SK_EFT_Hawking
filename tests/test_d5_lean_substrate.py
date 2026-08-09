@@ -137,7 +137,7 @@ class TestFormulasToTheorems:
 
     def test_a_theorem_in_a_subdirectory_is_found(self, tmp_path, monkeypatch):
         """QI-01 REGRESSION GUARD, specific to this check. Under the pre-2026-08-04
-        non-recursive `glob('*.lean')` this check read 1,373 of 2,039 files, so a
+        non-recursive `glob('*.lean')` this check read 1,373 of ~2,040 files, so a
         mapped theorem living in a package read as absent while existing — a false
         FAILURE rather than a false pass, but the resolution set was two-thirds of
         the library.

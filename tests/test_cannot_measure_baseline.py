@@ -14,7 +14,7 @@ Item 4 was filed as "add an `UNEVALUATED` result state". That remedy is DECLINED
 third state is a contract break. What CAN be closed is the *generator*: stop the
 population growing silently.
 
-MEASURED 2026-08-04 across the 59 checks — 60 cannot-measure return sites:
+MEASURED 2026-08-04 across the 59 checks then registered (79 today) — 60 cannot-measure return sites:
 **35 FAIL (58%, already converted) and 25 PASS**, the latter collapsing to the
 22 (check, kind) pairs frozen below.
 

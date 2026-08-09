@@ -96,7 +96,7 @@ def check_formulas_to_theorems() -> CheckResult:
     all_lean_names = set(ARISTOTLE_THEOREMS.keys()) - _stale_keys
     if lean_dir.exists():
         # ⚠️ rglob, NOT glob (fixed 2026-08-04, audit finding QI-01). `glob` read
-        # 1,373 of 2,039-as-of-2026-08-04 files, so any mapped theorem that lives in a package
+        # 1,373 of ~2,040 files, so any mapped theorem that lives in a package
         # would be reported "Not in Lean source or ARISTOTLE_THEOREMS" while
         # existing. A false failure rather than a false pass, but the set this
         # check resolves against was two-thirds of the library.

@@ -53,6 +53,17 @@ class Detail:
     passed: bool
     message: str = ""
     warning: bool = False  # True = passed but with advisory warning (⚠)
+    #: False = this sub-finding MEASURED NOTHING. Additive and default-True, so
+    #: every existing construction keeps its meaning.
+    #:
+    #: ⚠️ `CheckResult.measured` alone was not enough. A check whose sub-findings
+    #: each said "the Lean half did not run" still returned `measured=True`,
+    #: because the wrapper built its verdict from `passed` and dropped the rest —
+    #: so a bundle whose freshness could not be established was byte-identical to
+    #: a fresh one at every consumer, including the `--ci` coverage floor. Three
+    #: reviewers found it independently. A cannot-measure branch sets this False
+    #: and the wrapper derives the check's `measured` from its details.
+    measured: bool = True
 
 
 @dataclass
@@ -60,7 +71,7 @@ class CheckResult:
     """Result of one top-level check.
 
     NOTE `passed` is a bare `bool` with no third state. Measured 2026-08-04 across
-    the 59 checks: **60 cannot-measure return sites — 35 FAIL and 25 PASS**, the
+    the 59 checks then registered (79 today): **60 cannot-measure return sites — 35 FAIL and 25 PASS**, the
     latter collapsing to **22 (check, kind) pairs**. (This docstring said "~20
     sites" — audit QI-17; the figure is now computed, not estimated.)
 

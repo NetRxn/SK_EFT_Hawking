@@ -459,13 +459,15 @@ the ledger's earlier unqualified "all seven VERIFIED".
   V9 (END_TO_END_MAP §9) and V10 (VALIDATION_ARCHITECTURE remainder) closed 25 units.
 - **It is an UPPER bound.** A compound sentence counts once in the denominator but owes one row
   per clause — the granularity failure this ledger exists to prevent. True coverage is lower.
-- **The queue:** `CHECK_AUTHORING_GUIDE.md` 14 uncovered · `END_TO_END_MAP.md` 13 — the last
-  two. **V9–V18 closed 120 units.** Fully enumerated (five of seven):
-  `SURFACE_INVENTORY.md`, `VALIDATION_ARCHITECTURE.md`, `README.md`,
-  `VALIDATION_GATE_TOPOLOGY.md`, `QA_QI_INFRASTRUCTURE_MAP.md`.
-- ⚠️ **`END_TO_END_MAP.md` is the least verified, not the cleanest.** It records zero
-  corrections over 34 atoms, which reads as health; it is 43% coverage of a document no other
-  mechanism checks.
+- **The queue is CLOSED.** ⚠️ These two bullets described superseded state for two days,
+  contradicting this entry's own corrected heading twelve lines above — the same
+  correction-landed-at-one-site defect as D15 and D36. As of V9–V18 all six prose documents
+  read 100% in the ledger's §Final state table: `CHECK_AUTHORING_GUIDE.md` 54/54 and
+  `END_TO_END_MAP.md` 80/80 were the last two, and both are now fully enumerated.
+- ⚠️ **`END_TO_END_MAP.md` was the least verified, not the cleanest** — it recorded zero
+  corrections over 34 atoms, which reads as health, at 43% coverage of a document no other
+  mechanism checks. It is now at 80/80, and the caveat that survives is the general one: the
+  denominator counts a compound sentence once, so unit coverage overstates clause coverage.
 
 **Why this is not simply "finish the list."** V8 measured that a correction is as error-prone
 as the prose it replaces: 5 of its 35 atoms were false, 4 of them written by the pass that had
@@ -933,14 +935,33 @@ violated for the fifth time in this workstream.
 > "Sixteen sibling bundles" and carried "17-bundle" in five more places including a section
 > title and a bibitem; I1 said "seventeen publication targets" in four; D3, D4 and I3 each
 > carried a "14-bundle" bibitem; and I1 quoted "thirty-three registered checks" against a live
-> seventy-nine. **Every one is now fixed by REMOVING the census figure**, not by updating it —
-> the architecture rule is that a count belongs in the derived inventory, and a roster number
-> written into prose is stale the moment the roster moves. That is the third time this branch
-> has had to relearn it.
+> seventy-nine.
 >
-> **The instrument that let it through:** the original scan keyed on the six F sites the entry
-> itself enumerated. Re-scanning the corpus for the *pattern* rather than the *known list* is
-> what found the other nine. A finding's own site list is a claim like any other.
+> ⚠️ **AND THAT RE-CLOSURE WAS ITSELF WRONG IN TWO DIRECTIONS — corrected 2026-08-09 after a
+> third pass.** It claimed "every one is now fixed by REMOVING the census figure, not by
+> updating it". Measured:
+>
+> * **A SIXTEENTH SITE WAS STILL LIVE.** `papers/I1/paper_draft.tex:1067` read
+>   "seventy-plus-source to **seventeen**-publication consolidation". The widened scan keyed on
+>   the noun-phrase forms (`seventeen publication targets`) and never matched the hyphenated
+>   compound-adjective form — which is *exactly* the failure the paragraph below diagnoses. The
+>   entry violated its own stated lesson in the act of recording it. Now rewritten to
+>   "many-source-to-few-publication", which carries the meaning and no number.
+> * **F WAS FIXED BY UPDATING, NOT REMOVING.** Nine census figures remain hard-coded in
+>   `papers/F/paper_draft.tex` (`:50`, `:136`, `:2230` "twenty sibling threads"; `:514`, `:2017`,
+>   `:2020` "21 bundles"; `:1742` "21-bundle architecture"; `:1745`, `:2050` "20 siblings").
+>   **They are being KEPT deliberately, and the entry's blanket claim was the error.** F is the
+>   flagship whose subject *is* the bundle architecture: "we consolidate the twenty sibling
+>   threads" is the paper's thesis sentence, not incidental bookkeeping, and removing the number
+>   would remove the claim. The no-count-in-narrative rule is machine-enforced over
+>   `docs/architecture/*`, not over paper prose, and F's roster figures are covered instead by
+>   the Stage-10 claims review. What was wrong was asserting a remedy that had not been applied.
+>
+> **The instrument that let it through, twice:** the original scan keyed on the six F sites the
+> entry itself enumerated; the second keyed on the noun-phrase spellings. Re-scanning the corpus
+> for the *pattern* rather than the *known list* is what found the other nine — and scanning for
+> the *claim* rather than the *phrasing* is what found the sixteenth. A finding's own site list
+> is a claim like any other, and so is its account of what it fixed.
 
 > **All six roster sites corrected** (abstract, §1.2, §9.4, §11.1, §11.2, §12.3): sixteen siblings →
 > twenty, seventeenth bundle → twenty-first, Tier 1 `D1--D8` → `D1--D12`, and D9–D12 are now named
@@ -2175,15 +2196,22 @@ only thing separating the two claims in print.
 > **1. Seventy-four of the 307 were never homeable.** The count included **autogen**
 > declarations — `noConfusionType`, `inj`, projection lemmas — which `bundle_closure` is
 > *designed* never to reach (`compute_closure` takes the autogen set precisely to skip them).
-> The entry's per-module figures decompose exactly: `Basic` 93 = 63 + 30 autogen,
-> `StabilizerCode` 40 = 32 + 8, `NoiseModelMT` 33 = 29 + 4, `Malignant` 22 = 18 + 4,
-> `NoiseModel` 21 = 17 + 4, and `Counting` 11 / `Chernoff` 9 unchanged because they have none.
-> **The real figure is 233 of 333 non-autogen declarations.**
+> **The real figure is 154 un-homed of 254 non-autogen declarations**, under
+> `validate_helpers.autogen_index` — the canonical filter this entry's own ⚠️ block below
+> declares mandatory. Per module (total = author-written + autogen):
+> `Basic` 95 = 34 + 61, `StabilizerCode` 43 = 25 + 18, `NoiseModelMT` 33 = 24 + 9,
+> `Malignant` 22 = 13 + 9, `NoiseModel` 21 = 12 + 9, `Counting` 16 and `Chernoff` 9 with none.
+>
+> ⚠️ **This paragraph read "233 of 333" — the RETRACTED raw-field figure — for two days after
+> the block below retracted it.** Same defect as D15 and D4: the correction landed at the site
+> the finding named and not at the second site carrying the same claim. Re-measured
+> 2026-08-09: 154/254 canonical, 233/333 raw. Three per-module rows had also drifted in raw
+> units (`Basic` 93→95, `StabilizerCode` 40→43, `Counting` 11→16).
 >
 > **2. The "TODO-D35 wearing a different number" diagnosis is refuted.** D35's composition
 > landed; declaring its four capstones as D6 apexes homed **7** declarations (240 → 233), not
-> two hundred. The reason is visible in the population: **127 of the 233 are used by nothing at
-> all**, and 93 of those are *theorems*. A leaf theorem is not waiting for a consumer — it is
+> two hundred. The reason is visible in the population: **83 of the 154 are used by nothing at
+> all**, and 61 of those are *theorems*. A leaf theorem is not waiting for a consumer — it is
 > homed by a bundle claiming it, or not at all.
 >
 > **3. The number was never anomalous.** Corpus-wide, **26,985 of 32,778 non-autogen
@@ -2208,7 +2236,7 @@ only thing separating the two claims in print.
 > D6 §7 now makes in print, so the closure grew because the paper's claims grew — the direction
 > the entry's own warning permits.
 >
-> **Not built, deliberately:** a corpus-wide un-homed ratchet. At 83.8% the metric has no
+> **Not built, deliberately:** a corpus-wide un-homed ratchet. At 82.3% the metric has no
 > defect to guard, and a ratchet over a non-defect is instrument inflation of the kind
 > `bundle_lean_module_coverage`'s own docstring warns about.
 

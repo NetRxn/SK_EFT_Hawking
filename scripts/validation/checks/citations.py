@@ -208,10 +208,14 @@ def check_parameter_provenance() -> CheckResult:
     else:
         details.append(Detail(
             "value_coverage", True,
-            f"{compared} of {len(PARAMETER_PROVENANCE)} provenance values compared "
-            f"against code; {len(unresolvable)} have no code counterpart "
-            f"(at or under the frozen ceiling {_UNRES_CEIL} — inherited debt, "
-            f"repair is ADR-010 scope)",
+            # ⚠️ The RATCHETED population leads the message. That is the parsing
+            # convention `tests/test_ratchets_have_zero_headroom.py` relies on to
+            # measure headroom without re-implementing any check's counting; this
+            # message led with `compared` instead and read as 119 of slack.
+            f"{len(unresolvable)} of {len(PARAMETER_PROVENANCE)} provenance entries "
+            f"have no comparable code value (at or under the frozen ceiling "
+            f"{_UNRES_CEIL} — inherited debt, repair is ADR-010 scope); "
+            f"{compared} value(s) compared against code",
             warning=bool(unresolvable)))
 
     if null_values:
