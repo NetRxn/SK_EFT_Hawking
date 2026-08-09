@@ -1368,7 +1368,46 @@ that set. Small, and it strengthens the Letter rather than resizing any claim.
 the other three declared pairs; a positioning gap in a splash is a pattern candidate, not
 necessarily a one-off. Not yet measured for them.
 
-### D35. Derive the AGP recursion instead of instantiating it at a pinned constant — OPEN
+### D35. Derive the AGP recursion instead of instantiating it at a pinned constant — ⚠️ HALF CLOSED 2026-08-09
+
+> **The single-level step is now derived. The multi-level composition is not.** Stated this way
+> because the difference is exactly what D6 §7 may claim.
+>
+> **✅ Closed: the union bound.** `lean/SKEFTHawking/FaultTolerance/MalignantUnionBound.lean`
+> (new, kernel-pure, axioms exactly `{propext, Classical.choice, Quot.sound}`):
+>
+> * `malignant_pair_indep_le` — pairwise independence plus a per-location rate `μ(fail i) ≤ ε`
+>   gives `μ(fail i ∩ fail j) ≤ ε²`. **The only place independence is used**, deliberately
+>   isolated so the two ingredients stay separable.
+> * `measure_malignant_union_le` — the union bound proper, `μ(⋃ pairs) ≤ |F| · ε²`, using no
+>   independence at all.
+> * `exRecFailure_le_agpRecursionStep` — the composition.
+> * `exRecFailureProb_le_exRecFailureBound` — the bridge to `ExRec.lean`'s vocabulary.
+>
+> ⚠️ **That bridge is the point.** `ExRec.exRecFailureBound A ε := A * ε^2` shipped with a
+> docstring calling it *"the leading-order Chernoff-like bound from union bound on malignant
+> pairs"*, and **nothing proved any probability satisfied it**. `ExRec` carries a location COUNT,
+> `MalignantPairAttestation` a malignant-pair COUNT, `LocalStochasticNoise` a rate and a count;
+> the entire layer was combinatorial bookkeeping with no measure anywhere. That is *why* the
+> threshold theorem's closure never reached it: there was nothing probabilistic to reach.
+>
+> **⚠️ OPEN: the levels are not composed, and the threshold theorem still does not consume any of
+> this.** Verified structurally: nothing imports `MalignantUnionBound` except the root aggregate,
+> so `agp_threshold_steane` cannot reach it. `agpLevelSequence` in `Concatenation.lean` remains
+> *defined* by `ε_{L+1} = A·ε_L²` rather than derived.
+>
+> **What closing it needs:** a model of a level-`(L+1)` extended rectangle as built from level-`L`
+> rectangles, so the single-level bound can be applied inductively and `agp_double_exp_bound`'s
+> recursion *hypothesis* (it already takes the recursion as a hypothesis, not a definition) is
+> discharged for a probabilistically-defined sequence. That is a construction wave, not a
+> connection wave, and it is the remaining half.
+>
+> **Also still open, and separate:** `A_CNOT = 35,235` stays pinned to AGP §8.3 eq. (36).
+> Deriving it means enumerating malignant pairs over a concrete circuit.
+>
+> D6 §7 now states both gaps explicitly. **Its scope paragraphs are load-bearing and must not be
+> trimmed** until the composition lands.
+
 
 D6 §7's threshold theorem instantiates ε_{L+1} ≤ A ε_L² at `A_CNOT = 35,235`, a literal pinned to
 AGP 2006 §8.3 eq. (36). The step **to** that recursion, from the extended-rectangle structure

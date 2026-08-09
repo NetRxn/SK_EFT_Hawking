@@ -107,6 +107,21 @@
       "name": "SKEFTHawking.FaultTolerance.steaneMalignancyCounts_A_CNOT_le_choose_two",
       "claims": "\u00a77 Eq. (acnot) well-formedness: A_CNOT <= binom(M,2), so the malignant-pair count cannot exceed the pairs available to it",
       "declared": "2026-08-09"
+    },
+    {
+      "name": "SKEFTHawking.FaultTolerance.exRecFailureProb_le_exRecFailureBound",
+      "claims": "\u00a77 Eq. (union-bound) closure: an ex-Rec's failure probability really is at most A*eps^2, so exRecFailureBound stops being a definition nothing satisfies",
+      "declared": "2026-08-09"
+    },
+    {
+      "name": "SKEFTHawking.FaultTolerance.measure_malignant_union_le",
+      "claims": "\u00a77 the union bound proper, over the malignant-pair set, using no independence",
+      "declared": "2026-08-09"
+    },
+    {
+      "name": "SKEFTHawking.FaultTolerance.malignant_pair_indep_le",
+      "claims": "\u00a77 the single place independence enters: pairwise independence + per-location rate eps gives joint failure <= eps^2",
+      "declared": "2026-08-09"
     }
   ],
   "length_target": {
@@ -115,6 +130,6 @@
     "ceiling": 60,
     "source": "PAPER_STRATEGY.md \u00a76"
   },
-  "compiled_pages": 7,
+  "compiled_pages": 8,
   "compile_gate_ok": true
 }

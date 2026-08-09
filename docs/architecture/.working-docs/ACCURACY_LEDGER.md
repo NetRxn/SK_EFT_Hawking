@@ -2427,3 +2427,40 @@ theorems it cites.
 repair moved D6 from *holding another bundle's paper* to *holding its own and being short*, which
 is a better failure and an honest one. Filling it further is TODO-D35, and D35 is a proof wave, not
 a writing wave.
+
+---
+
+## V64 — TODO-D35: the ex-Rec layer contained no probability at all — 5 atoms
+
+Scope: derive the AGP recursion rather than instantiate it at a pinned constant. First Lean wave of
+this stretch; MCP-first loop per the project's Lean conventions.
+
+| # | Proposition | Decider | Verbatim result |
+|---|---|---|---|
+| 1 | D35 is a connection wave: the modules exist and need wiring | read `ExRec`, `NoiseModel`, `Chernoff`, `Concatenation` in full | **NO — it is a construction wave.** `ExRec` is `{M : ℕ, M_pos}`, a location COUNT. `MalignantPairAttestation` is `{A : ℕ, A_le_choose_two}`, a COUNT. `LocalStochasticNoise` is a rate and a count. **No measure appears anywhere in the layer** |
+| 2 | `pairFailureBound` and `agpRecursionStep` are proved bounds | read their definitions | **Both are `def`s.** `Chernoff.lean`'s own docstring: *"we abstract this as a real-valued upper-bound function ... The concrete MeasureTheory instantiation is deferred"* |
+| 3 | `exRecFailureBound A ε := A * ε^2` is a bound on something | grep for any theorem relating it to a measure | **Nothing.** Its docstring calls it *"the leading-order Chernoff-like bound from union bound on malignant pairs"* and no probability was ever shown to satisfy it |
+| 4 | Mathlib supplies the pieces | leansearch | `measure_biUnion_finset_le` and `IndepSet.measure_inter_eq_mul`, both exact fits. The module compiled **first pass** with one deprecation, closed by `gcongr` |
+| 5 | The new module closes D35 | structural check of the import graph | **Half.** Nothing imports `MalignantUnionBound` except the root aggregate, so `agp_threshold_steane` still cannot reach it. `agpLevelSequence` remains DEFINED by the recursion |
+
+**⚠️ ATOM 1 IS THE FINDING, AND IT INVERTS THE TODO I WROTE YESTERDAY.** TODO-D35 said *"the modules
+it would need already exist and are kernel-clean — this is a connection wave, not a construction
+wave."* **That was wrong**, and it was wrong because I had read the module *headers*, which describe
+extended rectangles and local stochastic noise in physical language, rather than the *declarations*,
+which are three natural numbers and two inequalities between them. The layer models the AGP argument's
+BOOKKEEPING, not its probability. That is the real reason the threshold theorem's closure never
+reached it: **there was nothing probabilistic there to reach.**
+
+This is `feedback_verify_substrate_strength_not_docstrings` met from a new direction — I judged a
+substrate's strength from its prose and filed a scoping claim on that basis.
+
+**What shipped.** `MalignantUnionBound.lean`, kernel-pure (`{propext, Classical.choice, Quot.sound}`):
+independence isolated in one lemma, the union bound proper in another using no independence, their
+composition, and `exRecFailureProb_le_exRecFailureBound` bridging to `ExRec`'s vocabulary. The bridge
+theorem's closure reaches `ExRec`, so the probabilistic layer now genuinely touches the structure.
+
+**NOT-AN-ASSERTION.** This does not make the threshold theorem's proof depend on probability. The
+levels are uncomposed: nothing yet models a level-`(L+1)` rectangle as built from level-`L`
+rectangles. D6 §7 says so in the manuscript, in the paragraph headed *"What remains, stated because
+it is the result's real boundary."* **The single-level justification sits beside the threshold
+theorem, not beneath it**, and writing it up any other way would repeat the overclaim V63 caught.

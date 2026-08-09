@@ -596,20 +596,45 @@ abstract local stochastic model and its joint-failure bounds; and
 \verb|Chernoff.lean| proves the pair-failure union bound
 $\binom{n}{2}\varepsilon^2$.
 
-\paragraph{The gap between them, stated because it is the result's real
-boundary.} The headline theorem's dependency closure is 27 declarations and
-reaches \verb|SteaneCode|, \verb|StabilizerCode|, \verb|Counting|,
-\verb|Concatenation|, \verb|DoubleExp| and \verb|Basic|. It does \emph{not}
-reach \verb|ExRec|, \verb|Malignant|, \verb|NoiseModel|, \verb|NoiseModelMT| or
-\verb|Chernoff|. What is machine-checked is therefore the \emph{consequence} of
-the AGP recursion, not its derivation: $A_{\rm CNOT}$ enters
-Eq.~\eqref{eq:agp-recursion} as a literal pinned to
-Ref.~\cite{AGP2006}~\S8.3, and the step from the extended-rectangle structure
-under local stochastic noise \emph{to} that recursion is carried by the primary
-source rather than by this development. Closing that step, so that
-Eq.~\eqref{eq:agp-recursion} is derived from Eq.~\eqref{eq:exrec} and the noise
-model rather than assumed at a pinned constant, is the natural next wave and
-the modules it needs are already in place.
+\paragraph{The single-level step, derived.} The union bound the recursion rests
+on is now proved rather than assumed. \verb|MalignantUnionBound.lean| establishes,
+for a probability measure $\mu$ and a malignant-pair set $F$,
+\begin{equation}
+  \mu\!\left(\bigcup_{(i,j)\in F} \mathrm{fail}_i \cap \mathrm{fail}_j\right)
+    \;\le\; |F| \cdot \varepsilon^2,
+  \label{eq:union-bound}
+\end{equation}
+from two separated ingredients: \verb|malignant_pair_indep_le|, which turns
+pairwise independence and a per-location rate $\mu(\mathrm{fail}_i) \le
+\varepsilon$ into $\mu(\mathrm{fail}_i \cap \mathrm{fail}_j) \le \varepsilon^2$,
+and \verb|measure_malignant_union_le|, which is the union bound proper and uses
+no independence at all. Independence enters in exactly one place, which is where
+the local stochastic noise model's content sits.
+
+\verb|exRecFailureProb_le_exRecFailureBound| then closes the loop to
+\textsection\ref{sec:threshold}'s vocabulary: for an ex-Rec whose malignant-pair
+set has cardinality $A$, the probability that it is bad really is at most
+$A\,\varepsilon^2$. Before this, \verb|exRecFailureBound| was a definition
+carrying a docstring that called it a union bound; nothing proved that any
+probability satisfied it.
+
+\paragraph{What remains, stated because it is the result's real boundary.} Two
+gaps survive and neither is implicit in the Lean.
+
+\emph{The levels are not yet composed.} Eq.~\eqref{eq:union-bound} is a
+single-level statement. \verb|agpLevelSequence| in \verb|Concatenation.lean| is
+still \emph{defined} by Eq.~\eqref{eq:agp-recursion} rather than derived, and the
+headline theorem's dependency closure does not reach the probabilistic layer:
+nothing yet models a level-$(L{+}1)$ extended rectangle as built from level-$L$
+rectangles, which is what would let the single-level bound be applied inductively.
+So the threshold theorem still proves the \emph{consequence} of the recursion
+from the recursion, with the single-level justification now available beside it
+rather than beneath it.
+
+\emph{The count is still pinned.} $A_{\rm CNOT} = 35\,235$ enters
+Eq.~\eqref{eq:acnot} as a literal from Ref.~\cite{AGP2006}~\S8.3. Deriving it
+requires enumerating malignant pairs over a concrete circuit, which is a
+combinatorial undertaking of a different kind and is not attempted here.
 \subsection{The threshold}
 
 \verb|AGP/Threshold.lean| composes the chain. The threshold is the inverse of
