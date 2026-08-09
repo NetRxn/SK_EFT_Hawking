@@ -1410,7 +1410,34 @@ curating one is the failure mode TODO-D30 describes. The fix is a one-line rewor
 owed before either bundle records a Stage-13 green. Filed rather than done here because editing a
 bundle draft is out of scope for a validation-layer change.
 
-### D34. L1 cites none of the 2017 GW170817-constraint literature — OPEN, blocks L1 submission
+### D34. L1 cites none of the 2017 GW170817-constraint literature — ✅ DONE 2026-08-09
+
+> **Closed, but the finding's framing was half wrong and the sibling-check refuted its own
+> hypothesis.** See ledger V67.
+>
+> **What was true:** L1 cited `Abbott2017GW170817` (the observation) and none of the four
+> back-to-back PRLs that *used* the bound. Fixed: all four added (Baker 251301, Creminelli-Vernizzi
+> 251302, Sakstein-Jain 251303, Ezquiaga-Zumalacarregui 251304), each verified against its arXiv
+> abstract page on 2026-08-09 with title, authors, journal ref and DOI confirmed, and each given a
+> real `.abstract.txt` primary-source cache. `citation_primary_sources_present` 368 → 372 cached.
+>
+> **What was NOT true: "10 bibitems" as a deficiency.** Measured across all 21 bundles, L1 sits
+> mid-pack at 2.6 citations per 100 lines, *above* D3, F, D8, D2 and D11, with **zero** uncited
+> bibitems. The sparse cluster is elsewhere (I1 0.5, D5 0.6, I2/I3 0.7, D7 0.9).
+>
+> **The sibling-splash hypothesis is REFUTED.** This TODO said a positioning gap in one splash is a
+> pattern candidate and told the fixer to check L3/D3, E1 and E2 first. Done: L3 3.1, E1 3.2, L2 3.3,
+> E2 2.8 per 100 lines — the splashes are among the *best*-cited bundles in the portfolio. L1's gap
+> was specific to it and to one literature, not structural to the splash idiom.
+>
+> **The positioning paragraph does more than cite.** It states the structural difference: every
+> theory the 2017 sweep reached has a Lagrangian from which a varying c_GW is *derived*, so the bound
+> lands on operator coefficients. The vestigial identification has none, so the bound fixes chi_vest
+> itself. That also explains why the sweep's escape routes (conformal rescaling, coefficient
+> compensation, Horndeski restriction) do not apply here. L1 compiles at 4 pages, still inside its
+> PRL charter.
+
+<details><summary>Original finding (2026-08-09 morning), retained</summary>
 
 Confirmed 2026-08-09 (the point the 2026-08-08 adjudication flagged as unverified and has now
 measured): `papers/L1/paper_draft.tex` carries **10 bibitems and zero** from the body of work that
@@ -1433,6 +1460,33 @@ that set. Small, and it strengthens the Letter rather than resizing any claim.
 ⚠️ **Check the sibling splashes for the same gap before fixing only L1.** L3/D3 and E1/E2+D1 are
 the other three declared pairs; a positioning gap in a splash is a pattern candidate, not
 necessarily a one-off. Not yet measured for them.
+
+</details>
+
+### D38. D5's bibliography is two-thirds dead — OPEN
+
+Measured 2026-08-09 while checking the sibling splashes for D34. `papers/D5/paper_draft.tex` has
+**27 `\bibitem` entries, 18 of whose keys never appear anywhere in the body text** — verified by
+whole-document substring search, not by regex (see V67 for why that distinction is load-bearing).
+
+    Berezhiani2015, BK2025, Volovik2006, KV2008, ADW2019, Diakonov2011, Wan2019, DESI2024,
+    Pretko2017, Glodkowski2024, VanWaerbeke2025, PlazaKraiselburd2025fR,
+    TyagiHaridasuBasak2025, LucianoPaliathanasisSaridakis2506, YoonGuha2023, Vergeles2025,
+    Lean4, Mathlib
+
+`D7` has the same defect at smaller scale (3 of 6). **LaTeX does not warn about an unused
+`\bibitem`** — only about the reverse — so nothing in the pipeline sees this today.
+
+**Why it matters beyond tidiness.** A bibliography is a claim of engagement. Eighteen entries the
+text never cites reads to a referee as either padding or, worse, as a draft whose prose was cut
+without its scholarship being revisited. Several of these (DESI2024, VanWaerbeke2025,
+TyagiHaridasuBasak2025) are recent observational-cosmology papers whose *presence* implies D5
+positions against current data.
+
+**Fix shape:** for each, either cite it where it belongs or drop it. Not mechanical — deciding which
+requires reading D5's argument. **Do not add a gate for this without going through §6a first**: the
+defect class is real but `citation_primary_sources_present` already walks cited keys, and the right
+move may be one more leg on an existing check rather than a new one.
 
 ### D35. Derive the AGP recursion instead of instantiating it at a pinned constant — ⚠️ HALF CLOSED 2026-08-09
 

@@ -3363,6 +3363,95 @@ CITATION_REGISTRY = {
                  'historical reasons in different paper drafts. Consolidate in '
                  'a future pass.',
     },
+    # ── The 2017 GW170817-constraint sweep ────────────────────────────────
+    # Four back-to-back PRLs (251301-251304, 18 Dec 2017) that turned the c_GW
+    # bound into eliminations of named modified-gravity classes. Added
+    # 2026-08-09 for bundle L1, whose falsification claim a referee will
+    # compare to this sweep and which previously cited none of it (TODO-D34).
+    # All four verified against arXiv abstract pages the same day.
+    'BakerBellini2017': {
+        'authors': 'Baker, T., Bellini, E., Ferreira, P. G., Lagos, M., Noller, J., Sawicki, I.',
+        'title': 'Strong constraints on cosmological gravity from GW170817 and GRB 170817A',
+        'journal': 'Phys. Rev. Lett.',
+        'volume': 119,
+        'page': '251301',
+        'year': 2017,
+        'doi': '10.1103/PhysRevLett.119.251301',
+        'arxiv': '1710.06394',
+        'doi_verified': True,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/BakerBellini2017.abstract.txt',
+        'used_in': ['papers/L1/paper_draft.tex'],
+        'provides': [
+            'scalar-tensor / vector-tensor elimination from the c_GW bound',
+            'independent graviton-mass bound in bimetric gravity',
+        ],
+        'notes': 'Sweep member covering the vector-tensor and bimetric classes. '
+                 'Cited by L1 to delimit what the 2017 sweep reached.',
+    },
+    'CreminelliVernizzi2017': {
+        'authors': 'Creminelli, P., Vernizzi, F.',
+        'title': 'Dark Energy after GW170817 and GRB170817A',
+        'journal': 'Phys. Rev. Lett.',
+        'volume': 119,
+        'page': '251302',
+        'year': 2017,
+        'doi': '10.1103/PhysRevLett.119.251302',
+        'arxiv': '1710.05877',
+        'doi_verified': True,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/CreminelliVernizzi2017.abstract.txt',
+        'used_in': ['papers/L1/paper_draft.tex'],
+        'provides': [
+            'no-tuning criterion: c_GW unaffected on nearby cosmological solutions',
+            'Horndeski / beyond-Horndeski / DHOST operator relations',
+        ],
+        'notes': 'Supplies the stability-under-nearby-solutions criterion that L1 '
+                 'contrasts with its own window-measure argument.',
+    },
+    'SaksteinJain2017': {
+        'authors': 'Sakstein, J., Jain, B.',
+        'title': 'Implications of the Neutron Star Merger GW170817 for '
+                 'Cosmological Scalar-Tensor Theories',
+        'journal': 'Phys. Rev. Lett.',
+        'volume': 119,
+        'page': '251303',
+        'year': 2017,
+        'doi': '10.1103/PhysRevLett.119.251303',
+        'arxiv': '1710.05893',
+        'doi_verified': True,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/SaksteinJain2017.abstract.txt',
+        'used_in': ['papers/L1/paper_draft.tex'],
+        'provides': [
+            'c_GW bound combined with cluster + M87 SEP constraints',
+            'quartic-galileon exclusion; disformal photon-coupling bound',
+        ],
+        'notes': 'The sweep member that combines the bound with independent '
+                 'astrophysical data rather than using it alone.',
+    },
+    'EzquiagaZumalacarregui2017': {
+        'authors': 'Ezquiaga, J. M., Zumalacarregui, M.',
+        'title': 'Dark Energy after GW170817: dead ends and the road ahead',
+        'journal': 'Phys. Rev. Lett.',
+        'volume': 119,
+        'page': '251304',
+        'year': 2017,
+        'doi': '10.1103/PhysRevLett.119.251304',
+        'arxiv': '1710.05901',
+        'doi_verified': True,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/EzquiagaZumalacarregui2017.abstract.txt',
+        'used_in': ['papers/L1/paper_draft.tex'],
+        'provides': [
+            'broadest sweep coverage: Einstein-aether, Horava, Generalized Proca, '
+            'TeVeS, MOND-like',
+            'GW-speed bound |c_g/c - 1| <= 5e-16',
+        ],
+        'notes': 'L1 leans on this paper\'s closing enumeration: every class it names '
+                 'has a Lagrangian predicting a varying c_g, which is exactly what the '
+                 'kinematic vestigial identification lacks.',
+    },
     'Abbott2017GW170817': {
         'authors': 'Abbott, B. P. et al. (LIGO+Virgo+EM partners)',
         'title': 'Gravitational Waves and Gamma-Rays from a Binary Neutron Star '

@@ -2589,3 +2589,55 @@ bilayer band is an estimate from a QCD analogy rather than a measurement, and th
 argument rests on the fluid being conformal — which the bilayer is not. What changed is that
 δ_diss is now derived through the canonical path with its assumptions written down, instead of
 being a dimensionally-inconsistent literal.
+
+---
+
+## V67 — TODO-D34 closed; its premise was half wrong and its own hypothesis refuted — 6 atoms, 4 INSTRUMENT FAILURES IN ONE PASS
+
+**A1 — the true half.** L1 cited the GW170817 *observation* and none of the four PRLs that used the
+bound (251301-251304). Fixed, with all four verified against arXiv on 2026-08-09 and given real
+`.abstract.txt` caches; the gate went 368 → 372 cached with no header disagreement, meaning title,
+authors, year, DOI and arXiv all match the registry.
+
+**A2 — the false half.** TODO-D34 framed *"10 bibitems"* as the deficiency. Measured across all 21
+bundles, L1 is **mid-pack** at 2.6 cites/100 lines, above D3, F, D8, D2 and D11, with zero uncited
+entries. Citation count was never L1's problem; one missing literature was.
+
+**A3 — the sibling hypothesis, refuted by its own check.** The TODO instructed the fixer to check
+the other three declared splashes first because *"a positioning gap in a splash is a pattern
+candidate."* Checked: L3 3.1, E1 3.2, L2 3.3, E2 2.8 — the splashes are among the **best**-cited
+bundles. The pattern hypothesis was wrong, and checking it cost one measurement.
+
+**A4 — FOUR instrument failures in a single measurement pass, each caught by the next.**
+1. Counted `\bibitem` → scored D8 and D10 at **zero**; they use `.bib` + bibtex.
+2. Line-based `\cite` regex → reported **5 uncited entries in L1**; the `\cite{...}` spans two lines
+   with a `%` continuation, so the regex stopped at the newline. **L1 has zero uncited entries.**
+3. Read `paper_draft.log` for undefined citations → reported **8 for D6** from a *stale log*; a
+   clean recompile shows zero.
+4. Same log sweep → reported 29/17/16 undefined for D8/D10/D11, which is what a single pdflatex pass
+   *always* reports for a bibtex bundle.
+> Every one of the four was an instrument error, and **not one changed a conclusion** — because each
+> was caught before it was written down as a finding. The one survivor (A5) survived because I
+> switched instruments to whole-document substring search rather than trusting a third regex.
+
+**A5 — the survivor, and it is bigger than what I set out to fix.** **D5 has 27 bibitems and 18
+whose key never appears in the body** (D7: 3 of 6). LaTeX warns about the reverse case only, so
+nothing in the pipeline sees it. Filed as TODO-D38, explicitly *without* a gate: §6a first.
+
+**A6 — a cost I incurred and am not hiding.** The E2 rewrite (V66) pushed that bundle from over its
+charter ceiling to further over: `bundle_manuscript_length` now reports E2 at 4 751 word-equivalents
+against a 3 750 ceiling. E2 was already over before this wave, and the added text is load-bearing
+(the ν derivation and the two-window correction), but the gap is wider because of me. Trimming E2 to
+its Tier-4 letter charter is now a harder job than it was this morning.
+
+> **The through-line, third in a row and now a rule rather than an observation.** V65: a disclosed
+> gap is still a gap. V66: a filed finding's scope is a measurement, and measurements decay. V67:
+> **when a measurement disagrees with the thing it measures, suspect the instrument first.** Four
+> times in one pass the instrument was wrong and the corpus was fine. The productive discipline is
+> not "measure more carefully" but "measure the same quantity two different ways, and only believe
+> the ones that agree" — the substring check and the LaTeX compiler agreed about L1 and about D6, so
+> those stand; the regex stood alone on D5, so it was re-run by a different method before being filed.
+
+**NOT-AN-ASSERTION.** L1 is not submittable. `readiness_submission_gate` remains red across the
+portfolio, the positioning paragraph has had no Stage-13 adversarial review, and the naturalness
+window it rests on is still project-adopted rather than derived, which the draft says in print.
