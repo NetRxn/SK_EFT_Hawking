@@ -2816,3 +2816,33 @@ are not the three that moved.
 **NOT-AN-ASSERTION.** Whether an en-dash is correct at a given site is a typographic judgement
 per site; what is measured here is that every *new* en-dash sits in a compound name, a numeric
 range, or a table's empty-cell slot, and none joins two clauses.
+
+---
+
+## V74 — PR-review round 2: which instruments lied, and my own fix that landed at one of two sites
+
+Six pr-review-toolkit agents ran against the round-1 fixes. The goal's rule — *record which
+instrument lied* — applied to my own work more than to theirs.
+
+| # | Claim | Instrument that produced it | Verdict |
+|---|---|---|---|
+| 1 | Round 1: "the `freshness_stale` writer is now gated on `lean_unmeasured is None`" | reading the diff at the site I edited | **FALSE at the second site.** Two branches write that field; I gated the sourceless one and left the source-measurable one keyed on `not stale_sources` alone. Measured with source mtimes forced old: **12 bundles written `freshness_stale=False` while the same run emitted `lean-stale`** — D2 48 of 85 modules, L2 42 of 45. Reproduced a second way by forcing the git map to `None`. Two reviewers found it independently. |
+| 2 | Round 1: "the staleness verdict is now mutation-covered in both directions" | a test that called `_lean_module_change_times` and recomputed `t > last_lift` **in the test body** | **FALSE.** A test that reimplements the predicate it pins cannot fail when the predicate is wrong; the mutation left it green. The one test that did fire was `.lake`-gated and SKIPS in exactly the environment where the blindness was first seen. |
+| 3 | Nobody had ever measured the **source** leg's verdict | — | **CONFIRMED UNPINNED.** Replacing `mt > last_lift` with `False` — which makes CHECK 22 structurally incapable of reporting a source-stale bundle, its original and primary job — left **all 90 tests across both files green**. |
+| 4 | `RATCHETED_CHECKS` covers the ratchets | `len(RATCHETED_CHECKS) >= 6` | **BLIND BY CONSTRUCTION.** A ratchet never added satisfies a count floor trivially. 14 `*_CEILING` constants exist; **two were named by no test at all** (`PROVENANCE_UNRESOLVABLE_CEILING`, `LEGACY_DRAFT_LATEX_BROKEN_CEILING`). Replaced by a reconciliation over the constants themselves. |
+| 5 | The serializer AST guard catches open-coded dumps | a walk over `.write_text(json.dumps(...))` only | **HALF-BLIND.** `with open(p,'w') as f: json.dump(md, f)` — same `ensure_ascii` default, same D25 oscillation — was silently green. |
+| 6 | *(comment-analyzer)* `MalignantUnionBound.lean`'s "21 author-written" should be 32 | the agent's own closure walk | **NOT REPRODUCED — finding WITHDRAWN.** `bundle_closure.compute_closure`, the canonical resolver, gives **21 author-written out of 22 walked**. The comment's 21 was right; its **33** was not. Corrected to 22, and the comment now names the resolver it was measured with. My own first probe here also disagreed (a hand-rolled three-key walk gave 22 project-prefixed) — three instruments, and only one of them is the one the codebase uses. |
+| 7 | *(type-design)* the `hcard`/`hindep` hypotheses are over-strong | reading the proof against the lemma it calls | **CONFIRMED.** `hcard` is consumed by a monotone bound and `agp_bound_mono_malignant_set` proves that monotonicity and was never called; `hindep`'s `IndepSet` equality is used where `≤` suffices. Both weakened. |
+
+**THE PATTERN, and it is the same one three times.** D15, D36 and D4 each had a correction that
+landed at the site the finding named and **not** at the second site carrying the same claim —
+D36 stated 82.3% in its ⚠️ block and 83.8% eleven lines later; D4 stated 361/361 in its heading
+and "43% coverage" fifteen lines later; D15 claimed every roster count was fixed by removal
+while nine survive in F by design and a sixteenth was still live in I1. My `freshness_stale`
+fix is the same shape in code rather than prose. **A grep for the CLAIM rather than the LINE
+would have caught all four**, which is the instrument lesson D15 records and then fails to
+apply to itself.
+
+**NOT-AN-ASSERTION.** The 12-bundle figure in row 1 is the count under forced-old source
+mtimes, which is the condition that exposes the branch; it is not a claim that 12 bundles are
+Lean-stale on the live tree.

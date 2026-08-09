@@ -188,8 +188,13 @@
       "declared": "2026-08-06"
     },
     {
+      "name": "SKEFTHawking.QuantumNetwork.linearResponseRateFunctionCentered_is_ldp_certified",
+      "claims": "§1, §4.2 — the consumption claim's certification half: the very rate function D9's tail bound is about is the one I3's LDP layer certifies as LDPCompatibleSKEFT. Split out from the theorem above, where it was a hypothesis-independent conjunct",
+      "declared": "2026-08-09"
+    },
+    {
       "name": "SKEFTHawking.QuantumNetwork.fdt_rare_event_tail_is_ldp_certified",
-      "claims": "§1, §4.2 — the consumption claim, built: D9's rare-event tail is a statement about the very rate function I3's LDP layer certifies as LDPCompatibleSKEFT, with the centering constant β²σ²/8 made explicit",
+      "claims": "§1, §4.2 — the consumption claim's substantive half: D9's rare-event tail bounded strictly below by the explicit centering constant β²σ²/8, off the FDT-pinned mean",
       "declared": "2026-08-09"
     }
   ],

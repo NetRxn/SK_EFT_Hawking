@@ -130,6 +130,30 @@ theorem exRecFailure_le_agpRecursionStep
   measure_malignant_union_le fail F
     (fun p hp => malignant_pair_indep_le (hindep p hp) (hrate p.1) (hrate p.2))
 
+/-- **The same bound from SUB-multiplicativity, which is all the proof uses.**
+
+⚠️ `IndepSet` is an EQUALITY — `μ (s ∩ t) = μ s * μ t` — and the union bound needs
+only `≤`. Demanding exact independence excludes every negatively-correlated noise
+model, and those are precisely the models the AGP bound is supposed to cover:
+local stochastic noise gives sub-multiplicativity in general, not independence.
+
+`malignant_pair_indep_le` remains the adapter for the genuinely independent case,
+so nothing that had independence loses anything; this is strictly more general. -/
+theorem exRecFailure_le_agpRecursionStep_of_submul
+    {μ : Measure Ω} (fail : ι → Set Ω) (F : Finset (ι × ι)) {ε : ENNReal}
+    (hrate : ∀ i, μ (fail i) ≤ ε)
+    (hsubmul : ∀ p ∈ F, μ (fail p.1 ∩ fail p.2) ≤ μ (fail p.1) * μ (fail p.2)) :
+    μ (⋃ p ∈ F, fail p.1 ∩ fail p.2) ≤ (F.card : ENNReal) * ε ^ 2 :=
+  measure_malignant_union_le fail F (fun p hp =>
+    (hsubmul p hp).trans (by rw [sq]; exact mul_le_mul' (hrate p.1) (hrate p.2)))
+
+/-- Independence implies the sub-multiplicativity the bound actually needs, so the
+general form above subsumes the independent case. -/
+theorem submul_of_indepSet
+    {μ : Measure Ω} {s t : Set Ω} (h : IndepSet s t μ) :
+    μ (s ∩ t) ≤ μ s * μ t :=
+  le_of_eq h.measure_inter_eq_mul
+
 /-! ## 4. Consistency with the counting bound
 
 The malignant-pair count refines the naive "any two locations" count: `F` is a

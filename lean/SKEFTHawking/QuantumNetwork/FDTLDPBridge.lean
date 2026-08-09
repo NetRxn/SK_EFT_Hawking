@@ -65,18 +65,32 @@ theorem linearResponseRateFunction_at_zero (β σ_sq : ℝ) (hσ : σ_sq ≠ 0) 
   field_simp
   ring
 
-/-- **D9's rare-event tail is a statement about the rate function I3 certifies.**
+/-- **Half one of the consumption claim: the centered rate function is exactly what
+I3's LDP layer certifies.**
 
-Both halves of the consumption claim, for one object: the function is
-`LDPCompatibleSKEFT` by I3's instance, and its tail is bounded strictly below by
-`-β²σ²/8` off the FDT-pinned mean. The second half is `fdt_rare_event_tail`
-transported across the centering that makes the function LDP-admissible. -/
+⚠️ **This is stated ALONE, on purpose.** It used to be the first conjunct of the
+bridge theorem below, where it was dead weight: it resolves by `inferInstance`
+from `linearResponseRateFunctionCentered_isLDPCompatibleSKEFT`, which needs only
+`[Fact (σ_sq ≠ 0)]` and holds for every `β` and every `W` — so it was independent
+of both of that theorem's hypotheses, and dropping it changed nothing (CLAUDE.md
+preemptive-strengthening rule 1). A fact about the function is not a consequence
+of the hypotheses, and bundling the two made one substantive theorem look like
+two. Both halves remain D9 apexes; they are now separately checkable. -/
+theorem linearResponseRateFunctionCentered_is_ldp_certified
+    (β : ℝ) {σ_sq : ℝ} (hσ : 0 < σ_sq) :
+    LDPCompatibleSKEFT β (linearResponseRateFunctionCentered β σ_sq) := by
+  haveI : Fact (σ_sq ≠ 0) := ⟨ne_of_gt hσ⟩
+  infer_instance
+
+/-- **Half two, and the substantive one: D9's rare-event tail, transported.**
+
+Off the FDT-pinned mean the centered rate function is bounded strictly below by
+`-β²σ²/8`. This is `fdt_rare_event_tail` carried across the centering that makes
+the function LDP-admissible, and unlike the certification above it genuinely
+consumes both hypotheses. -/
 theorem fdt_rare_event_tail_is_ldp_certified
     {β σ_sq W : ℝ} (hσ : 0 < σ_sq) (hW : W ≠ β * σ_sq / 2) :
-    LDPCompatibleSKEFT β (linearResponseRateFunctionCentered β σ_sq) ∧
-      -(β ^ 2 * σ_sq / 8) < linearResponseRateFunctionCentered β σ_sq W := by
-  haveI : Fact (σ_sq ≠ 0) := ⟨ne_of_gt hσ⟩
-  refine ⟨inferInstance, ?_⟩
+    -(β ^ 2 * σ_sq / 8) < linearResponseRateFunctionCentered β σ_sq W := by
   have htail : 0 < linearResponseRateFunction β σ_sq W := fdt_rare_event_tail hσ hW
   have hzero : linearResponseRateFunction β σ_sq 0 = β ^ 2 * σ_sq / 8 :=
     linearResponseRateFunction_at_zero β σ_sq (ne_of_gt hσ)
@@ -84,12 +98,21 @@ theorem fdt_rare_event_tail_is_ldp_certified
   rw [hzero]
   linarith
 
-/-- Non-vacuity: the hypotheses are satisfiable, so the bridge is not
-conditionally empty. At `β = 0`, `σ² = 1`, `W = 1` the FDT-pinned mean is `0`,
-so `W ≠ βσ²/2` holds and the floor is `0`. -/
+/-- Non-vacuity, at an operating point where every number in the statement is
+NONZERO.
+
+⚠️ The witness was `β = 0, σ² = 1, W = 1`. There the FDT-pinned mean `βσ²/2` is
+`0`, the centering constant `β²σ²/8` is `0`, and the floor is `0` — every
+quantity the theorem is *about* vanished, and nothing distinguished it from
+`0 < I(1)`. At `β = 2, σ² = 1, W = 0` the mean is `1`, so `W ≠ βσ²/2` is a real
+side condition, and the floor is `-1/2`: a wrong centering constant breaks it. -/
 theorem fdt_rare_event_tail_is_ldp_certified_witness :
-    LDPCompatibleSKEFT 0 (linearResponseRateFunctionCentered 0 1) ∧
-      -(0 ^ 2 * (1 : ℝ) / 8) < linearResponseRateFunctionCentered 0 1 1 :=
+    -((2 : ℝ) ^ 2 * (1 : ℝ) / 8) < linearResponseRateFunctionCentered 2 1 0 :=
   fdt_rare_event_tail_is_ldp_certified (by norm_num) (by norm_num)
+
+/-- The certification half at the same nonzero operating point. -/
+theorem linearResponseRateFunctionCentered_is_ldp_certified_witness :
+    LDPCompatibleSKEFT 2 (linearResponseRateFunctionCentered 2 1) :=
+  linearResponseRateFunctionCentered_is_ldp_certified 2 (by norm_num)
 
 end SKEFTHawking.QuantumNetwork

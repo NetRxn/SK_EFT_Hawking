@@ -52,9 +52,15 @@ def check_graph_integrity() -> CheckResult:
     roster_details = []
     try:
         from build_graph import _infer_bundle_from_text
+        _roster_is_derived = True
         try:
             from bundle_registry import VALID_BUNDLE_TARGETS as _roster
         except Exception:
+            # ⚠️ A hardcoded roster validates the round-trip against a frozen
+            # literal instead of the registry — which is the hand-maintained list
+            # this check exists to replace. Defensible as a fallback; invisible
+            # is not, so it now says so.
+            _roster_is_derived = False
             _roster = frozenset(
                 [f"D{i}" for i in range(1, 13)] + [f"L{i}" for i in range(1, 4)]
                 + [f"I{i}" for i in range(1, 4)] + ["E1", "E2", "F"]
@@ -72,12 +78,21 @@ def check_graph_integrity() -> CheckResult:
             roster_details.append(Detail(
                 "bundle_code_roundtrip", True,
                 f"all {len(_roster)} roster bundle codes resolve through the graph's "
-                f"bundle inference (incl. two-digit D10-D12)",
+                f"bundle inference (incl. two-digit D10-D12)"
+                + ("" if _roster_is_derived else
+                   " — ⚠️ measured against a HARDCODED fallback roster, not the "
+                   "registry, because bundle_registry could not be imported"),
+                warning=not _roster_is_derived,
+                measured=_roster_is_derived,
             ))
     except Exception as exc:  # pragma: no cover
+        # ⚠️ Was `passed=True` — a PASS on skip, in the guard added because
+        # D10-D12 silently failed to round-trip. Skipping the check for the
+        # bundles it protects is not evidence they round-trip.
         roster_details.append(Detail(
             "bundle_code_roundtrip", True,
-            f"roster round-trip skipped ({type(exc).__name__}: {exc})", warning=True))
+            f"roster round-trip SKIPPED ({type(exc).__name__}: {exc}) — not "
+            f"evidence the codes resolve", warning=True, measured=False))
 
     # ── Orphaned-finding guard (added 2026-07-31, D11 round-5 BLOCKER 4.1) ────
     # A ReviewFinding that resolves to a bundle but emits no FLAGS edge is
@@ -233,12 +248,18 @@ def check_graph_integrity() -> CheckResult:
     try:
         from graph_integrity import run_integrity_checks
     except ImportError as exc:
+        # ⚠️ UNMEASURED, not passing. `run_integrity_checks` IS this check's
+        # substantive body; without it the roster legs are all that ran, and a
+        # passing `Detail("import", True, ...)` made the whole thing count as a
+        # full measurement toward the `--ci` coverage floor.
         return CheckResult(
             passed=all(d.passed for d in roster_details),
+            measured=False,
             details=roster_details + [
-                Detail("import", True,
-                       f"graph_integrity not available ({exc}); skipping",
-                       warning=True),
+                Detail("import", False,
+                       f"graph_integrity not available ({exc}) — the integrity "
+                       f"scan DID NOT RUN, so its silence is not evidence",
+                       warning=True, measured=False),
             ])
 
     report = run_integrity_checks()

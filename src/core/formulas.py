@@ -514,8 +514,16 @@ def horizon_damping_rate(gamma_1, gamma_2, kappa, c_s):
     Returns:
         Γ_H [s⁻¹]
     """
+    # ⚠️ RAISES rather than returning 0.0. A non-physical sound speed used to
+    # produce a physically MEANINGFUL answer — zero damping — which flows into
+    # `δ_diss = Γ_H/κ = 0` and reads downstream as "dissipationless system". This
+    # function was extracted precisely because an open-coded version of it
+    # silently produced a wrong-by-eleven-orders number; a silent sentinel is the
+    # same failure mode with a different value.
     if c_s <= 0:
-        return 0.0
+        raise ValueError(
+            f"c_s must be a positive sound speed [m/s], got {c_s!r}. "
+            f"Returning 0.0 here would report a dissipationless horizon.")
     return (gamma_1 + gamma_2) * (kappa / c_s) ** 2
 
 
@@ -546,7 +554,13 @@ def conformal_kinematic_viscosity(eta_over_sT, c_s):
 
     Returns:
         ν [m²/s]
+
+    Raises:
+        ValueError: if `c_s <= 0`. Its sibling `horizon_damping_rate` had a silent
+            `return 0.0` on the same condition; this one had no guard at all.
     """
+    if c_s <= 0:
+        raise ValueError(f"c_s must be a positive sound speed [m/s], got {c_s!r}")
     return 2.0 * eta_over_sT * c_s ** 2
 
 

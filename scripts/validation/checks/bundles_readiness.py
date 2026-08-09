@@ -159,9 +159,16 @@ def check_bundle_figure_integrity() -> CheckResult:
                 (fs.name, fs.function))
         if _derived:
             SPECS = _derived
+            _SPEC_FALLBACK = None
         else:
             raise RuntimeError("no d11_/d12_ specs found")
-    except Exception:
+    except Exception as _spec_exc:      # noqa: BLE001
+        # ⚠️ The fallback itself is defensible; its SILENCE was not. This exact
+        # literal was live for a whole review round — production always used it,
+        # i.e. the hand-maintained list this block exists to replace — and nothing
+        # said so. Round 1 fixed the cause and left the silence; `_SPEC_FALLBACK`
+        # is now surfaced as a warning Detail below.
+        _SPEC_FALLBACK = f"{type(_spec_exc).__name__}: {_spec_exc}"
         SPECS = {
         "D11": [("d11_fig1_phononic_band_gap", "fig_d11_phononic_band_gap"),
                 ("d11_fig2_pt_exceptional_point", "fig_d11_pt_exceptional_point"),
@@ -253,6 +260,20 @@ def check_bundle_figure_integrity() -> CheckResult:
             on_disk[code] = on_disk.get(code, 0) + 1
     uncovered = {c: n for c, n in on_disk.items() if c not in SPECS}
     if uncovered:
+        # ⚠️ `measured=False` on THIS DETAIL, not on the CheckResult, and the
+        # distinction is deliberate. The check really did measure the
+        # registry-backed figures; calling the whole result unmeasured would be
+        # its own false statement, and would silently drop a check out of the
+        # `--ci` coverage floor — a zero-headroom instrument. What was wrong was
+        # that the uncovered figures had no machine-readable mark at all, so a
+        # consumer reading details saw a passing census.
+        #
+        # ⚠️ RESIDUAL, stated rather than closed: `gate_precheck s9` consumes only
+        # this check's EXIT CODE, so it still cannot see this warning, and a
+        # figure-reviewer dispatch on a fully-uncovered bundle still prints PASS.
+        # Closing that means either registering the uncovered figures in
+        # `visualizations.py` or teaching `gate_precheck` the per-bundle coverage
+        # — both real work, neither hidden.
         details.insert(0, Detail(
             "coverage", True,
             f"{sum(uncovered.values())} figure(s) across {len(uncovered)} bundle(s) "
@@ -260,7 +281,14 @@ def check_bundle_figure_integrity() -> CheckResult:
             f"{', '.join(f'{c}:{n}' for c, n in sorted(uncovered.items()))}. "
             f"This check speaks only to figures it can rebuild from "
             f"`visualizations.py`; the rest are UNMEASURED here.",
-            warning=True))
+            warning=True, measured=False))
+    if _SPEC_FALLBACK:
+        details.insert(0, Detail(
+            "spec_source", True,
+            f"the D11/D12 figure specs came from the HARDCODED FALLBACK, not from "
+            f"`review_figures.FIGURE_REGISTRY` ({_SPEC_FALLBACK}) — the list this "
+            f"derivation exists to replace is what actually ran",
+            warning=True, measured=False))
     details.insert(0, Detail(
         "summary", n_fail == 0,
         f"{n_ok + n_fail} registry-backed bundle figures checked — {n_ok} legible / "
@@ -444,13 +472,28 @@ _TEX_COMMENT_RE = re.compile(r"(?<!\\)%.*")
 #: the cost of widening it. A reader does not know or care which file a sentence was
 #: typed in, so neither should the population.
 def _reader_visible_sources(tex: "Path") -> "list[Path]":
-    """`tex` plus every `.tex` it \input{}s, transitively, de-duplicated.
+    r"""`tex` plus every `.tex` it \input{}s, transitively, de-duplicated.
 
     `.bib` and image members of the closure are excluded: a bibliography entry is
     not manuscript prose.
     """
     return sorted({tex, *(p for p in _H.draft_input_closure(tex)
                           if p.suffix == ".tex" and p.is_file())})
+
+
+def _unscannable_closure_members(tex) -> list[str]:
+    """`.tex` closure members DROPPED because they do not resolve to a file.
+
+    ⚠️ `draft_input_closure` keeps an unresolvable `\\input` target on purpose —
+    "an unresolvable reference is still recorded as a path" — and the `.is_file()`
+    filter above discards exactly those, silently. A draft with
+    `\\input{tables/gone}` scanned clean and reported "0 em-dashes" with no detail
+    naming the file it never opened. Zero such entries exist today, so this is
+    latent — latent on the very widening these checks just shipped.
+    """
+    return sorted(
+        str(q) for q in _H.draft_input_closure(tex)
+        if q.suffix == ".tex" and not q.is_file())
 
 
 #: Environments whose `\\` is a ROW separator, not a line break inside a sentence.
@@ -460,12 +503,12 @@ _ROW_ENV_RE = re.compile(
 
 
 def _rows_as_sentences(body: str) -> str:
-    """Make each table row its own unit before sentence splitting.
+    r"""Make each table row its own unit before sentence splitting.
 
     ⚠️ Measured 2026-08-09: without this, `papers/I1/tables/table1_stages.tex`
     reports a single **166-word sentence** that no reader ever sees — it is fourteen
     two-column table rows concatenated, because `\\` is not a sentence boundary to
-    the splitter. Widening the sentence-length population to the `\input` closure
+    the splitter. Widening the sentence-length population to the input closure
     imported that artifact and pushed the over-100 count from 22 to 23, one past a
     down-only ratchet, for a defect that does not exist in the prose.
     **Scoped to row environments deliberately**: splitting on every `\\` would also
@@ -527,6 +570,12 @@ def check_bundle_prose_em_dash_free() -> CheckResult:
             continue
         checked += 1
         hits = []
+        for missing in _unscannable_closure_members(tex):
+            details.append(Detail(
+                f"{code}:unscannable", False,
+                f"\\input target {missing} does not resolve to a file and was NOT "
+                f"scanned — an unread file is not a clean one",
+                measured=False))
         for src in _reader_visible_sources(tex):
             for i, line in enumerate(src.read_text(errors="replace").splitlines(), 1):
                 body = _TEX_COMMENT_RE.sub("", line)
@@ -549,11 +598,20 @@ def check_bundle_prose_em_dash_free() -> CheckResult:
             "no bundle draft was read — this check is UNVERIFIED, not passing"))
         return CheckResult(passed=False, measured=False, details=details)
 
+    # ⚠️ An unscannable closure member must reach the VERDICT, not just the detail
+    # list. Emitting a `passed=False` Detail while returning `passed=(total == 0)`
+    # leaves the check green over a file it never opened — the same
+    # silence-reads-as-clean shape the widening was meant to close.
+    n_unscannable = sum(1 for d in details if d.name.endswith(":unscannable"))
     details.insert(0, Detail(
-        "summary", total == 0,
+        "summary", total == 0 and n_unscannable == 0,
         f"{checked} bundle draft(s) scanned, {total} em-dash(es) in reader-visible prose "
-        f"(target 0; en-dashes are mandatory and deliberately untouched)"))
-    return CheckResult(passed=total == 0, details=details)
+        f"(target 0; en-dashes are mandatory and deliberately untouched)"
+        + (f"; ⚠️ {n_unscannable} closure member(s) could NOT be scanned"
+           if n_unscannable else ""),
+        measured=(n_unscannable == 0)))
+    return CheckResult(passed=(total == 0 and n_unscannable == 0),
+                       measured=(n_unscannable == 0), details=details)
 
 
 #: Module basenames too generic to find by substring. A hit on `Basic` proves nothing.

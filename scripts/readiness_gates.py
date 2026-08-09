@@ -68,6 +68,20 @@ class GateResult:
     blockers: list[str] = field(default_factory=list)
     notes: str = ''
     last_evaluated: str = ''
+    #: False = this gate's evaluator COULD NOT MEASURE — an unreadable draft, an
+    #: absent artifact. Additive with a True default, exactly as `CheckResult.
+    #: measured` is, and for the identical reason one layer down.
+    #:
+    #: ⚠️ `state='open'` was carrying two meanings: "measured, and genuinely
+    #: outstanding" and "the evaluator read nothing". `paper_aggregate_state` maps
+    #: both to YELLOW, so a paper whose draft could not be opened was
+    #: indistinguishable from one with real work left — the same defect
+    #: `CheckResult.measured` was added to fix, in the sibling layer.
+    #:
+    #: ⚠️ NOT a sixth `GateState`. ADR-009 §Deferred item 4 declined `UNEVALUATED`
+    #: on `passed` for the same D2-contract reason: `state` is read by consumers
+    #: that would break on a new value. An additive field leaves them correct.
+    measured: bool = True
 
     def to_node_payload(self) -> dict:
         shape_map = {'blocked': 'diamond', 'passed': 'square',
@@ -85,6 +99,7 @@ class GateResult:
                 'gate': self.gate,
                 'priority': self.priority,
                 'state': self.state,
+                'measured': self.measured,
                 'evidence': self.evidence[:50],
                 'blockers': self.blockers[:50],
                 'notes': self.notes,
@@ -126,13 +141,36 @@ class GraphIndex:
         edges = self.in_edges.get(node_id, [])
         return [e for e in edges if edge_type is None or e.get('type') == edge_type]
 
-    def paper_tex(self, paper_key: str) -> str:
-        """Return paper_draft.tex contents (or empty string if not readable)."""
+    def paper_tex(self, paper_key: str) -> str | None:
+        """`paper_draft.tex` contents, or **None** when it cannot be read.
+
+        ⚠️ This returned `''` for missing, unreadable, and genuinely-empty alike,
+        and two consumers turned that into a PASS: `_eval_parameter_provenance`
+        concluded "no inline unit-bearing literals in body prose" and
+        `_eval_narrative_grounding` emitted "and the draft has no abstract block"
+        — a false statement about the draft, offered as the gate's own evidence.
+        `None` forces each caller to decide, which `_eval_citation_integrity`
+        already did correctly.
+        """
         tex_path = PAPERS_DIR / paper_key / "paper_draft.tex"
         try:
             return tex_path.read_text()
         except (OSError, UnicodeDecodeError):
-            return ''
+            return None
+
+
+def _unreadable_draft(r: GateResult) -> GateResult:
+    """The one shape every evaluator uses when `paper_tex` returns None.
+
+    ⚠️ `measured=False` is the load-bearing part. Without it an unreadable draft
+    is a YELLOW gate indistinguishable from real outstanding work, and three
+    evaluators went further and reported PASS with a positive claim about a file
+    they never opened.
+    """
+    r.state = 'open'
+    r.measured = False
+    r.notes = 'paper_draft.tex not readable — gate UNMEASURED, not outstanding'
+    return r
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -156,9 +194,11 @@ def _eval_citation_integrity(paper: dict, idx: GraphIndex) -> GateResult:
     r = GateResult(gate='CitationIntegrity', paper=paper_key, priority=1)
 
     tex = idx.paper_tex(paper_key)
+    if tex is None:
+        return _unreadable_draft(r)
     if not tex:
         r.state = 'open'
-        r.notes = 'paper_draft.tex not readable'
+        r.notes = 'paper_draft.tex is empty'
         return r
 
     # `\bibitem[Label]{key}` carries an optional argument; the un-bracketed form
@@ -289,6 +329,8 @@ def _eval_parameter_provenance(paper: dict, idx: GraphIndex) -> GateResult:
         # this surfaces to the reviewer (YELLOW) without reddening a corpus where
         # 61 papers are already red. "Not established" is the honest state.
         tex = idx.paper_tex(paper_key)
+        if tex is None:
+            return _unreadable_draft(r)
         # ⚠️ Returns (stripped_text, matches) — a 2-tuple, ALWAYS truthy. My first
         # draft wrote `literals = find_inline_numerical_literals(tex)` and tested it
         # for truth, so this branch fired for every paper regardless of content, and
@@ -453,6 +495,8 @@ def _eval_lean_proof_substance(paper: dict, idx: GraphIndex) -> GateResult:
     # this gate and `prose_theorem_reference_coverage` cannot drift apart.
     from validation.checks.prose_lean_refs import _extract_prose_lean_candidates
     tex = idx.paper_tex(paper_key)
+    if tex is None:
+        return _unreadable_draft(r)
     referenced_short_names = {tok.rsplit('.', 1)[-1]
                               for tok, _offset in _extract_prose_lean_candidates(tex)}
 
@@ -502,7 +546,10 @@ def _eval_assumption_disclosure(paper: dict, idx: GraphIndex) -> GateResult:
                     if ae['target'].startswith('hyp:'):
                         assumed_hyp_ids.add(ae['target'])
 
-    tex = idx.paper_tex(paper_key).lower()
+    _tex_raw = idx.paper_tex(paper_key)
+    if _tex_raw is None:
+        return _unreadable_draft(r)
+    tex = _tex_raw.lower()
     undisclosed: list[str] = []
     disclosed: list[str] = []
     for hid in assumed_hyp_ids:
@@ -573,7 +620,9 @@ def _eval_narrative_grounding(paper: dict, idx: GraphIndex) -> GateResult:
         # A draft with an abstract but NO ProseClaim nodes at all is an extraction
         # gap: the gate verified nothing. `open`, so the reviewer sees it.
         tex = idx.paper_tex(paper_key)
-        has_abstract = bool(tex) and '\\begin{abstract}' in tex
+        if tex is None:
+            return _unreadable_draft(r)
+        has_abstract = '\\begin{abstract}' in tex
         if has_abstract and not prose_claims:
             r.state = 'open'
             r.notes = ('NOT ESTABLISHED — the draft has an abstract but NO ProseClaim '
@@ -615,6 +664,8 @@ def _eval_production_run_health(paper: dict, idx: GraphIndex) -> GateResult:
 
     # Detect "MC evidence" claim without backing success
     tex = idx.paper_tex(paper_key)
+    if tex is None:
+        return _unreadable_draft(r)
     mc_claim = bool(re.search(r'\b(Monte\s+Carlo\s+evidence|MC\s+evidence)\b', tex, re.IGNORECASE))
     success_runs = [r_ for r_ in relevant_runs
                     if r_.get('meta', {}).get('status') == 'success']
@@ -672,6 +723,8 @@ def _eval_numerical_freshness(paper: dict, idx: GraphIndex) -> GateResult:
     # blind spot of the check written to detect disagreement. Verified identical
     # (pattern string and flags) before merging, so this is behaviour-preserving.
     tex = idx.paper_tex(paper_key)
+    if tex is None:
+        return _unreadable_draft(r)
     inline_literals = 0
     if tex:
         _, _lit_matches = find_inline_numerical_literals(tex)

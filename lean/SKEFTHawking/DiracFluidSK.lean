@@ -240,16 +240,35 @@ theorem kinematicViscosity_nonneg (etaOverST c_s : ℝ) (h : 0 ≤ etaOverST) :
   unfold kinematicViscosity
   positivity
 
-/-- **The dropped velocity² is detectable dimensionally, and here numerically.**
+/-- **The dropped velocity² is detectable as a SCALING LAW, which is unit-free.**
 
-    With `η/(sT)` a time and `c_s` a speed, `ν = 2·(η/(sT))·c_s²` scales as
-    `c_s²` — so the omitted factor is exactly `2c_s²`, and for any positive
-    sound speed above `1 m/s` the correct `ν` strictly exceeds the bare time.
-    A `ν` that does *not* scale with `c_s²` is the pre-repair defect. -/
-theorem kinematicViscosity_exceeds_bare_time (etaOverST c_s : ℝ)
-    (hη : 0 < etaOverST) (hc : 1 < c_s) :
-    etaOverST < kinematicViscosity etaOverST c_s := by
+    Rescaling the sound speed by `s` rescales `ν` by `s²`. That is the whole
+    content of the missing factor, and it is the same statement in m/s, km/s or
+    natural units — which is what makes it a test rather than a coincidence of
+    units.
+
+    ⚠️ **This replaced `kinematicViscosity_exceeds_bare_time`, which compared a
+    TIME to a VISCOSITY.** `etaOverST` is `[s]`; `kinematicViscosity` is `[m²/s]`;
+    `etaOverST < kinematicViscosity etaOverST c_s` therefore asserted something
+    about numeric magnitudes in a chosen unit system — true for `c_s` in m/s and
+    false for the same physical sound speed in km/s. Reduced, it said `1 < 2c_s²`
+    given `c_s > 1`: no physical content at all. In the one module that exists
+    because a missing velocity² produced an eleven-order-of-magnitude error, the
+    theorem meant to make that detectable was the only unit-dependent one in the
+    file. -/
+theorem kinematicViscosity_scales_quadratically (etaOverST c_s s : ℝ) :
+    kinematicViscosity etaOverST (s * c_s)
+      = s ^ 2 * kinematicViscosity etaOverST c_s := by
   unfold kinematicViscosity
-  nlinarith [sq_nonneg c_s, sq_nonneg (c_s - 1)]
+  ring
+
+/-- The same scaling at the Dean-device operating point, `norm_num`-backed: a
+    doubled sound speed quadruples `ν`. A `ν` built without the velocity² would
+    return the same number for both, which is exactly the pre-repair defect. -/
+theorem kinematicViscosity_doubling_quadruples (etaOverST c_s : ℝ) :
+    kinematicViscosity etaOverST (2 * c_s)
+      = 4 * kinematicViscosity etaOverST c_s := by
+  rw [kinematicViscosity_scales_quadratically]
+  norm_num
 
 end SKEFTHawking.DiracFluidSK

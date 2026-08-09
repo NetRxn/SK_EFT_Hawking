@@ -101,19 +101,27 @@ probability at most `agpSeq A ε₀ L`, derived level by level from the single-l
 union bound rather than assumed.
 
 The hypotheses are exactly the AGP model: a base-level rate (`hbase`), a constant
-malignant-pair count (`hcard`), the concatenation structure (`hstruct`), and
-pairwise independence of constituent failures (`hindep`). -/
+malignant-pair count bound (`hcard`), the concatenation structure (`hstruct`), and
+sub-multiplicativity of constituent failures (`hsubmul`).
+
+⚠️ Both `hcard` and `hsubmul` are deliberately the WEAKEST forms the proof uses.
+`hcard` was `= A` where only `≤ A` is needed and the bound is monotone in the
+card; `hsubmul` was full `IndepSet`, an equality, where only `μ (s ∩ t) ≤ μ s * μ t`
+is needed. Independence excludes negatively-correlated noise, and equality on the
+card excludes any ex-Rec whose malignant set is a proper subset of the available
+pairs — that is, all of them. `submul_of_indepSet` converts an independent model,
+so nothing that had the stronger hypotheses loses anything. -/
 theorem levelFailure_le_agpSeq
     {μ : Measure Ω} {Loc : ℕ → Type*}
     (fail : ∀ L, Loc L → Set Ω)
     (malignant : ∀ L, Loc (L + 1) → Finset (Loc L × Loc L))
     (A : ℕ) (ε₀ : NNReal)
     (hbase : ∀ i, μ (fail 0 i) ≤ (ε₀ : ENNReal))
-    (hcard : ∀ L j, (malignant L j).card = A)
+    (hcard : ∀ L j, (malignant L j).card ≤ A)
     (hstruct : ∀ L j,
       fail (L + 1) j ⊆ ⋃ p ∈ malignant L j, fail L p.1 ∩ fail L p.2)
-    (hindep : ∀ L j, ∀ p ∈ malignant L j,
-      IndepSet (fail L p.1) (fail L p.2) μ) :
+    (hsubmul : ∀ L j, ∀ p ∈ malignant L j,
+      μ (fail L p.1 ∩ fail L p.2) ≤ μ (fail L p.1) * μ (fail L p.2)) :
     ∀ L, ∀ i, μ (fail L i) ≤ ((agpSeq (A : NNReal) ε₀ L : NNReal) : ENNReal) := by
   intro L
   induction L with
@@ -122,9 +130,22 @@ theorem levelFailure_le_agpSeq
     intro j
     refine le_trans (measure_mono (hstruct L j)) ?_
     refine le_trans
-      (exRecFailure_le_agpRecursionStep (μ := μ) (fail L) (malignant L j)
-        (ε := ((agpSeq (A : NNReal) ε₀ L : NNReal) : ENNReal)) ih (hindep L j)) ?_
-    rw [hcard L j, agpSeq_succ]
+      (exRecFailure_le_agpRecursionStep_of_submul (μ := μ) (fail L) (malignant L j)
+        (ε := ((agpSeq (A : NNReal) ε₀ L : NNReal) : ENNReal)) ih (hsubmul L j)) ?_
+    -- ⚠️ `hcard` is `≤`, not `=`, and the bound is MONOTONE in the card — which is
+    -- what `agp_bound_mono_malignant_set` proves and nothing called. A real ex-Rec's
+    -- malignant set is a SUBSET of the pairs available, so `≤ A` is what it can
+    -- supply; demanding equality made the hypothesis unsatisfiable for the models
+    -- the theorem is about.
+    have hmono : ((malignant L j).card : ENNReal) ≤ (A : ENNReal) := by
+      exact_mod_cast hcard L j
+    have hstep :
+        ((malignant L j).card : ENNReal)
+            * ((agpSeq (A : NNReal) ε₀ L : NNReal) : ENNReal) ^ 2
+          ≤ (A : ENNReal) * ((agpSeq (A : NNReal) ε₀ L : NNReal) : ENNReal) ^ 2 := by
+      gcongr
+    refine le_trans hstep ?_
+    rw [agpSeq_succ]
     push_cast
     exact le_rfl
 
@@ -143,14 +164,14 @@ theorem concatenated_failure_double_exp
     (malignant : ∀ L, Loc (L + 1) → Finset (Loc L × Loc L))
     (A : ℕ) (ε₀ : NNReal)
     (hbase : ∀ i, μ (fail 0 i) ≤ (ε₀ : ENNReal))
-    (hcard : ∀ L j, (malignant L j).card = A)
+    (hcard : ∀ L j, (malignant L j).card ≤ A)
     (hstruct : ∀ L j,
       fail (L + 1) j ⊆ ⋃ p ∈ malignant L j, fail L p.1 ∩ fail L p.2)
-    (hindep : ∀ L j, ∀ p ∈ malignant L j,
-      IndepSet (fail L p.1) (fail L p.2) μ) :
+    (hsubmul : ∀ L j, ∀ p ∈ malignant L j,
+      μ (fail L p.1 ∩ fail L p.2) ≤ μ (fail L p.1) * μ (fail L p.2)) :
     ∀ L, ∀ i, (A : ℝ) * (μ (fail L i)).toReal ≤ ((A : ℝ) * (ε₀ : ℝ)) ^ (2 ^ L) := by
   intro L i
-  have hbound := levelFailure_le_agpSeq fail malignant A ε₀ hbase hcard hstruct hindep L i
+  have hbound := levelFailure_le_agpSeq fail malignant A ε₀ hbase hcard hstruct hsubmul L i
   have htoReal : (μ (fail L i)).toReal ≤ (agpSeq (A : NNReal) ε₀ L : ℝ) :=
     ENNReal.toReal_le_coe_of_le_coe hbound
   have hcast : (((A : NNReal)) : ℝ) = (A : ℝ) := by push_cast; ring
@@ -173,17 +194,17 @@ theorem steane_concatenated_failure_below_threshold
     (malignant : ∀ L, Loc (L + 1) → Finset (Loc L × Loc L))
     (ε₀ : NNReal)
     (hbase : ∀ i, μ (fail 0 i) ≤ (ε₀ : ENNReal))
-    (hcard : ∀ L j, (malignant L j).card = steaneMalignancyCounts.A_CNOT)
+    (hcard : ∀ L j, (malignant L j).card ≤ steaneMalignancyCounts.A_CNOT)
     (hstruct : ∀ L j,
       fail (L + 1) j ⊆ ⋃ p ∈ malignant L j, fail L p.1 ∩ fail L p.2)
-    (hindep : ∀ L j, ∀ p ∈ malignant L j,
-      IndepSet (fail L p.1) (fail L p.2) μ)
+    (hsubmul : ∀ L j, ∀ p ∈ malignant L j,
+      μ (fail L p.1 ∩ fail L p.2) ≤ μ (fail L p.1) * μ (fail L p.2))
     (hbelow : (ε₀ : ℝ) < AGP.steaneAGPThreshold) :
     ∀ L, 1 ≤ L → ∀ i,
       (steaneMalignancyCounts.A_CNOT : ℝ) * (μ (fail L i)).toReal < 1 := by
   intro L hL i
   have hbound := levelFailure_le_agpSeq fail malignant
-    steaneMalignancyCounts.A_CNOT ε₀ hbase hcard hstruct hindep L i
+    steaneMalignancyCounts.A_CNOT ε₀ hbase hcard hstruct hsubmul L i
   have htoReal :
       (μ (fail L i)).toReal
         ≤ (agpSeq ((steaneMalignancyCounts.A_CNOT : ℕ) : NNReal) ε₀ L : ℝ) :=
@@ -211,30 +232,52 @@ the circuit's locations, and building one is the same construction as deriving
 `A_CNOT` itself.
 -/
 
-/-- **The hypothesis set is satisfiable.** On any measurable space, taking every
-level's failure event to be `∅` and each malignant set to be a fixed `A`-element
-set of index pairs satisfies `hbase`, `hcard`, `hstruct` and `hindep` at once —
-so neither `levelFailure_le_agpSeq` nor its corollaries is conditionally
-empty. -/
+/-- **The hypothesis set is satisfiable**, in the exact shape the theorems now
+take (`hcard` as `≤`, `hsubmul` rather than full independence), so neither
+`levelFailure_le_agpSeq` nor its corollaries is conditionally empty.
+
+⚠️ **THE MALIGNANT PAIRS ARE OFF-DIAGONAL, and that is not cosmetic.** This
+witness used `fun i => (i, i)`. A diagonal pair is not a pair of two distinct
+locations at all — AGP's malignant set counts pairs of *different* locations —
+and under the old `IndepSet` hypothesis it was worse than wrong: `IndepSet s s μ`
+forces `μ s = (μ s)²`, i.e. `μ s ∈ {0, 1}`, so a diagonal malignant set could
+never be satisfied by any nondegenerate failure event. The witness proved the
+hypotheses non-empty only in the corner where the theorem says nothing.
+
+⚠️ **What this still does NOT show, stated rather than implied.** `fail ≡ ∅`
+makes every probability `0`, so `hbase` is satisfied without being exercised: the
+witness rules out vacuity, it does not exhibit a model in which the bound is
+approached. A model with a strictly positive base rate needs a genuine
+independent product space over the circuit's locations — the same construction as
+deriving `A_CNOT` itself, which `MalignantUnionBound.lean`'s scope note already
+records as a separate undertaking. Building it is open work, not a closed gap. -/
 theorem levelFailure_hypotheses_satisfiable
     (μ : Measure Ω) [IsProbabilityMeasure μ] (A : ℕ) (ε₀ : NNReal) :
     ∃ (Loc : ℕ → Type) (fail : ∀ L, Loc L → Set Ω)
       (malignant : ∀ L, Loc (L + 1) → Finset (Loc L × Loc L)),
       (∀ i, μ (fail 0 i) ≤ (ε₀ : ENNReal)) ∧
-      (∀ L j, (malignant L j).card = A) ∧
+      (∀ L j, (malignant L j).card ≤ A) ∧
       (∀ L j, fail (L + 1) j ⊆ ⋃ p ∈ malignant L j, fail L p.1 ∩ fail L p.2) ∧
-      (∀ L j, ∀ p ∈ malignant L j, IndepSet (fail L p.1) (fail L p.2) μ) := by
-  refine ⟨fun _ => Fin A, fun _ _ => (∅ : Set Ω),
+      (∀ L j, ∀ p ∈ malignant L j, p.1 ≠ p.2) ∧
+      (∀ L j, ∀ p ∈ malignant L j,
+        μ (fail L p.1 ∩ fail L p.2) ≤ μ (fail L p.1) * μ (fail L p.2)) := by
+  -- `Fin A × Bool` gives every level at least two DISTINCT locations to pair,
+  -- so the malignant set can be off-diagonal for any `A`, including `A = 0`.
+  refine ⟨fun _ => Fin A × Bool, fun _ _ => (∅ : Set Ω),
           fun _ _ => (Finset.univ : Finset (Fin A)).map
-            ⟨fun i => (i, i), fun _ _ h => (Prod.mk.injEq _ _ _ _ ▸ h).1⟩,
-          ?_, ?_, ?_, ?_⟩
+            ⟨fun i => ((i, false), (i, true)), ?_⟩,
+          ?_, ?_, ?_, ?_, ?_⟩
+  · intro a b h
+    simpa using congrArg (fun q => q.1.1) h
   · intro i; simp
   · intro L j; simp
   · intro L j; simp
+  · intro L j p hp
+    simp only [Finset.mem_map, Finset.mem_univ, Function.Embedding.coeFn_mk,
+      true_and] at hp
+    obtain ⟨i, rfl⟩ := hp
+    simp
   · intro L j p _
-    -- Independence of `∅` with itself: `μ (∅ ∩ ∅) = 0 = μ ∅ * μ ∅`.
-    refine (indepSet_iff_measure_inter_eq_mul
-      (MeasurableSet.empty) (MeasurableSet.empty) μ).mpr ?_
     simp
 
 end SKEFTHawking.FaultTolerance

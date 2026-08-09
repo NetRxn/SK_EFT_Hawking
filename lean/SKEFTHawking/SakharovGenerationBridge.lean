@@ -104,12 +104,20 @@ theorem diracFlavourNf_eq_scaled_generationNf (c : FermionContent) :
 are `3` and `24`. Stated numerically so it is falsifiable rather than a remark:
 if a future content made them agree, this fails. -/
 theorem sm_counts_differ :
-    (standardModel.generationNf : ℚ) = 3 ∧
-    standardModel.diracFlavourNf = 24 ∧
+    (standardModel.generationNf : ℚ) = 3 ∧ standardModel.diracFlavourNf = 24 := by
+  refine ⟨by norm_num [FermionContent.generationNf, standardModel], ?_⟩
+  norm_num [FermionContent.diracFlavourNf, standardModel]
+
+/-- The disequality, extracted. ⚠️ It was the THIRD CONJUNCT of `sm_counts_differ`
+and is implied by the first two — `3 ≠ 24` follows from the two values by
+`norm_num`, so bundling it made two substantive numbers look like three claims
+(CLAUDE.md preemptive-strengthening rule 1, P2). The two witnesses are the
+falsifiable content; this is the reading downstream wants. -/
+theorem sm_counts_differ_ne :
     (standardModel.generationNf : ℚ) ≠ standardModel.diracFlavourNf := by
-  refine ⟨by norm_num [FermionContent.generationNf, standardModel], ?_, ?_⟩
-  · norm_num [FermionContent.diracFlavourNf, standardModel]
-  · norm_num [FermionContent.generationNf, FermionContent.diracFlavourNf, standardModel]
+  obtain ⟨h3, h24⟩ := sm_counts_differ
+  rw [h3, h24]
+  norm_num
 
 /-- The counts coincide only in the degenerate case of two Weyl fields per
 generation — one Dirac field each. The Standard Model has sixteen, so the
@@ -150,9 +158,18 @@ theorem generation_constraint_transfers
     ∃ k : ℕ, c.diracFlavourNf = (24 * k : ℚ) := by
   -- ⚠️ The anomaly condition is CONSUMED, not assumed. This used to take
   -- `3 ∣ c.generations` as a bare hypothesis — i.e. it assumed the very
-  -- constraint it advertises as transferring. `generation_mod3_constraint` is
-  -- the theorem that derives it from modular invariance, and calling it is what
-  -- makes the word "transfers" true.
+  -- constraint it advertises as transferring. Taking `24 ∣ 8·generations`
+  -- instead is a real strengthening: that is the anomaly-side condition on the
+  -- chiral central charge, and `generation_mod3_constraint` is what carries it
+  -- to the generation count.
+  --
+  -- ⚠️ IT IS *CARRIED*, NOT *DERIVED*, and the earlier wording here said
+  -- "derives it from modular invariance" — which `GenerationConstraint.lean:47`
+  -- records as false in as many words: the modular-invariance axiom was REMOVED
+  -- as FALSE (it universally quantified over all N_f; N_f = 1 gives 24 ∤ 8), and
+  -- what remains is a true arithmetic conditional. `24 ∣ c₋` is still a physics
+  -- INPUT at this boundary. In the one module whose stated purpose is to stop an
+  -- unwitnessed claim, a comment was making one.
   obtain ⟨k, hk⟩ := SKEFTHawking.generation_mod3_constraint c.generations hpos hanom
   refine ⟨k, ?_⟩
   unfold FermionContent.diracFlavourNf
