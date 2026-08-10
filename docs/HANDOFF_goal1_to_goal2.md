@@ -418,8 +418,14 @@ defect the test claims to catch, not merely something nearby.**
    but it is undocumented anywhere the reader would look, and it makes the gate's green
    depend on local state.
 
-3. **`bundle_manuscript_length` cannot hold full coverage across a normal run — the suite
-   stales its own input.** Measured 2026-08-10, sharpening the reviewer's Finding 7 with a
+3. **~~`bundle_manuscript_length` coverage~~ — DESCOPED BY THE OPERATOR (2026-08-10).**
+   Manuscript length is out of the goal entirely: writing to the declared floors is not
+   realistic across this many bundles, so under-length is accepted and the gate's partial
+   coverage is no longer a blocker. The mechanism is kept below because it is a *real and
+   still-live* defect in the freshness machinery that will bite any FUTURE gate keyed the
+   same way — it is simply no longer this goal's problem.
+
+   **The suite stales its own input.** Measured 2026-08-10, sharpening the reviewer's Finding 7 with a
    mechanism. The cycle:
 
    * `docs/counts.tex` carries `\totaltests`, so **adding a test changes it** (6153 → 6156
