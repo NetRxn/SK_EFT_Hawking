@@ -1322,7 +1322,23 @@ def check_bundle_manuscript_length() -> CheckResult:
     **Both bounds carry weight, and they catch different failures.** A ceiling catches
     a letter that has become a monograph. A *floor* catches the failure this corpus
     actually exhibits — a container declared as a deep paper whose content is a letter.
-    Dropping the floor would make the gate agree with every one of the audit's findings.
+
+    ⚠️ **THE FLOOR IS ADVISORY AS OF 2026-08-10, BY OPERATOR DECISION.** Verbatim:
+    *"if length of paper is not sufficient, it's ok to skip. I don't think it's
+    realistic to write that length in many areas."* Under-floor findings are reported
+    with their exact magnitude and flagged as warnings; they no longer fail the check.
+    Over-ceiling still fails — a journal rejects an over-length manuscript outright,
+    which is a submission blocker rather than an aspiration.
+
+    **What was deliberately NOT done, and why it matters:** the declared floors were
+    not lowered to match current page counts. That would have made the gate agree with
+    every one of the audit's findings — the exact move the paragraph above says would
+    hollow it out — and it would have destroyed the measurement the operator is
+    choosing to accept. Accepting a gap and hiding it are different acts. The charters
+    still say what the venues want; the check still says how far each draft is from
+    it; only the verdict stopped blocking. If a charter is genuinely unrealistic for a
+    given bundle, re-setting THAT bundle's `length_target` is a per-bundle editorial
+    decision for goal 2, made with the operator and recorded — not a silent sweep.
 
     ⚠️ **UNMEASURED is not PASS, and there are four ways to reach it** — no declared
     target, no compiled PDF, a PDF older than the draft's input closure, or no
@@ -1367,9 +1383,23 @@ def check_bundle_manuscript_length() -> CheckResult:
             under.append(f"{code}: {value} {u} < floor {floor} — declared as a "
                          f"{md.get('target_journal', '?')} article, sized like a letter")
 
-    for label, rows in (("over_ceiling", over), ("under_floor", under)):
-        for r in rows:
-            details.append(Detail(label, False, r))
+    # ⚠️ **OPERATOR DECISION 2026-08-10: UNDER-FLOOR IS ADVISORY, NOT A FAILURE.**
+    # Verbatim: *"if length of paper is not sufficient, it's ok to skip. I don't
+    # think it's realistic to write that length in many areas."*
+    #
+    # This is a product decision and only the operator could make it. What it does
+    # NOT authorise, and what was deliberately not done: lowering the declared
+    # floors to match current page counts. That would erase the measurement. The
+    # floors stay as the charters state them, every gap is still reported with its
+    # exact magnitude, and the verdict simply stops blocking on it.
+    #
+    # OVER-ceiling remains a hard FAIL. It is a different fact: a journal rejects
+    # an over-length manuscript outright, so that one is a real submission blocker
+    # rather than an aspiration.
+    for r in over:
+        details.append(Detail("over_ceiling", False, r))
+    for r in under:
+        details.append(Detail("under_floor", True, r, warning=True))
     for r in unmeasured:
         details.append(Detail("unmeasured", True, r, warning=True))
 
@@ -1381,13 +1411,14 @@ def check_bundle_manuscript_length() -> CheckResult:
             f"(`scripts/compile_bundle_pdf.py --all`) and declare `length_target`."))
         return CheckResult(passed=False, measured=False, details=details)
 
-    bad = len(over) + len(under)
     details.insert(0, Detail(
-        "summary", bad == 0,
-        f"{sized} manuscript(s) sized against their declared target, {bad} outside it "
-        f"({len(over)} over ceiling, {len(under)} under floor); "
-        f"{len(unmeasured)} UNMEASURED"))
-    return CheckResult(passed=bad == 0, details=details)
+        "summary", len(over) == 0,
+        f"{sized} manuscript(s) sized against their declared target — "
+        f"{len(over)} OVER ceiling (gating), {len(under)} under floor "
+        f"(ADVISORY by operator decision 2026-08-10, not gating); "
+        f"{len(unmeasured)} UNMEASURED",
+        warning=bool(under)))
+    return CheckResult(passed=len(over) == 0, details=details)
 
 
 @register_check("bundle_metadata_matches_graph",

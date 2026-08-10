@@ -147,6 +147,22 @@ records the target as **data with a provenance field**, not as a frozen constant
 target is not yet decided records `length_target: null` with a stated reason — which reads as
 UNMEASURED, never as passing. A charter is a current commitment, not a freeze.
 
+⚠️ **AMENDED 2026-08-10 BY OPERATOR DECISION: the FLOOR is advisory.** Verbatim: *"if length
+of paper is not sufficient, it's ok to skip. I don't think it's realistic to write that length
+in many areas."* `bundle_manuscript_length` now reports every under-floor bundle, with its
+magnitude, as a WARNING and passes; over-ceiling still fails, because an over-length manuscript
+is rejected by the venue rather than merely under-ambitious.
+
+This amends C4's consequence, not C4 itself — the target remains data with provenance. Two
+things were explicitly NOT done, and the distinction is the whole point of recording this here:
+
+* **The declared floors were not lowered to match current page counts.** That would make the
+  gate agree with every finding in the audit that created it, and would delete the measurement
+  the operator is choosing to accept. Accepting a gap and hiding it are different acts.
+* **No bundle's `length_target` was re-set.** If a specific charter is genuinely unrealistic for
+  its venue, changing THAT bundle's target is a per-bundle editorial call for goal 2, made with
+  the operator and recorded with a reason — not a sweep performed under cover of this decision.
+
 ### C5. The decider must not be the generator.
 
 Carried verbatim from `PROSE-QUALITY-BASELINE.md` §Remediation item 4. An LLM rewriting LLM prose

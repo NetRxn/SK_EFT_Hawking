@@ -742,17 +742,39 @@ class TestBundleManuscriptLength:
         assert not r.passed
         assert any("over_ceiling" == d.name for d in r.details)
 
-    def test_under_floor_fails(self, tmp_path, monkeypatch):
+    def test_under_floor_is_REPORTED_but_does_not_gate(self, tmp_path, monkeypatch):
         """The live D7 case: 3 pp declared as a ~40 pp article.
 
-        A ceiling-only gate would PASS this, and passing it is precisely how D7 and
-        D10 were closed GREEN (audit 2026-08-01 §5.4 Gate 12).
-        """
+        ⚠️ **OPERATOR DECISION 2026-08-10** — verbatim: *"if length of paper is not
+        sufficient, it's ok to skip. I don't think it's realistic to write that
+        length in many areas."* Under-floor became ADVISORY. This test previously
+        asserted `not r.passed`.
+
+        What the decision did NOT authorise, and what this test still pins: the
+        finding must still be REPORTED, with its magnitude. Silencing it — or
+        lowering the declared floor to match the page count — would erase the
+        measurement, and the operator asked to stop blocking, not to stop knowing.
+        A ceiling-only gate that emitted NOTHING is how D7 and D10 were closed GREEN
+        (audit 2026-08-01 §5.4 Gate 12); that failure mode is still guarded."""
         self._setup(tmp_path, monkeypatch, {"D7": self._blob(floor=24)},
                     measured={"D7": (3, "pages", None)})
         r = bru.check_bundle_manuscript_length()
-        assert not r.passed
-        assert any(d.name == "under_floor" for d in r.details)
+        assert r.passed, "under-floor is advisory by operator decision"
+        under = [d for d in r.details if d.name == "under_floor"]
+        assert under, "the gap must still be reported"
+        assert under[0].warning is True, "reported as an advisory, visibly"
+        assert "24" in under[0].message and "3" in under[0].message, (
+            "the magnitude must survive: floor and actual both stated")
+
+    def test_over_ceiling_still_FAILS(self, tmp_path, monkeypatch):
+        """The half the operator decision did NOT touch, and the reason it did not:
+        a journal rejects an over-length manuscript outright, so this is a real
+        submission blocker rather than an aspiration."""
+        self._setup(tmp_path, monkeypatch, {"D7": self._blob(floor=24, ceiling=40)},
+                    measured={"D7": (99, "pages", None)})
+        r = bru.check_bundle_manuscript_length()
+        assert not r.passed, "over-ceiling must still gate"
+        assert any(d.name == "over_ceiling" and not d.passed for d in r.details)
 
     def test_a_boundary_value_is_inside_the_band(self, tmp_path, monkeypatch):
         """Inclusive bounds, asserted in both directions so an off-by-one shows up."""
@@ -804,8 +826,9 @@ class TestBundleManuscriptLength:
                     measured={"D1": (3, "pages", None),
                               "D2": (None, "pages", "no compiled PDF")})
         r = bru.check_bundle_manuscript_length()
-        assert not r.passed and r.measured, "one sized bundle ⇒ a real verdict"
-        assert any(d.name == "under_floor" for d in r.details)
+        assert r.measured, "one sized bundle ⇒ a real verdict, not UNMEASURED"
+        assert any(d.name == "under_floor" for d in r.details), (
+            "the sized bundle must still be judged and its gap reported")
 
     # ── the measurer's trust conditions ───────────────────────────────────
     def test_a_pdf_older_than_the_draft_is_not_trusted(self, tmp_path, monkeypatch):

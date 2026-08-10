@@ -142,12 +142,19 @@ stage not run are different states, and only one of them is recoverable by re-ru
 
 * **`readiness_submission_gate` — RED BY DESIGN.** It is downstream of Stages 9/10/13.
   It cannot go green until goal 2 runs them. **Do not "fix" it.**
-* **`bundle_manuscript_length` — RED, deliberately, for 11 under-floor bundles.** Its only
-  routes to green are writing the content or nulling a declared `length_target`, and every
-  one of the 11 declares a `target_journal`, so nulling is a re-charter. The check's own
-  docstring names that as making the gate "agree with every one of the audit's findings".
-  The coach ruled it stays red and carries into goal 2; goal item 6 closes PARTIALLY MET
-  with the measurement in `ACCURACY_LEDGER` V70.
+* **`bundle_manuscript_length` — now GREEN, by OPERATOR DECISION, with 11 bundles still under
+  their floors.** The operator ruled on 2026-08-10: *"if length of paper is not sufficient,
+  it's ok to skip. I don't think it's realistic to write that length in many areas."*
+  Under-floor is ADVISORY — every gap is still reported with its magnitude as a warning;
+  over-ceiling still fails, because a venue rejects an over-length manuscript outright.
+
+  ⚠️ **Goal 2 must not read this green as "the manuscripts are the right length".** No floor
+  was lowered and no `length_target` was re-set; the charters still say what the venues want
+  and the drafts are still short of them. What changed is that the gate stopped blocking.
+  **The open question goal 2 inherits is per-bundle: for each of the 11, does the CHARTER move
+  or does the DRAFT?** That is an editorial call to make with the operator, one bundle at a
+  time, with the reason recorded — not a sweep. See `ACCURACY_LEDGER` V75 (the conflict) and
+  V77 (the decision and what it did not authorise).
 
 ⚠️ **`bundle_figure_adequacy` is green with EIGHT bundles carrying zero drawn figures.** That is
 legitimate — the pipeline law mandates `\figuredeferred{id}{reason}` as the deferral form and the

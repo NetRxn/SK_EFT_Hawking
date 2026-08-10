@@ -2931,3 +2931,33 @@ it every time is a reader with fresh context and no stake in the claim.
 
 **NOT-AN-ASSERTION.** Row 1's "74 against 75" is the count on the tree at that commit with a
 built `lean/.lake`. It is not a claim about any other environment.
+
+---
+
+## V77 — the length floor becomes advisory, by operator decision
+
+**This is the one condition in this goal that an agent could not resolve, and it was escalated
+rather than decided.** V75 recorded the conflict: goal condition 6 requires
+`bundle_manuscript_length` green; condition 5 forbids forcing a gate green by re-chartering; and
+the only other route was writing several hundred manuscript pages, which is goal 2's scope. The
+loop left the gate red and named the conflict. The operator then ruled.
+
+> **Operator, 2026-08-10, verbatim:** *"if length of paper is not sufficient, it's ok to skip. I
+> don't think it's realistic to write that length in many areas."*
+
+| # | Proposition | Decider | Verbatim result |
+|---|---|---|---|
+| 1 | Under-floor no longer gates | `validate.py --check bundle_manuscript_length` | **PASS**, summary `0 OVER ceiling (gating), 3 under floor (ADVISORY by operator decision 2026-08-10, not gating); 16 UNMEASURED` |
+| 2 | Every gap is still reported, with its magnitude | read the details | Each under-floor bundle still emits `D7: 4 pp < floor 24 — declared as a PRX Quantum … article, sized like a letter`, as a WARNING |
+| 3 | Over-ceiling still fails | seeded a 99 pp bundle against a 40 pp ceiling in `tests/test_d5_bundles_readiness.py` | **Fails**, as it must — a venue rejects an over-length manuscript outright |
+| 4 | No floor was lowered; no `length_target` was re-set | `git diff` over `papers/*/bundle_metadata.json` | **Zero changes.** The charters still say what the venues want |
+
+**WHAT WAS DELIBERATELY NOT DONE.** The tempting implementation was to lower each declared floor
+to the current page count. That would have turned the gate green with no warnings at all — and it
+is precisely the move the check's own docstring says "would make the gate agree with every one of
+the audit's findings". **Accepting a gap and hiding it are different acts.** The operator asked to
+stop blocking, not to stop knowing.
+
+**Condition 6 is therefore met by AMENDMENT, not by achievement**, and this entry exists so that
+no later reader mistakes one for the other. The 11 under-floor bundles are still 11 under-floor
+bundles; goal 2 inherits the question of whether each charter or each draft should move.
