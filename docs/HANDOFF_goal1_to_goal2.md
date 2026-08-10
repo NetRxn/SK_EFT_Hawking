@@ -292,8 +292,15 @@ UNMEASURED count and names every skipped bundle), not by lying about `measured`.
 Regenerating `counts.tex` staled every bundle PDF; `bundle_manuscript_length` correctly
 went 21-UNMEASURED and **FAILED** (nothing sizable ⇒ UNVERIFIED, not passing); the
 documented remedy `compile_bundle_pdf.py --all --force` restored 21/21 sized, 0
-unmeasured. **The §5.1 regeneration ORDER is real — follow it.** The 17 compile failures
-are legacy per-paper drafts (`paperNN_*`, `note_*`), **none of the 21 bundles**.
+unmeasured. **The §5.1 regeneration ORDER is real — follow it**, and note it is *counts
+first, compile second*: regenerating `counts.tex` after compiling re-stales 16 of the 21 at
+once, which is what happened here.
+
+Compile failures are **14** legacy per-paper drafts, **none of the 21 bundles** —
+`paper_latex_compiles` reports `50/64 drafts clean (21/21 bundles, 29/43 legacy) … 14 legacy
+(ratcheted)` at its frozen ceiling of 14. ⚠️ An earlier draft of this section said "17",
+counted off raw `compile_bundle_pdf.py --all --force` FAIL lines rather than off the ratcheted
+check. The check is the authoritative instrument; the raw script's failure set is wider.
 
 ### Five tests that could not fail
 

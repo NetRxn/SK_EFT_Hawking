@@ -2641,6 +2641,16 @@ SENTENCE_OVER_60_ADVISORY = 220
 # dimensionless, so this is arguably a false positive of that leg rather than debt —
 # but the instrument was NOT tuned to make this wave pass. The class is filed as
 # TODO-D37 for separate adjudication, and the ceiling carries the cost meanwhile.
+#
+# ⚠️ CHALLENGED 2026-08-10 by a fresh-context closure reviewer, which read the raise as
+# "the loop raised the ceiling to admit a literal it had itself just added" and rated it
+# indefensible. RE-MEASURED, and the rationale above holds: the theorem is real —
+# `SKEFTHawking.FaultTolerance.AGP.steaneAGPThreshold_gt` resolves in `lean_deps.json` —
+# so the alternative the challenge implies (route the value through `counts.tex`) would
+# make a THEOREM'S OWN ASSERTED CONSTANT depend on a regenerated file, which is strictly
+# worse than one ratcheted literal. The raise stands, deliberately, and sets NO precedent:
+# it is admissible only because the value is a theorem's statement and a primary source's
+# published bound — never because a wave found the ceiling inconvenient.
 
 # ════════════════════════════════════════════════════════════════════
 # VACUOUS-STATEMENT BASELINE (identity-pinned ratchet; SIG gate hardening 2026-06-13)

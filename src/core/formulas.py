@@ -470,7 +470,12 @@ def effective_temperature_ratio(omega, c_s, kappa, D,
     # definition SecondOrderSK.GammaH and transonic_background.
     # compute_dissipative_correction. Forming Γ_H at the mode wavenumber ω/c_s
     # would make this first-order term spuriously scale with frequency (B-05).
-    Gamma_H = (gamma_1 + gamma_2) * (kappa / c_s) ** 2 if c_s > 0 else 0.0
+    # Routed through the canonical `horizon_damping_rate` in THIS module. It was
+    # open-coded here with the exact `if c_s > 0 else 0.0` sentinel that function's
+    # own docstring condemns — inside the canonical home, so the rule was broken
+    # where it is declared. A negative c_s silently reported a DISSIPATIONLESS
+    # horizon (ratio 0.9948 instead of an error). Latent: all callers pass c_s > 0.
+    Gamma_H = horizon_damping_rate(gamma_1, gamma_2, kappa, c_s)
     delta_diss = first_order_correction(Gamma_H, kappa) if kappa > 0 else 0.0
 
     # Second-order correction: mode-dependent (k = ω/c_s), FREQUENCY-DEPENDENT.

@@ -148,7 +148,7 @@ def ensure_lean_deps_fresh() -> tuple[bool, str]:
     ----------------------------------------------------------
     The guard is a SHA-256 over every `.lean` source: **46 ms** measured, against
     **150 ms** for one parse of the 70 MB artifact. When a refresh IS needed, a full
-    run already pays for that same extraction at position 29 via `counts_fresh` →
+    run already pays for that same extraction via `counts_fresh` →
     `update_counts.py`; this moves the cost earlier, it does not add it.
 
     Degrades to a no-op (never raises) if `extract_lean_deps` is unavailable, so a

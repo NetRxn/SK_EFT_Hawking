@@ -298,6 +298,41 @@ class TestLakeResolution:
             f"{root.parent} (ADR-009 H1: no Path(__file__) parent-walks)")
         assert root.is_absolute(), "callers cd elsewhere; a relative root is a bug"
 
+    def test_lean_root_is_DERIVED_from_the_anchor_not_from__file__(self):
+        """ADR-009 H1: the resolver must not parent-walk from its own location.
+
+        ⚠️ THIS CANNOT BE TESTED BEHAVIOURALLY, and the previous attempt to do so
+        was mis-proven. `validate_helpers.py:73` sets
+        `PROJECT_ROOT = SCRIPT_DIR.parent`, so a FAITHFUL parent-walk from
+        `scripts/validation/checks/` —
+        `Path(__file__).resolve().parent.parent.parent.parent / "lean"` — returns
+        the byte-identical path. Every assertion about the RESULT (including
+        `root.parent == _H.PROJECT_ROOT`) is satisfied by it. The mutation I
+        originally used to "prove" the sibling test walked the WRONG NUMBER of
+        levels, which is a typo, not the architectural violation, so the proof was
+        invalid. A fresh-context reviewer caught it by seeding the correct walk and
+        watching the test stay green.
+
+        The property is about DERIVATION, not value, so the source is the only
+        place it is visible. Behaviour is still covered by the sibling test above,
+        which catches wrong-depth walks; this one catches faithful ones.
+        """
+        src = Path(lt.__file__).read_text()
+        fn = next(n for n in ast.walk(ast.parse(src))
+                  if isinstance(n, ast.FunctionDef) and n.name == "_resolve_lean_root")
+        body = ast.unparse(fn)
+
+        assert "__file__" not in body, (
+            "`_resolve_lean_root` derives its path from `__file__`. ADR-009 H1 "
+            "requires the shared `validate_helpers.PROJECT_ROOT` anchor: a "
+            "parent-walk silently returns the WRONG root the moment this file "
+            "moves between directories, and — because PROJECT_ROOT is itself one "
+            "level up from scripts/ — it returns the RIGHT path today, so no "
+            "behavioural test can catch it.\n\n" + body)
+        assert "PROJECT_ROOT" in body, (
+            "`_resolve_lean_root` no longer references the PROJECT_ROOT anchor:\n"
+            + body)
+
     def test_the_two_callers_keep_DIFFERENT_skip_messages(self, monkeypatch):
         """⚠️ THE POINT OF THE EXTRACTION, and its limit. Only the RESOLUTION is
         shared; each check keeps its own SKIP text and its own early return, because
