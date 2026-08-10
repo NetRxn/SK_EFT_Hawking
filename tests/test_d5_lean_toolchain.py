@@ -501,6 +501,22 @@ class TestElaborationKnobWatchlist:
         assert any("synthInstance.maxSize 400" in (d.message or "") for d in r.details)
         assert r.details[0].warning
 
+    def test_an_EMPTY_tree_is_UNMEASURED_not_a_clean_bill(self, tmp_path, monkeypatch):
+        """An existing but empty tree scans nothing. Reporting `0 sites — 22 below` with
+        passed=True is an empty population sold as evidence, and it counts toward the
+        zero-headroom CI_MIN_CHECKS_RUN floor. This check is named as Invariant #10's
+        enforcement, so a vacuous pass is the invariant declaring itself green while
+        measuring nothing. Filed by closure review 3; the directory-exists guard alone
+        did not cover it."""
+        empty = tmp_path / "lean" / "SKEFTHawking"
+        empty.mkdir(parents=True)
+        monkeypatch.setattr(_H, "LEAN_DIR", empty)
+        monkeypatch.setattr(_H, "PROJECT_ROOT", tmp_path)
+        r = lt.check_elaboration_knob_watchlist()
+        assert r.measured is False and r.passed is False, (
+            "an empty scan reported a verdict — Invariant #10 would report itself "
+            "satisfied on a population it never read")
+
     def test_a_clean_tree_reports_zero(self, tmp_path, monkeypatch):
         """SILENT ON CORRECT DATA."""
         monkeypatch.setattr(_H, "LEAN_DIR",

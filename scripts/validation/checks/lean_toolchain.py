@@ -665,9 +665,11 @@ def check_elaboration_knob_watchlist() -> CheckResult:
 
     hits: List[Detail] = []
     violations: List[Detail] = []
+    scanned = 0
     for f in sorted(lean_dir.rglob("*.lean")):
         if "/.lake/" in str(f):
             continue
+        scanned += 1
         lines = f.read_text(errors="replace").splitlines()
         rel = f.relative_to(_H.PROJECT_ROOT)
         for i, line in enumerate(lines, 1):
@@ -697,6 +699,20 @@ def check_elaboration_knob_watchlist() -> CheckResult:
                         f"{rel}:{i}", False,
                         f"maxHeartbeats {mh.group(1)} on a `{attaches_to}` — Invariant #10 "
                         f"forbids it in a proof body; decompose into `have` sub-lemmas"))
+
+    # SEAM GUARD (closure review 3). The directory-exists guard above is not enough:
+    # an existing but EMPTY tree scans zero files, finds zero violations, and reports
+    # `0 sites (ceiling 22) — 22 below` with passed=True, measured=True — an empty
+    # population sold as evidence, and counted toward the zero-headroom
+    # CI_MIN_CHECKS_RUN floor. This check is named in the handoff as Invariant #10's
+    # enforcement, so a vacuous pass here is the invariant reporting itself green
+    # while measuring nothing. Its sibling `lean_modules_in_build_graph` already
+    # carries this guard; this one did not.
+    if scanned == 0:
+        return CheckResult(passed=False, measured=False, details=[
+            Detail("lean_src", False,
+                   f"SKIPPED — no .lean files under {lean_dir}; Invariant #10 is "
+                   f"UNVERIFIED, not satisfied")])
 
     over = len(violations) > MAXHEARTBEATS_PROOF_BODY_CEILING
     summary = Detail(

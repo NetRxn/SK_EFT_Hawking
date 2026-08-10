@@ -159,7 +159,7 @@ def count_lean(deps_path: Path, preloaded: list | None = None) -> dict:
 
     # ⚠️ AUTHOR-WRITTEN ONLY, via the canonical resolver. This read
     # `[d for d in data if d["kind"] == "theorem"]` with NO autogen filter, so
-    # `\totaltheorems` published 26,398 — of which 3,711 are compiler-generated
+    # `\totaltheorems` published 26,398 — of which 3,729 are compiler-generated
     # (1,508 `.eq_1` equation lemmas, 790 `.sizeOf_spec`, 420 `.inj`, 417 `.injEq`,
     # 184 `.congr_simp`, …). That number is `\input` into I1, D2 and I3 and rendered
     # to a reader as "machine-checked theorems" and "theorems were written" —

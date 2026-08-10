@@ -341,6 +341,7 @@ def lean_module_summary(modules: list[str],
     """
     import json as _json
     from src.core.constants import ARISTOTLE_THEOREMS
+    from validate_helpers import autogen_index as _autogen_index
 
     lean_deps_path = PROJECT_ROOT / "lean" / "lean_deps.json"
     data = []
@@ -349,6 +350,17 @@ def lean_module_summary(modules: list[str],
             data = _json.loads(lean_deps_path.read_text())
         except Exception:
             data = []
+
+    # `kind == "theorem"` includes Lean's OWN products — `.eq_1`, `.sizeOf_spec`,
+    # `.inj`, `.congr_simp`, `.eq_def`. Publishing them as "theorems" inflated
+    # LatticeHamiltonian 33->62 and paper7's Total 79->135 in tracked, reader-facing
+    # tables. `validate_helpers.autogen_index` is the SINGLE owner of "is this
+    # compiler-generated"; do NOT reintroduce a local `kind == "theorem"` filter here
+    # or in any other generator (this is the fourth site to have carried one).
+    _autogen = _autogen_index(data)
+
+    def _is_author_theorem(d: dict) -> bool:
+        return d.get('kind') == 'theorem' and not _autogen.get(d.get('name', ''))
 
     # Build per-module index
     by_module: dict[str, list[dict]] = {}
@@ -361,7 +373,7 @@ def lean_module_summary(modules: list[str],
     totals = {'theorems': 0, 'aristotle': 0, 'sorry': 0, 'axioms': 0, 'definitions': 0}
     for short_name in modules:
         decls = by_module.get(short_name, [])
-        theorems = sum(1 for d in decls if d.get('kind') == 'theorem')
+        theorems = sum(1 for d in decls if _is_author_theorem(d))
         axioms = sum(1 for d in decls if d.get('kind') == 'axiom')
         definitions = sum(1 for d in decls if d.get('kind') == 'def')
         sorry_count = sum(
@@ -370,7 +382,7 @@ def lean_module_summary(modules: list[str],
         )
         aristotle_count = sum(
             1 for d in decls
-            if d.get('kind') == 'theorem'
+            if _is_author_theorem(d)
             and d.get('name', '').rsplit('.', 1)[-1] in ARISTOTLE_THEOREMS
         )
         totals['theorems'] += theorems

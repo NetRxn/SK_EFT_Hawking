@@ -51,7 +51,7 @@ The recurring shape across both passes was **a guard that could not fail**:
 | `Detail.measured` silently reset to `True` on every memo replay | positional round-trip over 4 of 5 fields |
 | the production-graph guard was bypassable, aimed at prod, AND deselected from the default run | three independent failures in one test, any one re-arming a 49,003-vertex wipe |
 | `proxy_body_audit`'s scanner anchored at column 0 | blind to 8.1% of the corpus; `@[simp]`, `private`, indented all invisible |
-| `\totaltheorems` published 3,711 compiler-generated declarations as authored | reached readers in I1's abstract |
+| `\totaltheorems` published 3,729 compiler-generated declarations as authored | reached readers in I1's abstract |
 
 ## Reading the evidence
 
