@@ -61,7 +61,29 @@ is reported as not verified.
 | C16 | memo, ci_mode, build_graph, public_surface + 9 | 13 | 5,747 | dispatched |
 | C17 + C18 | the seam/meta guards (ratchets, cannot-measure, registry contract, conftest) + 27 | 49 | 6,467 | dispatched |
 
-Wave 3 — docs (C01–C06, 101 files, 34,077) and papers (C08–C10, 123 files, 12,235): **pending**.
+Wave 2 returned **38 findings across 828 test functions**, 477 of them individually
+mutation-verified, including **4 BLOCKERs** — every one a guard that could not fail:
+a compile-gate verdict written for a run that compiled nothing; `Detail.measured`
+silently reset on every cache replay; the `--ci` coverage floor counting registry
+entries instead of measured checks; and the guard against wiping the 49,003-vertex
+production graph being simultaneously bypassable, aimed at production, and deselected
+from the default run.
+
+Wave 3 — docs and papers. **Dispatched, READ-ONLY.** Reviewers are explicitly forbidden
+to mutate: wave 2 hit a real collision when one chunk agent's backup/restore of a shared
+file clobbered another's in-flight seed. Doc and paper findings need no mutation — they
+are verifiable by measurement, under the two-instrument rule.
+
+| chunk | files | lines | status |
+|---|---:|---:|---|
+| C01–C03 | the heaviest architecture/ADR documents | 17 | 16,966 | dispatched |
+| C04–C06 | the remaining 84 docs incl. frozen procedures | 84 | 17,111 | dispatched |
+| C08–C10 | `papers/**` — 21 bundle drafts + metadata + legacy | 123 | 12,235 | dispatched |
+
+**All 21 chunks are now dispatched or closed** — the partition is fully covered for the
+first time. What remains after wave 3 lands: fix its findings, then a FRESH-CONTEXT
+closure reviewer over the whole chunked pass at final HEAD, which is the only thing that
+can turn "reviewed" into a claim someone else can check.
 
 ## Rules given to every chunk reviewer
 
