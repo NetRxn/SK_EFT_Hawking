@@ -371,3 +371,54 @@ comments, so nothing caught the dangling reference. Now routed through
    `END_TO_END_MAP.md`, the `ADR-010 §Open item 4` mis-citation at three sites (the
    mtime decision lives in **§D6**), "fifteen live sites" superseded by a sixteenth, and
    D36's at-HEAD figures that were stale one commit after they were written.
+
+---
+
+## 9. Closure review (2026-08-10) — what it overturned, and three things it is right about
+
+A fresh-context reviewer audited the branch under a rule barring it from accepting this
+loop's commit messages, ledger, handoff, or code comments as evidence. Only commands it
+ran itself counted. It verified ten of the eleven specific claims put to it — including
+the `adw_effective_potential` symmetry fix, the `--check` repeat semantics, the sorry-guard
+regex against real Lean output, the `record_review` refusal (with all 21 metadata files
+byte-identical before/after), the `update_counts` refusal, the `2.58×` ratio, the 16-of-21
+`counts.tex` closure, and the "two bundles" correction in F.
+
+**It overturned one, and the one it overturned was a claim about my own work.** See §8's
+`test_lean_root_defaults_under_the_project_anchor`: I asserted it was mutation-proven
+against an ADR-009 H1 parent-walk. It was not. `validate_helpers.py:73` sets
+`PROJECT_ROOT = SCRIPT_DIR.parent`, so a *faithful* walk from `scripts/validation/checks/`
+returns the byte-identical path and satisfies every assertion about the result. My mutation
+walked the wrong number of levels — a typo, not the violation — so it proved nothing. The
+property is about **derivation, not value**, and is only visible in the source; there is
+now a test that reads the parsed function body, and it is proven against the reviewer's own
+seed. **The lesson generalises: a mutation only proves a test when the mutation is the
+defect the test claims to catch, not merely something nearby.**
+
+### Three findings that are real and are NOT closed
+
+1. **Goal condition 5, read literally, is not met — by inheritance.** 22 `set_option
+   maxHeartbeats` sites sit in proof bodies (Pipeline Invariant #10 forbids them), and 26
+   of 631 apex theorems carry `native_decide` axioms in their closure, so "axiom closure is
+   exactly `{propext, Classical.choice, Quot.sound}`" holds only if compiler-trust axioms
+   are excluded. Both are **identical on `main`**, ratcheted at zero headroom
+   (`MAXHEARTBEATS_PROOF_BODY_CEILING`, ADR-002 / `bundle_native_decide_debt`), and
+   untouched by this branch. They are disclosed debt, not regressions — but the check that
+   reports the heartbeat sites is *advisory and passes*, so nothing gates on Invariant #10.
+   **Whether `native_decide` should count toward the headline-axiom claim is an operator
+   call, not one this loop should make silently.**
+
+2. **`--ci` green is not reproducible from a bare checkout.** `papers/**/*.pdf` is
+   gitignored (3 of 21 bundle PDFs are tracked), and `bundle_manuscript_length` refuses to
+   size a PDF that is absent or older than its draft's `\input` closure. In a fresh
+   `git worktree` of HEAD it returns `passed=False, measured=False` with all 21 unmeasured —
+   which also drops the run below `CI_MIN_CHECKS_RUN = 75`, since that floor counts
+   *measured* checks at zero headroom. **A clone must run `compile_bundle_pdf.py --all`
+   before `--ci` means anything.** This is a build-artifact dependency rather than a defect,
+   but it is undocumented anywhere the reader would look, and it makes the gate's green
+   depend on local state.
+
+3. **The branch was a moving target during review.** The loop committed twice while the
+   reviewer measured, resolving two findings mid-audit. Any closure verdict on this branch
+   must name a SHA — the reviewer's is `f8f2fa52`, and §8's fixes land after it. **Freeze
+   the tree before dispatching the next one.**
