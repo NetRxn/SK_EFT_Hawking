@@ -19,7 +19,26 @@ MUTATION-VERIFIED 2026-08-04 — 10 mutations, all CAUGHT, clean negative contro
 """
 from __future__ import annotations
 
+def _count_in(message: str, unit: str) -> int:
+    """Extract the integer preceding `unit` in a summary message.
+
+    ⚠️ USE THIS INSTEAD OF `f"{n} {unit}" in message`. A count substring is true
+    for infinitely many values: `"0 drawn"` is a substring of `"10 drawn"`,
+    `"1 em-dash"` of `"11 em-dash"`, `"2254 jobs"` of `"12254 jobs"`. Chunk-review
+    mutations that inflated five separate production counts by 10x left every one
+    of those assertions green.
+
+    This is a CLASS sweep, not a one-site fix. The same defect was found and fixed
+    once in `test_d5_papers_prose.py` (`"0 unresolved" in message`) and the other
+    sites were not swept — which is exactly how it survived to be found again.
+    """
+    m = re.search(rf"(\d+) {re.escape(unit)}", message)
+    assert m is not None, f"no '<int> {unit}' in message: {message!r}"
+    return int(m.group(1))
+
+
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -417,7 +436,8 @@ class TestAtlasHypothesisDiscipline:
             {"id": "hyp:H_b", "module": "Beta"},
         ])
         msg = next(d for d in r.details if d.name == "gating_vs_orphan").message
-        assert "1 gate >=1 downstream theorem" in msg and "1 orphan" in msg
+        assert _count_in(msg, "gate >=1 downstream theorem") == 1
+        assert _count_in(msg, "orphan") == 1
 
     def test_the_module_stem_strips_a_phase_annotation(self, monkeypatch):
         """`module` is often annotated `Foo (Phase X…)`; without stripping, the same

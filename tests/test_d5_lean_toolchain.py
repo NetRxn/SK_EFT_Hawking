@@ -15,8 +15,27 @@ MUTATION-VERIFIED 2026-08-04 — 11 mutations, all CAUGHT, clean negative contro
 """
 from __future__ import annotations
 
+def _count_in(message: str, unit: str) -> int:
+    """Extract the integer preceding `unit` in a summary message.
+
+    ⚠️ USE THIS INSTEAD OF `f"{n} {unit}" in message`. A count substring is true
+    for infinitely many values: `"0 drawn"` is a substring of `"10 drawn"`,
+    `"1 em-dash"` of `"11 em-dash"`, `"2254 jobs"` of `"12254 jobs"`. Chunk-review
+    mutations that inflated five separate production counts by 10x left every one
+    of those assertions green.
+
+    This is a CLASS sweep, not a one-site fix. The same defect was found and fixed
+    once in `test_d5_papers_prose.py` (`"0 unresolved" in message`) and the other
+    sites were not swept — which is exactly how it survived to be found again.
+    """
+    m = re.search(rf"(\d+) {re.escape(unit)}", message)
+    assert m is not None, f"no '<int> {unit}' in message: {message!r}"
+    return int(m.group(1))
+
+
 import ast
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -370,7 +389,8 @@ class TestLeanBuild:
         r = self._run(tmp_path, monkeypatch,
                       _Proc(0, stdout="Build completed successfully (2254 jobs)."))
         assert r.passed is True
-        assert any("2254 jobs" in (d.message or "") for d in r.details)
+        assert any(_count_in(d.message or "", "jobs") == 2254
+                   for d in r.details if "jobs" in (d.message or ""))
 
     def test_a_failing_build_fails(self, tmp_path, monkeypatch):
         """FIRES ON THE SEEDED DEFECT."""
@@ -488,7 +508,7 @@ class TestElaborationKnobWatchlist:
         monkeypatch.setattr(_H, "PROJECT_ROOT", tmp_path)
         r = lt.check_elaboration_knob_watchlist()
         assert not r.details[0].warning
-        assert "0 proof-body" in (r.details[0].message or "")
+        assert _count_in(r.details[0].message or "", "proof-body") == 0
 
     def test_maxHeartbeats_in_a_proof_body_is_now_ENFORCED(self, tmp_path, monkeypatch):
         """⚠️ THIS TEST IS THE INVERSE OF THE ONE IT REPLACES, AND THAT IS THE POINT.

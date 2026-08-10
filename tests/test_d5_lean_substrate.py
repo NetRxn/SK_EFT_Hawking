@@ -92,25 +92,58 @@ class TestFormulasToTheorems:
     """Every Python formula's docstring names its Lean theorem, and that theorem
     exists in the Lean source or in `ARISTOTLE_THEOREMS`."""
 
+    #: ⚠️ A LITERAL CONTRACT, deliberately NOT lifted from the production body.
+    #:
+    #: This used to `ast.literal_eval` the check's own `mapping` and build every
+    #: fixture from it, defended by a docstring arguing a copy "would silently
+    #: describe a different set the moment a formula is added". The opposite is
+    #: true: reading the expectation FROM the code under test means the test can
+    #: only assert the code equals itself, so NARROWING the check is invisible.
+    #: Proven by a chunk reviewer — deleting the entire `turning_point_shift`
+    #: entry from production left all 37 tests GREEN.
+    #:
+    #: This is the SAME defect that was fixed in `test_d5_lean_toolchain.py`
+    #: (`_SPOT_NAMES`) and not swept across at the time. Sweeping the class now.
+    #:
+    #: A stale copy is caught by `test_the_literal_contract_matches_production`
+    #: below — that is what a drift detector is for, and it is the only place the
+    #: production body may be read.
+    _MAPPING: list[tuple[str, list[str]]] = [
+        ('count_coefficients', ['secondOrder_count', 'secondOrder_count_with_parity', 'thirdOrder_count']),
+        ('enumerate_monomials', ['secondOrder_count_with_parity', 'secondOrder_requires_parity_breaking']),
+        ('damping_rate', ['dampingRate_eq_zero_iff']),
+        ('dispersive_correction', ['dispersive_correction_bound', 'bogoliubov_superluminal']),
+        ('first_order_correction', ['firstOrder_correction_zero_iff']),
+        ('effective_temperature_ratio', ['effective_temp_zeroth_order']),
+        ('turning_point_shift', ['turning_point_shift_nonzero', 'turning_point_shift']),
+    ]
+
     @staticmethod
     def _mapping() -> list[tuple[str, list[str]]]:
-        """The check's own `mapping` literal, read from the AST.
+        return [(f, list(ts)) for f, ts in TestFormulasToTheorems._MAPPING]
 
-        Deliberately not restated: the mapping is function-local, and a copy here
-        would silently describe a different set the moment a formula is added.
-        `ast.literal_eval` also refuses anything that is not a plain literal, so
-        this cannot start executing check code by accident.
+    def test_the_literal_contract_matches_production(self):
+        """The pin above must equal what `check_formulas_to_theorems` maps.
+
+        The ONE place production's body may be read — to DETECT drift, never to
+        DEFINE the expectation. A failure here means production changed its
+        formula->theorem mapping and the literal needs a deliberate, reviewed
+        update; that edit is the review surface.
         """
         src = Path(ls.__file__).read_text()
         fn = next(n for n in ast.walk(ast.parse(src))
                   if isinstance(n, ast.FunctionDef) and n.name == "check_formulas_to_theorems")
+        live = None
         for node in ast.walk(fn):
             if isinstance(node, ast.Assign) and \
                     any(getattr(t, "id", None) == "mapping" for t in node.targets):
-                return ast.literal_eval(node.value)
-        raise AssertionError(
-            "check_formulas_to_theorems no longer assigns a literal `mapping` — this "
-            "test read it from the AST precisely so it could not go stale; re-point it")
+                live = ast.literal_eval(node.value)
+        assert live is not None, (
+            "check_formulas_to_theorems no longer assigns a literal `mapping`")
+        assert [(f, list(ts)) for f, ts in live] == self._mapping(), (
+            f"formula->theorem mapping drift.\n  production: {live}\n"
+            f"  pinned:     {self._mapping()}\n"
+            f"Update the literal deliberately; do NOT re-derive it from the source.")
 
     def _all_theorem_names(self) -> list[str]:
         return [t for _f, thms in self._mapping() for t in thms]

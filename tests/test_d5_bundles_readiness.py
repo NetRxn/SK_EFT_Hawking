@@ -25,6 +25,29 @@ MUTATION-VERIFIED 2026-08-04 — 12 mutations, all CAUGHT, clean negative contro
 """
 from __future__ import annotations
 
+#: The roster-literal threshold, pinned as a test-side literal so production
+#: cannot move it without a deliberate, reviewed edit here.
+_EXPECTED_ROSTER_THRESHOLD = 6
+
+
+def _count_in(message: str, unit: str) -> int:
+    """Extract the integer preceding `unit` in a summary message.
+
+    ⚠️ USE THIS INSTEAD OF `f"{n} {unit}" in message`. A count substring is true
+    for infinitely many values: `"0 drawn"` is a substring of `"10 drawn"`,
+    `"1 em-dash"` of `"11 em-dash"`, `"2254 jobs"` of `"12254 jobs"`. Chunk-review
+    mutations that inflated five separate production counts by 10x left every one
+    of those assertions green.
+
+    This is a CLASS sweep, not a one-site fix. The same defect was found and fixed
+    once in `test_d5_papers_prose.py` (`"0 unresolved" in message`) and the other
+    sites were not swept — which is exactly how it survived to be found again.
+    """
+    m = re.search(rf"(\d+) {re.escape(unit)}", message)
+    assert m is not None, f"no '<int> {unit}' in message: {message!r}"
+    return int(m.group(1))
+
+
 import json
 import re
 import sys
@@ -398,8 +421,19 @@ class TestBundleRegistryConsistency:
         the audit's QI-01 lesson a scan protects the NEXT offender, not just today's.
         """
         import bundle_registry
-        codes = sorted(bundle_registry.VALID_BUNDLE_TARGETS)[:bru._ROSTER_LITERAL_THRESHOLD]
-        assert len(codes) >= bru._ROSTER_LITERAL_THRESHOLD
+        # ⚠️ PINNED, not read from production. Sizing the fixture off
+        # `bru._ROSTER_LITERAL_THRESHOLD` made the threshold unobservable: a
+        # chunk reviewer moved it 6 -> 5 and all 136 tests stayed green. Leg C
+        # is the ONLY structural guard against roster re-fragmentation (7
+        # hardcoded copies existed pre-2026-07-30), so its sensitivity must not
+        # be silently adjustable. The old second line was also a tautology:
+        # `len(x[:N]) >= N` for any list of length >= N.
+        assert bru._ROSTER_LITERAL_THRESHOLD == _EXPECTED_ROSTER_THRESHOLD, (
+            f"roster-literal threshold moved to {bru._ROSTER_LITERAL_THRESHOLD}; "
+            f"update the pin DELIBERATELY — lowering it weakens the only guard "
+            f"against a re-hardcoded roster")
+        codes = sorted(bundle_registry.VALID_BUNDLE_TARGETS)[:_EXPECTED_ROSTER_THRESHOLD]
+        assert len(codes) == _EXPECTED_ROSTER_THRESHOLD
         scripts = tmp_path / "scripts"
         scripts.mkdir(parents=True)
         (scripts / "offender.py").write_text(f"ROSTER = {codes!r}\n")
@@ -416,7 +450,7 @@ class TestBundleRegistryConsistency:
         related bundles — is not reported. A guard that fires on correct code gets
         turned off."""
         import bundle_registry
-        codes = sorted(bundle_registry.VALID_BUNDLE_TARGETS)[:bru._ROSTER_LITERAL_THRESHOLD - 1]
+        codes = sorted(bundle_registry.VALID_BUNDLE_TARGETS)[:_EXPECTED_ROSTER_THRESHOLD - 1]
         scripts = tmp_path / "scripts"
         scripts.mkdir(parents=True)
         (scripts / "innocent.py").write_text(f"PAIR = {codes!r}\n")
@@ -1066,7 +1100,7 @@ class TestBundleProseEmDashFree:
                     {"D1": "observables---also drives the SK--EFT bound.\n"})
         r = bru.check_bundle_prose_em_dash_free()
         assert not r.passed
-        assert "1 em-dash" in r.details[0].message
+        assert _count_in(r.details[0].message, "em-dash") == 1
 
     def test_a_hyphen_is_never_flagged(self, tmp_path, monkeypatch):
         self._setup(tmp_path, monkeypatch,
@@ -1097,7 +1131,8 @@ class TestBundleProseEmDashFree:
     def test_the_ligature_form_is_flagged(self, tmp_path, monkeypatch):
         self._setup(tmp_path, monkeypatch, {"D1": "The result --- surprisingly --- holds.\n"})
         r = bru.check_bundle_prose_em_dash_free()
-        assert not r.passed and "2 em-dash" in r.details[0].message
+        assert not r.passed
+        assert _count_in(r.details[0].message, "em-dash") == 2
 
     def test_the_UNICODE_form_is_flagged(self, tmp_path, monkeypatch):
         """120 of the corpus's 741 were literal characters, not ligatures — a check
@@ -1305,7 +1340,8 @@ class TestBundleFigureAdequacy:
         r = bru.check_bundle_figure_adequacy()
         assert r.passed, "a fully-planned bundle still meets its floor"
         summary = r.details[0].message
-        assert "0 drawn" in summary and "4 declared-deferred" in summary
+        assert _count_in(summary, "drawn") == 0
+        assert _count_in(summary, "declared-deferred") == 4
         assert "1 bundle(s) with zero drawn figures" in summary
 
     def test_the_summary_counts_drawn_and_deferred_separately(
@@ -1319,7 +1355,8 @@ class TestBundleFigureAdequacy:
         })
         r = bru.check_bundle_figure_adequacy()
         summary = r.details[0].message
-        assert "4 drawn" in summary and "4 declared-deferred" in summary
+        assert _count_in(summary, "drawn") == 4
+        assert _count_in(summary, "declared-deferred") == 4
         assert "1 bundle(s) with zero drawn figures" in summary
 
     def test_figures_in_a_COMMENT_do_not_count(self, tmp_path, monkeypatch):
