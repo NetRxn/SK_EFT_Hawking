@@ -371,3 +371,64 @@ class TestScopePartitionIsTotal:
         would classify every memoized check by where the DECORATOR lives."""
         assert validate._leaf_module_of("axiom_closure_allowlist") == "lean_toolchain", (
             "a memoized check is being attributed to the memo wrapper, not its own module")
+
+
+class TestTheFloorCountsMEASUREDNotMERELYRAN:
+    """The `--ci` floor must count MEASURED checks, not registry entries.
+
+    ⚠️ The distinction IS the guard. `CI_MIN_CHECKS_RUN` exists so a run on a
+    machine missing a toolchain cannot report a green tick over a shrunken
+    suite — and a check that returned WITHOUT MEASURING (absent artifact, dead
+    toolchain) is precisely that case wearing a pass.
+
+    ⚠️ AND IT WAS COVERED BY NOTHING RUNNABLE. `test_the_LIVE_floor_has_ZERO_
+    headroom` compares the constant to its own definition (`len(_CHECKS) -
+    len(CI_SKIP)`), so it catches an arithmetic slip and nothing else.
+    `test_the_LIVE_floor_matches_what_a_REAL_run_MEASURES` is `@pytest.mark.slow`
+    AND re-implements the measured filter in its own body from `run_checks()` —
+    it never calls `main()`, where the floor actually lives. A chunk reviewer
+    replaced `validate.py`'s `measured = [n for n, r in results.items() if
+    r.measured]` with `measured = list(results)` and 22 tests passed.
+
+    These drive the REAL `main()` on a tiny registry, which is the only place the
+    decision is made.
+    """
+
+    @staticmethod
+    def _unmeasured():
+        return CheckResult(passed=True, measured=False, details=[])
+
+    def test_an_unmeasured_pass_does_not_count_toward_the_floor(
+            self, tiny_registry, monkeypatch):
+        """FIRES ON THE SEEDED DEFECT — `measured = list(results)` reddens this."""
+        # One of the six real checks measured nothing; the other five did.
+        patched = []
+        for s in validate._CHECKS:
+            if s.name == "c0":
+                patched.append(CheckSpec(name=s.name, description=s.description,
+                                         func=self._unmeasured))
+            else:
+                patched.append(s)
+        monkeypatch.setattr(validate, "_CHECKS", patched, raising=False)
+
+        n_real = len(patched) - len(_cfg.CI_SKIP)
+        monkeypatch.setattr(_cfg, "CI_MIN_CHECKS_RUN", n_real)
+
+        rc, err = _run(["--ci", "--no-archive"])
+        assert rc == 1, (
+            "an UNMEASURED pass was counted toward the coverage floor — a run "
+            "where a toolchain is absent now reports green over a shrunken suite, "
+            "which is the exact failure CI_MIN_CHECKS_RUN exists to prevent")
+        assert "WITHOUT MEASURING" in err and "c0" in err, (
+            f"the unmeasured check was not named in the report: {err!r}")
+
+    def test_all_measured_at_exactly_the_floor_passes(self, tiny_registry, monkeypatch):
+        """SILENT ON CORRECT DATA — the complement, so the test above is not vacuous.
+
+        Without this, a floor that rejected EVERYTHING would satisfy the sibling.
+        """
+        n_real = len(validate._CHECKS) - len(_cfg.CI_SKIP)
+        monkeypatch.setattr(_cfg, "CI_MIN_CHECKS_RUN", n_real)
+        rc, err = _run(["--ci", "--no-archive"])
+        assert rc == 0, f"all checks measured at exactly the floor should pass: {err!r}"
+        assert "WITHOUT MEASURING" not in err
