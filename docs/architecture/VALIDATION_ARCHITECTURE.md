@@ -206,8 +206,8 @@ uv run python scripts/update_counts.py              # regenerates counts.tex IF 
 #   ^ counts are AUTHOR-WRITTEN-scoped: `update_counts` filters through
 #     `validate_helpers.autogen_index`, the single owner of "is this
 #     compiler-generated". Without that filter `\totaltheorems` published 26,398
-#     where 22,687 are author-written — 3,711 of them Lean's own `.eq_1`,
-#     `.sizeOf_spec`, `.inj`, `.congr_simp` products. That number is `\input` by
+#     where 22,669 are author-written — 3,729 of them Lean's own `.eq_1`,
+#     `.sizeOf_spec`, `.inj`, `.congr_simp`, `.eq_def` products. That number is `\input` by
 #     I1, D2 and I3 and read as "machine-checked theorems". Do not reintroduce a
 #     local kind=="theorem" filter in any generator.
 uv run python scripts/compile_bundle_pdf.py --all --force
@@ -223,11 +223,16 @@ workflow just has an order.
 
 ⚠️ **`counts_fresh`'s staleness inputs must cover every tree the artifact publishes.**
 They did not: only `lean_deps.json`, `constants.py` and `visualizations.py` were inputs,
-while `counts.json` also publishes `pytest_cases`, `test_files`, `notebooks` and `papers`.
-So `\totaltests` and its siblings could drift while the check reported `fresh` — measured
-2026-08-10 at 6,163 published against 6,171 live, green throughout. `tests/`, `notebooks/`
-and `papers/` are now rglob-newest inputs on the same shape as the existing Lean leg. A new
-published count needs its tree added here, or it inherits the same blindness.
+while `counts.json` also publishes `pytest_cases`, `test_files`, `notebooks`, `papers` and
+`python_modules`. So `\totaltests` and its siblings could drift while the check reported
+`fresh` — measured 2026-08-10 at 6,163 published against 6,171 live, green throughout.
+`tests/`, `notebooks/`, `papers/` and `src/` are now rglob-newest inputs on the same shape
+as the existing Lean leg — four legs, one per published tree. (`src/` was missed in the
+first repair and added the same day: the two named `constants.py`/`visualizations.py`
+inputs are *specific files*, so every other module under `src/` was outside the predicate
+while `python_modules` was published from the whole tree.) A new published count needs its
+tree added here, or it inherits the same blindness; `test_every_tree_counts_json_publishes_
+is_a_staleness_input` is mutation-verified one case per leg.
 
 The cost is real and is accepted deliberately: the alternative is giving the
 coverage floor slack, and a floor with slack cannot see the next check that
