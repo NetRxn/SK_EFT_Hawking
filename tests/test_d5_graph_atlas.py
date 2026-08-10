@@ -324,7 +324,7 @@ class TestAtlasIntegrity:
         `except Exception` — and BOTH handlers on the path are `except Exception`:
         `check_atlas_integrity`'s own, and `validate.run_checks`'s.
 
-        Measured: `atlas_integrity` is check 35 of 59, so a missing `lean_deps.json`
+        Measured: `atlas_integrity` is check 39 of 79, so a missing `lean_deps.json`
         did not fail the atlas check — it terminated the interpreter and **the other 24
         checks never ran**, with no report distinguishing that from a clean exit.
 
@@ -457,7 +457,7 @@ class TestInferBundleFromTextIsActuallyTested:
     finding to `paper3_` — and D12 rendered "Blockers 0" while carrying 36 open
     findings.
 
-    So: 59 of 59 checks are protected against deletion, and the one regression
+    So: every registered check (79 today) is protected against deletion, and the one regression
     that actually happened was invisible. These tests close that.
     """
 

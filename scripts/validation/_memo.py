@@ -203,7 +203,7 @@ def lean_source_fingerprint() -> str:
     costs 0.42 s and cannot be stale.
 
     ⚠️ THE ROOT AGGREGATE IS A SIBLING, NOT A CHILD (fixed 2026-08-05, reviewer
-    R6). `lean/SKEFTHawking.lean` — 5,226 lines, the file whose `import` lines
+    R6). `lean/SKEFTHawking.lean`, the file whose `import` lines
     decide which modules are in the environment `AxiomAudit` actually walks — sits
     NEXT TO `lean/SKEFTHawking/`, so `glob("**/*.lean")` over the directory missed
     it entirely (verified: ~2,040 files matched, the root file not among them).

@@ -471,7 +471,7 @@ _TEX_COMMENT_RE = re.compile(r"(?<!\\)%.*")
 #: ratchet frozen over the narrow population, so every day it stayed narrow raised
 #: the cost of widening it. A reader does not know or care which file a sentence was
 #: typed in, so neither should the population.
-def _reader_visible_sources(tex: "Path") -> "list[Path]":
+def _reader_visible_sources(tex: Path) -> list[Path]:
     r"""`tex` plus every `.tex` it \input{}s, transitively, de-duplicated.
 
     `.bib` and image members of the closure are excluded: a bibliography entry is
@@ -481,7 +481,7 @@ def _reader_visible_sources(tex: "Path") -> "list[Path]":
                           if p.suffix == ".tex" and p.is_file())})
 
 
-def _reader_visible_sources_and_gaps(tex) -> tuple[list, list[str]]:
+def _reader_visible_sources_and_gaps(tex: Path) -> tuple[list[Path], list[str]]:
     r"""`(sources, unscannable)` — the population AND what fell out of it.
 
     ⚠️ **The gap report is bound to the population on purpose.** The unscannable
@@ -496,7 +496,7 @@ def _reader_visible_sources_and_gaps(tex) -> tuple[list, list[str]]:
     return _reader_visible_sources(tex), _unscannable_closure_members(tex)
 
 
-def _unscannable_closure_members(tex) -> list[str]:
+def _unscannable_closure_members(tex: Path) -> list[str]:
     """`.tex` closure members DROPPED because they do not resolve to a file.
 
     ⚠️ `draft_input_closure` keeps an unresolvable `\\input` target on purpose —
@@ -521,8 +521,8 @@ def _rows_as_sentences(body: str) -> str:
     r"""Make each table row its own unit before sentence splitting.
 
     ⚠️ Measured 2026-08-09: without this, `papers/I1/tables/table1_stages.tex`
-    reports a single **166-word sentence** that no reader ever sees — it is fourteen
-    two-column table rows concatenated, because `\\` is not a sentence boundary to
+    reports a single **166-word sentence** that no reader ever sees — it is fifteen
+    three-column table rows concatenated, because `\\` is not a sentence boundary to
     the splitter. Widening the sentence-length population to the input closure
     imported that artifact and pushed the over-100 count from 22 to 23, one past a
     down-only ratchet, for a defect that does not exist in the prose.

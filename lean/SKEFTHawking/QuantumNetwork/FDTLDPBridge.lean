@@ -30,8 +30,14 @@ correct remedy rather than narrowing the prose.
 
 WHAT IS PROVED
 --------------
-`fdt_rare_event_tail_is_ldp_certified` states both halves of the consumption
-claim at once, for the one object:
+⚠️ The two halves of the consumption claim are stated SEPARATELY, and the split is
+the point: `linearResponseRateFunctionCentered_is_ldp_certified` carries the first,
+`fdt_rare_event_tail_is_ldp_certified` the second. They were one conjunction until
+2026-08-09, when the first conjunct turned out to resolve by `inferInstance`
+independently of both hypotheses — one substantive theorem dressed as two. (This
+header went on describing the conjunction for a while after the split, which is the
+same defect as the split itself: a claim about the code outliving the code.) The two
+halves are:
 
   * the rate function is the LDP-compatible one I3 certifies, and
   * its rare-event tail is bounded below by `-β²σ²/8` away from the FDT-pinned
@@ -77,9 +83,13 @@ preemptive-strengthening rule 1). A fact about the function is not a consequence
 of the hypotheses, and bundling the two made one substantive theorem look like
 two. Both halves remain D9 apexes; they are now separately checkable. -/
 theorem linearResponseRateFunctionCentered_is_ldp_certified
-    (β : ℝ) {σ_sq : ℝ} (hσ : 0 < σ_sq) :
+    (β : ℝ) {σ_sq : ℝ} (hσ : σ_sq ≠ 0) :
     LDPCompatibleSKEFT β (linearResponseRateFunctionCentered β σ_sq) := by
-  haveI : Fact (σ_sq ≠ 0) := ⟨ne_of_gt hσ⟩
+  -- ⚠️ `σ_sq ≠ 0`, not `0 < σ_sq`. The docstring's own argument is that the
+  -- instance "needs only `[Fact (σ_sq ≠ 0)]`", and the theorem was stated with
+  -- positivity anyway — the same over-strong-hypothesis habit this wave weakened
+  -- twice over in `ConcatenatedComposition`, one file away.
+  haveI : Fact (σ_sq ≠ 0) := ⟨hσ⟩
   infer_instance
 
 /-- **Half two, and the substantive one: D9's rare-event tail, transported.**

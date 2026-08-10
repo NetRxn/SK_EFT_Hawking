@@ -353,8 +353,8 @@ def load_lean_deps_file() -> list[dict]:
     caught by `except Exception`. Both handlers on the path are `except Exception`:
     `graph_atlas.check_atlas_integrity`'s own, and `validate.run_checks`'s. So a
     missing `lean_deps.json` did not fail the atlas check — it **terminated the
-    interpreter mid-suite**. `atlas_integrity` is check 35 of 59, so the other
-    **24 checks after it never ran**, and the run ended with no report distinguishing
+    interpreter mid-suite**. `atlas_integrity` is check 39 of 79, so the other
+    **the 40 checks after it never ran**, and the run ended with no report distinguishing
     that from a clean exit.
 
     This is the `sys.exit()`-in-a-library antipattern: a control-flow decision that
@@ -381,7 +381,7 @@ def main(argv: list[str] | None = None) -> int:
     # The CLI boundary is where "stop the process" is a correct decision, so the
     # conversion lives here rather than inside `load_lean_deps_file` (see its
     # docstring: raising SystemExit from a library killed validate.py mid-suite,
-    # taking 24 checks with it).
+    # taking the 40 checks after it with it).
     try:
         lean_deps = load_lean_deps_file()
     except FileNotFoundError as exc:

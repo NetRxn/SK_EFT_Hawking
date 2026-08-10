@@ -151,7 +151,7 @@ def find_inline_numerical_literals(text: str) -> tuple[str, list]:
 #
 # ⚠️ Measured 2026-08-09: the trap had ALREADY been rediscovered independently
 # by two consumers, each with its own private correct handling —
-# `prose_lean_refs._PROSE_UNESCAPE_RE` (unescape, then match) and
+# `prose_lean_refs`'s own copy (unescape, then match) and
 # `lean_substrate._tex_name_pattern` (build an escape-tolerant pattern). Two
 # solutions to one problem in two modules is precisely the duplication this
 # entry predicted, so the helpers live here now.

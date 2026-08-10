@@ -29,7 +29,7 @@ exits 0. That is *"absence of measurement rendered as success"* reintroduced one
 layer up, which is the finding this entire audit exists to close.
 
 So the mode's real content is the COVERAGE FLOOR, and that is what these tests are
-mostly about. A green tick over 48 of 59 is worse than no CI.
+mostly about. A green tick over 71 of 79 is worse than no CI.
 
 WHAT IS DELIBERATELY *NOT* HERE
 -------------------------------

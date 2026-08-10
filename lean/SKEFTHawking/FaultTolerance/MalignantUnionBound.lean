@@ -19,7 +19,8 @@ Measured 2026-08-09 via `bundle_closure.compute_closure` — the canonical
 resolver, not a hand-rolled walk: `agp_threshold_steane`'s dependency closure
 walks 22 declarations, 21 of them author-written, and reaches none of
 `ExRec`, `Malignant`, `NoiseModel`, `NoiseModelMT` or `Chernoff`. (The 27 this
-comment carried until 2026-08-09 was the closure of a DIFFERENTLY NAMED theorem,
+comment carried until 2026-08-09 was, AS MEASURED THEN, the closure of a
+DIFFERENTLY NAMED theorem —
 `FaultTolerance.agp_threshold_steane_bound` in `Counting.lean`. The qualitative
 half — that neither reaches those five modules — holds for both.) What was machine-checked was the CONSEQUENCE of the
 AGP recursion, not its derivation.
@@ -161,14 +162,26 @@ subset of the pairs available, so the derived bound is at least as tight as
 `pairFailureBound`. This connects the derived statement to the abstract one
 `Chernoff.lean` ships. -/
 
+/-- **Monotone in the CARD**, which is the form a caller with `card ≤ A` needs.
+
+⚠️ `agp_bound_mono_malignant_set` below is monotone in the SET (`F ⊆ G`), and
+`ConcatenatedComposition`'s proof has `(malignant L j).card ≤ A` with no ambient
+`G` — so its comment named a lemma that was a different statement and re-derived
+this one inline. Backing a docstring cross-reference with an actual call is rule 3
+of the preemptive-strengthening discipline; this is the lemma that makes the call
+possible. -/
+theorem agp_bound_mono_card {n m : ℕ} (ε : ENNReal) (h : n ≤ m) :
+    (n : ENNReal) * ε ^ 2 ≤ (m : ENNReal) * ε ^ 2 := by
+  have hnm : (n : ENNReal) ≤ (m : ENNReal) := by exact_mod_cast h
+  gcongr
+
 /-- The derived bound is monotone in the malignant-pair set: a refinement that
-counts fewer pairs gives a tighter bound. -/
+counts fewer pairs gives a tighter bound. Now DERIVED from the card form, so the
+two cannot drift. -/
 theorem agp_bound_mono_malignant_set
     (F G : Finset (ι × ι)) (ε : ENNReal) (hFG : F ⊆ G) :
-    (F.card : ENNReal) * ε ^ 2 ≤ (G.card : ENNReal) * ε ^ 2 := by
-  have : (F.card : ENNReal) ≤ (G.card : ENNReal) := by
-    exact_mod_cast Finset.card_le_card hFG
-  gcongr
+    (F.card : ENNReal) * ε ^ 2 ≤ (G.card : ENNReal) * ε ^ 2 :=
+  agp_bound_mono_card ε (Finset.card_le_card hFG)
 
 /-! ## 5. The bridge to `ExRec.exRecFailureBound`
 

@@ -2603,7 +2603,7 @@ NUMERICAL_LITERAL_CEILING = 117  # inline unit-bearing values outside \input{tab
 #:     widened + rows-as-units: 20  <- shipped
 #:
 #: The 23 was not debt. `papers/I1/tables/table1_stages.tex` scanned as a single
-#: 166-word "sentence" that is fourteen concatenated table rows; no reader sees it.
+#: 166-word "sentence" that is fifteen concatenated table rows; no reader sees it.
 #: Correcting the instrument removed two such artifacts from the narrow population
 #: too, which is why the honest new floor is 20 and not 22.
 SENTENCE_OVER_100_CEILING = 20

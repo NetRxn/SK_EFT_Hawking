@@ -259,7 +259,7 @@ def _apply_canonical_order() -> None:
 # and left the 14 below it appended, unsorted, in import order. Two consequences,
 # both invisible because the tail happened to already be in canonical sequence:
 #
-#   1. The mechanism was inert for 14/59 checks, i.e. exactly the ones a Phase-2
+#   1. The mechanism was inert for 14/59 (as of that pass; 79 checks today) checks, i.e. exactly the ones a Phase-2
 #      module move is most likely to reorder.
 #   2. The `raise` above — the "loud failure for a check nobody declared a
 #      position for" — could not fire for anything registered below, INCLUDING

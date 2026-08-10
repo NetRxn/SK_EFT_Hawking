@@ -31,7 +31,7 @@ list of per-bundle finding dicts. `validate.py` consumes it via
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -345,9 +345,10 @@ class BundleFinding:
     measured: bool = True
 
     def as_dict(self) -> dict:
-        return {"bundle": self.bundle, "passed": self.passed,
-                "warning": self.warning, "message": self.message,
-                "measured": self.measured}
+        # ⚠️ `asdict`, NOT a hand-written literal. The hand-written version omitted
+        # any field added later — silently, at every consumer at once, which is the
+        # "a site forgot `measured`" defect relocated one layer up and made global.
+        return asdict(self)
 
 
 def check(write_metadata: bool = False) -> list[dict]:
@@ -413,29 +414,29 @@ def check(write_metadata: bool = False) -> list[dict]:
         try:
             md = json.loads(md_path.read_text())
         except (json.JSONDecodeError, OSError) as exc:
-            findings.append(BundleFinding(**{
-                "bundle": bundle,
-                "passed": False,
-                "warning": False,
-                "measured": False,   # an unreadable blob is the strongest
+            findings.append(BundleFinding(
+                bundle=bundle,
+                passed=False,
+                warning=False,
+                measured=False,   # an unreadable blob is the strongest
                                      # per-bundle non-measurement available
-                "message": f"failed to read bundle_metadata.json: {exc}",
-            }))
+                message=f"failed to read bundle_metadata.json: {exc}",
+            ))
             continue
 
         last_lift = _parse_iso(md.get("last_lift"))
 
         # Sub-finding A: stage13_redo_required flag
         if md.get("stage13_redo_required") is True:
-            findings.append(BundleFinding(**{
-                "bundle": bundle,
-                "passed": True,
-                "warning": True,
-                "message": (
+            findings.append(BundleFinding(
+                bundle=bundle,
+                passed=True,
+                warning=True,
+                message=(
                     "stage13_redo_required=true (set by bundle_append.py); "
                     "Stage-13 reviewer agent must re-clear before bundle close"
                 ),
-            }))
+            ))
 
         # Sub-finding B: source-paper mtime newer than last_lift
         if last_lift is None:
@@ -446,22 +447,22 @@ def check(write_metadata: bool = False) -> list[dict]:
             # present but unparseable (a corrupted or reformatted timestamp).
             raw_lift = md.get("last_lift")
             if raw_lift is None:
-                findings.append(BundleFinding(**{
-                    "bundle": bundle,
-                    "passed": True,
-                    "warning": False,
-                    "message": "bundle initialized; no lifts yet (skip)",
-                }))
+                findings.append(BundleFinding(
+                    bundle=bundle,
+                    passed=True,
+                    warning=False,
+                    message="bundle initialized; no lifts yet (skip)",
+                ))
             else:
-                findings.append(BundleFinding(**{
-                    "bundle": bundle,
-                    "passed": False,
-                    "warning": False,
-                    "measured": False,
-                    "message": (
+                findings.append(BundleFinding(
+                    bundle=bundle,
+                    passed=False,
+                    warning=False,
+                    measured=False,
+                    message=(
                         f"last_lift is present but unparseable ({raw_lift!r}); "
                         f"freshness cannot be computed for this bundle"),
-                }))
+                ))
             continue
 
         sources = sorted([
@@ -496,32 +497,32 @@ def check(write_metadata: bool = False) -> list[dict]:
         if lean_unmeasured is not None:
             lean_times, lean_unresolved, stale_lean = {}, [], []
             lean_unmeasured_here = True
-            findings.append(BundleFinding(**{
-                "bundle": bundle,
-                "passed": True,
-                "warning": True,
-                "measured": False,
-                "message": (
+            findings.append(BundleFinding(
+                bundle=bundle,
+                passed=True,
+                warning=True,
+                measured=False,
+                message=(
                     f"Lean freshness leg UNMEASURED ({lean_unmeasured}) — this "
                     f"bundle's Lean substrate was NOT compared to last_lift; the "
                     f"source-paper leg below stands alone"),
-            }))
+            ))
         else:
             registered = _registered_lean_modules(bundle)
             if registered is None:
                 # Half the population is unreadable, so the union is not the
                 # population — report UNMEASURED rather than a smaller number.
                 lean_times, lean_unresolved, stale_lean = {}, [], []
-                findings.append(BundleFinding(**{
-                    "bundle": bundle,
-                    "passed": True,
-                    "warning": True,
-                    "measured": False,
-                    "message": (
+                findings.append(BundleFinding(
+                    bundle=bundle,
+                    passed=True,
+                    warning=True,
+                    measured=False,
+                    message=(
                         "Lean freshness leg UNMEASURED (append_log.json "
                         "unreadable, so the registered half of the module "
                         "population could not be read)"),
-                }))
+                ))
                 lean_unmeasured_here = True
             else:
                 lean_unmeasured_here = False
@@ -535,10 +536,10 @@ def check(write_metadata: bool = False) -> list[dict]:
             sample = ", ".join(lean_unresolved[:3])
             extra = (f" ... and {len(lean_unresolved) - 3} more"
                      if len(lean_unresolved) > 3 else "")
-            findings.append(BundleFinding(**{
-                "bundle": bundle,
-                "passed": True,
-                "warning": True,
+            findings.append(BundleFinding(
+                bundle=bundle,
+                passed=True,
+                warning=True,
                 # ⚠️ `measured` stays TRUE. THE POLICY, stated once and applied
                 # everywhere: `measured=False` means the population was
                 # UNREACHABLE, not that it was incompletely covered. This bundle's
@@ -555,7 +556,7 @@ def check(write_metadata: bool = False) -> list[dict]:
                 # The incompleteness is handled where it actually bites: the
                 # metadata writer below refuses to clear `freshness_stale` over a
                 # partial population.
-                "message": (
+                message=(
                     f"{len(lean_unresolved)} of "
                     f"{len(lean_unresolved) + len(lean_times)} declared Lean "
                     f"module(s) resolve to no file ({sample}{extra}); they are "
@@ -563,32 +564,32 @@ def check(write_metadata: bool = False) -> list[dict]:
                     f"deleted module silently drops out of the population it "
                     f"was registered into"
                 ),
-            }))
+            ))
         if stale_lean:
             sample = ", ".join(f"{m}({t.strftime('%Y-%m-%d')})"
                                for m, t in stale_lean[:3])
             extra = (f" ... and {len(stale_lean) - 3} more"
                      if len(stale_lean) > 3 else "")
-            findings.append(BundleFinding(**{
-                "bundle": bundle,
-                "passed": True,
-                "warning": True,
-                "message": (
+            findings.append(BundleFinding(
+                bundle=bundle,
+                passed=True,
+                warning=True,
+                message=(
                     f"lean-stale: {len(stale_lean)} of {len(lean_times)} declared "
                     f"Lean module(s) last changed after last_lift "
                     f"({last_lift.strftime('%Y-%m-%d')}); sample: {sample}{extra}"
                 ),
-            }))
+            ))
 
         if sources and not measurable and not lean_times:
             sample = ", ".join(sources[:3])
             extra = f" ... and {len(sources) - 3} more" if len(sources) > 3 else ""
-            findings.append(BundleFinding(**{
-                "bundle": bundle,
-                "passed": True,
-                "warning": True,
-                "measured": False,
-                "message": (
+            findings.append(BundleFinding(
+                bundle=bundle,
+                passed=True,
+                warning=True,
+                measured=False,
+                message=(
                     f"UNMEASURABLE: all {len(sources)} declared source(s) name a "
                     f"directory absent from papers/ ({sample}{extra}) AND "
                     + ("the Lean population was NOT RESOLVED "
@@ -598,7 +599,7 @@ def check(write_metadata: bool = False) -> list[dict]:
                     + "; freshness is NOT established — the Stage-C absorption "
                       "trigger cannot fire on either population."
                 ),
-            }))
+            ))
             continue
 
         if sources and not measurable:
@@ -630,11 +631,11 @@ def check(write_metadata: bool = False) -> list[dict]:
                 elif md.get("freshness_stale") != want:
                     md["freshness_stale"] = want
                     write_bundle_json(md_path, md)
-            findings.append(BundleFinding(**{
-                "bundle": bundle,
-                "passed": True,
-                "warning": bool(stale_lean),
-                "message": (
+            findings.append(BundleFinding(
+                bundle=bundle,
+                passed=True,
+                warning=bool(stale_lean),
+                message=(
                     f"source-UNMEASURABLE, Lean-measured: all {len(sources)} "
                     f"declared source(s) name an absent directory, but "
                     f"{len(lean_times)} declared Lean module(s) resolve and "
@@ -642,7 +643,7 @@ def check(write_metadata: bool = False) -> list[dict]:
                        if stale_lean else
                        f"all predate last_lift ({last_lift.strftime('%Y-%m-%d')})")
                 ),
-            }))
+            ))
             continue
 
         if stale_sources:
@@ -654,17 +655,17 @@ def check(write_metadata: bool = False) -> list[dict]:
                 f" ... and {len(stale_sources) - 3} more"
                 if len(stale_sources) > 3 else ""
             )
-            findings.append(BundleFinding(**{
-                "bundle": bundle,
-                "passed": True,
-                "warning": True,
-                "message": (
+            findings.append(BundleFinding(
+                bundle=bundle,
+                passed=True,
+                warning=True,
+                message=(
                     f"freshness-stale: {len(stale_sources)} of {len(measurable)} "
                     f"measurable source paper(s) modified after last_lift "
                     f"({last_lift.strftime('%Y-%m-%d')}); "
                     f"sample: {sample}{extra}"
                 ),
-            }))
+            ))
             # Set freshness_stale=true in metadata so dashboard reflects it.
             # ⚠️ NO `except OSError: pass`. Three writers touch this same field and
             # this was the only one that swallowed a failed write — the finding
@@ -675,22 +676,23 @@ def check(write_metadata: bool = False) -> list[dict]:
                 md["freshness_stale"] = True
                 write_bundle_json(md_path, md)
         else:
-            findings.append(BundleFinding(**{
-                "bundle": bundle,
-                "passed": True,
-                "warning": bool(stale_lean) or lean_unmeasured is not None,
-                "message": (
+            findings.append(BundleFinding(
+                bundle=bundle,
+                passed=True,
+                warning=bool(stale_lean) or lean_unmeasured_here,
+                measured=not lean_unmeasured_here,
+                message=(
                     f"source-fresh: all {len(measurable)} measurable source paper(s) "
                     f"older than last_lift ({last_lift.strftime('%Y-%m-%d')})"
                     + ("; the LEAN leg reports staleness above, so this bundle is "
                        "NOT fresh overall" if stale_lean else "")
                     + ("; the Lean leg is UNMEASURED, so freshness is not "
-                       "established" if lean_unmeasured is not None else "")
+                       "established" if lean_unmeasured_here else "")
                     + (f"; {len(absent_sources)} further declared source(s) name "
                        f"an absent directory and were NOT measured"
                        if absent_sources else "")
                 ),
-            }))
+            ))
             # ⚠️ THE SAME GATE AS THE SOURCELESS BRANCH, AND IT BELONGS HERE TOO.
             # Round 1 fixed the clear-on-unmeasured bug at the sourceless site only.
             # This branch went on clearing the flag from `not stale_sources` alone,

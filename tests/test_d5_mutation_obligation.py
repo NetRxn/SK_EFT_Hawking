@@ -52,7 +52,7 @@ its own ratchet: 24 of 79 checks have been seen to fail against a defect written
 the real artifact they read. The other 55 have not. Obligation (4) exists because
 obligations (1)–(3) read as completeness while that gap was invisible.
 
-**STATUS 2026-08-04: THE BACKLOG IS EMPTY. All 59 registered checks are
+**STATUS 2026-08-04: THE BACKLOG IS EMPTY. All registered checks (59 then, 79 today) are
 mutation-verified, `AWAITING_MUTATION_TEST` is empty and `AWAITING_CEILING` is 0.**
 
 That changes what this file is for. It was written to stop the untested population
@@ -913,7 +913,7 @@ PRODUCTION_SEEDED: frozenset[str] = frozenset({
 #: The ratchet, in the same idiom as `AWAITING_CEILING`: the number of registered
 #: checks NOT yet production-seeded. **It may be LOWERED, never raised.**
 #:
-#: 55 of 59 as of 2026-08-05. That number is the honest state of the sweep the PR
+#: 55 of 59 as of 2026-08-05 (79 checks today). That number is the honest state of the sweep the PR
 #: review's resume point lists as its top item, and it is deliberately large: it counts
 #: every check for which nobody has yet demonstrated a production failure, not every
 #: check that is broken. Lower it one check at a time, each with the probe recorded in
@@ -1061,7 +1061,7 @@ class TestVerifiedEntriesAreReal:
         ⚠️ Why stripping them matters. This guard originally matched raw file text,
         so an entry was satisfied by the check's name appearing in a module
         docstring — and these files describe every check they cover in prose.
-        Measured 2026-08-04: **3 of 59 entries were satisfied by prose alone**, and
+        Measured 2026-08-04, when the suite was 59 checks: **3 of 59 entries were satisfied by prose alone**, and
         one of those (`axiom_count_prose_consistency`) turned out never to invoke its
         registered check at all, only a pure core. Promoting a fictional entry cost
         one line of prose; it now costs a call.

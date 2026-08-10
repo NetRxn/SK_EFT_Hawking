@@ -736,18 +736,18 @@ def check_bundle_source_freshness() -> CheckResult:
     )
     if _cfg.STRICT_MODE:
         summary_msg += " (strict mode: WARN promoted to FAIL)"
-    details.insert(0, Detail("summary", n_fail == 0, summary_msg))
 
     # ⚠️ FAIL-CLOSED, and deliberately so. If ANY bundle's freshness could not be
     # established, this check did not measure its population — and the `--ci`
     # floor is exactly the instrument meant to see that. In a healthy tree no
     # detail is unmeasured and this is True; with `lean/.lake` absent all 21 go
     # dark and the floor catches it instead of counting a full measurement.
+    # Count BEFORE inserting, so the summary is never in its own population.
     n_unmeasured = sum(1 for d in details if not d.measured)
     if n_unmeasured:
         summary_msg += f" — {n_unmeasured} UNMEASURED"
-    details[0] = Detail("summary", n_fail == 0, summary_msg,
-                        measured=(n_unmeasured == 0))
+    details.insert(0, Detail("summary", n_fail == 0, summary_msg,
+                             measured=(n_unmeasured == 0)))
 
     return CheckResult(
         passed=(n_fail == 0),

@@ -22,7 +22,7 @@ the split is ~493 moved / ~586 remaining. Same method as the three Phase-2 split
 
 ⚠️ NOTE ON SIZE AS A CRITERION. 1,079 was not an outlier *when this split ran* —
 `citations` and `bundles_readiness` sat in the same band. Both have since grown,
-and `bundles_readiness` is now the corpus's largest check module at roughly twice
+and `bundles_readiness` is now the corpus's largest check module at more than twice
 the line count this one was split at, so the sentence's original argument no longer
 holds in its own numbers; it is a candidate for the same treatment. This split is
 justified by COHESION, not by line count alone; the reduction is a consequence.

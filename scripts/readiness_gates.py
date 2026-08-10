@@ -144,13 +144,18 @@ class GraphIndex:
     def paper_tex(self, paper_key: str) -> str | None:
         """`paper_draft.tex` contents, or **None** when it cannot be read.
 
-        ⚠️ This returned `''` for missing, unreadable, and genuinely-empty alike,
-        and two consumers turned that into a PASS: `_eval_parameter_provenance`
-        concluded "no inline unit-bearing literals in body prose" and
-        `_eval_narrative_grounding` emitted "and the draft has no abstract block"
-        — a false statement about the draft, offered as the gate's own evidence.
-        `None` forces each caller to decide, which `_eval_citation_integrity`
-        already did correctly.
+        ⚠️ This returned `''` for missing, unreadable, and genuinely-empty alike.
+        **Seven call sites consume it; six reached a positive verdict on `''`, and
+        `_eval_citation_integrity` is the only one that already branched.** Two of
+        the six stated it outright: `_eval_parameter_provenance` concluded "no
+        inline unit-bearing literals in body prose" and `_eval_narrative_grounding`
+        emitted "and the draft has no abstract block" — a false statement about the
+        draft, offered as the gate's own evidence. `None` forces each caller to
+        decide.
+
+        (This docstring said "two consumers" and `_unreadable_draft`'s said "three
+        evaluators", in the same commit, for the same defect. Neither was the
+        count. Enumerated here once, authoritatively.)
         """
         tex_path = PAPERS_DIR / paper_key / "paper_draft.tex"
         try:
@@ -162,10 +167,10 @@ class GraphIndex:
 def _unreadable_draft(r: GateResult) -> GateResult:
     """The one shape every evaluator uses when `paper_tex` returns None.
 
-    ⚠️ `measured=False` is the load-bearing part. Without it an unreadable draft
-    is a YELLOW gate indistinguishable from real outstanding work, and three
-    evaluators went further and reported PASS with a positive claim about a file
-    they never opened.
+    ⚠️ `measured=False` is the load-bearing part. Without it an unreadable draft is
+    a YELLOW gate indistinguishable from real outstanding work. For the count of
+    affected consumers see `GraphIndex.paper_tex`, which owns that enumeration —
+    this docstring used to carry a second, different count of the same thing.
     """
     r.state = 'open'
     r.measured = False

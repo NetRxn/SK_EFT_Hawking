@@ -497,13 +497,18 @@ def check_review_docs_mint_findings() -> CheckResult:
             #
             # Two earlier scopings were both wrong, in opposite directions. Filtering to
             # roster-named files put 120 documents out of scope. Then excluding
-            # `*-bundle-stage13/` — because most files there (107 of 138 when measured
-            # 2026-08-05; the directory has since grown, so treat both numbers as of that
-            # date) are `bundle_readiness.py` aggregations that mint zero BY DESIGN —
-            # excluded the directory `BUNDLE_DIRECTORY_SCHEMA.md:86` and
-            # `BUNDLE_LIFT_PROCEDURE.md:243` name as THE canonical location for a Stage-13
-            # review, hiding the findings-bearing reviews among them (five at the time),
-            # one of them declaring a BLOCKER (D12 round-10 8.2).
+            # `*-bundle-stage13/` — because most files there are `bundle_readiness.py`
+            # aggregations that mint zero BY DESIGN — excluded the directory
+            # `BUNDLE_DIRECTORY_SCHEMA.md:86` and `BUNDLE_LIFT_PROCEDURE.md:243` name as
+            # THE canonical location for a Stage-13 review, hiding the findings-bearing
+            # reviews among them, one of them declaring a BLOCKER (D12 round-10 8.2).
+            #
+            # ⚠️ The census that used to sit here ("107 of 138") is DELETED rather than
+            # corrected. Re-measured at its own stated date and at three plausible
+            # denominators, it reproduces at NONE — the directory went 131 → 152 → 173 →
+            # 194 and never passed through 138. A number nobody can reproduce is worse
+            # than no number, and the argument ("most of them are generated aggregations")
+            # never needed one.
             #
             # The honest discriminator is the document's own content: a file containing
             # finding-shaped headings must mint findings. A generated aggregation has no

@@ -951,8 +951,8 @@ violated for the fifth time in this workstream.
 >   `papers/F/paper_draft.tex` (`:50`, `:136`, `:2230` "twenty sibling threads"; `:514`, `:2017`,
 >   `:2020` "21 bundles"; `:1742` "21-bundle architecture"; `:1745`, `:2050` "20 siblings").
 >   **They are being KEPT deliberately, and the entry's blanket claim was the error.** F is the
->   flagship whose subject *is* the bundle architecture: "we consolidate the twenty sibling
->   threads" is the paper's thesis sentence, not incidental bookkeeping, and removing the number
+>   flagship whose subject *is* the bundle architecture: "we consolidate the twenty
+>   sibling-bundle threads" is the paper's thesis sentence, not incidental bookkeeping, and removing the number
 >   would remove the claim. The no-count-in-narrative rule is machine-enforced over
 >   `docs/architecture/*`, not over paper prose, and F's roster figures are covered instead by
 >   the Stage-10 claims review. What was wrong was asserting a remedy that had not been applied.
@@ -2198,7 +2198,9 @@ only thing separating the two claims in print.
 > *designed* never to reach (`compute_closure` takes the autogen set precisely to skip them).
 > **The real figure is 155 un-homed of 256 non-autogen declarations** (60.5%), under
 > `validate_helpers.autogen_index` — the canonical filter this entry's own ⚠️ block below
-> declares mandatory. Per module (total = author-written + autogen):
+> declares mandatory. Per module, for the SEVEN modules this entry originally named
+> (FaultTolerance has 18, so these rows do not sum to the corpus figure above) —
+> total = author-written + autogen:
 > `Basic` 95 = 34 + 61, `StabilizerCode` 43 = 25 + 18, `NoiseModelMT` 33 = 24 + 9,
 > `Malignant` 22 = 13 + 9, `NoiseModel` 21 = 12 + 9, `Counting` 16 and `Chernoff` 9 with none.
 >

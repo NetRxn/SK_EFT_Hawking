@@ -132,19 +132,16 @@ theorem levelFailure_le_agpSeq
     refine le_trans
       (exRecFailure_le_agpRecursionStep_of_submul (μ := μ) (fail L) (malignant L j)
         (ε := ((agpSeq (A : NNReal) ε₀ L : NNReal) : ENNReal)) ih (hsubmul L j)) ?_
-    -- ⚠️ `hcard` is `≤`, not `=`, and the bound is MONOTONE in the card — which is
-    -- what `agp_bound_mono_malignant_set` proves and nothing called. A real ex-Rec's
+    -- ⚠️ `hcard` is `≤`, not `=`, and the bound is MONOTONE in the card, which is
+    -- exactly what `agp_bound_mono_card` states — and it is CALLED here rather than
+    -- re-derived inline, because a comment naming a lemma it does not invoke is the
+    -- rot rule 3 of the preemptive-strengthening discipline exists to stop. (Its
+    -- sibling `agp_bound_mono_malignant_set` is monotone in the SET, which is a
+    -- different statement and does not apply at this call site.) A real ex-Rec's
     -- malignant set is a SUBSET of the pairs available, so `≤ A` is what it can
     -- supply; demanding equality made the hypothesis unsatisfiable for the models
     -- the theorem is about.
-    have hmono : ((malignant L j).card : ENNReal) ≤ (A : ENNReal) := by
-      exact_mod_cast hcard L j
-    have hstep :
-        ((malignant L j).card : ENNReal)
-            * ((agpSeq (A : NNReal) ε₀ L : NNReal) : ENNReal) ^ 2
-          ≤ (A : ENNReal) * ((agpSeq (A : NNReal) ε₀ L : NNReal) : ENNReal) ^ 2 := by
-      gcongr
-    refine le_trans hstep ?_
+    refine le_trans (agp_bound_mono_card _ (hcard L j)) ?_
     rw [agpSeq_succ]
     push_cast
     exact le_rfl
@@ -232,8 +229,9 @@ the circuit's locations, and building one is the same construction as deriving
 `A_CNOT` itself.
 -/
 
-/-- **The hypothesis set is satisfiable**, in the exact shape the theorems now
-take (`hcard` as `≤`, `hsubmul` rather than full independence), so neither
+/-- **The hypothesis set is satisfiable**, in the shape the theorems now take
+(`hcard` as `≤`, `hsubmul` rather than full independence) PLUS off-diagonality,
+which is strictly more than any of them requires — so neither
 `levelFailure_le_agpSeq` nor its corollaries is conditionally empty.
 
 ⚠️ **THE MALIGNANT PAIRS ARE OFF-DIAGONAL, and that is not cosmetic.** This
@@ -261,8 +259,9 @@ theorem levelFailure_hypotheses_satisfiable
       (∀ L j, ∀ p ∈ malignant L j, p.1 ≠ p.2) ∧
       (∀ L j, ∀ p ∈ malignant L j,
         μ (fail L p.1 ∩ fail L p.2) ≤ μ (fail L p.1) * μ (fail L p.2)) := by
-  -- `Fin A × Bool` gives every level at least two DISTINCT locations to pair,
-  -- so the malignant set can be off-diagonal for any `A`, including `A = 0`.
+  -- `Fin A × Bool` gives every level at least two DISTINCT locations to pair, so
+  -- the malignant set is off-diagonal for every `A ≥ 1` — and vacuously so at
+  -- `A = 0`, where the type is empty and the malignant set is too.
   refine ⟨fun _ => Fin A × Bool, fun _ _ => (∅ : Set Ω),
           fun _ _ => (Finset.univ : Finset (Fin A)).map
             ⟨fun i => ((i, false), (i, true)), ?_⟩,
