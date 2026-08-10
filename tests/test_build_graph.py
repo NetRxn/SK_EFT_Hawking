@@ -565,6 +565,69 @@ class TestDependsOnAxiomEdges:
 # PG+AGE parallel write tests
 # ═══════════════════════════════════════════════════════════════════════
 
+class TestAgeLabelCreation:
+    """`_create_age_labels` must actually ISSUE label statements.
+
+    ⚠️ It issued ZERO for a commit. `graph_name` was parameterised in the body and
+    not the signature, so every `create_vlabel`/`create_elabel` raised `NameError`
+    into `except Exception: pass  # Label already exists` — a broad catch, a false
+    comment, and a dead path, all invisible because AGE auto-creates labels on
+    `CREATE` so nothing downstream failed.
+
+    Needs no database: a recording fake connection is enough, which is exactly why
+    the absence of this test was the gap.
+    """
+
+    class _Cur:
+        def __init__(self, log): self.log = log
+        def __enter__(self): return self
+        def __exit__(self, *a): return False
+        def execute(self, q, *a): self.log.append(q)
+
+    class _Conn:
+        autocommit = False
+        def __init__(self): self.log = []
+        def cursor(self): return TestAgeLabelCreation._Cur(self.log)
+
+    def test_labels_are_actually_issued(self):
+        from scripts.build_graph import _create_age_labels
+        conn = self._Conn()
+        _create_age_labels(conn, {"Formula", "Theorem"}, {"VERIFIES"}, "throwaway")
+        assert sum("create_vlabel" in q for q in conn.log) == 2, (
+            f"expected one vlabel per node type; issued {conn.log}")
+        assert sum("create_elabel" in q for q in conn.log) == 1
+
+    def test_labels_target_the_graph_they_were_given(self):
+        """The half that would have caught the original bug AND a wrong target."""
+        from scripts.build_graph import _create_age_labels
+        conn = self._Conn()
+        _create_age_labels(conn, {"Formula"}, {"VERIFIES"}, "throwaway_xyz")
+        creates = [q for q in conn.log if "create_" in q]
+        assert creates, "no label statements issued at all"
+        assert all("throwaway_xyz" in q for q in creates), creates
+        assert not any("'sk_eft'" in q for q in creates), (
+            "a label statement targeted PRODUCTION despite being given a name")
+
+    def test_a_non_duplicate_error_is_not_swallowed(self, caplog):
+        """The narrowed catch. A broken connection must not read as 'already exists'."""
+        import logging
+
+        class Boom(TestAgeLabelCreation._Cur):
+            def execute(self, q, *a):
+                if "create_" in q:
+                    raise RuntimeError("connection lost")
+                self.log.append(q)
+
+        class BoomConn(TestAgeLabelCreation._Conn):
+            def cursor(self): return Boom(self.log)
+
+        from scripts.build_graph import _create_age_labels
+        with caplog.at_level(logging.WARNING):
+            _create_age_labels(BoomConn(), {"Formula"}, set(), "throwaway")
+        assert "connection lost" in caplog.text, (
+            "a real failure was swallowed by the duplicate-label handler")
+
+
 class TestPGWrite:
     """Tests for PG+AGE parallel write. Skips if PG unavailable.
 
@@ -988,8 +1051,7 @@ class TestExtractReadinessGateNodes:
 class TestVerifiesEdges:
     """VERIFIES: PythonTest -> Formula / Parameter / LeanTheorem (with test_kind)."""
 
-    def test_edges_carry_test_kind(self, all_graph_nodes, all_graph_node_ids):
-        nodes = extract_all_nodes()
+    def test_edges_carry_test_kind(self, all_graph_node_ids):
         node_ids = all_graph_node_ids
         edges = extract_verifies_edges(node_ids)
         if not edges:
@@ -1004,8 +1066,7 @@ class TestVerifiesEdges:
 class TestFlagsEdges:
     """FLAGS: ReviewFinding -> any artifact."""
 
-    def test_edge_shape(self, all_graph_nodes, all_graph_node_ids):
-        nodes = extract_all_nodes()
+    def test_edge_shape(self, all_graph_node_ids):
         node_ids = all_graph_node_ids
         edges = extract_flags_edges(node_ids)
         if not edges:
@@ -1020,8 +1081,7 @@ class TestFlagsEdges:
 class TestReportsEdges:
     """REPORTS: Paper -> CountMetric (paper_value + delta_pct attributes)."""
 
-    def test_edges_carry_delta(self, all_graph_nodes, all_graph_node_ids):
-        nodes = extract_all_nodes()
+    def test_edges_carry_delta(self, all_graph_node_ids):
         node_ids = all_graph_node_ids
         edges = extract_reports_edges(node_ids)
         if not edges:

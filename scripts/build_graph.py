@@ -4058,11 +4058,31 @@ def _cypher_escape(s) -> str:
             .replace("$$", "$ $"))
 
 
-def _create_age_labels(conn, node_types: set, edge_types: set) -> None:
+PG_GRAPH_NAME = "sk_eft"
+"""The production AGE graph. Overridable per call ONLY so tests can write to a
+throwaway graph — see `write_graph_to_pg`."""
+
+
+def _create_age_labels(conn, node_types: set, edge_types: set,
+                       graph_name: str = PG_GRAPH_NAME) -> None:
     """Create AGE vertex and edge labels using autocommit to avoid transaction pollution.
 
-    Each CREATE label is its own statement; errors (label already exists) are
+    Each CREATE label is its own statement; a genuine duplicate-label error is
     ignored individually without affecting the surrounding transaction.
+
+    ⚠️ **`graph_name` WAS MISSING FROM THIS SIGNATURE FOR ONE COMMIT, AND THE BARE
+    `except Exception` HID IT COMPLETELY.** The parameterisation that let tests
+    target a throwaway graph was applied to the body and not the signature, so
+    `graph_name` was a FREE VARIABLE: every `create_vlabel`/`create_elabel` raised
+    `NameError`, which is an `Exception`, which the handler swallowed with the
+    comment "Label already exists". Measured with a recording fake connection:
+    **zero label statements issued**, on every call, in production and in tests.
+
+    It was invisible because AGE auto-creates labels on `CREATE`, so nothing
+    downstream failed. That is the silent-failure triad in one construct — a broad
+    catch, a false explanatory comment, and a dead code path — shipped by the
+    commit that was fixing a different instance of it. The catch below is now
+    narrow so the next one cannot hide.
     """
     # Use autocommit so each label creation is its own transaction
     old_autocommit = conn.autocommit
@@ -4076,22 +4096,31 @@ def _create_age_labels(conn, node_types: set, edge_types: set) -> None:
                     cur.execute(
                         f"SELECT create_vlabel('{graph_name}', '{_cypher_escape(ntype)}')"
                     )
-                except Exception:
-                    pass  # Label already exists
+                except Exception as exc:
+                    # ⚠️ NARROW. `except Exception: pass  # Label already exists`
+                    # was false 100% of the time (see the docstring) and would
+                    # equally have hidden a lost connection, a permission error, or
+                    # the AGE extension not being loaded. Only an
+                    # already-exists condition is ignorable; anything else is
+                    # surfaced.
+                    if "already exists" not in str(exc).lower():
+                        logger.warning("create label failed on %s: %s", graph_name, exc)
             for etype in sorted(edge_types):
                 try:
                     cur.execute(
                         f"SELECT create_elabel('{graph_name}', '{_cypher_escape(etype)}')"
                     )
-                except Exception:
-                    pass  # Label already exists
+                except Exception as exc:
+                    # ⚠️ NARROW. `except Exception: pass  # Label already exists`
+                    # was false 100% of the time (see the docstring) and would
+                    # equally have hidden a lost connection, a permission error, or
+                    # the AGE extension not being loaded. Only an
+                    # already-exists condition is ignorable; anything else is
+                    # surfaced.
+                    if "already exists" not in str(exc).lower():
+                        logger.warning("create label failed on %s: %s", graph_name, exc)
     finally:
         conn.autocommit = old_autocommit
-
-
-PG_GRAPH_NAME = "sk_eft"
-"""The production AGE graph. Overridable per call ONLY so tests can write to a
-throwaway graph — see `write_graph_to_pg`."""
 
 
 def write_graph_to_pg(graph: dict, graph_name: str = PG_GRAPH_NAME) -> None:
@@ -4132,7 +4161,7 @@ def write_graph_to_pg(graph: dict, graph_name: str = PG_GRAPH_NAME) -> None:
         # --- 4 & 5. Create vertex/edge labels (idempotent, autocommit each) ---
         node_types = {n['type'] for n in graph['nodes']}
         edge_types = {e['type'] for e in graph['links']}
-        _create_age_labels(conn, node_types, edge_types)
+        _create_age_labels(conn, node_types, edge_types, graph_name)
 
         # --- 3, 6, 7, 8. Clear + insert all in one transaction ---
         with conn:

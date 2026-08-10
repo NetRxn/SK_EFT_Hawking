@@ -65,22 +65,24 @@ class Detail:
     #: and the check derives its own `measured` from its details.
     #:
     #: ⚠️ THERE IS NO AUTOMATIC WRAPPER, and an earlier version of this sentence said
-    #: there was. `run_checks` derives nothing; SIX checks fold their details by
-    #: hand and the rest do not — `bundle_figure_integrity`,
-    #: `bundle_prose_em_dash_free`, `bundle_sentence_length`,
-    #: `bundle_reader_facing_voice`, `bundle_source_freshness`, `graph_integrity`.
-    #: (This said "two" and was falsified by a hunk of its OWN commit, which added
-    #: the first of the six. A count in a comment is a claim with a short shelf
-    #: life; the durable statement is that the fold is per-check and manual.) Whether a partly-unmeasured check is itself unmeasured is
-    #: a PER-CHECK judgement: one that measured its primary population and merely
-    #: lacked coverage of part of it IS measured (the uncovered-figure census in
-    #: `bundle_figure_integrity`), while one whose population was UNREACHABLE is not
-    #: (`bundle_source_freshness`'s dark Lean leg, `bundle_manuscript_length`'s stale
-    #: PDFs, and `bundle_figure_integrity`'s own registry-load fallback — which IS a
-    #: population failure and does flip the check, so that check contains both sides
-    #: of the distinction rather than only the one it was first cited for).
-    #: Automating the fold would erase that distinction. Do not read this field as
-    #: feeding anything on its own.
+    #: there was. `run_checks` derives nothing; the fold is PER-CHECK and MANUAL, done
+    #: by whichever checks need it.
+    #:
+    #: ⚠️ **DO NOT WRITE THE NUMBER HERE.** This sentence has now been falsified
+    #: three times by hunks of its own commit: it said "two", was corrected to
+    #: "SIX" with the six named — and a seventh, `check_bundle_manuscript_length`,
+    #: was added by the same commit range that wrote the correction. A census in a
+    #: comment about a population the commit is actively changing is a claim with a
+    #: guaranteed short shelf life. Derive it:
+    #:
+    #:     grep -rnE 'measured\s*=\s*(?!True|False)' scripts/validation/
+    #:
+    #: Automating the fold would erase a real distinction: a check that measured its
+    #: primary population and merely lacked coverage of PART of it IS measured (the
+    #: uncovered-figure census in `bundle_figure_integrity`), while one whose
+    #: population was UNREACHABLE is not (`bundle_source_freshness`'s dark Lean leg,
+    #: `bundle_manuscript_length`'s stale PDFs). Do not read this field as feeding
+    #: anything on its own.
     measured: bool = True
 
 

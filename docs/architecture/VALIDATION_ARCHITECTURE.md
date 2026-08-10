@@ -184,6 +184,33 @@ subsystem exists to close. It is sound only if the key spans every input.
 > [`CHECK_AUTHORING_GUIDE.md` §5](CHECK_AUTHORING_GUIDE.md#5-the-systemic-pattern--the-shapes-it-has-actually-taken),
 > which owns the systemic-pattern ledger. Read it before adding a guard to anything here.
 
+### 5.1 Regeneration ORDER, and why `--ci` can go red with nothing in the diff
+
+`docs/counts.tex` sits in **every** bundle's `\input` closure, and
+`bundle_manuscript_length` refuses to size a PDF older than that closure. Since this
+branch folded the unmeasured population into `CheckResult.measured`, and
+`CI_MIN_CHECKS_RUN` has **zero slack** by design, one stale PDF takes `--ci` red.
+
+So the order is load-bearing:
+
+```bash
+uv run python -m pytest -m ''                       # may change \totaltests
+uv run python scripts/update_counts.py              # regenerates counts.tex IF substance moved
+uv run python scripts/compile_bundle_pdf.py --all --force
+uv run python scripts/validate.py --ci
+```
+
+⚠️ **This is NOT spurious churn, and the distinction matters.** `update_counts.py`
+holds a byte-stability contract — it compares everything except the `generated`
+stamp and leaves both artifacts untouched when nothing substantive moved. So a
+moved `counts.tex` mtime means the counts genuinely changed, which means the
+numbers baked into all 21 PDFs genuinely are out of date. The gate is right; the
+workflow just has an order.
+
+The cost is real and is accepted deliberately: the alternative is giving the
+coverage floor slack, and a floor with slack cannot see the next check that
+silently stops measuring — which is the failure it exists to catch.
+
 ## 6. What this subsystem does not do
 
 ⚠️ **These are coverage GAPS, not absences.** A check exists for most of them; what is true
