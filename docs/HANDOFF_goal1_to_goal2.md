@@ -190,8 +190,41 @@ against 3750. Everything removed landed in D1, its declared deep companion.
 ## 6. Substrate state
 
 * `rm -rf .lake/build && lake build SKEFTHawking.ExtractDeps` — **clean, 10,827 jobs**.
-* Zero `sorry`. Axioms exactly `{propext, Classical.choice, Quot.sound}` on every new
-  declaration. No new project-local axiom was introduced.
+* Zero `sorry`. No new project-local axiom was introduced.
+* **Axioms: exactly `{propext, Classical.choice, Quot.sound}` on every declaration this
+  branch ADDED — but NOT across the whole apex set.** Measured 2026-08-10 with
+  `lake env lean` + `#print axioms` over all 578 declared bundle apexes (not
+  `lean_verify`, which has produced a false `sorryAx` here):
+
+  ```
+  555 of 578 kernel-pure
+   23 carry a `…_native.native_decide.ax_*` compiler-trust axiom
+  owning bundles: D4 18 · D2 3 · F 3 · I2 1 · L2 1
+  ```
+
+  Those 23 include headline theorems (`e8_det_one`, `FibonacciMTC.fib_pentagon`,
+  the `IsingBraiding` family). The owning-bundle histogram matches
+  `NATIVE_DECIDE_BUNDLE_DEBT = {D4:19, L2:6, F:3, D2:3, I2:1}` exactly, so this is
+  **disclosed and ratcheted, not a regression** — but the unqualified sentence that
+  used to sit here was false, and a reader entitled to take "kernel-pure" literally
+  would have been misled.
+
+  ### ⏭️ CIRCLE BACK: re-state this once the `native_decide` elimination lands
+
+  This wording is **provisional by design**. The decl-closure ceiling has come down
+  `852 → 587 → 546` (`NATIVE_DECIDE_DECL_CLOSURE_CEILING`, `constants.py:2516`), so
+  elimination is an active trajectory, not a permanent posture — the project's stance
+  is that `native_decide` is compiler trust to be discharged, the same posture it
+  holds toward axioms.
+
+  **When that ceiling reaches 0**, come back here and to `TODO-D39` and collapse this
+  whole caveat to the one-line claim it replaced. Until then, do NOT restore the
+  unqualified sentence, and do NOT quote "kernel-pure" of the apex set without the
+  23. The check to re-run is:
+
+  ```bash
+  uv run python scripts/validate.py --check native_decide_regression   # ceiling → 0?
+  ```
 * Three new Lean modules: `FaultTolerance/MalignantUnionBound.lean`,
   `FaultTolerance/ConcatenatedComposition.lean`, `QuantumNetwork/FDTLDPBridge.lean`, plus
   a rewritten `SakharovGenerationBridge.lean`.

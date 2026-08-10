@@ -891,8 +891,26 @@ holds; the claim that all 59 are verified in both directions is retracted.
 seeding the defect in the **production artifact** rather than a fixture — and that criterion is the
 lasting correction, not the four repairs. **The retraction above still stands for the other 55:**
 what the registry certifies is that a decision was recorded and the named test references the check
-in code, which is weaker than "can fail in production." Do not restore the stronger reading until
-the QI-30 sweep has run across all 59.
+in code, which is weaker than "can fail in production."
+
+⚠️ **TERMINALITY.** This paragraph used to end *"do not restore the stronger reading until the
+QI-30 sweep has run across all 59"* — a forward condition on a frozen count, which left this ADR
+non-terminal and the count stale (the registry is 79 today, not 59). An ADR must not carry an
+instruction whose trigger it cannot state in live terms.
+
+The condition is now **owned by the mechanism, not by this document**: the gap between "a
+decision was recorded" and "shown to fail in production" is the `FIXTURE_ONLY_CEILING` ratchet
+in `tests/test_d5_mutation_obligation.py`, which counts checks whose obligation is discharged by
+a fixture rather than a production seed. It is a DOWN-ONLY ratchet, so the sweep's progress is
+measured continuously rather than announced. Derive the live gap:
+
+```bash
+uv run python -m pytest tests/test_d5_mutation_obligation.py -q   # the ratchet is the sweep's odometer
+```
+
+**This ADR is therefore terminal.** It records the decision and the criterion; the remaining
+work is tracked where it can be measured, and no reader needs to return here to learn whether
+the sweep has finished.
 
 `tests/test_d5_mutation_obligation.py`
 requires every registered check to declare its test status, and as of the QA/QI audit's workstream

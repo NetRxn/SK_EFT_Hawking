@@ -2312,3 +2312,49 @@ absorbed the cost (116 → 117) with its rationale recorded in `constants.py`.
 whole 117 population, since other entries may also be dimensionless), or accept scientific notation
 as in-scope and keep the ceiling. **Re-measure before deciding** — the population was last
 characterised on 2026-08-03 and this pass did not re-derive what the other 116 are.
+
+---
+
+### TODO-D39. ⏭️ CIRCLE BACK — re-state the axiom-purity claim once `native_decide` is eliminated
+
+**Status: OPEN BY DESIGN.** This is a scheduled revisit, not a defect. It is the one item
+here that is *supposed* to stay open until an external condition is met.
+
+**The measurement** (2026-08-10, `lake env lean` + `#print axioms` over all 578 declared
+bundle apexes — NOT `lean_verify`, which has produced a false `sorryAx` in this repo):
+
+```
+555 of 578 kernel-pure
+ 23 carry `…_native.native_decide.ax_*`
+ owning bundles: D4 18 · D2 3 · F 3 · I2 1 · L2 1
+```
+
+The histogram matches `NATIVE_DECIDE_BUNDLE_DEBT` exactly, so the debt is disclosed and
+ratcheted. What was wrong was the *prose*: several places claimed axioms are "exactly
+`{propext, Classical.choice, Quot.sound}`" without qualification, which is true of every
+declaration this branch ADDED and false of the apex set as a whole. Among the 23 are
+headline theorems (`e8_det_one`, `FibonacciMTC.fib_pentagon`, the `IsingBraiding` family).
+
+**Why it is open rather than fixed.** `native_decide` is compiler trust the project intends
+to discharge, not a permanent posture — the same stance it takes toward axioms. The
+decl-closure ceiling has fallen `852 → 587 → 546`
+(`NATIVE_DECIDE_DECL_CLOSURE_CEILING`, `src/core/constants.py:2516`), so the trajectory is
+live. The qualified wording is scaffolding for that trajectory.
+
+**The trigger, and what to do when it fires:**
+
+```bash
+uv run python scripts/validate.py --check native_decide_regression   # ceiling reaches 0
+```
+
+When the ceiling reaches **0**, collapse the caveat back to the one-line claim it replaced,
+in BOTH places:
+
+* `docs/HANDOFF_goal1_to_goal2.md` §"CIRCLE BACK: re-state this once the native_decide
+  elimination lands"
+* this entry — close it as DONE with the measurement that showed 0
+
+**Until then:** do NOT restore an unqualified "axioms exactly `{propext, Classical.choice,
+Quot.sound}`" anywhere, and do NOT describe the apex set as kernel-pure without the 23.
+⚠️ Re-measure before acting — a filed count is a claim, this one included, and the ceiling
+has moved three times already.

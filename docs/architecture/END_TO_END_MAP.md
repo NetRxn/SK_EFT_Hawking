@@ -240,9 +240,21 @@ The finding→gate pipeline and its silent drops are in
 
 **Live gaps:**
 
-- **The two `stage*_status` gaps — the missing promotion actor and the unenforced ordering rule
-  — are stated with their transitions and their guards in [§8](#8--gates-and-human-sign-off).**
-  Read them there; this section does not restate them.
+- ~~**The two `stage*_status` gaps — the missing promotion actor and the unenforced ordering
+  rule.**~~ **BOTH CLOSED — this entry was stale and self-contradicting.** The "missing
+  promotion actor" is `scripts/record_review.py`, which this same document names as the actor
+  in §8; the "unenforced ordering rule" is the registered check
+  `bundle_reviewer_stage_ordering`, which a closure reviewer confirmed live by seeding a
+  violation (`stage13=green` with `stage9=not_started`) and observing `passed=False`.
+
+  Listing as a *live gap* something the same file names the mechanism for, two sections down,
+  is the heading-vs-body contradiction this document set already produced twice. Verify rather
+  than trust either statement:
+
+  ```bash
+  uv run python scripts/validate.py --check bundle_reviewer_stage_ordering
+  uv run python scripts/record_review.py --help      # --doc REQUIRED for --stage 13
+  ```
 - ⚠️ **A review written in an unrecognised heading style mints nothing, silently.** The
   extractor's accepted forms, and why the risk is a NEW form rather than the existing corpus,
   are in [`QA_QI_INFRASTRUCTURE_MAP.md` §3](QA_QI_INFRASTRUCTURE_MAP.md#the-dialect-question--narrow-but-no-longer-single).
