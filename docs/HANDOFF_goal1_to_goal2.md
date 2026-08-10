@@ -149,6 +149,12 @@ stage not run are different states, and only one of them is recoverable by re-ru
   The coach ruled it stays red and carries into goal 2; goal item 6 closes PARTIALLY MET
   with the measurement in `ACCURACY_LEDGER` V70.
 
+⚠️ **`bundle_figure_adequacy` is green with EIGHT bundles carrying zero drawn figures.** That is
+legitimate — the pipeline law mandates `\figuredeferred{id}{reason}` as the deferral form and the
+gate counts it toward the tier floor — but a reader should not have to derive it from the
+summary. Goal 2 owns turning 40 declared deferrals into drawn figures; the green means "every
+deferral is declared with a reason", not "every bundle has its figures".
+
 Green and worth not regressing: `bundle_figure_adequacy` (green **by declared deferral** —
 its summary reads `42 drawn, 40 declared-deferred, 8 bundle(s) with zero drawn figures`,
 so the magnitude cannot hide behind the green), `bundle_structural_coherence`,

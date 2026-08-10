@@ -1057,6 +1057,10 @@ violated for the fifth time in this workstream.
 
 ### D16. The program's central synthesis claim has no Lean witness — ✅ DONE 2026-08-09 (CRITICAL)
 
+> **Reproduced before fixing:** read `HeatKernelExpansion.a0_dirac` and `GenerationConstraint`
+> directly and compared their units — the claim is FALSE as literally stated, and that reading is
+> what showed it. Detail below.
+
 > ⚠️ **The claim is not unwitnessed. As literally stated it is FALSE, and measuring it is what
 > showed that.** Read directly:
 > * `HeatKernelExpansion.a0_dirac (N_f : ℝ)` counts **Dirac species**, is real-valued, fiducial `15`.
@@ -1920,6 +1924,9 @@ ADR-010 §Open item 5.
 
 ### D32. D6 §5.4 excision + AGP threshold lift — ✅ DONE 2026-08-09 (one wave)
 
+> **Reproduced before fixing:** measured D6 at 1,102 lines / 12 pp with §5.4 spanning lines
+> 504–991 (488 lines, 44% of the draft) — the excision target was sized, not estimated.
+
 > **Both halves landed together, as required.** D6 is 758 lines / 7 pp, from 1,102 / 12 pp.
 >
 > **Excision.** §5.4 (lines 504–991, 488 lines, 44 % of the draft) is now a 20-line
@@ -1973,6 +1980,9 @@ and §4's claim that real-interval arithmetic is "absent from Mathlib v4.29.1" �
 and D9 §5 ships exactly that technique.
 
 ### D33. L3's work-marker comment trips `bundle_todo_free_before_green` if L3 ever goes green — ✅ DONE 2026-08-09
+
+> **Reproduced before fixing:** ran the marker scan over L3 and D6, which is what refuted the
+> entry's own guess about D6:17 (`source_manifest.md` exists and is populated).
 
 > L3:442 reworded (`TODO content stubs` → `Placeholder content stubs`) — it was a note *about*
 > markers, not a marker.

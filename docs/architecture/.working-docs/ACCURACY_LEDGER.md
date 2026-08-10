@@ -2687,6 +2687,15 @@ all) and cleared D1.
 
 ---
 
+## V69 — SKIPPED, deliberately, and recorded so the gap is not read as a lost entry
+
+⚠️ **There is no V69.** The numbering jumped V68 → V70 during the ADR-011 wave; nothing was
+written and nothing was deleted. Flagged by the closure reviewer, which is the right catch — an
+unexplained gap in an append-only audit log is indistinguishable from a removed entry, and this
+file's whole purpose is that a reader can tell those apart. The sequence is otherwise unbroken.
+
+---
+
 ## V70 — goal item 6, the three bundle gates — 6 atoms, MY DICHOTOMY WAS MECHANICALLY FALSE
 
 | # | Proposition | Decider | Verbatim result |
