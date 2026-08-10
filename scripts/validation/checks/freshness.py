@@ -180,6 +180,7 @@ def _counts_is_stale() -> tuple[bool, str]:
     # Same rglob-newest shape as the Lean leg above, deliberately: one staleness
     # mechanism, applied to every tree whose contents this artifact publishes.
     for label, root, pat in (
+            ("src/**/*.py", _H.SRC_DIR, "*.py"),      # publishes python_modules
             ("tests/**/*.py", _H.TESTS_DIR, "*.py"),
             ("notebooks/**/*.ipynb", _H.NOTEBOOKS_DIR, "*.ipynb"),
             ("papers/**/paper_draft.tex", _H.PAPERS_DIR, "paper_draft.tex")):

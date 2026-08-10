@@ -67,12 +67,20 @@ _HEADER = (
 
 def render(code: str, closures, by_name) -> str | None:
     """The LaTeX body for one bundle, or `None` when its substrate is unmeasurable."""
+    # ⚠️ The CANONICAL classifier, not the raw ExtractDeps `autogen` field. This
+    # read `by_name[n].get("autogen")` while this module's header claimed parity
+    # with `update_counts.py`'s project-wide convention — false as written: the raw
+    # field misses the parent-kind-guarded supplement (`.eq_1`, `.congr_simp`,
+    # `.eq_def`, `deriving` products). Both figures now come from one owner, which
+    # is what makes them comparable.
+    from validate_helpers import autogen_index as _ai
+    _autogen = _ai(list(by_name.values()))
     c = closures.get(code)
     if c is None or not c.measurable:
         return None
     theorems = sum(
         1 for n in c.closure
-        if by_name[n].get("kind") == "theorem" and not by_name[n].get("autogen"))
+        if by_name[n].get("kind") == "theorem" and not _autogen.get(n))
     return (
         _HEADER
         + f"\\newcommand{{\\bundleTheorems}}{{{theorems}}}\n"

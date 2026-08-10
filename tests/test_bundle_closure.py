@@ -181,6 +181,10 @@ class TestTheCheck:
             (d / "bundle_metadata.json").write_text(json.dumps(payload))
         import validate_helpers
         monkeypatch.setattr(validate_helpers, "PROJECT_ROOT", tmp_path)
+        # The check reaches the corpus via the canonical PAPERS_DIR anchor (H1), so
+        # redirecting PROJECT_ROOT alone leaves it reading the production papers tree.
+        # Patch the anchor the check actually reads.
+        monkeypatch.setattr(validate_helpers, "PAPERS_DIR", tmp_path / "papers")
 
     def test_nothing_declared_says_UNMEASURABLE_rather_than_passing_vacuously(
             self, check, monkeypatch, tmp_path):
@@ -232,6 +236,7 @@ class TestTheCheck:
         (tmp_path / "papers").mkdir()
         import validate_helpers
         monkeypatch.setattr(validate_helpers, "PROJECT_ROOT", tmp_path)
+        monkeypatch.setattr(validate_helpers, "PAPERS_DIR", tmp_path / "papers")
         res = check()
         assert res.measured is False and res.passed is True
 

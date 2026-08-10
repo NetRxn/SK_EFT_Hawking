@@ -280,7 +280,7 @@ def unresolved_aristotle_keys() -> list[str]:
 #: every eliminator in the tree.
 _RESERVED_GENERATED_SUFFIXES = (
     # not reached by isInternalDetail / isAuxRecursor / isNoConfusion
-    "noConfusionType", "ctorIdx", "toCtorIdx", "sizeOf_spec", "eq_def", "injEq",
+    "noConfusionType", "ctorIdx", "toCtorIdx", "sizeOf_spec", "injEq",
     "inj", "ctorElim", "ctorElimType", "ofNat",
     # `deriving Fintype/Inhabited/DecidableEq` products, added 2026-08-10 after a
     # closure reviewer measured ~300 of these still counted as author-written.
@@ -310,7 +310,13 @@ _DERIVED_INSTANCE_FIELD_SUFFIXES = ("repr", "decEq", "default")
 #: Measured 2026-08-10: 184 `.congr_simp`, parents `{def: 150, structure: 1, absent: 33}`;
 #: `grep -rn "congr_simp" lean/SKEFTHawking/` returns 0 — Lean's congruence-simp lemmas,
 #: written by nobody.
-_DEF_PARENTED_GENERATED_SUFFIXES = ("congr_simp",)
+_DEF_PARENTED_GENERATED_SUFFIXES = ("congr_simp", "eq_def")
+#: ⚠️ `eq_def` MOVED HERE from `_RESERVED_GENERATED_SUFFIXES` on 2026-08-10. It was
+#: sitting in the inductive/structure-parented set while all 20 live instances are
+#: `def`-parented or parentless, so its guard never matched and 18 generated lemmas
+#: were published as author-written. The set created for exactly this shape already
+#: had the `None`-parent branch it needed — the suffix was simply in the wrong list.
+#: `grep -rn "eq_def" lean/SKEFTHawking/` → 0: nobody wrote them.
 
 
 def _is_internal_detail(name: str) -> bool:

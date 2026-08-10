@@ -2329,8 +2329,20 @@ bundle apexes — NOT `lean_verify`, which has produced a false `sorryAx` in thi
  owning bundles: D4 18 · D2 3 · F 3 · I2 1 · L2 1
 ```
 
-The histogram matches `NATIVE_DECIDE_BUNDLE_DEBT` exactly, so the debt is disclosed and
-ratcheted. What was wrong was the *prose*: several places claimed axioms are "exactly
+⚠️ **This entry first said "the histogram matches `NATIVE_DECIDE_BUNDLE_DEBT` exactly." It
+does not — they are two different populations,** and a closure reviewer caught it on a
+branch whose own rule is that a filed count is a claim:
+
+```
+apex histogram    D4 18 · D2 3 · F 3 · I2 1 · L2 1
+NATIVE_DECIDE_…   D4 19 · D2 3 · F 3 · I2 1 · L2 6     ← closure-scoped (constants.py:2526)
+closure histogram D4 19 · D2 3 · F 3 · I2 1 · L2 6     ← what the registry actually tracks
+```
+
+The registry counts DECLARATION-CLOSURE hits; the 23 above are declared APEXES. The
+conclusion survives — the closure histogram does match the registry, so the debt is
+disclosed and ratcheted — but the evidence originally cited for it was the wrong
+population. What was wrong was the *prose*: several places claimed axioms are "exactly
 `{propext, Classical.choice, Quot.sound}`" without qualification, which is true of every
 declaration this branch ADDED and false of the apex set as a whole. Among the 23 are
 headline theorems (`e8_det_one`, `FibonacciMTC.fib_pentagon`, the `IsingBraiding` family).

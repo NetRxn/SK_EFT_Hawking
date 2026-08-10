@@ -655,6 +655,11 @@ class TestLeanModulesInBuildGraph:
             "".join(f"import SKEFTHawking.{m}\n" for m in root_imports))
         (tmp_path / "lean" / "lakefile.toml").write_text(lakefile)
         monkeypatch.setattr(_H, "PROJECT_ROOT", tmp_path)
+        # The check reaches the module tree via the canonical LEAN_DIR anchor (H1), so
+        # redirecting PROJECT_ROOT alone leaves it reading the production tree. Patch the
+        # anchor the check actually reads — if this line is dropped, the isolation is a
+        # no-op and every assertion below silently measures the real project.
+        monkeypatch.setattr(_H, "LEAN_DIR", src)
         return src
 
     def test_an_unreachable_module_FAILS(self, tmp_path, monkeypatch):
@@ -691,6 +696,9 @@ class TestLeanModulesInBuildGraph:
 
     def test_an_absent_source_dir_is_UNMEASURABLE_not_passing(self, tmp_path, monkeypatch):
         monkeypatch.setattr(_H, "PROJECT_ROOT", tmp_path)
+        # LEAN_DIR is the anchor the check reads (H1); point it at a path that does not
+        # exist so "absent source dir" is the condition actually under test.
+        monkeypatch.setattr(_H, "LEAN_DIR", tmp_path / "lean" / "SKEFTHawking")
         r = lt.check_lean_modules_in_build_graph()
         assert r.passed is False and r.measured is False
 

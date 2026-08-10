@@ -2312,7 +2312,7 @@ def check_bundle_apex_resolves() -> CheckResult:
         if not passed and not warning:
             all_pass = False
 
-    papers_root = _H.PROJECT_ROOT / "papers"
+    papers_root = _H.PAPERS_DIR   # H1: the anchor owns this path, never re-derive it
     declarations = bundle_closure.load_apex_declarations(papers_root)
     if not declarations:
         # No bundle metadata at all — the input is ABSENT, not empty. This is the one

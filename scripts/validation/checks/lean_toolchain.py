@@ -977,7 +977,7 @@ def _root_reachable_modules() -> set:
                 "(else it is built, indexed, counted and guarded by nothing)")
 def check_lean_modules_in_build_graph() -> CheckResult:
     """Compare the FILESYSTEM to the import graph — the join nothing else makes."""
-    src = _H.PROJECT_ROOT / "lean" / "SKEFTHawking"
+    src = _H.LEAN_DIR   # H1: the anchor owns this path, never re-derive it
     if not src.is_dir():
         return CheckResult(passed=False, measured=False, details=[Detail(
             "scope", False, "SKIPPED — lean/SKEFTHawking/ absent; UNVERIFIED, not passing")])

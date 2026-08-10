@@ -266,8 +266,7 @@ The finding→gate pipeline and its silent drops are in
   failure, and illegibility. Note that most of the figure
   registry is legacy `paperNN_` figures, so the uncovered *bundle* population is much smaller
   than the registry size suggests — check the registry rather than assuming either extreme.
-- **`tables_fresh` cannot fail on staleness.** Its stale branch appends a `Detail` and falls
-  through to `passed=True`; only a non-zero subprocess or an unrunnable generator fails it. It
+~~`tables_fresh` cannot fail on staleness.~~ **REPAIRED and this line was stale.** `_verify_regeneration` is wired into `check_tables_fresh` and the stale branch now returns `passed=False` (`freshness.py:344`). The R4-I7 fix changed the behaviour and did not update the document describing it — architecture rule 2, missed. Verify: `uv run python scripts/validate.py --check tables_fresh`.
   is a self-healing regenerator wearing a gate's interface. Compounding it: every `tables.py`
   on disk sits under a legacy `paperNN_*` directory, so **no publication bundle is wired to
   the table pipeline at all.**

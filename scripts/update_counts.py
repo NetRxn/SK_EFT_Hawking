@@ -116,6 +116,31 @@ def native_decide_decls(data):
     ]
 
 
+_AUTOGEN_CACHE = {}
+
+
+def _autogen_index_shared():
+    """The ONE autogen classifier this module uses, built once per process.
+
+    ⚠️ Every generator here routes through `validate_helpers.autogen_index`. Three
+    used to carry a bare `kind == "theorem"` filter — including the per-module I1
+    macro loop, whose own comment claimed it was "identical to count_lean()'s
+    theorem counting" AFTER count_lean had been canonicalized and it had not. A
+    closure reviewer measured 873 of 2,012 modules as containing generated
+    theorems, so one `deriving` clause in any of the 17 emitted modules would have
+    silently inflated a published macro.
+
+    Cached because `autogen_index` needs the whole record set to resolve parents and
+    several generators run in one process; do NOT inline the classification again.
+    """
+    if "idx" not in _AUTOGEN_CACHE:
+        import sys as _s
+        _s.path.insert(0, str(Path(__file__).resolve().parent))
+        from validate_helpers import autogen_index as _ai, load_lean_deps as _lld
+        _AUTOGEN_CACHE["idx"] = _ai(_lld())
+    return _AUTOGEN_CACHE["idx"]
+
+
 def count_lean(deps_path: Path, preloaded: list | None = None) -> dict:
     """Extract Lean counts from lean_deps.json (authoritative, environment-based).
 
@@ -563,7 +588,8 @@ def generate_tex(counts: dict, path: Path, deps: list | None = None):
             _names = {"SKEFTHawking." + m.replace("/", ".") for m in _D11_MODULES}
             _dt = sum(1 for e in _deps
                       if isinstance(e, dict) and e.get("module") in _names
-                      and e.get("kind") == "theorem")
+                      and e.get("kind") == "theorem"
+                      and not _autogen_index_shared().get(e["name"]))
             lines.append(f"\\newcommand{{\\dxiDepsTheorems}}{{{_dt}}}")
         except Exception:
             pass
@@ -720,7 +746,7 @@ def generate_tex(counts: dict, path: Path, deps: list | None = None):
     if deps:
         mod_thms: dict = {}
         for d in deps:
-            if d.get("kind") == "theorem":
+            if d.get("kind") == "theorem" and not _autogen_index_shared().get(d["name"]):
                 mod_thms[d["module"]] = mod_thms.get(d["module"], 0) + 1
 
         _i1_w16 = [  # Phase 6f Waves 1–6 (one module per wave)

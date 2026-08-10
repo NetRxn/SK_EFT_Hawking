@@ -32,6 +32,8 @@ import base64
 import json
 import struct
 import sys
+
+import pytest
 from pathlib import Path
 
 SK_ROOT = Path(__file__).resolve().parent.parent
@@ -90,7 +92,7 @@ class TestCountsFreshness:
         # \totaltests drifted 6163→6171 with this check green). Retarget them at
         # empty tmp dirs, exactly as LEAN_DIR is: a fixture that leaves a real-tree
         # anchor in place is testing the developer's working copy, not the check.
-        for _name in ("TESTS_DIR", "NOTEBOOKS_DIR", "PAPERS_DIR"):
+        for _name in ("TESTS_DIR", "NOTEBOOKS_DIR", "PAPERS_DIR", "SRC_DIR"):
             _d = tmp_path / _name.lower()
             _d.mkdir(parents=True, exist_ok=True)
             monkeypatch.setattr(_H, _name, _d)
@@ -126,6 +128,28 @@ class TestCountsFreshness:
         assert runner.calls, (
             "a .lean file in a SUBDIRECTORY did not mark counts stale — this is "
             "ADR-004 W7 M2 reopened, and it is the seed of audit QI-01")
+
+    @pytest.mark.parametrize("anchor,rel", [
+        ("SRC_DIR", "core/formulas.py"),
+        ("TESTS_DIR", "test_thing.py"),
+        ("NOTEBOOKS_DIR", "nb.ipynb"),
+        ("PAPERS_DIR", "D1/paper_draft.tex"),
+    ])
+    def test_every_tree_counts_json_publishes_is_a_staleness_input(
+            self, tmp_path, monkeypatch, anchor, rel):
+        """ONE LEG PER PUBLISHED TREE. `counts.json` publishes figures derived from
+        `src/`, `tests/`, `notebooks/` and `papers/`; a tree that is not a staleness
+        input lets its figure drift while this check stays green — exactly how
+        `\\totaltests` drifted 6163→6171. Each parameter case fails if its leg is
+        dropped from `_counts_is_stale`. The SRC_DIR case is the one added
+        2026-08-10; the other three had no positive test at all before it."""
+        runner = self._setup(tmp_path, monkeypatch, counts_mtime=1000, source_mtime=500)
+        _touch(getattr(_H, anchor) / rel, 3000)
+        fr.check_counts_fresh()
+        assert runner.calls, (
+            f"a file under {anchor} newer than counts.json did not mark counts stale — "
+            f"counts.json publishes a figure derived from that tree, so the figure can "
+            f"now drift with this check green")
 
     def test_a_missing_counts_tex_is_stale(self, tmp_path, monkeypatch):
         runner = self._setup(tmp_path, monkeypatch, counts_mtime=2000,
