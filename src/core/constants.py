@@ -2576,6 +2576,32 @@ NATIVE_DECIDE_BUNDLE_DEBT = {
 # Measured 2026-08-03 on all 64 drafts. Enforced by
 # `validate.py --check count_literals` / `--check numerical_literals`.
 COUNT_LITERAL_CEILING = 107      # hardcoded "N theorems/modules/sorry" in paper prose
+#: `@[simp]` projection lemmas with a structural name and a trivial body.
+#:
+#: These are REWRITE PLUMBING, not claims: given
+#: `instance : Add _ := ⟨fun x y => ⟨x.rank + y.rank⟩⟩`, the lemma
+#: `@[simp] theorem add_rank : (x + y).rank = x.rank + y.rank := rfl` has `rfl`
+#: as its ONLY correct proof. `proxy_body_audit` hunts a theorem NAMED like a
+#: claim that is `rfl`-provable because its definition was rigged; a `@[simp]`
+#: projection is a different species and classing it as vacuity is a category
+#: error.
+#:
+#: ⚠️ RATCHETED AT THE MEASURED VALUE, ZERO HEADROOM. The exemption is a category
+#: correction, not a licence — an eighth such lemma FAILS the check and must be
+#: looked at. Do not raise this to admit a new one; establish first that it is
+#: genuinely a projection and not a claim wearing `@[simp]`.
+#:
+#: Measured 2026-08-10, the first time the population was visible at all: the
+#: scanner was anchored at column 0 and had never seen a `@[simp]` declaration in
+#: the project's history, so `VACUOUS_STATEMENT_BASELINE` was calibrated on a
+#: population that structurally excluded them. The seven:
+#:   HandleTradeAtomVacuity.{collapsedPresentation_rank, constRankTwoPresentation_rank}
+#:   IntersectionMatrixDisjointSumInt.intH2BasisSum_rank
+#:   KummerK3E1Package.kummerK3IntH2Basis_rank
+#:   SymTFT/StiefelWhitney.{zero_rank, add_rank, neg_rank}
+#: All seven pre-exist on `main`; none of their files is in the ADR-009 branch diff.
+SIMP_PROJECTION_CEILING = 7
+
 NUMERICAL_LITERAL_CEILING = 117  # inline unit-bearing values outside \input{tables/}
 
 #: Sentences over 100 words in bundle body prose (TODO-D7, the readability half).

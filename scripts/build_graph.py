@@ -2209,7 +2209,17 @@ def _scan_lean_theorem_bodies(source: str):
             body_parts.append(ln.strip())
             k += 1
         body = " ".join(body_parts).strip()
-        yield name, line_no, body
+        # `is_simp`: the declaration carries a `@[simp]` attribute, on its own
+        # line or inline. A `@[simp]` lemma is REWRITE PLUMBING, not a claim —
+        # `@[simp] theorem (x + y).rank = x.rank + y.rank := rfl` beside
+        # `instance : Add _ := ⟨fun x y => ⟨x.rank + y.rank⟩⟩` has `rfl` as its
+        # only correct proof. Consumers that hunt "defining-the-conclusion"
+        # claims need to tell the two apart; before the scanner tolerated
+        # attributes at all, it never saw a single `@[simp]` declaration, so no
+        # consumer had ever had to make the distinction.
+        is_simp = ("@[simp]" in line
+                   or (line_no >= 2 and "@[simp]" in lines[line_no - 2]))
+        yield name, line_no, body, is_simp
         i = k
 
 
@@ -2272,7 +2282,7 @@ def extract_placeholder_marker_nodes() -> list[dict]:
         _rel = lean_file.relative_to(LEAN_DIR)
         module_name = ".".join(_rel.with_suffix("").parts)
         rel_path = f'lean/SKEFTHawking/{_rel.as_posix()}'
-        for thm_name, line_no, body in _scan_lean_theorem_bodies(source):
+        for thm_name, line_no, body, _is_simp in _scan_lean_theorem_bodies(source):
             if thm_name in placeholder_short_names:
                 continue
             pattern_label = None

@@ -255,7 +255,7 @@ def test_native_decide_metric_in_counts_and_under_ceiling():
 
 def test_scanner_yields_lemmas_not_just_theorems():  # C1
     from scripts.build_graph import _scan_lean_theorem_bodies
-    names = [n for n, _, _ in _scan_lean_theorem_bodies(
+    names = [n for n, _, _, _ in _scan_lean_theorem_bodies(
         "lemma foo_rank_iso : a = a := rfl\ntheorem bar : b := rfl\ndef baz : Nat := 3\n")]
     assert "foo_rank_iso" in names and "bar" in names
     assert "baz" not in names  # defs are NOT claims — not scanned
@@ -344,7 +344,7 @@ def test_is_autogen_decl():
 def test_scanner_captures_body_on_continuation_line():  # #25 (the empty-body bug)
     from scripts.build_graph import _scan_lean_theorem_bodies
     src = "theorem foo (x : Nat) :\n    x = x := rfl\n"
-    bodies = {n: b for n, _, b in _scan_lean_theorem_bodies(src)}
+    bodies = {n: b for n, _, b, _ in _scan_lean_theorem_bodies(src)}
     assert bodies.get("foo") == "rfl", bodies  # was '' before the fix
 
 
@@ -451,3 +451,53 @@ def test_r05_gate_fails_if_definitional_record_relabeled_derivation(monkeypatch)
     r = check_formula_grounding()
     assert not r.passed
     assert any("wrt_S2xS1_eq_rank" in d.name for d in r.details if not d.passed)
+
+
+def test_the_simp_projection_exemption_is_a_ratchet_not_a_licence():
+    """`@[simp]` projections are exempt BY CATEGORY, and the exemption is capped.
+
+    ⚠️ The exemption exists because a `@[simp]` lemma is rewrite plumbing, not a
+    claim: given `instance : Add _ := ⟨fun x y => ⟨x.rank + y.rank⟩⟩`, the lemma
+    `@[simp] theorem add_rank : (x + y).rank = x.rank + y.rank := rfl` has `rfl`
+    as its ONLY correct proof. That is a category distinction, not a threshold.
+
+    ⚠️ But an exemption that can grow is a loophole. This pins BOTH directions:
+    the ceiling sits at the measured population (zero headroom), and exceeding it
+    must reach the CHECK'S VERDICT — not merely print a red detail under a green
+    header, which is how the first draft of this leg shipped.
+    """
+    from src.core.constants import SIMP_PROJECTION_CEILING
+    from validation.checks.lean_substrate import check_proxy_body_audit
+
+    r = check_proxy_body_audit()
+    leg = next((d for d in r.details if d.name == "simp_projections"), None)
+    assert leg is not None, "the simp-projection leg vanished"
+
+    n = int(re.search(r"(\d+) `@\[simp\]`", leg.message).group(1))
+    assert n == SIMP_PROJECTION_CEILING, (
+        f"ZERO HEADROOM required: {n} projections against ceiling "
+        f"{SIMP_PROJECTION_CEILING}. If this grew, the new lemma must be shown to "
+        f"be a projection and not a claim wearing @[simp] before the pin moves.")
+    assert r.passed, "at the ceiling the check must pass"
+
+
+def test_exceeding_the_simp_ceiling_reaches_the_VERDICT(monkeypatch):
+    """FIRES ON THE SEEDED DEFECT — a breach must fail the CHECK, not just a detail.
+
+    The first draft folded nothing into the verdict: `simp_projections` rendered
+    `✗` while the header still read `✓ PASS`. A ratchet whose breach does not
+    reach the verdict is not a ratchet.
+    """
+    from validation.checks import lean_substrate as ls
+    from validation.checks.lean_substrate import check_proxy_body_audit
+
+    monkeypatch.setattr("src.core.constants.SIMP_PROJECTION_CEILING", 0,
+                        raising=False)
+    import src.core.constants as C
+    monkeypatch.setattr(C, "SIMP_PROJECTION_CEILING", 0)
+    r = check_proxy_body_audit()
+    leg = next(d for d in r.details if d.name == "simp_projections")
+    assert not leg.passed, "the leg did not register the breach"
+    assert not r.passed, (
+        "the breach printed a red detail under a PASSING check — the exact "
+        "failing-detail-on-a-passing-check shape this suite flags elsewhere")

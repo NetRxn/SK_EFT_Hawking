@@ -397,6 +397,7 @@ def check_proxy_body_audit() -> CheckResult:
         MODELING_ASSUMPTION_THEOREMS = {}
     try:
         from src.core.constants import VACUOUS_STATEMENT_BASELINE as BASELINE
+        from src.core.constants import SIMP_PROJECTION_CEILING
     except ImportError:
         BASELINE = frozenset()
 
@@ -418,15 +419,41 @@ def check_proxy_body_audit() -> CheckResult:
 
     new_flagged: List[tuple] = []
     grandfathered: List[str] = []
+    simp_projections: List[str] = []
     for lean_file in sorted(lean_dir.rglob("*.lean")):
         try:
             source = lean_file.read_text()
         except (OSError, UnicodeDecodeError):
             continue
-        for thm_name, line_no, body in _scan_lean_theorem_bodies(source):
+        for thm_name, line_no, body, is_simp in _scan_lean_theorem_bodies(source):
             if thm_name in exempt or thm_name in whitelisted:
                 continue
             if not _STRUCTURAL_NAME_RE.search(thm_name):
+                continue
+            # ── `@[simp]` PROJECTION LEMMAS ARE A DIFFERENT SPECIES ────────────
+            # This check hunts a theorem NAMED like a claim that is `rfl`-provable
+            # because its definition was rigged. A `@[simp]` lemma is not making a
+            # claim — it is exposing a field to the simp set, and `rfl` is its ONLY
+            # correct proof:
+            #     instance : Add _ := ⟨fun x y => ⟨x.rank + y.rank⟩⟩
+            #     @[simp] theorem add_rank … : (x + y).rank = x.rank + y.rank := rfl
+            # Calling that "defining the conclusion" is a category error.
+            #
+            # ⚠️ THIS IS A CATEGORY CORRECTION, NOT A THRESHOLD MOVE. Until the
+            # scanner was taught to tolerate attributes (it was anchored at column
+            # 0 and missed 8.1% of the corpus), it had NEVER seen a `@[simp]`
+            # declaration, so `VACUOUS_STATEMENT_BASELINE` was calibrated on a
+            # population that structurally excluded them. Grandfathering the seven
+            # it newly caught into that baseline would have been the real
+            # loosening — using a just-repaired instrument to justify widening the
+            # exemption it exists to shrink.
+            #
+            # It is RATCHETED, so the exemption cannot grow silently: an eighth
+            # `@[simp]` structural `rfl` lemma fails this check loudly.
+            if is_simp:
+                norm_s = " ".join(body.split())
+                if any(rx.match(norm_s) for rx, _ in _TRIVIAL_BODY_RES):
+                    simp_projections.append(f"{lean_file.stem}.{thm_name}")
                 continue
             norm = " ".join(body.split())
             if _NONTRIVIAL_MARKER_RE.search(norm):
@@ -446,6 +473,20 @@ def check_proxy_body_audit() -> CheckResult:
     # Advisory: disclosed vacuous_proxy theorems are tracked debt (PASS, but visible).
     n_vac = sum(1 for v in MODELING_ASSUMPTION_THEOREMS.values()
                 if v.get("category") == "vacuous_proxy")
+    # `@[simp]` projection lemmas: exempt by CATEGORY, ratcheted so the exemption
+    # cannot grow silently. Over ceiling is a HARD FAIL — a new one must be shown
+    # to be a projection and not a claim wearing `@[simp]`.
+    _simp_over = len(simp_projections) > SIMP_PROJECTION_CEILING
+    details.append(Detail(
+        "simp_projections", not _simp_over,
+        f"{len(simp_projections)} `@[simp]` projection lemma(s) with a structural "
+        f"name and a trivial body (ceiling {SIMP_PROJECTION_CEILING}) — rewrite "
+        f"plumbing, where `rfl` is the only correct proof, NOT a "
+        f"defining-the-conclusion claim"
+        + ("" if not _simp_over else
+           f"; OVER CEILING: {', '.join(sorted(simp_projections))}"),
+        warning=bool(simp_projections) and not _simp_over))
+
     if n_vac:
         details.append(Detail(
             "tracked_vacuous_proxies", True,
@@ -468,12 +509,17 @@ def check_proxy_body_audit() -> CheckResult:
             f"NEW structurally-named theorem closed by `{label}` at line {line_no} (not in baseline) — "
             f"register in MODELING_ASSUMPTION_THEOREMS (with reason+discloses) or strengthen"))
 
-    if new_flagged or wl_incomplete:
+    # ⚠️ `_simp_over` FOLDS INTO THE VERDICT. Without it the check rendered a red
+    # `✗ simp_projections` detail under a green `✓ PASS` header — a failing detail
+    # on a passing check, which is the exact shape flagged elsewhere in this suite
+    # (`elaboration_knob_watchlist` printing 22 ✗ lines under ✓ PASS). A ratchet
+    # whose breach does not reach the verdict is not a ratchet.
+    if new_flagged or wl_incomplete or _simp_over:
         return CheckResult(passed=False, details=details)
     details.append(Detail(
         "all_theorems", True,
         f"no NEW trivially-closed structural theorems ({len(grandfathered)} baselined, "
-        f"{n_vac} disclosed vacuous_proxy)"))
+        f"{n_vac} disclosed vacuous_proxy, {len(simp_projections)} `@[simp]` projections)"))
     return CheckResult(passed=True, details=details)
 
 

@@ -98,7 +98,7 @@ class TestPlaceholderScanCoversWholeTree:
                     src = f.read_text()
                 except (OSError, UnicodeDecodeError):
                     continue
-                for name, _line, body in _scan_lean_theorem_bodies(src):
+                for name, _line, body, _is_simp in _scan_lean_theorem_bodies(src):
                     if name in registered:
                         continue
                     if any(rx.search(body) for rx, _ in _PLACEHOLDER_BODY_PATTERNS):

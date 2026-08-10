@@ -248,7 +248,7 @@ def _lean_decl_proof_body(short_name: str, module: str):
         source = f.read_text()
     except (OSError, UnicodeDecodeError):
         return None
-    for name, _ln, body in _scan_lean_theorem_bodies(source):
+    for name, _ln, body, _is_simp in _scan_lean_theorem_bodies(source):
         if name.split(".")[-1] == short_name:
             return " ".join(body.split())
     return None
