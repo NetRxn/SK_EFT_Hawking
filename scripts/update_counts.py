@@ -206,8 +206,24 @@ def count_lean(deps_path: Path, preloaded: list | None = None) -> dict:
         _debt = (_baseline | _proxy | _defl) - _ph_short  # union, placeholders already split off
         _n_baseline, _n_proxy, _n_defl, _n_debt = (
             len(_baseline), len(_proxy), len(_defl), len(_debt))
-    except Exception:
-        _n_baseline = _n_proxy = _n_defl = _n_debt = 0
+    except Exception as _exc:
+        # ⚠️ NO SILENT ZERO. This read `except Exception: _n_debt = 0`, which is the
+        # worst available answer: `theorems_kernel_substantive` is computed as
+        # `_substantive - _n_debt`, so a swallowed failure does not merely lose the
+        # debt line — it silently INFLATES the published kernel-substantive count by
+        # the whole debt (69 today) and reports `theorems_tracked_vacuity_debt: 0`,
+        # i.e. "this project has no tracked vacuity". These numbers are rendered into
+        # `docs/counts.tex` and `\input` by the drafts, so the lie reaches the papers.
+        #
+        # "Cannot measure" is not "measured zero" — the same doctrine the validation
+        # suite enforces via `CheckResult.measured`. Fail loudly and let the caller
+        # fix the import rather than ship a confident wrong number.
+        raise RuntimeError(
+            "could not compute the tracked-vacuity split from src.core.constants "
+            f"({type(_exc).__name__}: {_exc}). Refusing to publish counts with the "
+            "debt silently zeroed — that would inflate theorems_kernel_substantive "
+            "and assert the project carries no tracked vacuity."
+        ) from _exc
     _substantive = len(theorems) - len(placeholders)
 
     return {

@@ -111,20 +111,27 @@ def ensure_lean_deps_fresh() -> tuple[bool, str]:
 
     WHY THIS EXISTS — the readers disagreed with each other
     -------------------------------------------------------
-    Measured 2026-08-04 against the live registry: `counts_fresh` sits at position
-    **29**, and the eight `lean_deps.json` readers straddle it — **five before**
-    (`tracked_hypothesis_ledger` 4, `formula_grounding` 6, `vacuous_statement_audit` 7,
-    `nogo_substrate_integrity` 8, `native_decide_regression` 9) and **three after**
-    (`prose_theorem_reference_coverage` 54, `theorem_name_embedded_citations` 55,
-    `lean_docstring_refs_resolve` 57).
+    ⚠️ DO NOT WRITE ORDINALS HERE. This paragraph used to argue from fixed registry
+    positions ("`counts_fresh` sits at position 29 ... five readers before it, three
+    after"). `counts_fresh` was moved to the FRONT of `_CANONICAL_ORDER` on
+    2026-08-07, which refuted every number in the sentence and, read literally,
+    refuted the function's own reason for existing. Derive the ordering instead:
 
-    Nothing refreshed the file before position 29, and `load_lean_deps()` reads it
-    directly with no hash guard. So on exactly the runs where Lean changed — a wave
-    close — the first five validated the PREVIOUS extraction while the last three
-    validated the fresh one, inside a single run. Among the five is the
+        uv run python scripts/validate.py --list        # order is the run order
+
+    THE DEFECT, stated without ordinals: several checks read `lean/lean_deps.json`,
+    `load_lean_deps()` reads it directly with NO hash guard, and the check that
+    regenerates it sits somewhere in the same ordered run. On exactly the runs where
+    Lean changed — a wave close — every reader scheduled BEFORE the regeneration
+    validated the PREVIOUS extraction while every reader after it validated the fresh
+    one, inside a single run. Among the early readers is the
     `native_decide_regression` ratchet: a ratchet measuring the previous wave's
     substrate cannot see the trust surface the current wave added, which is the one
     thing it exists to catch.
+
+    That the regenerating check now happens to run first does NOT retire this
+    function: the guarantee must not depend on registry order, which has already
+    moved once. Refreshing here, before the loop starts, is order-independent.
 
     A cache would not have fixed that — it would have frozen one of the two states.
     Refreshing once, up front, makes all eight observe the same snapshot.
@@ -155,6 +162,17 @@ def ensure_lean_deps_fresh() -> tuple[bool, str]:
         if not extract_lean_deps._needs_refresh():
             return False, "lean_deps.json already fresh (hash matches .lean sources)"
         extract_lean_deps._run_extraction()
+        # ⚠️ VERIFY the refresh actually took. This returned True unconditionally
+        # after calling `_run_extraction()`, so any run that completed without
+        # regenerating the artifact still reported "refreshed before any check read
+        # it". That report is worse than no report: the checks downstream then read
+        # a STALE artifact under a fresh-looking banner, and the resulting pass is
+        # memoized under the NEW source key, so it replays instead of re-running.
+        # Re-asking the same hash guard is the only claim we can actually back.
+        if extract_lean_deps._needs_refresh():
+            return False, ("refresh RAN but lean_deps.json is still stale by its own "
+                           "hash guard — downstream checks are reading an out-of-date "
+                           "artifact; do NOT trust counts from this run")
         return True, "lean_deps.json refreshed before any check read it"
     except Exception as exc:  # noqa: BLE001
         # NEVER fail the run here. Each check keeps its own missing/stale verdict

@@ -401,8 +401,16 @@ def _eval_computation_correctness(paper: dict, idx: GraphIndex) -> GateResult:
     bounds_only: list[str] = []
     no_tests: list[str] = []
     strong: list[str] = []
+    # ⚠️ Formulas the paper names that are NOT IN THE GRAPH are dropped by the
+    # `continue` below. They must be COUNTED, not silently skipped: the evidence
+    # line reported `len(formula_ids)` as the number examined while the three
+    # buckets summed to fewer, so the gate asserted test coverage of formulas it
+    # had never looked at. A self-refuting evidence string ("6 formulas ... 1
+    # strong, 0 bounds-only, 0 no tests") is the only thing that made it visible.
+    absent: list[str] = []
     for fid in formula_ids:
         if fid not in idx.by_id:
+            absent.append(fid)
             continue
         v_edges = [e for e in idx.incoming(fid, 'VERIFIES')]
         if not v_edges:
@@ -414,11 +422,23 @@ def _eval_computation_correctness(paper: dict, idx: GraphIndex) -> GateResult:
         else:
             strong.append(fid)
 
+    # The four buckets now partition `formula_ids` exactly: strong + bounds_only
+    # + no_tests + absent == len(formula_ids). If that ever stops holding, the
+    # line is lying again.
+    assert len(strong) + len(bounds_only) + len(no_tests) + len(absent) == len(formula_ids)
     r.evidence.append(
         f'{len(formula_ids)} formulas grounding paper claims '
         f'({len(strong)} with golden/identity/roundtrip, '
-        f'{len(bounds_only)} bounds-only, {len(no_tests)} no tests)'
+        f'{len(bounds_only)} bounds-only, {len(no_tests)} no tests, '
+        f'{len(absent)} NOT IN GRAPH — not examined)'
     )
+    if absent:
+        r.evidence.append(
+            f'⚠️ {len(absent)} named formula(s) absent from the graph, so this '
+            f'gate says NOTHING about their test coverage: '
+            f'{", ".join(sorted(absent)[:5])}'
+            + (' …' if len(absent) > 5 else '')
+        )
 
     # R-06 WARN: surface formulas this paper grounds on whose Lean grounding does
     # NOT resolve to a real theorem (graph verification 'unverified') or is only a
@@ -578,8 +598,29 @@ def _eval_assumption_disclosure(paper: dict, idx: GraphIndex) -> GateResult:
         r.state = 'blocked'
         r.notes = f'{len(undisclosed)} hypothesis dependencies not named in paper'
     elif not assumed_hyp_ids:
+        # ⚠️ VACUOUS PASS — and measured 2026-08-10 to be vacuous for **every** paper
+        # in the corpus, so this gate contributes no evidence at all today.
+        #
+        # It is a genuine pass, not a measurement failure: the 4-hop walk
+        # (CLAIMS -> GROUNDED_IN -> VERIFIED_BY -> ASSUMES) RUNS and lands on an
+        # empty set, so `measured` stays True per THE ONE POLICY (empty population
+        # reached != population unreachable). What was wrong is that "passed" read
+        # as "disclosure was verified" when nothing was checked.
+        #
+        # The structural cause, measured: the walk reaches 122 theorem nodes; 66
+        # lean nodes carry an ASSUMES edge; the two sets are DISJOINT (intersection
+        # 0). The hypothesis-bearing theorems are simply not cited by any paper's
+        # claim chain. That is a real wiring signal, not noise — if a future wave
+        # cites one, this gate starts doing work, and if it never does, the gate
+        # should be retired rather than left as decorative green.
         r.state = 'passed'
-        r.notes = 'no hypothesis dependencies'
+        r.notes = ('VACUOUS: no cited theorem assumes any hypothesis, so nothing was '
+                   'checked — this pass is not evidence of disclosure')
+        r.evidence.append(
+            'vacuous pass: the CLAIMS->GROUNDED_IN->VERIFIED_BY->ASSUMES walk reached '
+            'no hyp: node for this paper. Corpus-wide this holds for every paper '
+            '(measured 2026-08-10), because the theorems that carry ASSUMES edges are '
+            'disjoint from those any paper cites.')
     else:
         r.state = 'passed'
         r.notes = 'all hypothesis dependencies disclosed in paper'
