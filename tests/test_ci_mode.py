@@ -55,7 +55,7 @@ sys.path.insert(0, str(SK_ROOT))
 
 import validate  # noqa: E402
 from validation import _config as _cfg  # noqa: E402
-from validation._registry import CheckResult, CheckSpec  # noqa: E402
+from validation._registry import CheckResult, CheckSpec, Detail  # noqa: E402
 
 
 def _ok():
@@ -432,3 +432,72 @@ class TestTheFloorCountsMEASUREDNotMERELYRAN:
         rc, err = _run(["--ci", "--no-archive"])
         assert rc == 0, f"all checks measured at exactly the floor should pass: {err!r}"
         assert "WITHOUT MEASURING" not in err
+
+
+class TestPrintResultsRendersTheThirdState:
+    """`print_results` must show UNMEASURED. Guards a change of my own.
+
+    ⚠️ Before this, `measured` was rendered NOWHERE on the default path: two
+    `CheckResult`s differing only in `measured` produced BYTE-IDENTICAL output,
+    on the exact command CLAUDE.md tells everyone to run. The axis this suite
+    exists to establish was visible only in `--json`, the archive, and a stderr
+    line inside `--ci`.
+
+    ⚠️ AND THE FIX SHIPPED UNGUARDED. A reviewer reverted the whole `_unmeasured`
+    block and 159 tests passed — no test drives `print_results` at all; the only
+    reference in `tests/` stubs it out.
+    """
+
+    @staticmethod
+    def _render(_mp=None, **kw):
+        """Render through the REAL `print_results`.
+
+        The per-check detail block only renders for names in `_CHECKS` —
+        `print_results` iterates the registry, not the results dict — so a
+        synthetic result must be accompanied by a registered spec or its details
+        are silently invisible. (Discovered the hard way: the first draft of
+        these tests asserted on detail lines that were never printed.)
+        """
+        buf = io.StringIO()
+        if _mp is not None:
+            _mp.setattr(validate, "_CHECKS",
+                        [CheckSpec(name=n, description=n, func=_ok) for n in kw],
+                        raising=False)
+        with contextlib.redirect_stdout(buf):
+            validate.print_results(kw)
+        return buf.getvalue()
+
+    def test_an_unmeasured_check_is_visibly_distinct(self):
+        """FIRES ON THE SEEDED DEFECT — reverting the block reddens this."""
+        d = [Detail("pop", True, "21 of 21")]
+        measured = self._render(demo=CheckResult(passed=True, measured=True, details=d))
+        unmeasured = self._render(demo=CheckResult(passed=True, measured=False, details=d))
+        assert measured != unmeasured, (
+            "a check that measured NOTHING renders identically to one that "
+            "measured everything — the whole `measured` axis is invisible to "
+            "the reader of the default report")
+        assert "did NOT MEASURE" in unmeasured
+        assert "demo" in unmeasured.split("did NOT MEASURE", 1)[1], (
+            "the unmeasured check must be NAMED, not merely counted")
+
+    def test_the_unqualified_all_clear_is_withheld(self):
+        """An all-green run over an unreached population must not read as clean."""
+        d = [Detail("pop", True, "ok")]
+        clean = self._render(a=CheckResult(passed=True, measured=True, details=d))
+        partial = self._render(a=CheckResult(passed=True, measured=True, details=d),
+                               b=CheckResult(passed=True, measured=False, details=d))
+        assert "ALL CHECKS PASSED" in clean and "UNMEASURED list" not in clean
+        assert "but see the UNMEASURED list above" in partial, (
+            "an unqualified ALL CHECKS PASSED was printed over a population that "
+            "was not reached")
+
+    def test_a_skipped_member_detail_is_marked(self, monkeypatch):
+        """The per-member axis, not just the check-level one."""
+        out = self._render(monkeypatch, a=CheckResult(passed=True, measured=True, details=[
+            Detail("sized", True, "D1: 12 pp"),
+            Detail("skipped", True, "D9: stale PDF", warning=True, measured=False)]))
+        skipped_line = next(l for l in out.splitlines() if "D9" in l)
+        sized_line = next(l for l in out.splitlines() if "D1" in l)
+        assert skipped_line.lstrip().startswith("\033[33m?\033[0m"), (
+            f"a skipped member carries no distinguishing glyph: {skipped_line!r}")
+        assert not sized_line.lstrip().startswith("\033[33m?\033[0m")

@@ -314,7 +314,15 @@ def print_results(results: Dict[str, CheckResult]) -> None:
         if spec.name not in results:
             continue
         cr = results[spec.name]
-        status = "\033[32m✓ PASS\033[0m" if cr.passed else "\033[31m✗ FAIL\033[0m"
+        # ⚠️ THREE states. `measured` was rendered NOWHERE on this path: a check
+        # that measured nothing was byte-identical to one that measured
+        # everything, on the command CLAUDE.md tells everyone to run.
+        if not cr.passed:
+            status = "\033[31m✗ FAIL\033[0m"
+        elif not cr.measured:
+            status = "\033[33m? UNMEASURED\033[0m"
+        else:
+            status = "\033[32m✓ PASS\033[0m"
         print(f"\n{'═'*70}")
         print(f"  {status}  {spec.name}: {spec.description}")
         print(f"{'═'*70}")
@@ -334,6 +342,12 @@ def print_results(results: Dict[str, CheckResult]) -> None:
             # failed, and it failed by promotion rather than on its own terms.
             if not d.passed:
                 sym = "\033[33m⚠\033[0m\033[31m✗\033[0m" if d.warning else "✗"
+            elif not d.measured:
+                # A SKIPPED MEMBER: the check ran, this member was not measured.
+                # Takes precedence over `warning` — "not measured" is the stronger
+                # statement, and the two co-occur constantly (a skipped member is
+                # usually also flagged).
+                sym = "\033[33m?\033[0m"
             elif d.warning:
                 sym = "\033[33m⚠\033[0m"
             else:

@@ -554,3 +554,65 @@ class TestQuantumNetwork:
         assert r.passed is False
         assert any(d.name == "qn_lean_theorems_exist" and not d.passed
                    for d in r.details)
+
+
+class TestTheGrapheneBoundsLeg:
+    """The graphene EFT-validity leg of `physical_bounds`. Guards my own change.
+
+    ⚠️ THIS LEG SHIPPED WITH NO TEST. A reviewer seeded `for _name in
+    sorted(GRAPHENE_PLATFORMS)` -> `for _name in []`, making the whole leg inert,
+    and 168 tests across six files passed. The one test that *did* go red under a
+    different mutation (`eft_valid` hardcoded True) reached the defect only
+    THROUGH this leg — so with the leg removed, nothing was left.
+
+    The leg exists because the Gamma_H repair raised graphene `delta_diss` by ~12
+    orders and Pipeline Invariant 5 ("every computed quantity has bounds") was
+    unmet for exactly the quantity that moved. Two of four platforms sit outside
+    EFT validity and are shipped DISCLOSED rather than hidden; that disclosure is
+    what these tests pin.
+    """
+
+    def test_the_leg_actually_examines_every_platform(self):
+        """FIRES ON THE SEEDED DEFECT — emptying the loop reddens this."""
+        from src.core.constants import GRAPHENE_PLATFORMS
+        r = ph.check_physical_bounds()
+        seen = {d.name.split(":", 1)[1] for d in r.details
+                if d.name.startswith("graphene:")}
+        assert seen == set(GRAPHENE_PLATFORMS), (
+            f"the graphene leg examined {sorted(seen)} but the roster is "
+            f"{sorted(GRAPHENE_PLATFORMS)} — a leg that iterates nothing reports "
+            f"no violation and looks identical to a clean one")
+        assert any(d.name == "graphene_summary" for d in r.details)
+
+    def test_the_out_of_validity_platforms_are_NAMED_not_hidden(self):
+        """Disclosure is the contract; silence would be the defect."""
+        r = ph.check_physical_bounds()
+        flagged = {d.name.split(":", 1)[1] for d in r.details
+                   if d.name.startswith("graphene:") and "OUTSIDE EFT" in (d.message or "")}
+        assert flagged == {"Monolayer_50nm", "PN_junction_10nm"}, (
+            f"expected exactly the two measured out-of-validity platforms "
+            f"(D=1.51 and D=7.64), got {sorted(flagged)}")
+
+    def test_a_contradicted_eft_valid_flag_FAILS(self, monkeypatch):
+        """FIRES ON THE SEEDED DEFECT — `eft_valid` must agree with the numbers.
+
+        This is the leg's real job: not to re-derive the physics, but to catch a
+        result whose self-reported validity contradicts its own D / delta values.
+        """
+        import src.graphene.hawking_predictions as hp
+        real = hp.graphene_hawking_prediction
+
+        def lying(name, *a, **kw):
+            out = dict(real(name, *a, **kw))
+            out["eft_valid"] = True          # claim validity for every platform
+            return out
+
+        monkeypatch.setattr(ph, "graphene_hawking_prediction", lying, raising=False)
+        monkeypatch.setattr(hp, "graphene_hawking_prediction", lying)
+        r = ph.check_physical_bounds()
+        bad = [d for d in r.details
+               if d.name.startswith("graphene:") and not d.passed]
+        assert bad, (
+            "a platform claiming eft_valid=True while measuring D>1 was accepted — "
+            "the disclosure contract is unenforced")
+        assert r.passed is False
