@@ -565,3 +565,85 @@ class TestNonMeasurementIsNeverCached:
         assert r.measured is False, (
             "the live check returned PASS and claimed it MEASURED, with no Lean "
             "toolchain present — the memo will cache a non-measurement again")
+
+
+class TestTheSchemaBumpIsDoingSomething:
+    """The 1→2 schema bump exists to serialize `Detail.measured`. Guard that.
+
+    ⚠️ MEMO_SCHEMA was bumped SOLELY so `measured` survives a replay — the cache
+    round-tripped `Detail` positionally over four fields, so a
+    `Detail(measured=False)` came back `measured=True` on every cache hit. And
+    the whole file covered it with NOTHING: a chunk reviewer reverted the
+    serialization to the 4-field row and all 34 tests passed, because every
+    fixture here uses the default `measured=True`.
+
+    Two separate things need asserting and neither was:
+      1. `measured=False` survives a replay (the reason for the bump);
+      2. a schema-1 file ON DISK is discarded (the bump's own mechanism). The
+         existing `test_a_schema_bump_invalidates_everything` seeds with one
+         lambda and replays with a DIFFERENT one, so it misses on body identity
+         regardless of schema — it cannot fail.
+    """
+
+    def _fixed_cache(self, tmp_path, monkeypatch):
+        path = tmp_path / "memo.json"
+        # `delenv` matters: SKEFT_VALIDATION_NO_MEMO bypasses the cache entirely,
+        # so without it these tests silently measure nothing. The module fixture
+        # above clears it for the same reason.
+        monkeypatch.delenv("SKEFT_VALIDATION_NO_MEMO", raising=False)
+        monkeypatch.setattr(_memo, "_cache_path", lambda: path)
+        monkeypatch.setattr(_cfg, "STRICT_MODE", False)
+        monkeypatch.setattr(_cfg, "NO_MEMO", False)
+        return path
+
+    def test_a_false_measured_survives_the_replay(self, tmp_path, monkeypatch):
+        """FIRES ON THE SEEDED DEFECT — revert `_memo.py`'s 5th field and this reddens."""
+        self._fixed_cache(tmp_path, monkeypatch)
+
+        def body():
+            return CheckResult(passed=True, details=[
+                Detail("skipped_member", True, "could not size D9",
+                       warning=True, measured=False)])
+
+        first = _memo.memoized("probe", "KEY", body, "inputs")
+        assert [d.measured for d in first.details] == [False], "fixture is wrong"
+
+        replay = _memo.memoized("probe", "KEY", body, "inputs")
+        assert any(d.name == "memo" for d in replay.details), (
+            "expected a cache HIT — without one this test proves nothing")
+        skipped = [d for d in replay.details if d.name == "skipped_member"]
+        assert skipped and skipped[0].measured is False, (
+            "`measured` reverted to its True default on replay — a partial-coverage "
+            "check would silently report full coverage from cache. This is the "
+            "positional-round-trip hazard THE ONE POLICY names.")
+
+    def test_a_schema_1_file_on_disk_is_discarded(self, tmp_path, monkeypatch):
+        """The bump's own mechanism, asserted against the SAME body.
+
+        The pre-existing sibling replays with a different lambda, so the body
+        digest alone defeats the hit; it would pass with the schema check
+        deleted. This one keeps the body identical so ONLY the schema differs.
+        """
+        path = self._fixed_cache(tmp_path, monkeypatch)
+        calls = []
+
+        def body():
+            calls.append(1)
+            return CheckResult(passed=True, details=[Detail("x", True, "m")])
+
+        _memo.memoized("probe", "KEY", body, "inputs")
+        assert len(calls) == 1
+        _memo.memoized("probe", "KEY", body, "inputs")
+        assert len(calls) == 1, "no cache hit — the rest of this test is vacuous"
+
+        # Rewrite ONLY the schema stamp; entries (and the body) stay valid.
+        blob = json.loads(path.read_text())
+        assert blob["schema"] == _memo.MEMO_SCHEMA
+        blob["schema"] = _memo.MEMO_SCHEMA - 1
+        path.write_text(json.dumps(blob))
+
+        _memo.memoized("probe", "KEY", body, "inputs")
+        assert len(calls) == 2, (
+            "a stale-schema cache was REPLAYED. Entries written under an older "
+            "schema lost fields the current code expects — that is the entire "
+            "reason the version exists.")
