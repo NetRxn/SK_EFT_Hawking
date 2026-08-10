@@ -826,9 +826,19 @@ class TestBundleManuscriptLength:
                     measured={"D1": (3, "pages", None),
                               "D2": (None, "pages", "no compiled PDF")})
         r = bru.check_bundle_manuscript_length()
-        assert r.measured, "one sized bundle ⇒ a real verdict, not UNMEASURED"
         assert any(d.name == "under_floor" for d in r.details), (
             "the sized bundle must still be judged and its gap reported")
+        assert any(d.name == "unmeasured" for d in r.details), (
+            "and the one it could not size must be named, not dropped")
+        # ⚠️ `measured=False` on a MIXED population, and that is the point of the
+        # fold added 2026-08-09. The check judges what it can size — the assertion
+        # above — but it must not report a full measurement over a population it
+        # only partly reached: a bundle that goes UNMEASURED also escapes the
+        # OVER-CEILING leg, the one that still gates, so staleness was a way to
+        # skip the only blocking check here. Without the fold this gate degraded
+        # silently from 11 reported gaps to 1 and stayed green.
+        assert not r.measured, (
+            "a partly-unsizable population is not a full measurement")
 
     # ── the measurer's trust conditions ───────────────────────────────────
     def test_a_pdf_older_than_the_draft_is_not_trusted(self, tmp_path, monkeypatch):

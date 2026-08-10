@@ -302,6 +302,15 @@ def check_bundle_figure_integrity() -> CheckResult:
     # The spec-source fallback IS a population failure (the registry could not be
     # read, so the specs came from a frozen literal), unlike partial figure
     # coverage above — so it, and only it, flips the check's own `measured`.
+    #
+    # ⚠️ **THIS COUPLES THE ZERO-HEADROOM `--ci` FLOOR TO AN OUT-OF-BAND IMPORT, and
+    # that consequence is deliberate but was undisclosed when first shipped.**
+    # `CI_MIN_CHECKS_RUN` is 75 with no slack, so a failed `review_figures`
+    # FIGURE_REGISTRY load now turns `--ci` red rather than merely warning. That
+    # import demonstrably failed on EVERY run for a whole review round (see the
+    # comment at the fallback itself) without anyone noticing — which is the
+    # argument for the coupling, not against it: a silent fallback to the
+    # hand-maintained list this derivation exists to replace should stop the build.
     return CheckResult(passed=n_fail == 0,
                        measured=_SPEC_FALLBACK is None, details=details)
 
@@ -1422,7 +1431,24 @@ def check_bundle_manuscript_length() -> CheckResult:
         f"(ADVISORY by operator decision 2026-08-09, not gating); "
         f"{len(unmeasured)} UNMEASURED",
         warning=bool(under)))
-    return CheckResult(passed=len(over) == 0, details=details)
+    # ⚠️ **THE UNMEASURED POPULATION FOLDS INTO `measured`, and this check was the
+    # one sibling that did not do it.** Five others already do (`freshness.py`,
+    # the three reader-visible-prose checks, `graph_atlas`). Without the fold this
+    # gate degraded SILENTLY: a stale PDF took a bundle UNMEASURED, the reported
+    # under-floor population shrank 11 → 10 → 1, and it stayed GREEN throughout.
+    #
+    # That is not only an advisory-information loss. A bundle that goes UNMEASURED
+    # also escapes the OVER-CEILING leg — the one that still gates — so staleness
+    # was a way to skip the only blocking check here. Latent today (zero
+    # over-ceiling bundles), which is exactly why it needed closing before it
+    # wasn't.
+    #
+    # Folding it makes the perishability ENFORCE itself rather than be documented
+    # in three places and observed in none: a stale tree now reads `74 MEASURED,
+    # floor 75` under `--ci` instead of a green tick over part of the corpus. The
+    # remedy is `scripts/compile_bundle_pdf.py --all --force`.
+    return CheckResult(passed=len(over) == 0,
+                       measured=not unmeasured, details=details)
 
 
 @register_check("bundle_metadata_matches_graph",

@@ -91,14 +91,19 @@ representable and D9 sits in it. Do not read `UNMEASURED` as a mild YELLOW.
 2. **Clear the 15 `stage13_redo_required` flags** by re-review, not by editing the field.
    (This note said 14 until the closure reviewer counted 15 — its own §2 table listed 15
    all along, so the prose contradicted the table beside it.)
-3. **The manuscript programme.** `bundle_manuscript_length` is RED for **11 bundles under
-   floor** — F needs 80pp and has 24; D7 needs 24 and has 4.
+3. **The manuscript programme.** `bundle_manuscript_length` reports **11 bundles under
+   floor** — F needs 80pp and has 24; D7 needs 24 and has 4. The gate PASSES on that
+   (under-floor is advisory by operator decision — see §5); the 11 gaps are the work.
    ⚠️ **That count requires a fresh compile.** Run
    `uv run python scripts/compile_bundle_pdf.py --all --force` first: the check reports
    `UNMEASURED` for any bundle whose PDF predates its `\input` closure, and adding a
    shared input (as goal 1 did with `docs/figuredeferred.tex`) staleness-invalidates all
-   21 at once. Measured stale, the same check reports 3 under floor and 16 UNMEASURED —
-   the closure reviewer saw exactly that and was right to flag the discrepancy. The
+   21 at once. Measured stale, the same check reported 3 under floor and 16 UNMEASURED —
+   the closure reviewer saw exactly that and was right to flag the discrepancy.
+   ⚠️ **A stale tree now FAILS `--ci` rather than passing quietly**: the unmeasured
+   population folds into the check's `measured`, so staleness reads as `74 MEASURED,
+   floor 75` instead of a green tick over part of the corpus. That is deliberate — the
+   gate could otherwise degrade from 11 reported gaps to 1 and stay green. The
    per-bundle `pp` column in §2 is likewise only meaningful on a freshly compiled tree. This is goal 2's headline
    deliverable and is roughly 150 pages of new physics manuscript plus the figures behind
    the 40 deferrals. **No floor was lowered and no `length_target` was nulled** — see §5.

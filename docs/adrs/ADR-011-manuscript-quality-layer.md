@@ -159,6 +159,16 @@ things were explicitly NOT done, and the distinction is the whole point of recor
 * **The declared floors were not lowered to match current page counts.** That would make the
   gate agree with every finding in the audit that created it, and would delete the measurement
   the operator is choosing to accept. Accepting a gap and hiding it are different acts.
+⚠️ **THE SAFETY ARGUMENT HAS A PRECONDITION, and it belongs here rather than only in the
+handoff.** "Every gap is reported with its magnitude" holds only on a freshly compiled tree:
+`bundle_manuscript_length` refuses to size a PDF older than its draft's `\input` closure, and
+`docs/counts.tex` is in every bundle's closure, so any counts regeneration re-stales all 21 at
+once. Measured 2026-08-09: the amendment's own commit claimed "11 under floor, 0 UNMEASURED"
+while the live tree reported 3 and 16 — the argument was true of 27% of the population it
+described. It is now **machine-enforced** rather than documented: the unmeasured population folds
+into the check's `measured`, so a stale tree fails `--ci` at `74 MEASURED, floor 75` instead of
+passing green over a fraction of the corpus. Remedy: `scripts/compile_bundle_pdf.py --all --force`.
+
 * **No bundle's `length_target` was re-set.** If a specific charter is genuinely unrealistic for
   its venue, changing THAT bundle's target is a per-bundle editorial call for goal 2, made with
   the operator and recorded with a reason — not a sweep performed under cover of this decision.

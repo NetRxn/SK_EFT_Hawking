@@ -2947,7 +2947,7 @@ loop left the gate red and named the conflict. The operator then ruled.
 
 | # | Proposition | Decider | Verbatim result |
 |---|---|---|---|
-| 1 | Under-floor no longer gates | `validate.py --check bundle_manuscript_length` | **PASS**, summary `0 OVER ceiling (gating), 3 under floor (ADVISORY by operator decision 2026-08-09, not gating); 16 UNMEASURED` |
+| 1 | Under-floor no longer gates | `validate.py --check bundle_manuscript_length` | **PASS**, summary `0 OVER ceiling (gating), 3 under floor (ADVISORY by operator decision 2026-08-10, not gating); 16 UNMEASURED`. ⚠️ The `2026-08-10` inside this quote is what the tool ACTUALLY PRINTED at the time; a later blanket datestamp sweep rewrote it to match the corrected source, turning a **Verbatim result** cell into something the instrument never said — the falsified-evidence-record defect, created by the fix for that defect, in this same file. Restored. Sweeps must not touch quoted tool output. |
 | 2 | Every gap is still reported, with its magnitude | read the details | Each under-floor bundle still emits `D7: 4 pp < floor 24 — declared as a PRX Quantum … article, sized like a letter`, as a WARNING |
 | 3 | Over-ceiling still fails | seeded a 99 pp bundle against a 40 pp ceiling in `tests/test_d5_bundles_readiness.py` | **Fails**, as it must — a venue rejects an over-length manuscript outright |
 | 4 | No floor was lowered; no `length_target` was re-set | `git diff` over `papers/*/bundle_metadata.json` | **Zero changes.** The charters still say what the venues want |
@@ -3009,7 +3009,7 @@ three mutations, but two Majors landed on work from the preceding two hours.
 | 5 | A comment citing *"the sibling at :783 in this same file"* | writing the line number without opening it | **:783 is a DOCSTRING**, and the nearby return guards a different import in a different check. |
 | 6 | A test fixture stubbing `extract_all_nodes_without_gates` | `monkeypatch.setattr(..., raising=False)` | **THAT FUNCTION DOES NOT EXIST.** The patch silently created an unused attribute, so the test read as isolated while running every real extractor. A patch that patches nothing is a comment with a syntax error. |
 | 7 | `Detail.measured`'s docstring: *"the wrapper derives the check's `measured` from its details"* | look for the wrapper | **THERE IS NO WRAPPER.** `run_checks` derives nothing; two checks fold by hand. Corrected, and the reason automation would be WRONG is now stated: partial coverage and unreachable population are different facts and only a per-check judgement can tell them apart. |
-| 8 | Every 2026-08-10 datestamp, including the verbatim operator quote in an ADR | the clock | **The local date was 2026-08-09.** Correct only in UTC. On an ADR amendment carrying an operator quote, the date is part of the record. Nine sites corrected. |
+| 8 | Every 2026-08-10 datestamp, including the verbatim operator quote in an ADR | the clock | **The local date was 2026-08-09.** Correct only in UTC. On an ADR amendment carrying an operator quote, the date is part of the record. **Ten** sites corrected (this row said nine — the sweep hit every one; the count was off by one). |
 
 **SIXTH CONSECUTIVE ROUND, and the sharpest instance yet.** Row 1 is not a stale number: it is the
 justification for a gate turning green, asserted in five places, and it was true of 27% of the
@@ -3021,3 +3021,41 @@ one's own fix is worth nothing until someone with no stake in it runs the mutati
 by construction — the next `update_counts` run re-stales all 21 PDFs, and `compile_bundle_pdf.py
 --all --force` is the remedy. That perishability is now the gate's most important property, not a
 footnote, because the amendment made the green depend on it.
+
+---
+
+## V80 — round 5: the fix was void before it was committed, and the mechanism is now machine-enforced
+
+Round 5 was scoped to round 4's fixes and recommended **stopping the review rounds** — with three
+changes first. Its reasoning is the reason this entry is the last of the series: rounds 1–3 found
+*code behaviour*; round 4 found one behaviour defect and five claims-about-code; round 5 found one
+re-stale of an already-correct fix, one pre-existing latent silent-pass, and otherwise
+claims-about-claims. **Another round of the same kind is divergent, not converging** — each
+remediation writes a new dense paragraph of self-describing numbers and the next round refutes it.
+V78's sentence was refuted by V79; V79's row 8 and `_registry.py`'s "two checks" are refuted here,
+one of them by a hunk of its own commit.
+
+| # | Claim | Instrument | Verdict |
+|---|---|---|---|
+| 1 | V79: *"now 21 sized, 11 under floor, 0 UNMEASURED"* | running the check once, then committing | **ALREADY FALSE 8 MINUTES BEFORE THE COMMIT.** `tests/test_unscannable_input_guard.py` seeds `papers/D1/paper_draft.tex` and restored it **from saved bytes — with a fresh mtime**. The gate refuses to size a PDF older than its draft's closure, so D1 went UNMEASURED and the reported population fell 11 → 10 while the gate stayed GREEN. Timeline from `stat`: PDF 20:39:27, draft 20:44:00 (suite start), commit 20:52:43. **A test changed what a production check measured.** |
+| 2 | Nothing catches that degradation | read the return | **CONFIRMED.** `bundle_manuscript_length` was the ONE sibling of six that did not fold its unmeasured population into `CheckResult.measured`. Worse than advisory-loss: an UNMEASURED bundle also escapes the **over-ceiling** leg, the only one that still gates — staleness was a way to skip the blocking check. Latent solely because the corpus has zero over-ceiling bundles. |
+| 3 | `_registry.py`: *"two checks fold their details by hand"* | count them | **SIX**, in six checks — and **the first was added by a hunk of the same commit**, 130 lines from the sentence it falsified. |
+| 4 | `_registry.py` cites `bundle_figure_integrity` as the partial-coverage-still-measured example | read that check | **It contains BOTH sides.** Its registry-load fallback is a genuine population failure and does flip `measured`. The example now says so. |
+| 5 | `bundle_source_freshness` is the population-unreachable exemplar | mutate its input to `[]` | **ITS OWN EMPTY-POPULATION BRANCH REPORTED `measured=True`.** Zero bundles measured, reported as a measurement — the ADR-009 H1 scenario applied to the whole corpus. **Invisible to BOTH guards**: the AST scanner only sees `except` handlers and presence-call `if`s (the test is `not findings`), and no keyword matches "no bundle directories initialized yet". Pre-existing; five rounds missed it. |
+| 6 | *"Nine sites corrected"* (V79 row 8) | `git grep -c` | **TEN.** The sweep hit every one; the count was off by one. |
+| 7 | The datestamp sweep touched only source | read what it changed | **IT REWROTE A RECORDED INSTRUMENT OUTPUT.** V78's **Verbatim result** cell was changed from what the tool actually printed to match the corrected code — the falsified-evidence defect, created by the fix for that defect, in this file. Restored, with the rule: **a sweep must not touch quoted tool output.** |
+
+**WHAT CHANGED, and why it ends the series.** Items 1 and 2 are now mechanisms, not documentation:
+
+* the fixture restores **mtime as well as bytes**, so a test can no longer change what a
+  production check measures — pinned by a test that asserts the fixture's contract directly
+  rather than the gate's verdict, which would fail for unrelated reasons;
+* the unmeasured population **folds into `measured`**, so a stale tree reads `74 MEASURED, floor
+  75` under `--ci` instead of a green tick over part of the corpus. The perishability the operator
+  decision rests on now **enforces itself** instead of being documented in three places and
+  observed in none.
+
+**The structural fix logged for goal 2** — asserting on `Detail.measured` rather than prose
+keywords — would have caught row 5 only if paired with a population-reachability assertion, since
+that branch constructs no `Detail` at all. It would NOT have caught rows 1 or 3. It remains
+necessary and insufficient, and it is goal 2's, not this loop's.

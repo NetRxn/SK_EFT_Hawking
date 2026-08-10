@@ -708,12 +708,24 @@ def check_bundle_source_freshness() -> CheckResult:
 
     findings = _run_check()
     if not findings:
+        # ⚠️ ZERO bundles measured, and this reported a MEASUREMENT for five rounds.
+        # It is the ADR-009 H1 anchor-retarget scenario applied to the whole bundle
+        # corpus: move `papers/` and CHECK 22 returns green over nothing.
+        #
+        # Both guards were blind to it, which is why five rounds missed it. The AST
+        # scanner only sees `except` handlers and `if`s whose test calls a presence
+        # function — the test here is `not findings`. The keyword scanner does not
+        # match "no bundle directories initialized yet". Neither instrument could
+        # see the site, so nothing contradicted `_registry.py`'s citing THIS check
+        # as the example of a population-unreachable non-measurement.
         return CheckResult(
             passed=True,
+            measured=False,
             details=[Detail(
                 "scope",
                 True,
                 "no bundle directories initialized yet (pre-Phase-7-execution state)",
+                measured=False,
             )],
         )
 

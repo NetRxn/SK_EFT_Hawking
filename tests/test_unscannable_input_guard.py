@@ -49,9 +49,11 @@ def seeded_unresolvable_input():
     Restores from SAVED BYTES in a `finally`, never `git checkout` — a checkout
     would also discard concurrent edits, which is how a sibling test lost work.
     """
+    import os
     import validate_helpers as _H
     draft = _H.PAPERS_DIR / SEED_HOST / "paper_draft.tex"
     original = draft.read_text(encoding="utf-8")
+    original_stat = draft.stat()
     assert "\\begin{document}" in original, "fixture host lost its document body"
     try:
         draft.write_text(original.replace("\\begin{document}",
@@ -60,6 +62,15 @@ def seeded_unresolvable_input():
         yield
     finally:
         draft.write_text(original, encoding="utf-8")
+        # ⚠️ RESTORE THE MTIME, not just the bytes. This fixture edits a TRACKED
+        # draft, and `bundle_manuscript_length` refuses to size a PDF older than
+        # its draft's `\input` closure — so a byte-perfect restore with a fresh
+        # mtime silently took D1 UNMEASURED and the length gate went from
+        # reporting 11 gaps to 10, while still passing. Measured: the "0
+        # UNMEASURED" state was invalidated by THIS FIXTURE eight minutes before
+        # the commit claiming it was written. A test must not change what a
+        # production check measures.
+        os.utime(draft, ns=(original_stat.st_atime_ns, original_stat.st_mtime_ns))
 
 
 class TestAnUnreadFileIsNotACleanFile:
@@ -92,6 +103,52 @@ class TestAnUnreadFileIsNotACleanFile:
 
 def test_no_probe_survives_the_module(request):
     """Runs last: the tracked corpus must carry no trace of the seed."""
+    import validate_helpers as _H
+    body = (_H.PAPERS_DIR / SEED_HOST / "paper_draft.tex").read_text(encoding="utf-8")
+    assert "__unscannable_regression_probe" not in body, (
+        "the seeding fixture leaked into the tracked corpus")
+
+
+def test_the_fixture_restores_the_drafts_MTIME_not_just_its_bytes():
+    """⚠️ The property that actually matters, asserted directly on the file.
+
+    An earlier version of this test asked whether `bundle_manuscript_length` still
+    SIZED the host bundle — and that conflates two different facts. The gate also
+    goes UNMEASURED when `docs/counts.tex` is regenerated (it sits in every
+    bundle's `\input` closure), which any counts-regenerating test does and which
+    is nothing to do with this fixture. A test that fails for a reason outside its
+    own subject teaches the reader to ignore it.
+
+    So: measure the draft's mtime, run the fixture's full cycle by hand, and
+    require the mtime to come back. That is the fixture's contract and nothing
+    else's."""
+    import os
+    import validate_helpers as _H
+
+    draft = _H.PAPERS_DIR / SEED_HOST / "paper_draft.tex"
+    before_bytes = draft.read_text(encoding="utf-8")
+    before = draft.stat()
+
+    # the fixture's cycle, inline
+    try:
+        draft.write_text(before_bytes.replace("\\begin{document}",
+                                              SEED + "\\begin{document}", 1),
+                         encoding="utf-8")
+    finally:
+        draft.write_text(before_bytes, encoding="utf-8")
+        os.utime(draft, ns=(before.st_atime_ns, before.st_mtime_ns))
+
+    after = draft.stat()
+    assert draft.read_text(encoding="utf-8") == before_bytes, "bytes not restored"
+    assert after.st_mtime_ns == before.st_mtime_ns, (
+        "the draft's mtime moved. `bundle_manuscript_length` refuses to size a PDF "
+        "older than its draft's input closure, so a byte-perfect restore with a "
+        "fresh mtime silently takes this bundle UNMEASURED and shrinks that gate's "
+        "reported population while it keeps passing.")
+
+
+def test_no_probe_survives_the_module():
+    """The tracked corpus must carry no trace of the seed."""
     import validate_helpers as _H
     body = (_H.PAPERS_DIR / SEED_HOST / "paper_draft.tex").read_text(encoding="utf-8")
     assert "__unscannable_regression_probe" not in body, (
