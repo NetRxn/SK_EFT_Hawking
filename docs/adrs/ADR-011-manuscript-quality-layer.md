@@ -6,8 +6,10 @@
   implemented; the promotion path, the authoring skill and the prose-reviewer are in the repo.
 
   **Two consequences are deliberately visible rather than resolved**, because resolving them means
-  writing manuscripts rather than infrastructure: `bundle_manuscript_length` is RED for 11 bundles
-  under floor, and `bundle_figure_adequacy` is green **by declared deferral** — 42 drawn against 40
+  writing manuscripts rather than infrastructure: `bundle_manuscript_length` **passes with its
+  under-floor bundles reported but not gating** — under-floor became advisory by operator decision
+  (§C4, amended 2026-08-09, 3h16m after this status block was first written; over-ceiling remains a
+  hard FAIL), and `bundle_figure_adequacy` is green **by declared deferral** — 42 drawn against 40
   deferred, with 8 bundles carrying no drawn figure. Both magnitudes ride on the gates' own summary
   lines, so neither can hide behind a colour. See `ACCURACY_LEDGER` V70 and V72; V72 records a
   closure reviewer's charge that the figure gate's green is a scope move, and does not defend it away.
@@ -162,8 +164,8 @@ things were explicitly NOT done, and the distinction is the whole point of recor
 ⚠️ **THE SAFETY ARGUMENT HAS A PRECONDITION, and it belongs here rather than only in the
 handoff.** "Every gap is reported with its magnitude" holds only on a freshly compiled tree:
 `bundle_manuscript_length` refuses to size a PDF older than its draft's `\input` closure, and
-`docs/counts.tex` is in every bundle's closure, so any counts regeneration re-stales all 21 at
-once. Measured 2026-08-09: the amendment's own commit claimed "11 under floor, 0 UNMEASURED"
+`docs/counts.tex` is in 16 of the 21 bundles' closures (not D3, D4, D7, D8, D12), so any counts
+regeneration re-stales those 16 at once. Measured 2026-08-09: the amendment's own commit claimed "11 under floor, 0 UNMEASURED"
 while the live tree reported 3 and 16 — the argument was true of 27% of the population it
 described. It is now **machine-enforced** rather than documented: the unmeasured population folds
 into the check's `measured`, so a stale tree fails `--ci` at `74 MEASURED, floor 75` instead of

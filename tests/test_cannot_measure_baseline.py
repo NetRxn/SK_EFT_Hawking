@@ -195,7 +195,10 @@ class TestCannotMeasureBaseline:
         # themselves exist to prevent, sitting in the guard that protects them.
         # Zero headroom: if the population legitimately shrinks, LOWER this in the
         # same commit and say why.
-        assert len(sites) >= 54, (
+        # ⚠️ RE-PINNED 54 -> 62, 2026-08-10. The population grew by 8 on this
+        # branch and the floor was not moved with it — 13% headroom in the very
+        # file whose subject is floors with headroom. Measured live: 62.
+        assert len(sites) >= 62, (
             f"the AST scan found only {len(sites)} cannot-measure sites across "
             f"{CHECKS_DIR}; it matched almost nothing, so the ratchet below is "
             f"vacuous. Did the check modules move, or `CheckResult` get aliased?"
@@ -313,7 +316,9 @@ class TestSelfDeclaredSkipsDeclareMeasuredFalse:
         """Guard the seam: a scanner matching nothing makes the assertion below
         pass vacuously — the exact failure this file exists to prevent."""
         sites = _self_declared_skips()
-        assert len(sites) >= 15, (
+        # ⚠️ RE-PINNED 15 -> 30, 2026-08-10. Live population is 30, so this sat
+        # at **100% headroom**: half the corpus could vanish and it stayed green.
+        assert len(sites) >= 30, (
             f"only {len(sites)} self-declared skip sites found; the scan is not "
             f"seeing real code (did `CheckResult` get aliased, or the modules move?)")
 

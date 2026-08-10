@@ -592,6 +592,33 @@ class TestCrossModuleConsistency:
             v_form = adw_effective_potential(C, G=20.0, Lambda=1.0, N_f=4)
             assert v_gap == pytest.approx(v_form)
 
+    def test_effective_potential_even_in_C(self):
+        """V_eff(-C) == V_eff(+C): every term is C^2 or C^4, incl. inside the log.
+
+        Regression guard. The guard read `if C < 1e-15: return 0.0`, which caught
+        every negative tetrad magnitude and flattened the whole negative branch of
+        a DOUBLE WELL to zero (V(-0.5) == 0.0 while V(+0.5) == -0.4987...). It
+        survived because `test_effective_potential_matches_formulas` above samples
+        only C in [0.01, 0.1, 0.5] — all positive — and every production caller
+        sweeps C >= 0, so nothing exercised the broken half.
+
+        Deleting the `abs()` in `formulas.adw_effective_potential` must fail this.
+        """
+        for C in [1e-3, 0.01, 0.1, 0.5, 1.0, 3.7]:
+            v_pos = adw_effective_potential(C, G=20.0, Lambda=1.0, N_f=4)
+            v_neg = adw_effective_potential(-C, G=20.0, Lambda=1.0, N_f=4)
+            assert v_neg == pytest.approx(v_pos, rel=1e-15), (
+                f"V_eff is even in C but V({-C}) = {v_neg} != V({C}) = {v_pos}"
+            )
+        # The negative branch must actually be a well, not a flat sentinel: at
+        # least one sampled point is strictly below V(0) = 0.
+        assert min(
+            adw_effective_potential(-C, G=20.0, Lambda=1.0, N_f=4)
+            for C in [0.01, 0.1, 0.5, 1.0]
+        ) < 0.0
+        # The origin stays guarded against the Lambda^2/C^2 division.
+        assert adw_effective_potential(0.0, G=20.0, Lambda=1.0, N_f=4) == 0.0
+
     def test_broken_generators_matches_formulas(self):
         for d in [3, 4, 5]:
             bg_fluct = broken_generator_count(d)

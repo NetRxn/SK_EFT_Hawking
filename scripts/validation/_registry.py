@@ -75,14 +75,28 @@ class Detail:
     #: comment about a population the commit is actively changing is a claim with a
     #: guaranteed short shelf life. Derive it:
     #:
-    #:     grep -rnE 'measured\s*=\s*(?!True|False)' scripts/validation/
+    #:     grep -rn 'measured=' scripts/validation/ \
+    #:       | grep -vE 'measured=(True|False)' | grep -vE ':\s*#'
+    #:
+    #: (POSIX ERE has no negative lookahead, so the single-`grep -E` form of this
+    #: exits 2 with a syntax error instead of an answer. Verified to run: 11 sites
+    #: across `freshness.py`, `graph_atlas.py`, `bundles_readiness.py`. The third
+    #: `grep -v` drops comment lines so this instruction does not count itself.)
     #:
     #: Automating the fold would erase a real distinction: a check that measured its
     #: primary population and merely lacked coverage of PART of it IS measured (the
     #: uncovered-figure census in `bundle_figure_integrity`), while one whose
-    #: population was UNREACHABLE is not (`bundle_source_freshness`'s dark Lean leg,
-    #: `bundle_manuscript_length`'s stale PDFs). Do not read this field as feeding
-    #: anything on its own.
+    #: population was UNREACHABLE is not (`bundle_source_freshness`'s dark Lean leg).
+    #: Do not read this field as feeding anything on its own.
+    #:
+    #: ⚠️ This paragraph previously named `bundle_manuscript_length`'s stale PDFs as
+    #: the second example of the UNREACHABLE case, contradicting its own preceding
+    #: sentence — a stale PDF for SOME bundles is exactly "coverage of PART of the
+    #: population", the case the sentence assigns to measured=True. The check's
+    #: implementation followed the wrong half (`measured=not unmeasured`) and one
+    #: stale PDF took the whole `--ci` coverage floor down. Partial coverage keeps
+    #: `CheckResult.measured=True` and marks the SKIPPED MEMBERS `Detail(measured=
+    #: False)`; only a wholly unreachable population clears the check-level flag.
     measured: bool = True
 
 

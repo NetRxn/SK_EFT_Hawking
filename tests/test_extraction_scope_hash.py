@@ -15,6 +15,31 @@ sys.path.insert(0, str(SK_ROOT))
 sys.path.insert(0, str(SK_ROOT / "scripts"))
 
 
+
+def _gauntlet_code() -> str:
+    """`run_verification_gauntlet`'s body as CODE, with comments and docstrings gone.
+
+    ⚠️ The point of the round-trip through `ast`: `inspect.getsource` hands back the
+    comments too, so a substring assertion over it can be discharged by prose
+    describing the code rather than by the code. `ast.unparse` of the parsed body
+    drops comments entirely and normalises the docstring away, so only real
+    statements can satisfy these assertions.
+    """
+    import ast
+    import inspect
+    import textwrap
+
+    import src.core.aristotle_submit as A
+
+    fn = ast.parse(textwrap.dedent(inspect.getsource(A.run_verification_gauntlet))).body[0]
+    body = fn.body
+    if (body and isinstance(body[0], ast.Expr)
+            and isinstance(body[0].value, ast.Constant)
+            and isinstance(body[0].value.value, str)):
+        body = body[1:]                      # drop the docstring
+    return "\n".join(ast.unparse(stmt) for stmt in body)
+
+
 class TestExtractionScopeHash:
     """`compute_lean_hash` must cover the ROOT AGGREGATE, which alone decides scope."""
 
@@ -99,18 +124,24 @@ class TestGauntletRefreshesBeforeJudging:
         building alone left step 3 judging kernel purity against the PRE-graft closure,
         which is the one thing the step exists to prevent.
         """
-        import inspect
-        import src.core.aristotle_submit as A
-        src = inspect.getsource(A.run_verification_gauntlet)
-        assert "_refresh_lean_deps()" in src, "the gauntlet no longer refreshes lean_deps"
-        assert '"SKEFTHawking.ExtractDeps"' not in src, (
+        # ⚠️ AST OF THE BODY, NOT `inspect.getsource`. Raw source INCLUDES COMMENTS,
+        # so these assertions were satisfied by prose. Mutation-proven by a reviewer:
+        # deleting the entire refresh try/except — the `_refresh_lean_deps()` call AND
+        # the failure path — while leaving a comment naming them left all 6 tests
+        # GREEN, and the Aristotle gauntlet silently judging kernel purity against a
+        # stale `lean_deps.json`, which is the exact pre-graft-view bug this guards.
+        # `run_verification_gauntlet` is named by no other test, so that was the whole
+        # of its coverage. Same evasion already fixed in
+        # `test_readiness_gate_measured.py` and `test_ratchets_have_zero_headroom.py`;
+        # this file was missed.
+        code = _gauntlet_code()
+        assert "_refresh_lean_deps()" in code, "the gauntlet no longer refreshes lean_deps"
+        assert '"SKEFTHawking.ExtractDeps"' not in code, (
             "the gauntlet is back to compiling the .olean instead of regenerating the JSON")
 
     def test_a_failed_refresh_FAILS_the_gauntlet(self, monkeypatch):
         """A refresh that raises must not fall through to a stale read — that is exactly
         the pre-graft-view bug, and a silent fallback would reinstate it."""
-        import inspect
-        import src.core.aristotle_submit as A
-        src = inspect.getsource(A.run_verification_gauntlet)
-        assert "res.kernel_pure = False" in src and "return res" in src, (
+        code = _gauntlet_code()
+        assert "res.kernel_pure = False" in code and "return res" in code, (
             "a failed ExtractDeps refresh must fail the gauntlet, not continue")

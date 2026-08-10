@@ -1391,7 +1391,7 @@ def check_bundle_manuscript_length() -> CheckResult:
     for r in under:
         details.append(Detail("under_floor", True, r, warning=True))
     for r in unmeasured:
-        details.append(Detail("unmeasured", True, r, warning=True))
+        details.append(Detail("unmeasured", True, r, warning=True, measured=False))
 
     if sized == 0:
         details.insert(0, Detail(
@@ -1412,7 +1412,10 @@ def check_bundle_manuscript_length() -> CheckResult:
     # one sibling that did not do it.** Five others already do (`freshness.py`,
     # the three reader-visible-prose checks, `graph_atlas`). Without the fold this
     # gate degraded SILENTLY: a stale PDF took a bundle UNMEASURED, the reported
-    # under-floor population shrank 11 → 10 → 1, and it stayed GREEN throughout.
+    # under-floor population fell 11 → 3 on a stale tree (ACCURACY_LEDGER V75/V79
+  # row 1; ADR-011 §C4) and 11 → 10 on a test-seeded one (V80 row 1), and it stayed
+  # GREEN throughout. (An earlier draft of this comment wrote "11 → 10 → 1",
+  # asserting a third degradation that is recorded nowhere.)
     #
     # That is not only an advisory-information loss. A bundle that goes UNMEASURED
     # also escapes the OVER-CEILING leg — the one that still gates — so staleness
@@ -1424,8 +1427,28 @@ def check_bundle_manuscript_length() -> CheckResult:
     # in three places and observed in none: a stale tree now reads `74 MEASURED,
     # floor 75` under `--ci` instead of a green tick over part of the corpus. The
     # remedy is `scripts/compile_bundle_pdf.py --all --force`.
+    # `measured=True` whenever ANY bundle was sized. THE ONE POLICY: `measured=False`
+    # means the population was UNREACHABLE, not that coverage of it was INCOMPLETE.
+    # Sizing 10 of 21 is incomplete coverage of a reachable population, so the check
+    # IS measured; the 11 it could not size are carried on their own details, each
+    # `measured=False`, which is where the granular signal belongs. The wholly
+    # unreachable case (`sized == 0`) returns `measured=False` at the guard above.
+    #
+    # The previous `measured=not unmeasured` conflated the two and broke `--ci`: the
+    # coverage floor counts MEASURED checks with zero headroom, so one stale PDF
+    # anywhere took the whole suite under the floor. It also contradicted this
+    # module's own policy note in `_registry.py`.
+    #
+    # ⚠️ What that fold was reaching for is REAL and is NOT solved by this line: a
+    # bundle that goes UNMEASURED escapes the OVER-CEILING leg, the only one that
+    # still gates, so staleness remains a way to skip it. That is contained by
+    # keeping it LOUD rather than by lying about `measured` — the summary always
+    # prints the UNMEASURED count, every skipped bundle is named, and
+    # `bundle_source_freshness` gates staleness directly. Recompiling
+    # (`scripts/compile_bundle_pdf.py --all --force`) is the remedy; see
+    # VALIDATION_ARCHITECTURE.md §5.1 for the regeneration ORDER.
     return CheckResult(passed=len(over) == 0,
-                       measured=not unmeasured, details=details)
+                       measured=sized > 0, details=details)
 
 
 @register_check("bundle_metadata_matches_graph",

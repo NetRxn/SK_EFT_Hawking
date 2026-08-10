@@ -72,6 +72,21 @@ def seeded_unresolvable_input():
         # production check measures.
         os.utime(draft, ns=(original_stat.st_atime_ns, original_stat.st_mtime_ns))
 
+        # ⚠️ THE FIXTURE ASSERTS ITS OWN CONTRACT, HERE, IN TEARDOWN.
+        # A separate test asserting this cannot work: an earlier version inlined the
+        # write/restore cycle and asserted on its own two preceding lines, so deleting
+        # the `os.utime` above left it GREEN — mutation-proven by a reviewer. Teardown
+        # is the only place the real fixture's restoration can be observed, and every
+        # test that uses the fixture now inherits the guard for free.
+        after = draft.stat()
+        assert draft.read_text(encoding="utf-8") == original, (
+            "the fixture did not restore the draft's BYTES")
+        assert after.st_mtime_ns == original_stat.st_mtime_ns, (
+            "the fixture restored bytes but MOVED THE MTIME. "
+            "`bundle_manuscript_length` refuses to size a PDF older than its draft's "
+            "`\\input` closure, so this silently takes the bundle UNMEASURED and "
+            "shrinks that gate's reported population while it keeps passing.")
+
 
 class TestAnUnreadFileIsNotACleanFile:
     @pytest.mark.parametrize("check", GAP_SENSITIVE_CHECKS)
@@ -101,42 +116,10 @@ class TestAnUnreadFileIsNotACleanFile:
             _H.PAPERS_DIR / SEED_HOST / "paper_draft.tex").read_text(encoding="utf-8")
 
 
-def test_the_fixture_restores_the_drafts_MTIME_not_just_its_bytes():
-    r"""⚠️ The property that actually matters, asserted directly on the file.
-
-    An earlier version of this test asked whether `bundle_manuscript_length` still
-    SIZED the host bundle — and that conflates two different facts. The gate also
-    goes UNMEASURED when `docs/counts.tex` is regenerated (it sits in every
-    bundle's `\input` closure), which any counts-regenerating test does and which
-    is nothing to do with this fixture. A test that fails for a reason outside its
-    own subject teaches the reader to ignore it.
-
-    So: measure the draft's mtime, run the fixture's full cycle by hand, and
-    require the mtime to come back. That is the fixture's contract and nothing
-    else's."""
-    import os
-    import validate_helpers as _H
-
-    draft = _H.PAPERS_DIR / SEED_HOST / "paper_draft.tex"
-    before_bytes = draft.read_text(encoding="utf-8")
-    before = draft.stat()
-
-    # the fixture's cycle, inline
-    try:
-        draft.write_text(before_bytes.replace("\\begin{document}",
-                                              SEED + "\\begin{document}", 1),
-                         encoding="utf-8")
-    finally:
-        draft.write_text(before_bytes, encoding="utf-8")
-        os.utime(draft, ns=(before.st_atime_ns, before.st_mtime_ns))
-
-    after = draft.stat()
-    assert draft.read_text(encoding="utf-8") == before_bytes, "bytes not restored"
-    assert after.st_mtime_ns == before.st_mtime_ns, (
-        "the draft's mtime moved. `bundle_manuscript_length` refuses to size a PDF "
-        "older than its draft's input closure, so a byte-perfect restore with a "
-        "fresh mtime silently takes this bundle UNMEASURED and shrinks that gate's "
-        "reported population while it keeps passing.")
+# ⚠️ REMOVED: `test_the_fixture_restores_the_drafts_MTIME_not_just_its_bytes`
+# re-implemented the fixture's cycle inline and asserted on that, never invoking the
+# fixture — so deleting `os.utime` from the real one left it green. Its contract now
+# lives in the fixture's own teardown above, where it cannot be bypassed.
 
 
 def test_no_probe_survives_the_module():

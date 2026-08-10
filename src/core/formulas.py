@@ -696,7 +696,22 @@ def adw_effective_potential(C, G, Lambda, N_f):
     Returns:
         V_eff(C)
     """
-    if C < 1e-15:
+    # ⚠️ `abs(C)`, NOT `C`. This read `if C < 1e-15`, which caught EVERY negative
+    # tetrad magnitude and returned 0.0 — flattening the entire negative branch of a
+    # DOUBLE WELL to zero. Every term above is even in `C` (`C²`, `C⁴`, and `C²`
+    # inside the log), so `V(-C) = V(C)` identically; measured before the fix:
+    #     V(+0.5, G=1, Λ=10, N_f=4) = -0.49876809672521716
+    #     V(-0.5, …)                =  0.0
+    # The guard's only job is the `Λ²/C²` division at the origin, which is a
+    # statement about |C|.
+    #
+    # LATENT, not observed: every caller today samples C >= 0 only —
+    # `gap_equation.py:334` `np.linspace(0, Lambda, n_points)`, the minimizer's
+    # `bounds=(1e-6 * Lambda, C_max)` at `gap_equation.py:220`, and
+    # `ginzburg_landau.py:683` `np.linspace(0.5, 5.0, …)`. So no published figure
+    # or solver result was wrong. The fix is to keep it that way if a caller ever
+    # sweeps the full double well; `test_effective_potential_even_in_C` is the guard.
+    if abs(C) < 1e-15:
         return 0.0
     V_tree = C**2 / (2.0 * G)
     prefactor = N_f / (16.0 * np.pi**2)

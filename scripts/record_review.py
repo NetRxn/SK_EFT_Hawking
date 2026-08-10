@@ -88,9 +88,21 @@ def record(bundle: str, stage: int, verdict: str, doc: str | None,
     except (OSError, json.JSONDecodeError) as exc:
         return False, f"{mp} is unreadable ({exc})"
 
+    # ⚠️ TWO guards, and the second is the one that was missing. `--doc` is optional
+    # at the parser, so `doc is None` skipped the existence check ENTIRELY: a
+    # Stage-13 GREEN could be recorded citing NO document at all. Nothing
+    # downstream caught it — `bundle_readiness.py` derives `review_recorded` from
+    # the DATE (always written) and the KIND (always written), and no validate.py
+    # check reads `stage13_review_doc`, so the bundle rendered GREEN.
     if doc is not None and not (REPO / doc).exists():
         return False, (f"--doc {doc} does not exist. A verdict citing a review document "
                        f"that is not on disk records nothing a later reader can check.")
+
+    if stage == 13 and doc is None:
+        return False, ("--doc is REQUIRED for --stage 13. A Stage-13 verdict is a claim "
+                       "that an adversarial review happened; without a document on disk "
+                       "it is unfalsifiable, and the green it produces is indistinguishable "
+                       "from one backed by a real review.")
 
     if stage == 13:
         if kind is None:
@@ -117,8 +129,13 @@ def record(bundle: str, stage: int, verdict: str, doc: str | None,
     md[f"last_stage{stage}_review"] = now
     if stage == 13:
         md["stage13_review_kind"] = kind
-        if doc is not None:
-            md["stage13_review_doc"] = doc
+        # UNCONDITIONAL write. This was guarded by `if doc is not None`, so a
+        # Stage-13 write without `--doc` left the PREVIOUS document path in place
+        # while flipping `stage13_review_kind` — the metadata then asserted that an
+        # old targeted sweep WAS the full adversarial pass, the exact conflation
+        # `KINDS` exists to prevent. `doc` is now required above, so this always
+        # overwrites with the document this verdict actually cites.
+        md["stage13_review_doc"] = doc
 
     # ensure_ascii=False: these blobs carry `§`/`—` in their apex `claims` strings and
     # the default rewrites every one as `\uXXXX` (TODO-D25).

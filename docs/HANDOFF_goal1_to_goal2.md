@@ -97,8 +97,9 @@ representable and D9 sits in it. Do not read `UNMEASURED` as a mild YELLOW.
    ⚠️ **That count requires a fresh compile.** Run
    `uv run python scripts/compile_bundle_pdf.py --all --force` first: the check reports
    `UNMEASURED` for any bundle whose PDF predates its `\input` closure, and adding a
-   shared input (as goal 1 did with `docs/figuredeferred.tex`) staleness-invalidates all
-   21 at once. Measured stale, the same check reported 3 under floor and 16 UNMEASURED —
+   shared input already in the closure staleness-invalidates every bundle that carries it
+   at once — `docs/counts.tex` reaches 16 of the 21, and goal 1's own
+   `docs/figuredeferred.tex` reaches 11, not all 21. Measured stale, the same check reported 3 under floor and 16 UNMEASURED —
    the closure reviewer saw exactly that and was right to flag the discrepancy.
    ⚠️ **A stale tree now FAILS `--ci` rather than passing quietly**: the unmeasured
    population folds into the check's `measured`, so staleness reads as `74 MEASURED,

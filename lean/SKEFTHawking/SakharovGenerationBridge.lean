@@ -194,6 +194,48 @@ theorem generation_constraint_transfers_iff
     have hnat : c.generations = 3 * k := by exact_mod_cast this
     exact ⟨(k : ℤ), by rw [hnat]; push_cast; ring⟩
 
+/-! ### The observable consequence — the part that is NOT definitional
+
+⚠️ **`generation_constraint_transfers_iff` IS A DEFINITIONAL IDENTITY, and saying so
+is the correction.** Under `hw : weylPerGeneration = 16` the definition gives
+`diracFlavourNf = 8·generations`, so the right-hand side `∃ k, diracFlavourNf = 24k`
+unfolds to `24 ∣ 8·generations` — the left-hand side. A reviewer proved the whole
+biconditional in the kernel **without** `generation_mod3_constraint` and **without**
+`hpos`, which means the earlier repair — turning a `P → P` implication into a
+biconditional — made the triviality symmetric rather than removing it.
+
+The lesson generalises past this module and is worth stating: **"the docstring
+cross-reference is backed by a real call" was the wrong invariant. The right one is
+"the call is LOAD-BEARING."** `generation_mod3_constraint` is genuinely invoked
+above, and the proof still does not need it.
+
+What is NOT definitional is what the constraint does to the OBSERVABLE. If the
+anomaly condition forces `N_f = 24k`, then the emergent Newton constant
+`G_N = 12π/(N_f Λ²)` cannot take arbitrary values — it lands on a discrete ladder
+indexed by `k`, and consecutive admissible rungs stand in a fixed ratio. That is a
+statement about `G_N_from_a2`, not about how `diracFlavourNf` was defined, and it is
+falsifiable: change the 24 and the ratio changes. -/
+
+/-- **Admissible Newton constants form a discrete ladder.** Consecutive rungs of the
+anomaly-allowed species count stand in ratio `(k+1)/k`. -/
+theorem gn_ladder_ratio (Λ : ℝ) (hΛ : Λ ≠ 0) (k : ℕ) (hk : 0 < k) :
+    HeatKernelExpansion.G_N_from_a2 Λ (24 * k)
+        / HeatKernelExpansion.G_N_from_a2 Λ (24 * (k + 1)) = (k + 1) / k := by
+  have hk' : (k : ℝ) ≠ 0 := Nat.cast_ne_zero.mpr hk.ne'
+  have hΛ2 : (Λ : ℝ) ^ 2 ≠ 0 := pow_ne_zero 2 hΛ
+  unfold HeatKernelExpansion.G_N_from_a2
+  field_simp
+
+/-- The `norm_num`-backed anchor: the first two admissible rungs differ by exactly a
+factor of two. A wrong divisor in the anomaly condition breaks this. -/
+theorem gn_first_two_rungs (Λ : ℝ) (hΛ : Λ ≠ 0) :
+    HeatKernelExpansion.G_N_from_a2 Λ 24
+      = 2 * HeatKernelExpansion.G_N_from_a2 Λ 48 := by
+  have hΛ2 : (Λ : ℝ) ^ 2 ≠ 0 := pow_ne_zero 2 hΛ
+  unfold HeatKernelExpansion.G_N_from_a2
+  field_simp
+  ring
+
 /-- The forward direction alone, for callers that only need it. Named so the old
 implication has a home; the biconditional above is the statement with content. -/
 theorem generation_constraint_transfers

@@ -830,15 +830,41 @@ class TestBundleManuscriptLength:
             "the sized bundle must still be judged and its gap reported")
         assert any(d.name == "unmeasured" for d in r.details), (
             "and the one it could not size must be named, not dropped")
-        # ⚠️ `measured=False` on a MIXED population, and that is the point of the
-        # fold added 2026-08-09. The check judges what it can size — the assertion
-        # above — but it must not report a full measurement over a population it
-        # only partly reached: a bundle that goes UNMEASURED also escapes the
-        # OVER-CEILING leg, the one that still gates, so staleness was a way to
-        # skip the only blocking check here. Without the fold this gate degraded
-        # silently from 11 reported gaps to 1 and stayed green.
-        assert not r.measured, (
-            "a partly-unsizable population is not a full measurement")
+        # ⚠️ `measured=True` on a MIXED population. THE ONE POLICY: `measured=False`
+        # means the population was UNREACHABLE, not that coverage of it was
+        # INCOMPLETE. Sizing 1 of 2 is incomplete coverage of a reachable
+        # population, so the CHECK is measured and the SKIPPED MEMBER carries the
+        # unmeasured flag on its own Detail.
+        #
+        # This assertion previously read `assert not r.measured`, matching a fold
+        # (`measured=not unmeasured`) that contradicted the policy and broke `--ci`:
+        # the coverage floor counts MEASURED checks at zero headroom, so a single
+        # stale PDF anywhere took the whole suite under the floor.
+        assert r.measured, (
+            "partial coverage of a REACHABLE population is still a measurement; "
+            "measured=False is reserved for a population that could not be reached")
+        unmeasured_details = [d for d in r.details if d.name == "unmeasured"]
+        assert unmeasured_details and all(not d.measured for d in unmeasured_details), (
+            "the granular signal must survive on the skipped member's own Detail — "
+            "that is what makes check-level measured=True honest rather than a loss")
+        assert all(d.measured for d in r.details if d.name == "under_floor"), (
+            "a bundle that WAS sized must not be tarred with the skipped one's flag")
+
+    def test_a_wholly_unsizable_population_is_not_measured(self, tmp_path, monkeypatch):
+        """measured=False is reserved for the case nothing at all could be sized.
+
+        The complement of the test above, and the reason check-level `measured`
+        still carries information: with zero sizable bundles the check has not
+        measured its population at all, must say so, and must NOT report a pass.
+        """
+        self._setup(tmp_path, monkeypatch,
+                    {"D1": self._blob(), "D2": self._blob()},
+                    measured={"D1": (None, "pages", "no compiled PDF"),
+                              "D2": (None, "pages", "no compiled PDF")})
+        r = bru.check_bundle_manuscript_length()
+        assert not r.measured, "nothing sized => the population was not reached"
+        assert not r.passed, "an unmeasured gate is UNVERIFIED, never passing"
+        assert any(d.name == "population" for d in r.details)
 
     # ── the measurer's trust conditions ───────────────────────────────────
     def test_a_pdf_older_than_the_draft_is_not_trusted(self, tmp_path, monkeypatch):

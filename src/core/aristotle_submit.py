@@ -703,8 +703,20 @@ def run_verification_gauntlet(targets: list[str], *, run_tests: bool = True) -> 
     build = subprocess.run(["lake", "build", "SKEFTHawking"], capture_output=True,
                            text=True, cwd=str(LEAN_DIR))
     res.build_ok = build.returncode == 0
+    # ⚠️ QUOTE STYLE IS LOAD-BEARING — match it quote-AGNOSTICALLY. Lean v4.32.0
+    # emits BACKTICKS: ``declaration uses `sorry` ``. This read the fixed string
+    # "declaration uses 'sorry'" (straight quotes), matched nothing, and so
+    # `sorry_warns` was always [] -> `zero_sorry = build_ok`, which is True for a
+    # build that CONTAINS a sorry. The gauntlet then printed `sorry-warnings=0` to
+    # the operator. Reproduced: `lake env lean` on `theorem z : True := by sorry`
+    # emits ``warning: declaration uses `sorry` `` and exits 0.
+    #
+    # `scripts/pre-commit-sync.sh:68-72` was repaired for this exact defect (commit
+    # 8a08889e) and carries the same warning; this second consumer of the identical
+    # string was not swept at the time. Do NOT re-narrow either to a fixed string.
+    _SORRY_RE = re.compile(r"declaration uses .?sorry.?")
     sorry_warns = [ln for ln in (build.stdout + build.stderr).splitlines()
-                   if "declaration uses 'sorry'" in ln]
+                   if _SORRY_RE.search(ln)]
     res.zero_sorry = res.build_ok and not sorry_warns
     res.details.append(f"build exit={build.returncode}; sorry-warnings={len(sorry_warns)}")
     if not res.build_ok:

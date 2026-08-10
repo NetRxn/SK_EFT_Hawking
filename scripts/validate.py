@@ -70,7 +70,7 @@ import time
 from dataclasses import asdict          # `dataclass`/`field` moved with the result types
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Dict, List, Optional  # `Callable` moved with `register_check`
+from typing import Dict, List, Optional, Sequence  # `Callable` moved with `register_check`
 
 # ═══════════════════════════════════════════════════════════════════════
 # Path resolution
@@ -277,7 +277,7 @@ def _apply_canonical_order() -> None:
 # ═══════════════════════════════════════════════════════════════════════
 
 def run_checks(
-    check_filter: Optional[str] = None,
+    check_filter: "Optional[Sequence[str]]" = None,
     skip: "Optional[frozenset[str]]" = None,
 ) -> Dict[str, CheckResult]:
     """Run all (or one) registered checks, return results keyed by name.
@@ -289,7 +289,7 @@ def run_checks(
     """
     results = {}
     for spec in _CHECKS:
-        if check_filter and spec.name != check_filter:
+        if check_filter and spec.name not in check_filter:
             continue
         if skip and spec.name in skip:
             continue
@@ -719,7 +719,18 @@ Examples:
   python scripts/validate.py --list       # list available checks
 """,
     )
-    parser.add_argument("--check", help="Run only this check (by name)")
+    # `action="append"`, NOT the default single-value store. Repeating the flag
+    # silently kept only the LAST name and dropped every earlier one -> the run
+    # reported "Overall: 1/1 checks passed" while a gate the caller asked for had
+    # never executed. Five call sites relied on chaining, two of them in frozen
+    # procedures (BUNDLE_LIFT_PROCEDURE.md, LATE_PHASE6_ABSORPTION_PROTOCOL.md),
+    # and the Aristotle gauntlet lost its `axiom_closure_allowlist` leg — the
+    # Invariant #15 backstop against an un-signed-off axiom in a grafted proof.
+    # This is the same silent-disable failure the unknown-name guard below exists
+    # to prevent, arriving through a different door.
+    parser.add_argument("--check", action="append", metavar="NAME",
+                        help="Run only this check (by name). Repeatable: "
+                             "--check a --check b runs both.")
     parser.add_argument("--json", action="store_true", help="JSON output to stdout")
     parser.add_argument("--no-archive", action="store_true",
                         help="Skip saving timestamped report (default: always archive)")
@@ -785,9 +796,11 @@ Examples:
     # -> exit 0, silently DISABLING the gate (the commit gate / gate_precheck rely on a
     # real failure surfacing). Fail loud with rc2 (run_check in pre-commit-sync.sh maps
     # rc2 -> SKIP-printed; gate_precheck propagates it as FAIL).
-    if args.check and args.check not in {spec.name for spec in _CHECKS}:
-        print(f"ERROR: unknown check {args.check!r}. Run 'validate.py --list' for the registry.",
-              file=sys.stderr)
+    _known = {spec.name for spec in _CHECKS}
+    _unknown = [name for name in (args.check or []) if name not in _known]
+    if _unknown:
+        print(f"ERROR: unknown check(s) {', '.join(repr(n) for n in _unknown)}. "
+              f"Run 'validate.py --list' for the registry.", file=sys.stderr)
         return 2
 
     # ── ONE lean_deps snapshot per full run (ADR-009 §Deferred item 0) ──────

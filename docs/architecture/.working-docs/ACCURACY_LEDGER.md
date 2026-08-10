@@ -2881,7 +2881,7 @@ I am not making it green.**
 | 3 | Is this an instrument defect? | read the gate against the charters | **No.** The drafts really are letter-sized against article charters. The gate is doing exactly its job. |
 
 ⚠️ **ROW 2's STATE IS PERISHABLE AND IS PROBABLY NOT THE TREE'S STATE AS YOU READ THIS.**
-`docs/counts.tex` is in every bundle's `\input` closure, so ANY counts regeneration re-stales all
+`docs/counts.tex` is in 16 of the 21 bundles' `\input` closures, so ANY counts regeneration re-stales those
 21 PDFs and the gate returns to "3 under floor, 16 UNMEASURED" — the state row 1 calls an
 artifact. That is not the gate misbehaving; it is the gate correctly refusing to size a PDF
 older than its own draft. To reproduce row 2, run `compile_bundle_pdf.py --all` **after** the

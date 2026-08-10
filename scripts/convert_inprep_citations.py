@@ -87,6 +87,7 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 from src.core.workspace import find_workspace  # noqa: E402
+from validation._tex import _strip_tex_comments   # DRY: one owner
 
 CITATIONS_PATH = PROJECT_ROOT / "src" / "core" / "citations.py"
 PAPERS_DIR = PROJECT_ROOT / "papers"
@@ -311,7 +312,16 @@ def check_paper(paper: str) -> int:
     for i, line in enumerate(
             tex.read_text(encoding="utf-8", errors="replace").splitlines(),
             start=1):
-        content = line.split("%", 1)[0]
+        # DRY + FAIL-CLOSED: the canonical `\%`-aware stripper. `line.split("%", 1)[0]`
+        # TRUNCATES AT AN ESCAPED PERCENT, so an "in preparation" occurrence after a
+        # literal `5\%` became invisible and this gate — the F-last check — printed
+        # CHECK PASS when it should have failed. Demonstrated:
+        #     naive  finds 'in preparation': False
+        #     canon  finds 'in preparation': True
+        # on `The yield improved 5\% over prior work \cite{foo} (in preparation).`
+        # 27 drafts contain `\%`; none currently combines it with the phrase, so this
+        # was latent — a fail-OPEN gate waiting for one sentence.
+        content = _strip_tex_comments(line)
         if re.search(r"in preparation", content, flags=re.IGNORECASE):
             hits.append((i, line.strip()))
     if hits:

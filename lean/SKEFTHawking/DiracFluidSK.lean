@@ -214,7 +214,9 @@ noncomputable def kinematicViscosity (etaOverST c_s : ℝ) : ℝ :=
     velocity is measured. The hypothesis is stated as `v_F ^ 2 = 2 * c_s ^ 2`
     rather than assumed, because it is exactly what **fails** for bilayer
     graphene: quadratic band touching gives no emergent light cone, and pairing
-    the monolayer `v_F` with the measured bilayer `c_s` inflates `ν` by 5.2×. -/
+    the monolayer `v_F` with the measured bilayer `c_s` inflates `ν` by
+    `(v_F/c_s)^2 / 2` = 2.6× — note the `/2`, which follows from this very
+    theorem: the c_s form carries a factor 2 that the `v_F` form absorbs. -/
 theorem kinematicViscosity_eq_vF_form (etaOverST c_s v_F : ℝ)
     (hconf : v_F ^ 2 = 2 * c_s ^ 2) :
     kinematicViscosity etaOverST c_s = etaOverST * v_F ^ 2 := by

@@ -186,7 +186,14 @@ subsystem exists to close. It is sound only if the key spans every input.
 
 ### 5.1 Regeneration ORDER, and why `--ci` can go red with nothing in the diff
 
-`docs/counts.tex` sits in **every** bundle's `\input` closure, and
+`docs/counts.tex` sits in the `\input` closure of **most, but deliberately not all,**
+bundles. Which ones is a question for `validate_helpers.draft_input_closure`, the
+shared resolver — never for a grep, and never for a list transcribed here: some
+drafts mention `counts.tex` only inside `%%` comments, where a grep says yes and the
+closure says no. This sentence previously read "**every** bundle's closure"; the
+universal is false, and it was the stated premise for the perishability workflow
+below, so a reader who believed it would never ask why some bundles never go
+UNMEASURED. And
 `bundle_manuscript_length` refuses to size a PDF older than that closure. Since this
 branch folded the unmeasured population into `CheckResult.measured`, and
 `CI_MIN_CHECKS_RUN` has **zero slack** by design, one stale PDF takes `--ci` red.
@@ -204,7 +211,7 @@ uv run python scripts/validate.py --ci
 holds a byte-stability contract — it compares everything except the `generated`
 stamp and leaves both artifacts untouched when nothing substantive moved. So a
 moved `counts.tex` mtime means the counts genuinely changed, which means the
-numbers baked into all 21 PDFs genuinely are out of date. The gate is right; the
+numbers baked into every PDF whose closure contains it genuinely are out of date. The gate is right; the
 workflow just has an order.
 
 The cost is real and is accepted deliberately: the alternative is giving the

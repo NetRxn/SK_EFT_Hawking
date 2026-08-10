@@ -105,7 +105,11 @@ def graphene_kinematic_viscosity(platform_name):
     v_F is a band parameter defined only for the monolayer. Bilayer graphene
     has quadratic band touching, so it has no emergent light cone and no v_F
     in the Dirac sense — pairing the monolayer v_F = 10⁶ m/s with the measured
-    bilayer c_s = 4.4×10⁵ m/s violates c_s = v_F/√2 and inflates ν by 5.2×.
+    bilayer c_s = 4.4×10⁵ m/s violates c_s = v_F/√2 and inflates ν by
+    (v_F/c_s)²/2 = 2.6×. (NOT (v_F/c_s)² = 5.2×: ν = 2·(η/sT)·c_s² in the c_s form
+    but (η/sT)·v_F² in the v_F form, so the ratio carries a 1/2. Dropping that 1/2
+    is the same class of slip as the wrong-by-eleven-orders velocity² recorded at
+    formulas.py:501; provenance.py:852 states the correct 2.6×.)
 
     **Bilayer caveat.** The prefactor is exactly 1 for a d = 2 conformal fluid
     (ζ = 0). The bilayer is not conformal; `bilayer_eos.bulk_to_shear_ratio`
