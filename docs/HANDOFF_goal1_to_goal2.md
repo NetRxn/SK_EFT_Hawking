@@ -622,3 +622,55 @@ for c in sorted(BUNDLE_CODES):
           d.get('stage13_status'), d.get('readiness'),
           d.get('stage13_redo_required'))"
 ```
+
+## 11. Second closure review (2026-08-10, at `2f920e46`) — six findings, all fixed
+
+The first closure review's fixes were themselves reviewed by a second fresh-context
+reviewer, which **reopened condition 3**. Its verdict is worth quoting for goal 2,
+because it names the branch's recurring shape rather than six unrelated bugs:
+
+> the counts fix is materially incomplete in three independent ways — the published
+> theorem figure is still not author-written-only, one published macro family still has
+> no autogen filter at all, and the staleness mechanism still misses the fourth tree it
+> publishes. […] F4 is the branch's recurring "fix breaks a neighbour" shape recurring
+> twice more, unnoticed.
+
+All six landed in `78ded271`. What generalises:
+
+- **F1 — one predicate, three re-derivations.** Three generators each answered "is this
+  declaration compiler-generated?" from a different source. The fix is a single shared
+  accessor, not three corrected copies. **Rule for goal 2:** when a fix touches a
+  predicate, grep for every site that answers the same question before declaring it
+  fixed; a corrected duplicate is a defect that has not been found yet.
+- **F2 — a guard in the wrong branch never matches.** `eq_def` sat in the suffix set
+  whose branch requires an inductive/structure parent; all 20 live instances are
+  parentless, so it filtered nothing while appearing to. **Rule:** a guard's membership
+  list and its branch condition are two facts; verifying the list is not verifying the
+  guard. Assert the count moves.
+- **F3 — a published figure with no staleness input.** `counts.json` publishes a figure
+  derived from `src/`, but `src/` was not an input to `_counts_is_stale`. The
+  parametrized test now proves one leg per published tree, and is mutation-verified
+  against all four. The other three legs had **no positive test at all** before this.
+  **Rule:** for each figure a generator publishes, there must be a test that the tree it
+  derives from can make it stale.
+- **F4 — the H1 hazard, twice, introduced while fixing something else.** Two checks
+  reached the corpus by re-deriving from `_H.PROJECT_ROOT` instead of using
+  `_H.PAPERS_DIR` / `_H.LEAN_DIR`. Ten tests then failed — and the reason is the
+  instructive part: **they had been passing *because* the code re-derived from
+  `PROJECT_ROOT`, which is exactly what their fixtures patched.** The isolation was a
+  no-op against the anchor the check actually read; retargeting `PAPERS_DIR` at a tmp
+  tree had been reporting 631 declared apexes read from production. Fixtures now patch
+  the anchor under test and carry a comment saying what breaks if it is dropped.
+  **Rule:** a fixture that patches a path the check does not read is not isolation —
+  prove it by retargeting and confirming the check goes `measured=False`.
+- **F5 — two populations, one number.** TODO-D39 cited the apex histogram
+  (`D4 18 · L2 1`) as evidence about `NATIVE_DECIDE_BUNDLE_DEBT` (`D4 19 · L2 6`). The
+  debt figure is closure-scoped; the histogram is not. **Rule:** before a count supports
+  a claim, state the predicate that scopes it.
+- **F6 — a doc asserting a check cannot fail** on a condition it can.
+
+**Status of the ten conditions is therefore condition 3 = re-verification pending**: the
+fixes are committed and the fast suite is green (6,098 passed, 6 skipped), and the
+third fresh-context closure review is the gate that decides whether it closes. Goal 2
+should treat a *clean* third review as the merge signal, not this note — this note is
+prose, and prose is not evidence for itself.
