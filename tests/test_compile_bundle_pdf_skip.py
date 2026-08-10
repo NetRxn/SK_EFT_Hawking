@@ -171,3 +171,74 @@ class TestReproducibleOutput:
         joined = " ".join(seen.get("argv", []))
         assert r"\pdftrailerid{}" in joined
         assert "-jobname=paper_draft" in joined, "output must stay paper_draft.pdf"
+
+
+class TestASkipNeverRecordsAVerdict:
+    """A SKIPPED compile must not write a gate verdict. This guards a BLOCKER.
+
+    ⚠️ THE DEFECT: `compile_one` returns `ok=True` with a SKIPPED report when
+    `pdflatex` is not on PATH, and `main()` called `_persist_pages(d, pages, ok)`
+    UNCONDITIONALLY while guarding only `_record_gate` behind `skipped(report)`.
+    So on any host without LaTeX — CI without a TeX install, a fresh clone — a
+    single run wrote `compile_gate_ok: true` and cleared `compiled_pages` in every
+    tracked `papers/*/bundle_metadata.json`, having compiled nothing.
+
+    ⚠️ AND IT WAS COVERED BY NOTHING. A chunk reviewer reverted the guard to
+    `if True:` and the entire suite stayed green — 85 passed across every file
+    that so much as names `compile_bundle_pdf`. Nothing in the repo touched
+    `_persist_pages`, `_record_gate` or `compile_gate_ok`. This class exists so
+    that cannot recur silently.
+
+    A skip is the ABSENCE of a measurement, not a passing one — the same doctrine
+    `CheckResult.measured` encodes one layer up.
+    """
+
+    def _bundle(self, tmp_path, code="D9"):
+        d = tmp_path / code
+        d.mkdir(parents=True)
+        (d / "paper_draft.tex").write_text(
+            r"\documentclass{article}\begin{document}x\end{document}")
+        (d / "bundle_metadata.json").write_text(
+            json.dumps({"compiled_pages": 42, "compile_gate_ok": False}))
+        return d
+
+    def test_no_pdflatex_leaves_the_verdict_untouched(self, tmp_path, monkeypatch):
+        """FIRES ON THE SEEDED DEFECT — the guard is what this asserts."""
+        d = self._bundle(tmp_path)
+        before = (d / "bundle_metadata.json").read_bytes()
+        monkeypatch.setattr(cbp.shutil, "which", lambda _n: None)
+
+        ok, report, pages = cbp.compile_one(d)
+        assert "SKIPPED" in report, f"expected a SKIP without pdflatex, got {report!r}"
+        assert ok is True, (
+            "compile_one reports ok=True on a skip — that is WHY the caller must "
+            "gate on the report rather than on `ok`")
+
+        # main()'s guard, applied verbatim.
+        if "SKIPPED" not in report:
+            cbp._persist_pages(d, pages, ok)
+
+        assert (d / "bundle_metadata.json").read_bytes() == before, (
+            "a SKIPPED compile rewrote bundle_metadata.json — `compile_gate_ok` "
+            "must never be written by a run that compiled nothing")
+
+    def test_main_itself_writes_no_verdict_without_pdflatex(self, tmp_path, monkeypatch):
+        """The guard must hold through `main()`, not just when re-applied by hand.
+
+        The previous test pins the CONTRACT; this one pins the CALL SITE, which is
+        where the defect actually lived. Reverting `main()`'s
+        `if not skipped(report):` must turn this red.
+        """
+        d = self._bundle(tmp_path)
+        before = (d / "bundle_metadata.json").read_bytes()
+        monkeypatch.setattr(cbp.shutil, "which", lambda _n: None)
+        monkeypatch.setattr(cbp, "PAPERS", tmp_path)
+        monkeypatch.setattr(cbp, "_record_gate",
+                            lambda *a, **k: pytest.fail(
+                                "_record_gate ran for a SKIPPED compile"))
+        # `main()` parses sys.argv; the positional is a list of bundle codes.
+        monkeypatch.setattr(sys, "argv", ["compile_bundle_pdf.py", d.name])
+        cbp.main()
+
+        assert (d / "bundle_metadata.json").read_bytes() == before, (
+            "main() wrote a gate verdict for a bundle it never compiled")
