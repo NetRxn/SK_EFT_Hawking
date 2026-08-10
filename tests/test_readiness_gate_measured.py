@@ -194,10 +194,13 @@ class TestTheReaderHasAProductionCaller:
 
         r = rg.GateResult(gate="citation_integrity", paper="ZZ", priority=1)
         r.state, r.measured = "open", measured
-        monkeypatch.setattr(build_graph, "extract_all_nodes_without_gates",
-                            lambda: [], raising=False)
-        monkeypatch.setattr(build_graph, "extract_all_edges_without_gates",
-                            lambda _ids: [], raising=False)
+        # ⚠️ Only the GATE INPUT is stubbed, and deliberately so. An earlier version
+        # also tried to stub `extract_all_nodes_without_gates`, which DOES NOT EXIST —
+        # `raising=False` silently created an unused attribute, so the test read as
+        # isolated while running every real extractor anyway. A patch that patches
+        # nothing is a comment with a syntax error. The real extractors do run here
+        # (a couple of seconds); that is honest, and the stubbed evaluator discards
+        # their output.
         import readiness_gates
         monkeypatch.setattr(readiness_gates, "evaluate_all_gates",
                             lambda _g: [r], raising=False)

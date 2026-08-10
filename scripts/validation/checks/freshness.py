@@ -473,9 +473,13 @@ def check_notebook_stored_outputs_current() -> CheckResult:
         # ⚠️ `measured=False`. This branch executes NO notebook, and it defaulted to
         # reporting a measurement — so with nbclient absent it counted toward the
         # `--ci` zero-headroom coverage floor as evidence, and `_memo` could cache
-        # it. `notebooks.py` handles the IDENTICAL nbclient ImportError with
-        # `measured=False`, and so does the sibling at :783 in this same file; this
-        # was the one site of three that did not.
+        # it. `notebooks.py:317` handles the IDENTICAL nbclient ImportError with
+        # `measured=False`; this was the site that did not.
+        #
+        # ⚠️ An earlier version of this comment also cited "the sibling at :783 in
+        # this same file". That line is a DOCSTRING, and the nearby return guards a
+        # different import in a different check. Naming a line without opening it is
+        # how this branch produced most of its wrong claims — including this one.
         return CheckResult(passed=True, measured=False, details=[
             Detail("import", True, f"nbclient/nbformat unavailable ({exc}); skipping",
                    warning=True, measured=False)])

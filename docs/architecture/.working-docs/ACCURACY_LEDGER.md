@@ -2942,12 +2942,12 @@ rather than decided.** V75 recorded the conflict: goal condition 6 requires
 the only other route was writing several hundred manuscript pages, which is goal 2's scope. The
 loop left the gate red and named the conflict. The operator then ruled.
 
-> **Operator, 2026-08-10, verbatim:** *"if length of paper is not sufficient, it's ok to skip. I
+> **Operator, 2026-08-09, verbatim:** *"if length of paper is not sufficient, it's ok to skip. I
 > don't think it's realistic to write that length in many areas."*
 
 | # | Proposition | Decider | Verbatim result |
 |---|---|---|---|
-| 1 | Under-floor no longer gates | `validate.py --check bundle_manuscript_length` | **PASS**, summary `0 OVER ceiling (gating), 3 under floor (ADVISORY by operator decision 2026-08-10, not gating); 16 UNMEASURED` |
+| 1 | Under-floor no longer gates | `validate.py --check bundle_manuscript_length` | **PASS**, summary `0 OVER ceiling (gating), 3 under floor (ADVISORY by operator decision 2026-08-09, not gating); 16 UNMEASURED` |
 | 2 | Every gap is still reported, with its magnitude | read the details | Each under-floor bundle still emits `D7: 4 pp < floor 24 — declared as a PRX Quantum … article, sized like a letter`, as a WARNING |
 | 3 | Over-ceiling still fails | seeded a 99 pp bundle against a 40 pp ceiling in `tests/test_d5_bundles_readiness.py` | **Fails**, as it must — a venue rejects an over-length manuscript outright |
 | 4 | No floor was lowered; no `length_target` was re-set | `git diff` over `papers/*/bundle_metadata.json` | **Zero changes.** The charters still say what the venues want |
@@ -2991,3 +2991,33 @@ is worth nothing until a reader with no stake in it runs the mutation, and that 
 `Detail(..., measured=False)` and assert on THAT, retiring the prose keyword list entirely.
 Widening the list is a stopgap that closed today's hole; it will not close the next one. Logged
 for goal 2 rather than attempted here.
+
+---
+
+## V79 — round 4: the amendment's own safety argument was false for 8 of 11 bundles
+
+Round 4 was scoped to one question — *did the fixes for the closure reviews introduce a defect of
+their own class?* — and answered **yes**. Blocker was empty and the behavioural guard survived
+three mutations, but two Majors landed on work from the preceding two hours.
+
+| # | Claim | Instrument | Verdict |
+|---|---|---|---|
+| 1 | The operator amendment is safe because *"every gap is still reported, with its magnitude"* — asserted in ADR-011, the handoff, V77 and two code comments, and it is the SOLE safety argument for turning the gate green | reading the amendment, not running it | **FALSE FOR 8 OF 11.** The gate stated a magnitude for **3**; the other 8 emitted only a staleness warning naming no floor and no page count — because this loop's own `cc920614` had regenerated `docs/counts.tex`, which sits in every bundle's `\input` closure, staling 16 PDFs. While the gate was RED a reader investigated; GREEN, the project neither blocked *nor knew* for 8 of 11. **Fixed by running `compile_bundle_pdf.py --all --force`: now 21 sized, 11 under floor, 0 UNMEASURED, every one naming its floor and its page count.** |
+| 2 | `bundle_manuscript_length` has production-seeded evidence that it bites | `PRODUCTION_SEEDED`, written 2026-08-08 | **THE AMENDMENT FALSIFIED IT AND DID NOT NOTICE.** The record asserts D3 floor→200 gives `rc=1`; re-run, it gives `rc=0` — the finding is named, the check passes. The companion `MUTATION_VERIFIED` entry still advertised *"fires UNDER FLOOR … the leg that catches the live corpus"*, the exact leg the amendment retired. Both corrected, and the seed re-pointed at the over-ceiling leg — with the fact stated plainly that the corpus has **zero** over-ceiling bundles, so the gating leg has no naturally-occurring instance and the seed is its whole evidence. |
+| 3 | *"Widening the list is a stopgap that closed today's hole"* (V78) | the widened list | **REFUTED — today's hole included a site in today's baseline.** `reviews.py`'s `review_severity_declared` is IN the frozen `CANNOT_MEASURE_PASS_BASELINE` (27 of 28 sites carried `measured=False`; this one did not) and no keyword matches "no review directory". Its non-baselined sibling `papers_prose.py`'s `paper_toolchain_pin_drift` sat **thirteen lines below a correct version of itself**. |
+| 4 | *"Every word added to `_SKIP_WORDS` is one a real branch was found using"* | count the hits | **TWO OF FOUR WERE SPECULATIVE.** `skipping` 4, `unavailable` 1, `cannot` 0, `no such` 0 — and the original `missing` is 0 too. Words kept (a heuristic matching only yesterday's wording is why it needed widening); the sentence corrected. |
+| 5 | A comment citing *"the sibling at :783 in this same file"* | writing the line number without opening it | **:783 is a DOCSTRING**, and the nearby return guards a different import in a different check. |
+| 6 | A test fixture stubbing `extract_all_nodes_without_gates` | `monkeypatch.setattr(..., raising=False)` | **THAT FUNCTION DOES NOT EXIST.** The patch silently created an unused attribute, so the test read as isolated while running every real extractor. A patch that patches nothing is a comment with a syntax error. |
+| 7 | `Detail.measured`'s docstring: *"the wrapper derives the check's `measured` from its details"* | look for the wrapper | **THERE IS NO WRAPPER.** `run_checks` derives nothing; two checks fold by hand. Corrected, and the reason automation would be WRONG is now stated: partial coverage and unreachable population are different facts and only a per-check judgement can tell them apart. |
+| 8 | Every 2026-08-10 datestamp, including the verbatim operator quote in an ADR | the clock | **The local date was 2026-08-09.** Correct only in UTC. On an ADR amendment carrying an operator quote, the date is part of the record. Nine sites corrected. |
+
+**SIXTH CONSECUTIVE ROUND, and the sharpest instance yet.** Row 1 is not a stale number: it is the
+justification for a gate turning green, asserted in five places, and it was true of 27% of the
+population it described. Row 3 refutes a sentence written in the previous ledger entry, two hours
+earlier, about the very fix that entry was recording. The measured lesson stands: **a claim about
+one's own fix is worth nothing until someone with no stake in it runs the mutation.**
+
+**NOT-AN-ASSERTION.** Row 1's "0 UNMEASURED" is true of the tree as recompiled. It is perishable
+by construction — the next `update_counts` run re-stales all 21 PDFs, and `compile_bundle_pdf.py
+--all --force` is the remedy. That perishability is now the gate's most important property, not a
+footnote, because the amendment made the green depend on it.

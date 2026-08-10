@@ -240,11 +240,17 @@ import re as _re
 #: A return whose own detail text says it skipped. If a check tells the reader it
 #: could not measure, it must tell `--ci`'s coverage floor and `_memo` the same
 #: thing — otherwise the floor counts it as evidence and the memo caches it.
-#: ⚠️ WIDENED 2026-08-10. The list is a prose heuristic and it missed a live site:
+#: ⚠️ WIDENED 2026-08-09. The list is a prose heuristic and it missed a live site:
 #: `freshness.py`'s nbclient guard says "unavailable … skipping", and NONE of the
 #: seven original words matched, so a branch that executed no notebook reported a
 #: measurement and the scanner never looked at it. Every word added here is one a
-#: real cannot-measure branch was found using.
+#: real cannot-measure branch was found using — ⚠️ EXCEPT `cannot` and `no such`,
+#: which have ZERO hits across every `CheckResult` return in `checks/` and are
+#: SPECULATIVE. Measured 2026-08-09 after round 4 called the claim out: `skipping`
+#: 4 hits, `unavailable` 1, `cannot` 0, `no such` 0 (and the original `missing` is
+#: now 0 too). Speculative entries are kept — they cost nothing and a heuristic
+#: that only matches yesterday's wording is the reason this list needed widening —
+#: but the sentence claiming all of them were observed was false and is corrected.
 #:
 #: ⚠️ THE REAL FIX IS STRUCTURAL, not lexical, and it is now possible: `Detail`
 #: carries `measured`, so a future pass should require every cannot-measure branch

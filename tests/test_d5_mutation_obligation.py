@@ -660,9 +660,13 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
         "unwired: `compile_bundle_pdf.py` computed the page count and dropped it into "
         "a human-readable string, so manuscript size was measured nowhere and D7 (3 pp) "
         "and D10 (5 pp) were closed GREEN against ~40 pp targets. Legs: SILENT inside "
-        "the band and at both inclusive boundaries; fires over ceiling; fires UNDER "
-        "FLOOR (the leg a ceiling-only gate would miss, and the one that catches the "
-        "live corpus); a letter with no floor is never under; `length_target: null` is "
+        "the band and at both inclusive boundaries; fires over ceiling; REPORTS under "
+        "floor. ⚠️ CORRECTED 2026-08-09: this read 'fires UNDER FLOOR (the leg a "
+        "ceiling-only gate would miss, and the one that catches the live corpus)' — the "
+        "exact leg the operator amendment turned ADVISORY that day. It no longer fires; "
+        "it warns, with the magnitude, and a test pins that silencing it is a failure. "
+        "Reading this entry as written would have credited the check with gating power "
+        "it does not have; a letter with no floor is never under; `length_target: null` is "
         "UNMEASURED and does NOT count as sized, so deleting the field cannot green the "
         "gate; a mixed population still judges what it can size; a PDF older than its "
         "own input closure is not trusted; a missing PDF names the command that fixes "
@@ -853,6 +857,18 @@ PRODUCTION_SEEDED: frozenset[str] = frozenset({
     # -> D3 named at "59 pp < floor 200". Restored and verified byte-identical (`cmp`).
     # The probe also surfaced TODO-D25: the seeding writer's default `ensure_ascii`
     # rewrote 189 lines for a 9-line edit.
+    #
+    # ⚠️ **THIS RECORD WAS FALSIFIED BY THE 2026-08-09 OPERATOR AMENDMENT, and the
+    # amendment did not notice.** Under-floor became ADVISORY, so re-running the exact
+    # seed above now gives `rc=0`, not the `rc=1` this entry asserts. Re-run and
+    # confirmed by round-4 review: the finding is still NAMED (`D3: 58 pp < floor 200`)
+    # but the check passes.
+    #
+    # The seed is therefore re-pointed at the leg that still GATES. Over-ceiling: set
+    # D7's ceiling below its live page count in the real blob -> rc=1 naming D7. That
+    # is the only remaining production evidence this check bites, and it is worth
+    # stating plainly that the corpus has ZERO over-ceiling bundles today, so the
+    # gating leg has no naturally-occurring instance — the seed is the whole evidence.
     "bundle_manuscript_length",
     # 2026-08-08 (ADR-011 Phase 2): D6's exact 2026-08-07 state recreated in the REAL
     # `papers/D6/bundle_metadata.json` — stage13 green, stage9 not_started, stage10

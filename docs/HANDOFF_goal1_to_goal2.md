@@ -143,7 +143,7 @@ stage not run are different states, and only one of them is recoverable by re-ru
 * **`readiness_submission_gate` — RED BY DESIGN.** It is downstream of Stages 9/10/13.
   It cannot go green until goal 2 runs them. **Do not "fix" it.**
 * **`bundle_manuscript_length` — now GREEN, by OPERATOR DECISION, with 11 bundles still under
-  their floors.** The operator ruled on 2026-08-10: *"if length of paper is not sufficient,
+  their floors.** The operator ruled on 2026-08-09: *"if length of paper is not sufficient,
   it's ok to skip. I don't think it's realistic to write that length in many areas."*
   Under-floor is ADVISORY — every gap is still reported with its magnitude as a warning;
   over-ceiling still fails, because a venue rejects an over-length manuscript outright.

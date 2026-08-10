@@ -347,8 +347,14 @@ def check_review_severity_declared() -> CheckResult:
 
     reviews_dir = _H.PAPERS_DIR / "AutomatedReviews"   # one owner (audit QI-11)
     if not reviews_dir.is_dir():
-        return CheckResult(passed=True, details=[
-            Detail("scope", True, "no review directory", warning=True)])
+        # ⚠️ This site is IN `CANNOT_MEASURE_PASS_BASELINE` — the project's own frozen
+        # list of PASS-without-measuring branches — and reported `measured=True`
+        # anyway. 27 of the 28 baselined sites carried the flag; this was the one
+        # that did not, and none of the scanner's keywords matches "no review
+        # directory". A site listed in today's baseline was today's hole.
+        return CheckResult(passed=True, measured=False, details=[
+            Detail("scope", True, "no review directory", warning=True,
+                   measured=False)])
 
     _SEV_LINE = re.compile(r'^[-*]\s*\*\*Severity:?\*\*', re.M | re.I)
     _HEADING = re.compile(r'^#{3,5}\s+\S', re.M)
@@ -587,7 +593,7 @@ def check_accepted_findings_carry_rationale() -> CheckResult:
     # ⚠️ The comment above described the hazard for weeks and the code did nothing
     # about it. `measured=False` is what closes it: the PASS stays (an absent
     # ledger is not a failure) but it stops counting as evidence toward the `--ci`
-    # coverage floor, and `_memo` refuses to cache it. Found 2026-08-10 by WIDENING
+    # coverage floor, and `_memo` refuses to cache it. Found 2026-08-09 by WIDENING
     # `test_cannot_measure_baseline`'s keyword list to include "skipping" — the
     # scanner had been unable to see this site, so nothing contradicted the comment.
     ledger_path = _H.DOCS_DIR / "review_finding_supersessions.json"

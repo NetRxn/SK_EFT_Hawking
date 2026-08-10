@@ -299,7 +299,11 @@ def check_bundle_figure_integrity() -> CheckResult:
         f"{n_ok + n_fail} registry-backed bundle figures checked — {n_ok} legible / "
         f"{n_fail} below the {FLOOR_PT}pt floor; {sum(on_disk.values())} figure(s) "
         f"exist across {len(on_disk)} bundle(s)"))
-    return CheckResult(passed=n_fail == 0, details=details)
+    # The spec-source fallback IS a population failure (the registry could not be
+    # read, so the specs came from a frozen literal), unlike partial figure
+    # coverage above — so it, and only it, flips the check's own `measured`.
+    return CheckResult(passed=n_fail == 0,
+                       measured=_SPEC_FALLBACK is None, details=details)
 
 
 def _readiness_aggregate():
@@ -1323,7 +1327,7 @@ def check_bundle_manuscript_length() -> CheckResult:
     a letter that has become a monograph. A *floor* catches the failure this corpus
     actually exhibits — a container declared as a deep paper whose content is a letter.
 
-    ⚠️ **THE FLOOR IS ADVISORY AS OF 2026-08-10, BY OPERATOR DECISION.** Verbatim:
+    ⚠️ **THE FLOOR IS ADVISORY AS OF 2026-08-09, BY OPERATOR DECISION.** Verbatim:
     *"if length of paper is not sufficient, it's ok to skip. I don't think it's
     realistic to write that length in many areas."* Under-floor findings are reported
     with their exact magnitude and flagged as warnings; they no longer fail the check.
@@ -1383,7 +1387,7 @@ def check_bundle_manuscript_length() -> CheckResult:
             under.append(f"{code}: {value} {u} < floor {floor} — declared as a "
                          f"{md.get('target_journal', '?')} article, sized like a letter")
 
-    # ⚠️ **OPERATOR DECISION 2026-08-10: UNDER-FLOOR IS ADVISORY, NOT A FAILURE.**
+    # ⚠️ **OPERATOR DECISION 2026-08-09: UNDER-FLOOR IS ADVISORY, NOT A FAILURE.**
     # Verbatim: *"if length of paper is not sufficient, it's ok to skip. I don't
     # think it's realistic to write that length in many areas."*
     #
@@ -1415,7 +1419,7 @@ def check_bundle_manuscript_length() -> CheckResult:
         "summary", len(over) == 0,
         f"{sized} manuscript(s) sized against their declared target — "
         f"{len(over)} OVER ceiling (gating), {len(under)} under floor "
-        f"(ADVISORY by operator decision 2026-08-10, not gating); "
+        f"(ADVISORY by operator decision 2026-08-09, not gating); "
         f"{len(unmeasured)} UNMEASURED",
         warning=bool(under)))
     return CheckResult(passed=len(over) == 0, details=details)

@@ -745,7 +745,7 @@ class TestBundleManuscriptLength:
     def test_under_floor_is_REPORTED_but_does_not_gate(self, tmp_path, monkeypatch):
         """The live D7 case: 3 pp declared as a ~40 pp article.
 
-        ⚠️ **OPERATOR DECISION 2026-08-10** — verbatim: *"if length of paper is not
+        ⚠️ **OPERATOR DECISION 2026-08-09** — verbatim: *"if length of paper is not
         sufficient, it's ok to skip. I don't think it's realistic to write that
         length in many areas."* Under-floor became ADVISORY. This test previously
         asserted `not r.passed`.

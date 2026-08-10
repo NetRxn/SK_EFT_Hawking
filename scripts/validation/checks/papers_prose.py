@@ -1049,8 +1049,14 @@ def check_paper_toolchain_pin_drift() -> CheckResult:
     drafts = _H.all_paper_drafts()              # ALL drafts (bundles + legacy)
     drafts += sorted(_H.PAPERS_DIR.glob("*/preprint_draft.md"))   # 1 file today
     if not drafts:
-        return CheckResult(passed=True, details=[
-            Detail("scan", True, "no paper drafts found — nothing to check")])
+        # ⚠️ `measured=False`, matching the two siblings a dozen lines above which had
+        # it right. An empty draft population is the ADR-009 H1 anchor-retarget
+        # scenario — a moved module makes the glob return nothing — and this branch
+        # converted it into measured green. The correct version of it was already in
+        # this file; that adjacency is this branch's signature failure mode.
+        return CheckResult(passed=True, measured=False, details=[
+            Detail("scan", True, "no paper drafts found — nothing to check",
+                   measured=False)])
 
     pin_hits: list[str] = []
     cap_hits: list[str] = []

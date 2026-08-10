@@ -62,7 +62,16 @@ class Detail:
     #: so a bundle whose freshness could not be established was byte-identical to
     #: a fresh one at every consumer, including the `--ci` coverage floor. Three
     #: reviewers found it independently. A cannot-measure branch sets this False
-    #: and the wrapper derives the check's `measured` from its details.
+    #: and the check derives its own `measured` from its details.
+    #:
+    #: ⚠️ THERE IS NO AUTOMATIC WRAPPER, and an earlier version of this sentence said
+    #: there was. `run_checks` derives nothing; two checks fold their details by hand
+    #: and the rest do not. Whether a partly-unmeasured check is itself unmeasured is
+    #: a PER-CHECK judgement: one that measured its primary population and merely
+    #: lacked coverage of part of it IS measured (`bundle_figure_integrity`), while
+    #: one whose population was unreachable is not (`bundle_source_freshness`).
+    #: Automating the fold would erase that distinction. Do not read this field as
+    #: feeding anything on its own.
     measured: bool = True
 
 

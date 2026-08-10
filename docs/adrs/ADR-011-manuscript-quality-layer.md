@@ -147,7 +147,7 @@ records the target as **data with a provenance field**, not as a frozen constant
 target is not yet decided records `length_target: null` with a stated reason — which reads as
 UNMEASURED, never as passing. A charter is a current commitment, not a freeze.
 
-⚠️ **AMENDED 2026-08-10 BY OPERATOR DECISION: the FLOOR is advisory.** Verbatim: *"if length
+⚠️ **AMENDED 2026-08-09 BY OPERATOR DECISION: the FLOOR is advisory.** Verbatim: *"if length
 of paper is not sufficient, it's ok to skip. I don't think it's realistic to write that length
 in many areas."* `bundle_manuscript_length` now reports every under-floor bundle, with its
 magnitude, as a WARNING and passes; over-ceiling still fails, because an over-length manuscript
