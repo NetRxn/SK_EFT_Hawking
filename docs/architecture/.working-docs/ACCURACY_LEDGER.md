@@ -3059,3 +3059,38 @@ one of them by a hunk of its own commit.
 keywords — would have caught row 5 only if paired with a population-reachability assertion, since
 that branch constructs no `Detail` at all. It would NOT have caught rows 1 or 3. It remains
 necessary and insufficient, and it is goal 2's, not this loop's.
+
+---
+
+## V81 — "E2 is over ceiling and worsened in the Γ_H repair" — REFUTED by measurement
+
+**The claim** (carried in the goal's condition 6, and instructing a trim-or-re-charter
+decision): E2 exceeds its declared length ceiling, and the Γ_H repair made it worse.
+
+**Re-measured 2026-08-10, on a freshly compiled tree** (`compile_bundle_pdf.py --all
+--force`, then `validate.py --check bundle_manuscript_length`):
+
+```
+21 manuscript(s) sized against their declared target —
+  0 OVER ceiling (gating), 11 under floor (advisory), 0 UNMEASURED
+```
+
+E2 is **not flagged in either direction**. Its declared target is
+`{unit: word_equivalents, ceiling: 3750, source: "PRL author guide"}` and it compiles to
+**5 pages** — comfortably inside a PRL letter budget, not over it.
+
+**Which instrument lied.** The claim was almost certainly formed while E2's PDF was
+**UNMEASURED**, which is the state it was in when this loop first looked: a stale PDF
+(older than its `\input` closure) is refused a size, and a refusal is easy to read as a
+failure. It is not — `bundle_manuscript_length` distinguishes them, and the summary line
+prints the UNMEASURED count separately from the OVER count for exactly this reason.
+**A gate that declines to measure is not a gate that failed.**
+
+**Disposition: CLOSED-NOT-A-DEFECT.** Neither a trim nor a re-charter is warranted, and
+performing either would have been the silent scope change condition 5 forbids — a
+re-charter in particular would have loosened a ceiling that nothing was violating.
+
+⚠️ Generalisation, since this is the third instance: **re-measure a filed finding on a
+FRESHLY COMPILED tree before acting on it.** Perishability makes any paper-side finding
+older than the last `counts.tex` regeneration suspect, and the failure mode is
+directional — staleness reads as failure, never as success.
