@@ -481,6 +481,21 @@ def _reader_visible_sources(tex: "Path") -> "list[Path]":
                           if p.suffix == ".tex" and p.is_file())})
 
 
+def _reader_visible_sources_and_gaps(tex) -> tuple[list, list[str]]:
+    r"""`(sources, unscannable)` — the population AND what fell out of it.
+
+    ⚠️ **The gap report is bound to the population on purpose.** The unscannable
+    guard was wired into the em-dash check alone, so a draft that `\input`s a
+    renamed file was silently clean in `bundle_sentence_length` and
+    `bundle_reader_facing_voice` — and `bundle_sentence_length` is a DOWN-ONLY
+    RATCHET whose floor was just lowered 22→20. A missing `\input` silently
+    shrinks that ratchet's own population, and the ratchet then locks in a floor
+    derived from prose it never read. Returning the two together means a caller
+    cannot consume the population without receiving its gaps.
+    """
+    return _reader_visible_sources(tex), _unscannable_closure_members(tex)
+
+
 def _unscannable_closure_members(tex) -> list[str]:
     """`.tex` closure members DROPPED because they do not resolve to a file.
 
@@ -563,7 +578,7 @@ def check_bundle_prose_em_dash_free() -> CheckResult:
             "roster", False,
             f"could not read the bundle roster ({exc}) — UNVERIFIED, not passing")])
 
-    checked = total = 0
+    checked = total = n_unscannable = 0
     for code in codes:
         tex = _H.PAPERS_DIR / code / "paper_draft.tex"
         if not tex.is_file():
@@ -571,8 +586,9 @@ def check_bundle_prose_em_dash_free() -> CheckResult:
         checked += 1
         hits = []
         for missing in _unscannable_closure_members(tex):
+            n_unscannable += 1
             details.append(Detail(
-                f"{code}:unscannable", False,
+                f"{code}:unscannable:{n_unscannable}", False,
                 f"\\input target {missing} does not resolve to a file and was NOT "
                 f"scanned — an unread file is not a clean one",
                 measured=False))
@@ -602,7 +618,6 @@ def check_bundle_prose_em_dash_free() -> CheckResult:
     # list. Emitting a `passed=False` Detail while returning `passed=(total == 0)`
     # leaves the check green over a file it never opened — the same
     # silence-reads-as-clean shape the widening was meant to close.
-    n_unscannable = sum(1 for d in details if d.name.endswith(":unscannable"))
     details.insert(0, Detail(
         "summary", total == 0 and n_unscannable == 0,
         f"{checked} bundle draft(s) scanned, {total} em-dash(es) in reader-visible prose "
@@ -969,8 +984,11 @@ def check_bundle_sentence_length() -> CheckResult:
 
     Two thresholds, gated differently on purpose:
 
-    * **>100 words — GATED.** Not a style preference. Measured 2026-08-09 at 22
-      sentences across 14 bundles, max 235 words.
+    * **>100 words — GATED.** Not a style preference. Measured 2026-08-09 at 20
+      sentences across 13 bundles, max 235 words — see `SENTENCE_OVER_100_CEILING`
+      for the four-way population measurement behind that number. (It read "22
+      across 14" for two days: the ceiling constant was rewritten with the full
+      table and this docstring, in the module that IMPLEMENTS it, was not.)
     * **>60 words — ADVISORY.** Long but defensible in a methods paragraph.
       Gating it would fire on correct work, which VALIDATION_GATE_TOPOLOGY §3
       says is how a gate gets switched off.
@@ -988,13 +1006,16 @@ def check_bundle_sentence_length() -> CheckResult:
     details: List[Detail] = []
     over60 = 0
     over100: list[tuple[str, int]] = []
+    unscannable: list[str] = []
     scanned = 0
     for code in sorted(BUNDLE_CODES):
         draft = _H.PAPERS_DIR / code / "paper_draft.tex"
         if not draft.is_file():
             continue
         scanned += 1
-        for src in _reader_visible_sources(draft):
+        srcs, gaps = _reader_visible_sources_and_gaps(draft)
+        unscannable.extend(f"{code}: {g}" for g in gaps)
+        for src in srcs:
             body = _strip_tex_comments(src.read_text(encoding="utf-8", errors="ignore"))
             body = body.split(r"\begin{document}")[-1].split(r"\begin{thebibliography}")[0]
             body = _rows_as_sentences(body)
@@ -1007,9 +1028,21 @@ def check_bundle_sentence_length() -> CheckResult:
                     over100.append((code, n))
 
     if scanned == 0:
-        return CheckResult(passed=False, details=[Detail(
-            "scanned", False,
-            "no bundle draft found — an empty scan is not evidence of short prose")])
+        # ⚠️ `measured=False` — five sibling zero-population guards in this file
+        # set it and this one, in the check this diff rewrote, set neither the
+        # CheckResult's nor the Detail's flag while its own message states the
+        # cannot-measure premise verbatim.
+        return CheckResult(passed=False, measured=False, details=[Detail(
+            "scanned", False, measured=False,
+            message="no bundle draft found — an empty scan is not evidence "
+                    "of short prose")])
+    if unscannable:
+        # A ratchet must not be computed over a population it could not read.
+        details.append(Detail(
+            "unscannable", False,
+            f"{len(unscannable)} \\input target(s) do not resolve and were NOT "
+            f"scanned, so the ratchet population is incomplete: "
+            f"{'; '.join(unscannable[:3])}", measured=False))
 
     ok = len(over100) <= SENTENCE_OVER_100_CEILING
     worst = max((n for _c, n in over100), default=0)
@@ -1027,7 +1060,11 @@ def check_bundle_sentence_length() -> CheckResult:
         f"{over60} sentence(s) over 60 words (advisory baseline "
         f"{SENTENCE_OVER_60_ADVISORY}; not gated, see docstring)",
         warning=over60 > SENTENCE_OVER_60_ADVISORY))
-    return CheckResult(passed=ok, details=details)
+    # ⚠️ A DOWN-ONLY RATCHET must not report a measurement over a population
+    # it could not read: an unresolvable `\input` silently shrinks the count
+    # the floor is frozen against.
+    return CheckResult(passed=ok and not unscannable,
+                       measured=not unscannable, details=details)
 
 
 @register_check("bundle_reader_facing_voice",
@@ -1070,7 +1107,13 @@ def check_bundle_reader_facing_voice() -> CheckResult:
             continue
         checked += 1
         found = []
-        for src in _reader_visible_sources(tex):
+        srcs, gaps = _reader_visible_sources_and_gaps(tex)
+        for g in gaps:
+            details.append(Detail(
+                f"{code}:unscannable:{len(details)}", False,
+                f"\\input target {g} does not resolve and was NOT scanned",
+                measured=False))
+        for src in srcs:
             for i, line in enumerate(src.read_text(errors="replace").splitlines(), 1):
                 body = _TEX_COMMENT_RE.sub("", line)
                 for pat, why in _SELF_NARRATION:
@@ -1094,7 +1137,9 @@ def check_bundle_reader_facing_voice() -> CheckResult:
         "summary", total == 0,
         f"{checked} bundle draft(s) scanned, {total} passage(s) narrating the paper's own "
         f"correction history (target 0; the history belongs in change_log.md)"))
-    return CheckResult(passed=total == 0, details=details)
+    n_gaps = sum(1 for d in details if ":unscannable:" in d.name)
+    return CheckResult(passed=(total == 0 and n_gaps == 0),
+                       measured=(n_gaps == 0), details=details)
 
 
 #: Reviewer-stage status values the tree actually uses. `Phase7a_Roadmap.md:91-93`

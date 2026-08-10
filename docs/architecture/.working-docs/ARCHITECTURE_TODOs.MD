@@ -2196,7 +2196,7 @@ only thing separating the two claims in print.
 > **1. Seventy-four of the 307 were never homeable.** The count included **autogen**
 > declarations — `noConfusionType`, `inj`, projection lemmas — which `bundle_closure` is
 > *designed* never to reach (`compute_closure` takes the autogen set precisely to skip them).
-> **The real figure is 154 un-homed of 254 non-autogen declarations**, under
+> **The real figure is 155 un-homed of 256 non-autogen declarations** (60.5%), under
 > `validate_helpers.autogen_index` — the canonical filter this entry's own ⚠️ block below
 > declares mandatory. Per module (total = author-written + autogen):
 > `Basic` 95 = 34 + 61, `StabilizerCode` 43 = 25 + 18, `NoiseModelMT` 33 = 24 + 9,
@@ -2205,17 +2205,22 @@ only thing separating the two claims in print.
 > ⚠️ **This paragraph read "233 of 333" — the RETRACTED raw-field figure — for two days after
 > the block below retracted it.** Same defect as D15 and D4: the correction landed at the site
 > the finding named and not at the second site carrying the same claim. Re-measured
-> 2026-08-09: 154/254 canonical, 233/333 raw. Three per-module rows had also drifted in raw
+> 2026-08-09: 154/254 canonical, 233/333 raw. ⚠️ **Re-measured again at HEAD: 155/256** — this
+> wave's own new Lean declarations (`MalignantUnionBound`'s two sub-multiplicativity lemmas,
+> `ConcatenatedComposition`, `FDTLDPBridge`, `SakharovGenerationBridge`) landed in the same
+> commit as the figure, so the entry and `lean_deps.json` disagreed by one commit. The raw
+> figures below are LEFT as they are: they record what a past pass reported, which is the point
+> of quoting them. Three per-module rows had also drifted in raw
 > units (`Basic` 93→95, `StabilizerCode` 40→43, `Counting` 11→16).
 >
 > **2. The "TODO-D35 wearing a different number" diagnosis is refuted.** D35's composition
 > landed; declaring its four capstones as D6 apexes homed **7** declarations (240 → 233), not
-> two hundred. The reason is visible in the population: **83 of the 154 are used by nothing at
-> all**, and 61 of those are *theorems*. A leaf theorem is not waiting for a consumer — it is
+> two hundred. The reason is visible in the population: **84 of the 155 are used by nothing at
+> all**, and 62 of those are *theorems*. A leaf theorem is not waiting for a consumer — it is
 > homed by a bundle claiming it, or not at all.
 >
 > **3. The number was never anomalous.** Corpus-wide, **26,985 of 32,778 non-autogen
-> declarations (82.3%) are un-homed**. FaultTolerance sits at **60.6%**, which is *far better*
+> declarations (82.3%) are un-homed**. FaultTolerance sits at **60.5%**, which is *far better*
 > than the project average.
 >
 > ⚠️ **THESE NUMBERS WERE WRONG UNTIL 2026-08-09, AND THE INSTRUMENT IS THE LESSON.** The first

@@ -2612,12 +2612,21 @@ SENTENCE_OVER_100_CEILING = 20
 #: long but defensible in a methods paragraph, and gating it would fire on correct
 #: work (VALIDATION_GATE_TOPOLOGY §3). Recorded so the trend is visible.
 #:
-#: ⚠️ 199 -> 220, 2026-08-09. This is NOT prose growth and must not be read as
-#: debt: the same commit widened the population from `paper_draft.tex` to the whole
-#: `\input` closure, which added 16 hits, and made table rows their own units, which
-#: removed some. Re-baselined rather than left warning, because a permanent warning
-#: whose content is "the population definition changed" is noise. This number is
-#: advisory in both directions — it never gates.
+#: ⚠️ 199 -> 220, 2026-08-09. TWO causes, and only one is instrumental — the first
+#: version of this note said "This is NOT prose growth", and that was wrong for
+#: roughly half the move. Measured at the UNCHANGED narrow instrument: 199 when the
+#: baseline was set, **209 at this branch's base commit**. So:
+#:
+#:     +16   population widened to the `\input` closure
+#:      -5   table rows became their own units
+#:     +10   PROSE WRITTEN BEFORE THIS DIFF, at a fixed instrument
+#:     ----
+#:     +21
+#:
+#: The +10 is real and is the part a reader should care about. Re-baselined rather
+#: than left warning, because a permanent warning whose content is "the population
+#: definition changed" is noise — but the prose half is debt, not bookkeeping. This
+#: number is advisory in both directions and never gates.
 SENTENCE_OVER_60_ADVISORY = 220
 # ⚠️ RAISED 116 -> 117 on 2026-08-09, with the rationale this block demands.
 # D6 §7's new threshold section states the certified bound `2.73 \times 10^{-5}`

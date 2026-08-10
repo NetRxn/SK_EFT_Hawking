@@ -252,14 +252,24 @@ def check_graph_integrity() -> CheckResult:
         # substantive body; without it the roster legs are all that ran, and a
         # passing `Detail("import", True, ...)` made the whole thing count as a
         # full measurement toward the `--ci` coverage floor.
+        # ⚠️ `passed=False`, not `all(roster_details)`. The verdict was computed
+        # over the roster legs only, and the failing `import` Detail was appended
+        # AFTERWARDS — so a plain `validate.py` run printed `✓ PASS
+        # graph_integrity` while `run_integrity_checks`, this check's entire
+        # substantive body, had not run. `measured=False` covered the `--ci` path
+        # but `all_passed` is computed on EVERY path.
+        #
+        # `warning` dropped: `_registry.Detail` documents it as "passed but with
+        # an advisory warning", and `passed=False, warning=True` is outside that
+        # contract. `passed=False` + `measured=False` already carry the meaning.
         return CheckResult(
-            passed=all(d.passed for d in roster_details),
+            passed=False,
             measured=False,
             details=roster_details + [
                 Detail("import", False,
                        f"graph_integrity not available ({exc}) — the integrity "
                        f"scan DID NOT RUN, so its silence is not evidence",
-                       warning=True, measured=False),
+                       measured=False),
             ])
 
     report = run_integrity_checks()
@@ -355,7 +365,16 @@ def check_graph_integrity() -> CheckResult:
 
     details = roster_details + details
     passed = passed and all(d.passed for d in roster_details)
-    return CheckResult(passed=passed, details=details)
+    # ⚠️ M-D: the roster leg can fall back to a HARDCODED literal instead of the
+    # registry (`_roster_is_derived`), and it marked only its own Detail. With no
+    # derivation at the CheckResult, validating the round-trip against a frozen
+    # list rather than the registry was invisible to the `--ci` floor and to the
+    # JSON summary. Under this codebase's one policy — `measured=False` means the
+    # POPULATION WAS UNREACHABLE — a roster read from a literal is exactly that:
+    # the registry, which is the population, was not reached.
+    return CheckResult(passed=passed,
+                       measured=all(d.measured for d in roster_details),
+                       details=details)
 
 
 # ═══════════════════════════════════════════════════════════════════════

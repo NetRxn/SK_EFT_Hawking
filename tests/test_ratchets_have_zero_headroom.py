@@ -116,7 +116,7 @@ class TestRatchetsHaveZeroHeadroom:
 
         The old guard asserted the roster had at least six entries. A ratchet that
         was never added satisfies that trivially, so the roster's own blind spot
-        was undetectable by the test guarding the roster. Measured 2026-08-09: 14
+        was undetectable by the test guarding the roster. Measured 2026-08-09: 15
         `*_CEILING` constants exist; **two were named by no test file at all**, and
         six more were covered by ad-hoc per-check tests rather than by this roster
         — zero-headroom enforcement living in two unreconciled mechanisms.
@@ -130,14 +130,75 @@ class TestRatchetsHaveZeroHeadroom:
         roots += sorted((SK_ROOT / "scripts" / "validation").rglob("*.py"))
         found = set()
         for f in roots:
-            found |= set(_re.findall(r"^([A-Z][A-Z0-9_]*CEILING[A-Z0-9_]*)\s*=",
+            found |= set(_re.findall(r"^(_?[A-Z][A-Z0-9_]*CEILING[A-Z0-9_]*)\s*=",
                                      f.read_text(encoding="utf-8"), _re.MULTILINE))
         found -= _NOT_A_RATCHET
         assert found, "no ceiling constants found — the scan itself broke"
 
-        test_src = "\n".join(
-            f.read_text(encoding="utf-8") for f in sorted((SK_ROOT / "tests").rglob("*.py")))
-        orphans = sorted(c for c in found if c not in test_src)
+        # ⚠️ COMMENTS AND DOCSTRINGS DO NOT COUNT. The first version of this test
+        # concatenated the raw test tree, which includes THIS FILE — and the very
+        # comment above naming the two previously-uncovered ceilings was their
+        # only test-tree mention. The mechanism meant to catch a forgotten ceiling
+        # was discharged by writing the ceiling's name in prose explaining that it
+        # had been forgotten. Strip comments and string literals first, so a name
+        # counts only where it is USED.
+        # Drop COMMENTS and DOCSTRINGS. ⚠️ NOT all strings: `monkeypatch.setattr(
+        # mod, "SOME_CEILING", 0)` names the constant in a string literal and is a
+        # perfectly real use. A docstring is a string in STATEMENT position, which
+        # is what the `prev_significant` test below identifies.
+        import io, tokenize
+        code_only = []
+        for f in sorted((SK_ROOT / "tests").rglob("*.py")):
+            src = f.read_text(encoding="utf-8")
+            try:
+                prev = tokenize.NEWLINE
+                for tok in tokenize.generate_tokens(io.StringIO(src).readline):
+                    if tok.type == tokenize.COMMENT:
+                        continue
+                    is_docstring = (tok.type == tokenize.STRING and prev in (
+                        tokenize.NEWLINE, tokenize.NL, tokenize.INDENT,
+                        tokenize.DEDENT, tokenize.ENCODING))
+                    if not is_docstring:
+                        code_only.append(tok.string)
+                    if tok.type not in (tokenize.NL, tokenize.COMMENT):
+                        prev = tok.type
+            except (tokenize.TokenError, IndentationError, SyntaxError):
+                code_only.append(src)          # unparseable: fall back to raw
+        test_src = "\n".join(code_only)
+        # A ceiling is covered EITHER by name in test code, OR because the check
+        # that consumes it is in RATCHETED_CHECKS — which is how
+        # `PROVENANCE_UNRESOLVABLE_CEILING` and `LEGACY_DRAFT_LATEX_BROKEN_CEILING`
+        # are held: the parametrized zero-headroom test above drives
+        # `parameter_provenance` and `paper_latex_compiles` and asserts their live
+        # population equals their reported ceiling. Coverage by check name is real
+        # coverage; what is NOT coverage is a mention in a comment, which is why
+        # `test_src` is stripped of comments and docstrings above.
+        # ⚠️ Ownership is per FUNCTION BODY, not per module. Crediting every
+        # ceiling in a module that happens to contain a ratcheted check gives a
+        # free pass to the next ceiling added to `citations.py` — measured: a
+        # seeded `ZZZ_FORGOTTEN_CEILING` there passed under the module-level rule.
+        import ast as _ast
+        covered_by_check: set[str] = set()
+        for f in sorted((SK_ROOT / "scripts" / "validation").rglob("*.py")):
+            src = f.read_text(encoding="utf-8")
+            try:
+                tree = _ast.parse(src)
+            except SyntaxError:
+                continue
+            for node in _ast.walk(tree):
+                if not isinstance(node, (_ast.FunctionDef, _ast.AsyncFunctionDef)):
+                    continue
+                names = {d.args[0].value for d in node.decorator_list
+                         if isinstance(d, _ast.Call)
+                         and getattr(d.func, "id", "") == "register_check"
+                         and d.args and isinstance(d.args[0], _ast.Constant)}
+                if not (names & set(RATCHETED_CHECKS)):
+                    continue
+                body = _ast.get_source_segment(src, node) or ""
+                covered_by_check |= {c for c in found if c in body}
+
+        orphans = sorted(c for c in found
+                         if c not in test_src and c not in covered_by_check)
         assert orphans == [], (
             f"{len(orphans)} ratchet ceiling(s) are named by NO test, so nothing "
             f"holds them at zero headroom: {orphans}. Add the owning check to "

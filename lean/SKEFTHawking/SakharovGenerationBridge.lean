@@ -148,34 +148,58 @@ Newton constant. That transfer is the synthesis claim's actual predictive
 content.
 -/
 
-/-- **The anomaly constraint transfers to the Sakharov coefficient.** If the
-generation count satisfies the modular-invariance constraint `3 ∣ generations`,
-then at Standard-Model per-generation content the Dirac species count is a
-multiple of `24`. -/
+/-- **The anomaly-side divisibility and the Sakharov-side one are the SAME
+CONDITION**, at Standard-Model per-generation content.
+
+⚠️ **STATED AS A BICONDITIONAL BECAUSE THE IMPLICATION WAS A TAUTOLOGY, and
+saying so is the only honest form.** This was `generation_constraint_transfers`,
+an implication, and it went through two wrong hypothesis choices:
+
+1. It first took `3 ∣ c.generations` — assuming the very constraint it advertised
+   as transferring (CLAUDE.md anti-pattern P4).
+2. It was then "strengthened" to `24 ∣ 8·generations` on the argument that this
+   is the anomaly-side condition on the chiral central charge rather than a
+   restatement. **That argument is false, and the refutation is one line:**
+   `24 ∣ 8n ↔ 3 ∣ n` over ℤ, kernel-checked. The two hypotheses are logically
+   equivalent, so nothing was strengthened.
+
+   Worse, with `hw : weylPerGeneration = 16` we have `diracFlavourNf = 8·g`, so
+   the conclusion `∃ k, diracFlavourNf = 24k` unfolds to `24 ∣ 8g` — the
+   hypothesis itself. The implication was `P → P` modulo one definition.
+
+The biconditional is the true and non-trivial statement: it says the two
+divisibility conditions coincide under SM content, which is a fact about the
+factor of 8 (`diracFlavourNf_eq_scaled_generationNf`) and not a transfer of
+independent physics. **`24 ∣ c₋` remains a physics INPUT at this boundary** —
+`GenerationConstraint.lean:47` records that the modular-invariance axiom which
+would have supplied it was REMOVED AS FALSE (it quantified over all `N_f`, and
+`N_f = 1` gives `24 ∤ 8`). Nothing here derives it. -/
+theorem generation_constraint_transfers_iff
+    (c : FermionContent) (hw : c.weylPerGeneration = 16) (hpos : 0 < c.generations) :
+    24 ∣ (8 * (c.generations : ℤ)) ↔ ∃ k : ℕ, c.diracFlavourNf = (24 * k : ℚ) := by
+  constructor
+  · intro hanom
+    obtain ⟨k, hk⟩ := SKEFTHawking.generation_mod3_constraint c.generations hpos hanom
+    refine ⟨k, ?_⟩
+    unfold FermionContent.diracFlavourNf
+    rw [hw, hk]
+    push_cast
+    ring
+  · rintro ⟨k, hk⟩
+    unfold FermionContent.diracFlavourNf at hk
+    rw [hw] at hk
+    have hg : (c.generations : ℚ) * 16 / 2 = 24 * k := hk
+    have : (c.generations : ℚ) = 3 * k := by linarith
+    have hnat : c.generations = 3 * k := by exact_mod_cast this
+    exact ⟨(k : ℤ), by rw [hnat]; push_cast; ring⟩
+
+/-- The forward direction alone, for callers that only need it. Named so the old
+implication has a home; the biconditional above is the statement with content. -/
 theorem generation_constraint_transfers
     (c : FermionContent) (hw : c.weylPerGeneration = 16)
     (hpos : 0 < c.generations) (hanom : 24 ∣ (8 * (c.generations : ℤ))) :
-    ∃ k : ℕ, c.diracFlavourNf = (24 * k : ℚ) := by
-  -- ⚠️ The anomaly condition is CONSUMED, not assumed. This used to take
-  -- `3 ∣ c.generations` as a bare hypothesis — i.e. it assumed the very
-  -- constraint it advertises as transferring. Taking `24 ∣ 8·generations`
-  -- instead is a real strengthening: that is the anomaly-side condition on the
-  -- chiral central charge, and `generation_mod3_constraint` is what carries it
-  -- to the generation count.
-  --
-  -- ⚠️ IT IS *CARRIED*, NOT *DERIVED*, and the earlier wording here said
-  -- "derives it from modular invariance" — which `GenerationConstraint.lean:47`
-  -- records as false in as many words: the modular-invariance axiom was REMOVED
-  -- as FALSE (it universally quantified over all N_f; N_f = 1 gives 24 ∤ 8), and
-  -- what remains is a true arithmetic conditional. `24 ∣ c₋` is still a physics
-  -- INPUT at this boundary. In the one module whose stated purpose is to stop an
-  -- unwitnessed claim, a comment was making one.
-  obtain ⟨k, hk⟩ := SKEFTHawking.generation_mod3_constraint c.generations hpos hanom
-  refine ⟨k, ?_⟩
-  unfold FermionContent.diracFlavourNf
-  rw [hw, hk]
-  push_cast
-  ring
+    ∃ k : ℕ, c.diracFlavourNf = (24 * k : ℚ) :=
+  (generation_constraint_transfers_iff c hw hpos).mp hanom
 
 /-- Non-vacuity of the transfer: the Standard-Model content satisfies its
 hypotheses, so `generation_constraint_transfers` is not conditionally empty. -/

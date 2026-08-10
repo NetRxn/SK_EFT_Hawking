@@ -931,8 +931,34 @@ def evaluate_all_gates(graph: dict) -> list[GateResult]:
     return results
 
 
+def paper_unmeasured_gates(results: list[GateResult], paper_key: str) -> list[str]:
+    """Gate names whose evaluator COULD NOT MEASURE, for this paper.
+
+    ⚠️ **`GateResult.measured` was write-only until this existed**, and that is
+    the defect the field was added to fix, left live at the exact function named
+    as its victim. `paper_aggregate_state` keys on `state` alone and maps both
+    "measured, outstanding" and "read nothing" to YELLOW, so a paper whose draft
+    could not be opened rendered identically to one with real blockers. Adding a
+    fourth aggregate value is not the fix — `state` is a contract — so the
+    distinction is surfaced BESIDE the colour, which is the convention
+    `bundle_readiness.py` already uses one layer up.
+
+    Callers that render a paper's state should render this too; an empty list
+    means every gate for this paper actually ran.
+    """
+    return sorted(r.gate for r in results
+                  if r.paper == paper_key and not r.measured)
+
+
 def paper_aggregate_state(results: list[GateResult], paper_key: str) -> str:
-    """Return 'red' / 'yellow' / 'green' for a paper's overall state."""
+    """Return 'red' / 'yellow' / 'green' for a paper's overall state.
+
+    ⚠️ This deliberately does NOT consult `measured`. A colour is a three-value
+    contract read by `check_readiness_submission_gate` and by the heatmap, and a
+    fourth value would break both. Ask `paper_unmeasured_gates` alongside it —
+    a YELLOW with a non-empty unmeasured list is a different fact from a YELLOW
+    with an empty one, and only the caller can render that.
+    """
     paper_results = [r for r in results if r.paper == paper_key]
     # Any blocked gate is red, whatever its priority — `check_readiness_submission_gate`
     # has always classified a blocked P2 gate as red, and the two verdicts must agree

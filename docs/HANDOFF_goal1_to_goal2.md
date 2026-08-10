@@ -20,9 +20,16 @@ findings — with one OPEN remainder, stated here because a heading-scanner woul
 > reviewer chose precisely so a scanner would not read D4 as wholly closed. This document
 > was that scanner, and claimed "None is left OPEN" one commit after the heading was written.
 
-Sixteen of the 38 were wrong about their own scope, premise or remedy, and **four** named a
-hazard or blocker that did not exist (D1 WITHDRAWN; D17, D36, D37 CLOSED-NOT-A-DEFECT). Each
-is recorded in the entry with the measurement that refuted it, not silently dropped.
+Sixteen of the 38 were wrong about their own scope, premise or remedy, and **five** named a
+hazard or blocker that did not exist: D1 (WITHDRAWN), D17, D36, D37 (CLOSED-NOT-A-DEFECT), and
+**D28 — whose heading reads `✅ DONE` while its body records "THIS ENTRY'S LOAD-BEARING HAZARD
+DOES NOT EXIST"**. Each is recorded in the entry with the measurement that refuted it, not
+silently dropped.
+
+⚠️ This count was wrong twice — three, then four — and both times for the same reason: it was
+taken by scanning DISPOSITION LABELS rather than the claims. D28's label says DONE. That is the
+instrument failure this handoff and `ARCHITECTURE_TODOs` both diagnose elsewhere, committed
+here in the sentence that reports the diagnosis.
 
 Load-bearing outcomes goal 2 should know about:
 

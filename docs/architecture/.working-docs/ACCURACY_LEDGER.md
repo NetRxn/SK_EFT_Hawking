@@ -64,10 +64,19 @@ created to stop. **So 361/361 means "every unit the splitter identified has a ro
 claim in these documents is verified".** True clause-level coverage is lower and is not
 measured; treating the 100% as the latter is the error this note exists to prevent.
 
-⚠️ **What "verified" means for a row, and what it does not mean for a document.** Each of the
-217 rows names a single proposition, the artifact or command that decides it, and the result.
-Those 217 are verified. **No document is fully covered**, so no document is certified free of
-false statements — only free of them among its enumerated atoms.
+⚠️ **What "verified" means for a row, and what it does not mean for a document.** Each atom row
+names a single proposition, the artifact or command that decides it, and the result. All six
+prose documents are at 100% of their *enumerated* units. **No document is fully covered at
+CLAUSE granularity**, so none is certified free of false statements — only free of them among
+its enumerated atoms.
+
+⚠️ This paragraph read "Each of the 217 rows … **No document is fully covered**" for as long as
+it took the queue to close, sitting twenty lines below a table showing 100% on every row. The
+count was stale (336 numbered rows today) and the flat "not fully covered" was false of all
+six. It is the exact defect V74 was written to name — a correction landing at one site and not
+at the second site carrying the same claim — reproduced inside the paragraph pair V74 fixed.
+The census is now gone rather than updated: the permanent statement is that a row names one
+proposition, and the clause-granularity caveat is the part that does not drift.
 
 ### Corrections found
 
@@ -2846,3 +2855,39 @@ apply to itself.
 **NOT-AN-ASSERTION.** The 12-bundle figure in row 1 is the count under forced-old source
 mtimes, which is the condition that exposes the branch; it is not a claim that 12 bundles are
 Lean-stale on the live tree.
+
+---
+
+## V75 — `bundle_manuscript_length` is RED, and it is red for a real reason
+
+The goal names three bundle gates that must be green. Two are:
+`bundle_figure_adequacy` (21 checked, 0 short — 42 drawn, 40 declared-deferred) and
+`bundle_structural_coherence` (21 checked, 0 short). **`bundle_manuscript_length` is not, and
+I am not making it green.**
+
+| # | Proposition | Decider | Verbatim result |
+|---|---|---|---|
+| 1 | "3 under floor, 16 UNMEASURED" — the figure this loop carried | the gate on a tree whose PDFs predated the draft closure | **An artifact of my own change.** Adding a shared `\input{docs/counts.tex}` put every bundle's PDF behind its draft's input closure, so 16 of 21 correctly reported "the size on disk is not this draft's size". The three failures visible were the only three the stale tree could see. |
+| 2 | The true state, all 21 recompiled | `compile_bundle_pdf.py --all`, then the gate | **11 of 21 under floor, 0 over ceiling, 0 UNMEASURED.** F 24 pp vs floor 80; D1 11/24, D2 11/18, D5 14/24, D6 8/24, D7 4/24, D8 9/27, D9 12/24, D10 5/24, D11 9/24, D12 11/21. |
+| 3 | Is this an instrument defect? | read the gate against the charters | **No.** The drafts really are letter-sized against article charters. The gate is doing exactly its job. |
+
+⚠️ **ROW 2's STATE IS PERISHABLE AND IS PROBABLY NOT THE TREE'S STATE AS YOU READ THIS.**
+`docs/counts.tex` is in every bundle's `\input` closure, so ANY counts regeneration re-stales all
+21 PDFs and the gate returns to "3 under floor, 16 UNMEASURED" — the state row 1 calls an
+artifact. That is not the gate misbehaving; it is the gate correctly refusing to size a PDF
+older than its own draft. To reproduce row 2, run `compile_bundle_pdf.py --all` **after** the
+last `update_counts` write. A first version of row 3 said "16 unmeasured became 0", which reads
+as a permanent improvement; it is a property of when you last recompiled.
+
+**WHY IT STAYS RED.** The only routes to green are (a) writing several hundred pages of
+manuscript, which is the manuscript programme and belongs to goal 2 by the operator's own
+scope split, or (b) lowering the charter floors — which the goal forbids in terms: *never
+force a gate green by re-chartering, loosening or narrowing*. Ratchets move down only, and a
+length floor is not a ratchet: lowering it would be re-chartering the publication target.
+
+**This is a conflict between two of the goal's own conditions**, and it is resolved the way the
+rules say to resolve it: the gate reports the truth, the truth is recorded here and in the
+handoff, and the remedy is named as goal-2 work rather than performed as a number change.
+
+**NOT-AN-ASSERTION.** Nothing here says the charters are wrong. They may well be right and the
+drafts simply early. What is asserted is only the measured gap, and that closing it is writing.

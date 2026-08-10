@@ -48,7 +48,7 @@ DECISION about every check and cannot silently add an untested one. Do not read 
 green run here as coverage — read the named test.
 
 ⚠️ **NOR DOES IT PROVE A CHECK CAN FAIL.** That is a different claim and it now has
-its own ratchet: 4 of 59 checks have been seen to fail against a defect written into
+its own ratchet: 24 of 79 checks have been seen to fail against a defect written into
 the real artifact they read. The other 55 have not. Obligation (4) exists because
 obligations (1)–(3) read as completeness while that gap was invisible.
 

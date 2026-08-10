@@ -417,6 +417,8 @@ def check(write_metadata: bool = False) -> list[dict]:
                 "bundle": bundle,
                 "passed": False,
                 "warning": False,
+                "measured": False,   # an unreadable blob is the strongest
+                                     # per-bundle non-measurement available
                 "message": f"failed to read bundle_metadata.json: {exc}",
             }))
             continue
@@ -537,7 +539,22 @@ def check(write_metadata: bool = False) -> list[dict]:
                 "bundle": bundle,
                 "passed": True,
                 "warning": True,
-                "measured": False,
+                # ⚠️ `measured` stays TRUE. THE POLICY, stated once and applied
+                # everywhere: `measured=False` means the population was
+                # UNREACHABLE, not that it was incompletely covered. This bundle's
+                # verdict WAS reached, over the modules that resolve; some declared
+                # NAMES not resolving is a coverage warning inside a measurement.
+                #
+                # Marking it False took `bundle_source_freshness` out of the `--ci`
+                # floor on a HEALTHY tree — 74 measured against a zero-headroom
+                # floor of 75 — and a floor that is red when nothing is wrong is a
+                # floor that gets lowered. Two reviewers found it independently, and
+                # both noted the same commit had shipped the OPPOSITE rule in
+                # `bundle_figure_integrity`. One policy now governs both.
+                #
+                # The incompleteness is handled where it actually bites: the
+                # metadata writer below refuses to clear `freshness_stale` over a
+                # partial population.
                 "message": (
                     f"{len(lean_unresolved)} of "
                     f"{len(lean_unresolved) + len(lean_times)} declared Lean "
@@ -575,8 +592,8 @@ def check(write_metadata: bool = False) -> list[dict]:
                     f"UNMEASURABLE: all {len(sources)} declared source(s) name a "
                     f"directory absent from papers/ ({sample}{extra}) AND "
                     + ("the Lean population was NOT RESOLVED "
-                       f"({lean_unmeasured})"
-                       if lean_unmeasured is not None else
+                       f"({lean_unmeasured or 'append_log.json unreadable'})"
+                       if lean_unmeasured_here else
                        "the bundle declares no resolvable Lean module")
                     + "; freshness is NOT established — the Stage-C absorption "
                       "trigger cannot fire on either population."
@@ -600,9 +617,17 @@ def check(write_metadata: bool = False) -> list[dict]:
             # nine — writing "fresh" from a leg that measured nothing. Absence of
             # measurement is not evidence of freshness, which is the whole thesis
             # of this module.
+            # ⚠️ `lean_unresolved` gates the CLEAR but not the SET, and the
+            # asymmetry is the point. Staleness found over a partial population is
+            # still staleness. Freshness over a partial population is NOT evidence:
+            # a module renamed after `last_lift` drops out BY NAME, and clearing
+            # the flag on its absence is the same "absence is not evidence" failure
+            # this module exists to prevent, at a third site.
             if write_metadata and not lean_unmeasured_here:
                 want = bool(stale_lean)
-                if md.get("freshness_stale") != want:
+                if not want and lean_unresolved:
+                    pass                     # incomplete population: assert nothing
+                elif md.get("freshness_stale") != want:
                     md["freshness_stale"] = want
                     write_bundle_json(md_path, md)
             findings.append(BundleFinding(**{
@@ -675,9 +700,13 @@ def check(write_metadata: bool = False) -> list[dict]:
             # written False while the same run emitted `lean-stale` — D2 at 48 of
             # 85 modules, L2 at 42 of 45. Forcing the git map to None reproduced
             # it a second way. A fix applied at one of two sites is not a fix.
+            # Same asymmetry as the sourceless branch above: report staleness
+            # from a partial population, never clear from one.
             if write_metadata and not lean_unmeasured_here:
                 want = bool(stale_lean)      # sources are fresh; Lean decides
-                if md.get("freshness_stale") != want:
+                if not want and lean_unresolved:
+                    pass                     # incomplete population: assert nothing
+                elif md.get("freshness_stale") != want:
                     md["freshness_stale"] = want
                     write_bundle_json(md_path, md)
 
