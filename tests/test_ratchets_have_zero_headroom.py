@@ -178,6 +178,7 @@ class TestRatchetsHaveZeroHeadroom:
         # free pass to the next ceiling added to `citations.py` — measured: a
         # seeded `ZZZ_FORGOTTEN_CEILING` there passed under the module-level rule.
         import ast as _ast
+        from textwrap import dedent as _dedent
         covered_by_check: set[str] = set()
         for f in sorted((SK_ROOT / "scripts" / "validation").rglob("*.py")):
             src = f.read_text(encoding="utf-8")
@@ -194,8 +195,26 @@ class TestRatchetsHaveZeroHeadroom:
                          and d.args and isinstance(d.args[0], _ast.Constant)}
                 if not (names & set(RATCHETED_CHECKS)):
                     continue
+                # ⚠️ `get_source_segment` returns RAW source INCLUDING comments,
+                # so a bare substring test would credit a ceiling named only in a
+                # comment inside a ratcheted check body — the same evasion this
+                # test strips comments to prevent on the other path. Caught by the
+                # closure reviewer. Match against identifier tokens only.
                 body = _ast.get_source_segment(src, node) or ""
-                covered_by_check |= {c for c in found if c in body}
+                try:
+                    used = {n.id for n in _ast.walk(_ast.parse(_dedent(body)))
+                            if isinstance(n, _ast.Name)}
+                    used |= {n.attr for n in _ast.walk(_ast.parse(_dedent(body)))
+                             if isinstance(n, _ast.Attribute)}
+                    used |= {a.name for n in _ast.walk(_ast.parse(_dedent(body)))
+                             if isinstance(n, (_ast.Import, _ast.ImportFrom))
+                             for a in n.names}
+                    used |= {a.asname for n in _ast.walk(_ast.parse(_dedent(body)))
+                             if isinstance(n, (_ast.Import, _ast.ImportFrom))
+                             for a in n.names if a.asname}
+                except SyntaxError:
+                    used = set()
+                covered_by_check |= (found & used)
 
         orphans = sorted(c for c in found
                          if c not in test_src and c not in covered_by_check)

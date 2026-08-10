@@ -52,7 +52,7 @@ plugin is stale. Nothing in goal 1 advanced a reviewer stage; several bundles we
 
 | Bundle | Tier | s9 | s10 | s13 | redo required | readiness | pp |
 |---|---:|---|---|---|---|---|---:|
-| F | 0 | pending | pending | pending | **yes** | RED | 23 |
+| F | 0 | pending | pending | pending | **yes** | RED | 24 |
 | D1 | 1 | pending | pending | pending | **yes** | RED | 11 |
 | D2 | 1 | pending | pending | pending | **yes** | RED | 11 |
 | D3 | 1 | pending | pending | pending | **yes** | RED | 58 |
@@ -92,7 +92,7 @@ representable and D9 sits in it. Do not read `UNMEASURED` as a mild YELLOW.
    (This note said 14 until the closure reviewer counted 15 — its own §2 table listed 15
    all along, so the prose contradicted the table beside it.)
 3. **The manuscript programme.** `bundle_manuscript_length` is RED for **11 bundles under
-   floor** — F needs 80pp and has 23; D7 needs 24 and has 4.
+   floor** — F needs 80pp and has 24; D7 needs 24 and has 4.
    ⚠️ **That count requires a fresh compile.** Run
    `uv run python scripts/compile_bundle_pdf.py --all --force` first: the check reports
    `UNMEASURED` for any bundle whose PDF predates its `\input` closure, and adding a

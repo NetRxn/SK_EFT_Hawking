@@ -157,8 +157,9 @@ an implication, and it went through two wrong hypothesis choices:
 
 1. It first took `3 ∣ c.generations` — assuming the very constraint it advertised
    as transferring (CLAUDE.md anti-pattern P4).
-2. It was then "strengthened" to `24 ∣ 8·generations` on the argument that this
-   is the anomaly-side condition on the chiral central charge rather than a
+2. It was then "strengthened" to `24 ∣ 8·generations` in `4e6f078e` (PR-review
+   pass 1 — NOT the later round, which only defended it), on the argument that
+   this is the anomaly-side condition on the chiral central charge rather than a
    restatement. **That argument is false, and the refutation is one line:**
    `24 ∣ 8n ↔ 3 ∣ n` over ℤ, kernel-checked. The two hypotheses are logically
    equivalent, so nothing was strengthened.

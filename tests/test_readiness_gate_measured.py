@@ -170,3 +170,26 @@ class TestEveryDraftReadingEvaluatorDeclaresUnmeasured:
         r = fn({"id": "paper:ZZ", "meta": {"paper_key": "ZZ"}}, unreadable)
         assert r.measured is True, (
             f"{name} reported UNMEASURED on a draft it could read")
+
+
+class TestTheReaderHasAProductionCaller:
+    """⚠️ `paper_unmeasured_gates` was added to give `GateResult.measured` a reader,
+    and for one commit its only caller was the test asserting it exists — the same
+    write-only defect one layer up, which is what the closure reviewer caught. Its
+    production caller is `build_graph.extract_readiness_gate_nodes`."""
+
+    def test_build_graph_calls_it(self):
+        import inspect
+        import build_graph
+        src = inspect.getsource(build_graph.extract_readiness_gate_nodes)
+        assert "paper_unmeasured_gates" in src, (
+            "the only reader of GateResult.measured lost its production caller; "
+            "the field is write-only again")
+
+    def test_it_warns_rather_than_changing_the_state(self):
+        """The state contract must stay a three-value colour — the distinction is
+        reported beside it, not folded into it."""
+        import inspect
+        import build_graph
+        src = inspect.getsource(build_graph.extract_readiness_gate_nodes)
+        assert "logger.warning" in src and "UNMEASURED" in src

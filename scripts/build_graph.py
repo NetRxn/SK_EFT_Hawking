@@ -2797,6 +2797,23 @@ def extract_readiness_gate_nodes() -> list[dict]:
                     len(nodes),
                     len(set(n['meta']['paper'] for n in nodes)),
                     dict(states))
+        # ⚠️ A gate whose evaluator could not READ the draft is `state='open'`,
+        # identical to one with genuine outstanding work — `GateState` has no
+        # cannot-measure value and must not grow one (it is a contract). So the
+        # distinction is reported BESIDE the state, here, where the graph is built.
+        #
+        # This call is why `paper_unmeasured_gates` exists. Without a production
+        # consumer, `GateResult.measured` was written, serialized, and read by
+        # nothing — a write-only field is not a fix, and the closure reviewer was
+        # right to call the earlier version vacuous.
+        from readiness_gates import paper_unmeasured_gates
+        for paper in sorted({r.paper for r in results}):
+            dark = paper_unmeasured_gates(results, paper)
+            if dark:
+                logger.warning(
+                    "ReadinessGate: %s has %d UNMEASURED gate(s) — the evaluator "
+                    "read nothing, which is NOT the same as outstanding work: %s",
+                    paper, len(dark), ", ".join(dark))
     return nodes
 
 

@@ -2891,3 +2891,34 @@ handoff, and the remedy is named as goal-2 work rather than performed as a numbe
 
 **NOT-AN-ASSERTION.** Nothing here says the charters are wrong. They may well be right and the
 drafts simply early. What is asserted is only the measured gap, and that closing it is writing.
+
+---
+
+## V76 — PR-review round 3 and the closure review: the instruments that lied, mine included
+
+Condition 3 requires the liars logged HERE, not in commit messages. Round 3 ran six agents; a
+fresh-context closure reviewer then ran over the result and returned **GOAL NOT MET**, which is
+the correct verdict and the reason this entry exists.
+
+| # | Claim | Instrument that produced it | Verdict |
+|---|---|---|---|
+| 1 | Round 2: "fail-closed `measured` is right — in a healthy tree no detail is unmeasured" | reasoning about the intent, never a run of `--ci` | **FALSE, and it broke the floor.** `bundle_source_freshness` marked a PARTIALLY resolved Lean-module population `measured=False`, which propagated to the whole CheckResult: **74 measured against a zero-headroom floor of 75, on a clean tree.** Two reviewers found it independently and both predicted `test_the_LIVE_floor_matches_what_a_REAL_run_MEASURES` would catch it. It did — the single failure in 6,281 tests. |
+| 2 | Round 2 shipped "one policy" for `measured` | reading each check in isolation | **TWO CONTRADICTORY POLICIES IN ONE COMMIT** — fail-closed in `bundle_source_freshness`, partial-is-measured in `bundle_figure_integrity`. As the hunter put it, *the floor was selecting the policy*: the honest rule broke CI and the rationalized one stayed green. Now one rule: `measured=False` means the population was UNREACHABLE, not incompletely covered. |
+| 3 | Round 3: "one policy, applied everywhere" | my own account of the fix | **STILL FALSE when the closure reviewer checked.** `bundle_figure_integrity`'s `coverage` Detail was still setting `measured=False` for incomplete coverage — inside the very check the policy comment cites as its exemplar. Fixed. |
+| 4 | Round 3: `graph_atlas`'s skipped round-trip "was `passed=True`" | writing the comment and not the change | **THE COMMENT ASSERTED A FIX THAT WAS NEVER MADE**, and stood for two commits. `passed` was still `True`. This is the exact defect this branch spent three rounds auditing for, committed inside the audit. Now `passed=False`. |
+| 5 | Round 3: the unscannable-`\input` guard is "(seeded, proven)" — asserted in TWO commit messages | an interactive probe, not a test | **NOTHING IN THE REPO PINNED IT.** `git grep unscannable -- tests/` returned nothing. The behaviour was real; a verification that lives in a transcript is not a guard. `tests/test_unscannable_input_guard.py` now pins all three checks in both directions. |
+| 6 | Round 3: `paper_unmeasured_gates` "gives `GateResult.measured` a reader" | adding the function and a test for it | **MATERIALLY VACUOUS.** Zero production callers; the only reader was the test asserting the function exists — the write-only defect relocated one layer up. Now called by `build_graph.extract_readiness_gate_nodes`, with a test that the caller survives. |
+| 7 | Round 3: the ceiling reconciliation resists a comment-only mention | stripping comments on ONE of two paths | **HALF TRUE.** `ast.get_source_segment` returns raw source INCLUDING comments, so a ceiling named only in a comment *inside a ratcheted check body* was still credited. Now matched on identifier tokens. Both evasions re-seeded and confirmed caught. |
+| 8 | Round 3 commit: "round 2 introduced the `24 ∣ 8n` hypothesis" | memory | **WRONG COMMIT.** `git log -S` puts it in `4e6f078e`, PR-review pass 1; the later round only defended it. Corrected in the Lean docstring. |
+| 9 | The handoff's F row: 23 pp | transcription | **24** per `papers/F/bundle_metadata.json`. Two sites. |
+
+**THE PATTERN, now measured across four rounds:** *every round created a defect of the class it
+was fixing.* Round 1 → round 2's Blocker was round 1's fix applied at one of two sites. Round 2 →
+round 3's Blocker was round 2's `measured` rule. Round 3 → the closure reviewer found a comment
+asserting a fix that was never made, in the commit whose subject is comments asserting fixes that
+were never made. That is not carelessness about a detail; it is the specific failure mode of
+fixing a thing and reporting the fix in the same motion, and the only instrument that has caught
+it every time is a reader with fresh context and no stake in the claim.
+
+**NOT-AN-ASSERTION.** Row 1's "74 against 75" is the count on the tree at that commit with a
+built `lean/.lake`. It is not a claim about any other environment.

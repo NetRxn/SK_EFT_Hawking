@@ -260,8 +260,13 @@ def check_bundle_figure_integrity() -> CheckResult:
             on_disk[code] = on_disk.get(code, 0) + 1
     uncovered = {c: n for c, n in on_disk.items() if c not in SPECS}
     if uncovered:
-        # ⚠️ `measured=False` on THIS DETAIL, not on the CheckResult, and the
-        # distinction is deliberate. The check really did measure the
+        # ⚠️ `measured` stays TRUE, under the SAME policy this codebase applies to
+        # partial Lean-module resolution: `measured=False` means the population was
+        # UNREACHABLE, not incompletely covered. This detail said `measured=False`
+        # for incomplete coverage — the precise case the policy abolishes — inside
+        # the very check the policy comment cites as its exemplar. Found by the
+        # closure reviewer. The uncovered figures are a WARNING within a
+        # measurement, which is what the warning flag is for. The check really did measure the
         # registry-backed figures; calling the whole result unmeasured would be
         # its own false statement, and would silently drop a check out of the
         # `--ci` coverage floor — a zero-headroom instrument. What was wrong was
@@ -281,7 +286,7 @@ def check_bundle_figure_integrity() -> CheckResult:
             f"{', '.join(f'{c}:{n}' for c, n in sorted(uncovered.items()))}. "
             f"This check speaks only to figures it can rebuild from "
             f"`visualizations.py`; the rest are UNMEASURED here.",
-            warning=True, measured=False))
+            warning=True))
     if _SPEC_FALLBACK:
         details.insert(0, Detail(
             "spec_source", True,

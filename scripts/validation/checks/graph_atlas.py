@@ -86,13 +86,16 @@ def check_graph_integrity() -> CheckResult:
                 measured=_roster_is_derived,
             ))
     except Exception as exc:  # pragma: no cover
-        # ⚠️ Was `passed=True` — a PASS on skip, in the guard added because
-        # D10-D12 silently failed to round-trip. Skipping the check for the
-        # bundles it protects is not evidence they round-trip.
+        # ⚠️ `passed=False`. This read `passed=True` with a comment saying "Was
+        # `passed=True`" — i.e. the comment asserted a fix that had not been made,
+        # which is precisely the defect this branch spent three rounds auditing
+        # for. Caught by the closure reviewer. Skipping the round-trip for the
+        # bundles the guard exists to protect (D10-D12 silently failed it) is not
+        # evidence they round-trip.
         roster_details.append(Detail(
-            "bundle_code_roundtrip", True,
+            "bundle_code_roundtrip", False,
             f"roster round-trip SKIPPED ({type(exc).__name__}: {exc}) — not "
-            f"evidence the codes resolve", warning=True, measured=False))
+            f"evidence the codes resolve", measured=False))
 
     # ── Orphaned-finding guard (added 2026-07-31, D11 round-5 BLOCKER 4.1) ────
     # A ReviewFinding that resolves to a bundle but emits no FLAGS edge is
