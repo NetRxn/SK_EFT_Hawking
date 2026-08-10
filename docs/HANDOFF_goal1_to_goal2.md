@@ -11,14 +11,22 @@ owns the wave-pipeline reviewer stages, the merge, and the manuscript programme.
 
 ## 1. What goal 1 closed
 
-**All 38 D-items in `docs/architecture/.working-docs/ARCHITECTURE_TODOs.MD` are closed as
-findings — with one OPEN remainder, stated here because a heading-scanner would miss it:**
+**All D-items in `docs/architecture/.working-docs/ARCHITECTURE_TODOs.MD` are closed as
+findings. None is left OPEN** — verified 2026-08-10 by scanning every `###` D-item heading
+for an OPEN/⚠️ marker, not by trusting this sentence.
 
-> **D4 carries an OPEN remainder.** Ledger coverage is 361/361, but its *perishability
-> queue* is not executed and carries into goal 2. The D4 heading says so explicitly
-> (`✅ 100% (361/361) COVERED; ⚠️ the perishability queue is OPEN`) — a phrasing the closure
-> reviewer chose precisely so a scanner would not read D4 as wholly closed. This document
-> was that scanner, and claimed "None is left OPEN" one commit after the heading was written.
+> **The D4 "perishability queue", resolved 2026-08-10.** This paragraph used to record it as
+> the one OPEN remainder. It is closed, and the term is retired rather than carried forward.
+> V9–V18 executed the work: all six prose documents read 100% in the ledger's §Final state
+> table (`CHECK_AUTHORING_GUIDE.md` 54/54 and `END_TO_END_MAP.md` 80/80 last), and D4's body
+> has said "The queue is CLOSED" since — while its heading still asserted OPEN twelve lines
+> above. Both now agree.
+>
+> ⚠️ Worth keeping as a lesson rather than a status: "perishability queue" occurred in exactly
+> two places repo-wide — that heading and this paragraph — and named **no concrete artifact**.
+> An item that cannot be pointed at can be neither executed nor verified closed, which is why
+> it survived three separate reviews. What is real is the ledger's P/D perishability
+> *convention* for individual atoms; there was never a queue derived from it.
 
 Sixteen of the 38 were wrong about their own scope, premise or remedy, and **five** named a
 hazard or blocker that did not exist: D1 (WITHDRAWN), D17, D36, D37 (CLOSED-NOT-A-DEFECT), and

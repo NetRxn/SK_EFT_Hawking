@@ -440,12 +440,22 @@ reach for the same sentence split. Cite the check's verdict instead of re-derivi
 
 ---
 
-### D4. Ledger coverage — ✅ 100% (361/361) COVERED; ⚠️ the perishability queue is OPEN
+### D4. Ledger coverage — ✅ 100% (361/361) COVERED; ✅ the queue is CLOSED
 
-> **Heading corrected 2026-08-09 by the closure reviewer.** The ✅ described *coverage*,
-> which is genuinely 361/361, while the body carries an unexecuted queue and a three-step
-> Fix shape. A reader scanning headings read this as closed. Coverage is closed;
-> the queue is not, and the two are different claims.
+> **Heading corrected twice.** 2026-08-09, by the closure reviewer: the ✅ then described
+> *coverage* only, which is genuinely 361/361, while the body still carried an unexecuted
+> queue — so a reader scanning headings read the entry as closed when it was not.
+>
+> **2026-08-10:** the correction had itself gone stale in the opposite direction. V9–V18
+> executed the queue — all six prose documents read 100% in the ledger's §Final state table,
+> `CHECK_AUTHORING_GUIDE.md` 54/54 and `END_TO_END_MAP.md` 80/80 being the last two — and the
+> body below has said "**The queue is CLOSED**" since. The heading kept asserting OPEN
+> against its own body twelve lines down. Both halves now say closed.
+>
+> ⚠️ The term "perishability queue" is retired here rather than redefined: it appeared in
+> exactly two places repo-wide (this heading and the goal-1→2 handoff) and named no concrete
+> artifact, so it could be neither executed nor verified. What *is* real and remains is the
+> ledger's P/D perishability **convention** for individual atoms — not a queue derived from it.
 
 Measured 2026-08-07, after V8. **This is the honest state of the accuracy effort**, replacing
 the ledger's earlier unqualified "all seven VERIFIED".
