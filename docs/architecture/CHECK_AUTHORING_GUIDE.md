@@ -146,6 +146,31 @@ uv run python -m pytest tests/ -q                               # nothing regres
 # then: seed the defect in production, watch it fail, restore
 ```
 
+### 4.1 What the test costs is part of the review
+
+A check's test is paid on **every edit**, by everyone. Three rules, each written after the
+violation shipped and was measured (2026-08-09/10 test-quality audit):
+
+* **Never drive a production datastore from a test.** `TestPGWrite` called
+  `write_graph_to_pg` — which opens `MATCH (n) DETACH DELETE n` — against the real `sk_eft`
+  AGE graph. It cost **646 s, 47% of the slow suite**, and left the dashboard's store holding
+  one fake node after every full run. `write_graph_to_pg(graph, graph_name=…)` now takes a
+  target so a test can aim at a throwaway graph; a 4-node synthetic graph exercises the same
+  path in 0.13 s. **Size bought runtime, not coverage.**
+* **An expensive, argument-free, idempotent check gets a `session` fixture in
+  `tests/conftest.py`, not a call per assertion.** `check_prose_theorem_reference_coverage()`
+  is 24.6 s and was called four times unpatched — 97 s for one answer. A test that
+  *monkeypatches* the corpus keeps its own call; that is the whole rule.
+* **A slow test carries the `slow` marker, and a marked test is actually slow.** A real
+  Monte-Carlo run sat in the default suite (30.7 s); meanwhile three modules were marked
+  `slow` on a `lake`-re-extraction premise that stopped being true long ago.
+
+⚠️ **A test that cannot fail is worse than no test at the same cost.** Two were deleted in
+that pass: one asserted `[e.output for e in EDGES if …]` contains only `e.output` values — an
+identity — while paying 13.8 s to run every real staleness probe; another filtered on
+`kind == 'axiom'` and then asserted `kind == 'axiom'`. Before adding an assertion, ask what
+value of the world would make it red.
+
 ## 5. The systemic pattern — the shapes it has actually taken
 
 Independent mechanisms, one shape: **absence of measurement rendered as success.** This

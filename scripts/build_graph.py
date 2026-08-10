@@ -4074,14 +4074,14 @@ def _create_age_labels(conn, node_types: set, edge_types: set) -> None:
             for ntype in sorted(node_types):
                 try:
                     cur.execute(
-                        f"SELECT create_vlabel('sk_eft', '{_cypher_escape(ntype)}')"
+                        f"SELECT create_vlabel('{graph_name}', '{_cypher_escape(ntype)}')"
                     )
                 except Exception:
                     pass  # Label already exists
             for etype in sorted(edge_types):
                 try:
                     cur.execute(
-                        f"SELECT create_elabel('sk_eft', '{_cypher_escape(etype)}')"
+                        f"SELECT create_elabel('{graph_name}', '{_cypher_escape(etype)}')"
                     )
                 except Exception:
                     pass  # Label already exists
@@ -4089,7 +4089,12 @@ def _create_age_labels(conn, node_types: set, edge_types: set) -> None:
         conn.autocommit = old_autocommit
 
 
-def write_graph_to_pg(graph: dict) -> None:
+PG_GRAPH_NAME = "sk_eft"
+"""The production AGE graph. Overridable per call ONLY so tests can write to a
+throwaway graph — see `write_graph_to_pg`."""
+
+
+def write_graph_to_pg(graph: dict, graph_name: str = PG_GRAPH_NAME) -> None:
     """Write all nodes and edges to PostgreSQL + Apache AGE (best-effort).
 
     If psycopg is unavailable or the connection fails, logs a warning and
@@ -4097,6 +4102,14 @@ def write_graph_to_pg(graph: dict) -> None:
 
     Connection: host=localhost port=5433 dbname=sk_eft_provenance
                 user=sk_eft password=sk_eft_local  graph=sk_eft
+
+    ⚠️ **THIS FUNCTION BEGINS BY DELETING EVERY VERTEX IN `graph_name`.** It is a
+    replace-the-world writer, not an upsert. `graph_name` exists so a test can
+    aim that at a throwaway graph instead of production: `TestPGWrite` used to
+    drive the real 49k-node write against `sk_eft` on every `-m slow` run, which
+    (a) cost 646 s — 47% of the slow suite — and (b) left the dashboard's
+    datastore holding a single fake node whenever a test passed a dummy graph.
+    Never pass the default from a test.
     """
     # --- 1. Import psycopg ---
     try:
@@ -4128,8 +4141,8 @@ def write_graph_to_pg(graph: dict) -> None:
                 cur.execute("SET search_path = ag_catalog, '$user', public")
 
                 # --- 3. Clear existing data ---
-                cur.execute("""
-                    SELECT * FROM cypher('sk_eft', $$
+                cur.execute(f"""
+                    SELECT * FROM cypher('{graph_name}', $$
                         MATCH (n) DETACH DELETE n
                     $$) AS (a agtype)
                 """)
@@ -4146,7 +4159,7 @@ def write_graph_to_pg(graph: dict) -> None:
                     meta_str = _cypher_escape(json.dumps(node.get('meta', {}), default=str))
 
                     cur.execute(f"""
-                        SELECT * FROM cypher('sk_eft', $$
+                        SELECT * FROM cypher('{graph_name}', $$
                             CREATE (:{ntype} {{
                                 id: '{nid}',
                                 name: '{name}',
@@ -4166,7 +4179,7 @@ def write_graph_to_pg(graph: dict) -> None:
                     tgt = _cypher_escape(edge['target'])
 
                     cur.execute(f"""
-                        SELECT * FROM cypher('sk_eft', $$
+                        SELECT * FROM cypher('{graph_name}', $$
                             MATCH (a {{id: '{src}'}}), (b {{id: '{tgt}'}})
                             CREATE (a)-[:{etype}]->(b)
                         $$) AS (a agtype)

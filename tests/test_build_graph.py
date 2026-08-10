@@ -289,9 +289,9 @@ class TestExtractFigureNodes:
 class TestNodeIntegrity:
     """Tests for aggregate node extraction."""
 
-    def test_extract_all_nodes_no_duplicate_ids(self):
+    def test_extract_all_nodes_no_duplicate_ids(self, all_graph_nodes):
         """All node IDs are unique across all extractors."""
-        nodes = extract_all_nodes()
+        nodes = all_graph_nodes
         ids = [n['id'] for n in nodes]
         assert len(ids) == len(set(ids)), (
             f"Duplicate node IDs found: {[x for x in ids if ids.count(x) > 1][:5]}"
@@ -301,22 +301,22 @@ class TestNodeIntegrity:
 class TestEdgeIntegrity:
     """Tests for edge extraction."""
 
-    def test_extract_all_edges_not_empty(self):
+    def test_extract_all_edges_not_empty(self, all_graph_nodes, all_graph_node_ids, all_graph_edges):
         """At least some edges are extracted."""
-        nodes = extract_all_nodes()
-        node_ids = {n['id'] for n in nodes}
-        edges = extract_all_edges(node_ids)
+        nodes = all_graph_nodes
+        node_ids = all_graph_node_ids
+        edges = all_graph_edges
         assert len(edges) > 0
 
-    def test_edges_reference_valid_node_ids(self):
+    def test_edges_reference_valid_node_ids(self, all_graph_nodes, all_graph_node_ids, all_graph_edges):
         """Every edge source and target exists in the node list, except for
         BACKED_BY edges intentionally emitted with `link_state: missing_target`
         (per `extract_backed_by_edges` design at `build_graph.py:2008` —
         these surface unresolvable claims-review chain links to the
         graph-integrity check rather than silently dropping them)."""
-        nodes = extract_all_nodes()
-        node_ids = {n['id'] for n in nodes}
-        edges = extract_all_edges(node_ids)
+        nodes = all_graph_nodes
+        node_ids = all_graph_node_ids
+        edges = all_graph_edges
         for edge in edges:
             assert edge['source'] in node_ids, (
                 f"Edge source {edge['source']} not in nodes (type={edge['type']})"
@@ -331,20 +331,20 @@ class TestEdgeIntegrity:
                 f"Edge target {edge['target']} not in nodes (type={edge['type']})"
             )
 
-    def test_edges_have_required_fields(self):
+    def test_edges_have_required_fields(self, all_graph_nodes, all_graph_node_ids, all_graph_edges):
         """Every edge has source, target, and type."""
-        nodes = extract_all_nodes()
-        node_ids = {n['id'] for n in nodes}
-        edges = extract_all_edges(node_ids)
+        nodes = all_graph_nodes
+        node_ids = all_graph_node_ids
+        edges = all_graph_edges
         for edge in edges:
             assert 'source' in edge
             assert 'target' in edge
             assert 'type' in edge
 
-    def test_claims_edges_exist(self):
+    def test_claims_edges_exist(self, all_graph_nodes, all_graph_node_ids):
         """CLAIMS edges connect papers to their claims."""
-        nodes = extract_all_nodes()
-        node_ids = {n['id'] for n in nodes}
+        nodes = all_graph_nodes
+        node_ids = all_graph_node_ids
         edges = extract_claims_edges(node_ids)
         assert len(edges) > 0
         for e in edges:
@@ -352,22 +352,22 @@ class TestEdgeIntegrity:
             assert e['source'].startswith('paper:')
             assert e['target'].startswith('claim:')
 
-    def test_every_claim_node_has_a_claims_edge(self):
+    def test_every_claim_node_has_a_claims_edge(self, all_graph_nodes, all_graph_node_ids):
         """R-06 core: every discovered PaperClaim node (declared, tex-auto, OR
         bundle-discovered) is CLAIMS-connected to its paper — zero orphan claims.
         The pre-remediation graph had 128 orphan claims because CLAIMS edges were
         driven from PAPER_DEPENDENCIES.key_claims alone."""
-        nodes = extract_all_nodes()
-        node_ids = {n['id'] for n in nodes}
+        nodes = all_graph_nodes
+        node_ids = all_graph_node_ids
         claim_ids = {n['id'] for n in nodes if n['type'] == 'PaperClaim'}
         claimed = {e['target'] for e in extract_claims_edges(node_ids)}
         orphans = claim_ids - claimed
         assert not orphans, f"{len(orphans)} orphan claim(s): {sorted(orphans)[:10]}"
 
-    def test_claims_edges_cover_bundle_claims(self):
+    def test_claims_edges_cover_bundle_claims(self, all_graph_nodes, all_graph_node_ids):
         """R-06: claims on a bundle paper (e.g. D1) get CLAIMS edges too."""
-        nodes = extract_all_nodes()
-        node_ids = {n['id'] for n in nodes}
+        nodes = all_graph_nodes
+        node_ids = all_graph_node_ids
         edges = extract_claims_edges(node_ids)
         if 'paper:D1' in node_ids:
             d1_claims = {e['target'] for e in edges if e['source'] == 'paper:D1'}
@@ -377,10 +377,10 @@ class TestEdgeIntegrity:
             if d1_claim_nodes:
                 assert d1_claim_nodes <= d1_claims
 
-    def test_verified_by_edges_exist(self):
+    def test_verified_by_edges_exist(self, all_graph_nodes, all_graph_node_ids):
         """VERIFIED_BY edges connect formulas to Lean theorems."""
-        nodes = extract_all_nodes()
-        node_ids = {n['id'] for n in nodes}
+        nodes = all_graph_nodes
+        node_ids = all_graph_node_ids
         edges = extract_verified_by_edges(node_ids)
         assert len(edges) > 0
         for e in edges:
@@ -388,10 +388,10 @@ class TestEdgeIntegrity:
             assert e['source'].startswith('formula:')
             assert e['target'].startswith('lean:')
 
-    def test_sourced_from_edges_exist(self):
+    def test_sourced_from_edges_exist(self, all_graph_nodes, all_graph_node_ids):
         """SOURCED_FROM edges connect parameters to primary sources."""
-        nodes = extract_all_nodes()
-        node_ids = {n['id'] for n in nodes}
+        nodes = all_graph_nodes
+        node_ids = all_graph_node_ids
         edges = extract_sourced_from_edges(node_ids)
         assert len(edges) > 0
         for e in edges:
@@ -532,10 +532,10 @@ class TestShapeMap:
 class TestDependsOnAxiomEdges:
     """Tests for extract_depends_on_axiom_edges()."""
 
-    def test_edges_point_to_axioms(self):
+    def test_edges_point_to_axioms(self, all_graph_nodes, all_graph_node_ids):
         """Every DEPENDS_ON_AXIOM edge target is a LeanAxiom node."""
-        nodes = extract_all_nodes()
-        node_ids = {n['id'] for n in nodes}
+        nodes = all_graph_nodes
+        node_ids = all_graph_node_ids
         node_types = {n['id']: n['type'] for n in nodes}
         edges = extract_depends_on_axiom_edges(node_ids)
         for e in edges:
@@ -544,18 +544,18 @@ class TestDependsOnAxiomEdges:
                 f"Target {e['target']} is {target_type}, not LeanAxiom"
             )
 
-    def test_edges_have_correct_type(self):
+    def test_edges_have_correct_type(self, all_graph_nodes, all_graph_node_ids):
         """All edges returned have type DEPENDS_ON_AXIOM."""
-        nodes = extract_all_nodes()
-        node_ids = {n['id'] for n in nodes}
+        nodes = all_graph_nodes
+        node_ids = all_graph_node_ids
         edges = extract_depends_on_axiom_edges(node_ids)
         for e in edges:
             assert e['type'] == 'DEPENDS_ON_AXIOM'
 
-    def test_no_self_edges(self):
+    def test_no_self_edges(self, all_graph_nodes, all_graph_node_ids):
         """No edge connects a node to itself."""
-        nodes = extract_all_nodes()
-        node_ids = {n['id'] for n in nodes}
+        nodes = all_graph_nodes
+        node_ids = all_graph_node_ids
         edges = extract_depends_on_axiom_edges(node_ids)
         for e in edges:
             assert e['source'] != e['target'], f"Self-edge on {e['source']}"
@@ -566,7 +566,27 @@ class TestDependsOnAxiomEdges:
 # ═══════════════════════════════════════════════════════════════════════
 
 class TestPGWrite:
-    """Tests for PG+AGE parallel write. Skips if PG unavailable."""
+    """Tests for PG+AGE parallel write. Skips if PG unavailable.
+
+    ⚠️ **THESE WRITE TO A THROWAWAY AGE GRAPH, NEVER TO PRODUCTION.**
+    This class used to build the full 49k-node graph with `sync_pg=True` and write
+    it to the real `sk_eft` graph on every `-m slow` run. Two consequences, both
+    measured by a test-quality audit 2026-08-09:
+
+    * **646 s — 47% of the whole slow suite**, and 36% of the entire test estate,
+      to make three assertions about a write path.
+    * `write_graph_to_pg` opens with an unconditional `MATCH (n) DETACH DELETE n`,
+      so a sibling test passing a one-node dummy left the dashboard's datastore
+      holding a single fake node after every full run.
+
+    The write path is identical whether the graph has 49,003 nodes or 4. What the
+    size bought was runtime, not coverage. A synthetic graph against a per-run
+    throwaway AGE graph tests the same code and cannot touch production data.
+    """
+
+    #: Per-run throwaway graph. Created and dropped by the fixture below; the
+    #: production name is never passed from a test.
+    TEST_GRAPH = "sk_eft_test_pgwrite"
 
     @pytest.fixture(scope="class")
     def pg_conn(self):
@@ -583,14 +603,47 @@ class TestPGWrite:
 
     @pytest.fixture(scope="class")
     def built_graph(self, pg_conn):
-        """Build the graph once per class (expensive — runs Lean extraction).
+        """A SYNTHETIC graph, written to the throwaway AGE graph.
 
-        Phase 5v Wave 9a: ``build_graph_json`` decoupled PG write from graph
-        construction. The TestPGWrite class is specifically about the PG
-        write path, so pass ``sync_pg=True`` to force the old behavior.
+        Small on purpose: the assertions below are "vertices exist" and "the count
+        matches the dict", both of which a 4-node graph exercises exactly as well as
+        a 49,003-node one. Creates the graph, writes, yields, then drops it — so a
+        crashed run leaves no residue in the shared container either.
         """
-        from scripts.build_graph import build_graph_json
-        return build_graph_json(sync_pg=True)
+        from scripts.build_graph import write_graph_to_pg
+
+        def _node(i, ntype="Formula"):
+            return {'id': f'synthetic:{i}', 'type': ntype, 'name': f'n{i}',
+                    'label': f'n{i}', 'verification': 'verified', 'detail': '',
+                    'meta': {'shape': 'circle'}}
+
+        graph = {
+            'nodes': [_node(0), _node(1), _node(2, "Theorem"), _node(3, "Theorem")],
+            'links': [{'source': 'synthetic:0', 'target': 'synthetic:2',
+                       'type': 'VERIFIES'},
+                      {'source': 'synthetic:1', 'target': 'synthetic:3',
+                       'type': 'VERIFIES'}],
+            'meta': {'node_count': 4, 'edge_count': 2},
+        }
+
+        with pg_conn.cursor() as cur:
+            cur.execute("LOAD 'age'")
+            cur.execute("SET search_path = ag_catalog, '$user', public")
+            cur.execute(
+                "SELECT count(*) FROM ag_catalog.ag_graph WHERE name = %s",
+                (self.TEST_GRAPH,))
+            if cur.fetchone()[0] == 0:
+                cur.execute("SELECT create_graph(%s)", (self.TEST_GRAPH,))
+            pg_conn.commit()
+
+        write_graph_to_pg(graph, graph_name=self.TEST_GRAPH)
+        yield graph
+
+        with pg_conn.cursor() as cur:
+            cur.execute("LOAD 'age'")
+            cur.execute("SET search_path = ag_catalog, '$user', public")
+            cur.execute("SELECT drop_graph(%s, true)", (self.TEST_GRAPH,))
+            pg_conn.commit()
 
     def test_write_populates_graph(self, pg_conn, built_graph):
         """Vertices exist in PG after write."""
@@ -598,7 +651,7 @@ class TestPGWrite:
             cur.execute("LOAD 'age'")
             cur.execute("SET search_path = ag_catalog, '$user', public")
             cur.execute("""
-                SELECT * FROM cypher('sk_eft', $$
+                SELECT * FROM cypher('sk_eft_test_pgwrite', $$
                     MATCH (n) RETURN count(n)
                 $$) AS (cnt agtype)
             """)
@@ -614,7 +667,7 @@ class TestPGWrite:
             cur.execute("LOAD 'age'")
             cur.execute("SET search_path = ag_catalog, '$user', public")
             cur.execute("""
-                SELECT * FROM cypher('sk_eft', $$
+                SELECT * FROM cypher('sk_eft_test_pgwrite', $$
                     MATCH (n) RETURN count(n)
                 $$) AS (cnt agtype)
             """)
@@ -935,9 +988,9 @@ class TestExtractReadinessGateNodes:
 class TestVerifiesEdges:
     """VERIFIES: PythonTest -> Formula / Parameter / LeanTheorem (with test_kind)."""
 
-    def test_edges_carry_test_kind(self):
+    def test_edges_carry_test_kind(self, all_graph_nodes, all_graph_node_ids):
         nodes = extract_all_nodes()
-        node_ids = {n['id'] for n in nodes}
+        node_ids = all_graph_node_ids
         edges = extract_verifies_edges(node_ids)
         if not edges:
             pytest.skip("No VERIFIES edges")
@@ -951,9 +1004,9 @@ class TestVerifiesEdges:
 class TestFlagsEdges:
     """FLAGS: ReviewFinding -> any artifact."""
 
-    def test_edge_shape(self):
+    def test_edge_shape(self, all_graph_nodes, all_graph_node_ids):
         nodes = extract_all_nodes()
-        node_ids = {n['id'] for n in nodes}
+        node_ids = all_graph_node_ids
         edges = extract_flags_edges(node_ids)
         if not edges:
             pytest.skip("No FLAGS edges")
@@ -967,9 +1020,9 @@ class TestFlagsEdges:
 class TestReportsEdges:
     """REPORTS: Paper -> CountMetric (paper_value + delta_pct attributes)."""
 
-    def test_edges_carry_delta(self):
+    def test_edges_carry_delta(self, all_graph_nodes, all_graph_node_ids):
         nodes = extract_all_nodes()
-        node_ids = {n['id'] for n in nodes}
+        node_ids = all_graph_node_ids
         edges = extract_reports_edges(node_ids)
         if not edges:
             pytest.skip("No REPORTS edges")

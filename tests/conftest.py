@@ -25,6 +25,14 @@ import os
 
 os.environ["SKEFT_VALIDATION_NO_MEMO"] = "1"
 
+# ⚠️ Deliberately NOT also setting `SKEFT_VALIDATION_NO_LATEX_CACHE`. The two are
+# different: the VERDICT memo is keyed on a check name, so a patched test run can
+# poison a key a real run later reads — that one must be off. The LaTeX cache is
+# keyed on each draft's own content closure, so a seeded defect changes the hash
+# and correctly misses; disabling it only bought a 41.84 s pdflatex recompile of
+# all 64 drafts on every slow run. Set `SKEFT_VALIDATION_NO_LATEX_CACHE=1` if you
+# genuinely want the recompile.
+
 
 # ── shared results for expensive, IDEMPOTENT live-corpus checks ──────────────
 #
@@ -86,3 +94,41 @@ def bundles_summary():
     """
     from datastar_bundles import load_bundles_summary
     return load_bundles_summary()
+
+
+@pytest.fixture(scope="session")
+def all_graph_nodes():
+    """`build_graph.extract_all_nodes()`, once per session.
+
+    ⚠️ Measured 7.11 s for 49,003 nodes, and **24 slow tests each called it at
+    FUNCTION scope** — ~284 s, 20% of the slow suite, re-deriving an artifact none
+    of them mutates. Safe to share for exactly that reason: the extractors read
+    tracked files and return fresh lists.
+
+    A test that monkeypatches an extractor MUST keep its own call.
+    """
+    from build_graph import extract_all_nodes
+    return extract_all_nodes()
+
+
+@pytest.fixture(scope="session")
+def all_graph_node_ids(all_graph_nodes):
+    """`{n['id']}` — derived, so callers don't rebuild the set per test."""
+    return {n["id"] for n in all_graph_nodes}
+
+
+@pytest.fixture(scope="session")
+def all_graph_edges(all_graph_node_ids):
+    """`build_graph.extract_all_edges(node_ids)`, once per session (2.72 s)."""
+    from build_graph import extract_all_edges
+    return extract_all_edges(all_graph_node_ids)
+
+
+@pytest.fixture(scope="session")
+def graph_integrity_report():
+    """`graph_integrity.run_integrity_checks()`, once per session.
+
+    Four tests re-ran this independently. It is a pure read over the same graph.
+    """
+    from graph_integrity import run_integrity_checks
+    return run_integrity_checks()

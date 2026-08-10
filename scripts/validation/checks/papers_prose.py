@@ -544,8 +544,20 @@ def check_paper_latex_compiles() -> CheckResult:
     # claimed, for both caches, that the Paper Submission Gate "always re-measures".
     # Two caches with two different bypass rules and one docstring covering both is
     # exactly how a guarantee becomes false without anyone editing it.
-    _bypass_cache = (_cfg.FORCE_LATEX or _cfg.NO_MEMO or _cfg.STRICT_MODE
-                     or os.environ.get("SKEFT_VALIDATION_NO_MEMO") == "1")
+    # ⚠️ `SKEFT_VALIDATION_NO_MEMO` NO LONGER BYPASSES *THIS* CACHE, and the two
+    # caches are different animals — which is the whole point of the paragraph
+    # above. The VERDICT memo is keyed on a check name, so a patched test run can
+    # poison a key a real run later reads: `conftest.py` is right to disable it
+    # suite-wide. THIS cache is keyed on each draft's own content closure, so a
+    # test that seeds a defect changes the hash and correctly misses — there is
+    # nothing to poison.
+    #
+    # Conflating them cost 41.84 s per run: every `-m slow` recompiled all 64
+    # drafts with pdflatex to re-derive an answer the content hash already had.
+    # `SKEFT_VALIDATION_NO_LATEX_CACHE=1` is the escape hatch for anyone who
+    # genuinely wants a forced recompile, and `--force-latex` still does it.
+    _bypass_cache = (_cfg.FORCE_LATEX or _cfg.STRICT_MODE
+                     or os.environ.get("SKEFT_VALIDATION_NO_LATEX_CACHE") == "1")
 
     cache_path = _H.PROJECT_ROOT / LATEX_COMPILE_CACHE
     prev_clean: Dict[str, str] = {}

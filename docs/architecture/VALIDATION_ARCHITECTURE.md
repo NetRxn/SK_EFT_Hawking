@@ -167,6 +167,18 @@ subsystem exists to close. It is sound only if the key spans every input.
 5. `--no-memo`, and `--strict` implying it; `tests/conftest.py` disables the memo suite-wide so
    no monkeypatched test can poison a developer's cache.
 
+> ⚠️ **THE TWO CACHES HAVE SEPARATE BYPASS FLAGS, and conflating them cost real time.**
+> `SKEFT_VALIDATION_NO_MEMO` governs the **verdict memo** only. The memo is keyed on a *check
+> name*, so a patched test run genuinely can poison a key a later real run reads — disabling it
+> suite-wide is correct. The **per-draft LaTeX cache** is keyed on that draft's own content
+> closure, so a test that seeds a defect changes the hash and correctly misses; there is nothing
+> to poison. Until 2026-08-09 the conftest flag switched off both, and every `-m slow` run
+> recompiled all 64 drafts with pdflatex to re-derive an answer the content hash already held —
+> **41.8 s, measured**. The LaTeX cache now has its own escape hatch,
+> `SKEFT_VALIDATION_NO_LATEX_CACHE=1`, alongside `--force-latex`.
+>
+> The general shape: *two caches with two different poisoning risks must not share one switch.*
+
 > ⚠️ **The first version had four guards and a review pass found three holes anyway.** The
 > generalisable lesson that came out of it is stated once, in
 > [`CHECK_AUTHORING_GUIDE.md` §5](CHECK_AUTHORING_GUIDE.md#5-the-systemic-pattern--the-shapes-it-has-actually-taken),
