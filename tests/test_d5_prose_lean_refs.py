@@ -185,7 +185,7 @@ class TestProseTheoremReferenceCoverage:
         r = plr.check_prose_theorem_reference_coverage()
         assert r.passed is True, [(d.name, d.message) for d in r.details if not d.passed]
 
-    def test_the_live_legacy_ceiling_has_ZERO_headroom(self):
+    def test_the_live_legacy_ceiling_has_ZERO_headroom(self, prose_ref_coverage_result):
         """The ratchet's whole value is that it is measured AT the corpus, not above
         it. A ceiling with slack admits new debt silently — the failure mode
         `recurrence_reopens_closures` demonstrated three times, where a constant was
@@ -194,7 +194,7 @@ class TestProseTheoremReferenceCoverage:
         Runs against the REAL corpus, not a fixture: this is the assertion that would
         catch the ceiling being raised to buy a green run."""
         from src.core.constants import LEGACY_DRAFT_UNRESOLVED_REF_CEILING as ceil
-        r = plr.check_prose_theorem_reference_coverage()
+        r = prose_ref_coverage_result      # session-shared; this call is unpatched
         summary = next(d for d in r.details if d.name == "legacy_ratchet")
         import re as _re
         m = _re.search(r"(\d+) unresolved", summary.message or "")

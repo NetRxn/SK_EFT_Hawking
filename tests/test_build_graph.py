@@ -623,10 +623,37 @@ class TestPGWrite:
             f"PG vertex count {count} != graph node_count {expected}"
         )
 
-    def test_write_survives_pg_unavailable(self):
-        """write_graph_to_pg does not raise when PG is unavailable."""
+    def test_write_survives_pg_unavailable(self, monkeypatch):
+        """`write_graph_to_pg` does not raise when PG is UNAVAILABLE.
+
+        ⚠️ **THIS TEST USED TO DESTROY THE PRODUCTION PROVENANCE GRAPH.** It called
+        `write_graph_to_pg` with a one-node dummy and no isolation. The function
+        opens with an unconditional `MATCH (n) DETACH DELETE n` against the real
+        `sk_eft` AGE graph — so on any machine where Postgres is UP (it has been,
+        for days) the test did not exercise the unavailable path at all. It wiped
+        **49,003 vertices / 15,919 edges** and left a single fake node `test:x`,
+        silently, on every `-m slow` and `-m ''` run. The dashboard's datastore has
+        been holding that fake node after every full suite.
+
+        Found by a scoped test-quality audit, 2026-08-09. The graph was rebuilt
+        with `build_graph.py --sync-pg`.
+
+        The name was right and the body was wrong: what this asserts is the
+        NO-PSYCOPG branch, so `psycopg` is made unimportable and that branch is the
+        only one reachable. Nothing touches a live database.
+        """
+        import builtins
         from scripts.build_graph import write_graph_to_pg
-        # Pass a minimal graph — function must never raise
+
+        real_import = builtins.__import__
+
+        def _no_psycopg(name, *a, **kw):
+            if name == "psycopg" or name.startswith("psycopg."):
+                raise ImportError("psycopg unavailable (simulated)")
+            return real_import(name, *a, **kw)
+
+        monkeypatch.setattr(builtins, "__import__", _no_psycopg)
+
         dummy_graph = {
             'nodes': [{'id': 'test:x', 'type': 'Formula', 'name': 'x',
                        'label': 'x', 'verification': 'verified', 'detail': '',
@@ -634,8 +661,7 @@ class TestPGWrite:
             'links': [],
             'meta': {'node_count': 1, 'edge_count': 0},
         }
-        # Should complete without raising regardless of PG availability
-        write_graph_to_pg(dummy_graph)
+        write_graph_to_pg(dummy_graph)      # must not raise
 
 
 # ═══════════════════════════════════════════════════════════════════════

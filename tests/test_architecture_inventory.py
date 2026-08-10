@@ -107,10 +107,14 @@ class TestTheFreshnessCheck:
         import validate
         return validate.check_architecture_inventory_fresh
 
-    def test_the_live_tree_is_fresh(self, check):
+    def test_the_live_tree_is_fresh(self, architecture_inventory_result):
         """SILENT ON CORRECT DATA. If this fails, run
-        `uv run python scripts/architecture_inventory.py --write`."""
-        res = check()
+        `uv run python scripts/architecture_inventory.py --write`.
+
+        Session-shared: three tests read a different `Detail` out of this one
+        result at ~10.7 s each. `test_a_HAND_EDIT_to_the_census_FAILS` below
+        monkeypatches the census, so it correctly keeps its own call."""
+        res = architecture_inventory_result
         assert res.passed is True, [d.message for d in res.details]
 
     def test_a_HAND_EDIT_to_the_census_FAILS(self, check, monkeypatch, tmp_path):
@@ -251,9 +255,8 @@ class TestNoRostersInNarratives:
         assert not self._fires(
             "The bundles D1, D2, D3 are listed in scripts/bundle_registry.py.")
 
-    def test_live_corpus_is_clean(self):
-        from validation.checks.freshness import check_architecture_inventory_fresh
-        res = check_architecture_inventory_fresh()
+    def test_live_corpus_is_clean(self, architecture_inventory_result):
+        res = architecture_inventory_result
         roster = [d for d in res.details if d.name == "no_rosters_in_narratives"]
         assert roster and roster[0].passed, [d.message for d in roster]
 
@@ -277,8 +280,9 @@ class TestDocumentsAnswerTheirQuestion:
         return next(d for d in res.details
                     if d.name == "documents_answer_their_question")
 
-    def test_every_owned_document_declares_its_question(self):
-        d = self._leg()
+    def test_every_owned_document_declares_its_question(self, architecture_inventory_result):
+        d = next(x for x in architecture_inventory_result.details
+                 if x.name == "documents_answer_their_question")
         assert d.passed, d.message
 
     def test_each_readme_row_has_a_verbatim_match(self):

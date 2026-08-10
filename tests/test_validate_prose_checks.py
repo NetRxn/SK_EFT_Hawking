@@ -331,14 +331,14 @@ class TestLiveRepoSmoke:
         assert result.passed, [
             (d.name, d.message) for d in result.details if not d.passed]
 
-    def test_prose_theorem_reference_coverage_passes(self):
-        result = check_prose_theorem_reference_coverage()
+    def test_prose_theorem_reference_coverage_passes(self, prose_ref_coverage_result):
+        result = prose_ref_coverage_result
         assert result.error is None, result.error
         assert result.passed, [
             (d.name, d.message) for d in result.details if not d.passed]
 
-    def test_prose_coverage_waivers_surface_as_warnings(self):
-        result = check_prose_theorem_reference_coverage()
+    def test_prose_coverage_waivers_surface_as_warnings(self, prose_ref_coverage_result):
+        result = prose_ref_coverage_result
         waived = [d for d in result.details if d.name.startswith("waived:")]
         # Exactly the documented waiver set — if this grows past 5 the
         # candidate filter is too loose (see _PROSE_REF_WAIVERS).
@@ -372,9 +372,14 @@ class TestLiveRepoSmoke:
         finally:
             cfg.STRICT_MODE = old
 
-    def test_summary_details_present(self):
-        for fn in (check_axiom_count_prose_consistency,
-                   check_prose_theorem_reference_coverage,
-                   check_theorem_name_embedded_citations):
-            names = [d.name for d in fn().details]
-            assert "summary" in names, f"{fn.__name__} missing summary detail"
+    def test_summary_details_present(self, prose_ref_coverage_result):
+        # ⚠️ The 24.6 s check comes from the session fixture; re-invoking it here
+        # would silently re-pay the whole cost the fixture exists to remove.
+        results = [check_axiom_count_prose_consistency(),
+                   prose_ref_coverage_result,
+                   check_theorem_name_embedded_citations()]
+        for fn_name, res in zip(("check_axiom_count_prose_consistency",
+                                 "check_prose_theorem_reference_coverage",
+                                 "check_theorem_name_embedded_citations"), results):
+            names = [d.name for d in res.details]
+            assert "summary" in names, f"{fn_name} missing summary detail"

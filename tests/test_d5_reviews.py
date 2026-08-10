@@ -499,7 +499,8 @@ class TestChainBackingTargetsResolve:
     `UNRESOLVED_CHAIN_LINK_CEILING` in the same commit that does the remediation.
     """
 
-    def test_a_dangling_link_seeded_past_the_ceiling_fails(self, monkeypatch):
+    def test_a_dangling_link_seeded_past_the_ceiling_fails(
+            self, monkeypatch, chain_backing_result):
         """⚠️ Seeded at the SEAM, not into the tracked corpus.
 
         This test used to append a dangling link to the real
@@ -515,7 +516,7 @@ class TestChainBackingTargetsResolve:
         ceiling can fire, which the seam shows without touching a tracked file."""
         import chain_canonicalize as _cc
 
-        assert rv.check_chain_backing_targets_resolve().passed is True, (
+        assert chain_backing_result.passed is True, (
             "baseline must be green, or this mutation proves nothing")
 
         real = list(_cc._iter_links())
@@ -534,10 +535,13 @@ class TestChainBackingTargetsResolve:
         target = _H.PAPERS_DIR / "D3" / "claims_review.json"
         assert "seeded_defect" not in target.read_text(encoding="utf-8")
 
-    def test_the_ceiling_carries_no_headroom(self):
+    def test_the_ceiling_carries_no_headroom(self, chain_backing_result):
         """A ratchet above the population cannot fire. Assert against the LIVE measured
-        value, never against the constant's own definition (guide §2.3)."""
-        r = rv.check_chain_backing_targets_resolve()
+        value, never against the constant's own definition (guide §2.3).
+
+        Session-shared: this call is unpatched, so it is the same result the seeded
+        test takes its baseline from."""
+        r = chain_backing_result
         detail = next(d for d in r.details if d.name == "unresolvable")
         live = int(detail.message.split()[0])
         assert live == rv.UNRESOLVED_CHAIN_LINK_CEILING, (

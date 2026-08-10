@@ -1912,7 +1912,12 @@ class TestMajoranaJIT:
         np.testing.assert_allclose(Q_py, Q_jit, atol=1e-12)
 
 
+@pytest.mark.slow
 class TestMajoranaProductionRunner:
+    """⚠️ MARKED SLOW 2026-08-09. These run a REAL Majorana Monte Carlo —
+    thermalisation, measurement sweeps, fermion and gauge acceptance — 30.7 s paid
+    on every edit in the DEFAULT suite. That is the textbook case the marker exists
+    for. They still run under `-m slow` and before any merge."""
     """Verify production Majorana MC runner."""
 
     def test_run_majorana_mc_completes(self):
