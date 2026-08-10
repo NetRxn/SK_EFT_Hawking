@@ -74,21 +74,56 @@ class TestEnsureLeanDepsFresh:
         assert "fresh" in note.lower()
 
     def test_refreshes_when_stale(self, monkeypatch):
-        """FIRES on a seeded defect — a hash mismatch must trigger the refresh."""
+        """FIRES on a seeded defect — a hash mismatch must trigger the refresh.
+
+        ⚠️ The stub models a refresh that WORKS: `_needs_refresh` is True before
+        the extraction and False after, which is what a real regeneration does.
+        It previously returned True unconditionally, i.e. it modelled an
+        extraction that changed nothing — and the test then asserted
+        `refreshed is True` for it, pinning the very defect that
+        `test_a_refresh_that_leaves_the_file_stale_is_not_reported_as_fresh`
+        below now covers.
+        """
         import extract_lean_deps as eld
         called = []
-        monkeypatch.setattr(eld, "_needs_refresh", lambda: True)
+        monkeypatch.setattr(eld, "_needs_refresh", lambda: not called)
         monkeypatch.setattr(eld, "_run_extraction", lambda: called.append(1))
 
         refreshed, note = _H.ensure_lean_deps_fresh()
 
         assert refreshed is True
         assert called == [1], (
-            "lean_deps.json was stale and no extraction ran. The five checks at "
-            "registry positions 4-9 would then validate the previous extraction "
-            "while those at 54-57 validate the fresh one."
+            "lean_deps.json was stale and no extraction ran, so the checks "
+            "scheduled before the regenerating check would validate the previous "
+            "extraction while those after it validate the fresh one, inside one run."
         )
         assert "refresh" in note.lower()
+
+    def test_a_refresh_that_leaves_the_file_stale_is_not_reported_as_fresh(
+            self, monkeypatch):
+        """FIRES on the seeded defect — extraction ran but the artifact is still stale.
+
+        `ensure_lean_deps_fresh` used to return True unconditionally once
+        `_run_extraction()` returned, so a run that completed WITHOUT actually
+        regenerating still reported "refreshed before any check read it". That is
+        worse than no report: downstream checks then read a stale artifact under a
+        fresh-looking banner, and the resulting PASS is memoized under the NEW
+        source key, so it replays instead of re-running.
+        """
+        import extract_lean_deps as eld
+        called = []
+        # Extraction runs, but the hash guard still says stale afterwards.
+        monkeypatch.setattr(eld, "_needs_refresh", lambda: True)
+        monkeypatch.setattr(eld, "_run_extraction", lambda: called.append(1))
+
+        refreshed, note = _H.ensure_lean_deps_fresh()
+
+        assert called == [1], "the extraction should still have been attempted"
+        assert refreshed is False, (
+            "a refresh that left the artifact stale was reported as a successful "
+            "refresh — the exact false-report this guard exists to prevent")
+        assert "stale" in note.lower(), (
+            f"the note must say the artifact is still stale, got {note!r}")
 
     def test_refresh_failure_never_raises(self, monkeypatch):
         """A failed refresh is reported, never propagated.
