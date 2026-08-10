@@ -334,8 +334,16 @@ per remediation round, and D11/D12 ran fourteen Stage-13 rounds in a single day.
 **3. F-05:** lift §11 gains *"a fix may not narrate itself"*; §12 gains a terminal de-scarring
 pass.
 
-**Dropped entirely and deferred to the prose agent:** the slop vocabulary, `bundle`/`lift`/`sorry`,
-sentence length, and em-dash *density* as distinct from em-dash *presence*.
+**Dropped entirely and deferred to the prose agent:** the slop vocabulary,
+`bundle`/`lift`/`sorry`, and em-dash *density* as distinct from em-dash *presence*.
+
+⚠️ **`sentence length` was listed here and should not have been.** It did not stay with
+the prose agent: `bundle_sentence_length` shipped as a DETERMINISTIC gate under TODO-D7
+(`ff8fc0c4`, 2026-08-09 12:36), ratcheted at `SENTENCE_OVER_100_CEILING` with zero
+headroom. This document was edited four times after that commit and the sentence
+survived each pass — the correction-landed-at-one-site pattern, applied to a decision
+record. A reader planning the prose agent's scope from this list would have built it
+twice.
 
 ### Phase 4 — Charter §2/§3 (section plan + figure plan), Gates 13/14, F-02/F-03
 

@@ -91,7 +91,8 @@
   [`docs/audits/2026-08-05-adr010-measurement/MEASUREMENTS.md`](../audits/2026-08-05-adr010-measurement/MEASUREMENTS.md)
   (**this ADR's own evidence base** — every §Context figure re-measured with its predicate stated) ·
   `scripts/bundle_registry.py` (the machine roster) ·
-  Pipeline Invariant #14 (`WAVE_EXECUTION_PIPELINE.md:689`).
+  Pipeline Invariant #14 (cite by NAME — line anchors into that file are stale after
+  its `6d5fb283` rewrite).
 
 ---
 
@@ -190,8 +191,14 @@ that needs fixing."*
 - **1 403–1 633 of the 2 039 Lean modules appear in no bundle draft** — measured 2026-08-05 as a band
   between a deliberately generous and a strict homing predicate, because the honest answer is bracketed.
   The inherited *"~340"* is low by **4–5×**, and had **no recoverable predicate and no backing check**:
-  `bundle_lean_module_coverage`, which `SYNTHESIS.md` §5 says *"surfaces the ~340 unlifted modules"*,
-  **does not exist**.
+  `bundle_lean_module_coverage`, which `SYNTHESIS.md` §5 says *"surfaces the ~340 unlifted
+  modules"*, **did not exist when this was written and DOES now** — shipped by ADR-011
+  Phase 6 (F-10) on this branch, registered as *"Lean modules a bundle registers as
+  contributing are named in its draft (ratcheted)"* and ratcheted at zero headroom.
+  Confirmed: `validate.py --list | grep bundle_lean_module_coverage` returns it. This
+  entry is DISCHARGED; an ADR that still asserts a live check is absent is not
+  terminal, and a reader acting on it would build a second mechanism beside the one
+  that exists.
 - The **8 fully-closed phases** (6h, 6j, 6k, 6l, 6q, 6r, 6r′, 6s) all have roadmaps, but *"a phase has
   no bundle home"* is **not machine-answerable today** — nothing joins a phase to a bundle except
   `PAPER_DRAFT_MAPPING.md`, whose late-phase entries name directories that do not exist (see below). D5
@@ -249,9 +256,13 @@ gated behind D6 / `REMEDIATION_PLAN.md` §6a's approval step. Not built.
 
 ### Two documents disagree with the live roster
 
-- **Pipeline Invariant #14** (`WAVE_EXECUTION_PIPELINE.md:689`) enumerates
-  `F, D1–D9, L1–L3, I1–I3, E1, E2` — *"18 targets as of the 2026-06-10 D9 authorization"* — an enum that
-  **cannot legally hold D10, D11 or D12**. Verified directly 2026-08-04.
+- ~~**Pipeline Invariant #14** enumerates `F, D1–D9, L1–L3, I1–I3, E1, E2` — an enum that
+  cannot legally hold D10, D11 or D12.~~ **DISCHARGED.** True when verified 2026-08-04;
+  fixed by this branch's own rewrite of the law (`6d5fb283`). Invariant 14 now reads
+  *"one of the codes in `validate.BUNDLE_CODES`, the roster's single source of truth"* —
+  no enum, so no roster can outgrow it. The `:689` anchor is also stale (that line is now
+  part of Invariant 5); cite invariants by NAME, since a rewrite moves every line number.
+  This entry and §D7's open item are both closed.
 - **`PAPER_STRATEGY.md:341`** still carries *"All 14 bundles have shipped Stage 9 + Stage 10 + Stage 13
   reviewer triples GREEN"* from 2026-05-07.
 

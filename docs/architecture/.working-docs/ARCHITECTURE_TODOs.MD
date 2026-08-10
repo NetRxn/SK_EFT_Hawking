@@ -609,7 +609,9 @@ version *and* the Mathlib rev against `lean-toolchain` + `lakefile.toml`.
 > figures: **199 over 60, and 22 over 100 across 14 bundles, longest 235 words** — partly from this
 > branch's own additions, which is worth saying plainly.
 >
-> **Built:** `bundle_sentence_length`, a down-only ratchet (`SENTENCE_OVER_100_CEILING = 22`).
+> **Built:** `bundle_sentence_length`, a down-only ratchet. ⚠️ Do NOT restate the ceiling
+> here — this line said `= 22` and the live constant is 20 (it moved DOWN, which is the
+> only legal direction). `grep SENTENCE_OVER_100_CEILING src/core/constants.py` answers it.
 > Over-100 is gated because a sentence a referee must re-read to parse is not a style preference;
 > over-60 is reported as an advisory baseline and deliberately **not** gated, because 60 words is
 > defensible in a methods paragraph and gating it would fire on correct work

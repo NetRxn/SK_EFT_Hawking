@@ -18,7 +18,19 @@ without re-deriving it. Read this first, then the linked documents.
 > sites (`evaluate_all_gates`, `_blocked_p1_gates_by_paper`) were **CLOSED by `5228ed6d`**, after the
 > documents below were written — several still record them as open (audit finding QI-21/QI-22).
 >
-> ## 🔴 THE QA/QI INFRASTRUCTURE AUDIT IS **REOPENED** — 31 closed, 4 OPEN Criticals
+> ## ⚠️ THIS FILE CONTRADICTED ITSELF FOUR LINES APART — read the note before the banner
+>
+> The heading said **"REOPENED — 31 closed, 4 OPEN Criticals"** while the paragraph
+> immediately below said the 31 findings are **"all now closed"** (repeated again lower in
+> the file). Both cannot be true, and this document is item 1 of its own cold-start reading
+> order — so the first thing a fresh session read was a contradiction.
+>
+> **Neither half is quotable as state.** Resolve the audit's status from the audit's own
+> board (`docs/audits/2026-08-04-qa-qi-infrastructure/README.md`, counting checkbox entries,
+> not the last ordinal — that board itself states three different totals) and from
+> `validate.py --ci`. Do not resolve it from this heading.
+>
+> ## THE QA/QI INFRASTRUCTURE AUDIT — status is NOT recorded here (see above)
 > **➡️ Read [`docs/audits/2026-08-04-qa-qi-infrastructure/PR_REVIEW_2026-08-05.md`](../../audits/2026-08-04-qa-qi-infrastructure/PR_REVIEW_2026-08-05.md) FIRST** — six-reviewer PR
 > review, verdict **DO NOT MERGE**, measured state and the ordered resume point.
 > A full direct read of the entire QA/QI surface (~17,700 lines, including `build_graph.py`, which
@@ -172,7 +184,7 @@ result was merely CONSISTENT with it. A verification that cannot distinguish the
 launders the claim instead of testing it.)*
 
 **`infra/adr-009-validation-modularization`** — ALL infrastructure work, off main until every phase is done
-(operator ruling 2026-08-03). **76 commits ahead of main, 0 behind** — re-count with `git rev-list --count main..HEAD` rather than trusting this number; it was "35" and stale by 20 within a day (audit finding QI-24).
+(operator ruling 2026-08-03). **commits ahead of main (COUNT IT — this said 76 and was ~4x low), 0 behind** — re-count with `git rev-list --count main..HEAD` rather than trusting this number; it was "35" and stale by 20 within a day (audit finding QI-24).
 Recent:
 
 ```

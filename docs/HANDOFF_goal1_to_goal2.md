@@ -403,8 +403,15 @@ defect the test claims to catch, not merely something nearby.**
    exactly `{propext, Classical.choice, Quot.sound}`" holds only if compiler-trust axioms
    are excluded. Both are **identical on `main`**, ratcheted at zero headroom
    (`MAXHEARTBEATS_PROOF_BODY_CEILING`, ADR-002 / `bundle_native_decide_debt`), and
-   untouched by this branch. They are disclosed debt, not regressions — but the check that
-   reports the heartbeat sites is *advisory and passes*, so nothing gates on Invariant #10.
+   untouched by this branch. They are disclosed debt, not regressions.
+
+   ⚠️ **This paragraph previously said "nothing gates on Invariant #10". That is FALSE.**
+   `check_elaboration_knob_watchlist` returns `passed=not over` against
+   `MAXHEARTBEATS_PROOF_BODY_CEILING = 22` at zero headroom, so a 23rd proof-body
+   heartbeat site FAILS the check. The *name* is advisory; the `invariant_10` leg is
+   not. `AI-DEFECT-DEFENSE-LAYER.md:54` had it right ("enforced … zero-headroom
+   ratchet") and this file contradicted it. The 22 existing sites are frozen debt that
+   cannot grow — which is the enforcement, not the absence of it.
    **Whether `native_decide` should count toward the headline-axiom claim is an operator
    call, not one this loop should make silently.**
 

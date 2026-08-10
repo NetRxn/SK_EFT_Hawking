@@ -288,9 +288,16 @@ derived `readiness`/`blockers_open` fields, script-owned.
 | 4 | findings → `blockers_open`, `open_findings`, `readiness` | `bundle_readiness.write_metadata_counts` |
 | 5 | all conditions met → submission | operator runs `gate_precheck.py submission` |
 
-**Exit condition** (`BUNDLE_LIFT_PROCEDURE.md` §12) — iterate §8→§9→§10→§11 until all six hold:
-`stage9_status == "green"` · `stage10_status == "green"` · `stage13_status == "green"` ·
-`blockers_open == 0` · `stage13_redo_required == false` · `freshness_stale == false`.
+**Exit condition** (`BUNDLE_LIFT_PROCEDURE.md` §12) — iterate §8→§9→§10→§11 until all
+**five** hold: `stage9_status == "green"` · `stage10_status == "green"` ·
+`stage13_status == "green"` · `blockers_open == 0` · `stage13_redo_required == false`.
+
+⚠️ **`freshness_stale` is NOT an exit condition**, and this map listed it as a sixth.
+`BUNDLE_LIFT_PROCEDURE.md:395` states the rule in terms: it is an mtime signal, not a
+readiness verdict, and *"treating it as a readiness verdict misled two reviewers and one
+remediation"* — the correction landed in `LATE_PHASE6_ABSORPTION_PROTOCOL.md` on
+2026-07-31. **The exit gate is `stage13_redo_required`.** Re-committing the error here,
+in the document a reader reaches first, is how a corrected mistake comes back.
 
 **The derived verdict** (`bundle_readiness.py:370-391`), in evaluation order:
 
