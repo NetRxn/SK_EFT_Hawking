@@ -2961,3 +2961,33 @@ stop blocking, not to stop knowing.
 **Condition 6 is therefore met by AMENDMENT, not by achievement**, and this entry exists so that
 no later reader mistakes one for the other. The 11 under-floor bundles are still 11 under-floor
 bundles; goal 2 inherits the question of whether each charter or each draft should move.
+
+---
+
+## V78 — closure review #2: the signature defect, committed inside the fix for the signature defect
+
+Two fresh-context closure reviews ran. The second passed the condition-6 amendment after attacking
+it four ways (it seeded a real over-ceiling case; it mutated the advisory to silence and got two
+test failures; it re-derived the 11-bundle population itself; it confirmed `git diff -- papers/`
+is empty). It then produced two findings that did not survive, both mine.
+
+| # | Claim | Instrument | Verdict |
+|---|---|---|---|
+| 1 | `paper_unmeasured_gates` "has a production caller", pinned by a test | `inspect.getsource(...)` + `"paper_unmeasured_gates" in src` | **THE GUARD WAS VACUOUS.** The function body contains a COMMENT naming `paper_unmeasured_gates`, so the import and the call could both be deleted and the tests still passed. Mutation-proven by the reviewer and **reproduced here before rewriting**. It is the identical raw-source-includes-comments evasion that was CORRECTLY fixed in `test_ratchets_have_zero_headroom.py` in the very same commit, a hundred lines away. Replaced with a BEHAVIOURAL test that drives the real extractor and asserts on captured log records; deleting the call now fails it. |
+| 2 | "One policy applied everywhere" for `measured` | an AST sweep of the FORWARD direction only | **THE INVERSE DIRECTION WAS UNTOUCHED.** `freshness.py`'s nbclient `ImportError` returned `passed=True` with no `measured=False` — a branch that executed no notebook reporting a measurement — while `notebooks.py` handles the identical import with `measured=False`. |
+| 3 | The guard built to catch exactly that | `_SKIP_WORDS` = `SKIPPED\|not found\|absent\|not installed\|missing\|unreadable\|could not` | **COULD NOT SEE IT.** The site says *"unavailable … skipping"* and no word matched. Widened; on the first run the wider list immediately found **a THIRD site** — `reviews.py`'s `accepted_findings_carry_rationale`, whose own comment had described the hazard ("on a module move this check would report success having examined nothing") for weeks while the code did nothing about it. |
+| 4 | The `--ci` floor after all three fixes | `run_checks(skip=CI_SKIP)` | **MEASURED 75 / floor 75.** Zero headroom, restored, with three more branches now honestly reporting that they measured nothing. |
+
+**THE PATTERN, FIFTH CONSECUTIVE ROUND.** Round 1's one-site fix became round 2's Blocker; round
+2's `measured` rule became round 3's Blocker; round 3's commit message became closure review #1's
+finding; **closure review #1's fix became closure review #2's finding, and the vacuous guard was
+written a hundred lines from the correct version of itself in the same commit.** The lesson is not
+"be more careful" — five rounds of care did not prevent it. It is that a claim about one's own fix
+is worth nothing until a reader with no stake in it runs the mutation, and that a test asserting
+*source text* is not a test.
+
+**The structural remedy is now available and is NOT done:** `Detail` carries `measured`, so
+`test_cannot_measure_baseline` should require every cannot-measure branch to construct
+`Detail(..., measured=False)` and assert on THAT, retiring the prose keyword list entirely.
+Widening the list is a stopgap that closed today's hole; it will not close the next one. Logged
+for goal 2 rather than attempted here.

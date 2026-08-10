@@ -240,8 +240,20 @@ import re as _re
 #: A return whose own detail text says it skipped. If a check tells the reader it
 #: could not measure, it must tell `--ci`'s coverage floor and `_memo` the same
 #: thing — otherwise the floor counts it as evidence and the memo caches it.
+#: ⚠️ WIDENED 2026-08-10. The list is a prose heuristic and it missed a live site:
+#: `freshness.py`'s nbclient guard says "unavailable … skipping", and NONE of the
+#: seven original words matched, so a branch that executed no notebook reported a
+#: measurement and the scanner never looked at it. Every word added here is one a
+#: real cannot-measure branch was found using.
+#:
+#: ⚠️ THE REAL FIX IS STRUCTURAL, not lexical, and it is now possible: `Detail`
+#: carries `measured`, so a future pass should require every cannot-measure branch
+#: to construct `Detail(..., measured=False)` and assert on THAT rather than on
+#: what the message happens to say. Tracked for goal 2; widening the list is the
+#: stopgap that closes today's hole.
 _SKIP_WORDS = _re.compile(
-    r"SKIPPED|not found|absent|not installed|missing|unreadable|could not", _re.IGNORECASE)
+    r"SKIPPED|skipping|not found|absent|unavailable|not installed|missing"
+    r"|unreadable|could not|cannot|no such", _re.IGNORECASE)
 
 
 def _self_declared_skips():

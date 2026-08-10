@@ -583,15 +583,24 @@ def check_accepted_findings_carry_rationale() -> CheckResult:
     # ADR-009 H1. This site is one of the two where a retargeted anchor would be
     # SILENT: a missing ledger returns passed=True below, so on a module move this
     # check would report success having examined nothing.
+    #
+    # ⚠️ The comment above described the hazard for weeks and the code did nothing
+    # about it. `measured=False` is what closes it: the PASS stays (an absent
+    # ledger is not a failure) but it stops counting as evidence toward the `--ci`
+    # coverage floor, and `_memo` refuses to cache it. Found 2026-08-10 by WIDENING
+    # `test_cannot_measure_baseline`'s keyword list to include "skipping" — the
+    # scanner had been unable to see this site, so nothing contradicted the comment.
     ledger_path = _H.DOCS_DIR / "review_finding_supersessions.json"
     if not ledger_path.is_file():
-        return CheckResult(passed=True, details=[
-            Detail("ledger", True, "no supersession ledger; skipping", warning=True)])
+        return CheckResult(passed=True, measured=False, details=[
+            Detail("ledger", True, "no supersession ledger; skipping",
+                   warning=True, measured=False)])
     try:
         led = json.loads(ledger_path.read_text(encoding="utf-8"))
     except (json.JSONDecodeError, OSError) as exc:
-        return CheckResult(passed=False, details=[
-            Detail("ledger", False, f"ledger unreadable ({exc}) — unverified, not passing")])
+        return CheckResult(passed=False, measured=False, details=[
+            Detail("ledger", False, f"ledger unreadable ({exc}) — unverified, not passing",
+                   measured=False)])
 
     MIN_CHARS = 40
     bad, checked = [], 0

@@ -174,22 +174,54 @@ class TestEveryDraftReadingEvaluatorDeclaresUnmeasured:
 
 class TestTheReaderHasAProductionCaller:
     """⚠️ `paper_unmeasured_gates` was added to give `GateResult.measured` a reader,
-    and for one commit its only caller was the test asserting it exists — the same
-    write-only defect one layer up, which is what the closure reviewer caught. Its
-    production caller is `build_graph.extract_readiness_gate_nodes`."""
+    and for one commit its only caller was the test asserting it exists.
 
-    def test_build_graph_calls_it(self):
-        import inspect
-        import build_graph
-        src = inspect.getsource(build_graph.extract_readiness_gate_nodes)
-        assert "paper_unmeasured_gates" in src, (
-            "the only reader of GateResult.measured lost its production caller; "
-            "the field is write-only again")
+    ⚠️⚠️ **AND THE FIRST VERSION OF THIS CLASS WAS ITSELF VACUOUS.** It asserted
+    `"paper_unmeasured_gates" in inspect.getsource(...)` — and the function body
+    contains a COMMENT naming `paper_unmeasured_gates`, so the import and the call
+    could both be deleted and these tests still passed. Mutation-proven by the
+    closure reviewer and reproduced here before rewriting. It is the identical
+    raw-source-includes-comments evasion that was CORRECTLY fixed in
+    `test_ratchets_have_zero_headroom.py` in the very same commit, a hundred lines
+    away — this branch's signature defect, committed inside the fix for it.
 
-    def test_it_warns_rather_than_changing_the_state(self):
-        """The state contract must stay a three-value colour — the distinction is
-        reported beside it, not folded into it."""
-        import inspect
+    So this asserts BEHAVIOUR, not source text: drive the real extractor with a
+    gate that measured nothing and require the warning to reach the log."""
+
+    def _drive(self, monkeypatch, caplog, measured: bool):
+        import logging
         import build_graph
-        src = inspect.getsource(build_graph.extract_readiness_gate_nodes)
-        assert "logger.warning" in src and "UNMEASURED" in src
+
+        r = rg.GateResult(gate="citation_integrity", paper="ZZ", priority=1)
+        r.state, r.measured = "open", measured
+        monkeypatch.setattr(build_graph, "extract_all_nodes_without_gates",
+                            lambda: [], raising=False)
+        monkeypatch.setattr(build_graph, "extract_all_edges_without_gates",
+                            lambda _ids: [], raising=False)
+        import readiness_gates
+        monkeypatch.setattr(readiness_gates, "evaluate_all_gates",
+                            lambda _g: [r], raising=False)
+        with caplog.at_level(logging.WARNING):
+            build_graph.extract_readiness_gate_nodes()
+        return caplog.text
+
+    def test_an_unmeasured_gate_reaches_the_log(self, monkeypatch, caplog):
+        text = self._drive(monkeypatch, caplog, measured=False)
+        assert "UNMEASURED" in text and "ZZ" in text, (
+            "the only reader of GateResult.measured produced no output for a gate "
+            "that measured nothing — the field is write-only again")
+
+    def test_a_measured_gate_is_SILENT(self, monkeypatch, caplog):
+        """The direction that makes the test above mean something: a reader that
+        warns unconditionally carries no information."""
+        text = self._drive(monkeypatch, caplog, measured=True)
+        assert "UNMEASURED" not in text
+
+    def test_the_warning_does_not_change_the_state(self, monkeypatch, caplog):
+        """The distinction is reported BESIDE the colour, never folded into it —
+        `GateState` is a three-value contract read by other consumers."""
+        import build_graph
+        r = rg.GateResult(gate="g", paper="ZZ", priority=1)
+        r.state, r.measured = "open", False
+        assert r.to_node_payload()["meta"]["state"] == "open"
+        assert r.to_node_payload()["meta"]["measured"] is False

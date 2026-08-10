@@ -470,9 +470,15 @@ def check_notebook_stored_outputs_current() -> CheckResult:
         import nbformat
         from nbclient import NotebookClient
     except ImportError as exc:
-        return CheckResult(passed=True, details=[
+        # ⚠️ `measured=False`. This branch executes NO notebook, and it defaulted to
+        # reporting a measurement — so with nbclient absent it counted toward the
+        # `--ci` zero-headroom coverage floor as evidence, and `_memo` could cache
+        # it. `notebooks.py` handles the IDENTICAL nbclient ImportError with
+        # `measured=False`, and so does the sibling at :783 in this same file; this
+        # was the one site of three that did not.
+        return CheckResult(passed=True, measured=False, details=[
             Detail("import", True, f"nbclient/nbformat unavailable ({exc}); skipping",
-                   warning=True)])
+                   warning=True, measured=False)])
 
     targets = sorted(_H.NOTEBOOKS_DIR.glob("D1[12]_*.ipynb"))
     if not targets:
