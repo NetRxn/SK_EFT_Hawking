@@ -198,6 +198,29 @@ def graphene_hawking_prediction(platform_name):
         'omega_H_over_Gamma_mr': omega_H_over_Gamma_mr,
         'T_H_over_T_ambient': plat['T_H_over_T_ambient'],
         'correction_pct': (delta_disp + delta_diss) * 100,
+        # ⚠️ EFT VALIDITY IS PART OF THE RESULT, not a caveat in prose elsewhere.
+        # The Γ_H repair raised δ_diss by ~12 orders, and on the short-gradient
+        # platforms the perturbative expansion no longer converges. Measured
+        # 2026-08-10 across the live roster:
+        #     Dean_bilayer_nozzle  D=0.231  δ_diss=0.065  δ_disp=-0.028   VALID
+        #     Monolayer_100nm      D=0.764  δ_diss=0.345  δ_disp=-0.306   VALID
+        #     Monolayer_50nm       D=1.506  δ_diss=0.681  δ_disp=-1.188   INVALID
+        #     PN_junction_10nm     D=7.638  δ_diss=4.863  δ_disp=-30.55   INVALID
+        # A "correction" of -3055 % is not a small correction; returning it as a
+        # bare number invites a caller to quote it. `GrapheneHawking.lean` item 4
+        # states the requirement (D < 1) and nothing enforced it. Every narrative
+        # in the repo is scoped to the Dean device; these two shipped silently.
+        #
+        # NOT a re-charter and NOT a narrowing: no platform is removed and every
+        # number is still returned unchanged. The result now simply says whether
+        # the theory that produced it applies to itself.
+        'eft_valid': bool(D < 1.0 and abs(delta_disp) < 1.0 and 0.0 < delta_diss < 1.0),
+        'eft_validity_note': (
+            "EFT-valid: D < 1, |δ_disp| < 1, 0 < δ_diss < 1"
+            if (D < 1.0 and abs(delta_disp) < 1.0 and 0.0 < delta_diss < 1.0) else
+            f"OUTSIDE EFT VALIDITY — D={D:.3g} (needs < 1), "
+            f"δ_disp={delta_disp:.3g}, δ_diss={delta_diss:.3g}. The perturbative "
+            f"expansion does not converge here; these values are NOT a prediction."),
     }
 
 

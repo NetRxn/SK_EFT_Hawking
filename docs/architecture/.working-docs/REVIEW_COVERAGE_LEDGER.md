@@ -42,7 +42,25 @@ proves nothing.
 | C21 + C11 | validation core (`_registry`, `_memo`, `_tex`, `_config`) + repo root/config | 31 | 3,843 | dispatched |
 | C14 + C07 | `src/**` physics + `lean/**` proofs | 20 | 2,005 | dispatched |
 
-Wave 2 — tests (C15–C18, 68 files, 17,713 lines): **pending**.
+Wave 1 returned **~63 findings** across the six chunks — in files the whole-diff pass had
+nominally already covered. That number is the argument for chunking: one BLOCKER
+(`compile_bundle_pdf` writing `compile_gate_ok: true` for every bundle on a host with no
+`pdflatex`), two fail-opens (a *crashed* paper-side check let `--scope substrate` exit 0
+printing "SUBSTRATE: clean"; `bundle_closure.measurable` emitted `\bundleTheorems{0}` when
+every apex dangled), a memo silently dropping `Detail.measured` on replay, and a physics
+disclosure gap (graphene `δ_diss` unbounded; two of four platforms outside EFT validity,
+one with `δ_disp = -30.55`).
+
+Wave 2 — tests. **Dispatched.** One question per file: *can each test fail?* Reviewers are
+required to SEED the defect each test claims to catch and observe red; a test not mutated
+is reported as not verified.
+
+| chunk | files | lines | status |
+|---|---:|---:|---|
+| C15 | the six heaviest `test_d5_*` guards | 6 | 5,499 | dispatched |
+| C16 | memo, ci_mode, build_graph, public_surface + 9 | 13 | 5,747 | dispatched |
+| C17 + C18 | the seam/meta guards (ratchets, cannot-measure, registry contract, conftest) + 27 | 49 | 6,467 | dispatched |
+
 Wave 3 — docs (C01–C06, 101 files, 34,077) and papers (C08–C10, 123 files, 12,235): **pending**.
 
 ## Rules given to every chunk reviewer

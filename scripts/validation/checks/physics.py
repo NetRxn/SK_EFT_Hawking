@@ -722,6 +722,54 @@ def check_physical_bounds() -> CheckResult:
             details.append(Detail(f"{name}/{check_name}", passed,
                                   f"{'OK' if passed else 'FAILED'}"))
 
+    # ── GRAPHENE LEG ──────────────────────────────────────────────────────
+    # ⚠️ This check bounded only the three BEC platforms. The Γ_H repair raised
+    # graphene `δ_diss` by ~12 orders and NOTHING bounded the result, so Pipeline
+    # Invariant 5 ("every computed quantity has bounds") was unmet for the exact
+    # quantity that wave changed. Two of four platforms land outside EFT validity
+    # (Monolayer_50nm D=1.51; PN_junction_10nm D=7.64 with δ_disp=-30.55, a
+    # "correction" of -3055 %) and shipped silently while every narrative in the
+    # repo was scoped to the Dean device.
+    #
+    # The bound is on DISCLOSURE, not on the values: a platform outside validity
+    # is fine so long as the RESULT SAYS SO. Forcing the numbers into range, or
+    # dropping the platforms, would be the re-charter this suite exists to stop.
+    from src.core.constants import GRAPHENE_PLATFORMS
+    from src.graphene.hawking_predictions import graphene_hawking_prediction
+
+    n_valid = n_flagged = 0
+    for _name in sorted(GRAPHENE_PLATFORMS):
+        r = graphene_hawking_prediction(_name)
+        if "eft_valid" not in r:
+            details.append(Detail(f"graphene:{_name}", False,
+                                  "result carries no `eft_valid` key — an "
+                                  "out-of-validity value would ship as a bare number"))
+            all_pass = False
+            continue
+        in_range = (r["D"] < 1.0 and abs(r["delta_disp"]) < 1.0
+                    and 0.0 < r["delta_diss"] < 1.0)
+        if r["eft_valid"] != in_range:
+            details.append(Detail(f"graphene:{_name}", False,
+                                  f"`eft_valid`={r['eft_valid']} contradicts measured "
+                                  f"D={r['D']:.3g}, δ_disp={r['delta_disp']:.3g}, "
+                                  f"δ_diss={r['delta_diss']:.3g}"))
+            all_pass = False
+        elif in_range:
+            n_valid += 1
+            details.append(Detail(f"graphene:{_name}", True,
+                                  f"D={r['D']:.3g}, δ_diss={r['delta_diss']:.3g}, "
+                                  f"δ_disp={r['delta_disp']:.3g} — within EFT validity"))
+        else:
+            n_flagged += 1
+            details.append(Detail(f"graphene:{_name}", True,
+                                  f"OUTSIDE EFT validity, correctly flagged: "
+                                  f"D={r['D']:.3g}, δ_disp={r['delta_disp']:.3g}",
+                                  warning=True))
+    details.append(Detail(
+        "graphene_summary", True,
+        f"{len(GRAPHENE_PLATFORMS)} graphene platform(s) bounded — {n_valid} within "
+        f"EFT validity, {n_flagged} outside and DISCLOSED", warning=bool(n_flagged)))
+
     return CheckResult(passed=all_pass, details=details)
 
 
