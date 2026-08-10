@@ -3094,3 +3094,61 @@ re-charter in particular would have loosened a ceiling that nothing was violatin
 FRESHLY COMPILED tree before acting on it.** Perishability makes any paper-side finding
 older than the last `counts.tex` regeneration suspect, and the failure mode is
 directional — staleness reads as failure, never as success.
+
+---
+
+## V82 — `proxy_body_audit`'s scanner was blind to 8.1% of the corpus; fixing it reveals 7 inherited violations
+
+**The defect.** `build_graph._scan_lean_theorem_bodies` matched
+`^(?:theorem|lemma)\s+` — anchored at column 0, with no allowance for an attribute, a
+modifier, or indentation. Measured over `lean/SKEFTHawking/**`:
+
+```
+declarations seen by the scanner  : 20,122
+seen by a tolerant scanner        : 21,894
+MISSED                            :  1,772   (8.1%)
+of those, trivially-closed (:= rfl):   230
+```
+
+`@[simp] theorem`, `private theorem` and every indented declaration were invisible.
+**This is the `isNoConfusion`-vs-`noConfusionType` shape verbatim** — a declaration-form
+convention that does not match what Lean source contains, so the guard reported a
+measured zero over a population it never saw. Three consumers shared the blind spot:
+`proxy_body_audit`, `formula_grounding`'s R-05 relabel gate, and the placeholder
+extractor.
+
+**Which instrument lied:** the scanner. `proxy_body_audit` reported **PASS** with live
+hard-FAIL violations sitting in the tree.
+
+**What the fix reveals — and why it is NOT this branch's regression.** With the scanner
+widened, the check FAILS on **7 structurally-named theorems closed by `rfl`**:
+
+```
+HandleTradeAtomVacuity.lean:230   collapsedPresentation_rank
+HandleTradeAtomVacuity.lean:336   constRankTwoPresentation_rank
+IntersectionMatrixDisjointSumInt.lean:100  intH2BasisSum_rank
+KummerK3E1Package.lean:144        kummerK3IntH2Basis_rank
+SymTFT/StiefelWhitney.lean:114/115/116  zero_rank / add_rank / neg_rank
+```
+
+Verified: **every one pre-exists on `main`**, and none of those files appears in
+`git diff --name-only main..HEAD`. The debt is inherited; only its *visibility* is new.
+
+## ⛔ OPEN — an operator disposition, deliberately not taken
+
+The check offers two remedies: **strengthen** the seven theorems, or **register** them in
+`MODELING_ASSUMPTION_THEOREMS` with `reason` + `discloses`.
+
+**Neither was applied here, and the third option — quietly re-baselining them — is
+forbidden** by the no-silent-scope-change rule: adding seven names to
+`VACUOUS_STATEMENT_BASELINE` to restore green would be forcing a gate green by
+re-chartering, which is precisely what a fixed instrument must never be used to justify.
+
+Choosing between strengthen and disclose requires reading seven Lean theorems and judging
+whether each is legitimately definitional. That judgement was not made, so it is recorded
+as open rather than guessed at.
+
+**Consequence, stated plainly:** `validate.py` now carries a SECOND red beyond
+`readiness_submission_gate`. That red is CORRECT — it is a guard that started working.
+Reverting the scanner would restore green by restoring blindness, which is the worse
+trade. Goal 2 (or the operator) picks strengthen-or-disclose.

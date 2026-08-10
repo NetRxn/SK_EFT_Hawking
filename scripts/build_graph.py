@@ -2139,7 +2139,25 @@ def _scan_lean_theorem_bodies(source: str):
         # adversarial finding C1, 2026-06-13). `def`/`instance` are NOT scanned:
         # they are definitions, not claims, and a value def (`def foo_dim := 3`)
         # is legitimately trivial-bodied.
-        m = re.match(r'^(?:theorem|lemma)\s+([A-Za-z_][A-Za-z0-9_\']*)', line)
+        # ⚠️ TOLERATE attributes, modifiers and indentation. This was anchored at
+        # column 0 with no prefix allowance, so `@[simp] theorem`, `private
+        # theorem` and any indented declaration were INVISIBLE — 1,772 of 21,894
+        # declarations (8.1%), 230 of them trivially-closed (`:= rfl`).
+        #
+        # This is the `isNoConfusion`-vs-`noConfusionType` shape verbatim: a
+        # declaration-form convention that does not match what Lean source
+        # actually contains, so the guard reports a measured zero over a
+        # population it never saw. `proxy_body_audit` reported PASS with live
+        # hard-FAIL violations sitting in the tree.
+        #
+        # Three consumers inherit this scanner — `proxy_body_audit`
+        # (lean_substrate.py), `formula_grounding`'s R-05 relabel gate
+        # (lean_statements.py) and the placeholder extractor below — so the blind
+        # spot was shared by all three.
+        m = re.match(
+            r'^\s*(?:@\[[^\]]*\]\s*)?'
+            r'(?:private\s+|protected\s+|nonrec\s+|scoped\s+)*'
+            r'(?:theorem|lemma)\s+([A-Za-z_][A-Za-z0-9_\']*)', line)
         if not m:
             i += 1
             continue
