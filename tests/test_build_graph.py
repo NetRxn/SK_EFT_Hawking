@@ -15,8 +15,16 @@ from pathlib import Path
 from collections import Counter
 
 import pytest
+import types
 
-pytestmark = pytest.mark.slow
+# ⚠️ NOT a module-level `slow` mark. One was here, deselecting ALL 66 functions
+# from the default `pytest tests/` run — including `TestAgeLabelCreation`, which
+# needs no database and completes in 0.02 s. A guard that only runs under
+# `-m slow` is a guard most runs do not have.
+#
+# The mark now sits on the classes that genuinely need Postgres or a full graph
+# build. Anything cheap and DB-free stays on the default path, which is where a
+# regression should be caught.
 
 # Ensure project root is on sys.path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -286,6 +294,7 @@ class TestExtractFigureNodes:
 # Aggregate and integrity tests
 # ═══════════════════════════════════════════════════════════════════════
 
+@pytest.mark.slow
 class TestNodeIntegrity:
     """Tests for aggregate node extraction."""
 
@@ -298,6 +307,7 @@ class TestNodeIntegrity:
         )
 
 
+@pytest.mark.slow
 class TestEdgeIntegrity:
     """Tests for edge extraction."""
 
@@ -404,6 +414,7 @@ class TestEdgeIntegrity:
 # Full graph tests
 # ═══════════════════════════════════════════════════════════════════════
 
+@pytest.mark.slow
 class TestFullGraph:
     """Tests for build_graph_json()."""
 
@@ -628,6 +639,7 @@ class TestAgeLabelCreation:
             "a real failure was swallowed by the duplicate-label handler")
 
 
+@pytest.mark.slow
 class TestPGWrite:
     """Tests for PG+AGE parallel write. Skips if PG unavailable.
 
@@ -739,45 +751,6 @@ class TestPGWrite:
             f"PG vertex count {count} != graph node_count {expected}"
         )
 
-    def test_write_survives_pg_unavailable(self, monkeypatch):
-        """`write_graph_to_pg` does not raise when PG is UNAVAILABLE.
-
-        ⚠️ **THIS TEST USED TO DESTROY THE PRODUCTION PROVENANCE GRAPH.** It called
-        `write_graph_to_pg` with a one-node dummy and no isolation. The function
-        opens with an unconditional `MATCH (n) DETACH DELETE n` against the real
-        `sk_eft` AGE graph — so on any machine where Postgres is UP (it has been,
-        for days) the test did not exercise the unavailable path at all. It wiped
-        **49,003 vertices / 15,919 edges** and left a single fake node `test:x`,
-        silently, on every `-m slow` and `-m ''` run. The dashboard's datastore has
-        been holding that fake node after every full suite.
-
-        Found by a scoped test-quality audit, 2026-08-09. The graph was rebuilt
-        with `build_graph.py --sync-pg`.
-
-        The name was right and the body was wrong: what this asserts is the
-        NO-PSYCOPG branch, so `psycopg` is made unimportable and that branch is the
-        only one reachable. Nothing touches a live database.
-        """
-        import builtins
-        from scripts.build_graph import write_graph_to_pg
-
-        real_import = builtins.__import__
-
-        def _no_psycopg(name, *a, **kw):
-            if name == "psycopg" or name.startswith("psycopg."):
-                raise ImportError("psycopg unavailable (simulated)")
-            return real_import(name, *a, **kw)
-
-        monkeypatch.setattr(builtins, "__import__", _no_psycopg)
-
-        dummy_graph = {
-            'nodes': [{'id': 'test:x', 'type': 'Formula', 'name': 'x',
-                       'label': 'x', 'verification': 'verified', 'detail': '',
-                       'meta': {'shape': 'circle'}}],
-            'links': [],
-            'meta': {'node_count': 1, 'edge_count': 0},
-        }
-        write_graph_to_pg(dummy_graph)      # must not raise
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -1025,6 +998,7 @@ class TestExtractCountMetricNodes:
             assert 'metric' in n['meta']
 
 
+@pytest.mark.slow
 class TestExtractReadinessGateNodes:
     """ReadinessGate — per-paper × per-dimension gate state."""
 
@@ -1092,3 +1066,90 @@ class TestReportsEdges:
             assert e['target'].startswith('count:')
             # delta_pct optional (may be None if canonical value missing)
             assert 'paper_value' in e or 'value' in e
+
+
+class TestPGWriteWithoutPsycopg:
+    """The no-psycopg branch. Deliberately NOT marked slow, and NOT in TestPGWrite.
+
+    This guards against re-arming a wipe of the live 49,003-vertex graph, and it
+    needs no database at all — so it belongs on the DEFAULT path. It sat inside
+    the `slow`-marked TestPGWrite, which meant the single guard against the most
+    destructive failure in this suite ran only under `-m slow`.
+    """
+
+    TEST_GRAPH = "sk_eft_test_pgwrite_nopsycopg"
+
+    def test_write_survives_pg_unavailable(self, monkeypatch, caplog):
+        """`write_graph_to_pg` does not raise when PG is UNAVAILABLE.
+
+        ⚠️ **THIS TEST USED TO DESTROY THE PRODUCTION PROVENANCE GRAPH.** It called
+        `write_graph_to_pg` with a one-node dummy and no isolation. The function
+        opens with an unconditional `MATCH (n) DETACH DELETE n` against the real
+        `sk_eft` AGE graph — so on any machine where Postgres is UP (it has been,
+        for days) the test did not exercise the unavailable path at all. It wiped
+        **49,003 vertices / 15,919 edges** and left a single fake node `test:x`,
+        silently, on every `-m slow` and `-m ''` run. The dashboard's datastore has
+        been holding that fake node after every full suite.
+
+        Found by a scoped test-quality audit, 2026-08-09. The graph was rebuilt
+        with `build_graph.py --sync-pg`.
+
+        The name was right and the body was wrong: what this asserts is the
+        NO-PSYCOPG branch, so `psycopg` is made unimportable and that branch is the
+        only one reachable. Nothing touches a live database.
+
+        ⚠️ **THE ISOLATION WAS ONE BYPASSABLE HOOK, AND IT AIMED AT PRODUCTION.**
+        Patching `builtins.__import__` does not stop `importlib.import_module`,
+        so any refactor of that import re-arms the wipe described above — and the
+        call passed the DEFAULT `graph_name`, i.e. the real `sk_eft`. A reviewer
+        defeated the hook and this test noticed nothing, because "must not raise"
+        is satisfied by the destructive path succeeding.
+
+        Three guards now, because one is what failed:
+          1. the call names `TEST_GRAPH`, never production;
+          2. `psycopg.connect` is replaced by a sentinel that FAILS the test if
+             reached, so the hook being bypassed is loud rather than silent;
+          3. the no-psycopg branch must be positively OBSERVED, not inferred from
+             the absence of an exception.
+        """
+        import builtins
+        import logging
+        import sys as _sys
+        from scripts.build_graph import write_graph_to_pg
+
+        caplog.set_level(logging.DEBUG)
+
+        real_import = builtins.__import__
+
+        def _no_psycopg(name, *a, **kw):
+            if name == "psycopg" or name.startswith("psycopg."):
+                raise ImportError("psycopg unavailable (simulated)")
+            return real_import(name, *a, **kw)
+
+        monkeypatch.setattr(builtins, "__import__", _no_psycopg)
+
+        # Guard 2: if the import hook is ever bypassed, connecting must ABORT the
+        # test rather than reach `MATCH (n) DETACH DELETE n`.
+        _stub = types.ModuleType("psycopg")
+        _stub.connect = lambda *a, **k: pytest.fail(
+            "psycopg.connect was reached — the no-psycopg branch was NOT taken "
+            "and this test was one refactor away from wiping the live graph")
+        monkeypatch.setitem(_sys.modules, "psycopg", _stub)
+
+        dummy_graph = {
+            'nodes': [{'id': 'test:x', 'type': 'Formula', 'name': 'x',
+                       'label': 'x', 'verification': 'verified', 'detail': '',
+                       'meta': {'shape': 'circle'}}],
+            'links': [],
+            'meta': {'node_count': 1, 'edge_count': 0},
+        }
+        # Guard 1: never the production graph name, even on the branch that is
+        # supposed to return before connecting.
+        write_graph_to_pg(dummy_graph, graph_name=self.TEST_GRAPH)
+
+        # Guard 3: assert the branch was TAKEN. "Did not raise" is also true of
+        # the destructive path completing successfully, which is exactly how the
+        # original wipe went unnoticed for days.
+        assert any("psycopg" in r.getMessage().lower() for r in caplog.records), (
+            "no 'psycopg unavailable' log — the unavailable branch was not "
+            "observed, so this test asserts nothing about it")
