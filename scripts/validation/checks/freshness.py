@@ -166,6 +166,28 @@ def _counts_is_stale() -> tuple[bool, str]:
     newest_lean = max((f.stat().st_mtime for f in lean_src), default=0)
     if newest_lean > counts_mtime:
         return True, "SKEFTHawking/**/*.lean newer than counts.json"
+
+    # ⚠️ THE OTHER COUNT-BEARING TREES. `counts.json` publishes `pytest_cases`,
+    # `test_files`, `notebooks` and `papers`, and NONE of those directories was a
+    # staleness input — only lean_deps, constants.py and visualizations.py were. So
+    # `\totaltests`, `\testfiles`, `\notebookcount` and `\papercount` could drift
+    # silently while this check reported `fresh`. Measured 2026-08-10: two commits
+    # added 8 tests after the last regeneration and `counts.json` still said 6,163
+    # against a live 6,171, with the check green — a violation of the repo's
+    # "update before you ship, in the same commit" rule BY the mechanism meant to
+    # enforce it.
+    #
+    # Same rglob-newest shape as the Lean leg above, deliberately: one staleness
+    # mechanism, applied to every tree whose contents this artifact publishes.
+    for label, root, pat in (
+            ("tests/**/*.py", _H.TESTS_DIR, "*.py"),
+            ("notebooks/**/*.ipynb", _H.NOTEBOOKS_DIR, "*.ipynb"),
+            ("papers/**/paper_draft.tex", _H.PAPERS_DIR, "paper_draft.tex")):
+        if not root.exists():
+            continue
+        newest = max((f.stat().st_mtime for f in root.rglob(pat)), default=0)
+        if newest > counts_mtime:
+            return True, f"{label} newer than counts.json"
     return False, "fresh"
 
 

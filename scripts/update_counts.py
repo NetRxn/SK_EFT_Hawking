@@ -132,7 +132,25 @@ def count_lean(deps_path: Path, preloaded: list | None = None) -> dict:
         with open(deps_path) as f:
             data = json.load(f)
 
-    theorems = [d for d in data if d["kind"] == "theorem"]
+    # ⚠️ AUTHOR-WRITTEN ONLY, via the canonical resolver. This read
+    # `[d for d in data if d["kind"] == "theorem"]` with NO autogen filter, so
+    # `\totaltheorems` published 26,398 — of which 3,711 are compiler-generated
+    # (1,508 `.eq_1` equation lemmas, 790 `.sizeOf_spec`, 420 `.inj`, 417 `.injEq`,
+    # 184 `.congr_simp`, …). That number is `\input` into I1, D2 and I3 and rendered
+    # to a reader as "machine-checked theorems" and "theorems were written" —
+    # including in I1's ABSTRACT. Nobody wrote 1,508 equation lemmas.
+    #
+    # `validate_helpers.autogen_index` is the SINGLE OWNER of "is this compiler
+    # generated" (ExtractDeps' `autogen` field plus the parent-kind-guarded suffix
+    # supplement). It was built for exactly this and every other consumer already
+    # uses it; this generator — the one whose output reaches readers — did not.
+    # Do NOT reintroduce a local predicate here.
+    import sys as _sys
+    _sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from validate_helpers import autogen_index as _autogen_index
+    _autogen = _autogen_index(data)
+    theorems = [d for d in data
+                if d["kind"] == "theorem" and not _autogen.get(d["name"])]
     # Standalone placeholders: theorems whose type is exactly `True`
     # Note: structure field projections like `GappedInterfaceConjecture.gap_exists`
     # also have type containing True but are intentional structure fields, not placeholders.

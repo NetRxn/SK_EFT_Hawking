@@ -2600,6 +2600,25 @@ COUNT_LITERAL_CEILING = 107      # hardcoded "N theorems/modules/sorry" in paper
 #:   KummerK3E1Package.kummerK3IntH2Basis_rank
 #:   SymTFT/StiefelWhitney.{zero_rank, add_rank, neg_rank}
 #: All seven pre-exist on `main`; none of their files is in the ADR-009 branch diff.
+#: ⚠️ PIN THE NAMES, NOT THE COUNT. A ceiling on the COUNT is defeated by a swap: a
+#: closure reviewer deleted one genuine projection and added
+#:     @[simp] theorem spectralGap_rank_is_maximal : spectralGap.rank = 0 := rfl
+#: against a rigged definition, and the check still read "7 of 7, PASS". A vacuous
+#: claim wearing `@[simp]` escaped through any refactor that removed a projection in
+#: the same change. An allow-list makes the exemption per-declaration, so a NEW name
+#: is flagged whatever the total.
+SIMP_PROJECTION_ALLOWLIST = frozenset({
+    "HandleTradeAtomVacuity.collapsedPresentation_rank",
+    "HandleTradeAtomVacuity.constRankTwoPresentation_rank",
+    "IntersectionMatrixDisjointSumInt.intH2BasisSum_rank",
+    "KummerK3E1Package.kummerK3IntH2Basis_rank",
+    "StiefelWhitney.zero_rank",
+    "StiefelWhitney.add_rank",
+    "StiefelWhitney.neg_rank",
+})
+
+#: Kept as a SECOND, independent assertion: the allow-list must not silently grow
+#: either. Two instruments on one population, which is this project's own rule.
 SIMP_PROJECTION_CEILING = 7
 
 NUMERICAL_LITERAL_CEILING = 117  # inline unit-bearing values outside \input{tables/}

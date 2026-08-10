@@ -28,8 +28,8 @@
 | Metric | Value |
 |---|---:|
 | Lean declarations (total) | 40726 |
-| Lean theorems (total) | 26398 |
-| Lean theorems (substantive) | 26372 |
+| Lean theorems (total) | 22687 |
+| Lean theorems (substantive) | 22661 |
 | Lean theorems (placeholder `True := trivial`) | 26 |
 | Lean modules | 2040 |
 | Lean definitions | 12807 |
@@ -42,7 +42,7 @@
 | Aristotle runs | 44 |
 | Python source modules | 137 |
 | Test files | 181 |
-| pytest cases | 6163 |
+| pytest cases | 6172 |
 | Figures (PNG) | 170 |
 | Notebooks | 91 |
 | Papers (drafts) | 42 |

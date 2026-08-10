@@ -77,6 +77,11 @@ LEAN_DIR = PROJECT_ROOT / "lean" / "SKEFTHawking"
 LEAN_DEPS_PATH = PROJECT_ROOT / "lean" / "lean_deps.json"
 NOTEBOOKS_DIR = PROJECT_ROOT / "notebooks"
 PAPERS_DIR = PROJECT_ROOT / "papers"
+#: Added 2026-08-10 when `counts_fresh` gained a tests/ staleness leg. It must be
+#: an ANCHOR, not an inline `PROJECT_ROOT / "tests"`: hazard H1 says reach paths as
+#: `_H.<NAME>` at each use so a test can retarget them. The first version inlined it
+#: and a fixture that retargets every other anchor still read the REAL tests/ tree.
+TESTS_DIR = PROJECT_ROOT / "tests"
 DOCS_DIR = PROJECT_ROOT / "docs"
 COUNTS_JSON_PATH = DOCS_DIR / "counts.json"
 COUNTS_TEX_PATH = DOCS_DIR / "counts.tex"
@@ -277,6 +282,11 @@ _RESERVED_GENERATED_SUFFIXES = (
     # not reached by isInternalDetail / isAuxRecursor / isNoConfusion
     "noConfusionType", "ctorIdx", "toCtorIdx", "sizeOf_spec", "eq_def", "injEq",
     "inj", "ctorElim", "ctorElimType", "ofNat",
+    # `deriving Fintype/Inhabited/DecidableEq` products, added 2026-08-10 after a
+    # closure reviewer measured ~300 of these still counted as author-written.
+    # Each is inductive-parented (verified 71/71, 18/18, 18/18, 18/18) and appears
+    # NOWHERE in `lean/SKEFTHawking/**` source — `grep -rn` returns 0.
+    "ofNat_ctorIdx", "enumList", "enumList_nodup", "enumList_getElem?_ctorIdx_eq",
     # reached by Lean in production; kept for self-sufficiency
     "casesOn", "recOn", "brecOn", "below", "ibelow", "binductionOn", "noConfusion",
 )
@@ -286,7 +296,21 @@ _RESERVED_GENERATED_SUFFIXES = (
 #: above cannot reach them; they get their own parent-kind branch rather than a bare
 #: suffix match. Measured over the live corpus: every `.repr` (76) and `.decEq` (34) has
 #: an `instance` parent, and no author-written declaration ends in either.
-_DERIVED_INSTANCE_FIELD_SUFFIXES = ("repr", "decEq")
+_DERIVED_INSTANCE_FIELD_SUFFIXES = ("repr", "decEq", "default")
+
+#: `def`-PARENTED generated lemmas. Their own set, with their own parent-kind guard,
+#: because the two sets above guard on `inductive`/`structure` and `instance` parents
+#: respectively and neither can reach these.
+#:
+#: ⚠️ Deliberately NOT folded into `_RESERVED_GENERATED_SUFFIXES`. Widening that set's
+#: guard to accept `def` parents would also let `inj`, `sizeOf_spec` and the rest match
+#: `def`-parented names, which is a far larger and unjustified surface. One narrow set
+#: per parent kind keeps each guard exactly as wide as its evidence.
+#:
+#: Measured 2026-08-10: 184 `.congr_simp`, parents `{def: 150, structure: 1, absent: 33}`;
+#: `grep -rn "congr_simp" lean/SKEFTHawking/` returns 0 — Lean's congruence-simp lemmas,
+#: written by nobody.
+_DEF_PARENTED_GENERATED_SUFFIXES = ("congr_simp",)
 
 
 def _is_internal_detail(name: str) -> bool:
@@ -339,6 +363,12 @@ def autogen_index(records) -> dict:
                 return True
         for suf in _DERIVED_INSTANCE_FIELD_SUFFIXES:
             if name.endswith("." + suf) and kind.get(name[: -(len(suf) + 1)]) == "instance":
+                return True
+        for suf in _DEF_PARENTED_GENERATED_SUFFIXES:
+            # `def`-parented, or parentless (the parent itself was filtered out of
+            # the record set) — both are Lean products; no author writes `foo.congr_simp`.
+            if name.endswith("." + suf) and kind.get(name[: -(len(suf) + 1)]) in (
+                    "def", "structure", None):
                 return True
         return False
 

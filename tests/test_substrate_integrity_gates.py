@@ -481,6 +481,32 @@ def test_the_simp_projection_exemption_is_a_ratchet_not_a_licence():
     assert r.passed, "at the ceiling the check must pass"
 
 
+def test_a_swapped_in_simp_lemma_is_caught_by_NAME_not_count(monkeypatch):
+    """FIRES ON THE SEEDED DEFECT — the swap attack a count-only ratchet allows.
+
+    ⚠️ The first version of this exemption pinned the COUNT. A closure reviewer
+    defeated it by SWAPPING: delete one genuine projection, add a rigged
+    `@[simp] theorem …_rank : … = 0 := rfl`, total still 7, check still PASS.
+    The allow-list makes the exemption per-declaration, so a name nobody vetted is
+    flagged whatever the arithmetic says.
+    """
+    from src.core.constants import SIMP_PROJECTION_ALLOWLIST
+    from validation.checks.lean_substrate import check_proxy_body_audit
+
+    # Drop one vetted name: the corresponding live lemma is now un-allow-listed.
+    victim = sorted(SIMP_PROJECTION_ALLOWLIST)[0]
+    import src.core.constants as C
+    monkeypatch.setattr(C, "SIMP_PROJECTION_ALLOWLIST",
+                        SIMP_PROJECTION_ALLOWLIST - {victim})
+    r = check_proxy_body_audit()
+    assert not r.passed, (
+        f"{victim} left the allow-list and the check still passed — the exemption "
+        f"is keyed on a count, so a rigged lemma can be swapped in for a real one")
+    assert any(victim in (d.message or "") or victim in d.name
+               for d in r.details if not d.passed), \
+        f"the un-vetted declaration was not NAMED in any failing detail"
+
+
 def test_exceeding_the_simp_ceiling_reaches_the_VERDICT(monkeypatch):
     """FIRES ON THE SEEDED DEFECT — a breach must fail the CHECK, not just a detail.
 

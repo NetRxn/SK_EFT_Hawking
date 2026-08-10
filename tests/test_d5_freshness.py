@@ -85,6 +85,15 @@ class TestCountsFreshness:
         lean = tmp_path / "lean" / "SKEFTHawking"
         _touch(lean / "Sub" / "M.lean", lean_mtime if lean_mtime else 0.0)
         monkeypatch.setattr(_H, "LEAN_DIR", lean)
+        # `counts.json` also publishes pytest_cases / test_files / notebooks /
+        # papers, so those trees are staleness inputs too (added 2026-08-10 after
+        # \totaltests drifted 6163→6171 with this check green). Retarget them at
+        # empty tmp dirs, exactly as LEAN_DIR is: a fixture that leaves a real-tree
+        # anchor in place is testing the developer's working copy, not the check.
+        for _name in ("TESTS_DIR", "NOTEBOOKS_DIR", "PAPERS_DIR"):
+            _d = tmp_path / _name.lower()
+            _d.mkdir(parents=True, exist_ok=True)
+            monkeypatch.setattr(_H, _name, _d)
         runner = _Ran()
         monkeypatch.setattr(fr.subprocess, "run", runner)
         return runner

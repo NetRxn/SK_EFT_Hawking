@@ -203,6 +203,13 @@ So the order is load-bearing:
 ```bash
 uv run python -m pytest -m ''                       # may change \totaltests
 uv run python scripts/update_counts.py              # regenerates counts.tex IF substance moved
+#   ^ counts are AUTHOR-WRITTEN-scoped: `update_counts` filters through
+#     `validate_helpers.autogen_index`, the single owner of "is this
+#     compiler-generated". Without that filter `\totaltheorems` published 26,398
+#     where 22,687 are author-written — 3,711 of them Lean's own `.eq_1`,
+#     `.sizeOf_spec`, `.inj`, `.congr_simp` products. That number is `\input` by
+#     I1, D2 and I3 and read as "machine-checked theorems". Do not reintroduce a
+#     local kind=="theorem" filter in any generator.
 uv run python scripts/compile_bundle_pdf.py --all --force
 uv run python scripts/validate.py --ci
 ```
@@ -213,6 +220,14 @@ stamp and leaves both artifacts untouched when nothing substantive moved. So a
 moved `counts.tex` mtime means the counts genuinely changed, which means the
 numbers baked into every PDF whose closure contains it genuinely are out of date. The gate is right; the
 workflow just has an order.
+
+⚠️ **`counts_fresh`'s staleness inputs must cover every tree the artifact publishes.**
+They did not: only `lean_deps.json`, `constants.py` and `visualizations.py` were inputs,
+while `counts.json` also publishes `pytest_cases`, `test_files`, `notebooks` and `papers`.
+So `\totaltests` and its siblings could drift while the check reported `fresh` — measured
+2026-08-10 at 6,163 published against 6,171 live, green throughout. `tests/`, `notebooks/`
+and `papers/` are now rglob-newest inputs on the same shape as the existing Lean leg. A new
+published count needs its tree added here, or it inherits the same blindness.
 
 The cost is real and is accepted deliberately: the alternative is giving the
 coverage floor slack, and a floor with slack cannot see the next check that

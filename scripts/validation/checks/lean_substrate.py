@@ -398,6 +398,7 @@ def check_proxy_body_audit() -> CheckResult:
     try:
         from src.core.constants import VACUOUS_STATEMENT_BASELINE as BASELINE
         from src.core.constants import SIMP_PROJECTION_CEILING
+        from src.core.constants import SIMP_PROJECTION_ALLOWLIST
     except ImportError:
         BASELINE = frozenset()
 
@@ -453,7 +454,15 @@ def check_proxy_body_audit() -> CheckResult:
             if is_simp:
                 norm_s = " ".join(body.split())
                 if any(rx.match(norm_s) for rx, _ in _TRIVIAL_BODY_RES):
-                    simp_projections.append(f"{lean_file.stem}.{thm_name}")
+                    qual = f"{lean_file.stem}.{thm_name}"
+                    simp_projections.append(qual)
+                    # ⚠️ IDENTITY, not just count. An unknown `@[simp]` structural
+                    # `rfl` lemma is flagged even if the TOTAL is unchanged — a
+                    # count-only ratchet is defeated by swapping one out for a
+                    # rigged one, which is exactly how a reviewer broke the first
+                    # version of this leg.
+                    if qual not in SIMP_PROJECTION_ALLOWLIST:
+                        new_flagged.append((qual, line_no, "@[simp] rfl (not allow-listed)"))
                 continue
             norm = " ".join(body.split())
             if _NONTRIVIAL_MARKER_RE.search(norm):
