@@ -34,6 +34,7 @@ from typing import List
 import validate_helpers as _H
 from validation import _config as _cfg
 from validation._registry import CheckResult, Detail, register_check
+from validation._tex import _strip_tex_comments
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -420,10 +421,11 @@ def check_citation_primary_sources_present() -> CheckResult:
     for tex_path in paper_tex_files:
         paper_key = tex_path.parent.name
         text = tex_path.read_text(encoding="utf-8", errors="replace")
-        # Strip TeX-comment lines so commented-out \cite{} are not gated
-        text_uncommented = "\n".join(
-            line.split("%", 1)[0] for line in text.splitlines()
-        )
+        # Strip TeX comments so commented-out \cite{} are not gated.
+        # DRY: the `\%`-aware canonical stripper. The naive `split("%", 1)[0]`
+        # this replaced truncates at an ESCAPED percent — measured on papers/I1,
+        # 1 hit against 3, a 3x undercount. Six copies of this existed.
+        text_uncommented = _strip_tex_comments(text)
         for m in CITE_RE.finditer(text_uncommented):
             for raw_key in m.group(1).split(","):
                 key = raw_key.strip()

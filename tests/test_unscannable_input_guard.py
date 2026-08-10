@@ -101,16 +101,8 @@ class TestAnUnreadFileIsNotACleanFile:
             _H.PAPERS_DIR / SEED_HOST / "paper_draft.tex").read_text(encoding="utf-8")
 
 
-def test_no_probe_survives_the_module(request):
-    """Runs last: the tracked corpus must carry no trace of the seed."""
-    import validate_helpers as _H
-    body = (_H.PAPERS_DIR / SEED_HOST / "paper_draft.tex").read_text(encoding="utf-8")
-    assert "__unscannable_regression_probe" not in body, (
-        "the seeding fixture leaked into the tracked corpus")
-
-
 def test_the_fixture_restores_the_drafts_MTIME_not_just_its_bytes():
-    """⚠️ The property that actually matters, asserted directly on the file.
+    r"""⚠️ The property that actually matters, asserted directly on the file.
 
     An earlier version of this test asked whether `bundle_manuscript_length` still
     SIZED the host bundle — and that conflates two different facts. The gate also

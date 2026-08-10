@@ -588,13 +588,10 @@ def check_bundle_prose_em_dash_free() -> CheckResult:
     has no business stopping at a file boundary the reader cannot perceive.
     """
     details: List[Detail] = []
-    try:
-        import bundle_registry as registry
-        codes = list(registry.BUNDLE_CODES)
-    except Exception as exc:  # noqa: BLE001
+    codes, _roster_err = _H.bundle_codes_or_unmeasured()
+    if codes is None:
         return CheckResult(passed=False, measured=False, details=[Detail(
-            "roster", False,
-            f"could not read the bundle roster ({exc}) — UNVERIFIED, not passing")])
+            "roster", False, _roster_err)])
 
     checked = total = n_unscannable = 0
     for code in codes:
@@ -698,13 +695,10 @@ def check_bundle_lean_module_coverage() -> CheckResult:
     (`APSEta.He3A` as `He3A`). Both forms count.
     """
     details: List[Detail] = []
-    try:
-        import bundle_registry as registry
-        codes = list(registry.BUNDLE_CODES)
-    except Exception as exc:  # noqa: BLE001
+    codes, _roster_err = _H.bundle_codes_or_unmeasured()
+    if codes is None:
         return CheckResult(passed=False, measured=False, details=[Detail(
-            "roster", False,
-            f"could not read the bundle roster ({exc}) — UNVERIFIED, not passing")])
+            "roster", False, _roster_err)])
 
     checked = declared = absent_total = 0
     worst: list[tuple[int, str, list[str]]] = []
@@ -805,13 +799,10 @@ def check_bundle_structural_coherence() -> CheckResult:
     is an arbitrary line, and "Code Availability" is legitimately short.
     """
     details: List[Detail] = []
-    try:
-        import bundle_registry as registry
-        codes = list(registry.BUNDLE_CODES)
-    except Exception as exc:  # noqa: BLE001
+    codes, _roster_err = _H.bundle_codes_or_unmeasured()
+    if codes is None:
         return CheckResult(passed=False, measured=False, details=[Detail(
-            "roster", False,
-            f"could not read the bundle roster ({exc}) — UNVERIFIED, not passing")])
+            "roster", False, _roster_err)])
 
     checked = bad = 0
     for code in codes:
@@ -888,13 +879,10 @@ def check_bundle_figure_adequacy() -> CheckResult:
     and the floor becomes the case for a bundle whose plan is not yet written.
     """
     details: List[Detail] = []
-    try:
-        import bundle_registry as registry
-        codes = list(registry.BUNDLE_CODES)
-    except Exception as exc:  # noqa: BLE001
+    codes, _roster_err = _H.bundle_codes_or_unmeasured()
+    if codes is None:
         return CheckResult(passed=False, measured=False, details=[Detail(
-            "roster", False,
-            f"could not read the bundle roster ({exc}) — UNVERIFIED, not passing")])
+            "roster", False, _roster_err)])
 
     checked = short = 0
     total_drawn = total_deferred = zero_drawn = 0
@@ -1110,13 +1098,10 @@ def check_bundle_reader_facing_voice() -> CheckResult:
     Comments are stripped — `%` text is not rendered, and the lift banners live there.
     """
     details: List[Detail] = []
-    try:
-        import bundle_registry as registry
-        codes = list(registry.BUNDLE_CODES)
-    except Exception as exc:  # noqa: BLE001
+    codes, _roster_err = _H.bundle_codes_or_unmeasured()
+    if codes is None:
         return CheckResult(passed=False, measured=False, details=[Detail(
-            "roster", False,
-            f"could not read the bundle roster ({exc}) — UNVERIFIED, not passing")])
+            "roster", False, _roster_err)])
 
     checked = total = 0
     for code in codes:
@@ -1203,13 +1188,10 @@ def check_bundle_reviewer_stage_ordering() -> CheckResult:
     (`evaluate_all_gates` renamed → every readiness check green with nothing to check).
     """
     details: list[Detail] = []
-    try:
-        import bundle_registry as registry
-        codes = list(registry.BUNDLE_CODES)
-    except Exception as exc:  # noqa: BLE001
+    codes, _roster_err = _H.bundle_codes_or_unmeasured()
+    if codes is None:
         return CheckResult(passed=False, measured=False, details=[Detail(
-            "roster", False,
-            f"could not read the bundle roster ({exc}) — UNVERIFIED, not passing")])
+            "roster", False, _roster_err)])
 
     checked = 0
     bad = 0
@@ -1364,15 +1346,10 @@ def check_bundle_manuscript_length() -> CheckResult:
     bundle whose venue is still open (ADR-010 §Open item 1) — and never a quiet pass.
     """
     details: List[Detail] = []
-    try:
-        # From the roster's OWNER, not from `validate`'s re-export — the discipline
-        # `bundle_registry_consistency` leg C exists to enforce.
-        import bundle_registry as registry
-        codes = list(registry.BUNDLE_CODES)
-    except Exception as exc:  # noqa: BLE001
+    codes, _roster_err = _H.bundle_codes_or_unmeasured()
+    if codes is None:
         return CheckResult(passed=False, measured=False, details=[Detail(
-            "roster", False,
-            f"could not read the bundle roster ({exc}) — UNVERIFIED, not passing")])
+            "roster", False, _roster_err)])
 
     over, under, unmeasured, sized = [], [], [], 0
     for code in codes:
@@ -2499,12 +2476,10 @@ def check_bundle_native_decide_debt() -> CheckResult:
 
     details: List[Detail] = []
     ok = True
-    try:
-        import bundle_registry as registry
-        codes = list(registry.BUNDLE_CODES)
-    except Exception as exc:  # noqa: BLE001
+    codes, _roster_err = _H.bundle_codes_or_unmeasured()
+    if codes is None:
         return CheckResult(passed=False, measured=False, details=[Detail(
-            "roster", False, f"could not read the bundle roster ({exc}) — UNVERIFIED")])
+            "roster", False, _roster_err)])
 
     undeclared = [c for c in codes if c not in hits]
     if undeclared:
@@ -2614,12 +2589,10 @@ def check_bundle_todo_free_before_green() -> CheckResult:
     comment, a one-line edit. Pushing the burden onto unambiguous authoring is
     cheaper and more durable than a curated allow-list that itself goes stale.
     """
-    try:
-        import bundle_registry as registry
-        codes = list(registry.BUNDLE_CODES)
-    except Exception as exc:  # noqa: BLE001
+    codes, _roster_err = _H.bundle_codes_or_unmeasured()
+    if codes is None:
         return CheckResult(passed=False, measured=False, details=[Detail(
-            "roster", False, f"could not read the bundle roster ({exc}) — UNVERIFIED")])
+            "roster", False, _roster_err)])
 
     details: List[Detail] = []
     ok = True

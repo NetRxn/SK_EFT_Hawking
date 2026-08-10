@@ -388,3 +388,26 @@ def draft_input_closure(tex: Path, _seen: set | None = None) -> list[Path]:
         else:
             closure.append(target)
     return closure
+
+
+def bundle_codes_or_unmeasured() -> "tuple[list[str] | None, str | None]":
+    """`(codes, None)`, or `(None, reason)` when the roster cannot be read.
+
+    DRY: **ten** checks opened with a byte-identical seven-line try/except that
+    imported `bundle_registry`, caught `Exception`, and returned
+    `CheckResult(passed=False, measured=False, details=[Detail("roster", False, …)])`
+    — in two message variants that had drifted apart (seven said ", not passing",
+    three did not). One roster reader, one message, one place to change it.
+
+    Lives here rather than in a check module so neither check package imports a
+    sibling; `validate_helpers` is already the shared home and is outside both.
+    """
+    try:
+        # From the roster's OWNER, not from `validate`'s re-export — the discipline
+        # `bundle_registry_consistency` leg C exists to enforce. That comment used to
+        # live at one of the ten call sites and applied to all of them.
+        import bundle_registry as registry
+        return list(registry.BUNDLE_CODES), None
+    except Exception as exc:      # noqa: BLE001 — any import failure is unmeasured
+        return None, (f"could not read the bundle roster ({exc}) — UNVERIFIED, "
+                      f"not passing")

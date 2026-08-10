@@ -33,6 +33,7 @@ OUTPUT_PATH = SK_ROOT / "docs" / "missing_bibkey_stubs.json"
 
 sys.path.insert(0, str(SK_ROOT))
 from src.core.citations import CITATION_REGISTRY  # noqa: E402
+from validation._tex import _strip_tex_comments   # DRY: one owner
 
 
 CITE_RE = re.compile(r"\\cite[a-zA-Z]*\*?\s*(?:\[[^\]]*\])*\s*\{([^}]+)\}")
@@ -151,7 +152,7 @@ def collect_cite_keys(paper_dir: Path) -> set[str]:
     if not tex.is_file():
         return set()
     text = tex.read_text(encoding="utf-8", errors="replace")
-    text = "\n".join(line.split("%", 1)[0] for line in text.splitlines())
+    text = _strip_tex_comments(text)
     keys = set()
     for m in CITE_RE.finditer(text):
         for raw in m.group(1).split(","):
@@ -168,7 +169,7 @@ def collect_bibitem_blocks(paper_dir: Path) -> dict[str, str]:
         return {}
     text = tex.read_text(encoding="utf-8", errors="replace")
     # Drop comment lines
-    text = "\n".join(line.split("%", 1)[0] for line in text.splitlines())
+    text = _strip_tex_comments(text)
     # Find all bibitem starts; each block runs until the next \bibitem or
     # \end{thebibliography}.
     matches = list(BIBITEM_RE.finditer(text))

@@ -1152,12 +1152,10 @@ def check_bundle_cross_references_resolve() -> CheckResult:
     ⚠️ **UNMEASURABLE is not PASS.** An unreadable or absent draft is counted and named,
     and a run that reaches no draft at all returns `measured=False`.
     """
-    try:
-        from bundle_registry import BUNDLE_CODES as _CODES
-        codes = list(_CODES)
-    except Exception as exc:  # noqa: BLE001
+    codes, _roster_err = _H.bundle_codes_or_unmeasured()
+    if codes is None:
         return CheckResult(passed=False, measured=False, details=[Detail(
-            "roster", False, f"could not read the bundle roster ({exc}) — UNVERIFIED")])
+            "roster", False, _roster_err)])
 
     details: List[Detail] = []
     dangling: dict[str, list[str]] = {}

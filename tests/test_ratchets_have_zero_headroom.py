@@ -71,6 +71,19 @@ _NOT_A_RATCHET = {
     "_SECTION_CEILING_BY_TIER",
 }
 
+#: ⚠️ `paper_latex_compiles` shells out to pdflatex across all 21 bundle drafts —
+#: **42 s in a unit test**, measured with `--durations`. Adding it to
+#: `RATCHETED_CHECKS` put that cost on the DEFAULT suite and took it from ~6 min to
+#: 7:44. It still runs under `-m slow` and in every `validate.py` invocation, so
+#: nothing stops being checked — it stops being checked on the fast path, where the
+#: cost is paid on every edit.
+_SLOW_TO_EXECUTE = {"paper_latex_compiles"}
+
+_RATCHET_PARAMS = [
+    pytest.param(c, marks=pytest.mark.slow) if c in _SLOW_TO_EXECUTE else pytest.param(c)
+    for c in RATCHETED_CHECKS
+]
+
 _CEIL_RE = re.compile(r"ceiling\s+(\d+)", re.IGNORECASE)
 _LEAD_RE = re.compile(r"(\d+)")
 
@@ -93,7 +106,7 @@ def _population_and_ceiling(check: str):
 
 class TestRatchetsHaveZeroHeadroom:
 
-    @pytest.mark.parametrize("check", RATCHETED_CHECKS)
+    @pytest.mark.parametrize("check", _RATCHET_PARAMS)
     def test_population_equals_ceiling(self, check):
         """FIRES ON A SEEDED DEFECT: raise any ceiling above its live population and
         this fails — before the ratchet silently stops guarding."""
