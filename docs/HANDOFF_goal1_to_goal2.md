@@ -459,3 +459,133 @@ defect the test claims to catch, not merely something nearby.**
    reviewer measured, resolving two findings mid-audit. Any closure verdict on this branch
    must name a SHA — the reviewer's is `f8f2fa52`, and §8's fixes land after it. **Freeze
    the tree before dispatching the next one.**
+
+---
+
+# 10. GOAL-2 HANDOFF — measured state, what to run, and the one decision waiting
+
+Everything in this section was measured on 2026-08-10 at branch HEAD, not carried
+forward from an earlier note. Re-derive anything you intend to act on: the commands are
+given so you can.
+
+## 10.1 Every bundle's reviewer-stage status
+
+Source: `papers/<CODE>/bundle_metadata.json`. Re-derive with the loop in §10.5.
+
+| | Stage 9 | Stage 10 | Stage 13 | §7.5 prose | readiness | s13 redo |
+|---|---|---|---|---|---|---|
+| D1  | pending | pending | pending | not run | RED | ✔ |
+| D2  | pending | pending | pending | not run | RED | ✔ |
+| D3  | pending | pending | pending | not run | RED | ✔ |
+| D4  | pending | pending | pending | not run | RED | ✔ |
+| D5  | pending | pending | pending | not run | RED | — |
+| D6  | **not_started** | **skeleton** | pending | not run | YELLOW | ✔ |
+| D7  | **not_started** | pending | pending | not run | RED | ✔ |
+| D8  | pending | pending | pending | not run | YELLOW | ✔ |
+| D9  | pending | pending | pending | not run | **UNMEASURED** | ✔ |
+| D10 | pending | pending | pending | not run | YELLOW | ✔ |
+| D11 | pending | pending | pending | not run | RED | ✔ |
+| D12 | **pending-redo** | **pending-redo** | **pending-redo** | not run | RED | ✔ |
+| E1  | pending | pending | pending | not run | RED | — |
+| E2  | pending | pending | pending | not run | YELLOW | ✔ |
+| F   | pending | pending | pending | not run | RED | ✔ |
+| I1  | pending | pending | pending | not run | RED | — |
+| I2  | pending | pending | pending | not run | RED | — |
+| I3  | pending | pending | pending | not run | RED | ✔ |
+| L1  | pending | pending | pending | not run | RED | ✔ |
+| L2  | pending | pending | pending | not run | RED | — |
+| L3  | pending | pending | pending | not run | RED | — |
+
+Three facts a reader should not have to infer:
+
+- **No bundle is `green` at any reviewer stage.** Commit `14ba438c` (2026-08-07,
+  branch-only) demoted every reviewer-stage green to `pending` by operator decision. The
+  live value set is exactly `{pending, pending-redo, skeleton, not_started}` — `green`
+  does not occur. Any tool or doc branching on a live `green` is reading a state no
+  bundle is in.
+- **§7.5 prose review has never run for any bundle** — the agent that would run it
+  (`prose-reviewer`) is not installed. See §10.3.
+- **D9's readiness is `UNMEASURED`, not RED or GREEN.** It is the portfolio's only
+  former GREEN and the one bundle whose P1 gates could not be computed. Do not read it
+  as either colour.
+
+**15 of 21 carry `stage13_redo_required`.** That flag — not `freshness_stale` — is the
+lift exit gate (`BUNDLE_LIFT_PROCEDURE.md:395`).
+
+## 10.2 What goal 2 must run
+
+In order. Each is blocked on the one above it.
+
+1. **Resolve the plugin decision (§10.3).** Everything else in Stage 9/10/13/§7.5 runs a
+   stale contract until this is settled.
+2. **Stage 9 (figure) and Stage 10 (claims)** per bundle. ⚠️ `gate_precheck.py s9` is a
+   weak gate: `check_viz_consistency` has exactly one unconditional `passed=True` return,
+   and `bundle_figure_integrity`'s SPECS cover **D11 and D12 only**, so an s9 precheck on
+   any of the other 19 bundles passes having examined zero of that bundle's figures.
+   Treat a green s9 as "not blocked", never as "figures verified".
+3. **Stage 13 (adversarial)** per bundle. `record_review.py` now REQUIRES `--doc` for
+   stage 13 and overwrites `stage13_review_doc` on every write, so a green cannot be
+   recorded without a citable artifact.
+4. **§7.5 prose** — only after `prose-reviewer` is installed.
+5. **Then, and only then, `readiness_submission_gate`.** It is downstream of all four and
+   is expected to stay red until they land. It is not a defect and must not be "fixed".
+6. **The merge to main.** Deliberately not done in goal 1.
+
+## 10.3 The plugin decision goal 2 faces
+
+Measured against the newest cache revision (`skeft-local/skeft-qa/57c1067d9d23`):
+
+| | installed | in repo |
+|---|---:|---:|
+| agents | **8** | **9** |
+
+`prose-reviewer.md` is **absent from the installed plugin**. The three reviewer agents
+that *are* installed have drifted from the repo copies:
+
+| agent | differing lines |
+|---|---:|
+| `figure-reviewer` | 14 |
+| `claims-reviewer` | 26 |
+| `adversarial-reviewer` | 17 |
+
+**The decision: refresh, or fall back.**
+
+- **Refresh** (recommended) — reinstall the plugin from the in-repo
+  `.claude/plugins/skeft-qa/` so all 9 agents are present and the three reviewers match
+  their repo contracts. Then Stages 9/10/13/§7.5 run the contract this branch actually
+  wrote. Cost: one plugin refresh, then re-verify the count is 9 and the three diffs are 0.
+- **Fall back** — run Stages 9/10/13 against the stale installed agents and skip §7.5
+  entirely. **Not recommended**: the 26-line drift in `claims-reviewer` is the largest,
+  and that agent is the one whose output feeds the chain-of-backing records. A review run
+  against a stale contract produces findings keyed to a schema the repo no longer uses.
+
+Whichever is chosen, **record it** — a Stage-13 green produced under the fallback means
+something materially weaker than one produced after a refresh, and nothing in the
+metadata distinguishes them.
+
+## 10.4 What goal 1 leaves behind, stated as risk
+
+- **`--ci` green is not reproducible from a bare checkout.** `papers/**/*.pdf` is
+  gitignored (3 of 21 bundle PDFs are tracked) and `bundle_manuscript_length` refuses to
+  size an absent PDF, so a fresh clone drops below `CI_MIN_CHECKS_RUN`. Run
+  `compile_bundle_pdf.py --all` first.
+- **`counts.tex` perishability is self-inflicting.** It carries `\totaltests`, so adding
+  a test changes it; it sits in 16 of 21 `\input` closures; and `counts_fresh` advances
+  its mtime from inside `validate.py`. Regenerate in the order
+  `pytest → update_counts → compile_bundle_pdf --all --force → validate --ci`.
+- **`readiness_submission_gate` stays red by design** until §10.2 steps 2–4 land.
+- Open items with measurements, not guesses, are in `ACCURACY_LEDGER.md` V81–V82 and the
+  residue list in §8.
+
+## 10.5 Re-derive the table above
+
+```bash
+uv run python -c "
+import sys,json,os;sys.path.insert(0,'scripts')
+from bundle_registry import BUNDLE_CODES
+for c in sorted(BUNDLE_CODES):
+    d=json.load(open(f'papers/{c}/bundle_metadata.json'))
+    print(c, d.get('stage9_status'), d.get('stage10_status'),
+          d.get('stage13_status'), d.get('readiness'),
+          d.get('stage13_redo_required'))"
+```
