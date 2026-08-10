@@ -418,7 +418,31 @@ defect the test claims to catch, not merely something nearby.**
    but it is undocumented anywhere the reader would look, and it makes the gate's green
    depend on local state.
 
-3. **The branch was a moving target during review.** The loop committed twice while the
+3. **`bundle_manuscript_length` cannot hold full coverage across a normal run — the suite
+   stales its own input.** Measured 2026-08-10, sharpening the reviewer's Finding 7 with a
+   mechanism. The cycle:
+
+   * `docs/counts.tex` carries `\totaltests`, so **adding a test changes it** (6153 → 6156
+     this session — a real content change, not a stamp-only rewrite).
+   * `counts.tex` is in 16 of the 21 bundles' `\input` closures.
+   * `counts_fresh` runs inside `validate.py` and advances `counts.tex`'s mtime — observed
+     04:16:08 → 04:29:02 across a single `--check counts_fresh` invocation.
+   * `bundle_manuscript_length` refuses to size any PDF older than its draft's closure.
+
+   So compiling all 21, then running the suite, leaves **5 sized and 16 UNMEASURED** — which
+   is the state at this HEAD. The gate still PASSES (it gates only on over-ceiling, and the 5
+   it sized are within target), but it is green over 24% of its population, and no ordering of
+   the documented §5.1 workflow fixes it: the step that checks freshness is downstream of the
+   step that destroys it.
+
+   **This is a design defect, not a stale artifact, and it is NOT closed.** The plausible
+   repairs — exclude `counts.tex` from the length-freshness closure (it cannot change a page
+   count by more than a digit), or key freshness on content hash rather than mtime, or have
+   `counts_fresh` leave mtime alone when the content is unchanged — are each a real decision
+   with blast radius beyond this branch, so none was taken unilaterally at the close of a
+   loop. Goal 2 should pick one before treating this gate's green as meaningful.
+
+4. **The branch was a moving target during review.** The loop committed twice while the
    reviewer measured, resolving two findings mid-audit. Any closure verdict on this branch
    must name a SHA — the reviewer's is `f8f2fa52`, and §8's fixes land after it. **Freeze
    the tree before dispatching the next one.**
