@@ -172,16 +172,53 @@ class TestTheoremCount:
 class TestLeanSource:
     """Spot-check theorem names still resolve in the Lean source."""
 
+    #: ⚠️ A LITERAL CONTRACT, deliberately NOT lifted from the production body.
+    #: This used to AST-parse `spot_checks` out of `check_lean_source` and build the
+    #: fixture from whatever it found, so the test could never disagree with
+    #: production: replacing all five names with fictional ones left it GREEN. A
+    #: test whose expectation is read from the code under test asserts only that
+    #: the code equals itself.
+    #:
+    #: Transcribed 2026-08-10. If production changes, this list must be updated
+    #: DELIBERATELY — that edit is the review surface, and
+    #: `test_the_literal_contract_matches_production` below is what forces it.
+    _SPOT_NAMES = sorted({
+        "dampingRate_eq_zero_iff",
+        "dispersive_correction_bound",
+        "firstOrder_correction_zero_iff",
+        "acousticMetric_det",
+        "secondOrder_count",
+        "fracton_exceeds_standard_general",
+        "binomial_strict_mono",
+        "dof_gap_positive_2_through_8",
+        "evading_one_breaks_nogo",
+        "ep_distinguishes_phases",
+        "obstructions_individually_sufficient",
+    })
+
     @staticmethod
     def _spot_names() -> list[str]:
+        return list(TestLeanSource._SPOT_NAMES)
+
+    def test_the_literal_contract_matches_production(self):
+        """The pin above must equal what `check_lean_source` actually spot-checks.
+
+        This is the ONE place the production body may be read — to detect drift,
+        never to define the expectation. If this fails, production changed its
+        spot-check set and the literal above needs a deliberate, reviewed update.
+        """
         src = Path(lt.__file__).read_text()
         fn = next(n for n in ast.walk(ast.parse(src))
                   if isinstance(n, ast.FunctionDef) and n.name == "check_lean_source")
+        live = None
         for node in ast.walk(fn):
             if isinstance(node, ast.Assign) and \
                     any(getattr(t, "id", None) == "spot_checks" for t in node.targets):
-                return sorted(set(ast.literal_eval(node.value).values()))
-        raise AssertionError("check_lean_source no longer assigns a literal spot_checks")
+                live = sorted(set(ast.literal_eval(node.value).values()))
+        assert live is not None, "check_lean_source no longer assigns a literal spot_checks"
+        assert live == self._SPOT_NAMES, (
+            f"spot-check drift.\n  production: {live}\n  pinned:     {self._SPOT_NAMES}\n"
+            f"Update the literal deliberately; do NOT re-derive it from the source.")
 
     def test_all_names_present_passes(self, tmp_path, monkeypatch):
         """SILENT ON CORRECT DATA."""
@@ -234,8 +271,32 @@ class TestLakeResolution:
         assert lt._resolve_lean_root() == Path("/custom/lean")
 
     def test_lean_root_defaults_under_the_project_anchor(self, monkeypatch):
+        """The default resolves to a REAL Lean project, anchored on PROJECT_ROOT.
+
+        ⚠️ This asserted `lt._resolve_lean_root() == _H.PROJECT_ROOT / "lean"`, which
+        IS the production expression verbatim — the test restated the implementation
+        and so could not fail. Rewriting `_resolve_lean_root` as a `Path(__file__)`
+        parent-walk, the exact ADR-009 H1 violation this module's header pins, left
+        it GREEN.
+
+        Assert observable properties instead: the resolved directory must actually
+        BE a Lean project on disk (it carries a `lakefile.toml` and the
+        `SKEFTHawking` source tree), and it must be anchored on `_H.PROJECT_ROOT`
+        rather than on the resolver's own file location — which is what makes a
+        parent-walk implementation detectable.
+        """
         monkeypatch.delenv("LEAN_PROJECT_DIR", raising=False)
-        assert lt._resolve_lean_root() == _H.PROJECT_ROOT / "lean"
+        root = lt._resolve_lean_root()
+
+        assert (root / "lakefile.toml").is_file(), (
+            f"{root} is not a Lean project — no lakefile.toml. A resolver that "
+            f"returns a path-shaped value pointing at nothing is not resolving.")
+        assert (root / "SKEFTHawking").is_dir(), (
+            f"{root} carries no SKEFTHawking source tree")
+        assert root.parent == _H.PROJECT_ROOT, (
+            f"lean root must hang off the PROJECT_ROOT anchor, got parent "
+            f"{root.parent} (ADR-009 H1: no Path(__file__) parent-walks)")
+        assert root.is_absolute(), "callers cd elsewhere; a relative root is a bug"
 
     def test_the_two_callers_keep_DIFFERENT_skip_messages(self, monkeypatch):
         """⚠️ THE POINT OF THE EXTRACTION, and its limit. Only the RESOLUTION is

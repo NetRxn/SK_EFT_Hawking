@@ -571,7 +571,12 @@ class TestBundleSourceFreshness:
             msgs = by_bundle.get(code)
             if not msgs:                       # pragma: no cover - bundle present in-repo
                 continue
-            assert not any(msg.startswith("fresh:") for msg in msgs), (
+            # ⚠️ The prefix is `source-fresh:`, NOT `fresh:`. This read
+            # `msg.startswith("fresh:")`, which matches NOTHING the production code
+            # emits (`check_bundle_source_freshness.py:685` writes
+            # "source-fresh: all N measurable source paper(s) ..."), so the sole
+            # assertion of a PRODUCTION-SEEDED test was unfalsifiable.
+            assert not any("source-fresh:" in msg for msg in msgs), (
                 f"{code} claims freshness, but all of its declared sources name "
                 f"directories absent from papers/ — re-derive this test's premise if "
                 f"real source directories were finally created for it, rather than "

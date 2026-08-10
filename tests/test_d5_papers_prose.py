@@ -18,6 +18,7 @@ MUTATION-VERIFIED 2026-08-04 — 9 mutations, all CAUGHT, clean negative control
 from __future__ import annotations
 
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -421,4 +422,10 @@ class TestBundleCrossReferencesResolve:
         """Target is 0 unresolved; any regression fails on the next run."""
         r = pp.check_bundle_cross_references_resolve()
         summary = next(d for d in r.details if d.name == "summary")
-        assert "0 unresolved" in summary.message
+        # ⚠️ Parse the NUMBER. This read `"0 unresolved" in summary.message`, which
+        # is a SUBSTRING of "10 unresolved", "20 unresolved", "100 unresolved" — the
+        # zero-headroom ratchet passed for any count ending in 0.
+        m = re.search(r"(\d+) unresolved", summary.message)
+        assert m, f"no unresolved-count in summary: {summary.message!r}"
+        assert int(m.group(1)) == 0, (
+            f"ratchet headroom must be exactly 0, got {m.group(1)}: {summary.message}")

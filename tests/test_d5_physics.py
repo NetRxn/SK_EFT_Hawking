@@ -140,12 +140,43 @@ class TestNumericalConsistency:
                             lambda: _fake_experiments(table, **kw))
         return table
 
+    #: The comparison surface this check MUST cover, pinned as a literal.
+    #:
+    #: ⚠️ `_patch` builds its fixture by AST-lifting the `expected` table out of
+    #: `check_numerical_consistency` itself, so on the happy path `rel_err` is 0 BY
+    #: CONSTRUCTION and "SILENT ON CORRECT DATA" asserted nothing about the
+    #: comparison actually happening — bombing `constants.get_all_experiments` and
+    #: every public `formulas` function left it green. The lift is still the right
+    #: way to build the fixture (it keeps the seeded-drift tests honest), but the
+    #: SHAPE of what got compared has to be pinned independently, or a check that
+    #: silently compares nothing still reads as a pass.
+    _EXPECTED_EXPERIMENTS = ("Heidelberg", "Steinhauer", "Trento")
+    _EXPECTED_PARAMS = ("T_H", "c_s", "kappa", "xi")
+
     def test_matching_values_pass(self, monkeypatch):
-        """SILENT ON CORRECT DATA."""
-        self._patch(monkeypatch)
+        """SILENT ON CORRECT DATA — and it really did compare the whole surface."""
+        table = self._patch(monkeypatch)
         r = ph.check_numerical_consistency()
         assert r.passed is True, [(d.name, d.message) for d in r.details if not d.passed]
-        assert r.details, "the check reported success having compared nothing"
+
+        # The production table must still span the pinned surface. If this fails,
+        # production changed and the pin needs a deliberate, reviewed update.
+        assert tuple(sorted(table)) == self._EXPECTED_EXPERIMENTS, (
+            f"experiment roster drift: {sorted(table)}")
+        for exp, vals in table.items():
+            assert tuple(sorted(vals)) == self._EXPECTED_PARAMS, (
+                f"{exp} parameter roster drift: {sorted(vals)}")
+
+        # …and the check must have REACHED every one of them. `assert r.details`
+        # alone passed on a single detail, so a check that compared 1 of 12 and
+        # short-circuited was indistinguishable from one that compared all 12.
+        compared = {d.name for d in r.details}
+        want = {f"{e}.{p}" for e in self._EXPECTED_EXPERIMENTS
+                for p in self._EXPECTED_PARAMS}
+        missing = want - compared
+        assert not missing, (
+            f"the check passed without comparing {len(missing)} of {len(want)} "
+            f"parameters: {sorted(missing)}")
 
     def test_a_perturbed_parameter_fails(self, monkeypatch):
         """FIRES ON THE SEEDED DEFECT — one parameter moved 20 %, four times the
