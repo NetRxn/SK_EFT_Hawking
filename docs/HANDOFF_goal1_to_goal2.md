@@ -202,3 +202,157 @@ contract is its code.**
 **The nine sourceless bundles can now signal Stage A.** `freshness_stale` is `true` for
 D6/D7/D9/I3 and the rest of the nine, written by the Lean trigger. Before goal 1 the
 trigger could not signal at all, so an absorption pass keying on that field saw nothing.
+
+---
+
+## 8. The six-agent pr-review-toolkit round (2026-08-10) — what it found and what changed
+
+The full six-agent suite ran over the **branch diff vs `main`** (`c2b597e1..336ebcc7`,
+448 files): code-reviewer, comment-analyzer, silent-failure-hunter, pr-test-analyzer,
+type-design-analyzer, code-simplifier. Every finding acted on below was **reproduced
+before it was fixed** — including the ones the agents attributed to me — and every
+replacement test was **mutation-proven** by re-seeding the defect.
+
+### The one physics defect
+
+`formulas.adw_effective_potential` guarded on `C < 1e-15` instead of `abs(C)`, so the
+entire negative branch of a **double well** returned `0.0`. Every term is even in `C`
+(`C²`, `C⁴`, and `C²` inside the log), so `V(-0.5)` must equal `V(+0.5)`; measured
+`-0.4987…` vs `0.0`.
+
+**It never reached a figure or a solver result.** Every caller samples `C ≥ 0` —
+`gap_equation.py:334` `linspace(0, Lambda)`, the minimizer's `bounds=(1e-6·Λ, C_max)`,
+`ginzburg_landau.py:683` `linspace(0.5, 5.0)`. Latent, not observed. The pre-existing
+equivalence test sampled only `C ∈ {0.01, 0.1, 0.5}`, which is exactly why it survived;
+`test_effective_potential_even_in_C` now covers both signs.
+
+### Four gates that could not fire
+
+| Gate | Why it was inert | Now |
+|---|---|---|
+| `validate.py --check` | single-value arg — repeating it kept only the LAST name and printed "1/1 passed". The Aristotle gauntlet lost its `axiom_closure_allowlist` leg (the Invariant #15 backstop); two frozen procedures silently skipped checks | `action="append"`; unknown-name guard covers every name; single `--check` byte-identical |
+| `aristotle_submit` sorry guard | matched `"declaration uses 'sorry'"`; Lean v4.32 emits **backticks**, so `sorry_warns` was always `[]` and `zero_sorry == build_ok` | quote-agnostic regex, matching its already-repaired sibling in `pre-commit-sync.sh` |
+| `record_review.py` | `--doc` optional ⇒ a Stage-13 **GREEN with no evidence document**, and the previous doc path left in place while `review_kind` flipped | `--doc` required for stage 13; path always overwritten |
+| `convert_inprep_citations` | split on `"%"`, truncating at an escaped `\%` | canonical `\%`-aware stripper (one owner) |
+
+### Three gates that reported what they had not measured
+
+- **`update_counts.py`** — `except Exception: _n_debt = 0` around the tracked-vacuity
+  split. Because `theorems_kernel_substantive = _substantive - _n_debt`, a swallowed
+  failure **inflated the published kernel count by the whole debt (69)** and asserted
+  `tracked_vacuity_debt: 0`. These render into `docs/counts.tex`, which drafts
+  `\input` — the lie reached the papers. Now raises.
+- **`_eval_computation_correctness`** — formulas absent from the graph were
+  `continue`d, then `len(formula_ids)` was reported as the number examined. The four
+  buckets now partition the population exactly (asserted) and the unexamined ones are
+  named.
+- **`ensure_lean_deps_fresh`** — returned `True` unconditionally after calling
+  `_run_extraction()`, and the resulting stale pass is memoized under the **new** source
+  key, so it replays. Now re-asks the hash guard.
+
+### `_eval_assumption_disclosure` is vacuous for the whole corpus — measured, not fixed
+
+The 4-hop walk (`CLAIMS → GROUNDED_IN → VERIFIED_BY → ASSUMES`) **runs** and lands
+empty for **all 64 papers**. Measured cause: the walk reaches **122** theorem nodes,
+**66** lean nodes carry an `ASSUMES` edge, and the two sets are **disjoint**
+(intersection 0). The hypothesis-bearing theorems are simply not cited by any paper's
+claim chain.
+
+It is kept as a pass — an empty population *reached* is not a population *unreachable* —
+but the pass now says so instead of reading as verified disclosure. **Goal 2 decision:**
+if a wave cites one of those 66, the gate starts working; if none ever does, retire it
+rather than leave it as decorative green.
+
+### The `measured` axis — a self-contradiction of goal 1's own making
+
+`bundle_manuscript_length` returned `measured=False` whenever **any** bundle was
+unsizable. THE ONE POLICY is that `measured=False` means the population was
+**UNREACHABLE**, not that coverage of it was **INCOMPLETE** — sizing 20 of 21 is the
+latter. One stale PDF took the whole `--ci` coverage floor down. Worse, the policy note
+in `_registry.py` named this very check as a legitimate `measured=False` while its own
+preceding sentence said the opposite, and the implementation followed the wrong half.
+
+Now `measured = sized > 0`, with each skipped bundle carrying `measured=False` on its
+**own Detail** — the granular signal survives, so check-level `measured=True` is honest
+rather than a loss. What the bad fold was reaching for is real and is **not** solved by
+that line: a bundle that goes UNMEASURED escapes the over-ceiling leg, the only one that
+still gates. That is contained by keeping it loud (the summary always prints the
+UNMEASURED count and names every skipped bundle), not by lying about `measured`.
+
+### Perishability, exercised rather than described
+
+Regenerating `counts.tex` staled every bundle PDF; `bundle_manuscript_length` correctly
+went 21-UNMEASURED and **FAILED** (nothing sizable ⇒ UNVERIFIED, not passing); the
+documented remedy `compile_bundle_pdf.py --all --force` restored 21/21 sized, 0
+unmeasured. **The §5.1 regeneration ORDER is real — follow it.** The 17 compile failures
+are legacy per-paper drafts (`paperNN_*`, `note_*`), **none of the 21 bundles**.
+
+### Five tests that could not fail
+
+Three had **self-referential expectations** — a test whose expectation is read from the
+code under test asserts only that the code equals itself:
+
+- `_spot_names()` AST-lifted `spot_checks` out of `check_lean_source`; replacing a
+  production name with a fiction left it green. Now a pinned literal **plus a drift
+  detector** that forces a deliberate update.
+- `test_lean_root_defaults_under_the_project_anchor` asserted the production expression
+  verbatim; rewriting the resolver as a `Path(__file__)` parent-walk — the exact ADR-009
+  H1 violation its own module header pins — left it green.
+- `test_d5_physics._patch` lifts the `expected` table from the check, so `rel_err ≡ 0`
+  by construction. The lift stays (it keeps the seeded-drift tests honest); the **shape**
+  is pinned separately, because `assert r.details` passed on a single detail.
+
+Two **matched nothing**: `msg.startswith("fresh:")` against a production string that
+begins `source-fresh:`, and `"0 unresolved" in message` — a substring of
+`"10 unresolved"`, so the zero-headroom ratchet passed for any count ending in 0.
+
+### Refutable numbers corrected
+
+- **`5.2×` → `2.58×`.** `(v_F/c_s)²` with the `/2` dropped; `ν = 2·(η/sT)·c_s²` in the
+  `c_s` form but `(η/sT)·v_F²` in the `v_F` form, so the ratio carries a factor ½.
+  `provenance.py:852` already stated the correct value. Fixed in
+  `hawking_predictions.py` and `DiracFluidSK.lean`.
+- **`papers/F:514` said "four bundles … (D6, D9)"** — reader-visible, rendered in an
+  `\fbox` in the compiled PDF. Measured against the pre-08-08 baseline: exactly **two**
+  changed (D6 11→23, D9 25→27), the two it already named.
+- **"`docs/counts.tex` sits in EVERY bundle's `\input` closure"** is false for 5 of 21,
+  and it was the stated premise of the perishability workflow. ⚠️ My first correction
+  transcribed the member list and was **caught by `architecture_inventory_fresh`** — the
+  no-census-in-narrative rule is machine-enforced. Restated as a **mechanism**
+  (`draft_input_closure` is the authority), which is the form that rule wants.
+- `figuredeferred.tex` claimed 21 consumers; measured **11**.
+- The registry's own "derive it" grep used ERE negative lookahead and **exited 2**
+  instead of answering; the replacement runs and excludes itself from its own count.
+- A comment claimed the under-floor population "shrank 11 → 10 → 1"; the third
+  degradation is recorded nowhere. Corrected to the two measured facts (11→3 stale tree,
+  11→10 test-seeded).
+- ADR-011's status block said `bundle_manuscript_length` is RED; the operator amendment
+  **156 lines below in the same document** made under-floor advisory, and it passes.
+
+### Canonical-home bypass
+
+`transonic_background` open-coded `Γ_H` while `formulas.py` declared itself the canonical
+home and said callers must not. Three defects in three lines: the graphene path was
+routed and the BEC path — the one the docstring *names* — was not; it kept the
+`if cs > 0 else 0.0` silent sentinel, which reports a **dissipationless horizon**; and it
+cited a Lean theorem (`SecondOrderSK.gamma_H_from_transport`) that **does not exist** in
+`lean_deps.json`. `lean_docstring_refs_resolve` scans Lean docstrings, not Python
+comments, so nothing caught the dangling reference. Now routed through
+`horizon_damping_rate`, which raises instead.
+
+### Still open for goal 2 (from these reports, not fixed here)
+
+1. **`gate_precheck s9` cannot fail for 11 of the 13 bundles that carry figures** —
+   `check_viz_consistency` has one unconditional `passed=True` return, and
+   `bundle_figure_integrity`'s SPECS cover only D11 and D12.
+2. **The `submission` gate (`"__strict__"`) cannot pass on any tree** — it keys on mtime,
+   which `git checkout`/merge restamps. Needs a product decision, not a code fix.
+3. **`BundleClosure.measurable` never checks that any apex *resolved*** → an
+   all-unresolvable apex list emits `\bundleTheorems{0}` into D1, D5, E1, E2, F.
+4. **30 graph nodes point at files that don't exist** — the `rglob` widening was not
+   swept into path/key construction (`tests/e2e/*`); stem collision is latent today.
+5. **`render_bundle_counts.py --check` is blind to an orphaned `bundle_counts.tex`.**
+6. The comment-analyzer's remaining doc corrections: stale line cross-references in
+   `END_TO_END_MAP.md`, the `ADR-010 §Open item 4` mis-citation at three sites (the
+   mtime decision lives in **§D6**), "fifteen live sites" superseded by a sixteenth, and
+   D36's at-HEAD figures that were stale one commit after they were written.
