@@ -353,7 +353,17 @@ def print_results(results: Dict[str, CheckResult]) -> None:
     if total_warnings:
         summary += f" ({total_warnings} warning{'s' if total_warnings > 1 else ''})"
     print(summary)
-    if passed == total:
+    # ⚠️ Never print an unqualified all-clear over a population that was not
+    # reached. `measured` was invisible on this path entirely; the count below is
+    # the reader's cue that a green verdict is partial.
+    _unmeasured = sorted(n for n, r in results.items() if not r.measured)
+    if _unmeasured:
+        print(f"  \033[33m? {len(_unmeasured)} check(s) did NOT MEASURE\033[0m — a "
+              f"verdict over a population they could not reach: "
+              f"{', '.join(_unmeasured)}")
+    if passed == total and _unmeasured:
+        print("  \033[33mALL CHECKS PASSED — but see the UNMEASURED list above\033[0m")
+    elif passed == total:
         print("  \033[32mALL CHECKS PASSED\033[0m")
     else:
         print("  \033[31mSOME CHECKS FAILED\033[0m")
