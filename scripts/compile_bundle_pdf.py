@@ -390,8 +390,15 @@ def main() -> int:
         print(report)
         if not ok:
             failed += 1
-        _persist_pages(d, pages, ok)
+        # ⚠️ BOTH writers are guarded by `skipped(report)`. `_persist_pages` was
+        # called unconditionally while only `_record_gate` was guarded — so on a
+        # box with no `pdflatex`, `compile_one` returns ok=True with a SKIPPED
+        # report and this wrote `compile_gate_ok: true` (and cleared
+        # `compiled_pages`) into EVERY tracked bundle_metadata.json without
+        # compiling anything. A skip is not a pass; it is the absence of a
+        # measurement, and it must not be recorded as a verdict.
         if not skipped(report):
+            _persist_pages(d, pages, ok)
             _record_gate(d.name, ok, pages)
     print(f"\n{len(dirs) - failed}/{len(dirs)} bundle(s) passed the compile gate")
     return 1 if failed else 0

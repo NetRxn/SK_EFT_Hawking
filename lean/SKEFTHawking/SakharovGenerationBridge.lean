@@ -213,8 +213,20 @@ What is NOT definitional is what the constraint does to the OBSERVABLE. If the
 anomaly condition forces `N_f = 24k`, then the emergent Newton constant
 `G_N = 12π/(N_f Λ²)` cannot take arbitrary values — it lands on a discrete ladder
 indexed by `k`, and consecutive admissible rungs stand in a fixed ratio. That is a
-statement about `G_N_from_a2`, not about how `diracFlavourNf` was defined, and it is
-falsifiable: change the 24 and the ratio changes. -/
+statement about `G_N_from_a2`, not about how `diracFlavourNf` was defined.
+
+⚠️ **The `24` is NOT load-bearing in the two ladder theorems below, and an earlier
+version of this paragraph claimed it was** ("falsifiable: change the 24 and the ratio
+changes"). It is not: `G_N_from_a2 Λ N_f = 12π/(N_f Λ²)`, so in any ratio
+`G(d·k) / G(d·(k+1))` the divisor `d` cancels identically. Kernel-checked for an
+ARBITRARY divisor — `G_N_from_a2 Λ (d*k) / G_N_from_a2 Λ (d*(k+1)) = (k+1)/k` closes
+by `field_simp` alone for every `d ≠ 0`.
+
+What the two theorems below actually pin is `G_N ∝ 1/N_f` — the shape of the
+observable's dependence on the species count. That IS content, and it is what the
+ladder picture rests on; it is simply not a test of the anomaly divisor. A theorem
+that tested the divisor would have to carry it as a hypothesis rather than inline
+the literal `24` on both sides of a ratio. -/
 
 /-- **Admissible Newton constants form a discrete ladder.** Consecutive rungs of the
 anomaly-allowed species count stand in ratio `(k+1)/k`. -/
@@ -227,7 +239,14 @@ theorem gn_ladder_ratio (Λ : ℝ) (hΛ : Λ ≠ 0) (k : ℕ) (hk : 0 < k) :
   field_simp
 
 /-- The `norm_num`-backed anchor: the first two admissible rungs differ by exactly a
-factor of two. A wrong divisor in the anomaly condition breaks this. -/
+factor of two.
+
+⚠️ This said "A wrong divisor in the anomaly condition breaks this." It does not —
+see the §-note above: the divisor cancels, so `G_N_from_a2 Λ d = 2 * G_N_from_a2 Λ
+(2*d)` holds for every `d ≠ 0`. What breaks it is a wrong EXPONENT on `N_f`. Note
+also that `hΛ` is not load-bearing here: at `Λ = 0` the statement reduces to
+`0 = 2*0`, which `norm_num` closes; it is kept only for signature agreement with
+`gn_ladder_ratio`, where it IS needed. -/
 theorem gn_first_two_rungs (Λ : ℝ) (hΛ : Λ ≠ 0) :
     HeatKernelExpansion.G_N_from_a2 Λ 24
       = 2 * HeatKernelExpansion.G_N_from_a2 Λ 48 := by

@@ -65,7 +65,14 @@ class BundleClosure:
 
     @property
     def measurable(self) -> bool:
-        return self.declared and bool(self.apexes)
+        # ⚠️ `bool(self.closure)`, not just `bool(self.apexes)`. `apexes` is the
+        # DECLARED list; names that fail to resolve are filed into
+        # `unresolved_apexes` and contribute nothing to the closure. Without the
+        # third conjunct a bundle whose apexes ALL dangle (a module rename, a
+        # typo) was `measurable` with an EMPTY closure, and `render_bundle_counts`
+        # emitted `\bundleTheorems{0}` into the draft — the exact confident wrong
+        # number its own docstring says must never be printed.
+        return self.declared and bool(self.apexes) and bool(self.closure)
 
 
 def load_apex_declarations(papers_root: Path) -> dict[str, dict]:

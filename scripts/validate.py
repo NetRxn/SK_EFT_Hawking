@@ -428,10 +428,20 @@ def _print_failure_provenance(results: Dict[str, CheckResult]) -> None:
         if cr.passed:
             continue
         spec = by_name.get(name)
-        mod = getattr(spec.func, "__module__", "") if spec else ""
-        leaf = mod.rsplit(".", 1)[-1]
+        # ⚠️ `_leaf_module_of` UNWRAPS the memo wrapper; this read `spec.func.
+        # __module__` directly, so every MEMOIZED check reported leaf `_memo`,
+        # which is in NEITHER partition and fell through to "substrate" by the
+        # `else`. That disagrees with the `--scope substrate` gate below, which
+        # does unwrap — the printed provenance and the exit code could therefore
+        # contradict each other. Benign only while both memoized checks happen to
+        # be substrate-side. (DEF-12, re-measured 2026-08-10, still live.)
+        leaf = _leaf_module_of(name) if spec else ""
         (paper if leaf in _PAPER_SIDE_MODULES else substrate).append(name)
-    if not (paper and substrate) and not paper:
+    # `if not paper` — the `not (paper and substrate)` conjunct was dead: when
+    # `paper` is empty the second conjunct already returns, and when it is
+    # non-empty the first is False. Substrate-only failures print no provenance
+    # block, which is intended (there is nothing to attribute).
+    if not paper:
         return
     print()
     if substrate:
@@ -908,10 +918,23 @@ Examples:
             return 1
 
     if args.scope == "substrate" and not all_passed:
+        # ⚠️ An UNMEASURED failure BLOCKS regardless of which side it is on. A check
+        # that raised is the strongest cannot-measure the suite produces —
+        # `run_checks` sets `measured=False` precisely for that case — and the
+        # scope filter used to discard it: a paper-side check crashing because a
+        # SHARED helper broke exited 0 while printing "✓ SUBSTRATE: clean" and "a
+        # Lean-only wave cannot have caused them". Both claims are unknowable when
+        # the check never ran, and `gate_precheck.py`'s `s13-lean` leg runs exactly
+        # this command, so the crash surfaced to the operator as PASS.
+        #
+        # The scope flag's contract is "changes what BLOCKS, never what is measured"
+        # — and a crash is not a measurement, so it is outside what the flag may
+        # forgive.
         blocking = [n for n, r in results.items()
                     if not r.passed
                     and getattr(_spec_of(n), "func", None) is not None
-                    and _leaf_module_of(n) not in _PAPER_SIDE_MODULES]
+                    and (_leaf_module_of(n) not in _PAPER_SIDE_MODULES
+                         or not r.measured)]
         if not blocking:
             print("\n  \033[33m--scope substrate:\033[0m the only failures are paper-corpus; "
                   "exiting 0. They are REAL and still listed above — this flag changes what "

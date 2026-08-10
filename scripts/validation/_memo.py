@@ -87,7 +87,10 @@ from validation._registry import CheckResult, Detail
 #: that alters check semantics without altering any file a key names (a dependency
 #: upgrade, a Lean toolchain bump whose pin files are unchanged). Cheap: the next
 #: run pays full price once.
-MEMO_SCHEMA = 1
+# Bumped 1 -> 2 (2026-08-10): `Detail.measured` is now serialized. A schema
+# mismatch discards the whole cache, which is exactly right — entries written
+# under schema 1 lost `measured` and must not be replayed.
+MEMO_SCHEMA = 2
 
 #: Machine-local, git-ignored (`.gitignore`, alongside the notebook skip-cache and
 #: the four `lean/.lean_*_cache.json` ExtractDeps caches). Never tracked: a shared
@@ -267,6 +270,26 @@ def memo_key(*parts: str) -> str:
     return hashlib.sha256("|".join(parts).encode("utf-8")).hexdigest()[:24]
 
 
+def _details_from_cache(rows):
+    """Rebuild `Detail`s from cache rows, tolerating arity drift.
+
+    A structurally-valid cache whose rows have the wrong arity used to raise
+    `TypeError` straight out of `memoized`, contradicting this module's own
+    "every error path here computes rather than skips". That is the live shape a
+    `Detail` field change without a `MEMO_SCHEMA` bump produces. Raising here
+    takes down the whole suite; returning None makes the caller recompute.
+    """
+    out = []
+    for row in rows:
+        if not isinstance(row, (list, tuple)) or not (3 <= len(row) <= 5):
+            return None
+        try:
+            out.append(Detail(*row))
+        except TypeError:
+            return None
+    return out
+
+
 def memoized(name: str, key: str, compute: Callable[[], CheckResult],
              what: str) -> CheckResult:
     """Run ``compute``, or return a PASS if ``key`` matches its last passing run.
@@ -314,12 +337,19 @@ def memoized(name: str, key: str, compute: Callable[[], CheckResult],
         # see. A cached bare PASS would delete that warning from every run after the
         # first, which is a silent narrowing of what the suite reports: the same
         # defect class as the cache itself, one field over.
-        return CheckResult(
-            passed=True,
-            details=[Detail("memo", True,
-                            f"SKIPPED (cached) — {what} unchanged since the last "
-                            f"PASS; --no-memo (or --strict) re-measures")]
-                    + [Detail(*d) for d in hit.get("details", [])])
+        # Arity drift in the cached rows => RECOMPUTE, never raise. A wrong-arity
+        # row used to raise TypeError straight out of `memoized`, contradicting
+        # this module's own "every error path here computes rather than skips" —
+        # and that is the live shape a `Detail` field change without a
+        # MEMO_SCHEMA bump produces.
+        _cached = _details_from_cache(hit.get("details", []))
+        if _cached is not None:
+            return CheckResult(
+                passed=True,
+                details=[Detail("memo", True,
+                                f"SKIPPED (cached) — {what} unchanged since the last "
+                                f"PASS; --no-memo (or --strict) re-measures")]
+                        + _cached)
 
     result = compute()
 
@@ -354,7 +384,16 @@ def memoized(name: str, key: str, compute: Callable[[], CheckResult],
         if result.passed:
             entries[name] = {
                 "key": key,
-                "details": [[d.name, d.passed, d.message, d.warning]
+                # ⚠️ `measured` IS SERIALIZED. This wrote 4 fields and replayed them
+                # POSITIONALLY into a 5-field `Detail`, so `measured` silently
+                # reverted to its `True` default on every cache hit — the exact
+                # positional-round-trip hazard THE ONE POLICY names. Verified before
+                # the fix: a `Detail(..., measured=False)` came back `measured=True`
+                # on replay. Latent only while no memoized check emits a skipped
+                # member; `graph_atlas` and `freshness` both DERIVE their
+                # check-level `measured` from `d.measured`, so the first
+                # partial-coverage check to be memoized would have lost its markers.
+                "details": [[d.name, d.passed, d.message, d.warning, d.measured]
                             for d in result.details],
             }
         else:
