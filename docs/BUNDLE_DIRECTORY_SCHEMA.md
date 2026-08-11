@@ -144,7 +144,7 @@ The value set is wider than `Phase7a_Roadmap.md:91-93` declares: the live corpus
 `_STAGE_STATUS_VALUES`, and an undeclared value is a finding rather than silently read as
 "not green, therefore safe".
 
-#### `length_target` — the charter's size commitment, and the only field that can fail Gate 12
+#### `length_target` — the charter's size commitment, and the only field `bundle_manuscript_length` can fail on
 
 ```json
 "length_target": {"unit": "pages", "floor": 24, "ceiling": 60, "source": "PAPER_STRATEGY.md §6"}
