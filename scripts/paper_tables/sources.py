@@ -428,11 +428,19 @@ def lean_module_summary(modules: list[str],
 
 
 def pipeline_stages() -> list[dict]:
-    """The 12 pipeline stages + their gates, parsed from
+    """Every pipeline stage + its gate, parsed from
     `docs/WAVE_EXECUTION_PIPELINE.md`. Used by Paper 15 Table 1.
 
     Returns rows with: stage (number), name (stage name), gate (gate
     description text).
+
+    ⚠️ The count is DERIVED, never asserted. This docstring said "12" while the
+    parse returned 13 and the pipeline had 14, and the two stages it dropped were
+    dropped SILENTLY into a published table: `ARISTOTLE (FALLBACK)` because the
+    name pattern excluded parentheses, and `META-PROCESS QI` because its line reads
+    `-> Advisory:` rather than `-> Gate:`. Paper 15 is the methodology paper, so its
+    Table 1 was describing this pipeline with Aristotle missing from it. The
+    completeness assertion below now makes a silent drop impossible.
     """
     import re as _re
     pipeline_md = PROJECT_ROOT / "docs" / "WAVE_EXECUTION_PIPELINE.md"
@@ -442,13 +450,18 @@ def pipeline_stages() -> list[dict]:
     text = pipeline_md.read_text()
     # Parse the summary block "Stage N: NAME → Gate: ..."
     rows = []
+    # `()` must be in the name class (ARISTOTLE (FALLBACK)); the verdict label is
+    # `Gate:` OR `Advisory:` (Stage 14 is advisory by design, not a gate).
     summary_re = _re.compile(
-        r'Stage\s+(\d+[a-z]?)[:\s]+([A-Z][A-Z &—\-]+?)\s+→\s+Gate:\s+(.+)',
+        r'Stage\s+(\d+[a-z]?)[:\s]+([A-Z][A-Z &—()\-]+?)\s+→\s+(?:Gate|Advisory):\s+(.+)',
         _re.MULTILINE,
     )
     for m in summary_re.finditer(text):
         stage_num = m.group(1)
-        name = m.group(2).strip().title().replace('Sk', 'SK')
+        # `.title()` lowercases initialisms; each needs restoring. `Sk`->`SK` was already
+        # here, and `Qi`->`QI` joined it when Stage 14 first parsed (it had been dropped
+        # entirely, so its rendering had never been seen).
+        name = m.group(2).strip().title().replace('Sk', 'SK').replace('Qi', 'QI')
         gate = m.group(3).strip()
         rows.append({
             'stage': stage_num,
@@ -458,6 +471,23 @@ def pipeline_stages() -> list[dict]:
             'name': _escape_latex_text(name),
             'gate': _escape_latex_text(gate),
         })
+
+    # COMPLETENESS ASSERTION — the parse must account for every stage the summary
+    # block declares. Table 2 in this same file already shipped as an EMPTY TABULAR
+    # once (see `validation_checks` below) because a generator that silently stops
+    # matching looks identical to one with nothing to emit, and `tables_fresh`
+    # compares mtimes, not content. Table 1 then repeated the class in miniature,
+    # dropping ARISTOTLE and META-PROCESS QI. A count that disagrees is a parse bug,
+    # never a pipeline that shrank: stage numbers are immutable by this document's
+    # own rule, so raise rather than publish a short table.
+    declared = len(_re.findall(r'^Stage\s+\d+[a-z]?:', text, _re.MULTILINE))
+    if declared and len(rows) != declared:
+        raise RuntimeError(
+            f"pipeline_stages parsed {len(rows)} of {declared} stages declared in "
+            f"docs/WAVE_EXECUTION_PIPELINE.md's summary block. Missing: "
+            f"{sorted(set(_re.findall(r'^Stage\s+(\d+[a-z]?):', text, _re.MULTILINE)) - {r['stage'] for r in rows})}. "
+            f"Fix the parse — do NOT publish a short table into Paper 15."
+        )
     return rows
 
 
