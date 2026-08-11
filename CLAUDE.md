@@ -84,8 +84,7 @@ never affects builds. Killed servers do not respawn within a session.
 **[`docs/architecture/`](docs/architecture/README.md) is the canonical description of this
 system.** Start at its `README.md`, which owns the index and the ownership table.
 
-Three rules, and they are not style preferences — each exists because its violation shipped
-and cost a multi-day recovery:
+Three rules. They are requirements, not style preferences:
 
 1. **Read before you design.** Before adding a check, a gate, an extractor, an edge type, or
    any new infrastructure, read the document that owns that surface. The recurring failure is
@@ -101,12 +100,10 @@ and cost a multi-day recovery:
    `validate.py --check architecture_inventory_fresh` fails on a census count found in any
    narrative there. Name the *mechanism*, not the *magnitude*, and link to the census.
 
-⚠️ **Why this is a hard requirement.** These documents drifted out of sync **within 24 hours**
-of being written, twice — one map stated two different check totals inside a single sentence,
-and two maps asserted a review path was dead that had been repaired before they were authored.
-A wrong architecture document is worse than none, because it gets quoted. **Nothing
-mechanically verifies a prose claim** (tracked as B2 in
-`docs/architecture/.working-docs/ARCHITECTURE_TODOs.MD`), so the discipline is the guard.
+⚠️ **A wrong architecture document is worse than none, because it gets quoted.** Rule 3 is
+machine-enforced; rules 1 and 2 are not, and **nothing mechanically verifies a prose claim**
+(tracked as B2 in `docs/architecture/.working-docs/ARCHITECTURE_TODOs.MD`). Where the guard is
+discipline rather than a check, treat it as the stricter obligation, not the looser one.
 
 Remediation items found in these documents but requiring code go in
 [`ARCHITECTURE_TODOs.MD`](docs/architecture/.working-docs/ARCHITECTURE_TODOs.MD) — enumerated
@@ -168,9 +165,14 @@ PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1 uv pip install -e rust/ --force-reinstall 
 uv run python scripts/submit_to_aristotle.py --dry-run
 ```
 
-QA review agents ship as a Claude Code plugin (LLM figure / claims / adversarial review,
-Stage 13). Programmatic checks (`validate.py`, `update_counts.py`,
-`update_inventory_index.py`, `qi_register.py`) are deterministic — run them, don't eyeball.
+QA and authoring agents ship as the `skeft-qa` Claude Code plugin. On the paper side:
+`paper-drafter` writes one manuscript section against a lead-authored brief (Stage 10, returns
+prose — it holds no write tools); `prose-reviewer` reads a whole draft as a referee at its named
+venue (lift §7.5); `figure-reviewer` (Stage 9), `claims-reviewer` (Stage 10) and
+`adversarial-reviewer` (Stage 13) audit rendering, backing and correctness respectively. The
+plugin's `README.md` is the current roster. Programmatic checks (`validate.py`,
+`update_counts.py`, `update_inventory_index.py`, `qi_register.py`) are deterministic — run them,
+don't eyeball.
 
 ---
 
@@ -273,7 +275,8 @@ spec: the workspace-level `Lit-Search/README.md`):
 any query/URL containing a denylisted local path / identifier and any fetch outside the
 scholarly-domain whitelist. The denylist is split: a committed template
 (`.claude/plugins/skeft-qa/scripts/research_egress_denylist.sample.txt`) + an **untracked local**
-copy (`…/research_egress_denylist.txt`) the operator installs with their own identifiers.
+copy (`.claude/plugins/skeft-qa/scripts/research_egress_denylist.txt`) the operator installs
+with their own identifiers.
 **First-run setup:** run `.claude/plugins/skeft-qa/scripts/install_egress_denylist.sh` (or copy the
 sample) and fill in the FILL-IN rows; until then only the generic absolute-path baseline applies.
 
