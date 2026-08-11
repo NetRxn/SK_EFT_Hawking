@@ -153,6 +153,7 @@ Scan abstract, introduction, and conclusion for sentences in these classes:
 
 - **first-claim** — "first in any proof assistant", "first formally verified X", "first computed"
   - Search GitHub, Mathlib, Agda standard library, Coq / Rocq ecosystem for prior formalizations. Document what you searched.
+  - `WebSearch` is open, but `WebFetch` is whitelisted by design and **`github.com` is not on it** (only named repo paths are). A denied fetch is a fetch you did not make — record it as `fetch_failed` (rule 7). Never let a denial read as an absence of prior art: "I could not look" and "there is nothing there" are opposite findings.
   - **BLOCKER** if you find prior work. **REQUIRED** if you don't find anything but haven't searched exhaustively.
 - **unification-claim** — "all the same X", "converge to", "rooted in", "derive from a common origin"
   - Is there a formal theorem that captures the unification, or is this interpretive prose?

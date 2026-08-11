@@ -5,9 +5,10 @@ description: >
   every sentence in a paper draft and emits a sentence-keyed JSON record with
   chain-of-backing (formula/theorem/axiom/parameter/citation/hypothesis) plus
   agent verdict (PASS/FAIL/WARN/INFO/UNGROUNDED/TRANSITION) per sentence. Covers
-  five finding classes: internal arithmetic drift (IA), toolchain pin drift (TP),
-  stealth pipeline-vs-prose drift (SD), theorem-name reference drift (TN), and
-  hypothesis disclosure gap (HD). Emits reconciliation records (not silent
+  six finding classes: internal arithmetic drift (IA), toolchain pin drift (TP),
+  stealth pipeline-vs-prose drift (SD), theorem-name reference drift (TN),
+  hypothesis disclosure gap (HD), and placeholder cited as verified (PC). Emits
+  reconciliation records (not silent
   supersession) for prior findings that don't reproduce. Invoke after updating a
   paper draft or before submission.
   See "When to invoke" in the agent body for worked scenarios.
@@ -211,9 +212,9 @@ The agent verdict is PURELY about chain-resolution + recomputation agreement. Th
 
 ---
 
-# Part C — Five finding classes
+# Part C — Six finding classes
 
-Each sentence record carries a `finding_classes[]` subset of `[IA, TP, SD, TN, HD]`. Multiple classes can apply to one sentence. Top-level `blocking_issues[]` aggregates across sentences.
+Each sentence record carries a `finding_classes[]` subset of `[IA, TP, SD, TN, HD, PC]`. Multiple classes can apply to one sentence. Top-level `blocking_issues[]` aggregates across sentences.
 
 ## C.1 Class IA — Internal arithmetic / count drift
 
@@ -495,7 +496,7 @@ Write the report to `papers/<paper>/claims_review.json`.
     "total_sentences": 234,
     "by_type": { "numeric": 23, "theorem-ref": 7, "citation": 18, "parameter": 8, "formal-claim": 12, "qualitative": 35, "methodology": 21, "transition": 92, "metaclaim": 18 },
     "by_verdict": { "PASS": 89, "FAIL": 2, "WARN": 4, "INFO": 12, "UNGROUNDED": 17, "TRANSITION": 110 },
-    "by_finding_class": { "IA": 0, "TP": 0, "SD": 0, "TN": 0, "HD": 1 },
+    "by_finding_class": { "IA": 0, "TP": 0, "SD": 0, "TN": 0, "HD": 1, "PC": 0 },
     "non_reproducing_count": 8,
     "non_reproducing_auto_closed": 3,
     "non_reproducing_candidates": 5,

@@ -170,7 +170,7 @@ _VALID_TYPES = {
     'numeric', 'theorem-ref', 'citation', 'parameter', 'formal-claim',
     'qualitative', 'methodology', 'transition', 'metaclaim',
 }
-_VALID_FINDING_CLASSES = {'IA', 'TP', 'SD', 'TN', 'HD'}
+_VALID_FINDING_CLASSES = {'IA', 'TP', 'SD', 'TN', 'HD', 'PC'}
 _VALID_LINK_KINDS = {
     'formula', 'theorem', 'axiom', 'parameter',
     'citation', 'hypothesis', 'aristotle', 'production_run',

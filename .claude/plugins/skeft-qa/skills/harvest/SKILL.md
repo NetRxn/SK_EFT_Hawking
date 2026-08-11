@@ -1,8 +1,13 @@
 ---
 name: harvest
-description: This skill should be used when the user asks to "run the harvest", "harvest the sessions", "extract process signal", "consolidate the register", or when a scheduled task or second-session /loop fires the off-hot-loop harvest. Never invoke it inside a /goal session. Off-hot-loop System-2 harvest. Reads each managed /goal session's transcript from a byte-offset watermark, extracts process/harness signal (Haiku) — crossing the compact boundary for the pre-vs-post-compact delta and ingesting the guard's blocked-question log — and a register-AWARE Opus consolidator files/combines it into the four-section register (Open / Process Wins / Closed / Misfiled) — re-opening a recurring closed finding, grouping semi-related ones, filing real wins to Process Wins (capped at agent-reviewed, never injected), and dropping noise (never writing Misfiled — that is /debrief's human sweep) — then refreshes the open-only active-issues view. Invoked by a Desktop scheduled task or a second-session /loop — never inside a /goal session.
+description: >
+  This skill should be used when the user asks to "run the harvest", "harvest the sessions",
+  "extract process signal", "consolidate the register", or when a scheduled task or
+  second-session /loop fires the off-hot-loop harvest. It reads each managed /goal session's
+  transcript from a watermark, extracts process/harness signal, and consolidates it into the
+  System-2 register. Never invoke it inside a /goal session — it runs off the hot loop only.
 disallowed-tools: AskUserQuestion
-allowed-tools: Bash(jq *), Bash(uv run python *), Bash(python3 *), Read, Agent
+allowed-tools: Bash(jq *), Bash(uv run *), Bash(python3 *), Read, Agent
 ---
 
 You are the System-2 harvest. Run ONLY off the hot loop. Native CC throughout — no headless.

@@ -25,6 +25,9 @@ The guarded defect classes:
   8. test_agents_declare_an_explicit_model -- an agent omits `model:` and silently inherits.
   9. test_model_invocable_skills_use_third_person -- a model-invocable skill's description lacks the
      third-person trigger form, which is what the model matches on to decide to load it.
+ 10. test_frontmatter_actually_parses    -- frontmatter that is not valid YAML, which Claude Code
+     loads as EMPTY metadata rather than reporting. Defects 8/9 above scan it with a regex, so they
+     pass on a block that never parses; only a real parser sees it.
 
 This file scans `Path(__file__).resolve().parent.parent` (i.e. THIS plugin), so the identical file
 guards the private sibling plugin in place.
@@ -198,3 +201,62 @@ def test_model_invocable_skills_use_third_person():
     assert not offenders, (
         "model-invocable skill description lacks the third-person trigger form "
         "('This skill should be used when the user asks to \"...\"'):\n  " + "\n  ".join(offenders))
+
+
+def test_frontmatter_actually_parses():
+    """Defect 10 -- frontmatter that is not valid YAML.
+
+    THE FAILURE IS SILENT. Claude Code parses each frontmatter block as YAML; on a parse error it
+    loads the component with EMPTY metadata -- every field dropped, no error raised, no warning in
+    the transcript. The file is still on disk and still looks right to a reader, but its `name`,
+    `description`, `model` and `allowed-tools` are gone, so a model-invocable skill stops being
+    discoverable and an agent's declared model silently reverts.
+
+    This is why the check is a parse and not another regex. Defects 8 and 9 scan the raw block with
+    `re.search`, which happily matches lines inside a block that will never parse -- they were both
+    green on `wave-close` while its description carried a bare `: ` inside a plain scalar (YAML
+    reads colon-space as a mapping separator). The house fix for a description holding punctuation
+    is the folded form (`description: >` + an indented body), which most of the surface already
+    uses; the outlier hand-rolled a plain scalar.
+
+    `claude plugin validate <path>` remains authoritative -- it runs the same JS parser the runtime
+    does. This test is the fast, always-collected approximation: PyYAML and that parser agree on
+    structural validity, which is the whole invariant here.
+    """
+    import yaml
+
+    # Required fields differ by kind. A skill and an agent are addressed by their `name:`, so an
+    # empty one unregisters them. A COMMAND is addressed by its FILENAME -- upstream plugin-dev
+    # states plainly that a basic command needs no frontmatter at all -- so requiring `name:` there
+    # would be inventing a rule the runtime does not have. `description:` is required across all
+    # three: it is what the model matches on to decide whether to load the component.
+    targets = ([(p, ("name", "description")) for p in sorted((PLUGIN / "skills").glob("*/SKILL.md"))]
+               + [(p, ("name", "description")) for p in sorted((PLUGIN / "agents").glob("*.md"))]
+               + [(p, ("description",)) for p in sorted((PLUGIN / "commands").glob("*.md"))])
+    assert targets, "no frontmatter-bearing components found -- the glob roots moved"
+
+    offenders = []
+    for md, required in targets:
+        rel = md.relative_to(PLUGIN)
+        block = _frontmatter(md)
+        if not block.strip():
+            offenders.append(f"{rel}: no frontmatter block")
+            continue
+        try:
+            meta = yaml.safe_load(block)
+        except yaml.YAMLError as e:
+            mark = getattr(e, "problem_mark", None)
+            where = f" (line {mark.line + 1} of the block)" if mark else ""
+            offenders.append(f"{rel}: does not parse{where} -- {getattr(e, 'problem', e)}")
+            continue
+        if not isinstance(meta, dict):
+            offenders.append(f"{rel}: parses to {type(meta).__name__}, not a mapping")
+            continue
+        for field in required:
+            if not str(meta.get(field) or "").strip():
+                offenders.append(f"{rel}: `{field}` missing or empty after parse")
+
+    assert not offenders, (
+        "frontmatter does not parse as YAML -- Claude Code loads these with EMPTY metadata "
+        "(all fields silently dropped). A description holding `: `, `#`, or a leading quote needs "
+        "the folded form (`description: >` + indented body):\n  " + "\n  ".join(offenders))

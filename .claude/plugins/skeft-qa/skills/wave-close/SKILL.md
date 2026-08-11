@@ -1,6 +1,11 @@
 ---
 name: wave-close
-description: This skill should be used when the user asks to "close the wave", "run wave-close", "close out wave N", "record the wave close", or once a wave's bricks are shipped and validate is green. Closes a wave deterministically: runs the gate prerequisites, dispatches the fresh-context adversarial review, and records the close in `*_close.md`. Use once per wave.
+description: >
+  This skill should be used when the user asks to "close the wave", "run wave-close",
+  "close out wave N", "record the wave close", or once a wave's bricks are shipped and
+  validate is green. Closes a wave deterministically: runs the gate prerequisites,
+  dispatches the fresh-context adversarial review, and records the close in `*_close.md`.
+  Use once per wave.
 argument-hint: <wave-or-bundle-id>
 allowed-tools: Bash(git rev-parse *), Bash(cd *), Bash(uv run python *), Agent
 ---
