@@ -940,6 +940,14 @@ def check_architecture_inventory_fresh() -> CheckResult:
     # VALIDATION_GATE_TOPOLOGY §3 a gate that fires on correct work gets switched off.
     # `registries` is deliberately absent from the nouns: "rebinding creates two
     # registries" describes a bug mechanism, not the census's registry table.
+    # ⚠️ THIS MATCHES ADJACENCY, NOT THE CLASS — a stated limit, not an oversight.
+    # `22,669 machine-checked theorems` passes: one adjective separates the number from
+    # the noun, and that is this project's own house phrasing (`papers/I1` writes exactly
+    # it). Widening to a bounded adjective gap was tried and REVERTED: it caught no live
+    # violation and produced three false positives on correct prose — a quoted historical
+    # tally, "gate" used as a verb, and `checks` inside the identifier `run_checks`. Per
+    # VALIDATION_GATE_TOPOLOGY §3 a gate that fires on correct work gets switched off, so
+    # precision wins here and the residue is covered by review, not by this pattern.
     count_re = re.compile(
         r"(?<![-#\w])(?:\d[\d,]*|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)\b"
         r"[\s*_`]*(?:" + census_nouns + r")\b",
@@ -1082,9 +1090,13 @@ def check_architecture_inventory_fresh() -> CheckResult:
             "no_counts_in_narratives", not offenders,
             f"{scanned} narrative doc(s) in {arch_dir.name}/ state no census count"
             if not offenders else
-            f"census count(s) written into a narrative — move the number to "
-            f"{doc.name} and link to it, or name the mechanism instead of the "
-            f"magnitude: {offenders[:6]}"))
+            f"census count(s) written into a narrative — name the MECHANISM instead "
+            f"of the magnitude, and link to whichever artifact OWNS the number: "
+            f"{doc.name} for surfaces (checks, gates, hooks, agents, commands, "
+            f"bundles, node/edge types, validation modules); docs/counts.json for "
+            f"theorem and declaration counts. A corpus count does NOT belong in "
+            f"{doc.name} — that file is compared verbatim against a fresh render, so "
+            f"a hand-written number there fails leg 1 instead: {offenders[:6]}"))
         if offenders:
             all_pass = False
 
