@@ -2454,3 +2454,42 @@ changes whether a component works today.
   bibkeys across `Lit-Search/Phase-*/primary-sources/`: **146 of 493 = 30%**. "Roughly a
   third" is accurate. The number is not load-bearing either way — the read-in-full rule is
   unconditional — but the sentence is right and should stay.
+
+### D43 — a correct skill can still be invisible: the skill-listing budget (HOST-side, not ours)
+
+Measured 2026-08-11, after the wave-close frontmatter fix. `skeft-qa:wave-close` and
+`skeft-qa:paper-authoring` render in the model's skill listing as a bare name with **no
+description**, which looks exactly like the empty-metadata bug that was just fixed. It is a
+different mechanism, and chasing it as a plugin defect wastes a session.
+
+**The listing has a character budget** — context window x bytes-per-token x
+`skillListingBudgetFraction` (default 0.01) = 30,000 chars here. With 129 skills installed the
+raw demand is ~38,500, so CC drops descriptions to fit, keeping name-only entries. Bundled
+skills are protected; plugin skills are sorted by a usage-recency score
+(`usageCount x max(0.5^(days/7), 0.1)`) and filled greedily. A skill never invoked scores
+**exactly 0** and is first to lose its description.
+
+**How to tell the two apart in one step** — read the rendered line:
+- `- name` (no trailing colon)  -> loaded, truncated at render. Nothing wrong with the file.
+- `- name: ` (trailing colon-space) -> empty metadata. That IS the frontmatter bug; see D42/defect 10.
+
+The `: ` is a literal in the description-bearing formatter, so it cannot appear on a truncated
+entry. Verified against this session's `skill_listing` attachment: `'- skeft-qa:wave-close'`,
+`len(content)=29957`, `skillCount=129`, and the seven skeft skills that DO render are exactly
+the seven present in `~/.claude.json` -> `skillUsage`.
+
+**Consequence, and why it matters for wave-close specifically.** wave-close must be
+agent-invocable — in autonomous /goal mode the loop runs it itself for GAP-B. It is still
+listed and still invocable BY NAME, and `goal-dev` (which does render) carries the instruction,
+so the path is not broken. But the model cannot currently discover wave-close from its
+description alone.
+
+**Fixes, operator's call, in order of directness:** raise `skillListingBudgetFraction` to ~0.015
+(45,000 chars, clears the overflow with headroom); or disable unused skills — 129 installed is
+the actual cause, and many belong to plugins unrelated to this project. Do NOT rely on invoking
+the skill once to seed `skillUsage`: the score decays `0.5^(days/7)`, so a once-per-wave skill
+falls back off.
+
+**No test can catch this.** It is a function of host settings, total installed skill count, and
+personal invocation history. The plugin is fully correct and still invisible. The only detector
+is the rendered `skill_listing` attachment in the session transcript.
