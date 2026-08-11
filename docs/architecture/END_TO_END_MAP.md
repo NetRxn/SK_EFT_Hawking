@@ -222,12 +222,15 @@ agent dispatched over one section; review is the `prose-reviewer` agent. All thr
 same `references/` directory inside the skill, by path, so a drafting rule and a review
 criterion cannot diverge into two standards.
 
-⚠️ **`paper-drafter` is the only agent on this spine that WRITES a source.** Every other agent
-reads `papers/<bundle>/paper_draft.tex`; it produces one, and nothing downstream records that
-an agent wrote it. Its obligations are therefore internal — above all, a section that cites
+⚠️ **`paper-drafter` produces manuscript prose but writes no file** — it returns a section and
+the lead places it, so one serializing writer owns the monolithic `paper_draft.tex`. What does
+not change is that nothing downstream records an agent produced the prose. Its obligations are
+therefore internal — above all, a section that cites
 prior work is written against that work read in full for the portion being written, because
 every layer below verifies that a source *resolves*, never that the prose represents it
-faithfully. `QA_QI_INFRASTRUCTURE_MAP.md` §1 carries the plane diagram and the full rule. The reviewer runs at `BUNDLE_LIFT_PROCEDURE.md` §7.5 — **before**
+faithfully. `QA_QI_INFRASTRUCTURE_MAP.md` §1 carries the plane diagram and the full rule.
+
+The reviewer runs at `BUNDLE_LIFT_PROCEDURE.md` §7.5 — **before**
 Stage 9 and before the claims sub-gate — because its output is a restructuring instruction, and
 restructuring after figures and claims have been reviewed invalidates both.
 

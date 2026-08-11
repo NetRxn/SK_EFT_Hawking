@@ -485,7 +485,11 @@ def pipeline_stages() -> list[dict]:
     # keys on the same summary-block formatting the row parse does — so one reformat
     # silences both together and publishes an empty tabular, which is the incident this
     # assertion cites. Both counts carry a floor.
-    if declared < 14 or not rows:
+    # Floor 15 = the live population at zero headroom (Stages 1,2,3a,3b,4-14). A floor of
+    # 14 sat one BELOW it, so deleting the ARISTOTLE line alone gave declared=rows=14 and
+    # published a 14-row table — the exact defect this assertion cites. Lower only with a
+    # dated reason, like every other ratchet here.
+    if declared < 15 or not rows:
         raise RuntimeError(
             f"pipeline_stages: {declared} stage(s) declared and {len(rows)} parsed from "
             f"docs/WAVE_EXECUTION_PIPELINE.md. The summary block did not parse — its "

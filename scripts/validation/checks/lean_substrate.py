@@ -645,7 +645,7 @@ def check_tracked_hypotheses_fresh() -> CheckResult:
     # item 4 preserves are all optional TOOLCHAIN absences (pdfminer, lake, nbclient),
     # which is a different thing. Its absence is a defect, not an environment.
     #
-    # VALIDATED, not reasoned: `constants.py:1372` asserts the Aristotle count at
+    # VALIDATED, not reasoned: `constants.py:1375` asserts the Aristotle count at
     # IMPORT time, so adding a registry entry without updating the count raises
     # `AssertionError` — not `ImportError` — while this module is being imported.
     # Measured before the fix: that returned `passed=True` with the detail
@@ -786,17 +786,24 @@ def check_lean_zero_sorry() -> CheckResult:
 
 # Sites that compare `kind == "theorem"` WITHOUT an autogen guard, deliberately.
 # Each entry needs a reason. Adding one is a scope decision, not a formality.
+#
+# ⚠️ EXEMPTION IS SITE-LOCAL, enforced by a marker on the line itself:
+#     ... d["kind"] == "theorem" ...  # census-exempt: <key>
+# Keying on file, or on file:enclosing-def, both failed: a second bare census added
+# beside an exempted one — inside the SAME 156-line `count_lean`, the function that
+# carried two of the six historical defects — inherited the exemption and passed.
+# A marker cannot be inherited by a neighbouring line.
 THEOREM_FILTER_ALLOWLIST: Dict[str, str] = {
-    "scripts/update_counts.py:count_lean":
+    "sorry-theorems":
         "counts declarations with a `sorry` axiom dep; an autogen declaration cannot "
         "carry one, so the filter is a no-op here (sorry count is 0 and ratcheted).",
-    "scripts/provenance_dashboard.py:_node_id_for":
+    "node-id-dispatch":
         "dispatches a node-ID prefix by kind; it is not a census and publishes no count.",
-    "scripts/bundle_closure.py:build_closures":
+    "apex-kind":
         "classifies ONE declared apex (is the name a theorem?) rather than counting a "
         "population; the module already threads `autogen` into `compute_closure`, and a "
         "bundle never declares a compiler-generated name as an apex.",
-    "scripts/count_theorem_reuse.py:load_env_index":
+    "reuse-scan":
         "a reuse/citation scan over proof bodies, not a published census (its docstring "
         "overclaims an exclusion it does not implement — tracked, not load-bearing).",
 }
@@ -819,7 +826,7 @@ PUBLISHED_CENSUS_FLOOR = 3
 
 _DOC_QUOTES = (chr(34) * 3, chr(39) * 3)
 
-_DEF_RE = re.compile(r"^\s*def\s+([A-Za-z_][A-Za-z0-9_]*)")
+_EXEMPT_RE = re.compile(r"#\s*census-exempt:\s*([a-z0-9-]+)")
 
 _THEOREM_FILTER_RE = re.compile(r"""kind["'\)\]]*\s*(?:==|!=)\s*["']theorem["']""")
 _AUTOGEN_NEARBY_RE = re.compile(r"_?autogen|_AUTOGEN|autogen_index")
@@ -939,14 +946,9 @@ def check_theorem_census_agrees() -> CheckResult:
             # `update_counts.py`, which carried two of the six historical defects.
             # The key's second field is the enclosing def, so an exemption covers one
             # site and a new bare census in an allow-listed file still fails.
-            enclosing = ""
-            for prev in range(i, -1, -1):
-                m_def = _DEF_RE.match(lines[prev])
-                if m_def:
-                    enclosing = m_def.group(1)
-                    break
-            if f"{rel}:{enclosing}" in THEOREM_FILTER_ALLOWLIST:
-                used_allowlist.add(f"{rel}:{enclosing}")
+            m_ex = _EXEMPT_RE.search(line)
+            if m_ex and m_ex.group(1) in THEOREM_FILTER_ALLOWLIST:
+                used_allowlist.add(m_ex.group(1))
                 continue
             unowned.append(f"{rel}:{i + 1}")
 
@@ -965,10 +967,15 @@ def check_theorem_census_agrees() -> CheckResult:
                               f"leg would pass over sites it can no longer see"))
         return CheckResult(passed=False, measured=False, details=details)
 
+    # F7: an entry nobody uses is a stale exemption widening the rule invisibly.
+    unused = sorted(set(THEOREM_FILTER_ALLOWLIST) - used_allowlist)
+    if unused:
+        unowned.append(f"STALE allow-list entr(ies) matching no site: {', '.join(unused)}")
+
     details.append(Detail(
         "ownership", not unowned,
         f"{scanned_files} script(s) scanned, {sites_found} `kind == \"theorem\"` site(s); "
-        + (f"{len(THEOREM_FILTER_ALLOWLIST)} allow-listed unfiltered site(s)"
+        + (f"{len(used_allowlist)} allow-listed site(s), all matched"
            if not unowned else
            f"UNOWNED `kind == \"theorem\"` filter(s): {', '.join(unowned)} — route through "
            f"validate_helpers.autogen_index, or add to THEOREM_FILTER_ALLOWLIST with a reason")))

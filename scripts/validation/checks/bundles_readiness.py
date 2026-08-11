@@ -305,7 +305,7 @@ def check_bundle_figure_integrity() -> CheckResult:
     #
     # ⚠️ **THIS COUPLES THE ZERO-HEADROOM `--ci` FLOOR TO AN OUT-OF-BAND IMPORT, and
     # that consequence is deliberate but was undisclosed when first shipped.**
-    # `CI_MIN_CHECKS_RUN` is 75 with no slack, so a failed `review_figures`
+    # `CI_MIN_CHECKS_RUN` is 76 with no slack, so a failed `review_figures`
     # FIGURE_REGISTRY load now turns `--ci` red rather than merely warning. That
     # import demonstrably failed on EVERY run for a whole review round (see the
     # comment at the fallback itself) without anyone noticing — which is the
@@ -1424,8 +1424,8 @@ def check_bundle_manuscript_length() -> CheckResult:
     # wasn't.
     #
     # Folding it makes the perishability ENFORCE itself rather than be documented
-    # in three places and observed in none: a stale tree now reads `74 MEASURED,
-    # floor 75` under `--ci` instead of a green tick over part of the corpus. The
+    # in three places and observed in none: a stale tree now reads `75 MEASURED,
+    # floor 76` under `--ci` instead of a green tick over part of the corpus. The
     # remedy is `scripts/compile_bundle_pdf.py --all --force`.
     # `measured=True` whenever ANY bundle was sized. THE ONE POLICY: `measured=False`
     # means the population was UNREACHABLE, not that coverage of it was INCOMPLETE.

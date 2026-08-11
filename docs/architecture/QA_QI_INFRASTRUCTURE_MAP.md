@@ -54,7 +54,7 @@ flowchart TB
         BR["bundle_readiness.py<br/>→ heatmap + metadata counts"]
     end
 
-    subgraph D["④a DRAFTING — LLM agent, WRITES a source"]
+    subgraph D["④a DRAFTING — LLM agent, returns prose"]
         PD["paper-drafter<br/>Stage 10, per section"]
     end
 
@@ -80,7 +80,7 @@ flowchart TB
     ED & CNT & ATL & BG --> VCK
     GI & RG & BR --> VCK
     VCK --> VAL
-    PD --> TEX
+    PD -.->|via the lead| TEX
     TEX --> PR & FR & CR & AR
     NB --> VCK
     AR & CR --> RF --> BG
@@ -94,12 +94,16 @@ flowchart TB
 **The system is well-designed in its architecture and substantially broken in its wiring.**
 That sentence is the thesis of this whole directory, and every section below is an instance.
 
-⚠️ **`paper-drafter` is the only agent whose arrow points INTO plane ①.** Every other agent
-consumes `papers/*/paper_draft.tex`; this one produces it. That inverts the premise the rest of
-the directory rests on — sources are authored, everything else is derived — because an
-agent-authored source is still a source, and **nothing downstream can tell who wrote it**. No
-check, no reviewer and no graph node records authorship. Its obligations therefore have to be
-internal to the agent; there is no layer beneath it to catch what it gets wrong.
+⚠️ **`paper-drafter` is the only agent that PRODUCES manuscript prose**, but it does not write
+the file: it returns a section and the lead places it. That keeps plane ① author-written by a
+single serializing writer, which matters because a bundle is one monolithic `paper_draft.tex` —
+parallel drafters holding `Write` would clobber it and holding `Edit` would race. It therefore
+holds neither.
+
+The provenance consequence stands regardless of who types: **nothing downstream records that an
+agent produced the prose.** No check, no reviewer and no graph node carries authorship, so the
+drafter's obligations have to be internal to it; there is no layer beneath it to catch what it
+gets wrong.
 
 The one that matters is **prior art**. A drafted section that cites must be written against the
 cited work itself, read in full for that portion — not an abstract, not a summary, not the

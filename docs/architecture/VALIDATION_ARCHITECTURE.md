@@ -205,8 +205,8 @@ uv run python -m pytest -m ''                       # may change \totaltests
 uv run python scripts/update_counts.py              # regenerates counts.tex IF substance moved
 #   ^ counts are AUTHOR-WRITTEN-scoped: `update_counts` filters through
 #     `validate_helpers.autogen_index`, the single owner of "is this
-#     compiler-generated". Without that filter `\totaltheorems` published 26,398
-#     where 22,669 are author-written — 3,729 of them Lean's own `.eq_1`,
+#     compiler-generated". Unfiltered, this corpus counts 26,398 theorem-kind
+#     declarations against 22,669 author-written — 3,729 of them Lean's own `.eq_1`,
 #     `.sizeOf_spec`, `.inj`, `.congr_simp`, `.eq_def` products. That number is `\input` by
 #     I1, D2 and I3 and read as "machine-checked theorems". A local kind=="theorem"
 #     filter in any generator is now a CHECK FAILURE, not an instruction — see below.

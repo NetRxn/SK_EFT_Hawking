@@ -2697,7 +2697,7 @@ def _pp_sentence_chain_link_states(
             nid = _node_id_for('LeanAxiom', target)
         elif kind in ('theorem', 'formula'):
             # Lean theorems use lean: prefix; formulas use formula:
-            if kind == 'theorem':
+            if kind == 'theorem':  # census-exempt: node-id-dispatch
                 nid = _node_id_for('LeanTheorem', target)
             else:
                 nid = _node_id_for('Formula', target)

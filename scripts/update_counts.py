@@ -159,7 +159,7 @@ def count_lean(deps_path: Path, preloaded: list | None = None) -> dict:
 
     # ⚠️ AUTHOR-WRITTEN ONLY, via the canonical resolver. This read
     # `[d for d in data if d["kind"] == "theorem"]` with NO autogen filter, so
-    # `\totaltheorems` published 26,398 — of which 3,729 are compiler-generated
+    # unfiltered, this corpus counts 26,398 theorem-kind — 3,729 compiler-generated
     # (1,508 `.eq_1` equation lemmas, 790 `.sizeOf_spec`, 420 `.inj`, 417 `.injEq`,
     # 184 `.congr_simp`, …). That number is `\input` into I1, D2 and I3 and rendered
     # to a reader as "machine-checked theorems" and "theorems were written" —
@@ -191,7 +191,7 @@ def count_lean(deps_path: Path, preloaded: list | None = None) -> dict:
         if any("sorry" in str(a).lower() for a in d.get("axiom_deps_core", []))
     ]
     # Also count theorems that directly use sorry (kind == "theorem" with sorry dep)
-    sorry_theorems = [d for d in sorry_deps if d["kind"] == "theorem"]
+    sorry_theorems = [d for d in sorry_deps if d["kind"] == "theorem"]  # census-exempt: sorry-theorems
 
     # native_decide trust-surface metric (ADR-002 / Substrate Integrity Gates R4):
     # the authoritative count is the DECL-CLOSURE — declarations whose transitive

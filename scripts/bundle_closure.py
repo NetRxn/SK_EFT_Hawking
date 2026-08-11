@@ -162,7 +162,7 @@ def build_closures(records, declarations: dict[str, dict]) -> dict[str, BundleCl
             if rec is None:
                 bc.unresolved_apexes.append(name)
                 continue
-            if rec.get("kind") != "theorem":
+            if rec.get("kind") != "theorem":  # census-exempt: apex-kind
                 bc.non_theorem_apexes.append(name)
             seeds.append(name)
         (bc.closure, bc.max_depth,

@@ -168,7 +168,7 @@ handoff.** "Every gap is reported with its magnitude" holds only on a freshly co
 regeneration re-stales those 16 at once. Measured 2026-08-09: the amendment's own commit claimed "11 under floor, 0 UNMEASURED"
 while the live tree reported 3 and 16 — the argument was true of 27% of the population it
 described. It is now **machine-enforced** rather than documented: the unmeasured population folds
-into the check's `measured`, so a stale tree fails `--ci` at `74 MEASURED, floor 75` instead of
+into the check's `measured`, so a stale tree fails `--ci` at `75 MEASURED, floor 76` instead of
 passing green over a fraction of the corpus. Remedy: `scripts/compile_bundle_pdf.py --all --force`.
 
 * **No bundle's `length_target` was re-set.** If a specific charter is genuinely unrealistic for
