@@ -13340,19 +13340,26 @@ def fig_i1_gap_counterexample() -> "go.Figure":
       (i)   trivial branch Δ = 0 for G < G_c,
       (ii)  non-trivial branch Δ(G) > 0 for G > G_c,
       (iii) horizontal line at Δ = Λ = 1,
-      (iv)  marked saturation point G* where Δ = Λ
-            (with c_4 = 1, G* = 2 / (1 - log 2) ≈ 6.518),
+      (iv)  marked saturation point G* where Δ = Λ,
       (v)   region G ≥ G* where the original folklore Δ < Λ fails.
 
     Uses an analytic interpolation through (G_c, 0), (G*, Λ) that respects
     the qualitative gap-equation structure (no numerical Newton solve
     needed — the figure's purpose is to display the saturation event).
+
+    ⚠️ BOTH couplings are DERIVED from the stated convention, not typed.
+    Fixed 2026-08-11 (ARCHITECTURE_TODOs D45-c): G_c had been hardcoded to
+    1.0 while the docstring declared c_4 = 1, in which criticalCoupling_formula
+    gives G_c = 1/(N_f I(0)) = 2/c_4 = 2. The rendered ratio G*/G_c therefore
+    read 6.5 where the verified value is 1/(1 - log 2) ≈ 3.26. Deriving both
+    from c_4 makes that class of drift impossible rather than merely fixed.
     """
     Lambda = 1.0
-    # G_c at the boundary of the pre-geometric / Δ > 0 phase
-    G_c = 1.0
-    # Saturation coupling: Δ = Λ ⇒ G* = 2/(1 - log 2) (paper-textual constant)
-    G_star = 2.0 / (1.0 - np.log(2.0))   # ≈ 6.518
+    c_4 = 1.0                            # figure convention, stated in the caption
+    # G_c = 1/(N_f · I(0)) with I(0) = c_4 Λ²/2 and N_f = Λ = 1  ⇒  2/c_4.
+    G_c = 2.0 / c_4
+    # Saturation: Δ = Λ ⇒ I(Λ) = I(0)(1 - log 2) ⇒ G* = G_c/(1 - log 2).
+    G_star = G_c / (1.0 - np.log(2.0))
 
     # Trivial branch
     G_trivial = np.linspace(0.0, G_c, 80)

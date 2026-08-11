@@ -781,20 +781,17 @@ with $G$ (\texttt{gap\_solution\_monotone}). The branch meets the
 cutoff at the saturation coupling $G^{\ast} = G_c/(1-\log 2)$ (amber
 marker), which is where the counterexample returned in Aristotle
 run~\texttt{79e07d55} sits, and exceeds it throughout the amber region,
-where the conjectured bound $\Delta < \Lambda$ fails. The onset and the
+where the conjectured bound $\Delta < \Lambda$ fails. In the figure's
+convention $c_4 = \Lambda = N_f = 1$ the two couplings are $G_c = 2$ and
+$G^{\ast} = 2/(1-\log 2)$, a ratio of $1/(1-\log 2) \approx 3.26$; both
+are derived in the generator from $c_4$ rather than typed, so the
+displayed ratio cannot drift from the verified one. The onset and the
 saturation point are exact; the branch drawn between and beyond them is
 an interpolation respecting the square-root onset, not a numerical
 solution of Eq.~(\ref{eq:gapeq}).}
 \label{fig:gap_counterexample}
 \end{figure}
 
-% TODO: the generator fig_i1_gap_counterexample in
-% src/core/visualizations.py places the onset at G = 1 while declaring
-% the c_4 = Lambda = N_f = 1 convention, in which
-% criticalCoupling_formula gives G_c = 2. The rendered figure therefore
-% shows a G*/G_c ratio of 6.5 where the verified ratio is
-% 1/(1 - log 2) = 3.26. The figure must be regenerated before
-% submission; the caption above avoids asserting either numeral.
 
 The general lesson is narrower than ``formal methods find bugs'' and
 more useful. A pen-and-paper theorem inherits its hypotheses from the
