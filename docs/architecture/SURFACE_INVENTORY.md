@@ -168,15 +168,15 @@ success; for a `blocked` default it is a blocker no evidence supports. Guarded b
 | agent | model | purpose |
 |---|---|---|
 | [`adversarial-reviewer`](../../.claude/plugins/skeft-qa/agents/adversarial-reviewer.md) | opus | Fresh-context adversarial review of a paper draft before submission. Runs Stage 13 of the pipeline. Finds every way a paper can be wrong that the internal pipeline missed — wrong-t |
-| [`claims-reviewer`](../../.claude/plugins/skeft-qa/agents/claims-reviewer.md) | inherit | claims-reviewer-v2 — sentence-level prose audit for SK-EFT Hawking papers. Walks every sentence in a paper draft and emits a sentence-keyed JSON record with chain-of-backing (formu |
+| [`claims-reviewer`](../../.claude/plugins/skeft-qa/agents/claims-reviewer.md) | opus | claims-reviewer-v2 — sentence-level prose audit for SK-EFT Hawking papers. Walks every sentence in a paper draft and emits a sentence-keyed JSON record with chain-of-backing (formu |
 | [`coach`](../../.claude/plugins/skeft-qa/agents/coach.md) | opus | In-time human-proxy for an autonomous /goal loop that tried to ask the user a blocking question (the user is out of the loop). Dispatched when the PreToolUse(AskUserQuestion) guard |
-| [`figure-reviewer`](../../.claude/plugins/skeft-qa/agents/figure-reviewer.md) | inherit | Use this agent to review generated physics figures for rendering quality, physics accuracy, and style consistency. Invoke after running review_figures.py to generate PNGs and a rev |
+| [`figure-reviewer`](../../.claude/plugins/skeft-qa/agents/figure-reviewer.md) | opus | Use this agent to review generated physics figures for rendering quality, physics accuracy, and style consistency. Invoke after running review_figures.py to generate PNGs and a rev |
 | [`harvest-consolidator`](../../.claude/plugins/skeft-qa/agents/harvest-consolidator.md) | opus | Consolidate harvest-extractor candidates into the System-2 register — register-AWARE filing & combining. Dispatched by the harvest skill. |
 | [`harvest-extractor`](../../.claude/plugins/skeft-qa/agents/harvest-extractor.md) | haiku | Extract dev-process/harness signal from a /goal transcript span — including the pre-vs-post-compact delta across boundaries. Dispatched by the harvest skill. |
-| [`lean-worker`](../../.claude/plugins/skeft-qa/agents/lean-worker.md) | inherit | Prove ONE independent Lean 4 sub-chain in a pre-built parallel worktree slot. The lead assigns you a slot N (wt1/wt2/wt3); you get your OWN fast, build-isolated lean-lsp via mcp__l |
+| [`lean-worker`](../../.claude/plugins/skeft-qa/agents/lean-worker.md) | opus | Prove ONE independent Lean 4 sub-chain in a pre-built parallel worktree slot. The lead assigns you a slot N (wt1/wt2/wt3); you get your OWN fast, build-isolated lean-lsp via mcp__l |
 | [`paper-drafter`](../../.claude/plugins/skeft-qa/agents/paper-drafter.md) | opus | Use this agent to draft ONE assigned section of a publication bundle manuscript at Stage 10, against an explicit brief from the lead. This is the drafting counterpart to the four r |
 | [`prose-reviewer`](../../.claude/plugins/skeft-qa/agents/prose-reviewer.md) | opus | Use this agent to read a publication bundle draft start to finish as a referee at its named venue would, and report where the manuscript fails to carry a reader. This is the fourth |
-| [`research-scout`](../../.claude/plugins/skeft-qa/agents/research-scout.md) | inherit | Read-only web reconnaissance for a goal-mode loop. Given ONE focused, already-sanitized research question, find the answer in whitelisted scholarly sources and return a STRUCTURED, |
+| [`research-scout`](../../.claude/plugins/skeft-qa/agents/research-scout.md) | sonnet | Read-only web reconnaissance for a goal-mode loop. Given ONE focused, already-sanitized research question, find the answer in whitelisted scholarly sources and return a STRUCTURED, |
 
 ## Commands — 6
 

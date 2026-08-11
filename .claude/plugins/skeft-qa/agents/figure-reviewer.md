@@ -7,7 +7,7 @@ description: >
   structured report that pairs with validation results.
   See "When to invoke" in the agent body for worked scenarios.
 
-model: inherit
+model: opus
 color: cyan
 tools: ["Read", "Glob", "Grep", "Bash"]
 ---

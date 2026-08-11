@@ -10,7 +10,7 @@ description: >
   decide, edit, or commit; you report, and the lead vets and files.
   See "When to invoke" in the agent body for worked scenarios.
 
-model: inherit
+model: sonnet
 color: cyan
 tools: ["WebSearch", "WebFetch", "Read", "Grep"]
 ---

@@ -12,7 +12,7 @@ description: >
   paper draft or before submission.
   See "When to invoke" in the agent body for worked scenarios.
 
-model: inherit
+model: opus
 color: yellow
 tools: ["Read", "Glob", "Grep", "Bash"]
 ---
