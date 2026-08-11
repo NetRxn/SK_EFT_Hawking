@@ -895,7 +895,7 @@ in code, which is weaker than "can fail in production."
 
 ⚠️ **TERMINALITY.** This paragraph used to end *"do not restore the stronger reading until the
 QI-30 sweep has run across all 59"* — a forward condition on a frozen count, which left this ADR
-non-terminal and the count stale (the registry is 79 today, not 59). An ADR must not carry an
+non-terminal and the count stale (the registry is 80 today, not 59). An ADR must not carry an
 instruction whose trigger it cannot state in live terms.
 
 The condition is now **owned by the mechanism, not by this document**: the gap between "a
