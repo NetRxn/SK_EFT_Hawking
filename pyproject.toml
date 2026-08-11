@@ -81,7 +81,7 @@ gpu = ["torch>=2.13.0"]
 # linux marker's extra to mlx[cuda13].
 mlx = [
     "mlx>=0.30; sys_platform == 'darwin'",
-    "mlx[cuda]>=0.30; sys_platform == 'linux'",
+    "mlx[cuda]>=0.32.0; sys_platform == 'linux'",
 ]
 
 # Rust backend build tool — now in main dependencies.
