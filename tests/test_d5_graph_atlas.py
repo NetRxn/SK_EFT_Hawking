@@ -343,7 +343,7 @@ class TestAtlasIntegrity:
         `except Exception` — and BOTH handlers on the path are `except Exception`:
         `check_atlas_integrity`'s own, and `validate.run_checks`'s.
 
-        Measured: `atlas_integrity` is check 39 of 79, so a missing `lean_deps.json`
+        Measured: `atlas_integrity` runs partway through the suite, so a missing `lean_deps.json`
         did not fail the atlas check — it terminated the interpreter and **the other 24
         checks never ran**, with no report distinguishing that from a clean exit.
 

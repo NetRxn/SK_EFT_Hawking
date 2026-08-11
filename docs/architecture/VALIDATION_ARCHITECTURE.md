@@ -223,11 +223,16 @@ per-module I1 macro loop, `render_bundle_counts`, `paper_tables/sources`,
 `atlas_view`, and an apex classifier in `bundle_closure`. Three of those were added or
 survived *after* the prose rule was written a few lines up.
 
-**They all agreed, and were all wrong.** Every census counted the generated declarations
-as authored, so `counts.tex` and `ATLAS_HEATMAP.md` both published **26,103** — 3,434 of
-that corpus were Lean's own products. (Today's corpus is larger: 26,398 raw against 22,669
-authored, a gap of 3,729. The two pairs belong to different extractions and must not be
-mixed.) A test asserted the three instruments "agree"; nothing
+**They all agreed, and were all wrong.** Every census counted Lean's generated
+declarations as authored, so `counts.tex` and `ATLAS_HEATMAP.md` published the same
+inflated figure on main. Agreement held throughout, so it was never the property that
+needed checking.
+
+⚠️ **No figure appears in this paragraph, deliberately.** Three successive attempts to
+state one were wrong, the last by subtracting a current authored count from a historical
+raw count — two different extractions. The live numbers are derived in `docs/counts.json`
+and gated by `theorem_census_agrees`; a narrative that restates them is a fourth census
+nobody reconciles, which is what README rule 1 forbids. A test asserted the three instruments "agree"; nothing
 compared them — but agreement held throughout, so it was never the property that
 needed checking.
 
@@ -257,9 +262,11 @@ a clean pass, and both are now pinned as tests:
    detect its own removal.
 
 Consequently the leg carries a **down-only floor on its scanned population**
-(`THEOREM_FILTER_SITES_FLOOR`), because narrowing the pattern from 13 matches to 5
-still passed when only zero was fatal. A guard whose population can silently shrink is
-the same defect one level up.
+(`THEOREM_FILTER_SITES_FLOOR`), not only on its violation count: a detector that stops
+SEEING a site cannot report it, so the violation count never moves. Each successive
+detector shrank that population silently until the floor caught it. A guard whose
+population can quietly shrink is the same defect one level up — and the floor must be
+re-measured whenever the detector changes, which is now asserted by test.
 
 ⚠️ **This is NOT spurious churn, and the distinction matters.** `update_counts.py`
 holds a byte-stability contract — it compares everything except the `generated`

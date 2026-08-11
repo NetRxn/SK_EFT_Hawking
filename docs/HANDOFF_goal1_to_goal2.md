@@ -204,7 +204,7 @@ stage not run are different states, and only one of them is recoverable by re-ru
 
 ## 5. Gate state at handoff — and the one that stays red on purpose
 
-`validate.py`: **77 of 79 pass.** The two that do not:
+`validate.py`: all but one check pass. The exception:
 
 > ⚠️ Verified by running the suite, not asserted. A first draft of this note said
 > 77/79 before the run and the run said 76 — E2's trim had added a companion

@@ -115,7 +115,7 @@ CI_SKIP: dict[str, str] = {
 #:
 #: ⚠️ COUNTS MEASUREMENTS, NOT INVOCATIONS (fixed 2026-08-05). As first written the
 #: floor compared `len(results)`, which `run_checks` fills for every registered spec —
-#: so it was identically 55 against a floor of 55 and could never fire. Four reviewers
+#: so it was identically 55 against a floor of 55 and could never fire. Multiple reviewers
 #: found that independently. `validate.main()` now counts `r.measured`.
 #:
 #: So `--ci` FAILS when fewer checks MEASURE than this. A missing toolchain becomes a

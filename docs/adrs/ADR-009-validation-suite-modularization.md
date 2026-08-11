@@ -55,7 +55,7 @@
 > **Line-citation baseline — ⚠️ THE CITATIONS BELOW NO LONGER RESOLVE. Read them as names, not lines.**
 > Every `validate.py:NNNN` citation in this document is anchored to the file **as read on 2026-08-03 at
 > 7,778 lines** (7,813 after the `stage13_status` guard inserted 35 lines at `:4355`). **Phase 2 has since
-> moved all 59 check bodies out**, and `scripts/validate.py` is now **720 lines** of framework, so every
+> moved every check body out**, and `scripts/validate.py` is now framework only, so every
 > citation to a CHECK BODY is dangling: locate the check **by name** in its `scripts/validation/checks/*.py`
 > module instead. Citations to the framework itself (`Detail`/`CheckResult`, the registry, `run_checks`,
 > reporting, the CLI, `main`) still resolve in `validate.py`, at new line numbers.
@@ -71,7 +71,7 @@
 
 ## Context
 
-`scripts/validate.py` is the project's cross-layer gate: 59 registered checks spanning Python ↔ Lean ↔
+`scripts/validate.py` is the project's cross-layer gate, spanning Python ↔ Lean ↔
 notebooks ↔ papers, invoked at Stage 7 and Stage 12 of the wave pipeline, by `scripts/gate_precheck.py`, and
 by the pre-commit hook.
 
@@ -162,7 +162,7 @@ The corrected layout:
   `CheckSpec`, the `_CHECKS` registry and `register_check`, `run_checks`, reporting, `archive_results`, the
   CLI, and the `BUNDLE_CODES` re-export H2 requires). It imports the check modules for their registration
   side-effect, from an **explicit ordered list** (H3).
-- **`scripts/validation/checks/*.py`** — the 59 checks, split by domain, each file readable in one pass.
+- **`scripts/validation/checks/*.py`** — the checks, split by domain, each file readable in one pass.
 - **`scripts/validate_helpers.py`** — already shipped in Phase 1; stays put so its path anchor keeps
   resolving from `scripts/` (H1).
 
@@ -914,7 +914,7 @@ the sweep has finished.
 
 `tests/test_d5_mutation_obligation.py`
 requires every registered check to declare its test status, and as of the QA/QI audit's workstream
-W-D **all 59 checks are mutation-verified** — `AWAITING_MUTATION_TEST` is empty and its ceiling is
+W-D **every registered check is mutation-verified** — `AWAITING_MUTATION_TEST` is empty and its ceiling is
 **0**, so the next check added without a both-directions test fails on arrival rather than being
 absorbed into a backlog.
 

@@ -83,8 +83,8 @@ class TestOwnershipLegCannotGoVacuous:
     def test_the_scanner_sees_the_dominant_forms(self, tmp_path):
         """The scan must see every spelling a census is actually written in. Two earlier
         line-regex versions could not: one omitted `)` from its character class and matched
-        NOTHING across 131 files while passing; the tokenizer cannot have that bug because
-        it reads tokens, not text."""
+        NOTHING across 131 files while passing; the AST cannot have that bug because it
+        matches nodes, not text."""
         f = tmp_path / "m.py"
         f.write_text(
             "def a(ds):\n    return [d for d in ds if d.get('kind') == 'theorem']\n"
@@ -94,7 +94,7 @@ class TestOwnershipLegCannotGoVacuous:
         assert len(seen) == 3 and len(unguarded) == 3
 
     def test_a_guard_in_the_SAME_expression_owns_the_site(self, tmp_path):
-        """Ownership is logical-line scoped: a guard in this expression owns it, one two
+        """Ownership is STATEMENT scoped: a guard in this expression owns it, one two
         lines away does not. An earlier +/-2 line window accepted the module's own
         `_autogen = ...` assignment and so could not detect a guard's removal."""
         f = tmp_path / "m.py"
@@ -139,6 +139,57 @@ class TestOwnershipLegCannotGoVacuous:
             ls.__file__).read_text()), (
             "the +/-2 line window is back — the ownership leg cannot detect a guard's "
             "own removal with it in place")
+
+
+class TestEveryDetectedShapeIsActuallyDetected:
+    """One test per shape the detector CLAIMS. Their absence is why a rewrite shipped
+    naming `case "theorem":` as supported while `_is_theorem(n.pattern)` raised
+    AttributeError on every `match` statement in scripts/ — taking the whole check down,
+    with CI_MIN_CHECKS_RUN at zero slack. A claimed capability with no test is a claim."""
+
+    def _sites(self, tmp_path, body):
+        f = tmp_path / "m.py"
+        f.write_text(body)
+        return ls._census_sites(f)
+
+    def test_operand_order_does_not_hide_a_site(self, tmp_path):
+        """Token adjacency required the literal right of the operator, so swapping the
+        operands hid a census WHILE its autogen guard was deleted."""
+        seen, sites, _ = self._sites(tmp_path, 'def f(d):\n    return "theorem" == d["kind"]\n')
+        assert len(seen) == 1 and len(sites) == 1
+
+    def test_a_single_element_in_is_a_census(self, tmp_path):
+        seen, sites, _ = self._sites(tmp_path, 'def f(d):\n    return d["kind"] in ("theorem",)\n')
+        assert len(seen) == 1 and len(sites) == 1
+
+    def test_a_multi_kind_in_is_DISPATCH_not_a_census(self, tmp_path):
+        """`kind in ('theorem','axiom')` cannot count theorems; all six live instances
+        are node-kind dispatch."""
+        seen, _, _ = self._sites(tmp_path, 'def f(d):\n    return d["kind"] in ("theorem", "axiom")\n')
+        assert not seen
+
+    def test_a_match_case_is_detected_and_does_not_crash(self, tmp_path):
+        seen, sites, _ = self._sites(
+            tmp_path, 'def f(k):\n    match k:\n        case "theorem":\n            return 1\n')
+        assert len(seen) == 1 and len(sites) == 1
+
+    def test_an_UNRELATED_match_does_not_raise(self, tmp_path):
+        """The crash fired on ANY `match`/`case <literal>` anywhere in scripts/, on any
+        subject — nothing to do with theorems."""
+        seen, _, _ = self._sites(
+            tmp_path, 'def f(k):\n    match k:\n        case "definition":\n            return 1\n')
+        assert seen == set()
+
+    def test_a_same_line_sibling_is_its_OWN_site(self, tmp_path):
+        """Keying on lineno alone collapsed two censuses on one physical line into one, so
+        a marker exempting the first silently covered the second and the population never
+        moved — invisible to the zero-headroom floor."""
+        seen, sites, _ = self._sites(
+            tmp_path,
+            'def f(ds):\n    a = [d for d in ds if d["kind"] == "theorem"]; '
+            'b = [d for d in ds if d["kind"] == "theorem"]\n    return a, b\n')
+        assert len(seen) == 2, "two censuses on one line are two sites"
+        assert len(sites) == 2
 
 
 class TestPopulationFloorsAreHeldAtZeroHeadroom:

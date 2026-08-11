@@ -359,7 +359,7 @@ def load_lean_deps_file() -> list[dict]:
     caught by `except Exception`. Both handlers on the path are `except Exception`:
     `graph_atlas.check_atlas_integrity`'s own, and `validate.run_checks`'s. So a
     missing `lean_deps.json` did not fail the atlas check — it **terminated the
-    interpreter mid-suite**. `atlas_integrity` is check 39 of 79, so the other
+    interpreter mid-suite**. `atlas_integrity` runs partway through the suite, so the other
     **the 40 checks after it never ran**, and the run ended with no report distinguishing
     that from a clean exit.
 

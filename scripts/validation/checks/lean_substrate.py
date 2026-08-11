@@ -772,9 +772,10 @@ def check_lean_zero_sorry() -> CheckResult:
 #   4. paper_tables/sources.py                (found by review 3)
 #   5. atlas_view.py                          (found by review 4)
 #   6. bundle_closure.py apex classifier      (found by the guard itself)
-# Every one of them counted generated declarations as authored, so the instruments
-# AGREED on an inflated figure — main published 26,103 in both `counts.tex` and
-# `ATLAS_HEATMAP.md`. Agreement was never the property that needed checking.
+# Five of them counted generated declarations as authored, so the PUBLISHED instruments
+# agreed on an inflated figure on main. Agreement was never the property that needed
+# checking. The sixth, `bundle_closure`'s apex classifier, publishes no count — it is on
+# this list because it compares the same field, and it carries a `census-exempt` marker.
 #
 # Fixing site N and waiting for a reviewer to find site N+1 is not a process. This
 # check makes the census self-enforcing in two independent ways:
@@ -814,14 +815,12 @@ THEOREM_FILTER_ALLOWLIST: Dict[str, str] = {
         "overclaims an exclusion it does not implement — tracked, not load-bearing).",
 }
 
-# `)` and `]` must be in the class: the dominant form is `d.get('kind') == 'theorem'`,
-# where `kind` is followed by `')`. A first version omitted `)` and therefore matched
-# NOTHING across 131 files while reporting a clean pass — the leg was vacuous. The
-# `sites_found` total below exists so that failure mode is visible in the output.
-# Down-only ratchet on the SCANNED POPULATION, not just on violations. Breaking the
-# pattern from 13 matches to 5 still passed when only zero was fatal, so a quietly
-# narrowing regex could re-open the whole class. Lower this only alongside a stated
-# reason, exactly like every other ratchet here.
+# Down-only ratchet on the SCANNED POPULATION, not only on violations, because a
+# detector that stops SEEING a site cannot report it and the violation count never
+# moves. Both earlier detectors shrank this silently — a regex that matched nothing
+# across 131 files, then token adjacency that missed a swapped operand. `sites_found`
+# is reported so a narrowing is visible. Lower only alongside a stated reason, exactly
+# like every other ratchet here.
 # RE-MEASURED 2026-08-11 against the AST detector: 12 sites, zero headroom. The two
 # earlier values (13 regex, 11 tokens) were each the population of a DIFFERENT detector,
 # and neither was re-derived when the technique changed — which left one slack site, so a
@@ -872,6 +871,14 @@ def _census_sites(path) -> tuple:
         return isinstance(node, ast.Constant) and node.value == "theorem"  # census-exempt: detector-self
 
     def _guarded(stmt) -> bool:
+        """Whether this statement carries an autogen reference.
+
+        A NAME-SHAPED HEURISTIC, and its limits are real in both directions: a variable
+        merely named `autogen_unused` forges a guard, and a guard applied in a PRECEDING
+        statement (`if autogen.get(n): continue`) or through a differently-named helper is
+        not seen. Fail-open on the first, fail-closed on the second. Stated because
+        claiming completeness is what broke the two previous detectors.
+        """
         for n in ast.walk(stmt):
             if isinstance(n, ast.Name) and "autogen" in n.id.lower():
                 return True
@@ -900,12 +907,13 @@ def _census_sites(path) -> tuple:
                     # of several kinds — and all six live instances are exactly that. A
                     # one-element container IS census-shaped, so it stays detected.
                     hit = n
-            elif isinstance(n, ast.MatchValue) and _is_theorem(n.pattern):
+            elif isinstance(n, ast.MatchValue) and _is_theorem(n.value):
                 hit = n
             if hit is not None:
-                seen.add(hit.lineno)
+                key = (hit.lineno, hit.col_offset)
+                seen.add(key)
                 if not guarded:
-                    sites.add(hit.lineno)
+                    sites.add(key)
     return seen, sites, marks
 
 
@@ -1015,14 +1023,14 @@ def check_theorem_census_agrees() -> CheckResult:
             unowned.append(f"{rel}: UNPARSEABLE — cannot audit")
             continue
         sites_found += len(seen)
-        for lineno in sorted(sites):
+        for lineno, col in sorted(sites):
             key = marks.get(lineno)
             if key and key in THEOREM_FILTER_ALLOWLIST:
-                used_sites.append(f"{rel}:{lineno}")
-                key_sites.setdefault(key, []).append(f"{rel}:{lineno}")
+                used_sites.append(f"{rel}:{lineno}:{col}")
+                key_sites.setdefault(key, []).append(f"{rel}:{lineno}:{col}")
                 used_keys.add(key)
                 continue
-            unowned.append(f"{rel}:{lineno}")
+            unowned.append(f"{rel}:{lineno}:{col}")
 
     if sites_found < THEOREM_FILTER_SITES_FLOOR:
         # A scan that matches nothing is a broken pattern, not a clean codebase:

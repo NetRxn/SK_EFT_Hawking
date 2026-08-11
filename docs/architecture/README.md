@@ -20,7 +20,7 @@ defect — fix it rather than working around it.
 
 ⚠️ **`D` is overloaded across this project — always qualify it.** Five namespaces share the
 prefix: publication bundles (`D1`–`D12`), ADR-010's decisions (`§D1`–`§D7`, `§D5a`), ADR-009's
-(`D1`–`D3`), the operator decisions in the 2026-08-01 audit's `SYNTHESIS.md` §5 (`D-1`–`D-6`), and
+(`D1`–`D5`), the operator decisions in the 2026-08-01 audit's `SYNTHESIS.md` §5 (`D-1`–`D-6`), and
 the `D`-prefixed items in
 [`.working-docs/ARCHITECTURE_TODOs.MD`](.working-docs/ARCHITECTURE_TODOs.MD).
 Write `ADR-010 §D5a`, `ADR-009 D2`, `SYNTHESIS D-1`, `TODO-D5`; reserve a bare `D6`

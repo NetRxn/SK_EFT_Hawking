@@ -917,7 +917,7 @@ Examples:
         # was identically `59 - len(CI_SKIP)` = 55 against a floor of 55, and
         # `55 < 55` is never true: the floor could not fire, on any input.
         #
-        # SIX reviewers found this independently in PR-review pass 2, and one
+        # Multiple reviewers found this independently in PR-review pass 2, and one
         # identified why it was invisible: `test_ci_mode.py`'s zero-headroom test
         # asserts `CI_MIN_CHECKS_RUN == len(_CHECKS) - len(CI_SKIP)` — the very
         # definition of the quantity being compared — so the guard and its test
