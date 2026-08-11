@@ -4,7 +4,7 @@
 WHY THIS EXISTS. The merge gate is two agreeing `pytest -m ''` runs plus
 `validate.py --ci --no-memo` plus a clean `lake build`: about 45 minutes. That gate
 certifies a MERGE CANDIDATE. It was being run after every fix round, including rounds
-that touched only markdown, and across eleven rounds not one finding required it:
+that touched only markdown, and across the last five findings of that stretch, none required it:
 a crash caught by one unit test, a wrong test name caught by grep, a stale
 `counts.tex` caught by `counts_fresh` in 30 seconds.
 

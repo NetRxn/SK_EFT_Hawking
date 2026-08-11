@@ -320,8 +320,10 @@ git reports as touched; `--merge-gate` runs the real thing, once, on the candida
 five commits. A gate that inherits `--ci`'s blind spot is not a gate.
 
 **What neither depth can assert:** that a regenerating check left the working tree clean.
-`counts_fresh` and `tables_fresh` rewrite in place and then pass, so a stale *committed*
-artifact reddens nothing. Check `git status` yourself after either run.
+`counts_fresh`, `tables_fresh` and `claim_clusters_fresh` all rewrite in place and then
+pass, so a stale *committed* artifact reddens nothing. Check `git status` yourself. Only
+`--merge-gate` prints this caveat; a scoped run can invoke `counts_fresh` and will not say
+so, which is a gap in the tool, not in this rule.
 
 ## 6. What this subsystem does not do
 
