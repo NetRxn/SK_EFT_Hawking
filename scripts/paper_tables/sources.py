@@ -481,7 +481,17 @@ def pipeline_stages() -> list[dict]:
     # never a pipeline that shrank: stage numbers are immutable by this document's
     # own rule, so raise rather than publish a short table.
     declared = len(_re.findall(r'^Stage\s+\d+[a-z]?:', text, _re.MULTILINE))
-    if declared and len(rows) != declared:
+    # `if declared and ...` short-circuits the whole assertion at zero, and `declared`
+    # keys on the same summary-block formatting the row parse does — so one reformat
+    # silences both together and publishes an empty tabular, which is the incident this
+    # assertion cites. Both counts carry a floor.
+    if declared < 14 or not rows:
+        raise RuntimeError(
+            f"pipeline_stages: {declared} stage(s) declared and {len(rows)} parsed from "
+            f"docs/WAVE_EXECUTION_PIPELINE.md. The summary block did not parse — its "
+            f"format changed, or the file moved. Fix the parse; do NOT publish a short "
+            f"or empty table into Paper 15.")
+    if len(rows) != declared:
         raise RuntimeError(
             f"pipeline_stages parsed {len(rows)} of {declared} stages declared in "
             f"docs/WAVE_EXECUTION_PIPELINE.md's summary block. Missing: "

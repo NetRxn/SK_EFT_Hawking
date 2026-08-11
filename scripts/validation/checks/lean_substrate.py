@@ -769,32 +769,34 @@ def check_lean_zero_sorry() -> CheckResult:
 #   3. render_bundle_counts.py                (found by review 2, F1)
 #   4. paper_tables/sources.py                (found by review 3)
 #   5. atlas_view.py                          (found by review 4)
-# Site 5 was the worst: it published `26,398 theorem nodes` in the tracked,
-# reader-facing docs/ATLAS_HEATMAP.md while counts.tex published 22,669 — the same
-# corpus, two numbers, differing by exactly the 3,729 compiler-generated
-# declarations. A test asserted the instruments "agree"; nothing compared them.
+# Every one of them counted generated declarations as authored, so the instruments
+# AGREED on an inflated figure — main published 26,103 in both `counts.tex` and
+# `ATLAS_HEATMAP.md`. Agreement was never the property that needed checking.
 #
 # Fixing site N and waiting for a reviewer to find site N+1 is not a process. This
 # check makes the census self-enforcing in two independent ways:
-#   LEG 1 (agreement) — every PUBLISHED theorem census must equal the one derivation.
-#   LEG 2 (ownership) — every `kind == "theorem"` filter in the codebase must be
-#                       accompanied by an autogen guard, or be on a stated allow-list.
-# Leg 1 catches a wrong number; leg 2 catches the code that would produce one, before
-# it is ever published. A sixth site fails the suite instead of reaching a reader.
+#   LEG 2 (ownership) — every `kind == "theorem"` filter must carry an autogen guard
+#                       or sit on a stated allow-list. THIS is the leg that would have
+#                       caught the original defect: it fails on the CODE that produces
+#                       a wrong number, before any number is published.
+#   LEG 1 (agreement) — every PUBLISHED census must equal the one derivation. This
+#                       catches a PARTIAL fix: correcting the six sites one at a time
+#                       left `ATLAS_HEATMAP.md` at 26,398 against `counts.tex`'s 22,669
+#                       for two commits.
 
 # Sites that compare `kind == "theorem"` WITHOUT an autogen guard, deliberately.
 # Each entry needs a reason. Adding one is a scope decision, not a formality.
 THEOREM_FILTER_ALLOWLIST: Dict[str, str] = {
-    "scripts/update_counts.py:sorry_theorems":
+    "scripts/update_counts.py:count_lean":
         "counts declarations with a `sorry` axiom dep; an autogen declaration cannot "
         "carry one, so the filter is a no-op here (sorry count is 0 and ratcheted).",
-    "scripts/provenance_dashboard.py:node_id_dispatch":
+    "scripts/provenance_dashboard.py:_node_id_for":
         "dispatches a node-ID prefix by kind; it is not a census and publishes no count.",
-    "scripts/bundle_closure.py:apex_kind_classification":
+    "scripts/bundle_closure.py:build_closures":
         "classifies ONE declared apex (is the name a theorem?) rather than counting a "
         "population; the module already threads `autogen` into `compute_closure`, and a "
         "bundle never declares a compiler-generated name as an apex.",
-    "scripts/count_theorem_reuse.py:reuse_scan":
+    "scripts/count_theorem_reuse.py:load_env_index":
         "a reuse/citation scan over proof bodies, not a published census (its docstring "
         "overclaims an exclusion it does not implement — tracked, not load-bearing).",
 }
@@ -807,7 +809,17 @@ THEOREM_FILTER_ALLOWLIST: Dict[str, str] = {
 # pattern from 13 matches to 5 still passed when only zero was fatal, so a quietly
 # narrowing regex could re-open the whole class. Lower this only alongside a stated
 # reason, exactly like every other ratchet here.
-THEOREM_FILTER_SITES_FLOOR = 13
+# 13 -> 11 (2026-08-10): the scan now skips docstring bodies, and two of the 13 were
+# PROSE describing this rule rather than code. Coverage did not shrink — the
+# measurement got more precise. Lower only with a reason like this one.
+THEOREM_FILTER_SITES_FLOOR = 11
+
+#: Published censuses leg 1 must locate: counts.json, atlas_view.json, ATLAS_HEATMAP.md.
+PUBLISHED_CENSUS_FLOOR = 3
+
+_DOC_QUOTES = (chr(34) * 3, chr(39) * 3)
+
+_DEF_RE = re.compile(r"^\s*def\s+([A-Za-z_][A-Za-z0-9_]*)")
 
 _THEOREM_FILTER_RE = re.compile(r"""kind["'\)\]]*\s*(?:==|!=)\s*["']theorem["']""")
 _AUTOGEN_NEARBY_RE = re.compile(r"_?autogen|_AUTOGEN|autogen_index")
@@ -862,9 +874,15 @@ def check_theorem_census_agrees() -> CheckResult:
         if m:
             published["docs/ATLAS_HEATMAP.md:theorem nodes"] = int(m.group(1).replace(",", ""))
 
-    if not published:
-        details.append(Detail("agreement", False,
-                              "no published census found on disk — UNVERIFIED", ))
+    # Floor, not emptiness: `if not published` fires only when ALL THREE consumers
+    # vanish, so renaming one artifact's phrasing dropped it from the comparison
+    # silently and the leg passed over a document publishing the wrong number.
+    if len(published) < PUBLISHED_CENSUS_FLOOR:
+        details.append(Detail(
+            "agreement", False,
+            f"only {len(published)} of {PUBLISHED_CENSUS_FLOOR} published census(es) "
+            f"located ({sorted(published) or 'none'}) — one is no longer being read; "
+            f"UNVERIFIED, not agreed"))
         return CheckResult(passed=False, measured=False, details=details)
 
     disagreeing = {k: v for k, v in published.items() if v != canonical}
@@ -881,6 +899,7 @@ def check_theorem_census_agrees() -> CheckResult:
 
     # ---- LEG 2: every kind == "theorem" filter is owned or allow-listed ---------
     unowned: List[str] = []
+    used_allowlist: set = set()
     sites_found = 0
     scanned_files = 0
     for py in sorted(_H.PROJECT_ROOT.glob("scripts/**/*.py")):
@@ -889,8 +908,18 @@ def check_theorem_census_agrees() -> CheckResult:
         scanned_files += 1
         lines = py.read_text(errors="replace").splitlines()
         rel = py.relative_to(_H.PROJECT_ROOT).as_posix()
+        in_doc = False
         for i, line in enumerate(lines):
-            if line.lstrip().startswith("#") or not _THEOREM_FILTER_RE.search(line):
+            # Track docstring bodies: two of these sites are PROSE describing this
+            # very rule, and they only became visible once the allow-list stopped
+            # exempting whole files. A comment filter alone does not see them.
+            for _q in _DOC_QUOTES:
+                if line.count(_q) % 2:
+                    in_doc = not in_doc
+                    break
+            if in_doc or line.lstrip().startswith("#"):
+                continue
+            if not _THEOREM_FILTER_RE.search(line):
                 continue
             sites_found += 1
             # SAME EXPRESSION, not "somewhere nearby". A +/-2 line window was tried
@@ -905,7 +934,19 @@ def check_theorem_census_agrees() -> CheckResult:
                 window += "\n" + lines[i + 1]
             if _AUTOGEN_NEARBY_RE.search(window):
                 continue
-            if any(a.startswith(rel + ":") for a in THEOREM_FILTER_ALLOWLIST):
+            # SITE-scoped, not FILE-scoped. Matching on the path prefix alone made one
+            # entry blanket-exempt every unguarded filter in that file — including
+            # `update_counts.py`, which carried two of the six historical defects.
+            # The key's second field is the enclosing def, so an exemption covers one
+            # site and a new bare census in an allow-listed file still fails.
+            enclosing = ""
+            for prev in range(i, -1, -1):
+                m_def = _DEF_RE.match(lines[prev])
+                if m_def:
+                    enclosing = m_def.group(1)
+                    break
+            if f"{rel}:{enclosing}" in THEOREM_FILTER_ALLOWLIST:
+                used_allowlist.add(f"{rel}:{enclosing}")
                 continue
             unowned.append(f"{rel}:{i + 1}")
 

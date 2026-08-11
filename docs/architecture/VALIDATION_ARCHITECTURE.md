@@ -223,10 +223,11 @@ per-module I1 macro loop, `render_bundle_counts`, `paper_tables/sources`,
 `atlas_view`, and an apex classifier in `bundle_closure`. Three of those were added or
 survived *after* the prose rule was written a few lines up.
 
-The worst reached readers. `atlas_view.py` published **26,398 "theorem nodes"** into
-the tracked `docs/ATLAS_HEATMAP.md` while `counts.tex` published **22,669** — the same
-corpus, two numbers, differing by exactly the 3,729 compiler-generated declarations.
-A test asserted the three instruments "agree"; **nothing compared them**.
+**They all agreed, and were all wrong.** Every census counted the 3,729
+compiler-generated declarations as authored, so `counts.tex` and `ATLAS_HEATMAP.md`
+both published **26,103**. A test asserted the three instruments "agree"; nothing
+compared them — but agreement held throughout, so it was never the property that
+needed checking.
 
 `theorem_census_agrees` replaces the exhortation with two legs that fail the suite:
 
@@ -235,8 +236,11 @@ A test asserted the three instruments "agree"; **nothing compared them**.
 | **agreement** | a published census that differs from the one derivation | the real `ATLAS_HEATMAP.md` census was rewritten to a wrong value → FAIL naming file and delta; restored → PASS |
 | **ownership** | a `kind == "theorem"` filter that bypasses `validate_helpers.autogen_index` | the guard was stripped from the real `paper_tables/sources.py` → FAIL naming the line; restored → PASS |
 
-**The ownership leg is the one that generalises**, because it fails on the *code* that
-would produce a wrong number rather than waiting for the number to be published. A
+**The ownership leg is the one that would have caught this**, because it fails on the
+*code* that produces a wrong number rather than on a disagreement between published
+numbers — and there was no disagreement. The agreement leg earns its place on a
+different failure: correcting the six sites one at a time left `ATLAS_HEATMAP.md` at
+26,398 against `counts.tex`'s 22,669 for two commits, so it catches a PARTIAL fix. A
 site that genuinely must not filter goes in `THEOREM_FILTER_ALLOWLIST` **with a stated
 reason** — a scope decision on the record, not a silent exemption.
 

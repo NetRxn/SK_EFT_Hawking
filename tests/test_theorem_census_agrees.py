@@ -2,10 +2,9 @@
 
 WHY THIS CHECK EXISTS. "Is this declaration compiler-generated?" was answered
 independently in SIX places, each found by a different reviewer, one at a time. The
-worst published `26,398 theorem nodes` in tracked `docs/ATLAS_HEATMAP.md` while
-`counts.tex` published `22,669` — the same corpus, two numbers, differing by exactly
-the 3,729 compiler-generated declarations. A test asserted the instruments "agree";
-nothing compared them.
+six counted generated declarations as authored, so the instruments AGREED on an inflated
+figure — main published 26,103 in both `counts.tex` and `ATLAS_HEATMAP.md`. A prior test
+asserted they "agree"; agreement held the whole time, which is why it never fired.
 
 So this check has two legs and BOTH must be able to fail:
   * agreement — a published census that disagrees with the one derivation
@@ -50,13 +49,26 @@ class TestTheCensusAgrees:
         assert r.measured is False and r.passed is False
 
     def test_a_disagreeing_published_census_FAILS(self, tmp_path, monkeypatch):
-        """FIRES ON THE SEEDED DEFECT — the ATLAS_HEATMAP 26,398 vs counts.tex 22,669
-        divergence, which shipped in a tracked reader-facing file."""
+        """FIRES ON THE SEEDED DEFECT. The divergence this leg exists for is a PARTIAL
+        fix: correcting the six sites one at a time left ATLAS_HEATMAP.md at 26,398
+        against counts.tex's 22,669 for two commits (78ded271..a1644a76)."""
+        # ALL THREE censuses must be present, or the population floor fires first and
+        # the disagreement is never reached. Seed a tiny corpus so the canonical value
+        # is cheap, then make exactly one census disagree.
+        import json as _json
+        monkeypatch.setattr(_H, "load_lean_deps",
+                            lambda *a, **k: [{"name": "SKEFTHawking.M.thm_a", "kind": "theorem"},
+                                             {"name": "SKEFTHawking.M.thm_b", "kind": "theorem"}])
         docs = tmp_path / "docs"
         docs.mkdir()
         (docs / "ATLAS_HEATMAP.md").write_text("_Source: 999999 theorem nodes, 0 open._\n")
+        cj = docs / "counts.json"
+        cj.write_text(_json.dumps({"lean": {"theorems_total": 2}}))
+        lean = tmp_path / "lean"
+        lean.mkdir()
+        (lean / "atlas_view.json").write_text(_json.dumps({"nodes": [{"fqn": "a"}, {"fqn": "b"}]}))
         monkeypatch.setattr(_H, "DOCS_DIR", docs)
-        monkeypatch.setattr(_H, "COUNTS_JSON_PATH", tmp_path / "absent.json")
+        monkeypatch.setattr(_H, "COUNTS_JSON_PATH", cj)
         monkeypatch.setattr(_H, "PROJECT_ROOT", tmp_path)
         r = ls.check_theorem_census_agrees()
         assert r.passed is False

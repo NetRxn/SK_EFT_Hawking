@@ -245,8 +245,9 @@ no new `sorry`, no `native_decide` regression, no un-signed-off axiom.
 
 - Add the run UUID to `ARISTOTLE_THEOREMS` (`src/core/constants.py`) and bump the
   `assert ARISTOTLE_PROVED_COUNT == <N>` in that same file, in the same commit. **That assert is
-  the only pin — do not add a second.** It raises at import, so a wrong count fails before any
-  check body runs.
+  the only pin — do not add a second.** A wrong count raises `AssertionError` from the first
+  check body that imports `constants` (checks import it lazily, and the runner catches), so it
+  surfaces as a check-level failure, not an import error.
 - Set `SorryGap(filled=True)` in `src/core/aristotle_interface.py` — append or update, never
   delete; the registry is provenance
 - Run `scripts/update_counts.py`; `scripts/aristotle_usage_by_bundle.py` re-derives per-bundle
