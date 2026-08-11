@@ -717,10 +717,32 @@ exactly the 3,729 generated declarations. Goal 1 routed all six through
 `validate_helpers.autogen_index` and added `theorem_census_agrees` to catch a seventh. That
 guard **detects**; it does not **prevent**.
 
-**The fix.** `kind` is emitted at one line — `lean/SKEFTHawking/ExtractDeps.lean:252`. Emit
-`"theorem_autogen"` for compiler-generated declarations. Then the naive `kind == "theorem"`
-every consumer already writes is *correct*, and a consumer that genuinely wants all
-theorem-kind declarations opts in explicitly.
+**The fix, and its real cost.** `kind` is emitted at one line —
+`lean/SKEFTHawking/ExtractDeps.lean:252`. Emitting `"theorem_autogen"` there makes the naive
+`kind == "theorem"` every consumer already writes *correct*. But that emit is the LAST step,
+not the work.
+
+⚠️ **Lean's current detection is incomplete, measured against the live artifact:**
+
+| | |
+|---|---|
+| declarations | 40,726 (all carry an `autogen` field) |
+| Lean-side `autogen = True` | 5,878 |
+| Python `autogen_index` | 8,283 |
+| **gap Lean would miss** | **2,405** |
+| Lean-marks-but-Python-doesn't | 0 (Lean is sound; Python is a strict superset) |
+
+The gap is whole families, not stragglers: `.sizeOf_spec` (790), `.ctorIdx` (498), `.inj`
+(420), `.congr_simp` (184), `.ctorElimType` (88), `.toCtorIdx` (81), `.repr` (76), `.ofNat`
+(71), `.decEq` (34), `.eq_def` (20). Emitting the new `kind` from today's Lean detection would
+publish 2,405 generated declarations as authored — re-opening the exact defect this removes.
+
+**So Item 0 is: extend ExtractDeps' autogen detection to cover those 2,405, THEN change the
+emit.** These come from inductive elaboration and `deriving`, which Lean tracks structurally,
+so name-independent detection is very likely available — but that is **unverified**, and it is
+the real risk in this item. Verify it in Lean before committing to the approach; if structural
+detection cannot reach the whole set, the item does not deliver what it promises and the
+`theorem_census_agrees` guard stays as the mechanism.
 
 **Why the producer and not the loader.** Inverting `load_lean_deps()`'s default was considered
 and rejected on measurement: 76 call sites across 18 script files, but **14 files bypass the
