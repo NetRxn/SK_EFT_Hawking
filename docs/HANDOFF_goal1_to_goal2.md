@@ -739,7 +739,9 @@ environment, which knows what it generated rather than inferring it from names.
 |---|---|
 | producer change | one line at `ExtractDeps.lean:252` |
 | rebuild | full `rm -rf .lake/build && lake build SKEFTHawking.ExtractDeps`; invalidates every memo fingerprint |
-| consumers needing opt-in | the graph, `lean_zero_sorry` and `axiom_closure_allowlist` must see **all** declarations (they scan for `sorryAx`). Estimated 5–8 files — **not enumerated; enumerate before starting** |
+| consumers needing opt-in | **zero — enumerated, not estimated.** No "must see everything" consumer selects on `kind`: `build_graph.py` has 0 kind-filter sites and already drops generated declarations by name (`build_graph.py:605`), and `axiom_closure_allowlist` runs the `AxiomAudit` Lean executable over all `SKEFTHawking.*` declarations without reading `kind` at all (`lean_zero_sorry` is subsumed by it — a `sorry` elaborates to `sorryAx` in the transitive closure). The rename is invisible to them |
+| sites that simplify automatically | 7 of the 9 executable `kind == "theorem"` sites drop their autogen guard and become correct as written |
+| the one site needing a decision | `provenance_dashboard.py:2700` dispatches a node-ID prefix on `kind`; decide whether generated declarations should get `LeanTheorem` ids (today they do) |
 | schema surface | `lean_deps.json` is tracked; `KNOWLEDGE_GRAPH.md` describes it |
 | test surface | 8 test files reference the loader; any fixture hardcoding `kind: "theorem"` for a generated declaration changes meaning **silently** — the "fix breaks a neighbour" shape |
 
