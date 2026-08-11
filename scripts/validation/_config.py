@@ -119,7 +119,7 @@ CI_SKIP: dict[str, str] = {
 #: found that independently. `validate.main()` now counts `r.measured`.
 #:
 #: So `--ci` FAILS when fewer checks MEASURE than this. A missing toolchain becomes a
-#: red build reading "71 of 79 ran", not a green tick. Lower it only with a stated
+#: red build naming how many fewer than the floor MEASURED, not a green tick. Lower it only with a stated
 #: reason, exactly like every other ratchet in this codebase.
 CI_MIN_CHECKS_RUN: int = 76  # 2026-08-10: +1 (theorem_census_agrees — the
                              #   anti-whack-a-mole census guard); 80 registered

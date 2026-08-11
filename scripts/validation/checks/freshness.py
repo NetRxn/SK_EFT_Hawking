@@ -926,7 +926,14 @@ def check_architecture_inventory_fresh() -> CheckResult:
     # switched off.
     arch_dir = doc.parent
     census_nouns = (r"checks?|gates?|hooks?|agents?|commands?|bundles?|"
-                    r"node types?|edge types?|validation modules?")
+                    r"node types?|edge types?|validation modules?|"
+                    # theorems/declarations added 2026-08-11: a corpus count sat in
+                    # VALIDATION_ARCHITECTURE for three rounds, outside every mechanical
+                    # guard, while the same file declared such figures forbidden. It moves
+                    # on every Lean wave, so prose restating it is a census nobody
+                    # reconciles. The live values are derived in counts.json and gated by
+                    # `theorem_census_agrees`.
+                    r"theorems?|declarations?")
     # (?<![-#\w]) — a digit preceded by a hyphen or a hash is part of a NAME or an
     # ORDINAL, never a count. "Tier-2 checks" is the tier's name; "Invariant #4 gate"
     # is the invariant's number. Both were false positives on correct prose, and per

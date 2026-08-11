@@ -791,12 +791,14 @@ def check_lean_zero_sorry() -> CheckResult:
 # Sites that compare `kind == "theorem"` WITHOUT an autogen guard, deliberately.
 # Each entry needs a reason. Adding one is a scope decision, not a formality.
 #
-# ⚠️ EXEMPTION IS SITE-LOCAL, enforced by a marker on the line itself:
+# ⚠️ EXEMPTION IS LINE-LOCAL, enforced by a marker on the line itself:
 #     ... d["kind"] == "theorem" ...  # census-exempt: <key>
 # Keying on file, or on file:enclosing-def, both failed: a second bare census added
 # beside an exempted one — inside the SAME 156-line `count_lean`, the function that
 # carried two of the six historical defects — inherited the exemption and passed.
-# A marker cannot be inherited by a neighbouring line.
+# A marker cannot be inherited by a neighbouring line. A SECOND census on the SAME
+# line does inherit it — sites are keyed (line, col) so both claim the one key, and
+# ONE KEY, ONE SITE below fails the check. Fail-closed, not silent.
 THEOREM_FILTER_ALLOWLIST: Dict[str, str] = {
     "detector-self":
         "the comparison inside `_is_theorem` that FINDS census sites; it is the "
@@ -825,7 +827,7 @@ THEOREM_FILTER_ALLOWLIST: Dict[str, str] = {
 # earlier values (13 regex, 11 tokens) were each the population of a DIFFERENT detector,
 # and neither was re-derived when the technique changed — which left one slack site, so a
 # real census could vanish silently. Re-measure this whenever the detector changes;
-# `test_the_floor_equals_the_live_population` now fails if you do not.
+# `test_the_site_floor_equals_the_live_population` now fails if you do not.
 THEOREM_FILTER_SITES_FLOOR = 12
 
 #: Published censuses leg 1 must locate: counts.json, counts.tex, atlas_view.json,

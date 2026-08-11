@@ -205,16 +205,16 @@ uv run python -m pytest -m ''                       # may change \totaltests
 uv run python scripts/update_counts.py              # regenerates counts.tex IF substance moved
 #   ^ counts are AUTHOR-WRITTEN-scoped: `update_counts` filters through
 #     `validate_helpers.autogen_index`, the single owner of "is this
-#     compiler-generated". Unfiltered, this corpus counts 26,398 theorem-kind
-#     declarations against 22,669 author-written — 3,729 of them Lean's own `.eq_1`,
-#     `.sizeOf_spec`, `.inj`, `.congr_simp`, `.eq_def` products. That number is `\input` by
-#     I1, D2 and I3 and read as "machine-checked theorems". A local kind=="theorem"
+#     compiler-generated". Unfiltered, the raw count sweeps in Lean's own `.eq_1`,
+#     `.sizeOf_spec`, `.inj`, `.congr_simp` and `.eq_def` products alongside authored
+#     results. `\totaltheorems` is `\input` by I1, D2 and I3 and read as
+#     "machine-checked theorems", so the filtered value is the only honest one. A local kind=="theorem"
 #     filter in any generator is now a CHECK FAILURE, not an instruction — see below.
 uv run python scripts/compile_bundle_pdf.py --all --force
 uv run python scripts/validate.py --ci
 ```
 
-### One theorem census, mechanically enforced
+### A single theorem census, mechanically enforced
 
 ⚠️ **The sentence above used to be advice, and advice did not hold.** "Is this
 declaration compiler-generated?" was answered independently in **six** places, each
@@ -246,8 +246,9 @@ needed checking.
 **The ownership leg is the one that would have caught this**, because it fails on the
 *code* that produces a wrong number rather than on a disagreement between published
 numbers — and there was no disagreement. The agreement leg earns its place on a
-different failure: correcting the six sites one at a time left `ATLAS_HEATMAP.md` at
-26,398 against `counts.tex`'s 22,669 across five commits, so it catches a PARTIAL fix. A
+different failure: correcting the sites one at a time left `ATLAS_HEATMAP.md` publishing
+a raw count against `counts.tex`'s filtered one across five commits, so it catches a
+PARTIAL fix. A
 site that genuinely must not filter goes in `THEOREM_FILTER_ALLOWLIST` **with a stated
 reason** — a scope decision on the record, not a silent exemption.
 

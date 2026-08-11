@@ -907,7 +907,7 @@ Examples:
     # stops 7 lean_deps readers plus 3 `lake` shell-outs from measuring anything —
     # while the run still reports green. That is "absence of measurement rendered
     # as success" reintroduced one layer up, which is the finding this whole audit
-    # exists to close. A green tick over 71 of 79 is worse than no CI, because it
+    # exists to close. A green tick over a partial run is worse than no CI, because it
     # manufactures confidence.
     if _cfg.CI_MODE and not args.check:
         # ⚠️ COUNTS MEASUREMENTS, NOT INVOCATIONS (fixed 2026-08-05).
@@ -921,7 +921,7 @@ Examples:
         # identified why it was invisible: `test_ci_mode.py`'s zero-headroom test
         # asserts `CI_MIN_CHECKS_RUN == len(_CHECKS) - len(CI_SKIP)` — the very
         # definition of the quantity being compared — so the guard and its test
-        # were jointly self-sealing. A green tick over 71 of 79 is worse than no
+        # were jointly self-sealing. A green tick over a partial run is worse than no
         # CI because it manufactures confidence; a floor that cannot fire is worse
         # still, because it manufactures confidence *in the guard*.
         measured = [n for n, r in results.items() if r.measured]
