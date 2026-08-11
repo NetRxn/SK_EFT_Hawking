@@ -54,6 +54,10 @@ flowchart TB
         BR["bundle_readiness.py<br/>→ heatmap + metadata counts"]
     end
 
+    subgraph D["④a DRAFTING — LLM agent, WRITES a source"]
+        PD["paper-drafter<br/>Stage 10, per section"]
+    end
+
     subgraph R["④ REVIEW — LLM agents"]
         PR["prose-reviewer<br/>lift §7.5"]
         FR["figure-reviewer<br/>Stage 9"]
@@ -76,6 +80,7 @@ flowchart TB
     ED & CNT & ATL & BG --> VCK
     GI & RG & BR --> VCK
     VCK --> VAL
+    PD --> TEX
     TEX --> PR & FR & CR & AR
     NB --> VCK
     AR & CR --> RF --> BG
@@ -88,6 +93,26 @@ flowchart TB
 
 **The system is well-designed in its architecture and substantially broken in its wiring.**
 That sentence is the thesis of this whole directory, and every section below is an instance.
+
+⚠️ **`paper-drafter` is the only agent whose arrow points INTO plane ①.** Every other agent
+consumes `papers/*/paper_draft.tex`; this one produces it. That inverts the premise the rest of
+the directory rests on — sources are authored, everything else is derived — because an
+agent-authored source is still a source, and **nothing downstream can tell who wrote it**. No
+check, no reviewer and no graph node records authorship. Its obligations therefore have to be
+internal to the agent; there is no layer beneath it to catch what it gets wrong.
+
+The one that matters is **prior art**. A drafted section that cites must be written against the
+cited work itself, read in full for that portion — not an abstract, not a summary, not the
+`CITATION_REGISTRY` entry. Misquoted or misinterpreted prior art is the failure class that
+survives every layer below, because each layer verifies that a source *exists and resolves*,
+never that the prose represents it faithfully: Invariant 11 asserts a cached primary source is
+present, `claims-reviewer` FAILs a DOI that resolves to the wrong paper, Stage 13 makes citation
+findings BLOCKER. None of them can read the paper and judge fidelity. Briefs carry the source
+path; drafted claims carry their location (table, equation, figure) so the layers below have
+something checkable to land on.
+
+Sections are **disjoint per agent**. The lead owns the outline, the argument's spine, and
+integration — the properties no per-section agent can see.
 
 ⚠️ **`prose-reviewer` deliberately does not reach plane ④'s finding pipeline.** It runs earliest
 of the four — `BUNDLE_LIFT_PROCEDURE.md` §7.5, before Stage 9 — and returns a restructuring

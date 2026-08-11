@@ -23,6 +23,8 @@ notebook is finalized.
 | `figure-reviewer` | Visual review of generated figures (after `review_figures.py`) for rendering quality, physics accuracy, and style. |
 | `prose-reviewer` | **The fourth reviewer.** Reads a bundle draft start to finish as a referee at its named venue: does the abstract lead with the result, does each section advance a single argument, where would a reader stop. The other three ask *does it render*, *is it backed*, *is it wrong*; none asks whether it lands. Output is a RESTRUCTURING INSTRUCTION, not a finding list. Runs at lift §7.5, before Stage 9. |
 
+| `paper-drafter` | **The drafting counterpart to the four reviewers, and the only agent that WRITES a tracked source.** Drafts ONE assigned bundle section at Stage 10 against a lead-authored brief, with `paper-authoring` loaded. Dispatch several in parallel over DISJOINT sections; the lead owns the outline, the argument's spine, and integration. Its governing rule: a section that cites must be written against the cited work read IN FULL for that portion — misrepresented prior art is the one class no layer beneath it can catch, since every layer checks a source resolves, never that the prose is faithful to it. |
+
 `adversarial-reviewer` and `claims-reviewer` accept a `bundle_target` argument for
 bundle-aware Stage-13 review (anchors in `docs/agents/claims-reviewer-bundle-prompts.md`).
 
