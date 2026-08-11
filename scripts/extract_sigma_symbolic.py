@@ -92,7 +92,19 @@ from fractions import Fraction
 from typing import Dict, List, Tuple
 
 import numpy as np
-from tqsim import AnyonicCircuit
+
+try:
+    from tqsim import AnyonicCircuit
+except ModuleNotFoundError as exc:                       # pragma: no cover - env-dependent
+    raise ModuleNotFoundError(
+        "tqsim is not installed, and it cannot be added to this project: TQSim 0.0.2 pins "
+        "numpy>=1.23.4,<2.0.0 while this project requires numpy>=2.0, so `uv lock` rejects "
+        "the combination. Run this one-shot extraction in a SEPARATE numpy<2 environment:\n"
+        "    uv run --isolated --with 'numpy<2' --with tqsim python scripts/extract_sigma_symbolic.py\n"
+        "The repo depends on this script's committed OUTPUT, not on importing it, so nothing "
+        "else breaks while tqsim is absent. See tests/test_dependency_declaration.py "
+        "(UNDECLARABLE) for why this exemption exists."
+    ) from exc
 
 
 # ---------------------------------------------------------------------------

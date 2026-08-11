@@ -147,6 +147,7 @@ uv run python -m pytest -m '' -v              # everything — before PR / submi
 # Passing an explicit path scopes the run; omitting it picks up BOTH testpaths. The plugin's
 # guards (shell-invocation defects, surface-vs-README drift) previously ran only when someone
 # passed `.claude/plugins/skeft-qa/tests` by hand, so nothing ran them. Prefer the bare form.
+uv run python scripts/dep_upgrade_preview.py  # what `uv lock --upgrade` WOULD do (writes nothing)
 uv run python scripts/verify_scope.py         # verify ONLY what your change can break
 uv run python scripts/verify_scope.py --merge-gate   # the full ~45-min certification
 uv run python scripts/validate.py             # full validation suite (--list enumerates it)
@@ -239,6 +240,14 @@ A ruthless post-wave review remains mandatory.
 - **Formula provenance:** every `formulas.py` entry references its Lean theorem + Aristotle run ID.
 - **Mathlib pin:** `lean/lakefile.toml` (`81a5d257`, the v4.32.0 tag; toolchain `leanprover/lean4:v4.32.0`). Mathlib, PhysLib (`c4843367`), the REPL dep and the toolchain move as ONE matched set — never bump one alone.
 - **pytest:** `pythonpath = ["."]`.
+- **Dependencies: if we import it, we declare it.** An undeclared import survives only while
+  some *other* package happens to pull it in — `uv lock --upgrade` can drop it silently
+  (measured: it removed `pytest-timeout`, and `markupsafe`, which backs the dashboard's XSS
+  escaping, was reachable only via flask/jinja2). Enforced by
+  `tests/test_dependency_declaration.py`. Preview any upgrade with
+  `scripts/dep_upgrade_preview.py` — it separates removals and major bumps from routine ones.
+  Blind spot it cannot cover: a pytest **plugin** is activated by installation, never
+  imported, so declare those by hand.
 - **Workspace-level paths** (e.g. `Lit-Search/`): resolve via `from src.core.workspace import find_workspace` — never hardcode parent-walks.
 - **New modules:** `src/<domain>/`, `tests/test_<domain>.py`, `lean/SKEFTHawking/<Module>.lean`.
 
