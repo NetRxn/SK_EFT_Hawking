@@ -3,7 +3,7 @@
 WHY THIS EXISTS
 ---------------
 Measured on this branch (2026-08-05) on the then-55-check suite: **332.6 s**, and
-**43 of those checks finish in under one second**. The suite is 79 checks today; the three
+**43 of those checks finish in under one second**. The suite is 80 checks today; the three
 below still dominate, which is what this module is for:
 
     axiom_closure_allowlist    145.4 s   (shells `lake env lean --run AxiomAudit`)

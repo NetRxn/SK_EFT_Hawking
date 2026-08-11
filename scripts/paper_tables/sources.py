@@ -427,6 +427,10 @@ def lean_module_summary(modules: list[str],
     return rows
 
 
+#: Live population of `^Stage N:` lines in WAVE_EXECUTION_PIPELINE.md, zero headroom.
+PIPELINE_STAGES_FLOOR = 15
+
+
 def pipeline_stages() -> list[dict]:
     """Every pipeline stage + its gate, parsed from
     `docs/WAVE_EXECUTION_PIPELINE.md`. Used by Paper 15 Table 1.
@@ -489,7 +493,7 @@ def pipeline_stages() -> list[dict]:
     # 14 sat one BELOW it, so deleting the ARISTOTLE line alone gave declared=rows=14 and
     # published a 14-row table — the exact defect this assertion cites. Lower only with a
     # dated reason, like every other ratchet here.
-    if declared < 15 or not rows:
+    if declared < PIPELINE_STAGES_FLOOR or not rows:
         raise RuntimeError(
             f"pipeline_stages: {declared} stage(s) declared and {len(rows)} parsed from "
             f"docs/WAVE_EXECUTION_PIPELINE.md. The summary block did not parse — its "

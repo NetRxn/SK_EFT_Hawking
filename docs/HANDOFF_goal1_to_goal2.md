@@ -739,7 +739,7 @@ products (`.eq_1`, `.sizeOf_spec`, `.inj`, `.congr_simp`, `.eq_def`). Six consum
 naive filter and were each wrong the same way, so the published censuses **agreed** on an
 inflated figure — main carried 26,103 in both `counts.tex` and `ATLAS_HEATMAP.md`. Agreement
 was never the property that needed checking; correcting the six one at a time is what produced
-a real divergence, `ATLAS_HEATMAP.md` at 26,398 against `counts.tex`'s 22,669 for two commits. Goal 1 routed all six through
+a real divergence, `ATLAS_HEATMAP.md` at 26,398 against `counts.tex`'s 22,669 across five commits. Goal 1 routed all six through
 `validate_helpers.autogen_index` and added `theorem_census_agrees` to catch a seventh. That
 guard **detects**; it does not **prevent**.
 

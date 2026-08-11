@@ -101,7 +101,7 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
         "`)` from its class and matched NOTHING across 131 files while passing, and a "
         "+/-2 line ownership window accepted the module's own `_autogen = ...` assignment "
         "so the leg could not detect a guard's removal. The scanned population now "
-        "carries a down-only floor (13) because narrowing the pattern 13 -> 5 still "
+        "carries a down-only floor (11) because narrowing the pattern 13 -> 5 still "
         "passed when only zero was fatal."),
     "chain_backing_targets_resolve": (
         "test_d5_reviews.py",
@@ -944,7 +944,7 @@ PRODUCTION_SEEDED: frozenset[str] = frozenset({
 #: The ratchet, in the same idiom as `AWAITING_CEILING`: the number of registered
 #: checks NOT yet production-seeded. **It may be LOWERED, never raised.**
 #:
-#: 55 of 59 as of 2026-08-05 (79 checks today). That number is the honest state of the sweep the PR
+#: 55 of 59 as of 2026-08-05 (80 checks today). That number is the honest state of the sweep the PR
 #: review's resume point lists as its top item, and it is deliberately large: it counts
 #: every check for which nobody has yet demonstrated a production failure, not every
 #: check that is broken. Lower it one check at a time, each with the probe recorded in

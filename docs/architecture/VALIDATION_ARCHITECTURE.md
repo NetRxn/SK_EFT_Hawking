@@ -240,7 +240,7 @@ needed checking.
 *code* that produces a wrong number rather than on a disagreement between published
 numbers — and there was no disagreement. The agreement leg earns its place on a
 different failure: correcting the six sites one at a time left `ATLAS_HEATMAP.md` at
-26,398 against `counts.tex`'s 22,669 for two commits, so it catches a PARTIAL fix. A
+26,398 against `counts.tex`'s 22,669 across five commits, so it catches a PARTIAL fix. A
 site that genuinely must not filter goes in `THEOREM_FILTER_ALLOWLIST` **with a stated
 reason** — a scope decision on the record, not a silent exemption.
 

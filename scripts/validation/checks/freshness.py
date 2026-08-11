@@ -860,11 +860,13 @@ def check_architecture_inventory_fresh() -> CheckResult:
     hook, agent, command, graph type, registry and bundle — derived by
     `scripts/architecture_inventory.py` from the artifact that owns each population.
 
-    The split exists because narrative counts rot, provably and repeatedly here:
-    `WAVE_EXECUTION_PIPELINE.md` still opens "these 12 stages" against a longer live stage
-    list, quotes a check total from an earlier era, and freezes the roster at a bundle count
-    that predates the bundles authorized since. Each was true when written. A map nobody can
-    trust is worse than no map, because it is quoted.
+    The split exists because narrative counts rot, provably and repeatedly here.
+    `WAVE_EXECUTION_PIPELINE.md` once opened on a stage count shorter than its own live
+    stage list, quoted a check total from an earlier era, and froze the roster at a bundle
+    count predating the bundles authorized since. Each was true when written; all three
+    have since been repaired, which is the point rather than a reason to relax the rule —
+    they were repaired by hand, one at a time, after a reader had already been misled.
+    A map nobody can trust is worse than no map, because it is quoted.
 
     So the census is regenerated, never hand-edited, and this check fails when the tracked
     file no longer matches a fresh run. Regenerate with:

@@ -65,6 +65,16 @@ RATCHETED_CHECKS = (
 #: `*_CEILING` constants that are NOT zero-headroom ratchets, with the reason.
 #: Anything not here must be named by a test — that is the reconciliation.
 _NOT_A_RATCHET = {
+    # Population floors for `theorem_census_agrees`. Held at zero headroom
+    # BEHAVIOURALLY by tests/test_theorem_census_agrees.py — narrowing the scan or
+    # dropping a published census fails the leg — rather than by a name match here.
+    "THEOREM_FILTER_SITES_FLOOR",
+    "PUBLISHED_CENSUS_FLOOR",
+
+    # Per-tier figure minimums from the bundle charters: a CHARTER value, not a
+    # measured population, so zero-headroom reconciliation does not apply.
+    "_FIGURE_FLOOR_BY_TIER",
+
     # A per-tier cap on revtex4-2 letter-numbered subsections (26 is the format's
     # own limit). A charter sits under it by design; equality would be a defect,
     # not the goal, so zero headroom is the wrong property to assert.
@@ -143,7 +153,7 @@ class TestRatchetsHaveZeroHeadroom:
         roots += sorted((SK_ROOT / "scripts" / "validation").rglob("*.py"))
         found = set()
         for f in roots:
-            found |= set(_re.findall(r"^(_?[A-Z][A-Z0-9_]*CEILING[A-Z0-9_]*)\s*=",
+            found |= set(_re.findall(r"^(_?[A-Z][A-Z0-9_]*(?:CEILING|FLOOR)[A-Z0-9_]*)\s*=",
                                      f.read_text(encoding="utf-8"), _re.MULTILINE))
         found -= _NOT_A_RATCHET
         assert found, "no ceiling constants found — the scan itself broke"

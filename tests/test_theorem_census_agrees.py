@@ -51,7 +51,7 @@ class TestTheCensusAgrees:
     def test_a_disagreeing_published_census_FAILS(self, tmp_path, monkeypatch):
         """FIRES ON THE SEEDED DEFECT. The divergence this leg exists for is a PARTIAL
         fix: correcting the six sites one at a time left ATLAS_HEATMAP.md at 26,398
-        against counts.tex's 22,669 for two commits (78ded271..a1644a76)."""
+        against counts.tex's 22,669 across five commits (78ded271..a1644a76)."""
         # ALL THREE censuses must be present, or the population floor fires first and
         # the disagreement is never reached. Seed a tiny corpus so the canonical value
         # is cheap, then make exactly one census disagree.
@@ -79,24 +79,54 @@ class TestTheCensusAgrees:
 class TestOwnershipLegCannotGoVacuous:
     """Both authoring bugs that made this leg pass over everything are pinned here."""
 
-    def test_the_pattern_matches_the_dominant_form(self):
-        """AUTHORING BUG 1. The regex omitted `)` from its class, so the dominant
-        `d.get('kind') == 'theorem'` form never matched and the leg scanned 131 files
-        finding zero. A pattern that cannot see the common case is not a guard."""
-        assert ls._THEOREM_FILTER_RE.search("if d.get('kind') == 'theorem':")
-        assert ls._THEOREM_FILTER_RE.search('if d["kind"] == "theorem":')
-        assert ls._THEOREM_FILTER_RE.search("if rec.get('kind') != 'theorem':")
+    def test_the_scanner_sees_the_dominant_forms(self, tmp_path):
+        """The scan must see every spelling a census is actually written in. Two earlier
+        line-regex versions could not: one omitted `)` from its character class and matched
+        NOTHING across 131 files while passing; the tokenizer cannot have that bug because
+        it reads tokens, not text."""
+        f = tmp_path / "m.py"
+        f.write_text(
+            "def a(ds):\n    return [d for d in ds if d.get('kind') == 'theorem']\n"
+            "def b(ds):\n    return [d for d in ds if d[\"kind\"] == \"theorem\"]\n"
+            "def c(r):\n    return r.get('kind') != 'theorem'\n")
+        seen, unguarded, _ = ls._census_sites(f)
+        assert len(seen) == 3 and len(unguarded) == 3
 
-    def test_a_narrowing_pattern_FAILS_rather_than_passing_quietly(self, monkeypatch):
-        """AUTHORING BUG 1, second half. Breaking the pattern took matches 13 -> 5 and
-        the leg still passed, because only ZERO was fatal. The population carries a
-        down-only floor so a quietly narrowing regex reopens nothing."""
-        import re as _re
-        monkeypatch.setattr(ls, "_THEOREM_FILTER_RE",
-                            _re.compile(r"kind[\"']\s*==\s*[\"']theorem[\"']"))
-        r = ls.check_theorem_census_agrees()
-        assert r.passed is False and r.measured is False
-        assert any("NARROWED" in (d.message or "") for d in r.details)
+    def test_a_guard_in_the_SAME_expression_owns_the_site(self, tmp_path):
+        """Ownership is logical-line scoped: a guard in this expression owns it, one two
+        lines away does not. An earlier +/-2 line window accepted the module's own
+        `_autogen = ...` assignment and so could not detect a guard's removal."""
+        f = tmp_path / "m.py"
+        f.write_text(
+            "def ok(ds, autogen):\n"
+            "    return [d for d in ds if d['kind'] == 'theorem' and not autogen.get(d['n'])]\n"
+            "def bad(ds):\n"
+            "    autogen = {}\n"
+            "    return [d for d in ds if d['kind'] == 'theorem']\n")
+        seen, unguarded, _ = ls._census_sites(f)
+        assert len(seen) == 2, "both comparisons must be SEEN"
+        assert len(unguarded) == 1, "the guarded one must be owned, the bare one flagged"
+
+    def test_a_marker_inside_a_STRING_does_not_exempt(self, tmp_path):
+        """A `# census-exempt:` marker is a COMMENT token. Text that merely looks like one,
+        inside a string literal, exempted its own line under the previous line-regex."""
+        f = tmp_path / "m.py"
+        f.write_text("def f(ds):\n"
+                     "    x = '# census-exempt: sorry-theorems'\n"
+                     "    return [d for d in ds if d['kind'] == 'theorem']\n")
+        _, unguarded, marks = ls._census_sites(f)
+        assert unguarded and not marks, "a string must never register as a marker"
+
+    def test_a_stray_triple_quote_in_a_string_hides_nothing(self, tmp_path):
+        """A quote-parity docstring tracker was flipped by a lone triple-quote inside a
+        string literal, hiding every site below it — and the population floor cannot catch
+        that, because a site never SEEN never enters the count."""
+        f = tmp_path / "m.py"
+        f.write_text('X = \'"""\'\n'
+                     "def f(ds):\n"
+                     "    return [d for d in ds if d['kind'] == 'theorem']\n")
+        seen, unguarded, _ = ls._census_sites(f)
+        assert len(seen) == 1 and len(unguarded) == 1
 
     def test_a_nearby_autogen_mention_does_not_count_as_a_guard(self, monkeypatch):
         """AUTHORING BUG 2. A +/-2 line window accepted the module's own
@@ -108,3 +138,18 @@ class TestOwnershipLegCannotGoVacuous:
             ls.__file__).read_text()), (
             "the +/-2 line window is back — the ownership leg cannot detect a guard's "
             "own removal with it in place")
+
+
+class TestPipelineStagesFloor:
+    """`PIPELINE_STAGES_FLOOR` sits in scripts/paper_tables/, outside the
+    zero-headroom scan's paths, so it is reconciled here instead of going unheld."""
+
+    def test_the_floor_equals_the_live_population(self):
+        import re as _re
+        from paper_tables.sources import PIPELINE_STAGES_FLOOR
+        doc = (SK_ROOT / "docs" / "WAVE_EXECUTION_PIPELINE.md").read_text()
+        live = len(_re.findall(r"^Stage\s+\d+[a-z]?:", doc, _re.M))
+        assert PIPELINE_STAGES_FLOOR == live, (
+            f"floor {PIPELINE_STAGES_FLOOR} vs {live} declared stages. A floor BELOW the "
+            f"population lets one stage be deleted and still publish a short table — the "
+            f"defect the assertion cites. Move them together, with a reason.")

@@ -41,8 +41,10 @@ a runtime flag.
 """
 from __future__ import annotations
 
+import ast
 import json
 import re
+import tokenize
 from typing import Dict, List
 
 import validate_helpers as _H
@@ -782,7 +784,7 @@ def check_lean_zero_sorry() -> CheckResult:
 #   LEG 1 (agreement) — every PUBLISHED census must equal the one derivation. This
 #                       catches a PARTIAL fix: correcting the six sites one at a time
 #                       left `ATLAS_HEATMAP.md` at 26,398 against `counts.tex`'s 22,669
-#                       for two commits.
+#                       across five commits.
 
 # Sites that compare `kind == "theorem"` WITHOUT an autogen guard, deliberately.
 # Each entry needs a reason. Adding one is a scope decision, not a formality.
@@ -794,6 +796,9 @@ def check_lean_zero_sorry() -> CheckResult:
 # carried two of the six historical defects — inherited the exemption and passed.
 # A marker cannot be inherited by a neighbouring line.
 THEOREM_FILTER_ALLOWLIST: Dict[str, str] = {
+    "detector-self":
+        "the comparison inside `_flush_logical` that FINDS census sites; it is the "
+        "detector, not a census.",
     "sorry-theorems":
         "counts declarations with a `sorry` axiom dep; an autogen declaration cannot "
         "carry one, so the filter is a no-op here (sorry count is 0 and ratcheted).",
@@ -821,15 +826,75 @@ THEOREM_FILTER_ALLOWLIST: Dict[str, str] = {
 # measurement got more precise. Lower only with a reason like this one.
 THEOREM_FILTER_SITES_FLOOR = 11
 
-#: Published censuses leg 1 must locate: counts.json, atlas_view.json, ATLAS_HEATMAP.md.
-PUBLISHED_CENSUS_FLOOR = 3
+#: Published censuses leg 1 must locate: counts.json, counts.tex, atlas_view.json,
+#: ATLAS_HEATMAP.md. counts.tex was OUTSIDE this leg until 2026-08-11 — the artifact the
+#: leg's own cited incident names, `\input` by ten-plus drafts and printed by I1 as
+#: "machine-checked theorems", and reachable by no other content guard (`counts_fresh`
+#: keys on its mtime and is CI_SKIP). Setting it to 99999 left this check green.
+PUBLISHED_CENSUS_FLOOR = 4
 
 _DOC_QUOTES = (chr(34) * 3, chr(39) * 3)
 
 _EXEMPT_RE = re.compile(r"#\s*census-exempt:\s*([a-z0-9-]+)")
 
-_THEOREM_FILTER_RE = re.compile(r"""kind["'\)\]]*\s*(?:==|!=)\s*["']theorem["']""")
 _AUTOGEN_NEARBY_RE = re.compile(r"_?autogen|_AUTOGEN|autogen_index")
+
+
+def _census_sites(path) -> tuple:
+    """Unowned `kind == "theorem"` sites, and `# census-exempt:` markers, via TOKENIZE.
+
+    A site is a `== "theorem"` / `!= "theorem"` comparison whose LOGICAL LINE carries no
+    autogen reference. Logical-line scope is what makes ownership exact: an autogen guard
+    two lines away is not a guard on this expression, and a guard in this expression is.
+
+    Line-level regexes were tried twice and both had bypasses the population floor could
+    not see, because a site never *seen* never enters the count. A quote-parity docstring
+    tracker was flipped by a lone triple-quote inside a string literal, hiding every site
+    below it; and a marker matched inside a string literal exempted its own line. Tokens
+    separate CODE from COMMENT from STRING, so neither is expressible.
+    """
+    seen: set = set()          # every comparison site — the population the floor tracks
+    sites: set = set()         # the UNGUARDED subset — candidates for ownership
+    marks: dict = {}
+    with open(path, "rb") as fh:
+        toks = list(tokenize.tokenize(fh.readline))
+
+    logical: list = []
+    for tok in toks:
+        if tok.type == tokenize.COMMENT:
+            m = _EXEMPT_RE.search(tok.string)
+            if m:
+                marks[tok.start[0]] = m.group(1)
+            continue
+        if tok.type in (tokenize.NEWLINE,):
+            _flush_logical(logical, seen, sites)
+            logical = []
+            continue
+        if tok.type in (tokenize.NL, tokenize.INDENT, tokenize.DEDENT,
+                        tokenize.ENCODING, tokenize.ENDMARKER):
+            continue
+        logical.append(tok)
+    _flush_logical(logical, seen, sites)
+    return seen, sites, marks
+
+
+def _flush_logical(toks, seen, sites) -> None:
+    """Record a site if this statement compares kind to "theorem" and is unguarded."""
+    guarded = any(t.type == tokenize.NAME and "autogen" in t.string.lower() for t in toks)
+    for i, t in enumerate(toks):
+        if t.type != tokenize.STRING:
+            continue
+        try:
+            val = ast.literal_eval(t.string)
+        except Exception:
+            continue
+        if val != "theorem":  # census-exempt: detector-self
+            continue
+        prev = toks[i - 1] if i else None
+        if prev is not None and prev.type == tokenize.OP and prev.string in ("==", "!="):
+            seen.add(t.start[0])
+            if not guarded:
+                sites.add(t.start[0])
 
 
 @register_check(
@@ -875,6 +940,12 @@ def check_theorem_census_agrees() -> CheckResult:
             published["lean/atlas_view.json:nodes"] = len(_a.get("nodes", []))
         except Exception:
             pass
+    tex_path = _H.COUNTS_TEX_PATH
+    if tex_path.exists():
+        m = re.search(r"\\totaltheorems\}\{([0-9]+)\}", tex_path.read_text())
+        if m:
+            published["docs/counts.tex:\\totaltheorems"] = int(m.group(1))
+
     heat_path = _H.DOCS_DIR / "ATLAS_HEATMAP.md"
     if heat_path.exists():
         m = re.search(r"([0-9][0-9,]*)\s+theorem nodes", heat_path.read_text())
@@ -906,56 +977,30 @@ def check_theorem_census_agrees() -> CheckResult:
 
     # ---- LEG 2: every kind == "theorem" filter is owned or allow-listed ---------
     unowned: List[str] = []
-    used_allowlist: set = set()
+    used_sites: List[str] = []          # one entry PER SITE, not per key
+    key_sites: Dict[str, List[str]] = {}   # key -> the sites claiming it
+    used_keys: set = set()
     sites_found = 0
     scanned_files = 0
     for py in sorted(_H.PROJECT_ROOT.glob("scripts/**/*.py")):
         if "/.venv/" in str(py) or "__pycache__" in str(py):
             continue
         scanned_files += 1
-        lines = py.read_text(errors="replace").splitlines()
         rel = py.relative_to(_H.PROJECT_ROOT).as_posix()
-        in_doc = False
-        for i, line in enumerate(lines):
-            # Track docstring bodies: two of these sites are PROSE describing this
-            # very rule, and they only became visible once the allow-list stopped
-            # exempting whole files. A comment filter alone does not see them.
-            for _q in _DOC_QUOTES:
-                if line.count(_q) % 2:
-                    in_doc = not in_doc
-                    break
-            if in_doc or line.lstrip().startswith("#"):
+        try:
+            seen, sites, marks = _census_sites(py)
+        except (SyntaxError, UnicodeDecodeError, tokenize.TokenError):
+            unowned.append(f"{rel}: UNPARSEABLE — cannot audit")
+            continue
+        sites_found += len(seen)
+        for lineno in sorted(sites):
+            key = marks.get(lineno)
+            if key and key in THEOREM_FILTER_ALLOWLIST:
+                used_sites.append(f"{rel}:{lineno}")
+                key_sites.setdefault(key, []).append(f"{rel}:{lineno}")
+                used_keys.add(key)
                 continue
-            if not _THEOREM_FILTER_RE.search(line):
-                continue
-            sites_found += 1
-            # SAME EXPRESSION, not "somewhere nearby". A +/-2 line window was tried
-            # first and could not detect its own removal: stripping the guard from
-            # `sources.py` left the `_autogen = autogen_index(...)` assignment two
-            # lines up, so the window still matched and the check passed. A guard
-            # that cannot fail is the defect this check exists to prevent, so the
-            # rule is the same line, or the immediate continuation of a wrapped one.
-            window = line
-            if i + 1 < len(lines) and (line.rstrip().endswith(("and", "or", "(", "\\"))
-                                       or lines[i + 1].lstrip().startswith(("and ", "or "))):
-                window += "\n" + lines[i + 1]
-            if _AUTOGEN_NEARBY_RE.search(window):
-                continue
-            # SITE-scoped, not FILE-scoped. Matching on the path prefix alone made one
-            # entry blanket-exempt every unguarded filter in that file — including
-            # `update_counts.py`, which carried two of the six historical defects.
-            # The key's second field is the enclosing def, so an exemption covers one
-            # site and a new bare census in an allow-listed file still fails.
-            m_ex = _EXEMPT_RE.search(line)
-            if m_ex and m_ex.group(1) in THEOREM_FILTER_ALLOWLIST:
-                used_allowlist.add(m_ex.group(1))
-                continue
-            unowned.append(f"{rel}:{i + 1}")
-
-    if scanned_files == 0:
-        details.append(Detail("ownership", False,
-                              "SKIPPED — no scripts scanned; ownership UNVERIFIED"))
-        return CheckResult(passed=False, measured=False, details=details)
+            unowned.append(f"{rel}:{lineno}")
 
     if sites_found < THEOREM_FILTER_SITES_FLOOR:
         # A scan that matches nothing is a broken pattern, not a clean codebase:
@@ -967,15 +1012,22 @@ def check_theorem_census_agrees() -> CheckResult:
                               f"leg would pass over sites it can no longer see"))
         return CheckResult(passed=False, measured=False, details=details)
 
+    # ONE KEY, ONE SITE. A key is a per-site exemption with a stated reason, so a second
+    # site claiming the same key is a NEW unreviewed exemption wearing an approved name —
+    # and the site count alone does not reveal it.
+    for k, ss in sorted(key_sites.items()):
+        if len(ss) > 1:
+            unowned.append(f"key '{k}' claimed by {len(ss)} sites: {', '.join(sorted(ss))}")
+
     # F7: an entry nobody uses is a stale exemption widening the rule invisibly.
-    unused = sorted(set(THEOREM_FILTER_ALLOWLIST) - used_allowlist)
+    unused = sorted(set(THEOREM_FILTER_ALLOWLIST) - used_keys)
     if unused:
         unowned.append(f"STALE allow-list entr(ies) matching no site: {', '.join(unused)}")
 
     details.append(Detail(
         "ownership", not unowned,
         f"{scanned_files} script(s) scanned, {sites_found} `kind == \"theorem\"` site(s); "
-        + (f"{len(used_allowlist)} allow-listed site(s), all matched"
+        + (f"{len(used_sites)} allow-listed site(s) under {len(used_keys)} key(s)"
            if not unowned else
            f"UNOWNED `kind == \"theorem\"` filter(s): {', '.join(unowned)} — route through "
            f"validate_helpers.autogen_index, or add to THEOREM_FILTER_ALLOWLIST with a reason")))

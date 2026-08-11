@@ -49,7 +49,7 @@ cites; it reads each in full before writing about it."
 
 Cited works are cached locally under `Lit-Search/Phase-*/primary-sources/<bibkey>.{pdf,
 abstract.txt,json}` (Invariant 11), and `Read` opens PDFs. **You hold no web tools, by
-design** — `research-scout` is the only agent that reaches the network. If a source is not
+design** — network access belongs to `research-scout`, which the lead dispatches for you. If a source is not
 in the cache — or is cached without a PDF — that is a gap to report, never a reason to
 write around it.
 
