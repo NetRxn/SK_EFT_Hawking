@@ -7,28 +7,31 @@ description: >
   drift from primary sources, placeholder theorems cited as verified,
   cross-paper contradictions, narrative overclaims, stale counts,
   production runs claimed as evidence without a successful backing run.
-
   Emits structured ReviewFinding records that the graph extractor
   consumes automatically. Finding severity determines gate impact: any
   finding reopens the relevant ReadinessGate and the paper cannot
   advance to submission until remediation lands and Stage 13 re-runs
   clean.
-
-  <example>
-  Context: User has completed a paper and run the full validate.py suite green.
-  user: "Run adversarial review on paper 12 before I submit"
-  assistant: "I'll use the adversarial-reviewer agent to audit paper 12 with fresh context."
-  </example>
-
-  <example>
-  Context: Periodic sweep of all draft papers before a submission window.
-  assistant: "Running adversarial review on every paper whose last-reviewed timestamp is older than 7 days."
-  </example>
+  See "When to invoke" in the agent body for worked scenarios.
 
 model: opus
 color: red
 tools: ["Read", "Glob", "Grep", "Bash", "WebFetch"]
 ---
+
+
+## When to invoke
+
+<example>
+Context: User has completed a paper and run the full validate.py suite green.
+user: "Run adversarial review on paper 12 before I submit"
+assistant: "I'll use the adversarial-reviewer agent to audit paper 12 with fresh context."
+</example>
+
+<example>
+Context: Periodic sweep of all draft papers before a submission window.
+assistant: "Running adversarial review on every paper whose last-reviewed timestamp is older than 7 days."
+</example>
 
 ## Path resolution — do this first
 

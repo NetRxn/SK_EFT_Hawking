@@ -5,37 +5,41 @@ description: >
   physics accuracy, and style consistency. Invoke after running
   review_figures.py to generate PNGs and a review manifest. Produces a
   structured report that pairs with validation results.
-
-  <example>
-  Context: User has run review_figures.py and wants figures checked
-  user: "Review the generated figures for issues"
-  assistant: "I'll use the figure-reviewer agent to visually inspect each figure against the manifest."
-  <commentary>
-  Figures have been generated and need systematic visual review before paper submission or notebook finalization.
-  </commentary>
-  </example>
-
-  <example>
-  Context: User has updated visualizations and wants to verify output
-  user: "Check that the new CGL figures look correct"
-  assistant: "I'll use the figure-reviewer agent to review the figures against their expected properties."
-  <commentary>
-  After modifying visualization code, visual review catches rendering issues that automated checks miss.
-  </commentary>
-  </example>
-
-  <example>
-  Context: Proactive review after figure generation completes
-  assistant: "Figures generated successfully. Let me review them for rendering quality and accuracy."
-  <commentary>
-  Proactively invoke after figure generation to catch issues before they reach the paper or notebooks.
-  </commentary>
-  </example>
+  See "When to invoke" in the agent body for worked scenarios.
 
 model: inherit
 color: cyan
 tools: ["Read", "Glob", "Grep", "Bash"]
 ---
+
+
+## When to invoke
+
+<example>
+Context: User has run review_figures.py and wants figures checked
+user: "Review the generated figures for issues"
+assistant: "I'll use the figure-reviewer agent to visually inspect each figure against the manifest."
+<commentary>
+Figures have been generated and need systematic visual review before paper submission or notebook finalization.
+</commentary>
+</example>
+
+<example>
+Context: User has updated visualizations and wants to verify output
+user: "Check that the new CGL figures look correct"
+assistant: "I'll use the figure-reviewer agent to review the figures against their expected properties."
+<commentary>
+After modifying visualization code, visual review catches rendering issues that automated checks miss.
+</commentary>
+</example>
+
+<example>
+Context: Proactive review after figure generation completes
+assistant: "Figures generated successfully. Let me review them for rendering quality and accuracy."
+<commentary>
+Proactively invoke after figure generation to catch issues before they reach the paper or notebooks.
+</commentary>
+</example>
 
 ## Path resolution — do this first
 

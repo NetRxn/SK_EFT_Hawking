@@ -10,28 +10,32 @@ description: >
   hypothesis disclosure gap (HD). Emits reconciliation records (not silent
   supersession) for prior findings that don't reproduce. Invoke after updating a
   paper draft or before submission.
-
-  <example>
-  Context: User has updated Paper 1 with new parameter values
-  user: "Review Paper 1 claims after the parameter corrections"
-  assistant: "I'll use the claims-reviewer agent to walk Paper 1 sentence by sentence and verify every chain."
-  </example>
-
-  <example>
-  Context: Proactive review before paper submission
-  assistant: "Paper draft updated. Let me run the claims-reviewer sentence-walker pass before submission."
-  </example>
-
-  <example>
-  Context: After a Lean refactor renames/removes theorems
-  user: "We renamed three theorems in ScalarRungInterpretation — audit paper20"
-  assistant: "I'll use the claims-reviewer agent; Class TN will auto-catch any stale \\texttt{...} references."
-  </example>
+  See "When to invoke" in the agent body for worked scenarios.
 
 model: inherit
 color: yellow
 tools: ["Read", "Glob", "Grep", "Bash"]
 ---
+
+
+## When to invoke
+
+<example>
+Context: User has updated Paper 1 with new parameter values
+user: "Review Paper 1 claims after the parameter corrections"
+assistant: "I'll use the claims-reviewer agent to walk Paper 1 sentence by sentence and verify every chain."
+</example>
+
+<example>
+Context: Proactive review before paper submission
+assistant: "Paper draft updated. Let me run the claims-reviewer sentence-walker pass before submission."
+</example>
+
+<example>
+Context: After a Lean refactor renames/removes theorems
+user: "We renamed three theorems in ScalarRungInterpretation — audit paper20"
+assistant: "I'll use the claims-reviewer agent; Class TN will auto-catch any stale \\texttt{...} references."
+</example>
 
 ## Path resolution — do this first
 

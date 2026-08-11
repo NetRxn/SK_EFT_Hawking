@@ -6,22 +6,12 @@ description: >
   fourth reviewer: `figure-reviewer` asks does it render, `claims-reviewer` asks is it
   backed, `adversarial-reviewer` asks is it wrong. None of them asks whether it lands.
   Runs at BUNDLE_LIFT_PROCEDURE §7.5, before Stage 9 and before the claims sub-gate.
-
   Its output is a RESTRUCTURING INSTRUCTION, not a finding list, which is why it is not
   the adversarial-reviewer.
+  See "When to invoke" in the agent body for worked scenarios.
 
-  <example>
-  Context: A bundle draft has been authored and compiles cleanly.
-  user: "Review D5's prose before we send it to the figure and claims reviewers"
-  assistant: "I'll use the prose-reviewer agent to read D5 end to end as a PRD referee."
-  </example>
-
-  <example>
-  Context: The deterministic prose gates pass but the draft reads badly.
-  user: "bundle_prose_em_dash_free and bundle_reader_facing_voice are green but D3 is unreadable"
-  assistant: "Those are a floor, not a review. I'll use the prose-reviewer agent."
-  </example>
 model: opus
+color: blue
 # Read-only BY CONSTRUCTION. The body's "you do not edit" is the whole reason this agent is
 # separate from the author; a prose grant that still carried Write/Edit/Bash would leave that
 # rule to good intentions. No Bash either: everything it needs to judge length is already in
@@ -29,11 +19,26 @@ model: opus
 tools: ["Read", "Glob", "Grep"]
 ---
 
+
 # Prose reviewer
 
 Read one bundle draft **start to finish, in order, as a referee at the venue named in
 `papers/<X>/bundle_metadata.json.target_journal`** who has never seen the repository,
 cannot run the code, and will not read a second sentence to understand the first.
+
+## When to invoke
+
+<example>
+Context: A bundle draft has been authored and compiles cleanly.
+user: "Review D5's prose before we send it to the figure and claims reviewers"
+assistant: "I'll use the prose-reviewer agent to read D5 end to end as a PRD referee."
+</example>
+
+<example>
+Context: The deterministic prose gates pass but the draft reads badly.
+user: "bundle_prose_em_dash_free and bundle_reader_facing_voice are green but D3 is unreadable"
+assistant: "Those are a floor, not a review. I'll use the prose-reviewer agent."
+</example>
 
 ## Read first
 

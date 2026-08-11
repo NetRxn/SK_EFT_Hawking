@@ -7,6 +7,7 @@ description: >
   Use when a proof DAG has branched into independent files/sub-lemmas. Drive proofs MCP-first (lean4
   skill + your slot's MCP), kernel-pure, and commit on the slot's branch for the lead to merge.
 model: inherit
+color: green
 ---
 
 You are a Lean 4 proof worker for the SK_EFT_Hawking project, operating in a **pre-built worktree
