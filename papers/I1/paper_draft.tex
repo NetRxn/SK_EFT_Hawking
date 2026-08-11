@@ -15,20 +15,9 @@
 %% Source manifest: papers/I1/source_manifest.md
 %% Append log: papers/I1/append_log.json
 %% Change log: papers/I1/change_log.md
-%% This bundle is a synthesis-driven new composition (Phase 7a sub-wave
-%% 7a.2). It draws on paper15_methodology, paper44_riemannian_connection,
-%% Phase 6f W1-W6 algebraic-GR substrate rosters, and Phase 6g W5
-%% structural-Prop scoping pattern as substrate; the prose is authored
-%% fresh.
 \input{../../docs/counts.tex}
-%% ── Per-module Phase-6f/6g count-macro fallbacks ────────────────────
-%% These 19 macros are referenced in §11–§13 but are not (yet) emitted
-%% by scripts/update_counts.py into docs/counts.tex. Values computed
-%% from lean/lean_deps.json (kind == "theorem" grouped by module — the
-%% exact update_counts.py convention), snapshot 2026-06-10.
-%% \providecommand yields to docs/counts.tex definitions the moment the
-%% counts pipeline emits these macros; the durable fix is to add them
-%% to update_counts.py and delete this block.
+%% Per-module count-macro fallbacks. \providecommand yields to
+%% docs/counts.tex whenever the counts pipeline emits these directly.
 \providecommand{\curvatureThms}{14}
 \providecommand{\einsteinTensorThms}{9}
 \providecommand{\energyConditionsThms}{8}
@@ -56,56 +45,44 @@ Effective Field Theory, Algebraic General Relativity, and
 Topological Quantum Field Theory}
 
 \author{John Roehm}
-\date{Draft: Phase 7a, May 2026}
+\date{\today}
 
 \begin{document}
 
 \maketitle
 
 \begin{abstract}
-Computational physics research lacks a structural guarantee that
-published numerical claims match the underlying computation. We
-describe a three-layer continuous-verification pipeline integrating
-Python numerics, Lean~4 formal proofs, and the Aristotle automated
-theorem prover, organized into a fourteen-stage workflow with
-fifteen invariants. Applied across a research program spanning
-dissipative effective field theory, analog Hawking radiation,
-emergent gravity through black-hole thermodynamics, anomaly
-constraints on Standard Model particle content, dark-sector substrate
-constraints, and topological quantum computation foundations, the
-pipeline has produced \totaltheorems{} machine-checked theorems
-across \leanmodules{} Lean modules with \sorrycount{} remaining gaps
-(\sorrypercent\%) plus \aristotleproved{} theorems closed by
-automated theorem proving. We document three new pipeline stages
-beyond the original twelve-stage version (interactive Lean
-development via the language-server protocol, fresh-context
-adversarial review, and meta-process quality improvement), three new
-invariants (placeholder non-load-bearing, no heartbeat overrides in
-proof bodies, primary-source citation cache), the publication-bundle
-architecture that consolidates per-wave drafts into the
-publication targets that frame enumerates, and the preemptive-strengthening discipline
-that reduces theorem-statement audit cost from twelve retroactive
-cuts to five and then to zero across three successive waves (with
-a mandatory ruthless post-wave review as a safety net for residual
-subtler patterns). Three worked cases illustrate the methodology:
-the Aristotle FirstOrderKMS counterexample (where automated proving
-failed and the failure surfaced a substantive physics result), the
-gap-solution-bounded conjecture disproof (where formalization-driven
-counterexample search refuted a literature claim), and the
-chirality-wall exclusion (where decomposing a large goal into
-structural sub-lemmas exposed an assumption no registry recorded). Two further studies document the
-classical-general-relativity mathematics the pipeline accumulated as a
-byproduct, and the discipline by which a theorem is scoped around
-infrastructure the ambient library does not contain.
-A final process result documents the limits of metadata-level
-citation validation: a June~2026 external-review remediation found
-that a citation can be metadata-valid (resolvable identifier,
-cached primary source, correct bibliographic data) while the
-specific claim the prose attributes to it is unsupported by the
-source (three instances in roughly ten spot checks), motivating
-three new deterministic prose-consistency checks and a systematic
-content-level attribution sweep.
-The methodology is domain-agnostic.
+The most informative outputs of a machine-checked physics programme are
+its failures. We report three formalization episodes in which an
+automated prover's refusal, rather than its success, carried the
+result: a returned counterexample localized a defective hypothesis to
+the five field components its specification never named; a second
+refuted an expectation that a condensate gap stays below its cutoff,
+and in doing so yielded a closed-form ceiling on the coupling range in
+which the model is valid at all; and decomposing a large exclusion into
+structural sub-lemmas forced a physics assumption that no assumption
+registry recorded into the open, where it was discharged as two
+theorems rather than admitted as an axiom. A fourth result concerns the
+verification apparatus itself: a citation can be metadata-valid, with
+a resolving identifier, a cached primary source and correct
+bibliographic data, while the claim the prose attributes to it is unsupported by
+that source, and roughly three in ten spot-checked load-bearing
+attributions were wrong at that level, every one of them passing all
+deterministic checks. Making such failures legible rather than silent
+is, we argue, the real design problem. The apparatus that produced
+these results is a three-layer pipeline integrating Python numerics,
+Lean~4 proofs and an automated theorem prover, run as a staged
+development cycle under explicit invariants; applied across
+dissipative effective field theory, analog Hawking radiation, emergent
+gravity, anomaly constraints on Standard Model particle content, dark
+sector constraints and topological quantum computation, it has produced
+\totaltheorems{} machine-checked theorems across \leanmodules{} Lean
+modules with \sorrycount{} remaining gaps (\sorrypercent\%), plus
+\aristotleproved{} theorems closed by automated proving. Two further
+studies document the classical-general-relativity mathematics the
+programme accumulated as a byproduct, and the discipline by which a
+result is scoped around infrastructure the ambient library does not
+contain. Nothing in the method is specific to this physics.
 \end{abstract}
 
 %% ─────────────────────────────────────────────────────────────────
@@ -170,26 +147,14 @@ publicly available; monospaced file paths throughout this paper
 are paths from the root of the public repository (see the Code
 Availability statement).
 
-This paper extends and supersedes an earlier internal draft
-description of a twelve-stage version of the pipeline (April
-2026). The version described here adds three stages beyond
-the original twelve: interactive Lean development via the
-language-server protocol (Stage~3a), fresh-context adversarial
-review (Stage~13), and meta-process quality improvement
-(Stage~14); and three invariants (placeholder non-load-bearing,
-no heartbeat overrides in proof bodies, primary-source citation
-cache). The invariant set has since grown to fifteen; the
-fifteenth (explicit user sign-off, with a documented discharge
-plan, for any new project-local axiom) encodes the project's
-posture that axioms are temporary scaffolding, not permanent
-commitments (Section~\ref{sec:pipeline}). It also documents the
-publication-bundle architecture that consolidates per-wave drafts
-into the publication targets that frame enumerates, and the preemptive-strengthening
-discipline that reduces theorem-statement audit cost from twelve
-retroactive cuts (Phase~6c.3) to five (Phase~6b.1) and then to zero
-(Phase~6m R6) by applying strengthening rules prospectively, with
-a mandatory ruthless post-wave review as the safety net for the
-subtler patterns the prospective checklist misses.
+The development cycle described here runs from a substrate change
+through formalization, mechanical validation, drafting and three
+independent review passes, under a set of invariants that a change
+must not violate. Two of those invariants carry most of the weight in
+what follows: a declaration proved trivially may never be cited as a
+result, and a new project-local axiom requires an explicit discharge
+plan rather than a note of intent. The programme currently ships no
+project-local axioms at all.
 
 The remainder of this paper is organized as follows.
 Section~\ref{sec:architecture} describes the three-layer
@@ -839,7 +804,10 @@ sphaleron-decoupling threshold. \texttt{WallCracked}$(a)$ is $a = 0$:
 the anomaly cancels, so the chiral theory admits the gauging step and a
 non-perturbative regulator exists. The second conjunct is the
 phase-transition condition, $0 < E$ together with
-$c\,\lambda\,T_c < E$, where $E$ is the cubic thermal coefficient
+$c\,\lambda\,T_c < E$. Here $\lambda$ is the quartic self-coupling,
+$\mu^2$ the mass-squared parameter and $c_T$ the thermal-mass
+coefficient of the finite-temperature effective potential, and $E$ is
+its cubic thermal coefficient
 \texttt{p.cubic\_coeff} and
 $T_c = \sqrt{\mu^2 / c_T}$ is the critical temperature built from the
 record's other fields.
@@ -1068,13 +1036,10 @@ project-level memory.}
 \label{tab:stages}
 \end{table}
 
-The current pipeline extends the original twelve-stage version
-(paper15 draft, April 2026) with three additional stages.
-Stage~3a, interactive Lean development via the language-server
-protocol, replaces the previous ``write tactic, run \texttt{lake
-build}, parse error, iterate'' development loop (approximately
-fifteen seconds per cycle) with a millisecond-latency interactive
-loop using the \texttt{lean-lsp-mcp} tool integration. The
+Interactive Lean development via the language-server protocol
+replaces a ``write tactic, run \texttt{lake build}, parse error,
+iterate'' loop, whose cycle time is set by the build, with one whose
+cycle time is set by a language-server query. The
 interactive loop reads the proof state at any line and column,
 tests candidate tactic sequences without editing the file, and
 returns ``no goals'' when the proof is complete. Per tactic-test cycle, the interactive
@@ -1191,12 +1156,11 @@ are preserved verbatim across regenerations.
 \item \textbf{Every paper-shaped output lifts into a publication
 bundle.} New drafts, section additions, and notebook companions
 identify their target bundle at Stage~1 and record it in the
-draft-mapping document at Stage~12. No new stand-alone paper
-drafts are created without explicit user authorization to add a
-new bundle target beyond the current roster.
+draft-mapping document before it is assembled, so every published
+sentence has a recorded route from the source that produced it.
 
 \item \textbf{Every new project-local axiom requires explicit
-user sign-off.} Locked in May~2026. No axiom ships on
+user sign-off.} No axiom ships on
 recommendation-only authority; every new axiom carries either a
 discharge plan (a scheduled wave producing a substantive
 constructive proof) or a documented argument that no constructive
@@ -1234,9 +1198,9 @@ where the audit identified a vacuous statement), the pass has
 been moved to the prospective phase: each theorem statement is
 checked against the same six anti-patterns \emph{before} the
 statement is written. The reduction in audit cost is
-substantial: the wave that introduced the discipline (Phase~6c.3)
-required twelve retroactive cuts; the next wave (Phase~6b.1)
-required five; the wave after that (Phase~6m R6) required zero.
+substantial: across the first three development cycles in which it
+was applied, the number of statements requiring a retroactive
+strengthening cut fell from twelve, to five, to none.
 
 The six anti-patterns are:
 
@@ -1921,6 +1885,14 @@ the covariant-derivative interface once the missing pieces were
 supplied in-project, is the subject of
 Section~\ref{sec:riemannian_sidebar}.
 
+Notation, since these modules borrow two letters twice over. In the
+curvature and exact-solution layers $K$ is a sectional-curvature
+constant and $g_{\mu\nu}$ the metric; in the slice-data layer
+$K_{ij}$ is the extrinsic curvature of a spatial slice, $\mathrm{tr}\,K$
+its trace, ${}^{(3)}\!R$ the intrinsic scalar curvature of that slice,
+and $\rho$ the matter energy density. The two uses of $K$ are
+unrelated and are kept apart by their index structure.
+
 \begin{itemize}
 \item \textbf{Curvature algebra} (\texttt{Curvature.lean},
 \curvatureThms{}~theorems; \texttt{EinsteinTensor.lean},
@@ -2282,7 +2254,7 @@ stops at partitions of unity and the tangent and cotangent bundles, and
 its relativity entries are order-theoretic axiomatisations carrying no
 metric tensor. We make no claim about proof assistants beyond those two.
 A systematic search of the other major libraries was not carried out,
-and an unsearched library is not an empty one --- which is the
+and an unsearched library is not an empty one. That is the
 distinction this manuscript spends Section~\ref{sec:adversarial}
 insisting on, and we decline to violate it here.
 The modules follow upstream file, naming and section conventions with an
@@ -2388,7 +2360,10 @@ rather than rebuilt.
 
 The lifecycle of a gating proposition is visible in the curve-level
 focusing results. The comparison bound
-$\theta(\lambda) \le \theta_0 / (1 + \theta_0\lambda/3)$ first entered
+$\theta(\lambda) \le \theta_0 / (1 + \theta_0\lambda/3)$, in which
+$\theta$ is the expansion of a null congruence and $\lambda$ its affine
+parameter (unrelated to the quartic coupling of
+Section~\ref{sec:case3}), first entered
 the development as a field of the hypothesis bundle
 \texttt{IsCurveTheoreticPenroseHypothesis}, that is, in the second
 state, with the intended route recorded as the library's ordinary
@@ -2495,19 +2470,6 @@ response (deterministic prose-consistency checks where the
 property is mechanizable, fresh-context content reading where it
 is not) is the pipeline's newest layer, and there is no reason
 to believe it is the last.
-
-Three pipeline extensions matured during the year under review
-and are now load-bearing. First, a meta-process quality-improvement register
-(Stage~14) that surfaces systemic patterns across waves; the seed
-event is the April~2026 external-adversarial-review round that
-exposed a thirteen-dimensional problem space that internal
-validation could not detect by construction. Second, the
-publication-bundle architecture that consolidates per-wave drafts
-into the publication targets that frame enumerates while preserving sentence-level
-provenance; this paper is drafted under that architecture. Third, an automated cross-bundle consistency check
-that walks a cross-bundle cluster registry and flags member-
-sentence drift across bundle boundaries, preventing the same fact
-from being stated differently in two papers.
 
 The pipeline is open-source, domain-agnostic, and immediately
 applicable in any research domain where the connection between

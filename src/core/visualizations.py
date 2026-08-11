@@ -12909,6 +12909,12 @@ def fig_i1_three_layer_architecture() -> "go.Figure":
         showlegend=False,
         margin=dict(l=20, r=20, t=80, b=20),
     )
+    # Typeset-legibility floor is enforced by the shared helper, not by the
+    # font sizes above: it pins font-to-canvas and normalizes annotation and
+    # per-trace label fonts, so this figure cannot ship mixed-size text.
+    _bundle_layout(fig, fig.layout.title.text if fig.layout.title else "",
+                   height=fig.layout.height or 800,
+                   width=fig.layout.width or 1200)
     return fig
 
 
@@ -13037,6 +13043,12 @@ def fig_i1_pipeline_14_stages() -> "go.Figure":
         showlegend=False,
         margin=dict(l=20, r=20, t=80, b=30),
     )
+    # Typeset-legibility floor is enforced by the shared helper, not by the
+    # font sizes above: it pins font-to-canvas and normalizes annotation and
+    # per-trace label fonts, so this figure cannot ship mixed-size text.
+    _bundle_layout(fig, fig.layout.title.text if fig.layout.title else "",
+                   height=fig.layout.height or 800,
+                   width=fig.layout.width or 1200)
     return fig
 
 
@@ -13185,6 +13197,12 @@ def fig_i1_sentence_state_clusters() -> "go.Figure":
         showlegend=False,
         margin=dict(l=20, r=20, t=80, b=20),
     )
+    # Typeset-legibility floor is enforced by the shared helper, not by the
+    # font sizes above: it pins font-to-canvas and normalizes annotation and
+    # per-trace label fonts, so this figure cannot ship mixed-size text.
+    _bundle_layout(fig, fig.layout.title.text if fig.layout.title else "",
+                   height=fig.layout.height or 800,
+                   width=fig.layout.width or 1200)
     return fig
 
 
@@ -13330,6 +13348,12 @@ def fig_i1_firstorderkms_grid() -> "go.Figure":
         margin=dict(l=20, r=20, t=160, b=20),
         showlegend=False,
     )
+    # Typeset-legibility floor is enforced by the shared helper, not by the
+    # font sizes above: it pins font-to-canvas and normalizes annotation and
+    # per-trace label fonts, so this figure cannot ship mixed-size text.
+    _bundle_layout(fig, fig.layout.title.text if fig.layout.title else "",
+                   height=fig.layout.height or 800,
+                   width=fig.layout.width or 1200)
     return fig
 
 
@@ -13453,6 +13477,12 @@ def fig_i1_gap_counterexample() -> "go.Figure":
         yaxis=dict(title="Gap Δ", range=[0, 1.5]),
         legend=dict(x=0.02, y=0.98, bgcolor="rgba(255,255,255,0.9)"),
     )
+    # Typeset-legibility floor is enforced by the shared helper, not by the
+    # font sizes above: it pins font-to-canvas and normalizes annotation and
+    # per-trace label fonts, so this figure cannot ship mixed-size text.
+    _bundle_layout(fig, fig.layout.title.text if fig.layout.title else "",
+                   height=fig.layout.height or 800,
+                   width=fig.layout.width or 1200)
     return fig
 
 
@@ -13565,6 +13595,12 @@ def fig_i1_chirality_wall_tree() -> "go.Figure":
         plot_bgcolor="white", paper_bgcolor="white",
         margin=dict(l=20, r=20, t=100, b=20),
     )
+    # Typeset-legibility floor is enforced by the shared helper, not by the
+    # font sizes above: it pins font-to-canvas and normalizes annotation and
+    # per-trace label fonts, so this figure cannot ship mixed-size text.
+    _bundle_layout(fig, fig.layout.title.text if fig.layout.title else "",
+                   height=fig.layout.height or 800,
+                   width=fig.layout.width or 1200)
     return fig
 
 
@@ -14821,8 +14857,14 @@ def _bundle_layout(fig, title, height=340, width=_BUNDLE_FIG_WIDTH,
     # figures hardcoding 11-12 px on ~900 px canvases -> 6.4-6.8 pt in print,
     # below the 8 pt floor, while every other string was compliant. Normalize
     # them here so a single call cannot leave a mixed-size figure behind.
+    # ⚠️ The selector must match how a trace CARRIES its labels, not just `text`.
+    # Keying on `text` alone skipped treemap/sunburst/pie/icicle traces, which
+    # label via `labels`, so a treemap kept its hardcoded textfont and stayed
+    # below the floor while every other string in the figure was normalized —
+    # the mixed-size outcome this call exists to make impossible.
     fig.update_traces(textfont_size=font_size - 1,
-                      selector=lambda t: getattr(t, "text", None) is not None)
+                      selector=lambda t: getattr(t, "text", None) is not None
+                      or getattr(t, "labels", None) is not None)
     return fig
 
 
