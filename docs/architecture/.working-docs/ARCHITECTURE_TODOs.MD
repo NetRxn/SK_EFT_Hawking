@@ -2583,3 +2583,43 @@ claim unmade with a `% TODO` rather than inventing a citation — the correct be
 verify. They came back with defects in `formulas.py`, in a Lean docstring, in two figure
 generators and in a registry — none of which is prose. Reading the substrate closely enough to
 write about it is itself an audit.
+
+### D46 — I1 drafting wave, round 2: four more substrate findings (filed, NOT fixed)
+
+**D46-a — `IsLocallyWellPosed` is vacuous, and a bundle apex claims it gates.**
+`lean/SKEFTHawking/CauchyProblem.lean:146` is `def IsLocallyWellPosed (_S : Spacetime) : Prop := True`.
+I1's apex registration for `WaveEquation1D.add_isClassicalWaveSolution` claims the missing PDE
+infrastructure is "scoped as the gating Prop IsLocallyWellPosed rather than reinvented". A
+proposition defined as `True` cannot gate anything — it is discharged by `trivial`. Measured
+independently: `IsLocallyWellPosed` appears in three theorem CONCLUSIONS
+(`CauchyProblem.lean:198`, `WaveEquation1D.lean:325,344`) and in **zero** hypotheses, so nothing
+consumes it. The honest description is "linearity shipped; the absent PDE infrastructure NAMED
+rather than reinvented" — a weaker and true claim. The I1 apex text is corrected in this commit;
+the Lean is left alone.
+
+**D46-b — `IsNullGeodesicallyIncomplete` is definitionally `0 < lam_max`.**
+`lean/SKEFTHawking/PenroseSingularity.lean:220-221`. The conclusion of the curve-level focusing
+chain is *defined* as positivity of a real parameter, so the mathematical weight sits entirely in
+the comparison bound and the strict negativity of the expansion, not in the word "incompleteness".
+This is CLAUDE.md's own defining-the-conclusion anti-pattern, and it lands on **D3's headline
+singularity-theorem chain**, not on I1 — surfaced here only because drafting forced the taxonomy.
+Wherever that chain is presented as a singularity theorem, it needs the disclosure.
+
+**D46-c — `check_bundle_consistency`'s docstring is aspirational; its body is not.**
+The docstring lists bibkey / ±2σ / Lean-reference comparison criteria the body never executes.
+What it actually does: branch on `match_kind`, pass exact clusters on the construction argument,
+emit an advisory for normalized clusters, fail only on an unrecognized kind. No numerical
+comparison anywhere. A reader trusting the docstring would take a green as a consistency
+guarantee it does not provide. Either implement the docstring or rewrite it to the body.
+
+**D46-d — `\aristotleruns` counts the string `manual` as a run.**
+`update_counts.py` computes `len(set(ARISTOTLE_THEOREMS.values()))`, and three entries carry the
+marker `manual` for theorems closed by hand. Measured: 322 entries, 44 distinct values, 3 manual →
+**319 prover-closed theorems across 43 genuine runs**, against a published 322/44. The macro is one
+high wherever it appears, including two sites in I1's introduction. Fix in `count_aristotle`:
+discard the marker and emit both figures.
+
+**Also measured, no action needed:** the registry's largest batch is run `4528aa2b` at 63 entries,
+not the 25 of `78dcc5f4` that the draft called the record. And the lead's own pre-brief caution was
+wrong — "32 references to 78dcc5f4" was a raw grep including section-comment lines; the true entry
+count is 25, so the draft's original figure was right. Count entries, not grep hits.

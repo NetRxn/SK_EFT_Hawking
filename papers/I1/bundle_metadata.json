@@ -28,7 +28,7 @@
     },
     {
       "name": "SKEFTHawking.WaveEquation1D.add_isClassicalWaveSolution",
-      "claims": "§13 — the structural-Prop scoping pattern's worked case: the 1D wave equation distilled from the Einstein vacuum equations in harmonic gauge, with linearity shipped and the Mathlib-absent PDE infrastructure scoped as the gating Prop IsLocallyWellPosed rather than reinvented in-project",
+      "claims": "§13 — the structural-scoping worked case: the 1D wave equation, with linearity SHIPPED (eight pointwise differentiability hypotheses on the data, proved outright) and the absent PDE infrastructure NAMED rather than reinvented in-project. ⚠️ Correction 2026-08-11: an earlier wording called IsLocallyWellPosed a 'gating Prop'. It is `def ... : Prop := True` (CauchyProblem.lean:146) and appears in zero hypotheses, so it gates nothing; it is an architectural marker fixing where a future proof attaches. See ARCHITECTURE_TODOs D46-a.",
       "declared": "2026-08-07"
     }
   ],
