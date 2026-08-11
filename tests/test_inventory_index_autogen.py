@@ -136,20 +136,77 @@ class TestValidateCheckRegistered:
         assert any(d.name == "freshness" for d in result.details)
 
     def test_check_is_in_registry_with_two_string_decorator(self):
+        """The decorator must be statically parseable — some tooling reads the
+        registry from source rather than by importing it.
+
+        ⚠️ SCOPE WIDENED 2026-08-03 (ADR-009 Phase 2). This scanned only
+        `scripts/validate.py`; the check now lives in
+        `scripts/validation/checks/freshness.py`, so a one-file scan reported the
+        decorator missing when nothing was wrong with it. A structural test scoped
+        to a single file goes stale the moment the code is split — the same defect
+        that had to be fixed in `test_validate_public_surface.py`'s H1 guard.
+        """
         import ast
-        validate_py = PROJECT_ROOT / "scripts" / "validate.py"
-        tree = ast.parse(validate_py.read_text())
+        sources = [PROJECT_ROOT / "scripts" / "validate.py"]
+        sources += sorted((PROJECT_ROOT / "scripts" / "validation").rglob("*.py"))
         names = []
-        for node in ast.walk(tree):
-            if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
-                continue
-            for dec in node.decorator_list:
-                if (isinstance(dec, ast.Call)
-                        and isinstance(dec.func, ast.Name)
-                        and dec.func.id == "register_check"
-                        and len(dec.args) >= 2
-                        and isinstance(dec.args[0], ast.Constant)
-                        and isinstance(dec.args[1], ast.Constant)):
-                    names.append(str(dec.args[0].value))
+        for src in sources:
+            tree = ast.parse(src.read_text())
+            for node in ast.walk(tree):
+                if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                    continue
+                for dec in node.decorator_list:
+                    if (isinstance(dec, ast.Call)
+                            and isinstance(dec.func, ast.Name)
+                            and dec.func.id == "register_check"
+                            and len(dec.args) >= 2
+                            and isinstance(dec.args[0], ast.Constant)
+                            and isinstance(dec.args[1], ast.Constant)):
+                        names.append(str(dec.args[0].value))
         assert "inventory_index_autogen_fresh" in names, (
-            "check not AST-parseable as a two-string register_check decorator")
+            "check not AST-parseable as a two-string register_check decorator "
+            f"across {len(sources)} suite source file(s)")
+
+
+class TestValidationChecksTableIsNotEmpty:
+    r"""`paper_tables.sources.validation_checks()` feeds Paper 15's Table 2.
+
+    ⚠️ **It shipped EMPTY for 40+ commits.** It AST-parsed `scripts/validate.py`
+    alone; ADR-009 Phase 2 moved all 59 check bodies into
+    `scripts/validation/checks/*.py`, so from `c3456a23` it returned `[]` and
+    `papers/paper15_methodology/tables/table2_checks.tex` rendered as a tabular with
+    rules and no rows — while the paper still `\input`s it.
+
+    Nothing caught it: `tables_fresh` compares MTIMES, never content, so a generator
+    whose source set silently emptied is indistinguishable from one with nothing to do.
+
+    The assertion is tied to the LIVE registry rather than to a frozen number, so it
+    tracks checks being added or removed and only fails when the generator and the
+    suite disagree — which is the actual invariant.
+    """
+
+    def test_the_row_count_equals_the_registered_check_count(self):
+        import sys
+        from pathlib import Path
+        root = Path(__file__).resolve().parent.parent
+        sys.path.insert(0, str(root / "scripts"))
+        from paper_tables.sources import validation_checks
+        import validate
+
+        rows = validation_checks()
+        assert len(rows) == len(validate._CHECKS), (
+            f"validation_checks() returned {len(rows)} rows for "
+            f"{len(validate._CHECKS)} registered checks. Paper 15 Table 2 is "
+            f"generated from this; a mismatch means the generator's source set no "
+            f"longer covers where the checks live (it read only scripts/validate.py "
+            f"until 2026-08-04, and shipped an EMPTY table).")
+
+    def test_every_row_carries_a_name_and_a_description(self):
+        import sys
+        from pathlib import Path
+        root = Path(__file__).resolve().parent.parent
+        sys.path.insert(0, str(root / "scripts"))
+        from paper_tables.sources import validation_checks
+        for r in validation_checks():
+            assert r.get("name", "").strip(), r
+            assert r.get("description", "").strip(), r

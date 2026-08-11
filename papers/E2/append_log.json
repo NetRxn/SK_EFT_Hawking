@@ -5,7 +5,7 @@
       "date": "2026-05-01T22:41:36Z",
       "source_paper": "paper16_graphene_sk_eft",
       "lift_action": "Lift-companion",
-      "bundle_section_inserted": "\u00a71",
+      "bundle_section_inserted": "§1",
       "lean_modules_referenced": [
         "GrapheneHawking",
         "DiracFluidMetric",

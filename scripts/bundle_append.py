@@ -27,10 +27,19 @@ already-drafted bundle, or for recording bookkeeping-only events
     and `--notes`. Optional: `--source-paper` (use a sentinel like
     `none` or omit).
 
+**A source registration does not create a section (F-02, TODO-D26).** A lift
+must name the existing top-level section it belongs under
+(`--target-section "<title>"`), and lands as a `\\subsection` inside it.
+Creating a new top-level section is a change to the bundle's argument
+structure, so it takes `--new-section --section-rationale "<why>"` and the
+reason is written into the draft, `change_log.md` and `append_log.json`.
+`--initial-lift` implies the new-section path: a bundle with no draft has no
+section plan to append into.
+
 Effects (full-lift modes):
   - validates source ↔ bundle mapping
-  - computes the next `\\section` / `\\subsection` heading using the
-    `--insertion-point` hint (e.g., "§13", "§§4.2")
+  - resolves `--target-section` against the draft's own top-level sections
+    (or takes the explicit `--new-section` path)
   - appends the heading + a stub body to `papers/<bundle>/paper_draft.tex`
   - appends an entry to `papers/<bundle>/append_log.json`
   - appends a dated H2 to `papers/<bundle>/change_log.md`
@@ -61,16 +70,21 @@ context. This script is one mechanical step in that procedure.
 
 Usage
 -----
-    # Initial lift / additive lift
-    uv run python scripts/bundle_append.py \\
-        --bundle D5 --source-paper paper17_dark_sector \\
-        --insertion-point '§2-§3' \\
-        --notes "Initial lift; paper17 SFDM cluster-merger forecast"
-
+    # Additive lift into an existing section (the normal case)
     uv run python scripts/bundle_append.py \\
         --bundle D5 --source-paper paper29_bbn_unified \\
-        --insertion-point '§4'
+        --insertion-point '§4' \\
+        --target-section 'Cosmological constraints'
 
+    # A lift that genuinely changes the bundle's architecture
+    uv run python scripts/bundle_append.py \\
+        --bundle D5 --source-paper paper17_dark_sector \\
+        --insertion-point '§2-§3' --new-section \\
+        --section-rationale "SFDM cluster-merger forecasts are a distinct \\
+                             observational channel; no existing section argues it" \\
+        --notes "paper17 SFDM cluster-merger forecast"
+
+    # First lift into an undrafted bundle (implies --new-section)
     uv run python scripts/bundle_append.py \\
         --bundle I1 --source-paper paper15_methodology \\
         --insertion-point '§1' --initial-lift
@@ -98,6 +112,8 @@ MAPPING_DOC = PROJECT_ROOT / "docs" / "PAPER_DRAFT_MAPPING.md"
 sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 from bundle_migration import parse_mapping  # noqa: E402
 from sentence_state import _VALID_BUNDLE_TARGETS  # noqa: E402
+from bundle_json import write_bundle_json  # noqa: E402
+from validation._tex import _strip_tex_comments  # noqa: E402
 
 
 def _now_iso() -> str:
@@ -202,6 +218,138 @@ def _insertion_marker_pattern() -> re.Pattern:
     return re.compile(r"%% BUNDLE_APPEND_INSERT_HERE.*?$", re.MULTILINE)
 
 
+# ═══════════════════════════════════════════════════════════════════════
+# F-02 — registering a source must not create a section (TODO-D26)
+# ═══════════════════════════════════════════════════════════════════════
+#
+# MEASURED 2026-08-09, across all 21 bundles' `append_log.json`: **74 of 74
+# content lifts inserted a top-level `\section`.** The `§§` subsection form the
+# old `is_subsection` hint recognised was used ZERO times, because nothing ever
+# required it — a source registration silently bought a top-level heading, and
+# 28 of those 74 landed in D3, which is exactly how it reached 31 sections —
+# before the D3 consolidation in this same branch cut it to 20.
+#
+# The fix is NOT to stop inserting a skeleton. `append_log.json`'s
+# `bundle_section_inserted` is the anchor the absorption protocol reads to find
+# where a lift landed; an append that inserts nothing makes that field a lie.
+# The fix is that the anchor must be a *planned* place: an append now attaches a
+# `\subsection` inside a section the bundle's architecture already has, and
+# creating a new top-level section is an explicit, justified, logged act
+# (`--new-section` + `--section-rationale`) rather than the default.
+#
+# The section plan is read off the draft's own top-level sections rather than a
+# separate `CHARTER.md`. A plan stored beside the document it describes drifts
+# from it; a plan *read from* the document cannot. The validation this buys is
+# the same one the charter was for: you may only append where the architecture
+# already has a home, or say out loud that you are changing the architecture.
+
+#: Commands that terminate a top-level section's body.
+_SECTION_TERMINATORS = (
+    r"\\section\b",
+    r"\\appendix\b",
+    r"\\bibliography\b",
+    r"\\begin\{thebibliography\}",
+    r"\\end\{document\}",
+)
+_TERMINATOR_RE = re.compile("|".join(_SECTION_TERMINATORS))
+_SECTION_START_RE = re.compile(r"\\section\*?\s*\{")
+
+
+def _brace_matched(text: str, open_idx: int) -> tuple[str, int]:
+    """Content of the `{...}` group starting at `open_idx`, and the offset just
+    past its closing brace.
+
+    Brace matching rather than `[^}]*` because section titles in this corpus
+    carry nested groups (`\\mathbb{Z}`, `\\texttt{...}`); a non-greedy character
+    class stops at the inner brace and truncates the title.
+    """
+    depth = 0
+    i = open_idx
+    while i < len(text):
+        c = text[i]
+        if c == "\\":
+            i += 2
+            continue
+        if c == "{":
+            depth += 1
+        elif c == "}":
+            depth -= 1
+            if depth == 0:
+                return text[open_idx + 1:i], i + 1
+        i += 1
+    raise ValueError(f"unbalanced brace group at offset {open_idx}")
+
+
+def _top_level_sections(text: str) -> list[tuple[str, int, int]]:
+    """`(title, heading_start, body_end)` for every top-level `\\section`.
+
+    Scanned against a comment-stripped copy that preserves every offset, so a
+    `\\section` inside a `%%` banner (this script writes several) is not seen as
+    structure while the offsets still index into the original text.
+    """
+    scan = _strip_tex_comments(text)
+    out: list[tuple[str, int, int]] = []
+    for m in _SECTION_START_RE.finditer(scan):
+        title, after = _brace_matched(scan, m.end() - 1)
+        term = _TERMINATOR_RE.search(scan, after)
+        end = term.start() if term else len(scan)
+        out.append((title.strip(), m.start(), _back_over_banner(scan, end)))
+    return out
+
+
+def _back_over_banner(scan: str, end: int) -> int:
+    """Rewind `end` past the blank and comment lines that introduce whatever
+    follows.
+
+    Drafts in this corpus precede each `\\section` with a `%% ===== §N — ... =====`
+    banner. Inserting exactly at the terminator drops the new subsection
+    *between that banner and the section it announces*, so the banner reads as
+    belonging to the wrong body. Comments are already blanked to spaces in
+    `scan`, so rewinding over whitespace-only lines covers both cases.
+    """
+    while end > 0:
+        prev_nl = scan.rfind("\n", 0, end - 1)
+        line = scan[prev_nl + 1:end - 1] if prev_nl != -1 else scan[:end - 1]
+        if line.strip():
+            break
+        end = prev_nl + 1
+        if prev_nl == -1:
+            break
+    return end
+
+
+def _resolve_target_section(text: str, wanted: str) -> tuple[str, int]:
+    """`(matched_title, insertion_offset)` for the section a lift targets.
+
+    Matching widens exact → case-insensitive → unique substring, and an
+    ambiguous or absent name is a hard error listing what the draft actually
+    has. Guessing here would put content under the wrong argument, which is the
+    failure the target is meant to prevent.
+    """
+    secs = _top_level_sections(text)
+    if not secs:
+        raise LookupError("the draft has no top-level \\section to target; "
+                          "use --new-section (or --initial-lift)")
+    exact = [s for s in secs if s[0] == wanted]
+    if not exact:
+        exact = [s for s in secs if s[0].lower() == wanted.lower()]
+    if not exact:
+        exact = [s for s in secs if wanted.lower() in s[0].lower()]
+    if len(exact) == 1:
+        title, _start, body_end = exact[0]
+        return title, body_end
+    listing = "\n".join(f"    - {s[0]}" for s in secs)
+    if not exact:
+        raise LookupError(
+            f"no top-level section matches {wanted!r}. The draft's section "
+            f"plan is:\n{listing}\n  Append into one of these, or pass "
+            f"--new-section --section-rationale '<why the architecture needs a "
+            f"new top-level section>'.")
+    raise LookupError(
+        f"{wanted!r} matches {len(exact)} sections "
+        f"({', '.join(repr(s[0]) for s in exact)}); name one exactly.")
+
+
 def _append_section_to_draft(
     draft: Path,
     *,
@@ -210,27 +358,32 @@ def _append_section_to_draft(
     source_title: str,
     insertion_point: str,
     notes: str,
-) -> tuple[bool, str]:
-    """Insert a new \\section / \\subsection skeleton into paper_draft.tex
-    at the BUNDLE_APPEND_INSERT_HERE marker (default) or after the most
-    recent \\section if the marker is missing.
+    target_section: str = "",
+    new_section: bool = False,
+    section_rationale: str = "",
+) -> tuple[bool, str, str]:
+    """Insert a lift skeleton into paper_draft.tex.
 
-    Returns (modified, msg).
+    Two shapes, and which one runs is a decision the caller must have made
+    (F-02). With `target_section`, a `\\subsection` skeleton lands at the end of
+    that existing section's body. With `new_section`, a top-level `\\section`
+    lands at the BUNDLE_APPEND_INSERT_HERE marker, falling back to before the
+    bibliography and then before `\\end{document}` — and `section_rationale`
+    goes into the draft beside it, so the justification for a new heading sits
+    where the next reader of the architecture will find it.
+
+    Returns `(modified, msg, anchor)`; `anchor` is the resolved
+    `bundle_section_inserted` value, not the caller's hint.
     """
     text = draft.read_text()
 
-    # Detect section vs subsection from insertion_point hint
-    is_subsection = (
-        insertion_point.startswith("§§")
-        or "subsection" in insertion_point.lower()
-    )
-    cmd = "subsection" if is_subsection else "section"
-
-    section_block = f"""
+    if new_section:
+        block = f"""
 %% ─── Lifted from {source} ({insertion_point}) — {_now_iso()} ───
-\\{cmd}{{{source_title}}}
+\\section{{{source_title}}}
 \\label{{sec:{bundle.lower()}-{source}}}
 
+%% NEW TOP-LEVEL SECTION. Rationale: {section_rationale}
 %% Insertion point hint from PAPER_DRAFT_MAPPING.md: {insertion_point}
 %% Lift notes: {notes or '(none)'}
 %% TODO: lift content from papers/{source}/paper_draft.tex
@@ -239,40 +392,66 @@ def _append_section_to_draft(
 
 %% ─── End lift from {source} ───
 """
-
-    marker = _insertion_marker_pattern()
-    m = marker.search(text)
-    if m:
-        new_text = text[: m.start()] + section_block + "\n" + text[m.start():]
-    else:
-        # Fallback: insert before \bibliography
-        bib_match = re.search(r"^\\bibliography\{", text, re.MULTILINE)
-        if bib_match:
-            new_text = text[: bib_match.start()] + section_block + "\n" + text[bib_match.start():]
+        m = _insertion_marker_pattern().search(text)
+        if m:
+            cut = m.start()
         else:
-            # Last resort: append before \end{document}
-            end_match = re.search(r"^\\end\{document\}", text, re.MULTILINE)
-            if not end_match:
+            bib = re.search(r"^\\bibliography\{", text, re.MULTILINE)
+            end = re.search(r"^\\end\{document\}", text, re.MULTILINE)
+            if bib:
+                cut = bib.start()
+            elif end:
+                cut = end.start()
+            else:
                 return (False, "could not locate insertion site (no marker, "
-                               "no \\bibliography, no \\end{document})")
-            new_text = text[: end_match.start()] + section_block + "\n" + text[end_match.start():]
+                               "no \\bibliography, no \\end{document})", "")
+        draft.write_text(text[:cut] + block + "\n" + text[cut:])
+        anchor = f"§ (new) {source_title}"
+        return (True, f"appended \\section{{{source_title}}} — NEW top-level "
+                      f"section, rationale recorded", anchor)
 
-    draft.write_text(new_text)
-    return (True, f"appended \\{cmd}{{{source_title}}} ({insertion_point})")
+    try:
+        matched, cut = _resolve_target_section(text, target_section)
+    except LookupError as exc:
+        return (False, str(exc), "")
+
+    block = f"""
+%% ─── Lifted from {source} ({insertion_point}) — {_now_iso()} ───
+\\subsection{{{source_title}}}
+\\label{{sec:{bundle.lower()}-{source}}}
+
+%% Appended into the existing section "{matched}" (F-02: a source
+%% registration does not create a top-level section).
+%% Insertion point hint from PAPER_DRAFT_MAPPING.md: {insertion_point}
+%% Lift notes: {notes or '(none)'}
+%% TODO: lift content from papers/{source}/paper_draft.tex
+%% TODO: ensure all numerical claims trace via formulas.py / counts.tex
+%% TODO: ensure all citations have primary-source cache entries
+
+%% ─── End lift from {source} ───
+"""
+    draft.write_text(text[:cut].rstrip() + "\n" + block + "\n" + text[cut:])
+    anchor = f"§ {matched} / §§ {source_title}"
+    return (True, f"appended \\subsection{{{source_title}}} into "
+                  f"\\section{{{matched}}}", anchor)
 
 
 def _append_to_change_log(
     bundle: str, source: str, source_title: str,
     insertion_point: str, lift_action: str, notes: str,
+    anchor: str = "", section_rationale: str = "",
 ) -> None:
     log_path = _bundle_dir(bundle) / "change_log.md"
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    rationale_row = (f"\n- New top-level section rationale: {section_rationale}"
+                     if section_rationale else "")
     entry = f"""
 ## {today} — {lift_action} from `{source}` ({insertion_point})
 
 - Source title: {source_title}
 - Lift action: {lift_action}
 - Insertion point: {insertion_point}
+- Anchor: {anchor or insertion_point}{rationale_row}
 - Stage-13 redo required: yes
 - Notes: {notes or "(none)"}
 """
@@ -285,6 +464,7 @@ def _append_to_change_log(
 def _append_to_append_log(
     bundle: str, source: str, lift_action: str, insertion_point: str,
     notes: str, lean_modules: list[str],
+    anchor: str = "", section_rationale: str = "",
 ) -> None:
     log_path = _bundle_dir(bundle) / "append_log.json"
     if log_path.exists():
@@ -295,7 +475,13 @@ def _append_to_append_log(
         "date": _now_iso(),
         "source_paper": source,
         "lift_action": lift_action,
-        "bundle_section_inserted": insertion_point,
+        # The RESOLVED anchor, not the caller's hint: the absorption protocol
+        # reads this field to find where a lift landed, and a hint like "§13"
+        # names a position no reader can locate in the draft.
+        "bundle_section_inserted": anchor or insertion_point,
+        "insertion_point_hint": insertion_point,
+        "new_top_level_section": bool(section_rationale),
+        "new_section_rationale": section_rationale,
         "lean_modules_referenced": lean_modules,
         "citation_count_added": 0,  # filled in by manual citation-merge step
         "stage13_redo_required": True,
@@ -303,7 +489,7 @@ def _append_to_append_log(
         "notes": notes,
     }
     data["events"].append(event)
-    log_path.write_text(json.dumps(data, indent=2) + "\n")
+    write_bundle_json(log_path, data)
 
 
 def _update_metadata_post_append(bundle: str) -> None:
@@ -323,7 +509,7 @@ def _update_metadata_post_append(bundle: str) -> None:
         md["stage9_status"] = "pending"
     if md.get("stage10_status") == "green":
         md["stage10_status"] = "pending"
-    md_path.write_text(json.dumps(md, indent=2) + "\n")
+    write_bundle_json(md_path, md)
 
 
 def _append_to_change_log_bookkeeping(
@@ -373,7 +559,7 @@ def _append_to_append_log_bookkeeping(
         "notes": notes,
     }
     data["events"].append(event)
-    log_path.write_text(json.dumps(data, indent=2) + "\n")
+    write_bundle_json(log_path, data)
 
 
 def _update_metadata_post_bookkeeping(bundle: str) -> None:
@@ -386,7 +572,7 @@ def _update_metadata_post_bookkeeping(bundle: str) -> None:
     md = json.loads(md_path.read_text())
     md["last_lift"] = _now_iso()
     md["freshness_stale"] = False
-    md_path.write_text(json.dumps(md, indent=2) + "\n")
+    write_bundle_json(md_path, md)
 
 
 def _refresh_source_manifest(bundle: str) -> None:
@@ -409,9 +595,17 @@ def append(
     notes: str = "",
     lean_modules: list[str] | None = None,
     initial_lift: bool = False,
+    target_section: str = "",
+    new_section: bool = False,
+    section_rationale: str = "",
 ) -> int:
     """Run a single append operation. Returns 0 on success, nonzero on
-    error."""
+    error.
+
+    Exactly one of `target_section` / `new_section` decides the shape (F-02).
+    `initial_lift` implies `new_section`: a bundle with no draft has no section
+    plan to append into, so its first heading is not a change of architecture.
+    """
     if bundle not in _VALID_BUNDLE_TARGETS:
         print(f"FATAL: invalid bundle {bundle!r}", file=sys.stderr)
         return 2
@@ -454,20 +648,33 @@ def append(
     metadata = json.loads(md_path.read_text())
 
     # Ensure paper_draft.tex skeleton exists
+    draft_existed = (_bundle_dir(bundle) / "paper_draft.tex").exists()
     draft = _ensure_paper_draft_skeleton(bundle, metadata)
     if initial_lift and not draft.exists():
         print(f"FATAL: --initial-lift requested but skeleton not created",
               file=sys.stderr)
         return 2
 
+    # F-02: a bundle with no pre-existing draft has no architecture to append
+    # into, so its first lift creates a section by construction rather than by
+    # default. Recorded as such so the log does not read like an opt-in.
+    if initial_lift or not draft_existed:
+        new_section = True
+        section_rationale = section_rationale or (
+            "initial lift — bundle had no paper_draft.tex, so no section plan "
+            "existed to append into")
+
     # Append the section
-    ok, msg = _append_section_to_draft(
+    ok, msg, anchor = _append_section_to_draft(
         draft,
         bundle=bundle,
         source=source,
         source_title=source_title,
         insertion_point=insertion_point,
         notes=notes,
+        target_section=target_section,
+        new_section=new_section,
+        section_rationale=section_rationale,
     )
     if not ok:
         print(f"FATAL: append to paper_draft.tex failed: {msg}",
@@ -476,11 +683,13 @@ def append(
 
     # Update bookkeeping
     _append_to_change_log(
-        bundle, source, source_title, insertion_point, lift_action, notes
+        bundle, source, source_title, insertion_point, lift_action, notes,
+        anchor=anchor, section_rationale=section_rationale,
     )
     _append_to_append_log(
         bundle, source, lift_action, insertion_point, notes,
         lean_modules or [],
+        anchor=anchor, section_rationale=section_rationale,
     )
     _update_metadata_post_append(bundle)
     _refresh_source_manifest(bundle)
@@ -557,8 +766,26 @@ def main() -> int:
                         help="comma-separated Lean module names referenced (e.g., "
                              "'CausalSetDarkEnergy,EntropicGravityDarkEnergy'); "
                              "lift-mode only")
+    parser.add_argument("--target-section", default="",
+                        help="EXISTING top-level section title to append into; the "
+                             "lift lands as a \\subsection inside it (F-02). "
+                             "Required in lift mode unless --new-section or "
+                             "--initial-lift. Matching is exact, then "
+                             "case-insensitive, then unique-substring; an "
+                             "ambiguous or absent name lists the draft's sections "
+                             "and exits nonzero.")
+    parser.add_argument("--new-section", action="store_true",
+                        help="create a NEW top-level section for this lift — a "
+                             "change to the bundle's architecture, not a "
+                             "registration side-effect. Requires "
+                             "--section-rationale.")
+    parser.add_argument("--section-rationale", default="",
+                        help="why the bundle's architecture needs a new top-level "
+                             "section; recorded in the draft, change_log.md and "
+                             "append_log.json. Required with --new-section.")
     parser.add_argument("--initial-lift", action="store_true",
-                        help="bundle has no paper_draft.tex yet; bootstrap skeleton")
+                        help="bundle has no paper_draft.tex yet; bootstrap skeleton "
+                             "(implies --new-section)")
     parser.add_argument("--bookkeeping-only", action="store_true",
                         help="record a bookkeeping-only event (no \\section "
                              "insertion, no stage flips); requires --lift-action "
@@ -592,6 +819,28 @@ def main() -> int:
               file=sys.stderr)
         return 2
 
+    # F-02 (TODO-D26). Measured across all 21 bundles: 74 of 74 content lifts
+    # created a top-level section, because creating one was the default and
+    # nothing had to be said to get it. It now has to be said.
+    if args.new_section and args.target_section:
+        print("FATAL: --new-section and --target-section are exclusive; a lift "
+              "either goes into the existing architecture or changes it",
+              file=sys.stderr)
+        return 2
+    if args.new_section and not args.section_rationale.strip():
+        print("FATAL: --new-section requires --section-rationale. A new "
+              "top-level section is a change to the bundle's argument "
+              "structure; the reason belongs in change_log.md next to it.",
+              file=sys.stderr)
+        return 2
+    if not args.new_section and not args.initial_lift and not args.target_section:
+        print("FATAL: lift mode requires --target-section '<existing section "
+              "title>' (the lift lands as a \\subsection inside it), or an "
+              "explicit --new-section --section-rationale '<why>'. Registering "
+              "a source does not by itself buy a top-level section (F-02).",
+              file=sys.stderr)
+        return 2
+
     lean_modules = [m.strip() for m in args.lean_modules.split(",") if m.strip()]
     return append(
         bundle=args.bundle,
@@ -600,6 +849,9 @@ def main() -> int:
         notes=args.notes,
         lean_modules=lean_modules,
         initial_lift=args.initial_lift,
+        target_section=args.target_section,
+        new_section=args.new_section,
+        section_rationale=args.section_rationale,
     )
 
 

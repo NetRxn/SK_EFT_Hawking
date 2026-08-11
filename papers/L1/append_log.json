@@ -5,7 +5,7 @@
       "date": "2026-05-01T18:01:41Z",
       "source_paper": "paper25_gravitational_waves",
       "lift_action": "Lift-letter",
-      "bundle_section_inserted": "\u00a71",
+      "bundle_section_inserted": "§1",
       "lean_modules_referenced": [
         "GravitationalWaves",
         "LinearizedEFE",
@@ -14,13 +14,13 @@
       "citation_count_added": 0,
       "stage13_redo_required": true,
       "agent_run_id": "bundle_append-2026-05-01T18:01:41Z",
-      "notes": "Initial lift: paper25 \u2192 L1 PRL splash (GW170817 vestigial-graviton falsifier; voucher candidate; Phase 6a W2)"
+      "notes": "Initial lift: paper25 → L1 PRL splash (GW170817 vestigial-graviton falsifier; voucher candidate; Phase 6a W2)"
     },
     {
       "date": "2026-05-06T15:42:03Z",
       "source_paper": "_phase6o_W1b_lean_only",
       "lift_action": "Lift-section",
-      "bundle_section_inserted": "\u00a74",
+      "bundle_section_inserted": "§4",
       "lean_modules_referenced": [
         "KerrSchild.PetrovD",
         "KerrSchild.SingleCopy",

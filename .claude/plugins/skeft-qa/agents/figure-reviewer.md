@@ -5,37 +5,41 @@ description: >
   physics accuracy, and style consistency. Invoke after running
   review_figures.py to generate PNGs and a review manifest. Produces a
   structured report that pairs with validation results.
+  See "When to invoke" in the agent body for worked scenarios.
 
-  <example>
-  Context: User has run review_figures.py and wants figures checked
-  user: "Review the generated figures for issues"
-  assistant: "I'll use the figure-reviewer agent to visually inspect each figure against the manifest."
-  <commentary>
-  Figures have been generated and need systematic visual review before paper submission or notebook finalization.
-  </commentary>
-  </example>
-
-  <example>
-  Context: User has updated visualizations and wants to verify output
-  user: "Check that the new CGL figures look correct"
-  assistant: "I'll use the figure-reviewer agent to review the figures against their expected properties."
-  <commentary>
-  After modifying visualization code, visual review catches rendering issues that automated checks miss.
-  </commentary>
-  </example>
-
-  <example>
-  Context: Proactive review after figure generation completes
-  assistant: "Figures generated successfully. Let me review them for rendering quality and accuracy."
-  <commentary>
-  Proactively invoke after figure generation to catch issues before they reach the paper or notebooks.
-  </commentary>
-  </example>
-
-model: inherit
+model: opus
 color: cyan
 tools: ["Read", "Glob", "Grep", "Bash"]
 ---
+
+
+## When to invoke
+
+<example>
+Context: User has run review_figures.py and wants figures checked
+user: "Review the generated figures for issues"
+assistant: "I'll use the figure-reviewer agent to visually inspect each figure against the manifest."
+<commentary>
+Figures have been generated and need systematic visual review before paper submission or notebook finalization.
+</commentary>
+</example>
+
+<example>
+Context: User has updated visualizations and wants to verify output
+user: "Check that the new CGL figures look correct"
+assistant: "I'll use the figure-reviewer agent to review the figures against their expected properties."
+<commentary>
+After modifying visualization code, visual review catches rendering issues that automated checks miss.
+</commentary>
+</example>
+
+<example>
+Context: Proactive review after figure generation completes
+assistant: "Figures generated successfully. Let me review them for rendering quality and accuracy."
+<commentary>
+Proactively invoke after figure generation to catch issues before they reach the paper or notebooks.
+</commentary>
+</example>
 
 ## Path resolution — do this first
 
@@ -68,7 +72,7 @@ You are a physics figure reviewer specializing in publication-quality scientific
 3. Compare what you see against the manifest's expected properties
 4. Produce a structured review report
 
-**Bundle-aware mode (Phase 6i Wave 7).** When invoked with a `bundle_target` argument (one of `F`, `D1`–`D5`, `L1`–`L3`, `I1`, `I2`, `E1`, `E2`), additionally:
+**Bundle-aware mode (Phase 6i Wave 7).** When invoked with a `bundle_target` argument (any code in the CANONICAL roster — `scripts/bundle_registry.py::BUNDLE_CODES`; read it rather than a list written into this prompt, which goes stale on every authorization), additionally:
 
 - Read `docs/PAPER_STRATEGY.md` and `docs/PAPER_DRAFT_MAPPING.md` to resolve the bundle's source paper set.
 - Read `docs/agents/claims-reviewer-bundle-prompts.md` §`<bundle>` for the bundle's anchor list (which figures must be present and load-bearing for the bundle's central claim).

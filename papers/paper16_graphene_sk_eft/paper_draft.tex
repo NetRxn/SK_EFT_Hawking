@@ -28,10 +28,11 @@ reaches~$c_s$---a condition already achieved by the Dean group at Columbia
 For the Dean bilayer nozzle, we predict $T_H \approx \SI{2.4}{\kelvin}$
 (nine orders of magnitude above BEC), with a well-controlled EFT expansion
 (adiabaticity $D = 0.23$, dispersive correction $\delta_{\rm disp} = -2.8\%$).
-The dissipative correction $\delta_{\rm diss} \sim 10^{-13}$ is negligible---11
-orders of magnitude below the dispersive correction---because the viscous
-damping rate $\Gamma_H \approx \SI{0.3}{\per\second}$ is vastly smaller
-than the surface gravity $\kappa \sim \SI{e12}{\per\second}$. The Hawking
+The dissipative correction $\delta_{\rm diss} \approx +6.5\%$ is the larger
+of the two and carries the opposite sign, so the corrections partially
+cancel: the viscous damping rate is
+$\Gamma_H \approx \SI{1.3e11}{\per\second}$ against a surface gravity
+$\kappa = \SI{2e12}{\per\second}$. The Hawking
 signal manifests as excess current noise $\Delta S_I \approx
 \SI{e-26}{\ampere\squared/\hertz}$ across a \SIrange{0.5}{85}{\giga\hertz}
 band---roughly 1\% of the thermal Johnson-Nyquist background---extractable
@@ -277,23 +278,34 @@ $T_{\rm eff} = T_H(1 + \delta_{\rm disp}) \approx \SI{2.36}{\kelvin}$.
 This is formally proved positive for $D^2 < 6/\pi$ in Lean~4
 (\texttt{graphene\_T\_eff\_positive}).
 
-\subsection{Dissipative correction: negligible by 11 orders}
+\subsection{Dissipative correction: comparable, and opposite in sign}
 
 The dissipative correction from viscous damping at the horizon is
 \begin{equation}
 \delta_{\rm diss} = \frac{\Gamma_H}{\kappa}, \qquad
-\Gamma_H = \frac{\eta}{s T} \left(\frac{\kappa}{c_s}\right)^2.
+\Gamma_H = \nu \left(\frac{\kappa}{c_s}\right)^2,
 \end{equation}
-With $\eta/s \approx 4 \times \hbar/(4\pi k_B)$ (Majumdar~\textit{et~al.})
-and $T \sim \SI{150}{\kelvin}$:
+where $\nu$ is the momentum-diffusion constant. Because the momentum
+density of a relativistic fluid is $w/v_F^2$,
 \begin{equation}
-\Gamma_H \approx \SI{0.3}{\per\second}, \qquad
-\delta_{\rm diss} \approx 10^{-13}.
+\nu = \frac{\eta\,v_F^2}{w} = \frac{\eta}{s T}\,v_F^2
+    = 2\,\frac{\eta}{s T}\,c_s^2 ,
 \end{equation}
-This is \emph{eleven orders of magnitude smaller} than the dispersive
-correction. The SK-EFT framework's value for graphene is therefore the
-\emph{systematic organization} of corrections and \emph{formal verification},
-not the specific dissipative modification to~$T_H$.
+the last equality holding for a conformal fluid ($c_s = v_F/\sqrt{2}$).
+The $d = 2$ sound-attenuation bracket $[2(d-1)/d]\eta + \zeta$ is exactly
+$1\cdot\eta$ with $\zeta = 0$, so no $O(1)$ factor survives; the familiar
+$4/3$ is the $d = 3$ value. With $\eta/s \approx 4 \times \hbar/(4\pi k_B)$
+(Majumdar~\textit{et~al.}) and $T \sim \SI{150}{\kelvin}$:
+\begin{equation}
+\Gamma_H \approx \SI{1.3e11}{\per\second}, \qquad
+\delta_{\rm diss} \approx +6.5\%.
+\end{equation}
+Writing $\eta/(sT)$, a \emph{time}, in place of $\nu$ omits the
+velocity$^2$ and understates $\delta_{\rm diss}$ by eleven orders of
+magnitude. Restored, the dissipative correction exceeds the dispersive
+$-2.8\%$ and cancels part of it, leaving a net $+3.7\%$. Graphene is
+therefore the platform where the SK-EFT's dissipative channel is a
+percent-level measurable rather than a formal refinement.
 
 %% ================================================================
 \section{Noise Spectrum and Detection Protocol}

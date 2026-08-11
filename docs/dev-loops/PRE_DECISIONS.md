@@ -134,7 +134,7 @@ bias that re-seeds the thrash.
 ### The research path — Tier 1 (don't reinvent a known result)
 
 When step-2 local search is dry **and** the gap is a *known* result: dispatch **`research-scout`** (or
-`/deep-research`) — the only web-tool holder, read-only / sandboxed, returns a **structured cited
+`/deep-research`) — read-only / sandboxed, the agent the ladder routes web questions through, returns a **structured cited
 report**, never raw page content. **You (lead) vet** it, then **file** it into `Lit-Search/…` with a
 provenance header and keep building (web facts stay `tier: PROJECTED` until a primary source is
 checked; the Lean kernel is the terminal verifier). **Sanitize the question** to its public

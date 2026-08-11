@@ -41,10 +41,13 @@ def test_each_edge_has_regen_and_staleness():
         assert e.cost in ("cheap", "heavy"), f"{e.output} bad cost {e.cost}"
 
 
-def test_stale_artifacts_is_subset_of_outputs():
-    m = _load("sync_manifest")
-    outs = {e.output for e in m.EDGES}
-    assert all(s in outs for s in m.stale_artifacts())
+# ⚠️ REMOVED 2026-08-09: `test_stale_artifacts_is_subset_of_outputs` was a
+# STRUCTURAL TAUTOLOGY that cost 13.77 s. `stale_artifacts()` is
+# `[e.output for e in EDGES if …]` (sync_manifest.py:147), so every element IS an
+# `e.output` by construction — the assertion re-derived the predicate it claimed to
+# pin and could never fail. The cost was real: `e.is_stale()` runs every staleness
+# probe against the live tree, in the DEFAULT suite, to prove an identity.
+# `test_cheap_only_excludes_heavy_edges` below is the falsifiable version and is cheap.
 
 
 def test_cheap_only_excludes_heavy_edges(monkeypatch):

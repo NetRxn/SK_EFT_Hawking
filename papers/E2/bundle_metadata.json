@@ -1,14 +1,46 @@
 {
   "bundle_target": "E2",
+  "apex_theorems": [
+    {
+      "name": "SKEFTHawking.DiracFluidWKB.dean_lowest_channel_above_four_omega_H",
+      "claims": "§2/§5 the load-bearing quasi-1D guarantee: the lowest transverse channel exceeds 4ω_H across the whole integration window",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.DiracFluidMetric.diracFluidMetric_y_offdiag_zero",
+      "claims": "§2 the y-row off-diagonals of the 2+1D acoustic metric vanish — the block-diagonalization",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.DiracFluidMetric.diracFluidMetric_gyy",
+      "claims": "§2 the yy block reduces to the conformal factor",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GrapheneHawking.graphene_T_eff_positive",
+      "claims": "§3 T_eff = T_H(1 + δ_disp) is positive for D² < 6/π",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GrapheneNoiseFormula.fdt_consistency",
+      "claims": "§4 the closed-form noise PSD's algebraic identity — the draft discloses this certifies the closed form, NOT the two-route equivalence",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.AcousticMetric.hawking_temp_from_surface_gravity",
+      "claims": "§1 the name-binding of T_H = ħκ/2πk_B to surface gravity; disclosed as a rfl-discharge with the substantive content upstream",
+      "declared": "2026-08-07"
+    }
+  ],
   "tier": 4,
   "title": "Dean-Kim-Lucas graphene letter",
   "target_journal": "PRL | PRR",
   "phase7_subphase": "7e",
-  "stage9_status": "green",
-  "stage10_status": "green",
-  "stage13_status": "green",
-  "stage13_redo_required": false,
-  "freshness_stale": false,
+  "stage9_status": "pending",
+  "stage10_status": "pending",
+  "stage13_status": "pending",
+  "stage13_redo_required": true,
+  "freshness_stale": true,
   "source_manifest_last_regen": "2026-05-12T12:46:30Z",
   "last_lift": "2026-05-12T13:00:00Z",
   "last_stage9_review": "2026-05-04T00:00:00Z",
@@ -21,7 +53,16 @@
   "supersession_ledger_anchor": "docs/review_finding_supersessions.json",
   "notes": "2026-05-07 Session-3 cross-bundle propagation: E2 Geurs2025 + Majumdar2025 bibitems updated to match arXiv-version titles + author initials (S.~Majumdar → A.~Majumdar). Both received arXiv ID + Nat. Phys. coordinates where applicable. LaTeX recompile clean (4pp/569936 bytes). | 2026-05-07 Session-3 cross-bundle r1 GREEN: 0 BLOCKER, 3 RECOMMENDED (Falque2025 dangling bibitem; Zhao2023 missing arXiv/DOI; η/s device-equivalence one-sentence clarification). η/s ≈ 4 × ℏ/(4π k_B) attribution at E2:169 CORRECTLY GROUNDED — Majumdar2025 abstract explicitly reports three distinct universalities (σ_Q≈4 e²/h, >200× WF violation, η/s→ℏ/(4πk_B)); E2 cites all three correctly. E2↔D1 §7 cross-bundle CONSISTENT (8 shared narrative claims agree). | 2026-06-10 attribution-content sweep (docs/audits/stage13_attribution_sweep_2026-06-10.md): GREEN after fixes. Falque four-orders->order-of-magnitude + convention note; Geurs 500mK disclosure + 150K electron-temp relabel.",
   "open_findings": 21,
-  "blocked_p1_gates": [],
+  "blocked_p1_gates": [
+    "LeanProofSubstance"
+  ],
   "readiness": "YELLOW",
-  "readiness_last_computed": "2026-07-31"
+  "readiness_last_computed": "2026-08-08",
+  "length_target": {
+    "unit": "word_equivalents",
+    "ceiling": 3750,
+    "source": "PRL author guide (3750 word equivalents: text + 300/figure + tables + captions + refs)"
+  },
+  "compiled_pages": 5,
+  "compile_gate_ok": true
 }

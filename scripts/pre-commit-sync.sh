@@ -2,7 +2,7 @@
 # L2 mechanical-sync commit gate (public-safe). Chained AFTER the leak-guard by the
 # canonical installer. FAIL-OPEN by design: a missing toolchain or a transient crash
 # NEVER blocks a commit. Auto-fixes cheap staleness; INCREMENTAL lean guard (never
-# the 30-min clean ExtractDeps — that's /skeft-qa:sync); HARD-BLOCKS only genuine
+# the clean ExtractDeps — that's /skeft-qa:sync); HARD-BLOCKS only genuine
 # SOUNDNESS breakage, and only on `main`.
 set -uo pipefail
 
@@ -62,14 +62,19 @@ if git diff --cached --name-only --diff-filter=ACM | grep -q '\.lean$'; then
   # Genuine-sorry guard (precise). A naive source grep (`grep -RnE '^\s*sorry'`) matches
   # commented-out `sorry`s, docstring code-fence examples, and `.backup` files — all false
   # positives, none of them compiled (it blocked EVERY commit once such pre-existing lines
-  # existed). Instead trust the build we just ran: Lean prints "declaration uses 'sorry'"
-  # ONLY for a genuine sorry in a built declaration (and replays it for cached modules), so
-  # the captured build log is the precise, false-positive-free signal.
-  if [ -f /tmp/skeft-lean.$$ ] && grep -qF "declaration uses 'sorry'" /tmp/skeft-lean.$$; then
+  # existed). Instead trust the build we just ran: Lean reports a genuine sorry in a built
+  # declaration (and replays it for cached modules), so the build log is the precise signal.
+  #
+  # ⚠️ QUOTE STYLE IS LOAD-BEARING. Lean v4.32.0 emits BACKTICKS — declaration uses `sorry`
+  # — and the quoting has changed across toolchains. Match it quote-AGNOSTICALLY so a future
+  # change degrades to a false positive (loud, fixable) rather than to silence. Do NOT
+  # re-narrow this to a fixed string.
+  _SORRY_RE="declaration uses .?sorry.?"
+  if [ -f /tmp/skeft-lean.$$ ] && grep -qE "$_SORRY_RE" /tmp/skeft-lean.$$; then
     echo "ERROR: genuine 'sorry' in a built lean/SKEFTHawking declaration (lake reported it)."
-    [ "$BRANCH" = "main" ] && { grep -nF "declaration uses 'sorry'" /tmp/skeft-lean.$$ | head -10; exit 1; } || echo "(off-main: warn only)"
+    [ "$BRANCH" = "main" ] && { grep -nE "$_SORRY_RE" /tmp/skeft-lean.$$ | head -10; exit 1; } || echo "(off-main: warn only)"
   fi
-  # counts.json is now stale vs .lean — but its regen IS the 30-min ExtractDeps, so do
+  # counts.json is now stale vs .lean — but its regen IS the ExtractDeps pass, so do
   # NOT run it here. Staleness is a METRIC, not soundness → WARN even on `main` (review
   # MAJOR); never block a routine .lean commit (that would stall the /goal loop).
   #     PERF: ask `validate._counts_is_stale()` DIRECTLY. The old form called
@@ -79,6 +84,8 @@ if git diff --cached --name-only --diff-filter=ACM | grep -q '\.lean$'; then
   #     Also print the REASON: "stale" alone reads like breakage, when the overwhelmingly common
   #     cause is benign — `git merge` of a worker branch stamps the merged .lean files with mtime=now,
   #     so a counts regen followed by a merge is *correctly* stale again.
+  #     COST (measured 2026-08-06, warm .lake cache): `scripts/update_counts.py` = 3 min 14 s.
+  #     A cold/clean ExtractDeps is a separate, much rarer case — keep the two distinct.
   _cs=$(uv run python -c "
 import sys; sys.path.insert(0,'scripts')
 import validate

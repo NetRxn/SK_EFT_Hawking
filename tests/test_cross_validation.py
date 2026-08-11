@@ -59,7 +59,11 @@ class TestCrossValidation:
         assert result.passed, f"Paper-code mismatches: {failures}"
 
     def test_theorem_count(self):
-        """Theorem registry has 35 entries and is self-consistent."""
+        """Aristotle registry entries resolve to real Lean declarations.
+
+        (Docstring said "35 entries" — a count from an earlier era, and the
+        check no longer asserts a count at all: audit QI-30.)
+        """
         result = check_theorem_count()
         assert result.passed
 

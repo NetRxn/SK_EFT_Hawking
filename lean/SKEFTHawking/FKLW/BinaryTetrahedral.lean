@@ -739,9 +739,14 @@ theorem weylElem_torusElem_pi_half_commutator :
   -- Goal: torusElem (-(2 * (π/2))) = negOneSU
   rw [show -(2 * (Real.pi / 2)) = -Real.pi from by ring]
   rw [torusElem_neg, ← torusElem_pi_eq_negOneSU]
+  -- Goal here is `torusElem π * torusElem π = 1`. The previous proof rewrote with
+  -- `← torusElem_add` and then `neg_add_cancel`, which cannot fire: the summands are
+  -- `π + π`, not `-π + π` (line 741 has already turned `torusElem (-π)` into
+  -- `(torusElem π)⁻¹` and then into `torusElem π`). Go through the central element
+  -- instead — `torusElem π = negOneSU` and `negOneSU² = 1`.
   exact (eq_inv_of_mul_eq_one_left (by
-    rw [← torusElem_add, neg_add_cancel]
-    exact torusElem_zero)).symm
+    rw [torusElem_pi_eq_negOneSU]
+    exact negOneSU_mul_self)).symm
 
 /-- **`orderOf weylElem = 4`** — the Weyl element has order exactly 4 in SU(2).
 

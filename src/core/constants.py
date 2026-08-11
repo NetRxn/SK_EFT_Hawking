@@ -256,6 +256,9 @@ GRAPHENE_PLATFORMS = {
         'alpha_eff': 0.7,              # effective coupling on hBN
         'nozzle_throat_nm': 200,       # nm (throat length L; gradient length scale)
         'channel_width_nm': 1000,      # nm (channel width W; Dean geometry, Phase 5w §2)
+        # ⚠️ DEAD LITERAL — overwritten below by l_ee = ℏv_F/(k_B T) = 50.92 nm for
+        # every platform. Retained only as the deep-research §1.4 cross-reference;
+        # no caller ever observes 51.
         'l_ee_nm': 51,                 # nm (electron-electron mean free path; deep research §1.4)
         'v_over_c_s_horizon': 0.985,   # dimensionless (flow velocity / c_s at horizon for Γ₀ ≈ 0.9994)
         'T_ambient_K': 150,            # K (cryogenic operating temperature)
@@ -1373,6 +1376,119 @@ assert ARISTOTLE_PROVED_COUNT == 322, f"Expected 322 Aristotle-proved theorems, 
 # Backwards compatibility alias
 TOTAL_THEOREMS = ARISTOTLE_PROVED_COUNT
 
+#: Registry entries that name no Lean declaration. Frozen 2026-08-04 (audit QI-30).
+#:
+#: `ARISTOTLE_THEOREMS` is hand-maintained, and `validate.py`'s `formulas` check unions
+#: its KEYS into the set of "valid Lean theorem names" — so a stale entry launders a
+#: nonexistent theorem into that set and a formula can be reported as grounded on it.
+#: Measured at the freeze: **14 of 322 keys resolve to nothing** in `lean_deps.json` or
+#: the Lean source (the `DG_inst*` family plus `DG_basis_mul` and `fock_space_finite_dim`
+#: — an Aristotle batch whose Lean was later restructured).
+#:
+#: A RATCHET, not a walk-back (the house idiom — cf. `VACUOUS_STATEMENT_BASELINE`,
+#: `NATIVE_DECIDE_DECL_CLOSURE_CEILING`, `COUNT_LITERAL_CEILING`). Existing debt is
+#: frozen and visible; a NEW stale entry fails. **Lower this as entries are repaired;
+#: raising it needs a stated reason in the same commit.**
+ARISTOTLE_REGISTRY_UNRESOLVED_CEILING = 14
+
+#: Unresolved `\texttt{}` Lean references in the 43 LEGACY per-paper drafts.
+#: Frozen 2026-08-05 (audit QI-32).
+#:
+#: `prose_theorem_reference_coverage` scoped itself to the 21 publication bundles by
+#: a documented decision — legacy drafts are historical snapshots superseded by the
+#: bundles. The leg that nominally covered them lived in `paper_provenance`, whose
+#: `\texttt{}` regex could not cross the `\_` LaTeX escape and so matched **zero**
+#: references for five months. Removing a dead guard and leaving 43 drafts at zero
+#: coverage would be a walk-back, so the population is measured instead: **774
+#: candidate references across the 43 drafts, of which 81 resolve to nothing**,
+#: concentrated in 23 drafts (paper44_riemannian_connection alone carries 23).
+#:
+#: The 81 are a MIXED population and this number must not be quoted as 81 drifted
+#: theorem names. The check itemises them; inspection shows some are genuine drift
+#: (`fdr_noise_bound_rar`, `cc_reproduced`) and some are Mathlib lemmas the resolver
+#: cannot recognise unqualified (`pow_pos`, `abs_neg`, `map_sub`) — a resolver gap
+#: the bundle leg never exposed because bundle prose qualifies its Mathlib names.
+#: Both classes ratchet the same way, which is why the ceiling is on the total.
+#:
+#: A RATCHET, not advisory (cf. `ARISTOTLE_REGISTRY_UNRESOLVED_CEILING`,
+#: `VACUOUS_STATEMENT_BASELINE`, `COUNT_LITERAL_CEILING`). Existing debt is frozen
+#: and itemised; a NEW unresolved reference in a legacy draft FAILS. **Lower this as
+#: drafts are repaired; raising it needs a stated reason in the same commit.**
+#: Repairing the remainder is paper substance, scoped to ADR-010, not to ADR-009.
+#:
+#: **81 → 79, lowered 2026-08-05 (ADR-010 measurement pass).** Making D8/D9/paper14's
+#: `\lean{}` alias references visible (see `_PROSE_VERBATIM_ALIAS_DEF_RE`) surfaced four
+#: paper14 tokens, all false positives of the candidate filter — three Mathlib
+#: CategoryTheory names the prose itself attributes to Mathlib (`ObjectProperty.*`,
+#: `Rigid.Basic`) and one tactic (`fin_cases`). Fixing the filter rather than raising the
+#: ceiling net-removed two. The +218 newly-visible BUNDLE references all resolve.
+#: **79 → 80, raised 2026-08-06 with cause.** `ARISTOTLE_THEOREMS` keys naming no live
+#: declaration were withdrawn from the prose resolver's whitelist: such a key is a claim
+#: that a Lean theorem exists, so whitelisting it let prose cite a non-existent theorem
+#: and resolve. 14 keys are in that state (the population
+#: `ARISTOTLE_REGISTRY_UNRESOLVED_CEILING` already tracks); exactly one is cited by a
+#: draft — `fock_space_finite_dim` in legacy paper7_chirality_formal. This is
+#: newly-VISIBLE pre-existing debt, not new debt, and no BUNDLE cites a dead key.
+LEGACY_DRAFT_UNRESOLVED_REF_CEILING = 80
+
+#: Provenance entries with no comparable value in code (`_lookup_provenance_value`
+#: returns None, or the value is non-numeric). Frozen 2026-08-05 at the live count.
+#:
+#: Until this date these were skipped IN SILENCE, and the check's success message read
+#: "All provenance values match code" while describing 37 comparisons out of 206. The
+#: same commit fixed a divide-by-zero guard that had turned the relative comparison
+#: absolute below 1e-30 — a 10x error in HBAR passed (PR-review pass 3, R4 CRITICAL).
+#:
+#: A RATCHET, not advisory. Existing debt is frozen; a NEW un-comparable entry FAILS.
+#: **Lower this as entries are wired to their constants**; raising it needs a stated
+#: reason in the same commit.
+#: 2026-08-09: 170 → 163. The resolver hand-listed ATOMS / EXPERIMENTS /
+#: POLARITON_PLATFORMS and so could not see GRAPHENE_PLATFORMS at all — all six
+#: `Dean_bilayer_nozzle.*` entries resolved to None and were absorbed into this
+#: ceiling as "inherited debt" rather than checked. Wiring the sweep to every
+#: dict-of-dicts registry in constants resolved 7 entries and immediately caught
+#: a live mismatch (`l_ee_nm` 51 vs the derived 50.92). An unresolvable entry is
+#: *counted*, not reported, so a blind resolver reads as debt rather than as a
+#: blind spot — the same failure shape as the three instruments repaired in the
+#: ADR-010 measurement pass.
+PROVENANCE_UNRESOLVABLE_CEILING = 163
+
+#: Legacy (non-bundle) `papers/*/paper_draft.tex` that do not compile under pdflatex.
+#: Frozen 2026-08-06 at the measured live count.
+#:
+#: `paper_latex_compiles` previously iterated BUNDLE_CODES only, so the legacy corpus —
+#: which includes `paper15_methodology`, the draft whose fatal-error incident is the
+#: reason the check exists — was never compiled by it.
+#:
+#: A RATCHET: bundles hard-fail, legacy drafts are frozen and may only shrink. A NEW
+#: broken legacy draft FAILS; raising this needs a stated reason in the same commit.
+LEGACY_DRAFT_LATEX_BROKEN_CEILING = 14
+
+#: Registry bibitem titles that differ from their cached PDF's page-1 title by exactly
+#: one word (the check's HIGH-CONFIDENCE drift class). Frozen 2026-08-05 (audit QI-33).
+#:
+#: `bibitem_title_primary_source` was one of the four checks the PR review found unable
+#: to fail: its verdict line read `not STRICT_MODE or (...)`, and until 2026-08-05 no
+#: caller passed `--strict`. `gate_precheck.py submission` is now that caller, which
+#: made the check's strict semantics load-bearing for the first time — and they were
+#: wrong in the other direction: they promoted the NOT-FOUND class (62 live entries the
+#: check's own docstring calls false-positive-prone, because page 1 is often a journal
+#: cover) to a hard failure alongside DROP-WORD (9). Strict now promotes DROP-WORD only.
+#:
+#: Of those 9, two were `pdfminer` whitespace artifacts and are repaired by the
+#: whitespace-insensitive containment leg. The remaining 7 are real registry-vs-published
+#: differences worth correcting — `GovindarajanKaulSuneeta2001` registers "entropy of
+#: the BTZ black hole" where the published title has no "the"; `Turyshev2026DESI`'s
+#: registered title is a stub. Correcting them against their published sources is paper
+#: substance -> ADR-010.
+#:
+#: A RATCHET (the house idiom). CITATION_REGISTRY is corpus-wide, so an unratcheted bar
+#: blocks submission of every paper on a drifted title used by any other — a gate firing
+#: on work nobody was asked to do. Inherited drift is frozen and itemised; a NEW drifted
+#: title fails the submission gate. **Lower this as titles are corrected; raising it
+#: needs a stated reason in the same commit.**
+BIBITEM_TITLE_DRIFT_CEILING = 7
+
 # ═══════════════════════════════════════════════════════════════════════
 # Axiom metadata — historical record (all axioms now removed)
 # ═══════════════════════════════════════════════════════════════════════
@@ -2398,6 +2514,188 @@ FORMULA_GROUNDING_KIND: dict[str, dict[str, str]] = {
 # docs/counts.json `lean.native_decide_decl_closure`; enforced by
 # `validate.py --check native_decide_regression`.
 NATIVE_DECIDE_DECL_CLOSURE_CEILING = 546  # 2026-06-13 (post-6AO; was 852→587 at ADR-002 cleanup)
+
+#: PER-BUNDLE `native_decide` debt — the operator's ratchet, authorized 2026-08-08:
+#: *"We are working down the native_decides, but some are thorny. they need to be
+#: disclosed to the extent they are part of the proof chain, and we should track those
+#: so that we can pay down the debt as resources become available. Ratchet system."*
+#:
+#: `NATIVE_DECIDE_DECL_CLOSURE_CEILING` above is a PROJECT-WIDE count and answers a
+#: different question. It cannot tell a reader of any one paper whether *that paper's*
+#: results rest on the compiler. This map does: the key is a bundle code, the value is
+#: how many declarations in that bundle's **declared-apex closure** carry
+#: `native_decide`. Debt is therefore attributed to the manuscript whose claims depend
+#: on it, which is the unit at which it must be disclosed and the unit at which paying
+#: it down changes what a paper may assert.
+#:
+#: Measured 2026-08-08 against all 21 declared closures. A bundle absent from this map
+#: is asserted to carry ZERO — and that assertion is enforced, not assumed, so a wave
+#: that routes compiler-trust into a clean bundle fails rather than quietly landing.
+#:
+#: **Ratchet direction: DOWN ONLY.** Lower an entry as debt is eliminated (delete it at
+#: zero). Raising one, or adding a bundle, needs a stated reason in the same commit —
+#: the same discipline as every ceiling above.
+#:
+#: ⚠️ D8 is the worked precedent for paying down rather than disclosing forever: it
+#: eliminated four `native_decide` sweeps (the largest over ~16.7 M tuples) by
+#: structural reproofs, and one of them **strengthened** the statement by dropping a
+#: hypothesis. Its draft §"Kernel purity made uniform" documents the elimination. That
+#: is the target state for every row below.
+NATIVE_DECIDE_BUNDLE_DEBT = {
+    "D4": 19,   # IsingBraiding 17, FigureEightKnot 2 — the audit's D-5 "D4's headline results"
+    "L2": 6,    # A1Resolution 5, A1Ext 1
+    "F": 3,     # FigureEightKnot 2, IsingBraiding 1 (inherited from D4's substrate)
+    "D2": 3,    # E8Lattice 3
+    "I2": 1,    # FibonacciMTC 1
+}
+
+# ════════════════════════════════════════════════════════════════════
+# PAPER-LITERAL RATCHETS (ADR-009 Phase 3 item 2, 2026-08-03)
+#
+# `count_literals` and `numerical_literals` both shipped as WARN-only with the
+# same promise in their docstrings: *"WARN-level during the retrofit period; will
+# escalate to FAIL once all 15 papers use macros."*
+#
+# The retrofit never completed and the corpus grew from 15 papers to 64, so the
+# escalation condition receded faster than it was approached. Two checks were
+# therefore structurally incapable of failing, indefinitely, while reporting a
+# growing number of findings — the QA/QI map's §7 pattern with a deadline that
+# never arrives.
+#
+# Disposition: **neither is permanently advisory, so neither is walked back.**
+# They become RATCHETS instead, the same shape as the native_decide ceiling above:
+# the existing debt is frozen and visible, and any NEW literal fails the check.
+# That makes the promise real today rather than conditional on a cleanup nobody
+# scheduled, and it does not require the corpus to be fixed first.
+#
+# Lowering these is the goal; a wave that removes literals should lower them in
+# the same commit. RAISING one is a deliberate act that must carry a rationale —
+# and per Invariant #1/#2 the fix is almost always to move the value into
+# `\input{tables/...}` or a `counts.tex` macro instead.
+#
+# Measured 2026-08-03 on all 64 drafts. Enforced by
+# `validate.py --check count_literals` / `--check numerical_literals`.
+COUNT_LITERAL_CEILING = 107      # hardcoded "N theorems/modules/sorry" in paper prose
+#: `@[simp]` projection lemmas with a structural name and a trivial body.
+#:
+#: These are REWRITE PLUMBING, not claims: given
+#: `instance : Add _ := ⟨fun x y => ⟨x.rank + y.rank⟩⟩`, the lemma
+#: `@[simp] theorem add_rank : (x + y).rank = x.rank + y.rank := rfl` has `rfl`
+#: as its ONLY correct proof. `proxy_body_audit` hunts a theorem NAMED like a
+#: claim that is `rfl`-provable because its definition was rigged; a `@[simp]`
+#: projection is a different species and classing it as vacuity is a category
+#: error.
+#:
+#: ⚠️ RATCHETED AT THE MEASURED VALUE, ZERO HEADROOM. The exemption is a category
+#: correction, not a licence — an eighth such lemma FAILS the check and must be
+#: looked at. Do not raise this to admit a new one; establish first that it is
+#: genuinely a projection and not a claim wearing `@[simp]`.
+#:
+#: Measured 2026-08-10, the first time the population was visible at all: the
+#: scanner was anchored at column 0 and had never seen a `@[simp]` declaration in
+#: the project's history, so `VACUOUS_STATEMENT_BASELINE` was calibrated on a
+#: population that structurally excluded them. The seven:
+#:   HandleTradeAtomVacuity.{collapsedPresentation_rank, constRankTwoPresentation_rank}
+#:   IntersectionMatrixDisjointSumInt.intH2BasisSum_rank
+#:   KummerK3E1Package.kummerK3IntH2Basis_rank
+#:   SymTFT/StiefelWhitney.{zero_rank, add_rank, neg_rank}
+#: All seven pre-exist on `main`; none of their files is in the ADR-009 branch diff.
+#: ⚠️ PIN THE NAMES, NOT THE COUNT. A ceiling on the COUNT is defeated by a swap: a
+#: closure reviewer deleted one genuine projection and added
+#:     @[simp] theorem spectralGap_rank_is_maximal : spectralGap.rank = 0 := rfl
+#: against a rigged definition, and the check still read "7 of 7, PASS". A vacuous
+#: claim wearing `@[simp]` escaped through any refactor that removed a projection in
+#: the same change. An allow-list makes the exemption per-declaration, so a NEW name
+#: is flagged whatever the total.
+SIMP_PROJECTION_ALLOWLIST = frozenset({
+    "HandleTradeAtomVacuity.collapsedPresentation_rank",
+    "HandleTradeAtomVacuity.constRankTwoPresentation_rank",
+    "IntersectionMatrixDisjointSumInt.intH2BasisSum_rank",
+    "KummerK3E1Package.kummerK3IntH2Basis_rank",
+    "StiefelWhitney.zero_rank",
+    "StiefelWhitney.add_rank",
+    "StiefelWhitney.neg_rank",
+})
+
+#: Kept as a SECOND, independent assertion: the allow-list must not silently grow
+#: either. Two instruments on one population, which is this project's own rule.
+SIMP_PROJECTION_CEILING = 7
+
+NUMERICAL_LITERAL_CEILING = 117  # inline unit-bearing values outside \input{tables/}
+
+#: Sentences over 100 words in bundle body prose (TODO-D7, the readability half).
+#:
+#: ⚠️ MEASURED 2026-08-09 AND THE PROBLEM HAD GROWN, partly from this branch's own
+#: additions. TODO-D7 recorded "7 bundles contain a sentence over 100 words (max
+#: 179)"; the live figure is 22 such sentences across 14 bundles, max 235. A
+#: sentence over 100 words is not a style preference — it is one a referee has to
+#: re-read to parse.
+#:
+#: A RATCHET, not a target. Frozen at the measured value so it can only shrink.
+#: ⚠️ The prose was deliberately NOT rewritten to lower it in the same change:
+#: TODO-D7's own constraint is that "the decider must not be the generator", and a
+#: metric introduced together with the edits that satisfy it measures nothing.
+#:
+#: ⚠️ 22 -> 20, LOWERED 2026-08-09, and the population WIDENED in the same commit —
+#: both moves strengthen the ratchet, which is the only direction permitted. The
+#: check now reads every `.tex` a draft `\input`s, not `paper_draft.tex` alone (the
+#: two sibling reader-visible-prose checks had been widened and this one had not),
+#: and it treats a table ROW as its own unit. Measured all four ways:
+#:
+#:     narrow  + rows-joined : 22   <- the old number
+#:     widened + rows-joined : 23   <- one PAST the ratchet, on an artifact
+#:     narrow  + rows-as-units: 20
+#:     widened + rows-as-units: 20  <- shipped
+#:
+#: The 23 was not debt. `papers/I1/tables/table1_stages.tex` scanned as a single
+#: 166-word "sentence" that is fifteen concatenated table rows; no reader sees it.
+#: Correcting the instrument removed two such artifacts from the narrow population
+#: too, which is why the honest new floor is 20 and not 22.
+SENTENCE_OVER_100_CEILING = 20
+
+#: Advisory companion: sentences over 60 words. Reported, not gated — 60 words is
+#: long but defensible in a methods paragraph, and gating it would fire on correct
+#: work (VALIDATION_GATE_TOPOLOGY §3). Recorded so the trend is visible.
+#:
+#: ⚠️ 199 -> 220, 2026-08-09. TWO causes, and only one is instrumental — the first
+#: version of this note said "This is NOT prose growth", and that was wrong for
+#: roughly half the move. Measured at the UNCHANGED narrow instrument: 199 when the
+#: baseline was set, **209 at this branch's base commit**. So:
+#:
+#:     +16   population widened to the `\input` closure
+#:      -5   table rows became their own units
+#:     +10   PROSE WRITTEN BEFORE THIS DIFF, at a fixed instrument
+#:     ----
+#:     +21
+#:
+#: The +10 is real and is the part a reader should care about. Re-baselined rather
+#: than left warning, because a permanent warning whose content is "the population
+#: definition changed" is noise — but the prose half is debt, not bookkeeping. This
+#: number is advisory in both directions and never gates.
+SENTENCE_OVER_60_ADVISORY = 220
+# ⚠️ RAISED 116 -> 117 on 2026-08-09, with the rationale this block demands.
+# D6 §7's new threshold section states the certified bound `2.73 \times 10^{-5}`
+# inside a displayed equation. That value is not a project measurement to be routed
+# through a macro: it is the constant the Lean theorem itself asserts
+# (`steaneAGPThreshold_gt : steaneAGPThreshold > 2.73e-5`) and the published rigorous
+# bound of the primary source (AGP 2006). Moving it into `counts.tex` would make a
+# theorem's own statement depend on a regenerated file.
+#
+# ⚠️ It is flagged by the `\times 10^` leg of `NUMERICAL_LITERAL_RE`, whose docstring
+# scopes the predicate to "a literal with a physical unit". An error rate is
+# dimensionless, so this is arguably a false positive of that leg rather than debt —
+# but the instrument was NOT tuned to make this wave pass. The class is filed as
+# TODO-D37 for separate adjudication, and the ceiling carries the cost meanwhile.
+#
+# ⚠️ CHALLENGED 2026-08-10 by a fresh-context closure reviewer, which read the raise as
+# "the loop raised the ceiling to admit a literal it had itself just added" and rated it
+# indefensible. RE-MEASURED, and the rationale above holds: the theorem is real —
+# `SKEFTHawking.FaultTolerance.AGP.steaneAGPThreshold_gt` resolves in `lean_deps.json` —
+# so the alternative the challenge implies (route the value through `counts.tex`) would
+# make a THEOREM'S OWN ASSERTED CONSTANT depend on a regenerated file, which is strictly
+# worse than one ratcheted literal. The raise stands, deliberately, and sets NO precedent:
+# it is admissible only because the value is a theorem's statement and a primary source's
+# published bound — never because a wave found the ceiling inconvenient.
 
 # ════════════════════════════════════════════════════════════════════
 # VACUOUS-STATEMENT BASELINE (identity-pinned ratchet; SIG gate hardening 2026-06-13)

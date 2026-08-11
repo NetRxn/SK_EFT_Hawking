@@ -100,6 +100,7 @@ from src.core.constants import ARISTOTLE_THEOREMS          # noqa: E402
 from src.core.provenance import PAPER_DEPENDENCIES          # noqa: E402
 from bundle_migration import parse_mapping, MAPPING_DOC     # noqa: E402
 from bundle_registry import BUNDLE_CODES                    # noqa: E402
+from validation._tex import _strip_tex_comments   # DRY: one owner
 
 LEAN_DEPS_PATH = PROJECT_ROOT / "lean" / "lean_deps.json"
 LEAN_SRC_DIR = PROJECT_ROOT / "lean" / "SKEFTHawking"
@@ -230,7 +231,10 @@ def _draft_text(bundle: str) -> str:
     if not tex.exists():
         return ""
     raw = tex.read_text(encoding="utf-8", errors="replace")
-    return "\n".join(line.split("%", 1)[0] for line in raw.splitlines())
+    # DRY: the canonical `\%`-aware stripper. A naive `line.split("%", 1)[0]`
+    # TRUNCATES AT AN ESCAPED PERCENT — measured on papers/I1: 1 hit vs 3, a 3x
+    # undercount. Six hand-rolled strippers existed; this is the one owner.
+    return _strip_tex_comments(raw)
 
 
 def draft_mention_count(text: str) -> int:

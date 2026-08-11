@@ -34,11 +34,20 @@ payloads that `build_graph.extract_readiness_gate_nodes()` can emit.
 from __future__ import annotations
 
 import logging
+import re
 from collections import defaultdict
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Callable, Literal
+
+# ONE definition of the inline-literal predicate, shared with the
+# `numerical_literals` check (audit QI-02). `validation._tex` imports nothing from
+# the validation suite — same leaf property as `_config` / `_registry` — so this
+# import cannot close a cycle with `validation.checks.bundles_readiness →
+# readiness_gates`. Reaching this module requires `scripts/` on `sys.path`, which is
+# already true of every importer of `readiness_gates` itself.
+from validation._tex import find_inline_numerical_literals
 
 logger = logging.getLogger(__name__)
 
@@ -59,6 +68,20 @@ class GateResult:
     blockers: list[str] = field(default_factory=list)
     notes: str = ''
     last_evaluated: str = ''
+    #: False = this gate's evaluator COULD NOT MEASURE — an unreadable draft, an
+    #: absent artifact. Additive with a True default, exactly as `CheckResult.
+    #: measured` is, and for the identical reason one layer down.
+    #:
+    #: ⚠️ `state='open'` was carrying two meanings: "measured, and genuinely
+    #: outstanding" and "the evaluator read nothing". `paper_aggregate_state` maps
+    #: both to YELLOW, so a paper whose draft could not be opened was
+    #: indistinguishable from one with real work left — the same defect
+    #: `CheckResult.measured` was added to fix, in the sibling layer.
+    #:
+    #: ⚠️ NOT a sixth `GateState`. ADR-009 §Deferred item 4 declined `UNEVALUATED`
+    #: on `passed` for the same D2-contract reason: `state` is read by consumers
+    #: that would break on a new value. An additive field leaves them correct.
+    measured: bool = True
 
     def to_node_payload(self) -> dict:
         shape_map = {'blocked': 'diamond', 'passed': 'square',
@@ -76,6 +99,7 @@ class GateResult:
                 'gate': self.gate,
                 'priority': self.priority,
                 'state': self.state,
+                'measured': self.measured,
                 'evidence': self.evidence[:50],
                 'blockers': self.blockers[:50],
                 'notes': self.notes,
@@ -117,13 +141,41 @@ class GraphIndex:
         edges = self.in_edges.get(node_id, [])
         return [e for e in edges if edge_type is None or e.get('type') == edge_type]
 
-    def paper_tex(self, paper_key: str) -> str:
-        """Return paper_draft.tex contents (or empty string if not readable)."""
+    def paper_tex(self, paper_key: str) -> str | None:
+        """`paper_draft.tex` contents, or **None** when it cannot be read.
+
+        ⚠️ This returned `''` for missing, unreadable, and genuinely-empty alike.
+        **Seven call sites consume it; six reached a positive verdict on `''`, and
+        `_eval_citation_integrity` is the only one that already branched.** Two of
+        the six stated it outright: `_eval_parameter_provenance` concluded "no
+        inline unit-bearing literals in body prose" and `_eval_narrative_grounding`
+        emitted "and the draft has no abstract block" — a false statement about the
+        draft, offered as the gate's own evidence. `None` forces each caller to
+        decide.
+
+        (This docstring said "two consumers" and `_unreadable_draft`'s said "three
+        evaluators", in the same commit, for the same defect. Neither was the
+        count. Enumerated here once, authoritatively.)
+        """
         tex_path = PAPERS_DIR / paper_key / "paper_draft.tex"
         try:
             return tex_path.read_text()
         except (OSError, UnicodeDecodeError):
-            return ''
+            return None
+
+
+def _unreadable_draft(r: GateResult) -> GateResult:
+    """The one shape every evaluator uses when `paper_tex` returns None.
+
+    ⚠️ `measured=False` is the load-bearing part. Without it an unreadable draft is
+    a YELLOW gate indistinguishable from real outstanding work. For the count of
+    affected consumers see `GraphIndex.paper_tex`, which owns that enumeration —
+    this docstring used to carry a second, different count of the same thing.
+    """
+    r.state = 'open'
+    r.measured = False
+    r.notes = 'paper_draft.tex not readable — gate UNMEASURED, not outstanding'
+    return r
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -138,21 +190,45 @@ def _eval_citation_integrity(paper: dict, idx: GraphIndex) -> GateResult:
     registered. (DOI fetch-and-verify is deferred to Stage 13; this is
     the registry-coverage check.)
     """
-    import re
-    paper_key = paper['meta'].get('topic') or paper['name'] or ''
+    # ⚠️ A dead first assignment was removed here 2026-08-04 (audit QI-05):
+    # `paper_key = paper['meta'].get('topic') or paper['name'] or ''` was computed
+    # and then overwritten on the very next line by the `paper['id']` form. Every
+    # other evaluator uses only the `paper['id']` form, which is the correct one —
+    # `meta.topic` is a description, not a key.
     paper_key = paper['id'].replace('paper:', '', 1)
     r = GateResult(gate='CitationIntegrity', paper=paper_key, priority=1)
 
     tex = idx.paper_tex(paper_key)
+    if tex is None:
+        return _unreadable_draft(r)
     if not tex:
         r.state = 'open'
-        r.notes = 'paper_draft.tex not readable'
+        r.notes = 'paper_draft.tex is empty'
         return r
 
-    bibkeys = set(re.findall(r'\\bibitem\{([^}]+)\}', tex))
+    # `\bibitem[Label]{key}` carries an optional argument; the un-bracketed form
+    # missed it entirely.
+    bibkeys = set(re.findall(r'\\bibitem(?:\[[^\]]*\])?\{([^}]+)\}', tex))
     if not bibkeys:
+        # ⚠️ NO BIBITEMS IS NOT NO CITATIONS. Measured 2026-08-09 across 67 drafts:
+        # 61 use `\bibitem`, and 3 do not — D8, D10 and paper45. D8 and D10 each
+        # carry SEVENTEEN distinct `\cite{}` keys via a bibtex `\bibliography{}`,
+        # so their registry coverage was never checked and a P1 gate reported
+        # `passed` on two Tier-1 bundles. `_eval_parameter_provenance` and
+        # `_eval_narrative_grounding` were both given this corroborate-before-
+        # passing branch on 2026-08-05; this sibling, directly above them, was not.
+        cited = set(re.findall(r'\\cite[tp]?\*?(?:\[[^\]]*\])*\{([^}]+)\}', tex))
+        cited = {k.strip() for group in cited for k in group.split(',') if k.strip()}
+        if cited:
+            r.state = 'open'
+            r.notes = (f'no \\bibitem block, but {len(cited)} distinct \\cite key(s) '
+                       f'are used — citation coverage NOT ESTABLISHED (the paper '
+                       f'cites through \\bibliography{{}}; this gate can only read '
+                       f'\\bibitem)')
+            r.evidence.append(f'{len(cited)} cited keys, 0 verifiable here')
+            return r
         r.state = 'passed'
-        r.notes = 'no bibitems (paper has no bibliography block)'
+        r.notes = 'no bibitems and no \\cite keys (paper has no bibliography)'
         return r
 
     # CITATION_REGISTRY entries via PrimarySource nodes (id = 'source:{key}')
@@ -241,8 +317,53 @@ def _eval_parameter_provenance(paper: dict, idx: GraphIndex) -> GateResult:
 
     r.evidence.append(f'{len(param_ids)} parameters depended on; {len(verified)} human-verified')
     if not param_ids:
-        r.state = 'passed'
-        r.notes = 'no parameter dependencies declared'
+        # ⚠️ CORROBORATE BEFORE PASSING VACUOUSLY (2026-08-05, PR-review pass 2).
+        # `param_ids` comes from GRAPH edges, so an empty list means either "this
+        # paper genuinely depends on no parameters" or "the extraction failed to
+        # link them" — and this branch could not tell them apart. It passed either
+        # way, so a physics paper full of numbers whose parameters were never
+        # linked read as PROVENANCE-CLEAN.
+        #
+        # That is exactly the case a referee raises and the author should not have
+        # to discover unaided, which is what this gate family exists for. So:
+        # cross-check the paper's OWN .tex, as `_eval_citation_integrity` already
+        # does. Unit-bearing numerical literals with zero parameter edges is a
+        # linkage failure, not a clean bill.
+        #
+        # `open`, not `blocked`: the paper may be fine and the GRAPH at fault, so
+        # this surfaces to the reviewer (YELLOW) without reddening a corpus where
+        # 61 papers are already red. "Not established" is the honest state.
+        tex = idx.paper_tex(paper_key)
+        if tex is None:
+            return _unreadable_draft(r)
+        # ⚠️ Returns (stripped_text, matches) — a 2-tuple, ALWAYS truthy. My first
+        # draft wrote `literals = find_inline_numerical_literals(tex)` and tested it
+        # for truth, so this branch fired for every paper regardless of content, and
+        # the "58 papers carry unit-bearing numbers" figure I reported was an
+        # artifact of tuple truthiness, not a measurement. The sibling caller at
+        # :635 already unpacks correctly.
+        _, literals = find_inline_numerical_literals(tex) if tex else ("", [])
+        if literals:
+            r.state = 'open'
+            r.notes = (f'NOT ESTABLISHED — no parameter dependencies in the graph, but '
+                       f'the draft carries {len(literals)} unit-bearing numerical '
+                       f'literal(s). Either the paper declares no parameters (clean) or '
+                       f'the extraction did not link them (nothing was checked).')
+            r.evidence.append(f'{len(literals)} unit-bearing literals in the draft')
+        else:
+            r.state = 'passed'
+            # ⚠️ "no INLINE literals", which is narrower than "no numbers". By design
+            # `find_inline_numerical_literals` strips `\input{tables/...}` and
+            # `\caption{}` — generated tables are the compliant mechanism, so counting
+            # them would penalise compliance. MEASURED 2026-08-05: **31 of 64 drafts**
+            # read as literal-free while pulling numbers through `\input`. For
+            # generated tables that is defensible (their provenance is structural, from
+            # `render_paper_tables.py`), and `counts.tex` carries counts rather than
+            # experimental parameters — but it is NOT the same claim as "this paper uses
+            # no parameters", so do not word it that way.
+            r.notes = ('no parameter dependencies declared, and no inline unit-bearing '
+                       r'literals in body prose (numbers arriving via \input{tables/} or '
+                       'counts.tex are structurally sourced and not counted here)')
     elif unverified:
         # Treat as blocked for submission but acceptable during draft
         r.blockers = [p.replace('param:', '', 1) for p in unverified[:20]]
@@ -280,8 +401,16 @@ def _eval_computation_correctness(paper: dict, idx: GraphIndex) -> GateResult:
     bounds_only: list[str] = []
     no_tests: list[str] = []
     strong: list[str] = []
+    # ⚠️ Formulas the paper names that are NOT IN THE GRAPH are dropped by the
+    # `continue` below. They must be COUNTED, not silently skipped: the evidence
+    # line reported `len(formula_ids)` as the number examined while the three
+    # buckets summed to fewer, so the gate asserted test coverage of formulas it
+    # had never looked at. A self-refuting evidence string ("6 formulas ... 1
+    # strong, 0 bounds-only, 0 no tests") is the only thing that made it visible.
+    absent: list[str] = []
     for fid in formula_ids:
         if fid not in idx.by_id:
+            absent.append(fid)
             continue
         v_edges = [e for e in idx.incoming(fid, 'VERIFIES')]
         if not v_edges:
@@ -293,11 +422,23 @@ def _eval_computation_correctness(paper: dict, idx: GraphIndex) -> GateResult:
         else:
             strong.append(fid)
 
+    # The four buckets now partition `formula_ids` exactly: strong + bounds_only
+    # + no_tests + absent == len(formula_ids). If that ever stops holding, the
+    # line is lying again.
+    assert len(strong) + len(bounds_only) + len(no_tests) + len(absent) == len(formula_ids)
     r.evidence.append(
         f'{len(formula_ids)} formulas grounding paper claims '
         f'({len(strong)} with golden/identity/roundtrip, '
-        f'{len(bounds_only)} bounds-only, {len(no_tests)} no tests)'
+        f'{len(bounds_only)} bounds-only, {len(no_tests)} no tests, '
+        f'{len(absent)} NOT IN GRAPH — not examined)'
     )
+    if absent:
+        r.evidence.append(
+            f'⚠️ {len(absent)} named formula(s) absent from the graph, so this '
+            f'gate says NOTHING about their test coverage: '
+            f'{", ".join(sorted(absent)[:5])}'
+            + (' …' if len(absent) > 5 else '')
+        )
 
     # R-06 WARN: surface formulas this paper grounds on whose Lean grounding does
     # NOT resolve to a real theorem (graph verification 'unverified') or is only a
@@ -350,7 +491,6 @@ def _eval_lean_proof_substance(paper: dict, idx: GraphIndex) -> GateResult:
     Fail if any Lean theorem this paper cites (via VERIFIED_BY reverse
     lookup from its grounding Formulas) also has a PlaceholderMarker node.
     """
-    import re
     paper_key = paper['id'].replace('paper:', '', 1)
     r = GateResult(gate='LeanProofSubstance', paper=paper_key, priority=1)
 
@@ -370,11 +510,20 @@ def _eval_lean_proof_substance(paper: dict, idx: GraphIndex) -> GateResult:
     placeholder_labels = {n['name']
                           for n in idx.by_type.get('PlaceholderMarker', [])}
 
-    # Theorems cited by short name in prose
+    # Theorems cited by short name in prose.
+    #
+    # ⚠️ Reuse the shared extractor — do NOT re-implement this. Bundle drafts write Lean
+    # references in several verbatim forms (`\texttt{}`, preamble aliases such as D8/D9's
+    # `\lean{}` and D11/D12's `\thm{}`/`\mthm{}`, and `\verb`), and a `\texttt`-only regex
+    # reaches a small fraction of them. `_extract_prose_lean_candidates` discovers the
+    # forms structurally and applies the project's Lean-identifier candidate filter, so
+    # this gate and `prose_theorem_reference_coverage` cannot drift apart.
+    from validation.checks.prose_lean_refs import _extract_prose_lean_candidates
     tex = idx.paper_tex(paper_key)
-    referenced_short_names = set(
-        re.findall(r'\\texttt\{([A-Za-z_][A-Za-z0-9_]*)\}', tex)
-    )
+    if tex is None:
+        return _unreadable_draft(r)
+    referenced_short_names = {tok.rsplit('.', 1)[-1]
+                              for tok, _offset in _extract_prose_lean_candidates(tex)}
 
     # Which cited theorems resolve to a placeholder?
     flagged = []
@@ -422,7 +571,10 @@ def _eval_assumption_disclosure(paper: dict, idx: GraphIndex) -> GateResult:
                     if ae['target'].startswith('hyp:'):
                         assumed_hyp_ids.add(ae['target'])
 
-    tex = idx.paper_tex(paper_key).lower()
+    _tex_raw = idx.paper_tex(paper_key)
+    if _tex_raw is None:
+        return _unreadable_draft(r)
+    tex = _tex_raw.lower()
     undisclosed: list[str] = []
     disclosed: list[str] = []
     for hid in assumed_hyp_ids:
@@ -446,8 +598,29 @@ def _eval_assumption_disclosure(paper: dict, idx: GraphIndex) -> GateResult:
         r.state = 'blocked'
         r.notes = f'{len(undisclosed)} hypothesis dependencies not named in paper'
     elif not assumed_hyp_ids:
+        # ⚠️ VACUOUS PASS — and measured 2026-08-10 to be vacuous for **every** paper
+        # in the corpus, so this gate contributes no evidence at all today.
+        #
+        # It is a genuine pass, not a measurement failure: the 4-hop walk
+        # (CLAIMS -> GROUNDED_IN -> VERIFIED_BY -> ASSUMES) RUNS and lands on an
+        # empty set, so `measured` stays True per THE ONE POLICY (empty population
+        # reached != population unreachable). What was wrong is that "passed" read
+        # as "disclosure was verified" when nothing was checked.
+        #
+        # The structural cause, measured: the walk reaches 122 theorem nodes; 66
+        # lean nodes carry an ASSUMES edge; the two sets are DISJOINT (intersection
+        # 0). The hypothesis-bearing theorems are simply not cited by any paper's
+        # claim chain. That is a real wiring signal, not noise — if a future wave
+        # cites one, this gate starts doing work, and if it never does, the gate
+        # should be retired rather than left as decorative green.
         r.state = 'passed'
-        r.notes = 'no hypothesis dependencies'
+        r.notes = ('VACUOUS: no cited theorem assumes any hypothesis, so nothing was '
+                   'checked — this pass is not evidence of disclosure')
+        r.evidence.append(
+            'vacuous pass: the CLAIMS->GROUNDED_IN->VERIFIED_BY->ASSUMES walk reached '
+            'no hyp: node for this paper. Corpus-wide this holds for every paper '
+            '(measured 2026-08-10), because the theorems that carry ASSUMES edges are '
+            'disjoint from those any paper cites.')
     else:
         r.state = 'passed'
         r.notes = 'all hypothesis dependencies disclosed in paper'
@@ -484,8 +657,28 @@ def _eval_narrative_grounding(paper: dict, idx: GraphIndex) -> GateResult:
         r.state = 'blocked'
         r.notes = f'{len(unsupported)} "interesting" prose claims lack formal support'
     elif not interesting:
-        r.state = 'passed'
-        r.notes = 'no interesting prose claims flagged'
+        # ⚠️ CORROBORATE (2026-08-05, PR-review pass 2) — same shape as
+        # ParameterProvenance above. `prose_claims` are GRAPH nodes filtered by
+        # `meta.paper`, so zero of them means either "the abstract makes no
+        # interesting claims" or "the abstract was never extracted". A paper whose
+        # prose was never ingested passed NarrativeGrounding cleanly.
+        #
+        # A draft with an abstract but NO ProseClaim nodes at all is an extraction
+        # gap: the gate verified nothing. `open`, so the reviewer sees it.
+        tex = idx.paper_tex(paper_key)
+        if tex is None:
+            return _unreadable_draft(r)
+        has_abstract = '\\begin{abstract}' in tex
+        if has_abstract and not prose_claims:
+            r.state = 'open'
+            r.notes = ('NOT ESTABLISHED — the draft has an abstract but NO ProseClaim '
+                       'nodes exist for it, so no narrative claim was examined. Either '
+                       'the abstract makes no interesting claims (clean) or prose '
+                       'extraction did not run for this paper (nothing was checked).')
+        else:
+            r.state = 'passed'
+            r.notes = ('no interesting prose claims flagged'
+                       + ('' if prose_claims else ' (and the draft has no abstract block)'))
     else:
         r.state = 'passed'
         r.notes = 'all interesting claims have SUPPORTS edges'
@@ -517,7 +710,8 @@ def _eval_production_run_health(paper: dict, idx: GraphIndex) -> GateResult:
 
     # Detect "MC evidence" claim without backing success
     tex = idx.paper_tex(paper_key)
-    import re
+    if tex is None:
+        return _unreadable_draft(r)
     mc_claim = bool(re.search(r'\b(Monte\s+Carlo\s+evidence|MC\s+evidence)\b', tex, re.IGNORECASE))
     success_runs = [r_ for r_ in relevant_runs
                     if r_.get('meta', {}).get('status') == 'success']
@@ -558,7 +752,6 @@ def _eval_numerical_freshness(paper: dict, idx: GraphIndex) -> GateResult:
     just count metrics. Evaluation considers both count-level and
     table-level freshness.
     """
-    import re as _re
     paper_key = paper['id'].replace('paper:', '', 1)
     r = GateResult(gate='NumericalFreshness', paper=paper_key, priority=2)
 
@@ -567,19 +760,21 @@ def _eval_numerical_freshness(paper: dict, idx: GraphIndex) -> GateResult:
     stale_reports = [e for e in reports if e.get('stale')]
 
     # --- 2. Inline numerical literals outside \input{tables/...} ---
+    # ⚠️ ONE OWNER (2026-08-04, audit finding QI-02). This block used to carry its
+    # own byte-identical copy of the pattern AND of the two-step strip that
+    # `validation/checks/papers_prose.py` uses for the `numerical_literals` check.
+    # Both feed a per-paper verdict, and `validate.py --check
+    # readiness_verdicts_agree` exists to assert those verdicts agree — so tuning
+    # one copy would have made the two subsystems disagree by construction, in the
+    # blind spot of the check written to detect disagreement. Verified identical
+    # (pattern string and flags) before merging, so this is behaviour-preserving.
     tex = idx.paper_tex(paper_key)
+    if tex is None:
+        return _unreadable_draft(r)
     inline_literals = 0
     if tex:
-        stripped = _re.sub(r'\\input\{tables/[^}]+\}', '', tex)
-        stripped = _re.sub(r'\\caption\{[^}]*\}', '', stripped, flags=_re.DOTALL)
-        lit_re = _re.compile(
-            r'(?<!\\)\b(\d+\.\d+|\d+(?:\.\d+)?e[+-]?\d+)\s*(~?)\\?(?:'
-            r'(?:mu|\\mu)\s*m\b|nK\b|mK\b|\\mathrm\{[a-zA-Z]+\}|'
-            r's\^?(?:-|\{-|\^{-)1\}?|mm/s\b|\\mu m\b|\\times\s*10\^'
-            r')',
-            _re.IGNORECASE,
-        )
-        inline_literals = len(lit_re.findall(stripped))
+        _, _lit_matches = find_inline_numerical_literals(tex)
+        inline_literals = len(_lit_matches)
 
     # --- 3. Autogen table staleness (table-level freshness) ---
     tables_dir = PAPERS_DIR / paper_key / 'tables'
@@ -759,17 +954,57 @@ def evaluate_all_gates(graph: dict) -> list[GateResult]:
             try:
                 r = evaluator(paper, idx)
             except Exception as exc:
+                # BLOCKED, not `open` (2026-08-04). `paper_aggregate_state` maps
+                # `open` to YELLOW and only `blocked` to RED, so an evaluator that
+                # CRASHED used to render as a mild advisory — the gate reported
+                # "not evaluated" in a shape a reader takes as "nothing serious".
+                # That is the QA_QI_INFRASTRUCTURE_MAP §7 pattern (absence of
+                # measurement rendered as success) living in the readiness layer.
+                # An evaluator that cannot run has not cleared its paper.
+                #
+                # Measured before the change: 0 evaluator exceptions across
+                # 704 evaluations (64 papers x 11 gates), so this is a no-op on
+                # the current tree and pure future-proofing — the failure it
+                # guards against is a NEW evaluator bug, which is exactly when a
+                # silent downgrade would do the most damage.
                 paper_key = paper['id'].replace('paper:', '', 1)
                 r = GateResult(gate=gate_name, paper=paper_key, priority=prio,
-                               state='open',
-                               notes=f'evaluator error: {exc}')
+                               state='blocked',
+                               blockers=[f'evaluator raised {type(exc).__name__}'],
+                               notes=f'evaluator error (UNVERIFIED, not passing): {exc}')
             r.last_evaluated = now
             results.append(r)
     return results
 
 
+def paper_unmeasured_gates(results: list[GateResult], paper_key: str) -> list[str]:
+    """Gate names whose evaluator COULD NOT MEASURE, for this paper.
+
+    ⚠️ **`GateResult.measured` was write-only until this existed**, and that is
+    the defect the field was added to fix, left live at the exact function named
+    as its victim. `paper_aggregate_state` keys on `state` alone and maps both
+    "measured, outstanding" and "read nothing" to YELLOW, so a paper whose draft
+    could not be opened rendered identically to one with real blockers. Adding a
+    fourth aggregate value is not the fix — `state` is a contract — so the
+    distinction is surfaced BESIDE the colour, which is the convention
+    `bundle_readiness.py` already uses one layer up.
+
+    Callers that render a paper's state should render this too; an empty list
+    means every gate for this paper actually ran.
+    """
+    return sorted(r.gate for r in results
+                  if r.paper == paper_key and not r.measured)
+
+
 def paper_aggregate_state(results: list[GateResult], paper_key: str) -> str:
-    """Return 'red' / 'yellow' / 'green' for a paper's overall state."""
+    """Return 'red' / 'yellow' / 'green' for a paper's overall state.
+
+    ⚠️ This deliberately does NOT consult `measured`. A colour is a three-value
+    contract read by `check_readiness_submission_gate` and by the heatmap, and a
+    fourth value would break both. Ask `paper_unmeasured_gates` alongside it —
+    a YELLOW with a non-empty unmeasured list is a different fact from a YELLOW
+    with an empty one, and only the caller can render that.
+    """
     paper_results = [r for r in results if r.paper == paper_key]
     # Any blocked gate is red, whatever its priority — `check_readiness_submission_gate`
     # has always classified a blocked P2 gate as red, and the two verdicts must agree

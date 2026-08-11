@@ -2,6 +2,7 @@
 name: harvest-consolidator
 description: Consolidate harvest-extractor candidates into the System-2 register — register-AWARE filing & combining. Dispatched by the harvest skill.
 model: opus
+color: magenta
 tools: Bash, Read
 ---
 

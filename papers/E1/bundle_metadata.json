@@ -1,14 +1,51 @@
 {
   "bundle_target": "E1",
+  "apex_theorems": [
+    {
+      "name": "SKEFTHawking.PolaritonTier1.polariton_tier1_fails_tmds",
+      "claims": "§2 the Wave-6v.4 scope demarcation: the Tier-1 patch does NOT cover ultrafast TMD-polariton nanocavities (Γ_LP/κ ≈ 24.86 vs the 0.1 threshold)",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.DKMBootstrap.polariton_dkm_f3_holds_at_pump_below_threshold",
+      "claims": "§2 the Wave-6v.3 deliverable on the E1 side: DKM F3 holds at device-operating pump energies",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.DKMBootstrap.polariton_inherits_graphene_uniqueness_result",
+      "claims": "§2 the bimodal-branch resolution — polariton takes the graphene positive-uniqueness branch; closes the Phase-6q open question",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.AcousticMetric.hawking_temp_from_surface_gravity",
+      "claims": "§3 the name-binding of Eq. (3) T_H = ħκ/2πk_B to surface gravity; the draft discloses it as a rfl-discharge with the substantive content upstream",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.PolaritonTier1.attenuation_ge_one",
+      "claims": "§4/§6 spatial attenuation ≥ 1 — the BEC Re G ≥ 0 chain carried to the polariton case",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.PolaritonTier1.attenuation_mono_Gamma",
+      "claims": "§4 attenuation monotone in Γ",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.PolaritonTier1.attenuation_eq_one_at_zero_decay",
+      "claims": "Acknowledgments: attenuation recovers 1 at zero decay",
+      "declared": "2026-08-07"
+    }
+  ],
   "tier": 4,
   "title": "Paris-LKB polariton letter",
   "target_journal": "PRL | PRR",
   "phase7_subphase": "7e",
-  "stage9_status": "green",
+  "stage9_status": "pending",
   "stage9_round": 3,
-  "stage10_status": "green",
+  "stage10_status": "pending",
   "stage10_round": 2,
-  "stage13_status": "green",
+  "stage13_status": "pending",
   "stage13_round": 1,
   "stage13_redo_required": false,
   "freshness_stale": true,
@@ -22,11 +59,19 @@
   "stage13_review_doc": "docs/audits/stage13_attribution_sweep_2026-06-10.md#e1",
   "audit_log_path": "papers/E1/audit_log.jsonl",
   "supersession_ledger_anchor": "docs/review_finding_supersessions.json",
-  "notes": "Stage 13 r1 2026-05-04: GREEN. 0 BLOCKER / 0 REQUIRED / 4 ADVISORY (5.1 \u0393=1-limit qualifier on universal 0.175\u03ba; 5.2 5229-thms project-vs-chain framing; 2.1 G(\u03ba)\u22480.002 sig-fig rounding; 8.1 boxed-eq label cosmetic). 14 bibitems all in CITATION_REGISTRY; 11 device-parameter audit points reproduce <0.5% from Falque \u00a7IV.1 + provenance.py human_verified 2026-04-28; 4 cited Lean theorems substantive; cross-paper diff vs paper12 + paper16 clean. **Bundle reviewer-triple closed: Stage 9 r3 GREEN + Stage 10 r2 GREEN + Stage 13 r1 GREEN.** QI-E1-1 candidate raised: validate.py --check tier4_device_audit. Stage 10 r2: Round-1 propagating drift block:E1:1 + block:E1:2 fully resolved. | 2026-05-06 Session-2 stage10 round-3 re-walk GREEN (28 sentences, 0 blocking_issues, 0 FAIL, 1 WARN cosmetic). Both 2 D.2 absorption stubs (W1a noise floor \u00a73, W1b Kerr-Schild double-copy \u00a74) properly commented post-Session-2 systematic cleanup. Cross-bundle E1\u2194D1 \u00a76 polariton VERIFIED IDENTICAL LKB device specs. | 2026-05-06 Session-2 stage13 round-1 RED\u2192fix-verified GREEN: BLOCKER 7.1 (Gate 9 CountFreshness, 5229/243 stale literal at lines 45 + 82) FIXED via mechanical replacement to 5812/322. Verified by grep (0 remaining 5229/243 references) + LaTeX recompile clean (3pp/373291 bytes). Cross-bundle E1\u2194D1 \u00a76 polariton character-for-character agreement verified. | 2026-05-06 Session-2 stage9 Stage9 GREEN: D.2 absorption events were post-bib stubs only (now commented); no figure changes. E1 figures pre-existing GREEN per round-3 close 2026-05-04. | 2026-06-10 attribution-content sweep (docs/audits/stage13_attribution_sweep_2026-06-10.md): GREEN. 12 claims: 6 SUPPORTED / 6 CAVEAT / 0 NOT-SUPPORTED. Device specs verbatim. Amelio2020 registry-title flagged.",
+  "notes": "Stage 13 r1 2026-05-04: GREEN. 0 BLOCKER / 0 REQUIRED / 4 ADVISORY (5.1 Γ=1-limit qualifier on universal 0.175κ; 5.2 5229-thms project-vs-chain framing; 2.1 G(κ)≈0.002 sig-fig rounding; 8.1 boxed-eq label cosmetic). 14 bibitems all in CITATION_REGISTRY; 11 device-parameter audit points reproduce <0.5% from Falque §IV.1 + provenance.py human_verified 2026-04-28; 4 cited Lean theorems substantive; cross-paper diff vs paper12 + paper16 clean. **Bundle reviewer-triple closed: Stage 9 r3 GREEN + Stage 10 r2 GREEN + Stage 13 r1 GREEN.** QI-E1-1 candidate raised: validate.py --check tier4_device_audit. Stage 10 r2: Round-1 propagating drift block:E1:1 + block:E1:2 fully resolved. | 2026-05-06 Session-2 stage10 round-3 re-walk GREEN (28 sentences, 0 blocking_issues, 0 FAIL, 1 WARN cosmetic). Both 2 D.2 absorption stubs (W1a noise floor §3, W1b Kerr-Schild double-copy §4) properly commented post-Session-2 systematic cleanup. Cross-bundle E1↔D1 §6 polariton VERIFIED IDENTICAL LKB device specs. | 2026-05-06 Session-2 stage13 round-1 RED→fix-verified GREEN: BLOCKER 7.1 (Gate 9 CountFreshness, 5229/243 stale literal at lines 45 + 82) FIXED via mechanical replacement to 5812/322. Verified by grep (0 remaining 5229/243 references) + LaTeX recompile clean (3pp/373291 bytes). Cross-bundle E1↔D1 §6 polariton character-for-character agreement verified. | 2026-05-06 Session-2 stage9 Stage9 GREEN: D.2 absorption events were post-bib stubs only (now commented); no figure changes. E1 figures pre-existing GREEN per round-3 close 2026-05-04. | 2026-06-10 attribution-content sweep (docs/audits/stage13_attribution_sweep_2026-06-10.md): GREEN. 12 claims: 6 SUPPORTED / 6 CAVEAT / 0 NOT-SUPPORTED. Device specs verbatim. Amelio2020 registry-title flagged.",
   "open_findings": 12,
   "blocked_p1_gates": [
-    "FixPropagation"
+    "FixPropagation",
+    "LeanProofSubstance"
   ],
   "readiness": "RED",
-  "readiness_last_computed": "2026-07-31"
+  "readiness_last_computed": "2026-08-08",
+  "length_target": {
+    "unit": "word_equivalents",
+    "ceiling": 3750,
+    "source": "PRL author guide (3750 word equivalents: text + 300/figure + tables + captions + refs)"
+  },
+  "compiled_pages": 5,
+  "compile_gate_ok": true
 }

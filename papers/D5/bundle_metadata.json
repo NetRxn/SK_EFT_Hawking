@@ -1,12 +1,364 @@
 {
   "bundle_target": "D5",
+  "apex_theorems": [
+    {
+      "name": "SKEFTHawking.ADWMechanism.critical_coupling_pos",
+      "claims": "§2.2 — ADW critical-coupling positivity underwriting the Volovik tetrad self-tuning CC claim — critical_coupling_pos",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.BBN.at_least_three_phase5x_candidates_bbn_conformant",
+      "claims": "§4 — BBN classification of the five Phase-5x DM candidates via the N_eff channel — at_least_three_phase5x_candidates_bbn_conformant",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.BBN.bbn_violators_share_n_eff_failure_mode",
+      "claims": "§4 — BBN classification of the five Phase-5x DM candidates via the N_eff channel — bbn_violators_share_n_eff_failure_mode",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.CausalSetDarkEnergy.barrow_bound_gap_at_least_40_percent",
+      "claims": "§8 Track A (causal-set DE) — NO-GO at R5 plus the three publishable structural caveats — barrow_bound_gap_at_least_40_percent",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.CausalSetDarkEnergy.barrow_bound_prescription_dependent",
+      "claims": "§8 Track A (causal-set DE) — NO-GO at R5 plus the three publishable structural caveats — barrow_bound_prescription_dependent",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.CausalSetDarkEnergy.bdg_sigma_lambda_alpha_bdg_over_sqrt_v",
+      "claims": "§8 Track A (causal-set DE) — NO-GO at R5 plus the three publishable structural caveats — bdg_sigma_lambda_alpha_bdg_over_sqrt_v",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.CausalSetDarkEnergy.bdg_sigma_lambda_decreasing",
+      "claims": "§8 Track A (causal-set DE) — NO-GO at R5 plus the three publishable structural caveats — bdg_sigma_lambda_decreasing",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.CausalSetDarkEnergy.causet_dalembertian_4d_gradient_instability",
+      "claims": "§8 Track A (causal-set DE) — NO-GO at R5 plus the three publishable structural caveats — causet_dalembertian_4d_gradient_instability",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.CausalSetDarkEnergy.everpresent_lambda_tier4_sharpening_factor_100x",
+      "claims": "§8 Track A (causal-set DE) — NO-GO at R5 plus the three publishable structural caveats — everpresent_lambda_tier4_sharpening_factor_100x",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.CausalSetDarkEnergy.fDESI_R5_sharpened_below_1em4",
+      "claims": "§8 Track A (causal-set DE) — NO-GO at R5 plus the three publishable structural caveats — fDESI_R5_sharpened_below_1em4",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.CausalSetDarkEnergy.fDESI_R5_sharpened_below_raw",
+      "claims": "§8 Track A (causal-set DE) — NO-GO at R5 plus the three publishable structural caveats — fDESI_R5_sharpened_below_raw",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.CausalSetDarkEnergy.gibbs_duhem_inapplicable_causal_set_robust_under_prescriptions",
+      "claims": "§8 Track A (causal-set DE) — NO-GO at R5 plus the three publishable structural caveats — gibbs_duhem_inapplicable_causal_set_robust_under_prescriptions",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.CausalSetDarkEnergy.track_a_fully_no_go_at_r5",
+      "claims": "§8 Track A (causal-set DE) — NO-GO at R5 plus the three publishable structural caveats — track_a_fully_no_go_at_r5",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.CausalSetDarkEnergy.track_a_outside_gibbs_duhem_domain",
+      "claims": "§8 Track A (causal-set DE) — NO-GO at R5 plus the three publishable structural caveats — track_a_outside_gibbs_duhem_domain",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.DKMBootstrap.polariton_inherits_graphene_uniqueness_result",
+      "claims": "§13 — the platform cross-inheritance result named in the discussion — polariton_inherits_graphene_uniqueness_result",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.DarkEnergyObstructionPrinciple.viability_iff_all_four",
+      "claims": "§9 — the Phase-5y four-factor viability machinery the Track-B closures call through — viability_iff_all_four",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.DarkSectorClassificationExtension.class_0_membership_robust_under_admissible_prescriptions",
+      "claims": "§12 — the unified 7-class Gibbs-Duhem taxonomy and 3-tier applicability gradient — class_0_membership_robust_under_admissible_prescriptions",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.DarkSectorClassificationExtension.class_c_admits_orthogonality_failure_witness",
+      "claims": "§12 — the unified 7-class Gibbs-Duhem taxonomy and 3-tier applicability gradient — class_c_admits_orthogonality_failure_witness",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.DarkSectorClassificationExtension.gd_binds_only_for_class_c_and_class_d",
+      "claims": "§12 — the unified 7-class Gibbs-Duhem taxonomy and 3-tier applicability gradient — gd_binds_only_for_class_c_and_class_d",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.DarkSectorClassificationExtension.kss_unique_class_a",
+      "claims": "§12 — the unified 7-class Gibbs-Duhem taxonomy and 3-tier applicability gradient — kss_unique_class_a",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.DarkSectorClassificationExtension.phase6m_class_admits_tier_assignment",
+      "claims": "§12 — the unified 7-class Gibbs-Duhem taxonomy and 3-tier applicability gradient — phase6m_class_admits_tier_assignment",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.DarkSectorClassificationExtension.phase6m_mechanism_count",
+      "claims": "§12 — the unified 7-class Gibbs-Duhem taxonomy and 3-tier applicability gradient — phase6m_mechanism_count",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.DarkSectorClassificationExtension.track_a_uniform_class_0",
+      "claims": "§12 — the unified 7-class Gibbs-Duhem taxonomy and 3-tier applicability gradient — track_a_uniform_class_0",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.DarkSectorClassificationExtension.track_b_class_decomposition",
+      "claims": "§12 — the unified 7-class Gibbs-Duhem taxonomy and 3-tier applicability gradient — track_b_class_decomposition",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.DarkSectorClassificationExtension.track_c_highest_survival",
+      "claims": "§12 — the unified 7-class Gibbs-Duhem taxonomy and 3-tier applicability gradient — track_c_highest_survival",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.DarkSectorSynthesis.phase5x_candidates_viability_matrix",
+      "claims": "§2 — the Phase-5x candidate viability matrix. ⚠️ The draft labels this MCC (machine-checked classification): Lean verifies the consistency of hand-assigned flags, not the underlying bound — phase5x_candidates_viability_matrix",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EntropicGravityDarkEnergy.all_quantitative_bounds_disfavoured",
+      "claims": "§9 Track B — the 8/8 unanimous entropic-gravity NO-GO, the bundle's substantive new claim — all_quantitative_bounds_disfavoured",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EntropicGravityDarkEnergy.barrow_aic_delta_below_jeffreys_decisive",
+      "claims": "§9 Track B — the 8/8 unanimous entropic-gravity NO-GO, the bundle's substantive new claim — barrow_aic_delta_below_jeffreys_decisive",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EntropicGravityDarkEnergy.barrow_hde_disfavoured_information_criteria_luciano_paliathanasis_saridakis",
+      "claims": "§9 Track B — the 8/8 unanimous entropic-gravity NO-GO, the bundle's substantive new claim — barrow_hde_disfavoured_information_criteria_luciano_paliathanasis_saridakis",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EntropicGravityDarkEnergy.both_decisive_bayes_bounds_exceed_jeffreys_decisive",
+      "claims": "§9 Track B — the 8/8 unanimous entropic-gravity NO-GO, the bundle's substantive new claim — both_decisive_bayes_bounds_exceed_jeffreys_decisive",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EntropicGravityDarkEnergy.cadoni_tuveri_dec_no_go_via_gd_theorem_w_eq_minus_1",
+      "claims": "§9 Track B — the 8/8 unanimous entropic-gravity NO-GO, the bundle's substantive new claim — cadoni_tuveri_dec_no_go_via_gd_theorem_w_eq_minus_1",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EntropicGravityDarkEnergy.dec_cpl_excluded_from_desi_dr2_1sigma",
+      "claims": "§9 Track B — the 8/8 unanimous entropic-gravity NO-GO, the bundle's substantive new claim — dec_cpl_excluded_from_desi_dr2_1sigma",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EntropicGravityDarkEnergy.dec_fails_orthogonality_principle",
+      "claims": "§9 Track B — the 8/8 unanimous entropic-gravity NO-GO, the bundle's substantive new claim — dec_fails_orthogonality_principle",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EntropicGravityDarkEnergy.entropic_gravity_no_go_count_eight",
+      "claims": "§9 Track B — the 8/8 unanimous entropic-gravity NO-GO, the bundle's substantive new claim — entropic_gravity_no_go_count_eight",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EntropicGravityDarkEnergy.entropic_gravity_seven_genuine_per_candidate_falsifiers",
+      "claims": "§9 Track B — the 8/8 unanimous entropic-gravity NO-GO, the bundle's substantive new claim — entropic_gravity_seven_genuine_per_candidate_falsifiers",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EntropicGravityDarkEnergy.hde_event_horizon_no_go_w_a_sign_mismatch_3sigma",
+      "claims": "§9 Track B — the 8/8 unanimous entropic-gravity NO-GO, the bundle's substantive new claim — hde_event_horizon_no_go_w_a_sign_mismatch_3sigma",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EntropicGravityDarkEnergy.hossenfelder_verlinde_no_go_post_yoon_guha",
+      "claims": "§9 Track B — the 8/8 unanimous entropic-gravity NO-GO, the bundle's substantive new claim — hossenfelder_verlinde_no_go_post_yoon_guha",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EntropicGravityDarkEnergy.hossenfelder_verlinde_residual_no_go_cmb_absent_cold_dark_matter",
+      "claims": "§9 Track B — the 8/8 unanimous entropic-gravity NO-GO, the bundle's substantive new claim — hossenfelder_verlinde_residual_no_go_cmb_absent_cold_dark_matter",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EntropicGravityDarkEnergy.odintsov_donofrio_paul_omega_k_no_go_logB_15_to_17",
+      "claims": "§9 Track B — the 8/8 unanimous entropic-gravity NO-GO, the bundle's substantive new claim — odintsov_donofrio_paul_omega_k_no_go_logB_15_to_17",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EntropicGravityDarkEnergy.padmanabhan_cosmin_no_go_no_scalar_perturbation_theory",
+      "claims": "§9 Track B — the 8/8 unanimous entropic-gravity NO-GO, the bundle's substantive new claim — padmanabhan_cosmin_no_go_no_scalar_perturbation_theory",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EntropicGravityDarkEnergy.r_d_anchoring_partial_rescue_does_not_save_class_b_or_class_d",
+      "claims": "§9 Track B — the 8/8 unanimous entropic-gravity NO-GO, the bundle's substantive new claim — r_d_anchoring_partial_rescue_does_not_save_class_b_or_class_d",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EntropicGravityDarkEnergy.r_d_independent_count_eight",
+      "claims": "§9 Track B — the 8/8 unanimous entropic-gravity NO-GO, the bundle's substantive new claim — r_d_independent_count_eight",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EntropicGravityDarkEnergy.tsallis_hde_no_go_bayes_factor_tyagi_haridasu_basak",
+      "claims": "§9 Track B — the 8/8 unanimous entropic-gravity NO-GO, the bundle's substantive new claim — tsallis_hde_no_go_bayes_factor_tyagi_haridasu_basak",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EntropicGravityDarkEnergy.verlinde_2017_no_go_via_cluster_mass_densities_halenka_miller",
+      "claims": "§9 Track B — the 8/8 unanimous entropic-gravity NO-GO, the bundle's substantive new claim — verlinde_2017_no_go_via_cluster_mass_densities_halenka_miller",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EquivalencePrinciple.vestigial_phase_eta_violates_microscope_bound",
+      "claims": "§6 — the EP classification; vestigial-only violation — vestigial_phase_eta_violates_microscope_bound",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FangGuTorsionDM.fg_cdm_obstruction",
+      "claims": "§2.3 — the FG torsion CDM obstruction; the draft cites this as a DERIVED example (traceless T^munu), not MCC — fg_cdm_obstruction",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GibbsDuhemTheorem.gibbs_duhem_obstruction_main",
+      "claims": "§8.1 — the Phase-5y Gibbs-Duhem obstruction, shown INAPPLICABLE to causal-set DE across all four sprinkling prescriptions — gibbs_duhem_obstruction_main",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.JacobsonThermoGRDarkEnergy.SakharovExtended.flsBEC_depletion_strictly_between_zero_and_one",
+      "claims": "§10/§11 Track C (Jacobson thermo-GR, highest survival) + the Sakharov 4-criterion cross-bridge — flsBEC_depletion_strictly_between_zero_and_one",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.JacobsonThermoGRDarkEnergy.SakharovExtended.flsBEC_lambda_j_neq_lambda_hk_real",
+      "claims": "§10/§11 Track C (Jacobson thermo-GR, highest survival) + the Sakharov 4-criterion cross-bridge — flsBEC_lambda_j_neq_lambda_hk_real",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.JacobsonThermoGRDarkEnergy.SakharovExtended.sakharov_criterion_implies_lambda_j_eq_lambda_hk_real",
+      "claims": "§10/§11 Track C (Jacobson thermo-GR, highest survival) + the Sakharov 4-criterion cross-bridge — sakharov_criterion_implies_lambda_j_eq_lambda_hk_real",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.JacobsonThermoGRDarkEnergy.SakharovExtended.sakharov_depletion_factor_relation",
+      "claims": "§10/§11 Track C (Jacobson thermo-GR, highest survival) + the Sakharov 4-criterion cross-bridge — sakharov_depletion_factor_relation",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.JacobsonThermoGRDarkEnergy.SakharovExtended.volovikJannes_he3a_depletion_eq_one",
+      "claims": "§10/§11 Track C (Jacobson thermo-GR, highest survival) + the Sakharov 4-criterion cross-bridge — volovikJannes_he3a_depletion_eq_one",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.JacobsonThermoGRDarkEnergy.SakharovExtended.volovikJannes_he3a_lambda_j_eq_lambda_hk_real",
+      "claims": "§10/§11 Track C (Jacobson thermo-GR, highest survival) + the Sakharov 4-criterion cross-bridge — volovikJannes_he3a_lambda_j_eq_lambda_hk_real",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.JacobsonThermoGRDarkEnergy.SakharovExtended.volovikJannes_vs_flsBEC_depletion_asymmetry",
+      "claims": "§10/§11 Track C (Jacobson thermo-GR, highest survival) + the Sakharov 4-criterion cross-bridge — volovikJannes_vs_flsBEC_depletion_asymmetry",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.JacobsonThermoGRDarkEnergy.SakharovExtended.wave_4a_4_honest_one_way_closure",
+      "claims": "§10/§11 Track C (Jacobson thermo-GR, highest survival) + the Sakharov 4-criterion cross-bridge — wave_4a_4_honest_one_way_closure",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.JacobsonThermoGRDarkEnergy.f_R_hu_sawicki_no_go_via_dolgov_kawasaki_or_chameleon",
+      "claims": "§10/§11 Track C (Jacobson thermo-GR, highest survival) + the Sakharov 4-criterion cross-bridge — f_R_hu_sawicki_no_go_via_dolgov_kawasaki_or_chameleon",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.JacobsonThermoGRDarkEnergy.f_R_starobinsky_DE_directly_preferred_over_lambda_cdm",
+      "claims": "§10/§11 Track C (Jacobson thermo-GR, highest survival) + the Sakharov 4-criterion cross-bridge — f_R_starobinsky_DE_directly_preferred_over_lambda_cdm",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.JacobsonThermoGRDarkEnergy.finazzi_liberati_sindoni_bec_violates_universal_coupling",
+      "claims": "§10/§11 Track C (Jacobson thermo-GR, highest survival) + the Sakharov 4-criterion cross-bridge — finazzi_liberati_sindoni_bec_violates_universal_coupling",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.JacobsonThermoGRDarkEnergy.hu_sawicki_fails_orthogonality_principle",
+      "claims": "§10/§11 Track C (Jacobson thermo-GR, highest survival) + the Sakharov 4-criterion cross-bridge — hu_sawicki_fails_orthogonality_principle",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.JacobsonThermoGRDarkEnergy.kss_de_partial_viable_under_lv_egj_path_a",
+      "claims": "§10/§11 Track C (Jacobson thermo-GR, highest survival) + the Sakharov 4-criterion cross-bridge — kss_de_partial_viable_under_lv_egj_path_a",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.JacobsonThermoGRDarkEnergy.lovelock_cpl_excluded_from_desi_dr2_1sigma",
+      "claims": "§10/§11 Track C (Jacobson thermo-GR, highest survival) + the Sakharov 4-criterion cross-bridge — lovelock_cpl_excluded_from_desi_dr2_1sigma",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.JacobsonThermoGRDarkEnergy.lovelock_de_no_go_under_causality_respecting_alpha_2_at_quintom_b_box_edge",
+      "claims": "§10/§11 Track C (Jacobson thermo-GR, highest survival) + the Sakharov 4-criterion cross-bridge — lovelock_de_no_go_under_causality_respecting_alpha_2_at_quintom_b_box_edge",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.JacobsonThermoGRDarkEnergy.sakharov_induced_gravity_criterion_implies_lambda_j_eq_lambda_hk",
+      "claims": "§10/§11 Track C (Jacobson thermo-GR, highest survival) + the Sakharov 4-criterion cross-bridge — sakharov_induced_gravity_criterion_implies_lambda_j_eq_lambda_hk",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.JacobsonThermoGRDarkEnergy.track_c_at_least_5_cleared_r5",
+      "claims": "§10/§11 Track C (Jacobson thermo-GR, highest survival) + the Sakharov 4-criterion cross-bridge — track_c_at_least_5_cleared_r5",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.JacobsonThermoGRDarkEnergy.unimodular_reformulation_admits_track_c_survivors",
+      "claims": "§10/§11 Track C (Jacobson thermo-GR, highest survival) + the Sakharov 4-criterion cross-bridge — unimodular_reformulation_admits_track_c_survivors",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.JacobsonThermoGRDarkEnergy.volovik_jannes_he3a_satisfies_sakharov_criterion",
+      "claims": "§10/§11 Track C (Jacobson thermo-GR, highest survival) + the Sakharov 4-criterion cross-bridge — volovik_jannes_he3a_satisfies_sakharov_criterion",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.JacobsonThermoGRDarkEnergy.volovik_jannes_substrate_anchors_sakharov_criterion",
+      "claims": "§10/§11 Track C (Jacobson thermo-GR, highest survival) + the Sakharov 4-criterion cross-bridge — volovik_jannes_substrate_anchors_sakharov_criterion",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.SFDMMergerForecast.delta_rho_monotone_in_mach_sfdm",
+      "claims": "§2.4 — the BK superfluid-DM cluster-merger forecast (the 'money plot') — delta_rho_monotone_in_mach_sfdm",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.SFDMMergerForecast.sfdm_offset_step_function",
+      "claims": "§2.4 — the BK superfluid-DM cluster-merger forecast (the 'money plot') — sfdm_offset_step_function",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.StrongCPTopologicalDE.zhitnitsky_DE_far_below_planck",
+      "claims": "§5 — Zhitnitsky topological DE, parameter-free given Lambda_QCD and M_P — zhitnitsky_DE_far_below_planck",
+      "declared": "2026-08-07"
+    }
+  ],
   "tier": 1,
   "title": "Dark sector under substrate constraints",
   "target_journal": "PRD",
   "phase7_subphase": "7b",
-  "stage9_status": "green",
-  "stage10_status": "green",
-  "stage13_status": "green",
+  "stage9_status": "pending",
+  "stage10_status": "pending",
+  "stage13_status": "pending",
   "stage13_redo_required": false,
   "freshness_stale": true,
   "source_manifest_last_regen": "2026-06-10T20:25:34Z",
@@ -16,20 +368,29 @@
   "last_stage13_review": "2026-06-10T19:30:00Z",
   "blockers_open": 17,
   "advisories_open": 45,
-  "stage9_round3_summary": "Stage 9 round 3 GREEN. All 4 round-1 figure FAILs resolved: (1) fig28_adw_effective_potential caption rewritten to match G/G_c parameterization figure; (2) fig_zhitnitsky_de_theta_scan caption rewritten for \u039b_QCD-axis (was wrongly described as \u03b8-scan); (3) fig_phase5x_candidate_viability_matrix margin r=560 width=1500 \u2014 all 5 right-edge Lean-anchor annotations now visible; (4) fig_lambda_emerg_parameter_scan: palette swap (steel_blue/amber/Heidelberg/cross + linestyles solid/dash/dot/dashdot, no red/green) + caption rewritten to drop green/yellow/red verdict-band words + locus annotation removed (was at 2.83e-12 GeV outside [10^0, 10^20] display range, kaleido produced 'log\u03bcs' artifact at panel edge). 3 cosmetic MINORs persist as advisory (SFDM cluster labels collide; BBN \u0394N_eff annotation overlap; EP \u03b7 annotation overlap on MICROSCOPE bar). Non-blocking under round-2 pass criterion.",
-  "stage10_round2_summary": "Stage 10 round 2 GREEN \u2014 14/14 PASS / 0 FAIL / 0 WARN. All 8 round-1 BLOCKERs resolved: (1) \u00a712 mechanism-count rewritten to clarify B+C=17 in length-aggregator vs A's 4 inductive-constructor count \u2192 21 total via case-exhaustion + classification via phase6m_class_admits_tier_assignment; (2) abstract reworded to distinguish 4 quantitative-Bayesian + 4 structurally-NO-GO mechanisms with mechanism-specific obstructions; (3) \u00a79.1 itemize collapsed to 8 mechanism-level entries + 2 DEC sub-supports merged inline; (4) BBN theorem names corrected (bbn_violators_share_n_eff_failure_mode + at_least_three_phase5x_candidates_bbn_conformant); (5) BBNUnified.lean \u2192 BBN.lean; (6) EquivalencePrincipleClassification + VestigialPhaseEPViolation \u2192 EquivalencePrinciple.lean (single module); (7) CosmologicalConstantEmergent.lean \u2192 MicroscopicCoefficientMatch.lean; (8) T-0/S-0 attribution moved from HiddenSectorMixedCharge.lean \u2192 DarkSectorSynthesis.lean (HiddenSectorMixedCharge retained for C-1). WARN-class (bare critical_coupling_pos in fig28 caption) cleaned up to ADWMechanism.critical_coupling_pos. 1 advisory followup logged: DSCE9 docstring at DarkSectorClassificationExtension.lean:262-266 updated separately to align with theorem body (B+C=17 not 4+8+9=21).",
-  "stage13_round1_summary": "Stage 13 round 1 GREEN. Tier-1 deep-paper profile sweep across 8 finding classes. Verdict: 0 BLOCKER / 0 RECOMMENDED / 2 ADVISORY. (1) Citations: 7 spot-checked load-bearing bibitems (Touboul2017, PlazaKraiselburd2025fR, YoonGuha2023, TyagiHaridasuBasak2025, LucianoPaliathanasisSaridakis2506, JannesVolovik2012, Berezhiani2015) all present in CITATION_REGISTRY. (2) Numerical claims: \u03c1_DE \u2248 6.7\u00d710\u207b\u2079 eV\u2074 + MICROSCOPE \u03b7<10\u207b\u00b9\u2075 + 17-vs-21 mechanism count all internally consistent. (3) Lean-theorem-name resolution: 19 named theorems spot-verified via grep; all resolve. (4) Cross-bundle: D2 + D3 paper_drafts not yet lifted, so cross-bundle re-check deferred to D2/D3 lift; intra-bundle clean. (5) 'First' claims (first complete-mechanism-family unanimous NO-GO closure / first systematic \u039b_J vs \u039b_HK on common substrate) corroborated against ARCHITECTURE_SCOPE.md + Phase6m_Roadmap.md + PAPER_DRAFT_MAPPING.md. (6) Production-run claims N/A (theory paper). (7) freshness_stale: false; manifest current. (8) Architectural-scope: tracked-hypothesis discipline in place; ADVISORY 1 noted \u00a74 prose says 'tracked Lean hypothesis H_S0_thermalized/H_FG_thermalized' but Lean implements via theorem-hypothesis parameter h_thermalize, not a named def H_FOO Prop. ADVISORY 2 noted as low-priority cross-checking. QI Candidate raised: QI-D5-1 (low priority) \u2014 validator for prose-vs-Lean tracked-hypothesis name resolution; would catch \u00a74 H_S0_thermalized/H_FG_thermalized prose-vs-implementation gap prospectively.",
+  "stage9_round3_summary": "Stage 9 round 3 GREEN. All 4 round-1 figure FAILs resolved: (1) fig28_adw_effective_potential caption rewritten to match G/G_c parameterization figure; (2) fig_zhitnitsky_de_theta_scan caption rewritten for Λ_QCD-axis (was wrongly described as θ-scan); (3) fig_phase5x_candidate_viability_matrix margin r=560 width=1500 — all 5 right-edge Lean-anchor annotations now visible; (4) fig_lambda_emerg_parameter_scan: palette swap (steel_blue/amber/Heidelberg/cross + linestyles solid/dash/dot/dashdot, no red/green) + caption rewritten to drop green/yellow/red verdict-band words + locus annotation removed (was at 2.83e-12 GeV outside [10^0, 10^20] display range, kaleido produced 'logμs' artifact at panel edge). 3 cosmetic MINORs persist as advisory (SFDM cluster labels collide; BBN ΔN_eff annotation overlap; EP η annotation overlap on MICROSCOPE bar). Non-blocking under round-2 pass criterion.",
+  "stage10_round2_summary": "Stage 10 round 2 GREEN — 14/14 PASS / 0 FAIL / 0 WARN. All 8 round-1 BLOCKERs resolved: (1) §12 mechanism-count rewritten to clarify B+C=17 in length-aggregator vs A's 4 inductive-constructor count → 21 total via case-exhaustion + classification via phase6m_class_admits_tier_assignment; (2) abstract reworded to distinguish 4 quantitative-Bayesian + 4 structurally-NO-GO mechanisms with mechanism-specific obstructions; (3) §9.1 itemize collapsed to 8 mechanism-level entries + 2 DEC sub-supports merged inline; (4) BBN theorem names corrected (bbn_violators_share_n_eff_failure_mode + at_least_three_phase5x_candidates_bbn_conformant); (5) BBNUnified.lean → BBN.lean; (6) EquivalencePrincipleClassification + VestigialPhaseEPViolation → EquivalencePrinciple.lean (single module); (7) CosmologicalConstantEmergent.lean → MicroscopicCoefficientMatch.lean; (8) T-0/S-0 attribution moved from HiddenSectorMixedCharge.lean → DarkSectorSynthesis.lean (HiddenSectorMixedCharge retained for C-1). WARN-class (bare critical_coupling_pos in fig28 caption) cleaned up to ADWMechanism.critical_coupling_pos. 1 advisory followup logged: DSCE9 docstring at DarkSectorClassificationExtension.lean:262-266 updated separately to align with theorem body (B+C=17 not 4+8+9=21).",
+  "stage13_round1_summary": "Stage 13 round 1 GREEN. Tier-1 deep-paper profile sweep across 8 finding classes. Verdict: 0 BLOCKER / 0 RECOMMENDED / 2 ADVISORY. (1) Citations: 7 spot-checked load-bearing bibitems (Touboul2017, PlazaKraiselburd2025fR, YoonGuha2023, TyagiHaridasuBasak2025, LucianoPaliathanasisSaridakis2506, JannesVolovik2012, Berezhiani2015) all present in CITATION_REGISTRY. (2) Numerical claims: ρ_DE ≈ 6.7×10⁻⁹ eV⁴ + MICROSCOPE η<10⁻¹⁵ + 17-vs-21 mechanism count all internally consistent. (3) Lean-theorem-name resolution: 19 named theorems spot-verified via grep; all resolve. (4) Cross-bundle: D2 + D3 paper_drafts not yet lifted, so cross-bundle re-check deferred to D2/D3 lift; intra-bundle clean. (5) 'First' claims (first complete-mechanism-family unanimous NO-GO closure / first systematic Λ_J vs Λ_HK on common substrate) corroborated against ARCHITECTURE_SCOPE.md + Phase6m_Roadmap.md + PAPER_DRAFT_MAPPING.md. (6) Production-run claims N/A (theory paper). (7) freshness_stale: false; manifest current. (8) Architectural-scope: tracked-hypothesis discipline in place; ADVISORY 1 noted §4 prose says 'tracked Lean hypothesis H_S0_thermalized/H_FG_thermalized' but Lean implements via theorem-hypothesis parameter h_thermalize, not a named def H_FOO Prop. ADVISORY 2 noted as low-priority cross-checking. QI Candidate raised: QI-D5-1 (low priority) — validator for prose-vs-Lean tracked-hypothesis name resolution; would catch §4 H_S0_thermalized/H_FG_thermalized prose-vs-implementation gap prospectively.",
   "stage9_review_doc": "papers/D5/figures/figure_review_report.json",
   "stage10_review_doc": "papers/D5/claims_review.json",
   "stage13_review_doc": "docs/audits/stage13_attribution_sweep_2026-06-10.md#d5",
   "audit_log_path": "papers/D5/audit_log.jsonl",
   "supersession_ledger_anchor": "docs/review_finding_supersessions.json",
-  "notes": "Phase 7b sub-wave 7b.2 CLOSED at GREEN 2026-05-01. 12-page Tier-1 deep-paper bundle (target PRD) shipped through full reviewer-triple pipeline: Stage 9 (3 rounds; 4 figure FAILs \u2192 GREEN), Stage 10 (2 rounds; 8 claim FAILs + 1 WARN \u2192 GREEN with 14/14 PASS), Stage 13 (1 round; 0 BLOCKER GREEN). 6 sources lifted via bundle_append.py: paper17 \u00a72-\u00a73 + paper29 \u00a74 + paper32 \u00a75 + paper34 \u00a76 + paper42b \u00a77 + D5_phase6m_lean_only \u00a78-\u00a712 (D.4 sourceless pattern). 19 bibitems all registered + cached. Substantive new contribution: \u00a79 Track B 8/8 unanimous NO-GO closure (first complete-mechanism-family closure in Phase 6m; 4 quantitative-Bayesian aggregated in all_quantitative_bounds_exceed_jeffreys_decisive + 4 structurally-NO-GO via mechanism-specific obstructions); \u00a711 Sakharov 4-criterion cross-bridge (\u00b3He-A satisfies all 4; FLS BEC violates condition (ii); first systematic \u039b_J vs \u039b_HK on common substrate); \u00a712 unified 7-class GD taxonomy with 3-tier applicability gradient + phase6m_class_admits_tier_assignment. 2 advisories carried forward: D5-S13-A1 \u00a74 H_S0/FG_thermalized prose-vs-implementation gap (h_thermalize is theorem-parameter not named def); D5-S13-A2 cross-bundle re-check deferred to D2/D3 lift. 17 supersession-ledger entries appended (401 \u2192 418). LaTeX compile clean throughout. lake build clean (2186 jobs / 2.8s on docstring change verification). Bundle ready for PRD submission after publication-length expansion (~50pp; current 12pp first-pass is condensed). | 2026-05-06 Session-2 stage10 round-4 GREEN: both round-3 BLOCKERs (post-bib W1c writeup + W2b QuantumCrooks stubs) auto-closed deterministically via Session-2 systematic stub-commenting. 16 sentences, 0 FAIL, 0 WARN. Cross-bundle D5\u2194D3 \u00a721 (heat-kernel a_0) + D5\u2194D2 (Z16 anomaly classification) PASS. | 2026-05-06 Session-2 stage13 round-1 RED: 4 BLOCKER + 2 REQUIRED + 1 RECOMMENDED. **NOTE: BLOCKERs are PRE-EXISTING substantive issues (round-1-green/round-2-discovery regression 2026-05-01\u21922026-05-06), not Session-1 absorption regressions.** BLOCKER 1.1 (YoonGuha2023 fabricated title \u2014 actual: \"Inflation and the late time acceleration from Hossenfelder-Verlinde gravity\") + 1.2 (TyagiHaridasuBasak2025 title misattributed + Lean tsallis_log_bayes:=6.2 unsourced) + 1.3 (LucianoPaliathanasisSaridakis2506 title misattributed + methodology mismatch \u2014 information-criteria not Bayesian-as-primary) + 5.1 (sakharov_induced_gravity_criterion_iff_lambda_j_eq_lambda_hk named _iff_ + called biconditional, but one-way implication; P5 structural tautology). DEFERRED TO SESSION 3 \u2014 fixes require WebFetch verification + possible Lean refactor + possible \u00a79.1 prose rewrite; beyond mechanical Session-2 closure scope. User attention recommended for prioritization. | 2026-05-07 Session-3 phase A bibitem fixes applied for round-1 BLOCKERs: BLOCKER 1.1 YoonGuha2023 (initial J.\u2192Y., B.\u2192A., title arXiv-version \"Inflation and the late time acceleration from Hossenfelder-Verlinde gravity\"); 1.2 TyagiHaridasuBasak2025 (initials S.~Tyagi \u2192 U.~K.~Tyagi, B.~S.~Haridasu \u2192 S.~Haridasu, title arXiv-version \"Constraints on Generalized Gravity-Thermodynamic Cosmology from DESI DR2\"); 1.3 LucianoPaliathanasisSaridakis2506 (title arXiv-version \"Constraints on Barrow and Tsallis Holographic Dark Energy from DESI DR2 BAO data\" + JHEAp 49 100427 (2026) coordinates added). LaTeX recompile clean. Round-2 S13 verification pending. | 2026-05-07 Session-3 stage13 round-2 verification GREEN: ALL 4 round-1 BLOCKERs cleanly closed (1.1 YoonGuha2023 verbatim retitle + initials; 1.2 TyagiHaridasuBasak2025 verbatim retitle + initials; 1.3 LucianoPaliathanasisSaridakis2506 verbatim retitle + JHEAp 49 100427 (2026) coordinates; 5.1 P5 anti-pattern via \u00a711 prose hedge). 2 carry-forward REQUIREDs flagged for Session-4: 1.4 PlazaKraiselburd2025fR paraphrased title (NEW \u2014 wasnt in r1); 7.1 Tsallis log-Bayes 6.2 provenance (Lean tsallis_log_bayes:=6.2 needs re-cite or MCC downgrade). 1 new low-priority advisory: JacobsonThermoGRDarkEnergy.lean:326-332 Lean docstring still says biconditional vs paper-side hedge (consistency-discipline only). | 2026-06-10 attribution-content sweep (docs/audits/stage13_attribution_sweep_2026-06-10.md): GREEN. 19 anchors: 16 SUPPORTED / 3 CAVEAT / 0 NOT-SUPPORTED. HalenkaMiller fix holds.",
+  "notes": "Phase 7b sub-wave 7b.2 CLOSED at GREEN 2026-05-01. 12-page Tier-1 deep-paper bundle (target PRD) shipped through full reviewer-triple pipeline: Stage 9 (3 rounds; 4 figure FAILs → GREEN), Stage 10 (2 rounds; 8 claim FAILs + 1 WARN → GREEN with 14/14 PASS), Stage 13 (1 round; 0 BLOCKER GREEN). 6 sources lifted via bundle_append.py: paper17 §2-§3 + paper29 §4 + paper32 §5 + paper34 §6 + paper42b §7 + D5_phase6m_lean_only §8-§12 (D.4 sourceless pattern). 19 bibitems all registered + cached. Substantive new contribution: §9 Track B 8/8 unanimous NO-GO closure (first complete-mechanism-family closure in Phase 6m; 4 quantitative-Bayesian aggregated in all_quantitative_bounds_exceed_jeffreys_decisive + 4 structurally-NO-GO via mechanism-specific obstructions); §11 Sakharov 4-criterion cross-bridge (³He-A satisfies all 4; FLS BEC violates condition (ii); first systematic Λ_J vs Λ_HK on common substrate); §12 unified 7-class GD taxonomy with 3-tier applicability gradient + phase6m_class_admits_tier_assignment. 2 advisories carried forward: D5-S13-A1 §4 H_S0/FG_thermalized prose-vs-implementation gap (h_thermalize is theorem-parameter not named def); D5-S13-A2 cross-bundle re-check deferred to D2/D3 lift. 17 supersession-ledger entries appended (401 → 418). LaTeX compile clean throughout. lake build clean (2186 jobs / 2.8s on docstring change verification). Bundle ready for PRD submission after publication-length expansion (~50pp; current 12pp first-pass is condensed). | 2026-05-06 Session-2 stage10 round-4 GREEN: both round-3 BLOCKERs (post-bib W1c writeup + W2b QuantumCrooks stubs) auto-closed deterministically via Session-2 systematic stub-commenting. 16 sentences, 0 FAIL, 0 WARN. Cross-bundle D5↔D3 §21 (heat-kernel a_0) + D5↔D2 (Z16 anomaly classification) PASS. | 2026-05-06 Session-2 stage13 round-1 RED: 4 BLOCKER + 2 REQUIRED + 1 RECOMMENDED. **NOTE: BLOCKERs are PRE-EXISTING substantive issues (round-1-green/round-2-discovery regression 2026-05-01→2026-05-06), not Session-1 absorption regressions.** BLOCKER 1.1 (YoonGuha2023 fabricated title — actual: \"Inflation and the late time acceleration from Hossenfelder-Verlinde gravity\") + 1.2 (TyagiHaridasuBasak2025 title misattributed + Lean tsallis_log_bayes:=6.2 unsourced) + 1.3 (LucianoPaliathanasisSaridakis2506 title misattributed + methodology mismatch — information-criteria not Bayesian-as-primary) + 5.1 (sakharov_induced_gravity_criterion_iff_lambda_j_eq_lambda_hk named _iff_ + called biconditional, but one-way implication; P5 structural tautology). DEFERRED TO SESSION 3 — fixes require WebFetch verification + possible Lean refactor + possible §9.1 prose rewrite; beyond mechanical Session-2 closure scope. User attention recommended for prioritization. | 2026-05-07 Session-3 phase A bibitem fixes applied for round-1 BLOCKERs: BLOCKER 1.1 YoonGuha2023 (initial J.→Y., B.→A., title arXiv-version \"Inflation and the late time acceleration from Hossenfelder-Verlinde gravity\"); 1.2 TyagiHaridasuBasak2025 (initials S.~Tyagi → U.~K.~Tyagi, B.~S.~Haridasu → S.~Haridasu, title arXiv-version \"Constraints on Generalized Gravity-Thermodynamic Cosmology from DESI DR2\"); 1.3 LucianoPaliathanasisSaridakis2506 (title arXiv-version \"Constraints on Barrow and Tsallis Holographic Dark Energy from DESI DR2 BAO data\" + JHEAp 49 100427 (2026) coordinates added). LaTeX recompile clean. Round-2 S13 verification pending. | 2026-05-07 Session-3 stage13 round-2 verification GREEN: ALL 4 round-1 BLOCKERs cleanly closed (1.1 YoonGuha2023 verbatim retitle + initials; 1.2 TyagiHaridasuBasak2025 verbatim retitle + initials; 1.3 LucianoPaliathanasisSaridakis2506 verbatim retitle + JHEAp 49 100427 (2026) coordinates; 5.1 P5 anti-pattern via §11 prose hedge). 2 carry-forward REQUIREDs flagged for Session-4: 1.4 PlazaKraiselburd2025fR paraphrased title (NEW — wasnt in r1); 7.1 Tsallis log-Bayes 6.2 provenance (Lean tsallis_log_bayes:=6.2 needs re-cite or MCC downgrade). 1 new low-priority advisory: JacobsonThermoGRDarkEnergy.lean:326-332 Lean docstring still says biconditional vs paper-side hedge (consistency-discipline only). | 2026-06-10 attribution-content sweep (docs/audits/stage13_attribution_sweep_2026-06-10.md): GREEN. 19 anchors: 16 SUPPORTED / 3 CAVEAT / 0 NOT-SUPPORTED. HalenkaMiller fix holds.",
   "open_findings": 62,
   "blocked_p1_gates": [
     "FixPropagation",
+    "LeanProofSubstance",
     "NarrativeGrounding"
   ],
   "readiness": "RED",
-  "readiness_last_computed": "2026-07-31"
+  "readiness_last_computed": "2026-08-08",
+  "length_target": {
+    "unit": "pages",
+    "floor": 24,
+    "ceiling": 60,
+    "source": "PAPER_STRATEGY.md §6"
+  },
+  "compiled_pages": 14,
+  "compile_gate_ok": true
 }

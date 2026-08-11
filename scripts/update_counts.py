@@ -84,6 +84,63 @@ OUTPUT_JSON = PROJECT_ROOT / "docs" / "counts.json"
 OUTPUT_TEX = PROJECT_ROOT / "docs" / "counts.tex"
 
 
+
+def is_native_decide_axiom(a) -> bool:
+    """True if an axiom name is a `native_decide` compiler-trust axiom.
+
+    ⚠️ ONE definition, deliberately. This predicate existed in two places —
+    nested inside this module's counts computation, and again as
+    `is_native_decide` inside `axiom_closure_allowlist` — which is the same
+    duplicate-policy shape as the eight divergent `lean_deps.json` loaders
+    ADR-009 H4 catalogues. A third copy was about to be written for
+    `native_decide_regression` (ADR-009 §Deferred item 1); it imports this instead.
+    """
+    s = str(a)
+    return "native_decide" in s or s in ("Lean.ofReduceBool", "Lean.trustCompiler")
+
+
+def native_decide_decls(data):
+    """Declarations whose transitive axiom closure touches a `native_decide` axiom.
+
+    THE ADR-002 kernel-trust-surface population. A pure function of
+    `lean_deps.json`, which is why `native_decide_regression` can compute the
+    ratchet metric from the upstream source rather than from `docs/counts.json`
+    — the latter is written by this script at registration position ~29, long
+    after that check runs at ~9, and is not written at all when the check is
+    invoked in isolation by the commit gate.
+    """
+    return [
+        d for d in data
+        if any(is_native_decide_axiom(a) for a in
+               (d.get("axiom_deps_project") or []) + (d.get("axiom_deps_core") or []))
+    ]
+
+
+_AUTOGEN_CACHE = {}
+
+
+def _autogen_index_shared():
+    """The ONE autogen classifier this module uses, built once per process.
+
+    ⚠️ Every generator here routes through `validate_helpers.autogen_index`. Three
+    used to carry a bare `kind == "theorem"` filter — including the per-module I1
+    macro loop, whose own comment claimed it was "identical to count_lean()'s
+    theorem counting" AFTER count_lean had been canonicalized and it had not. A
+    closure reviewer measured 873 of 2,012 modules as containing generated
+    theorems, so one `deriving` clause in any of the 17 emitted modules would have
+    silently inflated a published macro.
+
+    Cached because `autogen_index` needs the whole record set to resolve parents and
+    several generators run in one process; do NOT inline the classification again.
+    """
+    if "idx" not in _AUTOGEN_CACHE:
+        import sys as _s
+        _s.path.insert(0, str(Path(__file__).resolve().parent))
+        from validate_helpers import autogen_index as _ai, load_lean_deps as _lld
+        _AUTOGEN_CACHE["idx"] = _ai(_lld())
+    return _AUTOGEN_CACHE["idx"]
+
+
 def count_lean(deps_path: Path, preloaded: list | None = None) -> dict:
     """Extract Lean counts from lean_deps.json (authoritative, environment-based).
 
@@ -100,7 +157,25 @@ def count_lean(deps_path: Path, preloaded: list | None = None) -> dict:
         with open(deps_path) as f:
             data = json.load(f)
 
-    theorems = [d for d in data if d["kind"] == "theorem"]
+    # ⚠️ AUTHOR-WRITTEN ONLY, via the canonical resolver. This read
+    # `[d for d in data if d["kind"] == "theorem"]` with NO autogen filter, so
+    # unfiltered, this corpus counts 26,398 theorem-kind — 3,729 compiler-generated
+    # (1,508 `.eq_1` equation lemmas, 790 `.sizeOf_spec`, 420 `.inj`, 417 `.injEq`,
+    # 184 `.congr_simp`, …). That number is `\input` into I1, D2 and I3 and rendered
+    # to a reader as "machine-checked theorems" and "theorems were written" —
+    # including in I1's ABSTRACT. Nobody wrote 1,508 equation lemmas.
+    #
+    # `validate_helpers.autogen_index` is the SINGLE OWNER of "is this compiler
+    # generated" (ExtractDeps' `autogen` field plus the parent-kind-guarded suffix
+    # supplement). It was built for exactly this and every other consumer already
+    # uses it; this generator — the one whose output reaches readers — did not.
+    # Do NOT reintroduce a local predicate here.
+    import sys as _sys
+    _sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from validate_helpers import autogen_index as _autogen_index
+    _autogen = _autogen_index(data)
+    theorems = [d for d in data
+                if d["kind"] == "theorem" and not _autogen.get(d["name"])]
     # Standalone placeholders: theorems whose type is exactly `True`
     # Note: structure field projections like `GappedInterfaceConjecture.gap_exists`
     # also have type containing True but are intentional structure fields, not placeholders.
@@ -116,21 +191,13 @@ def count_lean(deps_path: Path, preloaded: list | None = None) -> dict:
         if any("sorry" in str(a).lower() for a in d.get("axiom_deps_core", []))
     ]
     # Also count theorems that directly use sorry (kind == "theorem" with sorry dep)
-    sorry_theorems = [d for d in sorry_deps if d["kind"] == "theorem"]
+    sorry_theorems = [d for d in sorry_deps if d["kind"] == "theorem"]  # census-exempt: sorry-theorems
 
     # native_decide trust-surface metric (ADR-002 / Substrate Integrity Gates R4):
     # the authoritative count is the DECL-CLOSURE — declarations whose transitive
     # axiom closure includes a native_decide compiler-trust axiom — NOT the source
     # call-site count. This mirrors `validate.py --check axiom_closure_allowlist`.
-    def _is_nd_axiom(a) -> bool:
-        s = str(a)
-        return "native_decide" in s or s in ("Lean.ofReduceBool", "Lean.trustCompiler")
-
-    nd_decls = [
-        d for d in data
-        if any(_is_nd_axiom(a) for a in
-               (d.get("axiom_deps_project") or []) + (d.get("axiom_deps_core") or []))
-    ]
+    nd_decls = native_decide_decls(data)
     nd_clusters: dict = {}
     for d in nd_decls:
         m = d.get("module", "")
@@ -182,8 +249,24 @@ def count_lean(deps_path: Path, preloaded: list | None = None) -> dict:
         _debt = (_baseline | _proxy | _defl) - _ph_short  # union, placeholders already split off
         _n_baseline, _n_proxy, _n_defl, _n_debt = (
             len(_baseline), len(_proxy), len(_defl), len(_debt))
-    except Exception:
-        _n_baseline = _n_proxy = _n_defl = _n_debt = 0
+    except Exception as _exc:
+        # ⚠️ NO SILENT ZERO. This read `except Exception: _n_debt = 0`, which is the
+        # worst available answer: `theorems_kernel_substantive` is computed as
+        # `_substantive - _n_debt`, so a swallowed failure does not merely lose the
+        # debt line — it silently INFLATES the published kernel-substantive count by
+        # the whole debt (69 today) and reports `theorems_tracked_vacuity_debt: 0`,
+        # i.e. "this project has no tracked vacuity". These numbers are rendered into
+        # `docs/counts.tex` and `\input` by the drafts, so the lie reaches the papers.
+        #
+        # "Cannot measure" is not "measured zero" — the same doctrine the validation
+        # suite enforces via `CheckResult.measured`. Fail loudly and let the caller
+        # fix the import rather than ship a confident wrong number.
+        raise RuntimeError(
+            "could not compute the tracked-vacuity split from src.core.constants "
+            f"({type(_exc).__name__}: {_exc}). Refusing to publish counts with the "
+            "debt silently zeroed — that would inflate theorems_kernel_substantive "
+            "and assert the project carries no tracked vacuity."
+        ) from _exc
     _substantive = len(theorems) - len(placeholders)
 
     return {
@@ -306,6 +389,57 @@ def count_per_section_theorems(lean_path: Path) -> dict:
     return per_section
 
 
+def _d11_modules_from_closure() -> list[str]:
+    """D11's substrate modules, derived from its declared-apex closure.
+
+    Fails LOUDLY rather than falling back to a stale literal: a silent fallback
+    is how a hand-maintained roster survives the mechanism meant to replace it.
+    """
+    import bundle_closure as _bc
+    recs = _bc.load_records()
+    closures = _bc.build_closures(recs, _bc.load_apex_declarations(PROJECT_ROOT / "papers"))
+    d11 = closures.get("D11")
+    if d11 is None or not d11.modules:
+        raise RuntimeError(
+            "D11 closure empty or absent — refusing to emit \\dxi* macros from a "
+            "guess. Check papers/D11/bundle_metadata.json apex_theorems and "
+            "lean/lean_deps.json freshness.")
+    return sorted(m.replace("SKEFTHawking.", "").replace(".", "/") for m in d11.modules)
+
+
+def read_live_pins() -> dict:
+    """The live toolchain / dependency pins, read from the Lean project.
+
+    TODO-D6: 27 pin-drift sites across 8 bundles plus legacy drafts, every one a
+    hand-typed reproducibility coordinate that went stale at the v4.32.0 bump.
+    Transcribing the new values would only reset the clock. Emitting them as
+    generated macros removes the literal from the draft, so the next bump cannot
+    strand a draft at all.
+    """
+    root = PROJECT_ROOT / "lean"
+    pins = {"toolchain": "?", "mathlib_rev": "?", "physlib_rev": "?"}
+    try:
+        raw = (root / "lean-toolchain").read_text(encoding="utf-8").strip()
+        if ":" in raw:
+            pins["toolchain"] = raw.split(":", 1)[1].strip().lstrip("v")
+    except OSError:
+        pass
+    try:
+        toml_text = (root / "lakefile.toml").read_text(encoding="utf-8")
+        import re as _re
+        for block in toml_text.split("[[require]]")[1:]:
+            n = _re.search(r'name\s*=\s*"([^"]+)"', block)
+            r = _re.search(r'rev\s*=\s*"([0-9a-f]{8,40})"', block)
+            if n and r:
+                key = {"mathlib": "mathlib_rev", "Physlib": "physlib_rev",
+                       "physlib": "physlib_rev"}.get(n.group(1))
+                if key:
+                    pins[key] = r.group(1)[:8]
+    except OSError:
+        pass
+    return pins
+
+
 def generate_tex(counts: dict, path: Path, deps: list | None = None):
     """Generate LaTeX macros for paper inclusion.
 
@@ -314,6 +448,7 @@ def generate_tex(counts: dict, path: Path, deps: list | None = None):
     kind == "theorem" macro groups below; otherwise the cached
     lean/lean_deps.json is read directly.
     """
+    _pins = read_live_pins()
     lean = counts.get("lean", {})
     python = counts.get("python", {})
     aristotle = counts.get("aristotle", {})
@@ -326,6 +461,11 @@ def generate_tex(counts: dict, path: Path, deps: list | None = None):
     lines = [
         f"% Auto-generated by update_counts.py — {counts['generated']}",
         f"% Do not edit manually. Run: uv run python scripts/update_counts.py",
+        # TODO-D6: reproducibility pins as generated macros, so a draft states
+        # the coordinate without hard-typing a value that a bump strands.
+        f"\\newcommand{{\\leantoolchain}}{{{_pins['toolchain']}}}",
+        f"\\newcommand{{\\mathlibrev}}{{{_pins['mathlib_rev']}}}",
+        f"\\newcommand{{\\physlibrev}}{{{_pins['physlib_rev']}}}",
         f"\\newcommand{{\\totaltheorems}}{{{lean.get('theorems_total', '?')}}}",
         f"\\newcommand{{\\substantivetheorems}}{{{lean.get('theorems_substantive', '?')}}}",
         f"\\newcommand{{\\placeholdertheorems}}{{{lean.get('theorems_placeholder', '?')}}}",
@@ -371,15 +511,19 @@ def generate_tex(counts: dict, path: Path, deps: list | None = None):
     # is INCLUDED and now disclosed; the two are Torus and LinkField, and Torus
     # is cited in the paper's own prose, so excluding it would make a cited
     # object uncountable under the stated rule.
-    _D11_MODULES = [
-        "BlochBundle", "AcousticBlochOperator", "PhononicBandGap", "BandGapEnclosure",
-        "MaxwellGarnett", "EffectiveMediumBounds", "EffectiveModuli",
-        "ExceptionalPoint", "NonHermitianWinding", "NonHermitianBloch",
-    ] + [f"TopologicalBand/{m}" for m in (
-        "ArgSectors", "BlochFHS", "BlochFrame", "BlochFrameOfD",
-        "FHSExamples", "FHSLatticeGauge", "FiniteTorus", "PrincipalBranch")
-    ] + [f"GrapheneBand/{m}" for m in (
-        "BernalBilayer", "DiracExpansion", "HaldaneWitness", "Honeycomb")]
+    # TODO-D10: DERIVED from D11's apex closure, not hand-listed.
+    #
+    # This was a 22-name literal. On 2026-08-07 D11's declared-apex closure came
+    # to reach exactly those 22 modules — no module outside the list, no listed
+    # module unreached — verified again 2026-08-09 with zero difference in either
+    # direction. Agreement between a derived and a hand-maintained answer is the
+    # moment to delete the hand-maintained one: a new D11 module would otherwise
+    # be counted by nobody and noticed by nothing.
+    #
+    # ⚠️ The COUNTING RULE below is unchanged and must stay unchanged — line-prefix,
+    # outside block comments, `abbrev` included. Only the module SET is derived.
+    # The rule is stated in D11's own prose and audited by its Stage-13.
+    _D11_MODULES = _d11_modules_from_closure()
 
     _thm_re = re.compile(r"^(?:@\[[^\]]*\]\s*)?(?:private\s+|protected\s+)?(?:theorem|lemma)\b")
     _def_re = re.compile(
@@ -444,7 +588,8 @@ def generate_tex(counts: dict, path: Path, deps: list | None = None):
             _names = {"SKEFTHawking." + m.replace("/", ".") for m in _D11_MODULES}
             _dt = sum(1 for e in _deps
                       if isinstance(e, dict) and e.get("module") in _names
-                      and e.get("kind") == "theorem")
+                      and e.get("kind") == "theorem"
+                      and not _autogen_index_shared().get(e["name"]))
             lines.append(f"\\newcommand{{\\dxiDepsTheorems}}{{{_dt}}}")
         except Exception:
             pass
@@ -601,7 +746,7 @@ def generate_tex(counts: dict, path: Path, deps: list | None = None):
     if deps:
         mod_thms: dict = {}
         for d in deps:
-            if d.get("kind") == "theorem":
+            if d.get("kind") == "theorem" and not _autogen_index_shared().get(d["name"]):
                 mod_thms[d["module"]] = mod_thms.get(d["module"], 0) + 1
 
         _i1_w16 = [  # Phase 6f Waves 1–6 (one module per wave)

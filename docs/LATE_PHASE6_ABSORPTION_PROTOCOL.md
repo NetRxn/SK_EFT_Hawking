@@ -6,7 +6,7 @@ Step-by-step protocol for absorbing a new Phase 6X wave's output (e.g., Phase 6n
 
 **Design rationale.** User direction 2026-04-30: *"i anticipate more phase 6 items being added, make sure the process you put in place for 7a's & the corresponding roadmap is robust to new items that may pop in past 6m."* The bundle architecture (`PAPER_STRATEGY.md` + `PAPER_DRAFT_MAPPING.md`) was designed assuming the source-paper roster is roughly stable; this protocol documents how *append-only* expansion happens with minimal re-work.
 
-**Default branch:** D.2 (additive append via `bundle_append.py`). D.1 is passive; D.3 requires manual author judgment. **D.4** (sourceless / Lean-only late absorption) is added at sub-wave 7a.4 freeze after the I2 lift demonstrated that fully-sourceless bundles are a real pattern, not a hypothetical.
+**Check D.0 first** (ADR-011 Phase 6): a target with open blockers, a non-green Stage 13, or a red charter floor is HOMED but NOT absorbed, because appending to it makes the review loop non-convergent. **In this corpus that is currently the normal case, not the exception.** Otherwise the default branch is D.2 (additive append via `bundle_append.py`). D.1 is passive; D.3 requires manual author judgment. **D.4** (sourceless / Lean-only late absorption) is added at sub-wave 7a.4 freeze after the I2 lift demonstrated that fully-sourceless bundles are a real pattern, not a hypothetical.
 
 ---
 
@@ -28,7 +28,7 @@ Phase 7's bundles must absorb the new content without redrafting.
 | **A** | Phase 6X completes its own per-paper Stage-13 closure | Phase 6X | Phase 6X internal |
 | **B** | Add row(s) to `PAPER_DRAFT_MAPPING.md` per Pipeline Invariant #14 | Phase 6X owner | Phase 6X close |
 | **C** | `bundle_source_manifest.py` re-run; `validate.py --check bundle_source_freshness` flags affected bundles `freshness-stale` | automation | mapping update |
-| **D** | Branch by bundle state (D.1 / D.2 / D.3) | Phase 7 owner | freshness flag |
+| **D** | Branch by bundle state (**D.0** / D.1 / D.2 / D.3 / D.4) | Phase 7 owner | freshness flag |
 | **E** | F (flagship) auto-flags `freshness-stale` if any Tier-1 bundle absorbs new content | automation | downstream propagation |
 | **F** | Stage-13 re-invocation per affected bundle; BLOCKERs resolved | Phase 7 owner + reviewer agents | re-review queue |
 | **G** | `validate.py --check bundle_consistency` re-run; `cluster_bundle_index.json` re-frozen | automation | post-review closure |
@@ -65,7 +65,9 @@ Phase 6X owner adds a row (or several) to `docs/PAPER_DRAFT_MAPPING.md` Table 1 
 | `paperNN_topic` | <Title> | Phase 6X W<wave> | **<Bundle> §<N>** | Lift-section |
 ```
 
-Each new source paper has explicit `bundle_destination(s)` and `lift_action`. If the new content does not fit any of the existing 13 bundles, **user authorization is required** for a 14th+ bundle target (Pipeline Invariant #14).
+Each new source paper has explicit `bundle_destination(s)` and `lift_action`. If the new content fits **no bundle in the live roster**, a new bundle target requires **user authorization** (Pipeline Invariant #14).
+
+⚠️ **The roster is owned by `scripts/bundle_registry.py`, surfaced as `validate.BUNDLE_CODES`, and censused in `docs/architecture/SURFACE_INVENTORY.md` — read it there.** This gate previously counted the bundles inline and named the next ordinal, which is a hardcoded roster wearing prose: it went stale on the first authorization it was meant to govern and then misstated the very roster a reader consults it to check. Do not restore a number here; the question the gate asks is *"is this bundle in the registry?"*, and only the registry can answer it.
 
 **Authorization gates inside Stage B:**
 - ≥1 new bundle target → user authorization
@@ -83,11 +85,62 @@ uv run python scripts/validate.py --check bundle_source_freshness
 
 Effects:
 - New source rows appear in each affected bundle's `source_manifest.md`.
-- `validate.py --check bundle_source_freshness` flags affected bundles `freshness-stale=true` and sets `bundle_metadata.json.freshness_stale=true`.
+- `validate.py --check bundle_source_freshness` flags affected bundles `freshness-stale=true`.
+
+> ✅ **THE STAGE-C TRIGGER NOW FIRES FOR PHASE-SOURCED BUNDLES TOO (2026-08-09, TODO-D27).**
+> Two populations are compared to `last_lift`, and a bundle is stale if either moved.
+>
+> * **Source papers** — the latest mtime under `papers/<source>/`. Bundles whose
+>   `PAPER_DRAFT_MAPPING.md` entries are synthetic tokens (`_phase6t_lean_only`,
+>   `D9_initial_draft`, …) name no directory, so this population is empty for **D6–D12, I2
+>   and I3** and they report `source-UNMEASURABLE` on this leg. That is honest, not a gap.
+> * **Lean substrate** — the last **commit** touching each module the bundle rests on, over
+>   the union of `append_log.json`'s `lean_modules_referenced` and the bundle's **derived
+>   apex closure**. The closure is what makes the trigger universal: D6 and D7 register
+>   zero modules, so a registration-only trigger would have left the two neediest bundles
+>   unmeasured. Every one of the 21 declares apexes.
+>
+> **Commit time, not mtime.** A `git checkout`, a worktree creation or a fresh clone
+> rewrites every mtime in the tree; an mtime trigger would mark all nine stale at once for
+> a reason unrelated to content. Mtime is used only for a file git does not know about —
+> untracked, or dirty in the working tree.
+>
+> **Zero bundles are wholly `UNMEASURABLE`.** Registered module names that resolve to no
+> file are reported per bundle rather than dropped, so a renamed module cannot silently
+> shrink the population it was registered into.
+>
+> ⚠️ `freshness_stale` is **no longer written during validation**. `check_bundle_source_freshness.check()`
+> is pure by default — a check must not mutate the artifact it checks, and this one wrote its own
+> verdict into the file the dashboard and this protocol read. The CLI entry point still writes it
+> (`write_metadata=True`), so refreshing the flag is now an explicit action rather than a side
+> effect of running the suite.
 
 ### Stage D — Branch by bundle state
 
 For each affected bundle, classify into one of four branches:
+
+#### D.0 — Target is unsound: HOME the work, do not absorb it (F-08)
+
+**Check this branch first.** It applies when `paper_draft.tex` exists **and** any of:
+
+- `blockers_open > 0`;
+- `stage13_status != green`;
+- the bundle fails its own charter floor — `bundle_manuscript_length`,
+  `bundle_figure_adequacy` or `bundle_structural_coherence` red.
+
+**Action: do not absorb.** Register the mapping row (Stage B) so the work is *homed* and
+cannot be lost, set `absorption_queued: true` in `bundle_metadata.json`, and stop. The
+bundle is remediated to GREEN first; the queued absorptions then land as a single D.2/D.4
+batch followed by one Stage-F cycle.
+
+**Why this branch has to exist.** Appending to a bundle carrying open blockers makes the
+review loop non-convergent: each round adds content while the previous round's findings are
+still open, and the manuscript grows while it is being repaired. D1 carries 37 blockers and
+D12 carries 46. **This is the normal case in this corpus today, not the exception**, which
+is why it is the first row rather than a footnote.
+
+D.0 decouples *homing* from *absorbing*: the work never becomes un-homed, and the defective
+bundle stops growing.
 
 #### D.1 — Bundle not yet drafted (passive pickup)
 
@@ -218,6 +271,7 @@ uv run python scripts/bundle_clusters.py
 
 | Condition | Branch | Owner | Stage A gate |
 |---|---|---|---|
+| `paper_draft.tex` exists AND the target is unsound (blockers open, Stage 13 not green, or a charter floor red) | **D.0** | Phase 7 owner | none — do not absorb; home and queue |
 | `papers/<bundle>/paper_draft.tex` does not exist | **D.1** | passive (no action) | n/a (deferred) |
 | `paper_draft.tex` exists AND new content is additive AND Phase 6X has per-paper draft | **D.2** | Phase 7 sub-phase owner | A (per-paper Stage-13 GREEN) |
 | `paper_draft.tex` exists AND new content overturns/refines prior content | **D.3** | Phase 7 owner + lead author | A (per-paper Stage-13 GREEN) |
@@ -266,7 +320,7 @@ The strict-extension-layer pattern is load-bearing here: keeping the legacy `Sak
 
 The following protocol stages may require explicit user authorization before proceeding:
 
-1. **Stage B** — if Phase 6X output does not fit any of the existing 13 bundle targets (Pipeline Invariant #14, 14th+ bundle target).
+1. **Stage B** — if Phase 6X output fits no bundle in the live roster (`scripts/bundle_registry.py` / `validate.BUNDLE_CODES`), so a new bundle target is required (Pipeline Invariant #14).
 2. **Stage B** — if mapping addition overrides existing bundle assignment for a previously-mapped paper.
 3. **Stage B** — if new `Lift-flagship` row absorbs Phase 6X content directly into F without going through a Tier-1 sibling.
 4. **Stage D.3** — if revision substantially changes bundle's published-claim profile.

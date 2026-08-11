@@ -5,7 +5,7 @@
       "date": "2026-07-30T21:53:51Z",
       "source_paper": "D11_initial_draft",
       "lift_action": "Lift-section",
-      "bundle_section_inserted": "\u00a71",
+      "bundle_section_inserted": "§1",
       "lean_modules_referenced": [
         "BlochBundle",
         "TopologicalBand.PrincipalBranch",

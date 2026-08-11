@@ -2,7 +2,8 @@
 
 The lab notebook is the **one source-of-truth brick log** for a `/goal` loop (live brick-state;
 the marker is captured-once at launch). It is **progressively disclosed** and the plugin maintains
-it for you via the `/skeft-qa:notebook` command (`scripts/notebook_lib.py`). You should rarely touch
+it for you via the `/skeft-qa:notebook` command (`${CLAUDE_PLUGIN_ROOT}/scripts/notebook_lib.py`).
+You should rarely touch
 its structure by hand — author the *content*, let the tool keep the *scaffold* correct and the active
 shard **under the ~25k-token Read guard automatically**.
 

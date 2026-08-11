@@ -1,14 +1,71 @@
 {
   "bundle_target": "L1",
+  "apex_theorems": [
+    {
+      "name": "SKEFTHawking.GravitationalWaves.c_GW_match_iff_chi_close_to_one",
+      "claims": "Theorem 1: LigoSatisfied(Δc/c) ↔ χ_vest ∈ [(1-τ)²,(1+τ)²] — the correctness-push biconditional locating the compatible window",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GravitationalWaves.natural_lower_violates_ligo",
+      "claims": "Theorem 2: at χ_vest = 0.1 the deviation exceeds the GW170817 cap",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GravitationalWaves.natural_upper_violates_ligo",
+      "claims": "Theorem 3: at χ_vest = 10 the deviation exceeds the GW170817 cap",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GravitationalWaves.vestigial_natural_range_violates_ligo",
+      "claims": "the bundled corollary — both endpoints fail simultaneously; the headline figure's Lean witness",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_at_one",
+      "claims": "the tracked-hypothesis bundle is discharged at χ_vest = 1 (non-vacuity)",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_natural_lower",
+      "claims": "falsifier isolating P2 (GW170817 compatibility) at the lower endpoint",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_natural_upper",
+      "claims": "falsifier isolating P2 at the upper endpoint",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_zero",
+      "claims": "falsifier isolating P1 (positivity)",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_quarter",
+      "claims": "falsifier isolating P3' — at χ_vest = 1/4 the deviation saturates -1/2, establishing P3' independence from P1",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GravitationalWaves.natural_range_disjoint_from_ligo_window",
+      "claims": "the Phase-5y H1 underdetermination caveat as a disjointness theorem: no c-rescaling reconciles either endpoint",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GravitationalWaves.second_sound_graviton_natural_range_universally_falsified",
+      "claims": "the frame-independent form, quantifying over all c > 0 explicitly",
+      "declared": "2026-08-07"
+    }
+  ],
   "tier": 2,
   "title": "GW170817 / vestigial-graviton",
   "target_journal": "PRL",
   "phase7_subphase": "7b",
-  "stage9_status": "green",
-  "stage10_status": "green",
-  "stage13_status": "green",
-  "stage13_redo_required": false,
-  "freshness_stale": false,
+  "stage9_status": "pending",
+  "stage10_status": "pending",
+  "stage13_status": "pending",
+  "stage13_redo_required": true,
+  "freshness_stale": true,
   "source_manifest_last_regen": "2026-05-12T12:46:30Z",
   "last_lift": "2026-05-06T15:42:03Z",
   "last_stage9_review": "2026-05-07T01:00:00Z",
@@ -30,5 +87,12 @@
     "FixPropagation"
   ],
   "readiness": "RED",
-  "readiness_last_computed": "2026-07-31"
+  "readiness_last_computed": "2026-07-31",
+  "length_target": {
+    "unit": "word_equivalents",
+    "ceiling": 3750,
+    "source": "PRL author guide (3750 word equivalents: text + 300/figure + tables + captions + refs)"
+  },
+  "compiled_pages": 4,
+  "compile_gate_ok": true
 }

@@ -1,14 +1,381 @@
 {
   "bundle_target": "D11",
+  "apex_theorems": [
+    {
+      "name": "SKEFTHawking.TopologicalBand.sum_plaquetteArg_eq_two_pi_mul_latticeChern",
+      "claims": "Abstract + §2.2 — the FHS integrality carrier: the total plaquette phase is 2π times the integer latticeChern, with NO spectral, gap or continuum hypothesis",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.TopologicalBand.latticeChern_gaugeInvariant",
+      "claims": "Abstract + §2.2 — gauge invariance of the lattice Chern number, unconditional",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.TopologicalBand.blochLatticeChern_integrality",
+      "claims": "§2.2 — integrality inherited at the AdmissibleBandFrame (physical-band) level",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.TopologicalBand.blochLatticeChern_rephase",
+      "claims": "§2.2 — gauge invariance inherited at the AdmissibleBandFrame level",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.TopologicalBand.latticeChern_Uwit",
+      "claims": "§2.2 — non-vacuity: an explicit 2x2-torus link field whose lattice Chern number is 1",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.TopologicalBand.latticeChern_trivial",
+      "claims": "§2.2 — the negative fixture the witness is stated against: 0 for the constant field",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.TopologicalBand.blochLatticeChern_eq_zero_of_narrow_D",
+      "claims": "§2.2 — complementary vanishing criterion: a frame with no phase frustration cannot wind",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.Topological.blochPauli_gap_pos_iff",
+      "claims": "§2.3 — the two-band d.sigma model is gapped IF AND ONLY IF d != 0; the band-touching point the invariant is defined around is characterized, not merely excluded",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.Topological.blochPauli_band_secular",
+      "claims": "§2.3 — the two band energies are genuine eigenvalues, via the secular determinant",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.TopologicalBand.blochProj_idem",
+      "claims": "§2.3 — the lower-band projector is idempotent (the spectral input to the frame)",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.Phononic.DiatomicChain.acousticBloch_eigenvalue_iff",
+      "claims": "§3 — spectral COMPLETENESS: the secular determinant vanishes iff lambda is one of the two branches; stronger than exhibiting eigenvalues",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.Phononic.DiatomicChain.acousticBloch_spectrum",
+      "claims": "§3 — Hermiticity packaged with the branch ordering",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.Phononic.phononic_band_gap_exists",
+      "claims": "Abstract + §3 — band-gap existence for the concrete diatomic chain (1,2,1,1): lo < hi bracketing both branches for all k",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.Phononic.diatomicCrystal.branchMinus_at_pi",
+      "claims": "Abstract + §3 + Fig.1 — the lower gap edge is ATTAINED (exactly 1 at k = pi), so the gap is the true one and not a loose bracket",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.Phononic.diatomicCrystal.branchPlus_at_pi",
+      "claims": "Abstract + §3 + Fig.1 — the upper gap edge is ATTAINED (exactly 2 at k = pi)",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.Phononic.diatomicCrystal.branchMinus_at_neg_pi",
+      "claims": "Fig.1 — the lower edge is attained at -pi as well; theorem-backed, not asserted by symmetry",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.Phononic.diatomicCrystal.branchPlus_at_neg_pi",
+      "claims": "Fig.1 — the upper edge is attained at -pi as well; theorem-backed, not asserted by symmetry",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.Phononic.DiatomicChain.branchMinus_neg",
+      "claims": "Fig.1 — evenness of the lower branch in k (the symmetry the caption declines to assume)",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.Phononic.DiatomicChain.branchPlus_neg",
+      "claims": "Fig.1 — evenness of the upper branch in k",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.Phononic.band_gap_falsifier",
+      "claims": "§3 — the gap stated as a REFUTATION: any real omega^2 annihilating the secular determinant strictly inside the gap yields a contradiction",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.Phononic.band_gap_rational_enclosure",
+      "claims": "Abstract + §3 — the frequency gap certified by a rational inner bracket, discharged by norm_num with no floating-point arithmetic",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.NonHermitian.pt_symmetric_real_spectrum_iff",
+      "claims": "Abstract + §4 — sharp BICONDITIONAL PT transition: a real eigenvalue exists iff g^2 <= 1",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.NonHermitian.exceptional_point_defective",
+      "claims": "Abstract + §4 — a genuinely DEFECTIVE order-two exceptional point, established by computing both eigenspaces rather than by a Jordan normal form (which Mathlib lacks)",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.NonHermitian.ep_order_two",
+      "claims": "§4 — the characteristic polynomial at the exceptional point",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.NonHermitian.ep_proximity_enclosure",
+      "claims": "§4 — approach to the exceptional point quantified: the eigenvalue splitting bounded on a neighbourhood",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.NonHermitian.ep_splitting_at_ep",
+      "claims": "§4 — exact vanishing of the splitting at the critical point",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.Metamaterial.maxwellGarnett_clausius_mossotti",
+      "claims": "§5 — the Maxwell-Garnett closed form solves the Clausius-Mossotti relation in a cross-multiplied, division-free formulation",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.Metamaterial.maxwellGarnett_host_recovery",
+      "claims": "§5 — the zero-fill sanity check",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.Metamaterial.effectiveMedium_constituent_bounds",
+      "claims": "§5 — the bound actually proved: the elementary CONSTITUENT bracket, with the ordering hypothesis load-bearing (Maxwell-Garnett is not host/inclusion symmetric)",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.Metamaterial.effectiveMedium_constituent_bounds_strict",
+      "claims": "Abstract + §5 — the bracket is STRICT on a genuinely mixed two-phase composite, so neither constituent bound is attained",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.Metamaterial.effectiveMedium_hashinShtrikman_enclosure",
+      "claims": "§5 + Fig.4 — the worked instance at (1, 4, 1/2) gives exactly 2. NAME IS HISTORICAL: the draft states explicitly that neither the Wiener nor the Hashin-Shtrikman family is formalized here and that this theorem entails neither",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.Metamaterial.effectiveMedium_worked_point_strict",
+      "claims": "§5 + Fig.4 — the worked point placed strictly inside [1,4] by instantiating the general theorem rather than re-deriving order facts from the value",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.Metamaterial.effectiveModuli_enclosure",
+      "claims": "§5 — the Voigt/Reuss ordering chain M1 <= M_R <= M_V <= M2 under 0 < M1 <= M2, with the hypotheses load-bearing (a counterexample at (4,1,1/2) falsifies the unconditional form)",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.Metamaterial.voigt_sub_reuss_eq",
+      "claims": "Abstract + §5 — the arithmetic-minus-harmonic gap in EXACT closed form, not merely as the inequality M_V >= M_R",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GrapheneBand.structureFactor_eq_zero_iff",
+      "claims": "§6.1 — the Dirac points characterized in a quotient-free form",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GrapheneBand.honeycomb_energy_eq",
+      "claims": "§6.1 — the band energies are the two signed norms",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GrapheneBand.honeycomb_band_secular",
+      "claims": "§6.1 — those energies are genuine eigenvalues",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GrapheneBand.diracK'_ne_recip_translate_diracK",
+      "claims": "§6.1 — the two cones are inequivalent: one is not a reciprocal-lattice translate of the other",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GrapheneBand.isHoneycombChart_of_neighbours",
+      "claims": "§6.1 — the generality answer: the honeycomb's own neighbour geometry FORCES the chart. Stated as a forcing result rather than an invariance result BECAUSE of the §7 shear refutation",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GrapheneBand.structureFactor_linear_expansion_global",
+      "claims": "§6.2 — the linearization error bounded GLOBALLY (no validity ball), via a second-order remainder bound for the complex exponential with constant 1",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GrapheneBand.quadForm_of_chart",
+      "claims": "§6.2 — isotropy is a theorem, and a chart-specific one",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GrapheneBand.dispersion_slope_eq_hbar_fermiVelocity",
+      "claims": "§6.2 — the linear dispersion, with the Fermi velocity left parametrized rather than carrying a baked-in unit convention",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GrapheneBand.dispersion_linear_not_exact",
+      "claims": "§6.2 — NEGATIVE: an explicit point at which the linear form and the exact structure factor differ",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GrapheneBand.gapped_dirac_gap_eq",
+      "claims": "§6.2 — the Semenoff-mass Dirac-point gap is exactly twice the absolute mass",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GrapheneBand.gapped_gap_ge_dirac",
+      "claims": "§6.2 — that gap is the model minimum",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GrapheneBand.gapped_gap_eq_dirac_iff",
+      "claims": "§6.2 — the exact minimizer set of the gap",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GrapheneBand.haldaneNNN_eq_nnnSum",
+      "claims": "§6.3 — the next-nearest-neighbour hopping bridged to the physical neighbour sum (the modelling-fidelity link)",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GrapheneBand.haldane_gap_diracK",
+      "claims": "§6.3 — the Dirac-point gaps of the Haldane model",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GrapheneBand.haldane_mass_inversion_iff",
+      "claims": "§6.3 — the mass-inversion criterion",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GrapheneBand.haldane1_pos",
+      "claims": "§6.3 — admissibility obligation discharged, not a formality: the north-pole condition checked at all sixteen vertices",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GrapheneBand.haldane1_link_ne",
+      "claims": "§6.3 — admissibility obligation discharged: all thirty-two nearest-neighbour overlaps are nonzero",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GrapheneBand.haldaneFrame_latticeChern_eq_neg_one",
+      "claims": "ABSTRACT HEADLINE + §6.3 — C = -1 certified for a concrete Haldane model on a 4x4 torus at t = t2 = 1, phi = pi/2, m = 1. This is what makes the invariant non-vacuous",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GrapheneBand.haldaneFrame_latticeChern_gauge_independent",
+      "claims": "§6.3 — that value is a property of the sampled band, not of the gauge representative",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GrapheneBand.haldane_trivial_phase_chern_zero",
+      "claims": "§6.3 + Fig.3 — companion value: C = 0 at m = 6, outside the analytic window",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GrapheneBand.haldane_window_bounds",
+      "claims": "§6.3 — the analytic mass-inversion window |m| < 3*sqrt(3)",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GrapheneBand.haldane_massInversion_not_sufficient_at_N4",
+      "claims": "§6.3 + §7 + Fig.3 — NEGATIVE, and the reason a prior classification theorem was deleted: at m = 5 the masses HAVE inverted (inside the window) and the 4x4 invariant still reads 0. Mass inversion is not sufficient at fixed grid size",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GrapheneBand.coneBerryPhase_pi",
+      "claims": "§6.3 — the Berry phase around a cone is EXACTLY pi for the diamond loop, not enclosed",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GrapheneBand.coneWinding_two_pi",
+      "claims": "§6.3 — the winding increments sum to 2pi",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GrapheneBand.flatLoopBerryPhase_zero",
+      "claims": "§6.3 — contrast pair: zero Berry phase for a loop enclosing no degeneracy",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GrapheneBand.flatWinding_zero",
+      "claims": "§6.3 — contrast pair: zero winding for that loop",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GrapheneBand.coneWinding_increments_off_branch_cut",
+      "claims": "§6.3 — the stated limitation, in positive form: the increments are certified non-marginal (each keeps a margin from the branch cut) though not certified alias-free",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GrapheneBand.det_fin_four",
+      "claims": "§6.4 — Mathlib-grade infrastructure built for this bundle: the 4x4 determinant expansion (Mathlib ships only through det_fin_three)",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GrapheneBand.bernal_det_eq",
+      "claims": "§6.4 — the 4x4 Bernal secular determinant collapses to a single real quadratic",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GrapheneBand.bernal_eigenvector_iff",
+      "claims": "§6.4 — those roots are genuine Bloch eigenvectors",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GrapheneBand.bernal_chirality_two",
+      "claims": "§6.4 + §7 — the exact chirality relation at ZERO bias; the eigenvector-level invariant that caught the wrong model and is now required for every multi-band model we ship",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GrapheneBand.bernal_lowRoot_enclosure",
+      "claims": "§6.4 — at ZERO bias, the low-energy behaviour bracketed globally",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GrapheneBand.bernal_mexicanHat",
+      "claims": "§6.4 — at NONZERO bias (a hypothesis the theorem carries explicitly), the band minimum sits at finite momentum with the gap strictly below the applied bias",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GrapheneBand.bernal_halfGapSq_isLeast",
+      "claims": "§6.4 — for general bias, the field-induced gap is a genuine LEAST element",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GrapheneBand.bernal_fullGapSq_eq",
+      "claims": "§6.4 — that gap matches the standard closed form",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GrapheneBand.structureFactor_zero_set_not_shear_invariant",
+      "claims": "Abstract + §7 — REFUTATION: the zero set of the honeycomb structure factor is NOT invariant under a general GL2(Z) chart change; an explicit shear breaks it",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GrapheneBand.not_isHoneycombChart_shear",
+      "claims": "§7 — the sheared chart is inadmissible (the other half of that refutation)",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GrapheneBand.bernal_spectrum_not_determine_model",
+      "claims": "Abstract + §7 + Conclusion — REFUTATION, the bundle's most transferable result: a multi-band Hamiltonian is not determined by its spectrum. Four-way conjunction: the swapped model is Hermitian everywhere, the two secular determinants agree everywhere, the Hamiltonians are nonetheless distinct at f = i, and i^2 != i*conj(i)",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GrapheneBand.bernalSwapped_chirality_zero",
+      "claims": "§7 — the conjugated variant is phase-blind, which is what the chirality relation sees and the determinant cannot",
+      "declared": "2026-08-07"
+    }
+  ],
   "tier": 1,
   "title": "Kernel-Verified Topological Band Theory & Metamaterial Substrate",
   "target_journal": "PRD | PRX Quantum | PRB",
   "phase7_subphase": "6CA-CE+6ED",
-  "stage9_status": "green",
-  "stage10_status": "green",
+  "stage9_status": "pending",
+  "stage10_status": "pending",
   "stage13_status": "pending",
   "stage13_redo_required": true,
-  "freshness_stale": false,
+  "freshness_stale": true,
   "source_manifest_last_regen": "2026-07-30T23:27:11Z",
   "last_lift": "2026-07-30T21:53:51Z",
   "last_stage9_review": "2026-07-31T04:10:00Z",
@@ -26,5 +393,13 @@
     "FixPropagation"
   ],
   "readiness": "RED",
-  "readiness_last_computed": "2026-08-01"
+  "readiness_last_computed": "2026-08-01",
+  "length_target": {
+    "unit": "pages",
+    "floor": 24,
+    "ceiling": 60,
+    "source": "PAPER_STRATEGY.md §6"
+  },
+  "compiled_pages": 9,
+  "compile_gate_ok": true
 }

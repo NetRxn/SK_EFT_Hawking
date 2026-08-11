@@ -5,7 +5,7 @@
       "date": "2026-06-30T01:41:08Z",
       "source_paper": "D10_initial_draft",
       "lift_action": "Lift-section",
-      "bundle_section_inserted": "\u00a71",
+      "bundle_section_inserted": "§1",
       "lean_modules_referenced": [
         "NEGFGreenFunction",
         "LandauerConductance",

@@ -5,7 +5,7 @@ allowed-tools: Bash(uv run *)
 ---
 <!-- A COMMAND (model-invocable, like reset-slot) so the autonomous lead can maintain the lab
      notebook from any context without loading the goal-dev skill. The deterministic logic lives in
-     scripts/notebook_lib.py (unit-tested, stdlib-only, idempotent). The two-layer model + per-brick
+     ${CLAUDE_PLUGIN_ROOT}/scripts/notebook_lib.py (unit-tested, stdlib-only, idempotent). The two-layer model + per-brick
      discipline are in goal-dev/references/lab-notebook.md. "<25k automatically" = `sync`/`shard`
      self-level on invoke; a read-only `check` also runs in SessionStart re-injection + the pre-commit
      gate so oversize/stale can't go silent. No hook ever mutates the notebook (self-improving, never

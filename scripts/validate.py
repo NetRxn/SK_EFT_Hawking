@@ -67,4791 +67,210 @@ import subprocess
 import sys
 import tempfile
 import time
-from dataclasses import dataclass, field, asdict
+from dataclasses import asdict          # `dataclass`/`field` moved with the result types
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Callable, Dict, List, Optional
+from typing import Dict, List, Optional, Sequence  # `Callable` moved with `register_check`
 
 # ═══════════════════════════════════════════════════════════════════════
 # Path resolution
 # ═══════════════════════════════════════════════════════════════════════
 
-SCRIPT_DIR = Path(__file__).resolve().parent
-PROJECT_ROOT = SCRIPT_DIR.parent
-SRC_DIR = PROJECT_ROOT / "src"
-LEAN_DIR = PROJECT_ROOT / "lean" / "SKEFTHawking"
-NOTEBOOKS_DIR = PROJECT_ROOT / "notebooks"
-# Local (git-ignored) skip-cache for CHECK 11 notebook execution: maps each
-# vetted notebook to a content hash so unchanged, previously-passed notebooks
-# are not re-executed. Mirrors the Lean `extract_lean_deps.py` hash-skip.
-NOTEBOOK_EXEC_CACHE = NOTEBOOKS_DIR / ".notebook_exec_cache.json"
-PAPERS_DIR = PROJECT_ROOT / "papers"
-REPORTS_DIR = PROJECT_ROOT / "docs" / "validation" / "reports"
+# Bootstrap only — the minimum needed to make sibling modules importable. Every
+# other path below is an ALIAS of `validate_helpers`, which owns the anchor.
+_BOOTSTRAP_SCRIPT_DIR = Path(__file__).resolve().parent
+sys.path.insert(0, str(_BOOTSTRAP_SCRIPT_DIR.parent))   # repo root, so `src.*` imports
+if str(_BOOTSTRAP_SCRIPT_DIR) not in sys.path:          # siblings (tests import this module)
+    sys.path.insert(0, str(_BOOTSTRAP_SCRIPT_DIR))
 
-# Ensure src is importable
-sys.path.insert(0, str(PROJECT_ROOT))
-
-# Ensure sibling scripts/ modules are importable (validate.py is imported as a
-# module by tests/, not only run as __main__).
-if str(SCRIPT_DIR) not in sys.path:
-    sys.path.insert(0, str(SCRIPT_DIR))
 from bundle_registry import BUNDLE_CODES as _REGISTRY_BUNDLE_CODES  # noqa: E402
-
-
-# ═══════════════════════════════════════════════════════════════════════
-# Data structures
-# ═══════════════════════════════════════════════════════════════════════
-
-@dataclass
-class Detail:
-    """Single sub-check result."""
-    name: str
-    passed: bool
-    message: str = ""
-    warning: bool = False  # True = passed but with advisory warning (⚠)
-
-
-@dataclass
-class CheckResult:
-    """Result of one top-level check."""
-    passed: bool
-    details: List[Detail] = field(default_factory=list)
-    error: Optional[str] = None
-
-
-@dataclass
-class CheckSpec:
-    """Registered check metadata."""
-    name: str
-    description: str
-    func: Callable[[], CheckResult]
-
-
-# Global registry
-_CHECKS: List[CheckSpec] = []
-
-# Strict mode flag — set by CLI --strict. Tightens advisory warnings to hard
-# failures for paper-submission gating (currently used by parameter_provenance
-# and provenance_doi_in_registry).
-STRICT_MODE: bool = False
-
-# Force flag — set by CLI --force-notebooks. Bypasses the CHECK 11 notebook
-# skip-cache and re-executes every notebook (use after a kernel / dependency
-# upgrade that could change execution outcomes without changing notebook
-# content). Default False: unchanged, previously-vetted notebooks are skipped.
-FORCE_NOTEBOOK_REEXEC: bool = False
-
-# Force flag — set by CLI --force-latex OR when `paper_latex_compiles` is the
-# explicitly selected `--check`. The latex-compile check is slow (pdflatex ×
-# all bundle drafts), so it SKIPS in the default full run unless one of these
-# is set. Default False.
-FORCE_LATEX: bool = False
-
-
-def register_check(name: str, description: str):
-    """Decorator to register a validation check."""
-    def decorator(func: Callable[[], CheckResult]) -> Callable[[], CheckResult]:
-        _CHECKS.append(CheckSpec(name=name, description=description, func=func))
-        return func
-    return decorator
-
-
-# ═══════════════════════════════════════════════════════════════════════
-# CHECK 1: Python formulas ↔ Lean theorems
-# ═══════════════════════════════════════════════════════════════════════
-
-@register_check("formulas", "Python formulas reference valid Lean theorems")
-def check_formulas_to_theorems() -> CheckResult:
-    from src.core import formulas
-    from src.core.constants import ARISTOTLE_THEOREMS
-
-    mapping = [
-        ('count_coefficients', ['secondOrder_count', 'secondOrder_count_with_parity', 'thirdOrder_count']),
-        ('enumerate_monomials', ['secondOrder_count_with_parity', 'secondOrder_requires_parity_breaking']),
-        ('damping_rate', ['dampingRate_eq_zero_iff']),
-        ('dispersive_correction', ['dispersive_correction_bound', 'bogoliubov_superluminal']),
-        ('first_order_correction', ['firstOrder_correction_zero_iff']),
-        ('effective_temperature_ratio', ['effective_temp_zeroth_order']),
-        ('turning_point_shift', ['turning_point_shift_nonzero', 'turning_point_shift']),
-    ]
-
-    # Build set of all Lean theorem names (Aristotle-proved + manually proved)
-    lean_dir = Path(__file__).parent.parent / 'lean' / 'SKEFTHawking'
-    all_lean_names = set(ARISTOTLE_THEOREMS.keys())
-    if lean_dir.exists():
-        for lean_file in lean_dir.glob('*.lean'):
-            for line in lean_file.read_text().splitlines():
-                if line.startswith('theorem '):
-                    name = line.split()[1].split('(')[0].split(':')[0].strip()
-                    all_lean_names.add(name)
-
-    details = []
-    all_pass = True
-
-    for func_name, theorem_names in mapping:
-        func = getattr(formulas, func_name, None)
-        if not func or not func.__doc__:
-            details.append(Detail(func_name, False, "Function not found or missing docstring"))
-            all_pass = False
-            continue
-
-        doc = func.__doc__
-        missing_from_doc = [t for t in theorem_names if t not in doc]
-        missing_from_lean = [t for t in theorem_names if t not in all_lean_names]
-
-        if not missing_from_doc and not missing_from_lean:
-            details.append(Detail(func_name, True, f"Refs: {', '.join(theorem_names)}"))
-        elif missing_from_doc:
-            details.append(Detail(func_name, False, f"Missing from docstring: {missing_from_doc}"))
-            all_pass = False
-        else:
-            details.append(Detail(func_name, False, f"Not in Lean source or ARISTOTLE_THEOREMS: {missing_from_lean}"))
-            all_pass = False
-
-    return CheckResult(passed=all_pass, details=details)
-
-
-# ═══════════════════════════════════════════════════════════════════════
-# CHECK 1b: Placeholder theorems are not cited as verified (Invariant #9, R5)
-# ═══════════════════════════════════════════════════════════════════════
-
-# Verification-claim phrasing that, in a window around a placeholder reference,
-# indicates the paper presents a `True := trivial` placeholder as a real result.
-_VERIFY_CLAIM_RE = re.compile(
-    r"formally\s+verif|formal\s+verification|machine[-\s]check|"
-    r"end[-\s]to[-\s]end\s+(formal\s+)?verif|kernel[-\s]verif|kernel[-\s]check|"
-    r"proven\s+in\s+Lean|verified\s+(in|by)\s+Lean|rigorously\s+verif|"
-    r"zero\s+\\?texttt\{?sorry",
-    re.IGNORECASE,
-)
-# Hedge phrasing that, near a placeholder reference, means the claim is honestly
-# disclosed (statement-level / concrete-instance-only / deferred) — not an
-# overclaim. ADR-004 W7 finding H2: these are CLAIM-SPECIFIC MULTI-WORD phrases,
-# NOT bare ambiguous single words (a stray "stub"/"modulo"/"deferred" in
-# unrelated prose must not suppress a real overclaim). Each alternative is a
-# phrase a careful author writes ABOUT this specific claim.
-_HEDGE_CLAIM_RE = re.compile(
-    r"statement[-\s]level|at\s+the\s+statement\s+level|formalized\s+at\s+the\s+statement|"
-    r"_TODO|\\_TODO|not\s+yet\s+(proven|formal|verif)|conjectur|"
-    r"deferred\s+to|abstract\s+(braided[-\s]monoidal\s+)?functor|"
-    r"concrete(ly)?\s+(verif|for|instance)|verified\s+concretely|"
-    r"general[-\s]?\$?G\$?\s+(statement|case|level)|matched\s+at\s+the\s+(level|anyon)|"
-    r"only\s+(the\s+)?\$?\\?mathbb\{?Z\}?|for\s+\$?\\?mathbb",
-    re.IGNORECASE,
-)
-
-
-def _tex_name_pattern(token: str) -> "re.Pattern":
-    """Regex for a Lean decl name as it can appear in LaTeX — underscores may be
-    backslash-escaped (`\\_`) inside `\\texttt{}` / prose."""
-    return re.compile(re.escape(token).replace("_", r"(?:\\_|_)"))
-
-
-@register_check(
-    "placeholder_not_cited",
-    "Placeholder (True := trivial) theorems are not cited as verified in any paper (Invariant #9)")
-def check_placeholder_not_cited() -> CheckResult:
-    """Enforces the paper-claim clause of Pipeline Invariant #9: a placeholder
-    theorem (registered in ``PLACEHOLDER_THEOREMS``) must NOT be presented as a
-    formally-verified result in any paper. Matches both (a) the actual Lean decl
-    name / tracking key and (b) an optional ``tex_signature`` (the published math
-    notation a paper cites the claim by, e.g. ``Z(Vec_G) ≅ Rep(D(G))``) within a
-    window of a verification-claim phrase, unless a hedge phrase is also present.
-    Substrate Integrity Gates W1 (2026-06-13); enforces audit finding #3.
-    """
-    from src.core.constants import PLACEHOLDER_THEOREMS
-
-    if not PAPERS_DIR.exists():
-        return CheckResult(passed=True, details=[Detail("papers_dir", True, "no papers/ directory")])
-
-    WINDOW = 320  # verification-claim + hedge search window each side of a match.
-    #               ADR-004 W7 finding H2 is addressed by tightening the HEDGE
-    #               REGEX to claim-specific multi-word phrases (above), NOT by a
-    #               narrower window (which false-flags legitimately-hedged-but-
-    #               spread-out prose, e.g. paper9).
-
-    tokens: List[tuple] = []  # (compiled_regex, registry_key, kind)
-    for key, meta in PLACEHOLDER_THEOREMS.items():
-        lean_name = meta.get("lean_name", key)
-        for tok in {lean_name, key}:
-            tokens.append((_tex_name_pattern(tok), key, "name"))
-        sig = meta.get("tex_signature")
-        if sig:
-            tokens.append((re.compile(sig, re.IGNORECASE), key, "signature"))
-
-    details: List[Detail] = []
-    any_fail = False
-    n_drafts = 0
-
-    for paper_dir in sorted(PAPERS_DIR.iterdir()):
-        if not paper_dir.is_dir():
-            continue
-        tex = paper_dir / "paper_draft.tex"
-        if not tex.exists():
-            continue
-        n_drafts += 1
-        try:
-            text = tex.read_text()
-        except (OSError, UnicodeDecodeError):
-            continue
-
-        offenders: Dict[str, str] = {}
-        for tok_re, key, kind in tokens:
-            for m in tok_re.finditer(text):
-                win = text[max(0, m.start() - WINDOW): min(len(text), m.end() + WINDOW)]
-                if _VERIFY_CLAIM_RE.search(win) and not _HEDGE_CLAIM_RE.search(win):
-                    offenders.setdefault(key, kind)
-
-        if offenders:
-            any_fail = True
-            msg = "; ".join(f"{k} ({kind})" for k, kind in sorted(offenders.items()))
-            details.append(Detail(
-                paper_dir.name, False,
-                f"presents placeholder(s) as formally verified without a hedge: {msg} "
-                f"(Invariant #9 — placeholders MUST NOT be cited as a paper claim)"))
-
-    if not any_fail:
-        details.append(Detail(
-            "all_papers", True,
-            f"no placeholder cited as a verified result across {n_drafts} paper draft(s)"))
-    return CheckResult(passed=not any_fail, details=details)
-
-
-# Strong "this proves the scientific result" verbs (the theorem as SUBJECT).
-# Deliberately EXCLUDES `proven`/`proved` — "the theorem is proven (zero sorry)"
-# is a legitimate statement about the theorem EXISTING, not an overclaim that it
-# establishes the physics.
-_OVERCLAIM_VERB_RE = re.compile(
-    r"\b(establish(es|ed)?|demonstrat(es|ed)?|guarante(es|ed)|confirm(s|ed))\b",
-    re.IGNORECASE)
-# Honest framings for a bookkeeping / definitional theorem near its name.
-_LEDGER_HEDGE_RE = re.compile(
-    r"\b(record(s|ed)?|tabulat|aggregat|enumerat|bookkeep|tallies|"
-    r"classification\s+ledger|summari[sz])\b", re.IGNORECASE)
-
-
-@register_check(
-    "disclosure_consistency",
-    "No paper presents a disclosed definitional/vacuous_proxy theorem as 'establishing' a result (#9)")
-def check_disclosure_consistency() -> CheckResult:
-    """ADR-004 reconcile #9: a theorem disclosed in ``MODELING_ASSUMPTION_THEOREMS``
-    as ``definitional`` / ``vacuous_proxy`` (NOT carrying the substantive proof
-    load — bookkeeping / a self-disclosed marker) must NOT be presented in any
-    paper as ESTABLISHING / DEMONSTRATING / GUARANTEEING a scientific result.
-    Nothing previously checked that paper prose matched a theorem's disclosure
-    tier: D5 prose-claimed the disclosed-bookkeeping aggregator
-    ``r_d_independent_count_eight`` 'establishes the 8/8 closure', contradicting
-    its own constants.py disclosure. Mirrors ``placeholder_not_cited`` (R5) for the
-    modeling-assumption disclosure tier (paper-prose ↔ disclosure-category)."""
-    from src.core.constants import MODELING_ASSUMPTION_THEOREMS as M
-    if not PAPERS_DIR.exists():
-        return CheckResult(passed=True, details=[Detail("papers_dir", True, "no papers/ directory")])
-
-    disclosed = []  # (regex, lean_name)
-    for k, v in M.items():
-        if v.get("category") in ("definitional", "vacuous_proxy"):
-            ln = v.get("lean_name", k)
-            disclosed.append((_tex_name_pattern(ln), ln))
-
-    AFTER = 60  # the disclosed theorem is the SUBJECT; the claim verb follows it.
-    details: List[Detail] = []
-    any_fail = False
-    n_drafts = 0
-    for paper_dir in sorted(PAPERS_DIR.iterdir()):
-        tex = paper_dir / "paper_draft.tex"
-        if not (paper_dir.is_dir() and tex.exists()):
-            continue
-        n_drafts += 1
-        try:
-            text = tex.read_text()
-        except (OSError, UnicodeDecodeError):
-            continue
-        offenders: set = set()
-        for rx, ln in disclosed:
-            for m in rx.finditer(text):
-                win = text[m.end(): min(len(text), m.end() + AFTER)]
-                if _OVERCLAIM_VERB_RE.search(win) and not _LEDGER_HEDGE_RE.search(win):
-                    offenders.add(ln)
-        if offenders:
-            any_fail = True
-            details.append(Detail(
-                paper_dir.name, False,
-                f"presents disclosed definitional/vacuous_proxy theorem(s) as establishing a result: "
-                f"{', '.join(sorted(offenders))} — reframe (the substantive proof load is in the "
-                f"per-item theorems; these are bookkeeping/markers per MODELING_ASSUMPTION_THEOREMS)"))
-    if not any_fail:
-        details.append(Detail(
-            "all_papers", True,
-            f"no disclosed-definitional theorem prose-claimed to 'establish' a result "
-            f"across {n_drafts} paper draft(s)"))
-    return CheckResult(passed=not any_fail, details=details)
-
-
-# ═══════════════════════════════════════════════════════════════════════
-# CHECK 1c: Proxy-body audit — structurally-named theorems not trivially closed
-#           (R2; mechanizes Stage-3a checklist item 5 "defining-the-conclusion")
-# ═══════════════════════════════════════════════════════════════════════
-
-# Theorem NAME claims a structural / quantitative result.
-_STRUCTURAL_NAME_RE = re.compile(
-    r"(_dim$|_dim_|_dims_|rank|finrank|Ext|classification|_no_go$|_nogo$|"
-    r"sixteen_|_unanimous$|_equivalence$|_corresponds$|_correspondence$|_combined$|"
-    r"_iso$|_well_defined$|_count$|_matches|_preserved$|_bijection$|_holds$)",
-    re.IGNORECASE,  # ADR-004 W7 finding M3: added correspondence/matches/preserved/bijection/holds
-)
-# A body that is ESSENTIALLY a trivial closer (after whitespace normalization).
-# Deliberately EXCLUDES decide / native_decide / norm_num / ring / simp etc. —
-# the compiler-trust surface is ADR-002's P4 gate, and the decide/norm_num
-# arithmetic-proxy class is Phase-5q.T's T5 detector.
-_TRIVIAL_BODY_RES = [
-    (re.compile(r"^(by\s+)?(exact\s+)?rfl$"), "rfl"),
-    (re.compile(r"^(by\s+)?(exact\s+)?trivial$"), "trivial"),
-    (re.compile(r"^by\s+(intro\s+[\w\s]+?)?cases\s+\w+\s*<;>\s*rfl$"), "cases <;> rfl"),
-    (re.compile(r"^(by\s+exact\s+)?h[\w']*$"), "identity-return (hypothesis)"),
-    (re.compile(r"^(by\s+exact\s+)?Equiv\.refl[\w\s.]*$"), "Equiv.refl"),
-    # ADR-004 W7 adversarial finding C2 — UNAMBIGUOUSLY-trivial forms only.
-    # (Deliberately NOT a bare `⟨…⟩` matcher: an anonymous constructor of REAL
-    # proven lemmas — e.g. `full_correspondence := ⟨left_inverse, right_inverse,
-    # …⟩` — is substantive, so only all-rfl/all-trivial constructors are flagged.)
-    (re.compile(r"^(by\s+exact\s+)?Iff\.rfl$"), "Iff.rfl"),
-    (re.compile(r"^(by\s+exact\s+)?⟨\s*(rfl|trivial)(\s*,\s*(rfl|trivial))*\s*⟩$"), "⟨rfl,…⟩"),
-    (re.compile(r"^(by\s+exact\s+)?And\.intro\s+(rfl|trivial)\s+(rfl|trivial)$"), "And.intro rfl rfl"),
-    (re.compile(r"^fun\s+\w+\s*=>\s*\w+\.\w+$"), "struct-field projection (fun _ => _.field)"),
-    # ADR-004 reconcile #23 — a self-discharging existential witnessed ENTIRELY by
-    # `Equiv.refl` / `rfl` / `trivial` (+ a `.bijective`/`.symm` projection of one):
-    # `∃ φ, Bijective φ := ⟨Equiv.refl _, (Equiv.refl _).bijective⟩`. This is a
-    # TARGETED anon-ctor matcher (every component is itself trivial), NOT a bare
-    # `⟨…⟩` matcher — a constructor of REAL lemmas (`⟨left_inv, right_inv⟩`) has a
-    # component that is not Equiv.refl/rfl/trivial, so it does not match (preserves
-    # the deliberate non-flagging of substantive constructors at finding C2).
-    (re.compile(
-        r"^(by\s+exact\s+)?⟨\s*"
-        r"(\(?\s*Equiv\.refl[\s\w]*+\)?(\.\w+)?|rfl|trivial)"
-        r"(\s*,\s*(\(?\s*Equiv\.refl[\s\w]*+\)?(\.\w+)?|rfl|trivial))*\s*⟩$"),
-     "⟨Equiv.refl,…⟩ (self-discharging existential)"),
-]
-# Substantive-tactic markers: if the body contains any of these it is NOT a
-# trivial closer (belt-and-suspenders with the anchored patterns above).
-_NONTRIVIAL_MARKER_RE = re.compile(
-    r"\b(decide|native_decide|norm_num|simp|ring|omega|linarith|nlinarith|"
-    r"aesop|positivity|induction|refine|constructor|calc|apply)\b")
-
-
-@register_check(
-    "proxy_body_audit",
-    "Structurally-named theorems are not proved by a trivial 'defining-the-conclusion' body (R2)")
-def check_proxy_body_audit() -> CheckResult:
-    """Flags any theorem whose NAME claims a structural / quantitative result
-    but whose PROOF is a trivial closer (rfl / trivial / cases<;>rfl /
-    identity-return / Equiv.refl) — the defining-the-conclusion anti-pattern
-    where the real content lives in a definition / struct field / registry, not
-    the proof. A flagged decl is COMPLIANT iff registered in
-    ``MODELING_ASSUMPTION_THEOREMS`` (with a reason + disclosure pointer) or
-    already a ``PLACEHOLDER_THEOREMS`` stub. Substrate Integrity Gates W2."""
-    import sys as _sys
-    _sys.path.insert(0, str(Path(__file__).parent))
-    from build_graph import _scan_lean_theorem_bodies
-    from src.core.constants import PLACEHOLDER_LEAN_NAMES
-    try:
-        from src.core.constants import MODELING_ASSUMPTION_THEOREMS
-    except ImportError:
-        MODELING_ASSUMPTION_THEOREMS = {}
-    try:
-        from src.core.constants import VACUOUS_STATEMENT_BASELINE as BASELINE
-    except ImportError:
-        BASELINE = frozenset()
-
-    lean_dir = PROJECT_ROOT / "lean" / "SKEFTHawking"
-    if not lean_dir.exists():
-        return CheckResult(passed=True, details=[Detail("lean_dir", True, "no lean dir")])
-
-    exempt = set(PLACEHOLDER_LEAN_NAMES.keys())
-    # A whitelist entry is a valid disclosure ONLY if it carries `reason` AND
-    # `discloses` — a bare entry is not a free pass.
-    whitelisted: set = set()
-    wl_incomplete: List[str] = []
-    for k, v in MODELING_ASSUMPTION_THEOREMS.items():
-        if v.get("reason") and v.get("discloses"):
-            whitelisted.add(v.get("lean_name", k))
-        else:
-            wl_incomplete.append(k)
-
-    new_flagged: List[tuple] = []
-    grandfathered: List[str] = []
-    for lean_file in sorted(lean_dir.rglob("*.lean")):
-        try:
-            source = lean_file.read_text()
-        except (OSError, UnicodeDecodeError):
-            continue
-        for thm_name, line_no, body in _scan_lean_theorem_bodies(source):
-            if thm_name in exempt or thm_name in whitelisted:
-                continue
-            if not _STRUCTURAL_NAME_RE.search(thm_name):
-                continue
-            norm = " ".join(body.split())
-            if _NONTRIVIAL_MARKER_RE.search(norm):
-                continue
-            label = next((lbl for rx, lbl in _TRIVIAL_BODY_RES if rx.match(norm)), None)
-            if label is None:
-                continue
-            # Grandfather the pre-existing class un-hid by the scanner / anon-ctor
-            # fixes (visible tracked debt). A NEW trivially-bodied structural
-            # theorem (not in the baseline) is a HARD-FAIL — closes the generator.
-            if thm_name in BASELINE:
-                grandfathered.append(thm_name)
-            else:
-                new_flagged.append((f"{lean_file.stem}.{thm_name}", line_no, label))
-
-    details: List[Detail] = []
-    # Advisory: disclosed vacuous_proxy theorems are tracked debt (PASS, but visible).
-    n_vac = sum(1 for v in MODELING_ASSUMPTION_THEOREMS.values()
-                if v.get("category") == "vacuous_proxy")
-    if n_vac:
-        details.append(Detail(
-            "tracked_vacuous_proxies", True,
-            f"{n_vac} structurally-named theorem(s) disclosed as `vacuous_proxy` tracked debt "
-            f"(see MODELING_ASSUMPTION_THEOREMS `discharge` pointers)", warning=True))
-    if grandfathered:
-        details.append(Detail(
-            "baseline", True,
-            f"{len(grandfathered)} grandfathered trivially-bodied theorem(s) in "
-            f"VACUOUS_STATEMENT_BASELINE (visible tracked debt → Vacuous Statement Sweep)",
-            warning=True))
-
-    for k in wl_incomplete:
-        details.append(Detail(
-            k, False,
-            "MODELING_ASSUMPTION_THEOREMS entry missing `reason`/`discloses` — not a valid disclosure"))
-    for full, line_no, label in new_flagged:
-        details.append(Detail(
-            full, False,
-            f"NEW structurally-named theorem closed by `{label}` at line {line_no} (not in baseline) — "
-            f"register in MODELING_ASSUMPTION_THEOREMS (with reason+discloses) or strengthen"))
-
-    if new_flagged or wl_incomplete:
-        return CheckResult(passed=False, details=details)
-    details.append(Detail(
-        "all_theorems", True,
-        f"no NEW trivially-closed structural theorems ({len(grandfathered)} baselined, "
-        f"{n_vac} disclosed vacuous_proxy)"))
-    return CheckResult(passed=True, details=details)
-
-
-# ═══════════════════════════════════════════════════════════════════════
-# CHECK 1d: Tracked-hypothesis ledger coverage (R3, Invariant #16)
-# ═══════════════════════════════════════════════════════════════════════
-
-def _is_prop_codomain(type_str: str) -> bool:
-    """True if a declaration's type has codomain `Prop` (a Prop-valued def /
-    structure = a candidate tracked-hypothesis), excluding `Subgroup`/type
-    defs that happen to be H_*-named."""
-    if not type_str:
-        return False
-    return type_str.replace("\n", " ").rstrip().split("→")[-1].strip() == "Prop"
-
-
-_TRACKED_PROP_NAME_RE = re.compile(r"^(H_[A-Za-z0-9_]+|[A-Za-z0-9_]+Conjecture|[A-Za-z0-9_]+Hypothesis)$")
-
-
-@register_check(
-    "tracked_hypothesis_ledger",
-    "Every consumed tracked-hypothesis Prop is registered in HYPOTHESIS_REGISTRY (Invariant #16, R3)")
-def check_tracked_hypothesis_ledger() -> CheckResult:
-    """Single-source-of-truth enforcement for tracked hypotheses: every
-    Prop-valued tracked hypothesis (`H_*` / `*Conjecture` / `*Hypothesis`) that
-    is CONSUMED as a binder `(h : P …)` by some theorem must be registered in
-    ``HYPOTHESIS_REGISTRY`` (the machine-readable source of truth) — or listed
-    in ``TRACKED_HYPOTHESIS_NON_LOAD_BEARING`` with a reason. Substrate
-    Integrity Gates W3. **Advisory until the registry backlog is cleared, then
-    escalates to hard-fail (Invariant #16).**"""
-    from src.core import constants as _c
-    HYPOTHESIS_REGISTRY = getattr(_c, "HYPOTHESIS_REGISTRY", {})
-    NON_LB = getattr(_c, "TRACKED_HYPOTHESIS_NON_LOAD_BEARING", {})
-
-    deps_path = PROJECT_ROOT / "lean" / "lean_deps.json"
-    if not deps_path.exists():
-        return CheckResult(passed=True, details=[Detail("lean_deps", True, "no lean_deps.json")])
-    deps = json.loads(deps_path.read_text())
-
-    # 1) Prop-valued tracked-hypothesis defs/structures (codomain Prop, tracked name)
-    tracked: dict = {}  # short name -> module
-    for d in deps:
-        short = d.get("name", "").split(".")[-1]
-        if _TRACKED_PROP_NAME_RE.match(short) and _is_prop_codomain(d.get("type", "")):
-            tracked[short] = d.get("module", "")
-
-    # 2) which are CONSUMED as a binder `( ident : Name` anywhere in the source
-    lean_dir = PROJECT_ROOT / "lean" / "SKEFTHawking"
-    src = "\n".join(
-        f.read_text(errors="ignore") for f in lean_dir.rglob("*.lean"))
-    consumed = set()
-    for name in tracked:
-        if re.search(r"\(\s*_?[A-Za-z0-9_']*\s*:\s*" + re.escape(name) + r"\b", src):
-            consumed.add(name)
-
-    # 3) coverage: registry key OR a dependent_theorems back-reference OR non-LB list
-    covered = set(HYPOTHESIS_REGISTRY.keys())
-    gap = sorted(n for n in consumed if n not in covered and n not in NON_LB)
-
-    details: List[Detail] = []
-    details.append(Detail(
-        "surface", not gap,
-        f"{len(tracked)} tracked Prop-defs; {len(consumed)} consumed; "
-        f"{len(consumed) - len(gap)} covered (registry {len(HYPOTHESIS_REGISTRY)} + non-LB {len(NON_LB)})"))
-    for n in gap:
-        details.append(Detail(
-            n, False,
-            f"consumed tracked Prop (def in {tracked[n]}) absent from HYPOTHESIS_REGISTRY "
-            f"and TRACKED_HYPOTHESIS_NON_LOAD_BEARING — register or downgrade (Invariant #16)"))
-    return CheckResult(passed=not gap, details=details)
-
-
-@register_check(
-    "tracked_hypotheses_fresh",
-    "docs/PERMANENT_TRACKED_HYPOTHESES.md is up-to-date vs HYPOTHESIS_REGISTRY (auto-regen)")
-def check_tracked_hypotheses_fresh() -> CheckResult:
-    """The tracked-hypotheses doc is an auto-generated VIEW of HYPOTHESIS_REGISTRY
-    (Substrate Integrity Gates W3). Same auto-regenerate-stale pattern as
-    ``counts_fresh``/``tables_fresh``: if the on-disk markdown drifts from the
-    registry render, regenerate it (so it can never silently diverge — the prior
-    two-disjoint-ledgers failure)."""
-    import sys as _sys
-    _sys.path.insert(0, str(Path(__file__).parent))
-    try:
-        import render_tracked_hypotheses as _r
-    except Exception as e:  # pragma: no cover
-        return CheckResult(passed=True, details=[Detail("import", True, f"renderer unavailable: {e}", warning=True)])
-    new = _r.render()
-    doc = _r.DOC_PATH
-    old = doc.read_text() if doc.exists() else ""
-    if old == new:
-        return CheckResult(passed=True, details=[Detail(
-            "tracked_hypotheses", True, f"{new.count('### ')} entries; doc matches HYPOTHESIS_REGISTRY")])
-    # HARD-FAIL on drift (do NOT silently rewrite a git-tracked file — ADR-004 W7
-    # adversarial finding M1; cf. memory feedback_dont_discard_autogen_artifacts).
-    # The maintainer regenerates + commits the result in the same wave.
-    return CheckResult(passed=False, details=[Detail(
-        "tracked_hypotheses", False,
-        "docs/PERMANENT_TRACKED_HYPOTHESES.md is STALE vs HYPOTHESIS_REGISTRY — "
-        "run `python scripts/render_tracked_hypotheses.py` and commit the regenerated doc")])
-
-
-# ═══════════════════════════════════════════════════════════════════════
-# CHECK 1e: Formula content-grounding (R1, Invariant #4 with teeth)
-# ═══════════════════════════════════════════════════════════════════════
-
-# ═══════════════════════════════════════════════════════════════════════
-# Type-thinness classifier (ADR-004 reconcile #45/#54/#25/#14) — shared by
-# `vacuous_statement_audit` and the `formula_grounding` hardening. Operates on
-# the ELABORATED type from lean_deps.json (name-agnostic, tactic-agnostic), so
-# it catches statements that prove nothing regardless of the proof tactic or the
-# theorem's name — the gap that let bare-arithmetic / reflexive theorems slip the
-# name-gated, norm_num-excluding `proxy_body_audit`.
-# ═══════════════════════════════════════════════════════════════════════
-
-# Tokens that carry NO physics content (operators, relations, numeric base types,
-# logical connectives). A statement whose ONLY identifiers are these (+ numeric
-# literals) is a closed decidable fact — "ground arithmetic dressed as physics".
-_ARITH_TOKENS = frozenset({
-    "Eq", "Ne", "GT.gt", "LT.lt", "LE.le", "GE.ge",
-    "HMul.hMul", "instHMul.hMul", "HAdd.hAdd", "instHAdd.hAdd",
-    "HSub.hSub", "instHSub.hSub", "HDiv.hDiv", "instHDiv.hDiv",
-    "HPow.hPow", "instHPow", "Neg.neg", "OfNat.ofNat", "OfScientific.ofScientific",
-    "Nat", "Int", "Real", "Rat", "ℝ", "ℕ", "ℤ", "ℚ",
-    "And", "Or", "Iff", "Not", "True", "False", "Prop",
-})
-_NUMLIT_RE = re.compile(r"^-?\d+(\.\d+)?(e-?\d+)?$", re.IGNORECASE)
-_TYPE_IDENT_RE = re.compile(r"[A-Za-z_][A-Za-z0-9_'.]*")
-# A "simple" Eq-argument = a single token with no internal structure (numeric
-# literal or a bare identifier / bound variable). Reflexive `Eq X X` is reliable
-# ONLY for simple args: a COMPOUND arg (`Eq (f a) (f a)`) may be a FALSE reflexive
-# because lean_deps' pretty-printed type ELIDES implicit args — e.g.
-# `sigPos_cast_pos : … sigPos (A.map (Int.cast:ℤ→ℝ)) → … sigPos (A.map (Int.cast:ℤ→ℚ))`
-# prints both sides as `sigPos (A.map Int.cast)` (the ℝ/ℚ codomain is elided), so a
-# genuine ℝ→ℚ transfer LOOKS reflexive. Restricting to simple args removes this
-# whole elision false-positive class (reconcile 2026-06-13).
-_SIMPLE_ARG_RE = re.compile(r"^-?[\w.]+'?$")
-_THIN_HARD = {"True", "reflexive (X=X)"}
-
-
-def _top_tokens(s: str) -> List[str]:
-    """Split into top-level tokens (bracket-balanced groups or maximal
-    non-space runs), respecting ()[]{}⟨⟩."""
-    toks, depth, cur = [], 0, ""
-    for ch in s:
-        if ch in "([{⟨":
-            depth += 1; cur += ch
-        elif ch in ")]}⟩":
-            depth -= 1; cur += ch
-        elif ch == " " and depth == 0:
-            if cur:
-                toks.append(cur); cur = ""
-        else:
-            cur += ch
-    if cur:
-        toks.append(cur)
-    return toks
-
-
-def _top_arrow_split(s: str) -> List[str]:
-    """Split on top-level `→` (function arrows), respecting brackets."""
-    parts, depth, last, i = [], 0, 0, 0
-    while i < len(s):
-        ch = s[i]
-        if ch in "([{⟨":
-            depth += 1
-        elif ch in ")]}⟩":
-            depth -= 1
-        elif depth == 0 and ch == "→":
-            parts.append(s[last:i].strip()); last = i + 1
-        i += 1
-    parts.append(s[last:].strip())
-    return parts
-
-
-def _strip_leading_binders(t: str) -> str:
-    """Drop leading `∀ … ,` / `∃ … ,` binder groups to reach the proposition."""
-    t = t.strip()
-    while t.startswith("∀") or t.startswith("∃"):
-        depth, ci = 0, None
-        for i, ch in enumerate(t):
-            if ch in "([{⟨":
-                depth += 1
-            elif ch in ")]}⟩":
-                depth -= 1
-            elif ch == "," and depth == 0:
-                ci = i; break
-        if ci is None:
-            break
-        t = t[ci + 1:].strip()
-    return t
-
-
-# Lean/Mathlib compiler-EMITTED lemmas (congruence, constructor, recursor,
-# equation lemmas) carry trivial/structural types by construction and are NOT
-# authored claims — exclude them (e.g. `Padic.congr_simp`, `Foo.mk.congr_simp`).
-_AUTOGEN_SHORT = frozenset({
-    "congr_simp", "congr", "injEq", "mk", "rec", "recOn", "casesOn", "below",
-    "brecOn", "ind", "binductionOn", "noConfusion", "noConfusionType",
-    "sizeOf_spec", "eq_def", "eq_mp", "eq_mpr", "fst", "snd",
-})
-_AUTOGEN_RE = re.compile(r"^(eq|proof|match|fun)_\d+$")
-
-
-def _is_autogen_decl(name: str) -> bool:
-    short = name.split(".")[-1]
-    return (short in _AUTOGEN_SHORT or bool(_AUTOGEN_RE.match(short))
-            or ".mk." in name or name.endswith(".congr_simp"))
-
-
-def _thin_type_label(type_str: str):
-    """Classify a declaration's elaborated type as content-thin, or None.
-
-    Returns a label string; `label in _THIN_HARD` ⇒ unambiguously vacuous
-    (hard-fail). `'ground-arith'` ⇒ closed numeric fact (advisory — the class
-    legitimately mixes vacuous physics-dressing with real counting identities
-    like `4*5/2 = 10`, with no syntactic separator). Operates on the elaborated
-    lean_deps type. Order: True ▸ reflexive ▸ ground-arith.
-
-    NOTE type-based `P→P` (hypothesis-return) detection is DELIBERATELY omitted:
-    lean_deps elides implicit args, so a genuine transfer `P_ℝ → P_ℚ` prints as
-    `P → P` (e.g. `sigPos_cast_pos`). The genuine `P→P` tautologies are caught
-    body-wise by `proxy_body_audit` (identity-return), which is elision-immune."""
-    if not type_str:
-        return None
-    t = type_str.replace("\n", " ").strip()
-    while "  " in t:
-        t = t.replace("  ", " ")
-    if t == "True":
-        return "True"
-    core = _strip_leading_binders(t)
-    concl = _top_arrow_split(core)[-1].strip()
-    # reflexive `Eq X X` (prefix) / `X = X` (infix) — SIMPLE args only (a compound
-    # arg may be a pretty-print elision false-reflexive; see `_SIMPLE_ARG_RE`).
-    toks = _top_tokens(concl)
-    if len(toks) == 3 and toks[0] == "Eq" and toks[1] == toks[2] \
-            and _SIMPLE_ARG_RE.match(toks[1]):
-        return "reflexive (X=X)"
-    if len(toks) == 3 and toks[1] == "=" and toks[0] == toks[2] \
-            and _SIMPLE_ARG_RE.match(toks[0]):
-        return "reflexive (X=X)"
-    # ground arithmetic: conclusion's only identifiers are operators/literals
-    leftover = [x for x in _TYPE_IDENT_RE.findall(concl)
-                if x not in _ARITH_TOKENS and not _NUMLIT_RE.match(x)]
-    has_rel = (any(r in concl for r in ("Eq", "GT.gt", "LT.lt", "LE.le", "GE.ge", "Ne"))
-               or any(op in concl for op in ("=", "<", ">", "≤", "≥")))
-    if has_rel and not leftover:
-        return "ground-arith"
-    return None
-
-
-def _is_vacuous_identity_wrapper(type_str: str) -> bool:
-    """True iff the elaborated type is a DOUBLY-vacuous identity wrapper: an
-    implication `P → P` whose antecedent equals its consequent AND that shared
-    `P` is itself a reflexive equality `Eq X X` / `X = X`. This is the
-    `dd_simples_count` evidence-laundering shape (`… (h : Σ = Σ) : Σ = Σ := h`
-    — returns its hypothesis, proves nothing).
-
-    Requiring the reflexive body is what makes this false-positive-free: a
-    genuine transfer `P_ℝ → P_ℚ` also prints `P → P` after implicit-arg elision
-    (the reason `_thin_type_label` omits bare `P→P`), but there `P` is a
-    substantive proposition, not `Eq X X`. Only the reflexive-body case is
-    unambiguously content-free."""
-    if not type_str:
-        return False
-    core = _strip_leading_binders(type_str.replace("\n", " ").strip())
-    parts = _top_arrow_split(core)
-    if len(parts) < 2 or parts[-1].strip() != parts[-2].strip():
-        return False
-    toks = _top_tokens(parts[-1].strip())
-    return ((len(toks) == 3 and toks[0] == "Eq" and toks[1] == toks[2])
-            or (len(toks) == 3 and toks[1] == "=" and toks[0] == toks[2]))
-
-
-# Bare definitional closers: an `rfl`-family proof of an equality means the two
-# sides are DEFINITIONALLY equal (the theorem unfolds a definition, deriving
-# nothing). `simp`/`norm_num`/`decide` are deliberately NOT here — those can
-# discharge substantive computations.
-_BARE_RFL_RE = re.compile(r"^(by\s+)?(exact\s+)?(rfl|Iff\.rfl|Eq\.refl(\s+\S+)?)$")
-
-
-def _lean_decl_proof_body(short_name: str, module: str):
-    """Normalized proof body of ``short_name`` in its Lean ``module`` file, or
-    None. ``module`` is the lean_deps form ``SKEFTHawking.<Path.To.Module>`` and
-    maps to ``LEAN_DIR/<Path>/<To>/<Module>.lean``. Reads a single file."""
-    if not module:
-        return None
-    import sys as _sys
-    _sys.path.insert(0, str(SCRIPT_DIR))
-    try:
-        from build_graph import _scan_lean_theorem_bodies
-    except Exception:  # pragma: no cover - import guard
-        return None
-    segs = str(module).split(".")
-    if segs and segs[0] == "SKEFTHawking":
-        segs = segs[1:]
-    if not segs:
-        return None
-    f = LEAN_DIR.joinpath(*segs).with_suffix(".lean")
-    if not f.exists():
-        return None
-    try:
-        source = f.read_text()
-    except (OSError, UnicodeDecodeError):
-        return None
-    for name, _ln, body in _scan_lean_theorem_bodies(source):
-        if name.split(".")[-1] == short_name:
-            return " ".join(body.split())
-    return None
-
-
-def _grounding_is_definitional(decl: dict) -> bool:
-    """A grounding theorem is a 'definitional record' iff its elaborated type is
-    a vacuous identity wrapper OR its Lean proof body is a bare `rfl`-family
-    closer (definitional equality). Used by `formula_grounding` to keep the
-    `FORMULA_GROUNDING_KIND` declarations honest."""
-    if _is_vacuous_identity_wrapper(decl.get("type", "")):
-        return True
-    body = _lean_decl_proof_body(decl.get("name", "").split(".")[-1], decl.get("module", ""))
-    return bool(body and _BARE_RFL_RE.match(body))
-
-
-def _parse_formula_lean_refs(src: str) -> set:
-    """Extract Lean theorem-name tokens from `Lean: …` docstring lines in
-    formulas.py, dropping non-decl artifacts (file names, `pending`, fragments,
-    all-caps matrix labels)."""
-    refs = set()
-    for m in re.finditer(r"Lean:\s*(.+)", src):
-        line = re.split(r"[—–]\s|\s-\s", m.group(1))[0]  # drop trailing description
-        for tok in line.split(","):
-            tok = re.sub(r"\(.*?\)", "", tok).strip().rstrip(".").strip()
-            if not re.fullmatch(r"[A-Za-z_][\w.]*", tok) or len(tok) <= 2:
-                continue
-            if tok.endswith(".lean") or tok == "pending" or tok.startswith("_"):
-                continue
-            if re.fullmatch(r"[A-Z][A-Z0-9]{0,4}", tok):  # matrix-element labels (K0E0)
-                continue
-            refs.add(tok)
-    return refs
-
-
-@register_check(
-    "formula_grounding",
-    "Every formulas.py Lean reference resolves to a real, non-placeholder theorem (Invariant #4, R1)")
-def check_formula_grounding() -> CheckResult:
-    """Content-grounding for Pipeline Invariant #4: each `Lean:` reference in
-    `formulas.py` must resolve to a real Lean declaration that is NOT a
-    `True`/placeholder stub (a formula must not be 'grounded' on a theorem that
-    proves nothing — the δ_diss-class hazard, audit 2026-06-13 #14). Extends the
-    7-pair name-presence `formulas` check to ALL ~390 references.
-    HARD-FAIL: placeholder-grounded refs. ADVISORY: dangling (unresolved) refs —
-    a stale-name drift backlog the gate surfaces (FormulaRefSweep follow-up)."""
-    from src.core.constants import PLACEHOLDER_LEAN_NAMES
-    formulas_path = PROJECT_ROOT / "src" / "core" / "formulas.py"
-    deps_path = PROJECT_ROOT / "lean" / "lean_deps.json"
-    if not formulas_path.exists() or not deps_path.exists():
-        return CheckResult(passed=True, details=[Detail("inputs", True, "formulas.py / lean_deps.json absent")])
-
-    deps = json.loads(deps_path.read_text())
-    names, dotted, shorts, by_short, by_full = set(), set(), set(), {}, {}
-    for d in deps:
-        n = d.get("name", "")
-        if not n:
-            continue
-        names.add(n); by_full[n] = d
-        segs = n.split("."); shorts.add(segs[-1]); by_short.setdefault(segs[-1], d)
-        for i in range(1, len(segs)):
-            dotted.add(".".join(segs[i:]))
-
-    refs = _parse_formula_lean_refs(formulas_path.read_text())
-
-    def resolves(t):
-        return t in names or t in dotted or t in shorts
-
-    def decl(t):
-        return by_full.get(t) or by_short.get(t.split(".")[-1])
-
-    placeholder_grounded, dangling, thin_grounded = [], [], []
-    for t in sorted(refs):
-        if not resolves(t):
-            dangling.append(t)
-            continue
-        d = decl(t)
-        if not d:
-            continue
-        if d.get("type") == "True" or d["name"].split(".")[-1] in PLACEHOLDER_LEAN_NAMES:
-            placeholder_grounded.append(t)
-            continue
-        # ADR-004 reconcile #14 (the real Wave-21 semantic audit): a formula must
-        # not be "grounded" on a theorem whose CONCLUSION proves nothing — a
-        # reflexive `Eq N N` / `P→P` tautology (the δ_diss-class hazard, where the
-        # cited theorem merely mentions the quantity instead of relating it). The
-        # 7-9-order δ_diss units bug hid precisely because grounding meant "a named
-        # theorem exists", not "the theorem's conclusion pertains to the formula".
-        # NOTE this is STRUCTURAL substance (the statement is non-tautological),
-        # not full semantic "conclusion ⟹ float-computation" (undecidable); it
-        # catches the prove-nothing class. Ground-arith groundings are allowed —
-        # a formula computing a count may legitimately ground on `… = N`.
-        if _thin_type_label(d.get("type", "")) in _THIN_HARD:
-            thin_grounded.append(t)
-
-    # ── R-05: grounding-kind honesty (definitional-record vs derivation) ──
-    # A formula must not present a DEFINITIONAL record (identity wrapper / rfl
-    # equality) as an independent DERIVATION. FORMULA_GROUNDING_KIND is the
-    # authoritative per-ref claim; this cross-checks it against the Lean.
-    from src.core.constants import FORMULA_GROUNDING_KIND
-    kind_violations: List[tuple] = []
-
-    # Leg B (false-positive-free, ALL refs): a vacuous identity wrapper (`P → P`
-    # with reflexive body — proves nothing) MUST be declared a definitional
-    # record; grounding a formula on one as a derivation is forbidden.
-    for t in sorted(refs):
-        if not resolves(t):
-            continue
-        d = decl(t)
-        if not d or not _is_vacuous_identity_wrapper(d.get("type", "")):
-            continue
-        meta = FORMULA_GROUNDING_KIND.get(t.split(".")[-1])
-        if not meta or meta.get("kind") != "definitional-record":
-            kind_violations.append((t,
-                "vacuous identity wrapper (`P → P`, reflexive body — proves nothing) grounds "
-                "a formula; declare grounding_kind='definitional-record' in FORMULA_GROUNDING_KIND "
-                "or reground on a substantive theorem"))
-
-    # Legs A/C (the declared entries): the declared kind must MATCH the Lean.
-    # 'definitional-record' that is actually substantive → mislabel; 'derivation'
-    # that is actually an identity wrapper / rfl-definitional equality → the R-05
-    # relabel we forbid (a definitional record cannot be re-labeled a derivation).
-    for short, meta in FORMULA_GROUNDING_KIND.items():
-        d = by_short.get(short)
-        if not d:
-            kind_violations.append((short,
-                "FORMULA_GROUNDING_KIND entry resolves to no Lean declaration"))
-            continue
-        kind = meta.get("kind")
-        is_defl = _grounding_is_definitional(d)
-        if kind == "definitional-record" and not is_defl:
-            kind_violations.append((short,
-                "declared grounding_kind='definitional-record' but the Lean is neither an identity "
-                "wrapper nor an rfl-definitional equality — inaccurate label (do not hide a "
-                "substantive or open theorem behind a definitional record)"))
-        elif kind == "derivation" and is_defl:
-            kind_violations.append((short,
-                "declared grounding_kind='derivation' but the Lean IS an identity wrapper / "
-                "rfl-definitional equality — a definitional record cannot be re-labeled a "
-                "derivation (R-05 evidence-laundering)"))
-        elif kind not in ("definitional-record", "derivation"):
-            kind_violations.append((short,
-                f"kind={kind!r} is not 'definitional-record' or 'derivation'"))
-
-    ok = not (placeholder_grounded or dangling or thin_grounded or kind_violations)
-    details: List[Detail] = []
-    details.append(Detail(
-        "coverage", ok,
-        f"{len(refs)} Lean refs; {len(refs) - len(dangling)} resolve; "
-        f"{len(placeholder_grounded)} placeholder-grounded; {len(thin_grounded)} thin-grounded; "
-        f"{len(dangling)} dangling; {len(FORMULA_GROUNDING_KIND)} grounding-kind declared; "
-        f"{len(kind_violations)} grounding-kind violation(s)"))
-    for t, msg in kind_violations:
-        details.append(Detail(t, False, msg))
-    for t in placeholder_grounded:
-        details.append(Detail(t, False, "formula grounded on a placeholder/True stub (Invariant #4)"))
-    for t in thin_grounded:
-        details.append(Detail(
-            t, False,
-            "formula grounded on a reflexive/tautological theorem (proves nothing; "
-            "Invariant #4 content-grounding) — reground on a substantive theorem"))
-    # Dangling refs are HARD-FAIL since the 2026-06-13 FormulaRefSweep drove the
-    # count to 0 (ratchet — a NEW stale/renamed formula ref must be fixed, not
-    # left to rot). Replace the dangling name with the current theorem, drop the
-    # ref if no theorem grounds the formula, or (if it is a legitimate Mathlib /
-    # external name) it should still resolve in lean_deps — if not, it is drift.
-    for t in dangling:
-        details.append(Detail(
-            t, False,
-            "formula Lean-ref does not resolve (stale/renamed) — fix the name or drop the ref"))
-    return CheckResult(passed=ok, details=details)
-
-
-@register_check(
-    "vacuous_statement_audit",
-    "No project theorem/lemma has a content-thin (reflexive / tautological) statement (R2 type-companion)")
-def check_vacuous_statement_audit() -> CheckResult:
-    """Type-based companion to `proxy_body_audit` (ADR-004 reconcile #45/#54/#25).
-    `proxy_body_audit` is name-gated (`_STRUCTURAL_NAME_RE`) and excludes
-    `norm_num`/`decide` bodies, so a theorem whose STATEMENT proves nothing slips
-    if its name isn't structural or its proof is `by norm_num` (e.g.
-    `tetrad_components : 4*4=16`, `hom_tensor_adjunction_dim : ∀ rank, rank=rank`).
-    This check classifies the ELABORATED type (lean_deps.json), name- and
-    tactic-agnostic.
-
-    HARD-FAIL: reflexive `Eq X X` and `True` (the unambiguously-vacuous classes)
-    NOT in `VACUOUS_STATEMENT_BASELINE`. ADVISORY: ground-arithmetic (closed
-    numeric facts — the class legitimately mixes vacuous physics-dressing with
-    real counting identities like `4*5/2=10`) AND the grandfathered baseline (the
-    ~48 pre-existing content-thin theorems un-hid by the SIG-gate blind-spot fixes,
-    visible tracked debt — a name leaves the set only by being dispositioned). A
-    flagged decl is COMPLIANT iff registered in `PLACEHOLDER_THEOREMS` /
-    `MODELING_ASSUMPTION_THEOREMS` (reason+discloses), self-disclosed via a
-    `_DEFINITIONAL` name suffix, or in the baseline. NEW (non-baseline) thin
-    statements HARD-FAIL — closing the generator (ADR-004 pathway #2)."""
-    from src.core.constants import PLACEHOLDER_LEAN_NAMES
-    try:
-        from src.core.constants import MODELING_ASSUMPTION_THEOREMS
-    except ImportError:
-        MODELING_ASSUMPTION_THEOREMS = {}
-    try:
-        from src.core.constants import VACUOUS_STATEMENT_BASELINE as BASELINE
-    except ImportError:
-        BASELINE = frozenset()
-    deps_path = PROJECT_ROOT / "lean" / "lean_deps.json"
-    if not deps_path.exists():
-        return CheckResult(passed=True, details=[Detail("inputs", True, "lean_deps.json absent")])
-
-    exempt = set(PLACEHOLDER_LEAN_NAMES.keys())
-    for k, v in MODELING_ASSUMPTION_THEOREMS.items():
-        if v.get("reason") and v.get("discloses"):
-            exempt.add(v.get("lean_name", k))
-
-    deps = json.loads(deps_path.read_text())
-    new_hard: List[tuple] = []
-    grandfathered: List[str] = []
-    advisory: List[tuple] = []
-    for d in deps:
-        if d.get("kind") not in ("theorem", "lemma"):
-            continue
-        name = d.get("name", "")
-        if _is_autogen_decl(name):
-            continue
-        short = name.split(".")[-1]
-        if short in exempt or short.endswith("_DEFINITIONAL"):
-            continue
-        label = _thin_type_label(d.get("type", ""))
-        if label is None:
-            continue
-        if label not in _THIN_HARD:
-            advisory.append((name, label))
-        elif short in BASELINE:
-            grandfathered.append(short)
-        else:
-            new_hard.append((name, label))
-
-    details: List[Detail] = []
-    if advisory:
-        details.append(Detail(
-            "ground_arithmetic", True,
-            f"{len(advisory)} closed-arithmetic theorem(s) (verify load-bearing or delete/disclose) — "
-            f"e.g. {', '.join(n.split('.')[-1] for n, _ in advisory[:5])}", warning=True))
-    if grandfathered:
-        details.append(Detail(
-            "baseline", True,
-            f"{len(grandfathered)} grandfathered content-thin theorem(s) in VACUOUS_STATEMENT_BASELINE "
-            f"(visible tracked debt → Vacuous Statement Sweep)", warning=True))
-    for name, label in new_hard:
-        short = name.split(".")[-1]
-        details.append(Detail(
-            short, False,
-            f"NEW content-thin statement `{short}` [{label}] not in baseline — strengthen, delete, "
-            f"or register in MODELING_ASSUMPTION_THEOREMS (reason+discloses)"))
-    if new_hard:
-        return CheckResult(passed=False, details=details)
-    details.append(Detail(
-        "all_theorems", True,
-        f"no NEW content-thin statements ({len(grandfathered)} baselined, "
-        f"{len(advisory)} ground-arith advisory)"))
-    return CheckResult(passed=True, details=details)
-
-
-# ═══════════════════════════════════════════════════════════════════════
-# CHECK 1e′: kernel no-go substrate integrity (ADR-007 N-C, Invariant #17)
-# ═══════════════════════════════════════════════════════════════════════
-
-@register_check(
-    "nogo_substrate_integrity",
-    "Every provably-false no-go has a live, kernel-pure, non-vacuous backing theorem (Invariant #17, ADR-007 N-C)")
-def check_nogo_substrate_integrity() -> CheckResult:
-    """The negative-front mirror of ``tracked_hypothesis_ledger`` (ADR-007 N-C).
-    For every ``KERNEL_NOGO_REGISTRY`` entry, each backing theorem must (1) EXIST
-    in ``lean_deps.json``, (2) be KERNEL-PURE (core-axiom closure ⊆
-    ``{propext, Classical.choice, Quot.sound}``, no ``sorryAx`` / genuine project
-    axiom), and (3) be NON-VACUOUS (its elaborated type is not ``True`` / reflexive
-    ``X=X`` — a self-discharging no-go blocks nothing; reuses
-    ``vacuous_statement_audit``'s ``_thin_type_label``). Any failure = **BLOCKER**
-    (this plugs the atlas ``"never touches OBSTRUCTION"`` hole — Hole A/B, ADR-007).
-    ADVISORY: every ``SETTLED_FORKS`` fork field-authored ``kernel-no-go`` that has
-    no registry entry — the *refutable-but-unencoded* one-time audit (ADR-007
-    Costs/risks #1; encode per N-E). SCOPE: provably-false no-gos only; policy /
-    route / preference bans are OUT of scope (N-B) and remain prose-only."""
-    from src.core import constants as _c
-    REG = getattr(_c, "KERNEL_NOGO_REGISTRY", {})
-    KERNEL = {"propext", "Classical.choice", "Quot.sound"}
-    _ND = re.compile(r"\._native\.native_decide")
-
-    deps_path = PROJECT_ROOT / "lean" / "lean_deps.json"
-    if not deps_path.exists():
-        return CheckResult(passed=True, details=[Detail("inputs", True, "lean_deps.json absent")])
-    deps = json.loads(deps_path.read_text())
-    by_name = {d.get("name", ""): d for d in deps}
-
-    def _kernel_pure(rec: dict) -> bool:
-        core = set(rec.get("axiom_deps_core", []))
-        proj = [a for a in rec.get("axiom_deps_project", []) if not _ND.search(a)]
-        return (core.issubset(KERNEL) and not proj
-                and not any("sorryAx" in a for a in rec.get("axiom_deps_core", [])))
-
-    details: List[Detail] = []
-    hard = False
-    for fork_id, e in sorted(REG.items()):
-        bts = e.get("backing_theorems", []) or []
-        if not bts:
-            details.append(Detail(
-                fork_id, True,
-                "registry entry carries NO backing theorem (construction-level no-go?) — advisory",
-                warning=True))
-            continue
-        for bt in bts:
-            rec = by_name.get(bt)
-            if rec is None:
-                hard = True
-                details.append(Detail(
-                    fork_id, False,
-                    f"backing `{bt}` ABSENT from lean_deps.json (renamed/deleted — the blocker rotted; Hole B)"))
-                continue
-            if not _kernel_pure(rec):
-                hard = True
-                details.append(Detail(
-                    fork_id, False,
-                    f"backing `{bt}` NOT kernel-pure (core={sorted(set(rec.get('axiom_deps_core', [])))}, "
-                    f"proj={rec.get('axiom_deps_project', [])}) — a tainted refutation is not self-enforcing"))
-                continue
-            label = _thin_type_label(rec.get("type", ""))
-            if label in _THIN_HARD:
-                hard = True
-                details.append(Detail(
-                    fork_id, False,
-                    f"backing `{bt}` is VACUOUS [{label}] — a self-discharging no-go blocks nothing (Hole A)"))
-                continue
-            details.append(Detail(
-                fork_id, True,
-                f"backing `{bt}` [{e.get('nogo_kind', '?')}] exists, kernel-pure, non-vacuous"))
-
-    # Hole-B audit (advisory): field-authored `kernel-no-go` SETTLED_FORKS forks lacking a registry entry.
-    forks_path = PROJECT_ROOT / "docs" / "dev-loops" / "SETTLED_FORKS.md"
-    if forks_path.exists():
-        text = forks_path.read_text(errors="ignore")
-        knogo = []
-        for block in re.split(r"^## +", text, flags=re.M)[1:]:
-            fid = block.splitlines()[0].strip()
-            if re.search(r"authored_by:\s*kernel-no-go", block):
-                knogo.append(fid)
-        reg_forks = {e.get("fork_id") for e in REG.values()}
-        unencoded = [f for f in knogo if f not in reg_forks]
-        details.append(Detail(
-            "audit", True,
-            f"{len(REG)} registry entries; {len(knogo)} field-authored kernel-no-go forks; "
-            f"{len(unencoded)} refutable-but-unencoded (advisory — encode per N-E): "
-            f"{', '.join(unencoded) or 'none'}",
-            warning=bool(unencoded)))
-
-    return CheckResult(passed=not hard, details=details)
-
-
-# ═══════════════════════════════════════════════════════════════════════
-# CHECK 1f: native_decide trust-surface regression (R4)
-# ═══════════════════════════════════════════════════════════════════════
-
-@register_check(
-    "native_decide_regression",
-    "native_decide decl-closure does not silently grow past its ceiling (R4; ADR-002)")
-def check_native_decide_regression() -> CheckResult:
-    """The native_decide kernel-trust surface (decl-closure — ADR-002's metric,
-    in docs/counts.json `lean.native_decide_decl_closure`) may only DECREASE
-    without review. A wave that ADDS trust surface must bump
-    `NATIVE_DECIDE_DECL_CLOSURE_CEILING` (constants.py) in the same commit with a
-    rationale, so the increase is visible (no silent growth). Elimination policy
-    is owned by ADR-002. Substrate Integrity Gates W5."""
-    from src.core.constants import NATIVE_DECIDE_DECL_CLOSURE_CEILING as CEIL
-    counts_path = PROJECT_ROOT / "docs" / "counts.json"
-    if not counts_path.exists():
-        return CheckResult(passed=True, details=[Detail("counts", True, "counts.json absent")])
-    lean = json.loads(counts_path.read_text()).get("lean", {})
-    cur = lean.get("native_decide_decl_closure")
-    if cur is None:
-        return CheckResult(passed=True, details=[Detail(
-            "metric", True, "native_decide_decl_closure not yet in counts.json — run update_counts.py",
-            warning=True)])
-    clusters = lean.get("native_decide_clusters", {})
-    if cur > CEIL:
-        return CheckResult(passed=False, details=[Detail(
-            "ceiling", False,
-            f"native_decide decl-closure {cur} EXCEEDS ceiling {CEIL} — a wave grew the "
-            f"kernel-trust surface. Eliminate (ADR-002) or bump NATIVE_DECIDE_DECL_CLOSURE_CEILING "
-            f"with a rationale. Clusters: {clusters}")])
-    msg = f"native_decide decl-closure {cur} ≤ ceiling {CEIL}"
-    if cur < CEIL:
-        msg += f" (down {CEIL - cur}; consider lowering the ceiling). Clusters: {clusters}"
-    return CheckResult(passed=True, details=[Detail("ceiling", True, msg, warning=(cur < CEIL))])
-
-
-# ═══════════════════════════════════════════════════════════════════════
-# CHECK 2: Numerical consistency
-# ═══════════════════════════════════════════════════════════════════════
-
-@register_check("numerical", "Experimental parameters match reference values")
-def check_numerical_consistency() -> CheckResult:
-    from src.core.constants import get_all_experiments, HBAR
-
-    expected = {
-        'Steinhauer': {'c_s': 5.476e-4, 'xi': 1.334e-6, 'kappa': 4.8, 'T_H': 5.78e-12},
-        'Heidelberg': {'c_s': 3.919e-3, 'xi': 4.159e-7, 'kappa': 101.9, 'T_H': 1.24e-10},
-        'Trento':     {'c_s': 2.185e-3, 'xi': 1.264e-6, 'kappa': 21.4, 'T_H': 2.6e-11},
-    }
-
-    tolerance = 0.05
-    details = []
-    all_pass = True
-
-    try:
-        experiments = get_all_experiments()
-    except Exception as e:
-        return CheckResult(passed=False, error=str(e))
-
-    for name, (params, bg) in experiments.items():
-        if name not in expected:
-            continue
-
-        actuals = {
-            'c_s': params.sound_speed_upstream,
-            'xi': params.healing_length,
-            'kappa': bg.surface_gravity,
-            'T_H': bg.hawking_temp,
-        }
-
-        for param, exp_val in expected[name].items():
-            actual = actuals[param]
-            rel_err = abs(actual - exp_val) / abs(exp_val)
-            ok = rel_err <= tolerance
-            details.append(Detail(
-                f"{name}.{param}",
-                ok,
-                f"expected={exp_val:.3e}, actual={actual:.3e}, err={rel_err*100:.1f}%"
-            ))
-            if not ok:
-                all_pass = False
-
-    return CheckResult(passed=all_pass, details=details)
-
-
-# ═══════════════════════════════════════════════════════════════════════
-# CHECK 3: Formula identities
-# ═══════════════════════════════════════════════════════════════════════
-
-@register_check("identities", "Mathematical identities and boundary conditions hold")
-def check_formula_identities() -> CheckResult:
-    from src.core import formulas
-
-    details = []
-    all_pass = True
-
-    tests = [
-        ("count(1)==2", lambda: formulas.count_coefficients(1) == 2),
-        ("count(2)==2", lambda: formulas.count_coefficients(2) == 2),
-        ("count(3)==3", lambda: formulas.count_coefficients(3) == 3),
-        ("disp(0)==0", lambda: formulas.dispersive_correction(0) == 0),
-        ("1st_order(0,kappa)==0", lambda: formulas.first_order_correction(0, 1.0) == 0),
-        ("Gamma(k,w,cs,0,0,0,0)==0", lambda: formulas.damping_rate(1.0, 2.0, 0.5, 0, 0, 0, 0) == 0),
-    ]
-
-    for name, fn in tests:
-        try:
-            ok = fn()
-            details.append(Detail(name, ok))
-            if not ok:
-                all_pass = False
-        except Exception as e:
-            details.append(Detail(name, False, str(e)))
-            all_pass = False
-
-    # Acoustic-mode vanishing: k=w/cs with gamma_22=-gamma_21
-    try:
-        c_s, omega, kappa = 1.0, 100.0, 50.0
-        k = omega / c_s
-        g21 = 0.5
-        result = formulas.second_order_correction(k, omega, c_s, g21, -g21, kappa)
-        ok = abs(result) < 1e-10
-        details.append(Detail("delta2_acoustic_vanishes", ok, f"value={result:.3e}"))
-        if not ok:
-            all_pass = False
-    except Exception as e:
-        details.append(Detail("delta2_acoustic_vanishes", False, str(e)))
-        all_pass = False
-
-    return CheckResult(passed=all_pass, details=details)
-
-
-# ═══════════════════════════════════════════════════════════════════════
-# CHECK 4: Paper 1 Table 1 consistency
-# ═══════════════════════════════════════════════════════════════════════
-
-@register_check("paper_table", "Paper 1 Table 1 values match solver output")
-def check_paper_table_consistency() -> CheckResult:
-    from src.core.constants import get_all_experiments
-
-    paper_path = PAPERS_DIR / "paper1_first_order" / "paper_draft.tex"
-    if not paper_path.exists():
-        return CheckResult(passed=False, error=f"Paper not found: {paper_path}")
-
-    # Reference values from the corrected table (solver output)
-    # NOTE: Steinhauer kappa/T_H here are MODEL values (tanh profile).
-    # Published values (kappa=290, T_H=0.35nK) come from the actual
-    # step potential, not our smooth model. See backreaction.py steinhauer_si().
-    paper_table = {
-        'Steinhauer': {'c_s': 5.476e-4, 'xi': 1.334e-6, 'kappa': 4.8, 'T_H': 0.006e-9},
-        'Heidelberg': {'c_s': 3.919e-3, 'xi': 4.159e-7, 'kappa': 101.9, 'T_H': 0.124e-9},
-        'Trento':     {'c_s': 2.185e-3, 'xi': 1.264e-6, 'kappa': 21.4, 'T_H': 0.026e-9},
-    }
-
-    tolerance = 0.05
-    details = []
-    all_pass = True
-
-    try:
-        experiments = get_all_experiments()
-    except Exception as e:
-        return CheckResult(passed=False, error=str(e))
-
-    for name, paper_vals in paper_table.items():
-        if name not in experiments:
-            continue
-        params, bg = experiments[name]
-        actuals = {
-            'c_s': params.sound_speed_upstream,
-            'xi': params.healing_length,
-            'kappa': bg.surface_gravity,
-            'T_H': bg.hawking_temp,
-        }
-        for param, pval in paper_vals.items():
-            actual = actuals[param]
-            rel_err = abs(actual - pval) / abs(pval)
-            ok = rel_err <= tolerance
-            details.append(Detail(f"{name}.{param}", ok,
-                                  f"paper={pval:.3e}, code={actual:.3e}"))
-            if not ok:
-                all_pass = False
-
-    return CheckResult(passed=all_pass, details=details)
-
-
-# ═══════════════════════════════════════════════════════════════════════
-# CHECK 4b: D1 hierarchy table + crossover ↔ canonical evaluator (finding B-01)
-# ═══════════════════════════════════════════════════════════════════════
-
-def _parse_latex_number(cell: str):
-    """Parse a LaTeX numeric table/prose cell into a float, or None.
-
-    Handles the forms that appear in D1's hierarchy table and crossover
-    sentences, so the check FAILS on the stale hand-authored formats
-    (``$-2.7\\%$``, ``$\\sim 26\\%$``, ``$10^{-1}$``) as well as on wrong
-    scientific-notation values:
-
-        ``$-8.53\\times10^{-5}$``  -> -8.53e-5
-        ``$1.41\\times10^{-5}$``   -> 1.41e-5
-        ``$10^{-5}$``              -> 1e-5
-        ``$-2.7\\%$`` / ``$\\sim 26\\%$``  -> -0.027 / 0.26
-        bare float / ``1.59\\times10^{-3}`` (no ``$``)
-    """
-    import re as _re
-    s = cell.strip()
-    s = s.replace("\\textbf{", "").rstrip("}")
-    s = s.replace("$", "").replace("\\sim", "").replace("\\approx", "").strip()
-    # mantissa × 10^{exp}
-    m = _re.search(r"(-?\d+\.?\d*)\s*\\times\s*10\^\{?(-?\d+)\}?", s)
-    if m:
-        return float(m.group(1)) * 10.0 ** int(m.group(2))
-    # pure power ±10^{exp}
-    m = _re.fullmatch(r"(-?)10\^\{?(-?\d+)\}?", s)
-    if m:
-        return (-1.0 if m.group(1) == "-" else 1.0) * 10.0 ** int(m.group(2))
-    # percentage
-    m = _re.match(r"(-?\d+\.?\d*)\s*\\%", s)
-    if m:
-        return float(m.group(1)) / 100.0
-    try:
-        return float(s)
-    except ValueError:
-        return None
-
-
-@register_check("d1_hierarchy_table",
-                "D1 BEC hierarchy table + crossover match the canonical evaluator")
-def check_d1_hierarchy_table() -> CheckResult:
-    """Parse D1's rendered hierarchy table (three BEC rows) and the
-    spectral-floor crossover sentences from ``papers/D1/paper_draft.tex``
-    and compare every numeric against the SINGLE canonical evaluator
-    ``scripts/gen_d1_hierarchy_table.compute_bec_hierarchy()`` within a
-    declared 0.5 % relative tolerance (the table cells carry 3 significant
-    figures, so 3-sig-fig rounding is < 0.5 %).
-
-    Closes finding B-01. The pre-existing ``paper_provenance`` /
-    ``paper_table`` checks parse no D1 numerics, so the stale
-    hand-authored magnitudes (δ_disp −2.7/−1.2/−0.5 %, δ_diss
-    26 %/10⁻¹/10⁻⁵, crossover ≈ 2.0 T_H) were never caught. This check
-    FAILS on those (wrong value *and* wrong format) and PASSES only once
-    the rows are regenerated from the pipeline.
-    """
-    import re as _re
-    import math as _math
-
-    paper_path = PAPERS_DIR / "D1" / "paper_draft.tex"
-    if not paper_path.exists():
-        return CheckResult(passed=False, error=f"Paper not found: {paper_path}")
-
-    try:
-        from scripts.gen_d1_hierarchy_table import compute_bec_hierarchy
-    except Exception as e:  # pragma: no cover - import guard
-        return CheckResult(passed=False, error=f"cannot import evaluator: {e}")
-
-    hier = compute_bec_hierarchy()
-    text = paper_path.read_text(encoding="utf-8")
-    TOL = 0.005  # 0.5 % relative
-
-    details: List[Detail] = []
-    all_pass = True
-
-    def _rel_ok(got, want) -> tuple:
-        if got is None:
-            return False, "unparseable / wrong format"
-        if want == 0:
-            return abs(got) <= TOL, f"paper={got:.4g}, canon=0"
-        rel = abs(got - want) / abs(want)
-        return rel <= TOL, f"paper={got:.4g}, canon={want:.4g}, rel={rel:.2%}"
-
-    # --- (1) The three BEC table rows -----------------------------------
-    tbl = _re.search(
-        r"\\label\{tab:hierarchy\}.*?\\begin\{tabular\}(.*?)\\end\{tabular\}",
-        text, _re.DOTALL)
-    if not tbl:
-        return CheckResult(passed=False,
-                           error="tab:hierarchy tabular block not found in D1 draft")
-    body = tbl.group(1)
-    rows = [r for r in body.split(r"\\") if "&" in r]
-
-    for plat in ("Steinhauer", "Heidelberg", "Trento"):
-        canon = hier[plat]
-        row = next((r for r in rows
-                    if _re.search(r"^[^&]*" + plat, r.strip())), None)
-        if row is None:
-            details.append(Detail(f"{plat}.row", False, "table row not found"))
-            all_pass = False
-            continue
-        cells = [c.strip() for c in row.split("&")]
-        if len(cells) < 5:
-            details.append(Detail(f"{plat}.row", False,
-                                  f"expected 5 cells, got {len(cells)}"))
-            all_pass = False
-            continue
-        # cells: [label, T_H, delta_disp, delta_diss, dominance]
-        for idx, key in ((2, "delta_disp"), (3, "delta_diss")):
-            ok, msg = _rel_ok(_parse_latex_number(cells[idx]), canon[key])
-            details.append(Detail(f"{plat}.{key}", ok, msg))
-            all_pass = all_pass and ok
-        dom_cell = cells[4].replace("\\textbf{", "").replace("}", "").strip()
-        dom_ok = dom_cell.startswith(canon["dominance"])
-        details.append(Detail(f"{plat}.dominance", dom_ok,
-                              f"paper={dom_cell!r}, canon={canon['dominance']!r}"))
-        all_pass = all_pass and dom_ok
-
-    # --- (2) Numeric crossover sentences ω_× ≈ T_H ln(2/X) ≈ Y T_H -------
-    # Only the *numeric* sentences match (the symbolic abstract/display
-    # forms use `=`, `\;\approx\;` or `\cdot` and are excluded by shape).
-    cross_re = _re.compile(
-        r"\\omega_\\times\s*\\approx\s*T_H\s*\\ln\(2/([^)]+)\)\s*"
-        r"\\approx\s*([\d.]+)\\,\s*T_H", _re.DOTALL)
-    matches = list(cross_re.finditer(text))
-    if not matches:
-        details.append(Detail("crossover.present", False,
-                              "no numeric ω_× ≈ T_H ln(2/X) ≈ Y T_H sentence found"))
-        all_pass = False
-    diss_values = [h["delta_diss"] for h in hier.values()]
-    for i, m in enumerate(matches):
-        X = _parse_latex_number(m.group(1))
-        Y = float(m.group(2))
-        # (a) the ln-argument X must be one of the canonical δ_diss values
-        if X is None:
-            details.append(Detail(f"crossover[{i}].arg", False,
-                                  f"unparseable ln argument {m.group(1)!r}"))
-            all_pass = False
-            continue
-        best = min((abs(X - d) / abs(d)) for d in diss_values)
-        arg_ok = best <= TOL
-        details.append(Detail(f"crossover[{i}].delta_diss_match", arg_ok,
-                              f"ln-arg={X:.4g}, nearest canon δ_diss rel={best:.2%}"))
-        # (b) the quoted coefficient Y must equal ln(2/X)
-        y_ok, y_msg = _rel_ok(Y, _math.log(2.0 / X))
-        details.append(Detail(f"crossover[{i}].coefficient", y_ok, y_msg))
-        all_pass = all_pass and arg_ok and y_ok
-
-    return CheckResult(passed=all_pass, details=details)
-
-
-# ═══════════════════════════════════════════════════════════════════════
-# CHECK 4c: Flagship (F) inline BEC hierarchy claims ↔ canonical evaluator
-# ═══════════════════════════════════════════════════════════════════════
-
-@register_check("f_hierarchy_claims",
-                "Flagship F inline Heidelberg BEC corrections match the canonical evaluator")
-def check_f_hierarchy_claims() -> CheckResult:
-    """Sibling of ``d1_hierarchy_table`` for the flagship ``papers/F``.
-
-    F quotes the BEC corrections inline (prose), not as a table, so this
-    check targets the specific Heidelberg sentences by anchored regex and
-    compares each quoted value against the SAME canonical evaluator
-    ``scripts/gen_d1_hierarchy_table.compute_bec_hierarchy()`` (Heidelberg
-    row) within 0.5 % relative. Each claim is REQUIRED to be present in the
-    expected form: a missing/rephrased-stale anchor is a failure, so the
-    historical magnitudes (δ_diss ~26 %, δ_disp ~10 %, spectral floor
-    ~2 T_H) — none of which match the anchored numeric form — FAIL, and the
-    corrected sentences PASS. The polariton (−19 %) and graphene (−2.8 %)
-    values are deliberately NOT matched here: they belong to other
-    platforms/modules and would false-positive against the Heidelberg row.
-    """
-    import re as _re
-    import math as _math
-
-    paper_path = PAPERS_DIR / "F" / "paper_draft.tex"
-    if not paper_path.exists():
-        return CheckResult(passed=False, error=f"Paper not found: {paper_path}")
-
-    try:
-        from scripts.gen_d1_hierarchy_table import compute_bec_hierarchy
-    except Exception as e:  # pragma: no cover - import guard
-        return CheckResult(passed=False, error=f"cannot import evaluator: {e}")
-
-    heid = compute_bec_hierarchy()["Heidelberg"]
-    text = paper_path.read_text(encoding="utf-8")
-    TOL = 0.005  # 0.5 % relative
-
-    details: List[Detail] = []
-    all_pass = True
-
-    def _rel_ok(got, want) -> tuple:
-        if got is None:
-            return False, "unparseable / wrong format"
-        if want == 0:
-            return abs(got) <= TOL, f"paper={got:.4g}, canon=0"
-        rel = abs(got - want) / abs(want)
-        return rel <= TOL, f"paper={got:.4g}, canon={want:.4g}, rel={rel:.2%}"
-
-    # (label, anchored regex capturing the LaTeX value, canonical key)
-    claims = [
-        ("heidelberg.delta_diss.second_order",
-         r"\\delta_\{\\mathrm\{diss\}\}\s*\\approx\s*([^$]+?)\$.*?Heidelberg parameters",
-         "delta_diss"),
-        ("heidelberg.delta_disp.hierarchy",
-         r"dispersive correction is \$\\delta_\{\\mathrm\{disp\}\}\s*\\approx\s*([^$]+?)\$",
-         "delta_disp"),
-        ("heidelberg.delta_diss.hierarchy",
-         r"dissipative correction\s*\$?\\delta_\{\\mathrm\{diss\}\}\s*\\approx\s*([^$]+?)\$",
-         "delta_diss"),
-    ]
-    for label, pat, key in claims:
-        m = _re.search(pat, text, _re.DOTALL)
-        if not m:
-            details.append(Detail(label, False,
-                                  "expected Heidelberg claim not found (missing or stale form)"))
-            all_pass = False
-            continue
-        ok, msg = _rel_ok(_parse_latex_number(m.group(1)), heid[key])
-        details.append(Detail(label, ok, msg))
-        all_pass = all_pass and ok
-
-    # Crossover sentence: ω_× = T_H ln(2/δ_diss) ≈ Y T_H (symbolic ln-arg;
-    # the coefficient Y must equal ln(2 / canonical δ_diss)).
-    cm = _re.search(
-        r"\\ln\(2/\\delta_\{\\mathrm\{diss\}\}\)\s*\\approx\s*([\d.]+)\\,\s*T_H", text)
-    if not cm:
-        details.append(Detail("heidelberg.crossover", False,
-                              "expected ω_× = T_H ln(2/δ_diss) ≈ Y T_H sentence not found"))
-        all_pass = False
-    else:
-        y_ok, y_msg = _rel_ok(float(cm.group(1)), _math.log(2.0 / heid["delta_diss"]))
-        details.append(Detail("heidelberg.crossover", y_ok, y_msg))
-        all_pass = all_pass and y_ok
-
-    return CheckResult(passed=all_pass, details=details)
-
-
-# ═══════════════════════════════════════════════════════════════════════
-# CHECK 5: Theorem registry
-# ═══════════════════════════════════════════════════════════════════════
-
-@register_check("theorems", "Theorem registry has 322 entries and is self-consistent")
-def check_theorem_count() -> CheckResult:
-    from src.core.constants import ARISTOTLE_THEOREMS, TOTAL_THEOREMS
-
-    details = []
-    all_pass = True
-
-    for name, (actual, expected) in {
-        "TOTAL_THEOREMS": (TOTAL_THEOREMS, 322),
-        "len(ARISTOTLE_THEOREMS)": (len(ARISTOTLE_THEOREMS), 322),
-    }.items():
-        ok = actual == expected
-        details.append(Detail(name, ok, f"actual={actual}, expected={expected}"))
-        if not ok:
-            all_pass = False
-
-    ok = TOTAL_THEOREMS == len(ARISTOTLE_THEOREMS)
-    details.append(Detail("consistency", ok,
-                          f"TOTAL={TOTAL_THEOREMS}, dict={len(ARISTOTLE_THEOREMS)}"))
-    if not ok:
-        all_pass = False
-
-    return CheckResult(passed=all_pass, details=details)
-
-
-# ═══════════════════════════════════════════════════════════════════════
-# CHECK 6: No inline physics in notebooks
-# ═══════════════════════════════════════════════════════════════════════
-
-@register_check("notebooks", "Notebooks import physics from src.core, no re-implementation")
-def check_notebook_isolation() -> CheckResult:
-    forbidden = {
-        'damping_rate', 'dispersive_correction', 'first_order_correction',
-        'second_order_correction', 'turning_point_shift',
-        'effective_temperature', 'count_formula',
-        'enumerate_monomials', 'count_coefficients',
-        'cgl_fdr', 'retarded_kernel', 'noise_kernel',
-        'derive_fdr_fourier', 'extract_odd_kernel',
-    }
-
-    details = []
-    all_pass = True
-
-    for nb_path in sorted(NOTEBOOKS_DIR.glob("*.ipynb")):
-        try:
-            with open(nb_path) as f:
-                nb = json.load(f)
-        except Exception as e:
-            details.append(Detail(nb_path.name, False, f"Parse error: {e}"))
-            all_pass = False
-            continue
-
-        violations = set()
-        for cell in nb.get('cells', []):
-            if cell.get('cell_type') != 'code':
-                continue
-            src = ''.join(cell.get('source', []))
-            for fn in forbidden:
-                if re.search(rf'def\s+{re.escape(fn)}\s*\(', src):
-                    violations.add(fn)
-
-        ok = len(violations) == 0
-        msg = "clean" if ok else f"redefines: {', '.join(sorted(violations))}"
-        details.append(Detail(nb_path.name, ok, msg))
-        if not ok:
-            all_pass = False
-
-    return CheckResult(passed=all_pass, details=details)
-
-
-# ═══════════════════════════════════════════════════════════════════════
-# CHECK 7: Lean theorem names appear in .lean source files
-# ═══════════════════════════════════════════════════════════════════════
-
-@register_check("lean_source", "Key theorem names found in Lean source files")
-def check_lean_source() -> CheckResult:
-    if not LEAN_DIR.exists():
-        return CheckResult(passed=False, error=f"Lean directory not found: {LEAN_DIR}")
-
-    # Collect all identifiers declared as theorem/lemma/def
-    lean_idents = set()
-    for lf in LEAN_DIR.glob("*.lean"):
-        try:
-            content = lf.read_text()
-            lean_idents.update(re.findall(r'(?:theorem|lemma|def)\s+(\w+)', content))
-        except Exception:
-            pass
-
-    # Map Python registry names to expected Lean identifiers
-    # (some differ by naming convention)
-    spot_checks = {
-        # Phase 1-2
-        'dampingRate_eq_zero_iff': 'dampingRate_eq_zero_iff',
-        'dispersive_bound': 'dispersive_correction_bound',
-        'firstOrder_correction_zero_iff': 'firstOrder_correction_zero_iff',
-        'acoustic_metric_determinant': 'acousticMetric_det',
-        'secondOrder_count': 'secondOrder_count',
-        # Phase 4 (Aristotle batch b1ea2eb7)
-        'fracton_exceeds_standard_general': 'fracton_exceeds_standard_general',
-        'binomial_strict_mono': 'binomial_strict_mono',
-        'dof_gap_positive_2_through_8': 'dof_gap_positive_2_through_8',
-        'evading_one_breaks_nogo': 'evading_one_breaks_nogo',
-        'ep_distinguishes_phases': 'ep_distinguishes_phases',
-        'obstructions_individually_sufficient': 'obstructions_individually_sufficient',
-    }
-
-    details = []
-    all_pass = True
-
-    for registry_name, lean_name in spot_checks.items():
-        ok = lean_name in lean_idents
-        details.append(Detail(registry_name, ok,
-                              f"Lean ident '{lean_name}' {'found' if ok else 'NOT found'}"))
-        if not ok:
-            all_pass = False
-
-    return CheckResult(passed=all_pass, details=details)
-
-
-# ═══════════════════════════════════════════════════════════════════════
-# CHECK 8: CGL FDR derivation consistency
-# ═══════════════════════════════════════════════════════════════════════
-
-@register_check("cgl_fdr", "CGL FDR derivation produces correct results")
-def check_cgl_fdr() -> CheckResult:
-    """Verify the CGL dynamical KMS derivation of the FDR."""
-    from src.second_order.cgl_derivation import (
-        verify_einstein_relation,
-        verify_first_order_bec,
-        verify_second_order_fdr,
-        derive_fdr_fourier,
-    )
-
-    details = []
-    all_pass = True
-
-    # Einstein relation
-    ok = verify_einstein_relation()
-    details.append(Detail("einstein_relation", ok,
-                          "σ = γ/β₀ for Brownian particle"))
-    if not ok:
-        all_pass = False
-
-    # First-order BEC FDR
-    ok = verify_first_order_bec()
-    details.append(Detail("first_order_bec", ok,
-                          "K_N = 2Γ/β₀ for BEC with damping"))
-    if not ok:
-        all_pass = False
-
-    # Second-order noise reality
-    ok = verify_second_order_fdr()
-    details.append(Detail("second_order_real", ok,
-                          "Second-order noise kernel is real"))
-    if not ok:
-        all_pass = False
-
-    # General pattern: noise count at even orders
-    try:
-        results = derive_fdr_fourier(4)
-        counts = {N: len(data['noise']) for N, data in results.items()}
-        ok = counts == {0: 1, 1: 0, 2: 2, 3: 0, 4: 3}
-        details.append(Detail("noise_count_pattern", ok,
-                              f"Noise counts: {counts}"))
-        if not ok:
-            all_pass = False
-    except Exception as e:
-        details.append(Detail("noise_count_pattern", False, str(e)))
-        all_pass = False
-
-    return CheckResult(passed=all_pass, details=details)
-
-
-# ═══════════════════════════════════════════════════════════════════════
-# CHECK 9: Lean build (optional, requires `lake` on PATH)
-# ═══════════════════════════════════════════════════════════════════════
-
-@register_check("lean_build", "Lean project builds cleanly (requires lake)")
-def check_lean_build() -> CheckResult:
-    """
-    Run `lake build` on the Lean project.
-
-    Lake discovery order:
-      1. LAKE_PATH env var  (explicit path to lake binary)
-      2. ~/.elan/bin/lake   (standard elan install location)
-      3. System PATH         (global install)
-
-    Lean project directory:
-      1. LEAN_PROJECT_DIR env var  (override for mono-repo layouts)
-      2. PROJECT_ROOT / "lean"     (default, same repo)
-
-    The check looks for lakefile.lean OR lakefile.toml (Lean 4 / Lake v4+).
-    """
-    import shutil
-    import os
-
-    # ── Resolve lake binary ──
-    lake_bin = os.environ.get("LAKE_PATH")
-
-    if not lake_bin:
-        # Try ~/.elan/bin/lake (standard elan install)
-        elan_lake = Path.home() / ".elan" / "bin" / "lake"
-        if elan_lake.is_file():
-            lake_bin = str(elan_lake)
-
-    if not lake_bin:
-        lake_bin = shutil.which("lake")
-
-    if not lake_bin:
-        return CheckResult(
-            passed=True,
-            details=[Detail("lake", True,
-                            "SKIPPED — lake not found. Set LAKE_PATH or install elan "
-                            "(https://github.com/leanprover/elan)")],
-        )
-
-    # ── Resolve Lean project directory ──
-    lean_root = Path(os.environ.get("LEAN_PROJECT_DIR", PROJECT_ROOT / "lean"))
-
-    has_lakefile = (
-        (lean_root / "lakefile.lean").exists()
-        or (lean_root / "lakefile.toml").exists()
-    )
-    if not has_lakefile:
-        return CheckResult(
-            passed=True,
-            details=[Detail("lakefile", True,
-                            f"SKIPPED — no lakefile.{{lean,toml}} in {lean_root}")],
-        )
-
-    # ── Run lake build ──
-    details = [Detail("lake_bin", True, lake_bin),
-               Detail("lean_root", True, str(lean_root))]
-
-    try:
-        result = subprocess.run(
-            [lake_bin, "build"],
-            cwd=str(lean_root),
-            capture_output=True, text=True, timeout=600,
-        )
-        ok = result.returncode == 0
-        if ok:
-            # Count jobs from output like "Build completed successfully (2254 jobs)."
-            # or "ℹ [2254/2254] ..." lines in stderr + stdout
-            combined = result.stderr + result.stdout
-            job_match = (
-                re.search(r'(\d+) jobs?\)', combined)
-                or re.search(r'\[(\d+)/\1\]', combined)  # [N/N] = final job
-            )
-            jobs = job_match.group(1) if job_match else "cached"
-            msg = f"build succeeded ({jobs} jobs)"
-        else:
-            msg = result.stderr[-500:]
-        details.append(Detail("lake_build", ok, msg))
-        return CheckResult(passed=ok, details=details)
-    except subprocess.TimeoutExpired:
-        details.append(Detail("lake_build", False, "timeout (600s)"))
-        return CheckResult(passed=False, details=details)
-    except Exception as e:
-        return CheckResult(passed=False, details=details, error=str(e))
-
-
-# ═══════════════════════════════════════════════════════════════════════
-# CHECK: Axiom-closure allow-list (AI-Defect-Defense-Layer P4, Invariant #15)
-# ═══════════════════════════════════════════════════════════════════════
-
-@register_check(
-    "axiom_closure_allowlist",
-    "Every SKEFTHawking declaration's transitive axiom closure is on the standard "
-    "kernel axioms + the AXIOM_METADATA allow-list (Invariant #15 backstop)",
-)
-def check_axiom_closure_allowlist() -> CheckResult:
-    """
-    AI-Defect-Defense-Layer P4. Runs the ``AxiomAudit`` Lean executable
-    (interpreted, reusing the memoized ``AxiomClosure`` machinery that backs
-    ``ExtractDeps``) to obtain the transitive *non-core* axiom closure of every
-    ``SKEFTHawking.*`` declaration, and verifies each axiom lies in the allow-list
-
-        {propext, Classical.choice, Quot.sound} ∪ AXIOM_METADATA.keys()
-
-    Posture (WARN-first, retrofit): a non-allow-listed axiom is an advisory
-    warning by default and a hard failure under ``--strict`` (paper-submission
-    gating), mirroring ``parameter_provenance``. ``native_decide``-generated
-    compiler-trust axioms (per-declaration ``*._native.native_decide.ax_*``) are
-    recognised as a distinct *accepted* category and reported for visibility —
-    they are not declared project ``axiom``s, so ``counts.json`` reports
-    ``Axioms: 0`` while this check surfaces the genuine trust surface.
-
-    Shares the underlying Lean executable with the lean4 plugin's
-    ``/check-axioms`` (``lean/SKEFTHawking/AxiomAudit.lean``): discipline defined
-    once, invoked interactively at ``/lean4:checkpoint`` and non-interactively here.
-    """
-    import shutil
-    import os
-
-    # ── Resolve lake (mirror check_lean_build) ──
-    lake_bin = os.environ.get("LAKE_PATH")
-    if not lake_bin:
-        elan_lake = Path.home() / ".elan" / "bin" / "lake"
-        if elan_lake.is_file():
-            lake_bin = str(elan_lake)
-    if not lake_bin:
-        lake_bin = shutil.which("lake")
-    if not lake_bin:
-        return CheckResult(passed=True, details=[
-            Detail("lake", True, "SKIPPED — lake not found. Set LAKE_PATH or install elan")])
-
-    lean_root = Path(os.environ.get("LEAN_PROJECT_DIR", PROJECT_ROOT / "lean"))
-    audit_src = lean_root / "SKEFTHawking" / "AxiomAudit.lean"
-    if not audit_src.exists():
-        return CheckResult(passed=True, details=[
-            Detail("axiom_audit_src", True, f"SKIPPED — {audit_src} not found")])
-
-    # ── Allow-list ──
-    try:
-        from src.core.constants import AXIOM_METADATA  # type: ignore
-        metadata_keys = set(AXIOM_METADATA.keys())
-    except Exception:
-        metadata_keys = set()
-    allowlist = {"propext", "Classical.choice", "Quot.sound"} | metadata_keys
-
-    # ── Run AxiomAudit (interpreted; native link exceeds macOS arg limits) ──
-    try:
-        result = subprocess.run(
-            [lake_bin, "env", "lean", "--run", "SKEFTHawking/AxiomAudit.lean"],
-            cwd=str(lean_root), capture_output=True, text=True, timeout=600,
-        )
-    except subprocess.TimeoutExpired:
-        return CheckResult(passed=True, details=[
-            Detail("axiom_audit_run", True, "SKIPPED — AxiomAudit timed out (600s)", warning=True)])
-    except Exception as exc:  # noqa: BLE001
-        return CheckResult(passed=True, details=[
-            Detail("axiom_audit_run", True, f"SKIPPED — {exc}", warning=True)])
-
-    if result.returncode != 0:
-        return CheckResult(passed=True, details=[
-            Detail("axiom_audit_run", True,
-                   f"SKIPPED — AxiomAudit exited {result.returncode}: {result.stderr[-300:]}",
-                   warning=True)])
-
-    try:
-        closures: Dict[str, List[str]] = json.loads(result.stdout.strip() or "{}")
-    except json.JSONDecodeError as exc:
-        return CheckResult(passed=True, details=[
-            Detail("axiom_audit_parse", True,
-                   f"SKIPPED — could not parse AxiomAudit output ({exc})", warning=True)])
-
-    def is_native_decide(ax: str) -> bool:
-        return "native_decide" in ax or ax in ("Lean.ofReduceBool", "Lean.trustCompiler")
-
-    native_decls: set[str] = set()
-    unexpected: Dict[str, List[str]] = {}
-    for decl, axes in closures.items():
-        if "native_decide" in decl:
-            continue  # the per-declaration native-axiom self-entries
-        bad: List[str] = []
-        for ax in axes:
-            if ax in allowlist:
-                continue
-            if is_native_decide(ax):
-                native_decls.add(decl)
-                continue
-            bad.append(ax)
-        if bad:
-            unexpected[decl] = sorted(set(bad))
-
-    details = [Detail("allowlist_size", True,
-                      f"{len(allowlist)} allow-listed axioms "
-                      f"(3 core + {len(metadata_keys)} AXIOM_METADATA)")]
-
-    if native_decls:
-        details.append(Detail(
-            "native_decide", True,
-            f"{len(native_decls)} declaration(s) transitively use `native_decide` "
-            f"(compiler-trust axiom) — accepted Lean mechanism, flagged for visibility "
-            f"(counts.json 'Axioms: 0' counts only declared `axiom`s)",
-            warning=True))
-
-    strict = STRICT_MODE
-    if unexpected:
-        sample = list(unexpected.items())[:10]
-        msg = (f"{len(unexpected)} declaration(s) carry a non-allow-listed axiom "
-               f"({'FAIL under --strict' if strict else 'WARN-first'} — add to "
-               f"AXIOM_METADATA or discharge): "
-               + "; ".join(f"{d} → {','.join(ax)}" for d, ax in sample))
-        details.append(Detail("unexpected_axioms", not strict, msg, warning=not strict))
-        return CheckResult(passed=not strict, details=details)
-
-    details.append(Detail(
-        "allowlist", True,
-        "no declaration carries a non-allow-listed, non-native_decide axiom "
-        "(Invariant #15 backstop clean)"))
-    return CheckResult(passed=True, details=details)
-
-
-# ═══════════════════════════════════════════════════════════════════════
-# CHECK: Elaboration-knob watchlist (perf / upstream-portability, NOT soundness)
-# ═══════════════════════════════════════════════════════════════════════
-
-@register_check(
-    "elaboration_knob_watchlist",
-    "Watchlist (advisory): proof-body maxRecDepth / synthInstance knobs — a "
-    "performance / Mathlib-CI-portability signal, NOT a soundness or axiom-closure issue",
-)
-def check_elaboration_knob_watchlist() -> CheckResult:
-    """
-    Surfaces every ``set_option maxRecDepth`` / ``synthInstance.maxSize`` /
-    ``synthInstance.maxHeartbeats`` in SKEFTHawking Lean source.
-
-    WHY THIS IS SEPARATE FROM ``axiom_closure_allowlist`` (the soundness gate):
-    these are *elaboration-time* knobs. They only let the front-end search deeper /
-    wider before giving up; the **kernel independently re-checks the final term** and
-    never reads them, so they add NOTHING to the axiom closure (no ``Lean.ofReduceBool``)
-    and stay kernel-pure ``{propext, Classical.choice, Quot.sound}``. Mathlib uses
-    ``maxRecDepth`` routinely. The genuine trust surface (``native_decide`` →
-    ``Lean.ofReduceBool``) is gated by ``axiom_closure_allowlist``; THIS check is a
-    NON-FAILING watchlist for the only real downside — a ``decide`` heavy enough to
-    need a knob is also a slow KERNEL reduction, which Mathlib CI's speed budget may
-    reject. So each hit is an upstream-portability candidate (consider a structural
-    reproof IF upstreaming that lemma), never a correctness concern. Always passes.
-
-    NB ``maxHeartbeats`` in proof bodies is forbidden outright by Invariant #10
-    (architecture discipline) and is enforced elsewhere; it is intentionally not in
-    this advisory list.
-    """
-    import re
-
-    lean_dir = PROJECT_ROOT / "lean" / "SKEFTHawking"
-    if not lean_dir.exists():
-        return CheckResult(passed=True, details=[
-            Detail("lean_src", True, f"SKIPPED — {lean_dir} not found")])
-
-    pat = re.compile(
-        r"set_option\s+(maxRecDepth|synthInstance\.maxSize|synthInstance\.maxHeartbeats)\s+(\d+)")
-    hits: List[Detail] = []
-    for f in sorted(lean_dir.rglob("*.lean")):
-        if "/.lake/" in str(f):
-            continue
-        for i, line in enumerate(f.read_text(errors="replace").splitlines(), 1):
-            m = pat.search(line)
-            if m:
-                rel = f.relative_to(PROJECT_ROOT)
-                hits.append(Detail(f"{rel}:{i}", True, f"{m.group(1)} {m.group(2)}", warning=True))
-
-    summary = Detail(
-        "watchlist", True,
-        f"{len(hits)} proof-body elaboration-knob site(s) — perf/upstream-CI watchlist, "
-        "kernel-pure (NOT a soundness/axiom-closure issue; that is axiom_closure_allowlist)",
-        warning=bool(hits))
-    return CheckResult(passed=True, details=[summary] + hits)
-
-
-# ═══════════════════════════════════════════════════════════════════════
-# CHECK 10: Notebook visualization consistency (warnings only)
-# ═══════════════════════════════════════════════════════════════════════
-
-@register_check("bundle_figure_integrity",
-                "Bundle figures match a fresh render and are legible at typeset size")
-def check_bundle_figure_integrity() -> CheckResult:
-    """Two guarantees the printed paper actually depends on, both of which were
-    violated in the D11/D12 first lift and caught only by a human-in-the-loop
-    reviewer rasterising the PDF:
-
-    1. **No source/artefact drift.** Every ``papers/<bundle>/figures/<name>.png``
-       must be byte-identical to a fresh render from ``src/core/visualizations``.
-       ``review_figures.py`` writes to ``PROJECT_ROOT/figures``, not into the
-       bundle directories, so nothing otherwise stops a shipped figure from
-       silently diverging from the code that is supposed to produce it.
-
-    2. **Legible in print.** ``bundle_figure_typeset_pt`` reports the SMALLEST
-       printed text size, over every text-bearing field, at ``figure*``
-       ``\textwidth``. Stage-9 round 3 found figures printing at 2-3 pt against
-       10 pt body text while looking fine as PNGs. Round 5 then found that the
-       checker itself had **zero consumers repo-wide** — it was honest but not
-       binding. This is the binding.
-
-    Floor is 8.0 pt. Skips cleanly when kaleido is unavailable.
-    """
-    import importlib
-
-    details: List[Detail] = []
-    try:
-        viz = importlib.import_module("src.core.visualizations")
-    except Exception as exc:  # pragma: no cover - import guard
-        return CheckResult(passed=True, details=[Detail(
-            "skipped", True, f"visualizations import failed ({exc}) — skipped",
-            warning=True)])
-
-    if not hasattr(viz, "bundle_figure_typeset_pt"):
-        return CheckResult(passed=True, details=[Detail(
-            "skipped", True, "bundle_figure_typeset_pt absent — skipped",
-            warning=True)])
-
-    FLOOR_PT = 8.0
-    # Derived from FIGURE_REGISTRY rather than hand-maintained: a hand-listed
-    # roster means the NEXT bundle figure ships unguarded, which is the same
-    # silent-omission class as the four hardcoded bundle registries this lift
-    # had to patch. The literal below is the fallback if the registry is
-    # unreadable.
-    try:
-        import importlib.util as _ilu
-        _spec = _ilu.spec_from_file_location(
-            "_review_figures", SCRIPT_DIR / "review_figures.py")
-        _rf = _ilu.module_from_spec(_spec)
-        _spec.loader.exec_module(_rf)
-        _derived: dict[str, list] = {}
-        for fs in _rf.FIGURE_REGISTRY:
-            if not fs.name.startswith(("d11_", "d12_")):
-                continue
-            _derived.setdefault(fs.name.split("_")[0].upper(), []).append(
-                (fs.name, fs.function))
-        if _derived:
-            SPECS = _derived
-        else:
-            raise RuntimeError("no d11_/d12_ specs found")
-    except Exception:
-        SPECS = {
-        "D11": [("d11_fig1_phononic_band_gap", "fig_d11_phononic_band_gap"),
-                ("d11_fig2_pt_exceptional_point", "fig_d11_pt_exceptional_point"),
-                ("d11_fig3_haldane_chern", "fig_d11_haldane_chern"),
-                ("d11_fig4_effective_medium", "fig_d11_effective_medium")],
-        "D12": [("d12_fig1_poisson_floor_vs_folklore", "fig_d12_poisson_floor_vs_folklore"),
-                ("d12_fig2_enbw_matched_filter", "fig_d12_enbw_matched_filter"),
-                ("d12_fig3_etf_stability", "fig_d12_etf_stability")],
-    }
-
-    n_ok = n_fail = 0
-    for bundle, figs in SPECS.items():
-        for png_name, func_name in figs:
-            png = PAPERS_DIR / bundle / "figures" / f"{png_name}.png"
-            fn = getattr(viz, func_name, None)
-            if fn is None:
-                details.append(Detail(f"missing_fn:{bundle}:{func_name}", False,
-                                      f"{func_name} not found in visualizations"))
-                n_fail += 1
-                continue
-            if not png.exists():
-                details.append(Detail(f"missing_png:{bundle}:{png_name}", False,
-                                      f"papers/{bundle}/figures/{png_name}.png absent"))
-                n_fail += 1
-                continue
-            try:
-                fig = fn()
-            except Exception as exc:
-                details.append(Detail(f"render_error:{bundle}:{png_name}", False,
-                                      f"{func_name}() raised {exc!r}"))
-                n_fail += 1
-                continue
-
-            pt = viz.bundle_figure_typeset_pt(fig)
-            if pt < FLOOR_PT:
-                details.append(Detail(
-                    f"illegible:{bundle}:{png_name}", False,
-                    f"smallest printed text {pt:.2f}pt < {FLOOR_PT}pt floor "
-                    f"(against 10pt body) — widen the canvas or raise the font"))
-                n_fail += 1
-            else:
-                n_ok += 1
-                details.append(Detail(f"legible:{bundle}:{png_name}", True,
-                                      f"smallest printed text {pt:.2f}pt", warning=False))
-
-            # Drift check is advisory: kaleido may be unavailable, and a
-            # byte-compare is sensitive to renderer version. A mismatch is worth
-            # surfacing, not worth blocking a whole validation run on.
-            try:
-                import hashlib, tempfile, os as _os
-                with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
-                    tmp_path = tmp.name
-                fig.write_image(tmp_path, scale=3)
-                fresh = hashlib.sha256(Path(tmp_path).read_bytes()).hexdigest()
-                shipped = hashlib.sha256(png.read_bytes()).hexdigest()
-                _os.unlink(tmp_path)
-                if fresh != shipped:
-                    details.append(Detail(
-                        f"drift:{bundle}:{png_name}", True,
-                        f"shipped PNG differs from a fresh render "
-                        f"({shipped[:12]} vs {fresh[:12]}) — re-render before review",
-                        warning=True))
-            except ImportError:
-                pass  # kaleido genuinely unavailable — advisory only
-            except Exception as exc:
-                # A bare `except: pass` here previously swallowed a NameError
-                # for a whole review round, making "zero drift" indistinguishable
-                # from "never ran". Surface anything that is not a missing
-                # renderer, as a warning rather than a hard failure.
-                details.append(Detail(
-                    f"drift_check_error:{bundle}:{png_name}", True,
-                    f"drift comparison could not run: {type(exc).__name__}: {exc}",
-                    warning=True))
-
-    details.insert(0, Detail(
-        "summary", n_fail == 0,
-        f"{n_ok + n_fail} bundle figures checked — {n_ok} legible / {n_fail} below "
-        f"the {FLOOR_PT}pt floor"))
-    return CheckResult(passed=n_fail == 0, details=details)
-
-
-@register_check("viz_consistency", "Notebook visualizations use imported physics and consistent style")
-def check_viz_consistency() -> CheckResult:
-    """Visualization consistency warnings (advisory, always passes).
-
-    Two mechanisms:
-      1. Opt-in: cells tagged ``# viz-ref: fig_name`` are checked against
-         the corresponding function in ``src/core/visualizations.py``.
-      2. Safety net: any ``.show()`` call in a code cell that lacks a
-         ``viz-ref`` tag triggers a warning — the figure is untracked.
-
-    Also warns if a figure cell uses hardcoded color hex values instead
-    of the COLORS dict from constants.py.
-    """
-    import ast
-    import importlib
-
-    details = []
-
-    # ── Discover visualizations.py figure functions ──
-    viz_functions = set()
-    viz_path = SRC_DIR / "core" / "visualizations.py"
-    if viz_path.exists():
-        try:
-            tree = ast.parse(viz_path.read_text())
-            viz_functions = {
-                node.name for node in ast.walk(tree)
-                if isinstance(node, ast.FunctionDef) and node.name.startswith("fig_")
-            }
-        except SyntaxError:
-            details.append(Detail("visualizations.py", True,
-                                  "WARN: could not parse visualizations.py",
-                                  warning=True))
-
-    # ── Known COLORS hex values (hardcoding these is a smell) ──
-    try:
-        from src.core.constants import COLORS as _COLORS
-        known_hex = {v.lower() for v in _COLORS.values() if isinstance(v, str)}
-    except ImportError:
-        known_hex = set()
-
-    # ── Scan notebooks ──
-    for nb_path in sorted(NOTEBOOKS_DIR.glob("*.ipynb")):
-        try:
-            with open(nb_path) as f:
-                nb = json.load(f)
-        except Exception as e:
-            details.append(Detail(nb_path.name, True,
-                                  f"WARN: could not parse — {e}", warning=True))
-            continue
-
-        untracked_show = 0
-        hardcoded_colors = 0
-        ref_warnings = []
-
-        for cell_idx, cell in enumerate(nb.get('cells', [])):
-            if cell.get('cell_type') != 'code':
-                continue
-            src = ''.join(cell.get('source', []))
-
-            # ── Check for viz-ref tags ──
-            ref_match = re.search(r'#\s*viz-ref:\s*(\w+)', src)
-            has_show = '.show()' in src
-
-            if ref_match:
-                ref_name = ref_match.group(1)
-                # Check function exists in visualizations.py
-                if ref_name not in viz_functions:
-                    ref_warnings.append(
-                        f"cell {cell_idx}: viz-ref '{ref_name}' not found in visualizations.py"
-                    )
-            elif has_show:
-                # Safety net: .show() without viz-ref tag
-                untracked_show += 1
-
-            # ── Check for hardcoded color hex values ──
-            if known_hex:
-                hex_matches = re.findall(r'["\']#([0-9a-fA-F]{6})["\']', src)
-                for h in hex_matches:
-                    if f"#{h.lower()}" in known_hex:
-                        hardcoded_colors += 1
-
-        # ── Report per notebook ──
-        warns = []
-        if untracked_show:
-            warns.append(f"{untracked_show} untagged .show() call(s)")
-        if hardcoded_colors:
-            warns.append(f"{hardcoded_colors} hardcoded COLORS hex value(s) — use COLORS dict")
-        for rw in ref_warnings:
-            warns.append(rw)
-
-        if warns:
-            details.append(Detail(
-                nb_path.name, True,
-                "WARN: " + "; ".join(warns),
-                warning=True,
-            ))
-        else:
-            details.append(Detail(nb_path.name, True, "clean"))
-
-    # Always passes — these are advisory warnings
-    return CheckResult(passed=True, details=details)
-
-
-# ═══════════════════════════════════════════════════════════════════════
-# CHECK 11: Notebook execution (all notebooks must run without errors)
-# ═══════════════════════════════════════════════════════════════════════
-
-def _src_core_fingerprint() -> str:
-    """SHA-256 (16 hex) of all ``src/core/*.py`` — the physics the notebooks
-    import. Any change invalidates the whole CHECK 11 skip-cache, forcing a
-    full re-vet (a formulas/constants edit can change notebook outcomes without
-    changing notebook content)."""
-    hasher = hashlib.sha256()
-    src_core = SRC_DIR / "core"
-    if src_core.is_dir():
-        for fp in sorted(src_core.glob("*.py")):
-            hasher.update(fp.read_bytes())
-    return hasher.hexdigest()[:16]
-
-
-def _notebook_code_hash(nb) -> str:
-    """SHA-256 (16 hex) of a notebook's code-cell sources. Ignores outputs and
-    execution_count (which change on every run) so the hash is stable for an
-    otherwise-unchanged notebook."""
-    hasher = hashlib.sha256()
-    for cell in nb.cells:
-        if cell.cell_type == "code":
-            hasher.update(cell.source.encode("utf-8"))
-    return hasher.hexdigest()[:16]
-
-
-@register_check("notebook_exec", "All notebooks execute without errors")
-def check_notebook_execution() -> CheckResult:
-    """Execute each notebook top-to-bottom and verify zero errors.
-
-    Uses nbclient's execute engine with a per-cell timeout. Catches import
-    errors, missing variables, broken physics code, and runtime failures that
-    static checks miss.
-
-    **Skip-cache (2026-05-28):** unchanged, previously-passed notebooks are
-    skipped via a content hash recorded in ``NOTEBOOK_EXEC_CACHE`` (keyed on a
-    ``src/core`` fingerprint), mirroring the Lean ``extract_lean_deps.py``
-    hash-skip. Without it this check re-executes all ~89 notebooks every run
-    (~25 min) — the dominant ``validate.py`` slowness. Pass ``--force-notebooks``
-    to bypass the cache and re-execute everything (e.g. after a kernel /
-    dependency upgrade that changes outcomes without changing content).
-    """
-    import nbformat
-
-    details: List[Detail] = []
-    all_pass = True
-
-    # Try importing the execution engine
-    try:
-        from nbclient import NotebookClient
-    except ImportError:
-        return CheckResult(
-            passed=True,
-            details=[Detail("nbclient", True,
-                            "SKIPPED — nbclient not installed. "
-                            "Install with: pip install nbclient")],
-        )
-
-    # Load the skip-cache. A src/core fingerprint mismatch discards it (re-vet
-    # all); --force-notebooks ignores it entirely.
-    src_fp = _src_core_fingerprint()
-    prev_passed: Dict[str, str] = {}
-    if NOTEBOOK_EXEC_CACHE.is_file() and not FORCE_NOTEBOOK_REEXEC:
-        try:
-            loaded = json.loads(NOTEBOOK_EXEC_CACHE.read_text())
-            if isinstance(loaded, dict) and loaded.get("src_fingerprint") == src_fp:
-                prev_passed = loaded.get("passed", {}) or {}
-        except (json.JSONDecodeError, OSError):
-            prev_passed = {}
-
-    new_passed: Dict[str, str] = {}
-    n_skipped = 0
-
-    for nb_path in sorted(NOTEBOOKS_DIR.glob("*.ipynb")):
-        try:
-            with open(nb_path) as f:
-                nb = nbformat.read(f, as_version=4)
-        except Exception as e:
-            all_pass = False
-            details.append(Detail(nb_path.name, False, f"unreadable: {e}"))
-            continue
-
-        code_hash = _notebook_code_hash(nb)
-
-        # Skip unchanged, previously-vetted notebooks.
-        if not FORCE_NOTEBOOK_REEXEC and prev_passed.get(nb_path.name) == code_hash:
-            n_skipped += 1
-            new_passed[nb_path.name] = code_hash
-            details.append(Detail(nb_path.name, True,
-                                  "SKIPPED — unchanged, previously vetted"))
-            continue
-
-        try:
-            client = NotebookClient(
-                nb,
-                timeout=120,          # per-cell timeout
-                kernel_name="python3",
-                resources={"metadata": {"path": str(NOTEBOOKS_DIR)}},
-            )
-            client.execute()
-
-            # Count executed cells
-            code_cells = sum(1 for c in nb.cells if c.cell_type == "code")
-            details.append(Detail(
-                nb_path.name, True,
-                f"{code_cells} code cells executed successfully"))
-            new_passed[nb_path.name] = code_hash  # record vetted state
-
-        except Exception as e:
-            all_pass = False
-            # Extract just the error type and message, not the full traceback
-            err_lines = str(e).strip().split("\n")
-            # Find the actual error line (usually last non-empty line with Error in it)
-            err_msg = err_lines[-1] if err_lines else str(e)
-            for line in reversed(err_lines):
-                if "Error" in line:
-                    err_msg = line.strip()
-                    break
-            if len(err_msg) > 200:
-                err_msg = err_msg[:200] + "..."
-            details.append(Detail(nb_path.name, False, err_msg))
-            # Do NOT record — a failed notebook re-runs next time.
-
-    # Persist the updated cache (only currently-existing, vetted notebooks).
-    try:
-        NOTEBOOK_EXEC_CACHE.write_text(json.dumps(
-            {"src_fingerprint": src_fp, "passed": new_passed},
-            indent=2, sort_keys=True))
-    except OSError:
-        pass
-
-    if n_skipped:
-        details.insert(0, Detail(
-            "skip_cache", True,
-            f"{n_skipped} notebook(s) skipped (unchanged, previously vetted); "
-            f"--force-notebooks re-runs all"))
-
-    return CheckResult(passed=all_pass, details=details)
-
-
-# ═══════════════════════════════════════════════════════════════════════
-# CHECK 12: Physical bounds validation
-# ═══════════════════════════════════════════════════════════════════════
-
-@register_check("physical_bounds", "All computed quantities within physical bounds")
-def check_physical_bounds() -> CheckResult:
-    """Verify computed physics values are physically reasonable.
-
-    Catches absurdities like negative temperatures, perturbative corrections > 1,
-    or shot counts that are impossibly small for tiny corrections.
-    """
-    from src.wkb.spectrum import (
-        steinhauer_platform, heidelberg_platform, trento_platform,
-        compute_spectrum, spectrum_summary,
-    )
-
-    details = []
-    all_pass = True
-
-    platforms = {
-        'steinhauer': steinhauer_platform(),
-        'heidelberg': heidelberg_platform(),
-        'trento': trento_platform(),
-    }
-
-    for name, platform in platforms.items():
-        spectrum = compute_spectrum(platform)
-        summ = spectrum_summary(spectrum)
-
-        checks = [
-            ('T_H > 0', platform.T_H > 0),
-            ('kappa > 0', platform.kappa > 0),
-            ('0 < D < 1', 0 < platform.D < 1),
-            ('0 < delta_diss < 1', 0 < summ['delta_diss_at_T_H'] < 1),
-            ('n_noise >= 0', summ['n_noise_at_T_H'] >= 0),
-        ]
-
-        # Shot count sanity: if correction is sub-percent, need many shots
-        delta_diss = summ['delta_diss_at_T_H']
-        shots = summ['shots_needed']
-        if delta_diss < 1e-3:
-            checks.append((
-                f'shots > 10^4 (delta={delta_diss:.1e})',
-                shots > 1e4
-            ))
-
-        for check_name, passed in checks:
-            if not passed:
-                all_pass = False
-            details.append(Detail(f"{name}/{check_name}", passed,
-                                  f"{'OK' if passed else 'FAILED'}"))
-
-    return CheckResult(passed=all_pass, details=details)
-
-
-# ═══════════════════════════════════════════════════════════════════════
-# CHECK 13: Cross-path consistency
-# ═══════════════════════════════════════════════════════════════════════
-
-@register_check("cross_path_consistency",
-                "Different code paths agree within 0.5%/1% tolerance")
-def check_cross_path_consistency() -> CheckResult:
-    """Verify quantities computed by different modules agree.
-
-    Catches duplicate implementations that drift apart.
-    """
-    from src.core.formulas import decoherence_parameter
-    from src.core.transonic_background import steinhauer_Rb87, solve_transonic_background
-    from src.core.constants import EXPERIMENTS
-    from src.wkb.spectrum import steinhauer_platform, compute_spectrum, spectrum_summary
-
-    details = []
-    all_pass = True
-
-    # --- Compare delta_diss: direct formula vs spectrum_summary ---
-    platform = steinhauer_platform()
-    spectrum = compute_spectrum(platform)
-    summ = spectrum_summary(spectrum)
-    delta_diss_spectrum = summ['delta_diss_at_T_H']
-
-    gamma_eff = platform.gamma_1 + platform.gamma_2
-    delta_diss_direct = gamma_eff * (platform.T_H / platform.c_s)**2 / platform.kappa
-
-    if delta_diss_spectrum > 0 and delta_diss_direct > 0:
-        rel_diff = abs(delta_diss_spectrum - delta_diss_direct) / delta_diss_spectrum
-        ok = rel_diff < 0.005
-        details.append(Detail(
-            "delta_diss: spectrum vs direct",
-            ok,
-            f"spectrum={delta_diss_spectrum:.4e}, direct={delta_diss_direct:.4e}, "
-            f"rel_diff={rel_diff:.4f}"
-        ))
-        if not ok:
-            all_pass = False
-
-    # --- Compare decoherence: spectrum_summary vs formulas.py ---
-    dk_spectrum = summ['delta_k_at_T_H']
-    Gamma_H = gamma_eff * (platform.T_H / platform.c_s)**2
-    dk_formulas = decoherence_parameter(Gamma_H, platform.kappa)
-
-    if dk_spectrum > 0 and dk_formulas > 0:
-        rel_diff = abs(dk_spectrum - dk_formulas) / dk_spectrum
-        ok = rel_diff < 0.005
-        details.append(Detail(
-            "decoherence: spectrum vs formulas",
-            ok,
-            f"spectrum={dk_spectrum:.4e}, formulas={dk_formulas:.4e}, "
-            f"rel_diff={rel_diff:.4f}"
-        ))
-        if not ok:
-            all_pass = False
-
-    # Note: WKB platform uses natural units (c_s=1, kappa=1) while
-    # BECParameters uses SI. Dimensionless ratios (delta_diss, decoherence)
-    # are unit-independent and compared above. Dimensional quantities
-    # (c_s, T_H) cannot be directly compared across unit systems.
-
-    return CheckResult(passed=all_pass, details=details)
-
-
-# ═══════════════════════════════════════════════════════════════════════
-# CHECK 14: Paper claim provenance
-# ═══════════════════════════════════════════════════════════════════════
-
-@register_check("paper_provenance",
-                "Paper numerical claims trace to computations within 0.5%")
-def check_paper_provenance() -> CheckResult:
-    """Verify paper theorem references exist in Lean and figures are present."""
-    details = []
-    all_pass = True
-
-    # Build set of all Lean theorem names
-    lean_names = set()
-    for lean_file in LEAN_DIR.glob("*.lean"):
-        for line in lean_file.read_text().splitlines():
-            if line.startswith("theorem "):
-                name = line.split()[1].split("(")[0].split(":")[0].strip()
-                lean_names.add(name)
-
-    for paper_dir in sorted(PAPERS_DIR.iterdir()):
-        tex_file = paper_dir / "paper_draft.tex"
-        if not tex_file.exists():
-            continue
-
-        tex = tex_file.read_text()
-
-        # Check 1: \\texttt{theorem_name} refs exist in Lean
-        texttt_refs = re.findall(r'\\texttt\{([a-z_][a-zA-Z0-9_]*)\}', tex)
-        theorem_refs = [r for r in texttt_refs if '_' in r]
-        missing = [r for r in theorem_refs if r not in lean_names]
-        if missing:
-            all_pass = False
-            details.append(Detail(
-                f"{paper_dir.name}/theorem_refs", False,
-                f"Not in Lean: {missing}"
-            ))
-        elif theorem_refs:
-            details.append(Detail(
-                f"{paper_dir.name}/theorem_refs", True,
-                f"{len(theorem_refs)} theorem references verified"
-            ))
-
-        # Check 2: No \\fbox placeholder figures
-        if '\\fbox{\\parbox' in tex:
-            all_pass = False
-            details.append(Detail(
-                f"{paper_dir.name}/figures", False,
-                "Has \\fbox placeholder figures — must use \\includegraphics"
-            ))
-        elif '\\includegraphics' in tex:
-            # Resolve each \includegraphics{PATH} relative to the paper tex dir.
-            # Papers may reference local figures/ (most) or shared figures/phase*/ (paper16).
-            includegraphics_refs = re.findall(
-                r'\\includegraphics(?:\[[^\]]*\])?\{([^}]+)\}', tex
-            )
-            missing_figs = []
-            resolved_count = 0
-            for ref in includegraphics_refs:
-                ref_path = (paper_dir / ref).resolve()
-                # Accept the exact path, or the path with any of the common
-                # graphics extensions appended (LaTeX auto-appends .pdf/.png).
-                candidates = [ref_path] + [
-                    ref_path.with_suffix(ext) for ext in ('.png', '.pdf', '.jpg')
-                ]
-                if any(c.exists() for c in candidates):
-                    resolved_count += 1
-                else:
-                    missing_figs.append(ref)
-            if missing_figs:
-                all_pass = False
-                details.append(Detail(
-                    f"{paper_dir.name}/figures", False,
-                    f"Missing {len(missing_figs)} referenced figure(s): {missing_figs[:3]}"
-                    + (f" (+{len(missing_figs) - 3} more)" if len(missing_figs) > 3 else "")
-                ))
-            else:
-                details.append(Detail(
-                    f"{paper_dir.name}/figures", True,
-                    f"{resolved_count} referenced figure(s) resolved"
-                ))
-
-        # Check 3: No placeholder bibliography entries
-        # Strip LaTeX line comments first so historical cleanup notes
-        # like "% [2026-05-04 cleanup: ... arXiv:2604.XXXXX ...]" don't
-        # false-positive. A LaTeX line comment starts at an unescaped %
-        # and continues to end-of-line.
-        tex_comment_stripped = re.sub(r'(?<!\\)%[^\n]*', '', tex)
-        if (
-            'xxxxx' in tex_comment_stripped.lower()
-            or 'Nature \\textbf{XXX}' in tex_comment_stripped
-        ):
-            all_pass = False
-            details.append(Detail(
-                f"{paper_dir.name}/bibliography", False,
-                "Has placeholder bibliography entries (xxxxx or XXX)"
-            ))
-
-    return CheckResult(passed=all_pass, details=details)
-
-
-# ═══════════════════════════════════════════════════════════════════════
-# CHECK 15: Parameter provenance — every experimental param has a
-# verified source traced to a published paper + table/figure.
-# ═══════════════════════════════════════════════════════════════════════
-
-@register_check("parameter_provenance",
-                "Every experimental parameter has verified provenance")
-def check_parameter_provenance() -> CheckResult:
-    """CHECK 15: Validate the parameter provenance registry.
-
-    Checks:
-    1. Coverage: every param in EXPERIMENTS/ATOMS/POLARITON has provenance
-    2. LLM verification: all entries have llm_verified_date (gates Stage 1)
-    3. Human verification: advisory — gates paper submission, not computation
-    4. Consistency: provenance value matches actual constant value
-    5. Tier appropriateness: MEASURED params must have a real source
-    """
-    from src.core.constants import EXPERIMENTS, ATOMS, POLARITON_PLATFORMS
-    from src.core.provenance import PARAMETER_PROVENANCE
-
-    details = []
-    all_pass = True
-
-    # --- 1. Coverage: every parameter has a provenance entry ---
-    missing = []
-    for platform, params in EXPERIMENTS.items():
-        for key in params:
-            if key in ('description', 'atom'):
-                continue
-            prov_key = f"{platform}.{key}"
-            if prov_key not in PARAMETER_PROVENANCE:
-                missing.append(prov_key)
-
-    for atom, props in ATOMS.items():
-        for key in props:
-            if key in ('label',):
-                continue
-            prov_key = f"{atom}.{key}"
-            if prov_key not in PARAMETER_PROVENANCE:
-                missing.append(prov_key)
-
-    # Check POLARITON_MASS
-    if 'POLARITON_MASS' not in PARAMETER_PROVENANCE:
-        missing.append('POLARITON_MASS')
-
-    for config, params in POLARITON_PLATFORMS.items():
-        for key in ('c_s', 'xi', 'kappa', 'tau_cav', 'Gamma_pol', 'gamma_phonon_dim'):
-            prov_key = f"{config}.{key}"
-            if prov_key not in PARAMETER_PROVENANCE:
-                # Shared params (c_s, xi, kappa, gamma_phonon_dim) only need
-                # one entry under Paris_long since all configs share them
-                if key in ('c_s', 'xi', 'kappa', 'gamma_phonon_dim'):
-                    shared_key = f"Paris_long.{key}"
-                    if shared_key not in PARAMETER_PROVENANCE:
-                        missing.append(prov_key)
-                else:
-                    missing.append(prov_key)
-
-    if missing:
-        all_pass = False
-        details.append(Detail(
-            "coverage", False,
-            f"Missing provenance for {len(missing)} params: {', '.join(missing[:5])}"
-            + (f"... (+{len(missing)-5} more)" if len(missing) > 5 else "")
-        ))
-    else:
-        details.append(Detail("coverage", True,
-                              f"All {len(PARAMETER_PROVENANCE)} parameters have provenance entries"))
-
-    # --- 2. LLM verification (gates Stage 1 computation) ---
-    not_llm = [k for k, v in PARAMETER_PROVENANCE.items()
-               if v.get('llm_verified_date') is None]
-    if not_llm:
-        all_pass = False
-        details.append(Detail(
-            "llm_verification", False,
-            f"{len(not_llm)} params not LLM-verified: {', '.join(not_llm[:5])}"
-            + (f"... (+{len(not_llm)-5} more)" if len(not_llm) > 5 else "")
-        ))
-    else:
-        details.append(Detail("llm_verification", True,
-                              "All parameters LLM-verified"))
-
-    # --- 3. Human verification (advisory by default; hard fail in --strict) ---
-    # PROJECTED tier is exempt from human_verified — these are explicit estimates
-    # for not-yet-performed experiments, not measurements requiring verification.
-    not_human = [k for k, v in PARAMETER_PROVENANCE.items()
-                 if v.get('human_verified_date') is None]
-    not_human_required = [
-        k for k in not_human
-        if PARAMETER_PROVENANCE[k].get('tier') != 'PROJECTED'
-    ]
-    if STRICT_MODE and not_human_required:
-        all_pass = False
-        sample = ', '.join(not_human_required[:8])
-        more = f" + {len(not_human_required) - 8} more" if len(not_human_required) > 8 else ""
-        details.append(Detail(
-            "human_verification", False,
-            f"[strict] {len(not_human_required)} non-PROJECTED params lack "
-            f"human_verified_date (paper-submission blocker): {sample}{more}"
-        ))
-    elif not_human:
-        details.append(Detail(
-            "human_verification", True,
-            f"{len(not_human)} params not yet human-verified "
-            f"({len(not_human_required)} non-PROJECTED; blocks paper submission)",
-            warning=True
-        ))
-    else:
-        details.append(Detail("human_verification", True,
-                              "All parameters human-verified — paper submission unblocked"))
-
-    # --- 4. Consistency: provenance value matches actual constant ---
-    mismatches = []
-    null_values = []
-    for prov_key, entry in PARAMETER_PROVENANCE.items():
-        if entry['value'] is None:
-            null_values.append(prov_key)
-            continue
-
-        # Look up actual value
-        actual = _lookup_provenance_value(prov_key, EXPERIMENTS, ATOMS,
-                                          POLARITON_PLATFORMS)
-        if actual is not None:
-            try:
-                rel_err = abs(float(actual) - float(entry['value'])) / max(abs(float(actual)), 1e-30)
-                if rel_err > 0.001:
-                    mismatches.append(f"{prov_key}: registry={entry['value']}, code={actual}")
-            except (TypeError, ValueError):
-                pass  # non-numeric (e.g., string params)
-
-    if null_values:
-        all_pass = False
-        details.append(Detail(
-            "unresolved_conflicts", False,
-            f"{len(null_values)} params have NULL value (unresolved conflict): "
-            f"{', '.join(null_values)}"
-        ))
-    if mismatches:
-        all_pass = False
-        details.append(Detail(
-            "value_consistency", False,
-            f"{len(mismatches)} mismatches: {'; '.join(mismatches[:3])}"
-        ))
-    elif not null_values:
-        details.append(Detail("value_consistency", True,
-                              "All provenance values match code"))
-
-    # --- 5. Tier appropriateness ---
-    tier_issues = []
-    for prov_key, entry in PARAMETER_PROVENANCE.items():
-        if (entry['tier'] == 'MEASURED'
-                and entry.get('llm_verified_date') is None
-                and 'CODATA' not in entry.get('source', '')
-                and 'NIST' not in entry.get('source', '')):
-            tier_issues.append(prov_key)
-    if tier_issues:
-        details.append(Detail(
-            "tier_appropriateness", True,
-            f"{len(tier_issues)} MEASURED params not yet LLM-verified: "
-            f"{', '.join(tier_issues[:5])}",
-            warning=True
-        ))
-
-    return CheckResult(passed=all_pass, details=details)
-
-
-# ═══════════════════════════════════════════════════════════════════════
-# CHECK 15b: Counts freshness (Phase 5v Wave 1b)
-# ═══════════════════════════════════════════════════════════════════════
-
-COUNTS_JSON_PATH = PROJECT_ROOT / "docs" / "counts.json"
-COUNTS_TEX_PATH = PROJECT_ROOT / "docs" / "counts.tex"
-_COUNTS_SOURCES = [
-    PROJECT_ROOT / "lean" / "lean_deps.json",
-    PROJECT_ROOT / "src" / "core" / "constants.py",
-    PROJECT_ROOT / "src" / "core" / "visualizations.py",
-]
-
-
-def _counts_is_stale() -> tuple[bool, str]:
-    """Return (stale, reason). Stale if counts.json is missing or older
-    than any of _COUNTS_SOURCES, or if counts.tex is missing."""
-    if not COUNTS_JSON_PATH.exists():
-        return True, "counts.json missing"
-    if not COUNTS_TEX_PATH.exists():
-        return True, "counts.tex missing"
-    counts_mtime = COUNTS_JSON_PATH.stat().st_mtime
-    for src in _COUNTS_SOURCES:
-        if src.exists() and src.stat().st_mtime > counts_mtime:
-            return True, f"{src.name} newer than counts.json"
-    # Also regenerate if any .lean file in SKEFTHawking is newer (catches
-    # cases where lean_deps.json isn't regenerated but sources changed).
-    # rglob (recursive) — a *.lean in a subdirectory (FKLW/, SymTFT/,
-    # QuantumNetwork/, …) must also mark counts stale, else a native_decide
-    # added in a subdir kept the decl-closure metric stale (ADR-004 W7
-    # adversarial finding M2, 2026-06-13).
-    lean_src = LEAN_DIR.rglob("*.lean")
-    newest_lean = max((f.stat().st_mtime for f in lean_src), default=0)
-    if newest_lean > counts_mtime:
-        return True, "SKEFTHawking/**/*.lean newer than counts.json"
-    return False, "fresh"
-
-
-@register_check("counts_fresh",
-                "counts.json / counts.tex are up-to-date vs. sources")
-def check_counts_fresh() -> CheckResult:
-    """CHECK 15b: Regenerate counts.json + counts.tex if stale.
-
-    Papers reference counts via \\input{counts.tex} macros; this check
-    ensures the macro values reflect the current codebase. Regeneration
-    is automatic when sources are newer; check passes as long as both
-    artifacts exist after the regeneration attempt.
-    """
-    stale, reason = _counts_is_stale()
-    details = []
-
-    if stale:
-        details.append(Detail("staleness", True, f"stale: {reason}",
-                              warning=True))
-        # Run update_counts.py
-        try:
-            # Timeout 1800s = 30 min (Phase 7a sub-wave 7a.0.4 bump from 600s).
-            # update_counts.py invokes ExtractDeps.lean which walks ~5000+ decls
-            # and runs collectAxioms on each — exceeds 600s on current project size.
-            result = subprocess.run(
-                ["uv", "run", "python",
-                 str(SCRIPT_DIR / "update_counts.py")],
-                cwd=str(PROJECT_ROOT),
-                capture_output=True, text=True, timeout=1800,
-            )
-            if result.returncode != 0:
-                details.append(Detail(
-                    "regenerate", False,
-                    f"update_counts.py failed (rc={result.returncode}): "
-                    f"{result.stderr[-200:].strip()}",
-                ))
-                return CheckResult(passed=False, details=details)
-            details.append(Detail("regenerate", True,
-                                  "update_counts.py succeeded"))
-        except (FileNotFoundError, subprocess.TimeoutExpired) as exc:
-            details.append(Detail("regenerate", False,
-                                  f"update_counts.py not runnable: {exc}"))
-            return CheckResult(passed=False, details=details)
-    else:
-        details.append(Detail("staleness", True, "fresh"))
-
-    # Both artifacts must now exist
-    passed = COUNTS_JSON_PATH.exists() and COUNTS_TEX_PATH.exists()
-    if passed:
-        # Summary of current counts
-        try:
-            counts = json.loads(COUNTS_JSON_PATH.read_text())
-            lean = counts.get("lean", {})
-            python = counts.get("python", {})
-            aristotle = counts.get("aristotle", {})
-            summary = (
-                f"theorems={lean.get('theorems_total','?')} "
-                f"(substantive={lean.get('theorems_substantive','?')}, "
-                f"placeholder={lean.get('theorems_placeholder','?')}) | "
-                f"modules={lean.get('modules','?')} | "
-                f"sorry={lean.get('sorry_declarations','?')} | "
-                f"papers={python.get('papers','?')} | "
-                f"aristotle_proved={aristotle.get('aristotle_proved','?')}"
-            )
-            details.append(Detail("summary", True, summary))
-        except (json.JSONDecodeError, OSError) as exc:
-            details.append(Detail("summary", False,
-                                  f"counts.json unreadable: {exc}"))
-            passed = False
-
-    return CheckResult(passed=passed, details=details)
-
-
-# ═══════════════════════════════════════════════════════════════════════
-# CHECK 15c: Paper tables freshness (Phase 5v)
-# ═══════════════════════════════════════════════════════════════════════
-
-_TABLES_SOURCES = [
-    PROJECT_ROOT / "src" / "core" / "formulas.py",
-    PROJECT_ROOT / "src" / "core" / "constants.py",
-    PROJECT_ROOT / "src" / "core" / "transonic_background.py",
-    PROJECT_ROOT / "src" / "core" / "provenance.py",
-    PROJECT_ROOT / "lean" / "lean_deps.json",
-    PROJECT_ROOT / "docs" / "WAVE_EXECUTION_PIPELINE.md",
-    PROJECT_ROOT / "scripts" / "paper_tables" / "__init__.py",
-    PROJECT_ROOT / "scripts" / "paper_tables" / "sources.py",
-    PROJECT_ROOT / "scripts" / "render_paper_tables.py",
-]
-
-
-def _tables_specs() -> list[Path]:
-    """Every papers/<key>/tables.py that exists."""
-    if not PAPERS_DIR.exists():
-        return []
-    return list(PAPERS_DIR.glob("paper*_*/tables.py"))
-
-
-def _tables_outputs() -> list[Path]:
-    """Every papers/<key>/tables/*.tex that has been generated."""
-    if not PAPERS_DIR.exists():
-        return []
-    return list(PAPERS_DIR.glob("paper*_*/tables/*.tex"))
-
-
-def _tables_is_stale() -> tuple[bool, str]:
-    """Stale if any source / spec mtime is newer than the newest output,
-    or if a spec exists but has no output file."""
-    specs = _tables_specs()
-    outputs = _tables_outputs()
-    if not specs:
-        return False, "no tables.py specs"
-    if not outputs:
-        return True, f"{len(specs)} spec(s) but no output .tex files"
-    output_mtime = min(p.stat().st_mtime for p in outputs)
-    for src in _TABLES_SOURCES + specs:
-        if src.exists() and src.stat().st_mtime > output_mtime:
-            return True, f"{src.name} newer than oldest output"
-    return False, f"fresh ({len(outputs)} output files across {len(specs)} papers)"
-
-
-@register_check("tables_fresh",
-                "Paper tables (tables/*.tex) are up-to-date vs. pipeline sources")
-def check_tables_fresh() -> CheckResult:
-    """CHECK 15c: Regenerate papers/*/tables/*.tex if stale.
-
-    Papers `\\input{}` their numerical tables from this autogenerated
-    directory; this check keeps the cells fresh when any pipeline source
-    changes (formulas, constants, transonic background, the paper's
-    spec). Mirror of CHECK 15b counts_fresh for numerical tables.
-    """
-    stale, reason = _tables_is_stale()
-    details = []
-    if stale:
-        details.append(Detail("staleness", True, f"stale: {reason}", warning=True))
-        try:
-            result = subprocess.run(
-                ["uv", "run", "python",
-                 str(SCRIPT_DIR / "render_paper_tables.py")],
-                cwd=str(PROJECT_ROOT),
-                capture_output=True, text=True, timeout=300,
-            )
-            if result.returncode != 0:
-                details.append(Detail(
-                    "regenerate", False,
-                    f"render_paper_tables.py failed (rc={result.returncode}): "
-                    f"{result.stderr[-200:].strip()}",
-                ))
-                return CheckResult(passed=False, details=details)
-            tables_written = result.stdout.strip().splitlines()[-1] if result.stdout.strip() else '0 tables'
-            details.append(Detail("regenerate", True,
-                                  f"render_paper_tables.py succeeded: {tables_written}"))
-        except (FileNotFoundError, subprocess.TimeoutExpired) as exc:
-            details.append(Detail("regenerate", False,
-                                  f"render_paper_tables.py not runnable: {exc}"))
-            return CheckResult(passed=False, details=details)
-    else:
-        details.append(Detail("staleness", True, reason))
-    return CheckResult(passed=True, details=details)
-
-
-# ═══════════════════════════════════════════════════════════════════════
-# CHECK 15d: Cross-paper ClaimCluster freshness (Phase 5v Wave 10f)
-# ═══════════════════════════════════════════════════════════════════════
-
-CLAIM_CLUSTERS_PATH = PROJECT_ROOT / "papers" / "claim_clusters.json"
-
-
-def _claim_clusters_is_stale() -> tuple[bool, str]:
-    """Stale if any v2 ``claims_review.json`` mtime is newer than
-    ``claim_clusters.json``, or if any v2 file exists but no cluster
-    file does.
-
-    A v2 ``claims_review.json`` carries a top-level ``sentences`` list;
-    files without that key are v1 and don't participate in cross-paper
-    clustering.
-    """
-    if not PAPERS_DIR.exists():
-        return False, "no papers/ dir"
-    v2_files: list[Path] = []
-    for p in PAPERS_DIR.iterdir():
-        if not p.is_dir() or not p.name.startswith('paper'):
-            continue
-        cr = p / 'claims_review.json'
-        if not cr.exists():
-            continue
-        try:
-            data = json.loads(cr.read_text())
-        except json.JSONDecodeError:
-            continue
-        if isinstance(data.get('sentences'), list):
-            v2_files.append(cr)
-    if not v2_files:
-        return False, "no v2 claims_review.json files"
-    if not CLAIM_CLUSTERS_PATH.exists():
-        return True, f"{len(v2_files)} v2 paper(s), no claim_clusters.json"
-    cluster_mtime = CLAIM_CLUSTERS_PATH.stat().st_mtime
-    for f in v2_files:
-        if f.stat().st_mtime > cluster_mtime:
-            return True, f"{f.parent.name}/claims_review.json newer than claim_clusters.json"
-    return False, f"fresh ({len(v2_files)} v2 paper(s) tracked)"
-
-
-@register_check("claim_clusters_fresh",
-                "papers/claim_clusters.json is up-to-date vs. v2 claims_review.json files")
-def check_claim_clusters_fresh() -> CheckResult:
-    """CHECK 15d: Regenerate ``papers/claim_clusters.json`` if any v2
-    ``claims_review.json`` is newer.
-
-    Wave 10f. The cross-paper ClaimCluster + MEMBER_OF graph extractors
-    consume this file; out-of-date data means the dashboard misses
-    propagation prompts and ``graph_integrity.claim_cluster_inconsistency``
-    runs against stale member sets. Auto-regenerates via ``cluster_detect.py``.
-    Idempotent + safe on machines with zero v2 papers.
-    """
-    stale, reason = _claim_clusters_is_stale()
-    details = []
-    if stale:
-        details.append(Detail("staleness", True, f"stale: {reason}", warning=True))
-        try:
-            result = subprocess.run(
-                ["uv", "run", "python",
-                 str(SCRIPT_DIR / "cluster_detect.py")],
-                cwd=str(PROJECT_ROOT),
-                capture_output=True, text=True, timeout=120,
-            )
-            if result.returncode != 0:
-                details.append(Detail(
-                    "regenerate", False,
-                    f"cluster_detect.py failed (rc={result.returncode}): "
-                    f"{result.stderr[-200:].strip()}",
-                ))
-                return CheckResult(passed=False, details=details)
-            # cluster_detect prints summary on stderr (one-line)
-            tail = (result.stderr or '').strip().splitlines()
-            details.append(Detail("regenerate", True,
-                                  tail[-1] if tail else "cluster_detect.py succeeded"))
-        except (FileNotFoundError, subprocess.TimeoutExpired) as exc:
-            details.append(Detail("regenerate", False,
-                                  f"cluster_detect.py not runnable: {exc}"))
-            return CheckResult(passed=False, details=details)
-    else:
-        details.append(Detail("staleness", True, reason))
-
-    # Summarize current cluster state when present
-    if CLAIM_CLUSTERS_PATH.exists():
-        try:
-            data = json.loads(CLAIM_CLUSTERS_PATH.read_text())
-            n_clusters = data.get('cluster_count', 0)
-            n_papers = len(data.get('paper_coverage') or [])
-            details.append(Detail(
-                "summary", True,
-                f"{n_clusters} cluster(s) across {n_papers} paper(s)",
-            ))
-        except (json.JSONDecodeError, OSError) as exc:
-            details.append(Detail("summary", False,
-                                  f"claim_clusters.json unreadable: {exc}"))
-            return CheckResult(passed=False, details=details)
-    return CheckResult(passed=True, details=details)
-
-
-# ═══════════════════════════════════════════════════════════════════════
-# CHECK 17b: Inline numerical literals outside \input{} blocks (Phase 5v)
-# ═══════════════════════════════════════════════════════════════════════
-
-# Patterns that strongly suggest a hardcoded numerical literal with a
-# physical unit. Any such literal in paper prose should move into an
-# auto-generated tables/*.tex file so it stays pipeline-derived.
-_NUMERICAL_LITERAL_RE = re.compile(
-    r'(?<!\\)\b(\d+\.\d+|\d+(?:\.\d+)?e[+-]?\d+)\s*'
-    r'(~?)\\?(?:'
-    r'(?:mu|\\mu)\s*m\b|'
-    r'nK\b|'
-    r'mK\b|'
-    r'\\mathrm\{[a-zA-Z]+\}|'
-    r's\^?(?:-|\{-|\^{-)1\}?|'
-    r'mm/s\b|'
-    r'\\mu m\b|'
-    r'\\times\s*10\^'
-    r')',
-    re.IGNORECASE,
-)
-
-
-@register_check("numerical_literals",
-                "Paper .tex files free of inline numerical literals outside \\input{} blocks")
-def check_numerical_literals() -> CheckResult:
-    """CHECK 17b: Flag hardcoded numerical literals in paper body.
-
-    Counterpart to CHECK 17 count_literals. Values with physical units
-    should come from auto-generated tables/*.tex files, not be
-    hand-coded in the body. WARN-level during retrofit; flip to FAIL
-    once every paper uses `\\input{tables/...}` for its numerical
-    content.
-    """
-    if not PAPERS_DIR.exists():
-        return CheckResult(passed=True, details=[
-            Detail("papers_dir", True, "papers/ not found; skipping", warning=True),
-        ])
-
-    details = []
-    total_findings = 0
-    total_inputs = 0
-    # Glob widened 2026-07-31: was `paper*_*/`, which matched only the legacy
-    # `paperNN_<slug>/` layout and left ALL 21 publication bundles (D1-D12, I1-I3,
-    # L1-L3, E1, E2, F) unscanned. Filed as a Stage-13 QI candidate in two
-    # consecutive rounds before being fixed. Use the same `*/` form the bundle-aware
-    # checks already use.
-    for tex_path in sorted(PAPERS_DIR.glob("*/paper_draft.tex")):
-        paper_name = tex_path.parent.name
-        try:
-            text = tex_path.read_text()
-        except UnicodeDecodeError:
-            details.append(Detail(paper_name, True, "unreadable; skipping",
-                                  warning=True))
-            continue
-
-        # Papers that \input{tables/...} have opted in for data rows
-        input_count = len(re.findall(r'\\input\{tables/[^}]+\}', text))
-        total_inputs += input_count
-
-        # Strip everything inside \input{tables/...} sections (the
-        # generated files have their own literals, we trust those).
-        # Also strip captions (they often cite reference values like
-        # "290 s^-1" for comparison — those are intentional literals
-        # documenting the paper's relationship to primary sources).
-        stripped = re.sub(r'\\input\{tables/[^}]+\}', '', text)
-        stripped = re.sub(r'\\caption\{[^}]*\}', '', stripped, flags=re.DOTALL)
-
-        # Find numerical literals with physical units in the remainder
-        findings = []
-        for m in _NUMERICAL_LITERAL_RE.finditer(stripped):
-            line_no = stripped.count("\n", 0, m.start()) + 1
-            findings.append((line_no, m.group(0).strip()))
-
-        if not findings:
-            details.append(Detail(
-                paper_name, True,
-                f"no inline unit-bearing literals in body"
-                + (f" (uses {input_count} \\input tables)" if input_count else ""),
-            ))
-            continue
-
-        total_findings += len(findings)
-        sample = "; ".join(f'L{ln} "{lit}"' for ln, lit in findings[:3])
-        suffix = f" (+{len(findings)-3} more)" if len(findings) > 3 else ""
-        prefix = f"uses {input_count} \\input, " if input_count else ""
-        details.append(Detail(
-            paper_name, True,
-            f"{prefix}{len(findings)} inline literal(s): {sample}{suffix}",
-            warning=(len(findings) > 0),
-        ))
-
-    details.insert(0, Detail(
-        "summary", True,
-        f"{total_findings} inline literals across papers; "
-        f"{total_inputs} \\input{{tables/}} references in use "
-        f"(WARN-level during retrofit)",
-        warning=(total_findings > 0),
-    ))
-
-    # WARN-only until retrofit is complete; never hard-fails.
-    return CheckResult(passed=True, details=details)
-
-
-# ═══════════════════════════════════════════════════════════════════════
-# CHECK 16: Knowledge graph integrity
-# ═══════════════════════════════════════════════════════════════════════
-
-@register_check("graph_integrity",
-                "Knowledge graph integrity — orphans, conflicts, broken chains")
-def check_graph_integrity() -> CheckResult:
-    """CHECK 16: Build provenance graph and run integrity queries.
-
-    Includes a roster round-trip guard (added 2026-07-31): every canonical
-    bundle code must resolve through `build_graph._infer_bundle_from_text`.
-    Without it, `D[1-9]` silently failed on every TWO-DIGIT code (D10/D11/D12,
-    authorized 2026-06-29): the FLAGS-edge builder resolved no bundle, the
-    readiness heatmap counted zero findings for all three, and D12 rendered
-    "Blockers 0" while carrying 36 open ReviewFindings. It also produced FALSE
-    FLAGS edges, since the paper-key text matcher fired in the bundle matcher's
-    place. Any future roster extension now fails here rather than silently.
-    """
-    roster_details = []
-    try:
-        sys.path.insert(0, str(SCRIPT_DIR))
-        from build_graph import _infer_bundle_from_text
-        try:
-            from bundle_registry import VALID_BUNDLE_TARGETS as _roster
-        except Exception:
-            _roster = frozenset(
-                [f"D{i}" for i in range(1, 13)] + [f"L{i}" for i in range(1, 4)]
-                + [f"I{i}" for i in range(1, 4)] + ["E1", "E2", "F"]
-            )
-        unresolved = sorted(c for c in _roster if _infer_bundle_from_text(c) != c)
-        if unresolved:
-            roster_details.append(Detail(
-                "bundle_code_roundtrip", False,
-                f"{len(unresolved)} roster bundle code(s) do not round-trip through "
-                f"build_graph._infer_bundle_from_text: {', '.join(unresolved)}. "
-                f"Review findings for these bundles are invisible to the FLAGS-edge "
-                f"builder and the readiness heatmap will under-report them as zero.",
-            ))
-        else:
-            roster_details.append(Detail(
-                "bundle_code_roundtrip", True,
-                f"all {len(_roster)} roster bundle codes resolve through the graph's "
-                f"bundle inference (incl. two-digit D10-D12)",
-            ))
-    except Exception as exc:  # pragma: no cover
-        roster_details.append(Detail(
-            "bundle_code_roundtrip", True,
-            f"roster round-trip skipped ({type(exc).__name__}: {exc})", warning=True))
-
-    # ── Orphaned-finding guard (added 2026-07-31, D11 round-5 BLOCKER 4.1) ────
-    # A ReviewFinding that resolves to a bundle but emits no FLAGS edge is
-    # INVISIBLE to Gate 11 FixPropagation and to the "a BLOCKER flips the
-    # ReadinessGate to blocked" mechanism — so the gate passes vacuously. Ten
-    # bundles were in exactly that state (D6-D12, I2, I3) because their only
-    # PAPER_DRAFT_MAPPING sources are synthesis stubs with no Paper node, and
-    # the fan-out silently skipped them. readiness_submission_gate reported
-    # "D11 — all P1 passed" while six Stage-13 BLOCKERs sat unclosed on disk.
-    # An unrecordable finding is indistinguishable from no finding, so make it
-    # fail loudly.
-    try:
-        from build_graph import build_graph_json
-        _g = build_graph_json()
-        _edges = _g.get("edges") or _g.get("links") or []
-        # ⚠️ PREDICATE STRENGTHENED 2026-07-31 (D11 round-6 BLOCKER 4.1). The first
-        # version asked only "does this finding emit SOME FLAGS edge", which a
-        # reviewer showed passes green under three mutations — including one that
-        # reproduced the original defect exactly (retarget D11's 39 edges to a
-        # source-paper stub: still "some edge", still PASS). It now asserts the
-        # property that matters: a finding about bundle X flags `paper:X`.
-        _tgt = {}
-        for e in _edges:
-            if e.get("type") == "FLAGS":
-                _tgt.setdefault(e["source"], set()).add(e["target"])
-        _findings = [n for n in _g.get("nodes", [])
-                     if isinstance(n, dict) and n.get("type") == "ReviewFinding"]
-        _orphans = [
-            n["id"] for n in _findings
-            if (n.get("meta") or {}).get("inferred_bundle")
-            and f"paper:{n['meta']['inferred_bundle']}" not in _tgt.get(n["id"], set())
-        ]
-        # Second leg (closes mutation B): a finding whose bundle inference FAILS is
-        # excluded from the scan above by construction, so the guard was blind to the
-        # very layer-1 defect that started this class. Assert instead that every
-        # review file named after a roster bundle yields findings that resolve.
-        _by_file = {}
-        for n in _findings:
-            m = n.get("meta") or {}
-            rf = m.get("review_file", "")
-            stem = rf.rsplit("/", 1)[-1].removesuffix(".md")
-            if stem in _roster:
-                _by_file.setdefault(stem, []).append(m.get("inferred_bundle"))
-        _unresolved_files = sorted(
-            f for f, vals in _by_file.items() if not any(v == f for v in vals))
-        if _orphans or _unresolved_files:
-            _msgs = []
-            if _orphans:
-                _msgs.append(
-                    f"{len(_orphans)} ReviewFinding(s) resolve to a bundle but emit no FLAGS "
-                    f"edge to `paper:<that bundle>`: {', '.join(sorted(_orphans)[:3])}")
-            if _unresolved_files:
-                _msgs.append(
-                    f"{len(_unresolved_files)} review file(s) named after a roster bundle "
-                    f"yield no finding resolving to it: {', '.join(_unresolved_files[:3])}")
-            roster_details.append(Detail("findings_reach_the_graph", False, "; ".join(_msgs)))
-        else:
-            roster_details.append(Detail(
-                "findings_reach_the_graph", True,
-                f"all {sum(1 for n in _findings if (n.get('meta') or {}).get('inferred_bundle'))} "
-                f"bundle-resolved findings flag their own bundle, and every bundle-named review "
-                f"file resolves",
-            ))
-    except Exception as exc:  # pragma: no cover
-        # FAIL, not pass: this guard exists to make invisible findings visible, so a
-        # build error in the scan must not be indistinguishable from a clean scan
-        # (D12 round-6 finding 8.2 — the original `warning=True` failed open).
-        roster_details.append(Detail(
-            "findings_reach_the_graph", False,
-            f"orphan scan could not run ({type(exc).__name__}: {exc}) — treat as unverified"))
-
-    # ── Supersession-ledger referential integrity (D12 round-6 finding 4.1) ──
-    # Findings raised in rounds whose review document was never written to disk
-    # were filed under an EARLIER review's IDs. That both collides with live
-    # findings (a still-open finding rendered `fixed`) and mints dangling IDs
-    # naming no node. Neither is detectable from the ledger alone.
-    try:
-        _led = json.loads(
-            (Path(__file__).resolve().parent.parent / "docs"
-             / "review_finding_supersessions.json").read_text(encoding="utf-8"))
-        _entries = _led.get("supersessions", [])
-        _known = {n["id"] for n in _g.get("nodes", [])
-                  if isinstance(n, dict) and n.get("type") == "ReviewFinding"}
-        # Scope to the `review:<date-dir>:<name>:<section>` scheme, which is the one
-        # extract_review_finding_nodes mints nodes for. Legacy Stage-9/10 records use
-        # an unrelated `bundle-stage10:...` scheme and were never graph nodes, so
-        # flagging them would be noise, not signal.
-        _dangling = sorted({e["finding_id"] for e in _entries
-                            if e.get("finding_id", "").startswith("review:")
-                            and e["finding_id"] not in _known})
-        # Baseline re-measured 2026-08-01 (D11 Stage-13 round-13 finding 2220:4.5). It was
-        # pinned at 67 against a population of 66, i.e. it carried one slot of headroom in
-        # which a NEW dangling record could be filed without failing — in the one guard
-        # whose whole purpose is to catch newly-filed closures that name nothing.
-        #
-        # Its justifying comment was also wrong about the population it describes. Measured:
-        # of the 66, 53 use annotated IDs and 13 do not — the comment claimed all 67 were
-        # annotated. 67 was the count of ledger ids MENTIONING stage9/stage10, a different
-        # population that happened to be one larger.
-        #
-        # Pinned to the exact count, so any growth fails on the first record.
-        _LEDGER_DANGLING_BASELINE = 66
-        #
-        # ⚠️ A CLAIM I MADE HERE WAS WRONG, retracted 2026-08-01. I wrote that this guard
-        # "does not run" and reported it as a twelfth defect, on the strength of a mutation
-        # test that planted a dangling record and saw no `ledger_ids_resolve` detail. The
-        # test was invoking `check_bundle_registry_consistency`. This guard lives in
-        # `check_graph_integrity` (line ~3261) — a different check entirely — so of course
-        # it emitted nothing there.
-        #
-        # Re-tested against the right host: baseline reports "66 dangling ... no growth" and
-        # PASSES; planting one dangling record reports "67 ... above the pinned baseline of
-        # 66" and FAILS. The guard works, and the baseline correction above is what makes
-        # the growth case fail at exactly one record.
-        #
-        # I found a real defect (the 67-vs-66 headroom), then manufactured a second one out
-        # of my own testing error and committed it as a finding. Diagnosing by running the
-        # wrong function is the same class of mistake as measuring the wrong quantity, which
-        # is what produced the eleven genuine instances this session.
-        if len(_dangling) > _LEDGER_DANGLING_BASELINE:
-            _s = ", ".join(_dangling[:4])
-            roster_details.append(Detail(
-                "ledger_ids_resolve", False,
-                f"{len(_dangling)} supersession finding_id(s) name no ReviewFinding node, "
-                f"above the pinned baseline of {_LEDGER_DANGLING_BASELINE} — a closure filed "
-                f"against a nonexistent finding closes nothing: {_s}",
-            ))
-        elif _dangling:
-            roster_details.append(Detail(
-                "ledger_ids_resolve", True,
-                f"{len(_dangling)} dangling supersession finding_id(s) (pre-existing annotated-ID "
-                f"debt, baseline {_LEDGER_DANGLING_BASELINE}); no growth",
-                warning=True,
-            ))
-        else:
-            roster_details.append(Detail(
-                "ledger_ids_resolve", True,
-                f"all review:-scheme supersession finding_ids resolve to ReviewFinding nodes "
-                f"({len(_entries)} entries scanned)",
-            ))
-    except Exception as exc:  # pragma: no cover
-        # FAIL, not warn (2026-08-01). This handler returned passed=True, so ANY exception
-        # in the scan made the guard silently absent — which is exactly the state a
-        # mutation test found it in: planting a dangling record left the check green with
-        # no `ledger_ids_resolve` detail emitted at all. A guard that cannot run must say
-        # so loudly; this one exists to catch closures naming nothing, and three such
-        # records were filed this session while it was inert.
-        roster_details.append(Detail(
-            "ledger_ids_resolve", False,
-            f"ledger integrity scan FAILED TO RUN ({type(exc).__name__}: {exc}) — the "
-            f"dangling-closure guard did not execute, so its silence is not evidence"))
-
-    try:
-        from graph_integrity import run_integrity_checks
-    except ImportError as exc:
-        return CheckResult(
-            passed=all(d.passed for d in roster_details),
-            details=roster_details + [
-                Detail("import", True,
-                       f"graph_integrity not available ({exc}); skipping",
-                       warning=True),
-            ])
-
-    report = run_integrity_checks()
-    s = report['summary']
-
-    details = []
-
-    # Graph size (informational)
-    details.append(Detail(
-        "graph_size", True,
-        f"{s['total_nodes']} nodes, {s['total_edges']} edges",
-    ))
-
-    # Conflicts are hard failures
-    if s['conflicts'] > 0:
-        conflict_names = ', '.join(c['name'] for c in report['conflicts'][:5])
-        suffix = f" (+{s['conflicts'] - 5} more)" if s['conflicts'] > 5 else ""
-        details.append(Detail(
-            "conflicts", False,
-            f"{s['conflicts']} verification conflicts: {conflict_names}{suffix}",
-        ))
-    else:
-        details.append(Detail("conflicts", True, "No verification conflicts"))
-
-    # Orphan CLAIM nodes are a HARD FAIL (R-06 regression guard). Every discovered
-    # paper claim must be CLAIMS-connected to its paper; a non-zero count means
-    # paper/claim discovery drifted out of sync. Distinct from generic orphans
-    # below (unconnected Lean declaration nodes are expected substrate).
-    orphan_claims = s.get('orphan_claims', 0)
-    if orphan_claims > 0:
-        oc_sample = ', '.join(o['id'] for o in report.get('orphan_claims', [])[:5])
-        oc_suffix = f" (+{orphan_claims - 5} more)" if orphan_claims > 5 else ""
-        details.append(Detail(
-            "orphan_claims", False,
-            f"{orphan_claims} orphan paper-claim nodes (no CLAIMS edge to a paper) — "
-            f"paper/claim discovery is out of sync: {oc_sample}{oc_suffix}",
-        ))
-    else:
-        details.append(Detail("orphan_claims", True,
-                              "No orphan paper-claim nodes (all claims CLAIMS-connected)"))
-
-    # Generic orphans (mostly unconnected Lean declaration nodes) are warnings.
-    if s['orphans'] > 0:
-        orphan_sample = ', '.join(o['id'] for o in report['orphan_nodes'][:5])
-        suffix = f" (+{s['orphans'] - 5} more)" if s['orphans'] > 5 else ""
-        details.append(Detail(
-            "orphan_nodes", True,
-            f"{s['orphans']} orphan nodes: {orphan_sample}{suffix}",
-            warning=True,
-        ))
-    else:
-        details.append(Detail("orphan_nodes", True, "No orphan nodes"))
-
-    # Ungrounded claims are warnings
-    if s['ungrounded'] > 0:
-        sample = ', '.join(u['id'] for u in report['ungrounded_claims'][:5])
-        suffix = f" (+{s['ungrounded'] - 5} more)" if s['ungrounded'] > 5 else ""
-        details.append(Detail(
-            "ungrounded_claims", True,
-            f"{s['ungrounded']} ungrounded claims: {sample}{suffix}",
-            warning=True,
-        ))
-    else:
-        details.append(Detail("ungrounded_claims", True, "All claims grounded"))
-
-    # Broken chains are warnings
-    if s['broken_chains'] > 0:
-        sample = ', '.join(b['formula'] for b in report['broken_chains'][:5])
-        suffix = f" (+{s['broken_chains'] - 5} more)" if s['broken_chains'] > 5 else ""
-        details.append(Detail(
-            "broken_chains", True,
-            f"{s['broken_chains']} broken provenance chains: {sample}{suffix}",
-            warning=True,
-        ))
-    else:
-        details.append(Detail("broken_chains", True, "No broken provenance chains"))
-
-    # Missing provenance are warnings
-    if s['missing_provenance'] > 0:
-        sample = ', '.join(m['name'] for m in report['missing_provenance'][:5])
-        suffix = f" (+{s['missing_provenance'] - 5} more)" if s['missing_provenance'] > 5 else ""
-        details.append(Detail(
-            "missing_provenance", True,
-            f"{s['missing_provenance']} params without SOURCED_FROM: {sample}{suffix}",
-            warning=True,
-        ))
-    else:
-        details.append(Detail("missing_provenance", True,
-                              "All non-projected params have provenance sources"))
-
-    # Hard failures: verification conflicts and orphan claim nodes (R-06 guard).
-    passed = s['conflicts'] == 0 and s.get('orphan_claims', 0) == 0
-
-    details = roster_details + details
-    passed = passed and all(d.passed for d in roster_details)
-    return CheckResult(passed=passed, details=details)
-
-
-# ═══════════════════════════════════════════════════════════════════════
-# CHECK: Derived proof-atlas integrity (ADR-005 D-F)
-# ═══════════════════════════════════════════════════════════════════════
-
-@register_check("atlas_integrity",
-                "Derived proof-atlas (ADR-005) is consistent: no kind conflicts, no undisclosed "
-                "project axioms, open nodes registry-backed, no apex silently closed")
-def check_atlas_integrity() -> CheckResult:
-    """Gate the derived atlas VIEW (``scripts/atlas_view.py``) — a projection of
-    ``lean_deps.json`` ∪ ``HYPOTHESIS_REGISTRY`` ∪ ``AXIOM_METADATA``. ``native_decide`` compiler
-    axioms are excluded from the axiom-taint leg (ADR-002 owns that surface). The
-    ``apex_not_closed`` leg is ACTIVE as of Phase 2 (apexes = HEADLINE-tier open targets from the
-    hypothesis registry; ADR-005 D-H)."""
-    try:
-        sys.path.insert(0, str(SCRIPT_DIR))
-        import atlas_view
-        from src.core.constants import AXIOM_METADATA, HYPOTHESIS_REGISTRY
-        lean_deps = atlas_view.load_lean_deps_file()
-        atlas = atlas_view.build_atlas(lean_deps)
-    except Exception as exc:  # noqa: BLE001
-        return CheckResult(passed=False, error=f"atlas build failed: {exc}")
-
-    details: List[Detail] = []
-    nodes = atlas["nodes"]
-    unknowns = atlas["unknowns"]
-
-    # (1) Kind consistency: no FQN classified as more than one atlas kind.
-    seen: dict = {}
-    conflicts = []
-    for n in nodes:
-        prev = seen.setdefault(n["fqn"], n["atlas_kind"])
-        if prev != n["atlas_kind"]:
-            conflicts.append(n["fqn"])
-    details.append(Detail("kind_consistency", not conflicts,
-        "no FQN has conflicting atlas kinds" if not conflicts
-        else f"{len(conflicts)} FQNs with conflicting kinds: {conflicts[:5]}"))
-
-    # (2) No undisclosed project axiom: every GENUINE project axiom (native_decide excluded) in any
-    #     closure must be disclosed in AXIOM_METADATA. Currently 0 — catches a future stray axiom.
-    allow = set(AXIOM_METADATA.keys())
-    untracked = []
-    for r in lean_deps:
-        for a in atlas_view._genuine_project_axioms(r):
-            if a.split(".")[-1] not in allow:
-                untracked.append(f"{r['name']} <- {a}")
-    details.append(Detail("no_undisclosed_project_axiom", not untracked,
-        "all genuine project axioms disclosed in AXIOM_METADATA (or none)" if not untracked
-        else f"{len(untracked)} undisclosed: {untracked[:5]}"))
-
-    # (3) Every open (UNKNOWN) atlas node is registry-backed. The converse — no consumed
-    #     unregistered Prop — is enforced by the tracked_hypothesis_ledger check.
-    malformed = [u.get("id") for u in unknowns
-                 if not str(u.get("id", "")).startswith("hyp:") or u.get("atlas_kind") != "UNKNOWN"]
-    details.append(Detail("open_nodes_registry_backed", not malformed,
-        f"{len(unknowns)} open nodes, all from HYPOTHESIS_REGISTRY" if not malformed
-        else f"{len(malformed)} malformed open nodes: {malformed[:5]}"))
-
-    # (4) Apex closure integrity (ADR-005 D-F/D-H). Apexes = HEADLINE-tier registry
-    #     targets (`is_apex`). A discharge theorem's short name may be SUFFIXED
-    #     (`H_Fib_v4_witness_unconditional` discharges key `H_Fib_v4_witness`), so
-    #     exact-name matching alone misses silent discharges (R-07, 2026-07-20). Two
-    #     failure modes:
-    #       (a) SILENT closure — the apex is still marked OPEN but a producer theorem
-    #           (exact key, or key + a recognized discharge suffix) already proves it;
-    #       (b) BOGUS closure — the apex is marked DISCHARGED/SUPERSEDED but NO producer
-    #           theorem is found (a closure with nothing behind it).
-    #     An EXPLICITLY discharged apex backed by a real producer is correct → passes.
-    apexes = [u for u in unknowns if u.get("is_apex")]
-    proved = {n["fqn"] for n in nodes if n.get("atlas_status") == "PROVED"}
-    proved_last = {fqn.split(".")[-1] for fqn in proved}
-    _DISCHARGE_SUFFIXES = ("", "_unconditional", "_discharged", "_proven")
-
-    def _apex_producer(key: str):
-        for suf in _DISCHARGE_SUFFIXES:
-            if (key + suf) in proved_last:
-                return key + suf
-        return None
-
-    _OPEN_ST = ("STATED", "PLANNED", "ACTIVE", "OPEN")
-    _CLOSED_ST = ("DISCHARGED", "SUPERSEDED")
-    bad_apex = []
-    open_apex_n = 0
-    for u in apexes:
-        key = str(u.get("id", ""))[len("hyp:"):]
-        st = str(u.get("atlas_status", "")).upper()
-        producer = _apex_producer(key)
-        if st in _OPEN_ST:
-            open_apex_n += 1
-            if producer:
-                bad_apex.append(f"{u.get('id')} (open but producer {producer} exists)")
-        elif st in _CLOSED_ST and not producer:
-            bad_apex.append(f"{u.get('id')} (marked {st} but no producer theorem found)")
-    details.append(Detail("apex_not_closed", not bad_apex,
-        (f"{len(apexes)} headline apex(es): {open_apex_n} open (none silently discharged), "
-         f"{len(apexes) - open_apex_n} explicitly discharged (producer-verified)")
-        if apexes and not bad_apex
-        else ("no apex (headline-tier) nodes" if not apexes
-              else f"{len(bad_apex)} apex integrity failure(s): {bad_apex[:5]}")))
-
-    # (5) Every declared `dependent_theorems` FQN resolves to a real declaration.
-    #     A short name absent from the ENTIRE declaration set is a PHANTOM target
-    #     (hard fail; R-07 caught `SKEFTHawking.central_charge_from_sm`). A short name
-    #     that exists but under a different full namespace is namespace DRIFT
-    #     (advisory warning — the theorem exists, only the registry FQN prefix is stale).
-    #     Resolve against the FULL declaration set (raw lean_deps), NOT the classified
-    #     atlas `nodes` subset (which excludes many real decls and would false-flag them).
-    all_fqns = {r.get("name") for r in lean_deps if isinstance(r, dict) and r.get("name")}
-    all_short = {fqn.split(".")[-1] for fqn in all_fqns}
-    phantoms, drift = [], []
-    for hkey, h in HYPOTHESIS_REGISTRY.items():
-        for dt in (h.get("dependent_theorems") or []):
-            if dt in all_fqns:
-                continue
-            (drift if dt.split(".")[-1] in all_short else phantoms).append(f"{hkey}:{dt}")
-    details.append(Detail("dependent_theorems_resolve", not phantoms,
-        f"all {sum(len(h.get('dependent_theorems') or []) for h in HYPOTHESIS_REGISTRY.values())} "
-        f"dependent_theorems FQNs resolve to a declaration"
-        if not phantoms else f"{len(phantoms)} phantom target(s): {phantoms[:5]}"))
-    if drift:
-        details.append(Detail("dependent_theorems_namespace_drift", True,
-            f"{len(drift)} ref(s) resolve by short name but the FQN namespace prefix "
-            f"has drifted (advisory, not gating): {drift[:8]}", warning=True))
-
-    passed = all(d.passed for d in details)
-    return CheckResult(passed=passed, details=details)
-
-
-def _hyp_module_stem(module):
-    """Leading module-path token of an atlas ``module`` field (often annotated "Foo (Phase X...)")."""
-    if not module:
-        return "(none)"
-    head = str(module).split("(", 1)[0].strip()
-    toks = head.split()
-    return toks[0] if toks else "(none)"
-
-
-@register_check("atlas_hypothesis_discipline",
-                "INFO: tracked-hypothesis distribution (total / gating vs orphan-landmark / per-module) "
-                "for PD-2 visibility — NEVER a gate; the bank-or-grind discipline lives in the coach")
-def check_atlas_hypothesis_discipline() -> CheckResult:
-    """PD-2 visibility (``docs/dev-loops/proposals/hypothesis-banking-discharge.md``; reshaped
-    2026-06-22 against live data + a deliberate design ruling). A tracked hypothesis is a DISCLOSED
-    ASSUMPTION (a liability the project leans on), DISTINCT from accrued proved work (assets — PROVED /
-    OBSTRUCTION nodes, which this check NEVER touches). On a clean tree most tracked hypotheses are
-    legitimately ORPHAN (external-boundary / future landmarks that gate no current theorem — precise
-    parked statements, not debt), so this is INFO-ONLY: it NEVER fails the build and NEVER culls
-    anything. The real PD-2 discipline is PER-DECISION — the coach's bank-or-grind unlock-check (does a
-    NEW assumption actually unlock the load-bearing residual?) + the stall-detector's route-proliferation.
-    This check just reports the distribution so ``/debrief`` can SEE scatter developing without
-    auto-failing."""
-    try:
-        sys.path.insert(0, str(SCRIPT_DIR))
-        import atlas_view
-        atlas = atlas_view.build_atlas(atlas_view.load_lean_deps_file())
-    except Exception as exc:  # noqa: BLE001
-        return CheckResult(passed=False, error=f"atlas build failed: {exc}")
-    unknowns = atlas["unknowns"]
-    gating = [u for u in unknowns if (u.get("dependent_theorems") or [])]
-    orphan = [u for u in unknowns if not (u.get("dependent_theorems") or [])]
-    by_mod: dict = {}
-    for u in unknowns:
-        s = _hyp_module_stem(u.get("module"))
-        by_mod[s] = by_mod.get(s, 0) + 1
-    top = sorted(by_mod.items(), key=lambda kv: (-kv[1], kv[0]))[:3]
-    details: List[Detail] = [
-        Detail("tracked_hypotheses_total", True,
-               f"{len(unknowns)} tracked hypotheses (disclosed assumptions; accrued PROVED/no-go assets are NOT counted here)"),
-        Detail("gating_vs_orphan", True,
-               f"{len(gating)} gate >=1 downstream theorem; {len(orphan)} orphan landmarks "
-               f"(external-boundary / future — legitimately gate nothing yet; NOT debt, NOT culled)"),
-        Detail("per_module_distribution", True,
-               (f"open hypotheses over {len(by_mod)} modules; densest: " +
-                ", ".join(f"{m}={c}" for m, c in top)) if by_mod else "no tracked hypotheses"),
-    ]
-    return CheckResult(passed=True, details=details)   # INFO-ONLY: never fails the build
-
-
-# ═══════════════════════════════════════════════════════════════════════
-# CHECK 17: Count literals in paper .tex (Phase 5v Wave 1b)
-# ═══════════════════════════════════════════════════════════════════════
-
-# Patterns that strongly suggest a hardcoded count literal in paper prose.
-# Each pattern captures (\d+) together with a domain noun; the assumption
-# is that any such count should come from \input{../../docs/counts.tex}
-# macros (\totaltheorems, \leanmodules, etc.) so counts stay fresh.
-_COUNT_LITERAL_PATTERNS = [
-    # "N theorems", "N Lean theorems", "N formally-verified theorems"
-    (re.compile(r'(?<![\\{\d])\b(\d{2,5})\s+(?:formally[- ]?verified\s+|machine[- ]?checked\s+|Lean\s+)?theorems?\b', re.IGNORECASE), "theorems"),
-    # "N Lean modules" / "N modules"
-    (re.compile(r'(?<![\\{\d])\b(\d{2,4})\s+(?:Lean\s+)?modules?\b', re.IGNORECASE), "modules"),
-    # "N sorry" (remaining sorry count)
-    (re.compile(r'(?<![\\{\d])\b(\d{1,4})\s+(?:remaining\s+)?sorry\b', re.IGNORECASE), "sorry"),
-    # "N Aristotle-proved"
-    (re.compile(r'(?<![\\{\d])\b(\d{2,4})\s+Aristotle[- ]?proved', re.IGNORECASE), "aristotle_proved"),
-]
-
-
-@register_check("count_literals",
-                "Paper .tex files reference counts via \\input{counts.tex} macros, not literals")
-def check_count_literals() -> CheckResult:
-    """CHECK 17: Flag hardcoded count literals in paper .tex files.
-
-    Papers should pull counts from docs/counts.tex via \\input + macros
-    (\\totaltheorems, \\leanmodules, \\sorrycount, etc.) so stale counts
-    can't ship. This check greps every paper_draft.tex for patterns like
-    "N theorems", "N Lean modules", etc., and WARNs when found outside
-    of an \\input context. WARN-level during the retrofit period; will
-    escalate to FAIL once all 15 papers use macros.
-    """
-    if not PAPERS_DIR.exists():
-        return CheckResult(passed=True, details=[
-            Detail("papers_dir", True, "papers/ directory not found; skipping",
-                   warning=True),
-        ])
-
-    # Papers that have \input'd counts.tex are exempt — they've opted in
-    # Glob widened 2026-07-31: `paper*/` matched only `paperNN_<slug>/`, so every
-    # publication bundle's count literals were ungated and desynchronized silently on
-    # each substrate edit. See check_numerical_literals for the same fix.
-    paper_tex_files = sorted(PAPERS_DIR.glob("*/paper_draft.tex"))
-    details = []
-    total_findings = 0
-
-    for tex_path in paper_tex_files:
-        paper_name = tex_path.parent.name
-        try:
-            text = tex_path.read_text()
-        except UnicodeDecodeError:
-            details.append(Detail(paper_name, True,
-                                  "unreadable (encoding); skipping",
-                                  warning=True))
-            continue
-
-        # Has this paper opted in to macros?
-        uses_macros = (
-            r'\input{../../docs/counts.tex}' in text
-            or r'\input{../docs/counts.tex}' in text
-            or r'\input{counts.tex}' in text
-            or any(macro in text for macro in [
-                r'\totaltheorems', r'\substantivetheorems',
-                r'\leanmodules', r'\sorrycount', r'\aristotleproved',
-            ])
-        )
-
-        findings = []
-        for pattern, kind in _COUNT_LITERAL_PATTERNS:
-            for m in pattern.finditer(text):
-                # Compute a rough line number for reporting
-                line_no = text.count("\n", 0, m.start()) + 1
-                findings.append((line_no, kind, m.group(0).strip()))
-
-        if not findings:
-            details.append(Detail(
-                paper_name, True,
-                "no count literals found" + (" (macros in use)" if uses_macros else ""),
-            ))
-            continue
-
-        # Found literals — WARN (passes but advisory)
-        total_findings += len(findings)
-        sample = "; ".join(
-            f"L{ln} \"{lit}\" ({kind})" for ln, kind, lit in findings[:3]
-        )
-        suffix = f" (+{len(findings)-3} more)" if len(findings) > 3 else ""
-        status_prefix = "USES MACROS but " if uses_macros else ""
-        details.append(Detail(
-            paper_name, True,
-            f"{status_prefix}{len(findings)} count-literal matches: {sample}{suffix}",
-            warning=True,
-        ))
-
-    details.insert(0, Detail(
-        "summary", True,
-        f"{total_findings} count-literal matches across {len(paper_tex_files)} papers "
-        f"(WARN-level; retrofit to \\input{{counts.tex}} + macros)",
-        warning=(total_findings > 0),
-    ))
-
-    # CHECK 17 is WARN-only until retrofit complete — never hard-fail
-    return CheckResult(passed=True, details=details)
-
-
-# ═══════════════════════════════════════════════════════════════════════
-# CHECK 18: Readiness submission gate (Phase 5v Wave 4)
-# ═══════════════════════════════════════════════════════════════════════
-
-# ── NOT SHIPPED: `ledger_evidence_names_its_finding` ────────────────────────────────
-# D12 round-13 BLOCKER 13.1 found three ledger records that close a finding their evidence
-# does not describe, and nothing detects it. I built a guard requiring the evidence to share
-# a content word with the finding's title, and MEASURED it before shipping: it flags 40
-# records, and the ones I sampled are correct. Example —
-# `2026-04-28-...:paper40_higher_curvature:2.1`, whose evidence reads "CrossPaperConsistency
-# gate verifies sampled cross-paper bibitems match character-for-character on load-bearing
-# fields". That describes the FIX; the title describes the DEFECT; well-written evidence
-# routinely shares no vocabulary with the finding it closes.
+# ADR-009 Phase 1: shared path anchors + artifact loaders. Owns WHERE things are
+# and HOW they are read; each call site keeps its OWN verdict on absence (H4).
+import validate_helpers as _H  # noqa: E402
+# ADR-009 H5: runtime flags live in ONE module, reached by ATTRIBUTE ACCESS so the
+# value is resolved at call time. Importing them by value binds a copy at import
+# time and silently freezes --strict once the checks are split across modules.
+from validation import _config as _cfg  # noqa: E402
+
+# ── Path anchors — ALIASES, not independent derivations (ADR-009 H1) ─────
+# These were each computed from `Path(__file__)`. That is safe while this file
+# lives at `scripts/validate.py` and silently wrong the moment it becomes
+# `scripts/validate/__init__.py`: `PROJECT_ROOT` would resolve to `scripts/`,
+# every artifact lookup would miss, every check would take its "absent" branch,
+# and the suite would go GREEN having measured nothing. Aliasing a single anchor
+# in `validate_helpers` (which stays at `scripts/`) makes the Phase-2 move
+# provably path-neutral instead of a silent catastrophe.
+SCRIPT_DIR = _H.SCRIPT_DIR
+PROJECT_ROOT = _H.PROJECT_ROOT
+SRC_DIR = _H.SRC_DIR
+LEAN_DIR = _H.LEAN_DIR
+NOTEBOOKS_DIR = _H.NOTEBOOKS_DIR
+PAPERS_DIR = _H.PAPERS_DIR
+def _reports_dir():
+    # ⚠️ H1: resolved AT EACH USE, not bound at import. A module-level
+    # `X = _H.ANCHOR / "..."` is an import-time COPY: a test monkeypatching the
+    # anchor does not reach it, so the check silently reads the PRODUCTION tree
+    # while the test believes it is reading a fixture. Converted 2026-08-05
+    # (PR-review pass 2, R3-I5 / R1).
+    return _H.DOCS_DIR / "validation" / "reports"
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# Data structures + registry — RE-EXPORTED from `validation._registry`
+# ═══════════════════════════════════════════════════════════════════════
+# These moved out so that `validation/checks/*.py` can import them without
+# importing `validate`, which would be a cycle (validate imports the check
+# modules for their registration side-effect). See `validation/_registry.py`.
 #
-# So the premise is wrong, not the threshold, and a guard that flags 40 correct records is
-# worse than no guard — that is the lesson this session has taught eleven times. The three
-# real mis-keys were caught by a reviewer READING them, which is not a test I can currently
-# mechanise. Recording the gap rather than shipping a check that manufactures work.
+# ⚠️ `_CHECKS` is re-exported BY BINDING, and that is load-bearing: registration
+# appends to it and `_apply_canonical_order()` sorts it in place, so this name and
+# `validation._registry._CHECKS` must remain THE SAME list. Never rebind it
+# (`_CHECKS = [...]`) — that yields two registries, one filled by registration and
+# a different one iterated by `run_checks` / `--list`, and since `all([])` is True
+# the suite would report success while running fewer checks.
 #
-# What would work, and is not built: require the record to name the artifact it changed
-# (a file path) and verify that path appears in the cited commit's diff. That is mechanical
-# and would have caught all three, since their evidence names another round's artifacts.
-
-
-@register_check("recurrence_reopens_closures",
-                "A closure is not contradicted by a later review raising the same finding")
-def check_recurrence_reopens_closures() -> CheckResult:
-    """CHECK: a finding closed in the ledger must not recur in a LATER review.
-
-    Added 2026-07-31 (D12 Stage-13 round-11 finding 8.1b, part 3c). The ledger is now the
-    sole channel that can close a finding, which makes a stale closure the remaining way
-    for a real defect to read as resolved: close it, have a later round raise the same
-    thing, and the ledger still says fixed. That happened repeatedly this session — the
-    "effective modulus" misnomer was closed and re-raised across five rounds.
-
-    Recurrence is matched on the finding's own title text, normalised, requiring a long
-    overlap so that two genuinely different findings about the same file do not collide.
-    A hit is reported against the CLOSURE, not the new finding: the new finding is correct,
-    and it is the closure that is now false.
-    """
-    sys.path.insert(0, str(SCRIPT_DIR))
-    try:
-        from build_graph import extract_review_finding_nodes
-    except ImportError as exc:
-        return CheckResult(passed=False, details=[
-            Detail("import", False, f"unavailable ({exc}) — unverified, not passing")])
-
-    # ⚠️ THRESHOLDS ARE MEASURED, NOT GUESSED. The first version required a 60-character
-    # common prefix. Measured afterwards: normalized finding labels run min 5 / median 48 /
-    # **max 56** characters, so that threshold could never be met and the check was
-    # structurally incapable of ever reporting a hit — while printing a reassuring
-    # "0 contradicted" over 500 closures. That is the sixth guard in this session that
-    # could not do what its summary said, and the pattern each time was choosing a constant
-    # from what I imagined the data looked like.
-    # ⚠️ The PRIMITIVE was wrong, not just the constant (D11 round-12 BLOCKER 4.2).
-    # I required a 30-character common PREFIX. Measured over all 4,210 candidate pairs in
-    # this corpus, the maximum prefix ANY pair achieves is 17 — and `_PREFIX_FRAC *
-    # _MIN_TITLE = 22.5` put a second floor above that ceiling, so no single constant could
-    # revive it. The check printed "0 contradicted by a recurrence" while being incapable
-    # of anything else, under a comment that read "THRESHOLDS ARE MEASURED, NOT GUESSED"
-    # and listed the six previous instances. I had measured label LENGTHS; the predicate
-    # compares PREFIXES, and I never measured those.
-    #
-    # A recurrence restates a finding, it does not re-type it: word order and wording drift
-    # while the vocabulary persists. Token overlap (Jaccard) is the right primitive.
-    # Measured on the same 4,210 pairs: median 0.00, p99 0.20, max 0.67 — and the single
-    # pair at 0.67 is a TRUE recurrence ("israel third law parenthetical", closed then
-    # re-raised in a later round). 0.50 sits in the empty band between p99 and that pair.
-    _MIN_TITLE = 12          # below this a title carries too few tokens to compare
-    # ⚠️ RE-DERIVED 2026-08-01 (D11 round-13 N1). Switching the primitive from prefix to
-    # Jaccard was right; I then kept a 0.50 threshold that I had measured on a sweep whose
-    # pairing rules were NOT the check's own. Measured with the check's `_norm`, its
-    # same-bundle rule and its date rule, over 4,706 pairs: median 0.000, p99 0.200,
-    # MAX 0.429. So 0.50 admitted nothing — the guard still could not fire, one round after
-    # being "fixed", and the 0.67 pair I cited as calibration does not exist as a
-    # closure/open pair at all.
-    #
-    # The two D12 records I reported it "rejecting" were added already `open`; the guard had
-    # no part in it. That claim in commit 03a4592e's message is false and this comment is
-    # the correction.
-    #
-    # 0.40 sits between p99 (0.200) and the top pair (0.429), which is a TRUE stale closure:
-    # 1530:D11:4.1 closed, 2220:D11:4.6 open, both about PAPER_DRAFT_MAPPING.md:109.
-    _MIN_OVERLAP = 0.40      # Jaccard over token sets
-    #
-    # ⚠️ THIS MATCHER IS WEAK, and its limits are measured — but an earlier version of this
-    # comment said it "cannot do its job", which round 14 disproved: driving the ledger off
-    # git snapshots it fires 3 real hits at 0.40 that 0.50 could not reach, and scores 22/29
-    # on a 29-pair labelled set built from twelve self-declared chains. My own fixture has
-    # three positives and I generalised from it to an absolute — the same over-reach, one
-    # layer up, as the numbers this session kept overstating. What follows is the measured
-    # limit, not an impossibility claim. Measured on
-    # `tests/fixtures/recurrence_pairs.json`: true recurrences score 0.188, 0.000, 0.071
-    # while unrelated pairs score 0.000 — the worst positive does not beat the best
-    # negative, so NO threshold separates them. All three tunings this session
-    # (30-char prefix -> 0.50 -> 0.40) were tuning a matcher that cannot discriminate.
-    #
-    # Root cause is upstream: `label` is `heading[:50]`, so a RESTATED finding — which is
-    # what a recurrence is — shares almost no vocabulary with its original. What this guard
-    # actually detects is duplicate heading OPENINGS, which is why every real hit it has
-    # produced was a near-verbatim repeat. Those hits were genuine and worth having; the
-    # guard is kept for them, at a threshold that admits them and little else.
-    #
-    # It is a WEAK recurrence detector — good on near-verbatim restatements, poor on
-    # rewordings — and must not be quoted as a reliable one. Improving it
-    # needs the full finding text carried on the node, not a wider constant — and
-    # `tests/…::TestRecurrenceThresholdAgainstFrozenPairs` fails the day that lands, which
-    # is the signal to replace this comment.
-    #
-    # QI: qi-threshold-calibration-consumes-its-own-datum. Three times a constant was set
-    # just under the live corpus maximum by the same commit that repaired the pair
-    # producing that maximum, so it was unreachable on arrival. Thresholds on a
-    # self-remediating corpus must be calibrated against frozen labelled pairs.
-
-    def _norm(s: str) -> str:
-        s = re.sub(r'[`*_\[\]]', '', str(s or '')).lower()
-        s = re.sub(r'[^a-z0-9 ]+', ' ', s)
-        toks = s.split()
-        # Drop leading section-number and severity-word tokens. A recurrence appears under
-        # a DIFFERENT number in a later round — round 8's 5.1 recurring as round 9's 3.2 —
-        # so comparing prefixes that begin with the number is fragile in exactly the case
-        # the check exists for. Verified with a planted probe whose label minted as
-        # "1.1 1.1 blocker ..." against a source of "1.1 blocker ...": the prefix agreement
-        # was near zero for two identical findings.
-        while toks and (re.fullmatch(r'[0-9]+([a-z0-9]*)?', toks[0])
-                        or toks[0] in ('blocker', 'required', 'recommended', 'critical',
-                                       'major', 'minor', 'advisory', 'regression')):
-            toks.pop(0)
-        return " ".join(toks)
-
-    findings = extract_review_finding_nodes()
-    closed, open_ = [], []
-    for f in findings:
-        m = f.get("meta") or {}
-        rec = (m.get("review_date", ""), _norm(f.get("label", "")), f["id"], m.get("severity"),
-               m.get("inferred_bundle") or m.get("inferred_paper"))
-        if not rec[1] or len(rec[1]) < _MIN_TITLE:
-            continue
-        (closed if m.get("status") in ("fixed", "accepted") else open_).append(rec)
-
-    details: list[Detail] = []
-    hits = 0
-    compared = 0
-    _had_candidate: set = set()
-    skipped_short = sum(1 for f in findings
-                        if len(_norm(f.get("label", ""))) < _MIN_TITLE)
-    for cdate, ctext, cid, csev, cbundle in closed:
-        if csev not in ("critical", "major"):
-            continue
-        for odate, otext, oid, _, obundle in open_:
-            # Same bundle only. Reviews share heading boilerplate across bundles, so a D2
-            # closure matching an I2 finding's title is a template collision, not a
-            # recurrence — measured: the two hits before this constraint were exactly that
-            # (D2 vs I2, L3 vs L2).
-            if cbundle is None or obundle is None or cbundle != obundle:
-                continue
-            if odate <= cdate:
-                continue
-            _a, _b = set(ctext.split()), set(otext.split())
-            if not _a or not _b:
-                continue
-            # Count a closure as COMPARED only once it has something to compare against
-            # (D12 round-13). `compared += 1` used to sit before this loop, so it counted
-            # closures that reached the loop rather than closures that met a candidate:
-            # the summary said 318 where 162 had any counterpart. Ninth instance of the
-            # same defect, and the third consecutive version of THIS summary line to
-            # overstate its own coverage.
-            if cid not in _had_candidate:
-                _had_candidate.add(cid)
-                compared += 1
-            if len(_a & _b) / len(_a | _b) >= _MIN_OVERLAP:
-                hits += 1
-                details.append(Detail(
-                    cid, False,
-                    f"closed on {cdate}, but {oid} ({odate}) raises the same finding and is "
-                    f"open. The later review is the evidence; the CLOSURE is what is now "
-                    f"false. Reopen it or record why the recurrence is a different defect."))
-                break
-
-    # Report what was COMPARED, not what was collected. The previous summary printed
-    # `len(closed)` — 552 — while the loop's severity filter meant 148 were actually
-    # compared, and it never mentioned the findings excluded for a short title. A guard's
-    # summary overstating its own coverage is the failure this session kept producing.
-    details.insert(0, Detail(
-        "summary", hits == 0,
-        f"{compared} blocking-severity closure(s) compared against {len(open_)} open "
-        f"finding(s) from later same-bundle reviews; {hits} contradicted by a recurrence. "
-        f"NOT compared: {len(closed) - compared} non-blocking closure(s), and "
-        f"{skipped_short} finding(s) whose normalised title is under {_MIN_TITLE} chars "
-        f"(labels are truncated to heading[:50] upstream, so short titles are a real "
-        f"coverage limit, not a rounding detail)"))
-    return CheckResult(passed=hits == 0, details=details)
-
-
-@register_check("review_severity_declared",
-                "Review documents from the cutoff forward declare each finding's severity")
-def check_review_severity_declared() -> CheckResult:
-    """CHECK: severity must be a declared field, not an inferable glyph.
-
-    Added 2026-07-31 (D12 Stage-13 round-11 finding 8.1b, part 3b). Severity drove the
-    blocking-closure bar while being inferred from glyphs in the heading, which made it
-    editable without leaving a trace. Two exploits were demonstrated against that: a
-    one-line glyph demotion plus the word "fixed" reopened self-closure on a past BLOCKER,
-    and typesetting a summary as `0 «**»BLOCKER«**»` escalated a whole zero-blocker report
-    to critical.
-
-    `build_graph` now prefers an explicit `- **Severity:** <level>` line in the finding
-    body. This check makes that mandatory from `_CUTOFF` forward, so omitting it is a red
-    build rather than a silent downgrade. Historical documents keep glyph inference — there
-    are ~1400 findings that predate the convention and rewriting them would be churn with
-    no provenance value, so the cutoff is the honest boundary rather than a blanket rule.
-    """
-    _CUTOFF = "2026-08-01"   # documents dated on/after this must declare severity
-
-    reviews_dir = PROJECT_ROOT / "papers" / "AutomatedReviews"
-    if not reviews_dir.is_dir():
-        return CheckResult(passed=True, details=[
-            Detail("scope", True, "no review directory", warning=True)])
-
-    _SEV_LINE = re.compile(r'^[-*]\s*\*\*Severity:?\*\*', re.M | re.I)
-    _HEADING = re.compile(r'^#{3,5}\s+\S', re.M)
-
-    details: list[Detail] = []
-    bad = 0
-    checked = 0
-    for md in sorted(reviews_dir.glob("*/*.md")):
-        date = md.parent.name[:10]
-        if date < _CUTOFF:
-            continue
-        text = md.read_text(encoding="utf-8", errors="replace")
-        n_head = len(_HEADING.findall(text))
-        if n_head == 0:
-            continue
-        checked += 1
-        n_sev = len(_SEV_LINE.findall(text))
-        if n_sev < n_head:
-            bad += 1
-            details.append(Detail(
-                str(md.relative_to(PROJECT_ROOT)), False,
-                f"{n_head} finding heading(s) but only {n_sev} `- **Severity:**` line(s). "
-                f"From {_CUTOFF} every finding must declare its severity explicitly: "
-                f"severity drives the blocking-closure bar, and inferring it from a glyph "
-                f"lets it be changed without leaving a trace."))
-
-    details.insert(0, Detail(
-        "summary", bad == 0,
-        f"{checked} review document(s) dated >= {_CUTOFF} checked; {bad} with findings "
-        f"that do not declare severity (earlier documents keep glyph inference)"))
-    return CheckResult(passed=bad == 0, details=details)
-
-
-@register_check("review_docs_mint_findings",
-                "Every bundle Stage-13 review document mints at least one ReviewFinding node")
-def check_review_docs_mint_findings() -> CheckResult:
-    """CHECK: a review that produces zero graph nodes must fail loudly, not silently pass.
-
-    Added 2026-07-31 (D12 Stage-13 round-9 BLOCKER 8.2). This is the fail-open path that
-    survived every previous repair, and it needs no mutation to trigger — only a heading
-    that drifts from `### N.N — ` to `#### `, `### Finding `, or `### 1.1: `. The
-    round-9 reviewer wrote a review declaring four BLOCKERs with such headings and it
-    minted **zero** nodes; `findings_reach_the_graph` structurally cannot see it, because
-    that guard's file index is built *from findings*, so a file with no findings is not in
-    it. A whole round of blockers then reads exactly like a clean round.
-
-    The predicate the existing guards cannot express is this one: for each review document
-    named after a bundle in the roster, at least one `ReviewFinding` node must resolve to
-    it. Zero is a parser failure or a malformed document — never evidence of a clean review.
-    """
-    # Deliberately LOOSER than `build_graph._REVIEW_SECTION_RE`: this asks "does this
-    # document look like it carries findings", and the gap between the two regexes IS the
-    # defect being detected. If they were the same pattern the check would be a tautology.
-    #
-    # ⚠️ The first version was circular anyway (D12 round-11 BLOCKER 8.2). It required
-    # `<digits><dash>` — the exact fragment that drifts — so the six documents minting zero
-    # were precisely the six it skipped, and my "8 → 0" was measured inside the scope the
-    # check itself defines. Those six carry 47 severity-marked headings including four
-    # declared BLOCKERs in `lean_project_audit.md` and four 🔴 in `CitationReview-01.md`.
-    #
-    # The predicate is now SEVERITY, not numbering: a heading that declares BLOCKER /
-    # REQUIRED / RECOMMENDED / CRITICAL, or carries a severity glyph, is a finding heading
-    # whatever its numbering scheme — including the forms that defeated the old one
-    # (`### 1. Paper 7 —`, `### 1. Class 6 BLOCKER —`, `### BLOCK-1 (…) —`,
-    # `### I.1 Count …`, and glyph-first `### 🔴 BLOCKER 1.1 —`). Severity is the thing a
-    # finding cannot omit and still be a finding.
-    _SEVERITY_HEADING = re.compile(
-        r'^#{3,5}\s+.*(?:BLOCKER|REQUIRED|RECOMMENDED|CRITICAL|MAJOR|MINOR'
-        r'|\U0001F534|\U0001F7E1|\U0001F535|\u26a0)', re.M)
-    # ...but a severity WORD is not a severity LABEL. A clean figure review's headings read
-    # "`fig5.png` (P2) — **PASS** (round-2 BLOCKER resolved)": the token appears inside a
-    # resolution note, and that document correctly mints nothing. Excluding headings that
-    # also declare PASS/RESOLVED is the difference between "carries findings" and "mentions
-    # a finding", and skipping it would have made this guard fire on a correct document —
-    # the fifth time today.
-    _RESOLVED_HEADING = re.compile(r'PASS|RESOLVED|resolved', re.I)
-
-    def _carries_findings(text: str) -> bool:
-        return any(not _RESOLVED_HEADING.search(h)
-                   for h in _SEVERITY_HEADING.findall(text) or []) or any(
-            not _RESOLVED_HEADING.search(m.group(0))
-            for m in _SEVERITY_HEADING.finditer(text))
-
-    sys.path.insert(0, str(SCRIPT_DIR))
-    try:
-        from build_graph import extract_review_finding_nodes
-    except ImportError as exc:
-        return CheckResult(passed=False, details=[
-            Detail("import", False,
-                   f"could not import the review extractor ({exc}) — unverified, not passing")])
-
-    try:
-        findings = extract_review_finding_nodes()
-    except Exception as exc:
-        return CheckResult(passed=False, details=[
-            Detail("extract", False,
-                   f"review extraction failed ({type(exc).__name__}: {exc}) — unverified")])
-
-    minted: dict[str, int] = {}
-    for f in findings:
-        rf = (f.get("meta") or {}).get("review_file")
-        if rf:
-            minted[rf] = minted.get(rf, 0) + 1
-
-    reviews_dir = PROJECT_ROOT / "papers" / "AutomatedReviews"
-    details: list[Detail] = []
-    empty = 0
-    checked = 0
-    if reviews_dir.is_dir():
-        for md in sorted(reviews_dir.glob("*/*.md")):
-            # Scope by CONTENT, not by filename or directory.
-            #
-            # Two earlier scopings were both wrong, in opposite directions. Filtering to
-            # roster-named files put 120 documents out of scope. Then excluding
-            # `*-bundle-stage13/` — because 107 of 138 files there are
-            # `bundle_readiness.py` aggregations that mint zero BY DESIGN — excluded the
-            # directory `BUNDLE_DIRECTORY_SCHEMA.md:86` and `BUNDLE_LIFT_PROCEDURE.md:243`
-            # name as THE canonical location for a Stage-13 review, hiding five
-            # findings-bearing reviews, one of them declaring a BLOCKER (D12 round-10 8.2).
-            #
-            # The honest discriminator is the document's own content: a file containing
-            # finding-shaped headings must mint findings. A generated aggregation has no
-            # such headings and is silently skipped — not because of where it lives, but
-            # because it never claimed to carry findings.
-            if not _carries_findings(md.read_text(encoding="utf-8", errors="replace")):
-                continue
-            checked += 1
-            rel = str(md.relative_to(PROJECT_ROOT))
-            n = minted.get(rel, 0)
-            if n == 0:
-                empty += 1
-                details.append(Detail(
-                    rel, False,
-                    f"this Stage-13 review document mints ZERO ReviewFinding nodes. Either "
-                    f"its finding headings do not match the extractor's expected "
-                    f"`### <N.N> — <severity> — <text>` form, or the document is malformed. "
-                    f"A round that mints nothing is invisible to Gate 11 and reads exactly "
-                    f"like a clean round."))
-
-    details.insert(0, Detail(
-        "summary", empty == 0,
-        f"{checked} document(s) carrying unresolved severity-labelled headings checked "
-        f"(a document mentioning a severity only inside a PASS/RESOLVED note carries no "
-        f"findings and is skipped); {empty} mint zero"))
-    return CheckResult(passed=empty == 0, details=details)
-
-
-@register_check("accepted_findings_carry_rationale",
-                "Every `accepted` supersession record justifies acceptance in writing")
-def check_accepted_findings_carry_rationale() -> CheckResult:
-    """CHECK: `accepted` must be a recorded decision, never a way to silence a finding.
-
-    Added 2026-07-31 (D12 Stage-13 round-8). `_eval_fix_propagation` stopped treating
-    `accepted` as an open blocker this session — correct, because it is a deliberate
-    decision written into the supersession ledger, not an unclosed finding. But that
-    change also made `accepted` the cheapest way to make a blocking finding disappear
-    from Gate 11: 27 blocking-severity findings are currently invisible to it on that
-    status alone. The round-8 reviewer measured that 138 of 140 accepted records carry
-    substantive rationale and none is wholly bare — so the practice is sound and this
-    check pins it, rather than fixing a live defect.
-
-    A blocking-severity acceptance additionally has to say why acceptance rather than a
-    fix; "accepted" with a one-line restatement of the finding is not a decision.
-    """
-    ledger_path = (Path(__file__).resolve().parent.parent / "docs"
-                   / "review_finding_supersessions.json")
-    if not ledger_path.is_file():
-        return CheckResult(passed=True, details=[
-            Detail("ledger", True, "no supersession ledger; skipping", warning=True)])
-    try:
-        led = json.loads(ledger_path.read_text(encoding="utf-8"))
-    except (json.JSONDecodeError, OSError) as exc:
-        return CheckResult(passed=False, details=[
-            Detail("ledger", False, f"ledger unreadable ({exc}) — unverified, not passing")])
-
-    MIN_CHARS = 40
-    bad, checked = [], 0
-    for e in led.get("supersessions", []):
-        if e.get("status") != "accepted":
-            continue
-        checked += 1
-        # The ledger uses three field names for the same thing across its history:
-        # `evidence` (recent), `rationale`, and `note` (the 2026-05 records). Reading only
-        # the first two produced two false positives on records that are in fact well
-        # justified — a guard that flags correct data is worse than none.
-        why = " ".join(str(e.get("evidence") or e.get("rationale")
-                           or e.get("note") or "").split())
-        if len(why) < MIN_CHARS:
-            bad.append((e.get("finding_id", "?"), len(why)))
-
-    details = [Detail("summary", not bad,
-                      f"{checked} accepted record(s) checked, {len(bad)} without a written "
-                      f"rationale of at least {MIN_CHARS} characters")]
-    for fid, n in bad[:10]:
-        details.append(Detail(
-            fid, False,
-            f"status=accepted with {n} characters of rationale. `accepted` removes a "
-            f"finding from Gate 11's blocking set, so it must record a DECISION — why "
-            f"acceptance rather than a fix — not merely assert one."))
-    return CheckResult(passed=not bad, details=details)
-
-
-@register_check("bundle_metadata_matches_graph",
-                "bundle_metadata.json finding counts equal the live graph's")
-def check_bundle_metadata_matches_graph() -> CheckResult:
-    """CHECK: the per-bundle metadata blob must not assert stale finding counts.
-
-    Added 2026-07-31 (D12 Stage-13 round-7 findings 7.2 + 8.3 and D11 4.2 — three
-    findings, one root cause). `bundle_source_manifest.py` initialises
-    `blockers_open` / `advisories_open` to 0 when a bundle is created and nothing
-    updated them afterwards, so ALL 21 bundles asserted `blockers_open: 0` while
-    carrying up to 36 open blockers each — and `freshness_stale: false` rested on
-    that zero. `bundle_readiness.py` now writes the live numbers back
-    (`write_metadata_counts`); this check is the guard that they stay written.
-
-    It compares against the same aggregation the heatmap uses, so a bundle whose
-    metadata was hand-edited, or whose readiness run was skipped after new findings
-    landed, fails here rather than being quoted as evidence of readiness.
-    """
-    sys.path.insert(0, str(SCRIPT_DIR))
-    try:
-        from bundle_readiness import (MAPPING_DOC, parse_mapping,
-                                      load_findings_by_paper,
-                                      resolve_stage13_reviews,
-                                      aggregate_by_bundle,
-                                      _bundle_metadata_path)
-    except ImportError as exc:
-        # FAIL, not pass (D12 Stage-13 round-8 BLOCKER 8.2). A readiness guard that cannot
-        # load its own dependency reports "no disagreement found" — indistinguishable from
-        # agreement. Demonstrated end-to-end by the round-8 reviewer: renaming
-        # `evaluate_all_gates` makes build_graph emit ZERO ReadinessGate nodes, at which
-        # point every readiness check passed green with nothing to check.
-        return CheckResult(passed=False, details=[
-            Detail("import", False,
-                   f"could not import the readiness machinery ({exc}) — this check is "
-                   f"UNVERIFIED, not passing")])
-
-    try:
-        by_bundle = aggregate_by_bundle(
-            parse_mapping(MAPPING_DOC.read_text()),
-            load_findings_by_paper(),
-            resolve_stage13_reviews(backfill=False))
-    except Exception as exc:
-        # FAIL, not pass: an uncomputable live verdict is not agreement.
-        return CheckResult(passed=False, details=[
-            Detail("aggregate", False,
-                   f"live counts could not be computed ({type(exc).__name__}: {exc}) "
-                   f"— metadata is therefore UNVERIFIED, not matching")])
-
-    details: list[Detail] = []
-    drift = 0
-    checked = 0
-    for bundle, agg in sorted(by_bundle.items()):
-        mp = _bundle_metadata_path(bundle)
-        if not mp.is_file():
-            # FAIL, not skip (D12 round-8): a bundle with no metadata blob has nothing to
-            # disagree with the graph, which is not the same as agreeing with it.
-            drift += 1
-            details.append(Detail(
-                bundle, False,
-                f"no bundle_metadata.json at {mp} — the readiness assertions for this "
-                f"bundle do not exist, so they are unverified rather than consistent"))
-            continue
-        try:
-            meta = json.loads(mp.read_text())
-        except (json.JSONDecodeError, OSError) as exc:
-            drift += 1
-            details.append(Detail(bundle, False, f"metadata unreadable: {exc}"))
-            continue
-        checked += 1
-        live_blockers = agg.get("blocker_count", 0)
-        live_adv = sum(v for k, v in (agg.get("severity_mix") or {}).items()
-                       if k in ("minor", "advisory"))
-        bad = []
-        if meta.get("blockers_open") != live_blockers:
-            bad.append(f"blockers_open={meta.get('blockers_open')} live={live_blockers}")
-        if meta.get("advisories_open") != live_adv:
-            bad.append(f"advisories_open={meta.get('advisories_open')} live={live_adv}")
-        if meta.get("readiness") != agg.get("readiness"):
-            bad.append(f"readiness={meta.get('readiness')!r} live={agg.get('readiness')!r}")
-        # NOT asserted here: `freshness_stale`. D12 Stage-13 round-8 reported that seven
-        # bundles set it false with blockers open, citing
-        # LATE_PHASE6_ABSORPTION_PROTOCOL.md. I implemented that assertion and it was
-        # wrong — the field is owned by `scripts/check_bundle_source_freshness.py` and
-        # means "a source paper is newer than last_lift", which is independent of blocker
-        # count. The protocol line quoted is a workflow step, not the field's definition.
-        # Asserting it here made two writers fight and `validate.py` non-idempotent.
-        if bad:
-            drift += 1
-            details.append(Detail(
-                bundle, False,
-                f"metadata disagrees with the live graph: {'; '.join(bad)}. "
-                f"Re-run `uv run python scripts/bundle_readiness.py`, which writes these "
-                f"fields; do not hand-edit them."))
-
-    details.insert(0, Detail(
-        "summary", drift == 0,
-        f"{checked} bundle metadata blob(s) compared against the live graph, "
-        f"{drift} with drift"))
-    return CheckResult(passed=drift == 0, details=details)
-
-
-@register_check("notebook_stored_outputs_current",
-                "Bundle companion notebooks' STORED outputs equal what their code produces")
-def check_notebook_stored_outputs_current() -> CheckResult:
-    """CHECK: stored notebook output must be what the notebook actually produces.
-
-    Added 2026-07-31 (D11 Stage-13 round-7 BLOCKER 5.1). `notebook_exec` executes
-    each notebook with `NotebookClient` into an in-memory `nb` and **never writes it
-    back** (`scripts/validate.py`, no `nbformat.write` in that path). So it proves a
-    notebook *runs*; it has no opinion about what is stored in it. Stored outputs can
-    therefore drift arbitrarily from what the code produces, and the check stays green
-    the whole time.
-
-    That is exactly what happened: D11's companion notebook shipped as a bundle
-    artifact with stored figure output rendering `Voigt-Reuss elastic bounds` and
-    `effective modulus M` — the two namings the paper's Section 5 and the Lean module
-    header explicitly retract — plus a 3.3177 annotation missing the
-    `(numerical, not certified)` qualifier the paper claims the figure carries. A
-    reader opening the shipped notebook saw the retracted claims.
-
-    NOTE on the diagnosed cause: the round-7 reviewer attributed this to the skip-cache
-    key being "the notebook's own state, not visualizations.py". That is not the
-    mechanism — `_src_core_fingerprint()` hashes all of `src/core/*.py`, visualizations
-    included, and does invalidate the cache. The real cause is narrower and worse: the
-    check never compares or refreshes stored output at all, so no cache key could have
-    saved it.
-
-    Scoped to the bundle companion notebooks (the ones that ship as artifacts) because
-    executing all ~91 costs ~10 minutes; the rest stay covered by `notebook_exec`'s
-    runs-clean guarantee. The scope limit is stated in the summary line rather than
-    left implicit.
-    """
-    try:
-        import nbformat
-        from nbclient import NotebookClient
-    except ImportError as exc:
-        return CheckResult(passed=True, details=[
-            Detail("import", True, f"nbclient/nbformat unavailable ({exc}); skipping",
-                   warning=True)])
-
-    targets = sorted(NOTEBOOKS_DIR.glob("D1[12]_*.ipynb"))
-    if not targets:
-        # FAIL, not pass (D11 round-12). The glob is the whole scope, so renaming a
-        # notebook out of the pattern silently emptied it and the check reported success
-        # having examined nothing — the same fail-open shape as the readiness guards.
-        return CheckResult(passed=False, details=[
-            Detail("scope", False,
-                   "NO bundle companion notebook matches D1[12]_*.ipynb. The bundles ship "
-                   "executed notebooks, so an empty scope means the glob no longer finds "
-                   "them — unverified, not passing.")])
-
-    # Arrays longer than this are summarised by a rounded-value digest rather than
-    # compared element-by-element. Applies identically to base64 numpy arrays and lists.
-    _BULK_ARRAY_MIN = 8
-    # Significant figures kept in the digest. 1e-15 relative jitter (library/BLAS
-    # version noise) rounds away; a curve computed from a different formula does not.
-    _DIGEST_SIGFIGS = 9
-
-    def _decode_bdata(obj) -> list:
-        """Decode a Plotly `{"dtype": ..., "bdata": <base64>}` array to a Python list."""
-        import base64 as _b64, struct as _st
-        fmt = {"f8": "<d", "f4": "<f", "i8": "<q", "i4": "<i", "i2": "<h", "i1": "<b",
-               "u8": "<Q", "u4": "<I", "u2": "<H", "u1": "<B"}.get(str(obj.get("dtype")))
-        if fmt is None:
-            return []
-        try:
-            raw = _b64.b64decode(obj["bdata"])
-        except Exception:
-            return []
-        w = _st.calcsize(fmt)
-        return [_st.unpack_from(fmt, raw, i * w)[0] for i in range(len(raw) // w)]
-
-    def _array_digest(values: list) -> str:
-        """Length + a digest of the VALUES rounded to `_DIGEST_SIGFIGS`.
-
-        ⚠️ This replaced a length-only summary on 2026-07-31 (D11 Stage-13 round-9
-        finding 5.1). Length-only meant the *values* of any array longer than
-        `_BULK_ARRAY_MIN` were invisible: the round-9 reviewer demonstrated end-to-end
-        that the shipped notebook could plot `ε = 1 + 3f` instead of Maxwell–Garnett,
-        under an annotation reading "(certified)", and this check still reported
-        "stored output matches a fresh run". A structural exclusion cannot distinguish
-        a claim from noise; a rounded digest can, which is what the reviewer proposed.
-        """
-        import hashlib as _h
-        h = _h.sha256()
-        n = 0
-        for v in values:
-            if not isinstance(v, (int, float)) or v != v or v in (float("inf"), float("-inf")):
-                h.update(repr(v).encode())
-            else:
-                h.update(f"{float(v):.{_DIGEST_SIGFIGS}g}".encode())
-            h.update(b"\x00")
-            n += 1
-        return f"len={n},sha={h.hexdigest()[:16]}"
-
-    def _strings_in(obj, _path: str = "") -> list[str]:
-        """Every claim-bearing leaf of a JSON payload, in document order.
-
-        String leaves are the reader-visible text surface — subplot titles, axis titles,
-        legend names, annotation text. Numeric leaves matter too, but only in the places
-        where a number IS a claim.
-
-        ⚠️ The numeric half was added 2026-07-31 after a round-8 reviewer defeated the
-        string-only version: moving the *certified* Maxwell–Garnett marker from
-        `f = 1/2` to `f = 0.55`, while its label still read
-        `f = 1/2 ⟹ ε_eff = 2 (certified)`, left this check green. Scalar coordinates
-        serialize as JSON numbers, not string leaves, so a text-only comparison cannot
-        see a certified point that has silently moved off the value it certifies.
-
-        Bulk trace arrays are deliberately EXCLUDED: `x`/`y`/`z` lists are hundreds of
-        floats whose low-order digits move with library versions, and comparing them
-        would make the check fire on non-claims. Scalar positions do not have that
-        problem — an annotation anchor, a vline abscissa, a single-point marker — and
-        those are exactly where a figure asserts "this value is certified".
-        """
-        out: list[str] = []
-        if isinstance(obj, str):
-            out.append(obj)
-        elif isinstance(obj, bool):
-            out.append(f"{_path}={obj}")
-        elif isinstance(obj, (int, float)):
-            out.append(f"{_path}={obj!r}")
-        elif isinstance(obj, dict):
-            # Plotly serializes a numpy array as {"dtype": "f8", "bdata": "<base64>"}.
-            # `bdata` is a STRING, so without this branch it took the string arm above and
-            # was compared byte-for-byte — the exact opposite of the bulk-array rule below,
-            # which only ever saw arrays that happened to be Python lists at the call site.
-            # Measured 2026-07-31 (D11 round-8 finding 5.1): D11 has 24 base64 arrays and 0
-            # plain lists reaching the rule; D12 has 32 and 2. So the discriminator was
-            # "numpy or list at the call site", not "claim or not", and 56 bulk curves were
-            # being compared to the last bit — a 1e-15 jitter would have failed the check.
-            # Both encodings now route through the SAME length-only rule.
-            if isinstance(obj.get("bdata"), str) and "dtype" in obj:
-                out.append(f"{_path}[bdata:{obj['dtype']}]="
-                           + _array_digest(_decode_bdata(obj)))
-                return out
-            for k in sorted(obj):
-                out.extend(_strings_in(obj[k], f"{_path}.{k}" if _path else str(k)))
-        elif isinstance(obj, list):
-            # A long all-numeric list is plotted data, not a claim: keep only its length,
-            # so a trace losing points still shows up while float jitter does not.
-            nums = sum(1 for v in obj if isinstance(v, (int, float)))
-            if nums > _BULK_ARRAY_MIN and nums == len(obj):
-                out.append(f"{_path}[nums]=" + _array_digest(list(obj)))
-                return out
-            for i, v in enumerate(obj):
-                out.extend(_strings_in(v, f"{_path}[{i}]"))
-        return out
-
-    def _texts(nb) -> list[str]:
-        """Every text-bearing output payload, in order.
-
-        ⚠️ Figure output is the point (D11 round-7 BLOCKER 5.1 was a stale *figure*,
-        not stale stdout). In this repo figures serialize as
-        `application/vnd.plotly.v1+json`, so an implementation that collected only
-        `text/plain` / `text/html` / `application/json` — as the first version of this
-        function did — would ignore all four D11 figures and pass green on precisely the
-        defect it exists to catch. Any `*json*` MIME key is descended into for its string
-        leaves. Raster image payloads are still ignored: bit-level PNG churn is not a
-        claim.
-        """
-        out = []
-        for cell in nb.cells:
-            if cell.cell_type != "code":
-                continue
-            for o in cell.get("outputs", []) or []:
-                if "text" in o:
-                    out.append("".join(o["text"]))
-                d = (o.get("data") or {})
-                for key in sorted(d):
-                    # `text/markdown` added 2026-07-31 (D11 round-10 5.1). The digest
-                    # closed the numeric hole, but the MIME allow-list one level up was
-                    # still narrow: the reviewer injected a `text/markdown` output
-                    # asserting C = +1 beside the name of the theorem certifying C = −1,
-                    # and this check reported "stored output matches a fresh run". Any
-                    # rendered text a reader sees is a claim surface.
-                    # `image/svg+xml` added 2026-07-31 (D11 round-12). SVG was in neither
-                    # the allow-list nor the `json` branch, so the reviewer appended an SVG
-                    # cell, executed it, then edited ONLY the stored SVG to read "C = +1"
-                    # and "3.3177 (certified)" — the exact two claims this guard exists to
-                    # protect — and it reported "stored output matches a fresh run". SVG is
-                    # the realistic attack because GitHub does not render Plotly JSON, so a
-                    # static renderer is what an author reaches for.
-                    if key in ("text/plain", "text/html", "text/markdown",
-                               "text/latex", "application/x-latex", "image/svg+xml"):
-                        v = d[key]
-                        out.append(v if isinstance(v, str) else "".join(v))
-                    elif "json" in key:
-                        out.extend(_strings_in(d[key]))
-        return out
-
-    details: list[Detail] = []
-    all_pass = True
-    for nb_path in targets:
-        try:
-            stored = nbformat.read(nb_path.open(), as_version=4)
-            fresh = nbformat.read(nb_path.open(), as_version=4)
-            NotebookClient(fresh, timeout=180, kernel_name="python3",
-                           resources={"metadata": {"path": str(NOTEBOOKS_DIR)}}).execute()
-        except Exception as exc:
-            all_pass = False
-            details.append(Detail(nb_path.name, False,
-                                  f"could not re-execute for comparison: "
-                                  f"{type(exc).__name__}: {exc}"))
-            continue
-
-        a, b = _texts(stored), _texts(fresh)
-        if a == b:
-            details.append(Detail(nb_path.name, True,
-                                  f"stored output matches a fresh run "
-                                  f"({len(a)} text payloads)"))
-            continue
-        all_pass = False
-        diff = next((f"stored={x[:160]!r} fresh={y[:160]!r}"
-                     for x, y in zip(a, b) if x != y),
-                    f"payload count differs: stored={len(a)} fresh={len(b)}")
-        details.append(Detail(
-            nb_path.name, False,
-            f"STORED OUTPUT IS STALE — a fresh run produces different text. "
-            f"This notebook ships as a bundle artifact, so the stored output is what a "
-            f"reader sees. Re-execute in place: "
-            f"`uv run jupyter nbconvert --to notebook --execute --inplace "
-            f"notebooks/{nb_path.name}`. First divergence: {diff}"))
-
-    details.insert(0, Detail(
-        "summary", all_pass,
-        f"{len(targets)} bundle companion notebook(s) compared against a fresh run; "
-        f"non-bundle notebooks are NOT covered here (cost) and rely on notebook_exec"))
-    return CheckResult(passed=all_pass, details=details)
-
-
-@register_check("readiness_verdicts_agree",
-                "The heatmap and the submission gate return the same per-bundle verdict")
-def check_readiness_verdicts_agree() -> CheckResult:
-    """CHECK: cross-validate the two independent readiness verdicts.
-
-    Added 2026-07-31 (D12 Stage-13 round-6 BLOCKER 8.1). Two subsystems compute
-    a per-bundle readiness verdict from different inputs and had no consistency
-    obligation between them:
-
-      * `scripts/bundle_readiness.py` counts findings straight off the review
-        files, per bundle, and rendered D11/D12 RED with unclosed blockers;
-      * `readiness_submission_gate` aggregates ReadinessGate node states off the
-        graph, and rendered the same bundles as "all P1 passed".
-
-    Both were reporting honestly about their own inputs; nothing compared them,
-    so the reassuring one could be quoted as the verdict. This check asserts the
-    direction that matters: a bundle the heatmap calls RED (open blocking
-    findings) must NOT be green or yellow at the submission gate.
-    """
-    sys.path.insert(0, str(SCRIPT_DIR))
-    try:
-        from build_graph import build_graph_json
-        from bundle_readiness import (MAPPING_DOC, parse_mapping,
-                                      load_findings_by_paper,
-                                      resolve_stage13_reviews,
-                                      aggregate_by_bundle)
-    except ImportError as exc:
-        # FAIL, not pass (D12 Stage-13 round-8 BLOCKER 8.2). A readiness guard that cannot
-        # load its own dependency reports "no disagreement found" — indistinguishable from
-        # agreement. Demonstrated end-to-end by the round-8 reviewer: renaming
-        # `evaluate_all_gates` makes build_graph emit ZERO ReadinessGate nodes, at which
-        # point every readiness check passed green with nothing to check.
-        return CheckResult(passed=False, details=[
-            Detail("import", False,
-                   f"could not import the readiness machinery ({exc}) — this check is "
-                   f"UNVERIFIED, not passing")])
-
-    try:
-        assignments = parse_mapping(MAPPING_DOC.read_text())
-        findings_by_paper = load_findings_by_paper()
-        # Read-only: never backfill review metadata from inside a validation check.
-        review_info = resolve_stage13_reviews(backfill=False)
-        by_bundle = aggregate_by_bundle(assignments, findings_by_paper, review_info)
-    except Exception as exc:  # pragma: no cover - defensive
-        # FAIL, not pass (D12 round-7 finding 8.3). This guard exists to make a
-        # false-green verdict impossible; an exception inside the heatmap computation
-        # must not be indistinguishable from "the two verdicts agree". Same reasoning
-        # as the orphan-scan handler at :3366.
-        return CheckResult(passed=False, details=[
-            Detail("heatmap", False,
-                   f"heatmap verdict could not be computed ({type(exc).__name__}: "
-                   f"{exc}) — the two verdicts are therefore UNVERIFIED, not agreed")])
-
-    graph = build_graph_json()
-    gates = [n for n in graph.get('nodes', []) if n.get('type') == 'ReadinessGate']
-    if not gates:
-        return CheckResult(passed=False, details=[
-            Detail("gates", False,
-                   "NO ReadinessGate nodes exist — nothing to cross-check, so the two "
-                   "verdicts are unverified rather than in agreement (round-8 8.2)")])
-
-    blocked_at_gate: dict[str, list[str]] = {}
-    seen_papers: set[str] = set()
-    for g in gates:
-        m = g['meta']
-        seen_papers.add(m['paper'])
-        if m['state'] == 'blocked':
-            blocked_at_gate.setdefault(m['paper'], []).append(m['gate'])
-
-    details: list[Detail] = []
-    disagreements = 0
-    checked = 0
-
-    # ── Reverse direction (self-audit 2026-07-31; also raised as D12 round-7 8.2) ──
-    # The first version of this check opened with `if readiness != 'RED': continue`,
-    # so it asserted only heatmap-RED ⇒ some gate blocked and was blind BY
-    # CONSTRUCTION to the mirror image: a bundle the heatmap renders GREEN while a P1
-    # gate is blocked. That is the same false-green shape as the defect the check was
-    # written for, one layer over, and it was live — D6 rendered GREEN in
-    # BUNDLE_READINESS_HEATMAP.md with NarrativeGrounding blocked. GREEN is what a
-    # reader takes as "ready", so it must survive every P1 gate, including the ones
-    # the heatmap does not model (it counts findings only).
-    for bundle, agg in sorted(by_bundle.items()):
-        if str(agg.get('readiness', '')).upper() != 'GREEN':
-            continue
-        if bundle in blocked_at_gate:
-            disagreements += 1
-            details.append(Detail(
-                bundle, False,
-                f"DISAGREE (reverse): heatmap renders this bundle GREEN while P1 "
-                f"gate(s) {', '.join(sorted(blocked_at_gate[bundle]))} are blocked. The "
-                f"heatmap models findings only and cannot see these gates; GREEN must "
-                f"not be issued while any P1 gate is blocked"))
-        else:
-            checked += 1
-
-    for bundle, agg in sorted(by_bundle.items()):
-        if str(agg.get('readiness', '')).upper() != 'RED':
-            continue
-        if bundle not in seen_papers:
-            # FAIL, not warn (D12 round-7 finding 8.2). A heatmap-RED bundle with NO
-            # gate nodes is the strongest possible form of the defect this check
-            # exists for: the submission gate cannot report it as blocked because it
-            # has nothing to report at all. Warning-and-passing here reproduced the
-            # original 8.1 failure exactly.
-            disagreements += 1
-            details.append(Detail(
-                bundle, False,
-                f"heatmap RED ({agg.get('blocker_count', 0)} blockers) but NO "
-                f"ReadinessGate nodes exist for paper:{bundle} — the submission gate "
-                f"is structurally unable to report this bundle as blocked"))
-            continue
-        checked += 1
-        if bundle in blocked_at_gate:
-            details.append(Detail(
-                bundle, True,
-                f"agree: heatmap RED ({agg.get('blocker_count', 0)} blockers), "
-                f"gate blocked on {', '.join(sorted(blocked_at_gate[bundle]))}"))
-        else:
-            disagreements += 1
-            details.append(Detail(
-                bundle, False,
-                f"DISAGREE: heatmap RED with {agg.get('blocker_count', 0)} open "
-                f"blockers, but no ReadinessGate is blocked — the submission gate "
-                f"would report this bundle as passing"))
-
-    if not checked and not details:
-        details.append(Detail("summary", True,
-                              "no bundle is heatmap-RED; nothing to cross-check"))
-    else:
-        details.insert(0, Detail(
-            "summary", disagreements == 0,
-            f"{checked} heatmap-RED bundles cross-checked, "
-            f"{disagreements} disagreement(s)"))
-    return CheckResult(passed=disagreements == 0, details=details)
-
-
-@register_check("readiness_submission_gate",
-                "Every paper has all P1 readiness gates passed (Phase 5v Wave 4)")
-def check_readiness_submission_gate() -> CheckResult:
-    """CHECK 18: Aggregate per-paper readiness state.
-
-    Iterates every Paper node's 11 ReadinessGate instances. A paper is
-    submission-ready iff ALL priority-1 gates are `passed` and no
-    priority-2 gate is `blocked`. Priority-2 `needs-recheck`/`open` are
-    advisory warnings.
-
-    The check is WARN-only during the readiness rollout — existing drafts
-    will light up red (as intended) until remediation lands. To block
-    submission, run `validate.py --strict` (future flag) or grep for
-    'readiness-status: red' in archived reports.
-    """
-    sys.path.insert(0, str(SCRIPT_DIR))
-    try:
-        from build_graph import build_graph_json
-    except ImportError as exc:
-        return CheckResult(passed=True, details=[
-            Detail("import", True, f"build_graph not available ({exc}); skipping",
-                   warning=True),
-        ])
-
-    graph = build_graph_json()
-    gates = [n for n in graph.get('nodes', []) if n['type'] == 'ReadinessGate']
-    if not gates:
-        # FAIL, not warn (D12 round-8 BLOCKER 8.2). Zero gate nodes is not "no problems
-        # found" — it is the gate system being absent, which is the only state in which
-        # every bundle trivially satisfies it.
-        return CheckResult(passed=False, details=[
-            Detail("gates", False,
-                   "NO ReadinessGate nodes exist. The submission gate has nothing to "
-                   "evaluate, so its verdict is vacuous — treat as unverified, not passing."),
-        ])
-
-    # Aggregate per-paper
-    from collections import defaultdict
-    per_paper: dict[str, dict] = defaultdict(lambda: {
-        'p1_blocked': [], 'p2_blocked': [], 'p2_advisory': [],
-        'passed': [], 'open': [],
-    })
-    for g in gates:
-        m = g['meta']
-        paper = m['paper']
-        entry = (m['gate'], m['state'], m.get('notes', ''))
-        if m['state'] == 'passed':
-            per_paper[paper]['passed'].append(entry)
-        elif m['priority'] == 1 and m['state'] == 'blocked':
-            per_paper[paper]['p1_blocked'].append(entry)
-        elif m['priority'] == 2 and m['state'] == 'blocked':
-            per_paper[paper]['p2_blocked'].append(entry)
-        elif m['priority'] == 2 and m['state'] in ('needs-recheck', 'open'):
-            per_paper[paper]['p2_advisory'].append(entry)
-        else:
-            per_paper[paper]['open'].append(entry)
-
-    # Classification
-    green, yellow, red = [], [], []
-    for paper, state in sorted(per_paper.items()):
-        if state['p1_blocked'] or state['p2_blocked']:
-            red.append(paper)
-        elif state['p2_advisory'] or state['open']:
-            yellow.append(paper)
-        else:
-            green.append(paper)
-
-    details = [
-        Detail("summary", True,
-               f"{len(green)} green / {len(yellow)} yellow / {len(red)} red "
-               f"across {len(per_paper)} papers"),
-    ]
-
-    for paper in green:
-        details.append(Detail(paper, True, "all 11 gates passed"))
-    for paper in yellow:
-        s = per_paper[paper]
-        details.append(Detail(
-            paper, True,
-            f"all P1 passed; advisory on: "
-            f"{', '.join(g for g,_,_ in s['p2_advisory'] + s['open'])}",
-            warning=True))
-    for paper in red:
-        s = per_paper[paper]
-        blockers = s['p1_blocked'] + s['p2_blocked']
-        details.append(Detail(
-            paper, True,  # WARN not FAIL during rollout
-            f"{len(blockers)} blocked: "
-            f"{', '.join(g for g,_,_ in blockers[:5])}"
-            + (f" (+{len(blockers)-5} more)" if len(blockers) > 5 else ""),
-            warning=True))
-
-    return CheckResult(passed=True, details=details)
-
-
-def _lookup_provenance_value(prov_key, experiments, atoms, polariton_platforms):
-    """Look up the actual value in constants for a provenance key like 'Steinhauer.omega_perp'."""
-    import numpy as np
-    from src.core.constants import HBAR, K_B, A_BOHR, POLARITON_MASS
-
-    # Fundamental constants
-    fundamentals = {'HBAR': HBAR, 'K_B': K_B, 'A_BOHR': A_BOHR,
-                    'POLARITON_MASS': POLARITON_MASS}
-    if prov_key in fundamentals:
-        return fundamentals[prov_key]
-
-    parts = prov_key.split('.', 1)
-    if len(parts) != 2:
-        return None
-    group, key = parts
-
-    # ATOMS
-    if group in atoms:
-        return atoms[group].get(key)
-
-    # EXPERIMENTS
-    if group in experiments:
-        return experiments[group].get(key)
-
-    # POLARITON_PLATFORMS
-    if group in polariton_platforms:
-        return polariton_platforms[group].get(key)
-
-    return None
+# The re-export itself is required by ADR-009 D2 item 8: nine test files and
+# `scripts/sync_manifest.py` import names from `validate` directly.
+# `tests/test_validate_public_surface.py` freezes the full external surface and
+# asserts the `_CHECKS` identity above. That file's `EXPECTED_SURFACE` is the
+# AUTHORITATIVE list — do not restate its size here. (This comment read "the full
+# 33-name surface" until 2026-08-04; the real surface is 54, and ADR-009 D2 item 8
+# carries the same stale figure with the account of how the measurement was voided.)
+from validation._registry import (  # noqa: E402
+    Detail, CheckResult, CheckSpec, _CHECKS, register_check,
+)
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# Execution order (ADR-009 H3)
+# ═══════════════════════════════════════════════════════════════════════
+#
+# Registration order is SEMANTIC, not cosmetic: `counts_fresh`, `tables_fresh` and
+# `claim_clusters_fresh` shell out and REGENERATE artifacts that later checks read.
+# `run_checks` iterates `_CHECKS` in order, so what a later check observes depends on
+# what ran before it.
+#
+# ⚠️ This comment used to name TWO consumers of `docs/counts.json`, and so did the test
+# that enforced the ordering. Measured 2026-08-07, the real population was larger and
+# three of the undeclared readers ran BEFORE the regenerator — `lean_zero_sorry` (the
+# Invariant #4 gate), `native_decide_regression` and `axiom_closure_allowlist`. Naming a
+# consumer set in prose is the same hand-maintained-list failure the suite exists to
+# catch, so the set is now DERIVED by AST in
+# `tests/test_validate_registry_contract.py::_counts_consumers`, and `counts_fresh` runs
+# first. Do not re-enumerate consumers here.
+#
+# Until now that order was an EMERGENT PROPERTY of where each `@register_check`
+# happened to sit in one 7,800-line file. That is fine while there is one file and
+# impossible to preserve once the checks are split by domain: the current order
+# interleaves domains (#10 Lean, #11 physics, #13 papers, #16 Lean), so no ordering
+# of domain modules reproduces it.
+#
+# So import order and execution order are decoupled. Modules may be organised
+# however reads best; execution order is declared HERE, as data, and applied once
+# after registration. A registered check absent from this list raises on sort —
+# the correct loud failure for a check nobody declared a position for.
+#
+# NOTE `tests/test_validate_registry_contract.py` keeps its OWN frozen copy and
+# must NOT import this one; otherwise it would assert only that production agrees
+# with itself.
+_CANONICAL_ORDER: tuple[str, ...] = (
+    # `counts_fresh` FIRST — it regenerates `docs/counts.json`, and three checks that
+    # read it (`lean_zero_sorry`, `native_decide_regression`, `axiom_closure_allowlist`)
+    # used to run BEFORE it. On a run over a tree whose Lean sources had changed, the
+    # Invariant #4 gate evaluated the PREVIOUS extraction. Moved 2026-08-07; the
+    # consumer set is now DERIVED by AST in the ordering test, so a new consumer
+    # registered ahead of it fails rather than silently reading stale counts.
+    # Safe to run first: it depends on `lean_deps.json`, which `main()` already
+    # snapshots via `ensure_lean_deps_fresh()` before any check runs.
+    'counts_fresh',
+    'theorem_census_agrees',
+    'formulas', 'lean_zero_sorry', 'placeholder_not_cited', 'disclosure_consistency',
+    'proxy_body_audit', 'tracked_hypothesis_ledger', 'tracked_hypotheses_fresh',
+    'formula_grounding', 'vacuous_statement_audit', 'nogo_substrate_integrity',
+    'native_decide_regression', 'numerical', 'identities',
+    'paper_table', 'd1_hierarchy_table', 'f_hierarchy_claims',
+    'theorems', 'notebooks', 'lean_source',
+    # `lean_modules_in_build_graph` precedes `lean_build` and everything that reads
+    # lean_deps.json, and the position is semantic: it answers "is the population the
+    # rest of this suite measures actually the whole project?". A red here means every
+    # downstream count, the atlas and the axiom closure are computed over a proper
+    # subset — so the reader needs it BEFORE they trust any of them.
+    'cgl_fdr', 'lean_modules_in_build_graph', 'lean_build', 'axiom_closure_allowlist',
+    'elaboration_knob_watchlist', 'bundle_figure_integrity', 'viz_consistency',
+    'notebook_exec', 'physical_bounds', 'cross_path_consistency',
+    'paper_provenance', 'parameter_provenance',
+    'tables_fresh', 'claim_clusters_fresh', 'numerical_literals', 'bundle_tables_use_pipeline',
+    'graph_integrity', 'gate_edge_types_are_emitted', 'atlas_integrity',
+    'atlas_hypothesis_discipline',
+    'count_literals', 'recurrence_reopens_closures', 'review_severity_declared',
+    'review_docs_mint_findings', 'accepted_findings_carry_rationale',
+    'chain_backing_targets_resolve',
+    'bundle_metadata_matches_graph', 'bundle_stage13_claim_consistent',
+    'bundle_manuscript_length', 'bundle_reviewer_stage_ordering',
+    'bundle_prose_em_dash_free', 'bundle_reader_facing_voice',
+    'bundle_sentence_length',
+    'bundle_figure_adequacy', 'bundle_structural_coherence',
+    'bundle_lean_module_coverage',
+    'notebook_stored_outputs_current',
+    'readiness_verdicts_agree', 'readiness_submission_gate',
+    'citation_primary_sources_present', 'provenance_doi_in_registry',
+    'bundle_consistency', 'bundle_source_freshness',
+    'bibitem_title_primary_source', 'quantum_network',
+    # `bundle_apex_resolves` follows the roster gate and precedes the prose checks: it
+    # gates the ONE hand-maintained input to the derived substrate closure, so a reader
+    # needs its verdict before any per-bundle substrate figure downstream.
+    'bundle_registry_consistency', 'bundle_apex_resolves',
+    # Both of these read the DECLARED-APEX CLOSURE, so they must follow
+    # `bundle_apex_resolves` — it gates the one hand-maintained input the closure rests
+    # on. Reporting a per-bundle compiler-trust figure derived from an apex list that
+    # does not resolve would be a measurement over a population nobody validated, which
+    # is the defect class this suite exists to close.
+    # `bundle_todo_free_before_green` reads `stage13_status`, so it also belongs after
+    # `bundle_reviewer_stage_ordering` above: a green that should never have been
+    # recorded is that check's finding, and this one should not be the first to report it.
+    'bundle_native_decide_debt', 'bundle_todo_free_before_green',
+    # Precedes `paper_latex_compiles`: a dangling \ref is cheap to detect statically and
+    # is exactly what that check cannot see (one pdflatex pass reports every reference as
+    # undefined, and its per-draft cache skips untouched drafts).
+    'bundle_counts_fresh', 'bundle_cross_references_resolve', 'paper_latex_compiles',
+    'axiom_count_prose_consistency', 'prose_theorem_reference_coverage',
+    'theorem_name_embedded_citations', 'inventory_index_autogen_fresh', 'architecture_inventory_fresh',
+    'lean_docstring_refs_resolve', 'paper_toolchain_pin_drift',
+)
+
+
+def _apply_canonical_order() -> None:
+    """Sort `_CHECKS` into `_CANONICAL_ORDER`. Idempotent; a no-op while every
+    check still lives in this file in canonical sequence, which is exactly why it
+    is introduced BEFORE any module moves — the mechanism is proven inert before
+    anything depends on it."""
+    index = {name: i for i, name in enumerate(_CANONICAL_ORDER)}
+    unknown = [s.name for s in _CHECKS if s.name not in index]
+    if unknown:
+        raise RuntimeError(
+            f"check(s) registered with no declared execution position: {unknown}. "
+            f"Add them to _CANONICAL_ORDER — position is semantic (see above), so "
+            f"it must be chosen, not inherited from import order.")
+    _CHECKS.sort(key=lambda s: index[s.name])
+
+
+# ⚠️ THE CALL IS DELIBERATELY NOT HERE. It lives at the BOTTOM of this module,
+# after the last `@register_check`. Placing it here — which is where it was first
+# written, on 2026-08-03 — sorted only the 45 checks registered above this point
+# and left the 14 below it appended, unsorted, in import order. Two consequences,
+# both invisible because the tail happened to already be in canonical sequence:
+#
+#   1. The mechanism was inert for 14/59 (as of that pass; 80 checks today) checks, i.e. exactly the ones a Phase-2
+#      module move is most likely to reorder.
+#   2. The `raise` above — the "loud failure for a check nobody declared a
+#      position for" — could not fire for anything registered below, INCLUDING
+#      the end of the file, which is where a new check naturally goes. Verified
+#      by mutation: an undeclared check added at :7441 ran, listed, and exited 0.
+#
+# So the guard written to make ordering explicit was itself order-dependent.
+# `tests/test_validate_registry_contract.py` now asserts the call's position
+# structurally, because no behavioural test can see this while the tail is
+# coincidentally correct.
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -4859,17 +278,34 @@ def _lookup_provenance_value(prov_key, experiments, atoms, polariton_platforms):
 # ═══════════════════════════════════════════════════════════════════════
 
 def run_checks(
-    check_filter: Optional[str] = None,
+    check_filter: "Optional[Sequence[str]]" = None,
+    skip: "Optional[frozenset[str]]" = None,
 ) -> Dict[str, CheckResult]:
-    """Run all (or one) registered checks, return results keyed by name."""
+    """Run all (or one) registered checks, return results keyed by name.
+
+    `skip` names checks NOT to execute. It must be applied HERE, before the call —
+    filtering results afterwards runs every check and then deletes its answer, which
+    avoids none of the cost the skip exists to avoid and silently discards a real
+    failure.
+    """
     results = {}
     for spec in _CHECKS:
-        if check_filter and spec.name != check_filter:
+        if check_filter and spec.name not in check_filter:
+            continue
+        if skip and spec.name in skip:
             continue
         try:
             results[spec.name] = spec.func()
         except Exception as e:
-            results[spec.name] = CheckResult(passed=False, error=str(e))
+            # ⚠️ `measured=False`, and this is the single most central place it
+            # matters. An unhandled exception is the STRONGEST "could not
+            # measure" the suite can produce, and `measured` defaults True — so
+            # a crashed check used to count toward `--ci`'s coverage floor as
+            # evidence that it ran. The verdict was never wrong (`passed=False`
+            # still fails the suite); the FLOOR was, and the floor is the guard
+            # that exists because the previous floor could not fire.
+            results[spec.name] = CheckResult(
+                passed=False, measured=False, error=str(e))
     return results
 
 
@@ -4879,7 +315,15 @@ def print_results(results: Dict[str, CheckResult]) -> None:
         if spec.name not in results:
             continue
         cr = results[spec.name]
-        status = "\033[32m✓ PASS\033[0m" if cr.passed else "\033[31m✗ FAIL\033[0m"
+        # ⚠️ THREE states. `measured` was rendered NOWHERE on this path: a check
+        # that measured nothing was byte-identical to one that measured
+        # everything, on the command CLAUDE.md tells everyone to run.
+        if not cr.passed:
+            status = "\033[31m✗ FAIL\033[0m"
+        elif not cr.measured:
+            status = "\033[33m? UNMEASURED\033[0m"
+        else:
+            status = "\033[32m✓ PASS\033[0m"
         print(f"\n{'═'*70}")
         print(f"  {status}  {spec.name}: {spec.description}")
         print(f"{'═'*70}")
@@ -4888,12 +332,27 @@ def print_results(results: Dict[str, CheckResult]) -> None:
             print(f"  ERROR: {cr.error}")
 
         for d in cr.details:
-            if d.warning:
+            # ⚠️ FAILURE IS TESTED FIRST, and the order is the whole point.
+            # `warning` and `passed` are independent axes, and the pair
+            # (passed=False, warning=True) is REAL: it is what `--strict`
+            # produces when it promotes an advisory to a failure
+            # (`checks/freshness.py`). Testing `warning` first rendered every
+            # one of those as a yellow ⚠ while `CheckResult.passed` correctly
+            # went False — so the human-readable report contradicted the exit
+            # code on exactly the runs that matter. `⚠✗` keeps both facts: this
+            # failed, and it failed by promotion rather than on its own terms.
+            if not d.passed:
+                sym = "\033[33m⚠\033[0m\033[31m✗\033[0m" if d.warning else "✗"
+            elif not d.measured:
+                # A SKIPPED MEMBER: the check ran, this member was not measured.
+                # Takes precedence over `warning` — "not measured" is the stronger
+                # statement, and the two co-occur constantly (a skipped member is
+                # usually also flagged).
+                sym = "\033[33m?\033[0m"
+            elif d.warning:
                 sym = "\033[33m⚠\033[0m"
-            elif d.passed:
-                sym = "✓"
             else:
-                sym = "✗"
+                sym = "✓"
             line = f"  {sym} {d.name}"
             if d.message:
                 line += f"  —  {d.message}"
@@ -4909,20 +368,127 @@ def print_results(results: Dict[str, CheckResult]) -> None:
     if total_warnings:
         summary += f" ({total_warnings} warning{'s' if total_warnings > 1 else ''})"
     print(summary)
-    if passed == total:
+    # ⚠️ Never print an unqualified all-clear over a population that was not
+    # reached. `measured` was invisible on this path entirely; the count below is
+    # the reader's cue that a green verdict is partial.
+    _unmeasured = sorted(n for n, r in results.items() if not r.measured)
+    if _unmeasured:
+        print(f"  \033[33m? {len(_unmeasured)} check(s) did NOT MEASURE\033[0m — a "
+              f"verdict over a population they could not reach: "
+              f"{', '.join(_unmeasured)}")
+    if passed == total and _unmeasured:
+        print("  \033[33mALL CHECKS PASSED — but see the UNMEASURED list above\033[0m")
+    elif passed == total:
         print("  \033[32mALL CHECKS PASSED\033[0m")
     else:
         print("  \033[31mSOME CHECKS FAILED\033[0m")
+        _print_failure_provenance(results)
     print(f"{'═'*70}\n")
+
+
+#: Check modules whose subject is the PAPER CORPUS rather than the Lean/Python
+#: substrate. Derived from the module a check is DEFINED in — deliberately not a
+#: hand-listed set of check names, which would be a parallel list that drifts
+#: (the defect class this suite keeps finding).
+#: Which check-module belongs to which side. The CLASSIFICATION of an individual check
+#: is derived (from its defining module, via the registry), but this partition is a
+#: judgement and is declared. It must be TOTAL: `tests/test_ci_mode.py` asserts every
+#: module owning a registered check appears in exactly one side, so a new check module
+#: fails loudly rather than defaulting to "substrate" and silently gaining the power to
+#: block a Lean wave.
+_PAPER_SIDE_MODULES = frozenset({
+    "papers_prose", "prose_lean_refs", "citations", "bundles_readiness", "reviews",
+})
+_SUBSTRATE_SIDE_MODULES = frozenset({
+    "lean_substrate", "lean_toolchain", "lean_statements", "physics",
+    "graph_atlas", "freshness", "notebooks",
+})
+
+
+def _check_modules() -> set:
+    """Leaf module name of every module that owns a registered check."""
+    return {_defining_module(sp.func) for sp in _CHECKS}
+
+
+def _spec_of(name: str):
+    """The registered CheckSpec for `name`, or None."""
+    return next((sp for sp in _CHECKS if sp.name == name), None)
+
+
+def _defining_module(func) -> str:
+    """Leaf name of the module a check function is DEFINED in.
+
+    Unwraps the memo decorator: a memoized check's `__module__` is `_memo`, the
+    wrapper's home, not the check's. `_memo.memoize_check` exposes `__memo_body__`
+    for exactly this.
+    """
+    body = getattr(func, "__memo_body__", None) or func
+    return body.__module__.rsplit(".", 1)[-1]
+
+
+def _leaf_module_of(name: str) -> str:
+    """Leaf name of the module a check is DEFINED in — derived from the registry, so a
+    check that moves module carries its classification with it."""
+    sp = _spec_of(name)
+    return _defining_module(sp.func) if sp is not None else ""
+
+
+def _print_failure_provenance(results: Dict[str, CheckResult]) -> None:
+    """Split the failures into paper-corpus vs substrate, and say so.
+
+    WHY THIS EXISTS (2026-08-05). `gate_precheck.py s13` runs the FULL suite before
+    dispatching an expensive Stage-13 reviewer, so closing a **pure-Lean wave** can
+    be blocked by paper-corpus state the wave never touched. The rationale for
+    running everything is sound — do not spend reviewer budget on a known-bad tree
+    — but "the tree is clean" was being reported as one undifferentiated verdict.
+
+    ⚠️ This changes NOTHING about what runs or what blocks. A `--scope` flag that
+    skipped the 23 paper-side checks would be a filter that silently narrows the
+    population, which is precisely the defect class this suite exists to catch. The
+    fix for an unreadable verdict is to make it readable, not to shrink it.
+    """
+    by_name = {spec.name: spec for spec in _CHECKS}
+    paper, substrate = [], []
+    for name, cr in results.items():
+        if cr.passed:
+            continue
+        spec = by_name.get(name)
+        # ⚠️ `_leaf_module_of` UNWRAPS the memo wrapper; this read `spec.func.
+        # __module__` directly, so every MEMOIZED check reported leaf `_memo`,
+        # which is in NEITHER partition and fell through to "substrate" by the
+        # `else`. That disagrees with the `--scope substrate` gate below, which
+        # does unwrap — the printed provenance and the exit code could therefore
+        # contradict each other. Benign only while both memoized checks happen to
+        # be substrate-side. (DEF-12, re-measured 2026-08-10, still live.)
+        leaf = _leaf_module_of(name) if spec else ""
+        (paper if leaf in _PAPER_SIDE_MODULES else substrate).append(name)
+    # `if not paper` — the `not (paper and substrate)` conjunct was dead: when
+    # `paper` is empty the second conjunct already returns, and when it is
+    # non-empty the first is False. Substrate-only failures print no provenance
+    # block, which is intended (there is nothing to attribute).
+    if not paper:
+        return
+    print()
+    if substrate:
+        print(f"  \033[31m✗ SUBSTRATE ({len(substrate)}):\033[0m "
+              f"{', '.join(sorted(substrate))}")
+    else:
+        print("  \033[32m✓ SUBSTRATE: clean\033[0m — no Lean/Python-side failure")
+    if paper:
+        print(f"  \033[33m● PAPER CORPUS ({len(paper)}):\033[0m "
+              f"{', '.join(sorted(paper))}")
+        print("    These concern the paper corpus, not the Lean/Python substrate. A "
+              "Lean-only wave\n    cannot have caused them — see "
+              "docs/architecture/VALIDATION_GATE_TOPOLOGY.md §2.")
 
 
 def archive_results(results: Dict[str, CheckResult]) -> Path:
     """Write timestamped JSON + text report to docs/validation/reports/."""
-    REPORTS_DIR.mkdir(parents=True, exist_ok=True)
+    _reports_dir().mkdir(parents=True, exist_ok=True)
     ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
 
     # JSON report
-    json_path = REPORTS_DIR / f"validation_{ts}.json"
+    json_path = _reports_dir() / f"validation_{ts}.json"
     payload = {
         "timestamp": ts,
         "project_root": str(PROJECT_ROOT),
@@ -4931,12 +497,20 @@ def archive_results(results: Dict[str, CheckResult]) -> Path:
     for name, cr in results.items():
         payload["checks"][name] = {
             "passed": cr.passed,
+            # ⚠️ `measured` must cross EVERY persistence boundary. `_registry`
+            # justifies the field by naming the `--json` payload and the
+            # pre-commit consumers as the reason it exists; dropping it here
+            # re-created, in the archived historical record, exactly the state
+            # it was added to remove — a cannot-measure PASS stored
+            # byte-identically to a real one.
+            "measured": cr.measured,
             "error": cr.error,
             "details": [asdict(d) for d in cr.details],
         }
     payload["summary"] = {
         "total": len(results),
         "passed": sum(1 for r in results.values() if r.passed),
+        "measured": sum(1 for r in results.values() if r.measured),
         "failed": sum(1 for r in results.values() if not r.passed),
     }
     class _Encoder(json.JSONEncoder):
@@ -4952,7 +526,7 @@ def archive_results(results: Dict[str, CheckResult]) -> Path:
         json.dump(payload, f, indent=2, cls=_Encoder)
 
     # Text report (human-readable)
-    txt_path = REPORTS_DIR / f"validation_{ts}.txt"
+    txt_path = _reports_dir() / f"validation_{ts}.txt"
     lines = [
         f"SK-EFT Hawking Validation Report",
         f"Generated: {ts}",
@@ -4982,1047 +556,12 @@ def archive_results(results: Dict[str, CheckResult]) -> Path:
 
 
 # ═══════════════════════════════════════════════════════════════════════
-# CHECK 19: Citation primary-source cache present (Phase 6i Wave 1)
+# BUNDLE_CODES re-export — required by the roster gate (ADR-009 H2)
 # ═══════════════════════════════════════════════════════════════════════
-
-def _discover_cache_for(bibkey: str):
-    """Find a primary-source cache for `bibkey` by globbing, independently of what the
-    registry declares. Mirrors the discovery the existence half of
-    `citation_primary_sources_present` performs, so the content half cannot be opted out
-    of by editing one registry field (D11 round-8 finding 1.1)."""
-    from src.core.workspace import find_workspace as _fw
-    base = _fw() / "Lit-Search"
-    if not base.is_dir():
-        return None
-    for phase in base.iterdir():
-        d = phase / "primary-sources"
-        if not d.is_dir():
-            continue
-        # Every cache extension the existence half accepts. A `.pdf` or `.json` cache is
-        # a legitimate primary source with no parseable header — it resolves here (so it
-        # is not reported unresolvable) and the caller skips the header comparison.
-        for ext in ("abstract.txt", "txt", "md", "json", "pdf"):
-            cand = d / f"{bibkey}.{ext}"
-            if cand.is_file():
-                return cand
-        low = f"{bibkey}.".lower()
-        for cand in d.iterdir():
-            if cand.name.lower().startswith(low) and cand.is_file():
-                return cand
-    return None
-
-
-@register_check("citation_primary_sources_present",
-                "Every external bibitem cited in papers has a primary-source cache file")
-def check_citation_primary_sources_present() -> CheckResult:
-    """For every \\cite{<bibkey>} in any papers/*/paper_draft.tex, verify a
-    primary-source artifact exists on disk under
-    `Lit-Search/Phase-X/primary-sources/<bibkey>.{pdf,tex,abstract.txt,json}`.
-
-    `inprep: True` entries are exempt (no external primary source to cache).
-
-    Textbook / pre-DOI references with `primary_source_path: None` AND
-    `doi: None` AND `arxiv: None` are also exempt — these are canonical
-    textbook citations (e.g. Gilkey 1995 CRC heat-equation textbook;
-    Trautman 1973 pre-DOI Symposia Mathematica volume) verified via
-    secondary academic citations rather than via a downloadable primary
-    source. The registry entry's `notes` field documents the secondary-
-    citation pathway. Phase 6i Wave 6 addition.
-
-    Bibkeys absent from CITATION_REGISTRY surface as FAIL — that's already a
-    CitationIntegrity violation, not a Wave 1 concern, but worth reporting.
-    """
-    import ast
-    import re
-    from src.core.citations import CITATION_REGISTRY, bibkey_phase
-    from src.core.workspace import find_workspace
-
-    LIT_SEARCH = find_workspace() / "Lit-Search"
-    FALLBACK = "Phase-1-and-Background"
-    EXTENSIONS = ["pdf", "tex", "abstract.txt", "json"]
-
-    # ── Duplicate-key guard (added 2026-07-31) ────────────────────────────────
-    # CITATION_REGISTRY is a dict *literal*, so a repeated key is legal Python:
-    # the later entry silently wins and the earlier one's `used_in` consumers and
-    # `primary_source_path` become unreachable. That is invisible to every check
-    # that reads the imported dict, because by then the duplicate is already gone.
-    # It shipped undetected for two Stage-13 rounds ('Berry1984'). Detect it by
-    # parsing the source, not the imported object.
-    dup_details = []
-    try:
-        _reg_src = (Path(__file__).resolve().parent.parent
-                    / "src" / "core" / "citations.py").read_text(encoding="utf-8")
-        _tree = ast.parse(_reg_src)
-        _seen: dict[str, int] = {}
-        for _node in ast.walk(_tree):
-            if not isinstance(_node, ast.Dict):
-                continue
-            for _k in _node.keys:
-                if isinstance(_k, ast.Constant) and isinstance(_k.value, str):
-                    _seen[_k.value] = _seen.get(_k.value, 0) + 1
-        _dups = sorted(k for k, n in _seen.items() if n > 1 and k in CITATION_REGISTRY)
-        if _dups:
-            dup_details.append(Detail(
-                "duplicate_bibkeys", False,
-                f"{len(_dups)} bibkey(s) defined more than once in citations.py — the later "
-                f"literal silently shadows the earlier, orphaning its used_in/primary_source_path: "
-                f"{', '.join(_dups)}",
-            ))
-    except Exception as exc:  # pragma: no cover - guard must never mask the real check
-        dup_details.append(Detail(
-            "duplicate_bibkeys", True,
-            f"duplicate-key scan skipped ({type(exc).__name__}: {exc})", warning=True,
-        ))
-
-    # Match \cite, \citep, \citet, \citeauthor, etc., with optional star,
-    # optional [opt-args], then {key1,key2,...}
-    CITE_RE = re.compile(r"\\cite[a-zA-Z]*\*?\s*(?:\[[^\]]*\])*\s*\{([^}]+)\}")
-
-    details: List[Detail] = []
-    all_pass = True
-
-    paper_tex_files = sorted(PAPERS_DIR.glob("*/paper_draft.tex"))
-    if not paper_tex_files:
-        return CheckResult(passed=False, error="No papers/*/paper_draft.tex found")
-
-    # First pass: collect (bibkey, paper_key) usage across all papers
-    usage: dict[str, set[str]] = {}
-    for tex_path in paper_tex_files:
-        paper_key = tex_path.parent.name
-        text = tex_path.read_text(encoding="utf-8", errors="replace")
-        # Strip TeX-comment lines so commented-out \cite{} are not gated
-        text_uncommented = "\n".join(
-            line.split("%", 1)[0] for line in text.splitlines()
-        )
-        for m in CITE_RE.finditer(text_uncommented):
-            for raw_key in m.group(1).split(","):
-                key = raw_key.strip()
-                if key:
-                    usage.setdefault(key, set()).add(paper_key)
-
-    # Second pass: classify each cited bibkey
-    missing_from_registry: list[str] = []
-    inprep_exempt: list[str] = []
-    textbook_exempt: list[str] = []
-    cached: list[str] = []
-    not_cached: list[tuple[str, str, list[str]]] = []  # (key, phase, papers)
-
-    for bibkey in sorted(usage):
-        entry = CITATION_REGISTRY.get(bibkey)
-        if entry is None:
-            missing_from_registry.append(bibkey)
-            continue
-        if entry.get("inprep"):
-            inprep_exempt.append(bibkey)
-            continue
-        # Textbook / pre-DOI exemption (Wave-6): canonical textbook
-        # references with no DOI / no arXiv / no primary_source_path,
-        # verified via secondary academic citations per `notes`.
-        if (entry.get("primary_source_path") is None
-                and entry.get("doi") is None
-                and entry.get("arxiv") is None):
-            textbook_exempt.append(bibkey)
-            continue
-        # Resolve phase: prefer canonical (used_in[0] paper), else fallback
-        phase = bibkey_phase(entry) or FALLBACK
-        target_dir = LIT_SEARCH / phase / "primary-sources"
-        found = False
-        for ext in EXTENSIONS:
-            candidate = target_dir / f"{bibkey}.{ext}"
-            if candidate.is_file() and candidate.stat().st_size > 0:
-                found = True
-                break
-        if found:
-            cached.append(bibkey)
-        else:
-            not_cached.append((bibkey, phase, sorted(usage[bibkey])))
-
-    # Report
-    n_cited = len(usage)
-    n_cached = len(cached)
-    n_inprep = len(inprep_exempt)
-    n_textbook = len(textbook_exempt)
-    n_missing = len(missing_from_registry)
-    n_uncached = len(not_cached)
-
-    details.append(Detail(
-        "summary",
-        n_uncached == 0 and n_missing == 0,
-        f"{n_cited} bibkeys cited across {len(paper_tex_files)} papers — "
-        f"{n_cached} cached / {n_inprep} inprep-exempt / "
-        f"{n_textbook} textbook-exempt / "
-        f"{n_uncached} need cache / {n_missing} missing-from-registry"
-    ))
-
-    if missing_from_registry:
-        all_pass = False
-        sample = ", ".join(missing_from_registry[:8])
-        more = f" (and {len(missing_from_registry) - 8} more)" if len(missing_from_registry) > 8 else ""
-        details.append(Detail(
-            "missing_from_registry",
-            False,
-            f"{n_missing} cited bibkeys absent from CITATION_REGISTRY: {sample}{more}"
-        ))
-
-    if not_cached:
-        all_pass = False
-        # Group by phase for compactness
-        by_phase: dict[str, list[str]] = {}
-        for bibkey, phase, _ in not_cached:
-            by_phase.setdefault(phase, []).append(bibkey)
-        for phase in sorted(by_phase):
-            keys = by_phase[phase]
-            sample = ", ".join(keys[:5])
-            more = f" + {len(keys) - 5} more" if len(keys) > 5 else ""
-            details.append(Detail(
-                f"missing_cache:{phase}",
-                False,
-                f"{len(keys)} bibkeys lack primary-source cache: {sample}{more}"
-            ))
-
-    if all_pass:
-        details.append(Detail(
-            "all_cached",
-            True,
-            "Every cited external bibkey has a primary-source cache file"
-        ))
-
-    # Fold in the duplicate-key guard: a shadowed bibkey is a CitationIntegrity
-    # defect even when every cache file is present.
-    details.extend(dup_details)
-    all_pass = all_pass and all(d.passed for d in dup_details)
-
-    # ── Cache CONTENT agreement (added 2026-07-31) ────────────────────────────
-    # This check historically verified only that a cache file EXISTS. That let a
-    # hallucinated citation be caught in the .tex, fixed in the .tex and in
-    # CITATION_REGISTRY, and survive verbatim in the cache — the artifact the
-    # pipeline calls its strongest evidence class — while this check reported
-    # PASS. Two Stage-13 BLOCKERs of exactly that shape shipped
-    # (BoldoLaxMilgram2016, LeanLJ2025), each with the refuted metadata still
-    # tagged "[fetched]".
-    #
-    # (An earlier version of this comment claimed promote_primary_sources.py writes
-    # cache contents back into the registry, making a stale cache self-propagating.
-    # That was asserted without reading the script and is FALSE -- it reads only its
-    # sidecar JSON, missing_bibkey_stubs.json and citations.py, and inserts only
-    # 'inprep' and 'primary_source_path'. Corrected 2026-07-31, D11 round 4. The
-    # cache is a bad RECORD, not a loaded gun -- which is reason enough to gate it.)
-    #
-    # Compare each cache header's Title:/arXiv: against the registry.
-    title_details = []
-    _norm_ws = lambda s: " ".join(s.split()).strip().lower()
-    # ⚠️ BYPASS CLOSED 2026-07-31 (D11 Stage-13 round-8 finding 1.1). This loop used to
-    # `continue` whenever `primary_source_path` was absent or did not end in
-    # `.abstract.txt`, while the EXISTENCE half above globs for `<bibkey>.<ext>` by bibkey
-    # independently of that field. So blanking one registry field passed existence (the
-    # file is still on disk and still found by glob) and silently skipped every content
-    # check — title, authors, year, DOI, arXiv. A reviewer took that path green in three
-    # mutations. The loop is now driven by the cache DISCOVERED for each bibkey, so the
-    # registry cannot opt itself out, and a declared-but-unresolvable path is a FAIL
-    # rather than a silent skip.
-    for bibkey, entry in sorted(CITATION_REGISTRY.items()):
-        ps = entry.get("primary_source_path")
-        declared = bool(ps)
-        cache_file = (find_workspace() / ps) if ps else None
-        if cache_file is None or not str(ps).endswith(".abstract.txt"):
-            # No usable declared path: fall back to the same discovery the existence half
-            # uses, so the content checks still run on whatever cache is actually present.
-            found = _discover_cache_for(bibkey)
-            if found is None:
-                if declared:
-                    title_details.append(Detail(
-                        f"cache_path_unresolvable:{bibkey}", False,
-                        f"registry declares primary_source_path={ps!r} but no cache "
-                        f"resolves for this bibkey by any extension, so NO content check "
-                        f"ran. A declared path that names nothing is worse than none: it "
-                        f"reads as provenance."))
-                continue
-            # Header comparison needs a parseable header. A `.pdf`/`.json` cache has none;
-            # that is a real cache, just not one this half can read — skip silently, as the
-            # `.abstract.txt` opt-in used to, but ONLY after discovery proved it exists.
-            if found.suffix not in (".txt", ".md"):
-                continue
-            cache_file = found
-        if not cache_file.exists():
-            # Case-insensitive retry: registry paths say `Phase-6E`/`Phase-6C` while the
-            # directories on disk are `Phase-6e`/`Phase-6c`. That resolves on APFS but NOT
-            # on a case-sensitive filesystem, where every entry would fall through this
-            # branch and the gate would report PASS having checked nothing (D11 round-4
-            # finding). Resolve explicitly rather than skip.
-            parent = cache_file.parent
-            resolved = None
-            if not parent.exists():
-                gp = parent.parent
-                if gp.exists():
-                    for cand in gp.iterdir():
-                        if cand.is_dir() and cand.name.lower() == parent.name.lower():
-                            parent = cand
-                            break
-            if parent.exists():
-                for cand in parent.iterdir():
-                    if cand.name.lower() == cache_file.name.lower():
-                        resolved = cand
-                        break
-            if resolved is None:
-                continue  # existence is the other half of this check
-            cache_file = resolved
-        try:
-            head = cache_file.read_text(encoding="utf-8", errors="replace")[:4000]
-        except OSError:
-            continue
-        m_title = re.search(r"^Title:\s*(.+)$", head, re.MULTILINE)
-        reg_title = entry.get("title")
-        if m_title and reg_title:
-            if _norm_ws(m_title.group(1)) != _norm_ws(reg_title):
-                title_details.append(Detail(
-                    f"cache_title_mismatch:{bibkey}", False,
-                    f"{cache_file} header Title disagrees with CITATION_REGISTRY. "
-                    f"cache={m_title.group(1).strip()!r} registry={reg_title!r}. "
-                    f"The cache is this pipeline's designated primary-source evidence; a "
-                    f"disagreement means one of the two is wrong.",
-                ))
-        # Author-surname agreement. The round-2 LeanLJ2025 defect was a wrong TITLE *and*
-        # three wrong author initials; a title-only check catches that one but not an
-        # author-only drift, so compare surnames too (initials and accents vary).
-        m_auth = re.search(r"^Authors:\s*(.+)$", head, re.MULTILINE)
-        reg_auth = entry.get("authors")
-        if m_auth and reg_auth:
-            _STOP = {"and", "the", "van", "der", "den", "von", "de", "di", "el"}
-
-            def _surnames(s: str) -> set:
-                # Tokenize into WORDS, not comma-separated chunks: the cache writes
-                # "Scott Aaronson, Daniel Gottesman" while the registry writes
-                # "Aaronson, S. and Gottesman, D.", so a chunk comparison never
-                # intersects. Drop initials (len<=2) and connectives.
-                out = set()
-                for w in re.findall(r"[A-Za-zÀ-ÿ'’-]+", s):
-                    wl = w.lower()
-                    if len(wl) > 2 and wl not in _STOP:
-                        out.add(wl)
-                return out
-            c_s, r_s = _surnames(m_auth.group(1)), _surnames(reg_auth)
-            if c_s and r_s and not (c_s & r_s):
-                title_details.append(Detail(
-                    f"cache_authors_mismatch:{bibkey}", False,
-                    f"{ps} header Authors shares no surname with CITATION_REGISTRY. "
-                    f"cache={m_auth.group(1).strip()!r} registry={reg_auth!r}",
-                ))
-        # Year is ADVISORY only: a cache recording an arXiv v1 year against a registry
-        # holding the journal year is a legitimate convention difference, not a defect.
-        m_year = re.search(r"^Year:\s*(\d{4})", head, re.MULTILINE)
-        reg_year = entry.get("year")
-        if m_year and reg_year and int(m_year.group(1)) != int(reg_year):
-            title_details.append(Detail(
-                f"cache_year_advisory:{bibkey}", True,
-                f"{ps} header Year {m_year.group(1)} != registry {reg_year} "
-                f"(preprint vs publication year?)", warning=True,
-            ))
-        m_doi = re.search(r"^DOI:\s*(\S+)", head, re.MULTILINE)
-        reg_doi = entry.get("doi")
-        if m_doi and reg_doi and m_doi.group(1).strip().rstrip('.') != str(reg_doi).strip():
-            title_details.append(Detail(
-                f"cache_doi_mismatch:{bibkey}", False,
-                f"{ps} header DOI {m_doi.group(1)} != registry {reg_doi}",
-            ))
-        m_ax = re.search(r"^arXiv:\s*([0-9]{4}\.[0-9]{4,5}|[a-z-]+/[0-9]{7})", head, re.MULTILINE)
-        reg_ax = entry.get("arxiv")
-        if m_ax and reg_ax and m_ax.group(1).strip() != str(reg_ax).strip():
-            title_details.append(Detail(
-                f"cache_arxiv_mismatch:{bibkey}", False,
-                f"{ps} header arXiv {m_ax.group(1)} != registry {reg_ax}",
-            ))
-    if not title_details:
-        title_details.append(Detail(
-            "cache_content_agreement", True,
-            "Every .abstract.txt cache header agrees with its registry "
-            "Title/Authors/Year/DOI/arXiv",
-        ))
-    details.extend(title_details)
-    all_pass = all_pass and all(d.passed for d in title_details)
-
-    return CheckResult(passed=all_pass, details=details)
-
-
-# ═══════════════════════════════════════════════════════════════════════
-# CHECK 20: Provenance DOI ↔ CITATION_REGISTRY coverage
-# ═══════════════════════════════════════════════════════════════════════
-
-@register_check("provenance_doi_in_registry",
-                "PARAMETER_PROVENANCE source DOIs resolve to CITATION_REGISTRY bibkeys")
-def check_provenance_doi_in_registry() -> CheckResult:
-    """For every PARAMETER_PROVENANCE entry whose `doi` is non-null, verify
-    that DOI is present in CITATION_REGISTRY. This is the
-    `qi-provenance-citation-coverage` QI item recommended by the Stage 13
-    paper40 re-review (round 2): primary-experimental papers cited in
-    PARAMETER_PROVENANCE should themselves be in CITATION_REGISTRY so that
-    the Phase 6i Wave 1 primary-source cache covers them.
-
-    Each entry may also carry a `cited_bibkeys` field listing the registry
-    keys it relies on; if present, those keys must exist in CITATION_REGISTRY.
-
-    Strict mode promotes both findings to hard failures; default mode keeps
-    them as warnings (advisory during the rolling Phase 6i remediation).
-    """
-    from src.core.citations import CITATION_REGISTRY
-    from src.core.provenance import PARAMETER_PROVENANCE
-
-    reg_dois = {
-        (e.get('doi') or '').lower(): k
-        for k, e in CITATION_REGISTRY.items() if e.get('doi')
-    }
-
-    details: List[Detail] = []
-    all_pass = True
-
-    missing_doi: list[tuple[str, str]] = []  # (prov_key, doi)
-    missing_bibkey: list[tuple[str, str]] = []  # (prov_key, bibkey)
-    resolved_doi = 0
-    resolved_bibkey = 0
-    no_doi = 0
-
-    for prov_key, entry in PARAMETER_PROVENANCE.items():
-        doi = entry.get('doi')
-        if doi:
-            if doi.lower() in reg_dois:
-                resolved_doi += 1
-            else:
-                missing_doi.append((prov_key, doi))
-        else:
-            no_doi += 1
-
-        for bibkey in entry.get('cited_bibkeys', []) or []:
-            if bibkey in CITATION_REGISTRY:
-                resolved_bibkey += 1
-            else:
-                missing_bibkey.append((prov_key, bibkey))
-
-    n_total = len(PARAMETER_PROVENANCE)
-    details.append(Detail(
-        "summary", not (missing_doi or missing_bibkey),
-        f"{resolved_doi} provenance DOIs resolved / {len(missing_doi)} missing "
-        f"/ {no_doi} entries without DOI (internal derivation); "
-        f"{resolved_bibkey} cited_bibkeys resolved / "
-        f"{len(missing_bibkey)} missing"
-    ))
-
-    if missing_doi:
-        sample = ', '.join(f"{k}({d})" for k, d in missing_doi[:5])
-        more = f" + {len(missing_doi) - 5} more" if len(missing_doi) > 5 else ""
-        msg = (f"{len(missing_doi)} provenance DOIs absent from "
-               f"CITATION_REGISTRY: {sample}{more}")
-        if STRICT_MODE:
-            all_pass = False
-            details.append(Detail("missing_dois", False, f"[strict] {msg}"))
-        else:
-            details.append(Detail("missing_dois", True, msg, warning=True))
-
-    if missing_bibkey:
-        sample = ', '.join(f"{k}({b})" for k, b in missing_bibkey[:5])
-        more = f" + {len(missing_bibkey) - 5} more" if len(missing_bibkey) > 5 else ""
-        all_pass = False  # cited_bibkeys MUST resolve — these are explicit refs
-        details.append(Detail(
-            "missing_cited_bibkeys", False,
-            f"{len(missing_bibkey)} cited_bibkeys absent from "
-            f"CITATION_REGISTRY: {sample}{more}"
-        ))
-
-    if not (missing_doi or missing_bibkey):
-        details.append(Detail(
-            "all_resolved", True,
-            "Every provenance DOI and cited_bibkey resolves to a "
-            "CITATION_REGISTRY entry"
-        ))
-
-    return CheckResult(passed=all_pass, details=details)
-
-
-# ═══════════════════════════════════════════════════════════════════════
-# Phase 6i Wave 7.3 — bundle-level cross-paper consistency
-# ═══════════════════════════════════════════════════════════════════════
-
-@register_check("bundle_consistency",
-                "Cross-bundle clusters' member sentences agree on numerical "
-                "content across bundle boundaries")
-def check_bundle_consistency() -> CheckResult:
-    """For every cluster in `papers/cluster_bundle_index.json` whose
-    `cross_bundle: true` flag is set, verify that the cluster's member
-    sentences carry the same numerical content across all member
-    bundles.
-
-    The cluster index is built by `scripts/bundle_clusters.py` and
-    projects each cluster's `member_papers` through
-    `docs/PAPER_DRAFT_MAPPING.md` to determine which bundle codes the
-    cluster spans. A cross-bundle cluster's member sentences must agree
-    on:
-
-    - Same primary source citation (bibkey).
-    - Same numerical value (within ±2σ of the citation's reported
-      uncertainty, or within 1% relative tolerance if no uncertainty
-      is published).
-    - Same Lean theorem reference (or no Lean reference if the cluster
-      is qualitative).
-
-    Mismatches are flagged at WARN level (advisory; not yet a blocker
-    pending Wave 7.4 per-bundle Stage-13 sweep). The check exits
-    cleanly when no cross-bundle clusters disagree.
-
-    Phase 6i Wave 7.3 deliverable. Builds on the cluster-bundle index
-    from Wave 7.1 + the per-bundle anchor list from Wave 7.2.
-    """
-    # Layout-independent (works from the main checkout AND a worktree slot):
-    # PAPERS_DIR = PROJECT_ROOT / "papers", where PROJECT_ROOT is this
-    # checkout's repo root. The old `__file__.parent×3 / "SK_EFT_Hawking" /
-    # "papers"` walk resolved to `.claude/worktrees/SK_EFT_Hawking/papers`
-    # from a worktree. Per CLAUDE.md: never hardcode parent-walks.
-    INDEX_PATH = PAPERS_DIR / "cluster_bundle_index.json"
-
-    details: List[Detail] = []
-    if not INDEX_PATH.exists():
-        return CheckResult(
-            passed=False,
-            error=(
-                f"missing cluster bundle index at {INDEX_PATH}; "
-                f"run `uv run python scripts/bundle_clusters.py` first"
-            ),
-        )
-
-    try:
-        idx = json.loads(INDEX_PATH.read_text())
-    except (json.JSONDecodeError, OSError) as exc:
-        return CheckResult(passed=False, error=f"failed to read index: {exc}")
-
-    cross_bundle_clusters = [c for c in idx.get("clusters", [])
-                             if c.get("cross_bundle")]
-    n_total = idx.get("cluster_count", 0)
-    n_cross = len(cross_bundle_clusters)
-
-    details.append(Detail(
-        "summary",
-        True,
-        f"{n_total} clusters indexed / {n_cross} cross-bundle clusters",
-    ))
-
-    if not cross_bundle_clusters:
-        details.append(Detail(
-            "no_cross_bundle_clusters",
-            True,
-            "No cross-bundle clusters present; nothing to verify.",
-        ))
-        return CheckResult(passed=True, details=details)
-
-    # For each cross-bundle cluster, the cluster_detect.py exact-match
-    # algorithm guarantees same `normalized_hash`. So if the cluster
-    # was constructed by `match_kind: exact`, all member sentences
-    # share the same normalized prose content by construction — the
-    # only consistency risk is post-hoc drift via direct prose_state
-    # edit. For `match_kind: normalized`, fuzzy matches may differ in
-    # numerical content; flag those for manual review.
-    n_passing = 0
-    n_warning = 0
-    for c in cross_bundle_clusters:
-        match_kind = c.get("match_kind", "unknown")
-        bundles = ",".join(c.get(
-            "bundle_destinations_excluding_flagship", []
-        ))
-        if match_kind == "exact":
-            details.append(Detail(
-                f"exact_cluster:{c['id']}",
-                True,
-                f"exact-match cluster spans {bundles}; "
-                f"normalized_hash guarantees identical content "
-                f"({len(c.get('member_papers', []))} member papers).",
-            ))
-            n_passing += 1
-        elif match_kind == "normalized":
-            details.append(Detail(
-                f"normalized_cluster:{c['id']}",
-                True,  # advisory only
-                f"normalized-match cluster spans {bundles}; "
-                f"fuzzy match — manual numerical-consistency review "
-                f"recommended at Stage 13 sweep.",
-            ))
-            n_warning += 1
-        else:
-            details.append(Detail(
-                f"unknown_match_kind:{c['id']}",
-                False,
-                f"unknown match_kind {match_kind!r}; cluster index may "
-                f"be stale — re-run scripts/bundle_clusters.py",
-            ))
-
-    details.append(Detail(
-        "verdict",
-        all(d.passed for d in details),
-        f"{n_passing} exact-match clusters guaranteed consistent; "
-        f"{n_warning} normalized-match clusters flagged for Stage-13 "
-        f"manual review.",
-    ))
-
-    return CheckResult(
-        passed=all(d.passed for d in details),
-        details=details,
-    )
-
-
-# ═══════════════════════════════════════════════════════════════════════
-# CHECK 22: bundle source freshness (Phase 7a sub-wave 7a.1.4)
-# ═══════════════════════════════════════════════════════════════════════
-
-@register_check(
-    "bundle_source_freshness",
-    "Bundle source-paper mtime ≤ bundle last_lift; flag stale bundles",
-)
-def check_bundle_source_freshness() -> CheckResult:
-    """For each bundle (per `papers/<bundle>/bundle_metadata.json`),
-    detect whether any of its source papers (per
-    `docs/PAPER_DRAFT_MAPPING.md`) has been modified since the bundle's
-    last lift. Stale bundles need Stage-13 re-invocation per
-    `docs/LATE_PHASE6_ABSORPTION_PROTOCOL.md`.
-
-    Default mode: advisory (every detail.warning=True passes the check).
-    Strict mode (`validate.py --strict`): freshness-stale bundles fail.
-
-    Phase 7a sub-wave 7a.1.4 deliverable. Schema reference:
-    `docs/BUNDLE_DIRECTORY_SCHEMA.md`.
-    """
-    sys.path.insert(0, str(SCRIPT_DIR))
-    try:
-        from check_bundle_source_freshness import check as _run_check
-    except ImportError as exc:
-        return CheckResult(
-            passed=False,
-            error=f"check_bundle_source_freshness module unavailable: {exc}",
-        )
-
-    findings = _run_check()
-    if not findings:
-        return CheckResult(
-            passed=True,
-            details=[Detail(
-                "scope",
-                True,
-                "no bundle directories initialized yet (pre-Phase-7-execution state)",
-            )],
-        )
-
-    details: List[Detail] = []
-    n_warn = 0
-    n_fail = 0
-    for f in findings:
-        bundle = f["bundle"]
-        msg = f["message"]
-        passed = f["passed"]
-        warning = f.get("warning", False)
-        # In strict mode, WARN bundles fail
-        if STRICT_MODE and warning:
-            passed = False
-        details.append(Detail(
-            f"bundle:{bundle}",
-            passed,
-            msg,
-            warning=warning,
-        ))
-        if not passed:
-            n_fail += 1
-        elif warning:
-            n_warn += 1
-
-    summary_msg = (
-        f"{len(findings)} sub-findings: {n_fail} FAIL / {n_warn} WARN / "
-        f"{len(findings) - n_fail - n_warn} PASS"
-    )
-    if STRICT_MODE:
-        summary_msg += " (strict mode: WARN promoted to FAIL)"
-    details.insert(0, Detail("summary", n_fail == 0, summary_msg))
-
-    return CheckResult(
-        passed=(n_fail == 0),
-        details=details,
-    )
-
-
-# ═══════════════════════════════════════════════════════════════════════
-# CHECK 23: Bibitem title ↔ primary-source PDF page-1 consistency
-# (Stage 14 QI candidate from Phase 6o Wave 4a.4 D5 adversarial review:
-#  catches single-word title drift like "in a relativistic" vs
-#  "in relativistic" Bose-Einstein condensate. Default: advisory WARN.)
-# ═══════════════════════════════════════════════════════════════════════
-
-@register_check("bibitem_title_primary_source",
-                "Registry titles match primary-source cache PDF page-1 titles (drift detector)")
-def check_bibitem_title_primary_source() -> CheckResult:
-    """For every CITATION_REGISTRY entry whose `primary_source_path` points
-    to a `.pdf` cache file AND has a non-empty `title`, extract the page-1
-    text from the cached PDF and compare against the registry title.
-
-    Flags single-word and multi-word title drift between the registry's
-    bibitem title and the actual published form. Designed to catch the
-    failure mode that produced the BLOCKER in the Phase 6o Wave 4a.4 D5
-    adversarial review (`BelenchiaLiberatiMohd2014` registered as "in a
-    relativistic Bose-Einstein condensate" but published as "in
-    relativistic Bose-Einstein condensate" — a single-word drop).
-
-    Implementation: extract page-1 text via pdfminer.six; normalize both
-    titles (lowercase, collapse whitespace, strip punctuation); compute
-    `difflib.SequenceMatcher` ratio between the registry title and a
-    sliding window of the page-1 text. Flag entries where the best-window
-    ratio falls below a threshold.
-
-    Default mode: advisory WARN per finding (the check passes overall;
-    individual mismatches are surfaced for author review). Strict mode
-    (`validate.py --strict`) promotes mismatches to FAIL — for use at
-    paper-submission gate.
-
-    Skips:
-    - Entries with `inprep: True` (no external primary source).
-    - Entries with `primary_source_path: None` (textbook / pre-DOI exempt
-      per Pipeline Invariant #11).
-    - Entries whose cache is non-PDF (`.json`, `.abstract.txt`, `.tex`).
-    - Entries whose cache file does not exist on disk (separately
-      enforced by `citation_primary_sources_present`).
-
-    Phase 6o Wave 4a.4 close memo `temporary/working-docs/phase6o/
-    wave_4a_sakharov_lambda_substrate_refactor_close.md` documents the
-    BLOCKER pattern this check guards against.
-    """
-    import re
-    from src.core.citations import CITATION_REGISTRY
-    from src.core.workspace import find_workspace
-
-    # ps_path entries are workspace-relative (`Lit-Search/...`), so resolve
-    # against the workspace root. Layout-independent (main checkout AND a
-    # worktree slot); the old `__file__.parent×3` walk resolved to
-    # `.claude/worktrees` from a worktree. Per CLAUDE.md: no parent-walks.
-    PROJECT_ROOT_LOCAL = find_workspace()
-
-    try:
-        from pdfminer.high_level import extract_text  # type: ignore
-    except ImportError:
-        return CheckResult(
-            passed=True,
-            details=[Detail(
-                "skipped",
-                True,
-                "pdfminer.six not installed — check skipped (advisory)",
-                warning=True,
-            )],
-        )
-
-    # Common ligature decompositions used in PDF text extraction
-    LIGATURES = {
-        "ﬁ": "fi", "ﬂ": "fl", "ﬀ": "ff", "ﬃ": "ffi", "ﬄ": "ffl",
-        "ﬅ": "ft", "ﬆ": "st",
-    }
-
-    # Greek-letter spell-outs that appear in titles vs PDF text
-    GREEK = {
-        "Λ": "lambda", "λ": "lambda",
-        "Α": "alpha", "α": "alpha",
-        "Β": "beta", "β": "beta",
-        "Γ": "gamma", "γ": "gamma",
-        "Δ": "delta", "δ": "delta",
-        "Ω": "omega", "ω": "omega",
-        "ℝ": "r", "ℤ": "z", "ℕ": "n", "ℂ": "c",
-    }
-
-    def _normalize(s: str) -> str:
-        # Apply ligature + Greek decomposition
-        for k, v in LIGATURES.items():
-            s = s.replace(k, v)
-        for k, v in GREEK.items():
-            s = s.replace(k, v)
-        s = s.lower()
-        # Normalize all dash variants
-        s = s.replace("–", "-").replace("—", "-").replace("−", "-")
-        # Strip everything except letters, digits, hyphens, spaces.
-        # Also drop hyphens (so "Bose-Einstein" matches "Bose Einstein")
-        s = re.sub(r"[^a-z0-9\s]", " ", s)
-        s = re.sub(r"\s+", " ", s).strip()
-        return s
-
-    details: List[Detail] = []
-    flagged: list[tuple[str, str, str]] = []  # (key, registry_title, pdf_excerpt)
-    checked = 0
-    skipped_no_pdf = 0
-    skipped_inprep = 0
-    skipped_textbook = 0
-    skipped_no_title = 0
-    skipped_missing_cache = 0
-    extract_failed: list[tuple[str, str]] = []
-
-    for bibkey, entry in sorted(CITATION_REGISTRY.items()):
-        if entry.get("inprep"):
-            skipped_inprep += 1
-            continue
-        title = (entry.get("title") or "").strip()
-        if not title:
-            skipped_no_title += 1
-            continue
-        ps_path = entry.get("primary_source_path")
-        if ps_path is None:
-            # Textbook / pre-DOI exempt per Pipeline Invariant #11
-            if entry.get("doi") is None and entry.get("arxiv") is None:
-                skipped_textbook += 1
-            continue
-        if not str(ps_path).endswith(".pdf"):
-            skipped_no_pdf += 1
-            continue
-        cache_file = PROJECT_ROOT_LOCAL / ps_path
-        if not cache_file.is_file() or cache_file.stat().st_size == 0:
-            skipped_missing_cache += 1
-            continue
-
-        try:
-            page1_text = extract_text(str(cache_file), maxpages=1) or ""
-        except Exception as exc:
-            extract_failed.append((bibkey, str(exc)[:100]))
-            continue
-
-        norm_title = _normalize(title)
-        norm_page = _normalize(page1_text)
-        if not norm_title or not norm_page:
-            extract_failed.append((bibkey, "empty extract"))
-            continue
-
-        checked += 1
-
-        # Primary signal: substring containment after normalization.
-        # If the normalized registry title appears verbatim in the
-        # normalized page-1 text, the bibitem is consistent with the PDF.
-        if norm_title in norm_page:
-            continue
-
-        # Secondary signal: try dropping a single word from the registry
-        # title — if any single-word drop makes it a substring, that is
-        # the BLOCKER drift pattern (e.g., registry has "in a relativistic"
-        # but PDF has "in relativistic": dropping "a" yields containment).
-        tokens = norm_title.split()
-        single_drop_match = None
-        if len(tokens) >= 3:
-            for i, _ in enumerate(tokens):
-                candidate = " ".join(tokens[:i] + tokens[i + 1:])
-                if candidate and candidate in norm_page:
-                    single_drop_match = tokens[i]
-                    break
-        if single_drop_match is not None:
-            # Localize the matched window for the report
-            candidate = " ".join(t for t in tokens if t != single_drop_match)
-            idx = norm_page.find(candidate)
-            window = norm_page[max(0, idx - 10):idx + len(candidate) + 30]
-            flagged.append((
-                bibkey,
-                f"DROP-WORD: registry has extra {single_drop_match!r} not in PDF — title={title!r}",
-                window,
-            ))
-            continue
-
-        # Tertiary signal: check if PDF has an extra word the registry lacks.
-        # If we can find every registry token in order in a 200-char window
-        # of the page, but the title isn't a clean substring, flag for review.
-        # Otherwise, the title may simply not be on page 1 (e.g., journal
-        # metadata pages) — defer to manual audit.
-        # For brevity, just flag with a low-priority "title-not-on-page1" note.
-        flagged.append((
-            bibkey,
-            f"NOT-FOUND: registry title not a substring of page-1 — title={title!r}",
-            norm_page[:120],
-        ))
-
-    # Partition flags: DROP-WORD flags are the high-confidence drift class
-    # (the BLOCKER pattern this check targets). NOT-FOUND flags often
-    # indicate that the title isn't on page 1 of the PDF (e.g., the cache
-    # is a journal title page, a chapter excerpt, or has heavy metadata
-    # before the title) — these are advisory only.
-    drop_word_flags = [(k, m, w) for (k, m, w) in flagged if m.startswith("DROP-WORD")]
-    not_found_flags = [(k, m, w) for (k, m, w) in flagged if m.startswith("NOT-FOUND")]
-    n_drop_word = len(drop_word_flags)
-    n_not_found = len(not_found_flags)
-    n_extract_failed = len(extract_failed)
-
-    # In strict mode, both drift classes fail; in default mode, only
-    # DROP-WORD flags fail (high-confidence BLOCKER pattern), NOT-FOUND
-    # is advisory only.
-    summary_passed = STRICT_MODE is False or (n_drop_word == 0 and n_not_found == 0)
-    if not STRICT_MODE:
-        summary_passed = True  # Always pass in default mode
-
-    details.append(Detail(
-        "summary",
-        summary_passed,
-        f"checked {checked} PDF caches — "
-        f"{n_drop_word} DROP-WORD drift flag(s) / "
-        f"{n_not_found} NOT-FOUND advisory flag(s) / "
-        f"{n_extract_failed} extract-failure(s) / "
-        f"skipped: {skipped_inprep} inprep, {skipped_textbook} textbook, "
-        f"{skipped_no_pdf} non-pdf cache, {skipped_no_title} no-title, "
-        f"{skipped_missing_cache} cache-missing"
-        + (" (strict mode: drift flags promoted to FAIL)" if STRICT_MODE else ""),
-        warning=(n_drop_word > 0 or n_not_found > 0) and not STRICT_MODE,
-    ))
-
-    # DROP-WORD findings: high-confidence drift (the BLOCKER class)
-    for bibkey, msg, pdf_excerpt in drop_word_flags[:20]:
-        details.append(Detail(
-            f"drop_word:{bibkey}",
-            STRICT_MODE is False,
-            f"{msg} — pdf-page1≈{pdf_excerpt!r}",
-            warning=not STRICT_MODE,
-        ))
-    if len(drop_word_flags) > 20:
-        details.append(Detail(
-            "drop_word:overflow",
-            True,
-            f"({len(drop_word_flags) - 20} more DROP-WORD flags omitted)",
-            warning=True,
-        ))
-
-    # NOT-FOUND findings: advisory (title not on page 1; often false-positive
-    # for cached PDFs whose page-1 is a journal cover or chapter intro).
-    # Show only first 10 in default output.
-    for bibkey, msg, pdf_excerpt in not_found_flags[:10]:
-        details.append(Detail(
-            f"not_found:{bibkey}",
-            True,  # advisory only
-            f"{msg} (advisory — verify manually)",
-            warning=True,
-        ))
-    if len(not_found_flags) > 10:
-        details.append(Detail(
-            "not_found:overflow",
-            True,
-            f"({len(not_found_flags) - 10} more NOT-FOUND advisory flags omitted)",
-            warning=True,
-        ))
-
-    for bibkey, err in extract_failed[:10]:
-        details.append(Detail(
-            f"extract_failed:{bibkey}",
-            True,  # extract failures are advisory
-            f"pdfminer error: {err}",
-            warning=True,
-        ))
-
-    if n_drop_word == 0 and n_not_found == 0 and n_extract_failed == 0:
-        details.append(Detail(
-            "all_consistent",
-            True,
-            "Every checked registry title matches its PDF page-1 form",
-        ))
-
-    return CheckResult(
-        passed=summary_passed,
-        details=details,
-    )
-
-
-# ═══════════════════════════════════════════════════════════════════════
-# CHECK: Quantum-network substrate Python ↔ Lean cross-validation
-# ═══════════════════════════════════════════════════════════════════════
-
-@register_check("quantum_network",
-                "QN Python formulas satisfy the QuantumNetwork Lean theorem identities")
-def check_quantum_network() -> CheckResult:
-    """Cross-checks the `src/core/formulas.py` quantum-network mirror against the
-    closed-form identities/bounds proven in `lean/SKEFTHawking/QuantumNetwork/*.lean`
-    (Phases 6AA–6AD), and confirms the referenced Lean theorem names exist in that
-    subdirectory (CHECK 1 only globs the top-level package)."""
-    from src.core import formulas as F
-
-    details: List[Detail] = []
-    all_pass = True
-
-    def check(name: str, cond: bool, msg: str = ""):
-        nonlocal all_pass
-        details.append(Detail(name, cond, msg))
-        if not cond:
-            all_pass = False
-
-    # Werner swap multiplicative in the Werner parameter (wernerParam_swap)
-    F1, F2 = 0.83, 0.71
-    check("wernerParam_swap_multiplicative",
-          abs(F.werner_param(F.werner_swap_fidelity(F1, F2))
-              - F.werner_param(F1) * F.werner_param(F2)) < 1e-12)
-
-    # End-to-end one-more-link recurrence (endToEndFidelity_succ)
-    check("endToEndFidelity_succ",
-          all(abs(F.end_to_end_fidelity(0.9, k + 1)
-                  - F.werner_swap_fidelity(F.end_to_end_fidelity(0.9, k), 0.9)) < 1e-12
-              for k in range(6)))
-
-    # Envelope ∈ [1/4,1] (swapChain_fidelity_envelope)
-    check("swapChain_fidelity_envelope",
-          all(0.25 - 1e-12 <= F.end_to_end_fidelity(Fl, k) <= 1.0 + 1e-12
-              for Fl in (0.25, 0.5, 0.9, 1.0) for k in range(9)))
-
-    # BBPSSW strict increase on (1/2,1) (bbpsswRecurrence_gt)
-    check("bbpsswRecurrence_gt",
-          all(F.bbpssw_recurrence(Fl) > Fl for Fl in (0.51, 0.6, 0.75, 0.9, 0.99)))
-
-    # DEJMPS phase-flip-only increase + verified single-step decrease witness
-    check("dejmps_increase_phaseFlipOnly",
-          all(F.dejmps_out_a(A, (1 - A) / 2, (1 - A) / 2, 0.0) > A for A in (0.55, 0.7, 0.9)))
-    check("dejmps_single_step_can_decrease",
-          abs(F.dejmps_out_a(0.6, 0, 0, 0.4) - 13 / 25) < 1e-12
-          and F.dejmps_out_a(0.6, 0, 0, 0.4) < 0.6)
-
-    # Fortescue–Lo finite-round yield (fortescueLoYield_gt_two_thirds, _lt_one)
-    check("fortescueLoYield_gt_two_thirds",
-          all(2 / 3 < F.fortescue_lo_yield(D) < 1.0 for D in (3, 5, 12)))
-
-    # BB84 crossover proven, not hardcoded (bb84_crossover_exists, strictAntiOn)
-    check("bb84KeyRate_zero", abs(F.bb84_key_rate(0.0) - 1.0) < 1e-12)
-    check("bb84_crossover_sign_change",
-          F.bb84_key_rate(0.10) > 0.0 and F.bb84_key_rate(0.12) < 0.0)
-
-    # H₂(1/3) < 1 (w3_asymptotic_specified_lt_one)
-    check("w3_asymptotic_specified_lt_one", 0.0 < F.bin_entropy_bit(1 / 3) < 1.0)
-
-    # Horodecki teleportation (teleportAvgFidelity_horodecki, teleport_beats_classical_iff)
-    check("teleport_horodecki_formula",
-          all(abs(F.teleport_avg_fidelity(Fl) - (2 * Fl + 1) / 3) < 1e-12
-              for Fl in (0.5, 0.7, 1.0)))
-    check("teleport_beats_classical_iff",
-          F.teleport_avg_fidelity(0.6) > 2 / 3 and F.teleport_avg_fidelity(0.4) < 2 / 3)
-    check("haarPauliConstant_eq_third", abs(F.HAAR_PAULI_CONSTANT - 1 / 3) < 1e-15)
-
-    # Tier-1 anchors (bsmSuccessProb_*, linkRate_*)
-    check("bsmSuccessProb_bounds",
-          F.bsm_success_prob(2) == 0.5 and F.bsm_success_prob(4) == 1.0)
-    check("linkRate_monotonicity",
-          F.link_rate(1000, 2e8, 0.5) > F.link_rate(1000, 2e8, 0.9)
-          and F.link_rate(2000, 2e8, 0.5) > F.link_rate(1000, 2e8, 0.5))
-
-    # Referenced QN Lean theorem names exist in the QuantumNetwork subdirectory
-    qn_dir = Path(__file__).parent.parent / "lean" / "SKEFTHawking" / "QuantumNetwork"
-    expected = [
-        "wernerParam_swap", "endToEndFidelity_succ", "swapChain_fidelity_envelope",
-        "bbpsswRecurrence_gt", "dejmps_increase_phaseFlipOnly", "dejmps_single_step_can_decrease",
-        "fortescueLoYield_gt_two_thirds", "bb84_crossover_exists",
-        "teleportAvgFidelity_horodecki_unconditional", "haarPauliZSqAverage_eq",
-        "bsmSuccessProb_le_half_of_linearOptics", "linkRate_antitone_success",
-    ]
-    if qn_dir.exists():
-        names = set()
-        for lf in qn_dir.glob("*.lean"):
-            for line in lf.read_text().splitlines():
-                s = line.strip()
-                if s.startswith("theorem ") or s.startswith("lemma "):
-                    names.add(s.split()[1].split("(")[0].split(":")[0].strip())
-        missing = [t for t in expected if t not in names]
-        check("qn_lean_theorems_exist", not missing,
-              f"missing: {missing}" if missing else f"{len(expected)} QN theorems found")
-    else:
-        check("qn_lean_theorems_exist", False, "QuantumNetwork dir not found")
-
-    return CheckResult(passed=all_pass, details=details)
-
-
-# ═══════════════════════════════════════════════════════════════════════
-# Shared helpers for the prose-consistency checks (CHECK 24–26)
-# (Stage 14 follow-through from the 2026-06-05 external-review remediation;
-#  record: temporary/working-docs/reviews/papers/2026-06-05-Perplexity/
-#  REMEDIATION_TRIAGE_2026-06-10.md, Wave-5 process items a/b/c.)
-# ═══════════════════════════════════════════════════════════════════════
+# ⚠️ This header read "Shared helpers for the prose-consistency checks (CHECK 24–26)"
+# until 2026-08-04 (audit finding QI-26b). Those helpers moved to
+# `validation/checks/papers_prose.py` and `prose_lean_refs.py` in Phase 2; what
+# remains under it is the BUNDLE_CODES re-export, which is unrelated.
 
 #: Bundle codes per docs/PAPER_STRATEGY.md, from THE roster source of truth
 #: (scripts/bundle_registry.py). Re-exported under the historical name because
@@ -6037,1629 +576,169 @@ BUNDLE_CODES = _REGISTRY_BUNDLE_CODES
 
 
 # ═══════════════════════════════════════════════════════════════════════
-# Bundle-roster single-source-of-truth gate
+# Check modules — imported for their registration side-effect (ADR-009 Phase 2)
 # ═══════════════════════════════════════════════════════════════════════
-
-#: Modules that must derive their bundle roster from `bundle_registry`, and the
-#: bundle-keyed attribute names to compare against it. Adding a consumer here
-#: is how you put it under the gate.
-_ROSTER_CONSUMERS: tuple[tuple[str, tuple[str, ...]], ...] = (
-    ("sentence_state", ("_VALID_BUNDLE_TARGETS",)),
-    ("validate", ("BUNDLE_CODES",)),
-    ("bundle_readiness", ("_BUNDLE_ORDER", "_TIER_OF")),
-    ("review_runner", ("TIER_OF",)),
-    ("bundle_source_manifest", ("_TIER_OF", "_BUNDLE_TITLES",
-                               "_BUNDLE_TARGET_JOURNAL", "_BUNDLE_SUBPHASE")),
-    ("datastar_bundles", ("_TIER_OF", "_BUNDLE_TITLES")),
-    ("aristotle_usage_by_bundle", ("ALL_BUNDLES",)),
-)
-
-#: Files allowed to contain a literal bundle roster: the registry itself (the
-#: one legitimate home) and the migration shim that reads historical rosters.
-_ROSTER_LITERAL_ALLOWLIST = frozenset({"bundle_registry.py"})
-
-#: A literal collection holding at least this many distinct bundle codes is a
-#: roster, not a coincidence. The smallest real roster slice that could appear
-#: innocently is a tier (Tier 1 has 12 members); 6 is comfortably below every
-#: hand-rolled roster seen on 2026-07-30 and above any incidental grouping.
-_ROSTER_LITERAL_THRESHOLD = 6
-
-
-@register_check(
-    "bundle_registry_consistency",
-    "Publication-bundle roster has ONE source of truth "
-    "(scripts/bundle_registry.py) that every consumer derives from")
-def check_bundle_registry_consistency() -> CheckResult:
-    """Gate the publication-bundle roster against re-fragmentation.
-
-    Before 2026-07-30 the roster was hardcoded in **seven** places. The D11/D12
-    first lift patched each by hand, and every omission had failed *silently
-    and differently* — `validate.py` skipped D10 in the one check that catches
-    Lean theorem-name drift in prose; `bundle_readiness.py` rendered 19 of 21
-    bundles while looking complete; `aristotle_usage_by_bundle.py` reported a
-    complete-looking `n/len(ALL_BUNDLES)` over a roster that stopped at D9. Only
-    `review_runner.py` failed loudly (`KeyError('D10')`), and that one crash
-    took down the Stage-13 prep-brief entry point for every bundle at once.
-
-    Three independent legs, because "they all import the registry" is only
-    true until someone writes a new dict:
-
-    A. **Documentary agreement** — the registry's codes and tiers must match
-       `docs/PAPER_STRATEGY.md` §6, the human-authoritative roster. This is the
-       leg with teeth for the actual failure mode: a bundle authorized in the
-       strategy doc but never registered. (Only code and tier are compared —
-       the table's titles are abbreviated for width and its target column
-       collapses the registry's ``|``-separated journal alternatives, since a
-       literal ``|`` would break the markdown cell.)
-
-    B. **Consumer agreement** — every module in `_ROSTER_CONSUMERS` exposes
-       bundle-keyed attributes whose key sets equal the registry's exactly.
-       Catches a consumer that drifts by filtering or extending the roster.
-
-    C. **No re-hardcoding** — an AST walk over `scripts/*.py` flags any literal
-       dict/list/tuple/set holding ≥6 distinct bundle codes outside the
-       registry. This is the leg that stops the *next* authorized bundle from
-       regressing this: leg B only sees maps that already exist, but leg C sees
-       a brand-new hand-rolled roster the moment it is written. AST-based, so
-       prose in comments and docstrings never trips it.
-    """
-    details: List[Detail] = []
-    all_pass = True
-
-    def check(name: str, passed: bool, msg: str, warning: bool = False) -> None:
-        nonlocal all_pass
-        details.append(Detail(name, passed, msg, warning=warning))
-        if not passed and not warning:
-            all_pass = False
-
-    import bundle_registry as registry
-
-    ref_codes = set(registry.BUNDLE_CODES)
-
-    # ── Leg A: registry ↔ PAPER_STRATEGY.md §6 ──────────────────────────
-    try:
-        strategy = registry.parse_strategy_roster()
-    except (OSError, ValueError) as exc:
-        check("strategy_doc_parses", False, f"PAPER_STRATEGY.md §6: {exc}")
-        strategy = None
-
-    if strategy is not None:
-        unregistered = sorted(set(strategy) - ref_codes)   # authorized, not registered
-        unauthorized = sorted(ref_codes - set(strategy))   # registered, not in the doc
-        check(
-            "strategy_roster_matches", not unregistered and not unauthorized,
-            "registry codes == PAPER_STRATEGY.md §6 "
-            f"({len(ref_codes)} bundles)"
-            if not unregistered and not unauthorized else
-            "; ".join(filter(None, [
-                f"authorized in PAPER_STRATEGY.md §6 but MISSING from "
-                f"scripts/bundle_registry.py: {unregistered}"
-                if unregistered else "",
-                f"in scripts/bundle_registry.py but absent from "
-                f"PAPER_STRATEGY.md §6: {unauthorized}" if unauthorized else "",
-            ])),
-        )
-        tier_drift = {
-            c: (t, registry.TIER_OF[c])
-            for c, t in strategy.items()
-            if c in registry.TIER_OF and registry.TIER_OF[c] != t
-        }
-        check(
-            "strategy_tiers_match", not tier_drift,
-            f"all {len(strategy)} tiers agree with PAPER_STRATEGY.md §6"
-            if not tier_drift else
-            f"tier drift (doc, registry): {tier_drift}",
-        )
-
-    # ── Leg B: every consumer's key set == the registry's ────────────────
-    if str(SCRIPT_DIR) not in sys.path:
-        sys.path.insert(0, str(SCRIPT_DIR))
-
-    n_attrs = 0
-    leg_b_ok = True
-    for mod_name, attrs in _ROSTER_CONSUMERS:
-        try:
-            mod = importlib.import_module(mod_name)
-        except Exception as exc:  # noqa: BLE001 — any import failure is a fail
-            leg_b_ok = False
-            check(f"consumer_imports:{mod_name}", False,
-                  f"cannot import scripts/{mod_name}.py: {exc}")
-            continue
-        for attr in attrs:
-            obj = getattr(mod, attr, None)
-            if obj is None:
-                leg_b_ok = False
-                check(f"consumer_attr:{mod_name}.{attr}", False,
-                      f"{mod_name}.{attr} is gone — update _ROSTER_CONSUMERS "
-                      f"if it was intentionally renamed")
-                continue
-            keys = set(obj)
-            n_attrs += 1
-            if keys != ref_codes:
-                leg_b_ok = False
-                check(
-                    f"consumer_roster:{mod_name}.{attr}", False,
-                    f"{mod_name}.{attr} disagrees with bundle_registry — "
-                    f"missing {sorted(ref_codes - keys)}, "
-                    f"extra {sorted(keys - ref_codes)}",
-                )
-    if leg_b_ok:
-        check("consumer_rosters_agree", True,
-              f"{n_attrs} bundle-keyed attributes across "
-              f"{len(_ROSTER_CONSUMERS)} modules all match the registry "
-              f"({len(ref_codes)} bundles)")
-
-    # ── Leg C: no re-hardcoded roster literals under scripts/ ────────────
-    offenders: List[str] = []
-    n_scanned = 0
-    for py in sorted(SCRIPT_DIR.glob("*.py")):
-        if py.name in _ROSTER_LITERAL_ALLOWLIST:
-            continue
-        try:
-            tree = ast.parse(py.read_text(encoding="utf-8"), filename=str(py))
-        except (OSError, SyntaxError) as exc:
-            check(f"scan_parses:{py.name}", True, f"unparsed: {exc}",
-                  warning=True)
-            continue
-        n_scanned += 1
-        for node in ast.walk(tree):
-            if isinstance(node, ast.Dict):
-                elements = node.keys
-            elif isinstance(node, (ast.List, ast.Tuple, ast.Set)):
-                elements = node.elts
-            else:
-                continue
-            found = {
-                e.value for e in elements
-                if isinstance(e, ast.Constant) and e.value in ref_codes
-            }
-            if len(found) >= _ROSTER_LITERAL_THRESHOLD:
-                offenders.append(
-                    f"{py.name}:{node.lineno} ({len(found)} bundle codes)")
-
-    check(
-        "no_rehardcoded_rosters", not offenders,
-        f"{n_scanned} scripts/*.py scanned — no literal bundle roster outside "
-        f"scripts/bundle_registry.py"
-        if not offenders else
-        "literal bundle rosters found outside scripts/bundle_registry.py "
-        f"(import from it instead): {offenders}",
-    )
-
-    return CheckResult(passed=all_pass, details=details)
-
-
-# Fatal-error markers in a pdflatex .log. A `! ` line is TeX's universal
-# error sentinel (e.g. "! Undefined control sequence", "! Misplaced
-# alignment tab character &", "! LaTeX Error: ..."). Undefined-reference /
-# undefined-citation / overfull-box warnings are NOT fatal and are ignored.
-_LATEX_FATAL_RE = re.compile(r"^! ", re.MULTILINE)
-
-
-@register_check("paper_latex_compiles",
-                "Bundle drafts compile under pdflatex (advisory; slow — "
-                "pass --force-latex or --check paper_latex_compiles)")
-def check_paper_latex_compiles() -> CheckResult:
-    """Advisory, slow-gated: actually compile each bundle draft with
-    ``pdflatex`` and flag fatal (``! ``-marked) breakage.
-
-    Why this exists: the 2026-06-10 paper15 incident — 108 fatal LaTeX
-    errors injected by unescaped ``&``/``_`` and an executed ``\\input{}``
-    in autogenerated tables — was invisible to *every* structural check.
-    Only a real compile catches a draft that no longer builds. The fix
-    (table-generator escaping in ``scripts/paper_tables/sources.py``) is
-    durable, but a compile gate prevents the next such regression.
-
-    Posture:
-      - **Slow-gated**: SKIPPED in the default full run (pdflatex × all
-        bundles is minutes). Runs only when ``--force-latex`` is passed or
-        ``paper_latex_compiles`` is the explicitly selected ``--check``.
-      - **Advisory**: always ``passed=True``. A failing compile surfaces as
-        a ⚠ WARN, never a hard suite failure — transient toolchain/package
-        gaps must not block development. A persistent WARN is the signal to
-        investigate.
-
-    One non-stop pass per draft (enough to surface fatal breakage; full
-    reference/citation resolution is out of scope for a build gate).
-    Compiles with the paper dir as cwd (so relative ``\\input``/
-    ``\\includegraphics`` resolve) and ``-output-directory`` pointed at a
-    throwaway temp dir (so no ``.aux``/``.log``/``.pdf`` lands in the repo).
-    """
-    details: List[Detail] = []
-
-    if not FORCE_LATEX:
-        return CheckResult(passed=True, details=[Detail(
-            "skipped", True,
-            "SKIPPED (slow) — pass --force-latex or "
-            "--check paper_latex_compiles to compile all bundle drafts")])
-
-    pdflatex = shutil.which("pdflatex")
-    if pdflatex is None:
-        return CheckResult(passed=True, details=[Detail(
-            "toolchain", True,
-            "SKIPPED — pdflatex not on PATH (install a TeX distribution)")])
-
-    n_ok = 0
-    n_missing = 0
-    failed: List[tuple[str, int, str]] = []  # (code, n_fatal, first_error)
-
-    for code in BUNDLE_CODES:
-        tex = PAPERS_DIR / code / "paper_draft.tex"
-        if not tex.is_file():
-            n_missing += 1
-            continue
-        paper_dir = tex.parent
-        with tempfile.TemporaryDirectory(prefix=f"latexchk_{code}_") as out_dir:
-            try:
-                # capture_output without text= → bytes (unused; pdflatex logs
-                # often carry non-UTF-8 bytes). We parse the .log file instead.
-                subprocess.run(
-                    [pdflatex, "-interaction=nonstopmode", "-halt-on-error",
-                     "-no-shell-escape", f"-output-directory={out_dir}",
-                     "paper_draft.tex"],
-                    cwd=paper_dir, capture_output=True, timeout=180,
-                )
-            except subprocess.TimeoutExpired:
-                failed.append((code, -1, "compile timed out (>180s)"))
-                continue
-            except Exception as exc:  # noqa: BLE001 — advisory: never hard-error
-                failed.append((code, -1, f"compile invocation failed: {exc}"))
-                continue
-            log_path = Path(out_dir) / "paper_draft.log"
-            log = log_path.read_text(errors="replace") if log_path.is_file() else ""
-            fatal = _LATEX_FATAL_RE.findall(log)
-            if fatal:
-                # Capture the first "! ..." error line for the report.
-                m = re.search(r"^(! .*)$", log, re.MULTILINE)
-                first = m.group(1).strip()[:90] if m else "(see log)"
-                failed.append((code, len(fatal), first))
-            else:
-                n_ok += 1
-
-    all_pass = True
-    details.append(Detail(
-        "summary",
-        len(failed) == 0,
-        f"{n_ok}/{n_ok + len(failed)} bundle drafts compiled clean "
-        f"({n_missing} missing draft(s) skipped) — {len(failed)} with fatal errors"
-    ))
-    for code, n_fatal, first in failed:
-        all_pass = False
-        cnt = "timeout" if n_fatal < 0 else f"{n_fatal} fatal"
-        details.append(Detail(
-            f"compile:{code}", False,
-            f"{code}: {cnt} — first: {first}", warning=True))
-
-    # Advisory: never block the suite on a compile WARN.
-    return CheckResult(passed=True, details=details)
-
-
-def _strip_tex_comments(text: str) -> str:
-    """Blank out LaTeX comments (unescaped ``%`` to end-of-line) with
-    spaces, preserving every character offset and line break so that
-    match offsets in the stripped text map 1:1 onto the original file.
-    """
-    out = []
-    for line in text.split("\n"):
-        idx = None
-        i = 0
-        while i < len(line):
-            if line[i] == "%":
-                # escaped \% is content, not a comment
-                n_bs = 0
-                j = i - 1
-                while j >= 0 and line[j] == "\\":
-                    n_bs += 1
-                    j -= 1
-                if n_bs % 2 == 0:
-                    idx = i
-                    break
-            i += 1
-        if idx is None:
-            out.append(line)
-        else:
-            out.append(line[:idx] + " " * (len(line) - idx))
-    return "\n".join(out)
-
-
-def _line_of(text: str, offset: int) -> int:
-    """1-based line number of a character offset."""
-    return text.count("\n", 0, offset) + 1
-
-
-# ═══════════════════════════════════════════════════════════════════════
-# CHECK 24: Axiom-count ↔ paper-prose consistency
-# ═══════════════════════════════════════════════════════════════════════
-
-# Present-tense single-axiom claims ("one axiom", "a single axiom",
-# "1~axiom", "one tracked axiom", ...). `~` is the LaTeX non-breaking
-# space; word separators may also be newlines.
-_AXIOM_SEP = r"(?:\s|~)+"
-_AXIOM_SINGULAR_RE = re.compile(
-    r"\b(?:one|single|sole|lone|1)" + _AXIOM_SEP
-    + r"(?:(?:true|tracked|remaining|residual|project-local|project|"
-    + r"genuine|physical|global)" + _AXIOM_SEP + r")?"
-    + r"axiom\b(?!-)",
-    re.IGNORECASE,
-)
-# Present-tense naming of the retired axiom ("the axiom \texttt{gapped...").
-_AXIOM_GAPPED_PRESENT_RE = re.compile(
-    r"the" + _AXIOM_SEP + r"axiom" + _AXIOM_SEP + r"\\texttt\{gapped",
-    re.IGNORECASE,
-)
-# Numeric plural claims ("0 axioms", "3 axioms", "zero axioms"). The
-# qualifier group is captured so per-wave delta claims ("zero NEW
-# axioms") can be excluded from the total-count comparison.
-_AXIOM_PLURAL_RE = re.compile(
-    r"\b(zero|\d+)" + _AXIOM_SEP
-    + r"(?:(new|additional|extra|tracked|project-local|true|active|"
-    + r"declared)" + _AXIOM_SEP + r")?"
-    + r"axioms\b",
-    re.IGNORECASE,
-)
-# Historical-attribution context tokens: a single-axiom claim sitting
-# within ±120 chars of one of these is a legitimate retrospective
-# (D2/F-style "formerly axiom gapped_interface_axiom" usage).
-_AXIOM_HISTORICAL_RE = re.compile(
-    r"formerly|converted|retired|was\s+an\s+axiom|2026-05-19",
-    re.IGNORECASE,
-)
-_AXIOM_HIST_WINDOW = 120
-# Narrow immediately-preceding negation guard ("no single axiom ...").
-_AXIOM_NEG_BEFORE_RE = re.compile(r"\b(?:no|without)\b[^.\n]{0,15}$",
-                                  re.IGNORECASE)
-
-
-def _axiom_prose_findings(text: str, axiom_count: int) -> list:
-    """Pure scanning core for CHECK 24 (unit-testable).
-
-    Returns a list of dicts: ``{kind, line, excerpt, fail}`` where
-    ``kind`` is one of ``singular`` / ``gapped_present`` /
-    ``plural_mismatch``. ``fail=True`` only for the hard-failure class:
-    a non-historical single-axiom claim while the live axiom count is 0.
-    LaTeX comments are blanked before scanning (offsets preserved).
-    """
-    stripped = _strip_tex_comments(text)
-    findings = []
-
-    def _is_historical(start: int, end: int) -> bool:
-        lo = max(0, start - _AXIOM_HIST_WINDOW)
-        hi = min(len(stripped), end + _AXIOM_HIST_WINDOW)
-        return bool(_AXIOM_HISTORICAL_RE.search(stripped[lo:hi]))
-
-    for m in _AXIOM_SINGULAR_RE.finditer(stripped):
-        if _is_historical(m.start(), m.end()):
-            continue
-        if _AXIOM_NEG_BEFORE_RE.search(stripped[max(0, m.start() - 18):m.start()]):
-            continue
-        findings.append({
-            "kind": "singular",
-            "line": _line_of(stripped, m.start()),
-            "excerpt": " ".join(m.group(0).split()),
-            # claim value is 1; hard-fail iff the live count is 0,
-            # advisory mismatch iff the live count is some other N ≠ 1.
-            "fail": axiom_count == 0,
-            "mismatch": axiom_count != 1,
-        })
-
-    for m in _AXIOM_GAPPED_PRESENT_RE.finditer(stripped):
-        if _is_historical(m.start(), m.end()):
-            continue
-        findings.append({
-            "kind": "gapped_present",
-            "line": _line_of(stripped, m.start()),
-            "excerpt": " ".join(m.group(0).split()),
-            "fail": axiom_count == 0,
-            "mismatch": True,
-        })
-
-    for m in _AXIOM_PLURAL_RE.finditer(stripped):
-        qualifier = (m.group(2) or "").lower()
-        if qualifier in ("new", "additional", "extra"):
-            continue  # per-wave delta claim, not a total-count claim
-        value = 0 if m.group(1).lower() == "zero" else int(m.group(1))
-        if value == axiom_count:
-            continue
-        if _is_historical(m.start(), m.end()):
-            continue
-        findings.append({
-            "kind": "plural_mismatch",
-            "line": _line_of(stripped, m.start()),
-            "excerpt": " ".join(m.group(0).split()),
-            "fail": False,  # numeric plural drift is advisory-only
-            "mismatch": True,
-        })
-
-    return findings
-
-
-@register_check("axiom_count_prose_consistency",
-                "Paper prose axiom-count claims agree with docs/counts.json")
-def check_axiom_count_prose_consistency() -> CheckResult:
-    """Prevent the F-flagship failure class from the 2026-06-05 external
-    review: paper prose claiming "one (true) axiom" while
-    ``docs/counts.json`` reports 0 project-local axioms (the
-    ``gapped_interface_axiom`` was retired into the tracked Prop
-    ``TPFConjecture`` on 2026-05-19; see Pipeline Invariant #15).
-
-    Scans every ``papers/*/paper_draft.tex`` (bundle drafts AND legacy
-    per-paper drafts). Failure classes:
-
-    - **FAIL** — live axiom count is 0 and a present-tense single-axiom
-      claim ("one axiom", "a single axiom", "1~axiom", "one tracked
-      axiom", "the axiom \\texttt{gapped...") appears outside a
-      historical-attribution context (±120 chars of
-      formerly/converted/retired/"was an axiom"/2026-05-19 — the
-      D2/F-style "formerly axiom gapped_interface_axiom" usage is
-      legitimate and never flags).
-    - **WARN (advisory)** — a numeric plural claim ("N axioms", digit or
-      "zero" literal) disagrees with the live count. Word-numeral
-      plurals ("three axioms" — the Son-action physics-axioms idiom in
-      D1/F) and per-wave delta claims ("zero NEW axioms") are excluded
-      by design. The ``\\axiomcount{}`` macro is the preferred
-      mechanism and never flags (it carries no prose literal).
-
-    LaTeX comments are stripped before scanning. Calibrated live
-    2026-06-10: the sweep surfaced 16 genuinely-missed stale sites
-    across D5 + 10 legacy drafts (paper4/6/7/9/11/12/17/18/20/21/26),
-    all fixed in the same commit that ships this check.
-    """
-    counts_path = PROJECT_ROOT / "docs" / "counts.json"
-    if not counts_path.exists():
-        return CheckResult(passed=False,
-                           error=f"missing {counts_path}; run scripts/update_counts.py")
-    try:
-        axiom_count = int(json.loads(counts_path.read_text())["lean"]["axioms"])
-    except (json.JSONDecodeError, KeyError, TypeError, ValueError) as exc:
-        return CheckResult(passed=False,
-                           error=f"counts.json unreadable / missing lean.axioms: {exc}")
-
-    details: List[Detail] = []
-    n_fail = 0
-    n_warn = 0
-    n_scanned = 0
-
-    for tex in sorted(PAPERS_DIR.glob("*/paper_draft.tex")):
-        n_scanned += 1
-        try:
-            text = tex.read_text()
-        except OSError as exc:
-            details.append(Detail(f"unreadable:{tex.parent.name}", False, str(exc)))
-            n_fail += 1
-            continue
-        for f in _axiom_prose_findings(text, axiom_count):
-            rel = f"papers/{tex.parent.name}/paper_draft.tex:{f['line']}"
-            if f["fail"]:
-                n_fail += 1
-                details.append(Detail(
-                    f"stale_axiom_claim:{tex.parent.name}:{f['line']}",
-                    False,
-                    f"{rel} — present-tense '{f['excerpt']}' claim but "
-                    f"counts.json reports {axiom_count} project-local axioms "
-                    f"(non-historical context)",
-                ))
-            elif f["mismatch"]:
-                n_warn += 1
-                details.append(Detail(
-                    f"axiom_count_mismatch:{tex.parent.name}:{f['line']}",
-                    True,
-                    f"{rel} — '{f['excerpt']}' disagrees with counts.json "
-                    f"axiom count {axiom_count} (advisory)",
-                    warning=True,
-                ))
-
-    details.insert(0, Detail(
-        "summary",
-        n_fail == 0,
-        f"axiom count {axiom_count} (docs/counts.json) vs {n_scanned} "
-        f"paper drafts — {n_fail} stale single-axiom FAIL(s) / "
-        f"{n_warn} advisory mismatch(es)",
-    ))
-    if n_fail == 0 and n_warn == 0:
-        details.append(Detail(
-            "all_consistent", True,
-            "No non-historical axiom-count drift in any paper draft",
-        ))
-    return CheckResult(passed=(n_fail == 0), details=details)
-
-
-# ═══════════════════════════════════════════════════════════════════════
-# CHECK 25: Prose Lean-theorem reference coverage (bundle drafts)
-# (Implements the structural prevention proposed by QI item
-#  qi-leantheoremdrift as `bundle_lean_refs_resolve`.)
-# ═══════════════════════════════════════════════════════════════════════
-
-_PROSE_TEXTTT_RE = re.compile(r"\\texttt\{([^{}]+)\}")
-_PROSE_UNESCAPE_RE = re.compile(r"\\([_\\&%$#{}~^])")
-_PROSE_IDENT_RE = re.compile(
-    r"^[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)*$")
-_PROSE_FILE_SUFFIXES = (
-    ".py", ".md", ".json", ".tex", ".lean", ".ipynb", ".bib", ".log",
-    ".jsonl", ".pdf", ".png", ".toml", ".yaml", ".yml", ".txt", ".csv",
-    ".sh", ".olean", ".aux", ".bbl",
-)
-# Memory-note / working-doc tags carry trailing _YYYY_MM_DD dates
-# (e.g. project_phase6q_complete_2026_05_23 quoted in D5 prose).
-_PROSE_DOC_TAG_RE = re.compile(r"_(?:19|20)\d{2}_\d{2}_\d{2}$")
-# Mathlib namespaces commonly cited in bundle prose. These resolve in
-# Mathlib, not in lean_deps.json (which indexes only declarations
-# elaborated inside SKEFTHawking modules), so they are skipped.
-_PROSE_MATHLIB_PREFIXES = (
-    "Mathlib.", "Real.", "Nat.", "Int.", "Rat.", "Classical.", "Quot.",
-    "Complex.", "Finset.", "Fin.", "Set.", "List.", "Matrix.",
-    "Polynomial.", "MeasureTheory.", "CyclotomicField.", "FiberBundle.",
-    "Probability.", "LinearAlgebra.", "Function.", "Equiv.",
-    "LinearMap.", "TensorProduct.", "Algebra.", "CategoryTheory.",
-    "Filter.", "Topology.", "AddCircle.", "RingQuot.", "Module.",
-    "Submodule.", "Subgroup.", "MonoidHom.", "ContinuousMap.",
-    "CartanMatrix.", "IsCyclotomicExtension.",
-)
-# Empirically-built allowlist (calibrated 2026-06-10 on the 18 bundle
-# drafts; iterate when calibration surfaces a new non-Lean idiom class):
-#   - bare Mathlib lemmas / tactic names quoted in methodology prose
-#   - validate.py / infrastructure identifiers described in I1
-#   - Aristotle difficulty-tier enum labels (I1)
-#   - the retired-axiom name: every remaining mention is historical /
-#     a Python AXIOM_METADATA key; prose staleness around it is owned
-#     by CHECK 24 (axiom_count_prose_consistency).
-_PROSE_REF_ALLOWLIST = {
-    # tactics / Mathlib bare lemmas
-    "norm_num", "native_decide", "linear_combination", "fun_prop",
-    "mul_nonneg", "mul_self_nonneg", "sq_nonneg", "le_refl",
-    "continuous_const", "zeta_spec", "ring_nf", "simp_rw",
-    "exact_mod_cast", "decide_eq_true", "by_contra", "push_neg",
-    "field_simp",
-    # project infrastructure identifiers (validate.py checks, cluster /
-    # sentence-state schema fields) described in the I1 infrastructure
-    # paper and the F flagship process section
-    "bundle_consistency", "claim_cluster", "bundle_destination",
-    # Aristotle difficulty-tier enum labels (I1 registry description)
-    "very_hard",
-    # retired axiom name — historical mentions owned by CHECK 24
-    "gapped_interface_axiom",
-}
-# Disclaimer tokens: an unresolved reference within ±200 chars of one of
-# these is prose *about* a not-yet-shipped / renamed / removed
-# declaration, which is legitimate.
-_PROSE_DISCLAIMER_RE = re.compile(
-    r"in\s+flight|deferred|not\s+yet|planned|forthcoming|formerly|"
-    r"deprecated|renamed|retired|replaced|removed|commented-out",
-    re.IGNORECASE,
-)
-_PROSE_DISCLAIMER_WINDOW = 200
-# Narrow immediately-preceding negation ("there are no \texttt{X} ...").
-_PROSE_NEG_BEFORE_RE = re.compile(
-    r"\b(?:no|not|absent|without|lacks?)\b[^.]{0,30}$", re.IGNORECASE)
-
-
-def _prose_occurrence_disclaimed(source: str, offset: int) -> bool:
-    """True if the ``\\texttt{}`` occurrence at ``offset`` sits within
-    ±200 chars of a disclaimer token (in flight / deferred / planned /
-    formerly / renamed / retired / ...) or is immediately preceded by a
-    negation ("there are no \\texttt{X} or analogous ..."). Unit-testable
-    core of CHECK 25's exemption logic.
-    """
-    lo = max(0, offset - _PROSE_DISCLAIMER_WINDOW)
-    hi = min(len(source), offset + _PROSE_DISCLAIMER_WINDOW)
-    if _PROSE_DISCLAIMER_RE.search(source[lo:hi]):
-        return True
-    return bool(_PROSE_NEG_BEFORE_RE.search(source[max(0, offset - 40):offset]))
-
-# Per-instance waivers: (bundle, token) → reason. Each use is surfaced
-# prominently as a WARN detail. Keep this list short (≤5) — if it
-# grows, the candidate filter is too loose.
-_PROSE_REF_WAIVERS = {
-    ("I1", "gap_solution_bounded"):
-        "Deliberate historical reference: I1's gap-equation narrative "
-        "cites the FALSE folklore theorem disproved by an Aristotle "
-        "counterexample; it survives only as a commented-out stub at "
-        "TetradGapEquation.lean:307-321 (intentionally not a live "
-        "declaration). TODO: drop this waiver if the I1 narrative is "
-        "restructured to use the live gap_solution_monotone name only.",
-}
-
-
-def _extract_prose_lean_candidates(tex_source: str) -> list:
-    """Extract candidate Lean-identifier tokens from ``\\texttt{...}``
-    blocks (unit-testable core for CHECK 25).
-
-    Returns ``[(token, match_start_offset), ...]`` for tokens that pass
-    the candidate filter: identifier-shaped, contains ``_`` or ``.``,
-    no path separators or file suffixes, not ALL-CAPS (Python registry
-    constants), not an MCP tool name (``lean_*``), not a dated doc-tag,
-    length ≥ 4, no leading/trailing underscore.
-    """
-    out = []
-    for m in _PROSE_TEXTTT_RE.finditer(tex_source):
-        tok = _PROSE_UNESCAPE_RE.sub(r"\1", m.group(1)).strip()
-        if len(tok) < 4:
-            continue
-        if "_" not in tok and "." not in tok:
-            continue
-        if "/" in tok or "\\" in tok or any(c.isspace() for c in tok):
-            continue
-        if tok.endswith(_PROSE_FILE_SUFFIXES):
-            continue
-        if tok.startswith(("src.", "tests.", "scripts.", "docs.")):
-            continue
-        if tok.startswith("lean_"):  # lean-lsp MCP tool names (I3 §tooling)
-            continue
-        if tok.endswith("_") or tok.startswith("_"):
-            continue
-        if not _PROSE_IDENT_RE.match(tok):
-            continue
-        if tok.replace("_", "").replace(".", "").isupper():
-            continue  # CITATION_REGISTRY-style Python constants
-        if _PROSE_DOC_TAG_RE.search(tok):
-            continue  # memory-note / working-doc dated tags
-        out.append((tok, m.start()))
-    return out
-
-
-_LEAN_NAME_INDEX_CACHE: Optional[dict] = None
-
-
-def _load_lean_name_index() -> dict:
-    """Load (and cache) the Lean declaration-name index from
-    ``lean/lean_deps.json`` (declaration names + their `module` fields)
-    + module names from ``docs/counts.json`` + project Python registry
-    keys (PLACEHOLDER_THEOREMS, AXIOM_METADATA, HYPOTHESIS_REGISTRY,
-    ARISTOTLE_THEOREMS, PARAMETER_PROVENANCE, and the canonical
-    ``formulas.py`` public function names — prose legitimately
-    references entries of those canonical registries by key per
-    Pipeline Invariants #1/#2/#8).
-    """
-    global _LEAN_NAME_INDEX_CACHE
-    if _LEAN_NAME_INDEX_CACHE is not None:
-        return _LEAN_NAME_INDEX_CACHE
-
-    deps_path = PROJECT_ROOT / "lean" / "lean_deps.json"
-    entries = json.loads(deps_path.read_text())
-    names = set()
-    shorts = set()
-    dotted_suffixes = set()
-    short_to_modules: Dict[str, set] = {}
-    for e in entries:
-        n = e.get("name", "")
-        if not n:
-            continue
-        names.add(n)
-        segs = n.split(".")
-        shorts.add(segs[-1])
-        short_to_modules.setdefault(segs[-1], set()).add(e.get("module", ""))
-        for i in range(1, len(segs)):
-            dotted_suffixes.add(".".join(segs[i:]))
-
-    modules = set()
-    counts_path = PROJECT_ROOT / "docs" / "counts.json"
-    if counts_path.exists():
-        try:
-            modules = set(
-                json.loads(counts_path.read_text())["lean"]["module_names"])
-        except (json.JSONDecodeError, KeyError, TypeError):
-            modules = set()
-
-    registry_keys = set()
-    try:
-        from src.core import constants as _c
-        for reg_name in ("PLACEHOLDER_THEOREMS", "AXIOM_METADATA",
-                         "HYPOTHESIS_REGISTRY", "ARISTOTLE_THEOREMS"):
-            reg = getattr(_c, reg_name, None)
-            if isinstance(reg, dict):
-                registry_keys.update(reg.keys())
-            elif isinstance(reg, (list, set, tuple)):
-                registry_keys.update(reg)
-    except Exception:
-        pass  # registry resolution is a bonus source, never a blocker
-    try:
-        from src.core.provenance import PARAMETER_PROVENANCE
-        registry_keys.update(PARAMETER_PROVENANCE.keys())
-    except Exception:
-        pass
-    try:
-        from src.core import formulas as _f
-        registry_keys.update(
-            nm for nm in dir(_f)
-            if not nm.startswith("_") and callable(getattr(_f, nm)))
-    except Exception:
-        pass
-
-    _LEAN_NAME_INDEX_CACHE = {
-        "names": names,
-        "shorts": shorts,
-        "dotted_suffixes": dotted_suffixes,
-        "short_to_modules": short_to_modules,
-        "modules": modules,
-        "registry_keys": registry_keys,
-        "count": len(entries),
-    }
-    return _LEAN_NAME_INDEX_CACHE
-
-
-_LEAN_SOURCE_CACHE: Optional[str] = None
-
-
-def _lean_source_declares(short: str) -> bool:
-    """Secondary resolution source: does any ``lean/SKEFTHawking``
-    source file *declare* ``short`` (including ``private`` lemmas,
-    which ExtractDeps deliberately omits from lean_deps.json)?
-
-    Comments are stripped first so commented-out stubs (e.g. the
-    ``gap_solution_bounded`` folklore counterexample anchor in
-    TetradGapEquation.lean) do NOT resolve. Lazy + cached: the
-    concatenated comment-stripped source is built on first use only.
-    """
-    global _LEAN_SOURCE_CACHE
-    if _LEAN_SOURCE_CACHE is None:
-        chunks = []
-        for lf in sorted(LEAN_DIR.rglob("*.lean")):
-            try:
-                src = lf.read_text()
-            except OSError:
-                continue
-            src = re.sub(r"--[^\n]*", "", src)
-            prev = None
-            while prev != src:  # nested /- ... -/ block comments
-                prev = src
-                src = re.sub(r"/-(?:(?!/-|-/).)*?-/", "", src, flags=re.DOTALL)
-            chunks.append(src)
-        _LEAN_SOURCE_CACHE = "\n".join(chunks)
-    pat = (r"(?:theorem|lemma|def|abbrev|structure|class|instance|opaque)\s+"
-           + re.escape(short) + r"\b")
-    return re.search(pat, _LEAN_SOURCE_CACHE) is not None
-
-
-_PHYSLIB_SOURCE_CACHE: Optional[str] = None
-_PHYSLIB_DIR = PROJECT_ROOT / "lean" / ".lake" / "packages" / "Physlib"
-
-
-def _physlib_declares(short: str) -> bool:
-    """Tertiary resolution source: does the resolved **PhysLib** Lake
-    dependency declare ``short``?
-
-    PhysLib is a first-class dependency of this project (pinned in
-    ``lean/lakefile.toml``), and bundle prose legitimately names its
-    declarations — e.g. D10 cites ``MatrixMap.of_kraus_CP`` for the Choi
-    complete-positivity route, and the D11/D12 drafts lean on the PhysLib
-    Schur and POVM/hypothesis-testing substrates. Those names are real but
-    can never appear in ``lean_deps.json``, which carries *project*
-    declarations only, and they do not start with a Mathlib namespace
-    prefix — so without this tier every correct PhysLib reference is a
-    false FAIL. (That false positive was live on D10 the moment D10 entered
-    ``BUNDLE_CODES``, 2026-07-30.)
-
-    Same comment-stripping + lazy-cache discipline as
-    ``_lean_source_declares``. Returns False when the package is not
-    vendored (fresh clone before ``lake build``), which degrades to the
-    prior ABSENT behaviour rather than silently passing.
-    """
-    global _PHYSLIB_SOURCE_CACHE
-    if _PHYSLIB_SOURCE_CACHE is None:
-        if not _PHYSLIB_DIR.exists():
-            _PHYSLIB_SOURCE_CACHE = ""
-        else:
-            chunks = []
-            for lf in sorted(_PHYSLIB_DIR.rglob("*.lean")):
-                try:
-                    src = lf.read_text()
-                except OSError:
-                    continue
-                src = re.sub(r"--[^\n]*", "", src)
-                prev = None
-                while prev != src:
-                    prev = src
-                    src = re.sub(r"/-(?:(?!/-|-/).)*?-/", "", src, flags=re.DOTALL)
-                chunks.append(src)
-            _PHYSLIB_SOURCE_CACHE = "\n".join(chunks)
-    if not _PHYSLIB_SOURCE_CACHE:
-        return False
-    pat = (r"(?:theorem|lemma|def|abbrev|structure|class|instance|opaque)\s+"
-           + re.escape(short) + r"\b")
-    return re.search(pat, _PHYSLIB_SOURCE_CACHE) is not None
-
-
-def _resolve_prose_ref(token: str, index: dict) -> str:
-    """Resolve a candidate token against the Lean name index.
-
-    Returns one of:
-      'OK'       — exact / project-qualified suffix / verified
-                   ``<Module>.<thm>`` documentation idiom / module /
-                   Python-registry-key / canonical-formula match
-      'PRIVATE'  — declared in the Lean source but absent from
-                   lean_deps.json (``private`` declaration; OK)
-      'DRIFTED'  — dotted token whose last segment exists but in a
-                   module that does not match the written prefix
-                   (module-attribution drift; advisory)
-      'MATHLIB'  — known Mathlib namespace (skipped)
-      'PHYSLIB'  — declared in the resolved PhysLib Lake dependency
-                   (resolves upstream, not in lean_deps.json; skipped)
-      'ABSENT'   — no match anywhere
-    """
-    names = index["names"]
-    if token in names or token in index["dotted_suffixes"]:
-        return "OK"
-    if token in index["registry_keys"]:
-        return "OK"
-    modules = index["modules"]
-    if token in modules or f"SKEFTHawking.{token}" in modules:
-        return "OK"
-    if "." in token and any(m.startswith(token + ".") for m in modules):
-        return "OK"  # namespace prefix of a module family (e.g. SKEFTHawking.LDP)
-    if token.startswith(_PROSE_MATHLIB_PREFIXES):
-        return "MATHLIB"
-    short = token.rsplit(".", 1)[-1]
-    if short in index["shorts"]:
-        if "." not in token:
-            return "OK"
-        # Project documentation idiom `<Module>.<thm>`: the theorem is
-        # declared at (or near) top-level namespace inside the module
-        # FILE named `<Module>.lean`, so its qualified Lean name does
-        # not carry the module segment. Verify via the declaration's
-        # `module` field instead of its name.
-        head = token[: -(len(short) + 1)]
-        for mod in index["short_to_modules"].get(short, ()):
-            if (mod == head or mod == f"SKEFTHawking.{head}"
-                    or mod.endswith(f".{head}")):
-                return "OK"
-        return "DRIFTED"
-    if _lean_source_declares(short):
-        return "PRIVATE"
-    if _physlib_declares(short):
-        return "PHYSLIB"
-    return "ABSENT"
-
-
-@register_check("prose_theorem_reference_coverage",
-                "Bundle-draft \\texttt{} Lean references resolve in lean_deps.json")
-def check_prose_theorem_reference_coverage() -> CheckResult:
-    """Prevent the ``wen_adw_factor_6000`` failure class from the
-    2026-06-05 external review: bundle prose naming a Lean declaration
-    that does not exist in the built library. Implements the structural
-    prevention proposed by QI item **qi-leantheoremdrift**
-    (`bundle_lean_refs_resolve`, docs/QI_REGISTER.md).
-
-    Scope: the 21 publication-bundle drafts
-    (``papers/{F,D1–D12,E1,E2,I1–I3,L1–L3}/paper_draft.tex``) only.
-    D10 joined 2026-07-30 alongside the D11/D12 first-lift — it had been
-    shipping since 2026-06-30 outside this gate's scope, which is exactly
-    the drift exposure the check exists to close.
-    Legacy per-paper drafts are *excluded for now* — they are
-    historical-snapshot documents superseded by the bundles, and their
-    reference hygiene is audited separately by
-    ``scripts/audit_paper_lean_refs.py`` (Phase 6i Wave 4).
-
-    Pipeline: extract ``\\texttt{...}`` tokens → un-escape LaTeX →
-    candidate filter (identifier-shaped, contains ``_``/``.``, no file
-    suffix, not ALL-CAPS / ``lean_*`` MCP tool names / dated doc-tags /
-    allowlist) → resolve against lean_deps.json declaration names
-    (exact, project-qualified suffix, unqualified short name), module
-    names (docs/counts.json), and project Python registry keys.
-
-    Verdicts:
-    - unresolved (ABSENT) → **FAIL**, unless every occurrence sits
-      within ±200 chars of a disclaimer token (in flight / deferred /
-      not yet / planned / forthcoming / formerly / deprecated / renamed
-      / retired / replaced / removed / commented-out) or is immediately
-      preceded by a negation ("there are no \\texttt{X} ..."), or the
-      (bundle, token) pair carries a documented waiver
-      (``_PROSE_REF_WAIVERS`` — each use surfaces as a WARN).
-    - dotted token whose short name exists under a different namespace
-      (DRIFTED) → advisory WARN (rename candidates).
-    - Mathlib-namespace tokens → skipped (resolve upstream, not in
-      lean_deps.json).
-
-    Calibrated live 2026-06-10 across all 18 bundles (72 raw
-    unresolved → filter/disclaimer/registry classes → 1 documented
-    waiver). Run ``--json`` for machine-readable per-bundle findings.
-    """
-    deps_path = PROJECT_ROOT / "lean" / "lean_deps.json"
-    if not deps_path.exists():
-        return CheckResult(
-            passed=False,
-            error=(f"missing {deps_path}; refresh via `cd lean && lake build "
-                   f"SKEFTHawking.ExtractDeps` or validate.py --check graph_integrity"),
-        )
-    index = _load_lean_name_index()
-
-    details: List[Detail] = []
-    n_fail = 0
-    n_drift = 0
-    n_waived = 0
-    n_candidates = 0
-    n_bundles = 0
-
-    for bundle in BUNDLE_CODES:
-        tex = PAPERS_DIR / bundle / "paper_draft.tex"
-        if not tex.exists():
-            details.append(Detail(
-                f"missing_draft:{bundle}", True,
-                f"papers/{bundle}/paper_draft.tex absent — skipped",
-                warning=True,
-            ))
-            continue
-        n_bundles += 1
-        source = tex.read_text()
-        cands = _extract_prose_lean_candidates(source)
-        # Collapse to per-token occurrence lists
-        by_token: dict = {}
-        for tok, off in cands:
-            by_token.setdefault(tok, []).append(off)
-        n_candidates += len(by_token)
-
-        for tok, offsets in sorted(by_token.items()):
-            if tok in _PROSE_REF_ALLOWLIST:
-                continue
-            verdict = _resolve_prose_ref(tok, index)
-            if verdict in ("OK", "MATHLIB", "PRIVATE", "PHYSLIB"):
-                continue
-            if verdict == "DRIFTED":
-                n_drift += 1
-                details.append(Detail(
-                    f"drifted:{bundle}:{tok}", True,
-                    f"papers/{bundle}/paper_draft.tex:"
-                    f"{_line_of(source, offsets[0])} — qualified name "
-                    f"'{tok}' unresolved but short name exists under a "
-                    f"different namespace (rename candidate; advisory)",
-                    warning=True,
-                ))
-                continue
-            # ABSENT — disclaimer / negation exemption (every occurrence)
-            if all(_prose_occurrence_disclaimed(source, off)
-                   for off in offsets):
-                continue
-            waiver = _PROSE_REF_WAIVERS.get((bundle, tok))
-            if waiver is not None:
-                n_waived += 1
-                details.append(Detail(
-                    f"waived:{bundle}:{tok}", True,
-                    f"papers/{bundle}/paper_draft.tex:"
-                    f"{_line_of(source, offsets[0])} — '{tok}' unresolved "
-                    f"but WAIVED: {waiver}",
-                    warning=True,
-                ))
-                continue
-            n_fail += 1
-            lines = ",".join(str(_line_of(source, o)) for o in offsets[:4])
-            details.append(Detail(
-                f"unresolved:{bundle}:{tok}", False,
-                f"papers/{bundle}/paper_draft.tex:{lines} — "
-                f"\\texttt{{{tok}}} does not resolve to any declaration in "
-                f"lean/lean_deps.json (no disclaimer context; Class-TN drift)",
-            ))
-
-    details.insert(0, Detail(
-        "summary",
-        n_fail == 0,
-        f"{n_bundles} bundle drafts scanned / {n_candidates} candidate "
-        f"Lean references — {n_fail} unresolved FAIL(s) / {n_drift} "
-        f"drifted advisory / {n_waived} waived (documented)",
-    ))
-    if n_fail == 0 and n_drift == 0 and n_waived == 0:
-        details.append(Detail(
-            "all_resolved", True,
-            "Every bundle-draft Lean reference resolves against lean_deps.json",
-        ))
-    return CheckResult(passed=(n_fail == 0), details=details)
-
-
-# ═══════════════════════════════════════════════════════════════════════
-# CHECK 26: Theorem-name-embedded citations (advisory)
-# ═══════════════════════════════════════════════════════════════════════
-
-_YEAR_SEG_RE = re.compile(r"_((?:19|20)\d{2})(?=_|$)")
-# Segments immediately before a year token that are NOT author surnames
-# (numerical-bound naming idioms like d_n_bound_2020).
-_EMBED_AUTHOR_STOPWORDS = {
-    "bound", "bounds", "rate", "mass", "limit", "law", "gap", "model",
-    "theorem", "lemma", "data", "run", "wave", "phase", "et", "al",
-    "upper", "lower", "min", "max", "eq", "neq", "dr", "fit",
-}
-
-
-def _registry_surnames() -> set:
-    """Lowercased author surnames from CITATION_REGISTRY ('Halenka, V.
-    and Miller, C. J.' → {'halenka', 'miller'})."""
-    try:
-        from src.core.citations import CITATION_REGISTRY
-    except Exception:
-        return set()
-    surnames = set()
-    for entry in CITATION_REGISTRY.values():
-        authors = entry.get("authors") or ""
-        for m in re.finditer(r"([A-Za-z'\-]+)\s*,", authors):
-            surnames.add(m.group(1).lower())
-    return surnames
-
-
-def _embedded_citation_pairs(short_name: str, surname_lexicon: set) -> dict:
-    """Extract embedded (author, year) citation candidates from a
-    snake_case declaration name (unit-testable core for CHECK 26).
-
-    Returns ``{"year": str|None, "primary_author": str|None,
-    "trailing_authors": [str, ...]}``:
-
-    - ``primary_author`` — the segment immediately before the first
-      year token, unless it is a naming-idiom stopword / too short
-      (then None: no inferable authorship, declaration is skipped).
-    - ``trailing_authors`` — segments after the year token that match
-      a CITATION_REGISTRY author surname (length ≥ 4). The registry
-      acts as the surname lexicon so English naming segments
-      ("cluster", "densities") are never misread as authors.
-    """
-    m = _YEAR_SEG_RE.search(short_name)
-    if not m:
-        return {"year": None, "primary_author": None, "trailing_authors": []}
-    year = m.group(1)
-    before = short_name[:m.start()].split("_")
-    after = [s for s in short_name[m.end():].split("_") if s]
-
-    primary = before[-1].lower() if before and before[-1] else None
-    if (primary is None or len(primary) < 4 or not primary.isalpha()
-            or primary in _EMBED_AUTHOR_STOPWORDS):
-        primary = None
-
-    trailing = [s.lower() for s in after
-                if len(s) >= 4 and s.isalpha()
-                and s.lower() in surname_lexicon]
-    return {"year": year, "primary_author": primary,
-            "trailing_authors": trailing}
-
-
-_BIBITEM_RE = re.compile(
-    r"\\bibitem(?:\[[^\]]*\])?\{([^}]+)\}(.*?)"
-    r"(?=\\bibitem|\\end\{thebibliography\})",
-    re.DOTALL,
-)
-
-
-def _paper_bibitems(tex_source: str, bundle_dir: Path) -> list:
-    """Return [(bibkey, text), ...] from the draft's inline
-    ``thebibliography`` block; fall back to a ``\\bibliography{X}``
-    .bib file in the bundle directory if no inline block exists."""
-    items = _BIBITEM_RE.findall(tex_source)
-    if items:
-        return items
-    m = re.search(r"\\bibliography\{([^}]+)\}", tex_source)
-    if m:
-        bib = bundle_dir / f"{m.group(1)}.bib"
-        if bib.exists():
-            chunks = re.split(r"(?=@\w+\{)", bib.read_text())
-            out = []
-            for c in chunks:
-                km = re.match(r"@\w+\{([^,]+),", c)
-                if km:
-                    out.append((km.group(1).strip(), c))
-            return out
-    return []
-
-
-@register_check("theorem_name_embedded_citations",
-                "Declaration names embedding author+year have matching bibliography entries")
-def check_theorem_name_embedded_citations() -> CheckResult:
-    """Prevent the D5 phantom-citation class from the 2026-06-05
-    external review: a theorem name like
-    ``verlinde_2017_no_go_via_cluster_mass_densities_halenka_miller``
-    encodes author+year citations; if a bundle's prose mentions the
-    declaration but its bibliography has no matching entry, the reader
-    cannot follow the embedded citation (the original incident shipped
-    with BOTH Verlinde 2017 AND Halenka–Miller absent from the D5
-    bibliography and CITATION_REGISTRY).
-
-    Kinship note: this check is kin to the open QI item
-    **qi-citation_authoryear_metadata_match** (bibkey form vs registry
-    metadata) but distinct — that item validates
-    ``<LastName><Year>``-shaped *bibkeys* against registry metadata;
-    this check validates *Lean declaration names* that embed
-    author/year tokens against each citing paper's bibliography. It
-    does NOT close that QI item.
-
-    Mechanics: scan ``lean/lean_deps.json`` short declaration names for
-    year segments (``_((19|20)\\d{2})(_|$)``). Extract the candidate
-    primary (author, year) pair = segment immediately before the year
-    (skipped when it is a naming-idiom stopword like ``bound`` in
-    ``d_n_bound_2020`` — no inferable authorship), plus trailing author
-    segments validated against the CITATION_REGISTRY surname lexicon
-    (so naming segments like "cluster"/"densities" are never misread
-    as authors). For each bundle draft whose prose mentions the
-    declaration (``\\texttt``-escaped or raw), require:
-
-    - primary pair: some single bibitem contains the author surname
-      (case-insensitive) AND the year, OR a CITATION_REGISTRY entry
-      matches author+year and lists the paper in ``used_in``;
-    - each trailing author: appears in some bibitem, OR a registry
-      entry with that author lists the paper in ``used_in``.
-
-    Mismatch → **WARN (advisory default)**; promoted to **FAIL** under
-    ``--strict`` (mirrors provenance_doi_in_registry). Calibrated live
-    2026-06-10: 3 year-token declarations project-wide; the Verlinde
-    no-go (cited in D5) passes via the post-remediation
-    Verlinde2017dSEmergent + HalenkaMiller2020 bibitems.
-    """
-    deps_path = PROJECT_ROOT / "lean" / "lean_deps.json"
-    if not deps_path.exists():
-        return CheckResult(
-            passed=False,
-            error=(f"missing {deps_path}; refresh via `cd lean && lake build "
-                   f"SKEFTHawking.ExtractDeps`"),
-        )
-
-    try:
-        from src.core.citations import CITATION_REGISTRY
-    except Exception as exc:
-        return CheckResult(passed=False,
-                           error=f"CITATION_REGISTRY unavailable: {exc}")
-
-    surname_lexicon = _registry_surnames()
-    entries = json.loads(deps_path.read_text())
-    year_decls: dict = {}  # short_name → pairs dict
-    for e in entries:
-        n = e.get("name", "")
-        if not n:
-            continue
-        short = n.rsplit(".", 1)[-1]
-        if short in year_decls:
-            continue
-        if _YEAR_SEG_RE.search(short):
-            year_decls[short] = _embedded_citation_pairs(short, surname_lexicon)
-
-    details: List[Detail] = []
-    n_warn = 0
-    n_checked = 0
-    n_skipped_no_author = 0
-
-    def _registry_match(author: str, year: Optional[str], bundle: str) -> bool:
-        for entry in CITATION_REGISTRY.values():
-            authors = (entry.get("authors") or "").lower()
-            if author not in authors:
-                continue
-            if year is not None and str(entry.get("year") or "") != year:
-                continue
-            used_in = entry.get("used_in") or []
-            if any(f"papers/{bundle}/" in u for u in used_in):
-                return True
-        return False
-
-    for bundle in BUNDLE_CODES:
-        tex = PAPERS_DIR / bundle / "paper_draft.tex"
-        if not tex.exists():
-            continue
-        source = tex.read_text()
-        bibitems = None  # lazy
-        for short, pairs in sorted(year_decls.items()):
-            escaped = short.replace("_", r"\_")
-            if escaped not in source and short not in source:
-                continue
-            if pairs["primary_author"] is None and not pairs["trailing_authors"]:
-                n_skipped_no_author += 1
-                details.append(Detail(
-                    f"no_inferable_author:{bundle}:{short}", True,
-                    f"papers/{bundle}/paper_draft.tex mentions '{short}' "
-                    f"(year {pairs['year']}) but the pre-year segment is a "
-                    f"naming idiom, not an author — skipped",
-                ))
-                continue
-            if bibitems is None:
-                bibitems = _paper_bibitems(source, tex.parent)
-            n_checked += 1
-
-            requirements = []
-            if pairs["primary_author"]:
-                requirements.append((pairs["primary_author"], pairs["year"]))
-            for t in pairs["trailing_authors"]:
-                requirements.append((t, None))
-
-            for author, year in requirements:
-                bib_ok = any(
-                    author in (key + text).lower()
-                    and (year is None or year in text or year in key)
-                    for key, text in bibitems
-                )
-                if bib_ok or _registry_match(author, year, bundle):
-                    continue
-                n_warn += 1
-                msg = (
-                    f"papers/{bundle}/paper_draft.tex mentions "
-                    f"\\texttt{{{short}}} which embeds "
-                    f"'{author}'" + (f" ({year})" if year else "")
-                    + " — no matching bibliography entry or "
-                      "CITATION_REGISTRY used_in entry (phantom-citation "
-                      "candidate)"
-                )
-                if STRICT_MODE:
-                    details.append(Detail(
-                        f"embedded_citation_missing:{bundle}:{short}:{author}",
-                        False, f"[strict] {msg}"))
-                else:
-                    details.append(Detail(
-                        f"embedded_citation_missing:{bundle}:{short}:{author}",
-                        True, msg, warning=True))
-
-    passed = True
-    if STRICT_MODE and n_warn > 0:
-        passed = False
-    details.insert(0, Detail(
-        "summary",
-        passed,
-        f"{len(year_decls)} year-token declaration name(s) project-wide / "
-        f"{n_checked} prose-mention checks across bundles — {n_warn} "
-        f"embedded-citation mismatch(es)"
-        + (" (strict mode: mismatches FAIL)" if STRICT_MODE else " (advisory)")
-        + (f" / {n_skipped_no_author} skipped (no inferable author)"
-           if n_skipped_no_author else ""),
-        warning=(n_warn > 0 and not STRICT_MODE),
-    ))
-    if n_warn == 0:
-        details.append(Detail(
-            "all_embedded_citations_resolved", True,
-            "Every prose-mentioned year-token declaration has matching "
-            "bibliography / registry coverage",
-        ))
-    return CheckResult(passed=passed, details=details)
-
-
-# ═══════════════════════════════════════════════════════════════════════
-# CHECK: Inventory-Index autogen freshness (advisory)
-# ═══════════════════════════════════════════════════════════════════════
-
-@register_check("inventory_index_autogen_fresh",
-                "Advisory: SK_EFT_Hawking_Inventory_Index.md autogen blocks match docs/counts.json")
-def check_inventory_index_autogen_fresh() -> CheckResult:
-    """Advisory watchlist: the auto-generated blocks in the Inventory Index
-    (the §1 counts table, the §3 per-family-counts sentence, and the §3.1
-    generated family->count table) must reflect ``docs/counts.json``.
-
-    These blocks are owned by ``scripts/update_inventory_index.py`` and
-    bracketed by ``<!-- AUTOGEN:... -->`` markers. They drift between manual
-    syncs whenever ``update_counts.py`` regenerates ``counts.json`` without a
-    follow-up index refresh. This check is ADVISORY (always passes, warns on
-    staleness) — mirroring ``elaboration_knob_watchlist`` semantics — because a
-    stale doc-index is a documentation-hygiene signal, not a soundness or
-    pipeline-invariant failure. Fix: run
-    ``uv run python scripts/update_inventory_index.py``.
-
-    Runs the generator's ``compute_stale`` logic in-process (no shelling out).
-    """
-    if str(SCRIPT_DIR) not in sys.path:
-        sys.path.insert(0, str(SCRIPT_DIR))
-    try:
-        from update_inventory_index import compute_stale
-    except ImportError as exc:
-        return CheckResult(passed=True, details=[
-            Detail("import", True,
-                   f"SKIPPED — update_inventory_index not importable: {exc}",
-                   warning=True)])
-
-    try:
-        stale, summary = compute_stale()
-    except Exception as exc:  # defensive: never fail the suite on an advisory
-        return CheckResult(passed=True, details=[
-            Detail("compute", True,
-                   f"SKIPPED — compute_stale raised: {exc}", warning=True)])
-
-    if stale:
-        return CheckResult(passed=True, details=[
-            Detail("freshness", True,
-                   f"{summary} — run `uv run python "
-                   "scripts/update_inventory_index.py` to refresh",
-                   warning=True)])
-    return CheckResult(passed=True, details=[
-        Detail("freshness", True, summary)])
-
-
-# ═══════════════════════════════════════════════════════════════════════
-# CLI
-# ═══════════════════════════════════════════════════════════════════════
-
-
-# ---------------------------------------------------------------------------
-# Lean docstring reference drift (Stage-14 QI, 2026-07-28)
-# ---------------------------------------------------------------------------
-# Structural prevention for the failure class that produced BLOCKER 1.1 of the
-# Phase-6EA Stage-13 review: a Lean module docstring naming a project declaration
-# that no longer exists, because the declaration was renamed and the prose was not.
+# Import order does NOT determine execution order; `_CANONICAL_ORDER` below does
+# (H3). Organise `validation/checks/*` for reading, not for sequencing.
 #
-# `prose_theorem_reference_coverage` already guards this for *bundle drafts*
-# (papers/<bundle>/paper_draft.tex). Nothing guarded Lean docstrings themselves,
-# and the class has a live generator: it fired the same day a lead rename landed.
-#
-# Low-noise by construction. A backticked snake_case token is reported only when it
-# (a) fails to resolve in lean_deps.json, AND (b) closely resembles a name that DOES
-# resolve — i.e. it looks like rename drift rather than a Mathlib or tactic name.
-# That is precisely the observed failure shape and it keeps Mathlib references,
-# tactic names and local binders out of the result.
-_DOCSTRING_STRICT_FAMILIES = ("SKEFTHawking.Detection.", "SKEFTHawking.Electrothermal.",
-                              "SKEFTHawking.Control.", "SKEFTHawking.GrapheneBand.")
-_DOCSTRING_TOKEN_RE = re.compile(r"`([A-Za-z][A-Za-z0-9_']*)`")
-# Covers `/-- … -/` doc comments, `/-! … -/` section comments AND plain `/- … -/` module
-# headers. The module-header case was previously unscanned, which let a load-bearing
-# reference to a nonexistent `combined_floor_add_strictly_sharper` sit in
-# `Control/CompositeReadoutCeilings.lean`'s header through five adversarial reviews.
-_DOCSTRING_BLOCK_RE = re.compile(r"/-[-!]?(.*?)-/", re.DOTALL)
+# The names are re-exported because nine test files and `scripts/sync_manifest.py`
+# import them from `validate` directly (D2 item 8). `tests/test_validate_public_surface.py`
+# freezes that surface.
+from validation.checks import notebooks as _checks_notebooks  # noqa: E402
+from validation.checks import physics as _checks_physics      # noqa: E402
+from validation.checks import graph_atlas as _checks_graph_atlas  # noqa: E402
+from validation.checks import freshness as _checks_freshness      # noqa: E402
+from validation.checks import lean_toolchain as _checks_lean_toolchain  # noqa: E402
+from validation.checks import lean_substrate as _checks_lean_substrate  # noqa: E402
+from validation.checks import lean_statements as _checks_lean_statements  # noqa: E402
+from validation.checks import papers_prose as _checks_papers_prose      # noqa: E402
+from validation.checks import prose_lean_refs as _checks_prose_refs     # noqa: E402
+from validation.checks import citations as _checks_citations           # noqa: E402
+from validation.checks import reviews as _checks_reviews               # noqa: E402
+from validation.checks import bundles_readiness as _checks_bundles     # noqa: E402
 
+check_notebook_isolation = _checks_notebooks.check_notebook_isolation
+check_viz_consistency = _checks_notebooks.check_viz_consistency
+check_notebook_execution = _checks_notebooks.check_notebook_execution
+notebook_exec_cache = _checks_notebooks.notebook_exec_cache
+_src_core_fingerprint = _checks_notebooks._src_core_fingerprint
+_notebook_code_hash = _checks_notebooks._notebook_code_hash
 
-@register_check("lean_docstring_refs_resolve",
-                "Lean docstring `backticked` project names resolve (rename-drift guard)")
-def check_lean_docstring_refs_resolve() -> CheckResult:
-    """Flag Lean docstrings naming a project declaration that does not exist.
+check_numerical_consistency = _checks_physics.check_numerical_consistency
+check_formula_identities = _checks_physics.check_formula_identities
+check_paper_table_consistency = _checks_physics.check_paper_table_consistency
+check_d1_hierarchy_table = _checks_physics.check_d1_hierarchy_table
+check_f_hierarchy_claims = _checks_physics.check_f_hierarchy_claims
+check_cgl_fdr = _checks_physics.check_cgl_fdr
+check_physical_bounds = _checks_physics.check_physical_bounds
+check_cross_path_consistency = _checks_physics.check_cross_path_consistency
+check_quantum_network = _checks_physics.check_quantum_network
+_parse_latex_number = _checks_physics._parse_latex_number
 
-    Round-1 design used a `difflib` near-match filter to suppress noise. A regression
-    test against the ACTUAL blocker showed that silently defeated the check: the real
-    rename pair (`poisson_avgError_floor_equalRates` vs
-    `poisson_avgError_equalRates_eq_half`) scores below any cutoff loose enough to stay
-    quiet. So the near-match is now used only to enrich the message, never to gate it.
+check_graph_integrity = _checks_graph_atlas.check_graph_integrity
+check_atlas_integrity = _checks_graph_atlas.check_atlas_integrity
+check_atlas_hypothesis_discipline = _checks_graph_atlas.check_atlas_hypothesis_discipline
+_hyp_module_stem = _checks_graph_atlas._hyp_module_stem
 
-    Noise is controlled the honest way instead: a token is exempt if it is a Mathlib
-    declaration name (short-name set built from the pinned Mathlib source) or a common
-    tactic/keyword. Inside the strict families — the new, clean module families — any
-    surviving unresolvable token is a FAIL. Elsewhere it is advisory, so the legacy
-    backlog is reported without blocking.
-    """
-    import difflib
-    import subprocess
+check_counts_fresh = _checks_freshness.check_counts_fresh
+check_tables_fresh = _checks_freshness.check_tables_fresh
+check_claim_clusters_fresh = _checks_freshness.check_claim_clusters_fresh
+check_bundle_source_freshness = _checks_freshness.check_bundle_source_freshness
+check_inventory_index_autogen_fresh = _checks_freshness.check_inventory_index_autogen_fresh
+check_notebook_stored_outputs_current = _checks_freshness.check_notebook_stored_outputs_current
+_counts_is_stale = _checks_freshness._counts_is_stale      # scripts/sync_manifest.py
+_tables_is_stale = _checks_freshness._tables_is_stale      # scripts/sync_manifest.py
+_claim_clusters_is_stale = _checks_freshness._claim_clusters_is_stale
+COUNTS_JSON_PATH = _checks_freshness._H.COUNTS_JSON_PATH
+COUNTS_TEX_PATH = _checks_freshness._H.COUNTS_TEX_PATH
+claim_clusters_path = _checks_freshness.claim_clusters_path
 
-    deps_path = PROJECT_ROOT / "lean" / "lean_deps.json"
-    if not deps_path.exists():
-        return CheckResult(passed=True,
-                           details=[Detail("skipped", True, "lean_deps.json absent", warning=True)])
-    decls = json.loads(deps_path.read_text())
-    full = {d["name"] for d in decls}
-    short: dict[str, str] = {}
-    for d in decls:
-        short.setdefault(d["name"].rsplit(".", 1)[-1], d["name"])
-    known = set(short) | full
+check_native_decide_regression = _checks_lean_toolchain.check_native_decide_regression
+check_theorem_count = _checks_lean_toolchain.check_theorem_count
+check_lean_source = _checks_lean_toolchain.check_lean_source
+check_lean_build = _checks_lean_toolchain.check_lean_build
+check_axiom_closure_allowlist = _checks_lean_toolchain.check_axiom_closure_allowlist
+check_elaboration_knob_watchlist = _checks_lean_toolchain.check_elaboration_knob_watchlist
+check_lean_docstring_refs_resolve = _checks_lean_toolchain.check_lean_docstring_refs_resolve
 
-    mathlib_dir = PROJECT_ROOT / "lean" / ".lake" / "packages" / "mathlib" / "Mathlib"
-    mathlib_names: set[str] = set()
-    if mathlib_dir.exists():
-        try:
-            out = subprocess.run(
-                ["grep", "-rhoE",
-                 r"^(private |protected |noncomputable )*"
-                 r"(theorem|lemma|def|abbrev|instance|structure|inductive|class) "
-                 r"+[A-Za-z_][A-Za-z0-9_']*",
-                 str(mathlib_dir)],
-                capture_output=True, text=True, timeout=180).stdout
-            mathlib_names = {ln.split()[-1] for ln in out.splitlines() if ln.split()}
-        except Exception:
-            mathlib_names = set()
+check_formulas_to_theorems = _checks_lean_substrate.check_formulas_to_theorems
+check_placeholder_not_cited = _checks_lean_substrate.check_placeholder_not_cited
+check_disclosure_consistency = _checks_lean_substrate.check_disclosure_consistency
+check_proxy_body_audit = _checks_lean_substrate.check_proxy_body_audit
+check_tracked_hypothesis_ledger = _checks_lean_substrate.check_tracked_hypothesis_ledger
+check_tracked_hypotheses_fresh = _checks_lean_substrate.check_tracked_hypotheses_fresh
+# ── moved to checks/lean_statements.py 2026-08-04 (statement-level analysis) ──
+check_formula_grounding = _checks_lean_statements.check_formula_grounding
+check_vacuous_statement_audit = _checks_lean_statements.check_vacuous_statement_audit
+check_nogo_substrate_integrity = _checks_lean_statements.check_nogo_substrate_integrity
+# Regexes + pure cores imported directly by tests/test_substrate_integrity_gates.py
+_tex_name_pattern = _checks_lean_substrate._tex_name_pattern
+_VERIFY_CLAIM_RE = _checks_lean_substrate._VERIFY_CLAIM_RE
+_HEDGE_CLAIM_RE = _checks_lean_substrate._HEDGE_CLAIM_RE
+_OVERCLAIM_VERB_RE = _checks_lean_substrate._OVERCLAIM_VERB_RE
+_LEDGER_HEDGE_RE = _checks_lean_substrate._LEDGER_HEDGE_RE
+_STRUCTURAL_NAME_RE = _checks_lean_substrate._STRUCTURAL_NAME_RE
+_TRIVIAL_BODY_RES = _checks_lean_substrate._TRIVIAL_BODY_RES
+_NONTRIVIAL_MARKER_RE = _checks_lean_substrate._NONTRIVIAL_MARKER_RE
+_TRACKED_PROP_NAME_RE = _checks_lean_substrate._TRACKED_PROP_NAME_RE
+_THIN_HARD = _checks_lean_statements._THIN_HARD
+_is_prop_codomain = _checks_lean_substrate._is_prop_codomain
+_is_autogen_decl = _checks_lean_statements._is_autogen_decl
+_thin_type_label = _checks_lean_statements._thin_type_label
+_is_vacuous_identity_wrapper = _checks_lean_statements._is_vacuous_identity_wrapper
+_parse_formula_lean_refs = _checks_lean_statements._parse_formula_lean_refs
 
-    # A docstring may deliberately name a declaration that does NOT exist — e.g. recording a
-    # route that was rejected, retracted, or consciously not shipped. Those are the opposite of
-    # drift (they are the record that keeps someone from re-adding it), so exempt an occurrence
-    # whose surrounding sentence disclaims it. Mirrors the disclaimer exemption in
-    # `prose_theorem_reference_coverage`.
-    disclaim = re.compile(
-        r"(NOT shipped|not shipped|deliberately|does not exist|do(es)? NOT exist|retracted|"
-        r"rejected|REJECTED|banned|settled-dead|superseded|dropped|no longer|would have been|"
-        r"is wrong|was wrong|non-existent|nonexistent)", re.IGNORECASE)
-    exempt = {"set_option", "maxHeartbeats", "native_decide", "norm_num", "field_simp",
-              "ring_nf", "simp_rw", "noncomm_ring", "push_cast", "linear_combination",
-              "match_scalars", "fun_prop", "positivity", "gcongr", "gauss_sum"}
+check_paper_provenance = _checks_papers_prose.check_paper_provenance
+check_numerical_literals = _checks_papers_prose.check_numerical_literals
+check_count_literals = _checks_papers_prose.check_count_literals
+check_paper_latex_compiles = _checks_papers_prose.check_paper_latex_compiles
+check_axiom_count_prose_consistency = _checks_papers_prose.check_axiom_count_prose_consistency
+check_paper_toolchain_pin_drift = _checks_papers_prose.check_paper_toolchain_pin_drift
+_axiom_prose_findings = _checks_papers_prose._axiom_prose_findings
+_tp_live_pins = _checks_papers_prose._tp_live_pins
+_tp_scan_lines = _checks_papers_prose._tp_scan_lines
+check_prose_theorem_reference_coverage = _checks_prose_refs.check_prose_theorem_reference_coverage
+check_theorem_name_embedded_citations = _checks_prose_refs.check_theorem_name_embedded_citations
+_prose_occurrence_disclaimed = _checks_prose_refs._prose_occurrence_disclaimed
+_extract_prose_lean_candidates = _checks_prose_refs._extract_prose_lean_candidates
+_resolve_prose_ref = _checks_prose_refs._resolve_prose_ref
+_embedded_citation_pairs = _checks_prose_refs._embedded_citation_pairs
+_paper_bibitems = _checks_prose_refs._paper_bibitems
+_PROSE_REF_WAIVERS = _checks_prose_refs._PROSE_REF_WAIVERS
+from validation._tex import _strip_tex_comments  # noqa: E402  frozen surface
 
-    details: list[Detail] = []
-    n_fail = n_adv = 0
-    for path in sorted((PROJECT_ROOT / "lean" / "SKEFTHawking").rglob("*.lean")):
-        rel_mod = str(path.relative_to(PROJECT_ROOT / "lean" / "SKEFTHawking"))
-        module = "SKEFTHawking." + rel_mod.removesuffix(".lean").replace("/", ".")
-        strict = module.startswith(_DOCSTRING_STRICT_FAMILIES)
-        src = path.read_text(errors="ignore")
-        seen: set[str] = set()
-        for block in _DOCSTRING_BLOCK_RE.findall(src):
-            for tok in _DOCSTRING_TOKEN_RE.findall(block):
-                if tok in seen or tok in known or tok in mathlib_names or tok in exempt:
-                    continue
-                if "_" not in tok or len(tok) < 6 or not any(c.islower() for c in tok):
-                    continue
-                seen.add(tok)
-                # Disclaimed-in-context ⇒ intentional record of an absent name, not drift.
-                pos = block.index(tok)
-                if disclaim.search(block[max(0, pos - 400): pos + 400]):
-                    continue
-                near = difflib.get_close_matches(tok, short.keys(), n=1, cutoff=0.6)
-                hint = f"; nearest existing is `{near[0]}`" if near else ""
-                rel = path.relative_to(PROJECT_ROOT)
-                line = src[:src.index(tok)].count("\n") + 1 if tok in src else 0
-                if strict:
-                    n_fail += 1
-                    details.append(Detail(
-                        f"drift:{module}:{tok}", False,
-                        f"{rel}:{line} — docstring names `{tok}`, which resolves to NO "
-                        f"declaration and is not a Mathlib name{hint}. Update the prose or "
-                        f"restore the name.",
-                    ))
-                else:
-                    n_adv += 1
-                    details.append(Detail(
-                        f"drift-advisory:{module}:{tok}", True,
-                        f"{rel}:{line} — docstring names `{tok}` (unresolved{hint}) — "
-                        f"advisory outside the strict families.",
-                        warning=True,
-                    ))
-    details.insert(0, Detail(
-        "summary", True,
-        f"scanned all SKEFTHawking Lean docstrings against {len(short)} project + "
-        f"{len(mathlib_names)} Mathlib names — {n_fail} FAIL(s) in the strict families, "
-        f"{n_adv} advisory elsewhere",
-        warning=bool(n_adv),
-    ))
-    return CheckResult(passed=(n_fail == 0), details=details)
+check_parameter_provenance = _checks_citations.check_parameter_provenance
+check_citation_primary_sources_present = _checks_citations.check_citation_primary_sources_present
+check_provenance_doi_in_registry = _checks_citations.check_provenance_doi_in_registry
+check_bibitem_title_primary_source = _checks_citations.check_bibitem_title_primary_source
+check_recurrence_reopens_closures = _checks_reviews.check_recurrence_reopens_closures
+check_review_severity_declared = _checks_reviews.check_review_severity_declared
+check_review_docs_mint_findings = _checks_reviews.check_review_docs_mint_findings
+check_accepted_findings_carry_rationale = _checks_reviews.check_accepted_findings_carry_rationale
+check_chain_backing_targets_resolve = _checks_reviews.check_chain_backing_targets_resolve
+_recurrence_norm = _checks_reviews._recurrence_norm
+_RECURRENCE_MIN_TITLE = _checks_reviews._RECURRENCE_MIN_TITLE
+_RECURRENCE_MIN_OVERLAP = _checks_reviews._RECURRENCE_MIN_OVERLAP
+check_bundle_figure_integrity = _checks_bundles.check_bundle_figure_integrity
+check_bundle_metadata_matches_graph = _checks_bundles.check_bundle_metadata_matches_graph
+check_bundle_stage13_claim_consistent = _checks_bundles.check_bundle_stage13_claim_consistent
+check_bundle_manuscript_length = _checks_bundles.check_bundle_manuscript_length
+check_bundle_reviewer_stage_ordering = _checks_bundles.check_bundle_reviewer_stage_ordering
+check_bundle_prose_em_dash_free = _checks_bundles.check_bundle_prose_em_dash_free
+check_bundle_reader_facing_voice = _checks_bundles.check_bundle_reader_facing_voice
+check_bundle_sentence_length = _checks_bundles.check_bundle_sentence_length
+check_bundle_figure_adequacy = _checks_bundles.check_bundle_figure_adequacy
+check_bundle_structural_coherence = _checks_bundles.check_bundle_structural_coherence
+check_bundle_lean_module_coverage = _checks_bundles.check_bundle_lean_module_coverage
+check_readiness_verdicts_agree = _checks_bundles.check_readiness_verdicts_agree
+check_readiness_submission_gate = _checks_bundles.check_readiness_submission_gate
+check_bundle_consistency = _checks_bundles.check_bundle_consistency
+check_bundle_registry_consistency = _checks_bundles.check_bundle_registry_consistency
+check_bundle_apex_resolves = _checks_bundles.check_bundle_apex_resolves
+check_bundle_native_decide_debt = _checks_bundles.check_bundle_native_decide_debt
+check_bundle_todo_free_before_green = _checks_bundles.check_bundle_todo_free_before_green
+check_bundle_cross_references_resolve = _checks_papers_prose.check_bundle_cross_references_resolve
+check_bundle_counts_fresh = _checks_freshness.check_bundle_counts_fresh
+check_lean_zero_sorry = _checks_lean_substrate.check_lean_zero_sorry
+check_gate_edge_types_are_emitted = _checks_graph_atlas.check_gate_edge_types_are_emitted
+check_architecture_inventory_fresh = _checks_freshness.check_architecture_inventory_fresh
 
 
 # ═══════════════════════════════════════════════════════════════════════
-# CHECK: Paper toolchain-pin drift — Class TP (advisory)
+# Apply the declared execution order — AFTER every registration (ADR-009 H3)
 # ═══════════════════════════════════════════════════════════════════════
-# `docs/agents/claims_reviewer.md` defines Class TP (Toolchain Pin drift) as a
-# STRUCTURAL check — "Literal Lean/Mathlib version in paper != project pin",
-# sourced from `lean-toolchain` + `lakefile.toml`. That same doc records that
-# Classes TN and HD were mirrored into validate.py "at zero-agent-cost for
-# per-save CI-like invocation". TP never was, so it fired only when the
-# claims-reviewer agent ran — i.e. at Stage 13.
+# This must be the last statement following the final `@register_check`, and it
+# must run at IMPORT time rather than inside `main()`: the tests, the
+# characterization harness and `gate_precheck.py` all read `_CHECKS` directly
+# without ever calling `main`, so a sort deferred to the CLI would leave every
+# in-process consumer running an unordered registry.
 #
-# The v4.29.1 -> v4.32.0 bump (2026-07-29) made that gap load-bearing: every
-# bundle draft's verification-provenance sentence went stale in a single commit,
-# while Stage 13 was explicitly deferred. This check closes that window.
-#
-# ADVISORY by construction (always passes, warns) — mirroring
-# `inventory_index_autogen_fresh`. A stale pin in a DRAFT is a provenance-hygiene
-# signal, not a soundness failure, and the remedy is a publication decision that
-# belongs to Stage 13: does this paper re-verify under the new pin (update the
-# literal), or does it record the pin it was actually verified under (keep it,
-# and say so explicitly)? A find-and-replace at gate time would silently assert
-# the former for every draft. This check reports; Stage 13 decides.
-#
-# Two buckets, because the bump puts different kinds of sentence at risk:
-#   pin-drift        — "verified by `lake build` (v4.29.1, Mathlib 5e932f97)":
-#                      a reproducibility instruction that now points at a
-#                      toolchain the repo no longer pins.
-#   capability-claim — "Mathlib v4.29.1 has no Kunneth theorem": a justification
-#                      for an in-tree construction or a tracked gap, whose truth
-#                      value a Mathlib bump can silently FLIP.
-#
-# Third-party environments are exempt by construction: a version literal whose
-# context names Aristotle (whose sandbox is pinned at v4.28.0 independently of
-# our toolchain) is a fact about that service, not a claim about our pin.
-
-_TP_LEAN_VER_RE = re.compile(r"\bv?(4\.\d+\.\d+)\b")
-_TP_HEX_RE = re.compile(r"\b([0-9a-f]{8,40})\b")
-_TP_THIRD_PARTY_RE = re.compile(r"aristotle|sandbox|harmonic", re.IGNORECASE)
-_TP_MATHLIB_CTX_RE = re.compile(r"mathlib", re.IGNORECASE)
-_TP_CAPABILITY_RE = re.compile(
-    r"\b(has|have|had|lacks?|lacking|ships?|provides?|contains?|carries|"
-    r"absent|missing|no longer|does not|doesn't|not (?:currently )?in)\b",
-    re.IGNORECASE,
-)
-
-
-def _tp_live_pins() -> tuple[str | None, str | None]:
-    """Read the live (toolchain_version, mathlib_rev) from the Lean project."""
-    lean_root = LEAN_DIR.parent
-    version = None
-    try:
-        raw = (lean_root / "lean-toolchain").read_text(encoding="utf-8").strip()
-        m = _TP_LEAN_VER_RE.search(raw)
-        if m:
-            version = m.group(1)
-    except OSError:
-        pass
-
-    rev = None
-    try:
-        toml_text = (lean_root / "lakefile.toml").read_text(encoding="utf-8")
-        # Find the mathlib [[require]] stanza and take its rev.
-        for block in toml_text.split("[[require]]"):
-            if re.search(r'name\s*=\s*"mathlib"', block):
-                m = re.search(r'rev\s*=\s*"([0-9a-f]{8,40})"', block)
-                if m:
-                    rev = m.group(1)
-                break
-    except OSError:
-        pass
-    return version, rev
-
-
-def _tp_scan_lines(lines: list[str], live_ver: str, live_rev: str
-                   ) -> tuple[list[tuple[int, str]], list[tuple[int, str]]]:
-    """Pure core of Class TP: scan draft lines for non-live pin literals.
-
-    Returns ``(pin_hits, capability_hits)`` as ``(line_number, found)`` pairs.
-    Split out from the check so it is unit-testable with synthetic fixtures.
-    """
-    pin_hits: list[tuple[int, str]] = []
-    cap_hits: list[tuple[int, str]] = []
-    for i, line in enumerate(lines, start=1):
-        # Context window: the line plus its neighbours, so a claim split across
-        # a TeX line-wrap still sees its own qualifiers.
-        ctx = " ".join(lines[max(0, i - 2):i + 1])
-        if _TP_THIRD_PARTY_RE.search(ctx):
-            continue  # a third-party service's own pin, not ours
-
-        stale_vers = {v for v in _TP_LEAN_VER_RE.findall(line) if v != live_ver}
-        stale_revs: set[str] = set()
-        if _TP_MATHLIB_CTX_RE.search(ctx):
-            stale_revs = {
-                h for h in _TP_HEX_RE.findall(line)
-                if not (live_rev.startswith(h) or h.startswith(live_rev))
-            }
-
-        if not stale_vers and not stale_revs:
-            continue
-
-        found = ", ".join(sorted(stale_vers | stale_revs))
-        # A capability claim names Mathlib AND a have/lack verb: the bump can
-        # flip its truth value, which is a strictly worse failure than a stale
-        # reproducibility coordinate.
-        is_capability = bool(
-            _TP_MATHLIB_CTX_RE.search(line) and _TP_CAPABILITY_RE.search(line)
-        )
-        (cap_hits if is_capability else pin_hits).append((i, found))
-    return pin_hits, cap_hits
-
-
-@register_check("paper_toolchain_pin_drift",
-                "Advisory (Class TP): paper-draft toolchain/Mathlib pins match "
-                "lean-toolchain + lakefile.toml")
-def check_paper_toolchain_pin_drift() -> CheckResult:
-    """Flag paper drafts whose stated Lean/Mathlib pin differs from the live pin.
-
-    Structural mirror of claims-reviewer Class TP, so the drift is visible on
-    every validate run rather than only when Stage 13 executes. Always passes;
-    warnings only.
-    """
-    try:
-        live_ver, live_rev = _tp_live_pins()
-    except Exception as exc:  # defensive: an advisory never breaks the suite
-        return CheckResult(passed=True, details=[
-            Detail("pins", True, f"SKIPPED — could not read live pins: {exc}",
-                   warning=True)])
-
-    if live_ver is None or live_rev is None:
-        return CheckResult(passed=True, details=[
-            Detail("pins", True,
-                   "SKIPPED — lean-toolchain / lakefile.toml pin not parseable",
-                   warning=True)])
-
-    drafts = sorted(PAPERS_DIR.glob("*/paper_draft.tex"))
-    drafts += sorted(PAPERS_DIR.glob("*/preprint_draft.md"))
-    if not drafts:
-        return CheckResult(passed=True, details=[
-            Detail("scan", True, "no paper drafts found — nothing to check")])
-
-    pin_hits: list[str] = []
-    cap_hits: list[str] = []
-
-    for draft in drafts:
-        try:
-            lines = draft.read_text(encoding="utf-8").splitlines()
-        except OSError:
-            continue
-        rel = f"papers/{draft.parent.name}/{draft.name}"
-        file_pin, file_cap = _tp_scan_lines(lines, live_ver, live_rev)
-        pin_hits += [f"{rel}:{ln} — {found}" for ln, found in file_pin]
-        cap_hits += [f"{rel}:{ln} — {found}" for ln, found in file_cap]
-
-    details: list[Detail] = []
-    details.append(Detail(
-        "live-pin", True,
-        f"live pin: toolchain v{live_ver}, Mathlib {live_rev[:8]}"))
-
-    for hit in pin_hits:
-        details.append(Detail("pin-drift", True, f"{hit} (live v{live_ver} / "
-                                                 f"{live_rev[:8]})", warning=True))
-    for hit in cap_hits:
-        details.append(Detail(
-            "capability-claim", True,
-            f"{hit} — asserts what the PINNED Mathlib does/does not provide; "
-            "a pin bump can flip this", warning=True))
-
-    n = len(pin_hits) + len(cap_hits)
-    details.insert(1, Detail(
-        "summary", True,
-        f"scanned {len(drafts)} draft(s) — {len(pin_hits)} pin-drift, "
-        f"{len(cap_hits)} capability-claim site(s) referencing a non-live pin"
-        + ("; resolve at each bundle's Stage 13" if n else ""),
-        warning=bool(n)))
-
-    return CheckResult(passed=True, details=details)
+# In Phase 2 this becomes structurally safe rather than positionally safe — the
+# framework will import the check modules and then sort, so "after all
+# registrations" is enforced by the import block rather than by where this line
+# happens to sit. Until then, the position IS the contract, and the registry
+# test asserts it.
+_apply_canonical_order()
 
 
 def main(argv=None) -> int:
@@ -7675,15 +754,28 @@ Examples:
   python scripts/validate.py --list       # list available checks
 """,
     )
-    parser.add_argument("--check", help="Run only this check (by name)")
+    # `action="append"`, NOT the default single-value store. Repeating the flag
+    # silently kept only the LAST name and dropped every earlier one -> the run
+    # reported "Overall: 1/1 checks passed" while a gate the caller asked for had
+    # never executed. Five call sites relied on chaining, two of them in frozen
+    # procedures (BUNDLE_LIFT_PROCEDURE.md, LATE_PHASE6_ABSORPTION_PROTOCOL.md),
+    # and the Aristotle gauntlet lost its `axiom_closure_allowlist` leg — the
+    # Invariant #15 backstop against an un-signed-off axiom in a grafted proof.
+    # This is the same silent-disable failure the unknown-name guard below exists
+    # to prevent, arriving through a different door.
+    parser.add_argument("--check", action="append", metavar="NAME",
+                        help="Run only this check (by name). Repeatable: "
+                             "--check a --check b runs both.")
     parser.add_argument("--json", action="store_true", help="JSON output to stdout")
     parser.add_argument("--no-archive", action="store_true",
                         help="Skip saving timestamped report (default: always archive)")
     parser.add_argument("--list", action="store_true", help="List available checks")
     parser.add_argument(
         "--strict", action="store_true",
-        help=("Promote paper-submission advisory warnings to hard failures "
-              "(parameter_provenance, provenance_doi_in_registry). Used at the "
+        help=("Promote paper-submission advisory warnings to hard failures. "
+              "Read by 6 checks: parameter_provenance, provenance_doi_in_registry, "
+              "bibitem_title_primary_source, theorem_name_embedded_citations, "
+              "axiom_closure_allowlist, bundle_source_freshness. Used at the "
               "paper-submission gate, not at Stage-1 development.")
     )
     parser.add_argument(
@@ -7694,16 +786,39 @@ Examples:
     )
     parser.add_argument(
         "--force-latex", action="store_true",
-        help=("Run the slow paper_latex_compiles check (pdflatex × all bundle "
-              "drafts). Default skips it; it also auto-runs when selected via "
-              "--check paper_latex_compiles.")
+        help=("Recompile EVERY bundle draft, bypassing paper_latex_compiles' "
+              "per-draft content-hash cache. The compile itself is no longer "
+              "opt-in (it used to skip by default, which is how the suite stayed "
+              "green over a draft with fatal errors).")
+    )
+    parser.add_argument(
+        "--no-memo", action="store_true",
+        help=("Re-measure the expensive checks instead of reusing a cached PASS "
+              "keyed on their inputs (axiom_closure_allowlist, "
+              "lean_docstring_refs_resolve). Implied by --strict.")
+    )
+    parser.add_argument(
+        "--scope", choices=("all", "substrate"), default="all",
+        help=("Which failures bind the EXIT CODE. `all` (default) is unchanged: any "
+              "failure fails. `substrate` fails only on Lean/Python-side checks — "
+              "paper-corpus failures are still RUN and still PRINTED, they just do not "
+              "block. For a pure-Lean wave close, whose Stage-13 dispatch a red in "
+              "another bundle's LaTeX should not veto. Never use it at the submission "
+              "gate: `--strict` is that gate and is deliberately scope-blind."))
+    parser.add_argument(
+        "--ci", action="store_true",
+        help=("Unattended-runner mode: skip the checks whose premise does not hold on "
+              "a fresh clone (the three mtime regenerators + notebook_exec), never "
+              "archive, and FAIL if fewer than CI_MIN_CHECKS_RUN checks actually ran. "
+              "Does NOT imply --strict: that is the submission gate (Invariant #12).")
     )
     args = parser.parse_args(argv)
 
-    global STRICT_MODE, FORCE_NOTEBOOK_REEXEC, FORCE_LATEX
-    STRICT_MODE = args.strict
-    FORCE_NOTEBOOK_REEXEC = args.force_notebooks
-    FORCE_LATEX = args.force_latex or args.check == "paper_latex_compiles"
+    _cfg.CI_MODE = args.ci
+    _cfg.STRICT_MODE = args.strict
+    _cfg.FORCE_NOTEBOOK_REEXEC = args.force_notebooks
+    _cfg.FORCE_LATEX = args.force_latex
+    _cfg.NO_MEMO = args.no_memo
 
     if args.list:
         print("Available checks:")
@@ -7716,14 +831,41 @@ Examples:
     # -> exit 0, silently DISABLING the gate (the commit gate / gate_precheck rely on a
     # real failure surfacing). Fail loud with rc2 (run_check in pre-commit-sync.sh maps
     # rc2 -> SKIP-printed; gate_precheck propagates it as FAIL).
-    if args.check and args.check not in {spec.name for spec in _CHECKS}:
-        print(f"ERROR: unknown check {args.check!r}. Run 'validate.py --list' for the registry.",
-              file=sys.stderr)
+    _known = {spec.name for spec in _CHECKS}
+    _unknown = [name for name in (args.check or []) if name not in _known]
+    if _unknown:
+        print(f"ERROR: unknown check(s) {', '.join(repr(n) for n in _unknown)}. "
+              f"Run 'validate.py --list' for the registry.", file=sys.stderr)
         return 2
 
+    # ── ONE lean_deps snapshot per full run (ADR-009 §Deferred item 0) ──────
+    # Eight checks read `lean/lean_deps.json`; five of them run BEFORE
+    # `counts_fresh` (position 29) regenerates it and three run after, so on a
+    # wave close the two groups validated different extractions inside one run.
+    # Refreshing once here — hash-guarded, 46 ms when nothing changed — makes the
+    # whole run observe a single snapshot.
+    #
+    # FULL RUNS ONLY. `--check` must stay byte-identical: the commit gate runs
+    # `--check native_decide_regression` and `scripts/pre-commit-sync.sh:72-74`
+    # states it must NEVER trigger the heavy ExtractDeps pass. See
+    # `validate_helpers.ensure_lean_deps_fresh` for the full reasoning.
+    if not args.check:
+        refreshed, note = _H.ensure_lean_deps_fresh()
+        if refreshed or not args.json:
+            print(f"  lean_deps: {note}", file=sys.stderr)
+
+    # `--ci` skips are applied at the CALL, not to the results: see run_checks.
+    _ci_skip = _cfg.CI_SKIP if (_cfg.CI_MODE and not args.check) else None
     t0 = time.monotonic()
-    results = run_checks(check_filter=args.check)
+    results = run_checks(check_filter=args.check, skip=_ci_skip)
     elapsed = time.monotonic() - t0
+
+    # ── `--ci`: drop the checks whose premise does not hold on a runner ────────
+    # Applied HERE rather than inside the checks so no check body learns about CI —
+    # a check that behaves differently under CI is a check whose CI result means
+    # something different from its local result, which is how a green build stops
+    # being evidence. The exclusions and their reasons live in `_config.CI_SKIP`.
+    ci_skipped: list = sorted(_ci_skip) if _ci_skip else []
 
     if args.json:
         payload = {
@@ -7731,6 +873,7 @@ Examples:
             "checks": {
                 name: {
                     "passed": cr.passed,
+                    "measured": cr.measured,   # see archive_results
                     "error": cr.error,
                     "details": [asdict(d) for d in cr.details],
                 }
@@ -7739,6 +882,7 @@ Examples:
             "summary": {
                 "total": len(results),
                 "passed": sum(1 for r in results.values() if r.passed),
+                "measured": sum(1 for r in results.values() if r.measured),
             },
         }
         class _Enc(json.JSONEncoder):
@@ -7752,11 +896,75 @@ Examples:
         print_results(results)
         print(f"  Completed in {elapsed:.1f}s")
 
-    if not args.no_archive and not args.json and not args.check:
+    if not args.no_archive and not args.json and not args.check and not args.ci:
         path = archive_results(results)
         print(f"\n  Archived to: {path}")
 
     all_passed = all(r.passed for r in results.values())
+
+    # ── The coverage floor. THIS is the point of `--ci`. ──────────────────────
+    # Dropping the Lean toolchain from a runner makes the suite ~200 s faster and
+    # stops 7 lean_deps readers plus 3 `lake` shell-outs from measuring anything —
+    # while the run still reports green. That is "absence of measurement rendered
+    # as success" reintroduced one layer up, which is the finding this whole audit
+    # exists to close. A green tick over a partial run is worse than no CI, because it
+    # manufactures confidence.
+    if _cfg.CI_MODE and not args.check:
+        # ⚠️ COUNTS MEASUREMENTS, NOT INVOCATIONS (fixed 2026-08-05).
+        #
+        # This read `n_ran = len(results)`, and `run_checks` inserts an entry for
+        # EVERY registered spec — including from its `except` handler. So `n_ran`
+        # was identically `59 - len(CI_SKIP)` = 55 against a floor of 55, and
+        # `55 < 55` is never true: the floor could not fire, on any input.
+        #
+        # Multiple reviewers found this independently in PR-review pass 2, and one
+        # identified why it was invisible: `test_ci_mode.py`'s zero-headroom test
+        # asserts `CI_MIN_CHECKS_RUN == len(_CHECKS) - len(CI_SKIP)` — the very
+        # definition of the quantity being compared — so the guard and its test
+        # were jointly self-sealing. A green tick over a partial run is worse than no
+        # CI because it manufactures confidence; a floor that cannot fire is worse
+        # still, because it manufactures confidence *in the guard*.
+        measured = [n for n, r in results.items() if r.measured]
+        unmeasured = sorted(n for n, r in results.items() if not r.measured)
+        n_ran = len(measured)
+        if ci_skipped:
+            print(f"\n  --ci: skipped {len(ci_skipped)} check(s) whose premise does not "
+                  f"hold on a fresh clone: {', '.join(sorted(ci_skipped))}", file=sys.stderr)
+        if unmeasured:
+            print(f"\n  --ci: {len(unmeasured)} check(s) returned WITHOUT MEASURING "
+                  f"(absent artifact or toolchain): {', '.join(unmeasured)}",
+                  file=sys.stderr)
+        if n_ran < _cfg.CI_MIN_CHECKS_RUN:
+            print(f"\n  ✗ CI COVERAGE FLOOR: {n_ran} of {len(results)} check(s) actually "
+                  f"MEASURED, floor is {_cfg.CI_MIN_CHECKS_RUN}. The suite got SMALLER, "
+                  f"not greener — most likely the Lean toolchain is absent, which "
+                  f"silently disables the lean_deps readers. Install it on the runner, "
+                  f"or lower CI_MIN_CHECKS_RUN with a stated reason.", file=sys.stderr)
+            return 1
+
+    if args.scope == "substrate" and not all_passed:
+        # ⚠️ An UNMEASURED failure BLOCKS regardless of which side it is on. A check
+        # that raised is the strongest cannot-measure the suite produces —
+        # `run_checks` sets `measured=False` precisely for that case — and the
+        # scope filter used to discard it: a paper-side check crashing because a
+        # SHARED helper broke exited 0 while printing "✓ SUBSTRATE: clean" and "a
+        # Lean-only wave cannot have caused them". Both claims are unknowable when
+        # the check never ran, and `gate_precheck.py`'s `s13-lean` leg runs exactly
+        # this command, so the crash surfaced to the operator as PASS.
+        #
+        # The scope flag's contract is "changes what BLOCKS, never what is measured"
+        # — and a crash is not a measurement, so it is outside what the flag may
+        # forgive.
+        blocking = [n for n, r in results.items()
+                    if not r.passed
+                    and getattr(_spec_of(n), "func", None) is not None
+                    and (_leaf_module_of(n) not in _PAPER_SIDE_MODULES
+                         or not r.measured)]
+        if not blocking:
+            print("\n  \033[33m--scope substrate:\033[0m the only failures are paper-corpus; "
+                  "exiting 0. They are REAL and still listed above — this flag changes what "
+                  "BLOCKS, never what is measured or reported.", file=sys.stderr)
+            return 0
     return 0 if all_passed else 1
 
 

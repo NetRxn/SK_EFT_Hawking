@@ -12,7 +12,8 @@
 %% \leanmodules{}, \axiomcount{} instead of inline literals (NumericalFreshness
 %% Gate 9 — Stage-13 fix-pass 2026-05-11).
 \input{../../docs/counts.tex}
-\newcommand{\mathlibcommit}{5e932f97}
+\input{../../docs/figuredeferred.tex}
+\newcommand{\mathlibcommit}{\mathlibrev}
 
 %% Bundle: D2 (tier 1, target PRD | JHEP)
 %% Source manifest: papers/D2/source_manifest.md
@@ -68,9 +69,9 @@ $\pi_4(\mathrm{SU}(2)) = \mathbb{Z}_2 \hookrightarrow
 distinct settings (SM Weyl count, Z$_{16}$ DIII bordism index,
 Rokhlin's signature theorem, Kitaev DIII period-16) and the
 generation count $N_f = 3$ appears in two independent settings
-(Z$_{16}$ + modular). The end-to-end chain — from sixteen Weyl
+(Z$_{16}$ + modular). The end-to-end chain (from sixteen Weyl
 components through three formal mechanisms to one observed
-$N_f = 3$ — is verified by \texttt{lake build} on a Lean 4
+$N_f = 3$) is verified by \texttt{lake build} on a Lean 4
 library with \totaltheorems{} theorems across \leanmodules{}
 modules with \axiomcount{} project-local axioms: the 4+1D
 gapped-interface statement is carried as a tracked-hypothesis
@@ -86,7 +87,7 @@ Mathlib-side hypotheses
 isomorphism level, H3 Adams spectral sequence convergence,
 H4 Anderson-Brown-Peterson splitting; all four are established
 results in the algebraic-topology literature, tracked pending
-Mathlib formalization --- epistemically distinct from the
+Mathlib formalization, epistemically distinct from the
 genuinely open \texttt{TPFConjecture}), two physics-conjecture
 \texttt{Prop} fields (Golterman-Shamir conditions C4 and C5;
 encoded as predicate fields on structures, not as
@@ -117,13 +118,13 @@ realization that is provably outside the standard Nielsen-Ninomiya
 no-go scope~\cite{GoltermanShamir2026,GioiaThorngrenPRL2026,TPF2026}.
 
 Three findings are striking about this convergence. First, the
-integer 16 appears in four formally distinct settings — the SM Weyl
+integer 16 appears in four formally distinct settings: the SM Weyl
 count per generation, the $\mathbb{Z}_{16}$ Dai-Freed bordism index
 in 5D, Rokhlin's theorem on the signature of spin 4-manifolds, and
 Kitaev's DIII period-16 classification of free-fermion topological
-phases. Second, the generation count $N_f = 3$ is forced — by the
+phases. Second, the generation count $N_f = 3$ is forced, by the
 modular argument and (in the no-$\nu_R$ case) by the
-$\mathbb{Z}_{16}$ argument — through two completely independent
+$\mathbb{Z}_{16}$ argument, through two completely independent
 algebraic chains. Third, the four mechanisms are not currently
 proven equivalent: their joint convergence is a fact, but a
 unifying causal explanation (the conjectural quaternionic-spinor
@@ -180,10 +181,10 @@ items whose upstream completion would discharge every remaining
 tracked hypothesis.
 
 The synthesis-level claim of the paper is the convergence itself.
-The conjectural unifying explanation —
-${\rm Spin}^{\mathbb{Z}_4}$ five-bordism factoring through a
+The conjectural unifying explanation
+(${\rm Spin}^{\mathbb{Z}_4}$ five-bordism factoring through a
 quaternionic-spinor structure that simultaneously fixes the Weyl
-count, the modular framing, and the Witten anomaly — is flagged as
+count, the modular framing, and the Witten anomaly) is flagged as
 motivational throughout. Where the source papers each present one
 slice of evidence for that conjecture, this paper exposes the joint
 evidence. Falsification at this level would be either the
@@ -236,7 +237,7 @@ c_{-}^{\rm no\,\nu_R} \;=\; 15/2 \cdot N_f,
 \label{eq:c-no-nuR}
 \end{equation}
 which fails to be an integer for any odd $N_f$ (in particular, for
-the observed $N_f = 3$ case, $c_- = 22.5$ --- fractional). For even
+the observed $N_f = 3$ case, $c_- = 22.5$, fractional). For even
 $N_f$ the right-hand side is integral and this obstruction does not
 fire; the deeper $24 \mid c_-$ modular-invariance argument below
 nevertheless forces $N_f \in 3\mathbb{Z}$ regardless of parity. We
@@ -319,7 +320,7 @@ The full chain is formally enumerated in
 \texttt{RokhlinBridge.sixteen\_convergence\_full} (per that theorem's
 Lean docstring: it indexes the four \emph{independent} occurrences
 of the integer 16 across SM Weyl count, $\mathbb{Z}_{16}$ Dai--Freed,
-Rokhlin's signature theorem, and Kitaev's DIII period — without
+Rokhlin's signature theorem, and Kitaev's DIII period, without
 asserting a formal common-origin theorem; the common-origin
 mathematical content is the external result of
 Wang~\cite{Wang2024}). The arithmetic identity
@@ -341,7 +342,7 @@ the topological factor of two $2 \mid \sigma/8$ in the field \texttt{topo}.
 Its signature is the \emph{genuine} signature of the intersection form,
 $\sigma := \mathrm{latticeSig}\,(\text{form})$ (\texttt{LatticeSignature.lean}),
 not a free parameter. The algebraic residual $8\mid\mathrm{latticeSig}\,(\text{form})$
-is \emph{not} a carried interface field --- it is itself the derived kernel-pure
+is \emph{not} a carried interface field; it is itself the derived kernel-pure
 theorem \texttt{SmoothSpinManifold4.eight\_dvd\_sig} (the isolated van der Blij
 bound, via the discharged Hasse--Minkowski input). From these,
 \texttt{SmoothSpinManifold4.rokhlin}~$:~16 \mid \sigma$ is a kernel-pure
@@ -356,7 +357,7 @@ with the $16\mid\sigma$ conjunct now an interface theorem (conditional on
 the tracked \texttt{topo} field $2\mid\sigma/8$) rather than a bare assumed
 input. (The theorem name flags the \emph{unconditional} discharge of the
 algebraic $8\mid\sigma$ floor; the $16$ leg remains conditioned on
-$2\mid\sigma/8$, as it must be --- $16\mid\sigma$ is false for general
+$2\mid\sigma/8$, as it must be: $16\mid\sigma$ is false for general
 even-unimodular forms.)
 The dependency graph routes
 \emph{even-unimodular} $+$ \emph{van der Blij} $\Rightarrow 8\mid\sigma$,
@@ -399,7 +400,7 @@ $8\mid\mathrm{rank}=\sigma$ in the definite case is the theorem
 upgrades this to $16\mid\sigma$ given the topological factor; both are kernel-pure
 (standard axioms only). The only genuinely outstanding interface input is the
 topological factor of two $2\mid\sigma/8$. This factor is the $\hat A$-genus
-evenness (Atiyah--Singer index parity), equivalently --- by Freedman--Kirby ---
+evenness (Atiyah--Singer index parity), equivalently, by Freedman--Kirby,
 the vanishing of the Arf invariant of a smoothly embedded \emph{characteristic
 surface} in the $4$-manifold. It is irreducible: Freedman's $E_8$ manifold
 ($\sigma = 8$) shows it cannot be reduced to any algebraic invariant of the
@@ -478,7 +479,7 @@ tracked-hypothesis claim pending a Mathlib-PR upstream of the
 explicit isomorphism witness): the only remaining Mathlib-side
 hypotheses for the full $\mathbb{Z}_{16}$ result are now H1
 (ko-cohomology computation), H3 (Adams convergence), and H4
-(Anderson-Brown-Peterson splitting) — none of which carry physics
+(Anderson-Brown-Peterson splitting), none of which carry physics
 content beyond their homological-algebra statements. We catalog these in
 \S\ref{sec:outlook}.
 
@@ -527,7 +528,7 @@ class is a multiple of $24$ within the scope of those classifications
 VOA at trivial weight-$1$ is a not-applicable witness and falls
 outside the scope rather than supplying a counterexample). The
 companion deliverable \texttt{lean/SKEFTHawking/Schellekens/}
-formalises the chain at the \emph{predicate} level — the substantive
+formalises the chain at the \emph{predicate} level: the substantive
 work in \texttt{NiemeierLattice.lean} and
 \texttt{HolomorphicVOAc24.lean} is predicate-level (the lattice
 classification and VOA classification are Mathlib-absent results,
@@ -557,6 +558,8 @@ M\"oller--Scheithauer scope; for the program's chiral-fermion
 setting it is a not-applicable witness rather than a counterexample.
 
 %% ══════════════════════════════════════════════════════════════════
+
+\figuredeferred{fig:d2-generation-lattice}{the modular-invariance constraint surface over generation count; the constraint is formalized as a divisibility predicate, so a continuous surface needs a modelling choice this draft has not made}
 \section{The SM $\mathbb{Z}_{16}$ anomaly and a categorical layer}
 \label{sec:z16-drinfeld}
 
@@ -677,7 +680,7 @@ explicit in \S\ref{sec:chirality-wall} via the
 Onsager-algebra $\mathbb{Z}_2 \hookrightarrow \mathbb{Z}_{16}$
 embedding.
 
-\paragraph{SPT material exhibit — NbRe noncentrosymmetric triplet
+\paragraph{SPT material exhibit: NbRe noncentrosymmetric triplet
 superconductor (Phase 6v Wave 6v.8).}
 %% Provenance: Wave 6v.8 substantive ship into D2 §"SPT classification —
 %% material exhibits". Cross-reference Lean substrate
@@ -691,7 +694,7 @@ Py/NbRe/Py heterostructures. NbRe's noncentrosymmetric crystal
 structure (lacking spatial-inversion symmetry, enabling
 antisymmetric spin-orbit coupling on the $\sim 10\,\mathrm{meV}$
 scale at $T_c \approx 8.7\,\mathrm{K}$) combined with its triplet
-pairing channel places it in the Kitaev DIII topological class —
+pairing channel places it in the Kitaev DIII topological class,
 which connects to the same Rokhlin period-16 structure that
 underlies the SM $\mathbb{Z}_{16}$ anomaly classification of this
 section. The Lean substrate ships the substantive contrast in
@@ -733,9 +736,9 @@ Zero new project-local axioms; the original tracked Prop placeholder
 via \verb|H_NbReWindingNumberIdentity_holds|.
 \textit{Scope of the universal quantification.} The universality is
 over the parameterised \verb|SCParameters| capsule under the chosen
-substrate model — a 4-conjunct ITE on the sewing-matrix generators
+substrate model, a 4-conjunct ITE on the sewing-matrix generators
 (\verb|sewingCoeffsAt|) that encodes the standard inversion-symmetry-
-sign + triplet-d-vector profile — rather than a derivation from a
+sign + triplet-d-vector profile, rather than a derivation from a
 microscopic noncentrosymmetric BdG Hamiltonian. The substrate model
 ships the canonical Pfaffian-Z$_2$ sign-counting outcome on the two
 physically-relevant quadrants
@@ -748,6 +751,8 @@ physically relevant), pinned by the witness theorems
 \verb|pfaffianSign_at_gamma_noncentrosymmetric_singlet|.
 
 %% ══════════════════════════════════════════════════════════════════
+
+\figuredeferred{fig:d2-anomaly-classification}{the anomaly classification as a lattice diagram; blocked on the Pin$^+$ $\mathbb{Z}/16$ arc, which is 5q.H substrate still under construction}
 \section{The chirality wall: a three-pillar synthesis}
 \label{sec:chirality-wall}
 
@@ -763,7 +768,7 @@ fermion outside that scope; and an algebraic framework relating the
 construction to the targeted anomaly. We have machine-verified
 all three pillars and the bridges between them.
 
-\subsection{Pillar 1 — Golterman-Shamir conditional constraints and TPF evasion}
+\subsection{Pillar 1: Golterman-Shamir conditional constraints and TPF evasion}
 
 The Golterman-Shamir (GS) conditional
 constraints~\cite{GoltermanShamir2026} classify lattice chiral
@@ -781,8 +786,8 @@ discuss the conditions for the \emph{applicability} of the
 Nielsen-Ninomiya theorem to that Hamiltonian, such that if the
 conditions are satisfied, the massless fermion spectrum must be
 vector-like. ``Evading GS'' throughout this paper therefore means
-exiting the joint scope of the nine applicability conditions ---
-and with it the Nielsen-Ninomiya obstruction --- not
+exiting the joint scope of the nine applicability conditions,
+and with it the Nielsen-Ninomiya obstruction, not
 contradicting a theorem. Our
 formalisation of these nine conditions in
 \texttt{GoltermanShamir} (14 theorems) and
@@ -792,7 +797,7 @@ substantive Lean propositions: the Brillouin zone via Mathlib's
 exterior-algebra-finite-dimensionality result documented in
 \texttt{GoltermanShamir.lean} (closed by Aristotle, graded-decomposition
 strategy); and the spectral gap and matrix
-exponential via standard Mathlib infrastructure. Two conditions (C4 --- interpolating-fields completeness; C5 ---
+exponential via standard Mathlib infrastructure. Two conditions (C4: interpolating-fields completeness; C5:
 spontaneous symmetry breaking) enter as well-typed but non-proven
 physics conjectures, encoded as inductive-constructor Prop fields on
 the GS condition record (not as Lean \texttt{axiom} declarations).
@@ -819,7 +824,7 @@ five condition-violations identified above". This is what makes
 the conditional no-go analysis and the positive construction
 (Pillar 2) two sides of one statement.
 
-\subsection{Pillar 2 — Gioia-Thorngren positive construction}
+\subsection{Pillar 2: Gioia-Thorngren positive construction}
 
 The Gioia-Thorngren (GT) BdG Hamiltonian on
 $(\mathbb{Z}/L)^3$ realises a chiral fermion explicitly. In the
@@ -856,7 +861,7 @@ where $q_A(p) = \mathbf{1}_\sigma \otimes \bigl[
 holds for all parameter values. Writing
 \eqref{eq:gt-commutation} out as a direct
 $4 \times 4$-matrix calculation reduces the entire content to a
-single trigonometric identity $\sin^2 + \cos^2 = 1$ — but only
+single trigonometric identity $\sin^2 + \cos^2 = 1$, but only
 after the right
 $\sigma\otimes\tau$-block expansion is performed, and finding
 that expansion was the key insight discovered by the Aristotle
@@ -881,7 +886,7 @@ theorems).
 The GT formalisation is a machine-verified construction of a lattice
 chiral fermion in the SK-EFT Hawking project.
 
-\subsection{Pillar 3 — Onsager and the Witten anomaly}
+\subsection{Pillar 3: Onsager and the Witten anomaly}
 
 The third pillar gives the algebraic context for the GT
 construction. The Onsager algebra $\mathfrak{O}$, generated by
@@ -912,7 +917,7 @@ The fourth homotopy group of the contracted symmetry group is
 \]
 the Witten anomaly~\cite{Witten1982}. The
 $\mathbb{Z}_2 \hookrightarrow \mathbb{Z}_{16}$ embedding lands at
-element 8 — the same element marked by the toric-code mutual
+element 8: the same element marked by the toric-code mutual
 braiding $B(e, m) = -1$ in \S\ref{sec:z16-drinfeld}. The bridge
 chain $\mathfrak{O} \to \mathfrak{su}(2) \to \mathbb{Z}_2
 \hookrightarrow \mathbb{Z}_{16}$ in
@@ -969,7 +974,7 @@ admits a bridge theorem in
 \texttt{ChiralityWallMaster} (16 theorems total). Pillar 1
 $\leftrightarrow$ Pillar 2 establishes that the GT construction
 violates exactly the GS conditions identified in
-Pillar 1 — neither more nor fewer. Pillar 2 $\leftrightarrow$
+Pillar 1, neither more nor fewer. Pillar 2 $\leftrightarrow$
 Pillar 3 establishes the Dolan-Grady-coefficient
 \texttt{DG\_COEFF=16}, the In\"on\"u-Wigner contraction of the
 GT loop algebra, and the Witten-Z$_2$ embedding.
@@ -986,6 +991,8 @@ $N_f \times 16$ Weyl-count divisibility from
 \S\ref{sec:modular}.
 
 %% ══════════════════════════════════════════════════════════════════
+
+\figuredeferred{fig:d2-chirality-wall}{the three-pillar chirality wall; F's \texttt{fig:f-chirality-three-pillar} is the same object at survey scale and the two must be drawn together}
 \section{Outlook: axiom budget, Mathlib infrastructure, and
 falsification}
 \label{sec:outlook}
@@ -1050,7 +1057,7 @@ GS condition C5 (no spontaneous symmetry breaking, encoded as
 \texttt{C5\_no\_ssb.fields\_complete : Prop}). Neither carries
 mathematical content beyond what its statement asserts; both are
 standard physics inputs. The project's \texttt{lake build} axiom
-tally is \axiomcount{} --- both these conditions and the 4+1D
+tally is \axiomcount{}: both these conditions and the 4+1D
 \texttt{TPFConjecture} are predicate \texttt{Prop} fields, not
 \texttt{axiom} declarations.
 
@@ -1060,23 +1067,23 @@ Three textbook results in algebraic topology enter as tracked
 hypotheses. All are established mathematics with standard
 published proofs, tracked here only because Mathlib lacks the
 corresponding infrastructure (spectra, the Adams spectral
-sequence, Thom spectra) --- their epistemic status is therefore
+sequence, Thom spectra); their epistemic status is therefore
 wholly different from that of the genuinely open
 \texttt{TPFConjecture} above, which is a research conjecture:
 \begin{itemize}
-\item \textbf{H1} — ko-cohomology computation
+\item \textbf{H1}: ko-cohomology computation
 (Adams~\cite{Adams1974} et seq.). The structure of
 $\pi_*({\rm ko})$ is well-known but not yet formalised in
 Mathlib.
-\item \textbf{H3} — Adams spectral sequence convergence
+\item \textbf{H3}: Adams spectral sequence convergence
 (Beaudry-Campbell). The collapse of the relevant
 $E_\infty$-page to the cobordism group requires the
 convergence theorem.
-\item \textbf{H4} — Anderson-Brown-Peterson splitting
+\item \textbf{H4}: Anderson-Brown-Peterson splitting
 of ${\rm MSpin}$ at the prime 2~\cite{ABP1967}.
 \end{itemize}
 
-\textbf{H2} --- Hom-tensor change-of-rings adjunction --- is partially
+\textbf{H2}, Hom-tensor change-of-rings adjunction, is partially
 discharged at the dimension-equality level by
 \texttt{ChangeOfRings.hom\_tensor\_adjunction\_dim}; the full
 isomorphism statement~\eqref{eq:change-of-rings} remains a tracked
@@ -1105,10 +1112,10 @@ $E_8$, $\sigma = 8$). The interface theorem
 
 \subsection{What is conjectural and motivational}
 
-The unifying explanation for the four-thread convergence — that
+The unifying explanation for the four-thread convergence (that
 ${\rm Spin}^{\mathbb{Z}_4}$ five-bordism factors through a
 quaternionic-spinor structure that simultaneously fixes the Weyl
-count, the modular framing, and the Witten anomaly — is a
+count, the modular framing, and the Witten anomaly) is a
 research conjecture. The convergence \emph{itself} is
 machine-verified; the unifying explanation is not.
 
@@ -1168,6 +1175,7 @@ $\sin^2 + \cos^2 = 1$ reduction of the GT central commutation
 \eqref{eq:gt-commutation} was a substantive contribution to the
 formalisation, not merely a closure of an existing skeleton.
 
+\figuredeferred{fig:d2-axiom-budget}{the axiom budget over the phase sequence; the per-phase axiom attribution is not emitted by \texttt{ExtractDeps} today}
 \section*{Methods and tools disclosure}
 The formal verification layer of this work was developed with
 substantial machine assistance: Lean~4 proof drafting and iteration
@@ -1176,9 +1184,11 @@ the project's staged validation pipeline. A subset of the underlying
 library's theorems was closed by the Aristotle automated theorem
 prover (Harmonic); every proof is ultimately certified by the Lean~4
 kernel via \texttt{lake build} on the public repository, independently
-of any AI tool. Manuscript prose was AI-assisted and human-reviewed;
-all numerical claims trace to the repository's computation pipeline
-through its automated validation checks.
+of any AI tool. Manuscript prose was AI-assisted and human-reviewed.
+The repository's public validation suite reports, for every
+draft, any numerical value written inline in prose rather than
+sourced from a generated table; that report is the authority on
+this manuscript's numerical provenance.
 
 \begin{thebibliography}{99}
 

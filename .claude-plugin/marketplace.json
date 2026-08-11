@@ -11,7 +11,7 @@
     {
       "name": "skeft-qa",
       "source": "./.claude/plugins/skeft-qa",
-      "description": "QA review agents (Stage 13: adversarial-reviewer, claims-reviewer, figure-reviewer) plus the loop-durability dev-harness (SessionStart re-injection + PreToolUse(AskUserQuestion) guard + goal-mode skills)."
+      "description": "Fresh-context Stage-13 paper review (does it render, is it backed, is it wrong, does it land) plus the loop-durability dev-harness that keeps native /goal loops on-track across compactions and guards web egress fail-closed. Component roster lives in the plugin's README.md, not here, so this line cannot go stale."
     }
   ]
 }

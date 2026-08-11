@@ -18,6 +18,9 @@
 
 % Canonical counts from scripts/update_counts.py.
 \input{../../docs/counts.tex}
+\input{../../docs/figuredeferred.tex}
+
+\input{bundle_counts}
 
 \begin{document}
 
@@ -44,7 +47,7 @@ A Formally Verified Survey}
 %%   one object; its faces are the sibling bundles' worth of
 %%   predictive register.
 
-We consolidate the sixteen sibling-bundle threads of the SK--EFT
+We consolidate the twenty sibling-bundle threads of the SK--EFT
 Hawking research program into a single, formally verified survey of the
 substrate-condensation approach to fundamental physics. The
 substrate's predictive register lives at the boundary partition
@@ -53,14 +56,16 @@ review reports the substrate as a single object across the program's
 sibling threads. The synthesis claim, NEW to this flagship and absent
 from any individual sibling, is that the same antisymmetric-tetrad-bilinear
 (ADW) substrate that drives the emergent-gravity content of
-Bundle~D3---a single Sakharov coefficient
+Bundle~D3 (a single Sakharov coefficient
 $G_N^{\mathrm{Sak}} = 12\pi/(N_f\,\Lambda_{\mathrm{UV}}^{2})$
-propagating across six observables---also drives the SK--EFT analog-Hawking
+propagating across six observables) also drives the SK--EFT analog-Hawking
 content of Bundle~D1 (across BEC, polariton, and graphene Dirac-fluid
 platforms; $93\%$ Lean-theorem reuse), the chirality-wall and
 modular-invariance content of Bundle~D2
-($\mathrm{Spin}^{\mathbb{Z}_4}$ 5-bordism with $N_f = 16$ matching
-D3's Sakharov-coefficient $N_f$), the dark-sector NO-GO closures of
+($\mathrm{Spin}^{\mathbb{Z}_4}$ 5-bordism, whose generation count is
+tied to D3's Sakharov-coefficient flavour count by a fixed
+per-generation ratio rather than being equal to it; see
+\S\ref{sec:synthesis-claim}), the dark-sector NO-GO closures of
 Bundle~D5 (causal-set, entropic, and Jacobson thermodynamic-GR with
 the full Phase~6m three-track closure), and the topological
 quantum-computation foundations of Bundle~D4 (one MTC, four faces).
@@ -83,8 +88,8 @@ The cosmological-constant problem is \emph{reproduced} (not solved) at
 $\Lambda_{\mathrm{emerg}}/\Lambda_{\mathrm{obs}} \gtrsim 10^{100}$
 (the rigorous Lean lower bound; heuristically $\sim 10^{122}$). All
 load-bearing claims ship with Lean~4 modules at zero \texttt{sorry}
-and zero project-local axioms; the single non-trivial hypothesis ---
-the 4+1D gapped-interface conjecture --- is carried as the
+and zero project-local axioms; the single non-trivial hypothesis,
+the 4+1D gapped-interface conjecture, is carried as the
 tracked-hypothesis \texttt{Prop} \texttt{TPFConjecture}.
 \end{abstract}
 
@@ -112,7 +117,7 @@ emergent gravitational coupling
 $G_N^{\mathrm{Sak}} = 12\pi/(N_f\,\Lambda_{\mathrm{UV}}^{2})$
 through the heat-kernel $a_2$ coefficient of an
 $N_f$-flavour Dirac fermion bundle~\cite{Sakharov1968,Adler1980,
-Vassilevich2003}. Sixteen sibling bundles in this series build on that
+Vassilevich2003}. The sibling bundles in this series build on that
 substrate and its verification stack: SK--EFT analog Hawking
 radiation in three laboratory platforms (Bundle~D1, with companion
 experimental letters E1 and E2), Standard-Model anomaly cancellation
@@ -125,21 +130,23 @@ through the program's FKLW/horizon-MTC line (Bundles~D6, D7, and D8,
 on the fault-tolerant-computation substrate, the
 classical-simulability demarcation, and universal gate compilation
 respectively), and the methodology and verification stack itself
-(Bundles~I1, I2, and I3). This flagship review is the seventeenth
-bundle. It synthesises the sixteen sibling threads into a unified
+(Bundles~I1, I2, and I3). Four further deep bundles carry the
+quantum-network, open-system, topological-metamaterial and
+dark-sector threads (Bundles~D9--D12). This flagship review is the
+twenty-first bundle. It synthesises the twenty sibling threads into a unified
 description of the substrate's predictive register and reports the
 cross-thread identities that none of the sibling bundles report
 individually.
 
-\subsection{The 17-bundle publication architecture}
+\subsection{The publication architecture}
 
 Per the project's strategy frame~\cite{Roehm2026Strategy}, the SK--EFT
-Hawking program ships across $17$ publication targets organised by
+Hawking program ships across the publication targets organised by
 target tier:
 
 \begin{itemize}
 \item \textbf{Tier 0 (1 paper):} this flagship review (Bundle~F).
-\item \textbf{Tier 1 (8 deep papers):} Bundle~D1 (analog Hawking
+\item \textbf{Tier 1 (12 deep papers, D1--D12):} Bundle~D1 (analog Hawking
   across three platforms; PRD long format), Bundle~D2 (anomaly
   constraints on Standard-Model particle content), Bundle~D3 (emergent
   gravity through BH thermodynamics; the heaviest single bundle at
@@ -230,11 +237,12 @@ The substrate's predictive register is the union of these four
 partitions. \S\ref{sec:substrate-register} is the consolidated table.
 
 \subsection{Substrate-identity synthesis claim NEW to this flagship}
+\label{sec:synthesis-claim}
 
 Each sibling bundle reports its own thread; this flagship reports the
-substrate as one object. The synthesis claim NEW to F---absent from any
+substrate as one object. The synthesis claim NEW to F (absent from any
 individual sibling bundle and load-bearing for the architectural
-argument---is that the same ADW substrate with $N_f = 16$ drives the
+argument) is that the same ADW substrate with $N_f = 16$ drives the
 program's sibling threads. Concretely:
 
 \begin{itemize}
@@ -245,9 +253,25 @@ program's sibling threads. Concretely:
   uses the same $N_f = 16$ count that, on the modular-invariance side,
   uniquely fixes the Standard-Model anomaly classification via
   $\mathrm{Spin}^{\mathbb{Z}_4}$ 5-bordism (D2
-  \S\ref{sec:chirality-wall-modular} with L2). The $N_f$ in the
-  Sakharov coefficient and the $N_f$ in the modular-invariance
-  derivation of three SM fermion generations are the same $N_f$.
+  \S\ref{sec:chirality-wall-modular} with L2). These two counts are
+  \emph{not} the same number, and we state the relation precisely rather
+  than the identity. The Sakharov $N_f$ counts Dirac species in a
+  heat-kernel expansion and is real-valued; the modular-invariance $N_f$
+  counts generations and is the natural number constrained by
+  $3 \mid N_f$. Both are read off a single fermion content, and the
+  relation between them is fixed by the per-generation Weyl count:
+  \texttt{SakharovGenerationBridge.diracFlavourNf\_eq\_scaled\_generationNf}.
+  At Standard-Model content the two are $24$ and $3$
+  (\texttt{sm\_counts\_differ}), and they coincide only for two Weyl
+  fields per generation
+  (\texttt{counts\_agree\_iff\_two\_weyl\_per\_generation}). The
+  load-bearing direction survives and is proved: the modular-invariance
+  constraint $3 \mid \text{generations}$ transfers onto the Sakharov-side
+  species count
+  (\texttt{generation\_constraint\_transfers}), so an anomaly condition
+  does constrain the emergent Newton constant. \emph{That} is the
+  substrate-identity content (one fermion content, two derived counts),
+  and it is what this flagship claims.
 \item The same SK--EFT axioms, KMS condition, and
   fluctuation-dissipation relation that close the analog-Hawking
   spectrum on the BEC platform (D1 \S\ref{sec:analog-hawking})
@@ -266,8 +290,8 @@ program's sibling threads. Concretely:
   WRT partition + HP-QEC + RT/CH knife-edge), per D4's synthesis
   claim.
 \item The dark-sector NO-GO closures of D5
-  (\S\ref{sec:dark-sector})---across causal-set, entropic-gravity, and
-  Jacobson thermodynamic-GR mechanism families---use the \emph{same}
+  (\S\ref{sec:dark-sector}), across causal-set, entropic-gravity, and
+  Jacobson thermodynamic-GR mechanism families, use the \emph{same}
   Sakharov-induced-gravity criterion that distinguishes substrate
   classes within Phase~6m's Track C. The Sakharov four-condition
   criterion is validated on Volovik--Jannes ${}^3\mathrm{He}$-A and
@@ -284,6 +308,8 @@ individual sibling bundle.
 %% =====================================================================
 %% §2 — Architectural scope
 %% =====================================================================
+
+\figuredeferred{fig:f-three-layer-architecture}{design only; the three-layer Python/Lean/Aristotle architecture exists in this draft as three bullets and has no counterpart in \texttt{visualizations.py}}
 \section{Architectural scope}
 \label{sec:architectural-scope}
 
@@ -324,8 +350,8 @@ emergent gravity, gauge erasure producing $U(1)$ from a non-Abelian
 lattice, fracton hydrodynamics producing subdiffusive emergent
 currents, and vestigial gravity as a distinct intermediate ordering.
 Layer-3 predictions in this sector are falsifiable, formalised
-(currently $\sim \substantivetheorems$ Lean theorems with zero
-\texttt{sorry} and \axiomcount{} project-local axioms; see
+(currently $\bundleTheorems$ Lean theorems in this bundle's verified
+chain, with zero \texttt{sorry} and \axiomcount{} project-local axioms; see
 \S\ref{sec:methodology}), and
 actively tested against laboratory platforms (BEC, polariton, graphene
 Dirac fluid; D1, E1, E2).
@@ -375,7 +401,7 @@ $\sorrycount$ \texttt{sorry}.
 
 \textbf{Track-level verdicts.}
 \begin{itemize}
-\item \textbf{Track A --- Causal-set DE} (\texttt{CausalSetDarkEnergy.lean},
+\item \textbf{Track A: Causal-set DE} (\texttt{CausalSetDarkEnergy.lean},
   12 theorems): three NO-GO-R5 phenomenological + causal-set
   d'Alembertian NO-GO-R2 reaffirmed via 4D gradient instability.
   Three publishable structural caveats survive independent of DESI:
@@ -383,9 +409,9 @@ $\sorrycount$ \texttt{sorry}.
   Barrow-bound prescription dependence; BDG
   $\sigma_\Lambda = \alpha_{\mathrm{BDG}}/\sqrt{V}$ first-principles
   decomposition.
-\item \textbf{Track B --- Entropic-gravity DE}
+\item \textbf{Track B: Entropic-gravity DE}
   (\texttt{EntropicGravityDarkEnergy.lean}, 17 theorems): \emph{eight
-  NO-GO-R5 unanimous} --- a complete-mechanism-family NO-GO closure
+  NO-GO-R5 unanimous}: a complete-mechanism-family NO-GO closure
   in Phase~6m. Verlinde~2017, Padmanabhan-CosMIn,
   Hossenfelder--Verlinde post-Yoon--Guha, Cadoni--Tuveri DEC, Li~2004
   HDE, Tsallis HDE, Barrow HDE, and Odintsov-D'Onofrio-Paul
@@ -399,7 +425,7 @@ $\sorrycount$ \texttt{sorry}.
   Burnham--Anderson moderate threshold); the remaining four are
   structurally closed. Seven of eight candidates have
   $r_d$-independent NO-GO mechanisms.
-\item \textbf{Track C --- Jacobson thermodynamic-GR DE}
+\item \textbf{Track C: Jacobson thermodynamic-GR DE}
   (\texttt{JacobsonThermoGRDarkEnergy.lean}, 22 theorems):
   highest-survival track with five-plus R5 survivors. M3 EGJ $f(R)$
   Exp and ArcTanh are the strongest CLEARED-R5 of any track in
@@ -415,7 +441,7 @@ $\sorrycount$ \texttt{sorry}.
 four-condition criterion's one-way implication
 $\Lambda_J = \Lambda_{HK} \Rightarrow$ four-condition is validated on
 Volovik--Jannes ${}^3\mathrm{He}$-A and falsified on
-Finazzi--Liberati--Sindoni acoustic-BEC (condition (ii) fails---only
+Finazzi--Liberati--Sindoni acoustic-BEC (condition (ii) fails: only
 phonons have a BEC effective metric). The converse biconditional
 reading was honestly retired in Phase 6o Wave 4a Track 4 in favour of
 a load-bearing depletion-factor witness on \texttt{SakharovExtended}.
@@ -484,6 +510,8 @@ formulation:
 %% =====================================================================
 %% §3 — Gauge erasure (paper3)
 %% =====================================================================
+
+\figuredeferred{fig:f-bundle-dependency-network}{the data source is the pairwise apex-closure intersection over the 21 bundles, and two bundles had apexes declared or amended on 2026-08-09 (D6, D9); the graph is not stable enough to draw}
 \section{Gauge erasure}
 \label{sec:gauge-erasure}
 
@@ -529,7 +557,7 @@ hydrodynamics, Pretko--Radzihovsky fracton
 hydrodynamics~\cite{PretkoRadzihovsky2018}, and Maldacena's
 $\mathcal{N}=4$ super-Yang--Mills hydrodynamic
 limit~\cite{Maldacena1997} all share the same erasure selection
-rule. Domain walls---not Goldstone bosons---carry the residual
+rule. Domain walls, not Goldstone bosons, carry the residual
 non-Abelian information. This links forward to the Polyakov-loop
 confinement order parameter in Bundle~D3 \S 14 and to the colour-flavour
 locked diquark condensate in D3 \S 16 with~\cite{AlfordRajagopalWilczek1999}.
@@ -573,6 +601,8 @@ three sibling bundles without an additional mechanism.
 %% =====================================================================
 %% §4 — SK-EFT analog Hawking radiation across three platforms (D1 + E1 + E2)
 %% =====================================================================
+
+\figuredeferred{fig:f-substrate-growth}{a per-phase declaration census; \texttt{lean\_deps.json} carries the totals but not the phase attribution, which \texttt{ExtractDeps} does not currently emit}
 \section{SK--EFT analog Hawking radiation across three platforms}
 \label{sec:analog-hawking}
 
@@ -659,8 +689,12 @@ platform, the corresponding values are $\delta_{\mathrm{disp}} \approx
 -19\%$, $\delta_{\mathrm{diss}}$ subdominant; the sign-flip on
 $\delta_{\mathrm{disp}}$ is a substrate prediction distinguishing
 polariton from BEC. On the graphene platform, $\delta_{\mathrm{disp}}
-\approx -2.8\%$, $\delta_{\mathrm{diss}}$ subdominant; both
-corrections are smaller because of the lower dispersion ratio.
+\approx -2.8\%$ and $\delta_{\mathrm{diss}} \approx +6.5\%$, so the
+\emph{dissipative} term dominates and the net shift is $\approx +3.7\%$
+-- $T_{\rm eff}$ above $T_H$, not below. (This sentence carried the
+pre-repair state, in which $\Gamma_H$ was formed without the $v_F^2$
+factor and $\delta_{\mathrm{diss}}$ was subdominant by orders; the
+repair is recorded in D1 Table~I and E2.)
 
 The hierarchy of corrections per platform is the load-bearing content
 that translates the universal substrate framework into per-platform
@@ -698,7 +732,7 @@ $2{+}1$D rather than the BEC $3{+}1$D / polariton $2{+}1$D
 configurations, but the \texttt{SKDoubling.lean} +
 \texttt{SecondOrderSK.lean} machinery transfers across $\sim 93\%$
 of the load-bearing theorem content (deterministic count
-$106/114$: \texttt{scripts/count\_theorem\_reuse.py})---the
+$106/114$: \texttt{scripts/count\_theorem\_reuse.py}): the
 substrate-platform-agnostic
 property at the Lean-formalisation scope.
 
@@ -733,6 +767,8 @@ collectively rather than individually.
 %% =====================================================================
 %% §5 — Chirality wall + modular invariance (D2 + L2)
 %% =====================================================================
+
+\figuredeferred{fig:f-platform-comparison}{the three-platform comparison table ($T_H$, $\delta_{\rm disp}$, reuse fraction); the graphene column moved in the 2026-08-09 $\Gamma_H$ dimensional repair and E2's companion trim is still settling}
 \section{Chirality wall and modular invariance}
 \label{sec:chirality-wall-modular}
 
@@ -810,8 +846,8 @@ TPF evasion).} The nine Golterman--Shamir conditions delimit the
 applicability of the Nielsen--Ninomiya obstruction: a chiral lattice
 gauge theory with manifest gauge invariance satisfying all nine
 kinematical conditions must be vector-like. The substrate's chirality
-wall exits this applicability scope --- rather than contradicting a
-theorem --- through a topological-phase-factor (TPF) construction
+wall exits this applicability scope (rather than contradicting a
+theorem) through a topological-phase-factor (TPF) construction
 that breaks gauge invariance manifestly while preserving the
 topological invariant (D2 \S 4).
 
@@ -842,14 +878,14 @@ with that hypothesis.
 
 The chirality-wall program rests on a single non-trivial hypothesis:
 that any 4+1D SPT slab admits a gapped interface trivialisation iff
-its bulk anomaly cancels --- the gapped interface required by
+its bulk anomaly cancels: the gapped interface required by
 Pillar~2. In the Lean library this is the tracked-hypothesis
 \texttt{Prop} \texttt{TPFConjecture} (in \texttt{SPTClassification};
 formerly \texttt{axiom gapped\_interface\_axiom}, converted to a
 tracked \texttt{Prop} on 2026-05-19, so that the library declares
 \axiomcount{} project-local axioms). It is the only undischarged
 ingredient of the chirality-wall chain at the Lean-formalisation
-scope; with the conversion, the entire 17-bundle program ships
+scope; with the conversion, the entire program ships
 \axiomcount{} project-local axioms. All load-bearing substrate claims
 are theorems with zero \texttt{sorry}; content downstream of the
 conjecture carries \texttt{TPFConjecture} as an explicit hypothesis
@@ -886,15 +922,30 @@ observation that the $N_f = 16$ derived in D2 (modular framing /
 Rokhlin / 16-convergence) and the $N_f$ in the Sakharov coefficient
 $G_N^{\mathrm{Sak}} = 12\pi/(N_f\,\Lambda_{\mathrm{UV}}^{2})$ derived
 in D3 \S 17 (heat-kernel calibration on the substrate's Dirac-fermion
-bundle) are the same $N_f$. The same fermion-content count that fixes
-the Standard-Model anomaly classification also fixes the substrate's
-emergent gravitational coupling. This is one of the four substrate-identity
+bundle) are two readings of ONE fermion content, related by a fixed
+proportionality rather than identical. They are not the same number:
+\texttt{SakharovGenerationBridge.sm\_counts\_differ} proves that at
+Standard-Model content the anomaly-side count is $3$ and the
+Sakharov-side count is $24$, and
+\texttt{counts\_agree\_iff\_two\_weyl\_per\_generation} gives the exact
+condition under which they would coincide (two Weyl fields per
+generation, which the Standard Model does not satisfy). What is
+substantive, and what
+\texttt{SakharovGenerationBridge.generation\_constraint\_transfers}
+proves, is the transfer: the modular-invariance constraint
+$3 \mid N_{\mathrm{gen}}$, consumed from
+\texttt{GenerationConstraint.generation\_mod3\_constraint} rather than
+assumed, carries onto the Sakharov-side species count, so a condition derived
+from anomaly cancellation constrains the coefficient of the emergent
+Newton constant. This is one of the four substrate-identity
 threads listed in \S\ref{sec:strategic-frame} and is the F-unique
 synthesis content that none of the sibling bundles report individually.
 
 %% =====================================================================
 %% §6 — Emergent gravity through BH thermodynamics (D3 + L1 + L3)
 %% =====================================================================
+
+\figuredeferred{fig:f-chirality-three-pillar}{the three-pillar synthesis as one diagram; D2 owns the pillars and its own \texttt{fig:d2-chirality-wall} must be drawn first so the two agree}
 \section{Emergent gravity through black-hole thermodynamics}
 \label{sec:emergent-gravity}
 
@@ -975,17 +1026,17 @@ $\alpha = 1/5$, $N_f = 4$ instance. The factor-6000 figure on the
 emergent Newton constant ratio is an informal extrapolation from
 this $\geq 3$-orders-of-magnitude coupling deficit and is not
 separately Lean-verified at the Newton-constant level. Wen's
-mechanism is consistent for a $U(1)$ photon---its original
-target---but cannot scale to gravity at quantitative magnitude.
+mechanism is consistent for a $U(1)$ photon (its original
+target) but cannot scale to gravity at quantitative magnitude.
 
 \paragraph{Closure 3: GW170817 vestigial-graviton falsification (D3
 \S 6 with Bundle~L1).} The Volovik vestigial-second-sound
 mode~\cite{Volovik2024Vestigial} is a candidate for the substrate's
 graviton, but the natural-range parameter band
-$\chi_{\mathrm{vest}}\in[0.1,10]$ --- a project-adopted order-unity
+$\chi_{\mathrm{vest}}\in[0.1,10]$ (a project-adopted order-unity
 naturalness window about the random-phase-approximation
 bubble-integral scale, a modeling choice of this project rather than
-a published derivation --- is universally falsified by the
+a published derivation) is universally falsified by the
 GW170817 multi-messenger constraint (asymmetrically
 $-3\times 10^{-15} \le \Delta c/c \le +7\times 10^{-16}$;
 conservatively two-sided $|\Delta c/c| \le 3\times
@@ -1140,7 +1191,7 @@ which is $\sim 46$ orders below the
 Kosteleck\'y--Russell--Tasson~\cite{KosteleckyRussellTasson2008}
 experimental bound on cosmic axial torsion ($T < 10^{-31}\,\mathrm{GeV}$
 at 95\% CL). The substrate's prediction is in the cleared register
-(\S\ref{sec:substrate-register}) by 46 orders of magnitude---a
+(\S\ref{sec:substrate-register}) by 46 orders of magnitude: a
 prediction that is verified at experimental precision but with
 substantial headroom against tightening of the bound.
 
@@ -1203,6 +1254,8 @@ mechanism.
 %% =====================================================================
 %% §7 — Topological QC foundations (D4)
 %% =====================================================================
+
+\figuredeferred{fig:f-entropic-closure}{the Phase-6m 8/8 entropic closure with its threshold column; the threshold values live in per-wave roadmaps and have never been collected into one table}
 \section{Topological quantum-computation foundations}
 \label{sec:topological-qc}
 
@@ -1226,8 +1279,8 @@ HaydenPreskill2007,WalkerWang2012,PastawskiYoshidaHarlowPreskill2015}).
 
 \subsection{One MTC, four faces}
 
-The synthesis claim NEW to D4---which the substrate-identity claim
-of this flagship inherits---is the observation that the substrate
+The synthesis claim NEW to D4 (which the substrate-identity claim
+of this flagship inherits) is the observation that the substrate
 carries a \emph{single} MTC: the SU(2)$_k$ Chern--Simons MTC at the
 horizon. The single MTC underwrites four ostensibly distinct
 substrate computations:
@@ -1236,7 +1289,7 @@ substrate computations:
 \item \textbf{Face 1 (Drinfeld centre).} The Drinfeld-centre
   construction $\mathcal{Z}(\mathrm{Vec}_{\mathbb{Z}_N})$ supplies the
   Standard-Model anomaly classification anchor of Bundle~D2 \S 3.4.
-  The cross-bridge here---which Bundle~D4 \S 4 makes explicit---is
+  The cross-bridge here (which Bundle~D4 \S 4 makes explicit) is
   that the centre $\mathbb{Z}_N$ from D3's gauge-erasure mechanism
   (\S\ref{sec:gauge-erasure}) populates the Drinfeld category in the
   toric-code anchor.
@@ -1348,11 +1401,11 @@ character-for-character in the Phase~7c.8 review pass), and the
 once (in D3's \texttt{BHEntropyMicroscopic.lean}) and consumed by
 D4 through the cross-bridge.
 
-\paragraph{Forward reference — D6 (fault-tolerant-computation
+\paragraph{Forward reference: D6 (fault-tolerant-computation
 substrate) absorption pending.}
 %% Provenance: F-bundle FT-QC chapter checklist entry per Phase 6v/6w
 %% strategy synthesis §3.5.3 task #8. Tracks pending D6 absorption.
-A sibling bundle to D4, \emph{D6 — ``Formally Verified Fault-Tolerant
+A sibling bundle to D4, \emph{D6: ``Formally Verified Fault-Tolerant
 Quantum Computation Substrate''} was created at Phase~6v Wave~6v.1
 (2026-05-26) and covers the fault-tolerant-computation substrate
 side of the topological-quantum-computation chain. D6 absorbs four
@@ -1376,20 +1429,25 @@ falsifier); the four pending sections remain forward-referenced.
 The D6 absorption tracking checklist (per the Phase~6v/6w strategy
 synthesis §3.5.3 task~\#8) is:
 \begin{itemize}
-\item[$\Box$] Wave~6v.2 ship (Shor T-gate counts) — pending.
-\item[$\Box$] Wave~6v.5 ship (APM-LDPC + hashing bound) — pending.
-\item[$\Box$] Wave~6v.6 ship (W-state QFT in $\mathbb{Q}(\zeta_N)$) —
-  pending.
-\item[$\Box$] Phase~6t SK retroactive absorption into D6 §2 — pending.
+\item[$\boxtimes$] Wave~6v.2 ship (Shor T-gate counts): \textbf{shipped}
+  (\texttt{ShorTGateCount.wave\_6v\_2\_substantive\_closure}, a declared D6 apex).
+\item[$\boxtimes$] Wave~6v.5 ship (APM-LDPC + hashing bound): \textbf{shipped}
+  (\texttt{APMLdpcHashingBound.wave\_6v\_5\_substantive\_closure}, a declared D6 apex).
+\item[$\boxtimes$] Wave~6v.6 ship (W-state QFT in $\mathbb{Q}(\zeta_N)$):
+  \textbf{shipped} (\texttt{WStateQFT} declarations in D6's apex closure).
+\item[$\Box$] Phase~6t SK retroactive absorption into D6 §2: pending.
 \item[$\Box$] D6 bundle-level Stage~13 adversarial-review pass at
-  Phase~6v close — pending.
+  Phase~6v close: pending. \emph{No bundle in the programme currently holds a
+  reviewer-triple GREEN; see \S\ref{sec:phase7-closeout}.}
 \item[$\Box$] F~§6 (TQC foundations) absorption of D6 summary
-  sub-section — pending (this checklist item closes the loop).
+  sub-section: pending (this checklist item closes the loop).
 \end{itemize}
 
 %% =====================================================================
 %% §8 — Dark sector under substrate constraints (D5)
 %% =====================================================================
+
+\figuredeferred{fig:f-kernel-purity}{an axiom-closure census across the corpus; \texttt{axiom\_closure\_allowlist} computes it per declaration but nothing aggregates it for display}
 \section{Dark sector under substrate constraints}
 \label{sec:dark-sector}
 
@@ -1472,7 +1530,7 @@ quantitative thresholds:
 \begin{itemize}
 \item Verlinde 2017 (galaxy-cluster mass-density exclusion at
   $\geq 5\sigma$ under nominal profile assumptions, weakening once
-  weak-lensing/X-ray profile systematics are included ---
+  weak-lensing/X-ray profile systematics are included:
   Halenka--Miller, PRD \textbf{102}, 084007
   (2020)~\cite{HalenkaMiller2020}; plus structural
   CMB and Bullet-cluster critiques carrying no verified $\sigma$
@@ -1567,6 +1625,8 @@ final-form architectural statement on dark-energy mechanism families.
 %% =====================================================================
 %% §9 — Methodology and the verification stack (I1 + I2)
 %% =====================================================================
+
+\figuredeferred{fig:f-nogo-map}{the kernel-checked negative frontier; \texttt{KERNEL\_NOGO\_REGISTRY} holds the refutations but the atlas view that would lay them out is derived per-session and not yet a figure source}
 \section{Methodology and the verification stack}
 \label{sec:methodology}
 
@@ -1590,7 +1650,7 @@ evidence that something is wrong with the substrate analysis:
   computed in canonical Python modules (\texttt{src/core/formulas.py},
   \texttt{src/core/constants.py}, \texttt{src/wkb/spectrum.py},
   \texttt{src/adw/gap\_equation.py}). Pipeline Invariant \#1
-  designates \texttt{formulas.py} as canonical---the only place
+  designates \texttt{formulas.py} as canonical: the only place
   physics formulas live.
 \item \textbf{Layer 2: Lean 4 formal proofs.} Every formula in
   \texttt{formulas.py} carries a Lean theorem reference; every Lean
@@ -1683,11 +1743,15 @@ implicit assumptions). The reviewer's tool budget is hard-capped
 walk; partial-coverage caveats are documented in the verdict file
 when the cap is hit.
 
-The 17-bundle architecture is gated by reviewer-triple closure (Stage
+The 21-bundle architecture is gated by reviewer-triple closure (Stage
 9 figure-reviewer + Stage 10 claims-reviewer + Stage 13
 adversarial-reviewer; all three GREEN for a bundle to be marked
-closed). At F flagship close-out, all 16 sibling bundles plus this
-flagship will have passed reviewer-triple closure independently.
+closed). At F flagship close-out, all 20 sibling bundles plus this
+flagship are intended to have passed reviewer-triple closure
+independently. That gate is \emph{not} met at the time of writing:
+no bundle currently holds a reviewer-triple GREEN, and this flagship
+is itself RED with open blockers. The architecture below describes
+the intended close-out state, not the achieved one.
 
 \subsection{Algebraic-Lorentzian-geometry backbone}
 
@@ -1952,13 +2016,16 @@ target is identified.
 \label{sec:open-problems}
 
 \subsection{Phase 7 close-out summary}
+\label{sec:phase7-closeout}
 
-At the time of this flagship's submission, the substrate program has
-shipped 17 bundles to reviewer-triple-closed Stage-13 GREEN status.
-The 17 bundles ship across five tiers: Tier~0 (this flagship),
-Tier~1 (D1--D8; eight deep papers), Tier~2 (L1--L3; three PRL splashes
-extracted from D2 and D3), Tier~3 (I1--I3; three infrastructure
-papers), and Tier~4 (E1--E2; two experimental letters). The
+The substrate program comprises 21 bundles. \emph{None has yet
+reached reviewer-triple-closed Stage-13 GREEN}, and this section
+describes the intended shipping architecture rather than an achieved
+state. The 21 bundles span five tiers: Tier~0 (this flagship),
+Tier~1 (D1--D12; twelve deep papers), Tier~2 (L1--L3; three PRL
+splashes extracted from D2 and D3), Tier~3 (I1--I3; three
+infrastructure papers), and Tier~4 (E1--E2; two experimental
+letters). The
 architecture is the project's strategy
 frame~\cite{Roehm2026Strategy}.
 
@@ -1977,14 +2044,14 @@ All load-bearing claims are theorems.
 
 The submission sequence per~\cite{Roehm2026Strategy} \S 3 begins with
 the Tier-2 PRL splashes (L1, L2, L3) as arXiv vouchers ahead of the
-Tier-1 deep-paper submissions. The Tier-1 deep papers (D1--D8)
+Tier-1 deep-paper submissions. The Tier-1 deep papers (D1--D12)
 follow the splashes, with D3 (the heaviest at $\sim 50$pp)
 shipped after L1 and L3 since L1 and L3 extract content from D3.
 The Tier-3 infrastructure papers (I1, I2, I3) ship in parallel with
 the Tier-1 deep papers; I2 may delay if the Mathlib upstream cycle
 extends. The Tier-4 experimental letters (E1, E2) ship with the D1
 deep paper as companion content. This flagship review (F) ships last,
-citing all 16 siblings in their Phase-7-final form.
+citing all 20 siblings in their Phase-7-final form.
 
 The submission cadence is intentionally tied to the architecture's
 internal cross-bridges: each downstream submission cites upstream
@@ -2058,9 +2125,9 @@ horizons:
   Phase 8 collaboration with the Paris--LKB and Dean--Kim--Lucas
   groups is on the roadmap.
 \item \textbf{Is the chirality-wall hypothesis dischargeable?} The
-  single non-trivial hypothesis --- the tracked-hypothesis
+  single non-trivial hypothesis, the tracked-hypothesis
   \texttt{Prop} \texttt{TPFConjecture} (formerly
-  \texttt{axiom gapped\_interface\_axiom}) --- is a mathematical
+  \texttt{axiom gapped\_interface\_axiom}), is a mathematical
   conjecture (existence of a particular gapped-interface
   construction). Its discharge is a Mathlib-upstream-cycle target
   but may also depend on independent mathematical-topology research.
@@ -2099,7 +2166,13 @@ the F-unique synthesis content:
   (D3 \S\ref{sec:emergent-gravity}) and the $N_f = 16$ that uniquely
   fixes the Standard-Model anomaly classification via
   $\mathrm{Spin}^{\mathbb{Z}_4}$ 5-bordism (D2
-  \S\ref{sec:chirality-wall-modular} with L2) are the same $N_f$.
+  \S\ref{sec:chirality-wall-modular} with L2) are two readings of one
+  fermion content, related by the per-generation Weyl count and NOT
+  equal: the anomaly-side and Sakharov-side counts are $3$ and $24$
+  at Standard-Model content
+  (\texttt{SakharovGenerationBridge.sm\_counts\_differ}). The
+  substantive thread is that the anomaly constraint \emph{transfers} to
+  the Sakharov coefficient.
 \item The SK--EFT axioms, KMS condition, and fluctuation-dissipation
   relation that close the BEC analog Hawking spectrum (D1
   \S\ref{sec:analog-hawking}) re-close on polariton (E1) and
@@ -2125,7 +2198,7 @@ worth of predictive register.
 \subsection{Predictive register at the boundary partition}
 
 The substrate's predictive register lives at the boundary partition
-of phenomenology---each prediction lands cleared, falsified,
+of phenomenology: each prediction lands cleared, falsified,
 structurally blocked, or reproduced. This is what distinguishes
 substrate physics from speculative model-building: the substrate
 fails predictively at definite locations, and the substrate succeeds
@@ -2148,28 +2221,28 @@ problem at $\Lambda_{\mathrm{emerg}}/\Lambda_{\mathrm{obs}} \gtrsim
 
 \S\ref{sec:substrate-register} ships the consolidated table.
 
-\subsection{The 17-bundle architecture as a coherent submission package}
+\subsection{The architecture as a coherent submission package}
 
-Per the project's strategy frame~\cite{Roehm2026Strategy}, the 17
-bundles ship as a coherent submission package: the eight Tier-1 deep
-papers (D1--D8) carry the full substantive content; the three Tier-2
+Per the project's strategy frame~\cite{Roehm2026Strategy}, the 21
+bundles ship as a coherent submission package: the twelve Tier-1 deep
+papers (D1--D12) carry the full substantive content; the three Tier-2
 PRL splashes extract headline results from D3 (L1, L3) and D2 (L2);
 the three Tier-3 infrastructure papers describe the methodology (I1),
 the verified-statistics software (I2), and the LDP/It\^o substrate
 (I3); the two Tier-4 experimental letters carry per-platform
 companion content (E1 polariton, E2 graphene); and this Tier-0
-flagship review (Bundle~F) integrates the sixteen sibling threads
+flagship review (Bundle~F) integrates the twenty sibling threads
 into a single survey with substrate-identity synthesis claim. NO-GO results are reported as first-class predictive
 content rather than absences. All load-bearing claims ship with Lean
 4 modules at zero \texttt{sorry} and \axiomcount{} project-local
-axioms; the single non-trivial hypothesis --- the 4+1D
-gapped-interface conjecture --- is carried as the tracked-hypothesis
+axioms; the single non-trivial hypothesis, the 4+1D
+gapped-interface conjecture, is carried as the tracked-hypothesis
 \texttt{Prop} \texttt{TPFConjecture}. The architecture is
 intentionally append-friendly: new
 Tier-2 PRL splashes can be added if a future Phase 6X wave produces
 a 4-page-PRL-shaped headline.
 
-The substrate is one object; the 17-bundle architecture is its
+The substrate is one object; the bundle architecture is its
 coherent description across SM-plus-GR phenomenology.
 
 %% BUNDLE_APPEND_INSERT_HERE — bundle_append.py inserts new sections at
@@ -2186,7 +2259,7 @@ coherent description across SM-plus-GR phenomenology.
 
 \bibitem{Roehm2026Strategy}
 J.~G.~Roehm,
-``SK--EFT Hawking 17-bundle publication architecture,''
+``SK--EFT Hawking publication architecture,''
 project paper-strategy frame, in preparation (2026).
 
 \bibitem{Roehm2026D1}

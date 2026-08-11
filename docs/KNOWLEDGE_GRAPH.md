@@ -126,9 +126,22 @@ Shapes encode semantic roles — a visual dimension independent of color:
 - `projected` — PROJECTED tier parameter (no primary source expected)
 - `unverified` — no verification
 
-### Edge Types (25 — Phase 1 + 1.5 + 5v Wave 2a + Phase 5v coverage fix + 5v Wave 10b)
+### Edge Types (Phase 1 + 1.5 + 5v Wave 2a + Phase 5v coverage fix + 5v Wave 10b)
 
-**Phase 1 / 1.5 base edges (12):**
+> **Counts live in [`docs/architecture/SURFACE_INVENTORY.md`](architecture/SURFACE_INVENTORY.md#knowledge-graph--types)**,
+> which derives declared-vs-emitted from the AST and is gated by
+> `validate.py --check architecture_inventory_fresh`. This heading carried a hardcoded
+> **25** while the section below listed 25 rows whose own sub-heading said 8 for a
+> 10-row table, and while two emitted types were missing entirely — the arithmetic
+> that a reader would have to redo on every edit is exactly what rots.
+>
+> **Emission status is the column that matters.** Five declared types
+> (`CONTRADICTS`, `IMPACTED_BY`, `PRODUCES`, `SUPERSEDES`, `SUPPORTS`) have **no
+> emitter**, and three of those are queried by readiness gates — see
+> `validate.py --check gate_edge_types_are_emitted`, which fails on any dead type not
+> disclosed there.
+
+**Phase 1 / 1.5 base edges:**
 
 | Edge | From | To | Semantics |
 |------|------|----|-----------|
@@ -145,18 +158,18 @@ Shapes encode semantic roles — a visual dimension independent of color:
 | `DEPENDS_ON_AXIOM` | LeanTheorem/LeanDef | LeanAxiom | Transitive axiom dependency (from `collectAxioms`) |
 | `ASSUMES` | LeanTheorem | Hypothesis | Theorem takes this hypothesis as a parameter (from HYPOTHESIS_REGISTRY.dependent_theorems) |
 
-**Phase 5v Wave 2a readiness-system edges (8):**
+**Phase 5v Wave 2a readiness-system edges:**
 
-| Edge | From | To | Purpose | Wired in |
-|------|------|----|---------|----------|
-| `VERIFIES` | PythonTest | Formula/Parameter/LeanTheorem | Test covers artifact; carries `test_kind` attribute | Wave 2a+ |
-| `FLAGS` | ReviewFinding | any | Review flagged this artifact | Wave 2c |
-| `SUPERSEDES` | ReviewFinding | ReviewFinding | Later review resolved/reopened earlier finding | Wave 2c |
-| `PRODUCES` | ProductionRun | Formula/PaperClaim | Run generated data this depends on | Wave 2d |
-| `REPORTS` | Paper | CountMetric | Paper reports a count value (comparable to canonical) | Wave 2g |
-| `SUPPORTS` | artifact | artifact | Mutual reinforcement (dual of CONTRADICTS) | Wave 2f |
-| `CONTRADICTS` | artifact | artifact | Cross-artifact inconsistency | Wave 2f |
-| `IMPACTED_BY` | ReadinessGate | any | Gate flips to `needs-recheck` if upstream changes | Wave 4 |
+| Edge | From | To | Purpose | Wired in | Emitted? |
+|------|------|----|---------|----------|----------|
+| `VERIFIES` | PythonTest | Formula/Parameter/LeanTheorem | Test covers artifact; carries `test_kind` attribute | Wave 2a+ | ✅ |
+| `FLAGS` | ReviewFinding | any | Review flagged this artifact | Wave 2c | ✅ |
+| `SUPERSEDES` | ReviewFinding | ReviewFinding | Later review resolved/reopened earlier finding | Wave 2c | ❌ — the supersession ledger is read from `review_finding_supersessions.json` as a **status override on the finding node**, never materialised as an edge |
+| `PRODUCES` | ProductionRun | Formula/PaperClaim | Run generated data this depends on | Wave 2d | ❌ **deferred to Wave 4, which closed DONE 2026-04-15 without it.** Queried by `ProductionRunHealth`, whose prose-regex fallback fired and masked the missing primary path |
+| `REPORTS` | Paper | CountMetric | Paper reports a count value (comparable to canonical) | Wave 2g | ✅ |
+| `SUPPORTS` | artifact | artifact | Mutual reinforcement (dual of CONTRADICTS) | Wave 2f | ❌ — queried by `NarrativeGrounding`, which therefore passes vacuously for every paper carrying no `interesting` ProseClaim |
+| `CONTRADICTS` | artifact | artifact | Cross-artifact inconsistency | Wave 2f | ❌ — queried by `CrossPaperConsistency` |
+| `IMPACTED_BY` | ReadinessGate | any | Gate flips to `needs-recheck` if upstream changes | Wave 4 | ❌ — not gate-queried |
 | `CITES_SOURCE` | Paper | PrimarySource | `\bibitem{key}` in paper .tex resolves to a registered CITATION_REGISTRY entry | Phase 5v coverage fix |
 | `CITES_THEOREM` | Paper | LeanTheorem/LeanDef | `\texttt{name}` in paper .tex resolves uniquely to a Lean declaration | Phase 5v coverage fix |
 
@@ -167,6 +180,19 @@ Shapes encode semantic roles — a visual dimension independent of color:
 | `BACKED_BY` | Sentence | any artifact (Formula / LeanTheorem / LeanAxiom / Parameter / PrimarySource / Hypothesis / AristotleRun / ProductionRun / LeanModule) | One edge per chain link proposed by claims-reviewer-v2. Carries `meta.link_kind` + `meta.link_state` (derived at build-time: `resolved` / `llm_verified_only` / `human_verified` / `stale` / `missing_target` — NOT human-ratified separately; sentence-level is the ratification axis, per-link is UX affordance). | Wave 10b |
 | `LOGGED_BY` | AuditEvent | any node (target of the audit event) | Sentence node + all `LOGGED_BY` edges incoming = full audit trail for that sentence. Emitted from `audit_log.jsonl`. | Wave 10b |
 | `MEMBER_OF` | Sentence | ClaimCluster | Cross-paper claim-cluster membership; replaces pairwise `SAME_CLAIM_AS` for n-ary equivalence. Any cluster size 2+ uses this edge. Carries `meta.member_confidence`. | Wave 10b (data from Wave 10f) |
+
+**Emitted-but-undeclared, added 2026-08-06:**
+
+Both were live in `build_graph.py` and absent from this table until the end-to-end
+architecture map diffed the doc against the AST. `CLAIMS_APEX` is the sharper case —
+**it was added to the graph on 2026-08-06 by the author of that map, without updating
+this doc.** Schema drift produced while documenting schema drift, which is the argument
+for the derived census rather than for trying harder.
+
+| Edge | From | To | Purpose | Wired in | Emitted? |
+|------|------|----|---------|----------|----------|
+| `CLAIMS_APEX` | Paper (bundle) | LeanTheorem | The results a bundle **declares** it establishes, from `papers/<bundle>/bundle_metadata.json` `apex_theorems`. The bundle's substrate is the DERIVED transitive closure over `name_deps_project` from these; declaring the apex is the only hand-maintained half. Gated by `validate.py --check bundle_apex_resolves`. | ADR-010, 2026-08-06 | ✅ |
+| `USES` | LeanTheorem/LeanDef | LeanTheorem/LeanDef/LeanStructure/… | Direct-reference proof-DAG edge from `name_deps_project` — "this declaration's body mentions that one by name". Backs the dashboard's *Show proof dependencies* toggle and the apex-closure computation. | Wave 9c | ⚙️ **opt-in** — `extract_uses_edges` returns `[]` unless `SK_EFT_INCLUDE_USES=1`, because the full DAG is ~40k edges. A deliberate cost gate, not drift: absent from a default graph by design. |
 
 **Write-path discipline (Wave 10b).** Human verification state + audit events are written EXCLUSIVELY via `scripts/sentence_state.py` CLI. No free-form JSON edits. The CLI enforces schema validation + file-lock + atomic writes. LLMs, dashboard backend, and ad-hoc scripts all route through the same mutation chokepoint. Corresponds to Wave 9f's JSON-canonical-at-rest architecture — PG+AGE is rebuildable mirror; no bidirectional pollution.
 
@@ -309,7 +335,7 @@ Integrated as CHECK 16 in the validation suite. Conflicts are hard failures; orp
 | `lean/SKEFTHawking/ExtractDeps.lean` | Lean meta script: declaration extraction + collectAxioms |
 | `lean/lean_deps.json` | Cached extraction output (gitignored) |
 | `scripts/extract_lean_deps.py` | Python wrapper with staleness check for Lean extraction |
-| `scripts/build_graph.py` | Extracts 13 node types + 11 edge types, writes to JSON + PG+AGE |
+| `scripts/build_graph.py` | Extracts every node + edge type above, writes to JSON + PG+AGE. (Said "13 node types + 11 edge types" until 2026-08-06, against a live 26 + 22 — counts belong in `docs/architecture/SURFACE_INVENTORY.md`, which derives them.) |
 | `scripts/graph_integrity.py` | Structural integrity queries + axiom checks + PG sync |
 | `scripts/provenance_dashboard.py` | Flask dashboard + API endpoints + Proof Architecture data |
 | `scripts/templates/dashboard.html` | Main dashboard template (Datastar) |

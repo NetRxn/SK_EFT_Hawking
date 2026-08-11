@@ -493,6 +493,7 @@ import SKEFTHawking.LDP.Varadhan
 import SKEFTHawking.LDP.LDPCompatibleSKEFT
 import SKEFTHawking.HigherOrderSK
 import SKEFTHawking.AcousticMetric
+import SKEFTHawking.SakharovGenerationBridge
 import SKEFTHawking.SKDoubling
 import SKEFTHawking.SecondOrderSK
 import SKEFTHawking.HawkingUniversality
@@ -4003,6 +4004,7 @@ import SKEFTHawking.QuantumNetwork.NetworkCapacity
 import SKEFTHawking.QuantumNetwork.NetworkCapacityStrongDuality
 -- Phase 6AN Wave 4 (2026-06-08): FDT (Johnson–Nyquist) noise floor + LDP rare-event tail (devices).
 import SKEFTHawking.QuantumNetwork.FDTNoiseFloor
+import SKEFTHawking.QuantumNetwork.FDTLDPBridge
 -- Phase 6AM W4 (2026-06-09): quantum (Callen–Welton) coth floor — QHO CanonicalEnsemble meanEnergy from PhysLib.
 import SKEFTHawking.QuantumNetwork.QuantumFDTFloor
 -- Phase 6AK Wave 6AK.3 (2026-06-03): unitary-error-basis exact diamond distance (two-qubit Pauli).
@@ -5195,6 +5197,43 @@ import SKEFTHawking.Control.DriveCalibration
 -- the worst-mechanism (max) form is unconditional, the additive form requires a stated disjointness
 -- binder, and the strict gap between them is PROVED rather than claimed.
 import SKEFTHawking.Control.CompositeReadoutCeilings
+
+-- ── Modules recovered into the build graph, 2026-08-05 ──────────────────────────
+-- These 25 existed on disk but were reachable from nothing, so Lake never built them,
+-- ExtractDeps never indexed them, and the sorry/axiom guards never saw them. They
+-- leaked in arc-sized clusters over four months (the whole FaultTolerance arc on
+-- 2026-05-12; SymTFT on 2026-07-27). Two did not compile at all when first built —
+-- FKLW.BinaryTetrahedral and SingularChainComplexCat, both repaired in the same
+-- commit. `validate.py --check lean_modules_in_build_graph` now enforces that the
+-- filesystem and this import list agree. See
+-- docs/audits/2026-08-05-pr-review-3/VERIFIED-C2-sorry-guard.md.
+import SKEFTHawking.AtlasAttr
+import SKEFTHawking.AxiomClosure
+import SKEFTHawking.FKLW.BinaryTetrahedral
+import SKEFTHawking.FKLW.StandardTorusSU2
+import SKEFTHawking.FKLW.TrappedIonAlphabet
+import SKEFTHawking.FKLW.TrappedIonSU4Calibration
+import SKEFTHawking.FaultTolerance.AGP.Threshold
+import SKEFTHawking.FaultTolerance.Chernoff
+import SKEFTHawking.FaultTolerance.Concatenation
+import SKEFTHawking.FaultTolerance.Counting
+import SKEFTHawking.FaultTolerance.DoubleExp
+import SKEFTHawking.FaultTolerance.ExRec
+import SKEFTHawking.FaultTolerance.Malignant
+import SKEFTHawking.FaultTolerance.MalignantUnionBound
+import SKEFTHawking.FaultTolerance.ConcatenatedComposition
+import SKEFTHawking.FaultTolerance.StabilizerCode
+import SKEFTHawking.FaultTolerance.SteaneCode
+import SKEFTHawking.FaultTolerantUQC
+import SKEFTHawking.SingularCapCastChain
+import SKEFTHawking.SingularCapHomologySubdiv
+import SKEFTHawking.SingularChainComplexCat
+import SKEFTHawking.SingularConnSquareCloseUncond
+import SKEFTHawking.SingularPDWindow2
+import SKEFTHawking.SingularSurfaceIntersectionFormInstances
+import SKEFTHawking.SymTFT.CenterLinear
+import SKEFTHawking.SymTFT.ElectricSeparable
+import SKEFTHawking.SymTFT.VecGLinear
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization

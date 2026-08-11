@@ -64,7 +64,7 @@ def test_readiness_display_surfaced():
     assert "b.readiness_display" in BUNDLES_TPL
 
 
-def test_load_bundles_summary_matches_mapping_doc():
+def test_load_bundles_summary_matches_mapping_doc(bundles_summary):
     """The rendered roster is exactly what PAPER_DRAFT_MAPPING.md assigns.
 
     Derived rather than pinned to a literal: authorizing or lifting a bundle
@@ -73,12 +73,16 @@ def test_load_bundles_summary_matches_mapping_doc():
     """
     from bundle_migration import parse_mapping
     from bundle_readiness import aggregate_by_bundle, load_findings_by_paper
-    from datastar_bundles import MAPPING_DOC, load_bundles_summary
+    from datastar_bundles import MAPPING_DOC
 
+    # ⚠️ The independent re-derivation is DELIBERATE anti-tautology design and stays:
+    # comparing the rendered roster against the mapping doc via a different path is
+    # the whole point. Only the shared, idempotent `load_bundles_summary()` is
+    # session-scoped.
     expected = set(aggregate_by_bundle(
         parse_mapping(MAPPING_DOC.read_text()), load_findings_by_paper()))
 
-    summary = load_bundles_summary()
+    summary = bundles_summary
     codes = {b["code"] for b in summary["bundles"]}
     assert codes == expected
     assert summary["total_bundles"] == len(expected)
@@ -86,13 +90,11 @@ def test_load_bundles_summary_matches_mapping_doc():
         assert "readiness_display" in b, b["code"]
 
 
-def test_every_rendered_bundle_has_a_title():
+def test_every_rendered_bundle_has_a_title(bundles_summary):
     """D10 shipped into the mapping and _TIER_OF but never into _BUNDLE_TITLES,
     so it rendered with a BLANK title cell for weeks. The lookup is a `.get`
     default, so nothing failed loudly."""
-    from datastar_bundles import load_bundles_summary
-
-    blank = [b["code"] for b in load_bundles_summary()["bundles"] if not b["title"]]
+    blank = [b["code"] for b in bundles_summary["bundles"] if not b["title"]]
     assert blank == [], f"bundles rendering with an empty title: {blank}"
 
 

@@ -6914,7 +6914,7 @@ def fig_graphene_dissipation_window():
                   annotation_text='ω_H = Γ_mr (detection threshold)',
                   annotation_position='top left')
 
-    # Platform markers
+    # Platform markers — momentum relaxation
     for name, plat in GRAPHENE_PLATFORMS.items():
         if name == 'PN_junction_10nm':
             continue  # Not acoustic horizon
@@ -6931,10 +6931,35 @@ def fig_graphene_dissipation_window():
                 showlegend=False,
             ))
 
+    # Viscous window ω_H/Γ_H — the rate that actually binds (2026-08-09).
+    # Plotted because the Γ_mr series alone is misleading: the two run in
+    # OPPOSITE directions in T_H, and only the viscous one crosses unity.
+    from src.core.constants import HBAR as _HBAR, K_B as _KB
+    from src.graphene.hawking_predictions import graphene_hawking_prediction
+
+    _visc_T, _visc_r = [], []
+    for name in GRAPHENE_PLATFORMS:
+        if name == 'PN_junction_10nm':
+            continue
+        pred = graphene_hawking_prediction(name)
+        omega_H = _KB * pred['T_H_K'] / _HBAR
+        _visc_T.append(pred['T_H_K'])
+        _visc_r.append(omega_H / pred['Gamma_H_s1'])
+
+    _order = np.argsort(_visc_T)
+    fig.add_trace(go.Scatter(
+        x=np.array(_visc_T)[_order], y=np.array(_visc_r)[_order],
+        mode='markers+lines',
+        name='ω_H / Γ_H (viscous — binding)',
+        marker=dict(size=11, color=COLORS['amber'], symbol='square'),
+        line=dict(color=COLORS['amber'], width=2, dash='dot'),
+    ))
+
     apply_layout(fig,
         xaxis=dict(title='Hawking temperature T_H (K)', type='log'),
-        yaxis=dict(title='ω_H / Γ_mr', type='log'),
-        title=dict(text='Dissipation Window for Hawking Detection — Graphene',
+        yaxis=dict(title='ω_H / Γ  (dashed line: Γ = ω_H)', type='log'),
+        title=dict(text='Dissipation Windows — Graphene: momentum relaxation '
+                        'vs viscous attenuation',
                    font=TITLE_FONT),
         height=500, width=700,
     )

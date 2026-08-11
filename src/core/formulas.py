@@ -470,7 +470,12 @@ def effective_temperature_ratio(omega, c_s, kappa, D,
     # definition SecondOrderSK.GammaH and transonic_background.
     # compute_dissipative_correction. Forming Γ_H at the mode wavenumber ω/c_s
     # would make this first-order term spuriously scale with frequency (B-05).
-    Gamma_H = (gamma_1 + gamma_2) * (kappa / c_s) ** 2 if c_s > 0 else 0.0
+    # Routed through the canonical `horizon_damping_rate` in THIS module. It was
+    # open-coded here with the exact `if c_s > 0 else 0.0` sentinel that function's
+    # own docstring condemns — inside the canonical home, so the rule was broken
+    # where it is declared. A negative c_s silently reported a DISSIPATIONLESS
+    # horizon (ratio 0.9948 instead of an error). Latent: all callers pass c_s > 0.
+    Gamma_H = horizon_damping_rate(gamma_1, gamma_2, kappa, c_s)
     delta_diss = first_order_correction(Gamma_H, kappa) if kappa > 0 else 0.0
 
     # Second-order correction: mode-dependent (k = ω/c_s), FREQUENCY-DEPENDENT.
@@ -489,6 +494,80 @@ def effective_temperature_ratio(omega, c_s, kappa, D,
 # ════════════════════════════════════════════════════════════════════
 # WKB turning point shift (WKBAnalysis.lean: turning_point_shift_nonzero)
 # ════════════════════════════════════════════════════════════════════
+
+def horizon_damping_rate(gamma_1, gamma_2, kappa, c_s):
+    """
+    Horizon damping rate from EFT transport coefficients.
+
+    Γ_H = (γ₁ + γ₂) · k_H²  =  (γ₁ + γ₂) · (κ/c_s)²
+
+    This is the canonical home for the identity (Pipeline Invariant 1). It was
+    previously written inline in `compute_dissipative_correction` and
+    re-derived — wrongly — in `src/graphene/hawking_predictions.py`, which
+    dropped the velocity² and produced a quantity in [s·m⁻²] labelled [s⁻¹].
+    Callers must use this function rather than open-coding the conversion.
+
+    Lean: SKEFTHawking.SecondOrderSK.GammaH, SKEFTHawking.SecondOrderSK.gammaH_def, SKEFTHawking.SecondOrderSK.gammaH_via_kH
+
+    Source: original
+
+    Args:
+        gamma_1, gamma_2: first-order transport coefficients [m²/s]
+        kappa: surface gravity [s⁻¹]
+        c_s: sound speed [m/s]
+
+    Returns:
+        Γ_H [s⁻¹]
+    """
+    # ⚠️ RAISES rather than returning 0.0. A non-physical sound speed used to
+    # produce a physically MEANINGFUL answer — zero damping — which flows into
+    # `δ_diss = Γ_H/κ = 0` and reads downstream as "dissipationless system". This
+    # function was extracted precisely because an open-coded version of it
+    # silently produced a wrong-by-eleven-orders number; a silent sentinel is the
+    # same failure mode with a different value.
+    if c_s <= 0:
+        raise ValueError(
+            f"c_s must be a positive sound speed [m/s], got {c_s!r}. "
+            f"Returning 0.0 here would report a dissipationless horizon.")
+    return (gamma_1 + gamma_2) * (kappa / c_s) ** 2
+
+
+def conformal_kinematic_viscosity(eta_over_sT, c_s):
+    """
+    Momentum-diffusion constant of a 2+1D conformal relativistic fluid.
+
+    ν = η·v_F²/w = (η/(sT))·v_F² = 2·(η/(sT))·c_s²
+
+    The two forms are identical for a conformal fluid, where c_s = v_F/√2. The
+    c_s form is preferred because c_s is *measured* on both graphene platforms
+    while v_F is a band parameter defined only for the monolayer.
+
+    Why v_F² and not c_s² alone: in relativistic hydrodynamics the momentum
+    density is w/v_F², so ν = η/(w/v_F²). The sound-attenuation coefficient
+    carries [2(d−1)/d]·η + ζ; in **d = 2** that bracket is exactly 1·η, and
+    ζ = 0 by conformal symmetry — so there is no residual O(1) factor. (The
+    familiar 4/3 is the d = 3 value and does not apply here.)
+
+    Lean: SKEFTHawking.DiracFluidSK.kinematicViscosity, SKEFTHawking.DiracFluidSK.kinematicViscosity_eq_vF_form
+
+    Source: original — Phase-5w survey §"Sound attenuation by viscosity gives
+    Γ_sound ~ (η/w)k²"; Kovtun-Son-Starinets for the η/s normalisation.
+
+    Args:
+        eta_over_sT: η/(s·T) [s] — the KSS ratio divided by temperature
+        c_s: sound speed [m/s]
+
+    Returns:
+        ν [m²/s]
+
+    Raises:
+        ValueError: if `c_s <= 0`. Its sibling `horizon_damping_rate` had a silent
+            `return 0.0` on the same condition; this one had no guard at all.
+    """
+    if c_s <= 0:
+        raise ValueError(f"c_s must be a positive sound speed [m/s], got {c_s!r}")
+    return 2.0 * eta_over_sT * c_s ** 2
+
 
 def turning_point_shift(Gamma_H, kappa, c_s):
     """
@@ -622,7 +701,22 @@ def adw_effective_potential(C, G, Lambda, N_f):
     Returns:
         V_eff(C)
     """
-    if C < 1e-15:
+    # ⚠️ `abs(C)`, NOT `C`. This read `if C < 1e-15`, which caught EVERY negative
+    # tetrad magnitude and returned 0.0 — flattening the entire negative branch of a
+    # DOUBLE WELL to zero. Every term above is even in `C` (`C²`, `C⁴`, and `C²`
+    # inside the log), so `V(-C) = V(C)` identically; measured before the fix:
+    #     V(+0.5, G=1, Λ=10, N_f=4) = -0.49876809672521716
+    #     V(-0.5, …)                =  0.0
+    # The guard's only job is the `Λ²/C²` division at the origin, which is a
+    # statement about |C|.
+    #
+    # LATENT, not observed: every caller today samples C >= 0 only —
+    # `gap_equation.py:334` `np.linspace(0, Lambda, n_points)`, the minimizer's
+    # `bounds=(1e-6 * Lambda, C_max)` at `gap_equation.py:220`, and
+    # `ginzburg_landau.py:683` `np.linspace(0.5, 5.0, …)`. So no published figure
+    # or solver result was wrong. The fix is to keep it that way if a caller ever
+    # sweeps the full double well; `test_effective_potential_even_in_C` is the guard.
+    if abs(C) < 1e-15:
         return 0.0
     V_tree = C**2 / (2.0 * G)
     prefactor = N_f / (16.0 * np.pi**2)

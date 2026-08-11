@@ -28,12 +28,12 @@ from scripts.graph_integrity import run_integrity_checks
 class TestIntegrityReportStructure:
     """Tests that the integrity report has all expected keys and valid types."""
 
-    def test_integrity_report_structure(self):
+    def test_integrity_report_structure(self, graph_integrity_report):
         """Report has all expected keys: legacy (orphan_nodes, broken_chains,
         ungrounded_claims, missing_provenance, summary, conflicts,
         unclassified_axioms) plus Phase 5v Wave 10b sentence/audit/cluster
         + last_modified checks."""
-        report = run_integrity_checks()
+        report = graph_integrity_report
 
         # Top-level keys (Wave 10b adds 6 new check buckets)
         expected_keys = {
@@ -113,12 +113,12 @@ class TestIntegrityReportStructure:
 class TestOrphanClaimGuard:
     """R-06 regression guard: zero orphan paper-claim nodes."""
 
-    def test_no_orphan_paper_claims(self):
+    def test_no_orphan_paper_claims(self, graph_integrity_report):
         """Every PaperClaim node is CLAIMS-connected to its paper. The pre-R-06
         graph had 128 orphan claims; the CLAIMS-edge extractor now connects every
         discovered claim, so this must stay 0. A non-zero count is a hard fail in
         validate.py --check graph_integrity."""
-        report = run_integrity_checks()
+        report = graph_integrity_report
         assert report['summary']['orphan_claims'] == 0, (
             f"{report['summary']['orphan_claims']} orphan paper-claim(s): "
             f"{[o['id'] for o in report['orphan_claims'][:10]]}"
@@ -131,14 +131,14 @@ class TestOrphanClaimGuard:
 class TestDetectsKnownConflict:
     """Tests that the integrity checker detects conflicts via verification status."""
 
-    def test_detects_known_conflict(self):
+    def test_detects_known_conflict(self, all_graph_nodes, graph_integrity_report):
         """Conflict detection is consistent: summary count matches conflict list,
         and any conflict entries have the expected fields.
 
         Note: omega_perp previously had a conflict but it has been resolved.
         This test validates the detection mechanism works structurally.
         """
-        report = run_integrity_checks()
+        report = graph_integrity_report
 
         # Summary count must match the conflict list length
         assert report['summary']['conflicts'] == len(report['conflicts'])
@@ -152,7 +152,7 @@ class TestDetectsKnownConflict:
 
         # Cross-check: independently count conflict nodes from the graph
         from scripts.build_graph import extract_all_nodes
-        nodes = extract_all_nodes()
+        nodes = all_graph_nodes
         expected_conflicts = sum(
             1 for n in nodes if n.get('verification') == 'conflict'
         )
@@ -169,16 +169,16 @@ class TestDetectsKnownConflict:
 class TestReviewFindingIntegrity:
     """ReviewFindings should participate in FLAGS edges (otherwise orphan)."""
 
-    def test_no_orphaned_findings(self):
+    def test_no_orphaned_findings(self, all_graph_nodes, all_graph_node_ids, all_graph_edges):
         """Every ReviewFinding is either (a) source of a FLAGS edge, or
         (b) part of a SUPERSEDES chain. Orphan findings indicate the
         heuristic body-text paper-attribution failed and the finding
         won't surface in the dashboard."""
         from scripts.build_graph import extract_all_nodes, extract_all_edges
 
-        nodes = extract_all_nodes()
-        node_ids = {n['id'] for n in nodes}
-        edges = extract_all_edges(node_ids)
+        nodes = all_graph_nodes
+        node_ids = all_graph_node_ids
+        edges = all_graph_edges
 
         findings = [n for n in nodes if n['type'] == 'ReviewFinding']
         if not findings:
@@ -211,13 +211,13 @@ class TestReviewFindingIntegrity:
 class TestCountMetricIntegrity:
     """CountMetric snapshot values should match canonical counts.json."""
 
-    def test_count_metric_matches_canonical(self):
+    def test_count_metric_matches_canonical(self, all_graph_nodes):
         """Every CountMetric node whose id ends in ':current' carries the
         canonical value from counts.json in meta.value. Drift is a bug in
         the extractor (stale snapshot) or in counts.json itself."""
         from scripts.build_graph import extract_all_nodes
 
-        nodes = extract_all_nodes()
+        nodes = all_graph_nodes
         metrics = [n for n in nodes if n['type'] == 'CountMetric']
         if not metrics:
             pytest.skip("No CountMetric nodes")
@@ -248,7 +248,7 @@ class TestCountMetricIntegrity:
 class TestFormulaTestCoverage:
     """Formulas covered only by bounds tests have no correctness coverage."""
 
-    def test_bounds_only_formulas_flagged(self):
+    def test_bounds_only_formulas_flagged(self, all_graph_nodes, all_graph_node_ids):
         """A Formula with VERIFIES incoming edges ALL of test_kind='bounds'
         has no golden/identity coverage — this is a ComputationCorrectness
         gate signal. This test does not fail; it asserts the integrity
@@ -258,8 +258,8 @@ class TestFormulaTestCoverage:
             extract_all_nodes, extract_formula_nodes, extract_verifies_edges,
         )
 
-        nodes = extract_all_nodes()
-        node_ids = {n['id'] for n in nodes}
+        nodes = all_graph_nodes
+        node_ids = all_graph_node_ids
         verifies = [e for e in extract_verifies_edges(node_ids) if e['type'] == 'VERIFIES']
         if not verifies:
             pytest.skip("No VERIFIES edges")
@@ -282,9 +282,31 @@ class TestFormulaTestCoverage:
         covered = len(incoming_by_target)
         if covered == 0:
             pytest.skip("No formulas have VERIFIES coverage")
-        bounds_only_rate = len(bounds_only) / covered
-        assert bounds_only_rate < 0.80, (
-            f"{bounds_only_rate:.0%} of covered formulas ({len(bounds_only)}/"
-            f"{covered}) have bounds-only test coverage; indicates systemic "
-            f"lack of golden/identity tests. Example: {bounds_only[:3]}"
-        )
+        # ⚠️ A ZERO-HEADROOM RATCHET, measured AT the live population.
+        #
+        # This went through two wrong versions. It first asserted
+        # `bounds_only_rate < 0.80` against a live 0.101 — 70 points of headroom, an
+        # eightfold collapse needed to fire, on a test whose own docstring said "This
+        # test does not fail". I replaced that with `0.0 <= rate <= 1.0`, which a
+        # reviewer then PROVED unfalsifiable: `bounds_only` is a comprehension over
+        # `incoming_by_target`, `covered = len(incoming_by_target)`, and `covered == 0`
+        # is already skipped — so the range holds for every possible input. That
+        # traded a weak test for a vacuous one, which the house rule forbids:
+        # a replacement must be STRONGER than what it replaces.
+        #
+        # The house idiom is a count frozen at what the corpus actually reaches, and
+        # lowered — never raised — when the debt shrinks. 35 of 347 formulas have
+        # bounds-only coverage today. If that grows, someone added a formula with no
+        # golden/identity test and this fires; if it shrinks, lower the number in the
+        # same commit that earns it.
+        BOUNDS_ONLY_CEILING = 35
+
+        assert len(bounds_only) <= BOUNDS_ONLY_CEILING, (
+            f"{len(bounds_only)} of {covered} covered formulas have bounds-only "
+            f"coverage, above the frozen {BOUNDS_ONLY_CEILING}. A formula gained "
+            f"VERIFIES edges that are ALL test_kind='bounds' — it has no "
+            f"golden/identity coverage. New: {sorted(bounds_only)[:3]}")
+        assert len(bounds_only) == BOUNDS_ONLY_CEILING, (
+            f"bounds-only coverage FELL to {len(bounds_only)} from "
+            f"{BOUNDS_ONLY_CEILING} — good news the ratchet must record. Lower "
+            f"BOUNDS_ONLY_CEILING here, in this commit; headroom makes it unfireable.")

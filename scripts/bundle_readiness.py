@@ -90,7 +90,19 @@ _DIR_DATE_RE = re.compile(r"^(\d{4}-\d{2}-\d{2})(?:-T?(\d{3,4}))?")
 # Plain full-bundle stage13_status enum values per BUNDLE_DIRECTORY_SCHEMA.md.
 # Anything else (e.g. D6's "green_phase6AA_section (...)") is a freeform
 # caveat string and is surfaced verbatim in the heatmap.
+#: Declared `stage*_status` vocabulary. ⚠️ EXTENDED 2026-08-09 (TODO-D5): the set
+#: below covered stage13 ONLY, and three values live in the corpus were undeclared —
+#: measured `not_started` (2), `skeleton` (1), `pending-redo` (1), all of them on
+#: stage9/stage10, which had NO enum guard at all. An undeclared value on an
+#: unguarded stage is indistinguishable from a typo, and both read as "not green".
 _PLAIN_STAGE13_STATUSES = {"pending", "green", "yellow", "red", ""}
+#: The full live vocabulary, per stage. `not_started` and `skeleton` are legitimate
+#: pre-review states; `pending-redo` marks a stage invalidated by a later append.
+_STAGE_STATUS_ENUM = frozenset({
+    "pending", "green", "yellow", "red", "",
+    "not_started", "skeleton", "pending-redo",
+})
+_GUARDED_STAGE_FIELDS = ("stage9_status", "stage10_status", "stage13_status")
 
 sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 from bundle_migration import parse_mapping, MAPPING_DOC  # noqa: E402
@@ -106,6 +118,7 @@ from bundle_registry import (  # noqa: E402
     BUNDLE_CODES as _BUNDLE_ORDER,
     TIER_OF as _TIER_OF,
 )
+from bundle_json import write_bundle_json  # noqa: E402
 
 
 def load_findings_by_paper() -> dict[str, list[dict]]:
@@ -229,6 +242,7 @@ def resolve_stage13_reviews(*, backfill: bool) -> dict[str, dict]:
     for b in sorted(_VALID_BUNDLE_TARGETS):
         rec = {
             "date": None,
+            "kind": None,
             "source": None,
             "backfilled": False,
             "backfilled_this_run": False,
@@ -245,7 +259,15 @@ def resolve_stage13_reviews(*, backfill: bool) -> dict[str, dict]:
             raw_status = str(md.get("stage13_status") or "")
             if raw_status not in _PLAIN_STAGE13_STATUSES:
                 rec["status_caveat"] = raw_status
+            # TODO-D5: stage9/stage10 were unguarded entirely. A value outside the
+            # declared vocabulary on ANY stage is recorded, not silently accepted.
+            off = [f"{f}={md.get(f)!r}" for f in _GUARDED_STAGE_FIELDS
+                   if str(md.get(f) or "") not in _STAGE_STATUS_ENUM]
+            if off:
+                rec["stage_status_undeclared"] = off
 
+        if md is not None:
+            rec["kind"] = md.get("stage13_review_kind")
         if md is not None and md.get("last_stage13_review"):
             rec["date"] = str(md["last_stage13_review"])[:10]
             src = md.get("last_stage13_review_source")
@@ -265,14 +287,21 @@ def resolve_stage13_reviews(*, backfill: bool) -> dict[str, dict]:
                 if backfill and md is not None:
                     md["last_stage13_review"] = date
                     md["last_stage13_review_source"] = note
-                    md_path.write_text(json.dumps(md, indent=2) + "\n")
+                    write_bundle_json(md_path, md)
                     rec["backfilled_this_run"] = True
         out[b] = rec
     return out
 
 
-def _blocked_p1_gates_by_paper() -> dict[str, list[str]]:
-    """Bundle/paper key -> names of its BLOCKED priority-1 ReadinessGates.
+#: Stage-13 evidence kinds that earn a GREEN readiness verdict. Mirrors
+#: `record_review.KINDS_SUFFICIENT_FOR_GREEN`; kept as a literal rather than imported so
+#: the readiness layer does not take a dependency on the writer CLI, and asserted equal
+#: to it by `tests/test_record_review.py`.
+_KINDS_SUFFICIENT_FOR_GREEN = frozenset({"full-adversarial"})
+
+
+def _blocked_p1_gates_by_paper() -> dict[str, list[str]] | None:
+    """Bundle/paper key -> names of its BLOCKED priority-1 ReadinessGates, or None.
 
     Added 2026-07-31 (self-audit, corroborated by D12 Stage-13 round-7 finding 8.2).
     This module's verdict is computed from review findings ONLY, so it cannot see the
@@ -283,9 +312,22 @@ def _blocked_p1_gates_by_paper() -> dict[str, list[str]]:
     simply had no obligation to agree with the gate, which is exactly the shape of the
     round-6 8.1 defect one layer over.
 
-    Returns an empty mapping (never raises) if the graph is unavailable, and callers
-    treat that as "no downgrade" — the graph is already a hard dependency of
-    `load_findings_by_paper`, so an outage there fails loudly upstream.
+    Returns ``None`` — NOT ``{}`` — when the gates could not be computed, and
+    `aggregate_by_bundle` refuses to issue GREEN in that case.
+
+    ⚠️ **CORRECTED 2026-08-04.** This returned ``{}`` on ANY exception, documented as
+    *"callers treat that as 'no downgrade'"*, justified by "the graph is already a hard
+    dependency of `load_findings_by_paper`, so an outage there fails loudly upstream".
+    That reasoning does not hold: `load_findings_by_paper` calls
+    `extract_review_finding_nodes`, **not** `build_graph_json`, so a failure *inside*
+    `build_graph_json` or a NEW evaluator bug in `evaluate_all_gates` was swallowed
+    here and nowhere else. The P1-gate downgrade then silently vanished and a bundle
+    could render 🟢 GREEN — through the error path of the very function added to stop
+    that (D6 and D10 were the live instances it was written for).
+
+    `{}` and "could not compute" are different facts and must not share a value; that
+    is the same `UNEVALUATED`-vs-`clear` conflation `QA_QI_INFRASTRUCTURE_MAP` §7
+    names as the systemic pattern.
     """
     try:
         from readiness_gates import evaluate_all_gates
@@ -295,8 +337,10 @@ def _blocked_p1_gates_by_paper() -> dict[str, list[str]]:
             if r.state == "blocked" and r.priority == 1:
                 out.setdefault(r.paper, []).append(r.gate)
         return out
-    except Exception:
-        return {}
+    except Exception as exc:  # noqa: BLE001 — reported, never silently absorbed
+        print(f"[WARN] P1-gate downgrade could not be computed "
+              f"({type(exc).__name__}: {exc}) — GREEN will be withheld", file=sys.stderr)
+        return None
 
 
 def aggregate_by_bundle(
@@ -348,6 +392,7 @@ def aggregate_by_bundle(
 
         rev = review_info.get(b, {}) or {}
         review_recorded = bool(rev.get("date"))
+        review_kind = rev.get("kind")
 
         # Stage-13 readiness verdict (S5 closure 2026-06-10): GREEN
         # additionally requires a RECORDED fresh-context Stage-13 review.
@@ -362,10 +407,42 @@ def aggregate_by_bundle(
             readiness, readiness_display = "GREEN", "GREEN"
 
         # GREEN must survive every P1 gate, not only the finding-derived ones.
-        gate_block = sorted(blocked_p1.get(b, []))
-        if readiness == "GREEN" and gate_block:
-            readiness = "YELLOW"
-            readiness_display = f"YELLOW (P1 gate blocked: {', '.join(gate_block)})"
+        # `blocked_p1 is None` means the gates could NOT be computed — which is not
+        # the same as "no gate is blocked", so GREEN is withheld rather than granted
+        # by default (2026-08-04; see `_blocked_p1_gates_by_paper`).
+        if blocked_p1 is None:
+            gate_block = []
+            if readiness == "GREEN":
+                readiness = "YELLOW"
+                readiness_display = "YELLOW (P1 gates UNVERIFIED — could not be computed)"
+        else:
+            gate_block = sorted(blocked_p1.get(b, []))
+            if readiness == "GREEN" and gate_block:
+                readiness = "YELLOW"
+                readiness_display = f"YELLOW (P1 gate blocked: {', '.join(gate_block)})"
+
+        # ── ADR-011 Phase 2d: two more ways GREEN is WITHHELD rather than granted ──
+        # Both follow the pattern this layer already uses twice (`blocked_p1 is None`
+        # above; `evaluate_all_gates`' crash handling): a thing that was NOT MEASURED
+        # must not render as a thing that was measured and found fine.
+        if readiness == "GREEN" and review_kind not in _KINDS_SUFFICIENT_FOR_GREEN:
+            # A recorded review is not necessarily a review of the right SCOPE. Any
+            # document referenced by `stage13_review_doc` satisfies `review_recorded`,
+            # so a targeted 16-anchor attribution sweep counted exactly as a full
+            # fresh-context adversarial pass — which is how D9, the portfolio's only
+            # GREEN, reached GREEN with its Stage 10 never run.
+            readiness = "UNMEASURED"
+            readiness_display = (
+                f"UNMEASURED (Stage-13 evidence kind="
+                f"{review_kind or 'unrecorded'}; only "
+                f"{'/'.join(sorted(_KINDS_SUFFICIENT_FOR_GREEN))} earns GREEN)")
+        elif readiness == "GREEN" and not (
+                _bundle_metadata_path(b).parent / "claims_review.json").is_file():
+            # No Stage-10 artifact at all. `chain_canonicalize --report` measured this
+            # directly on 2026-08-01: D6 and D9 have no `claims_review.json`, and F and
+            # I3 have one carrying ZERO chain links.
+            readiness = "UNMEASURED"
+            readiness_display = "UNMEASURED (Stage 10 never run — no claims_review.json)"
 
         by_bundle[b] = {
             "sources": sorted(sources),
@@ -554,7 +631,10 @@ def write_heatmap(
     ]
 
     tier_map = _TIER_OF
-    icon = {"GREEN": "🟢", "YELLOW": "🟡", "RED": "🔴"}
+    # ⚪ for UNMEASURED, deliberately not 🟡: a bundle nobody measured is a
+    # different fact from a bundle measured and found short, and rendering both
+    # amber is what let an unmeasured bundle read as a merely-cautious one.
+    icon = {"GREEN": "🟢", "YELLOW": "🟡", "RED": "🔴", "UNMEASURED": "⚪"}
 
     caveat_lines: list[str] = []
     any_backfilled = False
@@ -708,7 +788,7 @@ def write_metadata_counts(by_bundle: dict[str, dict]) -> list[str]:
                if k != "readiness_last_computed"):
             continue
         meta.update(updates)
-        meta_path.write_text(json.dumps(meta, indent=2, ensure_ascii=False) + "\n")
+        write_bundle_json(meta_path, meta)
         changed.append(bundle)
     return changed
 

@@ -169,7 +169,22 @@ def test_no_active_sorry():
     }
 
     lean_dir = LEAN_DIR / "SKEFTHawking"
-    for lean_file in lean_dir.glob("*.lean"):
+    # rglob, not glob (2026-08-06). The non-recursive form scanned 1 372 of 2 038
+    # modules — every namespace subdirectory (QuantumNetwork/, GloriosoLiu/,
+    # CrooksAnalogHawking/, Resurgence/, …) was unscanned while the test's name
+    # promised the whole substrate. Exactly the defect `compute_lean_hash`'s
+    # docstring records fixing for the extraction cache; this call site was missed.
+    # Widening cost nothing: measured 0 active sorries in the 666 newly-covered
+    # files, so the population grew and the verdict did not move.
+    lean_files = sorted(lean_dir.rglob("*.lean"))
+    assert len(lean_files) > 1500, (
+        f"only {len(lean_files)} .lean files found under {lean_dir} — the scan has "
+        "silently narrowed, and a scan that matches nothing passes vacuously"
+    )
+    for lean_file in lean_files:
+        # Matched on bare NAME, so an allow-listed file is exempt wherever it sits.
+        # Both current entries are top-level and unique; revisit if a subdirectory
+        # ever introduces a same-named module.
         if lean_file.name in SORRY_ALLOWED:
             continue
         content = lean_file.read_text()

@@ -70,11 +70,27 @@ def compute_lean_hash() -> str:
     ``CrooksAnalogHawking/SKEFTHorizonBridge.lean`` and modified
     ``GloriosoLiu/{EntropyCurrent,OnsagerReciprocity}.lean`` did not refresh
     counts because no top-level file changed.
+
+    ⚠️ **The root aggregate is hashed too, and it is the load-bearing one.**
+    ``lean/SKEFTHawking.lean`` sits ONE LEVEL ABOVE ``LEAN_DIR`` and is what
+    ``ExtractDeps.lean`` imports, so it alone decides **which modules are in scope
+    for extraction**. Adding or removing an import there changes the extracted
+    population without touching any file under ``SKEFTHawking/`` — so hashing only
+    the subtree left the one edit that changes scope invisible to the cache.
+
+    That is the same defect the paragraph above records fixing, one level up: the
+    earlier repair widened the walk from ``glob`` to ``rglob`` — it went *deeper*
+    and never went *up*. Added 2026-08-06 after the end-to-end architecture map
+    measured it (`docs/architecture/END_TO_END_MAP.md` §4).
     """
     hasher = hashlib.sha256()
     if LEAN_DIR.is_dir():
         for fp in sorted(LEAN_DIR.rglob("*.lean")):
             hasher.update(fp.read_bytes())
+    # The aggregate LAST and unconditionally — a missing aggregate must change the
+    # hash too, or its deletion would read as "nothing changed".
+    aggregate = LEAN_ROOT / "SKEFTHawking.lean"
+    hasher.update(aggregate.read_bytes() if aggregate.is_file() else b"<absent>")
     return hasher.hexdigest()[:16]
 
 
@@ -106,9 +122,16 @@ def _run_extraction() -> None:
 
     with harness_lock.regen_lock("lean_deps") as got:
         if not got:
-            logger.info(
-                "lean_deps regen already in progress (lock held by another process) — "
-                "using existing cache"
+            # ⚠️ WARNING, not INFO. A skip means this process is about to read a
+            # lean_deps.json it KNOWS is stale — `_needs_refresh()` already returned True.
+            # Everything downstream (counts, the atlas, the graph, the axiom closure) is then
+            # computed from the previous extraction. At INFO this was invisible under the
+            # default logging level, so a caller could not tell a refreshed run from a skipped
+            # one (ARCHITECTURE_TODOs A1).
+            logger.warning(
+                "lean_deps is STALE and its regen is held by another process — proceeding on "
+                "the PREVIOUS extraction. Counts, atlas, graph and axiom-closure results from "
+                "this run reflect the older tree; re-run once the other process finishes."
             )
             return
         _run_extraction_locked()

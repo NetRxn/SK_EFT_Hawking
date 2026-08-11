@@ -2,6 +2,7 @@
 name: harvest-extractor
 description: Extract dev-process/harness signal from a /goal transcript span — including the pre-vs-post-compact delta across boundaries. Dispatched by the harvest skill.
 model: haiku
+color: cyan
 tools: Read, Bash
 ---
 

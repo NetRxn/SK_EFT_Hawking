@@ -79,11 +79,47 @@ pgrep -fl lean-lsp-mcp
 Heavy `lake build` / floor checks use the **Bash** tool, not these MCP servers, so trimming them
 never affects builds. Killed servers do not respawn within a session.
 
+## Architecture documents — read before designing, update before shipping
+
+**[`docs/architecture/`](docs/architecture/README.md) is the canonical description of this
+system.** Start at its `README.md`, which owns the index and the ownership table.
+
+Three rules, and they are not style preferences — each exists because its violation shipped
+and cost a multi-day recovery:
+
+1. **Read before you design.** Before adding a check, a gate, an extractor, an edge type, or
+   any new infrastructure, read the document that owns that surface. The recurring failure is
+   building a second mechanism beside one that already exists — a third prose→Lean resolver, a
+   second gate roster, a hand-listed consumer set parallel to a registry.
+2. **Update before you ship, in the same commit.** A design change lands in these documents
+   **before** the code that implements it. A doc written afterwards is a changelog; only one
+   written first is a specification. If a change makes a statement in these files wrong, fixing
+   that statement is part of the change, not follow-up work.
+3. **Never write a count into a narrative.** Every census figure — checks, gates, hooks,
+   agents, commands, node/edge types, registries, bundles — lives **only** in the derived
+   [`SURFACE_INVENTORY.md`](docs/architecture/SURFACE_INVENTORY.md). This is machine-enforced:
+   `validate.py --check architecture_inventory_fresh` fails on a census count found in any
+   narrative there. Name the *mechanism*, not the *magnitude*, and link to the census.
+
+⚠️ **Why this is a hard requirement.** These documents drifted out of sync **within 24 hours**
+of being written, twice — one map stated two different check totals inside a single sentence,
+and two maps asserted a review path was dead that had been repaired before they were authored.
+A wrong architecture document is worse than none, because it gets quoted. **Nothing
+mechanically verifies a prose claim** (tracked as B2 in
+`docs/architecture/.working-docs/ARCHITECTURE_TODOs.MD`), so the discipline is the guard.
+
+Remediation items found in these documents but requiring code go in
+[`ARCHITECTURE_TODOs.MD`](docs/architecture/.working-docs/ARCHITECTURE_TODOs.MD) — enumerated
+with paths and context, not silently fixed in passing.
+
+---
+
 ## When-to-read references (progressive disclosure)
 
 | Read **before…** | Document |
 |---|---|
 | any work (the law: 14 stages, no skipping) | [WAVE_EXECUTION_PIPELINE.md](docs/WAVE_EXECUTION_PIPELINE.md) |
+| designing or changing ANY infrastructure | [docs/architecture/README.md](docs/architecture/README.md) — see the three rules above |
 | understanding the tree / build / architecture | [README.md](README.md) |
 | changing anything — quick module/Lean/counts map | [SK_EFT_Hawking_Inventory_Index.md](SK_EFT_Hawking_Inventory_Index.md) |
 | any Aristotle session | [docs/references/Theorm_Proving_Aristotle_Lean.md](docs/references/Theorm_Proving_Aristotle_Lean.md) |
@@ -103,10 +139,17 @@ inventory — **keep it synced** as you ship, but you needn't read it whole on b
 ```bash
 # Python (uv-managed, Python >= 3.14)
 uv sync                                       # install/sync deps
-uv run python -m pytest tests/ -v             # fast tests (~2s; deselects 'slow')
-uv run python -m pytest tests/ -m slow -v     # slow tests (~10 min: Lean ExtractDeps + graph)
-uv run python -m pytest tests/ -m '' -v       # everything — before PR / submission / wave close
-uv run python scripts/validate.py             # full validation suite (106 checks)
+uv run python -m pytest -q                    # BOTH suites: repo tests + the skeft-qa plugin's
+                                              #   surface guards (testpaths covers both)
+uv run python -m pytest tests/ -v             # repo only, fast (~2.5 min; deselects 'slow')
+uv run python -m pytest tests/ -m slow -v     # slow tests (Lean ExtractDeps + graph)
+uv run python -m pytest -m '' -v              # everything — before PR / submission / wave close
+# Passing an explicit path scopes the run; omitting it picks up BOTH testpaths. The plugin's
+# guards (shell-invocation defects, surface-vs-README drift) previously ran only when someone
+# passed `.claude/plugins/skeft-qa/tests` by hand, so nothing ran them. Prefer the bare form.
+uv run python scripts/verify_scope.py         # verify ONLY what your change can break
+uv run python scripts/verify_scope.py --merge-gate   # the full ~45-min certification
+uv run python scripts/validate.py             # full validation suite (--list enumerates it)
 uv run python scripts/validate.py --list      # list checks; --check <name> runs one
 uv run python scripts/review_figures.py       # PNGs + structural figure checks
 uv run python scripts/provenance_dashboard.py # provenance command center (localhost:8050)
@@ -212,8 +255,8 @@ assuming infeasibility. Flag quality tradeoffs explicitly; let the user decide.
 When a loop needs information it lacks locally, follow the **three-tier research ladder** (full
 spec: the workspace-level `Lit-Search/README.md`):
 - **Tier 0 — local:** read the `Lit-Search/Phase-*/` corpus directly.
-- **Tier 1 — on-the-fly (sandboxed):** dispatch the **`research-scout`** agent (the only web-tool
-  holder; read-only) or `/deep-research`; the lead vets the cited report and files it with a
+- **Tier 1 — on-the-fly (sandboxed):** dispatch the **`research-scout`** agent (read-only,
+  sandboxed; the agent this ladder routes web questions through) or `/deep-research`; the lead vets the cited report and files it with a
   provenance header. Use this instead of reinventing a known result or waiting on a human.
 - **Tier 2 — async human dispatch:** `Lit-Search/Tasks/submitted/` — last resort.
 

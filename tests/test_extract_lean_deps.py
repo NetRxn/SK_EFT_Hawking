@@ -53,12 +53,9 @@ class TestLoadLeanDeps:
         for d in deps[:10]:
             assert required.issubset(d.keys()), f"Missing fields in {d.get('name', '?')}: {required - set(d.keys())}"
 
-    def test_axiom_classification(self, deps):
-        """If axioms exist, they should have kind='axiom'. Count may be 0 if all proved."""
-        axioms = [d for d in deps if d['kind'] == 'axiom']
-        # Axioms may have been eliminated (proved as theorems) — count >= 0 is valid
-        for a in axioms:
-            assert a['kind'] == 'axiom'
+    # ⚠️ REMOVED 2026-08-09: `test_axiom_classification` filtered
+    # `[d for d in deps if d['kind'] == 'axiom']` and then asserted each result had
+    # `kind == 'axiom'`. It recomputed the predicate it pinned and could not fail.
 
     def test_has_theorems(self, deps):
         theorems = [d for d in deps if d['kind'] == 'theorem']

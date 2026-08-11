@@ -9,7 +9,8 @@
 **Sibling docs (read on bootstrap):**
 - `README.md` — project framing (public-facing).
 - `../CLAUDE.md` (workspace root) — agent guidance and conventions; project-level guidance for SK_EFT_Hawking lives here (there is no separate per-repo `CLAUDE.md`).
-- `docs/WAVE_EXECUTION_PIPELINE.md` — 14-stage wave protocol and 15 pipeline invariants.
+- `docs/WAVE_EXECUTION_PIPELINE.md` — 14-stage wave protocol and 17 pipeline invariants (the law;
+  provenance for each rule is in `docs/WAVE_PIPELINE_RATIONALE.md`).
 - `docs/PAPER_STRATEGY.md` — 17-bundle publication architecture (D8 added 2026-05-31).
 - `docs/PERMANENT_TRACKED_HYPOTHESES.md` — load-bearing tracked Props.
 - `docs/BUNDLE_READINESS_HEATMAP.md` — per-bundle Stage-13 readiness.
@@ -26,22 +27,22 @@
 <!-- AUTOGEN:counts-table BEGIN -->
 | Metric | Value |
 |---|---:|
-| Lean declarations (total) | 40262 |
-| Lean theorems (total) | 26103 |
-| Lean theorems (substantive) | 26077 |
+| Lean declarations (total) | 40726 |
+| Lean theorems (total) | 22669 |
+| Lean theorems (substantive) | 22643 |
 | Lean theorems (placeholder `True := trivial`) | 26 |
-| Lean modules | 2012 |
-| Lean definitions | 12657 |
-| Lean structures | 472 |
-| Lean instances | 929 |
+| Lean modules | 2040 |
+| Lean definitions | 12807 |
+| Lean structures | 480 |
+| Lean instances | 939 |
 | Lean inductives | 101 |
 | Lean axioms | **0** (project-local) |
 | Lean sorries | **0** |
 | Aristotle-proved theorems | 322 |
 | Aristotle runs | 44 |
 | Python source modules | 137 |
-| Test files | 136 |
-| pytest cases | 5000 |
+| Test files | 182 |
+| pytest cases | 6195 |
 | Figures (PNG) | 170 |
 | Notebooks | 91 |
 | Papers (drafts) | 42 |
@@ -108,7 +109,7 @@ For the public narrative of what the project does, see `README.md`. Key story ar
 **936 Lean modules** (per `docs/counts.json` regen 2026-06-10 PM; the jump from 751 at 2026-05-30 reflects (i) the FKLW Ross-Selinger / KMM / grid-synth corpus growth across Phases 6AM→6AO, and (ii) the `QuantumNetwork/` build-out — 103 modules now — across Phases 6AF→6AQ) under `lean/SKEFTHawking/`. Grouped by subdirectory or topical family.
 
 <!-- AUTOGEN:per-family-counts BEGIN -->
-**Per-family verified counts** (from grouping `lean.module_names`): FKLW 373, QuantumNetwork 104, SymTFT 43, DKMBootstrap 12, QuantumCrooks 11, GloriosoLiu 9, CrooksAnalogHawking 8, SymTFTAudit 8, TopologicalBand 8, APSEta 7, FaultTolerance 7, Detection 6, Itô 6, LDP 6, Schellekens 6, DoubleCopy 5, Resurgence 5, SoftTheorems 5, Carrollian 4, Control 4, GrapheneBand 4, ETH 3, Electrothermal 3, CrossBridges 2, MathlibAux 1; remaining **1362 top-level** modules under `lean/SKEFTHawking/` directly. For full per-module theorem counts + key results, see `SK_EFT_Hawking_Inventory.md` Section 2. For the canonical module-name list, see `docs/counts.json` field `lean.module_names`.
+**Per-family verified counts** (from grouping `lean.module_names`): FKLW 377, QuantumNetwork 105, SymTFT 46, FaultTolerance 18, DKMBootstrap 12, QuantumCrooks 11, GloriosoLiu 9, CrooksAnalogHawking 8, SymTFTAudit 8, TopologicalBand 8, APSEta 7, Detection 6, Itô 6, LDP 6, Schellekens 6, DoubleCopy 5, Resurgence 5, SoftTheorems 5, Carrollian 4, Control 4, GrapheneBand 4, ETH 3, Electrothermal 3, CrossBridges 2, MathlibAux 1; remaining **1371 top-level** modules under `lean/SKEFTHawking/` directly. For full per-module theorem counts + key results, see `SK_EFT_Hawking_Inventory.md` Section 2. For the canonical module-name list, see `docs/counts.json` field `lean.module_names`.
 <!-- AUTOGEN:per-family-counts END -->
 
 ### 3.1 Subdirectory families (sub-packages)
@@ -141,9 +142,10 @@ For the public narrative of what the project does, see `README.md`. Key story ar
 
 | Family | Modules |
 |---|---:|
-| `FKLW` | 373 |
-| `QuantumNetwork` | 104 |
-| `SymTFT` | 43 |
+| `FKLW` | 377 |
+| `QuantumNetwork` | 105 |
+| `SymTFT` | 46 |
+| `FaultTolerance` | 18 |
 | `DKMBootstrap` | 12 |
 | `QuantumCrooks` | 11 |
 | `GloriosoLiu` | 9 |
@@ -151,7 +153,6 @@ For the public narrative of what the project does, see `README.md`. Key story ar
 | `SymTFTAudit` | 8 |
 | `TopologicalBand` | 8 |
 | `APSEta` | 7 |
-| `FaultTolerance` | 7 |
 | `Detection` | 6 |
 | `Itô` | 6 |
 | `LDP` | 6 |
@@ -166,8 +167,8 @@ For the public narrative of what the project does, see `README.md`. Key story ar
 | `Electrothermal` | 3 |
 | `CrossBridges` | 2 |
 | `MathlibAux` | 1 |
-| _(top-level)_ | 1362 |
-| **Total** | **2012** |
+| _(top-level)_ | 1371 |
+| **Total** | **2040** |
 <!-- AUTOGEN:family-count-table END -->
 
 ### 3.2 Topical groupings (top-level `.lean` files)
@@ -386,7 +387,7 @@ Search live: `grep -rn "H_VestigialModeIsGraviton\|H_DESICompatibility\|H_RT_For
 
 ---
 
-## 6. Pipeline invariants (15)
+## 6. Pipeline invariants (17)
 
 Authority: `docs/WAVE_EXECUTION_PIPELINE.md` §"Pipeline Invariants". One-line summary each:
 
@@ -403,12 +404,14 @@ Authority: `docs/WAVE_EXECUTION_PIPELINE.md` §"Pipeline Invariants". One-line s
 11. **Every external bibitem has a primary-source cache file** under `Lit-Search/Phase-X/primary-sources/<bibkey>.{pdf,abstract.txt,json}`, enforced by CHECK 19.
 12. **Provenance DOIs resolve to the registry** — every DOI in `PARAMETER_PROVENANCE` must resolve to a `CITATION_REGISTRY` bibkey (CHECK 20).
 13. **Stage 14 QI register is auto-regen + manually-curated** — open items regenerated; closed items preserved verbatim across regens.
-14. **Every paper-shaped output lifts into a `PAPER_STRATEGY.md` bundle** (F, D1–D8, L1–L3, I1, I2, I3, E1, E2 — 17 targets) — recorded in `docs/PAPER_DRAFT_MAPPING.md`.
+14. **Every paper-shaped output lifts into a `PAPER_STRATEGY.md` bundle** — the roster is `validate.BUNDLE_CODES` (F, D1–D12, L1–L3, I1–I3, E1, E2), recorded in `docs/PAPER_DRAFT_MAPPING.md`.
 15. **Every new project-local `axiom` requires explicit user sign-off** + discharge plan or no-feasible-proof argument; `AXIOM_METADATA` registration mandatory.
+16. **Every consumed tracked-hypothesis Prop is in `HYPOTHESIS_REGISTRY`** (or `TRACKED_HYPOTHESIS_NON_LOAD_BEARING` with a reason); `PERMANENT_TRACKED_HYPOTHESES.md` is an auto-generated view, never hand-edited.
+17. **Every provably-false settled no-go has a live, kernel-pure, non-vacuous backing theorem** in `KERNEL_NOGO_REGISTRY`; policy/route bans stay prose in `SETTLED_FORKS.md`.
 
 ---
 
-## 7. Bundle status (17 publication targets)
+## 7. Bundle status (21 publication targets)
 
 Authority: `docs/PAPER_STRATEGY.md` (architecture) + `docs/PAPER_DRAFT_MAPPING.md` (per-draft → per-bundle assignment) + `docs/BUNDLE_READINESS_HEATMAP.md` (per-bundle Stage-13 readiness, auto-regen via `scripts/bundle_readiness.py --heatmap`).
 
@@ -561,7 +564,8 @@ The heatmap aggregates existing per-paper findings; a fresh-context bundle Stage
 | `docs/QI_REGISTER.md` | Stage 14 quality-improvement register (auto-regen + manually-curated). |
 | `docs/READINESS_GATES.md` | Per-paper Stage-13 readiness companion to bundle heatmap. |
 | `docs/RESEARCH_STATUS_OVERVIEW.md` | High-level research-status overview. |
-| `docs/WAVE_EXECUTION_PIPELINE.md` | 14-stage wave protocol + 15 pipeline invariants. |
+| `docs/WAVE_EXECUTION_PIPELINE.md` | 14-stage wave protocol + 17 pipeline invariants (the law). |
+| `docs/WAVE_PIPELINE_RATIONALE.md` | Why each pipeline rule exists; read on demand, not to follow the process. |
 | `docs/counts.json` | Live counts ground truth (regen via `scripts/update_counts.py`). |
 | `docs/counts.tex` | LaTeX `\input{}` counts macros for papers. |
 
@@ -606,7 +610,7 @@ Implications + strategic-positioning notes per phase, `docs/stakeholder/Phase<N>
 ## 11. Scripts (~65 in `scripts/`)
 
 **Validation + counts:**
-- `scripts/validate.py` — full validation suite (21 checks); `--list` enumerates; `--check <name>` runs one.
+- `scripts/validate.py` — full validation suite (61 checks); `--list` enumerates; `--check <name>` runs one.
 - `scripts/update_counts.py` — regenerates `docs/counts.json` (re-runs `extract_lean_deps.py` if Lean source hashes changed).
 - `scripts/extract_lean_deps.py` — extracts Lean declaration taxonomy + axiom dependencies (via `ExtractDeps.lean`).
 - `scripts/graph_integrity.py` — graph-integrity checks for the knowledge graph.

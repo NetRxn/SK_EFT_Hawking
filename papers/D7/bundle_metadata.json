@@ -1,14 +1,86 @@
 {
   "bundle_target": "D7",
+  "apex_theorems": [
+    {
+      "name": "SKEFTHawking.BPLDPSimulability.loopCorrectionRate_eq_neg_log",
+      "claims": "ABSTRACT + §3 — the Legendre evaluation: loopCorrectionRate G = -log(1-p) as an explicit least-upper-bound argument. The supremum is approached as theta -> -inf and NOT attained on loopy graphs, and the draft says so",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.BPLDPSimulability.loopCorrectionRate_eq_zero_iff_fourCycleFree",
+      "claims": "ABSTRACT + §3 — the zero-rate <=> four-cycle-freeness equivalence, PROVEN from the variational definition rather than definitional. This is the D7-EV3 upgrade from the earlier {0,1} tree indicator",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.BPLDPSimulability.loopCorrectionRate_pos_of_not_fourCycleFree",
+      "claims": "§3 — strict positivity of the rate on loopy graphs",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.BPLDPSimulability.loopCorrectionRate_lt_of_loopDensity_lt",
+      "claims": "§3 — strict monotonicity in loop density: the rate SEPARATES loopy graphs by loop content (the complete bipartite 2x2 graph has rate log(4/3), kernel-checked)",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.BPLDPSimulability.loopCorrectionRate_le_iff_loopDensity_le",
+      "claims": "§3 — the general threshold form (rate <= t <=> loop density <= 1 - e^-t), replacing the former fixed indicator threshold",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.BPLDPSimulability.no_loop_event_prob_eq_exp_neg_rate",
+      "claims": "§3 — the exact finite-n Cramer identity (1-p)^n = exp(-n I(0)) for the no-loop-correction event",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.BPLDPSimulability.loopCorrection_isCramerIIDUpperBound",
+      "claims": "§3 — the bridge to the project LDP suite via the Bernoulli Kullback-Leibler rate function",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.BPLDPSimulability.fourCycles_eq_empty_iff_fourCycleFree",
+      "claims": "§3 — the 4-cycle Finset <-> predicate bridge. Load-bearing for the kernel-checked decidable-combinatorics construction of the rate",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.BPLDPSimulability.fourCycleFree_nonneg_iff_ldp_rate_zero",
+      "claims": "ABSTRACT + §3 HEADLINE — the BP-favorability biconditional: IsFourCycleFreeNonnegWeighted iff the loop-correction rate vanishes and the factor weights are non-negative",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.ChernBridge.crystalline_eq_quasicrystalline_iff_c1_zero",
+      "claims": "ABSTRACT + §4 — the categorical-Chern <-> real-space-Chern bridge: the crystalline (c0+c1) and quasicrystalline (c0-c1) band-edge limits agree iff c1 = 0, so their difference 2c1 extracts the topological invariant",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.AnalogHawkingDemarcation.analog_hawking_fourCycleFree_demarcation",
+      "claims": "ABSTRACT HEADLINE + §5 — THE demarcation biconditional: classically simulable in the combined BP / Chebyshev-TN regime iff (zero loop-correction rate AND non-negative weights) AND c1 = 0",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.AnalogHawkingDemarcation.analog_hawking_tree_simulable_demarcation",
+      "claims": "§5 — the end-to-end tree-side form: genuine tree-ness plus synchronous BP convergence",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.AnalogHawkingDemarcation.not_fourCycleFreeNonneg_or_nonzero_c1_implies_not_simulable",
+      "claims": "ABSTRACT + §5 — the contrapositive, giving the QUANTUM-ADVANTAGE regime explicitly: loop-bearing topology or negative weights, OR non-trivial Chern coefficient",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.KibbleZurekUnruh.surface_gravity_bounds_kzm_exponent",
+      "claims": "§6 — the Kibble-Zurek-Unruh foundation theorem bounding the KZM exponent via the SK-EFT surface gravity. ⚠️ The draft states plainly that AnalogHawkingDemarcation.lean does NOT import KibbleZurekUnruh.lean and that per-platform instantiation bridges do not exist",
+      "declared": "2026-08-07"
+    }
+  ],
   "tier": 1,
   "title": "Classical Simulability and Quantum Advantage via Tensor Networks: A Formally Verified Demarcation",
   "target_journal": "PRX Quantum or Physical Review X",
   "phase7_subphase": "7w (Phase 6w D7 spin-out)",
   "stage9_status": "not_started",
-  "stage10_status": "green",
-  "stage13_status": "green",
-  "stage13_redo_required": false,
-  "freshness_stale": false,
+  "stage10_status": "pending",
+  "stage13_status": "pending",
+  "stage13_redo_required": true,
+  "freshness_stale": true,
   "source_manifest_last_regen": null,
   "last_lift": "2026-05-26T20:00:00Z",
   "last_stage9_review": null,
@@ -106,5 +178,13 @@
     "FixPropagation"
   ],
   "readiness": "RED",
-  "readiness_last_computed": "2026-07-31"
+  "readiness_last_computed": "2026-07-31",
+  "length_target": {
+    "unit": "pages",
+    "floor": 24,
+    "ceiling": 60,
+    "source": "PAPER_STRATEGY.md §6"
+  },
+  "compiled_pages": 4,
+  "compile_gate_ok": true
 }

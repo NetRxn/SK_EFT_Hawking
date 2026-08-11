@@ -25,7 +25,8 @@ SK_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(SK_ROOT))
 sys.path.insert(0, str(SK_ROOT / "scripts"))
 
-import validate as v  # noqa: E402
+import validate as v
+import validate_helpers as _H  # noqa: E402
 from validate import check_f_hierarchy_claims  # noqa: E402
 
 
@@ -95,16 +96,52 @@ class TestGatePasses:
                                for d in result.details if not d.passed]
 
     def test_passes_on_fixed_synthetic(self, tmp_path, monkeypatch):
-        monkeypatch.setattr(v, "PAPERS_DIR", _write_F(tmp_path, _FIXED_F))
+        monkeypatch.setattr(_H, "PAPERS_DIR", _write_F(tmp_path, _FIXED_F))
         result = check_f_hierarchy_claims()
         assert result.passed, [(d.name, d.message)
                                for d in result.details if not d.passed]
         assert all(d.passed for d in result.details)
 
 
+class TestOneWrongValueAloneCarriesTheVerdict:
+    """D5 REINFORCEMENT (audit QI-27). `_STALE_F` is stale in four ways at once —
+    all three Heidelberg claims plus the crossover — and each fails via the
+    *anchor-not-found* path, never via the value comparison. So the value
+    comparison's contribution to the verdict was untested.
+
+    Measured 2026-08-04: `all_pass = all_pass and ok` -> `all_pass = all_pass`
+    was **MISSED** by the whole file. Every quoted magnitude could have stopped
+    affecting the verdict while the tests stayed green — on the flagship paper.
+
+    This corrupts ONE value in the otherwise-correct draft, so the anchor still
+    matches and the verdict can only travel through `_rel_ok`.
+    """
+
+    def test_a_single_wrong_disp_value_fails(self, tmp_path, monkeypatch):
+        body = _FIXED_F.replace(r"-7.32\times10^{-5}", r"-9.99\times10^{-3}")
+        assert body != _FIXED_F, "value substitution did not apply"
+        monkeypatch.setattr(_H, "PAPERS_DIR", _write_F(tmp_path, body))
+        result = check_f_hierarchy_claims()
+        assert not result.passed, (
+            "a wrong δ_disp value, with the anchor intact and everything else "
+            "canonical, did not move the verdict — the value comparison no "
+            "longer reaches `all_pass`")
+        failed = {d.name for d in result.details if not d.passed}
+        assert failed == {"heidelberg.delta_disp.hierarchy"}, (
+            f"expected exactly one failing detail, got {sorted(failed)}")
+
+    def test_a_single_wrong_crossover_coefficient_fails(self, tmp_path, monkeypatch):
+        body = _FIXED_F.replace(r"\approx 7.14\, T_H", r"\approx 2.00\, T_H")
+        assert body != _FIXED_F, "coefficient substitution did not apply"
+        monkeypatch.setattr(_H, "PAPERS_DIR", _write_F(tmp_path, body))
+        result = check_f_hierarchy_claims()
+        assert not result.passed
+        assert {d.name for d in result.details if not d.passed} == {"heidelberg.crossover"}
+
+
 class TestGateFailsOnStale:
     def test_fails_on_stale(self, tmp_path, monkeypatch):
-        monkeypatch.setattr(v, "PAPERS_DIR", _write_F(tmp_path, _STALE_F))
+        monkeypatch.setattr(_H, "PAPERS_DIR", _write_F(tmp_path, _STALE_F))
         result = check_f_hierarchy_claims()
         assert not result.passed
         failed = {d.name for d in result.details if not d.passed}
@@ -119,7 +156,7 @@ class TestGateFailsOnStale:
         # false-positive the Heidelberg hierarchy delta_disp anchor.
         body = (r"the corresponding values are $\delta_{\mathrm{disp}} "
                 r"\approx -19\%$, subdominant.")
-        monkeypatch.setattr(v, "PAPERS_DIR", _write_F(tmp_path, body))
+        monkeypatch.setattr(_H, "PAPERS_DIR", _write_F(tmp_path, body))
         result = check_f_hierarchy_claims()
         # not found -> fails (as expected), but never as a -19% PASS
         assert not result.passed

@@ -40,14 +40,14 @@ GW170817~\cite{Abbott2017GW170817} bound
 $-3\times 10^{-15} \leq \dccap \leq +7\times 10^{-16}$
 (conservatively two-sided: $|\dccap| \leq 3\times 10^{-15}$). The
 result is sharp: over the natural susceptibility range
-$\chivest \in [0.1, 10]$ --- a project-adopted order-unity
+$\chivest \in [0.1, 10]$ (a project-adopted order-unity
 naturalness window about the random-phase-approximation
-bubble-integral scale --- the
+bubble-integral scale) the
 deviation $\dccap = \sqrt{\chivest} - 1$ falls in $[-0.68, +2.16]$,
 exceeding the GW170817 cap by $\sim 7\times 10^{14}$. The
 GW170817-compatible window
 $\chivest \in [(1-\tau)^2,(1+\tau)^2]$ with $\tau = 3\times 10^{-15}$
-has measure $4\tau \approx 1.2\times 10^{-14}$ --- vanishingly small
+has measure $4\tau \approx 1.2\times 10^{-14}$, vanishingly small
 under any natural-range prior. The result is a Lean 4 formal proof
 (\texttt{GravitationalWaves.lean}, 21 theorems, zero \texttt{sorry},
 zero new axioms): a biconditional locating the compatible window plus
@@ -122,6 +122,45 @@ refutation of one specific kinematic identification, not of emergent
 gravity nor of the ADW program; we discuss three Phase~6 recovery
 paths in Sec.~\ref{sec:discussion}.
 
+\paragraph{Relation to the 2017 constraint sweep.} Using GW170817 to
+eliminate a gravity model is not new. Within months of the detection,
+four back-to-back Letters established what the bound
+kills: Baker \emph{et al.}~\cite{BakerBellini2017} covered general
+scalar-tensor and vector-tensor theories and bounded the graviton mass
+in bimetric gravity; Creminelli and
+Vernizzi~\cite{CreminelliVernizzi2017} showed that avoiding tuning
+requires $\cGW$ to be unaffected on \emph{nearby} cosmological
+solutions, collapsing quartic and quintic beyond-Horndeski theories to a
+single function; Sakstein and Jain~\cite{SaksteinJain2017} combined the
+bound with cluster and M87 strong-equivalence-principle data to render
+the quartic galileon cosmologically irrelevant; and Ezquiaga and
+Zumalac\'arregui~\cite{EzquiagaZumalacarregui2017} extended the
+conclusion to Einstein-aether, Ho\v{r}ava, Generalized Proca and TeVeS.
+
+The present result is not a further entry in that list, and the
+difference is structural rather than one of degree. Every theory the
+2017 sweep reached has a Lagrangian from which a varying $\cGW$ is
+\emph{derived}; the constraint therefore lands on operator coefficients,
+and each Letter reports which coefficients survive. The
+vestigial-second-sound identification has no such Lagrangian. As
+Sec.~\ref{sec:intro} notes, $\cGW = c\sqrt{\chivest}$ is asserted
+kinematically: the mode is assumed rather than derived, so there are no
+operator coefficients for the bound to constrain and nothing to tune.
+What the bound can do instead is fix $\chivest$ itself, and the content
+of this Letter is that the value it fixes is incompatible with every
+value the identification's own microscopic origin would predict. The
+2017 sweep constrained \emph{theories}; this constrains an
+\emph{identification}, which is why it is stated as a disjointness of
+two intervals rather than as a surviving region of parameter space.
+
+A corollary worth stating plainly: because the argument never uses a
+Lagrangian, it is insensitive to the operator-level escape routes those
+Letters catalogue. Conformal rescaling, coefficient compensation and
+restriction to Horndeski's simplest terms all act on terms that the
+kinematic identification does not have. The three recovery paths in
+Sec.~\ref{sec:discussion} are correspondingly different in kind, and
+each requires replacing the identification rather than repairing it.
+
 %% ================================================================
 \section{Formal setup and result}
 \label{sec:result}
@@ -138,7 +177,7 @@ normalization is $\mathcal{O}(\Lambda_{\rm UV}^2/16\pi^2)$ by
 dimensional analysis, and we take the $\pm 1$-decade window about
 the resulting unit-normalized central value. We emphasize the
 provenance: the window is a modeling choice of this project, not a
-published derivation --- the Vergeles lattice
+published derivation: the Vergeles lattice
 analysis~\cite{Vergeles2025} establishes unitarity of the underlying
 Einstein--Cartan--Palatini lattice theory but does not itself
 compute $\chivest$ or assign it a range. The window matches the
@@ -199,6 +238,20 @@ and \verb|Real.sqrt_sq|, closed by \verb|linarith|. These are
 type. The bundled corollary
 \verb|vestigial_natural_range_violates_ligo| asserts both endpoints
 fail \verb|LigoSatisfied| simultaneously.
+
+The identification hypothesis itself is refuted pointwise rather than
+only at the observable:
+\verb|H_VestigialModeIsGraviton_fails_at_natural_lower| and
+\verb|H_VestigialModeIsGraviton_fails_at_natural_upper| refute it at the
+two endpoints, and
+\verb|H_VestigialModeIsGraviton_fails_at_zero| and
+\verb|H_VestigialModeIsGraviton_fails_at_quarter| refute it at
+$\chivest \in \{0, 1/4\}$, which are outside the natural range and
+establish that the failure is not an endpoint artefact. The one value
+that survives is the singleton:
+\verb|ligo_satisfied_at_chi_one| proves \verb|LigoSatisfied| holds at
+$\chivest = 1$, and \verb|c_GW_deviation_zero_iff_chi_one| makes that
+the exact biconditional.
 
 \begin{figure}[t]
   \centering
@@ -287,12 +340,20 @@ is the natural venue for the disambiguation.
 the leading term in a derivative expansion. If $\chivest$ varies
 with frequency, the leading-order falsification could in principle be
 lifted by a near-cancellation in the LIGO band. The
-SK--EFT dispersion correction (formalized in
-\texttt{SecondOrderSK.lean}) is the leading frequency dependence in
-the present framework; at the project's current conservative upper
-bound $|\gamma| \leq 10^{-30}$ on $\Gamma_H/\cGW^2$ it does not lift
-the falsification, but a derivation of $\Gamma_H$ from a microscopic
-matching is open.
+SK--EFT dispersion correction is the leading frequency dependence in
+the present framework, and this path is closed in the Lean rather than
+argued: \texttt{vestigial\_dispersion\_below\_ligo\_at\_inspiral\_peak}
+proves that at the project's conservative upper bound
+$|\gamma| \leq 10^{-30}$ on $\Gamma_H/\cGW^2$ the correction at the
+$100\,\mathrm{Hz}$ inspiral peak stays inside the GW170817 tolerance,
+so it does not lift the falsification. The general form is
+\texttt{dispersion\_within\_ligo\_iff}, a biconditional exchanging the
+correction's tolerance for $|\gamma| \leq \mathrm{tol}/\omega$;
+\texttt{dispersion\_correction\_abs\_bound},
+\texttt{dispersion\_correction\_linear\_in\_gamma} and
+\texttt{dispersion\_correction\_zero\_at\_no\_dissipation} fix its
+magnitude, additivity and no-dissipation limit. A derivation of
+$\Gamma_H$ from a microscopic matching is open.
 \end{enumerate}
 
 \paragraph{Comparison to the linearized-EFE wave.} The companion
@@ -365,6 +426,26 @@ DOI: 10.1103/PhysRevD.112.054509.
 B.~P.~Abbott \emph{et al.}\ (LIGO/Virgo, Fermi GBM, INTEGRAL),
 Astrophys.\ J.\ Lett.\ \textbf{848}, L13 (2017);
 DOI: 10.3847/2041-8213/aa920c.
+
+\bibitem{BakerBellini2017}
+T.~Baker, E.~Bellini, P.~G.~Ferreira, M.~Lagos, J.~Noller and I.~Sawicki,
+Phys.\ Rev.\ Lett.\ \textbf{119}, 251301 (2017);
+DOI: 10.1103/PhysRevLett.119.251301.
+
+\bibitem{CreminelliVernizzi2017}
+P.~Creminelli and F.~Vernizzi,
+Phys.\ Rev.\ Lett.\ \textbf{119}, 251302 (2017);
+DOI: 10.1103/PhysRevLett.119.251302.
+
+\bibitem{SaksteinJain2017}
+J.~Sakstein and B.~Jain,
+Phys.\ Rev.\ Lett.\ \textbf{119}, 251303 (2017);
+DOI: 10.1103/PhysRevLett.119.251303.
+
+\bibitem{EzquiagaZumalacarregui2017}
+J.~M.~Ezquiaga and M.~Zumalac\'arregui,
+Phys.\ Rev.\ Lett.\ \textbf{119}, 251304 (2017);
+DOI: 10.1103/PhysRevLett.119.251304.
 
 \bibitem{Roehm2026LinearizedEFE}
 J.~G.~Roehm, ``Linearized Einstein Equations from

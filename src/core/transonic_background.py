@@ -365,14 +365,31 @@ def compute_dissipative_correction(
     xi = params.healing_length
     cs = params.sound_speed_upstream
 
-    from src.core.formulas import first_order_correction, dispersive_correction
+    from src.core.formulas import (first_order_correction, dispersive_correction,
+                                   horizon_damping_rate)
 
     # Convert EFT transport coefficients (γ in [m²/s]) to horizon damping rate
     # (Γ_H in [s⁻¹]) via the Hawking wavenumber k_H = κ/c_s.
-    # Identity grounded in Lean: SecondOrderSK.gamma_H_from_transport
-    k_H_sq = (kappa / cs) ** 2 if cs > 0 else 0.0
-    gamma_eff = gamma_1 + gamma_2              # [m²/s]
-    Gamma_H = gamma_eff * k_H_sq               # [s⁻¹]
+    #
+    # Routed through the canonical `formulas.horizon_damping_rate` (Pipeline
+    # Invariant 1). This was open-coded here as
+    #     k_H_sq = (kappa / cs) ** 2 if cs > 0 else 0.0
+    # which carried three defects the canonical function exists to prevent: the
+    # graphene path was routed and this BEC path — the one the canonical
+    # docstring names — was not; the `if cs > 0 else 0.0` is the silent sentinel
+    # that reports a DISSIPATIONLESS horizon for a bad c_s (the canonical form
+    # raises instead); and the Lean theorem it cited,
+    # `SecondOrderSK.gamma_H_from_transport`, does not exist in `lean_deps.json`
+    # (the real names are `GammaH` / `gammaH_def` / `gammaH_via_kH`).
+    # `lean_docstring_refs_resolve` scans Lean docstrings, not Python comments,
+    # so nothing caught the dangling reference.
+    gamma_eff = gamma_1 + gamma_2                                  # [m²/s]
+    Gamma_H = horizon_damping_rate(gamma_1, gamma_2, kappa, cs)   # [s⁻¹]
+    # Reported in the return dict. Safe to compute unguarded: the canonical call
+    # above RAISES on c_s <= 0, so reaching this line means cs > 0. That is the
+    # point of routing through it — the guard is asserted once, loudly, instead of
+    # each open-coded site silently substituting a dissipationless 0.0.
+    k_H_sq = (kappa / cs) ** 2                                     # [m⁻²]
 
     D = bg.adiabaticity
     delta_diss = first_order_correction(Gamma_H, kappa)
@@ -386,7 +403,10 @@ def compute_dissipative_correction(
     a = params.scattering_length
     na3 = n * a**3
     omega_H = kappa
-    gamma_beliaev = np.sqrt(na3) * omega_H**2 / cs if cs > 0 else 0
+    # Unguarded for the same reason as `k_H_sq`: `horizon_damping_rate` above has
+    # already raised if c_s <= 0. The `if cs > 0 else 0` here was the same silent
+    # sentinel — it reported zero Beliaev damping for an invalid sound speed.
+    gamma_beliaev = np.sqrt(na3) * omega_H**2 / cs
 
     return {
         "delta_diss": delta_diss,

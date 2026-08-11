@@ -1,13 +1,325 @@
 {
   "bundle_target": "D4",
+  "apex_theorems": [
+    {
+      "name": "SKEFTHawking.uq_K_mul_Kinv",
+      "claims": "§2.1 — Uq(sl2) Hopf relation: K K^-1 = 1",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.uq_Kinv_mul_K",
+      "claims": "§2.1 — and its mirror",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.uq_KE",
+      "claims": "§2.1 — K E K^-1 = q^2 E",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.uq_KF",
+      "claims": "§2.1 — K F K^-1 = q^-2 F",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.uq_serre",
+      "claims": "§2.1 — the quantum Serre relations",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.IsingBraiding.hexagon_I",
+      "claims": "§3.2 — hexagon coherence 1 of 6",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.IsingBraiding.hexagon_II",
+      "claims": "§3.2 — hexagon 2 of 6",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.IsingBraiding.hexagon_III",
+      "claims": "§3.2 — hexagon 3 of 6",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.IsingBraiding.hexagon_pss_psi",
+      "claims": "§3.2 — hexagon 4 of 6",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.IsingBraiding.hexagon_pss_one",
+      "claims": "§3.2 — hexagon 5 of 6",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.IsingBraiding.hexagon_spp",
+      "claims": "§3.2 — hexagon 6 of 6; ABSTRACT claims all six",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.IsingBraiding.ribbon_ss_1",
+      "claims": "§3.2 — ribbon equation 1 of 4",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.IsingBraiding.ribbon_ss_psi",
+      "claims": "§3.2 — ribbon 2 of 4",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.IsingBraiding.ribbon_sp_sigma",
+      "claims": "§3.2 — ribbon 3 of 4",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.IsingBraiding.ribbon_pp_1",
+      "claims": "§3.2 — ribbon 4 of 4",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.IsingBraiding.R_product",
+      "claims": "§3.1 — the R-matrix product identity in Q(zeta_16)",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.IsingBraiding.R1_sq",
+      "claims": "§3.1 — R-matrix square, vacuum channel",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.IsingBraiding.Rpsi_sq",
+      "claims": "§3.1 — R-matrix square, psi channel",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.IsingBraiding.gauss_sum",
+      "claims": "§3.2 — the explicit Ising Gauss sum completing the braided structure",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.IsingBraiding.trefoil_eq_neg_sqrt2",
+      "claims": "ABSTRACT + §3.3 — the closed-form trefoil invariant = -sqrt 2, the primary non-trivial knot calculation",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.IsingBraiding.hopf_link_matches_S_matrix",
+      "claims": "§3.4 — the Hopf-link invariant equals S_ab/D: the calibration that the algebraically derived modular S-matrix agrees with the diagrammatic expectation value",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FigureEightKnot.figure_eight_trace_neg_one",
+      "claims": "§3.5 — the unnormalised figure-eight quantum trace = -1 in Q(zeta_16), via native_decide",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FigureEightKnot.figure_eight_normalized",
+      "claims": "§3.5 — the normalised RT invariant RT(4_1, sigma) = -1/sqrt 2. Also via native_decide, and the draft says so",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.s3_anyon_count",
+      "claims": "§4.3 — |Irr(D(S3))| = 8, the non-abelian anyon spectrum",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.class_equation",
+      "claims": "§4.3 — the S3 class equation 1 + 3 + 2 = 6",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.centralizer_order_formula",
+      "claims": "§4.3 — centraliser orders per conjugacy class",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.s3_global_dim_sq",
+      "claims": "§4.3 — D^2 = 36 = |S3|^2",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.A3_is_nonabelian",
+      "claims": "§4.3 — the non-abelian sub-spectrum, part 1",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.B_anyons_dim_3",
+      "claims": "§4.3 — quantum dimension 3 anyons, part 2",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.s3_center_summary",
+      "claims": "§4.3 — the closure over the Z(Vec_S3) ~ Rep(D(S3)) spectrum. The non-abelian extension lives natively in D4; D2 §3.4 consumes only the abelian toric-code anchor",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.wrt_S2xS1_eq_rank",
+      "claims": "§5.1 — Z_WRT(S^2 x S^1) = rk(C). ⚠️ DEFINITIONAL ENCODING: the draft states this is an `rfl` sanity-check on the definitional unfolding, NOT a proof of the Verlinde-formula chain, which it says is deferred pending Mathlib",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.wrt_S3_formula",
+      "claims": "§5.2 — Z_WRT(S^3) = p+/D^2. ⚠️ Also definitional (`rfl`-discharged), encoding the Kirby-colour normalisation rather than proving Kirby-move invariance. The draft names Kirby-move invariance as the principal deferred WRT item",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FermiHubbardDimer.dark_state_in_kernel",
+      "claims": "§6.1 — the dark-state vector lies in the singlet-sector kernel",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FermiHubbardDimer.darkVec_ne_zero",
+      "claims": "§6.1 — and is non-trivial at nondegenerate parameters. ⚠️ The Berry-phase / adiabatic-drag equivalence (T13-T15) is EXPLICITLY DEFERRED in the module and in the draft",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.QECHolographyBridge.HPCode.one_le_globalDimSq",
+      "claims": "§7.1 — the boundary condition fixes 1 <= D^2",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.QECHolographyBridge.HPCode.scramblingTimeBound_nonneg",
+      "claims": "§7.1 — scrambling-time positivity guard",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.QECHolographyBridge.HPCode.codeDistance_nonneg",
+      "claims": "§7.1 — code-distance positivity",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.QECHolographyBridge.HPCode.code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class",
+      "claims": "ABSTRACT + §7.2 — THE central QEC biconditional: code-distance scaling matches anyonic fusion iff the fusion algebra is admissible. The face-3 anchor of 'one MTC, four faces'",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.QECHolographyBridge.HPCode.recovery_at_scrambling_bound",
+      "claims": "§7.3 — at the scrambling bound, boundary entropy plus code distance saturate the Hayden-Preskill recovery condition",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.QECHolographyBridge.HPCode.horizon_BC_implies_HP_admissible",
+      "claims": "§7.4 — the horizon boundary condition implies admissibility",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.QECHolographyBridge.HPCode.nonabelian_anyon_implies_codeDistance_pos",
+      "claims": "§7.4 — non-abelian anyon support implies positive code distance",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.QECHolographyBridge.trivialAbelian_violates_admissibility",
+      "claims": "ABSTRACT + §7.5 — the constructive falsifier: a trivially abelian MTC violates admissibility. Connects directly to D3 §7's abelian_MTC_falsifies_H_HorizonBoundaryCondition",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.QECHolographyBridge.fibonacci_HPCode_codeDistance_lt_log_two",
+      "claims": "§7.6 — the Fibonacci-anyon quantitative benchmark",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.QECHolographyBridge.fibonacci_HPCode_scramblingTimeBound_pos",
+      "claims": "§7.6 — its scrambling-time positivity",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.BHEntropyMicroscopic.fibonacci_horizon_satisfies_H_HorizonBoundaryCondition",
+      "claims": "§7.1 — the boundary-condition bundle is SATISFIABLE, witnessed on the Fibonacci horizon. This is what stops the five-field Prop from being vacuous",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.RTCasiniHuertaBounds.rt_entropy_pos",
+      "claims": "§8.1 — RT entropy positivity on the MTC substrate",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.RTCasiniHuertaBounds.rt_kaulMajumdar_gap_at_reduced_area_two",
+      "claims": "§8.1 — the Kaul-Majumdar matching at the reduced-area-2 critical point",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.RTCasiniHuertaBounds.rt_eq_kaulMajumdar_iff_trivial_reduced_area",
+      "claims": "ABSTRACT + §8.3 — THE knife-edge biconditional: RT entropy equals the Kaul-Majumdar microscopic entropy iff the reduced area trivialises. Face 4 of 'one MTC, four faces', and D4 identifies it as the mathematical underpinning of D3 §7's abelian-MTC falsifier",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FKLW.fibonacci_density_F21_unconditional",
+      "claims": "§9.1 — F.21 UNCONDITIONAL: the Fibonacci braid image is dense in SU(2). Closed by a Cartan-closed-subgroup attack; the discrete branch excluded by an Aharonov-Arad cardinality argument",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FKLW.OneParameterSubgroupSU2.Y_h_norm_le_half_pi_norm_sub_one",
+      "claims": "§9.4 — Mathlib-PR-quality SU(2) matrix-log Lipschitz bound, via the analytically-tight Jordan inequality",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FKLW.GroupCommutatorNearIdentity.groupCommutator_stability_nearIdentity",
+      "claims": "§9.3 Wave 1 — group-commutator stability near the identity",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.MatrixBCHCubic.bch_order_2_cubic_thm",
+      "claims": "§9.3 Wave 1 — the order-2 BCH cubic bound. The draft flags its constant 320 as loose by Dawson-Nielsen's own analysis",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FKLW.SolovayKitaevLengthBound.three_lt_skLengthExponent",
+      "claims": "§9.2 — the exponent sentinel c > 3",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FKLW.SolovayKitaevLengthBound.skLengthExponent_lt_four",
+      "claims": "§9.2 — and c < 4, closing the open interval around log5/log(3/2)",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FKLW.SolovayKitaevLengthBound.skLengthAtEpsilon_unconditional",
+      "claims": "§9.3 Wave 5 — the asymptotic length-at-precision headline, discharged unconditionally",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FKLW.SolovayKitaevQuantitative.solovayKitaev_dawson_nielsen_quantitative_fibonacci_strict",
+      "claims": "ABSTRACT + §9.2 — THE quantitative Solovay-Kitaev headline: error <= epsilon AND polylog length bundled at the SAME algorithmic compile level, unlike weaker existence-only forms",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FKLW.SolovayKitaevPathA.skApproxC_succ",
+      "claims": "§9.4 — the Path-A recursion unfolding, making the Dawson-Nielsen composition visible at the Lean term level rather than as an existential certificate",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FKLW.SolovayKitaevPathA.SkApproxCSuperQuadraticBound_holds",
+      "claims": "§9.4 — the super-quadratic shrinkage bound discharged at the calibrated K_compose = 1024, kernel-only",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FKLW.SolovayKitaevPathA.Y_h_eq_zero_in_regime_implies_eq_one",
+      "claims": "§9.4 — Y_h injectivity in the near-identity regime, closing the invalid branch",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FKLW.SolovayKitaevPathA.solovayKitaev_dawson_nielsen_quantitative_fibonacci_strict_constructive_unconditional",
+      "claims": "§9.4 — the constructive compiler, loose-epsilon regime, unconditional",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FKLW.SolovayKitaevPathA.solovayKitaev_dawson_nielsen_quantitative_fibonacci_strict_constructive_tight",
+      "claims": "§9.4 — the constructive compiler on the TIGHT-epsilon regime, bundling error and length at the same level. The draft's primacy claim rests on this one",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FKLW.GenericSU2.valid_branch_K_chain_le_K_compose_numeric_generic",
+      "claims": "§9.4 — the Mathlib-PR-quality numerical calibration chain underwriting K_proof <= 788 against K_compose = 1024, margin >= 236",
+      "declared": "2026-08-07"
+    }
+  ],
   "tier": 1,
   "title": "Topological quantum computation foundations",
   "target_journal": "Comm. Math. Phys. | PRX Quantum",
   "phase7_subphase": "7f",
-  "stage9_status": "green",
-  "stage10_status": "green",
-  "stage13_status": "green",
-  "stage13_redo_required": false,
+  "stage9_status": "pending",
+  "stage10_status": "pending",
+  "stage13_status": "pending",
+  "stage13_redo_required": true,
   "freshness_stale": true,
   "source_manifest_last_regen": "2026-06-10T20:25:17Z",
   "last_lift": "2026-05-31T15:37:22Z",
@@ -21,11 +333,20 @@
   "stage13_review_doc": "docs/audits/stage13_attribution_sweep_2026-06-10.md#d4",
   "audit_log_path": "papers/D4/audit_log.jsonl",
   "supersession_ledger_anchor": "docs/review_finding_supersessions.json",
-  "notes": "2026-05-06 Session-2 stage10 round-3 GREEN: 10 sentences walked, 0 BLOCKER, 7 advisories carried (4 r2 carryover + 3 ABSORB_STUB now closed via Session-2 systematic stub-commenting). Cross-bundle D4\u2194D2 (Drinfeld center) + D4\u2194D3 \u00a79 (QEC-MTC) PASS; D4\u2194D3 \u00a77 RT/CH still one-sided (D3 has 0 mentions; carryover advisory). | 2026-05-06 Session-2 stage13 round-1 GREEN-with-advisories (0 BLOCKER, 2 REQUIRED, 4 RECOMMENDED). Cross-bundle D4\u2194D2 Drinfeld-centre + D4\u2194D3 QEC \u00a77 PASS bidirectional. D4\u2194D3 \u00a78 RT/CH still one-sided (auto-resolves on D3 next revision). Round-1 BLOCKER (missing bibitem block) + 2 REQUIREDs (tracked-hypothesis wording, \"Sixteen\" count) ALL CLOSED in current draft. | 2026-05-06 Session-2 stage9 Stage9 GREEN: empty papers/D4/figures/ directory (paper_draft.tex has 0 \\includegraphics + 0 figure envs; vacuously consistent with cross-bridge anchors). | 2026-05-23 Phase 7f post-6t-Path-A stage9 round-2 GREEN: vacuous-PASS confirmed against current draft (0 \\includegraphics + 0 figure envs in \u00a79 Phase 6t lift); D4 anchors are textual. | 2026-05-23 round-4 stage10 GREEN-WITH-ADVISORIES post-Phase-6t \u00a79 lift: 34 sentences walked, 0 BLOCKER, 5 new advisories (2 IA LoC undercount, 1 TN skLengthAtEpsilon name-case, 1 HD gapped_interface_axiom possibly stale, 1 BCM D4\u2192F unidirectional). 4 prior r3 findings superseded (r2:3 QEC un-prefix + r3:5/6/7 ABSORB_STUBs). 2 carryover (r2:1 tracked-hypothesis wording + r2:4 D3 \u00a77 RT/CH one-sided). All 11 \u00a79 Lean refs verified via direct grep; lean_deps.json staleness ~17 declarations. Stage 13 invocation UNBLOCKED. | 2026-05-23 round-4 advisory-fix pass: fu:D4:r4:1/2 (LoC undercount) FIXED \u2014 \u00a79.3 total updated 2,000\u21925,640 + per-module Waves 2/4/5/Path A updated to actual wc -l (762/852/504/2,565). fu:D4:r4:3 (TN skLengthAtEpsilon case) FIXED \u2014 \u00a79.3 Wave 5 bullet now disambiguates Prop SkLengthAtEpsilon vs theorem skLengthAtEpsilon_unconditional. fu:D4:r4:4 (HD gapped_interface_axiom stale) FIXED across 4 sites (abstract line 62; \u00a78.5 heading + body lines 758-772; \u00a79.3 footer lines 1043-1049; \u00a79.5 axiom-inheritance paragraph 1204-1212) reflecting project axiom count = 0 (counts.json: axiom_names: []) since 2026-05-19 Phase 5h Wave 1 refactor (gapped_interface_axiom \u2192 TPFConjecture tracked Prop in SPTClassification.lean). LaTeX recompiles clean (28pp, 377409B). advisories_open 7\u21923 (residual: r2:1 \u00a78.4 wording, r2:4 D3 \u00a77 reciprocity, r4:5 D4\u2192F unidirectional). | 2026-05-23T15:30:00Z Phase 7f Stage 13 round-2 fresh-context adversarial review GREEN-with-advisories (0 BLOCKER, 0 REQUIRED, 1 RECOMMENDED, 4 ADVISORY total of which 3 carryover). Independently verified: 17/17 bibkeys in CITATION_REGISTRY; 11/11 Phase 6t \u00a79 load-bearing Lean theorem names exist on disk with substantive bodies (SkApproxCSuperQuadraticBound_holds at SolovayKitaevPathA.lean:1716 visually inspected ~810-line induction with valid-branch K-chain composition; solovayKitaev_dawson_nielsen_quantitative_fibonacci_strict at SolovayKitaevQuantitative.lean:185 composes two non-trivial lemmas); commit SHAs 5eaa861 + 0ec1522 verified via git log; all numerical constants (c=3.9694, \u03b5\u2080=1/8388608, K_proof\u2264788, margin\u2265236, 320=253+30+36+1, LoC 5640 total) check via direct compute; primacy claim verbatim-backed by Lit-Search/Phase-6t/Phase 6t Solovay-Kitaev Formal-Verification Landscape Scan.md cross-language audit (Isabelle/HOL/Coq/Agda/HOL4/Metamath/Rocq = no SK formalization in any kernel-checked system); counts.json axiom_names:[] confirmed; bundle_consistency PASS (3 clusters / 2 cross-bundle exact-match). 1 new ADVISORY (Gate 3): K_huge factor '~10^16' at line 1098 should be '~4\u00d710^19' for displayed (3/2) exponent form (mild quantitative drift; round-4 reviewer reconciled to (2\u03b5\u2080)^2 form but paper displays (3/2); fix is \u22642-line). 1 new RECOMMENDED (Gate 1): line 900 'Lemma 6' vs bibitem line 1236 'Lemma 6.1' wording inconsistency. 3 ADVISORY CARRYOVER: fu:D4:r2:1 (\u00a78.4 wording), fu:D4:r2:4 (D3 RT/CH one-sided), fu:D4:r4:5 (D4\u2192F unidirectional) \u2014 all out-of-scope. QI candidate emitted: bundle_reciprocity validate.py check to auto-track cross-bridge one-sidedness across revisions. Bundle is Stage-13 GREEN and closable per BUNDLE_LIFT_PROCEDURE.md \u00a714. | 2026-05-23T17:30:00Z Stage-13 advisory-fix pass: 2 cosmetic findings closed (Gate-1 RECOMMENDED 'Lemma~6'\u2192'Lemma~6.1' at line 900 matching bibitem 1236; Gate-3 ADVISORY K_huge factor '~10^16'\u2192'~4\u00d710^19' at line 1098 with explicit derivation 10^30\u00b7(2\u03b5\u2080)^(3/2)/(2\u221a2) \u2248 4.1\u00d710^19). LaTeX recompiles clean (28pp, 377844B). advisories_open 5\u21923 (residuals are the 3 cross-bundle reciprocity carryovers: r2:1, r2:4, r4:5 \u2014 all out-of-scope for D4-side revision). | 2026-06-10 attribution-content sweep (docs/audits/stage13_attribution_sweep_2026-06-10.md): GREEN. 5 anchors: 2 SUPPORTED / 2 CAVEAT / 0 NOT-SUPPORTED / 1 SOURCE-MISSING (AharonovArad Lemma 6.1 abstract-only). FreedmanLarsenWang universality + DawsonNielsen 3.97 verified.",
+  "notes": "2026-05-06 Session-2 stage10 round-3 GREEN: 10 sentences walked, 0 BLOCKER, 7 advisories carried (4 r2 carryover + 3 ABSORB_STUB now closed via Session-2 systematic stub-commenting). Cross-bundle D4↔D2 (Drinfeld center) + D4↔D3 §9 (QEC-MTC) PASS; D4↔D3 §7 RT/CH still one-sided (D3 has 0 mentions; carryover advisory). | 2026-05-06 Session-2 stage13 round-1 GREEN-with-advisories (0 BLOCKER, 2 REQUIRED, 4 RECOMMENDED). Cross-bundle D4↔D2 Drinfeld-centre + D4↔D3 QEC §7 PASS bidirectional. D4↔D3 §8 RT/CH still one-sided (auto-resolves on D3 next revision). Round-1 BLOCKER (missing bibitem block) + 2 REQUIREDs (tracked-hypothesis wording, \"Sixteen\" count) ALL CLOSED in current draft. | 2026-05-06 Session-2 stage9 Stage9 GREEN: empty papers/D4/figures/ directory (paper_draft.tex has 0 \\includegraphics + 0 figure envs; vacuously consistent with cross-bridge anchors). | 2026-05-23 Phase 7f post-6t-Path-A stage9 round-2 GREEN: vacuous-PASS confirmed against current draft (0 \\includegraphics + 0 figure envs in §9 Phase 6t lift); D4 anchors are textual. | 2026-05-23 round-4 stage10 GREEN-WITH-ADVISORIES post-Phase-6t §9 lift: 34 sentences walked, 0 BLOCKER, 5 new advisories (2 IA LoC undercount, 1 TN skLengthAtEpsilon name-case, 1 HD gapped_interface_axiom possibly stale, 1 BCM D4→F unidirectional). 4 prior r3 findings superseded (r2:3 QEC un-prefix + r3:5/6/7 ABSORB_STUBs). 2 carryover (r2:1 tracked-hypothesis wording + r2:4 D3 §7 RT/CH one-sided). All 11 §9 Lean refs verified via direct grep; lean_deps.json staleness ~17 declarations. Stage 13 invocation UNBLOCKED. | 2026-05-23 round-4 advisory-fix pass: fu:D4:r4:1/2 (LoC undercount) FIXED — §9.3 total updated 2,000→5,640 + per-module Waves 2/4/5/Path A updated to actual wc -l (762/852/504/2,565). fu:D4:r4:3 (TN skLengthAtEpsilon case) FIXED — §9.3 Wave 5 bullet now disambiguates Prop SkLengthAtEpsilon vs theorem skLengthAtEpsilon_unconditional. fu:D4:r4:4 (HD gapped_interface_axiom stale) FIXED across 4 sites (abstract line 62; §8.5 heading + body lines 758-772; §9.3 footer lines 1043-1049; §9.5 axiom-inheritance paragraph 1204-1212) reflecting project axiom count = 0 (counts.json: axiom_names: []) since 2026-05-19 Phase 5h Wave 1 refactor (gapped_interface_axiom → TPFConjecture tracked Prop in SPTClassification.lean). LaTeX recompiles clean (28pp, 377409B). advisories_open 7→3 (residual: r2:1 §8.4 wording, r2:4 D3 §7 reciprocity, r4:5 D4→F unidirectional). | 2026-05-23T15:30:00Z Phase 7f Stage 13 round-2 fresh-context adversarial review GREEN-with-advisories (0 BLOCKER, 0 REQUIRED, 1 RECOMMENDED, 4 ADVISORY total of which 3 carryover). Independently verified: 17/17 bibkeys in CITATION_REGISTRY; 11/11 Phase 6t §9 load-bearing Lean theorem names exist on disk with substantive bodies (SkApproxCSuperQuadraticBound_holds at SolovayKitaevPathA.lean:1716 visually inspected ~810-line induction with valid-branch K-chain composition; solovayKitaev_dawson_nielsen_quantitative_fibonacci_strict at SolovayKitaevQuantitative.lean:185 composes two non-trivial lemmas); commit SHAs 5eaa861 + 0ec1522 verified via git log; all numerical constants (c=3.9694, ε₀=1/8388608, K_proof≤788, margin≥236, 320=253+30+36+1, LoC 5640 total) check via direct compute; primacy claim verbatim-backed by Lit-Search/Phase-6t/Phase 6t Solovay-Kitaev Formal-Verification Landscape Scan.md cross-language audit (Isabelle/HOL/Coq/Agda/HOL4/Metamath/Rocq = no SK formalization in any kernel-checked system); counts.json axiom_names:[] confirmed; bundle_consistency PASS (3 clusters / 2 cross-bundle exact-match). 1 new ADVISORY (Gate 3): K_huge factor '~10^16' at line 1098 should be '~4×10^19' for displayed (3/2) exponent form (mild quantitative drift; round-4 reviewer reconciled to (2ε₀)^2 form but paper displays (3/2); fix is ≤2-line). 1 new RECOMMENDED (Gate 1): line 900 'Lemma 6' vs bibitem line 1236 'Lemma 6.1' wording inconsistency. 3 ADVISORY CARRYOVER: fu:D4:r2:1 (§8.4 wording), fu:D4:r2:4 (D3 RT/CH one-sided), fu:D4:r4:5 (D4→F unidirectional) — all out-of-scope. QI candidate emitted: bundle_reciprocity validate.py check to auto-track cross-bridge one-sidedness across revisions. Bundle is Stage-13 GREEN and closable per BUNDLE_LIFT_PROCEDURE.md §14. | 2026-05-23T17:30:00Z Stage-13 advisory-fix pass: 2 cosmetic findings closed (Gate-1 RECOMMENDED 'Lemma~6'→'Lemma~6.1' at line 900 matching bibitem 1236; Gate-3 ADVISORY K_huge factor '~10^16'→'~4×10^19' at line 1098 with explicit derivation 10^30·(2ε₀)^(3/2)/(2√2) ≈ 4.1×10^19). LaTeX recompiles clean (28pp, 377844B). advisories_open 5→3 (residuals are the 3 cross-bundle reciprocity carryovers: r2:1, r2:4, r4:5 — all out-of-scope for D4-side revision). | 2026-06-10 attribution-content sweep (docs/audits/stage13_attribution_sweep_2026-06-10.md): GREEN. 5 anchors: 2 SUPPORTED / 2 CAVEAT / 0 NOT-SUPPORTED / 1 SOURCE-MISSING (AharonovArad Lemma 6.1 abstract-only). FreedmanLarsenWang universality + DawsonNielsen 3.97 verified.",
   "open_findings": 34,
   "blocked_p1_gates": [
-    "FixPropagation"
+    "FixPropagation",
+    "LeanProofSubstance"
   ],
   "readiness": "RED",
-  "readiness_last_computed": "2026-07-31"
+  "readiness_last_computed": "2026-08-08",
+  "length_target": {
+    "unit": "pages",
+    "floor": 24,
+    "ceiling": 60,
+    "source": "PAPER_STRATEGY.md §6"
+  },
+  "compiled_pages": 32,
+  "compile_gate_ok": true
 }

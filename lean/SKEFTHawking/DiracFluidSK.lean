@@ -175,4 +175,102 @@ theorem eft_expansion_perturbative (D : ℝ)
   calc Real.pi / 6 * D ^ 2 < 1 * 1 := by nlinarith [sq_nonneg D]
     _ = 1 := one_mul 1
 
+/-! ## Momentum diffusion: the velocity² that converts η/(sT) into a viscosity
+
+`η/(sT)` is a **time**. The SK-EFT transport coefficients γ₁, γ₂ are kinematic
+viscosities `[m²/s]`. Converting between them needs a velocity², and which one
+is not a matter of convention: in relativistic hydrodynamics the momentum
+density is `w/v_F²`, so `ν = η v_F²/w = (η/(sT))·v_F²` at `μ = 0` where `w = Ts`.
+
+The sound-attenuation coefficient carries `[2(d−1)/d]·η + ζ`. In **d = 2** that
+bracket is exactly `1·η`, and `ζ = 0` by conformal symmetry — so no O(1) factor
+survives. (The familiar `4/3` is the `d = 3` value.)
+
+Dropping the velocity² is not a small error: it makes `Γ_H` come out in
+`[s·m⁻²]`, and for the Dean device it lands eleven orders below the
+`Γ_sound ~ 10¹⁰ s⁻¹` the Phase-5w survey reports for the same fluid.
+
+Anchors `src.core.formulas.conformal_kinematic_viscosity`.
+-/
+
+/-- Momentum-diffusion constant of a 2+1D conformal fluid, in terms of the
+    **measured** sound speed: `ν = 2·(η/(sT))·c_s²`.
+
+    Stated in `c_s` rather than `v_F` deliberately — `c_s` is measured on both
+    graphene platforms, while `v_F` is a band parameter defined only for the
+    monolayer. -/
+noncomputable def kinematicViscosity (etaOverST c_s : ℝ) : ℝ :=
+  2 * etaOverST * c_s ^ 2
+
+/-- **The identity that dissolves the `c_s²`-versus-`v_F²` question.**
+
+    For a conformal fluid the sound speed satisfies `c_s = v_F/√2`, equivalently
+    `v_F² = 2c_s²`. Under exactly that hypothesis the two candidate forms of the
+    momentum-diffusion constant are *the same number*:
+
+      `2·(η/(sT))·c_s²  =  (η/(sT))·v_F²`
+
+    So there was never a physical fork between them — only a question of which
+    velocity is measured. The hypothesis is stated as `v_F ^ 2 = 2 * c_s ^ 2`
+    rather than assumed, because it is exactly what **fails** for bilayer
+    graphene: quadratic band touching gives no emergent light cone, and pairing
+    the monolayer `v_F` with the measured bilayer `c_s` inflates `ν` by
+    `(v_F/c_s)^2 / 2` = 2.6× — note the `/2`, which follows from this very
+    theorem: the c_s form carries a factor 2 that the `v_F` form absorbs. -/
+theorem kinematicViscosity_eq_vF_form (etaOverST c_s v_F : ℝ)
+    (hconf : v_F ^ 2 = 2 * c_s ^ 2) :
+    kinematicViscosity etaOverST c_s = etaOverST * v_F ^ 2 := by
+  unfold kinematicViscosity
+  rw [hconf]; ring
+
+/-- The conformal hypothesis in its physical form `c_s = v_F/√2` implies the
+    squared form the equivalence above consumes. Supplied so callers may state
+    the relation as the sound-speed identity they actually measure. -/
+theorem conformal_sound_speed_sq (v_F c_s : ℝ) (h : c_s = v_F / Real.sqrt 2) :
+    v_F ^ 2 = 2 * c_s ^ 2 := by
+  subst h
+  have h2 : Real.sqrt 2 ^ 2 = 2 := Real.sq_sqrt (by norm_num)
+  rw [div_pow, h2]
+  ring
+
+/-- `Γ_H` built from a conformal `ν` is non-negative, given a non-negative
+    `η/(sT)`. Non-negativity of the damping rate is what makes `δ_diss = Γ_H/κ`
+    a *heating* correction, opposite in sign to the dispersive term — the
+    partial cancellation that survives the repair. -/
+theorem kinematicViscosity_nonneg (etaOverST c_s : ℝ) (h : 0 ≤ etaOverST) :
+    0 ≤ kinematicViscosity etaOverST c_s := by
+  unfold kinematicViscosity
+  positivity
+
+/-- **The dropped velocity² is detectable as a SCALING LAW, which is unit-free.**
+
+    Rescaling the sound speed by `s` rescales `ν` by `s²`. That is the whole
+    content of the missing factor, and it is the same statement in m/s, km/s or
+    natural units — which is what makes it a test rather than a coincidence of
+    units.
+
+    ⚠️ **This replaced `kinematicViscosity_exceeds_bare_time`, which compared a
+    TIME to a VISCOSITY.** `etaOverST` is `[s]`; `kinematicViscosity` is `[m²/s]`;
+    `etaOverST < kinematicViscosity etaOverST c_s` therefore asserted something
+    about numeric magnitudes in a chosen unit system — true for `c_s` in m/s and
+    false for the same physical sound speed in km/s. Reduced, it said `1 < 2c_s²`
+    given `c_s > 1`: no physical content at all. In the one module that exists
+    because a missing velocity² produced an eleven-order-of-magnitude error, the
+    theorem meant to make that detectable was the only unit-dependent one in the
+    file. -/
+theorem kinematicViscosity_scales_quadratically (etaOverST c_s s : ℝ) :
+    kinematicViscosity etaOverST (s * c_s)
+      = s ^ 2 * kinematicViscosity etaOverST c_s := by
+  unfold kinematicViscosity
+  ring
+
+/-- The same scaling at the Dean-device operating point, `norm_num`-backed: a
+    doubled sound speed quadruples `ν`. A `ν` built without the velocity² would
+    return the same number for both, which is exactly the pre-repair defect. -/
+theorem kinematicViscosity_doubling_quadruples (etaOverST c_s : ℝ) :
+    kinematicViscosity etaOverST (2 * c_s)
+      = 4 * kinematicViscosity etaOverST c_s := by
+  rw [kinematicViscosity_scales_quadratically]
+  norm_num
+
 end SKEFTHawking.DiracFluidSK

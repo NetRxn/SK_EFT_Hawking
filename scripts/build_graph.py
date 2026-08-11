@@ -92,28 +92,42 @@ LEAN_KIND_TO_TYPE: dict[str, str] = {
     'opaque': 'LeanDef',
 }
 
-# Lean auto-generated helper names (recursors, eliminators, boilerplate).
-# ExtractDeps filters .ctorInfo/.recInfo/.quotInfo, but Lean also emits
-# per-type helpers classified as theorems/defs: `noConfusion`, `casesOn`,
-# `recOn`, `sizeOf_spec`, injectivity lemmas, `match_N`, etc. These carry no
-# research content and would otherwise pollute the graph with ~2,100 noise
-# nodes, crowding out the ~3,600 substantive declarations.
-_AUTOGEN_SHORT_RE = re.compile(
-    r'^('
-    r'noConfusion(Type)?|casesOn|recOn|sizeOf_spec|'
-    r'ctorIdx|ctorElim(Type)?|toCtorIdx|'
-    r'elim|inj|injEq|'
-    r'match_\d+|eq_\d+|'
-    r'repr|toString|decEq|fromNat|ofNat|'
-    r'below|brecOn|binductionOn'
-    r')$'
-)
+# Lean auto-generated helpers (recursors, eliminators, `deriving` boilerplate) carry no
+# research content and would crowd the substantive declarations out of the graph.
+#
+# Which declarations those ARE is decided by `validate_helpers.autogen_index` — Lean's own
+# predicates via the `autogen` field `ExtractDeps` emits, plus a parent-kind-guarded suffix
+# supplement — so the graph, the atlas overlay and `validate.py` classify one population one
+# way. Build it once per `lean_deps` load: it needs the whole record set to resolve parents,
+# which is exactly what a per-name test cannot do.
+
+
+def _autogen_lookup(declarations) -> dict:
+    """`{name: is_compiler_generated}` for this record set (see `autogen_index`)."""
+    sys.path.insert(0, str(SCRIPT_DIR))
+    from validate_helpers import autogen_index
+    return autogen_index(declarations)
 
 # Populated by extract_lean_declaration_nodes; consumed by
 # _resolve_lean_short() in edge extractors. Maps short name -> list of full
 # node IDs so short-name collisions surface as ambiguity (logged + skipped)
 # instead of silent drops.
 _LEAN_SHORT_INDEX: dict[str, list[str]] = {}
+
+# Populated by extract_python_test_nodes; consumed by extract_verifies_edges.
+# Maps a test module stem -> the names bound by `import X [as y]` in that file.
+# Same pattern as _LEAN_SHORT_INDEX above: derived during node extraction and
+# read by an edge extractor, rather than stored on every one of ~4,400 test
+# nodes (it is a property of the FILE, not of each test in it).
+#
+# A name bound by `import` denotes a Python MODULE and can never be a reference
+# to a Lean declaration — which is exactly what the VERIFIES resolver needs to
+# know. Names bound by `from M import a` are deliberately NOT recorded here:
+# those are symbols, and a project symbol legitimately mirrors a Lean short name
+# (the naming correspondence the Lean branch exists to follow). `from src.core
+# import formulas as F` is a from-import, so the formula branch's `F.` alias
+# path is unaffected.
+_TEST_MODULE_ALIASES: dict[str, set[str]] = {}
 
 
 def discover_paper_draft_paths(papers_dir: Path) -> list[Path]:
@@ -210,9 +224,16 @@ def compute_source_hash() -> str:
         PROJECT_ROOT / "scripts" / "review_figures.py",
     ])
 
-    # Add Lean files
+    # Add Lean files.
+    # ⚠️ rglob, NOT glob (fixed 2026-08-04, audit finding QI-01). This was
+    # `glob("*.lean")`, which sees only the 1,373 top-level modules out of ~2,040 —
+    # so a change confined to a SUBDIRECTORY (FaultTolerance/, QuantumNetwork/,
+    # APSEta/, Detection/, …) did not move the source hash at all, and this hash is
+    # the graph's staleness key. 33% of the Lean tree could drift without the graph
+    # noticing. Same class as ADR-004 W7 finding M2, which fixed exactly this in
+    # `validation/checks/freshness.py:_counts_is_stale` and was never swept here.
     if LEAN_DIR.is_dir():
-        lean_files = sorted(LEAN_DIR.glob("*.lean"))
+        lean_files = sorted(LEAN_DIR.rglob("*.lean"))
         source_files.extend(lean_files)
 
     for fp in source_files:
@@ -352,6 +373,12 @@ def _lean_ref_resolution_index() -> frozenset:
     return frozenset(forms)
 
 
+#: Tokens that appear where a declaration name would but name no declaration.
+#: `pending` is the project's own placeholder; the rest are what authors write when
+#: there is nothing to cite.
+_LEAN_REF_NON_NAMES = frozenset({"pending", "n/a", "na", "none", "tbd"})
+
+
 def _clean_lean_ref(ref: str) -> str | None:
     """Normalise a raw ``Lean:`` docstring token to a bare declaration name, or
     return ``None`` if the token is not a declaration-name claim at all.
@@ -372,10 +399,40 @@ def _clean_lean_ref(ref: str) -> str | None:
     head = re.sub(r"\(.*?\)", "", head).strip()
     if not head:
         return None
-    tok = head.split()[0].rstrip(".;,").strip()
-    if not re.fullmatch(r"[A-Za-z_][\w.]*", tok) or len(tok) <= 2:
+    # ⚠️ `.lstrip('.')` and the `'` in the character class are BOTH fixes from
+    # 2026-08-04 (audit finding QI-03), each measured:
+    #
+    #   * A LEADING DOT is the docstring's suffix idiom — `.dean_adiabatic` means
+    #     `QuasiOneDReduction.dean_adiabatic`. Rejecting it dropped 3 real names.
+    #   * A LEAN PRIME NAME (`haldaneD_diracK'`) is a perfectly ordinary
+    #     declaration. The old class `[\w.]` has no apostrophe, so every primed
+    #     name was silently discarded — 2 more.
+    #
+    # All five newly-accepted names RESOLVE against `lean_deps.json`, and nothing
+    # previously accepted is now rejected, so this strictly widens correct
+    # coverage: 509 -> 514 refs, dangling unchanged at 4.
+    #
+    # ⚠️ The class stays `\w`-based, NOT `[A-Za-z0-9]`. A first draft of this fix
+    # spelled it out in ASCII and thereby dropped `BHEntropyMicroscopic.HorizonMTCBC.γ_immirzi`
+    # and `c₄_pos` — Lean identifiers are Unicode, and `\w` already matches them.
+    # Measuring the candidate against the live refs is what caught that.
+    tok = head.split()[0].rstrip(".;,").strip().lstrip(".")
+    if not tok or tok.lower() in _LEAN_REF_NON_NAMES:
         return None
-    if tok.endswith(".lean") or tok == "pending" or tok.startswith("_"):
+    # This single `fullmatch` is what rejects the structural junk the unguarded
+    # inline parser in `extract_verified_by_edges` used to hand to
+    # `_resolve_lean_short` — `16}_num`, `N/A`, `…falsifier_*`, bare numerals.
+    # `\w` matches none of `{ } * / \`, and the leading `[A-Za-z_]` kills anything
+    # starting with a digit.
+    #
+    # ⚠️ A separate `any(c in tok for c in "{}*/\\")` guard sat here briefly and was
+    # REMOVED on measurement: mutating it to `if False:` changed no verdict and
+    # failed no test, i.e. it could never be the sole reason a token was rejected.
+    # A guard that cannot fire is the thing this audit exists to delete, and
+    # shipping one inside the fix would have been the same defect one layer down.
+    if not re.fullmatch(r"[A-Za-z_][\w.']*", tok) or len(tok) <= 2:
+        return None
+    if tok.endswith(".lean") or tok.startswith("_"):
         return None
     if re.fullmatch(r"[A-Z][A-Z0-9]{0,4}", tok):  # matrix-element labels (K0E0)
         return None
@@ -527,6 +584,7 @@ def extract_lean_declaration_nodes() -> list[dict]:
     )
 
     declarations = load_lean_deps()
+    autogen = _autogen_lookup(declarations)
 
     nodes = []
     seen_ids = set()
@@ -545,7 +603,7 @@ def extract_lean_declaration_nodes() -> list[dict]:
         short_name = full_name.rsplit('.', 1)[-1] if '.' in full_name else full_name
 
         # Skip Lean auto-generated helpers (noConfusion, casesOn, match_N, etc.).
-        if _AUTOGEN_SHORT_RE.match(short_name):
+        if autogen.get(full_name):
             _dropped_autogen += 1
             continue
 
@@ -1256,6 +1314,26 @@ def _extract_imports(tree: _ast.AST) -> set[str]:
     return names
 
 
+def _extract_module_aliases(tree: _ast.AST) -> set[str]:
+    """Return the names bound by ``import X`` / ``import X as y`` in a module.
+
+    A strict subset of :func:`_extract_imports`, which also collects
+    ``from M import a``. The two forms bind different kinds of thing and the
+    VERIFIES resolver has to tell them apart — see ``_TEST_MODULE_ALIASES``.
+
+    Walks the whole tree, not just module scope, because a function-scoped
+    ``import numpy as np`` binds a module just as surely as a top-level one
+    (``_extract_imports`` already walks the whole tree for the same reason,
+    despite its docstring saying "module scope").
+    """
+    names: set[str] = set()
+    for node in _ast.walk(tree):
+        if isinstance(node, _ast.Import):
+            for alias in node.names:
+                names.add((alias.asname or alias.name).split('.')[0])
+    return names
+
+
 def _classify_assertion(node: _ast.AST) -> str | None:
     """Classify a single assertion AST node by its test_kind.
 
@@ -1337,6 +1415,31 @@ def _classify_test_function(fn: _ast.FunctionDef,
     return 'unknown', sorted(names)
 
 
+def _iter_test_functions(tree):
+    """Yield ``(function_node, enclosing_class_name_or_None)`` for every
+    ``def test_*`` in a parsed test module, in source order.
+
+    Replaces a bare ``ast.walk`` + ``isinstance(FunctionDef)`` scan, which found
+    the same functions but carried no class context — so the caller could not
+    disambiguate two identically-named methods in different classes. Descends into
+    nested classes (a real pattern in this suite) and into function bodies, so the
+    set of functions found is identical to the old walk; only the context is new.
+    """
+    for node in _ast.walk(tree):
+        if not isinstance(node, _ast.ClassDef):
+            continue
+        for sub in _ast.walk(node):
+            if isinstance(sub, _ast.FunctionDef) and sub.name.startswith('test_'):
+                yield sub, node.name
+    # Module-level tests (and tests nested in plain functions) carry no class.
+    in_class = {id(sub) for node in _ast.walk(tree) if isinstance(node, _ast.ClassDef)
+                for sub in _ast.walk(node) if isinstance(sub, _ast.FunctionDef)}
+    for node in _ast.walk(tree):
+        if (isinstance(node, _ast.FunctionDef) and node.name.startswith('test_')
+                and id(node) not in in_class):
+            yield node, None
+
+
 def extract_python_test_nodes() -> list[dict]:
     """PythonTest — test functions with test_kind classification.
 
@@ -1357,7 +1460,11 @@ def extract_python_test_nodes() -> list[dict]:
 
     nodes = []
     seen_ids: set[str] = set()
-    for test_file in sorted(tests_dir.glob("test_*.py")):
+    _TEST_MODULE_ALIASES.clear()
+    # ⚠️ rglob (fixed 2026-08-04). `glob` stopped at the top level, so 12 files /
+    # 30 `def test_*` under `tests/e2e/` minted NO PythonTest node and any VERIFIES
+    # coverage they carry was invisible to Gate 4. The QI-01 class, in Python.
+    for test_file in sorted(tests_dir.rglob("test_*.py")):
         try:
             source = test_file.read_text()
             tree = _ast.parse(source, filename=str(test_file))
@@ -1366,11 +1473,36 @@ def extract_python_test_nodes() -> list[dict]:
             continue
         module = test_file.stem  # e.g. "test_formulas"
         imports = _extract_imports(tree)
-        for node in _ast.walk(tree):
-            if isinstance(node, _ast.FunctionDef) and node.name.startswith('test_'):
+        _TEST_MODULE_ALIASES[module] = _extract_module_aliases(tree)
+        # ── Class-qualified ids (fixed 2026-08-03, ADR-009 §Deferred item 7) ──
+        # The id was `test:<module>::<function>` with the CLASS OMITTED, and the
+        # loop deduped on it. So two tests sharing a method name in different
+        # classes of one file collided, and every one after the first was silently
+        # discarded — no log, no counter. Measured corpus-wide at the fix:
+        # **4,416 `def test_*` in tests/ produced 4,350 PythonTest nodes; 66 tests
+        # were missing from the graph.** It surfaced when a new 9-test file minted 7.
+        #
+        # That matters because these nodes are the source of the VERIFIES
+        # coverage edges that `ReadinessGate: ComputationCorrectness` reads — a
+        # dropped node takes its formula-targeted edges with it. Paired with the
+        # alias-resolution defect in `extract_verifies_edges` (which FABRICATED
+        # 144 Lean-targeted edges from `np.all`-style names; fixed 2026-08-03),
+        # the graph's coverage picture was wrong in both directions at once.
+        #
+        # The id now mirrors pytest's own nodeid shape, `file::Class::method`.
+        # Safe to change: it is constructed here and nowhere else, consumed only
+        # within the same build, and persisted nowhere — `write_graph_to_pg` is a
+        # full delete-and-rewrite, and neither the supersession ledger nor bundle
+        # metadata references a `test:` id.
+        for node, class_name in _iter_test_functions(tree):
                 test_kind, refs = _classify_test_function(node, imports)
-                test_id = f'test:{module}::{node.name}'
+                qualifier = f'{class_name}::' if class_name else ''
+                test_id = f'test:{module}::{qualifier}{node.name}'
                 if test_id in seen_ids:
+                    # Now genuinely a duplicate definition, not a name collision
+                    # across classes. Log it rather than dropping in silence.
+                    logger.warning("PythonTest: duplicate id %s in %s — skipping",
+                                   test_id, test_file.name)
                     continue
                 seen_ids.add(test_id)
                 nodes.append({
@@ -1394,7 +1526,7 @@ def extract_python_test_nodes() -> list[dict]:
         kind_counts = _C(n['meta']['test_kind'] for n in nodes)
         logger.info("PythonTest extraction: %d tests across %d files (%s)",
                     len(nodes),
-                    len(list(tests_dir.glob("test_*.py"))),
+                    len(list(tests_dir.rglob("test_*.py"))),
                     ", ".join(f"{k}={v}" for k, v in kind_counts.most_common()))
     return nodes
 
@@ -1405,6 +1537,25 @@ _SEV_GLYPHS = {
     '🟡': 'major',
     '🔵': 'minor',
 }
+
+#: Reviewer vocabulary -> the severity a node carries. **Module scope, deliberately**
+#: (2026-08-05): it was a function-local literal inside
+#: `extract_review_finding_nodes`, so nothing outside could bind it — and
+#: `test_build_graph.py::TestExtractReviewFindingNodes::test_node_shape` hand-listed a
+#: DIFFERENT set. That test accepted `blocker`, which this map never emits, and omitted
+#: `critical`, which is the only submission-blocking value. It has been RED since the
+#: declared-severity convention landed, invisible because `pyproject.toml` deselects
+#: `slow`. Same fix, same reason, as `_recurrence_norm` under ADR-009 Phase 0 Guard 3:
+#: a test that re-states a mapping asserts nothing about the mapping.
+_SEVERITY_DECL_MAP = {
+    'blocker': 'critical', 'critical': 'critical',
+    'required': 'major', 'major': 'major',
+    'recommended': 'minor', 'minor': 'minor',
+    'advisory': 'advisory', 'info': 'advisory',
+}
+
+#: Every severity a ReviewFinding node can carry, derived rather than restated.
+SEVERITY_VALUES = frozenset(_SEVERITY_DECL_MAP.values()) | frozenset(_SEV_GLYPHS.values())
 
 # Section heading pattern for Master Checklist / Comprehensive / Citation
 # review formats:
@@ -1645,13 +1796,21 @@ def extract_review_finding_nodes() -> list[dict]:
             _decl = re.search(r'^[-*]\s*\*\*Severity:?\*\*:?\s*([A-Za-z]+)',
                               body[:1200], re.MULTILINE | re.IGNORECASE)
             severity = None
+            _decl_unrecognised = False
             if _decl:
                 _v = _decl.group(1).strip().lower()
-                _MAP = {'blocker': 'critical', 'critical': 'critical',
-                        'required': 'major', 'major': 'major',
-                        'recommended': 'minor', 'minor': 'minor',
-                        'advisory': 'advisory', 'info': 'advisory'}
-                severity = _MAP.get(_v)
+                severity = _SEVERITY_DECL_MAP.get(_v)
+                # ⚠️ AN UNRECOGNISED DECLARED VALUE IS NOT A DECLARATION (2026-08-05).
+                # `_MAP.get()` returned None for a typo (`blockr`, `high`), severity fell
+                # through to `advisory`, and the file-level BLOCKER escalation below was
+                # skipped because it is gated on `_decl is None` — the LINE matched, only
+                # its value failed. A mistyped BLOCKER therefore landed as advisory -> the
+                # paper reads YELLOW -> `readiness_submission_gate` passes.
+                # `review_severity_declared` does not catch it either: it counts
+                # `**Severity:**` LINES and never validates the token.
+                # An unparseable declaration now behaves exactly as an absent one, so
+                # inference and escalation both still run.
+                _decl_unrecognised = severity is None
             if severity is None:
                 severity = 'advisory'
                 # The HEADING is authoritative for the fallback; the body is a last resort
@@ -1683,7 +1842,7 @@ def extract_review_finding_nodes() -> list[dict]:
             # it was introduced to replace. Two reviewers also tripped the file-level rule
             # on their own reports by quoting the marker while describing it, escalating
             # entire clean rounds.
-            if _decl is None:
+            if _decl is None or _decl_unrecognised:
                 if _BLOCKER_RE.search(heading) or _BLOCKER_RE.search(body[:1000]):
                     severity = 'critical'
                 elif file_has_critical_marker:
@@ -1980,7 +2139,25 @@ def _scan_lean_theorem_bodies(source: str):
         # adversarial finding C1, 2026-06-13). `def`/`instance` are NOT scanned:
         # they are definitions, not claims, and a value def (`def foo_dim := 3`)
         # is legitimately trivial-bodied.
-        m = re.match(r'^(?:theorem|lemma)\s+([A-Za-z_][A-Za-z0-9_\']*)', line)
+        # ⚠️ TOLERATE attributes, modifiers and indentation. This was anchored at
+        # column 0 with no prefix allowance, so `@[simp] theorem`, `private
+        # theorem` and any indented declaration were INVISIBLE — 1,772 of 21,894
+        # declarations (8.1%), 230 of them trivially-closed (`:= rfl`).
+        #
+        # This is the `isNoConfusion`-vs-`noConfusionType` shape verbatim: a
+        # declaration-form convention that does not match what Lean source
+        # actually contains, so the guard reports a measured zero over a
+        # population it never saw. `proxy_body_audit` reported PASS with live
+        # hard-FAIL violations sitting in the tree.
+        #
+        # Three consumers inherit this scanner — `proxy_body_audit`
+        # (lean_substrate.py), `formula_grounding`'s R-05 relabel gate
+        # (lean_statements.py) and the placeholder extractor below — so the blind
+        # spot was shared by all three.
+        m = re.match(
+            r'^\s*(?:@\[[^\]]*\]\s*)?'
+            r'(?:private\s+|protected\s+|nonrec\s+|scoped\s+)*'
+            r'(?:theorem|lemma)\s+([A-Za-z_][A-Za-z0-9_\']*)', line)
         if not m:
             i += 1
             continue
@@ -2032,7 +2209,17 @@ def _scan_lean_theorem_bodies(source: str):
             body_parts.append(ln.strip())
             k += 1
         body = " ".join(body_parts).strip()
-        yield name, line_no, body
+        # `is_simp`: the declaration carries a `@[simp]` attribute, on its own
+        # line or inline. A `@[simp]` lemma is REWRITE PLUMBING, not a claim —
+        # `@[simp] theorem (x + y).rank = x.rank + y.rank := rfl` beside
+        # `instance : Add _ := ⟨fun x y => ⟨x.rank + y.rank⟩⟩` has `rfl` as its
+        # only correct proof. Consumers that hunt "defining-the-conclusion"
+        # claims need to tell the two apart; before the scanner tolerated
+        # attributes at all, it never saw a single `@[simp]` declaration, so no
+        # consumer had ever had to make the distinction.
+        is_simp = ("@[simp]" in line
+                   or (line_no >= 2 and "@[simp]" in lines[line_no - 2]))
+        yield name, line_no, body, is_simp
         i = k
 
 
@@ -2062,13 +2249,40 @@ def extract_placeholder_marker_nodes() -> list[dict]:
     nodes = []
     seen_ids: set[str] = set()
 
-    for lean_file in sorted(LEAN_DIR.glob("*.lean")):
+    # ⚠️ rglob, NOT glob (fixed 2026-08-04, audit finding QI-01). This scanned only
+    # the 1,373 top-level modules of ~2,040, so **112 placeholder-bodied theorems in
+    # SUBDIRECTORIES minted no PlaceholderMarker node** — e.g.
+    # `APSEta/Predicate.lean::isSakharovConsistent_BECAcoustic`. P1 Gate 5
+    # (LeanProofSubstance) decides by membership in exactly these nodes, so a paper
+    # citing a subdirectory placeholder passed the gate against an empty set. The
+    # gate reported "no placeholder theorems cited" having never looked at a third
+    # of the library — the absence-of-measurement shape, inside a P1 gate.
+    #
+    # Measured at the fix: verdict movement on the current tree is **ZERO**. No
+    # paper cites any of the 112 by `\texttt` name; exactly one
+    # (`readoutDecayProb_eq_cohGamma`) is reachable through a formula VERIFIED_BY
+    # ref, and no paper's `key_claims` ground on that formula
+    # (`teleport_avg_fidelity`). So this closes a latent hole rather than surfacing
+    # live debt — the same posture as the `evaluate_all_gates` repair in `5228ed6d`.
+    # Expect +114 PlaceholderMarker nodes in the graph_integrity characterization.
+    for lean_file in sorted(LEAN_DIR.rglob("*.lean")):
         try:
             source = lean_file.read_text()
         except (OSError, UnicodeDecodeError):
             continue
-        module_name = lean_file.stem  # e.g. "RokhlinBridge"
-        for thm_name, line_no, body in _scan_lean_theorem_bodies(source):
+        # `module_name` is the DOTTED Lean module path (`APSEta.Predicate`), which is
+        # what `SKEFTHawking.<module>.<thm>` should mirror; `rel_path` is the on-disk
+        # location and must stay a real path, not the dotted form.
+        #
+        # Keying on the bare `lean_file.stem` is not safe once subdirectories are in
+        # scope: `A/Foo.lean` and `B/Foo.lean` would mint the same id and `seen_ids`
+        # would silently drop the second — reintroducing here the
+        # class-omitted-from-the-key defect that lost 66 PythonTest nodes
+        # (ADR-009 §Deferred item 7).
+        _rel = lean_file.relative_to(LEAN_DIR)
+        module_name = ".".join(_rel.with_suffix("").parts)
+        rel_path = f'lean/SKEFTHawking/{_rel.as_posix()}'
+        for thm_name, line_no, body, _is_simp in _scan_lean_theorem_bodies(source):
             if thm_name in placeholder_short_names:
                 continue
             pattern_label = None
@@ -2091,11 +2305,11 @@ def extract_placeholder_marker_nodes() -> list[dict]:
                 'label': thm_name,
                 'name': thm_name,
                 'verification': 'unverified',
-                'detail': f'{module_name}.lean:{line_no} — body matches {pattern_label!r}',
+                'detail': f'{rel_path}:{line_no} — body matches {pattern_label!r}',
                 'meta': {
                     'module': module_name,
                     'lean_full_name': full_name,
-                    'lean_file': f'lean/SKEFTHawking/{module_name}.lean',
+                    'lean_file': rel_path,
                     'line': line_no,
                     'body_pattern': pattern_label,
                     'body_preview': body[:200],
@@ -2192,13 +2406,26 @@ def extract_count_metric_nodes() -> list[dict]:
 # ═══════════════════════════════════════════════════════════════════════
 
 def _iter_paper_dirs():
-    """Yield (paper_key, paper_dir_path) for every papers/paper*_*/ directory."""
-    papers_root = PROJECT_ROOT / "papers"
-    if not papers_root.is_dir():
-        return
-    for d in sorted(papers_root.iterdir()):
-        if d.is_dir() and d.name.startswith('paper'):
-            yield d.name, d
+    """Yield (key, dir) for every legacy `papers/paper*_*/` draft AND every
+    publication-bundle directory (`D1`…`D12`, `L1`–`L3`, `I1`–`I3`, `E1`, `E2`, `F`).
+
+    ⚠️ **This must route through `discover_paper_draft_paths`, and until 2026-08-06 it
+    did not.** That helper's own docstring states the contract — *"All node/edge
+    extractors route through this one helper so discovery cannot drift between them"* —
+    and this function was the one that didn't, keeping a bare ``startswith('paper')``
+    that predated the bundle roster. It is the sole directory iterator behind the
+    Sentence layer, the BACKED_BY chain, the AuditEvent log and LOGGED_BY, so the drift
+    was expensive: **20 of 49 `claims_review.json` files — 1 316 of 3 432 v2 sentences —
+    were invisible to the graph.** Measured 2026-08-06
+    (`docs/architecture/END_TO_END_MAP.md` §6).
+
+    Deriving the population from the artifact (a directory holding a `paper_draft.tex`)
+    rather than from a NAME is the point: a name filter has to be widened every time the
+    roster grows, and the failure is silent each time. This picks up `paper*_*` drafts,
+    all 21 bundles and `note_rt_ch_bounds` with no list to maintain.
+    """
+    for tex_path in discover_paper_draft_paths(PROJECT_ROOT / "papers"):
+        yield tex_path.parent.name, tex_path.parent
 
 
 def _load_claims_review(paper_dir: Path) -> dict | None:
@@ -2598,6 +2825,23 @@ def extract_readiness_gate_nodes() -> list[dict]:
                     len(nodes),
                     len(set(n['meta']['paper'] for n in nodes)),
                     dict(states))
+        # ⚠️ A gate whose evaluator could not READ the draft is `state='open'`,
+        # identical to one with genuine outstanding work — `GateState` has no
+        # cannot-measure value and must not grow one (it is a contract). So the
+        # distinction is reported BESIDE the state, here, where the graph is built.
+        #
+        # This call is why `paper_unmeasured_gates` exists. Without a production
+        # consumer, `GateResult.measured` was written, serialized, and read by
+        # nothing — a write-only field is not a fix, and the closure reviewer was
+        # right to call the earlier version vacuous.
+        from readiness_gates import paper_unmeasured_gates
+        for paper in sorted({r.paper for r in results}):
+            dark = paper_unmeasured_gates(results, paper)
+            if dark:
+                logger.warning(
+                    "ReadinessGate: %s has %d UNMEASURED gate(s) — the evaluator "
+                    "read nothing, which is NOT the same as outstanding work: %s",
+                    paper, len(dark), ", ".join(dark))
     return nodes
 
 
@@ -2667,17 +2911,19 @@ def extract_module_nodes() -> list[dict]:
     """
     from scripts.extract_lean_deps import load_lean_deps
 
+    declarations = load_lean_deps()
+    autogen = _autogen_lookup(declarations)
+
     counts: dict[str, int] = {}
     kinds: dict[str, dict[str, int]] = {}
-    for decl in load_lean_deps():
+    for decl in declarations:
         mod = decl.get('module', '')
         if not mod:
             continue
         kind = decl.get('kind', '')
         if LEAN_KIND_TO_TYPE.get(kind) is None:
             continue
-        short = (decl.get('name', '') or '').rsplit('.', 1)[-1]
-        if _AUTOGEN_SHORT_RE.match(short):
+        if autogen.get(decl.get('name', '')):
             continue
         counts[mod] = counts.get(mod, 0) + 1
         kinds.setdefault(mod, {})
@@ -2826,8 +3072,23 @@ def extract_verified_by_edges(node_ids: set) -> list[dict]:
             continue
         lean_refs = fnode.get('meta', {}).get('lean_refs', [])
         for ref in lean_refs:
-            # Clean up: ref might be "theorem_name (Module.lean)" or just "theorem_name"
-            clean_ref = ref.split('(')[0].strip().split(' ')[0].strip()
+            # ⚠️ ONE normalizer (2026-08-04, audit finding QI-03). This line used to
+            # be its own parser — `ref.split('(')[0].strip().split(' ')[0].strip()` —
+            # with NO rejection step at all, while `_clean_lean_ref` sat 2,500 lines
+            # above doing the job properly. Measured: it fed **33 junk tokens** into
+            # `_resolve_lean_short`, among them `'N/A'`, `'K0E0'`, `'2'`, `'3'`,
+            # `'16}_num'` and `'…falsifier_*'`.
+            #
+            # An unguarded short-name resolver fed unfiltered tokens is exactly the
+            # mechanism of section-Deferred item 7, where tail-resolution
+            # manufactured 144 phantom Lean VERIFIES edges. The formula branch of
+            # that same resolver has carried an alias allow-list against this hazard
+            # since D12 round-9; this branch had nothing.
+            #
+            # `_clean_lean_ref` is now the single owner and was fixed in the same
+            # pass to stop rejecting leading-dot refs and Lean prime names — so this
+            # switch does not trade junk rejection for lost coverage.
+            clean_ref = _clean_lean_ref(ref)
             if not clean_ref:
                 continue
             lean_id = _resolve_lean_short(clean_ref, node_ids)
@@ -3291,14 +3552,14 @@ def extract_cites_theorem_edges(node_ids: set) -> list[dict]:
     # index built on first need.
     # The cheapest approach: pull the subset of nodes with type
     # 'LeanTheorem' and keep their IDs as an acceptance set.
-    theorem_ids = set()
-    for node_id in node_ids:
-        # Fast path: we only need to know which IDs are LeanTheorem.
-        # The node_ids set doesn't carry type info, so we need to
-        # reconstruct. Do one pass via extract_lean_declaration_nodes
-        # (cached by lru of the lean_deps.json load).
-        pass
-    # One-shot: get the theorem-only ID set
+    # `node_ids` carries no type information, so the LeanTheorem subset is
+    # reconstructed from the declaration extractor.
+    #
+    # ⚠️ A `for node_id in node_ids: pass` loop stood here until 2026-08-04 (audit
+    # QI-06) — an empty pass over every id in the graph (~46,700 today), left behind
+    # when the "fast path" it was sketching was abandoned in favour of the one-shot
+    # below. It computed nothing and its comment described an approach the code did
+    # not take.
     _lean_nodes = extract_lean_declaration_nodes()
     theorem_ids = {n['id'] for n in _lean_nodes if n['type'] == 'LeanTheorem'}
 
@@ -3623,6 +3884,8 @@ def extract_verifies_edges(node_ids: set) -> list[dict]:
         if test['id'] not in node_ids:
             continue
         test_kind = test.get('meta', {}).get('test_kind', 'unknown')
+        module_aliases = _TEST_MODULE_ALIASES.get(
+            test.get('meta', {}).get('module', ''), frozenset())
         for raw in test.get('meta', {}).get('referenced_names', []):
             # Try Formula first, bare name then module-qualified
             target = formula_name_to_id.get(raw)
@@ -3633,8 +3896,49 @@ def extract_verifies_edges(node_ids: set) -> list[dict]:
             if target is None:
                 target = param_name_to_id.get(raw)
             if target is None:
-                # Try Lean short-name resolution (returns None if ambiguous/missing)
-                lean_id = _resolve_lean_short(raw, node_ids)
+                # ── Lean resolution, GUARDED (ADR-009 §Deferred item 7) ──────
+                # This branch used to call `_resolve_lean_short(raw, ...)`
+                # unguarded, and that function falls back to matching the TAIL
+                # of a dotted name against Lean short names. The formula index
+                # above has carried an alias allow-list against exactly this
+                # hazard since D12 round-9 — "a blanket tail fallback would let
+                # `np.sum` or `math.exp` match a formula named `sum` or `exp`,
+                # manufacturing coverage that does not exist". The Lean branch
+                # had no equivalent, so precisely that happened.
+                #
+                # Measured on the live graph at the fix: **144 of 536
+                # Lean-targeted VERIFIES edges were fabricated** — `np.all` (58)
+                # -> `FaultTolerance.Pauli.all`, `v` (21, from `import validate
+                # as v`) -> `EWMassMatrixInputs.v`, `np.diag` (11) ->
+                # `IsCharQ.diag`, `np.dot` -> `KMM.Col.dot`, `mx.eval` ->
+                # `IntFundamentalClass.eval`, `PARAMETER_PROVENANCE.get` ->
+                # `NeutrinoMixing.get`, and so on. All 17 Lean declarations that
+                # lost an edge lost EVERY edge they had, i.e. none of them had
+                # any genuine coverage mixed in.
+                # (ADR-009 recorded 10; that figure was measured from a sample
+                # of five example names and understated the count 14-fold.)
+                #
+                # Two rules, one principle — a VERIFIES edge must rest on a name
+                # the test actually wrote, not on a suffix of one:
+                #   * a ref rooted at a MODULE ALIAS is a Python module
+                #     reference, never a Lean declaration (`np`, `mx`, `sp`,
+                #     `time`, `v`, `ext`);
+                #   * a DOTTED ref is a Python attribute access, so it may
+                #     resolve only as a full Lean name, never by its tail.
+                #     (No ref on disk resolves this way today; the leg is kept
+                #     so a genuine `SKEFTHawking.Foo.bar` reference still works.)
+                #
+                # Formula- and param-targeted edges are provably untouched: this
+                # branch runs only when both indexes already missed, so it can
+                # neither add nor remove one. Verified empirically — 1,390
+                # non-Lean edges before and after, bit-identical — which is why
+                # no ReadinessGate:ComputationCorrectness verdict can move.
+                lean_id = None
+                if f'lean:{raw}' in node_ids:
+                    lean_id = f'lean:{raw}'
+                elif '.' not in raw and raw not in module_aliases:
+                    # (returns None if ambiguous/missing)
+                    lean_id = _resolve_lean_short(raw, node_ids)
                 if lean_id is not None:
                     target = lean_id
             if target is None or target not in node_ids:
@@ -3729,6 +4033,10 @@ def extract_all_edges(node_ids: set) -> list[dict]:
     edges.extend(extract_cites_source_edges(node_ids))
     edges.extend(extract_cites_theorem_edges(node_ids))
 
+    # ADR-010 — publication intake. The bundle's DECLARED apexes; its substrate is the
+    # derived closure, which `_overlay_closure` annotates rather than materialises.
+    edges.extend(extract_claims_apex_edges(node_ids))
+
     # Phase 5v Wave 10b — sentence-level prose audit edges
     edges.extend(extract_backed_by_edges(node_ids))
     edges.extend(extract_logged_by_edges(node_ids))
@@ -3778,11 +4086,31 @@ def _cypher_escape(s) -> str:
             .replace("$$", "$ $"))
 
 
-def _create_age_labels(conn, node_types: set, edge_types: set) -> None:
+PG_GRAPH_NAME = "sk_eft"
+"""The production AGE graph. Overridable per call ONLY so tests can write to a
+throwaway graph — see `write_graph_to_pg`."""
+
+
+def _create_age_labels(conn, node_types: set, edge_types: set,
+                       graph_name: str = PG_GRAPH_NAME) -> None:
     """Create AGE vertex and edge labels using autocommit to avoid transaction pollution.
 
-    Each CREATE label is its own statement; errors (label already exists) are
+    Each CREATE label is its own statement; a genuine duplicate-label error is
     ignored individually without affecting the surrounding transaction.
+
+    ⚠️ **`graph_name` WAS MISSING FROM THIS SIGNATURE FOR ONE COMMIT, AND THE BARE
+    `except Exception` HID IT COMPLETELY.** The parameterisation that let tests
+    target a throwaway graph was applied to the body and not the signature, so
+    `graph_name` was a FREE VARIABLE: every `create_vlabel`/`create_elabel` raised
+    `NameError`, which is an `Exception`, which the handler swallowed with the
+    comment "Label already exists". Measured with a recording fake connection:
+    **zero label statements issued**, on every call, in production and in tests.
+
+    It was invisible because AGE auto-creates labels on `CREATE`, so nothing
+    downstream failed. That is the silent-failure triad in one construct — a broad
+    catch, a false explanatory comment, and a dead code path — shipped by the
+    commit that was fixing a different instance of it. The catch below is now
+    narrow so the next one cannot hide.
     """
     # Use autocommit so each label creation is its own transaction
     old_autocommit = conn.autocommit
@@ -3794,22 +4122,36 @@ def _create_age_labels(conn, node_types: set, edge_types: set) -> None:
             for ntype in sorted(node_types):
                 try:
                     cur.execute(
-                        f"SELECT create_vlabel('sk_eft', '{_cypher_escape(ntype)}')"
+                        f"SELECT create_vlabel('{graph_name}', '{_cypher_escape(ntype)}')"
                     )
-                except Exception:
-                    pass  # Label already exists
+                except Exception as exc:
+                    # ⚠️ NARROW. `except Exception: pass  # Label already exists`
+                    # was false 100% of the time (see the docstring) and would
+                    # equally have hidden a lost connection, a permission error, or
+                    # the AGE extension not being loaded. Only an
+                    # already-exists condition is ignorable; anything else is
+                    # surfaced.
+                    if "already exists" not in str(exc).lower():
+                        logger.warning("create label failed on %s: %s", graph_name, exc)
             for etype in sorted(edge_types):
                 try:
                     cur.execute(
-                        f"SELECT create_elabel('sk_eft', '{_cypher_escape(etype)}')"
+                        f"SELECT create_elabel('{graph_name}', '{_cypher_escape(etype)}')"
                     )
-                except Exception:
-                    pass  # Label already exists
+                except Exception as exc:
+                    # ⚠️ NARROW. `except Exception: pass  # Label already exists`
+                    # was false 100% of the time (see the docstring) and would
+                    # equally have hidden a lost connection, a permission error, or
+                    # the AGE extension not being loaded. Only an
+                    # already-exists condition is ignorable; anything else is
+                    # surfaced.
+                    if "already exists" not in str(exc).lower():
+                        logger.warning("create label failed on %s: %s", graph_name, exc)
     finally:
         conn.autocommit = old_autocommit
 
 
-def write_graph_to_pg(graph: dict) -> None:
+def write_graph_to_pg(graph: dict, graph_name: str = PG_GRAPH_NAME) -> None:
     """Write all nodes and edges to PostgreSQL + Apache AGE (best-effort).
 
     If psycopg is unavailable or the connection fails, logs a warning and
@@ -3817,6 +4159,14 @@ def write_graph_to_pg(graph: dict) -> None:
 
     Connection: host=localhost port=5433 dbname=sk_eft_provenance
                 user=sk_eft password=sk_eft_local  graph=sk_eft
+
+    ⚠️ **THIS FUNCTION BEGINS BY DELETING EVERY VERTEX IN `graph_name`.** It is a
+    replace-the-world writer, not an upsert. `graph_name` exists so a test can
+    aim that at a throwaway graph instead of production: `TestPGWrite` used to
+    drive the real 49k-node write against `sk_eft` on every `-m slow` run, which
+    (a) cost 646 s — 47% of the slow suite — and (b) left the dashboard's
+    datastore holding a single fake node whenever a test passed a dummy graph.
+    Never pass the default from a test.
     """
     # --- 1. Import psycopg ---
     try:
@@ -3839,7 +4189,7 @@ def write_graph_to_pg(graph: dict) -> None:
         # --- 4 & 5. Create vertex/edge labels (idempotent, autocommit each) ---
         node_types = {n['type'] for n in graph['nodes']}
         edge_types = {e['type'] for e in graph['links']}
-        _create_age_labels(conn, node_types, edge_types)
+        _create_age_labels(conn, node_types, edge_types, graph_name)
 
         # --- 3, 6, 7, 8. Clear + insert all in one transaction ---
         with conn:
@@ -3848,8 +4198,8 @@ def write_graph_to_pg(graph: dict) -> None:
                 cur.execute("SET search_path = ag_catalog, '$user', public")
 
                 # --- 3. Clear existing data ---
-                cur.execute("""
-                    SELECT * FROM cypher('sk_eft', $$
+                cur.execute(f"""
+                    SELECT * FROM cypher('{graph_name}', $$
                         MATCH (n) DETACH DELETE n
                     $$) AS (a agtype)
                 """)
@@ -3866,7 +4216,7 @@ def write_graph_to_pg(graph: dict) -> None:
                     meta_str = _cypher_escape(json.dumps(node.get('meta', {}), default=str))
 
                     cur.execute(f"""
-                        SELECT * FROM cypher('sk_eft', $$
+                        SELECT * FROM cypher('{graph_name}', $$
                             CREATE (:{ntype} {{
                                 id: '{nid}',
                                 name: '{name}',
@@ -3886,7 +4236,7 @@ def write_graph_to_pg(graph: dict) -> None:
                     tgt = _cypher_escape(edge['target'])
 
                     cur.execute(f"""
-                        SELECT * FROM cypher('sk_eft', $$
+                        SELECT * FROM cypher('{graph_name}', $$
                             MATCH (a {{id: '{src}'}}), (b {{id: '{tgt}'}})
                             CREATE (a)-[:{etype}]->(b)
                         $$) AS (a agtype)
@@ -3918,6 +4268,122 @@ def write_graph_to_pg(graph: dict) -> None:
 # ═══════════════════════════════════════════════════════════════════════
 # Full graph builder
 # ═══════════════════════════════════════════════════════════════════════
+
+def extract_claims_apex_edges(node_ids: set) -> list[dict]:
+    """CLAIMS_APEX: Paper -> LeanTheorem — the results a bundle says it establishes.
+
+    The ONLY hand-maintained half of the publication-intake design (`apex_theorems` in
+    `papers/<bundle>/bundle_metadata.json`); the substrate is derived from these by
+    `_overlay_closure` below and cannot drift. Small by construction — a handful per
+    bundle — which is why it can be real edges where the closure cannot.
+
+    An apex naming no live declaration is dropped here and FAILS `bundle_apex_resolves`;
+    this extractor does not invent a node for it, because a dangling apex must surface as
+    a broken declaration rather than as a graph node with nothing behind it.
+    """
+    sys.path.insert(0, str(SCRIPT_DIR))
+    try:
+        import bundle_closure
+    except ImportError as exc:  # noqa: BLE001
+        logger.warning("bundle_closure not importable (%s); no CLAIMS_APEX edges", exc)
+        return []
+
+    edges: list[dict] = []
+    unresolved = 0
+    declarations = bundle_closure.load_apex_declarations(PROJECT_ROOT / "papers")
+    for bundle, decl in sorted(declarations.items()):
+        src = f'paper:{bundle}'
+        if src not in node_ids:
+            continue
+        for name in decl["apexes"]:
+            tgt = f'lean:{name}'
+            if tgt not in node_ids:
+                unresolved += 1
+                continue
+            edges.append({'source': src, 'target': tgt, 'type': 'CLAIMS_APEX'})
+    if edges or unresolved:
+        logger.info("CLAIMS_APEX edges: emitted %d (unresolved: %d)", len(edges), unresolved)
+    return edges
+
+
+def _overlay_closure(nodes: list[dict]) -> None:
+    """Overlay the DERIVED bundle substrate closure onto Lean, module and Paper nodes IN
+    PLACE: ``meta.homed_by / home_count / closure_*``.
+
+    A VIEW, not a store — exactly like `_overlay_atlas`, and for the same reason. The
+    implication DAG is already the existing ``USES`` edges; materialising closure
+    membership as edges would add roughly 10 k links to a graph whose default is 14 040,
+    to render one view. Annotation costs nothing and gives the dashboard everything:
+    colour the substrate by `homed_by`, filter `home_count == 0` for the un-homed map,
+    size a bundle by `closure_size`.
+
+    ⚠️ `closure_truncated_private` travels with every closure size. `ExtractDeps` omits
+    `private` declarations, so a walk reaching one stops; a size published without it
+    reads as complete when it is not.
+
+    Fail-soft: an error logs and skips, and the graph still builds.
+
+    Cost, measured 2026-08-06: the full build goes **10.2 s → 10.9 s**. `load_lean_deps` is
+    uncached, so this re-reads the 71 MB record set exactly as `_overlay_atlas` does. If the
+    build ever needs trimming, hoisting ONE load through both overlays is the change to
+    make — not dropping either annotation.
+    """
+    try:
+        sys.path.insert(0, str(SCRIPT_DIR))
+        import bundle_closure
+        records = bundle_closure.load_records()
+        declarations = bundle_closure.load_apex_declarations(PROJECT_ROOT / "papers")
+        closures = bundle_closure.build_closures(records, declarations)
+        homed = bundle_closure.homing_index(closures)
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("closure overlay skipped (%s)", exc)
+        return
+
+    module_homes: dict[str, set] = {}
+    for bundle, bc in closures.items():
+        for mod in bc.modules:
+            module_homes.setdefault(mod, set()).add(bundle)
+
+    annotated = 0
+    for nd in nodes:
+        nid = nd.get("id", "")
+        m = nd.setdefault("meta", {})
+        if nid.startswith("lean:"):
+            bundles = homed.get(nid[5:])
+            if bundles is None:
+                continue
+            m["homed_by"] = bundles
+            m["home_count"] = len(bundles)
+            annotated += 1
+        elif nid.startswith("module:"):
+            bundles = module_homes.get(nid[7:])
+            if bundles is None:
+                continue
+            m["homed_by"] = sorted(bundles)
+            m["home_count"] = len(bundles)
+            annotated += 1
+        elif nid.startswith("paper:"):
+            bc = closures.get(nid[6:])
+            if bc is None:
+                continue
+            m["apex_declared"] = bc.declared
+            m["apex_count"] = len(bc.apexes)
+            # UNMEASURABLE, not empty — a bundle that never said what it claims has an
+            # UNKNOWN substrate, and a 0 here would read as "rests on nothing".
+            m["closure_measurable"] = bc.measurable
+            if bc.measurable:
+                m["closure_size"] = len(bc.closure)
+                m["closure_modules"] = len(bc.modules)
+                m["closure_max_depth"] = bc.max_depth
+                m["closure_truncated_private"] = bc.truncated_private
+            annotated += 1
+
+    n_unhomed = sum(1 for nd in nodes
+                    if nd.get("id", "").startswith("lean:")
+                    and not nd.get("meta", {}).get("homed_by"))
+    logger.info("closure overlay: annotated %d nodes; %d Lean nodes un-homed",
+                annotated, n_unhomed)
+
 
 def _overlay_atlas(nodes: list[dict]) -> None:
     """Overlay the derived proof-atlas classification (ADR-005 Phase 1a) onto existing Lean +
@@ -3980,6 +4446,7 @@ def build_graph_json(*, sync_pg: bool = False) -> dict:
     node_ids = {n['id'] for n in nodes}
     edges = extract_all_edges(node_ids)
     _overlay_atlas(nodes)  # ADR-005: annotate Lean/Hypothesis nodes with derived atlas trust-state
+    _overlay_closure(nodes)  # ADR-010: annotate which bundle(s) claim each declaration
 
     # Phase 5v Waves 10b/10c — verification change-bus + freshness propagation.
     # Use the canonical {nodes, links} shape (D3 convention; matches

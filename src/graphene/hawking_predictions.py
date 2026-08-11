@@ -23,6 +23,8 @@ from src.core.formulas import (
     dirac_fluid_sound_speed,
     dirac_fluid_hawking_from_geometry,
     dirac_fluid_dissipation_window,
+    horizon_damping_rate,
+    conformal_kinematic_viscosity,
 )
 
 
@@ -68,26 +70,71 @@ def graphene_adiabaticity(platform_name):
     return kappa * l_ee_m / c_s
 
 
+def graphene_eta_over_sT(platform_name):
+    """η/(s·T) for a graphene platform, in seconds.
+
+    η/s is quoted in KSS units ℏ/(4πk_B) (Majumdar 2025), so
+    η/(sT) = (η/s)_KSS · ℏ/(4π k_B T).
+
+    ⚠️ This is a **time**, not a kinematic viscosity. Converting it to the
+    ν [m²/s] the SK-EFT pipeline expects requires a velocity² — see
+    `graphene_kinematic_viscosity`. Omitting that factor is the defect that
+    produced δ_diss ~ 10⁻¹³ in this module until 2026-08-09; the quantity is
+    dimensionally [s·m⁻²] rather than [s⁻¹] and is eleven orders below the
+    Γ_sound ~ 10¹⁰ s⁻¹ that Phase-5w reports for the same fluid.
+
+    Args:
+        platform_name: key in GRAPHENE_PLATFORMS.
+
+    Returns:
+        η/(sT) [s]
+    """
+    plat = GRAPHENE_PLATFORMS[platform_name]
+    eta_over_s_SI = plat['eta_over_s_KSS'] * HBAR / (4 * np.pi * K_B)  # [K·s]
+    return eta_over_s_SI / plat['T_ambient_K']
+
+
+def graphene_kinematic_viscosity(platform_name):
+    """Momentum-diffusion constant ν [m²/s] for a graphene platform.
+
+    ν = (η/(sT))·v_F² = 2·(η/(sT))·c_s², the two forms being identical for a
+    conformal fluid (c_s = v_F/√2). Delegates to the canonical
+    `formulas.conformal_kinematic_viscosity`, which carries the derivation.
+
+    **The c_s form is used deliberately.** c_s is measured on both platforms;
+    v_F is a band parameter defined only for the monolayer. Bilayer graphene
+    has quadratic band touching, so it has no emergent light cone and no v_F
+    in the Dirac sense — pairing the monolayer v_F = 10⁶ m/s with the measured
+    bilayer c_s = 4.4×10⁵ m/s violates c_s = v_F/√2 and inflates ν by
+    (v_F/c_s)²/2 = 2.6×. (NOT (v_F/c_s)² = 5.2×: ν = 2·(η/sT)·c_s² in the c_s form
+    but (η/sT)·v_F² in the v_F form, so the ratio carries a 1/2. Dropping that 1/2
+    is the same class of slip as the wrong-by-eleven-orders velocity² recorded at
+    formulas.py:501; provenance.py:852 states the correct 2.6×.)
+
+    **Bilayer caveat.** The prefactor is exactly 1 for a d = 2 conformal fluid
+    (ζ = 0). The bilayer is not conformal; `bilayer_eos.bulk_to_shear_ratio`
+    estimates ζ/η ≲ 0.1, so ν carries a ≲10 % upward uncertainty there. This
+    is an uncertainty, not a central-value correction.
+
+    Args:
+        platform_name: key in GRAPHENE_PLATFORMS.
+
+    Returns:
+        ν [m²/s]
+    """
+    return conformal_kinematic_viscosity(
+        graphene_eta_over_sT(platform_name),
+        GRAPHENE_PLATFORMS[platform_name]['c_s'],
+    )
+
+
 def graphene_damping_rate_horizon(platform_name):
     """Effective damping rate Γ_H at the horizon for graphene.
 
-    In the BEC SK-EFT: Γ_H = (γ₁ + γ₂)(κ/c_s)².
-    For graphene, the dominant damping is sound attenuation from
-    shear viscosity:
-
-    Γ_sound ≈ (η/w) × k² = (η/w) × (ω_H/c_s)²
-
-    where η/s ≈ 4 × ℏ/(4πk_B) (Majumdar 2025) and w ≈ Ts
-    (conformal, w = ε + p = 3p = 3Ts/2... simplified: w ~ Ts).
-
-    At the horizon, ω_H ≈ κ (the surface gravity sets the
-    characteristic frequency), so:
-
-    Γ_H ≈ (η/(Ts)) × (κ/c_s)²
-
-    With η/s = 4ℏ/(4πk_B):
-    η = 4ℏs/(4πk_B)
-    Γ_H ≈ (4ℏ/(4πk_BT)) × (κ/c_s)²
+    Γ_H = (γ₁ + γ₂)(κ/c_s)² with γ₁ = γ₂ = ν/2 — the same identity the BEC
+    path uses (`SecondOrderSK.GammaH`), reached through the canonical
+    `formulas.horizon_damping_rate` rather than re-derived here. The KMS
+    equal splitting γ₁ = γ₂ mirrors `formulas.transport_coefficients_from_beliaev`.
 
     Args:
         platform_name: key in GRAPHENE_PLATFORMS.
@@ -96,17 +143,8 @@ def graphene_damping_rate_horizon(platform_name):
         Γ_H [s⁻¹]
     """
     plat = GRAPHENE_PLATFORMS[platform_name]
-    kappa = plat['gradient_s1']
-    c_s = plat['c_s']
-    T = plat['T_ambient_K']
-    eta_over_s = plat['eta_over_s_KSS']  # in units of ℏ/(4πk_B)
-
-    # η/s in SI: η/s = eta_over_s × ℏ/(4πk_B)
-    eta_over_s_SI = eta_over_s * HBAR / (4 * np.pi * K_B)  # [K·s]
-
-    # Γ_H = (η/(s·T)) × (κ/c_s)² = (η/s)/T × (κ/c_s)²
-    Gamma_H = (eta_over_s_SI / T) * (kappa / c_s) ** 2
-    return Gamma_H
+    nu = graphene_kinematic_viscosity(platform_name)
+    return horizon_damping_rate(nu / 2.0, nu / 2.0, plat['gradient_s1'], plat['c_s'])
 
 
 def graphene_hawking_prediction(platform_name):
@@ -160,6 +198,29 @@ def graphene_hawking_prediction(platform_name):
         'omega_H_over_Gamma_mr': omega_H_over_Gamma_mr,
         'T_H_over_T_ambient': plat['T_H_over_T_ambient'],
         'correction_pct': (delta_disp + delta_diss) * 100,
+        # ⚠️ EFT VALIDITY IS PART OF THE RESULT, not a caveat in prose elsewhere.
+        # The Γ_H repair raised δ_diss by ~12 orders, and on the short-gradient
+        # platforms the perturbative expansion no longer converges. Measured
+        # 2026-08-10 across the live roster:
+        #     Dean_bilayer_nozzle  D=0.231  δ_diss=0.065  δ_disp=-0.028   VALID
+        #     Monolayer_100nm      D=0.764  δ_diss=0.345  δ_disp=-0.306   VALID
+        #     Monolayer_50nm       D=1.506  δ_diss=0.681  δ_disp=-1.188   INVALID
+        #     PN_junction_10nm     D=7.638  δ_diss=4.863  δ_disp=-30.55   INVALID
+        # A "correction" of -3055 % is not a small correction; returning it as a
+        # bare number invites a caller to quote it. `GrapheneHawking.lean` item 4
+        # states the requirement (D < 1) and nothing enforced it. Every narrative
+        # in the repo is scoped to the Dean device; these two shipped silently.
+        #
+        # NOT a re-charter and NOT a narrowing: no platform is removed and every
+        # number is still returned unchanged. The result now simply says whether
+        # the theory that produced it applies to itself.
+        'eft_valid': bool(D < 1.0 and abs(delta_disp) < 1.0 and 0.0 < delta_diss < 1.0),
+        'eft_validity_note': (
+            "EFT-valid: D < 1, |δ_disp| < 1, 0 < δ_diss < 1"
+            if (D < 1.0 and abs(delta_disp) < 1.0 and 0.0 < delta_diss < 1.0) else
+            f"OUTSIDE EFT VALIDITY — D={D:.3g} (needs < 1), "
+            f"δ_disp={delta_disp:.3g}, δ_diss={delta_diss:.3g}. The perturbative "
+            f"expansion does not converge here; these values are NOT a prediction."),
     }
 
 

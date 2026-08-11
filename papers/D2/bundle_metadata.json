@@ -1,13 +1,250 @@
 {
   "bundle_target": "D2",
+  "apex_theorems": [
+    {
+      "name": "SKEFTHawking.fermion_count_gives_central_charge",
+      "claims": "ABSTRACT + §2.1 — c_- = 8 N_f from the sixteen left-handed Weyl components per generation",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.central_charge_fractional_without_nu_R",
+      "claims": "ABSTRACT + §2.3 — without nu_R the central charge is 15/2 per generation, fractional at the observed N_f = 3. An INDEPENDENT gravitational-anomaly argument for nu_R, complementary to the usual gauge-anomaly one",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.qParam_shift",
+      "claims": "§2.2 — the Dedekind-eta T-phase shift, via Mathlib's Complex.exp_add",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.framing_anomaly_constraint",
+      "claims": "§2.2 — the modular framing constraint 24 | c_-",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.generation_mod3_constraint",
+      "claims": "ABSTRACT HEADLINE + §2.2 — 24 | 8 N_f implies 3 | N_f, so three generations is the minimal solution. Closed by Aristotle (run a1dfcbde). This is the load-bearing result of the bundle",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.hom_tensor_adjunction_dim",
+      "claims": "§2.5 — the A(1) -> A change-of-rings adjunction at the DIMENSION-EQUALITY level, substantively discharging hypothesis H2. The draft is explicit that the full isomorphism statement remains tracked",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.sixteen_convergence_full",
+      "claims": "ABSTRACT + §2.4 — the four independent occurrences of 16 enumerated. ⚠️ The draft states its own scope from the Lean docstring: it INDEXES the four occurrences WITHOUT asserting a common-origin theorem",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.e8_det_one",
+      "claims": "§2.4 — E8 unimodularity by cofactor expansion against the Cartan matrix",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.e8_diagonal_all_two",
+      "claims": "§2.4 — the E8 diagonal is all twos",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.e8_diagonal_even",
+      "claims": "§2.4 — hence the form is even",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.e8_sigma_div_8",
+      "claims": "§2.4 + §3.5 — sigma(E8) = 8; the same 8 as the Witten Z2 inside Z16",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.e8_sigma_not_div_16",
+      "claims": "§2.4 — E8 exhibits the algebraic floor WITHOUT saturating the topological Rokhlin bound: Freedman's counterexample, formalised",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.rokhlin_gap",
+      "claims": "§2.4 — the structural gap 16 | 2 sigma(E8) with 16 not dividing sigma(E8)",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.char_sq_valid_e8",
+      "claims": "§2.4 — validity of the characteristic-square pairing on E8",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.constraints_without_nu_R",
+      "claims": "§2.4 — lcm(16, 3) = 48, which with the no-nu_R argument forces N_f in 48Z, in tension with the observed N_f = 3",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.rokhlin_strictly_stronger",
+      "claims": "§2.4 — the joint Z16-plus-Rokhlin bound strictly exceeds the algebraic 8 | sigma alone",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.eight_dvd_latticeSig",
+      "claims": "§2.4 — 8 | latticeSig for EVERY even unimodular form, UNCONDITIONALLY. The van der Blij lemma discharged through the classification route, both classical inputs now kernel-pure",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.eight_dvd_latticeSig_of_definite",
+      "claims": "§2.4 — the definite branch via level-one theta-modularity",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.hasIsotropicVector",
+      "claims": "§2.4 — the Hasse-Minkowski input DISCHARGED at every rank (>=5; 2; 1 and 3 vacuous; 4 via Chevalley-Warning + Hensel + binary Hilbert reciprocity)",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.weakIsotropic_rank_four",
+      "claims": "§2.4 — the rank-four case, the hard one",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.exists_hyperbolic_pair",
+      "claims": "§2.4 — hyperbolic-plane splitting from a primitive isotropic vector",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.latticeSig_congr",
+      "claims": "§2.4 — Sylvester congruence invariance of the lattice signature",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.rokhlin_from_serre_plus_topology",
+      "claims": "§2.4 — 8 | sigma composed with 2 | sigma/8 gives 16 | sigma",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.sixteen_dvd_latticeSig",
+      "claims": "§2.4 — the upgrade to 16 | sigma given the topological factor",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.sixteen_dvd_latticeSig_of_eight_dvd_of_topo",
+      "claims": "§2.4 — the composition stated at the interface",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.SmoothSpinManifold4.eight_dvd_sig",
+      "claims": "§2.4 — the algebraic residual is a DERIVED kernel-pure theorem on the interface, not a carried hypothesis field",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.SmoothSpinManifold4.rokhlin",
+      "claims": "§2.4 — 16 | sigma as a kernel-pure interface theorem, no global Rokhlin hypothesis and no new axiom. ⚠️ Conditional on the disclosed topological field 2 | sigma/8, as it must be — 16 | sigma is FALSE for general even unimodular forms",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.sixteen_convergence_unconditional",
+      "claims": "§2.4 — the four-16 enumeration rerun with the 16 | sigma conjunct an interface theorem rather than a bare assumed input",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.RokhlinArfNoGo.lattice_arf_bridge_refuted",
+      "claims": "§2.4 — a machine-checked NO-GO: the topological factor is NOT the Arf invariant of the lattice refinement. The lattice Arf is identically 0 on every even unimodular form, so the finite Arf/Gauss-sum apparatus sees only sigma mod 8",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.Schellekens.schellekensChain_implies_24_divides_c_minus_iff_3_divides_N_gen",
+      "claims": "§2.6 — the five-step Niemeier/Schellekens chain composed. ⚠️ PREDICATE-LEVEL SCAFFOLD: the draft states its Lean discharge is via `trivial` on predicate fields whose substantive content is tracked outside the library, and that the load-bearing 3 | N_f result does NOT depend on this scaffold",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.Schellekens.isSchellekensChainComposed_witness",
+      "claims": "§2.6 — the composed-chain witness",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.Schellekens.wave_2b_7_chain_closure",
+      "claims": "§2.6 — the wave closure over the chain",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.hidden_sector_required",
+      "claims": "ABSTRACT + §3.2 — 3 x 15 = -3 mod 16: any internally consistent SM extension omitting nu_R requires Z16-charged hidden matter or a gravitational-anomaly route",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.braiding_em_is_minus_one",
+      "claims": "§3.4 — the toric-code mutual braiding B(e,m) = -1, the categorical avatar of the Witten Z2 inside Z16",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.NbReTripletSPT.nbRe_is_DIII_topological",
+      "claims": "§3.6 — NbRe witnessed in the Kitaev DIII class (noncentrosymmetric AND triplet)",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.NbReTripletSPT.elementalNb_not_DIII_topological",
+      "claims": "§3.6 — the falsifier-class contrast against elemental Nb",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.NbReTripletSPT.fuKaneInvariant_eq_neg_one_of_DIII_topological",
+      "claims": "§3.6 — the Fu-Kane TRIM-product Pfaffian Z2 invariant evaluates to -1 on any DIII-topological capsule. ⚠️ The draft scopes this precisely: universality is over the parameterised SCParameters capsule under a chosen substrate model, NOT a derivation from a microscopic BdG Hamiltonian",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.NbReTripletSPT.fuKaneInvariant_zero_on_degenerate",
+      "claims": "§3.6 — the degenerate quadrant, disclosed as a substrate-level boundary condition",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.NbReTripletSPT.pfaffianSign_at_gamma_noncentrosymmetric_singlet",
+      "claims": "§3.6 — the not-physically-relevant quadrant, also disclosed",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.NbReTripletSPT.H_NbReWindingNumberIdentity_holds",
+      "claims": "§3.6 — a tracked Prop placeholder substantively DISCHARGED",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.LatticeHamiltonian.round_not_continuous_at_half",
+      "claims": "§4.1 — TPF evasion driver: `round` is discontinuous at 1/2, violating Golterman-Shamir C1",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.LatticeHamiltonian.rotor_hilbert_not_finite_dim",
+      "claims": "§4.1 — TPF evasion driver: l^2(Z) is infinite-dimensional, violating I3. Closed by Aristotle",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.TPFEvasion.tpf_outside_gs_scope_main",
+      "claims": "ABSTRACT + §4.1 — the conjunction: the TPF construction sits OUTSIDE the joint scope of the nine GS applicability conditions. ⚠️ The draft is careful that this means exiting an applicability scope, NOT contradicting a theorem",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.wilson_mass_at_zero",
+      "claims": "§4.2 — the Wilson mass vanishes at the origin",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.wilson_mass_zero_iff_cos_eq_one",
+      "claims": "§4.2 — and exactly on the corner set, exhausting the characterisation",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.gt_commutation_4x4",
+      "claims": "ABSTRACT + §4.2 — the Gioia-Thorngren central commutation [H_BdG(p), q_A(p)] = 0 for ALL parameters. The sigma-tau block expansion that reduces it to sin^2 + cos^2 = 1 was discovered by Aristotle (run 18969de2)",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FK.spectral_gap",
+      "claims": "§4.4 — the Fidkowski-Kitaev eight-Majorana spectral gap; the 2+1D machine-checked evidence supporting the 4+1D TPFConjecture",
+      "declared": "2026-08-07"
+    }
+  ],
   "tier": 1,
   "title": "Anomaly constraints on SM particle content",
   "target_journal": "PRD | JHEP",
   "phase7_subphase": "7d",
-  "stage9_status": "green",
-  "stage10_status": "green",
-  "stage13_status": "green",
-  "stage13_redo_required": false,
+  "stage9_status": "pending",
+  "stage10_status": "pending",
+  "stage13_status": "pending",
+  "stage13_redo_required": true,
   "freshness_stale": true,
   "source_manifest_last_regen": "2026-06-10T20:24:03Z",
   "last_lift": "2026-05-31T17:24:48Z",
@@ -19,11 +256,20 @@
   "stage13_review_doc": "docs/audits/stage13_attribution_sweep_2026-06-10.md#d2",
   "audit_log_path": "papers/D2/audit_log.jsonl",
   "supersession_ledger_anchor": "docs/review_finding_supersessions.json",
-  "notes": "2026-05-06 Session-2 round-3 surfaced 1 BLOCKER (Class TN line 401) + 2 advisories. All 3 fixed via paper_draft.tex Edits + lean_deps.json regen + supersession ledger 5 entries. Round-4 re-review in flight. | 2026-05-06 round-4 re-review GREEN: all 3 round-3 findings closed cleanly (BLOCKER TN line 401 + 2 advisories). 72 sentences walked / by_verdict PASS=48 WARN=16 INFO=4 TRANSITION=4 FAIL=0. Cross-bundle L2 consistency verified. Schema validates exit 0. | Round-2 verification 2026-05-06: both BLOCKERs closed cleanly (GarciaEtxebarriaMontero2019 cite typo + Schellekens trivial-discharge prose softening). Round-1 REQUIREDs 5.1 + 5.2 also closed via prose softening. 1 NEW advisory V.8 (Lean docstring sync at Chain.lean:76-77). 2 carry-forward advisories. | 2026-06-10 attribution-content sweep (docs/audits/stage13_attribution_sweep_2026-06-10.md): GREEN. paper10 source findings (2242 \u00d76) superseded \u2014 all resolved on disk (unconditional 16|\u03c3). D2 own anchors (anomaly N_f\u22610 mod 3, Ext over A(1)) intact; 2315 re-review had cleared D2-level blockers.",
+  "notes": "2026-05-06 Session-2 round-3 surfaced 1 BLOCKER (Class TN line 401) + 2 advisories. All 3 fixed via paper_draft.tex Edits + lean_deps.json regen + supersession ledger 5 entries. Round-4 re-review in flight. | 2026-05-06 round-4 re-review GREEN: all 3 round-3 findings closed cleanly (BLOCKER TN line 401 + 2 advisories). 72 sentences walked / by_verdict PASS=48 WARN=16 INFO=4 TRANSITION=4 FAIL=0. Cross-bundle L2 consistency verified. Schema validates exit 0. | Round-2 verification 2026-05-06: both BLOCKERs closed cleanly (GarciaEtxebarriaMontero2019 cite typo + Schellekens trivial-discharge prose softening). Round-1 REQUIREDs 5.1 + 5.2 also closed via prose softening. 1 NEW advisory V.8 (Lean docstring sync at Chain.lean:76-77). 2 carry-forward advisories. | 2026-06-10 attribution-content sweep (docs/audits/stage13_attribution_sweep_2026-06-10.md): GREEN. paper10 source findings (2242 ×6) superseded — all resolved on disk (unconditional 16|σ). D2 own anchors (anomaly N_f≡0 mod 3, Ext over A(1)) intact; 2315 re-review had cleared D2-level blockers.",
   "open_findings": 60,
   "blocked_p1_gates": [
-    "FixPropagation"
+    "FixPropagation",
+    "LeanProofSubstance"
   ],
   "readiness": "RED",
-  "readiness_last_computed": "2026-08-01"
+  "readiness_last_computed": "2026-08-08",
+  "length_target": {
+    "unit": "pages",
+    "floor": 18,
+    "ceiling": 45,
+    "source": "PAPER_STRATEGY.md §6"
+  },
+  "compiled_pages": 11,
+  "compile_gate_ok": true
 }

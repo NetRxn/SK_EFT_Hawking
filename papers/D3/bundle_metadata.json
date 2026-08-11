@@ -1,13 +1,460 @@
 {
   "bundle_target": "D3",
+  "apex_theorems": [
+    {
+      "name": "SKEFTHawking.ADWMechanism.critical_coupling_pos",
+      "claims": "§2.1 — the ADW critical coupling G_c = 8 pi^2/(N_f Lambda^2) is positive; the operational definition of the substrate scale",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.ADWMechanism.zero_C_no_fluct_gives_pregeometric",
+      "claims": "§2.2 — bifurcation trichotomy, branch 1: no condensate and no fluctuation gives the pregeometric phase",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.ADWMechanism.zero_C_with_fluct_gives_vestigial",
+      "claims": "§2.2 — branch 2: fluctuation without condensate gives the VESTIGIAL phase (the object GW170817 later falsifies as a graviton)",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.ADWMechanism.pos_C_gives_full_tetrad",
+      "claims": "§2.2 — branch 3: positive condensate gives the full tetrad phase, the only one admitting classical gravity",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GaugeErasure.gauge_erasure",
+      "claims": "§3 — CLOSURE 1: the hydrodynamic layer erases non-Abelian one-form gauge symmetry",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GaugeErasure.u1_survival",
+      "claims": "§3 — only U(1) survives fluid-cell coarse-graining as a continuous one-form",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EmergentGravityBounds.coupling_deficit",
+      "claims": "§4.1 — CLOSURE 2: the four-fermion coupling is below G_c/1000 across the natural ranges",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EmergentGravityBounds.coupling_ratio_small",
+      "claims": "§4.1 — the certified instance at alpha = 1/5, N_f = 4",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EmergentGravityBounds.wen_adw_ratio_eq",
+      "claims": "§4.1 — the closed-form ratio identity G_Wen/G_c = alpha^2 N_f/(32 pi^3)",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EmergentGravityBounds.wen_adw_ratio_bracket",
+      "claims": "§4.1 — the sharp bracket 1/6202 < alpha^2 N_f/(32 pi^3) < 1/6201 at the compact-QED-bounded point",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EmergentGravityBounds.wen_adw_factor_6000",
+      "claims": "§4.1 — the factor-6000 statement itself, formally discharged: 1/6202 < G_Wen/G_c < 1/6000 for every nonzero cutoff. ⚠️ NOTE: F's register calls this figure 'an informal extrapolation, not separately Lean-verified' — D3 ships it as a theorem, so F understates its own substrate here",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.LinearizedEFE.G_N_emerg_match_locus",
+      "claims": "§5.2 — DECISION GATE E.1: the matching locus for the emergent Newton constant. At G_N_obs = G_N^Sak this is the alpha_ADW = 1 condition the prose states. ⚠️ Its closure REQUIRES the three Vergeles Props, which §5.4 and §28.3 both record as OPEN",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.LinearizedEFE.G_N_emerg_match_at_planck_anchor",
+      "claims": "§5.2 — the match at the Planck anchor, within the precision of the Mathlib constants",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.LinearizedEFE.trace_reverse_negates_trace",
+      "claims": "§5.3 — the trace-reverse identity underwriting the FLRW reduction and Bianchi consistency",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.LinearizedEFE.G_N_sakharov_eq_ratio_critical_coupling",
+      "claims": "§1 + §5 — the algebraic tie G_N^Sak/G_c^ADW = 3/(2 pi) between the Sakharov closed form and the ADW critical coupling",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GravitationalWaves.c_GW_at_chi_one",
+      "claims": "§6 — the vestigial-graviton speed agrees with GR exactly at chi = 1",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GravitationalWaves.c_GW_deviation_zero_iff_chi_one",
+      "claims": "§6 — and ONLY at chi = 1 (biconditional)",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GravitationalWaves.c_GW_deviation_strict_mono",
+      "claims": "§6 — the deviation is strictly monotone in chi",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GravitationalWaves.natural_lower_violates_ligo",
+      "claims": "§6.1 — the chi = 0.1 endpoint violates the GW170817 cap",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GravitationalWaves.natural_upper_violates_ligo",
+      "claims": "§6.1 — the chi = 10 endpoint violates it",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GravitationalWaves.vestigial_natural_range_violates_ligo",
+      "claims": "§6.1 — the violation across the whole natural range",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GravitationalWaves.natural_range_disjoint_from_ligo_window",
+      "claims": "ABSTRACT + §4.3 + §6.1 — CLOSURE 3: the natural range is DISJOINT from the LIGO window. Shared character-for-character with L1",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GravitationalWaves.second_sound_graviton_natural_range_universally_falsified",
+      "claims": "ABSTRACT + §6.1 — the universal falsifier, the bundle's headline NO-GO",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.VestigialGravity.phase_count",
+      "claims": "§6.2 — the phase count: only the full-tetrad phase admits classical gravity",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.VestigialGravity.vestigial_has_metric_no_tetrad",
+      "claims": "§6.2 — the vestigial phase has metric structure but no tetrad",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.VestigialGravity.wep_distinguishes_vestigial_from_full",
+      "claims": "§6.2 — the Weak Equivalence Principle distinguishes the two phases",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.BHEntropyMicroscopic.kaul_majumdar_log_coefficient",
+      "claims": "ABSTRACT + §7.1 — the Kaul-Majumdar -3/2 logarithmic coefficient off the SU(2)_k Chern-Simons partition function",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.BHEntropyMicroscopic.kaul_majumdar_log_decomposition",
+      "claims": "§7.1 — its decomposition -3/2 = -1/2 (Gaussian saddle) - 1 (modular-transform piece)",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.BHEntropyMicroscopic.verlinde_matches_kaul_majumdar_at_large_area",
+      "claims": "§7.1 — the Verlinde-formula prefactor matches at large area",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.BHEntropyMicroscopic.gaussianSaddleAsymptotic",
+      "claims": "§7.1 — the genuine O(1/A) rate: the FAITHFUL Gamma-Catalan log-dimension approaches the Kaul-Majumdar closed form, so the closed form is a DERIVED COROLLARY rather than a saddle self-definition (Wave 7C, closing substrate-audit #13)",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.LaplaceMethodAsymptotic.log_singletCount_sub_rate",
+      "claims": "§7.1 — the sharp O(1/m) rate on the discrete singlet count",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GammaStirling.logGamma_sub_stirlingPart_isBigO",
+      "claims": "§7.1 — Mathlib-grade infrastructure built for this: Real.Gamma Stirling-with-remainder, kernel-pure via a Bohr-Mollerup convexity squeeze, with no Hardy-Ramanujan input",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.BHEntropyMicroscopic.H_VerlindeKMLiteralSumDerivation_discharged",
+      "claims": "§28.3 — a tracked hypothesis actually DISCHARGED (Wave 7B): the literal SU(2) singlet count reproduces the -3/2 log-coefficient to O(1)",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.InducedGravityEntropy.frolov_fursaev_quarter_coefficient",
+      "claims": "§7.1 — the 1/4 in A/(4 G_N) derived IMMIRZI-INDEPENDENTLY on the Sakharov induced-gravity route: the same Seeley-DeWitt a2 that induces G_N fixes the entropy area density",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.InducedGravityEntropy.frolov_fursaev_matches_kaulMajumdar_leading",
+      "claims": "§7.1 — the two routes agree at leading order",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.BHEntropyMicroscopic.kaul_majumdar_leading_matches_G_N_emerg",
+      "claims": "§7.5 — the entropy's leading term consumes the SAME G_N^emerg produced in §5",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.BHEntropyMicroscopic.abelian_MTC_falsifies_H_HorizonBoundaryCondition",
+      "claims": "ABSTRACT + §7.4 — the abelian-MTC falsifier: an abelian horizon MTC cannot reproduce the -3/2 coefficient, so SU(2)_k is structurally SELECTED rather than chosen",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.BHEntropyMicroscopic.sen_4d_disagrees_with_kaul_majumdar",
+      "claims": "§7.4 — Sen's 4D Schwarzschild coefficient disagrees with Kaul-Majumdar",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.BHEntropyMicroscopic.sen_4d_quantitative_disagreement_bound",
+      "claims": "§7.4 — the quantitative size of that disagreement",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.BHEntropyMicroscopic.H_HorizonBoundaryCondition_falsifier_positivity",
+      "claims": "§7.2 — boundary-condition falsifier 1 of 4 (positivity)",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.BHEntropyMicroscopic.H_HorizonBoundaryCondition_falsifier_logBound",
+      "claims": "§7.2 — falsifier 2 of 4 (log bound)",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.BHEntropyMicroscopic.H_HorizonBoundaryCondition_falsifier_secondLaw",
+      "claims": "§7.2 — falsifier 3 of 4 (second law)",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.BHEntropyMicroscopic.H_HorizonBoundaryCondition_falsifier_quarterCoefficient",
+      "claims": "§7.2 — falsifier 4 of 4 (quarter coefficient)",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.BHEntropyMicroscopic.H_HorizonBoundaryCondition_implies_nonabelian_envelope",
+      "claims": "§7.2 — the envelope: the boundary condition forces a non-abelian MTC",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.HorizonWittBoundary.horizon_wittTrivial_iff_three_generations",
+      "claims": "§7.3 — the Witt-invariant SHARPENING: boundary Witt-triviality (24 | c_-) holds iff 3 | N_f, tying the horizon boundary condition to the three-generation result through the SAME Witt invariant",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.HorizonWittBoundary.horizon_wave8_anomalyMatch_always",
+      "claims": "§7.3 — the elementary mod-8 condition holds for EVERY N_f, so on its own it constrains nothing — the draft says so rather than banking it",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.HorizonWittBoundary.wittTrivial_implies_mod8",
+      "claims": "§7.3 — mod-8 is exactly the necessary shadow of Witt-triviality",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.HorizonWittBoundary.horizon_anomalyMatch_strictly_weaker_than_witt",
+      "claims": "§7.3 — and the gap is strict: N_f = 1 passes mod-8 and fails Witt",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.BHThermodynamicsFourLaws.M_c_pos",
+      "claims": "§8.1 — the regime-partition mass M_c is positive",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.BHThermodynamicsFourLaws.regime_partition_criterion",
+      "claims": "ABSTRACT + §8.1 — the regime-partition biconditional: Schwarzschild branch iff M > M_c. Shared character-for-character with L3",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.BHThermodynamicsFourLaws.T_H_schwarzschild_strict_decreasing",
+      "claims": "§8.2 — T_H is strictly decreasing in M on the Schwarzschild branch",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.BHThermodynamicsFourLaws.T_H_acoustic_evolution_strict_decreasing",
+      "claims": "§8.2 — the acoustic cooling evolution on the ADW-extremality branch",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.QECHolographyBridge.HPCode.code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class",
+      "claims": "§9.1 — the QEC-MTC admissibility biconditional fixing that the SAME MTC carries both the entropy count of §7 and the code structure D4 §7 ships",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.CenterSymmetryConfinement.confining_iff_magnitude_zero",
+      "claims": "§14.1 — confinement iff the Polyakov-loop magnitude vanishes",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.CenterSymmetryConfinement.confining_iff_center_invariant",
+      "claims": "§14.1 — and iff the loop is centre-invariant; the two readings are content-equivalent",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.ChiralSSB_QCD.gmor_pdg_match",
+      "claims": "§15.2 — the Gell-Mann-Oakes-Renner relation discharged against published central values within the stated tolerance",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.ChiralSSB_QCD.chiral_unbroken_violates_gmor",
+      "claims": "§15.3 — the contrapositive no-go: a chiral-symmetric vacuum violates GMOR for any positive quark mass",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.ChiralSSB_QCD.not_isQuarkCondensateCandidate_of_too_negative",
+      "claims": "§15.1 — the structural negativity of the quark condensate",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.CFLChiralLagrangian.CFL_emergent_Z3_matches_QCD_center_Z3",
+      "claims": "§16.2 — FIRST-FORMALIZATION CLAIM: the cube root emerging from the CFL diquark condensate is exactly the generator of QCD's Z3 centre. This is the QCD-side voucher the gravity claims rest on",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.CFLChiralLagrangian.isCFLPhase_iff_magnitude_pos",
+      "claims": "§16.1 — the CFL-phase order parameter as a biconditional",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.CFLChiralLagrangian.cfl_phase_with_gmor_dual_broken",
+      "claims": "§16.3 — the CFL phase and the GMOR chiral breaking tie to a single phase",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.HeatKernelExpansion.G_N_from_a2_eq_G_N_sakharov",
+      "claims": "ABSTRACT + §1 + §17.2 — THE single-coefficient identity: G_N^Sak = 12 pi/(N_f Lambda^2) DERIVED from the heat-kernel a2 data. Everything else in the bundle consumes this",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.HeatKernelExpansion.a2_matches_GNemerg_iff_alpha_ADW_unity",
+      "claims": "§17.2 — DECISION GATE E.2: the heat-kernel-calibrated G_N matches the Sakharov form iff alpha_ADW = 1",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.HeatKernelExpansion.a0_dirac_linear",
+      "claims": "§17.1 + §21.1 — a0 = N_f, the coefficient that later reproduces the cosmological-constant problem",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.HeatKernelExpansion.a4_gauss_bonnet_combination",
+      "claims": "§17.3 + §18.1 — the a4 Gauss-Bonnet combination the Stelle basis is read off",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.CrooksAnalogHawking.horizonCrooks_substrate_partition",
+      "claims": "§17.5 — the substrate-class partition: 3He-A is horizon-Crooks-passable, the FLS acoustic BEC fails universal coupling. ⚠️ Stage-1 only — the draft states the detailed-balance witnesses are placeholders and the Sakharov-iff-Crooks bridge is DEFERRED",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.NonlinearDiffInvariance.pathB_residual_a4_dirac_eq_zero",
+      "claims": "§19.1 — the path-(b) residual vanishes through a4 on the Dirac bundle",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.NonlinearDiffInvariance.diff_invariance_a4_iff_dirac_basis_consistent",
+      "claims": "ABSTRACT + §19.2 — DECISION GATE E.3, and the fracton no-go's teeth: the biconditional closes for the Dirac bundle and fails for any mobility-constrained one",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.NonlinearDiffInvariance.perturbed_pathB_residual_a4_eq_delta_R_sq",
+      "claims": "§19.2 — the failure made CONSTRUCTIVE: any perturbation introduces a residual proportional to delta R^2",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.NonlinearEFE.efeResidualTrace_eq_zero_iff_alpha_unity",
+      "claims": "§20.1 — the trace-level Einstein-equation residual vanishes iff alpha_ADW = 1",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.NonlinearEFE.precessionRatio_eq_one_iff_alpha_unity",
+      "claims": "ABSTRACT + §20.3 — DECISION GATE E.4': the multi-channel PPN observables collapse onto a ONE-parameter family where generic PPN carries three independent dials",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.MicroscopicCoefficientMatch.lambdaEmergMicroscopic_pos",
+      "claims": "§21.1 — positivity of the emergent cosmological constant",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.MicroscopicCoefficientMatch.lambdaEmergMicroscopic_at_planck_natural_far_exceeds_observed",
+      "claims": "ABSTRACT + §21.2 — the REPRODUCED-register headline: the overshoot exceeds 10^100 at the natural point. The rigorous Lean lower bound; the ~10^122 is heuristic and the draft distinguishes them every time",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.MicroscopicCoefficientMatch.matchResidual_eq_zero_iff_alpha_unity",
+      "claims": "§21.4 — DECISION GATE E.4: the microscopic-macroscopic match closes iff alpha_ADW = 1",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.MicroscopicCoefficientMatch.higherCurvature_stelle_sum_negative",
+      "claims": "§21.5 — the Stelle higher-curvature aggregate closes negative on the Dirac bundle",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.MicroscopicCoefficientMatch.higherCurvature_stelle_sum_eq",
+      "claims": "§21.5 — the closed-form algebraic sum",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EinsteinCartanExtension.torsionAmplitude_pos",
+      "claims": "§22.1 — positivity of the torsion amplitude",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EinsteinCartanExtension.ecResidual_eq_zero_iff_alpha_unity",
+      "claims": "§22.1 — the torsion match-residual vanishes iff alpha_EC = 1",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EinsteinCartanExtension.torsionAtCosmologicalBackground_at_planck_natural_below_kostelecky",
+      "claims": "ABSTRACT + §22.2 — the CLEARED-register entry: |T_EC| sits ~46 orders below the Kostelecky-Russell-Tasson bound",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EinsteinCartanExtension.below_kostelecky_implies_below_hughes_drever",
+      "claims": "§22.2 — and therefore below the older Hughes-Drever isotropy bound",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.EinsteinCartanExtension.torsionBoundKostelecky_lt_hughesDrever",
+      "claims": "§22.3 — the chained ordering of the two published bounds",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.BundleRiemann.bundleRiemannAux_first_bianchi_torsionfree_apply",
+      "claims": "§22.5 — the algebraic first Bianchi identity on the indefinite-signature bundle; a Phase-8 Mathlib-upstream target",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.PenroseSingularity.correctness_push_biconditional_under_applicable",
+      "claims": "§24.3 — FIRST-FORMALIZATION CLAIM, scope stated precisely by the draft: the Penrose hypothesis bundle as a PREDICATE-LEVEL biconditional under an explicit applicability predicate, NOT a differential-geometric proof of the 1965 theorem",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.PenroseSingularity.penrose_both_focal_times_pos",
+      "claims": "§24.2 — the Riccati-focusing core: both focal times are positive",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.HawkingPenroseSingularity.cosmologicalLambda_violates_HP_hypothesis",
+      "claims": "§25.2 — the Lambda-violates-SEC counterexample, which makes the Hawking-Penrose variant UNAVAILABLE to the substrate's own cosmological sector. A limitation the draft states rather than omits",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.AreaTheorem.schwarzschild_horizon_area_nonDecreasing",
+      "claims": "§26.1 — the classical area theorem on the Schwarzschild family",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.AreaTheorem.schwarzschild_area_strictly_increasing",
+      "claims": "§26.1 — its strict form",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.NoHairTheorem.noHairTheorem_statement",
+      "claims": "§27.3 — the Kerr-family no-hair statement; the other Phase-8 Mathlib-upstream target",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.NoHairTheorem.subextremality_implies_abs_J_le_M_sq",
+      "claims": "§27.1 — the sub-extremality bound J^2 <= M^4",
+      "declared": "2026-08-07"
+    }
+  ],
   "tier": 1,
   "title": "Emergent gravity through BH thermodynamics",
   "target_journal": "PRD",
   "phase7_subphase": "7c",
-  "stage9_status": "green",
-  "stage10_status": "green",
-  "stage13_status": "green",
-  "stage13_redo_required": false,
+  "stage9_status": "pending",
+  "stage10_status": "pending",
+  "stage13_status": "pending",
+  "stage13_redo_required": true,
   "freshness_stale": true,
   "source_manifest_last_regen": "2026-06-10T20:25:26Z",
   "last_lift": "2026-05-31T17:24:48Z",
@@ -19,11 +466,20 @@
   "stage13_review_doc": "docs/audits/stage13_attribution_sweep_2026-06-10.md#d3",
   "audit_log_path": "papers/D3/audit_log.jsonl",
   "supersession_ledger_anchor": "docs/review_finding_supersessions.json",
-  "notes": "2026-05-06 Session-2 stage10 round-4 GREEN (8 focal sentences, 0 BLOCKER). Stage 9 GREEN (0 figures; advisory: D3 sibling figures absent for cross-bundle anchors \u2014 pre-existing, not Session-1 introduced). | Round-2 verification 2026-05-06: both BLOCKERs (7.1 biconditional overclaim + 6.1 trivial-HDB-witness misrepresentation) closed cleanly. REQUIRED 5.1 (Sakharov-Adler equilibrium-projection framing) + REQUIRED 4.1 (W-form bridge sentence) ALSO closed via paper_draft.tex Edits. 1 RECOMMENDED 5.2 (top-of-section Verlinde disclaimer) carry-forward advisory. | 2026-06-10 attribution-content sweep (docs/audits/stage13_attribution_sweep_2026-06-10.md): GREEN after fixes. Sen2013 -45/2->212/45 (Lean was already correct); KLRS 159GeV reattributed to DOnofrioRummukainen2016 (added).",
+  "notes": "2026-05-06 Session-2 stage10 round-4 GREEN (8 focal sentences, 0 BLOCKER). Stage 9 GREEN (0 figures; advisory: D3 sibling figures absent for cross-bundle anchors — pre-existing, not Session-1 introduced). | Round-2 verification 2026-05-06: both BLOCKERs (7.1 biconditional overclaim + 6.1 trivial-HDB-witness misrepresentation) closed cleanly. REQUIRED 5.1 (Sakharov-Adler equilibrium-projection framing) + REQUIRED 4.1 (W-form bridge sentence) ALSO closed via paper_draft.tex Edits. 1 RECOMMENDED 5.2 (top-of-section Verlinde disclaimer) carry-forward advisory. | 2026-06-10 attribution-content sweep (docs/audits/stage13_attribution_sweep_2026-06-10.md): GREEN after fixes. Sen2013 -45/2->212/45 (Lean was already correct); KLRS 159GeV reattributed to DOnofrioRummukainen2016 (added).",
   "open_findings": 57,
   "blocked_p1_gates": [
-    "FixPropagation"
+    "FixPropagation",
+    "LeanProofSubstance"
   ],
   "readiness": "RED",
-  "readiness_last_computed": "2026-07-31"
+  "readiness_last_computed": "2026-08-08",
+  "length_target": {
+    "unit": "pages",
+    "floor": 30,
+    "ceiling": 75,
+    "source": "PAPER_STRATEGY.md §6"
+  },
+  "compiled_pages": 58,
+  "compile_gate_ok": true
 }

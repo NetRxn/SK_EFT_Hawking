@@ -12,6 +12,8 @@
 %% Synthesis brief: papers/D3/SYNTHESIS_BRIEF.md.
 %% Stage-13 anchor list: docs/agents/claims-reviewer-bundle-prompts.md §D3.
 
+\input{../../docs/figuredeferred.tex}
+
 \begin{document}
 
 \title{Emergent gravity through black-hole thermodynamics:\\
@@ -59,8 +61,14 @@ no-hair statement on indefinite-signature metrics;
 substrate-side supplement consuming this content. Sixteen of
 the twenty-two threads ship with formally verified (zero-\texttt{sorry}) Lean~4
 modules; eight threads supply numerical or experimental falsifiers; the
-single shared coupling $N_f = 16$ also anchors the modular-invariance
-derivation of three Standard-Model fermion generations and the
+per-generation Weyl count $16$ carries the anomaly constraint onto the
+modular-invariance derivation of three Standard-Model fermion generations
+-- a \emph{transfer}, not a shared coupling: the Sakharov $N_f$ (Dirac
+species, real-valued) and the modular-invariance $N_f$ (generations,
+constrained by $3 \mid N_f$) are \emph{not} the same number, and neither
+equals $16$ for the Standard Model
+(\texttt{sm\_counts\_differ}: $\mathrm{generationNf} = 3$,
+$\mathrm{diracFlavourNf} = 24$) -- and the
 chirality-locked CFL-quark-matter $\mathbb{Z}_3$ that legitimates the
 substrate's higher-form-symmetry data on the QCD side.
 \end{abstract}
@@ -164,8 +172,8 @@ biconditional (\texttt{NonlinearDiffInvariance.diff\_invariance\_a4\_iff\_dirac\
 Decision Gate~E.3) closes through $a_4$. The microscopic--macroscopic
 match biconditional (\texttt{MicroscopicCoefficientMatch.matchResidual\_eq\_zero\_iff\_alpha\_unity},
 Decision Gate~E.4) closes at the same $\alpha = 1$. The multi-channel
-PPN ratios---light deflection, perihelion precession, ringdown
-frequency---collapse onto a single one-parameter family
+PPN ratios (light deflection, perihelion precession, ringdown
+frequency) collapse onto a single one-parameter family
 $\alpha:(2\alpha+1)/3:\alpha$ rather than the three independent dials of
 generic-PPN literature~\cite{Will2014} (\S\ref{sec:nonlinear-efe-ppn}).
 Stelle higher-curvature
@@ -186,7 +194,7 @@ $\Lambda_{\mathrm{obs}} \simeq 2.6\times 10^{-47}\,\mathrm{GeV}^{4}$ by
 $\gtrsim 10^{100}$ (heuristically $\sim 10^{122}$)
 (\texttt{MicroscopicCoefficientMatch.lambdaEmergMicroscopic\_at\_planck\_natural\_far\_exceeds\_observed}).
 This is the classical Weinberg cosmological-constant
-problem~\cite{Weinberg1989} reproduced---not solved---inside the
+problem~\cite{Weinberg1989} reproduced, not solved, inside the
 emergent-gravity formulation. We report this as a first-class
 result. Induced-gravity literature from Sakharov to
 Adler~\cite{Sakharov1968,Adler1980} left open whether emergent
@@ -361,6 +369,8 @@ free dial.
 %% §3 — Gauge erasure: only U(1) survives the fluid layer
 %% Lift: paper3_gauge_erasure
 %% =====================================================================
+
+\figuredeferred{fig:d3-adw-bifurcation}{the tetrad-gap bifurcation diagram; \texttt{adw/} solves the gap equation but the bifurcation sweep is a separate production run that has not been made}
 \section{Gauge erasure: only $U(1)$ survives the fluid layer}
 \label{sec:gauge-erasure}
 
@@ -392,7 +402,7 @@ The erasure mechanism is platform-universal:
 standard relativistic hydrodynamics, Pretko--Radzihovsky fracton
 hydrodynamics, and Maldacena's $\mathcal{N}=4$ super-Yang--Mills
 hydrodynamic limit~\cite{Maldacena1997} all share the same erasure
-selection rule. Domain walls---not Goldstone bosons---carry the residual
+selection rule. Domain walls, not Goldstone bosons, carry the residual
 non-Abelian information; this links forward to the Polyakov-loop
 confinement order parameter in \S\ref{sec:confinement}.
 
@@ -410,6 +420,8 @@ hydrodynamic regime.
 %% §4 — Closure triad: Wen-deficit + fracton-no-go + GW170817
 %% Lift: paper3 universality + paper5 structural obstacles + paper6 hierarchy
 %% =====================================================================
+
+\figuredeferred{fig:d3-gauge-erasure-flow}{the surviving-$U(1)$ flow; design only, no counterpart in \texttt{visualizations.py}}
 \section{Three closures forcing ADW: perturbative-Wen, fracton, vestigial-graviton}
 \label{sec:closure-triad}
 
@@ -419,7 +431,7 @@ also be ruled out before the ADW route is uniquely forced: perturbative
 extension of Wen's emergent
 $U(1)$~\cite{Wen2003} to gravity, and Pretko--Radzihovsky fracton
 hydrodynamics~\cite{PretkoRadzihovsky2018}. We treat both here, then
-preview the third closure---the GW170817 falsification of Volovik's
+preview the third closure: the GW170817 falsification of Volovik's
 vestigial second-sound graviton (full in \S\ref{sec:gw170817}).
 
 \subsection{Perturbative Wen-ADW deficit}
@@ -454,8 +466,8 @@ identity \texttt{EmergentGravityBounds.wen\_adw\_ratio\_eq}
 the sharp bracket \texttt{EmergentGravityBounds.wen\_adw\_ratio\_bracket}
 (\(1/6202 < \alpha^2 N_f/(32\pi^3) < 1/6201\) at this point, i.e.\ a
 deficit factor \(200\pi^3 \approx 6201.3\)) (Wen 2003~\cite{Wen2003}).
-Wen's mechanism is consistent for a $U(1)$ photon---its original
-target---but cannot scale to gravity at quantitative magnitude.
+Wen's mechanism is consistent for a $U(1)$ photon (its original
+target) but cannot scale to gravity at quantitative magnitude.
 
 \subsection{Fracton-hydrodynamics no-go for full diffeomorphism invariance}
 
@@ -682,6 +694,8 @@ target of the vestigial-metric Monte Carlo of \S\ref{sec:vestigial-mc}.
 %% §7 — Bekenstein–Hawking entropy from MTC state counting
 %% Lift: paper26_bh_entropy
 %% =====================================================================
+
+\figuredeferred{fig:d3-gw170817-constraint}{the natural-$\chi$ range against the GW170817 cap; L1 carries this figure as \texttt{fig\_c\_GW\_vs\_ligo\_constraint} and the deep version must not duplicate the splash one, so its framing waits on the L1/D3 split being settled}
 \section{Bekenstein--Hawking entropy from MTC state counting}
 \label{sec:bh-entropy}
 
@@ -709,15 +723,15 @@ $-3/2 = -1/2$ (Gaussian saddle) $-1$ (logarithmic Verlinde-formula
 modular-transform piece)
 (\texttt{kaul\_majumdar\_log\_decomposition}). The $1/4$ in $A/(4G_N)$ is, in the
 LQG/Verlinde-counting route of this section, a horizon boundary-condition (Immirzi)
-tuning; in the ADW Sakharov induced-gravity route it is derived $\Imm$-independently
+tuning; in the ADW Sakharov induced-gravity route it is derived Immirzi-independently
 (\texttt{InducedGravityEntropy.frolov\_fursaev\_quarter\_coefficient}, Wave~9): the
 same Seeley--DeWitt $a_2$ that induces $G_N$ also fixes the horizon entanglement-entropy
 area density, with the heat-kernel-to-Einstein--Hilbert ratio structurally $4$ (FFZ,
 hep-th/9607104). The $-3/2$ log is genuinely derived from the literal SU(2) singlet count:
 \texttt{verlindeEntropy\_SU2k} is now (Wave~7C) the \emph{faithful} $\Gamma$-Catalan
 log-dimension $\log\!\bigl[\Gamma(2x{+}1)/(\Gamma(x{+}1)\Gamma(x{+}2))\bigr]$ at
-$x = A/(8 G_N \log 2)$ --- a genuine analytic object, not the earlier saddle self-definition
-(closing substrate-audit \#13) --- and the Kaul--Majumdar closed form is a \emph{derived
+$x = A/(8 G_N \log 2)$, a genuine analytic object, not the earlier saddle self-definition
+(closing substrate-audit \#13), and the Kaul--Majumdar closed form is a \emph{derived
 corollary}: \texttt{gaussianSaddleAsymptotic} is the genuine $O(1/A)$ rate
 $\bigl|\texttt{verlindeEntropy\_SU2k}(A,G_N) - \texttt{kaulMajumdarS}(A,G_N,\kappa_{\mathrm{KM}})\bigr|
 = O(1/A)$ with the literal constant $\kappa_{\mathrm{KM}} = \tfrac{3}{2}\log(2\log 2) -
@@ -754,8 +768,8 @@ Witt-class machinery). The perturbative $8 \mid c_-$ is exactly its necessary sh
 (\texttt{wittTrivial\_implies\_mod8}), and the gap is strict: $N_f = 1$ passes $8 \mid c_-$ but
 fails $24 \mid c_-$ (\texttt{horizon\_anomalyMatch\_strictly\_weaker\_than\_witt}). This ties the
 horizon boundary condition to the program's three-generation result through the \emph{same} Witt
-invariant. The physical reading---Witt-triviality is equivalent to the boundary admitting a gapped
-(Lagrangian-algebra) topological boundary---is the Davydov--M\"uger--Nikshych--Ostrik (2010, arXiv:1009.2117)
+invariant. The physical reading, that Witt-triviality is equivalent to the boundary admitting a gapped
+(Lagrangian-algebra) topological boundary, is the Davydov--M\"uger--Nikshych--Ostrik (2010, arXiv:1009.2117)
 correspondence, of which the perturbative $8 \mid c_-$ is only the necessary part.
 
 \subsection{Abelian-MTC falsifier}
@@ -763,7 +777,7 @@ correspondence, of which the perturbative $8 \mid c_-$ is only the necessary par
 \texttt{abelian\_MTC\_falsifies\_H\_HorizonBoundaryCondition}: an abelian
 horizon MTC cannot reproduce the Kaul--Majumdar $-3/2$ logarithmic
 coefficient on the same area. This is a closure on the substrate's
-microscopic-MTC choice---if one tries to substitute the SU(2)$_k$
+microscopic-MTC choice: if one tries to substitute the SU(2)$_k$
 Chern--Simons partition with an abelian alternative, the Bekenstein--Hawking
 agreement fails. The Sen 4D Schwarzschild log-coefficient
 $+(212/45-3)=77/45\approx+1.71$~\cite{Sen2013} \emph{disagrees} with the
@@ -923,8 +937,9 @@ canonical framing here is character-for-character what D4 must adopt.
 A complementary empirical anchor on the ADW gap equation
 (\S\ref{sec:adw-gap}) is the rational-hybrid Monte Carlo (RHMC) study of
 the vestigial metric phase. We summarise the lattice action, observed
-order parameters, and the first-order transition signature at lattice
-volumes $L = 4$ and $L = 6$. The RHMC convergence at $L \ge 8$ remains in
+order parameters, and the lattice status: a coupling scan at $L = 4$ that does
+not resolve a transition, and a null result at $L = 8$, $m = 0.1$. No $L = 6$
+ensemble exists. The RHMC convergence at $L \ge 8$ remains in
 flight at the time of writing; the result decides whether the
 quantitative bifurcation prediction of \S\ref{sec:adw-gap} is
 empirically confirmed.
@@ -939,12 +954,20 @@ tetrad-block determinant $\det(e^a_\mu)$, jointly diagnostic of the
 vestigial-versus-full phase distinction
 (\texttt{VestigialGravity.phase\_hierarchy}).
 
-\subsection{First-order transition: $L = 4$ and $L = 6$}
+\subsection{Lattice status: a coupling scan at $L = 4$, a null result at $L = 8$}
 
-At $L = 4$ and $L = 6$ the RHMC samples show a first-order transition
-between a symmetric ($\chi=0$) phase and a vestigial-condensed ($\chi\ne 0$)
-phase, with a clean histogram split. The transition coupling matches
-$G_c^{\mathrm{ADW}}$ within statistical error.
+The RHMC coupling scan at $L = 4$ does \emph{not} resolve a transition, and no
+$L = 6$ ensemble has been generated. The $L = 8$, $m = 0.1$ ensemble is a null
+result: no signal above statistical noise.
+
+The two order parameters named above, $|\langle\chi\rangle|$ and
+$\det(e^a_\mu)$, are \emph{not} among the observables the current ensembles
+record -- the stored histories are $h^2$, $\Delta H$, $\mathrm{tr}\,m^2$ and
+$\mathrm{tr}\,Q^2$ -- so no histogram in either order parameter can be formed
+from the existing data, and no transition coupling can be compared against
+$G_c^{\mathrm{ADW}}$. The $m \to 0$ ensemble set and the Binder-cumulant and
+connected-susceptibility detectors are prerequisites for any such statement;
+see the deferral note below.
 
 \subsection{$L \ge 8$ convergence: in flight}
 
@@ -974,7 +997,9 @@ substrate's first quantitative empirical anchor for emergent gravity.
 %% §11 — Scalar rung: Higgs identification + microscopic m_H
 %% Lift: paper20_scalar_rung
 %% =====================================================================
-\section{Scalar rung: Higgs identification and microscopic $m_H$ falsifiability}
+
+\figuredeferred{fig:d3-vestigial-mc}{the lattice Monte-Carlo phase diagram; blocked on the $m\to0$ production set, which the $L=8$, $m=0.1$ run showed is required before any signal is visible}
+\section{Matter rungs: scalar and Majorana}
 \label{sec:scalar-rung}
 
 The Wetterich--Nambu--Jona-Lasinio (NJL) scalar
@@ -1030,7 +1055,7 @@ this honestly.
 %% §12 — Majorana rung: type-I seesaw + ℤ_16 singlet bridge
 %% Lift: paper21_majorana_rung
 %% =====================================================================
-\section{Majorana rung: type-I seesaw and the $\mathbb{Z}_{16}$ singlet bridge}
+\subsection{Majorana rung: type-I seesaw and the $\mathbb{Z}_{16}$ singlet bridge}
 \label{sec:majorana-rung}
 
 The lepton sector closes through a type-I seesaw on a singlet branch
@@ -1130,7 +1155,7 @@ the first leg of a doubly-forbidden EWBG closure; the second leg is
 %% §13.5 — EWBG doubly-forbidden bridge: chirality wall × crossover
 %% Lift: paper33_ewbg_chirality_wall
 %% =====================================================================
-\section{EWBG doubly-forbidden: chirality wall meets crossover}
+\subsection{EWBG doubly-forbidden: chirality wall meets crossover}
 \label{sec:ewbg-bridge}
 
 The substrate's chirality wall (\S\ref{sec:gauge-erasure} and Bundle~D2)
@@ -1169,7 +1194,7 @@ no-gos in the substrate's predictive register.
 %% §14 — Confinement: center symmetry + Polyakov loop + Svetitsky-Yaffe
 %% Lift: paper36_center_symmetry
 %% =====================================================================
-\section{Confinement: centre symmetry, Polyakov loop, Svetitsky--Yaffe universality}
+\section{The QCD vacuum: confinement, chiral breaking, colour-flavour locking}
 \label{sec:confinement}
 
 The non-Abelian gauge fields erased by the hydrodynamic layer
@@ -1214,7 +1239,7 @@ confinement-transition characterisation at the categorical level.
 %% §15 — Chiral SSB: GMOR (PDG-anchored)
 %% Lift: paper37_chiral_ssb
 %% =====================================================================
-\section{Chiral spontaneous symmetry breaking: Gell-Mann--Oakes--Renner}
+\subsection{Chiral spontaneous symmetry breaking: Gell-Mann--Oakes--Renner}
 \label{sec:chiral-ssb}
 
 The Gell-Mann--Oakes--Renner relation~\cite{GellMannOakesRenner1968}
@@ -1273,7 +1298,7 @@ constructively close the failure cases.
 %% §16 — CFL color-flavor locking: emergent Z_3 = QCD center
 %% Lift: paper38_cfl
 %% =====================================================================
-\section{Color-flavor locking: emergent $\mathbb{Z}_3$ matches QCD centre $\mathbb{Z}_3$}
+\subsection{Color-flavor locking: emergent $\mathbb{Z}_3$ matches QCD centre $\mathbb{Z}_3$}
 \label{sec:cfl}
 
 The colour-flavor-locked phase of high-density QCD~\cite{AlfordRajagopalWilczek1999}
@@ -1313,7 +1338,7 @@ discharge cases.
 The CFL identity establishes that the substrate's higher-form-symmetry
 data agree with QCD on the QCD side of the substrate's predictive
 register. The substrate cannot be inconsistent with confirmed QCD physics
-without this match---and the match closes
+without this match, and the match closes
 (\texttt{cfl\_phase\_with\_gmor\_dual\_broken} ties \S\ref{sec:cfl} to
 \S\ref{sec:chiral-ssb} on a single phase). This makes \S\ref{sec:cfl}
 load-bearing for the gravity-side claims of
@@ -1325,7 +1350,7 @@ QCD-side voucher, the gravity claims rest on an unvalidated substrate.
 %% §17 — Heat-kernel calibration + Sakharov-Adler ↔ G_N (Decision Gate E.2)
 %% Lift: paper39_heat_kernel_expansion
 %% =====================================================================
-\section{Heat-kernel calibration: Sakharov--Adler $\leftrightarrow$ $G_N^{\mathrm{emerg}}$ (Decision Gate E.2)}
+\section{Emergent-gravity calibration through $a_4$}
 \label{sec:heat-kernel}
 
 The Christensen--Duff Dirac heat-kernel
@@ -1464,7 +1489,7 @@ Verlinde-class entropic gravity is $r_d$-independent disfavoured under
 \emph{mixed-threshold} criteria across the quantitative
 checks canvassed: Bayes-decisive at Jeffreys $\geq 5$ for two of four
 $r_d$-independent quantitative bounds (Tsallis HDE +
-Odintsov dark energy --- aggregated as
+Odintsov dark energy, aggregated as
 \texttt{both\_decisive\_bayes\_bounds\_exceed\_jeffreys\_decisive}),
 at the $\geq 5\sigma$ galaxy-cluster mass-density
 level~\cite{HalenkaMiller2020} for Verlinde
@@ -1498,7 +1523,7 @@ or Decision Gate~E.2.
 %% §18 — Higher-curvature Stelle basis change at order a_4
 %% Lift: paper40_higher_curvature
 %% =====================================================================
-\section{Higher-curvature Stelle basis at order $a_4$}
+\subsection{Higher-curvature Stelle basis at order $a_4$}
 \label{sec:higher-curvature}
 
 The $a_4$ heat-kernel coefficients of \S\ref{sec:heat-kernel} translate to
@@ -1563,7 +1588,7 @@ with all published pulsar-timing and binary-black-hole bounds.
 %% §19 — Diff invariance order-by-order through a_4 (Decision Gate E.3)
 %% Lift: paper41_diff_invariance
 %% =====================================================================
-\section{Order-by-order diffeomorphism invariance through $a_4$ (Decision Gate E.3)}
+\subsection{Order-by-order diffeomorphism invariance through $a_4$ (Decision Gate E.3)}
 \label{sec:diff-invariance}
 
 The substrate's nonlinear-EFE chain (\S\ref{sec:nonlinear-efe-ppn}) requires
@@ -1617,7 +1642,7 @@ of \S\ref{sec:nonlinear-efe-ppn}.
 %% §20 — Variational nonlinear EFE + multi-channel PPN
 %% Lift: paper42_nonlinear_efe
 %% =====================================================================
-\section{Variational nonlinear Einstein equations + multi-channel PPN}
+\subsection{Variational nonlinear Einstein equations + multi-channel PPN}
 \label{sec:nonlinear-efe-ppn}
 
 With Decision Gate~E.3 closed (\S\ref{sec:diff-invariance}), the substrate
@@ -1637,8 +1662,8 @@ Decision-Gate-style biconditional at $\alpha_{\mathrm{ADW}} = 1$
 \subsection{Multi-channel PPN observables (one-parameter family)}
 
 The synthesis-level claim NEW to D3 is that the PPN observables of
-the substrate---light deflection, perihelion precession, and
-black-hole-ringdown frequency---form a one-parameter family in
+the substrate (light deflection, perihelion precession, and
+black-hole-ringdown frequency) form a one-parameter family in
 $\alpha_{\mathrm{ADW}}$:
 \begin{equation}
 \label{eq:ppn-ratio-identity}
@@ -1850,8 +1875,8 @@ no-hair content of subsequent sections.
 \subsection{Levi-Civita Christoffel uniqueness on Lorentzian metrics}
 
 The Christoffel-symbol Levi-Civita uniqueness theorem, which on
-Riemannian manifolds is well known and Mathlib-shipped, was --- to our
-knowledge --- not previously formalised on Lorentzian
+Riemannian manifolds is well known and Mathlib-shipped, was, to our
+knowledge, not previously formalised on Lorentzian
 (indefinite-signature) metrics in any proof assistant.
 \texttt{RiemannianConnection.lean} discharges
 uniqueness on the indefinite-signature case; this is the
@@ -1914,7 +1939,7 @@ content of subsequent sections.
 %% =====================================================================
 %% §23 — Causal structure axioms
 %% =====================================================================
-\section{Causal structure axioms}
+\subsection{Causal structure axioms}
 \label{sec:causal-structure}
 
 The substrate's spacetime carries the causal structure axioms of
@@ -1951,7 +1976,7 @@ strong causality plus global hyperbolicity) and \S\ref{sec:hawking-penrose}
 %% =====================================================================
 %% §24 — Penrose singularity hypothesis bundle + Riccati focusing
 %% =====================================================================
-\section{Penrose singularity hypothesis bundle + Riccati focusing core}
+\section{Black-hole theorems on the substrate}
 \label{sec:penrose}
 
 The Penrose singularity theorem~\cite{Penrose1965} closes on the
@@ -2001,7 +2026,7 @@ causal structure; and \emph{(iv)} NEC closure on the substrate's
 ADW stress-energy tensor (matching \S\ref{sec:adw-gap}'s gap-equation
 energy-momentum). When all four conditions hold, the biconditional
 collapses on the Lean side via the Riccati-focusing route
-(\S\ref{sec:singularity-thms} above); when any one fails, the
+(\S\ref{sec:penrose} above); when any one fails, the
 applicability predicate is false and the biconditional is vacuously
 satisfied (the Penrose hypothesis does not engage the substrate at
 that point). To our knowledge this is the first machine-checked
@@ -2016,7 +2041,7 @@ theorem~\cite{Penrose1965}.
 %% =====================================================================
 %% §25 — Hawking-Penrose SEC variant + Λ-violates-SEC counterexample
 %% =====================================================================
-\section{Hawking--Penrose SEC variant: $\Lambda$ violates SEC}
+\subsection{Hawking--Penrose SEC variant: $\Lambda$ violates SEC}
 \label{sec:hawking-penrose}
 
 The Hawking--Penrose strong-energy-condition variant~\cite{HawkingPenrose1970}
@@ -2054,7 +2079,7 @@ is unavailable.
 %% =====================================================================
 %% §26 — Classical area theorem on Schwarzschild family
 %% =====================================================================
-\section{Classical area theorem: Schwarzschild monotone-mass}
+\subsection{Classical area theorem: Schwarzschild monotone-mass}
 \label{sec:area}
 
 Hawking's classical area theorem~\cite{Hawking1971} on the Schwarzschild
@@ -2076,16 +2101,16 @@ The substrate's Bekenstein--Hawking entropy
 \eqref{eq:bh-entropy} reads $S(A) \ge A/(4G_N)$ on the leading order;
 combining with $dA/dt \ge 0$ delivers $dS/dt \ge 0$, the second-law
 content of \S\ref{sec:bch-four-laws}. Three independent derivations of
-$dS/dt \ge 0$---classical area-monotonicity (\S\ref{sec:area}),
-Glorioso--Liu SK-EFT entropy-current monotonicity (\S\ref{sec:bch-four-laws}),
-and microscopic MTC counting (\S\ref{sec:bh-entropy})---converge on the
-same substrate.
+$dS/dt \ge 0$ converge on the same substrate: classical area-monotonicity
+(\S\ref{sec:area}), Glorioso--Liu SK-EFT entropy-current monotonicity
+(\S\ref{sec:bch-four-laws}), and microscopic MTC counting
+(\S\ref{sec:bh-entropy}).
 
 
 %% =====================================================================
 %% §27 — No-hair theorem: Kerr family with sub-extremality
 %% =====================================================================
-\section{No-hair theorem: Kerr family with sub-extremality $J^2 \le M^4$}
+\subsection{No-hair theorem: Kerr family with sub-extremality $J^2 \le M^4$}
 \label{sec:no-hair}
 
 The Kerr family of stationary asymptotically flat axisymmetric vacuum
@@ -2205,19 +2230,19 @@ across the body are consolidated here by canonical module-qualified
 identifier with a one-line closure path:
 
 \begin{itemize}
-\item \texttt{LinearizedEFE.H\_VergelesPositivity} — Vergeles positivity
+\item \texttt{LinearizedEFE.H\_VergelesPositivity}: Vergeles positivity
   premise on the linearised gap-equation operator
   (\S\ref{sec:linearized-efe}); closes when the explicit one-loop
   calculation of $\alpha_{\mathrm{ADW}}$ is delivered.
-\item \texttt{LinearizedEFE.H\_CriticalLimitCollapse} — collapse of the
+\item \texttt{LinearizedEFE.H\_CriticalLimitCollapse}: collapse of the
   critical-limit functional onto a single coefficient at the
   Sakharov-identity calibration point (\S\ref{sec:linearized-efe});
   same closure path as \texttt{H\_VergelesPositivity}.
-\item \texttt{LinearizedEFE.H\_DeepGapReducesToAdler} — reduction of the
+\item \texttt{LinearizedEFE.H\_DeepGapReducesToAdler}: reduction of the
   deep-gap variational regime to the Adler $R$ functional at the
   Sakharov-identity point (\S\ref{sec:linearized-efe}); same closure
   path as the Vergeles trio.
-\item \texttt{BHEntropyMicroscopic.H\_HorizonBoundaryCondition} — the
+\item \texttt{BHEntropyMicroscopic.H\_HorizonBoundaryCondition}: the
   substrate's horizon-MTC boundary-condition Prop record
   (\S\ref{sec:bh-entropy}); four named falsifier theorems cover the
   alternative-MTC closures: \texttt{H\_HorizonBoundaryCondition\_falsifier\_positivity},
@@ -2225,16 +2250,16 @@ identifier with a one-line closure path:
   \texttt{H\_HorizonBoundaryCondition\_falsifier\_secondLaw}, and
   \texttt{H\_HorizonBoundaryCondition\_falsifier\_quarterCoefficient}.
   Cross-bridge to Bundle~D4 \S 7 (HP-QEC consumes the same Prop record).
-\item \texttt{CFLChiralLagrangian.H\_TopologicalOrderBeyondLG} — the
+\item \texttt{CFLChiralLagrangian.H\_TopologicalOrderBeyondLG}: the
   CFL-emergent-$\mathbb{Z}_3$ matching with QCD-centre $\mathbb{Z}_3$
-  beyond the Landau-Ginzburg paradigm (\S\ref{sec:cfl-z3-matching});
+  beyond the Landau-Ginzburg paradigm (\S\ref{sec:cfl});
   closes when an explicit topological-order-vs-Landau-Ginzburg
   taxonomy bridge ships, currently in flight.
-\item \texttt{ChiralSSB\_QCD.H\_TetradQuarkScalesNatural} — the tetrad
+\item \texttt{ChiralSSB\_QCD.H\_TetradQuarkScalesNatural}: the tetrad
   scale as natural microscopic anchor for the QCD chiral-SSB chain
   (\S\ref{sec:chiral-ssb}); closes when the Higgs-mass back-reaction
   calculation is delivered.
-\item \texttt{BHThermodynamicsFourLaws.H\_RegimePartition} — regime-partition
+\item \texttt{BHThermodynamicsFourLaws.H\_RegimePartition}: regime-partition
   criterion at $M_c = N_f \Lambda_{\mathrm{UV}}/(12\pi\,\alpha_{\mathrm{ADW}})$
   separating the Schottky-natural and ADW-extremality branches
   (\S\ref{sec:bch-four-laws}); shipped at the Lean-formalization scope
@@ -2245,39 +2270,39 @@ identifier with a one-line closure path:
   \texttt{falsifier\_third\_law\_form},
   \texttt{falsifier\_alpha\_ADW\_dependence}, and
   \texttt{four\_laws\_consistent\_with\_acoustic\_regime}.
-\item \texttt{PenroseSingularity.IsADWPenroseApplicable} — substrate-specific
+\item \texttt{PenroseSingularity.IsADWPenroseApplicable}: substrate-specific
   applicability predicate for the Penrose singularity hypothesis
-  (\S\ref{sec:singularity-thms}); the predicate requires
+  (\S\ref{sec:penrose}); the predicate requires
   (i)~ADW-substrate-scale tetrad presence, (ii)~trapped-surface
   hypothesis, (iii)~global-hyperbolicity witness, and (iv)~NEC closure
   on the ADW stress-energy. Shipped at the Lean-formalization scope as
   a substrate-data Prop; the substrate's correctness-push biconditional
   \texttt{correctness\_push\_biconditional\_under\_applicable} closes
   the Penrose direction under the applicability predicate.
-\item \texttt{NonlinearEFE.H\_NonlinearEFEHolds} — nonlinear-EFE chain
+\item \texttt{NonlinearEFE.H\_NonlinearEFEHolds}: nonlinear-EFE chain
   through the path-(b) framework (\S\ref{sec:nonlinear-efe-ppn});
   shipped at the Lean-formalization scope.
-\item \texttt{NonlinearDiffInvariance.H\_NonlinearDiffInvariance} —
+\item \texttt{NonlinearDiffInvariance.H\_NonlinearDiffInvariance}:
   diffeomorphism-invariance closure through $a_4$ on the Dirac bundle
   (\S\ref{sec:diff-invariance}); shipped at the Lean-formalization
   scope.
-\item \texttt{EinsteinCartanExtension.H\_EinsteinCartanExtensionHolds}
-  — Einstein-Cartan torsion bound at the cosmological background
+\item \texttt{EinsteinCartanExtension.H\_EinsteinCartanExtensionHolds}:
+  Einstein-Cartan torsion bound at the cosmological background
   (\S\ref{sec:einstein-cartan}); shipped at the Lean-formalization
   scope; closes the KRT-passage gap of $\sim 46$ orders.
-\item \texttt{MicroscopicCoefficientMatch.H\_MicroscopicCoefficientMatch}
-  — microscopic-coefficient match between Sakharov-derived $G_N$ and
+\item \texttt{MicroscopicCoefficientMatch.H\_MicroscopicCoefficientMatch}:
+  microscopic-coefficient match between Sakharov-derived $G_N$ and
   observation (\S\ref{sec:cc-emergent}); shipped at $\gtrsim 10^{100}$
   rigorous lower bound (heuristic $\sim 10^{122}$ caveat).
-\item \texttt{GravitationalWaves.H\_VestigialModeIsGraviton} — the
+\item \texttt{GravitationalWaves.H\_VestigialModeIsGraviton}: the
   vestigial-second-sound mode is identified with the graviton
   (\S\ref{sec:gw170817}); falsifier shipped via
   \texttt{second\_sound\_graviton\_natural\_range\_universally\_falsified}.
-\item \texttt{BHEntropyMicroscopic.H\_VerlindeKMLiteralSumDerivation} — the literal
-  SU(2) Kaul–Majumdar singlet-count derivation. \textbf{DISCHARGED (Wave 7B,
+\item \texttt{BHEntropyMicroscopic.H\_VerlindeKMLiteralSumDerivation}: the literal
+  SU(2) Kaul--Majumdar singlet-count derivation. \textbf{DISCHARGED (Wave 7B,
   2026-06-14):} restated to its genuine non-vacuous content and proven kernel-pure
   (\texttt{H\_VerlindeKMLiteralSumDerivation\_discharged}, via the Catalan/Stirling
-  route in \texttt{LaplaceMethodAsymptotic}) — the literal count reproduces the
+  route in \texttt{LaplaceMethodAsymptotic}): the literal count reproduces the
   $-3/2$ log-coefficient to $O(1)$. (The strictly-stronger $\le C/A$ rate remains
   documented future work.)
 \item \emph{In-flight numerical / non-Lean tracked premises:} RHMC
@@ -2478,9 +2503,11 @@ the project's staged validation pipeline. A subset of the underlying
 library's theorems was closed by the Aristotle automated theorem
 prover (Harmonic); every proof is ultimately certified by the Lean~4
 kernel via \texttt{lake build} on the public repository, independently
-of any AI tool. Manuscript prose was AI-assisted and human-reviewed;
-all numerical claims trace to the repository's computation pipeline
-through its automated validation checks.
+of any AI tool. Manuscript prose was AI-assisted and human-reviewed.
+The repository's public validation suite reports, for every
+draft, any numerical value written inline in prose rather than
+sourced from a generated table; that report is the authority on
+this manuscript's numerical provenance.
 
 \begin{thebibliography}{99}
 
@@ -2757,7 +2784,7 @@ in preparation (2026), Bundle L2 splash.
 
 \bibitem{Roehm2026Strategy}
 J.~G.~Roehm,
-``SK-EFT Hawking 14-bundle publication architecture,''
+``SK-EFT Hawking publication architecture,''
 project paper-strategy frame, in preparation (2026).
 
 \bibitem{Sakharov1967}

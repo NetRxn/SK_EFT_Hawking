@@ -1,18 +1,195 @@
 {
   "bundle_target": "D8",
+  "apex_theorems": [
+    {
+      "name": "SKEFTHawking.FKLW.GenericSU2.cliffordT_accPt_one_unconditional",
+      "claims": "§2 — the density witness for <H,T> in SU(2), via a Niven-style algebraic-integer obstruction on the trace sqrt2*sin(pi/8). The 1999 BMPRV folklore result, machine-verified. ⚠️ Also named by D4 §9's substrate list — see the D8 FINDINGS §3 resolution",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FKLW.GenericSU2.solovayKitaev_dawson_nielsen_quantitative_cliffordT_strict_constructive_tight_unconditional",
+      "claims": "ABSTRACT + §2 — the unconditional bundled-strict Clifford+T headline: error AND poly-log length at the same compile level. ⚠️ The theorem D4 also named; D8 develops it as its own §2, D4 mentions it in a module list",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FKLW.GenericSUd.exp_matrixMercatorLog",
+      "claims": "ABSTRACT + §3.1 — the Banach-algebra matrix logarithm with a NAMED convergence radius, and its exp round trip. This is what removes the existential obstruction blocking the SU(d) lift, and the paper's strongest Mathlib-upstream candidate",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FKLW.GenericSUd.solovayKitaev_dawson_nielsen_quantitative_generic_sud_strict_constructive_tight",
+      "claims": "ABSTRACT HEADLINE + §3 — quantitative Solovay-Kitaev at ARBITRARY dimension SU(d): the paper's first-of-its-kind claim",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FKLW.TrappedIonSU4.trappedIonSU4_solovayKitaev_headline_unconditional",
+      "claims": "§4 — the trapped-ion Molmer-Sorensen instantiation at SU(4), density via the Brylinski-Brylinski entangling criterion",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FKLW.CliffordCCZSU8.cliffordCCZSU8_solovayKitaev_headline_unconditional",
+      "claims": "§5 Route A — Clifford+CCZ at SU(8), density from the {H,T,CNOT} sub-alphabet. ⚠️ The draft flags honestly that CCZ is NOT load-bearing in this route",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FKLW.CliffordCCZSU8.cliffordCCZLiteral_dense",
+      "claims": "§5 Route B — T-FREE density from the seed CCZ*(H⊗H⊗H), whose trace 1/sqrt2 is not an algebraic integer, spread across su(8) by Clifford-conjugation irreducibility over the 63 non-identity Pauli lines",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FKLW.GenericSUd.cliffordCCZLiteral_solovayKitaev_headline_unconditional",
+      "claims": "§5 Route B — the bundled-strict headline on the T-free literal alphabet",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FKLW.MukhopadhyayCCZ.cliffordOnly_not_dense",
+      "claims": "ABSTRACT + §5/§6 — the CONVERSE: the Clifford group alone generates a finite subgroup of SU(8), so CCZ is the unique resource that makes the difference. This is what makes Route B's mechanism a result rather than an alternative proof",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FKLW.MukhopadhyayCCZ.channelSde2_le_toffoliCost",
+      "claims": "ABSTRACT + §6 — the UNCONDITIONAL Toffoli-count lower bound via the signed-parity-invariant sde2 measure on the channel representation. The earlier form was parametric; the hypotheses are discharged here",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FKLW.MukhopadhyayCCZ.channelRep_interp_isRat",
+      "claims": "§6 — rationality of the channel-representation entries (Mukhopadhyay Lemma 3.10). ⚠️ The draft states plainly that the stronger dyadic Z[1/2] form FOLLOWS from Theorem 3.8 rather than being proved here",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FKLW.GenericSU2.cliffordTCompile_eq_recursion",
+      "claims": "§7 — termination / finite depth: the compiler equals the structural DN recursion at explicit finite depth",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FKLW.GenericSU2.cliffordTCompile_recursion_base",
+      "claims": "§7 — loop initialization at depth 0",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FKLW.GenericSU2.cliffordTCompile_loop_invariant",
+      "claims": "§7 — the loop invariant: every refinement step preserves and tightens the contract, unconditionally",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FKLW.GenericSU2.cliffordTCompile_correct",
+      "claims": "ABSTRACT + §7 — the correct-by-construction compiler contract: error, recursion-level length, AND explicit output-word length, as a theorem about the ALGORITHM rather than a per-output certificate",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FKLW.GenericSU2.cliffordTCompile_correct_example",
+      "claims": "§7 — a worked instantiation witnessing the contract is non-vacuous at a concrete operating point",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.RossSelinger.rossSelinger_log_length_explicit",
+      "claims": "§8 — the Ross-Selinger efficiency layer: O(log 1/eps) with exponent 1, explicit in the grid precision",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.RossSelinger.gridFindT_isSome_of_residual",
+      "claims": "§8 — the conditionality made precise: grid-finder success is IMPLIED by a single number-theoretic existence (Ross Problem 3.2.4)",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.RossSelinger.rossSelinger_synth_of_residual",
+      "claims": "§8 — and that hypothesis alone delivers the full O(log 1/eps) synthesis. ⚠️ The draft states the gap is carried as an EXPLICIT HYPOTHESIS, never an axiom, and documents it as open in the literature",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.RossSelinger.zsqrt2_isSquare_of_unit_pos_pos",
+      "claims": "§9.1 — Ross-Selinger Appendix C Lemma C.2: doubly-positive units of Z[sqrt2] are squares",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.RossSelinger.relNorm_iff_doublyPositive_decomposable",
+      "claims": "§9.1 — Lemma C.16, the solvability criterion as a biconditional",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.RossSelinger.daggerDecomposable_mul_iff",
+      "claims": "§9.1 — Lemma C.19, multiplicativity across coprime factors",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.RossSelinger.not_daggerDecomposable_of_norm_pow_seven",
+      "claims": "§9.1 — the mod-8 obstruction at primes over p = 7 mod 8",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.RossSelinger.daggerDecomposable_of_prime_dvd_normSq",
+      "claims": "§9.1 — the Lemma C.20 engine with its constructive prime-case instances",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.RossSelinger.daggerDecomposable_pow_iff_seven",
+      "claims": "§9.1 — Lemma C.21, the even-power criterion as a biconditional",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.RossSelinger.GridProblem.oneDim_grid_exists_product",
+      "claims": "§9.1 — Lemma 4.4 SHARPENED to its product form, which is what the asymmetric two-disk analysis actually consumes",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.RossSelinger.Gate3.kmm_universal_headline",
+      "claims": "ABSTRACT + §9.2 — the Kliuchnikov-Maslov-Mosca ancilla route: O(log 1/eps) at exponent 1 UNCONDITIONALLY, via Lagrange four squares, with the explicit word bound 50400k + 812. The third mechanism, and the one with no number-theoretic hypothesis",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.RossSelinger.KMM.kSO3_reconstruct_le_three",
+      "claims": "§9.3 — a parity/ramification calculus replacing a native_decide box sweep",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.RossSelinger.KMM.someKills_of_orthogonal",
+      "claims": "§9.3 — a Giles-Selinger parity argument replacing the orthogonal-triple sweep, and STRENGTHENING the statement by dropping a hypothesis",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.diamondDist_unitaryKraus_le",
+      "claims": "ABSTRACT + §10 — the Aharonov-Kitaev-Nisan operator-norm-to-diamond conversion for unitary channels",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.KroneckerOpNorm.l2_opNorm_kronecker_one_le",
+      "claims": "§10 — the Kronecker-with-identity operator-norm bound; a named Mathlib-upstream candidate",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.MatrixNormBridge.l2_opNorm_le_sqrt_card_mul_of_rowSum_le",
+      "claims": "§10 — the row-sum-to-L2 operator-norm bridge supplying the sqrt2 dimension constant",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.traceNorm_eq_physlib",
+      "claims": "§10 — the single norm identification transferring the trace-norm Holder toolbox from the community quantum-information library",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.diamondDist_unitary_smul_phase",
+      "claims": "§10 — a known caveat shipped AS A THEOREM rather than as prose: U and e^{i theta}U generate the same channel (diamond distance zero) while their operator-norm distance is positive, so the bound is not sharp under global phase",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FKLW.GenericSU2.diamondDist_cliffordTCompile_le",
+      "claims": "ABSTRACT + §10 — the capstone: compiling to accuracy eps bounds the compiled word's PHYSICAL CHANNEL within diamond distance sqrt2*eps, with no unverified step between algorithm and channel",
+      "declared": "2026-08-07"
+    }
+  ],
   "tier": 1,
   "title": "Kernel-Verified Universal Quantum Gate Compilation — Alphabet-Agnostic Solovay-Kitaev across Dimensions",
   "target_journal": "PRX Quantum | Quantum",
   "phase7_subphase": "6xz",
   "stage9_status": "pending",
   "stage10_status": "pending",
-  "stage13_status": "green",
-  "stage13_redo_required": false,
+  "stage13_status": "pending",
+  "stage13_redo_required": true,
   "last_stage13_review": "2026-06-10T19:30:00Z",
   "stage13_review_doc": "docs/audits/stage13_attribution_sweep_2026-06-10.md#d8",
   "stage13_round1_doc": "papers/AutomatedReviews/2026-05-31-bundle-stage13/D8.md",
   "stage13_round1_findings": "0 BLOCKER, 2 REQUIRED (prior-art positioning vs VOQC/survey; first-claim ledger), 4 RECOMMENDED; all REQUIRED remediated, re-run GREEN",
-  "freshness_stale": false,
+  "freshness_stale": true,
   "source_manifest_last_regen": "2026-06-10T20:22:22Z",
   "last_lift": "2026-06-10T20:22:22Z",
   "last_stage10_review": "2026-05-31T14:55:00Z",
@@ -55,8 +232,17 @@
   "notes": "fresh-authored as a synthesis-driven new composition (no per-paper-draft sources to lift; sourceless per PAPER_DRAFT_MAPPING.md, D.4 path). Substrate is the FKLW/* + Mukhopadhyay/* + SolovayKitaev* Lean module families. Late absorption 2026-06-10 (D.4 x4): Phase 6AM-W5 / 6AN-W5 / 6AO T1-T3 / 6AP-W3+W3b verified-synthesis layer (FKLW/RossSelinger/*, FKLW/CliffordTCompiler, FKLW/CompiledGateDiamond, QuantumNetwork/{KroneckerOpNorm,UnitaryDiamond,MatrixNormBridge}); stage13_redo_required=true pending the queued Stage-F reviewer triple. | 2026-06-10 attribution-content sweep (docs/audits/stage13_attribution_sweep_2026-06-10.md): GREEN. 10 anchors: 3 SUPPORTED / 7 CAVEAT(abstract-only cache) / 0 NOT-SUPPORTED. AKN Lemma 12.6 diamond bound, KMM Lagrange-4-square, GilesSelinger column lemma all full-text verified; RS deep lemmas via verbatim DR.",
   "open_findings": 14,
   "blocked_p1_gates": [
+    "LeanProofSubstance",
     "NarrativeGrounding"
   ],
   "readiness": "YELLOW",
-  "readiness_last_computed": "2026-07-31"
+  "readiness_last_computed": "2026-08-08",
+  "length_target": {
+    "unit": "pages",
+    "floor": 27,
+    "ceiling": 68,
+    "source": "PAPER_STRATEGY.md §6"
+  },
+  "compiled_pages": 9,
+  "compile_gate_ok": true
 }

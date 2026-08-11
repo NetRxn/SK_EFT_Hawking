@@ -8,6 +8,7 @@
 \usepackage{braket}
 
 \input{../../docs/counts.tex}
+\input{../../docs/figuredeferred.tex}
 
 %% Bundle: D1 (tier 1, target PRD long article)
 %% Source manifest: papers/D1/source_manifest.md
@@ -16,6 +17,8 @@
 %% Sources: paper1+paper2+paper4+paper12+paper16_graphene_sk_eft
 %% E1 PRL (polariton) and E2 PRL (graphene) extracted Tier-4 letters
 %% already shipped GREEN (Phase 7b sub-wave 7b.4, commit ea1d944)
+
+\input{bundle_counts}
 
 \begin{document}
 
@@ -55,8 +58,8 @@ orders of magnitude in Hawking temperature
 $T_H \sim \SI{85}{\milli\kelvin}$ for the LKB polariton smooth-horizon
 baseline, $T_H \approx \SI{2.4}{\kelvin}$ for the Dean bilayer
 graphene nozzle), yet share a large fraction of the Lean theorem
-infrastructure (106 of 114 1+1D theorems --- approximately
-$93\%$ --- apply unchanged to graphene's 2+1D Dirac-fluid setup
+infrastructure (106 of 114 1+1D theorems, approximately
+$93\%$, apply unchanged to graphene's 2+1D Dirac-fluid setup
 with $c_s \to v_F/\sqrt{2}$; the $106/114$ partition is a
 deterministic script output over \texttt{lean/SKEFTHawking/},
 \texttt{scripts/count\_theorem\_reuse.py}). The
@@ -65,9 +68,11 @@ BEC the dissipative correction $\delta_\text{diss}$ exceeds the
 dispersive $\delta_\text{disp}$ by a factor $\sim 22$; at the LKB
 polariton smooth-horizon configuration $\delta_\text{disp}$ is
 $\approx -19\%$ and comparable to $\delta_\text{diss} \approx 14\%$,
-with dispersive leading; at the Dean graphene nozzle
-$\delta_\text{disp} \approx -2.8\%$ exceeds
-$\delta_\text{diss} \sim 10^{-13}$ by eleven orders of magnitude.
+with dispersive leading; at the Dean graphene nozzle the two are
+again comparable but with the ordering reversed,
+$\delta_\text{diss} \approx +6.5\%$ against
+$\delta_\text{disp} \approx -2.8\%$, so the corrections partially
+cancel and $T_\text{eff}$ sits \emph{above} $T_H$.
 Each platform yields a distinct leading detection mode: BEC delivers
 the FDR noise floor and (at Heidelberg) the spectral-floor
 crossover; polariton delivers stimulated-Hawking gain
@@ -84,17 +89,16 @@ The quantum-critical transport coefficients
 ($\sigma_Q \approx 4e^2/h$, $L/L_0 > 200$) are adopted from
 Majumdar et al.'s monolayer-graphene Dirac-fluid characterization
 as a cross-device modeling assumption for the bilayer nozzle
-regime. End-to-end, \substantivetheorems{}~Lean theorems are
-machine-verified
+regime. End-to-end, \bundleTheorems{}~Lean theorems in this
+bundle's verified chain are machine-verified
 (\texttt{lake build} clean, zero \texttt{sorry},
 \aristotleproved{}~closed by the Aristotle automated prover). The substrate's first-order KMS structure
 is encoded as the \texttt{FirstOrderKMS} Prop record (with fields
 \texttt{fdr\_i1}, \texttt{fdr\_i2}, \texttt{i3\_zero} in
 \texttt{SKDoubling.lean}); the original Prop was reformulated after
 Aristotle's counterexample $c = (0,0,0,0,0,0,0,1,0)$ exposed that
-the prior formulation constrained only four of nine field components
---- a
-methodological showcase of the value of formal verification for
+the prior formulation constrained only four of nine field components:
+a methodological showcase of the value of formal verification for
 EFT axiom design. Companion experimental letters E1 (Paris-LKB
 polariton) and E2 (Dean-Kim-Lucas graphene) carry the
 experimental-team-targeted implementations.
@@ -142,7 +146,7 @@ framework~\cite{CGL2017a,GloriosoLiu2018,Crossley2017II,Jana2020} for the
 three platforms and machine-check its predictions in Lean~4. The
 universality claim becomes the statement that 106 of 114 BEC 1+1D
 Lean theorems apply unchanged to the graphene 2+1D Dirac-fluid
-setup with $c_s \to v_F/\sqrt{2}$ --- a $93\%$ reuse fraction,
+setup with $c_s \to v_F/\sqrt{2}$, a $93\%$ reuse fraction,
 determined deterministically by
 \texttt{scripts/count\_theorem\_reuse.py}. The
 $7\%$ that does not reuse (8 theorems) comprises the explicit
@@ -285,6 +289,8 @@ they form the backbone of the cross-platform reuse claim of
 \S\ref{sec:graphene}.
 
 %% ══════════════════════════════════════════════════════════════════
+
+\figuredeferred{fig:d1-first-order-spectrum}{the BEC reference spectrum against the exact WKB result; the WKB pipeline emits the arrays but no figure function in \texttt{visualizations.py} pairs them}
 \section{Second-order SK-EFT: counting, KMS optimality, and parity}
 \label{sec:bec-second}
 
@@ -301,7 +307,7 @@ parity asymmetry) or $\mathrm{count}(3) = 3$, etc. The proof, by
 explicit bijection to a parity-graded monomial set, is closed by
 the Aristotle automated prover (run \texttt{d61290fd}); the
 small-$N$ cases $N = 1, 2, 3$ are independently closed by
-\texttt{native\_decide} in
+\texttt{decide} (kernel-checked, not compiled-evaluated) in
 \texttt{SecondOrderSK.firstOrder\_count},
 \texttt{secondOrder\_count},
 \texttt{secondOrder\_count\_with\_parity},
@@ -347,8 +353,8 @@ K_N(\omega, \mathbf{k})
 \end{equation}
 which connects the algebraic SK axioms to the dynamical-KMS
 microscopic principle of Crossley-Glorioso-Liu. The chain of
-implications --- algebraic KMS $\Rightarrow$ Einstein relation
-$\Rightarrow$ CGL FDR $\Rightarrow$ second-order KMS --- is closed
+implications (algebraic KMS $\Rightarrow$ Einstein relation
+$\Rightarrow$ CGL FDR $\Rightarrow$ second-order KMS) is closed
 in \texttt{CGLTransform.einstein\_relation},
 \texttt{cgl\_fdr\_general}, and
 \texttt{cgl\_implies\_secondOrderKMS}. The CGL FDR is what makes
@@ -362,7 +368,7 @@ correction $\delta^{(2)}(\omega)$ vanishes identically on the
 acoustic shell ($\omega^2 = c_s^2 k^2$). It becomes nonzero only
 through Bogoliubov off-shell dispersion at order
 $\xi^2 k^2 / (c_s\, k_\text{UV})^2$. For all current BEC platforms,
-$\delta^{(2)}$ is at most $10^{-8}$--$10^{-12}$ --- below detection
+$\delta^{(2)}$ is at most $10^{-8}$--$10^{-12}$, below detection
 thresholds. This is captured in the second-order formal-claim
 infrastructure of \texttt{SecondOrderSK}.
 
@@ -402,7 +408,7 @@ Standing-wave matching across the complex turning point gives
 The recovery of standard unitarity in the $\Gamma_H \to 0$ limit is
 captured by \texttt{WKBConnection.standard\_unitarity\_recovered}.
 
-\subsection{Non-perturbative effect 1 --- modified unitarity}
+\subsection{Non-perturbative effect 1: modified unitarity}
 
 Generalised across the dissipative SK contour, the standard
 relation $|\alpha|^2 - |\beta|^2 = 1$ is replaced by
@@ -421,7 +427,7 @@ $\Gamma_H \to 0$ recovery in
 final state of the analog Hawking process is not a pure quantum
 state; environmental coupling forces a finite mixed-state weight.
 
-\subsection{Non-perturbative effect 2 --- FDR-mandated noise floor}
+\subsection{Non-perturbative effect 2: FDR-mandated noise floor}
 
 Even with $|\beta|^2 = 0$ (no Hawking radiation), the FDR
 \eqref{eq:cgl-fdr} forces a residual
@@ -435,7 +441,7 @@ the FDR cannot be turned off without violating algebraic axioms of
 the SK-EFT. The noise floor is observable as a flat baseline to
 which the Hawking spectrum sits as a Planckian increment.
 
-\subsection{Non-perturbative effect 3 --- spectral floor}
+\subsection{Non-perturbative effect 3: spectral floor}
 
 Combining \eqref{eq:modified-unitarity} and \eqref{eq:noise-floor}
 gives the total occupation number
@@ -453,7 +459,7 @@ matching the abstract expression (using
 $\delta_\text{diss} = \Gamma_H/\kappa = \delta_k/2$).
 For Heidelberg-class BEC ($\delta_\text{diss} \approx 1.59\times10^{-3}$;
 Tab.~\ref{tab:hierarchy}), $\omega_\times \approx T_H \ln(2/1.59\times10^{-3})
-\approx 7.14\, T_H$ --- well below the dispersive UV cutoff
+\approx 7.14\, T_H$, well below the dispersive UV cutoff
 ($\omega_\text{max} \approx 121\, T_H$). The
 high-frequency spectrum becomes power-law ($\omega^{-1}$ correction)
 rather than exponentially suppressed. The predicted regime is one
@@ -471,7 +477,7 @@ magnitude smaller than at Heidelberg.)
 
 \subsection{Heidelberg as the unique BEC target}
 
-Among the three BEC platforms, Heidelberg is uniquely favourable ---
+Among the three BEC platforms, Heidelberg is uniquely favourable:
 not because it is the only one whose spectral floor lies below the
 dispersive UV cutoff (all three crossovers, $\omega_\times \approx
 7$--$12\, T_H$, sit well below the cutoff $\omega_\text{max} \approx
@@ -480,8 +486,8 @@ dissipation dominates dispersion ($\delta_\text{diss}$ exceeds
 $|\delta_\text{disp}|$ by a factor $\sim 22$; Tab.~\ref{tab:hierarchy}).
 Its crossover $\omega_\times \approx 7.1\, T_H$ is the lowest of the
 three and its FDR floor $\delta_\text{diss}/2 \approx 8\times10^{-4}$ is
-the largest --- roughly $70\times$ the Steinhauer floor and $110\times$
-the Trento floor --- so the spectral floor is reached earliest along the
+the largest (roughly $70\times$ the Steinhauer floor and $110\times$
+the Trento floor), so the spectral floor is reached earliest along the
 thermal tail and appears as the largest fractional deviation. Steinhauer
 and Trento reach their floors only near $\omega_\times \approx
 11$--$12\, T_H$, where the corresponding floors
@@ -505,6 +511,8 @@ among the three benchmarks, and hence the most informative BEC target
 for the spectral-floor prediction.
 
 %% ══════════════════════════════════════════════════════════════════
+
+\figuredeferred{fig:d1-three-nonperturbative}{the three non-perturbative effects on one axis; the Stokes-structure data is produced inside the notebook and is not exported to a stored artifact}
 \section{Hierarchy of corrections by platform}
 \label{sec:hierarchy}
 
@@ -541,7 +549,7 @@ $^{39}$K BEC (Heidelberg, projected) & $\sim 1$\,nK & $-7.32\times10^{-5}$ & $1.
 spin-sonic BEC (Trento)    & $\sim 1$\,nK & $-9.89\times10^{-5}$ & $1.41\times10^{-5}$ & disp \\
 LKB polariton (smooth)     & $\sim 85$\,mK & $-19\%$ & $14\%$ & disp/comp \\
 LKB polariton (steep)      & $\sim 134$\,mK & $-46\%$ & $\sim 10\%$ & \textbf{disp} (LO only) \\
-graphene (Dean)            & $\sim 2.4$\,K & $-2.8\%$ & $\sim 10^{-13}$ & \textbf{disp} \\
+graphene (Dean)            & $\sim 2.4$\,K & $-2.8\%$ & $+6.5\%$ & \textbf{diss} \\
 \bottomrule
 \end{tabular}
 \end{table*}
@@ -559,6 +567,8 @@ $\kappa$-scaling relative to $\delta_\text{disp}$, accessible at
 Heidelberg through Feshbach-tuned scattering-length sweeps.
 
 %% ══════════════════════════════════════════════════════════════════
+
+\figuredeferred{fig:d1-correction-hierarchy}{$\delta_{\rm disp}$ against $\delta_{\rm diss}$ per platform, which is Table~I as a figure; blocked on the same $\Gamma_H$ repair that moved the graphene row}
 \section{Polariton platform: stimulated Hawking and reservoir
 correction}
 \label{sec:polariton}
@@ -618,8 +628,8 @@ in $\Gamma$), and \texttt{attenuation\_eq\_one\_at\_zero\_decay}
 
 The shot-count comparison is striking: a single CW measurement
 with $N_\text{probe} = 100$ probe photons per mode gives
-$\mathrm{SNR} \approx 11$ at $G(0.1\kappa) \approx 1.14$ ---
-factor $10^3$--$10^6$ improvement over spontaneous-correlation
+$\mathrm{SNR} \approx 11$ at $G(0.1\kappa) \approx 1.14$,
+a factor of $10^3$--$10^6$ improvement over spontaneous-correlation
 detection, which requires $\sim 10^9$ repetitions to resolve
 correlations at the $5 \times 10^{-5}$
 level~\cite{Grisins2016,Jacquet2022}.
@@ -721,15 +731,36 @@ establishing that the cleanest detection band sits below the first
 transverse-mode resonance and therefore preserves the quasi-1D
 reduction.
 
-\subsection{Hierarchy: dispersive dominates by 11 orders}
+\subsection{Hierarchy: the two corrections are comparable and cancel}
 
 At the Dean nozzle parameters ($D = 0.23$),
-$\delta_\text{disp} \approx -2.8\%$ and $\delta_\text{diss}
-\sim 10^{-13}$. The dispersive correction dominates the
-dissipative by eleven orders of magnitude. For graphene, the
-SK-EFT framework value is therefore not the dissipative shift
-itself but the systematic organisation of the dispersive prediction
-plus the closed-form noise spectrum below.
+$\delta_\text{disp} \approx -2.8\%$ and $\delta_\text{diss} \approx
++6.5\%$. The dissipative correction is the larger of the two and
+carries the opposite sign, so they partially cancel and the net shift
+is $\approx +3.7\%$: upward, not downward. The dissipative value
+follows from the Dirac fluid's momentum-diffusion constant
+$\nu = \eta v_F^2/w = 2(\eta/sT)c_s^2$; writing $\eta/(sT)$ in place
+of $\nu$ omits a velocity$^2$ and understates $\delta_\text{diss}$ by
+eleven orders of magnitude.
+
+The two equalities each carry a hypothesis worth stating, because each
+fails on a platform this program also considers. The first is
+relativistic-hydrodynamic: the momentum density is $w/v_F^2$ rather
+than a mass density, which is what puts the $v_F^2$ there at all. The
+second, $\eta v_F^2/w = 2(\eta/sT)c_s^2$, holds for a conformal fluid,
+where $c_s = v_F/\sqrt{2}$; we write $\nu$ in the \emph{measured}
+$c_s$ because $v_F$ is a band parameter defined only for the
+monolayer. Bilayer graphene has quadratic band touching and therefore
+no emergent light cone, so the conformal equality is exactly the
+hypothesis that fails there. The sound-attenuation coefficient carries
+$[2(d{-}1)/d]\,\eta + \zeta$, which in $d = 2$ is exactly $1\cdot\eta$
+with $\zeta = 0$ by conformal symmetry, so no $O(1)$ ambiguity
+survives; the familiar $4/3$ is the $d = 3$ value. Bilayer
+non-conformality restores a small $\zeta$, raising $\nu$ by at most
+the estimated $\zeta/\eta \lesssim 0.1$. Graphene is thus the platform where the
+SK-EFT's dissipative channel is a percent-level measurable, not a
+formal refinement, and the one where reporting either correction
+without the other misstates even the sign of the result.
 
 \subsection{Closed-form noise spectrum: independent FDT and
 Landauer-Büttiker derivations}
@@ -749,6 +780,78 @@ agreement at the Lean level. The greybody factor
 $\Gamma_0 = 4 c_R v / (c_R + v)^2 \approx 0.99994$ at the Dean
 nozzle parameters~\cite{AndersonBFP2013}.
 
+\subsection{Independent cross-checks: Kibble--Zurek--Unruh scaling and the simulability demarcation}
+
+An independent classical-simulation cross-check of the universal
+critical-scaling physics underlying this prediction is provided by
+the Kibble-Zurek-Unruh correspondence: the same surface gravity
+$\kappa$ that fixes $T_H = \hbar\kappa/(2\pi k_B)$ also fixes the
+KZM quench rate $1/\tau_Q = \kappa$ at the analog horizon (Lean
+module \texttt{KibbleZurekUnruh.lean}, foundation theorem
+\texttt{surface\_gravity\_bounds\_kzm\_exponent}). The
+Tindall--Mello--Fishman--Stoudenmire--Sels classical tensor-network
+simulation of disordered TFIM
+spin-glasses~\cite{TindallMelloFishmanStoudenmireSels2026Science392}
+extracts the universal KZM scaling exponent $\mu = \nu z / (1+\nu z)$
+on 2D square, 3D cubic, and 3D diamond lattices at 300+ qubits,
+matching the D-Wave Advantage2 quantum annealer via belief-propagation
+contraction. The same $\mu$ governs the analog-Hawking
+thermal-occupation spectrum that the bilayer-nozzle measurement
+proposed here probes; a measured $\Delta S_I(\omega)$ profile
+inconsistent with both the SK-EFT prediction and the KZM scaling
+extracted from independent classical simulation would constitute a
+falsification of the universal critical-scaling backbone shared by
+both formalisms.
+
+The Phase 6w combined demarcation theorem
+(\texttt{analog\_hawking\_fourCycleFree\_demarcation}, Lean
+module \texttt{AnalogHawkingDemarcation.lean}) further localizes the
+classically-simulable regime for the bilayer-graphene Dirac fluid:
+the SK-EFT-predicted Hawking spectrum at the Dean nozzle's parameters
+passes the BP-on-PEPS simulability screen iff (i) the Dirac-fluid
+factor graph is BP-LDP-favorable (four-cycle-free topology, the
+combinatorial screen implied by tree-like structure, + non-negative
+factor weights) AND (ii) the second Chebyshev expansion coefficient $c_1$
+of the categorical marker vanishes.
+
+\emph{Scope: $c_1$ is not the topological Chern coefficient of the graphene moir\'e
+band-structure: \texttt{ChernBridge.lean:68} defines
+\texttt{categoricalChernExpansion c0 c1 := [c0, c1]}, a two-term Chebyshev expansion, and
+no graphene and no moir\'e superlattice appear anywhere in that module. The module does,
+however, invoke a Brillouin-zone reading: \texttt{ChernBridge.lean:14} frames the
+crystalline limit as a Brillouin-zone Chern number reducing to a sum. $c_1$ is therefore a
+Chebyshev coefficient, and the module makes no graphene or moir\'e claim while still invoking
+that Brillouin-zone reading. Naming $c_1$ as a graphene Chern coefficient would also
+contradict D11's own novelty carve-out, which states that this group's
+\texttt{ChernBridge} marker is a different object from a Bloch-band invariant.} The Aalto Chebyshev-TN
+methodology~\cite{TindallMelloFishmanStoudenmireSels2026Science392}
+applies to both crystalline and aperiodic-lattice configurations
+(formalized at the Lean level in
+\texttt{AperiodicLattice.lean} and \texttt{ChernBridge.lean}),
+extending the classical-simulability cross-check to moir\'e-graphene
+super-moir\'e systems that the Dean device can in principle access via
+controlled twist-angle tuning.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig105_graphene_snr_frequency.png}
+\caption{Per-bin Hawking-to-thermal noise ratio
+$S_{\rm Hawking}(\omega) / S_{\rm thermal}$ versus frequency at the
+Dean bilayer-nozzle parameters ($\sigma_Q \approx 4 e^2/h$,
+$T_{\rm e} = \SI{150}{\kelvin}$). The peak ratio is
+$\sim 8 \times 10^{-3}$ at $\omega \approx \omega_H$, reflecting
+the two-orders-of-magnitude separation between the Planckian
+Hawking signal and the white Johnson-Nyquist background. Shape-
+aware correlation analysis recovers the bandwidth-cumulative SNR by
+exploiting this Planckian-vs-white distinction; cumulative SNR
+reaches unity in $\sim 1$ minute of integration across the
+$[0, 4\omega_H]$ band, formally guaranteed to satisfy the quasi-1D
+parametric-safety condition (lowest transverse channel above
+$4\omega_H$, verified in
+\texttt{DiracFluidWKB.dean\_lowest\_channel\_above\_four\_omega\_H}).}
+\label{fig:snr}
+\end{figure}
+
 \subsection{Wiedemann-Franz cross-check}
 
 The Lorenz number $L_0 = \pi^2 k_B^2 / 3 e^2$ is the standard
@@ -758,7 +861,7 @@ ratio by a factor $> 200$ in ultra-clean monolayer graphene at the
 Dirac point. As in the companion letter E2, we adopt these
 quantum-critical transport coefficients
 ($\sigma_Q \approx 4e^2/h$, $L/L_0 > 200$) for the Dean-equivalent
-bilayer-Dirac-fluid regime --- a modeling assumption, since the
+bilayer-Dirac-fluid regime, a modeling assumption, since the
 Dean nozzle device (Ref.~\cite{Geurs2025}, bilayer) is plausibly
 within the same quantum-critical universality class but is not
 itself the device measured in
@@ -769,7 +872,7 @@ that gives~\eqref{eq:graphene-noise}. This is captured in
 \texttt{GrapheneNoiseFormula.snr\_independent\_of\_sigma\_Q} (the
 Lorenz-cancellation theorem). The Wiedemann-Franz violation is
 therefore a published, calibrated cross-check of the SK-EFT noise
-prediction --- if the framework gives the correct $L/L_0 > 200$
+prediction: if the framework gives the correct $L/L_0 > 200$
 scaling, it gives the correct Hawking noise.
 
 \subsection{Detection feasibility}
@@ -783,6 +886,8 @@ principal device-specific uncertainty is the greybody factor
 $\Gamma(\omega)$ near the lowest transverse channel.
 
 %% ══════════════════════════════════════════════════════════════════
+
+\figuredeferred{fig:d1-graphene-reuse}{the module-level reuse fraction behind the $93\%$ claim; the per-module reuse attribution is computed ad hoc in the claim audit and has no stored derivation}
 \section{Synthesis and outlook}
 \label{sec:synthesis}
 
@@ -847,8 +952,8 @@ quantum-advantage demarcation criterion: an analog Hawking system on
 a factor graph $G$ with factor weights $f_a$ and categorical-Chern data
 $(c_0, c_1)$ passes the BP-on-PEPS classical-simulability screen if
 and only if (i) the LDP rate function of the loop-correction terms
-vanishes (equivalently, the factor graph is four-cycle-free --- the
-combinatorial screen implied by tree-like topology --- and the
+vanishes (equivalently, the factor graph is four-cycle-free, i.e.\
+satisfies the combinatorial screen implied by tree-like topology, and the
 factor weights are non-negative) AND (ii) the topological coefficient
 $c_1$ vanishes. Lean module
 \texttt{AnalogHawkingDemarcation.lean} (Wave 6w.6, headline
@@ -862,7 +967,7 @@ fixed point in diameter-many sweeps) is
 \texttt{analog\_hawking\_tree\_simulable\_demarcation}. The
 contrapositive
 (\texttt{not\_fourCycleFreeNonneg\_or\_nonzero\_c1\_implies\_not\_simulable})
-gives the screen-failure regime explicitly --- four-cycle-bearing
+gives the screen-failure regime explicitly: four-cycle-bearing
 topology or negative factor weights, OR non-trivial
 Chern coefficient. Tindall-Sels-Aalto thus jointly bracket the
 classical-simulability boundary for the analog-Hawking platforms
@@ -937,9 +1042,11 @@ the project's staged validation pipeline. A subset of the underlying
 library's theorems was closed by the Aristotle automated theorem
 prover (Harmonic); every proof is ultimately certified by the Lean~4
 kernel via \texttt{lake build} on the public repository, independently
-of any AI tool. Manuscript prose was AI-assisted and human-reviewed;
-all numerical claims trace to the repository's computation pipeline
-through its automated validation checks.
+of any AI tool. Manuscript prose was AI-assisted and human-reviewed.
+The repository's public validation suite reports, for every
+draft, any numerical value written inline in prose rather than
+sourced from a generated table; that report is the authority on
+this manuscript's numerical provenance.
 
 \begin{thebibliography}{99}
 
@@ -1156,12 +1263,12 @@ J.~Roehm, ``Detecting Analog Hawking Radiation in the
 Bilayer-Graphene Dirac Fluid'', PRL/PRR letter (2026).
 
 \bibitem{Roehm2026F}
-J.~Roehm, ``Fluid-Based Approaches to Fundamental Physics --- A
+J.~Roehm, ``Fluid-Based Approaches to Fundamental Physics: A
 Formally Verified Survey'', RMP/Phys.~Rep.~flagship review (2026).
 
 \bibitem{Roehm2026I1}
-J.~Roehm, ``Formal Verification at Scale in Theoretical Physics
---- A Methodology with Worked Cases'', CPC methodology paper (2026).
+J.~Roehm, ``Formal Verification at Scale in Theoretical Physics:
+A Methodology with Worked Cases'', CPC methodology paper (2026).
 
 \bibitem{Roehm2026I2}
 J.~Roehm, ``Verified Statistical Estimators and the

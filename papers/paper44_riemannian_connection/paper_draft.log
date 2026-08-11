@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.22)  30 APR 2026 11:13
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.22)  9 AUG 2026 11:54
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1072,7 +1072,7 @@ msy/m/n/10 ^^@\OT1/cmr/m/n/10 [\OML/cmm/m/it/10 Z; X\OT1/cmr/m/n/10 ]][] =
 
 
 Underfull \hbox (badness 4752) in paragraph at lines 785--800
-\OT1/cmr/m/n/10 (which Math-lib also lacks at \OT1/cmtt/m/n/10 8850ed93\OT1/cmr
+\OT1/cmr/m/n/10 (which Math-lib also lacks at \OT1/cmtt/m/n/10 81a5d257\OT1/cmr
 /m/n/10 ). The
  []
 
@@ -1779,55 +1779,28 @@ Underfull \hbox (badness 4353) in paragraph at lines 1249--1257
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1259--1271
-[]\OT1/cmr/m/n/10 After the cuts the li-brary ships \OT1/cmr/bx/n/10 forty-four
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 1259--1271
-\OT1/cmr/bx/n/10 sub-stan-tive the-o-rems across seven mod-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 1259--1271
-\OT1/cmr/bx/n/10 ules\OT1/cmr/m/n/10 , zero \OT1/cmtt/m/n/10 sorry\OT1/cmr/m/n/
-10 , zero new project ax-ioms;
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 1259--1271
-\OT1/cmr/m/n/10 the sub-stan-tive dec-la-ra-tion count in-cludes
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 1259--1271
-[]$ \OT1/cmr/m/n/10 / $[]$
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 1275--1288
+Underfull \hbox (badness 10000) in paragraph at lines 1277--1290
 []\OT1/cmr/m/n/10 The nat-u-ral upstream-port tar-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1275--1288
+Underfull \hbox (badness 10000) in paragraph at lines 1277--1290
 \OT1/cmr/m/n/10 get is a \OT1/cmtt/m/n/10 Curvature.lean \OT1/cmr/m/n/10 file u
 n-der
  []
 
 
-Overfull \hbox (58.49734pt too wide) in paragraph at lines 1275--1288
+Overfull \hbox (58.49734pt too wide) in paragraph at lines 1277--1290
 \OT1/cmtt/m/n/10 Mathlib.Geometry.Manifold.VectorBundle.CovariantDerivative
  []
 
 
-Underfull \hbox (badness 1681) in paragraph at lines 1275--1288
+Underfull \hbox (badness 1681) in paragraph at lines 1277--1290
 \OT1/cmr/m/n/10 that de-fines the Rie-mann cur-va-ture on a bun-dled
  []
 
 
-Underfull \hbox (badness 2653) in paragraph at lines 1275--1288
+Underfull \hbox (badness 2653) in paragraph at lines 1277--1290
 \OT1/cmr/m/n/10 func-tion $\OML/cmm/m/it/10 R\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 
 X; Y\OT1/cmr/m/n/10 )\OML/cmm/m/it/10 Z \OT1/cmr/m/n/10 := \OMS/cmsy/m/n/10 r[]
 \OT1/cmr/m/n/10 (\OMS/cmsy/m/n/10 r[]\OML/cmm/m/it/10 Z\OT1/cmr/m/n/10 ) \OMS/c
@@ -1836,222 +1809,222 @@ mr/m/n/10 ) \OMS/cmsy/m/n/10 ^^@
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1275--1288
+Underfull \hbox (badness 10000) in paragraph at lines 1277--1290
 \OMS/cmsy/m/n/10 r[]\OML/cmm/m/it/10 Z$\OT1/cmr/m/n/10 , proves antisymmetry-in
 -$(\OML/cmm/m/it/10 X; Y\OT1/cmr/m/n/10 )$ via the
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1275--1288
+Underfull \hbox (badness 10000) in paragraph at lines 1277--1290
 \OT1/cmtt/m/n/10 TensorialAt.mkHom$[]$ \OT1/cmr/m/n/10 ma-chin-ery al-ready use
 d in
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1275--1288
+Underfull \hbox (badness 10000) in paragraph at lines 1277--1290
 \OT1/cmtt/m/n/10 IsCovariantDerivativeOn.torsion\OT1/cmr/m/n/10 , then de-rives
 
  []
 
 
-Underfull \hbox (badness 2846) in paragraph at lines 1275--1288
+Underfull \hbox (badness 2846) in paragraph at lines 1277--1290
 \OT1/cmr/m/n/10 Levi-Civita unique-ness via the Koszul-bilinear-form
  []
 
 [11]
-Underfull \hbox (badness 10000) in paragraph at lines 1289--1293
+Underfull \hbox (badness 10000) in paragraph at lines 1291--1295
 []\OT1/cmr/m/n/10 A par-al-lel \OT1/cmtt/m/n/10 Lorentzian.lean \OT1/cmr/m/n/10
  sib-ling of
  []
 
 
-Underfull \hbox (badness 6893) in paragraph at lines 1289--1293
+Underfull \hbox (badness 6893) in paragraph at lines 1291--1295
 \OT1/cmtt/m/n/10 Mathlib.Topology.VectorBundle.Riemannian \OT1/cmr/m/n/10 would
 
  []
 
 
-Underfull \hbox (badness 1173) in paragraph at lines 1295--1302
+Underfull \hbox (badness 1173) in paragraph at lines 1297--1304
 []\OT1/cmr/m/n/10 We are un-aware of a Levi-Civita Christof-fel for-
  []
 
 
-Underfull \hbox (badness 2846) in paragraph at lines 1295--1302
+Underfull \hbox (badness 2846) in paragraph at lines 1297--1304
 \OT1/cmr/m/n/10 mal-iza-tion in any proof as-sis-tant. HOL Light's
  []
 
 
-Underfull \hbox (badness 1127) in paragraph at lines 1304--1340
+Underfull \hbox (badness 1127) in paragraph at lines 1306--1342
 \OT1/cmr/m/n/10 all ship the con-tent re-ported in this pa-per. Ses-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1304--1340
+Underfull \hbox (badness 10000) in paragraph at lines 1306--1342
 \OT1/cmr/m/n/10 sion 2 adds \OT1/cmtt/m/n/10 RiemannDifferentialBianchi.lean
  []
 
 
-Underfull \hbox (badness 8170) in paragraph at lines 1304--1340
+Underfull \hbox (badness 8170) in paragraph at lines 1306--1342
 \OT1/cmr/m/n/10 with $\OML/cmm/m/it/10 @[]\OT1/cmr/m/n/10 ^^@$ + Schwarz sym-me
 -try + the linear-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1304--1340
+Underfull \hbox (badness 10000) in paragraph at lines 1306--1342
 \OT1/cmr/m/n/10 piece dif-fer-en-tial sec-ond Bianchi iden-tity
  []
 
 
-Underfull \hbox (badness 1314) in paragraph at lines 1304--1340
+Underfull \hbox (badness 1314) in paragraph at lines 1306--1342
 \OT1/cmr/m/n/10 bun-dle scope: the bare-function \OT1/cmtt/m/n/10 bundleRiemann
 Aux
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1304--1340
+Underfull \hbox (badness 10000) in paragraph at lines 1306--1342
 \OT1/cmr/m/n/10 con-sum-ing Bonn \OT1/cmtt/m/n/10 IsCovariantDerivativeOn \OT1/
 cmr/m/n/10 and
  []
 
 
-Underfull \hbox (badness 1365) in paragraph at lines 1304--1340
+Underfull \hbox (badness 1365) in paragraph at lines 1306--1342
 \OT1/cmtt/m/n/10 VectorField.mlieBracket \OT1/cmr/m/n/10 (an-ti-sym-met-ric in 
 $(\OML/cmm/m/it/10 X; Y\OT1/cmr/m/n/10 )$
  []
 
 
-Underfull \hbox (badness 3849) in paragraph at lines 1304--1340
+Underfull \hbox (badness 3849) in paragraph at lines 1306--1342
 \OT1/cmr/m/n/10 from $[]$ an-ti-sym-me-try, van-ish-ing on the
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1304--1340
+Underfull \hbox (badness 10000) in paragraph at lines 1306--1342
 \OT1/cmr/m/n/10 vector-fields spe-cial-i-sa-tion and the section/X-slot
  []
 
 
-Underfull \hbox (badness 1755) in paragraph at lines 1304--1340
+Underfull \hbox (badness 1755) in paragraph at lines 1306--1342
 []$\OT1/cmr/m/n/10 , the ab-stract bundle-level first Bianchi
  []
 
 
-Underfull \hbox (badness 1137) in paragraph at lines 1304--1340
+Underfull \hbox (badness 1137) in paragraph at lines 1306--1342
 \OT1/cmr/m/n/10 for $\OML/cmm/m/it/10 V \OT1/cmr/m/n/10 := [] \OML/cmm/m/it/10 
 I$ \OT1/cmr/m/n/10 (a $\OMS/cmsy/m/n/10 ^^X$\OT1/cmr/m/n/10 50-line proof close
 d
  []
 
 
-Underfull \hbox (badness 1281) in paragraph at lines 1304--1340
+Underfull \hbox (badness 1281) in paragraph at lines 1306--1342
 \OT1/cmr/m/n/10 via $[] ([] := [])$), and the
  []
 
 
-Underfull \hbox (badness 3601) in paragraph at lines 1304--1340
+Underfull \hbox (badness 3601) in paragraph at lines 1306--1342
 \OT1/cmr/m/n/10 sum-ing $[]$ di-rectly through
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1304--1340
+Underfull \hbox (badness 10000) in paragraph at lines 1306--1342
 \OT1/cmr/m/n/10 ker-nel ($[]$),
  []
 
 
-Underfull \hbox (badness 2961) in paragraph at lines 1304--1340
+Underfull \hbox (badness 2961) in paragraph at lines 1306--1342
 \OT1/cmr/m/n/10 the sub-stan-tive 4-conjunct $[]$ pred-i-cate
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1304--1340
+Underfull \hbox (badness 10000) in paragraph at lines 1306--1342
 \OT1/cmr/m/n/10 us-ing Math-lib's $[]$, the wave-headline
  []
 
 
-Underfull \hbox (badness 3769) in paragraph at lines 1304--1340
+Underfull \hbox (badness 3769) in paragraph at lines 1306--1342
 []$ \OT1/cmr/m/n/10 deriva-tion closed
  []
 
 
-Underfull \hbox (badness 3579) in paragraph at lines 1341--1361
+Underfull \hbox (badness 3579) in paragraph at lines 1343--1363
 []\OT1/cmr/bx/n/10 Session 4c (de-ferred). \OT1/cmr/m/n/10 A Mathlib-PR-track
  []
 
 
-Underfull \hbox (badness 1242) in paragraph at lines 1341--1361
+Underfull \hbox (badness 1242) in paragraph at lines 1343--1363
 \OT1/cmr/m/n/10 follow-on builds $[][]$ (from ex-ist-ing
  []
 
 
-Underfull \hbox (badness 1389) in paragraph at lines 1341--1361
+Underfull \hbox (badness 1389) in paragraph at lines 1343--1363
 \OT1/cmr/m/n/10 a three-line Ja-cobi con-se-quence, and spe-cialises on
  []
 
 
-Underfull \hbox (badness 2103) in paragraph at lines 1341--1361
+Underfull \hbox (badness 2103) in paragraph at lines 1343--1363
 [] \U/msb/m/n/10 R \OT1/cmr/m/n/10 ([] 4)$ to de-liver the coordinate-
  []
 
 
-Underfull \hbox (badness 2626) in paragraph at lines 1341--1361
+Underfull \hbox (badness 2626) in paragraph at lines 1343--1363
 \OMS/cmsy/m/n/10 r[]\OML/cmm/m/it/10 G[] \OT1/cmr/m/n/10 = 0$ dis-charge for $[
 ]$.
  []
 
 
-Underfull \hbox (badness 4699) in paragraph at lines 1341--1361
+Underfull \hbox (badness 4699) in paragraph at lines 1343--1363
 \OT1/cmr/m/n/10 Ses-sion 4c is not block-ing the SK-EFT physics
  []
 
 
-Underfull \hbox (badness 1107) in paragraph at lines 1341--1361
+Underfull \hbox (badness 1107) in paragraph at lines 1343--1363
 \OT1/cmr/m/n/10 pipeline (the Ses-sion 4b $[]$-
  []
 
 
-Underfull \hbox (badness 2980) in paragraph at lines 1341--1361
+Underfull \hbox (badness 2980) in paragraph at lines 1343--1363
 \OT1/cmr/m/n/10 Bonn's API at con-sumer sites); it is parked as
  []
 
 
-Underfull \hbox (badness 1762) in paragraph at lines 1341--1361
+Underfull \hbox (badness 1762) in paragraph at lines 1343--1363
 \OT1/cmr/m/n/10 Mathlib-PR-track in-fras-truc-ture. Fol-low-ing Ses-sion
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1341--1361
+Underfull \hbox (badness 10000) in paragraph at lines 1343--1363
 \OT1/cmtt/m/n/10 phase6f1[]curvature[]architecture[]decision.md
  []
 
 
-Underfull \hbox (badness 2158) in paragraph at lines 1370--1377
+Underfull \hbox (badness 2158) in paragraph at lines 1372--1379
 \OT1/cmr/m/n/10 preemptive-strengthening dis-ci-pline for catch-ing the
  []
 
 LaTeX Font Info:    Trying to load font information for OMS+cmtt on input line 
-1385.
-LaTeX Font Info:    No file OMScmtt.fd. on input line 1385.
+1387.
+LaTeX Font Info:    No file OMScmtt.fd. on input line 1387.
 
 LaTeX Font Warning: Font shape `OMS/cmtt/m/n' undefined
 (Font)              using `OMS/cmsy/m/n' instead
-(Font)              for symbol `textbraceleft' on input line 1385.
+(Font)              for symbol `textbraceleft' on input line 1387.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1382--1386
+Underfull \hbox (badness 10000) in paragraph at lines 1384--1388
  []\OT1/cmr/m/n/9 P. Mas-sot, M. Roth-gang, H. Mac-beth.
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1382--1386
+Underfull \hbox (badness 10000) in paragraph at lines 1384--1388
  \OT1/cmr/m/n/9 Math-lib4 co-vari-ant deriva-tives li-brary.
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1382--1386
- \OT1/cmr/m/it/9 Math-lib4 com-mit 8850ed93\OT1/cmr/m/n/9 , April 2026.
+Underfull \hbox (badness 10000) in paragraph at lines 1384--1388
+ \OT1/cmr/m/it/9 Math-lib4 com-mit 81a5d257\OT1/cmr/m/n/9 , April 2026.
  []
 
 
-Overfull \hbox (124.4042pt too wide) in paragraph at lines 1382--1386
+Overfull \hbox (124.4042pt too wide) in paragraph at lines 1384--1388
  \OT1/cmtt/m/n/9 Mathlib.Geometry.Manifold.VectorBundle.CovariantDerivative.\OM
 S/cmtt/m/n/9 f\OT1/cmtt/m/n/9 Basic,Torsion\OMS/cmtt/m/n/9 g\OT1/cmr/m/n/9 . 
  []
@@ -2064,40 +2037,40 @@ Overfull \vbox (5.1023pt too high) has occurred while \output is active []
 
 
 [12]
-Underfull \hbox (badness 1337) in paragraph at lines 1388--1393
+Underfull \hbox (badness 1337) in paragraph at lines 1390--1395
  []\OT1/cmr/m/n/9 S. Gou^^?ezel.  Rie-man-nian vec-tor bun-dles in Math-
  []
 
 
-Underfull \hbox (badness 5970) in paragraph at lines 1388--1393
- \OT1/cmr/m/n/9 lib4.  \OT1/cmr/m/it/9 Math-lib4 com-mit 8850ed93\OT1/cmr/m/n/9
+Underfull \hbox (badness 5578) in paragraph at lines 1390--1395
+ \OT1/cmr/m/n/9 lib4.  \OT1/cmr/m/it/9 Math-lib4 com-mit 81a5d257\OT1/cmr/m/n/9
  , March 2026.
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1388--1393
+Underfull \hbox (badness 10000) in paragraph at lines 1390--1395
  \OT1/cmtt/m/n/9 Mathlib.Topology.VectorBundle.Riemannian\OT1/cmr/m/n/9 ;
  []
 
 
-Overfull \hbox (6.48053pt too wide) in paragraph at lines 1388--1393
+Overfull \hbox (6.48053pt too wide) in paragraph at lines 1390--1395
  \OT1/cmtt/m/n/9 Mathlib.Geometry.Manifold.VectorBundle.Riemannian\OT1/cmr/m/n/
 9 . 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1440--1447
+Underfull \hbox (badness 10000) in paragraph at lines 1442--1449
  \OT1/cmtt/m/n/9 Mathlib.Geometry.Manifold.VectorField.LieBracket
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1440--1447
+Underfull \hbox (badness 10000) in paragraph at lines 1442--1449
  \OT1/cmr/m/n/9 (\OT1/cmtt/m/n/9 mlieBracket\OT1/cmr/m/n/9 , \OT1/cmtt/m/n/9 ml
 ieBracket[]self\OT1/cmr/m/n/9 ,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1440--1447
+Underfull \hbox (badness 10000) in paragraph at lines 1442--1449
  \OT1/cmtt/m/n/9 mlieBracket[]swap[]apply\OT1/cmr/m/n/9 , \OT1/cmtt/m/n/9 mlieB
 racket[]zero[]left\OT1/cmr/m/n/9 ,
  []
@@ -2115,23 +2088,14 @@ LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
 LaTeX Warning: There were undefined references.
 
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
-
-Package rerunfilecheck Warning: File `paper_draft.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `paper_draft.out':
-(rerunfilecheck)             Before: A1EA95506FF2533BE6DF71EBB5412559;13117
-(rerunfilecheck)             After:  F43A17179AC7A448626B24D379D61023;13575.
+Package rerunfilecheck Info: File `paper_draft.out' has not changed.
+(rerunfilecheck)             Checksum: F43A17179AC7A448626B24D379D61023;13575.
  ) 
 Here is how much of TeX's memory you used:
- 12533 strings out of 467525
- 185558 string characters out of 5418982
- 635432 words of memory out of 5000000
- 41190 multiletter control sequences out of 15000+600000
+ 12565 strings out of 467525
+ 186090 string characters out of 5418982
+ 635607 words of memory out of 5000000
+ 41222 multiletter control sequences out of 15000+600000
  637660 words of font info for 79 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  75i,9n,79p,887b,592s stack positions out of 10000i,1000n,20000p,200000b,200000s
@@ -2161,10 +2125,10 @@ t/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2026/texmf
 ist/fonts/type1/public/cm-super/sfbx1000.pfb></usr/local/texlive/2026/texmf-dis
 t/fonts/type1/public/cm-super/sfrm0900.pfb></usr/local/texlive/2026/texmf-dist/
 fonts/type1/public/cm-super/sfrm1000.pfb>
-Output written on paper_draft.pdf (13 pages, 410505 bytes).
+Output written on paper_draft.pdf (13 pages, 410558 bytes).
 PDF statistics:
- 498 PDF objects out of 1000 (max. 8388607)
- 425 compressed objects within 5 object streams
+ 501 PDF objects out of 1000 (max. 8388607)
+ 428 compressed objects within 5 object streams
  107 named destinations out of 1000 (max. 500000)
- 377 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 385 words of extra memory for PDF output out of 10000 (max. 10000000)
 

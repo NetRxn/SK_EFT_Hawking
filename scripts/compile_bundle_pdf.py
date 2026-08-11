@@ -25,18 +25,28 @@ Usage
     uv run python scripts/compile_bundle_pdf.py --all
     uv run python scripts/compile_bundle_pdf.py D12 --keep-artifacts   # debugging
 
+A draft whose PDF is already newer than every file feeding it is SKIPPED; pass
+`--force` to recompile regardless. Without the skip this script recompiled all 64
+drafts on every run, so every run dirtied ~45 tracked PDFs whether or not anything
+had changed.
+
 Exit code is non-zero if any bundle fails the gate (TeX error, unresolved reference
 in the RENDERED pdf, or a missing PDF).
 """
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import shutil
 import subprocess
 import sys
 import tempfile
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import validate_helpers as _H  # noqa: E402
+from bundle_json import write_bundle_json  # noqa: E402
 
 REPO = Path(__file__).resolve().parent.parent
 PAPERS = REPO / "papers"
@@ -50,30 +60,218 @@ def _bundle_dirs(names: list[str] | None) -> list[Path]:
                   if d.is_dir() and (d / "paper_draft.tex").is_file())
 
 
-def compile_one(bundle_dir: Path, keep: bool = False) -> tuple[bool, str]:
-    """Compile one bundle. Returns (passed, one-line report)."""
+#: Last compile verdict per draft, for EVERY `papers/<dir>` — the 21 bundles and the 43
+#: legacy drafts alike. Gitignored, like the sibling `.latex_compile_cache.json`: it is
+#: a local build cache, and a verdict from another machine's TeX install is not evidence
+#: about this one.
+GATE_CACHE = "papers/.compile_gate_cache.json"
+
+
+def _gate_cache() -> dict:
+    try:
+        loaded = json.loads((REPO / GATE_CACHE).read_text())
+        return loaded if isinstance(loaded, dict) else {}
+    except (OSError, json.JSONDecodeError):
+        return {}          # unreadable cache recompiles everything — fail-safe
+
+
+def _record_gate(name: str, ok: bool, pages: int | None) -> None:
+    cache = _gate_cache()
+    cache[name] = {"ok": ok, "pages": pages}
+    try:
+        (REPO / GATE_CACHE).write_text(json.dumps(cache, indent=2, sort_keys=True) + "\n")
+    except OSError:
+        pass               # a cache that cannot be written is a slow run, not a failure
+
+
+def _unresolved_markers(txt: str) -> int:
+    """Count what a READER would see as an unresolved pointer in the rendered PDF.
+
+    Two distinct markers, and counting only the first was a live hole:
+
+      * ``??``  — LaTeX's unresolved \\ref.
+      * ``[?]`` — apsrev4-2's unresolved \\cite. Renders as ``[? ? ?]`` for a
+        multi-citation.
+
+    ⚠️ **This gate counted only ``??`` until 2026-08-08, and D8 passed it while
+    shipping 26 citations rendered as ``[?]`` and NO bibliography section at all** —
+    its text reads *"...poly-logarithmically in 1/ε [? ? ? ]"*. The root cause was
+    that no compile path ran ``bibtex``, so a draft using ``\\bibliography{...}``
+    never got a ``.bbl``; that is fixed in :func:`compile_one`. This function is the
+    detection half, and it is separate on purpose: the pipeline can regress again,
+    and a gate that cannot see a broken citation is worse than a missing one.
+
+    A bare ``?`` is deliberately NOT matched — it is ordinary punctuation.
+    """
+    return len(re.findall(r"\?\?", txt)) + len(re.findall(r"\[\s*\?[\s?]*\]", txt))
+
+
+def _reproducible_env(tex: Path) -> dict:
+    """pdflatex environment that makes the output byte-reproducible.
+
+    Unpatched, `pdflatex` stamps the wall clock into `/CreationDate` and `/ModDate`, so
+    recompiling an UNCHANGED draft rewrites the PDF. Measured on D3: two back-to-back
+    `--force` compiles of identical sources differ in exactly **58 bytes**, all of them
+    those two dates. That is the whole reason a full run dirtied dozens of tracked PDFs
+    with nothing to show for it.
+
+    `SOURCE_DATE_EPOCH` + `FORCE_SOURCE_DATE=1` make pdftex use a supplied timestamp
+    instead. It is taken from the **newest file in the draft's own input closure**, not
+    from a constant: the stamped date then still means something — it is the date of the
+    most recent edit to this document — while being identical across any number of
+    recompiles of the same content, which is exactly the churn condition.
+
+    This is what takes the churn to zero for the drafts that CANNOT be skipped. A failing
+    draft must recompile every run (skipping asserts the gate passed), so the only way it
+    stops dirtying the tree is for the recompile to be reproducible.
+    """
+    import os
+    env = dict(os.environ)
+    try:
+        epoch = int(max(p.stat().st_mtime
+                        for p in _H.draft_input_closure(tex) if p.is_file()))
+    except (OSError, ValueError):
+        epoch = int(tex.stat().st_mtime) if tex.is_file() else 0
+    env["SOURCE_DATE_EPOCH"] = str(epoch)
+    env["FORCE_SOURCE_DATE"] = "1"
+    return env
+
+
+def _pdf_pages(pdf: Path) -> int | None:
+    """Page count of an existing PDF, or `None` if it cannot be read."""
+    if not shutil.which("pdfinfo") or not pdf.is_file():
+        return None
+    try:
+        info = subprocess.run(["pdfinfo", str(pdf)], capture_output=True,
+                              text=True, timeout=60).stdout
+    except (subprocess.SubprocessError, OSError):
+        return None
+    m = re.search(r"Pages:\s+(\d+)", info)
+    return int(m.group(1)) if m else None
+
+
+def _up_to_date(bundle_dir: Path, tex: Path) -> tuple[bool, int | None]:
+    """`(skip?, page count)` — may this draft's compile be skipped?
+
+    Two conditions, and the second is the one that matters:
+
+    1. the on-disk PDF is newer than every file in
+       `validate_helpers.draft_input_closure(tex)` — the single definition of "which
+       files change this draft", shared with `paper_latex_compiles`'s per-draft hash and
+       `bundle_manuscript_length`'s staleness test; **and**
+    2. **the last recorded verdict for this draft was a PASS** (`GATE_CACHE`).
+
+    ⚠️ **Condition 2 exists because skipping asserts the gate passed.** Without it, a
+    draft that genuinely FAILS the gate — D3 has 3 unresolved references in the rendered
+    PDF — would be reported `SKIPPED` and counted as passing on every run after the
+    first, because its PDF is perfectly fresh. A freshness heuristic that converts a
+    standing FAIL into a PASS is a gate that stops firing, which is the defect class this
+    repository keeps rediscovering (`viz_consistency` returning unconditional `True`;
+    Stage 9's "ALL figures PASS" over an empty set). A failing draft therefore recompiles
+    every run and keeps saying so.
+
+    ⚠️ **mtime, not content hash.** `touch`ing a source recompiles needlessly; that is
+    the cheap failure. The expensive one — a source edited without its mtime moving —
+    cannot happen through an editor. `--force` is the escape hatch for every case this
+    heuristic gets wrong, and is what to reach for when in any doubt.
+
+    The verdict lives in one sidecar covering **all 64 drafts**, not in
+    `bundle_metadata.json`, which only the 21 bundles have. Keying the skip off the
+    metadata blob meant the 43 legacy drafts could never record a verdict and so
+    recompiled forever — and since pdflatex stamps a creation date into the PDF, every
+    recompile rewrites the bytes. That is the churn this skip exists to stop, and
+    two-thirds of it sat outside the store.
+
+    Errs toward RECOMPILING everywhere else too: an unreadable closure, a missing PDF, or
+    no recorded verdict all return `False`.
+    """
+    pdf = bundle_dir / "paper_draft.pdf"
+    if not pdf.is_file():
+        return False, None
+    if _gate_cache().get(bundle_dir.name, {}).get("ok") is not True:
+        return False, None   # no recorded PASS -> no basis to skip
+    try:
+        newest = max(p.stat().st_mtime
+                     for p in _H.draft_input_closure(tex) if p.is_file())
+    except (OSError, ValueError):
+        return False, None
+    if pdf.stat().st_mtime < newest:
+        return False, None
+    return True, _pdf_pages(pdf)
+
+
+def compile_one(bundle_dir: Path, keep: bool = False,
+                force: bool = False) -> tuple[bool, str, int | None]:
+    """Compile one bundle. Returns (passed, one-line report, page count or None).
+
+    ⚠️ The page count used to be computed here and thrown away — it reached the
+    human-readable string at the end of this function and nothing else, so
+    `ManuscriptLength` had no instrument despite one existing (audit 2026-08-01
+    §5.2: *"The instrument exists and is deliberately unwired."*). It is now
+    returned, and `main()` persists it to `bundle_metadata.json.compiled_pages`
+    so the heatmap can render a size without recompiling 21 drafts.
+
+    Returned rather than written here, because a function that both compiles and
+    mutates tracked metadata cannot be called from a read-only context — the same
+    split `check_bundle_source_freshness` had to make after it wrote its own
+    verdict into the file its readers trust.
+    """
     tex = bundle_dir / "paper_draft.tex"
     if not tex.is_file():
-        return False, f"{bundle_dir.name}: no paper_draft.tex"
+        return False, f"{bundle_dir.name}: no paper_draft.tex", None
 
     pdflatex = shutil.which("pdflatex")
     if pdflatex is None:
-        return True, f"{bundle_dir.name}: SKIPPED (pdflatex not on PATH)"
+        return True, f"{bundle_dir.name}: SKIPPED (pdflatex not on PATH)", None
+
+    if not force:
+        fresh, pages = _up_to_date(bundle_dir, tex)
+        if fresh:
+            return True, (f"{bundle_dir.name}: SKIPPED (up to date) "
+                          f"pages={pages if pages is not None else '?'}"), pages
 
     out = Path(tempfile.mkdtemp(prefix=f"skeft-{bundle_dir.name}-"))
     try:
-        for _ in range(PASSES):
+        env = _reproducible_env(tex)
+        # A draft using `\bibliography{...}` needs bibtex between passes, or every
+        # citation renders as `[?]` and NO reference list is produced at all.
+        # ⚠️ Nothing ran bibtex before 2026-08-08, so D8 shipped 26 `[?]` citations and
+        # no bibliography while this gate reported OK — see `_unresolved_markers`.
+        needs_bibtex = bool(re.search(r"\\bibliography\{", tex.read_text(errors="replace")))
+        for i in range(PASSES):
             subprocess.run(
                 [pdflatex, "-interaction=nonstopmode", "-no-shell-escape",
-                 f"-output-directory={out}", tex.name],
+                 f"-output-directory={out}", "-jobname=paper_draft",
+                 # `\pdftrailerid{}` zeroes the PDF `/ID`, which pdfTeX derives
+                 # independently of SOURCE_DATE_EPOCH. Without it the two dates are
+                 # pinned and the trailer ID still moves, so an unchanged draft still
+                 # rewrites 56 bytes on every recompile. Passed on the command line so
+                 # no draft has to carry it. `-jobname` keeps the output named
+                 # `paper_draft.pdf` despite the argument no longer being a filename.
+                 rf"\pdftrailerid{{}}\input{{{tex.name}}}"],
                 cwd=bundle_dir,          # so \includegraphics{figures/…} resolves
+                env=env,
                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
                 timeout=300, check=False)
+            if needs_bibtex and i == 0 and shutil.which("bibtex"):
+                # After pass 1 the .aux holds the \citation records bibtex needs; the
+                # remaining passes then resolve the numbers it writes into the .bbl.
+                #
+                # ⚠️ BIBINPUTS is REQUIRED, not optional. bibtex must run with cwd=out
+                # (that is where the .aux is), but the .bib files live beside the draft,
+                # so without this it silently finds no database and every citation stays
+                # `[?]` — the same end state as not running bibtex at all, which is how
+                # this was first mis-diagnosed as "bibtex does not help".
+                bibenv = dict(env)
+                bibenv["BIBINPUTS"] = f"{bundle_dir}:{bibenv.get('BIBINPUTS', '')}"
+                subprocess.run(["bibtex", "paper_draft"], cwd=out, env=bibenv,
+                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                               timeout=120, check=False)
 
         log = out / "paper_draft.log"
         pdf = out / "paper_draft.pdf"
         if not pdf.is_file():
-            return False, f"{bundle_dir.name}: NO PDF PRODUCED"
+            return False, f"{bundle_dir.name}: NO PDF PRODUCED", None
 
         log_text = log.read_text(encoding="utf-8", errors="replace") if log.is_file() else ""
         errors = re.findall(r"^! .*$", log_text, re.M)
@@ -100,15 +298,15 @@ def compile_one(bundle_dir: Path, keep: bool = False) -> tuple[bool, str]:
         if shutil.which("pdftotext"):
             txt = subprocess.run(["pdftotext", str(pdf), "-"],
                                  capture_output=True, text=True, timeout=120).stdout
-            unresolved = txt.count("??")
+            unresolved = _unresolved_markers(txt)
 
-        pages = "?"
+        pages: str | int = "?"
         if shutil.which("pdfinfo"):
             info = subprocess.run(["pdfinfo", str(pdf)],
                                   capture_output=True, text=True, timeout=60).stdout
             m = re.search(r"Pages:\s+(\d+)", info)
             if m:
-                pages = m.group(1)
+                pages = int(m.group(1))
 
         shutil.copy2(pdf, bundle_dir / "paper_draft.pdf")
 
@@ -128,10 +326,43 @@ def compile_one(bundle_dir: Path, keep: bool = False) -> tuple[bool, str]:
             detail += f"\n    first error: {errors[0][:160]}"
         if keep:
             detail += f"\n    artifacts kept: {out}"
-        return ok, detail
+        return ok, detail, (pages if isinstance(pages, int) else None)
     finally:
         if not keep:
             shutil.rmtree(out, ignore_errors=True)
+
+
+def _persist_pages(bundle_dir: Path, pages: int | None, ok: bool | None = None) -> None:
+    """Record `compiled_pages` in the bundle's metadata — CLI-only, by design.
+
+    `bundle_manuscript_length` does NOT read this field; it measures the PDF
+    itself, because a stored number cannot be distinguished from a stale one.
+    This exists so the heatmap and dashboard can render a size without
+    recompiling 21 drafts.
+
+    `None` (no pdfinfo, or no PDF) CLEARS the field rather than leaving the
+    previous value: a compile that could not be measured must not leave a number
+    behind that reads as this compile's.
+    """
+    meta = bundle_dir / "bundle_metadata.json"
+    if not meta.is_file():
+        return
+    try:
+        md = json.loads(meta.read_text())
+    except (OSError, json.JSONDecodeError):
+        return
+    if md.get("compiled_pages") == pages and md.get("compile_gate_ok") == ok:
+        return
+    md["compiled_pages"] = pages
+    # The gate verdict, so `_up_to_date` can refuse to skip a draft that last FAILED.
+    # A skip asserts the gate passed; without a recorded pass there is no basis for it.
+    if ok is not None:
+        md["compile_gate_ok"] = ok
+    # ⚠️ `ensure_ascii=False` is REQUIRED, not cosmetic. These blobs carry `§` and `—`
+    # in their apex `claims` strings; the default re-encodes every one as `\uXXXX`,
+    # which rewrites ~450 lines of a file this function means to touch by one field.
+    # Four writers disagree on this today (TODO-D25) — match the on-disk form.
+    write_bundle_json(meta, md)
 
 
 def main() -> int:
@@ -141,18 +372,34 @@ def main() -> int:
     ap.add_argument("--all", action="store_true", help="every bundle with a paper_draft.tex")
     ap.add_argument("--keep-artifacts", action="store_true",
                     help="keep the temp build dir and print its path")
+    ap.add_argument("--force", action="store_true",
+                    help="recompile even when the PDF is newer than every input "
+                         "(bypasses the mtime skip; use whenever in doubt)")
     args = ap.parse_args()
 
     if not args.bundles and not args.all:
         ap.error("name at least one bundle, or pass --all")
 
+    def skipped(rep: str) -> bool:
+        return 'SKIPPED' in rep
+
     dirs = _bundle_dirs(None if args.all else args.bundles)
     failed = 0
     for d in dirs:
-        ok, report = compile_one(d, keep=args.keep_artifacts)
+        ok, report, pages = compile_one(d, keep=args.keep_artifacts, force=args.force)
         print(report)
         if not ok:
             failed += 1
+        # ⚠️ BOTH writers are guarded by `skipped(report)`. `_persist_pages` was
+        # called unconditionally while only `_record_gate` was guarded — so on a
+        # box with no `pdflatex`, `compile_one` returns ok=True with a SKIPPED
+        # report and this wrote `compile_gate_ok: true` (and cleared
+        # `compiled_pages`) into EVERY tracked bundle_metadata.json without
+        # compiling anything. A skip is not a pass; it is the absence of a
+        # measurement, and it must not be recorded as a verdict.
+        if not skipped(report):
+            _persist_pages(d, pages, ok)
+            _record_gate(d.name, ok, pages)
     print(f"\n{len(dirs) - failed}/{len(dirs)} bundle(s) passed the compile gate")
     return 1 if failed else 0
 

@@ -323,7 +323,7 @@ def load_env_index() -> dict[str, dict[str, dict]]:
         data = json.load(f)
     index: dict[str, dict[str, dict]] = {}
     for d in data:
-        if d.get("kind") == "theorem":
+        if d.get("kind") == "theorem":  # census-exempt: reuse-scan
             index.setdefault(d["module"], {})[d["name"]] = d
     return index
 

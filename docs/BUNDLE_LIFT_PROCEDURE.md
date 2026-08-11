@@ -6,7 +6,7 @@ Canonical 14-step workflow for lifting per-paper draft content into a publicatio
 
 **Stages 9, 10, 13 are three distinct reviewer-agent invocations.** Each writes to its own output location; findings consolidate via the supersession ledger. Do not conflate them.
 
-**Reviewer-stage ordering is a hard gate.** Stage 13 (adversarial review) may not be invoked until **both** Stage 9 (figure review) AND Stage 10 (claims review) are GREEN, with all fixes from those stages applied. Stages 9 and 10 may run in parallel against the same bundle if the bundle has no figure-prose dependencies; otherwise sequence them. Across *different* bundles, all three stages may run in parallel — multi-bundle parallelism is encouraged when the work is independent.
+**Reviewer-stage ordering is a hard gate, and as of ADR-011 Phase 2 it is enforced.** Stage 13 (adversarial review) may not be invoked until **both** Stage 9 (figure review) AND Stage 10 (claims review) are GREEN, with all fixes from those stages applied. Verdicts are recorded with `scripts/record_review.py`, which refuses a Stage-13 green while either prerequisite is unfinished; `validate.py --check bundle_reviewer_stage_ordering` catches a hand edit that bypasses it. Stages 9 and 10 may run in parallel against the same bundle if the bundle has no figure-prose dependencies; otherwise sequence them. Across *different* bundles, all three stages may run in parallel — multi-bundle parallelism is encouraged when the work is independent.
 
 ---
 
@@ -20,6 +20,28 @@ Canonical 14-step workflow for lifting per-paper draft content into a publicatio
 ---
 
 ## Procedure
+
+### §0. Charter — the size the container commits to (ADR-011 Phase 1)
+
+**Before any lift**, the bundle declares what it is for and how big it may be. Phase 1 of
+ADR-011 lands the size half; the section-architecture and figure-plan halves land in Phase 4
+and this section grows to meet them.
+
+Today that means `bundle_metadata.json` carries:
+
+- `target_journal` — the named venue (already present for every bundle, set at init from
+  `PAPER_STRATEGY.md`);
+- `length_target` — `{unit, floor, ceiling, source}`, per `docs/BUNDLE_DIRECTORY_SCHEMA.md`.
+  `unit` is `pages` for an article and `word_equivalents` for a letter, because PRL counts a
+  300-word allowance per figure and a page count is simply the wrong instrument for it.
+
+**Why this is §0 and not a later step.** The audit that produced it
+(`docs/audits/2026-08-01-publication-readiness/`) found the procedure had **no step that owns
+the document** — every one of §§1–14 operates at metadata, sentence, claim or artifact level.
+A size commitment made after the prose exists is a description, not a budget.
+
+⚠️ **A missing target is not permission.** `length_target: null` reports **UNMEASURED**, never
+PASS. Deleting the field cannot make `bundle_manuscript_length` green.
 
 ### §1. Pre-lift checks
 
@@ -50,7 +72,7 @@ Schema: `docs/BUNDLE_DIRECTORY_SCHEMA.md`.
 
 ### §3. Initial lift / append (per source paper, OR sourceless synthesis)
 
-> **Framing (load-bearing).** Bundles are *synthesis-driven new compositions*, not stitched-together copies of source per-paper drafts. The per-paper material is **substrate** — raw research content the bundle draws from — but the bundle's narrative arc, section structure, and prose are **authored fresh** with cross-program synthesis as the goal. The `bundle_append.py` script registers a source as contributing to the bundle and inserts a structural anchor (a section heading + TODO comment) so the bookkeeping (`source_manifest.md`, `append_log.json`) stays accurate; it does NOT copy source prose. Section bodies are authored in §7 below.
+> **Framing (load-bearing).** Bundles are *synthesis-driven new compositions*, not stitched-together copies of source per-paper drafts. The per-paper material is **substrate** — raw research content the bundle draws from — but the bundle's narrative arc, section structure, and prose are **authored fresh** with cross-program synthesis as the goal. The `bundle_append.py` script registers a source as contributing to the bundle and inserts a structural anchor (a heading + TODO comment) so the bookkeeping (`source_manifest.md`, `append_log.json`) stays accurate; it does NOT copy source prose. That anchor is a `\subsection` **inside a section the bundle already argues** — registering a source does not buy a top-level section (F-02, below). Section bodies are authored in §7 below.
 
 **Two paths:**
 
@@ -63,12 +85,35 @@ uv run python scripts/bundle_append.py \
     --bundle <X> \
     --source-paper <paperN_topic> \
     --insertion-point '<§N>' \
+    --target-section '<exact title of an EXISTING top-level section>' \
     --notes "<short rationale>" \
-    --lean-modules "<comma-separated Lean module names if applicable>" \
-    [--initial-lift]
+    --lean-modules "<comma-separated Lean module names if applicable>"
 ```
 
-The first invocation per bundle uses `--initial-lift` to create the `paper_draft.tex` skeleton. Subsequent calls register additional sources without copying their content.
+The first invocation per bundle uses `--initial-lift` instead of `--target-section`, to create the `paper_draft.tex` skeleton. Subsequent calls register additional sources without copying their content.
+
+> **A source registration does not create a section (ADR-011 F-02).** Measured across
+> all bundles' `append_log.json` before this rule existed: **74 of 74 content lifts
+> created a top-level `\section`**, 28 of them into D3 — which is how D3 reached 31
+> top-level sections. A lift now names the existing section it belongs under and lands
+> as a `\subsection` inside it. `--target-section` is matched against the draft's own
+> top-level sections (exact, then case-insensitive, then unique substring); an absent
+> or ambiguous name exits nonzero and prints the draft's section list.
+>
+> Creating a new top-level section is a change to the bundle's argument structure, not
+> a side-effect of registration, so it is explicit and justified:
+>
+> ```bash
+> uv run python scripts/bundle_append.py --bundle <X> --source-paper <paperN_topic> \
+>     --insertion-point '<§N>' --new-section \
+>     --section-rationale "<why no existing section argues this>"
+> ```
+>
+> The rationale is written into the draft, `change_log.md` and `append_log.json`.
+> `--initial-lift` implies this path: a bundle with no draft has no section plan to
+> append into. ⚠️ The skeleton insertion itself is **not** optional — `append_log.json`'s
+> `bundle_section_inserted` is the anchor the absorption protocol reads, and an append
+> that inserted nothing would make that field meaningless.
 
 #### §3b. Sourceless bundle (fresh synthesis from Lean substrate; e.g. I2)
 
@@ -143,7 +188,32 @@ Manual / scripted task (no script wraps this yet — defer to ad-hoc `bibtool` i
 - Resolve bibkey collisions per Phase 6m citation-merge precedent: prefer the entry already in `CITATION_REGISTRY`; flag conflicts in the bundle's `change_log.md`.
 - Re-run `validate.py --check citation_primary_sources_present` to ensure every absorbed bibkey resolves to a primary-source cache file.
 
-### §6. Figure migration
+### §6. Figure realisation (was: migration) — F-03
+
+⚠️ **This step used to be pure transport, and that is why 9 of 21 bundles ship zero
+figures.** Its instruction was to copy figures from the contributing sources; if they had
+none, the bundle got none, and **no step anywhere in this procedure ever planned a figure.**
+
+Stage 9 could not object either: its criterion is *"ALL figures PASS, no FAIL, no MINOR"*,
+which over an empty set is vacuously true. `papers/D10/bundle_metadata.json` recorded
+`stage9_status: green` for a bundle with no figures. `paper_provenance` is equally blind —
+it validates that `\includegraphics` targets exist, so a draft with none is trivially clean.
+Two gates over the same hole, both green.
+
+**The step now owns the figure set, not just its transport.** Every figure the bundle needs
+either exists in `papers/<X>/figures/`, or is declared deferred with a reason a reviewer can
+weigh:
+
+```latex
+\figuredeferred{fig:rhmc-binder}{awaiting the L=8 m→0 production run}
+```
+
+Enforced by `validate.py --check bundle_figure_adequacy`. Until a bundle carries a charter
+figure plan the check applies a **tier floor** as the backstop (Tier 0 ≥ 8, Tier 1 ≥ 4,
+Tier 3 ≥ 2, Tier 2/4 ≥ 1); once the plan exists the comparison should be against *it*, with
+the floor covering only bundles whose plan is not yet written.
+
+### §6a. Migrating figures that already exist
 
 - Copy each source's referenced figures from `papers/<source>/figures/` into `papers/<X>/figures/`.
 - Preserve `# viz-ref:` tags on the corresponding figure entries (else CHECK 6 / `viz_consistency` flags drift).
@@ -186,6 +256,40 @@ This is the substantive bundle work. The `\section` skeleton from §3 is just st
 4. **Definition before broadening.** When broadening an attribution from a narrow to a wider class (e.g., "Microsoft" → "broader research community pursuing Majorana platforms"), verify each addition belongs in the broadened category. Surface code is *abelian-stabilizer-class* QEC, not non-Abelian-anyon TQC; do not group them in a non-Abelian-anyon parenthetical (I2 sub-wave 7a.3 round-2 → round-3).
 
 **Reviewer scope (per user direction 2026-05-01):** Stages 9 / 10 / 13 (§§8–10 below) review the **bundle paper**, not the source per-paper drafts. Findings on `papers/paperN_*/` are not in Phase 7's scope; per-paper material that gets synthesized into a bundle is reviewed via the bundle's own stage triple.
+
+### §7.5. Whole-document read-through (mandatory, before §8) — F-04
+
+**Skill (drafting):** `skeft-qa:paper-authoring`. Read it, and its
+`references/prohibited-patterns.md`, **before** authoring §7, not after.
+
+**Agent (review):** `prose-reviewer`. One pass, reading the draft start to finish as a
+referee at the venue named in `bundle_metadata.json.target_journal` who has never seen the
+repository. It answers five questions and blocks on any `no`: does the abstract lead with
+the result; does each section advance a single argument; is every symbol defined before use;
+is any sentence addressed to a reviewer or to a prior draft rather than to a reader; is the
+compiled length within the charter's budget.
+
+**Its output is a restructuring instruction, not a finding list.** That is why it is not the
+adversarial-reviewer, whose output is findings-only by design.
+
+**Why here.** §§8–10 verify that the manuscript is *true*: figures render, claims trace to
+theorems, citations support their sentences. Nothing asks whether it *lands*. Sending an
+unreadable draft to Stage 13 spends the most expensive reviewer in the pipeline on prose
+defects.
+
+**Deterministic floor, run first** (cheap, and it stops the agent wasting a pass on what a
+regex can find):
+
+```bash
+uv run python scripts/validate.py --check bundle_prose_em_dash_free \
+    --check bundle_reader_facing_voice --check bundle_manuscript_length
+```
+
+⚠️ **The floor is not the review.** Both the skill and the agent read the same
+`prohibited-patterns.md`, so a rule cannot drift between writing and review; but the agent
+additionally carries reader-outcome questions the author is deliberately **not** given,
+because a generator optimises against any checklist it can see. A reviewer briefed entirely
+off the author's rules would pass anything the author produced.
 
 ### §8. Stage 9 — figure review (LLM visual review)
 
@@ -250,6 +354,25 @@ For any BLOCKER surfaced in §8 / §9 / §10:
 
 1. Reviewer agent emits BLOCKER → `audit_log.jsonl` entry (Stage 9/10) or `ReviewFinding` graph node (Stage 13).
 2. **Author** (not reviewer) fixes via direct edit to `paper_draft.tex` / `figures/` / source paper / Lean module as appropriate.
+
+   ⚠️ **A fix may not narrate itself (F-05, ADR-011 Phase 3).** The manuscript states what
+   IS true. It does not tell a referee what an earlier draft of itself said, on what date it
+   was corrected, or which review round caught it. That reader has no access to the process
+   and cannot act on it, so the text reads as a changelog pasted into a paper.
+
+   The correction history is not lost, it moves: `change_log.md` and
+   `docs/review_finding_supersessions.json` are where a later reader can actually check it,
+   and the ledger entry is required anyway by step 4.
+
+   **Removing narration is not deleting content.** A retraction is a scientific disclosure
+   and a scope correction states the correct scope; restate the substantive claim in the
+   present tense and drop only the account of the editing. Enforced by
+   `validate.py --check bundle_reader_facing_voice`.
+
+   Why this rule exists here rather than as advice: this step makes the manuscript the fix
+   surface, so every finding leaves a textual deposit, and D11/D12 ran **fourteen Stage-13
+   rounds in a single day**. The deposits accumulate *between* reviews, which is why a
+   deterministic check catches them and a periodic reviewer does not.
 3. **All-occurrence verification.** Before declaring a referential fix complete, `git grep` for the old reference across the whole bundle directory and any cross-referencing files. Filenames, theorem names, and counts often appear multiple times in a single `paper_draft.tex` (one in §2 prose, another in §5 table, another in §9 footnote). I2 sub-wave 7a.3 round-2 caught a missed second occurrence of `tests/test_jackknife.py` at line 232 after the round-1 fix had only updated line 17. The grep must be empty before claiming fixed.
 4. Append entry to `docs/review_finding_supersessions.json` with `meta.status: open → fixed | accepted` per closed finding. The entry must include deterministic-recheck evidence (file:line + replacement text) so a future fresh-context reviewer can verify the closure without re-running the agent. As of 2026-05-01 the ledger has 174 entries spanning Phase 6i + Phase 7a; the disciplined append-only pattern is what allows multi-round Stage-13 cycles to converge.
 5. Re-invoke the *same* reviewer agent in fresh context with `bundle_target=<X>`.
@@ -268,7 +391,32 @@ Repeat §8 → §9 → §10 → §11 until `bundle_metadata.json` shows:
 - `stage13_status == "green"`
 - `blockers_open == 0`
 - `stage13_redo_required == false`
-- `freshness_stale == false`
+
+⚠️ **`freshness_stale` is NOT an exit condition.** It is an mtime signal owned by
+`scripts/check_bundle_source_freshness.py`, meaning *a source paper is newer than
+`last_lift`*, and it is set and cleared from source mtimes alone on every run. Treating it as
+a readiness verdict misled two reviewers and one remediation; the correction landed in
+`LATE_PHASE6_ABSORPTION_PROTOCOL.md` on 2026-07-31 and is applied here. **The exit gate is
+`stage13_redo_required`**, which `bundle_append.py` sets on lift and no mtime writer clears.
+
+### §12a. De-scarring pass (terminal, mandatory — F-05)
+
+After the last round converges, before §13, sweep the draft for text that narrates the
+paper's own editing history and remove it, restating the substantive claim in the present
+tense. Empirically this is where the deposit is: the 14-round D11/D12 day is exactly when it
+accumulates, and one deposit per round is the mechanism.
+
+```bash
+uv run python scripts/validate.py --check bundle_reader_facing_voice --check bundle_prose_em_dash_free
+```
+
+Both must be green. The second is the em-dash prohibition: an em-dash signals AI authorship
+to a 2026 reader and costs trust, so the target is zero rather than a rate.
+
+⚠️ **Removing an em-dash is a rewrite, not a substitution**, and **`--` must never be
+touched** — it is mandatory typography (`Bose--Einstein`), the corpus carries over a thousand,
+and the check counts exactly three hyphens so it cannot see that regression. The replacement
+rules are in the authoring skill's `references/prohibited-patterns.md`.
 
 ### §13. Dashboard refresh + heatmap regen (mandatory exit step)
 
@@ -293,7 +441,9 @@ All four must succeed before bundle close. Commit the regenerated `docs/BUNDLE_R
 ## Cross-references
 
 - `WAVE_EXECUTION_PIPELINE.md` Stage 9 ↔ §8 (figure review)
-- `WAVE_EXECUTION_PIPELINE.md` Stage 10 ↔ §9 (claims review)
+- `WAVE_EXECUTION_PIPELINE.md` Stage 10 ↔ §9 — §9 covers Stage 10's **claims-review gate**;
+  the drafting half of Stage 10 is §§3–7 of this procedure, which Stage 10 names as *the*
+  Phase-7+ implementation of itself. "Stage 10" throughout this document is that gate.
 - `WAVE_EXECUTION_PIPELINE.md` Stage 13 ↔ §10 (adversarial review)
 - `docs/BUNDLE_DIRECTORY_SCHEMA.md` — `bundle_metadata.json` + `append_log.json` schemas
 - `docs/agents/claims-reviewer-bundle-prompts.md` — per-bundle Stage-13 anchor list

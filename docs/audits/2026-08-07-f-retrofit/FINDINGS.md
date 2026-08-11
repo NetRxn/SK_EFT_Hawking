@@ -1,0 +1,173 @@
+# F apex retrofit — the flagship surveys a program four bundles smaller than the one that exists
+
+**Date:** 2026-08-07 · Eighth bundle retrofitted under ADR-010 §D5a, and the first Tier-0.
+
+**Read IN FULL before anything was declared,** per ADR-010 C4: `papers/F/paper_draft.tex`
+(2,494 lines, every line), `papers/F/bundle_metadata.json`, and — for the claims that became
+findings — `docs/counts.tex`, `validate.py --list`, `docs/WAVE_EXECUTION_PIPELINE.md`,
+`docs/LATE_PHASE6_ABSORPTION_PROTOCOL.md`, and the axiom profile of every declared apex.
+
+---
+
+## 1. What was declared
+
+**29 apexes → 221 declarations across 27 modules, depth 5, one private truncation.**
+
+F is a survey, so its apexes are the theorems **it** names as backing its own predictive-register
+entries and its substrate-identity synthesis claim — not everything its siblings claim.
+
+| § | thread | apexes |
+|---|---|---|
+| §3 | gauge erasure (Closure 1) | 2 |
+| §4 | SK-EFT analog Hawking | 1 |
+| §6 | emergent gravity: Sakharov coefficient, three closures, four gates, entropy, Λ, torsion, Lorentzian backbone | 17 |
+| §7 | topological QC: one MTC, four faces | 6 |
+| §8 | dark sector: the 8/8 entropic-gravity closure | 3 |
+
+---
+
+## 1b. ADR-010 §D2 purpose statement — re-derived from the draft and the Lean
+
+| field | statement |
+|---|---|
+| **Audience** | Readers who want the whole program in one document — referees assessing the portfolio, and researchers deciding which sibling to read. |
+| **Venue** | Living Rev. Relativity \| Phys. Rep., per the metadata. A review venue is right; the length is not yet. |
+| **The claim only this container can make** | **The substrate-identity synthesis** — that one ADW object with `N_f = 16` drives the emergent-gravity, analog-Hawking, anomaly and dark-sector threads, and that the cross-thread identities close without an additional mechanism. F says this is *"structurally absent from any individual sibling bundle,"* and that is true: no sibling holds more than one thread. ⚠️ **It is also the claim with the weakest backing** — TODO-D16 records that the Sakharov-`N_f` half of it has no Lean witness. |
+| **Substrate** | 27 modules, 221 declarations, depth 5. Overwhelmingly its siblings': **F ∩ D3 = 126**, F ∩ D1 = 27, and **zero** against D6, D9, D10, D11, D12, L2. |
+| **Honest size vs charter** | 2,494 lines against a Tier-0 charter of ~80–150pp — the largest absolute shortfall in the portfolio, and compounded by §2: the document surveys a 17-bundle program when 21 exist. |
+| **Boundary failure?** | ⚠️ **Yes — and by construction, which is why it must be stated rather than treated as a defect.** A survey's purpose *cannot* be stated without its siblings' substrate; 126 of its 221 declarations are D3's. §D2's rule names this a boundary failure, and for F the honest reading is that the rule is diagnosing the genre. The actionable consequence is sequencing: **F cannot be redrafted until the bundles it surveys are measured**, which makes the retrofit its prerequisite. |
+
+---
+
+## 2. ⚠️ The flagship's architecture section is four bundles out of date
+
+F states its scope repeatedly and consistently: *"the sixteen sibling-bundle threads"*,
+*"$17$ publication targets"*, *"Tier 1 (8 deep papers): Bundle~D1 … Bundle~D8"*, *"this
+flagship review (F) ships last, citing all 16 siblings"*, *"the 17-bundle architecture as a
+coherent submission package"*.
+
+**The live roster is 21 bundles.** D9, D10, D11 and D12 — four Tier-1 deep papers, three of them
+now with declared apexes and measured closures — appear **nowhere** in the document that claims
+to survey the program. ADR-010's D10+D11 authorization (2026-06-29) post-dates this draft, and
+nothing brought the flagship forward.
+
+This is not a stale count in a narrative; it is a **scope** claim. A survey that enumerates its
+own contents and omits four of them is wrong about what it surveys, and the sentence
+*"integrates the sixteen sibling threads into a single survey"* is the thesis of the paper.
+
+**§11.1 compounds it:** *"the substrate program has shipped 17 bundles to reviewer-triple-closed
+Stage-13 GREEN status."* Both halves fail — the roster is 21, and the live readiness data says no
+bundle is submittable. F itself is `readiness: RED` with 23 open blockers. Filed as **TODO-D15**.
+
+---
+
+## 3. The closure: F's declared substrate is D1-shaped and touches none of the QC bundles
+
+| pair | shared declarations |
+|---|---|
+| **F ∩ D1** | **27** |
+| F ∩ D6, D9, D10, D11, D12, L2 | **0** each |
+
+D2, D3, D4, D5, L1, L3, I1–I3, E1, E2 are still undeclared, so F cannot yet be measured against
+them — and most of F's apexes are their content (`HeatKernelExpansion`, `GravitationalWaves`,
+`QECHolographyBridge`, `EntropicGravityDarkEnergy`). The zeros that *are* measurable say
+something specific: **the flagship's substrate touches none of the six quantum-computation,
+detection and band-theory bundles.** Two of those (D6, D7, D8) it names; four (D9–D12) it does
+not know exist.
+
+**F §7's D6 absorption checklist is stale in the other direction.** Six boxes, all unchecked,
+including *"Wave 6v.2 ship — pending"*, *"Wave 6v.5 ship — pending"*, *"Wave 6v.6 ship —
+pending"*. D6's own declared apexes include `wave_6v_5_substantive_closure`,
+`wave_6v_6_substantive_closure` and `shor_ecc256_tgate_count_le` (the 6v.2 headline), and D6 has
+completed its Stage-13 pass. **At least four of the six boxes are done and the flagship still
+shows them open.**
+
+---
+
+## 4. ❌ WITHDRAWN — F's `native_decide` annotation is CORRECT
+
+**This section originally claimed F §7.2 was wrong to annotate
+`FigureEightKnot.figure_eight_normalized` with `(native_decide)`, and generalised that into a
+corpus-wide prose defect that resolved an ADR-010 open item. Every part of that was false.**
+
+`FigureEightKnot.lean:122` reads `:= by native_decide`, and the declaration carries
+`…figure_eight_normalized._native.native_decide.ax_1_1` in `axiom_deps_project`. **F is right,
+and its disclosure is exactly the kind a referee should see.** The same is true of
+`figure_eight_trace_neg_one` and `IsingBraiding.trefoil_eq_neg_sqrt2`, which F also names.
+
+Corpus-wide, `validate.py --check native_decide_regression` — an **existing check that measures
+precisely this** — reports **546 declarations in the `native_decide` closure**, at its ceiling.
+
+**The error:** I probed `axiom_deps_core` for `Lean.ofReduceBool`. That field only ever contains
+`propext`, `Quot.sound` and `Classical.choice`; the `native_decide` marker lives in
+`axiom_deps_project`. An absence in the wrong field read as a measurement. Full post-mortem in
+`ARCHITECTURE_TODOs.MD` TODO-D13 and `ACCURACY_LEDGER.md` V26.
+
+**What this costs F:** nothing — this section is a retraction, not a finding. The §2, §3 and §5
+findings are unaffected and were derived from independent evidence.
+
+## 5. Stale infrastructure descriptions in §9
+
+F's §9 describes the verification stack. Each item below was re-derived, not assumed:
+
+| F says | live | source |
+|---|---|---|
+| *"`validate.py`; 29+ checks"* | **66** | `validate.py --list` |
+| *"Pipeline Invariants 1--14"* | invariants run to **#17** | `WAVE_EXECUTION_PIPELINE.md` |
+| *"`physics-qa:figure-reviewer`"* | plugin is **`skeft-qa`** | `.claude/plugins/` |
+| *"frozen 7-stage protocol with branches D.1/D.2/D.3"* | 7 stages ✓, but branch **D.4** exists | `LATE_PHASE6_ABSORPTION_PROTOCOL.md:9,56` |
+| *"$\sim 322$ Aristotle-proved theorems"* | value ✓ today | `\aristotleproved{}` = 322 |
+
+The last one is the interesting one: **the value is right and the mechanism is wrong.** F
+`\input`s `counts.tex` and uses `\substantivetheorems{}`, `\leanmodules{}`, `\axiomcount{}` and
+`\sorrycount{}` as macros throughout — then hardcodes `322` for the one figure that has a macro
+(`\aristotleproved{}`) sitting in the same file. It is correct now and will silently drift, which
+is exactly what the macro exists to prevent. Filed under **TODO-D15** with the roster staleness,
+since both are the same failure: the flagship describes a snapshot of the program rather than the
+program.
+
+---
+
+## 6. What F gets right, and it is worth saying
+
+Recorded because a findings document that only lists defects mis-describes the object.
+
+- **The Wen-ADW factor-6000 figure is honestly scoped.** F states the Lean-certified content is
+  `coupling_deficit` at the four-fermion level (`G_4f < G_c^ADW/1000`) and says in both §6.2 and
+  §10 that *"the factor-6000 figure on the emergent Newton constant ratio is an informal
+  extrapolation … and is not separately Lean-verified at the Newton-constant level."*
+- **The dark-energy thresholds are not flattened.** The abstract says *"two of four quantitative
+  mechanisms exceed Jeffreys-decisive"* and the register separates the Bayes-decisive pair, the
+  ≥5σ exclusion under *nominal profile assumptions*, and the merely-moderate ΔAIC = 4.7. The two
+  aggregator theorems (`both_decisive_bayes_bounds_exceed_jeffreys_decisive` vs
+  `all_quantitative_bounds_disfavoured`) are deliberately distinct, and the prose tracks them.
+- **The cosmological constant is labelled reproduced, not solved**, with the rigorous Lean bound
+  (10^100) distinguished from the heuristic (10^122) every time both appear.
+- **The vestigial-graviton natural range is flagged as a project-adopted naturalness window**,
+  *"a modeling choice of this project rather than a published derivation"* — in both §6.2 and §10.
+- **`dai_freed_spin_z4` is disclaimed as an external hypothesis**, not Lean-verified content, so
+  it was excluded from the apex list on the draft's own instruction (§7 below).
+
+The defects in §2–§5 are *bookkeeping about the program*. The physics claims are hedged with more
+care than the surrounding infrastructure prose.
+
+---
+
+## 7. Candidates rejected
+
+| candidate | why rejected |
+|---|---|
+| `SKEFTHawking.dai_freed_spin_z4` | F §5.2 says the cobordism computation is *"described in both papers as an external hypothesis, not as Lean-verified content"*. Declaring it would make F claim what it explicitly disclaims. |
+
+---
+
+## 8. Ledger
+
+| artifact | change |
+|---|---|
+| `papers/F/bundle_metadata.json` | `apex_theorems` added — 29 entries |
+| `scripts/validation/checks/bundles_readiness.py` | `UNDECLARED_APEX_CEILING` 14 → 13 |
+| `docs/architecture/.working-docs/ARCHITECTURE_TODOs.MD` | TODO-D15 (roster + infra staleness); TODO-D13 broadened to corpus-wide |
+| `docs/architecture/.working-docs/ACCURACY_LEDGER.md` | V24 |
+
+Gate: `validate.py --check bundle_apex_resolves` — PASS.

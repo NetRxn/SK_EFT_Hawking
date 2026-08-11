@@ -17,15 +17,23 @@ makes the Hawking temperature formula MORE robust:
 - Graphene: v_F(k) increases at small k (Coulomb renormalization) —
   subluminal, high-k modes CANNOT escape, strengthening the horizon
 
-The dispersive correction δ_disp = -(π/6)D² with D = κ·l_ee/c_s
-is the DOMINANT correction for graphene (δ_diss is negligible by 11
-orders of magnitude because η/(sT) << 1 at T ~ 100-300 K).
+The dispersive correction is δ_disp = -(π/6)D² with D = κ·l_ee/c_s.
+
+⚠️ **Corrected 2026-08-09.** This header previously said δ_disp is the
+DOMINANT correction, "negligible by 11 orders of magnitude because
+η/(sT) << 1". η/(sT) is a **time**, not a dimensionless number, and comparing
+it to 1 is the error: converting it to the kinematic viscosity the SK-EFT
+needs requires a velocity² (see `DiracFluidSK.kinematicViscosity`). With that
+factor restored, δ_diss ≈ +6.5 % at the Dean device against δ_disp ≈ −2.8 % —
+the dissipative term is the LARGER of the two, and they carry opposite signs
+and partially cancel. The eleven orders were an artifact, not a hierarchy.
 
 ## Key Results
 
 1. Hawking temperature is universal (from HawkingUniversality.lean)
 2. Dispersive correction bound applies with D = κ·l_ee/c_s
-3. Dissipative correction is perturbative (δ_diss << δ_disp << 1)
+3. Dissipative correction is perturbative at the Dean device (|δ_diss| < 0.1),
+   but is LARGER than the dispersive one there — not `δ_diss << δ_disp`
 4. EFT validity requires D < 1 (sets minimum constriction length)
 5. Subluminal dispersion strengthens horizon (no trans-Planckian leakage)
 
@@ -82,8 +90,13 @@ theorem graphene_dispersive_correction_bounded (D : ℝ) :
 
 /-- The dissipative correction is non-negative: δ_diss = Γ_H/κ ≥ 0.
 
-    For graphene, Γ_H ~ 0.3 s⁻¹ and κ ~ 10¹² s⁻¹, giving
-    δ_diss ~ 10⁻¹³ — negligible compared to δ_disp ~ 10⁻².
+    For the Dean device Γ_H ≈ 1.3×10¹¹ s⁻¹ and κ = 2×10¹² s⁻¹, giving
+    δ_diss ≈ 6.5×10⁻² — larger than |δ_disp| ≈ 2.8×10⁻², and of opposite
+    sign, so the two partially cancel.
+
+    ⚠️ The superseded figures (Γ_H ~ 0.3 s⁻¹, δ_diss ~ 10⁻¹³) came from
+    omitting the velocity² in ν; 0.3 s⁻¹ is eleven orders below the
+    Γ_sound ~ 10¹⁰ s⁻¹ that Phase-5w reports for this fluid.
 
     This theorem comes directly from WKBAnalysis.lean via the
     block-diagonal reduction. No adaptation needed. -/
@@ -92,9 +105,12 @@ theorem graphene_dissipative_nonneg (Gamma_H kappa : ℝ)
     0 ≤ Gamma_H / kappa :=
   div_nonneg hG hk.le
 
-/-- The effective temperature with dispersive correction only
-    (dissipative negligible):
+/-- The effective temperature with the dispersive correction alone:
     T_eff ≈ T_H · (1 - (π/6)D²)
+
+    ⚠️ This isolates the dispersive channel; it is **not** the full T_eff.
+    δ_diss is not negligible (see `graphene_dissipative_nonneg`), so the
+    physical T_eff carries both terms and, at the Dean device, exceeds T_H.
 
     This is positive when D² < 6/π, i.e., D < √(6/π) ≈ 1.38.
     For the Dean nozzle, D ≈ 0.23 → T_eff/T_H ≈ 0.97. -/

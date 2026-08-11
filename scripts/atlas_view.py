@@ -78,16 +78,79 @@ def _is_kernel_pure(rec: dict) -> bool:
             and core.issubset(KERNEL_AXIOMS) and not _has_sorry(rec))
 
 
-def _is_obstruction(rec: dict) -> bool:
-    if _NOGO_RE.search(rec.get("name", "")) or _NOGO_RE.search(rec.get("module", "")):
+#: Lean-synthesised declarations: structure eliminators, match arms, internal
+#: proof obligations. They are compiler artifacts, never mathematical content.
+#: Kinds that can carry a mathematical CLAIM. A namespace match promotes only
+#: these; `def`/`structure`/`instance`/`inductive` in a no-go namespace are the
+#: apparatus the no-go argument is about, not the argument.
+_CLAIM_KINDS = frozenset({"theorem", "lemma", "example"})
+
+# Compiler-generated declarations come from `lean_deps.json`'s `autogen` field, which
+# `ExtractDeps` computes with Lean's own predicates. A name-pattern regex used to live
+# here; measured against Lean it agreed on barely half the population, MISSING ~2 300
+# (mostly `X.eq_1`, whose name carries no leading underscore) and OVER-CLAIMING ~2 700.
+# `validate_helpers.autogen_index` builds the lookup, including the structurally-guarded
+# supplement for the reserved suffixes Lean's public predicates do not reach.
+#: Populated per `build_atlas` call from THAT call's records. `_is_obstruction` takes it
+#: as an ARGUMENT rather than reading this — a classifier that silently depends on
+#: module-global state gives a caller the wrong answer with no signal.
+_AUTOGEN: dict = {}
+
+
+def _is_obstruction(rec: dict, autogen: dict | None = None) -> bool:
+    # ⚠️ AUTO-GENERATED DECLARATIONS ARE NEVER OBSTRUCTIONS (2026-08-05, PR-review
+    # pass 2, R6-M1). Both tests below match against a FULLY QUALIFIED name, so a
+    # declaration inside e.g. `SKEFTHawking.DarkEnergyObstructionPrinciple` matched
+    # on its NAMESPACE. That swept in Lean-synthesised artifacts:
+    # `EmergentDarkEnergyModel.casesOn`, `.ctorIdx`, `.match_1_1` were all being
+    # ranked on the atlas NEGATIVE FRONTIER — the view a `/goal` loop consults to
+    # steer away from provably-dead paths.
+    #
+    # MEASURED at the fix: 577 classified OBSTRUCTION; 284 justified by the leaf
+    # name or a negated type; 293 by namespace alone, of which **68 were
+    # auto-generated** (44 `def` + 24 `theorem`). Excluding those is not a policy
+    # change — a structure eliminator is not a mathematical claim of any kind.
+    #
+    # The remaining 225 (genuine declarations that live in a no-go namespace) are
+    # left classified: whether "lives in `BCJNoGo`" should itself imply OBSTRUCTION
+    # is a real design question, and answering it by editing a regex would be
+    # deciding it silently. Filed for an explicit call.
+    # Primary signal is the record's OWN `autogen` field (emitted by ExtractDeps from
+    # Lean's predicates), so a single record is self-describing. `autogen` supplies the
+    # structurally-guarded supplement, which needs the whole corpus to resolve parents.
+    name = rec.get("name", "")
+    if rec.get("autogen") or (autogen or _AUTOGEN).get(name, False):
+        return False
+
+    # ⚠️ NAMESPACE MATCHES CLASSIFY ONLY CLAIM-BEARING KINDS (2026-08-05, operator
+    # ruling on R6-M1). The negative frontier exists to tell a `/goal` loop "this
+    # path is provably dead, here is the false statement" — so what belongs on it
+    # is **the argument that proves the negative**, not the apparatus the argument
+    # is built from.
+    #
+    # Both tests below match a FULLY QUALIFIED name, so a declaration inside e.g.
+    # `SKEFTHawking.DarkEnergyObstructionPrinciple` matched on its NAMESPACE. Of the
+    # 223 such matches, 134 are `theorem` (steps in the negative argument, kept) and
+    # 89 are apparatus — `def` 82, `structure` 4, `instance` 2, `inductive` 1, e.g.
+    # `IsViable`, `gibbsDuhemEvaded`, `EmergentDarkEnergyModel`. Those are the MODEL
+    # the argument is ABOUT; ranking them dilutes the frontier so the actual
+    # refutation competes with its own definitions for a top-8 digest slot.
+    #
+    # A declaration whose OWN leaf name says no-go, or whose type is negated, is
+    # still classified whatever its kind — this narrows namespace inference only.
+    name = rec.get("name", "")
+    leaf = name.rsplit(".", 1)[-1]
+    if _NOGO_RE.search(leaf):
         return True
+    if _NOGO_RE.search(name) or _NOGO_RE.search(rec.get("module", "")):
+        return rec.get("kind", "") in _CLAIM_KINDS
     t = (rec.get("type") or "").lstrip()
     return t.startswith("¬") or t.startswith("Not ") or t.startswith("Not(")
 
 
 def classify_theorem(rec: dict) -> tuple[str, str]:
     """Return ``(atlas_kind, atlas_status)`` for a theorem record."""
-    kind = "OBSTRUCTION" if _is_obstruction(rec) else "TRUE"
+    kind = "OBSTRUCTION" if _is_obstruction(rec, _AUTOGEN) else "TRUE"
     if _genuine_project_axioms(rec):
         status = "AXIOM_TAINTED"   # genuine project axiom — atlas_integrity cross-refs AXIOM_METADATA
     elif _has_sorry(rec):
@@ -121,6 +184,13 @@ _CLOSED_HYP_STATUSES = ("DISCHARGED", "SUPERSEDED")
 def build_atlas(lean_deps: list[dict], hyp_registry: dict | None = None,
                 axiom_metadata: dict | None = None) -> dict:
     """Compute the derived atlas view. Pure given its inputs (registries default to the project's)."""
+    # Autogen lookup is rebuilt per call from THESE records, so the function stays pure
+    # given its inputs — a module-level cache would leak one caller's corpus into another's.
+    global _AUTOGEN
+    sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
+    from validate_helpers import autogen_index  # noqa: E402
+    _AUTOGEN = autogen_index(lean_deps)
+
     if hyp_registry is None or axiom_metadata is None:
         sys.path.insert(0, str(PROJECT_ROOT))
         from src.core.constants import HYPOTHESIS_REGISTRY, AXIOM_METADATA  # noqa: E402
@@ -141,8 +211,14 @@ def build_atlas(lean_deps: list[dict], hyp_registry: dict | None = None,
     registered_fqns: set[str] = set()
 
     for r in lean_deps:
-        if r.get("kind") != "theorem":
-            continue  # defs/structures/instances are graph nodes but not atlas RESULT nodes in 1a
+        if r.get("kind") != "theorem" or _AUTOGEN.get(r.get("name", "")):
+            # defs/structures/instances are graph nodes but not atlas RESULT nodes in 1a;
+            # Lean's OWN products (.eq_1, .sizeOf_spec, .inj, .congr_simp, .eq_def) are
+            # `kind == "theorem"` but are not results anyone proved. `_AUTOGEN` was already
+            # built above (line ~192) and applied only inside `_is_obstruction`, so this
+            # node set counted them as authored — as every other census did.
+            # `theorem_census_agrees` now forces every published census to match.
+            continue
         ak, status = classify_theorem(r)
         fqn = r["name"]
         registered_fqns.add(fqn)
@@ -276,9 +352,25 @@ def build_atlas(lean_deps: list[dict], hyp_registry: dict | None = None,
 
 
 def load_lean_deps_file() -> list[dict]:
-    """Read lean_deps.json directly (does NOT trigger re-extraction)."""
+    """Read lean_deps.json directly (does NOT trigger re-extraction).
+
+    ⚠️ RAISES `FileNotFoundError`, NOT `SystemExit` (changed 2026-08-05, PR review).
+    It raised `SystemExit`, which derives from `BaseException` and is therefore NOT
+    caught by `except Exception`. Both handlers on the path are `except Exception`:
+    `graph_atlas.check_atlas_integrity`'s own, and `validate.run_checks`'s. So a
+    missing `lean_deps.json` did not fail the atlas check — it **terminated the
+    interpreter mid-suite**. `atlas_integrity` runs partway through the suite, so the other
+    **the 40 checks after it never ran**, and the run ended with no report distinguishing
+    that from a clean exit.
+
+    This is the `sys.exit()`-in-a-library antipattern: a control-flow decision that
+    belongs to the CLI boundary, taken inside a function four call-frames deep. `main()`
+    below converts it back at the boundary, where it is correct.
+    """
     if not LEAN_DEPS_PATH.exists():
-        raise SystemExit(f"lean_deps.json not found at {LEAN_DEPS_PATH} — run extraction first.")
+        raise FileNotFoundError(
+            f"lean_deps.json not found at {LEAN_DEPS_PATH} — run extraction first "
+            f"(`cd lean && lake build SKEFTHawking.ExtractDeps`).")
     with open(LEAN_DEPS_PATH) as f:
         return json.load(f)
 
@@ -292,7 +384,17 @@ def main(argv: list[str] | None = None) -> int:
                          "atlas_view.boundary.json) — post-compaction freshness; NEVER the tracked file")
     a = ap.parse_args(argv)
 
-    atlas = build_atlas(load_lean_deps_file())
+    # The CLI boundary is where "stop the process" is a correct decision, so the
+    # conversion lives here rather than inside `load_lean_deps_file` (see its
+    # docstring: raising SystemExit from a library killed validate.py mid-suite,
+    # taking the 40 checks after it with it).
+    try:
+        lean_deps = load_lean_deps_file()
+    except FileNotFoundError as exc:
+        print(str(exc), file=sys.stderr)
+        return 2
+
+    atlas = build_atlas(lean_deps)
     s = atlas["summary"]
     print("Derived Proof Atlas (Phase 2: tracks + apexes)")
     print(f"  theorem nodes : {s['theorem_nodes']}")

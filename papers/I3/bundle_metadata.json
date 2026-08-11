@@ -1,14 +1,76 @@
 {
   "bundle_target": "I3",
+  "apex_theorems": [
+    {
+      "name": "SKEFTHawking.Itô.isStochasticIntegral_trivial",
+      "claims": "§3.1 non-vacuity witness: the constant-zero integrand has the trivial stochastic integral",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.Itô.wave_3b_itoBeta_1_stochasticIntegral_closure",
+      "claims": "§3.1 wave-closure: StochasticIntegral predicate + witness",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.Itô.isBrownianQuadraticVariationT_witness",
+      "claims": "§3.2 non-vacuity witness for ⟨W⟩_t = t a.s. at the substrate level",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.Itô.wave_3b_itoBeta_2_quadraticVariation_closure",
+      "claims": "§3.2 wave-closure: quadratic variation + bilinear covariation substrate",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.Itô.wave_3b_itoBeta_3_semimartingale_closure",
+      "claims": "§3.3 wave-closure: Doob–Meyer decomposition substrate",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.Itô.wave_3b_itoBeta_4_itoIsometry_closure",
+      "claims": "§3.4 wave-closure: the Itô L² isometry substrate",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.Itô.ito_reduces_to_calculus_when_zero_qv",
+      "claims": "§3.5 the zero-quadratic-variation ⇒ FTC cross-bridge; also serves as the ItoLemma per-module closure",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.Itô.isNovikovCondition_constant",
+      "claims": "§3.6 non-vacuity witness: constant integrands satisfy Novikov",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.Itô.wave_3b_ito_overall_closure",
+      "claims": "§3.6 the overall Itô-namespace closure across all six modules",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.LDP.linearResponseRateFunctionCentered_continuous",
+      "claims": "§5 the substantive lemma authored by I3: continuity of the centered quadratic rate function",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.LDP.linearResponseRateFunctionCentered_isLDPCompatibleSKEFT",
+      "claims": "§5.1 the concrete instance — the program's linear-response Gaussian rate function is LDPCompatibleSKEFT",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.LDP.wave_3b_ldp_overall_closure",
+      "claims": "§5.2 the overall LDP-namespace closure = instance existence on the linear-response rate function",
+      "declared": "2026-08-07"
+    }
+  ],
   "tier": 3,
   "title": "Verified Stochastic Calculus for Mathlib4 — Stochastic Integral, Quadratic Variation, Itô's Lemma, and Large-Deviation Foundations",
   "target_journal": "JOSS | CPC",
   "phase7_subphase": "6o.zeta",
   "stage9_status": "pending",
-  "stage10_status": "green",
-  "stage13_status": "green",
-  "stage13_redo_required": false,
-  "freshness_stale": false,
+  "stage10_status": "pending",
+  "stage13_status": "pending",
+  "stage13_redo_required": true,
+  "freshness_stale": true,
   "source_manifest_last_regen": "2026-05-12T12:46:30Z",
   "last_lift": "2026-05-06T15:38:58Z",
   "last_stage9_review": null,
@@ -26,5 +88,13 @@
     "FixPropagation"
   ],
   "readiness": "RED",
-  "readiness_last_computed": "2026-07-31"
+  "readiness_last_computed": "2026-07-31",
+  "length_target": {
+    "unit": "pages",
+    "floor": 9,
+    "ceiling": 22,
+    "source": "PAPER_STRATEGY.md §6"
+  },
+  "compiled_pages": 19,
+  "compile_gate_ok": true
 }

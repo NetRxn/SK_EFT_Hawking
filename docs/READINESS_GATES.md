@@ -16,7 +16,9 @@ This document is the **source of truth** for the 11 readiness gates that every p
 - **YELLOW** — all gates `passed` except ≥1 `needs-recheck` / `open`
 - **GREEN** — all 11 gates `passed`
 
-Submission gate: a paper MAY NOT be submitted unless it is GREEN. There are no exceptions for any gate, P1 or P2. Credibility is the project's primary asset; every gate exists because a real failure class has passed through the internal pipeline in the past.
+**Submission policy (human):** a paper MAY NOT be submitted unless it is GREEN — no exceptions for any gate, P1 or P2. Credibility is the project's primary asset; every gate exists because a real failure class has passed through the internal pipeline in the past.
+
+**What the mechanized check enforces is narrower, and the gap is deliberate.** `validate.py --check readiness_submission_gate` fails iff a P1 gate is not `passed` or a P2 gate is `blocked`; a P2 gate at `needs-recheck`/`open` is reported as an advisory and does not fail the run. So a YELLOW paper — GREEN-ineligible under the policy above — still passes the suite. **Honouring the GREEN requirement at submission is the operator's judgement, not a mechanical stop.** Per-gate enforceability is tabulated in [`docs/architecture/VALIDATION_GATE_TOPOLOGY.md`](architecture/VALIDATION_GATE_TOPOLOGY.md#4-what-each-readiness-gate-actually-computes).
 
 ---
 
@@ -24,24 +26,22 @@ Submission gate: a paper MAY NOT be submitted unless it is GREEN. There are no e
 
 ### Gate 1 — CitationIntegrity
 
-**Intent:** Every bibliographic reference resolves to the paper the bibitem claims it does. Title, authors, arXiv ID, DOI, journal/volume/page all match the primary source.
+**Intent:** Every bibliographic reference resolves to the paper the bibitem claims it does — the right title, authors, arXiv ID, DOI, journal/volume/page.
 
 **Evaluator input:** Each `\bibitem{key}` in `paper_draft.tex`, plus the `CITATION_REGISTRY` entry for that key in `src/core/citations.py`.
 
-**Passes iff:**
-- Every bibkey in the `.tex` has a matching `CITATION_REGISTRY` entry
-- Every registry entry has `arxiv_verified == True` AND `doi_verified == True` (where applicable)
-- Bibitem author strings match the registry's author list (order-insensitive)
-- Bibitem title matches the registry title (exact or registry's known-aliases list)
-- Journal/volume/page/year in bibitem matches registry (for published refs)
+**This gate is registry COVERAGE, not content verification.** It passes iff every bibkey in the `.tex` has a matching `CITATION_REGISTRY` entry, and blocks on a bibkey that is not registered. It compares no metadata field against the source, so a registered bibitem whose title, authors or arXiv ID point at the wrong paper passes it.
 
-**Blocks on any:**
-- A bibkey that is not in the registry
-- A registry entry whose `arxiv_verified` is `False` or stale (hash mismatch vs. last fetch)
-- Mismatch between bibitem metadata and registry truth
-- Wrong-target arXiv ID (fetched title unrelated to what bibitem claims)
+**Where the content is actually verified** — the intent above is met by these, not by this gate:
 
-**Escalation:** All CitationIntegrity findings are `blocked` at submission time. Pre-submission drafts may carry findings as `needs-recheck` but submission requires full pass.
+| what | mechanism |
+|---|---|
+| registry title vs. the real paper | `validate.py --check bibitem_title_primary_source` — page-1 text of the cached PDF, catching word-level drift; entries with no cached PDF are outside its reach |
+| a cached primary source exists at all | `validate.py --check citation_primary_sources_present` |
+| parameter-source DOIs resolve to bibkeys | `validate.py --check provenance_doi_in_registry` (hard-fails under `--strict`, i.e. at the submission gate) |
+| author/venue/volume/page, and wrong-target arXiv IDs | **Stage 13 adversarial review** — a human-or-LLM read. No mechanical check covers these.
+
+**Escalation:** all CitationIntegrity findings are `blocked` at submission time. Pre-submission drafts may carry findings as `needs-recheck`, but submission requires a full pass.
 
 ### Gate 2 — CrossPaperConsistency
 
@@ -166,6 +166,8 @@ Interesting-claim heuristic tags:
 - `REPORTS` edges from Paper to `CountMetric` nodes (each edge carries `paper_value`, `canonical_value`, `delta_pct`, `stale`)
 - `validate.py --check count_literals` — WARN on count literals outside `\input{counts.tex}` macros
 - `validate.py --check tables_fresh` — FAIL if any `tables/*.tex` is stale vs sources
+
+**Enforcement:** the evaluator's reachable states are `passed` and `needs-recheck`; it does not emit `blocked`. Staleness therefore surfaces as an advisory (YELLOW) and never fails `readiness_submission_gate`. The named checks above are the mechanical teeth — `tables_fresh` fails the suite on its own.
 - `validate.py --check numerical_literals` — WARN on unit-bearing numerical literals outside `\input{tables/*.tex}` blocks
 - `validate.py --check paper_provenance` — FAIL on >0.5% drift between any paper numerical claim and its pipeline value
 
@@ -197,10 +199,9 @@ Interesting-claim heuristic tags:
 **Passes iff:**
 - Every `first-claim`-tagged ProseClaim has a corresponding ledger entry confirming prior-work search
 
-**Blocks on any:**
-- A first-claim without a ledger entry
+**Would block on:** a first-claim without a ledger entry — once the ledger exists.
 
-**Status:** The ledger node type is not yet implemented. Until it lands, this gate is `needs-recheck` for every paper with a first-claim — advisory only, but surfaces the obligation.
+**Enforcement:** the `FirstClaimLedger` node type is not implemented, so the evaluator's reachable states are `passed` and `needs-recheck`. Every paper carrying a first-claim sits at `needs-recheck`: advisory, surfacing the obligation without failing the suite. Verifying a first-claim is a human act until the ledger lands.
 
 ### Gate 11 — FixPropagation
 

@@ -131,12 +131,23 @@ def bilayer_impact_on_hawking(T=150.0):
     - The bulk viscosity ζ (enters at subleading order in δ_diss)
     - The transport coefficient counting (ζ ≠ 0 adds one coefficient)
 
+    ⚠️ **The ζ band is now the whole of this function's quantitative content.**
+    Until 2026-08-09 it multiplied ζ/η into a hardcoded `1e-13` — the defective
+    δ_diss this module inherited from `hawking_predictions` — and reported the
+    product as "negligible²". δ_diss is measured live here instead, and the ζ
+    contribution is returned as the fractional band it actually is.
+
     Returns:
         dict with impact assessment
     """
+    from src.graphene.hawking_predictions import graphene_hawking_prediction
+
     zeta_eta = bulk_to_shear_ratio(T)
     delta_conf = conformal_symmetry_breaking_parameter(T)
     T_star = bilayer_crossover_temperature()
+
+    # δ_diss for the bilayer device, from the canonical path — not a literal.
+    delta_diss = graphene_hawking_prediction('Dean_bilayer_nozzle')['delta_diss']
 
     return {
         'T_K': T,
@@ -147,13 +158,18 @@ def bilayer_impact_on_hawking(T=150.0):
         'T_H_affected': False,  # T_H = ℏκ/(2πk_B) is EOS-independent
         'delta_disp_affected': False,  # D uses measured c_s, not conformal
         'delta_diss_affected': True,  # ζ contributes to Γ_H at subleading order
-        'delta_diss_correction_order': zeta_eta * 1e-13,  # ζ/η × existing δ_diss
+        'delta_diss': delta_diss,
+        # ζ enters the sound-attenuation bracket as [2(d−1)/d]η + ζ = η(1 + ζ/η)
+        # in d = 2, so it scales ν — and hence δ_diss — by at most (1 + ζ/η).
+        'delta_diss_upper': delta_diss * (1.0 + zeta_eta),
+        'delta_diss_zeta_band_frac': zeta_eta,
         'transport_count_change': '+1 (bulk viscosity ζ)',
         'summary': (
             f'Bilayer at T={T:.0f} K: δ_conf = {delta_conf:.1e}, '
             f'ζ/η ≈ {zeta_eta:.2f}. '
             f'T_H and δ_disp unaffected (use measured c_s). '
-            f'δ_diss correction: {zeta_eta:.2f} × 10⁻¹³ (negligible²). '
-            f'Transport: +1 coefficient (ζ) at first order.'
+            f'δ_diss = {delta_diss:.3f}, rising to {delta_diss * (1 + zeta_eta):.3f} '
+            f'at the ζ/η upper bound — a ≲{zeta_eta * 100:.0f} % band, not a '
+            f'change of order. Transport: +1 coefficient (ζ) at first order.'
         ),
     }

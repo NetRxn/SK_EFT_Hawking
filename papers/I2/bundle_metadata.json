@@ -1,14 +1,116 @@
 {
   "bundle_target": "I2",
+  "apex_theorems": [
+    {
+      "name": "SKEFTHawking.jackknifeVariance_nonneg",
+      "claims": "ABSTRACT + §2.2 — the jackknife variance is non-negative for n >= 1. The draft explains why it is non-trivial: the pseudovalue construction has a sign-flip asymmetry, so an off-by-one in the prefactor is not caught structurally without the formal statement",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.autocovariance_zero_nonneg",
+      "claims": "§2.2 — the lag-zero autocovariance is non-negative",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.intAutocorrTime_uncorrelated",
+      "claims": "§2.2 — tau_int = 1/2 exactly for uncorrelated data at any admissible window: the theoretical minimum against which the diagnostic is read",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.intAutocorrTime_ge_half",
+      "claims": "ABSTRACT + §2.2 — tau_int >= 1/2 for non-negatively correlated data: the formal counterpart of N_eff <= N",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.verlinde_k1_11_0",
+      "claims": "§6.1 — Verlinde formula, representative case at k=1",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.verlinde_k1_11_1",
+      "claims": "§6.1 — k=1, second case",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.verlinde_k2_sigma_sq_vacuum",
+      "claims": "§6.1 — k=2 sigma-squared vacuum channel",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.verlinde_k2_sigma_sq_no_sigma",
+      "claims": "§6.1 — k=2, the vanishing sigma channel",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.verlinde_k2_sigma_sq_psi",
+      "claims": "§6.1 — k=2 psi channel",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.verlinde_k2_psi_sq_vacuum",
+      "claims": "§6.1 — k=2 psi-squared vacuum channel",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.verlinde_k3_full",
+      "claims": "§6.1 — the COMPLETE k=3 fusion table: all 4^3 = 64 index triples, each fiber checked against the truncated Clebsch-Gordan coefficients",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.verlinde_k4_full",
+      "claims": "§6.1 — the complete k=4 table, all 125 triples",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.verlinde_k5_full",
+      "claims": "§6.1 — the complete k=5 table, all 216 triples. ⚠️ The k=5 entries live in the totally real cubic Q(2cos(pi/7)), which admits NO quadratic radical form (casus irreducibilis); its cubic minimal polynomial is itself proven and drives all power reduction",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FibonacciMTC.fib_pentagon",
+      "claims": "§6.4 — the Fibonacci pentagon identity over the 512-case F-symbol catalog. ⚠️ Discharged by native_decide, and the draft says so at the point of use",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FibonacciBraiding.fib_hexagon_R_00",
+      "claims": "§6.4 — Fibonacci hexagon, d = tau sector, entry 00; kernel-pure",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FibonacciBraiding.fib_hexagon_R_11",
+      "claims": "§6.4 — d = tau sector, entry 11",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FibonacciBraiding.fib_hexagon_R_vacuum",
+      "claims": "§6.4 — the vacuum-sector eigenvalue relation R_tau^2 = R_1",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FibonacciBraiding.fib_hexagon_Rinv_00",
+      "claims": "§6.4 — the inverse-braiding counterpart, entry 00",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FibonacciBraiding.fib_hexagon_Rinv_11",
+      "claims": "§6.4 — inverse braiding, entry 11",
+      "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FibonacciBraiding.fib_hexagon_Rinv_vacuum",
+      "claims": "§6.4 — inverse-braiding vacuum sector, against proven inverses",
+      "declared": "2026-08-07"
+    }
+  ],
   "tier": 3,
   "title": "Verified statistical estimators + lean-tensor-categories",
   "target_journal": "JOSS",
   "phase7_subphase": "7a",
-  "stage9_status": "green",
-  "stage10_status": "green",
-  "stage13_status": "green",
+  "stage9_status": "pending",
+  "stage10_status": "pending",
+  "stage13_status": "pending",
   "stage13_redo_required": false,
-  "freshness_stale": false,
+  "freshness_stale": true,
   "source_manifest_last_regen": "2026-05-12T12:46:30Z",
   "last_lift": "2026-05-06T15:43:01Z",
   "last_stage9_review": "2026-05-01T21:05:00Z",
@@ -30,5 +132,13 @@
     "FixPropagation"
   ],
   "readiness": "RED",
-  "readiness_last_computed": "2026-07-31"
+  "readiness_last_computed": "2026-07-31",
+  "length_target": {
+    "unit": "pages",
+    "floor": 9,
+    "ceiling": 22,
+    "source": "PAPER_STRATEGY.md §6"
+  },
+  "compiled_pages": 15,
+  "compile_gate_ok": true
 }

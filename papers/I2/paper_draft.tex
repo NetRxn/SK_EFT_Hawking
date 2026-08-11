@@ -27,7 +27,7 @@ Physics, with Formalizations of Quantum Groups, Hopf Algebras, and
 Decidable Algebraic Number Fields}
 
 \author{John Roehm}
-\date{Draft --- Phase 7a, May 2026}
+\date{Draft: Phase 7a, May 2026}
 
 \begin{document}
 
@@ -179,24 +179,24 @@ The seven definitions are deliberately purely arithmetic:
 
 \begin{itemize}
 \item \texttt{sampleMean (n : $\mathbb{N}$) (x : Fin n $\to$
-$\mathbb{R}$)} --- the sample mean
+$\mathbb{R}$)}: the sample mean
 $\bar{x} = \frac{1}{n} \sum_i x_i$.
-\item \texttt{deleteOneSum} --- the delete-one partial sum used by
+\item \texttt{deleteOneSum}: the delete-one partial sum used by
 the jackknife.
-\item \texttt{jackknifeMeanStat} --- the jackknife pseudovalue
+\item \texttt{jackknifeMeanStat}: the jackknife pseudovalue
 mean.
-\item \texttt{jackknifeVariance} --- the jackknife variance
+\item \texttt{jackknifeVariance}: the jackknife variance
 estimator
 $\sigma^2_{\mathrm{JK}} = \frac{n-1}{n} \sum_i (\theta_i - \bar{\theta})^2$
 with the textbook bias-correction factor.
 \item \texttt{autocovariance (n : $\mathbb{N}$) (x : Fin n $\to$
-$\mathbb{R}$) (t : $\mathbb{N}$) (ht : t < n)} ---
+$\mathbb{R}$) (t : $\mathbb{N}$) (ht : t < n)}:
 the unnormalized autocovariance
 $C(t) = \sum_i (x_i - \bar{x})(x_{i+t} - \bar{x})$.
 \item \texttt{intAutocorrTime (n : $\mathbb{N}$) (x : Fin n $\to$
-$\mathbb{R}$) (W : $\mathbb{N}$) (hW : W + 1 < n)} ---
+$\mathbb{R}$) (W : $\mathbb{N}$) (hW : W + 1 < n)}:
 the integrated autocorrelation time with finite window $W$.
-\item \texttt{effectiveSampleSize} --- the effective sample size
+\item \texttt{effectiveSampleSize}: the effective sample size
 $N_{\mathrm{eff}} = N / (2 \tau_{\mathrm{int}})$.
 \end{itemize}
 
@@ -291,9 +291,9 @@ on the sample space and are not part of \texttt{VerifiedJackknife};
 they would belong to a future
 \texttt{Mathlib.Probability.Statistics} extension that does not yet
 exist at the relevant scope. The library's claim is that the
-estimators are deterministically what they are claimed to be ---
-non-negative, ordered correctly, with the right textbook prefactors
---- not that they are unbiased estimators of population quantities
+estimators are deterministically what they are claimed to be
+(non-negative, ordered correctly, with the right textbook prefactors),
+not that they are unbiased estimators of population quantities
 the user did not ask the library to know about. This is the
 appropriate scope for formal infrastructure: ground the symbolic
 content; leave the inferential semantics to consumers who have a
@@ -347,7 +347,7 @@ condition $\det S \neq 0$.}
 declarations:
 
 \begin{itemize}
-\item \texttt{class BalancedCategory} --- a braided monoidal
+\item \texttt{class BalancedCategory}: a braided monoidal
 category equipped with a twist
 $\theta : \mathbf{1} \Rightarrow \mathbf{1}$ satisfying the
 balancing axiom
@@ -355,13 +355,13 @@ $\theta_{X \otimes Y} = (\theta_X \otimes \theta_Y) \circ
 \beta_{Y, X} \circ \beta_{X, Y}$.
 \item \texttt{class RibbonCategory} (extending
 \texttt{BalancedCategory}, with \texttt{RigidCategory} as a
-typeclass parameter) --- a balanced rigid category with the
+typeclass parameter): a balanced rigid category with the
 twist--dual compatibility $\theta_{X^*} = (\theta_X)^*$. The class
 hierarchy carries duals through the \texttt{RigidCategory}
 parameter rather than via \texttt{PivotalCategory} inheritance; a
 refactor to align with the textbook ``balanced + pivotal''
 presentation of Bakalov--Kirillov / EGNO is a separate planned task.
-\item \texttt{structure ModularTensorData} --- the structural data
+\item \texttt{structure ModularTensorData}: the structural data
 for an MTC: a finite set of simple objects, an $S$-matrix, a
 $T$-matrix (the twist read on the simple-object basis), and the
 non-degeneracy condition $\det S \neq 0$ that promotes a fusion
@@ -497,8 +497,8 @@ decidable-arithmetic primitives that allow downstream code to use
 $\mathbb{Q}(\sqrt{2})$-coefficient $S$-matrix entries without
 opening Mathlib's abstract \texttt{AdjoinRoot} API. The planned
 \texttt{ComputableAdjoinRoot}-style bridge between these two
-representations --- not yet shipped as a separate file but
-implicit in \texttt{QSqrt2.lean}'s structure --- is the leading
+representations (not yet shipped as a separate file but
+implicit in \texttt{QSqrt2.lean}'s structure) is the leading
 proposed Mathlib upstream PR (Section~\ref{sec:upstream}).
 
 \subsection{The cyclotomic family}
@@ -521,7 +521,7 @@ arithmetic.
 The cumulative count is 207 declarations across the nine
 algebraic-number-field modules. The decidability structure
 integrates decidable-cyclotomic and decidable-quadratic-extension
-arithmetic in a single library --- Mathlib provides each
+arithmetic in a single library: Mathlib provides each
 separately, but supporting both $\sqrt{n}$ and $\zeta_n$ in the
 same library with composable decidable equality is original to
 this library.
@@ -756,7 +756,7 @@ heaviest assistance and the human-review protocol applied to them.
 The protocol is not a request for special treatment; it is
 disclosure that lets reviewers calibrate effort. We expect Mathlib's
 acceptance threshold to be the same for AI-assisted contributions
-as for unassisted ones --- the standard is correctness, mathematical
+as for unassisted ones: the standard is correctness, mathematical
 relevance, and engineering quality, not the provenance of the
 typing.
 
@@ -764,9 +764,9 @@ typing.
 \centering
 \includegraphics[width=0.95\linewidth]{figures/i2_fig5_mathlib_upstream_flow.png}
 \caption{Mathlib upstream coordination flow. Three sequential
-relationship-building gates --- R1 (Mathlib Zulip introduction),
-R2 (AI-tool-assistance disclosure), R3 (PR-strategy discussion with
-maintainers) --- precede the atomic-PR chain: PR-1 \texttt{QSqrt2 +
+relationship-building gates (R1: Mathlib Zulip introduction;
+R2: AI-tool-assistance disclosure; R3: PR-strategy discussion with
+maintainers) precede the atomic-PR chain: PR-1 \texttt{QSqrt2 +
 ComputableAdjoinRoot} bridge, PR-2 \texttt{PivotalCategory +
 RibbonCategory}, PR-3 \texttt{QuasitriangularBialgebra +
 RibbonHopfAlgebra}, and PR-4+ MTC instances. The cool-grey branch
@@ -893,9 +893,9 @@ Hopf algebra, a Ribbon Hopf algebra typeclass, or modular tensor
 categories \emph{as such}; the Agda \texttt{categories} library
 covers similar foundational categorical content with comparable
 scope. The content shipped here that complements rather than
-duplicates those ecosystems --- documented by the prior-art search
+duplicates those ecosystems (documented by the prior-art search
 in the SK--EFT Hawking project's \texttt{Lit-Search/Phase-5o/}
-dossier --- comprises: a non-trivial Hopf algebra in three
+dossier) comprises: a non-trivial Hopf algebra in three
 specializations ($U_q(\mathfrak{sl}_2)$,
 $U_q(\widehat{\mathfrak{sl}}_2)$, $U_q(\mathfrak{sl}_3)$); the
 Ribbon and Modular Tensor Category typeclasses; an MTC fusion-rule

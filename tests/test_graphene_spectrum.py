@@ -52,9 +52,19 @@ class TestDetectionProtocol:
         proto = detection_protocol_summary('Dean_bilayer_nozzle')
         assert proto['eft_valid'] is True
 
-    def test_dean_dispersive_dominates(self):
+    def test_dean_dissipative_dominates(self):
+        """INVERTED 2026-08-09 — the dissipative channel is the larger one.
+
+        Was `dominant == 'dispersive'`, which held only while ν was missing
+        its velocity² and δ_diss sat at 1.7e-13. Both terms are asserted, not
+        just the label, so a future regression in either one fails here rather
+        than silently flipping a string.
+        """
         proto = detection_protocol_summary('Dean_bilayer_nozzle')
-        assert proto['corrections']['dominant'] == 'dispersive'
+        corr = proto['corrections']
+        assert corr['dominant'] == 'dissipative'
+        assert corr['delta_diss'] > abs(corr['delta_disp'])
+        assert corr['delta_diss'] * corr['delta_disp'] < 0, 'opposite signs'
 
     def test_integration_time_finite(self):
         proto = detection_protocol_summary('Dean_bilayer_nozzle')
@@ -84,12 +94,30 @@ class TestPhysicalConsistency:
         high_freq_half = spec.n_hawking[len(spec.n_hawking)//2:]
         assert high_freq_half[-1] < high_freq_half[0]
 
-    def test_planck_approximation_at_low_freq(self):
-        """At low ω, n_Hawking ≈ n_Planck (corrections small for Dean)."""
+    def test_low_freq_ratio_equals_the_correction_factor(self):
+        """At low ω the Hawking/Planck ratio IS the correction factor.
+
+        As ω → 0 both occupations go as 1/ω, so their ratio tends to the
+        closed form the spectrum is built from:
+
+            n_H/n_P  →  (1 + δ_disp + δ_diss) / (1 − δ_k),   δ_k = 2δ_diss
+
+        The superseded assertion was `|ratio − 1| < 0.1` under the heading
+        "corrections small for Dean". That was true only because δ_diss was
+        1.7e-13; the ratio is now 1.19, and asserting the identity rather than
+        a tolerance means the test tracks the physics instead of the era.
+        """
+        from src.graphene.hawking_predictions import graphene_hawking_prediction
         spec = compute_graphene_spectrum('Dean_bilayer_nozzle')
-        # First few bins: Hawking should be within 10% of Planck
+        pred = graphene_hawking_prediction('Dean_bilayer_nozzle')
+        expected = ((1 + spec.delta_disp + spec.delta_diss)
+                    / (1 - pred['delta_k']))
         ratio = spec.n_hawking[:5] / spec.n_planck[:5]
-        assert np.all(np.abs(ratio - 1.0) < 0.1)
+        # n_noise adds a small ω-dependent excess on top of the limit, so the
+        # ratio approaches `expected` from above as ω falls.
+        assert np.all(ratio > expected)
+        assert abs(ratio[0] - expected) < 0.01
+        assert np.all(np.diff(ratio) > 0), 'ratio rises with ω away from the limit'
 
     def test_S_thermal_flat(self):
         """Johnson-Nyquist noise is frequency-independent (white noise)."""

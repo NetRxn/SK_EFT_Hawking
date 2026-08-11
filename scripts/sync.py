@@ -51,6 +51,12 @@ def main(argv=None) -> int:
     fast = a.fast or not a.full  # default fast
 
     ok = True
+    # Artifacts whose regeneration was SKIPPED because another process held the lock.
+    # Tracked, not merely printed: a skip means this run proceeded on whatever was already
+    # on disk, so "sync OK" would otherwise report success over work that did not happen.
+    # The lock's own behaviour is correct — it reports contention honestly; the defect was
+    # that callers discarded that signal (ARCHITECTURE_TODOs A1).
+    skipped: list[str] = []
     # Dependency order: lean_deps/counts first (heavy), then cheap derivations. Each
     # shared-artifact regen is serialized by the regen concurrency lock (spec 12 / Task 7):
     # if another agent (parallel worktree / lead+worker) holds the lock, SKIP and proceed on
@@ -63,6 +69,7 @@ def main(argv=None) -> int:
                 if got:
                     ok = _run(e.regen_cmd) and ok
                 else:
+                    skipped.append(str(e.output))
                     print(f"  (skip {e.output}: another agent is regenerating it)")
     if a.full:
         print("citation chain (S1):")
@@ -73,9 +80,22 @@ def main(argv=None) -> int:
                 ok = _run(["uv", "run", "python", "scripts/validate.py",
                            "--check", "citation_primary_sources_present"]) and ok
             else:
+                skipped.append("citation chain")
                 print("  (skip citation chain: another agent is regenerating it)")
-    print("sync OK" if ok else "sync had failures")
-    return 0 if ok else 1
+
+    # A skip is NOT a success. The exit code stays 0 — another process is doing the work and
+    # failing the caller would be wrong — but the summary must never read "sync OK" when a
+    # stale artifact was left in place, and it names what was skipped so the caller can re-run.
+    if not ok:
+        print("sync had failures")
+        return 1
+    if skipped:
+        print(f"sync INCOMPLETE — {len(skipped)} artifact(s) left stale because another "
+              f"process holds the lock: {', '.join(skipped)}")
+        print("  re-run once it finishes; this run did NOT regenerate them")
+        return 0
+    print("sync OK")
+    return 0
 
 
 if __name__ == "__main__":

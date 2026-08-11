@@ -8,7 +8,7 @@
   "stage10_status": "pending-redo",
   "stage13_status": "pending-redo",
   "stage13_redo_required": true,
-  "freshness_stale": false,
+  "freshness_stale": true,
   "source_manifest_last_regen": "2026-07-30T23:27:11Z",
   "last_lift": "2026-07-30T21:43:13Z",
   "last_stage9_review": "2026-07-31T04:10:00Z",
@@ -27,5 +27,70 @@
     "ParameterProvenance"
   ],
   "readiness": "RED",
-  "readiness_last_computed": "2026-08-01"
+  "readiness_last_computed": "2026-08-01",
+  "apex_theorems": [
+    {
+      "name": "SKEFTHawking.Detection.avgError_ge_affinity_sq",
+      "claims": "Abstract + §Poisson — Le Cam/Bhattacharyya average-error floor, valid for EVERY randomized count rule, with no false-alarm constraint and no likelihood-ratio assumption",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.Detection.darkBaseline_zeroFalseAlarm_load_bearing",
+      "claims": "Abstract + §Poisson — the zero-false-alarm dark-baseline optimum; its STRICT inequality is also the 'folklore floor is false-strict against a realizable counter' half",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.Detection.folklore_avgFloor_unsound_of_bright",
+      "claims": "Abstract + §Poisson — the opposite failure direction: exp(-N_diff) is exponentially FAIL-OPEN when used as an average-error screen",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.Detection.avgError_ge_gaussianQ_sharp",
+      "claims": "Abstract + §Poisson — Gaussian readout separation-budget floor, uniform over threshold placement",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.Detection.enbw_mul_window_isLeast",
+      "claims": "Abstract + §Filtered-readout — realizability forces ENBW*T >= 1/2, SHARP as a least element (IsLeast, not merely a bound)",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.Detection.matchedFilter_isGreatest",
+      "claims": "Abstract + §Filtered-readout — matched filtering is optimal as a GREATEST element",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.Detection.filteredSNR_eq_budget_iff",
+      "claims": "Abstract + §Filtered-readout — the sign-free characterization of matched-filter saturation is FALSE; equality holds iff the filter agrees a.e. with its DC average times the boxcar, a multiple that must be nonzero but need not be positive",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.Electrothermal.ETFModel.etf_stable_iff",
+      "claims": "Abstract + §Electrothermal — stability is an EXACT DICHOTOMY in the loop gain (PerturbationsDecay <-> -1 < loopGain)",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.Electrothermal.ETFModel.absLoopGain_criterion_unsound",
+      "claims": "Abstract + §Electrothermal — the magnitude-only electrothermal stability criterion is UNSOUND, exhibited by two models with equal |loopGain| and opposite stability",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.Control.rwa_propagator_difference_bound_physical",
+      "claims": "Abstract + §Two-level control — the rotating-wave reduction is an INEQUALITY with an explicit remainder at Bloch-Siegert scale, never an equality",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.Control.relaxation_detector_chain_ceiling",
+      "claims": "Abstract + §Composite readout ceilings + §Conclusion — the floors propagate to end-to-end assignment-fidelity ceilings across the full chain including relaxation",
+      "declared": "2026-08-06"
+    }
+  ],
+  "length_target": {
+    "unit": "pages",
+    "floor": 21,
+    "ceiling": 52,
+    "source": "PAPER_STRATEGY.md §6"
+  },
+  "compiled_pages": 11,
+  "compile_gate_ok": true
 }

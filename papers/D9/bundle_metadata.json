@@ -4,11 +4,11 @@
   "title": "Kernel-Verified Quantum-Network and Device-Characterization Certification Substrate",
   "target_journal": "PRX Quantum | Quantum",
   "phase7_subphase": "6AA-6AQ",
-  "stage9_status": "green",
+  "stage9_status": "pending",
   "stage10_status": "pending",
-  "stage13_status": "green",
-  "stage13_redo_required": false,
-  "freshness_stale": false,
+  "stage13_status": "pending",
+  "stage13_redo_required": true,
+  "freshness_stale": true,
   "source_manifest_last_regen": "2026-06-10T20:39:59Z",
   "last_lift": "2026-06-10T20:39:59Z",
   "last_stage9_review": "2026-06-10T20:00:00Z",
@@ -59,6 +59,151 @@
   ],
   "open_findings": 0,
   "blocked_p1_gates": [],
-  "readiness": "GREEN",
-  "readiness_last_computed": "2026-07-31"
+  "readiness": "UNMEASURED",
+  "readiness_last_computed": "2026-08-09",
+  "apex_theorems": [
+    {
+      "name": "SKEFTHawking.QuantumNetwork.diamondDist_eq_choiSDP",
+      "claims": "§2 — the full Watrous Choi-SDP primal=dual identity, proven unconditionally",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.exists_diamondDist_eq",
+      "claims": "§2 — the diamond-distance supremum is ATTAINED by an optimal input state",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.one_sub_sqrtFidelity_le_traceDist",
+      "claims": "§2 — Fuchs-van de Graaf lower bound 1-F <= D",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.traceDist_le_sqrt_one_sub_sqrtFidelity_sq",
+      "claims": "§2 — Fuchs-van de Graaf upper bound D <= sqrt(1-F^2), purification-free",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.diamondDist_ge_choi_traceNorm",
+      "claims": "§2 — Choi sandwich, lower side",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.diamondDist_le_choi_opNorm",
+      "claims": "§2 — Choi sandwich, upper side",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.diamondDist_errorBasisKraus_eq",
+      "claims": "§2 — exact diamond distance for any unitary-error-basis channel (Pauli, two-qubit, Weyl are instances)",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.diamondDist_genAmpDamp_bracket",
+      "claims": "§2 — the two-sided bracket where the channel is NOT covariant (thermal amplitude damping)",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.quantum_fannes_audenaert_sharp",
+      "claims": "§3 — the sharp unconditional Audenaert continuity bound with constant log(d-1)",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.vonNeumannEntropy_subadditive",
+      "claims": "§3 — subadditivity of the von Neumann entropy",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.no_local_distillation_to_bellPair",
+      "claims": "§3 — one-shot distillation no-go from the negativity monotone",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.logNegB_ncopy_localKraus_le",
+      "claims": "§3 — the regularized n-copy distillation-rate bound E_D <= E_N",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.swapChain_fidelity_envelope",
+      "claims": "§4 — the model-independent end-to-end fidelity envelope for Werner swap chains",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.decayInclusive_fidelity_envelope",
+      "claims": "§4 — its memory-decoherence-inclusive generalization",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.bbpsswRecurrence_gt",
+      "claims": "§4 — BBPSSW distillability: purification strictly increases fidelity on (1/2,1)",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.teleportAvgFidelity_horodecki_unconditional",
+      "claims": "§4 — Horodecki teleportation fidelity, unconditional (Haar-Pauli integral discharged)",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.bb84_positiveKey_fidelity_threshold",
+      "claims": "§4 — BB84 positive key iff F_e2e above the PROVEN (not hardcoded) crossover",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.FlowNetwork.maxFlow_eq_minCut",
+      "claims": "§4 — network capacity max-flow/min-cut strong duality, built in-project",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.erasureBound_le_plobBound",
+      "claims": "§4 — the erasure repeaterless ceiling against the PLOB form",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.avgGateFidelity_coherenceChannel_antitone",
+      "claims": "§5 — the coherence-limited average-gate-fidelity ceiling is monotone in gate duration",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.diamondDist_coherence_after_control_le",
+      "claims": "§5 — composed coherence-after-control gate bound",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.avgGateFidelity_diamondDist_two_sided",
+      "claims": "§5 — the randomized-benchmarking-style two-sided certificate",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.diamondDist_spamBitFlip_eq",
+      "claims": "§5 — SPAM readout bit-flip: diamond distance is exactly the readout error probability",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.avgAssignmentError_combined_floor",
+      "claims": "§5 — the combined relaxation+thermal readout assignment-error floor",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.expNeg_enclosure",
+      "claims": "§6 — the rational enclosure bracketing every decaying-exponential operating point",
+      "declared": "2026-08-06"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.linearResponseRateFunctionCentered_is_ldp_certified",
+      "claims": "§1, §4.2 — the consumption claim's certification half: the very rate function D9's tail bound is about is the one I3's LDP layer certifies as LDPCompatibleSKEFT. Split out from the theorem above, where it was a hypothesis-independent conjunct",
+      "declared": "2026-08-09"
+    },
+    {
+      "name": "SKEFTHawking.QuantumNetwork.fdt_rare_event_tail_is_ldp_certified",
+      "claims": "§1, §4.2 — the consumption claim's substantive half: D9's rare-event tail bounded strictly below by the explicit centering constant β²σ²/8, off the FDT-pinned mean",
+      "declared": "2026-08-09"
+    }
+  ],
+  "length_target": {
+    "unit": "pages",
+    "floor": 24,
+    "ceiling": 60,
+    "source": "PAPER_STRATEGY.md §6"
+  },
+  "compiled_pages": 12,
+  "compile_gate_ok": true
 }

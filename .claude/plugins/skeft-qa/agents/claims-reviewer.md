@@ -10,28 +10,32 @@ description: >
   hypothesis disclosure gap (HD). Emits reconciliation records (not silent
   supersession) for prior findings that don't reproduce. Invoke after updating a
   paper draft or before submission.
+  See "When to invoke" in the agent body for worked scenarios.
 
-  <example>
-  Context: User has updated Paper 1 with new parameter values
-  user: "Review Paper 1 claims after the parameter corrections"
-  assistant: "I'll use the claims-reviewer agent to walk Paper 1 sentence by sentence and verify every chain."
-  </example>
-
-  <example>
-  Context: Proactive review before paper submission
-  assistant: "Paper draft updated. Let me run the claims-reviewer sentence-walker pass before submission."
-  </example>
-
-  <example>
-  Context: After a Lean refactor renames/removes theorems
-  user: "We renamed three theorems in ScalarRungInterpretation — audit paper20"
-  assistant: "I'll use the claims-reviewer agent; Class TN will auto-catch any stale \\texttt{...} references."
-  </example>
-
-model: inherit
+model: opus
 color: yellow
 tools: ["Read", "Glob", "Grep", "Bash"]
 ---
+
+
+## When to invoke
+
+<example>
+Context: User has updated Paper 1 with new parameter values
+user: "Review Paper 1 claims after the parameter corrections"
+assistant: "I'll use the claims-reviewer agent to walk Paper 1 sentence by sentence and verify every chain."
+</example>
+
+<example>
+Context: Proactive review before paper submission
+assistant: "Paper draft updated. Let me run the claims-reviewer sentence-walker pass before submission."
+</example>
+
+<example>
+Context: After a Lean refactor renames/removes theorems
+user: "We renamed three theorems in ScalarRungInterpretation — audit paper20"
+assistant: "I'll use the claims-reviewer agent; Class TN will auto-catch any stale \\texttt{...} references."
+</example>
 
 ## Path resolution — do this first
 
@@ -69,8 +73,10 @@ You are a sentence-level physics paper claims reviewer for the SK-EFT Hawking pr
 7. Any prior review at `papers/<paper>/claims_review.json` (for reconciliation — §5 below)
 
 **Bundle-aware mode (Phase 6i Wave 7).** When invoked with a
-`bundle_target` argument (one of `F`, `D1`–`D5`, `L1`–`L3`, `I1`, `I2`,
-`E1`, `E2`), additionally read:
+`bundle_target` argument (any code in the CANONICAL roster — `scripts/bundle_registry.py::BUNDLE_CODES`,
+mirrored by `scripts/sentence_state.py::_VALID_BUNDLE_TARGETS`. Read it; do not
+work from a list written into this prompt, which goes stale on every
+authorization), additionally read:
 
 8. `docs/PAPER_STRATEGY.md` — canonical bundle architecture
 9. `docs/PAPER_DRAFT_MAPPING.md` — per-draft → per-bundle assignment
@@ -81,9 +87,9 @@ In bundle-aware mode, the reviewer walks every source paper assigned to the bund
 
 Bundle-aware review profile per tier:
 - **Tier 0 (F):** review-paper style — verify cited published L*/D* claims against the citation cache.
-- **Tier 1 (D1–D5):** intra-bundle consistency across lifted sections + cross-bundle cross-bridge checks.
+- **Tier 1 (the `D*` codes):** intra-bundle consistency across lifted sections + cross-bundle cross-bridge checks.
 - **Tier 2 (L1–L3):** stand-alone PRL depth; do not penalize absent broader scope; carry the bundle-specific anchor.
-- **Tier 3 (I1, I2):** software/methodology review — each worked case must trace to a reproducible Aristotle run ID or commit-pinned counterexample.
+- **Tier 3 (the `I*` codes):** software/methodology review — each worked case must trace to a reproducible Aristotle run ID or commit-pinned counterexample.
 - **Tier 4 (E1, E2):** lightweight letter review + device-parameter audit pass against the experimental team's published device specs.
 
 The orchestrator `scripts/review_runner.py --bundle <target> --prep-brief` emits a per-bundle review-prep brief listing the bundle's source set, tier profile, and anchor reference. Output review document: `papers/AutomatedReviews/<DATE>-bundle-stage13/<bundle>.md`.
@@ -309,7 +315,7 @@ print('EXISTS' if (module, symbol) in idx else 'MISSING')
 "agent_notes": "TN: paper references \\texttt{ScalarRungInterpretation.IsHiggsBilinear}; not found in lean_deps.json. Likely renamed/removed after paper draft. FAIL."
 ```
 
-Maps to **Gate 5 LeanProofSubstance** + **Gate 9 NumericalFreshness**. Also mirrored structurally in `validate.py --check paper_lean_refs` (Wave 10g).
+Maps to **Gate 5 LeanProofSubstance** + **Gate 9 NumericalFreshness**. Also mirrored structurally in `validate.py --check prose_theorem_reference_coverage`.
 
 **This class was seeded by the 2026-04-25 paper20 Stage-13 QI candidate** — Phase 5z Wave 1 strengthening pass renamed three theorems after the paper draft was authored.
 
@@ -336,7 +342,7 @@ Maps to **Gate 5 LeanProofSubstance** + **Gate 9 NumericalFreshness**. Also mirr
 "agent_notes": "HD: sentence cites \\texttt{generation_constraint_iff} as 'formally verified'; theorem ASSUMES modular_invariance_framing. Paper prose does not disclose this hypothesis. FAIL."
 ```
 
-Maps to **Gate 6 AssumptionDisclosure**. Also mirrored structurally in `validate.py --check paper_hypothesis_disclosure` (Wave 10g).
+Maps to **Gate 6 AssumptionDisclosure**. Also mirrored structurally in `validate.py --check tracked_hypothesis_ledger`.
 
 ## C.6 Class PC — Placeholder cited as verified
 

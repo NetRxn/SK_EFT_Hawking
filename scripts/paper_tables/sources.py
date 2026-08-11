@@ -37,6 +37,18 @@ def _format_sci(x: float, precision: int = 1) -> str:
     return f'${mantissa} \\times 10^{{{exp_int}}}$'
 
 
+#: Control sequences a check description may use and have typeset as LaTeX. Every
+#: other `\command` is rendered as literal code by `_neutralize_unsafe_macro`.
+#: Keep this SMALL — it is an allowlist precisely so that an unknown macro fails
+#: safe (typesets oddly) rather than fatally (aborts pdflatex). Entries must be
+#: defined by every document that `\input`s a generated table, i.e. plain LaTeX or
+#: the shared preamble — NOT a macro one bundle happens to define.
+_TABLE_DESC_SAFE_MACROS = frozenset({
+    'texttt', 'textbf', 'textit', 'emph', 'textbackslash',
+    'leq', 'geq', 'times', 'to', 'ldots', 'dots',
+})
+
+
 def _escape_latex_text(s: str) -> str:
     """Escape the LaTeX-special characters that recur in machine-parsed
     prose (stage names, gate text, check names/descriptions) but are
@@ -329,6 +341,7 @@ def lean_module_summary(modules: list[str],
     """
     import json as _json
     from src.core.constants import ARISTOTLE_THEOREMS
+    from validate_helpers import autogen_index as _autogen_index
 
     lean_deps_path = PROJECT_ROOT / "lean" / "lean_deps.json"
     data = []
@@ -337,6 +350,17 @@ def lean_module_summary(modules: list[str],
             data = _json.loads(lean_deps_path.read_text())
         except Exception:
             data = []
+
+    # `kind == "theorem"` includes Lean's OWN products — `.eq_1`, `.sizeOf_spec`,
+    # `.inj`, `.congr_simp`, `.eq_def`. Publishing them as "theorems" inflated
+    # LatticeHamiltonian 33->62 and paper7's Total 79->135 in tracked, reader-facing
+    # tables. `validate_helpers.autogen_index` is the SINGLE owner of "is this
+    # compiler-generated"; do NOT reintroduce a local `kind == "theorem"` filter here
+    # or in any other generator (this is the fourth site to have carried one).
+    _autogen = _autogen_index(data)
+
+    def _is_author_theorem(d: dict) -> bool:
+        return d.get('kind') == 'theorem' and not _autogen.get(d.get('name', ''))
 
     # Build per-module index
     by_module: dict[str, list[dict]] = {}
@@ -349,7 +373,7 @@ def lean_module_summary(modules: list[str],
     totals = {'theorems': 0, 'aristotle': 0, 'sorry': 0, 'axioms': 0, 'definitions': 0}
     for short_name in modules:
         decls = by_module.get(short_name, [])
-        theorems = sum(1 for d in decls if d.get('kind') == 'theorem')
+        theorems = sum(1 for d in decls if _is_author_theorem(d))
         axioms = sum(1 for d in decls if d.get('kind') == 'axiom')
         definitions = sum(1 for d in decls if d.get('kind') == 'def')
         sorry_count = sum(
@@ -358,7 +382,7 @@ def lean_module_summary(modules: list[str],
         )
         aristotle_count = sum(
             1 for d in decls
-            if d.get('kind') == 'theorem'
+            if _is_author_theorem(d)
             and d.get('name', '').rsplit('.', 1)[-1] in ARISTOTLE_THEOREMS
         )
         totals['theorems'] += theorems
@@ -403,12 +427,24 @@ def lean_module_summary(modules: list[str],
     return rows
 
 
+#: Live population of `^Stage N:` lines in WAVE_EXECUTION_PIPELINE.md, zero headroom.
+PIPELINE_STAGES_FLOOR = 15
+
+
 def pipeline_stages() -> list[dict]:
-    """The 12 pipeline stages + their gates, parsed from
+    """Every pipeline stage + its gate, parsed from
     `docs/WAVE_EXECUTION_PIPELINE.md`. Used by Paper 15 Table 1.
 
     Returns rows with: stage (number), name (stage name), gate (gate
     description text).
+
+    ⚠️ The count is DERIVED, never asserted. This docstring said "12" while the
+    parse returned 13 and the pipeline had 14, and the two stages it dropped were
+    dropped SILENTLY into a published table: `ARISTOTLE (FALLBACK)` because the
+    name pattern excluded parentheses, and `META-PROCESS QI` because its line reads
+    `-> Advisory:` rather than `-> Gate:`. Paper 15 is the methodology paper, so its
+    Table 1 was describing this pipeline with Aristotle missing from it. The
+    completeness assertion below now makes a silent drop impossible.
     """
     import re as _re
     pipeline_md = PROJECT_ROOT / "docs" / "WAVE_EXECUTION_PIPELINE.md"
@@ -418,13 +454,18 @@ def pipeline_stages() -> list[dict]:
     text = pipeline_md.read_text()
     # Parse the summary block "Stage N: NAME → Gate: ..."
     rows = []
+    # `()` must be in the name class (ARISTOTLE (FALLBACK)); the verdict label is
+    # `Gate:` OR `Advisory:` (Stage 14 is advisory by design, not a gate).
     summary_re = _re.compile(
-        r'Stage\s+(\d+[a-z]?)[:\s]+([A-Z][A-Z &—\-]+?)\s+→\s+Gate:\s+(.+)',
+        r'Stage\s+(\d+[a-z]?)[:\s]+([A-Z][A-Z &—()\-]+?)\s+→\s+(?:Gate|Advisory):\s+(.+)',
         _re.MULTILINE,
     )
     for m in summary_re.finditer(text):
         stage_num = m.group(1)
-        name = m.group(2).strip().title().replace('Sk', 'SK')
+        # `.title()` lowercases initialisms; each needs restoring. `Sk`->`SK` was already
+        # here, and `Qi`->`QI` joined it when Stage 14 first parsed (it had been dropped
+        # entirely, so its rendering had never been seen).
+        name = m.group(2).strip().title().replace('Sk', 'SK').replace('Qi', 'QI')
         gate = m.group(3).strip()
         rows.append({
             'stage': stage_num,
@@ -434,6 +475,37 @@ def pipeline_stages() -> list[dict]:
             'name': _escape_latex_text(name),
             'gate': _escape_latex_text(gate),
         })
+
+    # COMPLETENESS ASSERTION — the parse must account for every stage the summary
+    # block declares. Table 2 in this same file already shipped as an EMPTY TABULAR
+    # once (see `validation_checks` below) because a generator that silently stops
+    # matching looks identical to one with nothing to emit, and `tables_fresh`
+    # compares mtimes, not content. Table 1 then repeated the class in miniature,
+    # dropping ARISTOTLE and META-PROCESS QI. A count that disagrees is a parse bug,
+    # never a pipeline that shrank: stage numbers are immutable by this document's
+    # own rule, so raise rather than publish a short table.
+    declared = len(_re.findall(r'^Stage\s+\d+[a-z]?:', text, _re.MULTILINE))
+    # `if declared and ...` short-circuits the whole assertion at zero, and `declared`
+    # keys on the same summary-block formatting the row parse does — so one reformat
+    # silences both together and publishes an empty tabular, which is the incident this
+    # assertion cites. Both counts carry a floor.
+    # Floor 15 = the live population at zero headroom (Stages 1,2,3a,3b,4-14). A floor of
+    # 14 sat one BELOW it, so deleting the ARISTOTLE line alone gave declared=rows=14 and
+    # published a 14-row table — the exact defect this assertion cites. Lower only with a
+    # dated reason, like every other ratchet here.
+    if declared < PIPELINE_STAGES_FLOOR or not rows:
+        raise RuntimeError(
+            f"pipeline_stages: {declared} stage(s) declared and {len(rows)} parsed from "
+            f"docs/WAVE_EXECUTION_PIPELINE.md. The summary block did not parse — its "
+            f"format changed, or the file moved. Fix the parse; do NOT publish a short "
+            f"or empty table into Paper 15.")
+    if len(rows) != declared:
+        raise RuntimeError(
+            f"pipeline_stages parsed {len(rows)} of {declared} stages declared in "
+            f"docs/WAVE_EXECUTION_PIPELINE.md's summary block. Missing: "
+            f"{sorted(set(_re.findall(r'^Stage\s+(\d+[a-z]?):', text, _re.MULTILINE)) - {r['stage'] for r in rows})}. "
+            f"Fix the parse — do NOT publish a short table into Paper 15."
+        )
     return rows
 
 
@@ -445,28 +517,48 @@ def validation_checks() -> list[dict]:
     Returns rows with: number, name, description.
     """
     import ast as _ast
-    validate_py = PROJECT_ROOT / "scripts" / "validate.py"
-    if not validate_py.exists():
+
+    # ⚠️ SOURCES ARE THE WHOLE SUITE, NOT `validate.py` (fixed 2026-08-04).
+    # This read `scripts/validate.py` alone. ADR-009 Phase 2 moved all 59 check
+    # bodies into `scripts/validation/checks/*.py`, so from commit `c3456a23` this
+    # returned **[]** and Paper 15's Table 2 shipped as an EMPTY TABULAR — header
+    # rules and no rows — while `paper_draft.tex:136` still `\input`s it.
+    #
+    # `tables_fresh` regenerated the file and PASSED throughout, because it compares
+    # MTIMES and never content: a generator whose source set silently emptied looks
+    # exactly like a generator with nothing to do.
+    #
+    # This is the ADR's own thesis turned on the ADR — *a measurement is scoped by a
+    # predicate, and fixing the thing the predicate keyed on voids the measurement*
+    # (D2 item 8's correction). `tests/test_inventory_index_autogen.py` widened the
+    # IDENTICAL scan two commits earlier and this consumer was not swept.
+    sources = [PROJECT_ROOT / "scripts" / "validate.py"]
+    sources += sorted((PROJECT_ROOT / "scripts" / "validation").rglob("*.py"))
+    sources = [p for p in sources if p.exists()]
+    if not sources:
         return []
 
     # AST-based extraction: robust to multi-line decorators, implicit
     # string concatenation in descriptions, and trailing commas — the
     # earlier single-string-literal regex silently dropped 4 of the
     # registered checks (found 2026-06-10 during the I1 methodology sync).
-    tree = _ast.parse(validate_py.read_text())
-    found: list[tuple[int, str, str]] = []
-    for node in _ast.walk(tree):
-        if not isinstance(node, (_ast.FunctionDef, _ast.AsyncFunctionDef)):
-            continue
-        for dec in node.decorator_list:
-            if (isinstance(dec, _ast.Call)
-                    and isinstance(dec.func, _ast.Name)
-                    and dec.func.id == 'register_check'
-                    and len(dec.args) >= 2
-                    and isinstance(dec.args[0], _ast.Constant)
-                    and isinstance(dec.args[1], _ast.Constant)):
-                found.append((dec.lineno, str(dec.args[0].value), str(dec.args[1].value)))
+    found: list[tuple[str, int, str, str]] = []
+    for src in sources:
+        tree = _ast.parse(src.read_text())
+        for node in _ast.walk(tree):
+            if not isinstance(node, (_ast.FunctionDef, _ast.AsyncFunctionDef)):
+                continue
+            for dec in node.decorator_list:
+                if (isinstance(dec, _ast.Call)
+                        and isinstance(dec.func, _ast.Name)
+                        and dec.func.id == 'register_check'
+                        and len(dec.args) >= 2
+                        and isinstance(dec.args[0], _ast.Constant)
+                        and isinstance(dec.args[1], _ast.Constant)):
+                    found.append((src.name, dec.lineno,
+                                  str(dec.args[0].value), str(dec.args[1].value)))
     found.sort()
+    found = [(ln, name, desc) for _f, ln, name, desc in found]
     import re as _re
     rows = []
     for idx, (_, name, desc) in enumerate(found, start=1):
@@ -479,7 +571,28 @@ def validation_checks() -> list[dict]:
         def _neutralize_input(m: 're.Match[str]') -> str:
             arg = m.group(1).replace('_', r'\_')
             return r'\texttt{\textbackslash input\{' + arg + r'\}}'
+
+        def _neutralize_unsafe_macro(m: 're.Match[str]') -> str:
+            name = m.group(1)
+            if name in _TABLE_DESC_SAFE_MACROS:
+                return m.group(0)
+            return r'\texttt{\textbackslash ' + name + r'}'
         desc = _re.sub(r'\\input\{([^}]*)\}', _neutralize_input, desc)
+        # ...and then EVERY other control sequence that is not known-safe in the
+        # target document. The `\input` case above neutralized one known-dangerous
+        # command and trusted the rest; that is an enumerate-the-dangers policy, and
+        # it failed on 2026-08-05 when a check description was edited to mention
+        # `\texttt{}`, `\lean{}` and `\verb` as prose. `\lean` is undefined in
+        # paper15 and a bare `\verb ` takes the following space as its delimiter, so
+        # pdflatex aborted with "Undefined control sequence / no output PDF" — the
+        # SECOND time a check description has broken this exact compile (see the
+        # 2026-06-10 underscore note below).
+        #
+        # Inverted to an allowlist: a description is PROSE written for humans, and
+        # the renderer must make it safe rather than requiring every future author to
+        # know which macros this document defines. Anything outside the safe set
+        # typesets as literal code.
+        desc = _re.sub(r'\\([A-Za-z]+)', _neutralize_unsafe_macro, desc)
         # LaTeX-sanitize check descriptions: escape the special characters
         # (#, &, %, _) that aren't already escaped, then map non-ASCII
         # operators. _escape_latex_text leaves backslashes/braces alone so

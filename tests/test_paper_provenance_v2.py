@@ -370,3 +370,49 @@ class TestStaleDetectionPrecision:
         edges = [{'type': 'BACKED_BY', 'source': 's0', 'target': 'p0'}]
         nodes = {'p0': {'meta': {'last_modified': '2026-12-31T23:59:59Z'}}}
         assert sentence_is_stale(sentence, edges, nodes) is False
+
+
+# ── TODO-D29: the cluster writer must not churn a timestamp ────────────────
+
+class TestClusterWriterIsContentAddressed:
+    """`validate.py` left `papers/claim_clusters.json` dirty on every run with
+    8 insertions / 8 deletions, all `constructed_at`. Same defect class as
+    TODO-T2. Both directions are asserted: an unchanged payload must not be
+    rewritten, and a genuinely changed one must be."""
+
+    def _record(self, label='alpha'):
+        import cluster_detect
+        return cluster_detect.assemble_record(
+            [{'cluster_id': 'c0', 'match_kind': 'exact', 'confidence': 1.0,
+              'label': label, 'normalized_hash': 'h0',
+              'members': ['s0'], 'member_papers': ['pA']}],
+            strategy='exact')
+
+    def test_unchanged_payload_reuses_prior_timestamps(self):
+        import cluster_detect
+        a = self._record()
+        b = self._record()
+        b['constructed_at'] = 'DIFFERENT'
+        for c in b['clusters']:
+            c['constructed_at'] = 'DIFFERENT'
+        assert cluster_detect._strip_timestamps(a) == cluster_detect._strip_timestamps(b)
+
+    def test_changed_payload_is_not_masked(self, tmp_path):
+        """The guard must not swallow a real change — the failure mode of a
+        writer that preserves too eagerly is a file that never updates."""
+        import cluster_detect, json
+        p = tmp_path / 'clusters.json'
+        old = self._record(label='alpha')
+        p.write_text(json.dumps(old, indent=2, sort_keys=True) + '\n')
+
+        changed = self._record(label='BETA')
+        changed['constructed_at'] = 'NEW-STAMP'
+        out = cluster_detect._reuse_timestamps_if_unchanged(changed, p)
+        assert out['constructed_at'] == 'NEW-STAMP', 'real change must re-stamp'
+
+    def test_absent_file_does_not_crash(self, tmp_path):
+        import cluster_detect
+        r = self._record()
+        stamp = r['constructed_at']
+        out = cluster_detect._reuse_timestamps_if_unchanged(r, tmp_path / 'nope.json')
+        assert out['constructed_at'] == stamp

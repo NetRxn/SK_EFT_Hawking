@@ -158,3 +158,52 @@ class TestSmoke:
         live = [d for d in result.details if d.name == "live-pin"]
         assert len(live) == 1
         assert "toolchain v" in live[0].message
+
+
+# ── TODO-D22: a CURRENT PhysLib pin is not drift ──────────────────────────
+
+class TestNonMathlibPinsAreNotDrift:
+    """`_tp_live_pins` returns only Mathlib's rev, so a sentence naming Mathlib
+    and PhysLib together had the PhysLib hash compared against Mathlib's and a
+    correct pin reported stale. D11 and D12 both hit it. Both directions are
+    asserted: a live non-Mathlib rev is clean, a genuinely stale hex still flags."""
+
+    # `_tp_live_pins` strips the leading "v" — verified against the live
+    # resolver rather than assumed from the lean-toolchain file text.
+    LIVE_VER = "4.32.0"
+    LIVE_MATHLIB = "81a5d257c8e410db227a6665ed08f64fea08e997"
+    LIVE_PHYSLIB = "c48433678e8fb6306ebcd48453300c8e16058a62"
+
+    def test_current_physlib_rev_is_not_reported(self):
+        from validate import _tp_scan_lines
+        lines = ["Lean toolchain v4.32.0, Mathlib revision 81a5d257 and "
+                 "PhysLib revision c4843367."]
+        pin, _cap = _tp_scan_lines(lines, self.LIVE_VER, self.LIVE_MATHLIB,
+                                   other_revs=frozenset({self.LIVE_PHYSLIB}))
+        assert pin == [], f"current PhysLib pin reported as drift: {pin}"
+
+    def test_without_the_fix_the_same_line_would_flag(self):
+        """Seeded control: drop the PhysLib rev from the live set and the very
+        same line flags again. Proves the test is sensitive to the repair and
+        not merely to the line being clean."""
+        from validate import _tp_scan_lines
+        lines = ["Lean toolchain v4.32.0, Mathlib revision 81a5d257 and "
+                 "PhysLib revision c4843367."]
+        pin, _cap = _tp_scan_lines(lines, self.LIVE_VER, self.LIVE_MATHLIB)
+        assert any("c4843367" in found for _n, found in pin)
+
+    def test_genuinely_stale_hex_still_flags(self):
+        from validate import _tp_scan_lines
+        lines = ["Mathlib revision deadbeefcafe1234."]
+        pin, _cap = _tp_scan_lines(lines, self.LIVE_VER, self.LIVE_MATHLIB,
+                                   other_revs=frozenset({self.LIVE_PHYSLIB}))
+        assert any("deadbeef" in found for _n, found in pin)
+
+    def test_dep_revs_are_derived_from_the_lakefile(self):
+        """Derived, not hand-listed: mathlib and physlib both present."""
+        import sys, pathlib
+        sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / "scripts"))
+        from validation.checks.papers_prose import _tp_live_dep_revs
+        revs = _tp_live_dep_revs()
+        assert "mathlib" in revs and "physlib" in revs
+        assert all(len(v) >= 8 for v in revs.values())

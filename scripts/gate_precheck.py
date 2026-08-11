@@ -4,7 +4,11 @@ so Opus tokens/wall-time never burn on stale/failing state (spec 12 L4).
 
   gate_precheck.py s9   -> figures fresh + structural (before figure-reviewer)
   gate_precheck.py s10  -> paper_provenance + tables_fresh + placeholder/citation (before claims-reviewer)
-  gate_precheck.py s13  -> validate.py green over Stages 1-12 (before adversarial)
+  gate_precheck.py s13  -> validate.py green over Stages 1-12, INCLUDING the LaTeX
+                           compile (before adversarial)
+  gate_precheck.py submission
+                        -> the Paper Submission Gate: everything s13 runs, PLUS the
+                           six --strict legs. Run before arXiv/journal submission.
 
 Exit 0 = prereqs pass (safe to dispatch the reviewer); nonzero = do NOT dispatch.
 Stdlib only; delegates to the existing checks.
@@ -23,10 +27,59 @@ STAGE_CHECKS = {
     # (which must be side-effect-free + repeatable, runnable on every gate) would dirty the
     # working tree each time. `validate.py --check viz_consistency` validates the figure/viz
     # layer without any write.
-    "s9":  ["viz_consistency"],
+    # ⚠️ `bundle_figure_integrity` added 2026-08-05 (PR-review pass 2, R5-MAJ2).
+    # s9 ran EXACTLY ONE check — `viz_consistency` — whose body ends
+    # `# Always passes — these are advisory warnings` / `return CheckResult(
+    # passed=True, ...)`. So the deterministic precheck guarding an expensive Opus
+    # figure-reviewer dispatch returned rc=0 unconditionally: a gate that cannot
+    # fail is not a gate. `viz_consistency` is advisory BY DESIGN and stays — the
+    # defect was s9 having nothing else, not that check's disposition.
+    #
+    # `bundle_figure_integrity` is the right companion: it re-renders each bundle
+    # figure and compares, and checks legibility at typeset size, so it fails on
+    # exactly what would waste the review (a stale or unreadable figure). Verified
+    # side-effect-free before adding — a precheck runs before every dispatch and
+    # must not dirty the tree, which is why `review_figures.py --check` is still
+    # excluded (it rewrites tracked `figures/structural_checks.json`).
+    "s9":  ["viz_consistency", "bundle_figure_integrity"],
     "s10": ["paper_provenance", "tables_fresh", "placeholder_not_cited",
             "citation_primary_sources_present"],
-    "s13": ["__full__"],  # validate.py full green over 1-12
+    "s13": ["__full__"],  # validate.py full green over 1-12 (with --force-latex; see below)
+
+    # ── s13-lean: the same gate, scoped to the substrate (added 2026-08-06) ───────
+    # `s13` runs the FULL suite, so a PURE-LEAN wave's Stage-13 dispatch is vetoed by
+    # paper-corpus state the wave never touched. `VALIDATION_GATE_TOPOLOGY.md` §2
+    # recorded that as a known sharp edge; it is now load-bearing, because two
+    # corpus-wide reds (`bundle_metadata_matches_graph`, `readiness_submission_gate`)
+    # mean plain `s13` cannot pass for ANY wave, Lean or paper.
+    #
+    # `s13-lean` runs the IDENTICAL suite and prints the identical failures — only the
+    # EXIT CODE is scoped, via `validate.py --scope substrate`. Nothing is skipped and
+    # nothing is hidden: a Lean wave still sees the paper corpus is red, it just is not
+    # blocked by it.
+    #
+    # Use `s13` for a wave that TOUCHED papers/, and at any point where the corpus
+    # itself is the deliverable. `--scope` is deliberately absent from `submission`:
+    # that gate is scope-blind by design.
+    "s13-lean": ["__substrate__"],
+
+    # ── The Paper Submission Gate (added 2026-08-05) ──────────────────────────────
+    # `WAVE_EXECUTION_PIPELINE.md` Invariant #12 calls `--strict` *"mandatory at the
+    # Paper Submission Gate"*, and :72 spells the gate as a `--strict` invocation — but
+    # NOTHING called it. Six checks carry a strict-only leg (`parameter_provenance`,
+    # `provenance_doi_in_registry`, `bibitem_title_primary_source`,
+    # `theorem_name_embedded_citations`, `axiom_closure_allowlist`,
+    # `bundle_source_freshness`), so an invariant declared mandatory ran nowhere.
+    #
+    # WHY ITS OWN STAGE, not folded into s13. The strict legs gate SUBMISSION, not wave
+    # close, and the distinction is real: `bundle_source_freshness` WARNs whenever a
+    # source paper moved after the last lift, which is the NORMAL state of an
+    # in-progress bundle. Promoting that to a hard fail at every wave close would make
+    # the gate fire on correct work — and a gate that fires on correct work gets
+    # switched off. ADR-009 §Deferred item 6 reached the same split by measurement:
+    # `--strict` is a correctly-designed submission-time mode, and what was missing was
+    # a caller, not a change of default.
+    "submission": ["__strict__"],
 }
 
 
@@ -46,7 +99,26 @@ def main(argv=None) -> int:
     # concern (the official wave-gate validate / /sync), not this cheap pre-dispatch guard.
     for chk in STAGE_CHECKS[stage]:
         if chk == "__full__":
-            rc |= _run(["scripts/validate.py", "--no-archive"])
+            # --force-latex here now means "recompile every draft, ignoring the
+            # per-draft content-hash cache" — 16.6 s, cheap insurance immediately
+            # before an Opus reviewer dispatch.
+            #
+            # ⚠️ It meant something else when it was added earlier on 2026-08-05:
+            # back then it ENABLED the check at all, because `paper_latex_compiles`
+            # was slow-gated and returned PASS with detail "SKIPPED (slow)" by
+            # default — so "full green over Stages 1-12" was achievable with a draft
+            # that does not compile, and D3 does not, with 2 fatal errors. The slow
+            # gate is gone (the compile is always on and change-scoped), so this flag
+            # is no longer load-bearing for CORRECTNESS here; it is a deliberate
+            # belt-and-braces re-measure at the gate. Do not remove it on the grounds
+            # that "the check runs anyway" without re-reading that history.
+            rc |= _run(["scripts/validate.py", "--force-latex", "--no-archive"])
+        elif chk == "__substrate__":
+            rc |= _run(["scripts/validate.py", "--scope", "substrate",
+                        "--force-latex", "--no-archive"])
+        elif chk == "__strict__":
+            rc |= _run(["scripts/validate.py", "--strict", "--force-latex",
+                        "--no-archive"])
         else:
             # A real validate.py check (incl. s9's read-only viz_consistency). Post-Task-2.5 an
             # unknown name returns rc2 -> propagates as FAIL here (never a silent pass). NOTE: we
