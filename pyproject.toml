@@ -36,6 +36,7 @@ dependencies = [
     "pandas>=3.0.1",
     # Provenance dashboard
     "flask>=3.0",
+    "markupsafe>=3.0",      # dashboard XSS escaping; was reachable only via flask/jinja2
     # Datastar SDK — dashboard reactive layer (replaces HTMX/vanilla-JS).
     # Reference: docs/references/Datastar_Dashboard_Reference.md
     "datastar-py>=0.5",
@@ -47,6 +48,15 @@ dependencies = [
     # Pulled by ipython / nbconvert / jupyterlab-pygments unconstrained;
     # pin here to force >=2.20.0 across the dep graph.
     "pygments>=2.20",
+    # Transitive security floors (Dependabot, 2026-08-11). Each is pulled unconstrained by a
+    # direct dep — pillow by matplotlib<-pygridsynth, mistune + soupsieve by nbconvert,
+    # cryptography by pdfminer-six, setuptools by osqp/pygridsynth/torch — so the floor has to
+    # live here or a re-resolve can walk back under it.
+    "pillow>=12.3.0",
+    "mistune>=3.3.0",
+    "soupsieve>=2.8.4",
+    "cryptography>=50.0.0",
+    "setuptools>=83.0.0",
     "pdfminer-six>=20260107",
     "pygridsynth>=2.0.0",
 ]
@@ -64,7 +74,7 @@ jax-cpu = ["jax>=0.9.2"]
 
 # PyTorch MPS GPU backend (Wave 7C production) — ~100× speedup on Apple Silicon.
 # Required for: hs_rhmc_torch.py (to be implemented)
-gpu = ["torch>=2.12.1"]
+gpu = ["torch>=2.13.0"]
 
 # MLX backend (Apple Metal on macOS; CUDA on Linux for the same codebase).
 # Required for: hs_rhmc_mlx.py. On a CUDA-13 box (driver >= 580) switch the
@@ -79,7 +89,7 @@ mlx = [
 rust = []
 
 # All MC backends (development/testing)
-mc-all = ["numba>=0.65.0", "jax>=0.9.2", "torch>=2.12.1"]
+mc-all = ["numba>=0.65.0", "jax>=0.9.2", "torch>=2.13.0"]
 
 [build-system]
 requires = ["hatchling"]
