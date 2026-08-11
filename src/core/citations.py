@@ -141,6 +141,56 @@ CITATION_REGISTRY = {
     # Steinhauer / analog Hawking radiation
     # ════════════════════════════════════════════════════════════════
 
+    # ══════════════════════════════════════════════════════════════════
+    # Cauchy problem for the Einstein equations (I1 motivating citation)
+    # ══════════════════════════════════════════════════════════════════
+    # Added 2026-08-11. Attribution verified by research scout against the DOI
+    # landing page AND independently corroborated by Friedrich & Rendall, whose
+    # survey credits exactly this reduction to Bruhat 1952 as their ref. [16].
+
+    'FouresBruhat1952': {
+        'authors': 'Foures-Bruhat, Y.',
+        'title': ("Theoreme d'existence pour certains systemes d'equations aux "
+                  'derivees partielles non lineaires'),
+        'journal': 'Acta Mathematica',
+        'volume': 88,
+        'page': '141-225',
+        'year': 1952,
+        'doi': '10.1007/BF02392131',
+        'arxiv': None,
+        'doi_verified': None,
+        'inprep': False,
+        'primary_source_path': None,
+        'used_in': ['papers/I1/paper_draft.tex'],
+        'provides': [],
+        'notes': ('Origin of the harmonic-coordinate hyperbolic reduction of the Einstein '
+                  'vacuum equations and the resulting local-existence theorem. Cited in I1 '
+                  'ONLY to motivate a formalization target; the reduction is NOT formalized '
+                  'in this project. Open access via Project Euclid. The paper is in French, '
+                  '~85pp, and was NOT read in full: the attribution rests on Friedrich & '
+                  "Rendall's explicit credit, which is why that source is cited alongside it."),
+    },
+
+    'FriedrichRendall2000': {
+        'authors': 'Friedrich, H., Rendall, A. D.',
+        'title': 'The Cauchy Problem for the Einstein Equations',
+        'journal': 'Lecture Notes in Physics',
+        'volume': 540,
+        'page': '127-224',
+        'year': 2000,
+        'doi': '10.48550/arXiv.gr-qc/0002074',
+        'arxiv': 'gr-qc/0002074',
+        'doi_verified': None,
+        'inprep': False,
+        'primary_source_path': None,
+        'used_in': ['papers/I1/paper_draft.tex'],
+        'provides': [],
+        'notes': ('Modern, freely available survey. Paired with FouresBruhat1952 because it '
+                  'states the harmonic-coordinate reduction and attributes it to Bruhat 1952 '
+                  '(their ref. 16), making the attribution checkable by a referee without '
+                  'reading period French.'),
+    },
+
     'AGP2006': {
         'authors': 'Aliferis, P., Gottesman, D., Preskill, J.',
         'title': 'Quantum accuracy threshold for concatenated distance-3 codes',

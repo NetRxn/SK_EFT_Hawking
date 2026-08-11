@@ -92,9 +92,8 @@ the Aristotle FirstOrderKMS counterexample (where automated proving
 failed and the failure surfaced a substantive physics result), the
 gap-solution-bounded conjecture disproof (where formalization-driven
 counterexample search refuted a literature claim), and the
-chirality-wall axiom decomposition (where structural axiom
-classification turned a single 50-term proof into nine
-individually-tractable sublemmas). Two further studies document the
+chirality-wall exclusion (where decomposing a large goal into
+structural sub-lemmas exposed an assumption no registry recorded). Two further studies document the
 classical-general-relativity mathematics the pipeline accumulated as a
 byproduct, and the discipline by which a theorem is scoped around
 infrastructure the ambient library does not contain.
@@ -878,13 +877,13 @@ the Standard Model is a direct consumption of an upstream arithmetic
 theorem. The size came from stating all of them at once, and it is the
 only thing that made the goal hard.
 
-% TODO: the monolithic attempt and its failure mode are asserted in the
-% project's own working record but have no run identifier: there is no
-% ARISTOTLE_THEOREMS entry for EWBaryogenesisChiralityWall and no
-% archived run for either the failed monolithic submission or a batch
-% closure of the decomposed sub-lemmas. Either a run ID is supplied, or
-% this case study stands on the substrate shape alone (as drafted here)
-% and no claim about an automated-prover outcome is made.
+% RESOLVED 2026-08-11 (ARCHITECTURE_TODOs D49): no Aristotle run exists for
+% this work and none can. The run registry's last entry (986b9f66, 2026-04-07)
+% PREDATES the module's creation (2026-04-27) by three weeks, the results
+% archive has no run spanning that date, and the roadmap mentions the prover
+% zero times -- it records the decomposition as an up-front design choice, not
+% a recovery from a failed monolith. The claim is retired, not softened; this
+% section stands on the substrate shape alone, which is what it always had.
 
 The module as it ships contains no monolithic statement at all. It
 declares sixteen theorems, no \texttt{sorry}, and no project-local
@@ -926,12 +925,6 @@ records that with the wall cracked the compound predicate collapses to
 the phase-transition condition alone; and the quantitative anchor
 \texttt{sm\_klrs\_overshoot\_ratio\_gt\_threshold}.
 
-% TODO: figures/i1_fig6_chirality_wall_tree.png must be regenerated from
-% fig_i1_chirality_wall_tree in src/core/visualizations.py before this
-% caption is accurate. The rendered leaf labels are paraphrases
-% ("Sublemma A.1") rather than declaration names, and the rendered
-% subtitle asserts a single-batch Aristotle closure for which no run
-% record exists. The tree below is the one the module actually has.
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.95\linewidth]{figures/i1_fig6_chirality_wall_tree.png}
@@ -2467,15 +2460,16 @@ the checks is on the order of seconds per stage; the cost of
 finding and fixing a propagated error after publication is on the
 order of weeks per finding, in the best case.
 
-\textbf{Automated theorem proving is a force multiplier on
-formalization work, but only when the formalization itself is
-well-decomposed.} A monolithic fifty-term proof goal is
-intractable to both manual proof and to Aristotle. A decomposed
-nine-deep structure with each sublemma at twelve terms or fewer is
-tractable to both, and Aristotle closes the sublemmas in a single
-priority batch. The decomposition discipline is the pipeline's
-load-bearing investment: it pays back in throughput at every
-subsequent wave.
+\textbf{Decomposition is what makes a large goal tractable, and it
+pays a second dividend that has nothing to do with tractability.} A
+goal can be out of reach because it is large rather than because it
+is deep, and the two are indistinguishable from inside a failing
+tactic loop. Splitting one into structural sub-lemmas is the
+mechanical fix for the first. What is less obvious, and what
+Section~\ref{sec:case3} works through, is that decomposition also
+forces implicit assumptions into the open: an assumption can hide
+inside a monolithic statement indefinitely, because no gate can ask
+a question about something nobody has named.
 
 \textbf{Adversarial review is a separate role from authorship,
 and the separation is load-bearing.} A reviewer in the same

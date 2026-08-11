@@ -2681,3 +2681,45 @@ tells the reader to weigh the two statements separately, which is the honest int
 
 ⚠️ **Do not fix in the paper wave** — this is substrate, and the goal's filed-not-fixed rule holds.
 It is listed here because a strengthening pass, not a prose edit, is what closes it.
+
+### D49 — the chirality-wall Aristotle claim: RETIRED, and the figure that "proved" it was circular
+
+**Question asked:** does an Aristotle run record exist for the EWBG chirality-wall work? I had
+concluded no from ONE registry lookup, which is an absence-of-evidence conclusion and was the
+wrong basis. Re-run properly across the roadmap, the results archive, git history, Lit-Search and
+the module source.
+
+**Answer: no run exists, and no rename could hide one.** The decisive fact is chronological, not
+lexical: the run registry's last entry is `986b9f66` dated 2026-04-07, and the module was created
+2026-04-27 and shipped 2026-04-29. The registry has NOTHING from that era, so naming drift is
+excluded as an explanation. Corroborated four ways — `docs/aristotle_results/` has no run spanning
+2026-04-27 (last before: `run_20260420_083426_5d5951c1`, next: `run_20260629_054537_946db1c6`);
+`grep -ic aristotle docs/roadmaps/Phase6c_Roadmap.md` returns **0**; the module and
+`ChiralityWallMaster.lean` never mention the prover; and the roadmap records the decomposition as
+an **up-front design choice**, not a recovery from a failed monolith.
+
+**Retired, in four places** (§5 body was already blocked at draft by its own TODO; these were not):
+abstract, the closing Lesson 2, `bundle_metadata.json`'s apex registration, and the figure.
+
+**The circularity, which is the finding worth keeping.** `fig_i1_chirality_wall_tree`'s own source
+comment conceded it was built to make the prose's "nine" come out: *"the §5 text describes 'three
+sub-lemmas per pillar, plus three for the crossover side, totaling nine.' We treat Z16 as split
+across THREE pillars … = 9 leaves."* The figure was reverse-engineered from the prose and then
+cited back as evidence for it. Its leaf labels were invented ("Sublemma A.1") and its subtitle
+asserted "all 9 closed in a single Aristotle priority batch". Generator now names real
+declarations and asserts no prover outcome. **Derive a figure from the module, never from the
+prose about the module.**
+
+The number was also self-contradictory before anyone checked the run: the 2026-08-01 audit noted
+"three per pillar plus three for crossover" totals 12, not 9. The actual closure chain runs through
+FIVE named lemmas; the module ships 16 theorems.
+
+**No resubmission needed** — this closes by retiring a false claim, which is the cheaper and more
+honest of the two options.
+
+⚠️ **Process note on the search itself.** My premise that git history would carry the record was
+INVERTED for this era: the detailed run-ID-naming commit style begins around May 2026, and the
+350-line module arrived inside a single `"checkpoint (wip)"` alongside 50+ other files. Also found:
+`docs/references/aristotle_batch_plan.md` does not exist (CLAUDE.md links it; the real file is
+`Theorm_Proving_Aristotle_Lean.md`, misspelling included), and
+`docs/phase6c_wave2_stage13_close.md` is cited twice by the roadmap and does not exist.

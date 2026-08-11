@@ -13463,10 +13463,13 @@ def fig_i1_chirality_wall_tree() -> "go.Figure":
     2 obstructions (Z₁₆ chirality wall + crossover) → 3 sub-lemmas each →
     9 leaves total. Each leaf is annotated with "≤12 terms (Aristotle batch)".
     """
-    # Per paper I1 §5: root → 2 obstructions × 3 pillars × ... Actually
-    # the §5 text describes "three sub-lemmas per pillar, plus three
-    # sub-lemmas for the crossover side, totaling nine." We treat Z16 as
-    # split across THREE pillars (anomaly / fermion-content / wall-form),
+    # ⚠️ 2026-08-11 (ARCHITECTURE_TODOs D49): this tree was originally
+    # REVERSE-ENGINEERED from the §5 prose so the prose's "nine" would come
+    # out, and was then cited back as evidence for it. Circular. There is no
+    # Aristotle run for this module and none can be — the run registry's last
+    # entry predates the module by three weeks. Labels now name real module
+    # declarations and assert no prover outcome. Derive from the module, never
+    # from the prose about the module. (anomaly / fermion-content / wall-form),
     # each pillar having one sub-lemma → 3, plus three crossover-side
     # sub-lemmas → 6 total under Z16 + 3 under Crossover = 9 leaves.
     labels = [
@@ -13510,18 +13513,18 @@ def fig_i1_chirality_wall_tree() -> "go.Figure":
 
     # Custom hover/text per node
     customdata = [
-        "<b>50-term monolithic goal</b><br>intractable to Aristotle<br>(decomposition required)",
+        "<b>sm_no_nu_R_ewbg_doubly_forbidden</b><br>conjunction over two fermion contents",
         "Obstruction-A:<br>chiral-wall integrity",
         "Obstruction-B:<br>sphaleron-rate suppression",
         "Pillar A: anomaly (TPE)",
         "Pillar B: fermion content",
         "Pillar C: wall form",
-        "≤ 12 terms<br>Aristotle batch (priority 1)",
-        "≤ 12 terms<br>Aristotle batch (priority 1)",
-        "≤ 12 terms<br>Aristotle batch (priority 1)",
-        "≤ 12 terms<br>Aristotle batch (priority 1)",
-        "≤ 12 terms<br>Aristotle batch (priority 1)",
-        "≤ 12 terms<br>Aristotle batch (priority 1)",
+        "named module lemma<br>≤ 11 tactic lines",
+        "named module lemma<br>≤ 11 tactic lines",
+        "named module lemma<br>≤ 11 tactic lines",
+        "named module lemma<br>≤ 11 tactic lines",
+        "named module lemma<br>≤ 11 tactic lines",
+        "named module lemma<br>≤ 11 tactic lines",
     ]
 
     # Color palette: root carmine, obstructions amber, pillars sage,
@@ -13551,10 +13554,10 @@ def fig_i1_chirality_wall_tree() -> "go.Figure":
         height=560, width=1100,
         title=dict(
             text=(
-                "<b>Chirality-wall axiom decomposition tree</b><br>"
-                "<sub>Monolithic 50-term goal → 9 sub-lemmas (≤12 terms each); "
-                "all 9 closed in a single Aristotle priority batch "
-                "(paper I1 §5)</sub>"
+                "<b>Chirality-wall exclusion: decomposition tree</b><br>"
+                "<sub>Root conjunction over two fermion contents, split into two "
+                "independent obstructions, each resolving into named module "
+                "lemmas</sub>"
             ),
             x=0.5, xanchor="center", font=TITLE_FONT,
         ),
