@@ -1,0 +1,78 @@
+# Dependabot — automated dependency update PRs.
+#
+# WHY THIS EXISTS. Alerts were already being raised against uv.lock before this file
+# existed: GitHub's dependency graph scans the repo on every push regardless of config.
+# What was missing is anyone acting on them, so they accumulated silently to 28 across
+# 6 packages (2026-08-11). This file is the "someone acts on them" half.
+#
+# ALERTS vs UPDATES — the distinction that makes the rest of this readable:
+#   * Security ALERTS are automatic. No config. They are what `gh api .../dependabot/alerts`
+#     returns, and they fire the moment an advisory matches a locked version.
+#   * Version UPDATES are what this file schedules — routine PRs on a cadence.
+#   * Security UPDATES are PRs raised specifically to fix an alert. They ignore the schedule
+#     and the release cooldown, so a critical advisory does not wait for Monday.
+# Deleting this file would therefore NOT stop alerts. It would only stop the PRs.
+#
+# `uv` (not `pip`) is the correct ecosystem for a uv.lock project — GA since 2025-03. This
+# matters: an unrecognized package-ecosystem value makes the file silently inert, which is
+# indistinguishable from "no updates were needed."
+version: 2
+updates:
+  # ---- Python, project root: uv.lock + matching pins in pyproject.toml -----------------
+  - package-ecosystem: "uv"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    # 159 locked packages. Ungrouped, a quiet week still opens a dozen PRs, and PR fatigue
+    # is how the previous 28 alerts went unread. Group the routine ones into a single PR
+    # and let major bumps arrive alone, because those are the ones that break APIs and
+    # deserve an individual review — datastar-py 0.8 -> 1.0 (the dashboard's reactive
+    # layer) is currently pending and is exactly that shape.
+    open-pull-requests-limit: 5
+    groups:
+      python-routine:
+        update-types: ["minor", "patch"]
+    labels: ["dependencies", "python"]
+    commit-message:
+      prefix: "deps"
+
+  # ---- Python, rust/ has its own uv.lock (maturin build env) --------------------------
+  - package-ecosystem: "uv"
+    directory: "/rust"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 3
+    groups:
+      rust-py-routine:
+        update-types: ["minor", "patch"]
+    labels: ["dependencies", "python"]
+    commit-message:
+      prefix: "deps(rust)"
+
+  # ---- Rust crates for the RHMC extension ---------------------------------------------
+  - package-ecosystem: "cargo"
+    directory: "/rust"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 3
+    groups:
+      cargo-routine:
+        update-types: ["minor", "patch"]
+    labels: ["dependencies", "rust"]
+    commit-message:
+      prefix: "deps(cargo)"
+
+# NOT configured, deliberately:
+#   * github-actions — there are no workflows in this repo. An ecosystem block pointed at
+#     nothing is inert config that reads as coverage; add it with the first workflow.
+#   * lean/.lake/packages/** — gitignored, so the vendored mathlib/aesop manifests are not
+#     in the tree and cannot be picked up. The Lean toolchain is pinned as one matched set
+#     (Mathlib + PhysLib + REPL + lean-toolchain) and must never be bumped piecemeal, which
+#     is precisely what a bot would do.
+#
+# VERIFY IT IS LIVE (a valid-looking file that GitHub rejected is the failure mode here):
+#   Insights -> Dependency graph -> Dependabot  shows each entry with a last-checked time,
+#   and surfaces a parse error if the config is malformed. Or wait for the first Monday.
