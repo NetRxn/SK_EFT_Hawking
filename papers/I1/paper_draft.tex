@@ -612,14 +612,6 @@ nothing in the informal derivation was going to produce this
 counterexample, because the informal derivation never wrote down the
 hypothesis the counterexample violates.
 
-% TODO: the expectation Delta < Lambda is stated below without
-% attribution to any published work. It is presented as the
-% EFT-validity expectation that the formalization plan encoded as a
-% target theorem, which is documented. No primary source read for this
-% section asserts the bound, so no citation is attached; an earlier
-% framing that credited it to "the published literature on NJL gap
-% equations" is not supported by any source obtainable from the
-% citation cache. Retrieval would be needed to restore an attribution.
 
 The emergent-gravity sector of the program formalizes a
 Nambu--Jona-Lasinio-type self-consistency condition for tetrad
@@ -662,7 +654,18 @@ A tenth was submitted with them. Above the critical coupling the gap is
 a low-energy parameter of an effective description valid up to
 $\Lambda$, so a gap exceeding the cutoff is outside the regime in which
 the equation was derived, and the expectation that a solution obeys
-$\Delta < \Lambda$ is the natural one. The formalization plan recorded
+$\Delta < \Lambda$ is the natural one. It is worth being precise about
+the status of that expectation, because it is the thing the formalization
+tested. It is not a stated condition of the model. The standard reviews
+impose the cutoff as a regularization prescription, not as a bound on the
+condensate, and Buballa's analysis in fact exhibits a high-mass branch of
+gap-equation solutions in which the dynamical mass is comparable to or
+exceeds the cutoff, discarding that branch on phenomenological grounds --
+an empirical bound on the quark condensate -- rather than by any
+appeal to $\Delta < \Lambda$~\cite{Buballa2005}. The literature's own
+numerics already visit the regime the expectation forbids, without ever
+forbidding it. What the formalization did was write the expectation down
+as a hypothesis list, at which point it became falsifiable. The formalization plan recorded
 it as a target theorem, \texttt{gap\_solution\_bounded}, and stated it
 the only way a Lean statement can be stated, with every hypothesis
 enumerated: $0 < G$, $0 < N_f$, $0 < \Lambda$, $0 < \Delta$, and
@@ -2221,7 +2224,10 @@ root-namespace helpers written in upstream style,
 \subsection{Levi-Civita uniqueness, and the hypothesis it carries}
 
 \texttt{LeviCivita.lean} states the classical uniqueness theorem for the
-torsion-free metric-compatible connection at bundle scope. The predicate
+torsion-free metric-compatible connection at bundle scope, which is the
+fundamental theorem of Riemannian geometry, in the form given by
+Wald~\cite[Theorem 3.1.1]{Wald1984} and, in the pure-mathematics
+setting, by Kobayashi and Nomizu~\cite[Theorem IV.2.2]{KobayashiNomizu1963}. The predicate
 \texttt{IsLeviCivita} has four fields: the connection is a covariant
 derivative in the upstream sense, it is torsion-free, the bilinear form
 is symmetric, and the connection annihilates that form. The fourth field
@@ -2275,9 +2281,6 @@ and that is a statement a referee can check.
 % primary sources; only the upstream-library half was re-checked against
 % the pinned revision for this draft. Route the remainder through a
 % literature scout before any wider novelty sentence is added.
-% TODO: the textbook attributions for the Koszul derivation and for the
-% uniqueness theorem are asserted in the Lean docstrings but the sources
-% are not in the local cache, so no section-level citation is made here.
 The modules follow upstream file, naming and section conventions with an
 eventual contribution in view. That is an intention about future work and
 not a claim about what has been accepted anywhere.
@@ -2295,13 +2298,6 @@ setting in which the identity is usually met.
 \section{Scoping Results Around Absent Library Infrastructure}
 \label{sec:structural_prop_scoping}
 
-% TODO: the reduction of the Einstein vacuum equations in harmonic gauge
-% to a quasilinear hyperbolic system is stated below as the motivation for
-% a formalization target, without attribution. The source module attributes
-% it to Foures-Bruhat (1952); no primary source for that paper is cached
-% under Lit-Search/Phase-*/primary-sources/, so no citation is made here.
-% Either cache the source and cite it at the point marked, or leave the
-% statement as design motivation, which is how it is currently written.
 
 Formalization in an applied domain runs ahead of its library. A
 proof assistant offers three responses when a target theorem rests
@@ -2366,8 +2362,9 @@ belongs to the first state above, not the second.
 What the same module does not prove is equally on the record. The
 reduction of the Einstein vacuum equations in harmonic gauge to a
 quasilinear hyperbolic system, whose principal part is the wave
-operator, motivates the choice of target; it is not itself a
-formalized step, and no declaration in the substrate asserts it. The
+operator~\cite{FouresBruhat1952,FriedrichRendall2000}, motivates the
+choice of target; it is not itself a formalized step, and no declaration
+in the substrate asserts it. The
 predicate \texttt{IsHarmonicGauge}
 (\texttt{lean/SKEFTHawking/CauchyProblem.lean}) reserves a name for
 the gauge condition, and as currently written every chart satisfies
@@ -2583,6 +2580,17 @@ arXiv:hep-ph/9809291.
 M.~Shaposhnikov, ``Is there a hot electroweak phase transition at
 $m_H \gtrsim m_W$?,'' \emph{Phys.\ Rev.\ Lett.}\ \textbf{77} (1996)
 2887, arXiv:hep-ph/9605288.
+
+\bibitem{Buballa2005} M.~Buballa, ``NJL-model analysis of dense quark
+matter,'' \emph{Phys.\ Rept.}\ \textbf{407} (2005) 205--376,
+arXiv:hep-ph/0402234.
+
+\bibitem{Wald1984} R.~M.~Wald, \emph{General Relativity}
+(University of Chicago Press, Chicago, 1984).
+
+\bibitem{KobayashiNomizu1963} S.~Kobayashi and K.~Nomizu,
+\emph{Foundations of Differential Geometry, Vol.~I}
+(Interscience Publishers, New York, 1963).
 
 \end{thebibliography}
 

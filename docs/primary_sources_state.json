@@ -1,6 +1,6 @@
 {
   "_schema_version": 1,
-  "generated_at": "2026-08-09T07:09:36+00:00",
+  "generated_at": "2026-08-11T21:06:13+00:00",
   "entries": {
     "ABP1967": {
       "bibkey": "ABP1967",
@@ -991,6 +991,17 @@
       "size_bytes": 667,
       "url_used": null,
       "note": "pre-existing on disk; recorded without re-fetch"
+    },
+    "Buballa2005": {
+      "bibkey": "Buballa2005",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Buballa2005.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-08-11T21:06:13+00:00",
+      "size_bytes": 2243831,
+      "url_used": "https://arxiv.org/pdf/hep-ph/0402234",
+      "note": null
     },
     "Burkhard2025": {
       "bibkey": "Burkhard2025",
@@ -2191,6 +2202,17 @@
       "url_used": "https://arxiv.org/pdf/quant-ph/0607126",
       "note": null
     },
+    "FouresBruhat1952": {
+      "bibkey": "FouresBruhat1952",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "crossref-json",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/FouresBruhat1952.json",
+      "verdict": "success",
+      "fetched_at": "2026-08-11T21:06:10+00:00",
+      "size_bytes": 6382,
+      "url_used": "https://api.crossref.org/works/10.1007/BF02392131",
+      "note": "no arxiv id"
+    },
     "FractonDarkMatterLean": {
       "bibkey": "FractonDarkMatterLean",
       "phase": "Phase-6b",
@@ -2222,6 +2244,17 @@
       "fetched_at": "2026-05-11T16:17:03+00:00",
       "size_bytes": 212114,
       "url_used": "https://arxiv.org/pdf/quant-ph/0001108",
+      "note": null
+    },
+    "FriedrichRendall2000": {
+      "bibkey": "FriedrichRendall2000",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/FriedrichRendall2000.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-08-11T21:06:11+00:00",
+      "size_bytes": 782835,
+      "url_used": "https://arxiv.org/pdf/gr-qc/0002074",
       "note": null
     },
     "FuchsvandeGraaf1999": {
