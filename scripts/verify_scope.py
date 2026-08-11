@@ -16,14 +16,20 @@ So: iterate under `--scope`, gate once under `--merge-gate`.
 
 WHAT DECIDES SCOPE. Only what a change can be OBSERVED by:
 
-  lean/**                  -> lake build, ExtractDeps, the Lean-side checks
-  src/**, scripts/**       -> the fast suite + the checks owning the touched modules
-  tests/**                 -> the touched test files
+  lean/**                  -> lake build SKEFTHawking.ExtractDeps, zero-sorry, axioms
+  src/**, scripts/**       -> fast suite, architecture census, counts
+  tests/**                 -> fast suite, counts (tests/ is an INPUT to \totaltests)
+  rust/**, pyproject.toml  -> the RHMC/stencil tests that import the built extension
+  notebooks/**             -> notebook_exec, viz_consistency
   docs/architecture/**     -> architecture_inventory_fresh
   docs/counts.*            -> counts_fresh
   papers/**                -> the bundle gates
-  .claude/plugins/**       -> the plugin surface guards
+  .claude/plugins/**       -> plugin guards AND the architecture census it feeds
   everything else (*.md)   -> nothing mechanical; say so rather than imply coverage
+
+Each mapping is here because the path is a real INPUT to that step, not because it
+looked related. `tests/` -> counts and `.claude/plugins/` -> census were both missing
+in the first version and both were live under-reports.
 
 ⚠️ A NARROWER RUN IS A NARROWER CLAIM. This prints exactly what it ran and what it
 therefore does NOT certify. Quoting a scoped run as if it were the merge gate is the
@@ -60,7 +66,19 @@ def _plan(paths: list[str]) -> tuple[list[tuple[str, list[str]]], list[str]]:
         "counts": any(p.startswith("docs/counts.") for p in paths),
         "papers": any(p.startswith("papers/") for p in paths),
         "plugin": any(p.startswith(".claude/plugins/") for p in paths),
+        # `rust/` builds sk_eft_rhmc, imported by src/vestigial/hs_rhmc.py and
+        # exercised by seven test files; `notebooks/` is read by notebook_exec;
+        # pyproject changes the environment every step runs in. All three previously
+        # printed "nothing mechanical observes this change", which was false.
+        "rust": any(p.startswith("rust/") for p in paths),
+        "notebooks": any(p.startswith("notebooks/") for p in paths),
+        "env": any(p in ("pyproject.toml", "uv.lock") for p in paths),
     }
+    # counts.json/tex are DERIVED FROM tests/ and lean/ — a change to either moves
+    # \totaltests or a Lean count. Omitting counts_fresh here reproduced the exact
+    # blocker of the commit before this tool: a stale committed counts.tex.
+    counts_moved = any(touched[k] for k in
+                       ("counts", "tests", "lean", "code", "notebooks", "papers"))
     steps: list[tuple[str, list[str]]] = []
     if touched["code"] or touched["tests"]:
         steps.append(("fast suite (tests/, default markers)",
@@ -73,10 +91,22 @@ def _plan(paths: list[str]) -> tuple[list[tuple[str, list[str]]], list[str]]:
         steps.append(("architecture_inventory_fresh",
                       ["uv", "run", "python", "scripts/validate.py",
                        "--check", "architecture_inventory_fresh"]))
-    if touched["counts"] or touched["code"]:
+    if counts_moved:
         steps.append(("counts_fresh",
                       ["uv", "run", "python", "scripts/validate.py",
                        "--check", "counts_fresh", "--no-memo"]))
+    if touched["rust"] or touched["env"]:
+        steps.append(("RHMC + environment-dependent tests",
+                      ["uv", "run", "python", "-m", "pytest", "tests/", "-q", "-k",
+                       "rhmc or stencil or dirac"]))
+    if touched["notebooks"]:
+        steps.append(("notebook_exec / viz_consistency",
+                      ["uv", "run", "python", "scripts/validate.py",
+                       "--check", "notebook_exec", "--check", "viz_consistency"]))
+    if touched["plugin"]:
+        steps.append(("architecture_inventory_fresh (plugin feeds the census)",
+                      ["uv", "run", "python", "scripts/validate.py",
+                       "--check", "architecture_inventory_fresh"]))
     if touched["papers"]:
         steps.append(("bundle gates",
                       ["uv", "run", "python", "scripts/validate.py",
@@ -84,7 +114,10 @@ def _plan(paths: list[str]) -> tuple[list[tuple[str, list[str]]], list[str]]:
                        "--check", "bundle_reader_facing_voice",
                        "--check", "bundle_todo_free_before_green"]))
     if touched["lean"]:
-        steps.append(("lake build", ["lake", "build"]))
+        # NOT plain `lake build`: it leaves ExtractDeps.olean missing and breaks
+        # graph_integrity + counts_fresh downstream (CLAUDE.md, Build & run).
+        steps.append(("lake build + ExtractDeps",
+                      ["lake", "build", "SKEFTHawking.ExtractDeps"]))
         steps.append(("Lean substrate checks",
                       ["uv", "run", "python", "scripts/validate.py",
                        "--check", "lean_zero_sorry",
@@ -112,9 +145,23 @@ def main() -> int:
             ("full suite, run B", ["uv", "run", "python", "-m", "pytest", "-m", "", "-q"]),
             ("validate --ci --no-memo",
              ["uv", "run", "python", "scripts/validate.py", "--ci", "--no-memo"]),
-            ("lake build", ["lake", "build"]),
+            # ⚠️ `--ci` SKIPS four checks by design (_config.CI_SKIP): counts_fresh,
+            # tables_fresh, claim_clusters_fresh, notebook_exec. counts_fresh being
+            # among them is precisely why a stale committed counts.tex survived five
+            # commits. A gate that inherits that blind spot is not a gate, so run them
+            # explicitly here — this is the difference between --ci and CERTIFIED.
+            ("the four CI_SKIP checks --ci cannot run",
+             ["uv", "run", "python", "scripts/validate.py",
+              "--check", "counts_fresh", "--check", "tables_fresh",
+              "--check", "claim_clusters_fresh", "--check", "notebook_exec",
+              "--no-memo"]),
+            ("lake build + ExtractDeps",
+             ["lake", "build", "SKEFTHawking.ExtractDeps"]),
         ]
-        not_certified: list[str] = []
+        not_certified = [
+            "that regenerating checks left the WORKING TREE clean — counts_fresh and "
+            "tables_fresh rewrite in place and then pass, so check `git status` yourself",
+        ]
         print("MERGE GATE — the full certification.\n")
     else:
         paths = _changed(args.since)
@@ -132,6 +179,10 @@ def main() -> int:
             print("  NOT CERTIFIED: everything. This says only that no gate applies.")
             return 0
         print()
+
+    seen_argv = set()
+    steps = [(l, a) for l, a in steps
+             if not (tuple(a) in seen_argv or seen_argv.add(tuple(a)))]
 
     failed = []
     for label, argv in steps:
