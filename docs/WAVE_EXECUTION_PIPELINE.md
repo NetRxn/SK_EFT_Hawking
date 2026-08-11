@@ -245,13 +245,8 @@ no new `sorry`, no `native_decide` regression, no un-signed-off axiom.
 
 - Add the run UUID to `ARISTOTLE_THEOREMS` (`src/core/constants.py`) and bump the
   `assert ARISTOTLE_PROVED_COUNT == <N>` in that same file, in the same commit. **That assert is
-  the only pin, deliberately.** This step used to say "in both places", naming a CHECK 5 in
-  `scripts/validate.py`; ADR-009 moved every check body out of that file, and the check that once
-  restated this count was rewritten on 2026-08-04 after an audit found all three of its legs
-  vacuous — two unreachable (the `constants.py` assert raises at import, before any check body
-  runs) and one a tautology (`TOTAL_THEOREMS` is an alias of `len(ARISTOTLE_THEOREMS)`, so it
-  compared an expression to itself). The invariant is kept where it is enforced most strictly.
-  Do not re-add a second pin.
+  the only pin — do not add a second.** It raises at import, so a wrong count fails before any
+  check body runs.
 - Set `SorryGap(filled=True)` in `src/core/aristotle_interface.py` — append or update, never
   delete; the registry is provenance
 - Run `scripts/update_counts.py`; `scripts/aristotle_usage_by_bundle.py` re-derives per-bundle
@@ -272,7 +267,7 @@ cd lean
 lake build                               # library only; must complete clean
 lake build SKEFTHawking.ExtractDeps      # + ExtractDeps.olean (graph_integrity, counts_fresh)
 
-# Trustworthy clean baseline (after toolchain or structural changes):
+# Trustworthy but slow clean baseline (after toolchain or structural changes):
 rm -rf .lake/build && lake build SKEFTHawking.ExtractDeps
 ```
 
@@ -409,13 +404,13 @@ until they are clean. There is no Stage 10a and no renumbering.
 - Standard phrasing for a verification claim: "X theorems in `<Module>.lean`, verified by
   `lake build` (zero sorry). Z filled by the Aristotle automated prover [run IDs]."
 
-**Drafting guidance** is the `skeft-qa:paper-authoring` skill. It and the `prose-reviewer` agent
+**Drafting guidance** is the `skeft-qa:paper-authoring` skill. It and the `skeft-qa:prose-reviewer` agent
 read the same `references/prohibited-patterns.md`, so a rule cannot mean one thing while writing
 and another while reviewing.
 
 ### Sub-gate: read-through (runs first)
 
-The `prose-reviewer` agent reads the draft start to finish as a referee at its named venue, and
+The `skeft-qa:prose-reviewer` agent reads the draft start to finish as a referee at its named venue, and
 returns a restructuring instruction. It runs at `BUNDLE_LIFT_PROCEDURE.md` §7.5 — **before the
 claims review and before Stage 9.**
 
@@ -431,12 +426,8 @@ Run `skeft-qa:claims-reviewer`. It cross-references the `.tex` against, by sourc
 | `src/core/citations.py` | `CITATION_REGISTRY` |
 | `lean/lean_deps.json` | live declaration registry (theorem-name resolution) |
 
-⚠️ **Listed by FILE, not by registry, and deliberately.** This list previously named four
-registries plus `formulas.py` — mixed granularity that made `constants.py` look covered
-because `ARISTOTLE_THEOREMS` was named, while the four other registries the agent reads
-from that same file went unlisted. It left the placeholder FAIL below stating a gate whose
-input the doc never named. If you add a registry the reviewer reads, add it to its file's
-row here.
+Listed by file, so that adding a registry the reviewer reads means adding it to that file's
+row — not deciding whether the file is already "covered".
 
 - **FAIL** — a numerical value disagrees with computation by >0.5% (Class IA)
 - **FAIL** — a "formally verified" claim whose theorem is missing or has a `sorry` (Class TN)
