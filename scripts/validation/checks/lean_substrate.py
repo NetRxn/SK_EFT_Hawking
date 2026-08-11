@@ -421,11 +421,13 @@ def check_proxy_body_audit() -> CheckResult:
     new_flagged: List[tuple] = []
     grandfathered: List[str] = []
     simp_projections: List[str] = []
+    scanned = 0
     for lean_file in sorted(lean_dir.rglob("*.lean")):
         try:
             source = lean_file.read_text()
         except (OSError, UnicodeDecodeError):
             continue
+        scanned += 1
         for thm_name, line_no, body, is_simp in _scan_lean_theorem_bodies(source):
             if thm_name in exempt or thm_name in whitelisted:
                 continue
@@ -480,6 +482,18 @@ def check_proxy_body_audit() -> CheckResult:
 
     details: List[Detail] = []
     # Advisory: disclosed vacuous_proxy theorems are tracked debt (PASS, but visible).
+    # SEAM GUARD (closure review 4). The directory-exists guard above is not enough:
+    # an existing but EMPTY tree scans zero files and reports "no NEW trivially-closed
+    # structural theorems" with passed=True, measured=True — a clean bill issued over a
+    # population never read, counted toward the CI_MIN_CHECKS_RUN floor. Identical seam
+    # to the one closed in `elaboration_knob_watchlist`; `test_cannot_measure_baseline`
+    # covered only the ABSENT-dir path, not existing-but-empty.
+    if scanned == 0:
+        return CheckResult(passed=False, measured=False, details=[Detail(
+            "lean_src", False,
+            f"SKIPPED — no readable .lean files under {lean_dir}; the proxy-body "
+            f"audit is UNVERIFIED, not clean")])
+
     n_vac = sum(1 for v in MODELING_ASSUMPTION_THEOREMS.values()
                 if v.get("category") == "vacuous_proxy")
     # `@[simp]` projection lemmas: exempt by CATEGORY, ratcheted so the exemption
@@ -742,3 +756,180 @@ def check_lean_zero_sorry() -> CheckResult:
         f"{n_decl} declaration(s) carry `sorryAx` in their axiom closure "
         f"({n_thm} of them theorems) — Pipeline Invariant #4 is violated"))
     return CheckResult(passed=n_decl == 0, details=details)
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# CHECK: one theorem census, enforced — the anti-whack-a-mole guard
+# ═══════════════════════════════════════════════════════════════════════
+#
+# WHY THIS EXISTS. "Is this declaration compiler-generated?" was answered
+# independently in FIVE places, each found by a different reviewer, one at a time:
+#   1. update_counts.py `count_lean`          (found by review 1)
+#   2. update_counts.py per-module I1 macros  (found by review 2, F1)
+#   3. render_bundle_counts.py                (found by review 2, F1)
+#   4. paper_tables/sources.py                (found by review 3)
+#   5. atlas_view.py                          (found by review 4)
+# Site 5 was the worst: it published `26,398 theorem nodes` in the tracked,
+# reader-facing docs/ATLAS_HEATMAP.md while counts.tex published 22,669 — the same
+# corpus, two numbers, differing by exactly the 3,729 compiler-generated
+# declarations. A test asserted the instruments "agree"; nothing compared them.
+#
+# Fixing site N and waiting for a reviewer to find site N+1 is not a process. This
+# check makes the census self-enforcing in two independent ways:
+#   LEG 1 (agreement) — every PUBLISHED theorem census must equal the one derivation.
+#   LEG 2 (ownership) — every `kind == "theorem"` filter in the codebase must be
+#                       accompanied by an autogen guard, or be on a stated allow-list.
+# Leg 1 catches a wrong number; leg 2 catches the code that would produce one, before
+# it is ever published. A sixth site fails the suite instead of reaching a reader.
+
+# Sites that compare `kind == "theorem"` WITHOUT an autogen guard, deliberately.
+# Each entry needs a reason. Adding one is a scope decision, not a formality.
+THEOREM_FILTER_ALLOWLIST: Dict[str, str] = {
+    "scripts/update_counts.py:sorry_theorems":
+        "counts declarations with a `sorry` axiom dep; an autogen declaration cannot "
+        "carry one, so the filter is a no-op here (sorry count is 0 and ratcheted).",
+    "scripts/provenance_dashboard.py:node_id_dispatch":
+        "dispatches a node-ID prefix by kind; it is not a census and publishes no count.",
+    "scripts/bundle_closure.py:apex_kind_classification":
+        "classifies ONE declared apex (is the name a theorem?) rather than counting a "
+        "population; the module already threads `autogen` into `compute_closure`, and a "
+        "bundle never declares a compiler-generated name as an apex.",
+    "scripts/count_theorem_reuse.py:reuse_scan":
+        "a reuse/citation scan over proof bodies, not a published census (its docstring "
+        "overclaims an exclusion it does not implement — tracked, not load-bearing).",
+}
+
+# `)` and `]` must be in the class: the dominant form is `d.get('kind') == 'theorem'`,
+# where `kind` is followed by `')`. A first version omitted `)` and therefore matched
+# NOTHING across 131 files while reporting a clean pass — the leg was vacuous. The
+# `sites_found` total below exists so that failure mode is visible in the output.
+# Down-only ratchet on the SCANNED POPULATION, not just on violations. Breaking the
+# pattern from 13 matches to 5 still passed when only zero was fatal, so a quietly
+# narrowing regex could re-open the whole class. Lower this only alongside a stated
+# reason, exactly like every other ratchet here.
+THEOREM_FILTER_SITES_FLOOR = 13
+
+_THEOREM_FILTER_RE = re.compile(r"""kind["'\)\]]*\s*(?:==|!=)\s*["']theorem["']""")
+_AUTOGEN_NEARBY_RE = re.compile(r"_?autogen|_AUTOGEN|autogen_index")
+
+
+@register_check(
+    "theorem_census_agrees",
+    "Every published theorem census equals the one derivation, and every "
+    "`kind == \"theorem\"` filter goes through the single owner",
+)
+def check_theorem_census_agrees() -> CheckResult:
+    """Two legs: published counts must AGREE; source filters must be OWNED."""
+    details: List[Detail] = []
+
+    # ---- LEG 1: every published census equals the canonical derivation ----------
+    try:
+        deps = _H.load_lean_deps()
+    except Exception as exc:  # pragma: no cover - absent input
+        return CheckResult(passed=False, measured=False, details=[
+            Detail("population", False, f"SKIPPED — lean_deps unreadable ({exc}); "
+                                        "the census is UNVERIFIED, not agreed")])
+    if not deps:
+        return CheckResult(passed=False, measured=False, details=[
+            Detail("population", False,
+                   "SKIPPED — lean_deps.json holds no declarations; UNVERIFIED")])
+
+    autogen = _H.autogen_index(deps)
+    canonical = sum(1 for d in deps
+                    if d.get("kind") == "theorem" and not autogen.get(d.get("name", "")))
+    details.append(Detail("canonical", True,
+                          f"{canonical} author-written theorem(s) — the one derivation, "
+                          f"from validate_helpers.autogen_index"))
+
+    published: Dict[str, int] = {}
+    counts_path = _H.COUNTS_JSON_PATH
+    if counts_path.exists():
+        try:
+            published["docs/counts.json:lean.theorems_total"] = int(
+                json.loads(counts_path.read_text())["lean"]["theorems_total"])
+        except Exception:
+            pass
+    atlas_path = _H.PROJECT_ROOT / "lean" / "atlas_view.json"
+    if atlas_path.exists():
+        try:
+            _a = json.loads(atlas_path.read_text())
+            published["lean/atlas_view.json:nodes"] = len(_a.get("nodes", []))
+        except Exception:
+            pass
+    heat_path = _H.DOCS_DIR / "ATLAS_HEATMAP.md"
+    if heat_path.exists():
+        m = re.search(r"([0-9][0-9,]*)\s+theorem nodes", heat_path.read_text())
+        if m:
+            published["docs/ATLAS_HEATMAP.md:theorem nodes"] = int(m.group(1).replace(",", ""))
+
+    if not published:
+        details.append(Detail("agreement", False,
+                              "no published census found on disk — UNVERIFIED", ))
+        return CheckResult(passed=False, measured=False, details=details)
+
+    disagreeing = {k: v for k, v in published.items() if v != canonical}
+    details.append(Detail(
+        "agreement", not disagreeing,
+        f"{len(published)} published census(es) checked against {canonical}"
+        + ("" if not disagreeing else
+           " — DISAGREE: " + ", ".join(f"{k}={v}" for k, v in sorted(disagreeing.items())))))
+    for k, v in sorted(disagreeing.items()):
+        details.append(Detail(k, False,
+                              f"publishes {v}, canonical is {canonical} "
+                              f"(delta {v - canonical}); regenerate it through "
+                              f"validate_helpers.autogen_index"))
+
+    # ---- LEG 2: every kind == "theorem" filter is owned or allow-listed ---------
+    unowned: List[str] = []
+    sites_found = 0
+    scanned_files = 0
+    for py in sorted(_H.PROJECT_ROOT.glob("scripts/**/*.py")):
+        if "/.venv/" in str(py) or "__pycache__" in str(py):
+            continue
+        scanned_files += 1
+        lines = py.read_text(errors="replace").splitlines()
+        rel = py.relative_to(_H.PROJECT_ROOT).as_posix()
+        for i, line in enumerate(lines):
+            if line.lstrip().startswith("#") or not _THEOREM_FILTER_RE.search(line):
+                continue
+            sites_found += 1
+            # SAME EXPRESSION, not "somewhere nearby". A +/-2 line window was tried
+            # first and could not detect its own removal: stripping the guard from
+            # `sources.py` left the `_autogen = autogen_index(...)` assignment two
+            # lines up, so the window still matched and the check passed. A guard
+            # that cannot fail is the defect this check exists to prevent, so the
+            # rule is the same line, or the immediate continuation of a wrapped one.
+            window = line
+            if i + 1 < len(lines) and (line.rstrip().endswith(("and", "or", "(", "\\"))
+                                       or lines[i + 1].lstrip().startswith(("and ", "or "))):
+                window += "\n" + lines[i + 1]
+            if _AUTOGEN_NEARBY_RE.search(window):
+                continue
+            if any(a.startswith(rel + ":") for a in THEOREM_FILTER_ALLOWLIST):
+                continue
+            unowned.append(f"{rel}:{i + 1}")
+
+    if scanned_files == 0:
+        details.append(Detail("ownership", False,
+                              "SKIPPED — no scripts scanned; ownership UNVERIFIED"))
+        return CheckResult(passed=False, measured=False, details=details)
+
+    if sites_found < THEOREM_FILTER_SITES_FLOOR:
+        # A scan that matches nothing is a broken pattern, not a clean codebase:
+        # this project HAS `kind == "theorem"` filters by construction.
+        details.append(Detail("ownership", False,
+                              f"{scanned_files} script(s) scanned, only {sites_found} "
+                              f"`kind == \"theorem\"` site(s) matched (floor "
+                              f"{THEOREM_FILTER_SITES_FLOOR}) — the pattern NARROWED; the "
+                              f"leg would pass over sites it can no longer see"))
+        return CheckResult(passed=False, measured=False, details=details)
+
+    details.append(Detail(
+        "ownership", not unowned,
+        f"{scanned_files} script(s) scanned, {sites_found} `kind == \"theorem\"` site(s); "
+        + (f"{len(THEOREM_FILTER_ALLOWLIST)} allow-listed unfiltered site(s)"
+           if not unowned else
+           f"UNOWNED `kind == \"theorem\"` filter(s): {', '.join(unowned)} — route through "
+           f"validate_helpers.autogen_index, or add to THEOREM_FILTER_ALLOWLIST with a reason")))
+
+    return CheckResult(passed=not disagreeing and not unowned, details=details)

@@ -47,6 +47,10 @@ import validate as v  # noqa: E402
 # Frozen 2026-08-03 against `validate.py --list`, in registration order.
 EXPECTED_CHECKS = [
     'counts_fresh',
+    # 2026-08-10: the anti-whack-a-mole census guard. Positioned right after
+    # counts_fresh — the census can only be judged once counts.json is
+    # known-fresh, and before any check that reads a published theorem figure.
+    'theorem_census_agrees',
     'formulas', 'lean_zero_sorry', 'placeholder_not_cited', 'disclosure_consistency',
     'proxy_body_audit', 'tracked_hypothesis_ledger', 'tracked_hypotheses_fresh',
     'formula_grounding', 'vacuous_statement_audit', 'nogo_substrate_integrity',

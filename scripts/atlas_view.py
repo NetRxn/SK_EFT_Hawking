@@ -211,8 +211,15 @@ def build_atlas(lean_deps: list[dict], hyp_registry: dict | None = None,
     registered_fqns: set[str] = set()
 
     for r in lean_deps:
-        if r.get("kind") != "theorem":
-            continue  # defs/structures/instances are graph nodes but not atlas RESULT nodes in 1a
+        if r.get("kind") != "theorem" or _AUTOGEN.get(r.get("name", "")):
+            # defs/structures/instances are graph nodes but not atlas RESULT nodes in 1a;
+            # Lean's OWN products (.eq_1, .sizeOf_spec, .inj, .congr_simp, .eq_def) are
+            # `kind == "theorem"` but are not results anyone proved. Publishing them made
+            # ATLAS_HEATMAP.md say 26,398 "theorem nodes" while counts.tex said 22,669 —
+            # the same corpus, two numbers, differing by exactly this set. `_AUTOGEN` was
+            # already built above (line ~192) and applied only inside `_is_obstruction`.
+            # `theorem_census_agrees` now forces every published census to match.
+            continue
         ak, status = classify_theorem(r)
         fqn = r["name"]
         registered_fqns.add(fqn)

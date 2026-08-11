@@ -183,6 +183,7 @@ _CANONICAL_ORDER: tuple[str, ...] = (
     # Safe to run first: it depends on `lean_deps.json`, which `main()` already
     # snapshots via `ensure_lean_deps_fresh()` before any check runs.
     'counts_fresh',
+    'theorem_census_agrees',
     'formulas', 'lean_zero_sorry', 'placeholder_not_cited', 'disclosure_consistency',
     'proxy_body_audit', 'tracked_hypothesis_ledger', 'tracked_hypotheses_fresh',
     'formula_grounding', 'vacuous_statement_audit', 'nogo_substrate_integrity',

@@ -509,6 +509,16 @@ def check_axiom_closure_allowlist() -> CheckResult:
                    f"SKIPPED — AxiomAudit exited {result.returncode}: {result.stderr[-300:]}",
                    warning=True)])
 
+    # An EMPTY stdout was coerced to `{}` and then read as "Invariant #15 backstop
+    # clean", measured=True — a clean bill over zero declarations. AxiomAudit emitting
+    # nothing means it did not report, not that the corpus has no axioms (closure
+    # review 4).
+    if not result.stdout.strip():
+        return CheckResult(passed=False, measured=False, details=[
+            Detail("axiom_audit_empty", False,
+                   "SKIPPED — AxiomAudit produced no output; the axiom closure is "
+                   "UNVERIFIED, not clean")])
+
     try:
         closures: Dict[str, List[str]] = json.loads(result.stdout.strip() or "{}")
     except json.JSONDecodeError as exc:

@@ -458,6 +458,20 @@ class TestProxyBodyAudit:
         monkeypatch.setattr(_c, "PLACEHOLDER_LEAN_NAMES", placeholders or {})
         return ls.check_proxy_body_audit()
 
+    def test_an_EMPTY_tree_is_UNMEASURED_not_a_clean_bill(self, tmp_path, monkeypatch):
+        """An existing but EMPTY tree scans zero files and reported "no NEW
+        trivially-closed structural theorems", passed=True, measured=True — a clean bill
+        issued over a population never read, and counted toward the zero-headroom
+        CI_MIN_CHECKS_RUN floor. Identical seam to the one closed in
+        `elaboration_knob_watchlist`; `test_cannot_measure_baseline` covered only the
+        ABSENT-dir path, not existing-but-empty. Filed by closure review 4."""
+        empty = tmp_path / "lean" / "SKEFTHawking"
+        empty.mkdir(parents=True)
+        monkeypatch.setattr(_H, "LEAN_DIR", empty)
+        r = ls.check_proxy_body_audit()
+        assert r.measured is False and r.passed is False, (
+            "an empty scan issued a clean bill for the proxy-body audit")
+
     TRIVIAL = "theorem sixteen_classification_holds : True := trivial\n"
 
     def test_a_new_trivially_closed_structural_theorem_fails(self, tmp_path, monkeypatch):

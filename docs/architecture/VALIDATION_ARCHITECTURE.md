@@ -208,11 +208,52 @@ uv run python scripts/update_counts.py              # regenerates counts.tex IF 
 #     compiler-generated". Without that filter `\totaltheorems` published 26,398
 #     where 22,669 are author-written — 3,729 of them Lean's own `.eq_1`,
 #     `.sizeOf_spec`, `.inj`, `.congr_simp`, `.eq_def` products. That number is `\input` by
-#     I1, D2 and I3 and read as "machine-checked theorems". Do not reintroduce a
-#     local kind=="theorem" filter in any generator.
+#     I1, D2 and I3 and read as "machine-checked theorems". A local kind=="theorem"
+#     filter in any generator is now a CHECK FAILURE, not an instruction — see below.
 uv run python scripts/compile_bundle_pdf.py --all --force
 uv run python scripts/validate.py --ci
 ```
+
+### One theorem census, mechanically enforced
+
+⚠️ **The sentence above used to be advice, and advice did not hold.** "Is this
+declaration compiler-generated?" was answered independently in **six** places, each
+found by a different reviewer, one at a time — `update_counts.count_lean`, its
+per-module I1 macro loop, `render_bundle_counts`, `paper_tables/sources`,
+`atlas_view`, and an apex classifier in `bundle_closure`. Three of those were added or
+survived *after* the prose rule was written a few lines up.
+
+The worst reached readers. `atlas_view.py` published **26,398 "theorem nodes"** into
+the tracked `docs/ATLAS_HEATMAP.md` while `counts.tex` published **22,669** — the same
+corpus, two numbers, differing by exactly the 3,729 compiler-generated declarations.
+A test asserted the three instruments "agree"; **nothing compared them**.
+
+`theorem_census_agrees` replaces the exhortation with two legs that fail the suite:
+
+| leg | what it forbids | how it is proven able to fail |
+|---|---|---|
+| **agreement** | a published census that differs from the one derivation | the real `ATLAS_HEATMAP.md` census was rewritten to a wrong value → FAIL naming file and delta; restored → PASS |
+| **ownership** | a `kind == "theorem"` filter that bypasses `validate_helpers.autogen_index` | the guard was stripped from the real `paper_tables/sources.py` → FAIL naming the line; restored → PASS |
+
+**The ownership leg is the one that generalises**, because it fails on the *code* that
+would produce a wrong number rather than waiting for the number to be published. A
+site that genuinely must not filter goes in `THEOREM_FILTER_ALLOWLIST` **with a stated
+reason** — a scope decision on the record, not a silent exemption.
+
+Two authoring failures are recorded because both made a leg vacuous while it reported
+a clean pass, and both are now pinned as tests:
+
+1. the ownership regex omitted `)` from its character class, so it never matched the
+   dominant `d.get('kind') == 'theorem'` form — it scanned 131 files, matched **zero**,
+   and passed;
+2. an autogen guard was accepted anywhere within ±2 lines, so removing a real guard
+   left the module's own `_autogen = ...` assignment matching, and the leg could not
+   detect its own removal.
+
+Consequently the leg carries a **down-only floor on its scanned population**
+(`THEOREM_FILTER_SITES_FLOOR`), because narrowing the pattern from 13 matches to 5
+still passed when only zero was fatal. A guard whose population can silently shrink is
+the same defect one level up.
 
 ⚠️ **This is NOT spurious churn, and the distinction matters.** `update_counts.py`
 holds a byte-stability contract — it compares everything except the `generated`

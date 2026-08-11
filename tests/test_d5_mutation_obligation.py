@@ -91,6 +91,18 @@ TESTS_DIR = SK_ROOT / "tests"
 #: An entry here is a CLAIM that someone seeded a defect and watched the test fail.
 #: Add one only when that has actually been done — the evidence lives in the commit.
 MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
+    "theorem_census_agrees": (
+        "test_theorem_census_agrees.py",
+        "PRODUCTION-SEEDED, both legs, against the live tree. AGREEMENT: rewrote the real "
+        "docs/ATLAS_HEATMAP.md census 22669 -> 26398 -> FAIL naming the file and the 3729 "
+        "delta; restored -> PASS. OWNERSHIP: stripped the autogen guard from the real "
+        "scripts/paper_tables/sources.py:363 -> FAIL naming that line; restored -> PASS. "
+        "Two AUTHORING failures are themselves pinned as tests: the first regex omitted "
+        "`)` from its class and matched NOTHING across 131 files while passing, and a "
+        "+/-2 line ownership window accepted the module's own `_autogen = ...` assignment "
+        "so the leg could not detect a guard's removal. The scanned population now "
+        "carries a down-only floor (13) because narrowing the pattern 13 -> 5 still "
+        "passed when only zero was fatal."),
     "chain_backing_targets_resolve": (
         "test_d5_reviews.py",
         "Production-seeded in the REAL papers/D3/claims_review.json: one chain link naming "
@@ -812,6 +824,9 @@ AWAITING_CEILING = 0
 #: is the distinction the four blockers turned on. Erring toward absent overstates the
 #: remaining work; the opposite error is what produced them.
 PRODUCTION_SEEDED: frozenset[str] = frozenset({
+    # 2026-08-10: seeded in the real ATLAS_HEATMAP.md and the real sources.py
+    # (see its MUTATION_VERIFIED entry). Keeps FIXTURE_ONLY_CEILING at 55.
+    "theorem_census_agrees",
     # 2026-08-07: a dangling theorem link appended to the real papers/D3/claims_review.json
     # -> rc=1; restored from saved bytes.
     "chain_backing_targets_resolve",
