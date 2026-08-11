@@ -2525,3 +2525,61 @@ the roster name almost verbatim). `lean_local_search` reinforced the error by re
 for `KerrSchild` and `SingleCopy` — **its environment is narrower than the extracted build
 set**. `lean_deps.json` is authoritative for "what is built"; the LSP index is not. Search
 Lean by CONTENT via the lean4 skill, and cross-check module existence against `lean_deps.json`.
+
+### D45 — I1 drafting wave, 2026-08-11: four SUBSTRATE defects found by the drafters
+
+Three `skeft-qa:paper-drafter` agents drafted I1 §§3–5. Each was told to verify every Lean claim
+against source. They found four defects **outside the manuscript** — in Python, in Lean
+docstrings, and in figure generators. All four re-verified by the lead before filing.
+
+**D45-a — `tetrad_gap_solution` cannot return the solution it promises (PHYSICS, highest).**
+`src/core/formulas.py:2411` brackets its bisection at `lo, hi = 1e-10 * Lambda, Lambda`. The gap
+equation's fixed point exceeds Λ for G above a saturation coupling G\* = G_c/(1−log 2), so above
+G\* the function returns exactly Λ and that value **is not a fixed point**. Measured at Λ=N_f=1:
+
+| G / G\* | returned Δ | fixed-point residual |
+|---|---|---|
+| 0.99 | 0.992027 | −7e−13 (true solution) |
+| 1.00 | 1.000000 | +6e−13 (true solution, saturating) |
+| 1.50 | 1.000000 | **+0.5** |
+| 50.0 | 1.000000 | **+49.0** |
+
+Silent: no exception, no warning, and the docstring says "For G > G_c: returns the nontrivial
+solution Δ* > 0". The Python layer encodes exactly the bound that Lean REFUTED — the disproof of
+`gap_solution_bounded` is recorded in `TetradGapEquation.lean:311–325` as a commented block, and
+the numerics never got the message. Fix: bracket above Λ (or solve `G·N_f·I(Δ)=1` directly), and
+either return the true Δ>Λ or raise, but do not return a non-solution.
+
+**D45-b — KLRS mis-attribution in a Lean docstring (PRIOR-ART, lethal class).**
+`EWBaryogenesisChiralityWall.lean:50–52` attributes "lattice crossover threshold m_H = 72 ± 2 GeV"
+to Kajantie–Laine–Rummukainen–Shaposhnikov 1996. Both PDFs were read in full: KLRS gives
+70 GeV < m_H,c < 95 GeV, most likely ≈80 GeV; the 72.4 ± 1.7 GeV figure is Csikor–Fodor–Heitger
+1999's full-SM transform of their own 66.5 ± 1.4 GeV endpoint. `HYPOTHESIS_REGISTRY`'s `source`
+string gets this right, so the docstring is the sole wrong copy. This is a number attributed to a
+paper that does not contain it.
+
+**D45-c — two figure generators disagree with the theorems they illustrate.**
+`fig_i1_gap_counterexample` (`visualizations.py:13336+`) hardcodes `G_c = 1.0` while declaring the
+c₄=Λ=N_f=1 convention, in which `criticalCoupling_formula` gives G_c = 2 — so the rendered
+G\*/G_c reads 6.5 where the verified ratio is 1/(1−log 2) ≈ 3.26. `fig_i1_chirality_wall_tree`
+(`:13452+`) invents leaf labels ("Sublemma A.1") instead of declaration names and its rendered
+subtitle asserts a single-batch Aristotle closure with no run record; its own source comment
+concedes the tree was reverse-engineered from prose rather than from the declaration graph.
+
+**D45-d — `ARISTOTLE_THEOREMS` key resolves to a different module's theorem.**
+`'altFDR_uniqueness_test': '3eedcabb'` (`constants.py:1019`) is keyed by a bare name. It resolves
+to `SKEFTHawking.SecondOrderSK.altFDR_uniqueness_test`, NOT to `SKDoubling`'s first-order
+`firstOrder_altSign_uniqueness_test`, whose source comments claim that run. A drafter asked to
+cite the run ID for the first-order result would have attached the second-order run. Bare-name
+keys cannot distinguish same-named declarations across modules.
+
+**Unrecorded-run claims (manuscript-side, blocked at draft):** no `ARISTOTLE_THEOREMS` entry
+exists for any `EWBaryogenesisChiralityWall` declaration, so "OUT_OF_BUDGET after six hours" and
+"nine sub-lemmas closed in a single batch" have no backing. The module ships 16 theorems and the
+root's closure chain runs through 5 named lemmas; there is no set of nine. The drafter left the
+claim unmade with a `% TODO` rather than inventing a citation — the correct behaviour.
+
+**What this says about the harness:** the drafters were pointed at the substrate and told to
+verify. They came back with defects in `formulas.py`, in a Lean docstring, in two figure
+generators and in a registry — none of which is prose. Reading the substrate closely enough to
+write about it is itself an audit.
