@@ -2493,3 +2493,35 @@ falls back off.
 **No test can catch this.** It is a function of host settings, total installed skill count, and
 personal invocation history. The plugin is fully correct and still invisible. The only detector
 is the rendered `skill_listing` attachment in the session transcript.
+
+### D44 — `bundle_append.py --bookkeeping-only` silently ignores `--lean-modules`
+
+Measured 2026-08-11 on I1. `--bookkeeping-only` accepted `--lean-modules` with four module
+names, reported success, bumped `last_lift` and cleared `freshness_stale` — and did NOT add
+the modules. `_registered_lean_modules("I1")` returned 36 before and 36 after, and the module
+the call existed to register (`KerrSchild`) is still absent.
+
+Argparse accepts the flag for every mode; only the full-lift path reads it. A flag that is
+accepted and ignored is worse than one that errors, because the operator gets a success
+message and believes the registration landed.
+
+**Fix:** either honour `--lean-modules` on the bookkeeping path, or reject the combination
+with a message naming the supported route.
+
+**The registration gap it left open (small, real):** I1's `append_log` registers four module
+names that never shipped — `AlgebraicRiemann`, `DeSitterAdSLambdaVacuum`,
+`SchwarzschildKerrSchild`, `TetradMetricEquivalence`. THREE are harmless duplicate aliases:
+`Curvature`, `ExactSolutions` and `TetradFormalism` are each already registered under their
+real names, so the substrate is measured. Only `SchwarzschildKerrSchild` has no registered
+counterpart — `SKEFTHawking.KerrSchild` (8 author-written declarations, incl.
+`schwarzschild_horizon`, `ks_inverse_formula`) is in the build and in `lean_deps.json` but
+NOT in I1's measured population, so a change to it will not trip I1's staleness trigger.
+
+⚠️ **Measurement lesson, recorded because it cost three wrong revisions of the same finding.**
+The first read was "four modules absent from the file tree, git history, and all 40,726
+declarations." That was a grep error: the search matched module-name STRINGS, not content, and
+every one of the four maps to shipped substrate (`tetrad_metric_equivalence_at_alpha_one` is
+the roster name almost verbatim). `lean_local_search` reinforced the error by returning empty
+for `KerrSchild` and `SingleCopy` — **its environment is narrower than the extracted build
+set**. `lean_deps.json` is authoritative for "what is built"; the LSP index is not. Search
+Lean by CONTENT via the lean4 skill, and cross-check module existence against `lean_deps.json`.

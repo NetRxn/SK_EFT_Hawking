@@ -206,6 +206,17 @@
       "stage13_redo_required": false,
       "agent_run_id": "bundle_append-bookkeeping-2026-06-10T20:33:51Z",
       "notes": "2026-06-10 methodology sync: CHECKs 27-29 (axiom_count_prose_consistency / prose_theorem_reference_coverage / theorem_name_embedded_citations; registered-name forms — note table2_checks.tex row numbers 27-29 vs validate.py internal comments CHECK 24-26), attribution-content failure class + sweep design, recorded-review semantics, disclosure standard. Substantive prose changed in paper_draft.tex (abstract, §1, §5, §6, §8, §10, §14) — stage13_redo_required manually set true and freshness_stale manually restored after this bookkeeping event (the bundle remains stale pending the AttributionContentSweep I1 visit)."
+    },
+    {
+      "date": "2026-08-11T17:36:43Z",
+      "source_paper": "(none — bookkeeping)",
+      "lift_action": "Freshness-bookkeeping",
+      "bundle_section_inserted": "(n/a — bookkeeping)",
+      "lean_modules_referenced": [],
+      "citation_count_added": 0,
+      "stage13_redo_required": false,
+      "agent_run_id": "bundle_append-bookkeeping-2026-08-11T17:36:43Z",
+      "notes": "Registration correction, not a content lift. Event 2 (phase6f_w1_w6_substrate_rosters) registered four PLANNED module names that never shipped under those names: AlgebraicRiemann, DeSitterAdSLambdaVacuum, SchwarzschildKerrSchild, TetradMetricEquivalence. bundle_source_freshness flagged them as 'resolve to no file' and warned they are NOT measured by the staleness trigger, so four modules silently left the population they were registered into. The substrate itself was never missing — it shipped under different module names, verified against lean_deps.json (the built set, not the LSP environment, which is narrower): AlgebraicRiemann -> SKEFTHawking.Curvature (LoweredRiemann, FirstBianchi, AntisymPair12/34); SchwarzschildKerrSchild -> SKEFTHawking.KerrSchild (schwarzschild_horizon, ks_inverse_formula, radial_null); DeSitterAdSLambdaVacuum -> SKEFTHawking.ExactSolutions (deSitter_lambda_vacuum_iff, ads_lambda_eq_neg_three_over_ell_sq); TetradMetricEquivalence -> SKEFTHawking.TetradFormalism (tetrad_metric_equivalence_at_alpha_one). This event registers the four real modules so staleness measures them. The four phantom names remain in event 2 as the historical record and will keep warning as unresolved, which is accurate: they never existed. No paper_draft.tex change; no stage9/10/13 redo."
     }
   ]
 }

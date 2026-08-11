@@ -1,6 +1,6 @@
 # Bundle I1 — Source Manifest
 
-**Auto-generated:** 2026-06-10
+**Auto-generated:** 2026-08-11
 **Tool:** `scripts/bundle_source_manifest.py`
 **Source mapping:** `docs/PAPER_DRAFT_MAPPING.md`
 **Bundle anchor list:** `docs/agents/claims-reviewer-bundle-prompts.md` §`I1`
@@ -16,8 +16,8 @@
 | `_phase6o_W3a_lean_only` | §7 | (unspecified) | (see mapping) | (missing) |
 | `_phase6w_W2_lean_only` | §"BP-on-TN substrate" cross-bridge | (unspecified) | (see mapping) | (missing) |
 | `_phase6w_W4_lean_only` | §"Chebyshev-TN methodology" cross-bridge | (unspecified) | (see mapping) | (missing) |
-| `paper15_methodology` | (see mapping) | Lift-section | (see mapping) | 2026-06-10T20:01:33Z |
-| `paper44_riemannian_connection` | (see mapping) | Lift-section | (see mapping) | 2026-05-12T12:38:48Z |
+| `paper15_methodology` | (see mapping) | Lift-section | (see mapping) | 2026-08-11T17:09:28Z |
+| `paper44_riemannian_connection` | (see mapping) | Lift-section | (see mapping) | 2026-08-11T15:15:10Z |
 
 ## Coverage notes
 
