@@ -14,22 +14,28 @@ So: iterate under `--scope`, gate once under `--merge-gate`.
     uv run python scripts/verify_scope.py --since HEAD~1  # scope from a commit range
     uv run python scripts/verify_scope.py --merge-gate    # the full gate, for the candidate
 
-WHAT DECIDES SCOPE. Only what a change can be OBSERVED by:
+WHAT DECIDES SCOPE — this table is DERIVED FROM `_plan()`, not written beside it:
 
-  lean/**                  -> lake build SKEFTHawking.ExtractDeps, zero-sorry, axioms
-  src/**, scripts/**       -> fast suite, architecture census, counts
-  tests/**                 -> fast suite, counts (tests/ is an INPUT to \totaltests)
-  rust/**, pyproject.toml  -> the RHMC/stencil tests that import the built extension
-  notebooks/**             -> notebook_exec, viz_consistency
+  lean/**                  -> counts_fresh, lake build SKEFTHawking.ExtractDeps,
+                              lean_zero_sorry + axiom_closure_allowlist
+  src/**, scripts/**       -> fast suite, architecture_inventory_fresh, counts_fresh
+  tests/**                 -> fast suite, counts_fresh
+  rust/**                  -> NOTHING. No test under tests/ imports `sk_eft_rhmc`, and
+                              a rust change needs the CLAUDE.md rebuild first, so this
+                              tool cannot observe it. Reported in NOT CERTIFIED.
+  pyproject.toml, uv.lock  -> fast suite (the environment every step runs in)
+  notebooks/**             -> counts_fresh, notebook_exec + viz_consistency
   docs/architecture/**     -> architecture_inventory_fresh
   docs/counts.*            -> counts_fresh
-  papers/**                -> the bundle gates
-  .claude/plugins/**       -> plugin guards AND the architecture census it feeds
+  papers/**                -> counts_fresh, the three deterministic bundle gates
+  .claude/plugins/**       -> plugin guards AND architecture_inventory_fresh, because
+                              the census derives agents/hooks/commands from that tree
   everything else (*.md)   -> nothing mechanical; say so rather than imply coverage
 
-Each mapping is here because the path is a real INPUT to that step, not because it
-looked related. `tests/` -> counts and `.claude/plugins/` -> census were both missing
-in the first version and both were live under-reports.
+`counts_fresh` appears against six trees because `counts.json` publishes a figure
+derived from each: pytest_cases and test_files from tests/, python_modules from src/,
+notebooks/, papers/, and the whole Lean block. Verified against `update_counts.py`'s
+producers, not from memory.
 
 ⚠️ A NARROWER RUN IS A NARROWER CLAIM. This prints exactly what it ran and what it
 therefore does NOT certify. Quoting a scoped run as if it were the merge gate is the
@@ -66,10 +72,18 @@ def _plan(paths: list[str]) -> tuple[list[tuple[str, list[str]]], list[str]]:
         "counts": any(p.startswith("docs/counts.") for p in paths),
         "papers": any(p.startswith("papers/") for p in paths),
         "plugin": any(p.startswith(".claude/plugins/") for p in paths),
-        # `rust/` builds sk_eft_rhmc, imported by src/vestigial/hs_rhmc.py and
-        # exercised by seven test files; `notebooks/` is read by notebook_exec;
-        # pyproject changes the environment every step runs in. All three previously
-        # printed "nothing mechanical observes this change", which was false.
+        # `notebooks/` is read by notebook_exec; pyproject/uv.lock change the
+        # environment every other step runs in.
+        #
+        # ⚠️ `rust/` gets NO step, deliberately. An earlier version added a
+        # `-k "rhmc or stencil or dirac"` slice on the claim that sk_eft_rhmc is
+        # "imported by src/vestigial/hs_rhmc.py and exercised by seven test files".
+        # Both were false: the name appears there only inside docstrings, and ZERO
+        # files under tests/ import the extension — the slice ran 157 green tests
+        # having loaded none of it. That turned an honest "nothing observes this"
+        # into a FALSE GREEN, which is worse than the disclaimer it replaced. A
+        # rust/ change needs the rebuild from CLAUDE.md and has no automated
+        # coverage; `not_certified` says exactly that.
         "rust": any(p.startswith("rust/") for p in paths),
         "notebooks": any(p.startswith("notebooks/") for p in paths),
         "env": any(p in ("pyproject.toml", "uv.lock") for p in paths),
@@ -95,10 +109,9 @@ def _plan(paths: list[str]) -> tuple[list[tuple[str, list[str]]], list[str]]:
         steps.append(("counts_fresh",
                       ["uv", "run", "python", "scripts/validate.py",
                        "--check", "counts_fresh", "--no-memo"]))
-    if touched["rust"] or touched["env"]:
-        steps.append(("RHMC + environment-dependent tests",
-                      ["uv", "run", "python", "-m", "pytest", "tests/", "-q", "-k",
-                       "rhmc or stencil or dirac"]))
+    if touched["env"]:
+        steps.append(("fast suite (environment changed)",
+                      ["uv", "run", "python", "-m", "pytest", "tests/", "-q"]))
     if touched["notebooks"]:
         steps.append(("notebook_exec / viz_consistency",
                       ["uv", "run", "python", "scripts/validate.py",
@@ -124,6 +137,12 @@ def _plan(paths: list[str]) -> tuple[list[tuple[str, list[str]]], list[str]]:
                        "--check", "axiom_closure_allowlist", "--no-memo"]))
 
     not_certified = []
+    if touched["rust"]:
+        not_certified.append(
+            "ANYTHING about the Rust extension — no test under tests/ imports "
+            "sk_eft_rhmc, and this run did not rebuild it. Run "
+            "`PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1 uv pip install -e rust/ "
+            "--force-reinstall --no-deps` and exercise it by hand")
     if not touched["lean"]:
         not_certified.append("the Lean build and axiom closure (no lean/ change)")
     if not (touched["code"] or touched["tests"]):
@@ -180,9 +199,14 @@ def main() -> int:
             return 0
         print()
 
-    seen_argv = set()
-    steps = [(l, a) for l, a in steps
-             if not (tuple(a) in seen_argv or seen_argv.add(tuple(a)))]
+    if not args.merge_gate:
+        # SCOPED MODE ONLY. The gate's two full runs are byte-identical BY DESIGN — that
+        # is what "two agreeing runs" means — so de-duplicating there silently deleted
+        # run B while the docstring and --help still promised two. A tool whose critical
+        # failure is under-reporting must not quietly do less than it says.
+        seen_argv = set()
+        steps = [(l, a) for l, a in steps
+                 if not (tuple(a) in seen_argv or seen_argv.add(tuple(a)))]
 
     failed = []
     for label, argv in steps:
