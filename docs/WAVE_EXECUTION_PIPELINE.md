@@ -517,7 +517,10 @@ uv run python scripts/render_paper_tables.py
 Or run the whole mechanical sync in one command with the `skeft-qa:sync` skill.
 
 `docs/counts.json` is authoritative for ALL project counts; `docs/counts.tex` provides the LaTeX
-macros. Lean dependency extraction is managed by `scripts/extract_lean_deps.py`, which re-runs
+macros. Theorem censuses are author-written-scoped and must agree across every artifact that
+publishes one — `validate.py --check theorem_census_agrees` enforces both that and the rule that
+every `kind == "theorem"` filter goes through `validate_helpers.autogen_index`, the single owner
+of "is this compiler-generated". Lean dependency extraction is managed by `scripts/extract_lean_deps.py`, which re-runs
 `ExtractDeps.lean` only when the source hash changes. **Never delete `lean_deps.json.hash` to
 force a refresh** — run `update_counts.py`.
 

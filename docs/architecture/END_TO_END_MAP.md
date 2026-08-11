@@ -216,10 +216,18 @@ edge type that has no emitter and the gate that queries it.
 Spec: `WAVE_EXECUTION_PIPELINE.md` Stages 9/10/13 · `docs/BUNDLE_LIFT_PROCEDURE.md` ·
 `docs/LATE_PHASE6_ABSORPTION_PROTOCOL.md` · `docs/BUNDLE_DIRECTORY_SCHEMA.md`.
 
-**Authoring and review are now separate surfaces with a shared reference set.** The
-`paper-authoring` skill drafts and the `prose-reviewer` agent reads, and both bind to the same
-`references/` directory inside the skill so a drafting rule and a review criterion cannot
-diverge into two standards. The reviewer runs at `BUNDLE_LIFT_PROCEDURE.md` §7.5 — **before**
+**Authoring and review are separate surfaces over a shared reference set.** Drafting is the
+`paper-authoring` skill, loaded either by the lead writing in-context or by a `paper-drafter`
+agent dispatched over one section; review is the `prose-reviewer` agent. All three bind to the
+same `references/` directory inside the skill, by path, so a drafting rule and a review
+criterion cannot diverge into two standards.
+
+⚠️ **`paper-drafter` is the only agent on this spine that WRITES a source.** Every other agent
+reads `papers/<bundle>/paper_draft.tex`; it produces one, and nothing downstream records that
+an agent wrote it. Its obligations are therefore internal — above all, a section that cites
+prior work is written against that work read in full for the portion being written, because
+every layer below verifies that a source *resolves*, never that the prose represents it
+faithfully. `QA_QI_INFRASTRUCTURE_MAP.md` §1 carries the plane diagram and the full rule. The reviewer runs at `BUNDLE_LIFT_PROCEDURE.md` §7.5 — **before**
 Stage 9 and before the claims sub-gate — because its output is a restructuring instruction, and
 restructuring after figures and claims have been reviewed invalidates both.
 

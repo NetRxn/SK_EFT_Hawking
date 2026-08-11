@@ -509,7 +509,7 @@ defect the test claims to catch, not merely something nearby.**
    gitignored (3 of 21 bundle PDFs are tracked), and `bundle_manuscript_length` refuses to
    size a PDF that is absent or older than its draft's `\input` closure. In a fresh
    `git worktree` of HEAD it returns `passed=False, measured=False` with all 21 unmeasured —
-   which also drops the run below `CI_MIN_CHECKS_RUN = 75`, since that floor counts
+   which also drops the run below `CI_MIN_CHECKS_RUN = 76`, since that floor counts
    *measured* checks at zero headroom. **A clone must run `compile_bundle_pdf.py --all`
    before `--ci` means anything.** This is a build-artifact dependency rather than a defect,
    but it is undocumented anywhere the reader would look, and it makes the gate's green
@@ -736,9 +736,10 @@ prose, and prose is not evidence for itself.
 
 **The problem this removes.** `kind == "theorem"` in `lean_deps.json` includes Lean's own
 products (`.eq_1`, `.sizeOf_spec`, `.inj`, `.congr_simp`, `.eq_def`). Six consumers wrote the
-naive filter and were each wrong; the worst published **26,398 "theorem nodes"** in
-`docs/ATLAS_HEATMAP.md` against `counts.tex`'s **22,669** — the same corpus, differing by
-exactly the 3,729 generated declarations. Goal 1 routed all six through
+naive filter and were each wrong the same way, so the published censuses **agreed** on an
+inflated figure — main carried 26,103 in both `counts.tex` and `ATLAS_HEATMAP.md`. Agreement
+was never the property that needed checking; correcting the six one at a time is what produced
+a real divergence, `ATLAS_HEATMAP.md` at 26,398 against `counts.tex`'s 22,669 for two commits. Goal 1 routed all six through
 `validate_helpers.autogen_index` and added `theorem_census_agrees` to catch a seventh. That
 guard **detects**; it does not **prevent**.
 

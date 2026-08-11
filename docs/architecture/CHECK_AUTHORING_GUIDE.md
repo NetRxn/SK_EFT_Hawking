@@ -102,6 +102,22 @@ deleted from a live `key_fn`.
 Any check that greps, globs or walks needs a companion assertion that the population is non-empty
 and plausible.
 
+⚠️ **Non-empty is not enough — ratchet the POPULATION, not only the violations.** A pattern that
+narrows still matches *something*, so an emptiness guard passes it. `theorem_census_agrees` had
+its ownership regex silently drop from 13 matched sites to 5 and stayed green, because only zero
+was fatal; and its agreement leg located 2 of 3 published censuses and reported agreement,
+because `if not published` fires only when *all* consumers vanish. Both now carry a down-only
+floor (`THEOREM_FILTER_SITES_FLOOR`, `PUBLISHED_CENSUS_FLOOR`) and fail below it as
+`measured=False`. Lower such a floor only with a stated reason, exactly like any other ratchet —
+a population that shrank because the *measurement got more precise* is legitimate; one that
+shrank because the pattern rotted is the defect.
+
+⚠️ **The seam is the existence check, not the walk.** A directory that exists but is empty
+scans nothing and reports a clean bill. `elaboration_knob_watchlist` and `proxy_body_audit` both
+guarded only `dir.exists()` and returned `passed=True, measured=True` over zero files — one of
+them while being cited as Invariant #10's enforcement. Count what you actually read and gate on
+that count, not on whether the container is there.
+
 ⚠️ **A source-substring scan is defeatable by prose.** A guard that asserts a helper is called
 by searching the source finds the name **in a comment** and passes over a seeded regression. Use
 `ast`, and assert the **call**.
