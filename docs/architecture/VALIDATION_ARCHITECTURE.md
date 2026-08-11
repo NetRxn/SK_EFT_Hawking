@@ -223,9 +223,11 @@ per-module I1 macro loop, `render_bundle_counts`, `paper_tables/sources`,
 `atlas_view`, and an apex classifier in `bundle_closure`. Three of those were added or
 survived *after* the prose rule was written a few lines up.
 
-**They all agreed, and were all wrong.** Every census counted the 3,729
-compiler-generated declarations as authored, so `counts.tex` and `ATLAS_HEATMAP.md`
-both published **26,103**. A test asserted the three instruments "agree"; nothing
+**They all agreed, and were all wrong.** Every census counted the generated declarations
+as authored, so `counts.tex` and `ATLAS_HEATMAP.md` both published **26,103** — 3,434 of
+that corpus were Lean's own products. (Today's corpus is larger: 26,398 raw against 22,669
+authored, a gap of 3,729. The two pairs belong to different extractions and must not be
+mixed.) A test asserted the three instruments "agree"; nothing
 compared them — but agreement held throughout, so it was never the property that
 needed checking.
 

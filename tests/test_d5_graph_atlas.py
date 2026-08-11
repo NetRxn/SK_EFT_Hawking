@@ -477,7 +477,7 @@ class TestInferBundleFromTextIsActuallyTested:
     finding to `paper3_` — and D12 rendered "Blockers 0" while carrying 36 open
     findings.
 
-    So: every registered check (79 today) is protected against deletion, and the one regression
+    So: every registered check (80 today) is protected against deletion, and the one regression
     that actually happened was invisible. These tests close that.
     """
 

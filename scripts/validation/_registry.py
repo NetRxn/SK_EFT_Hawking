@@ -105,7 +105,7 @@ class CheckResult:
     """Result of one top-level check.
 
     NOTE `passed` is a bare `bool` with no third state. Measured 2026-08-04 across
-    the 59 checks then registered (79 today): **60 cannot-measure return sites — 35 FAIL and 25 PASS**, the
+    the 59 checks then registered (80 today): **60 cannot-measure return sites — 35 FAIL and 25 PASS**, the
     latter collapsing to **22 (check, kind) pairs**. (This docstring said "~20
     sites" — audit QI-17; the figure is now computed, not estimated.)
 

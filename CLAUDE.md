@@ -253,8 +253,8 @@ assuming infeasibility. Flag quality tradeoffs explicitly; let the user decide.
 When a loop needs information it lacks locally, follow the **three-tier research ladder** (full
 spec: the workspace-level `Lit-Search/README.md`):
 - **Tier 0 — local:** read the `Lit-Search/Phase-*/` corpus directly.
-- **Tier 1 — on-the-fly (sandboxed):** dispatch the **`research-scout`** agent (the only web-tool
-  holder; read-only) or `/deep-research`; the lead vets the cited report and files it with a
+- **Tier 1 — on-the-fly (sandboxed):** dispatch the **`research-scout`** agent (read-only,
+  sandboxed; the agent this ladder routes web questions through) or `/deep-research`; the lead vets the cited report and files it with a
   provenance header. Use this instead of reinventing a known result or waiting on a human.
 - **Tier 2 — async human dispatch:** `Lit-Search/Tasks/submitted/` — last resort.
 

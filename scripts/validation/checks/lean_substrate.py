@@ -765,12 +765,13 @@ def check_lean_zero_sorry() -> CheckResult:
 # ═══════════════════════════════════════════════════════════════════════
 #
 # WHY THIS EXISTS. "Is this declaration compiler-generated?" was answered
-# independently in FIVE places, each found by a different reviewer, one at a time:
+# independently in SIX places, each found by a different reviewer, one at a time:
 #   1. update_counts.py `count_lean`          (found by review 1)
 #   2. update_counts.py per-module I1 macros  (found by review 2, F1)
 #   3. render_bundle_counts.py                (found by review 2, F1)
 #   4. paper_tables/sources.py                (found by review 3)
 #   5. atlas_view.py                          (found by review 4)
+#   6. bundle_closure.py apex classifier      (found by the guard itself)
 # Every one of them counted generated declarations as authored, so the instruments
 # AGREED on an inflated figure — main published 26,103 in both `counts.tex` and
 # `ATLAS_HEATMAP.md`. Agreement was never the property that needed checking.
@@ -797,7 +798,7 @@ def check_lean_zero_sorry() -> CheckResult:
 # A marker cannot be inherited by a neighbouring line.
 THEOREM_FILTER_ALLOWLIST: Dict[str, str] = {
     "detector-self":
-        "the comparison inside `_flush_logical` that FINDS census sites; it is the "
+        "the comparison inside `_is_theorem` that FINDS census sites; it is the "
         "detector, not a census.",
     "sorry-theorems":
         "counts declarations with a `sorry` axiom dep; an autogen declaration cannot "
@@ -821,10 +822,12 @@ THEOREM_FILTER_ALLOWLIST: Dict[str, str] = {
 # pattern from 13 matches to 5 still passed when only zero was fatal, so a quietly
 # narrowing regex could re-open the whole class. Lower this only alongside a stated
 # reason, exactly like every other ratchet here.
-# 13 -> 11 (2026-08-10): the scan now skips docstring bodies, and two of the 13 were
-# PROSE describing this rule rather than code. Coverage did not shrink — the
-# measurement got more precise. Lower only with a reason like this one.
-THEOREM_FILTER_SITES_FLOOR = 11
+# RE-MEASURED 2026-08-11 against the AST detector: 12 sites, zero headroom. The two
+# earlier values (13 regex, 11 tokens) were each the population of a DIFFERENT detector,
+# and neither was re-derived when the technique changed — which left one slack site, so a
+# real census could vanish silently. Re-measure this whenever the detector changes;
+# `test_the_floor_equals_the_live_population` now fails if you do not.
+THEOREM_FILTER_SITES_FLOOR = 12
 
 #: Published censuses leg 1 must locate: counts.json, counts.tex, atlas_view.json,
 #: ATLAS_HEATMAP.md. counts.tex was OUTSIDE this leg until 2026-08-11 — the artifact the
@@ -833,68 +836,77 @@ THEOREM_FILTER_SITES_FLOOR = 11
 #: keys on its mtime and is CI_SKIP). Setting it to 99999 left this check green.
 PUBLISHED_CENSUS_FLOOR = 4
 
-_DOC_QUOTES = (chr(34) * 3, chr(39) * 3)
-
 _EXEMPT_RE = re.compile(r"#\s*census-exempt:\s*([a-z0-9-]+)")
-
-_AUTOGEN_NEARBY_RE = re.compile(r"_?autogen|_AUTOGEN|autogen_index")
 
 
 def _census_sites(path) -> tuple:
-    """Unowned `kind == "theorem"` sites, and `# census-exempt:` markers, via TOKENIZE.
+    """Census comparison sites, and `# census-exempt:` markers. AST for code, tokens for
+    comments — each tool used for what it can actually decide.
 
-    A site is a `== "theorem"` / `!= "theorem"` comparison whose LOGICAL LINE carries no
-    autogen reference. Logical-line scope is what makes ownership exact: an autogen guard
-    two lines away is not a guard on this expression, and a guard in this expression is.
+    DETECTED SHAPES, stated rather than implied:
+      * `x == "theorem"` and `"theorem" == x`, plus the `!=` forms — EITHER operand order;
+      * `x in ("theorem", ...)` and `not in`;
+      * `case "theorem":` in a `match`.
 
-    Line-level regexes were tried twice and both had bypasses the population floor could
-    not see, because a site never *seen* never enters the count. A quote-parity docstring
-    tracker was flipped by a lone triple-quote inside a string literal, hiding every site
-    below it; and a marker matched inside a string literal exempted its own line. Tokens
-    separate CODE from COMMENT from STRING, so neither is expressible.
+    NOT DETECTED, a real limit rather than an oversight: a literal reached through a
+    variable (`T = "theorem"; d["kind"] == T`) or built at runtime. Deciding that needs
+    dataflow. The `agreement` leg is the backstop for whatever ownership cannot see.
+
+    Two earlier implementations were narrower and BOTH shipped believing otherwise. A line
+    regex missed the dominant `d.get('kind') == 'theorem'` form outright. Token adjacency
+    then required the literal immediately right of the operator, so swapping the operands
+    hid a site while DELETING its autogen guard — demonstrated green against a real census
+    in `atlas_view.py`. Hence AST: operand order is not a property the node cares about.
     """
-    seen: set = set()          # every comparison site — the population the floor tracks
-    sites: set = set()         # the UNGUARDED subset — candidates for ownership
+    tree = ast.parse(path.read_text(errors="replace"))
+
     marks: dict = {}
     with open(path, "rb") as fh:
-        toks = list(tokenize.tokenize(fh.readline))
+        for tok in tokenize.tokenize(fh.readline):
+            if tok.type == tokenize.COMMENT:
+                m = _EXEMPT_RE.search(tok.string)
+                if m:
+                    marks[tok.start[0]] = m.group(1)
 
-    logical: list = []
-    for tok in toks:
-        if tok.type == tokenize.COMMENT:
-            m = _EXEMPT_RE.search(tok.string)
-            if m:
-                marks[tok.start[0]] = m.group(1)
+    def _is_theorem(node) -> bool:
+        return isinstance(node, ast.Constant) and node.value == "theorem"  # census-exempt: detector-self
+
+    def _guarded(stmt) -> bool:
+        for n in ast.walk(stmt):
+            if isinstance(n, ast.Name) and "autogen" in n.id.lower():
+                return True
+            if isinstance(n, ast.Attribute) and "autogen" in n.attr.lower():
+                return True
+        return False
+
+    seen: set = set()
+    sites: set = set()
+    for stmt in ast.walk(tree):
+        if not isinstance(stmt, ast.stmt):
             continue
-        if tok.type in (tokenize.NEWLINE,):
-            _flush_logical(logical, seen, sites)
-            logical = []
-            continue
-        if tok.type in (tokenize.NL, tokenize.INDENT, tokenize.DEDENT,
-                        tokenize.ENCODING, tokenize.ENDMARKER):
-            continue
-        logical.append(tok)
-    _flush_logical(logical, seen, sites)
+        guarded = _guarded(stmt)
+        for n in ast.walk(stmt):
+            hit = None
+            if isinstance(n, ast.Compare):
+                operands = [n.left] + list(n.comparators)
+                if any(_is_theorem(o) for o in operands) and any(
+                        isinstance(op, (ast.Eq, ast.NotEq)) for op in n.ops):
+                    hit = n
+                elif any(isinstance(op, (ast.In, ast.NotIn)) for op in n.ops) and any(
+                        isinstance(c, (ast.Tuple, ast.List, ast.Set)) and len(c.elts) == 1
+                        and _is_theorem(c.elts[0]) for c in n.comparators):
+                    # SINGLE-element only. `kind in ("theorem", "axiom", ...)` is node-kind
+                    # DISPATCH, not a census — you cannot count theorems by matching a set
+                    # of several kinds — and all six live instances are exactly that. A
+                    # one-element container IS census-shaped, so it stays detected.
+                    hit = n
+            elif isinstance(n, ast.MatchValue) and _is_theorem(n.pattern):
+                hit = n
+            if hit is not None:
+                seen.add(hit.lineno)
+                if not guarded:
+                    sites.add(hit.lineno)
     return seen, sites, marks
-
-
-def _flush_logical(toks, seen, sites) -> None:
-    """Record a site if this statement compares kind to "theorem" and is unguarded."""
-    guarded = any(t.type == tokenize.NAME and "autogen" in t.string.lower() for t in toks)
-    for i, t in enumerate(toks):
-        if t.type != tokenize.STRING:
-            continue
-        try:
-            val = ast.literal_eval(t.string)
-        except Exception:
-            continue
-        if val != "theorem":  # census-exempt: detector-self
-            continue
-        prev = toks[i - 1] if i else None
-        if prev is not None and prev.type == tokenize.OP and prev.string in ("==", "!="):
-            seen.add(t.start[0])
-            if not guarded:
-                sites.add(t.start[0])
 
 
 @register_check(
@@ -942,9 +954,19 @@ def check_theorem_census_agrees() -> CheckResult:
             pass
     tex_path = _H.COUNTS_TEX_PATH
     if tex_path.exists():
-        m = re.search(r"\\totaltheorems\}\{([0-9]+)\}", tex_path.read_text())
-        if m:
-            published["docs/counts.tex:\\totaltheorems"] = int(m.group(1))
+        # Strip LaTeX comments and take EVERY binding: a commented-out decoy with the right
+        # value, or a later \renewcommand carrying a wrong one, both passed a first-match
+        # search while the compiled document used something else.
+        body = re.sub(r"(?<!\\)%.*", "", tex_path.read_text())
+        vals = [int(v) for v in re.findall(r"\\totaltheorems\}\{([0-9]+)\}", body)]
+        if len(set(vals)) > 1:
+            details.append(Detail(
+                "counts_tex", False,
+                f"docs/counts.tex binds \\totaltheorems to {sorted(set(vals))} — the "
+                f"compiled value is whichever comes last; make it single-valued"))
+            return CheckResult(passed=False, details=details)
+        if vals:
+            published["docs/counts.tex:\\totaltheorems"] = vals[-1]
 
     heat_path = _H.DOCS_DIR / "ATLAS_HEATMAP.md"
     if heat_path.exists():

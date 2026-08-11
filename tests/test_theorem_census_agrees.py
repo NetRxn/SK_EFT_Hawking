@@ -21,6 +21,7 @@ leg silently vacuous:
 """
 from __future__ import annotations
 
+import re
 import sys
 from pathlib import Path
 
@@ -138,6 +139,27 @@ class TestOwnershipLegCannotGoVacuous:
             ls.__file__).read_text()), (
             "the +/-2 line window is back — the ownership leg cannot detect a guard's "
             "own removal with it in place")
+
+
+class TestPopulationFloorsAreHeldAtZeroHeadroom:
+    """`_NOT_A_RATCHET` excuses both census floors as "held behaviourally". That excuse was
+    FALSE when written — nothing named `THEOREM_FILTER_SITES_FLOOR`, and it sat one below
+    the live population, so a site could vanish unseen. These make it true."""
+
+    def test_the_site_floor_equals_the_live_population(self):
+        r = ls.check_theorem_census_agrees()
+        msg = next(d.message for d in r.details if d.name == "ownership")
+        live = int(re.search(r"(\d+) `kind", msg).group(1))
+        assert ls.THEOREM_FILTER_SITES_FLOOR == live, (
+            f"floor {ls.THEOREM_FILTER_SITES_FLOOR} vs {live} live sites. A floor BELOW the "
+            f"population lets a census vanish silently; ABOVE it fails on arrival. "
+            f"Re-measure whenever the detector changes.")
+
+    def test_the_census_floor_equals_the_published_set(self):
+        r = ls.check_theorem_census_agrees()
+        msg = next(d.message for d in r.details if d.name == "agreement")
+        live = int(re.search(r"(\d+) published", msg).group(1))
+        assert ls.PUBLISHED_CENSUS_FLOOR == live
 
 
 class TestPipelineStagesFloor:

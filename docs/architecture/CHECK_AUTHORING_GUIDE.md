@@ -105,7 +105,7 @@ and plausible.
 ⚠️ **Non-empty is not enough — ratchet the POPULATION, not only the violations.** A pattern that
 narrows still matches *something*, so an emptiness guard passes it. `theorem_census_agrees` had
 its ownership regex silently drop from 13 matched sites to 5 and stayed green, because only zero
-was fatal; and its agreement leg located 2 of 3 published censuses and reported agreement,
+was fatal; and its agreement leg located 3 of 4 published censuses and reported agreement,
 because `if not published` fires only when *all* consumers vanish. Both now carry a down-only
 floor (`THEOREM_FILTER_SITES_FLOOR`, `PUBLISHED_CENSUS_FLOOR`) and fail below it as
 `measured=False`. Lower such a floor only with a stated reason, exactly like any other ratchet —
