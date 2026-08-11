@@ -293,6 +293,36 @@ The cost is real and is accepted deliberately: the alternative is giving the
 coverage floor slack, and a floor with slack cannot see the next check that
 silently stops measuring — which is the failure it exists to catch.
 
+### 5.2 Two verification depths, and which one certifies what
+
+⚠️ **The merge gate is not the iteration gate.** Two agreeing `pytest -m ''` runs plus
+`validate.py --ci --no-memo` plus a clean `lake build` is roughly forty-five minutes, and
+it certifies a **merge candidate**. Running it after every fix is how one branch spent
+eleven review rounds re-proving the Lean build against markdown edits — across the last
+five findings of that stretch, none required it.
+
+`scripts/verify_scope.py` runs only what a change can be OBSERVED by, keyed on the paths
+git reports as touched; `--merge-gate` runs the real thing, once, on the candidate.
+
+**Two properties make the scoped mode safe, and both are load-bearing:**
+
+1. **It prints what it does NOT certify.** A narrower run is a narrower claim, and quoting
+   a scoped run as though it were the gate is the failure this whole directory exists to
+   prevent. The `NOT CERTIFIED` block is the feature, not the footer.
+2. **A path maps to a step only where the path is a real INPUT to it.** `tests/` reaches
+   `counts_fresh` because `\totaltests` is derived from it; `.claude/plugins/` reaches the
+   architecture census because the census reads that tree. Mappings written from intuition
+   rather than from the producer under-report, which is the tool's one critical failure.
+
+⚠️ **`--merge-gate` also runs the four `CI_SKIP` checks explicitly.** `--ci` skips
+`counts_fresh`, `tables_fresh`, `claim_clusters_fresh` and `notebook_exec` by design — and
+`counts_fresh` being among them is exactly why a stale committed `counts.tex` once survived
+five commits. A gate that inherits `--ci`'s blind spot is not a gate.
+
+**What neither depth can assert:** that a regenerating check left the working tree clean.
+`counts_fresh` and `tables_fresh` rewrite in place and then pass, so a stale *committed*
+artifact reddens nothing. Check `git status` yourself after either run.
+
 ## 6. What this subsystem does not do
 
 ⚠️ **These are coverage GAPS, not absences.** A check exists for most of them; what is true

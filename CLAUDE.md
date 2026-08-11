@@ -147,6 +147,8 @@ uv run python -m pytest -m '' -v              # everything — before PR / submi
 # Passing an explicit path scopes the run; omitting it picks up BOTH testpaths. The plugin's
 # guards (shell-invocation defects, surface-vs-README drift) previously ran only when someone
 # passed `.claude/plugins/skeft-qa/tests` by hand, so nothing ran them. Prefer the bare form.
+uv run python scripts/verify_scope.py         # verify ONLY what your change can break
+uv run python scripts/verify_scope.py --merge-gate   # the full ~45-min certification
 uv run python scripts/validate.py             # full validation suite (--list enumerates it)
 uv run python scripts/validate.py --list      # list checks; --check <name> runs one
 uv run python scripts/review_figures.py       # PNGs + structural figure checks

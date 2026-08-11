@@ -21,11 +21,18 @@ built) · [`CHECK_AUTHORING_GUIDE.md`](CHECK_AUTHORING_GUIDE.md) (what a new che
 | tier | trigger | what runs | blocks? |
 |---|---|---|---|
 | **0 — commit** | every `git commit` | leak/IP guard (staged diff) · `pre-commit-notebooks.sh` (**only staged `.ipynb`**) · `pre-commit-sync.sh`: incremental `lake build` if `.lean` staged, then a **short named list** of checks | **fail-open**; hard-blocks on `main` only |
+| **0.5 — iteration** | any time, mid-fix | `verify_scope.py` = only the steps the CHANGED PATHS are an input to, plus a printed `NOT CERTIFIED` block naming what it skipped | advisory; it is a claim about the change, never about the tree |
 | **1 — reviewer prechecks** | before dispatching an LLM reviewer | `gate_precheck.py s9` · `s10` | yes — do not spend reviewer budget on a stale tree |
 | **2 — wave close (paper)** | `/skeft-qa:wave-close` | `sync.py --full`, then `gate_precheck.py s13` = **full suite + `--force-latex`** | yes — no Stage-13 dispatch on a red tree |
 | **2 — wave close (Lean)** | same, for a wave that touched no `papers/` | `gate_precheck.py s13-lean` = the **same suite**, exit code scoped to the substrate | yes, on substrate reds only |
 | **3 — submission** | before arXiv/journal | `gate_precheck.py submission` = full suite **+ the `--strict` legs** | yes |
 | **— CI** | *none* | deliberately no scheduled runner | n/a |
+
+⚠️ **Tier 0.5 certifies a CHANGE, not the tree.** It exists because the merge-candidate
+gate was being paid on every fix round — forty-five minutes to re-prove the Lean build
+against a markdown edit. It is safe only while it keeps saying what it did not run, so a
+scoped result must never be quoted as a gate result. `verify_scope.py --merge-gate` is the
+gate, and it additionally runs the four `CI_SKIP` checks that `--ci` cannot.
 
 **Tier 0 never runs the full suite** — it runs a named list, all Lean/substrate-side, so a
 red caused by paper content cannot block a commit. The list is in `pre-commit-sync.sh`; it
