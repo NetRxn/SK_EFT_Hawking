@@ -94,11 +94,10 @@ gap-solution-bounded conjecture disproof (where formalization-driven
 counterexample search refuted a literature claim), and the
 chirality-wall axiom decomposition (where structural axiom
 classification turned a single 50-term proof into nine
-individually-tractable sublemmas). Two additional sidebar studies
-document the algebraic-general-relativity substrate formalization
-work that the pipeline accreted as a byproduct, and a
-Mathlib-dependency-fallback discipline pattern for theorems whose
-substantive content has no upstream PDE infrastructure available.
+individually-tractable sublemmas). Two further studies document the
+classical-general-relativity mathematics the pipeline accumulated as a
+byproduct, and the discipline by which a theorem is scoped around
+infrastructure the ambient library does not contain.
 A final process result documents the limits of metadata-level
 citation validation: a June~2026 external-review remediation found
 that a citation can be metadata-valid (resolvable identifier,
@@ -212,14 +211,13 @@ fresh-context adversarial-reviewer pattern, the recorded-review
 readiness semantics, and the limits of metadata-level citation
 validation surfaced by a June~2026 external-review remediation.
 Section~\ref{sec:phase6f_substrate} presents the
-algebraic-general-relativity substrate roster shipped over
-Phase~6f Waves~1--6. Section~\ref{sec:riemannian_sidebar}
-presents the Phase~6f Wave~7 catch-up Riemannian connection sidebar
-and its bundle-level extension via the abstract-bundle Levi-Civita
-construction (Phase~6f Wave~8 Sessions~1--3).
-Section~\ref{sec:structural_prop_scoping} describes the
-Mathlib-dependency-fallback structural-Prop scoping discipline
-(Phase~6g Wave~5). Section~\ref{sec:lessons} discusses lessons
+machine-checked layer of classical general relativity the programme
+accumulated at component level. Section~\ref{sec:riemannian_sidebar}
+presents the connection-level companion built above the upstream
+covariant-derivative interface, up to Levi-Civita uniqueness.
+Section~\ref{sec:structural_prop_scoping} describes how results are
+scoped around infrastructure the ambient library does not yet
+contain. Section~\ref{sec:lessons} discusses lessons
 learned and outlines future pipeline extensions.
 
 %% ─────────────────────────────────────────────────────────────────
@@ -1326,742 +1324,1131 @@ prove is what we claim.
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.95\linewidth]{figures/i1_fig3_sentence_state_clusters.png}
-\caption{Sentence-state claim clusters across paper bundles
-(schematic). Three papers (rectangles) each contain six sentences
-(circles). Curved lines connect sentences sharing a
-\texttt{claim\_cluster}. The amber cluster~C2 has
-\texttt{cross\_bundle: true} and links sentences across all three
-papers; clusters C1 (steel blue) and C3 (sage) are
-single-bundle. Cross-bundle clusters survive bundle
-consolidation, providing the per-bundle Stage-13
-adversarial-reviewer with a stable provenance index even when
-sentences are lifted into different paper bundles. Walked by
-\texttt{validate.py --check bundle\_consistency}.}
+\caption{Sentence-state claim clusters (schematic). Three source
+drafts (rectangles) each carry six sentences (circles); a line joins
+sentences that share a claim cluster, and grey circles are
+unclustered. All three clusters span more than one draft, but only
+the amber cluster~C2 spans more than one publication target and is
+flagged accordingly; the drafts joined by C1 (steel blue) and C3
+(sage) all lift into a single target. That flag is what the
+consistency check keys on: a cluster confined to one target cannot
+put two manuscripts at odds with each other, whereas a cross-target
+cluster is a claim a reader can encounter twice.}
 \label{fig:sentence_clusters}
 \end{figure}
 
-% TODO: substantive draft. Substrate to draw from:
-%  - prose_state.json schema in scripts/sentence_state.py
-%  - cross-paper consistency cluster mechanism in
-%    scripts/cluster_detect.py + scripts/bundle_clusters.py
-%  - claim_clusters.json + cluster_bundle_index.json semantics
-%  - validate.py CHECK 21 (bundle_consistency) walks the registry
-%    and flags cross-bundle drift
-%  - The publication-bundle architecture per docs/PAPER_STRATEGY.md
-%  - The bundle_metadata.json schema (Phase 7a sub-wave 7a.1.1) and
-%    the BUNDLE_LIFT_PROCEDURE.md canonical lift workflow
-%
-% Section thesis: per-paper provenance tracks WHERE each numerical
-% claim comes from; sentence-level provenance tracks WHAT each
-% prose sentence asserts and which sentences across the program
-% make the same assertion. Cross-paper consistency clusters are
-% the mechanism that prevents the same fact from being stated
-% differently in two papers --- a publication-readiness invariant
-% that emerges when the program ships >10 papers.
+The provenance machinery described so far answers one question:
+where did this number come from? A program that publishes more than
+one paper from one codebase has to answer a second. What does this
+sentence assert, and which other sentences in the program assert the
+same thing? Sentence-level provenance records the first; cross-paper
+consistency clusters record the second. The failure they exist to
+prevent is not a wrong number. It is one fact stated two different
+ways in two papers that a referee may well read side by side.
 
-Sentence-level provenance is the mechanism that scales the per-claim
-audit discipline from a single paper to a multi-paper publication
-program. Each prose sentence in every paper draft acquires a record
-in a structured registry (\texttt{papers/<paper>/prose\_state.json},
-schema-defined in \texttt{scripts/sentence\_state.py}) that captures
-the claim type (numeric, theorem-reference, citation, parameter,
-formal-claim, qualitative, transition, methodology, or metaclaim), a
-chain of backing links (formula in \texttt{formulas.py}, theorem in
-the Lean source, axiom in \texttt{AXIOM\_METADATA}, parameter in
-\texttt{PARAMETER\_PROVENANCE}, citation in
-\texttt{CITATION\_REGISTRY}, hypothesis in
-\texttt{HYPOTHESIS\_REGISTRY}), an agent verdict (PASS, FAIL, WARN,
-INFO, UNGROUNDED, TRANSITION) from the most recent claims-reviewer
-run, and a content-hash sentence identifier
-(\texttt{sentence:<paper>:<section\_slug>:<sha8>}) that survives
-prose edits within a paper but flips when the substantive claim
-changes.
+Every prose sentence of every draft carries a record in a per-paper
+state file. The record fixes the sentence's claim type (one of nine:
+numeric, theorem reference, citation, parameter, formal claim,
+qualitative, methodology, transition, metaclaim); its chain of
+backing links, each typed as a formula, a Lean theorem, an axiom, a
+parameter, a citation, a hypothesis, an automated-prover run, or a
+production run, and carrying a completeness verdict of full, partial
+or none; the verdict of the most recent automated claims review; and
+a content-hash identifier.
 
-The sentence ID is the stable handle. Adversarial-review findings
-are pinned to sentence IDs rather than line numbers, so an author's
-prose edit in one paragraph does not invalidate findings on
-neighboring paragraphs. Re-review is incremental: only sentences
-whose hash has changed since the last claims-reviewer run need fresh
-chain resolution; the rest are loaded from the prior
-\texttt{claims\_review.json}.
+The hash is the leading eight hexadecimal digits of a digest of a
+normalized form of the sentence: lowercased, with markup-only
+commands replaced by their arguments, citation and cross-reference
+commands deleted, quotation marks and dashes unified, whitespace
+collapsed, and a trailing bibliographic bracket stripped.
+Normalization is what makes the identifier worth having. A sentence
+that is retypeset, recited or rewrapped keeps its identifier, so the
+identifier names the assertion rather than its presentation. Any
+change of wording yields a new identifier, which is the intended
+behaviour rather than a defect: the record's job is to make a changed
+claim visible, not to preserve continuity across one.
 
-Cross-paper consistency clusters are the next layer. A claim made in
-two or more papers (a numerical bound, a theorem statement, a
-parameter value) groups its sentence IDs into a cluster registered
-in \texttt{papers/claim\_clusters.json}, with a
-\texttt{cross\_bundle: true} flag for clusters spanning two or more
-publication bundles. The validation check
-\texttt{validate.py --check bundle\_consistency} walks
-the registry and flags any cluster whose member sentences disagree
-on the cluster's load-bearing fact. The load-bearing example is
-GW170817 vs vestigial-graviton: the L1 PRL splash and the D3 deep
-paper both report the LIGO $\Delta c/c$ bound and the
-$7\times 10^{14}$ falsification factor; the
-\texttt{bundle\_consistency} check enforces that the
-two reports agree character-for-character on the numerical content.
+A single command-line interface,
+\texttt{scripts/sentence\_state.py}, is the only path that mutates
+that file or the append-only audit log beside it.
+Each mutating operation takes an exclusive advisory lock on the
+paper's state, appends its audit event \emph{before} computing the
+new state, then installs the new state by writing a temporary file
+and renaming it. A crash between those steps therefore loses no
+history: the audit log is replay-canonical, and the same interface
+replays it, reports any drift against the current state, and rewrites
+the state on request. Human ratification is a separate field from the
+agent verdict and takes one of four values, recorded with actor and
+timestamp, so a reader of the record can always tell which of the two
+a given sentence rests on.
 
-The publication-bundle architecture (codified in the process
-document \texttt{docs/PAPER\_STRATEGY.md} in the public repository)
-consolidates the project's seventy-plus mapped sources (per-wave
-drafts plus Lean-only synthesis handles) into the
-publication targets that frame enumerates organized into five tiers: a flagship review
-(\texttt{F}), eight themed deep papers
-(\texttt{D1}--\texttt{D8}), three PRL-style headline letters
-(\texttt{L1}--\texttt{L3}), three infrastructure papers (\texttt{I1},
-\texttt{I2}, \texttt{I3}), and two experimental letters (\texttt{E1},
-\texttt{E2}). Each per-wave draft maps to one bundle target via an
-append-only assignment table
-(repository document \texttt{docs/PAPER\_DRAFT\_MAPPING.md}); each
-bundle accumulates
-contributions from its sources via a documented lift workflow
-(repository document \texttt{docs/BUNDLE\_LIFT\_PROCEDURE.md},
-fourteen canonical steps);
-late-arriving Phase~6X waves absorb into already-drafted bundles via
-a hot-swap protocol
-(repository document \texttt{docs/LATE\_PHASE6\_ABSORPTION\_PROTOCOL.md},
-stages~A--G with explicit branches D.1 / D.2 / D.3 / D.4 by bundle
-state). Per-bundle
-state is captured in \texttt{papers/<bundle>/bundle\_metadata.json},
-whose fields include the three review-stage
-statuses (Stage~9 / 10 / 13), a freshness flag, the source-manifest
-last-regeneration timestamp, the stage-13 review document path, and
-the recorded-review timestamps consumed by the readiness semantics
-of Section~\ref{sec:adversarial}. Pipeline
-Invariant~14 codifies the contract: every paper-shaped output lifts
-into a bundle target identified at Stage~1 and recorded at
-Stage~12. The architecture is what makes many-source-to-few-publication
-consolidation tractable without sacrificing
-per-claim provenance: the sentence-level audit trail moves with the
-prose; the cluster registry preserves cross-bundle consistency; the
-bundle metadata captures every reviewer agent's verdict.
+Findings are pinned to sentence identifiers rather than to line
+numbers, and that is what makes repeated review tractable. When a new
+review run is ingested, every prior finding is re-checked. One that
+reproduces keeps its first-observed date. One that does not is
+auto-closed only when a deterministic recheck accounts for the change
+(a registry lookup, a declaration-name resolution, a count, a pin
+read); otherwise it becomes a supersession candidate that a human
+must confirm, so no judgment-based finding closes silently. An
+identifier present in the prior state and absent from the new run is
+tombstoned with its own audit event, and a tombstoned sentence whose
+normalized text is a near match for a current one is reported as a
+rewrite candidate rather than as a deletion beside an unrelated
+insertion.
 
-Two deposit-time process standards extend the bundle architecture
-to publication mechanics. First, the manuscript-level disclosure
-of machine assistance is \emph{register-derived rather than
-prose-discretionary}: a single canonical disclosure text
-(repository document \texttt{docs/DISCLOSURE\_TEXT.md}) exists in
-exactly two variants, differing only in one conditional sentence
-crediting the Aristotle automated theorem prover, and the variant
-each bundle carries is computed deterministically
-(\texttt{scripts/aristotle\_usage\_by\_bundle.py}) from the
-canonical registers (the Aristotle run registry, the per-paper
-declared Lean modules, the draft-to-bundle mapping, and the Lean
-dependency export) rather than chosen by the author. Second,
-deposit sequencing (repository document
-\texttt{docs/ARXIV\_DEPOSIT\_PLAN.md}) is gated on completion of
-the content-level attribution sweep described in
-Section~\ref{sec:adversarial}, and the deposit-time conversion of
-in-preparation self-citations into deposited identifiers is a
-single documented scripted pass
-(\texttt{scripts/convert\_inprep\_citations.py}) that updates the
-citation registry, rewrites the affected bibliography items, and
-writes the cache stubs the primary-source invariant requires,
-keeping Invariant~11 unbroken across the deposit transition.
+Cross-paper consistency clusters are built from the same hashes.
+\texttt{scripts/cluster\_detect.py} indexes every non-tombstoned
+sentence in the program and groups them by normalized hash. An
+exact-match cluster is a set of sentences that reached the same
+digest through the same normalization the per-paper review used. A
+normalized-match cluster is a set that agrees only under a more
+aggressive normalization, which additionally folds Unicode and
+discards punctuation, so that two sentences differing in hyphenation
+or citation style still meet. A group counts as a cluster only if it
+spans two or more papers; repetition inside one paper is redundancy,
+not a consistency risk. The result is written to
+\texttt{papers/claim\_clusters.json}, and
+\texttt{scripts/bundle\_clusters.py} projects each cluster through
+the draft-to-target assignment table into
+\texttt{papers/cluster\_bundle\_index.json}, tagging every cluster
+with the set of publication targets its members are destined for and
+flagging those that span two or more. The overview manuscript is
+excluded from that test: every draft contributes to it, so counting
+it would mark every cluster cross-target and the flag would carry no
+information.
 
-%% ─────────────────────────────────────────────────────────────────
-%% §9 Three-layer architecture extended (Aristotle integration)
-%% ─────────────────────────────────────────────────────────────────
+\texttt{validate.py --check bundle\_consistency} reads that index,
+and its guarantee is narrower than the word consistency suggests. For
+an exact-match cluster the members are identical after normalization
+by construction; the check certifies that identity, and the residual
+risk is a later direct edit of one member. For a normalized-match
+cluster the members are known to differ, and the check does not
+adjudicate the difference: it flags the cluster for the adversarial
+review of Section~\ref{sec:adversarial}, which resolves it against
+that target's anchor list. A cluster whose match kind the index does
+not recognize fails the check outright, since that means the index is
+stale with respect to the detector that wrote it. The companion check
+\texttt{validate.py --check claim\_clusters\_fresh} regenerates the
+cluster file whenever any sentence record is newer than it, so
+staleness is a transient state rather than a silent one.
+
+The mechanism's reach is lexical, and its blind spot follows
+directly. Two papers asserting the same fact in different words share
+no normalized hash and form no cluster. A falsification factor
+written as a power of ten in a letter and as a count of orders of
+magnitude in the deep paper that shares its subject is exactly the
+discrepancy a reader notices and exactly the one the detector cannot
+see. A semantic matching strategy over sentence embeddings is
+specified in the detector and deliberately left unimplemented; until
+it exists, agreement on a load-bearing claim across two manuscripts
+is carried by the per-target anchor list of
+Section~\ref{sec:adversarial}, which names the specific claims and
+citations a target's review must verify, and the cluster index covers
+the narrower case of verbatim reuse. We state the boundary rather
+than describing the check as a consistency guarantee, because a
+reader who believed the stronger claim would draw the wrong
+conclusion from a green result.
+
+Clusters mean something only because each source draft has a declared
+destination. The program's publication targets are declared once, in
+a registry (\texttt{scripts/bundle\_registry.py}) carrying each
+target's code, tier, working title and journal target, with a
+strategy document (\texttt{docs/PAPER\_STRATEGY.md}) as its
+human-readable counterpart and a validation check that fails the
+suite if the two disagree or if any consumer re-hardcodes the roster.
+Each source draft is assigned to one or more targets in an
+append-only table
+(\texttt{docs/PAPER\_DRAFT\_MAPPING.md}) together with a lift action
+recording whether its content becomes a section of one target, a
+letter accompanied by a section of a deep paper, an experimental
+companion, an overview summary, a retention in place, or a
+retirement. That assignment propagates into every sentence record as
+a destination, a section hint and a lift action, which is what allows
+a cluster to be projected onto targets at all. Content arriving after
+a target is drafted is absorbed through a documented protocol whose
+branches are selected by the target's current review state, rather
+than by redrafting.
+
+Per-target state lives in a metadata file beside each manuscript: the
+journal and page contract, the declared apex theorems, the status of
+each review stage with the date and report path of the review that
+produced it, a freshness flag against the source manifest, and the
+open-finding counts the readiness semantics of
+Section~\ref{sec:adversarial} consume. Taken together this is what
+makes consolidation of many sources into few publications tractable
+without losing per-claim provenance: the audit trail travels with the
+prose, the cluster index preserves the agreement it can actually
+certify, and the per-target metadata records which review produced
+which verdict.
+
+Two deposit-time standards extend the same principle to publication
+mechanics: what a register can determine is derived, not decided.
+The manuscript-level disclosure of machine assistance exists in
+exactly two variants of one canonical text, differing only in a
+conditional sentence crediting the automated theorem prover, and the
+variant a given manuscript carries is computed from the run registry,
+the per-paper declared Lean modules, the draft-to-target table and
+the Lean dependency export, rather than chosen by an author. Deposit
+sequencing is triggered by completion of the content-level
+attribution sweep of Section~\ref{sec:adversarial}, and the
+conversion of in-preparation self-citations into deposited
+identifiers at that point is a single scripted pass that edits the
+citation registry, regenerates each affected bibliography entry from
+registry data rather than pattern-matching the heterogeneous prior
+forms, and writes the primary-source cache stubs the corresponding
+invariant requires, so the invariant holds across the transition
+instead of being repaired after it.
 
 \section{Aristotle Automated Theorem Prover Integration}
 \label{sec:three_layer_extended}
 
-% TODO: substantive draft. Substrate to draw from:
-%  - paper15 §5 (Aristotle integration)
-%  - The priority batching protocol
-%  - Run 78dcc5f4 (25 theorems in a single session)
-%  - Run 79e07d55 (G_c critical coupling)
-%  - The interactive MCP loop as Stage 3a (replaces Stage 4 fallback
-%    workflow described in paper15)
-%
-% Section thesis: Aristotle is now Stage 4 --- a fallback for
-% sorries that survive the interactive Stage 3a. The interactive
-% loop is roughly 1000x faster for proof construction; Aristotle
-% is reserved for sorries that genuinely resist interactive proof
-% with sub-lemma decomposition.
+Automated theorem proving is the fallback layer of this pipeline and
+not its engine. Proof construction happens against a live goal state,
+interactively, and the automated prover is reserved for goals that
+resist that loop after they have been decomposed into sub-lemmas. The
+project's cumulative record of automated closures is the Aristotle run
+registry in \texttt{src/core/constants.py}, which holds
+\aristotleproved{} entries against \aristotleruns{} distinct
+identifiers. This section describes the registry, the submission and
+re-incorporation protocol, and the operational asymmetry that keeps
+the prover in the fallback position. The three episodes in which a
+prover outcome carried the physics are worked through separately in
+Sections~\ref{sec:case1}--\ref{sec:case3}.
 
-The role of automated theorem proving in the pipeline has shifted
-substantially over the year of operation. The original twelve-stage version of the pipeline (an earlier
-internal draft, April 2026) treated Aristotle as the primary
-proof-construction tool: a Lean
-theorem statement was registered with a strategy-hint comment in
-its docstring, the entire project was submitted in a priority
-batch, and the returned proofs were integrated after a manual
-diff review. The cycle time was approximately one batch per day,
-with batch sizes of ten to forty theorems.
+The division of labour was not the original one. In the earlier
+arrangement the prover was the default proof-construction tool: a
+theorem statement was registered with a strategy hint in its
+docstring, the \emph{entire} Lean project was uploaded, and the
+returned files were reviewed by diff and merged. Targeting flags
+existed but narrowed only the prompt, never the upload, so every
+submission shipped the whole substrate and the cycle time was about a
+day. Interactive proof against the language server changed the
+economics rather than the capability: a candidate tactic is tested
+without editing the file and the resulting goal state is read back at
+the latency of a language-server query rather than of a build.
 
-The introduction of Stage~3a (interactive Lean development via
-the \texttt{lean-lsp-mcp} integration) changed the balance.
-Interactive iteration on a single theorem now takes seconds, not
-hours; the tool reads the goal state at the cursor, tests four to
-six candidate tactic sequences without editing the file, and
-returns the resulting goal state for each. A typical proof that
-would have been submitted to Aristotle in the original workflow
-now closes interactively in three to five tactic-test cycles
-(see Section~\ref{sec:pipeline} for the per-cycle latency
-discussion). Aristotle has correspondingly retreated from
-default proof-construction tool to fallback-for-residual-sorries.
+Three situations still indicate the prover, and they are not
+interchangeable. The first is a goal whose tactic search space is too
+large to explore by candidate-at-a-time testing: long rewrite chains
+over non-commutative algebras, multi-step decompositions that branch
+at every step, and proofs needing an auxiliary construction that the
+local goal state does not suggest. The second is breadth rather than
+depth: a module carrying many small, independent obligations, where
+one submission amortises the fixed cost of a round trip across all of
+them. The third is the case where a \emph{refutation} is the useful
+output. Failure to close a goal interactively is not evidence that the
+goal is false, and no amount of it becomes evidence; a returned
+counterexample settles the question in one step. That is the mechanism
+behind both Section~\ref{sec:case1} and Section~\ref{sec:case2}, and
+it is the only one of the three that cannot be replaced by more
+patience at the keyboard. In every case decomposition precedes
+submission. A monolithic goal is not a candidate for the prover, it is
+a candidate for the bookkeeping described in
+Section~\ref{sec:case3}.
 
-The residual role is genuine, not vestigial. Three classes of
-proof retain a strong indication for Aristotle. The first is
-proofs whose tactic search space is too large for interactive
-candidate-testing: lengthy algebraic manipulations on
-non-commutative ring expressions, multi-step bidegree
-decompositions with case splits at every step, and Sobolev-type
-inequalities with auxiliary functions whose definitions are not
-suggested by the local goal state. The second is proofs that
-submit cleanly only after a structural decomposition into
-sub-lemmas (the chirality-wall case of Section~\ref{sec:case3}),
-where the sub-lemmas are individually small but numerous enough
-that interactive proof of all of them is more expensive than a
-single batch submission. The third is the diagnostic role
-illustrated in Section~\ref{sec:case1} and
-Section~\ref{sec:case2}: an Aristotle failure on a mathematically
-plausible statement is informative when the failure is reported
-as an explicit counterexample, surfacing a wrong axiom or a
-folklore-but-false claim that interactive iteration would not
-have surfaced as efficiently.
+A registry entry is a smaller object than it is often taken for, and
+the difference matters for anyone auditing a provenance claim. The key
+is a bare declaration name and the value is a run identifier, or a
+marker recording that the theorem was closed by hand alongside an
+automated batch. There is no module field, no priority field and no
+date field. Three consequences follow. A key does not identify
+a theorem on its own, so a claim of the form ``this theorem was closed
+in this run'' has to be resolved against the module in which the
+declaration actually lives before it is written down. Three entries
+carry the manual marker, so the count of prover-closed theorems is
+three below \aristotleproved{}, and the count of genuine runs is one
+below \aristotleruns{}. Fourteen keys currently name no live
+declaration, the residue of modules restructured after their batch was
+integrated; the population is frozen as a ceiling that fails on any
+new occurrence, and it is not reduced by deletion, because the
+registry is append-only provenance for results already published.
 
-The project's Aristotle activity to date is summarized by
-\aristotleproved{} cumulative theorems closed across
-\aristotleruns{} priority-batch runs, registered in the
-\texttt{ARISTOTLE\_THEOREMS} table in
-\texttt{src/core/constants.py}. Each entry records the theorem's
-fully qualified name, the run UUID, the priority tier (1 highest,
-3 lowest), and the integration date. The single-batch record is
-twenty-five theorems closed in run \texttt{78dcc5f4}, a
-Phase~5c Wave~1--7 multi-domain batch spanning S-matrix
-unitarity and Verlinde formulas at $k = 1, 2$ in
-\texttt{SU2kSMatrix}; the modular-tensor-category fingerprint
-in \texttt{RibbonCategory}; the Rokhlin invariant in
-\texttt{SpinBordism}; the $E_8$-lattice positivity proof in
-\texttt{E8Lattice}; restricted-quantum-group corepresentations
-in \texttt{RestrictedUq}; the integrated-autocorrelation-time
-estimator bounds in \texttt{VerifiedJackknife}; and seven public
-Hopf-algebra axioms in \texttt{Uqsl2Hopf}. The operationally
-most significant batch is the Phase~5d gap-equation batch
-\texttt{79e07d55}, which both produced the
-gap-solution-bounded counterexample of Section~\ref{sec:case2}
-and closed nine companion gap-equation theorems in the same
-submission.
+The largest single batch by registered theorems carries sixty-three
+entries across the fracton-hydrodynamics and
+Wetterich--Nambu--Jona-Lasinio modules. The most instructive one is
+smaller. Run \texttt{78dcc5f4} carries twenty-five
+entries spanning seven unrelated modules in a single session:
+S-matrix unitarity and Verlinde fusion coefficients at $k = 1$ and
+$k = 2$ in \texttt{SU2kSMatrix} (ten entries); modularity of both
+data in \texttt{RibbonCategory}; the determinant
+(\texttt{e8\_det\_one}) and a leading principal minor of the $E_8$
+Cartan matrix in \texttt{E8Lattice}; Rokhlin divisibility of the
+signature in \texttt{SpinBordism} (\texttt{rokhlin\_from\_bordism});
+the generator image of the small-quantum-group quotient in
+\texttt{RestrictedUq} (\texttt{uqToSmallUq\_E}); two
+integrated-autocorrelation-time bounds in \texttt{VerifiedJackknife}
+(\texttt{intAutocorrTime\_ge\_half} among them); and seven
+Hopf-algebra structure identities in \texttt{Uqsl2Hopf}
+(\texttt{comul\_coassoc} and the two antipode identities among them).
+Yield of that kind is a poor proxy for value. The two runs this paper
+works through carry ten registered theorems between them, nine in run
+\texttt{79e07d55} (Section~\ref{sec:case2}) and one in run
+\texttt{270e77a0} (Section~\ref{sec:case1}), and both mattered for
+what they refused to prove.
 
-The Aristotle service runs on a fixed Lean toolchain
-(\texttt{leanprover/lean4:v4.28.0}) with a corresponding pinned
-Mathlib commit, while the project's local toolchain is
-currently \texttt{leanprover/lean4:v\leantoolchain} with a separately
-pinned Mathlib commit (see
-\texttt{lean/lean-toolchain} and \texttt{lean/lakefile.toml}).
-Aristotle-returned proofs that exercise a 4.29.0-only feature
-in a tactic body fail at integration time on the project's
-toolchain; we run a \texttt{lake build} verification on every
-integrated batch (Stage~5 of the pipeline) before
-\texttt{ARISTOTLE\_THEOREMS} entries are added. The toolchain
-skew is the operational reason the project uses Aristotle
-\emph{sparingly}: every batch incurs a non-zero
-toolchain-compatibility audit cost, and when the cost dominates
-the proof-construction cost, the interactive Stage~3a loop is
-the better tool. All worked-case theorems referenced in
-Sections~\ref{sec:case1}--\ref{sec:case3} have been verified to
-compile cleanly on the project's local \leantoolchain{} toolchain
-post-integration. The integration protocol is unchanged across the
-shift: never \texttt{--integrate} on submission, always retrieve
-first, review the diff archived in the repository under
-\texttt{docs/aristotle\_results/run\_<timestamp>/diff.patch}, and
-integrate only after axiom-hygiene verification (Invariant~10:
-no heartbeat overrides introduced; new axioms registered in
-\texttt{AXIOM\_METADATA}; \texttt{lake build} clean post-merge).
+The current submission protocol is partial rather than whole-project,
+and re-incorporation is verify-then-graft. A submission stages a
+minimal Lean project consisting of the transitive import closure of
+the target file, with only the target editable and the closure
+supplied as context; a dependency that no module in the closure
+imports is pruned from the staged copy, which is disposable and leaves
+the repository untouched. Submission requires explicit authorisation
+and is refused for a closure already submitted in an unchanged state.
+Results are retrieved without being integrated. The graft applies only
+to the target files and refuses outright if the returned tree touched
+anything else in the closure, then runs a verification gauntlet: a
+clean build with no new \texttt{sorry}, a fresh dependency export, an
+axiom-closure audit of the grafted declarations against the project's
+allowed axiom set, the validation suite, and the tests. The graft is
+kept on a pass and reverted automatically on a failure, so a rejected
+proof costs a submission and never the substrate. Only a kept graft is
+registered, and registration is a fixed chain: the registry entry, the
+pinned count assertion that guards it, the counts regeneration, and
+the machine-assistance disclosure derived from the registry as
+described in Section~\ref{sec:provenance}. The batches enumerated
+above predate this protocol and were integrated under the earlier
+whole-file arrangement with manual diff review and, where two runs
+overlapped on one file, per-theorem cherry-picking. Every declaration
+named in this section is live in the module named beside it.
 
-%% ─────────────────────────────────────────────────────────────────
-%% §10 Stage 13 fresh-context adversarial reviewer
-%% ─────────────────────────────────────────────────────────────────
+The prover's sandbox runs a Lean toolchain one minor version behind
+the project's \texttt{\leantoolchain}, and the project does not
+down-port its own sources to close that gap. A maintained
+backward-compatible copy of the substrate would be a second source of
+truth obliged to track the first, and it fails the moment a proof
+genuinely needs a feature of the current toolchain. The mismatch is
+instead handled at the two boundaries where it is cheap: a standing
+note prepended to each submission tells the prover what its
+environment contains, so that budget is not spent rediscovering it,
+and the gauntlet rejects any returned proof that does not build and
+kernel-verify against the project's own toolchain. What remains is a
+per-submission overhead that is independent of how hard the goal is.
+That overhead, and not any limitation of the prover, is why the
+fallback stays a fallback: when the cost of the round trip exceeds the
+cost of constructing the proof interactively, the interactive loop is
+simply the better instrument, and for the overwhelming majority of
+this project's theorems it is.
 
 \section{The Fresh-Context Adversarial-Reviewer Pattern}
 \label{sec:adversarial}
 
-% TODO: substantive draft. Substrate to draw from:
-%  - .claude/plugins/physics-qa/agents/adversarial-reviewer.md
-%  - WAVE_EXECUTION_PIPELINE.md Stage 13 section
-%  - The April 2026 external-adversarial-review round that
-%    surfaced the 13-dimension problem space (seed event)
-%  - The 8 finding classes (citation integrity, parameter
-%    provenance, narrative grounding, cross-paper consistency,
-%    count freshness, formal-verification-claim substantiation,
-%    assumption disclosure, review-state hygiene)
-%  - The supersession ledger semantics (docs/review_finding_supersessions.json)
-%
-% Section thesis: the adversarial reviewer runs in a fresh context
-% (no memory of the author's prior justifications), works through
-% 8 finding classes systematically, and produces a structured
-% markdown report that flips readiness gates to blocked when
-% BLOCKER findings are present. The fresh-context property is
-% load-bearing --- the reviewer must not be persuadable by the
-% author's prior context.
+Every check described so far is deterministic, and every one of them
+was written by the same hand that wrote the artifact it inspects.
+That is a structural limit, not a resourcing one. A check can confirm
+that a bibliographic key is registered; it cannot confirm that the
+registered paper is the paper the sentence needs. A check can confirm
+that a Lean declaration exists and compiles; it cannot confirm that
+its statement is the proposition the prose claims. The failures that
+survive an internal pipeline are exactly the failures whose detection
+requires reading the artifact against something outside it.
 
-The fresh-context adversarial reviewer is the pipeline's
-load-bearing safeguard against the failure classes that internal
-validation cannot detect by construction. The April~2026
-external-adversarial-review round on the project's per-paper drafts
-exposed a thirteen-dimensional problem space (thirteen distinct
-failure-mode categories that none of the project's internal
-\texttt{validate.py} checks were designed to surface), including
-wrong-target arXiv citations (one paper cited a graph-neural-network
-arXiv ID where the intended citation was a torsion-cosmology
-paper), parameter values that had drifted from their primary
-sources after late-stage rounding, narrative overclaims that were
-factually wrong (a ``first machine-checked'' claim that proved to
-have an unrecognized prior art in Coq), and ``formally verified''
-prose claims whose Lean theorems were placeholder
-\texttt{True := trivial} markers. The seed event motivated
-Stage~13 as a permanent pipeline component.
+An external adversarial review of the project's drafts in April 2026
+measured the size of that blind spot, and the result was worse than
+the pipeline's authors expected. Three citations carried identifiers
+resolving to papers in unrelated fields: a lattice-gauge-theory claim
+supported by an infrared imaging atlas of active galactic nuclei, a
+polariton quasinormal-mode prediction supported by a machine-learning
+paper on extreme multi-label classification, and a non-Abelian gauge
+argument supported by a paper on magnetic-resonance coil design. One
+background-field table disagreed with the current solver output on
+every platform it tabulated, in one entry by more than a factor of
+four, and its inline scattering length had been superseded by a later
+measurement. Two theorems cited as verified had the trivially true
+proposition as their stated conclusion, with the physically
+meaningful hypotheses never used in the proof. A construction was
+attributed throughout one draft to a physicist who had no part in it,
+while the companion draft named the correct authors.
 
-The agent's design rests on the \emph{fresh-context} property: the
-reviewer runs in a context window that has not seen the author's
-prior justifications, internal communications, or in-development
-state. By construction, a reviewer in the same context as the author
-has internalized the author's framing; the reviewer's findings are
-limited to what the author's framing permits. A fresh-context
-reviewer reads the paper as a reader would, with no privileged
-backchannel into the author's intent, and emits findings against
-the artifact rather than against the author. The architectural
-choice is that the agent runs in a separate Claude Code session
-(separate context window, separate skill loading); the prompt is
-the \texttt{physics-qa} plugin's adversarial-reviewer agent
-definition plus the paper or bundle target.
+\subsection{Why the context must be fresh}
 
-The agent works through eight finding classes in strict order, one
-class at a time, against eleven readiness gates:
-(1)~CitationIntegrity: every \texttt{\textbackslash bibitem} is
-fetched against arXiv or DOI and compared character-for-character;
-(2)~ParameterProvenance: every numerical parameter is checked
-against \texttt{PARAMETER\_PROVENANCE}; (3)~LeanProofSubstance:
-every cited Lean theorem is read at its declaration site and its
-proof body inspected for placeholder patterns; (4)~CrossPaperConsistency:
-the paper is diff'd against every other paper for shared
-constructs; (5)~NarrativeGrounding: first-claims, unification
-claims, attribution claims, feasibility claims, and
-simulation-evidence claims are scanned against the artifact;
-(6)~AssumptionDisclosure: every cited theorem's load-bearing
-hypotheses must appear in prose; (7)~CountFreshness: count
-literals must match the canonical \texttt{counts.tex} macros;
-(8)~ProductionRunHealth: numerical-evidence claims must trace
-to a successful \texttt{ProductionRun} graph node.
+The reviewer is a language-model agent invoked against the manuscript
+with no shared state: no memory of the author's earlier reasoning, no
+access to the discussion in which a contested phrasing was settled,
+no knowledge of which claims were already defended. That property is
+the whole mechanism, and everything else in this section is
+machinery around it.
 
-The output is a structured markdown report at
-\texttt{papers/AutomatedReviews/<DATE>-internal-adversarial/<paper>.md}
-with finding severity in \{BLOCKER, REQUIRED, RECOMMENDED\}.
-\texttt{ReviewFinding} graph nodes are auto-extracted by
-\texttt{scripts/build\_graph.py:extract\_review\_finding\_nodes}
-with \texttt{FLAGS} edges to the affected paper or bundle, and
-BLOCKER findings flip the affected
-\texttt{ReadinessGate} status to \texttt{blocked}. Author-side fix
-appends to a supersession ledger
-(\texttt{docs/review\_finding\_supersessions.json}); on next graph
-build the supersession overrides the finding's status to
-\texttt{fixed} or \texttt{accepted}; \texttt{validate.py --check
-readiness\_submission\_gate} re-evaluates the bundle.
+A reviewer that shares the author's context has already accepted the
+author's framing, and its findings are then bounded by what that
+framing admits. The specific failure is not laziness but agreement:
+the justification that made a sentence acceptable while writing it is
+still available, still persuasive, and still absent from the page the
+referee will read. A fresh-context reviewer has access to the
+artifact and to the primary sources, and to nothing else. It is
+therefore not persuadable by an argument that was never written down.
 
-The bundle-level extension of the pattern was added in Phase~6i
-Wave~7. The orchestrator
-\texttt{scripts/review\_runner.py --bundle <X> --prep-brief}
-emits a per-bundle review brief; the agent walks every source
-paper assigned to the bundle (per
-\texttt{docs/PAPER\_DRAFT\_MAPPING.md}) plus the bundle's own
-draft; output goes to
-\texttt{papers/AutomatedReviews/<DATE>-bundle-stage13/<X>.md}.
-The per-bundle anchor list at
-\texttt{docs/agents/claims-reviewer-bundle-prompts.md} carries the
-load-bearing claims and citations the bundle's review must verify.
-Cross-bundle cluster mismatches (\texttt{cross\_bundle: true}
-clusters in \texttt{cluster\_bundle\_index.json}) emit
-\texttt{BundleConsistencyMismatch} findings.
+Three standing instructions protect the property from erosion. The
+reviewer does not defer to author intent: prose implying a conclusion
+the artifacts do not support is an overclaim whatever the author
+meant. The reviewer does not pattern-match on previously observed
+failures, because a reviewer optimising for last time's defect is a
+reviewer that has acquired the memory the design removed; each pass
+scans the manuscript in class order against the current state of the
+knowledge graph. And the reviewer does not implement fixes. Its
+output is findings; the author remediates and re-invokes. Separating
+the two roles is the reason the agent exists, and an agent that
+edits what it judges has resumed authorship of the thing it is
+judging.
 
-The review-state semantics were hardened in June~2026 with a
-\emph{recorded-review} requirement. A bundle's readiness verdict
-can reach green only when three conditions hold simultaneously:
-zero open blocker-class findings, at most five open advisories,
-\emph{and} a recorded fresh-context Stage-13 review (the review
-event itself, with its date and report path, captured in the
-bundle's \texttt{bundle\_metadata.json}). The third condition is
-the substantive one. Before the change, a bundle with no recorded
-findings was indistinguishable from a bundle that had been
-reviewed and passed; ``no findings recorded'' is not evidence of
-review, it is evidence of nothing. The hardened semantics
-introduce an explicit \emph{yellow (unreviewed)} verdict class for
-bundles with zero open blockers but no recorded fresh-context
-review, so the readiness heatmap cannot silently launder the
-absence of review into a pass.
+\subsection{The eight finding classes}
 
-The June~2026 external-review remediation also surfaced the most
-instructive citation-integrity lesson of the program to date. The
-pipeline's citation machinery to this point (the primary-source
-cache, Invariant~11, registry identifier resolution, and the
-bibliographic-title drift detector) validates citation
-\emph{metadata}. The remediation identified a failure class that
-metadata validation cannot catch by construction: a citation can
-be metadata-valid (the identifier resolves, the primary source
-is cached, the bibliographic data are correct) while the
-\emph{claim the prose attributes to it} is fabricated. Three
-instances were found in roughly ten spot checks of load-bearing
-attributions. In one, a draft attributed a quantitative
-susceptibility-range estimate to a cached source that is a
-unitarity proof in a lattice-gravity framework and contains no
-such analysis. In another, the prose attributed an observational
-exclusion to the wrong observables, at the wrong significance,
-with the wrong year, relative to the cached paper. In the third,
-the citation registry's own change history carried a fabricated
+The reviewer works a fixed roster of eight classes, in order, one
+class at a time, and does not batch findings across classes. Each
+class maps to exactly one readiness gate, and that gate's pass
+criteria define what correctness means for the class, so a finding is
+never an aesthetic judgement. Table~\ref{tab:finding_classes} gives
+the roster, the gate each class backstops, and the evidence the class
+requires.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{p{0.30\linewidth}p{0.24\linewidth}p{0.38\linewidth}}
+\hline
+\textbf{Finding class} & \textbf{Gate backstopped} & \textbf{Evidence read} \\
+\hline
+1. Wrong-target citations
+  & Citation integrity (1)
+  & Each bibliographic entry fetched against its arXiv identifier or
+    DOI; membership in the citation registry \\
+2. Parameter drift from primary sources
+  & Parameter provenance (3)
+  & The provenance entry, then the table, figure or equation of the
+    primary source it names \\
+3. Placeholder theorems cited as verified
+  & Lean proof substance (5)
+  & The theorem's declaration site and the tokens of its proof body \\
+4. Cross-paper contradictions
+  & Cross-paper consistency (2)
+  & Every companion draft; shared citation keys in particular \\
+5. Narrative overclaims
+  & Narrative grounding (7)
+  & Abstract, introduction and conclusion; prior-art searches for
+    priority claims \\
+6. Undisclosed assumptions
+  & Assumption disclosure (6)
+  & Hypothesis parameters and structure-field constraints of each
+    cited theorem \\
+7. Count-literal drift
+  & Numerical freshness (9)
+  & Canonical count macros and the reported-metric edges of the
+    knowledge graph \\
+8. Production-run health
+  & Production-run health (8)
+  & Run status, re-derived from the log tails rather than from a
+    cached status field \\
+\hline
+\end{tabular}
+\caption{The eight finding classes, the readiness gate each
+backstops, and the evidence each requires. The classes are not worked
+in gate order, because the order above puts the cheapest-to-refute
+claims first.}
+\label{tab:finding_classes}
+\end{table}
+
+Three of the eleven gates have no finding class of their own.
+Computation correctness is decided mechanically from the kind of
+assertion each test makes about a formula, and a bounds-only test
+cannot discharge it. Fix propagation is decided from the open or
+closed state of the findings themselves. First-claim verification has
+no mechanical evaluator at all, and the prior-art search inside class
+five is the only thing that feeds it; a priority claim is verified by
+a person or it is not verified.
+
+Two protocol details in that roster carry more weight than their
+length suggests. Citation verification consults a cache of previous
+fetches, and the cache amortises cost without licensing a skip: any
+entry whose recorded verification is stale, or whose bibliographic
+text has changed since it was recorded, is fetched again. And a fetch
+that a network policy refuses is recorded as a failed fetch, never as
+a null result. Not being able to look and finding nothing are
+opposite outcomes, and collapsing them is how a priority claim
+acquires false support. The same rule governs every unknown the
+reviewer meets: an unreadable file or an empty graph query is emitted
+as a finding, because a silent skip is indistinguishable from a pass.
+
+\subsection{From finding to gate}
+
+Each invocation writes one report for one manuscript, with one
+section per finding. A finding states its severity, the gate it
+belongs to, the file and line it was observed at, what was observed,
+the evidence, what was expected, and the mechanical step that would
+remediate it. Severity is a declared field taking one of four values,
+not a glyph to be read off a heading. The distinction is
+load-bearing: severity determines the closure bar, and a severity
+inferred from decoration can be changed without leaving a trace.
+Declaration is enforced by
+\texttt{validate.py --check review\_severity\_declared}.
+
+Reports are parsed on the next knowledge-graph build into finding
+nodes with edges to the manuscripts they flag, and a blocking finding
+flips its gate to blocked. The aggregate verdict is recomputed by
+\texttt{validate.py --check readiness\_submission\_gate}. A
+submission-blocking finding is thereby a state of the graph rather
+than a note in a document, which is what makes it survive the session
+that produced it.
+
+\subsection{A reviewer may not close its own findings}
+
+Every finding is born open, at every severity, and the only thing
+that can transition one is a record in the supersession ledger at
+\texttt{docs/review\_finding\_supersessions.json}. Wording a heading
+as resolved does nothing. This matters because the natural
+alternative, letting a review document report which of the previous
+findings are now fixed, gives the reviewing channel the power to
+close the findings it raises, and that power was repeatedly exercised
+by accident: a re-review that reconstructs an earlier report can mint
+every finding in it as closed, including the ones its own body
+describes as partially addressed.
+
+The ledger is deliberately a narrow channel. A record names the
+finding, an explicit closing status, the review or close-out document
+that confirmed the fix, a written rationale, and a date. Closing a
+blocking finding additionally requires that the rationale be
+substantive rather than a restatement, and that the record carry a
+commit or a date as its provenance anchor; a record meeting neither
+condition leaves the finding open, whatever status it declares.
+Accepting a blocking finding rather than fixing it is a decision that
+must be argued in writing, which
+\texttt{validate.py --check accepted\_findings\_carry\_rationale}
+enforces. A separate guard checks that every ledger record names a
+finding that actually exists, since a closure filed against a
+nonexistent identifier closes nothing while appearing to close
+something.
+
+The author's assertion that a finding is fixed is not evidence for
+the gate. The re-invocation is the evidence: the gate reopens only
+when a fresh pass over the same class returns no blocking finding.
+
+\subsection{Absence of findings is not evidence of review}
+
+A readiness verdict computed only from open findings cannot
+distinguish a manuscript that was reviewed and passed from one that
+was never reviewed, because both have none. The verdict therefore
+requires a recorded review as a third condition alongside zero
+blocking findings and a bounded advisory count, and manuscripts with
+no blocking findings and no recorded review occupy an explicit
+unreviewed class of their own. Review-recordedness resolves against
+the manuscript's own metadata, or else against a dated review
+document on disk; a review scoped to one section does not satisfy a
+whole-manuscript requirement.
+
+The pattern extends from a single manuscript to a multi-source
+manuscript without changing its semantics. A review brief names every
+contributing draft; the reviewer walks each of them plus the
+assembled manuscript, and carries a per-manuscript anchor list of the
+load-bearing claims and citations that pass must verify. Manuscripts
+of different kinds get different profiles: a methodology manuscript
+is held to the standard that every worked case trace to a
+reproducible run identifier or a pinned counterexample, which is the
+standard the three cases of Sections~\ref{sec:case1}
+to~\ref{sec:case3} are written against. Agreement between manuscripts
+that share a claim is checked deterministically rather than by the
+reviewer, as described in Section~\ref{sec:provenance}.
+
+\subsection{What the pattern still does not catch}
+
+The citation machinery described above validates citation
+\emph{metadata}. A remediation pass in June 2026 identified a failure
+class that metadata validation cannot reach by construction: a
+citation can be entirely metadata-valid, with a resolving identifier,
+a cached primary source and correct bibliographic data, while the
+claim the prose attributes to it is fabricated. Three instances
+turned up in roughly ten spot checks of load-bearing attributions. In
+the first, a quantitative susceptibility range was attributed to a
+cached source that is a unitarity proof in a lattice-gravity
+framework and contains no such analysis. In the second, an
+observational exclusion was attributed at the wrong observables, the
+wrong significance and the wrong year relative to the cached paper.
+In the third, the citation registry's own notes carried a fabricated
 title and wrong journal coordinates for a real paper whose actual
 framing is conditional rather than a no-go. All three passed every
-metadata-level check, by construction: the sources are real,
-cached, and correctly identified; the attributed \emph{content}
-was wrong.
+metadata-level check, because the sources are real, cached and
+correctly identified. Only the attributed content was wrong.
 
-The deterministic response shipped in the same remediation as
-three new validation checks. The first
-(\texttt{validate.py --check axiom\_count\_prose\_consistency})
-scans every paper draft for axiom-count claims and fails any
-present-tense claim that disagrees with the live machine-generated
-count, motivated by drafts still asserting the single-axiom
-posture after the last project-local axiom was retired into a
-tracked-hypothesis \texttt{Prop} on 2026-05-19; the calibration
-run alone surfaced sixteen stale prose sites across eleven drafts.
-The second
-(\texttt{validate.py --check prose\_theorem\_reference\_coverage})
-requires every Lean-identifier-shaped reference in monospaced
-bundle prose to resolve to a live declaration in the Lean
-dependency export, with a documented per-instance waiver mechanism
-(this paper's deliberately historical reference to the disproved
-folklore bound of Section~\ref{sec:case2} is the canonical
-waiver). The third
-(\texttt{validate.py --check theorem\_name\_embedded\_citations})
-covers declaration names that embed author--year tokens: when a
-paper's prose cites such a declaration, the citing paper's
-bibliography must contain a matching entry, so a reader can
-actually follow the citation the name encodes. The same
-remediation also replaced a manually maintained deep-paper
-headline count of cross-platform Lean-theorem reuse with a
-deterministic scripted count
-(\texttt{scripts/count\_theorem\_reuse.py}); the manual figure of
-$109/119$ corrected to $106/114 \approx 93\%$, with both the
-numerator and the denominator of the manual count having drifted.
+Part of the response is deterministic. One check scans every draft
+for axiom-count claims and fails any present-tense claim that
+disagrees with the machine-generated count. A second requires every
+identifier-shaped reference in monospaced prose to resolve to a live
+declaration in the Lean dependency export, with a per-instance waiver
+mechanism for deliberate references to declarations that no longer
+exist. A third covers declaration names that embed an author and a
+year: when prose cites such a declaration, the citing manuscript's
+bibliography must contain the matching entry, so that a reader can
+follow the citation the name encodes.
 
-Deterministic checks, however, guard \emph{presence and
-consistency}; only reading the source against the claim verifies
-\emph{support}. The systematic response is a content-level
-attribution sweep (repository document
-\texttt{docs/roadmaps/AttributionContentSweep\_Roadmap.md}). For
-every load-bearing citation--claim pair on a bundle's anchor list,
-a fresh-context agent reads the cached primary source and issues a
-dated verdict: supported; supported-with-caveat (the paper must
-then carry the caveat); not-supported (prose and registry
-corrected, with a ledger-style record); or source-missing (fetch,
-then verify). Each bundle visit pairs the content pass with a
-fresh-context Stage-13 re-invocation, works falsification-critical
-bundles first and the flagship last (so the flagship inherits its
-siblings' corrections), and installs the register-derived
-disclosure block of Section~\ref{sec:provenance}. The sweep's exit
-criterion is every bundle green under the recorded-review
-semantics above. The base rate that motivated the sweep
-(roughly three fabricated attributions per ten spot-checked) is
-exactly the kind of number a verification program must be willing
-to publish about itself: the metadata layer the program had been
-treating as citation integrity is necessary but not sufficient.
+Deterministic checks guard presence and consistency; only reading the
+source against the sentence verifies support. That is a content-level
+attribution sweep, and it is the pattern applied one level deeper.
+For every load-bearing pairing of a citation with the claim it
+supports, a fresh-context agent reads the cached primary source and
+issues a dated verdict: supported; supported with a caveat, which the
+manuscript must then carry; not supported, in which case prose and
+registry are corrected and a ledger record is written; or source
+missing, in which case the source is fetched and the verdict
+deferred. Each visit pairs the content pass with a fresh-context
+re-invocation of the reviewer, takes falsification-critical claims
+first and the overview manuscript last so that it inherits its
+companions' corrections.
 
-%% ─────────────────────────────────────────────────────────────────
-%% §11 Phase 6f W1-W6 algebraic-GR substrate roster
-%% ─────────────────────────────────────────────────────────────────
+The base rate that motivated the sweep, of order three fabricated
+attributions per ten load-bearing pairs spot-checked, is exactly the
+kind of number a verification programme has to be willing to publish
+about itself. It says that the metadata layer this programme had been
+treating as citation integrity is necessary and not sufficient, and
+that the fresh-context property buys nothing unless the reviewer is
+also required to open the source.
 
-\section{Algebraic-General-Relativity Substrate Roster}
+\section{Classical General Relativity at the Component Level}
 \label{sec:phase6f_substrate}
 
-% TODO: substantive draft. Substrate to draw from:
-%  - lean/SKEFTHawking/{ADMFormalism, AlgebraicRiemann,
-%    SchwarzschildKerrSchild, DeSitterAdSLambdaVacuum,
-%    TetradMetricEquivalence, ...}.lean
-%  - Phase 6f Wave 1-6 memory files
-%  - The algebraic-GR substrate roster:
-%    + algebraic Riemann (Wave 1)
-%    + Schwarzschild Kerr-Schild (Wave 2)
-%    + de Sitter / AdS Lambda-vacuum biconditional (Wave 3)
-%    + ADM Hamiltonian/momentum-constraint biconditionals (Wave 4)
-%    + tetrad metric equivalence (Wave 5)
-%    + Wave 6: tetrad formalism cross-bridges
-%
-% Section thesis: each of the six waves shipped a substrate-level
-% formalization at the algebraic-general-relativity layer. These
-% are infrastructure on which subsequent Phase 6 waves (BCH four
-% laws, area theorem, Hawking-Penrose singularity theorem) build.
-% The bundle paper presents this as a sidebar to the main
-% methodology narrative.
+A verification pipeline driven for long enough over one physics
+program accumulates infrastructure that the program's headline
+claims never mention. The largest such deposit here is a
+machine-checked layer of classical general relativity:
+\phaseSixfWonesixTotal{}~theorems across six modules, stated over
+component arrays $\mathrm{Fin}\,4 \to \cdots \to \mathbb{R}$ rather
+than over charts, bundles, or connections. This section records what
+each layer proves and which later result consumes it. No declaration
+in the six modules is marked as a placeholder in the registry that
+carries that marking (\texttt{src/core/constants.py}), and the layer
+introduces no unproved gap and no project-local axiom.
 
-Although this paper's primary contribution is methodological, the
-verification pipeline has produced as a side product a body of
-classical-general-relativity formalization at the algebraic
-substrate level. We sketch the body here as a sidebar; full
-treatment is the subject of a companion algebraic-general-relativity
-backbone paper.
-
-Phase~6f Waves~1 through~6 produced \phaseSixfWonesixTotal{}~theorems
-(all substantive in the current build; the
-substantive--vs--total distinction is the
-\texttt{PLACEHOLDER\_THEOREMS} registry per Invariant~9 of
-Section~\ref{sec:pipeline}) across six modules at the
-algebraic (not differential-geometric)
-level of GR. The algebraic level is the appropriate working language
-for substrate-emergent gravity, where the metric, Christoffel
-symbols, and curvature tensors are defined component-wise on
-$\mathrm{Fin}\,4 \to \mathrm{Fin}\,4 \to \cdots \to \mathbb{R}$
-arrays rather than via fiber-bundle abstractions; downstream
-black-hole-thermodynamics work consumes the algebraic theorems as
-Props rather than re-deriving them on a manifold. Six waves shipped
-in sequence:
+The component-level presentation is not a simplification of an
+available manifold-level interface. At the library revision this
+project pins, it reaches smooth manifolds, tangent and vector
+bundles, a covariant-derivative and torsion interface, and a
+positive-definite Riemannian-metric class, and stops there: no
+Riemann tensor, no Ricci tensor, no scalar curvature, no Bianchi
+identity, and no indefinite-signature metric. A curvature statement
+therefore has to be made over an explicit index set or not at all,
+and the index-set form is in any case the form in which a physicist
+reads the identities. The connection-level companion layer, built on
+the covariant-derivative interface once the missing pieces were
+supplied in-project, is the subject of
+Section~\ref{sec:riemannian_sidebar}.
 
 \begin{itemize}
-\item \textbf{Wave~1 (\texttt{Curvature.lean}, \curvatureThms{}~theorems):}
-algebraic Riemann tensor $R^\rho_{\sigma\mu\nu}$, the
-\texttt{FirstBianchi} predicate, antisymmetry of the lower index pair,
-and the pair-symmetry corollary $R_{\rho\sigma\mu\nu} =
-R_{\mu\nu\rho\sigma}$.
+\item \textbf{Curvature algebra} (\texttt{Curvature.lean},
+\curvatureThms{}~theorems; \texttt{EinsteinTensor.lean},
+\einsteinTensorThms{}): the three algebraic properties a Riemann
+tensor inherits from its underlying connection are carried as
+separate predicates, \texttt{AntisymLastTwo} (any linear
+connection), \texttt{FirstBianchi} (torsion-free), and
+\texttt{AntisymPair12} (metric-compatible, on the index-lowered
+tensor), so that the derivation visibly uses each. The headline is
+the pair-symmetry $R_{\rho\sigma\mu\nu} = R_{\mu\nu\rho\sigma}$
+(\texttt{pair\_symmetry\_lowered}), through four cyclic Bianchi
+instances, with Ricci symmetry as its corollary.
+Non-vacuity is established from both sides: a constant-sectional
+witness gives $\mathrm{Ric}_{\sigma\nu} = 3K g_{\sigma\nu}$ and
+diagonal trace $12K$, exhibiting the dimension factors $n-1$ and
+$n(n-1)$ at $n = 4$ (\texttt{constantSectional\_Ricci\_eq},
+\texttt{constantSectional\_diag\_trace\_eq}), and an explicit
+one-component tensor refutes the Bianchi predicate
+(\texttt{nonBianchiTensor\_violates\_FirstBianchi}). On top of this
+sits the Einstein tensor $G_{\mu\nu} := \mathrm{Ric}_{\mu\nu} -
+\tfrac{1}{2}R\,g_{\mu\nu}$, with the dimension-4 trace identity
+$G^{\mu}{}_{\mu} = -R$
+(\texttt{einsteinTensor\_trace\_eq\_neg\_scalar}), the vacuum
+characterization $G = 0 \iff \mathrm{Ric} = 0$
+(\texttt{einsteinTensor\_zero\_iff\_ricci\_zero}), and the
+$\Lambda$-vacuum biconditional $G + \Lambda g = 0 \iff \Lambda = 3K$
+on the constant-$K$ witness
+(\texttt{constantSectional\_lambda\_vacuum\_iff}), whose forward
+direction needs one non-degenerate metric component and uses it.
 
-\item \textbf{Wave~2 (\texttt{EinsteinTensor.lean}, \einsteinTensorThms{}~theorems):}
-algebraic Einstein tensor $G_{\mu\nu} := \mathrm{Ric}_{\mu\nu} -
-\tfrac{1}{2}R\, g_{\mu\nu}$, the dimension-4 trace identity
-$G^\mu_\mu = -R$, the vacuum-characterization biconditional
-$G_{\mu\nu} = 0 \iff \mathrm{Ric}_{\mu\nu} = 0$, and the de Sitter
-$\Lambda$-vacuum cross-bridge $G + \Lambda g = 0 \iff \Lambda = 3K$
-(constant-$K$ specialization).
+\item \textbf{Energy conditions} (\texttt{EnergyConditions.lean},
+\energyConditionsThms{}~theorems): the null, weak, dominant and
+strong conditions as predicates on a stress-energy bilinear form in
+signature $(-,+,+,+)$, with the causal-vector restrictions
+load-bearing rather than decorative (dropping the timelike
+restriction from the weak condition would turn it into
+positive-semidefiniteness, false in any nontrivial Lorentzian
+theory). The implication chain from dominant to weak to null ships
+with its continuity hypothesis exposed in the statement rather than
+assumed silently, since null vectors are limits of timelike ones
+(\texttt{WEC\_implies\_NEC\_under\_continuity}). The separations are
+witnessed concretely: a cosmological-constant fluid satisfies the
+weak and null conditions and violates the strong one for $\Lambda
+> 0$ (\texttt{cosmologicalLambda\_violates\_SEC}); a stiff fluid at
+$\rho = 1$, $p = 2$ violates the dominant condition on the explicit
+pair $v = (1, 9/10, 0, 0)$, $w = (1, -9/10, 0, 0)$
+(\texttt{stiff\_fluid\_violates\_DEC}); a ghost scalar violates the
+null condition (\texttt{ghostScalar\_violates\_NEC}).
 
-\item \textbf{Wave~3 (\texttt{EnergyConditions.lean}, \energyConditionsThms{}~theorems):} pointwise energy-condition predicates (NEC, WEC, SEC,
-DEC) on the algebraic stress-energy tensor and Ricci-curvature
-specializations.
+\item \textbf{Exact solutions} (\texttt{ExactSolutions.lean},
+\exactSolutionsThms{}~theorems, over \texttt{KerrSchild.lean}): four
+canonical solutions as named consumers of the two layers above.
+Minkowski is the unique $\Lambda = 0$ member of the constant-$K$
+family (\texttt{minkowski\_lambda\_zero\_iff\_K\_zero}); the
+$\Lambda$-vacuum biconditional specialized to the Minkowski carrier
+gives $\Lambda = 3K$ in the sign-agnostic form shared by de Sitter
+and anti-de Sitter (\texttt{deSitter\_lambda\_vacuum\_iff}), with
+$\Lambda = -3/\ell^2$ as the anti-de Sitter reading
+(\texttt{ads\_lambda\_eq\_neg\_three\_over\_ell\_sq}). Schwarzschild
+enters in Kerr--Schild form $g = \eta + (2M/r)\,l \otimes l$: the
+horizon is characterized as the unique radius at which the scalar
+reaches unity (\texttt{schwarzschild\_horizon\_iff}), and three
+theorems fix the sign of $g_{tt}$ outside, on, and inside it, the
+last of which
+(\texttt{schwarzschild\_g\_tt\_inside\_horizon\_pos}) is the
+character flip of the $t$-direction. The Kerr--Schild inverse is
+worth one sentence of method: the naive rank-one form
+$g^{-1} = \eta - \varphi\, l \otimes l$ is false, and what ships is
+the Sherman--Morrison form with the index raised through $\eta$
+(\texttt{raiseIndex}, \texttt{ks\_inverse\_formula}).
 
-\item \textbf{Wave~4 (\texttt{ExactSolutions.lean}, \exactSolutionsThms{}~theorems):} four canonical exact solutions as algebraic consumers
-of the Wave~1--3 substrate. Minkowski ($K=0$, $\Lambda=0$); de
-Sitter ($K>0$, Hubble$^2 = K$); anti-de Sitter ($K<0$, AdS radius
-$\ell = 1/\sqrt{-K}$); Schwarzschild in Kerr-Schild form
-$g = \eta + (2M/r)\,l\otimes l$, with explicit cross-bridges to
-Wave~1's Riemann tensor and downstream black-hole-thermodynamics
-hooks.
-
-\item \textbf{Wave~5 (\texttt{ADMFormalism.lean}, \admFormalismThms{}~theorems):}
-ADM 3+1 decomposition. Hamiltonian constraint
-$\square g = 2(R_{(3)} + K_{ij}K^{ij} - K^2)$, momentum constraint,
-extrinsic curvature trace, with Minkowski and de Sitter explicit
-witnesses.
-
-\item \textbf{Wave~6 (\texttt{TetradFormalism.lean}, \tetradFormalismThms{}~theorems):} tetrad-induced metric symmetry, Minkowski tetrad
-witness, determinant identity, and cross-bridges to the
-Einstein-Cartan extension module (Phase~6e).
+\item \textbf{The $3+1$ split and the tetrad correspondence}
+(\texttt{ADMFormalism.lean}, \admFormalismThms{}~theorems;
+\texttt{TetradFormalism.lean}, \tetradFormalismThms{}): the
+Arnowitt--Deser--Misner constraints are carried as algebraic
+functions of the slice data. In units $G = 1$ the Hamiltonian
+constraint $H = {}^{(3)}\!R + (\mathrm{tr}\,K)^2 - K_{ij}K^{ij} -
+16\pi\rho$ has a vacuum biconditional
+(\texttt{hamiltonianConstraint\_vacuum\_iff}) and, at a moment of
+time symmetry, collapses to ${}^{(3)}\!R = 16\pi\rho$
+(\texttt{hamiltonianConstraint\_moment\_of\_time\_symmetry\_iff}),
+which is the algebraic statement behind Yamabe positivity of the
+slice at non-negative density; the momentum constraint's vacuum form
+says the trace-free extrinsic curvature is divergence-free
+(\texttt{momentumConstraint\_vacuum\_iff}). Flat-slicing de Sitter
+data, $K_{ij} = -H\gamma_{ij}$ and ${}^{(3)}\!R = 0$ against
+$\rho_\Lambda = \Lambda/8\pi$, recovers $\Lambda = 3H^2$ from the
+constraint alone
+(\texttt{deSitter\_flat\_slicing\_hamiltonian\_iff}), which is the
+same identity the exact-solution layer obtained from the field
+equations. On the tetrad side, the induced metric $g_{\mu\nu} =
+\eta_{ab}e^a{}_\mu e^b{}_\nu$ (\texttt{tetradInducedMetric}) is
+symmetric by construction
+(\texttt{tetradInducedMetric\_symm}), the Kronecker tetrad returns
+$\eta$ exactly
+(\texttt{minkowskiTetrad\_induces\_minkowski\_metric}), and the
+reduction of the tetrad formulation to the metric one is stated as
+a biconditional in the Einstein--Cartan parameter,
+vanishing residual if and only if $\alpha_{\mathrm{EC}} = 1$
+(\texttt{tetrad\_levi\_civita\_iff\_alpha\_unity}).
 \end{itemize}
 
-Total Phase~6f W1-W6 yield: \phaseSixfWonesixTotal{}~theorems,
-all substantive (zero placeholder markers in the current build),
-zero sorry, zero new axioms. The Phase~6f audit summary
-is preserved in the program's per-phase literature cache,
-maintained alongside the repository; downstream papers
-(Bardeen-Carter-Hawking four laws, area theorem,
-Hawking--Penrose singularity theorem) reference these modules as
-load-bearing imports rather than as documentation. The
-methodology point: a verification pipeline producing a sustained
-research program inevitably accretes infrastructure that is itself
-publishable; the substrate paper is structurally derivative of the
-methodology, not parallel to it.
+The layering is real rather than nominal, and it is checkable by
+following the calls. Within the layer, the Einstein tensor is
+built from the curvature module's Ricci and scalar operators, the
+exact solutions specialize the Einstein-tensor biconditionals to the
+Minkowski carrier, and the slice-data module reaches back into the
+exact solutions to identify the Arnowitt--Deser--Misner mass with
+half the horizon radius
+(\texttt{schwarzschild\_adm\_mass\_eq\_half\_horizon\_radius}).
+Outside it, the horizon-area monotonicity result rewrites through
+the closed form $A = 16\pi M^2$ proved here
+(\texttt{schwarzschild\_area\_eq\_16pi\_M\_sq} consumed by
+\texttt{schwarzschild\_area\_monotone}); the black-hole uniqueness
+module reads its horizon radius and area from the same definitions
+(\texttt{kerr\_family\_schwarzschild\_horizon\_radius},
+\texttt{kerr\_family\_schwarzschild\_area}); and the singularity
+work discharges the statement that a positive cosmological constant
+evades the Hawking--Penrose hypothesis by applying this layer's
+strong-energy counterexample to the hypothesis bundle, rather than
+re-deriving the algebra
+(\texttt{cosmologicalLambda\_violates\_HP\_hypothesis} calling
+\texttt{cosmologicalLambda\_violates\_SEC}).
 
-%% ─────────────────────────────────────────────────────────────────
-%% §12 Phase 6f W7 Riemannian connection sidebar
-%% ─────────────────────────────────────────────────────────────────
+Three limits are worth stating, because each one is a place where a
+statement could have been manufactured and was not. The vacuum-Ricci
+verification for Schwarzschild is absent: it needs a Lorentzian
+metric and curvature built from a connection, and a tracked
+hypothesis asserting it would have been discharged trivially at this
+level, so the statement waits for the infrastructure rather than
+appearing as a proposition with nothing behind it. The contracted
+second Bianchi identity $\nabla^\mu G_{\mu\nu} = 0$ is absent for the
+same reason, a covariant divergence not being modelled here. The
+Cartan structure equations are absent because manifold-level
+differential forms are, so the tetrad module's torsion enters as an
+external amplitude and its physical content is carried by the
+Einstein--Cartan biconditional instead. Relatedly, the Schwarzschild
+thermodynamic identities in this layer, $\kappa \cdot 4M = 1$, $2\pi
+T_H = \kappa$, $A = 16\pi M^2$, and $S_{\mathrm{BH}} = 4\pi M^2$,
+fix the closed forms of named quantities and their mutual
+consistency; they do not derive the Hawking temperature from a field
+calculation, and the de Sitter analogue
+(\texttt{deSitter\_T\_H\_eq\_kappa\_over\_2pi}) has exactly the same
+standing.
 
-\section{The Riemannian Connection Sidebar}
+The methodology point is that this layer was never a goal. It exists
+because black-hole thermodynamics, the horizon-area theorem, and the
+singularity theorems each needed a component-level statement of some
+classical identity, and the pipeline's rule is that a needed
+statement is proved rather than assumed. A companion manuscript in
+preparation treats the layer as its primary subject; with respect to
+the methodology it is derivative, not parallel.
+
+\section{Curvature Infrastructure Above an Upstream Connection API}
 \label{sec:riemannian_sidebar}
 
-% TODO: substantive draft. Substrate to draw from:
-%  - papers/paper44_riemannian_connection/paper_draft.tex
-%  - lean/SKEFTHawking/{LeviCivita, BundleRiemann,
-%    BundleRiemannAux, ...}.lean
-%  - The session-by-session expansion (W7 sessions 1-3 SHIPPED;
-%    sessions 4-5 in flight at memory write time)
-%  - The mkHom₃ + bundled CovariantDerivative.riemann construction
-%  - Bundle-level first/second Bianchi via Jacobi
-%  - The Mathlib upstream PR target
-%
-% Section thesis: the Riemannian connection sidebar documents the
-% structural completion of the curvature gap above the Bonn API.
-% Wave 7 Sessions 1-3 shipped the Lorentzian metric typeclass +
-% Levi-Civita Christoffel uniqueness + full coordinate Riemann +
-% algebraic first Bianchi + differential second Bianchi machinery.
-% Wave 8 Sessions 1-3 SHIPPED add the bundle-level Riemann
-% curvature consumer of Bonn IsCovariantDerivativeOn + mlieBracket
-% API. The sidebar is sized for I1's methodology paper, not for
-% the full 100+ pp algebraic-GR backbone paper.
+The substrate of Section~\ref{sec:phase6f_substrate} operates pointwise
+on real-valued tensor components. The neighbouring question is whether
+the same identities can be stated at connection level on a smooth
+manifold, where the objects are sections of a vector bundle rather than
+indexed arrays. Mathlib4 at the revision this program pins
+(\mathlibrev{}) answers part of that question and leaves the rest open,
+and the open part is exactly the curvature layer. The project closed it
+in-project at two scopes: a coordinate scope on Christoffel arrays, and
+a bundle scope built directly on the upstream covariant-derivative
+predicate. This is the largest body of reusable mathematics the pipeline
+has produced that carries no physics content of its own.
 
-The algebraic substrate of Section~\ref{sec:phase6f_substrate}
-operates pointwise on real-valued tensor components. A neighboring
-question (equally classical, equally ``in the textbooks'')
-is whether the connection-level structure on a smooth manifold
-admits a parallel formalization. The Phase~6f Wave~7 catch-up
-shipped the connection-level layer; Wave~8 lifted it from
-component-coordinate scope to Bonn's bundle-level
-\texttt{IsCovariantDerivativeOn} API. We sketch the result here,
-keeping detail proportionate to a methodology-paper sidebar; the
-a companion paper currently in preparation as a project-internal
-draft treats the construction as its primary subject.
+\subsection{What the upstream library supplies, and what it does not}
 
-The starting point is the indefinite-signature metric typeclass
-\texttt{IsLorentzianMetric}. Mathlib's existing infrastructure on
-Riemannian-bundle metrics
-(\texttt{Mathlib.Geometry.Manifold.IsRiemannianBundle}, due to
-S.~Gou\"ezel) is positive-definite by design; Wave~7's contribution
-is the indefinite-signature analogue.
-Our typeclass is a field-level predicate (signature
-$(-, +, +, +)$), with Minkowski as a primitive witness
-(\texttt{$\eta$\_isLorentzianMetric}). Wave~7 (modules
-\texttt{LorentzianMetric.lean} + \texttt{RiemannianConnection.lean},
-\phaseSixfWsevenTotal{}~theorems) shipped the Christoffel-quadratic
-Riemann tensor antisymmetry (in the lower index pair, separate
-from the Wave~1 algebraic version which constructs Riemann from
-the abstract type rather than from the metric), the
-Koszul-formula closed form for the Levi-Civita Christoffel
-symbols, and a uniqueness predicate at the
-Levi-Civita-Christoffel level. A predicate-level falsifier
-asserts that a Riemannian-signature metric cannot satisfy
-\texttt{IsLorentzianMetric}.
+The connection itself is upstream. The module
+\texttt{Mathlib.Geometry.Manifold.VectorBundle.CovariantDerivative}
+supplies the predicate
+\texttt{IsCovariantDerivativeOn}, which asks that a map from sections of
+a bundle $V \to M$ to sections of $\mathrm{Hom}(TM, V)$ be additive and
+satisfy the Leibniz rule at points where the sections are
+differentiable, together with a bundled covariant derivative and
+a torsion tensor with its antisymmetry and vanishing-diagonal lemmas.
+A companion file in the same directory supplies metric compatibility,
+but only for bundles carrying a positive-definite fibre inner product.
+The Riemannian typeclass it consumes
+(\texttt{Mathlib.Geometry.Manifold.VectorBundle.Riemannian}) is fixed to
+a real inner-product space on each fibre. The manifold Lie bracket lives
+in \texttt{Mathlib.Geometry.Manifold.VectorField.LieBracket}.
 
-Wave~8 Sessions~1 through~5 (modules
-\texttt{RiemannCoordinate.lean},
-\texttt{RiemannDifferentialBianchi.lean},
-\texttt{BundleRiemannAux.lean}, \texttt{BundleRiemann.lean},
-\texttt{LeviCivita.lean}; \phaseSixfWeightTotal{}~theorems total:
-\riemannCoordinateThms{} + \riemannDifferentialBianchiThms{} +
-\bundleRiemannAuxThms{} + \bundleRiemannThms{} + \leviCivitaThms{} by
-module) shipped the coordinate-form Riemann tensor in linear
-plus quadratic decomposition, the algebraic first Bianchi
-identity, the differential second Bianchi identity, the
-bundle-level Riemann tensor consuming Bonn's
-\texttt{IsCovariantDerivativeOn} + \texttt{mlieBracket} API, the
-cyclic Jacobi identity for the manifold Lie bracket (Mathlib
-ships only the Leibniz form), the bundle-level first Bianchi
-identity under torsion-freeness, and the substantive bundle-level
-Levi-Civita uniqueness theorem via the Koszul-bilinear-form
-derivation $2g(\nabla_X Y, Z) = X g(Y,Z) + Y g(Z,X) - Z g(X,Y) +
-g([X,Y], Z) - g([X,Z], Y) - g([Y,Z], X)$.
+Four things are absent at that revision, and each is checkable by a
+referee against the pinned commit. There is no Riemann, Ricci or scalar
+curvature of a connection anywhere in the manifold hierarchy. There is
+no indefinite-signature metric, because the positive-definite fibre
+inner product is structural rather than a parameter. The tensoriality
+interface provides constructors for one and two arguments only, so the
+three-argument curvature map has no bundled form available to be
+constructed into. And the Lie-bracket file carries the Leibniz form of
+the Jacobi identity but not the cyclic form, which is the form the
+Bianchi identities consume.
 
-The bundle-level Levi-Civita uniqueness theorem is the
-load-bearing result of Wave~8: it lifts the Wald \S3.1 /
-Kobayashi-Nomizu IV.2.2 textbook construction to a
-proof-assistant-checked form, using \texttt{FiberBundle.extend}
-plus bilinearity non-degeneracy. The Phase~6f W7--W8 substrate
-collectively addresses two Mathlib gaps: the
-indefinite-signature metric typeclass, and Riemann/Ricci/scalar
-curvature on a connection (out-of-scope for the
-Massot--Rothgang--Macbeth Half-ERC proposal explicitly per their
-publicly visible roadmap). Two upstream Mathlib pull requests
-are in preparation; the current pin is a vendored copy in
-\texttt{lean/SKEFTHawking/}.
+\subsection{Coordinate scope}
 
-The sidebar's methodology point is that the verification pipeline
-produces \emph{textbook formalization} as a byproduct of doing
-applied physics in Lean. The five-page companion paper that
-documents this work (in preparation as a project-internal draft;
-target journal a Mathlib-aligned formal-verification venue) is a
-publication target in its own right, unrelated to the SK-EFT
-Hawking program except in that the Levi-Civita uniqueness
-statement was needed by the Bardeen-Carter-Hawking four-laws
-result of paper~L3 / D3 §8.
+Two modules work on Christoffel arrays
+$\Gamma^{\rho}{}_{\mu\nu} : \mathrm{Fin}\,4 \to \mathrm{Fin}\,4 \to
+\mathrm{Fin}\,4 \to \mathbb{R}$ with the metric partials passed as
+explicit input data. \texttt{RiemannCoordinate.lean} carries the full
+coordinate Riemann tensor as the sum of its linear and quadratic pieces,
+\begin{equation}
+R^{\rho}{}_{\sigma\mu\nu}
+  = \partial_{\mu}\Gamma^{\rho}{}_{\nu\sigma}
+  - \partial_{\nu}\Gamma^{\rho}{}_{\mu\sigma}
+  + \Gamma^{\rho}{}_{\mu\lambda}\Gamma^{\lambda}{}_{\nu\sigma}
+  - \Gamma^{\rho}{}_{\nu\lambda}\Gamma^{\lambda}{}_{\mu\sigma},
+\label{eq:riem-coord}
+\end{equation}
+with antisymmetry in the last index pair and the algebraic first Bianchi
+identity. That identity is not an unconditional fact about
+\eqref{eq:riem-coord}: \texttt{riemannCoord\_FirstBianchi} consumes one
+torsion-freeness hypothesis on $\Gamma$ and a second on its partial
+array, and the quadratic half alone
+(\texttt{riemannQuadraticTerm\_AntisymLastTwo} and its Bianchi
+companion) already requires the first of the two. Lowering the tensor
+and combining with the pair symmetry of the algebraic substrate yields
+$R_{\rho\sigma\mu\nu} = R_{\mu\nu\rho\sigma}$ through
+\texttt{riemannCoord\_pair\_symmetry\_lowered}, which calls
+\texttt{firstBianchi\_lift} and \texttt{pair\_symmetry\_lowered} in the
+substrate module rather than restating them. The Koszul closed form for
+the Levi-Civita Christoffel symbols ships as \texttt{christoffelKoszul},
+and \texttt{christoffelKoszul\_isTorsionFree} proves it symmetric in its
+lower pair under symmetry of the metric partials. That hypothesis is
+load-bearing rather than decorative: dropping it leaves a connection
+with torsion.
 
-%% ─────────────────────────────────────────────────────────────────
-%% §13 Phase 6g W5 structural-Prop scoping pattern
-%% ─────────────────────────────────────────────────────────────────
+\texttt{RiemannDifferentialBianchi.lean} adds the second-derivative
+carrier with an explicit Schwarz-symmetry predicate and the covariant
+derivative of a generic $(1,3)$-tensor. Two pieces of the differential
+second Bianchi identity are discharged there. The linear piece cancels
+under Schwarz symmetry alone
+(\texttt{riemannLinearTerm\_partial\_DifferentialBianchi}), and the
+lower-index correction terms cancel under torsion-freeness together with
+antisymmetry of the tensor in its last pair
+(\texttt{covRiemann\_groupCD\_cyclic\_zero}). The bilinear and cubic
+pieces are not discharged at this scope. They are tractable and
+uninteresting: several hundred normalised monomials, against three lines
+at bundle scope once the cyclic Jacobi identity is available.
 
-\section{Structural-Prop Scoping Under Mathlib-Dependency Fallback}
+\subsection{Indefinite signature}
+
+\texttt{LorentzianMetric.lean} supplies the signature layer the upstream
+Riemannian typeclass cannot host. \texttt{IsLorentzianSignature} pins the
+canonical diagonal form $\mathrm{diag}(-1,+1,+1,+1)$, and
+\texttt{IsLorentzianMetric} bundles it with symmetry; the Minkowski
+metric is the witness, discharged by calling the existing component
+lemmas of the linearised-field-equation module rather than recomputing
+them. The scope limit is worth stating plainly. This is the
+canonical-frame predicate, not a signature theory: a classification of
+general indefinite forms would need Sylvester's law of inertia at
+bilinear-form level, which is not available upstream. What the predicate
+does support is a falsifier,
+\texttt{riemannian\_not\_lorentzian\_signature}, which derives a
+contradiction from a metric asserted to have both signatures, and a
+fibrewise family predicate shaped to mirror the upstream Riemannian
+bundle typeclass.
+
+\subsection{Bundle scope}
+
+\texttt{BundleRiemannAux.lean} defines the curvature operator on a vector
+bundle over a manifold over a nontrivially normed field, in the textbook
+form
+\begin{equation}
+R(X, Y)Z = \nabla_{X}\nabla_{Y}Z - \nabla_{Y}\nabla_{X}Z
+           - \nabla_{[X, Y]}Z,
+\label{eq:bundle-riem}
+\end{equation}
+unrolled into the upstream argument order. It is a bare function rather
+than a bundled fibrewise-trilinear map, and that is a consequence of the
+missing three-argument tensoriality constructor noted above, not a design
+preference. Its structural lemmas need less than a connection.
+\texttt{bundleRiemannAux\_self} and
+\texttt{bundleRiemannAux\_swap\_apply} follow from bracket
+antisymmetry and from continuous linearity of the direction slot alone,
+with no covariant-derivative hypothesis anywhere in their statements;
+\texttt{bundleRiemannAux\_commuting\_brackets} reduces
+\eqref{eq:bundle-riem} to the pure connection commutator when the
+bracket vanishes at the point, which is the case a coordinate
+calculation actually meets. The degeneracies in the section slot and in
+the $X$ slot are where \texttt{IsCovariantDerivativeOn} first enters.
+
+The cyclic Jacobi identity for the manifold Lie bracket ships as
+\texttt{mlieBracket\_cyclic\_jacobi\_apply}, derived from the upstream
+Leibniz form by one outer antisymmetry rewrite and one negation
+distribution, the latter shipped alongside as
+\texttt{mlieBracket\_neg\_right\_apply}. On top of it,
+\texttt{bundleRiemannAux\_first\_bianchi\_torsionfree\_apply} proves the
+algebraic first Bianchi identity on the tangent bundle from
+torsion-freeness in the upstream sense plus additivity of the connection
+in its section argument. A second form of the same theorem removes the
+abstract additivity hypothesis by consuming
+\texttt{IsCovariantDerivativeOn} directly, at the cost of six pointwise
+differentiability hypotheses on the section pairs the proof forms. Two
+root-namespace helpers written in upstream style,
+\texttt{IsCovariantDerivativeOn.neg} and
+\texttt{IsCovariantDerivativeOn.sub}, carry that discharge.
+
+\subsection{Levi-Civita uniqueness, and the hypothesis it carries}
+
+\texttt{LeviCivita.lean} states the classical uniqueness theorem for the
+torsion-free metric-compatible connection at bundle scope. The predicate
+\texttt{IsLeviCivita} has four fields: the connection is a covariant
+derivative in the upstream sense, it is torsion-free, the bilinear form
+is symmetric, and the connection annihilates that form. The fourth field
+carries its own differentiability side conditions inline, so the
+predicate does not depend on a particular smoothness scaffolding.
+From it, \texttt{koszul\_identity\_of\_isLeviCivita} derives
+\begin{align}
+2\,g(\nabla_{X}Y, Z) ={}& X g(Y,Z) + Y g(Z,X) - Z g(X,Y) \nonumber \\
+ & + g([X,Y], Z) - g([X,Z], Y) - g([Y,Z], X),
+\label{eq:koszul}
+\end{align}
+whose right-hand side does not mention the connection. The algebraic
+kernel \texttt{leviCivita\_pointwise\_unique\_of\_koszul} converts that
+into pointwise equality of two connections, using non-degeneracy of the
+form at the point to realise an arbitrary
+tangent vector as the value of some section. Their composition,
+\texttt{leviCivita\_unique\_of\_isLeviCivita}, closes the argument under
+$2 \neq 0$ in the base field, which the derivation genuinely needs: the
+factor of two in \eqref{eq:koszul} is what the cancellation removes.
+
+One feature of the composed statement should be read directly rather
+than inferred, and we state it because a reader assessing what has been
+proved needs it. Because the kernel needs \eqref{eq:koszul} for every
+triple of test sections, the composition quantifies its differentiability
+hypothesis over every triple as well, in a single blanket conjunction.
+Sections here are arbitrary dependent functions carrying no smoothness
+constraint, so on a manifold admitting one section that is not
+differentiable at the point, that conjunction is false and the composed
+statement holds vacuously. The per-triple form in
+\texttt{koszul\_identity\_of\_isLeviCivita} does not have this shape, and
+it, together with the algebraic kernel, is where the mathematical content
+of the derivation sits. The two statements should be weighed separately.
+
+\subsection{What is claimed}
+
+These modules build with no \texttt{sorry} and introduce no new
+project-local axiom. Together they carry \phaseSixfWsevenTotal{}
+theorem-level declarations at the signature and coordinate-connection
+layer, and \phaseSixfWeightTotal{} across the coordinate Riemann,
+differential Bianchi, bundle curvature, bundle Bianchi and Levi-Civita
+modules (\riemannCoordinateThms{}, \riemannDifferentialBianchiThms{},
+\bundleRiemannAuxThms{}, \bundleRiemannThms{} and \leviCivitaThms{}
+respectively). A companion manuscript in preparation treats the
+construction as its primary subject; the account here is sized to the
+methodological point.
+
+The novelty claim is deliberately narrow. At the pinned revision, no
+counterpart to any of these identities exists in the upstream library,
+and that is a statement a referee can check.
+% TODO: the non-Lean half of the prior-art survey is not verified against
+% primary sources; only the upstream-library half was re-checked against
+% the pinned revision for this draft. Route the remainder through a
+% literature scout before any wider novelty sentence is added.
+% TODO: the textbook attributions for the Koszul derivation and for the
+% uniqueness theorem are asserted in the Lean docstrings but the sources
+% are not in the local cache, so no section-level citation is made here.
+The modules follow upstream file, naming and section conventions with an
+eventual contribution in view. That is an intention about future work and
+not a claim about what has been accepted anywhere.
+
+The methodological point is the one this paper can support on its own
+evidence. A verification pipeline pointed at physics accumulates
+mathematics that the physics does not contain, and the accumulation is
+not incidental: it happens precisely at the boundary of what the upstream
+library already proves. The discipline that keeps the accumulation honest
+is visible in the statements above. Each identity names the hypothesis it
+consumes, torsion-freeness, Schwarz symmetry, non-degeneracy, or
+invertibility of two, rather than importing it silently from the physical
+setting in which the identity is usually met.
+
+\section{Scoping Results Around Absent Library Infrastructure}
 \label{sec:structural_prop_scoping}
 
-% TODO: substantive draft. Substrate to draw from:
-%  - lean/SKEFTHawking/{HawkingPenroseSingularityCurveTheoretic,
-%    AreaTheoremCurveTheoretic, RiccatiComparison, ...}.lean
-%  - Phase 6g Wave 5 memory file
-%  - The 1-D wave equation Fourès-Bruhat distillation case
-%  - The pattern: when Mathlib lacks the PDE infrastructure
-%    (Cauchy-Kowalevski, energy estimates), structure the
-%    substantive content as a tracked Prop bundle that the
-%    project-local proof discharges modulo the missing infra,
-%    and document the missing infra as a "Mathlib upstream
-%    target" rather than as a sorry
-%
-% Section thesis: when a substantive Lean theorem cannot be
-% closed because the upstream PDE / measure-theoretic /
-% functional-analytic machinery is unavailable in Mathlib, the
-% structurally-correct response is not to invent the missing
-% theory in-project. It is to scope the substantive content as a
-% tracked Prop bundle, prove every other hypothesis in the
-% bundle, and let the missing-infra Prop be the gating hypothesis
-% that downstream proofs consume. This avoids in-project
-% reinvention of Mathlib while keeping the substantive content
-% Lean-checkable.
+% TODO: the reduction of the Einstein vacuum equations in harmonic gauge
+% to a quasilinear hyperbolic system is stated below as the motivation for
+% a formalization target, without attribution. The source module attributes
+% it to Foures-Bruhat (1952); no primary source for that paper is cached
+% under Lit-Search/Phase-*/primary-sources/, so no citation is made here.
+% Either cache the source and cite it at the point marked, or leave the
+% statement as design motivation, which is how it is currently written.
 
-A recurring failure mode in the project's first two years was
-in-project reinvention of upstream mathematical machinery whenever a
-target theorem depended on infrastructure absent from Mathlib. The
-Cauchy problem for the Einstein vacuum equations, the
-Cauchy--Kowalevski theorem, energy estimates for hyperbolic systems,
-and distributional Sobolev embedding all entered our Lean wishlist at
-various points. Each attempt to formalize from scratch consumed
-two-to-eight weeks of effort and produced incomplete substrate that
-the next wave was reluctant to reuse. The cumulative cost of these
-attempts ran into the months.
+Formalization in an applied domain runs ahead of its library. A
+proof assistant offers three responses when a target theorem rests
+on mathematics the ambient library does not contain, and only one
+of them preserves what makes a formal development worth reading.
+The first response is to rebuild the missing theory inside the
+project. The second is to admit the gap and continue. The third is
+to name the missing statement as an explicit proposition, prove
+everything the project can prove relative to that name, and record
+the name as an upstream target. We take the third. The property
+being protected is that the status of every claim can be read off
+its statement, by a reader who does not trust the surrounding
+prose.
 
-The Phase~6g Wave~5 finding, refined at Waves~9 and~10, was that
-\emph{the structurally-correct response is not in-project
-reinvention}. The pattern is straightforward: when a theorem
-depends on Mathlib-absent infrastructure, scope the missing
-infrastructure as a tracked-\texttt{Prop} bundle, prove every other
-hypothesis in the bundle within project scope, and let the
-missing-infrastructure \texttt{Prop} be the gating hypothesis that
-downstream proofs consume as an assumption. The result is a
-substantive theorem of the form ``modulo Mathlib provides
-\texttt{IsLocallyWellPosed}, the Cauchy problem is well-posed and
-satisfies $X$.''
+Four states are available to a claim in our substrate, and the
+manuscript keeps them apart by name.
 
-Wave~5 itself
-(\texttt{lean/SKEFTHawking/CauchyProblem.lean}) shipped the
-Einstein-vacuum Cauchy problem in this form. Wave~9 produced four
-substantive curve-theoretic modules
-(\texttt{RiccatiComparison.lean}, \texttt{MazurSigmaModelRigidity.lean},
-\texttt{HawkingPenroseSingularityCurveTheoretic.lean},
-\texttt{AreaTheoremCurveTheoretic.lean}) yielding \phaseSixgWnineTotal{}~theorems
-(\riccatiComparisonThms{} + \mazurSigmaModelRigidityThms{} +
-\hawkingPenroseCurveThms{} + \areaTheoremCurveThms{} by module) on
-Raychaudhuri-Riccati comparison, the
-$\sigma$-model 1D rigidity (Mazur's lemma:
-$f' \geq 0 \wedge f(0) = f(L) \implies f \equiv f(0)$), the
-curve-theoretic Hawking--Penrose singularity theorem with a
-de~Sitter strong-energy-condition counterexample, and area-evolution
-ODE monotone rigidity. Wave~10 closed the Phase~6g cycle with the
-distillation case study: the one-dimensional wave equation
-$\partial^2 u / \partial t^2 = c^2\, \partial^2 u / \partial x^2$
-reduced from the Einstein vacuum equations in harmonic gauge.
-\texttt{WaveEquation1D.lean} ships an
-\texttt{IsClassicalWaveSolution} predicate, two explicit witnesses
-(constant solution; linear traveling-wave solution),
-the linearity corollary
-(\texttt{add\_isClassicalWaveSolution}: sum of solutions is a
-solution), and the cross-bridge to the structural-\texttt{Prop}
-\texttt{IsLocallyWellPosed} that downstream Cauchy-problem theorems
-consume.
+\begin{itemize}
+  \item \textbf{Proved outright:} the statement is closed against
+    the kernel with no project-supplied stand-in. Hypotheses may
+    appear, but each one constrains the data the statement is about.
+  \item \textbf{Proved modulo an explicit gating proposition:} the
+    statement is closed, but one of its hypotheses is a named
+    proposition that the project does not prove and does not intend
+    to prove locally. The theorem is conditional, and is reported as
+    conditional wherever it is used.
+  \item \textbf{Declared without content:} a predicate has been given
+    a name and a docstring, but its definition is the trivially true
+    proposition. Any theorem concluding it is an architectural
+    marker. It fixes the point at which a future proof attaches and
+    carries no mathematical weight.
+  \item \textbf{Admitted:} the proof is stubbed. The build rejects
+    this, and the state does not occur in the substrate described
+    here.
+\end{itemize}
 
-The discipline is what makes substantive Lean content tractable in
-a research domain whose mathematical foundation is not yet in
-Mathlib. The cost of admitting a structural assumption with a clear
-provenance link to an upstream target is small; the cost of
-reinventing the upstream target is large; the cost of \emph{mixing}
-in-project partial reinvention with downstream theorems that
-consume it is unbounded, because partial reinvention rots
-asymmetrically when Mathlib eventually catches up. The pattern's
-emergence in Phase~6g, midway through the project, is itself a
-methodology lesson: structural-\texttt{Prop} scoping is the right
-default from the first wave; we encoded the discipline only after
-two months of recoverable cost.
+The line between the first two states is not the presence of
+hypotheses. A regularity assumption on a function is part of what
+the theorem says; a gating proposition is a different object,
+standing in for a theorem someone else will prove. Conflating them
+is what lets a conditional result be quoted as an unconditional one.
 
-%% ─────────────────────────────────────────────────────────────────
-%% §14 Lessons + future work
-%% ─────────────────────────────────────────────────────────────────
+The one-dimensional wave equation is the worked case
+(\texttt{lean/SKEFTHawking/WaveEquation1D.lean}). The target is
+$\partial_t^2 u = c^2\, \partial_x^2 u$ on $\mathbb{R}^2$, encoded by
+the predicate \texttt{IsClassicalWaveSolution} as an equality of
+iterated single-variable derivatives at every point, which agrees
+with the classical equation on twice continuously differentiable
+fields. Three results are proved outright. Two exhibit explicit
+solutions, the constant field
+(\texttt{const\_isClassicalWaveSolution}) and the linear travelling
+wave $u(t,x) = a(x - ct) + b$
+(\texttt{linearTraveling\_isClassicalWaveSolution}), so the predicate
+is inhabited and is inhabited non-constantly. The third is linearity
+(\texttt{add\_isClassicalWaveSolution}): the sum of two solutions is
+a solution, given that each summand is differentiable in each
+variable separately and that each of its first partial derivatives
+is differentiable in the corresponding variable, at every point.
+Those eight hypotheses are conditions on the data, so the theorem
+belongs to the first state above, not the second.
+
+What the same module does not prove is equally on the record. The
+reduction of the Einstein vacuum equations in harmonic gauge to a
+quasilinear hyperbolic system, whose principal part is the wave
+operator, motivates the choice of target; it is not itself a
+formalized step, and no declaration in the substrate asserts it. The
+predicate \texttt{IsHarmonicGauge}
+(\texttt{lean/SKEFTHawking/CauchyProblem.lean}) reserves a name for
+the gauge condition, and as currently written every chart satisfies
+it. \texttt{IsLocallyWellPosed}, in the same module, is defined to be
+the trivially true proposition. Consequently
+\texttt{waveSolution\_implies\_locally\_well\_posed} is an
+architectural marker in the third state: it records where the
+eventual well-posedness argument attaches to the concrete solution
+theory, and it proves nothing about the Einstein equations. No
+theorem in the substrate consumes \texttt{IsLocallyWellPosed} as a
+hypothesis, which is the honest reading of a predicate that is
+currently vacuous. The apex content of this module is the solution
+theory, and the scoping decision is that the missing partial
+differential equation machinery, local existence for quasilinear
+hyperbolic systems and the energy estimates it rests on, is named
+rather than rebuilt.
+
+The lifecycle of a gating proposition is visible in the curve-level
+focusing results. The comparison bound
+$\theta(\lambda) \le \theta_0 / (1 + \theta_0\lambda/3)$ first entered
+the development as a field of the hypothesis bundle
+\texttt{IsCurveTheoreticPenroseHypothesis}, that is, in the second
+state, with the intended route recorded as the library's ordinary
+differential equation comparison interface. It was later proved
+outright as \texttt{riccati\_comparison\_on\_focal\_window}
+(\texttt{lean/SKEFTHawking/RiccatiComparison.lean}) from the
+Raychaudhuri hypothesis bundle \texttt{IsRaychaudhuriCurve}, by a
+different route: the reciprocal of the expansion has derivative at
+least $1/3$ on the focal window, and the mean-value inequality on a
+convex domain, already present in the library, converts that into the
+comparison. The bridge
+\texttt{isRaychaudhuriCurve\_toCurveTheoreticPenroseHypothesis} then
+discharges the former gating field, leaving the composition
+conditional only on data hypotheses. Nothing had to be unpicked when
+the route was found, because no partial reimplementation had been
+built underneath the name. The area-evolution result
+\texttt{horizon\_area\_curve\_monotone}
+(\texttt{lean/SKEFTHawking/AreaTheoremCurveTheoretic.lean}) is proved
+outright by the same economy: the evolution equation
+$A' = \theta A$ and non-negativity of $\theta$ and $A$ give a
+non-negative derivative, and monotonicity follows from the library's
+monotonicity-from-derivative lemma.
+
+The discipline's cost is that a name can look like a result. That
+risk is not hypothetical in this development. The conclusion
+\texttt{IsNullGeodesicallyIncomplete} carried by the curve-level
+composition is defined as positivity of the focal parameter, so the
+mathematical weight of that chain sits in the comparison bound and in
+the strict negativity of the expansion on the focal window, not in
+the word incompleteness. Three controls keep the risk bounded. Every
+predicate whose definition is the trivially true proposition is
+registered in \texttt{PLACEHOLDER\_THEOREMS}
+(\texttt{src/core/constants.py}) with the claim it stands for and what
+a real proof would require; no such name is counted in a theorem
+total; and no such name is cited in a paper as a result. Against
+those costs, local reimplementation carries an unbounded one. A
+partial reimplementation that downstream theorems already consume
+rots asymmetrically once the library ships the real thing, because
+the downstream statements are then phrased against definitions that
+nobody else uses and that nobody will maintain.
+
+For a referee the practical consequence is a checkable one. Each
+claim in this section can be classified without reading the prose
+that surrounds it: open the named declaration, read its hypotheses,
+and unfold any predicate that appears in its conclusion. A claim
+proved outright survives that procedure with its hypotheses
+constraining data. A conditional claim exposes the proposition it is
+conditional on. A marker unfolds to the trivially true proposition
+in one step. We take the availability of that procedure, rather than
+the size of the theorem count, to be the measurable output of the
+discipline.
 
 \section{Lessons and Future Work}
 \label{sec:lessons}
