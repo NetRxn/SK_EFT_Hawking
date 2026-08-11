@@ -93,31 +93,63 @@ representable and D9 sits in it. Do not read `UNMEASURED` as a mild YELLOW.
 
 ## 3. What goal 2 must run
 
-1. **Refresh or work around the plugin** (§4), then run Stages 9 → 10 → 13 in that order.
-   The Stage-9-and-10-before-13 hard gate is enforced by `bundle_reviewer_stage_ordering`;
-   a Stage-13 verdict recorded ahead of them fails the check.
-2. **Clear the 15 `stage13_redo_required` flags** by re-review, not by editing the field.
-   (This note said 14 until the closure reviewer counted 15 — its own §2 table listed 15
-   all along, so the prose contradicted the table beside it.)
-3. **The manuscript programme.** `bundle_manuscript_length` reports **11 bundles under
-   floor** — F needs 80pp and has 24; D7 needs 24 and has 4. The gate PASSES on that
-   (under-floor is advisory by operator decision — see §5); the 11 gaps are the work.
-   ⚠️ **That count requires a fresh compile.** Run
-   `uv run python scripts/compile_bundle_pdf.py --all --force` first: the check reports
-   `UNMEASURED` for any bundle whose PDF predates its `\input` closure, and adding a
-   shared input already in the closure staleness-invalidates every bundle that carries it
-   at once — `docs/counts.tex` reaches 16 of the 21, and goal 1's own
-   `docs/figuredeferred.tex` reaches 11, not all 21. Measured stale, the same check reported 3 under floor and 16 UNMEASURED —
-   the closure reviewer saw exactly that and was right to flag the discrepancy.
-   ⚠️ **A stale tree now FAILS `--ci` rather than passing quietly**: the unmeasured
-   population folds into the check's `measured`, so staleness reads as `74 MEASURED,
-   floor 75` instead of a green tick over part of the corpus. That is deliberate — the
-   gate could otherwise degrade from 11 reported gaps to 1 and stay green. The
-   per-bundle `pp` column in §2 is likewise only meaningful on a freshly compiled tree. This is goal 2's headline
-   deliverable and is roughly 150 pages of new physics manuscript plus the figures behind
-   the 40 deferrals. **No floor was lowered and no `length_target` was nulled** — see §5.
-4. **Merge to main** once the above is green, with the full suite and a clean
+⚠️ **Do not run this as one goal.** Goal 1 absorbed five rounds of scope growth, and every
+defect its closure reviews found entered during one of them. The work below is sequenced so
+each item closes and is reviewed before the next opens.
+
+### The execution order is not the gate-recording order
+
+Recording is Stage 9 → 10 → 13 (`bundle_reviewer_stage_ordering` enforces it). **Execution is
+not.** `BUNDLE_LIFT_PROCEDURE.md` §7.5 puts the whole-document read-through before the claims
+review and before Stage 9, so per bundle the real sequence is:
+
+> draft → `skeft-qa:prose-reviewer` read-through → `skeft-qa:claims-reviewer` → Stage 9 figures
+> → Stage 13 adversarial
+
+Stage 10 is not a step between two reviews; it is the drafting stage and it *contains* the
+first two sub-gates. Most of goal 2's labour lives there.
+
+### What the agents do and do not do
+
+The four reviewers are **findings-only by design** — Stage 13 says so explicitly. No agent
+writes physics. `skeft-qa:paper-authoring` is a *skill*: drafting guidance for the lead, not an
+autonomous drafter. Plan the manuscript work as lead labour reviewed by agents, not as agent
+output.
+
+### Sequence
+
+**Item 0 — ExtractDeps declaration classification** (own branch, own review; see §12).
+Do this first: it removes a whole defect class rather than guarding it, and every later item
+reads the artifact it fixes.
+
+**Item 1 — the three infrastructure bundles, I1 → I2 → I3.** Smallest floors (15 / 9 / 9 pp)
+and the most mechanical content, so they exercise the full Stage-10 machinery on low-stakes
+material. This is the decision point: if the I-bundles come out weak, the problem is the
+pipeline, and it cost ~33 pages to learn rather than 150.
+
+**Item 2 — the deep papers**, one bundle per wave, ordered by substrate readiness. Split the
+roster explicitly into *needs new physics* and *needs only drafting* before starting; they are
+different kinds of work and should not share a wave.
+
+**Item 3 — F, last.** `PAPER_STRATEGY.md` §33: the flagship "ships *last*, after the Tier 1
+papers are out, so it can cite them and serve as the stable reference rather than a snapshot."
+F's floor is 80 pp against 24 today, but that gap is **blocked by design**, not outstanding
+work. Do not schedule it against the Tier-1 bundles.
+
+### Standing requirements for every bundle wave
+
+1. **Refresh or work around the plugin** (§4) before the first wave.
+2. **Clear the 15 `stage13_redo_required` flags** by re-review, never by editing the field.
+3. **Compile before measuring.** Run `compile_bundle_pdf.py --all --force` first:
+   `bundle_manuscript_length` reports `UNMEASURED` for any bundle whose PDF predates its
+   `\input` closure, and a shared input invalidates every bundle carrying it at once
+   (`docs/counts.tex` reaches 16 of 21). Measured stale, the same check reported 3 under floor
+   and 16 UNMEASURED against 11 under floor on a fresh tree. A stale tree now FAILS `--ci`
+   rather than passing quietly, which is deliberate.
+4. **Merge to main** per item, with the full suite and a clean
    `rm -rf .lake/build && lake build SKEFTHawking.ExtractDeps`.
+
+**Current state:** all 21 bundles are `pending` on Stage 9, 10 and 13. Nothing is green.
 
 ---
 
@@ -674,3 +706,42 @@ fixes are committed and the fast suite is green (6,098 passed, 6 skipped), and t
 third fresh-context closure review is the gate that decides whether it closes. Goal 2
 should treat a *clean* third review as the merge signal, not this note — this note is
 prose, and prose is not evidence for itself.
+
+## 12. Item 0 — classify compiler-generated declarations at the producer
+
+**The problem this removes.** `kind == "theorem"` in `lean_deps.json` includes Lean's own
+products (`.eq_1`, `.sizeOf_spec`, `.inj`, `.congr_simp`, `.eq_def`). Six consumers wrote the
+naive filter and were each wrong; the worst published **26,398 "theorem nodes"** in
+`docs/ATLAS_HEATMAP.md` against `counts.tex`'s **22,669** — the same corpus, differing by
+exactly the 3,729 generated declarations. Goal 1 routed all six through
+`validate_helpers.autogen_index` and added `theorem_census_agrees` to catch a seventh. That
+guard **detects**; it does not **prevent**.
+
+**The fix.** `kind` is emitted at one line — `lean/SKEFTHawking/ExtractDeps.lean:252`. Emit
+`"theorem_autogen"` for compiler-generated declarations. Then the naive `kind == "theorem"`
+every consumer already writes is *correct*, and a consumer that genuinely wants all
+theorem-kind declarations opts in explicitly.
+
+**Why the producer and not the loader.** Inverting `load_lean_deps()`'s default was considered
+and rejected on measurement: 76 call sites across 18 script files, but **14 files bypass the
+loader entirely** and `json.load` the artifact directly — including `build_graph`, `atlas_view`,
+`paper_tables/sources` and `render_bundle_counts`, i.e. the sites that actually shipped wrong
+numbers. The loader inversion covers less ground than the check already does.
+
+**What it deletes on success:** `autogen_index`'s three hand-maintained suffix sets, the
+ownership leg of `theorem_census_agrees`, `THEOREM_FILTER_SITES_FLOOR`, and
+`THEOREM_FILTER_ALLOWLIST`. Classification moves from Python suffix-matching to Lean's own
+environment, which knows what it generated rather than inferring it from names.
+
+**Blast radius (measured where stated, estimated where said).**
+
+| | |
+|---|---|
+| producer change | one line at `ExtractDeps.lean:252` |
+| rebuild | full `rm -rf .lake/build && lake build SKEFTHawking.ExtractDeps`; invalidates every memo fingerprint |
+| consumers needing opt-in | the graph, `lean_zero_sorry` and `axiom_closure_allowlist` must see **all** declarations (they scan for `sorryAx`). Estimated 5–8 files — **not enumerated; enumerate before starting** |
+| schema surface | `lean_deps.json` is tracked; `KNOWLEDGE_GRAPH.md` describes it |
+| test surface | 8 test files reference the loader; any fixture hardcoding `kind: "theorem"` for a generated declaration changes meaning **silently** — the "fix breaks a neighbour" shape |
+
+**Do it on its own branch with its own closure review.** It is a schema change to a tracked
+artifact behind a Lean rebuild, and it touches the trusted baseline.
