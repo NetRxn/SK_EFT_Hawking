@@ -243,9 +243,15 @@ no new `sorry`, no `native_decide` regression, no un-signed-off axiom.
 
 ### 4e. Register (only after a graft is kept)
 
-- Add the run UUID to `ARISTOTLE_THEOREMS` (`src/core/constants.py`), **bumping the hardcoded
-  count in the SAME commit in both places**: the `assert ARISTOTLE_PROVED_COUNT == <N>` in
-  `constants.py` and CHECK 5 in `scripts/validate.py`
+- Add the run UUID to `ARISTOTLE_THEOREMS` (`src/core/constants.py`) and bump the
+  `assert ARISTOTLE_PROVED_COUNT == <N>` in that same file, in the same commit. **That assert is
+  the only pin, deliberately.** This step used to say "in both places", naming a CHECK 5 in
+  `scripts/validate.py`; ADR-009 moved every check body out of that file, and the check that once
+  restated this count was rewritten on 2026-08-04 after an audit found all three of its legs
+  vacuous — two unreachable (the `constants.py` assert raises at import, before any check body
+  runs) and one a tautology (`TOTAL_THEOREMS` is an alias of `len(ARISTOTLE_THEOREMS)`, so it
+  compared an expression to itself). The invariant is kept where it is enforced most strictly.
+  Do not re-add a second pin.
 - Set `SorryGap(filled=True)` in `src/core/aristotle_interface.py` — append or update, never
   delete; the registry is provenance
 - Run `scripts/update_counts.py`; `scripts/aristotle_usage_by_bundle.py` re-derives per-bundle
