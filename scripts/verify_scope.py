@@ -20,9 +20,10 @@ WHAT DECIDES SCOPE — this table is DERIVED FROM `_plan()`, not written beside 
                               lean_zero_sorry + axiom_closure_allowlist
   src/**, scripts/**       -> fast suite, architecture_inventory_fresh, counts_fresh
   tests/**                 -> fast suite, counts_fresh
-  rust/**                  -> NOTHING. No test under tests/ imports `sk_eft_rhmc`, and
-                              a rust change needs the CLAUDE.md rebuild first, so this
-                              tool cannot observe it. Reported in NOT CERTIFIED.
+  rust/**                  -> NOTHING mechanical. No test under tests/ imports
+                              `sk_eft_rhmc` (nine scripts/ drivers do), and a rust change
+                              needs the CLAUDE.md rebuild first, so this tool cannot
+                              observe it. NOT CERTIFIED carries the rebuild command.
   pyproject.toml, uv.lock  -> fast suite (the environment every step runs in)
   notebooks/**             -> counts_fresh, notebook_exec + viz_consistency
   docs/architecture/**     -> architecture_inventory_fresh
@@ -145,8 +146,8 @@ def _plan(paths: list[str]) -> tuple[list[tuple[str, list[str]]], list[str]]:
             "--force-reinstall --no-deps` and exercise it by hand")
     if not touched["lean"]:
         not_certified.append("the Lean build and axiom closure (no lean/ change)")
-    if not (touched["code"] or touched["tests"]):
-        not_certified.append("the Python suite (no src/, scripts/ or tests/ change)")
+    if not any(lbl.startswith("fast suite") for lbl, _ in steps):
+        not_certified.append("the Python suite (nothing here runs it)")
     not_certified.append("the FULL `-m ''` suite and `--ci` floor — run --merge-gate for those")
     return steps, not_certified
 
@@ -194,8 +195,13 @@ def main() -> int:
         if len(paths) > 12:
             print(f"    … and {len(paths) - 12} more")
         if not steps:
+            # ⚠️ DO NOT return here without printing `not_certified`. This early exit
+            # discarded it, so a rust-only change — the case the rust/ disclosure was
+            # WRITTEN FOR — printed the generic line and dropped the rebuild command.
             print("\n  Nothing mechanical observes this change.")
             print("  NOT CERTIFIED: everything. This says only that no gate applies.")
+            for n in not_certified:
+                print(f"    - {n}")
             return 0
         print()
 
