@@ -2575,7 +2575,10 @@ NATIVE_DECIDE_BUNDLE_DEBT = {
 #
 # Measured 2026-08-03 on all 64 drafts. Enforced by
 # `validate.py --check count_literals` / `--check numerical_literals`.
-COUNT_LITERAL_CEILING = 107      # hardcoded "N theorems/modules/sorry" in paper prose
+COUNT_LITERAL_CEILING = 106      # hardcoded "N theorems/modules/sorry" in paper prose
+                                 # 107 -> 106 on 2026-08-11: the I1 restructuring deleted a
+                                 # count literal from prose. Lowered in the same commit, per
+                                 # the rule above — a ratchet that keeps headroom stops being one.
 #: `@[simp]` projection lemmas with a structural name and a trivial body.
 #:
 #: These are REWRITE PLUMBING, not claims: given
@@ -2651,7 +2654,10 @@ NUMERICAL_LITERAL_CEILING = 117  # inline unit-bearing values outside \input{tab
 #: 166-word "sentence" that is fifteen concatenated table rows; no reader sees it.
 #: Correcting the instrument removed two such artifacts from the narrow population
 #: too, which is why the honest new floor is 20 and not 22.
-SENTENCE_OVER_100_CEILING = 20
+#: 2026-08-11: 20 -> 18. I1's prose-reviewer restructuring split two over-100-word
+#: sentences while rewriting the abstract and merging sections. Repayment, not a
+#: measurement change — the instrument is the same one that produced the 20.
+SENTENCE_OVER_100_CEILING = 18
 
 #: Advisory companion: sentences over 60 words. Reported, not gated — 60 words is
 #: long but defensible in a methods paragraph, and gating it would fire on correct

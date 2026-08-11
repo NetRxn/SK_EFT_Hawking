@@ -2723,3 +2723,63 @@ INVERTED for this era: the detailed run-ID-naming commit style begins around May
 `docs/references/aristotle_batch_plan.md` does not exist (CLAUDE.md links it; the real file is
 `Theorm_Proving_Aristotle_Lean.md`, misspelling included), and
 `docs/phase6c_wave2_stage13_close.md` is cited twice by the roadmap and does not exist.
+
+### D50 — bundles register Lean modules that were never built, and nothing could say so
+
+`bundle_lean_module_coverage` had one verdict for two very different states: a module the
+draft simply does not cite, and a module that **does not exist in the Lean build**. The
+second cannot be repaid the way the check's own remediation text instructs ("cite the
+module"), because there is nothing to cite. **24 registrations across 6 bundles** are in
+that state (D1: 11, D5: 4, I1: 4, D3: 2, E1: 2, L2: 1); the check now reports them as a
+separate `unbuilt` leg instead of leaving them indistinguishable inside the ratchet.
+
+I1's four — `AlgebraicRiemann`, `SchwarzschildKerrSchild`, `DeSitterAdSLambdaVacuum`,
+`TetradMetricEquivalence`, all from one event, `phase6f_w1_w6_substrate_rosters` — have
+**never existed**: no `git log --diff-filter=A` record under those paths, no roadmap
+naming them, and no near-match in the build. The build has `KerrSchild`,
+`TetradFormalism`, `RiemannCoordinate` and `BundleRiemann`, so these read as planned
+names recorded in a substrate roster before the modules were written.
+
+**Why they were invisible.** All four survived only inside a stale `%`-commented block in
+`paper_draft.tex`, and the check read the raw file — so a comment listing a module that
+was never built counted as citing it. Stripping comments exposed them.
+
+**Remedy is removal, not prose**, and it needs per-bundle judgement (some of the other
+20 may be renames rather than never-built), so it is filed rather than done here.
+⚠️ `append_log.json` is an append-only event log; correcting a registration means
+deciding whether to append a correction event or amend history, and that decision belongs
+with `bundle_append.py`'s owner — do not hand-edit the file to make a number move.
+
+**Do not re-derive the 24 by exact match.** Registrations are not written in build-module
+form: dotted (`APSEta.He3A`), path-style (`RossSelinger/BridgeParity`) and bare
+(`CliffordCCZSU8Density`, actually `SKEFTHawking.FKLW.CliffordCCZSU8Density`) all occur.
+Matching on `SKEFTHawking.<name>` alone calls **182 of 444** registrations nonexistent;
+the true figure after resolving nesting and leaf is **52**, of which these 24 are also
+uncited. See `_resolve_module` and `reference-measurement-traps-false-absence`.
+
+### D51 — the manuscript-length gate keys on mtime, and one identical rewrite blanks all 21
+
+`bundle_manuscript_length` decides a PDF is trustworthy by comparing its mtime against the
+newest file in the draft's **input closure**. Every bundle draft `\input`s `docs/counts.tex`,
+so any tool that rewrites that file — even byte-for-byte identically — marks **all 21**
+bundles unmeasurable at once. Observed 2026-08-11: `docs/counts.tex` was rewritten with
+**no content change** (`git status` clean, last content commit `7fb909d9`), and the check
+went from *passed, 4 sized* to *UNVERIFIED, 21 unmeasured*. Nothing about any manuscript
+had changed.
+
+**The fix is already decided elsewhere in this repo.** ADR-011 F-07 rejected mtimes for the
+sibling source-freshness check for the same reason — "a checkout or fresh clone rewrites the
+whole tree's mtimes and would mark every sourceless bundle stale at once" — and switched to
+**the last commit that touched the file**. This check did not get that treatment. Apply the
+same signal here, or hash the closure's content rather than reading its timestamps.
+
+**Why it matters more than it looks.** The failure is silent in the reassuring direction:
+the check reports UNVERIFIED rather than red, and a reader skimming for failures sees no
+red. It also cannot be distinguished, from the output alone, from the real condition it
+exists to catch (a genuinely stale PDF) — so the honest response is always the expensive
+one, recompiling everything.
+
+⚠️ **Do not "fix" this by recompiling all 21 PDFs.** That treats the symptom, costs 21
+LaTeX runs, and the next identical rewrite of `counts.tex` reproduces it immediately. I1's
+PDF was recompiled here because its draft genuinely changed (the prose-reviewer
+restructuring), not to move this number.

@@ -98,7 +98,7 @@ checks read. See `validate._CANONICAL_ORDER`.
 | 53 | `bundle_sentence_length` | `bundles_readiness` | No bundle draft grows its stock of sentences a reader must re-read to parse |
 | 54 | `bundle_figure_adequacy` | `bundles_readiness` | Every bundle carries at least the figures its tier owes a reader |
 | 55 | `bundle_structural_coherence` | `bundles_readiness` | Every bundle has a closing section, a bibliography, and a readable section count |
-| 56 | `bundle_lean_module_coverage` | `bundles_readiness` | Lean modules a bundle registers as contributing are named in its draft (ratcheted) |
+| 56 | `bundle_lean_module_coverage` | `bundles_readiness` | Lean modules a bundle registers as contributing are reached by its draft, by module name or by citing their theorems (ratcheted) |
 | 57 | `notebook_stored_outputs_current` | `freshness` | Bundle companion notebooks' STORED outputs equal what their code produces |
 | 58 | `readiness_verdicts_agree` | `bundles_readiness` | The heatmap and the submission gate return the same per-bundle verdict |
 | 59 | `readiness_submission_gate` | `bundles_readiness` | Every paper has all P1 readiness gates passed (Phase 5v Wave 4) |

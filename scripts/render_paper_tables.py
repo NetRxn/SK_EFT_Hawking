@@ -46,7 +46,17 @@ def discover_specs() -> dict[str, dict]:
     specs: dict[str, dict] = {}
     if not PAPERS_DIR.exists():
         return specs
-    for tables_py in sorted(PAPERS_DIR.glob('paper*_*/tables.py')):
+    # ⚠️ Bundle directories are named by CODE (I1, D3, L2, E1), not `paperNN_*`,
+    # so globbing `paper*_*` alone made them undiscoverable — while
+    # `validate.py --check bundle_tables_use_pipeline` tells those very bundles to
+    # "add a papers/<X>/tables.py spec and render with render_paper_tables.py".
+    # The check demanded a remedy this discovery could not perform. Both shapes now
+    # resolve; discovery is by the PRESENCE of tables.py, not by the directory's
+    # naming convention.
+    _specs_found = sorted(PAPERS_DIR.glob('paper*_*/tables.py')) + sorted(
+        d / 'tables.py' for d in PAPERS_DIR.iterdir()
+        if d.is_dir() and not d.name.startswith('paper') and (d / 'tables.py').exists())
+    for tables_py in _specs_found:
         paper_key = tables_py.parent.name
         module_name = f'_paper_tables_{paper_key}'
         spec = importlib.util.spec_from_file_location(module_name, tables_py)

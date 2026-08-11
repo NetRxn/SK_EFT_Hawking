@@ -1001,15 +1001,23 @@ signatures instead of silently present in every closure below the
 axiom. That is the same move as the sphaleron case one step further
 along: name the assumption, then discharge it if you can.
 
-\section{The Fourteen-Stage Wave Execution Pipeline}
+\section{What a Development Cycle Has to Guarantee Before Review Can Find Anything}
 \label{sec:pipeline}
 
-The pipeline is organized as fourteen sequential stages, each with
-a gate that must pass before the next stage begins. Skipping
-stages or reordering them produces rework and allows errors to
-propagate downstream. Wave-level work (adding new physics,
-extending formalization, or producing experimental predictions)
-proceeds through all fourteen.
+The deterministic layer described in this section does not substitute for
+the review layer of Section~\ref{sec:adversarial}; it exists to make that
+layer's findings possible. A reviewer can only ask whether a cited
+declaration says what the prose claims if the declaration resolves, the
+count is current and the figure matches its generator. Every mechanism
+below buys one such precondition, and the three worked cases above turn on
+preconditions that held: the counterexample of
+Section~\ref{sec:case1} is informative because the coefficient space was
+finite and explicit, and the hidden assumption of Section~\ref{sec:case3}
+became visible because a decomposition had names to attach it to.
+
+The cycle runs as sequential stages, each with a gate that must pass before
+the next begins. Reordering them produces rework and lets errors propagate
+downstream.
 
 \begin{figure}[h]
 \centering
@@ -1173,26 +1181,27 @@ live project-local axiom count to zero.
 
 \end{enumerate}
 
-Invariant~9 addresses a subtle inflation problem:
-\placeholdertheorems{} of our \totaltheorems{} theorems are
-\texttt{True := trivial} placeholders that serve as documentation
-markers. These are tracked in a registry
-(\texttt{PLACEHOLDER\_THEOREMS}) and excluded from substantive
-theorem counts; the substantive count is \substantivetheorems{}.
-
-Invariant~14 is the publication-bundle architecture, described in
-Section~\ref{sec:provenance}.
+The placeholder invariant addresses an inflation problem that would
+otherwise be invisible: \placeholdertheorems{} of \totaltheorems{}
+declarations are proved trivially and serve as markers for where a future
+proof attaches. They are registered as such and excluded from the
+substantive count, which is \substantivetheorems{}. A theorem total that
+silently included them would be the kind of number this paper argues no
+reader should have to take on trust.
 
 %% ─────────────────────────────────────────────────────────────────
 %% §7 Preemptive-strengthening discipline
 %% ─────────────────────────────────────────────────────────────────
 
-\section{The Preemptive-Strengthening Discipline}
+\subsection{Writing statements that can fail}
 \label{sec:strengthening}
 
-The strengthening pass is an audit that runs at the end of each
-wave, examining each new theorem statement for six recurring
-anti-patterns. Originally retroactive (the audit ran after
+One precondition deserves its own treatment, because it is the one a
+reviewer cannot supply after the fact. A theorem whose statement cannot
+fail carries no information, and no amount of downstream review recovers
+that: the declaration resolves, the proof checks, and the claim is
+vacuous. The strengthening pass is an audit of each new theorem statement
+against six recurring anti-patterns. Originally retroactive (the audit ran after
 theorems were stated and proved, with retroactive cuts applied
 where the audit identified a vacuous statement), the pass has
 been moved to the prospective phase: each theorem statement is
@@ -1206,7 +1215,7 @@ The six anti-patterns are:
 
 \begin{itemize}
 
-\item \textbf{P2: Bundle redundancy.} A theorem stating a
+\item \textbf{1. Bundle redundancy.} A theorem stating a
 conjunction is redundant if dropping any conjunct produces a
 statement of equal information content. The pattern occurs when
 multiple conjuncts are algebraically equivalent: for instance,
@@ -1217,24 +1226,24 @@ theorem dressed as three. The fix is to write the substantive form
 ($\mathrm{violationLevel}\ m = \mathrm{none}$) plus a separate
 extraction lemma if downstream callers need the bundle shape.
 
-\item \textbf{P3: Multiplication-only triviality.} A theorem
+\item \textbf{2. Multiplication-only triviality.} A theorem
 whose substantive content is exhausted by an obvious arithmetic
 identity ($0.34 = 2 \times 0.17$, for instance) is structural, not
 physical. The fix is to replace with a load-bearing comparison
 that separates a conformant case from a violator
 ($0.34 < 1.0$).
 
-\item \textbf{P4: Self-discharging axiom.} An axiom whose
+\item \textbf{3. Self-discharging axiom.} An axiom whose
 statement reduces to truth via algebra alone is vacuous. The fix
 is to either remove the axiom or write the substantive content
 elsewhere.
 
-\item \textbf{P5: Falsifier as restated hypothesis.} A
+\item \textbf{4. Falsifier as restated hypothesis.} A
 ``falsifier'' theorem whose body restates its hypotheses without
 exercising any computation is structural-tautology repackaging.
 The fix is to ensure the falsifier exercises the hypothesis.
 
-\item \textbf{P6: Cross-module bridge integrity.} If a
+\item \textbf{5. Cross-module bridge integrity.} If a
 theorem's docstring references another module's theorem, the body
 must \texttt{import} that module and \emph{call} the theorem,
 not merely list it as a documentation pointer. The audit pattern
@@ -1243,7 +1252,7 @@ call in the body. A bridge whose body never invokes the named
 target is documentation-only and rots silently as the codebase
 evolves.
 
-\item \textbf{P7: Defining the conclusion.} If a function is
+\item \textbf{6. Defining the conclusion.} If a function is
 defined as \texttt{:= <obvious target>}, a theorem that asserts
 $0 \leq C/A$ for that function is trivially true. The fix is to
 either push the substantive content elsewhere (a tracked-hypothesis
@@ -1277,22 +1286,6 @@ prove is what we claim.
 
 \section{Sentence-Level Provenance and Cross-Paper Consistency Clusters}
 \label{sec:provenance}
-
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.95\linewidth]{figures/i1_fig3_sentence_state_clusters.png}
-\caption{Sentence-state claim clusters (schematic). Three source
-drafts (rectangles) each carry six sentences (circles); a line joins
-sentences that share a claim cluster, and grey circles are
-unclustered. All three clusters span more than one draft, but only
-the amber cluster~C2 spans more than one publication target and is
-flagged accordingly; the drafts joined by C1 (steel blue) and C3
-(sage) all lift into a single target. That flag is what the
-consistency check keys on: a cluster confined to one target cannot
-put two manuscripts at odds with each other, whereas a cross-target
-cluster is a claim a reader can encounter twice.}
-\label{fig:sentence_clusters}
-\end{figure}
 
 The provenance machinery described so far answers one question:
 where did this number come from? A program that publishes more than
@@ -1373,6 +1366,22 @@ flagging those that span two or more. The overview manuscript is
 excluded from that test: every draft contributes to it, so counting
 it would mark every cluster cross-target and the flag would carry no
 information.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\linewidth]{figures/i1_fig3_sentence_state_clusters.png}
+\caption{Sentence-state claim clusters (schematic). Three source
+drafts (rectangles) each carry six sentences (circles); a line joins
+sentences that share a claim cluster, and grey circles are
+unclustered. All three clusters span more than one draft, but only
+the amber cluster~C2 spans more than one publication target and is
+flagged accordingly; the drafts joined by C1 (steel blue) and C3
+(sage) all lift into a single target. That flag is what the
+consistency check keys on: a cluster confined to one target cannot
+put two manuscripts at odds with each other, whereas a cross-target
+cluster is a claim a reader can encounter twice.}
+\label{fig:sentence_clusters}
+\end{figure}
 
 \texttt{validate.py --check bundle\_consistency} reads that index,
 and its guarantee is narrower than the word consistency suggests. For
@@ -1659,43 +1668,7 @@ requires.
 
 \begin{table}[h]
 \centering
-\small
-\begin{tabular}{p{0.30\linewidth}p{0.24\linewidth}p{0.38\linewidth}}
-\hline
-\textbf{Finding class} & \textbf{Gate backstopped} & \textbf{Evidence read} \\
-\hline
-1. Wrong-target citations
-  & Citation integrity (1)
-  & Each bibliographic entry fetched against its arXiv identifier or
-    DOI; membership in the citation registry \\
-2. Parameter drift from primary sources
-  & Parameter provenance (3)
-  & The provenance entry, then the table, figure or equation of the
-    primary source it names \\
-3. Placeholder theorems cited as verified
-  & Lean proof substance (5)
-  & The theorem's declaration site and the tokens of its proof body \\
-4. Cross-paper contradictions
-  & Cross-paper consistency (2)
-  & Every companion draft; shared citation keys in particular \\
-5. Narrative overclaims
-  & Narrative grounding (7)
-  & Abstract, introduction and conclusion; prior-art searches for
-    priority claims \\
-6. Undisclosed assumptions
-  & Assumption disclosure (6)
-  & Hypothesis parameters and structure-field constraints of each
-    cited theorem \\
-7. Count-literal drift
-  & Numerical freshness (9)
-  & Canonical count macros and the reported-metric edges of the
-    knowledge graph \\
-8. Production-run health
-  & Production-run health (8)
-  & Run status, re-derived from the log tails rather than from a
-    cached status field \\
-\hline
-\end{tabular}
+\input{tables/table3_finding_classes.tex}
 \caption{The eight finding classes, the readiness gate each
 backstops, and the evidence each requires. The classes are not worked
 in gate order, because the order above puts the cheapest-to-refute
@@ -1856,33 +1829,46 @@ treating as citation integrity is necessary and not sufficient, and
 that the fresh-context property buys nothing unless the reviewer is
 also required to open the source.
 
-\section{Classical General Relativity at the Component Level}
+\section{Mathematics the Pipeline Accumulated as a Byproduct}
 \label{sec:phase6f_substrate}
 
-A verification pipeline driven for long enough over one physics
-program accumulates infrastructure that the program's headline
-claims never mention. The largest such deposit here is a
-machine-checked layer of classical general relativity:
-\phaseSixfWonesixTotal{}~theorems across six modules, stated over
-component arrays $\mathrm{Fin}\,4 \to \cdots \to \mathbb{R}$ rather
-than over charts, bundles, or connections. This section records what
-each layer proves and which later result consumes it. No declaration
-in the six modules is marked as a placeholder in the registry that
-carries that marking (\texttt{src/core/constants.py}), and the layer
-introduces no unproved gap and no project-local axiom.
+A verification programme pointed at physics accumulates mathematics the
+physics does not contain, and the accumulation is not incidental: it
+happens precisely at the boundary of what the ambient library already
+proves. Neither of the two layers described here was a goal. Each exists
+because some physics result needed a statement the library did not have,
+and the programme's rule is that a needed statement is proved rather
+than assumed. Both build with no unproved gap and no project-local
+axiom, and no declaration in either is registered as a placeholder.
 
-The component-level presentation is not a simplification of an
-available manifold-level interface. At the library revision this
-project pins, it reaches smooth manifolds, tangent and vector
-bundles, a covariant-derivative and torsion interface, and a
-positive-definite Riemannian-metric class, and stops there: no
-Riemann tensor, no Ricci tensor, no scalar curvature, no Bianchi
-identity, and no indefinite-signature metric. A curvature statement
-therefore has to be made over an explicit index set or not at all,
-and the index-set form is in any case the form in which a physicist
-reads the identities. The connection-level companion layer, built on
-the covariant-derivative interface once the missing pieces were
-supplied in-project, is the subject of
+What the library supplies, and where it stops, is checkable against the
+pinned revision (\mathlibrev{}). It reaches smooth manifolds, tangent
+and vector bundles, a covariant-derivative and torsion interface, and a
+positive-definite Riemannian-metric class. It has no Riemann, Ricci or
+scalar curvature of a connection anywhere in the manifold hierarchy; no
+Bianchi identity; no indefinite-signature metric, the positive-definite
+fibre inner product being structural rather than a parameter; a
+tensoriality interface with constructors for one and two arguments, so
+the three-argument curvature map has no bundled form to be constructed
+into; and the Leibniz form of the Jacobi identity for the manifold Lie
+bracket but not the cyclic form, which is the form the Bianchi
+identities consume.
+
+Two layers follow from that boundary. The first states the classical
+identities over component arrays
+$\mathrm{Fin}\,4 \to \cdots \to \mathbb{R}$, which is in any case the
+form in which a physicist reads them, and is where the physics results
+of this programme actually draw. The second asks whether the same
+identities can be stated at connection level, where the objects are
+sections of a vector bundle; it is the larger body of reusable
+mathematics and carries no physics content of its own. A companion
+manuscript in preparation treats both as its primary subject.
+
+\subsection{Component scope: the classical identities}
+
+\phaseSixfWonesixTotal{}~theorems across six modules. This subsection
+records what each layer proves and which later result consumes it. The
+connection-level layer is
 Section~\ref{sec:riemannian_sidebar}.
 
 Notation, since these modules borrow two letters twice over. In the
@@ -2038,30 +2024,14 @@ calculation, and the de Sitter analogue
 (\texttt{deSitter\_T\_H\_eq\_kappa\_over\_2pi}) has exactly the same
 standing.
 
-The methodology point is that this layer was never a goal. It exists
-because black-hole thermodynamics, the horizon-area theorem, and the
-singularity theorems each needed a component-level statement of some
-classical identity, and the pipeline's rule is that a needed
-statement is proved rather than assumed. A companion manuscript in
-preparation treats the layer as its primary subject; with respect to
-the methodology it is derivative, not parallel.
-
-\section{Curvature Infrastructure Above an Upstream Connection API}
+\subsection{Connection scope: curvature above the covariant-derivative interface}
 \label{sec:riemannian_sidebar}
 
-The substrate of Section~\ref{sec:phase6f_substrate} operates pointwise
-on real-valued tensor components. The neighbouring question is whether
-the same identities can be stated at connection level on a smooth
-manifold, where the objects are sections of a vector bundle rather than
-indexed arrays. Mathlib4 at the revision this program pins
-(\mathlibrev{}) answers part of that question and leaves the rest open,
-and the open part is exactly the curvature layer. The project closed it
-in-project at two scopes: a coordinate scope on Christoffel arrays, and
-a bundle scope built directly on the upstream covariant-derivative
-predicate. This is the largest body of reusable mathematics the pipeline
-has produced that carries no physics content of its own.
+The connection-level layer closes the gap named above at two scopes: a
+coordinate scope on Christoffel arrays, and a bundle scope built
+directly on the upstream covariant-derivative predicate.
 
-\subsection{What the upstream library supplies, and what it does not}
+\subsubsection{What the upstream interface supplies}
 
 The connection itself is upstream. The module
 \texttt{Mathlib.Geometry.Manifold.VectorBundle.CovariantDerivative}
@@ -2089,7 +2059,7 @@ constructed into. And the Lie-bracket file carries the Leibniz form of
 the Jacobi identity but not the cyclic form, which is the form the
 Bianchi identities consume.
 
-\subsection{Coordinate scope}
+\subsubsection{Coordinate scope}
 
 Two modules work on Christoffel arrays
 $\Gamma^{\rho}{}_{\mu\nu} : \mathrm{Fin}\,4 \to \mathrm{Fin}\,4 \to
@@ -2135,7 +2105,7 @@ pieces are not discharged at this scope. They are tractable and
 uninteresting: several hundred normalised monomials, against three lines
 at bundle scope once the cyclic Jacobi identity is available.
 
-\subsection{Indefinite signature}
+\subsubsection{Indefinite signature}
 
 \texttt{LorentzianMetric.lean} supplies the signature layer the upstream
 Riemannian typeclass cannot host. \texttt{IsLorentzianSignature} pins the
@@ -2153,7 +2123,7 @@ contradiction from a metric asserted to have both signatures, and a
 fibrewise family predicate shaped to mirror the upstream Riemannian
 bundle typeclass.
 
-\subsection{Bundle scope}
+\subsubsection{Bundle scope}
 
 \texttt{BundleRiemannAux.lean} defines the curvature operator on a vector
 bundle over a manifold over a nontrivially normed field, in the textbook
@@ -2193,7 +2163,7 @@ root-namespace helpers written in upstream style,
 \texttt{IsCovariantDerivativeOn.neg} and
 \texttt{IsCovariantDerivativeOn.sub}, carry that discharge.
 
-\subsection{Levi-Civita uniqueness, and the hypothesis it carries}
+\subsubsection{Levi-Civita uniqueness, and the hypothesis it carries}
 
 \texttt{LeviCivita.lean} states the classical uniqueness theorem for the
 torsion-free metric-compatible connection at bundle scope, which is the
@@ -2233,7 +2203,7 @@ statement holds vacuously. The per-triple form in
 it, together with the algebraic kernel, is where the mathematical content
 of the derivation sits. The two statements should be weighed separately.
 
-\subsection{What is claimed}
+\subsubsection{What is claimed}
 
 These modules build with no \texttt{sorry} and introduce no new
 project-local axiom. Together they carry \phaseSixfWsevenTotal{}
@@ -2271,7 +2241,7 @@ consumes, torsion-freeness, Schwarz symmetry, non-degeneracy, or
 invertibility of two, rather than importing it silently from the physical
 setting in which the identity is usually met.
 
-\section{Scoping Results Around Absent Library Infrastructure}
+\section{Worked Case~4: Scoping a Result Around Absent Library Infrastructure}
 \label{sec:structural_prop_scoping}
 
 
@@ -2419,7 +2389,7 @@ discipline.
 \section{Lessons and Future Work}
 \label{sec:lessons}
 
-We close with four lessons drawn from a year of running the
+We close with the lesson that generalizes least controversially, drawn from running the
 pipeline at the scale described.
 
 \textbf{Continuous verification is cheaper than retrofitted
@@ -2435,41 +2405,6 @@ checks before it could be cited downstream. The cost of running
 the checks is on the order of seconds per stage; the cost of
 finding and fixing a propagated error after publication is on the
 order of weeks per finding, in the best case.
-
-\textbf{Decomposition is what makes a large goal tractable, and it
-pays a second dividend that has nothing to do with tractability.} A
-goal can be out of reach because it is large rather than because it
-is deep, and the two are indistinguishable from inside a failing
-tactic loop. Splitting one into structural sub-lemmas is the
-mechanical fix for the first. What is less obvious, and what
-Section~\ref{sec:case3} works through, is that decomposition also
-forces implicit assumptions into the open: an assumption can hide
-inside a monolithic statement indefinitely, because no gate can ask
-a question about something nobody has named.
-
-\textbf{Adversarial review is a separate role from authorship,
-and the separation is load-bearing.} A reviewer in the same
-context as the author has, by construction, internalized the
-author's prior justifications. The reviewer's findings will, by
-construction, be limited to what the author's context permits.
-The fresh-context adversarial-reviewer pattern (the reviewer
-agent runs in a context window that has not seen the author's
-work) is the structural fix. The author fixes; the author
-re-invokes; iteration converges to clean.
-
-\textbf{Metadata-valid is not content-true.} The citation
-machinery of Invariant~11 (cached primary sources, resolving
-identifiers, title-drift detection) structurally prevents
-hallucinated \emph{references}. It does not prevent fabricated
-\emph{attributions}: prose ascribing to a real, cached, correctly
-cited source a claim the source does not make. At a measured base
-rate of roughly three per ten spot-checked load-bearing
-attributions (Section~\ref{sec:adversarial}), this is the failure
-mode that survived every deterministic layer of the pipeline. The
-response (deterministic prose-consistency checks where the
-property is mechanizable, fresh-context content reading where it
-is not) is the pipeline's newest layer, and there is no reason
-to believe it is the last.
 
 The pipeline is open-source, domain-agnostic, and immediately
 applicable in any research domain where the connection between

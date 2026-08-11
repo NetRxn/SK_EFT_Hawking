@@ -455,7 +455,13 @@ out so it can be dropped without disturbing Phases 1–5, on which nothing here 
    rather than the nine scoped here** — D10's 6BA/6BB/6BC carry the identical defect and
    were missed. 6CC is deliberately excluded: it is PARKED, and a row for a phase with no
    substrate registers an absorption unit that can never be absorbed.
-4. **F-10** — `bundle_lean_module_coverage`: declared modules must appear in the draft.
+4. **F-10** — `bundle_lean_module_coverage`: declared modules must be reached by the draft.
+   ✅ **Shipped; predicate corrected 2026-08-11 under measurement.** "Appear in the draft"
+   was scoped too narrowly in one direction and too loosely in the other. A draft that
+   cites a module's *theorems* reaches it more strongly than one naming the file, and the
+   original predicate scored that as absent; meanwhile a module surviving only inside a
+   `%`-commented block scored as cited. Both are now handled, and the ratchet fell to the
+   honest number rather than being widened to accommodate either.
 
 ### Phase 7 — `WAVE_EXECUTION_PIPELINE.md` becomes a clean reader-facing law (RUNS LAST)
 
