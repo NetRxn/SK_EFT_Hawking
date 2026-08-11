@@ -294,9 +294,9 @@ Layer~1 (Python numerics, top, blue) feeds Layer~2 (Lean~4 formal
 proofs, middle, amber) feeds Layer~3 (Aristotle automated theorem
 prover, bottom, sage). The curved feedback arrow on the right
 represents counterexample- or refinement-driven flow back to Layer~1
-(e.g.\ Aristotle run~\texttt{270e77a0} forced the strengthened
-\texttt{FirstOrderKMS} axiom that Layer~1's noise-floor formula
-depends on numerically; see Section~\ref{sec:case1}). The
+(e.g.\ Aristotle run~\texttt{270e77a0} returned the counterexample
+that forced the strengthened algebraic \texttt{FirstOrderKMS}
+condition; see Section~\ref{sec:case1}). The
 asymmetric composition is the substantive structural claim of \S2:
 none of the three layers alone suffices.}
 \label{fig:three_layer}
@@ -309,372 +309,738 @@ none of the three layers alone suffices.}
 \section{Worked Case~1: The FirstOrderKMS Aristotle Counterexample}
 \label{sec:case1}
 
-% TODO: substantive draft. Substrate to draw from:
-%  - SK-EFT Hawking project memory `feedback_aristotle_negative_results.md`
-%  - First-order Kubo-Martin-Schwinger relation in
-%    `lean/SKEFTHawking/FirstOrder.lean` (the theorem that Aristotle
-%    repeatedly failed to close)
-%  - The user-author iteration that surfaced the failure mode
-%  - The eventual physics resolution: the FirstOrderKMS at zeroth
-%    order is genuinely zero --- not because Aristotle was wrong,
-%    but because the symmetry-protected zero is the substantive
-%    claim, and the formal pipeline's inability to discover it
-%    automatically was diagnostic, not pathological
+An automated prover can return a refutation instead of a proof, and the
+refutation is the more valuable of the two outcomes. This section works
+through the case in which that happened here. A uniqueness theorem for
+the first-order Schwinger--Keldysh action was submitted with a
+hypothesis that had been written to encode the Kubo--Martin--Schwinger
+(KMS) condition and did not encode it. Aristotle returned an explicit
+nine-component coefficient vector satisfying the hypothesis and
+violating the conclusion. The defect was in the hypothesis, not in the
+physics being formalized and not in the prover: the informal sentence
+the hypothesis was meant to capture (``KMS fixes the first-order
+dissipative action up to two transport coefficients'') is true, and is
+now the closed theorem
+\texttt{SKEFTHawking.SKDoubling.firstOrder\_uniqueness}
+(\texttt{lean/SKEFTHawking/SKDoubling.lean}, lines~412--439, Aristotle
+run~\texttt{270e77a0}). What was wrong was the formal rendering of one
+of its three hypotheses, and nothing short of a machine attempting the
+proof was going to say so.
+
+\subsection{The formal setting}
+
+Two distinct nine-fold objects appear in this case, and keeping them
+apart is the whole of the bookkeeping. The first is the local field
+content. \texttt{SKFields} (\texttt{SKDoubling.lean}, line~80) is a
+record of nine real numbers: the retarded and advanced fields
+$\psi_r, \psi_a$; their first derivatives
+$\partial_t\psi_r, \partial_x\psi_r, \partial_t\psi_a, \partial_x\psi_a$;
+and the second derivatives
+$\partial_t^2\psi_r, \partial_t\partial_x\psi_r, \partial_x^2\psi_r$.
+An \texttt{SKAction} is a map from this record to a pair
+$(\operatorname{Re}\mathcal{L}, \operatorname{Im}\mathcal{L})$ of reals,
+so hermiticity of the Lagrangian is carried by the data type rather
+than by an assumption.
+
+The second nine-fold object is the coefficient space.
+\texttt{FirstOrderCoeffs} (lines~292--301) enumerates nine candidate
+monomials, six in the retarded-response sector and three in the noise
+sector:
 %
-% Section thesis: when a Lean theorem resists automated proof
-% repeatedly, the failure is information --- it surfaces either a
-% wrong-statement issue (P-anti-pattern, Section 7) or a
-% missing-physics issue. The FirstOrderKMS case is the latter: the
-% absence of an automated proof was diagnostic of the symmetry
-% protection that the corresponding paper's central claim depends on.
+\begin{align*}
+\operatorname{Re}\mathcal{L} &=
+  r_1\,\psi_a\partial_t^2\psi_r
++ r_2\,\psi_a\partial_x^2\psi_r
++ r_3\,\psi_a\partial_t\partial_x\psi_r
++ r_4\,\psi_a\partial_t\psi_r
++ r_5\,\psi_a\partial_x\psi_r
++ r_6\,\psi_a\psi_r , \\
+\operatorname{Im}\mathcal{L} &=
+  i_1\,\psi_a^2
++ i_2\,(\partial_t\psi_a)^2
++ i_3\,(\partial_x\psi_a)^2 ,
+\end{align*}
+%
+assembled by \texttt{firstOrderAction} (lines~304--315). The target of
+the uniqueness statement is the two-parameter family
+\texttt{firstOrderDissipativeAction} (lines~251--261), built from
+\texttt{DissipativeCoeffs} (\texttt{lean/SKEFTHawking/Basic.lean},
+lines~152--158), which carries $\gamma_1$ (isotropic phonon damping,
+related to bulk viscosity), $\gamma_2$ (anisotropic damping along the
+superfluid flow), and the two non-negativity fields
+\texttt{gamma\_1\_nonneg} and \texttt{gamma\_2\_nonneg}. Uniqueness
+means: every point of the nine-dimensional coefficient space that
+satisfies the constraints is the image of some $(\gamma_1,\gamma_2)$.
 
-In Schwinger--Keldysh effective field theory, the first-order action
-contains nine real coefficients
-$\{r_1, \ldots, r_6, i_1, i_2, i_3\}$ controlling six retarded-response
-and three noise channels at lowest derivative order. A clean physics
-question is whether the Kubo--Martin--Schwinger (KMS) condition (the
-algebraic statement of fluctuation--dissipation relating retarded and
-noise sectors) forces a unique parameterization of the action by the
-two transport coefficients $(\gamma_1, \gamma_2)$ (isotropic phonon
-damping, related to bulk viscosity, and anisotropic damping along the
-superfluid flow; the precise correspondence to the action coefficients
-is encoded in the \texttt{DissipativeCoeffs} structure of
-\texttt{Basic.lean} (line~152), consumed by the
-\texttt{firstOrderDissipativeAction} construction in
-\texttt{SKDoubling.lean} lines~244--280).
+\subsection{The published axiomatic and its Lean rendering}
 
-A published axiomatic for the SK-EFT contour exists. Crossley,
-Glorioso, and Liu~\cite{CrossleyGloriosoLiu2017} formulate the
-closed-time-path action with hermiticity, reflection positivity
-($\Im\,S \geq 0$), and a $\mathbb{Z}_2$ symmetry they identified as
-the local KMS condition. The companion paper of Glorioso, Crossley,
-and Liu~\cite{GloriosoCrossleyLiu2017} promotes this to the
-\emph{dynamical} KMS $\mathbb{Z}_2$ symmetry, which is the central
-algebraic-level statement applicable in any local-equilibrium state
-rather than only thermal density matrices. Glorioso and
-Liu~\cite{GloriosoLiu2018} then derive the local second law,
-$\partial_\mu J^\mu_S \geq 0$ for a Noether-constructed entropy
-current $J^\mu_S$, from the dynamical-KMS $\mathbb{Z}_2$ symmetry, the
-classical-limit remnant of microscopic unitarity, and the local
-equilibrium assumption; the pedagogical exposition is the TASI~2017
-lectures of Glorioso and Liu~\cite{GloriosoLiu2018TASI}. The
-dynamical-KMS axiom carries a UV-realization ambiguity surfaced by
-Jain and Kovtun~\cite{JainKovtun2024}, which the program encodes at
-the typeclass level (the strict-vs-algebraic dynamical-KMS predicates
-\texttt{hasDynamicalKMS\_strict} / \texttt{hasDynamicalKMS\_algebraic}
-in \texttt{lean/SKEFTHawking/GloriosoLiu/Axioms.lean}). The first-order
-projection of this published skeleton onto the polynomial action with
-nine candidate coefficients is the structure documented below; the
-strengthening discussed in the rest of this section is the projection
-step, not a project-original axiomatic choice.
+The constraints are not this program's invention. Crossley, Glorioso,
+and Liu~\cite{CrossleyGloriosoLiu2017} impose on the closed-time-path
+action, in their \S I.D, a normalization condition (their eq.~(1.28),
+sharpened at the level of the action to eq.~(1.36): the action vanishes
+when the two contour legs are identified, so every term carries at
+least one factor of the advanced field), a $\mathbb{Z}_2$ reflection
+condition on the action (their eq.~(1.29)), and, as item~5 of the same
+list, the requirement that the imaginary part of the action be
+non-negative. For a thermal density matrix (their eq.~(1.60)) the
+generating functional obeys in addition the local KMS condition, a
+$\mathbb{Z}_2$ symmetry (their \S I.F, eq.~(1.68)) whose quadratic-order
+content is the familiar fluctuation--dissipation theorem
+$\operatorname{Im}G_R = \tanh(\beta_0\omega/2)\,G_S$ (their eq.~(1.62)).
+Glorioso, Crossley, and Liu~\cite{GloriosoCrossleyLiu2017} replace the
+local KMS condition by the \emph{dynamical} KMS symmetry (their \S IV.A,
+eq.~(4.1)), equivalent to it in the classical limit but applicable to
+any state in local equilibrium rather than only to a thermal density
+matrix perturbed by background fields. Glorioso and
+Liu~\cite{GloriosoLiu2018} then derive the local second law
+$\partial_\mu S^\mu \ge 0$ from that $\mathbb{Z}_2$ symmetry together
+with the classical remnant of quantum unitarity, which supplies both
+$\operatorname{Im}I_{\mathrm{eff}} \ge 0$ and the normalization
+condition (their \S II, eqs.~(2.5)--(2.6)); the second law is proved in
+general and its local form perturbatively in the derivative expansion.
+A pedagogical account of the same construction is given in the lectures
+of Glorioso and Liu~\cite{GloriosoLiu2018TASI}. The realization of
+dynamical KMS is not unique when the theory carries ultraviolet content
+that the infrared symmetries do not fix: Jain and
+Kovtun~\cite{JainKovtun2024} exhibit distinct Schwinger--Keldysh models
+that share an effective action but realize the symmetry differently
+(their Appendix~C, eqs.~(C.9)--(C.11)), which is why this program keeps
+the strict and algebraic readings of the condition as separate
+predicates rather than collapsing them.
 
-Our first formalization encoded a \emph{preliminary} transform-level
-KMS constraint as a Lean axiom \texttt{KMSSymmetry} (in
-\texttt{lean/SKEFTHawking/SKDoubling.lean}, lines~156--168). The
-field-level transform $\psi_a \to \psi_a + i\beta\,\partial_t \psi_r$
-acts only on four of the nine components ($\psi_r$, $\psi_a$,
-$\partial_t \psi_r$, and $\partial_x \psi_r$), leaving the
-derivatives of $\psi_a$ and the second derivatives of $\psi_r$
-unconstrained. We submitted the accompanying uniqueness theorem
-\texttt{SKEFTHawking.SKDoubling.firstOrder\_uniqueness} to Aristotle
-in priority batch~1. Aristotle returned not a proof but a
-counterexample: the coefficient vector $c = (0,0,0,0,0,0,0,1,0)$,
-one nonzero noise channel ($i_2 = 1$) and nothing else, satisfies
-the transform-level constraint but is not the action of any valid
-$(\gamma_1, \gamma_2)$ pair. Without the formal pipeline this would
-have been a one-symbol typographical hole that survived three rounds
-of human review; with the formal pipeline it was flagged on first
-submission.
+Three of these conditions transcribe into Lean without difficulty.
+Normalization is \texttt{satisfies\_normalization} (lines~126--129),
+positivity of the imaginary part is \texttt{satisfies\_positivity}
+(lines~140--141), and hermiticity is discharged by the
+$\mathbb{R}\times\mathbb{R}$ codomain. The fourth condition is where the
+case begins.
 
-The resolution recovers the algebraic content of the published
-dynamical-KMS axiom. At the level of the polynomial coefficients
-(rather than the field-level transform), dynamical-KMS at first order
-is seven simultaneous relations: the four lower-derivative monomials
-whose KMS partner exceeds the first-order budget vanish,
-$r_3 = r_4 = r_5 = r_6 = 0$; the two retained noise coefficients are
-fixed by the algebraic FDR, $i_1 = -r_2/\beta$ and
-$i_2 = (r_1 + r_2)/\beta$; the spatial-noise coefficient is forced to
-zero, $i_3 = 0$. The strengthened axiom \texttt{FirstOrderKMS} (in
-\texttt{lean/SKEFTHawking/SKDoubling.lean}, lines~367--379) encodes
-all seven; the uniqueness theorem \texttt{firstOrder\_uniqueness}
-(lines~412--439, Aristotle run~\texttt{270e77a0}) closes cleanly
-under it (under positivity, dynamical-KMS, and $\beta > 0$ at
-positive temperature). The two-parameter $(\gamma_1, \gamma_2)$ family is
-recovered as a corollary. The four field components Aristotle's first-pass
-weak constraint \emph{did} hold are exactly the four whose KMS partners
-fit within the first-order derivative budget; the five it \emph{did not}
-hold (the derivatives of $\psi_a$ and second derivatives of $\psi_r$)
-are precisely the five whose KMS partners exceed first order and
-instead surface at second order in the SK-EFT loop expansion (where
-they are formalized in the program's Glorioso--Liu axiomatic Lean
-modules \texttt{lean/SKEFTHawking/GloriosoLiu/\{Axioms,FirstOrderProjection,SecondOrderProjection\}.lean}). The four-of-nine partition
-recovered by Aristotle's counterexample is, in this reading, a
-\emph{theorem} of first-order projection rather than an empirical
-observation.
+\subsection{The hypothesis as first submitted}
 
-The published analog-Hawking spectrum and noise-floor formula in the
-project's Tier~1 deep papers depend numerically on $i_3 = 0$; the
-original weakened constraint did not force $i_3 = 0$, and a paper
-using it would have shipped the wrong noise floor. The pedagogical
-content of this case study survives intact: an automated theorem
-prover's \emph{failure to prove} a stated theorem can be diagnostic
-information about the theorem's correctness, not a deficiency of the
-prover. The structural content is upgraded by the framing above: the
-diagnosis is that the original axiom encoded a \emph{projection} of
-dynamical-KMS that omitted the second-order content the published
-axiom carries, not a project-original ad-hoc choice that happened to
-be wrong.
+The KMS condition was first rendered at the level of the field
+transform, as the structure \texttt{KMSSymmetry} (lines~156--167). It
+bundles a map on \texttt{SKFields}, a specification of that map, and an
+invariance clause. The specification is a conjunction of exactly four
+equations, fixing $\psi_r$, $\partial_t\psi_r$ and $\partial_x\psi_r$
+and shifting $\psi_a \mapsto \psi_a + \beta\,\partial_t\psi_r$. The
+remaining five components of the record, namely
+$\partial_t\psi_a$, $\partial_x\psi_a$ and the three second derivatives
+of $\psi_r$, are named nowhere in the specification, so a witness may
+transform them however it likes. That the specification pins exactly
+four components is not a reading of the source but a theorem,
+\texttt{GloriosoLiu.kmsSpec\_pins\_four\_components}
+(\texttt{lean/SKEFTHawking/GloriosoLiu/Phase1Reconciliation.lean},
+lines~118--127), whose proof projects the four conjuncts out of the
+structure field itself.
+
+Set against the published condition, this rendering fails in two
+independent directions at once. It is too permissive, in that it
+constrains four of nine field components and is silent on the rest. It
+is also too rigid: its \texttt{invariance} clause demands pointwise
+equality of the Lagrangian under the transform, whereas the dynamical
+KMS condition of ref.~\cite{GloriosoCrossleyLiu2017} is equality up to a
+total derivative (their eq.~(5.3)), imposed on combinations that are
+closed under the symmetry rather than on individually truncated orders
+(their eq.~(5.9) and the sentence following it). The library records
+this by keeping the transform-level reading as
+\texttt{GloriosoLiu.hasDynamicalKMS\_strict}
+(\texttt{lean/SKEFTHawking/GloriosoLiu/Axioms.lean}, lines~91--92), a
+sanity primitive used for degenerate witnesses, while the substantive
+\texttt{dynamical\_KMS} field of the six-condition skeleton
+\texttt{SKEFTAxioms} (lines~160--172) is
+\texttt{hasDynamicalKMS\_algebraic} (lines~108--111). Neither reading is
+a Lean \texttt{axiom} declaration: both are ordinary structures, and the
+theorems below are proved from them.
+
+\subsection{What came back}
+
+Submitted with the transform-level hypothesis, the uniqueness statement
+was refuted. The witness is the coefficient vector
+%
+\[
+c = (r_1,\ldots,r_6,i_1,i_2,i_3) = (0,0,0,0,0,0,0,1,0),
+\]
+%
+a single unit of noise in the $(\partial_t\psi_a)^2$ channel and nothing
+else, now recorded as
+\texttt{GloriosoLiu.aristotleCounterexample} (lines~139--140). It
+defeats the statement for a reason the reader can check against
+\texttt{firstOrderAction} directly. Its action is
+$(\operatorname{Re}\mathcal{L},\operatorname{Im}\mathcal{L}) =
+(0,(\partial_t\psi_a)^2)$, so positivity holds. Matching the imaginary
+part against \texttt{firstOrderDissipativeAction}, whose noise sector is
+$(\gamma_1/\beta)\psi_a^2 + (\gamma_2/\beta)(\partial_t\psi_a)^2$, forces
+$\gamma_1 = 0$ and $\gamma_2 = \beta > 0$; but then the retarded sector
+of the target is $\beta\,\psi_a\partial_t^2\psi_r$, which does not
+vanish identically, while the witness has no retarded part at all. No
+pair $(\gamma_1,\gamma_2)$ reproduces it. The coefficient $i_2$ that the
+witness excites multiplies $(\partial_t\psi_a)^2$, and
+$\partial_t\psi_a$ is precisely one of the five components the transform
+specification never mentions.
+
+The witness survives in the library as a kernel-checked object rather
+than as an anecdote. \texttt{GloriosoLiu.aristotle\_counterexample\_violates\_FirstOrderKMS}
+(lines~150--158) proves
+$\neg\,\texttt{FirstOrderKMS}\ c\ \beta$ for every $\beta > 0$, and
+\texttt{GloriosoLiu.four\_of\_nine\_partition\_recovered}
+(lines~189--204) combines that with the four-component projection into
+one statement: any instance of the transform-level condition pins those
+four components, and the witness is ruled out only by the algebraic
+condition. A corollary,
+\texttt{GloriosoLiu.four\_of\_nine\_partition\_under\_GLU}
+(lines~231--239), derives the same conclusion from the six-condition
+skeleton by extracting the coefficient witness from its
+\texttt{dynamical\_KMS} field. We emphasize the scope: what is refuted
+is a formalization, not the axiomatic of
+refs.~\cite{CrossleyGloriosoLiu2017,GloriosoCrossleyLiu2017}.
+
+\subsection{The corrected condition}
+
+The repair is to impose the KMS condition on the coefficients rather
+than on the transform. \texttt{FirstOrderKMS} (lines~367--379) is a
+\texttt{Prop}-valued structure carrying seven relations: the four
+lower-derivative retarded monomials vanish,
+$r_3 = r_4 = r_5 = r_6 = 0$; two fluctuation--dissipation relations tie
+the surviving noise coefficients to the retarded ones,
+$i_1\beta = -r_2$ and $i_2\beta = r_1 + r_2$; and the spatial noise
+channel is switched off, $i_3 = 0$. The two fluctuation--dissipation
+relations are stated multiplicatively in $\beta$, which is equivalent to
+the familiar $i_1 = -r_2/\beta$ and $i_2 = (r_1+r_2)/\beta$ at any
+positive temperature and avoids a division in the hypothesis. Every one
+of the nine coefficients appears in at least one of the seven relations,
+and the solution set is two-dimensional, coordinatized by $(r_1,r_2)$.
+
+Under this hypothesis the uniqueness theorem closes.
+\texttt{firstOrder\_uniqueness} states that for every
+\texttt{FirstOrderCoeffs} $c$ and every $\beta > 0$, if
+\texttt{firstOrderAction}~$c$ satisfies positivity and $c$ satisfies
+\texttt{FirstOrderKMS}~$c$~$\beta$, then there exist
+\texttt{DissipativeCoeffs} whose action agrees with it on every field
+configuration. The proof supplies the witness explicitly,
+$\gamma_1 = -r_2$ and $\gamma_2 = r_1 + r_2$, and discharges the two
+non-negativity obligations of \texttt{DissipativeCoeffs} from positivity
+together with the two fluctuation--dissipation relations. Exactly one of
+the seven relations is what excludes the counterexample: with
+$r_1 = r_2 = 0$ and $i_2 = 1$, the relation $i_2\beta = r_1 + r_2$
+collapses to $\beta = 0$.
+
+\subsection{Probing the corrected condition on purpose}
+
+A hypothesis that has just been caught being too weak invites the
+question of whether it is now too strong, and the same instrument
+answers it. Two further statements were submitted deliberately. The
+first, \texttt{firstOrder\_KMS\_optimal} (lines~582--603), proves that
+under \texttt{FirstOrderKMS} and $\beta > 0$ the positivity of
+\texttt{firstOrderAction}~$c$ is \emph{equivalent} to
+$i_1 \ge 0 \wedge i_2 \ge 0$, so positivity contributes exactly the two
+sign conditions that \texttt{DissipativeCoeffs} already carries and no
+further relation among the coefficients is hiding in it. The second
+mis-states the condition on purpose. \texttt{FirstOrderKMS\_altSign}
+(lines~610--618) flips one sign, replacing $i_1\beta = -r_2$ by
+$i_1\beta = +r_2$, and
+\texttt{firstOrder\_altSign\_uniqueness\_test} (lines~636--656) is the
+kernel-checked \emph{negation} of the corresponding uniqueness claim,
+witnessed by $c = (1,1,0,0,0,0,1,2,0)$ at $\beta = 1$: that vector
+satisfies the flipped relations and positivity, yet forces
+$\gamma_1 = -r_2 = -1$, contradicting \texttt{gamma\_1\_nonneg}. The
+sign in the fluctuation--dissipation relation is therefore load-bearing
+rather than conventional, and the library says so in a form a reader can
+recompute rather than in a remark.
 
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.95\linewidth]{figures/i1_fig4_firstorderkms_grid.png}
-\caption{FirstOrderKMS 9-coefficient constraint grid
-(Aristotle run~\texttt{270e77a0}). Left panel: the preliminary
-transform-level \texttt{KMSSymmetry} constrains only the four
-field components $(\psi_r, \psi_a, \partial_t \psi_r,
-\partial_x \psi_r)$ on which the transform $\psi_a \to \psi_a +
-i\beta\,\partial_t \psi_r$ acts; the cell highlighted in carmine is
-the counterexample vector $c = (0,0,0,0,0,0,0,1,0)$ which satisfies
-the transform-level constraint but is not a valid first-order
-dissipative action. Right panel: the algebraic-level
-\texttt{FirstOrderKMS} (the first-order projection of the
-Glorioso--Liu dynamical-KMS axiom of
-ref.~\cite{GloriosoCrossleyLiu2017}) constrains seven of nine
-coefficients (including $i_3 = 0$ explicitly), and the
-\texttt{firstOrder\_uniqueness} theorem closes cleanly under it.}
+\caption{The nine first-order coefficients of \texttt{FirstOrderCoeffs}
+under the two candidate KMS hypotheses. Left panel: under the
+transform-level \texttt{KMSSymmetry}, whose specification pins four of
+the nine \texttt{SKFields} components and leaves $\partial_t\psi_a$
+among the five it does not mention, the noise coefficient $i_2$ carries
+no algebraic constraint; the cell highlighted in carmine is the refuting
+witness $c = (0,0,0,0,0,0,0,1,0)$ (\texttt{aristotleCounterexample}),
+which satisfies positivity and is the action of no
+$(\gamma_1,\gamma_2)$ pair. Right panel: the algebraic
+\texttt{FirstOrderKMS} imposes seven relations, every coefficient
+entering at least one of them and $i_3 = 0$ appearing explicitly,
+leaving a two-dimensional solution set coordinatized by $(r_1,r_2)$ and
+equivalently by $(\gamma_1,\gamma_2)$;
+\texttt{firstOrder\_uniqueness} closes under it (Aristotle
+run~\texttt{270e77a0}).}
 \label{fig:firstorderkms_grid}
 \end{figure}
 
-Aristotle's failure to prove a wrong statement is the substantive
-content of this case; the upgraded framing identifies precisely
-\emph{why} the original statement was wrong: it omitted the
-second-order content the dynamical-KMS axiom carries explicitly in
-the published Glorioso--Liu skeleton.
+\subsection{What generalizes}
 
-%% ─────────────────────────────────────────────────────────────────
-%% §4 Worked case 2: gap-solution-bounded conjecture disproof
-%% ─────────────────────────────────────────────────────────────────
+The case supports a narrow claim and not a broad one. A prover's failure
+to close a statement is evidence about the statement, and this
+particular failure localized the defect to a single hypothesis out of
+three and, within that hypothesis, to the five field components its
+specification never named. That is more information than a human review
+of the same statement produced, because the informal sentence the
+statement encodes is true; the error lived entirely in the gap between
+the sentence and its transcription, which is the one place prose review
+cannot look. Three conditions made the outcome usable. The statement was
+posed over a finite-dimensional coefficient space, so a counterexample
+was expressible as a tuple rather than as an obstruction argument. The
+refuting witness was retained and formalized, so the negative result is
+now checkable by the kernel instead of remembered. And the corrected
+hypothesis was afterwards attacked on purpose, by flipping a sign and
+proving the resulting claim false, so its non-triviality is measured
+rather than assumed.
+
+The limits are equally concrete. The refutation did not supply
+\texttt{FirstOrderKMS}; it established only that the submitted
+hypothesis admitted a vector the conclusion could not accommodate.
+Choosing the seven algebraic relations required reading the derivation
+in refs.~\cite{CrossleyGloriosoLiu2017,GloriosoCrossleyLiu2017} and
+projecting it onto this coefficient space by hand. A prover localizes a
+defect; it does not supply the physics that repairs it. Nor does a
+refutation distinguish between the two ways a statement can be wrong. A
+hypothesis can be too weak, as here, or the definitions underneath a
+correct-looking statement can themselves be wrong, in which case a
+successful proof is the dangerous outcome rather than the reassuring one
+(Section~\ref{sec:case3}). Only the first failure mode announces itself
+by refusing to close.
 
 \section{Worked Case~2: The Gap-Solution-Bounded Conjecture Disproof}
 \label{sec:case2}
 
-% TODO: substantive draft. Substrate to draw from:
-%  - The literature claim that a gap solution must be bounded
-%  - The formalization-driven counterexample search that refuted it
-%  - The Lean module containing the explicit unbounded counterexample
-%  - The PR (or commit-pinned counterexample reference) that
-%    documents the formal disproof
-%
-% Section thesis: formal verification is not just for confirming
-% known results; the systematic structure of a Lean formalization
-% can drive counterexample search that informal pen-and-paper work
-% does not. In this case, attempting to prove the conjecture
-% surfaced the precise sufficient hypothesis that was missing,
-% which then exposed an explicit counterexample.
+Worked Case~1 turned on a prover's failure to close a theorem that was
+true only under a stronger hypothesis. This case is the sharper
+variant. The target statement was false, the prover said so with an
+explicit witness, and the statement that replaced it is weaker in a way
+that changes what the surrounding physics is entitled to assume. The
+episode is the one that most directly answers the objection that formal
+verification only re-certifies what the author already believes:
+nothing in the informal derivation was going to produce this
+counterexample, because the informal derivation never wrote down the
+hypothesis the counterexample violates.
 
-The emergent-gravity sector of the project formalizes the
-Asymptotic-Darboux-Witt (ADW) gap equation, a Nambu--Jona-Lasinio-type
-self-consistency condition relating a fermion-bilinear gap $\Delta$,
-a four-fermion coupling $G$, a UV cutoff $\Lambda$, and a fermion
-flavor count $N_f$. The published literature on this and analogous
-NJL gap equations frequently asserts as ``obvious'' that the gap
-solution is bounded by the cutoff: $\Delta < \Lambda$ for all
-supercritical $G > G_c$. The bound is morally consistent with the
-EFT interpretation (the gap is a low-energy parameter; an
-above-cutoff gap is past the regime of validity) and is widely
-treated as folklore.
+% TODO: the expectation Delta < Lambda is stated below without
+% attribution to any published work. It is presented as the
+% EFT-validity expectation that the formalization plan encoded as a
+% target theorem, which is documented. No primary source read for this
+% section asserts the bound, so no citation is attached; an earlier
+% framing that credited it to "the published literature on NJL gap
+% equations" is not supported by any source obtainable from the
+% citation cache. Retrieval would be needed to restore an attribution.
 
-Our first formalization of the gap equation included a
-\texttt{gap\_solution\_bounded} theorem asserting exactly this. The
-proof was not closing under interactive iteration, so the theorem was
-submitted as part of Aristotle priority batch~1
-(\texttt{SKEFTHawking.TetradGapEquation.gap\_solution\_monotone}
-in \texttt{lean/SKEFTHawking/TetradGapEquation.lean},
-lines~333--349; the deprecated false claim survives as a
-commented-out stub at lines~311--325). Aristotle returned an explicit
-counterexample, again rather than a proof: at
-$G = 1/(c_4/2 \cdot (1 - \log 2))$, $N_f = 1$, $\Lambda = 1$, the
-gap solution is exactly $\Delta = 1 = \Lambda$, a fixed point of the
-self-consistency equation that saturates the would-be bound.
-Sufficiently strong coupling drives $\Delta$ to the cutoff and (we
-later verified by direct numerical solve) above it for further
-increase in $G$. The folklore claim is false on its face for the
-parameter range one would actually want.
+The emergent-gravity sector of the program formalizes a
+Nambu--Jona-Lasinio-type self-consistency condition for tetrad
+condensation, relating a condensate gap $\Delta$, a four-fermion
+coupling $G$, a UV cutoff $\Lambda$, and a fermion flavour count $N_f$
+(\texttt{lean/SKEFTHawking/TetradGapEquation.lean}). The gap equation
+is the fixed-point condition
+\begin{equation}
+  \Delta \;=\; G\,N_f\,\Delta\,I(\Delta),
+  \qquad
+  I(\Delta) \;=\; \int_0^{\Lambda} \frac{c_4\,p^3}{p^2+\Delta^2}\,\mathrm{d}p
+  \;=\; \frac{c_4}{2}\left[\Lambda^2 - \Delta^2
+        \log\!\left(1+\frac{\Lambda^2}{\Delta^2}\right)\right],
+  \label{eq:gapeq}
+\end{equation}
+with density-of-states coefficient $c_4 = 1/(4\pi^2)$ in $d=4$. The
+right-hand evaluation is exact, and it is what the Lean development
+takes as primitive: \texttt{gapIntegral} is defined as the closed form
+rather than as a Bochner integral, which keeps the module inside real
+analysis and away from measure theory. Two properties of $I$ carry the
+whole case. It is strictly positive for every $\Delta \geq 0$ and every
+$\Lambda > 0$ (\texttt{gapIntegral\_pos}), and it is strictly
+decreasing in $\Delta$ (\texttt{gapIntegral\_strictAnti}). Neither
+statement carries an upper restriction on $\Delta$, and neither
+needs one: Eq.~(\ref{eq:gapeq}) is a convergent integral over a fixed
+momentum range whatever the value of the gap.
 
-The theorem was rewritten as \texttt{gap\_solution\_monotone}
-(asserting only that $\Delta(G)$ is monotone in $G$, which is true)
-plus a tracked-hypothesis bound that names the additional structural
-assumption (an upper bound on $G$) under which a $\Delta < \Lambda$
-conclusion follows. The corrected statement and its proof are in
-Aristotle run~\texttt{79e07d55}, alongside eight other gap-equation
-theorems that closed in the same batch. The original
-\texttt{gap\_solution\_bounded} survives in the codebase as a
-commented-out stub at lines~311--325 of \texttt{TetradGapEquation.lean},
-preserved as a citable counterexample anchor for downstream papers
-that would otherwise inherit the folklore.
+The rest of the module is the standard phase-transition picture.
+Writing $G_c = 1/(N_f\,I(0)) = 8\pi^2/(N_f\Lambda^2)$
+(\texttt{criticalCoupling\_formula}), the trivial solution $\Delta = 0$
+is the only solution below $G_c$
+(\texttt{gap\_trivial\_unique\_subcritical}), a positive fixed point
+exists above it (\texttt{gap\_nontrivial\_exists}, by the intermediate
+value theorem applied to $g(\Delta) = G N_f I(\Delta) - 1$), and the
+bifurcation is a pitchfork at $G = G_c$ (\texttt{bifurcation\_at\_Gc}).
+Nine theorems of this module, including all of the above, closed in
+Aristotle run~\texttt{79e07d55}.
+
+A tenth was submitted with them. Above the critical coupling the gap is
+a low-energy parameter of an effective description valid up to
+$\Lambda$, so a gap exceeding the cutoff is outside the regime in which
+the equation was derived, and the expectation that a solution obeys
+$\Delta < \Lambda$ is the natural one. The formalization plan recorded
+it as a target theorem, \texttt{gap\_solution\_bounded}, and stated it
+the only way a Lean statement can be stated, with every hypothesis
+enumerated: $0 < G$, $0 < N_f$, $0 < \Lambda$, $0 < \Delta$, and
+$\Delta$ a fixed point of the gap operator, concluding $\Delta <
+\Lambda$. That enumeration is the substantive difference from the
+informal argument. On paper, ``the supercritical regime'' silently
+carries a second condition, that $G$ is not too far above $G_c$,
+because that is the regime anyone has in mind while writing. In Lean
+the second condition either appears in the hypothesis list or it does
+not exist, and here it did not.
+
+Aristotle returned a witness rather than a proof: $N_f = 1$,
+$\Lambda = 1$, $\Delta = 1$, and
+$G = 1/\bigl[(c_4/2)(1-\log 2)\bigr]$. The check is two lines. For
+$\Delta > 0$ the fixed-point condition of Eq.~(\ref{eq:gapeq}) reduces
+to $G N_f I(\Delta) = 1$, and at $\Delta = \Lambda$ the closed form
+gives $I(\Lambda) = (c_4\Lambda^2/2)(1-\log 2) = I(0)\,(1-\log 2)$, so
+that value of $G$ makes $\Delta = \Lambda$ an exact solution. The
+witness saturates the claimed strict inequality rather than violating
+it by a margin, which is the shape a counterexample to a strict bound
+usually takes and the shape a numerical scan is least likely to find.
+
+The saturating witness is not a boundary artefact, and this is where
+the formalization pays for itself a second time. Because $I$ is
+strictly positive at every $\Delta$, the coupling
+\begin{equation}
+  G(\Delta) \;=\; \frac{1}{N_f\,I(\Delta)}
+  \label{eq:invertgap}
+\end{equation}
+is well defined and positive for every $\Delta > 0$, and by
+construction $\Delta$ is a fixed point of the gap operator at that
+coupling. Because $I$ is strictly decreasing, $G(\Delta) > G(0) = G_c$,
+so every member of this family lies inside the supercritical regime the
+conjecture was about, and $G(\Delta)$ increases without bound as
+$\Delta$ does. The fixed-point set is a curve in the $(G,\Delta)$ plane
+that runs past $\Delta = \Lambda$ and never turns back. Strict
+monotonicity of $I$ then converts the conjecture into an exact
+threshold: a positive fixed point satisfies $\Delta < \Lambda$ if and
+only if
+\begin{equation}
+  G \;<\; G^{\ast} \;=\; \frac{G_c}{1-\log 2},
+  \label{eq:threshold}
+\end{equation}
+since $\Delta < \Lambda$ is equivalent to $I(\Delta) > I(\Lambda)$,
+which is equivalent to $1/(G N_f) > 1/(G^{\ast} N_f)$. The conjecture
+was therefore not merely wrong. It was missing exactly one hypothesis,
+and the missing hypothesis is identifiable in closed form from
+components that were already verified. Equations~(\ref{eq:invertgap})
+and~(\ref{eq:threshold}) follow from \texttt{gapIntegral\_pos} and
+\texttt{gapIntegral\_strictAnti} together with the closed form; the
+library does not currently carry either as a declaration, and they are
+presented here as consequences of verified components rather than as
+verified statements.
+
+The physical content of Eq.~(\ref{eq:threshold}) is worth stating in
+its own right, because it is a result obtained from a failed proof. The
+window of couplings in which this model condenses \emph{and} stays
+inside its own regime of validity is the bounded interval
+$G_c < G < G_c/(1-\log 2)$, a factor of $1/(1-\log 2)$ in coupling, not
+the half-line $G > G_c$ that the folklore reading licenses. A
+calculation that scans supercritical couplings without that ceiling
+will at some point report a condensate the effective description cannot
+support, and will do so without any internal signal that it has left
+the model's domain.
+
+What the library ships is the surviving statement,
+\texttt{gap\_solution\_monotone}
+(\texttt{lean/SKEFTHawking/TetradGapEquation.lean}, lines~333--349,
+Aristotle run~\texttt{79e07d55}): for couplings $G_1 < G_2$ with
+positive fixed points $\Delta_1$ and $\Delta_2$ respectively,
+$\Delta_1 < \Delta_2$. Its shape records the refutation as much as its
+content does. It quantifies over fixed points supplied as hypotheses,
+not over a solution function $\Delta^{\ast}(G)$, so it assumes neither
+that a branch has been selected nor that a selected branch stays
+anywhere in particular; and it concludes an ordering rather than a
+bound, so it says nothing that a large enough $G$ can falsify. The
+disproved statement is retained in the module as a commented-out block
+at lines~311--325, carrying the counterexample data and the reason the
+statement fails, so that a reader of the module encounters the
+refutation at the point where the missing theorem would otherwise look
+like an oversight.
+
+Downstream, the bound does not silently reappear. Where a later module
+needs a condensate that stays below the cutoff, it takes that as an
+explicit assumption rather than importing it from the gap equation. The
+predicate \texttt{H\_ScalarChannelIsTetradBifurcationOutput}
+(\texttt{lean/SKEFTHawking/ScalarRungInterpretation.lean},
+lines~170--172) states that a scalar channel arising from the
+supercritical branch has condensate VEV bounded by the UV cutoff, and
+it is consumed as a hypothesis by
+\texttt{mexican\_hat\_vev\_under\_supercritical\_bridge}
+(lines~179--184), whose conclusion is exactly as conditional as its
+input. The predicate has content rather than being a convenience:
+\texttt{bridge\_excludes\_super\_uv\_vev} (lines~190--196) proves the
+contrapositive, that a channel whose VEV exceeds the cutoff cannot be
+an output of the branch, so a super-cutoff channel refutes the bridge
+instead of quietly satisfying it. The assumption is carried in the
+program's \texttt{HYPOTHESIS\_REGISTRY} (\texttt{src/core/constants.py})
+with an eliminability grade and a named discharge path, namely the
+quantitative map from the scalar-channel parameters to the expansion
+coefficients of the gap-equation bifurcation, on whose resolution the
+predicate becomes a theorem of the gap-equation module. A referee can
+see, without reading a proof, exactly which conclusions of the
+emergent-gravity sector rest on the sub-cutoff assumption and what
+would be required to remove it.
 
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.85\linewidth]{figures/i1_fig5_gap_counterexample.png}
-\caption{Gap-equation counterexample to the
-\texttt{gap\_solution\_bounded} folklore claim
-($N_f = 1$, $\Lambda = 1$, $c_4 = 1$). For $G < G_c$ the gap is
-trivially zero (dotted grey curve). For $G \geq G_c$ the
-non-trivial branch $\Delta(G)$ rises monotonically and crosses the
-cutoff line $\Delta = \Lambda$ at the saturation coupling
-$G^\ast = 2 / (1 - \log 2) \approx 6.518$ (amber marker). For
-$G \geq G^\ast$ (amber-shaded region) the folklore claim
-$\Delta < \Lambda$ fails. Aristotle run~\texttt{79e07d55} replaced
-the bounded statement with a tracked-hypothesis variant that
-includes $G < G^\ast$ as an explicit assumption.}
+\caption{Saturation of the gap at the cutoff. Below the critical
+coupling the trivial solution $\Delta = 0$ is the only one (dotted
+line, \texttt{gap\_trivial\_unique\_subcritical}); above it a positive
+fixed point exists (\texttt{gap\_nontrivial\_exists}) and increases
+with $G$ (\texttt{gap\_solution\_monotone}). The branch meets the
+cutoff at the saturation coupling $G^{\ast} = G_c/(1-\log 2)$ (amber
+marker), which is where the counterexample returned in Aristotle
+run~\texttt{79e07d55} sits, and exceeds it throughout the amber region,
+where the conjectured bound $\Delta < \Lambda$ fails. The onset and the
+saturation point are exact; the branch drawn between and beyond them is
+an interpolation respecting the square-root onset, not a numerical
+solution of Eq.~(\ref{eq:gapeq}).}
 \label{fig:gap_counterexample}
 \end{figure}
 
-The case is a clean
-illustration of formalization-driven counterexample search: the
-counterexample exists in the literature only because the formal
-pipeline forced its production.
+% TODO: the generator fig_i1_gap_counterexample in
+% src/core/visualizations.py places the onset at G = 1 while declaring
+% the c_4 = Lambda = N_f = 1 convention, in which
+% criticalCoupling_formula gives G_c = 2. The rendered figure therefore
+% shows a G*/G_c ratio of 6.5 where the verified ratio is
+% 1/(1 - log 2) = 3.26. The figure must be regenerated before
+% submission; the caption above avoids asserting either numeral.
 
-%% ─────────────────────────────────────────────────────────────────
-%% §5 Worked case 3: chirality-wall axiom decomposition
-%% ─────────────────────────────────────────────────────────────────
+The general lesson is narrower than ``formal methods find bugs'' and
+more useful. A pen-and-paper theorem inherits its hypotheses from the
+context in which it is written, and the reader supplies the missing
+ones without noticing. A mechanized theorem cannot: the hypothesis list
+is finite, explicit, and adversarially searchable, and an automated
+prover that cannot close the goal is searching precisely the gap
+between the hypotheses that were written and the ones that were meant.
+In this case the search terminated in a witness, the witness localized
+the omission to a single missing inequality, and the inequality turned
+out to have a closed form that bounds the model's regime of validity
+from above. None of that required knowing in advance that the
+conjecture was false.
 
 \section{Worked Case~3: The Chirality-Wall Axiom Decomposition}
 \label{sec:case3}
 
-% TODO: substantive draft. Substrate to draw from:
-%  - Chirality-wall mechanism in EW baryogenesis context
-%    (paper33_ewbg_chirality_wall, Phase 6c W2)
-%  - The single 50-term theorem that initially could not be closed
-%  - The decomposition into nine sub-lemmas, each <=12 terms
-%  - Aristotle closure of the nine sub-lemmas in a single batch
-%  - The structural-axiom classification (eliminable vs hard vs
-%    unknown) that informed the decomposition
-%
-% Section thesis: a recurring pattern is that a monolithic proof
-% goal is intractable not because it is hard but because it is
-% large. Decomposition into structural sub-lemmas, each of which is
-% individually tractable, is the standard fix. The chirality-wall
-% case decomposed nine-deep and Aristotle closed all nine
-% sub-lemmas in a single submission.
+A proof goal can be out of reach because it is large rather than
+because it is deep, and from inside a tactic loop the two failures are
+indistinguishable: in both cases nothing closes. The distinction is
+operational. A deep goal needs an idea. A large one needs bookkeeping,
+and the bookkeeping is mechanical once someone insists on it. The third
+worked case is a large goal. The decomposition that made it tractable
+also did something no monolithic proof could have done: it forced into
+the open a physics assumption that none of the project's assumption
+registries recorded.
 
-The chirality-wall mechanism is a Standard-Model obstruction to
-electroweak baryogenesis under the constraint that the Higgs
-sector is a substrate-emergent bilinear of an underlying
-condensed-matter Hilbert space. The compound viability statement
-\emph{electroweak baryogenesis is forbidden in the Standard Model
-without right-handed neutrinos}
-(\texttt{sm\_no\_nu\_R\_ewbg\_doubly\_forbidden} in
-\texttt{lean/SKEFTHawking/EWBaryogenesisChiralityWall.lean})
-combines two independent obstructions: (i) the chirality wall
-arising from the $\mathbb{Z}_{16}$ anomaly classification, and
-(ii) the Standard-Model crossover-not-first-order phase
-transition. Each obstruction has multiple internal moving parts.
-Stated monolithically, the theorem has roughly fifty term-level
-constraints distributed across the two obstructions and their
-case distinctions.
+The theorem is a Standard-Model exclusion, formalized in
+\texttt{lean/SKEFTHawking/EWBaryogenesisChiralityWall.lean}. The module
+encodes viability of electroweak baryogenesis as a conjunction of two
+necessary conditions,
+\begin{equation}
+\label{eq:ewbgviable}
+\texttt{EWBGViable}(a, p, c) \;\equiv\;
+\texttt{WallCracked}(a) \;\wedge\;
+\mathsf{IsBaryogenesisViable}(p, c),
+\end{equation}
+where $a \in \mathbb{Z}_{16}$ is the anomaly of the fermion content,
+$p$ is a record of finite-temperature effective-potential parameters
+(\texttt{EWFiniteTParams} in
+\texttt{lean/SKEFTHawking/EWPhaseTransition.lean}), and $c$ is a real
+sphaleron-decoupling threshold. \texttt{WallCracked}$(a)$ is $a = 0$:
+the anomaly cancels, so the chiral theory admits the gauging step and a
+non-perturbative regulator exists. The second conjunct is the
+phase-transition condition, $0 < E$ together with
+$c\,\lambda\,T_c < E$, where $E$ is the cubic thermal coefficient
+\texttt{p.cubic\_coeff} and
+$T_c = \sqrt{\mu^2 / c_T}$ is the critical temperature built from the
+record's other fields.
 
-A monolithic proof attempt failed against both interactive
-tactics and against Aristotle. The interactive-MCP loop's
-\texttt{lean\_goal} returned a goal state that was too large to
-parse on a single screen; tactic candidates that closed any single
-component cascaded the rest into states that the tactic search
-could not resolve. Aristotle priority-batch submission returned
-\texttt{OUT\_OF\_BUDGET} after six hours of search.
+The root theorem is
+\texttt{sm\_no\_nu\_R\_ewbg\_doubly\_forbidden}. For every parameter
+record $p$, every threshold $c$, and under the hypothesis that the
+resummed Standard-Model transition is a crossover, it asserts
+\emph{both}
+$\neg\,\texttt{EWBGViable}(45, p, c)$ and
+$\neg\,\texttt{EWBGViable}(48, p, c)$. The two conjuncts are statements
+about two different fermion contents and they fail for two different
+reasons. Three generations without right-handed neutrinos carry
+$3 \times 15 = 45$ Weyl components and $45 \equiv 13 \not\equiv 0
+\pmod{16}$, so the wall is intact and the exclusion is independent of
+transition order. Adding three right-handed neutrinos gives $48 \equiv
+0$, which cracks the wall, and the exclusion then rests entirely on the
+crossover. Stating both is not a redundant bundle: neither conjunct
+implies the other, and dropping either leaves a fermion content for
+which the paper's headline claim is unsupported.
 
-The fix was a nine-fold structural decomposition driven by the
-project's structural-axiom registries in
-\texttt{src/core/constants.py}: \texttt{AXIOM\_METADATA} (the
-true-axiom table; tier $\in \{\texttt{closed}, \texttt{hard},
-\texttt{removed}\}$), \texttt{PLACEHOLDER\_THEOREMS} (placeholder
-markers per Invariant~9), \texttt{HYPOTHESIS\_REGISTRY} (tracked
-\texttt{Prop} bundles; tier $\in \{\texttt{algebraic},
-\texttt{hard}, \texttt{very\_hard}, \texttt{open}\}$), and
-\texttt{BORDISM\_HYPOTHESES} (Lean Mathlib bordism-deferred
-hypotheses; tier $\in \{\texttt{topological}\}$). Together these
-form a four-table eliminability landscape covering six tier
-values; each entry carries a \texttt{reason} or
-\texttt{evidence\_*} field documenting the structural rationale.
+Stated monolithically, that goal is large. Unfolding
+Eq.~\eqref{eq:ewbgviable} at both anomaly values expands the negated
+conjunction into two decision problems in $\mathbb{Z}_{16}$, two copies
+of a three-way real-arithmetic conjunction containing a square root,
+and the four bundled positivity fields that \texttt{EWFiniteTParams}
+carries with every instance ($0 < \mu^2$, $0 < \lambda$, $0 < c_T$,
+$0 \leq E$). De~Morgan over the whole thing needs a case split on
+$a = 0$ that the goal does not supply. The pipeline's own guidance
+(\S\ref{sec:pipeline}) lists monolithic simplification over goals of
+this size as an anti-pattern and sets the target for a submitted
+sub-goal at roughly a dozen term-level constraints.
 
-The chirality-wall theorem's load-bearing structural assumptions
-decompose along three pillars, each anchored on one entry of one
-of these tables (registry line numbers as of June~2026):
-(i) the $\mathbb{Z}_{16}$ anomaly chain, backed
-by the chiral-central-charge entry
-\texttt{c\_minus\_equals\_8Nf} in
-\texttt{HYPOTHESIS\_REGISTRY} (line 2282, tier
-\texttt{algebraic}, derived from particle content);
-(ii) the four-plus-one-dimensional gapped-interface hypothesis,
-encoded at decomposition time as the
-\texttt{gapped\_interface\_axiom} entry in
-\texttt{AXIOM\_METADATA} (line 1391; tier \texttt{hard} at the
-time of the decomposition, since retired: on 2026-05-19 the
-project-local axiom was converted into the tracked-hypothesis
-\texttt{Prop} \texttt{TPFConjecture}, with every consumer theorem
-now taking the conjecture as an explicit hypothesis parameter and
-the entry's eliminability moved to \texttt{closed}; the tracked
-dimensional ladder of evidence is unchanged: proven at $1{+}1$D
-and $2{+}1$D, conjectural at $3{+}1$D and $4{+}1$D);
-(iii) the topological-pivoting-frame no-go evasion, anchored on
-the \texttt{chirality\_limitation\_zero} placeholder entry in
-\texttt{PLACEHOLDER\_THEOREMS} (line 2127; per Invariant~9, this
-is a non-load-bearing documentation marker pointing at the
-underlying GS / TPF / GT three-pillar synthesis whose substantive
-content lives in the EWBaryogenesisChiralityWall theorem suite,
-some of whose hypotheses (e.g.\ \texttt{H\_KLRS\_SM\_Crossover}
-on line 2329) are themselves
-\texttt{HYPOTHESIS\_REGISTRY} entries). The decomposition tracks the same
-three-pillar boundary: three sub-lemmas per pillar, plus three
-sub-lemmas for the crossover side, totaling nine. Each
-sub-lemma has at most twelve term-level constraints.
-\emph{All nine sub-lemmas closed in a single Aristotle priority
-batch} after this decomposition, demonstrating that the
-original failure was about size, not difficulty.
+None of the pieces is deep. The $\mathbb{Z}_{16}$ facts are decidable
+and close by \texttt{decide}. The crossover exclusion is a two-line
+contradiction against a strict inequality. The wall-intact verdict for
+the Standard Model is a direct consumption of an upstream arithmetic
+theorem. The size came from stating all of them at once, and it is the
+only thing that made the goal hard.
 
+% TODO: the monolithic attempt and its failure mode are asserted in the
+% project's own working record but have no run identifier: there is no
+% ARISTOTLE_THEOREMS entry for EWBaryogenesisChiralityWall and no
+% archived run for either the failed monolithic submission or a batch
+% closure of the decomposed sub-lemmas. Either a run ID is supplied, or
+% this case study stands on the substrate shape alone (as drafted here)
+% and no claim about an automated-prover outcome is made.
+
+The module as it ships contains no monolithic statement at all. It
+declares sixteen theorems, no \texttt{sorry}, and no project-local
+axiom. The longest proof body is eleven tactic lines, in the
+biconditional discussed below; no other proof in the module runs past
+seven. The root theorem's own proof is a two-element anonymous
+constructor. Reading upward from it, the chain that discharges the
+exclusion is:
+
+\begin{itemize}
+\item \texttt{sm\_no\_nu\_R\_wall\_intact}: $45 \neq 0$ in
+$\mathbb{Z}_{16}$, consuming
+\texttt{Z16AnomalyComputation.three\_gen\_anomalous}.
+\item \texttt{ewbg\_forbidden\_if\_wall\_intact}: an intact wall
+refutes the first conjunct of Eq.~\eqref{eq:ewbgviable} for any $p$ and
+any $c$.
+\item \texttt{sm\_no\_nu\_R\_ewbg\_blocked}: the two above, composed at
+$a = 45$.
+\item \texttt{ewbg\_forbidden\_if\_transition\_crossover}: a crossover
+refutes the second conjunct for any anomaly, invoking
+\texttt{EWPhaseTransition.crossover\_excludes\_baryogenesis} in its
+proof body.
+\item \texttt{sm\_with\_3nu\_R\_ewbg\_forbidden\_under\_klrs}: the
+previous item at $a = 48$, under the tracked crossover hypothesis.
+\end{itemize}
+
+Around that spine sit the structural lemmas that make the
+decomposition auditable rather than merely shorter:
+\texttt{wall\_intact\_xor\_cracked} and
+\texttt{wall\_intact\_or\_cracked} (disjointness and exhaustivity of the
+wall predicate over $\mathbb{Z}_{16}$);
+\texttt{sm\_no\_nu\_R\_anomaly\_eq\_neg\_three}, which identifies the
+$45$-component content with the canonical $-3$ representative used in
+the anomaly classification;
+\texttt{sm\_single\_gen\_with\_nu\_R\_wall\_cracks} and
+\texttt{sm\_with\_3nu\_R\_wall\_cracks} at one and three generations;
+\texttt{sm\_with\_3nu\_R\_ewbg\_iff\_first\_order\_strong}, which
+records that with the wall cracked the compound predicate collapses to
+the phase-transition condition alone; and the quantitative anchor
+\texttt{sm\_klrs\_overshoot\_ratio\_gt\_threshold}.
+
+% TODO: figures/i1_fig6_chirality_wall_tree.png must be regenerated from
+% fig_i1_chirality_wall_tree in src/core/visualizations.py before this
+% caption is accurate. The rendered leaf labels are paraphrases
+% ("Sublemma A.1") rather than declaration names, and the rendered
+% subtitle asserts a single-batch Aristotle closure for which no run
+% record exists. The tree below is the one the module actually has.
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.95\linewidth]{figures/i1_fig6_chirality_wall_tree.png}
-\caption{Chirality-wall axiom decomposition: 9 sub-lemmas across
-6 labeled leaf groups. The root
-\texttt{sm\_no\_nu\_R\_ewbg\_doubly\_forbidden}
-(carmine) is a 50-term monolithic goal, intractable to a single
-Aristotle batch. It decomposes into two obstructions (amber):
-the $\mathbb{Z}_{16}$ chirality wall (Pillars A--C, sage) and the
-crossover side. The 6 visibly-labeled leaf rectangles (steel
-blue) cover the 9 sub-lemmas at $\leq 12$ terms each (Pillars A
-+ B + C contribute 1, 1, 1 directly-labeled leaves and the
-crossover side contributes 3, with the remaining 3 sub-lemmas
-collapsed into Pillar groupings for visual compactness; the
-full sub-lemma list is in the project's
-\texttt{EWBaryogenesisChiralityWall.lean}). All 9 closed in a
-single Aristotle priority batch; the specific leaf
-\texttt{ewbg\_forbidden\_iff\_wall\_intact\_or\_not\_viable}
-also surfaced the implicit fourth-pillar sphaleron-rate
-hypothesis described in the prose.}
+\caption{Decomposition of the chirality-wall exclusion. The root
+\texttt{sm\_no\_nu\_R\_ewbg\_doubly\_forbidden} (carmine) is a
+conjunction over two fermion contents whose unfolded form spans two
+$\mathbb{Z}_{16}$ decision problems, two copies of the
+phase-transition condition, and the four bundled positivity fields of
+\texttt{EWFiniteTParams}. It splits into two independent obstructions
+(amber): an intact chirality wall at anomaly $45$, which excludes
+baryogenesis for any transition order, and a crossover transition at
+anomaly $48$, which excludes it for any wall state. Each branch
+resolves into named module lemmas (steel blue), none of whose proof
+bodies exceeds eleven tactic lines. The biconditional
+\texttt{ewbg\_forbidden\_iff\_wall\_intact\_or\_not\_viable} is the
+leaf that made the sphaleron-rate dependency visible.}
 \label{fig:chirality_wall_tree}
 \end{figure}
 
-The structural-axiom classification did more than reduce
-intractable to tractable: it surfaced a hidden dependency. One of
-the sub-lemmas (the
-\texttt{ewbg\_forbidden\_iff\_wall\_intact\_or\_not\_viable}
-biconditional) revealed that a fourth-pillar hypothesis on
-\emph{sphaleron-rate suppression} was implicitly assumed but not
-recorded in \texttt{AXIOM\_METADATA}. The audit closed
-not by adding a new axiom but by promoting the implicit
-dependency to an explicit \emph{theorem}
-(\texttt{SKEFTHawking.EWBaryogenesisChiralityWall.sphaleronSuppression\_le\_one}
-on lines~106--114 of \texttt{EWBaryogenesisChiralityWall.lean},
-proving that the suppression factor lies in $[0,1]$ under the
-broken-phase-or-trivial-unbroken-phase hypothesis $v/T \geq 0$,
-within the surrounding \texttt{def sphaleronSuppression}
-infrastructure).
-A monolithic proof would have hidden this dependency
-indefinitely; the decomposition forced it into the open.
+The payload of this case is not that the decomposition worked. It is
+what the decomposition exposed. One of the sub-lemmas,
+\texttt{ewbg\_forbidden\_iff\_wall\_intact\_or\_not\_viable}, is a
+biconditional rather than an implication: it asserts that every failure
+of \texttt{EWBGViable} is attributable to the wall, to the transition,
+or to both, and that there is no third failure mode. Writing that
+statement out is what raised the question the monolith never had to
+answer. Exhaustivity holds only relative to what the compound predicate
+records, and the sphaleron rate, which is the physical quantity the
+whole decoupling criterion is about, appears in
+Eq.~\eqref{eq:ewbgviable} nowhere except as the free threshold
+parameter $c$. Nothing in the predicate constrains the rate itself. The
+biconditional is therefore true as stated only under a further
+assumption about the sphaleron rate, and that assumption had no entry
+in any of the project's assumption registries.
 
-%% ─────────────────────────────────────────────────────────────────
-%% §6 Fourteen-stage pipeline
-%% ─────────────────────────────────────────────────────────────────
+The audit closed it by proving it rather than by declaring it. The
+module defines the dimensionless suppression factor
+$\Sigma(v,T) = e^{-v/T}$ explicitly, as a structural stand-in whose
+limits are the physically meaningful content ($\Sigma \to 0$ deep in
+the broken phase, $\Sigma \to 1$ in the symmetric phase), and then
+bounds it from both sides:
+\texttt{sphaleronSuppression\_pos} gives $0 < \Sigma(v,T)$ at any
+finite $(v,T)$, and
+\texttt{sphaleronSuppression\_le\_one} gives $\Sigma(v,T) \leq 1$
+whenever $v/T \geq 0$. A factor that is strictly positive and never
+exceeds unity cannot open a failure channel of its own, so the rate
+enters the exclusion only through the threshold, which is exactly what
+the biconditional's exhaustivity requires. The threshold itself stays a
+free real parameter in every statement in the module, including the
+root theorem; its numerical value lives in the project's
+experimental-parameter table and never inside a theorem. Consistent
+with that resolution, no sphaleron-rate hypothesis appears today in
+\texttt{AXIOM\_METADATA}, in \texttt{PLACEHOLDER\_THEOREMS}, in
+\texttt{HYPOTHESIS\_REGISTRY} or in \texttt{BORDISM\_HYPOTHESES}: there
+is nothing left to record, because the assumption became two theorems.
+The module ships zero new axioms.
+
+The general point is that an implicit dependency is invisible in
+proportion to the size of the statement that hides it. A monolithic
+proof of the root theorem would have been correct, would have passed
+every mechanical gate the pipeline applies, and would have carried the
+same unexamined assumption indefinitely, because no gate in the pipeline
+can ask a question about an assumption nobody has named. Decomposition
+is what turns an implicit assumption into a statement, and a statement
+is something a reviewer can refuse.
+
+What the root theorem does still assume, it assumes visibly. Exactly
+one tracked hypothesis appears in its type: \texttt{H\_KLRS\_SM\_Crossover}~$p$,
+the proposition that the fully resummed Standard-Model transition is a
+crossover at the physical Higgs mass. This is an external lattice
+result and is not derived here. It is recorded in
+\texttt{HYPOTHESIS\_REGISTRY} (\texttt{src/core/constants.py}), graded as
+an external-boundary input of hard eliminability and naming this
+theorem among its dependent theorems, and its evidence is quantitative:
+the four-dimensional lattice analysis of the SU(2)-Higgs model places
+the endpoint of the first-order line at $m_H = 66.5 \pm 1.4$~GeV and
+transforms it perturbatively to $m_H = 72.4 \pm 1.7$~GeV for the full
+Standard Model, above which only a rapid crossover is
+seen~\cite{CsikorFodorHeitger1999}; the earlier three-dimensional
+analysis had bracketed the endpoint between $70$ and $95$~GeV, most
+likely near $80$~GeV~\cite{KLRS1996}. Against the observed $m_H =
+125.20$~GeV the margin is wide, and the module states it as a
+falsifiable arithmetic claim rather than a remark:
+\texttt{sm\_klrs\_overshoot\_ratio\_gt\_threshold} proves
+$1.5 < 125.20 / 72.4$ by \texttt{norm\_num}.
+
+Three registries carry the project's assumption inventory, and which
+one an assumption lands in is itself a claim that has to be checked.
+\texttt{AXIOM\_METADATA} holds project-local axioms and their retirement
+record, graded by eliminability; \texttt{HYPOTHESIS\_REGISTRY} holds
+tracked propositions that consumers take as explicit hypothesis
+parameters; \texttt{PLACEHOLDER\_THEOREMS} holds declarations proved
+\texttt{True := trivial}, which Invariant~9 forbids any proof, formula
+or paper claim from leaning on; \texttt{BORDISM\_HYPOTHESES} holds
+bordism-theoretic inputs deferred to future Mathlib infrastructure. The
+grades are not static. The entry \texttt{gapped\_interface\_axiom} was a
+live project-local axiom and is now graded \texttt{closed}, because the
+axiom was replaced by a tracked proposition (\texttt{TPFConjecture} in
+\texttt{lean/SKEFTHawking/SPTClassification.lean}) that every consumer
+takes as an explicit hypothesis parameter. The substantive conjecture is
+unchanged; what changed is that it is now visible in four type
+signatures instead of silently present in every closure below the
+axiom. That is the same move as the sphaleron case one step further
+along: name the assumption, then discharge it if you can.
 
 \section{The Fourteen-Stage Wave Execution Pipeline}
 \label{sec:pipeline}
@@ -1830,6 +2196,16 @@ arXiv:1805.09331.
 effective field theory for stable and causal relativistic
 hydrodynamics,'' \emph{JHEP}\ \textbf{01} (2024) 162,
 arXiv:2309.00511.
+\bibitem{CsikorFodorHeitger1999} F.~Csikor, Z.~Fodor and
+J.~Heitger, ``Endpoint of the hot electroweak phase transition,''
+\emph{Phys.\ Rev.\ Lett.}\ \textbf{82} (1999) 21,
+arXiv:hep-ph/9809291.
+
+\bibitem{KLRS1996} K.~Kajantie, M.~Laine, K.~Rummukainen and
+M.~Shaposhnikov, ``Is there a hot electroweak phase transition at
+$m_H \gtrsim m_W$?,'' \emph{Phys.\ Rev.\ Lett.}\ \textbf{77} (1996)
+2887, arXiv:hep-ph/9605288.
+
 \end{thebibliography}
 
 

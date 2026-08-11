@@ -8,7 +8,7 @@
     },
     {
       "name": "SKEFTHawking.TetradGapEquation.gap_solution_monotone",
-      "claims": "§4 WORKED CASE 2 — the corrected statement. The folklore claim gap_solution_bounded is FALSE (Aristotle produced the saturating counterexample at Delta = Lambda); what survives is monotonicity in G, plus a tracked-hypothesis bound naming the extra assumption",
+      "claims": "§4 WORKED CASE 2 — the corrected statement. The target theorem gap_solution_bounded is FALSE and was never a live declaration (it survives only as a commented block at TetradGapEquation.lean:311-325); Aristotle returned the saturating counterexample at Delta = Lambda. What ships is monotonicity in G. The sub-cutoff assumption is NOT carried as a bound on G: it is carried downstream as the tracked hypothesis H_ScalarChannelIsTetradBifurcationOutput in ScalarRungInterpretation, which bounds the condensate VEV, not the coupling.",
       "declared": "2026-08-07"
     },
     {
@@ -70,6 +70,6 @@
     "ceiling": 38,
     "source": "PAPER_STRATEGY.md §6"
   },
-  "compiled_pages": 23,
+  "compiled_pages": 28,
   "compile_gate_ok": true
 }
