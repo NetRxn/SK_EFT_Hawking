@@ -415,14 +415,34 @@ claims review and before Stage 9.**
 
 ### Sub-gate: claims review
 
-Run `skeft-qa:claims-reviewer`. It cross-references the `.tex` against `PAPER_DEPENDENCIES`,
-`formulas.py`, `PARAMETER_PROVENANCE`, `CITATION_REGISTRY` and `ARISTOTLE_THEOREMS`, and reports:
+Run `skeft-qa:claims-reviewer`. It cross-references the `.tex` against, by source file:
 
-- **FAIL** — a numerical value disagrees with computation by >0.5%
-- **FAIL** — a "formally verified" claim whose theorem is missing or has a `sorry`
+| source | registries read |
+|---|---|
+| `src/core/formulas.py` | the canonical evaluators, for recomputation |
+| `src/core/constants.py` | `ARISTOTLE_THEOREMS`, `PLACEHOLDER_THEOREMS`, `HYPOTHESIS_REGISTRY`, `AXIOM_METADATA`, `EXPERIMENTS` |
+| `src/core/provenance.py` | `PARAMETER_PROVENANCE`, `PAPER_DEPENDENCIES` |
+| `src/core/citations.py` | `CITATION_REGISTRY` |
+| `lean/lean_deps.json` | live declaration registry (theorem-name resolution) |
+
+⚠️ **Listed by FILE, not by registry, and deliberately.** This list previously named four
+registries plus `formulas.py` — mixed granularity that made `constants.py` look covered
+because `ARISTOTLE_THEOREMS` was named, while the four other registries the agent reads
+from that same file went unlisted. It left the placeholder FAIL below stating a gate whose
+input the doc never named. If you add a registry the reviewer reads, add it to its file's
+row here.
+
+- **FAIL** — a numerical value disagrees with computation by >0.5% (Class IA)
+- **FAIL** — a "formally verified" claim whose theorem is missing or has a `sorry` (Class TN)
 - **FAIL** — a "formally verified" claim citing a **placeholder** theorem, or a result presented as
-  kernel-verified that is only a concrete-instance or statement-level stub (Invariant 9)
+  kernel-verified that is only a concrete-instance or statement-level stub (Invariant 9; Class PC,
+  keyed on `PLACEHOLDER_THEOREMS`)
 - **FAIL** — a cited DOI that does not resolve, or resolves to the wrong paper
+- **FAIL** — a toolchain pin quoted in prose that disagrees with `lean-toolchain` / `lakefile.toml`
+  (Class TP)
+- **FAIL** — a tracked hypothesis carried by a cited result but not disclosed in the draft
+  (Class HD, keyed on `HYPOTHESIS_REGISTRY`)
+- **FAIL** — a prose cardinality that disagrees with the structured object it describes (Class SD)
 - **WARN** — a parameter referenced but not human-verified (blocks submission)
 - **WARN** — a qualitative claim without computed support
 
