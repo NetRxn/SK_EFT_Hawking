@@ -39,7 +39,7 @@ dependencies = [
     "markupsafe>=3.0",      # dashboard XSS escaping; was reachable only via flask/jinja2
     # Datastar SDK — dashboard reactive layer (replaces HTMX/vanilla-JS).
     # Reference: docs/references/Datastar_Dashboard_Reference.md
-    "datastar-py>=0.5",
+    "datastar-py>=1.0.2",
     # Provenance knowledge graph (database connectivity)
     "psycopg[binary]>=3.2",
     # HTTP client (citation primary-source fetcher; arXiv + Crossref + ADS)
