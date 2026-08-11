@@ -69,12 +69,16 @@ code, and will not read a second sentence to understand the first.
 ## Before handing off
 
 ```bash
-cd papers/<X> && pdflatex paper_draft.tex          # must be clean
+uv run python scripts/compile_bundle_pdf.py <X>   # must be clean
 uv run python scripts/validate.py \
     --check bundle_prose_em_dash_free \
     --check bundle_reader_facing_voice \
     --check bundle_manuscript_length
 ```
+
+Compile through `compile_bundle_pdf.py`, never `pdflatex` inside `papers/<X>/`. An in-place
+compile clobbers `paper_draft.{aux,log,synctex.gz}`, and a reviewer running concurrently then
+judges your draft by a `.log` that belongs to someone else's pass.
 
 All three are deterministic and all three must pass. They are a floor, not a review: they
 confirm nothing prohibited is present, and say nothing about whether the argument carries.

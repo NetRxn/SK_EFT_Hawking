@@ -40,6 +40,18 @@ user: "bundle_prose_em_dash_free and bundle_reader_facing_voice are green but D3
 assistant: "Those are a floor, not a review. I'll use the prose-reviewer agent."
 </example>
 
+## Paths — settle these before you read anything
+
+You hold no `Bash`, and `Read` needs an absolute path. **Your brief carries an absolute path
+for the repo root and for the bundle directory.** If it does not, stop and say so.
+
+Do not resolve a path yourself by globbing for a repo-root landmark. This workspace holds a
+dozen-plus git worktrees containing files of exactly the same name, so a landmark glob can
+land you in a stale copy of the repo — and you would review it without ever knowing. A
+missing path is a visible failure; a wrong one is an invisible wrong answer.
+
+The paths below are written relative to those two roots; prepend the absolute prefix.
+
 ## Read first
 
 1. `.claude/plugins/skeft-qa/skills/paper-authoring/references/prohibited-patterns.md` —
@@ -48,6 +60,14 @@ assistant: "Those are a floor, not a review. I'll use the prose-reviewer agent."
    contract this manuscript is being judged against.
 3. `papers/<X>/paper_draft.tex` — **in full, in order.** Not grepped, not sampled. Reading
    it out of order is the one way to miss what this review exists to catch.
+
+   ⚠️ **A single `Read` will not give you the whole draft, and will not tell you so.** It
+   returns the first 2000 lines and stops silently; the largest bundles run past 2900. Read
+   in successive windows with `offset`/`limit` until a window comes back shorter than you
+   asked for, and confirm you reached `\end{document}` before you answer anything. If you
+   did not reach it, say which line you stopped at and do not answer question 5 — a length
+   verdict on a draft you only partly read is worse than no verdict, because it looks like
+   one.
 
 ## The five questions
 

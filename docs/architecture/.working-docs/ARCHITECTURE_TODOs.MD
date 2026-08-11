@@ -2415,3 +2415,42 @@ was demonstrated by the reviewer, not inferred.
    checks" against 80 registered, "4,823 pytest cases" against 6,117 — and omits
    `verify_scope.py`. It sits outside `docs/architecture/`, so no machine guard reaches
    it. This is the largest of the six and the only one a reader is likely to act on.
+
+### D42 — skeft-qa plugin-dev review residue, 2026-08-11 (non-blocking)
+
+Two fresh-context plugin-dev reviewers (`plugin-validator`, `skill-reviewer`) ran as a
+pre-install gate before refreshing the `skeft-local` marketplace cache. Every Critical and
+Major finding was fixed in that commit. These five were filed instead — each is real, none
+changes whether a component works today.
+
+1. **`commands/orient.md` reads the marker with bare `cat`.** It is the only harness command
+   step not routed through `uv run`, and `Bash(cat:*)` is not in the allow list, so it
+   prompts. Route it through `harness_common_cli.py` instead of widening permissions.
+2. **`allowed-tools` uses two spellings of the same grant.** Plugin skills/commands write
+   `Bash(uv run *)`; `settings.local.json` writes `Bash(uv run:*)`. Determine which form the
+   skill-frontmatter matcher actually honors *before* normalizing — picking the wrong one
+   silently removes a grant rather than erroring, and `harvest`'s grant was already widened
+   in this commit on the assumption that the space form matches by prefix.
+3. **`agents/lean-worker.md` is the only agent with no `tools:` key**, so it inherits the full
+   set including `WebSearch`/`WebFetch`/`AskUserQuestion`. It genuinely needs Edit/Write/Bash
+   and the Lean MCP, so the grant is right — but an unstated grant means a worker can trip the
+   egress guard or try to ask the user mid-loop. Declare it.
+4. **Four agents have no "When to invoke" section** — `coach`, `lean-worker`,
+   `harvest-extractor`, `harvest-consolidator`. All four are dispatched programmatically by a
+   hook or a skill, so the practical risk is low, but they are auto-discovered and therefore
+   model-selectable. Two lines each ("dispatched by X; do not invoke directly") closes it.
+5. **`skills/harvest/SKILL.md` is the densest body on the surface with no `references/`.**
+   Well under the word bar, so not a blocker; steps 0b and 2 are mechanics needed only once
+   the skill is already running, and are the natural extraction.
+
+**Two findings were REFUTED by measurement — do not re-file them:**
+
+- *"`Agent` in `allowed-tools` should be `Task`."* The subagent tool's canonical name IS
+  `Agent` in the installed version; `Task` is the retained alias. One reviewer verified this
+  against the binary, the other guessed from an older convention. `wave-close` and `harvest`
+  are correct as written.
+- *"`paper-drafter`'s 'roughly a third of cached bibkeys have no PDF' is wrong."* The two
+  reviewers gave 36% and 20–25%; neither measured what the sentence claims. Counting distinct
+  bibkeys across `Lit-Search/Phase-*/primary-sources/`: **146 of 493 = 30%**. "Roughly a
+  third" is accurate. The number is not load-bearing either way — the read-in-full rule is
+  unconditional — but the sentence is right and should stay.

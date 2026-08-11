@@ -411,9 +411,11 @@ and another while reviewing.
 
 Draft either in-context or by dispatching `skeft-qa:paper-drafter`, one agent per **disjoint**
 section, each with a brief. The lead owns the outline, the argument's spine and integration. A
-drafted section that cites prior work is written against that work **read in full for the portion
-being written** — no layer below catches misrepresented prior art, because each checks that a
-source resolves, never that the prose is faithful to it.
+drafted section that cites, quotes **or characterizes** prior work is written against that work
+**read first** — the full text of every section, table and equation carrying the claim being made,
+never an abstract in place of one. No layer below catches misrepresented prior art, because each
+checks that a source resolves, never that the prose is faithful to it. This outranks the brief: a
+brief that asks for a section faster than the reading allows does not license drafting ahead of it.
 
 ### Sub-gate: read-through (runs first)
 
