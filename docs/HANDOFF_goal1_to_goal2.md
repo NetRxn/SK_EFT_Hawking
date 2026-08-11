@@ -143,9 +143,31 @@ equation, figure) so the claims-reviewer and Stage 13 have something checkable t
 
 ### Sequence
 
-**Item 0 — ExtractDeps declaration classification** (own branch, own review; see §12).
-Do this first: it removes a whole defect class rather than guarding it, and every later item
-reads the artifact it fixes.
+**Item 0 — ExtractDeps declaration classification** (see §12). **DEFERRED 2026-08-11 — do NOT
+do this first.** The sentence that used to stand here justified the ordering by saying the item
+"removes a whole defect class rather than guarding it." §12, written later and with
+measurements, retracts exactly that: `isCompilerSuffix` is a hardcoded suffix list because "no
+single predicate covers the family", and several of the 2,405 unclassified declarations will
+need new suffix legs in Lean too — **the item relocates suffix matching into the producer, it
+does not remove it.** Two sections of one document disagreed, and this one was the stale half.
+
+What survives is default-correctness, and goal 1 already banked most of it: `autogen_index` is
+the single owner and `theorem_census_agrees` catches a seventh consumer. Item 0 buys
+detect → prevent, and pays with a schema change to a tracked artifact, a full `.lake` rebuild
+invalidating every memo fingerprint, and 8 test files where a fixture hardcoding
+`kind: "theorem"` changes meaning **silently** — the "fix breaks a neighbour" shape that took
+goal 1's closure loop eleven rounds.
+
+Deferred, not closed: we have not shown it is not worth doing, only that it is not worth doing
+FIRST. Revisit if `theorem_census_agrees` ever fires in anger, or if a seventh naive consumer
+appears. Until then the guard is the mechanism, which §12 itself allows as a legitimate outcome.
+
+**Item 1 is therefore the entry point, and it started 2026-08-11 with I1.** Its own rationale is
+what makes it the right pilot, and it got stronger after the plugin work: `paper-drafter` and
+`prose-reviewer` had never been run for real, and three load-bearing things in them were
+repaired the same day (an absolute-path contract, a pagination contract for drafts past 2000
+lines, and three seams in the citation rule). Piloting one bundle validates the harness;
+fanning out first would multiply an unvalidated harness across 21 manuscripts.
 
 **Item 1 — the three infrastructure bundles, I1 → I2 → I3.** Smallest floors (15 / 9 / 9 pp)
 and the most mechanical content, so they exercise the full Stage-10 machinery on low-stakes
