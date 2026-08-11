@@ -151,9 +151,19 @@ def check_bundle_figure_integrity() -> CheckResult:
         # Reproduced directly before fixing, not inferred from the fallback firing.
         _sys.modules[_spec.name] = _rf
         _spec.loader.exec_module(_rf)
+        # ⚠️ The prefix set is DERIVED from the bundle roster, not typed.
+        # It was hardcoded to ("d11_", "d12_") until 2026-08-11, which meant the
+        # gate examined two bundles' figures and silently examined ZERO of every
+        # other bundle's -- while still reporting PASS for them. FIGURE_REGISTRY
+        # already carried the entries (I1 six, I2 five); only this filter hid
+        # them. Deriving the prefixes from BUNDLE_CODES makes a newly-registered
+        # bundle figure guarded on arrival, which is the property the surrounding
+        # comment already claimed.
+        from bundle_registry import BUNDLE_CODES        # single owner of the roster
+        _prefixes = tuple(f"{code.lower()}_" for code in BUNDLE_CODES)
         _derived: dict[str, list] = {}
         for fs in _rf.FIGURE_REGISTRY:
-            if not fs.name.startswith(("d11_", "d12_")):
+            if not fs.name.startswith(_prefixes):
                 continue
             _derived.setdefault(fs.name.split("_")[0].upper(), []).append(
                 (fs.name, fs.function))
@@ -221,7 +231,16 @@ def check_bundle_figure_integrity() -> CheckResult:
                 import os as _os   # hashlib/tempfile are module-level (audit QI-11)
                 with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
                     tmp_path = tmp.name
-                fig.write_image(tmp_path, scale=3)
+                # ⚠️ Must match scripts/review_figures.py's render rule EXACTLY, or
+                # drift is unclearable by construction. This was `scale=3`
+                # unconditionally while the renderer uses scale=2 for any figure
+                # whose declared canvas is >= 1000px wide, so every wide figure
+                # reported permanent drift that no regeneration could clear —
+                # a warning that cannot be acted on trains readers to ignore it.
+                _fw = fig.layout.width or 1200
+                _fh = fig.layout.height or 800
+                fig.write_image(tmp_path, width=_fw, height=_fh,
+                                scale=2 if _fw >= 1000 else 3)
                 fresh = hashlib.sha256(Path(tmp_path).read_bytes()).hexdigest()
                 shipped = hashlib.sha256(png.read_bytes()).hexdigest()
                 _os.unlink(tmp_path)

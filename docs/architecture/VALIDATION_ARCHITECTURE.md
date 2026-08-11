@@ -334,6 +334,16 @@ is that coverage is **per-artifact and partial** rather than corpus-wide:
   a fresh render and asserts typeset legibility — real assertions, but structural. The
   `physics_checks` each `FigureSpec` declares (`mach_crosses_one`, `T_H_dominates`, …) are read
   only to be copied into the review manifest for a downstream LLM; nothing evaluates them.
+  Its **reach** is now the whole roster: the bundle prefixes it selects on are derived from
+  `bundle_registry.BUNDLE_CODES`, so a newly-registered bundle figure is guarded on arrival.
+  Until 2026-08-11 that prefix set was a hand-written literal naming a couple of bundles, so
+  the check examined those bundles' figures and silently examined **none** of any other
+  bundle's while still reporting PASS for them — `FIGURE_REGISTRY` already carried the
+  entries; only the filter hid them. Its fresh-render call must also stay identical to
+  `scripts/review_figures.py`'s render rule (honour the figure's declared canvas;
+  `scale=2` at width ≥ 1000, else `scale=3`). It did not, and every wide figure reported drift
+  that no regeneration could clear — a warning that cannot be acted on teaches readers to
+  ignore the ones that can.
 - **Paper-quoted numbers are recomputed, for a few artifacts.** `paper_table` parses the
   *rendered* table the draft actually `\input`s and holds every cell to the canonical evaluator
   at the cell's own displayed precision; `d1_hierarchy_table` and `f_hierarchy_claims` do the
