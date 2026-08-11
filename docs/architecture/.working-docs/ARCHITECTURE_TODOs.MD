@@ -2623,3 +2623,34 @@ discard the marker and emit both figures.
 not the 25 of `78dcc5f4` that the draft called the record. And the lead's own pre-brief caution was
 wrong — "32 references to 78dcc5f4" was a raw grep including section-comment lines; the true entry
 count is 25, so the draft's original figure was right. Count entries, not grep hits.
+
+### D47 — I1 narrated a FABRICATED seed anecdote in its own anti-fabrication section
+
+**Severity: highest of the I1 wave.** I1 §10 (the adversarial-reviewer section) described the
+April 2026 review that motivates the whole pattern as having found "one paper cited a
+graph-neural-network arXiv ID where the intended citation was a torsion-cosmology paper", and
+claimed a first-machine-checked assertion "proved to have an unrecognized prior art in Coq".
+
+Neither is in the record. `papers/AutomatedReviews/2026-04-10/CitationReview-01.md` Tier 1 lists
+three wrong-target citations and none is that pair: an **infrared imaging atlas of active galactic
+nuclei** cited for lattice gauge theory, an **extreme-multi-label-classification** paper cited for
+polariton quasinormal modes, and an **MRI birdcage-coil** paper cited for non-Abelian gauge
+structure. On prior art, `ComprehensiveReview-01.md:343,610` says the priority claims "require at
+minimum a search of Mathlib, AFP, Coq's Mathematical Components, and Agda's standard library" —
+**the search was never run and no prior art was ever found.** "I could not look" had been
+converted into "there is something there", which is the exact collapse the reviewer's own class-5
+rule forbids.
+
+So a manuscript about detecting fabricated citations carried a fabricated anecdote in the section
+teaching that detection. It had also propagated to the **introduction, line 138** ("an unrelated
+graph-neural-network paper"), which is outside every drafted section and is LEAD work.
+
+Two lessons worth more than the fix. First, the anecdote was plausible, self-consistent and
+thematically perfect — which is what fabrications are. Nothing but opening the cited record
+distinguishes it, and no deterministic check reaches it: the citation-integrity gate validates
+citation METADATA, and this claim cites no work at all, it narrates a past event. Second, it
+survived every prior review of this manuscript.
+
+**Also found, unrelated but real:** the agent definition names gate 9 "CountFreshness" while
+`docs/READINESS_GATES.md` renamed it "NumericalFreshness" and widened it to quantity literals.
+`READINESS_GATES.md` makes updating the agent part of a gate change, so the agent file is stale.
