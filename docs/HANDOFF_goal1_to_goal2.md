@@ -109,12 +109,37 @@ review and before Stage 9, so per bundle the real sequence is:
 Stage 10 is not a step between two reviews; it is the drafting stage and it *contains* the
 first two sub-gates. Most of goal 2's labour lives there.
 
-### What the agents do and do not do
+### How the drafting work is split
 
-The four reviewers are **findings-only by design** — Stage 13 says so explicitly. No agent
-writes physics. `skeft-qa:paper-authoring` is a *skill*: drafting guidance for the lead, not an
-autonomous drafter. Plan the manuscript work as lead labour reviewed by agents, not as agent
-output.
+The four reviewers are **findings-only by design** — Stage 13 says so explicitly, and the
+separation of fix and review roles is the whole reason they exist. But drafting itself **does
+parallelize**, and the plugin simply has no agent for it yet.
+
+`skeft-qa:paper-authoring` is a *skill*, so a subagent can load it. The working shape is the
+`lean-worker` pattern applied to prose: the lead owns decomposition, the outline and the
+argument's spine; N drafting agents each own a **disjoint section** against an explicit brief
+with the skill loaded; the lead integrates and owns coherence, strategy and correctness; the
+findings-only reviewers run after. Cross-bundle work is trivially independent, and within a
+bundle a lead-authored outline resolves the section dependencies — the same way the proof DAG
+was split across worktree slots.
+
+**What is missing is an agent definition and a brief template, not a capability.** Build them
+before Item 1 rather than drafting serially by default.
+
+⚠️ **HARD CONSTRAINT — a drafting agent that cites must read the source in full.** Any portion
+of a draft touching a citation requires reading the cited work itself for that portion; a
+summary, an abstract, or the `CITATION_REGISTRY` entry is not sufficient. Misquoted,
+misinterpreted or otherwise misleading prior art is the program's **lethal failure mode**: it
+is the one class that survives every downstream layer, because the layers check that a source
+*exists and resolves*, never that the prose faithfully represents it —
+
+- Invariant 11 / `citation_primary_sources_present` asserts a cached primary source is present;
+- the claims-reviewer FAILs a DOI that does not resolve or resolves to the wrong paper;
+- Stage 13 makes citation findings BLOCKER at submission, no exceptions.
+
+None of those can read the paper and judge fidelity. Put the source path in every brief, require
+the agent to read it, and require quoted or paraphrased claims to carry the location (table,
+equation, figure) so the claims-reviewer and Stage 13 have something checkable to land on.
 
 ### Sequence
 
