@@ -9,6 +9,10 @@ Guidance for writing manuscript prose in `papers/<bundle>/paper_draft.tex`. This
 generative counterpart to the `prose-reviewer` agent; both read the same prohibited-pattern
 reference so a rule cannot drift between writing and review.
 
+Read it either way you draft: the lead writing in-context, or a `paper-drafter` agent
+dispatched over one section. `paper-drafter` reads this file and the same reference by
+path, so the floor is identical however the prose is produced.
+
 **Read `references/prohibited-patterns.md` before drafting.** It is mandatory, not
 background, and it is short.
 
