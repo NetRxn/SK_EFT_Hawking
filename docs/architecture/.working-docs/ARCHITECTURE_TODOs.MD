@@ -2654,3 +2654,30 @@ survived every prior review of this manuscript.
 **Also found, unrelated but real:** the agent definition names gate 9 "CountFreshness" while
 `docs/READINESS_GATES.md` renamed it "NumericalFreshness" and widened it to quantity literals.
 `READINESS_GATES.md` makes updating the agent part of a gate change, so the agent file is stale.
+
+### D48 — `leviCivita_unique_of_isLeviCivita` is plausibly VACUOUS (strengthening required)
+
+`lean/SKEFTHawking/LeviCivita.lean:366-378`. The composed uniqueness theorem carries
+
+    h_smooth : ∀ (X Y Z : Π x : M, TangentSpace I x), MDiffAt (T% X) x ∧ … (six conjuncts)
+
+quantified over **every** section triple. Sections here are arbitrary dependent functions with no
+smoothness constraint, so on any manifold admitting a single section non-differentiable at `x` the
+hypothesis is FALSE and the theorem holds vacuously. Its docstring calls it "the substantive
+Wald §3.1 / Kobayashi-Nomizu IV.2.2 uniqueness theorem at bundle level".
+
+The substantive content is one level down: `koszul_identity_of_isLeviCivita` (:267-273) takes
+`X Y Z` as explicit parameters with per-triple hypotheses `hX hY hZ`, and the algebraic kernel
+`leviCivita_pointwise_unique_of_koszul` does the real work. Only the COMPOSITION over-quantified.
+
+This is CLAUDE.md's own preemptive-strengthening checklist, question 4 (trivial-discharge) and the
+defining-the-conclusion check, arriving from a direction the checklist did not anticipate: not a
+tautological conclusion, but a hypothesis strong enough to be unsatisfiable.
+
+**Fix:** restrict `h_smooth` to the triples the proof actually forms, so the composed statement is
+non-vacuous. Until then, any manuscript presenting it should cite the per-triple Koszul identity
+and the kernel, not the composition. I1 §12 as drafted already states the hypothesis shape and
+tells the reader to weigh the two statements separately, which is the honest interim treatment.
+
+⚠️ **Do not fix in the paper wave** — this is substrate, and the goal's filed-not-fixed rule holds.
+It is listed here because a strengthening pass, not a prose edit, is what closes it.
