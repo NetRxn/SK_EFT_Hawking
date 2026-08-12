@@ -248,18 +248,34 @@ widen gate coverage, and must not be read as though it does.
 
 ### D2 — Six lanes, with Lean and Python/Rust kept separate (C5)
 
-| lane | flow | gates |
-|---|---|---|
-| `lean` | atlas target → `lean4` skill + MCP loop → worktree slot → Aristotle fallback | `lake build` clean, zero `sorry`, kernel-purity, axiom allowlist |
-| `pyrust` | superpowers: brainstorm → spec → plan → subagent dev → pr-review-toolkit | pytest, `verify_scope`, dependency declaration |
-| `substrate` | theorem and implementation disagree | **both** gate sets, plus a test that fails before the fix |
-| `prose` | paper agents (drafter, claims, figure, prose reviewers) | Stage 9/10 sub-gates |
-| `research` | three-tier ladder (`Lit-Search` → `research-scout` → async dispatch) | cited report vetted by the lead before filing |
-| `infra` | three dispositions — see below | `validate.py` + plugin surface tests |
+| lane | scope | agent profile / flow | gates |
+|---|---|---|---|
+| `lean` | proof obligations on the physics substrate | atlas target → `lean4` skill + MCP loop → `lean-worker` in a `wtN` worktree slot → Aristotle fallback | `lake build` clean, zero `sorry`, kernel-purity, axiom allowlist |
+| `substrate` | the theorem and the implementation disagree | both of the above **and** the `pyrust` flow | **both** gate sets, plus a test that fails before the fix |
+| `pyrust` | the physics code — `src/`, `rust/`, their tests | superpowers: brainstorm → spec → plan → subagent dev → pr-review-toolkit | pytest, `verify_scope`, dependency declaration |
+| `prose` | manuscripts, figures, citations | paper agents (drafter, claims, figure, prose reviewers) | Stage 9/10 sub-gates |
+| `research` | a question the corpus cannot answer | three-tier ladder (`Lit-Search` → `research-scout` → async dispatch) | cited report vetted by the lead before filing |
+| `infra` | **the machine itself** — architecture docs, validation checks, the wave pipeline, the harness and plugin, the dashboard | three dispositions — see below | `validate.py` + plugin surface tests + §the dashboard exception |
 
-`substrate` is its own lane because a defect of that kind needs a Lean-side statement, a
-Python-side repair, and a regression test asserting the two agree — which is neither adjacent lane,
-and is the class that had no queue at all.
+⚠️ **`lean`/`substrate` and `infra` are different lanes because they need different agent
+profiles, not merely different gates** (operator clarification, 2026-08-12). Substrate work is
+proof work: it runs through the atlas, the `lean4` MCP loop and a `lean-worker` holding a build-
+isolated worktree slot. Infrastructure work is work on the machine that runs the physics —
+architecture, workflows, harness, plugin, dashboard — and routes to entirely different workers with
+entirely different context. A finding that says "the Lean bound and the solver disagree" and a
+finding that says "the dashboard shows a stale gate" have nothing operationally in common.
+
+`substrate` is its own lane, distinct from both of its neighbours, because a defect of that kind
+needs a Lean-side statement, a Python-side repair, and a regression test asserting the two agree.
+It is the class that had no queue at all.
+
+⚠️ **The `infra` lane's gate set is incomplete for dashboard work, and this ADR adds dashboard
+work.** `validate.py` and the plugin surface tests cannot see a rendering defect, and a Flask test
+client **never executes page JavaScript** — so a template that renders an empty panel passes every
+gate the `infra` lane currently names. Dashboard changes carry two additional gates: a
+**template-contract test** (the server hands the template the keys it reads) and a **real browser
+test** driving the rendered page. Without both, D15 ships surfaces whose emptiness is
+indistinguishable from a clean state, which is this repository's signature defect.
 
 **The `infra` lane carries three dispositions, not one.** The first draft collapsed the operator's
 specification to "fix when mechanically obvious, else queue to the operator", losing the urgency
@@ -343,6 +359,19 @@ blocked. A check whose population can be empty while it reports PASS does not co
 **This is the decision that closes the problem that started the thread.** Today only a BLOCKER
 flips a gate, which is why 17 REQUIRED findings routed nowhere.
 
+**It is also the mechanization of a standing operator pre-decision, not a new policy.** PD-5
+(`docs/dev-loops/PRE_DECISIONS.md`, operator-set 2026-07-29) already states that
+BLOCKER/MAJOR/IMPORTANT findings *"are never deferred"* and that *"deferral requires an explicit
+operator sign-off asked for as a question — never assumed."* That rule has bound the autonomous
+loop for two weeks and binds no gate. D9 gives it teeth.
+
+⚠️ **The ratchet is not a deferral, and the distinction is exactly PD-5's.** PD-5 governs a finding
+you have just found: fix it in-session, at full strength. The ratchet governs the *population*: it
+cannot grow. A new major in a bundle takes that bundle above its ceiling and blocks its green,
+which is PD-5 firing mechanically. The pre-existing 219 are visible debt with a down-only
+obligation, not tolerated deferrals — and making them visible is the first time they have been
+anything other than invisible.
+
 A `major`-severity open finding blocks `stage13_status: green` for its bundle. It does **not** block
 submission — `readiness_submission_gate` keeps its current, stricter meaning, so the two tiers stay
 distinguishable.
@@ -406,11 +435,45 @@ first draft's shape — hides exactly the findings the operator most needs to se
 Two values. `now` surfaces immediately and non-blockingly, and the loop keeps working everything
 else. `queue` enters the operator queue and the operator is told it is there.
 
-The queue aggregates every operator-owned decision in the system, which are currently scattered
-across at least six surfaces: `needs_operator` findings · ADR-010 §Open's operator-owned items ·
-axiom sign-off (Invariant #15) · apex declaration (ADR-010 §D5a) · `/skeft-qa:debrief`'s
-structurally human-only calls · the System-2 register's promotion tier. **Nothing aggregates them
-today**, which is why the operator cannot answer "what needs me?" without reading six files.
+**Four feeds, surfaced together but NOT merged** (operator ruling 2026-08-12: *"could be the same
+page, separate pages — not forcing aggregation/combination is fine"*). They have different stores,
+different semantics and different actions, and flattening them into one list would destroy the only
+property that makes each legible.
+
+| # | feed | store today | machine-readable? |
+|---|---|---|---|
+| **A** | **System-1 — publication findings needing a call.** `needs_operator` `ReviewFinding`s with their decision packages | `ReviewFinding` nodes; `docs/QI_REGISTER.md` | yes — though the QI derivation currently emits zero (D15) |
+| **B** | **System-2 — dev-loop and harness process findings** from `/skeft-qa:harvest`, at their tier | `docs/dev-loops/SYSTEM2_REGISTER.md` — **gitignored, local-only**, `## Open` with `### <slug>` entries | headings and tiers only; not derived |
+| **C** | **Decisions — PD-3's second legitimate stop.** A genuine operator-only call | **`.claude/dev-harness/blocked_questions.jsonl`** — already written by the `AskUserQuestion` guard on every blocked question | yes, and it exists today |
+| **D** | **Parked work** — authorized work waiting on an external release condition (D19) | 119 roadmap markdown files, prose | **no** |
+
+Feed B is read-only in the dashboard and stays that way: `/skeft-qa:debrief` is the structurally
+human-only governor for promotion, closure and misfiling, and a second write path would break the
+`_clamp_tier` guarantee that no other writer exceeds `agent-reviewed`.
+
+### The graduation loop — why feed C should shrink over time
+
+The operator's standing requirement: *"each time i weigh in on something, we should be able to
+generalize so that the pre-decisions list and operating principles expand over time and cover more
+cases."* **That mechanism already exists** — `/skeft-qa:debrief` graduates a recurring lesson into a
+standing pre-decision, and `PRE_DECISIONS.md` carries a `Graduated pre-decisions` section for
+exactly this. What is missing is not the mechanism but the **feedback signal**: nothing measures
+whether graduation is keeping up with asking.
+
+So feed C carries two things beyond the question itself:
+
+1. **A graduation affordance on resolution.** When the operator decides, the decision is a candidate
+   pre-decision, routed to `/debrief`. Deciding without considering generalization is how the same
+   class gets asked twice.
+2. **Ask-rate against graduation-rate, and recurring un-graduated classes.** A class asked more than
+   once with no graduated pre-decision behind it is a **process defect**, and it is exactly the
+   defect that makes the operator a bottleneck. Surfacing it is what turns "these should be rare"
+   from an aspiration into something observable.
+
+⚠️ PD-3 already constrains this feed at its source: *"Stops, ONLY two: a kernel-checked no-go, or a
+genuine user-only decision (ask once, keep shipping)."* Feed C should therefore be **short by
+construction**. A long feed C is not a busy operator; it is a loop escaping through the question
+channel, and the dashboard should make that readable as such.
 
 ### D13 — Do not build a second ledger-integrity check; extend or promote the one that exists (C9)
 
@@ -461,9 +524,57 @@ same time.
 | # | surface | what it answers | data |
 |---|---|---|---|
 | **S1** | **Finding drill-through** — gate-cell blockers resolve to the `ReviewFinding` itself: severity, lane, target, `verify`, closure record, `blocked_by` | *what exactly is blocking this, and what is its disposition?* | the 4,879 `FLAGS` edges, currently discarded at render; the 145 gates whose `blockers` are prose strings |
-| **S2** | **Portfolio Flow board** — one row per bundle, columns are the pipeline stages (draft → §7.5 read-through → S9 → S10 → S12 → S13 → submission), each cell showing position and what is in flight, overlaid with open findings **by lane** | *where is everything, and what is the bottleneck?* | `stage*_status` + gate states + D1's `lane` |
-| **S3** | **Operator Queue** — every decision waiting on the human, each with its decision package (D11), split by urgency (D12) | *what needs me, and what can I decide well right now?* | D12's aggregation |
+| **S2** | **Portfolio Flow board** — see below | *where is everything, and what is the bottleneck?* | `stage*_status` + gate states + `lane` |
+| **S3** | **Attention** — D12's four feeds, side by side, unmerged | *what needs me, and what can I decide well right now?* | four separate stores; see D12 |
 | **S4** | **Reading-while-blocked** — a margin marker in Paper Provenance v2 when a sentence's backing artifact carries an open finding | *I am reading §4; is anything under it broken?* | existing `BACKED_BY` chains + `FLAGS` |
+
+#### S2 — the Flow board, specified
+
+**Rows:** the bundle roster, from `bundle_registry.BUNDLE_CODES` — never a hand-written list
+(`bundle_registry_consistency` Leg C exists because that pattern is known-bad).
+
+**Columns**, restricted to stages that carry real machine state:
+
+| column | source | note |
+|---|---|---|
+| draft exists | `papers/<B>/paper_draft.tex` + compiled PDF | |
+| §7.5 read-through | *(no field today)* | the `prose-reviewer` mints nothing by design (C3) — renders as **not tracked**, never as passed |
+| S9 figure | `stage9_status` | |
+| S10 claims | `stage10_status` + presence of `claims_review.json` | absence is its own state (ADR-011 Phase 2d) |
+| S12 sync | freshness checks | |
+| S13 adversarial | `stage13_status` + `stage13_review_kind` + `stage13_redo_required` | only `full-adversarial` earns green |
+| submission | `readiness_submission_gate` + `blockers_open` | |
+
+⚠️ **The status enum has drifted and the board must not hide it.** `Phase7a_Roadmap.md` declares
+`pending | green | red`; the live corpus uses five values, three undeclared
+(`pending-redo`, `skeleton`, `not_started`). `BUNDLE_READINESS_HEATMAP.md` already surfaces non-enum
+values verbatim rather than rejecting them, and the board does the same — an unrecognised value
+renders as itself, never coerced to the nearest known state.
+
+**The overlay is the bottleneck signal:** open findings per bundle, broken down by `lane`. That is
+what turns "D3 is yellow" into "D3 is held by six substrate findings" — the difference between a
+status board and a routing instrument.
+
+⚠️ **Live agent activity has no store, and v1 does not invent one.** The operator's stated need
+includes seeing *"many agents at different stages"*. Nothing writes agent activity today: the
+worktree slots, the `/goal` markers and the harvest register each carry a fragment, none carries a
+roster of what is running. So **v1 shows queue depth and stage position, not live activity** — which
+answers *where is work piling up* but not *who is working right now*. Building an activity writer is
+a separate decision, named here rather than silently designed around; a board that implies live
+activity while rendering stale state would be this project's signature defect in a new place.
+
+#### S3 — Attention, specified
+
+Four panes, one page, **not merged** (D12). Each keeps its own store, vocabulary and actions:
+
+- **Publication** (feed A) — `needs_operator` findings with their decision packages, plus the QI
+  register's open items once its derivation is repaired.
+- **Process** (feed B) — the System-2 register's `## Open` items at their tier. **Read-only**;
+  `/skeft-qa:debrief` remains the sole governor, and its tier clamp must not gain a second writer.
+- **Decisions** (feed C) — from `blocked_questions.jsonl` and `needs_operator: now`, each with its
+  package, its graduation affordance, and the ask-vs-graduation signal (D12).
+- **Parked** (feed D) — D19's items with their release conditions, and whether each condition is
+  now satisfied.
 
 **Two repairs, which are prerequisites rather than extras:**
 
@@ -517,6 +628,49 @@ subagent-driven dev → review → docs synchronized in the same commit — to b
 than remembered. It is codified as a `skeft-qa` skill, with this ADR as its worked example,
 including its three correction rounds. The correction rounds are the most valuable part: a process
 that produces a specification nobody adversarially reviews produces this document's first draft.
+
+### D19 — Parked work is a first-class item with a release condition
+
+**This is the one genuinely new build in the set, and it is the operator's fourth category:**
+authorized work that is not blocked by a defect but is waiting on something external. The named
+example is the staged MLX RHMC campaign, which has been *"on hold awaiting results"* with no surface
+that says so.
+
+**The pattern already exists in the corpus, in four or five prose dialects, machine-readable by
+nothing.** Measured across the 119 roadmap files:
+
+- `**Status: ⏸ PARKED / HOLDING (2026-06-30).** Gated on 5q.G … until 5q.G's L2 clears` (Phase6CC)
+- `⏳ **PARKED as landmark** — eliminability: very_hard … NOT queued for spare capacity` (Phase6o′)
+- `If the paper has not yet been published, Track 1 is on hold pending publication` (Phase6s)
+
+Every one of them names a **release condition**. That is the whole insight: **a parked item is
+structurally a finding whose blocker is external to the finding graph.** It has a target, a lane, an
+owner and a condition; the only difference from D10's `blocked_by` is what the blocker points at.
+
+**Decision.** `blocked_by` accepts external release-condition tokens alongside finding ids:
+
+| token | released when |
+|---|---|
+| `run:<id>` | a production/campaign run completes — the MLX case |
+| `phase:<id>` | another phase or wave closes |
+| `pub:<citekey>` | an external publication becomes available |
+| `operator:<slug>` | a named operator decision is recorded |
+| `research:<task>` | a `Lit-Search/Tasks/` dispatch returns |
+
+A roadmap declares a parked item in one opt-in block; the extractor mints it into the same queue as
+every other item, and the release condition is evaluated on each build. When the MLX run lands,
+`run:<id>` is satisfied and the item becomes dispatchable **automatically** — which is precisely the
+operator's *"routing todos / blockers / findings back to the planning stages."*
+
+⚠️ **Roadmaps are NOT converted into finding streams.** The block is additive and opt-in; the 119
+existing files are untouched until someone parks something deliberately. Converting the roadmap
+layer wholesale would be a far larger change than this ADR should make, and roadmaps are where
+scope is declared — a different job from where work is tracked.
+
+⚠️ **This only partially addresses a pre-existing hole, and the ADR should not pretend otherwise.**
+`END_TO_END_MAP.md` §2 records that the roadmap layer is *entirely unmechanized* and calls it *"the
+single largest ungated seam in the map"*: no check references `docs/roadmaps/`, and no `*_close.md`
+files exist. D19 gives parked work a surface. It does not gate roadmaps, and the seam stays open.
 
 ---
 
@@ -606,8 +760,14 @@ the pilot's 117 was 152 at the time of this amendment.
 **P8 — Substrate lane wiring (D4).** Re-file D45–D49 as `lane=substrate` findings; document the lane
 in the pipeline; confirm `ARCHITECTURE_TODOs.MD` is back inside its charter.
 
-**P9 — The operator control surface (D15).** S1 through S4, plus the QI de-saturation and the sign-off
-persistence repair. `docs/DASHBOARD.md` corrected in the same commit.
+**P8b — Parked work (D19).** The roadmap opt-in block, the external release-condition tokens on
+`blocked_by`, and their evaluation. Independent of P9 and a prerequisite for its Parked pane.
+
+**P9 — The operator control surface (D15).** In two waves, because they carry different risk. **P9a:**
+S1, S4, the QI de-saturation and the sign-off persistence repair — all over data that already exists,
+all with a template-contract test and a browser test per D2's dashboard exception. **P9b:** S2 and S3,
+built thin against the specifications in D15 and iterated. `docs/DASHBOARD.md` corrected in the commit
+that makes each claim wrong.
 
 **P10 — Orchestration (D2, D10, D11, D16).** Route by lane, fan out on disjoint `target`, traverse
 `BLOCKED_BY` for the cascade, worktree per lane, close by running `verify`, terminate at a merged
@@ -646,10 +806,22 @@ evidence but not proof; D2 may move again.
 as a test that cannot fail, same mitigation: the command must fail against the unrepaired artifact
 at the time it is written.
 
-**Risk.** The dashboard surfaces (D15) are the least-specified part of this ADR, because the
-requirement is ergonomic and ergonomics resist specification. S1 and S4 are render changes over
-existing data and are low-risk. S2 and S3 are new views whose value depends on layout, and they
-should be built thin and iterated against real use rather than specified exhaustively in advance.
+**Risk.** S2 and S3 were the least-specified part of this ADR and are now specified (D15) at the
+operator's request. What remains genuinely uncertain is **layout**, not content: the columns, the
+feeds and their stores are pinned, and the arrangement is iterated against real use.
+
+**Risk — named rather than designed around.** *Live agent activity has no writer.* The Flow board
+shows queue depth and stage position; it cannot show which agents are running. A board that implied
+otherwise would be absence-rendered-as-success in a new location, so v1 states the limit on its face.
+Whether to build an activity writer is a separate decision.
+
+**Risk — a pre-existing hole D19 only narrows.** The roadmap layer stays unmechanized: no check
+reads `docs/roadmaps/`, and D19 adds an opt-in surface for parked work rather than gating the layer.
+`END_TO_END_MAP.md` §2 already calls this the single largest ungated seam, and it remains one.
+
+**Risk.** Feed B (System-2) reads a **gitignored** 840 KB local file. That is correct for a local
+dashboard, but it means the Process pane is not reproducible across machines and shows nothing on a
+fresh clone. Stated rather than discovered.
 
 ---
 

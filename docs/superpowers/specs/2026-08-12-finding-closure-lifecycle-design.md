@@ -316,19 +316,90 @@ follow-on.
 | # | surface | answers | built from |
 |---|---|---|---|
 | **S1** | **Finding drill-through.** Gate-cell blockers resolve to the `ReviewFinding` itself — severity, lane, target, `verify`, closure record, `blocked_by`, and the ledger record that closed it | *what exactly blocks this, and what is its disposition?* | the 4,879 `FLAGS` edges, currently discarded at render; the 145 gates whose `blockers` are prose |
-| **S2** | **Portfolio Flow board.** One row per bundle; columns are the pipeline stages (draft → §7.5 read-through → S9 → S10 → S12 → S13 → submission); each cell shows position and what is in flight, overlaid with open findings **by lane** | *where is everything, and what is the bottleneck?* | `stage*_status` + gate states + `lane` |
-| **S3** | **Operator Queue.** Every decision waiting on the human, each with its decision package, split by urgency | *what needs me, and what can I decide well right now?* | §3's aggregation |
+| **S2** | **Portfolio Flow board** — roster rows × pipeline-stage columns, overlaid with open findings by lane | *where is everything, and what is the bottleneck?* | `stage*_status` + gate states + `lane` |
+| **S3** | **Attention** — four feeds side by side, unmerged | *what needs me, and what can I decide well right now?* | four separate stores |
 | **S4** | **Reading-while-blocked.** A margin marker in Paper Provenance v2 when a sentence's backing artifact carries an open finding | *I am reading §4 — is anything under it broken?* | existing `BACKED_BY` chains + `FLAGS` |
 
-S1 and S4 are render changes over data already in the graph. S2 and S3 are new views whose value
-depends on layout; they are built thin and iterated against real use rather than specified
-exhaustively here.
+S1 and S4 are render changes over data already in the graph. S2 and S3 are new views; their content
+is pinned below and their **layout** is iterated against real use.
 
-**S3 aggregates what is currently scattered across at least six surfaces:** `needs_operator`
-findings · ADR-010 §Open's operator-owned items · axiom sign-off (Invariant #15) · apex declaration
-(ADR-010 §D5a) · `/skeft-qa:debrief`'s structurally human-only calls · the System-2 register's
-promotion tier. Nothing aggregates them today, which is why "what needs me?" currently requires
-reading six files.
+⚠️ **Dashboard work carries two gates the `infra` lane does not otherwise name.** `validate.py` and
+the plugin surface tests cannot see a rendering defect, and a Flask test client **never executes page
+JavaScript** — so a template rendering an empty panel passes everything. Every surface here ships
+with a **template-contract test** (the server hands the template the keys it reads) and a **real
+browser test** driving the rendered page. Without both, an empty surface is indistinguishable from a
+clean one, which is this repository's signature defect.
+
+### S2 — the Flow board
+
+**Rows** come from `bundle_registry.BUNDLE_CODES`, never a hand-written list.
+
+| column | source | note |
+|---|---|---|
+| draft exists | `papers/<B>/paper_draft.tex` + compiled PDF | |
+| §7.5 read-through | *(no field today)* | `prose-reviewer` mints nothing by design — renders **not tracked**, never passed |
+| S9 figure | `stage9_status` | |
+| S10 claims | `stage10_status` + `claims_review.json` presence | absence is its own state |
+| S12 sync | freshness checks | |
+| S13 adversarial | `stage13_status` + `stage13_review_kind` + `stage13_redo_required` | only `full-adversarial` earns green |
+| submission | `readiness_submission_gate` + `blockers_open` | |
+
+⚠️ The status enum has drifted — three of the five live values are undeclared (`pending-redo`,
+`skeleton`, `not_started`). An unrecognised value renders **as itself**, never coerced to the nearest
+known state, on the same discipline `BUNDLE_READINESS_HEATMAP.md` already follows.
+
+**The overlay is the bottleneck signal:** open findings per bundle, broken down by lane. That is what
+turns "D3 is yellow" into "D3 is held by six substrate findings".
+
+⚠️ **Live agent activity has no writer, and v1 does not invent one.** Nothing records what is running:
+the worktree slots, the `/goal` markers and the harvest register each hold a fragment. v1 shows
+**queue depth and stage position**, and says so on its face. A board implying live activity while
+rendering stale state would be absence-rendered-as-success in a new place.
+
+### S3 — Attention: four feeds, not one list
+
+Operator ruling: *"could be the same page, separate pages — not forcing aggregation/combination is
+fine."* Merging them would destroy the property that makes each legible.
+
+| pane | feed | store | state today |
+|---|---|---|---|
+| **Publication** | System-1 findings needing a call | `ReviewFinding` nodes + `docs/QI_REGISTER.md` | exists; QI derivation emits 0 until repaired |
+| **Process** | System-2 dev-loop/harness findings from `/skeft-qa:harvest` | `docs/dev-loops/SYSTEM2_REGISTER.md` — `## Open`, `### <slug>`, tiered | exists; **gitignored, local-only, 840 KB** |
+| **Decisions** | PD-3's second legitimate stop | **`.claude/dev-harness/blocked_questions.jsonl`** | **already written today** by the `AskUserQuestion` guard |
+| **Parked** | authorized work on an external release condition | roadmap prose across 119 files | **no machine-readable state — §5.1** |
+
+**Process is read-only.** `/skeft-qa:debrief` is the structurally human-only governor for promotion,
+closure and misfiling; a second write path would break the `_clamp_tier` guarantee that no other
+writer exceeds `agent-reviewed`.
+
+**The Decisions pane carries a graduation loop.** The mechanism the operator wants already exists —
+`/debrief` graduates a recurring lesson into a standing pre-decision, and `PRE_DECISIONS.md` has a
+`Graduated pre-decisions` section for it. What is missing is the **feedback signal**. So the pane
+adds: a graduation affordance on every resolution, and **ask-rate against graduation-rate**, with
+recurring un-graduated classes called out. A class asked twice with no pre-decision behind it is a
+process defect, and it is the specific defect that makes the operator a bottleneck.
+
+⚠️ PD-3 constrains this feed at source: *"Stops, ONLY two: a kernel-checked no-go, or a genuine
+user-only decision (ask once, keep shipping)."* **A long Decisions pane is not a busy operator; it is
+a loop escaping through the question channel**, and the pane should read as such.
+
+### 5.1 Parked work — the fourth feed has no store
+
+The named case is the staged MLX RHMC campaign, on hold awaiting results, with no surface saying so.
+The pattern exists across the roadmaps in several prose dialects and is machine-readable by nothing:
+`Status: ⏸ PARKED / HOLDING … Gated on 5q.G` · `PARKED as landmark … NOT queued for spare capacity` ·
+`on hold pending publication`.
+
+**Every one names a release condition**, which is the design: a parked item is structurally a finding
+whose blocker is external to the finding graph. `blocked_by` therefore accepts external tokens
+alongside finding ids — `run:<id>` · `phase:<id>` · `pub:<citekey>` · `operator:<slug>` ·
+`research:<task>` — evaluated on each build, so a satisfied condition makes the item dispatchable
+automatically. That is the "route todos and blockers back to planning" path.
+
+⚠️ Roadmaps are **not** converted into finding streams. The declaration is one opt-in block; the 119
+existing files are untouched until something is parked deliberately. And this narrows rather than
+closes a pre-existing hole: `END_TO_END_MAP.md` §2 records that the roadmap layer is entirely
+unmechanized, and it remains so.
 
 ### Two repairs, which are prerequisites
 
