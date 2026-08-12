@@ -1,5 +1,28 @@
 # Finding-Closure Lifecycle Implementation Plan
 
+> ⛔ **SUPERSEDED 2026-08-12 — DO NOT EXECUTE. Awaiting rewrite against the expanded spec.**
+>
+> An adversarial review and an intent-drift assessment found four defects that make this plan
+> unsafe to run as written:
+>
+> 1. **Task 6 builds a check that already exists.** `ledger_ids_resolve` is live in
+>    `scripts/validation/checks/graph_atlas.py`, pinned at 66 with zero headroom and
+>    mutation-verified. The proposed ceiling of 247 is the aggregate over three schemes and is
+>    *weaker*. See spec §4.
+> 2. **Task 8's `finding_has_verify` can never be True in production** — nothing here makes a
+>    finding carry a `verify` command, so it ships a leg that cannot fire.
+> 3. **Task 6 omits every registration obligation** — `_CANONICAL_ORDER` (whose absence *raises*),
+>    the re-export, `MUTATION_VERIFIED`, `CI_MIN_CHECKS_RUN`, `SURFACE_INVENTORY.md`.
+> 4. **Task 3→4 breaks its own interface**: `close()` still passes `verify` into `_append`'s
+>    `verified_by` slot.
+>
+> Measured while reviewing it, and worth carrying into the rewrite: **Task 1's `N_FLIPPED` is 0** —
+> all 231 currently-closed non-blocking findings already meet the bar.
+>
+> The plan also covered only the closure half of ADR-012. Operator ruling 2026-08-12: routing and
+> closure are one build. Current design:
+> [`../specs/2026-08-12-finding-closure-lifecycle-design.md`](../specs/2026-08-12-finding-closure-lifecycle-design.md).
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Give the supersession ledger a writer, so closing a finding is a script call that cannot mint a broken key, instead of a hand-edit that silently fails 29% of the time.
