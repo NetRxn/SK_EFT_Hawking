@@ -170,6 +170,84 @@ def test_memo_refuses_to_cache_a_non_measurement():
     assert guards, "_memo.py does not read `.measured` — the cache can store a non-measurement"
 
 
+def test_the_two_ratchet_legs_are_complements_over_one_id_set():
+    """⚠️ THIS DOCUMENT ASSERTED THIS AND IT WAS FALSE. The sentence said the two legs
+    partitioned the blocking population; measured, eight open blocking findings were in
+    neither. Both prior wordings were true-when-written or never true, and nothing re-read
+    them — which is the exact rot this file exists to stop.
+
+    DECIDER: the check's own source, via `ast`. Leg 2 must key on the ids the aggregation
+    RETURNED (`open_finding_ids`), never on the presence of an attribution field. A
+    substring scan for `inferred_paper` would pass on the fixed file — the name still
+    appears in the comment explaining why keying on it was wrong.
+    """
+    _claim("END_TO_END_MAP.md",
+           "Leg 2 is keyed on the finding ids the aggregation\n  actually returned, so the "
+           "two legs are complements over one id set and cover the open\n  blocking "
+           "population by construction.")
+    tree = _module_ast("scripts/validation/checks/bundles_readiness.py")
+    fn = next(n for n in ast.walk(tree)
+              if isinstance(n, ast.FunctionDef)
+              and n.name == "check_bundle_stage13_claim_consistent")
+    consts = {n.value for n in ast.walk(fn)
+              if isinstance(n, ast.Constant) and isinstance(n.value, str)}
+    assert "open_finding_ids" in consts, (
+        "leg 2 no longer reads `open_finding_ids` — it is back to guessing which findings "
+        "the aggregation reached instead of asking it")
+    # …and it must not have gone back to the proxy. The explanatory COMMENT still says
+    # `inferred_paper`; a comment is not a Constant, so this sees only real lookups.
+    proxy = sorted(v for v in consts if v.startswith("inferred_"))
+    assert not proxy, (
+        f"the check reads {proxy} again — that attribution-field proxy is what missed the "
+        f"eight pre-bundle-era findings that reach no bundle")
+
+
+def test_the_ledger_writer_does_not_mint_its_own_ids():
+    """⚠️ A second minter reproduces the orphan class BY CONSTRUCTION — 66 ledger records
+    naming no node is what motivated the writer. DECIDER: the import graph plus the absence
+    of a local definition, both via `ast`. `close_finding.py` names `mint_finding_id` in its
+    own docstring, so a substring scan is satisfied by prose alone.
+    """
+    _claim("QA_QI_INFRASTRUCTURE_MAP.md",
+           "It mints ids with the extractor's own `mint_finding_id` — a second minter "
+           "would reproduce, by construction, the orphaned-record class that motivated it")
+    tree = _module_ast("scripts/close_finding.py")
+    modules = {a.name for n in ast.walk(tree) if isinstance(n, ast.Import)
+               for a in n.names}
+    assert "build_graph" in modules, (
+        "close_finding.py no longer imports build_graph — it cannot be sharing the minter")
+    # ASSERT THE CALL, not the name: it is `_bg.mint_finding_id(...)`, an Attribute.
+    called = {c.func.attr for c in ast.walk(tree)
+              if isinstance(c, ast.Call) and isinstance(c.func, ast.Attribute)}
+    assert "mint_finding_id" in called, (
+        "close_finding.py names the extractor's minter but never calls it")
+    local = [n.name for n in ast.walk(tree)
+             if isinstance(n, ast.FunctionDef) and "mint" in n.name]
+    assert not local, f"close_finding.py defines its own minter(s): {local}"
+
+
+def test_fix_propagation_is_the_only_evaluator_that_reads_flags():
+    """The routing surface P9a builds rests on this: if a second gate read FLAGS, the
+    drill-through would have to resolve blockers for it too. DECIDER: which evaluator
+    functions mention the edge type at all, from the AST rather than a line grep.
+    """
+    _claim("QA_QI_INFRASTRUCTURE_MAP.md",
+           "**`FixPropagation` is the only evaluator that reads FLAGS.** Every other gate "
+           "is blind to review findings.")
+    import readiness_gates as rg
+    tree = _module_ast("scripts/readiness_gates.py")
+    evaluators = {f.__name__ for _n, _p, f in rg.GATES}
+    readers = sorted(
+        n.name for n in ast.walk(tree)
+        if isinstance(n, ast.FunctionDef) and n.name in evaluators
+        and any(isinstance(c, ast.Constant) and c.value == "FLAGS"
+                for c in ast.walk(n)))
+    fix_prop = next(f.__name__ for n, _p, f in rg.GATES if n == "FixPropagation")
+    assert readers == [fix_prop], (
+        f"evaluators reading FLAGS are {readers}, not just [{fix_prop!r}] — a second "
+        f"finding-aware gate arrived and QA_QI_INFRASTRUCTURE_MAP §3 is now wrong")
+
+
 def test_the_ci_floor_counts_measurements_not_invocations():
     _claim("CHECK_AUTHORING_GUIDE.md",
            "`--ci`'s coverage floor counts *measurements, not\ninvocations*")

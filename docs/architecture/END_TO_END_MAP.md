@@ -362,15 +362,20 @@ Hand edits remain possible and are not forbidden — they are caught after the f
   `bundle_registry_consistency` Leg C forbids the literal, and a per-file allowlist would have
   blinded that gate to the whole module. A finding that resolves to no bundle reaches no
   per-bundle ceiling, so those are ratcheted separately by
-  `UNATTRIBUTED_OPEN_BLOCKING_CEILING`. Attributed and unattributed partition the blocking
-  population between them, so neither leg can be satisfied by moving a finding out of its
-  scope. Both carry zero headroom and may only be **lowered**, in the commit that lowers the
-  population.
+  `UNATTRIBUTED_OPEN_BLOCKING_CEILING`. **Leg 2 is keyed on the finding ids the aggregation
+  actually returned, so the two legs are complements over one id set and cover the open
+  blocking population by construction.** Both carry zero headroom and may only be
+  **lowered**, in the commit that lowers the population.
 
-  ⚠️ **The predicate is the whole guarantee.** Leg 1 first counted `major` alone, which left
-  the open criticals that *do* reach a bundle ratcheted by nothing at all — leg 2 sees only
-  the unattributed ones — so the coverage claim above was false as first written. Widening it
-  required re-deriving every ceiling: a measurement is scoped by its predicate, and changing
+  ⚠️ **The predicate is the whole guarantee, and it has now been wrong twice.** Leg 1 first
+  counted `major` alone, which left the open criticals that *do* reach a bundle ratcheted by
+  nothing at all. Leg 2 then keyed on *"carries neither `inferred_paper` nor
+  `inferred_bundle`"* — a **proxy** for "the aggregation did not reach it", and wrong for the
+  pre-bundle-era corpus (ADR-012 D7): those findings carry an `inferred_paper`, so leg 2
+  skipped them, and their paper maps to no bundle, so leg 1 never saw them. Eight open
+  blocking findings sat outside both legs while this paragraph claimed they could not.
+  **Both times the fix was to assert the decider instead of the proxy**, and both times it
+  required re-deriving the baseline: a measurement is scoped by its predicate, and changing
   what it keys on voids it. That re-derivation is not a ratchet being raised; a broader
   predicate gets its own baseline, frozen at the live count, and shrinks from there.
 

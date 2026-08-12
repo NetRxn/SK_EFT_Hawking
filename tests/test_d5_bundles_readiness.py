@@ -1927,18 +1927,78 @@ class TestTheOpenRequiredPopulationRatchets:
             "in the commit that shrank it — headroom makes a ratchet unfireable")
 
     def test_the_unattributed_ratchet_has_zero_headroom(self):
+        """⚠️ Measured by what the AGGREGATION REACHED, never by the presence of a key.
+
+        This test asserted `not inferred_bundle and not inferred_paper` — the same PROXY
+        the check itself used, so the two agreed with each other and neither agreed with
+        the truth. Eight open blocking findings carry an `inferred_paper` whose paper maps
+        to no bundle: keyed, therefore skipped here, and unreachable by leg 1, therefore
+        counted nowhere. A test that recomputes the check's own predicate cannot catch a
+        wrong predicate.
+        """
         import sys
         sys.path.insert(0, 'scripts')
         from build_graph import extract_review_finding_nodes
         from validation.checks.bundles_readiness import (
-            UNATTRIBUTED_OPEN_BLOCKING_CEILING)
+            UNATTRIBUTED_OPEN_BLOCKING_CEILING, _readiness_aggregate)
         from readiness_gates import BLOCKING_SEVERITIES
+        by_bundle, _, failure = _readiness_aggregate()
+        assert failure is None, f"aggregation failed: {failure}"
+        covered = {i for d in by_bundle.values()
+                   for i in (d.get('open_finding_ids') or ())}
         live = sum(1 for n in extract_review_finding_nodes()
                    if n['meta'].get('status') == 'open'
                    and n['meta'].get('severity') in BLOCKING_SEVERITIES
-                   and not n['meta'].get('inferred_bundle')
-                   and not n['meta'].get('inferred_paper'))
+                   and n['id'] not in covered)
         assert live == UNATTRIBUTED_OPEN_BLOCKING_CEILING
+
+    def test_the_two_ratchet_legs_cover_the_population(self):
+        """⚠️ THE CLAIM `END_TO_END_MAP.md` MAKES, ASSERTED — and it was false when first
+        written. Leg 1 bounds what the per-bundle aggregation reaches; leg 2 bounds the
+        rest. If any open blocking finding falls outside BOTH, the pair reports green over
+        a population nothing bounds, which is this repository's signature defect one level
+        up from where the ratchets usually catch it.
+
+        Measured 2026-08-12 before the fix: 8 findings sat in the gap, all of them keyed to
+        pre-bundle-era papers that map to no bundle (ADR-012 D7).
+        """
+        import sys
+        sys.path.insert(0, 'scripts')
+        from build_graph import extract_review_finding_nodes
+        from validation.checks.bundles_readiness import _readiness_aggregate
+        from readiness_gates import BLOCKING_SEVERITIES
+        by_bundle, _, failure = _readiness_aggregate()
+        assert failure is None, f"aggregation failed: {failure}"
+        covered = {i for d in by_bundle.values()
+                   for i in (d.get('open_finding_ids') or ())}
+        open_blocking = [n for n in extract_review_finding_nodes()
+                         if n['meta'].get('status') == 'open'
+                         and n['meta'].get('severity') in BLOCKING_SEVERITIES]
+        in_leg1 = [n for n in open_blocking if n['id'] in covered]
+        in_leg2 = [n for n in open_blocking if n['id'] not in covered]
+        assert len(in_leg1) + len(in_leg2) == len(open_blocking)
+        assert not ({n['id'] for n in in_leg1} & {n['id'] for n in in_leg2}), (
+            "a finding is counted by both legs — the scopes are meant to be complements")
+
+    def test_the_aggregation_names_EVERY_open_finding_it_reached(self):
+        """⚠️ SEEDED CAP. `open_finding_ids` was `open_findings[:10]`, a silent truncation
+        of the only field recording which findings the aggregation reached. Built on that,
+        leg 2's complement would report every 11th-and-later finding of a busy bundle as
+        unbounded — inventing 100+ phantom entries in the population it ratchets.
+        """
+        import sys
+        sys.path.insert(0, 'scripts')
+        from validation.checks.bundles_readiness import _readiness_aggregate
+        by_bundle, _, failure = _readiness_aggregate()
+        assert failure is None, f"aggregation failed: {failure}"
+        for b, d in by_bundle.items():
+            assert len(d.get('open_finding_ids') or ()) == d['open_findings'], (
+                f"{b}: open_finding_ids holds "
+                f"{len(d.get('open_finding_ids') or ())} of {d['open_findings']} — "
+                f"truncated, so the coverage complement is wrong by the difference")
+        assert any(d['open_findings'] > 10 for d in by_bundle.values()), (
+            "no bundle carries more than 10 open findings, so this test cannot "
+            "distinguish a complete list from the old [:10] cap — it is vacuous")
 
     def test_the_unattributed_ratchet_is_what_makes_the_other_honest(self, monkeypatch):
         """Seeded: with only a per-bundle ratchet, LOSING attribution leaves the ratchet.

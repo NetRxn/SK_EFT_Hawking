@@ -469,7 +469,12 @@ def aggregate_by_bundle(
             "stage13_review_backfilled": bool(rev.get("backfilled")),
             "stage13_status_caveat": rev.get("status_caveat"),
             "blocked_p1_gates": gate_block,
-            "open_finding_ids": [f["id"] for f in open_findings[:10]],
+            # ⚠️ COMPLETE, not a sample. This was `open_findings[:10]` — a silent cap on
+            # the only field that records WHICH findings this aggregation reached. Its one
+            # consumer renders a sample, so the cap now lives at the render site where it
+            # discloses itself; a truncated list here would make the coverage complement
+            # below report every 11th-and-later finding as unattributed.
+            "open_finding_ids": [f["id"] for f in open_findings],
         }
     return by_bundle
 
@@ -494,10 +499,14 @@ def write_bundle_review_doc(
     gate_lines = ", ".join(f"{v} {k}" for k, v in
                            sorted(info["gate_mix"].items())) or "_(none)_"
 
+    # A SAMPLE, and it says so. The cap used to sit in `aggregate_by_bundle`, where the
+    # reader of the dict had no way to tell ten findings from a hundred.
+    _open_ids = list(info["open_finding_ids"])
     open_ids_block = (
-        "\n".join(f"- `{i}`" for i in info["open_finding_ids"])
-        or "_(no open findings)_"
-    )
+        "\n".join(f"- `{i}`" for i in _open_ids[:10])
+        + (f"\n- _…and {len(_open_ids) - 10} more (showing 10 of {len(_open_ids)})_"
+           if len(_open_ids) > 10 else "")
+    ) or "_(no open findings)_"
 
     if info.get("stage13_review_date"):
         review_line = (

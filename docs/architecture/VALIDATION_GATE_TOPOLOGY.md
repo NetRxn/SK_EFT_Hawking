@@ -175,6 +175,24 @@ A recurring failure mode is a check telling you to run a script that cannot fix 
 | `apex_theorems` | a human, under ADR-010 §D5a's per-bundle context review | any script |
 | `docs/counts.json` / `counts.tex` | `update_counts.py` | — |
 | `lean/lean_deps.json` + `.hash` | `extract_lean_deps.py` | — |
+| `human_verified_date`, `human_verified_notes` in `src/core/provenance.py` | ⚠️ **nothing, per entry** — see below | the dashboard's confirm action |
+
+⚠️ **`human_verified_date` is the row this section exists for, and it has no writer.**
+`ParameterProvenance` is a P1 gate that blocks on the field's absence, and there is no
+supported way to set it for one parameter. The dashboard's `/verify` route mutates the
+imported `PARAMETER_PROVENANCE` dict **in memory** and writes only a change-bus event, so
+its green **HUMAN VERIFIED** badge reverts on the next page load and is byte-identical to a
+persisted one (Pipeline Invariant #8). The only route that writes the file is
+`scripts/wave2_flip_provenance.py`, a bulk regex sweep that stamps a **frozen**
+`VERIFY_DATE` and only rewrites entries currently holding `None` — so it can neither record
+today's confirmation nor revise an existing one. The two halves are disjoint: one writes the
+event, the other writes the field, and neither does what the gate asks.
+
+ADR-012 D15 makes this a shipping blocker rather than a known gap — *a control surface whose
+approve button does not persist cannot be the sign-off tool* — and P9a introduces a single
+per-entry writer that both callers use. **This row is updated in the commit that creates
+it**, per rule 2; until then it names the absence, because a fact table that promised a
+writer the tree does not have would be exactly the drift §6 was written to stop.
 
 So a `stage13_status='green'` contradicted by open blockers means **a past review has been
 invalidated by newly-minted findings** — the fix is to re-run Stage 13, not the counts

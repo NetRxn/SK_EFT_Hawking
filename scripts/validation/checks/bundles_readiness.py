@@ -378,7 +378,7 @@ def _required_open_ceilings() -> dict[str, int]:
         return {}
 
 
-#: Open critical+major findings carrying NEITHER `inferred_paper` NOR `inferred_bundle`.
+#: Open blocking-severity findings that the per-bundle aggregation DOES NOT REACH.
 #: **A RATCHET: may only shrink.**
 #:
 #: ⚠️ THIS IS WHAT MAKES THE PER-BUNDLE RATCHET HONEST. A per-bundle ceiling can only see
@@ -395,7 +395,19 @@ def _required_open_ceilings() -> dict[str, int]:
 #: misses.
 #: 2026-08-12: 47 -> 39 after the pilot batch closed 99 findings. Lowered in the same
 #: commit that lowered the population, per the ratchet rule.
-UNATTRIBUTED_OPEN_BLOCKING_CEILING: int = 39
+#:
+#: ⚠️ **39 -> 47, and this is a RE-DERIVATION, not a raise.** The predicate changed from
+#: "carries neither key" to "the aggregation did not reach it", because the first was a
+#: PROXY for the second and was wrong for 8 findings: a finding keyed to a pre-bundle-era
+#: paper (ADR-012 D7) has an `inferred_paper`, so the old predicate skipped it, and maps to
+#: no bundle, so leg 1 never counted it. Both legs reported green over it.
+#:
+#: A measurement is scoped by its predicate, and widening the predicate VOIDS the baseline
+#: — the same rule that governed leg 1's `major` -> `BLOCKING_SEVERITIES` widening earlier
+#: the same day. The new baseline is frozen at the live count under the new predicate and
+#: shrinks from there. That 47 equals the pre-pilot figure is a coincidence of two
+#: different populations, not a reversion.
+UNATTRIBUTED_OPEN_BLOCKING_CEILING: int = 47
 
 
 def _readiness_aggregate():
@@ -598,21 +610,42 @@ def check_bundle_stage13_claim_consistent() -> CheckResult:
             bad += 1
 
     # ── Ratchet 2: the population ratchet 1 structurally cannot see ───────────────
-    unattributed = sum(
-        1 for n in _all_findings
+    # ⚠️ THE COMPLEMENT OF LEG 1'S COVERAGE, not a proxy for it. This counted findings
+    # carrying NEITHER `inferred_paper` NOR `inferred_bundle` — a guess at which findings
+    # fail to reach the aggregation. The guess was wrong for a whole class: a finding
+    # carrying `inferred_paper` for a paper that maps to NO bundle (the pre-bundle-era
+    # corpus, ADR-012 D7) has a key, so this leg skipped it, and reaches no bundle, so
+    # leg 1 never saw it. Measured 2026-08-12: EIGHT open blocking findings sat in that
+    # gap, and `END_TO_END_MAP`'s claim that the two legs cover the population between
+    # them was false as written.
+    #
+    # Keying on what the aggregation ACTUALLY reached makes the coverage true by
+    # construction rather than by argument: leg 1 counts the ids in `open_finding_ids`,
+    # leg 2 counts every open blocking finding whose id is not among them. Neither leg
+    # can be satisfied by moving a finding out of its scope, because the scopes are
+    # defined as complements. `test_the_two_ratchet_legs_cover_the_population` pins it.
+    _covered: set[str] = set()
+    for _d in (by_bundle or {}).values():
+        _covered.update(_d.get("open_finding_ids") or ())
+    _open_blocking = [
+        n for n in _all_findings
         if (n["meta"].get("status") == "open"
-            and n["meta"].get("severity") in _BLOCKING
-            and not n["meta"].get("inferred_bundle")
-            and not n["meta"].get("inferred_paper")))
+            and n["meta"].get("severity") in _BLOCKING)]
+    _uncovered = [n for n in _open_blocking if n["id"] not in _covered]
+    _covered_blocking = [n for n in _open_blocking if n["id"] in _covered]
+    unattributed = len(_uncovered)
     ok_un = unattributed <= UNATTRIBUTED_OPEN_BLOCKING_CEILING
     details.append(Detail(
         "unattributed_population", ok_un,
-        f"{unattributed} open {'/'.join(sorted(_BLOCKING))} finding(s) carry neither "
-        f"`inferred_paper` nor `inferred_bundle`, so they reach NO bundle ceiling; "
-        f"limit {UNATTRIBUTED_OPEN_BLOCKING_CEILING}"
+        f"{unattributed} open {'/'.join(sorted(_BLOCKING))} finding(s) are NOT reached by "
+        f"the per-bundle aggregation, so no bundle ceiling bounds them; "
+        f"limit {UNATTRIBUTED_OPEN_BLOCKING_CEILING}. Together with leg 1 this covers the "
+        f"whole open blocking population ({len(_covered_blocking)} + {unattributed} = "
+        f"{len(_covered_blocking) + unattributed}), by construction: the two scopes are "
+        f"complements over the same id set"
         + ("" if ok_un else
-           " — a finding that LOSES its attribution silently leaves the per-bundle "
-           "ratchet. Re-attribute it or fix it; never raise this limit.")))
+           " — a finding that LOSES its attribution leaves the per-bundle ratchet. "
+           "Re-attribute it or fix it; never raise this limit.")))
     if not ok_un:
         bad += 1
 

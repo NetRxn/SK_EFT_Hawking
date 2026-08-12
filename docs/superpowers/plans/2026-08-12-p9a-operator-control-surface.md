@@ -443,6 +443,14 @@ Expected: FAIL — module does not exist.
 
 `src/core/provenance_writer.py` exposes `set_human_verified(key, date, notes, actor=None, dry_run=False) -> tuple[bool, str]`, rewriting exactly one entry's `human_verified_date`/`human_verified_notes` in `src/core/provenance.py`, atomically (temp-and-replace, as `close_finding._atomic_write` does), refusing an unknown key and refusing to overwrite an existing non-null date without an explicit `force`.
 
+⚠️ **`wave2_flip_provenance`'s regex only matches an entry currently holding `None`.** `HUMAN_NULL_RE` requires the literal pair `'human_verified_date': None,` / `'human_verified_notes': None,`, so the existing route cannot *revise* a verified entry at all — only flip a null one. The new writer must handle both, which is why `force` exists rather than being defensive scaffolding. Measured at HEAD, not inherited from the ADR.
+
+- [ ] **Step 3b: Update `VALIDATION_GATE_TOPOLOGY.md` §6 IN THIS COMMIT**
+
+§6 is the field-ownership table and it now carries a `human_verified_date` row stating that **nothing writes it per entry**, with the two disjoint halves named. That row was added ahead of this plan (rule 2: the design lands in the doc first) and deliberately does **not** name `src/core/provenance_writer.py`, because `architecture_inventory_fresh` requires every path-like reference to resolve and the file does not exist yet — a fact table promising a writer the tree lacks is the drift §6 exists to stop.
+
+The commit that creates the writer replaces that row's "written by" cell with `src/core/provenance_writer.set_human_verified` and moves the absence narrative into past tense. **Not a follow-up:** rule 2 makes it part of this change.
+
 - [ ] **Step 4: Make both callers use it**
 
 `wave2_flip_provenance.py` keeps its classifier and loses its regex writer. `provenance_dashboard.verify_param` (`:1272-1276`) calls `set_human_verified(...)` and **only** renders the green badge when it returns `ok`, then records the audit event as it already does.
@@ -523,11 +531,12 @@ The attachment point is clean: the per-sentence `<span>` at `:4439` already carr
   | Readiness tab offers "click-through to gate-specific evidence … review findings" | blockers render as unlinkable prose (`:5413`) until Task 3 lands — after Task 3 this becomes true, so correct it in **that** commit, not this one |
 
   ⚠️ Do **not** write census counts into it if it moves under `docs/architecture/` (that is P8d, not this plan).
-- [ ] **Step 2:** `QA_QI_INFRASTRUCTURE_MAP.md` §4 — the operator decision points that now persist.
+- [ ] **Step 2:** `QA_QI_INFRASTRUCTURE_MAP.md` §4 — the operator decision points that now persist. ⚠️ Its "Verify a parameter for submission → provenance dashboard → Invariant #8" row currently describes a decision the system does not record; that row changes with Task 5, not here.
 - [ ] **Step 3:** ADR-012 — mark P9a ✅ with commits.
-- [ ] **Step 4:** `uv run python -m pytest -m '' -q` · `uv run python -m pytest -m e2e -q` · `uv run python scripts/validate.py` · `uv run python scripts/verify_scope.py --merge-gate`.
+- [ ] **Step 4:** Pin whatever load-bearing claim this wave adds, in `tests/test_architecture_claims.py`. **Not optional and not a nicety:** `END_TO_END_MAP` and `QA_QI_INFRASTRUCTURE_MAP` had zero pinned claims until 2026-08-12, and the first thing pinning them surfaced was a false coverage sentence in a green suite. S1's blocker drill-through is exactly the shape that rots — it is true the moment Task 3 lands and silently false the first time an evaluator stops populating `blocker_refs`.
+- [ ] **Step 5:** `uv run python -m pytest -m '' -q` · `uv run python -m pytest -m e2e -q` · `uv run python scripts/validate.py` · `uv run python scripts/verify_scope.py --merge-gate`.
 
-⚠️ **Record any check already red on `main` before the branch.** At the time of writing: `bundle_figure_integrity`, `bundle_manuscript_length` (did-not-measure), `readiness_submission_gate`, and `test_ci_mode.py::test_the_LIVE_floor_matches_what_a_REAL_run_MEASURES` — the last because the floor is defined as registered-minus-skipped, so any unmeasured check makes it red with zero slack.
+⚠️ **Record any check already red on `main` before the branch. RE-MEASURE THIS LIST — it is stale as written.** It named `bundle_manuscript_length` (did-not-measure) and the CI-floor test as inherited conditions. **Both were fixed on `main` in `1e633702`**: the cause was a regenerated `counts.tex` sitting inside every bundle's `\input` closure, and the remedy was `compile_bundle_pdf.py --all --force` — step 3 of the four-step order in `VALIDATION_ARCHITECTURE.md` §5.1. Two of the four "inherited failures" were neither inherited nor failures. Run the suite and write down what is *actually* red before cutting the branch; a stale red-list is how a branch gets credited with a failure it did not cause, and blamed for one it did.
 
 ---
 
