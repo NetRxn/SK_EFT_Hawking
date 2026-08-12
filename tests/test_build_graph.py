@@ -1153,3 +1153,30 @@ class TestPGWriteWithoutPsycopg:
         assert any("psycopg" in r.getMessage().lower() for r in caplog.records), (
             "no 'psycopg unavailable' log — the unavailable branch was not "
             "observed, so this test asserts nothing about it")
+
+
+class TestTheFindingIdMinterIsShared:
+    """One minter, importable, and the one production actually uses.
+
+    `close_finding.py` mints ids to WRITE the supersession ledger;
+    `extract_review_finding_nodes` mints them to READ it back. Two implementations
+    diverging is exactly how 66 review:-scheme ledger records came to reference ids that
+    match no node — inert records, whose findings still read `open`.
+    """
+
+    def test_mint_finding_id_is_importable_and_stable(self):
+        from scripts.build_graph import mint_finding_id
+        assert mint_finding_id(
+            '2026-08-12-0006-internal-adversarial', 'I1', '5.5'
+        ) == 'review:2026-08-12-0006-internal-adversarial:I1:5.5'
+
+    def test_every_minted_node_id_round_trips_through_the_function(self):
+        from scripts.build_graph import extract_review_finding_nodes, mint_finding_id
+        nodes = extract_review_finding_nodes()
+        assert nodes, "no findings extracted — an empty seam is not a clean one"
+        for n in nodes:
+            m = n['meta']
+            assert n['id'] == mint_finding_id(
+                m['review_date'], m['review_name'], m['section']), (
+                f"{n['id']} was not produced by mint_finding_id — the extractor and the "
+                "minter have diverged, which is the orphan class at its source")

@@ -1721,6 +1721,23 @@ def _load_supersession_ledger() -> dict[str, dict]:
     return out
 
 
+def mint_finding_id(date_dir: str, review_name: str, section_num: str) -> str:
+    """The canonical ReviewFinding node id.
+
+    ⚠️ MODULE SCOPE ON PURPOSE. `scripts/close_finding.py` imports this to WRITE the
+    supersession ledger, and `extract_review_finding_nodes` calls it to READ the ledger
+    back. A second implementation is not a duplication smell, it IS the defect: 66 of the
+    870 ledger records carry a `review:` id no node matches, because every one was
+    hand-typed against a format nobody could check, and the findings they meant to close
+    still read `open`.
+
+    Same reasoning as `_recurrence_norm`, which moved to module scope after a period in
+    which the production matcher could have been deleted or inverted with its test still
+    green.
+    """
+    return f'review:{date_dir}:{review_name}:{section_num}'
+
+
 def extract_review_finding_nodes() -> list[dict]:
     """ReviewFinding — findings from adversarial reviews.
 
@@ -1884,7 +1901,7 @@ def extract_review_finding_nodes() -> list[dict]:
             # the inverted PAPER_DRAFT_MAPPING to the source Paper nodes.
             inferred_bundle = _infer_bundle_from_text(review_name)
 
-            finding_id = f'review:{date_dir}:{review_name}:{section_num}'
+            finding_id = mint_finding_id(date_dir, review_name, section_num)
             if finding_id in seen_ids:
                 continue
             seen_ids.add(finding_id)
