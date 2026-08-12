@@ -16,11 +16,20 @@ the per-paper → per-bundle assignment from
      heatmap (the bundle-aware analog of the pre-existing
      `READINESS_GATES.md`).
 
-This script does NOT run a fresh-context LLM-driven Stage-13 review —
-that is a user-triggered downstream step per memory
-`feedback_stages_11_13_reflexive.md`. The aggregation here lifts the
-already-existing per-paper review findings into per-bundle summaries
-so the user can see at a glance which bundles are submission-ready.
+This script does NOT run a fresh-context LLM-driven Stage-13 review; it
+lifts the already-existing per-paper review findings into per-bundle
+summaries so the operator can see at a glance which bundles are
+submission-ready.
+
+⚠️ That is a statement about THIS SCRIPT's scope, not about a gate.
+**Stage 13 is a reflexive pipeline stage, not user-triggered** — it runs
+once the preliminary work and checks are done, like every other stage.
+This file previously said the opposite and cited
+`feedback_stages_11_13_reflexive.md` as its authority, which is the
+memory recording that Stages 11 and 13 are reflexive. The generated
+summaries carried that inverted sentence into every dated directory.
+The real user-authorization gates are Stage 4 Aristotle submissions and
+any stage a roadmap explicitly labels as user-gated.
 
 S5 closure (2026-06-10, user-authorized)
 ----------------------------------------
@@ -507,8 +516,10 @@ def write_bundle_review_doc(
 
 This is an *aggregation* of the existing per-paper Stage-13 review
 findings, partitioned by the per-paper → per-bundle assignment. It is
-NOT a fresh-context LLM Stage-13 review — that is user-triggered per
-memory `feedback_stages_11_13_reflexive.md`.
+NOT a fresh-context LLM Stage-13 review.
+
+⚠️ That is this document's scope, not a gate: **Stage 13 is a reflexive
+pipeline stage.** It runs once the preliminary work and checks are done.
 
 ## Source papers ({info['source_count']})
 
@@ -551,9 +562,9 @@ memory `feedback_stages_11_13_reflexive.md`.
   `validate.py --check bundle_consistency` to ensure cross-bundle
   cross-bridges (anchor table in
   `docs/agents/claims-reviewer-bundle-prompts.md`) hold.
-- **YELLOW (unreviewed):** schedule the bundle's fresh-context Stage-13
-  LLM sweep (user-triggered); the verdict cannot reach GREEN without a
-  recorded review.
+- **YELLOW (unreviewed):** run the bundle's fresh-context Stage-13 sweep —
+  a reflexive pipeline stage, not something to wait on; the verdict cannot
+  reach GREEN without a recorded review.
 - **YELLOW:** review the open advisory list; decide per-finding whether
   to fix-in-place or supersede via `docs/review_finding_supersessions.json`.
 - **RED:** address blocker findings before promoting to Stage-13
@@ -707,8 +718,9 @@ def write_heatmap(
         "- This heatmap aggregates *existing* per-paper Stage-13 review "
         "findings via `build_graph.extract_review_finding_nodes()` "
         "(post-supersession). It does NOT include findings from a fresh-"
-        "context Stage-13 sweep on the bundle (those are user-triggered) "
-        "— but since 2026-06-10 the GREEN verdict additionally REQUIRES "
+        "context Stage-13 sweep on the bundle — that sweep is a reflexive "
+        "pipeline stage this script does not run, NOT a user-gated one — "
+        "and since 2026-06-10 the GREEN verdict additionally REQUIRES "
         "that such a sweep is recorded for the bundle (S5 closure).",
         "- 'Open' means `meta.status == 'open'` after applying "
         "`docs/review_finding_supersessions.json` overrides.",
