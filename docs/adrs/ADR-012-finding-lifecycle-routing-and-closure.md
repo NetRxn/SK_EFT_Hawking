@@ -444,8 +444,33 @@ property that makes each legible.
 |---|---|---|---|
 | **A** | **System-1 — publication findings needing a call.** `needs_operator` `ReviewFinding`s with their decision packages | `ReviewFinding` nodes; `docs/QI_REGISTER.md` | yes — though the QI derivation currently emits zero (D15) |
 | **B** | **System-2 — dev-loop and harness process findings** from `/skeft-qa:harvest`, at their tier | `docs/dev-loops/SYSTEM2_REGISTER.md` — **gitignored, local-only**, `## Open` with `### <slug>` entries | headings and tiers only; not derived |
-| **C** | **Decisions — PD-3's second legitimate stop.** A genuine operator-only call | **`.claude/dev-harness/blocked_questions.jsonl`** — already written by the `AskUserQuestion` guard on every blocked question | yes, and it exists today |
+| **C** | **Decisions — PD-3's second legitimate stop.** A genuine operator-only call | **`.claude/dev-harness/blocked_questions.jsonl`**, written by the `AskUserQuestion` guard | yes, and **already consumed** — see below |
 | **D** | **Parked work** — authorized work waiting on an external release condition (D19) | 119 roadmap markdown files, prose | **no** |
+
+⚠️ **Correction (operator challenge, 2026-08-12).** An earlier draft of this section said the
+blocked-question log *"is read by nothing."* **That is false.** The log has two live consumers and a
+documented path to a human:
+
+- **`coach` (in-time).** The `PreToolUse(AskUserQuestion)` guard denies the question, logs it, and
+  redirects to the `coach` agent, which reads the log plus the pre-decisions store and returns one
+  decision and one concrete next action. This is the loop's *first* answer, and it resolves most
+  questions without the operator.
+- **`harvest-extractor` (asynchronous).** The harvest skill locates the log span since the last
+  `watermarks/bqlog.json` position and hands it to the extractor; the consolidator files it into the
+  System-2 register, and `/skeft-qa:debrief` is the human governor.
+
+So the operator path exists and is designed. **What is missing is not a reader — it is an
+operator-facing surface and a latency floor.** A blocked question reaches the human only after a
+harvest (cadence 4 h, per `harvest_state.json`), through an 840 KB gitignored register, with no view
+that says "three questions are waiting." Feed C's job is to shorten that path for the questions the
+coach could not settle, not to invent a channel.
+
+⚠️ **A second live gap, already recorded and worth carrying here.** `active_issues.json` is written by
+every harvest and **read by nothing** — `_read_active_issues` has zero callers repo-wide, while
+`HARNESS_GUIDE.md` describes it as feeding the re-injection. It carries exactly what feed B's pane
+needs (`{title, tier, tally, kind}`, already aggregated and already tiered). Feed B should consume it
+rather than re-parsing 840 KB of markdown, which turns a documented dead artifact into the pane's
+backing store.
 
 Feed B is read-only in the dashboard and stays that way: `/skeft-qa:debrief` is the structurally
 human-only governor for promotion, closure and misfiling, and a second write path would break the
@@ -555,13 +580,11 @@ renders as itself, never coerced to the nearest known state.
 what turns "D3 is yellow" into "D3 is held by six substrate findings" — the difference between a
 status board and a routing instrument.
 
-⚠️ **Live agent activity has no store, and v1 does not invent one.** The operator's stated need
-includes seeing *"many agents at different stages"*. Nothing writes agent activity today: the
-worktree slots, the `/goal` markers and the harvest register each carry a fragment, none carries a
-roster of what is running. So **v1 shows queue depth and stage position, not live activity** — which
-answers *where is work piling up* but not *who is working right now*. Building an activity writer is
-a separate decision, named here rather than silently designed around; a board that implies live
-activity while rendering stale state would be this project's signature defect in a new place.
+**Live activity: `/goal` level is in scope, subagent level is not** (operator ruling, corrected
+2026-08-12 — see D20). An earlier draft claimed activity had no writer at all. It does, at the level
+that matters: a `/goal` loop runs for hours to days and already emits a machine-readable marker,
+a per-compaction snapshot and a convergence signal. Subagent worktree slots turn over in minutes and
+are deliberately left out — a board tracking them would be stale between renders.
 
 #### S3 — Attention, specified
 
@@ -672,6 +695,90 @@ scope is declared — a different job from where work is tracked.
 single largest ungated seam in the map"*: no check references `docs/roadmaps/`, and no `*_close.md`
 files exist. D19 gives parked work a surface. It does not gate roadmaps, and the seam stays open.
 
+### D20 — `/goal`-level activity is surfaced from the state the harness already writes
+
+**Operator ruling 2026-08-12:** subagent worktree slots are fast-moving and out of scope, but a
+`/goal` instance typically runs for many hours to days with a coordinating agent driving workers,
+and *"machine-readable info that we're already using in our hooks/context bootstrap and harvest
+infrastructure is low-enough hanging fruit that it's worth our time to plan a legitimate
+integration."* Verified: it is, and there is more of it than the previous draft credited.
+
+**Everything below already exists and is written on every loop, under `.claude/dev-harness/`:**
+
+| artifact | writer | carries |
+|---|---|---|
+| `managed/<session>.json` | `/skeft-qa:goal-prompt` at arming | `role` · `goal` (the settled goal text) · `goal_id` · **`roadmap_path`** · **`notebook_path`** · `jsonl_path` · `repo` · `question_guard` |
+| `snapshot_<goal_id>.json` | `harness_precompact.py` on every PreCompact | git HEAD + last assistant text; **its mtime is a per-compaction heartbeat** |
+| `stall_history/<goal_id>.json` | `stall_detector.py` via the harvest consolidator | one record per compact event: `residual_id` + `status` — **the same residual repeating is a non-convergence signal**, computed against the derived atlas |
+| `coaching/<goal_id>.json` | the harvest consolidator | the forward-framed coaching block re-injected at SessionStart |
+| `watermarks/`, `harvest_state.json` | harvest | read positions; `last_run_ts` + `cadence_hours` |
+
+**A Loops pane therefore needs no new writer.** Per armed goal it can show: the goal text, the repo,
+last heartbeat, whether the question guard is on, how many blocked questions are outstanding, and —
+from `stall_history` — whether the loop has been on the same residual across N compactions. The last
+of these is a genuine bottleneck detector that already exists and has never been surfaced.
+
+⚠️ **`roadmap_path` and `notebook_path` are the load-bearing fields**, and they are why this is worth
+doing rather than merely cheap. They are a live edge from a *running loop* to the *planning artifact
+that authorized it* — the one direction the system currently cannot traverse. With D19's parked items
+keyed on the same roadmaps, the Flow board can answer *"what is running against this roadmap, what is
+parked behind it, and what is queued"* from one join.
+
+⚠️ **Everything here is gitignored and local.** Correct for a local dashboard; it means the Loops pane
+shows nothing on a fresh clone, and it must say so rather than render an empty roster as "no loops
+running."
+
+### D21 — The open items of prior ADRs enter this queue
+
+**The operator's regression concern, stated directly:** the ADR-009/010/011 work paused before the
+last merge must not be re-derived from cold context when it resumes, and must not be designed against
+an architecture that has since moved.
+
+Re-evaluated against this ADR:
+
+| prior item | state | disposition under ADR-012 |
+|---|---|---|
+| **ADR-009 §Deferred 0–7** | ✅ **all eight dispositioned** (fixed, or declined with measurements) | closed; no queue entry. The residue is the standing lesson that every item's scope figure was unverified — which is now D1's `target` and D17's generated brief |
+| **ADR-010 D2** — per-target purpose statements re-derived from the manuscripts | **OPEN** | 21 findings, `lane=prose`, one per bundle, disjoint `target` — **the exact shape ADR-012's fan-out exists for** |
+| **ADR-010 D4** — merge/split/retire | ✅ discharged 2026-08-08; all six proposed merges failed against the manuscripts | closed |
+| **ADR-010 D5** — homing dispositions for the un-homed substrate, measured at **1,403–1,633 modules**, not the charter's ~340 | **OPEN, and the largest single item in the portfolio** | `lane=substrate`, structured as a `BLOCKED_BY` tree: per-**arc** dispositions first, modules beneath them. ADR-010 itself anticipates that the 4–5× scope change may change the shape of the answer |
+| **ADR-010 D7** — the roster-drift change-set | **OPEN** | `lane=infra`/`prose`, doc work |
+| **ADR-010 §Open** — operator-owned questions | **OPEN by design** | feed A/C of the Attention surface; and D19's `operator:<slug>` token lets work park behind a named one |
+| **ADR-011 P1–P8** | ✅ complete | closed |
+| **`ARCHITECTURE_TODOs.MD` D50, D51** | open, under the standing build-freeze | stay in the working doc per C1 — they are architecture-accuracy defects and belong to it |
+
+**The synchronization rule:** an open item in a prior ADR is filed as a `ReviewFinding` with its
+lane and target, *pointing back at* the ADR that owns the decision. The ADR stays the decision
+record; the queue becomes the work record. This is the same move D4 makes for the D45–D49 entries,
+and it is what prevents the resumed work from re-deriving orientation the queue already holds.
+
+⚠️ **ADR-010's own standing warning applies to every row above:** *"Re-derive an item before acting
+on it, including its evidence line."* Roughly a third of its drift ledger is about a document's own
+count, several items' *correcting evidence* has itself gone stale, and one filed claim was withdrawn
+the day after it was written. The table above records state, not permission to skip re-measurement.
+
+### D22 — `docs/DASHBOARD.md` is canonicalized into `docs/architecture/`
+
+**Operator question, answered: yes.** The dashboard is now a governed surface with four new views and
+two repairs, and its describing document has four false claims — which is precisely the drift that
+`docs/architecture/` exists to prevent, and which happened *because* the document sits outside it.
+
+Moving it buys three mechanical guarantees it does not currently have:
+
+1. **Every path-like reference must resolve** (`architecture_inventory_fresh`). Today
+   `docs/verification_log.jsonl` and `docs/submission_state.json` are named and do not exist. Under
+   the check, that is a hard failure on arrival — the false claims must be corrected, or declared
+   missing in the check's explicit reasoned-exception set. Either way the lie stops being free.
+2. **No counts in the narrative** (rule 3). The stale roster and graph-type figures move to the
+   derived `SURFACE_INVENTORY.md` or disappear.
+3. **A required-content contract.** It gains a `> **Answers:**` line and a row in `README.md`'s
+   ownership table, and the check asserts the two agree verbatim — so it becomes an obvious review
+   target alongside the other seven rather than a document nobody is assigned to read.
+
+Costs, stated: the exception set in `scripts/architecture_inventory.py` must gain the two
+deliberately-absent paths with their reasons, every inbound reference to `docs/DASHBOARD.md` is
+updated in the same commit, and the move is a `git mv` so history follows.
+
 ---
 
 ## Pilot — the 117, dispositioned 2026-08-12
@@ -763,10 +870,18 @@ in the pipeline; confirm `ARCHITECTURE_TODOs.MD` is back inside its charter.
 **P8b — Parked work (D19).** The roadmap opt-in block, the external release-condition tokens on
 `blocked_by`, and their evaluation. Independent of P9 and a prerequisite for its Parked pane.
 
-**P9 — The operator control surface (D15).** In two waves, because they carry different risk. **P9a:**
+**P8c — Prior-ADR open items enter the queue (D21).** ADR-010 D2, D5 and D7 filed as findings with
+lanes and targets, pointing back at ADR-010 as the decision record. Re-measure each before filing.
+
+**P8d — Canonicalize `docs/DASHBOARD.md` (D22).** `git mv` into `docs/architecture/`, add the
+Answers contract line and the README ownership row, strip the counts, correct the four false claims,
+extend the inventory check's exception set, update inbound references.
+
+**P9 — The operator control surface (D15, D20).** In three waves, because they carry different risk. **P9a:**
 S1, S4, the QI de-saturation and the sign-off persistence repair — all over data that already exists,
 all with a template-contract test and a browser test per D2's dashboard exception. **P9b:** S2 and S3,
-built thin against the specifications in D15 and iterated. `docs/DASHBOARD.md` corrected in the commit
+built thin against the specifications in D15 and iterated. **P9c:** the Loops pane (D20) over the
+harness state that already exists — no new writer. `docs/DASHBOARD.md` corrected in the commit
 that makes each claim wrong.
 
 **P10 — Orchestration (D2, D10, D11, D16).** Route by lane, fan out on disjoint `target`, traverse
