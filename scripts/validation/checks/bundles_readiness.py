@@ -393,7 +393,9 @@ def _required_open_ceilings() -> dict[str, int]:
 #: carry `inferred_paper` and DO reach the aggregation, so counting 71 here would
 #: double-count what ratchet 1 already covers — a guard that lies about what the other one
 #: misses.
-UNATTRIBUTED_OPEN_BLOCKING_CEILING: int = 47
+#: 2026-08-12: 47 -> 39 after the pilot batch closed 99 findings. Lowered in the same
+#: commit that lowered the population, per the ratchet rule.
+UNATTRIBUTED_OPEN_BLOCKING_CEILING: int = 39
 
 
 def _readiness_aggregate():
