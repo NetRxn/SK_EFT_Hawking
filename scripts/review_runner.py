@@ -174,7 +174,82 @@ def validate_review_doc(bundle: str, doc_path: Path) -> tuple[bool, list[str]]:
     return (not issues, issues)
 
 
-def main() -> int:
+def emit_finding_brief(finding_id: str) -> str:
+    """Generated orientation for ONE finding (ADR-012 D17).
+
+    ⚠️ Orientation is GENERATED, not gathered. Re-deriving it per finding from cold context
+    is the expensive way, and it is what the operator's step 1 was reacting to: the finding
+    carries its own pointers, so the worker does not go looking. This is also what makes the
+    decision package affordable — four of its five elements are generated rather than
+    researched.
+
+    RAISES on an unknown id. An empty brief is worse than an error: it reads as "nothing to
+    orient on" when the truth is "the finding was not found".
+    """
+    import subprocess
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from build_graph import extract_review_finding_nodes
+
+    node = next((n for n in extract_review_finding_nodes() if n["id"] == finding_id), None)
+    if node is None:
+        raise KeyError(
+            f"{finding_id} names no minted finding. An empty brief would read as 'nothing "
+            f"to orient on' when the truth is 'not found'.")
+
+    m = node["meta"]
+    target = (m.get("target") or "").strip("`") or None
+    out = [f"# Orientation — {finding_id}", "",
+           f"**{node.get('name', '')[:160]}**", "",
+           f"- SEVERITY: {m.get('severity')}   STATUS: {m.get('status')}",
+           f"- LANE: {m.get('lane')}",
+           f"- BLOCKS: {m.get('blocks') or '(none declared)'}",
+           f"- VERIFY: {m.get('verify') or '(none declared)'}",
+           f"- BLOCKED-BY: {', '.join(m.get('blocked_by') or []) or '(nothing)'}",
+           f"- NEEDS-OPERATOR: {m.get('needs_operator') or 'no'}",
+           f"- REVIEW: {m.get('review_file')}", ""]
+
+    out += ["## TARGET", ""]
+    if not target:
+        out += ["⚠️ No `- **Location:**` line on this finding, so there is nothing to point",
+                "at. It is not dispatchable until one is added.", ""]
+    else:
+        out += [f"`{target}`", ""]
+        path = PROJECT_ROOT / target.split(":")[0]
+        if path.is_file():
+            out += [f"Exists. {path.stat().st_size} bytes.", ""]
+            out += ["## GIT HISTORY", ""]
+            try:
+                log = subprocess.run(
+                    ["git", "log", "-5", "--oneline", "--", str(path)],
+                    cwd=str(PROJECT_ROOT), capture_output=True, text=True, timeout=20)
+                out += ["```", log.stdout.strip() or "(no history)", "```", ""]
+            except Exception as exc:
+                out += [f"(git log unavailable: {exc})", ""]
+        else:
+            out += ["⚠️ The target does not resolve to a file on disk. Re-measure before",
+                    "acting: a finding pointing at a moved or renamed path is stale.", ""]
+
+    out += ["## ROADMAP", ""]
+    hits = []
+    rm = PROJECT_ROOT / "docs" / "roadmaps"
+    if target and rm.is_dir():
+        stem = Path(target.split(":")[0]).stem
+        for r in sorted(rm.glob("*.md")):
+            try:
+                if stem and stem in r.read_text(encoding="utf-8", errors="replace"):
+                    hits.append(r.name)
+            except OSError:
+                continue
+    out += ([f"- {h}" for h in hits[:5]] if hits else
+            ["(no roadmap mentions this target — it may predate the roadmap corpus)"])
+    out += ["", "## SUBSTRATE DELTA", "",
+            "⚠️ Answer explicitly, including 'no': has anything moved since this finding was",
+            "filed that should change the target? A finding's scope is a CLAIM, not a",
+            "measurement — re-derive it before acting.", ""]
+    return "\n".join(out)
+
+
+def main(argv=None) -> int:
     parser = argparse.ArgumentParser(
         description="Phase 6i Wave 7.2 bundle-aware review orchestrator",
     )
@@ -197,7 +272,20 @@ def main() -> int:
         "--json", action="store_true",
         help="emit JSON instead of human-readable output",
     )
-    args = parser.parse_args()
+    parser.add_argument(
+        "--finding",
+        help="emit generated orientation for ONE finding id (ADR-012 D17)",
+    )
+    args = parser.parse_args(argv)
+
+    # ⚠️ BEFORE the `--bundle` gate below, which returns 1 on anything without a bundle.
+    if args.finding:
+        try:
+            print(emit_finding_brief(args.finding))
+        except KeyError as exc:
+            print(f"✗ {exc}", file=sys.stderr)
+            return 1
+        return 0
 
     if args.list_bundles:
         info = list_bundles()
