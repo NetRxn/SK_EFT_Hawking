@@ -552,7 +552,7 @@ The heatmap aggregates existing per-paper findings; a fresh-context bundle Stage
 | `docs/BUNDLE_DIRECTORY_SCHEMA.md` | Per-bundle file layout. |
 | `docs/BUNDLE_LIFT_PROCEDURE.md` | 14-step procedure for lifting per-paper drafts into a publication bundle. |
 | `docs/BUNDLE_READINESS_HEATMAP.md` | Per-bundle Stage-13 readiness, auto-regen via `scripts/bundle_readiness.py`. |
-| `docs/DASHBOARD.md` | Provenance command-center documentation (`scripts/provenance_dashboard.py`, localhost:8050). |
+| `docs/architecture/DASHBOARD.md` | Provenance command-center documentation (`scripts/provenance_dashboard.py`, localhost:8050). |
 | `docs/KNOWLEDGE_GRAPH.md` | Project knowledge-graph schema + Postgres+AGE setup. |
 | `docs/LATE_PHASE6_ABSORPTION_PROTOCOL.md` | Stage A–G protocol for absorbing late-phase waves into already-drafted bundles. |
 | `docs/PAPER_DRAFT_MAPPING.md` | Per-existing-draft → per-bundle assignment table. |

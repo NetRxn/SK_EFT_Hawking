@@ -17,6 +17,7 @@ defect — fix it rather than working around it.
 | I am writing a new check — what do I owe? | [`CHECK_AUTHORING_GUIDE.md`](CHECK_AUTHORING_GUIDE.md) |
 | Which derived artifact has which writer and staleness key? How does a review finding become a gate? Where does a human actually decide? | [`QA_QI_INFRASTRUCTURE_MAP.md`](QA_QI_INFRASTRUCTURE_MAP.md) |
 | What are we publishing, what state is it in, and what is outstanding? | [`PUBLICATION_PORTFOLIO_MAP.md`](PUBLICATION_PORTFOLIO_MAP.md) |
+| What does the operator control surface show, which of its actions persist, and where does it read each panel from? | [`DASHBOARD.md`](DASHBOARD.md) |
 
 ⚠️ **`D` is overloaded across this project — always qualify it.** Five namespaces share the
 prefix: publication bundles (`D1`–`D12`), ADR-010's decisions (`§D1`–`§D7`, `§D5a`), ADR-009's

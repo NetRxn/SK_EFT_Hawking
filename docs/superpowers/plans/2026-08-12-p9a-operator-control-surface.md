@@ -517,7 +517,7 @@ The attachment point is clean: the per-sentence `<span>` at `:4439` already carr
 
 ### Task 9: Documents, and the full gate
 
-- [ ] **Step 1:** `docs/DASHBOARD.md` — the corrections below are **measured, not inherited**. ⚠️ An earlier draft of this step said "`docs/verification_log.jsonl` exists; `docs/submission_state.json` does not", taken from the ADR rather than from the disk. **Neither file exists.** That is the same claim-vs-measurement defect this plan exists to fix, so the list is now stated with how each was checked:
+- [ ] **Step 1:** `docs/architecture/DASHBOARD.md` — the corrections below are **measured, not inherited**. ⚠️ An earlier draft of this step said "`docs/verification_log.jsonl` exists; `docs/submission_state.json` does not", taken from the ADR rather than from the disk. **Neither file exists.** That is the same claim-vs-measurement defect this plan exists to fix, so the list is now stated with how each was checked:
 
   | claim in `DASHBOARD.md` | measured |
   |---|---|

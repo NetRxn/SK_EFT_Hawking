@@ -1119,14 +1119,24 @@ def check_architecture_inventory_fresh() -> CheckResult:
         "scripts/pre_commit_hook.sh",
         "scripts/install_pre_commit.sh",
         # Declared input to the (inert) freshness layer; never created. END_TO_END_MAP §6.
-        # Runtime artifacts: written during a /goal loop, absent in a clean tree.
         "docs/verification_log.jsonl",
+        # Declared as a Bundles-tab input by DASHBOARD.md and named there precisely to say
+        # it does NOT exist (ADR-012 C10/D22). Not gitignored either, so its absence is a
+        # gap rather than a local-artifact convention. Drop this entry when the submission
+        # event log acquires a store.
+        "docs/submission_state.json",
+        # Runtime artifacts: written during a /goal loop, absent in a clean tree.
         "active_issues.json",
         "blocked_questions.jsonl",
     }
     pathish = re.compile(r"^[A-Za-z_][\w./-]*\.(?:py|sh|md|json|lean|tex|jsonl|toml|yml)$")
+    # ⚠️ `docker` added 2026-08-12 (ADR-012 P8d). `docker/docker-compose.graph.yml` EXISTS
+    # and was reported dangling the moment DASHBOARD.md moved under `docs/architecture/` —
+    # the scanner simply never walked that directory. A root missing from this tuple makes
+    # a live file indistinguishable from a deleted one, which is the opposite of what this
+    # leg is for, so the fix is the root and never an exception entry.
     roots = ("scripts", "docs", "tests", "src", "papers", "lean", "figures",
-             "temporary", "notebooks", ".claude/plugins/skeft-qa")
+             "temporary", "notebooks", "docker", ".claude/plugins/skeft-qa")
     # `.lake` holds the whole Mathlib build tree — tens of thousands of files that no
     # architecture document references. Walking it turns a sub-second scan into minutes.
     skip_parts = {".lake", ".git", "__pycache__", "node_modules", ".pytest_cache"}

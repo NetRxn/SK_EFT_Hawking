@@ -489,7 +489,7 @@ uv run python scripts/provenance_dashboard.py           # http://localhost:8050
 - [Architecture Scope](docs/ARCHITECTURE_SCOPE.md) — Layer-3 predictive boundary (SM + GR in scope, dark-energy sector out under tested mechanisms)
 - [Permanent Tracked Hypotheses](docs/PERMANENT_TRACKED_HYPOTHESES.md) — the project's load-bearing tracked `Prop` ledger
 - [Knowledge Graph](docs/KNOWLEDGE_GRAPH.md) — interactive provenance visualization
-- [Dashboard](docs/DASHBOARD.md) — parameter verification, proof architecture, paper claims
+- [Dashboard](docs/architecture/DASHBOARD.md) — parameter verification, proof architecture, paper claims
 
 **Roadmaps.** [`docs/roadmaps/`](docs/roadmaps/) contains phase-specific execution plans for **Phase 1 → Phase 6z** (the active Phase-6 series runs `Phase6a_Roadmap.md` through `Phase6z_Roadmap.md`, with per-wave sub-roadmaps under `Phase6v/`, etc.), plus [Phase7_Roadmap.md](docs/roadmaps/Phase7_Roadmap.md) and [Phase7a_Roadmap.md](docs/roadmaps/Phase7a_Roadmap.md) for the bundle-architecture reframe. Forward-looking general targets are tracked in [Phase6_Deferred_Targets.md](docs/roadmaps/Phase6_Deferred_Targets.md).
 

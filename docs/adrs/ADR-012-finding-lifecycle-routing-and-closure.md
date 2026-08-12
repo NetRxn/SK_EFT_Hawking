@@ -217,7 +217,7 @@ Building a second check would be the "second mechanism beside one that already e
 *weaker*: an aggregate ceiling of 247 mixes 190 permanently-inert legacy records with 57 live ones,
 so deleting one legacy record silently buys a free slot for a real dangling closure. **See D13.**
 
-**C10. The dashboard's own documentation over-describes it.** `docs/DASHBOARD.md` declares a
+**C10. The dashboard's own documentation over-describes it.** `docs/architecture/DASHBOARD.md` declares a
 cross-tab change bus (`docs/verification_log.jsonl`) and a submission-event log
 (`docs/submission_state.json`); **neither file exists**, and neither is gitignored.
 `END_TO_END_MAP.md` §6 already names the first as the reason the entire freshness layer is inert.
@@ -679,7 +679,7 @@ Four panes, one page, **not merged** (D12). Each keeps its own store, vocabulary
   a change it never writes (C10, Invariant #8). A control surface whose approve button lies is
   worse than no control surface, and this one is the publication sign-off path.
 
-`docs/DASHBOARD.md` is corrected in the same change: two declared inputs do not exist, the roster
+`docs/architecture/DASHBOARD.md` is corrected in the same change: two declared inputs do not exist, the roster
 and graph-type figures are stale, and the change-bus it describes has never carried an event.
 
 ### D16 — The loop terminates at a closed-out, merged wave, not at a ledger record
@@ -845,7 +845,7 @@ on it, including its evidence line."* Roughly a third of its drift ledger is abo
 count, several items' *correcting evidence* has itself gone stale, and one filed claim was withdrawn
 the day after it was written. The table above records state, not permission to skip re-measurement.
 
-### D22 — `docs/DASHBOARD.md` is canonicalized into `docs/architecture/`
+### D22 — `docs/architecture/DASHBOARD.md` is canonicalized into `docs/architecture/`
 
 **Operator question, answered: yes.** The dashboard is now a governed surface with four new views and
 two repairs, and its describing document has four false claims — which is precisely the drift that
@@ -864,7 +864,7 @@ Moving it buys three mechanical guarantees it does not currently have:
    target alongside the other seven rather than a document nobody is assigned to read.
 
 Costs, stated: the exception set in `scripts/architecture_inventory.py` must gain the two
-deliberately-absent paths with their reasons, every inbound reference to `docs/DASHBOARD.md` is
+deliberately-absent paths with their reasons, every inbound reference to `docs/architecture/DASHBOARD.md` is
 updated in the same commit, and the move is a `git mv` so history follows.
 
 ---
@@ -1064,15 +1064,30 @@ nothing is parked yet, so this narrows the unmechanized roadmap seam without clo
 **P8c — Prior-ADR open items enter the queue (D21).** ADR-010 D2, D5 and D7 filed as findings with
 lanes and targets, pointing back at ADR-010 as the decision record. Re-measure each before filing.
 
-**P8d — Canonicalize `docs/DASHBOARD.md` (D22).** `git mv` into `docs/architecture/`, add the
-Answers contract line and the README ownership row, strip the counts, correct the four false claims,
-extend the inventory check's exception set, update inbound references.
+**P8d — Canonicalize `docs/architecture/DASHBOARD.md` (D22). ✅ COMPLETE 2026-08-12.** `git mv`
+into `docs/architecture/`; the Answers contract line and README ownership row added (the check now
+covers eight owned documents); the bundle roster, tier split and graph-type counts replaced with
+pointers to the census; the false claims corrected **and marked in place** rather than silently
+deleted, because a corrected mistake with no scar gets re-litigated.
+
+⚠️ **The move immediately earned its keep, and in a way D22 did not predict.** `doc_refs_resolve`
+fired on **three** references the moment the file entered the directory, and only two were the
+expected deliberate absences. The third, `docker/docker-compose.graph.yml`, **exists** — the
+scanner's `roots` tuple simply never walked `docker/`. A root missing from that tuple makes a live
+file indistinguishable from a deleted one, which inverts the leg's whole purpose, so the fix was
+the root and not an exception entry. `docs/submission_state.json` joined the reasoned-exception set
+with its own note; `docs/verification_log.jsonl` was already there.
+
+**Measured, not inherited:** every claim was checked against the tree rather than copied from C10.
+`/api/save` was documented as *"Save accumulated verification actions"* and the string appears
+**nowhere** in the app — a persistence path a reviewer could have believed in that has never
+existed. `/api/verify` is really `/verify`. `BACKED_BY` appears **zero** times in the dashboard.
 
 **P9 — The operator control surface (D15, D20).** In three waves, because they carry different risk. **P9a:**
 S1, S4, the QI de-saturation and the sign-off persistence repair — all over data that already exists,
 all with a template-contract test and a browser test per D2's dashboard exception. **P9b:** S2 and S3,
 built thin against the specifications in D15 and iterated. **P9c:** the Loops pane (D20) over the
-harness state that already exists — no new writer. `docs/DASHBOARD.md` corrected in the commit
+harness state that already exists — no new writer. `docs/architecture/DASHBOARD.md` corrected in the commit
 that makes each claim wrong.
 
 **P10 — Orchestration (D2, D10, D11, D16).** Route by lane, fan out on disjoint `target`, traverse
@@ -1185,7 +1200,7 @@ the writer D14 is modelled on).
 - `scripts/record_review.py` — the precedent writer for D14
 - `docs/WAVE_EXECUTION_PIPELINE.md` §Stage 13 — emission, and the re-invocation rule
 - `docs/READINESS_GATES.md` — canonical gate definitions; target of P1
-- `docs/DASHBOARD.md` — the control surface's governing document; corrected under D15
+- `docs/architecture/DASHBOARD.md` — the control surface's governing document; corrected under D15
 - `docs/architecture/CHECK_AUTHORING_GUIDE.md` — the obligations D8 and D13 inherit
 - `lean/atlas_view.json` — the derived Lean substrate queue (C2)
 - `docs/architecture/.working-docs/REVIEW_COVERAGE_LEDGER.md` — the chunking discipline the `pyrust`
