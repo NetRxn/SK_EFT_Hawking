@@ -663,6 +663,14 @@ failures because it is invisible from the outside.
 
 ### What remains before this ADR can recommend
 
+> 🔗 **The outstanding items below are queued by [ADR-012](ADR-012-finding-lifecycle-routing-and-closure.md) §D21**
+> (2026-08-12). Each is filed as a `ReviewFinding` carrying its lane and target and pointing back
+> here, so resumed work inherits the orientation instead of re-deriving it: **D2** → 21 `lane=prose`
+> findings, one per bundle, disjoint targets; **D5** → `lane=substrate`, structured as a `BLOCKED_BY`
+> tree of per-arc dispositions; **D7** → `lane=infra`. This ADR stays the decision record; the queue
+> becomes the work record. ⚠️ The standing rule below still binds: **re-derive each item, including
+> its evidence line, before acting on it.**
+
 The measurement pass discharges the EVIDENCE CLASS gate; it does **not** discharge D2, D4 or D5, all of
 which require reading manuscript content the pass deliberately did not read (C4). Outstanding:
 

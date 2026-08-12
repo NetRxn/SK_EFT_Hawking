@@ -2,7 +2,12 @@
 
 **Date:** 2026-08-12 (rewritten same day, scope expanded on operator ruling)
 **Status:** spec, pending implementation plan
-**Implements:** ADR-012 in full — D1 through D18
+**Implements:** ADR-012 in full — D1 through D22
+**Reconciled with:** ADR-002 (ratchet shape) · ADR-004 (single-writer posture) · ADR-005/007 (the
+atlas the `lean` lane points into) · ADR-006 (the Aristotle gauntlet) · ADR-008 (worktree slots) ·
+ADR-009 (the check contract §4 obeys) · ADR-010 (§D5a apex model; §6a's build-approval constraint,
+which §4 satisfies rather than waives) · ADR-011 (`prose` gates; `record_review.py`, the model for
+the writer). Per-ADR detail lives in ADR-012 §Overlap reconciliation and is **not** restated here.
 **Supersedes:** this file's own first version, which covered only the ledger's write side. That
 scope was a strict subset and is preserved below as §6.
 
@@ -351,10 +356,15 @@ known state, on the same discipline `BUNDLE_READINESS_HEATMAP.md` already follow
 **The overlay is the bottleneck signal:** open findings per bundle, broken down by lane. That is what
 turns "D3 is yellow" into "D3 is held by six substrate findings".
 
-⚠️ **Live agent activity has no writer, and v1 does not invent one.** Nothing records what is running:
-the worktree slots, the `/goal` markers and the harvest register each hold a fragment. v1 shows
-**queue depth and stage position**, and says so on its face. A board implying live activity while
-rendering stale state would be absence-rendered-as-success in a new place.
+⚠️ **`/goal`-level activity IS surfaced (§5.2); subagent slots are not.** A loop runs for hours to
+days and already emits a marker, a per-compaction heartbeat and a convergence signal. Worktree slots
+turn over in minutes and are deliberately excluded — a board tracking them would be stale between
+renders.
+
+⚠️ **Two of this board's own fields rest on known-soft signals.** `ARCHITECTURE_TODOs` D50 (a bundle
+can register Lean modules the build does not contain) and D51 (the length gate keys on mtime, so one
+identical rewrite blanks all 21) are open and are not this spec's to fix. S2 renders both; it must
+name what guards each rather than present either as authoritative.
 
 ### S3 — Attention: four feeds, not one list
 
@@ -365,8 +375,21 @@ fine."* Merging them would destroy the property that makes each legible.
 |---|---|---|---|
 | **Publication** | System-1 findings needing a call | `ReviewFinding` nodes + `docs/QI_REGISTER.md` | exists; QI derivation emits 0 until repaired |
 | **Process** | System-2 dev-loop/harness findings from `/skeft-qa:harvest` | `docs/dev-loops/SYSTEM2_REGISTER.md` — `## Open`, `### <slug>`, tiered | exists; **gitignored, local-only, 840 KB** |
-| **Decisions** | PD-3's second legitimate stop | **`.claude/dev-harness/blocked_questions.jsonl`** | **already written today** by the `AskUserQuestion` guard |
+| **Decisions** | PD-3's second legitimate stop | **`.claude/dev-harness/blocked_questions.jsonl`** | written by the guard **and already read** — see below |
 | **Parked** | authorized work on an external release condition | roadmap prose across 119 files | **no machine-readable state — §5.1** |
+| **Loops** | armed `/goal` instances (ADR-012 D20) | `.claude/dev-harness/managed/` + `snapshot_*` + `stall_history/` | **exists today; never surfaced — §5.2** |
+
+⚠️ **The blocked-question log is not unread.** `coach` reads it in-time (the `PreToolUse` guard
+denies, logs, redirects, and the coach returns one decision plus one next action), and the harvest
+skill hands a watermarked span to `harvest-extractor` → consolidator → System-2 register →
+`/skeft-qa:debrief`. **The gap is a surface and a latency floor**, not a reader: a question reaches
+the operator only after a harvest (cadence 4 h) through an 840 KB gitignored register, with no view
+saying any are waiting. Feed C shortens that path for questions the coach could not settle.
+
+⚠️ **Feed B should read `active_issues.json`, not the 840 KB register.** That file is written by every
+harvest and **read by nothing** (`_read_active_issues` has zero callers), and it already carries
+`{title, tier, tally, kind}` — aggregated and tiered, exactly the pane's shape. This turns a
+documented dead artifact into the backing store.
 
 **Process is read-only.** `/skeft-qa:debrief` is the structurally human-only governor for promotion,
 closure and misfiling; a second write path would break the `_clamp_tier` guarantee that no other
@@ -400,6 +423,44 @@ automatically. That is the "route todos and blockers back to planning" path.
 existing files are untouched until something is parked deliberately. And this narrows rather than
 closes a pre-existing hole: `END_TO_END_MAP.md` §2 records that the roadmap layer is entirely
 unmechanized, and it remains so.
+
+### 5.2 Loops — `/goal` activity, from state that already exists (ADR-012 D20)
+
+No new writer. Everything below is written on every loop today, under `.claude/dev-harness/`
+(**gitignored**, so the pane is empty on a fresh clone and must say so rather than render an empty
+roster as "no loops running"):
+
+| artifact | writer | carries |
+|---|---|---|
+| `managed/<session>.json` | `/skeft-qa:goal-prompt` at arming | `role` · `goal` · `goal_id` · **`roadmap_path`** · **`notebook_path`** · `jsonl_path` · `repo` · `question_guard` |
+| `snapshot_<goal_id>.json` | `harness_precompact.py` | git HEAD + last assistant text; **mtime = per-compaction heartbeat** |
+| `stall_history/<goal_id>.json` | `stall_detector.py` via the harvest consolidator | `residual_id` + `status` per compact event — **the same residual repeating is non-convergence**, computed against the derived atlas |
+| `coaching/<goal_id>.json` | the harvest consolidator | the SessionStart coaching block |
+| `harvest_state.json`, `watermarks/` | harvest | `last_run_ts`, `cadence_hours`, read positions |
+
+Per armed goal the pane shows: goal text, repo, last heartbeat, question-guard state, outstanding
+blocked questions, and **residual-repeat count** — a bottleneck detector that already exists and has
+never been surfaced.
+
+⚠️ **`roadmap_path` and `notebook_path` are why this is worth building, not merely cheap.** They are a
+live edge from a running loop to the planning artifact that authorized it — the one direction the
+system cannot currently traverse. With §5.1's parked items keyed on the same roadmaps, one join
+answers *what is running against this roadmap, what is parked behind it, and what is queued.*
+
+### 5.3 `docs/DASHBOARD.md` moves under `docs/architecture/` (ADR-012 D22)
+
+The document drifted **because** it sits outside the governed set. Moving it buys three mechanical
+guarantees:
+
+1. **every path-like reference must resolve** — the two nonexistent declared inputs become a hard
+   failure of `architecture_inventory_fresh`, or must be declared in its reasoned-exception set;
+2. **no counts in the narrative** — the stale roster and graph-type figures move to the derived
+   census or go;
+3. **a required-content contract** — a `> **Answers:**` line plus a `README.md` ownership row, held
+   verbatim-equal by the check, so it becomes an assigned review target.
+
+Cost: `scripts/architecture_inventory.py`'s exception set gains the two deliberately-absent paths
+with reasons; every inbound reference updates in the same commit; the move is a `git mv`.
 
 ### Two repairs, which are prerequisites
 
@@ -502,7 +563,7 @@ Per architecture rule 2, each lands **in the commit that makes it wrong**, not b
 | `docs/architecture/QA_QI_INFRASTRUCTURE_MAP.md` | shows the ledger as an append-only input with no writer named; §3's silent-drop list predates `BLOCKED_BY` | name the writer; add the new drop points |
 | `docs/WAVE_EXECUTION_PIPELINE.md` | §13 describes emission and re-invocation but not closure, the lanes, or the append-only exception | add the closure step and the lane taxonomy, cross-referencing `READINESS_GATES.md` rather than restating it |
 | `docs/KNOWLEDGE_GRAPH.md` | `SUPERSEDES` is documented as unimplemented; `BLOCKED_BY` is a new edge type | note the writer; add `BLOCKED_BY` with its emitter and consumer |
-| `docs/DASHBOARD.md` | four false claims (§5) | correct them; document S1–S4 |
+| `docs/DASHBOARD.md` → **`docs/architecture/DASHBOARD.md`** | four false claims (§5); drifted because it sits outside the governed set | `git mv`; add the Answers contract line + README ownership row; strip counts; correct the claims; extend the inventory check's exception set; update inbound references (§5.3) |
 | `docs/architecture/SURFACE_INVENTORY.md` | derived | regenerate — picks up new checks, edge types and scripts |
 | `docs/adrs/ADR-012-…md` | this spec carries D6/D13/D15 in more detail than the ADR | add the pointer; mark phases as they land |
 

@@ -2526,6 +2526,14 @@ for `KerrSchild` and `SingleCopy` — **its environment is narrower than the ext
 set**. `lean_deps.json` is authoritative for "what is built"; the LSP index is not. Search
 Lean by CONTENT via the lean4 skill, and cross-check module existence against `lean_deps.json`.
 
+> 🔗 **D45–D49 are re-filed as `ReviewFinding`s under [ADR-012](../../adrs/ADR-012-finding-lifecycle-routing-and-closure.md) §D4**
+> (2026-08-12). Filing them here was drift: this file's charter is architecture-accuracy defects, and
+> these are substrate, Lean and prose defects that needed a queue with teeth. **Lanes are assigned at
+> re-filing after re-measurement, not pre-assigned** — the block is mixed (D48 is a Lean
+> strengthening; D47 and D49 are prose). **D50 and D51 stay here**; both are architecture-accuracy
+> defects and belong to this charter. D39–D44 also stay, as this file's own non-blocking residue —
+> and **D39 is ADR-012 §D19's worked example** of parked work with a release condition.
+
 ### D45 — I1 drafting wave, 2026-08-11: four SUBSTRATE defects found by the drafters
 
 Three `skeft-qa:paper-drafter` agents drafted I1 §§3–5. Each was told to verify every Lean claim

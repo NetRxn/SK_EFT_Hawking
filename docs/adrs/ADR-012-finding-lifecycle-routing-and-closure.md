@@ -781,6 +781,75 @@ updated in the same commit, and the move is a `git mv` so history follows.
 
 ---
 
+## Overlap reconciliation with prior ADRs (keep the ADR set one system)
+
+Following ADR-009's convention. Each row states what the prior ADR owns and what this one does
+**not** touch, so the set stays one system rather than twelve.
+
+- **[ADR-002](ADR-002-native-decide-policy.md)** owns the `native_decide` policy and its ratchet.
+  **D9 copies its per-bundle ratchet *shape*** (`NATIVE_DECIDE_BUNDLE_DEBT`, down-only, zero
+  headroom) and changes nothing about it. `TODO-D39` — *"re-state the axiom-purity claim once
+  `native_decide` is eliminated"* — is a textbook **D19** parked item: its release condition is
+  ADR-002's elimination programme, expressible as a `phase:` token.
+- **[ADR-004](ADR-004-substrate-integrity-gates.md)** owns the R1–R5 substrate gates and the
+  **single-writer posture** for generated artifacts. **D14 extends that posture rather than
+  weakening it**: the ledger currently has *no* writer, and `close_finding.py` becomes its single
+  one. ADR-004's rule is the reason it must be the only one.
+- **[ADR-005](ADR-005-derived-proof-atlas.md) / [ADR-007](ADR-007-kernel-nogo-ledger-and-negative-frontier.md)**
+  own the derived atlas and the kernel-no-go ledger. **C2 is binding: the `lean` lane points *into*
+  the atlas and never duplicates it.** D20's stall signal is already computed against
+  `lean/atlas_view.json`; surfacing it adds no second derivation.
+- **[ADR-006](ADR-006-aristotle-submission-rewrite.md)** owns the submission CLI and the
+  verify-then-graft gauntlet. The `lean` lane's Aristotle fallback (D2) **is** that gauntlet,
+  unchanged; no lane may bypass it.
+- **[ADR-008](ADR-008-shared-lean-slot-control-plane.md)** owns the worktree slot control plane the
+  `lean` lane fans out into, and established that *shared infrastructure must be compatible before
+  any client activates*. D15's surfaces follow it: each lands behind its own gates, and none is a
+  precondition for another. `QA_QI_INFRASTRUCTURE_MAP.md` §6 records that the control plane has zero
+  references to `validate.py`, `build_graph` or `bundle_readiness`; **this ADR introduces no
+  coupling to it.**
+- **[ADR-009](ADR-009-validation-suite-modularization.md)** owns the check framework, hazards H1–H5,
+  and the registration contract. **D13's promotion obligations are ADR-009's, quoted not invented** —
+  `_CANONICAL_ORDER`, the re-export, the mutation entry, the CI floor. Its §Deferred items 0–7 are
+  **all eight dispositioned** (D21), so nothing there is queued.
+- **[ADR-010](ADR-010-publication-portfolio-reassessment.md)** owns the portfolio, the §D5a apex
+  intake model — which is what D15's Flow-board rows key on — and its own open items, queued by
+  **D21**.
+
+  ⚠️ **ADR-010 §6a constrains this ADR directly**, and the constraint was met rather than waived:
+  *no new check, gate or script without approval — establish what existing machinery covers the
+  defect by reading the code, describe the residue, ask, then build.* **C9 is that reading**
+  (`ledger_ids_resolve` already exists), **D13 is that residue** (promote or widen, never duplicate),
+  and this document is the asking.
+- **[ADR-011](ADR-011-manuscript-quality-layer.md)** owns the manuscript quality layer: the Stage
+  9/10 sub-gates that are the `prose` lane's gate set, the reader-facing-voice and em-dash checks,
+  and `scripts/record_review.py` — **the writer D14 is modelled on**. Its Phase 2 promotion path is
+  what D9's middle tier attaches to; D9 adds a blocking condition to `stage13_status`, it does not
+  change who writes the field.
+
+### Overlap with `ARCHITECTURE_TODOs.MD` (the working doc, per C1)
+
+The file's charter is one architecture-accuracy pass, under a standing operator build-freeze. **C1
+holds: this ADR does not absorb it, parse it, or make it infrastructure.** Where the two touch:
+
+| item | state | relationship |
+|---|---|---|
+| **B4** — chain-of-backing links name Lean targets that do not exist | ✅ GATED, backlog ratcheted (`chain_backing_targets_resolve`) | the **precedent** for D9's and D13's ratchets over a pre-existing population — a do-not-grow guard, not a defect count |
+| **C1** — `lean_zero_sorry` reads a derived artifact rather than the extraction | `WATCH` | untouched |
+| **TODO-D39** — circle back once `native_decide` is eliminated | parked | **the worked example for D19**; release condition is ADR-002's programme |
+| **D40–D44** — pytest outcome drift · `verify_scope` residue · plugin-dev residue · skill-listing budget · `bundle_append --bookkeeping-only` | open, non-blocking | `lane=infra` on re-filing, if and when the freeze lifts. **Not re-filed by this ADR** — they are the file's own residue |
+| **D45–D49** — the I1 drafting-wave defects | filed there during the pilot; **that was drift** | **re-filed as findings under D4.** Mixed lanes, not all substrate: D48 is a Lean strengthening, D47 and D49 are prose. Each is re-measured at filing and assigned its own lane — the ADR does not pre-assign them |
+| **D50, D51** — bundles register Lean modules that were never built · the length gate keys on mtime and one identical rewrite blanks all 21 | open | **stay in the working doc.** Both are architecture-accuracy defects and belong to its charter |
+
+⚠️ **Two of the file's own items are load-bearing for surfaces this ADR builds.** D50 means a bundle's
+registered module list can name modules the build does not contain, and D51 means the manuscript-length
+signal can blank for the whole roster on one rewrite. **The Flow board (S2) renders both fields.**
+Neither is this ADR's to fix, and S2 must not present either as authoritative without saying what
+guards it — the alternative is a control surface that inherits a known-soft signal and displays it as
+fact.
+
+---
+
 ## Pilot — the 117, dispositioned 2026-08-12
 
 Manifest: `docs/audits/2026-08-12-critical-triage/manifest.json`. Every row carries a disposition,
@@ -969,6 +1038,22 @@ and hides operator-owned Lean and substrate findings inside `infra`.
 ---
 
 ## References
+
+**Prior ADRs** — reconciled individually in §Overlap reconciliation; listed here so a reader lands on
+the owner of each surface this ADR touches:
+[ADR-002](ADR-002-native-decide-policy.md) (the ratchet shape D9 copies) ·
+[ADR-004](ADR-004-substrate-integrity-gates.md) (the single-writer posture D14 extends) ·
+[ADR-005](ADR-005-derived-proof-atlas.md) + [ADR-007](ADR-007-kernel-nogo-ledger-and-negative-frontier.md)
+(the atlas the `lean` lane points into, C2) ·
+[ADR-006](ADR-006-aristotle-submission-rewrite.md) (the gauntlet the `lean` lane ends in) ·
+[ADR-008](ADR-008-shared-lean-slot-control-plane.md) (the worktree slots the fan-out uses) ·
+[ADR-009](ADR-009-validation-suite-modularization.md) (the check contract D13 obeys; §Deferred all
+eight dispositioned) · [ADR-010](ADR-010-publication-portfolio-reassessment.md) (§D5a's apex model,
+§6a's build-approval constraint, and the open items D21 queues) ·
+[ADR-011](ADR-011-manuscript-quality-layer.md) (the `prose` lane's gates, and `record_review.py`,
+the writer D14 is modelled on).
+
+**Implementation and artifacts:**
 
 - `scripts/build_graph.py::extract_review_finding_nodes` — status inference, the closure bar, and the
   vacuity repair recorded in its comments
