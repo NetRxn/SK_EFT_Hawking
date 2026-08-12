@@ -37,7 +37,7 @@
 | `scripts/validation/checks/graph_atlas.py` | **loses** the `ledger_ids_resolve` leg | 11 |
 | `scripts/close_finding.py` | **new** — the only supported ledger writer | 7, 8 |
 | `scripts/review_runner.py` | per-finding orientation brief | 13 |
-| `docs/review_finding_supersessions.json` | schema + nine re-keys + the 98 closures | 9, 14 |
+| `docs/review_finding_supersessions.json` | schema + the re-keys + 106 pilot closures | 9, 14 |
 | `.claude/plugins/skeft-qa/agents/*.md` | the emission template | 4 |
 
 ---
@@ -58,7 +58,7 @@ Expected: clean tree on the new branch.
 
 ### Task 1: The closure contract enters the canonical gate document
 
-Docs first (ADR-012 P1, D3). `READINESS_GATES.md` is the canonical gate document and has **zero** mentions of the ledger, so a reader cannot learn how a gate un-blocks. Every later task depends on a rule that currently lives only in a `build_graph.py` comment.
+Docs first (ADR-012 P1, D3). `READINESS_GATES.md` is the canonical gate document and has **zero** mentions of the *supersession* ledger (its five "ledger" hits are the unbuilt `FirstClaimLedger`), so a reader cannot learn how a gate un-blocks. Every later task depends on a rule that currently lives only in a `build_graph.py` comment.
 
 **Files:**
 - Modify: `docs/READINESS_GATES.md`
@@ -225,8 +225,12 @@ class TestRoutingFieldsAreParsedNotInvented:
         blocks = sum(1 for n in ns if n['meta'].get('blocks'))
         target = sum(1 for n in ns if n['meta'].get('target'))
         # Floors, not equalities: the corpus grows. Measured 2026-08-12 at 93% / 92%.
-        assert blocks / len(ns) > 0.80, f"blocks coverage collapsed to {blocks}/{len(ns)}"
-        assert target / len(ns) > 0.80, f"target coverage collapsed to {target}/{len(ns)}"
+        # ⚠️ DENOMINATOR: 93%/92% was measured over SEVERITY-GLYPH SECTIONS (1,178).
+        # extract_review_finding_nodes returns 1,631 nodes — a wider population, because
+        # not every minted node comes from a section carrying the field template.
+        # Measured over NODES: Gate 1241/1631 = 76%, Location 1164/1631 = 71%.
+        assert blocks / len(ns) > 0.70, f"blocks coverage collapsed to {blocks}/{len(ns)}"
+        assert target / len(ns) > 0.65, f"target coverage collapsed to {target}/{len(ns)}"
 ```
 
 - [ ] **Step 2: Run it and watch it fail**
@@ -280,7 +284,7 @@ print('blocks', sum(1 for n in ns if n['meta'].get('blocks')), '/', len(ns))
 print('target', sum(1 for n in ns if n['meta'].get('target')), '/', len(ns))"
 ```
 
-Expected: tests PASS; roughly 93% / 92% populated.
+Expected: tests PASS; roughly **76% / 71%** over nodes (93%/92% is over severity-glyph sections — a different, narrower denominator).
 
 - [ ] **Step 6: Commit**
 
@@ -330,24 +334,25 @@ class TestLaneAndVerifyAreParsedForwardOnly:
 
 ```python
 class TestLaneEnforcementExtendsSeverityDeclared:
-    def test_the_check_is_green_on_the_live_corpus(self):
+    """⚠️ `tests/test_d5_reviews.py`'s header forbids `check_x().passed is True` on the live
+    tree — such a test passes whether the check works or not. Use the file's OWN helpers
+    (`_reviews_tree(tmp_path, …)` + `_patch_roots(monkeypatch, root)`), which drive the real
+    check over a synthetic corpus with the path anchor monkeypatched by attribute."""
+
+    def test_a_clean_lane_declaration_passes(self, tmp_path, monkeypatch):
         from validation.checks.reviews import check_review_severity_declared
+        root = _reviews_tree(tmp_path, {"2026-08-12-x/A.md":
+            "### 1.1 — 🔴 CRITICAL — x\n\n- **Severity:** critical\n- **Lane:** substrate\n"})
+        _patch_roots(monkeypatch, root)
         assert check_review_severity_declared().passed is True
 
-    def test_a_seeded_unknown_lane_turns_the_check_red(self, tmp_path, monkeypatch):
-        """Non-vacuity (ADR-012 D8): seed the PRODUCTION artifact, observe red."""
-        import validate_helpers as _H
+    def test_an_unmappable_lane_turns_the_check_red(self, tmp_path, monkeypatch):
+        """Non-vacuity (ADR-012 D8): seed the defect, observe red."""
         from validation.checks.reviews import check_review_severity_declared
-        import datetime
-        d = _H.PROJECT_ROOT / "papers" / "AutomatedReviews" / "9999-99-99-seeded-lane"
-        d.mkdir(parents=True, exist_ok=True)
-        f = d / "SEED.md"
-        f.write_text("### 1.1 — 🔴 CRITICAL — seeded\n\n"
-                     "- **Severity:** critical\n- **Lane:** wizardry\n")
-        try:
-            assert check_review_severity_declared().passed is False
-        finally:
-            f.unlink(); d.rmdir()
+        root = _reviews_tree(tmp_path, {"2026-08-12-x/A.md":
+            "### 1.1 — 🔴 CRITICAL — x\n\n- **Severity:** critical\n- **Lane:** wizardry\n"})
+        _patch_roots(monkeypatch, root)
+        assert check_review_severity_declared().passed is False
 ```
 
 - [ ] **Step 2: Run and watch them fail**
@@ -408,7 +413,13 @@ def _parse_blocked_by(body: str) -> list[str]:
 
 - [ ] **Step 5: Extend `check_review_severity_declared` in `scripts/validation/checks/reviews.py`**
 
-Inside the existing loop that validates the declared severity token, add a parallel leg. Import the map the same way the severity leg imports its own:
+⚠️ **`check_review_severity_declared` iterates DOCUMENTS, not findings** — it runs `_SEV_VALUE.findall(text)` over whole-file text. There is no per-finding body to hand `_parse_lane`, and `_parse_lane` uses `.search`, so applying it here would validate one lane per file. **Mirror the `_SEV_VALUE` leg exactly** with a module-scope sibling in `reviews.py`:
+
+```python
+_LANE_VALUE = re.compile(r"^[-*]\s*\*\*Lane:?\*\*:?\s*([A-Za-z]+)", re.M | re.I)
+```
+
+then, inside the same document walk, `declared_lanes.update(x.lower() for x in _LANE_VALUE.findall(text))`. That is genuinely the same walk and needs no `_parse_lane`. Import the map the way the severity leg imports its own:
 
 ```python
     try:
@@ -571,19 +582,25 @@ def finding_is_dispatchable(node: dict, node_ids: set[str], closed_ids: set[str]
 
 - [ ] **Step 4: Wire the edges into the graph build**
 
-In the function that assembles `links`, after the `FLAGS` extraction, add:
+⚠️ **There are TWO edge-assembly sites and neither has a `nodes` list** — both receive only
+`node_ids: set`. `extract_all_edges_without_gates` (the pre-gate view) and `extract_all_edges`
+(the real graph). Patching one makes the two disagree. So the extractor takes no argument and
+fetches its own nodes, matching every sibling extractor:
 
 ```python
-    links.extend(extract_blocked_by_edges(
-        [n for n in nodes if n.get('type') == 'ReviewFinding']))
+def extract_blocked_by_edges() -> list[dict]:
+    return _blocked_by_edges(extract_review_finding_nodes())
 ```
+
+and **both** sites get `edges.extend(extract_blocked_by_edges())` beside their `FLAGS` call.
+Keep the pure `_blocked_by_edges(finding_nodes)` for the tests above.
 
 - [ ] **Step 5: Document the edge type**
 
 In `docs/KNOWLEDGE_GRAPH.md`, add a row to the readiness-system edge table:
 
 ```
-| `BLOCKED_BY` | ReviewFinding | ReviewFinding | This finding waits on another, or on an external release condition | ADR-012 D10 | ✅ — consumer is `build_graph.finding_is_dispatchable` |
+| `BLOCKED_BY` | ReviewFinding | ReviewFinding | This finding waits on another, or on an external release condition | ADR-012 D10 | ⏳ — emitter live; `finding_is_dispatchable` is the consumer and is **called by orchestration, which is not built yet**. Zero live edges until findings start carrying `blocked_by`. Do not read this row as gated |
 ```
 
 Extend the existing `SUPERSEDES` note to name `scripts/close_finding.py` as the ledger's writer.
@@ -610,7 +627,15 @@ three edge types that gates query and nothing emits."
 
 ---
 
-### Task 6: REQUIRED blocks bundle-green, on two ratchets
+### Task 6: Ratchet the open-REQUIRED population down, per bundle
+
+⚠️ **PREMISE CORRECTED 2026-08-12 — do not trust older commit messages on this.** REQUIRED does
+**not** need to be made blocking: `readiness_gates.py:856` already sets
+`BLOCKING_SEVERITIES = {'critical','blocker','major'}`, `bundle_readiness.py:391` counts `major`
+into `n_blockers`, and `bundle_stage13_claim_consistent` compares a green claim against that count.
+**What is missing is a population guard** — nothing asserts the open-REQUIRED population cannot
+*grow*, and the existing consistency leg fires on **zero rows today** because no bundle claims
+`stage13_status: green`. This task adds the growth guard, not a severity tier.
 
 **Files:**
 - Modify: `scripts/validation/checks/bundles_readiness.py` (`check_bundle_stage13_claim_consistent`)
@@ -619,24 +644,30 @@ three edge types that gates query and nothing emits."
 **Interfaces:**
 - Produces: `bundles_readiness.REQUIRED_OPEN_BY_BUNDLE: dict[str, int]`, `bundles_readiness.UNATTRIBUTED_OPEN_BLOCKING_CEILING: int`
 
-- [ ] **Step 1: Measure both populations first**
+- [ ] **Step 1: Measure through the population the CHECK reads — not through `inferred_bundle`**
+
+⚠️ **These are two different populations, and using the wrong one makes the leg red on arrival.**
+`check_bundle_stage13_claim_consistent` reads its counts from the bundle aggregation, which
+attributes a finding through `inferred_paper or inferred_bundle` **plus** the paper→bundle mapping.
+Counting by `inferred_bundle` alone under-counts — measured: D3 3 vs 6, D5 6 vs 10, F 5 vs 15.
+
+Open the check, find the accessor it actually calls, call **that**, and read `major` out of its
+severity breakdown. Record the per-bundle dict verbatim into `REQUIRED_OPEN_BY_BUNDLE`.
+
+For the second ratchet: findings with **neither** `inferred_paper` nor `inferred_bundle` are
+filtered out inside the aggregation and never reach it, so the unattributed leg **must** call
+`build_graph.extract_review_finding_nodes()` itself. That is cheap (measured 0.25 s) and is not a
+"second graph build".
 
 ```bash
-uv run python - <<'PY'
-import sys, collections; sys.path.insert(0,'scripts')
-import build_graph as bg
-ns = bg.extract_review_finding_nodes()
-maj = [n for n in ns if n['meta']['severity'] == 'major' and n['meta']['status'] == 'open']
-by = collections.Counter(n['meta'].get('inferred_bundle') for n in maj)
-print('REQUIRED_OPEN_BY_BUNDLE =', {k: v for k, v in sorted(by.items()) if k})
-unattr = sum(1 for n in ns if n['meta']['status'] == 'open'
-             and n['meta']['severity'] in ('critical', 'major')
-             and not n['meta'].get('inferred_bundle'))
-print('UNATTRIBUTED_OPEN_BLOCKING_CEILING =', unattr)
-PY
+uv run python -c "
+import sys; sys.path.insert(0,'scripts'); import build_graph as bg
+print('UNATTRIBUTED =', sum(1 for n in bg.extract_review_finding_nodes()
+  if n['meta']['status']=='open' and n['meta']['severity'] in ('critical','major')
+  and not n['meta'].get('inferred_bundle')))"
 ```
 
-Record both. Measured 2026-08-12: 52 unattributed majors + 19 unattributed criticals = **71**; 15 bundles carry open majors.
+Measured 2026-08-12: **71** (52 majors + 19 criticals).
 
 - [ ] **Step 2: Write the failing tests**
 
@@ -651,11 +682,9 @@ class TestTheRequiredTier:
         import build_graph as bg
         from validation.checks.bundles_readiness import (
             REQUIRED_OPEN_BY_BUNDLE, UNATTRIBUTED_OPEN_BLOCKING_CEILING)
+        # ⚠️ Read through the SAME accessor the check uses, never `inferred_bundle`.
+        live = _open_majors_by_bundle(via=the_checks_own_accessor)
         ns = bg.extract_review_finding_nodes()
-        live = collections.Counter(
-            n['meta']['inferred_bundle'] for n in ns
-            if n['meta']['severity'] == 'major' and n['meta']['status'] == 'open'
-            and n['meta'].get('inferred_bundle'))
         for b, c in live.items():
             assert c <= REQUIRED_OPEN_BY_BUNDLE.get(b, 0), (
                 f"{b} has {c} open majors against ceiling "
@@ -709,7 +738,13 @@ REQUIRED_OPEN_BY_BUNDLE: dict[str, int] = {}   # ← fill from Step 1
 UNATTRIBUTED_OPEN_BLOCKING_CEILING: int = 71   # ← confirm against Step 1
 ```
 
-Inside `check_bundle_stage13_claim_consistent`, after the existing blocker leg, add two legs: per-bundle open-major counts against `REQUIRED_OPEN_BY_BUNDLE` (a bundle over ceiling fails, naming the bundle and the delta), and the unattributed count against `UNATTRIBUTED_OPEN_BLOCKING_CEILING`. Reuse the graph the existing leg already built — **do not rebuild it**.
+Inside `check_bundle_stage13_claim_consistent`, after the existing consistency leg, add two legs:
+
+1. **per-bundle** open-major counts, from the aggregation the check already computes, against
+   `REQUIRED_OPEN_BY_BUNDLE` — a bundle over ceiling fails, naming the bundle and the delta;
+2. **unattributed** open critical+major, from `build_graph.extract_review_finding_nodes()`, against
+   `UNATTRIBUTED_OPEN_BLOCKING_CEILING`. ⚠️ It **cannot** come from the aggregation — unattributed
+   findings are filtered out before they reach it. This leg is what makes the first one honest.
 
 - [ ] **Step 5: Run, then production-seed the mutation**
 
@@ -728,14 +763,16 @@ In `tests/test_d5_mutation_obligation.py`, update the `MUTATION_VERIFIED` entry 
 
 ```bash
 git add scripts/validation/checks/bundles_readiness.py tests/
-git commit -m "REQUIRED blocks bundle-green, on two ratchets
+git commit -m "ratchet the open-REQUIRED population down, per bundle
 
-D9 mechanizes PD-5. It EXTENDS bundle_stage13_claim_consistent, which already
-forbids a green Stage-13 against live blockers, by adding a severity tier.
+⚠️ NOT a new severity tier. major has been in BLOCKING_SEVERITIES since
+2026-07-31 and bundle_readiness counts it into n_blockers, so REQUIRED already
+blocks the gate, the readiness verdict and a green Stage-13 claim. What was
+missing is a GROWTH guard — and the existing consistency leg fires on zero rows
+today, since no bundle claims green.
 
-Two ratchets, not one: a per-bundle ceiling covers 167 of 219 open majors, and
-52 carry no bundle at all. With only the first, a finding that LOSES its
-attribution silently leaves the ratchet."
+Two ratchets: the per-bundle ceiling, and the unattributed population. Without
+the second, a finding that LOSES attribution silently leaves the ratchet."
 ```
 
 ---
@@ -1053,7 +1090,19 @@ print('re-keyed', n)
 PY
 ```
 
-Record the number. If it is not 9, **re-measure before proceeding** — do not assume.
+Record the number. Measured: exactly **9** are mechanically re-keyable, taking `review:`-scheme
+orphans 66 → 57. If it is not 9, **re-measure before proceeding**.
+
+⚠️ **TWO of the nine targets ALREADY have a ledger record** — `…:L2:5.1` and `…:D2:5.4`, both
+`status: fixed`. `_load_supersession_ledger` is last-wins, so a blind re-key creates a duplicate
+`finding_id` and one of each pair silently does nothing — the exact invariant `close_finding.py`
+exists to protect. **Skip any re-key whose target already carries a record**, and list those two in
+the commit message for deliberate handling.
+
+⚠️ **Lower `_LEDGER_DANGLING_BASELINE` 66 → 57 in THIS commit** (`graph_atlas.py:200`). The plan's
+own constraint is that a ratchet moves in the commit that moves its population; leaving it until
+Task 11 leaves nine slots of headroom in the guard whose whole job is catching newly-filed closures
+that name nothing.
 
 - [ ] **Step 2: Amend `_entry_format` to match its only reader**
 
@@ -1082,7 +1131,9 @@ import build_graph as bg
 ids = {n['id'] for n in bg.extract_review_finding_nodes()}
 led = json.load(open('docs/review_finding_supersessions.json'))['supersessions']
 rev = [r for r in led if r['finding_id'].startswith('review:') and r['finding_id'] not in ids]
-print('records', len(led), 'review:-scheme orphans', len(rev))
+dupes = len(led) - len({r['finding_id'] for r in led})
+print('records', len(led), 'review:-scheme orphans', len(rev), 'duplicate ids', dupes)
+assert dupes <= 4, f'{dupes} duplicate finding_ids — the re-key created some; baseline was 4'
 PY
 ```
 
@@ -1157,6 +1208,9 @@ class TestVerifiedByIsRequiredWhenAVerifyCommandExists:
 - [ ] **Step 2: Run and watch them fail**
 
 - [ ] **Step 3: Extract the predicate to module scope and unscope it**
+
+**Delete the existing function-local `_CLOSING_STATUSES`** inside `extract_review_finding_nodes` in
+the same edit — two definitions of the same tuple is how they drift.
 
 ```python
 _CLOSING_STATUSES = ('fixed', 'accepted')
@@ -1238,6 +1292,7 @@ Task 4 populates meta['verify']."
 - Modify: `scripts/validate.py` (`_CANONICAL_ORDER`, re-export)
 - Modify: `scripts/validation/_config.py` (`CI_MIN_CHECKS_RUN`)
 - Modify: `tests/test_d5_mutation_obligation.py`
+- Modify: **`tests/test_d5_graph_atlas.py`** — four tests assert on the leg being deleted
 - Modify: `docs/architecture/SURFACE_INVENTORY.md` (regenerated)
 - Test: `tests/test_d5_reviews.py`
 
@@ -1265,28 +1320,50 @@ class TestLedgerIdsResolveIsOneCheckNotTwo:
             "LOWER the baseline — headroom makes it unfireable")
 
     def test_the_leg_is_gone_from_graph_integrity(self):
-        """One mechanism, not two (CLAUDE.md rule 1)."""
+        """One mechanism, not two (CLAUDE.md rule 1).
+
+        ⚠️ Assert on the Detail CONSTRUCTION, not a bare substring: Step 4 leaves a
+        pointer comment behind, and a comment naming the check would fail a substring test.
+        """
         import inspect
         from validation.checks import graph_atlas
-        assert 'ledger_ids_resolve' not in inspect.getsource(graph_atlas), \
-            "the promoted check and its old leg both exist — that is the duplication D13 forbids"
+        src = inspect.getsource(graph_atlas)
+        assert 'Detail(\n            "ledger_ids_resolve"' not in src \
+            and 'Detail("ledger_ids_resolve"' not in src, \
+            "the promoted check and its old leg both exist — the duplication D13 forbids"
 ```
 
 - [ ] **Step 2: Run and watch them fail**
 
 - [ ] **Step 3: Move the leg into `scripts/validation/checks/reviews.py` as a registered check**
 
-Move the body verbatim — **including every comment**, which records the 67-vs-66 headroom correction and the retracted false finding. Convert the `Detail`s into a `CheckResult`, keep the `review:`-scheme scoping and its stated reason, and rename `_LEDGER_DANGLING_BASELINE` → module-scope `LEDGER_DANGLING_BASELINE`. Preserve the fail-closed exception handler (`passed=False` on a scan that could not run).
+Move the body verbatim — **including every comment**, which records the 67-vs-66 headroom correction
+and the reviewer's retracted false finding. Convert the `Detail`s into a `CheckResult`, keep the
+`review:`-scheme scoping **and its stated reason**, and set module-scope
+`LEDGER_DANGLING_BASELINE = 57` (Task 9 lowered the population).
+
+⚠️ **The leg's `_known` comes from `_g = build_graph_json()` built ~70 lines above it in the host.**
+A literal move has no `_g`. The promoted check derives ids from
+`build_graph.extract_review_finding_nodes()` (0.25 s) — **not** a second `build_graph_json()`, which
+would add a full graph build to every `validate.py` run.
 
 - [ ] **Step 4: Delete the leg from `graph_atlas.py`**, leaving a one-line comment naming where it went and why.
 
-- [ ] **Step 5: Register it — all five obligations, this commit**
+- [ ] **Step 5: Register it — all SIX obligations, this commit**
 
 1. `validate._CANONICAL_ORDER`: insert `'ledger_ids_resolve'` immediately after `'accepted_findings_carry_rationale'`. **Its absence raises**, taking the suite down.
 2. `validate.py`: add `check_ledger_ids_resolve = _checks_reviews.check_ledger_ids_resolve` beside the other reviews re-exports.
 3. `tests/test_d5_mutation_obligation.py`: add a `MUTATION_VERIFIED` entry naming the production-seeded test from Step 6. Do **not** touch `AWAITING_MUTATION_TEST` (empty) or raise `FIXTURE_ONLY_CEILING`.
 4. `scripts/validation/_config.py`: `CI_MIN_CHECKS_RUN` 76 → 77, with a dated comment.
-5. `uv run python scripts/architecture_inventory.py --write`.
+5. `tests/test_d5_mutation_obligation.py`: add `'ledger_ids_resolve'` to **`PRODUCTION_SEEDED`**.
+   ⚠️ **Without this the suite fails.** `FIXTURE_ONLY_CEILING == len(registered) - len(PRODUCTION_SEEDED)`
+   is asserted with zero headroom: registering an 81st check without a production seed makes
+   81 − 25 = 56 ≠ 55, and raising the ceiling is forbidden. The Step-6 probe IS the production seed.
+6. `uv run python scripts/architecture_inventory.py --write`.
+
+Also: move the four `ledger_ids_resolve` tests out of `tests/test_d5_graph_atlas.py` onto the new
+host, and edit `graph_integrity`'s `MUTATION_VERIFIED` "why" — it advertises "5 mutations … the
+66-vs-67 ledger baseline headroom", which becomes false.
 
 - [ ] **Step 6: Production-seeded mutation**
 
@@ -1426,7 +1503,7 @@ queue item with a node id, so parking behind it is the plain node-id case."
 
 **Files:**
 - Modify: `scripts/review_runner.py`
-- Test: `tests/test_review_runner.py`
+- Create: `tests/test_review_runner.py` (does not exist)
 
 **Interfaces:**
 - Consumes: `meta['target']` (Task 3)
@@ -1461,7 +1538,11 @@ class TestPerFindingBrief:
 
 Resolve the finding, then emit sections: `TARGET` (the `Location:` value, with the file read if it resolves), `LANE`, `BLOCKS`, `VERIFY`, `BLOCKED-BY`, `GIT HISTORY` (`git log -5 --oneline -- <path>` when the target names a path), `ROADMAP` (the roadmap that mentions the target, if one does), and `LEAN` (declarations from `lean_deps.json` when the target names a module). **Raise `KeyError` on an unknown id** — an empty brief is worse than an error.
 
-- [ ] **Step 4: Add `--finding <id>` to the CLI**, beside `--prep-brief`.
+- [ ] **Step 4: Add `--finding <id>` to the CLI**
+
+⚠️ **Handle it BEFORE the `--bundle` gate.** `main()` does `if not args.bundle: print_help(); return 1`
+early, so `--finding <id>` alone would exit 1. Also give `main(argv=None)` an argv parameter — it has
+none today, so the CLI cannot be tested in-process (`close_finding.main` is the pattern).
 
 - [ ] **Step 5: Run** — `uv run python -m pytest tests/test_review_runner.py -q`
 
@@ -1479,6 +1560,9 @@ affordable: four of its five elements are generated rather than researched."
 ---
 
 ### Task 14: Write the pilot's closure records through the writer
+
+⚠️ **106 rows, not 98.** The filter is `disposition in ('fixed','superseded','not-a-defect')` =
+98 + 6 + 2. Earlier text saying "the 98 closures" counts only the `fixed` slice.
 
 **Files:**
 - Modify: `docs/review_finding_supersessions.json` (via `close_finding.py` only)
@@ -1498,7 +1582,21 @@ print('rows with <40 char evidence:', sum(1 for r in rows if len(str(r['evidence
 PY
 ```
 
-Any non-zero in the last two lines is a **stop-and-report**, not a workaround.
+Add a third pre-flight — **rows that already carry a ledger record**:
+
+```bash
+uv run python -c "
+import sys,json,pathlib; sys.path.insert(0,'scripts')
+led={e['finding_id'] for e in json.loads(pathlib.Path('docs/review_finding_supersessions.json').read_text())['supersessions']}
+rows=json.loads(pathlib.Path('docs/audits/2026-08-12-critical-triage/manifest.json').read_text())
+pre=[r['id'] for r in rows if r['disposition'] in ('fixed','superseded','not-a-defect') and r['id'] in led]
+print('rows with a pre-existing record:', len(pre)); [print(' ', x) for x in pre]"
+```
+
+Measured: **2** (`…L3:6.1`, `…paper10_modular_generation:6.1`), both currently `status: open`.
+
+Any non-zero in the first two lines is a **stop-and-report**, not a workaround. The third is
+expected — Step 2 must route it to `refusals.md`, not crash.
 
 - [ ] **Step 2: Drive the manifest through the writer, in-process**
 
@@ -1511,8 +1609,11 @@ todo = [r for r in rows if r['disposition'] in ('fixed', 'superseded', 'not-a-de
 ok, refused = 0, []
 for r in todo:
     status = 'fixed' if r['disposition'] == 'fixed' else 'accepted'
-    good, msg = cf.close(doc=r['file'], sections=[r['section']], status=status,
-                         evidence=r['evidence'], date='2026-08-12')
+    try:
+        good, msg = cf.close(doc=r['file'], sections=[r['section']], status=status,
+                             evidence=r['evidence'], date='2026-08-12')
+    except ValueError as exc:          # a conflicting pre-existing record
+        good, msg = False, str(exc)
     if good: ok += 1
     else: refused.append((r['id'], msg))
 print('written', ok, 'refused', len(refused))

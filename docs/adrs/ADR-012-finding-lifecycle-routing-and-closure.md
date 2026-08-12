@@ -19,8 +19,8 @@
   3. **An intent-drift assessment against the operator's original specification** found that the
      first draft solved the *closure* half of the loop and silently dropped the *routing* half —
      including the problem that started the thread. D9 through D22 exist because of that
-     assessment. **Operator ruling 2026-08-12: the middle tier ships, routing folds into one
-     plan, and scope expansion is accepted rather than bolted on later.**
+     assessment. **Operator ruling 2026-08-12: the REQUIRED-population ratchet ships, routing folds
+     into one plan, and scope expansion is accepted rather than bolted on later.**
 
 - **Scope:** the full remediation loop — how a finding is emitted, typed, routed, scheduled,
   executed, verified, closed, and surfaced to a human. It does **not** change what the reviewers
@@ -38,10 +38,27 @@
 ### The problem that started this
 
 An I1 review pass closed with *"17 REQUIRED and 7 RECOMMENDED findings below blocker level, and
-`tetrad_gap_solution` still returning a non-solution above saturation."* Those findings became
-graph nodes. They blocked nothing and routed nowhere. The operator's question was whether a DAG
-directs the work that a review creates, and the honest answer was that a **dependency** graph
-exists and a **work-routing** graph does not.
+`tetrad_gap_solution` still returning a non-solution above saturation."* The operator's question was
+whether a DAG directs the work a review creates, and the honest answer was that a **dependency**
+graph exists and a **work-routing** graph does not.
+
+⚠️ **CORRECTED 2026-08-12, and the correction shrank this ADR again.** Every earlier draft of this
+section said those findings *"blocked nothing and routed nowhere."* **The first half was false, and
+it was never traced to code before being written down three times.** Measured at HEAD:
+
+- `readiness_gates.py:856` — `BLOCKING_SEVERITIES = frozenset({'critical', 'blocker', 'major'})`,
+  so an open REQUIRED finding escalates `FixPropagation` to a **blocked P1 gate** (since 2026-07-31);
+- `bundle_readiness.py:391` — `n_blockers = sum(sev_counter[s] for s in ("critical", "major"))`, so
+  an open REQUIRED finding already forces the bundle to **RED**;
+- `bundle_stage13_claim_consistent` compares a `green` claim against that same count, so a bundle
+  claiming Stage-13 green with an open REQUIRED **already fails**.
+
+**REQUIRED has been a blocking severity since before this thread began.** What was true — and is the
+whole problem — is the second half: those findings **route nowhere.** No lane, no target, no
+verification command, no owner, no dependency edges, nothing to schedule or parallelize on. The
+operator's ask was a *workflow* ask; the gating diagnosis was added later and was wrong.
+
+RECOMMENDED (`minor`) findings genuinely do block nothing, and that remains accurate.
 
 **The loop the operator specified**, which this ADR is measured against:
 
@@ -354,12 +371,24 @@ works, not that the check can fail in production (`CHECK_AUTHORING_GUIDE.md` §2
 `FIXTURE_ONLY_CEILING` may only shrink — so a fixture-only test is not merely weaker here, it is
 blocked. A check whose population can be empty while it reports PASS does not count as built.
 
-### D9 — REQUIRED blocks bundle-green, on a down-only ratchet
+### D9 — Ratchet the open-REQUIRED population down, per bundle
 
-**This is the decision that closes the problem that started the thread.** Today only a BLOCKER
-flips a gate, which is why 17 REQUIRED findings routed nowhere.
+⚠️ **REWRITTEN 2026-08-12 after the premise failed verification.** This decision previously read
+*"REQUIRED blocks bundle-green"* and justified itself on *"today only a BLOCKER flips a gate."*
+**Both are false** — see §Context. REQUIRED already blocks: the gate, the readiness verdict and the
+green-claim consistency check all treat `major` as blocking.
 
-**It is also the mechanization of a standing operator pre-decision, not a new policy.** PD-5
+**What is genuinely missing is a population guard, and that is what D9 now is.** Every existing
+mechanism asserts *consistency* — a green claim against live blockers — and **none asserts that the
+open-REQUIRED population cannot grow.** `bundle_stage13_claim_consistent` additionally fires on
+**zero rows today**, because no bundle currently claims `stage13_status: green`: it is a correct
+guard over an empty population. So a bundle can accumulate REQUIRED findings indefinitely without
+tripping anything, which is the state the roster is in.
+
+**D9 is therefore a down-only ratchet on the open-REQUIRED population**, per bundle, hosted on
+`bundle_stage13_claim_consistent` as a new leg — not a new severity tier, which already exists.
+
+**It mechanizes a standing operator pre-decision.** PD-5
 (`docs/dev-loops/PRE_DECISIONS.md`, operator-set 2026-07-29) already states that
 BLOCKER/MAJOR/IMPORTANT findings *"are never deferred"* and that *"deferral requires an explicit
 operator sign-off asked for as a question — never assumed."* That rule has bound the autonomous
@@ -372,15 +401,8 @@ which is PD-5 firing mechanically. The pre-existing 219 are visible debt with a 
 obligation, not tolerated deferrals — and making them visible is the first time they have been
 anything other than invisible.
 
-A `major`-severity open finding blocks `stage13_status: green` for its bundle. It does **not** block
-submission — `readiness_submission_gate` keeps its current, stricter meaning, so the two tiers stay
-distinguishable.
-
-**It extends `bundle_stage13_claim_consistent`; it does not sit beside it.** That check already
-forbids `stage13_status: green` while the live graph carries open *blockers*, comparing against the
-recomputed count rather than the stored one. D9 adds a **severity tier** to the same assertion. A
-sibling check would be the C9 failure — a second mechanism beside a working one — in the very ADR
-that names it.
+**It extends `bundle_stage13_claim_consistent`; it does not sit beside it.** A sibling check would be
+the C9 failure — a second mechanism beside a working one — in the very ADR that names it.
 
 The gate ships with a **per-bundle down-only ratchet frozen at the live count**, exactly like
 `NATIVE_DECIDE_BUNDLE_DEBT` and `UNDECLARED_APEX_CEILING`. 219 open majors distributed across the
@@ -868,8 +890,8 @@ Following ADR-009's convention. Each row states what the prior ADR owns and what
 - **[ADR-011](ADR-011-manuscript-quality-layer.md)** owns the manuscript quality layer: the Stage
   9/10 sub-gates that are the `prose` lane's gate set, the reader-facing-voice and em-dash checks,
   and `scripts/record_review.py` — **the writer D14 is modelled on**. Its Phase 2 promotion path is
-  what D9's middle tier attaches to; D9 adds a blocking condition to `stage13_status`, it does not
-  change who writes the field.
+  what D9's ratchet attaches to. D9 adds no blocking condition — `major` was already blocking —
+  and it does not change who writes the field.
 
 ### Overlap with `ARCHITECTURE_TODOs.MD` (the working doc, per C1)
 
@@ -966,7 +988,9 @@ adversarial review and the intent-drift assessment.
 per-finding orientation. Enforcement extends `review_severity_declared` rather than adding a sibling
 check — it already validates a declared token against a map. Ships with seeded-defect tests (D8).
 
-**P5 — Gating (D9).** REQUIRED blocks bundle-green, ratcheted per bundle at the live count.
+**P5 — The population guard (D9).** The open-REQUIRED population ratchets down per bundle, frozen
+at the live count, plus a corpus-wide ratchet on the unattributed population. Not a severity tier:
+`major` has been blocking since 2026-07-31.
 
 **P6 — Closure (D6, D13, D14).** `close_finding.py`; the bar unscoped and extended with
 `verified_by`; the ledger schema amended; `ledger_ids_resolve` promoted or widened per D13 — never
@@ -1016,10 +1040,9 @@ the most context, instead of repeatedly by whoever picks the finding up later.
 than the forward one, and a pre-2026-08-12 `fixed` does not imply a verification was run. Stated
 rather than hidden.
 
-**Accepted.** D9's ratchet means the middle tier does not bite on day one. A ratchet frozen at the
-live count enforces "no worse" immediately and "better" only as the population is worked down. The
-alternative — a hard gate over 219 open majors — takes the whole roster non-green at once, and a gate
-that fires on the existing corpus gets switched off.
+**Accepted.** D9's ratchet enforces "no worse" immediately and "better" only as the population is
+worked down. It deliberately does not re-litigate the 219 open majors, which already block their
+bundles today; what it adds is that the population cannot grow.
 
 **Accepted, and this is the largest one.** Scope roughly tripled between the first draft and this
 version. The operator's ruling was explicit: *"I understand this may significantly increase scope of

@@ -162,12 +162,19 @@ decision package (§3) affordable — four of its five elements are generated ra
 
 ## 2. Gating (ADR-012 D9)
 
-**A `major`-severity open finding blocks `stage13_status: green` for its bundle.** It does not block
-submission; `readiness_submission_gate` keeps its current, stricter meaning so the two tiers stay
-distinguishable.
+⚠️ **CORRECTED 2026-08-12.** This section previously said REQUIRED blocks nothing until D9 lands.
+**False, and never traced to code before being written.** `readiness_gates.py:856` sets
+`BLOCKING_SEVERITIES = {'critical','blocker','major'}`, `bundle_readiness.py:391` counts `major` into
+`n_blockers`, and `bundle_stage13_claim_consistent` compares a green claim against that count.
+REQUIRED already blocks the gate, the readiness verdict and the green claim.
 
-This is the decision that closes the originating problem. Until it lands, only BLOCKER flips a gate,
-and REQUIRED findings are schedulable but not enforcing.
+**What is missing is a population guard.** Every existing mechanism asserts *consistency*; none
+asserts the open-REQUIRED population **cannot grow** — and `bundle_stage13_claim_consistent` fires on
+zero rows today, since no bundle claims `stage13_status: green`. A bundle can accumulate REQUIRED
+findings indefinitely without tripping anything.
+
+**So D9 is a down-only ratchet on the open-REQUIRED population**, per bundle, as a new leg on
+`bundle_stage13_claim_consistent` — not a new severity tier, which already exists.
 
 **It extends `bundle_stage13_claim_consistent`**, which already forbids a `green` Stage-13 while the
 live graph carries open blockers, by adding a severity tier to the same assertion. A sibling check
@@ -241,6 +248,10 @@ the failure mode is an agent escalating early with a question it could have answ
 
 Modelled on `scripts/record_review.py`, which closed this exact class of gap for bundle status and
 whose docstring calls itself *"the writer transition 2 never had"*.
+
+⚠️ **A conflicting pre-existing record is a REFUSAL, not an exception.** A raise mid-batch escapes
+after some records are already written to a tracked file, so `close()` returns `(False, msg)` like
+every other refusal and the conflict lands in the refusals log.
 
 **Refuses to write when:**
 
