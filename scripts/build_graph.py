@@ -1776,6 +1776,49 @@ def _parse_blocked_by(body: str) -> list[str]:
     return [part.strip().strip('`') for part in raw.split(',') if part.strip().strip('`')]
 
 
+#: Statuses that REMOVE a finding from the open set. Must cover every one — round 10 keyed
+#: on `== 'fixed'` alone, so a two-key `{"finding_id": X, "status": "accepted"}` closed a
+#: live BLOCKER, because `_eval_fix_propagation` partitions `accepted` out before the
+#: severity filter ever runs.
+_CLOSING_STATUSES = ('fixed', 'accepted')
+
+
+def _closure_record_meets_bar(rec: dict, finding_has_verify: bool = False) -> bool:
+    """Does this ledger record justify closing a finding?
+
+    ⚠️ APPLIES AT EVERY SEVERITY since 2026-08-12. It was gated on
+    `severity in ('critical','major','blocker')`, which made a below-bar severity a closure
+    BYPASS: `- **Severity:**` is declarable in a finding's body and the declared value beats
+    the heading glyph, and `_SEVERITY_DECL_MAP` maps `recommended -> minor`, so a 🔴 heading
+    declaring `recommended` closed on `{"finding_id": X, "status": "fixed"}` — no evidence,
+    no anchor. Filed as D12 13.2, open across FOUR consecutive rounds, mutating each time
+    the previous route was shut, and reproducing byte-for-byte at HEAD. **Do not re-scope
+    it.**
+
+    Measured blast radius at the time of the change: **ZERO**. All 231 non-blocking findings
+    then closed carried a record, and every one of those records already met the bar. The
+    change closes a forward hole; it does not reopen a backlog.
+
+    Deliberately SCHEMA-TOLERANT. Measured over the live ledger: 264 blocking closures use
+    the older `(date, evidence, finding_id, status, superseded_by)` shape and 23 use the
+    newer one with `commit`/`closed_by`/`closed_date`. Requiring `commit` would reopen 264
+    well-formed historical closures — a guard firing on correct data gets switched off.
+
+    `finding_has_verify` is live only because the extractor now parses a `Verify:` line
+    (ADR-012 D1). Shipping this parameter without that producer would have been a leg that
+    cannot fire on any input, which is why routing and closure were one build.
+    """
+    rec = rec or {}
+    why = str(rec.get('evidence') or rec.get('note') or rec.get('rationale') or '').strip()
+    anchor = any(str(rec.get(k) or '').strip()
+                 for k in ('commit', 'date', 'closed_date', 'applied_at'))
+    base = bool(rec.get('status') in _CLOSING_STATUSES and len(why) >= 40 and anchor)
+    if not base or not finding_has_verify:
+        return base
+    vb = rec.get('verified_by') or {}
+    return vb.get('exit_code') == 0 and bool(str(vb.get('command') or '').strip())
+
+
 _FINDING_FIELD_RE_CACHE: dict[str, "re.Pattern[str]"] = {}
 
 
@@ -2060,20 +2103,14 @@ def extract_review_finding_nodes() -> list[dict]:
             # and every one of them set `status: fixed`: I tested the space I was thinking
             # about rather than the space that exists. An unrecognised token like
             # `"closed"` was equally unvalidated.
-            _CLOSING_STATUSES = ('fixed', 'accepted')
-            if (meta.get('status') in _CLOSING_STATUSES
-                    and severity in ('critical', 'major', 'blocker')):
-                _rec = ledger or {}
-                _why = str(_rec.get('evidence') or _rec.get('note')
-                           or _rec.get('rationale') or '').strip()
-                _anchor = any(str(_rec.get(k) or '').strip()
-                              for k in ('commit', 'date', 'closed_date', 'applied_at'))
-                if not (_rec.get('status') in _CLOSING_STATUSES
-                        and len(_why) >= 40 and _anchor):
+            if meta.get('status') in _CLOSING_STATUSES:
+                if not _closure_record_meets_bar(ledger, bool(meta.get('verify'))):
                     meta['status'] = 'open'
                     meta['blocking_closure_rejected'] = (
-                        'ledger record does not meet the blocking-closure bar '
-                        '(explicit status=fixed, >=40 chars of rationale, and a commit or date)')
+                        'ledger record does not meet the closure bar (an explicit closing '
+                        'status, >=40 chars of rationale, a commit or date anchor, and — '
+                        'when the finding declares a Verify: command — a passing '
+                        'verified_by)')
 
             nodes.append({
                 'id': finding_id,
