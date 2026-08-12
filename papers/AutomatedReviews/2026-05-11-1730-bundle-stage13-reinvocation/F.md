@@ -290,6 +290,7 @@ citation; missing T_H provenance.
   deprecated alias with an explicit note that it now contains a
   3-conjunct body matching the renamed theorem.
 - **Fix:** Replace line 1396's
+- **Lane:** `prose`
   `all\_quantitative\_bounds\_exceed\_jeffreys\_decisive` with
   `all\_three\_decisive\_bayes\_bounds\_exceed\_jeffreys\_decisive`.
   If the additional Barrow-AIC content is desired, add a second citation
@@ -319,6 +320,7 @@ citation; missing T_H provenance.
   `human_verified_date` fields. Cross-bundle: D1 likely has the same
   parameter and the entry will service both papers.
 - **Severity rationale:** REQUIRED (the measurement is from the
+- **Lane:** `prose`
   primary source and is being quoted, not predicted; the integrity gap
   is provenance-tracking discipline rather than scientific drift).
 

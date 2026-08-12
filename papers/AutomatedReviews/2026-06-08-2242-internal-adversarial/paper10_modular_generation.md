@@ -81,6 +81,7 @@ Citation metadata is clean (all 5 arXiv refs verified by fresh fetch).
 - **Expected:** Cite `sixteen_convergence_unconditional` as the headline, note `sixteen_convergence_full` is the older conditional enumeration; do not present the `16∣σ` conjunct as a standing hypothesis.
 - **Fix:** Swap the cited theorem; update the surrounding prose per 5.1.
 - **Cache:** n/a
+- **Lane:** `prose`
 
 ### 2.1 — 🔴 BLOCKER — Cross-paper contradiction with D2 on Rokhlin discharge status
 
@@ -101,6 +102,7 @@ Citation metadata is clean (all 5 arXiv refs verified by fresh fetch).
 - **Expected:** `\input{../../docs/counts.tex}` + `\totaltheorems{}`/`\leanmodules{}`/`\axiomcount{}` macros; values 11039 / 853 / 0.
 - **Fix:** Retrofit the count macros; drop the "1 axiom" claim.
 - **Cache:** n/a
+- **Lane:** `prose`
 
 ### 3.x — (Class 3 scan, no blocker beyond 5.2)
 

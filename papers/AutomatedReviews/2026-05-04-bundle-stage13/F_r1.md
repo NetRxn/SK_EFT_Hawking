@@ -187,6 +187,7 @@ otherwise GREEN-class structure.**
   reading; an in-flight disclaimer in the flagship review reads more
   conspicuously than the same disclaimer in the deep paper.
 - **Cache:** structural — body self-discloses the gap.
+- **Lane:** `prose`
 
 ### 1.3 — 🟡 REQUIRED — Lean-vs-prose drift: figure-eight knot invariant claimed "in flight" / "Open under tracked hypothesis" but `FigureEightKnot.lean` is closed at zero `sorry`, zero axioms
 
@@ -231,6 +232,7 @@ otherwise GREEN-class structure.**
   chain" includes this knot invariant) and an external reader walking
   F → D4 → `lean/` would discover the drift immediately.
 - **Cache:** Lean-library-vs-prose drift.
+- **Lane:** `prose`
 
 ### 2.1 — 🔵 RECOMMENDED — Abstract + §4 overclaim 92% Lean reuse from D1's BEC↔graphene-specific result to a three-platform claim
 

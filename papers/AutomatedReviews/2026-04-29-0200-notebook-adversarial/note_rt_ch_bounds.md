@@ -88,6 +88,7 @@ BLOCKER is resolved.
      CFTs" — that is correct, but doesn't rescue the attribution: the bound
      itself (universal in 2D CFTs by central charge) is not Casini-Huerta's.
 - **Cache:** fresh-fetch (this review) for arXiv:0905.2562 and
+- **Lane:** `prose`
   hep-th/0405152.
 
 ### 1.2 — 🔵 RECOMMENDED — Ryu-Takayanagi title in registry differs from arXiv canonical title (registry verbose form vs arXiv abbreviated form)

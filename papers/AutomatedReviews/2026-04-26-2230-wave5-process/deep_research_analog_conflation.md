@@ -136,6 +136,7 @@ or LLM-discretionary.
 - **Observed:** This wave's failure shipped past every internal check. Stage 13 adversarial-reviewer would have caught it (the slope-sign-vs-formula inconsistency is exactly the kind of thing it audits) but Stage 13 was not yet run on paper27. Stages 1–12 are blind to this class.
 - **Severity:** major (as a process gap; not paper-local)
 - **Status:** open
+- **Lane:** `infra`
 
 ## Recommendations
 

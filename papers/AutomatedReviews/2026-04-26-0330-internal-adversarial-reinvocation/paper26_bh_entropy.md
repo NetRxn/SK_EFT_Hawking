@@ -53,6 +53,7 @@ All 5 prior BLOCKERs and all 7 prior REQUIREDs were correctly remediated as clai
 - **Expected:** The remediation pass for REQUIRED 3.2 introduced this bug — the prior version of the bullet had no cross-reference; the new one references a label that doesn't exist. Either (a) change `\ref{sec:closedform}` to `\ref{sec:KM}` (the correct existing label, since §3 is the Kaul-Majumdar closed-form section that contains the prose-level decomposition discussion), or (b) add `\label{sec:closedform}` to a more specific subsection — but option (a) is simpler since the relevant prose is the §3.2 subsection of the Kaul-Majumdar section.
 - **Fix:** One-character edit: `\S\ref{sec:closedform}` → `\S\ref{sec:KM}` at `paper_draft.tex:438`.
 - **Cache:** direct grep (this round)
+- **Lane:** `prose`
 
 ### N.2 — 🔵 RECOMMENDED — Lean module summary still claims `*_falsifier_anomalyMatch` is shipped (it isn't)
 
