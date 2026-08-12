@@ -87,7 +87,7 @@
   "last_stage10_review": "2026-05-26T21:35:00Z",
   "last_stage10_review_round1": "2026-05-26T21:12:00Z",
   "last_stage13_review": "2026-06-10T19:30:00Z",
-  "blockers_open": 12,
+  "blockers_open": 4,
   "advisories_open": 5,
   "stage13_review_doc": "docs/audits/stage13_attribution_sweep_2026-06-10.md#d7",
   "stage13_review_doc_round1": "papers/AutomatedReviews/2026-05-26-2112-internal-adversarial/D7.md",
@@ -173,12 +173,12 @@
     }
   ],
   "notes": "D7 bundle created 2026-05-26 PM at Phase 6w Wave 6w.7 absorption pass. Synthesizes the Phase 6w substrate into a unified classical-simulability ↔ quantum-advantage demarcation paper. Primary anchors: Tindall-Sels Science 392, 868 (2026) (BP-on-PEPS classical simulation) + Antão-Sun-Fumega-Lado PRL 136, 156601 (2026) (Chebyshev-TN quasicrystal Chern markers). Stage 13 adversarial review Round 1 surfaced 4 BLOCKERs + 5 REQUIREDs + 4 RECOMMENDEDs; Stage 10 claims-reviewer Round 1 surfaced 2 BLOCKERs (1 IA count drift + 1 TN registry absence). Substantive remediation applied (3 P5 tautology theorems deleted, _c0 decorative parameter dropped, 3 missing bibkeys added with primary-source caching, paper prose down-toned to honestly describe substrate state). Round 2 fresh-context re-reviews on both sides verified prior findings SUPERSEDED via deterministic recheck. Final state: Stage-10 GREEN (0 BLOCKER, 5 LLM-judgment carry-forwards); Stage-13 GREEN (0 BLOCKER + 0 REQUIRED + 0 open RECOMMENDED). Bundle Stage-13 SUBMISSION-READY pending Stage 9 (vacuous-PASS eligible — no figures). | 2026-06-10 attribution-content sweep (docs/audits/stage13_attribution_sweep_2026-06-10.md): GREEN after cache fix. BiancoResta2011 registry arxiv id was wrong (1106.4014=Sau-Halperin) -> corrected to 1111.5697 + re-fetched. Tindall 300+ qubits/BP/Advantage2, Antao 268M sites verbatim; lattice-naming paraphrase caveat noted.",
-  "open_findings": 17,
+  "open_findings": 9,
   "blocked_p1_gates": [
     "FixPropagation"
   ],
   "readiness": "RED",
-  "readiness_last_computed": "2026-07-31",
+  "readiness_last_computed": "2026-08-12",
   "length_target": {
     "unit": "pages",
     "floor": 24,

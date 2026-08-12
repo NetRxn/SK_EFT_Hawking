@@ -150,3 +150,99 @@ def test_a_well_formed_record_DOES_close():
     finally:
         LEDGER.write_text(original)
         importlib.reload(BG)
+
+
+class TestTheBarAppliesAtEverySeverity:
+    """D12 13.2 — open across FOUR consecutive rounds and reproducing at HEAD.
+
+    The bar was gated on `severity in ('critical','major','blocker')`. Below that line a
+    two-key record — no evidence, no anchor — closed a finding. And `- **Severity:**` is
+    declarable in the finding BODY, where the declared value beats the heading glyph, with
+    `_SEVERITY_DECL_MAP` mapping `recommended -> minor`: so a 🔴 BLOCKER heading declaring
+    `recommended` closed on `{"finding_id": X, "status": "fixed"}`.
+    """
+
+    def test_a_content_free_record_cannot_close(self):
+        from scripts.build_graph import _closure_record_meets_bar
+        assert _closure_record_meets_bar({"finding_id": "x", "status": "fixed"}) is False
+
+    def test_an_accepted_two_key_record_cannot_close_either(self):
+        """Round 10 keyed on `== 'fixed'` alone, so `accepted` walked straight through —
+        `_eval_fix_propagation` partitions it out before the severity filter runs."""
+        from scripts.build_graph import _closure_record_meets_bar
+        assert _closure_record_meets_bar({"finding_id": "x", "status": "accepted"}) is False
+
+    def test_evidence_without_an_anchor_does_not_close(self):
+        from scripts.build_graph import _closure_record_meets_bar
+        assert _closure_record_meets_bar(
+            {"status": "fixed", "evidence": "y" * 60}) is False
+
+    def test_an_anchor_without_evidence_does_not_close(self):
+        from scripts.build_graph import _closure_record_meets_bar
+        assert _closure_record_meets_bar(
+            {"status": "fixed", "commit": "abc1234"}) is False
+
+    def test_a_complete_record_closes(self):
+        from scripts.build_graph import _closure_record_meets_bar
+        assert _closure_record_meets_bar(
+            {"status": "fixed", "evidence": "y" * 60, "commit": "abc1234"}) is True
+
+    def test_the_bar_stays_schema_tolerant(self):
+        """264 historical blocking closures use (date, evidence, ...) and 23 use
+        commit/closed_by/closed_date. Requiring `commit` would reopen 264 well-formed
+        closures — a guard firing on correct data gets switched off."""
+        from scripts.build_graph import _closure_record_meets_bar
+        for anchor in ("date", "closed_date", "applied_at"):
+            assert _closure_record_meets_bar(
+                {"status": "fixed", "evidence": "y" * 60, anchor: "2026-08-12"}) is True
+        for alias in ("note", "rationale"):
+            assert _closure_record_meets_bar(
+                {"status": "fixed", alias: "y" * 60, "commit": "abc"}) is True
+
+    def test_the_severity_scoping_is_gone_from_the_source(self):
+        """Structural: the bypass was re-introduced twice by narrowing the guard rather
+        than removing the class. Assert the scope test itself is absent."""
+        import inspect
+        from scripts import build_graph as BG
+        src = inspect.getsource(BG)
+        assert "severity in ('critical', 'major', 'blocker')" not in src
+
+
+class TestVerifiedByIsRequiredWhenTheFindingDeclaresAVerify:
+    """ADR-012 D6.2. Live ONLY because the extractor now parses a `Verify:` line — shipping
+    this parameter without that producer would have been a leg that cannot fire."""
+
+    def test_missing_verified_by_fails(self):
+        from scripts.build_graph import _closure_record_meets_bar
+        assert _closure_record_meets_bar(
+            {"status": "fixed", "evidence": "y" * 60, "commit": "abc"},
+            finding_has_verify=True) is False
+
+    def test_a_passing_verified_by_succeeds(self):
+        from scripts.build_graph import _closure_record_meets_bar
+        assert _closure_record_meets_bar(
+            {"status": "fixed", "evidence": "y" * 60, "commit": "abc",
+             "verified_by": {"command": "pytest -q", "exit_code": 0,
+                             "run_at": "2026-08-12"}},
+            finding_has_verify=True) is True
+
+    def test_a_recorded_nonzero_exit_does_not_close(self):
+        from scripts.build_graph import _closure_record_meets_bar
+        assert _closure_record_meets_bar(
+            {"status": "fixed", "evidence": "y" * 60, "commit": "abc",
+             "verified_by": {"command": "pytest -q", "exit_code": 1,
+                             "run_at": "2026-08-12"}},
+            finding_has_verify=True) is False
+
+    def test_an_empty_command_does_not_close(self):
+        """A verified_by asserting exit 0 for no command is an assertion about nothing."""
+        from scripts.build_graph import _closure_record_meets_bar
+        assert _closure_record_meets_bar(
+            {"status": "fixed", "evidence": "y" * 60, "commit": "abc",
+             "verified_by": {"command": "", "exit_code": 0}},
+            finding_has_verify=True) is False
+
+    def test_a_finding_without_a_verify_is_unaffected(self):
+        from scripts.build_graph import _closure_record_meets_bar
+        assert _closure_record_meets_bar(
+            {"status": "fixed", "evidence": "y" * 60, "commit": "abc"}) is True

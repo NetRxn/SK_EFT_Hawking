@@ -106,6 +106,7 @@ Not submission-ready until 1.1 and 3.1 are fixed.
   the absorbed constants.
 - **Fix:** Write the prefactor out at `:77`, matching the capstone docstring's own standard.
 - **Cache:** n/a
+- **Lane:** `lean`
 
 ### 2.2 — 🔵 RECOMMENDED — "within `O(Ω/ω)`" drops the linear-in-T growth the bound actually carries
 
@@ -187,6 +188,7 @@ Not submission-ready until 1.1 and 3.1 are fixed.
   antiderivative. This section's theorem is a parallel leaf, not a step in that chain."
 - **Fix:** Retarget and drop "composes this".
 - **Cache:** n/a
+- **Lane:** `lean`
 
 ### 4.2 — 🟡 REQUIRED — same wrong-target pointer in DriveCalibration
 
@@ -203,6 +205,7 @@ Not submission-ready until 1.1 and 3.1 are fixed.
   `validate.py --check lean_docstring_refs_resolve` (now strict for `SKEFTHawking.Control.`,
   verified passing with zero `Control` findings) cannot catch it.
 - **Cache:** n/a
+- **Lane:** `lean`
 
 ### 5.1 — 🟡 REQUIRED — §4.1's "stated at every `t` and every `T`" is false of the resonance witness, and its stated reason is the opposite of that witness's design
 
@@ -221,6 +224,7 @@ Not submission-ready until 1.1 and 3.1 are fixed.
   value at `T = π/2`, which is stronger than a bound at that point, not weaker."
 - **Fix:** Rewrite the second sentence of the §4.1 header.
 - **Cache:** n/a
+- **Lane:** `lean`
 
 ### 5.2 — 🟡 REQUIRED — conjunct 3 of `diagonal_drive_nondegenerate_instantiation` is glossed as a ∀-claim the statement does not carry
 
@@ -240,6 +244,7 @@ Not submission-ready until 1.1 and 3.1 are fixed.
   "differs from `a·1`".
 - **Fix:** Prefer strengthening the statement — the ∀-form is what "not a global phase" means.
 - **Cache:** n/a
+- **Lane:** `lean`
 
 ### 5.3 — 🟡 REQUIRED — "deliberately weaker binders" is false in the Ω coordinate
 
@@ -257,6 +262,7 @@ Not submission-ready until 1.1 and 3.1 are fixed.
   and is needed here for the nonvanishing-remainder conjunct."
 - **Fix:** Rewrite the parenthetical.
 - **Cache:** n/a
+- **Lane:** `lean`
 
 ### 5.4 — 🟡 REQUIRED — §5 header states the resonance-only calibration identity without the resonance qualifier the module proves is necessary
 
@@ -276,6 +282,7 @@ Not submission-ready until 1.1 and 3.1 are fixed.
   form is `θ = (T/2)√(Δ² + Ω²m²)`."
 - **Fix:** Add the qualifier at `:704`.
 - **Cache:** n/a
+- **Lane:** `lean`
 
 ### 6.1 — 🟡 REQUIRED — §4.1's exclusion argument rests on two Hermiticity facts the module never states, under a standard the module itself sets
 
@@ -300,6 +307,7 @@ Not submission-ready until 1.1 and 3.1 are fixed.
 - **Fix:** Ship `counterRotating_conjTranspose`; it is cheap and it makes the §4.1 argument
   self-supporting to the standard §4.1d states.
 - **Cache:** n/a
+- **Lane:** `lean`
 
 ### 7.1 — 🟡 REQUIRED — `kramers_degeneracy_instantiated` supplies every hypothesis, but its witness is degenerate and *necessarily* so at ℂ² — undisclosed
 
@@ -331,6 +339,7 @@ Not submission-ready until 1.1 and 3.1 are fixed.
   establishes non-vacuity only; a witness where the Kramers partner is informative requires
   `dim ≥ 4`."
 - **Cache:** n/a
+- **Lane:** `lean`
 
 ### 7.2 — 🔵 RECOMMENDED — "six hypotheses" undercounts `kramers_degeneracy`'s binders by one
 
@@ -369,6 +378,7 @@ Not submission-ready until 1.1 and 3.1 are fixed.
   relaxation one is an existential exhibiting a readout, which is a different and stronger shape."
 - **Fix:** Rewrite line 79's clause. This is the requested overshoot check: **line 79 overshot.**
 - **Cache:** n/a
+- **Lane:** `infra`
 
 ### 8.2 — 🟡 REQUIRED — roadmap decl counts are stale against a freshly regenerated `lean_deps.json`
 
@@ -390,6 +400,7 @@ Not submission-ready until 1.1 and 3.1 are fixed.
   so this drift is ungated.
 - **Fix:** Refresh the three counts. See the QI candidate below for the gating gap.
 - **Cache:** n/a
+- **Lane:** `infra`
 
 ### 9.1 — 🔵 RECOMMENDED — duplicate section number and scrambled section ordering in `RotatingWave.lean`
 

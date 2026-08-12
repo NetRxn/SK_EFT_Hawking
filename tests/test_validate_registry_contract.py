@@ -66,6 +66,12 @@ EXPECTED_CHECKS = [
     'atlas_hypothesis_discipline',
     'count_literals', 'recurrence_reopens_closures', 'review_severity_declared',
     'review_docs_mint_findings', 'accepted_findings_carry_rationale',
+    # ADR-012 P6: promoted out of `graph_integrity`, whose leg was deleted in the same
+    # commit. ⚠️ THIS ROSTER IS THE THIRD REGISTRATION OBLIGATION and it was the one
+    # missed — `_CANONICAL_ORDER`, `CI_MIN_CHECKS_RUN` and `MUTATION_VERIFIED` were all
+    # updated while this stayed at 80, which left the branch red AND disarmed the only
+    # assertion that notices a DROPPED check (`all([])` is True).
+    'ledger_ids_resolve',
     'chain_backing_targets_resolve',
     'bundle_metadata_matches_graph', 'bundle_stage13_claim_consistent',
     'bundle_manuscript_length', 'bundle_reviewer_stage_ordering',

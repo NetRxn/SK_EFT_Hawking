@@ -34,13 +34,17 @@ flowchart TB
     REV["⑧ REVIEW<br/>§7.5 prose · Stage 9 figure<br/>10 claims · 13 adversarial"]
     GATE["⑨ GATES<br/>readiness_gates.py"]
     HUMAN["⑩ HUMAN<br/>dashboard · submission gate"]
+    LEDGER["⑪ CLOSURE LEDGER<br/>docs/review_finding_supersessions.json<br/>close_finding.py is the SUPPORTED writer<br/>(most records predate it; hand edits still possible)"]
 
     RM --> GOAL --> LEAN --> EXT
     EXT --> VAL & GRAPH
     GRAPH --> GATE
     LEAN --> PAPER --> REV --> GATE --> HUMAN
     VAL --> HUMAN
-    HUMAN -.->|"supersession ledger"| GATE
+    GOAL -.->|"close_finding.py"| LEDGER
+    HUMAN -.->|"close_finding.py"| LEDGER
+    LEDGER -.->|"status override<br/>+ closure bar"| GRAPH
+    LEDGER -.->|"ledger_ids_resolve<br/>accepted_findings_carry_rationale"| VAL
     REV -.->|"QI candidates"| RM
 
     classDef gap stroke:#c0392b,stroke-width:3px
@@ -308,7 +312,9 @@ derived `readiness`/`blockers_open` fields, script-owned.
 | 2 | **`"pending"` → `"green"` on any of the three stages** | `scripts/record_review.py` (ADR-011 Phase 2) |
 | 3 | `"green"` → `"pending"` when new content is appended | `bundle_append.py:320-325` |
 | 4 | findings → `blockers_open`, `open_findings`, `readiness` | `bundle_readiness.write_metadata_counts` |
-| 5 | all conditions met → submission | operator runs `gate_precheck.py submission` |
+| 5 | **an open finding → `fixed` / `accepted`, un-blocking its gate** | `scripts/close_finding.py` (ADR-012) |
+| 5b | **a closed finding → `reopened`, which reads back as `open`** | `scripts/close_finding.py --status reopened` |
+| 6 | all conditions met → submission | operator runs `gate_precheck.py submission` |
 
 **Exit condition** (`BUNDLE_LIFT_PROCEDURE.md` §12) — iterate §8→§9→§10→§11 until all
 **five** hold: `stage9_status == "green"` · `stage10_status == "green"` ·
@@ -349,6 +355,28 @@ Hand edits remain possible and are not forbidden — they are caught after the f
 - `readiness` withholds GREEN when a P1 gate is blocked **or when the P1 gates could not be
   computed** — "could not compute" and "nothing blocked" are deliberately not the same value
   (`_blocked_p1_gates_by_paper` returns `None`, and the caller withholds).
+- **The open blocking-severity population is ratcheted, per bundle** (ADR-012 P5). A bundle
+  whose live open count at any severity in `BLOCKING_SEVERITIES` exceeds its recorded ceiling
+  fails `bundle_stage13_claim_consistent`. The ceilings are **data**
+  (`docs/required_open_ceilings.json`), not a literal roster in the check —
+  `bundle_registry_consistency` Leg C forbids the literal, and a per-file allowlist would have
+  blinded that gate to the whole module. A finding that resolves to no bundle reaches no
+  per-bundle ceiling, so those are ratcheted separately by
+  `UNATTRIBUTED_OPEN_BLOCKING_CEILING`. Attributed and unattributed partition the blocking
+  population between them, so neither leg can be satisfied by moving a finding out of its
+  scope. Both carry zero headroom and may only be **lowered**, in the commit that lowers the
+  population.
+
+  ⚠️ **The predicate is the whole guarantee.** Leg 1 first counted `major` alone, which left
+  the open criticals that *do* reach a bundle ratcheted by nothing at all — leg 2 sees only
+  the unattributed ones — so the coverage claim above was false as first written. Widening it
+  required re-deriving every ceiling: a measurement is scoped by its predicate, and changing
+  what it keys on voids it. That re-derivation is not a ratchet being raised; a broader
+  predicate gets its own baseline, frozen at the live count, and shrinks from there.
+
+  ⚠️ This ratchets **growth**, and adds no severity to the blocking set. `major` has been in
+  `BLOCKING_SEVERITIES` since 2026-07-31; it blocked before this change and blocks the same way
+  after it. What was missing was any pressure against the open population rising.
 
 **The ordering rule** — Stages 9 and 10 GREEN before 13, `BUNDLE_LIFT_PROCEDURE.md` §10 — is
 enforced twice since ADR-011 Phase 2: `record_review.py` refuses to write such a verdict, and

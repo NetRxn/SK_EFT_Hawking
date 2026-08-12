@@ -39,6 +39,7 @@ just verifying.
 - **Evidence:** `note_rt_ch_bounds/paper_draft.tex:75-78` — no `\cite{...}` adjacent to the 77/45 claim; `\thebibliography` at lines 259-283 has no Sen entry. The actual Sen reference is likely arXiv:1205.0971 (per the project's parameter-provenance memory at `feedback_post_wave_strengthening_audit.md` and the project status memory).
 - **Expected:** Either (a) add a Sen bibitem and `\cite{Sen2012}` adjacent to "Sen's 4D Schwarzschild log coefficient $77/45$" at line 76, or (b) drop the 77/45 specific number and discuss only the qualitative non-universality.
 - **Fix:** Add a bibitem along the lines of: `\bibitem{Sen2012} A.~Sen, ``Logarithmic corrections to N=2 black hole entropy: an infrared window into the microstates,'' Gen.\ Rel.\ Grav.\ \textbf{44}, 1207 (2012); arXiv:1108.3842.` (or arXiv:1205.0971 — verify against the actual Lean module's source). Cite at line 76. **CITATION_REGISTRY** entry must also be added if not present.
+- **Lane:** `prose`
 
 ### 3.1 — 🔵 RECOMMENDED — `H_CasiniHuerta_Bound_Valid_witness_saturated.ch_bound` proof is `rfl` on the bound
 

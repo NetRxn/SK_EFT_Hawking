@@ -1153,3 +1153,178 @@ class TestPGWriteWithoutPsycopg:
         assert any("psycopg" in r.getMessage().lower() for r in caplog.records), (
             "no 'psycopg unavailable' log — the unavailable branch was not "
             "observed, so this test asserts nothing about it")
+
+
+class TestTheFindingIdMinterIsShared:
+    """One minter, importable, and the one production actually uses.
+
+    `close_finding.py` mints ids to WRITE the supersession ledger;
+    `extract_review_finding_nodes` mints them to READ it back. Two implementations
+    diverging is exactly how 66 review:-scheme ledger records came to reference ids that
+    match no node — inert records, whose findings still read `open`.
+    """
+
+    def test_mint_finding_id_is_importable_and_stable(self):
+        from scripts.build_graph import mint_finding_id
+        assert mint_finding_id(
+            '2026-08-12-0006-internal-adversarial', 'I1', '5.5'
+        ) == 'review:2026-08-12-0006-internal-adversarial:I1:5.5'
+
+    def test_every_minted_node_id_round_trips_through_the_function(self):
+        from scripts.build_graph import extract_review_finding_nodes, mint_finding_id
+        nodes = extract_review_finding_nodes()
+        assert nodes, "no findings extracted — an empty seam is not a clean one"
+        for n in nodes:
+            m = n['meta']
+            assert n['id'] == mint_finding_id(
+                m['review_date'], m['review_name'], m['section']), (
+                f"{n['id']} was not produced by mint_finding_id — the extractor and the "
+                "minter have diverged, which is the orphan class at its source")
+
+
+class TestRoutingFieldsAreParsedNotInvented:
+    """ADR-012 C7: `Gate:` and `Location:` are ALREADY written on 92-93% of findings.
+
+    The first draft of ADR-012 proposed adding two NEW fields for data the system already
+    collects and discards at extraction.
+    """
+
+    def test_the_field_parser_reads_a_body_line(self):
+        from scripts.build_graph import _parse_finding_field
+        body = ("- **Gate:** CitationIntegrity\n"
+                "- **Location:** `src/core/citations.py:412`\n"
+                "- **Observed:** something\n")
+        assert _parse_finding_field(body, 'Gate') == 'CitationIntegrity'
+        assert _parse_finding_field(body, 'Location') == '`src/core/citations.py:412`'
+        assert _parse_finding_field(body, 'Nope') is None
+        assert _parse_finding_field('', 'Gate') is None
+
+    def test_the_live_corpus_populates_both_above_their_measured_floor(self):
+        from scripts.build_graph import extract_review_finding_nodes
+        ns = extract_review_finding_nodes()
+        assert ns, "no findings extracted — an empty seam is not a clean one"
+        blocks = sum(1 for n in ns if n['meta'].get('blocks'))
+        target = sum(1 for n in ns if n['meta'].get('target'))
+        # ⚠️ DENOMINATOR. 93%/92% was measured over SEVERITY-GLYPH SECTIONS (1,178).
+        # extract_review_finding_nodes returns a WIDER population (1,631) — not every
+        # minted node comes from a section carrying the field template. Measured over
+        # nodes: Gate 1241/1631 = 76.1%, Location 1164/1631 = 71.4%.
+        assert blocks / len(ns) > 0.70, f"blocks coverage collapsed to {blocks}/{len(ns)}"
+        assert target / len(ns) > 0.65, f"target coverage collapsed to {target}/{len(ns)}"
+
+
+class TestLaneAndReleaseSchemesAreDeclaredOnce:
+    """ADR-012 D1/D2/D19 — forward-only routing fields."""
+
+    def test_the_lane_map_is_the_single_declaration(self):
+        from scripts.build_graph import _LANE_DECL_MAP
+        assert set(_LANE_DECL_MAP) == {
+            'lean', 'pyrust', 'substrate', 'prose', 'research', 'infra'}
+
+    def test_there_is_no_operator_release_scheme(self):
+        """An operator decision that gates work is itself a queue item with a node id, so
+        parking behind it is the plain `blocked_by: <id>` case. A separate token would be a
+        second decision-record channel beside the queue."""
+        from scripts.build_graph import _RELEASE_SCHEMES
+        assert _RELEASE_SCHEMES == ('run:', 'phase:', 'pub:', 'research:')
+
+    def test_an_absent_lane_reads_unclassified_not_a_failure(self):
+        from scripts.build_graph import _parse_lane
+        assert _parse_lane("- **Observed:** x\n") == 'unclassified'
+
+    def test_a_declared_lane_is_normalised_case_insensitively(self):
+        from scripts.build_graph import _parse_lane
+        assert _parse_lane("- **Lane:** Substrate\n") == 'substrate'
+        assert _parse_lane("- **lane:** `prose`\n") == 'prose'
+
+    def test_an_unknown_lane_is_preserved_verbatim_for_the_check_to_name(self):
+        """Never coerced to the nearest known lane — silently mapping `substrat` to
+        `substrate` is the defect the severity-value leg was written to close."""
+        from scripts.build_graph import _parse_lane
+        assert _parse_lane("- **Lane:** wizardry\n") == 'wizardry'
+
+    def test_blocked_by_splits_on_commas_and_strips_backticks(self):
+        from scripts.build_graph import _parse_blocked_by
+        assert _parse_blocked_by("- **Blocked-by:** `review:d:X:1`, run:mlx-2026\n") == \
+            ['review:d:X:1', 'run:mlx-2026']
+        assert _parse_blocked_by("- **Observed:** none\n") == []
+
+    def test_the_parser_is_case_insensitive_like_every_other_field_scan(self):
+        """`reviews.py`'s _SEV_LINE / _SEV_VALUE / _LANE_VALUE all carry re.I. A
+        case-sensitive parser here would let the check validate a field the extractor then
+        silently fails to read."""
+        from scripts.build_graph import _parse_finding_field
+        assert _parse_finding_field("- **gate:** CitationIntegrity\n", 'Gate') == \
+            'CitationIntegrity'
+
+
+class TestBlockedByIsADagWithAConsumer:
+    """ADR-012 D10. ⚠️ KNOWLEDGE_GRAPH.md already carries three edge types that gates query
+    and nothing emits, and PRODUCES sat expired for a whole wave because a fallback masked
+    it. A new edge type ships with a consumer and a test proving the consumer sees it."""
+
+    def test_a_release_scheme_is_not_treated_as_a_node_reference(self):
+        from scripts.build_graph import _blocked_by_edges, finding_is_dispatchable
+        n = {'id': 'review:d:X:1',
+             'meta': {'blocked_by': ['run:mlx-rhmc-2026'], 'status': 'open'}}
+        assert _blocked_by_edges([n]) == []
+        assert finding_is_dispatchable(n, {'review:d:X:1'}, set()) is False
+
+    def test_an_unrecognised_scheme_is_REPORTED_not_raised(self):
+        """⚠️ THE CONTRACT CHANGED, and the reason is blast radius, not tolerance.
+
+        Raising here propagated out of both edge-assembly sites and so out of
+        `build_graph_json()` — one hand-typed id in reviewer markdown would have taken down
+        `knowledge_graph.json`, the atlas, `graph_integrity`, gate extraction and the
+        dashboard together, including the checks that would diagnose it. Detection moved to
+        `review_severity_declared`, which fails at ZERO. Same signal, bounded damage.
+        """
+        from scripts.build_graph import _blocked_by_edges, blocked_by_unresolved
+        n = {'id': 'review:d:X:1', 'meta': {'blocked_by': ['runs:42'], 'status': 'open'}}
+        assert _blocked_by_edges([n]) == []
+        assert blocked_by_unresolved([n]) == {'review:d:X:1': ['runs:42']}
+
+    def test_a_blocked_by_naming_no_node_is_REPORTED(self):
+        from scripts.build_graph import _blocked_by_edges, blocked_by_unresolved
+        n = {'id': 'review:d:X:1',
+             'meta': {'blocked_by': ['review:d:X:99'], 'status': 'open'}}
+        assert _blocked_by_edges([n]) == []
+        assert blocked_by_unresolved([n]) == {'review:d:X:1': ['review:d:X:99']}
+
+    def test_an_empty_release_value_is_UNRESOLVED_not_a_condition(self):
+        """`run:` is a truncation, and the likeliest typo for this field. Treating it as a
+        release condition makes the finding read WAITING when it is STUCK — nothing can
+        satisfy it and nothing will ever evaluate it."""
+        from scripts.build_graph import blocked_by_unresolved, finding_is_dispatchable
+        n = {'id': 'review:d:X:1', 'meta': {'blocked_by': ['run:'], 'status': 'open'}}
+        assert blocked_by_unresolved([n]) == {'review:d:X:1': ['run:']}
+        assert finding_is_dispatchable(n, {'review:d:X:1'}, set()) is False
+
+    def test_an_unresolvable_blocker_is_never_dispatchable(self):
+        from scripts.build_graph import finding_is_dispatchable
+        n = {'id': 'review:d:X:1',
+             'meta': {'blocked_by': ['review:d:X:99'], 'status': 'open'}}
+        assert finding_is_dispatchable(n, {'review:d:X:1'}, {'review:d:X:99'}) is False
+
+    def test_a_clean_corpus_reports_nothing_unresolved(self):
+        from scripts.build_graph import (blocked_by_unresolved,
+                                         extract_review_finding_nodes)
+        assert blocked_by_unresolved(extract_review_finding_nodes()) == {}
+
+    def test_a_resolvable_blocker_emits_an_edge_and_gates_dispatch(self):
+        from scripts.build_graph import _blocked_by_edges, finding_is_dispatchable
+        a = {'id': 'review:d:X:1',
+             'meta': {'blocked_by': ['review:d:X:2'], 'status': 'open'}}
+        b = {'id': 'review:d:X:2', 'meta': {'blocked_by': [], 'status': 'open'}}
+        assert _blocked_by_edges([a, b]) == [
+            {'source': 'review:d:X:1', 'target': 'review:d:X:2', 'type': 'BLOCKED_BY'}]
+        ids = {'review:d:X:1', 'review:d:X:2'}
+        assert finding_is_dispatchable(a, ids, set()) is False
+        assert finding_is_dispatchable(a, ids, {'review:d:X:2'}) is True
+        assert finding_is_dispatchable(b, ids, set()) is True
+
+    def test_the_live_corpus_emits_without_raising(self):
+        """Zero edges today — `blocked_by` is forward-only. The value of this test is that
+        it RAISES the day a malformed one is filed, instead of dropping it."""
+        from scripts.build_graph import extract_blocked_by_edges
+        assert extract_blocked_by_edges() == []

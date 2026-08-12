@@ -88,6 +88,7 @@ BLOCKER is resolved.
      CFTs" — that is correct, but doesn't rescue the attribution: the bound
      itself (universal in 2D CFTs by central charge) is not Casini-Huerta's.
 - **Cache:** fresh-fetch (this review) for arXiv:0905.2562 and
+- **Lane:** `prose`
   hep-th/0405152.
 
 ### 1.2 — 🔵 RECOMMENDED — Ryu-Takayanagi title in registry differs from arXiv canonical title (registry verbose form vs arXiv abbreviated form)
@@ -313,6 +314,7 @@ BLOCKER is resolved.
   phantom reference (it correctly cites `kaulMajumdar_not_H_RT` in cell
   `rtch-t-5-md`), so the impact is local to the Lean module.
 - **Cache:** n/a.
+- **Lane:** `lean`
 
 ### 5.1 — 🟡 REQUIRED — Notebook claim "first formalization" is implicit but not made explicit; should be stated honestly
 

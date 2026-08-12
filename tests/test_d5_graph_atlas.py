@@ -71,6 +71,7 @@ def _finding(fid: str, bundle: str | None, review_file: str = "") -> dict:
             "meta": {"inferred_bundle": bundle, "review_file": review_file}}
 
 
+
 class TestGraphIntegrity:
 
     def _run(self, tmp_path, monkeypatch, *, nodes=(), edges=(), ledger=None,
@@ -152,47 +153,6 @@ class TestGraphIntegrity:
         r = ga.check_graph_integrity()
         assert r.passed is False
         assert any(d.name == "findings_reach_the_graph" and "unverified" in (d.message or "")
-                   for d in r.details)
-
-    def test_a_dangling_closure_above_the_baseline_fails(self, tmp_path, monkeypatch):
-        """The ledger guard. ⚠️ Its baseline sat at 67 against a population of 66 —
-        exactly one slot of headroom, in the guard whose entire purpose is catching a
-        NEWLY filed closure that names nothing. Three such records were filed while it
-        was effectively inert."""
-        nodes, edges = self.FLAGGED
-        ledger = [{"finding_id": f"review:r:ghost:{i}"} for i in range(67)]
-        r = self._run(tmp_path, monkeypatch, nodes=nodes, edges=edges, ledger=ledger)
-        assert r.passed is False, (
-            "67 dangling closures did not exceed the pinned baseline of 66 — the "
-            "ratchet has headroom again")
-        assert any(d.name == "ledger_ids_resolve" and not d.passed for d in r.details)
-
-    def test_dangling_closures_at_the_baseline_pass_with_a_warning(self, tmp_path, monkeypatch):
-        """SILENT ON CORRECT DATA — pre-existing debt is tracked, not failed."""
-        nodes, edges = self.FLAGGED
-        ledger = [{"finding_id": f"review:r:ghost:{i}"} for i in range(66)]
-        r = self._run(tmp_path, monkeypatch, nodes=nodes, edges=edges, ledger=ledger)
-        assert r.passed is True
-        assert any(d.name == "ledger_ids_resolve" and d.warning for d in r.details)
-
-    def test_legacy_scheme_ledger_ids_are_out_of_scope(self, tmp_path, monkeypatch):
-        """Only `review:`-scheme ids ever minted nodes. Flagging the legacy
-        `bundle-stage10:` records would be noise, not signal."""
-        nodes, edges = self.FLAGGED
-        ledger = [{"finding_id": f"bundle-stage10:x:{i}"} for i in range(200)]
-        r = self._run(tmp_path, monkeypatch, nodes=nodes, edges=edges, ledger=ledger)
-        assert r.passed is True
-
-    def test_an_unreadable_ledger_fails_rather_than_passes(self, tmp_path, monkeypatch):
-        """Converted from fail-open 2026-08-01: ANY exception in the scan used to
-        make the guard silently absent, which is the state a mutation test found it
-        in — planting a dangling record left the check green with no detail emitted."""
-        nodes, edges = self.FLAGGED
-        self._run(tmp_path, monkeypatch, nodes=nodes, edges=edges)
-        (tmp_path / "docs" / "review_finding_supersessions.json").write_text("{not json")
-        r = ga.check_graph_integrity()
-        assert r.passed is False
-        assert any(d.name == "ledger_ids_resolve" and "FAILED TO RUN" in (d.message or "")
                    for d in r.details)
 
     def test_a_verification_conflict_is_a_hard_failure(self, tmp_path, monkeypatch):

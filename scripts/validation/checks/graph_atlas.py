@@ -167,86 +167,9 @@ def check_graph_integrity() -> CheckResult:
             "findings_reach_the_graph", False,
             f"orphan scan could not run ({type(exc).__name__}: {exc}) — treat as unverified"))
 
-    # ── Supersession-ledger referential integrity (D12 round-6 finding 4.1) ──
-    # Findings raised in rounds whose review document was never written to disk
-    # were filed under an EARLIER review's IDs. That both collides with live
-    # findings (a still-open finding rendered `fixed`) and mints dangling IDs
-    # naming no node. Neither is detectable from the ledger alone.
-    try:
-        _led = json.loads(
-            (_H.DOCS_DIR / "review_finding_supersessions.json")   # ADR-009 H1
-            .read_text(encoding="utf-8"))
-        _entries = _led.get("supersessions", [])
-        _known = {n["id"] for n in _g.get("nodes", [])
-                  if isinstance(n, dict) and n.get("type") == "ReviewFinding"}
-        # Scope to the `review:<date-dir>:<name>:<section>` scheme, which is the one
-        # extract_review_finding_nodes mints nodes for. Legacy Stage-9/10 records use
-        # an unrelated `bundle-stage10:...` scheme and were never graph nodes, so
-        # flagging them would be noise, not signal.
-        _dangling = sorted({e["finding_id"] for e in _entries
-                            if e.get("finding_id", "").startswith("review:")
-                            and e["finding_id"] not in _known})
-        # Baseline re-measured 2026-08-01 (D11 Stage-13 round-13 finding 2220:4.5). It was
-        # pinned at 67 against a population of 66, i.e. it carried one slot of headroom in
-        # which a NEW dangling record could be filed without failing — in the one guard
-        # whose whole purpose is to catch newly-filed closures that name nothing.
-        #
-        # Its justifying comment was also wrong about the population it describes. Measured:
-        # of the 66, 53 use annotated IDs and 13 do not — the comment claimed all 67 were
-        # annotated. 67 was the count of ledger ids MENTIONING stage9/stage10, a different
-        # population that happened to be one larger.
-        #
-        # Pinned to the exact count, so any growth fails on the first record.
-        _LEDGER_DANGLING_BASELINE = 66
-        #
-        # ⚠️ A CLAIM I MADE HERE WAS WRONG, retracted 2026-08-01. I wrote that this guard
-        # "does not run" and reported it as a twelfth defect, on the strength of a mutation
-        # test that planted a dangling record and saw no `ledger_ids_resolve` detail. The
-        # test was invoking `check_bundle_registry_consistency`. This guard lives in
-        # `check_graph_integrity` (line ~3261) — a different check entirely — so of course
-        # it emitted nothing there.
-        #
-        # Re-tested against the right host: baseline reports "66 dangling ... no growth" and
-        # PASSES; planting one dangling record reports "67 ... above the pinned baseline of
-        # 66" and FAILS. The guard works, and the baseline correction above is what makes
-        # the growth case fail at exactly one record.
-        #
-        # I found a real defect (the 67-vs-66 headroom), then manufactured a second one out
-        # of my own testing error and committed it as a finding. Diagnosing by running the
-        # wrong function is the same class of mistake as measuring the wrong quantity, which
-        # is what produced the eleven genuine instances this session.
-        if len(_dangling) > _LEDGER_DANGLING_BASELINE:
-            _s = ", ".join(_dangling[:4])
-            roster_details.append(Detail(
-                "ledger_ids_resolve", False,
-                f"{len(_dangling)} supersession finding_id(s) name no ReviewFinding node, "
-                f"above the pinned baseline of {_LEDGER_DANGLING_BASELINE} — a closure filed "
-                f"against a nonexistent finding closes nothing: {_s}",
-            ))
-        elif _dangling:
-            roster_details.append(Detail(
-                "ledger_ids_resolve", True,
-                f"{len(_dangling)} dangling supersession finding_id(s) (pre-existing annotated-ID "
-                f"debt, baseline {_LEDGER_DANGLING_BASELINE}); no growth",
-                warning=True,
-            ))
-        else:
-            roster_details.append(Detail(
-                "ledger_ids_resolve", True,
-                f"all review:-scheme supersession finding_ids resolve to ReviewFinding nodes "
-                f"({len(_entries)} entries scanned)",
-            ))
-    except Exception as exc:  # pragma: no cover
-        # FAIL, not warn (2026-08-01). This handler returned passed=True, so ANY exception
-        # in the scan made the guard silently absent — which is exactly the state a
-        # mutation test found it in: planting a dangling record left the check green with
-        # no `ledger_ids_resolve` detail emitted at all. A guard that cannot run must say
-        # so loudly; this one exists to catch closures naming nothing, and three such
-        # records were filed this session while it was inert.
-        roster_details.append(Detail(
-            "ledger_ids_resolve", False,
-            f"ledger integrity scan FAILED TO RUN ({type(exc).__name__}: {exc}) — the "
-            f"dangling-closure guard did not execute, so its silence is not evidence"))
+    # The supersession-ledger referential-integrity leg was PROMOTED to a registered
+    # check in `checks/reviews.py` on 2026-08-12 (ADR-012 D13) and deleted here in the
+    # same commit. Two copies of a ratchet is the defect, not the location.
 
     try:
         from graph_integrity import run_integrity_checks

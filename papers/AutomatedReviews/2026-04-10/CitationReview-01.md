@@ -61,6 +61,7 @@ This error is pervasive throughout Paper 7 and creates a direct contradiction wi
 - **Other Volovik paper:** "Gravity through the prism of condensed matter physics" is arXiv:2307.14370, JETP Lett. **118**, 546 (2023) — a different paper.[8]
 - **Good news:** The arXiv ID and journal citation point to the correct paper (the vestigial gravity paper), and that paper does support the claim made in Papers 5 and 6. The title alone is wrong.
 - **Risk:** Copy-editors and automated reference checkers will flag the title mismatch.
+- **Lane:** `prose`
 
 ***
 
@@ -71,6 +72,7 @@ This error is pervasive throughout Paper 7 and creates a direct contradiction wi
 - **Cited as:** D. Adler et al., *Nature* **636**, 87 (2024)
 - **Actual paper:** *"Observation of Hilbert space fragmentation and fractonic excitations in two-dimensional magnets"*, *Nature* **636**, 80–85 (2024), DOI: 10.1038/s41586-024-08188-0[9]
 - **Correction:** First page is **80**, not 87. The "87" may be an internal page number within the article, not the first page of the article.
+- **Lane:** `prose`
 
 ***
 
@@ -83,6 +85,7 @@ This error is pervasive throughout Paper 7 and creates a direct contradiction wi
 - **What the papers actually use:** The action written in Paper 1, Eq.(son_action), \[S = \int d^3x\,dt\,[n(\partial_t\phi + \vec{v}\cdot\nabla\phi) - P(n,\phi)]\], is the **non-relativistic** Madelung/superfluid hydrodynamics form, closer to Son–Wingate (2005) or standard BEC phonon EFT.
 - **The bibitem** bundles Son:2002 with Endlich et al., *Phys. Rev. D* **88**, 105001 (2013) — the non-relativistic EFT paper — which partially covers the gap, but the attribution in the text body is misleading.
 - **Required fix:** Clarify that the relativistic Son:2002 provides the EFT philosophy and symmetry structure, while the non-relativistic adaptation follows Son–Wingate or Endlich et al. Alternatively, cite Son:2002 only for the symmetry-breaking logic and cite the non-relativistic adaptation separately.
+- **Lane:** `prose`
 
 ### 8. Papers 9 — "Forces hidden sectors" overclaims GarciaEtxebarria:2019 🟡
 
@@ -91,6 +94,7 @@ This error is pervasive throughout Paper 7 and creates a direct contradiction wi
 - **The resolution GE2019 identifies:** Adding ν_R — not hidden sectors — is the standard resolution. GE2019 does not discuss or recommend hidden sectors as the solution.
 - **The arithmetic is correct** (3 × 15 = 45 ≡ −3 mod 16), but the conclusion "forces hidden sectors" substitutes one possible interpretation for what the source actually says. A reviewer of GE2019 will note the overclaim immediately.
 - **Required fix:** Soften to: *"...requiring either right-handed neutrinos or beyond-SM physics to cancel the anomaly, consistent with Garcia-Etxebarria and Montero."*
+- **Lane:** `prose`
 
 ### 9. Paper 10 — Modular generation derivation implicit assumptions not disclosed 🟡
 
@@ -99,6 +103,7 @@ This error is pervasive throughout Paper 7 and creates a direct contradiction wi
 - **What Wang:2024 (arXiv:2312.14928) actually establishes:** This argument is valid given specific assumptions about the system living on a **spin manifold** with a **particular bordism class**, and given the identification of the chiral central charge with the specific counting used.[1]
 - **The gap:** The step "framing anomaly \(c_- \equiv 0 \pmod{24}\)" requires the system to be placed on a compact spin 3-manifold with framing. Paper 10 describes this as the Dedekind eta constraint but the cobordism/spin structure assumption is an **implicit physics axiom**, not a derived result. The paper acknowledges one axiom ("gapped interface") but this deeper assumption goes undisclosed.
 - **Risk:** A condensed matter or math-physics referee will immediately ask why framing anomaly cancellation forces the 24 precisely, and the answer requires a more careful statement of what manifold class is assumed.
+- **Lane:** `prose`
 
 ***
 
@@ -108,6 +113,7 @@ This error is pervasive throughout Paper 7 and creates a direct contradiction wi
 
 - **Cited as:** D. Tong, arXiv:2104.03997 (2021) — year in bibitem is listed as 2021 but key says "Tong2022"
 - **Actual:** arXiv:2104.03997 was submitted April 2021, published in *JHEP* **2022**(07), 001 — so "Tong2022" refers to the journal year but the arXiv year is 2021. This ambiguity should be resolved by citing journal publication year consistently or adding the arXiv submission date explicitly.
+- **Lane:** `prose`
 
 ### 11. Papers 1, 2, 12 — `[Berti:2025]` journal volume needs verification 🟡
 
@@ -115,6 +121,7 @@ This error is pervasive throughout Paper 7 and creates a direct contradiction wi
 - **arXiv:2408.17292** confirmed correct (*"Analog Hawking radiation from a spin-sonic horizon in a two-component BEC"*)[1]
 - *Comptes Rendus Physique* typically publishes one volume per year; volume 25 would correspond to 2024, not 2025. Volume 26 would be 2025.
 - **Action:** Verify actual published volume via the CRP website before submission. The arXiv preprint reference is safe; the journal citation may have an off-by-one volume error.
+- **Lane:** `research`
 
 ***
 
@@ -133,6 +140,7 @@ This error is pervasive throughout Paper 7 and creates a direct contradiction wi
 - The caption itself notes: *"Steinhauer's published κ ≈ 290 s⁻¹ (step potential) gives T_H ≈ 0.35 nK."*
 - This 60× discrepancy is explained by different velocity profile models (tanh vs. step), which is physically legitimate but could confuse readers who check against the primary source.[12][13]
 - **Required fix:** Add a prominent note in the main text (not just the table caption) explaining the profile-dependence and why the tanh model yields a dramatically lower κ.
+- **Lane:** `prose`
 
 ### 14. Paper 12 — "2025 demonstration of programmable acoustic horizons at LKB Paris" needs verification 🟡
 
@@ -140,12 +148,15 @@ This error is pervasive throughout Paper 7 and creates a direct contradiction wi
 - The Falque et al. paper (arXiv:2311.01392, published PRL 2025) is titled *"Acoustic horizons and the Hawking effect in polariton fluids of light"* — this paper does study polariton acoustic horizons and is plausibly the correct reference.[14]
 - However, the specific claim of "fully **programmable** acoustic horizons" and "first observation of negative-energy Bogoliubov modes **inside** the horizon" should be verified against the actual Falque paper text. The word "programmable" may be an embellishment not present in the primary source.
 
+- **Lane:** `research`
+
 ### 15. Paper 15 — Self-referential metric inconsistency 🟡
 
 - Paper 15 (methodology) describes the pipeline and states: *"2237 machine-checked theorems across 94 Lean modules with 33 remaining gaps."*
 - Papers 14 and 16 (the latest outputs) state *"130 Lean modules"* and *"2237+ theorems"*.
 - Paper 15 has not been updated to reflect the current state of the codebase.
 - **Required fix:** Paper 15 must be updated before submission to match actual counts. A methodology paper that misrepresents its own outputs is particularly damaging for credibility.
+- **Lane:** `prose`
 
 ***
 

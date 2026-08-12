@@ -1,6 +1,6 @@
 # Bundle Readiness Heatmap
 
-**Auto-generated:** 2026-08-09
+**Auto-generated:** 2026-08-12
 **Tool:** `scripts/bundle_readiness.py --heatmap`
 
 **Companion to:** `docs/READINESS_GATES.md` (per-paper) — the per-bundle analog. Phase 6i Wave 7.4 deliverable; GREEN semantics tightened 2026-06-10 (S5 closure — see legend).
@@ -20,26 +20,26 @@
 
 | Bundle | Tier | Sources | Open | Blockers | Severity mix | Stage-13 review | Verdict |
 |---|---:|---:|---:|---:|---|:---:|:---:|
-| **F** | 0 | 63 | 112 | 23 | 72 advisory, 9 critical, 14 major, 17 minor | 2026-06-10 | 🔴 RED |
-| **D1** | 1 | 12 | 58 | 37 | 8 advisory, 24 critical, 13 major, 13 minor | 2026-06-10 | 🔴 RED |
-| **D2** | 1 | 6 | 60 | 19 | 23 advisory, 8 critical, 11 major, 18 minor | 2026-06-10 | 🔴 RED |
+| **F** | 0 | 63 | 106 | 17 | 72 advisory, 2 critical, 15 major, 17 minor | 2026-06-10 | 🔴 RED |
+| **D1** | 1 | 12 | 35 | 14 | 8 advisory, 1 critical, 13 major, 13 minor | 2026-06-10 | 🔴 RED |
+| **D2** | 1 | 6 | 55 | 14 | 23 advisory, 3 critical, 11 major, 18 minor | 2026-06-10 | 🔴 RED |
 | **D3** | 1 | 31 | 57 | 7 | 43 advisory, 1 critical, 6 major, 7 minor | 2026-06-10 | 🔴 RED |
-| **D4** | 1 | 12 | 34 | 1 | 33 advisory, 1 critical | 2026-06-10 | 🔴 RED |
-| **D5** | 1 | 9 | 62 | 17 | 35 advisory, 7 critical, 10 major, 10 minor | 2026-06-10 | 🔴 RED |
+| **D4** | 1 | 12 | 33 | 0 | 33 advisory | 2026-06-10 | 🟡 YELLOW |
+| **D5** | 1 | 9 | 54 | 9 | 35 advisory, 9 major, 10 minor | 2026-06-10 | 🔴 RED |
 | **D6** | 1 | 3 | 0 | 0 | _(none)_ | 2026-06-10 † | 🟡 YELLOW (P1 gate blocked: NarrativeGrounding) |
-| **D7** | 1 | 1 | 17 | 12 | 8 critical, 4 major, 5 minor | 2026-06-10 | 🔴 RED |
-| **D8** | 1 | 13 | 14 | 0 | 8 advisory, 6 minor | 2026-06-10 | 🟡 YELLOW |
-| **D9** | 1 | 1 | 0 | 0 | _(none)_ | 2026-06-10 | ? UNMEASURED (Stage-13 evidence kind=unrecorded; only full-adversarial earns GREEN) |
-| **D10** | 1 | 1 | 3 | 0 | 1 advisory, 2 minor | 2026-06-30 | 🟡 YELLOW (P1 gate blocked: LeanProofSubstance, NarrativeGrounding) |
-| **D11** | 1 | 1 | 86 | 23 | 18 advisory, 6 critical, 17 major, 45 minor | 2026-07-31 † | 🔴 RED |
-| **D12** | 1 | 1 | 148 | 46 | 7 advisory, 4 critical, 42 major, 95 minor | 2026-07-31 † | 🔴 RED |
+| **D7** | 1 | 1 | 9 | 4 | 4 major, 5 minor | 2026-06-10 | 🔴 RED |
+| **D8** | 1 | 13 | 31 | 17 | 8 advisory, 17 critical, 6 minor | 2026-06-10 | 🔴 RED |
+| **D9** | 1 | 1 | 0 | 0 | _(none)_ | 2026-06-10 | ⚪ UNMEASURED (Stage-13 evidence kind=unrecorded; only full-adversarial earns GREEN) |
+| **D10** | 1 | 4 | 20 | 17 | 1 advisory, 17 critical, 2 minor | 2026-06-30 | 🔴 RED |
+| **D11** | 1 | 6 | 81 | 18 | 18 advisory, 1 critical, 17 major, 45 minor | 2026-07-31 † | 🔴 RED |
+| **D12** | 1 | 5 | 146 | 44 | 7 advisory, 2 critical, 42 major, 95 minor | 2026-07-31 † | 🔴 RED |
 | **L1** | 2 | 2 | 5 | 2 | 2 major, 3 minor | 2026-06-10 | 🔴 RED |
-| **L2** | 2 | 1 | 43 | 16 | 24 advisory, 9 critical, 7 major, 3 minor | 2026-06-10 | 🔴 RED |
-| **L3** | 2 | 4 | 24 | 6 | 15 advisory, 2 critical, 4 major, 3 minor | 2026-06-10 | 🔴 RED |
-| **I1** | 3 | 8 | 41 | 16 | 14 advisory, 2 critical, 14 major, 11 minor | 2026-06-10 | 🔴 RED |
-| **I2** | 3 | 1 | 61 | 19 | 37 advisory, 8 critical, 11 major, 5 minor | 2026-06-10 | 🔴 RED |
-| **I3** | 3 | 1 | 36 | 16 | 16 advisory, 9 critical, 7 major, 4 minor | 2026-06-10 | 🔴 RED |
-| **E1** | 4 | 5 | 12 | 5 | 1 critical, 4 major, 7 minor | 2026-06-10 | 🔴 RED |
+| **L2** | 2 | 1 | 35 | 8 | 24 advisory, 1 critical, 7 major, 3 minor | 2026-06-10 | 🔴 RED |
+| **L3** | 2 | 4 | 23 | 5 | 15 advisory, 1 critical, 4 major, 3 minor | 2026-06-10 | 🔴 RED |
+| **I1** | 3 | 8 | 67 | 34 | 14 advisory, 2 critical, 32 major, 19 minor | 2026-06-10 | 🔴 RED |
+| **I2** | 3 | 1 | 53 | 11 | 37 advisory, 1 critical, 10 major, 5 minor | 2026-06-10 | 🔴 RED |
+| **I3** | 3 | 1 | 27 | 7 | 16 advisory, 7 major, 4 minor | 2026-06-10 | 🔴 RED |
+| **E1** | 4 | 5 | 11 | 4 | 4 major, 7 minor | 2026-06-10 | 🔴 RED |
 | **E2** | 4 | 4 | 21 | 0 | 15 advisory, 6 minor | 2026-06-10 | 🟡 YELLOW |
 
 † review date backfilled from on-disk review evidence; the evidence path is recorded in the bundle's `bundle_metadata.json` `last_stage13_review_source` field.
@@ -52,31 +52,31 @@
 
 | Bundle | AssumptionDisclosu | CitationIntegrity | ComputationCorrect | CountFreshness | CrossPaperConsiste | FixPropagation | LeanProofSubstance | NarrativeGrounding | ParameterProvenanc | ProductionRunHealt | unclassified |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| **F** | 8 | 13 | 10 | 9 | 15 | 0 | 6 | 5 | 15 | 1 | 30 |
-| **D1** | 1 | 26 | 2 | 2 | 8 | 0 | 3 | 6 | 3 | 0 | 7 |
-| **D2** | 11 | 16 | 3 | 4 | 9 | 0 | 2 | 6 | 2 | 0 | 7 |
-| **D3** | 7 | 6 | 7 | 5 | 4 | 0 | 2 | 1 | 7 | 1 | 17 |
-| **D4** | 3 | 2 | 1 | 0 | 5 | 1 | 2 | 1 | 1 | 0 | 18 |
-| **D5** | 3 | 17 | 2 | 3 | 6 | 0 | 2 | 6 | 6 | 0 | 17 |
+| **F** | 8 | 11 | 9 | 8 | 15 | 0 | 5 | 5 | 15 | 1 | 29 |
+| **D1** | 1 | 10 | 1 | 2 | 7 | 0 | 3 | 2 | 2 | 0 | 7 |
+| **D2** | 11 | 15 | 3 | 4 | 9 | 0 | 2 | 3 | 2 | 0 | 6 |
+| **D3** | 7 | 7 | 6 | 5 | 4 | 0 | 2 | 1 | 7 | 1 | 17 |
+| **D4** | 3 | 2 | 1 | 0 | 4 | 1 | 2 | 1 | 1 | 0 | 18 |
+| **D5** | 3 | 10 | 2 | 3 | 6 | 0 | 2 | 5 | 6 | 0 | 17 |
 | **D6** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| **D7** | 2 | 1 | 0 | 1 | 3 | 0 | 1 | 2 | 2 | 0 | 5 |
-| **D8** | 4 | 4 | 0 | 0 | 0 | 0 | 0 | 2 | 0 | 0 | 4 |
+| **D7** | 2 | 1 | 0 | 1 | 2 | 0 | 0 | 0 | 1 | 0 | 2 |
+| **D8** | 4 | 21 | 0 | 0 | 0 | 0 | 0 | 2 | 0 | 0 | 4 |
 | **D9** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| **D10** | 0 | 2 | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 0 | 0 |
-| **D11** | 5 | 16 | 4 | 11 | 7 | 0 | 1 | 3 | 14 | 0 | 25 |
-| **D12** | 20 | 18 | 11 | 9 | 0 | 0 | 0 | 19 | 33 | 0 | 38 |
+| **D10** | 0 | 19 | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 0 | 0 |
+| **D11** | 5 | 16 | 4 | 11 | 6 | 0 | 1 | 2 | 14 | 0 | 22 |
+| **D12** | 20 | 18 | 11 | 9 | 0 | 0 | 0 | 19 | 33 | 0 | 36 |
 | **L1** | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 2 | 2 | 0 | 0 |
-| **L2** | 6 | 4 | 4 | 3 | 8 | 0 | 3 | 1 | 8 | 0 | 6 |
-| **L3** | 2 | 8 | 0 | 2 | 3 | 0 | 0 | 1 | 0 | 1 | 7 |
-| **I1** | 3 | 10 | 0 | 2 | 0 | 0 | 0 | 13 | 4 | 0 | 9 |
-| **I2** | 2 | 6 | 2 | 3 | 1 | 0 | 5 | 13 | 9 | 0 | 20 |
-| **I3** | 2 | 2 | 0 | 2 | 6 | 0 | 3 | 7 | 6 | 0 | 8 |
-| **E1** | 1 | 3 | 0 | 2 | 0 | 0 | 0 | 3 | 2 | 0 | 1 |
+| **L2** | 4 | 3 | 3 | 3 | 6 | 0 | 2 | 0 | 8 | 0 | 6 |
+| **L3** | 2 | 7 | 0 | 2 | 3 | 0 | 0 | 1 | 0 | 1 | 7 |
+| **I1** | 6 | 14 | 0 | 4 | 3 | 0 | 0 | 18 | 8 | 0 | 14 |
+| **I2** | 2 | 6 | 2 | 3 | 1 | 0 | 5 | 9 | 8 | 0 | 17 |
+| **I3** | 2 | 1 | 0 | 1 | 5 | 0 | 2 | 6 | 4 | 0 | 6 |
+| **E1** | 1 | 3 | 0 | 1 | 0 | 0 | 0 | 3 | 2 | 0 | 1 |
 | **E2** | 1 | 6 | 0 | 0 | 2 | 0 | 1 | 5 | 2 | 0 | 4 |
 
 ## Notes
 
-- This heatmap aggregates *existing* per-paper Stage-13 review findings via `build_graph.extract_review_finding_nodes()` (post-supersession). It does NOT include findings from a fresh-context Stage-13 sweep on the bundle (those are user-triggered) — but since 2026-06-10 the GREEN verdict additionally REQUIRES that such a sweep is recorded for the bundle (S5 closure).
+- This heatmap aggregates *existing* per-paper Stage-13 review findings via `build_graph.extract_review_finding_nodes()` (post-supersession). It does NOT include findings from a fresh-context Stage-13 sweep on the bundle — that sweep is a reflexive pipeline stage this script does not run, NOT a user-gated one — and since 2026-06-10 the GREEN verdict additionally REQUIRES that such a sweep is recorded for the bundle (S5 closure).
 - 'Open' means `meta.status == 'open'` after applying `docs/review_finding_supersessions.json` overrides.
 - 'Blockers' = findings with severity `critical` or `major`. RED bundles must close blockers before promoting to a fresh-context Stage-13 LLM review.
 - **Staleness footnote:** the Stage-13 review column surfaces review dates so staleness is visible, but this heatmap does NOT compare edit dates against review dates. Re-review obligations after substantive edits are governed by Stage-13's re-invocation rule (`docs/WAVE_EXECUTION_PIPELINE.md` Stage 13: findings marked fixed must pass a re-invocation — "the re-run is evidence") and, for late absorptions into already-drafted bundles, the Stage-F re-review mandate (`docs/LATE_PHASE6_ABSORPTION_PROTOCOL.md`). A re-review sweep is separately scheduled.

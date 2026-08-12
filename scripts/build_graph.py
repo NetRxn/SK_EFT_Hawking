@@ -1721,6 +1721,149 @@ def _load_supersession_ledger() -> dict[str, dict]:
     return out
 
 
+#: The six routing lanes (ADR-012 D2). ⚠️ `lean`/`substrate` and `infra` are separate
+#: because they need different AGENT PROFILES, not merely different gates: substrate work
+#: runs the atlas + the lean4 MCP loop + a lean-worker holding a build-isolated worktree
+#: slot, while `infra` is work on the machine itself — architecture, workflows, harness,
+#: plugin, dashboard. Declared ONCE and validated against, the same shape as
+#: `_SEVERITY_DECL_MAP`; `review_severity_declared` owns the enforcement.
+_LANE_DECL_MAP: dict[str, str] = {
+    'lean': 'lean',
+    'pyrust': 'pyrust',
+    'substrate': 'substrate',
+    'prose': 'prose',
+    'research': 'research',
+    'infra': 'infra',
+}
+
+#: External release-condition schemes accepted in `blocked_by` (ADR-012 D19).
+#:
+#: ⚠️ `blocked_by` carries TWO kinds of entry and the discrimination is by PREFIX. A token
+#: matching one of these is an external condition and is never expected to resolve to a
+#: node; everything else must resolve to a minted finding id — **including an unrecognised
+#: scheme**, so `runs:42` fails loudly rather than becoming a blocker nothing can ever
+#: satisfy. A token that cannot be satisfied reads as WAITING when it is STUCK.
+#:
+#: ⚠️ There is deliberately NO `operator:` scheme. An operator decision that gates work is
+#: itself a queue item with a node id (ADR-012 D12/D21), so parking behind it is the plain
+#: node-id case. A separate token would be a second decision-record channel beside the
+#: queue, with its own store and its own staleness.
+_RELEASE_SCHEMES: tuple[str, ...] = ('run:', 'phase:', 'pub:', 'research:')
+
+
+def _parse_lane(body: str) -> str:
+    """Forward-only. Absent reads `unclassified` rather than failing the historical corpus.
+
+    An UNKNOWN token is preserved verbatim, never coerced to the nearest known lane, so
+    `review_severity_declared` can name it. Silently mapping `substrat` to `substrate`
+    would be the same defect the severity-value leg was written to close.
+    """
+    raw = _parse_finding_field(body, 'Lane')
+    if not raw:
+        return 'unclassified'
+    token = raw.strip().strip('`').lower()
+    return _LANE_DECL_MAP.get(token, token)
+
+
+def _parse_blocked_by(body: str) -> list[str]:
+    """Finding ids and/or external release conditions, comma-separated. Never validated
+    here — `extract_blocked_by_edges` raises on an unresolvable entry, because a blocker
+    silently dropped is the orphan class one layer up."""
+    raw = (_parse_finding_field(body, 'Blocked-by')
+           or _parse_finding_field(body, 'Blocked by'))
+    if not raw:
+        return []
+    return [part.strip().strip('`') for part in raw.split(',') if part.strip().strip('`')]
+
+
+#: Statuses that REMOVE a finding from the open set. Must cover every one — round 10 keyed
+#: on `== 'fixed'` alone, so a two-key `{"finding_id": X, "status": "accepted"}` closed a
+#: live BLOCKER, because `_eval_fix_propagation` partitions `accepted` out before the
+#: severity filter ever runs.
+_CLOSING_STATUSES = ('fixed', 'accepted')
+
+
+def _closure_record_meets_bar(rec: dict, finding_has_verify: bool = False) -> bool:
+    """Does this ledger record justify closing a finding?
+
+    ⚠️ APPLIES AT EVERY SEVERITY since 2026-08-12. It was gated on
+    `severity in ('critical','major','blocker')`, which made a below-bar severity a closure
+    BYPASS: `- **Severity:**` is declarable in a finding's body and the declared value beats
+    the heading glyph, and `_SEVERITY_DECL_MAP` maps `recommended -> minor`, so a 🔴 heading
+    declaring `recommended` closed on `{"finding_id": X, "status": "fixed"}` — no evidence,
+    no anchor. Filed as D12 13.2, open across FOUR consecutive rounds, mutating each time
+    the previous route was shut, and reproducing byte-for-byte at HEAD. **Do not re-scope
+    it.**
+
+    Measured blast radius at the time of the change: **ZERO**. All 231 non-blocking findings
+    then closed carried a record, and every one of those records already met the bar. The
+    change closes a forward hole; it does not reopen a backlog.
+
+    Deliberately SCHEMA-TOLERANT. Measured over the live ledger: 264 blocking closures use
+    the older `(date, evidence, finding_id, status, superseded_by)` shape and 23 use the
+    newer one with `commit`/`closed_by`/`closed_date`. Requiring `commit` would reopen 264
+    well-formed historical closures — a guard firing on correct data gets switched off.
+
+    `finding_has_verify` is live only because the extractor now parses a `Verify:` line
+    (ADR-012 D1). Shipping this parameter without that producer would have been a leg that
+    cannot fire on any input, which is why routing and closure were one build.
+    """
+    rec = rec or {}
+    why = str(rec.get('evidence') or rec.get('note') or rec.get('rationale') or '').strip()
+    anchor = any(str(rec.get(k) or '').strip()
+                 for k in ('commit', 'date', 'closed_date', 'applied_at'))
+    base = bool(rec.get('status') in _CLOSING_STATUSES and len(why) >= 40 and anchor)
+    if not base or not finding_has_verify:
+        return base
+    vb = rec.get('verified_by') or {}
+    return vb.get('exit_code') == 0 and bool(str(vb.get('command') or '').strip())
+
+
+_FINDING_FIELD_RE_CACHE: dict[str, "re.Pattern[str]"] = {}
+
+
+def _parse_finding_field(body: str, label: str) -> str | None:
+    """Read one `- **Label:** value` line out of a finding body.
+
+    ⚠️ The reviewer template has carried `Gate:`, `Location:`, `Observed:`, `Evidence:`,
+    `Expected:` and `Fix:` since before ADR-012, and this extractor parsed NONE of them.
+    Measured 2026-08-12 over severity-glyph sections: 93% carry `Gate:`, 92% carry
+    `Location:`. Those are `blocks` and `target` — written by the reviewer, sitting in the
+    markdown, discarded here. This function is the whole "unaffordable retrofit".
+    """
+    pat = _FINDING_FIELD_RE_CACHE.get(label)
+    if pat is None:
+        # ⚠️ re.I — `reviews.py`'s `_SEV_LINE`/`_SEV_VALUE`/`_LANE_VALUE` are all
+        # case-insensitive. A case-SENSITIVE parser here would validate a field the
+        # extractor then silently fails to read: two mechanisms disagreeing about the
+        # same line, which is how a populated field reads as absent.
+        pat = re.compile(rf"^\s*[-*]\s*\*\*{re.escape(label)}:?\*\*:?\s*(.+?)\s*$",
+                         re.M | re.I)
+        _FINDING_FIELD_RE_CACHE[label] = pat
+    m = pat.search(body or "")
+    if not m:
+        return None
+    return m.group(1).strip() or None
+
+
+def mint_finding_id(date_dir: str, review_name: str, section_num: str) -> str:
+    """The canonical ReviewFinding node id.
+
+    ⚠️ MODULE SCOPE ON PURPOSE. `scripts/close_finding.py` imports this to WRITE the
+    supersession ledger, and `extract_review_finding_nodes` calls it to READ the ledger
+    back. A second implementation is not a duplication smell, it IS the defect: a large
+    minority of the `review:`-scheme ledger records carry an id no node matches, because
+    every one was hand-typed against a format nobody could check, and the findings they
+    meant to close still read `open`. **`ledger_ids_resolve` owns that population and its
+    ratchet — read the live number there, never from this docstring.**
+
+    Same reasoning as `_recurrence_norm`, which moved to module scope after a period in
+    which the production matcher could have been deleted or inverted with its test still
+    green.
+    """
+    return f'review:{date_dir}:{review_name}:{section_num}'
+
+
 def extract_review_finding_nodes() -> list[dict]:
     """ReviewFinding — findings from adversarial reviews.
 
@@ -1884,7 +2027,7 @@ def extract_review_finding_nodes() -> list[dict]:
             # the inverted PAPER_DRAFT_MAPPING to the source Paper nodes.
             inferred_bundle = _infer_bundle_from_text(review_name)
 
-            finding_id = f'review:{date_dir}:{review_name}:{section_num}'
+            finding_id = mint_finding_id(date_dir, review_name, section_num)
             if finding_id in seen_ids:
                 continue
             seen_ids.add(finding_id)
@@ -1911,15 +2054,32 @@ def extract_review_finding_nodes() -> list[dict]:
                 'section': section_num,
                 'inferred_paper': inferred_paper,
                 'inferred_bundle': inferred_bundle,
+                # ADR-012 D1 — routing data the reviewer ALREADY writes (C7).
+                'blocks': _parse_finding_field(body, 'Gate'),
+                'target': _parse_finding_field(body, 'Location'),
+                # ADR-012 D1/D10/D12 — forward-only. Absent reads `unclassified`/None
+                # rather than failing 1,631 historical findings.
+                'lane': _parse_lane(body),
+                'verify': _parse_finding_field(body, 'Verify'),
+                'blocked_by': _parse_blocked_by(body),
+                'needs_operator': ((_parse_finding_field(body, 'Needs-operator') or '')
+                                   .strip().strip('`').lower() or None),
             }
             _KNOWN_STATUSES = ('open', 'fixed', 'accepted')
+            # ⚠️ `reopened` is WRITABLE (`close_finding.VALID_STATUSES`) and must read back
+            # as `open`. It currently lands in the unrecognised-token bucket, which is the
+            # right answer for the wrong reason — name it, so that widening
+            # `_KNOWN_STATUSES` later cannot silently make a reopened finding read closed.
+            _REOPENING_STATUSES = ('reopened',)
             ledger = supersessions.get(finding_id)
             if ledger:
                 _ls = ledger.get('status', status)
                 # An unrecognised token was written straight through and no consumer
                 # validated it, so `{"status": "closed"}` silently became a status nothing
                 # treats as open (round-11 8.1). Unknown tokens now read as `open`.
-                meta['status'] = _ls if _ls in _KNOWN_STATUSES else 'open'
+                meta['status'] = (
+                    'open' if _ls in _REOPENING_STATUSES
+                    else _ls if _ls in _KNOWN_STATUSES else 'open')
                 meta['superseded_by'] = ledger.get('superseded_by')
                 meta['supersession_evidence'] = ledger.get('evidence')
                 meta['supersession_date'] = ledger.get('date')
@@ -1951,20 +2111,14 @@ def extract_review_finding_nodes() -> list[dict]:
             # and every one of them set `status: fixed`: I tested the space I was thinking
             # about rather than the space that exists. An unrecognised token like
             # `"closed"` was equally unvalidated.
-            _CLOSING_STATUSES = ('fixed', 'accepted')
-            if (meta.get('status') in _CLOSING_STATUSES
-                    and severity in ('critical', 'major', 'blocker')):
-                _rec = ledger or {}
-                _why = str(_rec.get('evidence') or _rec.get('note')
-                           or _rec.get('rationale') or '').strip()
-                _anchor = any(str(_rec.get(k) or '').strip()
-                              for k in ('commit', 'date', 'closed_date', 'applied_at'))
-                if not (_rec.get('status') in _CLOSING_STATUSES
-                        and len(_why) >= 40 and _anchor):
+            if meta.get('status') in _CLOSING_STATUSES:
+                if not _closure_record_meets_bar(ledger, bool(meta.get('verify'))):
                     meta['status'] = 'open'
                     meta['blocking_closure_rejected'] = (
-                        'ledger record does not meet the blocking-closure bar '
-                        '(explicit status=fixed, >=40 chars of rationale, and a commit or date)')
+                        'ledger record does not meet the closure bar (an explicit closing '
+                        'status, >=40 chars of rationale, a commit or date anchor, and — '
+                        'when the finding declares a Verify: command — a passing '
+                        'verified_by)')
 
             nodes.append({
                 'id': finding_id,
@@ -2865,6 +3019,7 @@ def extract_all_edges_without_gates(node_ids: set) -> list[dict]:
     edges.extend(extract_uses_edges(node_ids))
     edges.extend(extract_verifies_edges(node_ids))
     edges.extend(extract_flags_edges(node_ids))
+    edges.extend(extract_blocked_by_edges())          # ADR-012 D10 — BOTH sites
     edges.extend(extract_reports_edges(node_ids))
     edges.extend(extract_cites_source_edges(node_ids))
     edges.extend(extract_cites_theorem_edges(node_ids))
@@ -3715,6 +3870,123 @@ def _invert_bundle_mapping() -> dict[str, list[str]]:
     return inverted
 
 
+def _blocked_by_edges(finding_nodes: list[dict]) -> list[dict]:
+    """`ReviewFinding → ReviewFinding` edges from `meta['blocked_by']` (ADR-012 D10).
+
+    Pure, so tests bind the real predicate rather than re-deriving it.
+
+    ⚠️ THIS FIELD CARRIES TWO KINDS OF ENTRY and the discrimination is by PREFIX. A token
+    matching a declared release scheme (`_RELEASE_SCHEMES`) is an external condition —
+    evaluated elsewhere, never resolved to a node. Everything else must resolve to a minted
+    finding id, **including an unrecognised scheme**: `runs:42` raises rather than becoming
+    a blocker nothing can ever satisfy, because a token that cannot be satisfied reads as
+    WAITING when it is STUCK.
+
+    ⚠️ AN UNRESOLVABLE ENTRY IS RECORDED, NOT RAISED — and this was the other way round
+    until a reviewer priced the blast radius. Raising here propagates out of BOTH edge
+    assembly sites, so it leaves `build_graph_json()` — and with it `knowledge_graph.json`,
+    the atlas, `graph_integrity`, gate extraction and the dashboard. The values are
+    hand-typed by LLM reviewers into markdown, from exactly the population that produced the
+    dangling ledger records, so the first typo would take down the whole derived-graph layer
+    including the checks that would diagnose it.
+
+    Detection is not weakened, it is MOVED to the idiom this repo already uses for this
+    class: `blocked_by_unresolved` reports the population and `review_severity_declared`
+    ratchets it at zero. Same signal, bounded blast radius. (`ledger_ids_resolve` is the
+    template — it counts dangling ids rather than exploding on one.)
+    """
+    ids = {n['id'] for n in finding_nodes}
+    edges: list[dict] = []
+    for n in finding_nodes:
+        for dep in (n.get('meta') or {}).get('blocked_by') or []:
+            if _classify_dep(dep, ids) == 'edge':
+                edges.append({'source': n['id'], 'target': dep, 'type': 'BLOCKED_BY'})
+    return edges
+
+
+def _classify_dep(dep: str, ids: set[str]) -> str:
+    """`'edge'` · `'release'` · `'unresolved'` — the ONE discrimination, shared.
+
+    ⚠️ An empty value after a known scheme (`run:`) is UNRESOLVED, not a release condition.
+    Nothing can satisfy it and nothing will evaluate it, so treating it as a condition makes
+    the finding read WAITING when it is STUCK — the same defect as an unrecognised scheme,
+    reached by a typo instead of a wrong word.
+    """
+    if dep.startswith(_RELEASE_SCHEMES):
+        return 'release' if dep.partition(':')[2].strip() else 'unresolved'
+    if ':' in dep and not dep.startswith('review:'):
+        return 'unresolved'                       # an unrecognised scheme
+    return 'edge' if dep in ids else 'unresolved'
+
+
+def blocked_by_unresolved(finding_nodes: list[dict]) -> dict[str, list[str]]:
+    """`{finding id: [tokens that resolve to nothing]}` — the ratcheted population.
+
+    A `blocked_by` naming no finding is the same class as a ledger record naming no node:
+    silently inert, indistinguishable from absent. Zero is the only acceptable count, which
+    is why `review_severity_declared` fails on any entry here rather than ratcheting a
+    baseline down over time.
+    """
+    ids = {n['id'] for n in finding_nodes}
+    out: dict[str, list[str]] = {}
+    for n in finding_nodes:
+        bad = [d for d in ((n.get('meta') or {}).get('blocked_by') or [])
+               if _classify_dep(d, ids) == 'unresolved']
+        if bad:
+            out[n['id']] = bad
+    return out
+
+
+def extract_blocked_by_edges() -> list[dict]:
+    """Argument-free, matching every sibling extractor.
+
+    ⚠️ There are TWO edge-assembly sites — the pre-gate view built inside
+    `extract_readiness_gate_nodes`, and the real graph — and both receive only a set of
+    node ids, never the finding `meta` this needs. Fetching our own nodes is what lets both
+    sites call this identically; patching one would leave the gate view and the graph
+    disagreeing about what is blocked.
+    """
+    return _blocked_by_edges(extract_review_finding_nodes())
+
+
+def finding_is_dispatchable(node: dict, node_ids: set[str],
+                            closed_ids: set[str]) -> bool:
+    """THE CONSUMER — a finding waits on every unclosed blocker and every unmet condition.
+
+    ⚠️ A new edge type ships with a consumer. `KNOWLEDGE_GRAPH.md` already carries three
+    types that gates query and nothing emits, and `PRODUCES` sat expired for a full wave
+    because a prose-regex fallback fired and masked it.
+
+    Release conditions are EVALUATED, not assumed. `parked_items.release_condition_met`
+    landed with parked work and returns three values; only an explicit `True` releases.
+    `False` (genuinely unmet) and `None` (cannot determine) both hold the finding, which is
+    the safe direction — reporting a parked item as dispatchable is worse than reporting a
+    released one as waiting — but they are held for *different reasons*, and collapsing the
+    evaluator away entirely would have left a released item non-dispatchable forever.
+
+    ⚠️ The import is local. `parked_items` imports `_RELEASE_SCHEMES` from this module, so a
+    module-level import here would be circular.
+
+    `node_ids` is the minted-finding population: a blocker naming an id outside it is
+    unresolvable, and an unresolvable blocker is not a satisfied one.
+    """
+    try:
+        from parked_items import release_condition_met
+    except ImportError:                                   # pragma: no cover
+        release_condition_met = lambda _t: None           # noqa: E731 — unknown, never met
+    for dep in (node.get('meta') or {}).get('blocked_by') or []:
+        kind = _classify_dep(dep, node_ids)
+        if kind == 'unresolved':
+            return False            # nothing can satisfy it — never dispatchable
+        if kind == 'release':
+            if release_condition_met(dep) is not True:
+                return False        # False (unmet) and None (unknown) both hold it
+            continue
+        if dep not in closed_ids:
+            return False
+    return True
+
+
 def extract_flags_edges(node_ids: set) -> list[dict]:
     """FLAGS: ReviewFinding -> Paper / Formula / LeanTheorem / etc.
 
@@ -4029,6 +4301,7 @@ def extract_all_edges(node_ids: set) -> list[dict]:
     edges.extend(extract_uses_edges(node_ids))
     edges.extend(extract_verifies_edges(node_ids))
     edges.extend(extract_flags_edges(node_ids))
+    edges.extend(extract_blocked_by_edges())          # ADR-012 D10 — BOTH sites
     edges.extend(extract_reports_edges(node_ids))
     edges.extend(extract_cites_source_edges(node_ids))
     edges.extend(extract_cites_theorem_edges(node_ids))

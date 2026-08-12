@@ -618,6 +618,11 @@ backstops.
 - A finding marked `fixed` by the author must pass a **re-invocation** showing no new BLOCKERs in
   that class before the gate flips back to `passed`. "The author says it's fixed" is not evidence;
   the re-run is evidence.
+- **A closure is recorded with `scripts/close_finding.py`, never by hand.** It mints the finding id
+  with the same function the extractor uses, so a record naming no finding cannot be produced.
+- **The closure bar applies at every severity**, not only blocking ones. `docs/READINESS_GATES.md`
+  owns the contract — status is `open` until the ledger says otherwise, and what a record must
+  carry. Read it there rather than here; one owner per fact.
 - **Do NOT use Stage 13 to fix issues.** The output is findings-only. The author fixes, the author
   re-invokes. Separating the fix and review roles is the whole reason the agent exists.
 - A systemic finding (a class affecting multiple papers, or a pipeline gap) is emitted as a
@@ -686,8 +691,55 @@ catalogued instances and leaves the generator alive.
 **The supersession ledger is append-only.** Never remove an entry from
 `review_finding_supersessions.json`; `_introduced_by` and `superseded_by` preserve the audit trail.
 
+⚠️ **One in-place edit is permitted, and was performed once (2026-08-12): re-keying a record whose
+`finding_id` matches no minted node.** Such a record closes nothing — it is inert, indistinguishable
+from absent — so correcting its key adds information rather than removing any, and the former key is
+preserved in `notes`. Two candidates were **skipped** because their corrected key already carried a
+record: the reader is last-wins, so re-keying onto an occupied id would have made one of the pair
+silently do nothing. Records are otherwise written only by `scripts/close_finding.py`.
+
 **Gate (advisory):** the QI register exists, is regenerated on Stage 14 runs, and is linked from
 the dashboard.
+
+### Parked work — declaring a release condition
+
+Authorized work that is waiting on something external is declared in the roadmap that owns it, in
+one opt-in block. `scripts/parked_items.py` parses it into finding-shaped queue items.
+
+⚠️ **Nothing consumes those items yet.** `collect()` has no caller outside its own `__main__` and
+its tests, and no gate, check or dashboard pane reads parked work — the Parked pane is P9. The
+parser is live and the shape is fixed; the queue is not built. **Do not read this section as
+gated.**
+
+```
+<!-- PARKED
+id: mlx-rhmc-campaign
+lane: pyrust
+target: docs/RHMC_CAMPAIGN_SEQUENCE.md
+blocked_by: run:mlx-rhmc-2026-08
+reason: campaign staged; the operator launches it, results gate the analysis wave
+-->
+```
+
+`id`, `lane` and `blocked_by` are required. **A parked item with no release condition is not parked,
+it is abandoned**, and the queue has to be able to tell those apart — so the parser refuses one.
+
+Four schemes are accepted, and **three of them resolve**: `phase:` (a roadmap carries a close
+marker) · `pub:` (a citekey resolves in `CITATION_REGISTRY` as published) · `research:` (a dispatch
+returns to `Lit-Search/Tasks/complete/`). ⚠️ **`run:` never resolves** — it returns *unknown*
+unconditionally, deliberately, until a run registry exists, because returning "unmet" would render
+every staged campaign permanently parked and "met" would release work on no evidence. Park behind
+`run:` expecting a human to notice, not a check. A scheme with an empty value (`run:` with nothing
+after it) is not a condition at all: it is rejected as unresolvable. There is deliberately **no `operator:` scheme**: an operator decision
+that gates work is itself a queue item with a node id, so parking behind it is the ordinary
+`blocked_by: <finding id>` case rather than a second decision-record channel.
+
+⚠️ **A condition that cannot be evaluated reads UNKNOWN, never "unmet".** Reporting it as unmet
+makes a released item look parked forever; reporting it as met would release work on no evidence.
+
+⚠️ **This does not gate roadmaps.** The block is opt-in and the corpus is untouched until something
+is parked deliberately. `docs/architecture/END_TO_END_MAP.md` §2 records that the roadmap layer is
+otherwise unmechanized, and that remains true.
 
 ---
 

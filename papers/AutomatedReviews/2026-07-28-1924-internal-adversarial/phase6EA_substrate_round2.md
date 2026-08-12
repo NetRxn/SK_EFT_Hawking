@@ -117,6 +117,7 @@ against the project's own toolchain (scratch file removed).
   by more than 3/2, so the floor is not binding here" — and point "not an equality in
   disguise" at `poisson_avgError_equalRates_eq_half`.
 - **Fix:** rewrite sentence (b); delete the "attainable error" gloss or move it to the
+- **Lane:** `lean`
   equal-rates theorem.
 
 ### 2.2 — 🟡 MAJOR — The roadmap Thesis still promises a deliverable the phase never shipped
@@ -140,6 +141,7 @@ against the project's own toolchain (scratch file removed).
   this reason — while leaving the identical overstatement at **L5**, one line above, in the
   sentence most likely to be lifted verbatim into D12 prose.
 - **Fix:** strike "the Neyman–Pearson structure of counting tests" from L5, or replace with
+- **Lane:** `infra`
   the shipped dark-baseline zero-false-alarm optimum (already listed) and say the general
   NP/MLR layer is future work.
 
@@ -169,6 +171,7 @@ against the project's own toolchain (scratch file removed).
   formalizes channel error-probability bounds), Agda, and Mizar; or the claim narrowed to
   what was actually checked ("absent from Mathlib at pin `5e932f97`").
 - **Fix:** dispatch a Tier-1 `research-scout` for the four ecosystems and record the result
+- **Lane:** `research`
   in the roadmap, or narrow both L5 and L7 to Mathlib. This blocks any D12-facing repetition
   of the claim, not the phase's substrate gate.
 

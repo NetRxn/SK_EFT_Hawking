@@ -168,6 +168,7 @@ Stage 13 sweep of `paper26_bh_entropy` (Phase 6a Track C Wave 3, Bekenstein-Hawk
 - **Evidence:** Direct grep of `BHEntropyMicroscopic.lean` shows the only per-MTC instance is `fibonacciHorizonBC` (line 488). No `S_horizon` candidate is constructed for it; therefore F1/F3 cannot be theorem-checked. F4 is a `True` placeholder for everyone (line 331). The Table I ✓ entries are *expectations* given the abstract structure, not verified per-instance.
 - **Expected:** Either (a) reword the table caption to "expected per Wave 3 conjecture" or "structurally compatible (no F1/F3 falsifier triggered by published `d_a` data)"; or (b) ship per-MTC Lean instances of `H_HorizonBoundaryCondition fibonacciHorizonBC S_horizon_KM`, etc., for at least one MTC. Option (a) for Wave 3 ship.
 - **Fix:** Edit Table I caption + footnote; add a sentence to §3.2 acknowledging the ✓ entries are conjectural-structural, not theorem-discharged.
+- **Lane:** `prose`
 
 ### 7.1 — 🟡 REQUIRED — Paper's `verlinde_dim_horizon` claim is partially supported (Python only)
 

@@ -558,3 +558,19 @@ End of claims-reviewer v2 prompt.
   Concurrent in-place compiles clobber `paper_draft.{aux,log,synctex.gz}`; judge a compile by the
   rendered PDF, never by a `.log` another process may have overwritten.
 - **Disclose every working-tree file you touched**, including edit-and-revert mutation tests.
+
+## Routing fields (ADR-012 D1) — required on every finding
+
+- **Lane:** `lean` | `pyrust` | `substrate` | `prose` | `research` | `infra` — who does the work
+- **Verify:** a runnable command that FAILS against the unrepaired artifact
+- **Blocked-by:** finding ids and/or release conditions (`run:` `phase:` `pub:` `research:`), comma-separated — omit if none
+- **Needs-operator:** `now` | `queue` — omit unless a human decision is genuinely required
+
+⚠️ **`Verify` must name the invariant it asserts, not merely run.** A DOI that *resolves* is not a
+DOI that resolves *to the cited work* — that distinction carried a wrong-target citation through
+three months and a Stage-13 fix-pass. A command checking a weaker property than its name implies is
+worse than no command, because it manufactures confidence.
+
+⚠️ **`Lane` routes; `Needs-operator` decides.** They are orthogonal — a `lean` finding can need a
+physics call. Omitting `Lane` reads `unclassified` and is accepted; declaring a token outside the six
+is an unroutable finding and fails `review_severity_declared`.

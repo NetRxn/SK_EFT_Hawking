@@ -2,11 +2,14 @@
   "_schema_version": 1,
   "_purpose": "Project-level ReviewFinding supersession ledger. Each entry overrides the inferred 'status' field on a ReviewFinding node when build_graph runs. Used to flip status='open' → 'fixed' for findings whose underlying issue has been remediated by a later wave, without editing the original review .md file (which is treated as immutable history).",
   "_entry_format": {
-    "finding_id": "string — the canonical ReviewFinding node ID, format `review:{date}:{review_name}:{section_num}` (matches the ID minted by extract_review_finding_nodes)",
-    "status": "string — the new status, one of 'fixed', 'accepted', 'reopened'",
-    "superseded_by": "string|null — review_id of the re-review that confirmed the fix, OR a Wave close-doc path",
-    "evidence": "string — short human-readable note on what / where / when",
-    "date": "ISO-8601 date the supersession was applied"
+    "finding_id": "string — the canonical ReviewFinding node ID. Produced by build_graph.mint_finding_id(date_dir, review_name, section_num); write records with scripts/close_finding.py, which mints it for you and REFUSES an id that matches no node. NEVER hand-type this: every one of the first 870 records was, and 59 of the review:-scheme ones still match nothing, so they close nothing.",
+    "status": "string — one of 'fixed', 'accepted', 'reopened'. An unrecognised token reads as 'open' (build_graph._KNOWN_STATUSES), so a typo silently fails to close.",
+    "superseded_by": "string|null — review_id of the re-review that confirmed the fix, or a Wave close-doc path. Optional since 2026-08-12: a passing `verified_by` is the supported alternative.",
+    "evidence": "string — what changed, and where. >= 40 chars to close, AT EVERY SEVERITY since 2026-08-12. `rationale` and `note` are accepted aliases (2026-05 records).",
+    "verified_by": "object|null — {command, exit_code, run_at}. The command that proves the finding fixed, and its result. Written by close_finding.py --verify. Required when the finding itself declares a `Verify:` command.",
+    "date": "ISO-8601 date the supersession was applied",
+    "commit": "string|null — commit anchoring the fix. ANY of commit/date/closed_date/applied_at satisfies the bar; before 2026-08-12 this format named only `date` while build_graph had always accepted all four.",
+    "notes": "string|null — free text. Carries the former key of a record re-keyed on 2026-08-12."
   },
   "_consumed_by": "scripts/build_graph.py:extract_review_finding_nodes",
   "_introduced_by": "Phase 6i Wave 2 Stage 13 Finding 11.1 + qi-fixpropagation-tracking QI candidate (2026-04-28)",
@@ -1174,11 +1177,12 @@
       "date": "2026-05-01"
     },
     {
-      "finding_id": "review:2026-05-01-1500-bundle-stage13:I1:3.1-residual",
+      "finding_id": "review:2026-05-01-1500-bundle-stage13:I1:3.1",
       "status": "fixed",
       "superseded_by": "Stage-13 round-3 expected (post-2026-05-01T22:30:00Z fix)",
       "evidence": "Phase 7a sub-wave 7a.2 round-2 BLOCKER 3.1-residual: §5 round-1 fix replaced fictitious chirality_wall_three_pillars with real entries but mis-attributed all to AXIOM_METADATA when in fact only gapped_interface_axiom (line 1351) is in AXIOM_METADATA; chirality_limitation_zero (line 1483) is in PLACEHOLDER_THEOREMS, c_minus_equals_8Nf (line 1590) and H_KLRS_SM_Crossover (line 1627) are in HYPOTHESIS_REGISTRY. The 6-tier eliminability vocabulary listed (algebraic/closed/hard/removed/topological/very_hard) is the union across AXIOM_METADATA + HYPOTHESIS_REGISTRY + BORDISM_HYPOTHESES, not AXIOM_METADATA alone. Remediated 2026-05-01T22:30Z: §5 paragraph at lines 472-497 rewritten to describe the four-table structural-axiom landscape (AXIOM_METADATA / PLACEHOLDER_THEOREMS / HYPOTHESIS_REGISTRY / BORDISM_HYPOTHESES) with per-registry tier sets cleanly attributed; each pillar's anchor identifies its actual registry: c_minus_equals_8Nf in HYPOTHESIS_REGISTRY (algebraic), gapped_interface_axiom in AXIOM_METADATA (hard), chirality_limitation_zero in PLACEHOLDER_THEOREMS (placeholder marker pointing at the EWBaryogenesisChiralityWall theorem suite whose hypothesis bundle includes H_KLRS_SM_Crossover in HYPOTHESIS_REGISTRY).",
-      "date": "2026-05-01"
+      "date": "2026-05-01",
+      "notes": "[2026-08-12 re-keyed from review:2026-05-01-1500-bundle-stage13:I1:3.1-residual: the suffix was never part of any minted id, so this record closed nothing.]"
     },
     {
       "finding_id": "review:2026-05-01-1500-bundle-stage13:I1:5.1",
@@ -1202,11 +1206,12 @@
       "date": "2026-05-01"
     },
     {
-      "finding_id": "review:2026-05-01-1456-bundle-stage13:I2:5.1-5.3",
+      "finding_id": "review:2026-05-01-1456-bundle-stage13:I2:5.1",
       "status": "fixed",
       "superseded_by": "review:2026-05-01-1518-bundle-stage13:I2",
       "evidence": "Phase 7a sub-wave 7a.3 round-1 REQUIRED 5.1+5.2+5.3: §9 attribution-claim hallucinations — 'Steinberg pivotal-category Coq library' (not findable on GitHub), 'Agda unimath' (UniMath is Coq, not Agda), 'Isabelle/AFP Tensor Networks submission' (no AFP entry). Remediated by replacing with verifiable citations: UniMath (Coq/Rocq, real) and Agda categories (real). §3 prior-art audit list updated correspondingly. Round-2 verified clean.",
-      "date": "2026-05-01"
+      "date": "2026-05-01",
+      "notes": "[2026-08-12 re-keyed from review:2026-05-01-1456-bundle-stage13:I2:5.1-5.3: the suffix was never part of any minted id, so this record closed nothing.]"
     },
     {
       "finding_id": "review:2026-05-01-1456-bundle-stage13:I2:5.4",
@@ -3809,18 +3814,20 @@
       "date": "2026-05-11"
     },
     {
-      "finding_id": "review:2026-05-11-1251-bundle-stage13:D5:5.1+5.2+5.3:retroactive_first_claim_removal",
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:D5:5.1",
       "status": "fixed",
       "superseded_by": "session_2026-05-11_first_claim_removal:D5",
       "evidence": "D5 7-class taxonomy first-claim removed (L1173): 'is, to the best of our knowledge, the first unified organisational framework' -> 'provides a unified organisational framework'. Per user policy 2026-05-11.",
-      "date": "2026-05-11"
+      "date": "2026-05-11",
+      "notes": "[2026-08-12 re-keyed from review:2026-05-11-1251-bundle-stage13:D5:5.1+5.2+5.3:retroactive_first_claim_removal: the suffix was never part of any minted id, so this record closed nothing.]"
     },
     {
-      "finding_id": "review:2026-05-11-1251-bundle-stage13:I3:5.1:retroactive_first_claim_removal",
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:I3:5.1",
       "status": "fixed",
       "superseded_by": "session_2026-05-11_first_claim_removal:I3",
       "evidence": "I3 'first explicit predicate-level scaffolding' first-claim removed (L269 + surrounding survey paragraph). Now describes what the library contributes (predicate-level scaffolding extending Mathlib4) without priority assertion. Per user policy 2026-05-11.",
-      "date": "2026-05-11"
+      "date": "2026-05-11",
+      "notes": "[2026-08-12 re-keyed from review:2026-05-11-1251-bundle-stage13:I3:5.1:retroactive_first_claim_removal: the suffix was never part of any minted id, so this record closed nothing.]"
     },
     {
       "finding_id": "review:2026-05-11-1251-bundle-stage13:D3:retroactive_first_claim_removal",
@@ -3830,11 +3837,12 @@
       "date": "2026-05-11"
     },
     {
-      "finding_id": "review:2026-05-11-1251-bundle-stage13:D2:1.2prime",
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:D2:1.2",
       "status": "fixed",
       "superseded_by": "session_2026-05-11_d2_l2_mechanical_fixpass",
       "evidence": "GoltermanShamir2026 registry + D2 bibitem corrected to actual arXiv:2603.15985 title 'Symmetric mass generation and the Nielsen-Ninomiya theorem'; fabricated 'Phys. Rev. D 113, 014503 (2026)' venue dropped (preprint only, contribution to PoS Lattice 2025). Verified via WebFetch arXiv:2603.15985 2026-05-11.",
-      "date": "2026-05-11"
+      "date": "2026-05-11",
+      "notes": "[2026-08-12 re-keyed from review:2026-05-11-1251-bundle-stage13:D2:1.2prime: the suffix was never part of any minted id, so this record closed nothing.]"
     },
     {
       "finding_id": "review:2026-05-11-1251-bundle-stage13:D2:1.3",
@@ -3963,11 +3971,12 @@
       "date": "2026-05-11"
     },
     {
-      "finding_id": "review:2026-05-11-1251-bundle-stage13:L2:3.1+3.2+3.3:substantive_rewrite",
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:L2:3.1",
       "status": "fixed",
       "superseded_by": "session_2026-05-11_l2_substantive_rewrite",
       "evidence": "L2 §IV rewritten per user first-claim removal policy + substantive content honest framing: drops 'first machine-checked Ext' framing entirely; describes resolution + chain-complex + rank-witness content actually proved (A1Resolution.lean d_n*d_{n+1}=0, d4_rank_9, d5_rank_15 RREF certificates); ChangeOfRings adjunction restated as Cartan-Eilenberg textbook content (not Lean-discharged); three textbook topology results enter as bibliographic citations rather than 'tracked hypotheses'. No placeholder prose. L2 compiles clean (4 pages).",
-      "date": "2026-05-11"
+      "date": "2026-05-11",
+      "notes": "[2026-08-12 re-keyed from review:2026-05-11-1251-bundle-stage13:L2:3.1+3.2+3.3:substantive_rewrite: the suffix was never part of any minted id, so this record closed nothing.]"
     },
     {
       "finding_id": "review:2026-05-11-1251-bundle-stage13:L2:5.1:first_claim_removal",
@@ -4040,11 +4049,12 @@
       "date": "2026-05-11"
     },
     {
-      "finding_id": "review:2026-05-11-1251-bundle-stage13:I1:5.1:first_claim_removal",
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:I1:5.1",
       "status": "fixed",
       "superseded_by": "session_2026-05-11_first_claim_removal:I1",
       "evidence": "All 9 priority first-in-any-proof-assistant claims REMOVED per user policy 2026-05-11 (REMOVAL not hedging). Locations: abstract L68 ('first-in-any-proof-assistant formalization claims at the algebraic-general-relativity substrate level' -> 'algebraic-general-relativity substrate formalization work'); intro L165 ('first-formalization-in-any-proof-assistant claims at the algebraic-general-relativity substrate level' -> 'algebraic-general-relativity substrate roster'); §11 comment L1202 ('first-formalization claims' -> 'algebraic-GR substrate roster'); §11 section title L1205 'Algebraic-General-Relativity Substrate First-Formalization Claims' -> 'Algebraic-General-Relativity Substrate Roster'; §11 author comment L1213 'first formalization in any proof assistant claim' -> 'algebraic-GR substrate roster'; §11 thesis comment L1221 'first-in-any-proof-assistant claim' -> 'substrate-level formalization at the algebraic-general-relativity layer'; §11 body L1232 'to the authors' knowledge after exhaustive prior-art search, new to any proof assistant' -> 'at the algebraic substrate level' (priority claim deleted); §11 Wave 1 L1257-1260 'Prior-art search across Mathlib4 / Coq Math-Components / Isabelle/AFP / HOL Light / HOL4 / Mizar / Agda unimath found no formalization of the Riemann tensor or the algebraic first Bianchi at this scope.' DELETED outright; §12 Wave 7 L1353-1354 'an indefinite-signature analogue did not exist in any proof assistant prior to Wave 7' -> 'Wave 7's contribution is the indefinite-signature analogue'; §12 Wave 8 L1391-1394 'two Mathlib gaps that no other proof assistant project we surveyed had filled' -> 'two Mathlib gaps' (priority clause deleted). 3 program-history matches retained per finding 5.2 KEPT list (L325, L440 'Our first formalization...', L1140 'a first machine-checked claim that proved to have...'). Final post-fix grep returns 3 matches, all confirmed program-history.",
-      "date": "2026-05-11"
+      "date": "2026-05-11",
+      "notes": "[2026-08-12 re-keyed from review:2026-05-11-1251-bundle-stage13:I1:5.1:first_claim_removal: the suffix was never part of any minted id, so this record closed nothing.]"
     },
     {
       "finding_id": "review:2026-05-11-1251-bundle-stage13:I1:5.3",
@@ -6459,6 +6469,699 @@
       "commit": "ee0c0b85",
       "superseded_by": null,
       "evidence": "Closed by MUTATION TEST, not by reading the guard — the through-line of this four-round chain is that every prior fix was verified by reading and every next round found it inert. tests/test_closure_guard_bypasses.py constructs a ledger record of each historically-successful bypass shape and asserts a LIVE blocking finding stays open: one-key, two-key-fixed, two-key-accepted, evidence-without-anchor, anchor-with-thin-evidence, accepted-thin-evidence. All 6 pass, plus a source assertion that heading-parse closure is absent (build_graph.py contains zero `status = 'fixed'`) and a non-vacuity leg asserting a WELL-FORMED record still DOES close — without which deleting the ledger reader would pass everything. 9 tests, ledger verified byte-identical after the run. This round's exact bypass — `{finding_id, status: 'accepted'}` — is the `two-key-accepted` case and is asserted to leave the finding open. _CLOSING_STATUSES is ('fixed','accepted'), so the bar applies at both, which was the scoping gap."
+    },
+    {
+      "finding_id": "review:2026-04-10:CitationReview-01:1",
+      "status": "fixed",
+      "evidence": "paper7 bibitem now arXiv:2601.04304; 2411.18738 survives nowhere in papers/ [triage agent]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-04-10:CitationReview-01:12",
+      "status": "accepted",
+      "evidence": "premise was a misattributed log: the BrokenPipeError run is the NJL model, not the ADW model paper 6 reports. Paper 6's numbers reproduce from a completed run to three digits [triage agent]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-04-10:CitationReview-01:2",
+      "status": "fixed",
+      "evidence": "paper12, D1 and E1 all carry arXiv:2511.12339; the wrong id has zero hits [triage agent]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-04-10:CitationReview-01:3",
+      "status": "fixed",
+      "evidence": "paper3 now arXiv:2502.13765; paper3 was never lifted into a bundle [triage agent]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-04-10:CitationReview-01:4",
+      "status": "fixed",
+      "evidence": "paper7 reads Thorngren-Preskill-Fidkowski; no Tong-Preskill string remains in any draft [triage agent]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-04-23-1500-internal-adversarial:paper17_dark_sector:2.1",
+      "status": "fixed",
+      "evidence": "exact-key search finds one bibitem{Paper8}; paper17 renamed its key [triage agent]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-04-25-1609-internal-adversarial:paper20_scalar_rung:7.1",
+      "status": "fixed",
+      "evidence": "fierzBlockSum_eq_68 proved by decide; paper20 states 68 and discloses the 66 typo [triage agent]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-04-29-0200-notebook-adversarial:paper32_strong_cp_de:F-1",
+      "status": "fixed",
+      "evidence": "agent read the primary PDF title page; bibitem and registry both match. Residual: a notebook cell keeps the old gloss [triage agent]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-04-29-0200-notebook-adversarial:paper32_strong_cp_de:F-2",
+      "status": "fixed",
+      "evidence": "agent read the primary PDF; bibitem and registry match verbatim [triage agent]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-04-bundle-stage13:D1_r1:1.1",
+      "status": "fixed",
+      "evidence": "bibitem in the live draft now carries the registry's title and venue under exact-key match; the wrong-target discrepancy the finding recorded no longer reproduces (verified 2026-08-12 by direct comparison, not via a proxy check)",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-04-bundle-stage13:D1_r1:1.2",
+      "status": "fixed",
+      "evidence": "bibitem in the live draft now carries the registry's title and venue under exact-key match; the wrong-target discrepancy the finding recorded no longer reproduces (verified 2026-08-12 by direct comparison, not via a proxy check)",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-04-bundle-stage13:D1_r1:1.3",
+      "status": "fixed",
+      "evidence": "bibitem in the live draft now carries the registry's title and venue under exact-key match; the wrong-target discrepancy the finding recorded no longer reproduces (verified 2026-08-12 by direct comparison, not via a proxy check)",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-04-bundle-stage13:D1_r1:1.4",
+      "status": "fixed",
+      "evidence": "bibitem in the live draft now carries the registry's title and venue under exact-key match; the wrong-target discrepancy the finding recorded no longer reproduces (verified 2026-08-12 by direct comparison, not via a proxy check)",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-04-bundle-stage13:D1_r1:1.5",
+      "status": "fixed",
+      "evidence": "all 42 bibkeys in papers/D1/paper_draft.tex resolve in CITATION_REGISTRY; zero absent",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-04-bundle-stage13:D4_r1:B-1",
+      "status": "fixed",
+      "evidence": "D4 carries an inline thebibliography with 18 entries; all six formerly-undefined keys present exactly once [triage agent]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-04-bundle-stage13:F_r1:1.1",
+      "status": "fixed",
+      "evidence": "zero occurrences of the four undefined count macros; F inputs counts.tex and bundle_counts and every macro resolves [triage agent]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-08-bundle-stage13:D5:1.1",
+      "status": "fixed",
+      "evidence": "bibitem in the live draft now carries the registry's title and venue under exact-key match; the wrong-target discrepancy the finding recorded no longer reproduces (verified 2026-08-12 by direct comparison, not via a proxy check)",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:D1:1.1",
+      "status": "fixed",
+      "evidence": "bibitem present in papers/D1/paper_draft.tex and its title matches CITATION_REGISTRY under exact-key match; verified 2026-08-12 against the live draft, not against a proxy check",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:D1:1.10",
+      "status": "accepted",
+      "evidence": "CGL2017b is neither cited nor defined in the live D1 draft; the citation was removed, so the bibitem-vs-registry inconsistency no longer has a subject",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:D1:1.11",
+      "status": "fixed",
+      "evidence": "bibitem present in papers/D1/paper_draft.tex and its title matches CITATION_REGISTRY under exact-key match; verified 2026-08-12 against the live draft, not against a proxy check",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:D1:1.2",
+      "status": "fixed",
+      "evidence": "bibitem present in papers/D1/paper_draft.tex and its title matches CITATION_REGISTRY under exact-key match; verified 2026-08-12 against the live draft, not against a proxy check",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:D1:1.3",
+      "status": "fixed",
+      "evidence": "bibitem present in papers/D1/paper_draft.tex and its title matches CITATION_REGISTRY under exact-key match; verified 2026-08-12 against the live draft, not against a proxy check",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:D1:1.4",
+      "status": "fixed",
+      "evidence": "bibitem present in papers/D1/paper_draft.tex and its title matches CITATION_REGISTRY under exact-key match; verified 2026-08-12 against the live draft, not against a proxy check",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:D1:1.5",
+      "status": "fixed",
+      "evidence": "bibitem present in papers/D1/paper_draft.tex and its title matches CITATION_REGISTRY under exact-key match; verified 2026-08-12 against the live draft, not against a proxy check",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:D1:1.6",
+      "status": "fixed",
+      "evidence": "bibitem present in papers/D1/paper_draft.tex and its title matches CITATION_REGISTRY under exact-key match; verified 2026-08-12 against the live draft, not against a proxy check",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:D1:1.7",
+      "status": "fixed",
+      "evidence": "bibitem present in papers/D1/paper_draft.tex and its title matches CITATION_REGISTRY under exact-key match; verified 2026-08-12 against the live draft, not against a proxy check",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:D1:1.8",
+      "status": "fixed",
+      "evidence": "bibitem present in papers/D1/paper_draft.tex and its title matches CITATION_REGISTRY under exact-key match; verified 2026-08-12 against the live draft, not against a proxy check",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:D1:1.9",
+      "status": "fixed",
+      "evidence": "bibitem present in papers/D1/paper_draft.tex and its title matches CITATION_REGISTRY under exact-key match; verified 2026-08-12 against the live draft, not against a proxy check",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:D1:2.1",
+      "status": "fixed",
+      "evidence": "Table I and intro now label K39 Heidelberg as projected, matching constants.py EXPERIMENTS [triage agent]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:D1:3.1",
+      "status": "fixed",
+      "evidence": "orphan (1+xi^2)^-1 display and \"Stage-13 anchor\" both removed; eq now the Gamma_H/kappa form only [triage agent]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:D1:5.1",
+      "status": "fixed",
+      "evidence": "zero hits for strongest/to our knowledge/no prior/unprecedented/first time in D1 [triage agent]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:D1:5.2",
+      "status": "fixed",
+      "evidence": "same priority-claim sweep; §3.5 rewritten to the non-priority form [triage agent]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:D1:5.3",
+      "status": "fixed",
+      "evidence": "same priority-claim sweep [triage agent]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:D1:5.4",
+      "status": "fixed",
+      "evidence": "same priority-claim sweep [triage agent]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:D1:6.1",
+      "status": "fixed",
+      "evidence": "crossover formula reconciled with the abstract; agent recomputed both logs (7.137 vs 7.14; 11.34 vs 11.3) [triage agent]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:D2:3.2",
+      "status": "fixed",
+      "evidence": "papers/D2/paper_draft.tex:301-317 routes sigma(E8)=8 through the substantive chain and discloses the Serre bound as automatic [triage agent; lead re-verified the regression and count claims]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:D2:5.1",
+      "status": "fixed",
+      "evidence": ":239-243 and the abstract now restrict the obstruction to odd N_f [triage agent; lead re-verified the regression and count claims]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:D5:1.1",
+      "status": "fixed",
+      "evidence": "registry title/journal/volume corrected and matches the D5 bibitem; cached source present. Residual: doi year and doi_verified still unresolved [triage agent]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:D5:1.2",
+      "status": "fixed",
+      "evidence": "bibitem in the live draft now carries the registry's title and venue under exact-key match; the wrong-target discrepancy the finding recorded no longer reproduces (verified 2026-08-12 by direct comparison, not via a proxy check)",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:D5:1.3",
+      "status": "fixed",
+      "evidence": "bibitem in the live draft now carries the registry's title and venue under exact-key match; the wrong-target discrepancy the finding recorded no longer reproduces (verified 2026-08-12 by direct comparison, not via a proxy check)",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:D5:1.4",
+      "status": "fixed",
+      "evidence": "bibitem in the live draft now carries the registry's title and venue under exact-key match; the wrong-target discrepancy the finding recorded no longer reproduces (verified 2026-08-12 by direct comparison, not via a proxy check)",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:I3:1.1",
+      "status": "fixed",
+      "evidence": "bibitem YingDegenne2022Martingales present at papers/I3/paper_draft.tex:1420-1426; registry entry doi_verified=True; cached PDF on disk [independent triage agent, verified by lead for the substrate claims]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:I3:3.1",
+      "status": "fixed",
+      "evidence": "no predicate in the 12 I3 modules is Prop := True; bodies read directly (StochasticIntegral.lean:55-58, Semimartingale.lean:38-42, Contraction/CramerIID/Varadhan) [independent triage agent, verified by lead for the substrate claims]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:I3:3.2",
+      "status": "fixed",
+      "evidence": "ItoLemma.lean:38-40 IsItoLemma is a four-conjunct predicate; :56-58 proved by explicit term, not trivial [independent triage agent, verified by lead for the substrate claims]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:I3:3.3",
+      "status": "fixed",
+      "evidence": "papers/I3/paper_draft.tex:727 now names IsCramerLowerBoundEsscher, matching CramerLowerBound.lean:35 [independent triage agent, verified by lead for the substrate claims]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:I3:5.3",
+      "status": "fixed",
+      "evidence": "claim grounded and caveated at :87-95 and :838-855; residual overclaim on the contraction field filed separately [independent triage agent, verified by lead for the substrate claims]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:I3:7.1",
+      "status": "fixed",
+      "evidence": "claims ~800 / exact 775; wc -l over the 12 modules = 775 [independent triage agent, verified by lead for the substrate claims]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:I3:7.2",
+      "status": "fixed",
+      "evidence": "claims 15 Prop-typed predicates; measured 14 def Is* + class LDPCompatibleSKEFT = 15 [independent triage agent, verified by lead for the substrate claims]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:I3:7.3",
+      "status": "fixed",
+      "evidence": "claims 12 non-vacuity witnesses; enumerated 12 across the 12 modules [independent triage agent, verified by lead for the substrate claims]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:L2:3.2",
+      "status": "fixed",
+      "evidence": "prose at :46-53 attributes the Ext-dimension step to the standard lemma; only resolution facts claimed machine-checked [triage agent; lead re-verified the regression and count claims]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:L2:3.3",
+      "status": "fixed",
+      "evidence": "L2 no longer cites ExtBordismBridge or generation_constraint_chain at all; module carries a vacuity-disclosure header [triage agent; lead re-verified the regression and count claims]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:L2:4.1",
+      "status": "fixed",
+      "evidence": "L2 and D2 use Roehm2026D2 / Roehm2026L2 symmetrically; zero Roehm2026Wave10 in either draft [triage agent; lead re-verified the regression and count claims]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:L3:1.1",
+      "status": "fixed",
+      "evidence": "three-way closed: bibitem, abstract AND registry all drop Procopio from the Balbinot author list [triage agent]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-11-1550-bundle-stage13:E1:7.1",
+      "status": "fixed",
+      "evidence": "E1 uses count macros; literal 5812 appears nowhere in papers/ [triage agent]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-11-1550-bundle-stage13:I2:3.1",
+      "status": "fixed",
+      "evidence": "remediated by building: verlinde_k3/k4/k5 tables now exist; verlinde_k5_full kernel-pure per lean_verify [independent triage agent, verified by lead for the substrate claims]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-11-1550-bundle-stage13:I2:3.2",
+      "status": "fixed",
+      "evidence": "FibonacciBraiding.lean:231-281 ships ten genuine hexagon theorems; pentagon re-attributed to FibonacciMTC.lean:108 [independent triage agent, verified by lead for the substrate claims]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-11-1550-bundle-stage13:I2:3.3",
+      "status": "fixed",
+      "evidence": "RibbonCategory.lean:66-68 unchanged; the PROSE was corrected at papers/I2/paper_draft.tex:356-363 [independent triage agent, verified by lead for the substrate claims]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-11-1550-bundle-stage13:I2:5.1",
+      "status": "fixed",
+      "evidence": "papers/I2/paper_draft.tex:40-41 no longer says \"the first\" [independent triage agent, verified by lead for the substrate claims]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-11-1550-bundle-stage13:I2:5.2",
+      "status": "fixed",
+      "evidence": "the \"first formalization in any proof assistant\" packaging removed at :69-77 [independent triage agent, verified by lead for the substrate claims]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-11-1550-bundle-stage13:I2:5.3",
+      "status": "fixed",
+      "evidence": "all eight priority-claim sites cleared; whole-file scan finds only two non-priority uses of \"first\" [independent triage agent, verified by lead for the substrate claims]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-11-1550-bundle-stage13:I2:7.2",
+      "status": "fixed",
+      "evidence": "claims 114 across four Hopf files; re-measured 28+25+40+21 = 114. Still inline literals, so re-driftable [independent triage agent, verified by lead for the substrate claims]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-11-1730-bundle-stage13-reinvocation:F:1.1",
+      "status": "fixed",
+      "evidence": "F now cites Z16AnomalyComputation.dai_freed_spin_z4; confirmed the declaration lives there, not in Z16Classification [triage agent]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-11-1730-bundle-stage13-reinvocation:F:1.2",
+      "status": "fixed",
+      "evidence": "F:908-916 describes the cobordism result as an external hypothesis, matching the module docstring [triage agent]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-11-1730-bundle-stage13-reinvocation:F:1.3",
+      "status": "fixed",
+      "evidence": "F:1016-1028 states the Lean content exactly and marks the factor-6000 figure as an informal extrapolation, not Lean-verified [triage agent]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-11-1730-bundle-stage13-reinvocation:F:1.4",
+      "status": "fixed",
+      "evidence": "all four F sites plus D5 agree on the mixed-threshold form; fix went further than proposed and stayed consistent [triage agent]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-25-1347-internal-adversarial:phase6q:2.1",
+      "status": "fixed",
+      "evidence": "agent read the Crossno PDF; the mean-free-path constant is now anchored to S1 with the full range recorded and asserted in tests [triage agent]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-26-2112-internal-adversarial:D7:1.1",
+      "status": "fixed",
+      "evidence": "YedidiaFreemanWeiss2003 in CITATION_REGISTRY with cached PDF; residual: no record in citation_verifications.jsonl [triage agent; lead re-verified the regression and count claims]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-26-2112-internal-adversarial:D7:1.2",
+      "status": "fixed",
+      "evidence": "Zurek1985 present, doi_verified=True, source cached [triage agent; lead re-verified the regression and count claims]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-26-2112-internal-adversarial:D7:1.3",
+      "status": "fixed",
+      "evidence": "BiancoResta2011 present, doi_verified=True, PDF cached; residual: notes field contradicts the arxiv field [triage agent; lead re-verified the regression and count claims]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-26-2112-internal-adversarial:D7:3.1",
+      "status": "accepted",
+      "evidence": "IsAnalogHawkingClassicallySimulable and its theorem deleted; AnalogHawkingDemarcation.lean:197-201 records the deletion [triage agent; lead re-verified the regression and count claims]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-26-2112-internal-adversarial:D7:3.2",
+      "status": "accepted",
+      "evidence": "analog_hawking_simulable_of_both_conditions absent; module rebuilt around FourCycleFree/Tree predicates [triage agent; lead re-verified the regression and count claims]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-26-2112-internal-adversarial:D7:3.3",
+      "status": "accepted",
+      "evidence": "categoricalChernExpansion_uses_aperiodicLattice deleted; ChernBridge.lean:127-140 records it [triage agent; lead re-verified the regression and count claims]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-26-2112-internal-adversarial:D7:5.1",
+      "status": "fixed",
+      "evidence": "papers/D7/paper_draft.tex:53-55 and :262-266 now disclose that no platform instantiation lemmas exist [triage agent; lead re-verified the regression and count claims]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-05-26-2112-internal-adversarial:D7:5.2",
+      "status": "fixed",
+      "evidence": "BPLDPSimulability.lean:301-304 loopCorrectionRate is a real supremum, not the if/then stub; closed form proved at :319-321 [triage agent; lead re-verified the regression and count claims]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-06-08-2239-internal-adversarial:L2:4.1",
+      "status": "fixed",
+      "evidence": "both L2 and D2 carry the wired-theorem framing; no contradiction [triage agent; lead re-verified the regression and count claims]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-06-08-2239-internal-adversarial:L2:5.1",
+      "status": "fixed",
+      "evidence": "16|sigma stated as a kernel-pure theorem at :272-284; \"external Wang input\" string gone [triage agent; lead re-verified the regression and count claims]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-06-08-2239-internal-adversarial:L2:5.2",
+      "status": "fixed",
+      "evidence": "L2 cites sixteen_convergence_unconditional; the declaration exists per lean-lsp [triage agent; lead re-verified the regression and count claims]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-06-08-2239-internal-adversarial:L2:6.1",
+      "status": "fixed",
+      "evidence": "axiomcount macro used; zero real ^axiom declarations in lean/SKEFTHawking [triage agent; lead re-verified the regression and count claims]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-06-08-2240-internal-adversarial:D2:5.1",
+      "status": "fixed",
+      "evidence": "every axiom-budget site uses the axiomcount macro; the old literals are gone [triage agent; lead re-verified the regression and count claims]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-06-08-2240-internal-adversarial:D2:5.2",
+      "status": "fixed",
+      "evidence": ":389-402 states both classical inputs are discharged as kernel-pure theorems [triage agent; lead re-verified the regression and count claims]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-06-08-2242-internal-adversarial:paper10_modular_generation:2.1",
+      "status": "fixed",
+      "evidence": "paper10:231-232 now matches D2 and L2 on the conditional 16|sigma leg [triage agent]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-07-28-1839-internal-adversarial:phase6EA_substrate:1.1",
+      "status": "fixed",
+      "evidence": "docstring now names the live declaration and states the claim in the correct direction [triage agent]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-07-28-1839-internal-adversarial:phase6EA_substrate:1.2",
+      "status": "fixed",
+      "evidence": "all three roadmap lines corrected; the PhysLib seam is marked NOT USED [triage agent]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-07-31-1530-internal-adversarial:D11:5.1",
+      "status": "fixed",
+      "evidence": "agent re-rendered the figures and diffed stored vs fresh; class closed structurally by the new notebook_stored_outputs_current check [triage agent; lead re-verified the bypass, the census and the attribution claims]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-07-31-1730-internal-adversarial:D12:8.1",
+      "status": "fixed",
+      "evidence": "heading-parse closure deleted; agent measured zero findings closed without a ledger record across the live corpus [triage agent; lead re-verified the bypass, the census and the attribution claims]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-07-31-1730-internal-adversarial:D12:8.2",
+      "status": "fixed",
+      "evidence": "agent reproduced MUT-2r in memory: both gate checks now fail closed. Residual: extract_readiness_gate_nodes still returns [] behind a bare warning [triage agent; lead re-verified the bypass, the census and the attribution claims]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-07-31-2220-internal-adversarial:D11:4.2",
+      "status": "fixed",
+      "evidence": "earlier round of the same recurrence-threshold defect; prefix predicate replaced by Jaccard with calibration fixture and unit test [triage agent; lead re-verified the bypass, the census and the attribution claims]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-08-01-0009-internal-adversarial:D11:N1",
+      "status": "fixed",
+      "evidence": "recurrence check moved to reviews.py with a Jaccard primitive; agent re-measured corpus max 0.267 and confirmed the planted-positive test exists. Residual: summary line still overstates coverage [triage agent; lead re-verified the bypass, the census and the attribution claims]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-08-01-0009-internal-adversarial:D11:N2",
+      "status": "fixed",
+      "evidence": "the else-block glyph override is deleted; agent verified by MUTATION in an isolated tree, not by the tombstone comment [triage agent; lead re-verified the bypass, the census and the attribution claims]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-08-01-0142-internal-adversarial:D11:N1",
+      "status": "fixed",
+      "evidence": "subject text moved E2 -> D1:817-826 and was corrected en route; the false \"no Brillouin zone anywhere\" claim is gone [triage agent; lead re-verified the bypass, the census and the attribution claims]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-08-01-0504-internal-adversarial:phase6EE_control:1.1",
+      "status": "fixed",
+      "evidence": "all four sites carry an explicit scope correction. Repair style caveat: the false universal sentence was retained and retracted beneath rather than rewritten [triage agent]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-08-01-0504-internal-adversarial:phase6EE_control:3.1",
+      "status": "fixed",
+      "evidence": "the half-magnitude claim is gone and replaced with the correct relation, consistent with DriveCalibration [triage agent]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-08-12-0006-internal-adversarial:I1:3.1",
+      "status": "fixed",
+      "evidence": "abstract and new §5 paragraph state that nothing consumes the two bounds; verified against lean_deps [triage agent; lead re-verified the bypass, the census and the attribution claims]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-08-12-0006-internal-adversarial:I1:3.2",
+      "status": "fixed",
+      "evidence": "pitchfork claim replaced with what bifurcation_at_Gc proves [triage agent; lead re-verified the bypass, the census and the attribution claims]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-08-12-0006-internal-adversarial:I1:5.1",
+      "status": "fixed",
+      "evidence": "§2 attribution rewritten; all three original defects gone (a new one was introduced and has since been corrected) [triage agent; lead re-verified the bypass, the census and the attribution claims]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-08-12-0006-internal-adversarial:I1:5.2",
+      "status": "fixed",
+      "evidence": "§4 now names the two run members and excludes the two locally-proved theorems [triage agent; lead re-verified the bypass, the census and the attribution claims]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-08-12-0006-internal-adversarial:I1:5.3",
+      "status": "fixed",
+      "evidence": "conclusion now matches the intro: the four failure modes shipped and were caught at adversarial review [triage agent; lead re-verified the bypass, the census and the attribution claims]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-08-12-0006-internal-adversarial:I1:5.4",
+      "status": "fixed",
+      "evidence": "§11 no longer asserts the completeness control (count corrected six -> seven after this review) [triage agent; lead re-verified the bypass, the census and the attribution claims]",
+      "superseded_by": null,
+      "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-08-12-0006-internal-adversarial:I1:5.5",
+      "status": "fixed",
+      "evidence": "figure rebuilt in the CODE; all seven labels resolve by exact name in lean_deps and all six edges are real dependencies [triage agent; lead re-verified the bypass, the census and the attribution claims]",
+      "superseded_by": null,
+      "date": "2026-08-12"
     }
   ]
 }

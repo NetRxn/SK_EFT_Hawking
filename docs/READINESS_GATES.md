@@ -257,3 +257,63 @@ The per-bundle analog of this document is `docs/BUNDLE_READINESS_HEATMAP.md`, au
 **Review-recordedness** resolves in order: (a) `papers/<X>/bundle_metadata.json` `last_stage13_review` (non-null ISO timestamp); (b) else the newest dated genuine fresh-context review document on disk (`papers/AutomatedReviews/` review files — excluding `bundle_readiness.py`'s own aggregation summaries — or a consolidated full-bundle audit doc `docs/audits/stage13_<X>_fullbundle_<date>.md`), which is then backfilled into the metadata with a `last_stage13_review_source` audit note (evidence-based only, never fabricated); (c) else unreviewed. A section-/phase-scoped Stage-13 audit (e.g. `docs/audits/stage13_phase6AA_*.md`) does **not** satisfy the full-bundle requirement.
 
 **What counts as a fresh-context Stage-13 review** is defined by `docs/WAVE_EXECUTION_PIPELINE.md` Stage 13: a fresh-context adversarial-reviewer invocation against the bundle (`bundle_target=<X>` profile per `docs/agents/claims-reviewer-bundle-prompts.md`), findings-only, with fixes verified by **re-invocation** ("the re-run is evidence"). The recorded review date surfaces staleness in the heatmap, but the heatmap performs no edit-date comparison — re-review obligations after substantive edits are governed by Stage-13's re-invocation rule and, for late absorptions into already-drafted bundles, by the **Stage-F re-review mandate** of `docs/LATE_PHASE6_ABSORPTION_PROTOCOL.md` (each `freshness-stale` bundle re-invokes the reviewer triple; `freshness_stale` is an mtime signal owned by `check_bundle_source_freshness.py` (source newer than `last_lift`), NOT a readiness verdict — it does not track `blockers_open`. The Stage-F exit gate is `stage13_redo_required`. Corrected 2026-07-31, D12 round-11 finding 8.6).
+
+---
+
+## Finding lifecycle — how a gate un-blocks
+
+**This document previously never mentioned the supersession ledger**, so a reader of the canonical
+gate definitions could not learn how a blocked gate returns to `passed`. That rule lived only as a
+comment inside `scripts/build_graph.py`. Rationale and history: [ADR-012](adrs/ADR-012-finding-lifecycle-routing-and-closure.md).
+
+**1. Every `ReviewFinding` is born `open`, unconditionally.** Heading text cannot close it. Findings
+once inferred `fixed` from their own wording, so a review document closed its own findings by
+phrasing alone — no remediation, no record, no re-review.
+
+**2. `docs/review_finding_supersessions.json` is the only channel that can change that status.**
+Making the ledger the sole transition channel removes the class rather than narrowing it; four
+rounds of narrower rules each found a way through.
+
+**3. A closure record must carry all three:**
+
+- an explicit closing status — `fixed` or `accepted` (an unrecognised token reads as `open`);
+- **at least 40 characters** of rationale, in any of `evidence` / `rationale` / `note`;
+- an anchor, in any of `commit` / `date` / `closed_date` / `applied_at`.
+
+**4. The bar applies at EVERY severity.** It was scoped to `critical`/`major`/`blocker`; because
+`- **Severity:**` is declarable in a finding's body and the declared value beats the heading glyph,
+declaring `recommended` under a 🔴 heading closed the finding on a two-key record. Filed, open across
+four consecutive rounds, and reproducing at HEAD when it was finally removed.
+
+**5. A finding carrying a `verify` command additionally requires a passing `verified_by`** —
+the command that was run and its exit code. A record once asserted it had cleaned up duplicate keys
+in registry entries that still carried them; one second of machine time would have caught it.
+
+⚠️ **The finding's own declared command is what runs.** `verified_by` is the strongest evidence in
+the ledger, and a record carrying `exit_code: 0` reads to every consumer as *the declared check
+passed* — so `close_finding.py` runs the `Verify:` line from the review document, refuses a
+`--verify` that differs from it, and records both. Accepting an unrelated command that happens to
+exit 0 would put absence-of-measurement into the one field designed to prevent it.
+
+**6. Records are written with `scripts/close_finding.py`, never by hand.** It mints the
+`finding_id` with the same function the reader uses, so a key that names no finding cannot be
+produced. Hand-editing is how a large fraction of the historical records came to close nothing at
+all: they name ids no node carries, and are inert.
+
+⚠️ **One in-place edit is permitted, and is not a closure**: re-keying an existing record whose
+`finding_id` matches no minted node. Such a record closes nothing, so correcting its key adds
+information rather than removing any, and the former key is preserved in `notes`. It was performed
+once, on 2026-08-12 (`f86178e3`); `WAVE_EXECUTION_PIPELINE.md` §13 states the same rule and the two
+must not drift. Everything that changes a *status* goes through the script.
+
+### Severity tiers — what each actually blocks
+
+| severity | effect |
+|---|---|
+| `critical` / `blocker` | blocks submission (`readiness_submission_gate`) and the bundle verdict |
+| `major` (REQUIRED) | **already blocking** — `BLOCKING_SEVERITIES` in `scripts/readiness_gates.py` includes it, so an open one escalates `FixPropagation` to a blocked P1 gate, forces the bundle to RED, and makes a `stage13_status: green` claim inconsistent. Its **population** is additionally ratcheted per bundle, down-only |
+| `minor` (RECOMMENDED) / `advisory` | advisory; no gate effect. The closure bar still applies |
+
+⚠️ **`major` is not a new tier and never needed to be made blocking.** Any document or commit
+message saying REQUIRED findings "block nothing" is describing a state that has not existed since
+2026-07-31. What was missing, and what the ratchet adds, is a guard on the population **growing**.

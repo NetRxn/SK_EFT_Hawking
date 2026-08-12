@@ -201,7 +201,13 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
     "review_severity_declared": (
         "test_d5_reviews.py",
         "`n_sev < n_head` -> `n_sev < 0` caught; plus a pre-cutoff leg so the historical "
-        "glyph-inference boundary cannot be silently widened into a blanket rule",
+        "glyph-inference boundary cannot be silently widened into a blanket rule. "
+        "2026-08-12 (ADR-012 D1/D10) two legs added: an unmappable LANE (`wizardry`) turns "
+        "it red, and a dangling `Blocked-by:` does too — the latter PRODUCTION-SEEDED, "
+        "since it reads `extract_review_finding_nodes()` rather than the walked text and a "
+        "fixture tree cannot reach it. That leg REPLACES a raise in `_blocked_by_edges`: "
+        "raising propagated out of `build_graph_json()`, so one hand-typed id would have "
+        "taken the graph, atlas, gate extraction and dashboard down together",
     ),
     "review_docs_mint_findings": (
         "test_d5_reviews.py",
@@ -736,8 +742,27 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
         "described in prose (D11 on Mathlib's in-source TODO) is a fact about a "
         "dependency, and `\\%` prints a percent sign rather than opening a comment",
     ),
+    "ledger_ids_resolve": (
+        "test_d5_reviews.py",
+        "3 mutations, PRODUCTION-SEEDED. PROMOTED out of check_graph_integrity 2026-08-12 "
+        "(ADR-012 D13) with the leg deleted in the same commit — two copies of a ratchet is "
+        "the defect, not the location. Appending one dangling review:-scheme record to the "
+        "real ledger takes it above baseline and the check FAILS naming the id; removing it "
+        "returns green. Its baseline has zero headroom by test, and it carries the history "
+        "of the 67-vs-66 slot that made it inert while three bad closures were filed."),
     "bundle_stage13_claim_consistent": (
         "test_d5_bundles_readiness.py",
+        "13 mutations (5 added 2026-08-12, ADR-012 D9: the two open-REQUIRED population "
+        "ratchets). PRODUCTION-SEEDED by `test_A_REAL_NEW_BLOCKING_FINDING_TURNS_THE_LEG_"
+        "RED` — appending one real 🔴 CRITICAL to a live review document takes D10 over its "
+        "ceiling and the leg names it; restoring the file returns green. ⚠️ That test "
+        "REPLACES A CLAIM: the entry previously described a by-hand probe that was never "
+        "recorded, so the leg's production-seeded status rode on a sentence, and neutering "
+        "the comparison left the whole file green. Also seeded: tightening every ceiling by "
+        "one, an EMPTY finding population (`checked` counts metadata blobs, not findings, "
+        "so both ratchets would read 0-and-pass over nothing), and a renamed `severity_mix` "
+        "key. The unattributed leg is seeded by tightening its limit, the only way to move "
+        "a population the check cannot itself create. "
         "8 mutations. Split out of `bundle_metadata_matches_graph` on 2026-08-07 "
         "(TODO-D23) with the assertion unchanged: the green-with-blockers guard whose "
         "own committed mutation record reads `PASS <-- missed` (the test existed, the "
@@ -824,6 +849,7 @@ AWAITING_CEILING = 0
 #: is the distinction the four blockers turned on. Erring toward absent overstates the
 #: remaining work; the opposite error is what produced them.
 PRODUCTION_SEEDED: frozenset[str] = frozenset({
+    "ledger_ids_resolve",
     # 2026-08-10: seeded in the real ATLAS_HEATMAP.md and the real sources.py
     # (see its MUTATION_VERIFIED entry). Keeps FIXTURE_ONLY_CEILING at 55.
     "theorem_census_agrees",
