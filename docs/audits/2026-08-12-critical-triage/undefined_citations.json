@@ -1,0 +1,93 @@
+{
+  "D10": {
+    "missing": [
+      "buttiker1986",
+      "coqq2022",
+      "datta1995",
+      "gksl1976",
+      "hohenbergKohn1964",
+      "isabelleCBO",
+      "kato1995",
+      "landauer1957",
+      "lean4",
+      "leanQI2025",
+      "levy1979",
+      "lieb1983",
+      "lindblad1976",
+      "mathlib",
+      "meirWingreen1992",
+      "reedSimon2",
+      "survey2021"
+    ],
+    "in_registry": [
+      "buttiker1986",
+      "coqq2022",
+      "datta1995",
+      "gksl1976",
+      "hohenbergKohn1964",
+      "isabelleCBO",
+      "kato1995",
+      "landauer1957",
+      "lean4",
+      "leanQI2025",
+      "levy1979",
+      "lieb1983",
+      "lindblad1976",
+      "mathlib",
+      "meirWingreen1992",
+      "reedSimon2",
+      "survey2021"
+    ],
+    "not_in_registry": []
+  },
+  "D8": {
+    "missing": [
+      "AKN1998",
+      "AaronsonGottesman2004",
+      "AharonovArad2011",
+      "BMPRV1999",
+      "Brylinski2002",
+      "DawsonNielsen2006",
+      "GilesSelinger2013",
+      "Hietala2020VOQC",
+      "KMM2013",
+      "KMM2013ancilla",
+      "KitaevShenVyalyi2002",
+      "Lewis2021VerifQC",
+      "Meiburg2025PhysLib",
+      "Mukhopadhyay2024",
+      "ReadRezayi1999",
+      "RossSelinger2016",
+      "Selinger2015"
+    ],
+    "in_registry": [
+      "AKN1998",
+      "AaronsonGottesman2004",
+      "AharonovArad2011",
+      "BMPRV1999",
+      "Brylinski2002",
+      "DawsonNielsen2006",
+      "GilesSelinger2013",
+      "Hietala2020VOQC",
+      "KMM2013",
+      "KMM2013ancilla",
+      "KitaevShenVyalyi2002",
+      "Lewis2021VerifQC",
+      "Meiburg2025PhysLib",
+      "Mukhopadhyay2024",
+      "ReadRezayi1999",
+      "RossSelinger2016",
+      "Selinger2015"
+    ],
+    "not_in_registry": []
+  },
+  "paper38_cfl": {
+    "missing": [
+      "SvetitskyYaffe1982"
+    ],
+    "in_registry": [
+      "SvetitskyYaffe1982"
+    ],
+    "not_in_registry": []
+  }
+}
