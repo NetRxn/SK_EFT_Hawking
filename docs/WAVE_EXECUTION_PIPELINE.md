@@ -650,6 +650,42 @@ bundle_source_freshness`.
 **Gate:** every paper marked submission-pending has ZERO `BLOCKER` findings with `status != fixed`,
 and `--check readiness_submission_gate` shows no RED papers among submission candidates.
 
+### The routing lane — who repairs this finding
+
+A finding records what is wrong. **`- **Lane:**` records who repairs it**, and it is the key the
+loop fans out on. Six values, and they are separated by **agent profile**, not by file extension:
+two findings in the same file can carry different lanes, and one finding can span two files and
+carry one.
+
+| lane | the finding says | worker profile | gates |
+|---|---|---|---|
+| `lean` | a proof obligation is open or a statement is weaker than it reads | atlas target → `lean4` MCP loop → `lean-worker` in a `wtN` slot → Aristotle fallback | `lake build` clean · zero `sorry` · kernel-purity · axiom allowlist |
+| `substrate` | **the theorem and the implementation disagree** | both of the above **and** the `pyrust` flow | both gate sets, plus a test that fails before the fix |
+| `pyrust` | the physics code is wrong — `src/`, `rust/`, their tests | superpowers: brainstorm → spec → plan → subagent dev → pr-review | pytest · `verify_scope` · dependency declaration |
+| `prose` | a manuscript, figure or citation misrepresents something | the paper agents | Stage 9/10 sub-gates |
+| `research` | **the corpus cannot answer this question** | the three-tier ladder (`Lit-Search` → `research-scout` → async dispatch) | a cited report, vetted by the lead before filing |
+| `infra` | the machine that runs the physics is wrong | architecture / harness / plugin / dashboard workers | `validate.py` + plugin surface tests + the dashboard exception below |
+
+⚠️ **`substrate` and `prose` are the two that cannot be derived from a path**, which is why the
+reviewer declares the lane rather than a script inferring it. `src/core/formulas.py` returning a
+value Lean refuted is `substrate`; a wrong prior-art attribution *inside a `.lean` docstring* is
+`prose`, because catching it means reading the cited paper. Lane follows the work, not the file.
+
+⚠️ **Dashboard work under `infra` carries two extra gates**, because `validate.py` and the plugin
+surface tests cannot see a rendering defect and **a Flask `test_client` never executes page
+JavaScript** — so a template that renders an empty panel passes everything the lane otherwise
+names. Those two are a template-contract test and a real browser test (`tests/e2e/`, run with
+`-m e2e`). Without both, an empty surface is indistinguishable from a clean one.
+
+**`lane` is absent-tolerant and forward-only.** An undeclared lane reads `unclassified`, never a
+default, so an unrouted finding cannot be mistaken for a routed one. An *unknown* lane is
+preserved verbatim and **fails** `review_severity_declared` — a token that maps to nothing routes
+the finding nowhere, which is a different and worse thing than not declaring one.
+
+**`needs_operator` is orthogonal to the lane, not a seventh value.** A `lean` finding can need a
+physics call and a `substrate` finding can need a scope decision; folding the two would hide
+exactly the findings the operator most needs to see.
+
 ---
 
 ## Stage 14: META-PROCESS QUALITY IMPROVEMENT (advisory)
