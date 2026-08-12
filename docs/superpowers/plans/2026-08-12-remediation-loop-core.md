@@ -2,9 +2,9 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Make a review finding routable and closable — it carries a lane, a target, a verification command and its blockers; REQUIRED severity blocks bundle-green; and closing it is a script call that cannot mint a broken key.
+**Goal:** Make a review finding routable and closable — it carries a lane, a target, a verification command and its blockers; the open-REQUIRED population ratchets down instead of growing; and closing it is a script call that cannot mint a broken key.
 
-**Architecture:** Everything extends a mechanism that already exists. The extractor gains fields it currently discards. The closure bar loses its severity scoping. `bundle_stage13_claim_consistent` gains a severity tier. `ledger_ids_resolve` is promoted out of `graph_integrity` and its leg deleted. One new script (`close_finding.py`), modelled on `record_review.py`. No new subsystem.
+**Architecture:** Everything extends a mechanism that already exists. The extractor gains fields it currently discards. The closure bar loses its severity scoping. `bundle_stage13_claim_consistent` gains a population ratchet (`major` is already blocking). `ledger_ids_resolve` is promoted out of `graph_integrity` and its leg deleted. One new script (`close_finding.py`), modelled on `record_review.py`. No new subsystem.
 
 **Tech Stack:** Python 3.14, `uv run`, pytest. No new dependencies.
 
@@ -19,7 +19,7 @@
 - **The id minter is shared, never copied.** `close_finding.py` imports it from `build_graph`.
 - **Every check leg ships with a PRODUCTION-seeded mutation** that observes red (ADR-012 D8, `CHECK_AUTHORING_GUIDE.md` §2.4). A fixture-only mutation raises `FIXTURE_ONLY_CEILING`, which may only shrink — so it is not merely weaker, it is blocked.
 - **Ratchets carry zero headroom** and may only be lowered, in the commit that lowers the population.
-- **A new registered check owes five things in the same commit:** `validate._CANONICAL_ORDER` (its absence *raises*), the `validate.py` re-export, a `MUTATION_VERIFIED` entry naming a real test (`AWAITING_MUTATION_TEST` is empty, `AWAITING_CEILING` is 0), `_config.CI_MIN_CHECKS_RUN`, and a regenerated `SURFACE_INVENTORY.md`.
+- **A new registered check owes six things in the same commit:** `validate._CANONICAL_ORDER` (its absence *raises*), the `validate.py` re-export, a `MUTATION_VERIFIED` entry naming a real test (`AWAITING_MUTATION_TEST` is empty, `AWAITING_CEILING` is 0), `_config.CI_MIN_CHECKS_RUN`, a `PRODUCTION_SEEDED` entry (`FIXTURE_ONLY_CEILING` may only shrink), and a regenerated `SURFACE_INVENTORY.md`.
 - **Architecture docs land in the commit that makes them wrong** (architecture rule 2), never batched.
 - **Never write a census count into a `docs/architecture/` narrative** (rule 3).
 - **Paths in checks are reached as `_H.<NAME>` at each use** (ADR-009 H1); flags by attribute on `_cfg` (H5).
@@ -33,7 +33,7 @@
 | `docs/READINESS_GATES.md` | the closure contract, canonically | 1 |
 | `scripts/build_graph.py` | mint ids · parse the six fields · emit `BLOCKED_BY` · apply the bar | 2, 3, 4, 5, 10 |
 | `scripts/validation/checks/reviews.py` | field enforcement · the promoted ledger check | 4, 11 |
-| `scripts/validation/checks/bundles_readiness.py` | the REQUIRED tier + its two ratchets | 6 |
+| `scripts/validation/checks/bundles_readiness.py` | the two open-REQUIRED population ratchets | 6 |
 | `scripts/validation/checks/graph_atlas.py` | **loses** the `ledger_ids_resolve` leg | 11 |
 | `scripts/close_finding.py` | **new** — the only supported ledger writer | 7, 8 |
 | `scripts/review_runner.py` | per-finding orientation brief | 13 |
@@ -78,7 +78,9 @@ Append a section titled `## Finding lifecycle — how a gate un-blocks` stating,
 4. **The bar applies at every severity** (from Task 10). It was scoped to `critical`/`major`/`blocker`, and because `- **Severity:**` is body-declarable and beats the heading glyph, declaring `recommended` under a 🔴 heading closed a finding on a two-key record.
 5. A finding carrying a `verify` command additionally needs a passing `verified_by`.
 6. Records are written with `scripts/close_finding.py`. Hand-editing the JSON is how 66 records came to name no finding.
-7. **Severity tiers:** a BLOCKER blocks submission; a REQUIRED (`major`) blocks `stage13_status: green` (Task 6).
+7. **Severity tiers:** a BLOCKER blocks submission; `major` is **already** in
+   `BLOCKING_SEVERITIES` (`readiness_gates.py:856`) and already blocks the green claim, the gate and
+   the readiness verdict — Task 6 adds only a down-only ratchet on the open-REQUIRED **population**.
 
 Cross-reference `ADR-012` for the rationale; do not restate it.
 
@@ -100,7 +102,7 @@ Expected: PASS.
 git add docs/READINESS_GATES.md docs/WAVE_EXECUTION_PIPELINE.md
 git commit -m "docs: the closure contract enters the canonical gate document
 
-READINESS_GATES.md had zero mentions of the ledger — the mechanism that
+READINESS_GATES.md had zero mentions of the SUPERSESSION ledger — the mechanism that
 decides whether a gate can un-block. ADR-012 D3/P1: the rule lands before
 the code that depends on it."
 ```
@@ -440,7 +442,9 @@ then, inside the same document walk, `declared_lanes.update(x.lower() for x in _
                if unknown_lanes else "all map")))
 ```
 
-Collect `declared_lanes` from the same document walk the severity leg already performs, using `build_graph._parse_lane` on each finding body. **Do not add a second walk.**
+Initialise `declared_lanes: set[str] = set()` beside the existing `bad`/`bad_value`/`checked`
+counters, and fill it inside the existing per-document loop where `text` is already in scope. **One
+walk, not two.**
 
 - [ ] **Step 6: Add the four lines to each of the three reviewer templates**
 
@@ -490,7 +494,7 @@ is the same shape as validating a lane."
 
 **Interfaces:**
 - Consumes: `_parse_blocked_by`, `_RELEASE_SCHEMES` (Task 4)
-- Produces: `build_graph.extract_blocked_by_edges(nodes: list[dict]) -> list[dict]`; `build_graph.finding_is_dispatchable(node: dict, node_ids: set[str], closed: set[str]) -> bool`
+- Produces: `build_graph.extract_blocked_by_edges() -> list[dict]` (argument-free; fetches its own nodes) and the pure `build_graph._blocked_by_edges(finding_nodes: list[dict]) -> list[dict]` the tests bind; `build_graph.finding_is_dispatchable(node: dict, node_ids: set[str], closed_ids: set[str]) -> bool`
 
 - [ ] **Step 1: Write the failing tests**
 
@@ -659,15 +663,21 @@ filtered out inside the aggregation and never reach it, so the unattributed leg 
 `build_graph.extract_review_finding_nodes()` itself. That is cheap (measured 0.25 s) and is not a
 "second graph build".
 
+⚠️ **The uncovered population is those carrying NEITHER key, not those missing `inferred_bundle`.**
+`bundle_readiness.py:142` reads `paper = m.get("inferred_paper") or m.get("inferred_bundle")`, so a
+finding with only `inferred_paper` **does** reach the aggregation and **is** already counted by
+ratchet 1. Measured: 71 lack `inferred_bundle`, but only **47** lack both — the other 24 would be
+double-counted.
+
 ```bash
 uv run python -c "
 import sys; sys.path.insert(0,'scripts'); import build_graph as bg
 print('UNATTRIBUTED =', sum(1 for n in bg.extract_review_finding_nodes()
   if n['meta']['status']=='open' and n['meta']['severity'] in ('critical','major')
-  and not n['meta'].get('inferred_bundle')))"
+  and not n['meta'].get('inferred_bundle') and not n['meta'].get('inferred_paper')))"
 ```
 
-Measured 2026-08-12: **71** (52 majors + 19 criticals).
+Measured 2026-08-12: **47**.
 
 - [ ] **Step 2: Write the failing tests**
 
@@ -683,7 +693,10 @@ class TestTheRequiredTier:
         from validation.checks.bundles_readiness import (
             REQUIRED_OPEN_BY_BUNDLE, UNATTRIBUTED_OPEN_BLOCKING_CEILING)
         # ⚠️ Read through the SAME accessor the check uses, never `inferred_bundle`.
-        live = _open_majors_by_bundle(via=the_checks_own_accessor)
+        from validation.checks.bundles_readiness import _readiness_aggregate
+        by_bundle = _readiness_aggregate()
+        live = {b: d['severity_mix'].get('major', 0) for b, d in by_bundle.items()
+                if d.get('severity_mix', {}).get('major')}
         ns = bg.extract_review_finding_nodes()
         for b, c in live.items():
             assert c <= REQUIRED_OPEN_BY_BUNDLE.get(b, 0), (
@@ -693,7 +706,8 @@ class TestTheRequiredTier:
             "ceilings carry headroom — lower them to the live count"
         unattr = sum(1 for n in ns if n['meta']['status'] == 'open'
                      and n['meta']['severity'] in ('critical', 'major')
-                     and not n['meta'].get('inferred_bundle'))
+                     and not n['meta'].get('inferred_bundle')
+                     and not n['meta'].get('inferred_paper'))
         assert unattr == UNATTRIBUTED_OPEN_BLOCKING_CEILING
 
     def test_the_unattributed_ratchet_is_what_makes_the_per_bundle_one_honest(self, monkeypatch):
@@ -729,22 +743,28 @@ REQUIRED_OPEN_BY_BUNDLE: dict[str, int] = {}   # ← fill from Step 1
 
 #: Open critical+major findings that resolve to NO bundle. **A RATCHET: may only shrink.**
 #:
-#: ⚠️ THIS IS WHAT MAKES THE PER-BUNDLE RATCHET HONEST. Measured 2026-08-12: 52 of 219
-#: open majors (23%) and 19 of 152 open criticals carry no `inferred_bundle` — silent-drop
-#: point 1 — so they attach to no ceiling. With only a per-bundle ratchet, a finding that
-#: LOSES its attribution silently leaves the ratchet, and "no bundle carries an open major"
-#: becomes reachable by degrading attribution rather than by fixing anything. That is
-#: absence rendered as success, one level up from where this suite usually catches it.
-UNATTRIBUTED_OPEN_BLOCKING_CEILING: int = 71   # ← confirm against Step 1
+#: ⚠️ THIS IS WHAT MAKES THE PER-BUNDLE RATCHET HONEST. Measured 2026-08-12: **47** open
+#: critical+major findings carry NEITHER `inferred_paper` NOR `inferred_bundle`, so
+#: `bundle_readiness.py:143` drops them before aggregation — silent-drop point 1 — and they
+#: attach to no ceiling. (71 lack `inferred_bundle`, but 24 of those carry `inferred_paper`
+#: and DO reach the aggregation, so counting them here would double-count ratchet 1.)
+#:
+#: With only a per-bundle ratchet, a finding that LOSES its attribution silently leaves the
+#: ratchet, and "no bundle carries an open major" becomes reachable by degrading attribution
+#: rather than by fixing anything — absence rendered as success, one level up from where
+#: this suite usually catches it.
+UNATTRIBUTED_OPEN_BLOCKING_CEILING: int = 47   # ← confirm against Step 1
 ```
 
 Inside `check_bundle_stage13_claim_consistent`, after the existing consistency leg, add two legs:
 
 1. **per-bundle** open-major counts, from the aggregation the check already computes, against
    `REQUIRED_OPEN_BY_BUNDLE` — a bundle over ceiling fails, naming the bundle and the delta;
-2. **unattributed** open critical+major, from `build_graph.extract_review_finding_nodes()`, against
-   `UNATTRIBUTED_OPEN_BLOCKING_CEILING`. ⚠️ It **cannot** come from the aggregation — unattributed
-   findings are filtered out before they reach it. This leg is what makes the first one honest.
+2. **unattributed** open critical+major — those carrying **neither** `inferred_paper` nor
+   `inferred_bundle` — from `build_graph.extract_review_finding_nodes()`, against
+   `UNATTRIBUTED_OPEN_BLOCKING_CEILING`. ⚠️ It **cannot** come from the aggregation:
+   `bundle_readiness.py:143` drops exactly this population before it arrives. This leg is what
+   makes the first one honest.
 
 - [ ] **Step 5: Run, then production-seed the mutation**
 
@@ -1073,25 +1093,34 @@ import build_graph as bg
 ids = {n['id'] for n in bg.extract_review_finding_nodes()}
 p = pathlib.Path('docs/review_finding_supersessions.json')
 data = json.loads(p.read_text())
-n = 0
+# ⚠️ THE SKIP GUARD IS IN THE SCRIPT, not only in the prose below it. Two of the nine
+# targets already carry a record; re-keying onto them creates a duplicate finding_id,
+# and `_load_supersession_ledger` is last-wins, so one of each pair silently does nothing.
+existing = {r['finding_id'] for r in data['supersessions']}
+n = skipped = 0
 for rec in data['supersessions']:
     fid = rec['finding_id']
     if fid in ids or not fid.startswith('review:'):
         continue
     m = re.match(r'(review:[^:]+:[^:]+:[0-9]+(?:\.[0-9]+)*)', fid)
     if m and m.group(1) in ids:
+        if m.group(1) in existing:
+            skipped += 1
+            continue
         rec['finding_id'] = m.group(1)
         rec['notes'] = (str(rec.get('notes') or '') +
                         f' [2026-08-12 re-keyed from {fid}: the suffix was never part of '
                         'any minted id, so this record closed nothing.]').strip()
         n += 1
 p.write_text(json.dumps(data, indent=2, ensure_ascii=False) + '\n')
-print('re-keyed', n)
+print('re-keyed', n, 'skipped (target already has a record)', skipped)
 PY
 ```
 
-Record the number. Measured: exactly **9** are mechanically re-keyable, taking `review:`-scheme
-orphans 66 → 57. If it is not 9, **re-measure before proceeding**.
+Expected: `re-keyed 7 skipped (target already has a record) 2`. **Measured under the skip rule:
+`review:`-scheme orphans go 66 → 59.** ⚠️ Not 57 — 57 is the *blind* re-key number, produced by the
+very path the skip rule forbids, and it also leaves 6 duplicate ids instead of the pre-existing 4.
+If you see anything other than 7/2, **re-measure before proceeding**.
 
 ⚠️ **TWO of the nine targets ALREADY have a ledger record** — `…:L2:5.1` and `…:D2:5.4`, both
 `status: fixed`. `_load_supersession_ledger` is last-wins, so a blind re-key creates a duplicate
@@ -1099,7 +1128,7 @@ orphans 66 → 57. If it is not 9, **re-measure before proceeding**.
 exists to protect. **Skip any re-key whose target already carries a record**, and list those two in
 the commit message for deliberate handling.
 
-⚠️ **Lower `_LEDGER_DANGLING_BASELINE` 66 → 57 in THIS commit** (`graph_atlas.py:200`). The plan's
+⚠️ **Lower `_LEDGER_DANGLING_BASELINE` 66 → 59 in THIS commit** (`graph_atlas.py:200`). The plan's
 own constraint is that a ratchet moves in the commit that moves its population; leaving it until
 Task 11 leaves nine slots of headroom in the guard whose whole job is catching newly-filed closures
 that name nothing.
@@ -1337,10 +1366,11 @@ class TestLedgerIdsResolveIsOneCheckNotTwo:
 
 - [ ] **Step 3: Move the leg into `scripts/validation/checks/reviews.py` as a registered check**
 
-Move the body verbatim — **including every comment**, which records the 67-vs-66 headroom correction
-and the reviewer's retracted false finding. Convert the `Detail`s into a `CheckResult`, keep the
+Move the body and **every comment** — they record the 67-vs-66 headroom correction and the
+reviewer's own retracted false finding — with **exactly two deliberate changes**, named here so a
+reader does not mistake them for drift: the baseline value (66 → 59) and the source of `_known`. Convert the `Detail`s into a `CheckResult`, keep the
 `review:`-scheme scoping **and its stated reason**, and set module-scope
-`LEDGER_DANGLING_BASELINE = 57` (Task 9 lowered the population).
+`LEDGER_DANGLING_BASELINE = 59` (Task 9 lowered the population from 66).
 
 ⚠️ **The leg's `_known` comes from `_g = build_graph_json()` built ~70 lines above it in the host.**
 A literal move has no `_g`. The promoted check derives ids from
@@ -1402,7 +1432,7 @@ aggregate over three schemes — which would have been a second mechanism beside
 a working one AND weaker: one ratchet over 190 permanently-inert legacy records
 plus 57 live ones lets deleting a legacy record buy headroom for a real dangler.
 
-Promoted, not duplicated. Carries all five registration obligations."
+Promoted, not duplicated. Carries all six registration obligations."
 ```
 
 ---
@@ -1665,7 +1695,7 @@ closure rests on a bar that could be walked around."
 
 - [ ] **Step 1: `END_TO_END_MAP.md` — re-route the writer edge**
 
-Line 43 reads `HUMAN -.->|"supersession ledger"| GATE`, accurate until Task 7. Replace with an explicit ledger node written by `close_finding.py`. In §8's promotion path, add the REQUIRED tier: a `major` open finding blocks `stage13_status: green`, ratcheted per bundle, with the unattributed population separately ratcheted.
+Line 43 reads `HUMAN -.->|"supersession ledger"| GATE`, accurate until Task 7. Replace with an explicit ledger node written by `close_finding.py`. In §8's promotion path, record that the open-REQUIRED **population** is now ratcheted per bundle, with the genuinely-unattributed population separately ratcheted. ⚠️ Do **not** write that `major` "now blocks" — it has been in `BLOCKING_SEVERITIES` since 2026-07-31.
 
 - [ ] **Step 2: `QA_QI_INFRASTRUCTURE_MAP.md` — name the writer and the new drop points**
 
@@ -1690,7 +1720,7 @@ Expected: `architecture_inventory_fresh` PASSES; the suite is no worse than the 
 
 ```bash
 git add docs/architecture/ docs/adrs/ADR-012-finding-lifecycle-routing-and-closure.md
-git commit -m "docs: the ledger has a writer, findings route, and REQUIRED blocks green
+git commit -m "docs: the ledger has a writer, findings route, REQUIRED ratchets down
 
 END_TO_END_MAP modelled the writer as HUMAN — accurate until this branch."
 ```
@@ -1701,9 +1731,12 @@ END_TO_END_MAP modelled the writer as HUMAN — accurate until this branch."
 
 **Spec coverage.** §1 emission/extraction → Tasks 3, 4, 5, 13. §2 gating → Task 6. §3 operator path → Task 4 (`needs_operator` field); the panes are the dashboard plan. §4 closure → Tasks 7, 8, 9, 10, 11. §5.1 parked → Task 12. §5.2/§5.3 → dashboard plan, declared out of scope above. §6 loop terminus → Task 15 plus the branch merge. Doc-update table → Tasks 1, 5, 9, 12, 15.
 
-**Placeholders.** None. Two tasks (11, 12) direct a *move* and a *parser* rather than pasting a body: Task 11 must move existing code verbatim including its comments (pasting a paraphrase would lose the 67-vs-66 correction), and Task 12's four resolvers each read a different artifact. Both carry their full test bodies and their exact interfaces.
+**Placeholders.** None. ⚠️ There was one — Task 6's test carried an undefined
+`_open_majors_by_bundle(via=…)`, which would have raised `NameError` at collection and made the
+TDD red step unreadable. It is now the real accessor. Two tasks (11, 12) direct a *move* and a
+*parser* rather than pasting a body: Task 11 must move existing code verbatim including its comments (pasting a paraphrase would lose the 67-vs-66 correction), and Task 12's four resolvers each read a different artifact. Both carry their full test bodies and their exact interfaces.
 
-**Type consistency.** `mint_finding_id(date_dir, review_name, section_num) -> str` — Task 2, used in 7 and 11. `_parse_finding_field(body, label) -> str | None` — Task 3, used in 4. `_LANE_DECL_MAP`, `_RELEASE_SCHEMES` — Task 4, used in 5. `extract_blocked_by_edges(nodes) -> list[dict]` and `finding_is_dispatchable(node, ids, closed) -> bool` — Task 5. `close(...) -> tuple[bool, str]` — Task 7, extended in 8 **without** signature change; `_append`'s sixth positional is `verified_by`, and Task 8 Step 3 states the call-site change explicitly. `_closure_record_meets_bar(rec, finding_has_verify=False) -> bool` — Task 10, both tests and the call site pass the second argument.
+**Type consistency.** `mint_finding_id(date_dir, review_name, section_num) -> str` — Task 2, used in 7 and 11. `_parse_finding_field(body, label) -> str | None` — Task 3, used in 4. `_LANE_DECL_MAP`, `_RELEASE_SCHEMES` — Task 4, used in 5. `extract_blocked_by_edges() -> list[dict]` (argument-free) with the pure `_blocked_by_edges(finding_nodes)` for tests, and `finding_is_dispatchable(node, ids, closed_ids) -> bool` — Task 5. `close(...) -> tuple[bool, str]` — Task 7, extended in 8 **without** signature change; `_append`'s sixth positional is `verified_by`, and Task 8 Step 3 states the call-site change explicitly. `_closure_record_meets_bar(rec, finding_has_verify=False) -> bool` — Task 10, both tests and the call site pass the second argument.
 
 **Ordering.** Task 10's `verified_by` leg reads `meta['verify']`, populated by Task 4 — routing before closure, which is the coupling that made the superseded plan ship a leg that could never fire. Task 14 runs after Task 10 so no closure rests on a bypassable bar, and after Task 6 so its ratchets exist to be lowered.
 

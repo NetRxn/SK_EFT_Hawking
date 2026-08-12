@@ -177,21 +177,27 @@ findings indefinitely without tripping anything.
 `bundle_stage13_claim_consistent` — not a new severity tier, which already exists.
 
 **It extends `bundle_stage13_claim_consistent`**, which already forbids a `green` Stage-13 while the
-live graph carries open blockers, by adding a severity tier to the same assertion. A sibling check
+live graph carries open blockers, by adding a **population** leg to the same check. A sibling check
 would be §4's own failure repeated.
 
-⚠️ **Measured coverage: 167 of 219.** 52 open majors (23%) and 19 open criticals carry no
-`inferred_bundle` — silent-drop point 1 — so they attach to no bundle ceiling. Left there, the gate
-also creates a perverse incentive: a finding that *loses* attribution silently leaves the ratchet. So
-**two ratchets ship, not one** — the per-bundle ceiling, and a corpus-wide down-only count of
-unattributed open blocking findings frozen at 52/19. Both may only shrink.
+⚠️ **The per-bundle ratchet cannot see every finding.** 47 open critical+major findings carry
+neither attribution key and are dropped before aggregation (silent-drop point 1), so they attach to
+no ceiling. Left there, the ratchet would also create a perverse incentive: a finding that *loses*
+attribution silently leaves it. So **two ratchets ship, not one** — the per-bundle ceiling, and a
+corpus-wide down-only count of genuinely-unattributed open blocking findings frozen at **47**. Both
+may only shrink.
 
 **Ratcheted per bundle, down-only, frozen at the live count**, on the same shape as
-`NATIVE_DECIDE_BUNDLE_DEBT` and `UNDECLARED_APEX_CEILING`. 219 open majors across the roster would
-otherwise take every bundle non-green on the first run, and **a gate that fires on the existing
-corpus gets switched off** — a lesson this project has recorded twice (`bundle_source_freshness`
-under `--strict`; the pre-ADR-011 figure-prefix literal). Zero headroom per bundle. Lower in the
-commit that lowers the population; never raise.
+`NATIVE_DECIDE_BUNDLE_DEBT` and `UNDECLARED_APEX_CEILING`. Freezing rather than zeroing follows the
+same rule as every other ratchet here: **a gate that fires on the existing corpus gets switched
+off**, a lesson recorded twice (`bundle_source_freshness` under `--strict`; the pre-ADR-011
+figure-prefix literal). Zero headroom per bundle. Lower in the commit that lowers the population;
+never raise.
+
+⚠️ The second ratchet counts findings carrying **neither** `inferred_paper` nor `inferred_bundle`
+(measured: **47**), not merely those missing `inferred_bundle` (71) — `bundle_readiness.py:142`
+falls back to `inferred_paper`, so 24 of the 71 already reach the aggregation and would be
+double-counted.
 
 The ceiling is the on-ramp and the distance marker, not the destination. Zero open majors is the
 target state.

@@ -414,7 +414,7 @@ Zero headroom per bundle. Lower the ceiling in the commit that lowers the popula
 it. The ratchet is the on-ramp, not the destination: a bundle at zero open majors is the target
 state and the ceiling records the distance.
 
-⚠️ **MEASURED NON-VACUITY, and it is not total (2026-08-12).** A per-bundle ratchet can only see
+⚠️ **MEASURED NON-VACUITY, and it is not total (2026-08-12).** ⚠️ The figures below are over `inferred_bundle`; the check reads a wider aggregation, so read them as the SHAPE of the gap, never as the constant. The constants are measured at implementation: **47** genuinely unattributed (carrying neither key), because 24 of the 71 missing `inferred_bundle` still carry `inferred_paper` and already reach the aggregation. A per-bundle ratchet can only see
 findings that resolve to a bundle. Measured at HEAD: **52 of 219 open majors (23%) carry no
 `inferred_bundle`** — and 19 of 152 open criticals — so they attach to no bundle's ceiling and D9
 blocks nothing for them. They are silent-drop point 1 in
