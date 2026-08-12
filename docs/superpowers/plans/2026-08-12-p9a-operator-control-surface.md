@@ -498,7 +498,20 @@ The attachment point is clean: the per-sentence `<span>` at `:4439` already carr
 
 ### Task 9: Documents, and the full gate
 
-- [ ] **Step 1:** `docs/DASHBOARD.md` — correct the two declared-but-absent inputs (`docs/verification_log.jsonl` exists; **`docs/submission_state.json` does not**), the stale roster/graph-type figures, and the change-bus that has never carried an event. ⚠️ Do **not** write census counts into it if it moves under `docs/architecture/` (that is P8d, not this plan).
+- [ ] **Step 1:** `docs/DASHBOARD.md` — the corrections below are **measured, not inherited**. ⚠️ An earlier draft of this step said "`docs/verification_log.jsonl` exists; `docs/submission_state.json` does not", taken from the ADR rather than from the disk. **Neither file exists.** That is the same claim-vs-measurement defect this plan exists to fix, so the list is now stated with how each was checked:
+
+  | claim in `DASHBOARD.md` | measured |
+  |---|---|
+  | `docs/submission_state.json` is a Bundles-tab input (×3: §Bundles, §Architecture, §Bundle readiness command) | **does not exist** |
+  | the change-bus writes `docs/verification_log.jsonl` (§Sentence-level provenance) | **does not exist** — the bus has never written a file, which is stronger than "never carried an event". ⚠️ `_graph_fingerprint` stats this path (`provenance_dashboard.py:210-232`); confirm it tolerates absence rather than silently pinning the cache |
+  | "18-bundle architecture" (×2, §Bundles and §Bundle readiness command) | `bundle_registry.BUNDLE_CODES` = **21** |
+  | "25 node types, 25 edge types" (§Architecture diagram) | stale; `SURFACE_INVENTORY.md` is the only place a count may live — replace with a pointer, per rule 3 |
+  | `POST /api/verify` | the route is **`/verify`** (`:1241`); no `/api/verify` exists |
+  | `POST /api/save` — "Save accumulated verification actions" | **no such route.** Removed, and documented as a dead no-op at `:1423-1429` |
+  | Paper Provenance v2 renders "each with its `BACKED_BY` chain" | the dashboard contains **zero** occurrences of `BACKED_BY`; chains come from `claims_review.json` |
+  | Readiness tab offers "click-through to gate-specific evidence … review findings" | blockers render as unlinkable prose (`:5413`) until Task 3 lands — after Task 3 this becomes true, so correct it in **that** commit, not this one |
+
+  ⚠️ Do **not** write census counts into it if it moves under `docs/architecture/` (that is P8d, not this plan).
 - [ ] **Step 2:** `QA_QI_INFRASTRUCTURE_MAP.md` §4 — the operator decision points that now persist.
 - [ ] **Step 3:** ADR-012 — mark P9a ✅ with commits.
 - [ ] **Step 4:** `uv run python -m pytest -m '' -q` · `uv run python -m pytest -m e2e -q` · `uv run python scripts/validate.py` · `uv run python scripts/verify_scope.py --merge-gate`.
