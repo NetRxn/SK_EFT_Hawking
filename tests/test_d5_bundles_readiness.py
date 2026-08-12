@@ -1810,3 +1810,61 @@ class TestSentenceLengthRatchet:
         msg = next(d.message for d in res.details if d.name == "over_100_words")
         live = int(msg.split()[0])
         assert live == SENTENCE_OVER_100_CEILING, (live, SENTENCE_OVER_100_CEILING)
+
+
+class TestTheOpenRequiredPopulationRatchets:
+    """ADR-012 D9. ⚠️ NOT a new severity tier — `major` has been in BLOCKING_SEVERITIES
+    since 2026-07-31 and already blocks the gate, the readiness verdict and the green
+    claim. What nothing asserted is that the population cannot GROW."""
+
+    def test_the_check_is_green_at_the_frozen_ceilings(self):
+        from validation.checks.bundles_readiness import (
+            check_bundle_stage13_claim_consistent)
+        assert check_bundle_stage13_claim_consistent().passed is True
+
+    def test_the_per_bundle_ratchet_has_zero_headroom(self):
+        """⚠️ Measured through `_readiness_aggregate()` — what the CHECK reads — never
+        through `meta['inferred_bundle']`. The aggregation attributes via
+        `inferred_paper or inferred_bundle` plus the paper->bundle mapping, so the two
+        populations differ materially (D3 3 vs 6, F 5 vs 15)."""
+        from validation.checks.bundles_readiness import (
+            _readiness_aggregate, _required_open_ceilings)
+        by_bundle, _, failure = _readiness_aggregate()
+        assert failure is None, f"aggregation failed: {failure}"
+        live = {b: d['severity_mix'].get('major', 0) for b, d in by_bundle.items()
+                if (d.get('severity_mix') or {}).get('major')}
+        assert live == _required_open_ceilings(), (
+            "ceilings carry headroom or have drifted; if the population SHRANK, lower them "
+            "in the commit that shrank it — headroom makes a ratchet unfireable")
+
+    def test_the_unattributed_ratchet_has_zero_headroom(self):
+        import sys
+        sys.path.insert(0, 'scripts')
+        from build_graph import extract_review_finding_nodes
+        from validation.checks.bundles_readiness import (
+            UNATTRIBUTED_OPEN_BLOCKING_CEILING)
+        live = sum(1 for n in extract_review_finding_nodes()
+                   if n['meta'].get('status') == 'open'
+                   and n['meta'].get('severity') in ('critical', 'major')
+                   and not n['meta'].get('inferred_bundle')
+                   and not n['meta'].get('inferred_paper'))
+        assert live == UNATTRIBUTED_OPEN_BLOCKING_CEILING
+
+    def test_the_unattributed_ratchet_is_what_makes_the_other_honest(self, monkeypatch):
+        """Seeded: with only a per-bundle ratchet, LOSING attribution leaves the ratchet.
+        Tightening the limit must go red — proving the leg can fail at all."""
+        import validation.checks.bundles_readiness as br
+        monkeypatch.setattr(br, 'UNATTRIBUTED_OPEN_BLOCKING_CEILING', 0)
+        res = br.check_bundle_stage13_claim_consistent()
+        assert res.passed is False
+        assert any(d.name == 'unattributed_population' and not d.passed
+                   for d in res.details)
+
+
+    def test_every_ceiling_key_is_a_live_bundle_code(self):
+        """The ceilings file is DATA, so it cannot trip the roster gate — which means the
+        roster gate also cannot catch it naming a bundle that no longer exists."""
+        from scripts.bundle_registry import BUNDLE_CODES
+        from validation.checks.bundles_readiness import _required_open_ceilings
+        unknown = sorted(set(_required_open_ceilings()) - set(BUNDLE_CODES))
+        assert not unknown, f"ceilings name bundles outside the registry: {unknown}"

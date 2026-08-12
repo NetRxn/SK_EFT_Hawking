@@ -738,6 +738,12 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
     ),
     "bundle_stage13_claim_consistent": (
         "test_d5_bundles_readiness.py",
+        "10 mutations (2 added 2026-08-12, ADR-012 D9: the two open-REQUIRED "
+        "population ratchets). PRODUCTION-SEEDED — appending one real 🟡 REQUIRED finding "
+        "to a live review document took D3 to 7>6 and F to 16>15 and the leg named both; "
+        "restoring the file returned it to green. The unattributed leg was seeded by "
+        "tightening its limit, which is the only way to move a population the check "
+        "cannot itself create. "
         "8 mutations. Split out of `bundle_metadata_matches_graph` on 2026-08-07 "
         "(TODO-D23) with the assertion unchanged: the green-with-blockers guard whose "
         "own committed mutation record reads `PASS <-- missed` (the test existed, the "

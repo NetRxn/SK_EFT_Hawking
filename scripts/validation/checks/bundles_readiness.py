@@ -335,6 +335,67 @@ def check_bundle_figure_integrity() -> CheckResult:
                        measured=_SPEC_FALLBACK is None, details=details)
 
 
+#: Open `major` (REQUIRED) findings per bundle. **A RATCHET: may only shrink.**
+#:
+#: ⚠️ THIS IS NOT A NEW SEVERITY TIER, and any commit message saying REQUIRED "now blocks"
+#: is describing a state that has not existed since 2026-07-31. `readiness_gates.py`'s
+#: `BLOCKING_SEVERITIES` already contains `major`; `bundle_readiness.py` already counts it
+#: into `n_blockers`; the leg above already forbids a green Stage-13 against that count.
+#: REQUIRED already blocks the gate, the readiness verdict AND the green claim.
+#:
+#: What nothing asserted is that the population cannot GROW — and the consistency leg above
+#: fires on zero rows today, because no bundle currently claims `stage13_status: green`. It
+#: is a correct guard over an empty population. This ratchet is the growth guard, and it
+#: mechanizes PD-5 ("BLOCKER/MAJOR/IMPORTANT are never deferred", operator-set 2026-07-29),
+#: which has bound the autonomous loop for two weeks and bound no gate.
+#:
+#: PD-5 governs the finding you just found: fix it in-session. This governs the population:
+#: a new major takes its bundle above ceiling and fails — PD-5 firing mechanically.
+#:
+#: MEASURED 2026-08-12 through `_readiness_aggregate()`, which is what this check reads.
+#: ⚠️ NOT through `meta['inferred_bundle']`: the aggregation attributes via
+#: `inferred_paper or inferred_bundle` plus the paper→bundle mapping, so the two populations
+#: differ materially (D3 3 vs 6, D5 6 vs 10, F 5 vs 15). Measuring the wrong one makes this
+#: leg red on arrival.
+def _required_open_ceilings() -> dict[str, int]:
+    """Load the frozen per-bundle ceilings (ADR-012 D9).
+
+    ⚠️ DATA, NOT A PYTHON LITERAL, and the reason is a guard firing on my first attempt.
+    A 15-code dict in this module tripped `bundle_registry_consistency` Leg C — a
+    hand-maintained roster parallel to `scripts/bundle_registry.py`. The per-file
+    allowlist would have blinded that gate to this entire module, which is the file most
+    likely to re-hardcode a roster, so the ceilings moved to data instead.
+
+    An ABSENT bundle reads 0 — the strictest default. A newly-registered bundle starts
+    clean and any open major fails it, so this file cannot go stale by omission.
+    """
+    path = _H.DOCS_DIR / "required_open_ceilings.json"
+    if not path.is_file():
+        return {}
+    try:
+        return dict(json.loads(path.read_text(encoding="utf-8")).get("ceilings", {}))
+    except (OSError, json.JSONDecodeError):
+        return {}
+
+
+#: Open critical+major findings carrying NEITHER `inferred_paper` NOR `inferred_bundle`.
+#: **A RATCHET: may only shrink.**
+#:
+#: ⚠️ THIS IS WHAT MAKES THE PER-BUNDLE RATCHET HONEST. A per-bundle ceiling can only see
+#: findings that reach the aggregation, and `bundle_readiness.py` drops those carrying
+#: neither key before it — silent-drop point 1 in `QA_QI_INFRASTRUCTURE_MAP.md` §3. With
+#: only the first ratchet, a finding that LOSES its attribution silently leaves the ratchet,
+#: and "no bundle carries an open major" becomes reachable by degrading attribution rather
+#: than by fixing anything. That is absence rendered as success, one level up from where
+#: this suite usually catches it.
+#:
+#: MEASURED 2026-08-12: **47** carry neither key. 71 lack `inferred_bundle`, but 24 of those
+#: carry `inferred_paper` and DO reach the aggregation, so counting 71 here would
+#: double-count what ratchet 1 already covers — a guard that lies about what the other one
+#: misses.
+UNATTRIBUTED_OPEN_BLOCKING_CEILING: int = 47
+
+
 def _readiness_aggregate():
     """`(by_bundle, metadata_path_fn, failure_detail)` — the live per-bundle aggregation.
 
@@ -467,6 +528,57 @@ def check_bundle_stage13_claim_consistent() -> CheckResult:
                 f"newly-minted blockers have since contradicted. Re-running the counts "
                 f"writer will NOT clear it: the bundle re-enters at Stage 9/10 and only "
                 f"then Stage 13 (BUNDLE_LIFT_PROCEDURE.md:9 gate ordering)."))
+
+    # ── Ratchet 1: the open-REQUIRED population, per bundle (ADR-012 D9) ──────────
+    _ceilings = _required_open_ceilings()
+    over = []
+    for bundle, data in sorted((by_bundle or {}).items()):
+        live_major = (data.get("severity_mix") or {}).get("major", 0)
+        ceiling = _ceilings.get(bundle, 0)
+        if live_major > ceiling:
+            over.append(f"{bundle} {live_major}>{ceiling}")
+    details.append(Detail(
+        "required_population", not over,
+        f"open REQUIRED (major) findings per bundle, against frozen ceilings; "
+        + (f"ABOVE CEILING: {', '.join(over)}. `major` is already blocking — what this "
+           f"ratchet adds is that the population may not GROW (PD-5). Fix the finding; "
+           f"do not raise the ceiling."
+           if over else
+           f"{sum((d.get('severity_mix') or {}).get('major', 0) for d in (by_bundle or {}).values())} "
+           f"across {len(_ceilings)} bundle(s), none above ceiling")))
+    if over:
+        bad += 1
+
+    # ── Ratchet 2: the population ratchet 1 structurally cannot see ───────────────
+    try:
+        import sys as _sys
+        _sys.path.insert(0, str(_H.PROJECT_ROOT / "scripts"))
+        from build_graph import extract_review_finding_nodes as _erfn
+        unattributed = sum(
+            1 for n in _erfn()
+            if (n["meta"].get("status") == "open"
+                and n["meta"].get("severity") in ("critical", "major")
+                and not n["meta"].get("inferred_bundle")
+                and not n["meta"].get("inferred_paper")))
+    except Exception as exc:        # cannot-measure is not success
+        details.append(Detail(
+            "unattributed_population", False, measured=False,
+            message=f"could not count unattributed findings ({exc}) — the guard that makes "
+                    f"the per-bundle ratchet honest did not run, so its silence is not "
+                    f"evidence"))
+        bad += 1
+    else:
+        ok_un = unattributed <= UNATTRIBUTED_OPEN_BLOCKING_CEILING
+        details.append(Detail(
+            "unattributed_population", ok_un,
+            f"{unattributed} open critical/major finding(s) carry neither `inferred_paper` "
+            f"nor `inferred_bundle`, so they reach NO bundle ceiling; "
+            f"limit {UNATTRIBUTED_OPEN_BLOCKING_CEILING}"
+            + ("" if ok_un else
+               " — a finding that LOSES its attribution silently leaves the per-bundle "
+               "ratchet. Re-attribute it or fix it; never raise this limit.")))
+        if not ok_un:
+            bad += 1
 
     # Seam guard (guide §2.5): a loop that inspected nothing must not report agreement.
     if checked == 0:
