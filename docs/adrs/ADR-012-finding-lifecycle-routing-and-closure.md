@@ -681,16 +681,22 @@ by the first draft. A finding is not done when its ledger record is written. It 
 Steps 3 and 4 are where this project's documented failures concentrate — `tables_fresh` and the
 `stage*_status` gap both shipped as code changes whose describing documents were never updated.
 
-### D17 — Orientation is generated, not gathered
+### D17 — Orientation is generated, not gathered ✅ IMPLEMENTED 2026-08-12 (`36edada9`)
 
 Re-deriving orientation per finding, from cold context, is the expensive way and it is what the
 operator's step 1 was reacting to. `scripts/review_runner.py --prep-brief` already generates a
-review-prep brief; the same generator is extended to emit a **per-finding brief** from the finding's
-own `target`: the source files, the Lean declarations in its closure, the formulas and constants it
-touches, the authorizing roadmap, and the relevant git history.
+review-prep brief; `emit_finding_brief` is a **second entry point on the same script**, sharing its
+CLI, that emits a per-finding brief from the finding's own `target`: the source files, the Lean
+declarations in its closure, the formulas and constants it touches, the authorizing roadmap, the
+relevant git history, and whether every declared blocker has closed or released.
 
 The finding carries its pointers; the worker does not go looking. This is also what makes D11's
 decision package affordable — four of its five elements are generated rather than researched.
+
+⚠️ **An unknown finding id RAISES; it does not emit an empty brief.** An empty brief reads as
+"nothing to orient on" when the truth is "not found" — absence rendered as success, in the one
+artifact a worker trusts. `--finding` is also handled *before* the `--bundle` gate, which would
+otherwise exit 1 while printing nothing.
 
 ### D18 — Routing and closure are one build, and this process is the pilot for a repeatable one
 
@@ -932,8 +938,10 @@ mechanical slice and re-verified every claim that changed a decision.
 **The backlog was a recording gap, not a defect backlog — 84% were already repaired.** The mechanism
 is specific and was found during the pilot: several review documents were formally closed by later
 re-reviews that were **never written into the ledger**. Three such re-reviews account for 14 fixed
-verdicts in a single slice. Two further findings can never close because their ledger keys carry
-suffixes (`…:I1:3.1-residual`) that do not match the ids `extract_review_finding_nodes` mints.
+verdicts in a single slice. Two further findings could not close **at the time of this pilot**
+because their ledger keys carried suffixes (`…:I1:3.1-residual`) that match no id
+`extract_review_finding_nodes` mints. ⚠️ That class was **re-keyed in `f86178e3`** and is no longer
+inert — which is also how three of P7's five refusals came about, the records having become live.
 
 **Triage behaved as a review pass in its own right.** It surfaced defects no finding had recorded: a
 live severity-scoped closure bypass (D6); a false closure in the ledger (57 entries); D2
@@ -970,42 +978,72 @@ D6.2's inert parameter, and the omitted registration obligations.**
 
 ## Plan
 
-Phases are ordered by what unblocks the most. **P2 and P3 are complete.**
+Phases are ordered by what unblocks the most. **P1–P7 and P8b are complete**, on
+`feat/adr012-remediation-loop` against the plan
+[`../superpowers/plans/2026-08-12-remediation-loop-core.md`](../superpowers/plans/2026-08-12-remediation-loop-core.md).
+P8, P8c, P8d, P9, P10 and P11 remain open, each needing its own plan.
 
-**P1 — Document the closure contract (D3).** `READINESS_GATES.md` gains the lifecycle section;
-`WAVE_EXECUTION_PIPELINE.md` §13 cross-references it rather than restating it. No code. First,
-because every later phase depends on a rule that is currently only a comment.
+**P1 — Document the closure contract (D3). ✅ COMPLETE 2026-08-12 (`10c04da9`).**
+`READINESS_GATES.md` gains the lifecycle section; `WAVE_EXECUTION_PIPELINE.md` §13
+cross-references it rather than restating it. No code. First, because every later phase depended
+on a rule that was only a comment.
 
-**P2 — Triage the 117 (D5, D7). ✅ COMPLETE 2026-08-12.** See §Pilot. The ledger records for the 98
-`fixed` are deliberately **not yet written** — that is P7, ordered after the bar is fixed.
+**P2 — Triage the 117 (D5, D7). ✅ COMPLETE 2026-08-12.** See §Pilot. The ledger records were
+deliberately **not written here** — that was P7, ordered after the bar was fixed, and it has
+since run.
 
 **P3 — Amend this ADR from what P2 taught. ✅ COMPLETE 2026-08-12**, and amended twice more from the
 adversarial review and the intent-drift assessment.
 
-**P4 — Emission and extraction (D1, D2, D10, D17).** The three markdown emitters gain `lane`,
+**P4 — Emission and extraction (D1, D2, D10, D17). ✅ COMPLETE 2026-08-12** (`4e45d1d8`,
+`46654641`, `ace9d8bf`, `6d41fc2e`, `36edada9`). The three markdown emitters gain `lane`,
 `verify`, `blocked_by` and `needs_operator`; `extract_review_finding_nodes` parses all of them plus
-`Gate:` and `Location:`; `BLOCKED_BY` edges emit; `review_runner.py --prep-brief` extends to
-per-finding orientation. Enforcement extends `review_severity_declared` rather than adding a sibling
-check — it already validates a declared token against a map. Ships with seeded-defect tests (D8).
+`Gate:` and `Location:`; `BLOCKED_BY` edges emit; `review_runner.py` gains per-finding orientation
+(D17). Enforcement extended `review_severity_declared` rather than adding a sibling check — it
+already validated a declared token against a map. Ships with seeded-defect tests (D8).
 
-**P5 — The population guard (D9).** The open-REQUIRED population ratchets down per bundle, frozen
-at the live count, plus a corpus-wide ratchet on the unattributed population. Not a severity tier:
-`major` has been blocking since 2026-07-31.
+⚠️ **`lane` is absent-tolerant by design** — an undeclared lane reads `unclassified`, never a
+default lane, so an unrouted finding cannot be mistaken for a routed one. An *unknown* lane is
+preserved verbatim and fails the check, which is a different signal from absence.
 
-**P6 — Closure (D6, D13, D14).** `close_finding.py`; the bar unscoped and extended with
-`verified_by`; the ledger schema amended; `ledger_ids_resolve` promoted or widened per D13 — never
-duplicated.
+**P5 — The population guard (D9). ✅ COMPLETE 2026-08-12** (`ae623cb7`; both ratchets lowered
+again in `eb878f5e` alongside the population they measure). The open-REQUIRED population ratchets
+down per bundle, frozen at the live count, plus a corpus-wide ratchet on the unattributed
+population. Not a severity tier: `major` has been blocking since 2026-07-31.
 
-**P7 — Write the pilot's closure records, after P6.** 98 dispositions through the writer. Ordering
-matters: closing a backlog through a bar that can still be walked around would bake the defect into
-98 records. Two malformed keys are re-keyed in the same pass. **Re-derive the population first** —
-the pilot's 117 was 152 at the time of this amendment.
+**P6 — Closure (D6, D13, D14). ✅ COMPLETE 2026-08-12.** `close_finding.py`, the only supported
+writer (`792b3f45`); the bar unscoped from severity and extended with `verified_by` (`73bce19f`);
+the ledger schema amended and its dead keys re-keyed (`f86178e3`); `ledger_ids_resolve` promoted to
+a registered check **and its `graph_integrity` leg deleted in the same commit** (`0d35c85b`).
+D13's "promoted or widened — never duplicated" was load-bearing: the check already existed at
+dangling-baseline 66, and the first draft of this ADR proposed building it.
+
+**P7 — Write the pilot's closure records, after P6. ✅ COMPLETE 2026-08-12** (`eb878f5e`).
+Ordering mattered: closing a backlog through a bar that could still be walked around would have
+baked the defect into every record. **Re-derived first, as required** — the pilot's 117 was 152 by
+the time the writer existed. The manifest holds 117 rows, **106 of which carry a closing
+disposition**; of those, **101 wrote cleanly and 5 were refused, none forced.** Open criticals
+fell to 48. Every refusal is the same class — a record already exists with
+a different status, and the reader is last-wins — and each is recorded with its open decision in
+[`../audits/2026-08-12-critical-triage/refusals.md`](../audits/2026-08-12-critical-triage/refusals.md).
+
+⚠️ **Three of those five refusals were *created* by this branch, not inherited.** The `f86178e3`
+re-key moved inert records onto ids that now mint nodes, and several of those ids are also manifest
+targets. That is the re-key working — the records became live — but it means those dispositions
+need reconciling by hand rather than by a second batch.
 
 **P8 — Substrate lane wiring (D4).** Re-file D45–D49 as `lane=substrate` findings; document the lane
 in the pipeline; confirm `ARCHITECTURE_TODOs.MD` is back inside its charter.
 
-**P8b — Parked work (D19).** The roadmap opt-in block, the external release-condition tokens on
-`blocked_by`, and their evaluation. Independent of P9 and a prerequisite for its Parked pane.
+**P8b — Parked work (D19). ✅ COMPLETE 2026-08-12** (`1a354d90`). The roadmap opt-in block, the
+external release-condition tokens on `blocked_by`, and their evaluation. Independent of P9 and a
+prerequisite for its Parked pane.
+
+⚠️ **`release_condition_met` returns three values, and `None` is not `False`.** An unresolvable
+condition is *unknown*, not *unmet*: rendering it unmet would leave a released item parked
+forever, and rendering it met would release work on no evidence. `run:` is deliberately always
+`None` until a run registry exists. The roadmap corpus is untouched — the block is opt-in, and
+nothing is parked yet, so this narrows the unmechanized roadmap seam without closing it.
 
 **P8c — Prior-ADR open items enter the queue (D21).** ADR-010 D2, D5 and D7 filed as findings with
 lanes and targets, pointing back at ADR-010 as the decision record. Re-measure each before filing.

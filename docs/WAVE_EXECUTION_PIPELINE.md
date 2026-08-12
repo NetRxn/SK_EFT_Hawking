@@ -704,7 +704,12 @@ the dashboard.
 ### Parked work — declaring a release condition
 
 Authorized work that is waiting on something external is declared in the roadmap that owns it, in
-one opt-in block. `scripts/parked_items.py` parses it into the same queue as every other item.
+one opt-in block. `scripts/parked_items.py` parses it into finding-shaped queue items.
+
+⚠️ **Nothing consumes those items yet.** `collect()` has no caller outside its own `__main__` and
+its tests, and no gate, check or dashboard pane reads parked work — the Parked pane is P9. The
+parser is live and the shape is fixed; the queue is not built. **Do not read this section as
+gated.**
 
 ```
 <!-- PARKED
@@ -719,9 +724,13 @@ reason: campaign staged; the operator launches it, results gate the analysis wav
 `id`, `lane` and `blocked_by` are required. **A parked item with no release condition is not parked,
 it is abandoned**, and the queue has to be able to tell those apart — so the parser refuses one.
 
-Four schemes resolve: `run:` (a campaign completes) · `phase:` (a roadmap carries a close marker) ·
-`pub:` (a citekey resolves in `CITATION_REGISTRY` as published) · `research:` (a dispatch returns to
-`Lit-Search/Tasks/complete/`). There is deliberately **no `operator:` scheme**: an operator decision
+Four schemes are accepted, and **three of them resolve**: `phase:` (a roadmap carries a close
+marker) · `pub:` (a citekey resolves in `CITATION_REGISTRY` as published) · `research:` (a dispatch
+returns to `Lit-Search/Tasks/complete/`). ⚠️ **`run:` never resolves** — it returns *unknown*
+unconditionally, deliberately, until a run registry exists, because returning "unmet" would render
+every staged campaign permanently parked and "met" would release work on no evidence. Park behind
+`run:` expecting a human to notice, not a check. A scheme with an empty value (`run:` with nothing
+after it) is not a condition at all: it is rejected as unresolvable. There is deliberately **no `operator:` scheme**: an operator decision
 that gates work is itself a queue item with a node id, so parking behind it is the ordinary
 `blocked_by: <finding id>` case rather than a second decision-record channel.
 

@@ -289,10 +289,22 @@ four consecutive rounds, and reproducing at HEAD when it was finally removed.
 the command that was run and its exit code. A record once asserted it had cleaned up duplicate keys
 in registry entries that still carried them; one second of machine time would have caught it.
 
+⚠️ **The finding's own declared command is what runs.** `verified_by` is the strongest evidence in
+the ledger, and a record carrying `exit_code: 0` reads to every consumer as *the declared check
+passed* — so `close_finding.py` runs the `Verify:` line from the review document, refuses a
+`--verify` that differs from it, and records both. Accepting an unrelated command that happens to
+exit 0 would put absence-of-measurement into the one field designed to prevent it.
+
 **6. Records are written with `scripts/close_finding.py`, never by hand.** It mints the
 `finding_id` with the same function the reader uses, so a key that names no finding cannot be
 produced. Hand-editing is how a large fraction of the historical records came to close nothing at
 all: they name ids no node carries, and are inert.
+
+⚠️ **One in-place edit is permitted, and is not a closure**: re-keying an existing record whose
+`finding_id` matches no minted node. Such a record closes nothing, so correcting its key adds
+information rather than removing any, and the former key is preserved in `notes`. It was performed
+once, on 2026-08-12 (`f86178e3`); `WAVE_EXECUTION_PIPELINE.md` §13 states the same rule and the two
+must not drift. Everything that changes a *status* goes through the script.
 
 ### Severity tiers — what each actually blocks
 

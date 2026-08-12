@@ -192,9 +192,11 @@ flowchart LR
     G11 -->|"open ∧ blocking severity"| BL["state=blocked<br/>self-promotes to P1"]
     BL --> AGG["paper_aggregate_state → RED"]
     AGG --> HM["BUNDLE_READINESS_HEATMAP.md"]
-    LED["review_finding_supersessions.json<br/>append-only"] -->|"status override<br/>+ blocking-closure bar"| EX
+    CF["scripts/close_finding.py<br/>the only supported writer"] -->|append| LED
+    LED["review_finding_supersessions.json<br/>append-only"] -->|"status override<br/>+ closure bar, every severity"| EX
+    RFN -->|extract_blocked_by_edges| BE["BLOCKED_BY → finding:Y"]
 
-    D1(["⚠ dropped: no inferred<br/>paper OR bundle"]):::drop
+    D1(["⚠ no inferred paper OR bundle:<br/>reaches no per-bundle ratchet.<br/>COUNTED if blocking; still<br/>dropped if minor/advisory"]):::drop
     D2(["⚠ dropped: FLAGS target<br/>not in node_ids — silent"]):::drop
     D3(["⚠ dropped: heading outside<br/>the regex → no findings"]):::drop
     EX -.-> D1 & D3
@@ -205,8 +207,14 @@ flowchart LR
 
 **Silent-drop points**, ranked by observed damage:
 
-1. A finding with neither `inferred_paper` nor `inferred_bundle` is dropped from bundle
-   aggregation.
+1. A finding with neither `inferred_paper` nor `inferred_bundle` reaches no bundle's ratchet.
+   ⚠️ **At a blocking severity it is no longer silent.** ADR-012 P5 counts that population
+   against `UNATTRIBUTED_OPEN_BLOCKING_CEILING`, a second leg of
+   `bundle_stage13_claim_consistent`, so growth in the unattributed blocking set fails a check
+   instead of vanishing between the per-bundle ceilings. Two things did **not** change: the
+   attribution gap itself — the finding still reaches no *bundle* — and the `minor`/`advisory`
+   population, which carries neither key and is counted by nothing. What changed is that being
+   unattributable stopped being a way out of the ratchet **for the severities that block**.
 2. `_emit` is a **no-op when the FLAGS target is absent** from `node_ids` — no log. This
    produced a bundle false-green.
 3. Ambiguous paper-key prefix → all edges skipped (info-level log only).
@@ -218,6 +226,36 @@ flowchart LR
 
 **`FixPropagation` is the only evaluator that reads FLAGS.** Every other gate is blind to
 review findings.
+
+**A `BLOCKED_BY` that names nothing is COUNTED, at a ceiling of zero.** The routing edge added
+by ADR-012 P4 does not silently drop an unresolvable target, an unknown release scheme, or a
+known scheme with an empty value (`run:`); `review_severity_declared` fails on any of them.
+Dropping one would render a blocked finding as dispatchable — work handed to an agent that
+cannot possibly finish it — which is the same failure shape as drop point (2).
+
+⚠️ **It is a check, not an exception, and that was a deliberate reversal.** `_blocked_by_edges`
+first *raised*. The raise propagated out of both edge-assembly sites and so out of
+`build_graph_json()`, so one hand-typed id in reviewer markdown would have taken down the graph,
+the atlas, `graph_integrity`, gate extraction and the dashboard together — including the checks
+that would diagnose it — and these values are typed by LLM reviewers, from the same population
+that produced the dangling ledger records. Loud detection, bounded blast radius: the ceiling is
+**zero**, not a ratcheted baseline, because this population starts empty and every entry in it
+is new.
+
+**The ledger has a writer.** `docs/review_finding_supersessions.json` is the only channel that
+can close a finding, and until ADR-012 P6 every record in it was hand-typed;
+`scripts/close_finding.py` is now the supported writer. It mints ids with the extractor's own
+`mint_finding_id` — a second minter would reproduce, by construction, the orphaned-record class
+that motivated it — it refuses rather than appends when a record already exists with a different
+status, because the reader is **last-wins and does not say so**, and it refuses a same-status
+record that does not meet the closure bar, because "already fixed" over a record that closes
+nothing reports success while the finding stays open.
+
+⚠️ **Hand edits remain possible and are only partly caught.** `ledger_ids_resolve` sees a
+record whose `finding_id` matches no minted node, in the `review:` scheme, above its ratchet —
+and now also a record with no `finding_id` at all. A hand edit carrying a *valid* id and a
+fabricated status passes it. The three real mis-keys were caught by a reviewer READING them,
+which is not yet a test.
 
 ### The dialect question — narrow, and the live risk is a NEW form
 
