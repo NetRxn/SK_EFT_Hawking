@@ -13487,84 +13487,63 @@ def fig_i1_gap_counterexample() -> "go.Figure":
 
 
 def fig_i1_chirality_wall_tree() -> "go.Figure":
-    """I1-FIG-6 — Chirality-wall axiom decomposition tree.
+    """I1-FIG-6 — Chirality-wall exclusion, as the module actually decomposes it.
 
-    Treemap representation: root (sm_no_nu_R_ewbg_doubly_forbidden) →
-    2 obstructions (Z₁₆ chirality wall + crossover) → 3 sub-lemmas each →
-    9 leaves total. Each leaf is annotated with "≤12 terms (Aristotle batch)".
+    Every node is a declaration of `SKEFTHawking.EWBaryogenesisChiralityWall`
+    and every edge is a real dependency of that declaration, read from
+    `lean_deps.json`. The figure asserts no prover outcome: this module has no
+    Aristotle run, and the theorems below were proved against a live goal state.
     """
-    # ⚠️ 2026-08-11 (ARCHITECTURE_TODOs D49): this tree was originally
-    # REVERSE-ENGINEERED from the §5 prose so the prose's "nine" would come
-    # out, and was then cited back as evidence for it. Circular. There is no
-    # Aristotle run for this module and none can be — the run registry's last
-    # entry predates the module by three weeks. Labels now name real module
-    # declarations and assert no prover outcome. Derive from the module, never
-    # from the prose about the module. (anomaly / fermion-content / wall-form),
-    # each pillar having one sub-lemma → 3, plus three crossover-side
-    # sub-lemmas → 6 total under Z16 + 3 under Crossover = 9 leaves.
+    # ⚠️ 2026-08-11 (ARCHITECTURE_TODOs D49, reopened by the Stage-13 pass):
+    # the previous tree was REVERSE-ENGINEERED from the §5 prose so the prose's
+    # "nine" would come out, then cited back as evidence for it. D49's repair
+    # was written into this comment and NOT into the code below it — the labels
+    # stayed "Pillar A"/"Sublemma A.1" (invented; no such declarations) and
+    # `values` still encoded the nine-leaf skeleton. Same defect as D10/D15/D36:
+    # the fix landed at the site the finding named, not at the site carrying the
+    # claim. Now derived from the module's own dependency edges.
     labels = [
-        # root
         "sm_no_nu_R_ewbg_doubly_forbidden",
-        # obstructions
-        "Z₁₆ chirality wall",
-        "Crossover (sphaleron suppression)",
-        # Three pillars under Z16
-        "Pillar A — anomaly",
-        "Pillar B — fermion content",
-        "Pillar C — wall form",
-        # Z16 sub-lemmas (one per pillar)
-        "Sublemma A.1<br>(z16-anomaly orthogonality)",
-        "Sublemma B.1<br>(no-νR ⇒ Pillar B intact)",
-        "Sublemma C.1<br>(wall-form ⇒ EWBG forbidden)",
-        # Crossover sub-lemmas
-        "Sublemma 2.1<br>(sphaleronSuppression ∈ [0,1])",
-        "Sublemma 2.2<br>(¬viable ⇒ EWBG forbidden)",
-        "Sublemma 2.3<br>(wall ∨ ¬viable ⇒ EWBG forbidden)",
+        # the two arms the root conjoins, one per fermion content
+        "sm_no_nu_R_ewbg_blocked",
+        "sm_with_3nu_R_ewbg_forbidden_under_klrs",
+        # what each arm consumes
+        "ewbg_forbidden_if_wall_intact",
+        "sm_no_nu_R_wall_intact",
+        "ewbg_forbidden_if_transition_crossover",
+        "H_KLRS_SM_Crossover",
     ]
     parents = [
         "",
         "sm_no_nu_R_ewbg_doubly_forbidden",
         "sm_no_nu_R_ewbg_doubly_forbidden",
-        "Z₁₆ chirality wall",
-        "Z₁₆ chirality wall",
-        "Z₁₆ chirality wall",
-        "Pillar A — anomaly",
-        "Pillar B — fermion content",
-        "Pillar C — wall form",
-        "Crossover (sphaleron suppression)",
-        "Crossover (sphaleron suppression)",
-        "Crossover (sphaleron suppression)",
+        "sm_no_nu_R_ewbg_blocked",
+        "sm_no_nu_R_ewbg_blocked",
+        "sm_with_3nu_R_ewbg_forbidden_under_klrs",
+        "sm_with_3nu_R_ewbg_forbidden_under_klrs",
     ]
-    # branchvalues='total': root = sum of leaves = 6 + 3 = 9.
-    # Each Z16 pillar is an internal node containing one leaf (=1).
-    # Z16 obstruction = 3 (sum of 3 pillars × 1 leaf each).
-    # Crossover obstruction = 3 (3 leaves).
-    values = [9, 6, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    # branchvalues='total': each arm carries its own two dependencies, so the
+    # root is 4 and each arm is 2. The number is the count of consumed
+    # declarations, not a claim about proof effort.
+    values = [4, 2, 2, 1, 1, 1, 1]
 
-    # Custom hover/text per node
     customdata = [
-        "<b>sm_no_nu_R_ewbg_doubly_forbidden</b><br>conjunction over two fermion contents",
-        "Obstruction-A:<br>chiral-wall integrity",
-        "Obstruction-B:<br>sphaleron-rate suppression",
-        "Pillar A: anomaly (TPE)",
-        "Pillar B: fermion content",
-        "Pillar C: wall form",
-        "named module lemma<br>≤ 11 tactic lines",
-        "named module lemma<br>≤ 11 tactic lines",
-        "named module lemma<br>≤ 11 tactic lines",
-        "named module lemma<br>≤ 11 tactic lines",
-        "named module lemma<br>≤ 11 tactic lines",
-        "named module lemma<br>≤ 11 tactic lines",
+        "root conjunction over two fermion contents",
+        "no right-handed neutrinos:<br>wall intact ⇒ EWBG blocked",
+        "three right-handed neutrinos:<br>forbidden under the KLRS crossover",
+        "theorem: wall intact ⇒ EWBG forbidden",
+        "theorem: the no-νR content leaves the wall intact",
+        "theorem: crossover transition ⇒ EWBG forbidden",
+        "definition: the KLRS Standard-Model crossover hypothesis",
     ]
 
-    # Color palette: root carmine, obstructions amber, pillars sage,
-    # leaves steel_blue (the sub-lemmas Aristotle actually proved).
+    # Root carmine, the two arms amber, the declarations they consume
+    # steel_blue, and the one definition among them sage.
     colors = [
         COLORS["carmine"],
         COLORS["amber"], COLORS["amber"],
-        COLORS["sage"], COLORS["sage"], COLORS["sage"],
         COLORS["steel_blue"], COLORS["steel_blue"], COLORS["steel_blue"],
-        COLORS["steel_blue"], COLORS["steel_blue"], COLORS["steel_blue"],
+        COLORS["sage"],
     ]
 
     fig = go.Figure(go.Treemap(
@@ -13585,9 +13564,9 @@ def fig_i1_chirality_wall_tree() -> "go.Figure":
         title=dict(
             text=(
                 "<b>Chirality-wall exclusion: decomposition tree</b><br>"
-                "<sub>Root conjunction over two fermion contents, split into two "
-                "independent obstructions, each resolving into named module "
-                "lemmas</sub>"
+                "<sub>Every node is a declaration of "
+                "EWBaryogenesisChiralityWall and every edge a dependency it "
+                "actually has; no prover outcome is asserted</sub>"
             ),
             x=0.5, xanchor="center", font=TITLE_FONT,
         ),

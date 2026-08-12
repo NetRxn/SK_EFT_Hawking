@@ -661,7 +661,10 @@ def check_accepted_findings_carry_rationale() -> CheckResult:
 #: Zero-headroom ratchet: unresolvable theorem/axiom/lemma chain links, measured 2026-08-07
 #: with `canonicalize_link`. Matches `chain_canonicalize.py --report`'s independent figure.
 #: May only be LOWERED.
-UNRESOLVED_CHAIN_LINK_CEILING = 121
+#: 2026-08-11: 121 -> 109. I1's Stage-10 re-review replaced its `claims_review.json`,
+#: and the rewritten records resolve twelve links the previous pass left dangling.
+#: Repayment, not a predicate change.
+UNRESOLVED_CHAIN_LINK_CEILING = 109
 
 _LEAN_LINK_KINDS = frozenset({"theorem", "axiom", "lemma"})
 

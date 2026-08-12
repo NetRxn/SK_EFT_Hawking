@@ -53,16 +53,18 @@ Topological Quantum Field Theory}
 
 \begin{abstract}
 The most informative outputs of a machine-checked physics programme are
-its failures. We report three formalization episodes in which an
-automated prover's refusal, rather than its success, carried the
-result: a returned counterexample localized a defective hypothesis to
-the five field components its specification never named; a second
-refuted an expectation that a condensate gap stays below its cutoff,
-and in doing so yielded a closed-form ceiling on the coupling range in
-which the model is valid at all; and decomposing a large exclusion into
-structural sub-lemmas forced a physics assumption that no assumption
-registry recorded into the open, where it was discharged as two
-theorems rather than admitted as an axiom. A fourth result concerns the
+its failures. We report three formalization episodes in which failure,
+rather than success, carried the result. In two of them the work was
+done by an automated prover's refusal: a returned counterexample
+localized a defective hypothesis to the five field components its
+specification never named, and a second refuted an expectation that a
+condensate gap stays below its cutoff, in doing so yielding a
+closed-form ceiling on the coupling range in which the model is valid
+at all. In the third no prover was involved: decomposing a large
+exclusion into structural sub-lemmas forced a physics assumption that
+no assumption registry recorded into the open, where it was removed by
+keeping the quantity a free parameter of every statement rather than
+admitted as an axiom. A fourth result concerns the
 verification apparatus itself: a citation can be metadata-valid, with
 a resolving identifier, a cached primary source and correct
 bibliographic data, while the claim the prose attributes to it is unsupported by
@@ -127,7 +129,7 @@ Lean-based physics infrastructure
 proof-assistance side include large-language-model copilots for
 Lean theorem proving~\cite{leancipilot} and recent
 silver-medal IMO results from automated proving~\cite{alphaproof}.
-Our pipeline has fourteen stages and fifteen invariants, integrates
+Our pipeline has fourteen stages and seventeen invariants, integrates
 three orthogonal verification layers, and produces
 machine-checkable artifacts at each stage. We have applied it to
 a research program spanning \papercount{}
@@ -231,12 +233,17 @@ exposes a numerical regularity; the regularity is stated as a Lean
 theorem with sorry; the theorem is closed by Aristotle in a
 priority batch; the closure feeds back into Python by setting the
 Aristotle run identifier in the formula docstring, which is then
-checked by the validation suite (Section~\ref{sec:pipeline}). The
-critical-coupling theorem $G_c = 8\pi^2/(N_f \Lambda^2)$ for the
-chirality-wall mechanism completed all three layers in a single
-session: derived in Python, stated in Lean, closed by Aristotle in
-run \texttt{79e07d55}, and checked by validation, all within
-twenty-four hours.
+checked by the validation suite (Section~\ref{sec:pipeline}). The gap
+equation for tetrad condensation ran this cycle end to end. Its
+critical coupling $G_c = 8\pi^2/(N_f \Lambda^2)$ was derived in Python
+and proved in Lean within the project
+(\texttt{criticalCoupling\_formula}, tied to the Coleman--Weinberg
+effective potential of the emergent-gravity module by
+\texttt{criticalCoupling\_eq\_adw}), and the nine theorems fixing the
+equation's solution structure around that coupling were closed by
+Aristotle in run~\texttt{79e07d55}, whose identifier the Python
+docstrings then carry for validation to check
+(Section~\ref{sec:case2}).
 
 The composition is asymmetric in a way that matters. Layer~1 alone
 gives reproducibility but not correctness: notebooks can produce
@@ -610,10 +617,19 @@ Writing $G_c = 1/(N_f\,I(0)) = 8\pi^2/(N_f\Lambda^2)$
 is the only solution below $G_c$
 (\texttt{gap\_trivial\_unique\_subcritical}), a positive fixed point
 exists above it (\texttt{gap\_nontrivial\_exists}, by the intermediate
-value theorem applied to $g(\Delta) = G N_f I(\Delta) - 1$), and the
-bifurcation is a pitchfork at $G = G_c$ (\texttt{bifurcation\_at\_Gc}).
-Nine theorems of this module, including all of the above, closed in
-Aristotle run~\texttt{79e07d55}.
+value theorem applied to $g(\Delta) = G N_f I(\Delta) - 1$), and at
+$G = G_c$ the reduced gap function still vanishes at $\Delta = 0$
+(\texttt{bifurcation\_at\_Gc}), so the trivial branch persists through
+the transition. That last statement is weaker than the word
+bifurcation suggests, and weaker than the module's own summary comment
+claims: no pitchfork is proved, and the exchange of stability is read
+off the two theorems either side of it rather than established
+directly. Nine theorems of this module closed in Aristotle
+run~\texttt{79e07d55}, among them
+\texttt{gap\_trivial\_unique\_subcritical} and
+\texttt{gap\_nontrivial\_exists}. \texttt{criticalCoupling\_formula}
+and \texttt{bifurcation\_at\_Gc} were not among them; both were proved
+inside the project against a live goal state.
 
 A tenth was submitted with them. Above the critical coupling the gap is
 a low-energy parameter of an effective description valid up to
@@ -773,6 +789,19 @@ out to have a closed form that bounds the model's regime of validity
 from above. None of that required knowing in advance that the
 conjecture was false.
 
+The refutation has not yet propagated back to the numerics, and saying
+so is part of the point. The project's own solver
+\texttt{tetrad\_gap\_solution} still iterates to a fixed point that
+does not satisfy Eq.~(\ref{eq:gapeq}) above the saturation coupling,
+returning a value with a large positive residual rather than reporting
+that no solution exists there. The formal layer knows the bound and the
+Python layer does not, which is the drift the three-layer architecture
+exists to prevent, in the direction it is weakest at catching: a
+theorem constrains what may be claimed, not what a function returns.
+The defect is filed against the substrate rather than repaired here,
+because the repair belongs with the solver and its tests, not with the
+manuscript that reports it.
+
 \section{Worked Case~3: The Chirality-Wall Axiom Decomposition}
 \label{sec:case3}
 
@@ -904,14 +933,19 @@ the phase-transition condition alone; and the quantitative anchor
 conjunction over two fermion contents whose unfolded form spans two
 $\mathbb{Z}_{16}$ decision problems, two copies of the
 phase-transition condition, and the four bundled positivity fields of
-\texttt{EWFiniteTParams}. It splits into two independent obstructions
-(amber): an intact chirality wall at anomaly $45$, which excludes
-baryogenesis for any transition order, and a crossover transition at
-anomaly $48$, which excludes it for any wall state. Each branch
-resolves into named module lemmas (steel blue), none of whose proof
-bodies exceeds eleven tactic lines. The biconditional
-\texttt{ewbg\_forbidden\_iff\_wall\_intact\_or\_not\_viable} is the
-leaf that made the sphaleron-rate dependency visible.}
+\texttt{EWFiniteTParams}. It splits into the two arms it conjoins
+(amber), one per fermion content: the no-$\nu_R$ arm, excluded by an
+intact chirality wall at anomaly $45$ for any transition order, and the
+three-$\nu_R$ arm, excluded by a crossover transition at anomaly $48$
+for any wall state. Beneath each arm are the declarations that arm
+actually consumes (steel blue, with the crossover hypothesis in sage),
+none of whose proof bodies exceeds eleven tactic lines. Every node is a
+declaration of the module and every edge a dependency it has; no
+prover outcome is asserted, and this module has no Aristotle run. The
+biconditional
+\texttt{ewbg\_forbidden\_iff\_wall\_intact\_or\_not\_viable}, discussed
+below, is a sibling of these arms rather than a node beneath them: it
+is what made the sphaleron-rate dependency visible.}
 \label{fig:chirality_wall_tree}
 \end{figure}
 
@@ -950,8 +984,19 @@ experimental-parameter table and never inside a theorem. Consistent
 with that resolution, no sphaleron-rate hypothesis appears today in
 \texttt{AXIOM\_METADATA}, in \texttt{PLACEHOLDER\_THEOREMS}, in
 \texttt{HYPOTHESIS\_REGISTRY} or in \texttt{BORDISM\_HYPOTHESES}: there
-is nothing left to record, because the assumption became two theorems.
-The module ships zero new axioms.
+is nothing left to record, because no statement in the module depends
+on the rate. The module ships zero new axioms.
+
+One qualification belongs here, because it is the distinction this
+paper is about. The two bounds are proved, but nothing in the project
+consumes either: no declaration lists them among its dependencies.
+They document why a strictly positive factor bounded by unity cannot
+open a failure channel; they are not lemmas the root theorem invokes.
+What actually removes the dependency is the threshold remaining a free
+real parameter. A proved theorem that nothing consumes records an
+argument rather than carrying one, and the audit's own value here was
+in forcing the assumption into view, not in the two bounds it left
+behind.
 
 The general point is that an implicit dependency is invisible in
 proportion to the size of the statement that hides it. A monolithic
@@ -1096,9 +1141,10 @@ Stage~7 runs the automated cross-layer validation suite
 (enumerated live by \texttt{validate.py --list}; the count is
 deliberately not quoted here, because a census figure written into
 prose is stale the moment a check is added: this sentence
-read ``thirty-three'' against a live seventy-nine)
+read ``thirty-three'' until an audit found the live figure had
+more than doubled)
 spanning formula--theorem correspondence, parameter provenance,
-count freshness, citation integrity, and bundle consistency
+numerical freshness, citation integrity, and bundle consistency
 (Sections~\ref{sec:provenance} and~\ref{sec:adversarial}).
 Stage~8 generates publication-
 quality figures. Stage~9 runs a figure-reviewer agent. Stage~10
@@ -1477,9 +1523,11 @@ registry in \texttt{src/core/constants.py}, which holds
 \aristotleproved{} entries against \aristotleruns{} distinct
 identifiers. This section describes the registry, the submission and
 re-incorporation protocol, and the operational asymmetry that keeps
-the prover in the fallback position. The three episodes in which a
+the prover in the fallback position. The two episodes in which a
 prover outcome carried the physics are worked through separately in
-Sections~\ref{sec:case1}--\ref{sec:case3}.
+Sections~\ref{sec:case1} and~\ref{sec:case2};
+Section~\ref{sec:case3}, which involved no prover run, is what the
+fallback position looks like when the interactive loop suffices.
 
 The division of labour was not the original one. In the earlier
 arrangement the prover was the default proof-construction tool: a
@@ -1577,7 +1625,7 @@ whole-file arrangement with manual diff review and, where two runs
 overlapped on one file, per-theorem cherry-picking. Every declaration
 named in this section is live in the module named beside it.
 
-The prover's sandbox runs a Lean toolchain one minor version behind
+The prover's sandbox runs a Lean toolchain four minor versions behind
 the project's \texttt{\leantoolchain}, and the project does not
 down-port its own sources to close that gap. A maintained
 backward-compatible copy of the substrate would be a second source of
@@ -2363,12 +2411,31 @@ risk is not hypothetical in this development. The conclusion
 composition is defined as positivity of the focal parameter, so the
 mathematical weight of that chain sits in the comparison bound and in
 the strict negativity of the expansion on the focal window, not in
-the word incompleteness. Three controls keep the risk bounded. Every
+the word incompleteness. Three controls are meant to bound the risk: a
 predicate whose definition is the trivially true proposition is
 registered in \texttt{PLACEHOLDER\_THEOREMS}
 (\texttt{src/core/constants.py}) with the claim it stands for and what
-a real proof would require; no such name is counted in a theorem
-total; and no such name is cited in a paper as a result. Against
+a real proof would require; a registered name is excluded from theorem
+totals; and a registered name is not cited in a paper as a result.
+The first of those is a hand-maintained registry rather than a
+derivation, and on inspection it does not have the coverage the other
+two controls assume. Six definitions in the substrate unfold to the
+trivially true proposition: \texttt{IsLocallyWellPosed},
+\texttt{IsStationaryAxisymmetricVacuumBH}, and two pairs named
+\texttt{hasCTPStructure} and \texttt{hasHermiticity} in the
+Schwinger--Keldysh axiom modules. None of the six is registered, and
+the registry's entries are a different family of names. Two
+consequences follow directly. Markers concluding with these predicates
+sit inside the substantive theorem count rather than outside it, and
+the check meant to enforce the third control reads the registry, so it
+cannot see them either. The last pair is the one worth flagging: they
+are fields of the six-condition skeleton \texttt{SKEFTAxioms} that
+Section~\ref{sec:case1} works through, so two of that structure's six
+conditions constrain nothing. We state the gap rather than the intent,
+because a control assumed complete is worth less than one whose
+coverage is known; closing it means deriving the registry from the
+definitions instead of maintaining it by hand.
+Against
 those costs, local reimplementation carries an unbounded one. A
 partial reimplementation that downstream theorems already consume
 rots asymmetrically once the library ships the real thing, because
@@ -2398,10 +2465,14 @@ not a methodology preference.} Each of the four failure modes we
 opened with (a numerical claim that traces to a non-existent
 code path, a ``formally verified'' claim whose theorem is a
 placeholder, a citation that resolves to the wrong paper, a
-parameter that has drifted from its primary source) would
-have shipped to draft state under the pre-pipeline workflow. Each
-was caught, in this project, by the pipeline's continuous
-checks before it could be cited downstream. The cost of running
+parameter that has drifted from its primary source) did ship to
+draft state in this project, and none was caught by the continuous
+checks. Each was found at adversarial review, the last stage before
+submission, which is late but still upstream of citation. That is the
+honest version of the claim, and it is the one that sets the agenda:
+the checks a stage runs continuously are cheaper than the review that
+caught these, so the work is to move findings of this kind earlier.
+The cost of running
 the checks is on the order of seconds per stage; the cost of
 finding and fixing a propagated error after publication is on the
 order of weeks per finding, in the best case.
@@ -2492,6 +2563,15 @@ arXiv:hep-ph/0402234.
 \bibitem{KobayashiNomizu1963} S.~Kobayashi and K.~Nomizu,
 \emph{Foundations of Differential Geometry, Vol.~I}
 (Interscience Publishers, New York, 1963).
+
+\bibitem{FouresBruhat1952} Y.~Foures-Bruhat, ``Th\'eor\`eme
+d'existence pour certains syst\`emes d'\'equations aux d\'eriv\'ees
+partielles non lin\'eaires,'' \emph{Acta Math.}\ \textbf{88} (1952)
+141--225, doi:10.1007/BF02392131.
+
+\bibitem{FriedrichRendall2000} H.~Friedrich and A.~D.~Rendall, ``The
+Cauchy problem for the Einstein equations,'' \emph{Lect.\ Notes
+Phys.}\ \textbf{540} (2000) 127--224, arXiv:gr-qc/0002074.
 
 \end{thebibliography}
 
