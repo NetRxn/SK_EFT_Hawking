@@ -1119,7 +1119,8 @@ _REF_RE = re.compile(r"\\(?:eq|c|C)?ref\{([^}]+)\}")
 
 @register_check(
     "bundle_cross_references_resolve",
-    "Every \\ref in a bundle draft has a matching \\label somewhere in its input closure")
+    "Every \\ref in a draft has a matching \\label in its input closure "
+    "(bundles at zero; legacy corpus ratcheted)")
 def check_bundle_cross_references_resolve() -> CheckResult:
     """CHECK: a `\\ref` with no `\\label` renders as a literal `??` to the reader.
 
@@ -1218,8 +1219,72 @@ def check_bundle_cross_references_resolve() -> CheckResult:
             f"draft's input closure, so each renders as `??` to a reader: "
             f"{', '.join(missing)}. Repoint to the live label or add the missing one"))
 
+    # ── The legacy corpus, ratcheted (2026-08-12) ────────────────────────────────────
+    # ⚠️ THIS CHECK HAD THE DEFECT IT WAS WRITTEN TO CATCH, one corpus over. It iterated
+    # bundle codes only — the same scoping error whose repair is recorded in
+    # `LEGACY_DRAFT_LATEX_BROKEN_CEILING`'s own comment: *"`paper_latex_compiles`
+    # previously iterated BUNDLE_CODES only, so the legacy corpus was never compiled by
+    # it."* Measured on the same tree that reported 21/21 bundles clean here,
+    # `compile_bundle_pdf.py --all` rendered a literal `??` in a legacy draft.
+    #
+    # Bundles stay at ZERO (a `??` must never reach a referee); the legacy corpus is
+    # frozen inherited debt that may only shrink, exactly as the compile gate treats it.
+    legacy_dangling: dict[str, list[str]] = {}
+    legacy_scanned = 0
+    dirs_seen = 0
+    try:
+        _bundle_set = set(codes)
+        for d in sorted(_H.PAPERS_DIR.iterdir()):
+            if d.is_dir():
+                dirs_seen += 1
+            tex = d / "paper_draft.tex"
+            if not d.is_dir() or d.name in _bundle_set or not tex.is_file():
+                continue
+            try:
+                labels = set()
+                for f in _H.draft_input_closure(tex):
+                    if f.suffix.lower() in {".tex", ".sty", ""} and f.is_file():
+                        labels |= set(_LABEL_RE.findall(f.read_text(errors="replace")))
+                body = tex.read_text(errors="replace")
+                labels |= set(_LABEL_RE.findall(body))
+                refs = _REF_RE.findall(body)
+            except OSError:
+                continue
+            legacy_scanned += 1
+            missing = sorted({r for r in refs if r not in labels})
+            if missing:
+                legacy_dangling[d.name] = missing
+    except OSError:
+        pass
+
+    from src.core.constants import LEGACY_DRAFT_DANGLING_REF_CEILING as _LEG_REF_CEIL
+    legacy_over = len(legacy_dangling) > _LEG_REF_CEIL
+    if not dirs_seen:
+        # Seam guard, on the only genuinely unmeasurable case. ⚠️ `legacy_scanned == 0` is
+        # NOT it: a corpus of bundles and nothing else is a real, clean zero, and failing
+        # on that would fire the check on correct work. What cannot be measured is a
+        # `papers/` that yielded no directory at all — an unreadable or absent tree.
+        details.append(Detail(
+            "legacy_seam", False,
+            f"no directory under {_H.PAPERS_DIR} was readable, so the legacy corpus was "
+            f"never walked — UNVERIFIED, not clean"))
+    else:
+        details.append(Detail(
+            "legacy_ratchet", not legacy_over,
+            f"{len(legacy_dangling)} of {legacy_scanned} legacy draft(s) carry a dangling "
+            f"\\ref, ceiling {_LEG_REF_CEIL}"
+            + (f" — ABOVE CEILING: "
+               f"{', '.join(f'{k} ({len(v)})' for k, v in sorted(legacy_dangling.items()))}. "
+               f"Fix the reference; do not raise the ceiling."
+               if legacy_over else
+               (f" (inherited debt, repair is ADR-010 scope): "
+                f"{', '.join(sorted(legacy_dangling))}" if legacy_dangling else "")),
+            warning=bool(legacy_dangling) and not legacy_over))
+
+    _failed = bool(dangling) or legacy_over or not dirs_seen
     details.append(Detail(
-        "summary", not dangling,
+        "summary", not _failed,
         f"{scanned} bundle draft(s) scanned, {total_refs} reference site(s), "
-        f"{sum(len(v) for v in dangling.values())} unresolved (target 0)"))
-    return CheckResult(passed=not dangling, details=details)
+        f"{sum(len(v) for v in dangling.values())} unresolved (target 0); "
+        f"plus {legacy_scanned} legacy draft(s) at ceiling {_LEG_REF_CEIL}"))
+    return CheckResult(passed=not _failed, details=details)

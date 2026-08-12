@@ -69,7 +69,7 @@
 61 & \texttt{paper\_latex\_compiles} & Every papers/*/paper\_draft.tex compiles under pdflatex --- bundles HARD-FAIL, legacy drafts ratchet; per-draft content-hash cache (--force-latex recompiles all) \\
 62 & \texttt{axiom\_count\_prose\_consistency} & Paper prose axiom-count claims agree with docs/counts.json \\
 63 & \texttt{paper\_toolchain\_pin\_drift} & Advisory (Class TP): paper-draft toolchain/Mathlib pins match lean-toolchain + lakefile.toml \\
-64 & \texttt{bundle\_cross\_references\_resolve} & Every \texttt{\textbackslash ref} in a bundle draft has a matching \texttt{\textbackslash label} somewhere in its input closure \\
+64 & \texttt{bundle\_cross\_references\_resolve} & Every \texttt{\textbackslash ref} in a draft has a matching \texttt{\textbackslash label} in its input closure (bundles at zero; legacy corpus ratcheted) \\
 65 & \texttt{numerical} & Experimental parameters match reference values \\
 66 & \texttt{identities} & Mathematical identities and boundary conditions hold \\
 67 & \texttt{paper\_table} & Paper 1's SHIPPED Table 1 cells match the canonical solver output \\

@@ -418,6 +418,51 @@ class TestBundleCrossReferencesResolve:
         r = pp.check_bundle_cross_references_resolve()
         assert not r.passed and not r.measured
 
+    def test_the_LEGACY_ratchet_has_zero_headroom(self):
+        """⚠️ THIS CHECK SHIPPED WITH THE DEFECT IT CATCHES, one corpus over: it iterated
+        BUNDLE codes only, which is the same scoping error `paper_latex_compiles` had
+        before its own legacy widening. It reported 21/21 clean on a tree where
+        `compile_bundle_pdf.py --all` rendered a literal `??` in a legacy draft.
+
+        Measured against the LIVE corpus, so the population cannot be a fixture's.
+        """
+        from src.core.constants import LEGACY_DRAFT_DANGLING_REF_CEILING
+        r = pp.check_bundle_cross_references_resolve()
+        leg = next(d for d in r.details if d.name == "legacy_ratchet")
+        m = re.search(r"^(\d+) of (\d+) legacy draft", leg.message)
+        assert m, f"the legacy leg stopped reporting its population: {leg.message}"
+        live, scanned = int(m.group(1)), int(m.group(2))
+        assert live == LEGACY_DRAFT_DANGLING_REF_CEILING, (
+            f"{live} legacy draft(s) carry a dangling ref against a ceiling of "
+            f"{LEGACY_DRAFT_DANGLING_REF_CEILING} — headroom makes a ratchet unfireable. "
+            f"If the population SHRANK, lower the ceiling in the commit that shrank it")
+        assert scanned > len(pp._H.bundle_codes_or_unmeasured()[0] or ()), (
+            "the legacy walk reached no more drafts than there are bundles — it is "
+            "scanning the bundle corpus again, not the legacy one")
+
+    def test_a_bundles_only_corpus_is_a_REAL_zero_not_a_seam_failure(
+            self, tmp_path, monkeypatch):
+        """A `papers/` holding only bundles has an empty legacy corpus, and that is a
+        measurement, not a failure to measure. Failing it would fire the check on correct
+        work, which is how a gate gets switched off."""
+        self._bundle(tmp_path, monkeypatch, "\\label{sec:a}\nSee \\ref{sec:a}.\n")
+        r = pp.check_bundle_cross_references_resolve()
+        assert r.passed, [d.message for d in r.details if not d.passed]
+        assert not any(d.name == "legacy_seam" for d in r.details)
+
+    def test_a_dangling_ref_in_a_LEGACY_draft_is_caught(self, tmp_path, monkeypatch):
+        """SEEDED IN THE SHAPE OF THE REAL DEFECT: the draft is not a bundle, so the
+        pre-2026-08-12 check could not see it at all."""
+        self._bundle(tmp_path, monkeypatch, "\\label{sec:a}\nSee \\ref{sec:a}.\n")
+        legacy = pp._H.PAPERS_DIR / "paper99_legacy"
+        legacy.mkdir(parents=True)
+        (legacy / "paper_draft.tex").write_text(
+            "\\label{sec:x}\nSee \\ref{sec:vanished}.\n")
+        monkeypatch.setattr("src.core.constants.LEGACY_DRAFT_DANGLING_REF_CEILING", 0)
+        r = pp.check_bundle_cross_references_resolve()
+        assert not r.passed
+        assert any("paper99_legacy" in d.message for d in r.details if not d.passed)
+
     def test_the_ratchet_has_zero_headroom(self):
         """Target is 0 unresolved; any regression fails on the next run."""
         r = pp.check_bundle_cross_references_resolve()

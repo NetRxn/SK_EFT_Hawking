@@ -114,7 +114,7 @@ checks read. See `validate._CANONICAL_ORDER`.
 | 69 | `bundle_native_decide_debt` | `bundles_readiness` | Every bundle's native_decide debt is disclosed in its draft and does not grow (ADR-002 ratchet, per-bundle) |
 | 70 | `bundle_todo_free_before_green` | `bundles_readiness` | No bundle carrying an unresolved work marker records a Stage-13 green |
 | 71 | `bundle_counts_fresh` | `freshness` | papers/<CODE>/bundle_counts.tex matches a fresh derivation from the bundle's apex closure |
-| 72 | `bundle_cross_references_resolve` | `papers_prose` | Every \ref in a bundle draft has a matching \label somewhere in its input closure |
+| 72 | `bundle_cross_references_resolve` | `papers_prose` | Every \ref in a draft has a matching \label in its input closure (bundles at zero; legacy corpus ratcheted) |
 | 73 | `paper_latex_compiles` | `papers_prose` | Every papers/*/paper_draft.tex compiles under pdflatex — bundles HARD-FAIL, legacy drafts ratchet; per-draft content-hash cache (--force-latex recompiles all) |
 | 74 | `axiom_count_prose_consistency` | `papers_prose` | Paper prose axiom-count claims agree with docs/counts.json |
 | 75 | `prose_theorem_reference_coverage` | `prose_lean_refs` | Bundle-draft Lean references in any verbatim form (texttt, a preamble alias for it, verb, or a TeX `name' quote) resolve in lean_deps.json |

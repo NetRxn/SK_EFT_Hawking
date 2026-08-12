@@ -1464,6 +1464,19 @@ PROVENANCE_UNRESOLVABLE_CEILING = 163
 #: broken legacy draft FAILS; raising this needs a stated reason in the same commit.
 LEGACY_DRAFT_LATEX_BROKEN_CEILING = 14
 
+#: Legacy (non-bundle) drafts carrying a `\ref` whose `\label` exists nowhere in the
+#: draft's input closure — each renders as a literal `??` to a reader.
+#: Frozen 2026-08-12 at the measured live count.
+#:
+#: `bundle_cross_references_resolve` iterated BUNDLE codes only, which is the SAME scoping
+#: error recorded three lines above for `paper_latex_compiles`: a check written to catch a
+#: reader-visible defect could not see two thirds of the corpus. It reported 21/21 bundles
+#: clean on a tree where `compile_bundle_pdf.py --all` rendered `??` in a legacy draft.
+#:
+#: A RATCHET, on the same terms as its sibling: bundles stay at ZERO because a `??` must
+#: never reach a referee; the legacy corpus is inherited debt that may only shrink.
+LEGACY_DRAFT_DANGLING_REF_CEILING = 1
+
 #: Registry bibitem titles that differ from their cached PDF's page-1 title by exactly
 #: one word (the check's HIGH-CONFIDENCE drift class). Frozen 2026-08-05 (audit QI-33).
 #:
