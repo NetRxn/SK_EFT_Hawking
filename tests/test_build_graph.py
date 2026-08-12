@@ -1211,3 +1211,48 @@ class TestRoutingFieldsAreParsedNotInvented:
         # nodes: Gate 1241/1631 = 76.1%, Location 1164/1631 = 71.4%.
         assert blocks / len(ns) > 0.70, f"blocks coverage collapsed to {blocks}/{len(ns)}"
         assert target / len(ns) > 0.65, f"target coverage collapsed to {target}/{len(ns)}"
+
+
+class TestLaneAndReleaseSchemesAreDeclaredOnce:
+    """ADR-012 D1/D2/D19 — forward-only routing fields."""
+
+    def test_the_lane_map_is_the_single_declaration(self):
+        from scripts.build_graph import _LANE_DECL_MAP
+        assert set(_LANE_DECL_MAP) == {
+            'lean', 'pyrust', 'substrate', 'prose', 'research', 'infra'}
+
+    def test_there_is_no_operator_release_scheme(self):
+        """An operator decision that gates work is itself a queue item with a node id, so
+        parking behind it is the plain `blocked_by: <id>` case. A separate token would be a
+        second decision-record channel beside the queue."""
+        from scripts.build_graph import _RELEASE_SCHEMES
+        assert _RELEASE_SCHEMES == ('run:', 'phase:', 'pub:', 'research:')
+
+    def test_an_absent_lane_reads_unclassified_not_a_failure(self):
+        from scripts.build_graph import _parse_lane
+        assert _parse_lane("- **Observed:** x\n") == 'unclassified'
+
+    def test_a_declared_lane_is_normalised_case_insensitively(self):
+        from scripts.build_graph import _parse_lane
+        assert _parse_lane("- **Lane:** Substrate\n") == 'substrate'
+        assert _parse_lane("- **lane:** `prose`\n") == 'prose'
+
+    def test_an_unknown_lane_is_preserved_verbatim_for_the_check_to_name(self):
+        """Never coerced to the nearest known lane — silently mapping `substrat` to
+        `substrate` is the defect the severity-value leg was written to close."""
+        from scripts.build_graph import _parse_lane
+        assert _parse_lane("- **Lane:** wizardry\n") == 'wizardry'
+
+    def test_blocked_by_splits_on_commas_and_strips_backticks(self):
+        from scripts.build_graph import _parse_blocked_by
+        assert _parse_blocked_by("- **Blocked-by:** `review:d:X:1`, run:mlx-2026\n") == \
+            ['review:d:X:1', 'run:mlx-2026']
+        assert _parse_blocked_by("- **Observed:** none\n") == []
+
+    def test_the_parser_is_case_insensitive_like_every_other_field_scan(self):
+        """`reviews.py`'s _SEV_LINE / _SEV_VALUE / _LANE_VALUE all carry re.I. A
+        case-sensitive parser here would let the check validate a field the extractor then
+        silently fails to read."""
+        from scripts.build_graph import _parse_finding_field
+        assert _parse_finding_field("- **gate:** CitationIntegrity\n", 'Gate') == \
+            'CitationIntegrity'

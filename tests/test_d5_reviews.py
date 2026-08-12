@@ -586,3 +586,38 @@ class TestChainBackingTargetsResolve:
             f"reviews.py defines its own resolution helpers {local} — resolution belongs to "
             f"chain_canonicalize.canonicalize_link, and a second resolver will disagree with it")
         assert "canonicalize_link" in src, "the check must call the shared resolver"
+
+
+class TestLaneEnforcementExtendsSeverityDeclared:
+    """ADR-012 D1/D2 — the lane leg rides the SAME document walk as the severity leg.
+
+    ⚠️ This file's discipline (see its header): drive the REAL check over a synthetic
+    corpus in `tmp_path` with the anchors monkeypatched. A `check_x().passed is True`
+    assertion against the live tree passes whether the check works or not.
+    """
+
+    def test_a_mappable_lane_passes(self, tmp_path, monkeypatch):
+        root = _reviews_tree(tmp_path, {"2026-08-12-x/A.md":
+            "### 1.1 — 🔴 CRITICAL — x\n\n"
+            "- **Severity:** critical\n- **Lane:** substrate\n"})
+        _patch_roots(monkeypatch, root)
+        assert rv.check_review_severity_declared().passed is True
+
+    def test_an_omitted_lane_is_NOT_a_failure(self, tmp_path, monkeypatch):
+        """`lane` is forward-only. Absent reads `unclassified`; the historical corpus of
+        1,596 findings must not go red on arrival."""
+        root = _reviews_tree(tmp_path, {"2026-08-12-x/A.md":
+            "### 1.1 — 🔴 CRITICAL — x\n\n- **Severity:** critical\n"})
+        _patch_roots(monkeypatch, root)
+        assert rv.check_review_severity_declared().passed is True
+
+    def test_an_unmappable_lane_turns_the_check_red(self, tmp_path, monkeypatch):
+        """Non-vacuity (ADR-012 D8): seed the defect, observe red. A lane build_graph
+        cannot map routes the finding NOWHERE — no worker, no gate set, no fan-out key."""
+        root = _reviews_tree(tmp_path, {"2026-08-12-x/A.md":
+            "### 1.1 — 🔴 CRITICAL — x\n\n"
+            "- **Severity:** critical\n- **Lane:** wizardry\n"})
+        _patch_roots(monkeypatch, root)
+        res = rv.check_review_severity_declared()
+        assert res.passed is False
+        assert any('wizardry' in d.message for d in res.details)

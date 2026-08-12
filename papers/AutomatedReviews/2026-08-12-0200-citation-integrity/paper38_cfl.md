@@ -35,8 +35,9 @@ at submission time, no exceptions.
 `\bibitem{SvetitskyYaffe1982}` defines it, so the reference renders undefined. The key resolves in
 `CITATION_REGISTRY`, so the repair is to emit the entry from the registry rather than to find
 a source.
+- **Severity:** blocker
 
-- **lane:** `prose`
-- **target:** `papers/paper38_cfl/paper_draft.tex`
-- **blocks:** CitationIntegrity (1)
-- **verify:** `uv run python scripts/check_undefined_citations.py paper38_cfl --key SvetitskyYaffe1982`
+- **Lane:** `prose`
+- **Location:** `papers/paper38_cfl/paper_draft.tex`
+- **Gate:** CitationIntegrity (1)
+- **Verify:** `uv run python scripts/check_undefined_citations.py paper38_cfl --key SvetitskyYaffe1982`

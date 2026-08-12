@@ -365,18 +365,26 @@ def check_review_severity_declared() -> CheckResult:
     # `readiness_submission_gate` passed. The line count is the weaker half of the
     # obligation; the vocabulary is the other half, and this check owns both.
     _SEV_VALUE = re.compile(r'^[-*]\s*\*\*Severity:?\*\*:?\s*([A-Za-z]+)', re.M | re.I)
+    # ⚠️ SAME SHAPE, SAME WALK (ADR-012 D1/D2). A lane routes the finding to a worker; a
+    # lane `build_graph` cannot map routes NOWHERE, which is an unroutable finding rather
+    # than a cosmetic typo. This deliberately reuses the per-document walk below instead of
+    # adding a second one, and reads values with `findall` — `_parse_lane` uses `.search`,
+    # so applying it to whole-document text would validate one lane per FILE.
+    _LANE_VALUE = re.compile(r'^[-*]\s*\*\*Lane:?\*\*:?\s*([A-Za-z]+)', re.M | re.I)
 
     details: list[Detail] = []
     bad = 0
     bad_value = 0
+    bad_lane = 0
     checked = 0
     try:
-        from build_graph import _SEVERITY_DECL_MAP
+        from build_graph import _SEVERITY_DECL_MAP, _LANE_DECL_MAP
         vocabulary = set(_SEVERITY_DECL_MAP)
+        lane_vocabulary = set(_LANE_DECL_MAP) | {'unclassified'}
     except ImportError as exc:      # cannot-measure is not success
         return CheckResult(passed=False, details=[Detail(
             "import", False,
-            f"build_graph._SEVERITY_DECL_MAP unavailable ({exc}) — the accepted "
+            f"build_graph declaration maps unavailable ({exc}) — the accepted "
             f"vocabulary is unknown, so this check cannot validate anything")])
 
     for md in sorted(reviews_dir.glob("*/*.md")):
@@ -408,12 +416,27 @@ def check_review_severity_declared() -> CheckResult:
                 f"declaration — the finding falls back to inference, and a mistyped "
                 f"BLOCKER lands advisory while this check's line count reads clean."))
 
+        unknown_lanes = sorted({v for v in _LANE_VALUE.findall(text)
+                                if v.strip().lower() not in lane_vocabulary})
+        if unknown_lanes:
+            bad_lane += 1
+            details.append(Detail(
+                f"{md.relative_to(_H.PROJECT_ROOT)}:lane", False,
+                f"declares lane value(s) `build_graph` cannot map: {unknown_lanes}. "
+                f"Accepted: {sorted(lane_vocabulary)}. A lane that does not map routes "
+                f"the finding nowhere — no worker, no gate set, no fan-out key — so it is "
+                f"an unroutable finding, not a typo. `lane` is forward-only: OMITTING it "
+                f"reads `unclassified` and is fine; declaring a token that means nothing "
+                f"is not."))
+
     details.insert(0, Detail(
-        "summary", bad == 0 and bad_value == 0,
+        "summary", bad == 0 and bad_value == 0 and bad_lane == 0,
         f"{checked} review document(s) dated >= {_CUTOFF} checked; {bad} with findings "
         f"that do not declare severity, {bad_value} declaring an unmappable severity "
-        f"value (earlier documents keep glyph inference)"))
-    return CheckResult(passed=(bad == 0 and bad_value == 0), details=details)
+        f"value, {bad_lane} declaring an unmappable lane (earlier documents keep glyph "
+        f"inference; `lane` is forward-only and its absence is not a failure)"))
+    return CheckResult(passed=(bad == 0 and bad_value == 0 and bad_lane == 0),
+                       details=details)
 
 
 @register_check("review_docs_mint_findings",

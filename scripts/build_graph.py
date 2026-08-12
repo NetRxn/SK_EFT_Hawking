@@ -1721,6 +1721,61 @@ def _load_supersession_ledger() -> dict[str, dict]:
     return out
 
 
+#: The six routing lanes (ADR-012 D2). ⚠️ `lean`/`substrate` and `infra` are separate
+#: because they need different AGENT PROFILES, not merely different gates: substrate work
+#: runs the atlas + the lean4 MCP loop + a lean-worker holding a build-isolated worktree
+#: slot, while `infra` is work on the machine itself — architecture, workflows, harness,
+#: plugin, dashboard. Declared ONCE and validated against, the same shape as
+#: `_SEVERITY_DECL_MAP`; `review_severity_declared` owns the enforcement.
+_LANE_DECL_MAP: dict[str, str] = {
+    'lean': 'lean',
+    'pyrust': 'pyrust',
+    'substrate': 'substrate',
+    'prose': 'prose',
+    'research': 'research',
+    'infra': 'infra',
+}
+
+#: External release-condition schemes accepted in `blocked_by` (ADR-012 D19).
+#:
+#: ⚠️ `blocked_by` carries TWO kinds of entry and the discrimination is by PREFIX. A token
+#: matching one of these is an external condition and is never expected to resolve to a
+#: node; everything else must resolve to a minted finding id — **including an unrecognised
+#: scheme**, so `runs:42` fails loudly rather than becoming a blocker nothing can ever
+#: satisfy. A token that cannot be satisfied reads as WAITING when it is STUCK.
+#:
+#: ⚠️ There is deliberately NO `operator:` scheme. An operator decision that gates work is
+#: itself a queue item with a node id (ADR-012 D12/D21), so parking behind it is the plain
+#: node-id case. A separate token would be a second decision-record channel beside the
+#: queue, with its own store and its own staleness.
+_RELEASE_SCHEMES: tuple[str, ...] = ('run:', 'phase:', 'pub:', 'research:')
+
+
+def _parse_lane(body: str) -> str:
+    """Forward-only. Absent reads `unclassified` rather than failing the historical corpus.
+
+    An UNKNOWN token is preserved verbatim, never coerced to the nearest known lane, so
+    `review_severity_declared` can name it. Silently mapping `substrat` to `substrate`
+    would be the same defect the severity-value leg was written to close.
+    """
+    raw = _parse_finding_field(body, 'Lane')
+    if not raw:
+        return 'unclassified'
+    token = raw.strip().strip('`').lower()
+    return _LANE_DECL_MAP.get(token, token)
+
+
+def _parse_blocked_by(body: str) -> list[str]:
+    """Finding ids and/or external release conditions, comma-separated. Never validated
+    here — `extract_blocked_by_edges` raises on an unresolvable entry, because a blocker
+    silently dropped is the orphan class one layer up."""
+    raw = (_parse_finding_field(body, 'Blocked-by')
+           or _parse_finding_field(body, 'Blocked by'))
+    if not raw:
+        return []
+    return [part.strip().strip('`') for part in raw.split(',') if part.strip().strip('`')]
+
+
 _FINDING_FIELD_RE_CACHE: dict[str, "re.Pattern[str]"] = {}
 
 
@@ -1735,7 +1790,12 @@ def _parse_finding_field(body: str, label: str) -> str | None:
     """
     pat = _FINDING_FIELD_RE_CACHE.get(label)
     if pat is None:
-        pat = re.compile(rf"^\s*[-*]\s*\*\*{re.escape(label)}:?\*\*:?\s*(.+?)\s*$", re.M)
+        # ⚠️ re.I — `reviews.py`'s `_SEV_LINE`/`_SEV_VALUE`/`_LANE_VALUE` are all
+        # case-insensitive. A case-SENSITIVE parser here would validate a field the
+        # extractor then silently fails to read: two mechanisms disagreeing about the
+        # same line, which is how a populated field reads as absent.
+        pat = re.compile(rf"^\s*[-*]\s*\*\*{re.escape(label)}:?\*\*:?\s*(.+?)\s*$",
+                         re.M | re.I)
         _FINDING_FIELD_RE_CACHE[label] = pat
     m = pat.search(body or "")
     if not m:
@@ -1953,6 +2013,13 @@ def extract_review_finding_nodes() -> list[dict]:
                 # ADR-012 D1 — routing data the reviewer ALREADY writes (C7).
                 'blocks': _parse_finding_field(body, 'Gate'),
                 'target': _parse_finding_field(body, 'Location'),
+                # ADR-012 D1/D10/D12 — forward-only. Absent reads `unclassified`/None
+                # rather than failing 1,631 historical findings.
+                'lane': _parse_lane(body),
+                'verify': _parse_finding_field(body, 'Verify'),
+                'blocked_by': _parse_blocked_by(body),
+                'needs_operator': ((_parse_finding_field(body, 'Needs-operator') or '')
+                                   .strip().strip('`').lower() or None),
             }
             _KNOWN_STATUSES = ('open', 'fixed', 'accepted')
             ledger = supersessions.get(finding_id)
