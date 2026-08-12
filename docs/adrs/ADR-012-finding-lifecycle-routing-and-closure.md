@@ -425,7 +425,7 @@ exactly the 29% orphan class one layer up. Both ship with seeded-defect tests (D
 
 ⚠️ **This rule and D19's external tokens share one field, so the discrimination must be explicit.**
 An entry whose prefix matches a **declared** external scheme (`run:` · `phase:` · `pub:` ·
-`operator:` · `research:`) is a release condition and is never expected to resolve to a node.
+`research:`) is a release condition and is never expected to resolve to a node.
 Everything else must resolve to a minted node id or fail loudly — **including an unrecognised
 scheme**, so that a typo like `runs:42` fails rather than becoming a blocker nothing can ever
 satisfy. The scheme list is declared in one place and validated against, on the same shape as
@@ -708,20 +708,21 @@ owner and a condition; the only difference from D10's `blocked_by` is what the b
 | `run:<id>` | a production/campaign run completes — the MLX case |
 | `phase:<id>` | another phase or wave closes |
 | `pub:<citekey>` | an external publication becomes available |
-| `operator:<slug>` | a named operator decision is recorded — ⚠️ **no store exists; see below** |
+| ~~`operator:<slug>`~~ | **DROPPED 2026-08-12 — it was unnecessary. See below.** |
 | `research:<task>` | a `Lit-Search/Tasks/` dispatch returns |
 
-⚠️ **`operator:` is the one token that is not free, and shipping it unspecified would create the
-defect this ADR exists to remove.** The other four resolve against artifacts that exist — a run
-manifest, a phase's close state, the citation registry, `Lit-Search/Tasks/`. There is **no store of
-recorded operator decisions**, so as written `operator:<slug>` is a condition nothing can ever
-satisfy: work parked behind it is parked permanently, and the queue would report it as waiting rather
-than as stuck. Two acceptable resolutions, and the plan must pick one rather than inherit the
-ambiguity: **(a)** ship the other four tokens and hold `operator:` until a decision record exists, or
-**(b)** specify that store now — the natural home is the `/skeft-qa:debrief` path that already records
-operator calls and graduates the generalisable ones into `PRE_DECISIONS.md` (D12), extended with a
-stable slug per decision. **(a) is the safe default**; (b) is better if D12's graduation loop is built
-in the same pass, because the two want the same record.
+✅ **`operator:` is DROPPED, and neither proposed store is built.** The adversarial pass found it had
+no store and offered two fixes; on specification both were wrong, because **the token is redundant.**
+
+An operator decision that gates work **is already a queue item**: under D12 it is a finding carrying
+`needs_operator`, and under D21 every operator-owned open item of a prior ADR is filed the same way.
+It therefore has a node id. Parking behind it is `blocked_by: <that finding's id>` — the plain
+node-id case, which D10 already builds, already validates, and already cascades on closure.
+
+Adding `operator:` would have meant a second decision-record channel beside the queue, with its own
+store, its own writer and its own staleness — the exact shape `CLAUDE.md` rule 1 forbids and C9
+caught once already in this ADR. **Four tokens ship** (`run:` · `phase:` · `pub:` · `research:`), each
+resolving against an artifact that exists. A decision is not an external condition; it is work.
 
 A roadmap declares a parked item in one opt-in block; the extractor mints it into the same queue as
 every other item, and the release condition is evaluated on each build. When the MLX run lands,
@@ -786,7 +787,7 @@ Re-evaluated against this ADR:
 | **ADR-010 D4** — merge/split/retire | ✅ discharged 2026-08-08; all six proposed merges failed against the manuscripts | closed |
 | **ADR-010 D5** — homing dispositions for the un-homed substrate, measured at **1,403–1,633 modules**, not the charter's ~340 | **OPEN, and the largest single item in the portfolio** | `lane=substrate`, structured as a `BLOCKED_BY` tree: per-**arc** dispositions first, modules beneath them. ADR-010 itself anticipates that the 4–5× scope change may change the shape of the answer |
 | **ADR-010 D7** — the roster-drift change-set | **OPEN** | `lane=infra`/`prose`, doc work |
-| **ADR-010 §Open** — operator-owned questions | **OPEN by design** | feed A/C of the Attention surface; and D19's `operator:<slug>` token lets work park behind a named one |
+| **ADR-010 §Open** — operator-owned questions | **OPEN by design** | feed A/C of the Attention surface; and work parks behind the *finding id* of the decision itself (D19), not a separate token |
 | **ADR-011 P1–P8** | ✅ complete | closed |
 | **`ARCHITECTURE_TODOs.MD` D50, D51** | open, under the standing build-freeze | stay in the working doc per C1 — they are architecture-accuracy defects and belong to it |
 

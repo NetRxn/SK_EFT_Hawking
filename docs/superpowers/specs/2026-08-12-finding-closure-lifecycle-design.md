@@ -144,8 +144,7 @@ test proving the consumer sees it. And a `blocked_by` naming an id that mints no
 loudly** — silently dropping it is the 29% orphan class one layer up.
 
 ⚠️ **This field also carries §5.1's external release-condition tokens, so discrimination is
-explicit.** A prefix matching a **declared** scheme (`run:` · `phase:` · `pub:` · `operator:` ·
-`research:`) is a release condition and never resolves to a node. Everything else must resolve to a
+explicit.** A prefix matching a **declared** scheme (`run:` · `phase:` · `pub:` · `research:`) is a release condition and never resolves to a node. Everything else must resolve to a
 minted id or fail — **including an unrecognised scheme**, so `runs:42` fails rather than becoming a
 blocker nothing can satisfy. The scheme list is declared once and validated against, on the shape of
 `_SEVERITY_DECL_MAP`.
@@ -432,9 +431,12 @@ The pattern exists across the roadmaps in several prose dialects and is machine-
 
 **Every one names a release condition**, which is the design: a parked item is structurally a finding
 whose blocker is external to the finding graph. `blocked_by` therefore accepts external tokens
-alongside finding ids — `run:<id>` · `phase:<id>` · `pub:<citekey>` · `operator:<slug>` ·
-`research:<task>` — evaluated on each build, so a satisfied condition makes the item dispatchable
+alongside finding ids — `run:<id>` · `phase:<id>` · `pub:<citekey>` · `research:<task>` — evaluated on each build, so a satisfied condition makes the item dispatchable
 automatically. That is the "route todos and blockers back to planning" path.
+
+✅ **There is no `operator:` token.** An operator decision that gates work is itself a queue item (a
+`needs_operator` finding, D12/D21), so it has a node id and parking behind it is the plain
+`blocked_by: <id>` case. A separate token would be a second decision-record channel beside the queue.
 
 ⚠️ Roadmaps are **not** converted into finding streams. The declaration is one opt-in block; the 119
 existing files are untouched until something is parked deliberately. And this narrows rather than
