@@ -294,6 +294,18 @@ gate the `infra` lane currently names. Dashboard changes carry two additional ga
 test** driving the rendered page. Without both, D15 ships surfaces whose emptiness is
 indistinguishable from a clean state, which is this repository's signature defect.
 
+**Measured 2026-08-12 — one of those two already exists, the other does not.** `tests/e2e/` is a
+real Playwright suite (13 files) whose `conftest.py` boots the actual dashboard as a subprocess on
+an ephemeral port and collects console errors; its own docstring gives this ADR's reasoning
+verbatim — *"a server-side `test_client` can never catch Datastar / SSE / data-on JS regressions."*
+It is excluded from the default run (`pyproject.toml` `addopts = -m 'not slow and not e2e'`) and is
+run with `-m e2e`. **So the browser gate is infrastructure that exists and needs cases, not a system
+to build.** The template-contract gate genuinely does not exist: nothing cross-checks
+`render_template(...)`'s kwargs against the variables the Jinja templates dereference, the app
+leaves Jinja's default `Undefined` rather than `StrictUndefined`, and **no test anywhere uses
+`app.test_client()`** — the two dashboard test files assert substrings against template *text* read
+off disk.
+
 **The `infra` lane carries three dispositions, not one.** The first draft collapsed the operator's
 specification to "fix when mechanically obvious, else queue to the operator", losing the urgency
 dimension entirely:
@@ -596,15 +608,19 @@ how the operator keeps oversight while that happens, and how they sign off on pu
 Shipping the loop without it produces a system that is more autonomous and less observable at the
 same time.
 
-**Five surfaces** (S1–S4 below, plus the Loops pane added by D20). Three are render changes over
-data already in the graph.
+**Five surfaces** (S1–S4 below, plus the Loops pane added by D20).
+
+⚠️ **CORRECTED 2026-08-12, from a read of the code rather than of this table.** An earlier draft
+said "three are render changes over data already in the graph." **S1 is not a render change**, and
+S4's stated data source is not the one the page uses. Both corrections enlarge the work; neither
+changes the design. See the `data` column below and §S1/S4 notes.
 
 | # | surface | what it answers | data |
 |---|---|---|---|
-| **S1** | **Finding drill-through** — gate-cell blockers resolve to the `ReviewFinding` itself: severity, lane, target, `verify`, closure record, `blocked_by` | *what exactly is blocking this, and what is its disposition?* | the 4,879 `FLAGS` edges, currently discarded at render; the 145 gates whose `blockers` are prose strings |
+| **S1** | **Finding drill-through** — gate-cell blockers resolve to the `ReviewFinding` itself: severity, lane, target, `verify`, closure record, `blocked_by` | *what exactly is blocking this, and what is its disposition?* | ⚠️ **NOT a render fix.** The id is destroyed in the evaluator: `readiness_gates.py:911` holds the whole finding and keeps `f['label'][:60]`. `GateResult.blockers` is `list[str]`, `to_node_payload` (`:104`) serializes it as such, and the dashboard never touches `FLAGS` at all (zero occurrences in `provenance_dashboard.py`). The change spans evaluator → `GateResult` → node payload → render |
 | **S2** | **Portfolio Flow board** — see below | *where is everything, and what is the bottleneck?* | `stage*_status` + gate states + `lane` |
 | **S3** | **Attention** — D12's four feeds, side by side, unmerged | *what needs me, and what can I decide well right now?* | four separate stores; see D12 |
-| **S4** | **Reading-while-blocked** — a margin marker in Paper Provenance v2 when a sentence's backing artifact carries an open finding | *I am reading §4; is anything under it broken?* | existing `BACKED_BY` chains + `FLAGS` |
+| **S4** | **Reading-while-blocked** — a margin marker in Paper Provenance v2 when a sentence's backing artifact carries an open finding | *I am reading §4; is anything under it broken?* | ⚠️ **Not the graph.** Paper Provenance v2 reconstructs its chains from `claims_review.json` (`_pp_sentence_chain_link_states`, `provenance_dashboard.py:2662`); it reads no `BACKED_BY` edge and no `FLAGS` edge. A sentence→finding resolution has to be built. The attachment point exists and is clean: the per-sentence `<span>` at `:4439` already carries a state-driven class list (`:4427`) |
 
 #### S2 — the Flow board, specified
 
