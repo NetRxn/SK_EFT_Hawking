@@ -618,6 +618,11 @@ backstops.
 - A finding marked `fixed` by the author must pass a **re-invocation** showing no new BLOCKERs in
   that class before the gate flips back to `passed`. "The author says it's fixed" is not evidence;
   the re-run is evidence.
+- **A closure is recorded with `scripts/close_finding.py`, never by hand.** It mints the finding id
+  with the same function the extractor uses, so a record naming no finding cannot be produced.
+- **The closure bar applies at every severity**, not only blocking ones. `docs/READINESS_GATES.md`
+  owns the contract — status is `open` until the ledger says otherwise, and what a record must
+  carry. Read it there rather than here; one owner per fact.
 - **Do NOT use Stage 13 to fix issues.** The output is findings-only. The author fixes, the author
   re-invokes. Separating the fix and review roles is the whole reason the agent exists.
 - A systemic finding (a class affecting multiple papers, or a pipeline gap) is emitted as a
