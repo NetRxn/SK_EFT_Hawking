@@ -71,22 +71,6 @@ def _finding(fid: str, bundle: str | None, review_file: str = "") -> dict:
             "meta": {"inferred_bundle": bundle, "review_file": review_file}}
 
 
-def _live_dangling_baseline() -> int:
-    """The production `_LEDGER_DANGLING_BASELINE`, read from source.
-
-    ⚠️ It is a FUNCTION-LOCAL constant, so it cannot be imported. These tests used to
-    hardcode 66 and broke the day the re-key lowered it to 59 — a test asserting a ratchet
-    has zero headroom must move WITH the ratchet, or it becomes a second, stale copy of the
-    number it is guarding.
-    """
-    import re as _re
-    from pathlib import Path as _P
-    src = (_P(__file__).resolve().parent.parent
-           / "scripts" / "validation" / "checks" / "graph_atlas.py").read_text()
-    m = _re.search(r"^\s*_LEDGER_DANGLING_BASELINE\s*=\s*(\d+)", src, _re.M)
-    assert m, "_LEDGER_DANGLING_BASELINE not found in graph_atlas.py"
-    return int(m.group(1))
-
 
 class TestGraphIntegrity:
 
@@ -169,49 +153,6 @@ class TestGraphIntegrity:
         r = ga.check_graph_integrity()
         assert r.passed is False
         assert any(d.name == "findings_reach_the_graph" and "unverified" in (d.message or "")
-                   for d in r.details)
-
-    def test_a_dangling_closure_above_the_baseline_fails(self, tmp_path, monkeypatch):
-        """The ledger guard. ⚠️ Its baseline sat at 67 against a population of 66 —
-        exactly one slot of headroom, in the guard whose entire purpose is catching a
-        NEWLY filed closure that names nothing. Three such records were filed while it
-        was effectively inert."""
-        nodes, edges = self.FLAGGED
-        base = _live_dangling_baseline()
-        ledger = [{"finding_id": f"review:r:ghost:{i}"} for i in range(base + 1)]
-        r = self._run(tmp_path, monkeypatch, nodes=nodes, edges=edges, ledger=ledger)
-        assert r.passed is False, (
-            f"{base + 1} dangling closures did not exceed the pinned baseline of {base} "
-            "— the ratchet has headroom again")
-        assert any(d.name == "ledger_ids_resolve" and not d.passed for d in r.details)
-
-    def test_dangling_closures_at_the_baseline_pass_with_a_warning(self, tmp_path, monkeypatch):
-        """SILENT ON CORRECT DATA — pre-existing debt is tracked, not failed."""
-        nodes, edges = self.FLAGGED
-        ledger = [{"finding_id": f"review:r:ghost:{i}"}
-                  for i in range(_live_dangling_baseline())]
-        r = self._run(tmp_path, monkeypatch, nodes=nodes, edges=edges, ledger=ledger)
-        assert r.passed is True
-        assert any(d.name == "ledger_ids_resolve" and d.warning for d in r.details)
-
-    def test_legacy_scheme_ledger_ids_are_out_of_scope(self, tmp_path, monkeypatch):
-        """Only `review:`-scheme ids ever minted nodes. Flagging the legacy
-        `bundle-stage10:` records would be noise, not signal."""
-        nodes, edges = self.FLAGGED
-        ledger = [{"finding_id": f"bundle-stage10:x:{i}"} for i in range(200)]
-        r = self._run(tmp_path, monkeypatch, nodes=nodes, edges=edges, ledger=ledger)
-        assert r.passed is True
-
-    def test_an_unreadable_ledger_fails_rather_than_passes(self, tmp_path, monkeypatch):
-        """Converted from fail-open 2026-08-01: ANY exception in the scan used to
-        make the guard silently absent, which is the state a mutation test found it
-        in — planting a dangling record left the check green with no detail emitted."""
-        nodes, edges = self.FLAGGED
-        self._run(tmp_path, monkeypatch, nodes=nodes, edges=edges)
-        (tmp_path / "docs" / "review_finding_supersessions.json").write_text("{not json")
-        r = ga.check_graph_integrity()
-        assert r.passed is False
-        assert any(d.name == "ledger_ids_resolve" and "FAILED TO RUN" in (d.message or "")
                    for d in r.details)
 
     def test_a_verification_conflict_is_a_hard_failure(self, tmp_path, monkeypatch):

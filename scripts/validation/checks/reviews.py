@@ -753,3 +753,96 @@ def check_chain_backing_targets_resolve() -> CheckResult:
             f"population fell to {n_bad} — lower UNRESOLVED_CHAIN_LINK_CEILING to match, "
             f"or the ratchet regains headroom and stops being able to fire"))
     return CheckResult(passed=within, details=details)
+
+#: Ledger records whose `finding_id` matches no minted node. **A RATCHET: may only shrink.**
+#:
+#: Baseline re-measured 2026-08-01 (D11 Stage-13 round-13 finding 2220:4.5). It was pinned
+#: at 67 against a population of 66, i.e. it carried one slot of headroom in the one guard
+#: whose whole purpose is catching a NEWLY filed closure that names nothing. Three such
+#: records were filed while it was effectively inert.
+#:
+#: Its justifying comment was also wrong about the population it described. Measured: of the
+#: 66, 53 used annotated IDs and 13 did not — the comment claimed all 67 were annotated. 67
+#: was the count of ledger ids MENTIONING stage9/stage10, a different population that
+#: happened to be one larger.
+#:
+#: 2026-08-12: 66 -> 59. Seven records whose keys carried suffixes no minted id has
+#: (`:3.1-residual`, `:5.1-5.3`) were re-keyed; two more were SKIPPED because their
+#: corrected key already carried a record and `_load_supersession_ledger` is last-wins, so
+#: re-keying onto an occupied id would have made one of the pair silently do nothing. 59 is
+#: the skip-rule number; 57 is the blind one.
+LEDGER_DANGLING_BASELINE = 59
+
+
+@register_check("ledger_ids_resolve",
+                "Supersession records name findings that exist (ratcheted)")
+def check_ledger_ids_resolve() -> CheckResult:
+    """CHECK: a closure that names no finding closes nothing, silently.
+
+    Findings raised in rounds whose review document was never written to disk were filed
+    under an EARLIER review's IDs. That both collides with live findings (a still-open
+    finding rendered `fixed`) and mints dangling IDs naming no node. Neither is detectable
+    from the ledger alone.
+
+    ⚠️ PROMOTED 2026-08-12 out of `check_graph_integrity`, where it lived as a `Detail` leg,
+    and the leg was DELETED in the same commit. It is not new: an earlier draft of ADR-012
+    proposed BUILDING it at a ceiling of 247 — the aggregate over three id schemes — which
+    would have been a second mechanism beside a working one AND weaker, because one ratchet
+    over 190 permanently-inert legacy records plus the live ones lets deleting a legacy
+    record silently buy headroom for a real dangler.
+
+    ⚠️ A CLAIM MADE HERE WAS WRONG, retracted 2026-08-01. A reviewer wrote that this guard
+    "does not run" and filed it as a twelfth defect, on the strength of a mutation test that
+    planted a dangling record and saw no `ledger_ids_resolve` detail. The test was invoking
+    `check_bundle_registry_consistency` — a different check entirely, so of course it emitted
+    nothing. Diagnosing by running the wrong function is the same class of mistake as
+    measuring the wrong quantity.
+
+    ⚠️ Scoped to the `review:<date-dir>:<name>:<section>` scheme, which is the one
+    `extract_review_finding_nodes` mints nodes for. Legacy Stage-9/10 records use an
+    unrelated `bundle-stage10:...` scheme and were never graph nodes, so flagging them would
+    be noise, not signal.
+    """
+    ledger_path = _H.DOCS_DIR / "review_finding_supersessions.json"
+    if not ledger_path.is_file():
+        return CheckResult(passed=True, measured=False, details=[
+            Detail("ledger", True, "no supersession ledger; skipping",
+                   warning=True, measured=False)])
+    try:
+        entries = json.loads(ledger_path.read_text(encoding="utf-8")).get(
+            "supersessions", [])
+    except (OSError, json.JSONDecodeError) as exc:
+        return CheckResult(passed=False, measured=False, details=[Detail(
+            "ledger", False, measured=False,
+            message=f"unreadable supersession ledger ({exc}) — UNVERIFIED, not passing")])
+
+    try:
+        # ⚠️ From the extractor, NOT `build_graph_json()`. The leg's original `_known` came
+        # from a full graph build ~70 lines above it in its old host; re-running that here
+        # would add a whole graph build to every validate.py run. This is 0.25 s.
+        from build_graph import extract_review_finding_nodes
+        known = {n["id"] for n in extract_review_finding_nodes()}
+    except Exception as exc:
+        # FAIL, not warn. This handler once returned passed=True, so ANY exception made the
+        # guard silently absent — exactly the state a mutation test found it in. A guard that
+        # cannot run must say so loudly; its silence is not evidence.
+        return CheckResult(passed=False, measured=False, details=[Detail(
+            "ledger_ids_resolve", False, measured=False,
+            message=f"ledger integrity scan FAILED TO RUN ({type(exc).__name__}: {exc}) — "
+                    f"the dangling-closure guard did not execute")])
+
+    dangling = sorted({e["finding_id"] for e in entries
+                       if e.get("finding_id", "").startswith("review:")
+                       and e["finding_id"] not in known})
+    if len(dangling) > LEDGER_DANGLING_BASELINE:
+        return CheckResult(passed=False, details=[Detail(
+            "ratchet", False,
+            f"{len(dangling)} supersession finding_id(s) name no ReviewFinding node, above "
+            f"the pinned baseline of {LEDGER_DANGLING_BASELINE} — a closure filed against a "
+            f"nonexistent finding closes nothing: {', '.join(dangling[:4])}. Re-key it or "
+            f"remove it; never raise the baseline.")])
+    return CheckResult(passed=True, details=[Detail(
+        "ratchet", True,
+        f"{len(dangling)} of {len(entries)} supersession record(s) name no live finding "
+        f"(pre-existing annotated-ID debt, baseline {LEDGER_DANGLING_BASELINE}); no growth",
+        warning=bool(dangling))])

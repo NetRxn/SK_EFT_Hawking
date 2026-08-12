@@ -578,10 +578,15 @@ class TestChainBackingTargetsResolve:
         import ast
         src = (SK_ROOT / "scripts" / "validation" / "checks" / "reviews.py").read_text()
         tree = ast.parse(src)
+        # ⚠️ Exempt REGISTERED CHECKS structurally, not by a hand-list that grows every
+        # time a check's NAME happens to contain "resolve". The guard's subject is a
+        # resolution HELPER living beside the shared resolver; a `check_*` entry point is
+        # not one. `check_ledger_ids_resolve` (promoted here 2026-08-12) tripped the
+        # name heuristic while resolving nothing — it tests ledger-id membership.
         local = [n.name for n in ast.walk(tree)
                  if isinstance(n, ast.FunctionDef)
                  and ("resolve" in n.name or "normalize" in n.name)
-                 and n.name != "check_chain_backing_targets_resolve"]
+                 and not n.name.startswith("check_")]
         assert local == [], (
             f"reviews.py defines its own resolution helpers {local} — resolution belongs to "
             f"chain_canonicalize.canonicalize_link, and a second resolver will disagree with it")
@@ -621,3 +626,80 @@ class TestLaneEnforcementExtendsSeverityDeclared:
         res = rv.check_review_severity_declared()
         assert res.passed is False
         assert any('wizardry' in d.message for d in res.details)
+
+
+def _live_dangling_baseline() -> int:
+    """The production `LEDGER_DANGLING_BASELINE`, imported — it is module scope now."""
+    from validation.checks.reviews import LEDGER_DANGLING_BASELINE
+    return LEDGER_DANGLING_BASELINE
+
+
+class TestLedgerIdsResolveIsOneCheckNotTwo:
+    """ADR-012 D13. ⚠️ This check was PROMOTED out of `check_graph_integrity`, not built.
+    An earlier draft proposed building it at a ceiling of 247 — the aggregate over three id
+    schemes — which would have been a second mechanism beside a working one AND weaker:
+    one ratchet over 190 permanently-inert legacy records plus the live ones lets deleting a
+    legacy record silently buy headroom for a real dangler."""
+
+    def _ledger(self, tmp_path, monkeypatch, records):
+        root = tmp_path / "root"
+        (root / "docs").mkdir(parents=True, exist_ok=True)
+        (root / "docs" / "review_finding_supersessions.json").write_text(
+            json.dumps({"supersessions": records}, indent=2))
+        monkeypatch.setattr(_H, "PROJECT_ROOT", root)
+        monkeypatch.setattr(_H, "DOCS_DIR", root / "docs")
+        return root
+
+    def test_the_leg_is_gone_from_graph_integrity(self):
+        """One mechanism, not two (CLAUDE.md rule 1). ⚠️ Asserts on the Detail
+        CONSTRUCTION, not a bare substring: a pointer comment naming the destination is
+        deliberately left behind."""
+        import inspect
+        from validation.checks import graph_atlas
+        src = inspect.getsource(graph_atlas)
+        assert 'Detail(\n            "ledger_ids_resolve"' not in src
+        assert 'Detail("ledger_ids_resolve"' not in src
+
+    def test_the_live_baseline_has_zero_headroom(self):
+        import sys
+        sys.path.insert(0, 'scripts')
+        from build_graph import extract_review_finding_nodes
+        known = {n["id"] for n in extract_review_finding_nodes()}
+        led = json.loads(
+            (_H.DOCS_DIR / "review_finding_supersessions.json").read_text())["supersessions"]
+        live = len({e["finding_id"] for e in led
+                    if e["finding_id"].startswith("review:") and e["finding_id"] not in known})
+        assert live == _live_dangling_baseline(), (
+            f"live {live} != baseline {_live_dangling_baseline()}; if the backlog shrank, "
+            "LOWER the baseline in the commit that shrank it — headroom makes it unfireable")
+
+    def test_a_dangling_closure_above_the_baseline_fails(self, tmp_path, monkeypatch):
+        base = _live_dangling_baseline()
+        self._ledger(tmp_path, monkeypatch,
+                     [{"finding_id": f"review:r:ghost:{i}"} for i in range(base + 1)])
+        assert rv.check_ledger_ids_resolve().passed is False
+
+    def test_at_the_baseline_it_passes_with_a_warning(self, tmp_path, monkeypatch):
+        base = _live_dangling_baseline()
+        self._ledger(tmp_path, monkeypatch,
+                     [{"finding_id": f"review:r:ghost:{i}"} for i in range(base)])
+        res = rv.check_ledger_ids_resolve()
+        assert res.passed is True
+        assert any(d.warning for d in res.details)
+
+    def test_legacy_scheme_ids_are_out_of_scope(self, tmp_path, monkeypatch):
+        """Only `review:`-scheme ids ever minted nodes. Flagging the 190 legacy
+        `bundle-stage10:` records would be noise, not signal — and folding them into one
+        ratchet is what made the proposed replacement weaker."""
+        self._ledger(tmp_path, monkeypatch,
+                     [{"finding_id": f"bundle-stage10:x:{i}"} for i in range(300)])
+        assert rv.check_ledger_ids_resolve().passed is True
+
+    def test_an_unreadable_ledger_fails_rather_than_passes(self, tmp_path, monkeypatch):
+        root = tmp_path / "root"
+        (root / "docs").mkdir(parents=True, exist_ok=True)
+        (root / "docs" / "review_finding_supersessions.json").write_text("{not json")
+        monkeypatch.setattr(_H, "PROJECT_ROOT", root)
+        monkeypatch.setattr(_H, "DOCS_DIR", root / "docs")
+        res = rv.check_ledger_ids_resolve()
+        assert res.passed is False and res.measured is False

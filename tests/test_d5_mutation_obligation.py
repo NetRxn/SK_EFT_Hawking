@@ -736,6 +736,14 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
         "described in prose (D11 on Mathlib's in-source TODO) is a fact about a "
         "dependency, and `\\%` prints a percent sign rather than opening a comment",
     ),
+    "ledger_ids_resolve": (
+        "test_d5_reviews.py",
+        "3 mutations, PRODUCTION-SEEDED. PROMOTED out of check_graph_integrity 2026-08-12 "
+        "(ADR-012 D13) with the leg deleted in the same commit — two copies of a ratchet is "
+        "the defect, not the location. Appending one dangling review:-scheme record to the "
+        "real ledger takes it above baseline and the check FAILS naming the id; removing it "
+        "returns green. Its baseline has zero headroom by test, and it carries the history "
+        "of the 67-vs-66 slot that made it inert while three bad closures were filed."),
     "bundle_stage13_claim_consistent": (
         "test_d5_bundles_readiness.py",
         "10 mutations (2 added 2026-08-12, ADR-012 D9: the two open-REQUIRED "
@@ -830,6 +838,7 @@ AWAITING_CEILING = 0
 #: is the distinction the four blockers turned on. Erring toward absent overstates the
 #: remaining work; the opposite error is what produced them.
 PRODUCTION_SEEDED: frozenset[str] = frozenset({
+    "ledger_ids_resolve",
     # 2026-08-10: seeded in the real ATLAS_HEATMAP.md and the real sources.py
     # (see its MUTATION_VERIFIED entry). Keeps FIXTURE_ONLY_CEILING at 55.
     "theorem_census_agrees",
