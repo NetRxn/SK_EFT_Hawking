@@ -9,7 +9,7 @@ ADR-009 (the check contract §4 obeys) · ADR-010 (§D5a apex model; §6a's buil
 which §4 satisfies rather than waives) · ADR-011 (`prose` gates; `record_review.py`, the model for
 the writer). Per-ADR detail lives in ADR-012 §Overlap reconciliation and is **not** restated here.
 **Supersedes:** this file's own first version, which covered only the ledger's write side. That
-scope was a strict subset and is preserved below as §6.
+scope was a strict subset and survives intact as **§4 (Closure)**.
 
 ---
 
@@ -79,7 +79,7 @@ Six participants. Three are new.
 | `docs/review_finding_supersessions.json` | the closure ledger | schema amended |
 | **`scripts/close_finding.py`** | the only supported writer | **new** |
 | **the bundle-green gate** | REQUIRED enforcement, ratcheted | **new leg on an existing check** |
-| **the dashboard** | the operator's control surface | **four surfaces, two repairs** |
+| **the dashboard** | the operator's control surface | **five surfaces, two repairs** |
 
 ### Two load-bearing constraints
 
@@ -143,6 +143,13 @@ prose-regex fallback fired and masked it. So `BLOCKED_BY` ships with a consumer 
 test proving the consumer sees it. And a `blocked_by` naming an id that mints no node **fails
 loudly** — silently dropping it is the 29% orphan class one layer up.
 
+⚠️ **This field also carries §5.1's external release-condition tokens, so discrimination is
+explicit.** A prefix matching a **declared** scheme (`run:` · `phase:` · `pub:` · `operator:` ·
+`research:`) is a release condition and never resolves to a node. Everything else must resolve to a
+minted id or fail — **including an unrecognised scheme**, so `runs:42` fails rather than becoming a
+blocker nothing can satisfy. The scheme list is declared once and validated against, on the shape of
+`_SEVERITY_DECL_MAP`.
+
 ### Orientation is generated (D17)
 
 `scripts/review_runner.py --prep-brief` already generates a review-prep brief. The same generator
@@ -162,6 +169,16 @@ distinguishable.
 
 This is the decision that closes the originating problem. Until it lands, only BLOCKER flips a gate,
 and REQUIRED findings are schedulable but not enforcing.
+
+**It extends `bundle_stage13_claim_consistent`**, which already forbids a `green` Stage-13 while the
+live graph carries open blockers, by adding a severity tier to the same assertion. A sibling check
+would be §4's own failure repeated.
+
+⚠️ **Measured coverage: 167 of 219.** 52 open majors (23%) and 19 open criticals carry no
+`inferred_bundle` — silent-drop point 1 — so they attach to no bundle ceiling. Left there, the gate
+also creates a perverse incentive: a finding that *loses* attribution silently leaves the ratchet. So
+**two ratchets ship, not one** — the per-bundle ceiling, and a corpus-wide down-only count of
+unattributed open blocking findings frozen at 52/19. Both may only shrink.
 
 **Ratcheted per bundle, down-only, frozen at the live count**, on the same shape as
 `NATIVE_DECIDE_BUNDLE_DEBT` and `UNDECLARED_APEX_CEILING`. 219 open majors across the roster would
@@ -316,7 +333,7 @@ happens, and how they sign off on publication content. **Shipping the loop witho
 system that is more autonomous and less observable at the same time**, which is why this is not a
 follow-on.
 
-### Four surfaces
+### Five surfaces
 
 | # | surface | answers | built from |
 |---|---|---|---|
@@ -526,6 +543,8 @@ reviewer emits finding  ──  severity · blocks · target · lane · verify �
 - **Unresolvable id** — refuse, and print the ids that *do* exist for that document.
 - **`--verify` fails** — refuse, print the command's output.
 - **`blocked_by` names no node** — fail loudly at extraction. Silence here is the orphan class.
+- **`blocked_by` carries an unrecognised scheme prefix** — fail. A token nothing can satisfy is worse
+  than a broken reference, because it reads as *waiting* rather than as *stuck*.
 - **Unreadable or malformed ledger** — fail closed. An absent ledger is not a licence to write one.
 - **Concurrent writes** — re-read immediately before appending; write atomically.
 - **A lane token the map cannot resolve** — fail, on the same shape as
@@ -587,6 +606,9 @@ Ordered by dependency, not by what ships fastest.
    `ledger_ids_resolve` promoted or widened per §4.
 5. **Write the pilot's closure records** — deliberately after step 4, so no closure rests on a bar
    that could be walked around. Re-derive the population first: the pilot's 117 is 152 today.
+   ⚠️ **This batch does not exercise `verified_by`**: the triage manifest carries no `verify` column,
+   so every record it writes takes the no-verify path. The `verified_by` requirement is proven by its
+   seeded-defect tests and by the first forward finding that carries a command, not by this backlog.
 6. **Substrate lane wiring** — re-file D45–D49; `ARCHITECTURE_TODOs.MD` back inside its charter.
 7. **The control surface** — S1, S4, the QI de-saturation and the sign-off repair first (they are
    over existing data); then S2 and S3, thin and iterated.

@@ -18,7 +18,7 @@
      the numbers.
   3. **An intent-drift assessment against the operator's original specification** found that the
      first draft solved the *closure* half of the loop and silently dropped the *routing* half —
-     including the problem that started the thread. D9 through D18 exist because of that
+     including the problem that started the thread. D9 through D22 exist because of that
      assessment. **Operator ruling 2026-08-12: the middle tier ships, routing folds into one
      plan, and scope expansion is accepted rather than bolted on later.**
 
@@ -376,6 +376,12 @@ A `major`-severity open finding blocks `stage13_status: green` for its bundle. I
 submission — `readiness_submission_gate` keeps its current, stricter meaning, so the two tiers stay
 distinguishable.
 
+**It extends `bundle_stage13_claim_consistent`; it does not sit beside it.** That check already
+forbids `stage13_status: green` while the live graph carries open *blockers*, comparing against the
+recomputed count rather than the stored one. D9 adds a **severity tier** to the same assertion. A
+sibling check would be the C9 failure — a second mechanism beside a working one — in the very ADR
+that names it.
+
 The gate ships with a **per-bundle down-only ratchet frozen at the live count**, exactly like
 `NATIVE_DECIDE_BUNDLE_DEBT` and `UNDECLARED_APEX_CEILING`. 219 open majors distributed across the
 roster would otherwise take every bundle non-green on the first run — a gate that fires on the
@@ -385,6 +391,22 @@ existing corpus gets switched off, and this project has that lesson recorded twi
 Zero headroom per bundle. Lower the ceiling in the commit that lowers the population; never raise
 it. The ratchet is the on-ramp, not the destination: a bundle at zero open majors is the target
 state and the ceiling records the distance.
+
+⚠️ **MEASURED NON-VACUITY, and it is not total (2026-08-12).** A per-bundle ratchet can only see
+findings that resolve to a bundle. Measured at HEAD: **52 of 219 open majors (23%) carry no
+`inferred_bundle`** — and 19 of 152 open criticals — so they attach to no bundle's ceiling and D9
+blocks nothing for them. They are silent-drop point 1 in
+`QA_QI_INFRASTRUCTURE_MAP.md` §3: a finding with neither `inferred_paper` nor `inferred_bundle` is
+dropped from bundle aggregation. **D9 as a per-bundle gate covers 167 of 219.**
+
+**That gap is also a perverse incentive, which is why it cannot be left as a footnote.** If the only
+ratchet is per-bundle, a finding that *loses* its attribution silently leaves the ratchet, and "no
+bundle carries an open major" becomes reachable by degrading attribution rather than by fixing
+anything — absence rendered as success, one level up from where this ADR usually catches it.
+
+**So D9 ships with two ratchets, not one:** the per-bundle ceiling, and a corpus-wide down-only count
+of **unattributed open blocking findings**, frozen at 52 majors / 19 criticals. Both may only shrink.
+The second is what makes the first honest.
 
 ### D10 — The queue is a DAG, not a list: findings carry `blocked_by`
 
@@ -400,6 +422,14 @@ closing a finding re-evaluates everything that named it — which is the cascade
 emits, and `PRODUCES` sat expired for a full wave because a working fallback masked it. And a
 `blocked_by` naming an id that mints no node must **fail loudly**, not silently drop — that is
 exactly the 29% orphan class one layer up. Both ship with seeded-defect tests (D8).
+
+⚠️ **This rule and D19's external tokens share one field, so the discrimination must be explicit.**
+An entry whose prefix matches a **declared** external scheme (`run:` · `phase:` · `pub:` ·
+`operator:` · `research:`) is a release condition and is never expected to resolve to a node.
+Everything else must resolve to a minted node id or fail loudly — **including an unrecognised
+scheme**, so that a typo like `runs:42` fails rather than becoming a blocker nothing can ever
+satisfy. The scheme list is declared in one place and validated against, on the same shape as
+`_SEVERITY_DECL_MAP`.
 
 ### D11 — A finding routed to the operator arrives as a decision package
 
@@ -544,7 +574,8 @@ how the operator keeps oversight while that happens, and how they sign off on pu
 Shipping the loop without it produces a system that is more autonomous and less observable at the
 same time.
 
-**Four surfaces.** Three are render changes over data already in the graph.
+**Five surfaces** (S1–S4 below, plus the Loops pane added by D20). Three are render changes over
+data already in the graph.
 
 | # | surface | what it answers | data |
 |---|---|---|---|
@@ -677,8 +708,20 @@ owner and a condition; the only difference from D10's `blocked_by` is what the b
 | `run:<id>` | a production/campaign run completes — the MLX case |
 | `phase:<id>` | another phase or wave closes |
 | `pub:<citekey>` | an external publication becomes available |
-| `operator:<slug>` | a named operator decision is recorded |
+| `operator:<slug>` | a named operator decision is recorded — ⚠️ **no store exists; see below** |
 | `research:<task>` | a `Lit-Search/Tasks/` dispatch returns |
+
+⚠️ **`operator:` is the one token that is not free, and shipping it unspecified would create the
+defect this ADR exists to remove.** The other four resolve against artifacts that exist — a run
+manifest, a phase's close state, the citation registry, `Lit-Search/Tasks/`. There is **no store of
+recorded operator decisions**, so as written `operator:<slug>` is a condition nothing can ever
+satisfy: work parked behind it is parked permanently, and the queue would report it as waiting rather
+than as stuck. Two acceptable resolutions, and the plan must pick one rather than inherit the
+ambiguity: **(a)** ship the other four tokens and hold `operator:` until a decision record exists, or
+**(b)** specify that store now — the natural home is the `/skeft-qa:debrief` path that already records
+operator calls and graduates the generalisable ones into `PRE_DECISIONS.md` (D12), extended with a
+stable slug per decision. **(a) is the safe default**; (b) is better if D12's graduation loop is built
+in the same pass, because the two want the same record.
 
 A roadmap declares a parked item in one opt-in block; the extractor mints it into the same queue as
 every other item, and the release condition is evaluated on each build. When the MLX run lands,
