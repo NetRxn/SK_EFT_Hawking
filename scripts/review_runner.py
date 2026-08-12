@@ -182,18 +182,44 @@ def validate_review_doc(bundle: str, doc_path: Path) -> tuple[bool, list[str]]:
 _TARGET_ROOTS: tuple[str, ...] = ("", "papers")
 
 
+def _workspace_root() -> Path | None:
+    """The multi-repo workspace this repo sits in, or `None` outside one.
+
+    ⚠️ Via `find_workspace`, never a hardcoded parent-walk — that is the repo convention,
+    and a parent-walk breaks in a worktree.
+    """
+    try:
+        from src.core.workspace import find_workspace
+        return Path(find_workspace())
+    except Exception:
+        return None
+
+
 def _resolve_target(target: str) -> tuple[Path | None, list[str]]:
     """`(path, tried)` — the file a `Location:` names, and every root attempted.
 
     Returning the attempts is what makes the unresolved branch actionable: "does not
     resolve" plus the paths tried is a measurement; "does not resolve" alone is a verdict
     the reader cannot check.
+
+    ⚠️ Some targets are WORKSPACE-relative, not repo-relative — `temporary/working-docs/...`
+    resolves in the workspace that holds this repo, not inside it. Those are live files, and
+    resolving only from the repo root reported them as stale, which is the same false-
+    staleness defect the `papers/` root was added to fix, one directory further out.
     """
     head = target.split(":")[0].strip()
     tried: list[str] = []
-    for root in _TARGET_ROOTS:
-        cand = (PROJECT_ROOT / root / head) if root else (PROJECT_ROOT / head)
-        tried.append(str(cand.relative_to(PROJECT_ROOT)))
+    roots: list[Path] = [PROJECT_ROOT / r if r else PROJECT_ROOT for r in _TARGET_ROOTS]
+    ws = _workspace_root()
+    if ws is not None and ws != PROJECT_ROOT:
+        roots.append(ws)
+    for base in roots:
+        cand = base / head
+        try:
+            shown = str(cand.relative_to(PROJECT_ROOT))
+        except ValueError:                       # outside the repo — show it absolute
+            shown = str(cand)
+        tried.append(shown)
         if cand.is_file():
             return cand, tried
     return None, tried
@@ -251,8 +277,14 @@ def emit_finding_brief(finding_id: str) -> str:
         out += [f"`{target}`", ""]
         path, tried = _resolve_target(target)
         if path is not None:
-            rel = path.relative_to(PROJECT_ROOT)
-            out += [f"Exists at `{rel}`. {path.stat().st_size} bytes.", ""]
+            try:
+                rel = str(path.relative_to(PROJECT_ROOT))
+                outside = ""
+            except ValueError:
+                # A workspace-level target. Say so — a worker who assumes repo-relative
+                # will not find it, and `git log` below covers only this repo.
+                rel, outside = str(path), "  ⚠️ OUTSIDE this repo (workspace-level path)"
+            out += [f"Exists at `{rel}`.{outside} {path.stat().st_size} bytes.", ""]
             out += ["## GIT HISTORY", ""]
             try:
                 log = subprocess.run(

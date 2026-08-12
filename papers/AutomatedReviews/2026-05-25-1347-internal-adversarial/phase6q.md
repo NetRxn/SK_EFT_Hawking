@@ -26,6 +26,7 @@ Twenty findings: 1 BLOCKER, 12 REQUIRED, 7 RECOMMENDED. The substantive math is 
 - **Evidence:** `grep -i "Yin\|Kuwahara\|Abanin\|Toledo.*Tude\|Parker.*Cao" src/core/citations.py` returns no matching keys (only an unrelated `Ying-Degenne` martingale entry). The READINESS_GATES.md Gate-1 rule states: "Every bibkey in the .tex has a matching CITATION_REGISTRY entry … A bibkey that is not in the registry [blocks]." Lean docstrings are not `.tex`, but per the adversarial-reviewer.md gate-1 expansion the same rule applies for load-bearing-citation-in-substrate: the registry is "how the pipeline tracks what has been verified."
 - **Expected:** Each of the 5 references either (a) has a `CITATION_REGISTRY` entry with primary-source PDF cached, or (b) is demoted from "load-bearing substrate reference" to "informal pointer" with an explicit disclaimer in the docstring.
 - **Fix:** Add the 5 entries to `CITATION_REGISTRY` (use existing `CHHK2025DKMTransport` as the template); back-fill primary-source PDFs via `scripts/back_fill_primary_sources.py`; run `validate.py --check citation_primary_sources_present`.
+- **Lane:** `prose`
 
 ### 1.2 — 🔵 RECOMMENDED — CHHK equation-label citations are inconsistent and likely wrong
 - **Gate:** CitationIntegrity
@@ -66,6 +67,7 @@ Twenty findings: 1 BLOCKER, 12 REQUIRED, 7 RECOMMENDED. The substantive math is 
 - **Evidence:** `CITATION_REGISTRY['CastroNeto2009RMPGraphene']` is present with cached primary source.
 - **Expected:** A note in the docstring confirming the precise equation reference, OR a structural primary-source-link via a regenerated `validate.py --check parameter_provenance` pass on this specific parameter.
 - **Fix:** Verify against page 4 of `Lit-Search/Phase-1-and-Background/primary-sources/CastroNeto2009RMPGraphene.pdf`; if eq. (4) is indeed the lattice constant equation, the docstring is fine; if not, correct the reference.
+- **Lane:** `prose`
 
 ### 3.1 — 🟡 REQUIRED — B.2 reverse-direction biconditional is a structural tautology (honestly disclosed but borderline)
 - **Gate:** LeanProofSubstance
@@ -74,6 +76,7 @@ Twenty findings: 1 BLOCKER, 12 REQUIRED, 7 RECOMMENDED. The substantive math is 
 - **Evidence:** Line 191: `⟨zeroCorrelator, zeroCorrelator_isImGRetardedNonneg⟩`. The docstring (lines 168-175) explicitly discloses this: "the substantive 'under action-correlator link' form … is **deferred** to the D1 lift-to-Lean wave," and "both sides hold unconditionally on every DKM substrate via the zero correlator, so the biconditional is structurally complete at substrate level."
 - **Expected:** The docstring honesty saves this from being a BLOCKER. The remaining ask: tag the headline theorem name or docstring more bluntly that this is *substrate-only* — e.g., rename to `chhk_F4_existence_iff_LDP_rate_function_holds_substrate_level` or add a `@[deprecated "..."]`-style banner pointing at the D1-deferred substantive form. The current name implies more than the body delivers.
 - **Fix:** Rename to make the substrate-only scope explicit, OR add an explicit "SUBSTRATE LEVEL ONLY — both sides hold via zero witness" line at the top of the docstring.
+- **Lane:** `lean`
 
 ### 3.2 — 🔵 RECOMMENDED — `IsDKMFeasibleSDPCandidate := True` placeholder retained — KEEP verdict honest
 - **Gate:** LeanProofSubstance
@@ -90,6 +93,7 @@ Twenty findings: 1 BLOCKER, 12 REQUIRED, 7 RECOMMENDED. The substantive math is 
 - **Evidence:** Line 102: `becBogoliubovCommutatorNorm := fun κ => (Nat.factorial (κ + κ) : ℝ)`. Line 207: the proof uses `unfold becBogoliubovCommutatorNorm` to expose the postulated form. The disclosure at lines 331-339 is honest but appears *after* the main headline's prose framing.
 - **Expected:** The headline name `becBogoliubovCommutatorNorm` itself is the source of the framing overclaim — it asserts the sequence IS the BEC Bogoliubov commutator norm, when in fact it is a *postulated substrate stand-in*. Either (a) rename to e.g. `becBogoliubovBosonicStandInSequence` or `superFactorialBosonicWitness`, or (b) move the "physical-stand-in" disclaimer to the *top* of the module docstring (before the substantive prose).
 - **Fix:** Reframe headline naming OR top-of-file disclaimer move.
+- **Lane:** `lean`
 
 ### 3.4 — 🔵 RECOMMENDED — `bec_distinguishes_from_graphene_super_factorial` substantive companion is genuinely substantive
 - **Gate:** LeanProofSubstance
@@ -116,6 +120,7 @@ Twenty findings: 1 BLOCKER, 12 REQUIRED, 7 RECOMMENDED. The substantive math is 
 - **Evidence:** `grep -n "0\.6" lean/SKEFTHawking/DKMBootstrap/HorizonTransportBootstrap.lean lean/SKEFTHawking/DKMBootstrap/E1E2CrossBridge.lean temporary/working-docs/phase6q/wave_2c_positioning.md` returns 5 sites of the stale value.
 - **Expected:** Single canonical value 0.0756 (or its `0.0757` rounding) across all four artifacts. The 0.6 number is wrong by ~8× and must not appear in any post-strengthening-close documentation.
 - **Fix:** Global replace `≈ 0.6` → `≈ 0.0756` (or `≈ 0.0757`) in the five sites above, then re-grep for any remaining 0.6 references to confirm no missed instances.
+- **Lane:** `infra`
 
 ### 4.2 — 🟡 REQUIRED — Module count drift: roadmap + memory say "9 new modules", inventory says "10" or "11", actual is 11
 - **Gate:** CrossPaperConsistency
@@ -128,6 +133,7 @@ Twenty findings: 1 BLOCKER, 12 REQUIRED, 7 RECOMMENDED. The substantive math is 
 - **Evidence:** `ls lean/SKEFTHawking/DKMBootstrap/*.lean | wc -l` = 11. `wc -l lean/SKEFTHawking/DKMBootstrap/*.lean` total = 2709 lines (inventory says ~2050 LoC — ~30% undercount).
 - **Expected:** Three-way consistency: roadmap, memory, inventory all agree (a) Session 1 shipped 10 modules, (b) Session 2 added 1 module, (c) current total = 11 modules, ~2709 LoC.
 - **Fix:** Edit roadmap line 9 + 424 "9 new" → "10 new (Session 1) + 1 new (Session 2) = 11 total"; edit memory line 10 + 53 + 60; edit inventory line 56 "10 new" → "11 modules (Session 1 + Session 2)"; correct LoC claim from "~2,050" to "~2,710" (or accept ~2,700 round).
+- **Lane:** `infra`
 
 ### 4.3 — 🔵 RECOMMENDED — Roadmap claims "10 Lean modules" under Session 1 close
 - **Gate:** CrossPaperConsistency
@@ -144,6 +150,7 @@ Twenty findings: 1 BLOCKER, 12 REQUIRED, 7 RECOMMENDED. The substantive math is 
 - **Evidence:** No `FirstClaimLedger` node exists yet (per gate doc); no documented prior-work search appears in the working doc, the Lit-Search dispatches, the roadmap, or the strengthening-close memory.
 - **Expected:** Either (a) demote to "first formally-verified analog known to the authors" / "to our knowledge, first formally-verified analog", or (b) document a prior-work search of Mathlib / Coq / Agda / Rocq before keeping the unqualified "first" claim.
 - **Fix:** Add a hedge to the L2-entry prose, OR add a ledger entry documenting the prior-work search (Lean's Mathlib has no CHHK transport-bootstrap formalization; Coq/Rocq/Agda likewise — but this requires explicit verification before the unqualified "first" claim).
+- **Lane:** `prose`
 
 ### 5.2 — 🟡 REQUIRED — Working doc's "graphene witness substantively non-trivial" framing overclaims relative to Lean substrate
 - **Gate:** NarrativeGrounding
@@ -152,6 +159,7 @@ Twenty findings: 1 BLOCKER, 12 REQUIRED, 7 RECOMMENDED. The substantive math is 
 - **Evidence:** `grapheneDKMParameters` at `E1E2CrossBridge.lean:83-93` has all five fields = 1. `IsMIRBound p mirConst := mirConst ≤ p.collectiveMeanFreePath / p.a` unfolds to `1/2 ≤ Real.sqrt(1·1)/1 = 1` — `norm_num` discharges trivially.
 - **Expected:** Working doc prose explicitly notes that the Lean theorem is at the *normalized substrate* (τ = D = a = 1) and the substantive physical claim is the Python-side `0.0756 ≤ ℓ/a` against Crossno's measured value.
 - **Fix:** Edit the L2-entry prose (line 29 + line 12 in the working doc) to add the qualifier "(Lean substrate at normalized parameters; substantive physical value `0.0756 ≤ ℓ/a` ships Python-side)" or similar.
+- **Lane:** `prose`
 
 ### 5.3 — 🔵 RECOMMENDED — "Highest-leverage cross-bridge of Phase 6q" is interpretive
 - **Gate:** NarrativeGrounding
@@ -176,6 +184,7 @@ Twenty findings: 1 BLOCKER, 12 REQUIRED, 7 RECOMMENDED. The substantive math is 
 - **Evidence:** Lines 220-224 show `h_pos` passed-through but unused in `chhk_positivity_yields_LDP_rate_function`'s body (LDPBridge.lean:143-147 has `_h_pos` underscore).
 - **Expected:** Rename or restructure to make the substantive engine explicit: e.g., `dkm_parameters_yield_LDP_compatible` taking `(h_pos, β, hβ, p)` and producing `IsLDPCompatibleCorrelator G β p` — with a docstring note that the F4 input is bundled-only-for-output, not load-bearing.
 - **Fix:** Either rename, or add a docstring sentence: "Substantive note: the F4 positivity hypothesis `h_pos` is preserved in the output pair but does not enter the rate-function discharge — the rate function is `DKMParameters`-determined."
+- **Lane:** `lean`
 
 ### 6.2 — 🔵 RECOMMENDED — Phase 6q axiom-set bridges (F4/F5/F6) require the action-correlator link as undisclosed in roadmap
 - **Gate:** AssumptionDisclosure
@@ -192,6 +201,7 @@ Twenty findings: 1 BLOCKER, 12 REQUIRED, 7 RECOMMENDED. The substantive math is 
 - **Evidence:** `wc -l lean/SKEFTHawking/DKMBootstrap/*.lean` total = 2709.
 - **Expected:** Match within ~5%.
 - **Fix:** Update inventory line 106 to "~2,710 LoC".
+- **Lane:** `infra`
 
 ### 7.2 — 🟡 REQUIRED — Pytest count: roadmap + memory + inventory say 4149; counts.json says 4218
 - **Gate:** NumericalFreshness
@@ -200,6 +210,7 @@ Twenty findings: 1 BLOCKER, 12 REQUIRED, 7 RECOMMENDED. The substantive math is 
 - **Evidence:** `counts.json` line 414: `"pytest_cases": 4218`. Live collection: 4150 collected. Roadmap line 486 + memory line 35 + inventory line 55: "pytest 4149/0".
 - **Expected:** Single canonical pytest count, sourced from `counts.json`, reported consistently across the three text artifacts.
 - **Fix:** Decide canonical reporting convention (e.g., "4218 total / 4150 default-run / 68 slow-deselected") and propagate.
+- **Lane:** `infra`
 
 ### 7.3 — 🔵 RECOMMENDED — Roadmap "~1,800 LoC" → actual Session 1 LoC ≈ 2,368 (=2709 − 341 BEC)
 - **Gate:** NumericalFreshness

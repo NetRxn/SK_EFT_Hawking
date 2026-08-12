@@ -89,12 +89,42 @@ class TestTargetResolution:
         assert path is not None and path.name == "review_runner.py"
         assert tried[0] == "scripts/review_runner.py"
 
+    def test_a_WORKSPACE_level_target_resolves(self):
+        """⚠️ `temporary/working-docs/...` lives in the workspace that HOLDS this repo, not
+        inside it. Resolving only from the repo root reported those files as stale — the
+        same false-staleness defect the `papers/` root was added to fix, one directory
+        further out. Found because an adjudicator cited content from a file the repo-root
+        resolver said did not exist, and the file was real."""
+        ws = rr._workspace_root()
+        if ws is None or ws == rr.PROJECT_ROOT:
+            pytest.skip("not running inside a multi-repo workspace")
+        probe = "temporary/working-docs/phase6q/wave_2c_positioning.md"
+        if not (ws / probe).is_file():
+            pytest.skip(f"{probe} is not present in this workspace")
+        path, tried = rr._resolve_target(probe + ":29")
+        assert path is not None, f"resolved against none of {tried}"
+        assert path.is_file()
+
+    def test_the_workspace_root_comes_from_find_workspace(self):
+        """Never a hardcoded parent-walk — that is the repo convention, and a parent-walk
+        breaks in a worktree."""
+        src = Path(rr.__file__).read_text(encoding="utf-8")
+        assert "find_workspace" in src
+        assert "parent.parent.parent" not in src
+
     def test_an_unresolvable_target_NAMES_WHAT_IT_TRIED(self):
         """'Does not resolve' plus the paths tried is a measurement. Alone it is a verdict
         the reader cannot check."""
         path, tried = rr._resolve_target("no/such/file.tex:12")
         assert path is None
-        assert tried == ["no/such/file.tex", "papers/no/such/file.tex"]
+        # Repo root, then `papers/`, then the workspace root when there is one. The
+        # workspace candidate is shown ABSOLUTE because it lies outside the repo.
+        assert tried[:2] == ["no/such/file.tex", "papers/no/such/file.tex"]
+        ws = rr._workspace_root()
+        if ws is not None and ws != rr.PROJECT_ROOT:
+            assert tried[2] == str(ws / "no/such/file.tex")
+        else:
+            assert len(tried) == 2
 
     def test_the_unresolved_branch_of_the_brief_is_reachable_and_honest(self):
         node = _a_finding_with_an_UNRESOLVABLE_target()

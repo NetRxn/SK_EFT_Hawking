@@ -314,6 +314,7 @@ BLOCKER is resolved.
   phantom reference (it correctly cites `kaulMajumdar_not_H_RT` in cell
   `rtch-t-5-md`), so the impact is local to the Lean module.
 - **Cache:** n/a.
+- **Lane:** `lean`
 
 ### 5.1 — 🟡 REQUIRED — Notebook claim "first formalization" is implicit but not made explicit; should be stated honestly
 

@@ -248,3 +248,4 @@ These elements should be preserved and highlighted more prominently:
 - **The conditional chain** `[24 | 8N_f] ∧ [c_- = 8N_f] ⟹ [3 | N_f]` is tight, correct, and completely machine-verified. Zero sorries. This should be the centerpiece.
 - **The `with/without ν_R` comparison table** is pedagogically excellent and should be kept.
 - **The disclosure that Rokhlin enters as a hypothesis** is intellectually honest and rare in AI-generated physics papers. Keep and expand it as a model for how to handle other conditional results.
+- **Lane:** `prose`

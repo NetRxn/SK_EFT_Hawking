@@ -76,6 +76,7 @@ Pipeline validation: `paper20_scalar_rung/paper_draft.tex` shows 13 bibitems; al
 - **Impact at draft stage:** none — paper is draft-ready
 - **Impact at submission stage:** **submission-blocking until each `doi_verified: None → True` flip is recorded**, with corresponding `citation_verifications.jsonl` entries
 - **Path to closure:** schedule a future authorized-WebFetch run (or manual verification with `scripts/citation_cache.py append_record`) for the 10 entries; the entries are already structured to receive the verification (each has `doi`, `arxiv` fields populated where applicable)
+- **Lane:** `research`
 
 ## QI register update
 

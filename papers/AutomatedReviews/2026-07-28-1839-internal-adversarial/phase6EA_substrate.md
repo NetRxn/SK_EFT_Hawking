@@ -111,6 +111,7 @@ reference backed by a call" claims verified against `lean/lean_deps.json` `value
   rewrites the residual content is `NNReal.coe_mul`. I reproduced the proof verbatim in a
   scratch theorem — it compiles with exactly those three rewrites.
 - **Expected:** Per checklist #3, "every cross-reference in a docstring must be backed by a Lean
+- **Lane:** `lean`
   call in the body." The claim "without this, `η` would be a bare algebraic parameter" is false
   as stated: this theorem creates no tie to `shotPSD_plane_transfer` whatsoever, so `η` there
   remains exactly as bare as before.
@@ -149,6 +150,7 @@ reference backed by a call" claims verified against `lean/lean_deps.json` `value
   does establish it — `poisson_avgError_equalRates_eq_half` (floor ¼, exact value ½, both over
   the *same* experiment).
 - **Fix:** rewrite the two concluding sentences; delete or correct the "√N at the decision
+- **Lane:** `lean`
   level N = 4" parenthetical.
 
 ### 2.3 — 🟡 MAJOR — Notebook INDEX records a retracted, non-existent Mathlib route as CHOSEN
@@ -171,6 +173,7 @@ reference backed by a call" claims verified against `lean/lean_deps.json` `value
   graph); "Commit state: main `c386610e`" (actual `0af953df`); Frontier "NEXT BRICK: dispatch
   6EA W3".
 - **Fix:** correct the DECISIONS line to name `posSemidef_eq_of_mul_self_eq` and record
+- **Lane:** `infra`
   `Matrix.PosSemidef.sq_eq_sq_iff` as **not-at-pin / retracted**; refresh the W3 checklist row,
   decl count, commit state, and Frontier.
 
@@ -190,6 +193,7 @@ reference backed by a call" claims verified against `lean/lean_deps.json` `value
   adjudicated both in this review — see 3.3 and 4.1 — but that is a backstop, not the wave's
   own audit.)
 - **Fix:** append a Wave-3 notebook entry and a per-wave audit block recording the disposition
+- **Lane:** `infra`
   of every checklist-#1…#5 flag, including the two carried-forward tautology risks and the
   findings in this report.
 
@@ -226,6 +230,7 @@ substrate sweep missed Mathlib's own decision-theory module
   contains only `Coding`, `Hamming`, `KullbackLeibler`. So the *bounds* are genuine whitespace;
   the *framework* is not.
 - **Fix:** (i) document a prior-art search (Coq `infotheo` — Affeldt et al. — formalizes
+- **Lane:** `research`
   Bhattacharyya-type channel bounds and is the most likely counter-example; Isabelle AFP
   probability/concentration entries) before any D12-facing repetition; (ii) strike the MLR item
   from the enumerated family or ship it; (iii) restate L24 as "Mathlib carries a Bayes/minimax

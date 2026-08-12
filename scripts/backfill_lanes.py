@@ -122,8 +122,13 @@ def _insert_lane(text: str, body_span: tuple[int, int], lane: str) -> str:
     body = text[start:end]
     line = f'- **Lane:** `{lane}`\n'
     fields = list(_FIELD_LINE.finditer(body))
-    if fields:
-        at = body.index('\n', fields[-1].start()) + 1
+    nl = body.find('\n', fields[-1].start()) if fields else -1
+    if nl != -1:
+        at = nl + 1
+    elif fields:
+        # The last field line IS the last line, with no trailing newline.
+        at = len(body)
+        line = '\n' + line
     else:
         at = len(body.rstrip()) + 1 if body.strip() else 0
         line = '\n' + line
@@ -150,11 +155,24 @@ def collect(blocking_only: bool = True) -> list[dict]:
 
 
 def apply(items: list[dict], dry_run: bool = False) -> tuple[int, list[str]]:
-    """Write each item's lane into its review document. Returns `(written, skipped)`."""
+    """Write each item's lane into its review document. Returns `(written, skipped)`.
+
+    ⚠️ **IDEMPOTENT BY RE-READING THE LIVE CORPUS**, not by trusting the input. An
+    adjudicated JSON records what a finding SHOULD carry, not what it already carries, so
+    replaying one after a partial run would insert a second `Lane:` line — and
+    `_parse_finding_field` takes the first match, leaving a stale duplicate that no reader
+    would ever notice. This matters because the first run DID die partway through, on a
+    finding whose last field line had no trailing newline.
+    """
+    live = {n['id']: (n['meta'] or {}).get('lane')
+            for n in _bg.extract_review_finding_nodes()}
     by_file: dict[str, list[dict]] = {}
     for it in items:
-        if it.get('lane'):
-            by_file.setdefault(it['review_file'], []).append(it)
+        if not it.get('lane'):
+            continue
+        if live.get(it['id'], 'unclassified') != 'unclassified':
+            continue                     # already declared — never write a second line
+        by_file.setdefault(it['review_file'], []).append(it)
 
     written, skipped = 0, []
     for rel, group in sorted(by_file.items()):

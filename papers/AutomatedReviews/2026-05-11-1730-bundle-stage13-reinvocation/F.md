@@ -255,6 +255,7 @@ citation; missing T_H provenance.
   Lorentzian-geometry first-formalisations") should be renamed in
   particular — title-level first-claims read as the most assertive form.
 - **Severity rationale:** REQUIRED rather than BLOCKER because the
+- **Lane:** `prose`
   hedging ("to our knowledge") is uniformly applied where the claims
   live, so a reader will not be misled into believing the searches were
   exhaustive. Submission-blocking under the strict reading of the task

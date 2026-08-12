@@ -75,6 +75,7 @@ distribution of the notebooks themselves.
 - **Evidence:** `grep -nE "Pendlebury|2.8e-11|EDM|theta|Zhitnitsky|RHO_DE|LAMBDA_QCD|neutron" src/core/provenance.py` returns one unrelated GW170817 hit. The strong-CP / DE parameters are absent.
 - **Expected:** Add three PARAMETER_PROVENANCE entries — `LAMBDA_QCD_PDG` (PDG-anchored 0.1 GeV; cite `ParticleDataGroup` registry entry), `NEUTRON_EDM_THETA_BOUND` (cite Pendlebury2015), `RHO_DE_PLANCK_DESI` (cite Planck2018 + DESI2024 with the Ω_Λ → eV⁴ conversion documented). Each must include `human_verified_date` before paper32 submission (per Invariant 8: "human verification … unblocks paper submission").
 - **Cache:** N/A.
+- **Lane:** `prose`
 
 ### F-4 — 🟡 REQUIRED — Technical notebook misdescribes IsAnomalyMatchingCompatible_no_planck_theta semantics [class: overclaim]
 
@@ -92,6 +93,7 @@ distribution of the notebooks themselves.
   i.e. it proves an unconditional `False` from the contradictory premises `(tv : ThetaVacuum)` and `tv.theta = 1`. It is **not** a statement about `IsAnomalyMatchingCompatible` and never references that predicate in its body — it never evaluates *any* of the three pillars; it derives `False` from the EDM invariant alone. The cell's "short-circuits via the theta_small invariant — the other two pillars are not even evaluated" reads as a description of evaluating `IsAnomalyMatchingCompatible` at θ = 1, which is wrong: the theorem is vacuously about a non-existent `ThetaVacuum`, not about the predicate.
 - **Expected:** Reword to: "At θ = 1, no `ThetaVacuum` exists at all — the theorem `IsAnomalyMatchingCompatible_no_planck_theta` proves `False` from the impossible pair of hypotheses (any `tv : ThetaVacuum`) ∧ (`tv.theta = 1`). The predicate `IsAnomalyMatchingCompatible` is never instantiated at θ = 1 because the structural premise of the conjunction (a valid `ThetaVacuum`) is uninhabitable."
 - **Note:** The Lean theorem's name is misleading on its own — `IsAnomalyMatchingCompatible_no_planck_theta` advertises a property of the predicate, but the body proves `False` directly without referencing the predicate. The naming is project-internal and not a notebook finding, but the notebook prose treats the name at face value, which is what produced the drift.
+- **Lane:** `prose`
 
 ### F-5 — 🟡 REQUIRED — Paper-vs-figure-vs-notebook orders-of-magnitude inconsistency [class: contradiction]
 
@@ -103,6 +105,7 @@ distribution of the notebooks themselves.
 - **Observed:** The figure-generation function's docstring asserts "~2 orders" while the paper and both notebooks assert "3 orders". 240× is approximately 10^2.38 — strictly 3 orders, not 2. The figure docstring is wrong.
 - **Evidence:** log10(6.71e-9 / 2.8e-11) = log10(239.6) = 2.379. So "within 3 orders" is correct (the canonical "Zhitnitsky proposal precision" is 3 orders, per the paper line 41); "within ~2 orders" is mathematically false (2.379 > 2).
 - **Expected:** Fix `src/core/visualizations.py:9141` docstring to "within ~3 orders without free parameters" (or "within a factor of ~240"). The figure file itself is unaffected — only the docstring drifts.
+- **Lane:** `pyrust`
 
 ### F-6 — 🟡 REQUIRED — Stakeholder notebook unverified physics-mechanism interpretive claim [class: overclaim]
 
@@ -111,6 +114,7 @@ distribution of the notebooks themselves.
 - **Observed:** "Van Waerbeke and Zhitnitsky (2025) pointed out that the QCD topological vacuum, viewed through **gauge/gravity duality and the analog of black-body emission for topological excitations**, naturally produces a vacuum energy density…"
 - **Evidence:** WebFetch of `https://arxiv.org/abs/2506.14182` abstract reports "physically motivated dark-energy (DE) model rooted in the topological structure of the Quantum ChromoDynamic (QCD) vacuum" — does not mention gauge/gravity duality nor "black-body emission for topological excitations" in the visible abstract. PDF body could not be fetched (binary content). The two specific mechanism phrases the notebook prose attributes to VW-Z are not verified against the paper body and are not load-bearing for any claim downstream — they are colour for a non-specialist tour. Risk: a stakeholder reader who clicks through to arXiv:2506.14182 and finds neither phrase will lose confidence in the notebook.
 - **Expected:** Either (a) drop the mechanistic phrases and use the abstract-grounded "rooted in the topological structure of the QCD vacuum" language, or (b) verify the phrases against the paper body and add the page/section citation. Until verified, the cell should not assert mechanistic detail beyond what the abstract supports.
+- **Lane:** `prose`
 
 ### F-7 — 🔵 RECOMMENDED — "no free parameters" claim relies on input scales already chosen [class: overclaim]
 

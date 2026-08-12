@@ -31,6 +31,7 @@ Aggregate verdict: **GREEN** (paper-local; 1 carryforward REQUIRED inherited fro
 
 - **Status:** **CLOSED**.
 - **Evidence:** `provenance.py:1107-1112` — `llm_verified_date` flipped to `2026-04-26`; `llm_verified_notes` rewritten to "PDG 2024 top mass m_t = 172.57 ± 0.29 GeV (single canonical PDG 2024 entry, S. Navas et al., PRD 110, 030001). y_t = √2 · 172.57 / 246.21965 = 0.9912. Updated 2026-04-26 from prior 0.9946 (which used 172.76 as central) to align with EW.M_TOP_GEV = 172.57." Single canonical attribution; references the `EW.M_TOP_GEV` entry; no longer self-contradicts. Cross-source consistency: `constants.py:1815/1825` (172.57 / 0.9912), `provenance.py:1078,1098` (172.57 / 0.9912), `paper_draft.tex:440` (172.57). All agree.
+- **Lane:** `pyrust`
 
 ## §6 rewrite audit (Round 4 fresh-context scan)
 
