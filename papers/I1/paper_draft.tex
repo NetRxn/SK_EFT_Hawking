@@ -237,8 +237,8 @@ checked by the validation suite (Section~\ref{sec:pipeline}). The gap
 equation for tetrad condensation ran this cycle end to end. Its
 critical coupling $G_c = 8\pi^2/(N_f \Lambda^2)$ was derived in Python
 and proved in Lean within the project
-(\texttt{criticalCoupling\_formula}, tied to the Coleman--Weinberg
-effective potential of the emergent-gravity module by
+(\texttt{criticalCoupling\_formula}, shown equal to the
+emergent-gravity module's own critical coupling by
 \texttt{criticalCoupling\_eq\_adw}), and the nine theorems fixing the
 equation's solution structure around that coupling were closed by
 Aristotle in run~\texttt{79e07d55}, whose identifier the Python
@@ -2419,12 +2419,17 @@ a real proof would require; a registered name is excluded from theorem
 totals; and a registered name is not cited in a paper as a result.
 The first of those is a hand-maintained registry rather than a
 derivation, and on inspection it does not have the coverage the other
-two controls assume. Six definitions in the substrate unfold to the
-trivially true proposition: \texttt{IsLocallyWellPosed},
+two controls assume. Seven definitions in the substrate unfold to the
+trivially true proposition: \texttt{IsLocallyWellPosed} and
+\texttt{IsBelRobinsonEnergyFinite} in the Cauchy-problem module,
 \texttt{IsStationaryAxisymmetricVacuumBH}, and two pairs named
 \texttt{hasCTPStructure} and \texttt{hasHermiticity} in the
-Schwinger--Keldysh axiom modules. None of the six is registered, and
-the registry's entries are a different family of names. Two
+Schwinger--Keldysh axiom modules. None of the seven is registered, and
+the registry's entries are a different family of names. The seventh
+was missed on a first pass because its definition splits \texttt{:
+Prop :=} and \texttt{True} across two lines, which a line-oriented
+scan does not see. That is the same shape of measurement error this
+section is about. Two
 consequences follow directly. Markers concluding with these predicates
 sit inside the substantive theorem count rather than outside it, and
 the check meant to enforce the third control reads the registry, so it
