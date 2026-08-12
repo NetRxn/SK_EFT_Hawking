@@ -164,7 +164,8 @@ Shapes encode semantic roles — a visual dimension independent of color:
 |------|------|----|---------|----------|----------|
 | `VERIFIES` | PythonTest | Formula/Parameter/LeanTheorem | Test covers artifact; carries `test_kind` attribute | Wave 2a+ | ✅ |
 | `FLAGS` | ReviewFinding | any | Review flagged this artifact | Wave 2c | ✅ |
-| `SUPERSEDES` | ReviewFinding | ReviewFinding | Later review resolved/reopened earlier finding | Wave 2c | ❌ — the supersession ledger is read from `review_finding_supersessions.json` as a **status override on the finding node**, never materialised as an edge |
+| `SUPERSEDES` | ReviewFinding | ReviewFinding | Later review resolved/reopened earlier finding | Wave 2c | ❌ — the supersession ledger is read from `review_finding_supersessions.json` as a **status override on the finding node**, never materialised as an edge. Its sole supported writer is `scripts/close_finding.py` |
+| `BLOCKED_BY` | ReviewFinding | ReviewFinding | This finding waits on another, or on an external release condition (`run:` `phase:` `pub:` `research:`) | ADR-012 D10 | ⏳ — **emitter live, zero edges today** (`blocked_by` is forward-only). The consumer is `build_graph.finding_is_dispatchable`, which orchestration calls — and orchestration is not built. **Do not read this row as gated.** An entry naming no node RAISES rather than dropping |
 | `PRODUCES` | ProductionRun | Formula/PaperClaim | Run generated data this depends on | Wave 2d | ❌ **deferred to Wave 4, which closed DONE 2026-04-15 without it.** Queried by `ProductionRunHealth`, whose prose-regex fallback fired and masked the missing primary path |
 | `REPORTS` | Paper | CountMetric | Paper reports a count value (comparable to canonical) | Wave 2g | ✅ |
 | `SUPPORTS` | artifact | artifact | Mutual reinforcement (dual of CONTRADICTS) | Wave 2f | ❌ — queried by `NarrativeGrounding`, which therefore passes vacuously for every paper carrying no `interesting` ProseClaim |

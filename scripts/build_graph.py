@@ -2974,6 +2974,7 @@ def extract_all_edges_without_gates(node_ids: set) -> list[dict]:
     edges.extend(extract_uses_edges(node_ids))
     edges.extend(extract_verifies_edges(node_ids))
     edges.extend(extract_flags_edges(node_ids))
+    edges.extend(extract_blocked_by_edges())          # ADR-012 D10 — BOTH sites
     edges.extend(extract_reports_edges(node_ids))
     edges.extend(extract_cites_source_edges(node_ids))
     edges.extend(extract_cites_theorem_edges(node_ids))
@@ -3824,6 +3825,72 @@ def _invert_bundle_mapping() -> dict[str, list[str]]:
     return inverted
 
 
+def _blocked_by_edges(finding_nodes: list[dict]) -> list[dict]:
+    """`ReviewFinding → ReviewFinding` edges from `meta['blocked_by']` (ADR-012 D10).
+
+    Pure, so tests bind the real predicate rather than re-deriving it.
+
+    ⚠️ THIS FIELD CARRIES TWO KINDS OF ENTRY and the discrimination is by PREFIX. A token
+    matching a declared release scheme (`_RELEASE_SCHEMES`) is an external condition —
+    evaluated elsewhere, never resolved to a node. Everything else must resolve to a minted
+    finding id, **including an unrecognised scheme**: `runs:42` raises rather than becoming
+    a blocker nothing can ever satisfy, because a token that cannot be satisfied reads as
+    WAITING when it is STUCK.
+
+    ⚠️ RAISES rather than dropping. A `blocked_by` naming no finding is the same class as
+    the 66 ledger records that name no node: silently inert, indistinguishable from absent.
+    """
+    ids = {n['id'] for n in finding_nodes}
+    edges: list[dict] = []
+    for n in finding_nodes:
+        for dep in (n.get('meta') or {}).get('blocked_by') or []:
+            if dep.startswith(_RELEASE_SCHEMES):
+                continue
+            if ':' in dep and not dep.startswith('review:'):
+                raise ValueError(
+                    f"{n['id']}: blocked_by {dep!r} carries an unrecognised scheme. Known "
+                    f"release schemes: {', '.join(_RELEASE_SCHEMES)}. A token nothing can "
+                    f"satisfy reads as WAITING when it is STUCK.")
+            if dep not in ids:
+                raise ValueError(
+                    f"{n['id']}: blocked_by {dep!r} names no minted finding. Silently "
+                    f"dropping it is the 66-record orphan class one layer up.")
+            edges.append({'source': n['id'], 'target': dep, 'type': 'BLOCKED_BY'})
+    return edges
+
+
+def extract_blocked_by_edges() -> list[dict]:
+    """Argument-free, matching every sibling extractor.
+
+    ⚠️ There are TWO edge-assembly sites — the pre-gate view built inside
+    `extract_readiness_gate_nodes`, and the real graph — and both receive only a set of
+    node ids, never the finding `meta` this needs. Fetching our own nodes is what lets both
+    sites call this identically; patching one would leave the gate view and the graph
+    disagreeing about what is blocked.
+    """
+    return _blocked_by_edges(extract_review_finding_nodes())
+
+
+def finding_is_dispatchable(node: dict, node_ids: set[str],
+                            closed_ids: set[str]) -> bool:
+    """THE CONSUMER — a finding waits on every unclosed blocker and every unmet condition.
+
+    ⚠️ A new edge type ships with a consumer. `KNOWLEDGE_GRAPH.md` already carries three
+    types that gates query and nothing emits, and `PRODUCES` sat expired for a full wave
+    because a prose-regex fallback fired and masked it.
+
+    Release conditions are OPAQUE here — their evaluation lands with parked work — so any
+    present one holds the finding. That is the safe direction: reporting a parked item as
+    dispatchable is worse than reporting a released one as waiting.
+    """
+    for dep in (node.get('meta') or {}).get('blocked_by') or []:
+        if dep.startswith(_RELEASE_SCHEMES):
+            return False
+        if dep not in closed_ids:
+            return False
+    return True
+
+
 def extract_flags_edges(node_ids: set) -> list[dict]:
     """FLAGS: ReviewFinding -> Paper / Formula / LeanTheorem / etc.
 
@@ -4138,6 +4205,7 @@ def extract_all_edges(node_ids: set) -> list[dict]:
     edges.extend(extract_uses_edges(node_ids))
     edges.extend(extract_verifies_edges(node_ids))
     edges.extend(extract_flags_edges(node_ids))
+    edges.extend(extract_blocked_by_edges())          # ADR-012 D10 — BOTH sites
     edges.extend(extract_reports_edges(node_ids))
     edges.extend(extract_cites_source_edges(node_ids))
     edges.extend(extract_cites_theorem_edges(node_ids))

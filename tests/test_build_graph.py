@@ -1256,3 +1256,47 @@ class TestLaneAndReleaseSchemesAreDeclaredOnce:
         from scripts.build_graph import _parse_finding_field
         assert _parse_finding_field("- **gate:** CitationIntegrity\n", 'Gate') == \
             'CitationIntegrity'
+
+
+class TestBlockedByIsADagWithAConsumer:
+    """ADR-012 D10. ⚠️ KNOWLEDGE_GRAPH.md already carries three edge types that gates query
+    and nothing emits, and PRODUCES sat expired for a whole wave because a fallback masked
+    it. A new edge type ships with a consumer and a test proving the consumer sees it."""
+
+    def test_a_release_scheme_is_not_treated_as_a_node_reference(self):
+        from scripts.build_graph import _blocked_by_edges, finding_is_dispatchable
+        n = {'id': 'review:d:X:1',
+             'meta': {'blocked_by': ['run:mlx-rhmc-2026'], 'status': 'open'}}
+        assert _blocked_by_edges([n]) == []
+        assert finding_is_dispatchable(n, {'review:d:X:1'}, set()) is False
+
+    def test_an_unrecognised_scheme_raises_rather_than_blocking_forever(self):
+        from scripts.build_graph import _blocked_by_edges
+        n = {'id': 'review:d:X:1', 'meta': {'blocked_by': ['runs:42'], 'status': 'open'}}
+        with pytest.raises(ValueError, match='runs:42'):
+            _blocked_by_edges([n])
+
+    def test_a_blocked_by_naming_no_node_raises(self):
+        from scripts.build_graph import _blocked_by_edges
+        n = {'id': 'review:d:X:1',
+             'meta': {'blocked_by': ['review:d:X:99'], 'status': 'open'}}
+        with pytest.raises(ValueError, match='review:d:X:99'):
+            _blocked_by_edges([n])
+
+    def test_a_resolvable_blocker_emits_an_edge_and_gates_dispatch(self):
+        from scripts.build_graph import _blocked_by_edges, finding_is_dispatchable
+        a = {'id': 'review:d:X:1',
+             'meta': {'blocked_by': ['review:d:X:2'], 'status': 'open'}}
+        b = {'id': 'review:d:X:2', 'meta': {'blocked_by': [], 'status': 'open'}}
+        assert _blocked_by_edges([a, b]) == [
+            {'source': 'review:d:X:1', 'target': 'review:d:X:2', 'type': 'BLOCKED_BY'}]
+        ids = {'review:d:X:1', 'review:d:X:2'}
+        assert finding_is_dispatchable(a, ids, set()) is False
+        assert finding_is_dispatchable(a, ids, {'review:d:X:2'}) is True
+        assert finding_is_dispatchable(b, ids, set()) is True
+
+    def test_the_live_corpus_emits_without_raising(self):
+        """Zero edges today — `blocked_by` is forward-only. The value of this test is that
+        it RAISES the day a malformed one is filed, instead of dropping it."""
+        from scripts.build_graph import extract_blocked_by_edges
+        assert extract_blocked_by_edges() == []

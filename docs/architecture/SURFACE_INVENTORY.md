@@ -144,7 +144,7 @@ checks read. See `validate._CANONICAL_ORDER`.
 ## Knowledge graph — types
 
 - **Node types:** 26 — `AristotleRun`, `AuditEvent`, `ClaimCluster`, `Contradiction`, `CountMetric`, `Figure`, `Formula`, `Hypothesis`, `LeanAxiom`, `LeanDef`, `LeanInductive`, `LeanInstance`, `LeanModule`, `LeanStructure`, `LeanTheorem`, `Paper`, `PaperClaim`, `Parameter`, `PlaceholderMarker`, `PrimarySource`, `ProductionRun`, `ProseClaim`, `PythonTest`, `ReadinessGate`, `ReviewFinding`, `Sentence`
-- **Edge types emitted:** 22 — `ASSUMES`, `BACKED_BY`, `CITES`, `CITES_SOURCE`, `CITES_THEOREM`, `CLAIMS`, `CLAIMS_APEX`, `DEPENDS_ON`, `DEPENDS_ON_AXIOM`, `FLAGS`, `GROUNDED_IN`, `HAS_FIGURE`, `IMPORTS`, `LOGGED_BY`, `MEMBER_OF`, `PROVED_BY`, `REPORTS`, `SOURCED_FROM`, `USED_BY`, `USES`, `VERIFIED_BY`, `VERIFIES`
+- **Edge types emitted:** 23 — `ASSUMES`, `BACKED_BY`, `BLOCKED_BY`, `CITES`, `CITES_SOURCE`, `CITES_THEOREM`, `CLAIMS`, `CLAIMS_APEX`, `DEPENDS_ON`, `DEPENDS_ON_AXIOM`, `FLAGS`, `GROUNDED_IN`, `HAS_FIGURE`, `IMPORTS`, `LOGGED_BY`, `MEMBER_OF`, `PROVED_BY`, `REPORTS`, `SOURCED_FROM`, `USED_BY`, `USES`, `VERIFIED_BY`, `VERIFIES`
 - **Edge types the gates query:** 11 — `ASSUMES`, `CLAIMS`, `CONTRADICTS`, `DEPENDS_ON`, `FLAGS`, `GROUNDED_IN`, `PRODUCES`, `REPORTS`, `SUPPORTS`, `VERIFIED_BY`, `VERIFIES`
 
 ⚠️ **3 edge type(s) are queried by a gate and emitted by nothing:** `CONTRADICTS`, `PRODUCES`, `SUPPORTS`. A gate reading a dead edge type returns a
