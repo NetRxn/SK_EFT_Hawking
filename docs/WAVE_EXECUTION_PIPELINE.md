@@ -691,6 +691,13 @@ catalogued instances and leaves the generator alive.
 **The supersession ledger is append-only.** Never remove an entry from
 `review_finding_supersessions.json`; `_introduced_by` and `superseded_by` preserve the audit trail.
 
+⚠️ **One in-place edit is permitted, and was performed once (2026-08-12): re-keying a record whose
+`finding_id` matches no minted node.** Such a record closes nothing — it is inert, indistinguishable
+from absent — so correcting its key adds information rather than removing any, and the former key is
+preserved in `notes`. Two candidates were **skipped** because their corrected key already carried a
+record: the reader is last-wins, so re-keying onto an occupied id would have made one of the pair
+silently do nothing. Records are otherwise written only by `scripts/close_finding.py`.
+
 **Gate (advisory):** the QI register exists, is regenerated on Stage 14 runs, and is linked from
 the dashboard.
 

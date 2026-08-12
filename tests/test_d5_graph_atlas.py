@@ -71,6 +71,23 @@ def _finding(fid: str, bundle: str | None, review_file: str = "") -> dict:
             "meta": {"inferred_bundle": bundle, "review_file": review_file}}
 
 
+def _live_dangling_baseline() -> int:
+    """The production `_LEDGER_DANGLING_BASELINE`, read from source.
+
+    ⚠️ It is a FUNCTION-LOCAL constant, so it cannot be imported. These tests used to
+    hardcode 66 and broke the day the re-key lowered it to 59 — a test asserting a ratchet
+    has zero headroom must move WITH the ratchet, or it becomes a second, stale copy of the
+    number it is guarding.
+    """
+    import re as _re
+    from pathlib import Path as _P
+    src = (_P(__file__).resolve().parent.parent
+           / "scripts" / "validation" / "checks" / "graph_atlas.py").read_text()
+    m = _re.search(r"^\s*_LEDGER_DANGLING_BASELINE\s*=\s*(\d+)", src, _re.M)
+    assert m, "_LEDGER_DANGLING_BASELINE not found in graph_atlas.py"
+    return int(m.group(1))
+
+
 class TestGraphIntegrity:
 
     def _run(self, tmp_path, monkeypatch, *, nodes=(), edges=(), ledger=None,
@@ -160,17 +177,19 @@ class TestGraphIntegrity:
         NEWLY filed closure that names nothing. Three such records were filed while it
         was effectively inert."""
         nodes, edges = self.FLAGGED
-        ledger = [{"finding_id": f"review:r:ghost:{i}"} for i in range(67)]
+        base = _live_dangling_baseline()
+        ledger = [{"finding_id": f"review:r:ghost:{i}"} for i in range(base + 1)]
         r = self._run(tmp_path, monkeypatch, nodes=nodes, edges=edges, ledger=ledger)
         assert r.passed is False, (
-            "67 dangling closures did not exceed the pinned baseline of 66 — the "
-            "ratchet has headroom again")
+            f"{base + 1} dangling closures did not exceed the pinned baseline of {base} "
+            "— the ratchet has headroom again")
         assert any(d.name == "ledger_ids_resolve" and not d.passed for d in r.details)
 
     def test_dangling_closures_at_the_baseline_pass_with_a_warning(self, tmp_path, monkeypatch):
         """SILENT ON CORRECT DATA — pre-existing debt is tracked, not failed."""
         nodes, edges = self.FLAGGED
-        ledger = [{"finding_id": f"review:r:ghost:{i}"} for i in range(66)]
+        ledger = [{"finding_id": f"review:r:ghost:{i}"}
+                  for i in range(_live_dangling_baseline())]
         r = self._run(tmp_path, monkeypatch, nodes=nodes, edges=edges, ledger=ledger)
         assert r.passed is True
         assert any(d.name == "ledger_ids_resolve" and d.warning for d in r.details)

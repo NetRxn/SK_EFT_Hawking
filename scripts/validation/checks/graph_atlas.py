@@ -197,7 +197,12 @@ def check_graph_integrity() -> CheckResult:
         # population that happened to be one larger.
         #
         # Pinned to the exact count, so any growth fails on the first record.
-        _LEDGER_DANGLING_BASELINE = 66
+        # 2026-08-12: 66 -> 59. Seven records whose keys carried suffixes no minted
+        # id has (`:3.1-residual`, `:5.1-5.3`) were re-keyed; two more were SKIPPED
+        # because their corrected key already carried a record and the reader is
+        # last-wins, so re-keying onto an occupied id would have made one of the pair
+        # silently do nothing. 59 is the skip-rule number; 57 is the blind one.
+        _LEDGER_DANGLING_BASELINE = 59
         #
         # ⚠️ A CLAIM I MADE HERE WAS WRONG, retracted 2026-08-01. I wrote that this guard
         # "does not run" and reported it as a twelfth defect, on the strength of a mutation
