@@ -3,11 +3,13 @@
 
 Why this exists
 ---------------
-`docs/review_finding_supersessions.json` is the ONLY channel that can close a blocking
-`ReviewFinding` (`build_graph.py`, the closure bar). It had **no writer**. All 870 records
-were hand-typed into a 645 KB JSON file, and 66 of the `review:`-scheme ones carry a
-`finding_id` that matches no minted node — inert, while the findings they meant to close
-still read `open`.
+`docs/review_finding_supersessions.json` is the ONLY channel that can close a
+`ReviewFinding` (`build_graph.py`, the closure bar — which applies at every severity since
+2026-08-12). It had **no writer**: every record was hand-typed into a large JSON file, and a
+substantial minority of the `review:`-scheme ones carry a `finding_id` that matches no
+minted node — inert, while the findings they meant to close still read `open`.
+`ledger_ids_resolve` owns that population and its ratchet; **read the live number there**,
+never from a docstring that ages.
 
 This is the same shape of gap `scripts/record_review.py` was written to close for bundle
 status, where "every green in the corpus was therefore a hand edit". **Nobody skips a
@@ -27,9 +29,16 @@ Load-bearing decisions
   ledger` is last-wins and does not say so, so appending a second record with a different
   status means one of the pair silently does nothing — the defect this script exists to
   remove, reintroduced by its own writer.
+* **A matching existing record is only idempotent if it MEETS THE BAR.** A prior
+  `{"finding_id": X, "status": "fixed"}` with no evidence closes nothing; skipping the write
+  because the status already matches would report success over a finding that stays `open`.
+* **The finding's declared `Verify:` command is what runs.** `verified_by` is the strongest
+  evidence in the ledger, so it may not be satisfied by an unrelated command that happens to
+  exit 0.
 
-⚠️ `--verify` runs `shell=True` against the repo root. It executes whatever the caller
-supplies, so it is for operator-authored commands, never untrusted input.
+⚠️ Verification runs `shell=True` against the repo root — the declared command from the
+review document, or `--verify` when the finding declares none. Both are authored inside this
+repo; neither is untrusted input, and neither is taken from a network source.
 """
 from __future__ import annotations
 
@@ -69,6 +78,11 @@ def ids_for_doc(doc: str) -> list[str]:
     return sorted(i for i in _live_ids() if i.startswith(prefix))
 
 
+def _norm_cmd(cmd: str) -> str:
+    """Whitespace-insensitive comparison. `a  b` and `a b` are the same command."""
+    return " ".join((cmd or "").strip().strip("`").split())
+
+
 def close(doc: str, sections: list[str], status: str, evidence: str,
           commit: str | None = None, date: str | None = None,
           verify: str | None = None, superseded_by: str | None = None,
@@ -83,10 +97,10 @@ def close(doc: str, sections: list[str], status: str, evidence: str,
         return False, f"status={status!r} is not one of {VALID_STATUSES}"
 
     date_dir, review_name = Path(doc).parent.name, Path(doc).stem
-    live = _live_ids()
+    nodes = {n["id"]: n for n in _bg.extract_review_finding_nodes()}
     minted = [_bg.mint_finding_id(date_dir, review_name, s) for s in sections]
 
-    missing = [m for m in minted if m not in live]
+    missing = [m for m in minted if m not in nodes]
     if missing:
         have = ids_for_doc(doc)
         return False, (f"no such finding: {', '.join(missing)}. This document mints: "
@@ -99,51 +113,136 @@ def close(doc: str, sections: list[str], status: str, evidence: str,
     if not (commit or date):
         return False, "no anchor: pass --commit or --date"
 
-    verified_by = None
-    if verify:
-        proc = subprocess.run(verify, shell=True, cwd=str(PROJECT_ROOT),
-                              capture_output=True, text=True)
-        if proc.returncode != 0:
-            return False, (f"verify command failed (exit {proc.returncode}): {verify}\n"
-                           f"{proc.stdout}{proc.stderr}")
-        verified_by = {"command": verify, "exit_code": 0,
-                       "run_at": _date.today().isoformat()}
+    ok, verified_by, msg = _run_verifications(minted, nodes, verify)
+    if not ok:
+        return False, msg
 
-    if not dry_run:
-        try:
-            _append(minted, status, evidence, commit, date, verified_by, superseded_by)
-        except ValueError as exc:       # a conflicting pre-existing record
-            return False, str(exc)
+    try:
+        to_add, already = _plan(minted, nodes, status, evidence, commit, date,
+                               verified_by, superseded_by)
+    except ValueError as exc:           # a conflicting or sub-bar pre-existing record
+        return False, str(exc)
+
+    if not dry_run and to_add:
+        _write(to_add)
 
     verb = "would write" if dry_run else "wrote"
-    return True, f"{verb} {len(minted)} record(s): {', '.join(minted)}"
+    body = ", ".join(r["finding_id"] for r in to_add) or "(nothing)"
+    # ⚠️ Name BOTH populations. "wrote 2 record(s)" over a batch where one was already
+    # recorded is a false count in the tool's own success line.
+    tail = (f"; {len(already)} already recorded: {', '.join(already)}"
+            if already else "")
+    return True, f"{verb} {len(to_add)} record(s): {body}{tail}"
 
 
-def _append(minted, status, evidence, commit, date, verified_by, superseded_by) -> None:
-    # Re-read immediately before writing, so a concurrent append is not clobbered.
-    data = json.loads(LEDGER.read_text(encoding="utf-8"))
-    existing = {e["finding_id"]: e for e in data["supersessions"]}   # last-wins, as the reader
-    to_add = []
+def _run_verifications(minted, nodes, verify) -> tuple[bool, dict, str]:
+    """Run each finding's verification command and record what actually ran.
+
+    ⚠️ **The finding's OWN `Verify:` line is authoritative.** `verified_by` is the strongest
+    evidence in the ledger — it is what makes the bar's Verify leg non-vacuous — and a
+    record carrying `exit_code: 0` reads to every consumer as *the declared check passed*.
+    Accepting any command the closer happened to pass would let `--verify true` stand in for
+    the real check, which is absence of measurement rendered as success, in the field
+    designed to prevent exactly that.
+
+    So: when the finding declares a command, it is RUN. Passing a different one is a
+    refusal, not an override — and passing none is not a way around it.
+    """
+    verified_by: dict[str, dict] = {}
+    for fid in minted:
+        declared = ((nodes[fid].get("meta") or {}).get("verify") or "").strip().strip("`")
+        if verify and declared and _norm_cmd(verify) != _norm_cmd(declared):
+            return False, {}, (
+                f"{fid} declares a verification command and --verify is a different one.\n"
+                f"  declared: {declared}\n  passed:   {verify}\n"
+                f"Closing on an unrelated command records exit_code=0 against a check that "
+                f"never ran. Run the declared command, or amend the finding's Verify: line.")
+        cmd = (verify or declared or "").strip()
+        if not cmd:
+            continue
+        proc = subprocess.run(cmd, shell=True, cwd=str(PROJECT_ROOT),
+                              capture_output=True, text=True)
+        if proc.returncode != 0:
+            return False, {}, (f"verify command failed (exit {proc.returncode}): {cmd}\n"
+                               f"{proc.stdout}{proc.stderr}")
+        verified_by[fid] = {"command": cmd, "declared": declared or None,
+                            "exit_code": 0, "run_at": _date.today().isoformat()}
+    return True, verified_by, ""
+
+
+def _plan(minted, nodes, status, evidence, commit, date, verified_by, superseded_by):
+    """`(to_add, already)` — or raise. Shared by the real write AND `--dry-run`.
+
+    ⚠️ Planning is separate from writing so that `--dry-run` previews the REFUSALS. When
+    the conflict scan lived inside the writer, a dry run reported `would write 2 record(s)`
+    for a batch the real invocation refused — a preview that cannot show the thing it is
+    previewing.
+    """
+    data = _read_ledger()
+    existing = {e.get("finding_id"): e for e in data["supersessions"]}  # last-wins, as the reader
+    to_add, already = [], []
     for fid in minted:
         prior = existing.get(fid)
-        if prior is not None and prior.get("status") == status:
-            continue                                                # idempotent
         if prior is not None:
-            raise ValueError(
-                f"{fid} already carries status={prior.get('status')!r}; refusing to append "
-                f"a conflicting {status!r}. The reader is last-wins and does not say so, "
-                f"which is how a closure silently does nothing. Amend the existing record "
-                f"deliberately instead.")
+            _guard_prior(fid, prior, status, nodes, already)
+            if fid in already:
+                continue
         rec = {"finding_id": fid, "status": status, "evidence": evidence,
                "superseded_by": superseded_by,
                "date": date or _date.today().isoformat()}
         if commit:
             rec["commit"] = commit
-        if verified_by:
-            rec["verified_by"] = verified_by
+        if verified_by.get(fid):
+            rec["verified_by"] = verified_by[fid]
         to_add.append(rec)
-    if not to_add:
+    return to_add, already
+
+
+def _guard_prior(fid, prior, status, nodes, already) -> None:
+    """Decide what an existing record means for this write. Appends to `already` or raises.
+
+    ⚠️ **Same status is NOT automatically idempotent.** A prior record carrying
+    `{"finding_id": X, "status": "fixed"}` and nothing else does not meet the closure bar,
+    so the finding still reads `open` — and skipping the write "because it is already fixed"
+    reports success while the finding stays blocked. That is this branch's founding defect
+    regenerated inside the writer built to remove it.
+    """
+    prior_status = prior.get("status")
+    if prior_status == status:
+        has_verify = bool((nodes[fid].get("meta") or {}).get("verify"))
+        if status in CLOSING_STATUSES and not _bg._closure_record_meets_bar(
+                prior, has_verify):
+            raise ValueError(
+                f"{fid} already carries status={status!r}, but that record does NOT meet "
+                f"the closure bar, so the finding still reads `open` and this call would "
+                f"report success while changing nothing. Amend the existing record — it "
+                f"needs an explicit closing status, >=40 chars of rationale, a commit or "
+                f"date anchor"
+                + (", and a passing verified_by for its declared Verify: command."
+                   if has_verify else "."))
+        already.append(fid)
         return
+    # A lifecycle transition through the append-only ledger, which the reader resolves
+    # last-wins: closing → reopened, and reopened → closing, are both legitimate.
+    if status == "reopened" and prior_status in CLOSING_STATUSES:
+        return
+    if prior_status == "reopened" and status in CLOSING_STATUSES:
+        return
+    raise ValueError(
+        f"{fid} already carries status={prior_status!r}; refusing to append a conflicting "
+        f"{status!r}. The reader is last-wins and does not say so, which is how a closure "
+        f"silently does nothing. Amend the existing record deliberately instead.")
+
+
+def _read_ledger() -> dict:
+    data = json.loads(LEDGER.read_text(encoding="utf-8"))
+    data.setdefault("supersessions", [])
+    return data
+
+
+def _write(to_add: list[dict]) -> None:
+    # Re-read immediately before writing, so a concurrent append is not clobbered.
+    data = _read_ledger()
     data["supersessions"].extend(to_add)
     _atomic_write(data)
 

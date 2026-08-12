@@ -17,12 +17,37 @@ sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 import review_runner as rr  # noqa: E402
 
 
-def _a_finding_with_a_target():
+def _a_finding_with_a_RESOLVABLE_target():
+    """⚠️ Requires the target to resolve on disk, not merely to exist as a string.
+
+    The first version asked only for a `target`, and the corpus is walked in sorted order,
+    so which finding it returned changed whenever a review was filed or closed. It picked a
+    finding whose `papers/`-relative target the brief could not resolve, and the whole class
+    read as a test failure rather than as the production bug it was.
+    """
+    import review_runner as _rr
     from build_graph import extract_review_finding_nodes
     for n in extract_review_finding_nodes():
-        if n["meta"].get("target") and n["meta"].get("status") == "open":
+        t = (n["meta"].get("target") or "").strip("`")
+        if t and n["meta"].get("status") == "open" and _rr._resolve_target(t)[0]:
             return n
     return None
+
+
+def _a_finding_with_an_UNRESOLVABLE_target():
+    import review_runner as _rr
+    from build_graph import extract_review_finding_nodes
+    for n in extract_review_finding_nodes():
+        t = (n["meta"].get("target") or "").strip("`")
+        if t and not _rr._resolve_target(t)[0]:
+            return n
+    return None
+
+
+def _a_finding_with_a_target():
+    n = _a_finding_with_a_RESOLVABLE_target()
+    assert n is not None, "no open finding carries a resolvable target — the seam is empty"
+    return n
 
 
 class TestPerFindingBrief:
@@ -39,8 +64,45 @@ class TestPerFindingBrief:
     def test_it_carries_the_routing_fields_a_worker_needs(self):
         node = _a_finding_with_a_target()
         out = rr.emit_finding_brief(node["id"])
-        for label in ("LANE:", "BLOCKS:", "VERIFY:", "BLOCKED-BY:", "NEEDS-OPERATOR:"):
+        for label in ("LANE:", "BLOCKS:", "VERIFY:", "BLOCKED-BY:", "DISPATCHABLE:",
+                      "NEEDS-OPERATOR:"):
             assert label in out
+
+
+class TestTargetResolution:
+    """⚠️ Review `Location:` values are written **`papers/`-relative**. Resolving them only
+    from the repo root made most of them miss, and the brief then told the worker the
+    finding was STALE — a false staleness claim on a live file."""
+
+    def test_a_papers_relative_target_resolves(self):
+        from build_graph import extract_review_finding_nodes
+        n = next(x for x in extract_review_finding_nodes()
+                 if (x["meta"].get("target") or "").strip("`").startswith("paper"))
+        t = n["meta"]["target"].strip("`")
+        path, tried = rr._resolve_target(t)
+        assert path is not None, f"{t} resolved against none of {tried}"
+        assert path.is_file()
+
+    def test_the_repo_root_is_still_tried_first(self, tmp_path, monkeypatch):
+        """A repo-relative target must not start resolving against `papers/` instead."""
+        path, tried = rr._resolve_target("scripts/review_runner.py")
+        assert path is not None and path.name == "review_runner.py"
+        assert tried[0] == "scripts/review_runner.py"
+
+    def test_an_unresolvable_target_NAMES_WHAT_IT_TRIED(self):
+        """'Does not resolve' plus the paths tried is a measurement. Alone it is a verdict
+        the reader cannot check."""
+        path, tried = rr._resolve_target("no/such/file.tex:12")
+        assert path is None
+        assert tried == ["no/such/file.tex", "papers/no/such/file.tex"]
+
+    def test_the_unresolved_branch_of_the_brief_is_reachable_and_honest(self):
+        node = _a_finding_with_an_UNRESOLVABLE_target()
+        if node is None:
+            pytest.skip("every filed target currently resolves")
+        out = rr.emit_finding_brief(node["id"])
+        assert "does not resolve to a file on disk" in out
+        assert "Tried:" in out
 
     def test_an_unknown_finding_id_RAISES_rather_than_emitting_an_empty_brief(self):
         """⚠️ An empty brief reads as 'nothing to orient on' when the truth is 'not

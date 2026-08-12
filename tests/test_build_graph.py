@@ -1270,18 +1270,46 @@ class TestBlockedByIsADagWithAConsumer:
         assert _blocked_by_edges([n]) == []
         assert finding_is_dispatchable(n, {'review:d:X:1'}, set()) is False
 
-    def test_an_unrecognised_scheme_raises_rather_than_blocking_forever(self):
-        from scripts.build_graph import _blocked_by_edges
-        n = {'id': 'review:d:X:1', 'meta': {'blocked_by': ['runs:42'], 'status': 'open'}}
-        with pytest.raises(ValueError, match='runs:42'):
-            _blocked_by_edges([n])
+    def test_an_unrecognised_scheme_is_REPORTED_not_raised(self):
+        """⚠️ THE CONTRACT CHANGED, and the reason is blast radius, not tolerance.
 
-    def test_a_blocked_by_naming_no_node_raises(self):
-        from scripts.build_graph import _blocked_by_edges
+        Raising here propagated out of both edge-assembly sites and so out of
+        `build_graph_json()` — one hand-typed id in reviewer markdown would have taken down
+        `knowledge_graph.json`, the atlas, `graph_integrity`, gate extraction and the
+        dashboard together, including the checks that would diagnose it. Detection moved to
+        `review_severity_declared`, which fails at ZERO. Same signal, bounded damage.
+        """
+        from scripts.build_graph import _blocked_by_edges, blocked_by_unresolved
+        n = {'id': 'review:d:X:1', 'meta': {'blocked_by': ['runs:42'], 'status': 'open'}}
+        assert _blocked_by_edges([n]) == []
+        assert blocked_by_unresolved([n]) == {'review:d:X:1': ['runs:42']}
+
+    def test_a_blocked_by_naming_no_node_is_REPORTED(self):
+        from scripts.build_graph import _blocked_by_edges, blocked_by_unresolved
         n = {'id': 'review:d:X:1',
              'meta': {'blocked_by': ['review:d:X:99'], 'status': 'open'}}
-        with pytest.raises(ValueError, match='review:d:X:99'):
-            _blocked_by_edges([n])
+        assert _blocked_by_edges([n]) == []
+        assert blocked_by_unresolved([n]) == {'review:d:X:1': ['review:d:X:99']}
+
+    def test_an_empty_release_value_is_UNRESOLVED_not_a_condition(self):
+        """`run:` is a truncation, and the likeliest typo for this field. Treating it as a
+        release condition makes the finding read WAITING when it is STUCK — nothing can
+        satisfy it and nothing will ever evaluate it."""
+        from scripts.build_graph import blocked_by_unresolved, finding_is_dispatchable
+        n = {'id': 'review:d:X:1', 'meta': {'blocked_by': ['run:'], 'status': 'open'}}
+        assert blocked_by_unresolved([n]) == {'review:d:X:1': ['run:']}
+        assert finding_is_dispatchable(n, {'review:d:X:1'}, set()) is False
+
+    def test_an_unresolvable_blocker_is_never_dispatchable(self):
+        from scripts.build_graph import finding_is_dispatchable
+        n = {'id': 'review:d:X:1',
+             'meta': {'blocked_by': ['review:d:X:99'], 'status': 'open'}}
+        assert finding_is_dispatchable(n, {'review:d:X:1'}, {'review:d:X:99'}) is False
+
+    def test_a_clean_corpus_reports_nothing_unresolved(self):
+        from scripts.build_graph import (blocked_by_unresolved,
+                                         extract_review_finding_nodes)
+        assert blocked_by_unresolved(extract_review_finding_nodes()) == {}
 
     def test_a_resolvable_blocker_emits_an_edge_and_gates_dispatch(self):
         from scripts.build_graph import _blocked_by_edges, finding_is_dispatchable

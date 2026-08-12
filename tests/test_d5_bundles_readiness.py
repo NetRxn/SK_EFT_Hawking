@@ -1822,17 +1822,106 @@ class TestTheOpenRequiredPopulationRatchets:
             check_bundle_stage13_claim_consistent)
         assert check_bundle_stage13_claim_consistent().passed is True
 
+    def test_TIGHTENING_A_CEILING_TURNS_THE_LEG_RED(self, monkeypatch):
+        """⚠️ THE MUTATION FOR RATCHET 1, and the suite had none.
+
+        Neutering the comparison to `if False and live > ceiling:` left the whole
+        `tests/test_d5_bundles_readiness.py` file green — the leg could be deleted or
+        inverted with 142 tests passing. The three sibling tests compare DATA to DATA
+        (`_readiness_aggregate()` against `_required_open_ceilings()`) and never invoke the
+        check, so none of them observes the comparison at all.
+
+        Tightening every ceiling by one is the smallest input that must be red.
+        """
+        import validation.checks.bundles_readiness as br
+        real = br._required_open_ceilings()
+        assert real, "no ceilings loaded — this mutation would prove nothing"
+        monkeypatch.setattr(br, '_required_open_ceilings',
+                            lambda: {b: max(0, c - 1) for b, c in real.items()})
+        res = br.check_bundle_stage13_claim_consistent()
+        assert res.passed is False
+        assert any(d.name == 'required_population' and not d.passed for d in res.details)
+
+    def test_A_REAL_NEW_BLOCKING_FINDING_TURNS_THE_LEG_RED(self):
+        """PRODUCTION-SEEDED (guide §2.4), and it replaces a CLAIM.
+
+        The registry entry asserted this mutation had been run by hand and it was never
+        recorded, so the leg's production-seeded status rode on an unverifiable sentence.
+        Appending one real blocking finding to a live review document must take its bundle
+        over the frozen ceiling and name it.
+        """
+        import validate_helpers as _H
+        import validation.checks.bundles_readiness as br
+        doc = (_H.PROJECT_ROOT
+               / "papers/AutomatedReviews/2026-08-12-0200-citation-integrity/D10.md")
+        assert doc.is_file(), "review document moved — re-point this mutation"
+        original = doc.read_text(encoding="utf-8")
+        try:
+            doc.write_text(
+                original + "\n### 99.9 — 🔴 CRITICAL — seeded mutation\n\n"
+                           "- **Severity:** critical\n\nSeeded by the test suite.\n",
+                encoding="utf-8")
+            res = br.check_bundle_stage13_claim_consistent()
+            assert res.passed is False, "a new open critical did not breach any ceiling"
+            over = [d for d in res.details
+                    if d.name == 'required_population' and not d.passed]
+            assert over and 'D10' in over[0].message
+        finally:
+            doc.write_text(original, encoding="utf-8")
+        assert doc.read_text(encoding="utf-8") == original
+        assert br.check_bundle_stage13_claim_consistent().passed is True
+
+    def test_AN_EMPTY_FINDING_POPULATION_IS_NOT_A_PASS(self, monkeypatch):
+        """⚠️ `checked` counts metadata BLOBS, not findings, so it stays at 21 while the
+        finding corpus reads zero — and both ratchets then report `0, none above ceiling`
+        over nothing. Both sit at zero headroom, so vacuity is the ONLY way they can
+        silently go green. This is the round-8 state one population over."""
+        import sys
+        sys.path.insert(0, 'scripts')
+        import build_graph as bg
+        monkeypatch.setattr(bg, 'extract_review_finding_nodes', lambda: [])
+        import validation.checks.bundles_readiness as br
+        res = br.check_bundle_stage13_claim_consistent()
+        assert res.passed is False
+        assert res.measured is False
+        assert any(d.name == 'finding_population' and not d.passed for d in res.details)
+
+    def test_A_RENAMED_SEVERITY_MIX_KEY_IS_NOT_A_PASS(self, monkeypatch):
+        """Counting a missing key yields 0 for every bundle, which passes — the
+        `lean_modules` vs `lean_modules_referenced` trap, one file over."""
+        import validation.checks.bundles_readiness as br
+        by_bundle, mp, failure = br._readiness_aggregate()
+        assert failure is None
+        stripped = {b: {k: v for k, v in d.items() if k != 'severity_mix'}
+                    for b, d in by_bundle.items()}
+        monkeypatch.setattr(br, '_readiness_aggregate', lambda: (stripped, mp, None))
+        res = br.check_bundle_stage13_claim_consistent()
+        assert res.passed is False
+        assert any(d.name == 'required_population' and not d.passed for d in res.details)
+
     def test_the_per_bundle_ratchet_has_zero_headroom(self):
         """⚠️ Measured through `_readiness_aggregate()` — what the CHECK reads — never
         through `meta['inferred_bundle']`. The aggregation attributes via
         `inferred_paper or inferred_bundle` plus the paper->bundle mapping, so the two
-        populations differ materially (D3 3 vs 6, F 5 vs 15)."""
+        populations differ materially (D3 3 vs 6, F 5 vs 15).
+
+        ⚠️ EVERY BLOCKING SEVERITY. Keying this on `major` alone was the defect: the open
+        CRITICALS that DO reach a bundle were ratcheted by nothing, since leg 2 covers only
+        the unattributed population.
+        """
+        import sys
+        sys.path.insert(0, 'scripts')
+        from readiness_gates import BLOCKING_SEVERITIES
         from validation.checks.bundles_readiness import (
             _readiness_aggregate, _required_open_ceilings)
         by_bundle, _, failure = _readiness_aggregate()
         assert failure is None, f"aggregation failed: {failure}"
-        live = {b: d['severity_mix'].get('major', 0) for b, d in by_bundle.items()
-                if (d.get('severity_mix') or {}).get('major')}
+        live = {}
+        for b, d in by_bundle.items():
+            n = sum(v for k, v in (d.get('severity_mix') or {}).items()
+                    if k in BLOCKING_SEVERITIES)
+            if n:
+                live[b] = n
         assert live == _required_open_ceilings(), (
             "ceilings carry headroom or have drifted; if the population SHRANK, lower them "
             "in the commit that shrank it — headroom makes a ratchet unfireable")
@@ -1843,9 +1932,10 @@ class TestTheOpenRequiredPopulationRatchets:
         from build_graph import extract_review_finding_nodes
         from validation.checks.bundles_readiness import (
             UNATTRIBUTED_OPEN_BLOCKING_CEILING)
+        from readiness_gates import BLOCKING_SEVERITIES
         live = sum(1 for n in extract_review_finding_nodes()
                    if n['meta'].get('status') == 'open'
-                   and n['meta'].get('severity') in ('critical', 'major')
+                   and n['meta'].get('severity') in BLOCKING_SEVERITIES
                    and not n['meta'].get('inferred_bundle')
                    and not n['meta'].get('inferred_paper'))
         assert live == UNATTRIBUTED_OPEN_BLOCKING_CEILING

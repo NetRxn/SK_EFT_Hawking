@@ -531,56 +531,90 @@ def check_bundle_stage13_claim_consistent() -> CheckResult:
                 f"writer will NOT clear it: the bundle re-enters at Stage 9/10 and only "
                 f"then Stage 13 (BUNDLE_LIFT_PROCEDURE.md:9 gate ordering)."))
 
-    # ── Ratchet 1: the open-REQUIRED population, per bundle (ADR-012 D9) ──────────
-    _ceilings = _required_open_ceilings()
-    over = []
-    for bundle, data in sorted((by_bundle or {}).items()):
-        live_major = (data.get("severity_mix") or {}).get("major", 0)
-        ceiling = _ceilings.get(bundle, 0)
-        if live_major > ceiling:
-            over.append(f"{bundle} {live_major}>{ceiling}")
-    details.append(Detail(
-        "required_population", not over,
-        f"open REQUIRED (major) findings per bundle, against frozen ceilings; "
-        + (f"ABOVE CEILING: {', '.join(over)}. `major` is already blocking — what this "
-           f"ratchet adds is that the population may not GROW (PD-5). Fix the finding; "
-           f"do not raise the ceiling."
-           if over else
-           f"{sum((d.get('severity_mix') or {}).get('major', 0) for d in (by_bundle or {}).values())} "
-           f"across {len(_ceilings)} bundle(s), none above ceiling")))
-    if over:
-        bad += 1
-
-    # ── Ratchet 2: the population ratchet 1 structurally cannot see ───────────────
+    # ── The finding population both ratchets measure ──────────────────────────────
+    # ⚠️ SEAM GUARD FIRST (guide §2.5). `checked` counts metadata BLOBS, not findings, so
+    # it stays at 21 while the finding corpus reads zero — and both ratchets then report
+    # "0, none above ceiling" over nothing. That is the round-8 state exactly: every
+    # readiness check green with nothing to check. Both sit at zero headroom, so the
+    # vacuous path is the ONLY way they can silently go green.
     try:
         import sys as _sys
         _sys.path.insert(0, str(_H.PROJECT_ROOT / "scripts"))
         from build_graph import extract_review_finding_nodes as _erfn
-        unattributed = sum(
-            1 for n in _erfn()
-            if (n["meta"].get("status") == "open"
-                and n["meta"].get("severity") in ("critical", "major")
-                and not n["meta"].get("inferred_bundle")
-                and not n["meta"].get("inferred_paper")))
+        _all_findings = _erfn()
     except Exception as exc:        # cannot-measure is not success
         details.append(Detail(
-            "unattributed_population", False, measured=False,
-            message=f"could not count unattributed findings ({exc}) — the guard that makes "
-                    f"the per-bundle ratchet honest did not run, so its silence is not "
-                    f"evidence"))
-        bad += 1
-    else:
-        ok_un = unattributed <= UNATTRIBUTED_OPEN_BLOCKING_CEILING
+            "finding_population", False, measured=False,
+            message=f"could not read the ReviewFinding population ({exc}); neither "
+                    f"open-REQUIRED ratchet ran, so their silence is not evidence"))
+        return CheckResult(passed=False, measured=False, details=details)
+    if not _all_findings:
         details.append(Detail(
-            "unattributed_population", ok_un,
-            f"{unattributed} open critical/major finding(s) carry neither `inferred_paper` "
-            f"nor `inferred_bundle`, so they reach NO bundle ceiling; "
-            f"limit {UNATTRIBUTED_OPEN_BLOCKING_CEILING}"
-            + ("" if ok_un else
-               " — a finding that LOSES its attribution silently leaves the per-bundle "
-               "ratchet. Re-attribute it or fix it; never raise this limit.")))
-        if not ok_un:
+            "finding_population", False, measured=False,
+            message="the ReviewFinding population is EMPTY — every open-REQUIRED ratchet "
+                    "below would read 0 and pass over nothing. An empty population is the "
+                    "round-8 state (rename `evaluate_all_gates` and every readiness check "
+                    "goes green), not a clean corpus"))
+        return CheckResult(passed=False, measured=False, details=details)
+
+    # ── Ratchet 1: the open-REQUIRED population, per bundle (ADR-012 D9) ──────────
+    # ⚠️ EVERY BLOCKING SEVERITY, not just `major`. Keying on `severity_mix['major']` left
+    # the attributed open CRITICALS ratcheted by nothing — leg 2 covers only the
+    # *unattributed* ones — so the population this leg claims to bound had a hole the exact
+    # size of the corpus's criticals. `BLOCKING_SEVERITIES` is imported, never restated.
+    from readiness_gates import BLOCKING_SEVERITIES as _BLOCKING
+    _ceilings = _required_open_ceilings()
+    # A renamed aggregate key would make every bundle read 0 and pass — the
+    # `lean_modules` vs `lean_modules_referenced` trap, one file over.
+    if not any("severity_mix" in (d or {}) for d in (by_bundle or {}).values()):
+        details.append(Detail(
+            "required_population", False, measured=False,
+            message="no bundle aggregate carries a `severity_mix` key — the field this "
+                    "ratchet counts has been renamed or dropped, and counting a missing "
+                    "key yields 0 for every bundle, which passes"))
+        bad += 1
+        _live_total = None
+    else:
+        over = []
+        _live_total = 0
+        for bundle, data in sorted((by_bundle or {}).items()):
+            mix = data.get("severity_mix") or {}
+            live = sum(v for k, v in mix.items() if k in _BLOCKING)
+            _live_total += live
+            ceiling = _ceilings.get(bundle, 0)
+            if live > ceiling:
+                over.append(f"{bundle} {live}>{ceiling}")
+        details.append(Detail(
+            "required_population", not over,
+            f"open REQUIRED ({'/'.join(sorted(_BLOCKING))}) findings per bundle, against "
+            f"frozen ceilings; "
+            + (f"ABOVE CEILING: {', '.join(over)}. These severities are ALREADY blocking — "
+               f"what this ratchet adds is that the population may not GROW (PD-5). Fix "
+               f"the finding; do not raise the ceiling."
+               if over else
+               f"{_live_total} across {len(by_bundle or {})} bundle(s) "
+               f"({len(_ceilings)} carry a non-zero ceiling), none above ceiling")))
+        if over:
             bad += 1
+
+    # ── Ratchet 2: the population ratchet 1 structurally cannot see ───────────────
+    unattributed = sum(
+        1 for n in _all_findings
+        if (n["meta"].get("status") == "open"
+            and n["meta"].get("severity") in _BLOCKING
+            and not n["meta"].get("inferred_bundle")
+            and not n["meta"].get("inferred_paper")))
+    ok_un = unattributed <= UNATTRIBUTED_OPEN_BLOCKING_CEILING
+    details.append(Detail(
+        "unattributed_population", ok_un,
+        f"{unattributed} open {'/'.join(sorted(_BLOCKING))} finding(s) carry neither "
+        f"`inferred_paper` nor `inferred_bundle`, so they reach NO bundle ceiling; "
+        f"limit {UNATTRIBUTED_OPEN_BLOCKING_CEILING}"
+        + ("" if ok_un else
+           " — a finding that LOSES its attribution silently leaves the per-bundle "
+           "ratchet. Re-attribute it or fix it; never raise this limit.")))
+    if not ok_un:
+        bad += 1
 
     # Seam guard (guide §2.5): a loop that inspected nothing must not report agreement.
     if checked == 0:

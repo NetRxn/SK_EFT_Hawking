@@ -1851,10 +1851,11 @@ def mint_finding_id(date_dir: str, review_name: str, section_num: str) -> str:
 
     ⚠️ MODULE SCOPE ON PURPOSE. `scripts/close_finding.py` imports this to WRITE the
     supersession ledger, and `extract_review_finding_nodes` calls it to READ the ledger
-    back. A second implementation is not a duplication smell, it IS the defect: 66 of the
-    870 ledger records carry a `review:` id no node matches, because every one was
-    hand-typed against a format nobody could check, and the findings they meant to close
-    still read `open`.
+    back. A second implementation is not a duplication smell, it IS the defect: a large
+    minority of the `review:`-scheme ledger records carry an id no node matches, because
+    every one was hand-typed against a format nobody could check, and the findings they
+    meant to close still read `open`. **`ledger_ids_resolve` owns that population and its
+    ratchet — read the live number there, never from this docstring.**
 
     Same reasoning as `_recurrence_norm`, which moved to module scope after a period in
     which the production matcher could have been deleted or inverted with its test still
@@ -2065,13 +2066,20 @@ def extract_review_finding_nodes() -> list[dict]:
                                    .strip().strip('`').lower() or None),
             }
             _KNOWN_STATUSES = ('open', 'fixed', 'accepted')
+            # ⚠️ `reopened` is WRITABLE (`close_finding.VALID_STATUSES`) and must read back
+            # as `open`. It currently lands in the unrecognised-token bucket, which is the
+            # right answer for the wrong reason — name it, so that widening
+            # `_KNOWN_STATUSES` later cannot silently make a reopened finding read closed.
+            _REOPENING_STATUSES = ('reopened',)
             ledger = supersessions.get(finding_id)
             if ledger:
                 _ls = ledger.get('status', status)
                 # An unrecognised token was written straight through and no consumer
                 # validated it, so `{"status": "closed"}` silently became a status nothing
                 # treats as open (round-11 8.1). Unknown tokens now read as `open`.
-                meta['status'] = _ls if _ls in _KNOWN_STATUSES else 'open'
+                meta['status'] = (
+                    'open' if _ls in _REOPENING_STATUSES
+                    else _ls if _ls in _KNOWN_STATUSES else 'open')
                 meta['superseded_by'] = ledger.get('superseded_by')
                 meta['supersession_evidence'] = ledger.get('evidence')
                 meta['supersession_date'] = ledger.get('date')
@@ -3874,26 +3882,59 @@ def _blocked_by_edges(finding_nodes: list[dict]) -> list[dict]:
     a blocker nothing can ever satisfy, because a token that cannot be satisfied reads as
     WAITING when it is STUCK.
 
-    ⚠️ RAISES rather than dropping. A `blocked_by` naming no finding is the same class as
-    the 66 ledger records that name no node: silently inert, indistinguishable from absent.
+    ⚠️ AN UNRESOLVABLE ENTRY IS RECORDED, NOT RAISED — and this was the other way round
+    until a reviewer priced the blast radius. Raising here propagates out of BOTH edge
+    assembly sites, so it leaves `build_graph_json()` — and with it `knowledge_graph.json`,
+    the atlas, `graph_integrity`, gate extraction and the dashboard. The values are
+    hand-typed by LLM reviewers into markdown, from exactly the population that produced the
+    dangling ledger records, so the first typo would take down the whole derived-graph layer
+    including the checks that would diagnose it.
+
+    Detection is not weakened, it is MOVED to the idiom this repo already uses for this
+    class: `blocked_by_unresolved` reports the population and `review_severity_declared`
+    ratchets it at zero. Same signal, bounded blast radius. (`ledger_ids_resolve` is the
+    template — it counts dangling ids rather than exploding on one.)
     """
     ids = {n['id'] for n in finding_nodes}
     edges: list[dict] = []
     for n in finding_nodes:
         for dep in (n.get('meta') or {}).get('blocked_by') or []:
-            if dep.startswith(_RELEASE_SCHEMES):
-                continue
-            if ':' in dep and not dep.startswith('review:'):
-                raise ValueError(
-                    f"{n['id']}: blocked_by {dep!r} carries an unrecognised scheme. Known "
-                    f"release schemes: {', '.join(_RELEASE_SCHEMES)}. A token nothing can "
-                    f"satisfy reads as WAITING when it is STUCK.")
-            if dep not in ids:
-                raise ValueError(
-                    f"{n['id']}: blocked_by {dep!r} names no minted finding. Silently "
-                    f"dropping it is the 66-record orphan class one layer up.")
-            edges.append({'source': n['id'], 'target': dep, 'type': 'BLOCKED_BY'})
+            if _classify_dep(dep, ids) == 'edge':
+                edges.append({'source': n['id'], 'target': dep, 'type': 'BLOCKED_BY'})
     return edges
+
+
+def _classify_dep(dep: str, ids: set[str]) -> str:
+    """`'edge'` · `'release'` · `'unresolved'` — the ONE discrimination, shared.
+
+    ⚠️ An empty value after a known scheme (`run:`) is UNRESOLVED, not a release condition.
+    Nothing can satisfy it and nothing will evaluate it, so treating it as a condition makes
+    the finding read WAITING when it is STUCK — the same defect as an unrecognised scheme,
+    reached by a typo instead of a wrong word.
+    """
+    if dep.startswith(_RELEASE_SCHEMES):
+        return 'release' if dep.partition(':')[2].strip() else 'unresolved'
+    if ':' in dep and not dep.startswith('review:'):
+        return 'unresolved'                       # an unrecognised scheme
+    return 'edge' if dep in ids else 'unresolved'
+
+
+def blocked_by_unresolved(finding_nodes: list[dict]) -> dict[str, list[str]]:
+    """`{finding id: [tokens that resolve to nothing]}` — the ratcheted population.
+
+    A `blocked_by` naming no finding is the same class as a ledger record naming no node:
+    silently inert, indistinguishable from absent. Zero is the only acceptable count, which
+    is why `review_severity_declared` fails on any entry here rather than ratcheting a
+    baseline down over time.
+    """
+    ids = {n['id'] for n in finding_nodes}
+    out: dict[str, list[str]] = {}
+    for n in finding_nodes:
+        bad = [d for d in ((n.get('meta') or {}).get('blocked_by') or [])
+               if _classify_dep(d, ids) == 'unresolved']
+        if bad:
+            out[n['id']] = bad
+    return out
 
 
 def extract_blocked_by_edges() -> list[dict]:
@@ -3916,13 +3957,31 @@ def finding_is_dispatchable(node: dict, node_ids: set[str],
     types that gates query and nothing emits, and `PRODUCES` sat expired for a full wave
     because a prose-regex fallback fired and masked it.
 
-    Release conditions are OPAQUE here — their evaluation lands with parked work — so any
-    present one holds the finding. That is the safe direction: reporting a parked item as
-    dispatchable is worse than reporting a released one as waiting.
+    Release conditions are EVALUATED, not assumed. `parked_items.release_condition_met`
+    landed with parked work and returns three values; only an explicit `True` releases.
+    `False` (genuinely unmet) and `None` (cannot determine) both hold the finding, which is
+    the safe direction — reporting a parked item as dispatchable is worse than reporting a
+    released one as waiting — but they are held for *different reasons*, and collapsing the
+    evaluator away entirely would have left a released item non-dispatchable forever.
+
+    ⚠️ The import is local. `parked_items` imports `_RELEASE_SCHEMES` from this module, so a
+    module-level import here would be circular.
+
+    `node_ids` is the minted-finding population: a blocker naming an id outside it is
+    unresolvable, and an unresolvable blocker is not a satisfied one.
     """
+    try:
+        from parked_items import release_condition_met
+    except ImportError:                                   # pragma: no cover
+        release_condition_met = lambda _t: None           # noqa: E731 — unknown, never met
     for dep in (node.get('meta') or {}).get('blocked_by') or []:
-        if dep.startswith(_RELEASE_SCHEMES):
-            return False
+        kind = _classify_dep(dep, node_ids)
+        if kind == 'unresolved':
+            return False            # nothing can satisfy it — never dispatchable
+        if kind == 'release':
+            if release_condition_met(dep) is not True:
+                return False        # False (unmet) and None (unknown) both hold it
+            continue
         if dep not in closed_ids:
             return False
     return True

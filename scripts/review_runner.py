@@ -174,6 +174,31 @@ def validate_review_doc(bundle: str, doc_path: Path) -> tuple[bool, list[str]]:
     return (not issues, issues)
 
 
+#: Roots a `- **Location:**` value may be written against, in resolution order.
+#: ⚠️ The review corpus writes targets **`papers/`-relative** (`D10_initial_draft/
+#: paper_draft.tex:88`), not repo-relative. Resolving only from the repo root made most
+#: targets miss, and the brief then told the worker the finding was STALE — a false
+#: staleness claim on a live file, in the one artifact the brief asks a worker to trust.
+_TARGET_ROOTS: tuple[str, ...] = ("", "papers")
+
+
+def _resolve_target(target: str) -> tuple[Path | None, list[str]]:
+    """`(path, tried)` — the file a `Location:` names, and every root attempted.
+
+    Returning the attempts is what makes the unresolved branch actionable: "does not
+    resolve" plus the paths tried is a measurement; "does not resolve" alone is a verdict
+    the reader cannot check.
+    """
+    head = target.split(":")[0].strip()
+    tried: list[str] = []
+    for root in _TARGET_ROOTS:
+        cand = (PROJECT_ROOT / root / head) if root else (PROJECT_ROOT / head)
+        tried.append(str(cand.relative_to(PROJECT_ROOT)))
+        if cand.is_file():
+            return cand, tried
+    return None, tried
+
+
 def emit_finding_brief(finding_id: str) -> str:
     """Generated orientation for ONE finding (ADR-012 D17).
 
@@ -188,13 +213,21 @@ def emit_finding_brief(finding_id: str) -> str:
     """
     import subprocess
     sys.path.insert(0, str(Path(__file__).resolve().parent))
-    from build_graph import extract_review_finding_nodes
+    from build_graph import extract_review_finding_nodes, finding_is_dispatchable
 
-    node = next((n for n in extract_review_finding_nodes() if n["id"] == finding_id), None)
+    nodes = extract_review_finding_nodes()
+    node = next((n for n in nodes if n["id"] == finding_id), None)
     if node is None:
         raise KeyError(
             f"{finding_id} names no minted finding. An empty brief would read as 'nothing "
             f"to orient on' when the truth is 'not found'.")
+
+    # THE production consumer of BLOCKED_BY. A dependency edge whose only caller is a test
+    # is an edge nothing observes working — `PRODUCES` sat expired for a full wave that way.
+    _ids = {n["id"] for n in nodes}
+    _closed = {n["id"] for n in nodes
+               if (n.get("meta") or {}).get("status") in ("fixed", "accepted")}
+    dispatchable = finding_is_dispatchable(node, _ids, _closed)
 
     m = node["meta"]
     target = (m.get("target") or "").strip("`") or None
@@ -205,6 +238,8 @@ def emit_finding_brief(finding_id: str) -> str:
            f"- BLOCKS: {m.get('blocks') or '(none declared)'}",
            f"- VERIFY: {m.get('verify') or '(none declared)'}",
            f"- BLOCKED-BY: {', '.join(m.get('blocked_by') or []) or '(nothing)'}",
+           f"- DISPATCHABLE: {'yes' if dispatchable else 'NO — every blocker above must '
+                                                        'close or release first'}",
            f"- NEEDS-OPERATOR: {m.get('needs_operator') or 'no'}",
            f"- REVIEW: {m.get('review_file')}", ""]
 
@@ -214,9 +249,10 @@ def emit_finding_brief(finding_id: str) -> str:
                 "at. It is not dispatchable until one is added.", ""]
     else:
         out += [f"`{target}`", ""]
-        path = PROJECT_ROOT / target.split(":")[0]
-        if path.is_file():
-            out += [f"Exists. {path.stat().st_size} bytes.", ""]
+        path, tried = _resolve_target(target)
+        if path is not None:
+            rel = path.relative_to(PROJECT_ROOT)
+            out += [f"Exists at `{rel}`. {path.stat().st_size} bytes.", ""]
             out += ["## GIT HISTORY", ""]
             try:
                 log = subprocess.run(
@@ -227,10 +263,11 @@ def emit_finding_brief(finding_id: str) -> str:
                 out += [f"(git log unavailable: {exc})", ""]
         else:
             out += ["⚠️ The target does not resolve to a file on disk. Re-measure before",
-                    "acting: a finding pointing at a moved or renamed path is stale.", ""]
+                    "acting: a finding pointing at a moved or renamed path is stale.",
+                    "", "Tried:"] + [f"- `{t}`" for t in tried] + [""]
 
     out += ["## ROADMAP", ""]
-    hits = []
+    hits, unread = [], []
     rm = PROJECT_ROOT / "docs" / "roadmaps"
     if target and rm.is_dir():
         stem = Path(target.split(":")[0]).stem
@@ -238,10 +275,16 @@ def emit_finding_brief(finding_id: str) -> str:
             try:
                 if stem and stem in r.read_text(encoding="utf-8", errors="replace"):
                     hits.append(r.name)
-            except OSError:
-                continue
+            except OSError as exc:
+                # ⚠️ NAME the unread files. Swallowing this makes an unreadable corpus
+                # print the same reassuring "no roadmap mentions this target" as a genuine
+                # absence — absence of measurement rendered as a measurement.
+                unread.append(f"{r.name} ({exc.__class__.__name__})")
     out += ([f"- {h}" for h in hits[:5]] if hits else
             ["(no roadmap mentions this target — it may predate the roadmap corpus)"])
+    if unread:
+        out += ["", f"⚠️ {len(unread)} roadmap(s) could not be read, so this list is "
+                    f"INCOMPLETE, not empty: " + ", ".join(unread[:5])]
     out += ["", "## SUBSTRATE DELTA", "",
             "⚠️ Answer explicitly, including 'no': has anything moved since this finding was",
             "filed that should change the target? A finding's scope is a CLAIM, not a",

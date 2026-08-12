@@ -628,6 +628,47 @@ class TestLaneEnforcementExtendsSeverityDeclared:
         assert any('wizardry' in d.message for d in res.details)
 
 
+class TestBlockedByResolvesLeg:
+    """ADR-012 D10. ⚠️ This leg REPLACES a raise in `_blocked_by_edges`, which propagated
+    out of `build_graph_json()` — one hand-typed id in reviewer markdown would have taken
+    down the graph, the atlas, `graph_integrity`, gate extraction and the dashboard at once,
+    including the checks that would diagnose it. Detection had to survive the move, so this
+    seeds the defect in a REAL review document and observes red end-to-end."""
+
+    #: A live review document inside the check's date window that mints findings.
+    DOC = ("papers/AutomatedReviews/2026-08-12-0200-citation-integrity/D10.md")
+
+    def test_a_dangling_blocked_by_in_a_REAL_document_turns_the_check_red(self):
+        """PRODUCTION-SEEDED (guide §2.4): the line goes into the tracked corpus and the
+        real extractor parses it. A fixture tree cannot reach this leg — it reads
+        `extract_review_finding_nodes()`, not the walked document text."""
+        import validate_helpers as _H
+        doc = _H.PROJECT_ROOT / self.DOC
+        assert doc.is_file(), f"{self.DOC} moved — re-point this mutation, do not delete it"
+        original = doc.read_text(encoding="utf-8")
+        try:
+            doc.write_text(
+                original + "\n- **Blocked-by:** review:no-such-date:NOPE:9.9\n",
+                encoding="utf-8")
+            res = rv.check_review_severity_declared()
+            assert res.passed is False, "a dangling Blocked-by did not turn the check red"
+            assert any("review:no-such-date:NOPE:9.9" in (d.message or "")
+                       for d in res.details)
+        finally:
+            doc.write_text(original, encoding="utf-8")
+        # and the corpus is clean again, byte for byte
+        assert doc.read_text(encoding="utf-8") == original
+        assert rv.check_review_severity_declared().passed is True
+
+    def test_the_live_corpus_carries_no_unresolvable_blocker(self):
+        """Zero, not a ratcheted baseline: unlike the ledger's historical debt this
+        population starts empty, so every entry in it is new."""
+        import sys
+        sys.path.insert(0, 'scripts')
+        from build_graph import blocked_by_unresolved, extract_review_finding_nodes
+        assert blocked_by_unresolved(extract_review_finding_nodes()) == {}
+
+
 def _live_dangling_baseline() -> int:
     """The production `LEDGER_DANGLING_BASELINE`, imported — it is module scope now."""
     from validation.checks.reviews import LEDGER_DANGLING_BASELINE

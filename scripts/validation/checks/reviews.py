@@ -370,7 +370,15 @@ def check_review_severity_declared() -> CheckResult:
     # than a cosmetic typo. This deliberately reuses the per-document walk below instead of
     # adding a second one, and reads values with `findall` — `_parse_lane` uses `.search`,
     # so applying it to whole-document text would validate one lane per FILE.
-    _LANE_VALUE = re.compile(r'^[-*]\s*\*\*Lane:?\*\*:?\s*([A-Za-z]+)', re.M | re.I)
+    #
+    # ⚠️ CAPTURES THE WHOLE VALUE, not a leading `[A-Za-z]+` run. Capturing only the run
+    # meant the validator and the extractor read DIFFERENT values off the same line:
+    # `- **Lane:** lean/substrate` validated as `lean` and PASSED, while `_parse_lane`
+    # emitted `lean/substrate` — unmappable, so the finding routed nowhere. Two mechanisms
+    # disagreeing about one line is the defect the `re.I` note in `build_graph` records for
+    # case; this was the same disagreement about the value grammar. The shape mirrors
+    # `_parse_finding_field`, and the normalisation below mirrors `_parse_lane` exactly.
+    _LANE_VALUE = re.compile(r'^\s*[-*]\s*\*\*Lane:?\*\*:?\s*(.+?)\s*$', re.M | re.I)
 
     details: list[Detail] = []
     bad = 0
@@ -378,7 +386,8 @@ def check_review_severity_declared() -> CheckResult:
     bad_lane = 0
     checked = 0
     try:
-        from build_graph import _SEVERITY_DECL_MAP, _LANE_DECL_MAP
+        from build_graph import (_SEVERITY_DECL_MAP, _LANE_DECL_MAP,
+                                 _RELEASE_SCHEMES as _RELEASE_SCHEME_NAMES)
         vocabulary = set(_SEVERITY_DECL_MAP)
         lane_vocabulary = set(_LANE_DECL_MAP) | {'unclassified'}
     except ImportError as exc:      # cannot-measure is not success
@@ -416,8 +425,9 @@ def check_review_severity_declared() -> CheckResult:
                 f"declaration — the finding falls back to inference, and a mistyped "
                 f"BLOCKER lands advisory while this check's line count reads clean."))
 
-        unknown_lanes = sorted({v for v in _LANE_VALUE.findall(text)
-                                if v.strip().lower() not in lane_vocabulary})
+        unknown_lanes = sorted({v.strip().strip('`').lower()
+                                for v in _LANE_VALUE.findall(text)
+                                if v.strip().strip('`').lower() not in lane_vocabulary})
         if unknown_lanes:
             bad_lane += 1
             details.append(Detail(
@@ -429,14 +439,52 @@ def check_review_severity_declared() -> CheckResult:
                 f"reads `unclassified` and is fine; declaring a token that means nothing "
                 f"is not."))
 
+    # ── A `Blocked-by:` that resolves to nothing (ADR-012 D10) ───────────────────────
+    # ⚠️ THIS LEG REPLACES A RAISE. `_blocked_by_edges` used to raise on an unresolvable
+    # entry, which propagated out of both edge-assembly sites and so out of
+    # `build_graph_json()` — one hand-typed id in reviewer markdown would have taken down
+    # `knowledge_graph.json`, the atlas, `graph_integrity`, gate extraction and the
+    # dashboard together, including the checks that would diagnose it. The values come from
+    # LLM reviewers typing ids by hand, the same population that produced the dangling
+    # ledger records, so that first typo was a matter of time.
+    #
+    # Detection is unchanged in strength and bounded in blast radius. **Zero, not a
+    # ratcheted baseline**: unlike the ledger's historical debt, this population starts
+    # empty and every entry is new, so there is nothing to ratchet down from.
+    bad_dep = 0
+    try:
+        from build_graph import blocked_by_unresolved, extract_review_finding_nodes
+        unresolved = blocked_by_unresolved(extract_review_finding_nodes())
+    except Exception as exc:
+        bad_dep = 1
+        details.append(Detail(
+            "blocked_by_resolves", False, measured=False,
+            message=f"could not evaluate `Blocked-by:` resolution ({exc}) — the guard did "
+                    f"not run, so its silence is not evidence"))
+    else:
+        for fid, toks in sorted(unresolved.items()):
+            bad_dep += 1
+            details.append(Detail(
+                f"{fid}:blocked_by", False,
+                f"blocked_by {toks} resolves to nothing — not a minted finding, and not a "
+                f"known release scheme with a value ({', '.join(_RELEASE_SCHEME_NAMES)}). "
+                f"A token nothing can satisfy makes the finding read WAITING when it is "
+                f"STUCK, and it reaches no worker either way."))
+        if not unresolved:
+            details.append(Detail(
+                "blocked_by_resolves", True,
+                "every declared `Blocked-by:` names a minted finding or a valued release "
+                "scheme"))
+
+    _ok = bad == 0 and bad_value == 0 and bad_lane == 0 and bad_dep == 0
     details.insert(0, Detail(
-        "summary", bad == 0 and bad_value == 0 and bad_lane == 0,
+        "summary", _ok,
         f"{checked} review document(s) dated >= {_CUTOFF} checked; {bad} with findings "
         f"that do not declare severity, {bad_value} declaring an unmappable severity "
-        f"value, {bad_lane} declaring an unmappable lane (earlier documents keep glyph "
-        f"inference; `lane` is forward-only and its absence is not a failure)"))
-    return CheckResult(passed=(bad == 0 and bad_value == 0 and bad_lane == 0),
-                       details=details)
+        f"value, {bad_lane} declaring an unmappable lane, {bad_dep} unresolvable "
+        f"`Blocked-by:` entr(ies) corpus-wide (earlier documents keep glyph inference; "
+        f"`lane` is forward-only and its absence is not a failure)"))
+    return CheckResult(passed=_ok, details=details)
 
 
 @register_check("review_docs_mint_findings",
@@ -802,12 +850,23 @@ def check_ledger_ids_resolve() -> CheckResult:
     `extract_review_finding_nodes` mints nodes for. Legacy Stage-9/10 records use an
     unrelated `bundle-stage10:...` scheme and were never graph nodes, so flagging them would
     be noise, not signal.
+
+    ⚠️ An ABSENT ledger FAILS here, unlike in `accepted_findings_carry_rationale`, and the
+    asymmetry is deliberate rather than an inconsistency. That check asks whether the
+    acceptances present are justified — no ledger means no acceptances, which is genuinely
+    fine. This one asks whether the closure channel still points at real findings, and a
+    vanished channel is at least as severe as a corrupt one. A malformed ledger was already
+    red while a missing one printed ✓, so the single guard whose subject had disappeared was
+    the one reporting success.
     """
     ledger_path = _H.DOCS_DIR / "review_finding_supersessions.json"
     if not ledger_path.is_file():
-        return CheckResult(passed=True, measured=False, details=[
-            Detail("ledger", True, "no supersession ledger; skipping",
-                   warning=True, measured=False)])
+        return CheckResult(passed=False, measured=False, details=[
+            Detail("ledger", False, measured=False,
+                   message=f"no supersession ledger at {ledger_path} — UNVERIFIED, not "
+                           f"passing. It is the ONLY channel that can close a finding, so "
+                           f"its absence means no closure can be checked, not that every "
+                           f"closure is sound")])
     try:
         entries = json.loads(ledger_path.read_text(encoding="utf-8")).get(
             "supersessions", [])
@@ -834,15 +893,29 @@ def check_ledger_ids_resolve() -> CheckResult:
     dangling = sorted({e["finding_id"] for e in entries
                        if e.get("finding_id", "").startswith("review:")
                        and e["finding_id"] not in known})
+    # ⚠️ A record with NO `finding_id` at all closes nothing and names nothing, so the
+    # `.get(..., "")` above skips it — invisible to the one guard whose subject is records
+    # that close nothing. Count it separately: it is a different defect from a wrong key,
+    # and zero is the only acceptable number.
+    keyless = [i for i, e in enumerate(entries) if not str(e.get("finding_id") or "").strip()]
+    details = []
+    if keyless:
+        details.append(Detail(
+            "keyless", False,
+            f"{len(keyless)} supersession record(s) carry no `finding_id` (index "
+            f"{', '.join(str(i) for i in keyless[:4])}). Such a record closes nothing and "
+            f"is invisible to the dangling scan, which keys on the field it lacks."))
     if len(dangling) > LEDGER_DANGLING_BASELINE:
-        return CheckResult(passed=False, details=[Detail(
+        details.append(Detail(
             "ratchet", False,
             f"{len(dangling)} supersession finding_id(s) name no ReviewFinding node, above "
             f"the pinned baseline of {LEDGER_DANGLING_BASELINE} — a closure filed against a "
             f"nonexistent finding closes nothing: {', '.join(dangling[:4])}. Re-key it or "
-            f"remove it; never raise the baseline.")])
-    return CheckResult(passed=True, details=[Detail(
+            f"remove it; never raise the baseline."))
+        return CheckResult(passed=False, details=details)
+    details.append(Detail(
         "ratchet", True,
         f"{len(dangling)} of {len(entries)} supersession record(s) name no live finding "
         f"(pre-existing annotated-ID debt, baseline {LEDGER_DANGLING_BASELINE}); no growth",
-        warning=bool(dangling))])
+        warning=bool(dangling)))
+    return CheckResult(passed=not keyless, details=details)

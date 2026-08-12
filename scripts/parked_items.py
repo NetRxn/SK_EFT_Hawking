@@ -79,13 +79,20 @@ def parse_parked_blocks(text: str, source: str) -> list[dict]:
             k, v = k.strip().lower(), v.strip()
             if k:
                 fields[k] = v
+        # ⚠️ Validate the PARSED list, not the raw field. `blocked_by: \`\`` is a non-empty
+        # string that yields zero conditions — the abandoned-not-parked state this block
+        # exists to reject, walking straight through a check on the raw value.
+        deps = [d for d in (p.strip().strip("`")
+                            for p in (fields.get("blocked_by") or "").split(","))
+                if d]
         missing = [k for k in _REQUIRED if not fields.get(k)]
+        if "blocked_by" not in missing and not deps:
+            missing.append("blocked_by")
         if missing:
             raise ValueError(
                 f"{source}: PARKED block is missing {missing}. A parked item with no "
                 f"`blocked_by` release condition is not parked, it is abandoned — and the "
                 f"queue must be able to tell those apart.")
-        deps = [d.strip().strip("`") for d in fields["blocked_by"].split(",") if d.strip()]
         items.append({
             "id": f"parked:{fields['id']}",
             "type": "ParkedItem",
