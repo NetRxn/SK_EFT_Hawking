@@ -107,10 +107,25 @@ class TestTargetResolution:
 
     def test_the_workspace_root_comes_from_find_workspace(self):
         """Never a hardcoded parent-walk — that is the repo convention, and a parent-walk
-        breaks in a worktree."""
-        src = Path(rr.__file__).read_text(encoding="utf-8")
-        assert "find_workspace" in src
-        assert "parent.parent.parent" not in src
+        breaks in a worktree.
+
+        ⚠️ ASSERTS THE CALL VIA `ast`, NOT A SUBSTRING. `CHECK_AUTHORING_GUIDE.md` §2.5: "a
+        guard that asserts a helper is called by searching the source finds the name in a
+        COMMENT and passes over a seeded regression." This test's first draft did exactly
+        that — and this docstring, which names `find_workspace`, would itself have satisfied
+        it.
+        """
+        import ast
+        tree = ast.parse(Path(rr.__file__).read_text(encoding="utf-8"))
+        fn = next(n for n in ast.walk(tree)
+                  if isinstance(n, ast.FunctionDef) and n.name == "_workspace_root")
+        called = {
+            (c.func.id if isinstance(c.func, ast.Name) else
+             c.func.attr if isinstance(c.func, ast.Attribute) else None)
+            for c in ast.walk(fn) if isinstance(c, ast.Call)
+        }
+        assert "find_workspace" in called, (
+            f"_workspace_root does not CALL find_workspace; it calls {sorted(x for x in called if x)}")
 
     def test_an_unresolvable_target_NAMES_WHAT_IT_TRIED(self):
         """'Does not resolve' plus the paths tried is a measurement. Alone it is a verdict

@@ -417,10 +417,21 @@ def test_the_date_is_a_PARAMETER_not_a_module_constant():
 
 def test_the_bulk_script_CALLS_the_writer_rather_than_reimplementing_it():
     """Two implementations of one write is how they drift — the defect this repo hits most.
-    Precedent: `mint_finding_id`, shared by the extractor and `close_finding`."""
-    src = (PROJECT_ROOT / 'scripts' / 'wave2_flip_provenance.py').read_text()
-    assert 'from src.core.provenance_writer import' in src
-    assert 'write_text' not in src, "the bulk script still writes provenance.py itself"
+    Precedent: `mint_finding_id`, shared by the extractor and `close_finding`.
+
+    ⚠️ VIA `ast`, ASSERTING THE CALL. `CHECK_AUTHORING_GUIDE.md` §2.5 — a substring scan for
+    the helper's name finds it in a comment and passes over a seeded regression. The first
+    draft of this very test was a substring scan.
+    """
+    import ast
+    tree = ast.parse((PROJECT_ROOT / 'scripts' / 'wave2_flip_provenance.py')
+                     .read_text(encoding='utf-8'))
+    called = {c.func.id if isinstance(c.func, ast.Name) else
+              c.func.attr if isinstance(c.func, ast.Attribute) else None
+              for c in ast.walk(tree) if isinstance(c, ast.Call)}
+    assert 'set_human_verified' in called, "the bulk script does not call the shared writer"
+    # …and it no longer writes the file itself: no `.write_text(` call survives.
+    assert 'write_text' not in called, "the bulk script still writes provenance.py itself"
 ```
 
 - [ ] **Step 2: Run and watch fail**
