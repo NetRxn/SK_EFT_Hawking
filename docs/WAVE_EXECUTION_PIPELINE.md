@@ -701,6 +701,37 @@ silently do nothing. Records are otherwise written only by `scripts/close_findin
 **Gate (advisory):** the QI register exists, is regenerated on Stage 14 runs, and is linked from
 the dashboard.
 
+### Parked work — declaring a release condition
+
+Authorized work that is waiting on something external is declared in the roadmap that owns it, in
+one opt-in block. `scripts/parked_items.py` parses it into the same queue as every other item.
+
+```
+<!-- PARKED
+id: mlx-rhmc-campaign
+lane: pyrust
+target: docs/RHMC_CAMPAIGN_SEQUENCE.md
+blocked_by: run:mlx-rhmc-2026-08
+reason: campaign staged; the operator launches it, results gate the analysis wave
+-->
+```
+
+`id`, `lane` and `blocked_by` are required. **A parked item with no release condition is not parked,
+it is abandoned**, and the queue has to be able to tell those apart — so the parser refuses one.
+
+Four schemes resolve: `run:` (a campaign completes) · `phase:` (a roadmap carries a close marker) ·
+`pub:` (a citekey resolves in `CITATION_REGISTRY` as published) · `research:` (a dispatch returns to
+`Lit-Search/Tasks/complete/`). There is deliberately **no `operator:` scheme**: an operator decision
+that gates work is itself a queue item with a node id, so parking behind it is the ordinary
+`blocked_by: <finding id>` case rather than a second decision-record channel.
+
+⚠️ **A condition that cannot be evaluated reads UNKNOWN, never "unmet".** Reporting it as unmet
+makes a released item look parked forever; reporting it as met would release work on no evidence.
+
+⚠️ **This does not gate roadmaps.** The block is opt-in and the corpus is untouched until something
+is parked deliberately. `docs/architecture/END_TO_END_MAP.md` §2 records that the roadmap layer is
+otherwise unmechanized, and that remains true.
+
 ---
 
 ## Pipeline Invariants
