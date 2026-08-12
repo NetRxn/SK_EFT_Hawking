@@ -1180,3 +1180,34 @@ class TestTheFindingIdMinterIsShared:
                 m['review_date'], m['review_name'], m['section']), (
                 f"{n['id']} was not produced by mint_finding_id — the extractor and the "
                 "minter have diverged, which is the orphan class at its source")
+
+
+class TestRoutingFieldsAreParsedNotInvented:
+    """ADR-012 C7: `Gate:` and `Location:` are ALREADY written on 92-93% of findings.
+
+    The first draft of ADR-012 proposed adding two NEW fields for data the system already
+    collects and discards at extraction.
+    """
+
+    def test_the_field_parser_reads_a_body_line(self):
+        from scripts.build_graph import _parse_finding_field
+        body = ("- **Gate:** CitationIntegrity\n"
+                "- **Location:** `src/core/citations.py:412`\n"
+                "- **Observed:** something\n")
+        assert _parse_finding_field(body, 'Gate') == 'CitationIntegrity'
+        assert _parse_finding_field(body, 'Location') == '`src/core/citations.py:412`'
+        assert _parse_finding_field(body, 'Nope') is None
+        assert _parse_finding_field('', 'Gate') is None
+
+    def test_the_live_corpus_populates_both_above_their_measured_floor(self):
+        from scripts.build_graph import extract_review_finding_nodes
+        ns = extract_review_finding_nodes()
+        assert ns, "no findings extracted — an empty seam is not a clean one"
+        blocks = sum(1 for n in ns if n['meta'].get('blocks'))
+        target = sum(1 for n in ns if n['meta'].get('target'))
+        # ⚠️ DENOMINATOR. 93%/92% was measured over SEVERITY-GLYPH SECTIONS (1,178).
+        # extract_review_finding_nodes returns a WIDER population (1,631) — not every
+        # minted node comes from a section carrying the field template. Measured over
+        # nodes: Gate 1241/1631 = 76.1%, Location 1164/1631 = 71.4%.
+        assert blocks / len(ns) > 0.70, f"blocks coverage collapsed to {blocks}/{len(ns)}"
+        assert target / len(ns) > 0.65, f"target coverage collapsed to {target}/{len(ns)}"

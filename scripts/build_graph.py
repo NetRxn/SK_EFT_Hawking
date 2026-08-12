@@ -1721,6 +1721,28 @@ def _load_supersession_ledger() -> dict[str, dict]:
     return out
 
 
+_FINDING_FIELD_RE_CACHE: dict[str, "re.Pattern[str]"] = {}
+
+
+def _parse_finding_field(body: str, label: str) -> str | None:
+    """Read one `- **Label:** value` line out of a finding body.
+
+    ⚠️ The reviewer template has carried `Gate:`, `Location:`, `Observed:`, `Evidence:`,
+    `Expected:` and `Fix:` since before ADR-012, and this extractor parsed NONE of them.
+    Measured 2026-08-12 over severity-glyph sections: 93% carry `Gate:`, 92% carry
+    `Location:`. Those are `blocks` and `target` — written by the reviewer, sitting in the
+    markdown, discarded here. This function is the whole "unaffordable retrofit".
+    """
+    pat = _FINDING_FIELD_RE_CACHE.get(label)
+    if pat is None:
+        pat = re.compile(rf"^\s*[-*]\s*\*\*{re.escape(label)}:?\*\*:?\s*(.+?)\s*$", re.M)
+        _FINDING_FIELD_RE_CACHE[label] = pat
+    m = pat.search(body or "")
+    if not m:
+        return None
+    return m.group(1).strip() or None
+
+
 def mint_finding_id(date_dir: str, review_name: str, section_num: str) -> str:
     """The canonical ReviewFinding node id.
 
@@ -1928,6 +1950,9 @@ def extract_review_finding_nodes() -> list[dict]:
                 'section': section_num,
                 'inferred_paper': inferred_paper,
                 'inferred_bundle': inferred_bundle,
+                # ADR-012 D1 — routing data the reviewer ALREADY writes (C7).
+                'blocks': _parse_finding_field(body, 'Gate'),
+                'target': _parse_finding_field(body, 'Location'),
             }
             _KNOWN_STATUSES = ('open', 'fixed', 'accepted')
             ledger = supersessions.get(finding_id)
