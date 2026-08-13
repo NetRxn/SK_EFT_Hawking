@@ -14,30 +14,28 @@ Aristotle** automated theorem prover.
 
 ---
 
-## Autonomous `/goal` mode — the stop hook is a GO signal, never coercion
+## Autonomous `/goal` mode — the Stop hook is a GO signal
 
-`/goal` is a routine, safe, Anthropic-official autonomous-development feature used
-regularly here. Once a goal is set the user is **intentionally out of the loop**; the
-feature's own machinery owns continuation, auto-compact, and closure.
+`/goal` is a routine autonomous-development feature used regularly here. Once a goal is
+set the user is **intentionally out of the loop**, and the feature's own machinery owns
+continuation, auto-compaction and closure.
 
-**When the Stop hook fires and the goal isn't met, that means: do the next increment of
-real work THIS turn.** Its "X/Y/Z remain" is *information about what's left*, not a
-rejection — the only correct response is "right, do the next piece."
+**When the Stop hook fires and the goal is not yet met, ship the next increment of real
+work this turn.** Its "X/Y/Z remain" reports what is left; the correct response is to do
+the next piece.
 
-- **DO**: ship the next substantive increment (build-clean, kernel-pure, invariants
-  respected), update the roadmap/notebook, repeat — across as many auto-compacts as it
-  takes. Quality does **not** drop across a compaction boundary.
-- **NEVER** answer with "Holding" / "awaiting direction" / "needs a fresh session" /
-  "this is multi-day so I'll stop" / any context-budget reasoning. It is **not your job
-  to manage the context window.**
-- **Blocked on a user-only decision?** First run full diligence (re-read the roadmap/DR
-  directly, Explore agents, reason about tradeoffs). If one option is clearly best, take
-  it. Ask **once** only when a *significant* tradeoff has *no* clear pre-decision — and
-  keep shipping anything else meanwhile. A deep-research dispatch is async: dispatch and
-  keep working.
-- **Trip-wire:** about to write "should I continue?" / "multi-day, next session" → STOP;
-  that *is* the antipattern. Do the next brick. The loop ends only when the goal is
-  genuinely met (→ closure reviewer) or the user redirects.
+- **Ship, then repeat.** A substantive increment — build-clean, kernel-pure, invariants
+  respected — then update the roadmap and notebook, then the next one. This runs across
+  as many compaction boundaries as it takes, and quality holds across each.
+- **Context management is the machinery's job, not yours.** Session depth and remaining
+  budget are not inputs to what you build or how far you take it.
+- **Blocked on a decision only the user can make?** Run full diligence first — re-read
+  the roadmap and research directly, dispatch Explore agents, reason through the
+  tradeoffs. If one option is clearly best, take it. Ask once only when a significant
+  tradeoff has no clear pre-decision, and keep shipping everything else meanwhile. A
+  deep-research dispatch is asynchronous: dispatch it and continue.
+- **The loop ends** when the goal is genuinely met (→ closure reviewer), or when the
+  user redirects it.
 
 **Running or arming a managed loop?** See the dev-harness operator's guide —
 [docs/dev-loops/HARNESS_GUIDE.md](docs/dev-loops/HARNESS_GUIDE.md): where to launch
@@ -84,8 +82,16 @@ never affects builds. Killed servers do not respawn within a session.
 **[`docs/architecture/`](docs/architecture/README.md) is the canonical description of this
 system.** Start at its `README.md`, which owns the index and the ownership table.
 
-Three rules. They are requirements, not style preferences:
+Four rules. They are requirements, not style preferences:
 
+0. **Invoke the `architecture-change` skill first.** Any change that adds or alters this
+   repo's own machinery — a check, a gate, an extractor, an edge type, a hook, a writer, a
+   dashboard surface, a plugin component — runs through it, and so does any ADR, spec or plan
+   before it is treated as settled. It owns the sequence (orient · measure · specify ·
+   adversarially review the specification · pilot · plan · build · ship with the docs) and
+   deliberately restates none of the rules below, so invoking it costs one step and skipping
+   it costs the four failures it exists to catch. **Rules 1–3 are what it enforces; this rule
+   is what makes them fire.**
 1. **Read before you design.** Before adding a check, a gate, an extractor, an edge type, or
    any new infrastructure, read the document that owns that surface. The recurring failure is
    building a second mechanism beside one that already exists — a third prose→Lean resolver, a
@@ -105,9 +111,18 @@ machine-enforced; rules 1 and 2 are not, and **nothing mechanically verifies a p
 (tracked as B2 in `docs/architecture/.working-docs/ARCHITECTURE_TODOs.MD`). Where the guard is
 discipline rather than a check, treat it as the stricter obligation, not the looser one.
 
-Remediation items found in these documents but requiring code go in
-[`ARCHITECTURE_TODOs.MD`](docs/architecture/.working-docs/ARCHITECTURE_TODOs.MD) — enumerated
-with paths and context, not silently fixed in passing.
+**A remediation item found in these documents but requiring code is FILED AS A FINDING** —
+`papers/AutomatedReviews/<date>-<slug>/<target>.md`, with a declared severity, lane and
+verify — so it is routed, ratcheted and closable through one writer
+([`scripts/close_finding.py`](scripts/close_finding.py), ADR-012). Enumerate it with paths
+and context; do not silently fix it in passing.
+
+⚠️ **Do not add to [`ARCHITECTURE_TODOs.MD`](docs/architecture/.working-docs/ARCHITECTURE_TODOs.MD).**
+It predates that queue and is **being retired into it**. It is still cited by identifier —
+`TODO-D*` from three architecture documents, `B2` from `tests/test_architecture_claims.py` —
+so it stays readable, but it takes no new entries. Two destinations for one job is the
+duplicate-mechanism failure rule 1 exists to prevent, and this is that failure inside the
+directory that names it.
 
 ---
 
@@ -116,9 +131,9 @@ with paths and context, not silently fixed in passing.
 | Read **before…** | Document |
 |---|---|
 | any work (the law: 14 stages, no skipping) | [WAVE_EXECUTION_PIPELINE.md](docs/WAVE_EXECUTION_PIPELINE.md) |
-| designing or changing ANY infrastructure | [docs/architecture/README.md](docs/architecture/README.md) — see the three rules above |
+| designing or changing ANY infrastructure | **invoke the `architecture-change` skill** (rule 0), then [docs/architecture/README.md](docs/architecture/README.md) — which of its eight documents answers which question |
 | understanding the tree / build / architecture | [README.md](README.md) |
-| changing anything — quick module/Lean/counts map | [SK_EFT_Hawking_Inventory_Index.md](SK_EFT_Hawking_Inventory_Index.md) |
+| finding a module — what it is, what imports it | [SK_EFT_Hawking_Inventory_Index.md](SK_EFT_Hawking_Inventory_Index.md) — a POINTER layer. Its `<!-- AUTOGEN -->` blocks are generated and gated; its narrative is hand-maintained and **verify anything it asserts** |
 | any Aristotle session | [docs/references/Theorm_Proving_Aristotle_Lean.md](docs/references/Theorm_Proving_Aristotle_Lean.md) |
 | any Mathlib/PhysLib/toolchain bump | [docs/references/mathlib_bump_playbook.md](docs/references/mathlib_bump_playbook.md) — repair patterns + the process rules that cost the most time |
 | any paper-shaped output | [docs/PAPER_STRATEGY.md](docs/PAPER_STRATEGY.md), [PAPER_DRAFT_MAPPING.md](docs/PAPER_DRAFT_MAPPING.md) |
@@ -141,9 +156,8 @@ uv run python -m pytest -q                    # BOTH suites: repo tests + the sk
 uv run python -m pytest tests/ -v             # repo only, fast (~2.5 min; deselects 'slow')
 uv run python -m pytest tests/ -m slow -v     # slow tests (Lean ExtractDeps + graph)
 uv run python -m pytest -m '' -v              # everything — before PR / submission / wave close
-# Passing an explicit path scopes the run; omitting it picks up BOTH testpaths. The plugin's
-# guards (shell-invocation defects, surface-vs-README drift) previously ran only when someone
-# passed `.claude/plugins/skeft-qa/tests` by hand, so nothing ran them. Prefer the bare form.
+# Prefer the bare form: an explicit path SCOPES the run, and only the bare form picks up
+# both testpaths — the repo's tests and the plugin's surface guards.
 uv run python scripts/dep_upgrade_preview.py  # what `uv lock --upgrade` WOULD do (writes nothing)
 uv run python scripts/verify_scope.py         # verify ONLY what your change can break
 uv run python scripts/verify_scope.py --merge-gate   # the full ~45-min certification
@@ -218,7 +232,8 @@ Computation flow: `constants.py` → params → `transonic_background.py` → fi
 `formulas.py` → corrections (Lean-verified); `wkb/` → Hawking spectrum; `adw/` → gap
 equation; `vestigial/` → Monte-Carlo metric phase; `lean/` → proofs + `ExtractDeps` taxonomy.
 
-Load-bearing invariants (full list in [WAVE_EXECUTION_PIPELINE.md](docs/WAVE_EXECUTION_PIPELINE.md)):
+A selection of the load-bearing invariants, keeping their canonical numbers — the full,
+numbered list is in [WAVE_EXECUTION_PIPELINE.md](docs/WAVE_EXECUTION_PIPELINE.md):
 1. **`formulas.py` is canonical** — the only home for physics formulas; everything imports it.
 2. **`constants.py` is canonical** — constants, experimental params, `ARISTOTLE_THEOREMS`, `AXIOM_METADATA`.
 3. **`visualizations.py` is canonical** — the only home for figure functions.
@@ -242,22 +257,21 @@ A ruthless post-wave review remains mandatory.
 - **Formula provenance:** every `formulas.py` entry references its Lean theorem + Aristotle run ID.
 - **Mathlib pin:** `lean/lakefile.toml` (`81a5d257`, the v4.32.0 tag; toolchain `leanprover/lean4:v4.32.0`). Mathlib, PhysLib (`c4843367`), the REPL dep and the toolchain move as ONE matched set — never bump one alone.
 - **pytest:** `pythonpath = ["."]`.
-- **Dependencies: if we import it, we declare it.** An undeclared import survives only while
-  some *other* package happens to pull it in — `uv lock --upgrade` can drop it silently
-  (measured: it removed `pytest-timeout`, and `markupsafe`, which backs the dashboard's XSS
-  escaping, was reachable only via flask/jinja2). Enforced by
-  `tests/test_dependency_declaration.py`. Preview any upgrade with
-  `scripts/dep_upgrade_preview.py` — it separates removals and major bumps from routine ones.
-  Blind spot it cannot cover: a pytest **plugin** is activated by installation, never
-  imported, so declare those by hand.
+- **Dependencies: if we import it, we declare it.** An undeclared import works only while
+  some *other* package happens to pull it in, and `uv lock --upgrade` can drop that carrier
+  without warning. Enforced by `tests/test_dependency_declaration.py`; preview any upgrade
+  with `scripts/dep_upgrade_preview.py`, which separates removals and major bumps from
+  routine ones. **Its one blind spot:** a pytest *plugin* is activated by installation and
+  never imported, so declare those by hand.
 - **Workspace-level paths** (e.g. `Lit-Search/`): resolve via `from src.core.workspace import find_workspace` — never hardcode parent-walks.
 - **New modules:** `src/<domain>/`, `tests/test_<domain>.py`, `lean/SKEFTHawking/<Module>.lean`.
 
 **Quality standard — correctness over expediency, always.** Never label approximate
-methods "exact"/"all orders"; never publish toy results as the real physics; if the
-correct implementation is feasible, do it. Past "multi-month" estimates have repeatedly
-resolved in hours–days with the Lean pipeline — reason from first principles before
-assuming infeasibility. Flag quality tradeoffs explicitly; let the user decide.
+methods "exact" or "all orders"; never publish toy results as the real physics; if the
+correct implementation is feasible, do it. **Reason from first principles before
+concluding something is infeasible** — this pipeline routinely closes in hours or days
+work that was estimated in months. Flag quality tradeoffs explicitly and let the user
+decide.
 
 ---
 

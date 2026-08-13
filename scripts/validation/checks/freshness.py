@@ -805,47 +805,189 @@ def check_bundle_source_freshness() -> CheckResult:
 # CHECK: Inventory-Index autogen freshness (advisory)
 # ═══════════════════════════════════════════════════════════════════════
 
-@register_check("inventory_index_autogen_fresh",
-                "Advisory: SK_EFT_Hawking_Inventory_Index.md autogen blocks match docs/counts.json")
-def check_inventory_index_autogen_fresh() -> CheckResult:
-    """Advisory watchlist: the auto-generated blocks in the Inventory Index
-    (the §1 counts table, the §3 per-family-counts sentence, and the §3.1
-    generated family->count table) must reflect ``docs/counts.json``.
+# The Index declares its own contract in its own header — "pointers only, no
+# embedded content", and a size ceiling justified by a single `Read` call. Both
+# legs below read that contract FROM the file rather than hardcoding it, so the
+# guard and the sentence a human reads cannot diverge into two rules.
+#
+# Down-only, per CHECK_AUTHORING_GUIDE §2.3. Lower either with a stated reason.
+_INDEX_NARRATIVE_COUNT_CEILING: int = 19
+"""Hand-written counts in the Index's narrative, outside the AUTOGEN blocks.
 
-    These blocks are owned by ``scripts/update_inventory_index.py`` and
-    bracketed by ``<!-- AUTOGEN:... -->`` markers. They drift between manual
-    syncs whenever ``update_counts.py`` regenerates ``counts.json`` without a
-    follow-up index refresh. This check is ADVISORY (always passes, warns on
-    staleness) — mirroring ``elaboration_knob_watchlist`` semantics — because a
-    stale doc-index is a documentation-hygiene signal, not a soundness or
-    pipeline-invariant failure. Fix: run
-    ``uv run python scripts/update_inventory_index.py``.
+Measured 2026-08-13 at 19, after pruning a ~10 KB nested changelog from the
+header. Every one of these is a second census beside `docs/counts.json`, and the
+population is the reason the leg exists: the pruned header stated a theorem count
+roughly ten thousand below the AUTOGEN table a few lines down, in the same file,
+green throughout — `inventory_index_autogen_fresh` gated the generated blocks and
+nothing at all outside them.
 
-    Runs the generator's ``compute_stale`` logic in-process (no shelling out).
+⚠️ The pattern matches adjacency and takes false positives (a year beside the word
+"Theorem", the `0 axiom` / `0 sorry` invariant restated). That is deliberate: they
+sit in the baseline, and the ratchet is down-only, so imprecision costs a slightly
+high ceiling and never a missed regression.
+"""
+
+
+# Same shape as `architecture_inventory_fresh`'s narrative-count pattern, over the
+# nouns the Index actually publishes. Adjacency-matched and deliberately imprecise
+# — see the ceiling's docstring for why that is the right trade here.
+_INDEX_COUNT_RE = re.compile(
+    r"(?<![-#\w])\d[\d,]*[\s*_`]*"
+    r"(?:theorems?|thm|modules?|mod|declarations?|axioms?|sorr(?:y|ies)|definitions?"
+    r"|bundles?|papers?|notebooks?|figures?|pytest cases|checks?|gates?)\b",
+    re.IGNORECASE)
+
+
+def _index_narrative_lines(text: str) -> tuple[list[str | None], int, list[str]]:
+    """Mask the AUTOGEN regions; return (masked lines, block count, seam errors).
+
+    ⚠️ **The masking IS the seam** (guide §2.5). An unmatched `BEGIN` masks every
+    line after it, so the scan quietly walks a shrinking population and reports a
+    clean bill — the same shape as the defect this check exists to catch. An
+    unmatched marker is therefore an error, not a parse convenience.
     """
+    masked: list[str | None] = []
+    errors: list[str] = []
+    blocks = 0
+    inside = False
+    for i, ln in enumerate(text.splitlines(), 1):
+        if "<!-- AUTOGEN:" in ln and "BEGIN" in ln:
+            if inside:
+                errors.append(f"L{i}: AUTOGEN BEGIN inside an unclosed block")
+            inside = True
+        masked.append(None if inside else ln)
+        if "<!-- AUTOGEN:" in ln and "END" in ln:
+            if not inside:
+                errors.append(f"L{i}: AUTOGEN END with no matching BEGIN")
+            else:
+                blocks += 1
+            inside = False
+    if inside:
+        errors.append("AUTOGEN BEGIN never closed — every line after it was masked")
+    return masked, blocks, errors
+
+
+@register_check("inventory_index_autogen_fresh",
+                "SK_EFT_Hawking_Inventory_Index.md: autogen blocks fresh, and its "
+                "narrative honours the pointers-only contract it declares")
+def check_inventory_index_autogen_fresh() -> CheckResult:
+    """The Inventory Index is the pointer layer CLAUDE.md routes a reader to for
+    "what is this module", and it owns two halves with different guarantees.
+
+    The ``<!-- AUTOGEN:... -->`` blocks (the §1 counts table, the §3 per-family
+    sentence, the §3.1 family->count table) are written by
+    ``scripts/update_inventory_index.py`` from ``docs/counts.json``; their
+    freshness leg stays ADVISORY, because a stale generated table is a hygiene
+    signal and running the generator fixes it.
+
+    ⚠️ **Everything OUTSIDE those markers had no guard at all, and that is where
+    the damage was.** Measured 2026-08-13: the narrative was two months stale, over
+    the size ceiling it declares for itself, stating a theorem count roughly ten
+    thousand below the AUTOGEN table in the same file, and asserting that this repo
+    has no ``CLAUDE.md`` — which it does, at 21 KB, as the primary bootstrap. A
+    reader who believes that sentence skips the bootstrap and never learns what
+    they do not know. Every gate was green.
+
+    The two legs added here BLOCK, and both read the Index's own declared contract
+    rather than a constant chosen here:
+
+    * **size** — the header states a ceiling, justified by a single ``Read`` call.
+    * **counts** — "pointers only, no embedded content"; a count in the narrative
+      is a second census beside ``docs/counts.json``, which is the rule
+      ``architecture_inventory_fresh`` already enforces for ``docs/architecture/``.
+      This is that mechanism extended to the document that needed it, not a second
+      one built beside it.
+    """
+    details: list[Detail] = []
+    all_pass = True
+
+    # ── Leg 1: AUTOGEN freshness (advisory, unchanged) ────────────────────────
     try:
         from update_inventory_index import compute_stale
-    except ImportError as exc:
-        return CheckResult(passed=True, measured=False, details=[
-            Detail("import", True,
-                   f"SKIPPED — update_inventory_index not importable: {exc}",
-                   warning=True)])
-
-    try:
         stale, summary = compute_stale()
-    except Exception as exc:  # defensive: never fail the suite on an advisory
-        return CheckResult(passed=True, measured=False, details=[
-            Detail("compute", True,
-                   f"SKIPPED — compute_stale raised: {exc}", warning=True)])
+        details.append(Detail(
+            "freshness", True,
+            f"{summary} — run `uv run python scripts/update_inventory_index.py` "
+            f"to refresh" if stale else summary,
+            warning=bool(stale)))
+    except ImportError as exc:
+        details.append(Detail("freshness", True,
+                              f"SKIPPED — update_inventory_index not importable: {exc}",
+                              warning=True))
+    except Exception as exc:  # defensive: an advisory leg never fails the suite
+        details.append(Detail("freshness", True,
+                              f"SKIPPED — compute_stale raised: {exc}", warning=True))
 
-    if stale:
-        return CheckResult(passed=True, details=[
-            Detail("freshness", True,
-                   f"{summary} — run `uv run python "
-                   "scripts/update_inventory_index.py` to refresh",
-                   warning=True)])
-    return CheckResult(passed=True, details=[
-        Detail("freshness", True, summary)])
+    # ── Legs 2+3: the narrative half ──────────────────────────────────────────
+    idx = _H.PROJECT_ROOT / "SK_EFT_Hawking_Inventory_Index.md"
+    if not idx.is_file():
+        return CheckResult(passed=False, measured=False, details=details + [Detail(
+            "index", False,
+            f"SKIPPED — {idx.name} absent; UNVERIFIED, not passing")])
+    text = idx.read_text(encoding="utf-8", errors="ignore")
+
+    declared = re.search(r"Keep under\s+(\d+)\s*KB", text)
+    if not declared:
+        all_pass = False
+        details.append(Detail(
+            "size_ceiling", False,
+            "the Index no longer declares a size ceiling — this leg asserts the "
+            "file against its OWN stated rule, so a deleted rule is an unmeasurable "
+            "leg, not a passing one. Restore the `Keep under N KB` sentence."))
+    else:
+        ceiling_kb = int(declared.group(1))
+        actual_kb = len(text.encode("utf-8")) / 1024
+        ok = actual_kb <= ceiling_kb
+        details.append(Detail(
+            "size_ceiling", ok,
+            f"{actual_kb:.0f} KB, within the {ceiling_kb} KB ceiling the file declares"
+            if ok else
+            f"{actual_kb:.0f} KB EXCEEDS the {ceiling_kb} KB ceiling the file declares "
+            f"for itself. The stated reason is that a bootstrap must read it in one "
+            f"call. Prune narrative into SK_EFT_Hawking_Inventory.md — the file's own "
+            f"Size-discipline rule says exactly that, and says not to inline wave "
+            f"history or per-commit detail here."))
+        if not ok:
+            all_pass = False
+
+    masked, blocks, seam_errors = _index_narrative_lines(text)
+    scanned = sum(1 for m in masked if m is not None)
+    if seam_errors or blocks == 0 or scanned == 0:
+        all_pass = False
+        details.append(Detail(
+            "narrative_seam", False,
+            f"the AUTOGEN masking is unsound, so the counts leg below walked a "
+            f"population it cannot vouch for — blocks={blocks}, narrative "
+            f"lines={scanned}, errors={seam_errors or 'none'}"))
+    else:
+        offenders = [
+            f"L{i}: {m.group(0).strip()!r}"
+            for i, ln in enumerate(masked, 1) if ln
+            for m in [_INDEX_COUNT_RE.search(ln)] if m
+        ]
+        n = len(offenders)
+        ok = n <= _INDEX_NARRATIVE_COUNT_CEILING
+        details.append(Detail(
+            "no_counts_outside_autogen", ok,
+            f"{n} hand-written count(s) in {scanned} narrative line(s), at or below "
+            f"the down-only ceiling of {_INDEX_NARRATIVE_COUNT_CEILING} "
+            f"({blocks} AUTOGEN block(s) masked)"
+            if ok else
+            f"{n} hand-written count(s) in the Index narrative EXCEEDS the down-only "
+            f"ceiling of {_INDEX_NARRATIVE_COUNT_CEILING}. The Index declares itself "
+            f"'pointers only — no embedded content'; a count here is a second census "
+            f"beside docs/counts.json and the AUTOGEN blocks, and it drifts. Name the "
+            f"artifact that owns the number instead: {offenders[:8]}"))
+        if not ok:
+            all_pass = False
+        elif n < _INDEX_NARRATIVE_COUNT_CEILING:
+            details.append(Detail(
+                "ratchet_slack", True,
+                f"ceiling {_INDEX_NARRATIVE_COUNT_CEILING} now has {_INDEX_NARRATIVE_COUNT_CEILING - n} "
+                f"of headroom — lower it to {n} in this commit; a ratchet with slack "
+                f"cannot fire (guide §2.3)", warning=True))
+
+    return CheckResult(passed=all_pass, details=details)
 
 
 @register_check(

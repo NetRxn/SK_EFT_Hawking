@@ -664,6 +664,110 @@ class TestInventoryIndexAutogenFresh:
         assert r.passed is True and r.details[0].warning
 
 
+class TestInventoryIndexNarrativeContract:
+    """PRODUCTION-SEEDED (guide §2.4): every mutation below is written into the REAL
+    `SK_EFT_Hawking_Inventory_Index.md` and restored in a `finally`.
+
+    These legs BLOCK, unlike the advisory freshness leg above, because the damage they
+    catch is not hygiene. Measured 2026-08-13, with every gate green: the narrative was
+    two months stale, over the size ceiling it declares for itself, publishing a theorem
+    count roughly ten thousand below the AUTOGEN table in the same file, and asserting
+    that this repo has no `CLAUDE.md` — which it does, and it is the primary bootstrap.
+    `inventory_index_autogen_fresh` gated the generated blocks and nothing outside them.
+    """
+
+    @staticmethod
+    def _index():
+        import validate_helpers as _vh
+        return _vh.PROJECT_ROOT / "SK_EFT_Hawking_Inventory_Index.md"
+
+    def _leg(self, name):
+        return next(d for d in fr.check_inventory_index_autogen_fresh().details
+                    if d.name == name)
+
+    def test_the_real_index_is_green_on_all_three_legs(self):
+        """The baseline the mutations below are measured against."""
+        r = fr.check_inventory_index_autogen_fresh()
+        assert r.passed and r.measured
+        assert {"size_ceiling", "no_counts_outside_autogen"} <= {d.name for d in r.details}
+
+    def test_the_ratchet_has_zero_headroom(self):
+        """Guide §2.3 — a ceiling above the live population cannot fire. The check
+        emits a `ratchet_slack` warning when it drifts; assert it is absent."""
+        assert not any(d.name == "ratchet_slack"
+                       for d in fr.check_inventory_index_autogen_fresh().details)
+
+    def test_a_count_added_to_the_narrative_fails_in_production(self):
+        """FIRES ON THE SEEDED DEFECT — the leg that would have caught the header
+        stating one theorem count while the AUTOGEN table stated another."""
+        idx = self._index()
+        orig = idx.read_text(encoding="utf-8")
+        try:
+            idx.write_text(orig + "\nThe project has 99999 theorems across 1234 modules.\n",
+                           encoding="utf-8")
+            leg = self._leg("no_counts_outside_autogen")
+            # Assert the DECIDER — the population crossed the ceiling. The message
+            # samples only the first offenders, so matching the seeded text would
+            # pin a display detail rather than the verdict.
+            assert not leg.passed
+            assert f"{fr._INDEX_NARRATIVE_COUNT_CEILING + 1} hand-written" in (
+                leg.message or "")
+        finally:
+            idx.write_text(orig, encoding="utf-8")
+
+    def test_exceeding_the_declared_ceiling_fails_in_production(self):
+        """The ceiling is READ FROM THE FILE, so the guard and the sentence a human
+        reads cannot become two different rules."""
+        idx = self._index()
+        orig = idx.read_text(encoding="utf-8")
+        try:
+            idx.write_text(orig + ("\n<!-- pad -->" * 4000), encoding="utf-8")
+            leg = self._leg("size_ceiling")
+            assert not leg.passed and "EXCEEDS" in (leg.message or "")
+        finally:
+            idx.write_text(orig, encoding="utf-8")
+
+    def test_a_deleted_ceiling_is_UNMEASURABLE_not_passing(self):
+        """Guide §2.1 — deleting the rule must not delete the guard silently."""
+        idx = self._index()
+        orig = idx.read_text(encoding="utf-8")
+        try:
+            idx.write_text(orig.replace("Keep under 100 KB", "Keep it smallish"),
+                           encoding="utf-8")
+            assert not self._leg("size_ceiling").passed
+        finally:
+            idx.write_text(orig, encoding="utf-8")
+
+    def test_an_unclosed_autogen_block_is_a_seam_failure_not_a_clean_scan(self):
+        """⚠️ THE MUTATION THAT MATTERS MOST. An unmatched BEGIN masks every line after
+        it, so the counts leg walks a shrinking population and reports a clean bill —
+        the exact shape of the defect this check exists to catch. It must fail LOUD,
+        not report zero offenders."""
+        idx = self._index()
+        orig = idx.read_text(encoding="utf-8")
+        assert "<!-- AUTOGEN:counts-table END -->" in orig
+        try:
+            idx.write_text(orig.replace("<!-- AUTOGEN:counts-table END -->", "", 1),
+                           encoding="utf-8")
+            leg = self._leg("narrative_seam")
+            assert not leg.passed and "unclosed" in (leg.message or "")
+        finally:
+            idx.write_text(orig, encoding="utf-8")
+
+    def test_the_seam_failure_is_not_reachable_by_the_counts_leg(self):
+        """Complement of the above: when the seam is broken the counts leg must not
+        also emit a green verdict beside it — one broken population, one answer."""
+        idx = self._index()
+        orig = idx.read_text(encoding="utf-8")
+        try:
+            idx.write_text(orig.replace("<!-- AUTOGEN:counts-table END -->", "", 1),
+                           encoding="utf-8")
+            names = {d.name for d in fr.check_inventory_index_autogen_fresh().details}
+            assert "narrative_seam" in names and "no_counts_outside_autogen" not in names
+        finally:
+            idx.write_text(orig, encoding="utf-8")
+
+
 class TestPathAliasCoupling:
     """The module-level path aliases are the known `test_no_check_module_aliases_a_path`
     gap (BinOp form). Pinning their derivation here means a change shows up as a

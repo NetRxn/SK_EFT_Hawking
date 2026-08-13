@@ -408,8 +408,15 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
     ),
     "inventory_index_autogen_fresh": (
         "test_d5_freshness.py",
-        "ADVISORY BY DESIGN (item 3), so both directions are on the WARNING. A leg pins "
-        "that a raising generator can never fail the suite",
+        "TWO HALVES. The AUTOGEN-freshness leg stays ADVISORY BY DESIGN (item 3), so its "
+        "directions are on the WARNING and a leg pins that a raising generator can never "
+        "fail the suite. The narrative legs added 2026-08-13 BLOCK and are "
+        "PRODUCTION-SEEDED against the real Index: a count appended to the narrative "
+        "crosses the down-only ceiling; padding past the size ceiling the file declares "
+        "for ITSELF fails; deleting that declared ceiling is UNMEASURABLE, not passing; "
+        "and an unclosed AUTOGEN marker — which masks every line after it and would make "
+        "the counts leg report a clean bill over a shrinking population — fails as a seam "
+        "error instead, with the counts leg suppressed rather than green beside it",
     ),
     # lean_toolchain.py: 34 tests / 14 mutations. Also CLOSES the QI-11 residue — the
     # lake-resolution block duplicated in check_lean_build and
@@ -849,6 +856,11 @@ AWAITING_CEILING = 0
 #: is the distinction the four blockers turned on. Erring toward absent overstates the
 #: remaining work; the opposite error is what produced them.
 PRODUCTION_SEEDED: frozenset[str] = frozenset({
+    # 2026-08-13: seeded in the real SK_EFT_Hawking_Inventory_Index.md — a count
+    # appended to the narrative, padding past the file's own declared size ceiling,
+    # that ceiling deleted, and an AUTOGEN END removed. Only the narrative legs are
+    # covered; the AUTOGEN-freshness leg above them stays advisory by ADR-009 item 3.
+    "inventory_index_autogen_fresh",
     "ledger_ids_resolve",
     # 2026-08-10: seeded in the real ATLAS_HEATMAP.md and the real sources.py
     # (see its MUTATION_VERIFIED entry). Keeps FIXTURE_ONLY_CEILING at 55.
@@ -975,7 +987,7 @@ PRODUCTION_SEEDED: frozenset[str] = frozenset({
 #: every check for which nobody has yet demonstrated a production failure, not every
 #: check that is broken. Lower it one check at a time, each with the probe recorded in
 #: the commit — the same way the 54-entry `AWAITING_MUTATION_TEST` backlog went to zero.
-FIXTURE_ONLY_CEILING = 55  # 2026-08-09: +3 checks, +3 production seeds — net unchanged
+FIXTURE_ONLY_CEILING = 54  # 2026-08-13: inventory_index_autogen_fresh seeded in production
 
 
 def _registered() -> list[str]:

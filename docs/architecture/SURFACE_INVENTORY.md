@@ -119,7 +119,7 @@ checks read. See `validate._CANONICAL_ORDER`.
 | 74 | `axiom_count_prose_consistency` | `papers_prose` | Paper prose axiom-count claims agree with docs/counts.json |
 | 75 | `prose_theorem_reference_coverage` | `prose_lean_refs` | Bundle-draft Lean references in any verbatim form (texttt, a preamble alias for it, verb, or a TeX `name' quote) resolve in lean_deps.json |
 | 76 | `theorem_name_embedded_citations` | `prose_lean_refs` | Declaration names embedding author+year have matching bibliography entries |
-| 77 | `inventory_index_autogen_fresh` | `freshness` | Advisory: SK_EFT_Hawking_Inventory_Index.md autogen blocks match docs/counts.json |
+| 77 | `inventory_index_autogen_fresh` | `freshness` | SK_EFT_Hawking_Inventory_Index.md: autogen blocks fresh, and its narrative honours the pointers-only contract it declares |
 | 78 | `architecture_inventory_fresh` | `freshness` | docs/architecture/SURFACE_INVENTORY.md matches a fresh derivation from the code |
 | 79 | `lean_docstring_refs_resolve` | `lean_toolchain` | Lean docstring `backticked` project names resolve (rename-drift guard) |
 | 80 | `paper_toolchain_pin_drift` | `papers_prose` | Advisory (Class TP): paper-draft toolchain/Mathlib pins match lean-toolchain + lakefile.toml |
