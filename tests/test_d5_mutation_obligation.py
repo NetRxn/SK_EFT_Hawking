@@ -424,7 +424,10 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
         "tree reports UNMEASURED rather than clean. The ratchet leg reads SOURCE, not the "
         "rendered artifact — a leg keyed on the artifact would be satisfied by the "
         "regeneration that introduced the regression, since the artifact always agrees "
-        "with itself"),
+        "with itself. D5 (2026-08-13) added the SHELL decider with its own both-directions "
+        "legs, including the false positive the bounding exists to stop (a comment AFTER "
+        "code is not a description) and a seam guard that fails if the glob stops matching "
+        "`*.sh` at all"),
     # lean_toolchain.py: 34 tests / 14 mutations. Also CLOSES the QI-11 residue — the
     # lake-resolution block duplicated in check_lean_build and
     # check_axiom_closure_allowlist now has one owner. Deferred to W-D on purpose: it

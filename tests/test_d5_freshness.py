@@ -692,6 +692,52 @@ class TestBundleCountsFresh:
         assert not r.passed and not r.measured
 
 
+class TestTheShellDecider:
+    """ADR-013 D5. Shell has no AST, so the census needs a second decider — and a decider
+    is exactly the thing this repository keeps getting wrong by substituting a proxy.
+
+    The rule is the LEADING comment block only. Scanning a whole script for comments would
+    call any script with an explanatory note "described", which is the false positive the
+    Python leg avoids by using `ast.get_docstring` rather than a source regex.
+    """
+
+    @property
+    def _mc(self):
+        import module_census
+        return module_census
+
+    def test_the_leading_block_is_taken(self):
+        assert self._mc._shell_header("#!/usr/bin/env bash\n# Does a thing.\n# In two lines.\n\nset -e\n") \
+            == "Does a thing.\nIn two lines."
+
+    def test_a_script_with_no_shebang_still_works(self):
+        assert self._mc._shell_header("# Just a header.\nset -e\n") == "Just a header."
+
+    def test_a_comment_AFTER_code_is_NOT_a_description(self):
+        """THE FALSE POSITIVE THIS BOUNDING EXISTS TO PREVENT."""
+        assert self._mc._shell_header("#!/bin/bash\nset -e\n# an explanatory note mid-file\n") is None
+
+    def test_a_script_with_only_a_shebang_is_undescribed(self):
+        assert self._mc._shell_header("#!/bin/bash\nset -e\n") is None
+
+    def test_the_block_stops_at_the_first_non_comment(self):
+        assert self._mc._shell_header("#!/bin/bash\n# One.\nset -e\n# Two.\n") == "One."
+
+    def test_the_four_real_scripts_are_all_described(self):
+        """Measured before the walk widened. The ceiling holds at 4 BECAUSE these are
+        described — had one lacked a header the fix would be writing it, never raising
+        the ceiling to admit it (a ratchet is scoped by its population predicate)."""
+        data = self._mc.collect()
+        sh = [r for r, _ in data["documented"] if r.endswith(".sh")]
+        assert len(sh) == 4, f"expected 4 described shell scripts, got {sh}"
+        assert not [r for r, _ in data["undocumented"] if r.endswith(".sh")]
+
+    def test_shell_is_actually_walked(self):
+        """SEAM GUARD. If the glob silently stopped matching `*.sh`, every leg above
+        would still pass on synthetic strings while the census covered nothing."""
+        assert any(r.endswith(".sh") for r, _ in self._mc.collect()["documented"])
+
+
 class TestModuleCensusFresh:
     """PRODUCTION-SEEDED (guide §2.4): every mutation writes into the REAL tree — a real
     module's docstring, or the real `docs/MODULE_CENSUS.md` — and restores in a `finally`.
@@ -772,7 +818,7 @@ class TestModuleCensusFresh:
         """ADR-013 D1b. An unstated boundary is how the next hand catalogue gets started."""
         mc = self._mod()
         text = mc.render(mc.collect())
-        assert "**Scope: Python only**" in text
+        assert "**Scope: Python and shell**" in text
         assert "lean.module_names" in text, "the header must name where Lean is answered"
 
     def test_undocumented_modules_are_named_not_merely_counted(self):

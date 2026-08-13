@@ -132,7 +132,7 @@ EDGES: list[Edge] = [
          UV + ["scripts/render_paper_tables.py"], _tables_stale, "cheap"),
     # ADR-013 D5 — the module census. Derived from module docstrings via the AST; cheap
     # (a source walk, no extraction), so it lands in --fast and the commit gate restages it.
-    Edge("docs/MODULE_CENSUS.md", "src/**/*.py, scripts/**/*.py",
+    Edge("docs/MODULE_CENSUS.md", "src/**/*.py, scripts/**/*.py, src|scripts/**/*.sh",
          UV + ["scripts/module_census.py", "--write"], _module_census_stale, "cheap"),
     # ADR-005 atlas surfaces — derived from lean_deps.json ∪ HYPOTHESIS_REGISTRY; cheap (no extraction).
     Edge("lean/atlas_view.json", "lean/lean_deps.json, src/core/constants.py (HYPOTHESIS_REGISTRY)",

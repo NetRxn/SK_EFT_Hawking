@@ -309,6 +309,30 @@ already answer instantly, which is building beside an existing mechanism.
 **Disposition: deleted, not migrated, and not an accepted loss** — there is nothing to lose. The
 27 stale line counts are removed with it, which is a net gain in accuracy.
 
+**D5 SHIPPED 2026-08-13 — shell added; blast radius measured on all five surfaces first.**
+The census walks `*.sh` alongside `*.py`. Five things move when the walk widens, and the fifth
+was not on the original list:
+
+1. **The scope sentence** (D1b) — "Python only" → "Python and shell", in the docstring, the
+   rendered header, and the test that asserts the artifact states its own scope.
+2. **The decider** — shell has no AST, so `_shell_header` takes the **leading comment block
+   only**: contiguous `#` lines after an optional shebang. Bounded on purpose; scanning a whole
+   script would call any script with an explanatory note "described", the same false positive
+   the Python leg avoids by not scanning source.
+3. **The population** — 318 → 322.
+4. **The ratchet** — `_NO_DOCSTRING_CEILING` holds at **4**, because all four scripts were
+   ALREADY described. Verified before the walk widened, not after. ⚠️ **A ratchet is scoped by
+   its population predicate, so widening the walk redefines what the ceiling counts.** Had one
+   script lacked a header, the honest fix would have been to write it — never to raise the
+   ceiling to admit it.
+5. **The sync `Edge` inputs** — `src/**/*.py, scripts/**/*.py` matched no shell file, so a
+   shell edit would not have marked the census stale and the commit gate would not have
+   restaged it. A widened walk with an unwidened staleness probe is a census that silently
+   stops tracking what it claims to cover.
+
+`verify_scope.py` needed no change: `_plan()` keys on the `src/`/`scripts/` path prefix, not on
+the extension, so a `.sh` edit already routes to `module_census_fresh`.
+
 **D10 — The mutation obligation MOVES; it is not deleted.** `inventory_index_autogen_fresh`'s
 four production-seeded mutations, its `PRODUCTION_SEEDED` membership and its `MUTATION_VERIFIED`
 entry transfer to `module_census_fresh`. `FIXTURE_ONLY_CEILING` is re-measured in the same commit.

@@ -1,4 +1,4 @@
-"""Derive the module census — the one answer to "what is this Python module".
+"""Derive the module census — the one answer to "what is this module or script".
 
     uv run python scripts/module_census.py            # print the census
     uv run python scripts/module_census.py --write    # write the tracked doc
@@ -8,15 +8,25 @@ had drifted while the generated blocks beside it stayed fresh — a half-generat
 generated half. This file is generated in whole; there is no hand-edited region for that
 failure to recur in.
 
-**Scope is Python only, and it is stated on the artifact's face (D1b).** Lean is answered
-by `docs/counts.json` (`lean.module_names`), `lean/lean_deps.json` and
+**Scope is Python and shell, and it is stated on the artifact's face (D1b).** Lean is
+answered by `docs/counts.json` (`lean.module_names`), `lean/lean_deps.json` and
 `lean/atlas_view.json`, all derived from the extraction chokepoint and unable to drift;
 notebooks, papers and tests by counts in `docs/counts.json`. An unstated boundary is how
 the next hand catalogue gets started.
 
-⚠️ **The DECIDER is `ast.get_docstring`, never a regex over source (D2).** A source scan
-finds a docstring-shaped string inside a function and calls the module documented —
-`CHECK_AUTHORING_GUIDE` §2.5.
+⚠️ **Shell was added at D5 (2026-08-13) and the four scripts were ALREADY described**, so
+`_NO_DOCSTRING_CEILING` holds at 4 — verified before the walk widened, not after. That
+check matters more than it looks: **a ratchet is scoped by the population predicate, so
+widening the walk redefines what the ceiling counts.** Had any of the four lacked a header
+the honest move would have been to write one, never to raise the ceiling to admit it.
+
+⚠️ **THE DECIDER DIFFERS BY LANGUAGE, and neither is a regex over the whole file (D2).**
+Python uses `ast.get_docstring`; a source scan finds a docstring-shaped string inside a
+function and calls the module documented (`CHECK_AUTHORING_GUIDE` §2.5). Shell has no AST,
+so the analogue is the **leading comment block only** — contiguous `#` lines after an
+optional shebang, stopping at the first line that is not one. Bounding it to the leading
+block is what keeps it from matching an explanatory comment anywhere in the body, which is
+the same failure the Python leg avoids by not scanning source.
 
 ⚠️ **The artifact is sited at `docs/`, not `docs/architecture/`.** That directory's README
 declares it does not own "what does this module do", and `architecture_inventory_fresh`
@@ -62,27 +72,53 @@ def _first_paragraph(doc: str) -> str:
     return re.sub(r"[\s=~_-]{4,}$", "", " ".join(" ".join(kept).split())).strip()
 
 
+def _shell_header(src: str) -> str | None:
+    """The LEADING comment block of a shell script, or None.
+
+    Shell has no AST, so this is the closest honest analogue of a module docstring:
+    contiguous `#` lines after an optional shebang, stopping at the first line that is
+    not one. **Bounded to the leading block on purpose** — scanning the whole file for
+    comments would match an explanatory note anywhere in the body and call the script
+    described, the same false-positive the Python leg avoids by not scanning source.
+    """
+    lines, out = src.splitlines(), []
+    i = 1 if lines and lines[0].startswith("#!") else 0
+    for line in lines[i:]:
+        s = line.strip()
+        if not s.startswith("#"):
+            break
+        out.append(s.lstrip("#").strip())
+    body = "\n".join(out).strip()
+    return body or None
+
+
 def collect() -> dict:
-    """Walk the trees and read every module docstring via the AST."""
+    """Walk the trees; read each file's description by the decider for its language."""
     documented: list[tuple[str, str]] = []
     undocumented: list[tuple[str, str]] = []
     for tree in TREES:
         base = PROJECT_ROOT / tree
         if not base.is_dir():
             continue
-        for path in sorted(base.rglob("*.py")):
+        paths = sorted((p for pat in ("*.py", "*.sh") for p in base.rglob(pat)),
+                       key=lambda p: p.as_posix())
+        for path in paths:
             if SKIP_PARTS & set(path.parts):
                 continue
             rel = path.relative_to(PROJECT_ROOT).as_posix()
             try:
-                doc = ast.get_docstring(ast.parse(path.read_text(encoding="utf-8")))
+                src = path.read_text(encoding="utf-8")
+                doc = (_shell_header(src) if path.suffix == ".sh"
+                       else ast.get_docstring(ast.parse(src)))
             except (SyntaxError, UnicodeDecodeError) as exc:
                 undocumented.append((rel, f"unparseable — {type(exc).__name__}"))
                 continue
             if doc and doc.strip():
                 documented.append((rel, _first_paragraph(doc)))
             else:
-                undocumented.append((rel, "no module docstring"))
+                undocumented.append(
+                    (rel, "no leading comment block" if path.suffix == ".sh"
+                          else "no module docstring"))
     return {"documented": documented, "undocumented": undocumented}
 
 
@@ -91,13 +127,14 @@ def render(data: dict) -> str:
     documented = data["documented"]
     undocumented = data["undocumented"]
     out: list[str] = [
-        "# Module census — what each Python module is",
+        "# Module census — what each module and script is",
         "",
         "**Generated by `scripts/module_census.py`. Do not edit — every line is derived**",
-        "from the module docstring, read via the AST. To change a description, change the",
-        "docstring; the next `sync` regenerates this file.",
+        "from the source: a Python module docstring read via the AST, or a shell script's",
+        "leading comment block. To change a description, change it at the source; the next",
+        "`sync` regenerates this file.",
         "",
-        "**Scope: Python only** — `src/` and `scripts/`. Lean modules are answered by",
+        "**Scope: Python and shell** — `src/` and `scripts/`. Lean modules are answered by",
         "`docs/counts.json` (`lean.module_names`), `lean/lean_deps.json` and",
         "`lean/atlas_view.json`; notebooks, papers and tests by counts in `docs/counts.json`.",
         "Nothing else belongs here.",
@@ -115,9 +152,9 @@ def render(data: dict) -> str:
     ]
     if undocumented:
         out += [
-            "These carry no module docstring, so there is nothing to derive. **An entry here",
-            "is a description that does not exist, not one this file failed to find** — the",
-            "fix is a docstring in the module.",
+            "These carry no module docstring (Python) or leading comment block (shell), so",
+            "there is nothing to derive. **An entry here is a description that does not",
+            "exist, not one this file failed to find** — the fix is at the source.",
             "",
         ]
         out += [f"- `{rel}` — {why}" for rel, why in undocumented]
