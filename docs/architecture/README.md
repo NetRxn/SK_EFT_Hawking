@@ -40,7 +40,7 @@ questions they do not answer, and where each is answered instead:
 
 | your question | not here — go to |
 |---|---|
-| **What does this module do?** Where does `<some>.py` live, what imports it, what is the per-module/per-Lean-family map | [`../../SK_EFT_Hawking_Inventory_Index.md`](../../SK_EFT_Hawking_Inventory_Index.md) (pointers) → [`../../SK_EFT_Hawking_Inventory.md`](../../SK_EFT_Hawking_Inventory.md) (prose) |
+| **What does this module do?** What is `<some>.py`, what is the per-Lean-family map | [`../MODULE_CENSUS.md`](../MODULE_CENSUS.md) for Python (derived from docstrings); `docs/counts.json` `lean.module_names` and `lean/atlas_view.json` for Lean |
 | **What must I do, in what order?** The 14 stages, the invariants | [`../WAVE_EXECUTION_PIPELINE.md`](../WAVE_EXECUTION_PIPELINE.md) — and why each rule exists, [`../WAVE_PIPELINE_RATIONALE.md`](../WAVE_PIPELINE_RATIONALE.md) |
 | **How do I run an architecture change?** The orient → measure → specify → review → pilot → plan → ship → terminate sequence | the `architecture-change` skill, which owns the *sequence* and deliberately restates none of the *rules* below |
 

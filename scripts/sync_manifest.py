@@ -2,7 +2,7 @@
 """L0 — the sync manifest: the single declarative table of mechanical
 (input → output, regen-cmd, staleness) edges. Generalizes the three
 staleness detectors that already exist (counts_fresh, the extract_lean_deps
-hash, tables_fresh, inventory_index_autogen_fresh) so nothing hard-codes a
+hash, tables_fresh, module_census_fresh) so nothing hard-codes a
 dependency edge twice. Read by sync.py (L3) and pre-commit-sync.sh (L2).
 
 Stdlib only. `--check` prints stale outputs and exits 1 if any are stale.
@@ -72,15 +72,6 @@ def _module_census_stale() -> bool:
         return True
 
 
-def _index_autogen_stale() -> bool:
-    sys.path.insert(0, str(SCRIPT_DIR))
-    try:
-        from update_inventory_index import compute_stale
-        return bool(compute_stale()[0])
-    except Exception:
-        return True
-
-
 def _atlas_view_stale() -> bool:
     """True if lean/atlas_view.json differs from a fresh build (ADR-005). Content-compare against the
     serialization `--write` would emit, so it catches ANY input change (lean_deps.json OR the
@@ -139,8 +130,6 @@ EDGES: list[Edge] = [
          UV + ["scripts/update_counts.py"], _counts_stale, "heavy"),
     Edge("papers/*/tables/*.tex", "papers/*/tables.py, lean/lean_deps.json",
          UV + ["scripts/render_paper_tables.py"], _tables_stale, "cheap"),
-    Edge("SK_EFT_Hawking_Inventory_Index.md (autogen blocks)", "docs/counts.json",
-         UV + ["scripts/update_inventory_index.py"], _index_autogen_stale, "cheap"),
     # ADR-013 D5 — the module census. Derived from module docstrings via the AST; cheap
     # (a source walk, no extraction), so it lands in --fast and the commit gate restages it.
     Edge("docs/MODULE_CENSUS.md", "src/**/*.py, scripts/**/*.py",

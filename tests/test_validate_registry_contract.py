@@ -15,7 +15,7 @@ of the registry are load-bearing and, before this file, asserted by nothing:
 
 2. **The registration ORDER.** Three checks (`counts_fresh`, `tables_fresh`,
    `claim_clusters_fresh`) shell out and REGENERATE artifacts that later checks
-   read — `axiom_count_prose_consistency` and `inventory_index_autogen_fresh`
+   read — `axiom_count_prose_consistency` and `module_census_fresh`
    both consume `docs/counts.json`. Order is therefore semantics, not cosmetics,
    and an import-order change during the split would alter what later checks
    observe while every existing test still passed.
@@ -96,7 +96,7 @@ EXPECTED_CHECKS = [
     'bundle_counts_fresh', 'bundle_cross_references_resolve',
     'paper_latex_compiles',
     'axiom_count_prose_consistency', 'prose_theorem_reference_coverage',
-    'theorem_name_embedded_citations', 'inventory_index_autogen_fresh',
+    'theorem_name_embedded_citations',
     'architecture_inventory_fresh',
     'module_census_fresh',
     'lean_docstring_refs_resolve', 'paper_toolchain_pin_drift',

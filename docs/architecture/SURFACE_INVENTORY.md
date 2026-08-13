@@ -18,7 +18,7 @@
 **No timestamp is recorded here on purpose** — a date would make the file dirty on
 every run and turn the freshness check into noise. The tree state IS the timestamp.
 
-## Validation checks — 83, in execution order
+## Validation checks — 82, in execution order
 
 Execution order is semantic: the `*_fresh` regenerators rewrite artifacts that later
 checks read. See `validate._CANONICAL_ORDER`.
@@ -26,8 +26,8 @@ checks read. See `validate._CANONICAL_ORDER`.
 | module | checks |
 |---|---:|
 | `bundles_readiness` | 18 |
-| `freshness` | 9 |
 | `physics` | 9 |
+| `freshness` | 8 |
 | `lean_substrate` | 8 |
 | `lean_toolchain` | 8 |
 | `papers_prose` | 8 |
@@ -120,11 +120,10 @@ checks read. See `validate._CANONICAL_ORDER`.
 | 75 | `axiom_count_prose_consistency` | `papers_prose` | Paper prose axiom-count claims agree with docs/counts.json |
 | 76 | `prose_theorem_reference_coverage` | `prose_lean_refs` | Bundle-draft Lean references in any verbatim form (texttt, a preamble alias for it, verb, or a TeX `name' quote) resolve in lean_deps.json |
 | 77 | `theorem_name_embedded_citations` | `prose_lean_refs` | Declaration names embedding author+year have matching bibliography entries |
-| 78 | `inventory_index_autogen_fresh` | `freshness` | SK_EFT_Hawking_Inventory_Index.md: autogen blocks fresh, and its narrative honours the pointers-only contract it declares |
-| 79 | `architecture_inventory_fresh` | `freshness` | docs/architecture/SURFACE_INVENTORY.md matches a fresh derivation from the code |
-| 80 | `module_census_fresh` | `freshness` | docs/MODULE_CENSUS.md matches a fresh derivation, and the undocumented module population is ratcheted |
-| 81 | `lean_docstring_refs_resolve` | `lean_toolchain` | Lean docstring `backticked` project names resolve (rename-drift guard) |
-| 82 | `paper_toolchain_pin_drift` | `papers_prose` | Advisory (Class TP): paper-draft toolchain/Mathlib pins match lean-toolchain + lakefile.toml |
+| 78 | `architecture_inventory_fresh` | `freshness` | docs/architecture/SURFACE_INVENTORY.md matches a fresh derivation from the code |
+| 79 | `module_census_fresh` | `freshness` | docs/MODULE_CENSUS.md matches a fresh derivation, and the undocumented module population is ratcheted |
+| 80 | `lean_docstring_refs_resolve` | `lean_toolchain` | Lean docstring `backticked` project names resolve (rename-drift guard) |
+| 81 | `paper_toolchain_pin_drift` | `papers_prose` | Advisory (Class TP): paper-draft toolchain/Mathlib pins match lean-toolchain + lakefile.toml |
 
 </details>
 

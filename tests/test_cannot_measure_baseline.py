@@ -118,10 +118,6 @@ CANNOT_MEASURE_PASS_BASELINE = frozenset({
     # empty case is a hard FAIL, not a pass — an empty population trips the seam
     # guard and reports UNVERIFIED.
     ('existential_witness_disclosure', 'missing-input'),
-    # ('inventory_index_autogen_fresh', 'exception') REMOVED 2026-08-13 — the check
-    # gained blocking narrative legs, so an unimportable/raising generator now warns
-    # on one leg while the other two still measure and can fail. Removed rather than
-    # left stale, so the ratchet tightens instead of holding a slot open.
     ('lean_docstring_refs_resolve', 'missing-input'),
     ('nogo_substrate_integrity', 'missing-input'),
     ('notebook_exec', 'exception'),

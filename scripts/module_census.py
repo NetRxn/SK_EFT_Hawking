@@ -3,9 +3,8 @@
     uv run python scripts/module_census.py            # print the census
     uv run python scripts/module_census.py --write    # write the tracked doc
 
-ADR-013 D1. Replaces the hand-maintained halves of `SK_EFT_Hawking_Inventory_Index.md`
-and `SK_EFT_Hawking_Inventory.md`, whose narrative had drifted while the generated blocks
-beside it stayed fresh — a half-generated document inherits the credibility of its
+ADR-013 D1. Replaces the hand-maintained Inventory pair (both retired), whose narrative
+had drifted while the generated blocks beside it stayed fresh — a half-generated document inherits the credibility of its
 generated half. This file is generated in whole; there is no hand-edited region for that
 failure to recur in.
 

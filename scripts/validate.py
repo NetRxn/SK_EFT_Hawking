@@ -236,7 +236,7 @@ _CANONICAL_ORDER: tuple[str, ...] = (
     # undefined, and its per-draft cache skips untouched drafts).
     'bundle_counts_fresh', 'bundle_cross_references_resolve', 'paper_latex_compiles',
     'axiom_count_prose_consistency', 'prose_theorem_reference_coverage',
-    'theorem_name_embedded_citations', 'inventory_index_autogen_fresh', 'architecture_inventory_fresh',
+    'theorem_name_embedded_citations', 'architecture_inventory_fresh',
     'module_census_fresh',
     'lean_docstring_refs_resolve', 'paper_toolchain_pin_drift',
 )
@@ -627,7 +627,6 @@ check_counts_fresh = _checks_freshness.check_counts_fresh
 check_tables_fresh = _checks_freshness.check_tables_fresh
 check_claim_clusters_fresh = _checks_freshness.check_claim_clusters_fresh
 check_bundle_source_freshness = _checks_freshness.check_bundle_source_freshness
-check_inventory_index_autogen_fresh = _checks_freshness.check_inventory_index_autogen_fresh
 check_notebook_stored_outputs_current = _checks_freshness.check_notebook_stored_outputs_current
 _counts_is_stale = _checks_freshness._counts_is_stale      # scripts/sync_manifest.py
 _tables_is_stale = _checks_freshness._tables_is_stale      # scripts/sync_manifest.py

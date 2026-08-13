@@ -138,8 +138,7 @@ is the load-bearing column:** content-hash and content-compare are sound; mtime 
 | `lean/lean_deps.json` | `extract_lean_deps.py` | **content hash** of every `.lean` under `SKEFTHawking/` **plus the root aggregate `lean/SKEFTHawking.lean`** | yes |
 | `docs/counts.json` / `.tex` | `update_counts.py` | mtime vs sources | yes |
 | `papers/*/tables/*.tex` | `render_paper_tables.py` | mtime | yes |
-| Inventory-Index autogen blocks | `update_inventory_index.py` | **content compare** | yes |
-| Inventory-Index **narrative** (everything outside those blocks) | a human | **contract legs in `inventory_index_autogen_fresh`** — see §2.1 | no |
+| `docs/MODULE_CENSUS.md` | `module_census.py` | **content compare** (`render(collect())`) | yes |
 | `lean/atlas_view.json` | `atlas_view.py` | **content compare** (rebuilds) | yes |
 | `docs/ATLAS_HEATMAP.md` | `atlas_heatmap.py` | **content compare** | yes |
 | `lean/SKEFTHawking/KernelNoGos.lean` | `gen_kernel_nogos_module.py` | **content compare** | yes |
@@ -152,78 +151,31 @@ is the load-bearing column:** content-hash and content-compare are sound; mtime 
 | PG + AGE `sk_eft` | `build_graph.write_graph_to_pg` | **none** (full delete + rewrite) | opt-in only |
 | `figures/provenance_graph.json` | `build_graph --out` | **none** | **no** |
 
-### 2.1 The Inventory pair — one instrument in two halves, and one file in two halves
+### 2.1 The module census — one derived answer, with no hand-written half
 
-`SK_EFT_Hawking_Inventory_Index.md` and `SK_EFT_Hawking_Inventory.md` answer *what is this
-module* — the question this directory deliberately does not own (see
-[`README.md`](README.md#what-is-deliberately-not-here)). **They are one instrument:** the
-Index holds `file path + one-line summary` and nothing else; the Inventory holds the prose.
-Find a thing in the Index, understand it in the Inventory. `CLAUDE.md` routes a reader to
-the Index; the Index's own header states the contract.
+`docs/MODULE_CENSUS.md` answers *what is this Python module* — the question this directory
+deliberately does not own (see [`README.md`](README.md#what-is-deliberately-not-here)). It is
+**generated in whole** by `scripts/module_census.py` from module docstrings, read via
+`ast.get_docstring`. To change a description, change the docstring.
 
-**The Index is also one file in two halves, with different guarantees, and the split is the
-whole design:**
+**It replaced a pair of hand-maintained files (ADR-013), and the reason generalises.** The
+Inventory pair was half generated and half hand-written in the same file, and *a half-generated
+document inherits the credibility of its generated half*: the Index's AUTOGEN table was fresh
+while the prose beside it was two months stale — a theorem count roughly half the generated one,
+and a sentence asserting this repo has no `CLAUDE.md`. Every gate was green, because every gate
+looked only inside the markers.
 
-| half | written by | guarantee |
-|---|---|---|
-| inside `<!-- AUTOGEN:… -->` markers | `update_inventory_index.py`, from `docs/counts.json` | derived; content-compared; **advisory** freshness leg, because running the generator fixes it |
-| everything outside them | a human | **two blocking legs**, both reading the Index's own declared rules |
+Three of the four legs that guarded the Index have no counterpart here, and that is the point:
+the census declares no size ceiling (it is generated whole), carries no narrative (so no
+hand-written count can drift), and has no `AUTOGEN` markers (so no unclosed marker can mask the
+lines after it). The hazards are designed out rather than guarded. The one leg with a
+counterpart is stronger: the Index's freshness leg was **advisory**, the census's is **blocking**.
 
-The blocking legs are `size_ceiling` and `no_counts_outside_autogen`, plus a
-`narrative_seam` guard. Each is worth naming for a reason that generalises:
+What the census does carry is a ratchet on the population it cannot describe — modules with no
+docstring, down-only. **That leg reads SOURCE, not the rendered artifact**: a leg keyed on the
+artifact would be satisfied by the very regeneration that introduced the regression, since the
+artifact always agrees with itself.
 
-* **The size ceiling is parsed out of the Index's own `Keep under N KB` sentence**, not
-  hardcoded here, so the guard and the rule a human reads cannot drift into two rules. A
-  *deleted* ceiling reports UNMEASURABLE rather than passing — removing the rule must not
-  remove the guard silently.
-* **No count outside the AUTOGEN blocks**, ratcheted down-only toward zero. This is
-  `architecture_inventory_fresh`'s counts rule extended to the document that needed it, not
-  a second mechanism built beside it.
-* **The seam is the masking, not the walk.** An unmatched `AUTOGEN BEGIN` masks every line
-  after it, so the counts leg would walk a shrinking population and report a clean bill —
-  the defect this whole directory is about. It fails loudly instead, with the counts leg
-  *suppressed* rather than rendered green beside a population nobody can vouch for.
-
-⚠️ **The narrative half had no guard at all until 2026-08-13, and that is where the damage
-was.** The generated table was fresh while the prose around it was two months stale — a
-theorem count roughly half the generated one, a bundle roster short of the live one, and a
-sentence asserting this repo has no `CLAUDE.md`, which it has and which is the primary
-bootstrap. A reader who believes that last one skips the bootstrap and never learns what
-they do not know. Every gate was green throughout, because every gate looked only inside
-the markers.
-
-**The generalisable shape:** a half-generated document inherits the credibility of its
-generated half. Gating only the derived part is not partial coverage — it is coverage
-pointed away from the part that rots.
-
-**The root-aggregate clause in row 1 is load-bearing.** `lean/SKEFTHawking.lean` sits one
-level *above* the hashed subtree and alone decides which modules are in scope for extraction.
-A hash covering only the subtree would leave the single edit that changes scope — adding or
-removing an import there — invisible to the cache. Widening the subtree walk does not address
-this: the gap is one level up, not deeper.
-
-**Concurrency.** `harness_lock.regen_lock` is **skip-and-use-cache, never block-and-wait**:
-a bounded poll, then yield `False`. The lock reports contention honestly; what matters is what
-each caller does with that signal.
-
-- `load_lean_deps()` logs a **WARNING** naming the blast radius — counts, atlas, graph and
-  axiom-closure results for that run reflect the previous extraction — and proceeds on the
-  existing file.
-- `sync.py` records every skipped artifact and prints **`sync INCOMPLETE`**, naming them.
-  Its exit code stays 0, deliberately: another process is doing the work, so failing the
-  caller would be wrong.
-
-On an internal error the lock fails *open* by yielding `True`, i.e. it proceeds with the
-regeneration — the safe direction, and not to be confused with the contention path.
-
-⚠️ The suite's auto-regenerating freshness checks shell out **with no lock at all**.
-
-**Cost.** `build_graph_json()` is called from several checks in one validate run, and each
-call internally re-runs the node extractors **except its own** — plus a full edge pass —
-inside `extract_readiness_gate_nodes`, which builds a pre-gate graph view to break the
-gate↔graph recursion. `build_graph_json` itself is not cached, so the whole build repeats per call. (Two internal name indices are `lru_cache`d, and the dashboard keeps its own graph cache — neither is shared with the validate path.)
-
----
 
 ## 3. The review pipeline — how a finding becomes a gate
 

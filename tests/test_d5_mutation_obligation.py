@@ -425,18 +425,6 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
         "rendered artifact — a leg keyed on the artifact would be satisfied by the "
         "regeneration that introduced the regression, since the artifact always agrees "
         "with itself"),
-    "inventory_index_autogen_fresh": (
-        "test_d5_freshness.py",
-        "TWO HALVES. The AUTOGEN-freshness leg stays ADVISORY BY DESIGN (item 3), so its "
-        "directions are on the WARNING and a leg pins that a raising generator can never "
-        "fail the suite. The narrative legs added 2026-08-13 BLOCK and are "
-        "PRODUCTION-SEEDED against the real Index: a count appended to the narrative "
-        "crosses the down-only ceiling; padding past the size ceiling the file declares "
-        "for ITSELF fails; deleting that declared ceiling is UNMEASURABLE, not passing; "
-        "and an unclosed AUTOGEN marker — which masks every line after it and would make "
-        "the counts leg report a clean bill over a shrinking population — fails as a seam "
-        "error instead, with the counts leg suppressed rather than green beside it",
-    ),
     # lean_toolchain.py: 34 tests / 14 mutations. Also CLOSES the QI-11 residue — the
     # lake-resolution block duplicated in check_lean_build and
     # check_axiom_closure_allowlist now has one owner. Deferred to W-D on purpose: it
@@ -882,11 +870,6 @@ PRODUCTION_SEEDED: frozenset[str] = frozenset({
     # 2026-08-13 (ADR-013 P1): seeded in the real src/core/transonic_background.py —
     # docstring changed, then removed — and in the real docs/MODULE_CENSUS.md.
     "module_census_fresh",
-    # 2026-08-13: seeded in the real SK_EFT_Hawking_Inventory_Index.md — a count
-    # appended to the narrative, padding past the file's own declared size ceiling,
-    # that ceiling deleted, and an AUTOGEN END removed. Only the narrative legs are
-    # covered; the AUTOGEN-freshness leg above them stays advisory by ADR-009 item 3.
-    "inventory_index_autogen_fresh",
     "ledger_ids_resolve",
     # 2026-08-10: seeded in the real ATLAS_HEATMAP.md and the real sources.py
     # (see its MUTATION_VERIFIED entry). Keeps FIXTURE_ONLY_CEILING at 55.
@@ -1013,7 +996,12 @@ PRODUCTION_SEEDED: frozenset[str] = frozenset({
 #: every check for which nobody has yet demonstrated a production failure, not every
 #: check that is broken. Lower it one check at a time, each with the probe recorded in
 #: the commit — the same way the 54-entry `AWAITING_MUTATION_TEST` backlog went to zero.
-FIXTURE_ONLY_CEILING = 54  # 2026-08-13: inventory_index_autogen_fresh seeded in production
+FIXTURE_ONLY_CEILING = 54  # 2026-08-13 (ADR-013 P4): UNCHANGED by the Index check's
+                           #   retirement, measured not assumed. This counts registered
+                           #   checks NOT production-seeded; the deleted check WAS
+                           #   production-seeded, so registered and PRODUCTION_SEEDED
+                           #   each fell by one and the fixture-only population did not
+                           #   move. A ceiling that may only be lowered therefore holds
 
 
 def _registered() -> list[str]:
