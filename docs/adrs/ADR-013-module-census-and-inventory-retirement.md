@@ -1,8 +1,11 @@
 # ADR-013 — The module census: one derived answer to "what is this module", and the retirement of the Inventory pair
 
-- **Status:** 📝 **PROPOSED — nothing built (drafted 2026-08-13).** §Plan is the authority on what
-  is built. This document lands before the code, per the architecture rule that *a doc written
-  afterwards is a changelog; only one written first is a specification*.
+- **Status:** ✅ **ACCEPTED — P1, P2, P4, P4b, P5, P6 SHIPPED 2026-08-13.** P3 folded into P4
+  (see the corrected D10 — its transfer did not exist). D3 (notebook census) and D5 (shell
+  census) remain open and are tracked in the plan table. This document landed before the code,
+  per the architecture rule that *a doc written afterwards is a changelog; only one written
+  first is a specification* — and the sequence paid: the pilot changed the design, D2's audit
+  showed the "accepted loss" was no loss, and D10's stated transfer turned out not to exist.
 - **Supersedes:** the hand-maintained halves of `SK_EFT_Hawking_Inventory_Index.md` and
   `SK_EFT_Hawking_Inventory.md`. It does not supersede any prior ADR.
 - **Sequence:** written through the `architecture-change` skill. Orient · measure · specify are
@@ -276,6 +279,35 @@ the first time this stage's obligation is mechanically checkable at all.
 `WAVE_EXECUTION_PIPELINE.md` is the process law and `WAVE_PIPELINE_RATIONALE.md` carries the
 *why* behind each rule — **a rule whose stated reason no longer holds is the next rule somebody
 relitigates**, so the rationale entry changes with it, per `docs/architecture/README.md`.
+
+**D2 RESOLVED 2026-08-13 — §1's API enumeration is NOT a regression, measured.** The operator's
+rule is that replacing hand-rolled with derived is always preferred and *regressions are
+show-stoppers*, so this was audited before P5 deleted anything.
+
+| measured at HEAD | result |
+|---|---|
+| module blocks §1 actually details | **27** of 318 — 8.5% coverage, against a header claiming 132 modules |
+| files it names that no longer exist | **0** |
+| enumerated names appearing nowhere in their module | **0** |
+| per-module line counts that are STALE | **24 of 27** — `constants.py` claims 242 lines against 6730, off by 28× |
+
+So the *names* are accurate and the *numbers* are almost entirely wrong. And the names are not
+unique content: every one is recoverable from the AST, authoritatively, which is how this audit
+compared them.
+
+**The only candidate-unique content was the per-name gloss, and the code already carries more.**
+`ATOMS` and `EXPERIMENTS` are glossed in §1 as one line each; in `constants.py` they sit under
+banner comments citing NIST, Kempen et al. (2002) and Falke et al. (2008) — provenance §1 never
+had. The symbol is the right home for the gloss; a parallel file is precisely the drift mechanism
+this ADR removes.
+
+**Deriving it inline was measured and rejected.** 3524 public top-level names across the 318
+modules is roughly +62 KB onto a 38 KB census — 2.6×, which breaks the *fits in a single `Read`*
+property C4 justifies the census on. It would also duplicate what `grep` and the language server
+already answer instantly, which is building beside an existing mechanism.
+
+**Disposition: deleted, not migrated, and not an accepted loss** — there is nothing to lose. The
+27 stale line counts are removed with it, which is a net gain in accuracy.
 
 **D10 — The mutation obligation MOVES; it is not deleted.** `inventory_index_autogen_fresh`'s
 four production-seeded mutations, its `PRODUCTION_SEEDED` membership and its `MUTATION_VERIFIED`

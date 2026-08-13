@@ -455,7 +455,6 @@ uv run python scripts/provenance_dashboard.py           # http://localhost:8050
 | See the big-picture assessment by chain | [`docs/RESEARCH_STATUS_OVERVIEW.md`](docs/RESEARCH_STATUS_OVERVIEW.md) |
 | Understand the predictive scope (what's in, what's out) | [`docs/ARCHITECTURE_SCOPE.md`](docs/ARCHITECTURE_SCOPE.md) |
 | See what each Python module is | [`docs/MODULE_CENSUS.md`](docs/MODULE_CENSUS.md) |
-| Check the full inventory | [`SK_EFT_Hawking_Inventory.md`](SK_EFT_Hawking_Inventory.md) |
 | Understand the execution process | [`docs/WAVE_EXECUTION_PIPELINE.md`](docs/WAVE_EXECUTION_PIPELINE.md) |
 | See the bundle architecture and Stage-13 readiness | [`docs/PAPER_STRATEGY.md`](docs/PAPER_STRATEGY.md) + [`docs/BUNDLE_READINESS_HEATMAP.md`](docs/BUNDLE_READINESS_HEATMAP.md) |
 | Lift draft content into a bundle | [`docs/BUNDLE_LIFT_PROCEDURE.md`](docs/BUNDLE_LIFT_PROCEDURE.md) |

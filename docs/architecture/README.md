@@ -101,7 +101,7 @@ of the field-ownership table — including the row the paragraph beneath it was 
 produces a number that measures nothing.** A module belongs *here* when it implements a
 mechanism one of these documents owns — a check, a gate, an artifact writer, an operator
 surface. The per-module inventory of `scripts/` and `src/` is
-[`../../SK_EFT_Hawking_Inventory.md`](../../SK_EFT_Hawking_Inventory.md)'s question, not this
+[`../MODULE_CENSUS.md`](../MODULE_CENSUS.md)'s question, not this
 directory's; a filename's absence from a narrative that names *mechanisms* is expected, and
 counting those absences yields a shortfall against a contract nobody wrote. Ask whether every
 mechanism is described and whether each description is **true** — the second is the one with

@@ -134,9 +134,6 @@ and context; do not silently fix it in passing.
 | absorbing a late wave into a drafted bundle | [docs/LATE_PHASE6_ABSORPTION_PROTOCOL.md](docs/LATE_PHASE6_ABSORPTION_PROTOCOL.md) |
 | checking bundle readiness | [docs/BUNDLE_READINESS_HEATMAP.md](docs/BUNDLE_READINESS_HEATMAP.md) |
 
-[SK_EFT_Hawking_Inventory.md](SK_EFT_Hawking_Inventory.md) is the full source-of-truth
-inventory — **keep it synced** as you ship, but you needn't read it whole on bootstrap.
-
 ---
 
 ## Build & run
