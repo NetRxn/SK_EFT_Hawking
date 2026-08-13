@@ -399,9 +399,15 @@ def _stage10_cell(metadata: dict | None, code: str) -> dict:
 def _stage13_cell(metadata: dict | None) -> dict:
     """S13. Only `full-adversarial` earns green, and the redo flag overrides everything.
 
-    Measured 2026-08-12: `stage13_review_kind` is absent from **every** bundle's metadata,
-    so no row on this board can currently reach green here. That is a real state of the
-    corpus and the board reports it; it is not a bug in this column.
+    ⚠️ Measured 2026-08-12, `stage13_review_kind` was absent from **every** bundle's
+    metadata, so no row could reach green here at all. That was a RECORDING gap, not 21
+    failed reviews, and it was filed and repaired on 2026-08-13: `resolve_stage13_reviews`
+    now reads a kind an evidence document DECLARES about itself, the same evidence-based
+    path the review date already had. Two bundles resolve one that way; the rest are
+    `reviewed-kind-unrecorded`, which is a distinct state from `unreviewed` and still does
+    not earn green. **A directory name is deliberately not treated as a kind** — inferring
+    one from the path would manufacture, for eighteen bundles at once, exactly the evidence
+    this gate exists to demand.
     """
     from bundle_readiness import _KINDS_SUFFICIENT_FOR_GREEN
 
@@ -619,10 +625,12 @@ def caveats(rows: list[dict], cov: dict, census: dict) -> list[str]:
     missing_kind = sorted(b for b, k in kinds.items() if not k)
     if missing_kind:
         out.append(
-            f"{len(missing_kind)} of {len(rows)} bundles record NO `stage13_review_kind`, "
-            "so no row can reach green at S13 whatever its `stage13_status` says — only a "
-            "`full-adversarial` review kind earns green. A non-green S13 cell here is "
-            "therefore often a recording gap, not a failed review.")
+            f"{len(missing_kind)} of {len(rows)} bundles resolve NO `stage13_review_kind` "
+            "— not from metadata, and not from a kind their evidence document declares — so "
+            "those rows cannot reach green at S13 whatever `stage13_status` says, since only "
+            "`full-adversarial` earns it. ⚠️ For most of them this is a RECORDING gap rather "
+            "than a failed review: the evidence exists on disk and does not say what kind of "
+            "pass it was. A kind is never inferred from a directory name.")
 
     unbuilt = {r["bundle"]: r["soft_signals"]["registered_lean_modules"]["unresolved"]
                for r in rows
