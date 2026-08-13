@@ -31,10 +31,18 @@ writer for it — see [`VALIDATION_GATE_TOPOLOGY.md`](VALIDATION_GATE_TOPOLOGY.m
 ownership picture. **A control surface whose approve button does not persist is not yet the
 sign-off tool**; repairing it is ADR-012 P9a.
 
-⚠️ **The cross-tab change bus has never written a file.** `docs/verification_log.jsonl` is
-described below as the bus's store; it **does not exist on disk** and is not gitignored, so the
-freshness layer that depends on it is inert rather than merely empty.
-[`END_TO_END_MAP.md`](END_TO_END_MAP.md) §6 names this as the reason.
+⚠️ **The cross-tab change bus is EMPTY, not inert — and the distinction was measured the hard
+way.** `docs/verification_log.jsonl`, the bus's store, is absent from a clean checkout, and an
+earlier version of this very section read *"the bus has never written a file, which is stronger
+than 'never carried an event'"*. **That was wrong about the mechanism.** The browser test added
+for ADR-012 P9a Task 5 clicked Confirm once, and the bus wrote its first event immediately and
+correctly. The file was absent because **nobody had ever exercised the confirm path in this
+checkout**, not because the writer is broken.
+
+The freshness layer downstream is therefore **unexercised**, which is a much cheaper problem than
+inert — and the correction is worth keeping because *"the artifact is missing"* and *"the mechanism
+does not work"* are exactly the two readings that a missing file cannot distinguish between.
+The log is a runtime artifact and is gitignored, alongside the harness's other per-run logs.
 
 ## Quick Start
 

@@ -179,10 +179,14 @@ edge type that has no emitter and the gate that queries it.
 
 **Live gaps, worst first:**
 
-- 🔴 **The freshness layer is entirely inert.** Every graph node carries the epoch as
-  `last_modified` — one distinct value across the whole graph — and a declared input,
-  `docs/verification_log.jsonl`, does not exist. `Phase5v_Roadmap.md` calls this "the
-  highest-value capability".
+- 🔴 **The freshness layer is inert, but its input is UNEXERCISED rather than unwritable —
+  and the two look identical from an absent file.** Every graph node carries the epoch as
+  `last_modified`, one distinct value across the whole graph. The declared input,
+  `docs/verification_log.jsonl`, is absent from a clean checkout; **the writer behind it
+  works.** Measured 2026-08-12: the browser test added for ADR-012 P9a clicked Confirm once
+  and the bus wrote its first event immediately. Nobody had ever exercised the confirm path
+  here. `Phase5v_Roadmap.md` calls this "the highest-value capability", and the residual gap
+  is that nothing *consumes* the events — not that none can be produced.
 - 🔴 **Some edge types the readiness gates query have no emitter at all** — `PRODUCES`,
   `SUPPORTS` and `CONTRADICTS` — so those gates return verdicts they did not compute. Guarded against growth
   by `gate_edge_types_are_emitted`; see [gate topology §4](VALIDATION_GATE_TOPOLOGY.md) for

@@ -1118,7 +1118,12 @@ def check_architecture_inventory_fresh() -> CheckResult:
         # saying so is the finding. See ARCHITECTURE_TODOs A2.
         "scripts/pre_commit_hook.sh",
         "scripts/install_pre_commit.sh",
-        # Declared input to the (inert) freshness layer; never created. END_TO_END_MAP §6.
+        # ⚠️ REASON CORRECTED 2026-08-12. This read "never created", which was true of the
+        # tree and false of the mechanism: the P9a browser test clicked Confirm once and
+        # the change bus wrote its first event immediately. It is a RUNTIME artifact —
+        # absent in a clean checkout, present after anyone confirms a parameter — and is
+        # now gitignored alongside the harness's other per-run logs. The exemption stands
+        # either way; the reason had to stop being wrong.
         "docs/verification_log.jsonl",
         # Declared as a Bundles-tab input by DASHBOARD.md and named there precisely to say
         # it does NOT exist (ADR-012 C10/D22). Not gitignored either, so its absence is a
