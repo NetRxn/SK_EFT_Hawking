@@ -265,3 +265,59 @@ def test_the_ci_floor_counts_measurements_not_invocations():
         for b in blocks for a in ast.walk(b)
     ), ("the coverage-floor branch no longer reads CheckResult.measured — it is counting "
         "invocations again, which is exactly what made it unfireable")
+
+
+# ── CLAUDE.md rule 0 ↔ the architecture-change skill ──────────────────────────────────
+
+def test_rule_zero_names_a_skill_that_exists():
+    """Rule 0 is the claim that makes rules 1-3 fire, and it was unpinned in both
+    directions: rename the skill directory or drift its `name:` and CLAUDE.md routes a
+    reader to something that does not resolve, silently.
+
+    ⚠️ MEASURED 2026-08-13: the skill lives in the repo but NOT in the loaded plugin
+    cache, so `Skill(architecture-change)` fails until the operator refreshes the plugin
+    and restarts. This test pins the repo side — the thing the project controls — and
+    cannot see the cache, which is the known plugin-drift gap END_TO_END_MAP §3 records.
+    """
+    claude_md = (ROOT / "CLAUDE.md").read_text(encoding="utf-8")
+    sentence = "**Invoke the `architecture-change` skill first.**"
+    assert " ".join(sentence.split()) in " ".join(claude_md.split()), (
+        "CLAUDE.md no longer carries rule 0. If the rule was reworded, re-verify that it "
+        "still routes to the skill and update this test; if it was deleted, delete this "
+        "test with it and say what replaced it.")
+
+    skill = ROOT / ".claude/plugins/skeft-qa/skills/architecture-change/SKILL.md"
+    assert skill.is_file(), f"rule 0 routes to a skill that is not on disk: {skill}"
+
+    # DECIDER: the frontmatter `name:`, which is what the harness resolves — not the
+    # directory, which can agree while the name has drifted.
+    head = skill.read_text(encoding="utf-8").split("---")[1]
+    names = [ln.split(":", 1)[1].strip() for ln in head.splitlines()
+             if ln.startswith("name:")]
+    assert names == ["architecture-change"], (
+        f"the skill's frontmatter name is {names}, but CLAUDE.md rule 0 and "
+        f"docs/architecture/README.md both invoke it as 'architecture-change'")
+
+
+def test_the_sequence_is_rendered_identically_everywhere_it_appears():
+    """The eight steps are named in three places. A reader who counts them in one and
+    acts on another gets a different sequence — `terminate` was missing from two of the
+    three renderings, which is how step 8 became optional in practice."""
+    steps = ["orient", "measure", "specify", "review", "pilot", "plan", "ship", "terminate"]
+
+    skill = (ROOT / ".claude/plugins/skeft-qa/skills/architecture-change/SKILL.md"
+             ).read_text(encoding="utf-8")
+    headings = [ln.split(".", 1)[1].strip().lower()
+                for ln in skill.splitlines() if ln.startswith("### ")
+                and ln[4].isdigit()]
+    first_words = [h.split()[0].strip(",.:;—") for h in headings]
+    assert first_words == steps, (
+        f"the skill's step headings begin {first_words}, not {steps} — the headings are "
+        f"the authority the other two renderings copy, so fix whichever drifted")
+
+    for path in ("CLAUDE.md", "docs/architecture/README.md"):
+        text = " ".join((ROOT / path).read_text(encoding="utf-8").split()).lower()
+        rendered = [s for s in steps if s in text]
+        assert rendered == steps, (
+            f"{path} renders the sequence as {rendered}, missing "
+            f"{[s for s in steps if s not in rendered]}")

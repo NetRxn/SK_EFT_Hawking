@@ -1,14 +1,17 @@
 ---
 name: architecture-change
 description: >
-  This skill should be used when the user asks to "write an ADR", "spec this out", "review this
-  spec", "plan this build", "add a validation check", "add a gate", or "change the architecture" —
-  and whenever a change would add or alter any part of SK_EFT_Hawking's own machinery (a check, a
-  gate, an extractor, an edge type, a hook, a writer, a dashboard surface, a plugin component). It
-  runs the repeatable sequence — orient, measure, specify, adversarially review the SPECIFICATION,
-  pilot, plan, subagent-driven build, ship with the docs in the same commit — and states the
-  failure each step prevents. Invoke it BEFORE designing, and again before an ADR, spec or plan is
-  treated as settled.
+  This skill should be used when the user asks to "write an ADR", "write an architecture decision
+  record", "spec this out", "review this spec", "review this ADR", "plan an infra build", "add a
+  validation check", "add a gate", "add a ratchet", "wire in a new check", "add an agent, command,
+  hook or skill to the plugin", or "change the architecture" — and, unprompted, whenever a change
+  would add or alter any part of SK_EFT_Hawking's own machinery (a check, a gate, an extractor, a
+  node or edge type, a hook, a writer, a dashboard surface, a plugin component), or would create or
+  edit anything under docs/adrs/, docs/architecture/, docs/superpowers/specs/,
+  docs/superpowers/plans/, scripts/validation/checks/, or .claude/plugins/skeft-qa/. Invoke it
+  BEFORE designing, and again before an ADR, spec or plan is treated as settled. For Lean proof
+  work inside a /goal loop — the MCP proof loop, worktree fan-out, tactic friction — use goal-dev
+  instead.
 ---
 
 # Changing the machine — the repeatable sequence
@@ -20,18 +23,38 @@ repeat and expensive to discover.
 **It owns the sequence and nothing else.** The rules it enforces are owned elsewhere and are not
 restated here — read them, do not re-derive them:
 
-- `CLAUDE.md` § *Architecture documents* — the three architecture rules (read before designing ·
-  update in the same commit · never write a count into a narrative).
+- `CLAUDE.md` § *Architecture documents* — the architecture rules. Rule 0 routes here; rules 1–3
+  (read before designing · update in the same commit · never write a count into a narrative) are
+  what this sequence enforces.
 - `docs/architecture/README.md` — the two rules, the ownership table, and which document answers
   which question.
 - `docs/architecture/CHECK_AUTHORING_GUIDE.md` — what a new check owes semantically, especially
   §2.4 (production-seeded mutation) and §2.5 (guard the seam).
 
 **The worked example is ADR-012** (`docs/adrs/ADR-012-finding-lifecycle-routing-and-closure.md`),
-which was corrected three times by three different instruments before it was trustworthy. Every
-rule below cites what it caught there. Read `references/adr-012-worked-example.md` before running
-this sequence for the first time; it is the evidence, and it is what makes the rules arguable
-rather than arbitrary.
+corrected three times by three different instruments — and **still carrying residual drift**, which
+the reference records and which is part of using the example well. Every rule below cites what it
+caught there. Read `references/adr-012-worked-example.md` before running this sequence for the
+first time; it is the evidence, and it is what makes the rules arguable rather than arbitrary.
+
+⚠️ **Every ADR-012 figure quoted below is a measurement dated 2026-08-12, illustrative and not
+current.** Re-derive anything you intend to act on — that is step 2, and quoting these numbers
+forward is the failure step 2 exists to prevent.
+
+## Scope, and what scales with it
+
+**Unconditional at any size:** step 1 (orient), step 2 (measure), step 3 (the document lands
+first), step 7's three shipping obligations, and step 8 (terminate at a merged wave). These are
+the cost of the rule, and it is one step plus the reading.
+
+**Scales with the change:** step 4 runs at minimum one adversarial pass, and all three instruments
+when the scope is contested or the change spans subsystems. Step 5's pilot is **required whenever
+the design asserts anything about a population's shape** — how many, what kind, how much is already
+repaired — and skippable when it asserts nothing.
+
+⚠️ A sequence that reads as all-or-nothing gets dropped whole on small changes. Adding one
+dashboard pane does not need a pilot; it still needs orient, measure, doc-first and the shipping
+obligations.
 
 ---
 
@@ -82,7 +105,7 @@ memory index and later ADRs. A renumber silently invalidates every citation.
 State each constraint as **measured and load-bearing**, with the code location that establishes it.
 A constraint with no measurement behind it is a preference.
 
-### 4. Adversarially review the SPECIFICATION, not only the implementation
+### 4. Review the SPECIFICATION adversarially, not only the implementation
 
 This is the step most often skipped and the one that returns the most. Run it with **different
 instruments**, because each finds a different class:

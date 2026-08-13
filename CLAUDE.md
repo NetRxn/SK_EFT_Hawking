@@ -87,11 +87,10 @@ Four rules. They are requirements, not style preferences:
 0. **Invoke the `architecture-change` skill first.** Any change that adds or alters this
    repo's own machinery — a check, a gate, an extractor, an edge type, a hook, a writer, a
    dashboard surface, a plugin component — runs through it, and so does any ADR, spec or plan
-   before it is treated as settled. It owns the sequence (orient · measure · specify ·
-   adversarially review the specification · pilot · plan · build · ship with the docs) and
-   deliberately restates none of the rules below, so invoking it costs one step and skipping
-   it costs the four failures it exists to catch. **Rules 1–3 are what it enforces; this rule
-   is what makes them fire.**
+   before it is treated as settled. It owns the eight-step sequence — **orient · measure ·
+   specify · review · pilot · plan · ship · terminate** — and deliberately restates none of the
+   rules below, so invoking it costs one step and skipping it costs the four failures it exists
+   to catch. **Rules 1–3 are what it enforces; this rule is what makes them fire.**
 1. **Read before you design.** Before adding a check, a gate, an extractor, an edge type, or
    any new infrastructure, read the document that owns that surface. The recurring failure is
    building a second mechanism beside one that already exists — a third prose→Lean resolver, a
