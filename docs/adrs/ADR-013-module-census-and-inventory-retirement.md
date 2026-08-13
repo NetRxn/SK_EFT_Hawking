@@ -55,9 +55,11 @@ do*. That is the only genuinely unique content across both files — Index §8 a
 ## Constraints — verified, and load-bearing for the design
 
 **C1 — The plugin already classifies the Inventory as a judgment doc.**
-`.claude/plugins/skeft-qa/skills/sync/SKILL.md:55` is the *only* reference to either file
-anywhere in the plugin: the prose Inventory is *"flag-only — never silently regenerated."*
-It was never intended to be generated, which is why it has no generator to fix.
+`.claude/plugins/skeft-qa/skills/sync/SKILL.md:55` is the plugin's **only** reference to either
+file, and it names the prose Inventory alone — the Index appears nowhere under
+`.claude/plugins/`. It classifies the Inventory as a judgment doc: *"flag-only — never silently
+regenerated."* The Inventory was never intended to be generated, which is why it has no generator
+to fix.
 
 **C2 — Regeneration is registered, not wired.** `scripts/sync_manifest.py` declares
 `Edge(output, inputs, command)`; `sync.py --fast` runs the cheap subset;
@@ -75,13 +77,26 @@ Pilot, 2026-08-13, over `src/` and `scripts/` excluding `.temp`:
 | | count | share |
 |---|---:|---:|
 | modules | 318 | |
-| substantive module docstring | 311 | 98% |
-| title-only docstring | 3 | 1% |
-| no docstring | 4 | 1% |
+| module docstring present | **314** | 99% |
+| no docstring | **4** | 1% |
 
 The four are `src/{dark_sector,fermi_hubbard,graphene}/__init__.py` and
-`scripts/tests/test_system2.py`. **The derived artifact is 32.6 KB**, against 398 KB
+`scripts/tests/test_system2.py`. The derived artifact is ~33 KB against 398 KB
 hand-maintained today, and fits in a single `Read`.
+
+⚠️ **AN EARLIER DRAFT OF THIS TABLE CLAIMED A THIRD POPULATION — "title-only: 3" — AND IT DOES
+NOT EXIST.** It came from a character-count threshold (first paragraph ≤ 60 chars), and the
+population a threshold produces moves with the threshold: 3 at ≤60 chars, 8 for "docstring is one
+line", 10 for "one line without terminal punctuation". Read directly, the three it flagged are
+*correct work* — `scripts/lean_slots/__init__.py` is `"ADR-008 shared Lean slot control plane."`,
+`scripts/slotctl.py` is `"Repository entry point for the ADR-008 Lean slot controller."` A
+non-arbitrary predicate — *the docstring restates the module name and adds no new word* — returns
+**zero**. The row is withdrawn, and D4's second ratchet with it: it would have fired on correct
+work, which is the `VALIDATION_GATE_TOPOLOGY` §3 failure this document invokes elsewhere.
+
+⚠️ **The pilot must ship.** `scripts/module_census.py` lands in P1 carrying this derivation, so
+C4 is reproducible by anyone. The numbers above were produced by a scratch script; for a document
+whose C6 withdraws two of its own prior figures, an unreproducible baseline is not acceptable.
 
 **C5 — The census is only as good as the docstrings, and one loss is measured.**
 `src/core/transonic_background.py`: the Inventory's hand prose says *"1D BEC transonic flow
@@ -121,28 +136,54 @@ the decider. Both numbers are withdrawn; C4 supersedes them.
 ## Decision
 
 **D1 — One derived artifact answers "what is this module": the module census.**
-`docs/architecture/MODULE_CENSUS.md`, generated from the source of `src/**/*.py` and
-`scripts/**/*.py`. Every row is `path | first paragraph of the module docstring`. No hand-edited
-region, no AUTOGEN markers — **the whole file is generated**, like `SURFACE_INVENTORY.md`, so the
-mixed-generation failure cannot recur in it.
+**`docs/MODULE_CENSUS.md`** — generated from the source of `src/**/*.py` and `scripts/**/*.py`.
+Every row is `path | first paragraph of the module docstring`. No hand-edited region, no AUTOGEN
+markers — **the whole file is generated**, like `SURFACE_INVENTORY.md`, so the mixed-generation
+failure cannot recur in it.
+
+⚠️ **It is sited at `docs/`, NOT `docs/architecture/`, for two independent reasons.**
+*(1)* `docs/architecture/README.md`'s "what is deliberately NOT here" table declares that this
+directory does not own *"what does this module do"* — putting the census there contradicts the
+scope boundary written into the directory's own index. *(2)* It would fail
+`architecture_inventory_fresh` **on the day it landed**: leg 2 forbids a census count in any
+narrative under `docs/architecture/`, and two module docstrings carry Phase-6i wave numbers that
+match it — `bundle_migration.py`'s *"Phase 6i Wave **7.1** bundle-aware migration"* and
+`review_runner.py`'s *"Wave **7.2** bundle-aware review orchestrator"* read as `1 bundle` and
+`2 bundle`. Since D1 makes the file wholly generated there would be nothing to edit, and the
+offender set is a function of arbitrary prose across 318 docstrings, so an unrelated docstring
+edit could redden the suite later. Measured before siting, not after.
+
+**D1b — Scope boundary, stated so nobody rebuilds a second catalogue.** The census covers
+**Python only** — `src/` and `scripts/`. Lean is answered by `docs/counts.json`
+(`lean.module_names`), `lean/lean_deps.json` and `lean/atlas_view.json`, all derived from the
+extraction chokepoint and unable to drift. Notebooks, papers and tests are answered by counts in
+`docs/counts.json` and by their own directories. **Nothing else is in scope, and the census header
+says so on its face.** An unstated boundary is how the next hand catalogue gets started.
 
 **D2 — The decider is `ast.get_docstring`, never a regex over source.** A source scan finds a
 docstring-shaped string inside a function and calls the module documented
 (`CHECK_AUTHORING_GUIDE` §2.5). The generator parses and asks the AST.
 
-**D3 — The census reports what it cannot describe, beside what it can.** Two populations are
-listed by name in the artifact itself: modules with **no** docstring, and modules whose docstring
-is **title-only**. A surface silent about its blind spot reads as complete.
+**D3 — The census reports what it cannot describe, beside what it can.** Modules with **no**
+docstring are listed by name in the artifact itself. A surface silent about its blind spot reads
+as complete.
 
-**D4 — Both populations are ratcheted down-only, at their live values.** `NO_DOCSTRING_CEILING`
-and `TITLE_ONLY_CEILING`, frozen at the C4 measurement, lowered in the commit that lowers the
-population. Nothing blocks today; the first regression does. Zero headroom, per
-`CHECK_AUTHORING_GUIDE` §2.3.
+**D4 — That population is ratcheted down-only at its live value.** `NO_DOCSTRING_CEILING = 4`,
+lowered in the commit that lowers the population. Nothing blocks today; the first regression
+does. Zero headroom, per `CHECK_AUTHORING_GUIDE` §2.3. It reads **source**, not the generated
+artifact, so the auto-regen path cannot launder a regression past it.
 
 ⚠️ **Not a hard fail on absence, deliberately.** Three of the four are `__init__.py`, where a
 docstring is a style question rather than a defect, and a gate that fires on correct work gets
 switched off (`VALIDATION_GATE_TOPOLOGY` §3). The ratchet gets the same pressure without the
 false positive.
+
+⚠️ **ONE RATCHET, NOT TWO — this reverses an operator choice on new evidence, and says so.**
+The operator chose "ratchet both populations, down-only" when presented with two. The second
+population turned out to be a measurement artifact of my own threshold, not a thing (C4). Shipping
+it would have gated docstring *style* against an arbitrary character count and reddened the suite
+over three good docstrings. The choice was sound on the information given; the information was
+wrong, and re-deriving it is what step 2 of this sequence is for.
 
 **D5 — The census is registered as a sync edge, not wired by hand.** One `Edge` in
 `sync_manifest.py` with `src/**/*.py, scripts/**/*.py` as inputs. It is cheap, so it lands in
@@ -157,10 +198,35 @@ run, and the retirement loses nothing. Bounded: §1 is 18 KB over roughly 40 mod
 ⚠️ **This is the step that makes retirement safe, and skipping it converts D8 into a deletion of
 hand-authored content.** It runs first and is verified per-module, not sampled.
 
+⚠️ **D6 COVERS THREE BODIES OF PROSE, NOT ONE — an earlier draft named only Inventory §1 and the
+asymmetry was unexplained.** Measured: §1 holds **52** `Purpose:` entries over 52 `src/` paths and
+**zero** `scripts/` paths, so "roughly 40 modules" understated it and the scripts were uncovered.
+The three:
+
+* **Inventory §1** — 52 `src/` `Purpose:` entries. Three of its backticked paths are bare
+  basenames (`constants.py`, `formulas.py`, `mean_field.py`) that do not resolve from the repo
+  root, so migration re-anchors rather than transplants.
+* **Index §11** — the scripts prose, which the census's `scripts/` half supersedes only where a
+  docstring already says as much.
+* **Index §3.1** — the hand-maintained Lean subdirectory table's `Purpose` column. ⚠️ **This is
+  the object the operator asked about by name**, and its counts are derivable while its prose is
+  not. The counts die with the file; the prose migrates into the corresponding
+  `lean/SKEFTHawking/<family>/` module docstrings, or is explicitly accepted as lost — silently
+  deleting it is the failure C5 exists to prevent.
+
+⚠️ **Inventory §4, §5, §6, §7 and §10 are NOT yet audited.** The Context's claim that the unique
+content is "§1 plus Index §8/§11" is established for those sections only. §4 (notebooks), §5
+(papers), §6 (tests), §7 (scripts) and §10 (formulas ↔ Lean theorem names) each have a *count* in
+`docs/counts.json` as their derived counterpart, **not a description**. P2 audits all five before
+P5 deletes the file; whatever is unique either migrates or is named as accepted loss. Retiring a
+319 KB file having read two of its ten sections is the sampling this ADR is replacing.
+
 **D7 — `SK_EFT_Hawking_Inventory_Index.md` is retired after the census is green.** Its unique
 content is §8 and §11, which the census supersedes; everything else is a second account of a
-derived artifact. Retirement unwires four code sites, three test files, three architecture
-documents and `CLAUDE.md`'s routing row.
+derived artifact. Retirement unwires **four code sites** (`sync_manifest.py`, `pre-commit-sync.sh`,
+`update_inventory_index.py`, `freshness.py`), **six test files**, **four architecture documents**
+(`README.md` included — it both routes to the pair and describes the check being deleted) and the
+live routing rows in `CLAUDE.md`, `README.md`, `PAPER_STRATEGY.md` and `RESEARCH_STATUS_OVERVIEW.md`.
 
 **D8 — `SK_EFT_Hawking_Inventory.md` is retired after D6 completes.** No code consumer, 4.2%
 Lean coverage, and its largest section duplicates the roadmaps.
@@ -222,9 +288,29 @@ into a queue whose purpose is dispatch.
 
 Phases are ordered so nothing is unwired before its replacement is green.
 
+⚠️ **P1's registration list is derived from code, not quoted — and an earlier draft of this plan
+named four of the eleven sites.** A check that registers without them breaks frozen contracts on
+arrival. The full set, each verified at HEAD:
+
+| site | why |
+|---|---|
+| `scripts/validation/checks/freshness.py` | the check itself |
+| `validate._CANONICAL_ORDER` | execution order is data, not import order (H3) |
+| re-export in `scripts/validate.py` | the module-attribute surface other tooling reads |
+| `EXPECTED_CHECKS` in `tests/test_validate_registry_contract.py` | frozen **count *and* order** — two tests fire |
+| `EXPECTED_CHECK_FUNCTIONS` in `tests/test_validate_public_surface.py` | frozen function roster |
+| `CI_MIN_CHECKS_RUN` in `scripts/validation/_config.py` | ⚠️ **+1 at P1 and −1 at P4** — "one in, one out" nets to zero only across the whole plan, and these are separate commits |
+| `tests/test_d5_mutation_obligation.py` | `MUTATION_VERIFIED` + `PRODUCTION_SEEDED` + `FIXTURE_ONLY_CEILING` |
+| `tests/test_cannot_measure_baseline.py` | two zero-headroom floors, both re-measured at P4 |
+| `tests/test_sync_manifest.py` | asserts the edge roster by name |
+| `scripts/verify_scope.py` | the `code` bucket (`src/`, `scripts/`) must reach `module_census_fresh` — those are its inputs |
+| `docs/architecture/SURFACE_INVENTORY.md` | regenerated |
+
+`CI_SKIP` correctly takes no entry: the census is cheap.
+
 | phase | what | gate |
 |---|---|---|
-| **P1** | Ship `scripts/module_census.py` + `MODULE_CENSUS.md` + `module_census_fresh` with both ratchets, register the `Edge`, add to `pre-commit-sync.sh`'s restage list. Production-seeded mutation for each leg. | census green, mutations red-then-green |
+| **P1** | Ship `scripts/module_census.py` (carrying C4's derivation, so the baseline is reproducible) + `docs/MODULE_CENSUS.md` + `module_census_fresh` with `NO_DOCSTRING_CEILING`, register the `Edge`, add to `pre-commit-sync.sh`'s restage list, **and every row of the table above**. Production-seeded mutation per leg. | census green, mutation red-then-green, registry-contract tests green |
 | **P2** | D6 — migrate the Inventory's richer `Purpose:` prose into module docstrings, per module. | census re-run shows the migrated text |
 | **P3** | D10 — move the mutation obligation; re-measure `FIXTURE_ONLY_CEILING`. | `test_d5_mutation_obligation` green |
 | **P4** | D7 — retire the Index: unwire `sync_manifest`, `pre-commit-sync.sh`, `update_inventory_index.py`, `freshness.py`, three test files, `CLAUDE.md`, three architecture docs. | full fast suite green |
@@ -239,6 +325,25 @@ two homes; before P1 it has one; after P4 it has one. There is no ordering in wh
 mandates maintaining a deleted file is worse than the drift being fixed, because it sends every
 future wave to a path that no longer exists. If P4/P5 land without it, the change is incomplete
 regardless of what the suite says — no check reads the law.
+
+⚠️ **P4 IS ORDER-SENSITIVE WITHIN ITSELF.** `sync_manifest._index_autogen_stale` imports
+`update_inventory_index.compute_stale`. Delete the script while its `Edge` survives and
+`stale_artifacts()` raises inside `sync.py --fast` — **on every commit**, for everyone. The Edge
+comes out in the same commit as the script, or before it. (`pre-commit-sync.sh:50` is safe either
+way; it guards with `[ -f "$f" ]`, so a mid-migration checkout degrades quietly rather than
+breaking.)
+
+⚠️ **P5's GATE CANNOT SEE MOST OF THE BLAST RADIUS, AND THAT WOULD BE FALSE ASSURANCE.**
+`doc_refs_resolve` scans **`docs/architecture/*.md` only**. The retirement's largest consumer is
+the repo front door: `README.md` carries four live routing rows ("See what's been built →
+Inventory_Index", "Check the full inventory → Inventory"), plus `docs/PAPER_STRATEGY.md`
+("module-level ground truth") and `docs/RESEARCH_STATUS_OVERVIEW.md`. None is reachable by that
+check. `docs/architecture/README.md`'s references are markdown links, whose form the leg's
+path-like regex does not match either. **P6 repoints all of them by hand and the gate is a manual
+grep, stated as such** — a green `doc_refs_resolve` after P5 proves less than it appears to.
+
+⚠️ **D9 does not exempt these.** Dated roadmap and audit records stay; **live routing rows are
+repointed.** The distinction is whether the sentence tells a reader where to go now.
 
 ---
 
