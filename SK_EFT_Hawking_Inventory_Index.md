@@ -271,8 +271,8 @@ Load-bearing top-level theorems. Each row: fully-qualified name + module path + 
 
 | Theorem | Module | One-line |
 |---|---|---|
-| `Uqsl2` (HopfAlgebra instance) | `Uqsl2Hopf.lean` | First Hopf-algebra instance on a quantum group in any proof assistant (66 thms, 0 sorry). |
-| `Uqsl3` (HopfAlgebra instance) | `Uqsl3Hopf.lean` | First rank-2 quantum-group Hopf algebra in any proof assistant (189 thms, 0 sorry). |
+| `Uqsl2` (HopfAlgebra instance) | `Uqsl2Hopf.lean` | First Hopf-algebra instance on a quantum group in any proof assistant. |
+| `Uqsl3` (HopfAlgebra instance) | `Uqsl3Hopf.lean` | First rank-2 quantum-group Hopf algebra in any proof assistant. |
 | `QuantumGroup k A` (HopfAlgebra instance) | `QuantumGroupHopf.lean` | First generic parameterized U_q(𝔤) HopfAlgebra in any proof assistant. |
 | `kacWaltonFusion` | `KacWaltonFusion.lean` | First Kac-Walton fusion algorithm in any proof assistant (SU(5)₁ Z₅, SU(2)/SU(3)/SU(4)/G₂/B₂ verified). |
 | `trefoil_eq_neg_one` | `IsingBraiding.lean` | Trefoil knot Jones polynomial = -1 — first machine-verified knot invariant. |

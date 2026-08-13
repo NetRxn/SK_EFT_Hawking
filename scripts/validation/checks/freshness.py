@@ -811,7 +811,7 @@ def check_bundle_source_freshness() -> CheckResult:
 # guard and the sentence a human reads cannot diverge into two rules.
 #
 # Down-only, per CHECK_AUTHORING_GUIDE §2.3. Lower either with a stated reason.
-_INDEX_NARRATIVE_COUNT_CEILING: int = 4
+_INDEX_NARRATIVE_COUNT_CEILING: int = 2
 """Hand-written counts in the Index's narrative, outside the AUTOGEN blocks.
 
 ⚠️ **THE TARGET IS ZERO, AND THIS IS DEBT, NOT AN ALLOWANCE.** The Index's stated
@@ -827,15 +827,18 @@ that had drifted by roughly a factor of two against the AUTOGEN table in the sam
 (`936 Lean modules` vs 2040, `12463 thm` vs 22669, `All 17 bundles` vs 21) or duplicated
 it verbatim (`322 theorems across 44 runs`).
 
-**The 4 that remain are not pollution**, which is why the pattern was tightened in the
-same commit rather than the ceiling parked above noise:
+**19 → 2 by the end of the same day.** The last two removals came from reading the
+survivors rather than trusting the count: two lines reported `0 sorry`, and behind that —
+invisible, because `search()` returns the FIRST match and the pattern's `thm` did not
+cover `thms` — each also carried a hand-written per-module theorem count. The population
+was right; the *identity* of two members was not, and a passing ratchet says nothing
+about that. Their significance claims (*"first Hopf-algebra instance on a quantum group in
+any proof assistant"*) are genuinely hand-authored and stayed; the counts went.
 
-* two rows of the hand-maintained §3.1 subdirectory table, which the Index's own header
-  declares is not auto-generated — a per-family roster, not a second census;
-* two restatements of the zero-`sorry` invariant inside declaration descriptions.
-
-Driving those to zero means giving §3.1 a generator and rephrasing two descriptions;
-neither is a doc edit, so both belong in a later commit rather than a looser regex.
+**The 2 that remain are the hand-maintained §3.1 subdirectory table**, which the Index's
+own header declares is not auto-generated. Reaching zero means deriving §3.1 from
+`docs/counts.json`'s `lean.module_names` by path prefix — a generator, not a doc edit,
+which is why it is named as later work rather than absorbed into a looser regex.
 """
 
 
@@ -855,9 +858,17 @@ neither is a doc edit, so both belong in a later commit rather than a looser reg
 #   * `mod\b(?!\s*[-\d])` — `mod` abbreviates "modules" in a count (`936 mod`) and
 #     means modular arithmetic in `mod 2` / `mod-2`. Only the arithmetic form is
 #     followed by a digit or hyphen.
+#
+# ⚠️ `thms?` NOT `thm` — the singular-only form silently missed `66 thms` and
+# `189 thms`, two real hand-written counts, which is CHECK_AUTHORING_GUIDE §2.5's
+# narrowing-pattern failure occurring inside the guard written to enforce it. Found
+# by reading the survivors rather than by any test: the line reported its SECOND
+# match (`0 sorry`) and the first one never registered, so the population looked
+# smaller and the ceiling was set below the truth. Nothing about a passing ratchet
+# distinguishes that from real progress.
 _INDEX_COUNT_RE = re.compile(
-    r"(?<![-#\w])(?!(?:19|20)\d\d[\s*_`]*(?:theorems?|thm)\b)\d[\d,]*[\s*_`]*"
-    r"(?:theorems?|thm|modules?|mod\b(?!\s*[-\d])|declarations?|axioms?|sorr(?:y|ies)"
+    r"(?<![-#\w])(?!(?:19|20)\d\d[\s*_`]*(?:theorems?|thms?)\b)\d[\d,]*[\s*_`]*"
+    r"(?:theorems?|thms?|modules?|mod\b(?!\s*[-\d])|declarations?|axioms?|sorr(?:y|ies)"
     r"|definitions?|bundles?|papers?|notebooks?|figures?|pytest cases|checks?|gates?)\b",
     re.IGNORECASE)
 
