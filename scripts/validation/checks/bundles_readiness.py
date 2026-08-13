@@ -461,9 +461,9 @@ def _readiness_aggregate():
         # `evaluate_all_gates` makes build_graph emit ZERO ReadinessGate nodes, at which
         # point every readiness check passed green with nothing to check.
         return None, None, Detail(
-            "import", False,
-            f"could not import the readiness machinery ({exc}) — this check is "
-            f"UNVERIFIED, not passing")
+            "import", False, measured=False,
+            message=f"could not import the readiness machinery ({exc}) — this check is "
+                    f"UNVERIFIED, not passing")
     try:
         by_bundle = aggregate_by_bundle(
             parse_mapping(MAPPING_DOC.read_text()),
@@ -472,9 +472,9 @@ def _readiness_aggregate():
     except Exception as exc:
         # FAIL, not pass: an uncomputable live verdict is not agreement.
         return None, None, Detail(
-            "aggregate", False,
-            f"live counts could not be computed ({type(exc).__name__}: {exc}) "
-            f"— metadata is therefore UNVERIFIED, not matching")
+            "aggregate", False, measured=False,
+            message=f"live counts could not be computed ({type(exc).__name__}: {exc}) "
+                    f"— metadata is therefore UNVERIFIED, not matching")
     return by_bundle, _bundle_metadata_path, None
 
 
@@ -671,10 +671,9 @@ def check_bundle_stage13_claim_consistent() -> CheckResult:
         "unattributed_population", ok_un,
         f"{unattributed} open {'/'.join(sorted(_BLOCKING))} finding(s) are NOT reached by "
         f"the per-bundle aggregation, so no bundle ceiling bounds them; "
-        f"limit {UNATTRIBUTED_OPEN_BLOCKING_CEILING}. Together with leg 1 this covers the "
-        f"whole open blocking population ({len(_covered_blocking)} + {unattributed} = "
-        f"{len(_covered_blocking) + unattributed}), by construction: the two scopes are "
-        f"complements over the same id set"
+        f"limit {UNATTRIBUTED_OPEN_BLOCKING_CEILING}. The two legs are complements over one id set, so every open blocking finding reaches exactly one of them: "
+        f"{len(_covered_blocking)} reached by the aggregation, {unattributed} not. "
+        f"⚠️ Leg 1 ratchets bundle-OCCURRENCES of those {len(_covered_blocking)} findings, not the findings — a finding attributed to two bundles counts against both ceilings, which is correct for a per-bundle guard and is why leg 1's total exceeds this one"
         + ("" if ok_un else
            " — a finding that LOSES its attribution leaves the per-bundle ratchet. "
            "Re-attribute it or fix it; never raise this limit.")))

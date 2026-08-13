@@ -288,3 +288,45 @@ def test_the_writer_consults_the_open_items_guard():
     called = _called_names(_func_def('main'))
     assert 'load_open_qi_ids' in called
     assert 'write_text' in called, "main no longer writes at all — re-derive this gate"
+
+
+# ── Manual fields survive a regeneration (pr-review IMPORTANT I5) ──────────────────────
+
+def test_hand_curated_fields_survive_a_regeneration(tmp_path, monkeypatch):
+    """⚠️ THE GUARD SAW VANISHED IDS, NOT VANISHED FIELDS. `main()` refuses to write when a
+    curated id is ABSENT from the derivation — but an id the derivation still reproduces
+    sailed through while the renderer rebuilt its Owner/Target date from the derived dict,
+    where both are hardcoded `None`. Assign an owner, regenerate, and it silently became
+    `_(unassigned)_` — while the register's own text asserted the generator "does NOT
+    overwrite manual fields"."""
+    import qi_register as q
+    reg = tmp_path / "QI_REGISTER.md"
+    reg.write_text(
+        "# QI\n\n## Open Items\n\n### qi-x-1234abcd — a thing\n\n"
+        "- **Owner:** J. Roehm\n- **Target date:** 2026-09-15\n- **Status:** in-progress\n"
+        "\n## Closed Items\n\n")
+    monkeypatch.setattr(q, "REGISTER_PATH", reg)
+    got = q.load_manual_fields()
+    assert got["qi-x-1234abcd"] == {"owner": "J. Roehm", "target_date": "2026-09-15",
+                                    "status": "in-progress"}
+
+
+def test_the_renderers_own_placeholders_do_not_read_back_as_values(tmp_path, monkeypatch):
+    """`_(unassigned)_` is the renderer saying "no value". Reading it back as one would turn
+    a blank into a curated blank and pin it forever."""
+    import qi_register as q
+    reg = tmp_path / "QI_REGISTER.md"
+    reg.write_text("# QI\n\n## Open Items\n\n### qi-y-9999 — a thing\n\n"
+                   "- **Owner:** _(unassigned)_\n- **Target date:** _(unset)_\n"
+                   "\n## Closed Items\n\n")
+    monkeypatch.setattr(q, "REGISTER_PATH", reg)
+    assert q.load_manual_fields() == {}
+
+
+def test_the_register_no_longer_claims_a_persistence_it_lacks():
+    """The document used to assert manual-field persistence and then admit, in the same
+    sentence, that it was "a follow-up". Now it is true, so the admission must go."""
+    import qi_register as q
+    text = q.render_register([], 0, {})
+    assert "manual-field persistence is a follow-up" not in text
+    assert "read back and preserved across regenerations" in text

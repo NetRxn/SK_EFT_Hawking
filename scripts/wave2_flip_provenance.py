@@ -120,6 +120,37 @@ def _build_replacement(rationale_key: str) -> str:
     )
 
 
+def _both_human_fields_null(key: str) -> bool:
+    """The sweep's ORIGINAL gate, restored: both human fields must be unset.
+
+    Derived by AST rather than by the old `HUMAN_NULL_RE` literal-pair regex, so quoting,
+    line wrapping and an adjacent comment cannot change the answer — the same reason
+    `provenance_writer` stopped using a line regex for the force guard.
+    """
+    sys.path.insert(0, str(PROJECT_ROOT))
+    from src.core.provenance_writer import _entry_keys, PROVENANCE_PATH
+    import ast as _ast
+    src = PROVENANCE_PATH.read_text(encoding="utf-8")
+    if _entry_keys(src, key) is None:
+        return False
+    for node in _ast.walk(_ast.parse(src)):
+        if not (isinstance(node, _ast.Assign)
+                and any(getattr(t, "id", None) == "PARAMETER_PROVENANCE"
+                        for t in node.targets)
+                and isinstance(node.value, _ast.Dict)):
+            continue
+        for k, v in zip(node.value.keys, node.value.values):
+            if not (isinstance(k, _ast.Constant) and k.value == key
+                    and isinstance(v, _ast.Dict)):
+                continue
+            vals = {kk.value: vv for kk, vv in zip(v.keys, v.values)
+                    if isinstance(kk, _ast.Constant)}
+            return all(
+                isinstance(vals.get(f), _ast.Constant) and vals[f].value is None
+                for f in ("human_verified_date", "human_verified_notes"))
+    return False
+
+
 def main(dry_run: bool = False) -> int:
     sys.path.insert(0, str(PROJECT_ROOT))
     from src.core.citations import CITATION_REGISTRY
@@ -163,6 +194,19 @@ def main(dry_run: bool = False) -> int:
         by_cat.setdefault(cat, []).append(key)
         if cat.startswith("hold_"):
             held += 1
+            continue
+        # ⚠️ THE OLD GATE REQUIRED BOTH FIELDS NULL, AND DROPPING HALF OF IT SILENTLY
+        # WIDENED WHAT THIS SWEEP WRITES. `HUMAN_NULL_RE` matched the literal pair
+        # `'human_verified_date': None,` / `'human_verified_notes': None,`; the per-entry
+        # writer gates on the DATE alone. Measured: 79 entries carry a null date, 77 carry
+        # both null — so 2 entries the sweep has never touched became writable. Those two
+        # are exactly the shape a `REJECTED:` or `FLAGGED:` note leaves behind, so a bulk
+        # flip would have overwritten a recorded human rejection with a categorisation
+        # rationale. The old population is restored explicitly rather than inherited.
+        if not _both_human_fields_null(key):
+            refused.append((key, "carries a human_verified_notes value — a recorded "
+                                 "rejection or flag. A bulk categorisation sweep does not "
+                                 "overwrite one; use the dashboard, or the writer directly"))
             continue
         ok, msg = set_human_verified(
             key, date=VERIFY_DATE,

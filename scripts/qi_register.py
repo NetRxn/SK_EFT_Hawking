@@ -93,6 +93,44 @@ def load_closed_qi_ids() -> tuple[set[str], dict[str, str]]:
     return closed_ids, closure_blocks
 
 
+def load_manual_fields() -> dict[str, dict]:
+    """Hand-curated per-item fields already on disk, keyed by qi id.
+
+    ⚠️ **THE GUARD ABOVE ONLY SEES IDS THAT VANISH; THIS SEES FIELDS THAT VANISH.** `main()`
+    refuses to write when a curated id is ABSENT from the derivation. But an id the
+    derivation still reproduces sails through the guard while `render_register` rebuilds its
+    `Owner` / `Target date` / `Status` from the derived dict, where they are hardcoded
+    `None`/`'open'`. Assign an owner to a derived item, regenerate, and it is silently
+    replaced by `_(unassigned)_` — with the register's own "Manual fields" section
+    asserting, one line up, that the generator "does NOT overwrite manual fields".
+
+    Read back and merged, so the assertion becomes true instead of aspirational.
+    """
+    if not REGISTER_PATH.exists():
+        return {}
+    text = REGISTER_PATH.read_text()
+    m_open = re.search(r"^## Open Items\b", text, re.MULTILINE)
+    if not m_open:
+        return {}
+    m_closed = re.search(r"^## Closed Items\b", text[m_open.end():], re.MULTILINE)
+    body = text[m_open.end():m_open.end() + (m_closed.start() if m_closed else len(text))]
+    out: dict[str, dict] = {}
+    #: `_(unassigned)_` / `_(unset)_` are the renderer's own placeholders for "no value";
+    #: reading one back as a value would turn a blank into a curated blank.
+    _placeholder = re.compile(r"^_\(.*\)_$")
+    for block in re.split(r"^### ", body, flags=re.MULTILINE)[1:]:
+        qid = block.split()[0].strip()
+        fields = {}
+        for label, key in (("Owner", "owner"), ("Target date", "target_date"),
+                           ("Status", "status"), ("Evidence on close", "evidence_on_close")):
+            m = re.search(rf"^- \*\*{re.escape(label)}:\*\* (.+?)\s*$", block, re.MULTILINE)
+            if m and not _placeholder.match(m.group(1).strip()):
+                fields[key] = m.group(1).strip()
+        if fields:
+            out[qid] = fields
+    return out
+
+
 def load_open_qi_ids() -> set[str]:
     """IDs currently sitting under `## Open Items` in the register on disk.
 
@@ -408,7 +446,14 @@ def cluster_findings(findings: list[dict]) -> list[dict]:
 def render_register(items: list[dict], findings_total: int,
                     stats: dict | None = None) -> str:
     """Render the QI register as markdown. Section structure is stable
-    so the document is diff-friendly across regenerations."""
+    so the document is diff-friendly across regenerations.
+
+    ⚠️ Hand-curated per-item fields on disk are read back and MERGED over the derived
+    values, so a regeneration cannot silently blank an owner or a target date on an item
+    the derivation still reproduces. Before this, only a VANISHED id was protected.
+    """
+    manual = load_manual_fields()
+    items = [{**it, **manual.get(it['id'], {})} for it in items]
     generated = datetime.now(timezone.utc).isoformat(timespec='seconds')
     open_count = sum(1 for it in items if it['status'] == 'open')
     closed_ids_set, _ = load_closed_qi_ids()
@@ -500,7 +545,7 @@ def render_register(items: list[dict], findings_total: int,
     lines.append("- `status` — `open` / `in-progress` / `closed`")
     lines.append("- `evidence_on_close` — commit hash or wave reference that remediated the pattern")
     lines.append("")
-    lines.append("To assign fields for a QI item, edit the item section inline. The generator does NOT overwrite manual fields (it matches on `id`). (Current generator is auto-regen-only; manual-field persistence is a follow-up.)")
+    lines.append("To assign fields for a QI item, edit the item section inline. `Owner`, `Target date`, `Status` and `Evidence on close` are read back and preserved across regenerations, matched on `id` — and the placeholders `_(unassigned)_` / `_(unset)_` read back as *no value*, not as a curated one. An item whose id the derivation no longer reproduces is not silently dropped either: `main()` refuses to write and names it, and `--force` is required.")
     lines.append("")
     return "\n".join(lines)
 

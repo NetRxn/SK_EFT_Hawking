@@ -292,14 +292,41 @@ class TestBundleStage13ClaimConsistent:
         assert any("unverified rather than consistent" in (d.message or "")
                    for d in r.details)
 
-    def test_an_empty_population_is_UNVERIFIED_not_passing(self, tmp_path, monkeypatch):
-        """SEAM GUARD (authoring guide §2.5). An empty roster is the round-8 state:
-        every readiness check green with nothing to check."""
-        _patch_readiness(monkeypatch, {})
+    def test_an_empty_FINDING_population_is_UNVERIFIED_not_passing(self, monkeypatch):
+        """SEAM GUARD 1 of 2 — the ReviewFinding corpus. Both ratchets would read 0 and
+        pass over nothing."""
+        _patch_readiness(monkeypatch, {}, findings=[])
+        r = bru.check_bundle_stage13_claim_consistent()
+        assert r.passed is False and r.measured is False
+        assert any(d.name == "finding_population" and not d.passed for d in r.details)
+
+    def test_an_empty_BUNDLE_population_is_UNVERIFIED_not_passing(self, tmp_path,
+                                                                  monkeypatch):
+        """SEAM GUARD 2 of 2 — the bundle roster. An empty roster is the round-8 state:
+        every readiness check green with nothing to check.
+
+        ⚠️ **THIS TEST STOPPED REACHING ITS GUARD AND NOBODY NOTICED.** It passed
+        `by_bundle={}` and asserted on the substring "UNVERIFIED", which BOTH seam guards
+        emit. When `_patch_readiness` began deriving the finding corpus from the aggregate,
+        `{}` produced an empty corpus too — so the check short-circuited on the *finding*
+        guard and returned before `checked == 0` was ever evaluated. The bundle guard was
+        then pinned by no test in the suite, while this one stayed green.
+
+        Two changes make it honest: a non-empty finding corpus so the check reaches the
+        second guard, and an assertion on the detail's NAME rather than on a word both
+        guards happen to share.
+        """
+        _patch_readiness(monkeypatch, {},
+                         findings=[{"id": "review:x:D1:1", "label": "l",
+                                    "meta": {"status": "open", "severity": "minor",
+                                             "inferred_bundle": "D1",
+                                             "inferred_paper": None}}])
         r = bru.check_bundle_stage13_claim_consistent()
         assert r.passed is False, "a check that inspected nothing reported agreement"
         assert r.measured is False
-        assert any("UNVERIFIED" in (d.message or "") for d in r.details)
+        assert any(d.name == "population" and not d.passed for d in r.details), (
+            f"the `checked == 0` guard did not fire; details were "
+            f"{[d.name for d in r.details]}")
 
     def test_an_uncomputable_aggregate_fails_rather_than_passes(self, tmp_path, monkeypatch):
         """FAIL, not pass: an uncomputable live verdict is not agreement."""

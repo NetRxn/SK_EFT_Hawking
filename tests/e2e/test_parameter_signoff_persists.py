@@ -15,7 +15,7 @@ succeeded rather than assuming it.
 from __future__ import annotations
 
 import re
-import subprocess
+import time
 from pathlib import Path
 
 import pytest
@@ -35,11 +35,11 @@ def _first_unverified(src: str) -> str | None:
 
 @pytest.mark.e2e
 def test_a_confirmed_parameter_is_still_confirmed_after_reload(page, dashboard_url):
-    dirty = subprocess.run(["git", "status", "--porcelain", str(PROV)],
-                           cwd=ROOT, capture_output=True, text=True).stdout.strip()
-    if dirty:
-        pytest.skip(f"{PROV.name} has uncommitted changes; refusing to write to it")
-
+    # ⚠️ THE DIRTY-CHECK MOVED TO AN AUTOUSE FIXTURE, AND IT NOW FAILS RATHER THAN SKIPS.
+    # This test used to skip on a dirty registry — and `test_parameters_tab.py` reliably
+    # dirtied it a moment later, so the branch's flagship persistence proof silently
+    # disabled itself on every run after the first. `tests/e2e/conftest.py` guards every
+    # e2e test now, because ANY of them can reach `/verify`.
     original = PROV.read_text(encoding="utf-8")
     key = _first_unverified(original)
     assert key, ("every parameter is already human-verified — this test would pass over "
@@ -53,14 +53,28 @@ def test_a_confirmed_parameter_is_still_confirmed_after_reload(page, dashboard_u
         card = page.locator(f'.param-card:has-text("{key}")').first
         card.scroll_into_view_if_needed()
         card.locator('button:has-text("Confirm")').first.click()
-        page.wait_for_timeout(1500)
+
+        # ⚠️ POLL, DO NOT SLEEP. The dashboard is a SEPARATE SUBPROCESS, so the write is
+        # asynchronous to this test. A fixed `wait_for_timeout(1500)` raced it two ways on a
+        # loaded machine: the assertion could fire before `os.replace` landed, AND the
+        # `finally` could then restore while the server was still writing — leaving the tree
+        # dirty by the very path written to prevent that.
+        after = original
+        deadline = time.monotonic() + 30
+        while time.monotonic() < deadline:
+            after = PROV.read_text(encoding="utf-8")
+            if after != original:
+                break
+            time.sleep(0.25)
 
         # ⚠️ THE ASSERTION THAT MATTERS: the FILE changed. Reading the page here would
         # pass against the old in-memory-only behaviour.
-        after = PROV.read_text(encoding="utf-8")
         assert after != original, (
-            "the confirm button rendered its badge and wrote nothing — the in-memory-only "
-            "path is back, and the badge is indistinguishable from a persisted one")
+            "the confirm button rendered its badge and wrote nothing within 30s — the "
+            "in-memory-only path is back, and the badge is indistinguishable from a "
+            "persisted one")
+        # Let any in-flight replace settle before the `finally` restores over it.
+        time.sleep(0.5)
         assert f"'{key}'" in after
         start = after.index(f"    '{key}': {{")
         entry = after[start:after.index("\n    },", start)]
