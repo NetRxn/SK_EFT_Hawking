@@ -23,13 +23,22 @@ hard failure — so the drift stops being free. Each false claim is corrected be
 
 ## What it cannot do — read this before trusting a green badge
 
-⚠️ **The Parameters tab's confirm button does not persist.** `/verify` mutates the imported
-`PARAMETER_PROVENANCE` dict in memory and writes only a change-bus event; the green
-**HUMAN VERIFIED** badge it renders is byte-identical to a persisted one and reverts on reload.
-`ParameterProvenance` is a P1 gate that blocks on that field, and there is no supported per-entry
-writer for it — see [`VALIDATION_GATE_TOPOLOGY.md`](VALIDATION_GATE_TOPOLOGY.md) §6 for the full
-ownership picture. **A control surface whose approve button does not persist is not yet the
-sign-off tool**; repairing it is ADR-012 P9a.
+✅ **The Parameters tab's three buttons all persist (ADR-012 P9a, 2026-08-12).** Confirm, Reject
+and Flag route through `src.core.provenance_writer`, the single per-entry writer, and the badge
+is rendered **only when the write returns ok** — a refusal renders as a refusal.
+
+⚠️ **This section read "the confirm button does not persist" for several hours after it did**,
+which is the drift rule 2 exists to prevent, in the document governing the surface that was
+repaired. What it described was real: `/verify` mutated the imported dict in memory, wrote only
+a change-bus event, and rendered a green **HUMAN VERIFIED** badge byte-identical to a persisted
+one — on the field a P1 gate blocks on.
+
+⚠️ **Reject and Flag were fixed second, and their absence was WORSE than the original defect.**
+With only Confirm persisting, Reject cleared the date in memory, rendered a red badge, and left
+the verification on disk — still green to the gate, with no route to withdraw it. Sign-off
+stuck and retraction evaporated; before the writer existed, both were equally ephemeral and the
+surface was at least uniformly honest. See
+[`VALIDATION_GATE_TOPOLOGY.md`](VALIDATION_GATE_TOPOLOGY.md) §6 for field ownership.
 
 ⚠️ **The cross-tab change bus is EMPTY, not inert — and the distinction was measured the hard
 way.** `docs/verification_log.jsonl`, the bus's store, is absent from a clean checkout, and an
@@ -155,6 +164,34 @@ Sentence-level chain-of-backing inspector. Renders the prose of a chosen paper a
 
 ⚠️ **CORRECTED 2026-08-12.** This said the chains are the sentences' **`BACKED_BY`** edges. The dashboard contains **zero** occurrences of `BACKED_BY`: the tab reconstructs each chain from `papers/<p>/claims_review.json` (`_pp_sentence_chain_link_states`), reading no graph edge at all. The distinction matters for anything built on top — a sentence-to-finding resolution has to be *built*, not queried, which is why ADR-012 P9a S4 is a task rather than a render change. Per-link verify buttons fire `/api/verification/event` with a `triggered_by: <sentence_id>` field so the audit trail records cross-tab provenance. Right-side drawer shows the `AuditEvent` log (`LOGGED_BY` edges) for the focused sentence, including `re_audit` chains across multiple agent runs. Cluster siblings (cross-paper `ClaimCluster` membership via `MEMBER_OF`) surface inline.
 
+## The ADR-012 operator surfaces — data layers, separate from the app
+
+⚠️ **These live in their own modules, and that is deliberate.** `provenance_dashboard.py` was
+already large enough that another four panes inside it would have made every one of them
+harder to reason about. Each module below is **pure data — no HTML** — so it can be tested
+without booting a server, and the app wires it.
+
+| module | surface | what it refuses to do |
+|---|---|---|
+| `scripts/sentence_findings.py` | **S4 — reading-while-blocked.** Marks a sentence when an open finding's `Location:` line range overlaps it | Resolve via `FLAGS`. Every one of those edges targets a `paper:` node, so the marker would render on **no sentence, ever**, and its emptiness would be indistinguishable from a clean corpus |
+| `scripts/dashboard_flow.py` | **S2 — the Flow board.** Bundle rows × stage columns, with an open-findings overlay broken down by `lane` | Coerce an unrecognised status to the nearest known one, treat §7.5 as anything but *not tracked*, or present the two known-soft signals (TODO-D50/D51) as authoritative |
+| `scripts/dashboard_attention.py` | **S3 — Attention.** The four feeds, side by side | **Merge them.** Different stores, vocabularies and actions; flattening destroys the only property that makes each legible |
+| `scripts/dashboard_loops.py` | **P9c — Loops.** `/goal`-level activity from harness state | Render an empty roster as "no loops running". `.claude/dev-harness/` is gitignored, so *nothing known* and *nothing armed* are different answers |
+
+**Every one of them reports what it CANNOT see, beside what it can.** `coverage()` returns the
+population the layer reaches *and* the population it does not, and asserts the two partition —
+the same discipline the readiness ratchets use, for the same reason: a partition asserted in
+prose drifts, and a surface that is silent about its blind spot reads as complete.
+
+⚠️ **S4's marker is a floor, not a total.** Markers cover only the findings whose `Location:`
+names a draft line; the rest carry no location or point outside the manuscripts entirely. **An
+unmarked sentence is not evidence of a clean sentence**, and the pane says so on its face.
+
+⚠️ **Three states, not two, wherever a thing can be unknown.** A sentence with no line span
+(question never asked) versus one with no findings (asked and clean); a loop roster that is
+absent versus empty; a Stage-13 review kind that is undeclared versus a bundle never reviewed.
+Collapsing any of these pairs renders *unknown* and *fine* identically.
+
 ## API Endpoints
 
 **The routes are declared by `@app.route` in `scripts/provenance_dashboard.py`; read them there rather than trusting a table.** The ones a reader is most likely to reach for:
@@ -210,6 +247,8 @@ Schema spans Phase 1 / 1.5 base types + Phase 5v Wave 2a readiness-system types 
 | `scripts/templates/partials/graph_tab.html` | D3 knowledge graph visualization |
 | `scripts/templates/partials/bundles_tab.html` · `chains_tab.html` · `paper_provenance_tab.html` · `qi_tab.html` · `readiness_tab.html` | the Datastar-driven tab bodies |
 | `tests/test_template_contract.py` | the gate asserting the server passes every variable these templates dereference |
+| `scripts/sentence_findings.py` · `dashboard_flow.py` · `dashboard_attention.py` · `dashboard_loops.py` | the ADR-012 surfaces' data layers — pure data, no HTML |
+| `src/core/provenance_writer.py` | the only per-entry writer for the human-verification fields |
 | `scripts/build_graph.py` | Graph extraction from registries |
 | `scripts/extract_lean_deps.py` | Lean declaration extraction wrapper |
 | `scripts/graph_integrity.py` | Integrity checker |

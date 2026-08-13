@@ -171,6 +171,15 @@ A recurring failure mode is a check telling you to run a script that cannot fix 
 |---|---|---|
 | `blockers_open`, `advisories_open`, `open_findings`, `blocked_p1_gates`, `readiness` | `bundle_readiness.write_metadata_counts` | — |
 | `stage13_status`, `stage9_status`, `stage10_status`, `stage13_review_kind` | **`scripts/record_review.py`** (the Stage-13/9/10 review cycle, `BUNDLE_LIFT_PROCEDURE` §§8–10) | `bundle_readiness.py` |
+
+⚠️ **`stage13_review_kind` has a READER that resolves it without a writer, and that asymmetry
+was a live defect.** `record_review.py` is still its only *writer*, but the field was absent
+from every bundle — so no bundle could reach Stage-13 green, while most had genuine review
+evidence on disk. `resolve_stage13_reviews` had an evidence fallback for the review **date**
+and none for its **kind**. It now reads a kind an evidence document *declares about itself*,
+and reports three states: `declared` · `reviewed-kind-unrecorded` · `unreviewed`.
+**A directory name is never treated as a kind** — inferring one from the path would manufacture
+the exact evidence the gate demands, for eighteen bundles at once.
 | `freshness_stale` | `check_bundle_source_freshness.py` | `bundle_readiness.py` (deliberately — two writers made `validate.py` non-idempotent) |
 | `apex_theorems` | a human, under ADR-010 §D5a's per-bundle context review | any script |
 | `docs/counts.json` / `counts.tex` | `update_counts.py` | — |

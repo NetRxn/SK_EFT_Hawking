@@ -58,6 +58,18 @@ That check enforces three things, and the third is the only mechanical guard on 
    naming a file precisely to say it is missing) live in an explicit, reasoned exception set
    in the check.
 
+⚠️ **AND NO CHECK NOTICES A SUBSYSTEM THAT IS SIMPLY ABSENT FROM THESE DOCUMENTS.** The
+census covers checks, gates, graph types, hooks, agents, commands, registries and bundles —
+**not modules.** Measured 2026-08-13: five new modules had landed with **zero** mentions
+across this directory, and every gate here was green over all of them. The checks verify
+what *is* written; nothing asks what *should have been*. That is this project's own defect
+class — absence rendered as success — sitting one level above the documents that name it.
+
+Rule 2 is therefore the only guard on new-surface coverage, and it is discipline rather than
+a mechanism. When a change adds a module, a writer, or an operator-facing surface, the
+document that owns that surface gains it **in the same commit**, and a green suite is not
+evidence that this happened.
+
 ⚠️ **No check verifies a prose claim** — a description can be fluent, well-cited, and wrong,
 and the suite stays green. That is why rule 2 exists, and why the load-bearing claims are
 additionally pinned by executable assertions in
