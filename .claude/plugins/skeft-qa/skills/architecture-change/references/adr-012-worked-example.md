@@ -152,6 +152,27 @@ reviewed leaves the other two classes open.
 
 ---
 
+## Three details the skill cites but does not retell
+
+Kept here so the skill can name the failure in a clause and a reader who wants the case has it.
+
+**Step 2 — the premise that was never traced to code.** Three consecutive drafts asserted that
+open REQUIRED findings *"blocked nothing"*. The code showed `major` had been a blocking severity
+for weeks: the gating half of the diagnosis was simply wrong, and nobody had opened the file.
+Separately the pilot's finding count had already moved by the time the closure writer existed,
+and P7 re-derived it rather than reusing the number.
+
+**Step 4 — self-review does not substitute.** In the pilot, an adversarial check of the lead's
+own remediation found two real errors, and one of them was a **false attribution introduced while
+fixing a finding about false attribution**. The lead was not careless; a reviewer reading their
+own work is reading their own assumptions.
+
+**Step 6 — halves that are inert apart.** The closure-side guard could not fire until the
+routing-side parser produced its input. Shipping closure alone would have produced a guard green
+in tests and dead in production — item 1 on `CHECK_AUTHORING_GUIDE` §6's checklist. Routing and
+closure became one build for that reason (§D18).
+
+
 ## Reading this example critically
 
 A third correction round is not a proof of correctness. ADR-012 still carries drift, and noticing it

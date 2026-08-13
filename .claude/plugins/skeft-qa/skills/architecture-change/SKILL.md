@@ -66,10 +66,9 @@ Read the `docs/architecture/` document that owns the surface, then **read the co
 Establish what existing machinery already covers the defect, and describe the residue that is
 genuinely uncovered (ADR-010 §6a).
 
-*Failure it prevents:* building a second mechanism beside one that already works. *In ADR-012:*
-the spec proposed to build `ledger_ids_resolve` — a check that already existed, already ratcheted
-at zero headroom, and already mutation-verified (§C9). The proposed replacement was also **weaker**
-than what it would have displaced. Orientation is not a formality; it deleted a whole task.
+*Failure it prevents:* building a second mechanism beside one that already works — in ADR-012 a
+proposed check already existed, ratcheted and mutation-verified, and the replacement was *weaker*
+than what it would have displaced (§C9). Orientation deleted a whole task.
 
 ⚠️ Prefer **promote** or **extend** over **add beside**. Two copies of a mechanism is the defect,
 not the cure — so a promotion deletes the original in the same commit (§D13).
@@ -80,11 +79,8 @@ Every figure that steers a decision is derived from the live artifact and dated.
 of a prior document — including a document authored in this same session — is a **claim**, not a
 measurement.
 
-*Failure it prevents:* a design justified by a premise that is false. *In ADR-012:* three
-consecutive drafts asserted that open REQUIRED findings *"blocked nothing"*; the code showed
-`major` had been a blocking severity for weeks. The gating half of the diagnosis was wrong and had
-never been traced to code. Separately, the pilot's finding count had already moved by the time the
-closure writer existed, and P7 re-derived rather than reusing it.
+*Failure it prevents:* a design justified by a premise that is false — three ADR-012 drafts rested
+on a gating claim the code contradicted, never traced.
 
 ### 3. Specify before building — the document lands first
 
@@ -123,9 +119,9 @@ specification nobody adversarially reviews produces this document's first draft*
 code and could not see the missing half; the drift assessment read it against the ask and could not
 see `ledger_ids_resolve`. Running one and calling it reviewed leaves the other class open.
 
-⚠️ **Self-review does not substitute.** In ADR-012's pilot, an adversarial check of the lead's own
-remediation found two real errors, one of them a false attribution introduced *while fixing a
-finding about false attribution*.
+⚠️ **Self-review does not substitute.** A reviewer reading their own work is reading their own
+assumptions — in ADR-012 that cost two real errors, one introduced while fixing a finding about
+the same class.
 
 ### 5. Pilot — because a pilot changes scope
 
