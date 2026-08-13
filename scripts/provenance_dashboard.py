@@ -1270,6 +1270,18 @@ def verify_param():
     now = datetime.now(timezone.utc).strftime('%Y-%m-%d')
 
     if action == 'confirm':
+        # ⚠️ THE BADGE FOLLOWS THE WRITE; it does not precede it (ADR-012 D15, Invariant
+        # #8). This branch used to set the in-memory dict and render HUMAN VERIFIED for a
+        # change nothing persisted — markup identical to a real one, reverting on reload,
+        # on the surface that gates publication sign-off.
+        from src.core.provenance_writer import set_human_verified
+        ok, msg = set_human_verified(
+            key, date=now, notes=notes,
+            actor=request.form.get('actor') or 'user:dashboard')
+        if not ok:
+            # A refusal is shown as a refusal. Rendering the green badge anyway is the
+            # exact defect being repaired, one layer up.
+            return (f'<span class="status-conflict">NOT SAVED: {_esc(msg)}</span>', 200)
         entry['human_verified_date'] = now
         entry['human_verified_notes'] = notes or 'Confirmed via dashboard'
         status_class = 'status-human'
@@ -5516,19 +5528,20 @@ def main():
         # returned 0 having written NOTHING — a command reporting success for work
         # it did not do, which is this audit's defect class wearing a CLI.
         #
-        # ⚠️ R5 filed this as "Invariant #8's human-verification tier has no working
-        # way to satisfy it". Re-measured: that is OVERSTATED.
-        # `scripts/wave2_flip_provenance.py` is a real writer
-        # (`PROV_PATH.write_text`, :178) and the gate IS satisfiable through it.
-        # What is broken is this path, and the dashboard's confirm button, which
-        # mutates in memory and then renders a green HUMAN VERIFIED badge for a
-        # change that is never persisted.
+        # ⚠️ THE MESSAGE IS UPDATED, NOT KEPT (ADR-012 P9a Task 6). It used to route the
+        # user to `wave2_flip_provenance.py` as "a real writer". That was true and is now
+        # misleading: the bulk sweep stamps a FROZEN date and matches only entries holding
+        # `None`, so it cannot record today's confirmation or revise an existing one.
+        # A message describing a defect that has since been fixed is how a corrected
+        # mistake gets re-litigated.
         raise NotImplementedError(
-            "`--write` was never implemented: it printed a success message and "
-            "returned without writing provenance.py. Use "
-            "`scripts/wave2_flip_provenance.py`, which does persist "
-            "`human_verified_date`. Tracked as R5-MAJ1 in "
-            "docs/audits/2026-08-05-pr-review-2/FINDINGS_REGISTER_PASS2.md.")
+            "`--write` is not implemented, and deliberately so: a batch flag over the "
+            "whole registry is the wrong shape for a per-entry human decision. The "
+            "supported route is `src.core.provenance_writer.set_human_verified(key, "
+            "date=..., notes=...)` — one entry, atomic, refusing an unknown key and "
+            "refusing to overwrite an existing verification without `force`. The "
+            "dashboard's confirm button now calls it and renders the green badge ONLY "
+            "when it returns ok.")
 
     app.config['PG_SYNC_ENABLED'] = not args.no_pg_sync
 

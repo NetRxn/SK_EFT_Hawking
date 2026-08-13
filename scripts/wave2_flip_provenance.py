@@ -139,44 +139,56 @@ def main(dry_run: bool = False) -> int:
         print("All PARAMETER_PROVENANCE entries already human-verified — no-op.")
         return 0
 
-    src_text = PROV_PATH.read_text(encoding="utf-8")
+    # ⚠️ THIS SCRIPT NO LONGER WRITES THE FILE (ADR-012 P9a Task 5). It keeps its
+    # CLASSIFIER — which is the part with real judgement in it — and delegates every write
+    # to `src.core.provenance_writer.set_human_verified`. Two implementations of one write
+    # is how they drift, and these two already had: this one stamped a frozen
+    # `VERIFY_DATE` and matched only entries literally holding `None`, so it could neither
+    # record today's confirmation nor revise an existing entry, while the dashboard wrote
+    # an audit event and no field at all. Precedent: `close_finding` imports the
+    # extractor's `mint_finding_id` rather than reimplementing it.
+    from src.core.provenance_writer import set_human_verified
 
     flipped = 0
     held = 0
+    refused: list[tuple[str, str]] = []
     by_cat: dict[str, list[str]] = {}
 
-    def replace_entry(match: re.Match) -> str:
-        nonlocal flipped, held
-        key = match.group("key")
-        cat = classifications.get(key)
-        if not cat:
-            return match.group(0)
+    for key, cat in sorted(classifications.items()):
         by_cat.setdefault(cat, []).append(key)
         if cat.startswith("hold_"):
             held += 1
-            return match.group(0)
-        body = match.group("body")
-        new_body, n = HUMAN_NULL_RE.subn(_build_replacement(cat), body, count=1)
-        if n == 0:
-            return match.group(0)
-        flipped += 1
-        return f"    '{key}': {{{new_body}    }},"
-
-    new_text = ENTRY_RE.sub(replace_entry, src_text)
+            continue
+        ok, msg = set_human_verified(
+            key, date=VERIFY_DATE,
+            notes=VERIFY_NOTES.format(rationale=RATIONALES[cat]),
+            actor="script:wave2_flip_provenance", dry_run=dry_run)
+        if ok:
+            flipped += 1
+        else:
+            refused.append((key, msg))
 
     print("Classification:")
     for cat in sorted(counts):
         print(f"  {cat}: {counts[cat]}")
     print()
-    print(f"Will flip: {flipped}")
-    print(f"Will hold (residuals): {held}")
+    print(f"{'Would flip' if dry_run else 'Flipped'}: {flipped}")
+    print(f"Held (residuals): {held}")
+
+    # ⚠️ REFUSALS ARE NAMED, never summed away. The old regex silently left an entry
+    # unchanged when its pattern did not match — `n == 0` returned the original text and
+    # nothing was reported — so a shape it could not handle was indistinguishable from a
+    # key it was never asked about.
+    if refused:
+        print(f"\nREFUSED ({len(refused)}) — each writes NOTHING:")
+        for key, msg in refused:
+            print(f"  {key}: {msg}")
 
     if dry_run:
         print("\n--- DRY RUN: no file written ---")
         return 0
 
-    PROV_PATH.write_text(new_text, encoding="utf-8")
-    print(f"\nWrote {PROV_PATH}")
+    print(f"\nWrote {PROV_PATH} ({flipped} entr{'y' if flipped == 1 else 'ies'})")
 
     print("\nResiduals (held — require explicit user attention):")
     for cat in ("hold_E_needs_attention", "hold_C_projected"):
