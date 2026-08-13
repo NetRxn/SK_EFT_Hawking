@@ -9,7 +9,7 @@ into a file with no reader. This document gives them a queue that has teeth.
 
 **Every claim below was RE-MEASURED at HEAD before filing**, per ADR-012 D4 (*"each is
 re-measured at filing and assigned its own lane — the ADR does not pre-assign them"*). That
-re-measurement changed the answer for four of the nine.
+re-measurement changed the answer for three of the eleven.
 
 | item | re-measured verdict | filed |
 |---|---|---|

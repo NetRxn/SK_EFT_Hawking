@@ -118,14 +118,54 @@ def test_an_absent_lane_reads_unclassified_and_never_a_default(live_gates):
     assert all(r["lane"] for r in refs), "a ref carries an empty lane rather than a value"
 
 
-def test_the_evaluator_no_longer_truncates_before_it_counts(live_gates):
-    """⚠️ THE REGRESSION THIS FILE EXISTS FOR. With the old `blocking[:10]`, no paper could
-    ever report more than ten blockers and `blockers_total` would have agreed with the lie.
-    At least one live paper carries more than ten."""
-    worst = max((g for g in live_gates if g.gate == "FixPropagation"),
-                key=lambda g: len(g.blocker_refs))
-    assert len(worst.blocker_refs) > 10, (
-        f"the worst paper ({worst.paper}) reports {len(worst.blocker_refs)} blockers — if "
-        f"that is exactly 10, the evaluator is truncating again and every disclosure "
-        f"downstream is reporting the truncated number as the total")
-    assert worst.to_node_payload()["meta"]["blocker_refs_total"] == len(worst.blocker_refs)
+@pytest.mark.parametrize("state", ["blocked", "needs-recheck"])
+def test_the_evaluator_no_longer_truncates_before_it_counts(live_gates, state):
+    """⚠️ THE REGRESSION THIS FILE EXISTS FOR — AND THE FIRST VERSION COULD NOT CATCH IT.
+
+    `_eval_fix_propagation` assigns blockers at TWO sites, one per branch. The original test
+    took `max` over all `FixPropagation` gates without filtering on state, so reinstating
+    `blocking[:10]` on the `blocked` branch dropped D12 from 44 to 10 while D4's
+    `needs-recheck` 31 kept the maximum above the threshold — **the whole file stayed green
+    over the exact defect it names.** Confirmed by mutation. Both sites changed, so both must
+    be pinned, which is what parametrizing on `state` does.
+
+    The bound is COMPUTED, not a magic number: it is the count of open findings the graph
+    actually attaches to that paper. A literal `> 10` would go red the day ADR-012 P10 drives
+    the population below eleven, and its message would say "the evaluator is truncating"
+    when the truth was that remediation worked.
+    """
+    gates = [g for g in live_gates if g.gate == "FixPropagation" and g.state == state]
+    assert gates, (
+        f"no FixPropagation gate in state {state!r} — this branch of the evaluator is "
+        f"unexercised, so the assertion would pass over nothing")
+    worst = max(gates, key=lambda g: len(g.blocker_refs))
+    payload = worst.to_node_payload()["meta"]
+    assert payload["blocker_refs_total"] == len(worst.blocker_refs)
+    assert payload["blockers_total"] == len(worst.blockers)
+    # Ground truth from the graph: however many findings reach this paper, the evaluator
+    # must have kept all of them.
+    n_expected = _open_findings_for_paper(worst.paper, blocking=(state == "blocked"))
+    assert len(worst.blocker_refs) == n_expected, (
+        f"{worst.paper} reports {len(worst.blocker_refs)} of {n_expected} findings the "
+        f"graph attaches to it — the evaluator is truncating before it counts, so every "
+        f"total downstream is the truncated number wearing the name of a disclosure")
+
+
+def _open_findings_for_paper(paper: str, blocking: bool) -> int:
+    """How many open findings the graph FLAGS onto this paper — derived independently of
+    the evaluator, so the two cannot agree with each other by construction."""
+    from build_graph import build_graph_json
+    import readiness_gates as _rg
+    g = build_graph_json()
+    by_id = {n["id"]: n for n in g["nodes"]}
+    n = 0
+    for e in g["links"]:
+        if e.get("type") != "FLAGS" or e["target"] != f"paper:{paper}":
+            continue
+        m = (by_id.get(e["source"]) or {}).get("meta") or {}
+        if m.get("status", "open") not in ("open",):
+            continue
+        sev = str(m.get("severity", "")).lower()
+        if blocking == (sev in _rg.BLOCKING_SEVERITIES):
+            n += 1
+    return n

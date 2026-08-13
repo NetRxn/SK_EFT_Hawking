@@ -79,11 +79,87 @@ def _replace_key(body: str, key: str, literal: str) -> tuple[str, int]:
     """Replace one `'key': <value>,` inside an entry body. Returns `(body, n_replaced)`.
 
     ⚠️ The value may span lines (the notes strings are long and wrapped), so the pattern
-    consumes up to the next key or the entry's end rather than to the next newline.
+    consumes up to the next sibling key or the entry's end rather than to the next newline.
+
+    ⚠️ **THE LOOKAHEAD IS THE WHOLE CORRECTNESS ARGUMENT, AND THE FIRST VERSION WAS WRONG.**
+    It read `'[a-z_]+':` — lowercase and underscore only — so a sibling key containing a digit
+    or a capital did not terminate the match and `.*?` ran straight through it. Confirmed by
+    probe: with `'iso_2019_ref'` sitting between `human_verified_notes` and `notes`, replacing
+    the notes field **deleted the `iso_2019_ref` pair entirely**, and both guards below passed
+    it (the file still parsed; the top-level entry count was unchanged). Same for an
+    `8-space` comment line, which is how a `# value disputed, do not mark verified` caveat
+    would vanish on a routine dashboard click.
+
+    It now stops at any sibling key OR a comment line. `_assert_only_changed` is the real
+    backstop; this pattern is the first line of defence, not the only one.
     """
     pat = re.compile(
-        rf"(?ms)^(        '{re.escape(key)}': ).*?(?=\n        '[a-z_]+': |\Z)")
+        rf"(?ms)^(        '{re.escape(key)}': ).*?"
+        rf"(?=\n        (?:'[A-Za-z0-9_]+':|#)|\Z)")
     return pat.subn(rf"\g<1>{literal.replace(chr(92), chr(92) * 2)},", body, count=1)
+
+
+def _entry_keys(src: str, key: str) -> list[str] | None:
+    """The key list of one `PARAMETER_PROVENANCE` entry, by AST. `None` if not found."""
+    for node in ast.walk(ast.parse(src)):
+        if not (isinstance(node, ast.Assign)
+                and any(getattr(t, "id", None) == "PARAMETER_PROVENANCE"
+                        for t in node.targets)
+                and isinstance(node.value, ast.Dict)):
+            continue
+        for k, v in zip(node.value.keys, node.value.values):
+            if isinstance(k, ast.Constant) and k.value == key and isinstance(v, ast.Dict):
+                return [kk.value for kk in v.keys if isinstance(kk, ast.Constant)]
+    return None
+
+
+def _current_verified_date(src: str, key: str) -> tuple[str | None, bool]:
+    """`(value, resolved)` for one entry's `human_verified_date`, by AST.
+
+    `resolved` is False when the entry or the field cannot be found, or when the value is not
+    a literal — every one of which is a reason to REFUSE rather than to proceed as though the
+    field were unset. Comments, line wrapping and quoting style are all irrelevant to the
+    AST, which is the entire reason it replaced a line-anchored regex here.
+    """
+    for node in ast.walk(ast.parse(src)):
+        if not (isinstance(node, ast.Assign)
+                and any(getattr(t, "id", None) == "PARAMETER_PROVENANCE"
+                        for t in node.targets)
+                and isinstance(node.value, ast.Dict)):
+            continue
+        for k, v in zip(node.value.keys, node.value.values):
+            if not (isinstance(k, ast.Constant) and k.value == key
+                    and isinstance(v, ast.Dict)):
+                continue
+            for kk, vv in zip(v.keys, v.values):
+                if isinstance(kk, ast.Constant) and kk.value == "human_verified_date":
+                    if isinstance(vv, ast.Constant):
+                        return (vv.value, True)
+                    return (None, False)      # present but not a literal — cannot judge
+            return (None, False)              # entry found, field absent
+    return (None, False)                      # entry not found
+
+
+def _assert_only_changed(before: str, after: str, key: str,
+                         allowed: set[str]) -> str | None:
+    """`None` if the edit touched only `allowed` fields of `key`; else the reason it did not.
+
+    ⚠️ **THIS IS THE GUARD THAT ACTUALLY WORKS.** Parsing and counting top-level entries —
+    the original pair — is blind to everything *inside* the entry being edited, which is
+    exactly where a regex edit does its damage. A swallowed sibling key leaves the file
+    parseable and the entry count unchanged, so both original guards passed the mutation
+    that deleted `iso_2019_ref`.
+    """
+    kb, ka = _entry_keys(before, key), _entry_keys(after, key)
+    if kb is None or ka is None:
+        return f"entry {key!r} could not be located after the edit"
+    if kb != ka:
+        lost, gained = sorted(set(kb) - set(ka)), sorted(set(ka) - set(kb))
+        return (f"the edit changed {key}'s field list — lost {lost}, gained {gained}. "
+                f"A regex edit that swallows a neighbouring field leaves the module "
+                f"parseable and the entry count unchanged, which is why neither of those "
+                f"checks catches it")
+    return None
 
 
 def set_human_verified(
@@ -115,11 +191,25 @@ def set_human_verified(
 
     start, end = span
     body = src[start:end]
-    current = re.search(r"^        'human_verified_date': (.+?),\s*$", body, re.M)
-    if current and current.group(1).strip() != "None" and not force:
-        return False, (f"{key} is already human-verified at {current.group(1)} — pass "
-                       f"force=True to overwrite. Silently replacing a recorded human "
-                       f"verification is not a thing this writer does")
+    # ⚠️ THE CURRENT VALUE COMES FROM THE AST, AND THE LINE REGEX IT REPLACES WAS A BYPASS.
+    # It required the value to end the line at a comma (`': (.+?),\s*$'`), so a perfectly
+    # ordinary trailing comment —
+    #     'human_verified_date': '2020-01-01',  # signed off by the operator
+    # — made the match fail, `current` read None, and the "already verified" refusal was
+    # SKIPPED ENTIRELY. A recorded human verification would have been silently overwritten
+    # by a routine confirm, on the registry backing a P1 gate. Constructed and confirmed.
+    #
+    # ⚠️ AND IT FAILS CLOSED. If the key is present but its value cannot be resolved, that is
+    # a refusal, not a licence: "I could not read the current value" must never behave like
+    # "there isn't one".
+    current, resolved = _current_verified_date(src, key)
+    if not resolved:
+        return False, (f"{key}'s `human_verified_date` could not be resolved from the "
+                       f"module — refusing rather than assuming it is unset")
+    if current is not None and not force:
+        return False, (f"{key} is already human-verified at {current!r} — pass force=True "
+                       f"to overwrite. Silently replacing a recorded human verification is "
+                       f"not a thing this writer does")
 
     note = notes.strip() or "Confirmed via the provenance dashboard"
     if actor:
@@ -145,12 +235,94 @@ def set_human_verified(
         return False, (f"the edit changed the entry count {before} -> {after} — nothing "
                        f"written")
     del tree
+    # ⚠️ ORDER MATTERS AND I GOT IT WRONG FIRST. This guard parses `new_src`, so running it
+    # before the SyntaxError check above turns a clean refusal ("would not parse") into an
+    # uncaught exception out of the writer.
+    reason = _assert_only_changed(src, new_src, key,
+                                  {"human_verified_date", "human_verified_notes"})
+    if reason:
+        return False, f"{reason} — nothing written"
 
     if dry_run:
         return True, f"{key}: would set human_verified_date={stamp} (dry run)"
 
     _atomic_write(PROVENANCE_PATH, new_src)
     return True, f"{key}: human_verified_date={stamp}"
+
+
+def withdraw_human_verified(key: str, notes: str, actor: str | None = None,
+                            dry_run: bool = False) -> tuple[bool, str]:
+    """Clear `human_verified_date` and record why. `(ok, message)`.
+
+    ⚠️ **THE ASYMMETRY THIS EXISTS TO CLOSE WAS WORSE THAN THE ORIGINAL DEFECT.** When only
+    `confirm` persisted, the dashboard's **Reject** button set `human_verified_date = None`
+    in memory, rendered a red `REJECTED` badge, and changed nothing on disk — so a
+    verification the operator had just retracted stayed on disk, kept the P1
+    `ParameterProvenance` gate green, and **had no UI route to withdraw it**. Sign-off stuck;
+    retraction evaporated. Before the writer existed, both were equally ephemeral and the
+    surface was at least uniformly honest.
+
+    **No `force` here, deliberately.** Withdrawing REDUCES what the tree claims; the guard on
+    `set_human_verified` exists to stop a claim being overwritten silently, and refusing a
+    retraction would keep an unwanted green in place — the opposite of what that guard is for.
+    """
+    note = (notes or "").strip() or "Withdrawn via the provenance dashboard"
+    return _write_fields(key, {"human_verified_date": None,
+                               "human_verified_notes": f"REJECTED: {note}"},
+                         actor=actor, dry_run=dry_run,
+                         what=f"withdrew human verification for {key}")
+
+
+def annotate_human_verified(key: str, notes: str, actor: str | None = None,
+                            dry_run: bool = False) -> tuple[bool, str]:
+    """Record a concern WITHOUT touching the verification date. `(ok, message)`.
+
+    The dashboard's **Flag** action. It deliberately leaves `human_verified_date` alone —
+    flagging raises a question, it does not answer one — but it must still PERSIST, or the
+    flag is a badge that vanishes on reload.
+    """
+    note = (notes or "").strip() or "Flagged via the provenance dashboard"
+    return _write_fields(key, {"human_verified_notes": f"FLAGGED: {note}"},
+                         actor=actor, dry_run=dry_run, what=f"flagged {key}")
+
+
+def _write_fields(key: str, updates: dict[str, str | None], actor: str | None,
+                  dry_run: bool, what: str) -> tuple[bool, str]:
+    """Apply one entry's field updates atomically, with every guard `set_human_verified` uses.
+
+    Shared so the three public operations cannot drift in their safety properties — the same
+    reason `close_finding` imports the extractor's id minter instead of reimplementing it.
+    """
+    src = PROVENANCE_PATH.read_text(encoding="utf-8")
+    span = _entry_span(src, key)
+    if span is None:
+        return False, f"unknown parameter key {key!r} — nothing written"
+    start, end = span
+    body = src[start:end]
+
+    for field_name, value in updates.items():
+        literal = "None" if value is None else _py_str(
+            f"{value} [{actor}]" if actor else value)
+        body, n = _replace_key(body, field_name, literal)
+        if not n:
+            return False, (f"{key} does not carry `{field_name}` — refusing rather than "
+                           f"inventing it")
+
+    new_src = src[:start] + body + src[end:]
+    try:
+        ast.parse(new_src)
+    except SyntaxError as exc:
+        return False, f"the edit would not parse ({exc}) — nothing written"
+    if _count_entries(src) != _count_entries(new_src):
+        return False, "the edit changed the entry count — nothing written"
+    reason = _assert_only_changed(src, new_src, key, set(updates))
+    if reason:
+        return False, f"{reason} — nothing written"
+
+    if dry_run:
+        return True, f"{what} (dry run)"
+    _atomic_write(PROVENANCE_PATH, new_src)
+    return True, what
 
 
 def _count_entries(src: str) -> int:

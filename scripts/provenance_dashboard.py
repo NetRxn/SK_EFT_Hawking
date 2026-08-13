@@ -1280,18 +1280,40 @@ def verify_param():
             actor=request.form.get('actor') or 'user:dashboard')
         if not ok:
             # A refusal is shown as a refusal. Rendering the green badge anyway is the
-            # exact defect being repaired, one layer up.
-            return (f'<span class="status-conflict">NOT SAVED: {_esc(msg)}</span>', 200)
+            # exact defect being repaired, one layer up. `status-badge` carries the padding
+            # and size every other badge in this row has — without it the refusal renders as
+            # full-size body text and looks like a different KIND of thing than the badge it
+            # replaced.
+            return (f'<span class="status-badge status-conflict">'
+                    f'NOT SAVED: {_esc(msg)}</span>', 200)
         entry['human_verified_date'] = now
         entry['human_verified_notes'] = notes or 'Confirmed via dashboard'
         status_class = 'status-human'
         status_text = 'HUMAN VERIFIED'
     elif action == 'reject':
+        # ⚠️ REJECT MUST PERSIST, AND ITS ABSENCE WAS WORSE THAN THE ORIGINAL DEFECT. When
+        # only `confirm` wrote to disk, this branch cleared the date IN MEMORY, rendered a
+        # red REJECTED badge, and left the verification on disk — still green to the P1
+        # gate, with no UI route to withdraw it. Sign-off stuck; retraction evaporated.
+        from src.core.provenance_writer import withdraw_human_verified
+        ok, msg = withdraw_human_verified(
+            key, notes, actor=request.form.get('actor') or 'user:dashboard')
+        if not ok:
+            return (f'<span class="status-badge status-conflict">'
+                    f'NOT SAVED: {_esc(msg)}</span>', 200)
         entry['human_verified_date'] = None
         entry['human_verified_notes'] = f'REJECTED: {notes}'
         status_class = 'status-conflict'
         status_text = f'REJECTED: {notes}'
     elif action == 'flag':
+        # Flag raises a question rather than answering one, so it leaves the date alone —
+        # but it must still persist, or it is a badge that vanishes on reload.
+        from src.core.provenance_writer import annotate_human_verified
+        ok, msg = annotate_human_verified(
+            key, notes, actor=request.form.get('actor') or 'user:dashboard')
+        if not ok:
+            return (f'<span class="status-badge status-conflict">'
+                    f'NOT SAVED: {_esc(msg)}</span>', 200)
         entry['human_verified_notes'] = f'FLAGGED: {notes}'
         status_class = 'status-unverified'
         status_text = f'FLAGGED: {notes}'
@@ -5254,7 +5276,7 @@ def _readiness_build_data() -> dict:
             'evidence': m.get('evidence', []),
             'blockers': m.get('blockers', []),
             # ADR-012 D15 S1 — the identity the evaluator now keeps. A gate cell that
-            # cannot name the finding behind it is a dead end, and 4,879 FLAGS edges were
+            # cannot name the finding behind it is a dead end, and 4,895 FLAGS edges were
             # invisible to the operator because of one `label[:60]` in the evaluator.
             'blocker_refs': m.get('blocker_refs', []),
             'blockers_total': m.get('blockers_total'),
@@ -5387,7 +5409,11 @@ def _readiness_heatmap_html(data: dict, signals: dict) -> str:
                 f'<tr><th class="paper-col{focused_cls}" '
                 f'data-on:click="{esc(focus_expr)}">{esc(paper_id)}</th>'
                 f'<td><span class="paper-state-{pstate}">{pstate}</span> '
-                f'<span style="color:var(--grey);font-size:0.72rem">{passed}/11</span></td>'
+                # ⚠️ The SAME hardcoded roster the focus pane carried, on the pane that is
+                # read FIRST — the focus pane only opens on a click. Fixing one and
+                # commenting it as done left the drift alive on the busier surface.
+                f'<span style="color:var(--grey);font-size:0.72rem">'
+                f'{passed}/{len(gate_list)}</span></td>'
             )
             for g in gate_list:
                 is_focus_cell = (active_paper == paper_id and active_gate == g['gate'])

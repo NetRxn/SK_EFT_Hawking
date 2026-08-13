@@ -120,6 +120,97 @@ def test_the_edit_preserves_every_other_entry(sandbox):
     ast.parse(after_src)
 
 
+def test_a_sibling_field_with_a_DIGIT_in_its_name_is_not_swallowed(sandbox):
+    """⚠️ CONSTRUCTED AND CONFIRMED BY REVIEW, NOT IMAGINED. `_replace_key`'s lookahead was
+    `'[a-z_]+':` — no digits, no capitals — so `.*?` ran straight through a sibling like
+    `iso_2019_ref` and deleted the whole pair. The file still parsed and the top-level entry
+    count was unchanged, **so both of the original guards passed it.**
+
+    That is why `_assert_only_changed` exists: parsing and counting entries are blind to
+    everything INSIDE the entry being edited, which is precisely where a regex edit does its
+    damage."""
+    src = sandbox.read_text(encoding="utf-8")
+    key = _first_unverified(sandbox)
+    span = pw._entry_span(src, key)
+    injected = src[:span[0]] + src[span[0]:span[1]].replace(
+        "        'human_verified_notes': None,\n",
+        "        'human_verified_notes': None,\n"
+        "        'iso_2019_ref': 'ISO 80000-1:2022',\n", 1) + src[span[1]:]
+    sandbox.write_text(injected, encoding="utf-8")
+
+    ok, msg = pw.set_human_verified(key, date="2026-08-12", notes="probe")
+    after = sandbox.read_text(encoding="utf-8")
+    assert "iso_2019_ref" in after, (
+        f"the sibling field was deleted by a routine verification write (ok={ok}, {msg})")
+    assert ok, msg
+
+
+def test_an_adjacent_CAVEAT_COMMENT_is_not_swallowed(sandbox):
+    """The same defect in its most dangerous form: `# do not mark verified, value disputed`
+    sitting beside the field, deleted by the click it was written to prevent."""
+    src = sandbox.read_text(encoding="utf-8")
+    key = _first_unverified(sandbox)
+    span = pw._entry_span(src, key)
+    caveat = "        # DO NOT MARK VERIFIED: value disputed, see audit 2026-08-01\n"
+    injected = src[:span[0]] + src[span[0]:span[1]].replace(
+        "        'human_verified_notes': None,\n",
+        caveat + "        'human_verified_notes': None,\n", 1) + src[span[1]:]
+    sandbox.write_text(injected, encoding="utf-8")
+
+    pw.set_human_verified(key, date="2026-08-12", notes="probe")
+    assert "DO NOT MARK VERIFIED" in sandbox.read_text(encoding="utf-8"), (
+        "the caveat comment was deleted by the write it warned against")
+
+
+# ── Withdraw and annotate — the two buttons that used to lie ──────────────────────────
+
+def test_reject_WITHDRAWS_the_verification_on_disk(sandbox):
+    """⚠️ THE ASYMMETRY THAT WAS WORSE THAN THE ORIGINAL DEFECT. With only `confirm`
+    persisting, Reject cleared the date in memory, rendered a red badge, and left the
+    verification on disk — still green to the P1 gate, with no route to withdraw it."""
+    key = _first_unverified(sandbox)
+    assert pw.set_human_verified(key, date="2026-08-12")[0]
+    ok, msg = pw.withdraw_human_verified(key, "source is wrong", actor="user:test")
+    assert ok, msg
+    entry = _entry_text(sandbox, key)
+    assert "'human_verified_date': None," in entry
+    assert "REJECTED: source is wrong" in entry
+
+
+def test_withdrawing_needs_no_FORCE(sandbox):
+    """Withdrawing REDUCES what the tree claims. The force guard exists to stop a claim
+    being overwritten silently; refusing a retraction would keep an unwanted green in
+    place — the opposite of what that guard is for."""
+    key = _first_unverified(sandbox)
+    assert pw.set_human_verified(key, date="2026-08-12")[0]
+    assert pw.withdraw_human_verified(key, "retract")[0]
+
+
+def test_flag_persists_and_leaves_the_DATE_alone(sandbox):
+    """Flagging raises a question rather than answering one — but a flag that vanishes on
+    reload is a badge, not a record."""
+    key = _first_unverified(sandbox)
+    assert pw.set_human_verified(key, date="2026-08-12")[0]
+    assert pw.annotate_human_verified(key, "check the units")[0]
+    entry = _entry_text(sandbox, key)
+    assert "'human_verified_date': '2026-08-12'," in entry
+    assert "FLAGGED: check the units" in entry
+
+
+def test_every_write_path_refuses_an_unknown_key(sandbox):
+    before = sandbox.read_text(encoding="utf-8")
+    for fn in (pw.withdraw_human_verified, pw.annotate_human_verified):
+        ok, msg = fn("NOT_A_REAL_PARAMETER", "x")
+        assert not ok and "unknown parameter key" in msg
+    assert sandbox.read_text(encoding="utf-8") == before
+
+
+def _entry_text(path: Path, key: str) -> str:
+    src = path.read_text(encoding="utf-8")
+    span = pw._entry_span(src, key)
+    return src[span[0]:span[1]]
+
+
 def test_a_write_that_would_not_parse_is_refused(sandbox, monkeypatch):
     """SEEDED: force the replacement to emit a broken literal and confirm nothing lands."""
     before = sandbox.read_text(encoding="utf-8")
@@ -161,10 +252,47 @@ def test_the_dashboard_confirm_path_CALLS_the_writer():
     assert "set_human_verified" in _calls("scripts/provenance_dashboard.py")
 
 
+def _func_calls(relpath: str, func: str) -> set[str]:
+    """Call names inside ONE function — not the whole module."""
+    tree = ast.parse((ROOT / relpath).read_text(encoding="utf-8"))
+    fn = next((n for n in ast.walk(tree)
+               if isinstance(n, ast.FunctionDef) and n.name == func), None)
+    assert fn is not None, f"{func} not found in {relpath}"
+    out = set()
+    for c in ast.walk(fn):
+        if isinstance(c, ast.Call):
+            out.add(getattr(c.func, "id", None) or getattr(c.func, "attr", None))
+    return out - {None}
+
+
 def test_the_write_is_atomic():
     """A crash midway through rewriting `provenance.py` breaks every importer in the repo
-    at once — the graph builder, the dashboard, the gates and `validate.py` together."""
-    assert "replace" in _calls("src/core/provenance_writer.py")
+    at once — the graph builder, the dashboard, the gates and `validate.py` together.
+
+    ⚠️ **THE FIRST VERSION OF THIS TEST COULD NOT FAIL.** It asserted `"replace" in
+    _calls(module)` — a MODULE-WIDE call set that already contains `str.replace`, from
+    `literal.replace(chr(92), …)` in `_replace_key`. Confirmed by mutation: swapping
+    `os.replace(tmp, path)` for a plain `path.write_text(...)` left all thirteen tests
+    green. The single test naming atomicity was satisfied by an unrelated string method.
+    Scope the assertion to the function that must be atomic.
+    """
+    inner = _func_calls("src/core/provenance_writer.py", "_atomic_write")
+    assert "mkstemp" in inner and "replace" in inner, (
+        f"`_atomic_write` no longer does temp-and-replace (calls: {sorted(inner)})")
+    assert "write_text" not in _func_calls(
+        "src/core/provenance_writer.py", "set_human_verified"), (
+        "the writer bypasses `_atomic_write` and writes the registry directly")
+
+
+def test_the_dashboard_calls_the_writer_FROM_THE_VERIFY_ROUTE():
+    """Scoped to the route. A module-wide assertion stays green if the call is moved into
+    dead code, which is the shape that would render a badge over nothing."""
+    for fn in ("verify_param",):
+        calls = _func_calls("scripts/provenance_dashboard.py", fn)
+        assert {"set_human_verified", "withdraw_human_verified",
+                "annotate_human_verified"} <= calls, (
+            f"{fn} does not route all three actions through the writer (calls: "
+            f"{sorted(c for c in calls if 'verified' in c)})")
 
 
 def test_the_write_flag_message_no_longer_names_the_bulk_sweep_as_the_route():

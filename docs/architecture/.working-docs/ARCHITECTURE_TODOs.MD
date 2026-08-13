@@ -2536,7 +2536,7 @@ Lean by CONTENT via the lean4 skill, and cross-check module existence against `l
 >
 > ✅ **RE-FILED 2026-08-12** (ADR-012 P8) —
 > [`papers/AutomatedReviews/2026-08-12-substrate-lane-refile/substrate-lane-refile.md`](../../../papers/AutomatedReviews/2026-08-12-substrate-lane-refile/substrate-lane-refile.md).
-> **Every claim was re-measured at HEAD first, and that changed the answer for four of the nine
+> **Every claim was re-measured at HEAD first, and that changed the answer for three of the eleven
 > sub-items**: D45-c, D47 and D49 were already fixed — several of them *in the commit that filed
 > them here*, which is precisely why a filed finding's state is a claim rather than a
 > measurement. Eight findings were minted, each with its own lane: one `substrate` (D45-a, the

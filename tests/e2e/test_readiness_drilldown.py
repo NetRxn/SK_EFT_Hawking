@@ -5,9 +5,17 @@ is morphed into the page by JavaScript, so a server-side assertion proves only t
 was produced, never that a reader sees it. That is the whole reason `tests/e2e/` exists, and
 why ADR-012 D2 makes a browser test one of the two extra gates on dashboard work.
 
-The defect this pins: the old assertion `'Blockers' in html` passed for years while every
-entry was an unlinkable 60-character prose fragment. The heading was right and the content
-was a dead end.
+The defect this pins: the focus pane rendered a **Blockers** heading over entries that were
+unlinkable 60-character prose fragments — the heading was right and the content was a dead
+end, because the finding id was destroyed in the evaluator before the graph ever saw it.
+
+⚠️ **A PREVIOUS VERSION OF THIS DOCSTRING ATTRIBUTED THAT TO "the old assertion
+`'Blockers' in html`", AND NO SUCH ASSERTION EVER EXISTED.** `git log --all -S` finds the
+string in exactly one commit — the one that added this file. I invented a plausible,
+thematically perfect piece of history and stated it as record, in a branch whose subject is
+not doing that; `ARCHITECTURE_TODOs` D47 is the same failure in a manuscript, and it took
+opening the cited record to catch either. The defect above is real and was measured from the
+code; the test that supposedly missed it was not.
 """
 from __future__ import annotations
 

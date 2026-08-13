@@ -8,7 +8,7 @@ was `qi-{gate.lower()}`, derived **solely** from the gate name, so the register 
 hold at most one item per gate for all time. Nine of the eleven gate ids sit in
 `## Closed Items`, and a closed id is skipped forever — the detector was switched off
 by its own success. Separately, the largest single bucket in the corpus
-(`unclassified`, 246 open findings across 25 papers) was dropped by a bare `continue`
+(`unclassified`, 246 open findings across 25 papers under the OLD `inferred_paper`-only partition; `--stats` now reports 42 under the shipped paper-or-bundle partition) was dropped by a bare `continue`
 with no trace, which reads as "no recurrent failure modes" rather than "the detector
 cannot name them".
 
@@ -210,7 +210,7 @@ def test_the_derivation_consults_the_closure_windows():
 # ── the end-to-end assertion ───────────────────────────────────────────────
 
 def test_the_derivation_is_not_saturated(findings):
-    """A corpus with 1,655 findings, 946 of them open, must not produce zero items."""
+    """A corpus of this size (2026-08-12: 1,663 findings, 954 open), must not produce zero items."""
     items = q.cluster_findings(findings)
     assert items, "derivation still saturated"
 
@@ -218,7 +218,7 @@ def test_the_derivation_is_not_saturated(findings):
 def test_bundle_era_findings_reach_the_cross_paper_threshold(findings, stats):
     """⚠️ THE SECOND CAUSE OF THE SATURATION, and one the plan does not name.
     Partitioning on `inferred_paper` alone collapses every bundle-era finding onto the
-    single `(unknown)` sentinel — measured live, 687 of 946 open findings carry
+    single `(unknown)` sentinel — measured live, 687 open findings carry
     `inferred_bundle` and NO `inferred_paper`. The ≥2-paper threshold was therefore
     being evaluated against a seventh of the corpus's spread.
     `bundle_readiness.load_findings_by_paper` took this fallback on 2026-07-31 after

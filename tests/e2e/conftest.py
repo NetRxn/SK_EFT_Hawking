@@ -137,3 +137,48 @@ def console_errors(page):
     )
     page.on("pageerror", lambda e: errors.append(f"pageerror: {e}"))
     return errors
+
+
+# ═══════════════════════════════════════════════════════════════════════════════════════
+# Registry guard — autouse, because a browser test can now WRITE the parameter registry
+# ═══════════════════════════════════════════════════════════════════════════════════════
+
+PROVENANCE_PATH = (Path(__file__).resolve().parent.parent.parent
+                   / "src" / "core" / "provenance.py")
+
+
+@pytest.fixture(autouse=True)
+def _provenance_registry_guard():
+    """Restore `src/core/provenance.py` after every e2e test. **Autouse, deliberately.**
+
+    ⚠️ **THIS BECAME NECESSARY THE MOMENT `/verify` STARTED PERSISTING.** `test_parameters_tab
+    .py::test_confirm_button_marks_human_verified` has clicked Confirm since Phase 3, guarded
+    only by a fixture that restored `docs/verification_log.jsonl`. Once ADR-012 P9a wired
+    `set_human_verified` into that route, a green test run began **writing a real
+    `human_verified_date` into a tracked file** — manufacturing exactly the evidence the P1
+    `ParameterProvenance` gate exists to demand, one `git add` away from being believed.
+
+    ⚠️ **AND IT COMPOUNDED.** `test_parameter_signoff_persists.py` skips when the registry is
+    dirty. Collection is alphabetical, so it ran first, restored correctly, and then
+    `test_parameters_tab.py` left the file modified — silently disabling the branch's
+    flagship persistence proof on every subsequent run. A guard that skips is a guard that
+    switches itself off.
+
+    Entering dirty is therefore a **FAILURE**, not a skip: it means a previous run leaked,
+    and continuing would let this fixture restore someone else's uncommitted work.
+    """
+    import subprocess
+    root = PROVENANCE_PATH.parent.parent.parent
+    dirty = subprocess.run(["git", "status", "--porcelain", str(PROVENANCE_PATH)],
+                           cwd=root, capture_output=True, text=True).stdout.strip()
+    assert not dirty, (
+        f"{PROVENANCE_PATH.name} is already modified before this test ran. Either a previous "
+        f"e2e run leaked a write, or you have uncommitted work here — restoring it "
+        f"afterwards would destroy the latter. Resolve it, then re-run.")
+    original = PROVENANCE_PATH.read_text(encoding="utf-8")
+    try:
+        yield
+    finally:
+        if PROVENANCE_PATH.read_text(encoding="utf-8") != original:
+            PROVENANCE_PATH.write_text(original, encoding="utf-8")
+        assert PROVENANCE_PATH.read_text(encoding="utf-8") == original

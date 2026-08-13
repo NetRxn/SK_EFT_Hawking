@@ -113,10 +113,16 @@ class GateResult:
                 'state': self.state,
                 'measured': self.measured,
                 'evidence': self.evidence[:50],
-                # ⚠️ DISCLOSE THE CAPS. `evidence[:50]` and `blockers[:50]` have truncated
-                # silently since this method was written, so a reader could not tell a paper
-                # with 50 blockers from one with 500 — and "no silent caps" is a standing
-                # rule here precisely because a hidden truncation reads as a complete list.
+                # ⚠️ DISCLOSE THE CAPS, AND THESE TOTALS ARE NOW EXACT FOR ALL ELEVEN GATES.
+                # `evidence[:50]` / `blockers[:50]` truncated silently since this method was
+                # written. The first fix moved the cap out of `_eval_fix_propagation` ONLY,
+                # which left ten evaluators slicing [:10] or [:20] BEFORE assigning — so
+                # `blockers_total` was a post-truncation length for them, i.e. exactly the
+                # "disclosure that lies" the sibling comment says must never exist, and
+                # `blockers_truncated` (> 50) was structurally unreachable for all ten.
+                # Nothing was wrong on screen — measured max was 16 against a cap of 20 —
+                # but the headroom was four. Every evaluator now assigns its full list and
+                # the cap lives here, at the one layer that can still see what it cut.
                 'blockers': self.blockers[:50],
                 'blockers_total': len(self.blockers),
                 'blockers_truncated': len(self.blockers) > 50,
@@ -261,7 +267,7 @@ def _eval_citation_integrity(paper: dict, idx: GraphIndex) -> GateResult:
     missing = sorted(bibkeys - registered_keys)
     r.evidence.append(f'{len(bibkeys)} bibitems, {len(bibkeys) - len(missing)} registered')
     if missing:
-        r.blockers = [f'unregistered bibkey: {k}' for k in missing[:20]]
+        r.blockers = [f'unregistered bibkey: {k}' for k in missing]
         r.state = 'blocked'
         r.notes = f'{len(missing)} bibkeys missing from CITATION_REGISTRY'
     else:
@@ -304,7 +310,7 @@ def _eval_cross_paper_consistency(paper: dict, idx: GraphIndex) -> GateResult:
                     break
 
     if total > 0:
-        r.blockers = [f'{e["target"]}: {e.get("conflict_detail","")}' for e in contradicts_out[:10]]
+        r.blockers = [f'{e["target"]}: {e.get("conflict_detail","")}' for e in contradicts_out]
         r.state = 'blocked'
         r.notes = f'{total} CONTRADICTS edges'
     elif inconsistencies > 0:
@@ -389,7 +395,7 @@ def _eval_parameter_provenance(paper: dict, idx: GraphIndex) -> GateResult:
                        'counts.tex are structurally sourced and not counted here)')
     elif unverified:
         # Treat as blocked for submission but acceptable during draft
-        r.blockers = [p.replace('param:', '', 1) for p in unverified[:20]]
+        r.blockers = [p.replace('param:', '', 1) for p in unverified]
         r.state = 'blocked'
         r.notes = f'{len(unverified)} parameters lack human_verified_date'
     else:
@@ -493,8 +499,8 @@ def _eval_computation_correctness(paper: dict, idx: GraphIndex) -> GateResult:
         )
     if bounds_only or no_tests:
         r.blockers = (
-            [f'bounds-only: {b.replace("formula:","",1)}' for b in bounds_only[:10]] +
-            [f'no tests: {b.replace("formula:","",1)}' for b in no_tests[:10]]
+            [f'bounds-only: {b.replace("formula:","",1)}' for b in bounds_only] +
+            [f'no tests: {b.replace("formula:","",1)}' for b in no_tests]
         )
         r.state = 'blocked'
         r.notes = (f'{len(bounds_only)} formulas bounds-only + '
@@ -565,7 +571,7 @@ def _eval_lean_proof_substance(paper: dict, idx: GraphIndex) -> GateResult:
         f'{len(flagged)} overlap with PlaceholderMarkers'
     )
     if flagged:
-        r.blockers = [f'placeholder cited: {n}' for n in flagged[:20]]
+        r.blockers = [f'placeholder cited: {n}' for n in flagged]
         r.state = 'blocked'
         r.notes = f'{len(flagged)} cited theorems are placeholders (rfl / Equiv.refl / trivial)'
     else:
@@ -617,7 +623,7 @@ def _eval_assumption_disclosure(paper: dict, idx: GraphIndex) -> GateResult:
         f'{len(disclosed)} referenced in paper, {len(undisclosed)} undisclosed'
     )
     if undisclosed:
-        r.blockers = [f'undisclosed hypothesis: {k}' for k in undisclosed[:10]]
+        r.blockers = [f'undisclosed hypothesis: {k}' for k in undisclosed]
         r.state = 'blocked'
         r.notes = f'{len(undisclosed)} hypothesis dependencies not named in paper'
     elif not assumed_hyp_ids:
@@ -676,7 +682,7 @@ def _eval_narrative_grounding(paper: dict, idx: GraphIndex) -> GateResult:
         f'{len(interesting) - len(unsupported)} have SUPPORTS edges'
     )
     if unsupported:
-        r.blockers = unsupported[:10]
+        r.blockers = unsupported
         r.state = 'blocked'
         r.notes = f'{len(unsupported)} "interesting" prose claims lack formal support'
     elif not interesting:
@@ -743,7 +749,7 @@ def _eval_production_run_health(paper: dict, idx: GraphIndex) -> GateResult:
                       f'{len(success_runs)} successful, {len(failed)} failed')
     if failed:
         r.blockers = [f'failed run: {r_.get("name","?")} ({r_.get("meta",{}).get("status")})'
-                      for r_ in failed[:10]]
+                      for r_ in failed]
         r.state = 'blocked'
         r.notes = f'{len(failed)} failed/unknown ProductionRuns linked to paper'
     elif mc_claim and not success_runs:
@@ -828,7 +834,7 @@ def _eval_numerical_freshness(paper: dict, idx: GraphIndex) -> GateResult:
         blockers.append(f'{inline_literals} inline unit-bearing literals in body — move to \\input{{tables/*.tex}}')
 
     if blockers:
-        r.blockers = blockers[:10]
+        r.blockers = blockers
         r.state = 'needs-recheck'
         parts = []
         if stale_reports:
@@ -868,7 +874,7 @@ def _eval_first_claim_verification(paper: dict, idx: GraphIndex) -> GateResult:
         r.state = 'needs-recheck'
         r.notes = ('first-claim verification ledger not yet in place — '
                    f'{len(first_claims)} claims need manual verification')
-        r.blockers = [pc['label'] for pc in first_claims[:10]]
+        r.blockers = [pc['label'] for pc in first_claims]
     else:
         r.state = 'passed'
         r.notes = 'no first-in-proof-assistant claims in abstract'
@@ -958,7 +964,7 @@ def _eval_fix_propagation(paper: dict, idx: GraphIndex) -> GateResult:
     if blocking:
         # ⚠️ THE CAP MOVED, and that is not incidental. This was `blocking[:10]` HERE, so
         # `len(self.blockers)` in the payload counted the truncated list — meaning a
-        # `blockers_total` computed there would have reported 10 for a paper with 34 and
+        # `blockers_total` computed there would have reported 10 for a paper carrying 44 and
         # called itself a disclosure. A cap can only be disclosed by a layer that can still
         # see what it cut. The evaluator now assigns everything; `to_node_payload` bounds
         # the payload and states both figures; the dashboard bounds the DISPLAY.

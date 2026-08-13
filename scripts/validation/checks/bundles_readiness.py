@@ -417,8 +417,19 @@ def _required_open_ceilings() -> dict[str, int]:
 #:
 #: The claim is that this is previously-INVISIBLE debt becoming visible, not new debt: every
 #: item was written down on **2026-08-11**, before this baseline was frozen on 2026-08-12, and
-#: the re-file document re-measures each one at HEAD (four of the nine were already fixed and
-#: are NOT filed).
+#: the re-file document re-measures each one at HEAD.
+#:
+#: ⚠️ **CORRECTED — this justification miscounted its own source.** It read "four of the nine
+#: were already fixed and are NOT filed", which is unsatisfiable: eight findings were minted,
+#: and 8 + 4 = 12, not 9. Measured against the re-file document: **eleven** sub-items
+#: (D45-a..d, D46-a..d, D47, D48, D49), of which **three** are marked fixed-and-not-filed
+#: (D45-c, D47, D49) and **eight** were filed. The "four of the nine" phrasing came from the
+#: re-file document's own prose, which says "four" and then names three — so the error
+#: propagated from there rather than originating here, and both are fixed.
+#:
+#: The raise itself reproduces exactly and is unaffected: the eight findings carry 1 critical
+#: + 4 major = **5 blocking**, and 47 + 5 = 52. A reviewer re-deriving this raise can now
+#: reconcile every number in it, which is the entire point of an auditable ceiling change.
 #:
 #: ⚠️ **THERE IS NO MECHANICAL DISCRIMINATOR BEHIND THAT CLAIM, and pretending otherwise would
 #: be worse than the raise.** To this check, five findings recorded a day earlier and five

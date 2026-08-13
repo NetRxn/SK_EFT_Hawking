@@ -1095,7 +1095,7 @@ targets. That is the re-key working — the records became live — but it means
 need reconciling by hand rather than by a second batch.
 
 **P8 — Substrate lane wiring (D4). ✅ COMPLETE 2026-08-12.** Eight findings minted from the five
-sub-items that survived re-measurement — **four of the nine were already fixed, several in the very
+sub-items that survived re-measurement — **three of the eleven were already fixed, several in the very
 commit that filed them into the working doc.** Lanes are mixed exactly as D4 predicted and were
 assigned per item: one `substrate` (the canonical theorem-vs-implementation disagreement), three
 `lean`, three `infra`, one `prose`. `WAVE_EXECUTION_PIPELINE.md` gains the lane taxonomy at Stage
