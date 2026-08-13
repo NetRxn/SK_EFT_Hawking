@@ -811,35 +811,54 @@ def check_bundle_source_freshness() -> CheckResult:
 # guard and the sentence a human reads cannot diverge into two rules.
 #
 # Down-only, per CHECK_AUTHORING_GUIDE §2.3. Lower either with a stated reason.
-_INDEX_NARRATIVE_COUNT_CEILING: int = 19
+_INDEX_NARRATIVE_COUNT_CEILING: int = 4
 """Hand-written counts in the Index's narrative, outside the AUTOGEN blocks.
 
-⚠️ **THE TARGET IS ZERO, AND 19 IS DEBT, NOT AN ALLOWANCE.** The Index's stated
+⚠️ **THE TARGET IS ZERO, AND THIS IS DEBT, NOT AN ALLOWANCE.** The Index's stated
 contract is that no number in it is hand-written: counts live in `docs/counts.json`
-and reach the file through the AUTOGEN blocks. This ceiling exists to stop the debt
-growing while it is paid down, and every commit that removes one should lower it.
+and reach the file through the AUTOGEN blocks. Every commit that removes one lowers
+this.
 
-Measured 2026-08-13 at 19, after pruning a ~10 KB nested changelog from the header.
-Each is a second census beside the generated one, which is exactly the failure that
-motivated the leg: the pruned header stated a theorem count roughly ten thousand
-below the AUTOGEN table a few lines down, in the same file, green throughout.
+**19 → 4, measured 2026-08-13**, in the commit that also took the file 93 → 79 KB —
+inside its 50–80 KB target rather than merely under its 100 KB ceiling. What went, and
+why it was pollution rather than content: a `Recent ships` changelog and a `Build state`
+snapshot (13 KB, wave history the roadmaps own — rule 1), plus four hand-copied counts
+that had drifted by roughly a factor of two against the AUTOGEN table in the same file
+(`936 Lean modules` vs 2040, `12463 thm` vs 22669, `All 17 bundles` vs 21) or duplicated
+it verbatim (`322 theorems across 44 runs`).
 
-⚠️ The pattern matches adjacency and takes false positives (a year beside the word
-"Theorem", the `0 axiom` / `0 sorry` invariant restated). That is deliberate: they
-sit in the baseline, and the ratchet is down-only, so imprecision costs a slightly
-high ceiling and never a missed regression. It does mean the floor cannot reach zero
-by pruning alone — the last few will need the pattern tightened, with the ceiling
-re-measured in that commit.
+**The 4 that remain are not pollution**, which is why the pattern was tightened in the
+same commit rather than the ceiling parked above noise:
+
+* two rows of the hand-maintained §3.1 subdirectory table, which the Index's own header
+  declares is not auto-generated — a per-family roster, not a second census;
+* two restatements of the zero-`sorry` invariant inside declaration descriptions.
+
+Driving those to zero means giving §3.1 a generator and rephrasing two descriptions;
+neither is a doc edit, so both belong in a later commit rather than a looser regex.
 """
 
 
 # Same shape as `architecture_inventory_fresh`'s narrative-count pattern, over the
-# nouns the Index actually publishes. Adjacency-matched and deliberately imprecise
-# — see the ceiling's docstring for why that is the right trade here.
+# nouns the Index actually publishes.
+#
+# ⚠️ TWO NEGATIVE GUARDS, both added 2026-08-13 after the population was pruned from
+# 19 to 7 and every survivor turned out to be a false positive or a legitimate entry.
+# A ratchet whose residue is noise cannot be driven to zero, and a number that does
+# not mean what it says stops being read.
+#
+#   * `(?!(?:19|20)\d\d[\s*_`]*(?:theorems?|thm)\b)` — a YEAR beside the word
+#     "Theorem" is a citation, not a count: `DMNO 2010 Theorem 5.2`.
+#     ⚠️ Stated blind spot: a genuine count that happens to fall in 1900–2099 and is
+#     written immediately before "theorems" is now invisible. Narrow and accepted;
+#     the alternative is a permanent false positive that keeps the floor off zero.
+#   * `mod\b(?!\s*[-\d])` — `mod` abbreviates "modules" in a count (`936 mod`) and
+#     means modular arithmetic in `mod 2` / `mod-2`. Only the arithmetic form is
+#     followed by a digit or hyphen.
 _INDEX_COUNT_RE = re.compile(
-    r"(?<![-#\w])\d[\d,]*[\s*_`]*"
-    r"(?:theorems?|thm|modules?|mod|declarations?|axioms?|sorr(?:y|ies)|definitions?"
-    r"|bundles?|papers?|notebooks?|figures?|pytest cases|checks?|gates?)\b",
+    r"(?<![-#\w])(?!(?:19|20)\d\d[\s*_`]*(?:theorems?|thm)\b)\d[\d,]*[\s*_`]*"
+    r"(?:theorems?|thm|modules?|mod\b(?!\s*[-\d])|declarations?|axioms?|sorr(?:y|ies)"
+    r"|definitions?|bundles?|papers?|notebooks?|figures?|pytest cases|checks?|gates?)\b",
     re.IGNORECASE)
 
 

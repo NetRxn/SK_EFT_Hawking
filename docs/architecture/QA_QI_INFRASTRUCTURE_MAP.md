@@ -139,6 +139,7 @@ is the load-bearing column:** content-hash and content-compare are sound; mtime 
 | `docs/counts.json` / `.tex` | `update_counts.py` | mtime vs sources | yes |
 | `papers/*/tables/*.tex` | `render_paper_tables.py` | mtime | yes |
 | Inventory-Index autogen blocks | `update_inventory_index.py` | **content compare** | yes |
+| Inventory-Index **narrative** (everything outside those blocks) | a human | **contract legs in `inventory_index_autogen_fresh`** — see §2.1 | no |
 | `lean/atlas_view.json` | `atlas_view.py` | **content compare** (rebuilds) | yes |
 | `docs/ATLAS_HEATMAP.md` | `atlas_heatmap.py` | **content compare** | yes |
 | `lean/SKEFTHawking/KernelNoGos.lean` | `gen_kernel_nogos_module.py` | **content compare** | yes |
@@ -150,6 +151,50 @@ is the load-bearing column:** content-hash and content-compare are sound; mtime 
 | `docs/QI_REGISTER.md` | `qi_register.py` | **none** — *re-parses its own Closed Items* | **no** |
 | PG + AGE `sk_eft` | `build_graph.write_graph_to_pg` | **none** (full delete + rewrite) | opt-in only |
 | `figures/provenance_graph.json` | `build_graph --out` | **none** | **no** |
+
+### 2.1 The Inventory pair — one instrument in two halves, and one file in two halves
+
+`SK_EFT_Hawking_Inventory_Index.md` and `SK_EFT_Hawking_Inventory.md` answer *what is this
+module* — the question this directory deliberately does not own (see
+[`README.md`](README.md#what-is-deliberately-not-here)). **They are one instrument:** the
+Index holds `file path + one-line summary` and nothing else; the Inventory holds the prose.
+Find a thing in the Index, understand it in the Inventory. `CLAUDE.md` routes a reader to
+the Index; the Index's own header states the contract.
+
+**The Index is also one file in two halves, with different guarantees, and the split is the
+whole design:**
+
+| half | written by | guarantee |
+|---|---|---|
+| inside `<!-- AUTOGEN:… -->` markers | `update_inventory_index.py`, from `docs/counts.json` | derived; content-compared; **advisory** freshness leg, because running the generator fixes it |
+| everything outside them | a human | **two blocking legs**, both reading the Index's own declared rules |
+
+The blocking legs are `size_ceiling` and `no_counts_outside_autogen`, plus a
+`narrative_seam` guard. Each is worth naming for a reason that generalises:
+
+* **The size ceiling is parsed out of the Index's own `Keep under N KB` sentence**, not
+  hardcoded here, so the guard and the rule a human reads cannot drift into two rules. A
+  *deleted* ceiling reports UNMEASURABLE rather than passing — removing the rule must not
+  remove the guard silently.
+* **No count outside the AUTOGEN blocks**, ratcheted down-only toward zero. This is
+  `architecture_inventory_fresh`'s counts rule extended to the document that needed it, not
+  a second mechanism built beside it.
+* **The seam is the masking, not the walk.** An unmatched `AUTOGEN BEGIN` masks every line
+  after it, so the counts leg would walk a shrinking population and report a clean bill —
+  the defect this whole directory is about. It fails loudly instead, with the counts leg
+  *suppressed* rather than rendered green beside a population nobody can vouch for.
+
+⚠️ **The narrative half had no guard at all until 2026-08-13, and that is where the damage
+was.** The generated table was fresh while the prose around it was two months stale — a
+theorem count roughly half the generated one, a bundle roster short of the live one, and a
+sentence asserting this repo has no `CLAUDE.md`, which it has and which is the primary
+bootstrap. A reader who believes that last one skips the bootstrap and never learns what
+they do not know. Every gate was green throughout, because every gate looked only inside
+the markers.
+
+**The generalisable shape:** a half-generated document inherits the credibility of its
+generated half. Gating only the derived part is not partial coverage — it is coverage
+pointed away from the part that rots.
 
 **The root-aggregate clause in row 1 is load-bearing.** `lean/SKEFTHawking.lean` sits one
 level *above* the hashed subtree and alone decides which modules are in scope for extraction.
