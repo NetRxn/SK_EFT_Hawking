@@ -282,6 +282,36 @@ four production-seeded mutations, its `PRODUCTION_SEEDED` membership and its `MU
 entry transfer to `module_census_fresh`. `FIXTURE_ONLY_CEILING` is re-measured in the same commit.
 Deleting a check that carries a mutation entry silently loosens the ratchet that tracks them.
 
+⚠️ **D10 CORRECTED 2026-08-13, measured at HEAD. Nothing transfers, and that is the stronger
+result.** Three of the Index check's four legs guard hazards the census **does not have**:
+
+| Index leg | what it guards | census |
+|---|---|---|
+| `size_ceiling` | the Index bloating past the limit it declares for itself | no declared ceiling — it is generated whole |
+| `no_counts_outside_autogen` | a hand-written count drifting in the narrative | **no narrative exists** |
+| `narrative_seam` | an unmatched `AUTOGEN` marker masking the lines after it | **no markers, no hand-edited region** |
+| AUTOGEN freshness (advisory) | the generated block going stale | census `stale` leg — **blocking, not advisory** |
+
+The census is *stronger* on the only leg with a counterpart, and the other three are moot by
+construction. That is the whole point of D1: the hazard is designed out rather than guarded.
+"The obligation moves" would have had P3 manufacture legs for hazards that cannot occur.
+
+**P3 therefore cannot be a standalone commit, and folds into P4.** `test_d5_mutation_obligation`
+requires **every registered check** to carry a `MUTATION_VERIFIED` entry — measured: 83 of 83.
+Removing the Index check's entry while the check still exists turns that test red. The entry and
+the check are deleted together or not at all.
+
+**`FIXTURE_ONLY_CEILING` stays 54; measured, not assumed.** It counts registered checks *not*
+production-seeded — live 54 against a ceiling of 54, **zero slack**. `inventory_index_autogen_fresh`
+IS production-seeded, so deleting it moves registered 83→82 and `PRODUCTION_SEEDED` 29→28 while
+the fixture-only count is untouched. A ceiling that may only be lowered therefore holds at 54,
+and P4 lowers `CI_MIN_CHECKS_RUN` alone.
+
+⚠️ **`CI_MIN_CHECKS_RUN`'s arithmetic in the table below is STALE.** It reads "+1 at P1 and −1 at
+P4 … nets to zero". A second check (`existential_witness_disclosure`) took it to **79** on
+2026-08-13, so P4's −1 lands on 79 and the plan no longer nets to zero. The one-in-one-out framing
+was only ever true of this ADR's own checks.
+
 ---
 
 ## Overlap reconciliation with prior ADRs
@@ -327,9 +357,9 @@ arrival. The full set, each verified at HEAD:
 | re-export in `scripts/validate.py` | the module-attribute surface other tooling reads |
 | `EXPECTED_CHECKS` in `tests/test_validate_registry_contract.py` | frozen **count *and* order** — two tests fire |
 | `EXPECTED_CHECK_FUNCTIONS` in `tests/test_validate_public_surface.py` | frozen function roster |
-| `CI_MIN_CHECKS_RUN` in `scripts/validation/_config.py` | ⚠️ **+1 at P1 and −1 at P4** — "one in, one out" nets to zero only across the whole plan, and these are separate commits |
+| `CI_MIN_CHECKS_RUN` in `scripts/validation/_config.py` | ⚠️ **+1 at P1, −1 at P4 — but it NO LONGER NETS TO ZERO.** `existential_witness_disclosure` took it to **79** on 2026-08-13, so P4's −1 lands on 79, not 78. "One in, one out" was only ever true of this ADR's own checks; re-read the live value before changing it |
 | `tests/test_d5_mutation_obligation.py` | `MUTATION_VERIFIED` + `PRODUCTION_SEEDED` + `FIXTURE_ONLY_CEILING` |
-| `tests/test_cannot_measure_baseline.py` | two zero-headroom floors, both re-measured at P4 |
+| `tests/test_cannot_measure_baseline.py` | two zero-headroom floors, both re-measured at P4. ⚠️ `existential_witness_disclosure` was added to `CANNOT_MEASURE_PASS_BASELINE` 2026-08-13 |
 | `tests/test_sync_manifest.py` | asserts the edge roster by name |
 | `scripts/verify_scope.py` | the `code` bucket (`src/`, `scripts/`) must reach `module_census_fresh` — those are its inputs |
 | `docs/architecture/SURFACE_INVENTORY.md` | regenerated |
@@ -340,7 +370,7 @@ arrival. The full set, each verified at HEAD:
 |---|---|---|
 | **P1** | Ship `scripts/module_census.py` (carrying C4's derivation, so the baseline is reproducible) + `docs/MODULE_CENSUS.md` + `module_census_fresh` with `NO_DOCSTRING_CEILING`, register the `Edge`, add to `pre-commit-sync.sh`'s restage list, **and every row of the table above**. Production-seeded mutation per leg. | census green, mutation red-then-green, registry-contract tests green |
 | **P2** | D6 — migrate the Inventory's richer `Purpose:` prose into module docstrings, per module. ⚠️ Per C8 a docstring is now a **published** surface, so each migration is staged through the disclosure hook and judged there — this is not a pure refactor. | census re-run shows the migrated text; disclosure hook clean |
-| **P3** | D10 — move the mutation obligation; re-measure `FIXTURE_ONLY_CEILING`. | `test_d5_mutation_obligation` green |
+| ~~**P3**~~ | **FOLDED INTO P4 (2026-08-13).** D10's transfer does not exist — three of the Index check's four legs guard hazards the census does not have, and the fourth is stronger on the census. The entry removals cannot precede the deletion, because every registered check must carry a `MUTATION_VERIFIED` entry. See the corrected D10. | — |
 | **P4** | D7 — retire the Index: unwire `sync_manifest`, `pre-commit-sync.sh`, `update_inventory_index.py`, `freshness.py`, three test files, `CLAUDE.md`, three architecture docs. | full fast suite green |
 | **P5** | D8 — retire the Inventory; correct the generated pointer string that names it. | `doc_refs_resolve` green |
 | **P4b** | D11 — amend `WAVE_EXECUTION_PIPELINE.md` Stage 12 and its `WAVE_PIPELINE_RATIONALE.md` entry. **Lands with P4/P5, never after.** | the law names no retired file |
