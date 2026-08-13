@@ -120,10 +120,31 @@ def _top_arrow_split(s: str) -> List[str]:
     return parts
 
 
+#: `∃ x, P` as lean_deps ELABORATES it. The pretty-printer emits the `Exists`
+#: applicative form, never the `∃ … ,` notation, so a binder stripper that matched
+#: only the notation reached the proposition in zero existential statements.
+_EXISTS_FUN_RE = re.compile(r"^Exists\s+fun\s+[^=]*?=>\s*")
+
+
 def _strip_leading_binders(t: str) -> str:
-    """Drop leading `∀ … ,` / `∃ … ,` binder groups to reach the proposition."""
+    """Drop leading `∀ … ,` / `∃ … ,` / `Exists fun … =>` binder groups to reach
+    the proposition.
+
+    ⚠️ `Exists fun … =>` is the form that actually occurs. lean_deps stores the
+    ELABORATED type, and Lean elaborates `∃ x, P x` to `Exists fun x => P x`; the
+    `∃` character never appears. Matching only `∃` meant every existential
+    statement kept its binder, so the conclusion was never reached and no
+    existential could be classified — measured 2026-08-13: 897 authored theorems
+    have an existential conclusion and the classifier had flagged exactly 0.
+    """
     t = t.strip()
-    while t.startswith("∀") or t.startswith("∃"):
+    while True:
+        m = _EXISTS_FUN_RE.match(t)
+        if m:
+            t = t[m.end():].strip()
+            continue
+        if not (t.startswith("∀") or t.startswith("∃")):
+            return t
         depth, ci = 0, None
         for i, ch in enumerate(t):
             if ch in "([{⟨":
@@ -133,9 +154,8 @@ def _strip_leading_binders(t: str) -> str:
             elif ch == "," and depth == 0:
                 ci = i; break
         if ci is None:
-            break
+            return t
         t = t[ci + 1:].strip()
-    return t
 
 
 # Lean/Mathlib compiler-EMITTED lemmas (congruence, constructor, recursor,
@@ -177,6 +197,15 @@ def _thin_type_label(type_str: str):
         return "True"
     core = _strip_leading_binders(t)
     concl = _top_arrow_split(core)[-1].strip()
+    # ⚠️ THE `True` TEST MUST ALSO RUN ON THE CONCLUSION, not only on the raw type.
+    # It ran only at the top, so a `True` reached through ANY binder or arrow scored
+    # clean: `∀ x, True`, `P → True` and `∃ x, True` all returned None. That is the
+    # purest vacuity there is, and it was invisible to the check whose entire subject
+    # is vacuity — including `acoustic_metric_theorem`, which is ARISTOTLE_THEOREMS-
+    # registered and whose docstring promises the wave equation `□_g π = 0`.
+    # `P → True` is vacuous for the same reason: everything implies True.
+    if concl == "True":
+        return "True"
     # reflexive `Eq X X` (prefix) / `X = X` (infix) — SIMPLE args only (a compound
     # arg may be a pretty-print elision false-reflexive; see `_SIMPLE_ARG_RE`).
     toks = _top_tokens(concl)

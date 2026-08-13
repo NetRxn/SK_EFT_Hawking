@@ -72,7 +72,7 @@ drift into two different rules.
 | Aristotle runs | 44 |
 | Python source modules | 138 |
 | Test files | 194 |
-| pytest cases | 6513 |
+| pytest cases | 6522 |
 | Figures (PNG) | 170 |
 | Notebooks | 91 |
 | Papers (drafts) | 42 |

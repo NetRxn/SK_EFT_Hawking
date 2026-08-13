@@ -2469,6 +2469,154 @@ PLACEHOLDER_THEOREMS: dict[str, dict[str, str]] = {
         'claim': 'Caveat: Misumi (2025) symmetry-preserving deformations can destabilize the single-Weyl phase (not a no-go)',
         'resolution': 'Documentation caveat — non-load-bearing',
     },
+
+    # ═══════════════════════════════════════════════════════════════════
+    # W2 RECONCILIATION, 2026-08-13 — the 13 this registry's own method
+    # could not see.
+    #
+    # ⚠️ The 2026-06-13 note above claims coverage of "ALL 26 on-disk type-`True`
+    # declarations", and prescribes the method that produced it:
+    # `grep -c "True := trivial"`. That is a SOURCE-STRING PROXY, not the
+    # decider. It structurally cannot see three shapes, and all three are here:
+    #   * a STRUCTURE FIELD `has_gap : True` — no `:= trivial` on the line;
+    #   * `∃ (_ : T), True` — an inhabitation claim, not the literal string;
+    #   * a theorem closed by anything other than the bare token `trivial`.
+    # The decider is the ELABORATED TYPE in lean_deps.json. Read that way the
+    # count is 39, not 26 — and `docs/counts.json theorems_placeholder` is wrong
+    # by the same 13 until it is regenerated.
+    #
+    # These were invisible to `vacuous_statement_audit` as well: its classifier
+    # tested `True` only against the RAW type string, so a `True` reached through
+    # any binder or arrow scored clean. Fixed the same day in
+    # `lean_statements._thin_type_label`; these 13 are what that fix surfaced.
+    #
+    # ⚠️ REGISTERING A PLACEHOLDER IS DISCLOSURE, NOT PROGRESS. Recording it as
+    # elimination is the specific error corrected in Phase5p_Roadmap.md on this
+    # date, where five of six "ELIMINATED" rows were renames or untouched decls.
+    # Every entry below is OPEN DEBT and each carries its own `resolution`.
+    #
+    # THE STRUCTURE-FIELD SUBSET IS THE SEVERE ONE. `WeylDoubletData` and
+    # `SMGPhaseData` declare their PHYSICS INVARIANTS as `: True`, so the
+    # structures constrain nothing and every theorem quantified over them holds
+    # its hypotheses for free — the signature reads far stronger than the claim.
+    # ═══════════════════════════════════════════════════════════════════
+
+    # ── WeylDoubletData: the carrier of the GT chirality argument ──
+    'q_V_commutes': {
+        'category': 'content',
+        'module': 'GTWeylDoublet',
+        'lean_name': 'q_V_commutes',
+        'claim': 'WeylDoubletData field: the vector charge commutes with H, [H, Q_V] = 0',
+        'resolution': 'State Q_V and H as operators and prove the commutator vanishes; '
+                      'as a `: True` field it imposes nothing on the structure',
+    },
+    'q_A_commutes': {
+        'category': 'content',
+        'module': 'GTWeylDoublet',
+        'lean_name': 'q_A_commutes',
+        'claim': 'WeylDoubletData field: the axial charge commutes with H, [H, Q_A] = 0',
+        'resolution': 'The source comment says "proved in GTCommutation.lean" — if that '
+                      'proof exists, make this field carry it instead of `True`',
+    },
+    'charges_noncommuting': {
+        'category': 'content',
+        'module': 'GTWeylDoublet',
+        'lean_name': 'charges_noncommuting',
+        'claim': 'WeylDoubletData field: the two charges do NOT commute, [Q_V, Q_A] ≠ 0 on a finite lattice',
+        'resolution': 'Prove the non-vanishing commutator. Note this field and the two '
+                      'above assert commuting AND non-commuting; as `True` all three are '
+                      'simultaneously satisfiable, which is why the inconsistency is invisible',
+    },
+
+    # ── SMGPhaseData: the carrier of the symmetric-mass-generation argument ──
+    'has_gap': {
+        'category': 'content',
+        'module': 'GaugingStep',
+        'lean_name': 'has_gap',
+        'claim': 'SMGPhaseData field: the phase is gapped, Δ > 0',
+        'resolution': 'Carry a spectral gap witness (`0 < Δ` against a defined spectrum)',
+    },
+    'chiral_symmetric': {
+        'category': 'content',
+        'module': 'GaugingStep',
+        'lean_name': 'chiral_symmetric',
+        'claim': 'SMGPhaseData field: no bilinear condensate forms',
+        'resolution': 'State the bilinear and assert its expectation vanishes',
+    },
+    'no_goldstones': {
+        'category': 'content',
+        'module': 'GaugingStep',
+        'lean_name': 'no_goldstones',
+        'claim': 'SMGPhaseData field: the phase exhibits no spontaneous symmetry breaking',
+        'resolution': 'Assert the absence of massless modes in the defined spectrum',
+    },
+    'smg_vector_like_only': {
+        'category': 'content',
+        'module': 'GaugingStep',
+        'lean_name': 'smg_vector_like_only',
+        'claim': 'SMG is demonstrated only for vector-like fermion content; the gap to '
+                 'chiral gauge theory is unsolved',
+        'resolution': 'A genuine scope limitation stated as `∃ _, True`. Either restate as '
+                      'a real statement about the fermion content or reclassify as a '
+                      'docs_marker — it currently reads as a proved limitation',
+    },
+
+    # ── remaining type-`True` declarations ──
+    'disentangled_range_zero': {
+        'category': 'content',
+        'module': 'SymmetryDisentangler',
+        'lean_name': 'disentangled_range_zero',
+        'claim': 'Disentangler field: W†QW has range 0',
+        'resolution': 'State the range condition against the defined operator',
+    },
+    'has_action': {
+        'category': 'content',
+        'module': 'GaugeEmergence',
+        'lean_name': 'has_action',
+        'claim': 'HalfBraidingData field: the half-braiding carries a group action',
+        'resolution': 'Source comment: "simplified: full statement requires linear map '
+                      'families". Carry the action as data, not as a `True` field',
+    },
+    'fermion_twist_neg': {
+        'category': 'content',
+        'module': 'Z16Classification',
+        'lean_name': 'fermion_twist_neg',
+        'claim': 'SuperModularCategoryData field: the fermion twist is θ_f = -1',
+        'resolution': 'Source comment: "requires ribbon structure". Carry the ribbon '
+                      'structure and state the twist equation',
+    },
+    'kapustin_fidkowski_nogo': {
+        'category': 'content',
+        'module': 'SPTClassification',
+        'lean_name': 'kapustin_fidkowski_nogo',
+        'claim': 'Kapustin-Fidkowski no-go: finite-dimensional commuting projectors cannot '
+                 'carry nonzero Hall conductance',
+        'resolution': 'A NO-GO whose statement is `True` blocks nothing. Either prove the '
+                      'refutation and enter it in KERNEL_NOGO_REGISTRY (Invariant #17), or '
+                      'move the ban to docs/dev-loops/SETTLED_FORKS.md where prose bans live',
+    },
+    'small_uq_simple_count': {
+        'category': 'content',
+        'module': 'RestrictedUq',
+        'lean_name': 'small_uq_simple_count',
+        'claim': 'After semisimplification, ell-1 = k+1 simple objects remain, matching SU(2)_k',
+        'resolution': 'A COUNT theorem that counts nothing. State the cardinality equation '
+                      'against the defined simple-object indexing type',
+    },
+    'acoustic_metric_theorem': {
+        'category': 'content',
+        'module': 'AcousticMetric',
+        'lean_name': 'acoustic_metric_theorem',
+        'claim': '`∃ (_ : PhononEOM eos bg), True` — i.e. `Nonempty (PhononEOM eos bg)`, the '
+                 'inhabitation of the phonon-EOM structure for a given background',
+        'resolution': '⚠️ REGISTERED IN ARISTOTLE_THEOREMS and named the central result of '
+                      'Structure A, so this entry is the most consequential in the registry. '
+                      'Its docstring promises the covariant wave equation `□_g π = 0` with the '
+                      'metric read off and matched against `acousticMetric`; the statement '
+                      'delivers only that the structure is inhabited, which the proof '
+                      'discharges by constructing one. Strengthen to the equation the '
+                      'docstring states, or correct the docstring and the Aristotle registration.',
+    },
 }
 
 # Count of content placeholders (inflates theorem count if not excluded)

@@ -201,7 +201,7 @@ check compares against reality. Sizes are recorded so a silent shrink is visible
 | `constants.ARISTOTLE_THEOREMS` | 322 |
 | `constants.AXIOM_METADATA` | 10 |
 | `constants.HYPOTHESIS_REGISTRY` | 48 |
-| `constants.PLACEHOLDER_THEOREMS` | 26 |
+| `constants.PLACEHOLDER_THEOREMS` | 39 |
 | `constants.KERNEL_NOGO_REGISTRY` | 45 |
 | `constants.MODELING_ASSUMPTION_THEOREMS` | 21 |
 | `constants.TRACKED_HYPOTHESIS_NON_LOAD_BEARING` | 0 |

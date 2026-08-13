@@ -144,22 +144,30 @@ Tracks A and B can proceed in parallel once deep research returns. Tracks C and 
 
 ## Placeholder Elimination Targets
 
-**Session 2026-04-08:** 7 placeholders eliminated (87→80) in DrinfeldCenterBridge, DrinfeldEquivalence, GaugeEmergence.
+Phase 5p directly enables eliminating these remaining `True := trivial` placeholders.
 
-Phase 5p directly enables eliminating these remaining `True := trivial` placeholders:
+⚠️ **Status corrected 2026-08-13 against `lean_deps.json`. Five of the six rows below
+recorded "ELIMINATED (2026-04-08)"; one was.** A placeholder *renamed* to a `_TODO`
+suffix enters `PLACEHOLDER_THEOREMS`, which exempts it from
+`validate.py --check vacuous_statement_audit` — so the gate goes green and the
+declaration is still `True := trivial`. Three others were never touched at all. Renaming
+is **disclosure**, not elimination; recording it as elimination is how a green gate
+became a false progress claim. Status is now stated as the kernel sees it.
 
-| Placeholder | Module | Eliminated by | Status |
-|-------------|--------|--------------|--------|
-| `equivalence_preserves_tensor` | DrinfeldEquivalence | W3 (Muger center) | **ELIMINATED** (2026-04-08) |
-| `equivalence_preserves_braiding` | DrinfeldEquivalence | W3 | **ELIMINATED** (2026-04-08) |
-| `gauge_emergence_statement` | GaugeEmergence | W3 + W5 | **ELIMINATED** (2026-04-08) |
-| `half_braiding_gives_action` | GaugeEmergence | W3 | **ELIMINATED** (2026-04-08) |
-| `center_universal_property` | DrinfeldEquivalence | W5 (bridge) | **ELIMINATED** (2026-04-08) |
-| `muger_center_trivial` | DrinfeldCenterBridge | W3 + W4 | **ELIMINATED** (2026-04-08) |
+| Placeholder | Module | Eliminated by | Status (verified 2026-08-13) |
+|-------------|--------|--------------|------------------------------|
+| `equivalence_preserves_tensor` | DrinfeldEquivalence | W3 (Muger center) | **STILL `True`** under its original name |
+| `equivalence_preserves_braiding` | DrinfeldEquivalence | W3 | **STILL `True`** under its original name |
+| `center_universal_property` | DrinfeldEquivalence | W5 (bridge) | **STILL `True`** under its original name |
+| `gauge_emergence_statement` | GaugeEmergence | W3 + W5 | **RENAMED** → `gauge_emergence_statement_TODO`, still `True` |
+| `half_braiding_gives_action` | GaugeEmergence | W3 | **RENAMED** → `half_braiding_gives_action_TODO`, still `True` |
+| `muger_center_trivial` | DrinfeldCenterBridge | W3 + W4 | **ELIMINATED** — absent from `lean_deps.json` ✅ |
 | `ocneanu_rigidity_placeholder` | FusionCategory | Phase 6 (Deligne) | remaining |
 | `fusion_to_tqft_placeholder` | FusionCategory | W5 + W6 | remaining |
 
-**Note:** The 7th eliminated placeholder was also in DrinfeldCenterBridge (total: 3 from DrinfeldCenterBridge, 2 from DrinfeldEquivalence, 2 from GaugeEmergence).
+The session's headline "7 placeholders eliminated (87→80)" is withdrawn: it counted
+renames as eliminations. One elimination is verified. The remaining count is UNVERIFIED
+and must be re-derived from `lean_deps.json`, never from this table's history.
 
 ---
 
