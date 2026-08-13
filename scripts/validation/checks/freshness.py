@@ -979,9 +979,9 @@ def check_inventory_index_autogen_fresh() -> CheckResult:
             if ok else
             f"{actual_kb:.0f} KB EXCEEDS the {ceiling_kb} KB ceiling the file declares "
             f"for itself. The stated reason is that a bootstrap must read it in one "
-            f"call. Prune narrative into SK_EFT_Hawking_Inventory.md — the file's own "
-            f"Size-discipline rule says exactly that, and says not to inline wave "
-            f"history or per-commit detail here."))
+            f"call. Prune narrative — the file's own Size-discipline rule says to move "
+            f"it to the artifact that owns it (roadmaps own wave history; docs/counts.json "
+            f"owns counts) and not to inline wave history or per-commit detail here."))
         if not ok:
             all_pass = False
 

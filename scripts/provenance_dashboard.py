@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""SK-EFT Provenance Command Center
+"""SK-EFT Provenance Command Center — tabs for Parameters, Formulas, Proof
+Architecture, Citations, Knowledge Graph, Paper Readiness, Process Health,
+Research Status, Paper Provenance (the 3-column sentence-level UI with keyboard
+navigation, change-bus and cluster propagation) and Bundles.
 
 Interactive Flask+HTMX dashboard for reviewing and verifying parameter
 provenance, formula citations, Lean/Aristotle proofs, paper claims, and

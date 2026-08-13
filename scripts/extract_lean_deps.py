@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Lean Declaration Extraction Wrapper
+"""Lean Declaration Extraction Wrapper — the Lean declaration taxonomy plus
+per-declaration axiom dependencies.
 
 Manages staleness checking and invocation of the Lean meta script
 `ExtractDeps.lean`. Provides `load_lean_deps()` for use by

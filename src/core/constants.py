@@ -1,6 +1,7 @@
 """
 Single source of truth for physical constants, experimental parameters,
-and the Plotly color palette used across the SK-EFT Hawking project.
+and the Plotly color palette used across the SK-EFT Hawking project. It is
+also the home of the Aristotle theorem registry (ARISTOTLE_THEOREMS).
 
 Every notebook, source module, and test should import from here —
 no hardcoded constants elsewhere in the codebase.

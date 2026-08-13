@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """
 Generate counts.json — the single source of truth for all project counts.
+Re-runs the `extract_lean_deps.py` extraction first when the Lean source
+hashes have changed.
 
 Reads from:
   - lean/lean_deps.json (Lean environment extraction via ExtractDeps.lean)

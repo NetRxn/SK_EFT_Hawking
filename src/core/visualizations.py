@@ -1,5 +1,6 @@
 """
-Publication-Quality & Interactive Visualizations for the SK-EFT Hawking Paper
+Publication-Quality & Interactive Visualizations for the SK-EFT Hawking Paper.
+This is the only place figure functions live.
 
 Generates:
   1. Static PDF/PNG figures for PRL submission (via kaleido)

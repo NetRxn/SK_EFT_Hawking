@@ -6,6 +6,7 @@ SK-EFT Hawking Knowledge Graph Builder
 Extracts nodes and edges from the project's canonical registries
 (provenance, formulas, constants, citations, figures, Lean theorems)
 and produces a JSON graph suitable for visualization and integrity analysis.
+An opt-in `--sync-pg` additionally writes that graph to PostgreSQL + Apache AGE.
 
 Usage
 -----
@@ -17,6 +18,9 @@ Usage
 
     # Check source hash staleness only:
     python scripts/build_graph.py --check
+
+    # Also write the graph to PostgreSQL + Apache AGE:
+    python scripts/build_graph.py --sync-pg
 """
 
 from __future__ import annotations

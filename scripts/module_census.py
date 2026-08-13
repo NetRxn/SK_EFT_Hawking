@@ -29,6 +29,7 @@ from __future__ import annotations
 
 import argparse
 import ast
+import re
 from pathlib import Path
 
 SCRIPT_DIR = Path(__file__).resolve().parent
@@ -51,7 +52,15 @@ def _first_paragraph(doc: str) -> str:
     C5), which is the point: the gap is then fixable in the module rather than in a
     parallel prose file that drifts.
     """
-    return " ".join(doc.strip().split("\n\n")[0].split())
+    first = doc.strip().split("\n\n")[0]
+    # ⚠️ Strip banner rules. A docstring styled as
+    #     Cross-Layer Validation Suite
+    #     ============================
+    # has no blank line, so the underline is part of paragraph one and lands in the
+    # published row as a wall of `=`. Measured 2026-08-13: 19 of 315 rows (6%).
+    # Drop rule-only lines, and trailing rule characters left on a text line.
+    kept = [ln for ln in first.splitlines() if not re.fullmatch(r"[=\-~_*#\s]{3,}", ln)]
+    return re.sub(r"[\s=~_-]{4,}$", "", " ".join(" ".join(kept).split())).strip()
 
 
 def collect() -> dict:

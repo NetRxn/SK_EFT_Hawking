@@ -1,4 +1,5 @@
-"""Wen's Emergent QED from String-Net Condensation.
+"""Wen's Emergent QED from String-Net Condensation — the microscopic UV
+completion the ADW emergent-gravity programme rests on.
 
 Implements the Levin-Wen rotor model on a 3D cubic lattice that produces
 emergent QED_{3+1} in the deconfined (Coulomb) phase: N_f=4 Dirac fermions

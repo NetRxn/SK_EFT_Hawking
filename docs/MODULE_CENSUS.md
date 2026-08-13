@@ -15,13 +15,13 @@ Nothing else belongs here.
 |---|---|
 | `src/__init__.py` | SK-EFT Hawking: Dissipative EFT Corrections to Analog Hawking Radiation. |
 | `src/adw/__init__.py` | Akama-Diakonov-Wetterich (ADW) Mean-Field Gap Equation. |
-| `src/adw/fluctuations.py` | Fluctuation Analysis and Nambu-Goldstone Mode Counting. |
+| `src/adw/fluctuations.py` | Fluctuation Analysis and Nambu-Goldstone Mode Counting, with a Vergeles mode-counting consistency check. |
 | `src/adw/gap_equation.py` | Gap Equation Solver for ADW Tetrad Condensation. |
 | `src/adw/ginzburg_landau.py` | Ginzburg-Landau Phase Classification for ADW Tetrad Condensation. |
 | `src/adw/hubbard_stratonovich.py` | Hubbard-Stratonovich Decomposition of the ADW 8-Fermion Interaction. |
 | `src/adw/tetrad_gap_solver.py` | Tetrad Gap Equation Solver — Integral Formulation. |
 | `src/adw/tetrad_observables.py` | Tetrad and Metric Order Parameter Observables. |
-| `src/adw/wen_model.py` | Wen's Emergent QED from String-Net Condensation. |
+| `src/adw/wen_model.py` | Wen's Emergent QED from String-Net Condensation — the microscopic UV completion the ADW emergent-gravity programme rests on. |
 | `src/bbn/__init__.py` | Phase 6b Wave 1 — BBN unified constraint framework. |
 | `src/bbn/abundances.py` | BBN observational constants — Phase 6b Wave 1. |
 | `src/bbn/candidate_checker.py` | Per-DM-candidate BBN-conformance evaluator — Phase 6b Wave 1. |
@@ -48,18 +48,18 @@ Nothing else belongs here.
 | `src/chiral_ssb/tetrad_ratio.py` | Tetrad-VEV / quark-condensate scale-naturalness — Phase 6d Wave 2. |
 | `src/chirality/__init__.py` | Chirality Wall Synthesis: TPF vs Golterman-Shamir Compatibility. |
 | `src/chirality/gioia_thorngren.py` | Gioia-Thorngren lattice chiral fermion computations. |
-| `src/chirality/tpf_gs_analysis.py` | Chirality Wall Synthesis: TPF vs Golterman-Shamir Compatibility Analysis. |
+| `src/chirality/tpf_gs_analysis.py` | Chirality Wall Synthesis: TPF vs Golterman-Shamir Compatibility Analysis. TPF evades two of the four GS conditions — lattice translation invariance and complete interpolating fields (via ancilla degrees of freedom) — which makes the breach of the chirality wall conditional rather than outright. |
 | `src/core/__init__.py` | Core shared infrastructure for the SK-EFT Hawking project. |
-| `src/core/aristotle_interface.py` | Aristotle API Interface for Lean Sorry-Filling |
+| `src/core/aristotle_interface.py` | Aristotle API Interface for Lean Sorry-Filling. Carries the registry of sorry gaps it was used to fill. |
 | `src/core/aristotle_submit.py` | src/core/aristotle_submit.py — SafeAristotleRunner (ADR-006). |
 | `src/core/citations.py` | Citation Registry — Canonical bibliography for the SK-EFT Hawking project. |
-| `src/core/constants.py` | Single source of truth for physical constants, experimental parameters, and the Plotly color palette used across the SK-EFT Hawking project. |
+| `src/core/constants.py` | Single source of truth for physical constants, experimental parameters, and the Plotly color palette used across the SK-EFT Hawking project. It is also the home of the Aristotle theorem registry (ARISTOTLE_THEOREMS). |
 | `src/core/formulas.py` | Canonical implementations of every formula verified by Lean/Aristotle. |
 | `src/core/provenance.py` | Parameter Provenance Registry |
 | `src/core/provenance_writer.py` | The single per-entry writer for `PARAMETER_PROVENANCE` human-verification fields. |
 | `src/core/sm_anomaly.py` | Standard Model Anomaly Computation in ℤ₁₆. |
-| `src/core/transonic_background.py` | Transonic Background Solver for 1D BEC Flow |
-| `src/core/visualizations.py` | Publication-Quality & Interactive Visualizations for the SK-EFT Hawking Paper |
+| `src/core/transonic_background.py` | Transonic Background Solver for 1D BEC Flow. Parameterizes the velocity as a smooth tanh transition through the horizon. |
+| `src/core/visualizations.py` | Publication-Quality & Interactive Visualizations for the SK-EFT Hawking Paper. This is the only place figure functions live. |
 | `src/core/workspace.py` | Canonical workspace-root resolver. |
 | `src/cosmological_perturbations/__init__.py` | Phase 6b Wave 2 — Linear cosmological perturbation theory. |
 | `src/cosmological_perturbations/cmb_spectrum.py` | CMB ℓ-space angular power spectrum amplitude diagnostics. |
@@ -108,7 +108,7 @@ Nothing else belongs here.
 | `src/fracton/non_abelian.py` | Non-Abelian Fracton Gauge Theories: Yang-Mills Compatibility Analysis. |
 | `src/fracton/sk_eft.py` | Fracton SK-EFT: Transport Coefficients and Symmetry Structure. |
 | `src/gauge_erasure/__init__.py` | Non-Abelian Gauge Erasure Theorem. |
-| `src/gauge_erasure/erasure_theorem.py` | Non-Abelian Gauge Erasure Theorem: algebraic argument and analysis. |
+| `src/gauge_erasure/erasure_theorem.py` | Non-Abelian Gauge Erasure Theorem: algebraic argument and analysis. In the Standard Model only U(1)_EM survives gauge erasure, so the superfluid phase carries electromagnetic Goldstone modes and nothing else. |
 | `src/graphene/bilayer_eos.py` | Bilayer graphene equation of state and conformal symmetry breaking. |
 | `src/graphene/hawking_predictions.py` | Hawking temperature predictions for graphene Dirac fluid platforms. |
 | `src/graphene/platform_comparison.py` | Unified multi-platform comparison: BEC, polariton, and graphene. |
@@ -192,7 +192,7 @@ Nothing else belongs here.
 | `scripts/analyze_rhmc_vestigial.py` | Vestigial-phase analysis for HS+RHMC production scans (L*_m* data dirs). |
 | `scripts/architecture_inventory.py` | Derive the project's QA/process SURFACE INVENTORY from the code, not from memory. |
 | `scripts/archive/submit_to_aristotle.py` | Submit SK-EFT Hawking Paper Lean sorries to Aristotle. |
-| `scripts/aristotle_usage_by_bundle.py` | aristotle_usage_by_bundle.py — register-driven Aristotle-clause applicability ============================================================================= |
+| `scripts/aristotle_usage_by_bundle.py` | aristotle_usage_by_bundle.py — register-driven Aristotle-clause applicability |
 | `scripts/atlas_heatmap.py` | Atlas heatmap — a glanceable Markdown surface of the derived proof-atlas (ADR-005 Phase 3). |
 | `scripts/atlas_view.py` | Derived Proof Atlas — the classification/frontier VIEW over the dependency graph (ADR-005). |
 | `scripts/audit_hypothesis_dependents.py` | Audit the HAND-WRITTEN ``dependent_theorems`` lists that drive the atlas POSITIVE frontier. |
@@ -202,25 +202,25 @@ Nothing else belongs here.
 | `scripts/benchmark_mlx_stencil.py` | Benchmark: MLX vs torch RHMC stencil engines — the MLX-adoption decision gate. |
 | `scripts/benchmark_rust_parallel.py` | Benchmark Rust RHMC backend with multiprocessing parallelism. |
 | `scripts/bridge_superset_validation.py` | Validate the `bridge` finite box check (HISTORICAL — native_decide since eliminated). |
-| `scripts/build_graph.py` | SK-EFT Hawking Knowledge Graph Builder ======================================= |
-| `scripts/bundle_append.py` | bundle_append.py — Phase 7a sub-wave 7a.1.3 deliverable ======================================================= |
+| `scripts/build_graph.py` | SK-EFT Hawking Knowledge Graph Builder |
+| `scripts/bundle_append.py` | bundle_append.py — Phase 7a sub-wave 7a.1.3 deliverable |
 | `scripts/bundle_closure.py` | Bundle substrate closure — the DERIVED half of the publication-intake design. |
-| `scripts/bundle_clusters.py` | bundle_clusters.py — Phase 6i Wave 7.1 cross-bundle cluster detection ===================================================================== |
+| `scripts/bundle_clusters.py` | bundle_clusters.py — Phase 6i Wave 7.1 cross-bundle cluster detection |
 | `scripts/bundle_json.py` | The single serializer for per-bundle JSON blobs (TODO-D25). |
-| `scripts/bundle_migration.py` | bundle_migration.py — Phase 6i Wave 7.1 bundle-aware migration ============================================================== |
-| `scripts/bundle_readiness.py` | bundle_readiness.py — Phase 6i Wave 7.4 per-bundle Stage-13 readiness summary ============================================================================= |
-| `scripts/bundle_registry.py` | bundle_registry.py — THE single source of truth for the publication-bundle roster ================================================================================== |
-| `scripts/bundle_source_manifest.py` | bundle_source_manifest.py — Phase 7a sub-wave 7a.1.2 deliverable ================================================================ |
+| `scripts/bundle_migration.py` | bundle_migration.py — Phase 6i Wave 7.1 bundle-aware migration |
+| `scripts/bundle_readiness.py` | bundle_readiness.py — Phase 6i Wave 7.4 per-bundle Stage-13 readiness summary |
+| `scripts/bundle_registry.py` | bundle_registry.py — THE single source of truth for the publication-bundle roster |
+| `scripts/bundle_source_manifest.py` | bundle_source_manifest.py — Phase 7a sub-wave 7a.1.2 deliverable |
 | `scripts/chain_canonicalize.py` | chain_canonicalize.py — deterministic canonicalization of the claims-reviewer's `chain_proposed.links` targets. |
-| `scripts/check_bundle_source_freshness.py` | check_bundle_source_freshness.py — Phase 7a sub-wave 7a.1.4 deliverable ======================================================================= |
+| `scripts/check_bundle_source_freshness.py` | check_bundle_source_freshness.py — Phase 7a sub-wave 7a.1.4 deliverable |
 | `scripts/check_undefined_citations.py` | Report citation keys used in a draft's reader-visible prose with no `\bibitem`. |
 | `scripts/citation_cache.py` | Citation verification cache helpers (Phase 5v Wave 6). |
 | `scripts/clifford_base_validation.py` | Validate the `cliffordBase` discharge BEFORE formalizing. |
 | `scripts/close_finding.py` | Write a closure into the supersession ledger — the writer the ledger never had. |
-| `scripts/cluster_detect.py` | cluster_detect.py — cross-paper ClaimCluster builder (Phase 5v Wave 10f) ======================================================================== |
+| `scripts/cluster_detect.py` | cluster_detect.py — cross-paper ClaimCluster builder (Phase 5v Wave 10f) |
 | `scripts/codex_dossier.py` | Codex dossier pipeline — keep GPT-provider output OUT of the orchestrator's context. |
 | `scripts/compile_bundle_pdf.py` | Compile a bundle draft to PDF WITHOUT writing build artifacts into the bundle. |
-| `scripts/convert_inprep_citations.py` | convert_inprep_citations.py — deposit-time conversion of in-preparation self-citations to real arXiv citations, in one documented pass. ======================================================================== |
+| `scripts/convert_inprep_citations.py` | convert_inprep_citations.py — deposit-time conversion of in-preparation self-citations to real arXiv citations, in one documented pass. |
 | `scripts/count_theorem_reuse.py` | Deterministic cross-platform Lean-theorem reuse counter (bundle D1 / paper16). |
 | `scripts/dashboard_attention.py` | Attention — the operator's four feeds, side by side and NOT merged (ADR-012 D15 S3). |
 | `scripts/dashboard_flow.py` | The Flow board — where every bundle is, and what is holding it (ADR-012 D15, S2). |
@@ -230,7 +230,7 @@ Nothing else belongs here.
 | `scripts/dep_upgrade_preview.py` | Show what `uv lock --upgrade` WOULD do, classified by risk. Writes nothing. |
 | `scripts/emit_clifford_table.py` | Emit the 192-entry Lean Clifford lookup table for cliffordBase. |
 | `scripts/export_web_atlas.py` | Export compact, web-weight JSON distillations of the proof atlas for external visualization surfaces (dashboards, static sites). |
-| `scripts/extract_lean_deps.py` | Lean Declaration Extraction Wrapper |
+| `scripts/extract_lean_deps.py` | Lean Declaration Extraction Wrapper — the Lean declaration taxonomy plus per-declaration axiom dependencies. |
 | `scripts/extract_missing_bibkeys.py` | Extract \bibitem stubs for cited bibkeys absent from CITATION_REGISTRY. |
 | `scripts/extract_sigma_symbolic.py` | Extract σ_1..σ_5 6-strand Fibonacci R-matrix generators from TQSim v0.0.2 + symbolically convert each entry to a closed-form Q(ζ_5, √φ) element, ready to paste as Lean `Mat13K_5Ext` literals. |
 | `scripts/find_phrase.py` | Whitespace-normalized phrase search across prose and source files. |
@@ -238,7 +238,7 @@ Nothing else belongs here.
 | `scripts/gen_d1_hierarchy_table.py` | Canonical evaluator for Paper D1's BEC correction-hierarchy table. |
 | `scripts/gen_kernel_nogos_module.py` | Regenerate ``lean/SKEFTHawking/KernelNoGos.lean`` — the Lean-side consolidated fence for the kernel-verified no-gos. |
 | `scripts/generate_a1_resolution.py` | Generate the minimal free resolution of F₂ over A(1) and export matrices for Lean 4. |
-| `scripts/graph_integrity.py` | SK-EFT Provenance Graph — Integrity Checker |
+| `scripts/graph_integrity.py` | SK-EFT Provenance Graph — Integrity Checker, including the sentence-level provenance checks (chain completeness, sentence-id collisions, audit-event well-formedness, claim-cluster consistency). |
 | `scripts/grid_compile_pygridsynth_xval.py` | Phase 6x Item I — ≥50-case cross-validation of the Ross-Selinger `compile` against pygridsynth. |
 | `scripts/grid_enum_pygridsynth_xval.py` | Phase 6x Item H — cross-validate the Ross-Selinger upright grid ENUMERATION vs pygridsynth. |
 | `scripts/grid_stub_validation.py` | Validate the Phase 6x Item G/H grid stub BEFORE formalizing (clean-room, from arXiv:1403.2975 §5 + the DR §2.1 decomposition; NO newsynth code copied). |
@@ -247,7 +247,7 @@ Nothing else belongs here.
 | `scripts/kmm_ma_step_residue.py` | Validate-before-formalize: characterize the MA `ma_step` reducing syllable. |
 | `scripts/kmm_n3_bfs.py` | KMM base-case (𝕊₃) BFS + the constant N₃ — reference computation. |
 | `scripts/kmm_zomega_reference_oracle.py` | ℤ[ω] reference oracle for the KMM Clifford+T exact-synthesis Lean formalization. |
-| `scripts/last_modified.py` | last_modified.py — freshness propagation for graph nodes (Phase 5v Wave 10b) ============================================================================ |
+| `scripts/last_modified.py` | last_modified.py — freshness propagation for graph nodes (Phase 5v Wave 10b) |
 | `scripts/lean_slots/__init__.py` | ADR-008 shared Lean slot control plane. |
 | `scripts/lean_slots/cli.py` | Command-line contract for the ADR-008 Lean slot controller. |
 | `scripts/lean_slots/controller.py` | Fail-closed lease, build-epoch, and integration controller for ADR-008. |
@@ -269,16 +269,16 @@ Nothing else belongs here.
 | `scripts/probe_rhmc_conditioning.py` | Is the L=8 near-zero fermion mode (kappa~1e7) a property of the OPERATOR or induced by the (trapped) CONFIG? |
 | `scripts/probe_rhmc_force_decomposition.py` | Force / spectrum decomposition probe — quantifies the payoff of the L=8 acceleration levers (multi-timescale pole-splitting, deflation) with measured numbers instead of estimates. |
 | `scripts/promote_primary_sources.py` | Promote sidecar fetch state into src/core/citations.py. |
-| `scripts/provenance_dashboard.py` | SK-EFT Provenance Command Center |
+| `scripts/provenance_dashboard.py` | SK-EFT Provenance Command Center — tabs for Parameters, Formulas, Proof Architecture, Citations, Knowledge Graph, Paper Readiness, Process Health, Research Status, Paper Provenance (the 3-column sentence-level UI with keyboard navigation, change-bus and cluster propagation) and Bundles. |
 | `scripts/qi_register.py` | Generate docs/QI_REGISTER.md — the Meta-process Quality Improvement register (Pipeline Stage 14, Phase 5v Wave 7). |
-| `scripts/readiness_gates.py` | SK-EFT Paper Readiness Gates (Phase 5v Wave 4) ============================================== |
+| `scripts/readiness_gates.py` | SK-EFT Paper Readiness Gates (Phase 5v Wave 4) |
 | `scripts/record_review.py` | Record a reviewer-stage verdict on a bundle — the writer transition 2 never had. |
 | `scripts/render_bundle_counts.py` | Per-bundle substrate counts, derived from the declared-apex closure. |
 | `scripts/render_paper_tables.py` | Render paper tables from per-paper `tables.py` specs (Phase 5v). |
 | `scripts/render_tracked_hypotheses.py` | Render docs/PERMANENT_TRACKED_HYPOTHESES.md from HYPOTHESIS_REGISTRY. |
 | `scripts/repo_state_probe.py` | Live repo-state probe — the LIVE ANCHOR for an autonomous /goal loop (Move 1 of the Live-Anchor redesign; spec docs/dev-loops/LIVE_ANCHOR_REDESIGN_SPEC.md). |
-| `scripts/review_figures.py` | SK-EFT Hawking — Figure Review Pipeline ======================================== |
-| `scripts/review_runner.py` | review_runner.py — Phase 6i Wave 7.2 bundle-aware review orchestrator ===================================================================== |
+| `scripts/review_figures.py` | SK-EFT Hawking — Figure Review Pipeline |
+| `scripts/review_runner.py` | review_runner.py — Phase 6i Wave 7.2 bundle-aware review orchestrator |
 | `scripts/rhmc_monitor.py` | Live early-stop monitor for HS+RHMC production scans. |
 | `scripts/run_majorana_production.py` | Production 8×8 Majorana fermion-bag MC with Kramers positivity. |
 | `scripts/run_rhmc_gpu_production.py` | GPU production driver for the certified stencil HS+RHMC engine. |
@@ -288,18 +288,18 @@ Nothing else belongs here.
 | `scripts/run_vestigial_production.py` | Production vestigial MC runs: 4D fermion-bag finite-size scaling. |
 | `scripts/scan_rhmc_l8_stepsize.py` | L=8 MD step-size (epsilon) scan for the Rust HS+RHMC backend. |
 | `scripts/sentence_findings.py` | Resolve manuscript sentences to the open findings that land on them (ADR-012 D15 S4). |
-| `scripts/sentence_state.py` | sentence_state.py — sole writer for sentence-level verification state (Phase 5v Wave 10b) ========================================================================================== |
+| `scripts/sentence_state.py` | sentence_state.py — sole writer for sentence-level verification state (Phase 5v Wave 10b) |
 | `scripts/slotctl.py` | Repository entry point for the ADR-008 Lean slot controller. |
 | `scripts/submit_to_aristotle.py` | Aristotle submission CLI (SAFE, partial-submission process — ADR-006). |
 | `scripts/sync.py` | L3 — the one foolproof mechanical-sync command. Regenerates stale artifacts in dependency order off the L0 manifest, so the agent never reconstructs a multi-script incantation. |
 | `scripts/sync_graph_to_pg.py` | Sync the provenance graph to PostgreSQL + Apache AGE (Phase 5v Wave 9f). |
 | `scripts/sync_manifest.py` | L0 — the sync manifest: the single declarative table of mechanical (input → output, regen-cmd, staleness) edges. Generalizes the three staleness detectors that already exist (counts_fresh, the extract_lean_deps hash, tables_fresh, inventory_index_autogen_fresh) so nothing hard-codes a dependency edge twice. Read by sync.py (L3) and pre-commit-sync.sh (L2). |
 | `scripts/system2_register.py` | System-2 dev-process findings register + consolidator (spec 6.2/6.3/A.4). |
-| `scripts/test_helpers.py` | test_helpers.py — isolated-state context managers for Wave 10 modules. ==================================================================== |
+| `scripts/test_helpers.py` | test_helpers.py — isolated-state context managers for Wave 10 modules. |
 | `scripts/test_pseudofermion_convention.py` | Empirical test: Pfaffian RHMC pseudofermion convention. |
-| `scripts/update_counts.py` | Generate counts.json — the single source of truth for all project counts. |
+| `scripts/update_counts.py` | Generate counts.json — the single source of truth for all project counts. Re-runs the `extract_lean_deps.py` extraction first when the Lean source hashes have changed. |
 | `scripts/update_inventory_index.py` | Regenerate the autogenerated blocks of ``SK_EFT_Hawking_Inventory_Index.md``. |
-| `scripts/validate.py` | SK-EFT Hawking Project — Cross-Layer Validation Suite ===================================================== |
+| `scripts/validate.py` | SK-EFT Hawking Project — Cross-Layer Validation Suite |
 | `scripts/validate_cuda_rhmc.py` | CUDA validation gate for the eo stencil RHMC — RUN THIS ON THE 3090 BEFORE any production `run_rhmc_gpu_production.py --device cuda` run. |
 | `scripts/validate_deflated_cg.py` | Acceptance test for the deflated CG (the core of the L=8 fix). |
 | `scripts/validate_deflation_eigensolver.py` | Acceptance test for the deflation eigensolver. |
@@ -323,7 +323,7 @@ Nothing else belongs here.
 | `scripts/validation/checks/physics.py` | Physics and paper-numeric checks — ADR-009 Phase 2. |
 | `scripts/validation/checks/prose_lean_refs.py` | Prose → Lean name resolution — ADR-009 Phase 2. |
 | `scripts/validation/checks/reviews.py` | Review-document and supersession-ledger checks — ADR-009 Phase 2. |
-| `scripts/verification_state.py` | verification_state.py — cross-tab change-bus event log (Phase 5v Wave 10c) ========================================================================== |
+| `scripts/verification_state.py` | verification_state.py — cross-tab change-bus event log (Phase 5v Wave 10c) |
 | `scripts/verify_rhmc_correctness.py` | Implementation-level correctness battery for the Rust HS+RHMC backend. |
 | `scripts/verify_scope.py` | Run the verification a change can actually fail — and nothing else. |
 | `scripts/view_vestigial_mc.py` | Interactive viewer for vestigial MC results. |

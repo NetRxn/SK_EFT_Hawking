@@ -1,4 +1,6 @@
-"""Non-Abelian Gauge Erasure Theorem: algebraic argument and analysis.
+"""Non-Abelian Gauge Erasure Theorem: algebraic argument and analysis. In the
+Standard Model only U(1)_EM survives gauge erasure, so the superfluid phase
+carries electromagnetic Goldstone modes and nothing else.
 
 Encodes the universal structural theorem that non-Abelian gauge degrees of
 freedom cannot survive hydrodynamization. The argument is purely algebraic,
