@@ -5,9 +5,9 @@ from the source: a Python module docstring read via the AST, or a shell script's
 leading comment block. To change a description, change it at the source; the next
 `sync` regenerates this file.
 
-**Scope: Python and shell** — `src/` and `scripts/`. Lean modules are answered by
-`docs/counts.json` (`lean.module_names`), `lean/lean_deps.json` and
-`lean/atlas_view.json`; notebooks, papers and tests by counts in `docs/counts.json`.
+**Scope: Python, shell and notebooks** — `src/`, `scripts/`, `notebooks/`. Lean is
+answered by `docs/counts.json` (`lean.module_names`), `lean/lean_deps.json` and
+`lean/atlas_view.json`; papers and tests by counts in `docs/counts.json`.
 Nothing else belongs here.
 
 ---
@@ -256,7 +256,7 @@ Nothing else belongs here.
 | `scripts/lean_slots/state.py` | Configuration and durable-state primitives for the Lean slot controller. |
 | `scripts/lean_slots/supervisor.py` | Deterministic local process lifecycle for fixed-root Lean MCP endpoints. |
 | `scripts/lint_native_decide_comments.py` | lint_native_decide_comments.py — detect comment-provenance artifacts left by a blind ``native_decide`` → ``decide`` substitution. |
-| `scripts/module_census.py` | Derive the module census — the one answer to "what is this module or script". |
+| `scripts/module_census.py` | Derive the census — the one answer to "what is this module, script or notebook". |
 | `scripts/paper_tables/__init__.py` | Paper tables framework (Phase 5v). |
 | `scripts/paper_tables/sources.py` | Row-generator functions for paper table autogen (Phase 5v). |
 | `scripts/parked_items.py` | Parked work — authorized work waiting on an external release condition (ADR-012 D19). |
@@ -332,10 +332,102 @@ Nothing else belongs here.
 | `scripts/verify_scope.py` | Run the verification a change can actually fail — and nothing else. |
 | `scripts/view_vestigial_mc.py` | Interactive viewer for vestigial MC results. |
 | `scripts/wave2_flip_provenance.py` | Phase 6i Wave 2 — bulk-flip human_verified_date for PARAMETER_PROVENANCE. |
+| `notebooks/D11_TopologicalBandTheory_Technical.ipynb` | D11 — Kernel-Verified Topological Band Theory & Metamaterial Substrate (Technical) — Companion to `papers/D11/paper_draft.tex`. |
+| `notebooks/D12_DetectorReadoutMetrology_Technical.ipynb` | D12 — Kernel-Verified Detector & Readout Metrology (Technical) — Companion to `papers/D12/paper_draft.tex`. |
+| `notebooks/Phase1_Stakeholder.ipynb` | Can We Hear a Black Hole Hiss? Measuring Friction in Artificial Hawking Radiation — *A stakeholder guide to the SK-EFT Hawking Paper* |
+| `notebooks/Phase1_Technical.ipynb` | Dissipative EFT Corrections to Analog Hawking Radiation in BEC Sonic Black Holes — **Authors:** John Roehm **Date:** March 2026 **Status:** Phase 1 COMPLETE — All 12 Lean proofs verified |
+| `notebooks/Phase2_Stakeholder.ipynb` | Does the Black Hole's Hiss Have a Melody? — *A stakeholder guide to Phase 2: when friction gives Hawking radiation a frequency-dependent twist* |
+| `notebooks/Phase2_Technical.ipynb` | Second-Order SK-EFT: Frequency-Dependent Corrections to Analog Hawking Radiation — **Authors:** John Roehm **Date:** March 2026 **Phase:** 2 of the SK-EFT Hawking Paper series |
+| `notebooks/Phase3a_ThirdOrder_Stakeholder.ipynb` | Third-Order SK-EFT: A Pattern Emerges — **Authors:** John Roehm **Date:** March 2026 **Audience:** Collaborators, reviewers, and experimentalists |
+| `notebooks/Phase3a_ThirdOrder_Technical.ipynb` | Third-Order SK-EFT: Parity Alternation and the Bogoliubov Connection — **Authors:** John Roehm **Date:** March 2026 **Phase:** 3 of the SK-EFT Hawking Paper series |
+| `notebooks/Phase3b_GaugeErasure_Stakeholder.ipynb` | Why Can't Fluids Carry Color Charge? — **Paper 3 -- Stakeholder Notebook** |
+| `notebooks/Phase3b_GaugeErasure_Technical.ipynb` | Non-Abelian Gauge Erasure: A Universal Structural Theorem — **Paper 3 — Technical Notebook** |
+| `notebooks/Phase3c_WKBConnection_Stakeholder.ipynb` | From Microscopic BEC Physics to the Observable Hawking Spectrum — **Paper 4 -- Stakeholder Notebook (Phase 3, Wave 2, Item 2D)** |
+| `notebooks/Phase3c_WKBConnection_Technical.ipynb` | Exact WKB Connection Formula for Dissipative Analog Hawking Radiation — **Phase 3 Wave 2 — Item 2D: WKB Connection Formula Technical Notebook** |
+| `notebooks/Phase3d_ADW_Stakeholder.ipynb` | Can Gravity Emerge from Quantum Fermions? — **A Stakeholder Guide to the ADW Gap Equation** |
+| `notebooks/Phase3d_ADW_Technical.ipynb` | ADW Mean-Field Gap Equation: Technical Notebook — **Phase 3 Wave 3** — Tests the gravity wall via the Akama-Diakonov-Wetterich mechanism. |
+| `notebooks/Phase4a_ExperimentalPredictions_Stakeholder.ipynb` | What Can Experiments Measure? Predictions for Analog Hawking Radiation — **Phase 4 Wave 1 — Item 1A: Experimental Prediction Package (Stakeholder Notebook)** |
+| `notebooks/Phase4a_ExperimentalPredictions_Technical.ipynb` | Experimental Prediction Package for BEC Analog Hawking Radiation — **Phase 4 Wave 1 — Item 1A: Experimental Prediction Tables (Technical Notebook)** |
+| `notebooks/Phase4b_Vestigial_Stakeholder.ipynb` | Vestigial Gravity: A Phase of Spacetime Without a Frame — **Phase 4 — Vestigial Gravity Simulation (Stakeholder Notebook)** |
+| `notebooks/Phase4b_Vestigial_Technical.ipynb` | Vestigial Gravity: Mean-Field Analysis and Monte Carlo Simulation — **Phase 4 Waves 2–3 — Items 2A, 3C: Vestigial Metric Correlator (Technical Notebook)** |
+| `notebooks/Phase5a_ChiralityWall_Stakeholder.ipynb` | The Chirality Wall: Can We Put Left-Handed Particles on a Grid? — **Phase 5 — Chirality Wall (Stakeholder Notebook)** |
+| `notebooks/Phase5a_ChiralityWall_Technical.ipynb` | Chirality Wall: TPF vs Golterman-Shamir Compatibility Analysis — **Phase 5 Wave 3 — Paper 7: Chirality Wall Formal Verification (Technical Notebook)** |
+| `notebooks/Phase5a_GTChiralFermion_Stakeholder.ipynb` | Cracking the Chirality Wall: Machine-Verified Lattice Chiral Fermions — **Phase 5a — Stakeholder Notebook** |
+| `notebooks/Phase5a_GTChiralFermion_Technical.ipynb` | Gioia-Thorngren Lattice Chiral Fermion: Formal Verification — **Phase 5a Waves 2+4 — Paper 8: Chirality Wall Master Theorem (Technical Notebook)** |
+| `notebooks/Phase5b_ModularGeneration_Stakeholder.ipynb` | Why Three Generations? A Machine-Verified Answer — **Phase 5b, Waves 4-5** | SK-EFT Hawking Project — Stakeholder Edition |
+| `notebooks/Phase5b_ModularGeneration_Technical.ipynb` | From Modular Forms to Generation Counting — Technical Notebook — **Phase 5b, Waves 4-5** | SK-EFT Hawking Project |
+| `notebooks/Phase5b_QuantumGroup_Stakeholder.ipynb` | Quantum Groups: A New Mathematical Language for Gauge Forces — **Phase 5b, Wave 7** | SK-EFT Hawking Project -- Stakeholder Edition |
+| `notebooks/Phase5b_QuantumGroup_Technical.ipynb` | q-Numbers and U_q(sl_2) -- Technical Notebook — **Phase 5b, Wave 7** | SK-EFT Hawking Project |
+| `notebooks/Phase5b_SMAnomalyDrinfeld_Stakeholder.ipynb` | Phase 5b: What the Numbers Tell Us — **Stakeholder Notebook** — Accessible summary of the SM anomaly and Drinfeld center results. |
+| `notebooks/Phase5b_SMAnomalyDrinfeld_Technical.ipynb` | Phase 5b: SM Anomaly in Z16 + Drinfeld Center — **Technical Notebook** — Computation pipeline for SM anomaly verification and Drinfeld center examples. |
+| `notebooks/Phase5b_Synthesis_Stakeholder.ipynb` | Phase 5 Synthesis: What We Built and What It Means — **Phase 5 — Synthesis (Stakeholder Notebook)** |
+| `notebooks/Phase5b_Synthesis_Technical.ipynb` | Phase 5 Synthesis: Kappa-Scaling, Polariton, Vestigial MC, Categorical Infrastructure, and Gauge Emergence — **Phase 5 Waves 1–2 + 4A–4C — Technical Synthesis Notebook** |
+| `notebooks/Phase5c_E8Rokhlin_Stakeholder.ipynb` | Why Does 16 Appear Everywhere? -- Stakeholder Edition — **Phase 5c** | SK-EFT Hawking Project -- Stakeholder Edition |
+| `notebooks/Phase5c_E8Rokhlin_Technical.ipynb` | E8 Cartan Matrix and the Rokhlin Algebra-Topology Gap -- Technical Notebook — **Phase 5c** | SK-EFT Hawking Project |
+| `notebooks/Phase5c_HopfAlgebra_Stakeholder.ipynb` | What Is a Quantum Group? -- Stakeholder Edition — **Phase 5c, Wave 1** | SK-EFT Hawking Project -- Stakeholder Edition |
+| `notebooks/Phase5c_HopfAlgebra_Technical.ipynb` | U_q(sl_2) Hopf Algebra Structure -- Technical Notebook — **Phase 5c, Wave 1** | SK-EFT Hawking Project |
+| `notebooks/Phase5c_SU2kFusion_Stakeholder.ipynb` | Fusion Categories: How Anyons Combine -- Stakeholder Edition — **Phase 5c, Wave 3** | SK-EFT Hawking Project -- Stakeholder Edition |
+| `notebooks/Phase5c_SU2kFusion_Technical.ipynb` | SU(2)_k Fusion Rules and Modular Data -- Technical Notebook — **Phase 5c, Wave 3** | SK-EFT Hawking Project |
+| `notebooks/Phase5d_MTC_Stakeholder.ipynb` | First Verified Modular Tensor Categories: What It Means for Quantum Computing — **Phase 5d Wave 4 — Stakeholder Summary** **Date:** April 2026 |
+| `notebooks/Phase5d_MTC_Technical.ipynb` | Phase 5d Wave 4: SU(2)_k MTC Instances — Technical Notebook — **Wave:** 5d-W4 (Ising + Fibonacci MTC) **Date:** April 2026 **Paper:** Paper 11 — *U_q(sl_2) in Lean 4* |
+| `notebooks/Phase5d_Polariton_Stakeholder.ipynb` | Polariton Hawking Radiation: What We Can Detect and How — **Phase 5d Wave 5 — Stakeholder Summary** **Date:** April 2026 |
+| `notebooks/Phase5d_Polariton_Technical.ipynb` | Phase 5d Wave 5: Polariton Hawking Radiation — Technical Notebook — **Wave:** 5d-W5 (Polariton Paper) **Date:** April 2026 **Paper:** Paper 12 — *Stimulated Hawking Radiation in Polariton BEC* |
+| `notebooks/Phase5d_TetradGap_Stakeholder.ipynb` | Can Gravity Emerge from Fermion Condensation? — In superconductors, electrons pair up below a critical temperature, forming a condensate that carries current without resistance. The **gap equation** predicts when this condensation occurs. |
+| `notebooks/Phase5d_TetradGap_Technical.ipynb` | Phase 5d: Tetrad Gap Equation — Technical Notebook — This notebook derives and solves the NJL-type gap equation for the tetrad VEV in the ADW mechanism — the first time this equation has been explicitly written down for the tetrad channel. |
+| `notebooks/Phase5e_BraidedMTC_Stakeholder.ipynb` | First Verified Braided Fusion Categories and Knot Invariants — **Phase 5e — Stakeholder Summary** **Date:** April 2026 |
+| `notebooks/Phase5e_BraidedMTC_Technical.ipynb` | Phase 5e: Complete Braided MTCs — Technical Notebook — **Phase:** 5e (Braided MTCs + Topological Invariants) **Date:** April 2026 **Paper:** Paper 11 — *U_q(sl_2) in Lean 4* |
+| `notebooks/Phase5h_ChiralityWall3D_Stakeholder.ipynb` | Can We Put Chiral Fermions on a Lattice? — **Phase 5h — Stakeholder Summary** **Date:** April 2026 |
+| `notebooks/Phase5h_ChiralityWall3D_Technical.ipynb` | Phase 5h: Chirality Wall 3+1D — Technical Notebook — **Phase:** 5h (Chirality Wall 3+1D Formal Verification) **Date:** April 2026 **Paper:** Paper 12 — *Chirality Wall in 3+1D: SPT Classification, Gauging Obstruction, and Lattice Chiral Fermions* |
+| `notebooks/Phase5i_RankTwoQuantumGroups_Stakeholder.ipynb` | First Rank-2 Quantum Group in a Proof Assistant — **Phase 5i — Stakeholder Summary** **Date:** April 2026 |
+| `notebooks/Phase5i_RankTwoQuantumGroups_Technical.ipynb` | Phase 5i: Rank-2 Quantum Groups — Technical Notebook — **Phase:** 5i (Rank-2 Quantum Groups and SU(3)_k Fusion) **Date:** April 2026 **Paper:** Paper 14 — *U_q(sl_3) and SU(3)_k Fusion Categories in Lean 4* |
+| `notebooks/Phase5j_FermiPointEmergence_Stakeholder.ipynb` | Can Gauge Fields and Gravity Emerge from Topology? — **Phase 5j — Stakeholder Summary** **Date:** April 2026 |
+| `notebooks/Phase5j_FermiPointEmergence_Technical.ipynb` | Phase 5j: Fermi-Point Gauge Emergence — Technical Notebook — **Phase:** 5j (Fermi-Point Topological Charge and Emergent Gauge Fields) **Date:** April 2026 **Paper:** Paper 13 — *Emergent Gauge Fields from Fermi-Point Topology* |
+| `notebooks/Phase5s_FKGappedInterface_Technical.ipynb` | Phase 5s Wave 4 — Fidkowski-Kitaev gapped interface (Cayley calibration) — **Technical companion** to `lean/SKEFTHawking/FKGappedInterface.lean` and the bridge theorem `gapped_interface_dimensional_ladder` in `SPTClassification.lean`. |
+| `notebooks/Phase5t_DoublonGate_Stakeholder.ipynb` | The Doublon Geometric Gate — First Formally Verified Geometric Quantum Gate — **Stakeholder notebook** — accessible explanation of what Phase 5t proves and why it matters. |
+| `notebooks/Phase5t_DoublonGate_Technical.ipynb` | Phase 5t: Doublon Geometric SWAP Gate — Technical Notebook — **Target:** Kiefer et al. (Nature 2026, arXiv:2507.22112) — formally verified in Lean 4. |
+| `notebooks/Phase5w_GrapheneDiracFluid_Stakeholder.ipynb` | Analog Hawking Radiation in Graphene: Executive Summary — **For:** Experimental collaborators (Dean/Lucas, Kim/Yacoby, Bandurin) |
+| `notebooks/Phase5w_GrapheneDiracFluid_Technical.ipynb` | Phase 5w Wave 2: Graphene Dirac Fluid Analog Metric — **Technical notebook** — Dirac fluid acoustic metric, Hawking temperature predictions, dissipation window analysis. |
+| `notebooks/Phase5z_MajoranaRung_Stakeholder.ipynb` | Phase 5z Wave 2: Why Neutrinos Have Tiny Masses — Stakeholder Notebook — **Plain-language goal:** Connect three deep facts about the universe — the existence of right-handed neutrinos, why neutrinos have masses 100 billion times smaller than electrons, and a strange algebraic constraint from topology — into a single coherent story, then check it line-by-line in a computer proof. |
+| `notebooks/Phase5z_MajoranaRung_Technical.ipynb` | Phase 5z Wave 2 (+2a +2b): Majorana-Rung Interpretation of the Sterile-Neutrino Seesaw — Technical Notebook — **Target:** Place the sterile-neutrino right-handed Weyl field $\nu_R$ as a $\mathbb{Z}_2$-graded rung on the SK-EFT fermionic substrate, formally verified in Lean 4 across `MajoranaRung.lean` (Wave 2 + 2b strengthening), `NeutrinoMixing.lean` (Wave 2a refactor), and `MajoranaRungDecoupling.lean` (Wave 2b new module). |
+| `notebooks/Phase5z_ScalarRung_Stakeholder.ipynb` | Phase 5z Wave 1 — Stakeholder Notebook — **The question.** The Standard Model has a Higgs field whose vacuum expectation value (VEV) gives masses to the W and Z bosons and to all the matter particles via Yukawa couplings. We assume it is a *fundamental* field. But what if it is instead a *condensate* of more fundamental fermions — like Cooper pairs in a superconductor are condensates of electrons? |
+| `notebooks/Phase5z_ScalarRung_Technical.ipynb` | Phase 5z Wave 1: Scalar-Rung Interpretation of the Higgs Bilinear — Technical Notebook — **Target:** Identify the Wetterich-NJL scalar channel with the Higgs bilinear, formally verified in Lean 4 (`ScalarRungInterpretation.lean`, 20 theorems, 0 sorry). |
+| `notebooks/Phase6b2_CosmologicalPerturbations_Stakeholder.ipynb` | Phase 6b Wave 2 — Cosmological Perturbations: A Stakeholder Walkthrough — **Question:** if the natural vestigial-DE branch fails DESI at the background level (Phase 5y NO-GO), can it still produce a sensible CMB-ℓ angular power spectrum at the linear-perturbation level? In other words: even if the *equation of state* mismatches DESI, are the *perturbations* well-behaved? |
+| `notebooks/Phase6b2_CosmologicalPerturbations_Technical.ipynb` | Phase 6b Wave 2 — Cosmological Perturbations Around Emergent Backgrounds — **Lean module:** `lean/SKEFTHawking/CosmologicalPerturbations.lean` |
+| `notebooks/Phase6c1_StrongCPDarkEnergy_Stakeholder.ipynb` | Phase 6c Wave 1: Could Two Famous Physics Mysteries Be the Same Mystery? — **A non-specialist tour of strong-CP, the cosmological-constant problem, and the Zhitnitsky bridge.** |
+| `notebooks/Phase6c1_StrongCPDarkEnergy_Technical.ipynb` | Phase 6c Wave 1: Strong-CP / Topological Dark Energy — Technical Notebook — Companion to `papers/paper32_strong_cp_de/paper_draft.tex`. |
+| `notebooks/Phase6c2_EWBaryogenesisChiralityWall_Stakeholder.ipynb` | Phase 6c Wave 2: Why the Standard Model can't make the universe's matter — Stakeholder — **The question:** Could the Standard Model alone explain why the universe contains more matter than antimatter? |
+| `notebooks/Phase6c2_EWBaryogenesisChiralityWall_Technical.ipynb` | Phase 6c Wave 2: EW Baryogenesis ↔ Chirality Wall — Technical Notebook — Companion to `papers/paper33_ewbg_chirality_wall/paper_draft.tex`. |
+| `notebooks/Phase6c3_EquivalencePrinciple_Stakeholder.ipynb` | Phase 6c Wave 3: When Things Fall, Do They All Fall the Same? — **A non-specialist tour of the equivalence principle and what it can — and cannot — tell us about dark matter.** |
+| `notebooks/Phase6c3_EquivalencePrinciple_Technical.ipynb` | Phase 6c Wave 3: Equivalence-Principle Classification of Phase 5x DM Mechanisms — Technical Notebook — Companion to `papers/paper34_equivalence_principle/paper_draft.tex`. |
+| `notebooks/Phase6c4_QECHolography_Stakeholder.ipynb` | Phase 6c Wave 4: Black Holes as Quantum Error-Correcting Codes — **A non-specialist tour of Hayden-Preskill scrambling, code distance, and why anyons matter for black-hole information.** |
+| `notebooks/Phase6c4_QECHolography_Technical.ipynb` | Phase 6c Wave 4: Hayden-Preskill QEC on MTC Horizon Substrate — Technical Notebook — Companion to `papers/paper35_qec_holography/paper_draft.tex`. |
+| `notebooks/Phase6c5_RTCasiniHuerta_Stakeholder.ipynb` | Phase 6c Wave 5: Bekenstein-Hawking, Ryu-Takayanagi, and the Log Correction Wars — **A non-specialist tour of why log corrections to black-hole entropy matter, and why the leading-order $A/(4 G_N)$ formula cannot be the whole microscopic story.** |
+| `notebooks/Phase6c5_RTCasiniHuerta_Technical.ipynb` | Phase 6c Wave 5: Ryu-Takayanagi vs Kaul-Majumdar — Technical Notebook — Companion to `papers/note_rt_ch_bounds/paper_draft.tex` (a short formalization note, not a full paper). |
+| `notebooks/Phase6d1_CenterSymmetry_Stakeholder.ipynb` | Phase 6d Wave 1: Why Quarks Are Locked Inside Hadrons (And What It Has to Do With Perfect Fluids) — **A non-specialist tour of confinement, the Polyakov loop, Svetitsky-Yaffe universality, and the KSS viscosity bound.** |
+| `notebooks/Phase6d1_CenterSymmetry_Technical.ipynb` | Phase 6d Wave 1: Center Symmetry, Confinement, and the Walker-Wang KSS Window — Technical Notebook — Companion to `papers/paper36_center_symmetry/paper_draft.tex`. |
+| `notebooks/Phase6d2_ChiralSSB_Stakeholder.ipynb` | Phase 6d Wave 2: Where Most of the Proton's Mass Comes From — **A non-specialist tour of chiral symmetry breaking, the quark condensate, and a beautiful 1968 identity that ties four numbers together with no parameters.** |
+| `notebooks/Phase6d2_ChiralSSB_Technical.ipynb` | Phase 6d Wave 2: Chiral SSB and the Gell-Mann–Oakes–Renner Relation — Technical Notebook — Companion to `papers/paper37_chiral_ssb/paper_draft.tex`. |
+| `notebooks/Phase6d3_CFL_Stakeholder.ipynb` | Phase 6d Wave 3: When Quark Matter Locks Up — and a Surprising ℤ_3 Coincidence — **A non-specialist tour of color-flavor-locked dense quark matter, the Hirono-Tanizaki emergent symmetry, and an algebraic agreement that ties the inside of neutron stars to ordinary confined hadrons.** |
+| `notebooks/Phase6d3_CFL_Technical.ipynb` | Phase 6d Wave 3: CFL Emergent ℤ_3 ≡ QCD Center ℤ_3 — Technical Notebook — Companion to `papers/paper38_cfl/paper_draft.tex`. |
+| `notebooks/Phase6e1_HeatKernelExpansion_Stakeholder.ipynb` | Phase 6e Wave 1: How does Newton's constant arise from a fermion fluid? — **Stakeholder companion** to `papers/paper39_heat_kernel_expansion/paper_draft.tex`. |
+| `notebooks/Phase6e1_HeatKernelExpansion_Technical.ipynb` | Phase 6e Wave 1: Seeley-DeWitt Heat-Kernel Expansion — Technical Notebook — Companion to `papers/paper39_heat_kernel_expansion/paper_draft.tex`. |
+| `notebooks/Phase6e2_HigherCurvatureStructure_Stakeholder.ipynb` | Phase 6e Wave 2: Higher-Curvature Structure — Stakeholder Notebook — Phase 6e Wave 1 showed that, in our microscopic theory of fermions on a discrete lattice, the leading correction to gravity reproduces Newton's constant exactly (the "Sakharov-Adler match"). Wave 2 takes the **next** correction — the second order in the curvature expansion — and asks two questions: |
+| `notebooks/Phase6e2_HigherCurvatureStructure_Technical.ipynb` | Phase 6e Wave 2: Higher-Curvature Structure — Technical Notebook — Companion to `papers/paper40_higher_curvature/paper_draft.tex`. |
+| `notebooks/Phase6e3_NonlinearDiffInvariance_Stakeholder.ipynb` | Phase 6e Wave 3 — Stakeholder Notebook — **One-line summary:** The Lean module `NonlinearDiffInvariance.lean` formally certifies that the heat-kernel effective Lagrangian of the ADW emergent-gravity programme is **diffeomorphism-invariant** order-by-order through order $a_4$ — Decision Gate E.3 returns PASS, and Wave 4 proceeds at full scope. |
+| `notebooks/Phase6e3_NonlinearDiffInvariance_Technical.ipynb` | Phase 6e Wave 3: Nonlinear Diffeomorphism Invariance — Technical Notebook — Companion to `papers/paper41_diff_invariance/paper_draft.tex`. |
+| `notebooks/Phase6e4_NonlinearEFE_Stakeholder.ipynb` | Phase 6e Wave 4 — Stakeholder Notebook — **One-line summary:** The Lean module `NonlinearEFE.lean` formally certifies that the trace-level nonlinear Einstein equations of the ADW emergent-gravity programme close *only* at the Sakharov-Adler calibration value $\alpha_{\mathrm{ADW}} = 1$, and predicts a clean multi-channel post-Newtonian signature (deflection, perihelion precession, ringdown frequency in a fixed 3:3:2 deviation pattern) that observation campaigns can already test. |
+| `notebooks/Phase6e4_NonlinearEFE_Technical.ipynb` | Phase 6e Wave 4: Nonlinear Einstein Field Equations from ADW — Technical Notebook — Companion to `papers/paper42_nonlinear_efe/paper_draft.tex`. |
+| `notebooks/Phase6e5_MicroscopicMatch_Stakeholder.ipynb` | Phase 6e Wave 5 — The Cosmological Constant Problem in Emergent Form — *Stakeholder notebook — for non-experts.* |
+| `notebooks/Phase6e5_MicroscopicMatch_Technical.ipynb` | Phase 6e Wave 5 — Microscopic-to-Macroscopic Coefficient Match — **Lean module:** `lean/SKEFTHawking/MicroscopicCoefficientMatch.lean` |
+| `notebooks/Phase6e6_EinsteinCartanExtension_Stakeholder.ipynb` | Phase 6e Wave 6 — Einstein-Cartan torsion at natural ADW parameters — **Audience:** stakeholders and researchers interested in the observational consequences of the ADW emergent-gravity programme. |
+| `notebooks/Phase6e6_EinsteinCartanExtension_Technical.ipynb` | Phase 6e Wave 6 — Einstein-Cartan Extension (torsion from spin current) — **Lean module:** `lean/SKEFTHawking/EinsteinCartanExtension.lean` |
+| `notebooks/Phase6t_SolovayKitaev_Stakeholder.ipynb` | Phase 6t — Quantitative Solovay-Kitaev for Fibonacci Anyons (Stakeholder) — **One-sentence summary.** This Lean substrate proves that any quantum gate on a 2-dimensional system can be implemented by braiding Fibonacci anyons, and gives a precise machine-verified bound on how many braids you need for any precision you target. |
+| `notebooks/Phase6t_SolovayKitaev_Technical.ipynb` | Phase 6t — Quantitative Solovay-Kitaev for Fibonacci Anyons (Technical) — **Lean modules:** `lean/SKEFTHawking/FKLW/{GroupCommutator,SU2BalancedCommutator,FibonacciEpsilonNet,SolovayKitaevRecursion,SolovayKitaevLengthBound,SolovayKitaevQuantitative,SolovayKitaevApplications,SolovayKitaevPathA}.lean` |
 
 ## Modules this census cannot describe
 
-These carry no module docstring (Python) or leading comment block (shell), so
+These carry no module docstring (Python), leading comment block (shell) or
+opening markdown heading (notebook), so
 there is nothing to derive. **An entry here is a description that does not
 exist, not one this file failed to find** — the fix is at the source.
 

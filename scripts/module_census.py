@@ -1,4 +1,4 @@
-"""Derive the module census — the one answer to "what is this module or script".
+"""Derive the census — the one answer to "what is this module, script or notebook".
 
     uv run python scripts/module_census.py            # print the census
     uv run python scripts/module_census.py --write    # write the tracked doc
@@ -8,11 +8,15 @@ had drifted while the generated blocks beside it stayed fresh — a half-generat
 generated half. This file is generated in whole; there is no hand-edited region for that
 failure to recur in.
 
-**Scope is Python and shell, and it is stated on the artifact's face (D1b).** Lean is
-answered by `docs/counts.json` (`lean.module_names`), `lean/lean_deps.json` and
+**Scope is Python, shell and notebooks, and it is stated on the artifact's face (D1b).**
+Lean is answered by `docs/counts.json` (`lean.module_names`), `lean/lean_deps.json` and
 `lean/atlas_view.json`, all derived from the extraction chokepoint and unable to drift;
-notebooks, papers and tests by counts in `docs/counts.json`. An unstated boundary is how
-the next hand catalogue gets started.
+papers and tests by counts in `docs/counts.json`. An unstated boundary is how the next hand
+catalogue gets started.
+
+⚠️ **`docs/counts.json` answers HOW MANY notebooks; nothing answered WHAT EACH ONE IS.**
+That is the same gap this census exists to close, which is why notebooks joined it at D3
+rather than staying a bare count.
 
 ⚠️ **Shell was added at D5 (2026-08-13) and the four scripts were ALREADY described**, so
 `_NO_DOCSTRING_CEILING` holds at 4 — verified before the walk widened, not after. That
@@ -38,6 +42,7 @@ from __future__ import annotations
 
 import argparse
 import ast
+import json
 import re
 from pathlib import Path
 
@@ -45,11 +50,13 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = SCRIPT_DIR.parent
 OUT_PATH = PROJECT_ROOT / "docs" / "MODULE_CENSUS.md"
 
-#: The two trees nothing else derives a per-module description for.
-TREES: tuple[str, ...] = ("src", "scripts")
+#: The trees nothing else derives a per-file description for.
+TREES: tuple[str, ...] = ("src", "scripts", "notebooks")
 
-#: Never walked: caches, virtualenvs, and the gitignored scratch tree.
-SKIP_PARTS: frozenset[str] = frozenset({"__pycache__", ".venv", "node_modules", ".temp"})
+#: Never walked: caches, virtualenvs, the gitignored scratch tree, and Jupyter's
+#: checkpoint copies (which would double-count every notebook under a stale name).
+SKIP_PARTS: frozenset[str] = frozenset({
+    "__pycache__", ".venv", "node_modules", ".temp", ".ipynb_checkpoints"})
 
 
 def _first_paragraph(doc: str) -> str:
@@ -92,6 +99,50 @@ def _shell_header(src: str) -> str | None:
     return body or None
 
 
+def _notebook_header(src: str) -> str | None:
+    """A notebook's leading markdown cell, as `heading — first prose paragraph`.
+
+    The decider for notebooks (D3). Measured 2026-08-13: **91 of 91 notebooks already
+    open with a markdown heading**, so this encodes a convention the corpus already
+    follows universally rather than imposing a new one — which is why it costs nothing
+    to adopt and why the ceiling does not move.
+
+    Sub-headings and rule lines are skipped when gathering the prose, so a title block
+    styled with an underline does not publish as a wall of `=`.
+    """
+    lines = [ln.rstrip() for ln in src.strip().splitlines()]
+    if not lines:
+        return None
+    head = lines[0].lstrip("#").strip()
+    rest: list[str] = []
+    for ln in lines[1:]:
+        s = ln.strip()
+        if not s:
+            if rest:
+                break
+            continue
+        if s.startswith("#") or re.fullmatch(r"[=\-~_*\s]{3,}", s):
+            continue
+        rest.append(s)
+    out = (head + (" — " + " ".join(rest) if rest else "")).strip()
+    return out or None
+
+
+def _notebook_first_markdown(path: Path) -> str | None:
+    """First cell of a notebook IF it is markdown, else None.
+
+    ⚠️ Deliberately not "the first markdown cell anywhere". A notebook that opens with
+    code and explains itself later is NOT self-describing at the point a reader opens
+    it, and calling it described would be the same false positive the shell leg bounds
+    against.
+    """
+    doc = json.loads(path.read_text(encoding="utf-8"))
+    cells = doc.get("cells") or []
+    if not cells or cells[0].get("cell_type") != "markdown":
+        return None
+    return _notebook_header("".join(cells[0].get("source") or []))
+
+
 def collect() -> dict:
     """Walk the trees; read each file's description by the decider for its language."""
     documented: list[tuple[str, str]] = []
@@ -100,25 +151,29 @@ def collect() -> dict:
         base = PROJECT_ROOT / tree
         if not base.is_dir():
             continue
-        paths = sorted((p for pat in ("*.py", "*.sh") for p in base.rglob(pat)),
+        paths = sorted((p for pat in ("*.py", "*.sh", "*.ipynb") for p in base.rglob(pat)),
                        key=lambda p: p.as_posix())
         for path in paths:
             if SKIP_PARTS & set(path.parts):
                 continue
             rel = path.relative_to(PROJECT_ROOT).as_posix()
             try:
-                src = path.read_text(encoding="utf-8")
-                doc = (_shell_header(src) if path.suffix == ".sh"
-                       else ast.get_docstring(ast.parse(src)))
-            except (SyntaxError, UnicodeDecodeError) as exc:
+                if path.suffix == ".ipynb":
+                    doc = _notebook_first_markdown(path)
+                else:
+                    src = path.read_text(encoding="utf-8")
+                    doc = (_shell_header(src) if path.suffix == ".sh"
+                           else ast.get_docstring(ast.parse(src)))
+            except (SyntaxError, UnicodeDecodeError, json.JSONDecodeError, KeyError) as exc:
                 undocumented.append((rel, f"unparseable — {type(exc).__name__}"))
                 continue
             if doc and doc.strip():
                 documented.append((rel, _first_paragraph(doc)))
             else:
-                undocumented.append(
-                    (rel, "no leading comment block" if path.suffix == ".sh"
-                          else "no module docstring"))
+                undocumented.append((rel, {
+                    ".sh": "no leading comment block",
+                    ".ipynb": "first cell is not a markdown heading",
+                }.get(path.suffix, "no module docstring")))
     return {"documented": documented, "undocumented": undocumented}
 
 
@@ -134,9 +189,9 @@ def render(data: dict) -> str:
         "leading comment block. To change a description, change it at the source; the next",
         "`sync` regenerates this file.",
         "",
-        "**Scope: Python and shell** — `src/` and `scripts/`. Lean modules are answered by",
-        "`docs/counts.json` (`lean.module_names`), `lean/lean_deps.json` and",
-        "`lean/atlas_view.json`; notebooks, papers and tests by counts in `docs/counts.json`.",
+        "**Scope: Python, shell and notebooks** — `src/`, `scripts/`, `notebooks/`. Lean is",
+        "answered by `docs/counts.json` (`lean.module_names`), `lean/lean_deps.json` and",
+        "`lean/atlas_view.json`; papers and tests by counts in `docs/counts.json`.",
         "Nothing else belongs here.",
         "",
         "---",
@@ -152,7 +207,8 @@ def render(data: dict) -> str:
     ]
     if undocumented:
         out += [
-            "These carry no module docstring (Python) or leading comment block (shell), so",
+            "These carry no module docstring (Python), leading comment block (shell) or",
+            "opening markdown heading (notebook), so",
             "there is nothing to derive. **An entry here is a description that does not",
             "exist, not one this file failed to find** — the fix is at the source.",
             "",

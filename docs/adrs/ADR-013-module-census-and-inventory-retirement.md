@@ -1,8 +1,8 @@
 # ADR-013 — The module census: one derived answer to "what is this module", and the retirement of the Inventory pair
 
 - **Status:** ✅ **ACCEPTED — P1, P2, P4, P4b, P5, P6 SHIPPED 2026-08-13.** P3 folded into P4
-  (see the corrected D10 — its transfer did not exist). D3 (notebook census) and D5 (shell
-  census) remain open and are tracked in the plan table. This document landed before the code,
+  (see the corrected D10 — its transfer did not exist); D3 and D5 shipped the same day.
+  **Every decision in this ADR is now built.** This document landed before the code,
   per the architecture rule that *a doc written afterwards is a changelog; only one written
   first is a specification* — and the sequence paid: the pilot changed the design, D2's audit
   showed the "accepted loss" was no loss, and D10's stated transfer turned out not to exist.
@@ -308,6 +308,35 @@ already answer instantly, which is building beside an existing mechanism.
 
 **Disposition: deleted, not migrated, and not an accepted loss** — there is nothing to lose. The
 27 stale line counts are removed with it, which is a net gain in accuracy.
+
+**D3 SHIPPED 2026-08-13 — notebooks joined the census; the convention already existed.**
+The operator asked for a notebook inventory but doubted the shape, and said a first-cell
+convention should not be formalised *"unless there's a clear correct way of doing it"*. Measured
+first: **91 of 91 notebooks already open with a markdown heading.** So there is a correct way,
+the corpus already follows it universally, and D3 ENCODES it rather than imposing anything.
+Adoption cost nothing and moved no ceiling.
+
+`docs/counts.json` answers *how many* notebooks; nothing answered *what each one is* — the exact
+gap this census exists to close, which is why a bare count was not enough.
+
+**The decider is the FIRST cell, and only if it is markdown** — heading plus first prose
+paragraph. Deliberately not "the first markdown cell anywhere": a notebook that opens with code
+and explains itself later is not self-describing at the point a reader opens it, and counting it
+as described is the same false positive the shell leg bounds against.
+
+**No notebook-authoring agent exists in the plugin**, so the convention could not be handed to
+one. Making it a census leg is the stronger form anyway — a contract the corpus is measured
+against every sync, rather than an instruction an agent may or may not follow.
+
+Population 322 → 413; undocumented holds at 4. `.ipynb_checkpoints` is skipped, or every
+notebook would double-count under a stale name.
+
+⚠️ **`verify_scope._plan()` needed the same widening the sync `Edge` needed at D5** — its
+`code` key matches the `src/`/`scripts/` prefixes, so a notebook edit routed to `notebook_exec`
+and `viz_consistency` but NOT to `module_census_fresh`. A walk widened without widening every
+probe that watches it is a census that silently stops tracking what it claims to cover. The
+docstring's derived scope table was resynced in the same commit, since it asserts it is derived
+from `_plan()` rather than written beside it.
 
 **D5 SHIPPED 2026-08-13 — shell added; blast radius measured on all five surfaces first.**
 The census walks `*.sh` alongside `*.py`. Five things move when the walk widens, and the fifth

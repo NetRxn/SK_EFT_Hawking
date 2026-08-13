@@ -738,6 +738,48 @@ class TestTheShellDecider:
         assert any(r.endswith(".sh") for r, _ in self._mc.collect()["documented"])
 
 
+class TestTheNotebookDecider:
+    """ADR-013 D3. Measured 2026-08-13: 91 of 91 notebooks already open with a markdown
+    heading, so this ENCODES a universal convention rather than imposing a new one —
+    which is why adopting it moved no ceiling."""
+
+    @property
+    def _mc(self):
+        import module_census
+        return module_census
+
+    def test_heading_plus_prose_becomes_the_description(self):
+        assert self._mc._notebook_header("# D11 — Band Theory\n\nCompanion to the draft.") \
+            == "D11 — Band Theory — Companion to the draft."
+
+    def test_a_bare_heading_is_enough(self):
+        assert self._mc._notebook_header("# Just A Title") == "Just A Title"
+
+    def test_rule_lines_do_not_reach_the_published_row(self):
+        """The wall-of-`=` defect, in the notebook leg."""
+        out = self._mc._notebook_header("# Title\n=======\n\nReal prose.")
+        assert "=" not in out and out.endswith("Real prose.")
+
+    def test_an_empty_cell_is_no_description(self):
+        assert self._mc._notebook_header("   \n\n") is None
+
+    def test_the_real_corpus_is_fully_described(self):
+        data = self._mc.collect()
+        nb = [r for r, _ in data["documented"] if r.endswith(".ipynb")]
+        assert len(nb) == 91, f"expected 91 described notebooks, got {len(nb)}"
+        assert not [r for r, _ in data["undocumented"] if r.endswith(".ipynb")]
+
+    def test_checkpoints_are_not_double_counted(self):
+        """`.ipynb_checkpoints` holds stale copies under near-identical names."""
+        assert not [r for r, _ in self._mc.collect()["documented"]
+                    if ".ipynb_checkpoints" in r]
+
+    def test_notebooks_are_actually_walked(self):
+        """SEAM GUARD — without it the legs above pass on synthetic strings while the
+        census covers no notebook at all."""
+        assert any(r.endswith(".ipynb") for r, _ in self._mc.collect()["documented"])
+
+
 class TestModuleCensusFresh:
     """PRODUCTION-SEEDED (guide §2.4): every mutation writes into the REAL tree — a real
     module's docstring, or the real `docs/MODULE_CENSUS.md` — and restores in a `finally`.
@@ -818,7 +860,7 @@ class TestModuleCensusFresh:
         """ADR-013 D1b. An unstated boundary is how the next hand catalogue gets started."""
         mc = self._mod()
         text = mc.render(mc.collect())
-        assert "**Scope: Python and shell**" in text
+        assert "**Scope: Python, shell and notebooks**" in text
         assert "lean.module_names" in text, "the header must name where Lean is answered"
 
     def test_undocumented_modules_are_named_not_merely_counted(self):

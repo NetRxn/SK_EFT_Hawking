@@ -21,14 +21,15 @@ WHAT DECIDES SCOPE — this table is DERIVED FROM `_plan()`, not written beside 
   lean/**                  -> counts_fresh, lake build SKEFTHawking.ExtractDeps,
                               lean_zero_sorry + axiom_closure_allowlist
   src/**, scripts/**       -> fast suite, architecture_inventory_fresh, counts_fresh,
-                              module_census_fresh (those trees ARE its inputs)
+                              module_census_fresh (those trees ARE its inputs — .py AND .sh)
   tests/**                 -> fast suite, counts_fresh
   rust/**                  -> NOTHING mechanical. No test under tests/ imports
                               `sk_eft_rhmc` (nine scripts/ drivers do), and a rust change
                               needs the CLAUDE.md rebuild first, so this tool cannot
                               observe it. NOT CERTIFIED carries the rebuild command.
   pyproject.toml, uv.lock  -> fast suite (the environment every step runs in)
-  notebooks/**             -> counts_fresh, notebook_exec + viz_consistency
+  notebooks/**             -> counts_fresh, module_census_fresh (the census walks it
+                              since D3), notebook_exec + viz_consistency
   docs/architecture/**     -> architecture_inventory_fresh
   docs/counts.*            -> counts_fresh
   papers/**                -> counts_fresh, the three deterministic bundle gates
@@ -121,6 +122,12 @@ def _plan(paths: list[str]) -> tuple[list[tuple[str, list[str]]], list[str]]:
         steps.append(("fast suite (environment changed)",
                       ["uv", "run", "python", "-m", "pytest", "tests/", "-q"]))
     if touched["notebooks"]:
+        # ⚠️ The census walks notebooks/ since D3, so a notebook edit can make it stale.
+        # `touched["code"]` keys on the src/ and scripts/ prefixes and does NOT cover
+        # this — the same unwidened-probe gap D5 found in the sync Edge.
+        steps.append(("module_census_fresh (the census walks notebooks/)",
+                      ["uv", "run", "python", "scripts/validate.py",
+                       "--check", "module_census_fresh"]))
         steps.append(("notebook_exec / viz_consistency",
                       ["uv", "run", "python", "scripts/validate.py",
                        "--check", "notebook_exec", "--check", "viz_consistency"]))
