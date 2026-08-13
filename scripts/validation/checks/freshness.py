@@ -190,6 +190,40 @@ def _counts_is_stale() -> tuple[bool, str]:
         newest = max((f.stat().st_mtime for f in root.rglob(pat)), default=0)
         if newest > counts_mtime:
             return True, f"{label} newer than counts.json"
+
+    # ⚠️ EVERY LEG ABOVE IS AN MTIME PROXY, AND AN MTIME-MAX CANNOT SEE A
+    # DELETION. Removing a file leaves every surviving file's mtime untouched,
+    # so the maximum does not move and this function reports `fresh` while
+    # counts.json publishes a count one too high. Measured 2026-08-13:
+    # `tests/test_inventory_index_autogen.py` was deleted in `bee7608c` and
+    # counts.json shipped `test_files: 194` against a live 193 for three
+    # commits, with this check green the whole time. The 2026-08-10 fix above
+    # widened the *trees*; it could not widen the *direction*.
+    #
+    # So for the legs that are cheap to derive exactly, assert the DECIDER —
+    # does the published number equal the live one — instead of a proxy for it.
+    # `pytest_cases` stays on the proxy because it costs a pytest collection,
+    # and it does not need the count leg: a deleted file moves `test_files`
+    # (caught here) and an edited file moves its own mtime (caught above).
+    #
+    # The derivation is IMPORTED, never re-implemented — a second count here
+    # would be a parallel mechanism free to disagree with the writer's.
+    try:
+        import update_counts as _uc
+        published = json.loads(
+            _H.COUNTS_JSON_PATH.read_text(encoding="utf-8")).get("python", {})
+        # Anchored on `_H`, not on `update_counts`'s own module constants, so a
+        # test that retargets the trees retargets this leg with them.
+        live = _uc.count_python_cheap(
+            src_dir=_H.SRC_DIR, tests_dir=_H.TESTS_DIR,
+            notebooks_dir=_H.NOTEBOOKS_DIR, papers_dir=_H.PAPERS_DIR,
+            viz_file=_H.SRC_DIR / "core" / "visualizations.py")
+    except Exception as exc:  # fail-stale (safe), same contract as the siblings
+        return True, f"python counts could not be recomputed: {type(exc).__name__}"
+    for leg, value in live.items():
+        if published.get(leg) != value:
+            return True, (f"python.{leg}: counts.json publishes "
+                          f"{published.get(leg)!r}, live is {value!r}")
     return False, "fresh"
 
 

@@ -73,6 +73,19 @@ class TestCountsFreshness:
     """`counts.json`/`counts.tex` reflect the current codebase. Papers `\\input` these
     macros, so a stale value is a wrong number in a published paper."""
 
+    @staticmethod
+    def _republish(counts_json, mtime):
+        """Rewrite the fixture's `python` block from the (retargeted) live trees."""
+        import os
+        import update_counts as _uc
+        data = json.loads(counts_json.read_text())
+        data["python"] = _uc.count_python_cheap(
+            src_dir=_H.SRC_DIR, tests_dir=_H.TESTS_DIR,
+            notebooks_dir=_H.NOTEBOOKS_DIR, papers_dir=_H.PAPERS_DIR,
+            viz_file=_H.SRC_DIR / "core" / "visualizations.py")
+        counts_json.write_text(json.dumps(data))
+        os.utime(counts_json, (mtime, mtime))
+
     def _setup(self, tmp_path, monkeypatch, *, counts_mtime, source_mtime,
                lean_mtime=None, tex=True):
         docs = tmp_path / "docs"
@@ -97,6 +110,12 @@ class TestCountsFreshness:
             _d = tmp_path / _name.lower()
             _d.mkdir(parents=True, exist_ok=True)
             monkeypatch.setattr(_H, _name, _d)
+        # The COUNT leg (2026-08-13) compares published vs live values, so a fresh
+        # fixture must publish what the tmp trees actually contain. Derived through
+        # the same helper the check uses rather than hand-written zeros: a hand-
+        # written block would have to be edited every time a leg is added, and the
+        # edit that gets forgotten silently turns every case below into "stale".
+        self._republish(cj, counts_mtime)
         runner = _Ran()
         monkeypatch.setattr(fr.subprocess, "run", runner)
         return runner
@@ -151,6 +170,83 @@ class TestCountsFreshness:
             f"a file under {anchor} newer than counts.json did not mark counts stale — "
             f"counts.json publishes a figure derived from that tree, so the figure can "
             f"now drift with this check green")
+
+    def test_a_deleted_test_file_marks_counts_stale(self, tmp_path, monkeypatch):
+        """THE DIRECTION EVERY MTIME LEG IS BLIND TO, and it shipped.
+
+        Deleting a file leaves every surviving file's mtime untouched, so an
+        mtime-max cannot move and the check reports fresh. Measured 2026-08-13:
+        `tests/test_inventory_index_autogen.py` was deleted in `bee7608c` and
+        `docs/counts.json` shipped `test_files: 194` against a live 193 for three
+        commits with `counts_fresh` green. Note the fixture's mtimes: counts is
+        NEWER than every source, so this can only pass via the count leg.
+        """
+        runner = self._setup(tmp_path, monkeypatch, counts_mtime=2000, source_mtime=1000)
+        victim = _touch(_H.TESTS_DIR / "test_gone.py", 500)
+        self._republish(_H.COUNTS_JSON_PATH, 2000)   # counts.json knows about it
+        assert fr._counts_is_stale()[0] is False, "fixture was not fresh to begin with"
+        victim.unlink()                              # ← no surviving mtime moves
+        stale, reason = fr._counts_is_stale()
+        assert stale is True, (
+            "a DELETED test file did not mark counts stale — every leg here is an "
+            "mtime-max, which cannot see a deletion; this is bee7608c reopened")
+        assert "test_files" in reason, reason
+        fr.check_counts_fresh()
+        assert runner.calls, "stale counts did not trigger regeneration"
+
+    def test_production_seeded_a_wrong_published_count_is_stale(self, monkeypatch):
+        """PRODUCTION-SEEDED MUTATION (guide §2.4) — the defect goes into
+        `docs/counts.json` itself, not a fixture. A fixture-only mutation proves the
+        test works; only this proves the check can fail against the artifact it
+        actually reads. Restores byte-for-byte, mtime included."""
+        import os
+        real = _H.COUNTS_JSON_PATH
+        original, st = real.read_bytes(), real.stat()
+        try:
+            data = json.loads(original)
+            data["python"]["test_files"] = data["python"]["test_files"] + 1
+            real.write_text(json.dumps(data, indent=2))
+            # ⚠️ Stamp counts.json as the NEWEST thing in the repo. `_counts_is_stale`
+            # returns on its FIRST stale reason, so on any working copy where a source
+            # was edited after the last regeneration an mtime leg fires first and this
+            # test can never reach — or isolate — the count leg. Without this the test
+            # is green on a clean tree and spuriously red on a working one.
+            future = max(p.stat().st_mtime for p in (_H.SRC_DIR.rglob("*.py"))) + 60
+            os.utime(real, (future, future))
+            stale, reason = fr._counts_is_stale()
+            assert stale is True, (
+                "counts.json publishing a test_files one higher than the live tree "
+                "was reported FRESH — this is exactly what shipped at bee7608c")
+            assert "test_files" in reason, reason
+        finally:
+            real.write_bytes(original)
+            os.utime(real, (st.st_atime, st.st_mtime))
+        assert fr._counts_is_stale()[0] is False, (
+            "the real counts.json is stale after restore — regenerate with "
+            "`uv run python scripts/update_counts.py`")
+
+    def test_the_count_leg_covers_every_published_glob_figure(self):
+        """SEAM GUARD (§2.5). The leg loops over whatever `count_python_cheap`
+        returns, so a helper that returned `{}` — or quietly lost a key — would make
+        every comparison above pass against nothing. Assert the leg set itself."""
+        import update_counts as _uc
+        legs = _uc.count_python_cheap()
+        assert set(legs) == {"python_modules", "test_files", "notebooks",
+                             "papers", "figures"}, legs
+        assert all(isinstance(v, int) for v in legs.values()), legs
+        assert legs["test_files"] > 0 and legs["python_modules"] > 0, (
+            "the helper matched nothing against the real tree — a scan that matches "
+            "nothing passes vacuously")
+
+    def test_the_cheap_split_agrees_with_the_full_counter(self):
+        """`count_python` delegates to `count_python_cheap`; if the split ever grows a
+        second derivation the freshness check and the writer can disagree, and the
+        check would then demand a regeneration that changes nothing."""
+        import update_counts as _uc
+        cheap = _uc.count_python_cheap()
+        full = _uc.count_python()
+        assert {k: full[k] for k in cheap} == cheap
+        assert "pytest_cases" in full and "pytest_cases" not in cheap
 
     def test_a_missing_counts_tex_is_stale(self, tmp_path, monkeypatch):
         runner = self._setup(tmp_path, monkeypatch, counts_mtime=2000,

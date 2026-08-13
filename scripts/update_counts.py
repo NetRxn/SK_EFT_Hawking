@@ -299,23 +299,68 @@ def count_lean(deps_path: Path, preloaded: list | None = None) -> dict:
     }
 
 
-def count_python() -> dict:
-    """Count Python source modules, test files, pytest cases, figures."""
-    src_modules = list(SRC_DIR.rglob("*.py"))
+def count_python_cheap(*, src_dir=None, tests_dir=None, notebooks_dir=None,
+                       papers_dir=None, viz_file=None) -> dict:
+    """The glob-derived python legs — no subprocess, microseconds.
+
+    Split out of `count_python` so the FRESHNESS CHECK can **recompute and
+    compare these values** rather than ask whether any file is newer than
+    `counts.json`.
+
+    ⚠️ **An mtime-max over surviving files is structurally blind to DELETION.**
+    Removing a file leaves every other file's mtime untouched, so the maximum
+    does not move and the artifact reports fresh while publishing a count that
+    is one too high. Measured 2026-08-13:
+    `tests/test_inventory_index_autogen.py` was deleted in `bee7608c` and
+    `docs/counts.json` shipped `test_files: 194` against a live **193**, with
+    `counts_fresh` green for three commits. The mtime legs added 2026-08-10
+    covered the right *trees*; they could not cover this *direction*.
+
+    `pytest_cases` is deliberately NOT here — it costs a pytest collection, and
+    it does not need to be: deleting a file moves `test_files`, and editing one
+    moves its own mtime, so the count leg and the mtime leg together cover both
+    directions.
+
+    The roots are parameters, defaulting to this module's constants, so the
+    freshness check can point them at ITS anchors (`validate_helpers`) and a
+    test can retarget them at a tmp tree. A helper that reads module globals
+    unconditionally would make every test of the check a test of the
+    developer's working copy.
+    """
+    src_dir = SRC_DIR if src_dir is None else src_dir
+    tests_dir = TESTS_DIR if tests_dir is None else tests_dir
+    notebooks_dir = NOTEBOOKS_DIR if notebooks_dir is None else notebooks_dir
+    papers_dir = PAPERS_DIR if papers_dir is None else papers_dir
+    viz_file = VIZ_FILE if viz_file is None else viz_file
+
+    src_modules = list(src_dir.rglob("*.py")) if src_dir.exists() else []
     src_modules = [f for f in src_modules if f.name != "__init__.py"]
 
-    test_files = list(TESTS_DIR.glob("test_*.py"))
+    test_files = list(tests_dir.glob("test_*.py")) if tests_dir.exists() else []
 
-    notebooks = list(NOTEBOOKS_DIR.glob("*.ipynb")) if NOTEBOOKS_DIR.exists() else []
+    notebooks = list(notebooks_dir.glob("*.ipynb")) if notebooks_dir.exists() else []
 
-    papers = list(PAPERS_DIR.glob("paper*/paper_draft.tex")) if PAPERS_DIR.exists() else []
+    papers = list(papers_dir.glob("paper*/paper_draft.tex")) if papers_dir.exists() else []
 
     # Count figure functions
     fig_count = 0
-    if VIZ_FILE.exists():
-        for line in VIZ_FILE.read_text().splitlines():
+    if viz_file.exists():
+        for line in viz_file.read_text().splitlines():
             if line.startswith("def fig_"):
                 fig_count += 1
+
+    return {
+        "python_modules": len(src_modules),
+        "test_files": len(test_files),
+        "notebooks": len(notebooks),
+        "papers": len(papers),
+        "figures": fig_count,
+    }
+
+
+def count_python() -> dict:
+    """Count Python source modules, test files, pytest cases, figures."""
+    cheap = count_python_cheap()
 
     # Pytest collection: total individual test cases (not just file count).
     # Uses --collect-only -q which is much faster than execution.
@@ -335,13 +380,15 @@ def count_python() -> dict:
         # Keep graceful degradation; 0 indicates "not collected this run"
         pytest_cases = 0
 
+    # Key order preserved from before the cheap/expensive split, so the split
+    # produces no diff in the tracked artifact.
     return {
-        "python_modules": len(src_modules),
-        "test_files": len(test_files),
+        "python_modules": cheap["python_modules"],
+        "test_files": cheap["test_files"],
         "pytest_cases": pytest_cases,
-        "notebooks": len(notebooks),
-        "papers": len(papers),
-        "figures": fig_count,
+        "notebooks": cheap["notebooks"],
+        "papers": cheap["papers"],
+        "figures": cheap["figures"],
     }
 
 
