@@ -152,6 +152,28 @@ reviewed leaves the other two classes open.
 
 ---
 
+## Why each step exists — the failure it prevents
+
+The skill states what to do. These are the failures behind each instruction, kept here so
+the sequence reads as a procedure rather than an argument.
+
+| step | failure it prevents | what it cost in ADR-012 |
+|---|---|---|
+| 1 orient | a second mechanism beside one that already works | a proposed check already existed, ratcheted and mutation-verified, and the replacement was *weaker* (§C9). Orientation deleted a whole task |
+| 2 measure | a design justified by a false premise | three drafts rested on a gating claim the code contradicted, never traced |
+| 3 specify | a changelog that reads like a specification afterwards | — |
+| 4 review | shipping a specification's first draft | §D18: a process that produces a spec nobody adversarially reviews produces this document's first draft |
+| 5 pilot | building for an imagined population | a 117-finding triage found ~84% already repaired — a *recording* gap, not a defect backlog — rewriting two decisions and adding two constraints |
+| 6 plan | splitting a build whose halves are inert apart | see "Three details" above |
+| 7 ship | a check that cannot fire, an unregistered surface, a stale doc | §C4: a gate reported "all P1 passed" while blockers sat unclosed, because the findings produced zero edges. An unrecordable finding is indistinguishable from no finding |
+| 8 terminate | a finding that reads closed over a system that is not | §D16 |
+
+⚠️ **Defects mutate rather than close.** The pilot found this across slices: a corrected count
+that re-drifted, a trivial predicate replaced by a differently-trivial one, a repair that landed
+in a comment while the code kept its defect. **A fix verified once, with no mechanism attached,
+is a fix that will re-break** — which is why step 7's obligation is a mechanism, not a
+demonstration.
+
 ## Three details the skill cites but does not retell
 
 Kept here so the skill can name the failure in a clause and a reader who wants the case has it.
