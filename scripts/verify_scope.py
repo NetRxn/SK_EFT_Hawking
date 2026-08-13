@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """Run the verification a change can actually fail — and nothing else.
 
-WHY THIS EXISTS. The merge gate is two agreeing `pytest -m ''` runs plus
-`validate.py --ci --no-memo` plus a clean `lake build`: about 45 minutes. That gate
+WHY THIS EXISTS. The merge gate is a full `pytest -m ''` run plus
+`validate.py --ci --no-memo` plus the four checks `--ci` skips plus a clean `lake build`,
+plus a working-tree check: roughly 25-30 minutes since the duplicate full run was dropped
+on 2026-08-13 (see the step list for why a repeat could not detect what it was for). That gate
 certifies a MERGE CANDIDATE. It was being run after every fix round, including rounds
 that touched only markdown, and across the last five findings of that stretch, none required it:
 a crash caught by one unit test, a wrong test name caught by grep, a stale
@@ -163,6 +165,18 @@ def _plan(paths: list[str]) -> tuple[list[tuple[str, list[str]]], list[str]]:
     return steps, not_certified
 
 
+def _tree_state() -> list[str]:
+    """`git status --porcelain` lines — the working tree as the gate sees it.
+
+    Compared before and after the gate's steps. Untracked files count: a check that
+    WRITES a new artifact and then reports it fresh is the same defect as one that
+    rewrites a tracked file.
+    """
+    r = subprocess.run(["git", "status", "--porcelain"], cwd=REPO,
+                       capture_output=True, text=True)
+    return [l for l in r.stdout.splitlines() if l.strip()]
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--since", help="scope from <commit>..HEAD instead of the working tree")
@@ -172,8 +186,24 @@ def main() -> int:
 
     if args.merge_gate:
         steps = [
-            ("full suite, run A", ["uv", "run", "python", "-m", "pytest", "-m", "", "-q"]),
-            ("full suite, run B", ["uv", "run", "python", "-m", "pytest", "-m", "", "-q"]),
+            # ⚠️ ONE full run, not two (2026-08-13). The gate ran this command TWICE,
+            # byte-identical, for "two agreeing runs" — roughly half its ~45 minutes.
+            #
+            # A repeat cannot buy what a repeat is normally for. Order-dependence needs a
+            # DIFFERENT order; no `pytest-randomly` / `pytest-random-order` is installed or
+            # declared, so both runs collected the same tests in the same order and the
+            # second could only re-observe the first. `c289ac8e`, which introduced this
+            # file, carried the pair forward as inherited practice while optimizing how
+            # OFTEN the gate runs; it never asked what the duplicate detected. No record
+            # of the two runs ever disagreeing exists in docs/.
+            #
+            # The one real property two sequential runs could signal — a suite that
+            # MUTATES the tree, live here because `counts_fresh` and `tables_fresh`
+            # rewrite in place — is now measured directly by the working-tree check
+            # below, in milliseconds instead of a quarter hour, and is asserted rather
+            # than left to the reader (it used to sit in `not_certified` as "check
+            # `git status` yourself").
+            ("full suite", ["uv", "run", "python", "-m", "pytest", "-m", "", "-q"]),
             # ⚠️ EXPECTED NON-ZERO. `readiness_submission_gate` is red BY DESIGN until
             # the bundles reach submission, so `--ci` exits 1 on a healthy branch. The
             # condition is "SUBSTRATE clean, and readiness_submission_gate the only
@@ -196,10 +226,7 @@ def main() -> int:
             ("lake build + ExtractDeps",
              ["lake", "build", "SKEFTHawking.ExtractDeps"]),
         ]
-        not_certified = [
-            "that regenerating checks left the WORKING TREE clean — counts_fresh and "
-            "tables_fresh rewrite in place and then pass, so check `git status` yourself",
-        ]
+        not_certified = []
         print("MERGE GATE — the full certification.\n")
     else:
         paths = _changed(args.since)
@@ -223,14 +250,22 @@ def main() -> int:
             return 0
         print()
 
-    if not args.merge_gate:
-        # SCOPED MODE ONLY. The gate's two full runs are byte-identical BY DESIGN — that
-        # is what "two agreeing runs" means — so de-duplicating there silently deleted
-        # run B while the docstring and --help still promised two. A tool whose critical
-        # failure is under-reporting must not quietly do less than it says.
-        seen_argv = set()
-        steps = [(l, a) for l, a in steps
-                 if not (tuple(a) in seen_argv or seen_argv.add(tuple(a)))]
+    # De-duplicate identical commands. This used to be SCOPED-MODE-ONLY, carved out
+    # because the gate's two byte-identical full runs were load-bearing "by design" and
+    # de-duplicating silently deleted run B while the docstring still promised two. The
+    # gate now declares ONE run, so the carve-out has nothing left to protect and the
+    # rule applies uniformly. The lesson it encoded still holds and now lives at the
+    # step list: a tool whose critical failure is under-reporting must never quietly do
+    # less than it says — which is why removing run B came with the docstring, the
+    # `not_certified` block and this guard in the same commit.
+    seen_argv = set()
+    steps = [s for s in steps
+             if not (tuple(s[1]) in seen_argv or seen_argv.add(tuple(s[1])))]
+
+    # ⚠️ Snapshot the working tree BEFORE any step. `counts_fresh` and `tables_fresh`
+    # regenerate in place and then pass, so a gate that ignores this reports green on a
+    # tree the run itself dirtied — the committed-stale-`counts.tex` shape.
+    tree_before = _tree_state()
 
     failed = []
     for step in steps:
@@ -253,6 +288,20 @@ def main() -> int:
             print(f"     {lines[-1][:150] if lines else '(no output)'}")
         if not ok:
             failed.append(label)
+
+    # The property the duplicate full run was reaching for, measured directly.
+    print("  ── working tree unchanged by this run")
+    dirtied = sorted(set(_tree_state()) - set(tree_before))
+    if dirtied:
+        failed.append("working tree unchanged by this run")
+        print(f"     {len(dirtied)} path(s) DIRTIED by the run itself: "
+              f"{', '.join(p[3:] or p for p in dirtied[:6])}"
+              f"{' …' if len(dirtied) > 6 else ''}")
+        print("     A step rewrote a tracked file or left a new one behind, and then "
+              "passed. Commit the regenerated artifact, or fix the step that writes "
+              "on read.")
+    else:
+        print("     clean — no tracked file was rewritten by the run")
 
     print()
     if failed:
