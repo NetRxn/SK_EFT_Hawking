@@ -146,7 +146,9 @@ Per-paper × readiness-gate matrix backed by `scripts/readiness_gates.py` and th
 
 ⚠️ **CORRECTED 2026-08-12.** This section previously claimed "click-through to gate-specific evidence (Lean theorems, parameter provenance, production runs, review findings)" while blockers rendered as unlinkable prose — the id was destroyed in the evaluator, which held the whole `ReviewFinding` and kept 60 characters of label. The claim above is the repair, and it is narrower than the sentence it replaces: **review findings drill through; Lean theorems, parameter provenance and production runs still do not.**
 
-⚠️ **The QI sub-pane is empty by construction.** The derivation keys a register item on the gate name alone, so it can hold at most one item per gate for all time — and most gates are already in `## Closed Items` and can never re-emit. Findings go in and nothing comes out. [`END_TO_END_MAP.md`](END_TO_END_MAP.md) §8 names the cause; ADR-012 P9a repairs it.
+⚠️ **The QI sub-pane is empty by construction.** The derivation keys a register item on the gate name alone, so it can hold at most one item per gate for all time — and most gates are already in `## Closed Items` and can never re-emit. Findings go in and nothing comes out.
+
+✅ **REPAIRED (ADR-012 P9a, 2026-08-12), and the sentence above understated the cause.** The gate-keyed id was one of **three** causes, not the one: `unclassified` — the largest single bucket — was dropped rather than reported, and the clustering partitioned on `inferred_paper` alone, so every finding carrying only `inferred_bundle` collapsed onto one sentinel. An item now identifies a **recurrence** (gate, paper set, window) and a closure suppresses its own window rather than its gate forever; the derivation went from zero items to 23. [`END_TO_END_MAP.md`](END_TO_END_MAP.md) §8 carries the full account and the one part still open — `## Open Items` is rebuilt rather than preserved.
 
 ### Chains _(Phase 5v)_
 
@@ -199,14 +201,14 @@ Collapsing any of these pairs renders *unknown* and *fine* identically.
 | Endpoint | Method | Returns |
 |----------|--------|---------|
 | `/` | GET | Dashboard HTML (tab selected via `?tab=` param) |
-| `/verify` | POST | Verify/reject/flag a parameter — ⚠️ **in memory only**, see the warning above |
+| `/verify` | POST | Verify/reject/flag a parameter — persists via `src.core.provenance_writer`; the badge renders only when the write returns ok |
 | `/api/graph` | GET | Full graph JSON `{nodes, links, meta}` |
 | `/api/graph/trace/<path:node_id>` | GET | Traced node/edge IDs for provenance chain |
 | `/api/graph/impact/<path:node_id>` | GET | Impacted node/edge IDs for upstream dependents |
 | `/api/graph/integrity` | GET | Integrity report (orphans, conflicts, chains) |
 | `/api/readiness` | GET | SSE stream backing the Readiness / QI tab |
 | `/api/bundles/<bundle>/submission_event` | POST | Record a submission event |
-| `/api/verification/event` | POST | Change-bus event (⚠️ writes no file — see above) |
+| `/api/verification/event` | POST | Change-bus event → `docs/verification_log.jsonl` (a gitignored runtime artifact; absent until the path is exercised) |
 
 ⚠️ **CORRECTED 2026-08-12.** The table named **`/api/verify`**, which does not exist — the route is
 `/verify` — and **`/api/save`**, *"Save accumulated verification actions"*, which has never existed:
@@ -277,7 +279,7 @@ The Bundles tab consumes the same per-bundle aggregation that this script writes
 The Paper Provenance v2 tab and the Bundles tab both rely on a tightly enforced write-path discipline:
 
 - **Sole writer for prose / audit state:** `scripts/sentence_state.py` (CLI). All mutations to `papers/<paper>/prose_state.json` and `papers/<paper>/audit_log.jsonl` route through this command — no free-form JSON edits, no ad-hoc scripts. Schema validation, file-lock, and atomic writes are enforced at this chokepoint.
-- **Cross-tab change-bus:** verification actions on artifacts (parameters / citations / axioms / hypotheses / aristotle runs / production runs) flow through `scripts/verification_state.py` → `docs/verification_log.jsonl`. ⚠️ **That file does not exist**, so everything described in this bullet and the next two is a design that has never carried an event. The library is real; its store has never been written. The Parameters tab's confirm/reject flow and Paper Provenance v2's per-link verify buttons are both delegates of this same library API. Each event annotates `meta.last_modified_explicit` on the corresponding KG node, propagating upstream so dependent `Sentence` nodes flip to `NEEDS_RECHECK` automatically when their backing artifacts re-verify.
+- **Cross-tab change-bus:** verification actions on artifacts (parameters / citations / axioms / hypotheses / aristotle runs / production runs) flow through `scripts/verification_state.py` → `docs/verification_log.jsonl`. ⚠️ **That store is a gitignored runtime artifact, absent from a clean checkout and written on first use** — measured 2026-08-12, when the ADR-012 P9a browser test clicked Confirm and the bus wrote its first event. This bullet read *"that file does not exist … a design that has never carried an event"*, which was a claim about the **mechanism** derived from the **artifact**, and those are the two readings a missing file cannot distinguish. What is genuinely unexercised is everything downstream: nothing yet *consumes* the events. The Parameters tab's confirm/reject flow and Paper Provenance v2's per-link verify buttons are both delegates of this same library API. Each event annotates `meta.last_modified_explicit` on the corresponding KG node, propagating upstream so dependent `Sentence` nodes flip to `NEEDS_RECHECK` automatically when their backing artifacts re-verify.
 - **`triggered_by` for cross-tab provenance:** verification events fired from a sentence's per-link UI carry `triggered_by: <source_sentence_id>`, so the audit trail surfaces "fired from sentence X's chain inspector" vs an opaque "Parameter X confirmed". Audit-log diffs render an inline `⚲ self` (self-triggered) or `↗ <other_sid>` badge. Field is `null` for events from the Parameters tab or the CLI.
 - **Replay-canonical recovery:** the audit log is the canonical record. If a `cmd_mark` succeeds at the audit-event write but fails at the prose_state update (rare partial-failure), `scripts/sentence_state.py rebuild_prose_state --paper <id> --check` walks events in timestamp order and reports drift; `--write` atomically replaces `prose_state.json` with the rebuilt content.
 - **Retention policy:** `docs/verification_log.jsonl` is append-only. `read_events` emits a one-shot WARN to stderr when the file exceeds 1 MB recommending `scripts/verification_state.py prune --keep-days 90` (default retention). `prune` refuses to operate without a retention criterion (`--keep-days N` / `--keep-records N` / `--before <ISO-8601>`). `--archive-to <path>` appends pruned events to a sidecar JSONL for recovery.

@@ -60,10 +60,28 @@ That check enforces three things, and the third is the only mechanical guard on 
 
 ⚠️ **AND NO CHECK NOTICES A SUBSYSTEM THAT IS SIMPLY ABSENT FROM THESE DOCUMENTS.** The
 census covers checks, gates, graph types, hooks, agents, commands, registries and bundles —
-**not modules.** Measured 2026-08-13: five new modules had landed with **zero** mentions
-across this directory, and every gate here was green over all of them. The checks verify
-what *is* written; nothing asks what *should have been*. That is this project's own defect
-class — absence rendered as success — sitting one level above the documents that name it.
+**not modules.** Measured 2026-08-13: five modules implementing operator surfaces this
+directory owns had landed with **zero** mentions here, and every gate was green over all of
+them. The checks verify what *is* written; nothing asks what *should have been*. That is this
+project's own defect class — absence rendered as success — sitting one level above the
+documents that name it.
+
+⚠️ **Nor does any check parse markdown STRUCTURE.** A prose paragraph inserted between two
+rows of a table splits it in two and turns every row below into literal pipe-delimited text;
+the census, the counts leg, the answers-contract and the path-resolution leg all stay green,
+and the diff shows only added lines. Measured the same day, in
+[`VALIDATION_GATE_TOPOLOGY.md`](VALIDATION_GATE_TOPOLOGY.md) §6, where it destroyed five rows
+of the field-ownership table — including the row the paragraph beneath it was about.
+
+⚠️ **"Absent from these documents" is not the same as "undocumented", and conflating them
+produces a number that measures nothing.** A module belongs *here* when it implements a
+mechanism one of these documents owns — a check, a gate, an artifact writer, an operator
+surface. The per-module inventory of `scripts/` and `src/` is
+[`../../SK_EFT_Hawking_Inventory.md`](../../SK_EFT_Hawking_Inventory.md)'s question, not this
+directory's; a filename's absence from a narrative that names *mechanisms* is expected, and
+counting those absences yields a shortfall against a contract nobody wrote. Ask whether every
+mechanism is described and whether each description is **true** — the second is the one with
+no mechanical guard at all.
 
 Rule 2 is therefore the only guard on new-surface coverage, and it is discipline rather than
 a mechanism. When a change adds a module, a writer, or an operator-facing surface, the

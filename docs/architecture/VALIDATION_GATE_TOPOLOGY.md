@@ -171,6 +171,11 @@ A recurring failure mode is a check telling you to run a script that cannot fix 
 |---|---|---|
 | `blockers_open`, `advisories_open`, `open_findings`, `blocked_p1_gates`, `readiness` | `bundle_readiness.write_metadata_counts` | — |
 | `stage13_status`, `stage9_status`, `stage10_status`, `stage13_review_kind` | **`scripts/record_review.py`** (the Stage-13/9/10 review cycle, `BUNDLE_LIFT_PROCEDURE` §§8–10) | `bundle_readiness.py` |
+| `freshness_stale` | `check_bundle_source_freshness.py` | `bundle_readiness.py` (deliberately — two writers made `validate.py` non-idempotent) |
+| `apex_theorems` | a human, under ADR-010 §D5a's per-bundle context review | any script |
+| `docs/counts.json` / `counts.tex` | `update_counts.py` | — |
+| `lean/lean_deps.json` + `.hash` | `extract_lean_deps.py` | — |
+| `human_verified_date`, `human_verified_notes` in `src/core/provenance.py` | **`src/core/provenance_writer.set_human_verified`** — the only per-entry writer | the dashboard directly; `wave2_flip_provenance.py` directly |
 
 ⚠️ **`stage13_review_kind` has a READER that resolves it without a writer, and that asymmetry
 was a live defect.** `record_review.py` is still its only *writer*, but the field was absent
@@ -180,11 +185,14 @@ and none for its **kind**. It now reads a kind an evidence document *declares ab
 and reports three states: `declared` · `reviewed-kind-unrecorded` · `unreviewed`.
 **A directory name is never treated as a kind** — inferring one from the path would manufacture
 the exact evidence the gate demands, for eighteen bundles at once.
-| `freshness_stale` | `check_bundle_source_freshness.py` | `bundle_readiness.py` (deliberately — two writers made `validate.py` non-idempotent) |
-| `apex_theorems` | a human, under ADR-010 §D5a's per-bundle context review | any script |
-| `docs/counts.json` / `counts.tex` | `update_counts.py` | — |
-| `lean/lean_deps.json` + `.hash` | `extract_lean_deps.py` | — |
-| `human_verified_date`, `human_verified_notes` in `src/core/provenance.py` | **`src/core/provenance_writer.set_human_verified`** — the only per-entry writer | the dashboard directly; `wave2_flip_provenance.py` directly |
+
+⚠️ **The note above was first written INSIDE this table**, between the `stage13_status` and
+`freshness_stale` rows, which split one table into two and left five rows — every writer from
+`freshness_stale` down, including the `provenance_writer` row the next note is about — rendering
+as literal pipe-delimited text. `architecture_inventory_fresh` stayed green: it checks the
+census, the counts, the answers-contract and that every path resolves, and **nothing in this
+directory parses markdown structure.** A prose insertion is how a table silently stops being
+one, and the rows it destroys are invisible in a diff that only added lines.
 
 ⚠️ **This row is the one §6 exists for, and until 2026-08-12 the answer was "nothing".**
 `ParameterProvenance` is a P1 gate that blocks on the field's absence, and there was no
