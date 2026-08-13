@@ -62,6 +62,33 @@ import SKEFTHawking.BraidGroup
 import SKEFTHawking.FKLW.AharonovAradBridge
 import SKEFTHawking.FKLW.AharonovAradBridgeIteration
 
+/-!
+## Sub-package scope — `SKEFTHawking.FKLW`
+
+`FKLW/` has no root module, and this one carries its namesake result, so the sub-package's
+scope is stated here (migrated from the retired `SK_EFT_Hawking_Inventory_Index.md` §3.1,
+per ADR-013 D6 — it was the only family-level statement of what `FKLW/` is).
+
+What began as the Freedman–Kitaev–Larsen–Wang **density** program became the
+verified-quantum-compilation arc that carries publication bundle D8. Three layers now share
+the sub-package, and a module belongs to exactly one of them:
+
+* **Density** — this module and the per-alphabet witnesses: braid-group (and gate-set) images
+  whose Lie span forces density in `SU(d)`, over the Fibonacci, Read–Rezayi, trapped-ion
+  `SU(4)`, Clifford+T and Clifford+CCZ `SU(8)` alphabets.
+* **Approximate compilation** — the alphabet-agnostic Solovay–Kitaev / Dawson–Nielsen
+  substrate and its per-alphabet quantitative headlines, lifted to arbitrary-dimension
+  `SU(d)`, together with the correct-by-construction compiler and its channel-level
+  (diamond-norm) consequence.
+* **Exact synthesis** — the Ross–Selinger / Kliuchnikov–Maslov–Mosca arc under
+  `FKLW/RossSelinger/`: the `ℤ[ω]` / `ℤ[√2]` ring substrate, the grid problem and its solvers,
+  and the structural reproofs that keep that chain free of `native_decide`.
+
+Each module's own header carries its phase, wave and provenance; this preamble names *layers*,
+not modules, so that it cannot drift as modules land. `docs/counts.json` (`lean.module_names`)
+is the authority on what the sub-package actually contains.
+-/
+
 set_option autoImplicit false
 
 namespace SKEFTHawking.FKLW

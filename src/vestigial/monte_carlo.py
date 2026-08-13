@@ -1,4 +1,5 @@
-"""Monte Carlo sampler for the HS-transformed bosonic tetrad model.
+"""Monte Carlo sampler for the HS-transformed bosonic tetrad model. Metropolis
+sweeps; measures the tetrad VEV and the metric magnitude.
 
 Samples the auxiliary (Hubbard-Stratonovich) field exp(-S_aux) where
 S_aux = (1/2G) Σ_x Tr(e^T η e). This is a purely on-site action with

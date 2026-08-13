@@ -1,4 +1,5 @@
-"""SU(2) quaternion algebra for SO(4) gauge-link Monte Carlo.
+"""SU(2) quaternion algebra for SO(4) gauge-link Monte Carlo, including
+Haar-random sampling.
 
 Unit quaternions q = (a, b, c, d) with a² + b² + c² + d² = 1
 parameterize SU(2). All operations are vectorized over arrays of

@@ -1,4 +1,5 @@
-"""Hybrid fermion-bag + gauge-link Monte Carlo for ADW tetrad condensation.
+"""Hybrid fermion-bag + gauge-link Monte Carlo for ADW tetrad condensation,
+built on a 4×4 complex fermion matrix with Sherman-Morrison-Woodbury updates.
 
 First-ever implementation of fermion-bag MC with dynamical SO(4) gauge links
 on a 4D hypercubic lattice. The algorithm alternates between:

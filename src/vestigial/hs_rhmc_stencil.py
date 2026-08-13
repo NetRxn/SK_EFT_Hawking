@@ -1,4 +1,8 @@
 """Batched matrix-free stencil for the HS+RHMC fermion operator (GPU port).
+Even-odd reduction gives a single-pole exact action and force; the solve is
+FP32-inner / FP64-residual refined and warm-started by chronological
+inversion. Certified against the dense oracle and Creutz, it also serves as
+the cross-engine oracle for the MLX port.
 
 The dense scaffold (`hs_rhmc_torch.build_fermion_matrix_torch`) materializes the
 8V×8V matrix A — O(dim²) memory (110 GB at L=12) and O(dim³) solves. This module

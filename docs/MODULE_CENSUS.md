@@ -17,7 +17,7 @@ Nothing else belongs here.
 | `src/adw/__init__.py` | Akama-Diakonov-Wetterich (ADW) Mean-Field Gap Equation. |
 | `src/adw/fluctuations.py` | Fluctuation Analysis and Nambu-Goldstone Mode Counting, with a Vergeles mode-counting consistency check. |
 | `src/adw/gap_equation.py` | Gap Equation Solver for ADW Tetrad Condensation. |
-| `src/adw/ginzburg_landau.py` | Ginzburg-Landau Phase Classification for ADW Tetrad Condensation. |
+| `src/adw/ginzburg_landau.py` | Ginzburg-Landau Phase Classification for ADW Tetrad Condensation, and the G/G_c phase diagram. Key result: the isotropic B-phase is the ground state throughout — the anisotropic A-phase is never favoured — as in weak-coupling He-3. |
 | `src/adw/hubbard_stratonovich.py` | Hubbard-Stratonovich Decomposition of the ADW 8-Fermion Interaction. |
 | `src/adw/tetrad_gap_solver.py` | Tetrad Gap Equation Solver — Integral Formulation. |
 | `src/adw/tetrad_observables.py` | Tetrad and Metric Order Parameter Observables. |
@@ -98,8 +98,8 @@ Nothing else belongs here.
 | `src/experimental/__init__.py` | Experimental prediction package for BEC analog Hawking radiation. |
 | `src/experimental/doublon_gate.py` | Phase 5t Wave 9 — Doublon geometric gate exact diagonalization (Python cross-validation layer). |
 | `src/experimental/kappa_scaling.py` | Kappa-Scaling Test Predictions for SK-EFT |
-| `src/experimental/polariton_predictions.py` | Polariton Platform Predictions — Tier 1 Perturbative Patch |
-| `src/experimental/predictions.py` | Experimental prediction tables for BEC analog Hawking radiation. |
+| `src/experimental/polariton_predictions.py` | Polariton Platform Predictions — Tier 1 Perturbative Patch. Classifies each cavity quality (ultra-long / long / standard) by the validity parameter Γ_pol/κ. |
+| `src/experimental/predictions.py` | Experimental prediction tables for BEC analog Hawking radiation, with the shot requirements and kappa-scaling test parameters that go with them. |
 | `src/fermi_hubbard/dimer.py` | Phase 5t Wave 2 — Fermi-Hubbard dimer algebraic core (Python cross-check). |
 | `src/first_order/__init__.py` | First-order SK-EFT analysis (Phase 1). |
 | `src/fracton/__init__.py` | Fracton Hydrodynamics Layer 2: Alternative UV-Retentive Hydrodynamics. |
@@ -158,21 +158,21 @@ Nothing else belongs here.
 | `src/vestigial/__init__.py` | Vestigial gravity simulation package. |
 | `src/vestigial/fermion_bag.py` | Fermion-bag Monte Carlo algorithm for the 4D ADW model. |
 | `src/vestigial/finite_size.py` | Finite-size scaling analysis for the vestigial gravity simulation. |
-| `src/vestigial/gauge_fermion_bag.py` | Hybrid fermion-bag + gauge-link Monte Carlo for ADW tetrad condensation. |
-| `src/vestigial/gauge_fermion_bag_majorana.py` | 8×8 Real Majorana fermion-bag Monte Carlo for ADW tetrad condensation. |
-| `src/vestigial/grassmann_trg.py` | Grassmann Tensor Renormalization Group for the 2D ADW model. |
+| `src/vestigial/gauge_fermion_bag.py` | Hybrid fermion-bag + gauge-link Monte Carlo for ADW tetrad condensation, built on a 4×4 complex fermion matrix with Sherman-Morrison-Woodbury updates. |
+| `src/vestigial/gauge_fermion_bag_majorana.py` | 8×8 Real Majorana fermion-bag Monte Carlo for ADW tetrad condensation, lifting SO(4) to Spin(4) by Givens decomposition. It hits the fermion-bag percolation wall at L ≥ 6, which is what motivates the HS+RHMC engines. |
+| `src/vestigial/grassmann_trg.py` | Grassmann Tensor Renormalization Group for the 2D ADW model. Yields the free energy, the specific heat, a coupling scan and D_cut convergence. |
 | `src/vestigial/hs_rhmc.py` | Hubbard-Stratonovich + Rational Hybrid Monte Carlo for ADW model. |
 | `src/vestigial/hs_rhmc_jax.py` | JAX-accelerated HS+RHMC computational backend. |
 | `src/vestigial/hs_rhmc_mlx.py` | MLX port of the batched matrix-free stencil RHMC engine (`hs_rhmc_stencil`). |
-| `src/vestigial/hs_rhmc_stencil.py` | Batched matrix-free stencil for the HS+RHMC fermion operator (GPU port). |
-| `src/vestigial/hs_rhmc_torch.py` | PyTorch MPS-accelerated HS+RHMC computational backend. |
-| `src/vestigial/lattice_4d.py` | 4D hypercubic lattice model for the ADW fermion-bag Monte Carlo. |
+| `src/vestigial/hs_rhmc_stencil.py` | Batched matrix-free stencil for the HS+RHMC fermion operator (GPU port). Even-odd reduction gives a single-pole exact action and force; the solve is FP32-inner / FP64-residual refined and warm-started by chronological inversion. Certified against the dense oracle and Creutz, it also serves as the cross-engine oracle for the MLX port. |
+| `src/vestigial/hs_rhmc_torch.py` | PyTorch MPS-accelerated HS+RHMC computational backend: batched LU for the float64 Metropolis Hamiltonian at L=4, batched CG at L≥6, and an FSAL Omelyan integrator. |
+| `src/vestigial/lattice_4d.py` | 4D hypercubic lattice model for the ADW fermion-bag Monte Carlo, with the SO(4) ≅ SU(2)_L × SU(2)_R gauge integration done analytically. Provides the site/bond/total action, the tetrad and metric order parameters, and the neighbor/bond indexing. |
 | `src/vestigial/lattice_model.py` | Lattice model for vestigial gravity simulation. |
-| `src/vestigial/mean_field.py` | Mean-field analysis for vestigial gravity. |
-| `src/vestigial/monte_carlo.py` | Monte Carlo sampler for the HS-transformed bosonic tetrad model. |
+| `src/vestigial/mean_field.py` | Mean-field analysis for vestigial gravity. The phase classification is curvature-based, via `adw_curvature_at_origin` from `formulas.py`. |
+| `src/vestigial/monte_carlo.py` | Monte Carlo sampler for the HS-transformed bosonic tetrad model. Metropolis sweeps; measures the tetrad VEV and the metric magnitude. |
 | `src/vestigial/phase_diagram.py` | Phase diagram for the vestigial gravity model. |
 | `src/vestigial/phase_scan.py` | Coupling scan for the 4D ADW phase diagram. |
-| `src/vestigial/quaternion.py` | SU(2) quaternion algebra for SO(4) gauge-link Monte Carlo. |
+| `src/vestigial/quaternion.py` | SU(2) quaternion algebra for SO(4) gauge-link Monte Carlo, including Haar-random sampling. |
 | `src/vestigial/rhmc_diagnostics.py` | Canonical RHMC run diagnostics + early-stop verdict logic. |
 | `src/vestigial/so4_gauge.py` | SO(4) gauge-link infrastructure for 4D hypercubic lattice. |
 | `src/vestigial/stencil_dirac.py` | Matrix-free staggered Dirac operator via torch.roll() stencil. |

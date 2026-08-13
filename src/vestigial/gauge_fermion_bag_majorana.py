@@ -1,4 +1,6 @@
-"""8×8 Real Majorana fermion-bag Monte Carlo for ADW tetrad condensation.
+"""8×8 Real Majorana fermion-bag Monte Carlo for ADW tetrad condensation,
+lifting SO(4) to Spin(4) by Givens decomposition. It hits the fermion-bag
+percolation wall at L ≥ 6, which is what motivates the HS+RHMC engines.
 
 Sign-problem-free implementation using the Majorana Kramers positivity
 theorem. A single 8-component real Grassmann field Ψ per Dirac flavor,
