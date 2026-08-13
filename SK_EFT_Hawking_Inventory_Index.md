@@ -6,12 +6,33 @@
 
 **Size discipline.** Target ~50–80 KB. Keep under 100 KB so future LLM bootstraps can read it in a single `Read` call (the harness truncates files >256 KB and may skip files much smaller than that). When this file approaches 100 KB, prune narrative — move it to `SK_EFT_Hawking_Inventory.md` or `temporary/working-docs/`. Do NOT inline session logs, wave-history, or per-commit detail; those belong in `temporary/working-docs/` or the prose inventory.
 
+> ⚠️ **THE NARRATIVE IN THIS FILE IS STALE; THE `<!-- AUTOGEN -->` BLOCKS ARE NOT.** Measured
+> 2026-08-13. `inventory_index_autogen_fresh` gates the AUTOGEN blocks **only**, so a freshly
+> generated table sits inside two-month-old prose and every gate stays green — this project's own
+> defect class, one level above the documents that name it. Concretely: the `Last synced` header
+> below states a theorem count roughly **ten thousand** below the AUTOGEN table a few lines down,
+> and the sibling list asserted something about this repo's `CLAUDE.md` that was simply false
+> (corrected below). **Trust the AUTOGEN blocks and the file paths; verify every narrative claim
+> against the artifact before acting on it.**
+
 **Sibling docs (read on bootstrap):**
+- **`CLAUDE.md` (THIS repo, ~21 KB) — the primary bootstrap.** Build commands, the Lean MCP loop,
+  the architecture rules, pipeline invariants, conventions, the research ladder.
+- `../CLAUDE.md` (workspace root, ~6 KB) — **only what spans repos**: the public/private boundary,
+  the shared MCP config, the research corpus. It defers per-project guidance to the file above.
+  ⚠️ This line previously read *"project-level guidance for SK_EFT_Hawking lives here (there is no
+  separate per-repo `CLAUDE.md`)"* — **false**, and the most damaging kind of doc defect, because a
+  reader who believes it skips the primary bootstrap and never learns what it does not know.
+- `docs/architecture/README.md` — **the canonical description of the machinery**: which of its eight
+  documents answers which question, and the three rules. Read it before designing any check, gate,
+  extractor, writer or dashboard surface. This index answers *what a module is*; that directory
+  answers *how a mechanism works* — do not substitute one for the other.
 - `README.md` — project framing (public-facing).
-- `../CLAUDE.md` (workspace root) — agent guidance and conventions; project-level guidance for SK_EFT_Hawking lives here (there is no separate per-repo `CLAUDE.md`).
-- `docs/WAVE_EXECUTION_PIPELINE.md` — 14-stage wave protocol and 17 pipeline invariants (the law;
-  provenance for each rule is in `docs/WAVE_PIPELINE_RATIONALE.md`).
-- `docs/PAPER_STRATEGY.md` — 17-bundle publication architecture (D8 added 2026-05-31).
+- `docs/WAVE_EXECUTION_PIPELINE.md` — the 14-stage wave protocol and the pipeline invariants (the
+  law; provenance for each rule is in `docs/WAVE_PIPELINE_RATIONALE.md`).
+- `docs/PAPER_STRATEGY.md` — the publication-bundle architecture. ⚠️ The bundle roster has grown
+  since this line was written; the live count is in the AUTOGEN table below and the live roster is
+  `scripts/bundle_registry.BUNDLE_CODES`, never a hand-written list.
 - `docs/PERMANENT_TRACKED_HYPOTHESES.md` — load-bearing tracked Props.
 - `docs/BUNDLE_READINESS_HEATMAP.md` — per-bundle Stage-13 readiness.
 - `SK_EFT_Hawking_Inventory.md` — full prose inventory (the upstream this index summarizes).

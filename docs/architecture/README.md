@@ -32,6 +32,30 @@ numbers, so **some TODO identifiers collide outright with bundle names** — `TO
 citation defect *in* bundle D11, and `TODO-D10` is about a hand-listed module roster, not
 about bundle D10. The `TODO-` prefix is the only thing separating them; never drop it.
 
+## What is deliberately NOT here
+
+These documents describe **mechanisms** — a check, a gate, a writer, an edge type, an operator
+surface — and each one answers exactly one question from the table above. Three neighbouring
+questions they do not answer, and where each is answered instead:
+
+| your question | not here — go to |
+|---|---|
+| **What does this module do?** Where does `<some>.py` live, what imports it, what is the per-module/per-Lean-family map | [`../../SK_EFT_Hawking_Inventory_Index.md`](../../SK_EFT_Hawking_Inventory_Index.md) (pointers) → [`../../SK_EFT_Hawking_Inventory.md`](../../SK_EFT_Hawking_Inventory.md) (prose) |
+| **What must I do, in what order?** The 14 stages, the invariants | [`../WAVE_EXECUTION_PIPELINE.md`](../WAVE_EXECUTION_PIPELINE.md) — and why each rule exists, [`../WAVE_PIPELINE_RATIONALE.md`](../WAVE_PIPELINE_RATIONALE.md) |
+| **How do I run an architecture change?** The orient→measure→specify→review→pilot→plan→ship sequence | the `architecture-change` skill, which owns the *sequence* and deliberately restates none of the *rules* below |
+
+⚠️ **A module's absence from this directory is therefore expected, not a defect** — the test is
+whether a module implements a mechanism one of these documents owns. Counting filename absences
+here measures a shortfall against a contract nobody wrote.
+
+⚠️ **The Inventory pair is a POINTER LAYER whose contract is stated in its own header, and it
+has drifted from that contract** — measured 2026-08-13: two months stale, over its own stated
+size ceiling, its narrative theorem count roughly ten thousand below the AUTOGEN table in the
+same file, and asserting that this repo has no `CLAUDE.md` when it has a 21 KB one that is the
+primary bootstrap. `inventory_index_autogen_fresh` gates the `<!-- AUTOGEN -->` blocks **only**,
+so a fresh generated table sits inside stale prose and every gate stays green. Read it for
+pointers; verify anything it asserts.
+
 Decisions live in [`../adrs/`](../adrs/); the graph schema in
 [`../KNOWLEDGE_GRAPH.md`](../KNOWLEDGE_GRAPH.md); the process law in
 [`../WAVE_EXECUTION_PIPELINE.md`](../WAVE_EXECUTION_PIPELINE.md), whose *why* — the incident
