@@ -407,7 +407,27 @@ def _required_open_ceilings() -> dict[str, int]:
 #: the same day. The new baseline is frozen at the live count under the new predicate and
 #: shrinks from there. That 47 equals the pre-pilot figure is a coincidence of two
 #: different populations, not a reversion.
-UNATTRIBUTED_OPEN_BLOCKING_CEILING: int = 47
+#:
+#: ⚠️ **47 -> 52, and this one is a RAISE. Operator-authorized 2026-08-12; read the argument
+#: before ever reusing it.** ADR-012 P8 re-filed the D45-D49 block out of
+#: `ARCHITECTURE_TODOs.MD` — a file with no machine reader — into the queue. Five of the eight
+#: minted findings are blocking, and all five are unattributed because a defect in
+#: `formulas.py`, `LeviCivita.lean` or `update_counts.py` reaches no bundle. Leg 2 therefore
+#: rose by exactly five.
+#:
+#: The claim is that this is previously-INVISIBLE debt becoming visible, not new debt: every
+#: item was written down on **2026-08-11**, before this baseline was frozen on 2026-08-12, and
+#: the re-file document re-measures each one at HEAD (four of the nine were already fixed and
+#: are NOT filed).
+#:
+#: ⚠️ **THERE IS NO MECHANICAL DISCRIMINATOR BEHIND THAT CLAIM, and pretending otherwise would
+#: be worse than the raise.** To this check, five findings recorded a day earlier and five
+#: invented this morning are identical — `review_date` is the FILING date, not the discovery
+#: date. The only safeguard is the dated record in `ARCHITECTURE_TODOs.MD` and the operator's
+#: sign-off on this specific raise. **A future raise justified by pointing at this one is
+#: exactly the abuse this note exists to make visible.** The ceiling records a distance that
+#: must shrink; ADR-012 P10 is what shrinks it.
+UNATTRIBUTED_OPEN_BLOCKING_CEILING: int = 52
 
 
 def _readiness_aggregate():
