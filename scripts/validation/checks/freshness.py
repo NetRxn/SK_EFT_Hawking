@@ -814,17 +814,22 @@ def check_bundle_source_freshness() -> CheckResult:
 _INDEX_NARRATIVE_COUNT_CEILING: int = 19
 """Hand-written counts in the Index's narrative, outside the AUTOGEN blocks.
 
-Measured 2026-08-13 at 19, after pruning a ~10 KB nested changelog from the
-header. Every one of these is a second census beside `docs/counts.json`, and the
-population is the reason the leg exists: the pruned header stated a theorem count
-roughly ten thousand below the AUTOGEN table a few lines down, in the same file,
-green throughout — `inventory_index_autogen_fresh` gated the generated blocks and
-nothing at all outside them.
+⚠️ **THE TARGET IS ZERO, AND 19 IS DEBT, NOT AN ALLOWANCE.** The Index's stated
+contract is that no number in it is hand-written: counts live in `docs/counts.json`
+and reach the file through the AUTOGEN blocks. This ceiling exists to stop the debt
+growing while it is paid down, and every commit that removes one should lower it.
+
+Measured 2026-08-13 at 19, after pruning a ~10 KB nested changelog from the header.
+Each is a second census beside the generated one, which is exactly the failure that
+motivated the leg: the pruned header stated a theorem count roughly ten thousand
+below the AUTOGEN table a few lines down, in the same file, green throughout.
 
 ⚠️ The pattern matches adjacency and takes false positives (a year beside the word
 "Theorem", the `0 axiom` / `0 sorry` invariant restated). That is deliberate: they
 sit in the baseline, and the ratchet is down-only, so imprecision costs a slightly
-high ceiling and never a missed regression.
+high ceiling and never a missed regression. It does mean the floor cannot reach zero
+by pruning alone — the last few will need the pattern tightened, with the ceiling
+re-measured in that commit.
 """
 
 

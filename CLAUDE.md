@@ -107,22 +107,16 @@ Four rules. They are requirements, not style preferences:
    narrative there. Name the *mechanism*, not the *magnitude*, and link to the census.
 
 ⚠️ **A wrong architecture document is worse than none, because it gets quoted.** Rule 3 is
-machine-enforced; rules 1 and 2 are not, and **nothing mechanically verifies a prose claim**
-(tracked as B2 in `docs/architecture/.working-docs/ARCHITECTURE_TODOs.MD`). Where the guard is
-discipline rather than a check, treat it as the stricter obligation, not the looser one.
+machine-enforced; rules 1 and 2 are not, and **nothing mechanically verifies a prose claim**.
+Where the guard is discipline rather than a check, treat it as the stricter obligation, not
+the looser one — the load-bearing claims are additionally pinned, in both directions, by
+[`tests/test_architecture_claims.py`](tests/test_architecture_claims.py).
 
 **A remediation item found in these documents but requiring code is FILED AS A FINDING** —
 `papers/AutomatedReviews/<date>-<slug>/<target>.md`, with a declared severity, lane and
-verify — so it is routed, ratcheted and closable through one writer
+verify. That is the one destination: it routes, ratchets, and closes through a single writer
 ([`scripts/close_finding.py`](scripts/close_finding.py), ADR-012). Enumerate it with paths
 and context; do not silently fix it in passing.
-
-⚠️ **Do not add to [`ARCHITECTURE_TODOs.MD`](docs/architecture/.working-docs/ARCHITECTURE_TODOs.MD).**
-It predates that queue and is **being retired into it**. It is still cited by identifier —
-`TODO-D*` from three architecture documents, `B2` from `tests/test_architecture_claims.py` —
-so it stays readable, but it takes no new entries. Two destinations for one job is the
-duplicate-mechanism failure rule 1 exists to prevent, and this is that failure inside the
-directory that names it.
 
 ---
 

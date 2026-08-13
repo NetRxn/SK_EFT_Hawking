@@ -1,32 +1,41 @@
 # SK-EFT Hawking — Inventory Index
 
-**Purpose.** LLM-friendly comprehensive index for the SK-EFT Hawking project. **This file is pointers only — no embedded content.** Every entry is `file path + one-line summary`. For full content read the pointed-to file. For comprehensive prose see `SK_EFT_Hawking_Inventory.md`. For live counts read `docs/counts.json`.
+**Purpose.** The pointer layer over the codebase. This file and
+[`SK_EFT_Hawking_Inventory.md`](SK_EFT_Hawking_Inventory.md) are **one instrument in two
+halves**: the Index holds `file path + one-line summary` and nothing else, the Inventory holds
+the prose. Read the Index to find a thing; read the Inventory to understand it.
 
-**Last synced:** 2026-06-14 — since then only the `<!-- AUTOGEN -->` blocks have been regenerated. Live counts: `docs/counts.json`. What each wave shipped: `docs/roadmaps/`. **Wave history is deliberately not summarized here** — the roadmaps own it, and a second account of the same events drifts from the first.
+**Two rules, and both are the whole point:**
 
-**Size discipline.** Target ~50–80 KB. Keep under 100 KB so future LLM bootstraps can read it in a single `Read` call (the harness truncates files >256 KB and may skip files much smaller than that). When this file approaches 100 KB, prune narrative — move it to `SK_EFT_Hawking_Inventory.md` or `temporary/working-docs/`. Do NOT inline session logs, wave-history, or per-commit detail; those belong in `temporary/working-docs/` or the prose inventory.
+1. **No embedded content.** Every entry is a pointer. Prose belongs in the Inventory; wave
+   history belongs in `docs/roadmaps/`; session logs belong in `temporary/working-docs/`. A
+   second account of something drifts from the first, and this file is the one that gets read
+   on bootstrap, so its drift is the expensive kind.
+2. **No hand-written number.** Counts live in `docs/counts.json` and reach this file through
+   the `<!-- AUTOGEN -->` blocks, written by `scripts/update_inventory_index.py`. Nothing
+   between those markers is edited by hand; nothing outside them states a count.
 
-> ⚠️ **THE NARRATIVE IN THIS FILE IS STALE; THE `<!-- AUTOGEN -->` BLOCKS ARE NOT.** Measured
-> 2026-08-13. `inventory_index_autogen_fresh` gates the AUTOGEN blocks **only**, so a freshly
-> generated table sits inside two-month-old prose and every gate stays green — this project's own
-> defect class, one level above the documents that name it. Concretely: the `Last synced` header
-> below states a theorem count roughly **ten thousand** below the AUTOGEN table a few lines down,
-> and the sibling list asserted something about this repo's `CLAUDE.md` that was simply false
-> (corrected below). **Trust the AUTOGEN blocks and the file paths; verify every narrative claim
-> against the artifact before acting on it.**
+**Size follows from rule 1:** target ~50–80 KB. **Keep under 100 KB**, so a bootstrap reads
+this file in one call. Over that means rule 1 has slipped — prune narrative into the Inventory
+rather than raising the number. `validate.py --check inventory_index_autogen_fresh` enforces
+the ceiling by parsing it out of the sentence you just read, so the guard and the rule cannot
+drift into two different rules.
+
+> **Current debt, measured 2026-08-13:** 19 hand-written counts remain outside the AUTOGEN
+> blocks, and the narrative was last hand-synced 2026-06-14. **19 is a down-only ceiling on the
+> way to zero, not an allowance** — rule 2's target is that no number here is hand-written. The
+> AUTOGEN blocks and the file paths are current; a narrative claim is worth verifying against
+> the artifact before you act on it.
 
 **Sibling docs (read on bootstrap):**
-- **`CLAUDE.md` (THIS repo, ~21 KB) — the primary bootstrap.** Build commands, the Lean MCP loop,
-  the architecture rules, pipeline invariants, conventions, the research ladder.
-- `../CLAUDE.md` (workspace root, ~6 KB) — **only what spans repos**: the public/private boundary,
-  the shared MCP config, the research corpus. It defers per-project guidance to the file above.
-  ⚠️ This line previously read *"project-level guidance for SK_EFT_Hawking lives here (there is no
-  separate per-repo `CLAUDE.md`)"* — **false**, and the most damaging kind of doc defect, because a
-  reader who believes it skips the primary bootstrap and never learns what it does not know.
-- `docs/architecture/README.md` — **the canonical description of the machinery**: which of its eight
-  documents answers which question, and the three rules. Read it before designing any check, gate,
-  extractor, writer or dashboard surface. This index answers *what a module is*; that directory
-  answers *how a mechanism works* — do not substitute one for the other.
+- **`CLAUDE.md` (THIS repo) — the primary bootstrap.** Build commands, the Lean MCP loop, the
+  architecture rules, pipeline invariants, conventions, the research ladder.
+- `../CLAUDE.md` (workspace root) — **only what spans repos**: the public/private boundary, the
+  shared MCP config, the research corpus. Per-project guidance is in the file above, not here.
+- `docs/architecture/README.md` — **the canonical description of the machinery**: which of its
+  eight documents answers which question, and the rules for changing any of it. Read it before
+  designing a check, gate, extractor, writer or dashboard surface. This index answers *what a
+  module is*; that directory answers *how a mechanism works*.
 - `README.md` — project framing (public-facing).
 - `docs/WAVE_EXECUTION_PIPELINE.md` — the 14-stage wave protocol and the pipeline invariants (the
   law; provenance for each rule is in `docs/WAVE_PIPELINE_RATIONALE.md`).
