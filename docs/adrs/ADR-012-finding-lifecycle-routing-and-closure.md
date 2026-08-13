@@ -859,10 +859,10 @@ Re-evaluated against this ADR:
 | prior item | state | disposition under ADR-012 |
 |---|---|---|
 | **ADR-009 §Deferred 0–7** | ✅ **all eight dispositioned** (fixed, or declined with measurements) | closed; no queue entry. The residue is the standing lesson that every item's scope figure was unverified — which is now D1's `target` and D17's generated brief |
-| **ADR-010 D2** — per-target purpose statements re-derived from the manuscripts | **OPEN** | 21 findings, `lane=prose`, one per bundle, disjoint `target` — **the exact shape ADR-012's fan-out exists for** |
+| **ADR-010 D2** — per-target purpose statements re-derived from the manuscripts | ✅ **DISCHARGED 2026-08-06/07** — re-measured at P8c | **NOT queued.** All 21 bundles carry a `## 1b. ADR-010 §D2 purpose statement` section in their apex-retrofit `FINDINGS.md`, each with every field D2 names; `ADR-011:130` already recorded this. **This row previously said OPEN and specified "21 findings, one per bundle" — filing them would have re-commissioned finished work**, which is exactly what D21's own re-measure rule exists to prevent |
 | **ADR-010 D4** — merge/split/retire | ✅ discharged 2026-08-08; all six proposed merges failed against the manuscripts | closed |
-| **ADR-010 D5** — homing dispositions for the un-homed substrate, measured at **1,403–1,633 modules**, not the charter's ~340 | **OPEN, and the largest single item in the portfolio** | `lane=substrate`, structured as a `BLOCKED_BY` tree: per-**arc** dispositions first, modules beneath them. ADR-010 itself anticipates that the 4–5× scope change may change the shape of the answer |
-| **ADR-010 D7** — the roster-drift change-set | **OPEN** | `lane=infra`/`prose`, doc work |
+| **ADR-010 D5** — homing dispositions for the un-homed substrate. Re-measured at P8c against the live closure predicate: **1,449 of 2,040 modules un-homed (26,652 of 32,443 declarations, 82.2%)** | **OPEN, and the largest single item in the portfolio** | `lane=substrate`, structured as a `BLOCKED_BY` tree, dispositions first and modules beneath them — but **the grouping key is DERIVED, never hand-listed** (ADR-010 §D5a retracted its arc map) |
+| **ADR-010 D7** — the roster-drift change-set | **OPEN at 26 of 36 audited sites**, plus ≥9 the audit never listed | `lane=infra`, and the lane is reasoned rather than defaulted: the target set contains **zero manuscripts** (the prose half closed as TODO-D15, a different population), and the durable repair is a `validate.py` check, which `prose`'s Stage 9/10 sub-gates cannot see |
 | **ADR-010 §Open** — operator-owned questions | **OPEN by design** | feed A/C of the Attention surface; and work parks behind the *finding id* of the decision itself (D19), not a separate token |
 | **ADR-011 P1–P8** | ✅ complete | closed |
 | **`ARCHITECTURE_TODOs.MD` D50, D51** | open, under the standing build-freeze | stay in the working doc per C1 — they are architecture-accuracy defects and belong to it |
@@ -876,6 +876,20 @@ and it is what prevents the resumed work from re-deriving orientation the queue 
 on it, including its evidence line."* Roughly a third of its drift ledger is about a document's own
 count, several items' *correcting evidence* has itself gone stale, and one filed claim was withdrawn
 the day after it was written. The table above records state, not permission to skip re-measurement.
+
+✅ **P8c ran that re-measurement on 2026-08-12, and it changed three of the four rows.** The warning
+was not decoration:
+
+- **D2 was already done.** Filing its 21 findings would have re-commissioned finished work.
+- **D5's scope moved again** — the homed set *shrank* by 40 modules and the un-homed *grew* by 44 in
+  six days. All 21 apexes resolve, so the input is sound; the drift's cause is not diagnosed here
+  and the finding claims none.
+- **This table quoted a WITHDRAWN figure.** The D5 row said *"not the charter's ~340"* and *"the
+  4–5× scope change"*. ADR-010's own correction box records that *"the audit's ~340 is low by 4–5×"*
+  **was a unit swap**, and that ~340 had no recoverable predicate. The withdrawn ratio survives at
+  two further sites inside ADR-010 and was inherited here from one of them. **A retracted number
+  propagates exactly like a live one** — this ADR quoting it a day later, in the decision whose
+  stated purpose is re-measurement, is the cleanest available demonstration.
 
 ### D22 — `docs/architecture/DASHBOARD.md` is canonicalized into `docs/architecture/`
 
