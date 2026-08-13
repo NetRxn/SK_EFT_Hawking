@@ -28,6 +28,7 @@ MUTATION-VERIFIED 2026-08-04 — 11 mutations, all CAUGHT, clean negative contro
 """
 from __future__ import annotations
 
+import ast
 import base64
 import json
 import struct
@@ -828,3 +829,96 @@ class TestBundleCountsFresh:
         monkeypatch.setattr(_H, "PAPERS_DIR", tmp_path / "papers")
         r = fr.check_bundle_counts_fresh()
         assert not r.passed and not r.measured
+
+
+class TestModuleCensusFresh:
+    """PRODUCTION-SEEDED (guide §2.4): every mutation writes into the REAL tree — a real
+    module's docstring, or the real `docs/MODULE_CENSUS.md` — and restores in a `finally`.
+
+    ADR-013. The census replaces two hand-maintained files whose narrative drifted while
+    their generated blocks stayed fresh. The legs below are what makes that trade safe:
+    the artifact must match a fresh derivation, and the population the census CANNOT
+    describe must not grow.
+    """
+
+    @staticmethod
+    def _mod():
+        import module_census
+        return module_census
+
+    def _leg(self, name):
+        return next(d for d in fr.check_module_census_fresh().details if d.name == name)
+
+    def test_the_live_tree_is_green_on_every_leg(self):
+        r = fr.check_module_census_fresh()
+        assert r.passed and r.measured
+        assert {"population", "census_fresh", "undocumented_modules"} == {
+            d.name for d in r.details}
+
+    def test_the_ratchet_has_zero_headroom(self):
+        """Guide §2.3 — a ceiling above the live population cannot fire."""
+        assert not any(d.name == "ratchet_slack"
+                       for d in fr.check_module_census_fresh().details)
+
+    def test_a_changed_docstring_makes_the_census_stale_in_production(self):
+        """FIRES ON THE SEEDED DEFECT — the leg that catches a description drifting away
+        from the module it describes, which is the whole failure the hand files had."""
+        mc = self._mod()
+        target = mc.PROJECT_ROOT / "src" / "core" / "transonic_background.py"
+        orig = target.read_text(encoding="utf-8")
+        try:
+            target.write_text(orig.replace(
+                "Transonic Background Solver", "SEEDED DEFECT Solver", 1), encoding="utf-8")
+            leg = self._leg("census_fresh")
+            assert not leg.passed and "STALE" in (leg.message or "")
+        finally:
+            target.write_text(orig, encoding="utf-8")
+
+    def test_removing_a_real_docstring_trips_the_ratchet(self):
+        """FIRES ON THE SEEDED DEFECT. ⚠️ The ratchet reads SOURCE, not the rendered
+        artifact — a leg keyed on the artifact would be satisfied by the regeneration that
+        introduced the regression, because the artifact always agrees with itself."""
+        mc = self._mod()
+        target = mc.PROJECT_ROOT / "src" / "core" / "transonic_background.py"
+        orig = target.read_text(encoding="utf-8")
+        tree = ast.parse(orig)
+        node = tree.body[0]
+        assert isinstance(node, ast.Expr) and isinstance(node.value, ast.Constant), (
+            "fixture assumption broken: the target module has no docstring")
+        try:
+            # Drop the docstring by its AST line span rather than by matching the literal —
+            # quoting style and escapes make a text match fragile, and a seed that silently
+            # fails to apply is a mutation test that proves nothing.
+            lines = orig.splitlines(keepends=True)
+            del lines[node.lineno - 1:node.end_lineno]
+            target.write_text("".join(lines), encoding="utf-8")
+            assert ast.get_docstring(ast.parse(target.read_text(encoding="utf-8"))) is None
+            leg = self._leg("undocumented_modules")
+            assert not leg.passed
+            assert f"{fr._NO_DOCSTRING_CEILING + 1} module(s)" in (leg.message or "")
+        finally:
+            target.write_text(orig, encoding="utf-8")
+
+    def test_a_walk_that_reaches_nothing_is_UNMEASURED_not_clean(self, monkeypatch):
+        """Guide §2.5 — the seam. A scan over an empty population passes vacuously; that
+        must read as UNVERIFIED rather than as a clean bill."""
+        monkeypatch.setattr(self._mod(), "TREES", ("no_such_tree",))
+        r = fr.check_module_census_fresh()
+        assert not r.passed and not r.measured
+        assert "vacuously" in (r.details[0].message or "")
+
+    def test_the_census_states_its_scope_on_its_face(self):
+        """ADR-013 D1b. An unstated boundary is how the next hand catalogue gets started."""
+        mc = self._mod()
+        text = mc.render(mc.collect())
+        assert "**Scope: Python only**" in text
+        assert "lean.module_names" in text, "the header must name where Lean is answered"
+
+    def test_undocumented_modules_are_named_not_merely_counted(self):
+        """ADR-013 D3 — a surface silent about its blind spot reads as complete."""
+        mc = self._mod()
+        data = mc.collect()
+        text = mc.render(data)
+        assert "## Modules this census cannot describe" in text
+        for rel, _ in data["undocumented"]:
+            assert f"`{rel}`" in text, f"{rel} is counted but not named"

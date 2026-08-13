@@ -97,6 +97,7 @@ EXPECTED_CHECKS = [
     'axiom_count_prose_consistency', 'prose_theorem_reference_coverage',
     'theorem_name_embedded_citations', 'inventory_index_autogen_fresh',
     'architecture_inventory_fresh',
+    'module_census_fresh',
     'lean_docstring_refs_resolve', 'paper_toolchain_pin_drift',
 ]
 

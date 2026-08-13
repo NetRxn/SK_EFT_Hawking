@@ -121,7 +121,10 @@ CI_SKIP: dict[str, str] = {
 #: So `--ci` FAILS when fewer checks MEASURE than this. A missing toolchain becomes a
 #: red build naming how many fewer than the floor MEASURED, not a green tick. Lower it only with a stated
 #: reason, exactly like every other ratchet in this codebase.
-CI_MIN_CHECKS_RUN: int = 77  # 2026-08-12: +1 (ledger_ids_resolve,
+CI_MIN_CHECKS_RUN: int = 78  # 2026-08-13: +1 (module_census_fresh, ADR-013 P1 —
+                             #   lowered again at P4 when inventory_index_autogen_fresh
+                             #   is deleted; separate commits, so it does not net out)
+                             # 2026-08-12: +1 (ledger_ids_resolve,
                              #   PROMOTED out of graph_integrity, not new)  # 2026-08-10: +1 (theorem_census_agrees — the
                              #   anti-whack-a-mole census guard); 80 registered
                              #   minus 4 CI_SKIP. Previously 75 = 79 minus the

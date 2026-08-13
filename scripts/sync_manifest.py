@@ -63,6 +63,15 @@ def _tables_stale() -> bool:
         return True
 
 
+def _module_census_stale() -> bool:
+    sys.path.insert(0, str(SCRIPT_DIR))
+    try:
+        import module_census as mc
+        return mc.OUT_PATH.read_text(encoding="utf-8") != mc.render(mc.collect())
+    except Exception:
+        return True
+
+
 def _index_autogen_stale() -> bool:
     sys.path.insert(0, str(SCRIPT_DIR))
     try:
@@ -132,6 +141,10 @@ EDGES: list[Edge] = [
          UV + ["scripts/render_paper_tables.py"], _tables_stale, "cheap"),
     Edge("SK_EFT_Hawking_Inventory_Index.md (autogen blocks)", "docs/counts.json",
          UV + ["scripts/update_inventory_index.py"], _index_autogen_stale, "cheap"),
+    # ADR-013 D5 — the module census. Derived from module docstrings via the AST; cheap
+    # (a source walk, no extraction), so it lands in --fast and the commit gate restages it.
+    Edge("docs/MODULE_CENSUS.md", "src/**/*.py, scripts/**/*.py",
+         UV + ["scripts/module_census.py", "--write"], _module_census_stale, "cheap"),
     # ADR-005 atlas surfaces — derived from lean_deps.json ∪ HYPOTHESIS_REGISTRY; cheap (no extraction).
     Edge("lean/atlas_view.json", "lean/lean_deps.json, src/core/constants.py (HYPOTHESIS_REGISTRY)",
          UV + ["scripts/atlas_view.py", "--write"], _atlas_view_stale, "cheap"),

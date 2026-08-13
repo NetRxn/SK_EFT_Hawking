@@ -1479,3 +1479,116 @@ def check_bundle_counts_fresh() -> CheckResult:
         f"{ok}/{ok + len(stale) + len(missing)} declared bundle(s) carry a current "
         f"bundle_counts.tex"))
     return CheckResult(passed=not (stale or missing), details=details)
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# ADR-013 — the module census
+# ═══════════════════════════════════════════════════════════════════════
+
+#: Modules in `src/` and `scripts/` carrying no module docstring. Down-only.
+#:
+#: Measured 2026-08-13 at 4: `src/{dark_sector,fermi_hubbard,graphene}/__init__.py` and
+#: `scripts/tests/test_system2.py`. 315 of 319 modules DO carry one, which is why this is
+#: a ratchet and not a hard failure — three of the four are `__init__.py`, where a
+#: docstring is a style question rather than a defect, and a gate that fires on correct
+#: work gets switched off (VALIDATION_GATE_TOPOLOGY §3).
+#:
+#: ⚠️ **The ceiling keys on the UNDOCUMENTED set, so adding documented modules cannot move
+#: it.** Building the census added `scripts/module_census.py` and took the population 318
+#: → 319 without touching this number — which is the property a ratchet on a defect
+#: population must have.
+#:
+#: ⚠️ **An earlier draft of ADR-013 also ratcheted a "title-only" population. It does not
+#: exist**: it came from a character threshold, and the population moved with the
+#: threshold (3 at ≤60 chars, 8 at "one line", 10 at "one line without terminal
+#: punctuation"). The modules it flagged carry good docstrings. A non-arbitrary predicate
+#: — the docstring restates the module name and adds no new word — returns zero.
+_NO_DOCSTRING_CEILING: int = 4
+
+
+@register_check("module_census_fresh",
+                "docs/MODULE_CENSUS.md matches a fresh derivation, and the undocumented "
+                "module population is ratcheted")
+def check_module_census_fresh() -> CheckResult:
+    """The census is derived from module docstrings via the AST; this asserts it is current
+    and that the population it cannot describe is not growing.
+
+    ⚠️ **The ratchet reads SOURCE, not the rendered artifact.** The census regenerates and
+    auto-restages at the commit gate, so a check keyed on the artifact would be satisfied
+    by the regeneration that introduced the regression — the artifact always agrees with
+    itself. Counting undocumented modules from the walk is what makes the leg able to fail.
+    """
+    try:
+        import module_census as mc
+    except ImportError as exc:
+        return CheckResult(passed=False, measured=False, details=[Detail(
+            "import", False,
+            f"SKIPPED — module_census not importable: {exc}; UNVERIFIED, not passing")])
+
+    try:
+        data = mc.collect()
+        fresh = mc.render(data)
+    except Exception as exc:  # noqa: BLE001 — a broken derivation must not read as clean
+        return CheckResult(passed=False, measured=False, details=[Detail(
+            "derive", False,
+            f"module_census failed to derive ({exc}) — the census cannot be compared, "
+            f"which is UNVERIFIED rather than fresh")])
+
+    details: list[Detail] = []
+    all_pass = True
+    n_doc = len(data["documented"])
+    n_un = len(data["undocumented"])
+
+    # ── Leg 1: the seam. A walk that reached nothing proves nothing (guide §2.5) ──
+    if n_doc + n_un == 0:
+        return CheckResult(passed=False, measured=False, details=[Detail(
+            "population", False,
+            f"the walk over {list(mc.TREES)} found zero modules — the legs below would "
+            f"pass vacuously over an empty population, which is not evidence they hold")])
+    details.append(Detail(
+        "population", True,
+        f"{n_doc + n_un} module(s) walked across {', '.join(mc.TREES)}/"))
+
+    # ── Leg 2: the tracked artifact matches a fresh derivation ────────────────
+    if not mc.OUT_PATH.is_file():
+        all_pass = False
+        details.append(Detail(
+            "census_fresh", False,
+            f"{mc.OUT_PATH.name} is absent — run "
+            f"`uv run python scripts/module_census.py --write`"))
+    else:
+        current = mc.OUT_PATH.read_text(encoding="utf-8")
+        ok = current == fresh
+        details.append(Detail(
+            "census_fresh", ok,
+            f"{mc.OUT_PATH.name} matches a fresh derivation ({n_doc} described)"
+            if ok else
+            f"{mc.OUT_PATH.name} is STALE — a module docstring changed and the census did "
+            f"not follow. Run `uv run python scripts/module_census.py --write`. It is "
+            f"regenerated and restaged by the commit gate, so a stale one means that gate "
+            f"did not run for this change."))
+        if not ok:
+            all_pass = False
+
+    # ── Leg 3: the undocumented population is ratcheted, down-only ────────────
+    ok = n_un <= _NO_DOCSTRING_CEILING
+    names = [rel for rel, _ in data["undocumented"]]
+    details.append(Detail(
+        "undocumented_modules", ok,
+        f"{n_un} module(s) without a docstring, at or below the down-only ceiling of "
+        f"{_NO_DOCSTRING_CEILING}"
+        if ok else
+        f"{n_un} module(s) without a docstring EXCEEDS the down-only ceiling of "
+        f"{_NO_DOCSTRING_CEILING}. The census cannot describe them, and the fix is a "
+        f"docstring in the module rather than a line in a hand-maintained catalogue: "
+        f"{names[:8]}"))
+    if not ok:
+        all_pass = False
+    elif n_un < _NO_DOCSTRING_CEILING:
+        details.append(Detail(
+            "ratchet_slack", True,
+            f"the ceiling now carries {_NO_DOCSTRING_CEILING - n_un} of headroom — lower it "
+            f"to {n_un} in this commit; a ratchet with slack cannot fire (guide §2.3)",
+            warning=True))
+
+    return CheckResult(passed=all_pass, details=details)

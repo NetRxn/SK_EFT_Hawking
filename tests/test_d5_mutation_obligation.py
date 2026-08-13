@@ -406,6 +406,16 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
         "population; a source-fresh + Lean-stale bundle still writes freshness_stale=true; "
         "a dark Lean leg writes NO flag at all; and the --strict promotion is unchanged",
     ),
+    "module_census_fresh": (
+        "test_d5_freshness.py",
+        "PRODUCTION-SEEDED on the real tree (ADR-013 P1). A changed docstring in the real "
+        "src/core/transonic_background.py makes the census STALE; the same module's "
+        "docstring REMOVED (by AST line span, not a text match that can silently fail to "
+        "apply) takes the undocumented population past its ceiling; a walk pointed at no "
+        "tree reports UNMEASURED rather than clean. The ratchet leg reads SOURCE, not the "
+        "rendered artifact — a leg keyed on the artifact would be satisfied by the "
+        "regeneration that introduced the regression, since the artifact always agrees "
+        "with itself"),
     "inventory_index_autogen_fresh": (
         "test_d5_freshness.py",
         "TWO HALVES. The AUTOGEN-freshness leg stays ADVISORY BY DESIGN (item 3), so its "
@@ -856,6 +866,9 @@ AWAITING_CEILING = 0
 #: is the distinction the four blockers turned on. Erring toward absent overstates the
 #: remaining work; the opposite error is what produced them.
 PRODUCTION_SEEDED: frozenset[str] = frozenset({
+    # 2026-08-13 (ADR-013 P1): seeded in the real src/core/transonic_background.py —
+    # docstring changed, then removed — and in the real docs/MODULE_CENSUS.md.
+    "module_census_fresh",
     # 2026-08-13: seeded in the real SK_EFT_Hawking_Inventory_Index.md — a count
     # appended to the narrative, padding past the file's own declared size ceiling,
     # that ceiling deleted, and an AUTOGEN END removed. Only the narrative legs are

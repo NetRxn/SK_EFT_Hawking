@@ -18,7 +18,8 @@ WHAT DECIDES SCOPE — this table is DERIVED FROM `_plan()`, not written beside 
 
   lean/**                  -> counts_fresh, lake build SKEFTHawking.ExtractDeps,
                               lean_zero_sorry + axiom_closure_allowlist
-  src/**, scripts/**       -> fast suite, architecture_inventory_fresh, counts_fresh
+  src/**, scripts/**       -> fast suite, architecture_inventory_fresh, counts_fresh,
+                              module_census_fresh (those trees ARE its inputs)
   tests/**                 -> fast suite, counts_fresh
   rust/**                  -> NOTHING mechanical. No test under tests/ imports
                               `sk_eft_rhmc` (nine scripts/ drivers do), and a rust change
@@ -106,6 +107,10 @@ def _plan(paths: list[str]) -> tuple[list[tuple[str, list[str]]], list[str]]:
         steps.append(("architecture_inventory_fresh",
                       ["uv", "run", "python", "scripts/validate.py",
                        "--check", "architecture_inventory_fresh"]))
+    if touched["code"]:
+        steps.append(("module_census_fresh",
+                      ["uv", "run", "python", "scripts/validate.py",
+                       "--check", "module_census_fresh"]))
     if counts_moved:
         steps.append(("counts_fresh",
                       ["uv", "run", "python", "scripts/validate.py",
