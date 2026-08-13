@@ -1094,8 +1094,20 @@ re-key moved inert records onto ids that now mint nodes, and several of those id
 targets. That is the re-key working — the records became live — but it means those dispositions
 need reconciling by hand rather than by a second batch.
 
-**P8 — Substrate lane wiring (D4).** Re-file D45–D49 as `lane=substrate` findings; document the lane
-in the pipeline; confirm `ARCHITECTURE_TODOs.MD` is back inside its charter.
+**P8 — Substrate lane wiring (D4). ✅ COMPLETE 2026-08-12.** Eight findings minted from the five
+sub-items that survived re-measurement — **four of the nine were already fixed, several in the very
+commit that filed them into the working doc.** Lanes are mixed exactly as D4 predicted and were
+assigned per item: one `substrate` (the canonical theorem-vs-implementation disagreement), three
+`lean`, three `infra`, one `prose`. `WAVE_EXECUTION_PIPELINE.md` gains the lane taxonomy at Stage
+13, and `ARCHITECTURE_TODOs.MD` is back inside its charter with a pointer to the re-file.
+
+⚠️ D45-b is filed rather than fixed **on purpose**: its entry asserts both primary sources were read
+in full, and correcting a citation on another document's word — while fixing a finding *about*
+unverified attribution — is the error §Pilot already records once.
+
+⚠️ **This phase was specified as "re-file D45–D49 as `lane=substrate` findings", and that framing
+was wrong** — the block is mixed, and pre-assigning a lane to a set of findings nobody had
+re-measured is the shape D4 explicitly warns against. Only one of the eight is `substrate`.
 
 **P8b — Parked work (D19). ✅ COMPLETE 2026-08-12** (`1a354d90`). The roadmap opt-in block, the
 external release-condition tokens on `blocked_by`, and their evaluation. Independent of P9 and a
@@ -1107,8 +1119,17 @@ forever, and rendering it met would release work on no evidence. `run:` is delib
 `None` until a run registry exists. The roadmap corpus is untouched — the block is opt-in, and
 nothing is parked yet, so this narrows the unmechanized roadmap seam without closing it.
 
-**P8c — Prior-ADR open items enter the queue (D21).** ADR-010 D2, D5 and D7 filed as findings with
-lanes and targets, pointing back at ADR-010 as the decision record. Re-measure each before filing.
+**P8c — Prior-ADR open items enter the queue (D21). ✅ COMPLETE 2026-08-12.** Eight findings, all
+`minor`, zero blocking — measured rather than tuned: `unattributed_population` sits at zero
+headroom, so any blocking finding filed unattributed takes the gate red, and none of these
+falsifies a claim a manuscript makes. **D2 was NOT filed: it is discharged**, and D21's specified
+fan-out of 21 findings would have re-commissioned finished work. D5's `BLOCKED_BY` tree is the
+first real use of D10's DAG — module-level findings block on arc-level ones by minted id.
+
+⚠️ **"Re-measure each before filing" was the phase's own instruction, and it changed three of the
+four rows** — including one that was already done and one quoting a figure ADR-010 had withdrawn.
+The instruction earned itself; a phase that had merely executed its specification would have filed
+21 redundant findings and propagated a retracted number.
 
 **P8d — Canonicalize `docs/architecture/DASHBOARD.md` (D22). ✅ COMPLETE 2026-08-12.** `git mv`
 into `docs/architecture/`; the Answers contract line and README ownership row added (the check now
@@ -1136,12 +1157,37 @@ built thin against the specifications in D15 and iterated. **P9c:** the Loops pa
 harness state that already exists — no new writer. `docs/architecture/DASHBOARD.md` corrected in the commit
 that makes each claim wrong.
 
+**P9a status 2026-08-12 — S1, the QI de-saturation and the template-contract gate are ✅ COMPLETE;
+the sign-off writer (Tasks 5/6) and S4 (Task 8) are open.**
+
+- **S1** landed as an *evaluator* change, as D15's corrected table said it must: the finding id was
+  destroyed in `_eval_fix_propagation`, which held the whole node and kept `label[:60]`. ⚠️ **The
+  cap was the harder half.** The evaluator truncated to ten *before* assigning, so a total computed
+  downstream would have reported 10 for a paper carrying 44 — **a disclosure that lies is worse
+  than a silent cap.** A cap can only be disclosed by a layer that can still see what it cut.
+- **The QI de-saturation found three causes where the plan named one.** The largest was that
+  clustering partitioned on `inferred_paper` alone, collapsing every bundle-era finding onto one
+  sentinel — **the same omission that produced a false GREEN in `bundle_readiness` on 2026-07-31**,
+  fixed there and never here. Zero items became 23.
+- **The template-contract gate corrected the plan on arrival:** "kwargs plus context processors"
+  names two of *three* sources, and a gate built to that literally flags `request`, `session` and
+  `url_for` as drift on day one.
+
 **P10 — Orchestration (D2, D10, D11, D16).** Route by lane, fan out on disjoint `target`, traverse
 `BLOCKED_BY` for the cascade, worktree per lane, close by running `verify`, terminate at a merged
 wave. Last, because it is the only phase whose design genuinely depends on what the earlier ones
 reveal.
 
-**P11 — The repeatable architecture-change skill (D18).**
+**P11 — The repeatable architecture-change skill (D18). ✅ COMPLETE 2026-08-12.**
+`/skeft-qa:architecture-change`, with this ADR as its worked example — all three correction rounds,
+each attributed to the instrument that produced it and the disjoint class it caught.
+
+⚠️ **Its registration checklist teaches DERIVATION rather than publishing a roster, and the reason
+is measured.** The plan's own six-item list was incomplete — it omitted
+`tests/test_validate_registry_contract.py::EXPECTED_CHECKS`, and three tests went red. Building the
+skill confirmed **seven** sites from the code, and found a conditional eighth
+(`test_validate_public_surface.py::EXPECTED_CHECK_FUNCTIONS`) that binds only once a check is
+imported off `validate` by name. A published roster would have been wrong a second time.
 
 ---
 
