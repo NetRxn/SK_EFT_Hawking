@@ -63,16 +63,62 @@ import validate_helpers as _H  # noqa: E402
 from validation.checks import bundles_readiness as bru  # noqa: E402
 
 
-def _agg(blockers=0, advisories=0, readiness=None):
+def _agg(blockers=0, advisories=0, readiness=None, bundle="D1"):
     """The heatmap aggregate shape the checks actually read: `readiness`
-    ('RED'/'GREEN'), `blocker_count`, and `severity_mix` (from which the
-    advisory count is summed)."""
+    ('RED'/'GREEN'), `blocker_count`, `severity_mix` (from which the advisory count is
+    summed), and `open_finding_ids`.
+
+    ⚠️ **`open_finding_ids` is REQUIRED and must be the COMPLETE list.** The unattributed
+    ratchet is defined as the complement of what this aggregation reached, so an aggregate
+    that names no finding declares every live finding unreachable. That is also why the
+    production field is no longer capped at ten: a truncated list here would invent
+    unattributed findings out of a busy bundle's tail.
+    """
+    n = blockers + advisories
     return {"blocker_count": blockers,
             "severity_mix": {"minor": advisories},
+            "open_findings": n,
+            "open_finding_ids": [f"review:fixture:{bundle}:{i}" for i in range(n)],
             "readiness": readiness or ("RED" if blockers else "GREEN")}
 
 
-def _patch_readiness(monkeypatch, by_bundle, *, gates=(), raise_aggregate=False):
+def _findings_for(by_bundle):
+    """The ReviewFinding corpus that MATCHES a fixture aggregate.
+
+    ⚠️ Patching the aggregate alone used to be enough, because the unattributed leg read
+    the live corpus independently and asked only whether each finding carried an
+    attribution field. It now asks whether the AGGREGATION REACHED it — the fix for a hole
+    that let eight real findings sit outside both legs — so a fixture that stubs one side
+    and not the other describes a world where ~1,600 live findings are unreachable, and the
+    ratchet correctly goes red over it. The fixture must be one coherent world or it is
+    testing nothing it claims to test.
+    """
+    out = []
+    for bundle, agg in (by_bundle or {}).items():
+        blocking = agg.get("blocker_count", 0)
+        for i, fid in enumerate(agg.get("open_finding_ids") or ()):
+            out.append({
+                "id": fid, "label": f"fixture finding {i}",
+                "meta": {"status": "open",
+                         "severity": "major" if i < blocking else "minor",
+                         "inferred_bundle": bundle, "inferred_paper": None},
+            })
+        # ⚠️ One CLOSED finding per bundle, so a bundle with zero OPEN findings still has
+        # a non-empty corpus. The check's population guard refuses to measure an empty
+        # ReviewFinding set — correctly, because "no findings extracted" and "no findings
+        # open" are the round-8 confusion it exists to prevent — and a fixture asserting
+        # "green with zero blockers passes" must therefore describe a corpus that was
+        # READ and found clean, not one that was never read.
+        out.append({
+            "id": f"review:fixture:{bundle}:closed", "label": "fixture closed finding",
+            "meta": {"status": "fixed", "severity": "major",
+                     "inferred_bundle": bundle, "inferred_paper": None},
+        })
+    return out
+
+
+def _patch_readiness(monkeypatch, by_bundle, *, gates=(), raise_aggregate=False,
+                     findings=None):
     monkeypatch.setattr(br, "parse_mapping", lambda t: {})
     monkeypatch.setattr(br, "load_findings_by_paper", lambda: {})
     monkeypatch.setattr(br, "resolve_stage13_reviews", lambda backfill=False: {})
@@ -84,6 +130,13 @@ def _patch_readiness(monkeypatch, by_bundle, *, gates=(), raise_aggregate=False)
     monkeypatch.setattr(br, "aggregate_by_bundle", _agg_fn)
     monkeypatch.setattr(build_graph, "build_graph_json",
                         lambda: {"nodes": list(gates), "edges": []})
+    # The finding corpus the two ratchets measure, kept CONSISTENT with the aggregate
+    # above. `raise_aggregate` deliberately leaves the live corpus in place: that case is
+    # about the aggregate failing to compute, and stubbing findings would mask it.
+    if not raise_aggregate:
+        monkeypatch.setattr(build_graph, "extract_review_finding_nodes",
+                            lambda: (findings if findings is not None
+                                     else _findings_for(by_bundle)))
 
 
 def _gate(bundle: str, state: str, name: str = "FixPropagation"):

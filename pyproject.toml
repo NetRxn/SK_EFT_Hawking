@@ -37,6 +37,12 @@ dependencies = [
     # Provenance dashboard
     "flask>=3.0",
     "markupsafe>=3.0",      # dashboard XSS escaping; was reachable only via flask/jinja2
+    # Imported directly by tests/test_template_contract.py, which uses `jinja2.meta.
+    # find_undeclared_variables` to assert the server passes every variable the templates
+    # dereference. Reachable only via flask until now — and `uv lock --upgrade` has
+    # silently dropped exactly that kind of transitive before (it removed pytest-timeout,
+    # and markupsafe one line up).
+    "jinja2>=3.1",
     # Datastar SDK — dashboard reactive layer (replaces HTMX/vanilla-JS).
     # Reference: docs/references/Datastar_Dashboard_Reference.md
     "datastar-py>=0.5",

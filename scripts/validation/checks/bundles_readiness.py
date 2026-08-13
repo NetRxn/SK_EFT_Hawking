@@ -584,9 +584,10 @@ def check_bundle_stage13_claim_consistent() -> CheckResult:
         details.append(Detail(
             "finding_population", False, measured=False,
             message="the ReviewFinding population is EMPTY — every open-REQUIRED ratchet "
-                    "below would read 0 and pass over nothing. An empty population is the "
-                    "round-8 state (rename `evaluate_all_gates` and every readiness check "
-                    "goes green), not a clean corpus"))
+                    "below would read 0 and pass over nothing, so this check is "
+                    "UNVERIFIED, not passing. An empty population is the round-8 state "
+                    "(rename `evaluate_all_gates` and every readiness check goes green), "
+                    "not a clean corpus"))
         return CheckResult(passed=False, measured=False, details=details)
 
     # ── Ratchet 1: the open-REQUIRED population, per bundle (ADR-012 D9) ──────────
