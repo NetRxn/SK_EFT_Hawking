@@ -125,6 +125,34 @@ population it governs**, and it is the direct cause of the drift this ADR remove
 It also makes this a **law amendment**, not a file retirement: Stage 12 must change in the same
 work, or the pipeline will mandate maintaining files that no longer exist.
 
+**C8 — THE CENSUS CHANGES THE DISCLOSURE SURFACE, AND THAT WAS FOUND BY SHIPPING IT.**
+P1's first commit was blocked by the repo's IP disclosure guard. The census is not a pure
+re-presentation of existing text: it **lifts module docstrings out of `src/` and republishes
+them in `docs/`**, on an artifact that regenerates and re-stages itself on every commit. Any
+term under IP watch that appears in any module docstring therefore crosses that boundary
+automatically and repeatedly, with no human in the loop.
+
+**The design consequence, which is now a standing property rather than an accident:**
+
+* A docstring is no longer only source. It is published prose, and the census is the
+  publisher. Whoever writes one is writing into `docs/`.
+* The guard that catches it is the **public repo's pre-commit hook, on the staged delta** —
+  the standing mechanism, and the right one, because it fires at the moment the text is
+  introduced.
+* ⚠️ **A forward gate cannot see backwards.** Anything committed before a term entered a
+  watchlist is invisible to it, permanently. Measured 2026-08-13: fourteen such hits stood
+  in the public tree, all predating the watchlist by six weeks to three months, and nothing
+  had ever looked. That backstop now exists as an **ad-hoc** sweep on the private side, run
+  when the delta gate structurally cannot help — a term added to a watchlist, a new asset,
+  before a filing, after a bulk import. **It is deliberately not a scheduled check:**
+  everything it can see is by definition already public, so running it daily would spend
+  minutes re-reporting what nobody can undo.
+
+**This does not change any decision above; it adds an obligation to P2 and P5.** Migrating
+prose *into* docstrings (D6) now means migrating it into a published surface, so that step
+inherits the disclosure question rather than being a pure refactor. Whatever is moved is
+staged through the hook, which is exactly where it should be judged.
+
 **C6 — The population I reported before was wrong twice, which is why C4 is stated as a
 derivation.** An earlier pass in this session reported "44 of 112 modules undocumented". The
 population was `scripts/*.py` **top level only** — 112 against a real 318 — and the metric was
@@ -311,7 +339,7 @@ arrival. The full set, each verified at HEAD:
 | phase | what | gate |
 |---|---|---|
 | **P1** | Ship `scripts/module_census.py` (carrying C4's derivation, so the baseline is reproducible) + `docs/MODULE_CENSUS.md` + `module_census_fresh` with `NO_DOCSTRING_CEILING`, register the `Edge`, add to `pre-commit-sync.sh`'s restage list, **and every row of the table above**. Production-seeded mutation per leg. | census green, mutation red-then-green, registry-contract tests green |
-| **P2** | D6 — migrate the Inventory's richer `Purpose:` prose into module docstrings, per module. | census re-run shows the migrated text |
+| **P2** | D6 — migrate the Inventory's richer `Purpose:` prose into module docstrings, per module. ⚠️ Per C8 a docstring is now a **published** surface, so each migration is staged through the disclosure hook and judged there — this is not a pure refactor. | census re-run shows the migrated text; disclosure hook clean |
 | **P3** | D10 — move the mutation obligation; re-measure `FIXTURE_ONLY_CEILING`. | `test_d5_mutation_obligation` green |
 | **P4** | D7 — retire the Index: unwire `sync_manifest`, `pre-commit-sync.sh`, `update_inventory_index.py`, `freshness.py`, three test files, `CLAUDE.md`, three architecture docs. | full fast suite green |
 | **P5** | D8 — retire the Inventory; correct the generated pointer string that names it. | `doc_refs_resolve` green |
