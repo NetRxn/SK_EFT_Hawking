@@ -30,6 +30,8 @@ from __future__ import annotations
 
 import json
 import sys
+
+import pytest
 from pathlib import Path
 
 SK_ROOT = Path(__file__).resolve().parent.parent
@@ -356,3 +358,152 @@ class TestNogoSubstrateIntegrity:
             "a KERNEL_NOGO_REGISTRY entry with no backing theorem passed — Invariant "
             "#17's escape hatch is open again")
         assert any(d.name == "fork-y" and not d.passed for d in r.details)
+
+
+class TestBinderBlindness:
+    """Regression for the defect that made every other test in this file necessary.
+
+    `_thin_type_label` tested `True` ONLY against the raw type string — before
+    binder-stripping and before arrow-splitting — and never re-tested the conclusion
+    it computed. And `_strip_leading_binders` matched the `∃ … ,` NOTATION, while
+    lean_deps stores the ELABORATED type, where Lean has already rewritten
+    `∃ x, P x` to `Exists fun x => P x`; the `∃` character never appears.
+
+    Result: `∀ x, True`, `P → True` and `∃ x, True` all classified CLEAN — the purest
+    vacuity there is, invisible to the check whose whole subject is vacuity. Measured
+    2026-08-13: 897 authored theorems had an existential conclusion and the classifier
+    had flagged 0 of them.
+    """
+
+    @pytest.mark.parametrize("type_str", [
+        "True",
+        "∀ (self : SMGPhaseData), True",
+        "Exists fun x => True",
+        "∀ (eos : E) (bg : B), Exists fun x => True",
+        "P → True",
+        "Exists fun x => Exists fun y => True",
+    ])
+    def test_True_is_reached_through_any_binder_or_arrow(self, type_str):
+        assert lst._thin_type_label(type_str) == "True", (
+            f"`{type_str}` did not classify as vacuous. A `True` conclusion is vacuous "
+            f"however it is reached; anything implies True and `∃ x, True` asserts only "
+            f"that some type is inhabited.")
+
+    def test_the_elaborated_existential_form_is_what_gets_stripped(self):
+        """The `∃` character never appears in an elaborated type — `Exists fun` does."""
+        assert lst._strip_leading_binders("Exists fun x => Eq x x") == "Eq x x"
+        assert lst._thin_type_label("Exists fun x => Eq x x") == "reflexive (X=X)"
+
+    def test_a_substantive_conclusion_under_a_binder_is_untouched(self):
+        """NEGATIVE CONTROL — the widening must not swallow real statements."""
+        assert lst._thin_type_label("∀ (x : Real), 0 < x → Exists fun y => Eq (f y) x") is None
+        assert lst._thin_type_label("∀ (eps : Real), 0 < eps → cs > 0") is None
+
+
+class TestExistentialWitnessDisclosure:
+    """`∃ x, P x` is vacuous exactly when a trivial witness satisfies `P`. That is a
+    proof obligation, not a syntactic property, so the gate requires the witness be
+    NAMED rather than trying to classify it.
+
+    A syntactic discriminator WAS built and measured first — "is some bound variable
+    equated to a project term" — and it was wrong in both directions on the live
+    population. It was discarded, not shipped. These tests pin the disclosure contract
+    that replaced it.
+    """
+
+    EXI = "∀ (mdr : M), Exists fun d => Exists fun C => And (0 < C) (LE.le (abs d) C)"
+
+    def _run(self, tmp_path, monkeypatch, *, records, registry, aristotle=("thm_x",),
+             doc="", placeholders=None, escape_ceiling=5, misnamed_ceiling=7):
+        src = tmp_path / "src" / "core"
+        src.mkdir(parents=True, exist_ok=True)
+        (src / "formulas.py").write_text(doc)
+        monkeypatch.setattr(_H, "SRC_DIR", tmp_path / "src")
+        _deps(tmp_path, monkeypatch, records)
+        monkeypatch.setattr(_c, "EXISTENTIAL_WITNESS_REGISTRY", registry)
+        monkeypatch.setattr(_c, "ARISTOTLE_THEOREMS", {a: {} for a in aristotle})
+        monkeypatch.setattr(_c, "PLACEHOLDER_LEAN_NAMES", placeholders or {})
+        monkeypatch.setattr(_c, "MODELING_ASSUMPTION_THEOREMS", {})
+        monkeypatch.setattr(_c, "EXISTENTIAL_ESCAPE_CEILING", escape_ceiling)
+        monkeypatch.setattr(_c, "EXISTENTIAL_MISNAMED_CEILING", misnamed_ceiling)
+        return lst.check_existential_witness_disclosure()
+
+    def test_an_undisclosed_existential_result_fails(self, tmp_path, monkeypatch):
+        """FIRES ON THE SEEDED DEFECT — a result sold with no witness named."""
+        r = self._run(tmp_path, monkeypatch,
+                      records=[_rec("SKEFTHawking.M.thm_x", type_=self.EXI)],
+                      registry={})
+        assert r.passed is False
+        assert any(d.name == "thm_x" for d in r.details)
+
+    def test_a_disclosed_existential_passes(self, tmp_path, monkeypatch):
+        r = self._run(tmp_path, monkeypatch,
+                      records=[_rec("SKEFTHawking.M.thm_x", type_=self.EXI)],
+                      registry={"thm_x": {"status": "anchored", "witness": "the fixed point"}})
+        assert r.passed is True
+
+    def test_an_entry_with_no_witness_text_fails(self, tmp_path, monkeypatch):
+        """A registry entry is not disclosure unless it actually names the witness."""
+        r = self._run(tmp_path, monkeypatch,
+                      records=[_rec("SKEFTHawking.M.thm_x", type_=self.EXI)],
+                      registry={"thm_x": {"status": "anchored", "witness": ""}})
+        assert r.passed is False
+
+    def test_a_non_existential_result_is_out_of_scope(self, tmp_path, monkeypatch):
+        """NEGATIVE CONTROL — the gate must not demand witnesses from every theorem.
+
+        The population must be NON-EMPTY for this to test anything: with only the
+        non-existential theorem in scope the seam guard fires UNVERIFIED, and a
+        version of this test that passed on THAT would be asserting nothing.
+        """
+        r = self._run(tmp_path, monkeypatch,
+                      records=[_rec("SKEFTHawking.M.plain", type_="0 < eps → cs > 0"),
+                               _rec("SKEFTHawking.M.thm_x", type_=self.EXI)],
+                      registry={"thm_x": {"status": "anchored", "witness": "w"}},
+                      aristotle=("plain", "thm_x"))
+        assert r.passed is True, "a non-existential theorem was asked to name a witness"
+        assert not any(d.name == "plain" for d in r.details)
+
+    def test_an_unsold_existential_is_out_of_scope(self, tmp_path, monkeypatch):
+        """Scope is what the project SELLS as a result, not every existential."""
+        r = self._run(tmp_path, monkeypatch,
+                      records=[_rec("SKEFTHawking.M.internal", type_=self.EXI)],
+                      registry={}, aristotle=())
+        assert r.passed is False, (
+            "population was empty — the seam guard must report UNVERIFIED, never PASS")
+        assert any(d.name == "population" for d in r.details)
+
+    def test_a_declared_placeholder_is_exempt(self, tmp_path, monkeypatch):
+        """Disclosed elsewhere; two registrations would let them disagree."""
+        r = self._run(tmp_path, monkeypatch,
+                      records=[_rec("SKEFTHawking.M.thm_x", type_=self.EXI),
+                               _rec("SKEFTHawking.M.thm_y", type_=self.EXI)],
+                      registry={"thm_y": {"status": "anchored", "witness": "w"}},
+                      aristotle=("thm_x", "thm_y"),
+                      placeholders={"thm_x": "thm_x"})
+        assert r.passed is True
+
+    def test_a_new_escape_breaches_the_down_only_ceiling(self, tmp_path, monkeypatch):
+        """The ratchet: disclosing an escape is not the same as being allowed one."""
+        r = self._run(tmp_path, monkeypatch,
+                      records=[_rec("SKEFTHawking.M.thm_x", type_=self.EXI)],
+                      registry={"thm_x": {"status": "escape", "witness": "d=1, C=1"}},
+                      escape_ceiling=0)
+        assert r.passed is False
+        assert any("never raise this ceiling" in (d.message or "") for d in r.details)
+
+    def test_a_new_misnamed_breaches_its_ceiling(self, tmp_path, monkeypatch):
+        r = self._run(tmp_path, monkeypatch,
+                      records=[_rec("SKEFTHawking.M.thm_x", type_=self.EXI)],
+                      registry={"thm_x": {"status": "misnamed", "witness": "w"}},
+                      misnamed_ceiling=0)
+        assert r.passed is False
+
+    def test_an_escape_at_the_ceiling_is_advisory_not_red(self, tmp_path, monkeypatch):
+        """Tracked debt stays visible without blocking — it leaves by remediation."""
+        r = self._run(tmp_path, monkeypatch,
+                      records=[_rec("SKEFTHawking.M.thm_x", type_=self.EXI)],
+                      registry={"thm_x": {"status": "escape", "witness": "d=1, C=1"}},
+                      escape_ceiling=1)
+        assert r.passed is True
+        assert any(d.warning for d in r.details)

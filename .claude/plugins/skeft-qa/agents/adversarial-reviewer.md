@@ -136,6 +136,21 @@ For every Lean theorem name the paper cites (search paper `.tex` for `\texttt{([
 
 For borderline cases, state your reasoning in the finding's detail so a future reviewer can re-evaluate.
 
+Steps 1–3 judge the PROOF. Now judge the STATEMENT. Read the elaborated type
+yourself; the PlaceholderMarker set does not answer this question.
+
+4. Conclusion is `True` under any binder or arrow (`∀ x, True`, `P → True`,
+   `∃ x, True`) → **BLOCKER**
+5. Conclusion is existential → name a witness. If a trivial value satisfies the
+   statement → **BLOCKER**. Consult `EXISTENTIAL_WITNESS_REGISTRY` in
+   `src/core/constants.py`; cite an existing `escape` / `misnamed` entry rather than
+   re-deriving it, and flag the paper for citing it as a result.
+6. A hypothesis structure with `: True` invariant fields → the theorem holds those
+   hypotheses for free → **BLOCKER**
+7. Docstring or paper prose asserts more than the statement proves — a closed form
+   where the Lean gives existence, general `d` where the Lean proves one instance,
+   "uniqueness" where the Lean proves existence → **BLOCKER**
+
 ### 4. Cross-paper contradictions → Gate 2 CrossPaperConsistency
 
 Diff this paper against every other `papers/paper*_*/paper_draft.tex`:

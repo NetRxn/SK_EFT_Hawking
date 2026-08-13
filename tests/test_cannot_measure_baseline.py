@@ -111,6 +111,13 @@ CANNOT_MEASURE_PASS_BASELINE = frozenset({
     ('disclosure_consistency', 'missing-input'),
     ('elaboration_knob_watchlist', 'missing-input'),
     ('formula_grounding', 'missing-input'),
+    # Added 2026-08-13 with `existential_witness_disclosure`. Same two inputs as
+    # `formula_grounding` and `vacuous_statement_audit` above (formulas.py +
+    # lean_deps.json) and the same reasoning: absence carries `measured=False`, so
+    # it stops counting as evidence rather than manufacturing one. Its SUBSTANTIVE
+    # empty case is a hard FAIL, not a pass — an empty population trips the seam
+    # guard and reports UNVERIFIED.
+    ('existential_witness_disclosure', 'missing-input'),
     # ('inventory_index_autogen_fresh', 'exception') REMOVED 2026-08-13 — the check
     # gained blocking narrative legs, so an unimportable/raising generator now warns
     # on one leg while the other two still measure and can fail. Removed rather than

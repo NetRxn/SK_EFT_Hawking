@@ -332,6 +332,15 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
         "exclusion, the `_DEFINITIONAL` suffix, ground-arith staying advisory, and the "
         "compound-reflexive elision guard that prevents a false-positive class",
     ),
+    "existential_witness_disclosure": (
+        "test_d5_lean_statements.py",
+        "PRODUCTION-SEEDED: an entry deleted from the REAL EXISTENTIAL_WITNESS_REGISTRY "
+        "in src/core/constants.py -> red naming `gap_nontrivial_exists`; restored. Plus 4 "
+        "fixture mutations (undisclosed member, empty witness text, and both down-only "
+        "ceilings) and 3 negative controls: a non-existential result, a declared "
+        "placeholder, and the empty-population seam guard that must report UNVERIFIED "
+        "rather than PASS",
+    ),
     "nogo_substrate_integrity": (
         "test_d5_lean_statements.py",
         "3 mutations: absent backing (Hole B), kernel-purity, and vacuity (Hole A). "
@@ -866,6 +875,10 @@ AWAITING_CEILING = 0
 #: is the distinction the four blockers turned on. Erring toward absent overstates the
 #: remaining work; the opposite error is what produced them.
 PRODUCTION_SEEDED: frozenset[str] = frozenset({
+    # 2026-08-13: an entry deleted from the REAL EXISTENTIAL_WITNESS_REGISTRY in
+    # src/core/constants.py -> red; restored from saved bytes. Keeps FIXTURE_ONLY_CEILING
+    # unchanged.
+    "existential_witness_disclosure",
     # 2026-08-13 (ADR-013 P1): seeded in the real src/core/transonic_background.py —
     # docstring changed, then removed — and in the real docs/MODULE_CENSUS.md.
     "module_census_fresh",

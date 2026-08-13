@@ -2632,6 +2632,206 @@ PLACEHOLDER_LEAN_NAMES = {
     v.get('lean_name', k): k for k, v in PLACEHOLDER_THEOREMS.items()
 }
 
+# ════════════════════════════════════════════════════════════════════
+# EXISTENTIAL WITNESS REGISTRY (2026-08-13)
+#
+# For every theorem SOLD AS A RESULT — cited from `formulas.py` or registered in
+# `ARISTOTLE_THEOREMS` — whose conclusion is an existential `∃ x…, P x`.
+#
+# WHY THIS IS A REGISTRY AND NOT A CLASSIFIER. `∃ x, P x` is vacuous exactly when
+# a trivial witness satisfies `P`, and that is a PROOF OBLIGATION, not a syntactic
+# property. A syntactic discriminator was built and MEASURED first — "is some bound
+# variable equated to a project term" — and it was wrong in both directions on the
+# live population: it cleared `dissipative_correction_existence` (an escape) and
+# condemned `gap_nontrivial_exists` and `susceptibility_diverges` (both sound). It
+# was discarded rather than shipped. Asserting a proxy for the decider is the failure
+# this registry exists to catch, so it must not be the mechanism.
+#
+# What the registry forces instead is that someone NAME THE WITNESS. That is the
+# question `dispersive_correction_bound` cannot survive: its witness is δ=1,
+# C=1/D², which has nothing to do with dispersion.
+#
+#   witness : the intended witness, concretely.
+#   status  : 'anchored' — a trivial witness does NOT satisfy it; the statement
+#                          pins the bound variable to project content.
+#             'escape'   — a trivial witness DOES satisfy it. The theorem proves
+#                          strictly less than its name claims. Ratcheted below.
+#             'misnamed' — the statement is sound but the NAME or gloss claims
+#                          more than it proves (existence sold as uniqueness).
+#
+# `escape` and `misnamed` are OPEN DEBT, not dispositions. Each needs a finding.
+# ════════════════════════════════════════════════════════════════════
+EXISTENTIAL_WITNESS_REGISTRY: dict[str, dict[str, str]] = {
+    # ── escapes: a trivial witness satisfies the statement ──
+    'dispersive_correction_bound': {
+        'status': 'escape',
+        'witness': 'δ_disp = 1, C = 1/D² where D = adiabaticityParam. Both the bounded '
+                   'quantity AND the bounding constant are ∃-bound, so `|δ| ≤ C·D²` is '
+                   'satisfiable whenever D ≠ 0. Kernel-checked 2026-08-13: the shape '
+                   'compiles with no dispersion relation in scope.',
+        'claims': 'the quantitative dispersive correction δ_disp = −(π/6)D²',
+        'proves': 'that D ≠ 0 — nothing about dispersion. It never mentions '
+                  '`dispersiveCorrection`, which exists as a project definition.',
+    },
+    'dissipative_correction_existence': {
+        'status': 'escape',
+        'witness': 'δ_diss = 0 when both γ vanish, δ_diss = 1 otherwise. The statement '
+                   'is a case split satisfiable by any two distinct reals; it is never '
+                   'tied to the actual dissipative correction.',
+        'claims': 'the existence of the dissipative correction',
+        'proves': 'that some number can be zero in one case and nonzero in another',
+    },
+    'onsager_infinite_dimensional': {
+        'status': 'escape',
+        'witness': 'm = n + 1. The statement is `∀ n, ∃ m, m > n` — the Archimedean '
+                   'property of ℕ. It contains NO project symbol whatsoever.',
+        'claims': 'the Onsager algebra is infinite-dimensional',
+        'proves': 'that the naturals are unbounded',
+    },
+    'tpf_violates_C2': {
+        'status': 'escape',
+        'witness': 'N = c.local_dim + 1. The `tpf` argument is DECORATIVE — it appears '
+                   'nowhere in the statement.',
+        'claims': 'the TPF construction violates condition C2',
+        'proves': 'that some natural exceeds `c.local_dim`, for any `c`',
+    },
+    'tpf_outside_gs_scope': {
+        'status': 'escape',
+        'witness': 'k = h.local_dim + 1. `tpf` is again decorative.',
+        'claims': 'the TPF construction lies outside Golterman-Shamir scope',
+        'proves': 'that some natural exceeds `h.local_dim`',
+    },
+
+    # ── misnamed: sound statement, overclaiming name ──
+    'firstOrder_uniqueness': {
+        'status': 'misnamed',
+        'witness': 'the coefficient record built from `c`; the statement is EXISTENCE '
+                   '(`∃ coeffs, ∀ fields, … = …`), not uniqueness.',
+        'claims': 'uniqueness of the first-order dissipative coefficients',
+        'proves': 'existence. Uniqueness needs `∃!` or `∀ c₁ c₂, … → c₁ = c₂`.',
+    },
+    'secondOrder_uniqueness': {
+        'status': 'misnamed',
+        'witness': 'as above — `∃ coeffs, c.r2_1 = coeffs.γ₂₁ ∧ c.r2_3 = coeffs.γ₂₂`.',
+        'claims': 'uniqueness of the second-order coefficients',
+        'proves': 'existence',
+    },
+    'fullSecondOrder_uniqueness': {
+        'status': 'misnamed',
+        'witness': 'as above, for the extended action.',
+        'claims': 'uniqueness of the full second-order coefficients',
+        'proves': 'existence',
+    },
+    'relaxed_uniqueness_test': {
+        'status': 'misnamed',
+        'witness': 'as above, under the relaxed KMS hypothesis.',
+        'claims': 'a uniqueness result under relaxed KMS',
+        'proves': 'existence',
+    },
+    'gt_chiral_charge_non_compact': {
+        'status': 'misnamed',
+        'witness': 'p3 = π/2, giving cos(π/4) = √2/2 ∉ {0, 1, −1}.',
+        'claims': 'the GT chiral charge is non-compact',
+        'proves': 'that the cosine takes some value outside three points — a fact '
+                  'about ℝ, not about charge compactness',
+    },
+    'chiral_charge_noncompact': {
+        'status': 'misnamed',
+        'witness': 'ev = cos(p3/2) — the statement unfolds the definition and adds '
+                   '−1 ≤ ev ≤ 1.',
+        'claims': 'non-compactness of the chiral charge',
+        'proves': 'that the eigenvalue is BOUNDED in [−1, 1] — if anything the '
+                  'opposite of what the name asserts',
+    },
+    'hidden_sector_required': {
+        'status': 'misnamed',
+        'witness': 'b = −a in ZMod 16, valid for every a ≠ 0.',
+        'claims': 'a hidden sector is required for anomaly cancellation',
+        'proves': 'that every nonzero element of a finite abelian group has an inverse',
+    },
+
+    # ── anchored: a trivial witness does NOT satisfy these ──
+    'gap_nontrivial_exists': {
+        'status': 'anchored',
+        'witness': 'a fixed point Δ of `gapOperator G N_f Λ`, whose existence is the '
+                   'content; `gapOperator … Δ = Δ` pins Δ to the project definition.',
+        'claims': 'a nontrivial gap solution exists above critical coupling',
+        'proves': 'that, and the hypothesis `criticalCoupling Λ N_f < G` is used',
+    },
+    'susceptibility_diverges': {
+        'status': 'anchored',
+        'witness': 'r_e_star, a positive zero of `metric_susceptibility_inv`; the '
+                   'equation pins it to the project definition.',
+        'claims': 'the metric susceptibility diverges',
+        'proves': 'that its inverse has a positive zero — the correct formalization',
+    },
+    'phononic_band_gap_exists': {
+        'status': 'anchored',
+        'witness': 'lo = sup of branchMinus, hi = inf of branchPlus; the universally '
+                   'quantified body over all k is what makes it substantive.',
+        'claims': 'the diatomic crystal has a phononic band gap',
+        'proves': 'that, against the defined branches',
+    },
+    'hawking_universality': {
+        'status': 'anchored',
+        'witness': 'teff, EQUATED to the effective-temperature expression.',
+        'claims': 'universality of the Hawking temperature',
+        'proves': 'the equation it states',
+    },
+    'ucd_unbounded': {
+        'status': 'anchored',
+        'witness': 'n with `upper_crit_dim n > d`; unboundedness of a PROJECT function, '
+                   'not of ℕ — contrast `onsager_infinite_dimensional`.',
+        'claims': 'the upper critical dimension is unbounded',
+        'proves': 'that',
+    },
+    'retention_ratio_diverges': {
+        'status': 'anchored',
+        'witness': 'N with `conserved_charges_fracton d N > M`; the project function '
+                   'carries the divergence.',
+        'claims': 'the retention ratio diverges',
+        'proves': 'that',
+    },
+    'sm_z4_all_odd': {
+        'status': 'anchored',
+        'witness': 'k = (z4ChargeRaw f − 1)/2; the equation pins k to the project '
+                   'charge function, so oddness is genuinely asserted.',
+        'claims': 'every SM fermion carries odd ℤ₄ charge',
+        'proves': 'that',
+    },
+    'c2_fock_dim_power_of_two': {
+        'status': 'anchored',
+        'witness': 'k = log₂(c.local_dim); `c.local_dim = 2^k` pins it.',
+        'claims': 'the C2 Fock-space dimension is a power of two',
+        'proves': 'that',
+    },
+    'unit_totalDim_one': {
+        'status': 'anchored',
+        'witness': 'the index i of the unit simple object; the companion clause '
+                   '`∀ j ≠ i, dimVector … j = 0` rules out a trivial witness.',
+        'claims': 'the monoidal unit has total dimension one',
+        'proves': 'that',
+    },
+    'zeroTemp_nontrivial': {
+        'status': 'anchored',
+        'witness': 'a field configuration f with positive dissipative Lagrangian; '
+                   'stated against the defined action.',
+        'claims': 'the zero-temperature limit is nontrivial',
+        'proves': 'that',
+    },
+}
+
+#: Existential statements sold as results that a trivial witness satisfies.
+#: DOWN-ONLY. Each is open debt with a filed finding; remediation removes it.
+#: Raising this number means a NEW escape shipped, which is the thing the
+#: registry exists to prevent.
+EXISTENTIAL_ESCAPE_CEILING: int = 5
+
+#: Existential statements whose NAME or gloss claims more than the statement
+#: proves. DOWN-ONLY, same contract.
+EXISTENTIAL_MISNAMED_CEILING: int = 7
+
+
 # ─────────────────────────────────────────────────────────────────────────
 # Formula-grounding kind registry (R-05, 2026-07-20)
 # ─────────────────────────────────────────────────────────────────────────

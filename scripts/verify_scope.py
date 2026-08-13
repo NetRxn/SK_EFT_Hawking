@@ -140,7 +140,13 @@ def _plan(paths: list[str]) -> tuple[list[tuple[str, list[str]]], list[str]]:
         steps.append(("Lean substrate checks",
                       ["uv", "run", "python", "scripts/validate.py",
                        "--check", "lean_zero_sorry",
-                       "--check", "axiom_closure_allowlist", "--no-memo"]))
+                       "--check", "axiom_closure_allowlist",
+                       # Statement-level, not proof-level. A Lean edit can rename a
+                       # theorem into or out of the existential population, or weaken a
+                       # statement to `∃ x, True` — neither of which the two checks
+                       # above can see, since both judge PROOFS.
+                       "--check", "vacuous_statement_audit",
+                       "--check", "existential_witness_disclosure", "--no-memo"]))
 
     not_certified = []
     if touched["rust"]:

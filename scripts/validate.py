@@ -187,6 +187,7 @@ _CANONICAL_ORDER: tuple[str, ...] = (
     'formulas', 'lean_zero_sorry', 'placeholder_not_cited', 'disclosure_consistency',
     'proxy_body_audit', 'tracked_hypothesis_ledger', 'tracked_hypotheses_fresh',
     'formula_grounding', 'vacuous_statement_audit', 'nogo_substrate_integrity',
+    'existential_witness_disclosure',
     'native_decide_regression', 'numerical', 'identities',
     'paper_table', 'd1_hierarchy_table', 'f_hierarchy_claims',
     'theorems', 'notebooks', 'lean_source',
@@ -653,6 +654,7 @@ check_tracked_hypotheses_fresh = _checks_lean_substrate.check_tracked_hypotheses
 check_formula_grounding = _checks_lean_statements.check_formula_grounding
 check_vacuous_statement_audit = _checks_lean_statements.check_vacuous_statement_audit
 check_nogo_substrate_integrity = _checks_lean_statements.check_nogo_substrate_integrity
+check_existential_witness_disclosure = _checks_lean_statements.check_existential_witness_disclosure
 # Regexes + pure cores imported directly by tests/test_substrate_integrity_gates.py
 _tex_name_pattern = _checks_lean_substrate._tex_name_pattern
 _VERIFY_CLAIM_RE = _checks_lean_substrate._VERIFY_CLAIM_RE

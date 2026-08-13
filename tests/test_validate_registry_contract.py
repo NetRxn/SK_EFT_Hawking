@@ -54,6 +54,7 @@ EXPECTED_CHECKS = [
     'formulas', 'lean_zero_sorry', 'placeholder_not_cited', 'disclosure_consistency',
     'proxy_body_audit', 'tracked_hypothesis_ledger', 'tracked_hypotheses_fresh',
     'formula_grounding', 'vacuous_statement_audit', 'nogo_substrate_integrity',
+    'existential_witness_disclosure',
     'native_decide_regression', 'numerical', 'identities',
     'paper_table', 'd1_hierarchy_table', 'f_hierarchy_claims',
     'theorems', 'notebooks', 'lean_source',
