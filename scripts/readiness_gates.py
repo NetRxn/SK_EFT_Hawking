@@ -82,6 +82,18 @@ class GateResult:
     #: on `passed` for the same D2-contract reason: `state` is read by consumers
     #: that would break on a new value. An additive field leaves them correct.
     measured: bool = True
+    #: Identity of each blocker, for evaluators that had a node in hand (ADR-012 D15 S1).
+    #:
+    #: ⚠️ `blockers` is PROSE and always has been — a 60-character label slice. The finding
+    #: id exists only inside the evaluator, which holds the whole `ReviewFinding` and then
+    #: keeps the label. That single lossy step is why a blocker cell has nothing to drill
+    #: through to, and why every `FLAGS` edge in the graph is invisible to the operator.
+    #:
+    #: ⚠️ ADDITIVE, deliberately. `blockers` keeps its meaning, so every evaluator that
+    #: builds a prose list keeps working untouched and only the ones resolving real nodes
+    #: populate this. Replacing `blockers` would have changed a field eleven evaluators and
+    #: the node payload already agree on.
+    blocker_refs: list[dict] = field(default_factory=list)
 
     def to_node_payload(self) -> dict:
         shape_map = {'blocked': 'diamond', 'passed': 'square',
@@ -101,7 +113,18 @@ class GateResult:
                 'state': self.state,
                 'measured': self.measured,
                 'evidence': self.evidence[:50],
+                # ⚠️ DISCLOSE THE CAPS. `evidence[:50]` and `blockers[:50]` have truncated
+                # silently since this method was written, so a reader could not tell a paper
+                # with 50 blockers from one with 500 — and "no silent caps" is a standing
+                # rule here precisely because a hidden truncation reads as a complete list.
                 'blockers': self.blockers[:50],
+                'blockers_total': len(self.blockers),
+                'blockers_truncated': len(self.blockers) > 50,
+                'evidence_total': len(self.evidence),
+                'evidence_truncated': len(self.evidence) > 50,
+                'blocker_refs': self.blocker_refs[:50],
+                'blocker_refs_total': len(self.blocker_refs),
+                'blocker_refs_truncated': len(self.blocker_refs) > 50,
                 'notes': self.notes,
                 'last_evaluated': self.last_evaluated,
                 'shape': shape_map.get(self.state, 'square'),
@@ -907,15 +930,48 @@ def _eval_fix_propagation(paper: dict, idx: GraphIndex) -> GateResult:
                       f'({len(fixed_findings)} fixed, {len(accepted_findings)} accepted, '
                       f'{len(open_findings)} open, '
                       f'{len(blocking)} of them submission-blocking)')
+    def _refs(findings: list[dict]) -> list[dict]:
+        """Keep the finding's IDENTITY beside its prose (ADR-012 D15 S1).
+
+        ⚠️ This function exists because the two lines it replaces read
+        `[f'{f.get("label","?")[:60]}' for f in ...]` — holding the entire ReviewFinding
+        (id, severity, lane, target, status) and keeping sixty characters of label. That
+        is the whole reason a gate cell is a dead end: the id is destroyed HERE, before
+        `GateResult`, before the node payload, before the dashboard. Nothing downstream
+        could recover it, which is why S1 is an evaluator change and not a render fix.
+        """
+        out = []
+        for f in findings:
+            m = f.get('meta') or {}
+            out.append({
+                'id': str(f.get('id', '')),
+                'label': str(f.get('label', '?'))[:60],
+                'severity': str(m.get('severity', '')),
+                # `unclassified` is the honest default: `lane` is forward-only, and an
+                # absent lane must never read as a routed one.
+                'lane': str(m.get('lane') or 'unclassified'),
+                'status': str(m.get('status', 'open')),
+                'target': str(m.get('target') or ''),
+            })
+        return out
+
     if blocking:
-        r.blockers = [f'{f.get("label","?")[:60]}' for f in blocking[:10]]
+        # ⚠️ THE CAP MOVED, and that is not incidental. This was `blocking[:10]` HERE, so
+        # `len(self.blockers)` in the payload counted the truncated list — meaning a
+        # `blockers_total` computed there would have reported 10 for a paper with 34 and
+        # called itself a disclosure. A cap can only be disclosed by a layer that can still
+        # see what it cut. The evaluator now assigns everything; `to_node_payload` bounds
+        # the payload and states both figures; the dashboard bounds the DISPLAY.
+        r.blocker_refs = _refs(blocking)
+        r.blockers = [x['label'] for x in r.blocker_refs]
         r.state = 'blocked'
         r.priority = 1
         r.notes = (f'{len(blocking)} open review findings at severity '
                    f'{"/".join(sorted(BLOCKING_SEVERITIES))} '
                    f'({len(open_findings)} open in total)')
     elif open_findings:
-        r.blockers = [f'{f.get("label","?")[:60]}' for f in open_findings[:10]]
+        r.blocker_refs = _refs(open_findings)
+        r.blockers = [x['label'] for x in r.blocker_refs]
         r.state = 'needs-recheck'
         r.notes = f'{len(open_findings)} review findings still open (all advisory)'
     else:

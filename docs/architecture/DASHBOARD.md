@@ -123,7 +123,11 @@ Key features: 4 layouts (Force/Radial/Hierarchy/Circle), 3 modes (Explore/Trace/
 
 Per-paper × readiness-gate matrix backed by `scripts/readiness_gates.py` and the `ReadinessGate` graph nodes (roster and priorities: [`SURFACE_INVENTORY.md`](SURFACE_INVENTORY.md#readiness-gates)). Each cell renders the gate's current state (`green` / `amber` / `red` / `needs-recheck`). Sibling QI sub-pane surfaces the QI register (`docs/QI_REGISTER.md`) with action items binned by severity. Driven by the `/api/readiness` SSE endpoint.
 
-⚠️ **CORRECTED 2026-08-12.** This section claimed "click-through to gate-specific evidence (Lean theorems, parameter provenance, production runs, review findings)". **Blockers render as unlinkable prose:** the evaluator holds the whole `ReviewFinding` and keeps 60 characters of its label, so the id is destroyed before the graph sees it and the dashboard touches no `FLAGS` edge at all. There is nothing to click through *to*. ADR-012 P9a S1 builds it; this line becomes true in that commit and not before.
+**A blocker in the focus pane carries the identity of the finding behind it** — its id, severity, lane and target, as `data-finding-id` / `data-lane` / `data-severity` on each entry (ADR-012 D15 S1). `FixPropagation` is the only gate that reads `FLAGS`, so it is the only one that can populate them; a gate whose evaluator has no node to name renders its prose list **and says that is what it is**, so an un-drillable blocker is visibly a different thing from a drillable one.
+
+⚠️ **The pane shows ten and states the total** (`showing 10 of 44`). The cap used to sit in the evaluator, which meant nothing downstream could tell ten blockers from forty-four — and a total computed there would have reported ten and called itself a disclosure. **A cap can only be disclosed by a layer that can still see what it cut**, so the evaluator now keeps everything, the node payload bounds and states both figures, and the pane bounds the display.
+
+⚠️ **CORRECTED 2026-08-12.** This section previously claimed "click-through to gate-specific evidence (Lean theorems, parameter provenance, production runs, review findings)" while blockers rendered as unlinkable prose — the id was destroyed in the evaluator, which held the whole `ReviewFinding` and kept 60 characters of label. The claim above is the repair, and it is narrower than the sentence it replaces: **review findings drill through; Lean theorems, parameter provenance and production runs still do not.**
 
 ⚠️ **The QI sub-pane is empty by construction.** The derivation keys a register item on the gate name alone, so it can hold at most one item per gate for all time — and most gates are already in `## Closed Items` and can never re-emit. Findings go in and nothing comes out. [`END_TO_END_MAP.md`](END_TO_END_MAP.md) §8 names the cause; ADR-012 P9a repairs it.
 
@@ -194,8 +198,10 @@ Schema spans Phase 1 / 1.5 base types + Phase 5v Wave 2a readiness-system types 
 | File | Purpose |
 |------|---------|
 | `scripts/provenance_dashboard.py` | Flask app, data loading, API endpoints |
-| `scripts/templates/dashboard.html` | Main template (all tabs except KG) |
+| `scripts/templates/dashboard.html` | Main template (nav + the tabs with no partial) |
 | `scripts/templates/partials/graph_tab.html` | D3 knowledge graph visualization |
+| `scripts/templates/partials/bundles_tab.html` · `chains_tab.html` · `paper_provenance_tab.html` · `qi_tab.html` · `readiness_tab.html` | the Datastar-driven tab bodies |
+| `tests/test_template_contract.py` | the gate asserting the server passes every variable these templates dereference |
 | `scripts/build_graph.py` | Graph extraction from registries |
 | `scripts/extract_lean_deps.py` | Lean declaration extraction wrapper |
 | `scripts/graph_integrity.py` | Integrity checker |

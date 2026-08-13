@@ -1,9 +1,16 @@
 # ADR-012 — The remediation loop: routing, closure, and the operator control surface
 
-- **Status:** 📝 **PROPOSED — PARTIALLY BUILT (drafted 2026-08-12, scope expanded 2026-08-12).**
-  The triage pilot (§Pilot) ran and is complete. Nothing else in this document is implemented.
-  It is written before the code deliberately, per the architecture rule that *a doc written
+- **Status:** 🏗️ **ACCEPTED — SUBSTANTIALLY BUILT (drafted 2026-08-12, scope expanded 2026-08-12).**
+  **§Plan is the authority on what is built**; read it rather than this line. P1–P7, P8, P8b, P8d
+  and P9a-S1 are complete; P8c, the rest of P9, P10 and P11 are open.
+  It was written before the code deliberately, per the architecture rule that *a doc written
   afterwards is a changelog; only one written first is a specification.*
+
+  ⚠️ **CORRECTED 2026-08-12. This line read "The triage pilot ran and is complete. Nothing else in
+  this document is implemented" while §Plan already marked seven phases ✅ COMPLETE and D17 was
+  headed `✅ IMPLEMENTED`.** The header was written first and never re-derived — the same failure
+  the ADR documents elsewhere, in the ADR's own status field. **One owner per fact:** the phase
+  table owns build state, and this line now points at it instead of restating it.
 
   **This document has been corrected three times, each by a different instrument, and the
   correction history is the reason to trust the current text over any earlier quotation of it:**
@@ -214,8 +221,18 @@ The measurements agree exactly: 66 `review:`-scheme orphans, 66 baseline. **The 
 nothing measured this" was the aggregate over three schemes, presented as an unmeasured deviation.**
 Building a second check would be the "second mechanism beside one that already exists" failure that
 `CLAUDE.md` rule 1 names, landing inside the change written to prevent it — and it would be
-*weaker*: an aggregate ceiling of 247 mixes 190 permanently-inert legacy records with 57 live ones,
+*weaker*: an aggregate ceiling mixes the permanently-inert legacy records with the live ones,
 so deleting one legacy record silently buys a free slot for a real dangling closure. **See D13.**
+
+⚠️ **CORRECTED 2026-08-12 — this sentence carried arithmetic that never reconciled with
+§Measurements.** It read *"an aggregate ceiling of 247 mixes 190 permanently-inert legacy records
+with 57 live ones"*, while §Measurements gave 256 orphans as 190 legacy + 66 `review:`-scheme.
+190 + 57 = 247 and 190 + 66 = 256 are both internally consistent and cannot both be the corpus;
+the live figure at drafting was 66, so 57/247 was wrong when written. Re-measured 2026-08-12 after
+the P7 closures: **249 orphans = 190 legacy + 59 `review:`-scheme**, matching the check's baseline
+of 59. **The argument is unaffected** — it turns on the *mixing*, not on the magnitude — which is
+exactly why the numbers should not have been in the prose at all. Read them from
+`validate.py --check ledger_ids_resolve`.
 
 **C10. The dashboard's own documentation over-describes it.** `docs/architecture/DASHBOARD.md` declares a
 cross-tab change bus (`docs/verification_log.jsonl`) and a submission-event log
@@ -439,8 +456,23 @@ bundle carries an open major" becomes reachable by degrading attribution rather 
 anything — absence rendered as success, one level up from where this ADR usually catches it.
 
 **So D9 ships with two ratchets, not one:** the per-bundle ceiling, and a corpus-wide down-only count
-of **unattributed open blocking findings**, frozen at 52 majors / 19 criticals. Both may only shrink.
+of **the open blocking findings the per-bundle aggregation does not reach**. Both may only shrink.
 The second is what makes the first honest.
+
+⚠️ **CORRECTED 2026-08-12 — this sentence stated the constant as "52 majors / 19 criticals" while
+the paragraph above it had already established 47.** The two are not a contradiction in the
+measurements (52 + 19 = 71 lack `inferred_bundle`, and 71 − 24 = 47 lack *both* keys); the defect
+was that the correction landed one paragraph up and never reached the sentence that names the
+frozen value. A number stated twice in one decision is a number that will disagree with itself.
+
+⚠️ **And the predicate has since changed, which voids all of these figures as constants.** Leg 2
+keyed on *"carries neither key"* — a **proxy** for *"the aggregation did not reach it"* — and it was
+wrong for the pre-bundle-era corpus (D7): those findings carry an `inferred_paper`, so leg 2 skipped
+them, and map to no bundle, so leg 1 never saw them. **Eight open blocking findings sat outside both
+legs.** Leg 2 now keys on the ids the aggregation returned, so the two legs are complements over one
+id set and the coverage holds by construction rather than by argument. **Read the constants from
+`scripts/validation/checks/bundles_readiness.py`, never from this paragraph** — every figure here is
+scoped by a predicate that has now moved twice.
 
 ### D10 — The queue is a DAG, not a list: findings carry `blocked_by`
 
@@ -1130,10 +1162,16 @@ at the time it is written.
 operator's request. What remains genuinely uncertain is **layout**, not content: the columns, the
 feeds and their stores are pinned, and the arrangement is iterated against real use.
 
-**Risk — named rather than designed around.** *Live agent activity has no writer.* The Flow board
-shows queue depth and stage position; it cannot show which agents are running. A board that implied
-otherwise would be absence-rendered-as-success in a new location, so v1 states the limit on its face.
-Whether to build an activity writer is a separate decision.
+**Risk — named rather than designed around, and NARROWED.** The Flow board shows queue depth and
+stage position; it cannot show which *subagents* are running, and a board implying otherwise would
+be absence-rendered-as-success in a new location, so v1 states the limit on its face.
+
+⚠️ **CORRECTED 2026-08-12: this paragraph read "live agent activity has no writer", which D20
+explicitly retracts** — *"An earlier draft claimed activity had no writer at all. It does, at the
+level that matters."* `/goal`-level activity has five writers under `.claude/dev-harness/`, including
+a per-compaction heartbeat and a non-convergence signal. The correction landed in D20 and S2 and
+never reached §Consequences. The residual risk is real but smaller than stated: **subagent** slots
+turn over in minutes and are deliberately out of scope; a `/goal` loop is observable today.
 
 **Risk — a pre-existing hole D19 only narrows.** The roadmap layer stays unmechanized: no check
 reads `docs/roadmaps/`, and D19 adds an opt-in surface for parked work rather than gating the layer.

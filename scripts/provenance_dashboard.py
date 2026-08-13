@@ -5197,6 +5197,12 @@ def _readiness_build_data() -> dict:
             'state': m.get('state'),
             'evidence': m.get('evidence', []),
             'blockers': m.get('blockers', []),
+            # ADR-012 D15 S1 — the identity the evaluator now keeps. A gate cell that
+            # cannot name the finding behind it is a dead end, and 4,879 FLAGS edges were
+            # invisible to the operator because of one `label[:60]` in the evaluator.
+            'blocker_refs': m.get('blocker_refs', []),
+            'blockers_total': m.get('blockers_total'),
+            'blockers_truncated': m.get('blockers_truncated', False),
             'notes': m.get('notes', ''),
             'last_evaluated': m.get('last_evaluated', ''),
         })
@@ -5229,7 +5235,12 @@ def _paper_gate_list(paper: dict) -> list[dict]:
     for name, prio, _abbrev in GATE_DEFS:
         g = by_gate.get(name) or {
             'gate': name, 'priority': prio, 'state': 'open',
-            'evidence': [], 'blockers': [], 'notes': '', 'last_evaluated': '',
+            # ⚠️ The filler must carry EVERY key a real row carries, or the template has to
+            # branch on which kind of row it got — and a template that branches on shape is
+            # how one of the two shapes stops being rendered.
+            'evidence': [], 'blockers': [], 'blocker_refs': [],
+            'blockers_total': 0, 'blockers_truncated': False,
+            'notes': '', 'last_evaluated': '',
         }
         out.append(g)
     return out
@@ -5378,7 +5389,10 @@ def _readiness_focus_html(data: dict, signals: dict) -> str:
         f'<h3>{esc(active_paper)}</h3>',
         '<div class="paper-meta">',
         f'<span class="paper-state-{pstate}">{pstate}</span> ',
-        f'{passed}/11 gates passed',
+        # ⚠️ Was a hardcoded `/11`. The gate roster is data (`GATE_DEFS` -> `gate_list`),
+        # and a literal beside it is a second roster that drifts the moment a gate is added
+        # or retired — the pane would then report "9/11" over twelve gates and read fine.
+        f'{passed}/{len(gate_list)} gates passed',
         '</div>',
         f'<a class="readiness-pp-link" href="{esc(pp_href)}">'
         '→ Open in Paper Provenance'
@@ -5410,9 +5424,36 @@ def _readiness_focus_html(data: dict, signals: dict) -> str:
                 for e in g['evidence']:
                     parts.append(f'<li>{esc(e)}</li>')
                 parts.append('</ul></div>')
-            if g.get('blockers'):
+            # ── Blockers, with the finding's identity (ADR-012 D15 S1) ────────────────
+            # ⚠️ DISPLAY CAP LIVES HERE, and it says so. The evaluator used to truncate to
+            # ten, so nothing downstream could tell 10 blockers from 44 — D12 carries 44.
+            # The cap belongs at the layer that can still see what it cut.
+            _refs = g.get('blocker_refs') or []
+            _cap = 10
+            if _refs:
                 parts.append('<div><strong style="font-size:0.75rem">Blockers</strong>'
                              '<ul class="blockers">')
+                for b in _refs[:_cap]:
+                    parts.append(
+                        f'<li data-finding-id="{esc(b.get("id", ""))}" '
+                        f'data-lane="{esc(b.get("lane", "unclassified"))}" '
+                        f'data-severity="{esc(b.get("severity", ""))}">'
+                        f'<span class="sev sev--{esc(b.get("severity", ""))}">'
+                        f'{esc(b.get("severity", ""))}</span> '
+                        f'<span class="lane">{esc(b.get("lane", "unclassified"))}</span> '
+                        f'{esc(b.get("label", ""))}</li>')
+                parts.append('</ul>')
+                if len(_refs) > _cap:
+                    parts.append(f'<p class="blockers-truncated">showing {_cap} '
+                                 f'of {len(_refs)}</p>')
+                parts.append('</div>')
+            elif g.get('blockers'):
+                # A gate whose evaluator had no node to name. SAY SO: an un-drillable
+                # blocker must be visibly a different thing from a drillable one, or the
+                # operator reads "no link" as "no finding".
+                parts.append('<div><strong style="font-size:0.75rem">Blockers</strong> '
+                             '<em style="font-size:0.7rem">(prose only — this gate reports '
+                             'no finding reference)</em><ul class="blockers">')
                 for b in g['blockers']:
                     parts.append(f'<li>{esc(b)}</li>')
                 parts.append('</ul></div>')
