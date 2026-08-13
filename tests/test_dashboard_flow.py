@@ -299,11 +299,24 @@ def test_submission_blocked_p1_is_red(board_env):
     assert cell["blockers_open"] == 6
 
 
-def test_submission_with_no_gates_is_unmeasured_never_green(board_env):
+def test_submission_with_no_gate_nodes_at_all_is_unmeasured_never_green(board_env):
     """The exact defect `readiness_submission_gate` shipped with: zero gates read as pass."""
     cell = _row(board_env({}, gates=[]))["cells"]["submission"]
     assert cell["kind"] == "unmeasured"
-    assert cell["kind"] != "green"
+    assert "vacuous" in cell["detail"]
+
+
+def test_submission_for_a_bundle_the_gates_never_name_is_unmeasured(board_env):
+    """A DIFFERENT no-verdict state from 'no gates exist', and it needs its own branch.
+
+    Collapsing the two is how the surviving-mutation dead branch got there in the first
+    place: one of them was unreachable, so `green` could be substituted into it with the
+    whole suite still passing.
+    """
+    cell = _row(board_env({}, gates=[_gate("SOMETHING_ELSE", "G1", "passed")]))[
+        "cells"]["submission"]
+    assert cell["kind"] == "unmeasured"
+    assert "none of them names this bundle" in cell["detail"]
 
 
 # ── Coverage: what the board cannot see ───────────────────────────────────────────────
@@ -439,40 +452,47 @@ def test_live_overlay_is_never_larger_than_the_aggregation_says():
 # ══════════════════════════════════════════════════════════════════════════════════════
 # MUTATION EVIDENCE — each seeded defect, and the test that caught it
 #
-# Run 2026-08-12 against `scripts/dashboard_flow.py`. Every mutation was applied, the
-# suite run, the named test observed RED, and the file restored to its committed state.
+# Run 2026-08-12 against `scripts/dashboard_flow.py`, default (fast) selection, 46 tests.
+# Every mutation was applied, the suite run, the named tests observed RED, and the file
+# restored — verified by a final green run at the end of the sweep.
 #
-#  1. `_status_cell`: undeclared branch changed to
-#     `return _cell("pending", "pending")` — the coercion D15 forbids.
+#  1. `_status_cell`: the undeclared branch replaced by `_cell("pending", "pending")` —
+#     the coercion D15 forbids.                                            (5 failed)
 #     RED: test_undeclared_status_renders_verbatim[pending-redo|skeleton|not_started],
 #          test_a_value_nobody_has_ever_seen_still_renders_verbatim,
-#          test_undeclared_status_is_not_coerced_to_pending,
-#          test_status_census_reports_the_undeclared_values,
-#          test_live_board_is_internally_consistent.        (8 failed)
+#          test_undeclared_status_is_not_coerced_to_pending.
+#     ⚠️ `test_status_census_reports_the_undeclared_values` stayed GREEN, correctly: the
+#     census reads `raw_status` off the metadata, not the rendered cell. Two independent
+#     paths, and the mutation only broke one — which is the reason both are asserted.
 #
-#  2. `_read_through_cell`: returned `_cell("green", "read")`.
-#     RED: test_read_through_is_not_tracked_and_never_a_verdict,
-#          test_read_through_ignores_every_other_stage_field (equal but both green ->
-#          caught by the first), test_live_board_is_internally_consistent.  (3 failed)
+#  2. `_read_through_cell`: returned `_cell("green", "read")`.             (1 failed)
+#     RED: test_read_through_is_not_tracked_and_never_a_verdict.
 #
-#  3. `_stage13_cell`: `sufficient = True` unconditionally.
-#     RED: test_s13_green_withheld_for_any_other_kind[4 params].            (4 failed)
+#  3. `_stage13_cell`: `sufficient = True` unconditionally.                (4 failed)
+#     RED: test_s13_green_withheld_for_any_other_kind[all 4 params].
 #
-#  4. `_stage10_cell`: `green_ok=True` regardless of the artifact.
-#     RED: test_stage10_green_withheld_without_the_artifact.                (1 failed)
+#  4. `_stage10_cell`: `green_ok=True` regardless of the artifact.         (1 failed)
+#     RED: test_stage10_green_withheld_without_the_artifact.
 #
-#  5. `lane_overlay`: `open_finding_ids[:10]` — the classic silent cap.
-#     RED: test_overlay_has_no_silent_cap,
-#          test_live_overlay_is_never_larger_than_the_aggregation_says.     (2 failed)
+#  5. `lane_overlay`: `open_finding_ids[:10]` — the classic silent cap.    (1 failed)
+#     RED: test_overlay_has_no_silent_cap.
 #
-#  6. `_submission_cell`: `state is None` branch returning `_cell("green", "ready")`.
-#     RED: test_submission_with_no_gates_is_unmeasured_never_green.         (1 failed)
+#  6. `_submission_cell`, both no-verdict branches, each -> `_cell("green", "ready")`:
+#     6a no-gate-nodes-at-all                                              (1 failed)
+#        RED: test_submission_with_no_gate_nodes_at_all_is_unmeasured_never_green.
+#     6b gates exist but none names this bundle                            (1 failed)
+#        RED: test_submission_for_a_bundle_the_gates_never_name_is_unmeasured.
+#     ⚠️ **THIS SWEEP FOUND A REAL DEFECT.** The first version of `_submission_cell` had a
+#     third branch, `state is None`, which `readiness_by_bundle` can never produce — so
+#     substituting `green` into it left the whole suite GREEN. A surviving mutation in a
+#     board whose job is to never render an unmeasured thing as fine is exactly the finding
+#     this file's mutation discipline exists to produce. The dead branch was deleted and
+#     the two reachable no-verdict states were split, at which point both mutations died.
 #
-#  7. `coverage`: keyless findings counted as attributed (the partition assertion is the
-#     guard; it fires before any test assertion does).
-#     RED: test_coverage_partitions_the_open_population (AssertionError from the
-#          module's own partition assert).                                  (1 failed)
+#  7. `coverage`: keyless findings counted as attributed.                  (1 failed)
+#     RED: test_coverage_partitions_the_open_population — via the module's OWN partition
+#          assert, which fires before the test's assertions do.
 #
-#  8. `flow_board`: the empty-roster `raise` replaced by `return {...'rows': []}`.
-#     RED: test_empty_roster_raises.                                        (1 failed)
+#  8. `flow_board`: the empty-roster `raise` replaced by a `{'rows': []}` return.
+#     RED: test_empty_roster_raises.                                       (1 failed)
 # ══════════════════════════════════════════════════════════════════════════════════════
