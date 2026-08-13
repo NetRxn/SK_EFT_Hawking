@@ -150,7 +150,7 @@ uv run python -m pytest -m '' -v              # everything — before PR / submi
 # both testpaths — the repo's tests and the plugin's surface guards.
 uv run python scripts/dep_upgrade_preview.py  # what `uv lock --upgrade` WOULD do (writes nothing)
 uv run python scripts/verify_scope.py         # verify ONLY what your change can break
-uv run python scripts/verify_scope.py --merge-gate   # the full ~45-min certification
+uv run python scripts/verify_scope.py --merge-gate   # the full ~25-min certification
 uv run python scripts/validate.py             # full validation suite (--list enumerates it)
 uv run python scripts/validate.py --list      # list checks; --check <name> runs one
 uv run python scripts/review_figures.py       # PNGs + structural figure checks
@@ -175,7 +175,7 @@ prose — it holds no write tools); `prose-reviewer` reads a whole draft as a re
 venue (lift §7.5); `figure-reviewer` (Stage 9), `claims-reviewer` (Stage 10) and
 `adversarial-reviewer` (Stage 13) audit rendering, backing and correctness respectively. The
 plugin's `README.md` is the current roster. Programmatic checks (`validate.py`,
-`update_counts.py`, `update_inventory_index.py`, `qi_register.py`) are deterministic — run them,
+`update_counts.py`, `module_census.py`, `qi_register.py`) are deterministic — run them,
 don't eyeball.
 
 ---

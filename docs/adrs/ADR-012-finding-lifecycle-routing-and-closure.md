@@ -1,8 +1,10 @@
 # ADR-012 — The remediation loop: routing, closure, and the operator control surface
 
 - **Status:** 🏗️ **ACCEPTED — SUBSTANTIALLY BUILT (drafted 2026-08-12, scope expanded 2026-08-12).**
-  **§Plan is the authority on what is built**; read it rather than this line. P1–P7, P8, P8b, P8d
-  and P9a-S1 are complete; P8c, the rest of P9, P10 and P11 are open.
+  **§Plan's per-phase entries are the authority on what is built. This line deliberately names
+  no phase.** It carried a roster twice, and the roster was stale both times — the second time
+  while the correction warning directly below was already on the page. A status summary that
+  restates what §Plan owns is a second owner for one fact, and the copy is the one that rots.
   It was written before the code deliberately, per the architecture rule that *a doc written
   afterwards is a changelog; only one written first is a specification.*
 
@@ -1040,10 +1042,14 @@ D6.2's inert parameter, and the omitted registration obligations.**
 
 ## Plan
 
-Phases are ordered by what unblocks the most. **P1–P7 and P8b are complete**, on
-`feat/adr012-remediation-loop` against the plan
+Phases are ordered by what unblocks the most, against the plan
 [`../superpowers/plans/2026-08-12-remediation-loop-core.md`](../superpowers/plans/2026-08-12-remediation-loop-core.md).
-P8, P8c, P8d, P9, P10 and P11 remain open, each needing its own plan.
+
+⚠️ **This preamble no longer lists which phases are done — read the per-phase entries below.**
+It said "P8, P8c, P8d, P9, P10 and P11 remain open" while four of those six were marked
+✅ COMPLETE in the very entries it introduces. **A section that summarises itself contradicts
+itself.** Each entry below carries its own status and its commits; there is exactly one place
+a phase's state is written, and it is the entry.
 
 **P1 — Document the closure contract (D3). ✅ COMPLETE 2026-08-12 (`10c04da9`).**
 `READINESS_GATES.md` gains the lifecycle section; `WAVE_EXECUTION_PIPELINE.md` §13
@@ -1157,8 +1163,23 @@ built thin against the specifications in D15 and iterated. **P9c:** the Loops pa
 harness state that already exists — no new writer. `docs/architecture/DASHBOARD.md` corrected in the commit
 that makes each claim wrong.
 
-**P9a status 2026-08-12 — S1, the QI de-saturation and the template-contract gate are ✅ COMPLETE;
-the sign-off writer (Tasks 5/6) and S4 (Task 8) are open.**
+**P9a ✅ COMPLETE 2026-08-13.** S1, the QI de-saturation and the template-contract gate landed
+first; the sign-off writer (Tasks 5/6, `4c04401f` + browser proof `34570904`) and S4 (Task 8,
+`2ad9fe6c`) followed. The status line above previously stopped at the first three.
+
+**P9b and P9c — the modules are BUILT AND UNWIRED, and this entry is the first record of them.**
+`dashboard_flow.py` (S2), `dashboard_attention.py` (S3) and `dashboard_loops.py` (D20) landed in
+`3076d031` — a pr-review remediation commit, not a phase commit, which is how 2,360 lines
+reached this branch without a phase entry. ⚠️ **Nothing imports them but their own tests.** The
+application never imports them, no route serves them, no template renders them, and every gate
+is green because an unreferenced module is not a broken reference. Filed as
+`papers/AutomatedReviews/2026-08-13-p9-panes-unwired/infra.md` (major, lane `infra`) rather
+than repaired in passing: D15 pins the columns and the feeds but leaves layout to be iterated
+against real use, so wiring them is a build with a judgment component.
+
+⚠️ **P10 should not be called done while these are unreachable.** P10 hands the operator a
+queue that these panes are the way to read; shipping it against an unreachable surface is
+D12's failure mode with extra steps.
 
 - **S1** landed as an *evaluator* change, as D15's corrected table said it must: the finding id was
   destroyed in `_eval_fix_propagation`, which held the whole node and kept `label[:60]`. ⚠️ **The

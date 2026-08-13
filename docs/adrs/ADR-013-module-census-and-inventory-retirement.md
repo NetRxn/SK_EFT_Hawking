@@ -331,10 +331,13 @@ against every sync, rather than an instruction an agent may or may not follow.
 Population 322 → 413; undocumented holds at 4. `.ipynb_checkpoints` is skipped, or every
 notebook would double-count under a stale name.
 
-⚠️ **`verify_scope._plan()` needed the same widening the sync `Edge` needed at D5** — its
-`code` key matches the `src/`/`scripts/` prefixes, so a notebook edit routed to `notebook_exec`
-and `viz_consistency` but NOT to `module_census_fresh`. A walk widened without widening every
-probe that watches it is a census that silently stops tracking what it claims to cover. The
+⚠️ **`verify_scope._plan()` needed widening, and it is a DECIDER — unlike the D5 `Edge`,
+which turned out to be documentation** (see D5 item 5). Its `code` key matches the
+`src/`/`scripts/` prefixes, so a notebook edit routed to `notebook_exec` and `viz_consistency`
+but NOT to `module_census_fresh`, and `_plan()` genuinely decides which checks run. A walk
+widened without widening every probe that watches it is a census that silently stops tracking
+what it claims to cover — **but which sites are probes and which are prose has to be read off
+the code, not assumed from the shape.** The
 docstring's derived scope table was resynced in the same commit, since it asserts it is derived
 from `_plan()` rather than written beside it.
 
@@ -354,10 +357,15 @@ was not on the original list:
    its population predicate, so widening the walk redefines what the ceiling counts.** Had one
    script lacked a header, the honest fix would have been to write it — never to raise the
    ceiling to admit it.
-5. **The sync `Edge` inputs** — `src/**/*.py, scripts/**/*.py` matched no shell file, so a
-   shell edit would not have marked the census stale and the commit gate would not have
-   restaged it. A widened walk with an unwidened staleness probe is a census that silently
-   stops tracking what it claims to cover.
+5. **The sync `Edge` inputs** — `src/**/*.py, scripts/**/*.py` named no shell file, so the
+   Edge's documented inputs no longer described what the census derives from. **CORRECTED
+   2026-08-13: the commit message and an earlier draft of this list claimed a shell edit would
+   therefore not have marked the census stale. That is wrong.** `Edge.inputs_glob` is annotated
+   in its own dataclass as *"doc only; staleness is is_stale"*, and `_module_census_stale`
+   content-compares the rendered census against the file — so it covered `*.sh` the moment the
+   walk did. The edit was owed as documentation; it repaired no gate. Kept as a scar because
+   the wrong version was the more interesting claim, which is exactly why it survived a
+   commit message unchallenged.
 
 `verify_scope.py` needed no change: `_plan()` keys on the `src/`/`scripts/` path prefix, not on
 the extension, so a `.sh` edit already routes to `module_census_fresh`.
