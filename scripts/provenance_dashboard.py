@@ -2830,6 +2830,23 @@ def _pp_build_data_v2(paper_id: str, cr: dict, fr: dict | None,
     sentences_in = cr.get('sentences', [])
     sentences_out: list[dict] = []
 
+    # ── Reading-while-blocked (ADR-012 D15 S4) ────────────────────────────────────────
+    # ⚠️ RESOLVED BY LOCATION, NOT BY `FLAGS`. All 4,895 FLAGS edges point at `paper:`
+    # nodes, so asking whether a finding flags a sentence's backing artifact returns
+    # nothing for every artifact — a marker that renders on no sentence, whose emptiness
+    # reads exactly like a clean corpus. The finding's `Location:` line is what actually
+    # places it, and "is anything under §4 broken?" is a question about where the reader
+    # is. See `scripts/sentence_findings.py`.
+    try:
+        import sentence_findings as _sf
+        _sent_findings = _sf.findings_for_sentences(paper_id, sentences_in)
+        _sf_coverage = _sf.coverage()
+        _sf_caveat = _sf.coverage_caveat(_sf_coverage)
+    except Exception as exc:                     # cannot-resolve is not "nothing found"
+        _sent_findings, _sf_coverage = {}, {}
+        _sf_caveat = (f'Finding markers UNAVAILABLE ({type(exc).__name__}) — the absence '
+                      f'of markers below is NOT evidence that nothing is broken.')
+
     coverage = {
         'verified': 0, 'interpretive': 0, 'ungrounded_human': 0,
         'needs_fix': 0, 'needs_recheck': 0, 'agent_proposed': 0,
@@ -2896,6 +2913,11 @@ def _pp_build_data_v2(paper_id: str, cr: dict, fr: dict | None,
             'audit_event_count': len(audit_by_sentence.get(sid, [])),
             # Wave 10f — cross-paper cluster memberships (zero-or-more)
             'clusters': clusters_by_sentence.get(sid, []),
+            # ADR-012 D15 S4. ⚠️ `None` when the sentence carries no `tex_line_start`:
+            # "no finding lands here" and "this sentence has no location, so the question
+            # was never asked" are different answers and the renderer must distinguish
+            # them. An empty list means asked-and-clean.
+            'open_findings': _sent_findings.get(sid),
         })
 
     # Title parse — share with v1 path below
@@ -2944,6 +2966,12 @@ def _pp_build_data_v2(paper_id: str, cr: dict, fr: dict | None,
         'audit_events_by_sentence': audit_by_sentence,
         'has_claims_review': True,
         'has_figure_review': fr is not None,
+        # ADR-012 D15 S4 — what the marker layer CANNOT see, carried beside what it can.
+        # ⚠️ NOT optional. A reader who sees an unmarked sentence concludes nothing is
+        # wrong with it, and that conclusion is only warranted for the fraction of findings
+        # whose Location names a draft line.
+        'finding_marker_coverage': _sf_coverage,
+        'finding_marker_caveat': _sf_caveat,
         'schema_version': 'v2',
     }
 
@@ -4442,17 +4470,33 @@ def _pp_v2_paper_body_html(data: dict, active_sentence: str,
                 classes.append('pp-sentence--active')
             if s.get('is_stale'):
                 classes.append('pp-sentence--stale')
+            # ADR-012 D15 S4 — an open finding lands on this sentence's lines.
+            # ⚠️ THREE STATES, not two. `None` means the sentence carries no line span so
+            # the question was never asked; `[]` means asked and clean. Collapsing them
+            # would render "unknown" and "fine" identically, which is the defect this
+            # whole surface exists to make impossible.
+            _fnd = s.get('open_findings')
+            if _fnd:
+                classes.append('pp-sentence--flagged')
+                if any(f['severity'] in ('critical', 'blocker', 'major') for f in _fnd):
+                    classes.append('pp-sentence--flagged-blocking')
+            elif _fnd is None:
+                classes.append('pp-sentence--unlocatable')
             click_expr = (
                 f"$activeSentence = '{esc(sid)}'; "
                 f"$activeLinkIdx = -1; "
                 f"@get(`/api/papers/${{$activePaper}}/provenance`)"
             )
             verdict = esc(s.get('agent_verdict', ''))
+            _fcount = len(_fnd) if _fnd else 0
+            _ftitle = (f' · {_fcount} open finding'
+                       f'{"s" if _fcount != 1 else ""}' if _fcount else '')
             parts.append(
                 f'<span class="{ " ".join(classes) }" '
                 f'data-sentence-id="{esc(sid)}" '
+                f'data-blocking-findings="{_fcount}" '
                 f'data-on:click="{esc(click_expr)}" '
-                f'title="{verdict} · {esc(palette_key)}">'
+                f'title="{verdict} · {esc(palette_key)}{esc(_ftitle)}">'
                 f'{quote_inner} </span>'
             )
         parts.append('</div>')
