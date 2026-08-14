@@ -1,9 +1,14 @@
 {# ═══ FLOW BOARD (ADR-012 D15 S2, P9b) ═══
-   Renders scripts/dashboard_flow.flow_board(). Every cell carries its own `kind`, and
-   the five non-verdict kinds (not-tracked / unmeasured / missing / undeclared / warning)
-   are styled DIFFERENTLY from pass and fail on purpose — the module refuses to render
-   "nobody measured this" as a verdict, and a template that painted them green or red
-   would put the defect back one layer up. #}
+   Renders scripts/dashboard_flow.flow_board(). Every cell carries its own `kind`, and the
+   FOUR non-verdict kinds — `not-tracked`, `unmeasured`, `absent`, `undeclared` — are styled
+   differently from pass and fail on purpose: the module refuses to render "nobody measured
+   this" as a verdict, and a template that painted them green or red would put the defect
+   back one layer up.
+
+   ⚠️ This comment said "five … / missing / … / warning" (pr-review, 2026-08-13). `missing`
+   is not a kind at all; `absent` is, and was unstyled. `warning` IS a verdict — measured,
+   not clean, not blocking — and correctly renders flat. The authority is `CELL_KINDS` in
+   `dashboard_flow.py`, now bound to the stylesheet by a test. #}
 {# The <style> block is this partial's MARKER (test_template_contract
    `_partial_markers`): it sits outside every {% if %}, so it is emitted whenever the
    include runs and proves the panel rendered rather than the shell rendering empty.

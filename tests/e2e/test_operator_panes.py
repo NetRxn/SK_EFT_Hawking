@@ -49,12 +49,24 @@ def test_a_non_verdict_cell_is_not_painted_as_a_verdict(page, dashboard_url):
     design (ADR-012 C3), so this is guaranteed to have a subject.
     """
     page.goto(f"{dashboard_url}/?tab=flow", wait_until="load")
-    cell = page.locator(".flow-board .flow-not-tracked").first
-    expect(cell).to_be_visible()
-    bg = cell.evaluate("el => getComputedStyle(el).backgroundImage")
-    assert "gradient" in bg, (
-        f"a not-tracked cell renders with backgroundImage={bg!r} — it must be visibly "
-        "distinct from pass and fail, not a flat verdict colour")
+    # ⚠️ EVERY non-verdict kind PRESENT ON THE PAGE, not just the one that is guaranteed.
+    # The first version asserted `.flow-not-tracked` alone and was green while `absent`
+    # — a real emitted kind — had no CSS rule at all and rendered flat, and while the
+    # rule beside it named `.flow-missing`, a kind that cannot exist (pr-review
+    # 2026-08-13). One kind's correctness is not the class's.
+    checked = 0
+    for kind in ("not-tracked", "unmeasured", "absent", "undeclared"):
+        cells = page.locator(f".flow-board .flow-{kind}")
+        if cells.count() == 0:
+            continue                     # not on this board today; the unit test covers it
+        bg = cells.first.evaluate("el => getComputedStyle(el).backgroundImage")
+        assert "gradient" in bg, (
+            f"a {kind!r} cell renders with backgroundImage={bg!r} — a non-verdict kind "
+            f"must be visibly distinct from pass and fail, not a flat verdict colour")
+        checked += 1
+    assert checked, (
+        "no non-verdict cell was found on the board at all — §7.5 is not-tracked for "
+        "every bundle by design, so this scan matched nothing and proved nothing")
 
 
 @pytest.mark.e2e

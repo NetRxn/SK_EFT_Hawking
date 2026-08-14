@@ -496,3 +496,50 @@ def test_live_overlay_is_never_larger_than_the_aggregation_says():
 #  8. `flow_board`: the empty-roster `raise` replaced by a `{'rows': []}` return.
 #     RED: test_empty_roster_raises.                                       (1 failed)
 # ══════════════════════════════════════════════════════════════════════════════════════
+
+
+# ── the render layer is bound to the data layer's vocabulary (pr-review 2026-08-13) ──
+
+def test_every_cell_kind_has_a_css_rule_and_every_rule_names_a_real_kind():
+    """⚠️ BOTH DIRECTIONS, because the stylesheet failed in both at once.
+
+    Shipped 2026-08-13: the hatch rule named `.flow-missing` — no such kind exists, and
+    `_cell()` raises on anything outside `CELL_KINDS`, so the selector could never match.
+    Meanwhile `absent` IS emitted (the artifact or field does not exist) and had **no rule
+    anywhere**, so it fell through to default styling — flat, exactly like a verdict. A
+    stylesheet naming an impossible kind beside an unstyled real one is absence-as-success
+    at the render layer, and no test could see it: the e2e guard asserted `.flow-not-tracked`
+    only, so it was green over both halves.
+
+    The data layer is the authority. This binds the stylesheet to it in both directions.
+    """
+    import re
+    from pathlib import Path
+    import dashboard_flow as df
+
+    root = Path(__file__).resolve().parent.parent
+    css = "\n".join((root / p).read_text(encoding="utf-8") for p in (
+        "scripts/templates/dashboard.html",
+        "scripts/templates/partials/flow_tab.html"))
+    # ⚠️ STRIP COMMENTS FIRST. The first run of this test failed on `.flow-missing`
+    # appearing inside the CSS comment that *documents* removing it — a scan that reads
+    # prose about CSS as CSS. Both comment syntaxes are in play: `/* */` inside <style>
+    # and `{# #}` in the Jinja partial.
+    css = re.sub(r"/\*.*?\*/|\{#.*?#\}", "", css, flags=re.S)
+    styled = {m.group(1) for m in re.finditer(r"\.flow-([a-z-]+)\b", css)}
+    assert styled, "the CSS scan matched nothing — it is not reading the stylesheet"
+
+    missing = {k for k in df.CELL_KINDS if k not in styled}
+    assert not missing, (
+        f"cell kind(s) {sorted(missing)} are emitted by dashboard_flow but have NO CSS "
+        f"rule — they render with default styling, which is the flat look of a verdict")
+
+    # The reverse: a `.flow-<x>` selector whose `<x>` is neither a kind nor one of the
+    # layout classes is a rule that can never match — dead style that reads as coverage.
+    layout = {"board", "scroll", "table", "cell", "tier", "open", "num", "lane",
+              "caveats", "error", "coverage", "census"}
+    phantom = {s for s in styled if s not in df.CELL_KINDS and s not in layout}
+    assert not phantom, (
+        f"CSS names .flow-{sorted(phantom)} which is not a cell kind and not a layout "
+        f"class — either a kind was renamed and the stylesheet did not follow, or the "
+        f"selector was invented; both look like styling that is doing something")

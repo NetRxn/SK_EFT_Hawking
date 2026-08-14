@@ -171,11 +171,23 @@
            <style> for its own classes, which is also the marker the template-contract
            gate uses to prove the include ran.
 
-           ⚠️ THE NON-VERDICT KINDS ARE DELIBERATELY NEITHER GREEN NOR RED. Painting
+           ⚠️ THE FOUR NON-VERDICT KINDS ARE DELIBERATELY NEITHER GREEN NOR RED. Painting
            `not-tracked` or `unmeasured` as a verdict would reintroduce at the render
            layer exactly what dashboard_flow.py refuses to do at the data layer. They
-           read hatched-grey — visibly "no answer", not "fine". */
-        .flow-not-tracked, .flow-unmeasured, .flow-missing, .flow-undeclared {
+           read hatched-grey — visibly "no answer", not "fine".
+
+           ⚠️ CORRECTED 2026-08-13 (pr-review). This rule named `.flow-missing`, which is
+           NOT a kind — `CELL_KINDS` has no `missing`, and `_cell()` raises on anything
+           outside that set, so the selector could never match. The real kind is `absent`,
+           which IS emitted (five sites in dashboard_flow.py) and therefore rendered with
+           NO rule at all: an artifact-does-not-exist cell fell through to default
+           styling, which is the flat look of a verdict. A stylesheet naming a kind that
+           cannot exist, beside a kind that exists and is unstyled, is the same
+           absence-as-success shape one layer down — and `warning` was listed here as a
+           fifth non-verdict kind although it IS a verdict (measured, not clean, not
+           blocking) and renders flat orange by design. `test_dashboard_flow.py` now binds
+           `CELL_KINDS` to the stylesheet so neither can drift again. */
+        .flow-not-tracked, .flow-unmeasured, .flow-absent, .flow-undeclared {
             background: repeating-linear-gradient(45deg, #f4f4f5, #f4f4f5 4px,
                         #e4e4e7 4px, #e4e4e7 8px);
             color: var(--grey); font-style: italic; }

@@ -12,10 +12,12 @@ a reason. Spawning the workers is the lead's job; a planner that also supervised
 decision and the execution in one place where neither could be tested alone.
 
 ⚠️ **IT REFUSES BEFORE IT FANS OUT, AND THE REFUSAL IS THE POINT.** Measured at HEAD
-2026-08-13: of 965 dispatchable open findings, **74 declare a `verify` command**.
+2026-08-13: **969 open** findings, **308 dispatchable**, of which **74 declare a `verify`
+command**. (This paragraph said "965 dispatchable … the other 891" — 965 was no population
+at all and 891 was computed over *open*, printed directly above the tool's own
+`open 969 · dispatchable 308` line. Two scopes in one sentence, pr-review 2026-08-13.)
 `close_finding._run_verifications` skips a finding that declares none (`if not cmd: continue`),
-so the other 891 can be recorded `fixed` with an empty `verified_by` — a closure nothing
-proved. D6 grandfathered that for records written *before* the writer existed; it was never a
+The rest can be recorded `fixed` with an empty `verified_by` — a closure nothing proved. D6 grandfathered that for records written *before* the writer existed; it was never a
 licence for new ones. A loop that dispatches and closes at machine speed turns a slow leak into
 a firehose, so an unverifiable finding is **PLANNED BUT NOT CLOSABLE** here, and says so.
 
@@ -26,11 +28,12 @@ population with the tool that fixes them (`backfill_lanes.py --propose`) named o
 the output. An unrouted finding is work the queue cannot yet dispatch, which is different from
 work it has dispatched badly.
 
-⚠️ **Fan-out is keyed on the TARGET, not the finding.** Two findings against the same file are
-not independent: the second worker would rebase onto the first's edit or clobber it. The unit
-of parallelism is therefore a target-group — every open finding naming one target, handed to
-one worker as a block (`feedback-maximize-per-turn-throughput`), and only distinct targets go
-to distinct slots.
+⚠️ **Fan-out is keyed on FILES, and the unit is a CONNECTED COMPONENT over them.** Two
+findings touching one file are not independent — the second worker rebases onto the first's
+edit or clobbers it — and 56 of 308 dispatchable findings name MORE than one file, so
+"one finding, one target" is not even well defined. Findings that share any file share a
+worker, which makes the grouping a union-find rather than a dict. Three separate drafts of
+this put one file in two workers' hands; see `target_files`.
 """
 from __future__ import annotations
 
@@ -86,12 +89,21 @@ LANE_PROFILE: dict[str, dict] = {
 #: Derived from the live tree, never hardcoded: a slot that was removed must not be planned
 #: into, and a slot that was added should be usable without editing this file.
 def lean_slots() -> list[str]:
-    """The `wtN` slots that actually exist on disk, sorted."""
+    """The `wtN` slots that are USABLE Lean worktrees, sorted.
+
+    ⚠️ **A DIRECTORY NAMED `wtN` IS NOT A SLOT** (pr-review 2026-08-13). The first version
+    accepted any `wt*` directory, so `mkdir .claude/worktrees/wt9` — an empty dir, no
+    checkout, no `.lake` — became a plannable slot and a Lean group was assigned to it. The
+    decider for "a Lean worker can build here in isolation" is a git worktree with its own
+    Lean tree, so both are required: a leftover or half-removed slot must not be planned into.
+    """
     base = PROJECT_ROOT / ".claude" / "worktrees"
     if not base.is_dir():
         return []
-    return sorted(p.name for p in base.iterdir()
-                  if p.is_dir() and p.name.startswith("wt") and p.name[2:].isdigit())
+    return sorted(
+        p.name for p in base.iterdir()
+        if p.is_dir() and p.name.startswith("wt") and p.name[2:].isdigit()
+        and (p / "lean").is_dir() and (p / ".git").exists())
 
 
 def _load_open_findings() -> tuple[list[dict], set[str], set[str]]:
@@ -151,21 +163,49 @@ LANE_STRENGTH: tuple[str, ...] = (
 _TARGET_RE = re.compile(r"[`\s\-*]*([\w./+-]+\.[A-Za-z0-9]+)(?::[\d\-–,]+)?")
 
 
-def target_file(raw: str) -> str:
-    """The FILE a target names, or `""` if it names none.
+def target_files(raw: str) -> list[str]:
+    """EVERY repo file a target names, canonical and existing — possibly none, possibly many.
 
-    ⚠️ **THE UNIT OF PARALLELISM IS THE FILE, NOT THE `Target:` STRING**, and the first draft
-    got this wrong in the direction that matters. Targets carry line ranges, so
-    `DriveCalibration.lean:612-641` and `DriveCalibration.lean:67-69` grouped as two units and
-    were assigned to **wt2 and wt3** — two workers editing one file in two worktrees, which is
-    precisely the collision target-grouping exists to prevent. Grouping by the raw string
-    looked like it was preventing collisions while causing them.
+    ⚠️ **THREE SEPARATE WAYS THE FIRST TWO DRAFTS PUT ONE FILE IN TWO WORKERS' HANDS.**
+    Draft 1 keyed on the raw `Target:` string, so `Drive.lean:612-641` and `Drive.lean:67-69`
+    became two units. Draft 2 stripped the line range but returned the path *as written* and
+    took only the FIRST match, which left two more holes, both measured live:
 
-    Also strips backticks and list bullets, and tolerates a target whose text continues into
-    prose (several findings quote the offending sentence after the path).
+    * **Spelling.** `SK_EFT_Hawking/papers/I2/paper_draft.tex` and `papers/I2/paper_draft.tex`
+      are one file and were two group keys. 10 of 95 keys did not exist from the repo root at
+      all — including a bare `paper_draft.tex` (a 2-finding group keyed on a name that is not
+      a file: the `(untargeted)` pseudo-group again, wearing a filename) and a bare
+      `OnsagerAlgebra.lean`, which consumed **wt3** for a path no worker could open.
+    * **Multiplicity.** 56 of 308 dispatchable findings name more than one file, and the rest
+      were silently dropped — including `…/RokhlinBridge.lean, papers/L2/paper_draft.tex`,
+      which resolved to the `.tex` and was therefore planned under **prose**, with no build
+      gate, for a finding requiring a Lean edit. `LANE_STRENGTH` cannot save that: it ranks
+      the lanes of findings sharing a key, and the key had already thrown the Lean file away.
+
+    So this returns **all** of them, each `resolve()`d against the repo and **required to
+    exist**. A path that does not resolve is not a target — reporting it as one is how a
+    worker gets sent to a file that is not there.
     """
-    m = _TARGET_RE.match((raw or "").strip())
-    return m.group(1) if m else ""
+    out, seen = [], set()
+    for m in _TARGET_RE.finditer(raw or ""):
+        cand = m.group(1).strip("`.,;")
+        for base in (PROJECT_ROOT, PROJECT_ROOT.parent):   # tolerate a `SK_EFT_Hawking/` prefix
+            try:
+                p = (base / cand).resolve()
+                rel = p.relative_to(PROJECT_ROOT).as_posix()
+            except (ValueError, OSError):
+                continue
+            if not p.is_file():
+                continue          # ⚠️ NOT `break` — the first draft of this very fix broke
+                                  # out of the base loop unconditionally, so the
+                                  # `SK_EFT_Hawking/…` spelling never reached the second
+                                  # base and stayed a separate group key: the defect being
+                                  # repaired, surviving inside its own repair.
+            if rel not in seen:
+                seen.add(rel)
+                out.append(rel)
+            break
+    return out
 
 
 def target_groups(nodes: list[dict]) -> tuple[list[dict], list[dict]]:
@@ -180,20 +220,50 @@ def target_groups(nodes: list[dict]) -> tuple[list[dict], list[dict]]:
     if they were one file. Nobody can be told where to work; that is a filing defect to
     repair, not a task to dispatch.
     """
-    by_target: dict[str, list[dict]] = defaultdict(list)
+    # ⚠️ CONNECTED COMPONENTS OVER FILES, not a dict keyed on one file per finding.
+    # 56 of 308 dispatchable findings name MORE THAN ONE file. Keying on the first put
+    # finding A (files X,Y) and finding B (file Y) in different groups — two workers, one
+    # file Y — and threw X away, which is how a Lean+prose finding got planned under a
+    # prose profile with no build gate. Findings that share ANY file must share a worker,
+    # and that is a union-find, not a grouping.
+    parent: dict[str, str] = {}
+
+    def _find(x: str) -> str:
+        while parent.setdefault(x, x) != x:
+            parent[x] = parent[parent[x]]
+            x = parent[x]
+        return x
+
+    def _union(a: str, b: str) -> None:
+        ra, rb = _find(a), _find(b)
+        if ra != rb:
+            parent[ra] = rb
+
+    files_of: dict[str, list[str]] = {}
     untargeted: list[dict] = []
     for n in nodes:
-        t = target_file(((n.get("meta") or {}).get("target") or ""))
-        if not t:
+        fs = target_files((n.get("meta") or {}).get("target") or "")
+        if not fs:
             untargeted.append(n)
             continue
-        by_target[t].append(n)
+        files_of[n["id"]] = fs
+        for f in fs[1:]:
+            _union(fs[0], f)
+
+    by_component: dict[str, list[dict]] = defaultdict(list)
+    for n in nodes:
+        fs = files_of.get(n["id"])
+        if fs:
+            by_component[_find(fs[0])].append(n)
+
     groups = []
-    for target, items in by_target.items():
+    for _root, items in by_component.items():
         lanes = {(i["meta"].get("lane") or "unclassified") for i in items}
         lane = next(l for l in LANE_STRENGTH if l in lanes)
+        files = sorted({f for i in items for f in files_of[i["id"]]})
         groups.append({
-            "target": target,
+            "target": files[0] if len(files) == 1 else f"{files[0]} (+{len(files) - 1})",
+            "files": files,
             "lane": lane,
             "spans_lanes": sorted(lanes) if len(lanes) > 1 else None,
             "findings": [i["id"] for i in items],
@@ -202,8 +272,16 @@ def target_groups(nodes: list[dict]) -> tuple[list[dict], list[dict]]:
             "severity": sorted({i["meta"].get("severity") for i in items} - {None}),
         })
     # Most-blocking first: criticals, then majors, then group size.
-    rank = {"critical": 0, "major": 1, "minor": 2, "advisory": 3}
-    groups.sort(key=lambda g: (min((rank.get(s, 9) for s in g["severity"]), default=9),
+    # ⚠️ The order is DERIVED from the declared vocabulary, not restated. A hand-written
+    # rank silently sorts a newly-declared severity BELOW advisory — never dispatched, no
+    # error — which is the "hand-maintained list parallel to a registry" the authoring
+    # guide names. `_LANE_DECL_MAP` is already pinned this way for lanes.
+    from build_graph import _SEVERITY_DECL_MAP
+    order = ["critical", "major", "minor", "advisory"]
+    rank = {s: order.index(s) if s in order else len(order)
+            for s in set(_SEVERITY_DECL_MAP.values()) | set(order)}
+    groups.sort(key=lambda g: (min((rank.get(s, len(order)) for s in g["severity"]),
+                                   default=len(order)),
                                -len(g["findings"]), g["target"]))
     return groups, untargeted
 
@@ -216,33 +294,51 @@ def plan(*, lane: str | None = None, slots: int | None = None) -> dict:
             "the open-finding population is EMPTY. A plan with nothing to do is "
             "indistinguishable from a queue this tool failed to read — refusing to render.")
     parts = classify(open_, ids, closed)
-    total = sum(len(v) for v in parts.values())
-    assert total == len(open_), (                      # the partition, asserted not claimed
-        f"the buckets hold {total} of {len(open_)} open findings — some fell through")
 
     groups, untargeted = target_groups(parts["dispatchable"])
     if lane:
         groups = [g for g in groups if g["lane"] == lane]
 
     wt = lean_slots()
-    assigned, slot_i = [], 0
-    cap = slots if slots is not None else max(len(wt), 1)
-    for g in groups[:cap]:
+    if slots is not None and slots < 0:
+        raise ValueError(f"--slots must be >= 0, got {slots}; a negative slice bound "
+                         f"dispatches all but the last group and reports queued=1")
+
+    # ⚠️ THE CAP IS PER ISOLATION CLASS. One global cap of `len(wt)` was a Lean-worktree
+    # budget applied to every lane: measured at HEAD it dispatched three PROSE groups,
+    # left all three slots idle, and never reached a Lean group — a fan-out tool planning
+    # zero parallel Lean work while its isolated slots sat empty, against the standing
+    # rule to saturate them. Slot-bound lanes are capped by free slots; the rest are
+    # capped separately.
+    slot_cap = len(wt) if slots is None else slots
+    free_cap = 3 if slots is None else slots
+
+    assigned, queued, slot_i, free_i = [], [], 0, 0
+    for g in groups:
         prof = LANE_PROFILE[g["lane"]]
         if prof["isolation"] == "worktree-slot":
-            # ⚠️ A Lean group with no slot free is NOT silently downgraded to an in-place
-            # edit: two Lean workers sharing one `.lake` is the build corruption the slots
-            # exist to prevent. It stays queued and says why.
-            g = {**g, "slot": wt[slot_i] if slot_i < len(wt) else None}
-            if g["slot"] is None:
-                g["deferred"] = f"no free wtN slot ({len(wt)} exist, all assigned)"
-            else:
-                slot_i += 1
-        assigned.append({**g, "agent": prof["agent"], "gates": prof["gates"]})
+            # ⚠️ A Lean group with no free slot is EXCLUDED from dispatch, not annotated.
+            # It was previously left in `dispatch[]` carrying a `deferred` string while
+            # `queued` reported 0 — so a `--json` consumer spawning one worker per entry
+            # spawned 13 Lean workers onto 3 `.lake`s: exactly the build corruption the
+            # slots exist to prevent, produced by the code that documents preventing it.
+            if slot_i >= slot_cap or slot_i >= len(wt):
+                queued.append({**g, "deferred": f"no free wtN slot ({len(wt)} exist)"})
+                continue
+            g = {**g, "slot": wt[slot_i]}
+            slot_i += 1
+        else:
+            if free_i >= free_cap:
+                queued.append({**g, "deferred": "beyond the non-isolated fan-out cap"})
+                continue
+            free_i += 1
+        assigned.append({**g, "agent": prof["agent"], "gates": prof["gates"],
+                         "isolation": prof["isolation"]})
 
     return {
         "dispatch": assigned,
-        "queued": len(groups) - len(assigned),
+        "queued": len(queued),
+        "queued_groups": queued,
         "counts": {
             "open": len(open_),
             "dispatchable": len(parts["dispatchable"]),

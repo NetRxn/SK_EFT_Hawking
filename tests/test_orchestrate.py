@@ -28,7 +28,15 @@ sys.path.insert(0, str(ROOT / "scripts"))
 import orchestrate as orch  # noqa: E402
 
 
-def _f(fid, *, lane="infra", target="src/x.py", severity="major",
+#: Real repo files. ⚠️ `target_files` now REQUIRES a target to resolve to a file that
+#: exists — 10 of 95 live group keys did not, including a bare `paper_draft.tex` and a bare
+#: `OnsagerAlgebra.lean` that consumed a worktree slot. Fixtures must therefore name real
+#: files, which also means these tests exercise the existence requirement rather than
+#: mocking past it.
+F1, F2, F3 = "src/core/formulas.py", "src/core/constants.py", "scripts/orchestrate.py"
+
+
+def _f(fid, *, lane="infra", target=F1, severity="major",
        verify=None, status="open", blocked_by=None):
     return {"id": fid, "meta": {"lane": lane, "target": target, "severity": severity,
                                 "verify": verify, "status": status,
@@ -38,37 +46,58 @@ def _f(fid, *, lane="infra", target="src/x.py", severity="major",
 # ── the target is a FILE, not a string ────────────────────────────────────────────────
 
 @pytest.mark.parametrize("raw,expected", [
-    ("`lean/SKEFTHawking/Control/DriveCalibration.lean:612-641`",
-     "lean/SKEFTHawking/Control/DriveCalibration.lean"),
-    ("`lean/SKEFTHawking/Control/DriveCalibration.lean:67-69`",
-     "lean/SKEFTHawking/Control/DriveCalibration.lean"),
-    ("src/core/formulas.py", "src/core/formulas.py"),
-    ("- `papers/note/paper_draft.tex:36-38` (abstract): \"the claim\"",
-     "papers/note/paper_draft.tex"),
-    ("", ""),
-    ("a finding with no path at all", ""),
+    (f"`{F1}:612-641`", [F1]),                      # line range stripped
+    (f"`{F1}:67-69`", [F1]),                        # …and the SAME file
+    (F1, [F1]),
+    (f"- `{F1}:36-38` (abstract): \"the claim\"", [F1]),   # prose after the path
+    (f"SK_EFT_Hawking/{F1}", [F1]),                 # ⚠️ the repo-prefixed spelling that
+                                                    #    shipped as a SECOND group key
+    (f"`{F1}`, `{F2}`", [F1, F2]),                  # ⚠️ 56 live findings name >1 file;
+                                                    #    the second was silently dropped
+    ("", []),
+    ("a finding with no path at all", []),
+    ("`paper_draft.tex`", []),                      # bare basename: not a file from root
+    ("`OnsagerAlgebra.lean`", []),                  # …this one consumed wt3
+    ("2.5% drift in a doc", []),                    # a version-like token is not a path
 ])
-def test_target_resolves_to_the_file(raw, expected):
-    assert orch.target_file(raw) == expected
+def test_target_resolves_to_every_file_it_names_and_only_real_ones(raw, expected):
+    assert orch.target_files(raw) == expected
 
 
 def test_two_line_ranges_in_one_file_are_ONE_unit():
     """THE REGRESSION. Grouping on the raw string made these two units, and the planner then
     handed one file to two workers in two worktrees while claiming to prevent exactly that."""
     groups, _ = orch.target_groups([
-        _f("a", lane="lean", target="`lean/SKEFTHawking/Control/DriveCalibration.lean:612-641`"),
-        _f("b", lane="lean", target="`lean/SKEFTHawking/Control/DriveCalibration.lean:67-69`"),
+        _f("a", lane="lean", target=f"`{F1}:612-641`"),
+        _f("b", lane="lean", target=f"`{F1}:67-69`"),
     ])
     assert len(groups) == 1, f"one file split into {len(groups)} work units: {groups}"
     assert sorted(groups[0]["findings"]) == ["a", "b"]
 
 
-def test_no_two_dispatched_groups_share_a_file():
-    """The property, asserted over the LIVE queue rather than a fixture — a fixture cannot
-    show that real targets normalize to distinct files."""
-    p = orch.plan()
-    files = [g["target"] for g in p["dispatch"]]
-    assert len(files) == len(set(files)), f"a file is dispatched twice: {files}"
+def test_no_two_groups_share_a_file():
+    """⚠️ THIS TEST COULD NOT FAIL, AND THE REGRESSION IT NAMES SHIPPED PAST IT.
+
+    It read `files = [g["target"] for g in dispatch]` and asserted uniqueness. Those are
+    `dict` KEYS — distinct by construction whatever the resolver returns — so it asserted a
+    property of `dict`, not of the grouping. A reviewer restored the raw-string resolver
+    (the exact shipped defect) and this test stayed GREEN with
+    `Drive.lean:612-641` and `Drive.lean:67-69` in wt2 and wt3.
+
+    Two corrections: assert over EVERY group, not the handful the cap dispatches; and
+    assert on the FILE SETS, which is the property that matters — pairwise disjoint.
+    """
+    open_, ids, closed = orch._load_open_findings()
+    groups, _ = orch.target_groups(orch.classify(open_, ids, closed)["dispatchable"])
+    assert len(groups) >= 2, "fewer than two groups — the property is vacuous here"
+    seen: dict[str, int] = {}
+    for i, g in enumerate(groups):
+        assert g["files"], f"group {g['target']!r} carries no files"
+        for f in g["files"]:
+            assert f not in seen, (
+                f"{f} is in group {seen[f]} AND group {i} — two workers, one file, which "
+                f"is the collision this grouping exists to prevent")
+            seen[f] = i
 
 
 def test_no_two_lean_groups_share_a_worktree_slot():
@@ -83,9 +112,9 @@ def test_an_untargeted_finding_is_never_grouped():
     """It rendered as a work unit while spanning four lanes. Nobody can be told where to
     work, so it is a filing defect — not a task."""
     groups, untargeted = orch.target_groups([
-        _f("a", target=""), _f("b", target="no path here"), _f("c", target="src/y.py"),
+        _f("a", target=""), _f("b", target="no path here"), _f("c", target=F2),
     ])
-    assert [g["target"] for g in groups] == ["src/y.py"]
+    assert [g["target"] for g in groups] == [F2]
     assert {n["id"] for n in untargeted} == {"a", "b"}
 
 
@@ -157,15 +186,29 @@ def test_a_spanning_target_gets_the_strongest_profile_not_the_first_alphabetical
     {infra, prose} that yields `infra` by luck; for {prose, research} it yields `prose`,
     also by luck — and for {lean, infra} it would yield `infra`, dropping the build gate."""
     groups, _ = orch.target_groups([
-        _f("a", lane="infra", target="src/z.py"),
-        _f("b", lane="lean", target="src/z.py"),
+        _f("a", lane="infra", target=F3),
+        _f("b", lane="lean", target=F3),
     ])
     assert groups[0]["lane"] == "lean", "a Lean finding must not be worked without a build gate"
     assert groups[0]["spans_lanes"] == ["infra", "lean"]
 
 
-def test_lean_slots_are_read_from_disk_not_hardcoded():
-    slots = orch.lean_slots()
-    assert slots == sorted(slots)
-    for s in slots:
-        assert (ROOT / ".claude" / "worktrees" / s).is_dir()
+def test_a_bare_directory_is_not_a_usable_lean_slot(tmp_path, monkeypatch):
+    """⚠️ BOTH ASSERTIONS IN THE FIRST VERSION WERE TAUTOLOGIES — `sorted(x) == sorted(x)`
+    and an `is_dir()` loop over names produced BY `is_dir()`. A reviewer replaced
+    `lean_slots` with a hardcoded list, which is what the test's own name forbids, and it
+    passed. It was also vacuous on a fresh clone: `.claude/worktrees/` is gitignored, so
+    the population is empty there and both assertions hold over nothing.
+
+    The decider is "a Lean worker can build here in isolation" — a git worktree with its
+    own Lean tree. A leftover `mkdir wt9` was accepted and had a group assigned to it.
+    """
+    base = tmp_path / ".claude" / "worktrees"
+    (base / "wt9").mkdir(parents=True)                       # bare dir: neither leg
+    (base / "wt8" / "lean").mkdir(parents=True)              # lean tree, no worktree
+    (base / "wt7" / "lean").mkdir(parents=True)
+    (base / "wt7" / ".git").write_text("gitdir: ...")        # both legs
+    monkeypatch.setattr(orch, "PROJECT_ROOT", tmp_path)
+    assert orch.lean_slots() == ["wt7"], (
+        "a directory named wtN is not a slot; planning into one sends a Lean worker "
+        "somewhere it cannot build")
