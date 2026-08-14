@@ -17,8 +17,9 @@ command**. (This paragraph said "965 dispatchable … the other 891" — 965 was
 at all and 891 was computed over *open*, printed directly above the tool's own
 `open 969 · dispatchable 308` line. Two scopes in one sentence, pr-review 2026-08-13.)
 `close_finding._run_verifications` skips a finding that declares none (`if not cmd: continue`),
-The rest can be recorded `fixed` with an empty `verified_by` — a closure nothing proved. D6 grandfathered that for records written *before* the writer existed; it was never a
-licence for new ones. A loop that dispatches and closes at machine speed turns a slow leak into
+so the rest can be recorded `fixed` with an empty `verified_by` — a closure nothing proved.
+D6 grandfathered that for records written *before* the writer existed; it was never a licence
+for new ones. A loop that dispatches and closes at machine speed turns a slow leak into
 a firehose, so an unverifiable finding is **PLANNED BUT NOT CLOSABLE** here, and says so.
 
 ⚠️ **`unclassified` IS NOT A LANE, AND IS NOT COERCED INTO ONE.** 657 of 969 open findings
@@ -120,9 +121,11 @@ def _load_open_findings() -> tuple[list[dict], set[str], set[str]]:
 def classify(nodes: list[dict], ids: set[str], closed: set[str]) -> dict:
     """Partition the open population into dispatchable · blocked · unrouted.
 
-    ⚠️ **The three buckets must PARTITION**, and `plan()` asserts it. A finding that fell out
-    of all three would be work the queue silently forgot, which is this repository's signature
-    defect wearing a scheduler's clothes.
+    ⚠️ **The three buckets partition by construction — if/elif/else — so DO NOT "assert" it.**
+    `plan()` used to, and both that statement and the test restating it were theorems about
+    the loop rather than measurements of it (and the assert vanishes under `python -O`). The
+    population that IS droppable is dropped downstream — untargeted, cap-queued, and whatever
+    a `--lane` filter removes — so that is where a real conservation check belongs.
     """
     from build_graph import finding_is_dispatchable
     dispatchable, blocked, unrouted = [], [], []
