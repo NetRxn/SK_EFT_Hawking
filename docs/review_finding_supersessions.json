@@ -7411,6 +7411,20 @@
         "exit_code": 0,
         "run_at": "2026-08-14"
       }
+    },
+    {
+      "finding_id": "review:2026-08-14-suite-runtime:infra:3",
+      "status": "fixed",
+      "evidence": "Explained and fixed; it was never nondeterminism. Two unstated premises in the test: (1) it stamped counts.json newer than src/**/*.py alone while _counts_is_stale returns on its FIRST stale reason and walks five trees, so editing any test file left the tests/ leg firing and the count leg was never reached; (2) it assumes published == live before seeding published+1, so when the live tree is already one ahead the seed lands on the true value, every leg goes quiet and the check correctly reports fresh. Both states were live during this session (55f3e5a1 published 195 while adding test_build_graph_memo.py; d82f237b published 196 while adding test_dashboard_graph_cache.py). The stamp now covers every tree the checker consults, and the test asserts the artifact is NOT stale before seeding, so a future leg added to the checker and not the stamp fails there naming that leg instead of silently exercising something else; the same assertion catches premise 2 and reports the live-vs-published drift with its remedy. Verified: 14 passed on a working copy with freshly-edited test files (previously red), and setting published to live-1 turns it red with the cause named.",
+      "superseded_by": null,
+      "date": "2026-08-14",
+      "commit": "2f5ede79",
+      "verified_by": {
+        "command": "uv run python -m pytest -q tests/test_d5_freshness.py",
+        "declared": "uv run python -m pytest -q tests/test_d5_freshness.py",
+        "exit_code": 0,
+        "run_at": "2026-08-14"
+      }
     }
   ]
 }
