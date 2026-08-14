@@ -219,8 +219,8 @@ The three shapes it takes here, each with a live instance:
   covered opened files but not imported modules, so editing the graph builder stopped
   invalidating the graph.
 - **Siblings compared to each other instead of to the source of truth.** `bundle_consistency`
-  passes on a false statement carried by three bundles, because it compares bundles to each
-  other and never to the Lean. A check that cannot fail when everything it compares is wrong
+  passes on a false statement that several sibling bundles carry alike, because it compares
+  bundles to each other and never to the Lean. A check that cannot fail when everything it compares is wrong
   together is not a check.
 
 The question that catches all three: **if this check passes, what exactly have I learned — and
