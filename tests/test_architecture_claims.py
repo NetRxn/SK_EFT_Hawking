@@ -399,3 +399,33 @@ def test_the_merge_gate_runs_the_full_suite_exactly_once():
     assert "_tree_state" in names, (
         "the before/after `git status --porcelain` assertion is gone; it is what the "
         "dropped duplicate was reaching for, and §5.2 credits it with certifying more")
+
+
+def test_aristotle_proved_counts_only_run_backed_entries():
+    """⚠️ 11 DRAFTS RENDER THIS MACRO AS "closed by the Aristotle automated prover".
+
+    `aristotle_proved` was `len(ARISTOTLE_THEOREMS)`, and the registry also holds `'manual'`
+    entries — theorems proved by hand, several of them BECAUSE a machine run had certified a
+    weaker statement later strengthened. So the published macro overstated machine
+    verification, and the 2026-08-13 statement-substance wave widened the gap from 4 to 6
+    while repairing the statements it counted.
+
+    The decider for "Aristotle closed it" is a run id, so this pins the count to that and
+    not to the registry's size.
+    """
+    import json
+    import update_counts
+    from src.core.constants import ARISTOTLE_THEOREMS as A
+
+    manual = {k for k, v in A.items() if v == "manual"}
+    assert manual, (
+        "no 'manual' entries — if the sentinel was renamed, this test is measuring nothing "
+        "and `aristotle_proved` may silently be counting hand proofs as machine ones again")
+
+    published = json.loads((ROOT / "docs" / "counts.json").read_text())["aristotle"]
+    assert published["aristotle_proved"] == len(A) - len(manual), (
+        f"aristotle_proved={published['aristotle_proved']} but the registry holds {len(A)} "
+        f"entries of which {len(manual)} are manual — the macro counts hand proofs as "
+        f"machine-closed in every draft that quotes it")
+    assert published["aristotle_proved"] < len(A), (
+        "the count equals the registry size, so the manual exclusion is not being applied")

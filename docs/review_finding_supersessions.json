@@ -7240,6 +7240,58 @@
         "exit_code": 0,
         "run_at": "2026-08-13"
       }
+    },
+    {
+      "finding_id": "review:2026-08-13-statement-substance:I1:1",
+      "status": "fixed",
+      "evidence": "acoustic_metric_theorem STRENGTHENED to the wave equation rather than documented down (wt2, c791c73b). The canonical form is now eomOperator ... = 0 <-> dAlembertian ... = 0 with the same binders the old exists-True carried, plus the metric match against acousticMetric itself; reachable entirely from substrate already in the module, no new axiom. ARISTOTLE_THEOREMS entry moved a87f425a -> manual because that run proved the OLD weak statement; leaving it would be false machine-verification provenance. lake build clean 10827 jobs (lead-run), axioms {propext, Classical.choice, Quot.sound}.",
+      "superseded_by": null,
+      "date": "2026-08-13",
+      "verified_by": {
+        "command": "uv run python scripts/validate.py --check vacuous_statement_audit --check existential_witness_disclosure",
+        "declared": "uv run python scripts/validate.py --check vacuous_statement_audit --check existential_witness_disclosure",
+        "exit_code": 0,
+        "run_at": "2026-08-13"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-13-statement-substance:I1:2",
+      "status": "fixed",
+      "evidence": "All three repaired and merged. §2/§3 (wt1, 092389fa): dispersive_correction_bound and dissipative_correction_existence re-pointed at dispersiveCorrection / dissipativeCorrection — no existential remains in either conclusion, the first conjunct is an EQUALITY (stronger than the bound asked for) and C is the explicit universal pi/6; the dissipative side strengthened != 0 to 0 <. §4 (wt3, da906d93): all three decorative-binder theorems restated against their own objects. The worker found the finding's own premise was wrong — DaviesPresentation does NOT imply infinite-dimensional (the zero algebra satisfies all three relations), so it BUILT a model (gl2 over Laurent polynomials, all three Davies relations proved) and proved not FiniteDimensional onsagerAlgebra; and the root defect was upstream, TPFConstruction.local_dim_unbounded being itself the Archimedean property, so TPFConstruction gained LocalSpace + local_infinite_dim and six theorems were restated. Escape population 5 -> 0; EXISTENTIAL_ESCAPE_CEILING lowered 5 -> 0 and the five obsolete registry entries removed after the lean_deps regen. lake build clean 10827 jobs on each slot and on merged main (lead-run — all three workers skipped the build on a stale -j4 recipe). Axioms {propext, Classical.choice, Quot.sound} throughout.",
+      "superseded_by": null,
+      "date": "2026-08-13",
+      "verified_by": {
+        "command": "uv run python scripts/validate.py --check existential_witness_disclosure",
+        "declared": "uv run python scripts/validate.py --check existential_witness_disclosure",
+        "exit_code": 0,
+        "run_at": "2026-08-13"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-13-statement-substance:I1:3",
+      "status": "fixed",
+      "evidence": "All three repaired and merged. §2/§3 (wt1, 092389fa): dispersive_correction_bound and dissipative_correction_existence re-pointed at dispersiveCorrection / dissipativeCorrection — no existential remains in either conclusion, the first conjunct is an EQUALITY (stronger than the bound asked for) and C is the explicit universal pi/6; the dissipative side strengthened != 0 to 0 <. §4 (wt3, da906d93): all three decorative-binder theorems restated against their own objects. The worker found the finding's own premise was wrong — DaviesPresentation does NOT imply infinite-dimensional (the zero algebra satisfies all three relations), so it BUILT a model (gl2 over Laurent polynomials, all three Davies relations proved) and proved not FiniteDimensional onsagerAlgebra; and the root defect was upstream, TPFConstruction.local_dim_unbounded being itself the Archimedean property, so TPFConstruction gained LocalSpace + local_infinite_dim and six theorems were restated. Escape population 5 -> 0; EXISTENTIAL_ESCAPE_CEILING lowered 5 -> 0 and the five obsolete registry entries removed after the lean_deps regen. lake build clean 10827 jobs on each slot and on merged main (lead-run — all three workers skipped the build on a stale -j4 recipe). Axioms {propext, Classical.choice, Quot.sound} throughout.",
+      "superseded_by": null,
+      "date": "2026-08-13",
+      "verified_by": {
+        "command": "uv run python scripts/validate.py --check existential_witness_disclosure",
+        "declared": "uv run python scripts/validate.py --check existential_witness_disclosure",
+        "exit_code": 0,
+        "run_at": "2026-08-13"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-13-statement-substance:I1:4",
+      "status": "fixed",
+      "evidence": "All three repaired and merged. §2/§3 (wt1, 092389fa): dispersive_correction_bound and dissipative_correction_existence re-pointed at dispersiveCorrection / dissipativeCorrection — no existential remains in either conclusion, the first conjunct is an EQUALITY (stronger than the bound asked for) and C is the explicit universal pi/6; the dissipative side strengthened != 0 to 0 <. §4 (wt3, da906d93): all three decorative-binder theorems restated against their own objects. The worker found the finding's own premise was wrong — DaviesPresentation does NOT imply infinite-dimensional (the zero algebra satisfies all three relations), so it BUILT a model (gl2 over Laurent polynomials, all three Davies relations proved) and proved not FiniteDimensional onsagerAlgebra; and the root defect was upstream, TPFConstruction.local_dim_unbounded being itself the Archimedean property, so TPFConstruction gained LocalSpace + local_infinite_dim and six theorems were restated. Escape population 5 -> 0; EXISTENTIAL_ESCAPE_CEILING lowered 5 -> 0 and the five obsolete registry entries removed after the lean_deps regen. lake build clean 10827 jobs on each slot and on merged main (lead-run — all three workers skipped the build on a stale -j4 recipe). Axioms {propext, Classical.choice, Quot.sound} throughout.",
+      "superseded_by": null,
+      "date": "2026-08-13",
+      "verified_by": {
+        "command": "uv run python scripts/validate.py --check existential_witness_disclosure",
+        "declared": "uv run python scripts/validate.py --check existential_witness_disclosure",
+        "exit_code": 0,
+        "run_at": "2026-08-13"
+      }
     }
   ]
 }

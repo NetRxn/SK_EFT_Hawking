@@ -412,7 +412,16 @@ def count_aristotle() -> dict:
         # The count of entries IS the count of Aristotle-proved theorems.
         run_ids = set(ARISTOTLE_THEOREMS.values())
         return {
-            "aristotle_proved": len(ARISTOTLE_THEOREMS),
+            # ⚠️ ENTRIES WHOSE VALUE IS A RUN ID — not `len(registry)`. 11 drafts render
+            # this macro as "closed by the Aristotle automated prover" / "closed
+            # automatically", and the registry also holds `'manual'` entries: theorems
+            # proved by hand, several of them BECAUSE a machine run had certified a
+            # weaker statement that was later strengthened (I1 §1/§4, 2026-08-13).
+            # Counting those as machine-closed overstates machine verification in every
+            # draft that quotes it, and the 2026-08-13 wave widened the gap 4 -> 6 while
+            # repairing the statements. The decider for "Aristotle closed it" is a run id.
+            "aristotle_proved": len([v for v in ARISTOTLE_THEOREMS.values()
+                                     if v != "manual"]),
             "aristotle_runs": len(run_ids),
         }
     except ImportError:
