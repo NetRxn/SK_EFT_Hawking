@@ -321,3 +321,81 @@ def test_the_sequence_is_rendered_identically_everywhere_it_appears():
         assert rendered == steps, (
             f"{path} renders the sequence as {rendered}, missing "
             f"{[s for s in steps if s not in rendered]}")
+
+
+# ── The 2026-08-13 sync-audit corrections, pinned so they cannot rot the same way ──
+#
+# All three sentences below were FALSE in a merged tree while every gate was green, and
+# two of them were made false by the same session that wrote them. None was catchable by
+# `doc_refs_resolve` (their paths all resolved) or by the counts leg (they state no count).
+# Pinning is the repo's own answer to "no check verifies a prose claim", so these are
+# exactly the claims that earn it: each describes a DECIDER a reader would act on.
+
+
+def test_counts_json_staleness_key_is_a_hybrid_not_pure_mtime():
+    """QA_QI's table recorded `counts.json` as keyed on mtime, which the count leg made
+    false. The table's whole purpose is recording staleness keys, so a wrong row there is
+    worse than no row: it is the place a reader goes to learn what protects the artifact."""
+    _claim("QA_QI_INFRASTRUCTURE_MAP.md",
+           "**value compare** on the five glob figures, mtime vs sources for `pytest_cases`")
+    # DECIDER: the freshness predicate must actually call the writer's own cheap counter.
+    tree = _module_ast("scripts/validation/checks/freshness.py")
+    calls = [n for n in ast.walk(tree)
+             if isinstance(n, ast.Call)
+             and getattr(n.func, "attr", None) == "count_python_cheap"]
+    assert calls, (
+        "`_counts_is_stale` no longer calls `update_counts.count_python_cheap` — the doc "
+        "says the key is a value compare, so either restore the call or fix the doc")
+    import update_counts
+    legs = set(update_counts.count_python_cheap())
+    assert legs == {"python_modules", "test_files", "notebooks", "papers", "figures"}, (
+        f"the cheap counter returns {sorted(legs)}; the doc says FIVE glob figures")
+    assert "pytest_cases" not in legs, (
+        "pytest_cases moved into the cheap counter — it costs a pytest collection, and "
+        "the doc explains the split on exactly that ground")
+
+
+def test_the_census_covers_three_languages_with_three_deciders():
+    """Three documents scoped the census to Python after D5 added shell and D3 notebooks —
+    one of them instructing a reader to 'change its docstring', which is the wrong
+    instruction for a shell script or a notebook."""
+    _claim("QA_QI_INFRASTRUCTURE_MAP.md",
+           "answers *what is this module, script or notebook*")
+    import module_census as mc
+    assert set(mc.TREES) == {"src", "scripts", "notebooks"}, mc.TREES
+    # DECIDER: one derivation per language, each a distinct function — not one regex.
+    names = {f.name for f in ast.walk(_module_ast("scripts/module_census.py"))
+             if isinstance(f, ast.FunctionDef)}
+    for decider in ("_shell_header", "_notebook_first_markdown"):
+        assert decider in names, (
+            f"{decider} is gone — the doc claims a decider per language; a single shared "
+            f"scan would reintroduce the false positive each one is bounded against")
+
+
+def test_the_merge_gate_runs_the_full_suite_exactly_once():
+    """VALIDATION_ARCHITECTURE described 'two agreeing `pytest -m ''` runs' for three
+    commits after the duplicate was dropped. The tree-state assertion replaced it."""
+    _claim("VALIDATION_ARCHITECTURE.md",
+           "One `pytest -m ''` run plus `validate.py --ci --no-memo`")
+    # ⚠️ DECIDER, NOT A SUBSTRING COUNT. `src.count('"-m", ""')` would also match the
+    # explanatory comments above the step — this file's own docstring records a proxy of
+    # exactly that shape MANUFACTURING an error. Walk the AST and count argv list literals
+    # that actually carry `-m` immediately followed by the empty marker string.
+    tree = _module_ast("scripts/verify_scope.py")
+    full_suite_argvs = 0
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.List):
+            continue
+        vals = [e.value for e in node.elts if isinstance(e, ast.Constant)]
+        if "pytest" in vals:
+            for a, b in zip(vals, vals[1:]):
+                if a == "-m" and b == "":
+                    full_suite_argvs += 1
+    assert full_suite_argvs == 1, (
+        f"{full_suite_argvs} argv literals run the unmarked full suite; the doc says the "
+        f"merge gate runs it ONCE. If a second run was restored, say why in "
+        f"VALIDATION_ARCHITECTURE §5.2 and update this test")
+    names = {f.name for f in ast.walk(tree) if isinstance(f, ast.FunctionDef)}
+    assert "_tree_state" in names, (
+        "the before/after `git status --porcelain` assertion is gone; it is what the "
+        "dropped duplicate was reaching for, and §5.2 credits it with certifying more")
