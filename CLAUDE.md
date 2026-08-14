@@ -150,7 +150,7 @@ uv run python -m pytest -m '' -v              # everything — before PR / submi
 # both testpaths — the repo's tests and the plugin's surface guards.
 uv run python scripts/dep_upgrade_preview.py  # what `uv lock --upgrade` WOULD do (writes nothing)
 uv run python scripts/verify_scope.py         # verify ONLY what your change can break
-uv run python scripts/verify_scope.py --merge-gate   # the full ~25-min certification
+uv run python scripts/verify_scope.py --merge-gate   # the full certification (32m44s measured 2026-08-13)
 uv run python scripts/validate.py             # full validation suite (--list enumerates it)
 uv run python scripts/validate.py --list      # list checks; --check <name> runs one
 uv run python scripts/review_figures.py       # PNGs + structural figure checks

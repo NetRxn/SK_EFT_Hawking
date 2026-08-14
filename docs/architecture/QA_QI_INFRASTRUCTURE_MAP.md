@@ -136,7 +136,7 @@ is the load-bearing column:** content-hash and content-compare are sound; mtime 
 | artifact | writer | staleness key | auto-synced? |
 |---|---|---|---|
 | `lean/lean_deps.json` | `extract_lean_deps.py` | **content hash** of every `.lean` under `SKEFTHawking/` **plus the root aggregate `lean/SKEFTHawking.lean`** | yes |
-| `docs/counts.json` / `.tex` | `update_counts.py` | mtime vs sources | yes |
+| `docs/counts.json` / `.tex` | `update_counts.py` | **hybrid** — **value compare** on the five glob figures, mtime vs sources for `pytest_cases` (see below) | yes |
 | `papers/*/tables/*.tex` | `render_paper_tables.py` | mtime | yes |
 | `docs/MODULE_CENSUS.md` | `module_census.py` | **content compare** (`render(collect())`) | yes |
 | `lean/atlas_view.json` | `atlas_view.py` | **content compare** (rebuilds) | yes |
@@ -151,12 +151,34 @@ is the load-bearing column:** content-hash and content-compare are sound; mtime 
 | PG + AGE `sk_eft` | `build_graph.write_graph_to_pg` | **none** (full delete + rewrite) | opt-in only |
 | `figures/provenance_graph.json` | `build_graph --out` | **none** | **no** |
 
+⚠️ **`counts.json`'s key is a hybrid because an mtime-max is blind in one direction, and it
+shipped that way.** Deleting a file leaves every surviving file's mtime untouched, so the
+maximum does not move and the artifact reports fresh while publishing a count one too high —
+measured 2026-08-13: `test_files: 194` against a live 193 for three commits, green throughout.
+The five glob-derived figures (`python_modules`, `test_files`, `notebooks`, `papers`, `figures`)
+are now **recomputed and compared** through `update_counts.count_python_cheap`, imported rather
+than re-implemented so the check and the writer cannot disagree. `pytest_cases` keeps the mtime
+proxy because it costs a pytest collection, and it needs no more: a deleted file moves
+`test_files`, an edited one moves its own mtime.
+
+**The generalisable rule for this table: an mtime is a proxy for "did the answer change", and it
+only works in one direction. Where the answer is cheap to recompute, recompute it** — which is
+why the rows above split into *mtime* and *content compare* at all, and why this row is now both.
+
 ### 2.1 The module census — one derived answer, with no hand-written half
 
-`docs/MODULE_CENSUS.md` answers *what is this Python module* — the question this directory
-deliberately does not own (see [`README.md`](README.md#what-is-deliberately-not-here)). It is
-**generated in whole** by `scripts/module_census.py` from module docstrings, read via
-`ast.get_docstring`. To change a description, change the docstring.
+`docs/MODULE_CENSUS.md` answers *what is this module, script or notebook* — the question this
+directory deliberately does not own (see
+[`README.md`](README.md#what-is-deliberately-not-here)). It is **generated in whole** by
+`scripts/module_census.py`. To change a description, change it at the source.
+
+⚠️ **The decider differs by language, and none of the three is a regex over the whole file.**
+Python uses `ast.get_docstring`; shell has no AST, so the analogue is the **leading comment
+block only** (contiguous `#` after an optional shebang), bounded so an explanatory note in the
+body cannot pass as a description; a notebook is described by its **first cell, and only if that
+cell is markdown** — a notebook that opens with code and explains itself later is not
+self-describing at the point a reader opens it. Shell joined at D5 and notebooks at D3
+(2026-08-13); this paragraph said *"Python module … read via `ast.get_docstring`"* until then.
 
 **It replaced a pair of hand-maintained files (ADR-013), and the reason generalises.** The
 Inventory pair was half generated and half hand-written in the same file, and *a half-generated

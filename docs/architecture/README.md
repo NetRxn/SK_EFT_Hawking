@@ -40,7 +40,7 @@ questions they do not answer, and where each is answered instead:
 
 | your question | not here — go to |
 |---|---|
-| **What does this module do?** What is `<some>.py`, what is the per-Lean-family map | [`../MODULE_CENSUS.md`](../MODULE_CENSUS.md) for Python (derived from docstrings); `docs/counts.json` `lean.module_names` and `lean/atlas_view.json` for Lean |
+| **What does this module do?** What is `<some>.py`/`.sh`/`.ipynb`, what is the per-Lean-family map | [`../MODULE_CENSUS.md`](../MODULE_CENSUS.md) for Python, shell and notebooks (derived — docstring, leading comment block, or opening markdown cell, per language); `docs/counts.json` `lean.module_names` and `lean/atlas_view.json` for Lean |
 | **What must I do, in what order?** The 14 stages, the invariants | [`../WAVE_EXECUTION_PIPELINE.md`](../WAVE_EXECUTION_PIPELINE.md) — and why each rule exists, [`../WAVE_PIPELINE_RATIONALE.md`](../WAVE_PIPELINE_RATIONALE.md) |
 | **How do I run an architecture change?** The orient → measure → specify → review → pilot → plan → ship → terminate sequence | the `architecture-change` skill, which owns the *sequence* and deliberately restates none of the *rules* below |
 
@@ -48,13 +48,18 @@ questions they do not answer, and where each is answered instead:
 whether a module implements a mechanism one of these documents owns. Counting filename absences
 here measures a shortfall against a contract nobody wrote.
 
-⚠️ **The Inventory pair is a POINTER LAYER whose contract is stated in its own header, and it
-has drifted from that contract** — measured 2026-08-13: two months stale, over its own stated
-size ceiling, its narrative theorem count roughly ten thousand below the AUTOGEN table in the
-same file, and asserting that this repo has no `CLAUDE.md` when it has a 21 KB one that is the
-primary bootstrap. `inventory_index_autogen_fresh` gates the `<!-- AUTOGEN -->` blocks **only**,
-so a fresh generated table sits inside stale prose and every gate stays green. Read it for
-pointers; verify anything it asserts.
+⚠️ **The Inventory pair is RETIRED (ADR-013 D7/D8, 2026-08-13).** Both files are deleted and
+`inventory_index_autogen_fresh` with them; [`../MODULE_CENSUS.md`](../MODULE_CENSUS.md) answers
+*what is this module* for Python, shell and notebooks, wholly derived. This paragraph used to
+end *"Read it for pointers; verify anything it asserts"* — advice pointing at two files that no
+longer exist.
+
+⚠️ **AND IT SURVIVED THE RETIREMENT, WHICH IS THE INSTRUCTIVE PART.** It names the pair and its
+gate in **prose**, never as a path, so `doc_refs_resolve` — the one mechanical guard on
+rot-by-deletion, described three paragraphs below — could not see it: that leg matches
+*path-like* references. The retirement's own hand-grep missed it too, because that sweep looked
+for *routing rows* and this is a caveat. **A deletion is only as visible as the shape the prose
+used to name the thing.**
 
 Decisions live in [`../adrs/`](../adrs/); the graph schema in
 [`../KNOWLEDGE_GRAPH.md`](../KNOWLEDGE_GRAPH.md); the process law in

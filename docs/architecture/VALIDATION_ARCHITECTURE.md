@@ -316,9 +316,22 @@ silently stops measuring — which is the failure it exists to catch.
 
 ### 5.2 Two verification depths, and which one certifies what
 
-⚠️ **The merge gate is not the iteration gate.** Two agreeing `pytest -m ''` runs plus
-`validate.py --ci --no-memo` plus a clean `lake build` is roughly forty-five minutes, and
-it certifies a **merge candidate**. Running it after every fix is how one branch spent
+⚠️ **The merge gate is not the iteration gate.** One `pytest -m ''` run plus
+`validate.py --ci --no-memo` plus the four `CI_SKIP` checks plus `lake build` +
+`ExtractDeps`, and a before/after `git status --porcelain` assertion — **measured 32m44s
+end to end, 2026-08-13, one run on the author's machine** — certifying a **merge
+candidate**.
+
+⚠️ **CORRECTED 2026-08-13, twice over.** This read *"Two agreeing `pytest -m ''` runs …
+is roughly forty-five minutes"*. The duplicate run was dropped in `b66bdb40` — with no
+order randomization installed, both runs collected the same tests in the same order, so B
+could only re-observe A; the tree-state assertion replaced it and certifies strictly more.
+**And the forty-five minutes was never measured here** — it was inherited prose, and it
+survived a same-day edit to this file because the sweep for stale timings was keyed on
+digits while this document spells the number in words.
+⚠️ **The 32m44s is wall clock for the whole gate, not the `25:32` pytest line inside it.**
+Quoting the first sub-step's own duration as the gate's cost is how the number was wrong
+the first time it was corrected. Running it after every fix is how one branch spent
 eleven review rounds re-proving the Lean build against markdown edits — across the last
 five findings of that stretch, none required it.
 

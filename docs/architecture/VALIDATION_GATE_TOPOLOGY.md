@@ -29,8 +29,11 @@ built) · [`CHECK_AUTHORING_GUIDE.md`](CHECK_AUTHORING_GUIDE.md) (what a new che
 | **— CI** | *none* | deliberately no scheduled runner | n/a |
 
 ⚠️ **Tier 0.5 certifies a CHANGE, not the tree.** It exists because the merge-candidate
-gate was being paid on every fix round — forty-five minutes to re-prove the Lean build
-against a markdown edit. It is safe only while it keeps saying what it did not run, so a
+gate was being paid on every fix round — half an hour to re-prove the Lean build
+against a markdown edit. (The gate is **32m44s measured 2026-08-13**, one run; the
+"forty-five minutes" this sentence carried was inherited prose from before `b66bdb40`
+dropped the duplicate full suite, and it is the cost of the *whole* gate, not of any
+sub-step's own reported duration.) It is safe only while it keeps saying what it did not run, so a
 scoped result must never be quoted as a gate result. `verify_scope.py --merge-gate` is the
 gate, and it additionally runs the four `CI_SKIP` checks that `--ci` cannot.
 
