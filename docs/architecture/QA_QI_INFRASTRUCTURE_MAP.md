@@ -127,6 +127,53 @@ ran.
 
 ---
 
+## 1.5 The execution and enforcement layers — what the review planes do NOT cover
+
+The planes above describe agents that **judge** artifacts. Two other agent classes act on the
+project, and a hook layer constrains all of them. Neither was reachable from this directory
+before, which is why a designer reading only the validation documents concluded that surfaces
+they cover were uncovered.
+
+### Execution agents
+
+**`lean-worker`** proves one independent Lean sub-chain inside a pre-built parallel worktree
+slot. The lead assigns a slot; the worker gets that slot's own build-isolated `lean-lsp`
+(`mcp__skeft_wtN__*`, each slot carrying its own `.lake`), so workers run concurrently with no
+coordination. It drives proofs MCP-first rather than through write→`lake build` cycles, holds
+kernel-purity as its bar, and commits on the slot branch for the lead to merge. It is bound by
+the negative frontier (ADR-007): settled-dead forks must not be re-derived, and a fresh-context
+worker is the likeliest re-deriver. **Its operational detail lives in the plugin's own
+progressive disclosure** — `skills/goal-dev/references/parallel-worktrees.md` for the fan-out
+flow and `skills/goal-dev/SKILL.md` for the proof loop — not here. The control plane it runs on
+is ADR-008's shared slot supervisor.
+
+**`research-scout`** is Tier-1 of the research ladder: read-only web reconnaissance for one
+focused, already-sanitized question, when the local `Lit-Search/` corpus (Tier 0) has nothing.
+It returns a structured, cited report and does not decide, edit, or commit — the lead vets the
+report and files it. **Its capability boundary is the point, not an incidental restriction:** it
+holds web tools and nothing that can mutate the repository, so a poisoned page cannot turn it
+into an editor, and it treats fetched content as data rather than instructions.
+
+### The enforcement layer — hooks, not conventions
+
+Agent obligations that matter are enforced by `PreToolUse` hooks in the plugin, **not** by prompt
+discipline. A reader of the agent prompts alone will mistake enforced boundaries for advisory
+ones. All fail closed.
+
+| guard | constrains | why it exists |
+|---|---|---|
+| `harness_web_egress_guard.py` | `WebSearch` / `WebFetch` | denies any query or URL carrying a denylisted local path or identifier, and any fetch outside the scholarly whitelist. The denylist is split: a committed sample plus an **untracked local** copy the operator installs with their own identifiers. |
+| `harness_worker_shell_guard.py` | `Bash`, for worker subagents only | a dispatched worker may not run builds, cache mutations, or integration commands; the lead owns those. Keyed on the subagent, so the lead session is unaffected. |
+| `harness_question_guard.py` | `AskUserQuestion` | redirects a blocking question raised inside an autonomous loop to the `coach` agent, which resolves it against the standing pre-decisions. The operator is deliberately out of the loop; a question that diligence would have answered is deferral, not deference. |
+
+⚠️ **The plugin uses progressive disclosure, and the governing detail is often one layer down.**
+A skill's `SKILL.md` is an entry point; its `references/` carry the operating detail, and reading
+only the entry point yields a systematically shallow picture — the same failure this section
+exists to prevent one level up. When assessing what the agent layer already covers, read the
+referenced files, not only the roster and the frontmatter.
+
+---
+
 ## 2. Artifact generation — writers, triggers, staleness keys
 
 Every derived artifact, its sole writer, and how staleness is detected. **The staleness key
