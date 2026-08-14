@@ -47,7 +47,7 @@ dependencies = [
     # Reference: docs/references/Datastar_Dashboard_Reference.md
     "datastar-py>=0.5",
     # Provenance knowledge graph (database connectivity)
-    "psycopg[binary]>=3.2",
+    "psycopg[binary]>=3.3.4",
     # HTTP client (citation primary-source fetcher; arXiv + Crossref + ADS)
     "httpx>=0.28",
     # Transitive floor for security: closes CVE-2026-4539 (ReDoS in AdlLexer).
