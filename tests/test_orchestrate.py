@@ -237,3 +237,35 @@ def test_a_bare_directory_is_not_a_usable_lean_slot(tmp_path, monkeypatch):
     assert orch.lean_slots() == ["wt7"], (
         "a directory named wtN is not a slot; planning into one sends a Lean worker "
         "somewhere it cannot build")
+
+
+def test_registry_writing_lanes_carry_the_one_writer_rule():
+    """⚠️ THE GUARANTEE THIS PLANNER ADVERTISES DOES NOT COVER WHAT A FIX WRITES.
+
+    Disjointness is computed over DECLARED targets. On 2026-08-13 wt2 and wt3 were dispatched
+    as disjoint — their Lean files were — and both then edited `constants.py` and
+    `aristotle_interface.py`, because a substrate repair that changes provenance must. They
+    merged cleanly only because the two workers happened to touch different regions.
+
+    Serialising the lane on those files would collapse the fan-out, since nearly every
+    substrate fix touches them. So the rule is the one already in force for the ledger — a
+    registry has ONE writer — and every dispatched unit in a registry-writing lane must carry
+    it, or the worker will not know.
+    """
+    p = orch.plan(slots=50)
+    writing = [g for g in p["dispatch"] if g["lane"] in ("lean", "substrate", "pyrust")]
+    if not writing:
+        pytest.skip("no registry-writing lane dispatched in this plan")
+    for g in writing:
+        rule = g.get("registry_rule") or ""
+        assert "do NOT edit" in rule, (
+            f"{g['target']!r} is a {g['lane']} unit dispatched with no registry rule — the "
+            f"worker will edit shared registries and collide with its neighbour")
+        for reg in orch.SHARED_REGISTRIES:
+            assert reg in rule, f"{reg} missing from the rule handed to {g['target']!r}"
+    # And the lanes that do NOT write registries must not be handed an irrelevant instruction.
+    for g in p["dispatch"]:
+        if g["lane"] in ("prose", "research", "infra"):
+            assert g.get("registry_rule") is None, (
+                f"{g['lane']} carries a registry rule it has no reason to obey; a rule that "
+                f"applies to everything is read as boilerplate and ignored where it matters")

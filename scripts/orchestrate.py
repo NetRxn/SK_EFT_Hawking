@@ -140,6 +140,33 @@ def classify(nodes: list[dict], ids: set[str], closed: set[str]) -> dict:
     return {"dispatchable": dispatchable, "blocked": blocked, "unrouted": unrouted}
 
 
+#: Files EVERY substrate/lean unit implicitly writes, which no finding ever declares.
+#: ⚠️ THE ORCHESTRATOR'S DISJOINTNESS IS OVER DECLARED TARGETS, AND A FIX WRITES MORE THAN
+#: ITS TARGET. Measured 2026-08-13: wt2 and wt3 were dispatched as disjoint (their Lean files
+#: were), then both edited `constants.py` and `aristotle_interface.py`, because a substrate
+#: repair that changes a theorem's provenance MUST touch the registries. They auto-merged only
+#: because the two workers happened to edit different regions — git's line-level merge, not
+#: this planner's guarantee.
+#:
+#: Serialising the lane on these files would be correct and useless: nearly every substrate fix
+#: touches them, so the fan-out would collapse to one. The rule instead follows the doctrine
+#: already in force for the ledger — **a registry has ONE writer** (`close_finding.py`). A
+#: worker reports the registry change it needs; the LEAD applies it at merge.
+SHARED_REGISTRIES: tuple[str, ...] = (
+    "src/core/constants.py",
+    "src/core/aristotle_interface.py",
+)
+
+
+def registry_note(lane: str) -> str | None:
+    """The instruction a dispatched worker in a registry-writing lane must carry."""
+    if lane not in ("lean", "substrate", "pyrust"):
+        return None
+    return ("do NOT edit " + " or ".join(SHARED_REGISTRIES) + " — report the registry change "
+            "you need and the lead applies it at merge. Two workers dispatched as disjoint "
+            "both wrote these files on 2026-08-13 and merged cleanly by luck.")
+
+
 def closable(node: dict) -> bool:
     """Can a worker actually CLOSE this, or only edit it?
 
@@ -331,7 +358,8 @@ def plan(*, lane: str | None = None, slots: int | None = None) -> dict:
             free_i += 1
         held |= set(g["files"])
         assigned.append({**g, "agent": prof["agent"], "gates": prof["gates"],
-                         "isolation": prof["isolation"]})
+                         "isolation": prof["isolation"],
+                         "registry_rule": registry_note(g["lane"])})
 
     return {
         "dispatch": assigned,

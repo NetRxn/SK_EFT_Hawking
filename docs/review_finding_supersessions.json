@@ -7292,6 +7292,19 @@
         "exit_code": 0,
         "run_at": "2026-08-13"
       }
+    },
+    {
+      "finding_id": "review:2026-08-13-i1-wave-residue:infra:1",
+      "status": "fixed",
+      "evidence": "SHARED_REGISTRIES + registry_note() added to orchestrate.py: every dispatched unit in a registry-writing lane (lean/substrate/pyrust) now carries an explicit do-NOT-edit rule naming both shared registries, and the doctrine it follows — a registry has ONE writer, as close_finding.py already is for the ledger. Serialising the lane on those files was rejected as correct-but-useless: nearly every substrate fix touches them, so the fan-out would collapse to one. Pinned both directions by test_registry_writing_lanes_carry_the_one_writer_rule, which also asserts prose/research/infra carry NO rule, because a rule that applies to everything is read as boilerplate and ignored where it matters.",
+      "superseded_by": null,
+      "date": "2026-08-13",
+      "verified_by": {
+        "command": "uv run python -m pytest tests/test_orchestrate.py -q",
+        "declared": "uv run python -m pytest tests/test_orchestrate.py -q",
+        "exit_code": 0,
+        "run_at": "2026-08-13"
+      }
     }
   ]
 }
