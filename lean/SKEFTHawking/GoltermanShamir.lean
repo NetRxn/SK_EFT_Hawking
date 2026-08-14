@@ -469,47 +469,95 @@ theorem c1_implies_i2 (M : LatticeModel) (h : C1_smooth_bloch M) :
 ## TPF Construction and Evasion
 -/
 
-/-- A TPF-like construction violating C2 and I3. -/
+/-- A TPF-like construction (Thorngren-Preskill-Fidkowski): a bosonic-rotor
+    boundary theory on the boundary of a bulk one dimension higher.
+
+    The load-bearing field is `local_infinite_dim`: the local Hilbert space is the
+    UNTRUNCATED rotor space, which is not finite-dimensional. That single fact is
+    what puts the construction outside C2 (a fermionic Fock space, necessarily
+    finite-dimensional — see the `Module.Finite` instance above) and outside I3.
+
+    ⚠️ 2026-08-13 (statement-substance review I1 §4): the previous version carried
+    `local_dim_unbounded : ∀ N, ∃ k, k > N` — the Archimedean property of ℕ, which
+    every structure satisfies and which says nothing about the TPF local space. The
+    theorems below then quantified over `tpf` without mentioning it. The local space
+    is now a FIELD, so the statements are about the construction. `tpfRotor` witnesses
+    that the strengthened structure is still inhabited by the physical object. -/
 structure TPFConstruction where
+  /-- The local Hilbert space at a boundary site: the rotor space. -/
+  LocalSpace : Type
+  [addCommGroup : AddCommGroup LocalSpace]
+  [moduleStruct : Module ℂ LocalSpace]
+  /-- The rotor tower is untruncated: the local space is NOT finite-dimensional. -/
+  local_infinite_dim : ¬ FiniteDimensional ℂ LocalSpace
+  /-- The construction carries bosonic (rotor) fields. -/
   has_bosonic_fields : Bool
   bosonic_fields_present : has_bosonic_fields = true
-  local_dim_unbounded : ∀ N : ℕ, ∃ k : ℕ, k > N
   bulk_dim : ℕ
   boundary_dim : ℕ
   bulk_is_higher : bulk_dim = boundary_dim + 1
 
-/-- **TPF violates C2: dimension exceeds any fermionic Fock space.** -/
+attribute [instance] TPFConstruction.addCommGroup TPFConstruction.moduleStruct
+
+/-- The canonical TPF construction: the rotor tower on `ℓ²(ℤ)`, on the (1+1)D
+    boundary of a (2+1)D bulk. Infinite-dimensionality is `rotor_hilbert_not_finite_dim`
+    (LatticeHamiltonian.lean), so `TPFConstruction` is inhabited by the physical
+    object it is named for and the theorems below are not vacuous. -/
+noncomputable def tpfRotor : TPFConstruction where
+  LocalSpace := lp (fun _ : ℤ => ℂ) 2
+  local_infinite_dim := rotor_hilbert_not_finite_dim
+  has_bosonic_fields := true
+  bosonic_fields_present := rfl
+  bulk_dim := 3
+  boundary_dim := 2
+  bulk_is_higher := rfl
+
+/-- **Evasion is structural: an infinite-dimensional local Hilbert space is by
+    itself incompatible with a fermionic Fock space, for EVERY mode count.**
+    This is the mathematical core the TPF theorems below specialize. -/
+theorem evasion_is_structural (V : Type) [AddCommGroup V] [Module ℂ V]
+    (hV : ¬ FiniteDimensional ℂ V) (k : ℕ) :
+    IsEmpty (V ≃ₗ[ℂ] FermionicFockSpace k) :=
+  ⟨fun e => hV (Module.Finite.equiv e.symm)⟩
+
+/-- **TPF violates C2.** C2 demands the local Hilbert space be the fermionic Fock
+    space on `c.n_modes` modes — `ExteriorAlgebra ℂ (Fin k → ℂ)`, of dimension
+    `2 ^ k = c.local_dim` and finite-dimensional. The TPF local space is not, so
+    there is NO ℂ-linear isomorphism between them, for any mode count. -/
 theorem tpf_violates_C2 (tpf : TPFConstruction) (c : C2_fermion_only) :
-    ∃ N : ℕ, N > c.local_dim :=
-  tpf.local_dim_unbounded c.local_dim
+    IsEmpty (tpf.LocalSpace ≃ₗ[ℂ] FermionicFockSpace c.n_modes) :=
+  evasion_is_structural tpf.LocalSpace tpf.local_infinite_dim c.n_modes
 
-/-- **TPF violates I3: local dimension is unbounded.** -/
-theorem tpf_violates_I3 (tpf : TPFConstruction) (N : ℕ) :
-    ∃ k : ℕ, k > N :=
-  tpf.local_dim_unbounded N
+/-- **TPF violates I3**, stated against the project's own `I3_finite_dim_local`. -/
+theorem tpf_violates_I3 (tpf : TPFConstruction) :
+    ¬ I3_finite_dim_local tpf.LocalSpace :=
+  tpf.local_infinite_dim
 
-/-- **Synthesis: TPF exceeds any GSConditionsBundle.** -/
+/-- **Synthesis: TPF lies outside the joint scope of the GS conditions.**
+    Against ANY lattice model carrying the full bundle, the TPF local Hilbert
+    space fails I3 outright and is incompatible with that bundle's own C2 Fock
+    space — so the nine conditions are not jointly satisfiable by TPF. -/
 theorem tpf_outside_gs_scope (tpf : TPFConstruction) (M : LatticeModel) [NeZero M.n]
     (h : GSConditionsBundle M) :
-    ∃ k : ℕ, k > h.local_dim :=
-  tpf.local_dim_unbounded h.local_dim
+    ¬ I3_finite_dim_local tpf.LocalSpace ∧
+      IsEmpty (tpf.LocalSpace ≃ₗ[ℂ] FermionicFockSpace h.c2.n_modes) :=
+  ⟨tpf.local_infinite_dim, tpf_violates_C2 tpf h.c2⟩
 
 /-- **TPF escapes via both bosonic nature AND infinite-dimensionality.** -/
 theorem tpf_escapes_by_bosonic_and_infinite (tpf : TPFConstruction) (M : LatticeModel) [NeZero M.n]
     (h : GSConditionsBundle M) :
-    tpf.has_bosonic_fields = true ∧ (∃ k : ℕ, k > h.local_dim) :=
-  ⟨tpf.bosonic_fields_present, tpf.local_dim_unbounded h.local_dim⟩
+    tpf.has_bosonic_fields = true ∧
+      ¬ I3_finite_dim_local tpf.LocalSpace ∧
+      IsEmpty (tpf.LocalSpace ≃ₗ[ℂ] FermionicFockSpace h.c2.n_modes) :=
+  ⟨tpf.bosonic_fields_present, tpf.local_infinite_dim, tpf_violates_C2 tpf h.c2⟩
 
-/-- **TPF's bosonic nature + Fock dim + unbounded: all three load-bearing.** -/
+/-- **TPF's bosonic nature + the C2 Fock dimension + the incompatibility:
+    all three load-bearing.** -/
 theorem tpf_bosonic_exceeds_fock (tpf : TPFConstruction) (c : C2_fermion_only) :
     tpf.has_bosonic_fields = true ∧
-    (∃ k : ℕ, c.local_dim = 2 ^ k) ∧
-    (∃ N : ℕ, N > c.local_dim) :=
-  ⟨tpf.bosonic_fields_present, ⟨c.n_modes, c.local_dim_eq⟩, tpf.local_dim_unbounded c.local_dim⟩
-
-/-- **Evasion is structural.** -/
-theorem evasion_is_structural (f : ∀ N : ℕ, ∃ k : ℕ, k > N) (bound : ℕ) :
-    ∃ k : ℕ, k > bound := f bound
+    c.local_dim = 2 ^ c.n_modes ∧
+    IsEmpty (tpf.LocalSpace ≃ₗ[ℂ] FermionicFockSpace c.n_modes) :=
+  ⟨tpf.bosonic_fields_present, c.local_dim_eq, tpf_violates_C2 tpf c⟩
 
 /-!
 ## Condition Interaction and Transparency

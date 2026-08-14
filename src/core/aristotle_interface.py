@@ -883,12 +883,19 @@ SORRY_GAPS: list[SorryGap] = [
              description="TPF local dim exceeds any C2 finite dim: ∃ N > c.local_dim_finite",
              priority=1,
              strategy_hint="Use tpf.local_dim_unbounded c.local_dim_finite to get ∃ k > local_dim_finite",
-             filled=True),
+             filled=True),  # HISTORICAL RECORD. Statement-substance review I1 §4 (2026-08-13):
+                            # this ∃-shape never mentioned `tpf`, and `TPFConstruction.local_dim_unbounded`
+                            # was itself the Archimedean property of ℕ. Both the field and the theorem
+                            # were replaced: the structure now carries `LocalSpace` + `local_infinite_dim`,
+                            # and the theorem reads `IsEmpty (tpf.LocalSpace ≃ₗ[ℂ] FermionicFockSpace
+                            # c.n_modes)`, proved manually (kernel-pure). The hint above is obsolete.
     SorryGap(module="SKEFTHawking.GoltermanShamir", name="tpf_outside_gs_scope",
              description="TPF dimension unbounded → exceeds any GSConditionsBundle.local_dim",
              priority=1,
              strategy_hint="Use tpf.local_dim_unbounded h.local_dim to get ∃ k > local_dim",
-             filled=True),
+             filled=True),  # HISTORICAL RECORD — same remediation as `tpf_violates_C2` above
+                            # (2026-08-13). Now `¬ I3_finite_dim_local tpf.LocalSpace ∧ IsEmpty
+                            # (tpf.LocalSpace ≃ₗ[ℂ] FermionicFockSpace h.c2.n_modes)`.
     SorryGap(module="SKEFTHawking.GoltermanShamir", name="c1_implies_i2",
              description="C1_smooth_bloch includes FiniteRange, which is I2_local",
              priority=1,
