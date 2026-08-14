@@ -138,7 +138,7 @@ is the load-bearing column:** content-hash and content-compare are sound; mtime 
 | `lean/lean_deps.json` | `extract_lean_deps.py` | **content hash** of every `.lean` under `SKEFTHawking/` **plus the root aggregate `lean/SKEFTHawking.lean`** | yes |
 | `docs/counts.json` / `.tex` | `update_counts.py` | mtime vs sources | yes |
 | `papers/*/tables/*.tex` | `render_paper_tables.py` | mtime | yes |
-| Inventory-Index autogen blocks | `update_inventory_index.py` | **content compare** | yes |
+| `docs/MODULE_CENSUS.md` | `module_census.py` | **content compare** (`render(collect())`) | yes |
 | `lean/atlas_view.json` | `atlas_view.py` | **content compare** (rebuilds) | yes |
 | `docs/ATLAS_HEATMAP.md` | `atlas_heatmap.py` | **content compare** | yes |
 | `lean/SKEFTHawking/KernelNoGos.lean` | `gen_kernel_nogos_module.py` | **content compare** | yes |
@@ -151,34 +151,31 @@ is the load-bearing column:** content-hash and content-compare are sound; mtime 
 | PG + AGE `sk_eft` | `build_graph.write_graph_to_pg` | **none** (full delete + rewrite) | opt-in only |
 | `figures/provenance_graph.json` | `build_graph --out` | **none** | **no** |
 
-**The root-aggregate clause in row 1 is load-bearing.** `lean/SKEFTHawking.lean` sits one
-level *above* the hashed subtree and alone decides which modules are in scope for extraction.
-A hash covering only the subtree would leave the single edit that changes scope — adding or
-removing an import there — invisible to the cache. Widening the subtree walk does not address
-this: the gap is one level up, not deeper.
+### 2.1 The module census — one derived answer, with no hand-written half
 
-**Concurrency.** `harness_lock.regen_lock` is **skip-and-use-cache, never block-and-wait**:
-a bounded poll, then yield `False`. The lock reports contention honestly; what matters is what
-each caller does with that signal.
+`docs/MODULE_CENSUS.md` answers *what is this Python module* — the question this directory
+deliberately does not own (see [`README.md`](README.md#what-is-deliberately-not-here)). It is
+**generated in whole** by `scripts/module_census.py` from module docstrings, read via
+`ast.get_docstring`. To change a description, change the docstring.
 
-- `load_lean_deps()` logs a **WARNING** naming the blast radius — counts, atlas, graph and
-  axiom-closure results for that run reflect the previous extraction — and proceeds on the
-  existing file.
-- `sync.py` records every skipped artifact and prints **`sync INCOMPLETE`**, naming them.
-  Its exit code stays 0, deliberately: another process is doing the work, so failing the
-  caller would be wrong.
+**It replaced a pair of hand-maintained files (ADR-013), and the reason generalises.** The
+Inventory pair was half generated and half hand-written in the same file, and *a half-generated
+document inherits the credibility of its generated half*: the Index's AUTOGEN table was fresh
+while the prose beside it was two months stale — a theorem count roughly half the generated one,
+and a sentence asserting this repo has no `CLAUDE.md`. Every gate was green, because every gate
+looked only inside the markers.
 
-On an internal error the lock fails *open* by yielding `True`, i.e. it proceeds with the
-regeneration — the safe direction, and not to be confused with the contention path.
+Three of the four legs that guarded the Index have no counterpart here, and that is the point:
+the census declares no size ceiling (it is generated whole), carries no narrative (so no
+hand-written count can drift), and has no `AUTOGEN` markers (so no unclosed marker can mask the
+lines after it). The hazards are designed out rather than guarded. The one leg with a
+counterpart is stronger: the Index's freshness leg was **advisory**, the census's is **blocking**.
 
-⚠️ The suite's auto-regenerating freshness checks shell out **with no lock at all**.
+What the census does carry is a ratchet on the population it cannot describe — modules with no
+docstring, down-only. **That leg reads SOURCE, not the rendered artifact**: a leg keyed on the
+artifact would be satisfied by the very regeneration that introduced the regression, since the
+artifact always agrees with itself.
 
-**Cost.** `build_graph_json()` is called from several checks in one validate run, and each
-call internally re-runs the node extractors **except its own** — plus a full edge pass —
-inside `extract_readiness_gate_nodes`, which builds a pre-gate graph view to break the
-gate↔graph recursion. `build_graph_json` itself is not cached, so the whole build repeats per call. (Two internal name indices are `lru_cache`d, and the dashboard keeps its own graph cache — neither is shared with the validate path.)
-
----
 
 ## 3. The review pipeline — how a finding becomes a gate
 

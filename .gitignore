@@ -140,3 +140,10 @@ lean/.lean_immref_cache.json
 lean/.lean_mathlib_closure_cache.json
 lean/.lean_typestr_cache.json
 lean/.lean_json_cache.json
+
+# Cross-tab verification change-bus log (`scripts/verification_state.py`). A RUNTIME
+# artifact: written the first time anyone confirms a parameter in the dashboard, absent in
+# a clean checkout. Ignored 2026-08-12, when the P9a browser test exercised the confirm
+# path and produced the first event — which also corrected the standing claim that the bus
+# "has never written a file". It writes fine; nobody had clicked the button.
+docs/verification_log.jsonl

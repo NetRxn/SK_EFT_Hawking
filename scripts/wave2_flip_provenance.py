@@ -120,6 +120,37 @@ def _build_replacement(rationale_key: str) -> str:
     )
 
 
+def _both_human_fields_null(key: str) -> bool:
+    """The sweep's ORIGINAL gate, restored: both human fields must be unset.
+
+    Derived by AST rather than by the old `HUMAN_NULL_RE` literal-pair regex, so quoting,
+    line wrapping and an adjacent comment cannot change the answer — the same reason
+    `provenance_writer` stopped using a line regex for the force guard.
+    """
+    sys.path.insert(0, str(PROJECT_ROOT))
+    from src.core.provenance_writer import _entry_keys, PROVENANCE_PATH
+    import ast as _ast
+    src = PROVENANCE_PATH.read_text(encoding="utf-8")
+    if _entry_keys(src, key) is None:
+        return False
+    for node in _ast.walk(_ast.parse(src)):
+        if not (isinstance(node, _ast.Assign)
+                and any(getattr(t, "id", None) == "PARAMETER_PROVENANCE"
+                        for t in node.targets)
+                and isinstance(node.value, _ast.Dict)):
+            continue
+        for k, v in zip(node.value.keys, node.value.values):
+            if not (isinstance(k, _ast.Constant) and k.value == key
+                    and isinstance(v, _ast.Dict)):
+                continue
+            vals = {kk.value: vv for kk, vv in zip(v.keys, v.values)
+                    if isinstance(kk, _ast.Constant)}
+            return all(
+                isinstance(vals.get(f), _ast.Constant) and vals[f].value is None
+                for f in ("human_verified_date", "human_verified_notes"))
+    return False
+
+
 def main(dry_run: bool = False) -> int:
     sys.path.insert(0, str(PROJECT_ROOT))
     from src.core.citations import CITATION_REGISTRY
@@ -139,44 +170,83 @@ def main(dry_run: bool = False) -> int:
         print("All PARAMETER_PROVENANCE entries already human-verified — no-op.")
         return 0
 
-    src_text = PROV_PATH.read_text(encoding="utf-8")
+    # ⚠️ THIS SCRIPT NO LONGER WRITES THE FILE (ADR-012 P9a Task 5). It keeps its
+    # CLASSIFIER — which is the part with real judgement in it — and delegates every write
+    # to `src.core.provenance_writer.set_human_verified`. Two implementations of one write
+    # is how they drift, and these two already had: this one stamped a frozen
+    # `VERIFY_DATE` and matched only entries literally holding `None`, so it could neither
+    # record today's confirmation nor revise an existing entry, while the dashboard wrote
+    # an audit event and no field at all. Precedent: `close_finding` imports the
+    # extractor's `mint_finding_id` rather than reimplementing it.
+    # ⚠️ THE SWEEP IS NOT ATOMIC, AND THE PER-ENTRY WRITER'S DOCSTRING SAYING "the write is
+    # atomic" IS TRUE PER ENTRY AND FALSE PER SWEEP. Each call re-reads and replaces the
+    # whole file, so N entries is N independent read-modify-replace cycles. An interrupt at
+    # entry 13 leaves 13 flipped and 13 not. Each key is therefore printed AS IT LANDS, so
+    # an interrupted run is reconstructible from stdout rather than only from a diff.
+    from src.core.provenance_writer import set_human_verified
 
     flipped = 0
     held = 0
+    refused: list[tuple[str, str]] = []
     by_cat: dict[str, list[str]] = {}
 
-    def replace_entry(match: re.Match) -> str:
-        nonlocal flipped, held
-        key = match.group("key")
-        cat = classifications.get(key)
-        if not cat:
-            return match.group(0)
+    for key, cat in sorted(classifications.items()):
         by_cat.setdefault(cat, []).append(key)
         if cat.startswith("hold_"):
             held += 1
-            return match.group(0)
-        body = match.group("body")
-        new_body, n = HUMAN_NULL_RE.subn(_build_replacement(cat), body, count=1)
-        if n == 0:
-            return match.group(0)
-        flipped += 1
-        return f"    '{key}': {{{new_body}    }},"
-
-    new_text = ENTRY_RE.sub(replace_entry, src_text)
+            continue
+        # ⚠️ THE OLD GATE REQUIRED BOTH FIELDS NULL, AND DROPPING HALF OF IT SILENTLY
+        # WIDENED WHAT THIS SWEEP WRITES. `HUMAN_NULL_RE` matched the literal pair
+        # `'human_verified_date': None,` / `'human_verified_notes': None,`; the per-entry
+        # writer gates on the DATE alone. Measured: 79 entries carry a null date, 77 carry
+        # both null — so 2 entries the sweep has never touched became writable. Those two
+        # are exactly the shape a `REJECTED:` or `FLAGGED:` note leaves behind, so a bulk
+        # flip would have overwritten a recorded human rejection with a categorisation
+        # rationale. The old population is restored explicitly rather than inherited.
+        if not _both_human_fields_null(key):
+            refused.append((key, "carries a human_verified_notes value — a recorded "
+                                 "rejection or flag. A bulk categorisation sweep does not "
+                                 "overwrite one; use the dashboard, or the writer directly"))
+            continue
+        ok, msg = set_human_verified(
+            key, date=VERIFY_DATE,
+            notes=VERIFY_NOTES.format(rationale=RATIONALES[cat]),
+            actor="script:wave2_flip_provenance", dry_run=dry_run)
+        if ok:
+            flipped += 1
+            if not dry_run:
+                print(f"  flipped {key}", flush=True)
+        else:
+            refused.append((key, msg))
 
     print("Classification:")
     for cat in sorted(counts):
         print(f"  {cat}: {counts[cat]}")
     print()
-    print(f"Will flip: {flipped}")
-    print(f"Will hold (residuals): {held}")
+    print(f"{'Would flip' if dry_run else 'Flipped'}: {flipped}")
+    print(f"Held (residuals): {held}")
+
+    # ⚠️ REFUSALS ARE NAMED, never summed away. The old regex silently left an entry
+    # unchanged when its pattern did not match — `n == 0` returned the original text and
+    # nothing was reported — so a shape it could not handle was indistinguishable from a
+    # key it was never asked about.
+    if refused:
+        print(f"\nREFUSED ({len(refused)}) — each writes NOTHING:")
+        for key, msg in refused:
+            print(f"  {key}: {msg}")
 
     if dry_run:
         print("\n--- DRY RUN: no file written ---")
-        return 0
+        return 1 if refused else 0
 
-    PROV_PATH.write_text(new_text, encoding="utf-8")
-    print(f"\nWrote {PROV_PATH}")
+    # ⚠️ BOTH OF THESE WERE UNCONDITIONAL, WHICH IS THE DEFECT THIS FILE'S SIBLING NAMES —
+    # "a command reporting success for work it did not do, this audit's defect class wearing
+    # a CLI". With every write refused, the last line of stdout said `Wrote …` and the exit
+    # status said success, over a file nothing had touched.
+    if flipped:
+        print(f"\nWrote {flipped} entr{'y' if flipped == 1 else 'ies'} to {PROV_PATH}")
+    else:
+        print(f"\nNo entries written to {PROV_PATH}.")
 
     print("\nResiduals (held — require explicit user attention):")
     for cat in ("hold_E_needs_attention", "hold_C_projected"):
@@ -185,7 +255,8 @@ def main(dry_run: bool = False) -> int:
             print(f"  {cat} ({len(keys)}):")
             for k in keys:
                 print(f"    {k}")
-    return 0
+    # A refusal is a failure of this command's stated job, and the exit code must say so.
+    return 1 if refused else 0
 
 
 if __name__ == "__main__":

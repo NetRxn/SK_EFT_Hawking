@@ -1,5 +1,6 @@
 """
-Aristotle API Interface for Lean Sorry-Filling
+Aristotle API Interface for Lean Sorry-Filling. Carries the registry of sorry
+gaps it was used to fill.
 
 Submits the SK-EFT Hawking Lean project to Aristotle for automated
 theorem proving. Manages project submission, status polling, and

@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""SK-EFT Provenance Command Center
+"""SK-EFT Provenance Command Center — tabs for Parameters, Formulas, Proof
+Architecture, Citations, Knowledge Graph, Paper Readiness, Process Health,
+Research Status, Paper Provenance (the 3-column sentence-level UI with keyboard
+navigation, change-bus and cluster propagation) and Bundles.
 
 Interactive Flask+HTMX dashboard for reviewing and verifying parameter
 provenance, formula citations, Lean/Aristotle proofs, paper claims, and
@@ -1154,7 +1157,40 @@ def index():
                 'error': 'failed to load bundle summary (see server log)',
             }
 
+    # ADR-012 P9b/P9c — the three operator panes. Lazy per tab, like bundles above:
+    # each builds the whole graph, so loading them on every request would tax the six
+    # tabs that do not use them.
+    #
+    # ⚠️ ON FAILURE THESE RENDER AN ERROR, NEVER AN EMPTY PANE. `flow_board()` itself
+    # raises rather than returning a board with no rows, because an empty board is
+    # indistinguishable from a portfolio with nothing in it. Swallowing that into `[]`
+    # here would undo the module's whole refusal — so the except branch carries an
+    # `error` key and the partial renders it as an error.
+    flow_board = attention = loops = None
+    _panes = {'flow': ('dashboard_flow', 'flow_board'),
+              'attention': ('dashboard_attention', 'attention'),
+              'loops': ('dashboard_loops', 'loops_panel')}
+    if tab in _panes:
+        _modname, _fn = _panes[tab]
+        try:
+            import importlib
+            _built = getattr(importlib.import_module(_modname), _fn)()
+        except Exception:
+            import traceback
+            traceback.print_exc()
+            # stack-trace-exposure guard, same contract as bundles_summary above.
+            _built = {'error': f'failed to build the {tab} pane (see server log)'}
+        if tab == 'flow':
+            flow_board = _built
+        elif tab == 'attention':
+            attention = _built
+        else:
+            loops = _built
+
     return render_template("dashboard.html",
+                           flow_board=flow_board,
+                           attention=attention,
+                           loops=loops,
                            params=filtered_params,
                            formulas=formulas,
                            theorems=theorems,
@@ -1270,16 +1306,50 @@ def verify_param():
     now = datetime.now(timezone.utc).strftime('%Y-%m-%d')
 
     if action == 'confirm':
+        # ⚠️ THE BADGE FOLLOWS THE WRITE; it does not precede it (ADR-012 D15, Invariant
+        # #8). This branch used to set the in-memory dict and render HUMAN VERIFIED for a
+        # change nothing persisted — markup identical to a real one, reverting on reload,
+        # on the surface that gates publication sign-off.
+        from src.core.provenance_writer import set_human_verified
+        ok, msg = set_human_verified(
+            key, date=now, notes=notes,
+            actor=request.form.get('actor') or 'user:dashboard')
+        if not ok:
+            # A refusal is shown as a refusal. Rendering the green badge anyway is the
+            # exact defect being repaired, one layer up. `status-badge` carries the padding
+            # and size every other badge in this row has — without it the refusal renders as
+            # full-size body text and looks like a different KIND of thing than the badge it
+            # replaced.
+            return (f'<span class="status-badge status-conflict">'
+                    f'NOT SAVED: {_esc(msg)}</span>', 200)
         entry['human_verified_date'] = now
         entry['human_verified_notes'] = notes or 'Confirmed via dashboard'
         status_class = 'status-human'
         status_text = 'HUMAN VERIFIED'
     elif action == 'reject':
+        # ⚠️ REJECT MUST PERSIST, AND ITS ABSENCE WAS WORSE THAN THE ORIGINAL DEFECT. When
+        # only `confirm` wrote to disk, this branch cleared the date IN MEMORY, rendered a
+        # red REJECTED badge, and left the verification on disk — still green to the P1
+        # gate, with no UI route to withdraw it. Sign-off stuck; retraction evaporated.
+        from src.core.provenance_writer import withdraw_human_verified
+        ok, msg = withdraw_human_verified(
+            key, notes, actor=request.form.get('actor') or 'user:dashboard')
+        if not ok:
+            return (f'<span class="status-badge status-conflict">'
+                    f'NOT SAVED: {_esc(msg)}</span>', 200)
         entry['human_verified_date'] = None
         entry['human_verified_notes'] = f'REJECTED: {notes}'
         status_class = 'status-conflict'
         status_text = f'REJECTED: {notes}'
     elif action == 'flag':
+        # Flag raises a question rather than answering one, so it leaves the date alone —
+        # but it must still persist, or it is a badge that vanishes on reload.
+        from src.core.provenance_writer import annotate_human_verified
+        ok, msg = annotate_human_verified(
+            key, notes, actor=request.form.get('actor') or 'user:dashboard')
+        if not ok:
+            return (f'<span class="status-badge status-conflict">'
+                    f'NOT SAVED: {_esc(msg)}</span>', 200)
         entry['human_verified_notes'] = f'FLAGGED: {notes}'
         status_class = 'status-unverified'
         status_text = f'FLAGGED: {notes}'
@@ -2818,6 +2888,23 @@ def _pp_build_data_v2(paper_id: str, cr: dict, fr: dict | None,
     sentences_in = cr.get('sentences', [])
     sentences_out: list[dict] = []
 
+    # ── Reading-while-blocked (ADR-012 D15 S4) ────────────────────────────────────────
+    # ⚠️ RESOLVED BY LOCATION, NOT BY `FLAGS`. All 4,895 FLAGS edges point at `paper:`
+    # nodes, so asking whether a finding flags a sentence's backing artifact returns
+    # nothing for every artifact — a marker that renders on no sentence, whose emptiness
+    # reads exactly like a clean corpus. The finding's `Location:` line is what actually
+    # places it, and "is anything under §4 broken?" is a question about where the reader
+    # is. See `scripts/sentence_findings.py`.
+    try:
+        import sentence_findings as _sf
+        _sent_findings = _sf.findings_for_sentences(paper_id, sentences_in)
+        _sf_coverage = _sf.coverage()
+        _sf_caveat = _sf.coverage_caveat(_sf_coverage)
+    except Exception as exc:                     # cannot-resolve is not "nothing found"
+        _sent_findings, _sf_coverage = {}, {}
+        _sf_caveat = (f'Finding markers UNAVAILABLE ({type(exc).__name__}) — the absence '
+                      f'of markers below is NOT evidence that nothing is broken.')
+
     coverage = {
         'verified': 0, 'interpretive': 0, 'ungrounded_human': 0,
         'needs_fix': 0, 'needs_recheck': 0, 'agent_proposed': 0,
@@ -2884,6 +2971,11 @@ def _pp_build_data_v2(paper_id: str, cr: dict, fr: dict | None,
             'audit_event_count': len(audit_by_sentence.get(sid, [])),
             # Wave 10f — cross-paper cluster memberships (zero-or-more)
             'clusters': clusters_by_sentence.get(sid, []),
+            # ADR-012 D15 S4. ⚠️ `None` when the sentence carries no `tex_line_start`:
+            # "no finding lands here" and "this sentence has no location, so the question
+            # was never asked" are different answers and the renderer must distinguish
+            # them. An empty list means asked-and-clean.
+            'open_findings': _sent_findings.get(sid),
         })
 
     # Title parse — share with v1 path below
@@ -2932,6 +3024,12 @@ def _pp_build_data_v2(paper_id: str, cr: dict, fr: dict | None,
         'audit_events_by_sentence': audit_by_sentence,
         'has_claims_review': True,
         'has_figure_review': fr is not None,
+        # ADR-012 D15 S4 — what the marker layer CANNOT see, carried beside what it can.
+        # ⚠️ NOT optional. A reader who sees an unmarked sentence concludes nothing is
+        # wrong with it, and that conclusion is only warranted for the fraction of findings
+        # whose Location names a draft line.
+        'finding_marker_coverage': _sf_coverage,
+        'finding_marker_caveat': _sf_caveat,
         'schema_version': 'v2',
     }
 
@@ -4430,17 +4528,33 @@ def _pp_v2_paper_body_html(data: dict, active_sentence: str,
                 classes.append('pp-sentence--active')
             if s.get('is_stale'):
                 classes.append('pp-sentence--stale')
+            # ADR-012 D15 S4 — an open finding lands on this sentence's lines.
+            # ⚠️ THREE STATES, not two. `None` means the sentence carries no line span so
+            # the question was never asked; `[]` means asked and clean. Collapsing them
+            # would render "unknown" and "fine" identically, which is the defect this
+            # whole surface exists to make impossible.
+            _fnd = s.get('open_findings')
+            if _fnd:
+                classes.append('pp-sentence--flagged')
+                if any(f['severity'] in ('critical', 'blocker', 'major') for f in _fnd):
+                    classes.append('pp-sentence--flagged-blocking')
+            elif _fnd is None:
+                classes.append('pp-sentence--unlocatable')
             click_expr = (
                 f"$activeSentence = '{esc(sid)}'; "
                 f"$activeLinkIdx = -1; "
                 f"@get(`/api/papers/${{$activePaper}}/provenance`)"
             )
             verdict = esc(s.get('agent_verdict', ''))
+            _fcount = len(_fnd) if _fnd else 0
+            _ftitle = (f' · {_fcount} open finding'
+                       f'{"s" if _fcount != 1 else ""}' if _fcount else '')
             parts.append(
                 f'<span class="{ " ".join(classes) }" '
                 f'data-sentence-id="{esc(sid)}" '
+                f'data-blocking-findings="{_fcount}" '
                 f'data-on:click="{esc(click_expr)}" '
-                f'title="{verdict} · {esc(palette_key)}">'
+                f'title="{verdict} · {esc(palette_key)}{esc(_ftitle)}">'
                 f'{quote_inner} </span>'
             )
         parts.append('</div>')
@@ -5197,6 +5311,12 @@ def _readiness_build_data() -> dict:
             'state': m.get('state'),
             'evidence': m.get('evidence', []),
             'blockers': m.get('blockers', []),
+            # ADR-012 D15 S1 — the identity the evaluator now keeps. A gate cell that
+            # cannot name the finding behind it is a dead end, and 4,895 FLAGS edges were
+            # invisible to the operator because of one `label[:60]` in the evaluator.
+            'blocker_refs': m.get('blocker_refs', []),
+            'blockers_total': m.get('blockers_total'),
+            'blockers_truncated': m.get('blockers_truncated', False),
             'notes': m.get('notes', ''),
             'last_evaluated': m.get('last_evaluated', ''),
         })
@@ -5229,7 +5349,12 @@ def _paper_gate_list(paper: dict) -> list[dict]:
     for name, prio, _abbrev in GATE_DEFS:
         g = by_gate.get(name) or {
             'gate': name, 'priority': prio, 'state': 'open',
-            'evidence': [], 'blockers': [], 'notes': '', 'last_evaluated': '',
+            # ⚠️ The filler must carry EVERY key a real row carries, or the template has to
+            # branch on which kind of row it got — and a template that branches on shape is
+            # how one of the two shapes stops being rendered.
+            'evidence': [], 'blockers': [], 'blocker_refs': [],
+            'blockers_total': 0, 'blockers_truncated': False,
+            'notes': '', 'last_evaluated': '',
         }
         out.append(g)
     return out
@@ -5320,7 +5445,11 @@ def _readiness_heatmap_html(data: dict, signals: dict) -> str:
                 f'<tr><th class="paper-col{focused_cls}" '
                 f'data-on:click="{esc(focus_expr)}">{esc(paper_id)}</th>'
                 f'<td><span class="paper-state-{pstate}">{pstate}</span> '
-                f'<span style="color:var(--grey);font-size:0.72rem">{passed}/11</span></td>'
+                # ⚠️ The SAME hardcoded roster the focus pane carried, on the pane that is
+                # read FIRST — the focus pane only opens on a click. Fixing one and
+                # commenting it as done left the drift alive on the busier surface.
+                f'<span style="color:var(--grey);font-size:0.72rem">'
+                f'{passed}/{len(gate_list)}</span></td>'
             )
             for g in gate_list:
                 is_focus_cell = (active_paper == paper_id and active_gate == g['gate'])
@@ -5378,7 +5507,10 @@ def _readiness_focus_html(data: dict, signals: dict) -> str:
         f'<h3>{esc(active_paper)}</h3>',
         '<div class="paper-meta">',
         f'<span class="paper-state-{pstate}">{pstate}</span> ',
-        f'{passed}/11 gates passed',
+        # ⚠️ Was a hardcoded `/11`. The gate roster is data (`GATE_DEFS` -> `gate_list`),
+        # and a literal beside it is a second roster that drifts the moment a gate is added
+        # or retired — the pane would then report "9/11" over twelve gates and read fine.
+        f'{passed}/{len(gate_list)} gates passed',
         '</div>',
         f'<a class="readiness-pp-link" href="{esc(pp_href)}">'
         '→ Open in Paper Provenance'
@@ -5410,9 +5542,36 @@ def _readiness_focus_html(data: dict, signals: dict) -> str:
                 for e in g['evidence']:
                     parts.append(f'<li>{esc(e)}</li>')
                 parts.append('</ul></div>')
-            if g.get('blockers'):
+            # ── Blockers, with the finding's identity (ADR-012 D15 S1) ────────────────
+            # ⚠️ DISPLAY CAP LIVES HERE, and it says so. The evaluator used to truncate to
+            # ten, so nothing downstream could tell 10 blockers from 44 — D12 carries 44.
+            # The cap belongs at the layer that can still see what it cut.
+            _refs = g.get('blocker_refs') or []
+            _cap = 10
+            if _refs:
                 parts.append('<div><strong style="font-size:0.75rem">Blockers</strong>'
                              '<ul class="blockers">')
+                for b in _refs[:_cap]:
+                    parts.append(
+                        f'<li data-finding-id="{esc(b.get("id", ""))}" '
+                        f'data-lane="{esc(b.get("lane", "unclassified"))}" '
+                        f'data-severity="{esc(b.get("severity", ""))}">'
+                        f'<span class="sev sev--{esc(b.get("severity", ""))}">'
+                        f'{esc(b.get("severity", ""))}</span> '
+                        f'<span class="lane">{esc(b.get("lane", "unclassified"))}</span> '
+                        f'{esc(b.get("label", ""))}</li>')
+                parts.append('</ul>')
+                if len(_refs) > _cap:
+                    parts.append(f'<p class="blockers-truncated">showing {_cap} '
+                                 f'of {len(_refs)}</p>')
+                parts.append('</div>')
+            elif g.get('blockers'):
+                # A gate whose evaluator had no node to name. SAY SO: an un-drillable
+                # blocker must be visibly a different thing from a drillable one, or the
+                # operator reads "no link" as "no finding".
+                parts.append('<div><strong style="font-size:0.75rem">Blockers</strong> '
+                             '<em style="font-size:0.7rem">(prose only — this gate reports '
+                             'no finding reference)</em><ul class="blockers">')
                 for b in g['blockers']:
                     parts.append(f'<li>{esc(b)}</li>')
                 parts.append('</ul></div>')
@@ -5475,19 +5634,20 @@ def main():
         # returned 0 having written NOTHING — a command reporting success for work
         # it did not do, which is this audit's defect class wearing a CLI.
         #
-        # ⚠️ R5 filed this as "Invariant #8's human-verification tier has no working
-        # way to satisfy it". Re-measured: that is OVERSTATED.
-        # `scripts/wave2_flip_provenance.py` is a real writer
-        # (`PROV_PATH.write_text`, :178) and the gate IS satisfiable through it.
-        # What is broken is this path, and the dashboard's confirm button, which
-        # mutates in memory and then renders a green HUMAN VERIFIED badge for a
-        # change that is never persisted.
+        # ⚠️ THE MESSAGE IS UPDATED, NOT KEPT (ADR-012 P9a Task 6). It used to route the
+        # user to `wave2_flip_provenance.py` as "a real writer". That was true and is now
+        # misleading: the bulk sweep stamps a FROZEN date and matches only entries holding
+        # `None`, so it cannot record today's confirmation or revise an existing one.
+        # A message describing a defect that has since been fixed is how a corrected
+        # mistake gets re-litigated.
         raise NotImplementedError(
-            "`--write` was never implemented: it printed a success message and "
-            "returned without writing provenance.py. Use "
-            "`scripts/wave2_flip_provenance.py`, which does persist "
-            "`human_verified_date`. Tracked as R5-MAJ1 in "
-            "docs/audits/2026-08-05-pr-review-2/FINDINGS_REGISTER_PASS2.md.")
+            "`--write` is not implemented, and deliberately so: a batch flag over the "
+            "whole registry is the wrong shape for a per-entry human decision. The "
+            "supported route is `src.core.provenance_writer.set_human_verified(key, "
+            "date=..., notes=...)` — one entry, atomic, refusing an unknown key and "
+            "refusing to overwrite an existing verification without `force`. The "
+            "dashboard's confirm button now calls it and renders the green badge ONLY "
+            "when it returns ok.")
 
     app.config['PG_SYNC_ENABLED'] = not args.no_pg_sync
 

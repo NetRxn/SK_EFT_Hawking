@@ -1,4 +1,5 @@
-"""Grassmann Tensor Renormalization Group for the 2D ADW model.
+"""Grassmann Tensor Renormalization Group for the 2D ADW model. Yields the
+free energy, the specific heat, a coupling scan and D_cut convergence.
 
 Implements the Grassmann TRG algorithm (Shimizu-Kuramashi 2014) to
 compute the partition function of the 2D reduced ADW model after

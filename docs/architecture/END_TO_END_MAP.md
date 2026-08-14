@@ -179,10 +179,14 @@ edge type that has no emitter and the gate that queries it.
 
 **Live gaps, worst first:**
 
-- 🔴 **The freshness layer is entirely inert.** Every graph node carries the epoch as
-  `last_modified` — one distinct value across the whole graph — and a declared input,
-  `docs/verification_log.jsonl`, does not exist. `Phase5v_Roadmap.md` calls this "the
-  highest-value capability".
+- 🔴 **The freshness layer is inert, but its input is UNEXERCISED rather than unwritable —
+  and the two look identical from an absent file.** Every graph node carries the epoch as
+  `last_modified`, one distinct value across the whole graph. The declared input,
+  `docs/verification_log.jsonl`, is absent from a clean checkout; **the writer behind it
+  works.** Measured 2026-08-12: the browser test added for ADR-012 P9a clicked Confirm once
+  and the bus wrote its first event immediately. Nobody had ever exercised the confirm path
+  here. `Phase5v_Roadmap.md` calls this "the highest-value capability", and the residual gap
+  is that nothing *consumes* the events — not that none can be produced.
 - 🔴 **Some edge types the readiness gates query have no emitter at all** — `PRODUCES`,
   `SUPPORTS` and `CONTRADICTS` — so those gates return verdicts they did not compute. Guarded against growth
   by `gate_edge_types_are_emitted`; see [gate topology §4](VALIDATION_GATE_TOPOLOGY.md) for
@@ -412,11 +416,23 @@ evidence, so the distinction is live, not hypothetical.
   carry one.
 - **`ProductionRunHealth`'s run-linkage leg cannot fire**: `ProductionRun` nodes have no
   outgoing edges. Only its prose-regex leg can block.
-- **Stage 14 detects nothing.** `qi_register.py --stats` derives zero QI items from the full
-  finding population: every gate-id sits in Closed Items and `unclassified` is skipped, so the
-  derivation is saturated shut. **The Stage-13 → Stage-14 escalation path — how a recurring
-  paper-level defect becomes a tracked process item — cannot fire at all.** Regenerating would
-  therefore replace the current Open items with nothing, and they are not reproducible.
+- ✅ **Stage 14 detects again (ADR-012 P9a, 2026-08-12).** It derived **zero** items from the full
+  finding population, and the Stage-13 → Stage-14 escalation path could not fire at all. **Three
+  causes, not the one this entry named:** the id was `qi-{gate}`, so the register held at most one
+  item per gate for all time and a closure retired that failure class permanently; `unclassified`
+  — the largest single bucket — was dropped rather than reported; and the clustering partitioned on
+  `inferred_paper` alone, so every finding carrying only `inferred_bundle` collapsed onto one
+  sentinel and never reached the cross-paper threshold. **That third cause is the same omission
+  that produced a false GREEN in `bundle_readiness` on 2026-07-31**, fixed there and never here.
+
+  An item now identifies a **recurrence** — gate, paper set, window — and a closure suppresses its
+  own window rather than its gate forever.
+
+  ⚠️ **`## Open Items` is still not preserved the way `## Closed Items` is**, and that gap is
+  unfixed. Invariant #13 protects the closed section; the open section is rebuilt from the
+  derivation, so a regeneration discards the hand-curated entries. `main()` now refuses to write,
+  names every id at risk, and requires `--force` — which converts a silent loss into a deliberate
+  one without closing the hole.
 - **Invariant #8 is satisfiable but not from the surface that offers it.** The dashboard's
   confirm action mutates an in-memory dict and declines to persist — **printing exactly why
   and naming the working route** (`scripts/wave2_flip_provenance.py`). A UX limitation with a

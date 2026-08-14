@@ -1,5 +1,6 @@
 """
-Transonic Background Solver for 1D BEC Flow
+Transonic Background Solver for 1D BEC Flow. Parameterizes the velocity as
+a smooth tanh transition through the horizon.
 
 Solves the steady-state Euler + continuity equations for a quasi-1D BEC
 with an external potential that creates a transonic flow (sonic horizon).

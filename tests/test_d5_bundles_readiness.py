@@ -63,16 +63,62 @@ import validate_helpers as _H  # noqa: E402
 from validation.checks import bundles_readiness as bru  # noqa: E402
 
 
-def _agg(blockers=0, advisories=0, readiness=None):
+def _agg(blockers=0, advisories=0, readiness=None, bundle="D1"):
     """The heatmap aggregate shape the checks actually read: `readiness`
-    ('RED'/'GREEN'), `blocker_count`, and `severity_mix` (from which the
-    advisory count is summed)."""
+    ('RED'/'GREEN'), `blocker_count`, `severity_mix` (from which the advisory count is
+    summed), and `open_finding_ids`.
+
+    ⚠️ **`open_finding_ids` is REQUIRED and must be the COMPLETE list.** The unattributed
+    ratchet is defined as the complement of what this aggregation reached, so an aggregate
+    that names no finding declares every live finding unreachable. That is also why the
+    production field is no longer capped at ten: a truncated list here would invent
+    unattributed findings out of a busy bundle's tail.
+    """
+    n = blockers + advisories
     return {"blocker_count": blockers,
             "severity_mix": {"minor": advisories},
+            "open_findings": n,
+            "open_finding_ids": [f"review:fixture:{bundle}:{i}" for i in range(n)],
             "readiness": readiness or ("RED" if blockers else "GREEN")}
 
 
-def _patch_readiness(monkeypatch, by_bundle, *, gates=(), raise_aggregate=False):
+def _findings_for(by_bundle):
+    """The ReviewFinding corpus that MATCHES a fixture aggregate.
+
+    ⚠️ Patching the aggregate alone used to be enough, because the unattributed leg read
+    the live corpus independently and asked only whether each finding carried an
+    attribution field. It now asks whether the AGGREGATION REACHED it — the fix for a hole
+    that let eight real findings sit outside both legs — so a fixture that stubs one side
+    and not the other describes a world where ~1,600 live findings are unreachable, and the
+    ratchet correctly goes red over it. The fixture must be one coherent world or it is
+    testing nothing it claims to test.
+    """
+    out = []
+    for bundle, agg in (by_bundle or {}).items():
+        blocking = agg.get("blocker_count", 0)
+        for i, fid in enumerate(agg.get("open_finding_ids") or ()):
+            out.append({
+                "id": fid, "label": f"fixture finding {i}",
+                "meta": {"status": "open",
+                         "severity": "major" if i < blocking else "minor",
+                         "inferred_bundle": bundle, "inferred_paper": None},
+            })
+        # ⚠️ One CLOSED finding per bundle, so a bundle with zero OPEN findings still has
+        # a non-empty corpus. The check's population guard refuses to measure an empty
+        # ReviewFinding set — correctly, because "no findings extracted" and "no findings
+        # open" are the round-8 confusion it exists to prevent — and a fixture asserting
+        # "green with zero blockers passes" must therefore describe a corpus that was
+        # READ and found clean, not one that was never read.
+        out.append({
+            "id": f"review:fixture:{bundle}:closed", "label": "fixture closed finding",
+            "meta": {"status": "fixed", "severity": "major",
+                     "inferred_bundle": bundle, "inferred_paper": None},
+        })
+    return out
+
+
+def _patch_readiness(monkeypatch, by_bundle, *, gates=(), raise_aggregate=False,
+                     findings=None):
     monkeypatch.setattr(br, "parse_mapping", lambda t: {})
     monkeypatch.setattr(br, "load_findings_by_paper", lambda: {})
     monkeypatch.setattr(br, "resolve_stage13_reviews", lambda backfill=False: {})
@@ -84,6 +130,13 @@ def _patch_readiness(monkeypatch, by_bundle, *, gates=(), raise_aggregate=False)
     monkeypatch.setattr(br, "aggregate_by_bundle", _agg_fn)
     monkeypatch.setattr(build_graph, "build_graph_json",
                         lambda: {"nodes": list(gates), "edges": []})
+    # The finding corpus the two ratchets measure, kept CONSISTENT with the aggregate
+    # above. `raise_aggregate` deliberately leaves the live corpus in place: that case is
+    # about the aggregate failing to compute, and stubbing findings would mask it.
+    if not raise_aggregate:
+        monkeypatch.setattr(build_graph, "extract_review_finding_nodes",
+                            lambda: (findings if findings is not None
+                                     else _findings_for(by_bundle)))
 
 
 def _gate(bundle: str, state: str, name: str = "FixPropagation"):
@@ -239,14 +292,41 @@ class TestBundleStage13ClaimConsistent:
         assert any("unverified rather than consistent" in (d.message or "")
                    for d in r.details)
 
-    def test_an_empty_population_is_UNVERIFIED_not_passing(self, tmp_path, monkeypatch):
-        """SEAM GUARD (authoring guide §2.5). An empty roster is the round-8 state:
-        every readiness check green with nothing to check."""
-        _patch_readiness(monkeypatch, {})
+    def test_an_empty_FINDING_population_is_UNVERIFIED_not_passing(self, monkeypatch):
+        """SEAM GUARD 1 of 2 — the ReviewFinding corpus. Both ratchets would read 0 and
+        pass over nothing."""
+        _patch_readiness(monkeypatch, {}, findings=[])
+        r = bru.check_bundle_stage13_claim_consistent()
+        assert r.passed is False and r.measured is False
+        assert any(d.name == "finding_population" and not d.passed for d in r.details)
+
+    def test_an_empty_BUNDLE_population_is_UNVERIFIED_not_passing(self, tmp_path,
+                                                                  monkeypatch):
+        """SEAM GUARD 2 of 2 — the bundle roster. An empty roster is the round-8 state:
+        every readiness check green with nothing to check.
+
+        ⚠️ **THIS TEST STOPPED REACHING ITS GUARD AND NOBODY NOTICED.** It passed
+        `by_bundle={}` and asserted on the substring "UNVERIFIED", which BOTH seam guards
+        emit. When `_patch_readiness` began deriving the finding corpus from the aggregate,
+        `{}` produced an empty corpus too — so the check short-circuited on the *finding*
+        guard and returned before `checked == 0` was ever evaluated. The bundle guard was
+        then pinned by no test in the suite, while this one stayed green.
+
+        Two changes make it honest: a non-empty finding corpus so the check reaches the
+        second guard, and an assertion on the detail's NAME rather than on a word both
+        guards happen to share.
+        """
+        _patch_readiness(monkeypatch, {},
+                         findings=[{"id": "review:x:D1:1", "label": "l",
+                                    "meta": {"status": "open", "severity": "minor",
+                                             "inferred_bundle": "D1",
+                                             "inferred_paper": None}}])
         r = bru.check_bundle_stage13_claim_consistent()
         assert r.passed is False, "a check that inspected nothing reported agreement"
         assert r.measured is False
-        assert any("UNVERIFIED" in (d.message or "") for d in r.details)
+        assert any(d.name == "population" and not d.passed for d in r.details), (
+            f"the `checked == 0` guard did not fire; details were "
+            f"{[d.name for d in r.details]}")
 
     def test_an_uncomputable_aggregate_fails_rather_than_passes(self, tmp_path, monkeypatch):
         """FAIL, not pass: an uncomputable live verdict is not agreement."""
@@ -2018,3 +2098,91 @@ class TestTheOpenRequiredPopulationRatchets:
         from validation.checks.bundles_readiness import _required_open_ceilings
         unknown = sorted(set(_required_open_ceilings()) - set(BUNDLE_CODES))
         assert not unknown, f"ceilings name bundles outside the registry: {unknown}"
+
+
+class TestStage13KindResolution:
+    """The Stage-13 review KIND gets the evidence path its sibling date already had.
+
+    ⚠️ `stage13_review_kind` was absent from all 21 bundles, and only `full-adversarial`
+    earns green — so NO bundle could reach Stage-13 green regardless of its status, while
+    20 of the 21 had genuine review evidence on disk. The date resolved through
+    `find_stage13_review_evidence` with an "evidence-based only, never fabricated" note;
+    the kind was read from metadata and from nowhere else.
+    """
+
+    def _evidence(self, monkeypatch, rel: str, text: str, tmp_path):
+        p = tmp_path / rel
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text(text)
+        import bundle_readiness as br_mod
+        monkeypatch.setattr(br_mod, "PROJECT_ROOT", tmp_path)
+        monkeypatch.setattr(br_mod, "find_stage13_review_evidence",
+                            lambda b: ("2026-05-11", rel))
+
+    def test_a_declared_kind_in_the_evidence_document_is_used(self, tmp_path, monkeypatch):
+        import bundle_readiness as br_mod
+        self._evidence(monkeypatch, "papers/AutomatedReviews/x/D1.md",
+                       "reviewer: adversarial-reviewer\nkind: full-adversarial\n\n# R\n",
+                       tmp_path)
+        assert br_mod._declared_review_kind("D1") == "full-adversarial"
+
+    def test_an_UNRECOGNISED_declared_kind_is_preserved_verbatim(self, tmp_path,
+                                                                 monkeypatch):
+        """⚠️ NEVER COERCED, NEVER DROPPED. One document on disk declares `adjudication`,
+        which is not one of the four accepted kinds. Mapping it to a neighbour loses the
+        fact that a reviewer used a word the system does not know; dropping it reads as
+        "no kind declared". It is kept, and it simply does not earn green."""
+        import bundle_readiness as br_mod
+        self._evidence(monkeypatch, "papers/AutomatedReviews/x/D1.md",
+                       "kind: adjudication\n\n# R\n", tmp_path)
+        got = br_mod._declared_review_kind("D1")
+        assert got == "adjudication"
+        assert got not in br_mod._KINDS_SUFFICIENT_FOR_GREEN
+
+    def test_a_directory_name_is_NOT_treated_as_a_kind(self, tmp_path, monkeypatch):
+        """⚠️ THE LINE THE FIX MUST NOT CROSS. `…-bundle-stage13/` says the pass was
+        bundle-level; it does not say it was full-adversarial. Inferring the kind from the
+        path would manufacture, for 18 bundles at once, the exact evidence the P1 gate
+        exists to demand."""
+        import bundle_readiness as br_mod
+        self._evidence(monkeypatch,
+                       "papers/AutomatedReviews/2026-05-11-bundle-stage13/D1.md",
+                       "reviewer: adversarial-reviewer\n\n# Adversarial Review — D1\n",
+                       tmp_path)
+        assert br_mod._declared_review_kind("D1") is None
+
+    def test_prose_mentioning_a_kind_does_not_count_as_declaring_one(self, tmp_path,
+                                                                    monkeypatch):
+        """A front-matter `kind:` line is a declaration; the words appearing in a sentence
+        are not. Otherwise a review that DISCUSSES full-adversarial passes claims to be one."""
+        import bundle_readiness as br_mod
+        self._evidence(monkeypatch, "papers/AutomatedReviews/x/D1.md",
+                       "# R\n\nThis was not a full-adversarial pass; kind is unclear.\n",
+                       tmp_path)
+        assert br_mod._declared_review_kind("D1") is None
+
+    def test_reviewed_kind_unrecorded_is_DISTINCT_from_unreviewed(self):
+        """⚠️ THREE STATES, NOT TWO. A bundle nobody reviewed and a bundle reviewed with the
+        kind never written down were both rendered UNMEASURED — same cell, different
+        remedies. One needs a review; the other needs a record."""
+        import bundle_readiness as br_mod
+        r = br_mod.resolve_stage13_reviews(backfill=False)
+        assert r, "empty roster — this assertion would pass over nothing"
+        states = {v["kind_state"] for v in r.values()}
+        assert states <= {"declared", "reviewed-kind-unrecorded", "unreviewed"}
+        for v in r.values():
+            if v["kind"]:
+                assert v["kind_state"] == "declared" and v["kind_source"]
+            elif v["date"]:
+                assert v["kind_state"] == "reviewed-kind-unrecorded"
+
+    def test_the_live_roster_resolves_a_kind_for_the_bundles_that_declare_one(self):
+        """Non-vacuity against production: if this resolves nothing, the evidence path is
+        dead and its silence is indistinguishable from 'no document declares a kind'."""
+        import bundle_readiness as br_mod
+        r = br_mod.resolve_stage13_reviews(backfill=False)
+        declared = {b: v["kind"] for b, v in r.items() if v["kind"]}
+        assert declared, "no bundle resolved a kind — the evidence path is not firing"
+        assert all(v["kind_source"] == "evidence-document"
+                   for v in r.values() if v["kind"]), (
+            "a kind resolved from somewhere other than metadata or an evidence document")

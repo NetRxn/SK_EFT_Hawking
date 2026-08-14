@@ -52,7 +52,9 @@ Run the one foolproof mechanical-sync command and report the result.
    the resolved repo first** so `uv` finds its project (a bare `uv run` from the workspace root runs an ephemeral interpreter WITHOUT the repo's deps (e.g. `src.core` fails to import); `cd` into the repo gives it the project env). (`sync.py` self-locates its own `ROOT` from `__file__`.)
 
 Then state which artifacts were regenerated and remind the user that Aristotle (S4) is excluded by design and
-judgment docs (the prose Inventory, README) are flag-only — never silently regenerated. If any regen failed,
+judgment docs are flag-only — never silently regenerated. (A judgment doc is one with no `Edge`
+in `sync_manifest.py`; name the rule, not a roster, so retiring a doc cannot leave this line
+naming a file that no longer exists.) If any regen failed,
 surface the failing command verbatim; do not paper over it. (Each shared-artifact regen is serialized by the
 Task-7 regen concurrency lock inside `sync.py`, so running `/sync` concurrently with another agent's loop is
 safe — a contended artifact is skipped, never raced; spec 12.)

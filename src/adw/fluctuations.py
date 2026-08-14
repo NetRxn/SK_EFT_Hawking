@@ -1,4 +1,5 @@
-"""Fluctuation Analysis and Nambu-Goldstone Mode Counting.
+"""Fluctuation Analysis and Nambu-Goldstone Mode Counting, with a Vergeles
+mode-counting consistency check.
 
 Analyzes fluctuations around the tetrad saddle point to identify
 graviton modes. The symmetry breaking pattern:

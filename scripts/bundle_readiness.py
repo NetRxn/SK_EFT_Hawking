@@ -277,6 +277,8 @@ def resolve_stage13_reviews(*, backfill: bool) -> dict[str, dict]:
 
         if md is not None:
             rec["kind"] = md.get("stage13_review_kind")
+        if rec["kind"]:
+            rec["kind_source"] = "bundle_metadata"
         if md is not None and md.get("last_stage13_review"):
             rec["date"] = str(md["last_stage13_review"])[:10]
             src = md.get("last_stage13_review_source")
@@ -298,8 +300,56 @@ def resolve_stage13_reviews(*, backfill: bool) -> dict[str, dict]:
                     md["last_stage13_review_source"] = note
                     write_bundle_json(md_path, md)
                     rec["backfilled_this_run"] = True
+        # ⚠️ THE KIND GETS THE EVIDENCE PATH ITS SIBLING DATE ALREADY HAD (2026-08-13).
+        # `rec["kind"]` was read from metadata and from NOWHERE ELSE, while the date three
+        # lines above resolves through `find_stage13_review_evidence` with a documented
+        # "evidence-based backfill only — never fabricated" note. Consequence, measured:
+        # `stage13_review_kind` was absent from all 21 bundles, only `full-adversarial`
+        # earns green, so NO bundle could reach Stage-13 green regardless of its status —
+        # and 20 of the 21 had genuine review evidence sitting on disk.
+        #
+        # ⚠️ A DIRECTORY NAME IS NOT A KIND, and this is the line the fix must not cross.
+        # `…-bundle-stage13/` says the pass was bundle-level; it does not say whether it was
+        # full-adversarial or a scoped sweep. Inferring the kind from the path would
+        # manufacture, for 18 bundles at once, exactly the evidence the P1 gate exists to
+        # demand. Only a kind the document DECLARES about itself is used.
+        if not rec["kind"]:
+            declared = _declared_review_kind(b)
+            if declared:
+                rec["kind"], rec["kind_source"] = declared, "evidence-document"
+        # Three states, not two: `unreviewed` and `reviewed, kind unrecorded` are different
+        # facts with different remedies — one needs a review, the other needs a record —
+        # and collapsing them is what made every S13 cell read the same.
+        rec["kind_state"] = (
+            "declared" if rec["kind"]
+            else ("reviewed-kind-unrecorded" if rec["date"] else "unreviewed"))
         out[b] = rec
     return out
+
+
+#: `kind: <token>` in an evidence document's own front matter. The ONLY evidence-side source
+#: of a review kind — see the warning in `resolve_stage13_reviews`.
+_DECLARED_KIND_RE = re.compile(r"^kind:\s*([A-Za-z][A-Za-z0-9-]*)\s*$", re.MULTILINE)
+
+
+def _declared_review_kind(bundle: str) -> str | None:
+    """The kind a bundle's newest Stage-13 evidence declares about ITSELF, or `None`.
+
+    ⚠️ An unrecognised token is returned VERBATIM, never coerced to the nearest accepted
+    kind and never dropped. One document on disk declares `adjudication`, which is not one
+    of the four accepted kinds; mapping it to a neighbour would lose the fact that a
+    reviewer used a word the system does not know, and dropping it would read as "no kind
+    declared". It simply will not satisfy `_KINDS_SUFFICIENT_FOR_GREEN`, which is correct.
+    """
+    ev = find_stage13_review_evidence(bundle)
+    if ev is None:
+        return None
+    try:
+        head = (PROJECT_ROOT / ev[1]).read_text(errors="replace")[:1200]
+    except OSError:
+        return None
+    m = _DECLARED_KIND_RE.search(head)
+    return m.group(1) if m else None
 
 
 #: Stage-13 evidence kinds that earn a GREEN readiness verdict. Mirrors

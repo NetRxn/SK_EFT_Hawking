@@ -120,10 +120,31 @@ def _top_arrow_split(s: str) -> List[str]:
     return parts
 
 
+#: `∃ x, P` as lean_deps ELABORATES it. The pretty-printer emits the `Exists`
+#: applicative form, never the `∃ … ,` notation, so a binder stripper that matched
+#: only the notation reached the proposition in zero existential statements.
+_EXISTS_FUN_RE = re.compile(r"^Exists\s+fun\s+[^=]*?=>\s*")
+
+
 def _strip_leading_binders(t: str) -> str:
-    """Drop leading `∀ … ,` / `∃ … ,` binder groups to reach the proposition."""
+    """Drop leading `∀ … ,` / `∃ … ,` / `Exists fun … =>` binder groups to reach
+    the proposition.
+
+    ⚠️ `Exists fun … =>` is the form that actually occurs. lean_deps stores the
+    ELABORATED type, and Lean elaborates `∃ x, P x` to `Exists fun x => P x`; the
+    `∃` character never appears. Matching only `∃` meant every existential
+    statement kept its binder, so the conclusion was never reached and no
+    existential could be classified — measured 2026-08-13: 897 authored theorems
+    have an existential conclusion and the classifier had flagged exactly 0.
+    """
     t = t.strip()
-    while t.startswith("∀") or t.startswith("∃"):
+    while True:
+        m = _EXISTS_FUN_RE.match(t)
+        if m:
+            t = t[m.end():].strip()
+            continue
+        if not (t.startswith("∀") or t.startswith("∃")):
+            return t
         depth, ci = 0, None
         for i, ch in enumerate(t):
             if ch in "([{⟨":
@@ -133,9 +154,8 @@ def _strip_leading_binders(t: str) -> str:
             elif ch == "," and depth == 0:
                 ci = i; break
         if ci is None:
-            break
+            return t
         t = t[ci + 1:].strip()
-    return t
 
 
 # Lean/Mathlib compiler-EMITTED lemmas (congruence, constructor, recursor,
@@ -177,6 +197,15 @@ def _thin_type_label(type_str: str):
         return "True"
     core = _strip_leading_binders(t)
     concl = _top_arrow_split(core)[-1].strip()
+    # ⚠️ THE `True` TEST MUST ALSO RUN ON THE CONCLUSION, not only on the raw type.
+    # It ran only at the top, so a `True` reached through ANY binder or arrow scored
+    # clean: `∀ x, True`, `P → True` and `∃ x, True` all returned None. That is the
+    # purest vacuity there is, and it was invisible to the check whose entire subject
+    # is vacuity — including `acoustic_metric_theorem`, which is ARISTOTLE_THEOREMS-
+    # registered and whose docstring promises the wave equation `□_g π = 0`.
+    # `P → True` is vacuous for the same reason: everything implies True.
+    if concl == "True":
+        return "True"
     # reflexive `Eq X X` (prefix) / `X = X` (infix) — SIMPLE args only (a compound
     # arg may be a pretty-print elision false-reflexive; see `_SIMPLE_ARG_RE`).
     toks = _top_tokens(concl)
@@ -519,6 +548,148 @@ def check_vacuous_statement_audit() -> CheckResult:
         f"no NEW content-thin statements ({len(grandfathered)} baselined, "
         f"{len(advisory)} ground-arith advisory)"))
     return CheckResult(passed=True, details=details)
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# CHECK 1e″: existential witness disclosure (2026-08-13)
+# ═══════════════════════════════════════════════════════════════════════
+
+def _strip_forall_only(t: str) -> str:
+    """Drop leading `∀ … ,` groups ONLY, leaving any `Exists fun` in place.
+
+    ⚠️ `_strip_leading_binders` cannot be reused here. It consumes
+    `Exists fun … =>` (which is what makes the vacuity classifier work at all),
+    so asking it "is the conclusion existential" always answers no — it has
+    already returned the existential's BODY. This measurement was gotten wrong
+    that way once; the two strippers answer different questions and must stay
+    separate.
+    """
+    t = " ".join((t or "").split()).strip()
+    while t.startswith("∀"):
+        depth, ci = 0, None
+        for i, ch in enumerate(t):
+            if ch in "([{⟨":
+                depth += 1
+            elif ch in ")]}⟩":
+                depth -= 1
+            elif ch == "," and depth == 0:
+                ci = i; break
+        if ci is None:
+            return t
+        t = t[ci + 1:].strip()
+    return t
+
+
+def _has_existential_conclusion(type_str: str) -> bool:
+    """Is the declaration's conclusion an existential, after ∀-binders/arrows?"""
+    return _top_arrow_split(_strip_forall_only(type_str))[-1].strip().startswith("Exists")
+
+
+@register_check(
+    "existential_witness_disclosure",
+    "Every existential theorem sold as a result names its witness (EXISTENTIAL_WITNESS_REGISTRY)")
+def check_existential_witness_disclosure() -> CheckResult:
+    """`∃ x, P x` is vacuous exactly when a trivial witness satisfies `P` — a proof
+    obligation, not a syntactic property. So this check does not classify; it requires
+    that someone NAMED THE WITNESS for every existential theorem the project SELLS as a
+    result (cited from `formulas.py` or registered in `ARISTOTLE_THEOREMS`).
+
+    That is the question the flagship case cannot survive: `dispersive_correction_bound`
+    is glossed as the quantitative bound `δ_disp = −(π/6)D²`, and its witness is
+    `δ=1, C=1/D²`. Writing the witness down is what makes that visible.
+
+    HARD-FAIL: an undisclosed member of the population (a NEW existential result must
+    arrive with its witness). HARD-FAIL: an `escape`/`misnamed` count above its
+    down-only ceiling. Declarations already disclosed as placeholders or modeling
+    assumptions are exempt — they are disclosed elsewhere, and requiring two
+    registrations would make the registries disagree.
+    """
+    from src.core.constants import (
+        ARISTOTLE_THEOREMS, EXISTENTIAL_WITNESS_REGISTRY, PLACEHOLDER_LEAN_NAMES,
+        EXISTENTIAL_ESCAPE_CEILING, EXISTENTIAL_MISNAMED_CEILING,
+    )
+    try:
+        from src.core.constants import MODELING_ASSUMPTION_THEOREMS
+    except ImportError:
+        MODELING_ASSUMPTION_THEOREMS = {}
+
+    # Absence of an INPUT is `measured=False` — the check stops counting as evidence
+    # rather than manufacturing one (registered in `CANNOT_MEASURE_PASS_BASELINE`, same
+    # two inputs and same reasoning as `formula_grounding` above). Absence of a
+    # POPULATION is different and is a hard FAIL — see the seam guard below.
+    formulas_path = _H.SRC_DIR / "core" / "formulas.py"
+    if not formulas_path.exists() or not _H.lean_deps_present():
+        return CheckResult(passed=True, measured=False,
+                           details=[Detail("inputs", True, "formulas.py / lean_deps.json absent")])
+
+    exempt = set(PLACEHOLDER_LEAN_NAMES)
+    for k, v in MODELING_ASSUMPTION_THEOREMS.items():
+        if v.get("reason") and v.get("discloses"):
+            exempt.add(v.get("lean_name", k))
+
+    sold = set(_parse_formula_lean_refs(formulas_path.read_text()))
+    sold |= {a.split(".")[-1] for a in ARISTOTLE_THEOREMS}
+
+    population, undisclosed = [], []
+    for d in _H.load_lean_deps():
+        if d.get("kind") not in ("theorem", "lemma"):
+            continue
+        name = d.get("name", "")
+        if _is_autogen_decl(name):
+            continue
+        short = name.split(".")[-1]
+        if short in exempt or short not in sold:
+            continue
+        if not _has_existential_conclusion(d.get("type", "")):
+            continue
+        population.append(short)
+        meta = EXISTENTIAL_WITNESS_REGISTRY.get(short)
+        if not meta or not meta.get("witness") or not meta.get("status"):
+            undisclosed.append(short)
+
+    # ⚠️ Seam guard (CHECK_AUTHORING_GUIDE §2.5). An empty population means the
+    # scan matched nothing — indistinguishable from "everything discloses" unless
+    # it is asserted. The population is non-empty by construction at HEAD.
+    if not population:
+        return CheckResult(passed=False, measured=False, details=[Detail(
+            "population", False,
+            "no existential result was inspected — this check is UNVERIFIED, not passing")])
+
+    by_status: dict[str, list] = {}
+    for short in population:
+        meta = EXISTENTIAL_WITNESS_REGISTRY.get(short) or {}
+        by_status.setdefault(meta.get("status", "UNDISCLOSED"), []).append(short)
+    escapes = by_status.get("escape", [])
+    misnamed = by_status.get("misnamed", [])
+
+    details: List[Detail] = [Detail(
+        "coverage", not undisclosed,
+        f"{len(population)} existential result(s) sold via formulas.py/ARISTOTLE; "
+        f"{len(population) - len(undisclosed)} name a witness; "
+        f"{len(by_status.get('anchored', []))} anchored, {len(escapes)} escape, "
+        f"{len(misnamed)} misnamed")]
+
+    for short in sorted(undisclosed):
+        details.append(Detail(short, False,
+            "existential theorem sold as a result with NO witness named — add an "
+            "EXISTENTIAL_WITNESS_REGISTRY entry stating the intended witness and status. "
+            "If you cannot name a witness that a trivial value fails to supply, the "
+            "statement does not prove what its name claims."))
+
+    ok_esc = len(escapes) <= EXISTENTIAL_ESCAPE_CEILING
+    details.append(Detail("escape_ratchet", ok_esc,
+        f"{len(escapes)} existential escape(s) vs down-only ceiling "
+        f"{EXISTENTIAL_ESCAPE_CEILING}: {', '.join(sorted(escapes)) or 'none'}"
+        + ("" if ok_esc else " — a NEW escape shipped. Strengthen the statement; "
+                             "never raise this ceiling."), warning=ok_esc and bool(escapes)))
+    ok_mis = len(misnamed) <= EXISTENTIAL_MISNAMED_CEILING
+    details.append(Detail("misnamed_ratchet", ok_mis,
+        f"{len(misnamed)} misnamed existential(s) vs down-only ceiling "
+        f"{EXISTENTIAL_MISNAMED_CEILING}: {', '.join(sorted(misnamed)) or 'none'}"
+        + ("" if ok_mis else " — rename the theorem or strengthen it to match its name."),
+        warning=ok_mis and bool(misnamed)))
+
+    return CheckResult(passed=not undisclosed and ok_esc and ok_mis, details=details)
 
 
 # ═══════════════════════════════════════════════════════════════════════

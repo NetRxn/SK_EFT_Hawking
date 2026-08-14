@@ -187,6 +187,7 @@ _CANONICAL_ORDER: tuple[str, ...] = (
     'formulas', 'lean_zero_sorry', 'placeholder_not_cited', 'disclosure_consistency',
     'proxy_body_audit', 'tracked_hypothesis_ledger', 'tracked_hypotheses_fresh',
     'formula_grounding', 'vacuous_statement_audit', 'nogo_substrate_integrity',
+    'existential_witness_disclosure',
     'native_decide_regression', 'numerical', 'identities',
     'paper_table', 'd1_hierarchy_table', 'f_hierarchy_claims',
     'theorems', 'notebooks', 'lean_source',
@@ -235,7 +236,8 @@ _CANONICAL_ORDER: tuple[str, ...] = (
     # undefined, and its per-draft cache skips untouched drafts).
     'bundle_counts_fresh', 'bundle_cross_references_resolve', 'paper_latex_compiles',
     'axiom_count_prose_consistency', 'prose_theorem_reference_coverage',
-    'theorem_name_embedded_citations', 'inventory_index_autogen_fresh', 'architecture_inventory_fresh',
+    'theorem_name_embedded_citations', 'architecture_inventory_fresh',
+    'module_census_fresh',
     'lean_docstring_refs_resolve', 'paper_toolchain_pin_drift',
 )
 
@@ -625,7 +627,6 @@ check_counts_fresh = _checks_freshness.check_counts_fresh
 check_tables_fresh = _checks_freshness.check_tables_fresh
 check_claim_clusters_fresh = _checks_freshness.check_claim_clusters_fresh
 check_bundle_source_freshness = _checks_freshness.check_bundle_source_freshness
-check_inventory_index_autogen_fresh = _checks_freshness.check_inventory_index_autogen_fresh
 check_notebook_stored_outputs_current = _checks_freshness.check_notebook_stored_outputs_current
 _counts_is_stale = _checks_freshness._counts_is_stale      # scripts/sync_manifest.py
 _tables_is_stale = _checks_freshness._tables_is_stale      # scripts/sync_manifest.py
@@ -652,6 +653,7 @@ check_tracked_hypotheses_fresh = _checks_lean_substrate.check_tracked_hypotheses
 check_formula_grounding = _checks_lean_statements.check_formula_grounding
 check_vacuous_statement_audit = _checks_lean_statements.check_vacuous_statement_audit
 check_nogo_substrate_integrity = _checks_lean_statements.check_nogo_substrate_integrity
+check_existential_witness_disclosure = _checks_lean_statements.check_existential_witness_disclosure
 # Regexes + pure cores imported directly by tests/test_substrate_integrity_gates.py
 _tex_name_pattern = _checks_lean_substrate._tex_name_pattern
 _VERIFY_CLAIM_RE = _checks_lean_substrate._VERIFY_CLAIM_RE
@@ -724,6 +726,7 @@ check_bundle_counts_fresh = _checks_freshness.check_bundle_counts_fresh
 check_lean_zero_sorry = _checks_lean_substrate.check_lean_zero_sorry
 check_gate_edge_types_are_emitted = _checks_graph_atlas.check_gate_edge_types_are_emitted
 check_architecture_inventory_fresh = _checks_freshness.check_architecture_inventory_fresh
+check_module_census_fresh = _checks_freshness.check_module_census_fresh
 
 
 # ═══════════════════════════════════════════════════════════════════════

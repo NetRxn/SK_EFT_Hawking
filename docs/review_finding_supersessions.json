@@ -7162,6 +7162,19 @@
       "evidence": "figure rebuilt in the CODE; all seven labels resolve by exact name in lean_deps and all six edges are real dependencies [triage agent; lead re-verified the bypass, the census and the attribution claims]",
       "superseded_by": null,
       "date": "2026-08-12"
+    },
+    {
+      "finding_id": "review:2026-08-13-p9-panes-unwired:infra:1",
+      "status": "fixed",
+      "evidence": "P9b/P9c wired: three partials (flow_tab/attention_tab/loops_tab), tab-bar links, include blocks, and a lazy per-tab build in provenance_dashboard.index(). Both D2 dashboard gates satisfied: template-contract green (13 passed; its tab roster is DERIVED from the source, so the three tabs entered its population automatically) and a real browser suite that asserts each pane rendered its own content, that a not-tracked cell is not painted as a verdict, and that each pane is reachable BY CLICKING the tab bar rather than only by URL. 6 passed under the declared command.",
+      "superseded_by": null,
+      "date": "2026-08-13",
+      "verified_by": {
+        "command": "uv run python -m pytest tests/e2e -m e2e -k \"flow or attention or loops\" -q",
+        "declared": "uv run python -m pytest tests/e2e -m e2e -k \"flow or attention or loops\" -q",
+        "exit_code": 0,
+        "run_at": "2026-08-13"
+      }
     }
   ]
 }

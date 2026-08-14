@@ -910,7 +910,7 @@ def check_axiom_count_prose_consistency() -> CheckResult:
 # while Stage 13 was explicitly deferred. This check closes that window.
 #
 # ADVISORY by construction (always passes, warns) — mirroring
-# `inventory_index_autogen_fresh`. A stale pin in a DRAFT is a provenance-hygiene
+# `module_census_fresh`. A stale pin in a DRAFT is a provenance-hygiene
 # signal, not a soundness failure, and the remedy is a publication decision that
 # belongs to Stage 13: does this paper re-verify under the new pin (update the
 # literal), or does it record the pin it was actually verified under (keep it,

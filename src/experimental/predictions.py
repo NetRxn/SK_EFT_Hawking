@@ -1,4 +1,5 @@
-"""Experimental prediction tables for BEC analog Hawking radiation.
+"""Experimental prediction tables for BEC analog Hawking radiation, with the
+shot requirements and kappa-scaling test parameters that go with them.
 
 Synthesizes results from Papers 1-4 into platform-specific, publication-ready
 prediction tables. Each table provides concrete observables at representative

@@ -28,6 +28,7 @@ MUTATION-VERIFIED 2026-08-04 — 11 mutations, all CAUGHT, clean negative contro
 """
 from __future__ import annotations
 
+import ast
 import base64
 import json
 import struct
@@ -72,6 +73,19 @@ class TestCountsFreshness:
     """`counts.json`/`counts.tex` reflect the current codebase. Papers `\\input` these
     macros, so a stale value is a wrong number in a published paper."""
 
+    @staticmethod
+    def _republish(counts_json, mtime):
+        """Rewrite the fixture's `python` block from the (retargeted) live trees."""
+        import os
+        import update_counts as _uc
+        data = json.loads(counts_json.read_text())
+        data["python"] = _uc.count_python_cheap(
+            src_dir=_H.SRC_DIR, tests_dir=_H.TESTS_DIR,
+            notebooks_dir=_H.NOTEBOOKS_DIR, papers_dir=_H.PAPERS_DIR,
+            viz_file=_H.SRC_DIR / "core" / "visualizations.py")
+        counts_json.write_text(json.dumps(data))
+        os.utime(counts_json, (mtime, mtime))
+
     def _setup(self, tmp_path, monkeypatch, *, counts_mtime, source_mtime,
                lean_mtime=None, tex=True):
         docs = tmp_path / "docs"
@@ -96,6 +110,12 @@ class TestCountsFreshness:
             _d = tmp_path / _name.lower()
             _d.mkdir(parents=True, exist_ok=True)
             monkeypatch.setattr(_H, _name, _d)
+        # The COUNT leg (2026-08-13) compares published vs live values, so a fresh
+        # fixture must publish what the tmp trees actually contain. Derived through
+        # the same helper the check uses rather than hand-written zeros: a hand-
+        # written block would have to be edited every time a leg is added, and the
+        # edit that gets forgotten silently turns every case below into "stale".
+        self._republish(cj, counts_mtime)
         runner = _Ran()
         monkeypatch.setattr(fr.subprocess, "run", runner)
         return runner
@@ -150,6 +170,83 @@ class TestCountsFreshness:
             f"a file under {anchor} newer than counts.json did not mark counts stale — "
             f"counts.json publishes a figure derived from that tree, so the figure can "
             f"now drift with this check green")
+
+    def test_a_deleted_test_file_marks_counts_stale(self, tmp_path, monkeypatch):
+        """THE DIRECTION EVERY MTIME LEG IS BLIND TO, and it shipped.
+
+        Deleting a file leaves every surviving file's mtime untouched, so an
+        mtime-max cannot move and the check reports fresh. Measured 2026-08-13:
+        `tests/test_inventory_index_autogen.py` was deleted in `bee7608c` and
+        `docs/counts.json` shipped `test_files: 194` against a live 193 for three
+        commits with `counts_fresh` green. Note the fixture's mtimes: counts is
+        NEWER than every source, so this can only pass via the count leg.
+        """
+        runner = self._setup(tmp_path, monkeypatch, counts_mtime=2000, source_mtime=1000)
+        victim = _touch(_H.TESTS_DIR / "test_gone.py", 500)
+        self._republish(_H.COUNTS_JSON_PATH, 2000)   # counts.json knows about it
+        assert fr._counts_is_stale()[0] is False, "fixture was not fresh to begin with"
+        victim.unlink()                              # ← no surviving mtime moves
+        stale, reason = fr._counts_is_stale()
+        assert stale is True, (
+            "a DELETED test file did not mark counts stale — every leg here is an "
+            "mtime-max, which cannot see a deletion; this is bee7608c reopened")
+        assert "test_files" in reason, reason
+        fr.check_counts_fresh()
+        assert runner.calls, "stale counts did not trigger regeneration"
+
+    def test_production_seeded_a_wrong_published_count_is_stale(self, monkeypatch):
+        """PRODUCTION-SEEDED MUTATION (guide §2.4) — the defect goes into
+        `docs/counts.json` itself, not a fixture. A fixture-only mutation proves the
+        test works; only this proves the check can fail against the artifact it
+        actually reads. Restores byte-for-byte, mtime included."""
+        import os
+        real = _H.COUNTS_JSON_PATH
+        original, st = real.read_bytes(), real.stat()
+        try:
+            data = json.loads(original)
+            data["python"]["test_files"] = data["python"]["test_files"] + 1
+            real.write_text(json.dumps(data, indent=2))
+            # ⚠️ Stamp counts.json as the NEWEST thing in the repo. `_counts_is_stale`
+            # returns on its FIRST stale reason, so on any working copy where a source
+            # was edited after the last regeneration an mtime leg fires first and this
+            # test can never reach — or isolate — the count leg. Without this the test
+            # is green on a clean tree and spuriously red on a working one.
+            future = max(p.stat().st_mtime for p in (_H.SRC_DIR.rglob("*.py"))) + 60
+            os.utime(real, (future, future))
+            stale, reason = fr._counts_is_stale()
+            assert stale is True, (
+                "counts.json publishing a test_files one higher than the live tree "
+                "was reported FRESH — this is exactly what shipped at bee7608c")
+            assert "test_files" in reason, reason
+        finally:
+            real.write_bytes(original)
+            os.utime(real, (st.st_atime, st.st_mtime))
+        assert fr._counts_is_stale()[0] is False, (
+            "the real counts.json is stale after restore — regenerate with "
+            "`uv run python scripts/update_counts.py`")
+
+    def test_the_count_leg_covers_every_published_glob_figure(self):
+        """SEAM GUARD (§2.5). The leg loops over whatever `count_python_cheap`
+        returns, so a helper that returned `{}` — or quietly lost a key — would make
+        every comparison above pass against nothing. Assert the leg set itself."""
+        import update_counts as _uc
+        legs = _uc.count_python_cheap()
+        assert set(legs) == {"python_modules", "test_files", "notebooks",
+                             "papers", "figures"}, legs
+        assert all(isinstance(v, int) for v in legs.values()), legs
+        assert legs["test_files"] > 0 and legs["python_modules"] > 0, (
+            "the helper matched nothing against the real tree — a scan that matches "
+            "nothing passes vacuously")
+
+    def test_the_cheap_split_agrees_with_the_full_counter(self):
+        """`count_python` delegates to `count_python_cheap`; if the split ever grows a
+        second derivation the freshness check and the writer can disagree, and the
+        check would then demand a regeneration that changes nothing."""
+        import update_counts as _uc
+        cheap = _uc.count_python_cheap()
+        full = _uc.count_python()
+        assert {k: full[k] for k in cheap} == cheap
+        assert "pytest_cases" in full and "pytest_cases" not in cheap
 
     def test_a_missing_counts_tex_is_stale(self, tmp_path, monkeypatch):
         runner = self._setup(tmp_path, monkeypatch, counts_mtime=2000,
@@ -627,41 +724,6 @@ class TestBundleSourceFreshness:
         assert fr.check_bundle_source_freshness().passed is False
 
 
-class TestInventoryIndexAutogenFresh:
-    """ADVISORY BY DESIGN (ADR-009 §Deferred item 3 — kept, because `sync.py --fast`
-    regenerates it on every commit so staleness is transient by construction). The two
-    directions are therefore on the WARNING."""
-
-    def _run(self, monkeypatch, result):
-        import update_inventory_index as m
-        monkeypatch.setattr(m, "compute_stale", lambda: result)
-        return fr.check_inventory_index_autogen_fresh()
-
-    def test_it_stays_advisory(self, monkeypatch):
-        """Pins the disposition — changing it must update ADR-009 item 3 too."""
-        assert self._run(monkeypatch, (True, "3 blocks stale")).passed is True
-
-    def test_staleness_warns(self, monkeypatch):
-        """FIRES ON THE SEEDED DEFECT (as a warning)."""
-        d = self._run(monkeypatch, (True, "3 blocks stale")).details[0]
-        assert d.warning and "stale" in (d.message or "")
-        assert "update_inventory_index" in (d.message or ""), (
-            "the warning must name the one command that fixes it")
-
-    def test_a_fresh_index_does_not_warn(self, monkeypatch):
-        """SILENT ON CORRECT DATA."""
-        d = self._run(monkeypatch, (False, "all blocks current")).details[0]
-        assert not d.warning
-
-    def test_a_raising_generator_never_fails_the_suite(self, monkeypatch):
-        """Deliberately defensive: an advisory must not be able to break a build."""
-        import update_inventory_index as m
-
-        def _boom():
-            raise RuntimeError("bad")
-        monkeypatch.setattr(m, "compute_stale", _boom)
-        r = fr.check_inventory_index_autogen_fresh()
-        assert r.passed is True and r.details[0].warning
 
 
 class TestPathAliasCoupling:
@@ -724,3 +786,184 @@ class TestBundleCountsFresh:
         monkeypatch.setattr(_H, "PAPERS_DIR", tmp_path / "papers")
         r = fr.check_bundle_counts_fresh()
         assert not r.passed and not r.measured
+
+
+class TestTheShellDecider:
+    """ADR-013 D5. Shell has no AST, so the census needs a second decider — and a decider
+    is exactly the thing this repository keeps getting wrong by substituting a proxy.
+
+    The rule is the LEADING comment block only. Scanning a whole script for comments would
+    call any script with an explanatory note "described", which is the false positive the
+    Python leg avoids by using `ast.get_docstring` rather than a source regex.
+    """
+
+    @property
+    def _mc(self):
+        import module_census
+        return module_census
+
+    def test_the_leading_block_is_taken(self):
+        assert self._mc._shell_header("#!/usr/bin/env bash\n# Does a thing.\n# In two lines.\n\nset -e\n") \
+            == "Does a thing.\nIn two lines."
+
+    def test_a_script_with_no_shebang_still_works(self):
+        assert self._mc._shell_header("# Just a header.\nset -e\n") == "Just a header."
+
+    def test_a_comment_AFTER_code_is_NOT_a_description(self):
+        """THE FALSE POSITIVE THIS BOUNDING EXISTS TO PREVENT."""
+        assert self._mc._shell_header("#!/bin/bash\nset -e\n# an explanatory note mid-file\n") is None
+
+    def test_a_script_with_only_a_shebang_is_undescribed(self):
+        assert self._mc._shell_header("#!/bin/bash\nset -e\n") is None
+
+    def test_the_block_stops_at_the_first_non_comment(self):
+        assert self._mc._shell_header("#!/bin/bash\n# One.\nset -e\n# Two.\n") == "One."
+
+    def test_the_four_real_scripts_are_all_described(self):
+        """Measured before the walk widened. The ceiling holds at 4 BECAUSE these are
+        described — had one lacked a header the fix would be writing it, never raising
+        the ceiling to admit it (a ratchet is scoped by its population predicate)."""
+        data = self._mc.collect()
+        sh = [r for r, _ in data["documented"] if r.endswith(".sh")]
+        assert len(sh) == 4, f"expected 4 described shell scripts, got {sh}"
+        assert not [r for r, _ in data["undocumented"] if r.endswith(".sh")]
+
+    def test_shell_is_actually_walked(self):
+        """SEAM GUARD. If the glob silently stopped matching `*.sh`, every leg above
+        would still pass on synthetic strings while the census covered nothing."""
+        assert any(r.endswith(".sh") for r, _ in self._mc.collect()["documented"])
+
+
+class TestTheNotebookDecider:
+    """ADR-013 D3. Measured 2026-08-13: 91 of 91 notebooks already open with a markdown
+    heading, so this ENCODES a universal convention rather than imposing a new one —
+    which is why adopting it moved no ceiling."""
+
+    @property
+    def _mc(self):
+        import module_census
+        return module_census
+
+    def test_heading_plus_prose_becomes_the_description(self):
+        assert self._mc._notebook_header("# D11 — Band Theory\n\nCompanion to the draft.") \
+            == "D11 — Band Theory — Companion to the draft."
+
+    def test_a_bare_heading_is_enough(self):
+        assert self._mc._notebook_header("# Just A Title") == "Just A Title"
+
+    def test_rule_lines_do_not_reach_the_published_row(self):
+        """The wall-of-`=` defect, in the notebook leg."""
+        out = self._mc._notebook_header("# Title\n=======\n\nReal prose.")
+        assert "=" not in out and out.endswith("Real prose.")
+
+    def test_an_empty_cell_is_no_description(self):
+        assert self._mc._notebook_header("   \n\n") is None
+
+    def test_the_real_corpus_is_fully_described(self):
+        data = self._mc.collect()
+        nb = [r for r, _ in data["documented"] if r.endswith(".ipynb")]
+        assert len(nb) == 91, f"expected 91 described notebooks, got {len(nb)}"
+        assert not [r for r, _ in data["undocumented"] if r.endswith(".ipynb")]
+
+    def test_checkpoints_are_not_double_counted(self):
+        """`.ipynb_checkpoints` holds stale copies under near-identical names."""
+        assert not [r for r, _ in self._mc.collect()["documented"]
+                    if ".ipynb_checkpoints" in r]
+
+    def test_notebooks_are_actually_walked(self):
+        """SEAM GUARD — without it the legs above pass on synthetic strings while the
+        census covers no notebook at all."""
+        assert any(r.endswith(".ipynb") for r, _ in self._mc.collect()["documented"])
+
+
+class TestModuleCensusFresh:
+    """PRODUCTION-SEEDED (guide §2.4): every mutation writes into the REAL tree — a real
+    module's docstring, or the real `docs/MODULE_CENSUS.md` — and restores in a `finally`.
+
+    ADR-013. The census replaces two hand-maintained files whose narrative drifted while
+    their generated blocks stayed fresh. The legs below are what makes that trade safe:
+    the artifact must match a fresh derivation, and the population the census CANNOT
+    describe must not grow.
+    """
+
+    @staticmethod
+    def _mod():
+        import module_census
+        return module_census
+
+    def _leg(self, name):
+        return next(d for d in fr.check_module_census_fresh().details if d.name == name)
+
+    def test_the_live_tree_is_green_on_every_leg(self):
+        r = fr.check_module_census_fresh()
+        assert r.passed and r.measured
+        assert {"population", "census_fresh", "undocumented_modules"} == {
+            d.name for d in r.details}
+
+    def test_the_ratchet_has_zero_headroom(self):
+        """Guide §2.3 — a ceiling above the live population cannot fire."""
+        assert not any(d.name == "ratchet_slack"
+                       for d in fr.check_module_census_fresh().details)
+
+    def test_a_changed_docstring_makes_the_census_stale_in_production(self):
+        """FIRES ON THE SEEDED DEFECT — the leg that catches a description drifting away
+        from the module it describes, which is the whole failure the hand files had."""
+        mc = self._mod()
+        target = mc.PROJECT_ROOT / "src" / "core" / "transonic_background.py"
+        orig = target.read_text(encoding="utf-8")
+        try:
+            target.write_text(orig.replace(
+                "Transonic Background Solver", "SEEDED DEFECT Solver", 1), encoding="utf-8")
+            leg = self._leg("census_fresh")
+            assert not leg.passed and "STALE" in (leg.message or "")
+        finally:
+            target.write_text(orig, encoding="utf-8")
+
+    def test_removing_a_real_docstring_trips_the_ratchet(self):
+        """FIRES ON THE SEEDED DEFECT. ⚠️ The ratchet reads SOURCE, not the rendered
+        artifact — a leg keyed on the artifact would be satisfied by the regeneration that
+        introduced the regression, because the artifact always agrees with itself."""
+        mc = self._mod()
+        target = mc.PROJECT_ROOT / "src" / "core" / "transonic_background.py"
+        orig = target.read_text(encoding="utf-8")
+        tree = ast.parse(orig)
+        node = tree.body[0]
+        assert isinstance(node, ast.Expr) and isinstance(node.value, ast.Constant), (
+            "fixture assumption broken: the target module has no docstring")
+        try:
+            # Drop the docstring by its AST line span rather than by matching the literal —
+            # quoting style and escapes make a text match fragile, and a seed that silently
+            # fails to apply is a mutation test that proves nothing.
+            lines = orig.splitlines(keepends=True)
+            del lines[node.lineno - 1:node.end_lineno]
+            target.write_text("".join(lines), encoding="utf-8")
+            assert ast.get_docstring(ast.parse(target.read_text(encoding="utf-8"))) is None
+            leg = self._leg("undocumented_modules")
+            assert not leg.passed
+            assert f"{fr._NO_DOCSTRING_CEILING + 1} module(s)" in (leg.message or "")
+        finally:
+            target.write_text(orig, encoding="utf-8")
+
+    def test_a_walk_that_reaches_nothing_is_UNMEASURED_not_clean(self, monkeypatch):
+        """Guide §2.5 — the seam. A scan over an empty population passes vacuously; that
+        must read as UNVERIFIED rather than as a clean bill."""
+        monkeypatch.setattr(self._mod(), "TREES", ("no_such_tree",))
+        r = fr.check_module_census_fresh()
+        assert not r.passed and not r.measured
+        assert "vacuously" in (r.details[0].message or "")
+
+    def test_the_census_states_its_scope_on_its_face(self):
+        """ADR-013 D1b. An unstated boundary is how the next hand catalogue gets started."""
+        mc = self._mod()
+        text = mc.render(mc.collect())
+        assert "**Scope: Python, shell and notebooks**" in text
+        assert "lean.module_names" in text, "the header must name where Lean is answered"
+
+    def test_undocumented_modules_are_named_not_merely_counted(self):
+        """ADR-013 D3 — a surface silent about its blind spot reads as complete."""
+        mc = self._mod()
+        data = mc.collect()
+        text = mc.render(data)
+        assert "## Modules this census cannot describe" in text
+        for rel, _ in data["undocumented"]:
+            assert f"`{rel}`" in text, f"{rel} is counted but not named"

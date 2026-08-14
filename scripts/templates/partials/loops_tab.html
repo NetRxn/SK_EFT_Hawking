@@ -1,0 +1,67 @@
+{# ═══ LOOPS (ADR-012 D20, P9c) ═══
+   Renders scripts/dashboard_loops.loops_panel() over harness state that already exists —
+   no new writer.
+
+   ⚠️ THE LIMIT IS ON THE FACE OF THE PANE, per ADR-012's narrowed risk. Snapshots and
+   stall history are keyed by TIMESTAMP and carry no goal id, so activity is reported
+   harness-wide and is NOT attributed to a loop. A pane implying it could show which
+   subagents are running would be absence-rendered-as-success in a new location. #}
+{# This partial's MARKER — see the note in flow_tab.html. First selector unique here. #}
+<style>
+.loops-pane { font-size: 0.85rem; }
+.loops-pane .loops-generated, .loops-pane .loops-note { color: var(--grey); font-size: 0.78rem; }
+.loops-pane .loops-state { font-weight: 600; }
+.loops-pane .loops-none-armed { color: var(--grey); }
+</style>
+<div class="loops-pane" data-partial="loops_tab">
+
+  {% if loops is none or loops.error %}
+    <p class="flow-error">⚠️ The Loops pane could not be built:
+      {{ loops.error if loops else 'not loaded' }}. Unmeasured, not idle.</p>
+  {% else %}
+
+  <h2>Loops — what is armed, and what the harness has been doing</h2>
+  <p class="loops-generated">generated {{ loops.generated }}</p>
+
+  <h3>Armed</h3>
+  <p class="loops-state loops-{{ loops.armed.state }}">{{ loops.armed.state }}</p>
+  {% if loops.armed.note %}<p class="loops-note">{{ loops.armed.note }}</p>{% endif %}
+  {% if loops.armed.loops %}
+  <table class="data-table">
+    <thead><tr><th>goal</th><th>armed</th><th>state</th></tr></thead>
+    <tbody>
+      {% for lp in loops.armed.loops %}
+      <tr><td>{{ lp.goal if lp.goal is defined else lp }}</td>
+          <td>{{ lp.armed_at if lp.armed_at is defined else '—' }}</td>
+          <td>{{ lp.state if lp.state is defined else '—' }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+
+  <h3>Activity <span class="att-blurb">{{ loops.activity.attribution }}</span></h3>
+  {# Its own class, not just `loops-note`: the browser test asserts THIS sentence is on
+     the pane, and a selector that matched "the first note" would have been satisfied by
+     the armed-state note above — passing while the limit was absent. #}
+  <p class="loops-note loops-attribution-limit">⚠️ {{ loops.activity.attribution_note }}</p>
+  <table class="data-table flow-coverage">
+    <tbody>
+      {% for k, v in loops.activity.items() %}
+      {% if k not in ('attribution', 'attribution_note') %}
+      <tr><td>{{ k.replace('_', ' ') }}</td><td class="flow-num">{{ v }}</td></tr>
+      {% endif %}
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h3>Blocked questions</h3>
+  <table class="data-table flow-coverage">
+    <tbody>
+      {% for k, v in loops.blocked_questions.items() %}
+      <tr><td>{{ k.replace('_', ' ') }}</td><td class="flow-num">{{ v }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  {% endif %}
+</div>

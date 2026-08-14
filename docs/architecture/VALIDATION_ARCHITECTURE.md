@@ -289,6 +289,27 @@ while `python_modules` was published from the whole tree.) A new published count
 tree added here, or it inherits the same blindness; `test_every_tree_counts_json_publishes_
 is_a_staleness_input` is mutation-verified one case per leg.
 
+⚠️ **AND THAT REPAIR WAS STILL INCOMPLETE, BECAUSE EVERY LEG OF IT IS AN MTIME PROXY.**
+An mtime-max over surviving files is structurally blind to **deletion**: removing a file
+leaves every other file's mtime untouched, so the maximum does not move and the check
+reports `fresh`. Measured 2026-08-13 — the Index's autogen test was deleted with the Index
+itself in `bee7608c` (ADR-013 D7; the path is deliberately not named here, because naming a
+deleted file is what `doc_refs_resolve` exists to stop, and it fired on the first draft of
+this very paragraph), `docs/counts.json` shipped `test_files: 194` against a live **193** for
+three commits, and `counts_fresh` was green throughout. The 2026-08-10 fix widened the *trees*; it
+could not widen the *direction*.
+
+The repair is to stop proxying where a proxy is not needed. `_counts_is_stale` now
+**recomputes and compares** the five glob-derived figures (`python_modules`, `test_files`,
+`notebooks`, `papers`, `figures`) through `update_counts.count_python_cheap` — imported, never
+re-implemented, so the check and the writer cannot disagree — and keeps the mtime legs for
+`pytest_cases` alone, which costs a pytest collection. The two are complementary rather than
+redundant: **deleting a file moves `test_files` (the count leg); editing one moves its own
+mtime (the mtime leg).** Neither direction is covered by the other.
+
+**The generalisable rule: an mtime is a proxy for "did the answer change", and it is a proxy
+that only works in one direction. Where the answer is cheap to recompute, assert the answer.**
+
 The cost is real and is accepted deliberately: the alternative is giving the
 coverage floor slack, and a floor with slack cannot see the next check that
 silently stops measuring — which is the failure it exists to catch.

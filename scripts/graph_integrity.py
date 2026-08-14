@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-"""SK-EFT Provenance Graph — Integrity Checker
+"""SK-EFT Provenance Graph — Integrity Checker, including the sentence-level
+provenance checks (chain completeness, sentence-id collisions, audit-event
+well-formedness, claim-cluster consistency).
 
 Runs structural queries against the extracted graph to find:
 - Orphan nodes (no edges)

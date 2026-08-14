@@ -194,7 +194,7 @@ The shipping-ready state is "all 14 bundles cleared per-bundle reviewer triple, 
 | Topic | Document |
 |-------|----------|
 | Full technical README | [`README.md`](../../README.md) |
-| Module inventory and quick-reference index | [`SK_EFT_Hawking_Inventory_Index.md`](../../SK_EFT_Hawking_Inventory_Index.md) |
+| What each Python module is | [`docs/MODULE_CENSUS.md`](../MODULE_CENSUS.md) |
 | Strategic situation and proof-chain assessment | [`docs/RESEARCH_STATUS_OVERVIEW.md`](../RESEARCH_STATUS_OVERVIEW.md) |
 | What each phase accomplished | `docs/stakeholder/Phase{N}_Implications.md` |
 | Strategic positioning per phase | `docs/stakeholder/Phase{N}_Strategic_Positioning.md` |

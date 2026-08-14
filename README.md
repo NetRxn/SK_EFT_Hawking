@@ -277,7 +277,7 @@ The 42 per-wave drafts in `papers/paperN_*/` remain as historical / source mater
 
 ## Library architecture
 
-The Lean library is organized into nine functional areas. The per-module map is in [`SK_EFT_Hawking_Inventory_Index.md`](SK_EFT_Hawking_Inventory_Index.md).
+The Lean library is organized into nine functional areas. The per-module map is `lean.module_names` in [`docs/counts.json`](docs/counts.json), with the dependency structure in `lean/lean_deps.json` and `lean/atlas_view.json`.
 
 - **Acoustic-Hawking foundation** — acoustic metric, SK doubling, universality, exact WKB connection formula, second- and third-order SK-EFT, CGL FDR derivation, dispersive corrections, DKM transport bootstrap.
 - **Emergent gauge fields and chirality** — gauge erasure, Fermi-point topological charge → emergent U(1)/SU(2), chirality wall and TPF evasion, three-pillar master synthesis.
@@ -343,7 +343,7 @@ SK_EFT_Hawking/
 │       ├── DKMBootstrap/              # Phase 6q DKM transport bootstrap
 │       ├── QuantumCrooks/             # Quantum-Crooks no-go architecture
 │       ├── CrooksAnalogHawking/       # Sakharov ↔ horizon-Crooks unification
-│       └── …                          # See SK_EFT_Hawking_Inventory_Index.md for the full per-module map
+│       └── …                          # Full per-module map: docs/counts.json (lean.module_names)
 │
 ├── src/
 │   ├── core/                          # Canonical homes: formulas.py, constants.py, visualizations.py,
@@ -454,8 +454,7 @@ uv run python scripts/provenance_dashboard.py           # http://localhost:8050
 | Understand the physics and results | This README (above) |
 | See the big-picture assessment by chain | [`docs/RESEARCH_STATUS_OVERVIEW.md`](docs/RESEARCH_STATUS_OVERVIEW.md) |
 | Understand the predictive scope (what's in, what's out) | [`docs/ARCHITECTURE_SCOPE.md`](docs/ARCHITECTURE_SCOPE.md) |
-| See what's been built and its status | [`SK_EFT_Hawking_Inventory_Index.md`](SK_EFT_Hawking_Inventory_Index.md) |
-| Check the full inventory | [`SK_EFT_Hawking_Inventory.md`](SK_EFT_Hawking_Inventory.md) |
+| See what each Python module is | [`docs/MODULE_CENSUS.md`](docs/MODULE_CENSUS.md) |
 | Understand the execution process | [`docs/WAVE_EXECUTION_PIPELINE.md`](docs/WAVE_EXECUTION_PIPELINE.md) |
 | See the bundle architecture and Stage-13 readiness | [`docs/PAPER_STRATEGY.md`](docs/PAPER_STRATEGY.md) + [`docs/BUNDLE_READINESS_HEATMAP.md`](docs/BUNDLE_READINESS_HEATMAP.md) |
 | Lift draft content into a bundle | [`docs/BUNDLE_LIFT_PROCEDURE.md`](docs/BUNDLE_LIFT_PROCEDURE.md) |
@@ -485,11 +484,11 @@ uv run python scripts/provenance_dashboard.py           # http://localhost:8050
 
 **Project documentation:**
 - [Wave Execution Pipeline](docs/WAVE_EXECUTION_PIPELINE.md) — the 14-stage process governing all work
-- [Inventory Index](SK_EFT_Hawking_Inventory_Index.md) — LLM-friendly quick reference: module map, counts, pipeline invariants
+- [Module Census](docs/MODULE_CENSUS.md) — what each Python module is, derived from its docstring
 - [Architecture Scope](docs/ARCHITECTURE_SCOPE.md) — Layer-3 predictive boundary (SM + GR in scope, dark-energy sector out under tested mechanisms)
 - [Permanent Tracked Hypotheses](docs/PERMANENT_TRACKED_HYPOTHESES.md) — the project's load-bearing tracked `Prop` ledger
 - [Knowledge Graph](docs/KNOWLEDGE_GRAPH.md) — interactive provenance visualization
-- [Dashboard](docs/DASHBOARD.md) — parameter verification, proof architecture, paper claims
+- [Dashboard](docs/architecture/DASHBOARD.md) — parameter verification, proof architecture, paper claims
 
 **Roadmaps.** [`docs/roadmaps/`](docs/roadmaps/) contains phase-specific execution plans for **Phase 1 → Phase 6z** (the active Phase-6 series runs `Phase6a_Roadmap.md` through `Phase6z_Roadmap.md`, with per-wave sub-roadmaps under `Phase6v/`, etc.), plus [Phase7_Roadmap.md](docs/roadmaps/Phase7_Roadmap.md) and [Phase7a_Roadmap.md](docs/roadmaps/Phase7a_Roadmap.md) for the bundle-architecture reframe. Forward-looking general targets are tracked in [Phase6_Deferred_Targets.md](docs/roadmaps/Phase6_Deferred_Targets.md).
 

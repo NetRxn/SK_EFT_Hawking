@@ -166,6 +166,27 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
+        /* ── Shared by the three operator panes (ADR-012 P9b/P9c) ──
+           Only what ALL THREE partials use lives here; each partial carries its own
+           <style> for its own classes, which is also the marker the template-contract
+           gate uses to prove the include ran.
+
+           ⚠️ THE NON-VERDICT KINDS ARE DELIBERATELY NEITHER GREEN NOR RED. Painting
+           `not-tracked` or `unmeasured` as a verdict would reintroduce at the render
+           layer exactly what dashboard_flow.py refuses to do at the data layer. They
+           read hatched-grey — visibly "no answer", not "fine". */
+        .flow-not-tracked, .flow-unmeasured, .flow-missing, .flow-undeclared {
+            background: repeating-linear-gradient(45deg, #f4f4f5, #f4f4f5 4px,
+                        #e4e4e7 4px, #e4e4e7 8px);
+            color: var(--grey); font-style: italic; }
+        .flow-num { text-align: right; font-variant-numeric: tabular-nums; }
+        .flow-caveats { background: #fffbeb; border-left: 3px solid #f59e0b;
+                        padding: 8px 12px 8px 28px; margin: 12px 0; font-size: 0.82rem; }
+        .flow-caveats li { margin: 4px 0; }
+        .flow-error { background: #fee2e2; border-left: 3px solid #dc2626;
+                      padding: 10px 14px; font-size: 0.88rem; }
+        .flow-coverage td:first-child { color: var(--grey); }
+
         /* Paper card */
         .paper-card { background: var(--bg); border: 1px solid var(--border);
                      border-radius: 8px; padding: 16px; margin-bottom: 12px; }
@@ -331,6 +352,19 @@
         <a class="tab {% if tab == 'bundles' %}active{% endif %}"
            href="?tab=bundles">
             Bundles
+        </a>
+        {# ADR-012 D15/D20 — the operator control surface (P9b/P9c). #}
+        <a class="tab {% if tab == 'flow' %}active{% endif %}"
+           href="?tab=flow">
+            Flow
+        </a>
+        <a class="tab {% if tab == 'attention' %}active{% endif %}"
+           href="?tab=attention">
+            Attention
+        </a>
+        <a class="tab {% if tab == 'loops' %}active{% endif %}"
+           href="?tab=loops">
+            Loops
         </a>
     </div>
 </div>
@@ -992,6 +1026,27 @@
     {% if tab == 'bundles' %}
     <div class="tab-content active">
         {% include 'partials/bundles_tab.html' %}
+    </div>
+    {% endif %}
+
+    <!-- ═══ FLOW BOARD (ADR-012 D15 S2, P9b) ═══ -->
+    {% if tab == 'flow' %}
+    <div class="tab-content active" style="max-width: none;">
+        {% include 'partials/flow_tab.html' %}
+    </div>
+    {% endif %}
+
+    <!-- ═══ ATTENTION (ADR-012 D15 S3, P9b) ═══ -->
+    {% if tab == 'attention' %}
+    <div class="tab-content active">
+        {% include 'partials/attention_tab.html' %}
+    </div>
+    {% endif %}
+
+    <!-- ═══ LOOPS (ADR-012 D20, P9c) ═══ -->
+    {% if tab == 'loops' %}
+    <div class="tab-content active">
+        {% include 'partials/loops_tab.html' %}
     </div>
     {% endif %}
 

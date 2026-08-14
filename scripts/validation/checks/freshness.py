@@ -2,7 +2,7 @@
 
 The checks that REGENERATE artifacts other checks read (`counts_fresh`,
 `tables_fresh`, `claim_clusters_fresh`), plus the freshness comparisons that do
-not regenerate (`bundle_source_freshness`, `inventory_index_autogen_fresh`,
+not regenerate (`bundle_source_freshness`, `module_census_fresh`,
 `notebook_stored_outputs_current`).
 
 ⚠️ **THIS MODULE IS WHY EXECUTION ORDER IS DATA.** `counts_fresh` shells out to
@@ -114,7 +114,8 @@ def _verify_regeneration(is_stale, generator: str, details: list) -> bool:
     # generator that correctly wrote nothing from one that is broken and writes
     # nothing when it should. The R4-I7 guarantee survives only for the case where
     # staleness OUTLIVES a touch. Closing that properly needs a content-derived
-    # staleness predicate (as `inventory_index_autogen_fresh` already uses); filed,
+    # staleness predicate (as `module_census_fresh` already uses — it content-compares
+    # `render(collect())` against the artifact); filed,
     # not done here.
     if still_stale:
         touched = False
@@ -189,6 +190,40 @@ def _counts_is_stale() -> tuple[bool, str]:
         newest = max((f.stat().st_mtime for f in root.rglob(pat)), default=0)
         if newest > counts_mtime:
             return True, f"{label} newer than counts.json"
+
+    # ⚠️ EVERY LEG ABOVE IS AN MTIME PROXY, AND AN MTIME-MAX CANNOT SEE A
+    # DELETION. Removing a file leaves every surviving file's mtime untouched,
+    # so the maximum does not move and this function reports `fresh` while
+    # counts.json publishes a count one too high. Measured 2026-08-13:
+    # `tests/test_inventory_index_autogen.py` was deleted in `bee7608c` and
+    # counts.json shipped `test_files: 194` against a live 193 for three
+    # commits, with this check green the whole time. The 2026-08-10 fix above
+    # widened the *trees*; it could not widen the *direction*.
+    #
+    # So for the legs that are cheap to derive exactly, assert the DECIDER —
+    # does the published number equal the live one — instead of a proxy for it.
+    # `pytest_cases` stays on the proxy because it costs a pytest collection,
+    # and it does not need the count leg: a deleted file moves `test_files`
+    # (caught here) and an edited file moves its own mtime (caught above).
+    #
+    # The derivation is IMPORTED, never re-implemented — a second count here
+    # would be a parallel mechanism free to disagree with the writer's.
+    try:
+        import update_counts as _uc
+        published = json.loads(
+            _H.COUNTS_JSON_PATH.read_text(encoding="utf-8")).get("python", {})
+        # Anchored on `_H`, not on `update_counts`'s own module constants, so a
+        # test that retargets the trees retargets this leg with them.
+        live = _uc.count_python_cheap(
+            src_dir=_H.SRC_DIR, tests_dir=_H.TESTS_DIR,
+            notebooks_dir=_H.NOTEBOOKS_DIR, papers_dir=_H.PAPERS_DIR,
+            viz_file=_H.SRC_DIR / "core" / "visualizations.py")
+    except Exception as exc:  # fail-stale (safe), same contract as the siblings
+        return True, f"python counts could not be recomputed: {type(exc).__name__}"
+    for leg, value in live.items():
+        if published.get(leg) != value:
+            return True, (f"python.{leg}: counts.json publishes "
+                          f"{published.get(leg)!r}, live is {value!r}")
     return False, "fresh"
 
 
@@ -801,52 +836,6 @@ def check_bundle_source_freshness() -> CheckResult:
     )
 
 
-# ═══════════════════════════════════════════════════════════════════════
-# CHECK: Inventory-Index autogen freshness (advisory)
-# ═══════════════════════════════════════════════════════════════════════
-
-@register_check("inventory_index_autogen_fresh",
-                "Advisory: SK_EFT_Hawking_Inventory_Index.md autogen blocks match docs/counts.json")
-def check_inventory_index_autogen_fresh() -> CheckResult:
-    """Advisory watchlist: the auto-generated blocks in the Inventory Index
-    (the §1 counts table, the §3 per-family-counts sentence, and the §3.1
-    generated family->count table) must reflect ``docs/counts.json``.
-
-    These blocks are owned by ``scripts/update_inventory_index.py`` and
-    bracketed by ``<!-- AUTOGEN:... -->`` markers. They drift between manual
-    syncs whenever ``update_counts.py`` regenerates ``counts.json`` without a
-    follow-up index refresh. This check is ADVISORY (always passes, warns on
-    staleness) — mirroring ``elaboration_knob_watchlist`` semantics — because a
-    stale doc-index is a documentation-hygiene signal, not a soundness or
-    pipeline-invariant failure. Fix: run
-    ``uv run python scripts/update_inventory_index.py``.
-
-    Runs the generator's ``compute_stale`` logic in-process (no shelling out).
-    """
-    try:
-        from update_inventory_index import compute_stale
-    except ImportError as exc:
-        return CheckResult(passed=True, measured=False, details=[
-            Detail("import", True,
-                   f"SKIPPED — update_inventory_index not importable: {exc}",
-                   warning=True)])
-
-    try:
-        stale, summary = compute_stale()
-    except Exception as exc:  # defensive: never fail the suite on an advisory
-        return CheckResult(passed=True, measured=False, details=[
-            Detail("compute", True,
-                   f"SKIPPED — compute_stale raised: {exc}", warning=True)])
-
-    if stale:
-        return CheckResult(passed=True, details=[
-            Detail("freshness", True,
-                   f"{summary} — run `uv run python "
-                   "scripts/update_inventory_index.py` to refresh",
-                   warning=True)])
-    return CheckResult(passed=True, details=[
-        Detail("freshness", True, summary)])
-
 
 @register_check(
     "architecture_inventory_fresh",
@@ -1118,15 +1107,30 @@ def check_architecture_inventory_fresh() -> CheckResult:
         # saying so is the finding. See ARCHITECTURE_TODOs A2.
         "scripts/pre_commit_hook.sh",
         "scripts/install_pre_commit.sh",
-        # Declared input to the (inert) freshness layer; never created. END_TO_END_MAP §6.
-        # Runtime artifacts: written during a /goal loop, absent in a clean tree.
+        # ⚠️ REASON CORRECTED 2026-08-12. This read "never created", which was true of the
+        # tree and false of the mechanism: the P9a browser test clicked Confirm once and
+        # the change bus wrote its first event immediately. It is a RUNTIME artifact —
+        # absent in a clean checkout, present after anyone confirms a parameter — and is
+        # now gitignored alongside the harness's other per-run logs. The exemption stands
+        # either way; the reason had to stop being wrong.
         "docs/verification_log.jsonl",
+        # Declared as a Bundles-tab input by DASHBOARD.md and named there precisely to say
+        # it does NOT exist (ADR-012 C10/D22). Not gitignored either, so its absence is a
+        # gap rather than a local-artifact convention. Drop this entry when the submission
+        # event log acquires a store.
+        "docs/submission_state.json",
+        # Runtime artifacts: written during a /goal loop, absent in a clean tree.
         "active_issues.json",
         "blocked_questions.jsonl",
     }
     pathish = re.compile(r"^[A-Za-z_][\w./-]*\.(?:py|sh|md|json|lean|tex|jsonl|toml|yml)$")
+    # ⚠️ `docker` added 2026-08-12 (ADR-012 P8d). `docker/docker-compose.graph.yml` EXISTS
+    # and was reported dangling the moment DASHBOARD.md moved under `docs/architecture/` —
+    # the scanner simply never walked that directory. A root missing from this tuple makes
+    # a live file indistinguishable from a deleted one, which is the opposite of what this
+    # leg is for, so the fix is the root and never an exception entry.
     roots = ("scripts", "docs", "tests", "src", "papers", "lean", "figures",
-             "temporary", "notebooks", ".claude/plugins/skeft-qa")
+             "temporary", "notebooks", "docker", ".claude/plugins/skeft-qa")
     # `.lake` holds the whole Mathlib build tree — tens of thousands of files that no
     # architecture document references. Walking it turns a sub-second scan into minutes.
     skip_parts = {".lake", ".git", "__pycache__", "node_modules", ".pytest_cache"}
@@ -1287,3 +1291,116 @@ def check_bundle_counts_fresh() -> CheckResult:
         f"{ok}/{ok + len(stale) + len(missing)} declared bundle(s) carry a current "
         f"bundle_counts.tex"))
     return CheckResult(passed=not (stale or missing), details=details)
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# ADR-013 — the module census
+# ═══════════════════════════════════════════════════════════════════════
+
+#: Modules in `src/` and `scripts/` carrying no module docstring. Down-only.
+#:
+#: Measured 2026-08-13 at 4: `src/{dark_sector,fermi_hubbard,graphene}/__init__.py` and
+#: `scripts/tests/test_system2.py`. 315 of 319 modules DO carry one, which is why this is
+#: a ratchet and not a hard failure — three of the four are `__init__.py`, where a
+#: docstring is a style question rather than a defect, and a gate that fires on correct
+#: work gets switched off (VALIDATION_GATE_TOPOLOGY §3).
+#:
+#: ⚠️ **The ceiling keys on the UNDOCUMENTED set, so adding documented modules cannot move
+#: it.** Building the census added `scripts/module_census.py` and took the population 318
+#: → 319 without touching this number — which is the property a ratchet on a defect
+#: population must have.
+#:
+#: ⚠️ **An earlier draft of ADR-013 also ratcheted a "title-only" population. It does not
+#: exist**: it came from a character threshold, and the population moved with the
+#: threshold (3 at ≤60 chars, 8 at "one line", 10 at "one line without terminal
+#: punctuation"). The modules it flagged carry good docstrings. A non-arbitrary predicate
+#: — the docstring restates the module name and adds no new word — returns zero.
+_NO_DOCSTRING_CEILING: int = 4
+
+
+@register_check("module_census_fresh",
+                "docs/MODULE_CENSUS.md matches a fresh derivation, and the undocumented "
+                "module population is ratcheted")
+def check_module_census_fresh() -> CheckResult:
+    """The census is derived from module docstrings via the AST; this asserts it is current
+    and that the population it cannot describe is not growing.
+
+    ⚠️ **The ratchet reads SOURCE, not the rendered artifact.** The census regenerates and
+    auto-restages at the commit gate, so a check keyed on the artifact would be satisfied
+    by the regeneration that introduced the regression — the artifact always agrees with
+    itself. Counting undocumented modules from the walk is what makes the leg able to fail.
+    """
+    try:
+        import module_census as mc
+    except ImportError as exc:
+        return CheckResult(passed=False, measured=False, details=[Detail(
+            "import", False,
+            f"SKIPPED — module_census not importable: {exc}; UNVERIFIED, not passing")])
+
+    try:
+        data = mc.collect()
+        fresh = mc.render(data)
+    except Exception as exc:  # noqa: BLE001 — a broken derivation must not read as clean
+        return CheckResult(passed=False, measured=False, details=[Detail(
+            "derive", False,
+            f"module_census failed to derive ({exc}) — the census cannot be compared, "
+            f"which is UNVERIFIED rather than fresh")])
+
+    details: list[Detail] = []
+    all_pass = True
+    n_doc = len(data["documented"])
+    n_un = len(data["undocumented"])
+
+    # ── Leg 1: the seam. A walk that reached nothing proves nothing (guide §2.5) ──
+    if n_doc + n_un == 0:
+        return CheckResult(passed=False, measured=False, details=[Detail(
+            "population", False,
+            f"the walk over {list(mc.TREES)} found zero modules — the legs below would "
+            f"pass vacuously over an empty population, which is not evidence they hold")])
+    details.append(Detail(
+        "population", True,
+        f"{n_doc + n_un} module(s) walked across {', '.join(mc.TREES)}/"))
+
+    # ── Leg 2: the tracked artifact matches a fresh derivation ────────────────
+    if not mc.OUT_PATH.is_file():
+        all_pass = False
+        details.append(Detail(
+            "census_fresh", False,
+            f"{mc.OUT_PATH.name} is absent — run "
+            f"`uv run python scripts/module_census.py --write`"))
+    else:
+        current = mc.OUT_PATH.read_text(encoding="utf-8")
+        ok = current == fresh
+        details.append(Detail(
+            "census_fresh", ok,
+            f"{mc.OUT_PATH.name} matches a fresh derivation ({n_doc} described)"
+            if ok else
+            f"{mc.OUT_PATH.name} is STALE — a module docstring changed and the census did "
+            f"not follow. Run `uv run python scripts/module_census.py --write`. It is "
+            f"regenerated and restaged by the commit gate, so a stale one means that gate "
+            f"did not run for this change."))
+        if not ok:
+            all_pass = False
+
+    # ── Leg 3: the undocumented population is ratcheted, down-only ────────────
+    ok = n_un <= _NO_DOCSTRING_CEILING
+    names = [rel for rel, _ in data["undocumented"]]
+    details.append(Detail(
+        "undocumented_modules", ok,
+        f"{n_un} module(s) without a docstring, at or below the down-only ceiling of "
+        f"{_NO_DOCSTRING_CEILING}"
+        if ok else
+        f"{n_un} module(s) without a docstring EXCEEDS the down-only ceiling of "
+        f"{_NO_DOCSTRING_CEILING}. The census cannot describe them, and the fix is a "
+        f"docstring in the module rather than a line in a hand-maintained catalogue: "
+        f"{names[:8]}"))
+    if not ok:
+        all_pass = False
+    elif n_un < _NO_DOCSTRING_CEILING:
+        details.append(Detail(
+            "ratchet_slack", True,
+            f"the ceiling now carries {_NO_DOCSTRING_CEILING - n_un} of headroom — lower it "
+            f"to {n_un} in this commit; a ratchet with slack cannot fire (guide §2.3)",
+            warning=True))
+
+    return CheckResult(passed=all_pass, details=details)

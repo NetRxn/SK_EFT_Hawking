@@ -1224,7 +1224,7 @@ Both stages reference `ReviewFinding` and `ReadinessGate` nodes as their primary
 - `docs/READINESS_GATES.md` — canonical 11-gate taxonomy
 - `docs/QI_REGISTER.md` — Stage 14 process-improvement register (auto-generated)
 - `docs/PAPER_TABLES_STATUS.md` — per-paper retrofit status of the table-autogeneration framework
-- `docs/DASHBOARD.md` — provenance command center documentation
+- `docs/architecture/DASHBOARD.md` — provenance command center documentation
 - `temporary/working-docs/reviews/papers/2026-04-12-Perplexity/SK_EFT_Hawking — Master Systematic Update Checklist.md` — source of the 13-dimension taxonomy
 - `docs/roadmaps/Phase5u_Paper_Revision_Roadmap.md` — April paper-revision sibling track (content; 5v is process)
 - `.claude/plugins/physics-qa/agents/claims-reviewer.md`, `figure-reviewer.md`, `adversarial-reviewer.md` — QA agents (claims-reviewer v2 redesign in Wave 10)

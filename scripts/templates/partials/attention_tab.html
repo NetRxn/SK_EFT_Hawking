@@ -1,0 +1,87 @@
+{# ═══ ATTENTION (ADR-012 D15 S3, P9b) ═══
+   Renders scripts/dashboard_attention.attention(): four UNMERGED feeds plus the coverage
+   and caveats that say what they cannot see. The module returns all six keys from one
+   call precisely so a template cannot render the lists and drop the sentences; this
+   partial therefore renders the caveats FIRST, where they cannot be scrolled past. #}
+{# This partial's MARKER — see the note in flow_tab.html. First selector unique here. #}
+<style>
+.attention-pane { font-size: 0.85rem; }
+.attention-pane .att-blurb { color: var(--grey); font-weight: 400; font-size: 0.8rem; }
+.attention-pane .att-count { float: right; color: var(--grey); font-size: 0.85rem; }
+.attention-pane .att-target { color: var(--grey); font-size: 0.75rem; margin-top: 2px; }
+.attention-pane .att-urgency { font-size: 0.75rem; }
+.attention-pane .att-ask-now { color: #991b1b; font-weight: 600; }
+.attention-pane .att-pkg-ok { color: #166534; }
+.attention-pane .att-pkg-short { color: #9a3412; }
+.attention-pane .att-empty { color: var(--grey); font-style: italic; font-size: 0.85rem; }
+</style>
+<div class="attention-pane" data-partial="attention_tab">
+
+  {% if attention is none or attention.error %}
+    <p class="flow-error">⚠️ Attention could not be built:
+      {{ attention.error if attention else 'not loaded' }}. Unmeasured, not empty.</p>
+  {% else %}
+
+  <h2>Attention — what wants a decision</h2>
+
+  {% if attention.caveats %}
+  <ul class="flow-caveats">
+    {% for line in attention.caveats %}<li>⚠️ {{ line }}</li>{% endfor %}
+  </ul>
+  {% endif %}
+
+  {# Four feeds, deliberately NOT merged into one ranked list: they carry different
+     urgency semantics and a single sort would invent a comparison nobody defined. #}
+  {% for feed, title, blurb in [
+       ('publication', 'Publication', 'open findings routed to the operator'),
+       ('process',     'Process',     'System-2 register, active issues'),
+       ('decisions',   'Decisions',   'blocked questions awaiting a call'),
+       ('parked',      'Parked',      'work held with a release condition')] %}
+  <h3>{{ title }} <span class="att-blurb">{{ blurb }}</span>
+      <span class="att-count">{{ attention[feed]|length }}</span></h3>
+  {% if attention[feed] %}
+  <table class="data-table att-table">
+    <thead><tr><th>item</th><th>urgency</th><th>lane</th><th>package</th></tr></thead>
+    <tbody>
+      {% for item in attention[feed] %}
+      <tr>
+        <td>{{ item.label if item.label is defined else item }}
+          {% if item.target is defined and item.target %}
+          <div class="att-target">{{ item.target }}</div>{% endif %}</td>
+        <td class="att-urgency att-{{ item.urgency if item.urgency is defined else 'none' }}">
+          {{ item.urgency if item.urgency is defined else '—' }}</td>
+        <td>{{ item.lane if item.lane is defined else '—' }}</td>
+        <td>
+          {% if item.decision_package is defined and item.decision_package %}
+            {% if item.decision_package.complete %}
+              <span class="att-pkg-ok">complete</span>
+            {% else %}
+              <span class="att-pkg-short" title="D11 requires all five">
+                missing {{ item.decision_package.missing|join(', ') }}</span>
+            {% endif %}
+          {% else %}—{% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="att-empty">None — a measured zero, not an unread feed. See coverage below.</p>
+  {% endif %}
+  {% endfor %}
+
+  <h3>Graduation signal</h3>
+  <p class="att-grad">{{ attention.graduation.note if attention.graduation.note is defined
+                          else attention.graduation }}</p>
+
+  <h3>What these feeds reached</h3>
+  <table class="data-table flow-coverage">
+    <tbody>
+      {% for k, v in attention.coverage.items() %}
+      <tr><td>{{ k.replace('_', ' ') }}</td><td class="flow-num">{{ v }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  {% endif %}
+</div>

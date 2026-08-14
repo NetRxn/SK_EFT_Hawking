@@ -1,9 +1,18 @@
 # ADR-012 — The remediation loop: routing, closure, and the operator control surface
 
-- **Status:** 📝 **PROPOSED — PARTIALLY BUILT (drafted 2026-08-12, scope expanded 2026-08-12).**
-  The triage pilot (§Pilot) ran and is complete. Nothing else in this document is implemented.
-  It is written before the code deliberately, per the architecture rule that *a doc written
+- **Status:** 🏗️ **ACCEPTED — SUBSTANTIALLY BUILT (drafted 2026-08-12, scope expanded 2026-08-12).**
+  **§Plan's per-phase entries are the authority on what is built. This line deliberately names
+  no phase.** It carried a roster twice, and the roster was stale both times — the second time
+  while the correction warning directly below was already on the page. A status summary that
+  restates what §Plan owns is a second owner for one fact, and the copy is the one that rots.
+  It was written before the code deliberately, per the architecture rule that *a doc written
   afterwards is a changelog; only one written first is a specification.*
+
+  ⚠️ **CORRECTED 2026-08-12. This line read "The triage pilot ran and is complete. Nothing else in
+  this document is implemented" while §Plan already marked seven phases ✅ COMPLETE and D17 was
+  headed `✅ IMPLEMENTED`.** The header was written first and never re-derived — the same failure
+  the ADR documents elsewhere, in the ADR's own status field. **One owner per fact:** the phase
+  table owns build state, and this line now points at it instead of restating it.
 
   **This document has been corrected three times, each by a different instrument, and the
   correction history is the reason to trust the current text over any earlier quotation of it:**
@@ -214,10 +223,20 @@ The measurements agree exactly: 66 `review:`-scheme orphans, 66 baseline. **The 
 nothing measured this" was the aggregate over three schemes, presented as an unmeasured deviation.**
 Building a second check would be the "second mechanism beside one that already exists" failure that
 `CLAUDE.md` rule 1 names, landing inside the change written to prevent it — and it would be
-*weaker*: an aggregate ceiling of 247 mixes 190 permanently-inert legacy records with 57 live ones,
+*weaker*: an aggregate ceiling mixes the permanently-inert legacy records with the live ones,
 so deleting one legacy record silently buys a free slot for a real dangling closure. **See D13.**
 
-**C10. The dashboard's own documentation over-describes it.** `docs/DASHBOARD.md` declares a
+⚠️ **CORRECTED 2026-08-12 — this sentence carried arithmetic that never reconciled with
+§Measurements.** It read *"an aggregate ceiling of 247 mixes 190 permanently-inert legacy records
+with 57 live ones"*, while §Measurements gave 256 orphans as 190 legacy + 66 `review:`-scheme.
+190 + 57 = 247 and 190 + 66 = 256 are both internally consistent and cannot both be the corpus;
+the live figure at drafting was 66, so 57/247 was wrong when written. Re-measured 2026-08-12 after
+the P7 closures: **249 orphans = 190 legacy + 59 `review:`-scheme**, matching the check's baseline
+of 59. **The argument is unaffected** — it turns on the *mixing*, not on the magnitude — which is
+exactly why the numbers should not have been in the prose at all. Read them from
+`validate.py --check ledger_ids_resolve`.
+
+**C10. The dashboard's own documentation over-describes it.** `docs/architecture/DASHBOARD.md` declares a
 cross-tab change bus (`docs/verification_log.jsonl`) and a submission-event log
 (`docs/submission_state.json`); **neither file exists**, and neither is gitignored.
 `END_TO_END_MAP.md` §6 already names the first as the reason the entire freshness layer is inert.
@@ -439,8 +458,23 @@ bundle carries an open major" becomes reachable by degrading attribution rather 
 anything — absence rendered as success, one level up from where this ADR usually catches it.
 
 **So D9 ships with two ratchets, not one:** the per-bundle ceiling, and a corpus-wide down-only count
-of **unattributed open blocking findings**, frozen at 52 majors / 19 criticals. Both may only shrink.
+of **the open blocking findings the per-bundle aggregation does not reach**. Both may only shrink.
 The second is what makes the first honest.
+
+⚠️ **CORRECTED 2026-08-12 — this sentence stated the constant as "52 majors / 19 criticals" while
+the paragraph above it had already established 47.** The two are not a contradiction in the
+measurements (52 + 19 = 71 lack `inferred_bundle`, and 71 − 24 = 47 lack *both* keys); the defect
+was that the correction landed one paragraph up and never reached the sentence that names the
+frozen value. A number stated twice in one decision is a number that will disagree with itself.
+
+⚠️ **And the predicate has since changed, which voids all of these figures as constants.** Leg 2
+keyed on *"carries neither key"* — a **proxy** for *"the aggregation did not reach it"* — and it was
+wrong for the pre-bundle-era corpus (D7): those findings carry an `inferred_paper`, so leg 2 skipped
+them, and map to no bundle, so leg 1 never saw them. **Eight open blocking findings sat outside both
+legs.** Leg 2 now keys on the ids the aggregation returned, so the two legs are complements over one
+id set and the coverage holds by construction rather than by argument. **Read the constants from
+`scripts/validation/checks/bundles_readiness.py`, never from this paragraph** — every figure here is
+scoped by a predicate that has now moved twice.
 
 ### D10 — The queue is a DAG, not a list: findings carry `blocked_by`
 
@@ -679,7 +713,7 @@ Four panes, one page, **not merged** (D12). Each keeps its own store, vocabulary
   a change it never writes (C10, Invariant #8). A control surface whose approve button lies is
   worse than no control surface, and this one is the publication sign-off path.
 
-`docs/DASHBOARD.md` is corrected in the same change: two declared inputs do not exist, the roster
+`docs/architecture/DASHBOARD.md` is corrected in the same change: two declared inputs do not exist, the roster
 and graph-type figures are stale, and the change-bus it describes has never carried an event.
 
 ### D16 — The loop terminates at a closed-out, merged wave, not at a ledger record
@@ -827,10 +861,10 @@ Re-evaluated against this ADR:
 | prior item | state | disposition under ADR-012 |
 |---|---|---|
 | **ADR-009 §Deferred 0–7** | ✅ **all eight dispositioned** (fixed, or declined with measurements) | closed; no queue entry. The residue is the standing lesson that every item's scope figure was unverified — which is now D1's `target` and D17's generated brief |
-| **ADR-010 D2** — per-target purpose statements re-derived from the manuscripts | **OPEN** | 21 findings, `lane=prose`, one per bundle, disjoint `target` — **the exact shape ADR-012's fan-out exists for** |
+| **ADR-010 D2** — per-target purpose statements re-derived from the manuscripts | ✅ **DISCHARGED 2026-08-06/07** — re-measured at P8c | **NOT queued.** All 21 bundles carry a `## 1b. ADR-010 §D2 purpose statement` section in their apex-retrofit `FINDINGS.md`, each with every field D2 names; `ADR-011:130` already recorded this. **This row previously said OPEN and specified "21 findings, one per bundle" — filing them would have re-commissioned finished work**, which is exactly what D21's own re-measure rule exists to prevent |
 | **ADR-010 D4** — merge/split/retire | ✅ discharged 2026-08-08; all six proposed merges failed against the manuscripts | closed |
-| **ADR-010 D5** — homing dispositions for the un-homed substrate, measured at **1,403–1,633 modules**, not the charter's ~340 | **OPEN, and the largest single item in the portfolio** | `lane=substrate`, structured as a `BLOCKED_BY` tree: per-**arc** dispositions first, modules beneath them. ADR-010 itself anticipates that the 4–5× scope change may change the shape of the answer |
-| **ADR-010 D7** — the roster-drift change-set | **OPEN** | `lane=infra`/`prose`, doc work |
+| **ADR-010 D5** — homing dispositions for the un-homed substrate. Re-measured at P8c against the live closure predicate: **1,449 of 2,040 modules un-homed (26,652 of 32,443 declarations, 82.2%)** | **OPEN, and the largest single item in the portfolio** | `lane=substrate`, structured as a `BLOCKED_BY` tree, dispositions first and modules beneath them — but **the grouping key is DERIVED, never hand-listed** (ADR-010 §D5a retracted its arc map) |
+| **ADR-010 D7** — the roster-drift change-set | **OPEN at 26 of 36 audited sites**, plus ≥9 the audit never listed | `lane=infra`, and the lane is reasoned rather than defaulted: the target set contains **zero manuscripts** (the prose half closed as TODO-D15, a different population), and the durable repair is a `validate.py` check, which `prose`'s Stage 9/10 sub-gates cannot see |
 | **ADR-010 §Open** — operator-owned questions | **OPEN by design** | feed A/C of the Attention surface; and work parks behind the *finding id* of the decision itself (D19), not a separate token |
 | **ADR-011 P1–P8** | ✅ complete | closed |
 | **`ARCHITECTURE_TODOs.MD` D50, D51** | open, under the standing build-freeze | stay in the working doc per C1 — they are architecture-accuracy defects and belong to it |
@@ -845,7 +879,21 @@ on it, including its evidence line."* Roughly a third of its drift ledger is abo
 count, several items' *correcting evidence* has itself gone stale, and one filed claim was withdrawn
 the day after it was written. The table above records state, not permission to skip re-measurement.
 
-### D22 — `docs/DASHBOARD.md` is canonicalized into `docs/architecture/`
+✅ **P8c ran that re-measurement on 2026-08-12, and it changed three of the four rows.** The warning
+was not decoration:
+
+- **D2 was already done.** Filing its 21 findings would have re-commissioned finished work.
+- **D5's scope moved again** — the homed set *shrank* by 40 modules and the un-homed *grew* by 44 in
+  six days. All 21 apexes resolve, so the input is sound; the drift's cause is not diagnosed here
+  and the finding claims none.
+- **This table quoted a WITHDRAWN figure.** The D5 row said *"not the charter's ~340"* and *"the
+  4–5× scope change"*. ADR-010's own correction box records that *"the audit's ~340 is low by 4–5×"*
+  **was a unit swap**, and that ~340 had no recoverable predicate. The withdrawn ratio survives at
+  two further sites inside ADR-010 and was inherited here from one of them. **A retracted number
+  propagates exactly like a live one** — this ADR quoting it a day later, in the decision whose
+  stated purpose is re-measurement, is the cleanest available demonstration.
+
+### D22 — `docs/architecture/DASHBOARD.md` is canonicalized into `docs/architecture/`
 
 **Operator question, answered: yes.** The dashboard is now a governed surface with four new views and
 two repairs, and its describing document has four false claims — which is precisely the drift that
@@ -864,7 +912,7 @@ Moving it buys three mechanical guarantees it does not currently have:
    target alongside the other seven rather than a document nobody is assigned to read.
 
 Costs, stated: the exception set in `scripts/architecture_inventory.py` must gain the two
-deliberately-absent paths with their reasons, every inbound reference to `docs/DASHBOARD.md` is
+deliberately-absent paths with their reasons, every inbound reference to `docs/architecture/DASHBOARD.md` is
 updated in the same commit, and the move is a `git mv` so history follows.
 
 ---
@@ -994,10 +1042,14 @@ D6.2's inert parameter, and the omitted registration obligations.**
 
 ## Plan
 
-Phases are ordered by what unblocks the most. **P1–P7 and P8b are complete**, on
-`feat/adr012-remediation-loop` against the plan
+Phases are ordered by what unblocks the most, against the plan
 [`../superpowers/plans/2026-08-12-remediation-loop-core.md`](../superpowers/plans/2026-08-12-remediation-loop-core.md).
-P8, P8c, P8d, P9, P10 and P11 remain open, each needing its own plan.
+
+⚠️ **This preamble no longer lists which phases are done — read the per-phase entries below.**
+It said "P8, P8c, P8d, P9, P10 and P11 remain open" while four of those six were marked
+✅ COMPLETE in the very entries it introduces. **A section that summarises itself contradicts
+itself.** Each entry below carries its own status and its commits; there is exactly one place
+a phase's state is written, and it is the entry.
 
 **P1 — Document the closure contract (D3). ✅ COMPLETE 2026-08-12 (`10c04da9`).**
 `READINESS_GATES.md` gains the lifecycle section; `WAVE_EXECUTION_PIPELINE.md` §13
@@ -1048,8 +1100,20 @@ re-key moved inert records onto ids that now mint nodes, and several of those id
 targets. That is the re-key working — the records became live — but it means those dispositions
 need reconciling by hand rather than by a second batch.
 
-**P8 — Substrate lane wiring (D4).** Re-file D45–D49 as `lane=substrate` findings; document the lane
-in the pipeline; confirm `ARCHITECTURE_TODOs.MD` is back inside its charter.
+**P8 — Substrate lane wiring (D4). ✅ COMPLETE 2026-08-12.** Eight findings minted from the five
+sub-items that survived re-measurement — **three of the eleven were already fixed, several in the very
+commit that filed them into the working doc.** Lanes are mixed exactly as D4 predicted and were
+assigned per item: one `substrate` (the canonical theorem-vs-implementation disagreement), three
+`lean`, three `infra`, one `prose`. `WAVE_EXECUTION_PIPELINE.md` gains the lane taxonomy at Stage
+13, and `ARCHITECTURE_TODOs.MD` is back inside its charter with a pointer to the re-file.
+
+⚠️ D45-b is filed rather than fixed **on purpose**: its entry asserts both primary sources were read
+in full, and correcting a citation on another document's word — while fixing a finding *about*
+unverified attribution — is the error §Pilot already records once.
+
+⚠️ **This phase was specified as "re-file D45–D49 as `lane=substrate` findings", and that framing
+was wrong** — the block is mixed, and pre-assigning a lane to a set of findings nobody had
+re-measured is the shape D4 explicitly warns against. Only one of the eight is `substrate`.
 
 **P8b — Parked work (D19). ✅ COMPLETE 2026-08-12** (`1a354d90`). The roadmap opt-in block, the
 external release-condition tokens on `blocked_by`, and their evaluation. Independent of P9 and a
@@ -1061,26 +1125,100 @@ forever, and rendering it met would release work on no evidence. `run:` is delib
 `None` until a run registry exists. The roadmap corpus is untouched — the block is opt-in, and
 nothing is parked yet, so this narrows the unmechanized roadmap seam without closing it.
 
-**P8c — Prior-ADR open items enter the queue (D21).** ADR-010 D2, D5 and D7 filed as findings with
-lanes and targets, pointing back at ADR-010 as the decision record. Re-measure each before filing.
+**P8c — Prior-ADR open items enter the queue (D21). ✅ COMPLETE 2026-08-12.** Eight findings, all
+`minor`, zero blocking — measured rather than tuned: `unattributed_population` sits at zero
+headroom, so any blocking finding filed unattributed takes the gate red, and none of these
+falsifies a claim a manuscript makes. **D2 was NOT filed: it is discharged**, and D21's specified
+fan-out of 21 findings would have re-commissioned finished work. D5's `BLOCKED_BY` tree is the
+first real use of D10's DAG — module-level findings block on arc-level ones by minted id.
 
-**P8d — Canonicalize `docs/DASHBOARD.md` (D22).** `git mv` into `docs/architecture/`, add the
-Answers contract line and the README ownership row, strip the counts, correct the four false claims,
-extend the inventory check's exception set, update inbound references.
+⚠️ **"Re-measure each before filing" was the phase's own instruction, and it changed three of the
+four rows** — including one that was already done and one quoting a figure ADR-010 had withdrawn.
+The instruction earned itself; a phase that had merely executed its specification would have filed
+21 redundant findings and propagated a retracted number.
+
+**P8d — Canonicalize `docs/architecture/DASHBOARD.md` (D22). ✅ COMPLETE 2026-08-12.** `git mv`
+into `docs/architecture/`; the Answers contract line and README ownership row added (the check now
+covers eight owned documents); the bundle roster, tier split and graph-type counts replaced with
+pointers to the census; the false claims corrected **and marked in place** rather than silently
+deleted, because a corrected mistake with no scar gets re-litigated.
+
+⚠️ **The move immediately earned its keep, and in a way D22 did not predict.** `doc_refs_resolve`
+fired on **three** references the moment the file entered the directory, and only two were the
+expected deliberate absences. The third, `docker/docker-compose.graph.yml`, **exists** — the
+scanner's `roots` tuple simply never walked `docker/`. A root missing from that tuple makes a live
+file indistinguishable from a deleted one, which inverts the leg's whole purpose, so the fix was
+the root and not an exception entry. `docs/submission_state.json` joined the reasoned-exception set
+with its own note; `docs/verification_log.jsonl` was already there.
+
+**Measured, not inherited:** every claim was checked against the tree rather than copied from C10.
+`/api/save` was documented as *"Save accumulated verification actions"* and the string appears
+**nowhere** in the app — a persistence path a reviewer could have believed in that has never
+existed. `/api/verify` is really `/verify`. `BACKED_BY` appears **zero** times in the dashboard.
 
 **P9 — The operator control surface (D15, D20).** In three waves, because they carry different risk. **P9a:**
 S1, S4, the QI de-saturation and the sign-off persistence repair — all over data that already exists,
 all with a template-contract test and a browser test per D2's dashboard exception. **P9b:** S2 and S3,
 built thin against the specifications in D15 and iterated. **P9c:** the Loops pane (D20) over the
-harness state that already exists — no new writer. `docs/DASHBOARD.md` corrected in the commit
+harness state that already exists — no new writer. `docs/architecture/DASHBOARD.md` corrected in the commit
 that makes each claim wrong.
+
+**P9a ✅ COMPLETE 2026-08-13.** S1, the QI de-saturation and the template-contract gate landed
+first; the sign-off writer (Tasks 5/6, `4c04401f` + browser proof `34570904`) and S4 (Task 8,
+`2ad9fe6c`) followed. The status line above previously stopped at the first three.
+
+**P9b and P9c — ✅ COMPLETE 2026-08-13, after shipping BUILT AND UNWIRED for a day.**
+`dashboard_flow.py` (S2), `dashboard_attention.py` (S3) and `dashboard_loops.py` (D20) landed in
+`3076d031` — a pr-review remediation commit, not a phase commit, which is how 2,360 lines
+reached this branch without a phase entry. ⚠️ **Nothing imported them but their own tests**: no
+route, no template, no reachable surface, and every gate green, because an unreferenced module
+is not a broken reference. Found by the pre-merge sync audit, filed
+(`2026-08-13-p9-panes-unwired/infra.md`, major, lane `infra`), then wired and closed through
+`close_finding.py` — the unattributed ratchet went 52 → 53 on the filing and back to 52 on the
+closure, which is the loop this ADR exists to make routine.
+
+**The wiring:** three partials, three tab links, and a lazy per-tab build in `index()` (each
+pane walks the whole graph, so building all three per request would tax the tabs that use
+none). Both gates D2 demands for dashboard work: the **template-contract** gate, whose tab
+roster is *derived* from the source and so absorbed the three tabs with no edit, and a **real
+browser** suite asserting each pane renders its own content, that a `not-tracked` cell is not
+painted as a verdict, and — the seam guard — that each pane is reachable **by clicking**, since
+every other assertion navigates by URL and would pass with no tab link at all.
+
+⚠️ **Two things the writer refused, and both refusals were right.** `close_finding.py` rejected
+a `--verify` that did not match the finding's declared command (*"closing on an unrelated
+command records exit_code=0 against a check that never ran"*), and the template-contract gate
+rejected partials with no `<style>` marker — the marker is what proves the include ran rather
+than the shell rendering an empty panel, which is precisely the failure being repaired.
+
+- **S1** landed as an *evaluator* change, as D15's corrected table said it must: the finding id was
+  destroyed in `_eval_fix_propagation`, which held the whole node and kept `label[:60]`. ⚠️ **The
+  cap was the harder half.** The evaluator truncated to ten *before* assigning, so a total computed
+  downstream would have reported 10 for a paper carrying 44 — **a disclosure that lies is worse
+  than a silent cap.** A cap can only be disclosed by a layer that can still see what it cut.
+- **The QI de-saturation found three causes where the plan named one.** The largest was that
+  clustering partitioned on `inferred_paper` alone, collapsing every bundle-era finding onto one
+  sentinel — **the same omission that produced a false GREEN in `bundle_readiness` on 2026-07-31**,
+  fixed there and never here. Zero items became 23.
+- **The template-contract gate corrected the plan on arrival:** "kwargs plus context processors"
+  names two of *three* sources, and a gate built to that literally flags `request`, `session` and
+  `url_for` as drift on day one.
 
 **P10 — Orchestration (D2, D10, D11, D16).** Route by lane, fan out on disjoint `target`, traverse
 `BLOCKED_BY` for the cascade, worktree per lane, close by running `verify`, terminate at a merged
 wave. Last, because it is the only phase whose design genuinely depends on what the earlier ones
 reveal.
 
-**P11 — The repeatable architecture-change skill (D18).**
+**P11 — The repeatable architecture-change skill (D18). ✅ COMPLETE 2026-08-12.**
+`/skeft-qa:architecture-change`, with this ADR as its worked example — all three correction rounds,
+each attributed to the instrument that produced it and the disjoint class it caught.
+
+⚠️ **Its registration checklist teaches DERIVATION rather than publishing a roster, and the reason
+is measured.** The plan's own six-item list was incomplete — it omitted
+`tests/test_validate_registry_contract.py::EXPECTED_CHECKS`, and three tests went red. Building the
+skill confirmed **seven** sites from the code, and found a conditional eighth
+(`test_validate_public_surface.py::EXPECTED_CHECK_FUNCTIONS`) that binds only once a check is
+imported off `validate` by name. A published roster would have been wrong a second time.
 
 ---
 
@@ -1115,10 +1253,16 @@ at the time it is written.
 operator's request. What remains genuinely uncertain is **layout**, not content: the columns, the
 feeds and their stores are pinned, and the arrangement is iterated against real use.
 
-**Risk — named rather than designed around.** *Live agent activity has no writer.* The Flow board
-shows queue depth and stage position; it cannot show which agents are running. A board that implied
-otherwise would be absence-rendered-as-success in a new location, so v1 states the limit on its face.
-Whether to build an activity writer is a separate decision.
+**Risk — named rather than designed around, and NARROWED.** The Flow board shows queue depth and
+stage position; it cannot show which *subagents* are running, and a board implying otherwise would
+be absence-rendered-as-success in a new location, so v1 states the limit on its face.
+
+⚠️ **CORRECTED 2026-08-12: this paragraph read "live agent activity has no writer", which D20
+explicitly retracts** — *"An earlier draft claimed activity had no writer at all. It does, at the
+level that matters."* `/goal`-level activity has five writers under `.claude/dev-harness/`, including
+a per-compaction heartbeat and a non-convergence signal. The correction landed in D20 and S2 and
+never reached §Consequences. The residual risk is real but smaller than stated: **subagent** slots
+turn over in minutes and are deliberately out of scope; a `/goal` loop is observable today.
 
 **Risk — a pre-existing hole D19 only narrows.** The roadmap layer stays unmechanized: no check
 reads `docs/roadmaps/`, and D19 adds an opt-in surface for parked work rather than gating the layer.
@@ -1185,7 +1329,7 @@ the writer D14 is modelled on).
 - `scripts/record_review.py` — the precedent writer for D14
 - `docs/WAVE_EXECUTION_PIPELINE.md` §Stage 13 — emission, and the re-invocation rule
 - `docs/READINESS_GATES.md` — canonical gate definitions; target of P1
-- `docs/DASHBOARD.md` — the control surface's governing document; corrected under D15
+- `docs/architecture/DASHBOARD.md` — the control surface's governing document; corrected under D15
 - `docs/architecture/CHECK_AUTHORING_GUIDE.md` — the obligations D8 and D13 inherit
 - `lean/atlas_view.json` — the derived Lean substrate queue (C2)
 - `docs/architecture/.working-docs/REVIEW_COVERAGE_LEDGER.md` — the chunking discipline the `pyrust`

@@ -1,4 +1,5 @@
-"""Mean-field analysis for vestigial gravity.
+"""Mean-field analysis for vestigial gravity. The phase classification is
+curvature-based, via `adw_curvature_at_origin` from `formulas.py`.
 
 Extends the Phase 3 gap equation analysis to include the metric
 correlator <e^a_mu e^b_nu>. The vestigial phase exists where

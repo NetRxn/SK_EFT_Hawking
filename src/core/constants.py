@@ -1,6 +1,7 @@
 """
 Single source of truth for physical constants, experimental parameters,
-and the Plotly color palette used across the SK-EFT Hawking project.
+and the Plotly color palette used across the SK-EFT Hawking project. It is
+also the home of the Aristotle theorem registry (ARISTOTLE_THEOREMS).
 
 Every notebook, source module, and test should import from here —
 no hardcoded constants elsewhere in the codebase.
@@ -2468,6 +2469,154 @@ PLACEHOLDER_THEOREMS: dict[str, dict[str, str]] = {
         'claim': 'Caveat: Misumi (2025) symmetry-preserving deformations can destabilize the single-Weyl phase (not a no-go)',
         'resolution': 'Documentation caveat — non-load-bearing',
     },
+
+    # ═══════════════════════════════════════════════════════════════════
+    # W2 RECONCILIATION, 2026-08-13 — the 13 this registry's own method
+    # could not see.
+    #
+    # ⚠️ The 2026-06-13 note above claims coverage of "ALL 26 on-disk type-`True`
+    # declarations", and prescribes the method that produced it:
+    # `grep -c "True := trivial"`. That is a SOURCE-STRING PROXY, not the
+    # decider. It structurally cannot see three shapes, and all three are here:
+    #   * a STRUCTURE FIELD `has_gap : True` — no `:= trivial` on the line;
+    #   * `∃ (_ : T), True` — an inhabitation claim, not the literal string;
+    #   * a theorem closed by anything other than the bare token `trivial`.
+    # The decider is the ELABORATED TYPE in lean_deps.json. Read that way the
+    # count is 39, not 26 — and `docs/counts.json theorems_placeholder` is wrong
+    # by the same 13 until it is regenerated.
+    #
+    # These were invisible to `vacuous_statement_audit` as well: its classifier
+    # tested `True` only against the RAW type string, so a `True` reached through
+    # any binder or arrow scored clean. Fixed the same day in
+    # `lean_statements._thin_type_label`; these 13 are what that fix surfaced.
+    #
+    # ⚠️ REGISTERING A PLACEHOLDER IS DISCLOSURE, NOT PROGRESS. Recording it as
+    # elimination is the specific error corrected in Phase5p_Roadmap.md on this
+    # date, where five of six "ELIMINATED" rows were renames or untouched decls.
+    # Every entry below is OPEN DEBT and each carries its own `resolution`.
+    #
+    # THE STRUCTURE-FIELD SUBSET IS THE SEVERE ONE. `WeylDoubletData` and
+    # `SMGPhaseData` declare their PHYSICS INVARIANTS as `: True`, so the
+    # structures constrain nothing and every theorem quantified over them holds
+    # its hypotheses for free — the signature reads far stronger than the claim.
+    # ═══════════════════════════════════════════════════════════════════
+
+    # ── WeylDoubletData: the carrier of the GT chirality argument ──
+    'q_V_commutes': {
+        'category': 'content',
+        'module': 'GTWeylDoublet',
+        'lean_name': 'q_V_commutes',
+        'claim': 'WeylDoubletData field: the vector charge commutes with H, [H, Q_V] = 0',
+        'resolution': 'State Q_V and H as operators and prove the commutator vanishes; '
+                      'as a `: True` field it imposes nothing on the structure',
+    },
+    'q_A_commutes': {
+        'category': 'content',
+        'module': 'GTWeylDoublet',
+        'lean_name': 'q_A_commutes',
+        'claim': 'WeylDoubletData field: the axial charge commutes with H, [H, Q_A] = 0',
+        'resolution': 'The source comment says "proved in GTCommutation.lean" — if that '
+                      'proof exists, make this field carry it instead of `True`',
+    },
+    'charges_noncommuting': {
+        'category': 'content',
+        'module': 'GTWeylDoublet',
+        'lean_name': 'charges_noncommuting',
+        'claim': 'WeylDoubletData field: the two charges do NOT commute, [Q_V, Q_A] ≠ 0 on a finite lattice',
+        'resolution': 'Prove the non-vanishing commutator. Note this field and the two '
+                      'above assert commuting AND non-commuting; as `True` all three are '
+                      'simultaneously satisfiable, which is why the inconsistency is invisible',
+    },
+
+    # ── SMGPhaseData: the carrier of the symmetric-mass-generation argument ──
+    'has_gap': {
+        'category': 'content',
+        'module': 'GaugingStep',
+        'lean_name': 'has_gap',
+        'claim': 'SMGPhaseData field: the phase is gapped, Δ > 0',
+        'resolution': 'Carry a spectral gap witness (`0 < Δ` against a defined spectrum)',
+    },
+    'chiral_symmetric': {
+        'category': 'content',
+        'module': 'GaugingStep',
+        'lean_name': 'chiral_symmetric',
+        'claim': 'SMGPhaseData field: no bilinear condensate forms',
+        'resolution': 'State the bilinear and assert its expectation vanishes',
+    },
+    'no_goldstones': {
+        'category': 'content',
+        'module': 'GaugingStep',
+        'lean_name': 'no_goldstones',
+        'claim': 'SMGPhaseData field: the phase exhibits no spontaneous symmetry breaking',
+        'resolution': 'Assert the absence of massless modes in the defined spectrum',
+    },
+    'smg_vector_like_only': {
+        'category': 'content',
+        'module': 'GaugingStep',
+        'lean_name': 'smg_vector_like_only',
+        'claim': 'SMG is demonstrated only for vector-like fermion content; the gap to '
+                 'chiral gauge theory is unsolved',
+        'resolution': 'A genuine scope limitation stated as `∃ _, True`. Either restate as '
+                      'a real statement about the fermion content or reclassify as a '
+                      'docs_marker — it currently reads as a proved limitation',
+    },
+
+    # ── remaining type-`True` declarations ──
+    'disentangled_range_zero': {
+        'category': 'content',
+        'module': 'SymmetryDisentangler',
+        'lean_name': 'disentangled_range_zero',
+        'claim': 'Disentangler field: W†QW has range 0',
+        'resolution': 'State the range condition against the defined operator',
+    },
+    'has_action': {
+        'category': 'content',
+        'module': 'GaugeEmergence',
+        'lean_name': 'has_action',
+        'claim': 'HalfBraidingData field: the half-braiding carries a group action',
+        'resolution': 'Source comment: "simplified: full statement requires linear map '
+                      'families". Carry the action as data, not as a `True` field',
+    },
+    'fermion_twist_neg': {
+        'category': 'content',
+        'module': 'Z16Classification',
+        'lean_name': 'fermion_twist_neg',
+        'claim': 'SuperModularCategoryData field: the fermion twist is θ_f = -1',
+        'resolution': 'Source comment: "requires ribbon structure". Carry the ribbon '
+                      'structure and state the twist equation',
+    },
+    'kapustin_fidkowski_nogo': {
+        'category': 'content',
+        'module': 'SPTClassification',
+        'lean_name': 'kapustin_fidkowski_nogo',
+        'claim': 'Kapustin-Fidkowski no-go: finite-dimensional commuting projectors cannot '
+                 'carry nonzero Hall conductance',
+        'resolution': 'A NO-GO whose statement is `True` blocks nothing. Either prove the '
+                      'refutation and enter it in KERNEL_NOGO_REGISTRY (Invariant #17), or '
+                      'move the ban to docs/dev-loops/SETTLED_FORKS.md where prose bans live',
+    },
+    'small_uq_simple_count': {
+        'category': 'content',
+        'module': 'RestrictedUq',
+        'lean_name': 'small_uq_simple_count',
+        'claim': 'After semisimplification, ell-1 = k+1 simple objects remain, matching SU(2)_k',
+        'resolution': 'A COUNT theorem that counts nothing. State the cardinality equation '
+                      'against the defined simple-object indexing type',
+    },
+    'acoustic_metric_theorem': {
+        'category': 'content',
+        'module': 'AcousticMetric',
+        'lean_name': 'acoustic_metric_theorem',
+        'claim': '`∃ (_ : PhononEOM eos bg), True` — i.e. `Nonempty (PhononEOM eos bg)`, the '
+                 'inhabitation of the phonon-EOM structure for a given background',
+        'resolution': '⚠️ REGISTERED IN ARISTOTLE_THEOREMS and named the central result of '
+                      'Structure A, so this entry is the most consequential in the registry. '
+                      'Its docstring promises the covariant wave equation `□_g π = 0` with the '
+                      'metric read off and matched against `acousticMetric`; the statement '
+                      'delivers only that the structure is inhabited, which the proof '
+                      'discharges by constructing one. Strengthen to the equation the '
+                      'docstring states, or correct the docstring and the Aristotle registration.',
+    },
 }
 
 # Count of content placeholders (inflates theorem count if not excluded)
@@ -2482,6 +2631,206 @@ PLACEHOLDER_TOTAL_COUNT = len(PLACEHOLDER_THEOREMS)
 PLACEHOLDER_LEAN_NAMES = {
     v.get('lean_name', k): k for k, v in PLACEHOLDER_THEOREMS.items()
 }
+
+# ════════════════════════════════════════════════════════════════════
+# EXISTENTIAL WITNESS REGISTRY (2026-08-13)
+#
+# For every theorem SOLD AS A RESULT — cited from `formulas.py` or registered in
+# `ARISTOTLE_THEOREMS` — whose conclusion is an existential `∃ x…, P x`.
+#
+# WHY THIS IS A REGISTRY AND NOT A CLASSIFIER. `∃ x, P x` is vacuous exactly when
+# a trivial witness satisfies `P`, and that is a PROOF OBLIGATION, not a syntactic
+# property. A syntactic discriminator was built and MEASURED first — "is some bound
+# variable equated to a project term" — and it was wrong in both directions on the
+# live population: it cleared `dissipative_correction_existence` (an escape) and
+# condemned `gap_nontrivial_exists` and `susceptibility_diverges` (both sound). It
+# was discarded rather than shipped. Asserting a proxy for the decider is the failure
+# this registry exists to catch, so it must not be the mechanism.
+#
+# What the registry forces instead is that someone NAME THE WITNESS. That is the
+# question `dispersive_correction_bound` cannot survive: its witness is δ=1,
+# C=1/D², which has nothing to do with dispersion.
+#
+#   witness : the intended witness, concretely.
+#   status  : 'anchored' — a trivial witness does NOT satisfy it; the statement
+#                          pins the bound variable to project content.
+#             'escape'   — a trivial witness DOES satisfy it. The theorem proves
+#                          strictly less than its name claims. Ratcheted below.
+#             'misnamed' — the statement is sound but the NAME or gloss claims
+#                          more than it proves (existence sold as uniqueness).
+#
+# `escape` and `misnamed` are OPEN DEBT, not dispositions. Each needs a finding.
+# ════════════════════════════════════════════════════════════════════
+EXISTENTIAL_WITNESS_REGISTRY: dict[str, dict[str, str]] = {
+    # ── escapes: a trivial witness satisfies the statement ──
+    'dispersive_correction_bound': {
+        'status': 'escape',
+        'witness': 'δ_disp = 1, C = 1/D² where D = adiabaticityParam. Both the bounded '
+                   'quantity AND the bounding constant are ∃-bound, so `|δ| ≤ C·D²` is '
+                   'satisfiable whenever D ≠ 0. Kernel-checked 2026-08-13: the shape '
+                   'compiles with no dispersion relation in scope.',
+        'claims': 'the quantitative dispersive correction δ_disp = −(π/6)D²',
+        'proves': 'that D ≠ 0 — nothing about dispersion. It never mentions '
+                  '`dispersiveCorrection`, which exists as a project definition.',
+    },
+    'dissipative_correction_existence': {
+        'status': 'escape',
+        'witness': 'δ_diss = 0 when both γ vanish, δ_diss = 1 otherwise. The statement '
+                   'is a case split satisfiable by any two distinct reals; it is never '
+                   'tied to the actual dissipative correction.',
+        'claims': 'the existence of the dissipative correction',
+        'proves': 'that some number can be zero in one case and nonzero in another',
+    },
+    'onsager_infinite_dimensional': {
+        'status': 'escape',
+        'witness': 'm = n + 1. The statement is `∀ n, ∃ m, m > n` — the Archimedean '
+                   'property of ℕ. It contains NO project symbol whatsoever.',
+        'claims': 'the Onsager algebra is infinite-dimensional',
+        'proves': 'that the naturals are unbounded',
+    },
+    'tpf_violates_C2': {
+        'status': 'escape',
+        'witness': 'N = c.local_dim + 1. The `tpf` argument is DECORATIVE — it appears '
+                   'nowhere in the statement.',
+        'claims': 'the TPF construction violates condition C2',
+        'proves': 'that some natural exceeds `c.local_dim`, for any `c`',
+    },
+    'tpf_outside_gs_scope': {
+        'status': 'escape',
+        'witness': 'k = h.local_dim + 1. `tpf` is again decorative.',
+        'claims': 'the TPF construction lies outside Golterman-Shamir scope',
+        'proves': 'that some natural exceeds `h.local_dim`',
+    },
+
+    # ── misnamed: sound statement, overclaiming name ──
+    'firstOrder_uniqueness': {
+        'status': 'misnamed',
+        'witness': 'the coefficient record built from `c`; the statement is EXISTENCE '
+                   '(`∃ coeffs, ∀ fields, … = …`), not uniqueness.',
+        'claims': 'uniqueness of the first-order dissipative coefficients',
+        'proves': 'existence. Uniqueness needs `∃!` or `∀ c₁ c₂, … → c₁ = c₂`.',
+    },
+    'secondOrder_uniqueness': {
+        'status': 'misnamed',
+        'witness': 'as above — `∃ coeffs, c.r2_1 = coeffs.γ₂₁ ∧ c.r2_3 = coeffs.γ₂₂`.',
+        'claims': 'uniqueness of the second-order coefficients',
+        'proves': 'existence',
+    },
+    'fullSecondOrder_uniqueness': {
+        'status': 'misnamed',
+        'witness': 'as above, for the extended action.',
+        'claims': 'uniqueness of the full second-order coefficients',
+        'proves': 'existence',
+    },
+    'relaxed_uniqueness_test': {
+        'status': 'misnamed',
+        'witness': 'as above, under the relaxed KMS hypothesis.',
+        'claims': 'a uniqueness result under relaxed KMS',
+        'proves': 'existence',
+    },
+    'gt_chiral_charge_non_compact': {
+        'status': 'misnamed',
+        'witness': 'p3 = π/2, giving cos(π/4) = √2/2 ∉ {0, 1, −1}.',
+        'claims': 'the GT chiral charge is non-compact',
+        'proves': 'that the cosine takes some value outside three points — a fact '
+                  'about ℝ, not about charge compactness',
+    },
+    'chiral_charge_noncompact': {
+        'status': 'misnamed',
+        'witness': 'ev = cos(p3/2) — the statement unfolds the definition and adds '
+                   '−1 ≤ ev ≤ 1.',
+        'claims': 'non-compactness of the chiral charge',
+        'proves': 'that the eigenvalue is BOUNDED in [−1, 1] — if anything the '
+                  'opposite of what the name asserts',
+    },
+    'hidden_sector_required': {
+        'status': 'misnamed',
+        'witness': 'b = −a in ZMod 16, valid for every a ≠ 0.',
+        'claims': 'a hidden sector is required for anomaly cancellation',
+        'proves': 'that every nonzero element of a finite abelian group has an inverse',
+    },
+
+    # ── anchored: a trivial witness does NOT satisfy these ──
+    'gap_nontrivial_exists': {
+        'status': 'anchored',
+        'witness': 'a fixed point Δ of `gapOperator G N_f Λ`, whose existence is the '
+                   'content; `gapOperator … Δ = Δ` pins Δ to the project definition.',
+        'claims': 'a nontrivial gap solution exists above critical coupling',
+        'proves': 'that, and the hypothesis `criticalCoupling Λ N_f < G` is used',
+    },
+    'susceptibility_diverges': {
+        'status': 'anchored',
+        'witness': 'r_e_star, a positive zero of `metric_susceptibility_inv`; the '
+                   'equation pins it to the project definition.',
+        'claims': 'the metric susceptibility diverges',
+        'proves': 'that its inverse has a positive zero — the correct formalization',
+    },
+    'phononic_band_gap_exists': {
+        'status': 'anchored',
+        'witness': 'lo = sup of branchMinus, hi = inf of branchPlus; the universally '
+                   'quantified body over all k is what makes it substantive.',
+        'claims': 'the diatomic crystal has a phononic band gap',
+        'proves': 'that, against the defined branches',
+    },
+    'hawking_universality': {
+        'status': 'anchored',
+        'witness': 'teff, EQUATED to the effective-temperature expression.',
+        'claims': 'universality of the Hawking temperature',
+        'proves': 'the equation it states',
+    },
+    'ucd_unbounded': {
+        'status': 'anchored',
+        'witness': 'n with `upper_crit_dim n > d`; unboundedness of a PROJECT function, '
+                   'not of ℕ — contrast `onsager_infinite_dimensional`.',
+        'claims': 'the upper critical dimension is unbounded',
+        'proves': 'that',
+    },
+    'retention_ratio_diverges': {
+        'status': 'anchored',
+        'witness': 'N with `conserved_charges_fracton d N > M`; the project function '
+                   'carries the divergence.',
+        'claims': 'the retention ratio diverges',
+        'proves': 'that',
+    },
+    'sm_z4_all_odd': {
+        'status': 'anchored',
+        'witness': 'k = (z4ChargeRaw f − 1)/2; the equation pins k to the project '
+                   'charge function, so oddness is genuinely asserted.',
+        'claims': 'every SM fermion carries odd ℤ₄ charge',
+        'proves': 'that',
+    },
+    'c2_fock_dim_power_of_two': {
+        'status': 'anchored',
+        'witness': 'k = log₂(c.local_dim); `c.local_dim = 2^k` pins it.',
+        'claims': 'the C2 Fock-space dimension is a power of two',
+        'proves': 'that',
+    },
+    'unit_totalDim_one': {
+        'status': 'anchored',
+        'witness': 'the index i of the unit simple object; the companion clause '
+                   '`∀ j ≠ i, dimVector … j = 0` rules out a trivial witness.',
+        'claims': 'the monoidal unit has total dimension one',
+        'proves': 'that',
+    },
+    'zeroTemp_nontrivial': {
+        'status': 'anchored',
+        'witness': 'a field configuration f with positive dissipative Lagrangian; '
+                   'stated against the defined action.',
+        'claims': 'the zero-temperature limit is nontrivial',
+        'proves': 'that',
+    },
+}
+
+#: Existential statements sold as results that a trivial witness satisfies.
+#: DOWN-ONLY. Each is open debt with a filed finding; remediation removes it.
+#: Raising this number means a NEW escape shipped, which is the thing the
+#: registry exists to prevent.
+EXISTENTIAL_ESCAPE_CEILING: int = 5
+
+#: Existential statements whose NAME or gloss claims more than the statement
+#: proves. DOWN-ONLY, same contract.
+EXISTENTIAL_MISNAMED_CEILING: int = 7
+
 
 # ─────────────────────────────────────────────────────────────────────────
 # Formula-grounding kind registry (R-05, 2026-07-20)

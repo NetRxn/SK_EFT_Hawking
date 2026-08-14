@@ -1324,7 +1324,53 @@ class TestBlockedByIsADagWithAConsumer:
         assert finding_is_dispatchable(b, ids, set()) is True
 
     def test_the_live_corpus_emits_without_raising(self):
-        """Zero edges today — `blocked_by` is forward-only. The value of this test is that
-        it RAISES the day a malformed one is filed, instead of dropping it."""
-        from scripts.build_graph import extract_blocked_by_edges
-        assert extract_blocked_by_edges() == []
+        """Extraction completes, every emitted edge resolves to a minted finding, and the
+        result is acyclic.
+
+        ⚠️ **This asserted `== []` until 2026-08-13, and it failed on CORRECT work.** The
+        docstring said its value was raising "the day a malformed one is filed"; the
+        assertion instead pinned the population at zero, which was a snapshot of *nobody
+        having filed one yet*. ADR-012 P4 built `Blocked-by:` support and P8c then filed
+        five legitimate chains — so the first real use of the feature reddened the suite.
+        Per `VALIDATION_GATE_TOPOLOGY` §3, a gate that fires on correct work gets switched
+        off, and a test that pins a transient count is a snapshot wearing an invariant's
+        name.
+
+        The properties below are what the class name actually claims, and they hold over
+        any population including an empty one. The emitter's ability to produce an edge at
+        all is proven by the constructed case above, which is where that belongs.
+        """
+        from scripts.build_graph import (extract_blocked_by_edges,
+                                         extract_review_finding_nodes)
+        edges = extract_blocked_by_edges()
+        minted = {n["id"] for n in extract_review_finding_nodes()}
+
+        dangling = [e for e in edges
+                    if e["source"] not in minted or e["target"] not in minted]
+        assert not dangling, (
+            f"{len(dangling)} BLOCKED_BY edge(s) name a finding that was never minted: "
+            f"{dangling[:3]}. A blocked finding whose blocker does not resolve reads as "
+            f"dispatchable, which hands an agent work it cannot finish.")
+
+        adj: dict[str, list[str]] = {}
+        for e in edges:
+            adj.setdefault(e["source"], []).append(e["target"])
+        seen, on_stack, cycles = set(), set(), []
+
+        def _walk(u: str) -> None:
+            seen.add(u)
+            on_stack.add(u)
+            for v in adj.get(u, ()):
+                if v in on_stack:
+                    cycles.append((u, v))
+                elif v not in seen:
+                    _walk(v)
+            on_stack.discard(u)
+
+        for node in list(adj):
+            if node not in seen:
+                _walk(node)
+        assert not cycles, (
+            f"BLOCKED_BY contains a cycle: {cycles[:3]}. Every finding in it waits on "
+            f"another finding in it, so none is ever dispatchable and the set is "
+            f"invisibly stuck.")

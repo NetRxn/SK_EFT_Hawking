@@ -82,6 +82,18 @@ class GateResult:
     #: on `passed` for the same D2-contract reason: `state` is read by consumers
     #: that would break on a new value. An additive field leaves them correct.
     measured: bool = True
+    #: Identity of each blocker, for evaluators that had a node in hand (ADR-012 D15 S1).
+    #:
+    #: ⚠️ `blockers` is PROSE and always has been — a 60-character label slice. The finding
+    #: id exists only inside the evaluator, which holds the whole `ReviewFinding` and then
+    #: keeps the label. That single lossy step is why a blocker cell has nothing to drill
+    #: through to, and why every `FLAGS` edge in the graph is invisible to the operator.
+    #:
+    #: ⚠️ ADDITIVE, deliberately. `blockers` keeps its meaning, so every evaluator that
+    #: builds a prose list keeps working untouched and only the ones resolving real nodes
+    #: populate this. Replacing `blockers` would have changed a field eleven evaluators and
+    #: the node payload already agree on.
+    blocker_refs: list[dict] = field(default_factory=list)
 
     def to_node_payload(self) -> dict:
         shape_map = {'blocked': 'diamond', 'passed': 'square',
@@ -101,7 +113,24 @@ class GateResult:
                 'state': self.state,
                 'measured': self.measured,
                 'evidence': self.evidence[:50],
+                # ⚠️ DISCLOSE THE CAPS, AND THESE TOTALS ARE NOW EXACT FOR ALL ELEVEN GATES.
+                # `evidence[:50]` / `blockers[:50]` truncated silently since this method was
+                # written. The first fix moved the cap out of `_eval_fix_propagation` ONLY,
+                # which left ten evaluators slicing [:10] or [:20] BEFORE assigning — so
+                # `blockers_total` was a post-truncation length for them, i.e. exactly the
+                # "disclosure that lies" the sibling comment says must never exist, and
+                # `blockers_truncated` (> 50) was structurally unreachable for all ten.
+                # Nothing was wrong on screen — measured max was 16 against a cap of 20 —
+                # but the headroom was four. Every evaluator now assigns its full list and
+                # the cap lives here, at the one layer that can still see what it cut.
                 'blockers': self.blockers[:50],
+                'blockers_total': len(self.blockers),
+                'blockers_truncated': len(self.blockers) > 50,
+                'evidence_total': len(self.evidence),
+                'evidence_truncated': len(self.evidence) > 50,
+                'blocker_refs': self.blocker_refs[:50],
+                'blocker_refs_total': len(self.blocker_refs),
+                'blocker_refs_truncated': len(self.blocker_refs) > 50,
                 'notes': self.notes,
                 'last_evaluated': self.last_evaluated,
                 'shape': shape_map.get(self.state, 'square'),
@@ -238,7 +267,7 @@ def _eval_citation_integrity(paper: dict, idx: GraphIndex) -> GateResult:
     missing = sorted(bibkeys - registered_keys)
     r.evidence.append(f'{len(bibkeys)} bibitems, {len(bibkeys) - len(missing)} registered')
     if missing:
-        r.blockers = [f'unregistered bibkey: {k}' for k in missing[:20]]
+        r.blockers = [f'unregistered bibkey: {k}' for k in missing]
         r.state = 'blocked'
         r.notes = f'{len(missing)} bibkeys missing from CITATION_REGISTRY'
     else:
@@ -281,7 +310,7 @@ def _eval_cross_paper_consistency(paper: dict, idx: GraphIndex) -> GateResult:
                     break
 
     if total > 0:
-        r.blockers = [f'{e["target"]}: {e.get("conflict_detail","")}' for e in contradicts_out[:10]]
+        r.blockers = [f'{e["target"]}: {e.get("conflict_detail","")}' for e in contradicts_out]
         r.state = 'blocked'
         r.notes = f'{total} CONTRADICTS edges'
     elif inconsistencies > 0:
@@ -366,7 +395,7 @@ def _eval_parameter_provenance(paper: dict, idx: GraphIndex) -> GateResult:
                        'counts.tex are structurally sourced and not counted here)')
     elif unverified:
         # Treat as blocked for submission but acceptable during draft
-        r.blockers = [p.replace('param:', '', 1) for p in unverified[:20]]
+        r.blockers = [p.replace('param:', '', 1) for p in unverified]
         r.state = 'blocked'
         r.notes = f'{len(unverified)} parameters lack human_verified_date'
     else:
@@ -470,8 +499,8 @@ def _eval_computation_correctness(paper: dict, idx: GraphIndex) -> GateResult:
         )
     if bounds_only or no_tests:
         r.blockers = (
-            [f'bounds-only: {b.replace("formula:","",1)}' for b in bounds_only[:10]] +
-            [f'no tests: {b.replace("formula:","",1)}' for b in no_tests[:10]]
+            [f'bounds-only: {b.replace("formula:","",1)}' for b in bounds_only] +
+            [f'no tests: {b.replace("formula:","",1)}' for b in no_tests]
         )
         r.state = 'blocked'
         r.notes = (f'{len(bounds_only)} formulas bounds-only + '
@@ -542,7 +571,7 @@ def _eval_lean_proof_substance(paper: dict, idx: GraphIndex) -> GateResult:
         f'{len(flagged)} overlap with PlaceholderMarkers'
     )
     if flagged:
-        r.blockers = [f'placeholder cited: {n}' for n in flagged[:20]]
+        r.blockers = [f'placeholder cited: {n}' for n in flagged]
         r.state = 'blocked'
         r.notes = f'{len(flagged)} cited theorems are placeholders (rfl / Equiv.refl / trivial)'
     else:
@@ -594,7 +623,7 @@ def _eval_assumption_disclosure(paper: dict, idx: GraphIndex) -> GateResult:
         f'{len(disclosed)} referenced in paper, {len(undisclosed)} undisclosed'
     )
     if undisclosed:
-        r.blockers = [f'undisclosed hypothesis: {k}' for k in undisclosed[:10]]
+        r.blockers = [f'undisclosed hypothesis: {k}' for k in undisclosed]
         r.state = 'blocked'
         r.notes = f'{len(undisclosed)} hypothesis dependencies not named in paper'
     elif not assumed_hyp_ids:
@@ -653,7 +682,7 @@ def _eval_narrative_grounding(paper: dict, idx: GraphIndex) -> GateResult:
         f'{len(interesting) - len(unsupported)} have SUPPORTS edges'
     )
     if unsupported:
-        r.blockers = unsupported[:10]
+        r.blockers = unsupported
         r.state = 'blocked'
         r.notes = f'{len(unsupported)} "interesting" prose claims lack formal support'
     elif not interesting:
@@ -720,7 +749,7 @@ def _eval_production_run_health(paper: dict, idx: GraphIndex) -> GateResult:
                       f'{len(success_runs)} successful, {len(failed)} failed')
     if failed:
         r.blockers = [f'failed run: {r_.get("name","?")} ({r_.get("meta",{}).get("status")})'
-                      for r_ in failed[:10]]
+                      for r_ in failed]
         r.state = 'blocked'
         r.notes = f'{len(failed)} failed/unknown ProductionRuns linked to paper'
     elif mc_claim and not success_runs:
@@ -805,7 +834,7 @@ def _eval_numerical_freshness(paper: dict, idx: GraphIndex) -> GateResult:
         blockers.append(f'{inline_literals} inline unit-bearing literals in body — move to \\input{{tables/*.tex}}')
 
     if blockers:
-        r.blockers = blockers[:10]
+        r.blockers = blockers
         r.state = 'needs-recheck'
         parts = []
         if stale_reports:
@@ -845,7 +874,7 @@ def _eval_first_claim_verification(paper: dict, idx: GraphIndex) -> GateResult:
         r.state = 'needs-recheck'
         r.notes = ('first-claim verification ledger not yet in place — '
                    f'{len(first_claims)} claims need manual verification')
-        r.blockers = [pc['label'] for pc in first_claims[:10]]
+        r.blockers = [pc['label'] for pc in first_claims]
     else:
         r.state = 'passed'
         r.notes = 'no first-in-proof-assistant claims in abstract'
@@ -907,15 +936,48 @@ def _eval_fix_propagation(paper: dict, idx: GraphIndex) -> GateResult:
                       f'({len(fixed_findings)} fixed, {len(accepted_findings)} accepted, '
                       f'{len(open_findings)} open, '
                       f'{len(blocking)} of them submission-blocking)')
+    def _refs(findings: list[dict]) -> list[dict]:
+        """Keep the finding's IDENTITY beside its prose (ADR-012 D15 S1).
+
+        ⚠️ This function exists because the two lines it replaces read
+        `[f'{f.get("label","?")[:60]}' for f in ...]` — holding the entire ReviewFinding
+        (id, severity, lane, target, status) and keeping sixty characters of label. That
+        is the whole reason a gate cell is a dead end: the id is destroyed HERE, before
+        `GateResult`, before the node payload, before the dashboard. Nothing downstream
+        could recover it, which is why S1 is an evaluator change and not a render fix.
+        """
+        out = []
+        for f in findings:
+            m = f.get('meta') or {}
+            out.append({
+                'id': str(f.get('id', '')),
+                'label': str(f.get('label', '?'))[:60],
+                'severity': str(m.get('severity', '')),
+                # `unclassified` is the honest default: `lane` is forward-only, and an
+                # absent lane must never read as a routed one.
+                'lane': str(m.get('lane') or 'unclassified'),
+                'status': str(m.get('status', 'open')),
+                'target': str(m.get('target') or ''),
+            })
+        return out
+
     if blocking:
-        r.blockers = [f'{f.get("label","?")[:60]}' for f in blocking[:10]]
+        # ⚠️ THE CAP MOVED, and that is not incidental. This was `blocking[:10]` HERE, so
+        # `len(self.blockers)` in the payload counted the truncated list — meaning a
+        # `blockers_total` computed there would have reported 10 for a paper carrying 44 and
+        # called itself a disclosure. A cap can only be disclosed by a layer that can still
+        # see what it cut. The evaluator now assigns everything; `to_node_payload` bounds
+        # the payload and states both figures; the dashboard bounds the DISPLAY.
+        r.blocker_refs = _refs(blocking)
+        r.blockers = [x['label'] for x in r.blocker_refs]
         r.state = 'blocked'
         r.priority = 1
         r.notes = (f'{len(blocking)} open review findings at severity '
                    f'{"/".join(sorted(BLOCKING_SEVERITIES))} '
                    f'({len(open_findings)} open in total)')
     elif open_findings:
-        r.blockers = [f'{f.get("label","?")[:60]}' for f in open_findings[:10]]
+        r.blocker_refs = _refs(open_findings)
+        r.blockers = [x['label'] for x in r.blocker_refs]
         r.state = 'needs-recheck'
         r.notes = f'{len(open_findings)} review findings still open (all advisory)'
     else:

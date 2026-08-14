@@ -77,7 +77,6 @@ EXPECTED_CHECK_FUNCTIONS = [
     "check_formula_grounding",
     "check_formula_identities",
     "check_formulas_to_theorems",
-    "check_inventory_index_autogen_fresh",
     "check_lean_source",
     "check_notebook_isolation",
     "check_numerical_consistency",

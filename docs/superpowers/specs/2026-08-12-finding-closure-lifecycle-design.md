@@ -483,7 +483,7 @@ live edge from a running loop to the planning artifact that authorized it — th
 system cannot currently traverse. With §5.1's parked items keyed on the same roadmaps, one join
 answers *what is running against this roadmap, what is parked behind it, and what is queued.*
 
-### 5.3 `docs/DASHBOARD.md` moves under `docs/architecture/` (ADR-012 D22)
+### 5.3 `docs/architecture/DASHBOARD.md` moves under `docs/architecture/` (ADR-012 D22)
 
 The document drifted **because** it sits outside the governed set. Moving it buys three mechanical
 guarantees:
@@ -511,7 +511,7 @@ badge for a change it never writes (Invariant #8); `--write` now raises, naming
 `scripts/wave2_flip_provenance.py` as the working route. A control surface whose approve button lies
 is worse than none, and this one is the publication sign-off path.
 
-### `docs/DASHBOARD.md` is corrected in the same change
+### `docs/architecture/DASHBOARD.md` is corrected in the same change
 
 Four claims are false at HEAD: `docs/verification_log.jsonl` (the cross-tab change bus) and
 `docs/submission_state.json` (the submission-event log) **do not exist and are not gitignored**; the
@@ -601,7 +601,7 @@ Per architecture rule 2, each lands **in the commit that makes it wrong**, not b
 | `docs/architecture/QA_QI_INFRASTRUCTURE_MAP.md` | shows the ledger as an append-only input with no writer named; §3's silent-drop list predates `BLOCKED_BY` | name the writer; add the new drop points |
 | `docs/WAVE_EXECUTION_PIPELINE.md` | §13 describes emission and re-invocation but not closure, the lanes, or the append-only exception | add the closure step and the lane taxonomy, cross-referencing `READINESS_GATES.md` rather than restating it |
 | `docs/KNOWLEDGE_GRAPH.md` | `SUPERSEDES` is documented as unimplemented; `BLOCKED_BY` is a new edge type | note the writer; add `BLOCKED_BY` with its emitter and consumer |
-| `docs/DASHBOARD.md` → **`docs/architecture/DASHBOARD.md`** | four false claims (§5); drifted because it sits outside the governed set | `git mv`; add the Answers contract line + README ownership row; strip counts; correct the claims; extend the inventory check's exception set; update inbound references (§5.3) |
+| `docs/architecture/DASHBOARD.md` → **`docs/architecture/DASHBOARD.md`** | four false claims (§5); drifted because it sits outside the governed set | `git mv`; add the Answers contract line + README ownership row; strip counts; correct the claims; extend the inventory check's exception set; update inbound references (§5.3) |
 | `docs/architecture/SURFACE_INVENTORY.md` | derived | regenerate — picks up new checks, edge types and scripts |
 | `docs/adrs/ADR-012-…md` | this spec carries D6/D13/D15 in more detail than the ADR | add the pointer; mark phases as they land |
 

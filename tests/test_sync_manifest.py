@@ -29,7 +29,10 @@ def test_manifest_enumerates_known_edges():
     assert any("counts.json" in k for k in keys)
     assert any("counts.tex" in k for k in keys)
     assert any("lean_deps.json" in k for k in keys)
-    assert any("Inventory_Index.md" in k for k in keys)  # autogen blocks
+    assert any("MODULE_CENSUS.md" in k for k in keys)  # ADR-013 P4: replaced the Index edge
+    # ADR-013 P1. Pinned here so the census cannot silently drop out of the sync
+    # roster — the Edge is what buys it pre-commit regen, --fast and /sync.
+    assert any("MODULE_CENSUS.md" in k for k in keys)
     assert any("tables" in k for k in keys)
 
 

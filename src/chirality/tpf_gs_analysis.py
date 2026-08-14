@@ -1,4 +1,7 @@
 """Chirality Wall Synthesis: TPF vs Golterman-Shamir Compatibility Analysis.
+TPF evades two of the four GS conditions — lattice translation invariance and
+complete interpolating fields (via ancilla degrees of freedom) — which makes
+the breach of the chirality wall conditional rather than outright.
 
 Formal analysis of whether the Thorngren-Preskill-Fidkowski (TPF) SPT slab
 disentangler evades the Golterman-Shamir (GS) generalized no-go theorem for

@@ -1,4 +1,7 @@
-"""4D hypercubic lattice model for the ADW fermion-bag Monte Carlo.
+"""4D hypercubic lattice model for the ADW fermion-bag Monte Carlo, with the
+SO(4) ≅ SU(2)_L × SU(2)_R gauge integration done analytically. Provides the
+site/bond/total action, the tetrad and metric order parameters, and the
+neighbor/bond indexing.
 
 Implements the purely fermionic effective theory on a 4D hypercubic
 lattice after analytical SO(4) gauge integration. Each site carries

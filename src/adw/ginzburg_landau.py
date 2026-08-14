@@ -1,4 +1,7 @@
-"""Ginzburg-Landau Phase Classification for ADW Tetrad Condensation.
+"""Ginzburg-Landau Phase Classification for ADW Tetrad Condensation, and the
+G/G_c phase diagram. Key result: the isotropic B-phase is the ground state
+throughout — the anisotropic A-phase is never favoured — as in weak-coupling
+He-3.
 
 Extends the ADW/He-3 structural analogy from qualitative to quantitative
 by computing the Ginzburg-Landau beta_i analogs for the tetrad effective

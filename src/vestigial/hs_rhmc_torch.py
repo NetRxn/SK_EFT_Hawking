@@ -1,4 +1,6 @@
-"""PyTorch MPS-accelerated HS+RHMC computational backend.
+"""PyTorch MPS-accelerated HS+RHMC computational backend: batched LU for the
+float64 Metropolis Hamiltonian at L=4, batched CG at L≥6, and an FSAL Omelyan
+integrator.
 
 Replaces JAX inner loops with PyTorch operations on Apple Silicon GPU (MPS).
 Key performance design:

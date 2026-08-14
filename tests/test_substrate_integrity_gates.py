@@ -57,7 +57,22 @@ from validate import (
 # ── Registry invariants (W1 / W2) ──────────────────────────────────────
 
 def test_placeholder_registry_total_matches_constant():
-    assert PLACEHOLDER_TOTAL_COUNT == len(PLACEHOLDER_THEOREMS) == 26
+    """The registry's own size, pinned.
+
+    ⚠️ WAS 26, raised to 39 on 2026-08-13. The 26 was not a miscount of the
+    population — it was the population a WRONG METHOD could see. The registry's
+    header prescribed `grep -c "True := trivial"`, a source-string proxy that
+    cannot match a structure field (`has_gap : True`, no `:= trivial` on the
+    line), an inhabitation claim (`∃ (_ : T), True`), or any closer other than
+    the bare token `trivial`. Re-measured against the ELABORATED TYPE in
+    lean_deps.json — the decider — the population is 39.
+
+    A raise here is admissible ONLY when re-measurement by the decider finds
+    declarations the previous method could not see, as it did here. It is NOT
+    admissible for a newly-authored placeholder: those still hard-fail
+    `vacuous_statement_audit`, which is the ratchet that closes the generator.
+    """
+    assert PLACEHOLDER_TOTAL_COUNT == len(PLACEHOLDER_THEOREMS) == 39
 
 
 def test_every_placeholder_has_lean_name_and_category():

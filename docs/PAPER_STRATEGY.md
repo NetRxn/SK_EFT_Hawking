@@ -414,7 +414,7 @@ Twenty-one publication targets (1 flagship + 12 Tier 1 deep + 3 Tier 2 PRL + 3 T
 - **Architecture scope:** `ARCHITECTURE_SCOPE.md` — Layer-3 predictive-boundary statement; lifted into the flagship's §2 + §10.
 - **Research status:** `RESEARCH_STATUS_OVERVIEW.md` — the snapshot inventory of proven chains, open targets, and NO-GOs that the bundles consolidate.
 - **Phase roadmaps:** `roadmaps/Phase{1..6}*_Roadmap.md` — per-wave execution plans whose deliverables flow into the bundles.
-- **Inventory:** `SK_EFT_Hawking_Inventory_Index.md` and `SK_EFT_Hawking_Inventory.md` — module-level ground truth.
+- **Module census:** `docs/MODULE_CENSUS.md` — module-level ground truth for Python, derived from docstrings.
 - **Knowledge graph:** `KNOWLEDGE_GRAPH.md` and the provenance dashboard's KG tab — the cross-paper claim-cluster infrastructure that survives the re-bundling.
 
 ---

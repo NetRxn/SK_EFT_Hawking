@@ -1,26 +1,9 @@
 {
   "generated_by": "scripts/extract_missing_bibkeys.py",
-  "n_total_cited": 529,
-  "n_in_registry": 528,
-  "n_stubs": 1,
+  "n_total_cited": 541,
+  "n_in_registry": 541,
+  "n_stubs": 0,
   "n_orphans": 0,
-  "stubs": [
-    {
-      "bibkey": "AGP2006",
-      "authors": "P.~Aliferis, D.~Gottesman, and J.~Preskill, ``Quantum accuracy threshold for concatenated distance-3 codes,'' Quantum Inf.\\ Comput.\\ , 97--165 (2006) [arXiv:quant-ph/0504218]",
-      "title": "",
-      "journal": null,
-      "volume": 6,
-      "page": null,
-      "year": 2006,
-      "doi": null,
-      "arxiv": "quant-ph/0504218",
-      "raw_block": "\\bibitem{AGP2006}\nP.~Aliferis, D.~Gottesman, and J.~Preskill,\n``Quantum accuracy threshold for concatenated distance-3 codes,''\nQuantum Inf.\\ Comput.\\ \\textbf{6}, 97--165 (2006)\n[arXiv:quant-ph/0504218].",
-      "cited_in": [
-        "D6"
-      ],
-      "bibitem_source": "D6"
-    }
-  ],
+  "stubs": [],
   "orphans": []
 }

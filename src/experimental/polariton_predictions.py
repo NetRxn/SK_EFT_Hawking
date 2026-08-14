@@ -1,5 +1,7 @@
 """
-Polariton Platform Predictions — Tier 1 Perturbative Patch
+Polariton Platform Predictions — Tier 1 Perturbative Patch. Classifies each
+cavity quality (ultra-long / long / standard) by the validity parameter
+Γ_pol/κ.
 
 Computes analog Hawking radiation predictions for driven-dissipative
 polariton condensates using the Tier 1 perturbative patch: uniform

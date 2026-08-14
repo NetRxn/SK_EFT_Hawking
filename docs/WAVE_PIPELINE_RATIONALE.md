@@ -134,6 +134,35 @@ bound was measured anywhere before 2026-08-08 — `compile_bundle_pdf.py` comput
 and discarded it — which is how two Tier-1 bundles were closed GREEN at a small fraction of their
 declared target. Added ADR-011 Phase 1.
 
+## Stage 12 — why the hand-maintained inventory was removed
+
+Until 2026-08-13 this stage mandated maintaining a 319 KB hand-written inventory and its index:
+a four-step maintenance procedure, a *what to update* table naming both files, and a six-item
+*watch for* list. Its gate was **"manual spot-check of three count-sensitive files."**
+
+**Nothing mechanical asserted any of it.** Measured before removal: zero checks referenced the
+Inventory's §1 or §2 or its `Last synced` date. So the enforcement for a hand catalogue of the
+whole system was a hand-run sample of three files, and the outcome was exactly what that
+predicts — the Inventory's largest section named 85 of 2040 live Lean modules (4.2%), and the
+Index's narrative had gone two months stale beside a generated table that was fresh.
+
+That last detail is the generalisable one, and it is why the pair was replaced rather than
+repaired: **a half-generated document inherits the credibility of its generated half.** The
+Index's AUTOGEN block was current; the prose around it claimed a theorem count roughly half the
+generated one and asserted this repo has no `CLAUDE.md`. Every gate was green, because every
+gate looked only inside the markers.
+
+`docs/MODULE_CENSUS.md` (ADR-013) is generated in whole from module docstrings, so there is no
+hand-edited region for that failure to recur in, and the fix for a bad description is a better
+docstring rather than a parallel prose file that drifts. Three of the four legs that guarded the
+Index have no counterpart, because the hazards they guarded cannot occur in a wholly generated
+file — see `docs/architecture/QA_QI_INFRASTRUCTURE_MAP.md` §2.1.
+
+**The lesson is not "people should have been more careful."** It is that a rule requiring
+sustained hand-maintenance of a derived-in-principle artifact will be broken, and a gate that
+samples three files cannot see it. Where the content can be derived, derive it; where it cannot,
+gate it mechanically.
+
 ## Stage 13 — why the stage exists
 
 The April 2026 external adversarial-review round found a 13-dimension problem space that had

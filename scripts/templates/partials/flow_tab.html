@@ -1,0 +1,104 @@
+{# ═══ FLOW BOARD (ADR-012 D15 S2, P9b) ═══
+   Renders scripts/dashboard_flow.flow_board(). Every cell carries its own `kind`, and
+   the five non-verdict kinds (not-tracked / unmeasured / missing / undeclared / warning)
+   are styled DIFFERENTLY from pass and fail on purpose — the module refuses to render
+   "nobody measured this" as a verdict, and a template that painted them green or red
+   would put the defect back one layer up. #}
+{# The <style> block is this partial's MARKER (test_template_contract
+   `_partial_markers`): it sits outside every {% if %}, so it is emitted whenever the
+   include runs and proves the panel rendered rather than the shell rendering empty.
+   Its first selector must be unique to this partial. #}
+<style>
+.flow-board { font-size: 0.85rem; }
+.flow-board .flow-scroll { overflow-x: auto; }
+.flow-board .flow-table td, .flow-board .flow-table th { white-space: nowrap; }
+.flow-board .flow-cell { text-align: center; font-size: 0.78rem; }
+.flow-board .flow-green   { background: #dcfce7; color: #166534; }
+.flow-board .flow-red     { background: #fee2e2; color: #991b1b; }
+.flow-board .flow-pending { background: #fef9c3; color: #854d0e; }
+.flow-board .flow-warning { background: #ffedd5; color: #9a3412; }
+.flow-board .flow-tier { color: var(--grey); font-size: 0.7rem; margin-left: 6px; }
+.flow-board .flow-open { text-align: right; font-variant-numeric: tabular-nums; }
+.flow-board .flow-lane { display: inline-block; padding: 1px 6px; margin: 0 3px 2px 0;
+    border-radius: 3px; font-size: 0.72rem; background: var(--blue-bg); }
+.flow-board .lane-unclassified { background: #f4f4f5; color: var(--grey); }
+.flow-board .flow-census { font-size: 0.8rem; color: var(--grey); margin-top: 10px; }
+</style>
+<div class="flow-board" data-partial="flow_tab">
+
+  {% if flow_board is none or flow_board.error %}
+    <p class="flow-error">⚠️ The Flow board could not be built:
+      {{ flow_board.error if flow_board else 'not loaded' }}.
+      <strong>This is an error, not an empty portfolio.</strong></p>
+  {% else %}
+
+  <h2>Flow — where every bundle is, and what holds it</h2>
+
+  {% if flow_board.caveats %}
+  <ul class="flow-caveats">
+    {% for line in flow_board.caveats %}<li>⚠️ {{ line }}</li>{% endfor %}
+  </ul>
+  {% endif %}
+
+  <div class="flow-scroll">
+  <table class="data-table flow-table">
+    <thead>
+      <tr>
+        <th>bundle</th>
+        {% for col in flow_board.columns %}
+        <th title="{{ col.source }}{% if col.note %} — {{ col.note }}{% endif %}">{{ col.label }}</th>
+        {% endfor %}
+        <th>open</th>
+        <th>lanes — who closes it</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in flow_board.rows %}
+      <tr>
+        <td class="mod-name">{{ row.bundle }}<span class="flow-tier">T{{ row.tier }}</span></td>
+        {% for col in flow_board.columns %}
+        {% set cell = row.cells.get(col.key) %}
+        <td class="flow-cell flow-{{ cell.kind if cell else 'unmeasured' }}"
+            {% if cell and cell.detail %}title="{{ cell.detail }}"{% endif %}>
+          {{ cell.value if cell else 'unmeasured' }}
+        </td>
+        {% endfor %}
+        <td class="flow-open">{{ row.blockers_open }}</td>
+        <td class="flow-lanes">
+          {% if not row.overlay.measured %}
+            <span class="flow-unmeasured">unmeasured</span>
+          {% elif not row.overlay.by_lane %}
+            <span class="flow-none">—</span>
+          {% else %}
+            {% for lane, n in row.overlay.by_lane.items() %}
+            <span class="flow-lane lane-{{ lane }}">{{ lane }} {{ n }}</span>
+            {% endfor %}
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+
+  {# The coverage block is NOT decoration. It is the partition assertion: every open
+     finding is either attributed to a row, keyed off the roster, or carries no key at
+     all. Dropping it would leave the board looking complete over a population it never
+     reached. #}
+  <h3>What this board reached</h3>
+  <table class="data-table flow-coverage">
+    <tbody>
+      {% for k, v in flow_board.coverage.items() %}
+      <tr><td>{{ k.replace('_', ' ') }}</td><td class="flow-num">{{ v }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  {% if flow_board.status_census.undeclared_by_roadmap %}
+  <p class="flow-census">⚠️ Stage-status values live in the corpus but undeclared by the
+    roadmap: {% for v in flow_board.status_census.undeclared_by_roadmap %}<code>{{ v }}</code>{% if not loop.last %}, {% endif %}{% endfor %}.
+    Rendered verbatim above — never coerced to the nearest declared state.</p>
+  {% endif %}
+
+  {% endif %}
+</div>

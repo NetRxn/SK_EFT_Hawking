@@ -111,7 +111,13 @@ CANNOT_MEASURE_PASS_BASELINE = frozenset({
     ('disclosure_consistency', 'missing-input'),
     ('elaboration_knob_watchlist', 'missing-input'),
     ('formula_grounding', 'missing-input'),
-    ('inventory_index_autogen_fresh', 'exception'),
+    # Added 2026-08-13 with `existential_witness_disclosure`. Same two inputs as
+    # `formula_grounding` and `vacuous_statement_audit` above (formulas.py +
+    # lean_deps.json) and the same reasoning: absence carries `measured=False`, so
+    # it stops counting as evidence rather than manufacturing one. Its SUBSTANTIVE
+    # empty case is a hard FAIL, not a pass — an empty population trips the seam
+    # guard and reports UNVERIFIED.
+    ('existential_witness_disclosure', 'missing-input'),
     ('lean_docstring_refs_resolve', 'missing-input'),
     ('nogo_substrate_integrity', 'missing-input'),
     ('notebook_exec', 'exception'),
@@ -318,7 +324,17 @@ class TestSelfDeclaredSkipsDeclareMeasuredFalse:
         sites = _self_declared_skips()
         # ⚠️ RE-PINNED 15 -> 30, 2026-08-10. Live population is 30, so this sat
         # at **100% headroom**: half the corpus could vanish and it stayed green.
-        assert len(sites) >= 30, (
+        #
+        # ⚠️ RE-PINNED 30 -> 28, 2026-08-13, and the REASON is what makes it
+        # legitimate. `inventory_index_autogen_fresh` gained two blocking narrative
+        # legs, so its two `passed=True, measured=False` early returns — the whole
+        # check was advisory — became warning Details inside a check that now
+        # measures and can fail. Both sites were verified gone from that check
+        # specifically, not merely absent from a smaller total. A population that
+        # shrank because the code genuinely lost the sites is legitimate; one that
+        # shrank because the scanner rotted is the defect this floor catches, and
+        # the two are indistinguishable from the count alone.
+        assert len(sites) >= 28, (
             f"only {len(sites)} self-declared skip sites found; the scan is not "
             f"seeing real code (did `CheckResult` get aliased, or the modules move?)")
 

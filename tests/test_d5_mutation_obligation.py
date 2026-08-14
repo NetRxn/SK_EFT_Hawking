@@ -332,6 +332,15 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
         "exclusion, the `_DEFINITIONAL` suffix, ground-arith staying advisory, and the "
         "compound-reflexive elision guard that prevents a false-positive class",
     ),
+    "existential_witness_disclosure": (
+        "test_d5_lean_statements.py",
+        "PRODUCTION-SEEDED: an entry deleted from the REAL EXISTENTIAL_WITNESS_REGISTRY "
+        "in src/core/constants.py -> red naming `gap_nontrivial_exists`; restored. Plus 4 "
+        "fixture mutations (undisclosed member, empty witness text, and both down-only "
+        "ceilings) and 3 negative controls: a non-existential result, a declared "
+        "placeholder, and the empty-population seam guard that must report UNVERIFIED "
+        "rather than PASS",
+    ),
     "nogo_substrate_integrity": (
         "test_d5_lean_statements.py",
         "3 mutations: absent backing (Hole B), kernel-purity, and vacuity (Hole A). "
@@ -406,11 +415,19 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
         "population; a source-fresh + Lean-stale bundle still writes freshness_stale=true; "
         "a dark Lean leg writes NO flag at all; and the --strict promotion is unchanged",
     ),
-    "inventory_index_autogen_fresh": (
+    "module_census_fresh": (
         "test_d5_freshness.py",
-        "ADVISORY BY DESIGN (item 3), so both directions are on the WARNING. A leg pins "
-        "that a raising generator can never fail the suite",
-    ),
+        "PRODUCTION-SEEDED on the real tree (ADR-013 P1). A changed docstring in the real "
+        "src/core/transonic_background.py makes the census STALE; the same module's "
+        "docstring REMOVED (by AST line span, not a text match that can silently fail to "
+        "apply) takes the undocumented population past its ceiling; a walk pointed at no "
+        "tree reports UNMEASURED rather than clean. The ratchet leg reads SOURCE, not the "
+        "rendered artifact — a leg keyed on the artifact would be satisfied by the "
+        "regeneration that introduced the regression, since the artifact always agrees "
+        "with itself. D5 (2026-08-13) added the SHELL decider with its own both-directions "
+        "legs, including the false positive the bounding exists to stop (a comment AFTER "
+        "code is not a description) and a seam guard that fails if the glob stops matching "
+        "`*.sh` at all"),
     # lean_toolchain.py: 34 tests / 14 mutations. Also CLOSES the QI-11 residue — the
     # lake-resolution block duplicated in check_lean_build and
     # check_axiom_closure_allowlist now has one owner. Deferred to W-D on purpose: it
@@ -849,6 +866,13 @@ AWAITING_CEILING = 0
 #: is the distinction the four blockers turned on. Erring toward absent overstates the
 #: remaining work; the opposite error is what produced them.
 PRODUCTION_SEEDED: frozenset[str] = frozenset({
+    # 2026-08-13: an entry deleted from the REAL EXISTENTIAL_WITNESS_REGISTRY in
+    # src/core/constants.py -> red; restored from saved bytes. Keeps FIXTURE_ONLY_CEILING
+    # unchanged.
+    "existential_witness_disclosure",
+    # 2026-08-13 (ADR-013 P1): seeded in the real src/core/transonic_background.py —
+    # docstring changed, then removed — and in the real docs/MODULE_CENSUS.md.
+    "module_census_fresh",
     "ledger_ids_resolve",
     # 2026-08-10: seeded in the real ATLAS_HEATMAP.md and the real sources.py
     # (see its MUTATION_VERIFIED entry). Keeps FIXTURE_ONLY_CEILING at 55.
@@ -975,7 +999,12 @@ PRODUCTION_SEEDED: frozenset[str] = frozenset({
 #: every check for which nobody has yet demonstrated a production failure, not every
 #: check that is broken. Lower it one check at a time, each with the probe recorded in
 #: the commit — the same way the 54-entry `AWAITING_MUTATION_TEST` backlog went to zero.
-FIXTURE_ONLY_CEILING = 55  # 2026-08-09: +3 checks, +3 production seeds — net unchanged
+FIXTURE_ONLY_CEILING = 54  # 2026-08-13 (ADR-013 P4): UNCHANGED by the Index check's
+                           #   retirement, measured not assumed. This counts registered
+                           #   checks NOT production-seeded; the deleted check WAS
+                           #   production-seeded, so registered and PRODUCTION_SEEDED
+                           #   each fell by one and the fixture-only population did not
+                           #   move. A ceiling that may only be lowered therefore holds
 
 
 def _registered() -> list[str]:

@@ -506,7 +506,26 @@ Use `jinja2.meta.find_undeclared_variables` over `dashboard.html` and every part
 
 **Files:** `scripts/provenance_dashboard.py:2662` (chain link states), `:4427-4445` (the sentence span), `tests/e2e/test_paper_provenance_markers.py`
 
-⚠️ **The ADR's data column was wrong and is corrected.** Paper Provenance v2 reads **no** `BACKED_BY` edge and **no** `FLAGS` edge — it reconstructs chains from `claims_review.json`. So this task builds a sentence→finding resolution: for each chain link, resolve its target node id, ask the graph whether any open `ReviewFinding` FLAGS it, and attach the result to the sentence dict at `:2864-2891`.
+⚠️ **The ADR's data column was wrong and is corrected.** Paper Provenance v2 reads **no** `BACKED_BY` edge and **no** `FLAGS` edge — it reconstructs chains from `claims_review.json`.
+
+⚠️⚠️ **AND THIS STEP'S OWN REPLACEMENT IS ALSO WRONG. MEASURED 2026-08-12, BEFORE BUILDING.** It said: *"resolve its target node id, ask the graph whether any open `ReviewFinding` FLAGS it"*. **`FLAGS` cannot answer that question.** All **4,895** `FLAGS` edges in the live graph point at `paper:` nodes — every single one — because `extract_flags_edges` attaches a finding to the *paper* it was filed against, never to a formula, theorem or parameter. Asking whether a finding FLAGS a chain-link artifact returns nothing for every artifact, forever: the marker would render on no sentence and its emptiness would be indistinguishable from a clean corpus. **That is this repository's signature defect, and building the step as written would have installed a fresh instance of it in the surface built to surface defects.**
+
+**What is actually available**, measured at HEAD:
+
+| candidate relation | measured | usable for a per-SENTENCE marker? |
+|---|---|---|
+| `FLAGS` → artifact | **0 edges** — all 4,895 target `paper:` | ❌ the relation does not exist |
+| `FLAGS` → paper | 4,895 | ❌ marks every sentence in a flagged paper — true, and useless |
+| finding `meta['target']` | **1,231 of 1,663** findings carry one, typically `papers/<p>/paper_draft.tex:666` or `:635-669` | ✅ **a LOCATION, which is the question S4 actually asks** |
+
+**S4's design therefore changes, and the operator question it answers is unchanged:** *"I am reading §4; is anything under it broken?"* is a question about **where the reader is**, not about the provenance chain beneath them. Resolve it by matching a finding's `target` line range against the sentence's own location in the draft.
+
+⚠️ **Two things that must not be hand-waved when this is built:**
+
+1. **`target` is reviewer-written prose in backticks**, with real variants already on disk — `:666`, `:635-669`, `:376, 598`, and `:635-669` followed by trailing words. Parse it with a decider and **count what does not parse**, reported rather than dropped. A target that fails to parse is a sentence that silently has no marker.
+2. **432 findings carry no `target` at all.** They can never mark a sentence. The pane must say so — a marker layer that is silent about the population it cannot see is the same failure one level down.
+
+**Not built in this pass.** The step is re-specified from measurement rather than executed against a relation that does not exist; building it is the next wave's work.
 
 The attachment point is clean: the per-sentence `<span>` at `:4439` already carries a state-driven class list built at `:4427`, so the marker is one more class plus a `data-blocking-findings` count.
 
@@ -517,7 +536,7 @@ The attachment point is clean: the per-sentence `<span>` at `:4439` already carr
 
 ### Task 9: Documents, and the full gate
 
-- [ ] **Step 1:** `docs/DASHBOARD.md` — the corrections below are **measured, not inherited**. ⚠️ An earlier draft of this step said "`docs/verification_log.jsonl` exists; `docs/submission_state.json` does not", taken from the ADR rather than from the disk. **Neither file exists.** That is the same claim-vs-measurement defect this plan exists to fix, so the list is now stated with how each was checked:
+- [ ] **Step 1:** `docs/architecture/DASHBOARD.md` — the corrections below are **measured, not inherited**. ⚠️ An earlier draft of this step said "`docs/verification_log.jsonl` exists; `docs/submission_state.json` does not", taken from the ADR rather than from the disk. **Neither file exists.** That is the same claim-vs-measurement defect this plan exists to fix, so the list is now stated with how each was checked:
 
   | claim in `DASHBOARD.md` | measured |
   |---|---|

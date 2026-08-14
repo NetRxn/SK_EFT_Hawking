@@ -2533,6 +2533,16 @@ Lean by CONTENT via the lean4 skill, and cross-check module existence against `l
 > strengthening; D47 and D49 are prose). **D50 and D51 stay here**; both are architecture-accuracy
 > defects and belong to this charter. D39–D44 also stay, as this file's own non-blocking residue —
 > and **D39 is ADR-012 §D19's worked example** of parked work with a release condition.
+>
+> ✅ **RE-FILED 2026-08-12** (ADR-012 P8) —
+> [`papers/AutomatedReviews/2026-08-12-substrate-lane-refile/substrate-lane-refile.md`](../../../papers/AutomatedReviews/2026-08-12-substrate-lane-refile/substrate-lane-refile.md).
+> **Every claim was re-measured at HEAD first, and that changed the answer for three of the eleven
+> sub-items**: D45-c, D47 and D49 were already fixed — several of them *in the commit that filed
+> them here*, which is precisely why a filed finding's state is a claim rather than a
+> measurement. Eight findings were minted, each with its own lane: one `substrate` (D45-a, the
+> canonical theorem-vs-implementation disagreement), three `lean`, three `infra`, one `prose`.
+> Read the re-file document rather than the entries below for current state — **the entries
+> below are the 2026-08-11 record and are not maintained.**
 
 ### D45 — I1 drafting wave, 2026-08-11: four SUBSTRATE defects found by the drafters
 
