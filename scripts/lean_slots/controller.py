@@ -710,8 +710,14 @@ class Controller:
             age = (datetime.now(timezone.utc) - heartbeat).total_seconds()
             timeout = int(self.inventory.raw.get("lease_timeout_seconds", 900))
             if age < timeout:
+                # `reclaim` is for SOMEONE ELSE's dead lease. An owner holding a clean slot
+                # wants `release`, which accepts QUARANTINED from the owner and needs no
+                # wait — routing them here is the common wrong turn, so say so.
                 raise SlotError(
-                    f"wt{number} heartbeat is only {int(age)}s old; stale threshold is {timeout}s"
+                    f"wt{number} heartbeat is only {int(age)}s old; stale threshold is "
+                    f"{timeout}s. If this session OWNS the lease and the worktree is clean, "
+                    f"use `slotctl release --slot {number}` instead — reclaim is for a lease "
+                    "whose owner is gone."
                 )
             if lease.get("owner_kind") == "process":
                 if process_matches(
@@ -1135,8 +1141,13 @@ class Controller:
             record(
                 f"wt{item['slot']}.endpoint",
                 item["proxy_running"] and item["backend_running"] == expected_backend,
-                f"proxy={item['proxy_running']} backend={item['backend_running']} "
-                f"expected_backend={expected_backend}",
+                (
+                    "proxy is ALIVE but running stale code/configuration — run "
+                    "`slotctl supervisor stop` then `start`; it is serving, not dead"
+                    if item.get("proxy_state") == "stale"
+                    else f"proxy={item['proxy_running']} backend={item['backend_running']} "
+                    f"expected_backend={expected_backend}"
+                ),
             )
         paired = self.inventory.paired_inventory()
         if paired is not None:

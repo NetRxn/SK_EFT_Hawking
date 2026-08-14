@@ -10,7 +10,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from typing import Any
 from urllib.parse import parse_qs, urlsplit
 
-from .state import Inventory, SlotError, token_hash
+from .state import Inventory, SlotError, read_json, token_hash, tool_cache_path, tool_list_key
 
 
 _DISCOVERY_METHODS = {
@@ -156,7 +156,28 @@ class LeaseGate:
 _OFFLINE_PROTOCOL_VERSION = "2025-06-18"
 
 
-def offline_handshake(messages: list[dict[str, Any]]) -> dict[str, Any] | None:
+def cached_tool_list(inventory: Inventory) -> list[dict[str, Any]]:
+    """The tools to advertise when this slot has no backend; empty when nothing is cached.
+
+    Advertising the real surface is what makes a leased-backend deployment usable at all:
+    MCP tools are registered at SESSION START, so a slot whose backend is idle then would
+    otherwise contribute zero tools to that session — permanently, no matter what the lead
+    leases afterwards. Serving the list costs nothing in safety, because `tools/call` still
+    goes to the real backend and still fails closed on the lease gate.
+    """
+    try:
+        cached = read_json(tool_cache_path(inventory.state_root))
+    except (SlotError, OSError):
+        return []
+    if cached.get("key") != tool_list_key(inventory.raw["server"]):
+        return []
+    tools = cached.get("tools")
+    return tools if isinstance(tools, list) else []
+
+
+def offline_handshake(
+    messages: list[dict[str, Any]], tools: list[dict[str, Any]] | None = None
+) -> dict[str, Any] | None:
     """A local reply for MCP handshake traffic when the slot has no backend, else None.
 
     A client opens every endpoint in its configuration at startup, long before any slot is
@@ -190,7 +211,11 @@ def offline_handshake(messages: list[dict[str, Any]]) -> dict[str, Any] | None:
             },
         }
     if method == "tools/list":
-        return {"jsonrpc": "2.0", "id": message.get("id"), "result": {"tools": []}}
+        return {
+            "jsonrpc": "2.0",
+            "id": message.get("id"),
+            "result": {"tools": list(tools or [])},
+        }
     if method == "ping":
         return {"jsonrpc": "2.0", "id": message.get("id"), "result": {}}
     return None
@@ -308,7 +333,11 @@ def make_handler(inventory: Inventory, number: int):
                             self.send_response(202)
                             self.send_header("Content-Length", "0")
                             self.end_headers()
-                        elif (local := offline_handshake(parsed)) is not None:
+                        elif (
+                            local := offline_handshake(
+                                parsed, cached_tool_list(inventory)
+                            )
+                        ) is not None:
                             self._respond_json(local)
                         else:
                             self._deny(503, f"backend unavailable: {exc}", request_id)

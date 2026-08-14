@@ -1427,3 +1427,105 @@ def test_the_integration_ref_is_configurable(slot_repo) -> None:
         {"base_ref": "does-not-exist"},
     )
     assert "trunk" in why
+
+
+def test_a_stale_proxy_is_reported_differently_from_a_dead_one(slot_repo, monkeypatch) -> None:
+    """Minor #2: `proxy=False` sent an operator hunting a dead process that was serving.
+
+    The remedies differ — restart the supervisor vs investigate a crash — so conflating
+    them is a wrong diagnosis, not just terse output.
+    """
+    from scripts.lean_slots import supervisor as sup
+
+    controller, _, _ = slot_repo
+    monkeypatch.setattr(sup.Supervisor, "process_state",
+                        lambda self, kind, number: "stale" if kind == "proxy" else "down")
+    monkeypatch.setattr(sup.Supervisor, "_running", lambda self, kind, number: False)
+    monkeypatch.setattr(sup.Supervisor, "global_backend_count", lambda self: 0)
+    detail = {c["name"]: c for c in controller.doctor()["checks"]}["wt1.endpoint"]["detail"]
+    assert "stale" in detail and "supervisor stop" in detail
+    assert "serving, not dead" in detail
+
+
+def test_reclaim_routes_an_owner_to_release(slot_repo) -> None:
+    """Minor #3: reclaim reads like THE recovery verb; it is the one for a dead owner."""
+    controller, repo, _ = slot_repo
+    path = repo / "config" / "lean-slots.public.json"
+    inventory = json.loads(path.read_text())
+    inventory["lease_timeout_seconds"] = 900          # the shipped value, not the fixture's 0
+    path.write_text(json.dumps(inventory))
+    moved = Controller(Inventory.load(path))
+    moved.acquire(1, client="claude", base_ref="main")
+    with pytest.raises(SlotError, match=r"release --slot 1"):
+        moved.reclaim(1, confirm_owner_gone=True)
+
+
+# --- The advertised tool list survives an idle backend (session-start registration) -----
+
+
+def _write_cache(controller, tools, key=None):
+    from scripts.lean_slots.state import tool_cache_path, tool_list_key
+    atomic_json(
+        tool_cache_path(controller.inventory.state_root),
+        {
+            "key": key or tool_list_key(controller.inventory.raw["server"]),
+            "tools": tools,
+            "harvested_at": "2026-08-14T00:00:00Z",
+        },
+    )
+
+
+def test_an_idle_slot_advertises_the_cached_tools(slot_repo) -> None:
+    """MCP tools register at SESSION START. A slot whose backend is idle then would
+    otherwise contribute zero tools to that session forever, no matter what is leased
+    afterwards — which makes a leased-backend deployment undispatchable."""
+    from scripts.lean_slots.proxy import cached_tool_list, offline_handshake
+
+    controller, _, _ = slot_repo
+    _write_cache(controller, [{"name": "lean_goal"}, {"name": "lean_verify"}])
+    tools = cached_tool_list(controller.inventory)
+    assert [t["name"] for t in tools] == ["lean_goal", "lean_verify"]
+    reply = offline_handshake([{"jsonrpc": "2.0", "id": 1, "method": "tools/list"}], tools)
+    assert len(reply["result"]["tools"]) == 2
+
+
+def test_a_cache_from_a_different_server_build_is_ignored(slot_repo) -> None:
+    """Bump the pinned server or edit disabled_tools and the cache must not be trusted."""
+    from scripts.lean_slots.proxy import cached_tool_list
+
+    controller, _, _ = slot_repo
+    _write_cache(controller, [{"name": "lean_goal"}], key="a-different-build")
+    assert cached_tool_list(controller.inventory) == []
+
+
+def test_editing_disabled_tools_invalidates_the_cache(slot_repo) -> None:
+    from scripts.lean_slots.proxy import cached_tool_list
+
+    controller, repo, _ = slot_repo
+    _write_cache(controller, [{"name": "lean_goal"}])
+    assert cached_tool_list(controller.inventory) != []
+    path = repo / "config" / "lean-slots.public.json"
+    inventory = json.loads(path.read_text())
+    inventory["server"]["disabled_tools"] = ["lean_build", "lean_run_code"]
+    path.write_text(json.dumps(inventory))
+    assert cached_tool_list(Inventory.load(path)) == []
+
+
+def test_the_cache_key_ignores_which_slot_is_serving(slot_repo) -> None:
+    """One list serves all three slots: the project path changes which PROJECT a backend
+    serves, never which TOOLS exist. Keying on the per-slot fingerprint would defeat it."""
+    from scripts.lean_slots.state import tool_list_key
+
+    controller, _, _ = slot_repo
+    server = dict(controller.inventory.raw["server"])
+    first = tool_list_key(server)
+    assert first == tool_list_key(dict(server))
+    server["command"] = ["different-binary"]
+    assert tool_list_key(server) != first
+
+
+def test_a_missing_cache_yields_no_tools_rather_than_an_error(slot_repo) -> None:
+    from scripts.lean_slots.proxy import cached_tool_list
+
+    controller, _, _ = slot_repo
+    assert cached_tool_list(controller.inventory) == []

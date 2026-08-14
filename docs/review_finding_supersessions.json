@@ -7357,6 +7357,32 @@
         "exit_code": 0,
         "run_at": "2026-08-14"
       }
+    },
+    {
+      "finding_id": "review:2026-08-13-adr008-phase4-residue:infra:2",
+      "status": "fixed",
+      "evidence": "Supervisor.process_state returns running|stale|down, surfaced in status() as proxy_state/backend_state, and doctor's endpoint check now says 'proxy is ALIVE but running stale code/configuration - run supervisor stop then start; it is serving, not dead' rather than the generic proxy=False. The two conditions have different remedies, so conflating them was a wrong diagnosis. Mutation-proven: collapsing stale back into the generic report turns the test red.",
+      "superseded_by": null,
+      "date": "2026-08-14",
+      "verified_by": {
+        "command": "uv run python -m pytest tests/test_lean_slots.py -q",
+        "declared": "uv run python -m pytest tests/test_lean_slots.py -q",
+        "exit_code": 0,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-13-adr008-phase4-residue:infra:3",
+      "status": "fixed",
+      "evidence": "reclaim's staleness refusal now names the right verb: an owner holding a clean slot is told to use 'slotctl release --slot N', which accepts QUARANTINED from the owner and needs no wait, and is told that reclaim is for a lease whose owner is gone. The age gate itself is unchanged - it is what stops one session reclaiming another's live lease - so this fixes the routing, not the bar. Mutation-proven: dropping the hint turns the test red.",
+      "superseded_by": null,
+      "date": "2026-08-14",
+      "verified_by": {
+        "command": "uv run python -m pytest tests/test_lean_slots.py -q",
+        "declared": "uv run python -m pytest tests/test_lean_slots.py -q",
+        "exit_code": 0,
+        "run_at": "2026-08-14"
+      }
     }
   ]
 }

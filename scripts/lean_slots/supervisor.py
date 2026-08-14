@@ -23,6 +23,8 @@ from .state import (
     now_iso,
     process_matches,
     process_start_signature,
+    tool_cache_path,
+    tool_list_key,
     read_json,
     sha256_bytes,
 )
@@ -50,13 +52,24 @@ class Supervisor:
             return None
 
     def _running(self, kind: str, number: int) -> bool:
+        return self.process_state(kind, number) == "running"
+
+    def process_state(self, kind: str, number: int) -> str:
+        """`running` | `stale` | `down` — distinguishing the two ways of not being usable.
+
+        `stale` means the process is ALIVE and its port is very likely still answering, but
+        it loaded an earlier implementation or inventory. Reporting that identically to
+        `down` sends an operator to look for a dead process that is in fact serving, which
+        is the wrong diagnosis and the wrong fix: the remedy is a supervisor restart.
+        """
         metadata = self._metadata(kind, number)
-        return bool(
-            metadata
-            and process_matches(int(metadata.get("pid", 0)), metadata.get("signature"))
-            and metadata.get("runtime_fingerprint")
-            == self._runtime_fingerprint(kind, number)
-        )
+        if not metadata or not process_matches(
+            int(metadata.get("pid", 0)), metadata.get("signature")
+        ):
+            return "down"
+        if metadata.get("runtime_fingerprint") != self._runtime_fingerprint(kind, number):
+            return "stale"
+        return "running"
 
     def _runtime_fingerprint(
         self, kind: str, number: int, command: list[str] | None = None
@@ -444,6 +457,9 @@ class Supervisor:
                         started.append(("backend", number))
                     elif not expected_backend and self._running("backend", number):
                         self._stop_backend_unlocked(number)
+                # Do this while the front doors are up but before any client attaches:
+                # an empty tool list at attach time is permanent for that session.
+                self._harvest_tool_list_unlocked()
             except Exception:
                 for kind, number in reversed(started):
                     slot = self.inventory.slot(number)
@@ -496,6 +512,118 @@ class Supervisor:
         if not isinstance(value, dict):
             raise SlotError("MCP probe response was not a JSON object")
         return value
+
+    def cached_tool_list(self) -> list[dict[str, Any]] | None:
+        """The tool list to advertise when a slot's backend is down, or None.
+
+        Keyed on `tool_list_key`, so a pinned-server bump or a `disabled_tools` edit
+        invalidates it while ordinary slot churn does not.
+        """
+        try:
+            cached = read_json(tool_cache_path(self.inventory.state_root))
+        except (SlotError, OSError):
+            return None
+        if cached.get("key") != tool_list_key(self.inventory.raw["server"]):
+            return None
+        tools = cached.get("tools")
+        return tools if isinstance(tools, list) and tools else None
+
+    def _fetch_tool_list(self, number: int) -> list[dict[str, Any]] | None:
+        """Ask a RUNNING backend what it offers. Returns None on any failure."""
+        slot = self.inventory.slot(number)
+        host = str(self.inventory.raw["server"]["host"])
+        headers = {
+            "Accept": "application/json, text/event-stream",
+            "Content-Type": "application/json",
+        }
+        if self.inventory.client_auth_mode == "bearer":
+            headers["Authorization"] = f"Bearer {self.inventory.token('codex')}"
+
+        def request(payload, session_id=None):
+            connection = http.client.HTTPConnection(
+                host, int(slot["proxy_port"]), timeout=120
+            )
+            current = dict(headers)
+            if session_id:
+                current["Mcp-Session-Id"] = session_id
+            connection.request(
+                "POST", "/mcp?client=codex", body=json.dumps(payload), headers=current
+            )
+            response = connection.getresponse()
+            body = response.read()
+            response_headers = dict(response.getheaders())
+            connection.close()
+            if response.status not in {200, 202}:
+                raise SlotError(f"tool-list harvest failed ({response.status})")
+            return (self._sse_json(body) if body else {}), response_headers
+
+        try:
+            _, response_headers = request(
+                {
+                    "jsonrpc": "2.0",
+                    "id": 1,
+                    "method": "initialize",
+                    "params": {
+                        "protocolVersion": "2025-06-18",
+                        "capabilities": {},
+                        "clientInfo": {"name": "slotctl-harvest", "version": "1"},
+                    },
+                }
+            )
+            session_id = response_headers.get("Mcp-Session-Id") or response_headers.get(
+                "mcp-session-id"
+            )
+            request({"jsonrpc": "2.0", "method": "notifications/initialized"}, session_id)
+            listed, _ = request(
+                {"jsonrpc": "2.0", "id": 2, "method": "tools/list"}, session_id
+            )
+        except (SlotError, OSError, http.client.HTTPException, ValueError):
+            return None
+        tools = (listed.get("result") or {}).get("tools")
+        return tools if isinstance(tools, list) and tools else None
+
+    def _harvest_tool_list_unlocked(self) -> bool:
+        """Populate the cache once, briefly borrowing a backend if none is running.
+
+        Without this, the FIRST session on a fresh clone sees no slot tools at all under
+        `backend_policy: "leased"` — every backend is down at attach time, and MCP tools
+        are registered at session start. Borrowed backends are always stopped again, so
+        this never leaves the heavy-backend count raised.
+        """
+        if self.cached_tool_list() is not None:
+            return False
+        for number in (1, 2, 3):
+            if not self._running("backend", number):
+                continue
+            tools = self._fetch_tool_list(number)
+            if tools:
+                self._write_tool_cache(tools)
+                return True
+        for number in (1, 2, 3):
+            if not self.inventory.slot(number):
+                continue
+            try:
+                self._start_backend_unlocked(number)
+            except SlotError:
+                continue
+            try:
+                tools = self._fetch_tool_list(number)
+            finally:
+                self._stop_backend_unlocked(number)
+            if tools:
+                self._write_tool_cache(tools)
+                return True
+        return False
+
+    def _write_tool_cache(self, tools: list[dict[str, Any]]) -> None:
+        atomic_json(
+            tool_cache_path(self.inventory.state_root),
+            {
+                "key": tool_list_key(self.inventory.raw["server"]),
+                "tools": tools,
+                "harvested_at": now_iso(),
+            },
+        )
 
     def probe(self, number: int, *, client: str = "codex") -> dict[str, Any]:
         """Exercise initialization, lease gating, and the no-build tool list."""
@@ -635,6 +763,8 @@ class Supervisor:
                     and _port_open(host, int(slot["proxy_port"])),
                     "backend_running": self._running("backend", number)
                     and _port_open(host, int(slot["backend_port"])),
+                    "proxy_state": self.process_state("proxy", number),
+                    "backend_state": self.process_state("backend", number),
                 }
             )
         return {

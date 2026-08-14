@@ -342,6 +342,28 @@ class Inventory:
         atomic_json(self.lease_path(number), lease)
 
 
+def tool_cache_path(state_root: Path) -> Path:
+    """Where the advertised tool list is cached, shared by the supervisor and the proxy."""
+    return state_root / "generated" / "tool-list.json"
+
+
+def tool_list_key(server: dict[str, Any]) -> str:
+    """What the advertised tool list actually depends on.
+
+    The server binary, the disabled set, and whether a REPL is enabled — deliberately NOT
+    the per-slot runtime fingerprint, which folds in the project path and port. Those
+    change which PROJECT a backend serves, never which TOOLS exist, so keying on them
+    would invalidate a perfectly good cache per slot and defeat the point.
+    """
+    return canonical_digest(
+        {
+            "command": [str(item) for item in server.get("command", [])],
+            "disabled_tools": sorted(str(t) for t in server.get("disabled_tools", [])),
+            "repl": bool(server.get("repl", False)),
+        }
+    )
+
+
 def process_start_signature(pid: int) -> str | None:
     """Return a stable-enough host signature to defend against PID reuse."""
     if pid <= 0:
