@@ -43,6 +43,12 @@ Python registries          build_graph.py           Flask API          D3 visual
 
 Lean declarations are extracted via a meta-programming script (`lean/SKEFTHawking/ExtractDeps.lean`) that uses `Lean.Environment.collectAxioms` to compute transitive axiom dependencies. The Python wrapper (`scripts/extract_lean_deps.py`) manages staleness checking — re-extraction only happens when `.lean` files change. Output cached at `lean/lean_deps.json`.
 
+### Within-Build Extractor Memo
+
+The graph is assembled at several sites that each derive from scratch — the pre-gate view inside `extract_readiness_gate_nodes`, the real node list, and the edge extractors — so a single build used to call each argument-free extractor **4-6 times**. `build_graph._BUILD_MEMO` derives each one once per build instead, cutting `build_graph_json()` from 14.4 s to 7.1 s (measured 2026-08-14) with a byte-identical graph.
+
+⛔ **The memo lives only for the dynamic extent of one `build_graph_json()` call, and that boundary is the whole safety argument — do not widen it.** Outside a build every extractor computes normally, so a direct caller such as `bundle_readiness.load_findings_by_paper` always reads live state. A cache that outlived a build would answer a post-seeding read from a pre-seeding snapshot, which would silently defeat the seeded-mutation tests that make this repo's non-vacuity claims worth anything. Build-scoping does not solve cache invalidation — it removes the problem, because nothing on disk can change while one build is on the stack. Extending it to a cross-build cache requires a key over everything the graph reads, and that surface measured 254,887 files / 16.5 GB. Guarded by `tests/test_build_graph_memo.py`.
+
 ### PG+AGE Parallel Write
 
 `build_graph.py` writes all nodes and edges to the `sk_eft` graph in PG+AGE (port 5433) alongside JSON extraction. This is best-effort — if PG is unavailable, JSON extraction still works. PG provides Cypher-based traversal for dependency tree queries in the Proof Architecture tab.

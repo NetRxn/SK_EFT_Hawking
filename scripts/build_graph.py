@@ -26,6 +26,7 @@ Usage
 from __future__ import annotations
 
 import argparse
+import copy
 import functools
 import hashlib
 import importlib
@@ -34,6 +35,7 @@ import json
 import logging
 import re
 import sys
+from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -167,6 +169,101 @@ def _reset_lean_ambiguity_log() -> None:
     _LEAN_AMBIGUITY_SEEN.clear()
 
 
+# ══════════════════════════════════════════════════════════════════════════
+# WITHIN-BUILD EXTRACTOR MEMO
+# ══════════════════════════════════════════════════════════════════════════
+#: Live ONLY for the dynamic extent of one `build_graph_json()` call; `None`
+#: means "not inside a build" and every extractor then computes normally.
+#:
+#: WHY THIS IS SCOPED TO A BUILD AND NOT TO THE PROCESS. Measured 2026-08-14:
+#: `build_graph_json()` is 14.4 s, and the argument-free node extractors run
+#: **4-6 times each** inside a single call, because the graph is assembled at
+#: several sites that each re-derive from scratch — the pre-gate view built by
+#: `extract_readiness_gate_nodes`, the real node list, and the edge extractors
+#: (`extract_verifies_edges` re-runs `extract_python_test_nodes`,
+#: `extract_depends_on_axiom_edges` re-runs `extract_lean_declaration_nodes`).
+#: `extract_python_test_nodes` alone re-parses and re-walks the whole test
+#: suite's AST four times per build (10.5M `ast.walk` calls).
+#:
+#: ⛔ A PROCESS-LIFETIME CACHE HERE WOULD BE A CORRECTNESS DEFECT, not merely a
+#: staleness risk. A large family of this repo's tests deliberately seeds a
+#: mutation into a PRODUCTION artifact and asserts the dependent check turns red
+#: — that discipline is what makes every non-vacuity claim here worth anything.
+#: A cache that outlived one build would answer the post-seeding call from a
+#: pre-seeding snapshot, and the test would pass FOR THE WRONG REASON: strictly
+#: worse than a slow suite, and invisible, because a check that cannot fire is
+#: indistinguishable from a check finding nothing.
+#:
+#: Scoping to the build sidesteps the question rather than answering it: within
+#: one `build_graph_json()` call the corpus cannot change, so there is no key to
+#: get wrong and no input that can be missed. That is deliberate — the
+#: alternative needs a fingerprint over everything the graph reads, and that
+#: surface measured 254,887 files / 16.5 GB (57 s to hash, 3.7 s even to stat),
+#: so any affordable key would necessarily be a hand-listed PROXY for the real
+#: input set. `provenance_dashboard._graph_fingerprint()` is exactly that proxy
+#: and is already wrong: it does not move when `papers/AutomatedReviews/` or the
+#: supersession ledger changes, though the graph embeds both.
+#:
+#: ⚠️ NOT THREAD-SAFE, and deliberately no worse than what it joins.
+#: `build_graph_json` already mutates the module-scoped `_LEAN_AMBIGUITY_SEEN`
+#: and `_LEAN_SHORT_INDEX` — which is why `provenance_dashboard.get_cached_graph`
+#: holds `_GRAPH_CACHE_LOCK` across the entire rebuild instead of building
+#: outside the critical section. This is a third such global and inherits that
+#: same protection; two concurrent unguarded builds were already unsound before
+#: it existed.
+#:
+#: Values are whatever the extractor returned — `list[dict]` for all of them
+#: except `extract_hypothesis_nodes`, which returns a tuple.
+_BUILD_MEMO: dict[str, object] | None = None
+
+
+@contextmanager
+def _build_memo_scope():
+    """Enable the within-build memo for the duration of one build.
+
+    Save/restore rather than set/clear, so a nested `build_graph_json()` cannot
+    tear down the outer build's memo on exit.
+    """
+    global _BUILD_MEMO
+    outer = _BUILD_MEMO
+    if outer is None:
+        _BUILD_MEMO = {}
+    try:
+        yield
+    finally:
+        _BUILD_MEMO = outer
+
+
+def _memo_within_build(fn):
+    """Memoize an argument-free extractor for the extent of one build.
+
+    ⚠️ RETURNS A COPY ON EVERY CALL, and that is not defensive habit. The two
+    assembly sites hold their results independently — `extract_all_nodes` builds
+    the real node list while `extract_readiness_gate_nodes` builds a separate
+    pre-gate view — and today each receives freshly-constructed dicts. Handing
+    both the same objects would make them alias, so a later mutation through one
+    view would appear in the other. `_overlay_atlas` and `_overlay_closure` both
+    annotate nodes in place, so that aliasing is reachable, not theoretical.
+    Measured: the copy is 1-2% of the rebuild it replaces for most extractors
+    and 55% for the largest (`extract_lean_declaration_nodes`, 32,472 nodes) —
+    a net win in every case, and a uniform rule beats a per-extractor judgement
+    that would rot the first time an extractor's cost profile changed.
+
+    `functools.wraps` keeps `inspect.getsource` and `__wrapped__` resolving to
+    the real body, which the guards that introspect extractor source depend on.
+    """
+    @functools.wraps(fn)
+    def wrapper():
+        if _BUILD_MEMO is None:
+            return fn()
+        name = fn.__name__
+        if name not in _BUILD_MEMO:
+            _BUILD_MEMO[name] = fn()
+        return copy.deepcopy(_BUILD_MEMO[name])
+    wrapper.__memo_body__ = fn                      # type: ignore[attr-defined]
+    return wrapper
+
+
 def _resolve_lean_short(name: str, node_ids: set) -> str | None:
     """Resolve a Lean declaration reference to its node ID.
 
@@ -278,6 +375,7 @@ def _lookup_code_value(key: str, EXPERIMENTS: dict, ATOMS: dict, POLARITON_PLATF
     return None
 
 
+@_memo_within_build
 def extract_parameter_nodes() -> list[dict]:
     """Extract parameter nodes from PARAMETER_PROVENANCE in provenance.py."""
     from src.core.provenance import PARAMETER_PROVENANCE
@@ -459,6 +557,7 @@ def _definitional_record_grounding_shorts() -> frozenset:
     )
 
 
+@_memo_within_build
 def extract_formula_nodes() -> list[dict]:
     """Extract formula nodes from function definitions in formulas.py.
 
@@ -575,6 +674,7 @@ def extract_formula_nodes() -> list[dict]:
     return nodes
 
 
+@_memo_within_build
 def extract_lean_declaration_nodes() -> list[dict]:
     """Extract typed declaration nodes from lean_deps.json.
 
@@ -714,6 +814,7 @@ def extract_lean_declaration_nodes() -> list[dict]:
     return nodes
 
 
+@_memo_within_build
 def extract_hypothesis_nodes():
     """Extract Hypothesis nodes and ASSUMES edges from HYPOTHESIS_REGISTRY.
 
@@ -781,6 +882,7 @@ def extract_hypothesis_nodes():
 extract_lean_theorem_nodes = extract_lean_declaration_nodes
 
 
+@_memo_within_build
 def extract_aristotle_run_nodes() -> list[dict]:
     """Extract Aristotle run nodes from ARISTOTLE_THEOREMS, deduplicated by run_id."""
     from src.core.constants import ARISTOTLE_THEOREMS
@@ -810,6 +912,7 @@ def extract_aristotle_run_nodes() -> list[dict]:
     return nodes
 
 
+@_memo_within_build
 def extract_primary_source_nodes() -> list[dict]:
     """Extract primary source nodes from CITATION_REGISTRY in citations.py."""
     from src.core.citations import CITATION_REGISTRY
@@ -859,6 +962,7 @@ def _parse_tex_title(tex_path: Path) -> str | None:
     return title[:200] if title else None
 
 
+@_memo_within_build
 def extract_paper_nodes() -> list[dict]:
     """Extract paper nodes. Auto-discovers every papers/paper*_*/paper_draft.tex
     on the filesystem; enriches with PAPER_DEPENDENCIES metadata when available.
@@ -1020,6 +1124,7 @@ def _auto_extract_paper_claims(tex: str, limit: int = 12) -> list[str]:
     return claims
 
 
+@_memo_within_build
 def extract_paper_claim_nodes() -> list[dict]:
     """Extract PaperClaim nodes from every paper on disk.
 
@@ -1095,6 +1200,7 @@ def extract_paper_claim_nodes() -> list[dict]:
     return nodes
 
 
+@_memo_within_build
 def extract_figure_nodes() -> list[dict]:
     """Extract figure nodes from FIGURE_REGISTRY in review_figures.py."""
     # Import via importlib to avoid circular deps from review_figures.py's sys.path manipulation
@@ -1223,6 +1329,7 @@ _INTERESTING_PATTERNS = [
 ]
 
 
+@_memo_within_build
 def extract_prose_claim_nodes() -> list[dict]:
     """ProseClaim — narrative statements not tied to a Formula.
 
@@ -1444,6 +1551,7 @@ def _iter_test_functions(tree):
             yield node, None
 
 
+@_memo_within_build
 def extract_python_test_nodes() -> list[dict]:
     """PythonTest — test functions with test_kind classification.
 
@@ -1868,6 +1976,7 @@ def mint_finding_id(date_dir: str, review_name: str, section_num: str) -> str:
     return f'review:{date_dir}:{review_name}:{section_num}'
 
 
+@_memo_within_build
 def extract_review_finding_nodes() -> list[dict]:
     """ReviewFinding — findings from adversarial reviews.
 
@@ -2165,6 +2274,7 @@ def _classify_log_tail(log_tail: str) -> tuple[str, str]:
     return 'unknown', 'no terminal marker'
 
 
+@_memo_within_build
 def extract_production_run_nodes() -> list[dict]:
     """ProductionRun — MC/RHMC/other production runs with status.
 
@@ -2381,6 +2491,7 @@ def _scan_lean_theorem_bodies(source: str):
         i = k
 
 
+@_memo_within_build
 def extract_placeholder_marker_nodes() -> list[dict]:
     """PlaceholderMarker — Lean decls with trivial body on non-trivial claim.
 
@@ -2480,6 +2591,7 @@ def extract_placeholder_marker_nodes() -> list[dict]:
     return nodes
 
 
+@_memo_within_build
 def extract_contradiction_nodes() -> list[dict]:
     """Contradiction — concrete cross-paper inconsistency instance.
 
@@ -2490,6 +2602,7 @@ def extract_contradiction_nodes() -> list[dict]:
     return []
 
 
+@_memo_within_build
 def extract_count_metric_nodes() -> list[dict]:
     """CountMetric — snapshot of a counts.json field.
 
@@ -2639,6 +2752,7 @@ def _load_audit_log(paper_dir: Path) -> list[dict]:
     return events
 
 
+@_memo_within_build
 def extract_sentence_nodes() -> list[dict]:
     """Sentence — one node per prose unit per paper (Phase 5v Wave 10b).
 
@@ -2715,6 +2829,7 @@ def extract_sentence_nodes() -> list[dict]:
     return nodes
 
 
+@_memo_within_build
 def extract_audit_event_nodes() -> list[dict]:
     """AuditEvent — append-only verification log (Phase 5v Wave 10b).
 
@@ -2739,6 +2854,7 @@ def extract_audit_event_nodes() -> list[dict]:
     return nodes
 
 
+@_memo_within_build
 def extract_claim_cluster_nodes() -> list[dict]:
     """ClaimCluster — cross-paper claim equivalence groups (Phase 5v Wave 10b).
 
@@ -2926,6 +3042,7 @@ def extract_member_of_edges(node_ids: set) -> list[dict]:
     return edges
 
 
+@_memo_within_build
 def extract_readiness_gate_nodes() -> list[dict]:
     """ReadinessGate — per-paper × per-dimension state (11 gates × 15 papers).
 
@@ -3059,6 +3176,7 @@ def _module_id_for_ref(target: str, node_ids: set) -> str | None:
     return mid if mid in node_ids else None
 
 
+@_memo_within_build
 def extract_module_nodes() -> list[dict]:
     """One LeanModule node per Lean module (file), auto-derived from lean_deps.
 
@@ -3941,6 +4059,7 @@ def blocked_by_unresolved(finding_nodes: list[dict]) -> dict[str, list[str]]:
     return out
 
 
+@_memo_within_build
 def extract_blocked_by_edges() -> list[dict]:
     """Argument-free, matching every sibling extractor.
 
@@ -4713,7 +4832,20 @@ def build_graph_json(*, sync_pg: bool = False) -> dict:
     every ``build_graph_json`` call would block every HTTP request on
     DB connectivity and silently waste seconds per request even when
     the graph is cached upstream.
+
+    THE MEMO SCOPE IS THIS FUNCTION'S BOUNDARY, and that placement is the whole
+    safety argument — see `_BUILD_MEMO`. Every argument-free extractor is
+    memoized while this call is on the stack and computes normally outside it,
+    so a caller that invokes an extractor directly (`load_findings_by_paper`
+    calls `extract_review_finding_nodes` with no build in progress) always reads
+    live state.
     """
+    with _build_memo_scope():
+        return _build_graph_json_uncached(sync_pg=sync_pg)
+
+
+def _build_graph_json_uncached(*, sync_pg: bool = False) -> dict:
+    """The real build. Call `build_graph_json`, which owns the memo scope."""
     _reset_lean_ambiguity_log()  # fresh dedup per build
     # Drop the cached Lean-resolution index so a long-lived process (dashboard)
     # that rebuilds after a lean_deps.json re-extraction re-derives honest
