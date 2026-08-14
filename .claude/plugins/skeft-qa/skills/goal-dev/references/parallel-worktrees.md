@@ -74,7 +74,7 @@ diagnosis time before anyone suspects load.
 - **The lead runs `lake build` / `lake build SKEFTHawking.ExtractDeps` / `validate.py`** — on `main`,
   after the merge. That is the run that counts; a slot's green build proves nothing about `main`.
 - **Narrow exception:** a worker adding a NEW module that another file must `import` needs an `.olean`
-  first. Then, and only then: `lake build -j4 SKEFTHawking.<ThatOneModule>` — a single named module,
+  first. Then, and only then: `lake build SKEFTHawking.<ThatOneModule>` — a single named module,
   never the bare target, always job-capped (3 slots × 4 of 16 cores leaves headroom for your gate and
   the LSP servers). The worker reports that it ran one.
 - **Don't run your own full gate while workers are live.** Merge first, then gate, then re-dispatch.
