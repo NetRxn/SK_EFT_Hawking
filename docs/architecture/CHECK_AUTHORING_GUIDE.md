@@ -9,6 +9,20 @@
 **Living document.** Start at [`README.md`](README.md). States no counts — the check roster is
 in [`SURFACE_INVENTORY.md`](SURFACE_INVENTORY.md).
 
+⛔ **BEFORE YOU AUTHOR: state what the REVIEWER-AGENT layer already covers.** This project
+verifies on two layers, and this document describes only one. A reviewer agent may already own
+the surface you are about to check — `claims-reviewer` walks every sentence of a draft and builds
+a chain of backing to formulas, theorems, axioms, parameters, citations and hypotheses;
+`adversarial-reviewer`, `prose-reviewer` and `figure-reviewer` own their own surfaces. Read
+[`QA_QI_INFRASTRUCTURE_MAP.md`](QA_QI_INFRASTRUCTURE_MAP.md) §3 and the
+[reviewer-agent roster](../../.claude/plugins/skeft-qa/README.md), and write down the coverage
+statement for **both** layers before designing anything.
+
+A check authored without that statement is how a fourth prose→Lean resolver gets built beside
+three existing ones — the failure `CLAUDE.md` rule 1 names by example. The agent layer is also
+where you learn that a surface is *reviewed but not gated*, which is a different remediation
+from *uncovered*: the first needs mechanizing, the second needs designing.
+
 Every rule below exists because the project shipped its violation; the citation after each is
 the incident, not a style preference.
 

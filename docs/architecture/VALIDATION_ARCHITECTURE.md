@@ -11,6 +11,13 @@ is in [`SURFACE_INVENTORY.md`](SURFACE_INVENTORY.md#validation-checks).
 
 The durable description of how `validate.py` and `scripts/validation/` are built and why.
 
+⚠️ **This document covers ONE of the project's two verification layers.** The other is the
+reviewer-agent layer — `claims-reviewer`, `adversarial-reviewer`, `prose-reviewer`,
+`figure-reviewer` — described in [`QA_QI_INFRASTRUCTURE_MAP.md`](QA_QI_INFRASTRUCTURE_MAP.md) §3
+and rostered in the [plugin README](../../.claude/plugins/skeft-qa/README.md). Neither layer's
+document describes the other, so reading only this one yields a systematically incomplete picture
+of what is already verified. Before concluding that a surface is uncovered, check both.
+
 **Companions:** [`VALIDATION_GATE_TOPOLOGY.md`](VALIDATION_GATE_TOPOLOGY.md) (when each gate
 runs, what it blocks, what each computes) · [`CHECK_AUTHORING_GUIDE.md`](CHECK_AUTHORING_GUIDE.md)
 (obligations a new check inherits, and the systemic-pattern ledger) ·

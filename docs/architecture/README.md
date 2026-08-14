@@ -10,6 +10,7 @@ defect — fix it rather than working around it.
 
 | your question | document |
 |---|---|
+| **Before building anything: what already covers this surface?** | **BOTH layers, always** — [`VALIDATION_GATE_TOPOLOGY.md`](VALIDATION_GATE_TOPOLOGY.md) for checks and gates, **and** [`QA_QI_INFRASTRUCTURE_MAP.md`](QA_QI_INFRASTRUCTURE_MAP.md) §3 plus the [reviewer-agent roster](../../.claude/plugins/skeft-qa/README.md) for what an agent already reviews |
 | **How many** of anything — checks, gates, hooks, agents, commands, node/edge types, registries, bundles | [`SURFACE_INVENTORY.md`](SURFACE_INVENTORY.md) |
 | How does work get from a roadmap to a signed-off publication? | [`END_TO_END_MAP.md`](END_TO_END_MAP.md) |
 | How is the validation suite **built** — modules, contracts, hazards, the memo | [`VALIDATION_ARCHITECTURE.md`](VALIDATION_ARCHITECTURE.md) |
