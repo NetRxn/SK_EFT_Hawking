@@ -199,6 +199,90 @@ theorem crossover_nonneg (mat : MaterialParams) :
   · exact mul_nonneg (le_of_lt Real.pi_pos) (sq_nonneg _)
 
 /-!
+## Corrections vs. the adiabaticity parameter
+
+`HawkingUniversality.adiabaticityParam κ c_s Λ = κ/(c_s·Λ)` is the dimensionless
+control parameter of the universality expansion. For a BEC the EFT cutoff momentum
+is the inverse healing length, Λ = 1/ξ, so
+
+  D = adiabaticityParam κ c_s (1/ξ) = κ·ξ/c_s = T_H/T_max,
+
+which is 0.02–0.04 in current experiments. The two theorems below re-express the
+`dispersiveCorrection` / `dissipativeCorrection` definitions above in terms of D and
+of the transport coefficients — they are the statements `src/core/formulas.py` cites.
+-/
+
+/-- **Dispersive correction bound (Corley–Jacobson 1996; Coutant–Parentani 2014).**
+
+    The dispersive correction is exactly `−(π/6)·D²` in the adiabaticity parameter
+    `D = adiabaticityParam κ c_s (1/ξ)`, hence bounded in magnitude by `(π/6)·D²`
+    and nonzero for every `κ > 0`:
+
+      δ_disp(κ) = −(π/6)·D²,  |δ_disp(κ)| ≤ (π/6)·D²,  δ_disp(κ) ≠ 0.
+
+    **Nothing here is existentially quantified.** The bounded quantity is
+    `dispersiveCorrection`, the project's definition of δ_disp (the quantity
+    `src/core/formulas.py::dispersive_correction(D)` computes), and the bounding
+    constant is the explicit universal number π/6 — so a witness cannot be chosen to
+    satisfy the inequality. The bound is sharp, by the first conjunct.
+
+    Companion of `kappa_scaling_dispersive_quadratic`, which fixes the same
+    correction's κ-dependence at fixed material parameters. -/
+theorem dispersive_correction_bound (mat : MaterialParams) (kappa : ℝ)
+    (hkappa : 0 < kappa) :
+    dispersiveCorrection mat kappa
+        = -(π / 6) * HawkingUniversality.adiabaticityParam kappa mat.cs (1 / mat.xi) ^ 2 ∧
+      |dispersiveCorrection mat kappa|
+        ≤ π / 6 * HawkingUniversality.adiabaticityParam kappa mat.cs (1 / mat.xi) ^ 2 ∧
+      dispersiveCorrection mat kappa ≠ 0 := by
+  -- D = κ/(c_s·(1/ξ)) = ξκ/c_s, so δ_disp = −(π/6)·(ξκ/c_s)² = −(π/6)·D².
+  have hD : HawkingUniversality.adiabaticityParam kappa mat.cs (1 / mat.xi)
+      = mat.xi * kappa / mat.cs := by
+    unfold HawkingUniversality.adiabaticityParam
+    field_simp
+  have hid : dispersiveCorrection mat kappa
+      = -(π / 6) * HawkingUniversality.adiabaticityParam kappa mat.cs (1 / mat.xi) ^ 2 := by
+    rw [hD]
+    unfold dispersiveCorrection
+    ring
+  have hneg : dispersiveCorrection mat kappa < 0 := dispersive_neg mat kappa hkappa
+  refine ⟨hid, ?_, ne_of_lt hneg⟩
+  rw [abs_of_nonpos hneg.le, hid]
+  linarith
+
+/-- **Dissipative correction: vanishing criterion (core SK-EFT result).**
+
+    The dissipative correction `dissipativeCorrection` vanishes exactly when both
+    first-order transport coefficients vanish, and is *strictly positive* (a genuine
+    red-shift, not merely nonzero) as soon as either is positive:
+
+      γ₁ = γ₂ = 0  →  δ_diss(κ) = 0,     0 < γ₁ ∨ 0 < γ₂  →  0 < δ_diss(κ).
+
+    Together the two implications characterise the zero set of δ_diss, because
+    `γ₁, γ₂ ≥ 0` on `MaterialParams`.
+
+    **Nothing here is existentially quantified**: the subject is the defined
+    correction `δ_diss(κ) = (γ₁+γ₂)·κ/c_s²` (the quantity
+    `src/core/formulas.py::dissipative_correction` computes as `Γ_H/κ`), not a
+    witness. Historical name retained — `ARISTOTLE_THEOREMS`, `formulas.py` and the
+    Phase-5 roadmaps cite it — although the statement is now a characterisation
+    rather than an existence claim. -/
+theorem dissipative_correction_existence (mat : MaterialParams) (kappa : ℝ)
+    (hkappa : 0 < kappa) :
+    ((mat.gamma_1 = 0 ∧ mat.gamma_2 = 0) → dissipativeCorrection mat kappa = 0) ∧
+      ((0 < mat.gamma_1 ∨ 0 < mat.gamma_2) → 0 < dissipativeCorrection mat kappa) := by
+  refine ⟨fun h => ?_, fun h => ?_⟩
+  · unfold dissipativeCorrection
+    rw [h.1, h.2]
+    ring
+  · unfold dissipativeCorrection
+    have hg : 0 < mat.gamma_1 + mat.gamma_2 := by
+      rcases h with h | h
+      · linarith [mat.gamma_2_nonneg]
+      · linarith [mat.gamma_1_nonneg]
+    exact div_pos (mul_pos hg hkappa) (pow_pos mat.cs_pos 2)
+
+/-!
 ## Crossover Theorem
 
 The central result: at κ = κ_cross, the corrections balance exactly.

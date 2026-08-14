@@ -39,7 +39,9 @@ and partially cancel. The eleven orders were an artifact, not a hierarchy.
 
 ## Reused Theorems (41 total, 0 modifications)
 
-From HawkingUniversality.lean (9): hawking_universality, dispersive_correction_bound, etc.
+From HawkingUniversality.lean: hawking_universality, adiabaticityParam, etc.
+  (`dispersive_correction_bound` / `dissipative_correction_existence` were restated
+   against the correction definitions and now live in KappaScaling.lean.)
 From WKBConnection.lean (17): unitarity_deficit_eq_decoherence, noise_floor_eq_delta_diss, etc.
 From WKBAnalysis.lean (15): dissipative_occupation_planckian, turning_point_shift, etc.
 
