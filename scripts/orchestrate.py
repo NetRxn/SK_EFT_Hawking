@@ -223,41 +223,25 @@ def target_groups(nodes: list[dict]) -> tuple[list[dict], list[dict]]:
     if they were one file. Nobody can be told where to work; that is a filing defect to
     repair, not a task to dispatch.
     """
-    # ⚠️ CONNECTED COMPONENTS OVER FILES, not a dict keyed on one file per finding.
-    # 56 of 308 dispatchable findings name MORE THAN ONE file. Keying on the first put
-    # finding A (files X,Y) and finding B (file Y) in different groups — two workers, one
-    # file Y — and threw X away, which is how a Lean+prose finding got planned under a
-    # prose profile with no build gate. Findings that share ANY file must share a worker,
-    # and that is a union-find, not a grouping.
-    parent: dict[str, str] = {}
-
-    def _find(x: str) -> str:
-        while parent.setdefault(x, x) != x:
-            parent[x] = parent[parent[x]]
-            x = parent[x]
-        return x
-
-    def _union(a: str, b: str) -> None:
-        ra, rb = _find(a), _find(b)
-        if ra != rb:
-            parent[ra] = rb
-
-    files_of: dict[str, list[str]] = {}
+    # ⚠️ A SHARED FILE IS A RESOURCE CONFLICT, NOT A REASON TO WELD TASKS TOGETHER.
+    # The previous version merged findings transitively over shared files (a union-find).
+    # It was collision-safe but conflated "what is one task" with "what may run at once":
+    # a hub file like `src/core/citations.py` chained unrelated work into ONE unit of 107
+    # findings spanning four lanes, which would have gone to a single lean-worker carrying
+    # prose and infra. Measured alternative: group by a finding's OWN file set and enforce
+    # disjointness at DISPATCH — 120 units instead of 69, largest 22 instead of 107, and
+    # 86 runnable concurrently instead of 69. Better on unit size, parallelism AND the
+    # safety property at once, so this is a repair, not a tradeoff.
+    by_component: dict[tuple, list[dict]] = defaultdict(list)
     untargeted: list[dict] = []
+    files_of: dict[str, list[str]] = {}
     for n in nodes:
         fs = target_files((n.get("meta") or {}).get("target") or "")
         if not fs:
             untargeted.append(n)
             continue
         files_of[n["id"]] = fs
-        for f in fs[1:]:
-            _union(fs[0], f)
-
-    by_component: dict[str, list[dict]] = defaultdict(list)
-    for n in nodes:
-        fs = files_of.get(n["id"])
-        if fs:
-            by_component[_find(fs[0])].append(n)
+        by_component[tuple(fs)].append(n)
 
     groups = []
     for _root, items in by_component.items():
@@ -317,7 +301,17 @@ def plan(*, lane: str | None = None, slots: int | None = None) -> dict:
     free_cap = 3 if slots is None else slots
 
     assigned, queued, slot_i, free_i = [], [], 0, 0
+    held: set[str] = set()          # files a dispatched group is already editing
     for g in groups:
+        # ⚠️ THE COLLISION GUARANTEE LIVES HERE, at dispatch, not in the grouping. Two
+        # units touching one file are both valid tasks; they simply may not run at the
+        # same time. A hub file therefore means "one unit per wave", and the rest queue —
+        # instead of every task that mentions it being fused into one.
+        overlap = held & set(g["files"])
+        if overlap:
+            queued.append({**g, "deferred":
+                           f"file(s) held by a dispatched group: {sorted(overlap)[:3]}"})
+            continue
         prof = LANE_PROFILE[g["lane"]]
         if prof["isolation"] == "worktree-slot":
             # ⚠️ A Lean group with no free slot is EXCLUDED from dispatch, not annotated.
@@ -335,6 +329,7 @@ def plan(*, lane: str | None = None, slots: int | None = None) -> dict:
                 queued.append({**g, "deferred": "beyond the non-isolated fan-out cap"})
                 continue
             free_i += 1
+        held |= set(g["files"])
         assigned.append({**g, "agent": prof["agent"], "gates": prof["gates"],
                          "isolation": prof["isolation"]})
 

@@ -75,29 +75,54 @@ def test_two_line_ranges_in_one_file_are_ONE_unit():
     assert sorted(groups[0]["findings"]) == ["a", "b"]
 
 
-def test_no_two_groups_share_a_file():
-    """⚠️ THIS TEST COULD NOT FAIL, AND THE REGRESSION IT NAMES SHIPPED PAST IT.
+def test_no_two_CONCURRENTLY_DISPATCHED_groups_share_a_file():
+    """⚠️ THE PROPERTY MOVED, BECAUSE THE DESIGN WAS WRONG — and the earlier version of
+    this test could not fail either way.
 
-    It read `files = [g["target"] for g in dispatch]` and asserted uniqueness. Those are
-    `dict` KEYS — distinct by construction whatever the resolver returns — so it asserted a
-    property of `dict`, not of the grouping. A reviewer restored the raw-string resolver
-    (the exact shipped defect) and this test stayed GREEN with
-    `Drive.lean:612-641` and `Drive.lean:67-69` in wt2 and wt3.
+    v1 read `[g["target"] for g in dispatch]` and asserted uniqueness: those are dict KEYS,
+    distinct by construction, so it asserted a property of `dict`. A reviewer restored the
+    raw-string resolver and it stayed green with one file in wt2 and wt3.
 
-    Two corrections: assert over EVERY group, not the handful the cap dispatches; and
-    assert on the FILE SETS, which is the property that matters — pairwise disjoint.
+    v2 asserted disjointness across ALL groups, which forced transitive merging to be true
+    — and that merging produced one unit of 107 findings across four lanes.
+
+    A shared file is a resource conflict, so the real invariant is about what runs AT ONCE:
+    no two groups dispatched in the same wave may touch the same file. Groups that overlap
+    are still valid tasks; they queue.
     """
-    open_, ids, closed = orch._load_open_findings()
-    groups, _ = orch.target_groups(orch.classify(open_, ids, closed)["dispatchable"])
-    assert len(groups) >= 2, "fewer than two groups — the property is vacuous here"
-    seen: dict[str, int] = {}
-    for i, g in enumerate(groups):
-        assert g["files"], f"group {g['target']!r} carries no files"
+    p = orch.plan(slots=50)
+    assert len(p["dispatch"]) >= 2, "fewer than two dispatched — the property is vacuous"
+    held: dict[str, str] = {}
+    for g in p["dispatch"]:
+        assert g["files"], f"dispatched group {g['target']!r} carries no files"
         for f in g["files"]:
-            assert f not in seen, (
-                f"{f} is in group {seen[f]} AND group {i} — two workers, one file, which "
-                f"is the collision this grouping exists to prevent")
-            seen[f] = i
+            assert f not in held, (
+                f"{f} is dispatched in both {held[f]!r} and {g['target']!r} — two workers, "
+                f"one file, in one wave")
+            held[f] = g["target"]
+
+
+def test_an_overlapping_group_is_QUEUED_not_merged_and_not_dropped():
+    """The counterpart: a conflict must cost concurrency, never coherence or coverage.
+    Merging cost coherence (a 107-finding unit); dropping would cost coverage."""
+    p = orch.plan(slots=50)
+    ids_dispatched = {i for g in p["dispatch"] for i in g["findings"]}
+    ids_queued = {i for g in p["queued_groups"] for i in g["findings"]}
+    assert ids_dispatched and ids_queued, "need both populations to assert the split"
+    assert not (ids_dispatched & ids_queued), "a finding is both dispatched and queued"
+    # ⚠️ Key on the DEFERRAL REASON, not on "overlaps something dispatched". With the
+    # conflict guard disabled this test still passed: groups queued by the CAP happened to
+    # overlap a dispatched one, so the population was non-empty for an unrelated reason.
+    # The decider is whether the conflict guard is what queued them.
+    held = {f for g in p["dispatch"] for f in g["files"]}
+    blocked = [g for g in p["queued_groups"] if "held by a dispatched group" in (g.get("deferred") or "")]
+    assert blocked, (
+        "no group was queued BY THE FILE-CONFLICT GUARD — either the guard never engaged "
+        "or its reason string changed and this assertion stopped measuring it")
+    for g in blocked:
+        assert set(g["files"]) & held, (
+            f"{g['target']!r} was deferred for a file conflict but shares no file with any "
+            f"dispatched group — the reason and the state disagree")
 
 
 def test_no_two_lean_groups_share_a_worktree_slot():
