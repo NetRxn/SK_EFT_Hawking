@@ -1,4 +1,4 @@
-"""Guards for the within-build extractor memo (`build_graph._BUILD_MEMO`).
+"""Guards for the within-build extractor memo (`build_graph._BUILD_MEMO_TLS`).
 
 WHAT THESE PROTECT, AND WHY IT IS NOT THE OBVIOUS THING
 -------------------------------------------------------
@@ -35,11 +35,20 @@ sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 import build_graph as bg  # noqa: E402
 
 #: Fields that legitimately differ between two builds a second apart. Verified
-#: to be the ONLY difference by running two *unmemoized* builds against each
-#: other: 704 gate nodes differed, and `last_evaluated` was the sole differing
-#: key. Normalising them is therefore not weakening the comparison — without it
-#: the test would assert a property the code never had.
-_VOLATILE = {"built_at", "last_evaluated", "last_modified", "generated_at"}
+#: by running two *unmemoized* builds against each other: 704 gate nodes
+#: differed and `last_evaluated` was the sole differing key. Normalising these is
+#: therefore not weakening the comparison — without it the test would assert a
+#: property the code never had.
+#:
+#: ⚠️ NARROWED to exactly the measured pair (review, 2026-08-14). It also listed
+#: `last_modified` and `generated_at`, which the same measurement shows do NOT
+#: vary between builds — and `last_modified` is the worst possible field to
+#: blank, because `scripts/last_modified.py` propagates it UP DEPENDENCY EDGES.
+#: A memo defect that changed the edge set, or fed one assembly site a stale
+#: upstream node, surfaces there and almost nowhere else in a whole-graph
+#: comparison. Normalising a field that does not need it is not harmless
+#: caution; it deletes the most sensitive signal the comparison has.
+_VOLATILE = {"built_at", "last_evaluated"}
 
 
 def _normalise(obj):
@@ -54,39 +63,137 @@ def _canonical(graph) -> str:
     return json.dumps(_normalise(graph), sort_keys=True, default=str)
 
 
+@pytest.fixture
+def tmp_probe():
+    """A real (initially empty) review directory in the real corpus.
+
+    Swept unconditionally, including any file a failing test left behind, so a
+    probe finding can never become part of the corpus the ratchets count.
+    """
+    import shutil
+    probe_dir = PROJECT_ROOT / "papers" / "AutomatedReviews" / "2026-08-14-live-state-probe"
+    shutil.rmtree(probe_dir, ignore_errors=True)
+    probe_dir.mkdir(parents=True)
+    try:
+        yield probe_dir, bg.mint_finding_id(probe_dir.name, "infra", "1")
+    finally:
+        shutil.rmtree(probe_dir, ignore_errors=True)
+
+
+class TestTheMemoIsPerThread:
+    """⚠️ ADDED AFTER REVIEW FOUND A LEAK THAT EVERY OTHER TEST HERE MISSED.
+
+    `_build_memo_scope` save/restores, which is right for nesting on one stack
+    and wrong for a global shared across threads: A installs `{}`; B sees a
+    non-None outer and shares A's memo; A exits restoring `None`; B exits
+    restoring **A's dict**, leaving a memo installed with no build running. Every
+    later extractor call in the process is then served from A's snapshot.
+
+    Not theoretical — the dashboard runs Flask `threaded=True`, and
+    `dashboard_flow.py:228` and `bundle_readiness.py:395` both call
+    `build_graph_json()` holding no lock, so two concurrent builds are one page
+    load away. Thread-local storage removes the interleaving instead of guarding
+    it.
+    """
+
+    def test_two_interleaved_scopes_do_not_leave_a_memo_installed(self):
+        import threading
+        a_entered = threading.Event()
+        b_entered = threading.Event()
+        a_exited = threading.Event()
+        failures: list[str] = []
+
+        def thread_a():
+            with bg._build_memo_scope():
+                bg.extract_review_finding_nodes()
+                a_entered.set()
+                b_entered.wait(timeout=10)
+            a_exited.set()
+            if bg._current_build_memo() is not None:
+                failures.append("A's memo survived A's scope")
+
+        def thread_b():
+            a_entered.wait(timeout=10)
+            with bg._build_memo_scope():
+                if bg._current_build_memo() is None:
+                    failures.append("B got no memo of its own")
+                b_entered.set()
+                a_exited.wait(timeout=10)
+            if bg._current_build_memo() is not None:
+                failures.append("a memo is installed on B with no build running")
+
+        ta, tb = threading.Thread(target=thread_a), threading.Thread(target=thread_b)
+        ta.start(); tb.start(); ta.join(15); tb.join(15)
+        assert not failures, failures
+        assert bg._current_build_memo() is None
+
+    def test_one_threads_scope_is_invisible_to_another(self):
+        import threading
+        seen: list[object] = []
+
+        def observer():
+            seen.append(bg._current_build_memo())
+
+        with bg._build_memo_scope():
+            bg.extract_review_finding_nodes()
+            assert bg._current_build_memo() is not None
+            t = threading.Thread(target=observer); t.start(); t.join(10)
+        assert seen == [None], (
+            f"another thread saw this build's memo ({seen!r}) — it is not thread-local, "
+            f"so its entries can be served to a caller with no build on its stack")
+
+
 class TestTheMemoCannotOutliveABuild:
     """The whole safety argument is the memo's lifetime. These pin it."""
 
     def test_the_memo_is_drained_at_rest(self):
-        assert bg._BUILD_MEMO is None, (
+        assert bg._current_build_memo() is None, (
             "the memo must be None outside a build — a non-None value at rest means "
             "some path enabled it without a scope to tear it down")
 
     def test_the_memo_is_drained_after_a_build(self):
         bg.build_graph_json(sync_pg=False)
-        assert bg._BUILD_MEMO is None
+        assert bg._current_build_memo() is None
 
-    def test_an_extractor_called_outside_a_build_is_not_memoized(self):
+    def test_an_extractor_called_outside_a_build_reads_LIVE_state(self, tmp_probe):
         """Direct callers must always read live state.
 
         `bundle_readiness.load_findings_by_paper` calls
         `extract_review_finding_nodes` with no build in progress. If the memo
         were process-scoped, that call would replay whatever the last build saw.
+
+        ⚠️ REWRITTEN — the original asserted `first is not second`, which was
+        VACUOUS and mutation testing proved it: the wrapper returns a
+        `copy.deepcopy` on every hit, so two calls can never be the same object
+        whatever the memo's scope. Under a deliberately process-lifetime memo the
+        assertion stayed green while the memo served a stale snapshot. Identity
+        was a proxy; liveness is the decider, so this seeds the real corpus and
+        asserts the content moves.
         """
-        assert bg._BUILD_MEMO is None
-        first = bg.extract_review_finding_nodes()
-        second = bg.extract_review_finding_nodes()
-        assert first is not second, "a fresh computation must return a fresh object"
+        assert bg._current_build_memo() is None
+        probe_dir, expected_id = tmp_probe
+
+        bg.build_graph_json(sync_pg=False)   # give a process-wide memo a chance to fill
+
+        (probe_dir / "infra.md").write_text(
+            "# probe\n\n### 1 — probe\n\n- **Severity:** minor\n- **Lane:** infra\n")
+        assert expected_id in {n["id"] for n in bg.extract_review_finding_nodes()}, (
+            "a direct extractor call did not see a finding written after the last "
+            "build — the memo is outliving its build")
+
+        (probe_dir / "infra.md").unlink()
+        assert expected_id not in {n["id"] for n in bg.extract_review_finding_nodes()}, (
+            "a direct extractor call still reports a deleted finding")
 
     def test_a_nested_build_does_not_tear_down_the_outer_memo(self):
         with bg._build_memo_scope():
             bg.extract_review_finding_nodes()
-            assert bg._BUILD_MEMO is not None
+            assert bg._current_build_memo() is not None
             with bg._build_memo_scope():
                 pass
-            assert bg._BUILD_MEMO is not None, (
+            assert bg._current_build_memo() is not None, (
                 "an inner scope exiting must not drain the outer build's memo")
-        assert bg._BUILD_MEMO is None
+        assert bg._current_build_memo() is None
 
 
 class TestTheMemoIsSemanticallyInvisible:

@@ -217,15 +217,49 @@ class TestCountsFreshness:
         original, st = real.read_bytes(), real.stat()
         try:
             data = json.loads(original)
-            data["python"]["test_files"] = data["python"]["test_files"] + 1
-            real.write_text(json.dumps(data, indent=2))
             # ⚠️ Stamp counts.json as the NEWEST thing in the repo. `_counts_is_stale`
             # returns on its FIRST stale reason, so on any working copy where a source
             # was edited after the last regeneration an mtime leg fires first and this
             # test can never reach — or isolate — the count leg. Without this the test
             # is green on a clean tree and spuriously red on a working one.
-            future = max(p.stat().st_mtime for p in (_H.SRC_DIR.rglob("*.py"))) + 60
+            #
+            # ⚠️ THE STAMP USED TO COVER `src/**/*.py` ALONE — a PROXY for "every tree
+            # the checker consults", and wrong for four of them. `_counts_is_stale`
+            # also walks `_COUNTS_SOURCES`, `lean/**/*.lean`, `tests/**/*.py`,
+            # `notebooks/**/*.ipynb` and `papers/**/paper_draft.tex`. Editing any TEST
+            # file — which is what one does while working on the suite — left
+            # `tests/**/*.py` newer than the stamp, so the `tests/` mtime leg fired,
+            # the count leg was never reached, and the failure read as a defect in the
+            # subject under test. That is the same assert-the-decider-not-the-proxy
+            # error this file exists to catch, committed by the fixture rather than
+            # the check.
+            newest = [p.stat().st_mtime for p in fr._COUNTS_SOURCES if p.exists()]
+            for root, pat in ((_H.LEAN_DIR, "*.lean"), (_H.SRC_DIR, "*.py"),
+                              (_H.TESTS_DIR, "*.py"), (_H.NOTEBOOKS_DIR, "*.ipynb"),
+                              (_H.PAPERS_DIR, "paper_draft.tex")):
+                if root.exists():
+                    newest.append(max((f.stat().st_mtime for f in root.rglob(pat)),
+                                      default=0))
+            future = max(newest) + 60
             os.utime(real, (future, future))
+            # ⚠️ VERIFY THE ISOLATION INSTEAD OF ASSUMING IT. If a future leg is added
+            # to `_counts_is_stale` and not to the stamp above, this fails HERE with
+            # that leg's own reason, rather than silently making the assertions below
+            # test something other than the count leg. It also catches the second
+            # unstated premise — that `published == live` before seeding — because a
+            # tree already off by one reports stale for the count reason right here.
+            pre_stale, pre_reason = fr._counts_is_stale()
+            assert pre_stale is False, (
+                f"fixture is not isolated: counts.json is already stale for "
+                f"{pre_reason!r} BEFORE this test seeds anything, so the assertions "
+                f"below would not be exercising the count leg. If the reason names a "
+                f"tree, add it to the stamp above; if it names test_files, the working "
+                f"copy's live count has drifted from counts.json — run update_counts.py")
+
+            # Seed only now, with the isolation established.
+            data["python"]["test_files"] = data["python"]["test_files"] + 1
+            real.write_text(json.dumps(data, indent=2))
+            os.utime(real, (future, future))   # the write reset the stamp
             stale, reason = fr._counts_is_stale()
             assert stale is True, (
                 "counts.json publishing a test_files one higher than the live tree "

@@ -7,7 +7,7 @@
 
 ## Findings
 
-### 1 — 🔵 64% of the gate is one graph build, and each build re-derives its extractors 4-6 times
+### 1 — 🔵 64% of the gate is one graph build, and each build re-derives its extractors up to 8 times
 
 - **Severity:** minor
 - ⚠️ **Severity is a judgement call worth overruling.** Nothing here produces a wrong result,
@@ -41,7 +41,7 @@
   `_blocked_p1_gates_by_paper()` -> `evaluate_all_gates(build_graph_json())`. Every consumer
   of bundle readiness triggers **a full knowledge-graph rebuild**, and that rebuild is the
   entire cost. `extract_review_finding_nodes` appears in the profile only because the build
-  calls it six times.
+  calls it five times.
 
   ⛔ **The prescribed cross-consumer cache is withdrawn, on two independent grounds.**
   *Unaffordable:* keying it correctly needs a fingerprint over everything the graph reads,
@@ -56,13 +56,16 @@
 
 - **Observed:** ~40 of 6,712 tests account for ~570 s of the 748 s gate. The shared cost is
   `build_graph_json()` at **14.4 s per call**, invoked once per readiness-consuming test. The
-  build re-derives its own argument-free extractors **4-6 times each**, because the graph is
+  build re-derives its own argument-free extractors **1-8 times each** (`{1: 5, 2: 10, 4: 4,
+  5: 1, 6: 1, 8: 1}` — five run once, where the memo only costs a copy), because the graph is
   assembled at several sites that each derive from scratch: the pre-gate view inside
   `extract_readiness_gate_nodes`, the real node list, and the edge extractors
   (`extract_verifies_edges` re-runs `extract_python_test_nodes`;
   `extract_depends_on_axiom_edges` re-runs `extract_lean_declaration_nodes`).
   `extract_python_test_nodes` alone re-parses and re-walks the whole test suite's AST four
-  times per build — 10.5 M `ast.walk` calls, 22.9 s of a profiled build.
+  times per build. ⚠️ That is **10.5 M AST nodes visited** across 62,308 `ast.walk`
+  invocations — an earlier draft called 10.5 M a count of `ast.walk` CALLS, off by ~168x.
+  Under `cProfile` it accounts for 22.9 s; unprofiled it is ~1.3 s per call, ~5.1 s per build.
 
   | site | graph builds | cost |
   |---|---|---|
@@ -120,7 +123,10 @@
   tests red (including both seeded-corpus guards); removing the copy turns the aliasing guard
   red.
 - **Measured result:** `build_graph_json()` **14.4 s -> 7.1 s** (2.01x), with the memoized
-  graph verified byte-identical to the unmemoized one across 50,278 nodes and 16,300 links.
+  graph verified **identical modulo timestamps** to the unmemoized one across ~50,3k nodes
+  and 16,300 links. ⚠️ Not literally byte-identical, and the next bullet says so — 704 gate
+  nodes differ on `last_evaluated` between ANY two builds. Node counts drift as findings are
+  filed into the corpus this document lives in, so they are given to the nearest hundred.
   ⚠️ The equivalence check must normalise `built_at` / `last_evaluated`: two *unmemoized*
   builds already differ in 704 gate nodes on those timestamps alone, so an un-normalised
   comparison would assert a determinism the code never had.
@@ -141,7 +147,8 @@
   a readiness or closure decision; at that point a stale finding set decides a gate.
 - **Lane:** infra
 - **Gate:** `bundle_readiness`
-- **Location:** `scripts/provenance_dashboard.py:207` (`_graph_fingerprint`)
+- **Location:** `scripts/provenance_dashboard.py` (`_graph_fingerprint`; line 207 at
+  `dc7ebb4c`, since moved — resolve by name, not by line)
 - **Observed:** `_GRAPH_CACHE` is invalidated by `_graph_fingerprint()`, a hand-listed set of
   13 files plus two globs (`papers/paper*_*/paper_draft.tex`, `lean/SKEFTHawking/*.lean`).
   **`papers/AutomatedReviews/**/*.md` and `docs/review_finding_supersessions.json` are in
@@ -212,14 +219,15 @@
 
 ---
 
-### 3 — 🟡 `test_production_seeded_a_wrong_published_count_is_stale` failed twice and I cannot reproduce it
+### 3 — 🟡 `test_production_seeded_a_wrong_published_count_is_stale` rests on two unstated premises about the working copy
 
 - **Severity:** minor
-- ⚠️ **Filed UNEXPLAINED, on purpose.** Every other finding in this document names a
-  mechanism. This one names only evidence, because two attempts to explain it were wrong and
-  a third guess recorded as fact is worse than an open question. A nondeterministic gate test
-  is worth a record even when the cause is unknown: the next person to see this red should
-  find the prior occurrences rather than re-derive them.
+- ⚠️ **WAS FILED UNEXPLAINED; NOW EXPLAINED AND FIXED.** It was recorded with evidence and
+  ruled-out causes but no mechanism, because two attempts to explain it were already wrong
+  and a third guess written as fact would be worse than an open question. That was the right
+  call: the mechanism, found by a `pr-review-toolkit` pass, is **not nondeterminism at all**.
+  It is two unstated premises about the state of the working copy, and both were true during
+  this session.
 - **Lane:** infra
 - **Gate:** `bundle_readiness`
 - **Location:** `tests/test_d5_freshness.py::TestCountsFreshness::test_production_seeded_a_wrong_published_count_is_stale`
@@ -243,14 +251,32 @@
   `testpaths` puts the plugin suite after `tests/`, so that cannot be upstream either.
   No stray `tests/test_gone.py` — the one temp test file any test creates — existed at the
   stop point of the `-x` run.
-- ⚠️ **The only surviving correlation, stated as a hypothesis and NOT as a cause:** both
-  failures came from runs where `scripts/update_counts.py` executed immediately before
-  `pytest` in the same shell command; both clean runs did not. The first of those two is
-  independently explained (counts really were stale by one, because a test file had been
-  added), so the correlation rests on a single unexplained data point. **It is not evidence
-  of a mechanism yet.**
+- ⚠️ **The `update_counts.py`-ran-immediately-before correlation was a RED HERRING.** It was
+  recorded here as a hypothesis and it does not survive: the real trigger is what the working
+  copy looked like, and running `update_counts.py` only changed that state incidentally.
+- **Root cause — TWO premises, neither stated, both false at times during this session:**
+  1. **The isolation stamp covered one tree out of five.** `_counts_is_stale` returns on its
+     FIRST stale reason and walks `_COUNTS_SOURCES`, `lean/**/*.lean`, `src/**/*.py`,
+     **`tests/**/*.py`**, `notebooks/**/*.ipynb` and `papers/**/paper_draft.tex`. The test
+     stamped `counts.json` newer than **`src/**/*.py` alone**, so editing any TEST file — what
+     one does while working on the suite — left the `tests/` leg firing first. The count leg
+     was never reached and the failure read as a defect in the subject under test. That is
+     the stamp asserting a PROXY for the decider, inside a test written to catch that class.
+  2. **It assumes `published == live` before seeding.** It seeds `published + 1` and expects
+     a mismatch; when the live tree is already one ahead — which is the state between adding
+     a test file and regenerating — the seed lands on the TRUE value, every leg goes quiet,
+     and the check correctly reports fresh. Reproduced deliberately: setting published to
+     live-1 turns it red with no defect anywhere.
+
+  Both states were live here: `55f3e5a1` published 195 while adding `test_build_graph_memo.py`,
+  and `d82f237b` published 196 while adding `test_dashboard_graph_cache.py`.
 - **Expected:** a gate test either passes deterministically or names the state it depends on.
-- **Fix:** reproduce first — run the full gate in a loop with `update_counts.py` immediately
-  before it, and have the test print live-vs-published on failure. Do not "fix" it by
-  regenerating counts; that was tried, and the failure recurred on the very next run.
+- **Fix (shipped):** the stamp now covers **every tree `_counts_is_stale` consults**, and the
+  test **verifies its isolation instead of assuming it** — it asserts the artifact is NOT
+  stale before seeding anything. A future leg added to the checker and not to the stamp now
+  fails there, naming that leg, instead of silently making the assertions below exercise
+  something other than the count leg. The same assertion catches premise 2, reporting the
+  live-vs-published drift and the remedy rather than "was reported FRESH".
+  ⚠️ Do NOT "fix" this by regenerating counts; that was tried first and the failure recurred
+  on the very next run, because it treats a symptom of premise 2 and leaves premise 1 intact.
 - **Verify:** `uv run python -m pytest -q tests/test_d5_freshness.py`
