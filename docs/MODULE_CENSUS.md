@@ -311,6 +311,7 @@ Nothing else belongs here.
 | `scripts/validate_deflated_cg.py` | Acceptance test for the deflated CG (the core of the L=8 fix). |
 | `scripts/validate_deflation_eigensolver.py` | Acceptance test for the deflation eigensolver. |
 | `scripts/validate_helpers.py` | Shared helpers for the validation suite — ADR-009 Phase 1. |
+| `scripts/validate_review_doc.py` | Validate ONE review document against the marker contract, before it is committed. |
 | `scripts/validate_rhmc_gpu.py` | Brick 6 — certify the GPU (MPS/FP32) stencil RHMC against FP64. |
 | `scripts/validation/__init__.py` | Validation-suite implementation package — ADR-009 Phase 2. |
 | `scripts/validation/_config.py` | Runtime flags for the validation suite — ADR-009 H5. |

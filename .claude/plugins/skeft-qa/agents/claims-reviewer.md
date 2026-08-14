@@ -574,3 +574,29 @@ worse than no command, because it manufactures confidence.
 ⚠️ **`Lane` routes; `Needs-operator` decides.** They are orthogonal — a `lean` finding can need a
 physics call. Omitting `Lane` reads `unclassified` and is accepted; declaring a token outside the six
 is an unroutable finding and fails `review_severity_declared`.
+
+---
+
+## ⛔ Before you finish: validate the document you just wrote
+
+Your report is parsed by machine. Malformed markers do not degrade gracefully — they break
+`review_severity_declared` for the whole corpus, and the failure is attributed to whoever next
+runs the suite rather than to you. Run this and fix what it reports:
+
+```bash
+uv run python scripts/validate_review_doc.py <the file you wrote>
+```
+
+The contract, which is NOT inferable from the surrounding prose:
+
+1. **A finding heading is ANY `###`/`####`/`#####` heading**, and every one must carry
+   `- **Severity:** <value>`. A section reporting NO findings must therefore be `##`. Do not
+   "fix" it by adding a Severity line — that mints a phantom finding node.
+2. **`Blocked-by:` takes a minted finding id** (`review:<date-dir>:<target>:<section>`) **or a
+   valued release scheme** (`run:`, `phase:`, `pub:`, `research:`). **Omit the line entirely
+   when nothing blocks the finding.** `none` is not a value: a token nothing can satisfy makes
+   the finding read WAITING when it is STUCK, and it reaches no worker either way.
+3. **`Severity:` and `Lane:` values come from the declared vocabularies.** An unmappable
+   severity lands the finding as `advisory`; an unmappable lane routes it to no worker.
+4. **`Verify:` is ONE command.** `close_finding.py` parses it as a single line and refuses a
+   closure whose verify does not match, stranding the finding.

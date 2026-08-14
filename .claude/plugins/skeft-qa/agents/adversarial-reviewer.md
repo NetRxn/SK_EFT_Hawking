@@ -328,3 +328,29 @@ On first invocation, announce:
 2. After reads complete: "Working finding classes 1 through 8 in order. Citation cache stats: <N total records, M stale>."
 3. Then work, quietly.
 4. At the end, write the output file and report the output path + finding counts.
+
+---
+
+## ⛔ Before you finish: validate the document you just wrote
+
+Your report is parsed by machine. Malformed markers do not degrade gracefully — they break
+`review_severity_declared` for the whole corpus, and the failure is attributed to whoever next
+runs the suite rather than to you. Run this and fix what it reports:
+
+```bash
+uv run python scripts/validate_review_doc.py <the file you wrote>
+```
+
+The contract, which is NOT inferable from the surrounding prose:
+
+1. **A finding heading is ANY `###`/`####`/`#####` heading**, and every one must carry
+   `- **Severity:** <value>`. A section reporting NO findings must therefore be `##`. Do not
+   "fix" it by adding a Severity line — that mints a phantom finding node.
+2. **`Blocked-by:` takes a minted finding id** (`review:<date-dir>:<target>:<section>`) **or a
+   valued release scheme** (`run:`, `phase:`, `pub:`, `research:`). **Omit the line entirely
+   when nothing blocks the finding.** `none` is not a value: a token nothing can satisfy makes
+   the finding read WAITING when it is STUCK, and it reaches no worker either way.
+3. **`Severity:` and `Lane:` values come from the declared vocabularies.** An unmappable
+   severity lands the finding as `advisory`; an unmappable lane routes it to no worker.
+4. **`Verify:` is ONE command.** `close_finding.py` parses it as a single line and refuses a
+   closure whose verify does not match, stranding the finding.
