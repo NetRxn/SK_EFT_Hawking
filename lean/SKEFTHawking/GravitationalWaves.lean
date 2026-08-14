@@ -22,9 +22,15 @@ DOF from first principles — the Volovik identification "second sound =
 graviton" is an *identification*, not a derivation. Wave 2 ships in
 "use-as-identified" mode with the bridge encoded as a tracked-hypothesis
 Prop `H_VestigialModeIsGraviton`. The module's main physical content
-is the *quantitative falsification*: the natural χ_vest range
-`[0.1, 10]` gives `|Δc/c| ∈ [0.68, 2.16]`, which fails GW170817 by
-14 orders of magnitude.
+is a *quantitative constraint*: GW170817 confines `χ_vest` to the
+window `[(1−τ)², (1+τ)²]` with `τ = tolGW170817 = 3 × 10⁻¹⁵`. That
+window lies strictly INSIDE the natural range `[0.1, 10]` — the two
+are nested, not disjoint, and they share `χ_vest = 1` — and it is
+narrower than the natural range by more than 14 orders of magnitude.
+So the datum pins the parameter to unity rather than excluding the
+range: the ENDPOINTS `χ_vest = 0.1, 10` are excluded; `χ_vest = 1`
+is not. The `|Δc/c|` values `0.68` and `2.16` are the deviations at
+those two endpoints, not over the range.
 
 ## Key Results
 
@@ -36,15 +42,24 @@ is the *quantitative falsification*: the natural χ_vest range
    captures `|δ| ≤ tol`. Biconditional
    `c_GW_match_iff_chi_close_to_one` characterises the
    c_GW = c locus.
-4. **Natural-range falsification (LOAD-BEARING).** Three explicit
-   theorems show that the χ_vest natural range
+4. **Natural-range endpoints excluded; interior constrained
+   (LOAD-BEARING).** The ENDPOINTS of
    `[CHI_VEST_NATURAL_LOWER, CHI_VEST_NATURAL_UPPER] = [0.1, 10]`
-   produces deviations vastly exceeding the GW170817 cap.
+   produce deviations vastly exceeding the GW170817 cap
+   (`natural_lower_violates_ligo`, `natural_upper_violates_ligo`),
+   while `ligo_confines_chi_vest_within_natural_range` shows every
+   LIGO-compatible `χ_vest` lies strictly interior to that range, and
+   `ligo_window_subset_natural_range` shows the compatible window is
+   nested inside it.
 5. **Bundled tracked hypothesis.** `H_VestigialModeIsGraviton` records
    the Volovik-Phase 5y H1 identification together with a
    constraint that `χ_vest` lies in a sub-window of the natural range
    compatible with GW170817. The bundle is genuinely non-trivial:
-   three falsifier theorems witness it.
+   it is satisfiable at `χ_vest = 1` and each conjunct has an explicit
+   falsifier.
+7. **`c`-independence, proved.** `c_GW_relative_deviation_eq` shows
+   `(c_GW χ c − c)/c = c_GW_deviation χ` for every `c ≠ 0`, tying the
+   `c`-free deviation formula back to `c_GW` itself.
 6. **Dispersion correction.** `dispersion_correction γ ω = γ · ω`
    captures the leading SK-EFT/Γ_H dissipative correction; vanishes
    when γ = 0.
@@ -105,6 +120,23 @@ theorem c_GW_pos {χ_vest c : ℝ} (hχ : 0 < χ_vest) (hc : 0 < c) :
 /-- Dimensionless GW-speed deviation from light:
     `Δc/c (χ_vest) = √χ_vest − 1`. Independent of `c`. -/
 noncomputable def c_GW_deviation (χ_vest : ℝ) : ℝ := Real.sqrt χ_vest - 1
+
+/-- **Bridge: `c_GW_deviation` IS the relative deviation of `c_GW`.** For any
+    `c ≠ 0`,
+
+      `(c_GW χ_vest c − c) / c = c_GW_deviation χ_vest`.
+
+    This is what makes the `c`-independence of `c_GW_deviation` a proved
+    fact rather than a definitional convention: the right-hand side has no
+    `c` in it, so the measured fractional speed offset is the same for
+    every non-zero `c`. Every GW170817 theorem below is stated in terms of
+    `c_GW_deviation`, and this lemma is what ties those statements back to
+    `c_GW`. -/
+theorem c_GW_relative_deviation_eq {χ_vest c : ℝ} (hc : c ≠ 0) :
+    (c_GW χ_vest c - c) / c = c_GW_deviation χ_vest := by
+  unfold c_GW c_GW_deviation
+  rw [div_eq_iff hc]
+  ring
 
 /-- The deviation vanishes iff `χ_vest = 1`. -/
 theorem c_GW_deviation_zero_iff_chi_one {χ_vest : ℝ} (hχ : 0 ≤ χ_vest) :
@@ -179,14 +211,21 @@ theorem c_GW_match_iff_chi_close_to_one {χ_vest : ℝ} (hχ : 0 ≤ χ_vest) :
       rwa [Real.sqrt_sq h_one_plus_tol_nn] at h1
     constructor <;> linarith
 
-/-! ## 3. Natural-range falsification (LOAD-BEARING)
+/-! ## 3. Natural-range endpoints and the GW170817 constraint (LOAD-BEARING)
 
     The vestigial-susceptibility "natural range" is `χ_vest · Λ² ∈ [0.1, 10]`
     (a half-decade window, matching `GRAV.ALPHA_ADW_LOWER/UPPER`). At
-    either end of this range, the GW deviation `Δc/c` exceeds the GW170817
-    cap by 14+ orders of magnitude. This is the Wave 2 falsification
-    result — quantitatively rules out the vestigial-second-sound graviton
-    identification *unless* χ_vest is fine-tuned to within 3e-15 of unity.
+    either END of this range the GW deviation `Δc/c` exceeds the GW170817
+    cap by 14+ orders of magnitude.
+
+    The GW170817-compatible window `[(1−τ)², (1+τ)²]`, `τ = tolGW170817`,
+    is **nested strictly inside** the natural range — not disjoint from it
+    (`ligo_window_subset_natural_range`), and it contains the natural
+    anchor `χ_vest = 1`. So the Wave 2 result is a fine-tuning
+    CONSTRAINT, not an exclusion of the range: GW170817 pins `χ_vest` to
+    within `~3e-15` of unity, a window narrower than the natural range by
+    more than 14 orders of magnitude
+    (`ligo_window_width_lt_natural_range_width_by_1e14`).
 -/
 
 /-- Natural-range lower bound: `χ_vest^L = 0.1` (matches
@@ -235,53 +274,143 @@ theorem natural_upper_violates_ligo :
   -- sqrt(10) - 1 ≥ 2 - 1 = 1, much greater than 3e-15
   linarith
 
-/-- **Bundled natural-range falsifier.** The natural χ_vest range
-    `[0.1, 10]` does NOT lie inside the GW170817-compatible
-    `[(1-tol)², (1+tol)²]` window. Equivalently, both endpoints fail
-    the LIGO constraint. -/
+/-- **Bundled endpoint falsifier.** Both endpoints of the natural χ_vest
+    range fail the GW170817 constraint.
+
+    This is a statement about the two ENDPOINTS. The range as a whole is
+    not excluded: it contains `χ_vest = 1`, which satisfies the cap
+    (`ligo_satisfied_at_chi_one`). The compatible sub-window is located by
+    `ligo_confines_chi_vest_within_natural_range`. -/
 theorem vestigial_natural_range_violates_ligo :
     ¬ LigoSatisfied (c_GW_deviation chi_vest_natural_lower) ∧
     ¬ LigoSatisfied (c_GW_deviation chi_vest_natural_upper) :=
   ⟨natural_lower_violates_ligo, natural_upper_violates_ligo⟩
 
+/-! ### 3.1 The GW170817-compatible window, located and measured
+
+    `c_GW_match_iff_chi_close_to_one` characterises the compatible set as
+    `[(1−τ)², (1+τ)²]`. The results here say *where* that interval sits
+    relative to the natural range, and *how wide* it is. -/
+
+/-- The natural lower bound lies strictly below the compatible window. -/
+theorem natural_lower_lt_ligo_window_lower :
+    chi_vest_natural_lower < (1 - tolGW170817) ^ 2 := by
+  unfold chi_vest_natural_lower tolGW170817
+  norm_num
+
+/-- The compatible window's upper end lies strictly below the natural upper bound. -/
+theorem ligo_window_upper_lt_natural_upper :
+    (1 + tolGW170817) ^ 2 < chi_vest_natural_upper := by
+  unfold chi_vest_natural_upper tolGW170817
+  norm_num
+
+/-- **The compatible window is nested inside the natural range.** The
+    GW170817-compatible set `[(1−τ)², (1+τ)²]` is a subset of the natural
+    range `[0.1, 10]` — the two are NOT disjoint. -/
+theorem ligo_window_subset_natural_range :
+    Set.Icc ((1 - tolGW170817) ^ 2) ((1 + tolGW170817) ^ 2) ⊆
+      Set.Icc chi_vest_natural_lower chi_vest_natural_upper := by
+  intro x hx
+  exact ⟨le_of_lt (lt_of_lt_of_le natural_lower_lt_ligo_window_lower hx.1),
+    le_of_lt (lt_of_le_of_lt hx.2 ligo_window_upper_lt_natural_upper)⟩
+
+/-- The natural anchor `χ_vest = 1` lies in the compatible window. Together
+    with `ligo_window_subset_natural_range` this witnesses that the window
+    is non-empty, so the confinement theorem below is not vacuous. -/
+theorem chi_one_mem_ligo_window :
+    (1 : ℝ) ∈ Set.Icc ((1 - tolGW170817) ^ 2) ((1 + tolGW170817) ^ 2) :=
+  (c_GW_match_iff_chi_close_to_one zero_le_one).mp ligo_satisfied_at_chi_one
+
+/-- **The compatible window and the natural range intersect.** They share
+    `χ_vest = 1`. This is the explicit refutation of any claim that the
+    natural range and the GW170817-compatible window are disjoint: the
+    correct relation is nesting (`ligo_window_subset_natural_range`). -/
+theorem ligo_window_inter_natural_range_nonempty :
+    (Set.Icc ((1 - tolGW170817) ^ 2) ((1 + tolGW170817) ^ 2) ∩
+      Set.Icc chi_vest_natural_lower chi_vest_natural_upper).Nonempty :=
+  ⟨1, chi_one_mem_ligo_window, ligo_window_subset_natural_range chi_one_mem_ligo_window⟩
+
+/-- **Headline constraint.** GW170817 confines `χ_vest` to a narrow
+    interval about unity that lies strictly interior to the natural range.
+
+    For non-negative `χ_vest` satisfying the LIGO cap: `χ_vest` lies in
+    `[(1−τ)², (1+τ)²]`, and hence strictly between the natural bounds
+    `0.1` and `10`.
+
+    This is a CONSTRAINT, not a falsification. The datum pins the
+    parameter to unity; it does not exclude the natural range, which
+    contains the pinned value (`chi_one_mem_ligo_window`). -/
+theorem ligo_confines_chi_vest_within_natural_range {χ_vest : ℝ} (hχ : 0 ≤ χ_vest)
+    (hligo : LigoSatisfied (c_GW_deviation χ_vest)) :
+    (1 - tolGW170817) ^ 2 ≤ χ_vest ∧ χ_vest ≤ (1 + tolGW170817) ^ 2 ∧
+      chi_vest_natural_lower < χ_vest ∧ χ_vest < chi_vest_natural_upper := by
+  obtain ⟨hlo, hhi⟩ := (c_GW_match_iff_chi_close_to_one hχ).mp hligo
+  exact ⟨hlo, hhi, lt_of_lt_of_le natural_lower_lt_ligo_window_lower hlo,
+    lt_of_le_of_lt hhi ligo_window_upper_lt_natural_upper⟩
+
+/-- **Window width.** `(1+τ)² − (1−τ)² = 4τ` exactly. -/
+theorem ligo_window_width_eq :
+    (1 + tolGW170817) ^ 2 - (1 - tolGW170817) ^ 2 = 4 * tolGW170817 := by
+  ring
+
+/-- **Window width, absolute bound.** With `τ = 3e-15` the compatible
+    window is narrower than `1e-13`. -/
+theorem ligo_window_width_lt_1e13 :
+    (1 + tolGW170817) ^ 2 - (1 - tolGW170817) ^ 2 < 1e-13 := by
+  rw [ligo_window_width_eq]
+  unfold tolGW170817
+  norm_num
+
+/-- **Natural-range width.** `10 − 0.1 = 9.9`. -/
+theorem natural_range_width_eq :
+    chi_vest_natural_upper - chi_vest_natural_lower = 99 / 10 := by
+  unfold chi_vest_natural_upper chi_vest_natural_lower
+  norm_num
+
+/-- **The fine-tuning, quantified.** Scaling the compatible window up by
+    `10¹⁴` still leaves it narrower than the natural range. This is the
+    falsifiable form of "GW170817 fine-tunes `χ_vest` by more than 14
+    orders of magnitude": the constraint shrinks the admissible interval
+    from width `9.9` to width `4τ = 1.2e-14`. -/
+theorem ligo_window_width_lt_natural_range_width_by_1e14 :
+    1e14 * ((1 + tolGW170817) ^ 2 - (1 - tolGW170817) ^ 2) <
+      chi_vest_natural_upper - chi_vest_natural_lower := by
+  rw [ligo_window_width_eq, natural_range_width_eq]
+  unfold tolGW170817
+  norm_num
+
 /-! ## 4. Tracked-hypothesis: vestigial mode = graviton (Phase 5y H1)
 
-    Strengthening note (2026-04-25, post-Wave-2 audit): the original
-    `second_sound_graviton_not_derived_DOF` theorem was an
-    `∀c, ∃χ, c_GW χ c = c` statement, trivially discharged by χ=1.
-    That is the ∃-absorption anti-pattern from
-    `feedback_subagent_lean_quality.md`: the existence of *one*
-    consistent value does not encode "underdetermination", which is the
-    Phase 5y H1 finding. We replace it with the **disjointness theorem**
-    `natural_range_disjoint_from_ligo_window`: for any χ in the natural
-    range `[0.1, 10]`, NO c-value gives a GW170817-compatible Δc/c
-    (because Δc/c is independent of c and falsified at both endpoints).
-    This is genuinely substantive: it proves the natural range and the
-    GW170817-compatible window are entirely disjoint, which is the
-    quantitative Phase 5y H1 caveat.
+    What the GW170817 datum settles about the Volovik identification
+    splits into two halves, and the theorems here keep them apart.
 
-    Similarly, the original `H_VestigialModeIsGraviton` had a redundant
-    P3 (`c_GW > 0`, implied by P1). We replace P3 with a load-bearing
-    quantitative constraint: P3' "Δc/c does not exceed the natural
-    falsification factor 1/2". This makes the bundle 3-conjunct
-    substantively (P1 = χ>0, P2 = LIGO, P3' = sub-half-deviation),
-    with falsifiers showing each of the three is independently
-    necessary.
+    *Negative half* — `natural_endpoints_violate_ligo_window` and
+    `natural_endpoints_violate_ligo_for_every_c`: the two ENDPOINTS of
+    the natural range are excluded, and no choice of the speed of light
+    `c` rescues them, because the relative deviation of `c_GW` equals
+    `c_GW_deviation χ` for every `c ≠ 0` (`c_GW_relative_deviation_eq`).
+    Both are two-point statements about `χ = 0.1` and `χ = 10`; neither
+    says anything about interior values.
+
+    *Positive half* — §3.1: the compatible window is non-empty, contains
+    `χ = 1`, and is nested strictly inside the natural range. The natural
+    range is therefore CONSTRAINED, not excluded.
+
+    `H_VestigialModeIsGraviton` bundles the identification as
+    P1 (`χ_vest > 0`) ∧ P2 (GW170817 cap) ∧ P3' (`|Δc/c| < 1/2`).
+    P3' is not implied by P1: `χ_vest = 1/4` satisfies P1 and fails P3'
+    at exactly `|Δ| = 1/2`.
 -/
 
-/-- **Phase 5y H1 caveat — disjointness theorem.** For any `χ` strictly
-    bracketed inside the natural range `[chi_vest_natural_lower,
-    chi_vest_natural_upper] = [0.1, 10]` (not at unity), the deviation
-    `c_GW_deviation(χ)` exceeds the GW170817 cap. Specifically: the
-    natural endpoints both fail `LigoSatisfied`, and `c_GW_deviation`
-    is strictly monotone, so the deviation cannot return to within the
-    cap without leaving the natural range.
+/-- **Endpoint exclusion.** No `χ` equal to either endpoint of the natural
+    range `[chi_vest_natural_lower, chi_vest_natural_upper] = [0.1, 10]`
+    satisfies the GW170817 cap.
 
-    This is the strong form of "the second-sound mode is not a derived
-    propagating DOF": the natural range that any uncontrolled UV theory
-    would produce is entirely disjoint from the GW170817-compatible
-    window, by 14 orders of magnitude. -/
-theorem natural_range_disjoint_from_ligo_window :
+    This is a TWO-POINT statement, about `χ = 0.1` and `χ = 10` only. The
+    interior of the natural range is governed by
+    `ligo_confines_chi_vest_within_natural_range`, which locates the
+    compatible sub-interval about `χ = 1`. -/
+theorem natural_endpoints_violate_ligo_window :
     ¬ ∃ χ : ℝ,
       (χ = chi_vest_natural_lower ∨ χ = chi_vest_natural_upper) ∧
       LigoSatisfied (c_GW_deviation χ) := by
@@ -290,21 +419,21 @@ theorem natural_range_disjoint_from_ligo_window :
   · rw [h] at hligo; exact natural_lower_violates_ligo hligo
   · rw [h] at hligo; exact natural_upper_violates_ligo hligo
 
-/-- **Phase 5y H1 caveat (frame-independent form).** The deviation
-    `c_GW_deviation` is independent of the speed of light `c` — it
-    depends only on `χ`. Hence the natural-range falsification holds
-    regardless of any UV choice of `c`: there is NO speed-of-light
-    rescaling that converts a natural-range `χ` into a
-    GW170817-compatible identification.
+/-- **Endpoint exclusion holds for every speed of light.** For any
+    `c ≠ 0`, the measured relative deviation `(c_GW χ c − c) / c` at either
+    natural-range endpoint violates the GW170817 cap.
 
-    Statement: for any positive `c` and any natural-range `χ`,
-    `LigoSatisfied (c_GW_deviation χ)` fails. -/
-theorem second_sound_graviton_natural_range_universally_falsified :
-    ∀ (c : ℝ) (_ : 0 < c) (χ : ℝ)
-      (_ : χ = chi_vest_natural_lower ∨ χ = chi_vest_natural_upper),
-      ¬ LigoSatisfied (c_GW_deviation χ) := by
-  intro _ _ χ hcase
-  rcases hcase with h | h
+    The `c` binder is load-bearing here: the statement is about the
+    relative deviation of `c_GW` itself, and it reduces to the
+    `c`-free `c_GW_deviation χ` only through
+    `c_GW_relative_deviation_eq`. So no UV rescaling of the speed of
+    light converts an endpoint value of `χ` into a compatible one. -/
+theorem natural_endpoints_violate_ligo_for_every_c
+    {c : ℝ} (hc : c ≠ 0) {χ : ℝ}
+    (hχ : χ = chi_vest_natural_lower ∨ χ = chi_vest_natural_upper) :
+    ¬ LigoSatisfied ((c_GW χ c - c) / c) := by
+  rw [c_GW_relative_deviation_eq hc]
+  rcases hχ with h | h
   · rw [h]; exact natural_lower_violates_ligo
   · rw [h]; exact natural_upper_violates_ligo
 
@@ -320,9 +449,10 @@ theorem second_sound_graviton_natural_range_universally_falsified :
           since e.g. χ_vest = 1/10 gives Δ ≈ -0.684 which violates
           P3' even though χ > 0)
 
-    The bundle is genuinely non-trivial: we exhibit three explicit
-    falsifiers below, each violating exactly one of the three
-    conjuncts. -/
+    The bundle is genuinely non-trivial: explicit falsifiers below
+    witness that each conjunct is independently necessary, and
+    `H_VestigialModeIsGraviton_at_one` witnesses that the bundle is
+    satisfiable. -/
 def H_VestigialModeIsGraviton (χ_vest : ℝ) : Prop :=
   0 < χ_vest ∧
   LigoSatisfied (c_GW_deviation χ_vest) ∧
@@ -355,11 +485,11 @@ theorem H_VestigialModeIsGraviton_fails_at_zero :
   exact lt_irrefl 0 h1
 
 /-- **Falsifier D — load-bearing for P3'.** χ_vest = 1/4 satisfies P1
-    (positive) AND P3' is the *only* clause that fails (Δc/c =
-    sqrt(1/4) - 1 = -1/2, so |Δ| = 1/2 violates `< 1/2`). This proves
-    P3' is genuinely independent of P1 — a 1/4 susceptibility passes
-    positivity but not sub-half-deviation. (P2 also fails at χ=1/4,
-    but the test isolates P3' independence: |Δ| = 1/2 ≥ 1/2.) -/
+    (positivity) but fails P3': `Δc/c = √(1/4) − 1 = −1/2`, so
+    `|Δ| = 1/2`, violating `< 1/2`. This witnesses that P3' is not
+    implied by P1 — a 1/4 susceptibility passes positivity but not
+    sub-half-deviation. (P2 fails here as well; the witness is the
+    P1-passes/P3'-fails pair, not exclusivity.) -/
 theorem H_VestigialModeIsGraviton_fails_at_quarter :
     ¬ H_VestigialModeIsGraviton (1 / 4) := by
   intro ⟨_, _, h3⟩
@@ -455,37 +585,53 @@ GravitationalWaves module (Phase 6a Wave 2).
 
   - c_GW, c_GW_at_chi_one, c_GW_pos: GW propagation speed from
     vestigial susceptibility
-  - c_GW_deviation, c_GW_deviation_zero_iff_chi_one,
-    c_GW_deviation_strict_mono: dimensionless deviation Δc/c
+  - c_GW_deviation, c_GW_relative_deviation_eq,
+    c_GW_deviation_zero_iff_chi_one, c_GW_deviation_strict_mono:
+    dimensionless deviation Δc/c, and the bridge proving it IS the
+    relative deviation of c_GW for every c ≠ 0
   - tolGW170817, LigoSatisfied, ligo_satisfied_at_chi_one: GW170817
     correctness-push predicate at the natural anchor
   - c_GW_match_iff_chi_close_to_one: correctness-push biconditional
   - chi_vest_natural_lower, chi_vest_natural_upper: half-decade
     natural range bounds (matches GW.CHI_VEST_NATURAL_*)
   - natural_lower_violates_ligo, natural_upper_violates_ligo,
-    vestigial_natural_range_violates_ligo: load-bearing
-    falsification — natural χ_vest range fails GW170817 by 14+
-    orders of magnitude
+    vestigial_natural_range_violates_ligo: load-bearing ENDPOINT
+    exclusion — the two ends of the natural χ_vest range miss the
+    GW170817 cap by 14+ orders of magnitude
 
-  -- Phase 5y H1 caveat (post-strengthening 2026-04-25):
-  - natural_range_disjoint_from_ligo_window: replaces the prior
-    ∃-absorption `second_sound_graviton_not_derived_DOF` with a
-    substantive disjointness theorem (the natural endpoints both
-    fail LigoSatisfied → the natural range and GW170817 window are
-    disjoint)
-  - second_sound_graviton_natural_range_universally_falsified:
-    frame-independent form (no c-rescaling can rescue the natural
-    range; deviation is independent of light speed)
+  -- §3.1 where the compatible window sits, and how wide it is:
+  - natural_lower_lt_ligo_window_lower,
+    ligo_window_upper_lt_natural_upper,
+    ligo_window_subset_natural_range: the GW170817-compatible window
+    is nested strictly INSIDE the natural range — not disjoint from it
+  - chi_one_mem_ligo_window,
+    ligo_window_inter_natural_range_nonempty: the window is non-empty
+    and meets the natural range at χ = 1 (so the confinement theorem
+    is not vacuous, and "disjoint" is refuted outright)
+  - ligo_confines_chi_vest_within_natural_range: HEADLINE — any
+    LIGO-compatible χ_vest lies in [(1−τ)², (1+τ)²] and strictly
+    between 0.1 and 10
+  - ligo_window_width_eq, ligo_window_width_lt_1e13,
+    natural_range_width_eq,
+    ligo_window_width_lt_natural_range_width_by_1e14: the window has
+    width exactly 4τ < 1e-13, against natural-range width 9.9 — the
+    fine-tuning stated as a falsifiable numerical comparison
 
-  -- Bundled hypothesis (post-strengthening: 3-conjunct, all
-     independently load-bearing):
+  -- Phase 5y H1 caveat:
+  - natural_endpoints_violate_ligo_window: no χ EQUAL to a natural
+    endpoint satisfies the cap (a two-point statement, not a range
+    statement)
+  - natural_endpoints_violate_ligo_for_every_c: the same exclusion for
+    the relative deviation (c_GW χ c − c)/c at every c ≠ 0 — no
+    speed-of-light rescaling rescues an endpoint value of χ
+
+  -- Bundled hypothesis (3-conjunct, all independently load-bearing):
   - H_VestigialModeIsGraviton: P1 (χ>0) ∧ P2 (LigoSatisfied) ∧
-    P3' (|Δc/c| < 1/2 sub-half-deviation) — replaced redundant
-    luminal-propagation conjunct with quantitative bound
-  - H_VestigialModeIsGraviton_at_one: anchor discharge
+    P3' (|Δc/c| < 1/2 sub-half-deviation)
+  - H_VestigialModeIsGraviton_at_one: anchor discharge (satisfiable)
   - H_VestigialModeIsGraviton_fails_at_natural_lower, _upper, _zero,
-    _quarter: FOUR explicit falsifiers (1/4 added: passes P1 but
-    fails P3' at exactly |Δ|=1/2, isolating P3' independence)
+    _quarter: explicit falsifiers (1/4 passes P1 but fails P3' at
+    exactly |Δ|=1/2, witnessing P3' independence from P1)
 
   -- Dispersion bridge (post-strengthening: substantive LIGO-band):
   - dispersion_correction, _zero_at_no_dissipation,
@@ -499,13 +645,21 @@ GravitationalWaves module (Phase 6a Wave 2).
     dispersion correction below tolGW170817 at GW170817 ω=100 Hz
 
   Zero sorry. Tracked hypothesis: H_VestigialModeIsGraviton
-  (= positivity ∧ LigoSatisfied ∧ sub-half-deviation). All four
-  falsifiers are required: each violates exactly one (or
-  isolates one) of the three conjuncts. The Phase 5y H1 caveat is
-  encoded as the substantive `natural_range_disjoint_from_ligo_window`
-  theorem (post-strengthening 2026-04-25, replacing the prior
-  ∃-absorption form which was vacuous). The actual vestigial graviton
-  identification awaits a derived-DOF mechanism (deep-research H1
-  negative finding; natural follow-up work).
+  (= positivity ∧ LigoSatisfied ∧ sub-half-deviation), satisfiable at
+  χ_vest = 1, with a falsifier per conjunct.
+
+  What GW170817 settles, stated precisely: the natural-range ENDPOINTS
+  are excluded (`natural_endpoints_violate_ligo_window`, and for every
+  c ≠ 0 by `natural_endpoints_violate_ligo_for_every_c`), while the
+  natural range as a whole is CONSTRAINED rather than excluded — the
+  compatible window is nested strictly inside it
+  (`ligo_window_subset_natural_range`), contains χ_vest = 1
+  (`chi_one_mem_ligo_window`), and is narrower by more than 14 orders
+  of magnitude (`ligo_window_width_lt_natural_range_width_by_1e14`).
+  The physical content is therefore a fine-tuning statement: GW170817
+  admits the vestigial identification only at χ_vest pinned to unity
+  to within ~3e-15. The actual vestigial graviton identification
+  awaits a derived-DOF mechanism (deep-research H1 negative finding;
+  natural follow-up work).
 -/
 end SKEFTHawking.GravitationalWaves
