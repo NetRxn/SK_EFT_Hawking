@@ -71,7 +71,50 @@ Announce these reads before you begin any grep / fetch work.
 
 ## Process
 
-Work the finding classes below **in order** (1 → 8). Each class maps to one readiness gate. For each class, scan the paper, emit one finding per issue, and move on. Do not batch across classes.
+### Class 0 — ADJUDICATE THIS BUNDLE'S PRIOR OPEN FINDINGS (do this FIRST)
+
+⛔ **A clean verdict from you does not clear the bundle if prior open findings remain.** The
+readiness gates are age-blind: `FixPropagation` blocks on any open blocking finding whatever its
+date, so a bundle you have just examined completely can still fail to go green because of records
+your pass supersedes. You are the authority that can retire them — a fresh-context re-examination
+is exactly what a supersession requires — and no later step will do it for you.
+
+List the bundle's open findings:
+
+```bash
+uv run python -c "
+import sys; sys.path.insert(0,'scripts')
+import build_graph as bg
+B='<BUNDLE>'
+for n in bg.extract_review_finding_nodes():
+    m=n.get('meta',{})
+    if m.get('status')=='open' and B in (m.get('inferred_bundle'), m.get('inferred_paper')):
+        print(m.get('severity'), n['id'], '|', (m.get('review_date') or '')[:10])
+"
+```
+
+For each, decide against **HEAD**, not against the finding's own text:
+
+- **Still live** — carry it forward; say so in your report so it is not silently dropped.
+- **Remediated** — close it: `scripts/close_finding.py --status fixed --evidence "<what changed, with the commit>"`.
+- **Mis-specified** — its remedy contradicts the artifact today. Close it `fixed` with the
+  contradiction quoted, and file the *correct* finding fresh if the underlying issue survives.
+  ⚠️ This is common and costly: a finding filed 2026-05-01 instructed the operator to verify a
+  parameter against a paper that the artifact itself states does not contain it. It sat open for
+  two months, blocking a P1 gate, describing work that had already been done differently.
+
+⚠️ **Re-measure before you adjudicate.** A filed finding's severity, counts and remedy are
+CLAIMS. Read the artifact it names at HEAD; do not inherit its framing — including from a
+finding you or a predecessor filed earlier the same day.
+
+⚠️ **A finding filed under the current convention declares its own `Verify:` command. Run it.**
+An open finding whose declared verification now passes is evidence the defect is gone — the
+finding named that command as its own decider, so this is not a proxy. It is not proof (the
+verify may be scoped too narrowly), so confirm against the artifact before closing.
+
+---
+
+Then work the finding classes below **in order** (1 → 8). Each class maps to one readiness gate. For each class, scan the paper, emit one finding per issue, and move on. Do not batch across classes.
 
 Consult the citation verification cache (`docs/citation_verifications.jsonl`, helpers in `scripts/citation_cache.py`) before fetching any arXiv URL — see finding class 1 for the protocol.
 

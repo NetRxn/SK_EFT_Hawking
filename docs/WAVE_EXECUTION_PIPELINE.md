@@ -595,6 +595,17 @@ backstops.
    Stage-13 green while either prerequisite is unfinished, and
    `validate.py --check bundle_reviewer_stage_ordering` catches a hand edit that bypasses it. A
    Stage-13 verdict also requires `--kind`; only `full-adversarial` earns a green.
+0a. **Adjudicate the bundle's prior open findings, before examining the draft.** The readiness
+   gates are age-blind: `FixPropagation` blocks on any open blocking finding whatever its date,
+   so a bundle a fresh pass finds clean can still fail to go green on records that pass
+   supersedes. A fresh-context re-examination is the authority that retires them, and no later
+   step does it. For each prior open finding, decide against **HEAD** rather than against the
+   finding's own text — still live (carry forward and say so), remediated (close `fixed` with
+   the change and its commit), or mis-specified (close `fixed` quoting the contradiction, then
+   re-file the correct finding if the issue survives). A finding filed under the current
+   convention declares its own `Verify:` command; running it is consulting the finding's own
+   declared decider, and a verify that now passes is evidence — though not proof, since it may
+   be scoped narrowly — that the defect is gone.
 0b. **A draft carrying an unresolved work marker may not be green.** Drafting with
    `% TODO:` notes is normal and permitted; recording a completed review over content the
    author has flagged as unwritten is not. `validate.py --check bundle_todo_free_before_green`
