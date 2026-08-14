@@ -201,6 +201,7 @@ half nothing in the suite was checking.
 | `scripts/dashboard_flow.py` | **S2 — the Flow board.** Bundle rows × stage columns, with an open-findings overlay broken down by `lane` | Coerce an unrecognised status to the nearest known one, treat §7.5 as anything but *not tracked*, or present the two known-soft signals (TODO-D50/D51) as authoritative |
 | `scripts/dashboard_attention.py` | **S3 — Attention.** The four feeds, side by side | **Merge them.** Different stores, vocabularies and actions; flattening destroys the only property that makes each legible |
 | `scripts/dashboard_loops.py` | **P9c — Loops.** `/goal`-level activity from harness state | Render an empty roster as "no loops running". `.claude/dev-harness/` is gitignored, so *nothing known* and *nothing armed* are different answers |
+| `scripts/orchestrate.py` | **P10 — the wave plan.** What may be worked in parallel now, by which profile, in which `wtN` slot | Coerce an unrouted finding into a lane · plan an unverifiable finding as *closable* · group two findings on one file as two units, or an untargeted finding as a unit at all |
 
 **Every one of them reports what it CANNOT see, beside what it can.** `coverage()` returns the
 population the layer reaches *and* the population it does not, and asserts the two partition —

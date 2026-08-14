@@ -257,6 +257,7 @@ Nothing else belongs here.
 | `scripts/lean_slots/supervisor.py` | Deterministic local process lifecycle for fixed-root Lean MCP endpoints. |
 | `scripts/lint_native_decide_comments.py` | lint_native_decide_comments.py — detect comment-provenance artifacts left by a blind ``native_decide`` → ``decide`` substitution. |
 | `scripts/module_census.py` | Derive the census — the one answer to "what is this module, script or notebook". |
+| `scripts/orchestrate.py` | Plan a remediation wave — what can be dispatched right now, and what must not be. |
 | `scripts/paper_tables/__init__.py` | Paper tables framework (Phase 5v). |
 | `scripts/paper_tables/sources.py` | Row-generator functions for paper table autogen (Phase 5v). |
 | `scripts/parked_items.py` | Parked work — authorized work waiting on an external release condition (ADR-012 D19). |

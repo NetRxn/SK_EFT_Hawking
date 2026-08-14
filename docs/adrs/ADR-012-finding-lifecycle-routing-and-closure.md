@@ -1,6 +1,9 @@
 # ADR-012 — The remediation loop: routing, closure, and the operator control surface
 
-- **Status:** 🏗️ **ACCEPTED — SUBSTANTIALLY BUILT (drafted 2026-08-12, scope expanded 2026-08-12).**
+- **Status:** ✅ **ACCEPTED — EVERY PHASE BUILT (drafted 2026-08-12, scope expanded the same day,
+  P10 closed 2026-08-13).** ⚠️ *Built* is not *in steady use*: P10 measured two preconditions that
+  gate the loop it plans — 657 of 969 open findings carry no lane, and only 74 declare a `verify`
+  command. The machinery is complete; the queue is not yet in a shape it can work at scale.
   **§Plan's per-phase entries are the authority on what is built. This line deliberately names
   no phase.** It carried a roster twice, and the roster was stale both times — the second time
   while the correction warning directly below was already on the page. A status summary that
@@ -1204,10 +1207,62 @@ than the shell rendering an empty panel, which is precisely the failure being re
   names two of *three* sources, and a gate built to that literally flags `request`, `session` and
   `url_for` as drift on day one.
 
-**P10 — Orchestration (D2, D10, D11, D16).** Route by lane, fan out on disjoint `target`, traverse
-`BLOCKED_BY` for the cascade, worktree per lane, close by running `verify`, terminate at a merged
-wave. Last, because it is the only phase whose design genuinely depends on what the earlier ones
-reveal.
+⚠️ **P10 MEASURED AT HEAD 2026-08-13, BEFORE BUILDING, AND THE QUEUE IS NOT THE SHAPE THIS
+PHASE WAS SPECIFIED AGAINST.** 1679 findings, **969 open**. Three figures redirect the design:
+
+| measured | figure | what it does to P10 |
+|---|---|---|
+| open findings with **no declared lane** | **657 of 969 (68%)** | the router's primary key is absent for two-thirds of the queue. `scripts/backfill_lanes.py --propose` exists; running it through is a **precondition**, not a nicety |
+| dispatchable findings **declaring a `verify`** | **74 of 965 (7.7%)** | D16 makes a passing `verify` the closure condition — and `close_finding._run_verifications` reads `if not cmd: continue`, so the other 891 close with **no verification whatsoever**, recorded as `fixed` |
+| findings **blocked** by an unclosed `blocked_by` | **4 of 969** | the DAG is nearly flat. D10's cascade is correct machinery with almost nothing to cascade *yet*; it is not the bottleneck P10 was imagined to relieve |
+
+⚠️ **The second row is the one that changes what P10 IS.** D6 accepted that *pre*-2026-08-12
+`fixed` does not imply a verification ran — grandfathering, stated. What the measurement shows is
+that a **post**-2026-08-12 `fixed` does not imply it either, for 92% of the live queue, because
+closure silently skips a finding that declares no command. A loop that dispatches and closes at
+machine speed would convert that from a slow leak into a firehose: **hundreds of ledger records
+reading *fixed* with an empty `verified_by`, indistinguishable from verified ones.**
+
+So P10 ships a **refusal** before it ships a fan-out: an orchestrator may not mark a finding
+closable when nothing can prove the fix. Authoring the `verify` line is part of the work, exactly
+as the finding's author owed it — which is the same rule the reviewer already follows, applied to
+the agent that picks the finding up.
+
+**P10 — Orchestration (D2, D10, D11, D16). ✅ COMPLETE 2026-08-13** — `scripts/orchestrate.py`.
+Route by lane, fan out on disjoint `target`, traverse `BLOCKED_BY` for the cascade, worktree per
+lane, close by running `verify`. Last, because it is the only phase whose design genuinely
+depends on what the earlier ones reveal — and the measurement above changed it.
+
+⚠️ **IT IS A PLANNER AND A GUARD, NOT A PROCESS SUPERVISOR.** It answers *what may be worked in
+parallel right now, by which profile, in which slot, and what would close each item* — and
+refuses the rest with a reason. Spawning workers stays with the lead. A planner that also
+supervised would put the decision and the execution in one place where neither could be tested
+alone; as it is, `plan()` reads the graph, writes nothing, spawns nothing, and is fully testable.
+
+**Three refusals, each of which would otherwise be a confident wrong plan:**
+
+1. **An unrouted finding is never coerced into a lane.** 657 of 969 carry none; a default would
+   hand physics to an infra worker and read downstream exactly like routing that worked.
+2. **An unverifiable finding is planned as WORK but not as CLOSABLE.** Authoring the `Verify:`
+   line is part of the fix.
+3. **An untargeted finding is not dispatched at all.** Nobody can be told where to work.
+
+⚠️ **TWO DEFECTS IN THE FIRST DRAFT, BOTH FOUND BY RUNNING IT AGAINST THE LIVE QUEUE RATHER THAN
+BY READING IT** — which is why step 5's pilot is not optional for anything asserting a
+population's shape:
+
+- **`(untargeted)` was a pseudo-group.** 20 findings spanning four lanes collected under one key
+  that rendered identically to a real work unit.
+- **Grouping on the raw `Target:` string split one file across two worktrees.**
+  `DriveCalibration.lean:612-641` and `…:67-69` went to **wt2 and wt3** — the precise collision
+  target-grouping exists to prevent, while the code claimed to prevent it. **The unit of
+  parallelism is the FILE**; normalising targets took the Lean lane from 21 groups to 13 and
+  made each worker's block larger, which is the throughput the fan-out is for.
+
+⚠️ **And a third: `sorted(lanes)[0]` was labelled "the strongest profile".** For
+`{infra, prose}` that is right by luck and for `{lean, infra}` it drops the build gate.
+`LANE_STRENGTH` now orders the six explicitly, and a test asserts a spanning target gets `lean`
+rather than `infra`. A comment claiming a decider does not make one.
 
 **P11 — The repeatable architecture-change skill (D18). ✅ COMPLETE 2026-08-12.**
 `/skeft-qa:architecture-change`, with this ADR as its worked example — all three correction rounds,
