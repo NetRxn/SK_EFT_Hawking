@@ -226,104 +226,28 @@ order, with corrections suppressed by (T_H/Λ)².
 theorem standard_hawking_thermal (kappa : ℝ) :
     hawkingTemp kappa = kappa / (2 * Real.pi) := rfl
 
-/-
-PROBLEM
-**Dispersive Correction (Corley-Jacobson 1996, Coutant-Parentani 2014).**
+/-!
+## Dispersive and dissipative corrections — stated in `KappaScaling.lean`
 
-For a modified dispersion relation ω² = c_s²k²(1 + (k/Λ)²) with
-adiabaticity parameter D = κ/(c_s·Λ) ≪ 1, the Hawking temperature receives
-a dispersive correction:
+`dispersive_correction_bound` and `dissipative_correction_existence` used to live
+here, in a form that quantified the corrected quantity existentially:
 
-  T_eff = T_H · (1 + δ_disp)  where |δ_disp| ≤ C · D²
+  `∃ δ_disp, ∃ C, 0 < C ∧ |δ_disp| ≤ C·D² ∧ δ_disp ≠ 0`
 
-The sign depends on sub/superluminal dispersion. The magnitude is
-|δ_disp| ~ (κξ/c_s)² ~ 0.04–0.16% for current BEC parameters.
+Both the bounded quantity AND the bounding constant were `∃`-bound, so the
+inequality was satisfiable for any `D ≠ 0` by `δ = 1, C = 1/D²` — the statement
+carried no information about dispersion, and never mentioned
+`KappaScaling.dispersiveCorrection`, the project's definition of `δ_disp`.
+The dissipative statement was the same shape: a case split satisfiable by `0` and
+`1`, never tied to `KappaScaling.dissipativeCorrection`.
 
-We strengthen the original statement to require δ_disp ≠ 0 when D > 0,
-preventing the trivial witness δ_disp = 0.
-
-PROVIDED SOLUTION
-The Corley-Jacobson result gives the leading correction explicitly:
-  δ_disp = -(π/6)·(ω/κ)·D² + O(D⁴)
-for subluminal dispersion. To prove the existential:
-
-1. Set delta_disp := -(π/6) · D² (taking ω/κ = 1 for the dominant mode).
-2. Set C := π/6 + 1 (or any constant larger than π/6).
-3. Then |delta_disp| = (π/6)·D² ≤ C·D² since π/6 < C. This gives the bound.
-4. For delta_disp ≠ 0: since D > 0 (from hD_pos), D² > 0, so (π/6)·D² > 0,
-   hence delta_disp = -(π/6)·D² ≠ 0.
-
-The key insight is that we can witness with a SPECIFIC nonzero value rather than
-proving the full WKB connection formula. The existential only needs one valid witness.
-
-Witness δ_disp := -(π/6) * D² and C := π/6 + 1 where D = adiabaticityParam kappa mdr.cs mdr.cutoff.
-
-1. C > 0: π/6 + 1 > 0 since π > 0.
-2. |δ_disp| = |-(π/6) * D²| = (π/6) * D² ≤ (π/6 + 1) * D² = C * D² since π/6 < π/6 + 1 and D² ≥ 0.
-3. δ_disp ≠ 0: since D > 0 (from hD_pos), D² > 0, so (π/6) * D² > 0, hence -(π/6) * D² ≠ 0.
-
-Use `refine ⟨_, _, ?_, ?_, ?_⟩` to split goals. For the bound, use abs_of_neg or abs_neg and mul_le_mul_of_nonneg_right. For nonzero, use neg_ne_zero and mul_ne_zero with pi_pos and sq_pos_of_pos.
+Both are now stated in `SKEFTHawking/KappaScaling.lean` — the one module where the
+correction definitions and `adiabaticityParam` are simultaneously in scope
+(`KappaScaling` imports this file, so the dependency cannot run the other way).
+They keep their names, and the bounding constant is now the explicit universal
+number `π/6` rather than an existential witness.
+See finding 2/3 of `papers/AutomatedReviews/2026-08-13-statement-substance/I1.md`.
 -/
-theorem dispersive_correction_bound
-    (mdr : ModifiedDispersion) (kappa : ℝ)
-    (_hkappa : 0 < kappa)
-    (_hadiabatic : adiabaticityParam kappa mdr.cs mdr.cutoff < 1)
-    (hD_pos : 0 < adiabaticityParam kappa mdr.cs mdr.cutoff) :
-    ∃ (delta_disp C : ℝ),
-      0 < C ∧
-      |delta_disp| ≤ C * (adiabaticityParam kappa mdr.cs mdr.cutoff) ^ 2 ∧
-      delta_disp ≠ 0 := by
-  -- Proof by Aristotle (run d65e3bba): concrete witness with bound verification
-  refine' ⟨ -Real.pi / 6 * adiabaticityParam kappa mdr.cs mdr.cutoff ^ 2, Real.pi / 6 + 1, _, _, _ ⟩ <;> ring <;> norm_num [ Real.pi_pos, hD_pos ];
-  · positivity;
-  · rw [ abs_of_nonneg Real.pi_pos.le ] ; nlinarith;
-  · linarith
-
-/-
-PROBLEM
-**Dissipative Correction — the core new result of this paper.**
-
-When the SK-EFT includes dissipative terms (γ₁, γ₂), the Hawking temperature
-receives an additional correction δ_diss = O(γ/(κξ²)). This correction:
-  - Vanishes when γ₁ = γ₂ = 0 (no dissipation → no correction)
-  - Is nonzero when either γ₁ > 0 or γ₂ > 0 (dissipation produces a genuine effect)
-
-We strengthen the original statement to require BOTH directions: vanishing when
-γ = 0, AND nonzero when γ > 0. This prevents the trivial witness δ_diss = 0.
-
-PROVIDED SOLUTION
-The leading-order dissipative correction from the modified mode equation is:
-  δ_diss = -(coeffs.gamma_1 + coeffs.gamma_2) / (2 * kappa)
-
-To prove the existential with both properties:
-1. Set delta_diss := -(coeffs.gamma_1 + coeffs.gamma_2) / (2 * kappa).
-2. Vanishing: if gamma_1 = 0 and gamma_2 = 0, then delta_diss = -(0+0)/(2κ) = 0. ✓
-3. Nonzero: if 0 < gamma_1 or 0 < gamma_2, then gamma_1 + gamma_2 > 0
-   (since both are ≥ 0 by DissipativeCoeffs.gamma_1_nonneg/gamma_2_nonneg).
-   With kappa > 0, the quotient is strictly negative, hence ≠ 0. ✓
-
-The proof uses: add_pos_of_pos_of_nonneg or add_pos_of_nonneg_of_pos for the
-sum, div_neg for the sign, and ne_of_lt for the final ≠ 0.
-
-Witness delta_diss := -(coeffs.gamma_1 + coeffs.gamma_2) / (2 * kappa).
-
-Forward direction (gamma_1 = 0 ∧ gamma_2 = 0 → delta_diss = 0): substitute gamma_1 = 0, gamma_2 = 0, numerator becomes 0, so delta_diss = 0. Use `simp` or `field_simp` after substituting.
-
-Reverse direction (0 < gamma_1 ∨ 0 < gamma_2 → delta_diss ≠ 0):
-- Both gamma_1 and gamma_2 are ≥ 0 (from coeffs.gamma_1_nonneg and coeffs.gamma_2_nonneg).
-- If 0 < gamma_1, then gamma_1 + gamma_2 > 0 by add_pos_of_pos_of_nonneg.
-- If 0 < gamma_2, then gamma_1 + gamma_2 > 0 by add_pos_of_nonneg_of_pos.
-- So gamma_1 + gamma_2 > 0, hence -(gamma_1 + gamma_2) < 0, and dividing by 2*kappa > 0 gives delta_diss < 0, hence ≠ 0.
--/
-theorem dissipative_correction_existence
-    (_mdr : ModifiedDispersion) (coeffs : DissipativeCoeffs) (kappa : ℝ)
-    (hkappa : 0 < kappa) :
-    ∃ (delta_diss : ℝ),
-      ((coeffs.gamma_1 = 0 ∧ coeffs.gamma_2 = 0) → delta_diss = 0) ∧
-      ((0 < coeffs.gamma_1 ∨ 0 < coeffs.gamma_2) → delta_diss ≠ 0) := by
-  -- Proof by Aristotle (run 657fcd6a): concrete witness with bidirectional verification
-  use -(coeffs.gamma_1 + coeffs.gamma_2) / (2 * kappa);
-  exact ⟨ fun h => by simp +decide [ h ], fun h => div_ne_zero ( by cases h <;> linarith [ coeffs.gamma_1_nonneg, coeffs.gamma_2_nonneg ] ) ( by positivity ) ⟩
 
 /-
 PROBLEM
@@ -341,8 +265,14 @@ The strengthened version requires:
   (d) Cross-term vanishes when dissipation vanishes
 
 This prevents the trivial all-zeros witness by requiring δ_disp ≠ 0 and the
-bidirectional δ_diss property, matching the sub-theorems
-dispersive_correction_bound and dissipative_correction_existence.
+bidirectional δ_diss property.
+
+⚠️ It does NOT prevent a trivial NONZERO witness, and the proof below uses one
+(δ_disp := 1, δ_diss := an if-then-else on γ). The quantitative statements — about
+the DEFINED corrections, with an explicit bounding constant — are
+`KappaScaling.dispersive_correction_bound` and
+`KappaScaling.dissipative_correction_existence`; this theorem is weaker than both
+and should be read as a structural-consistency claim only.
 
 PROVIDED SOLUTION
 Construct the EffectiveTemperature explicitly:
@@ -390,8 +320,9 @@ theorem hawking_universality
       (coeffs.gamma_1 = 0 → coeffs.gamma_2 = 0 → teff.delta_cross = 0) := by
   -- Proof by Aristotle (run 416fb432): existential witness construction
   -- Uses structural witnesses (delta_disp := 1, delta_diss := conditional)
-  -- Concrete physical values are in dispersive_correction_bound and
-  -- dissipative_correction_existence; this theorem validates structural consistency.
+  -- Concrete physical values are in KappaScaling.dispersive_correction_bound and
+  -- KappaScaling.dissipative_correction_existence; this theorem validates
+  -- structural consistency only (see the ⚠️ note above).
   obtain ⟨delta_diss, delta_diss_prop⟩ : ∃ delta_diss : ℝ,
     (coeffs.gamma_1 = 0 → coeffs.gamma_2 = 0 → delta_diss = 0) ∧
     ((0 < coeffs.gamma_1 ∨ 0 < coeffs.gamma_2) → delta_diss ≠ 0) := by
