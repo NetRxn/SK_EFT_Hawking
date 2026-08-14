@@ -10,8 +10,8 @@ FAIL DIRECTION, asymmetric on purpose: inside a subagent, any error denies. An e
 cannot be parsed at all is indistinguishable from the lead and ALLOWS — bricking the lead's
 Bash is the worse failure. Residual window: malformed event + subagent + build command.
 
-`lake build <OneModule>` is denied too: `parallel-worktrees.md`'s narrow exception was safe
-because it was job-capped, and Lake 5.0.0 removed `-j`. Granting it is a lead decision.
+`lake build <OneModule>` is denied too: Lake has no job cap, so a single-module build is
+still unbounded. Granting it is a lead decision, one slot at a time.
 """
 from __future__ import annotations
 
@@ -22,8 +22,8 @@ import sys
 #: (pattern, why). Matched anywhere in the command, so a `cd x && …` prefix or a `;` chain
 #: cannot smuggle one past. Mirrors the Codex-side denied set.
 DENIED: tuple[tuple[str, str], ...] = (
-    (r"\blake\s+build\b", "builds are the orchestrator's; Lake has no job cap on this "
-                          "toolchain, so a slot build takes the whole machine"),
+    (r"\blake\s+build\b", "builds are the orchestrator's; Lake has no job cap, so a slot "
+                          "build takes the whole machine"),
     (r"\blake\s+clean\b", "destroys build state the orchestrator owns"),
     (r"\blake\s+update\b", "moves dependency pins, which are a coupled set (Mathlib / "
                             "PhysLib / REPL / toolchain) the orchestrator owns"),

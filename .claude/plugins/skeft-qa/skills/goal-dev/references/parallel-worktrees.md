@@ -77,31 +77,18 @@ diagnosis time before anyone suspects load.
   first. Then, and only then: `lake build SKEFTHawking.<ThatOneModule>` — a single named module,
   never the bare target. The worker reports that it ran one.
 
-  ⚠️ **THE JOB CAP NO LONGER EXISTS, AND THAT MAKES THIS EXCEPTION MORE DANGEROUS, NOT LESS.**
-  This read "always job-capped (3 slots × 4 of 16 cores…)" via `lake build -j4`. **Lake 5.0.0
-  removed `-j` entirely** — verified 2026-08-13 against the full `lake --help` and
-  `lake help build`: there is no `-j`, `--jobs`, `--threads`, or `-K` key for it, and Lake
-  takes one job per core unconditionally. A single named module is still far cheaper than the
-  bare target, but it is no longer bounded, so grant the exception to ONE slot at a time.
+  ⚠️ **Lake has no job cap.** There is no `-j`, `--jobs`, `--threads`, `-K` key or lakefile
+  field for parallelism, and Lake has no scheduler of its own: it spawns build jobs onto the
+  Lean task-manager pool, sized by `get_lean_num_threads()` — one per logical core by default.
+  A single-module build is far cheaper than the bare target but is still unbounded.
 
-  ⚠️ Deleting the flag as "stale" is the wrong repair and was attempted on 2026-08-13: it
-  silently converts a job-capped command into an uncapped one while reading as a fix.
+  `LEAN_NUM_THREADS` is the only lever, and it is soft, not a `make -j`: a blocked pooled
+  worker raises the ceiling, `Task.Priority.dedicated` bypasses the pool, and Lake does not
+  override it for child processes, so it bounds Lake's pool and each child `lean`'s pool.
+  Measure before relying on it.
 
-  ⚠️ **THE SAME INVARIANT IS ENFORCED UNEVENLY ACROSS THE TWO CLIENTS, AND PARITY IS THE
-  GOAL.** Both Codex and Claude Code run workers against these slots (ADR-008), and
-  "workers run no builds" binds both. Today it is *mechanical* on one side —
-  `.codex/hooks/pre_tool_use_policy.py` returns `deny` for `lake build`, `lake clean`,
-  `lake exe cache get`, `rm -rf lean/.lake`, `git merge|rebase|cherry-pick` and
-  `slotctl build|absorb|supervisor stop` — and *prose in an agent definition* on the other.
-  An invariant that is enforced in one client and merely stated in the other is not a rule,
-  it is a coin flip on which client picked up the work: on 2026-08-13 three Claude workers
-  obeyed the prose and the LEAD misread their compliance as evasion, then edited the
-  instruction. A `PreToolUse(Bash)` guard in this plugin gives the Claude side the same
-  mechanical floor; the harness already distinguishes subagent context, and
-  `harness_web_egress_guard.py` is the fail-closed shape to copy.
-- **Don't run your own full gate while workers are live.** Merge first, then gate, then re-dispatch.
-  If you must gate mid-flight, expect it to take several times its solo cost — that is load, not
-  breakage, and it is not a reason to go looking for a broken cache.
+  **One build at a time, run by the lead, is the stronger guarantee and the primary control.**
+  The exception is a lead grant to a single slot, never a worker's to take.
 
 > **Maintainer caveat (do not regress):** a worker's slot commit depends on `scripts/pre-commit-sync.sh`
 > detecting a worktree (`git rev-parse --git-dir` ≠ `--git-common-dir`, env-resolved so it survives the shared
