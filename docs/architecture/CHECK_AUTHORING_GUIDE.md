@@ -201,6 +201,34 @@ identity — while paying 13.8 s to run every real staleness probe; another filt
 `kind == 'axiom'` and then asserted `kind == 'axiom'`. Before adding an assertion, ask what
 value of the world would make it red.
 
+## 4.5 Name the decider, in writing, before you write the assertion
+
+⛔ **Write down the property the check exists to establish, then write down what your assertion
+actually reads. If those differ, you have keyed on a PROXY.** This is the most frequent defect
+in this suite and it has no detector — a detector would need its own list of which sets are
+hand-rolled and which are derived, and that list would be a proxy for detecting proxies. It is
+prevented at authoring time or not at all.
+
+The three shapes it takes here, each with a live instance:
+
+- **A hand-list standing in for a derived set.** `_graph_fingerprint` named thirteen files as
+  "the canonical inputs that `build_graph_json` consumes". They were not, and filing a finding
+  stopped invalidating the dashboard cache. The derived answer — what the build actually opens —
+  was available the whole time.
+- **A key narrower than what it gates.** The same fingerprint, and later its replacement, which
+  covered opened files but not imported modules, so editing the graph builder stopped
+  invalidating the graph.
+- **Siblings compared to each other instead of to the source of truth.** `bundle_consistency`
+  passes on a false statement carried by three bundles, because it compares bundles to each
+  other and never to the Lean. A check that cannot fail when everything it compares is wrong
+  together is not a check.
+
+The question that catches all three: **if this check passes, what exactly have I learned — and
+is that the thing I set out to establish?** A check keyed on a proxy answers a different
+question than its name claims, and it answers it correctly, which is why review misses it.
+
+---
+
 ## 5. The systemic pattern — the shapes it has actually taken
 
 Independent mechanisms, one shape: **absence of measurement rendered as success.** This
