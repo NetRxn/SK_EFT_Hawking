@@ -282,6 +282,40 @@ theorem dissipative_correction_existence (mat : MaterialParams) (kappa : ℝ)
       · linarith [mat.gamma_1_nonneg]
     exact div_pos (mul_pos hg hkappa) (pow_pos mat.cs_pos 2)
 
+/-- **The universality theorem's correction fields ARE the definitions above.**
+
+    `HawkingUniversality.universalEffectiveTemp` — the dressed temperature
+    `HawkingUniversality.hawking_universality` is stated about — carries
+    `δ_disp = −(π/6)·D²` and `δ_diss = (γ₁+γ₂)·κ/c_s²` as *defined* fields. Under the
+    BEC identification of the EFT cutoff with the inverse healing length, `Λ = 1/ξ`,
+    and with the transport coefficients of `DissipativeCoeffs` and `MaterialParams`
+    identified, those two fields are literally `dispersiveCorrection` and
+    `dissipativeCorrection` evaluated at the horizon's surface gravity.
+
+    This is the link the universality theorem cannot state itself: `KappaScaling`
+    imports `HawkingUniversality`, so the correction definitions are not in scope
+    there. It is the same identification `dispersive_correction_bound` uses, and it
+    is what makes `hawking_universality` a statement about the project's corrections
+    rather than about two ad-hoc expressions. -/
+theorem universalEffectiveTemp_corrections_eq (mat : MaterialParams)
+    (mdr : HawkingUniversality.ModifiedDispersion) (coeffs : DissipativeCoeffs)
+    {bg : FluidBackground} (h : SonicHorizon bg)
+    (hcs : mdr.cs = mat.cs) (hcut : mdr.cutoff = 1 / mat.xi)
+    (hg1 : coeffs.gamma_1 = mat.gamma_1) (hg2 : coeffs.gamma_2 = mat.gamma_2) :
+    (HawkingUniversality.universalEffectiveTemp mdr coeffs h).delta_disp
+        = dispersiveCorrection mat h.surfaceGravity ∧
+      (HawkingUniversality.universalEffectiveTemp mdr coeffs h).delta_diss
+        = dissipativeCorrection mat h.surfaceGravity := by
+  constructor
+  · show -(π / 6) * HawkingUniversality.adiabaticityParam h.surfaceGravity mdr.cs mdr.cutoff ^ 2
+        = dispersiveCorrection mat h.surfaceGravity
+    rw [hcs, hcut]
+    exact ((dispersive_correction_bound mat h.surfaceGravity h.surfaceGravity_pos).1).symm
+  · show (coeffs.gamma_1 + coeffs.gamma_2) * h.surfaceGravity / mdr.cs ^ 2
+        = dissipativeCorrection mat h.surfaceGravity
+    rw [hcs, hg1, hg2]
+    rfl
+
 /-!
 ## Crossover Theorem
 
