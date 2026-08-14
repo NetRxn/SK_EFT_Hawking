@@ -166,13 +166,46 @@
   claim is false today, and nothing checks it.
 - **Expected:** either the key covers every input the build reads, or the cache does not
   claim to.
-- **Fix:** ⚠️ **Do not simply append two globs.** That repeats the mistake one input later
-  and re-arms the same silent failure. The measured constraint is that a complete key is
-  unaffordable — the graph's full input surface is 254,887 files / 16.5 GB — so the honest
-  options are (a) derive the key from the read-set the build actually opens, plus the
-  directory listings of everything it globs, so a new input enters the key by construction,
-  or (b) keep a hand-listed key and add a guard that FAILS when `build_graph_json` reads a
-  path the fingerprint does not cover. Either way the invariant must be asserted by a test,
-  not by a docstring. Pending design; not attempted in this wave.
-- **Verify:** a test that writes a finding into `papers/AutomatedReviews/`, calls
-  `get_cached_graph()` twice around it, and requires the second call to reflect the change.
+- ⚠️ **CORRECTED — "a complete key is unaffordable" was measuring the wrong set.** This
+  finding first deferred the fix on the grounds that the graph's input surface is
+  254,887 files / 16.5 GB. That is the surface a build *could* read (`papers/**` and
+  `docs/**` include PDFs, figures and build artifacts). The set it *actually opens* is
+  **2,945 files / 127.5 MB across 236 directories** — 5.1 ms to `stat`, 9.5 ms to list,
+  ~15 ms total against the 7.1 s rebuild it gates. Option (a) was affordable all along;
+  the deferral rested on a figure that answered a different question.
+- **Fix (shipped):** the key is derived from the read set the last build actually opened,
+  captured through a `sys.addaudithook` `open` recorder, plus the sorted directory listing
+  of every **ancestor** directory of every read file. A newly-read input therefore enters
+  the key by construction, and nobody has to remember to add it.
+  - ⚠️ **Ancestors, not immediate parents — this was a real bug, caught by its own test
+    before shipping.** Findings live in `papers/AutomatedReviews/<date>/*.md`, so the
+    immediate parents are the `<date>` directories and `papers/AutomatedReviews/` itself
+    went unwatched. Creating a new `<date>/` — which is exactly what filing a finding does,
+    the single most common way this corpus changes — invalidated nothing.
+  - **Fail-safe:** with no read set (before the first build, or after a build whose reads
+    could not be recorded), the key contains a fresh `object()` and can never match, so the
+    cache always rebuilds. It must not be `None`: `_GRAPH_CACHE['fingerprint']` is itself
+    initialised to `None`, and the two would compare equal — turning a cold cache into a hit.
+  - **Mid-build writes discard the read set.** The key is computed after the build, so a file
+    written during it would otherwise be baked in as "already accounted for" and the next
+    request would serve a graph built from pre-change data. Not hypothetical: this repo's
+    seeded-mutation tests write production artifacts, and a test run concurrent with a build
+    was observed doing so during this very wave.
+  - `st_mtime_ns` + size rather than content hashing: hashing the same read set is 116 ms
+    versus 5.1 ms and buys only same-nanosecond-same-size edits. Left as a one-line change.
+- **Measured result:** cold build 7.4 s, warm hit **16 ms**. Editing a review document,
+  editing the ledger, creating a new dated directory and deleting one all now rebuild;
+  an unchanged tree still serves the cached object.
+- **Verify:** `uv run python -m pytest -q tests/test_dashboard_graph_cache.py`
+
+  Nine guards, mutation-proven twice against the production module: reverting to
+  immediate-parent-only directories turns 3 red, and reintroducing the original blind spot
+  (dropping the review corpus and ledger from the watched set) turns 6 red. Both include the
+  end-to-end seam test, which requires the graph the dashboard **serves** to contain a
+  newly-filed finding rather than merely that a fingerprint moved.
+
+  ⚠️ Mutation testing also caught a **vacuity bug in these tests themselves**: the
+  new-directory test originally compared against a module-scoped baseline, and because
+  earlier tests in the file touch files, the key had already moved for unrelated reasons —
+  so it stayed green under the very mutation it existed to catch. Each invalidation test now
+  captures its baseline immediately before its own change.

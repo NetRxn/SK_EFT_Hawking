@@ -22,6 +22,8 @@ import os
 import re
 import sys
 import threading
+import time
+from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -204,40 +206,165 @@ def _suppress_lake_refresh() -> bool:
     return needs_refresh
 
 
-def _graph_fingerprint() -> tuple:
-    """Cheap staleness signal for the in-memory graph cache.
+#: The read set captured from the last completed build: every file the build
+#: actually opened, plus every directory it opened a file from.
+#:
+#: ⚠️ THIS REPLACED A HAND-LISTED KEY THAT WAS DEMONSTRABLY WRONG (2026-08-14).
+#: The previous `_graph_fingerprint` stat'd 13 named files plus two globs and
+#: its docstring called them "the canonical inputs that build_graph_json
+#: consumes". They were not. `papers/AutomatedReviews/**/*.md` and
+#: `docs/review_finding_supersessions.json` were in neither, yet the graph
+#: embeds a ReviewFinding node per finding and applies the ledger's status
+#: overrides — so filing a finding, or closing one through `close_finding.py`,
+#: did NOT invalidate this cache. Measured against the live function: touching
+#: the review corpus moved the fingerprint `False`; touching the ledger, `False`.
+#: The dashboard served the pre-change finding set until some unrelated keyed
+#: input happened to move.
+#:
+#: The lesson generalises past this one bug: a hand-listed key asserts a PROXY
+#: for the decider (what the build actually reads), so it is correct only until
+#: someone adds an input — and then it fails silently, in the green direction.
+#: Appending two globs would have fixed today's instance and re-armed the same
+#: failure for tomorrow's. The read set is the decider itself, so a newly-read
+#: input enters the key by construction and nobody has to remember.
+#:
+#: ⚠️ Deriving the watched DIRECTORIES from the read set is what covers files
+#: that do not exist yet. A newly filed finding was in no previous read set, so
+#: paths alone would miss it; its parent directory's listing changes, which is
+#: how creation and deletion are caught.
+#:
+#: Measured: 2,945 files read (127.5 MB) across 236 directories — 5.1 ms to stat
+#: and 9.5 ms to list, ~15 ms total against the 7.1 s rebuild it gates. Content
+#: hashing the same set is 116 ms and buys only same-nanosecond-same-size edits;
+#: `st_mtime_ns` is nanosecond-resolution, so that is left as a one-line change
+#: rather than a per-request cost.
+_READ_SET: dict = {'paths': None, 'dirs': None}
+_RECORDED_READS: set | None = None
+_AUDIT_HOOK_INSTALLED = False
 
-    Stat the canonical inputs that build_graph_json consumes and
-    return (path, mtime_ns) pairs. Any change here invalidates the
-    cache on next request. Cost: ~0.5ms — dominated by stat() calls.
+
+def _install_read_audit_hook_once() -> None:
+    """Audit hooks cannot be removed, so install exactly one, lazily.
+
+    The hook is inert unless `_RECORDED_READS` is a set, which only
+    `_record_build_reads()` makes true — outside a recorded build it costs one
+    module-global load and an `is not None` test per `open`.
     """
-    lean_dir = PROJECT_ROOT / "lean" / "SKEFTHawking"
-    targets: list[Path] = [
-        PROJECT_ROOT / "lean" / "lean_deps.json",
-        PROJECT_ROOT / "src" / "core" / "constants.py",
-        PROJECT_ROOT / "src" / "core" / "provenance.py",
-        PROJECT_ROOT / "src" / "core" / "formulas.py",
-        PROJECT_ROOT / "src" / "core" / "visualizations.py",
-        PROJECT_ROOT / "src" / "core" / "citations.py",
-        PROJECT_ROOT / "src" / "core" / "aristotle_interface.py",
-        PROJECT_ROOT / "scripts" / "build_graph.py",
-        PROJECT_ROOT / "scripts" / "readiness_gates.py",
-        PROJECT_ROOT / "scripts" / "verification_state.py",
-        PROJECT_ROOT / "scripts" / "last_modified.py",
-        PROJECT_ROOT / "docs" / "counts.json",
-        # Wave 10c — any verification event flips the cache so next
-        # request re-applies the change-bus + freshness propagation.
-        PROJECT_ROOT / "docs" / "verification_log.jsonl",
-    ]
-    # Papers + Lean sources are globbed; any file touched trips the cache
-    targets.extend(sorted((PROJECT_ROOT / "papers").glob("paper*_*/paper_draft.tex")))
-    targets.extend(sorted(lean_dir.glob("*.lean")))
-    fp = []
-    for p in targets:
+    global _AUDIT_HOOK_INSTALLED
+    if _AUDIT_HOOK_INSTALLED:
+        return
+
+    def _hook(event: str, args) -> None:
+        if event == 'open' and _RECORDED_READS is not None:
+            try:
+                target = args[0]
+                if isinstance(target, (str, bytes, Path)):
+                    _RECORDED_READS.add(str(target))
+            except Exception:  # noqa: BLE001 — an audit hook must never raise
+                pass
+
+    sys.addaudithook(_hook)
+    _AUDIT_HOOK_INSTALLED = True
+
+
+@contextmanager
+def _record_build_reads():
+    """Capture the read set of one build into `_READ_SET`.
+
+    On any failure the read set is left as `None`, which `_graph_fingerprint`
+    turns into a key that never matches — an unrecordable build yields a cache
+    that always rebuilds. Every error path here is slower, never staler.
+    """
+    global _RECORDED_READS
+    _install_read_audit_hook_once()
+    started_ns = time.time_ns()
+    _RECORDED_READS = set()
+    try:
+        yield
+    finally:
+        captured, _RECORDED_READS = _RECORDED_READS, None
+        paths, dirs = [], set()
+        changed_mid_build = False
+        for raw in captured or ():
+            try:
+                p = Path(raw)
+                st = p.stat()
+            except (OSError, ValueError):
+                continue
+            if not p.is_file():
+                continue
+            # ⚠️ A FILE THAT CHANGED WHILE WE WERE BUILDING POISONS THE WHOLE
+            # KEY. The fingerprint is computed after the build, so a mid-build
+            # write would be baked in as "already accounted for" and the next
+            # request would serve a graph built from the pre-change data — the
+            # exact silent staleness this rewrite exists to remove. Discarding
+            # the read set forces a rebuild instead. Not hypothetical: this
+            # repo's seeded-mutation tests write production artifacts, and a
+            # test run concurrent with a build was observed doing so.
+            if st.st_mtime_ns > started_ns:
+                changed_mid_build = True
+                break
+            paths.append(str(p))
+            # ⚠️ EVERY ANCESTOR, NOT JUST THE IMMEDIATE PARENT — and this was a
+            # real bug caught by its own test before shipping. Findings live in
+            # `papers/AutomatedReviews/<date>/*.md`, so the immediate parents
+            # are the `<date>` directories; the build opens no file directly in
+            # `papers/AutomatedReviews/`, so that directory went unwatched and
+            # creating a NEW `<date>/` — i.e. filing a finding, the single most
+            # common way this corpus changes — invalidated nothing. Watching the
+            # ancestors makes the appearance of a new subdirectory move the key.
+            try:
+                inside = p.resolve().relative_to(PROJECT_ROOT.resolve())
+            except (ValueError, OSError):
+                # Outside the repo (.venv, stdlib): watch the immediate parent
+                # only. Walking those ancestors to `/` would add unrelated
+                # directories whose churn would evict the cache constantly.
+                dirs.add(str(p.parent))
+                continue
+            node = PROJECT_ROOT.resolve()
+            dirs.add(str(node))
+            for part in inside.parts[:-1]:
+                node = node / part
+                dirs.add(str(node))
+        if captured and not changed_mid_build:
+            _READ_SET['paths'] = tuple(sorted(paths))
+            _READ_SET['dirs'] = tuple(sorted(dirs))
+        else:
+            _READ_SET['paths'] = None
+            _READ_SET['dirs'] = None
+
+
+def _graph_fingerprint() -> tuple:
+    """Staleness signal derived from what the last build actually read.
+
+    `(path, mtime_ns, size)` for every file the build opened, plus the sorted
+    directory listing of every directory it opened a file from. Cost ~15 ms.
+
+    Returns a key containing a fresh `object()` — which can never equal a
+    previously stored key — when no read set is available. That is the
+    fail-safe: before the first build, and after any build whose reads could
+    not be recorded or that raced a concurrent write, the cache always misses.
+    A plain `None` would be wrong here, because `_GRAPH_CACHE['fingerprint']`
+    is itself initialised to `None` and the two would compare equal, turning
+    the empty cache into a hit.
+    """
+    paths = _READ_SET['paths']
+    if not paths:
+        return ('<read-set-unavailable>', object())
+    fp: list = []
+    for p in paths:
         try:
-            fp.append((str(p), p.stat().st_mtime_ns))
-        except FileNotFoundError:
-            fp.append((str(p), 0))
+            st = os.stat(p)
+            fp.append((p, st.st_mtime_ns, st.st_size))
+        except OSError:
+            # Absence must hash differently from an empty file, so that deleting
+            # a previously-read input invalidates rather than silently matching.
+            fp.append((p, 0, -1))
+    for d in _READ_SET['dirs']:
+        try:
+            fp.append((d, tuple(sorted(os.listdir(d)))))
+        except OSError:
+            fp.append((d, ()))
     return tuple(fp)
 
 
@@ -298,11 +425,19 @@ def get_cached_graph(*, force_rebuild: bool = False, sync_pg: bool | None = None
 
         # Build outside the critical section would be better, but
         # build_graph_json isn't thread-safe against itself (it mutates
-        # module-scoped `_LEAN_AMBIGUITY_SEEN` and `_LEAN_SHORT_INDEX`).
-        # Holding the lock across the ~15s rebuild means requests pile
-        # up serialized — acceptable because this only happens on
+        # module-scoped `_LEAN_AMBIGUITY_SEEN`, `_LEAN_SHORT_INDEX` and
+        # `_BUILD_MEMO`). Holding the lock across the rebuild means requests
+        # pile up serialized — acceptable because this only happens on
         # staleness, not per request.
-        graph = build_graph_json(sync_pg=False)
+        with _record_build_reads():
+            graph = build_graph_json(sync_pg=False)
+        # ⚠️ RECOMPUTED FROM THE READ SET WE JUST CAPTURED, not the `fp` taken
+        # before the build. On the first build there is no read set yet, so the
+        # pre-build `fp` is the never-matching sentinel and storing it would
+        # make the cache miss forever. `_record_build_reads` discards the read
+        # set if any file changed mid-build, which keeps this recomputation
+        # from baking in a change the graph does not actually contain.
+        fp = _graph_fingerprint()
         _GRAPH_CACHE['graph'] = graph
         _GRAPH_CACHE['fingerprint'] = fp
         _GRAPH_CACHE['built_at'] = datetime.now(timezone.utc).isoformat(timespec='seconds')

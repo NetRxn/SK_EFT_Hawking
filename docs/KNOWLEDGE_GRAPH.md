@@ -49,6 +49,12 @@ The graph is assembled at several sites that each derive from scratch — the pr
 
 ⛔ **The memo lives only for the dynamic extent of one `build_graph_json()` call, and that boundary is the whole safety argument — do not widen it.** Outside a build every extractor computes normally, so a direct caller such as `bundle_readiness.load_findings_by_paper` always reads live state. A cache that outlived a build would answer a post-seeding read from a pre-seeding snapshot, which would silently defeat the seeded-mutation tests that make this repo's non-vacuity claims worth anything. Build-scoping does not solve cache invalidation — it removes the problem, because nothing on disk can change while one build is on the stack. Extending it to a cross-build cache requires a key over everything the graph reads, and that surface measured 254,887 files / 16.5 GB. Guarded by `tests/test_build_graph_memo.py`.
 
+### Dashboard Graph Cache — the staleness key
+
+`provenance_dashboard` serves `/api/graph*` from an in-process cache invalidated by `_graph_fingerprint()`. **The key is derived from the read set the last build actually opened** — every file, captured through an `open` audit hook — plus the sorted listing of every ancestor directory of those files. Cost ~15 ms against a 7.1 s rebuild.
+
+⛔ **Never replace this with a hand-listed set of inputs.** It was one until 2026-08-14, and it was wrong: `papers/AutomatedReviews/**/*.md` and `docs/review_finding_supersessions.json` were absent, so filing a finding — or closing one through `close_finding.py` — did not invalidate the cache and the dashboard served the pre-change finding set. A hand-listed key asserts a proxy for what the build reads, so it is correct only until someone adds an input, and then it fails silently in the green direction. The ancestor directories are what cover files that do not exist yet: a newly filed finding is in no previous read set, and its new dated directory changes a watched listing. Guarded by `tests/test_dashboard_graph_cache.py`.
+
 ### PG+AGE Parallel Write
 
 `build_graph.py` writes all nodes and edges to the `sk_eft` graph in PG+AGE (port 5433) alongside JSON extraction. This is best-effort — if PG is unavailable, JSON extraction still works. PG provides Cypher-based traversal for dependency tree queries in the Proof Architecture tab.
