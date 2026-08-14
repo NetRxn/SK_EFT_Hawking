@@ -7383,6 +7383,20 @@
         "exit_code": 0,
         "run_at": "2026-08-14"
       }
+    },
+    {
+      "finding_id": "review:2026-08-14-suite-runtime:infra:1",
+      "status": "fixed",
+      "evidence": "Root cause re-measured: the cost is build_graph_json() (14.4s), not the two functions originally named. Fixed by _BUILD_MEMO, a memo scoped to the dynamic extent of one build_graph_json() call, so each argument-free extractor is derived once per build instead of 4-6 times. Measured 14.41s -> 7.09s with the graph byte-identical across 50,278 nodes / 16,300 links; the seven affected test files 419.88s -> 263.01s over 267 tests. Guarded by tests/test_build_graph_memo.py, which seeds a real review document into papers/AutomatedReviews/ and requires the next build to see it; mutation-proven both ways against the production module. The originally prescribed cross-consumer cache is withdrawn as unaffordable and unsafe, and the finding corrected in place.",
+      "superseded_by": null,
+      "date": "2026-08-14",
+      "commit": "55f3e5a1",
+      "verified_by": {
+        "command": "uv run python -m pytest -q tests/test_build_graph_memo.py",
+        "declared": "uv run python -m pytest -q tests/test_build_graph_memo.py",
+        "exit_code": 0,
+        "run_at": "2026-08-14"
+      }
     }
   ]
 }

@@ -124,8 +124,10 @@
   ⚠️ The equivalence check must normalise `built_at` / `last_evaluated`: two *unmemoized*
   builds already differ in 704 gate nodes on those timestamps alone, so an un-normalised
   comparison would assert a determinism the code never had.
-- **Verify:** `uv run python -m pytest -q tests/test_build_graph_memo.py` and
-  `uv run python -m pytest -q --durations=20`
+- **Verify:** `uv run python -m pytest -q tests/test_build_graph_memo.py`
+
+  (The runtime itself is re-measured with `uv run python -m pytest -q --durations=20`; that
+  is a measurement, not a pass/fail gate, so it is deliberately not the `Verify:` command.)
 
 ---
 
