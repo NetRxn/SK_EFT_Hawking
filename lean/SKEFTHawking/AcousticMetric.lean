@@ -34,13 +34,14 @@ In the Painlevé-Gullstrand form (natural for the transonic problem):
    in fluctuations π, collect terms, identify with the curved-space
    Klein-Gordon equation.
 
-## sorry Gaps
+## Out of scope
+
+The file contains no `sorry`. The following are deliberately outside the
+statements proved here, not gaps in them:
 
 - PDE well-posedness (existence/uniqueness of solutions to □_g π = 0)
 - Regularity of the background fields (we assume smoothness)
 - The non-relativistic limit relating P(X) to Gross-Pitaevskii
-
-These gaps are documented for potential Aristotle filling.
 
 ## References
 
@@ -204,6 +205,91 @@ structure PhononEOM (eos : EquationOfState) (bg : FluidBackground) where
     coeffMatrix x = bg.density x • acousticMetricInv (bg.velocity x) (bg.soundSpeed x) (bg.density x)
     -- Note: √|det g| = ρ, which absorbs into the inverse metric prefactor
 
+/-- The canonical phonon EOM of a fluid background: coefficient matrix
+    `A = ρ · g^{μν}` for the acoustic metric.
+
+    This inhabits `PhononEOM`, so `acoustic_metric_theorem` — which quantifies
+    over a `PhononEOM` — is not vacuously quantified over an empty structure.
+    Inhabitation was the *entire* content of the pre-2026-08-13
+    `acoustic_metric_theorem`; it is kept here, as the auxiliary fact it is. -/
+noncomputable def PhononEOM.acoustic (eos : EquationOfState) (bg : FluidBackground) :
+    PhononEOM eos bg where
+  coeffMatrix x :=
+    bg.density x • acousticMetricInv (bg.velocity x) (bg.soundSpeed x) (bg.density x)
+  coeffMatrix_eq_metric _ := rfl
+
+/-- The divergence-form phonon wave operator built from an EOM coefficient
+    matrix `A_{μν}(x)`:
+
+      D_A π = ∂_t[A₀₀ ∂_t π + A₀₁ ∂_x π] + ∂_x[A₁₀ ∂_t π + A₁₁ ∂_x π]
+
+    This is exactly the left-hand side of the Euler-Lagrange equation quoted
+    in the `PhononEOM` docstring, written with no reference to any metric. -/
+noncomputable def eomOperator (A : ℝ → Matrix (Fin 2) (Fin 2) ℝ)
+    (pi_field : Spacetime1D → ℝ) : Spacetime1D → ℝ :=
+  fun p =>
+    partialT (fun q => A q.x 0 0 * partialT pi_field q + A q.x 0 1 * partialX pi_field q) p
+    + partialX (fun q => A q.x 1 0 * partialT pi_field q + A q.x 1 1 * partialX pi_field q) p
+
+/-- The four entries of a `PhononEOM` coefficient matrix, in fluid variables.
+
+    `A = ρ · g^{μν}` for the acoustic metric, and the density prefactor cancels
+    the `1/ρ` in `acousticMetricInv`, leaving the Painlevé-Gullstrand fluxes. -/
+theorem PhononEOM.coeffMatrix_entries {eos : EquationOfState} {bg : FluidBackground}
+    (eom : PhononEOM eos bg) (x : ℝ) :
+    eom.coeffMatrix x 0 0 = -1 / bg.soundSpeed x ∧
+    eom.coeffMatrix x 0 1 = -bg.velocity x / bg.soundSpeed x ∧
+    eom.coeffMatrix x 1 0 = -bg.velocity x / bg.soundSpeed x ∧
+    eom.coeffMatrix x 1 1 =
+      (bg.soundSpeed x ^ 2 - bg.velocity x ^ 2) / bg.soundSpeed x := by
+  have hr := (bg.density_pos x).ne'
+  have hc := (bg.soundSpeed_pos x).ne'
+  rw [eom.coeffMatrix_eq_metric x]
+  refine ⟨?_, ?_, ?_, ?_⟩ <;>
+    simp [acousticMetricInv, Matrix.smul_apply] <;> field_simp
+
+/-- The EOM coefficient matrix is the inverse of the acoustic metric, scaled by
+    the density: `A · g = ρ · I`. This is the "read the metric off the quadratic
+    expansion and match it against `acousticMetric`" step, stated as an identity
+    against `acousticMetric` itself rather than against its inverse. -/
+theorem PhononEOM.coeffMatrix_mul_acousticMetric {eos : EquationOfState}
+    {bg : FluidBackground} (eom : PhononEOM eos bg) (x : ℝ) :
+    eom.coeffMatrix x * acousticMetric (bg.velocity x) (bg.soundSpeed x) (bg.density x)
+      = bg.density x • (1 : Matrix (Fin 2) (Fin 2) ℝ) := by
+  rw [eom.coeffMatrix_eq_metric x, Matrix.smul_mul,
+    mul_eq_one_comm.mp
+      (acousticMetric_inv_correct _ _ _ (bg.soundSpeed_pos x).ne' (bg.density_pos x).ne')]
+
+/-- The divergence-form phonon wave operator is exactly `ρ` times the covariant
+    d'Alembertian of the acoustic metric. -/
+theorem eomOperator_eq_density_mul_dAlembertian {eos : EquationOfState}
+    {bg : FluidBackground} (eom : PhononEOM eos bg) (pi_field : Spacetime1D → ℝ)
+    (p : Spacetime1D) :
+    eomOperator eom.coeffMatrix pi_field p
+      = bg.density p.x * dAlembertian bg.velocity bg.soundSpeed bg.density pi_field p := by
+  have h0 : (fun q : Spacetime1D =>
+        eom.coeffMatrix q.x 0 0 * partialT pi_field q
+          + eom.coeffMatrix q.x 0 1 * partialX pi_field q)
+      = fun q : Spacetime1D =>
+        -1 / bg.soundSpeed q.x * partialT pi_field q
+          + -bg.velocity q.x / bg.soundSpeed q.x * partialX pi_field q := by
+    funext q
+    obtain ⟨e00, e01, -, -⟩ := eom.coeffMatrix_entries q.x
+    rw [e00, e01]
+  have h1 : (fun q : Spacetime1D =>
+        eom.coeffMatrix q.x 1 0 * partialT pi_field q
+          + eom.coeffMatrix q.x 1 1 * partialX pi_field q)
+      = fun q : Spacetime1D =>
+        -bg.velocity q.x / bg.soundSpeed q.x * partialT pi_field q
+          + (bg.soundSpeed q.x ^ 2 - bg.velocity q.x ^ 2) / bg.soundSpeed q.x
+              * partialX pi_field q := by
+    funext q
+    obtain ⟨-, -, e10, e11⟩ := eom.coeffMatrix_entries q.x
+    rw [e10, e11]
+  have hrho := (bg.density_pos p.x).ne'
+  simp only [eomOperator, dAlembertian, h0, h1]
+  field_simp
+
 /-!
 ## The Main Theorem: Phonon EOM ↔ Klein-Gordon on Acoustic Metric
 
@@ -213,28 +299,68 @@ This is the central result of Structure A.
 /-- **Acoustic Metric Theorem (Unruh 1981, Son 2002).**
 
     For a barotropic, irrotational, inviscid fluid described by the EFT
-    L = P(X), the linearized phonon equation of motion is:
+    L = P(X), the linearized phonon equation of motion is the covariant
+    Klein-Gordon equation `□_g π = 0` on the acoustic metric.
 
-      □_g π = 0
+    Two conjuncts, both equalities:
 
-    where g_{μν} is the acoustic metric in Painlevé-Gullstrand form,
-    determined algebraically by (v(x), c_s(x), ρ(x)).
+    1. **The metric matches `acousticMetric`.** The coefficient matrix
+       `A_{μν}(x)` of the phonon EOM satisfies `A · g = ρ · I` against the
+       Painlevé-Gullstrand acoustic metric `g` of `acousticMetric`. So `A` is
+       `ρ` times the inverse acoustic metric — the metric is *read off* the
+       EOM, not assumed.
+    2. **The EOM is the wave operator.** The divergence-form phonon operator
+       `∂_μ[A^{μν} ∂_ν π]` (`eomOperator`) equals `ρ` times the covariant
+       d'Alembertian `□_g π` (`dAlembertian`), pointwise on 1+1D spacetime.
 
-    **Proof strategy:** Expand P(X + δX) to quadratic order in the
-    fluctuation π. The Euler-Lagrange equation for π gives a second-order
-    PDE. Rewrite this PDE as the covariant d'Alembertian □_g π and read
-    off the metric components. Verify they match `acousticMetric`.
+    Since `ρ > 0` everywhere (`FluidBackground.density_pos`), conjunct 2 gives
+    the equation-level statement `phonon_eom_iff_klein_gordon`: a field solves
+    the phonon EOM at a point iff `□_g π = 0` there.
 
-    The algebraic identity (matching coefficients) is fully formalizable.
-    PDE well-posedness is left as `sorry`. -/
+    The `PhononEOM` hypothesis is satisfiable for every background —
+    `PhononEOM.acoustic` builds one — so this is not quantification over an
+    empty structure.
+
+    **Scope.** This is the algebraic identity — the coefficient matching that
+    the Unruh/Son derivation performs by hand. PDE well-posedness (existence
+    and uniqueness of solutions of `□_g π = 0`), regularity of the background,
+    and the non-relativistic P(X) ↔ Gross-Pitaevskii limit are outside the
+    statement; see the module header. No part of this file uses `sorry`. -/
 theorem acoustic_metric_theorem
-    (eos : EquationOfState) (bg : FluidBackground) :
-    ∃ (_ : PhononEOM eos bg), True := by
-  -- Proof by Aristotle: construct PhononEOM with coefficient matrix ρ(x)·g⁻¹_{μν}
-  -- The phonon wave operator in the EFT expansion IS the inverse acoustic metric
-  -- scaled by density, so the proof obligation reduces to rfl.
-  exact ⟨⟨fun x => bg.density x • acousticMetricInv (bg.velocity x) (bg.soundSpeed x) (bg.density x),
-    fun _ => rfl⟩, trivial⟩
+    (eos : EquationOfState) (bg : FluidBackground) (eom : PhononEOM eos bg)
+    (pi_field : Spacetime1D → ℝ) :
+    (∀ x : ℝ, eom.coeffMatrix x *
+        acousticMetric (bg.velocity x) (bg.soundSpeed x) (bg.density x)
+      = bg.density x • (1 : Matrix (Fin 2) (Fin 2) ℝ)) ∧
+    (∀ p : Spacetime1D, eomOperator eom.coeffMatrix pi_field p
+      = bg.density p.x * dAlembertian bg.velocity bg.soundSpeed bg.density pi_field p) :=
+  ⟨fun x => eom.coeffMatrix_mul_acousticMetric x,
+   fun p => eomOperator_eq_density_mul_dAlembertian eom pi_field p⟩
+
+/-- **The phonon EOM is the acoustic Klein-Gordon equation.**
+
+    A phonon field solves the divergence-form EOM at a point exactly when the
+    covariant d'Alembertian of the acoustic metric annihilates it there. This
+    is `acoustic_metric_theorem`'s second conjunct divided by `ρ > 0`. -/
+theorem phonon_eom_iff_klein_gordon {eos : EquationOfState} {bg : FluidBackground}
+    (eom : PhononEOM eos bg) (pi_field : Spacetime1D → ℝ) (p : Spacetime1D) :
+    eomOperator eom.coeffMatrix pi_field p = 0 ↔
+      dAlembertian bg.velocity bg.soundSpeed bg.density pi_field p = 0 := by
+  rw [eomOperator_eq_density_mul_dAlembertian eom pi_field p,
+    mul_eq_zero, or_iff_right (bg.density_pos p.x).ne']
+
+/-- **Hypothesis-free form.** Every fluid background carries the canonical
+    phonon EOM `PhononEOM.acoustic`, and a phonon field solves it exactly when
+    the acoustic d'Alembertian annihilates the field.
+
+    This is the honest replacement for the pre-2026-08-13 statement
+    `∃ (_ : PhononEOM eos bg), True`: same binders, but the conclusion is the
+    wave equation rather than `True`. -/
+theorem acoustic_metric_theorem_canonical (eos : EquationOfState)
+    (bg : FluidBackground) (pi_field : Spacetime1D → ℝ) (p : Spacetime1D) :
+    eomOperator (PhononEOM.acoustic eos bg).coeffMatrix pi_field p = 0 ↔
+      dAlembertian bg.velocity bg.soundSpeed bg.density pi_field p = 0 :=
+  phonon_eom_iff_klein_gordon (PhononEOM.acoustic eos bg) pi_field p
 
 /-- The acoustic metric has Lorentzian signature: one negative and one
     positive eigenvalue. This ensures the phonon EOM is hyperbolic.

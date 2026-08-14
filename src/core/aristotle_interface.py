@@ -93,7 +93,11 @@ SORRY_GAPS: list[SorryGap] = [
         priority=2,
         description="Phonon EOM from L=P(X) equals □_g π = 0 on acoustic metric",
         strategy_hint="Expand P(X) to quadratic order, compute Euler-Lagrange, match coefficients",
-        filled=True,  # Filled by Aristotle run a87f425a (2026-03-23)
+        # Aristotle run a87f425a (2026-03-23) closed the WEAK statement
+        # `∃ (_ : PhononEOM eos bg), True`. Restated and re-proved in-repo
+        # 2026-08-13 (I1 finding 1) as the coefficient-matching equalities the
+        # description names; ARISTOTLE_THEOREMS now records it as 'manual'.
+        filled=True,
     ),
     SorryGap(
         module="SKEFTHawking.AcousticMetric",

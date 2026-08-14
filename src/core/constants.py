@@ -970,7 +970,7 @@ COLORS = {
 # Maps Aristotle-proved theorems to their run IDs.
 #
 # Verification breakdown (1379 theorems (1304 substantive + 75 placeholder), 1 axiom, 97 Lean modules):
-#   - 322 tracked in ARISTOTLE_THEOREMS registry (319 machine + 3 manual, listed below with run IDs)
+#   - 322 tracked in ARISTOTLE_THEOREMS registry (318 machine + 4 manual, listed below with run IDs)
 #   - 872 proved manually in Lean (verified by `lake build`)
 #   - 1 axiom
 #   - 28 sorry
@@ -986,7 +986,12 @@ ARISTOTLE_THEOREMS = {
     'acousticMetric_det': '082e6776',
     'acousticMetric_inv_correct': '082e6776',
     'acoustic_metric_lorentzian': '082e6776',
-    'acoustic_metric_theorem': 'a87f425a',
+    # 2026-08-13: WAS run 'a87f425a'. That run proved the OLD statement
+    # `∃ (_ : PhononEOM eos bg), True`. The theorem was restated (I1 finding 1)
+    # as the two equalities its docstring promised and re-proved in-repo, so
+    # attributing the CURRENT statement to that run would be false provenance.
+    # Reverting to a machine run requires re-submitting the new statement.
+    'acoustic_metric_theorem': 'manual',
     'soundSpeed_from_eos': '88cf2000',
     # Phase 1 — SKDoubling.lean (6)
     'firstOrder_positivity': '082e6776',
@@ -2603,20 +2608,12 @@ PLACEHOLDER_THEOREMS: dict[str, dict[str, str]] = {
         'resolution': 'A COUNT theorem that counts nothing. State the cardinality equation '
                       'against the defined simple-object indexing type',
     },
-    'acoustic_metric_theorem': {
-        'category': 'content',
-        'module': 'AcousticMetric',
-        'lean_name': 'acoustic_metric_theorem',
-        'claim': '`∃ (_ : PhononEOM eos bg), True` — i.e. `Nonempty (PhononEOM eos bg)`, the '
-                 'inhabitation of the phonon-EOM structure for a given background',
-        'resolution': '⚠️ REGISTERED IN ARISTOTLE_THEOREMS and named the central result of '
-                      'Structure A, so this entry is the most consequential in the registry. '
-                      'Its docstring promises the covariant wave equation `□_g π = 0` with the '
-                      'metric read off and matched against `acousticMetric`; the statement '
-                      'delivers only that the structure is inhabited, which the proof '
-                      'discharges by constructing one. Strengthen to the equation the '
-                      'docstring states, or correct the docstring and the Aristotle registration.',
-    },
+    # REMEDIATED 2026-08-13 — `acoustic_metric_theorem` (AcousticMetric). Was
+    # `∃ (_ : PhononEOM eos bg), True` (inhabitation only). Strengthened to the
+    # two equalities its docstring promised: `A · g = ρ · I` against
+    # `acousticMetric`, and `eomOperator = ρ · dAlembertian`; the corollary
+    # `phonon_eom_iff_klein_gordon` carries `□_g π = 0`. Entry removed, not
+    # renamed — I1 finding 1, 2026-08-13-statement-substance.
 }
 
 # Count of content placeholders (inflates theorem count if not excluded)

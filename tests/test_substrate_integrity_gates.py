@@ -71,8 +71,15 @@ def test_placeholder_registry_total_matches_constant():
     declarations the previous method could not see, as it did here. It is NOT
     admissible for a newly-authored placeholder: those still hard-fail
     `vacuous_statement_audit`, which is the ratchet that closes the generator.
+
+    ⬇️ 39 → 38 on 2026-08-13: `acoustic_metric_theorem` REMEDIATED (I1 finding 1,
+    2026-08-13-statement-substance). Its `∃ (_ : PhononEOM eos bg), True` was
+    replaced by the two equalities its docstring promised — `A · g = ρ · I`
+    against `acousticMetric`, and `eomOperator = ρ · dAlembertian` — so it left
+    the population by being proved, not by being reclassified. A decrement is
+    admissible only that way.
     """
-    assert PLACEHOLDER_TOTAL_COUNT == len(PLACEHOLDER_THEOREMS) == 39
+    assert PLACEHOLDER_TOTAL_COUNT == len(PLACEHOLDER_THEOREMS) == 38
 
 
 def test_every_placeholder_has_lean_name_and_category():
