@@ -1001,9 +1001,9 @@ ARISTOTLE_THEOREMS = {
     'fdr_from_kms_gamma2': '20556034',
     'firstOrder_normalization': 'manual',
     # Phase 1 — HawkingUniversality.lean (3)
-    'dispersive_correction_bound': 'd65e3bba',
-    'dissipative_correction_existence': '657fcd6a',
-    'hawking_universality': '416fb432',
+    'dispersive_correction_bound': 'manual',
+    'dissipative_correction_existence': 'manual',
+    'hawking_universality': 'manual',
 
     # Phase 2 — SecondOrderSK.lean (8)
     'secondOrder_count': 'd61290fd',
@@ -2747,12 +2747,6 @@ EXISTENTIAL_WITNESS_REGISTRY: dict[str, dict[str, str]] = {
                    'quantified body over all k is what makes it substantive.',
         'claims': 'the diatomic crystal has a phononic band gap',
         'proves': 'that, against the defined branches',
-    },
-    'hawking_universality': {
-        'status': 'anchored',
-        'witness': 'teff, EQUATED to the effective-temperature expression.',
-        'claims': 'universality of the Hawking temperature',
-        'proves': 'the equation it states',
     },
     'ucd_unbounded': {
         'status': 'anchored',

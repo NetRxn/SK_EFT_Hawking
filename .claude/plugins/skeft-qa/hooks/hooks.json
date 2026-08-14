@@ -1,5 +1,5 @@
 {
-  "description": "skeft-qa loop-durability + egress hooks (v4.3): SessionStart re-inject (live-anchor) + PreToolUse(AskUserQuestion) guard + SessionEnd marker cleanup + PreCompact durable-channel staging (snapshot + lean regen flag; synchronous, no context injection) (default-inert, fail-open) + PreToolUse(WebSearch|WebFetch) web-egress guard (unconditional, fail-closed).",
+  "description": "skeft-qa loop-durability + egress hooks (v4.3): SessionStart re-inject (live-anchor) + PreToolUse(AskUserQuestion) guard + SessionEnd marker cleanup + PreCompact durable-channel staging (snapshot + lean regen flag; synchronous, no context injection) (default-inert, fail-open) + PreToolUse(WebSearch|WebFetch) web-egress guard (unconditional, fail-closed) + PreToolUse(Bash) worker shell guard (SUBAGENTS ONLY via agent_id; denies build/cache/integration commands for ADR-008 parity with the Codex policy; lead unaffected).",
   "hooks": {
     "PreCompact": [
       {
@@ -52,6 +52,16 @@
             "type": "command",
             "command": "uv run --no-sync python \"${CLAUDE_PLUGIN_ROOT}/scripts/harness_web_egress_guard.py\" || printf '%s' '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"permissionDecision\":\"deny\",\"permissionDecisionReason\":\"[web-egress] guard failed to launch; failing closed.\"}}'",
             "timeout": 15
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run --no-sync python \"${CLAUDE_PLUGIN_ROOT}/scripts/harness_worker_shell_guard.py\" || printf '{}'",
+            "timeout": 10
           }
         ]
       }

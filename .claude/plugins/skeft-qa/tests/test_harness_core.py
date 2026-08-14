@@ -5,6 +5,8 @@ import sys
 import time
 from pathlib import Path
 
+import pytest
+
 SCRIPTS = Path(__file__).resolve().parent.parent / "scripts"
 sys.path.insert(0, str(SCRIPTS))
 import harness_common as hc  # noqa: E402
@@ -446,3 +448,84 @@ def test_payload_points_to_goal_dev(tmp_path):
     so a post-compact loop knows where the dev references live (works for both plugin namespaces)."""
     payload = hc.build_reorientation_payload({"goal": "g"}, tmp_path)
     assert "goal-dev" in payload
+
+
+# --- PreToolUse(Bash) worker shell guard (ADR-008 parity) ---
+
+def _shell_guard():
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "wsg", SCRIPTS / "harness_worker_shell_guard.py")
+    m = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(m)
+    return m
+
+
+def _decided(ev):
+    return json.loads(_shell_guard().decide(ev))
+
+
+@pytest.mark.parametrize("cmd", [
+    "cd lean && lake build",
+    "lake build SKEFTHawking.Foo",          # the narrow exception: a LEAD grant, not a worker's
+    "git status; lake build",               # chained — the prefix must not smuggle it past
+    "lake clean",
+    "lake exe cache get",
+    "rm -rf lean/.lake",
+    "cp -R /tmp/cache lean/.lake",
+    "git merge worker",
+    "git rebase main",
+    "git cherry-pick deadbeef",
+    "python3 scripts/slotctl.py absorb --slot 2",
+])
+def test_a_subagent_is_denied_build_cache_and_integration(cmd):
+    d = _decided({"agent_id": "a1", "tool_input": {"command": cmd}})
+    assert d["hookSpecificOutput"]["permissionDecision"] == "deny", cmd
+
+
+@pytest.mark.parametrize("cmd", [
+    "cd lean && lake build", "git merge worker", "rm -rf lean/.lake"])
+def test_the_LEAD_is_never_affected(cmd):
+    """⚠️ The lead is the party that builds, publishes caches and integrates. A guard that
+    caught the lead would brick the orchestrator on the one command the design requires it to
+    run — and would read as a broken toolchain, not as a policy."""
+    assert _decided({"tool_input": {"command": cmd}}) == {}
+
+
+@pytest.mark.parametrize("cmd", [
+    "git commit -m x", "git status --short", "grep -n foo bar.lean", "git add lean/Foo.lean"])
+def test_a_subagent_keeps_its_normal_editing_and_commit_commands(cmd):
+    assert _decided({"agent_id": "a1", "tool_input": {"command": cmd}}) == {}
+
+
+def test_an_unreadable_command_denies_INSIDE_a_subagent():
+    d = _decided({"agent_id": "a1", "tool_input": {"command": {"not": "a string"}}})
+    assert d["hookSpecificOutput"]["permissionDecision"] == "deny"
+
+
+def test_the_denied_set_matches_the_codex_policy():
+    """⚠️ PARITY IS THE POINT, and it is asserted rather than asserted-in-prose. Both clients
+    drive workers against the same slots; a command denied on one side and allowed on the
+    other makes the invariant depend on which client picked up the work."""
+    codex = SCRIPTS.parents[3] / ".codex" / "hooks" / "pre_tool_use_policy.py"
+    if not codex.is_file():
+        pytest.skip("codex policy not present in this checkout")
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("codex_policy", codex)
+    cp = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(cp)
+    # ⚠️ The corpus is the point. An earlier version hand-listed seven commands and missed
+    # `lake update` — denied by Codex, allowed here — so the two clients enforced different
+    # rules while this test reported parity. Enumerate the shapes, including the ones a
+    # worker plausibly reaches for by habit.
+    for cmd in ("lake build", "lake build SKEFTHawking.Foo", "cd lean && lake build",
+                "lake clean", "lake update", "lake exe cache get",
+                "git merge x", "git rebase x", "git cherry-pick x",
+                "rm -rf lean/.lake", "cp -R /tmp/c lean/.lake"):
+        codex_denies = (cp.decision({"tool_name": "Bash", "tool_input": {"command": cmd}})
+                        ["hookSpecificOutput"]["permissionDecision"] == "deny")
+        ours_denies = (_decided({"agent_id": "a1", "tool_input": {"command": cmd}})
+                       .get("hookSpecificOutput", {}).get("permissionDecision") == "deny")
+        assert codex_denies == ours_denies, (
+            f"{cmd!r}: codex denies={codex_denies}, skeft-qa denies={ours_denies} — the two "
+            f"clients would enforce different rules against the same slots")

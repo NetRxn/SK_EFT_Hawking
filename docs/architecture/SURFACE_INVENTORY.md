@@ -154,7 +154,7 @@ verdict it did not compute — for a `passed` default that is absence rendered a
 success; for a `blocked` default it is a blocker no evidence supports. Guarded by
 `validate.py --check gate_edge_types_are_emitted`.
 
-## Hooks — 6
+## Hooks — 7
 
 | kind | event | matcher | command |
 |---|---|---|---|
@@ -163,6 +163,7 @@ success; for a `blocked` default it is a blocker no evidence supports. Guarded b
 | claude-code | `SessionEnd` | `*` | `uv run --no-sync python "${CLAUDE_PLUGIN_ROOT}/scripts/harness_session_end.py" 2>/dev/null || true` |
 | claude-code | `PreToolUse` | `AskUserQuestion` | `uv run --no-sync python "${CLAUDE_PLUGIN_ROOT}/scripts/harness_question_guard.py" 2>/dev/null || true` |
 | claude-code | `PreToolUse` | `WebSearch|WebFetch` | `uv run --no-sync python "${CLAUDE_PLUGIN_ROOT}/scripts/harness_web_egress_guard.py" || printf '%s' '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionR` |
+| claude-code | `PreToolUse` | `Bash` | `uv run --no-sync python "${CLAUDE_PLUGIN_ROOT}/scripts/harness_worker_shell_guard.py" || printf '{}'` |
 | git | `pre-commit` | `-` | `.git/hooks/pre-commit` |
 
 ## Agents — 10
@@ -201,7 +202,7 @@ check compares against reality. Sizes are recorded so a silent shrink is visible
 | `constants.ARISTOTLE_THEOREMS` | 322 |
 | `constants.AXIOM_METADATA` | 10 |
 | `constants.HYPOTHESIS_REGISTRY` | 48 |
-| `constants.PLACEHOLDER_THEOREMS` | 39 |
+| `constants.PLACEHOLDER_THEOREMS` | 38 |
 | `constants.KERNEL_NOGO_REGISTRY` | 45 |
 | `constants.MODELING_ASSUMPTION_THEOREMS` | 21 |
 | `constants.TRACKED_HYPOTHESIS_NON_LOAD_BEARING` | 0 |

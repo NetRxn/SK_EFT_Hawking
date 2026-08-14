@@ -1,6 +1,29 @@
 # ADR-008 — Shared three-slot Lean control plane for Codex and Claude Code
 
-- **Status:** **ACCEPTED (design, 2026-07-22; trusted-local authentication amendment, 2026-07-22). CODEX-FIRST IMPLEMENTATION AUTHORIZED; CLAUDE CODE ACTIVATION DEFERRED.** Codex may be enabled immediately. The local single-user deployment defaults to credential-free loopback access; optional bearer authentication remains banked for a future shared-user deployment. The shared infrastructure MUST be Claude-compatible, but Claude configuration/plugin changes MUST NOT be activated or declared verified until a live Claude Code validation window is available, no earlier than the week of 2026-07-27. Legacy Claude behavior remains the rollback path until that validation passes.
+- **Status:** **ACCEPTED (design, 2026-07-22; trusted-local authentication amendment, 2026-07-22). CODEX-FIRST IMPLEMENTATION AUTHORIZED; CLAUDE CODE ACTIVATION DEFERRED.**
+
+  ⚠️ **PARITY STEP TAKEN 2026-08-13, AHEAD OF FULL CLAUDE ACTIVATION.** The Claude side gained
+  `PreToolUse(Bash)` → `harness_worker_shell_guard.py`, which denies the same build / cache /
+  integration command set as `.codex/hooks/pre_tool_use_policy.py` for SUBAGENTS ONLY (keyed on
+  `agent_id`; the lead is never affected). A cross-client test loads the Codex policy module and
+  asserts both deny the same commands, so the two cannot drift.
+
+  **Why it could not wait for the activation window:** this ADR's load-bearing rule — *workers
+  prove and commit; the orchestrator builds* — was mechanical on one client and prose on the
+  other, and on 2026-08-13 three Claude workers correctly declined to build while the lead read
+  their compliance as evasion and edited the instruction to require it. Nothing in the system
+  could contradict the lead. An invariant enforced in one client and stated in the other is not
+  a rule; it is a coin flip on which client picked up the work. The guard is client-local and
+  changes no slot lifecycle, so it carries none of the risk the activation window is protecting
+  against.
+
+  ⚠️ **`lake build -j4` NO LONGER EXISTS AS A CAP.** Lake 5.0.0 removed `-j` entirely (verified
+  against the full `lake --help` and `lake help build`). The narrow single-module exception was
+  safe *because* it was job-capped, so it is now a lead-granted, one-slot-at-a-time decision —
+  and the guard denies it to workers for that reason, not as a tightening.
+
+  **Still deferred:** the shared control plane itself (proxy/backend endpoints, leases, epochs)
+  for Claude. Legacy per-slot `lean-lsp-wtN` remains the rollback path until that validation runs. Codex may be enabled immediately. The local single-user deployment defaults to credential-free loopback access; optional bearer authentication remains banked for a future shared-user deployment. The shared infrastructure MUST be Claude-compatible, but Claude configuration/plugin changes MUST NOT be activated or declared verified until a live Claude Code validation window is available, no earlier than the week of 2026-07-27. Legacy Claude behavior remains the rollback path until that validation passes.
 - **Decider:** John Roehm (project owner) — approved the three-slot, orchestrator-owned-build posture and the Codex-first/Claude-later rollout on 2026-07-22.
 - **Investigation and draft:** Codex, following an adversarial review of the current workspace, the pinned `lean-lsp-mcp` implementation, and the relevant public Claude-plugin commit history.
 - **Scope:** the public `SK_EFT_Hawking` Lean substrate, product-neutral local slot infrastructure, Codex integration, and a privacy-preserving extension point for private downstream repositories. Repository-specific private configuration and paths remain in private overlays and MUST NOT be committed here.

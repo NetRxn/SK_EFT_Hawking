@@ -74,12 +74,13 @@ Explore/Plan/review subagents or non-dev interactive sessions.
 | `/skeft-qa:goal-end` | you (user-only) | Disarm the loop — remove this session's marker. The explicit teardown for a mid-session `/goal clear` (which fires no hook). |
 | `/skeft-qa:reset-slot <N>` | you **or** the loop | Reset worktree slot `wtN` to `main` the guardrail-safe way (`checkout -B`; **refuses if the slot has commits not yet on `main`**). |
 
-### Hooks (`hooks/hooks.json` → `scripts/`) — five
+### Hooks (`hooks/hooks.json` → `scripts/`) — six
 
 **Four are default-inert + fail-open** (the loop-durability hooks: they do nothing unless this
-session is a managed loop, and a crash never blocks the tool call). **The fifth is neither** — the
-web-egress guard is *unconditional* and *fail-closed* by design, because a guard that fails open is
-not a guard. Read the posture per row; there is no blanket rule.
+session is a managed loop, and a crash never blocks the tool call). **Two are neither** — the
+web-egress guard is *unconditional* and *fail-closed*, because a guard that fails open is not a
+guard; the worker shell guard is *subagent-scoped* and denies inside that scope while leaving the
+lead untouched. Read the posture per row; there is no blanket rule.
 
 | Hook (`scripts/…`) | Posture | Job |
 |---|---|---|
@@ -88,6 +89,7 @@ not a guard. Read the posture per row; there is no blanket rule.
 | `PreCompact` — `harness_precompact.py` | inert + open | **Durable-channel staging only** (Live-Anchor Move 3): synchronously write the gitignored pre-loss **snapshot** artifact (last substantive message + HEAD) and — for a `mode=lean` goal — a `regen_requested.flag` staging the boundary atlas regen (the agent executes the regen post-compact via backgrounded Bash). Marker+mode-gated; **NO context injection / NO summary steer** (aligns to autocompact, never owns it); **writes ONLY under the gitignored `.claude/dev-harness/`** — never a git-tracked path (QI invariant). |
 | `SessionEnd` — `harness_session_end.py` | inert + open | **Marker teardown** — removes this session's marker on `reason=clear` only (a `/clear` that also clears the goal), so a dead loop's marker stops re-injecting. Never on `logout`/`resume` (a still-active goal restores on `--resume`). |
 | `PreToolUse(WebSearch\|WebFetch)` — `harness_web_egress_guard.py` | **unconditional + fail-CLOSED** | Screens outbound web calls against the research egress denylist. **Not marker-gated** — it applies to every session, managed or not, including subagents, because an un-managed session is exactly where an unreviewed fetch is most likely. If the guard cannot launch, the hook command emits a literal `deny` payload rather than falling through, so a broken guard blocks egress instead of silently permitting it. Denylist: `scripts/research_egress_denylist.txt` (seeded from `.sample.txt` by `scripts/install_egress_denylist.sh`). |
+| `PreToolUse(Bash)` — `harness_worker_shell_guard.py` | subagent-scoped + denies in scope | **ADR-008 parity with the Codex-side policy.** Denies build / cache / integration commands (`lake build\|clean\|exe cache get`, `rm -rf …/.lake`, `git merge\|rebase\|cherry-pick`, `slotctl build\|absorb\|supervisor`) to SUBAGENTS ONLY, keyed on `agent_id`. The lead is never affected — it is the party that builds. An unparseable event reads as the lead and allows, since bricking the lead's Bash is the worse failure. |
 
 No Stop/SubagentStop (`/goal` owns continuation), no PostToolUse (the local git pre-commit hook is
 the sole enforcing mechanical gate). PreCompact is **synchronous staging only** — the harvest

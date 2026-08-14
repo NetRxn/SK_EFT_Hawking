@@ -75,8 +75,30 @@ diagnosis time before anyone suspects load.
   after the merge. That is the run that counts; a slot's green build proves nothing about `main`.
 - **Narrow exception:** a worker adding a NEW module that another file must `import` needs an `.olean`
   first. Then, and only then: `lake build SKEFTHawking.<ThatOneModule>` — a single named module,
-  never the bare target, always job-capped (3 slots × 4 of 16 cores leaves headroom for your gate and
-  the LSP servers). The worker reports that it ran one.
+  never the bare target. The worker reports that it ran one.
+
+  ⚠️ **THE JOB CAP NO LONGER EXISTS, AND THAT MAKES THIS EXCEPTION MORE DANGEROUS, NOT LESS.**
+  This read "always job-capped (3 slots × 4 of 16 cores…)" via `lake build -j4`. **Lake 5.0.0
+  removed `-j` entirely** — verified 2026-08-13 against the full `lake --help` and
+  `lake help build`: there is no `-j`, `--jobs`, `--threads`, or `-K` key for it, and Lake
+  takes one job per core unconditionally. A single named module is still far cheaper than the
+  bare target, but it is no longer bounded, so grant the exception to ONE slot at a time.
+
+  ⚠️ Deleting the flag as "stale" is the wrong repair and was attempted on 2026-08-13: it
+  silently converts a job-capped command into an uncapped one while reading as a fix.
+
+  ⚠️ **THE SAME INVARIANT IS ENFORCED UNEVENLY ACROSS THE TWO CLIENTS, AND PARITY IS THE
+  GOAL.** Both Codex and Claude Code run workers against these slots (ADR-008), and
+  "workers run no builds" binds both. Today it is *mechanical* on one side —
+  `.codex/hooks/pre_tool_use_policy.py` returns `deny` for `lake build`, `lake clean`,
+  `lake exe cache get`, `rm -rf lean/.lake`, `git merge|rebase|cherry-pick` and
+  `slotctl build|absorb|supervisor stop` — and *prose in an agent definition* on the other.
+  An invariant that is enforced in one client and merely stated in the other is not a rule,
+  it is a coin flip on which client picked up the work: on 2026-08-13 three Claude workers
+  obeyed the prose and the LEAD misread their compliance as evasion, then edited the
+  instruction. A `PreToolUse(Bash)` guard in this plugin gives the Claude side the same
+  mechanical floor; the harness already distinguishes subagent context, and
+  `harness_web_egress_guard.py` is the fail-closed shape to copy.
 - **Don't run your own full gate while workers are live.** Merge first, then gate, then re-dispatch.
   If you must gate mid-flight, expect it to take several times its solo cost — that is load, not
   breakage, and it is not a reason to go looking for a broken cache.

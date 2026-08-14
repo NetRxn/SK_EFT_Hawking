@@ -57,7 +57,7 @@ proof closes; `lean_verify` is the authority on kernel purity. All three are per
 **Narrow exception — a NEW module that must become importable.** The LSP needs an `.olean` before another
 file can `import` your new module. Only in that case:
 ```bash
-cd "$SLOT/lean" && lake build SKEFTHawking.<YourNewModule>
+cd "$SLOT/lean" && lake build SKEFTHawking.<YourNewModule>   # ⚠️ NO JOB CAP EXISTS
 ```
 Always a **single named module**, never the bare target, and always **`-j4`** (this box has 16 cores; 3
 slots × 4 leaves headroom for the lead's gate and the LSP servers). Say in your report that you ran it.

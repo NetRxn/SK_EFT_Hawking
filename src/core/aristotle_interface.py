@@ -183,41 +183,52 @@ SORRY_GAPS: list[SorryGap] = [
     ),
 
     # Structure C: Hawking Universality
+    # ⚠️ RESTATED AND RE-HOMED 2026-08-13 (statement-substance review I1 §2). Every field
+    #    below was false after that repair, in four separate ways: the module (it moved to
+    #    `KappaScaling`), the description (the old `∃ δ_disp, ∃ C` shape), the strategy hint
+    #    (a witness for a statement that no longer exists), and the provenance (`filled by
+    #    run d65e3bba` — that run proved the OLD statement). A record wrong in all four is
+    #    not a stale pointer; it is a machine-verification claim for something never checked.
     SorryGap(
-        module="SKEFTHawking.HawkingUniversality",
+        module="SKEFTHawking.KappaScaling",
         name="dispersive_correction_bound",
         priority=3,
-        description="Dispersive correction: ∃ nonzero δ_disp with |δ_disp| ≤ C·D² "
-                    "(strengthened with δ_disp ≠ 0 to prevent trivial witness)",
-        strategy_hint="PROVIDED SOLUTION in docstring: witness δ_disp := -(π/6)·D², C := π/6 + 1. "
-                      "Verify |-(π/6)·D²| ≤ (π/6+1)·D² and -(π/6)·D² ≠ 0 from hD_pos.",
-        filled=True,  # Filled by Aristotle run d65e3bba (2026-03-23): concrete witness, bound + nonzero
+        description="Dispersive correction, EQUATED to its definition: "
+                    "dispersiveCorrection = -(π/6)·D², |·| ≤ (π/6)·D², and ≠ 0. "
+                    "No existential remains; the bounded quantity is the project definition "
+                    "and C is the explicit universal π/6.",
+        strategy_hint="Proved by hand 2026-08-13 against `dispersiveCorrection`, following "
+                      "`kappa_scaling_dispersive_quadratic`; Λ = 1/ξ identification.",
+        filled=True,  # Hand-proved 2026-08-13, kernel-pure. NOT run d65e3bba — that run
+                      # proved the pre-repair existential and certifies nothing here.
     ),
+    # ⚠️ Same four-way correction as above (I1 §3), same date, same reason.
     SorryGap(
-        module="SKEFTHawking.HawkingUniversality",
+        module="SKEFTHawking.KappaScaling",
         name="dissipative_correction_existence",
         priority=3,
-        description="Dissipative correction: ∃ δ_diss, vanishes iff γ₁=γ₂=0, nonzero otherwise "
-                    "(strengthened with bidirectional property)",
-        strategy_hint="PROVIDED SOLUTION in docstring: witness δ_diss := -(γ₁+γ₂)/(2κ). "
-                      "Forward: γ₁=γ₂=0 → numerator 0. Reverse: γ_i > 0 → sum > 0 → δ ≠ 0.",
-        filled=True,  # Filled by Aristotle run 657fcd6a (2026-03-23): concrete witness, bidirectional
+        description="Dissipative correction, EQUATED to its definition: "
+                    "dissipativeCorrection = 0 iff γ₁ = γ₂ = 0, and 0 < it otherwise. "
+                    "No existential; `≠ 0` strengthened to `0 <`.",
+        strategy_hint="Proved by hand 2026-08-13 against `dissipativeCorrection`.",
+        filled=True,  # Hand-proved 2026-08-13, kernel-pure. NOT run 657fcd6a.
     ),
     SorryGap(
         module="SKEFTHawking.HawkingUniversality",
         name="hawking_universality",
         priority=3,
-        description="Combined universality: ∃ EffectiveTemperature with T_H = ℏκ/2π, "
-                    "bidirectional δ_diss, nonzero δ_disp with O(D²) bound, "
-                    "and cross-term vanishes when γ→0. "
-                    "Strengthened: requires δ_disp ≠ 0 and (γ>0 → δ_diss ≠ 0) "
-                    "to prevent trivial all-zeros witness.",
-        strategy_hint="PROVIDED SOLUTION in docstring: construct EffectiveTemperature with "
-                      "T_H := hawkingTemp κ, delta_disp := -(π/6)·D², "
-                      "delta_diss := -(γ₁+γ₂)/(2κ), delta_cross := 0. "
-                      "Verify six conjuncts: rfl, simp, div_ne_zero+linarith, "
-                      "positivity+nlinarith, neg_ne_zero+mul_ne_zero, simp.",
-        filled=True,  # Filled by Aristotle run 416fb432 (2026-03-23): structural witnesses, all 6 conjuncts
+        description="Universality, stated over the DEFINED `universalEffectiveTemp`: "
+                    "δ_disp < 0 and |δ_disp| = (π/6)·D²; 0 ≤ δ_diss with δ_diss = 0 iff "
+                    "γ₁ = γ₂ = 0; and |T_eff − T_H·(1+δ_diss)| = T_H·(π/6)·D². "
+                    "The last conjunct is the universality claim and it is an EQUALITY: "
+                    "`mdr.F` appears nowhere on the right, so the entire dependence on the "
+                    "UV completion is the single constant (π/6)·D².",
+        strategy_hint="Proved by hand 2026-08-13. The tie to the canonical definitions is "
+                      "`KappaScaling.universalEffectiveTemp_corrections_eq`, one module up, "
+                      "since KappaScaling imports HawkingUniversality and not the reverse.",
+        filled=True,  # Hand-proved 2026-08-13, kernel-pure. NOT run 416fb432 — that run
+                      # proved the ∃-statement this replaced, whose witness was δ_disp := 1
+                      # and C := 1/D², i.e. the escape the review removed.
     ),
 
     # Structure B (Phase 2): Second-Order SK-EFT

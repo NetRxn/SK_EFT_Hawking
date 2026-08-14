@@ -7305,6 +7305,19 @@
         "exit_code": 0,
         "run_at": "2026-08-13"
       }
+    },
+    {
+      "finding_id": "review:2026-08-13-i1-wave-residue:infra:2",
+      "status": "fixed",
+      "evidence": "hawking_universality is no longer existential (wt1, 1009d9b8). New HawkingUniversality.universalEffectiveTemp defines every field rather than witnessing it, and the theorem now states delta_disp < 0 with |delta_disp| = (pi/6)*D^2, 0 <= delta_diss with delta_diss = 0 iff both gammas vanish, and — the actual universality claim — |T_eff - T_H*(1+delta_diss)| = T_H*(pi/6)*D^2 as an EQUALITY: mdr.F appears nowhere on the right, so the entire dependence on the UV completion is the single constant (pi/6)*D^2. The tie to the canonical definitions is KappaScaling.universalEffectiveTemp_corrections_eq, proved one module up because KappaScaling imports HawkingUniversality and not the reverse. Registry entry deleted after the lean_deps regen, in that order: population 17 -> 16, anchored 10 -> 9, escapes hold at 0 against the zero ceiling. ARISTOTLE_THEOREMS entry moved 416fb432 -> manual, and the same false-provenance residue was corrected for dispersive_correction_bound and dissipative_correction_existence from the earlier repair — three SorryGap records were wrong in four ways each (module, statement, witness, and a filled-by-run-N claim for statements that no longer exist). lake build clean 10827 jobs on merged main, lead-run.",
+      "superseded_by": null,
+      "date": "2026-08-13",
+      "verified_by": {
+        "command": "uv run python scripts/validate.py --check existential_witness_disclosure",
+        "declared": "uv run python scripts/validate.py --check existential_witness_disclosure",
+        "exit_code": 0,
+        "run_at": "2026-08-13"
+      }
     }
   ]
 }

@@ -90,7 +90,7 @@ concurrent slot builds stretched the lead's ~15 s pre-commit hook past **10 minu
 exactly like a broken toolchain and isn't. Workers gate on `lean_diagnostic_messages` / `lean_goal` /
 `lean_verify` (per-file, near-free); **you** run `lake build`, `lake build SKEFTHawking.ExtractDeps`, and
 `validate.py` on `main` after the merge. Only exception: a worker adding a NEW module another file must
-`import` may run `lake build SKEFTHawking.<ThatOneModule>` — one named module, reported.
+`import` may run `lake build SKEFTHawking.<ThatOneModule>` — one named module, reported. ⚠️ Lake 5.0.0 has NO `-j`, so this is uncapped: it takes the whole machine.
 
 Full flow, why the slots are persistent, and the maintainer caveat: `references/parallel-worktrees.md`.
 
