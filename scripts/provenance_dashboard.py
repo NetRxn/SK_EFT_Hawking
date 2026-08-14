@@ -1157,7 +1157,40 @@ def index():
                 'error': 'failed to load bundle summary (see server log)',
             }
 
+    # ADR-012 P9b/P9c — the three operator panes. Lazy per tab, like bundles above:
+    # each builds the whole graph, so loading them on every request would tax the six
+    # tabs that do not use them.
+    #
+    # ⚠️ ON FAILURE THESE RENDER AN ERROR, NEVER AN EMPTY PANE. `flow_board()` itself
+    # raises rather than returning a board with no rows, because an empty board is
+    # indistinguishable from a portfolio with nothing in it. Swallowing that into `[]`
+    # here would undo the module's whole refusal — so the except branch carries an
+    # `error` key and the partial renders it as an error.
+    flow_board = attention = loops = None
+    _panes = {'flow': ('dashboard_flow', 'flow_board'),
+              'attention': ('dashboard_attention', 'attention'),
+              'loops': ('dashboard_loops', 'loops_panel')}
+    if tab in _panes:
+        _modname, _fn = _panes[tab]
+        try:
+            import importlib
+            _built = getattr(importlib.import_module(_modname), _fn)()
+        except Exception:
+            import traceback
+            traceback.print_exc()
+            # stack-trace-exposure guard, same contract as bundles_summary above.
+            _built = {'error': f'failed to build the {tab} pane (see server log)'}
+        if tab == 'flow':
+            flow_board = _built
+        elif tab == 'attention':
+            attention = _built
+        else:
+            loops = _built
+
     return render_template("dashboard.html",
+                           flow_board=flow_board,
+                           attention=attention,
+                           loops=loops,
                            params=filtered_params,
                            formulas=formulas,
                            theorems=theorems,

@@ -1167,19 +1167,29 @@ that makes each claim wrong.
 first; the sign-off writer (Tasks 5/6, `4c04401f` + browser proof `34570904`) and S4 (Task 8,
 `2ad9fe6c`) followed. The status line above previously stopped at the first three.
 
-**P9b and P9c — the modules are BUILT AND UNWIRED, and this entry is the first record of them.**
+**P9b and P9c — ✅ COMPLETE 2026-08-13, after shipping BUILT AND UNWIRED for a day.**
 `dashboard_flow.py` (S2), `dashboard_attention.py` (S3) and `dashboard_loops.py` (D20) landed in
 `3076d031` — a pr-review remediation commit, not a phase commit, which is how 2,360 lines
-reached this branch without a phase entry. ⚠️ **Nothing imports them but their own tests.** The
-application never imports them, no route serves them, no template renders them, and every gate
-is green because an unreferenced module is not a broken reference. Filed as
-`papers/AutomatedReviews/2026-08-13-p9-panes-unwired/infra.md` (major, lane `infra`) rather
-than repaired in passing: D15 pins the columns and the feeds but leaves layout to be iterated
-against real use, so wiring them is a build with a judgment component.
+reached this branch without a phase entry. ⚠️ **Nothing imported them but their own tests**: no
+route, no template, no reachable surface, and every gate green, because an unreferenced module
+is not a broken reference. Found by the pre-merge sync audit, filed
+(`2026-08-13-p9-panes-unwired/infra.md`, major, lane `infra`), then wired and closed through
+`close_finding.py` — the unattributed ratchet went 52 → 53 on the filing and back to 52 on the
+closure, which is the loop this ADR exists to make routine.
 
-⚠️ **P10 should not be called done while these are unreachable.** P10 hands the operator a
-queue that these panes are the way to read; shipping it against an unreachable surface is
-D12's failure mode with extra steps.
+**The wiring:** three partials, three tab links, and a lazy per-tab build in `index()` (each
+pane walks the whole graph, so building all three per request would tax the tabs that use
+none). Both gates D2 demands for dashboard work: the **template-contract** gate, whose tab
+roster is *derived* from the source and so absorbed the three tabs with no edit, and a **real
+browser** suite asserting each pane renders its own content, that a `not-tracked` cell is not
+painted as a verdict, and — the seam guard — that each pane is reachable **by clicking**, since
+every other assertion navigates by URL and would pass with no tab link at all.
+
+⚠️ **Two things the writer refused, and both refusals were right.** `close_finding.py` rejected
+a `--verify` that did not match the finding's declared command (*"closing on an unrelated
+command records exit_code=0 against a check that never ran"*), and the template-contract gate
+rejected partials with no `<style>` marker — the marker is what proves the include ran rather
+than the shell rendering an empty panel, which is precisely the failure being repaired.
 
 - **S1** landed as an *evaluator* change, as D15's corrected table said it must: the finding id was
   destroyed in `_eval_fix_propagation`, which held the whole node and kept `label[:60]`. ⚠️ **The

@@ -160,6 +160,18 @@ Per-publication-bundle readiness panel over the bundle roster — which is `scri
 
 ⚠️ **CORRECTED 2026-08-12, twice over.** This section said "the 18-bundle architecture (1 flagship F + 9 Tier 1 deep + …)" — a hand-written roster **and** a census count in a narrative, both of which this directory forbids; the live roster is larger and the tier split had drifted. It also named `docs/submission_state.json` as an input: **that file does not exist and is not gitignored**, so the submission-event log has no store behind it.
 
+### Flow · Attention · Loops _(ADR-012 P9b/P9c, 2026-08-13)_
+
+The three operator panes, `?tab=flow` · `?tab=attention` · `?tab=loops`. Each is rendered by
+its own partial from the data layer described under *The ADR-012 operator surfaces* below;
+`index()` builds only the pane whose tab is selected, since each walks the whole graph.
+
+⚠️ **The five non-verdict cell kinds render hatched-grey, not green or red.** `not-tracked`,
+`unmeasured`, `missing`, `undeclared` and `warning` are not verdicts, and painting them as
+verdicts at the render layer would undo, invisibly, the refusal the data layer is built
+around. On failure the panes render an **error**, never an empty pane — `flow_board()` itself
+raises rather than returning a board with no rows.
+
 ### Paper Provenance v2 _(Phase 5v Wave 10)_
 
 Sentence-level chain-of-backing inspector. Renders the prose of a chosen paper as a stream of `Sentence` nodes (`sentence:<paper>:<section_slug>:<sha8>`), each with its chain to Formula / LeanTheorem / Parameter / PrimarySource / Hypothesis / AristotleRun / ProductionRun artifacts.
@@ -172,6 +184,16 @@ Sentence-level chain-of-backing inspector. Renders the prose of a chosen paper a
 already large enough that another four panes inside it would have made every one of them
 harder to reason about. Each module below is **pure data — no HTML** — so it can be tested
 without booting a server, and the app wires it.
+
+⚠️ **"AND THE APP WIRES IT" WAS FALSE WHEN WRITTEN, FOR THREE OF THE FOUR, AND STAYED FALSE
+FOR A DAY.** `dashboard_flow.py`, `dashboard_attention.py` and `dashboard_loops.py` shipped as
+2,360 lines that nothing but their own tests imported — no route, no template, no reachable
+surface — and **every gate was green**, because an unreferenced module is not a broken
+reference, a template-contract test needs a template, and a browser test needs a route.
+Wired 2026-08-13 (P9b/P9c: three partials, three tab links, a lazy per-tab build in
+`index()`), with both gates D2 requires for dashboard work. The sentence is kept, and this
+note beside it, because *pure data, and the app wires it* is a two-part claim whose second
+half nothing in the suite was checking.
 
 | module | surface | what it refuses to do |
 |---|---|---|
@@ -248,6 +270,7 @@ Schema spans Phase 1 / 1.5 base types + Phase 5v Wave 2a readiness-system types 
 | `scripts/templates/dashboard.html` | Main template (nav + the tabs with no partial) |
 | `scripts/templates/partials/graph_tab.html` | D3 knowledge graph visualization |
 | `scripts/templates/partials/bundles_tab.html` · `chains_tab.html` · `paper_provenance_tab.html` · `qi_tab.html` · `readiness_tab.html` | the Datastar-driven tab bodies |
+| `scripts/templates/partials/flow_tab.html` · `attention_tab.html` · `loops_tab.html` | the ADR-012 operator panes (server-rendered, no SSE) |
 | `tests/test_template_contract.py` | the gate asserting the server passes every variable these templates dereference |
 | `scripts/sentence_findings.py` · `dashboard_flow.py` · `dashboard_attention.py` · `dashboard_loops.py` | the ADR-012 surfaces' data layers — pure data, no HTML |
 | `src/core/provenance_writer.py` | the only per-entry writer for the human-verification fields |
