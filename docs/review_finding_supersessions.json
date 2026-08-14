@@ -7425,6 +7425,22 @@
         "exit_code": 0,
         "run_at": "2026-08-14"
       }
+    },
+    {
+      "finding_id": "review:2026-05-01-bundle-stage13:L1:2.1",
+      "status": "fixed",
+      "evidence": "Superseded by the review-2026-06-05 sweep, commit f1a0829f (2026-06-10). This finding's remedy — 'human-verify the range against the Vergeles 2025 RPA bubble integral' — is factually wrong at HEAD and was wrong when filed: src/core/provenance.py now states that the Vergeles paper (PRD 112,054509 = arXiv:2506.00036v2, 'Unitarity of 4D Lattice Theory of Gravity') contains NO RPA bubble integral, NO susceptibility computation and NO [0.1,10] range, and re-attributes chi_vest.Lambda^2 in [0.1,10] as a PROJECT-ADOPTED +/-1-decade naturalness window about the unit-normalized O(Lambda^2/16pi^2) one-loop bubble scale, with Vergeles cited for ECP lattice unitarity only. The structural content is formalized kernel-pure in lean/SKEFTHawking/VestigialSusceptibility.lean (27 declarations, zero sorry, zero native_decide). A PROPOSED human-verify note is pre-written on both entries for operator review-and-approve. The provenance defect this finding names is remediated; what remains is an operator sign-off on a disclosed naturalness prior, which is a decision and not a defect.",
+      "superseded_by": null,
+      "date": "2026-08-14",
+      "commit": "f1a0829f"
+    },
+    {
+      "finding_id": "review:2026-05-11-1550-bundle-stage13:L1:2.1",
+      "status": "fixed",
+      "evidence": "Superseded by the review-2026-06-05 sweep, commit f1a0829f (2026-06-10). This finding's remedy — 'human-verify the range against the Vergeles 2025 RPA bubble integral' — is factually wrong at HEAD and was wrong when filed: src/core/provenance.py now states that the Vergeles paper (PRD 112,054509 = arXiv:2506.00036v2, 'Unitarity of 4D Lattice Theory of Gravity') contains NO RPA bubble integral, NO susceptibility computation and NO [0.1,10] range, and re-attributes chi_vest.Lambda^2 in [0.1,10] as a PROJECT-ADOPTED +/-1-decade naturalness window about the unit-normalized O(Lambda^2/16pi^2) one-loop bubble scale, with Vergeles cited for ECP lattice unitarity only. The structural content is formalized kernel-pure in lean/SKEFTHawking/VestigialSusceptibility.lean (27 declarations, zero sorry, zero native_decide). A PROPOSED human-verify note is pre-written on both entries for operator review-and-approve. The provenance defect this finding names is remediated; what remains is an operator sign-off on a disclosed naturalness prior, which is a decision and not a defect.",
+      "superseded_by": null,
+      "date": "2026-08-14",
+      "commit": "f1a0829f"
     }
   ]
 }
