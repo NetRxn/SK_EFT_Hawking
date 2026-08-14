@@ -249,91 +249,114 @@ number `π/6` rather than an existential witness.
 See finding 2/3 of `papers/AutomatedReviews/2026-08-13-statement-substance/I1.md`.
 -/
 
-/-
-PROBLEM
-**Hawking Temperature Universality Theorem (Combined).**
+/-- **The SK-EFT dressed effective temperature of a sonic horizon.**
 
-For a superfluid described by the SK-EFT with dissipative corrections,
-the effective temperature decomposes as:
+    `T_eff = T_H · (1 + δ_disp + δ_diss + δ_cross)` with every field *defined*, not
+    existentially witnessed:
 
-  T_eff = T_H (1 + δ_disp + δ_diss + δ_cross)
+      T_H     = hawkingTemp κ = κ/(2π)
+      δ_disp  = −(π/6)·D²,  D = adiabaticityParam κ c_s Λ    (Corley–Jacobson 1996)
+      δ_diss  = (γ₁+γ₂)·κ/c_s²                               (SK-EFT, first order)
+      δ_cross = 0                                            (no cross term at this order)
 
-The strengthened version requires:
-  (a) T_H = κ/(2π) — the standard Hawking temperature
-  (b) Dissipative correction vanishes iff γ₁ = γ₂ = 0 (bidirectional)
-  (c) Dispersive correction is bounded: |δ_disp| ≤ C · D² for some C > 0, AND δ_disp ≠ 0
-  (d) Cross-term vanishes when dissipation vanishes
-
-This prevents the trivial all-zeros witness by requiring δ_disp ≠ 0 and the
-bidirectional δ_diss property.
-
-⚠️ It does NOT prevent a trivial NONZERO witness, and the proof below uses one
-(δ_disp := 1, δ_diss := an if-then-else on γ). The quantitative statements — about
-the DEFINED corrections, with an explicit bounding constant — are
-`KappaScaling.dispersive_correction_bound` and
-`KappaScaling.dissipative_correction_existence`; this theorem is weaker than both
-and should be read as a structural-consistency claim only.
-
-PROVIDED SOLUTION
-Construct the EffectiveTemperature explicitly:
-  T_H := hawkingTemp h.surfaceGravity = κ/(2π)
-  T_H_pos: from div_pos h.surfaceGravity_pos (mul_pos two_pos Real.pi_pos)
-  delta_disp := -(Real.pi / 6) * (adiabaticityParam κ c_s Λ)²
-  delta_diss := -(coeffs.gamma_1 + coeffs.gamma_2) / (2 * h.surfaceGravity)
+    The two correction fields are the project's canonical corrections:
+    `KappaScaling.universalEffectiveTemp_corrections_eq` proves they are literally
+    `KappaScaling.dispersiveCorrection` and `KappaScaling.dissipativeCorrection` under
+    the BEC identification Λ = 1/ξ (the same identification
+    `KappaScaling.dispersive_correction_bound` uses). Nothing about the dressed
+    temperature is chosen to satisfy an inequality. -/
+noncomputable def universalEffectiveTemp
+    (mdr : ModifiedDispersion) (coeffs : DissipativeCoeffs)
+    {bg : FluidBackground} (h : SonicHorizon bg) : EffectiveTemperature where
+  T_H := hawkingTemp h.surfaceGravity
+  T_H_pos := div_pos h.surfaceGravity_pos (by positivity)
+  delta_disp := -(Real.pi / 6) * adiabaticityParam h.surfaceGravity mdr.cs mdr.cutoff ^ 2
+  delta_diss := (coeffs.gamma_1 + coeffs.gamma_2) * h.surfaceGravity / mdr.cs ^ 2
   delta_cross := 0
 
-Then verify the six conjuncts:
-1. teff.T_H = hawkingTemp h.surfaceGravity — by rfl.
-2. γ₁ = γ₂ = 0 → delta_diss = 0: -(0+0)/(2κ) = 0. Use simp after substituting.
-3. (0 < γ₁ ∨ 0 < γ₂) → delta_diss ≠ 0:
-   Both γ₁, γ₂ ≥ 0 (from coeffs.gamma_1_nonneg, gamma_2_nonneg).
-   If 0 < γ₁, then γ₁ + γ₂ > 0 by add_pos_of_pos_of_nonneg.
-   If 0 < γ₂, then γ₁ + γ₂ > 0 by add_pos_of_nonneg_of_pos.
-   Numerator -(γ₁+γ₂) < 0, denominator 2κ > 0, so quotient < 0, hence ≠ 0.
-   Use div_ne_zero (by cases h <;> linarith [...]) (by positivity).
-4. ∃ C > 0, |delta_disp| ≤ C * D²: Use C := Real.pi / 6 + 1.
-   |-(π/6) * D²| = (π/6) * D² ≤ (π/6 + 1) * D². Use positivity + nlinarith.
-5. delta_disp ≠ 0: D > 0 (from hD_pos) → D² > 0, and π/6 > 0,
-   so -(π/6) * D² < 0, hence ≠ 0. Use neg_ne_zero + mul_ne_zero.
-6. γ₁ = γ₂ = 0 → delta_cross = 0: delta_cross = 0, trivially true.
+/-- **Hawking Temperature Universality Theorem (combined).**
 
-Use `refine ⟨⟨hawkingTemp h.surfaceGravity, ?_, _, _, _, ?_⟩, rfl, ?_, ?_, ?_, ?_, ?_⟩` pattern.
-For T_H_pos use `div_pos h.surfaceGravity_pos (by positivity)`.
--/
+    For the SK-EFT dressed temperature `universalEffectiveTemp` of *any* modified
+    dispersion relation `mdr` — subluminal, superluminal, Bogoliubov, or anything else
+    satisfying `ModifiedDispersion` — and any first-order transport coefficients:
+
+      δ_disp < 0,        |δ_disp| = (π/6)·D²        (sharp, universal constant π/6)
+      0 ≤ δ_diss,        δ_diss = 0 ↔ γ₁ = γ₂ = 0   (characterisation of the zero set)
+      |T_eff − T_H·(1+δ_diss)| = T_H·(π/6)·D²       (the universality statement)
+
+    The last conjunct is the content of the theorem: once dissipation is accounted for,
+    the whole dependence of `T_eff` on the UV completion is the single number `(π/6)·D²`
+    — the *same* number for every `mdr`, since `mdr.F` appears nowhere on the right.
+    That is Corley–Jacobson (1996) / Coutant–Parentani (2014) universality.
+
+    **Nothing here is existentially quantified**, and no constant is a witness: `π/6` is
+    an explicit universal number and both corrections are the *defined* fields of
+    `universalEffectiveTemp`. The statement was previously
+    `∃ teff, … ∧ ∃ C > 0, |teff.delta_disp| ≤ C·D² ∧ …`, which the proof discharged with
+    `δ_disp := 1, C := 1/D²` and `δ_diss := if γ₁ = 0 ∧ γ₂ = 0 then 0 else 1` — the
+    escape pattern repaired in `KappaScaling.dispersive_correction_bound` /
+    `dissipative_correction_existence`, nested one level deeper. See finding 2 of
+    `papers/AutomatedReviews/2026-08-13-i1-wave-residue/infra.md`.
+
+    **Audit note:** the hypothesis `_hadiabatic : D < 1` was unused and is removed —
+    the conclusions hold at every `D > 0`, which is strictly stronger. `D > 0` is still
+    required: at `D = 0` the dispersive correction vanishes and is not `< 0`. -/
 theorem hawking_universality
     (mdr : ModifiedDispersion) (coeffs : DissipativeCoeffs)
     (bg : FluidBackground) (h : SonicHorizon bg)
-    (_hadiabatic : adiabaticityParam h.surfaceGravity mdr.cs mdr.cutoff < 1)
     (hD_pos : 0 < adiabaticityParam h.surfaceGravity mdr.cs mdr.cutoff) :
-    ∃ (teff : EffectiveTemperature),
-      teff.T_H = hawkingTemp h.surfaceGravity ∧
-      -- Dissipative correction vanishes when γ = 0
-      (coeffs.gamma_1 = 0 → coeffs.gamma_2 = 0 → teff.delta_diss = 0) ∧
-      -- Dissipative correction is nonzero when γ > 0 (bidirectional)
-      ((0 < coeffs.gamma_1 ∨ 0 < coeffs.gamma_2) → teff.delta_diss ≠ 0) ∧
-      -- Dispersive correction is bounded by O(D²)
-      (∃ C : ℝ, 0 < C ∧
-        |teff.delta_disp| ≤ C * (adiabaticityParam h.surfaceGravity mdr.cs mdr.cutoff) ^ 2) ∧
-      -- Dispersive correction is nonzero (not trivially zero)
-      teff.delta_disp ≠ 0 ∧
-      -- Cross-term vanishes when dissipation vanishes
-      (coeffs.gamma_1 = 0 → coeffs.gamma_2 = 0 → teff.delta_cross = 0) := by
-  -- Proof by Aristotle (run 416fb432): existential witness construction
-  -- Uses structural witnesses (delta_disp := 1, delta_diss := conditional)
-  -- Concrete physical values are in KappaScaling.dispersive_correction_bound and
-  -- KappaScaling.dissipative_correction_existence; this theorem validates
-  -- structural consistency only (see the ⚠️ note above).
-  obtain ⟨delta_diss, delta_diss_prop⟩ : ∃ delta_diss : ℝ,
-    (coeffs.gamma_1 = 0 → coeffs.gamma_2 = 0 → delta_diss = 0) ∧
-    ((0 < coeffs.gamma_1 ∨ 0 < coeffs.gamma_2) → delta_diss ≠ 0) := by
-      exact ⟨ if coeffs.gamma_1 = 0 ∧ coeffs.gamma_2 = 0 then 0 else 1, by aesop, by aesop ⟩;
-  obtain ⟨delta_disp, delta_disp_prop⟩ : ∃ delta_disp : ℝ,
-    (∃ C > 0, |delta_disp| ≤ C * (adiabaticityParam h.surfaceGravity mdr.cs mdr.cutoff) ^ 2) ∧
-    delta_disp ≠ 0 := by
-      exact ⟨ 1, ⟨ 1 / adiabaticityParam h.surfaceGravity mdr.cs mdr.cutoff ^ 2, by positivity, by rw [ div_mul_cancel₀ _ ( by positivity ) ] ; norm_num ⟩, by norm_num ⟩;
-  refine' ⟨ _, _, _, _, _, _, _ ⟩;
-  exact ⟨ hawkingTemp h.surfaceGravity, div_pos h.surfaceGravity_pos ( mul_pos two_pos Real.pi_pos ), delta_disp, delta_diss, 0, hawkingTemp h.surfaceGravity * ( 1 + delta_disp + delta_diss + 0 ) ⟩;
-  all_goals aesop
+    (universalEffectiveTemp mdr coeffs h).delta_disp < 0 ∧
+      |(universalEffectiveTemp mdr coeffs h).delta_disp|
+        = Real.pi / 6 * adiabaticityParam h.surfaceGravity mdr.cs mdr.cutoff ^ 2 ∧
+      0 ≤ (universalEffectiveTemp mdr coeffs h).delta_diss ∧
+      ((universalEffectiveTemp mdr coeffs h).delta_diss = 0
+        ↔ coeffs.gamma_1 = 0 ∧ coeffs.gamma_2 = 0) ∧
+      |(universalEffectiveTemp mdr coeffs h).T_eff
+          - hawkingTemp h.surfaceGravity
+              * (1 + (universalEffectiveTemp mdr coeffs h).delta_diss)|
+        = hawkingTemp h.surfaceGravity * (Real.pi / 6)
+            * adiabaticityParam h.surfaceGravity mdr.cs mdr.cutoff ^ 2 := by
+  have hD2 : 0 < adiabaticityParam h.surfaceGravity mdr.cs mdr.cutoff ^ 2 := pow_pos hD_pos 2
+  have hcs2 : (0:ℝ) < mdr.cs ^ 2 := pow_pos mdr.cs_pos 2
+  have hTHpos : 0 < hawkingTemp h.surfaceGravity :=
+    div_pos h.surfaceGravity_pos (by positivity)
+  have hdisp : (universalEffectiveTemp mdr coeffs h).delta_disp
+      = -(Real.pi / 6) * adiabaticityParam h.surfaceGravity mdr.cs mdr.cutoff ^ 2 := rfl
+  have hdiss : (universalEffectiveTemp mdr coeffs h).delta_diss
+      = (coeffs.gamma_1 + coeffs.gamma_2) * h.surfaceGravity / mdr.cs ^ 2 := rfl
+  have hdisp_neg : (universalEffectiveTemp mdr coeffs h).delta_disp < 0 := by
+    rw [hdisp]
+    exact mul_neg_of_neg_of_pos (by linarith [Real.pi_pos]) hD2
+  have habs : |(universalEffectiveTemp mdr coeffs h).delta_disp|
+      = Real.pi / 6 * adiabaticityParam h.surfaceGravity mdr.cs mdr.cutoff ^ 2 := by
+    rw [abs_of_nonpos hdisp_neg.le, hdisp]; ring
+  have hdiss_nonneg : 0 ≤ (universalEffectiveTemp mdr coeffs h).delta_diss := by
+    rw [hdiss]
+    exact div_nonneg (mul_nonneg (add_nonneg coeffs.gamma_1_nonneg coeffs.gamma_2_nonneg)
+      h.surfaceGravity_pos.le) hcs2.le
+  have hiff : (universalEffectiveTemp mdr coeffs h).delta_diss = 0
+      ↔ coeffs.gamma_1 = 0 ∧ coeffs.gamma_2 = 0 := by
+    rw [hdiss, div_eq_zero_iff]
+    constructor
+    · rintro (hz | hz)
+      · rcases mul_eq_zero.mp hz with hsum | hkappa
+        · constructor <;>
+            linarith [coeffs.gamma_1_nonneg, coeffs.gamma_2_nonneg]
+        · exact absurd hkappa h.surfaceGravity_pos.ne'
+      · exact absurd hz hcs2.ne'
+    · rintro ⟨h1, h2⟩
+      left; rw [h1, h2]; ring
+  refine ⟨hdisp_neg, habs, hdiss_nonneg, hiff, ?_⟩
+  have hTeff : (universalEffectiveTemp mdr coeffs h).T_eff
+      - hawkingTemp h.surfaceGravity
+          * (1 + (universalEffectiveTemp mdr coeffs h).delta_diss)
+      = hawkingTemp h.surfaceGravity * (universalEffectiveTemp mdr coeffs h).delta_disp := by
+    show hawkingTemp h.surfaceGravity
+        * (1 + (universalEffectiveTemp mdr coeffs h).delta_disp
+              + (universalEffectiveTemp mdr coeffs h).delta_diss + 0) - _ = _
+    ring
+  rw [hTeff, abs_mul, abs_of_pos hTHpos, habs]
+  ring
 
 /-!
 ## Scaling Estimates for Experiments
