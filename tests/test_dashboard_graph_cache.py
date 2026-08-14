@@ -1,20 +1,16 @@
 """Guards for the dashboard graph cache's staleness key.
 
-THE DEFECT THESE EXIST FOR
---------------------------
-`_graph_fingerprint` used to stat 13 named files plus two globs, and its
-docstring called them "the canonical inputs that `build_graph_json` consumes".
-They were not: `papers/AutomatedReviews/**/*.md` and
-`docs/review_finding_supersessions.json` were in neither, though the graph
-embeds a ReviewFinding node per finding and applies the ledger's status
-overrides. Filing a finding — or closing one through `close_finding.py` — did
-not invalidate the cache, so the dashboard served the pre-change finding set
-until some unrelated keyed input happened to move. Measured 2026-08-14 against
-the live function: touching the corpus moved the key `False`; the ledger,
-`False`.
+WHAT THEY PROTECT
+-----------------
+`_graph_fingerprint` decides when the dashboard rebuilds its graph. The graph
+embeds a ReviewFinding node per finding and applies the supersession ledger's
+status overrides, so filing a finding — or closing one through
+`close_finding.py` — must invalidate the cache. A key that misses an input fails
+silently and in the green direction: the dashboard serves a pre-change finding
+set with nothing to indicate it.
 
-The key is now derived from the read set the last build actually opened, so a
-newly-read input enters it by construction.
+⛔ The key must stay derived from what the build actually reads. A hand-listed
+set of inputs is correct only until someone adds one.
 
 WHY MOST OF THESE ASSERT THE KEY AND ONE ASSERTS THE CACHE
 ----------------------------------------------------------
@@ -77,12 +73,11 @@ class TestTheKeyCoversTheReviewCorpus:
 class TestTheKeyCoversFilesThatDoNotExistYet:
     """The ancestor-directory leg.
 
-    ⚠️ This caught a real bug before it shipped. Watching each read file's
-    IMMEDIATE parent is not enough: findings live in
+    ⛔ Watching each read file's IMMEDIATE parent is not enough: findings live in
     `papers/AutomatedReviews/<date>/*.md`, so the immediate parents are the
-    `<date>` directories and `papers/AutomatedReviews/` itself went unwatched —
-    meaning a brand-new `<date>/`, which is what filing a finding creates,
-    invalidated nothing.
+    `<date>` directories and `papers/AutomatedReviews/` itself goes unwatched —
+    leaving a brand-new `<date>/`, which is what filing a finding creates,
+    invalidating nothing.
     """
 
     def test_the_corpus_root_itself_is_watched(self, warmed):
@@ -91,15 +86,13 @@ class TestTheKeyCoversFilesThatDoNotExistYet:
             "filed finding in a new dated subdirectory cannot move the key")
 
     def test_creating_a_new_finding_directory_moves_the_key(self, warmed):
-        """⚠️ The baseline is taken HERE, not from the module-scoped `warmed`.
+        """⛔ Take the baseline HERE, never from the module-scoped `warmed`.
 
-        Using `warmed` made this test VACUOUS and mutation testing is what
-        exposed it: earlier tests in this file touch files, so by the time this
-        one ran the key had already moved for reasons of its own, and the
-        assertion held no matter what creating a directory did. Under the
-        immediate-parent-only mutation — the exact bug this test exists for — it
-        stayed green. A baseline captured immediately before the change is the
-        only one that attributes the movement to the change.
+        Earlier tests in this file touch files, so `warmed` has already moved for
+        reasons of its own and an assertion against it holds no matter what this
+        test did — green even under the immediate-parent-only defect it exists to
+        catch. Only a baseline captured immediately before the change attributes
+        the movement to the change.
         """
         before = pd._graph_fingerprint()
         probe = REVIEWS / "2026-08-14-key-coverage-probe"

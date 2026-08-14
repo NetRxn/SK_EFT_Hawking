@@ -207,37 +207,31 @@ def _suppress_lake_refresh() -> bool:
 
 
 #: The read set captured from the last completed build: every file the build
-#: actually opened, plus every directory it opened a file from.
+#: opened, plus every directory it opened a file from (and their ancestors).
 #:
-#: ⚠️ THIS REPLACED A HAND-LISTED KEY THAT WAS DEMONSTRABLY WRONG (2026-08-14).
-#: The previous `_graph_fingerprint` stat'd 13 named files plus two globs and
-#: its docstring called them "the canonical inputs that build_graph_json
-#: consumes". They were not. `papers/AutomatedReviews/**/*.md` and
-#: `docs/review_finding_supersessions.json` were in neither, yet the graph
-#: embeds a ReviewFinding node per finding and applies the ledger's status
-#: overrides — so filing a finding, or closing one through `close_finding.py`,
-#: did NOT invalidate this cache. Measured against the live function: touching
-#: the review corpus moved the fingerprint `False`; touching the ledger, `False`.
-#: The dashboard served the pre-change finding set until some unrelated keyed
-#: input happened to move.
+#: ⛔ NEVER REPLACE THIS WITH A HAND-LISTED SET OF INPUTS. A hand-list asserts a
+#: PROXY for what the build reads: correct only until someone adds an input, and
+#: then wrong silently and in the green direction. The read set is the decider
+#: itself, so a newly-read input enters the key by construction.
 #:
-#: The lesson generalises past this one bug: a hand-listed key asserts a PROXY
-#: for the decider (what the build actually reads), so it is correct only until
-#: someone adds an input — and then it fails silently, in the green direction.
-#: Appending two globs would have fixed today's instance and re-armed the same
-#: failure for tomorrow's. The read set is the decider itself, so a newly-read
-#: input enters the key by construction and nobody has to remember.
+#: ⚠️ It covers `open` only. `os.stat`, `os.listdir`, `os.scandir` and `Path.glob`
+#: raise their own audit events, which this does not observe — so a value derived
+#: purely from a file's metadata, without opening it, is still outside the key.
+#: That residual is documented rather than hidden; treat it as the known limit.
 #:
-#: ⚠️ Deriving the watched DIRECTORIES from the read set is what covers files
-#: that do not exist yet. A newly filed finding was in no previous read set, so
-#: paths alone would miss it; its parent directory's listing changes, which is
-#: how creation and deletion are caught.
+#: Two halves, neither of which covers the other:
+#:   - DATA — the files the build opened.
+#:   - CODE — every repo `.py` in `sys.modules`, because a module already imported
+#:     is never opened again, so the hook cannot see it.
 #:
-#: Measured: 2,945 files read (127.5 MB) across 236 directories — 5.1 ms to stat
-#: and 9.5 ms to list, ~15 ms total against the 7.1 s rebuild it gates. Content
-#: hashing the same set is 116 ms and buys only same-nanosecond-same-size edits;
-#: `st_mtime_ns` is nanosecond-resolution, so that is left as a one-line change
-#: rather than a per-request cost.
+#: ⚠️ Ancestors, not immediate parents, is what covers files that do not exist
+#: yet: a newly filed finding is in no previous read set, and only its new dated
+#: directory's listing moves the key.
+#:
+#: Measured 2026-08-14: ~2,900 files across ~250 directories, ~18 ms to key,
+#: against the 7.1 s rebuild it gates. Content hashing the same set is ~116 ms and
+#: buys only same-nanosecond-same-size edits; `st_mtime_ns` is nanosecond-resolution.
+#: History: `papers/AutomatedReviews/2026-08-14-suite-runtime/infra.md` §2.
 _READ_SET: dict = {'paths': None, 'dirs': None}
 _RECORDED_READS: set | None = None
 _AUDIT_HOOK_INSTALLED = False
@@ -275,13 +269,10 @@ def _record_build_reads():
     turns into a key that never matches — an unrecordable build yields a cache
     that always rebuilds. Every error path here is slower, never staler.
 
-    ⚠️ THAT GUARANTEE USED TO HAVE A HOLE, and it was the interesting kind: it
-    held for failures inside the `yield`, but an exception raised in the `finally`
-    body itself propagated before either branch assigned `_READ_SET`, leaving the
-    PREVIOUS build's read set installed. That pairs a stale read set with a stale
-    graph and fingerprint — self-consistent, so the next request HITS and serves
-    the graph the failed rebuild was meant to replace. The whole body is now
-    wrapped so the docstring's claim holds by construction rather than by hope.
+    ⛔ The whole finalisation is wrapped, so that claim holds by construction. An
+    exception escaping it would leave the PREVIOUS build's read set installed —
+    stale set, stale graph, stale fingerprint, mutually consistent, so the next
+    request hits and serves the graph the failed rebuild was meant to replace.
     """
     global _RECORDED_READS
     _install_read_audit_hook_once()
@@ -332,14 +323,12 @@ def _finalise_read_set(captured: set | None, started_ns: int) -> None:
             continue
         if not p.is_file():
             continue
-        # ⚠️ A FILE THAT CHANGED WHILE WE WERE BUILDING POISONS THE WHOLE KEY.
-        # The fingerprint is computed after the build, so a mid-build write
-        # would be baked in as "already accounted for" and the next request
-        # would serve a graph built from the pre-change data — the exact silent
-        # staleness this rewrite exists to remove. Discarding the read set
-        # forces a rebuild instead. Not hypothetical: this repo's
-        # seeded-mutation tests write production artifacts, and a test run
-        # concurrent with a build was observed doing so.
+        # ⛔ A FILE THAT CHANGED WHILE WE WERE BUILDING POISONS THE WHOLE KEY.
+        # The fingerprint is computed after the build, so a mid-build write would
+        # be baked in as "already accounted for" and the next request would serve
+        # a graph built from pre-change data. Discard the read set instead. This
+        # is reachable: the seeded-mutation tests write production artifacts, and
+        # a test run concurrent with a build does exactly this.
         if st.st_mtime_ns > started_ns:
             logger.warning(
                 "graph cache key: %s changed during the build — discarding the read "
@@ -365,13 +354,12 @@ def _finalise_read_set(captured: set | None, started_ns: int) -> None:
 def _repo_ancestors(p: Path, root: Path) -> set[str]:
     """Every directory to watch on account of `p`.
 
-    ⚠️ EVERY ANCESTOR, NOT JUST THE IMMEDIATE PARENT — a real bug caught by its
-    own test before shipping. Findings live in
+    ⛔ EVERY ANCESTOR, NOT JUST THE IMMEDIATE PARENT. Findings live in
     `papers/AutomatedReviews/<date>/*.md`, so the immediate parents are the
-    `<date>` directories; the build opens no file directly in
-    `papers/AutomatedReviews/`, so that directory went unwatched and creating a
-    NEW `<date>/` — filing a finding, the single most common way this corpus
-    changes — invalidated nothing.
+    `<date>` directories and the build opens no file directly in
+    `papers/AutomatedReviews/`. Watching parents alone leaves that directory
+    unwatched, and creating a new `<date>/` — filing a finding, the most common
+    way this corpus changes — then invalidates nothing.
     """
     try:
         inside = p.resolve().relative_to(root)
@@ -391,22 +379,15 @@ def _repo_ancestors(p: Path, root: Path) -> set[str]:
 def _loaded_repo_module_sources() -> tuple[str, ...]:
     """Every `.py` inside this repo that is currently imported.
 
-    ⚠️ THIS EXISTS BECAUSE THE READ SET ALONE MADE THE KEY NARROWER THAN THE
-    HAND-LISTED ONE IT REPLACED (caught in review, 2026-08-14). An audit hook
-    sees `open`, and a module already in `sys.modules` is never opened again —
-    `provenance_dashboard` imports `build_graph` before recording starts, so
-    `scripts/build_graph.py` was captured by nothing. Where a valid
-    `__pycache__` entry exists only the `.pyc` is opened, and editing the `.py`
-    does not move the `.pyc`'s mtime, so those inputs were invisible too.
-    Measured against the 13 inputs the previous key named: five had regressed to
-    no-ops — `build_graph.py`, `readiness_gates.py`, `verification_state.py`,
-    `last_modified.py` and `aristotle_interface.py`. Editing the graph builder
-    itself no longer invalidated the graph cache.
+    The CODE half of the key. An audit hook sees `open`, and a module already in
+    `sys.modules` is never opened again — `provenance_dashboard` imports
+    `build_graph` before recording starts, and where a valid `__pycache__` entry
+    exists only the `.pyc` is opened, whose mtime does not move when the `.py` is
+    edited. Without this, editing the graph builder would not invalidate the
+    graph cache.
 
     `sys.modules` is the decider for "code that can change this build's output",
-    exactly as the read set is the decider for data, so this is the same
-    principle applied to the half the hook cannot observe — not a second
-    hand-list. Cost: one pass over `sys.modules` plus ~100 stats.
+    exactly as the read set is for data. Cost: one pass plus ~100 stats.
     """
     root = str(PROJECT_ROOT.resolve())
     out: set[str] = set()
@@ -431,24 +412,15 @@ def _graph_fingerprint() -> tuple:
     of each read file (immediate parent only, for files outside the repo).
     Cost ~12-23 ms.
 
-    ⚠️ This docstring previously said "every directory it opened a file from",
-    which describes the immediate-parent behaviour that was the shipped bug —
-    `papers/AutomatedReviews/` is watched precisely because ancestors are, and a
-    docstring describing the narrower rule invites someone to "simplify" back to
-    it.
-
     Returns a key containing a fresh `object()` — which can never equal a
     previously stored key — when no read set is available. That is the
     fail-safe: before the first build, and after any build whose reads could
     not be recorded or that raced a concurrent write, the cache always misses.
-    It is deliberately not `None`: `_GRAPH_CACHE['fingerprint']` is also
-    initialised to `None`, so a `None` key would be one guard away from turning
-    a cold cache into a hit. ⚠️ Note that today it IS only one guard away, not
-    zero — `get_cached_graph` tests `_GRAPH_CACHE['graph'] is not None` first,
-    so the collision is currently unreachable. The sentinel stands anyway,
-    because relying on a guard in another function is exactly the kind of
-    cross-module assumption this module has already been burned by; it must not
-    be deleted on the grounds that the collision "cannot happen".
+    ⛔ Deliberately not `None`. `_GRAPH_CACHE['fingerprint']` is also initialised
+    to `None`, so a `None` key would rely on `get_cached_graph`'s separate
+    `graph is not None` test to stop a cold cache reading as a hit. Do not delete
+    the sentinel on the grounds that the collision cannot happen — it cannot
+    happen because of a guard in another function.
     """
     paths = _READ_SET['paths']
     if not paths:
@@ -470,18 +442,13 @@ def _graph_fingerprint() -> tuple:
             fp.append((d, tuple(sorted(os.listdir(d)))))
         except OSError as exc:
             # ⛔ NOT `()` — that is a LEGAL listing, so "could not read this
-            # directory" would hash identically to "this directory is empty".
-            # The file leg two blocks up uses the impossible size -1 for exactly
-            # this reason, and this leg used to throw that discipline away. It
-            # matters more here than anywhere: the directory listing is the ONLY
-            # mechanism that catches files which did not exist at the last build,
-            # i.e. the whole shipped fix for a newly filed finding. Under fd
-            # pressure — and ENFILE is a documented recurring condition on this
-            # host — `os.listdir` fails while `os.stat` keeps working, every
-            # watched directory collapses to `()` on both sides of the
-            # comparison, the key matches, and the dashboard serves a graph
-            # missing the finding that was just filed. The original defect,
-            # resurrected through the error path of its own fix.
+            # directory" would hash identically to "this directory is empty",
+            # mirroring the impossible size -1 the file leg uses above. The
+            # listing is the ONLY mechanism catching files that did not exist at
+            # the last build. Under fd pressure (ENFILE is a recurring condition
+            # on this host) `os.listdir` fails while `os.stat` still works, every
+            # directory collapses to `()` on both sides, the key matches, and the
+            # dashboard serves a graph missing the finding just filed.
             logger.warning(
                 "graph cache key: cannot list %s (%s) — forcing a rebuild", d, exc)
             fp.append((d, '<unlistable>', object()))

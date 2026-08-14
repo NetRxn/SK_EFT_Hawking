@@ -173,89 +173,39 @@ def _reset_lean_ambiguity_log() -> None:
 # ══════════════════════════════════════════════════════════════════════════
 # WITHIN-BUILD EXTRACTOR MEMO
 # ══════════════════════════════════════════════════════════════════════════
-#: Live ONLY for the dynamic extent of one `build_graph_json()` call; `None`
-#: means "not inside a build" and every extractor then computes normally.
+#: Per-thread memo, live ONLY for the dynamic extent of one `build_graph_json()`
+#: call. `None` means "no build on this thread's stack", and every extractor then
+#: computes normally.
 #:
-#: WHY THIS IS SCOPED TO A BUILD AND NOT TO THE PROCESS. Measured 2026-08-14:
-#: `build_graph_json()` took **14.4 s before this memo and 7.1 s after**. The
-#: graph is assembled at several sites that each re-derive from scratch — the
-#: pre-gate view built by `extract_readiness_gate_nodes`, the real node list, and
-#: the edge extractors (`extract_verifies_edges` re-runs
+#: WHY IT EXISTS. The graph is assembled at several sites that each derive from
+#: scratch — the pre-gate view in `extract_readiness_gate_nodes`, the real node
+#: list, and the edge extractors (`extract_verifies_edges` re-runs
 #: `extract_python_test_nodes`; `extract_depends_on_axiom_edges` re-runs
-#: `extract_lean_declaration_nodes`) — so an argument-free extractor can run
-#: several times per build.
+#: `extract_lean_declaration_nodes`). Measured 2026-08-14, calls per build were
+#: `{1: 5, 2: 10, 4: 4, 5: 1, 6: 1, 8: 1}`; deriving each once took the build
+#: from 14.4 s to 7.1 s.
 #:
-#: ⚠️ The distribution is SKEWED, and an earlier version of this note claimed a
-#: flat "4-6 times each" that was wrong for 15 of the 23 (review, 2026-08-14).
-#: Measured calls per build: **1-8**, as `{1: 5, 2: 10, 4: 4, 5: 1, 6: 1, 8: 1}`
-#: — `extract_formula_nodes` 8x, `extract_lean_declaration_nodes` 6x,
-#: `extract_review_finding_nodes` 5x, and **five extractors run exactly once**,
-#: where the memo saves nothing and costs a copy. The uniform decorator is still
-#: the right call (see `_memo_within_build`), but it is justified by not needing
-#: a per-extractor judgement, NOT by a saving every extractor receives.
+#: ⛔ TWO CONSTRAINTS, BOTH LOAD-BEARING.
 #:
-#: `extract_python_test_nodes` re-parses and re-walks the whole test suite's AST
-#: four times per build. ⚠️ That is **10.5 M AST nodes visited** across 62,308
-#: `ast.walk` invocations — an earlier note called the 10.5 M figure a count of
-#: `ast.walk` CALLS, off by ~168x. Given this repo's history with a unit swap,
-#: the unit is the load-bearing half of that number.
+#: 1. **Do not widen the scope past one build.** Within a single call the corpus
+#:    cannot change, so there is no key to get wrong. A memo that outlived a
+#:    build would answer a post-seeding read from a pre-seeding snapshot, and the
+#:    seeded-mutation tests — which is what makes every non-vacuity claim in this
+#:    repo worth anything — would pass for the wrong reason, invisibly.
 #:
-#: ⛔ A PROCESS-LIFETIME CACHE HERE WOULD BE A CORRECTNESS DEFECT, not merely a
-#: staleness risk. A large family of this repo's tests deliberately seeds a
-#: mutation into a PRODUCTION artifact and asserts the dependent check turns red
-#: — that discipline is what makes every non-vacuity claim here worth anything.
-#: A cache that outlived one build would answer the post-seeding call from a
-#: pre-seeding snapshot, and the test would pass FOR THE WRONG REASON: strictly
-#: worse than a slow suite, and invisible, because a check that cannot fire is
-#: indistinguishable from a check finding nothing.
+#: 2. **Keep it thread-local.** As a module global, two interleaved builds leak
+#:    it permanently: A installs, B shares A's, A restores `None`, B restores A's
+#:    dict — leaving a memo installed with no build running, after which every
+#:    extractor call in the process replays A's snapshot. Concurrency is real
+#:    here: the dashboard runs Flask `threaded=True`, and `dashboard_flow.py` and
+#:    `bundle_readiness.py` both call `build_graph_json()` holding no lock.
 #:
-#: Scoping to the build sidesteps the question rather than answering it: within
-#: one `build_graph_json()` call the corpus cannot change, so there is no key to
-#: get wrong and no input that can be missed.
+#: This does not make `build_graph_json` thread-safe overall — `_LEAN_AMBIGUITY_SEEN`
+#: and `_LEAN_SHORT_INDEX` are still shared module state.
 #:
-#: ⚠️ TWO CLAIMS THAT USED TO SIT HERE WERE WRONG AND ARE DELETED, not softened.
-#: (1) This cited a 254,887-file / 16.5 GB input surface as proof that no
-#: cross-build key is affordable. That measured the surface a build COULD read;
-#: the set it actually opens is ~2,900 files / ~127 MB, and
-#: `provenance_dashboard` now keys on exactly that for ~12-23 ms. (2) It then
-#: asserted `_graph_fingerprint()` "is already wrong" about the review corpus and
-#: the ledger — true when written, fixed two commits later in the same range
-#: (`d82f237b`), and left standing here describing a live defect that no longer
-#: existed. A comment in file A asserting a defect in file B rots the moment B is
-#: fixed; this one rotted inside one wave. The reason to scope to the build is
-#: the one stated above — no key at all beats a key that can be wrong — and it
-#: does not need a claim about another module to stand up.
-#:
-#: ⚠️ THREAD-LOCAL, AND A MODULE GLOBAL HERE WAS A REAL DEFECT (caught in
-#: review, 2026-08-14). The save/restore below is written for NESTING, on one
-#: stack. Against a shared global, two concurrent builds interleave into a
-#: permanent leak: thread A enters and installs `{}`; thread B enters, sees a
-#: non-`None` outer and so shares A's memo rather than making its own; A exits
-#: and restores `None` while B is still building, so B's remaining extractors
-#: run unmemoized; B then exits and restores **A's dict**, leaving the memo
-#: installed with NO build on the stack. From that moment every extractor call
-#: in the process — including `bundle_readiness.load_findings_by_paper`, the one
-#: the design promises reads live state — is served from A's snapshot until some
-#: later scope happens to exit with `outer is None`.
-#:
-#: ⚠️ An earlier version of this note claimed the hazard was covered because
-#: `provenance_dashboard.get_cached_graph` holds `_GRAPH_CACHE_LOCK` across the
-#: rebuild. That was false, and asserting a caller's property without counting
-#: the callers is the same proxy-for-decider error this file keeps finding: the
-#: lock guards ONE of three build entry points. `dashboard_flow.py:228` and
-#: `bundle_readiness.py:395` both call `build_graph_json()` holding no lock, and
-#: the dashboard runs Flask with `threaded=True` — so two concurrent builds are
-#: one page load away, not a theoretical interleaving.
-#:
-#: Thread-local storage removes the interleaving rather than guarding it: each
-#: thread's scope can only save and restore its own. It does not make
-#: `build_graph_json` thread-safe overall — `_LEAN_AMBIGUITY_SEEN` and
-#: `_LEAN_SHORT_INDEX` remain shared module state, and that was already true
-#: before this memo existed — but the memo no longer adds a way to serve stale
-#: data with no build running.
-#:
-#: Values are whatever the extractor returned — `list[dict]` for all of them
-#: except `extract_hypothesis_nodes`, which returns a tuple.
+#: Values are whatever the extractor returned: `list[dict]` for all but
+#: `extract_hypothesis_nodes`, which returns a tuple.
+#: History: `papers/AutomatedReviews/2026-08-14-suite-runtime/infra.md` §1.
 _BUILD_MEMO_TLS = threading.local()
 
 
@@ -283,35 +233,23 @@ def _build_memo_scope():
 def _memo_within_build(fn):
     """Memoize an argument-free extractor for the extent of one build.
 
-    ⚠️ RETURNS A COPY ON EVERY CALL, and that is not defensive habit. The two
-    assembly sites hold their results independently — `extract_all_nodes` builds
-    the real node list while `extract_readiness_gate_nodes` builds a separate
-    pre-gate view — and today each receives freshly-constructed dicts. Handing
-    both the same objects would make them alias, so a later mutation through one
-    view would appear in the other. `_overlay_atlas` and `_overlay_closure` both
-    annotate nodes in place, so that aliasing is reachable, not theoretical.
-    ⚠️ IT IS NOT A NET WIN IN EVERY CASE, and an earlier version of this
-    docstring claimed it was (review, 2026-08-14). Measured copy cost as a
-    fraction of the extractor's own compute: `extract_parameter_nodes` 164%,
-    `extract_primary_source_nodes` 127%, `extract_contradiction_nodes` 91%,
-    `extract_hypothesis_nodes` 83% — and the five extractors called once per
-    build pay a copy for no saving at all. **Nine of 23 are net losses.** They
-    are sub-millisecond in absolute terms, which is why the uniform rule still
-    stands: it is justified by not needing a per-extractor judgement that would
-    rot the first time a cost profile changed, NOT by a saving each one receives.
-    The largest, `extract_lean_declaration_nodes` (32,472 nodes), copies at ~55%
-    of its rebuild and is a clear win at 6 calls.
+    ⚠️ RETURNS A COPY ON EVERY CALL. The two assembly sites hold their results
+    independently — `extract_all_nodes` builds the real node list while
+    `extract_readiness_gate_nodes` builds a separate pre-gate view — and each
+    receives freshly-constructed dicts today. Handing both the same objects would
+    alias them, and `_overlay_atlas` / `_overlay_closure` annotate nodes in place,
+    so a mutation through one view would appear in the other.
 
-    `functools.wraps` keeps `inspect.getsource` and `__wrapped__` resolving to
-    the real body. ⚠️ This previously justified that by naming "the guards that
-    introspect extractor source" — **no such guard exists**. A repo-wide sweep
-    found every `getsource`/`unwrap` hit targets a MODULE (unaffected by
-    decoration) or a non-extractor, and `tests/test_readiness_gate_measured.py`
-    documents being deliberately rewritten away from source introspection. The
-    wrapping is still correct — it keeps a future introspecting guard from
-    silently reading a 5-line wrapper — but it is a precaution, not a dependency,
-    and citing a guard that does not exist is how a reader loses trust in the
-    surrounding block.
+    The rule is uniform across every argument-free extractor deliberately, and
+    NOT because each one profits: nine of 23 pay more for the copy than they save,
+    and the five called once per build save nothing at all. All are
+    sub-millisecond. A uniform rule needs no per-extractor judgement to stay
+    correct when a cost profile changes; a tuned one would.
+
+    `functools.wraps` keeps `inspect.getsource` and `__wrapped__` resolving to the
+    real body, so a guard that introspects an extractor reads the extractor rather
+    than this five-line wrapper. No such guard exists today; this keeps one from
+    silently reading the wrong source if it is written.
     """
     @functools.wraps(fn)
     def wrapper():

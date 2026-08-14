@@ -3,9 +3,9 @@
 WHAT THESE PROTECT, AND WHY IT IS NOT THE OBVIOUS THING
 -------------------------------------------------------
 The memo exists for speed — measured 2026-08-14, it takes `build_graph_json()`
-from 14.4 s to 7.1 s by not re-deriving the argument-free extractors the 4-6
-times each that a single build otherwise calls them. Speed is not what these
-tests guard.
+from 14.4 s to 7.1 s by deriving each argument-free extractor once per build
+instead of the up-to-eight times a build otherwise calls them. Speed is not what
+these tests guard.
 
 The hazard is that a caching layer over a derivation can make a **seeded
 mutation invisible**. A large family of this repo's tests writes a defect into a
@@ -40,14 +40,12 @@ import build_graph as bg  # noqa: E402
 #: therefore not weakening the comparison — without it the test would assert a
 #: property the code never had.
 #:
-#: ⚠️ NARROWED to exactly the measured pair (review, 2026-08-14). It also listed
-#: `last_modified` and `generated_at`, which the same measurement shows do NOT
-#: vary between builds — and `last_modified` is the worst possible field to
-#: blank, because `scripts/last_modified.py` propagates it UP DEPENDENCY EDGES.
-#: A memo defect that changed the edge set, or fed one assembly site a stale
-#: upstream node, surfaces there and almost nowhere else in a whole-graph
-#: comparison. Normalising a field that does not need it is not harmless
-#: caution; it deletes the most sensitive signal the comparison has.
+#: ⛔ NORMALISE ONLY THESE TWO. In particular do not add `last_modified`:
+#: `scripts/last_modified.py` propagates it UP DEPENDENCY EDGES, so a defect that
+#: changed the edge set or fed an assembly site a stale upstream node surfaces
+#: there and almost nowhere else in a whole-graph comparison. Blanking a field
+#: that does not vary is not harmless caution — it deletes the comparison's most
+#: sensitive signal.
 _VOLATILE = {"built_at", "last_evaluated"}
 
 
@@ -81,19 +79,17 @@ def tmp_probe():
 
 
 class TestTheMemoIsPerThread:
-    """⚠️ ADDED AFTER REVIEW FOUND A LEAK THAT EVERY OTHER TEST HERE MISSED.
+    """The memo must be per-thread, and only a concurrency test can show it.
 
-    `_build_memo_scope` save/restores, which is right for nesting on one stack
-    and wrong for a global shared across threads: A installs `{}`; B sees a
-    non-None outer and shares A's memo; A exits restoring `None`; B exits
-    restoring **A's dict**, leaving a memo installed with no build running. Every
-    later extractor call in the process is then served from A's snapshot.
+    `_build_memo_scope` save/restores, which is right for nesting on one stack and
+    wrong for a global shared across threads: A installs `{}`; B sees a non-None
+    outer and shares A's memo; A exits restoring `None`; B exits restoring A's
+    dict — leaving a memo installed with no build running, after which every later
+    extractor call in the process is served from A's snapshot.
 
-    Not theoretical — the dashboard runs Flask `threaded=True`, and
-    `dashboard_flow.py:228` and `bundle_readiness.py:395` both call
-    `build_graph_json()` holding no lock, so two concurrent builds are one page
-    load away. Thread-local storage removes the interleaving instead of guarding
-    it.
+    Concurrency is reachable here: the dashboard runs Flask `threaded=True`, and
+    `dashboard_flow.py` and `bundle_readiness.py` both call `build_graph_json()`
+    holding no lock.
     """
 
     def test_two_interleaved_scopes_do_not_leave_a_memo_installed(self):
@@ -162,13 +158,11 @@ class TestTheMemoCannotOutliveABuild:
         `extract_review_finding_nodes` with no build in progress. If the memo
         were process-scoped, that call would replay whatever the last build saw.
 
-        ⚠️ REWRITTEN — the original asserted `first is not second`, which was
-        VACUOUS and mutation testing proved it: the wrapper returns a
-        `copy.deepcopy` on every hit, so two calls can never be the same object
-        whatever the memo's scope. Under a deliberately process-lifetime memo the
-        assertion stayed green while the memo served a stale snapshot. Identity
-        was a proxy; liveness is the decider, so this seeds the real corpus and
-        asserts the content moves.
+        ⛔ ASSERT LIVENESS, NOT IDENTITY. `first is not second` is vacuous here:
+        the wrapper deepcopies on every hit, so two calls are never the same
+        object whatever the memo's scope, and the assertion stays green while a
+        process-lifetime memo serves a stale snapshot. Seed the real corpus and
+        assert the content moves.
         """
         assert bg._current_build_memo() is None
         probe_dir, expected_id = tmp_probe
