@@ -37,6 +37,9 @@ _WHITELIST = (
     "arxiv.org", "export.arxiv.org", "doi.org", "link.aps.org", "journals.aps.org",
     "iopscience.iop.org", "projecteuclid.org", "stacks.math.columbia.edu",
     "leanprover-community.github.io", "leanprover.github.io", "oeis.org", "pdg.lbl.gov",
+    # Official Lean docs: the reference manual, release notes and toolchain pages for
+    # the language this substrate is written in.
+    "lean-lang.org",
     "en.wikipedia.org", "ncatlab.org", "encyclopediaofmath.org",
     "mathoverflow.net", "math.stackexchange.com",
     # Project tooling/infrastructure (NOT scholarly primaries), user-authorized 2026-06-29:
