@@ -72,25 +72,31 @@ The atlas (`lean/atlas_view.json`, derived — cannot drift) is the machine-trut
 Keep a **tightly-coupled single-file chain solo** with one fast MCP — that is faster than coordinating. Fan
 out **only when the DAG has genuinely branched** into independent sub-chains. To fan out, as `lead`:
 
-1. **`/reset-slot N`** — resets worktree slot `wtN` to `main`, the **guardrail-safe** way. ⚠️ Never reach for
-   `git reset --hard` / `git clean` on a slot — the auto-mode permission classifier denies them (it's a
-   Claude Code heuristic, not a dev-harness hook). `/reset-slot` refuses if the slot holds unmerged commits,
-   so nothing is lost.
-2. `Agent(subagent_type="skeft-qa:lean-worker", prompt="SLOT N=…, use mcp__lean-lsp-wtN__*, <one independent
+1. **`slotctl acquire --slot N --client claude --base-ref main`** then **`slotctl prepare --slot N`** —
+   the slot endpoints reject every tool call without an ACTIVE lease, so this is what makes the slot usable,
+   not a formality. `prepare` resets the slot to the base and installs a `.lake` matching the published
+   build epoch. Both refuse on a dirty or unabsorbed slot (→ `QUARANTINED`), so nothing is lost.
+   ⚠️ Never reach for `git reset --hard` / `git clean` on a slot — the auto-mode permission classifier
+   denies them. **`/reset-slot N`** remains for a slot driven outside a lease.
+2. `Agent(subagent_type="skeft-qa:lean-worker", prompt="SLOT N=…, use mcp__skeft_wtN__*, <one independent
    sub-chain/BLOCK — as large as is coherently independent — + Lit-Search refs + acceptance + any relevant
    kernel no-go from the NEGATIVE frontier the worker must not re-derive>")` — up to 3 concurrent. Hand
    workers **as-large-as-coherent blocks**, not atomic bricks (bigger blocks = fewer dispatch/merge/reread
    cycles + higher per-worker throughput). A fresh worker is the highest-risk re-deriver — **name the
    dead-forks in its brief.**
-3. Merge each `worktree-wtN` into `main`; re-run the full gate; `/reset-slot N` again for the next brick.
+3. **`slotctl ready --slot N`** then **`slotctl absorb --slot N`** — audits the slot, rebases onto the
+   current base, fast-forwards `main` (never cherry-picks), runs the authoritative gate under the
+   integration lock, publishes the epoch, rewarms and releases. Use `release --slot N` for a no-change slot.
 
 **⛔ You own `lake build`; workers do not.** Slot `.lake` isolation buys correctness, not contention
 relief — Lake takes one job per core, so 3 building slots is 3× the machine. Measured 2026-07-28: three
 concurrent slot builds stretched the lead's ~15 s pre-commit hook past **10 minutes**, which reads
 exactly like a broken toolchain and isn't. Workers gate on `lean_diagnostic_messages` / `lean_goal` /
 `lean_verify` (per-file, near-free); **you** run `lake build`, `lake build SKEFTHawking.ExtractDeps`, and
-`validate.py` on `main` after the merge. Only exception: a worker adding a NEW module another file must
-`import` may run `lake build SKEFTHawking.<ThatOneModule>` — one named module, reported. ⚠️ Lake has never had `-j`; this is uncapped and takes the whole machine.
+`validate.py` on `main` — or let `absorb` run them. A worker needing a NEW module importable reports it
+and **you** build it. ⚠️ Lake has never had `-j`; even one named module takes the whole machine, which is
+why the grant is not delegable. A `PreToolUse(Bash)` guard enforces this for subagents; it never
+constrains you.
 
 Full flow, why the slots are persistent, and the maintainer caveat: `references/parallel-worktrees.md`.
 

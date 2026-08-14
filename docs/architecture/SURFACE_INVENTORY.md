@@ -176,7 +176,7 @@ success; for a `blocked` default it is a blocker no evidence supports. Guarded b
 | [`figure-reviewer`](../../.claude/plugins/skeft-qa/agents/figure-reviewer.md) | opus | Use this agent to review generated physics figures for rendering quality, physics accuracy, and style consistency. Invoke after running review_figures.py to generate PNGs and a rev |
 | [`harvest-consolidator`](../../.claude/plugins/skeft-qa/agents/harvest-consolidator.md) | opus | Consolidate harvest-extractor candidates into the System-2 register — register-AWARE filing & combining. Dispatched by the harvest skill. |
 | [`harvest-extractor`](../../.claude/plugins/skeft-qa/agents/harvest-extractor.md) | haiku | Extract dev-process/harness signal from a /goal transcript span — including the pre-vs-post-compact delta across boundaries. Dispatched by the harvest skill. |
-| [`lean-worker`](../../.claude/plugins/skeft-qa/agents/lean-worker.md) | opus | Prove ONE independent Lean 4 sub-chain in a pre-built parallel worktree slot. The lead assigns you a slot N (wt1/wt2/wt3); you get your OWN fast, build-isolated lean-lsp via mcp__l |
+| [`lean-worker`](../../.claude/plugins/skeft-qa/agents/lean-worker.md) | opus | Prove ONE independent Lean 4 sub-chain in a pre-built parallel worktree slot. The lead assigns you a slot N (wt1/wt2/wt3); you get your OWN fast, build-isolated lean-lsp via mcp__s |
 | [`paper-drafter`](../../.claude/plugins/skeft-qa/agents/paper-drafter.md) | opus | Use this agent to draft ONE assigned section of a publication bundle manuscript at Stage 10, against an explicit brief from the lead. It RETURNS the section's prose; the lead write |
 | [`prose-reviewer`](../../.claude/plugins/skeft-qa/agents/prose-reviewer.md) | opus | Use this agent to read a publication bundle draft start to finish as a referee at its named venue would, and report where the manuscript fails to carry a reader. This is the fourth |
 | [`research-scout`](../../.claude/plugins/skeft-qa/agents/research-scout.md) | sonnet | Read-only web reconnaissance for a goal-mode loop. Given ONE focused, already-sanitized research question, find the answer in whitelisted scholarly sources and return a STRUCTURED, |
@@ -190,7 +190,7 @@ success; for a `blocked` default it is a blocker no evidence supports. Guarded b
 | [`goal-guard`](../../.claude/plugins/skeft-qa/commands/goal-guard.md) | Toggle the AskUserQuestion guard for the current managed /goal loop (on|off). Off lets the loop ask you a question; on resumes autonomous protection. |
 | [`notebook`](../../.claude/plugins/skeft-qa/commands/notebook.md) | Lab-notebook lifecycle ops for a /goal loop — new (bootstrap a correct active notebook + INDEX), sync (refresh the mechanical INDEX scaffold + flag staleness), shard (self-level th |
 | [`orient`](../../.claude/plugins/skeft-qa/commands/orient.md) | Re-orient on the current managed dev loop — a ≤200-word compass from the goal marker + source-of-truth docs (where am I, what's the next brick). |
-| [`reset-slot`](../../.claude/plugins/skeft-qa/commands/reset-slot.md) | Reset a parallel Lean worktree slot (wt1/wt2/wt3) to current main — the guardrail-safe way (checkout -B, refuses if the slot has commits not yet on main) and auto-re-clones the slo |
+| [`reset-slot`](../../.claude/plugins/skeft-qa/commands/reset-slot.md) | Reset an UNLEASED parallel Lean worktree slot (wt1/wt2/wt3) to current main — the guardrail-safe way (checkout -B, refuses if the slot has commits not yet on main) and auto-re-clon |
 
 ## Hand-maintained registries
 

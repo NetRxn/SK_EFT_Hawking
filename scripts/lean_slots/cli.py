@@ -85,13 +85,19 @@ def parser() -> argparse.ArgumentParser:
     )
     config_commands = config.add_subparsers(dest="config_command", required=True)
     render = config_commands.add_parser(
-        "render", help="render gitignored Codex configuration"
+        "render", help="render gitignored client configuration"
     )
+    render.add_argument("--client", choices=("codex", "claude"), default="codex")
     render.add_argument(
         "--scope", choices=("repo", "workspace", "both"), default="repo"
     )
     render.add_argument("--force", action="store_true")
     render.add_argument("--rotate-token", action="store_true")
+    render.add_argument(
+        "--rollback",
+        action="store_true",
+        help="claude only: restore the pre-activation mcpServers snapshot",
+    )
 
     session = commands.add_parser(
         "session", help="emit optional client-auth and shared-state environment"
@@ -159,11 +165,20 @@ def main(argv: list[str] | None = None) -> int:
         elif args.command == "build":
             _json(controller.build())
         elif args.command == "config":
-            paths = controller.render_config(
-                scope=args.scope,
-                force=args.force,
-                rotate_token=args.rotate_token,
-            )
+            if args.client == "claude":
+                if args.rotate_token:
+                    raise SlotError(
+                        "trusted-local Claude endpoints carry no token to rotate"
+                    )
+                paths = controller.render_claude_config(rollback=args.rollback)
+            else:
+                if args.rollback:
+                    raise SlotError("--rollback applies to --client claude only")
+                paths = controller.render_config(
+                    scope=args.scope,
+                    force=args.force,
+                    rotate_token=args.rotate_token,
+                )
             for path in paths:
                 print(path)
         elif args.command == "session":

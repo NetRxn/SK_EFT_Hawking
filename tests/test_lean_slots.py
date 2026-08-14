@@ -765,6 +765,7 @@ def test_doctor_json_shape_is_stable(slot_repo) -> None:
         "wt1.integrated",
         "build_epoch",
         "config.repo",
+        "config.claude",
         "heavy_backend_limit",
     }
 
@@ -783,3 +784,241 @@ def test_doctor_fails_closed_for_quarantine_and_unabsorbed_commits(slot_repo) ->
     second = {item["name"]: item for item in controller.doctor()["checks"]}
     assert not second["wt2.integrated"]["ok"]
     assert "1 unabsorbed commit" in second["wt2.integrated"]["detail"]
+
+
+# --- ADR-008 Phase 4: Claude MCP configuration (spec P4-1..P4-3) ---------------------
+
+
+#: The shape the production artifact actually has: the per-slot stdio servers this block
+#: replaces, interleaved with servers owned by other projects that must survive untouched.
+def _workspace_mcp(tmp_path: Path) -> Path:
+    path = tmp_path / ".mcp.json"
+    path.write_text(
+        json.dumps(
+            {
+                "mcpServers": {
+                    "lean-lsp": {"command": "uvx", "args": ["--lean-project-path", "/x/lean"]},
+                    "lean-lsp-other": {"command": "uvx", "args": ["--lean-project-path", "/y"]},
+                    "lean-lsp-wt1": {"command": "uvx", "args": ["--repl"]},
+                    "lean-lsp-wt2": {"command": "uvx", "args": ["--repl"]},
+                    "lean-lsp-wt3": {"command": "uvx", "args": ["--repl"]},
+                    "other-client": {"command": "other"},
+                }
+            },
+            indent=2,
+        )
+        + "\n"
+    )
+    return path
+
+
+def test_claude_render_swaps_stdio_slots_for_lease_gated_http(slot_repo, tmp_path) -> None:
+    controller, _, _ = slot_repo
+    target = _workspace_mcp(tmp_path)
+    controller.render_claude_config()
+    servers = json.loads(target.read_text())["mcpServers"]
+    assert not [key for key in servers if key.startswith("lean-lsp-wt")]
+    for number in (1, 2, 3):
+        entry = servers[f"test_wt{number}"]
+        assert entry["type"] == "http"
+        # The query parameter is what `proxy.py` matches against the lease's own client
+        # field; without it trusted-local dispatch fails closed.
+        assert entry["url"] == f"http://127.0.0.1:{29000 + number}/mcp?client=claude"
+
+
+def test_claude_render_leaves_other_projects_servers_and_their_order_alone(
+    slot_repo, tmp_path
+) -> None:
+    controller, _, _ = slot_repo
+    target = _workspace_mcp(tmp_path)
+    before = json.loads(target.read_text())["mcpServers"]
+    unrelated = {k: v for k, v in before.items() if not k.startswith("lean-lsp-wt")}
+    controller.render_claude_config()
+    after = json.loads(target.read_text())["mcpServers"]
+    assert {k: v for k, v in after.items() if k in unrelated} == unrelated
+    assert [k for k in after if k in unrelated] == list(unrelated)
+
+
+def test_claude_render_ports_come_from_the_inventory_not_a_second_list(
+    slot_repo, tmp_path
+) -> None:
+    controller, repo, _ = slot_repo
+    target = _workspace_mcp(tmp_path)
+    path = repo / "config" / "lean-slots.public.json"
+    inventory = json.loads(path.read_text())
+    inventory["slots"]["2"]["proxy_port"] = 29777
+    path.write_text(json.dumps(inventory))
+    moved = Controller(Inventory.load(path))
+    moved.render_claude_config()
+    servers = json.loads(target.read_text())["mcpServers"]
+    assert servers["test_wt2"]["url"].startswith("http://127.0.0.1:29777/")
+
+
+def test_a_drifted_port_in_the_live_file_is_reported_not_overwritten(
+    slot_repo, tmp_path
+) -> None:
+    controller, _, _ = slot_repo
+    target = _workspace_mcp(tmp_path)
+    controller.render_claude_config()
+    document = json.loads(target.read_text())
+    document["mcpServers"]["test_wt2"]["url"] = "http://127.0.0.1:29999/mcp?client=claude"
+    target.write_text(json.dumps(document, indent=2))
+    check = {item["name"]: item for item in controller.doctor()["checks"]}["config.claude"]
+    assert not check["ok"]
+    assert check["detail"].startswith("drifted")
+    assert "test_wt2" in check["detail"]
+    # Reporting, never writing: doctor left the operator's file exactly as it found it.
+    assert json.loads(target.read_text()) == document
+
+
+def test_a_missing_slot_entry_is_partial_not_current(slot_repo, tmp_path) -> None:
+    controller, _, _ = slot_repo
+    target = _workspace_mcp(tmp_path)
+    controller.render_claude_config()
+    document = json.loads(target.read_text())
+    del document["mcpServers"]["test_wt3"]
+    target.write_text(json.dumps(document, indent=2))
+    check = {item["name"]: item for item in controller.doctor()["checks"]}["config.claude"]
+    assert not check["ok"]
+    assert check["detail"].startswith("partial")
+    assert "test_wt3" in check["detail"]
+
+
+def test_a_legacy_stdio_slot_left_beside_the_http_block_is_drift(slot_repo, tmp_path) -> None:
+    """Coexistence is the process multiplication this change exists to remove."""
+    controller, _, _ = slot_repo
+    target = _workspace_mcp(tmp_path)
+    controller.render_claude_config()
+    document = json.loads(target.read_text())
+    document["mcpServers"]["lean-lsp-wt1"] = {"command": "uvx", "args": ["--repl"]}
+    target.write_text(json.dumps(document, indent=2))
+    check = {item["name"]: item for item in controller.doctor()["checks"]}["config.claude"]
+    assert not check["ok"]
+    assert "lean-lsp-wt1" in check["detail"]
+
+
+def test_pre_activation_and_rolled_back_states_are_healthy_not_broken(
+    slot_repo, tmp_path
+) -> None:
+    controller, _, _ = slot_repo
+    target = _workspace_mcp(tmp_path)
+    pre = json.loads(target.read_text())
+    before = {item["name"]: item for item in controller.doctor()["checks"]}["config.claude"]
+    assert before["ok"] and before["detail"].startswith("not activated")
+
+    controller.render_claude_config()
+    controller.render_claude_config(rollback=True)
+    assert json.loads(target.read_text())["mcpServers"] == pre["mcpServers"]
+    after = {item["name"]: item for item in controller.doctor()["checks"]}["config.claude"]
+    assert after["ok"] and after["detail"].startswith("not activated")
+
+
+def test_a_second_render_cannot_destroy_the_pre_activation_snapshot(
+    slot_repo, tmp_path
+) -> None:
+    """Otherwise the snapshot records an already-activated block and rollback is a no-op."""
+    controller, _, _ = slot_repo
+    target = _workspace_mcp(tmp_path)
+    pre = json.loads(target.read_text())["mcpServers"]
+    controller.render_claude_config()
+    controller.render_claude_config()
+    from scripts.lean_slots import claude_config
+
+    snapshot = json.loads(claude_config.rollback_path(controller.inventory).read_text())
+    assert snapshot == pre
+
+
+def test_render_refuses_an_absolute_claude_config_path(slot_repo, tmp_path) -> None:
+    controller, repo, _ = slot_repo
+    path = repo / "config" / "lean-slots.public.json"
+    inventory = json.loads(path.read_text())
+    inventory["config"] = {"claude_mcp": str(tmp_path / ".mcp.json")}
+    path.write_text(json.dumps(inventory))
+    with pytest.raises(SlotError, match="workspace-relative"):
+        Controller(Inventory.load(path)).render_claude_config()
+
+
+def test_the_live_workspace_mcp_config_classifies_without_raising() -> None:
+    """Production-seeded: run the classifier over the operator's real file, if present."""
+    from scripts.lean_slots import claude_config
+
+    inventory = Inventory.load()
+    live = Controller(inventory).claude_mcp_path()
+    if not live.exists():
+        pytest.skip("no workspace Claude MCP configuration on this host")
+    state, _ = claude_config.block_state(json.loads(live.read_text()), inventory)
+    assert state in {"current", "not activated", "partial", "drifted"}
+
+
+def test_a_session_owned_lease_survives_separate_cli_invocations(
+    slot_repo, monkeypatch
+) -> None:
+    """A lease outlives the shell that acquired it, or every second command fails closed."""
+    controller, repo, _ = slot_repo
+    monkeypatch.delenv("LEAN_SLOT_OWNER_PID", raising=False)
+    monkeypatch.setenv("CLAUDE_CODE_SESSION_ID", "session-abc")
+    lease = controller.acquire(1, client="claude", base_ref="main")
+    assert lease["owner_kind"] == "session"
+    # A distinct invocation: same session, different parent process.
+    reloaded = Controller(Inventory.load(repo / "config" / "lean-slots.public.json"))
+    assert reloaded.heartbeat(1)["slot"] == 1
+
+
+def test_a_different_session_cannot_drive_another_sessions_lease(
+    slot_repo, monkeypatch
+) -> None:
+    controller, repo, _ = slot_repo
+    monkeypatch.delenv("LEAN_SLOT_OWNER_PID", raising=False)
+    monkeypatch.setenv("CLAUDE_CODE_SESSION_ID", "session-abc")
+    controller.acquire(1, client="claude", base_ref="main")
+    monkeypatch.setenv("CLAUDE_CODE_SESSION_ID", "session-xyz")
+    other = Controller(Inventory.load(repo / "config" / "lean-slots.public.json"))
+    with pytest.raises(SlotError, match="owner"):
+        other.heartbeat(1)
+
+
+def test_the_neutral_owner_variable_outranks_the_client_specific_ones(
+    slot_repo, monkeypatch
+) -> None:
+    controller, _, _ = slot_repo
+    monkeypatch.delenv("LEAN_SLOT_OWNER_PID", raising=False)
+    monkeypatch.setenv("CODEX_THREAD_ID", "codex-thread")
+    monkeypatch.setenv("CLAUDE_CODE_SESSION_ID", "claude-session")
+    monkeypatch.setenv("LEAN_SLOT_OWNER_SESSION", "explicit-owner")
+    import hashlib
+
+    lease = controller.acquire(1, client="claude", base_ref="main")
+    assert (
+        lease["owner_session_hash"]
+        == hashlib.sha256(b"explicit-owner").hexdigest()
+    )
+
+
+def test_activate_rollback_reactivate_preserves_the_original_snapshot(
+    slot_repo, tmp_path
+) -> None:
+    """The rollback path is ADR-008 item 7 — retaining legacy stdio as recoverable state.
+
+    render->render is guarded elsewhere; this is the sequence that actually breaks write-once,
+    because after a rollback the file legitimately holds the legacy block again and a naive
+    snapshot-on-render would rewrite it, silently making the NEXT rollback restore an
+    already-activated block instead.
+    """
+    controller, _, _ = slot_repo
+    target = _workspace_mcp(tmp_path)
+    pre = json.loads(target.read_text())["mcpServers"]
+
+    controller.render_claude_config()
+    controller.render_claude_config(rollback=True)
+    assert json.loads(target.read_text())["mcpServers"] == pre
+    controller.render_claude_config()
+
+    servers = json.loads(target.read_text())["mcpServers"]
+    assert "test_wt1" in servers and "lean-lsp-wt1" not in servers
+
+    from scripts.lean_slots import claude_config
+
+    snapshot = json.loads(claude_config.rollback_path(controller.inventory).read_text())
+    assert snapshot == pre, (
+        "the snapshot no longer holds the pre-activation block, so a further rollback "
+        "would restore an activated config and the legacy path would be unrecoverable")

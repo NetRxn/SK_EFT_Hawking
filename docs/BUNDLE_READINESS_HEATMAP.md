@@ -1,6 +1,6 @@
 # Bundle Readiness Heatmap
 
-**Auto-generated:** 2026-08-13
+**Auto-generated:** 2026-08-14
 **Tool:** `scripts/bundle_readiness.py --heatmap`
 
 **Companion to:** `docs/READINESS_GATES.md` (per-paper) — the per-bundle analog. Phase 6i Wave 7.4 deliverable; GREEN semantics tightened 2026-06-10 (S5 closure — see legend).
@@ -36,7 +36,7 @@
 | **L1** | 2 | 2 | 6 | 2 | 2 major, 4 minor | 2026-06-10 | 🔴 RED |
 | **L2** | 2 | 1 | 35 | 8 | 24 advisory, 1 critical, 7 major, 3 minor | 2026-06-10 | 🔴 RED |
 | **L3** | 2 | 4 | 23 | 5 | 15 advisory, 1 critical, 4 major, 3 minor | 2026-06-10 | 🔴 RED |
-| **I1** | 3 | 8 | 68 | 34 | 14 advisory, 2 critical, 32 major, 20 minor | 2026-06-10 | 🔴 RED |
+| **I1** | 3 | 8 | 71 | 34 | 14 advisory, 2 critical, 32 major, 23 minor | 2026-06-10 | 🔴 RED |
 | **I2** | 3 | 1 | 53 | 11 | 37 advisory, 1 critical, 10 major, 5 minor | 2026-06-10 | 🔴 RED |
 | **I3** | 3 | 1 | 27 | 7 | 16 advisory, 7 major, 4 minor | 2026-06-10 | 🔴 RED |
 | **E1** | 4 | 5 | 11 | 4 | 4 major, 7 minor | 2026-06-10 | 🔴 RED |
@@ -68,7 +68,7 @@
 | **L1** | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 2 | 2 | 0 | 1 |
 | **L2** | 4 | 3 | 3 | 3 | 6 | 0 | 2 | 0 | 8 | 0 | 6 |
 | **L3** | 2 | 7 | 0 | 2 | 3 | 0 | 0 | 1 | 0 | 1 | 7 |
-| **I1** | 6 | 14 | 0 | 4 | 3 | 0 | 0 | 18 | 8 | 0 | 15 |
+| **I1** | 6 | 14 | 2 | 4 | 3 | 0 | 0 | 18 | 8 | 0 | 16 |
 | **I2** | 2 | 6 | 2 | 3 | 1 | 0 | 5 | 9 | 8 | 0 | 17 |
 | **I3** | 2 | 1 | 0 | 1 | 5 | 0 | 2 | 6 | 4 | 0 | 6 |
 | **E1** | 1 | 3 | 0 | 1 | 0 | 0 | 0 | 3 | 2 | 0 | 1 |

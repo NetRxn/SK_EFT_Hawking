@@ -35,7 +35,7 @@ invocable — an undocumented agent is one no operator knows exists.
 
 | Agent | Dispatched by | Purpose |
 |---|---|---|
-| `lean-worker` | the lead, during worktree fan-out | Proves ONE independent Lean sub-chain in a pre-built slot (`wt1`/`wt2`/`wt3`), each with its own build-isolated `mcp__lean-lsp-wtN__*` and its own `.lake`, so several run in parallel with zero coordination. Commits on the slot branch for the lead to merge. |
+| `lean-worker` | the lead, during worktree fan-out | Proves ONE independent Lean sub-chain in a pre-built slot (`wt1`/`wt2`/`wt3`), each with its own build-isolated `mcp__skeft_wtN__*` and its own `.lake`, so several run in parallel with zero coordination. Commits on the slot branch for the lead to merge. |
 | `coach` | the `PreToolUse(AskUserQuestion)` guard | In-time human proxy for a loop that tried to ask a blocking question while the user is out of the loop. Reads the pre-decisions store plus loop state and returns ONE decision and ONE next action. Fresh context is the point. |
 | `research-scout` | the lead, after Tier-0 local research is exhausted | Read-only web reconnaissance for a single focused question. Holds web tools and nothing that can mutate the repo, so a poisoned page cannot turn it into an editor. Reports; never decides, edits, or commits. |
 | `harvest-extractor` | the `harvest` skill | Extracts dev-process signal from one `/goal` transcript span, including the pre-vs-post-compact delta. Haiku. |

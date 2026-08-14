@@ -40,6 +40,7 @@ mislead. See B2 in `docs/architecture/.working-docs/ARCHITECTURE_TODOs.MD`.
 from __future__ import annotations
 
 import ast
+import re
 import sys
 from pathlib import Path
 
@@ -429,3 +430,89 @@ def test_aristotle_proved_counts_only_run_backed_entries():
         f"machine-closed in every draft that quotes it")
     assert published["aristotle_proved"] < len(A), (
         "the count equals the registry size, so the manual exclusion is not being applied")
+
+
+def test_no_plugin_file_grants_a_worker_a_build_the_guard_denies():
+    """Prose that instructs a worker to run a denied command is worse than silence.
+
+    ADR-008 change-set item 3. Three plugin files carried a "narrow exception" letting a
+    worker run `lake build SKEFTHawking.<Module>`; one of them additionally prescribed
+    `-j4`, a flag Lake has never had, one paragraph after stating Lake has no job cap.
+    `harness_worker_shell_guard.py` denies `lake build` to every subagent unconditionally,
+    so the grant was unexecutable — a worker following it burns a turn on a denial.
+
+    The decider is the guard's own denied set, not a hand-listed phrase.
+    """
+    import re
+    import sys
+
+    plugin = ROOT / ".claude" / "plugins" / "skeft-qa"
+    sys.path.insert(0, str(plugin / "scripts"))
+    try:
+        import harness_worker_shell_guard as guard
+    finally:
+        sys.path.pop(0)
+
+    denied = [pattern for pattern, _ in guard.DENIED]
+    assert any("lake" in p and "build" in p for p in denied), (
+        "the guard no longer denies `lake build` to workers; this test is measuring nothing")
+
+    offenders = []
+    for path in sorted(plugin.rglob("*.md")):
+        for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+            # Only lines that TELL a worker to run one — a line saying it is denied is fine.
+            if not re.search(r"^\s*(cd .*&&\s*)?lake\s+build\b", line):
+                continue
+            if any(re.search(p, line) for p in denied):
+                offenders.append(f"{path.relative_to(ROOT)}:{number}: {line.strip()}")
+    assert not offenders, (
+        "plugin prose instructs a worker to run a command the shipped guard denies:\n  "
+        + "\n  ".join(offenders))
+
+
+def test_no_plugin_file_prescribes_a_lake_job_cap_flag():
+    """`-j4` was live in `lean-worker.md` while the same paragraph said Lake has no `-j`."""
+    plugin = ROOT / ".claude" / "plugins" / "skeft-qa"
+    offenders = []
+    for path in sorted(plugin.rglob("*.md")):
+        for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+            if re.search(r"`-j\d+`|\blake build\b[^\n]*\s-j\s*\d", line):
+                offenders.append(f"{path.relative_to(ROOT)}:{number}: {line.strip()}")
+    assert not offenders, (
+        "plugin prose prescribes a Lake parallelism flag that does not exist:\n  "
+        + "\n  ".join(offenders))
+
+
+def test_the_claude_slot_endpoints_named_in_docs_are_the_ones_the_inventory_renders():
+    """Docs name `mcp__skeft_wtN__*`; the renderer derives those names from the inventory.
+
+    If an endpoint is renamed in `config/lean-slots.public.json`, every dispatch brief in the
+    plugin and harness guide silently names a server that does not exist. Pinning both ways
+    means the rename breaks here rather than at fan-out time.
+    """
+    import sys
+
+    sys.path.insert(0, str(ROOT / "scripts"))
+    try:
+        from lean_slots.claude_config import managed_servers
+        from lean_slots.state import Inventory
+    finally:
+        sys.path.pop(0)
+
+    rendered = set(managed_servers(Inventory.load(ROOT / "config" / "lean-slots.public.json")))
+    assert rendered, "the inventory renders no slot endpoints"
+
+    documented = set()
+    sources = [
+        ROOT / "docs" / "dev-loops" / "HARNESS_GUIDE.md",
+        *(ROOT / ".claude" / "plugins" / "skeft-qa").rglob("*.md"),
+    ]
+    for path in sources:
+        for match in re.finditer(r"mcp__(skeft_wt\d)__", path.read_text(encoding="utf-8")):
+            documented.add(match.group(1))
+    assert documented, (
+        "no document names a slot endpoint — the guidance no longer tells a lead which "
+        "server to hand a worker, and this test is measuring nothing")
+    assert documented <= rendered, (
+        f"documented endpoints {sorted(documented - rendered)} are not rendered from the "
+        f"inventory, which renders {sorted(rendered)}")

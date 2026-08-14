@@ -432,6 +432,15 @@ only as good as the partition it rests on, and a partition inherited from prose 
 partition. Re-derive the count, the consumer and the blast radius against the current tree
 before acting on any of them.
 
-**Out of scope, verified non-overlapping.** The Codex control plane (`scripts/lean_slots/*`,
-`.codex/*`, ADR-008) has zero references to `validate.py`, `register_check`,
-`gate_precheck`, `bundle_readiness` or `build_graph`.
+**Out of scope, verified non-overlapping.** The shared Lean slot control plane
+(`scripts/lean_slots/*`, `.codex/*`, the generated Claude MCP block, ADR-008) has zero references
+to `validate.py`, `register_check`, `gate_precheck`, `bundle_readiness` or `build_graph`. Since
+ADR-008 Phase 4 it serves **both** clients, so "Codex control plane" is no longer its name.
+
+⚠️ **It has its own check family.** `slotctl doctor` checks (`config.repo`, `config.claude`,
+`build_epoch`, `wtN.endpoint`, …) are **not** `validate.py` checks: they are not registered, not in
+`_CANONICAL_ORDER`, and `validate.py --list` contains none of them. Their one registration site
+beyond the definition is the doctor-shape assertion in `tests/test_lean_slots.py`. The
+`architecture-change` skill's `registration_sites.py` keys on a check *name* as a proxy for
+"a `validate.py` check" and so reports seven owed sites for a doctor check, all of them false
+positives — assert which family the check belongs to before working its list.

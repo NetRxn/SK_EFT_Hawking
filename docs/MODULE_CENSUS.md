@@ -250,6 +250,7 @@ Nothing else belongs here.
 | `scripts/kmm_zomega_reference_oracle.py` | ℤ[ω] reference oracle for the KMM Clifford+T exact-synthesis Lean formalization. |
 | `scripts/last_modified.py` | last_modified.py — freshness propagation for graph nodes (Phase 5v Wave 10b) |
 | `scripts/lean_slots/__init__.py` | ADR-008 shared Lean slot control plane. |
+| `scripts/lean_slots/claude_config.py` | Claude MCP configuration for the ADR-008 slot endpoints (spec P4-1..P4-3). |
 | `scripts/lean_slots/cli.py` | Command-line contract for the ADR-008 Lean slot controller. |
 | `scripts/lean_slots/controller.py` | Fail-closed lease, build-epoch, and integration controller for ADR-008. |
 | `scripts/lean_slots/proxy.py` | Lease-gated reverse proxy for one fixed, loopback-only Lean endpoint. |

@@ -51,6 +51,8 @@ self-discharging tautologies (`rfl`/`decide`/identity-wrappers/within-own-±2σ 
 
 When the proof DAG branches into **independent sub-chains**, the `lead` fans bricks out to the
 `skeft-qa:lean-worker` subagent, one per persistent worktree slot (`wt1/2/3`), each with its own
-build-isolated `mcp__lean-lsp-wtN__*` server. **Reset a slot with `/reset-slot N`** (guardrail-safe
-`checkout -B`; never `git reset --hard` — that's denied by the auto-mode classifier). Full flow,
+build-isolated `mcp__skeft_wtN__*` endpoint. **Lease a slot with `slotctl acquire --slot N --client
+claude --base-ref main` then `slotctl prepare --slot N`** — the endpoints reject every tool call
+without an ACTIVE lease. (`/reset-slot N` remains for a slot driven outside a lease; never
+`git reset --hard` — that's denied by the auto-mode classifier.) Full flow,
 the maintainer caveat, and why the slots are persistent: **see `parallel-worktrees.md`**.

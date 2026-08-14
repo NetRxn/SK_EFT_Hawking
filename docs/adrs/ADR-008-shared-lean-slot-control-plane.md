@@ -22,11 +22,92 @@
   safe *because* it was job-capped, so it is now a lead-granted, one-slot-at-a-time decision —
   and the guard denies it to workers for that reason, not as a tightening.
 
-  **Still deferred:** the shared control plane itself (proxy/backend endpoints, leases, epochs)
-  for Claude. Legacy per-slot `lean-lsp-wtN` remains the rollback path until that validation runs. Codex may be enabled immediately. The local single-user deployment defaults to credential-free loopback access; optional bearer authentication remains banked for a future shared-user deployment. The shared infrastructure MUST be Claude-compatible, but Claude configuration/plugin changes MUST NOT be activated or declared verified until a live Claude Code validation window is available, no earlier than the week of 2026-07-27. Legacy Claude behavior remains the rollback path until that validation passes.
+  ⚠️ **PHASE 4 WIRED 2026-08-13; ACCEPTANCE GATE NOT YET PASSED.** The Claude activation change set
+  is implemented and the control plane is live — see the *2026-08-13 Phase 4 record* below for what is
+  measured, what each item cost, and which of the seven deferred-gate tests remain unrun. Claude status
+  moves from `DESIGNED_NOT_VALIDATED` to **`WIRED_PENDING_ACCEPTANCE`**, not to verified. The legacy
+  stdio path is retained as rollback per item 7 and is restored by
+  `slotctl config render --client claude --rollback`.
+
+  **Still deferred:** retirement of the legacy stdio entries and the manual off-repo `pkill` procedure
+  (Phase 5), which the deferred gate's test 7 governs. Legacy per-slot `lean-lsp-wtN` remains the rollback path until that validation runs. Codex may be enabled immediately. The local single-user deployment defaults to credential-free loopback access; optional bearer authentication remains banked for a future shared-user deployment. The shared infrastructure MUST be Claude-compatible, but Claude configuration/plugin changes MUST NOT be activated or declared verified until a live Claude Code validation window is available, no earlier than the week of 2026-07-27. Legacy Claude behavior remains the rollback path until that validation passes.
 - **Decider:** John Roehm (project owner) — approved the three-slot, orchestrator-owned-build posture and the Codex-first/Claude-later rollout on 2026-07-22.
 - **Investigation and draft:** Codex, following an adversarial review of the current workspace, the pinned `lean-lsp-mcp` implementation, and the relevant public Claude-plugin commit history.
 - **Scope:** the public `SK_EFT_Hawking` Lean substrate, product-neutral local slot infrastructure, Codex integration, and a privacy-preserving extension point for private downstream repositories. Repository-specific private configuration and paths remain in private overlays and MUST NOT be committed here.
+
+## 2026-08-13 Phase 4 record — Claude activation wired
+
+Design: [`docs/superpowers/specs/2026-08-13-adr008-phase4-claude-activation-design.md`](../superpowers/specs/2026-08-13-adr008-phase4-claude-activation-design.md),
+decisions `P4-1`–`P4-6`. Measured against `5e764ec6`.
+
+### Two claims in this ADR were wrong and are corrected here
+
+1. **§ Context asserts the host "has since been raised to `kern.maxvnodes=786432`".** The live value is
+   **263168** — the raise did not survive a host reboot. No decision here depends on the larger number;
+   § *Risks* already requires lifecycle control rather than headroom, which is what the three-slot
+   posture actually rests on. Anyone re-deriving capacity from the ADR's figure would be re-deriving it
+   from a value that is not in effect.
+2. **Change-set item 3 names a "compile-feedback *unbounded build lane*".** No surface by that name
+   exists. Its residue was the narrow single-module worker build exception, carried in three plugin
+   files, one of which additionally still prescribed `-j4` — a flag Lake has never had — one paragraph
+   after stating that Lake has no job cap. Item 3 was therefore a prose-reconciliation task.
+
+### Change-set disposition
+
+| # | Item | Disposition |
+|---|---|---|
+| 1 | Generate HTTP MCP entries pointing at the running endpoints | **Shipped.** `slotctl config render --client claude` owns a named key block inside the shared workspace `.mcp.json` — adds `skeft_wt{1,2,3}`, removes the legacy stdio slots, leaves every other project's servers and their order intact. Ports derive from the versioned inventory, so they cannot drift from the controller. `doctor` gained `config.claude`. |
+| 2 | Lead acquires leases; workers never build | **Shipped.** `agents/lean-worker.md`, `skills/goal-dev/SKILL.md`, `references/parallel-worktrees.md` and `commands/reset-slot.md` now carry the `acquire → prepare → dispatch → ready → absorb` flow. This is a correctness requirement, not documentation: the endpoints are **lease-gated**, so a dispatch without a lease yields a connected server whose every tool call fails closed. |
+| 3 | Remove/repurpose the unbounded build lane | **Shipped** as prose reconciliation — see above. The worker reports the module; the lead builds it. |
+| 4 | Worker tool allowlists and build/cache/integration denials | Shipped earlier the same day (the parity step recorded above). |
+| 5 | Project the protocol into a private Claude plugin | **Out of scope here** — private overlay. |
+| 6 | Bump plugin versions, refresh cache, restart | **Restated to match the mechanism.** `skeft-qa` carries no `version` field and the loader keys its cache on a **content hash** (`~/.claude/plugins/cache/skeft-local/skeft-qa/<hash>/`), so there is nothing to bump: the edited tree becomes a new hash directory at the next refresh. Verified that the live cache snapshot still holds the pre-edit `lean-worker.md`, which is exactly why **the restart, not a version string, is the activation step.** |
+| 7 | Retain the legacy stdio path | **Shipped** as a one-time pre-activation snapshot restored by `--rollback`, rather than as live coexisting entries — keeping both live would preserve exactly the `clients × configured servers` multiplication item 1 exists to remove (§ *Alternatives* 2). |
+
+### A gap S-K required and the controller did not have
+
+`Controller._owner()` resolved a session identity from `CODEX_THREAD_ID` alone, falling back to
+`os.getppid()`. Because each `slotctl` invocation is a separate short-lived process, a Claude lead's
+`acquire` and `prepare` ran under different parents and the second failed `process owner mismatch` —
+S-C's own owner check rejecting the lease it had just issued. S-K requires the controller to "already
+admit a later Claude client"; on this path it did not. Owner resolution is now product-neutral:
+`LEAN_SLOT_OWNER_SESSION` first, then the per-client session variables.
+
+### Measured state after activation
+
+`slotctl doctor`: every check green except `wt2.lease`. **Claude activates at 2 of 3 slots** — slot 2 is
+held by a **private** `QUARANTINED` lease carrying two unabsorbed commits. The public controller refuses
+to reclaim it on repository-role mismatch, which is S-C and S-H behaving correctly; Phase 1's "use only
+currently clean/available slots" already pre-decides this. Capacity returns when the private side
+resolves its own quarantine.
+
+Published epoch `6fc5d77c…`; endpoints report 21 tools with `lean_build` absent server-side, and
+`lean_multi_attempt` / `lean_goal` / `lean_diagnostic_messages` / `lean_verify` all present, so the
+worker's binding loop survives the transport change. The endpoints run without `--repl` per S-F.
+
+### Deferred Claude activation gate — status
+
+**Test 2 passes.** The full lead workflow was exercised against the live plane:
+`acquire --slot 1 --client claude --base-ref main` → `prepare` (→ `ACTIVE`) → an MCP
+`tools/call` of `lean_file_outline` over `http://127.0.0.1:8761/mcp?client=claude`, which returned real
+Lean declaration data → `release` (→ `FREE`). Worker denial is separately enforced and tested. The
+lease gate is therefore demonstrated in both directions: dispatch is refused unleased and served once
+`ACTIVE`.
+
+**Tests 1, 3, 4, 5 and 6 are unrun** — each needs a client restart and a live swarm, which is the
+operator's next step. Test 7 is deliberately not attempted. **No Claude compatibility claim advances to
+verified beyond test 2 on this record.**
+
+Two operational facts this exercise established, both worth knowing before the first swarm:
+
+- **A controller code change invalidates the running endpoints.** The proxy records a runtime
+  fingerprint of the implementation it loaded, so after editing `scripts/lean_slots/*` the endpoints
+  report `proxy=False` while still serving, and `prepare` fails with *"proxy for wtN is not healthy"*
+  and quarantines the slot. Run `supervisor stop && supervisor start` after any controller edit. This
+  is the mechanism working — it is what stops a stale front door being mistaken for a current one.
+- **`slotctl` resolves its inventory, state root and lease directory from the current working
+  directory.** Invoked from inside a slot it addresses a different control plane and reports every slot
+  FREE. Always run it from the primary checkout.
 
 ## 2026-07-22 authentication amendment
 

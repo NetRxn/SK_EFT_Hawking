@@ -1,5 +1,5 @@
 ---
-description: Reset a parallel Lean worktree slot (wt1/wt2/wt3) to current main — the guardrail-safe way (checkout -B, refuses if the slot has commits not yet on main) and auto-re-clones the slot's .lake build when main advanced. Use before dispatching a lean-worker to a slot.
+description: Reset an UNLEASED parallel Lean worktree slot (wt1/wt2/wt3) to current main — the guardrail-safe way (checkout -B, refuses if the slot has commits not yet on main) and auto-re-clones the slot's .lake build when main advanced. For a leased slot use `slotctl prepare --slot N`, which also verifies the build epoch.
 argument-hint: <N>
 allowed-tools: Bash(uv run *)
 ---
@@ -16,5 +16,9 @@ Report the result. The script does `git -C .claude/worktrees/wtN checkout -B wor
 **never** `git reset --hard`/`git clean`, which the auto-mode permission classifier denies on a slot),
 **refuses if the slot holds commits not on `main`** (merge/cherry-pick them first, then re-run), and then
 **auto-re-clones the slot's `.lake` build** (APFS copy-on-write) when main advanced since the slot's last sync —
-so the slot's LSP matches its git tree with no manual step. Full fan-out flow: the `goal-dev` skill's
-`references/parallel-worktrees.md`.
+so the slot's LSP matches its git tree with no manual step.
+
+⚠️ **Scope:** this is the path for a slot driven **outside** a lease. When the slot is leased, use
+`slotctl prepare --slot N`: it resets to the lease's base and installs a `.lake` matching the published
+successful-build epoch, a check this command's HEAD-SHA stamp cannot make. Full fan-out flow: the
+`goal-dev` skill's `references/parallel-worktrees.md`.

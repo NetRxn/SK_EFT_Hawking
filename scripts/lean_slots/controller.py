@@ -219,12 +219,23 @@ class Controller:
                 "owner_pid": pid,
                 "owner_signature": process_start_signature(pid),
             }
-        session_id = os.environ.get("CODEX_THREAD_ID")
-        if session_id:
-            return {
-                "owner_kind": "session",
-                "owner_session_hash": hashlib.sha256(session_id.encode()).hexdigest(),
-            }
+        # A slot lease outlives any one CLI invocation, so the owner must be the driving
+        # session, not the shell that happened to run `acquire`. `LEAN_SLOT_OWNER_SESSION`
+        # is the product-neutral override (S-J); the client variables follow it so neither
+        # product needs an explicit export.
+        for variable in (
+            "LEAN_SLOT_OWNER_SESSION",
+            "CODEX_THREAD_ID",
+            "CLAUDE_CODE_SESSION_ID",
+        ):
+            session_id = os.environ.get(variable)
+            if session_id:
+                return {
+                    "owner_kind": "session",
+                    "owner_session_hash": hashlib.sha256(
+                        session_id.encode()
+                    ).hexdigest(),
+                }
         pid = os.getppid()
         return {
             "owner_kind": "process",
@@ -900,6 +911,24 @@ class Controller:
             atomic_write(destination, content)
         return destinations
 
+    def claude_mcp_path(self) -> Path:
+        """Workspace Claude MCP configuration named by the versioned inventory (spec P4-1)."""
+        relative = str(
+            self.inventory.raw.get("config", {}).get("claude_mcp", ".mcp.json")
+        )
+        if Path(relative).is_absolute():
+            raise SlotError("config.claude_mcp must be a workspace-relative path")
+        return self.inventory.workspace_root / relative
+
+    def render_claude_config(self, *, rollback: bool = False) -> list[Path]:
+        from . import claude_config
+
+        return [
+            claude_config.render(
+                self.inventory, self.claude_mcp_path(), rollback=rollback
+            )
+        ]
+
     def session_environment(self, *, client: str, rotate_token: bool = False) -> str:
         if rotate_token and self.inventory.client_auth_mode != "bearer":
             raise SlotError(
@@ -1005,6 +1034,22 @@ class Controller:
                     ok,
                     "current" if ok else f"missing or drifted: {path}",
                 )
+        from . import claude_config
+
+        claude_path = self.claude_mcp_path()
+        if not claude_path.exists():
+            record("config.claude", True, f"not managed here: {claude_path} absent")
+        else:
+            state, detail = claude_config.block_state(
+                read_json(claude_path), self.inventory
+            )
+            # `not activated` is OK on purpose: Phase 4 is reversible, and a rolled-back
+            # workstation must not report a broken control plane (spec P4-3).
+            record(
+                "config.claude",
+                state in {"current", "not activated"},
+                f"{state}: {detail}",
+            )
         from .supervisor import Supervisor
 
         supervisor = Supervisor(self.inventory).status()

@@ -49,11 +49,22 @@ troubleshooting, and how to refresh the plugin cache after edits.
 
 The shared `.mcp.json` used to launch this session may enable `lean-lsp-mcp` servers for Lean
 projects **other than this one**. A session focused on `SK_EFT_Hawking` needs only the server(s)
-whose `--lean-project-path` is **inside this repo** — including the `wt1/2/3` swarm slots, which are
-this repo's own worktrees (`…/SK_EFT_Hawking/.claude/worktrees/wtN/lean`). Any other `lean-lsp-mcp`
+whose `--lean-project-path` is **inside this repo**. Any other `lean-lsp-mcp`
 server is dead weight: it holds file descriptors / vnodes and, stacked with concurrent `lake build`s,
 can exhaust the system file table (ENFILE — "Too many open files in system") and break parallel
 build lanes.
+
+⚠️ **The `wt1/2/3` swarm slots are no longer per-session stdio servers.** Since ADR-008 Phase 4 they
+are shared loopback endpoints (`skeft_wtN`) owned by `slotctl supervisor` and shared with Codex — one
+process per slot for the whole workstation. **Never kill them from a session**; a session start neither
+creates nor owns them. Manage them only with `slotctl supervisor status|start|stop`.
+
+Their backends *are* `lean-lsp-mcp` processes, so they match a bare `pgrep lean-lsp-mcp`. Two things
+keep the trim below safe, and both must hold: the backends are pathed inside this repo
+(`…/SK_EFT_Hawking/.claude/worktrees/wtN/lean`), so the `grep -v SK_EFT_Hawking` selector already
+excludes them; and they are the only ones carrying `--transport streamable-http`. **If you ever widen
+the selector, exclude `--transport streamable-http` explicitly** — killing a supervisor-owned backend
+takes the slot out from under any other session or client using it.
 
 Leave the shared `.mcp.json` / `settings.local.json` **untouched** (so the launching config keeps
 working for every session) and instead **kill the off-repo servers at session start**. Select them
