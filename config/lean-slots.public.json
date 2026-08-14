@@ -30,6 +30,7 @@
   "server": {
     "host": "127.0.0.1",
     "client_auth": "trusted-local",
+    "backend_policy": "leased",
     "command": [
       "uvx",
       "--from",
@@ -46,6 +47,15 @@
   "config": {
     "claude_mcp": ".mcp.json"
   },
+  "host_limits": [
+    {
+      "platform": "Darwin",
+      "sysctl": "kern.maxvnodes",
+      "minimum": 1048576,
+      "why": "measured 2026-08-14 on a 16-core/128GiB host: one active slot drives kern.num_vnodes to ~753k and a third slot projects past 786432, so a full swarm plus a concurrent build needs headroom above it",
+      "remedy": "sudo sysctl -w kern.maxvnodes=1048576"
+    }
+  ],
   "build": {
     "cwd": "lean",
     "command": [

@@ -18,7 +18,7 @@ Codex as well as Claude Code.
 - Never reset or reclaim a dirty slot. A controller quarantine is a stop signal,
   not permission to clean the worktree.
 - The operator workflow and activation commands are in
-  `docs/dev-loops/CODEX_LEAN_SLOTS.md`; the normative design is ADR-008.
+  `docs/dev-loops/LEAN_SLOT_OPERATOR_GUIDE.md`; the normative design is ADR-008.
 
 ## Validation
 

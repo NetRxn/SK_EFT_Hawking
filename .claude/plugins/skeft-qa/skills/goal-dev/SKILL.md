@@ -87,6 +87,10 @@ out **only when the DAG has genuinely branched** into independent sub-chains. To
 3. **`slotctl ready --slot N`** then **`slotctl absorb --slot N`** — audits the slot, rebases onto the
    current base, fast-forwards `main` (never cherry-picks), runs the authoritative gate under the
    integration lock, publishes the epoch, rewarms and releases. Use `release --slot N` for a no-change slot.
+   Both reclaim the slot's ~4.4 GB Lean server automatically, so an idle slot costs nothing.
+
+**Before a full fan-out, run `slotctl doctor`** — it asserts the host's declared kernel limits (a swarm is
+bounded by **vnodes**, not file descriptors) and prints the exact remedy for a shortfall.
 
 **⛔ You own `lake build`; workers do not.** Slot `.lake` isolation buys correctness, not contention
 relief — Lake takes one job per core, so 3 building slots is 3× the machine. Measured 2026-07-28: three

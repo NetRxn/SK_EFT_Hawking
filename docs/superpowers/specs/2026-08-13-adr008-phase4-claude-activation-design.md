@@ -169,11 +169,21 @@ Each new mechanism ships with a test that seeds the defect into the **production
 - **Resolving wt2's private quarantine.** Private-overlay work; the public side cannot and must not.
 - **Change-set item 5** (projecting the protocol into a private Claude plugin) — private overlay.
 - **Enabling `--repl` on the endpoints** — S-F defers it behind its own concurrency tests.
-- **`backend_policy: "leased"`** for the public inventory. Attractive given the vnode ceiling: today
-  the public policy is `default`, so `supervisor start` runs a heavy backend per unleased slot.
-  `prepare` is *not* the obstacle — `paused_backend()` restarts the backend unconditionally rather
-  than consulting `backend_expected` (`supervisor.py:357-367`), and the downstream fixture already
-  exercises `leased`. It is out of scope because it changes steady-state resource behaviour for
-  **both** clients and belongs to its own decision with its own tests, not to a Claude wiring change.
+- ~~**`backend_policy: "leased"`** for the public inventory.~~ **SHIPPED 2026-08-14 as ADR-008 S-L**,
+  after measurement showed the standing cost was ~4.4 GB per used slot rather than the ~114 MB an
+  unused one suggested — a Lean server is spawned lazily but never reclaimed, so it persisted from
+  first use until `supervisor stop`.
+
+  ⚠️ **Both of this section's earlier claims about the obstacle were wrong, and both were derived by
+  reading rather than running.** The first said `prepare` would strand a slot because `paused_backend`
+  consults `backend_expected`; it does not. The correction then said `paused_backend` "restarts the
+  backend unconditionally", so nothing blocked the policy. What it actually does is call
+  `assert_healthy` **at entry**, which requires a running *backend* — a state a freshly-acquired
+  leased slot legitimately lacks, making `prepare` unreachable under the policy. The downstream
+  fixture never surfaced it because the paired path uses `activating_from`, not `paused_backend`.
+  Entry now asserts only proxy health (`Supervisor.assert_proxy_healthy`).
+
+  Measured full cycle after the fix: idle 0 MB → `prepare` 0 MB (Lean server still lazy) → worker
+  active 4336 MB → `release` 0 MB, reclaimed automatically. Peak concurrency is unchanged.
 - **Retiring the legacy stdio path and the session-start `pkill` procedure** — ADR-008 Phase 5,
   gated on the acceptance tests passing.

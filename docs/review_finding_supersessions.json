@@ -7318,6 +7318,45 @@
         "exit_code": 0,
         "run_at": "2026-08-13"
       }
+    },
+    {
+      "finding_id": "review:2026-08-13-adr008-phase4-residue:infra:1",
+      "status": "fixed",
+      "evidence": "Public inventory declares server.backend_policy='leased'; Controller._reconcile_backend stops the backend on every lease-exit path (release, reclaim, absorb) AFTER the lease file is removed, since backend_expected reads the lease. Also fixed the blocker this exposed: Supervisor.paused_backend asserted a healthy BACKEND at entry, which a freshly-acquired leased slot legitimately lacks, making prepare unreachable under that policy; entry now uses the new assert_proxy_healthy. Measured full cycle: idle 0MB -> prepare 0MB (Lean lazy) -> active 4336MB -> release 0MB reclaimed.",
+      "superseded_by": null,
+      "date": "2026-08-14",
+      "verified_by": {
+        "command": "uv run python -m pytest tests/test_lean_slots.py -q",
+        "declared": "uv run python -m pytest tests/test_lean_slots.py -q",
+        "exit_code": 0,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-13-adr008-phase4-residue:infra:4",
+      "status": "fixed",
+      "evidence": "Inventory.save_lease gained an explicit touch_heartbeat flag (default True), and Controller._quarantine now passes touch_heartbeat=False: quarantining is the controller acting, not the owner reporting in, so it no longer resets the staleness clock reclaim reads. quarantined_at still advances, so the audit trail is intact. Mutation-proven in both directions — restoring the refresh turns the guard test red, and disabling the real heartbeat turns the owner-liveness test red.",
+      "superseded_by": null,
+      "date": "2026-08-14",
+      "verified_by": {
+        "command": "uv run python -m pytest tests/test_lean_slots.py -q",
+        "declared": "uv run python -m pytest tests/test_lean_slots.py -q",
+        "exit_code": 0,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-13-adr008-phase4-residue:infra:5",
+      "status": "fixed",
+      "evidence": "release and reclaim now share Controller._is_absorbed, which asks the decider — is the slot's HEAD contained in the declared integration ref (default main, configurable via inventory integration_ref)? — and treats the lease's recorded base_ref as a hint, tried second. An unresolvable ref is skipped rather than fatal, and if NOTHING resolves the answer is 'not absorbed', so the audit stays fail-closed. Mutation-proven both ways: reverting to base-only absorption reproduces the wt2 trap, and failing open lets genuinely unmerged work be released. The hand-removal of runtime state that this defect forced is no longer reachable by ordinary merge-then-delete hygiene.",
+      "superseded_by": null,
+      "date": "2026-08-14",
+      "verified_by": {
+        "command": "uv run python -m pytest tests/test_lean_slots.py -q",
+        "declared": "uv run python -m pytest tests/test_lean_slots.py -q",
+        "exit_code": 0,
+        "run_at": "2026-08-14"
+      }
     }
   ]
 }

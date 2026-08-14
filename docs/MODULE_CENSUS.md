@@ -253,6 +253,7 @@ Nothing else belongs here.
 | `scripts/lean_slots/claude_config.py` | Claude MCP configuration for the ADR-008 slot endpoints (spec P4-1..P4-3). |
 | `scripts/lean_slots/cli.py` | Command-line contract for the ADR-008 Lean slot controller. |
 | `scripts/lean_slots/controller.py` | Fail-closed lease, build-epoch, and integration controller for ADR-008. |
+| `scripts/lean_slots/host_limits.py` | Declared host kernel limits for the slot control plane. |
 | `scripts/lean_slots/proxy.py` | Lease-gated reverse proxy for one fixed, loopback-only Lean endpoint. |
 | `scripts/lean_slots/state.py` | Configuration and durable-state primitives for the Lean slot controller. |
 | `scripts/lean_slots/supervisor.py` | Deterministic local process lifecycle for fixed-root Lean MCP endpoints. |

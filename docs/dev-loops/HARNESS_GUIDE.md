@@ -163,6 +163,21 @@ proof DAG has genuinely branched**, and only to slots `slotctl status` reports F
 **`/skeft-qa:reset-slot N`** remains the path for a slot driven **outside** a lease.
 ⚠️ Run `slotctl` from the primary checkout: it resolves its inventory and lease directory from the cwd,
 so invoking it inside a slot addresses a different control plane and reports every slot FREE.
+
+**Cost, measured.** A slot's Lean server (`lake serve` + `lean --server` + `lean --worker`) is spawned
+lazily on the first tool call and costs ~4.4 GB; `release`/`absorb` reclaim it automatically, so an idle
+slot costs nothing and you never need `supervisor stop` to get memory back. Peak for a full fan-out is
+that per active slot — budget accordingly, and prefer two well-chosen slots over three contended ones.
+
+⚠️ **Run `slotctl doctor` before a full fan-out.** A swarm is bounded by kernel **vnodes**, not file
+descriptors — a Lean server memory-maps ~10k `.olean` files, which never appear in `ulimit -n` — and
+`doctor` asserts the declared floor with a runnable remedy. The setting is runtime-only and lost on
+reboot; the persistence recipe is in
+[LEAN_SLOT_OPERATOR_GUIDE.md](LEAN_SLOT_OPERATOR_GUIDE.md).
+
+⚠️ **Editing `scripts/lean_slots/*` invalidates the running endpoints.** The supervisor fingerprints the
+loaded implementation, so `doctor` reports `proxy=False` while the port is still serving, and the next
+`prepare` quarantines the slot. Run `supervisor stop && supervisor start` after any such edit.
 Full convention: **`parallel-worktrees.md`** in the
 `goal-dev` skill (`.claude/plugins/skeft-qa/skills/goal-dev/references/parallel-worktrees.md`).
 

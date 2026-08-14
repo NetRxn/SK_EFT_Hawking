@@ -1022,3 +1022,408 @@ def test_activate_rollback_reactivate_preserves_the_original_snapshot(
     assert snapshot == pre, (
         "the snapshot no longer holds the pre-activation block, so a further rollback "
         "would restore an activated config and the legacy path would be unrecoverable")
+
+
+# --- ADR-008 Phase 4: declared host kernel limits (portable across machines) -----------
+
+
+def _with_limits(repo: Path, entries: list) -> Controller:
+    path = repo / "config" / "lean-slots.public.json"
+    inventory = json.loads(path.read_text())
+    inventory["host_limits"] = entries
+    path.write_text(json.dumps(inventory))
+    return Controller(Inventory.load(path))
+
+
+def test_a_knob_below_its_declared_minimum_fails_with_a_runnable_remedy(
+    slot_repo, monkeypatch
+) -> None:
+    from scripts.lean_slots import host_limits
+
+    controller, repo, _ = slot_repo
+    monkeypatch.delenv(host_limits.SKIP_ENV, raising=False)
+    monkeypatch.setattr(platform := __import__("platform"), "system", lambda: "TestOS")
+    monkeypatch.setattr(host_limits, "read_sysctl", lambda name: 1000)
+    moved = _with_limits(repo, [{"platform": "TestOS", "sysctl": "test.knob",
+                                 "minimum": 5000, "remedy": "sudo sysctl -w test.knob=5000"}])
+    name, ok, detail = host_limits.evaluate(moved.inventory)[0]
+    assert name == "host_limit.test.knob" and not ok
+    assert "1000" in detail and "5000" in detail
+    assert "sudo sysctl -w test.knob=5000" in detail
+    assert "lost on reboot" in detail
+
+
+def test_a_remedy_that_drifted_from_the_minimum_is_replaced_not_printed(
+    slot_repo, monkeypatch
+) -> None:
+    """A remedy naming a stale value would send the operator to run a command that
+    leaves the check red — the exact defect the live output exposed."""
+    from scripts.lean_slots import host_limits
+
+    controller, repo, _ = slot_repo
+    monkeypatch.delenv(host_limits.SKIP_ENV, raising=False)
+    monkeypatch.setattr(__import__("platform"), "system", lambda: "TestOS")
+    monkeypatch.setattr(host_limits, "read_sysctl", lambda name: 1000)
+    moved = _with_limits(repo, [{"platform": "TestOS", "sysctl": "test.knob",
+                                 "minimum": 9999,
+                                 "remedy": "sudo sysctl -w test.knob=5000"}])
+    _, ok, detail = host_limits.evaluate(moved.inventory)[0]
+    assert not ok
+    assert "test.knob=9999" in detail
+    assert "test.knob=5000" not in detail
+
+
+def test_a_platform_with_no_declared_limit_passes(slot_repo, monkeypatch) -> None:
+    """A public repo must not fail a clone on a machine whose kernel has no such knob."""
+    from scripts.lean_slots import host_limits
+
+    controller, repo, _ = slot_repo
+    monkeypatch.delenv(host_limits.SKIP_ENV, raising=False)
+    monkeypatch.setattr(__import__("platform"), "system", lambda: "Linux")
+    moved = _with_limits(repo, [{"platform": "Darwin", "sysctl": "kern.maxvnodes",
+                                 "minimum": 786432}])
+    name, ok, detail = host_limits.evaluate(moved.inventory)[0]
+    assert name == "host_limits" and ok
+    assert "Linux" in detail
+
+
+def test_a_knob_this_kernel_does_not_expose_passes(slot_repo, monkeypatch) -> None:
+    """Absent is not misconfigured."""
+    from scripts.lean_slots import host_limits
+
+    controller, repo, _ = slot_repo
+    monkeypatch.delenv(host_limits.SKIP_ENV, raising=False)
+    monkeypatch.setattr(__import__("platform"), "system", lambda: "TestOS")
+    monkeypatch.setattr(host_limits, "read_sysctl", lambda name: None)
+    moved = _with_limits(repo, [{"platform": "TestOS", "sysctl": "test.knob",
+                                 "minimum": 5000}])
+    _, ok, detail = host_limits.evaluate(moved.inventory)[0]
+    assert ok and "not exposed" in detail
+
+
+def test_the_skip_variable_opts_a_machine_out_without_a_repo_diff(
+    slot_repo, monkeypatch
+) -> None:
+    from scripts.lean_slots import host_limits
+
+    controller, repo, _ = slot_repo
+    monkeypatch.setenv(host_limits.SKIP_ENV, "1")
+    monkeypatch.setattr(__import__("platform"), "system", lambda: "TestOS")
+    monkeypatch.setattr(host_limits, "read_sysctl", lambda name: 1)
+    moved = _with_limits(repo, [{"platform": "TestOS", "sysctl": "test.knob",
+                                 "minimum": 5000}])
+    name, ok, detail = host_limits.evaluate(moved.inventory)[0]
+    assert name == "host_limits" and ok and host_limits.SKIP_ENV in detail
+
+
+def test_doctor_surfaces_the_host_limit_check(slot_repo) -> None:
+    controller, _, _ = slot_repo
+    names = {c["name"] for c in controller.doctor()["checks"]}
+    assert any(n == "host_limits" or n.startswith("host_limit.") for n in names)
+
+
+def test_the_shipped_public_inventory_declares_a_darwin_vnode_floor() -> None:
+    """The committed default must actually carry the limit this ADR added."""
+    from scripts.lean_slots import host_limits
+
+    inventory = Inventory.load()
+    entries = [e for e in (inventory.raw.get("host_limits") or [])
+               if e.get("platform") == "Darwin"]
+    assert entries, "public inventory lost its Darwin host limit"
+    entry = entries[0]
+    assert entry["sysctl"] == "kern.maxvnodes"
+    assert int(entry["minimum"]) >= 786432
+    assert str(entry["minimum"]) in entry.get("remedy", "")
+
+
+# --- ADR-008 Phase 4: leased backends are reclaimed on every lease-exit path ------------
+
+
+def _leased(repo: Path) -> Controller:
+    path = repo / "config" / "lean-slots.public.json"
+    inventory = json.loads(path.read_text())
+    inventory["server"]["backend_policy"] = "leased"
+    path.write_text(json.dumps(inventory))
+    # `build()` refuses a dirty primary checkout, so the policy switch must be committed
+    # like any other inventory change.
+    run(repo, "git", "add", "config/lean-slots.public.json")
+    run(repo, "git", "commit", "-m", "switch to leased backends")
+    return Controller(Inventory.load(path))
+
+
+def test_a_leased_slot_expects_no_backend_once_released(slot_repo) -> None:
+    controller, repo, _ = slot_repo
+    leased = _leased(repo)
+    leased.build()
+    assert not leased.inventory.backend_expected(1)
+    prepare(leased, 1, client="claude")
+    assert leased.inventory.backend_expected(1)
+    leased.release(1)
+    assert not leased.inventory.backend_expected(1)
+
+
+def test_release_reconciles_the_backend_after_the_lease_is_gone(
+    slot_repo, monkeypatch
+) -> None:
+    """Ordering is the whole point: `backend_expected` reads the lease, so a reconcile
+    that ran before the unlink would still see the slot leased and keep ~4.4 GB warm."""
+    controller, repo, _ = slot_repo
+    leased = _leased(repo)
+    leased.build()
+    prepare(leased, 1, client="claude")
+    seen: list[tuple[str, bool]] = []
+    monkeypatch.delenv("LEAN_SLOT_SKIP_SUPERVISOR", raising=False)
+
+    class FakeSupervisor:
+        def __init__(self, inventory):
+            self.inventory = inventory
+
+        def stop_backend(self, number):
+            seen.append(("stop", leased.inventory.lease_path(number).exists()))
+
+    import scripts.lean_slots.supervisor as sup
+
+    monkeypatch.setattr(sup, "Supervisor", FakeSupervisor)
+    leased.release(1)
+    assert seen == [("stop", False)], (
+        "the backend must be stopped exactly once, AFTER the lease file is removed")
+
+
+def test_a_default_policy_slot_keeps_its_backend_on_release(slot_repo, monkeypatch) -> None:
+    """`default` must remain a no-op — this change reclaims memory, it does not
+    quietly change the other policy's behaviour."""
+    controller, repo, _ = slot_repo
+    controller.build()
+    prepare(controller, 1, client="claude")
+    calls: list[int] = []
+    monkeypatch.delenv("LEAN_SLOT_SKIP_SUPERVISOR", raising=False)
+
+    class FakeSupervisor:
+        def __init__(self, inventory):
+            pass
+
+        def stop_backend(self, number):
+            calls.append(number)
+
+    import scripts.lean_slots.supervisor as sup
+
+    monkeypatch.setattr(sup, "Supervisor", FakeSupervisor)
+    controller.release(1)
+    assert calls == []
+
+
+def test_a_supervisor_failure_never_fails_an_already_successful_release(
+    slot_repo, monkeypatch, capsys
+) -> None:
+    controller, repo, _ = slot_repo
+    leased = _leased(repo)
+    leased.build()
+    prepare(leased, 1, client="claude")
+    monkeypatch.delenv("LEAN_SLOT_SKIP_SUPERVISOR", raising=False)
+
+    class ExplodingSupervisor:
+        def __init__(self, inventory):
+            pass
+
+        def stop_backend(self, number):
+            raise SlotError("supervisor is wedged")
+
+    import scripts.lean_slots.supervisor as sup
+
+    monkeypatch.setattr(sup, "Supervisor", ExplodingSupervisor)
+    leased.release(1)  # must not raise
+    assert not leased.inventory.lease_path(1).exists()
+    assert "could not be stopped" in capsys.readouterr().err
+
+
+def test_the_shipped_public_inventory_reclaims_idle_backends() -> None:
+    inventory = Inventory.load()
+    assert inventory.raw["server"].get("backend_policy") == "leased"
+
+
+# --- ADR-008: a backendless slot must still complete the MCP handshake ------------------
+
+
+def test_initialize_is_answered_when_the_slot_has_no_backend() -> None:
+    """Connect-time handshake must not fail for a DISPATCH-time resource.
+
+    Regression: `leased` backends made every unleased endpoint answer 503 to `initialize`.
+    codex-cli 0.145.0 (rmcp) treats that as a fatal transport error and the whole session
+    dies with no answer, `required = false` notwithstanding.
+    """
+    from scripts.lean_slots.proxy import offline_handshake
+
+    reply = offline_handshake([{
+        "jsonrpc": "2.0", "id": 7, "method": "initialize",
+        "params": {"protocolVersion": "2025-06-18"}}])
+    assert reply is not None
+    assert reply["id"] == 7
+    assert reply["result"]["protocolVersion"] == "2025-06-18"
+    assert "no active lease" in reply["result"]["instructions"]
+
+
+def test_a_backendless_slot_advertises_no_tools() -> None:
+    """An empty tool list is what keeps the offline handshake from weakening the gate."""
+    from scripts.lean_slots.proxy import offline_handshake
+
+    reply = offline_handshake([{"jsonrpc": "2.0", "id": 1, "method": "tools/list"}])
+    assert reply["result"]["tools"] == []
+
+
+def test_the_offline_reply_never_covers_tool_dispatch() -> None:
+    """`tools/call` must fall through to the 503/lease-gate path, never be answered here."""
+    from scripts.lean_slots.proxy import offline_handshake
+
+    for method in ("tools/call", "resources/read", "prompts/get"):
+        assert offline_handshake([{"jsonrpc": "2.0", "id": 1, "method": method}]) is None
+
+
+def test_notifications_are_recognised_so_they_take_202_not_503() -> None:
+    from scripts.lean_slots.proxy import is_notification_only
+
+    assert is_notification_only([{"jsonrpc": "2.0", "method": "notifications/initialized"}])
+    assert not is_notification_only([{"jsonrpc": "2.0", "id": 1, "method": "initialize"}])
+    assert not is_notification_only([])
+
+
+def test_a_lease_is_disk_state_so_it_survives_an_endpoint_restart(slot_repo) -> None:
+    """Gate test 3: the proxy holds no lease state, so a restart preserves rather than
+    reacquires. Pinned because moving lease state into the proxy would silently turn a
+    transparent reconnect into a lost lease."""
+    controller, _, _ = slot_repo
+    controller.build()
+    prepare(controller, 1, client="claude")
+    before = controller.inventory.lease(1)
+    # A restart replaces processes; it must not touch the lease record at all.
+    reloaded = Controller(Inventory.load(controller.inventory.source))
+    after = reloaded.inventory.lease(1)
+    assert after == before, "restarting the endpoints must not alter the lease"
+    assert after["state"] == "ACTIVE"
+    # Owner identity is what makes it a *preserved* lease rather than a reacquired one.
+    owner_key = (
+        "owner_session_hash" if after.get("owner_kind") == "session" else "owner_pid"
+    )
+    assert after[owner_key] == before[owner_key]
+
+
+def test_the_backend_command_pins_the_slot_worktree_as_project_root(slot_repo) -> None:
+    """`--lean-project-path` must name THIS slot's lean dir, never the primary checkout.
+
+    A same-content comparison cannot catch a wrong root: `prepare` resets the slot to the
+    base, so slot and primary hold identical files and both resolve every read.
+    """
+    controller, repo, worktrees = slot_repo
+    command = Supervisor(controller.inventory).backend_command(1)
+    assert "--lean-project-path" in command
+    root = Path(command[command.index("--lean-project-path") + 1]).resolve()
+    assert root == (worktrees[0] / "lean").resolve()
+    assert root != (repo / "lean").resolve()
+
+
+def test_quarantining_does_not_reset_the_clock_reclaim_reads(slot_repo) -> None:
+    """A failed reclaim must not make the next reclaim fail too.
+
+    `heartbeat_at` means "the owner is alive" and `reclaim` gates on it. When the
+    CONTROLLER writes a quarantine, refreshing it would reset the staleness clock, so a
+    genuinely stale lease could never be reclaimed by retry — each attempt resets what the
+    next one reads. Observed on a three-week-old lease: one failed reclaim rewrote
+    `heartbeat_at` to now, and the retry was refused for staleness instead of the real cause.
+    """
+    controller, _, _ = slot_repo
+    lease = controller.acquire(1, client="claude", base_ref="main")
+    _ = lease["heartbeat_at"]
+    lease["heartbeat_at"] = "2026-07-23T19:32:03Z"          # a genuinely stale owner
+    controller.inventory.save_lease(1, lease, touch_heartbeat=False)
+
+    stale = controller.inventory.lease(1)
+    assert stale["heartbeat_at"] == "2026-07-23T19:32:03Z"
+
+    controller._quarantine(1, stale, "simulated audit failure")
+    after = controller.inventory.lease(1)
+    assert after["state"] == "QUARANTINED"
+    assert after["heartbeat_at"] == "2026-07-23T19:32:03Z", (
+        "quarantining refreshed the heartbeat, so retrying reclaim can never succeed")
+    # The quarantine still records ITS own time — suppressing the heartbeat must not
+    # suppress the audit trail. The audit stamp advances while the liveness stamp does not.
+    assert after["quarantined_at"] > after["heartbeat_at"]
+
+
+def test_an_owner_heartbeat_still_refreshes(slot_repo) -> None:
+    """The fix must not disable the real heartbeat — that would let live leases expire."""
+    controller, _, _ = slot_repo
+    lease = controller.acquire(1, client="claude", base_ref="main")
+    lease["heartbeat_at"] = "2026-07-23T19:32:03Z"
+    controller.inventory.save_lease(1, lease, touch_heartbeat=False)
+    refreshed = controller.heartbeat(1)
+    assert refreshed["heartbeat_at"] != "2026-07-23T19:32:03Z"
+
+
+# --- Absorption is containment in the INTEGRATION ref, not in a recorded SHA ------------
+
+
+def test_a_slot_whose_base_branch_was_deleted_is_still_freeable(
+    slot_repo, monkeypatch
+) -> None:
+    """The wt2 trap, 2026-08-14: lease a feature branch, merge it, delete it.
+
+    Every controller verb was closed and the only exit was deleting runtime state by hand —
+    which S-C tells operators not to do. Ordinary hygiene must not create an unrecoverable
+    state.
+    """
+    controller, repo, worktrees = slot_repo
+    run(repo, "git", "branch", "feature/tmp-base", "main")
+    controller.build()
+    lease = controller.acquire(1, client="claude", base_ref="feature/tmp-base")
+    assert lease["base_ref"] == "feature/tmp-base"
+    # The slot's work lands on main the way `absorb` would, then the branch is deleted.
+    run(repo, "git", "branch", "-D", "feature/tmp-base")
+
+    worktree = worktrees[0]
+    absorbed, why = controller._is_absorbed(worktree, controller.inventory.lease(1))
+    assert absorbed, f"a slot contained in main must be freeable; got: {why}"
+    assert "integration ref" in why
+    controller.release(1)
+    assert controller.inventory.lease(1, required=False) is None
+
+
+def test_real_unabsorbed_work_still_blocks(slot_repo) -> None:
+    """The audit must stay fail-closed — this is what stops work being lost."""
+    controller, repo, worktrees = slot_repo
+    controller.build()
+    prepare(controller, 1, client="claude")
+    commit(worktrees[0], "unmerged.txt", "work nobody has merged\n")
+    absorbed, why = controller._is_absorbed(
+        worktrees[0], controller.inventory.lease(1)
+    )
+    assert not absorbed
+    assert "merge or rescue" in why
+    with pytest.raises(SlotError, match="quarantined"):
+        controller.release(1)
+
+
+def test_an_unresolvable_ref_is_not_evidence_of_absorption(slot_repo) -> None:
+    """Fail-closed: if NOTHING resolves, the answer is 'not safe', never 'sure, go ahead'."""
+    controller, repo, worktrees = slot_repo
+    controller.build()
+    prepare(controller, 1, client="claude")
+    commit(worktrees[0], "unmerged.txt", "work nobody has merged\n")
+    lease = controller.inventory.lease(1)
+    lease["base_ref"] = "refs/heads/does-not-exist"
+    absorbed, _ = controller._is_absorbed(worktrees[0], lease)
+    assert not absorbed
+
+
+def test_the_integration_ref_is_configurable(slot_repo) -> None:
+    controller, repo, _ = slot_repo
+    path = repo / "config" / "lean-slots.public.json"
+    inventory = json.loads(path.read_text())
+    inventory["integration_ref"] = "trunk"
+    path.write_text(json.dumps(inventory))
+    run(repo, "git", "branch", "trunk", "main")
+    moved = Controller(Inventory.load(path))
+    assert moved.inventory.raw["integration_ref"] == "trunk"
+    _, why = moved._is_absorbed(
+        moved.inventory.worktree(1),
+        {"base_ref": "does-not-exist"},
+    )
+    assert "trunk" in why

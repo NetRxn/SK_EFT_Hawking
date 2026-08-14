@@ -7,6 +7,7 @@ import os
 import shlex
 import shutil
 import subprocess
+import sys
 import tempfile
 import tomllib
 from datetime import datetime, timezone
@@ -299,7 +300,10 @@ class Controller:
         if create:
             exclusive_json(self.inventory.lease_path(number), lease)
         else:
-            self.inventory.save_lease(number, lease)
+            # Quarantining is the CONTROLLER acting, not the owner reporting in. Refreshing
+            # the heartbeat here would reset the staleness clock `reclaim` reads, so a failed
+            # reclaim would make the next one fail too — forever.
+            self.inventory.save_lease(number, lease, touch_heartbeat=False)
 
     def acquire(self, number: int, *, client: str, base_ref: str) -> dict[str, Any]:
         with self._slot_lock(number):
@@ -599,14 +603,13 @@ class Controller:
             except SlotError as exc:
                 self._quarantine(number, lease, str(exc))
                 raise
-            base_sha = self._primary_sha(str(lease["base_ref"]))
-            result = _run(
-                ["git", "merge-base", "--is-ancestor", "HEAD", base_sha],
-                cwd=worktree,
-                check=False,
-            )
-            if dirty or result.returncode:
-                reason = "release refused: dirty files or unabsorbed commits remain"
+            absorbed, why = self._is_absorbed(worktree, lease)
+            if dirty or not absorbed:
+                reason = (
+                    "release refused: dirty files remain"
+                    if dirty
+                    else f"release refused: {why}"
+                )
                 self._quarantine(number, lease, reason)
                 raise SlotError(f"wt{number} quarantined; {reason}")
             try:
@@ -615,6 +618,72 @@ class Controller:
                 self._quarantine(number, lease, f"counterpart restore failed: {exc}")
                 raise
             self.inventory.lease_path(number).unlink()
+            self._reconcile_backend(number)
+
+    def _is_absorbed(self, worktree: Path, lease: dict[str, Any]) -> tuple[bool, str]:
+        """Would freeing this slot lose work? Returns (safe_to_free, explanation).
+
+        The decider is **containment in the integration ref** — the branch `absorb`
+        fast-forwards, so work reachable from it is preserved no matter what happens to the
+        slot. The lease's recorded `base_ref` is a HINT, not the authority: ordinary hygiene
+        (merge a feature branch, delete it) deletes or supersedes it, and testing only
+        against it strands a slot whose commits are safely in `main` — with no controller
+        verb able to free it. That is the wt2 trap, 2026-08-14.
+
+        Fail-closed: if neither reference resolves, the answer is "not safe".
+        """
+        integration = str(self.inventory.raw.get("integration_ref", "main"))
+        for label, ref in ((f"integration ref {integration!r}", integration),
+                           (f"recorded base {lease.get('base_ref')!r}",
+                            str(lease.get("base_ref", "")))):
+            if not ref:
+                continue
+            try:
+                sha = self._primary_sha(ref)
+            except SlotError:
+                continue  # a deleted or unresolvable ref is not evidence of loss
+            if (
+                _run(
+                    ["git", "merge-base", "--is-ancestor", "HEAD", sha],
+                    cwd=worktree,
+                    check=False,
+                ).returncode
+                == 0
+            ):
+                return True, f"contained in {label}"
+        return False, (
+            f"not contained in the integration ref {integration!r} nor in the lease's "
+            f"recorded base {lease.get('base_ref')!r} (which may no longer resolve); "
+            "merge or rescue the slot's commits before freeing it"
+        )
+
+    def _reconcile_backend(self, number: int) -> None:
+        """Align a slot's heavy backend with what its (now-updated) lease implies.
+
+        Call AFTER the lease file is gone: `backend_expected` reads the lease, so a
+        reconcile that runs first would still see the slot as leased.
+
+        Under `backend_policy: "leased"` nothing else ever stops a backend, and a warm slot
+        is not cheap — one holds `lake serve` + `lean --server` + `lean --worker`, measured
+        at ~4.4 GB, for the lifetime of the supervisor. Under `"default"` this is a no-op.
+
+        Reclaiming memory must never fail an exit path that has already succeeded, so a
+        supervisor error here is reported and swallowed rather than raised: the lease is
+        released either way, and a stray backend is a resource cost, not a correctness one.
+        """
+        if os.environ.get("LEAN_SLOT_SKIP_SUPERVISOR"):
+            return
+        from .supervisor import Supervisor
+
+        try:
+            if not self.inventory.backend_expected(number):
+                Supervisor(self.inventory).stop_backend(number)
+        except (SlotError, OSError) as exc:  # pragma: no cover - defensive
+            print(
+                f"slotctl: wt{number} released, but its backend could not be stopped "
+                f"({exc}); run `slotctl supervisor start` to reconcile",
+                file=sys.stderr,
+            )
 
     def _restore_paired_backend(self, number: int) -> None:
         paired = self.inventory.paired_inventory()
@@ -667,17 +736,13 @@ class Controller:
             except SlotError as exc:
                 self._quarantine(number, lease, str(exc))
                 raise
-            base_sha = self._primary_sha(str(lease["base_ref"]))
-            absorbed = (
-                _run(
-                    ["git", "merge-base", "--is-ancestor", "HEAD", base_sha],
-                    cwd=worktree,
-                    check=False,
-                ).returncode
-                == 0
-            )
+            absorbed, why = self._is_absorbed(worktree, lease)
             if dirty or not absorbed:
-                reason = "stale owner, but dirty files or unabsorbed commits require recovery"
+                reason = (
+                    "stale owner, but dirty files require recovery"
+                    if dirty
+                    else f"stale owner, and {why}"
+                )
                 self._quarantine(number, lease, reason)
                 raise SlotError(f"wt{number} quarantined; {reason}")
             try:
@@ -686,6 +751,7 @@ class Controller:
                 self._quarantine(number, lease, f"counterpart restore failed: {exc}")
                 raise
             self.inventory.lease_path(number).unlink()
+            self._reconcile_backend(number)
 
     def absorb(self, number: int) -> dict[str, Any]:
         integration = self.inventory.state_root / "locks" / "integration.lock"
@@ -775,6 +841,7 @@ class Controller:
                     )
                     raise
                 self.inventory.lease_path(number).unlink()
+                self._reconcile_backend(number)
                 return {"integrated_head": slot_head, "epoch": epoch}
 
     def status(self) -> dict[str, Any]:
@@ -1034,6 +1101,10 @@ class Controller:
                     ok,
                     "current" if ok else f"missing or drifted: {path}",
                 )
+        from . import host_limits
+
+        for limit_name, limit_ok, limit_detail in host_limits.evaluate(self.inventory):
+            record(limit_name, limit_ok, limit_detail)
         from . import claude_config
 
         claude_path = self.claude_mcp_path()

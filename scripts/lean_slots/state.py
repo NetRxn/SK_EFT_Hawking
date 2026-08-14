@@ -326,8 +326,19 @@ class Inventory:
             raise SlotError(f"invalid lease identity/state for wt{number}")
         return lease
 
-    def save_lease(self, number: int, lease: dict[str, Any]) -> None:
-        lease["heartbeat_at"] = now_iso()
+    def save_lease(
+        self, number: int, lease: dict[str, Any], *, touch_heartbeat: bool = True
+    ) -> None:
+        """Persist a lease record.
+
+        `heartbeat_at` means **the owner is alive**, and `reclaim` gates on it. A
+        controller-side write the owner did not initiate is therefore not a heartbeat:
+        pass `touch_heartbeat=False` for those. Refreshing it on a failed reclaim's
+        quarantine write makes a genuinely stale lease unreclaimable **by retry**, because
+        every attempt resets the clock the next attempt reads.
+        """
+        if touch_heartbeat:
+            lease["heartbeat_at"] = now_iso()
         atomic_json(self.lease_path(number), lease)
 
 

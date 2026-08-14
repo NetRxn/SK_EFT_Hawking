@@ -355,10 +355,20 @@ class Supervisor:
 
     @contextmanager
     def paused_backend(self, number: int) -> Iterator[None]:
-        """Keep one backend stopped across an atomic cache/branch transition."""
+        """Keep one backend stopped across an atomic cache/branch transition.
+
+        Entry requires a healthy PROXY but tolerates a stopped backend: under
+        `backend_policy: "leased"` a slot that has only just been acquired legitimately has
+        no backend yet, and requiring one here would make `prepare` unreachable — the
+        endpoint gate, not a running backend, is what protects the cache swap.
+
+        Exit always leaves a healthy backend, because the caller is about to mark the slot
+        ACTIVE and hand it to a worker.
+        """
         with self.lifecycle():
-            self.assert_healthy(number)
-            self._stop_backend_unlocked(number)
+            self.assert_proxy_healthy(number)
+            if self._running("backend", number):
+                self._stop_backend_unlocked(number)
             try:
                 yield
             finally:
@@ -453,7 +463,8 @@ class Supervisor:
                 self._stop_backend_unlocked(number)
         return self.status()
 
-    def assert_healthy(self, number: int) -> None:
+    def assert_proxy_healthy(self, number: int) -> None:
+        """The front door must be up and running current code; the backend may be down."""
         slot = self.inventory.slot(number)
         host = str(self.inventory.raw["server"]["host"])
         if not self._running("proxy", number) or not _port_open(
@@ -462,6 +473,11 @@ class Supervisor:
             raise SlotError(
                 f"proxy for wt{number} is not healthy; run slotctl supervisor start"
             )
+
+    def assert_healthy(self, number: int) -> None:
+        slot = self.inventory.slot(number)
+        host = str(self.inventory.raw["server"]["host"])
+        self.assert_proxy_healthy(number)
         if not self._running("backend", number) or not _port_open(
             host, int(slot["backend_port"])
         ):

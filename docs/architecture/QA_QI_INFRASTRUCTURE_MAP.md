@@ -437,6 +437,12 @@ before acting on any of them.
 to `validate.py`, `register_check`, `gate_precheck`, `bundle_readiness` or `build_graph`. Since
 ADR-008 Phase 4 it serves **both** clients, so "Codex control plane" is no longer its name.
 
+Its host-resource requirements are **declared data, not prose**: `host_limits` in the versioned
+inventory, keyed by `platform.system()` and asserted by `doctor` with a remedy derived from the
+declared minimum. Because this repository is public the check fails only for a knob the running
+kernel exposes and under-provisions — an undeclared platform or an unexposed knob passes, and
+`LEAN_SLOT_SKIP_HOST_LIMITS` opts a host out without a repository diff (ADR-008 S-M).
+
 ⚠️ **It has its own check family.** `slotctl doctor` checks (`config.repo`, `config.claude`,
 `build_epoch`, `wtN.endpoint`, …) are **not** `validate.py` checks: they are not registered, not in
 `_CANONICAL_ORDER`, and `validate.py --list` contains none of them. Their one registration site

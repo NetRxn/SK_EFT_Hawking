@@ -40,6 +40,7 @@ mislead. See B2 in `docs/architecture/.working-docs/ARCHITECTURE_TODOs.MD`.
 from __future__ import annotations
 
 import ast
+import json
 import re
 import sys
 from pathlib import Path
@@ -516,3 +517,48 @@ def test_the_claude_slot_endpoints_named_in_docs_are_the_ones_the_inventory_rend
     assert documented <= rendered, (
         f"documented endpoints {sorted(documented - rendered)} are not rendered from the "
         f"inventory, which renders {sorted(rendered)}")
+
+
+# --- ADR-008 S-L / S-M: leased backends + declared host limits ------------------------
+
+_ADR8 = Path("docs/adrs/ADR-008-shared-lean-slot-control-plane.md")
+_GUIDE = Path("docs/dev-loops/LEAN_SLOT_OPERATOR_GUIDE.md")
+_SLOT_INVENTORY = Path("config/lean-slots.public.json")
+
+
+def test_adr008_S_L_matches_the_inventory_it_governs() -> None:
+    """S-L says a backend follows the lease; the shipped inventory must actually say so."""
+    assert "S-L — A heavy backend is a consequence of a lease" in _ADR8.read_text()
+    inventory = json.loads(_SLOT_INVENTORY.read_text())
+    assert inventory["server"]["backend_policy"] == "leased"
+
+
+def test_every_lease_exit_path_reconciles_the_backend() -> None:
+    """release / reclaim / absorb each remove the lease, so each must reconcile after it."""
+    source = Path("scripts/lean_slots/controller.py").read_text()
+    assert source.count("self.inventory.lease_path(number).unlink()") == 3
+    assert source.count("self._reconcile_backend(number)") == 3
+
+
+def test_adr008_S_M_matches_the_declared_host_limits() -> None:
+    text = _ADR8.read_text()
+    assert "S-M — Host kernel limits are declared, checked, and portable" in text
+    inventory = json.loads(_SLOT_INVENTORY.read_text())
+    entries = inventory.get("host_limits") or []
+    assert entries, "S-M is stated but the inventory declares no host limit"
+    for entry in entries:
+        assert {"platform", "sysctl", "minimum"} <= set(entry)
+        # The remedy must satisfy the minimum it is offered for.
+        assert str(entry["minimum"]) in entry.get("remedy", "")
+
+
+def test_the_operator_guide_is_client_neutral_and_carries_the_persistence_recipe() -> None:
+    """The guide was promoted from a Codex-only doc when Phase 4 made it serve both."""
+    assert _GUIDE.exists(), "the slot operator guide was moved or deleted"
+    text = _GUIDE.read_text()
+    assert "LaunchDaemon" in text and "root:wheel" in text
+    # /etc/sysctl.conf is unreliable on modern macOS; the guide must warn, not recommend.
+    assert "not reliably honored" in text
+    assert "LEAN_SLOT_SKIP_HOST_LIMITS" in text
+    assert not Path("docs/dev-loops/CODEX_LEAN_SLOTS.md").exists(), (
+        "promotion must delete the original in the same commit")

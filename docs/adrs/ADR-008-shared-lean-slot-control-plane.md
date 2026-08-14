@@ -42,11 +42,22 @@ decisions `P4-1`–`P4-6`. Measured against `5e764ec6`.
 
 ### Two claims in this ADR were wrong and are corrected here
 
-1. **§ Context asserts the host "has since been raised to `kern.maxvnodes=786432`".** The live value is
-   **263168** — the raise did not survive a host reboot. No decision here depends on the larger number;
-   § *Risks* already requires lifecycle control rather than headroom, which is what the three-slot
-   posture actually rests on. Anyone re-deriving capacity from the ADR's figure would be re-deriving it
-   from a value that is not in effect.
+1. **§ Context asserts the host "has since been raised to `kern.maxvnodes=786432`"** as though it were a
+   standing property. It is a manual `sysctl -w`, which writes the running kernel only: the boot default
+   on the reference host is **263168**, and the raise is lost on every reboot. Confirmed by inspection —
+   no `/etc/sysctl.conf`, no `LaunchDaemon`, no `boot-args` persists it. A capacity claim that silently
+   reverts is worse than an absent one, because the swarm fails at a moment nobody chose.
+
+   **Superseded by measurement (2026-08-14).** 786432 is itself too low. On the reference host
+   (16-core / 128 GiB), one active slot drives `kern.num_vnodes` to ~753k; two reach 586k mid-run, and a
+   third projects past 786432 before any concurrent build. The requirement is now **declared data, not
+   prose** — `host_limits` in the versioned inventory, asserted by `slotctl doctor` with a runnable
+   remedy, at a floor of **1048576**. Persistence guidance, including why a `LaunchDaemon` and not
+   `/etc/sysctl.conf`, lives in the operator guide.
+
+   ⚠️ File descriptors are **not** the binding resource and `ulimit -n` will mislead you: a Lean server
+   holds ~9,991 *memory-mapped* `.olean` files, which consume vnode references rather than open-file
+   entries — system-wide `kern.num_files` stays under 11k while one server maps ten thousand files.
 2. **Change-set item 3 names a "compile-feedback *unbounded build lane*".** No surface by that name
    exists. Its residue was the narrow single-module worker build exception, carried in three plugin
    files, one of which additionally still prescribed `-j4` — a flag Lake has never had — one paragraph
@@ -170,6 +181,10 @@ The words MUST, MUST NOT, SHOULD, and MAY below are normative.
 | **S-I — Integration is serialized and ancestry-safe** | `slotctl absorb` (or its exact equivalent) is orchestrator-only and protected by an integration lock. It verifies a clean committed slot, rebases the slot branch onto the current authoritative base when necessary, and then fast-forwards the primary checkout. It never cherry-picks, force-pushes, or discards unmerged work. A conflict or unexpected ancestry enters `QUARANTINED` state for explicit orchestrator resolution. After absorption, the orchestrator runs the authoritative gate, publishes a new epoch, rewarms the slot, and releases it. |
 | **S-J — Versioned specification, generated local configuration** | Product-neutral controller/supervisor code, schemas, tests, and public endpoint templates live in this repository. Private endpoint mappings live only in a private overlay. Workspace-root Claude/Codex MCP configuration is generated local state with a source digest. `slotctl doctor` MUST report drift rather than silently overwriting operator configuration. Credentials, leases, PIDs, logs, and epochs are gitignored runtime state. |
 | **S-K — Codex first; Claude activation gated** | Codex configuration, agents, and worker policies are implemented and tested first. The shared controller, supervisor, lease schema, endpoint naming, and generated-config interface MUST already admit a later Claude client. Claude plugin/config changes are a separate activation phase requiring live tests; until then, the existing Claude plugin and stdio launch path remain unchanged. No Claude compatibility claim may advance from “designed” to “verified” without those tests. |
+| **S-L — A heavy backend is a consequence of a lease** *(added 2026-08-14)* | The public inventory sets `server.backend_policy = "leased"`: a backend runs only while this repository holds a lease in an active state. Every lease-exit path — `release`, `reclaim`, `absorb` — MUST reconcile the backend **after** the lease record is removed, because expectation is derived from the lease. Reclamation MUST NOT fail an exit path that has already succeeded; a stray backend is a resource cost, not a correctness one, and is reported for `supervisor start` to resolve. Rationale is measured, not assumed: one active slot holds `lake serve` + `lean --server` + `lean --worker` at ~4.4 GB, and before this rule that memory persisted from first use until the supervisor was stopped by hand. Peak concurrency is unchanged; only the idle-after-a-wave cost is removed. `"default"` remains available and is unaffected. |
+| **S-O — Absorption means containment in the INTEGRATION ref** *(added 2026-08-14)* | `release` and `reclaim` must decide *"would freeing this slot lose work?"* by testing the slot's `HEAD` against the declared integration ref (`integration_ref`, default `main`) — the branch `absorb` fast-forwards. The lease's recorded `base_ref` is a **hint**, tried second, never the authority: ordinary hygiene (merge a feature branch, delete it) deletes or supersedes it. An unresolvable ref is skipped, not fatal; if nothing resolves the answer is **not absorbed**, so the audit stays fail-closed and dirty work still blocks. ⚠️ Discovered by a slot that no verb could free: its base branch was deleted after its commits reached `main`, so `release` failed on owner identity, `reclaim` failed on `rev-parse`, and the only exit was deleting runtime state by hand — precisely what S-C tells operators not to do. **A state reachable by ordinary hygiene must never be unrecoverable through the controller.** |
+| **S-N — The lease gate applies at DISPATCH, not at CONNECT** *(added 2026-08-14)* | A client opens every endpoint in its configuration at startup, long before any slot is leased. An endpoint whose slot is unleased MUST therefore still complete the MCP handshake — `initialize`, `tools/list`, `ping`, and notifications — answering locally when no backend is running, and MUST advertise an **empty tool list**. ⚠️ **The empty list is the UNLEASED state only, and constrains no worker.** A leased, prepared slot exposes its full surface — measured at 21 tools, every one the MCP-first loop needs (`lean_goal`, `lean_multi_attempt`, `lean_diagnostic_messages`, `lean_verify`, `lean_run_code`, the searches, hover, completions). The single removal anywhere is `lean_build` (S-E). A worker never meets the empty list, because a worker is only ever dispatched into a slot the lead has leased and prepared. Refusal belongs on `tools/call`, where `LeaseGate.authorize` already enforces it. This does not weaken S-E: no tool can be named, and dispatch still fails closed. ⚠️ Discovered by regression — S-L made unleased endpoints answer `503` to `initialize`, and codex-cli 0.145.0 (`rmcp`) treats that as a **fatal** transport error that kills the whole session with no answer, `required = false` notwithstanding. Claude Code tolerates it, so client resilience here is **not symmetric** and a single client's success is not evidence the contract holds. |
+| **S-M — Host kernel limits are declared, checked, and portable** *(added 2026-08-14)* | Resource requirements a swarm depends on MUST live as data in the versioned inventory (`host_limits`), keyed by `platform.system()`, and be reported by `doctor` with a remedy command derived from the declared minimum so the two cannot drift. Because this repository is public, the check MUST fail **only** for a knob the running kernel exposes whose value is below the declared floor: an undeclared platform passes, an unexposed knob passes, and `LEAN_SLOT_SKIP_HOST_LIMITS` opts a host out without a repository diff. A limit that is right for one workstation MUST NOT fail a clone on another. |
 
 ### Slot state machine
 
@@ -286,13 +301,38 @@ When live Claude testing becomes available, the Claude activation change set mus
 
 ### Deferred Claude activation gate
 
-1. One Claude session and multiple Claude subagents share the configured HTTP endpoints without spawning per-agent stdio servers.
-2. Claude worker tool policy denies builds and integration, while the lead can invoke the controller workflow.
-3. Claude reconnect after endpoint restart preserves or cleanly reacquires the intended lease and never changes project root.
-4. Claude-only three-slot work passes without ENFILE or process accumulation.
-5. One Claude worker and one Codex worker can operate on different leased slots concurrently; attempts to share a slot are denied.
-6. Session restart/plugin-cache refresh behavior is documented and verified.
-7. Only after all tests pass may the legacy stdio entries and manual off-repo `pkill` procedure be retired.
+Status as of 2026-08-14. A test is **PASSED** only where a real client exercised it end to end;
+"the mechanism looks right" is not a pass.
+
+1. **PASSED** — after the restart, a Claude session attached to `skeft_wt{1,3}` over HTTP with no
+   per-agent stdio spawn; the legacy `lean-lsp-wt*` servers are gone from the session.
+2. **PASSED** — `harness_worker_shell_guard.py` denies builds/cache/integration to subagents only,
+   with a cross-client test asserting parity against the Codex policy; the lead is unaffected.
+3. **PASSED** — a live session held an ACTIVE lease across a full `supervisor stop`/`start`. The
+   lease was **preserved**, not reacquired (same owner-session hash), because it lives on disk and
+   the proxy holds no lease state. The backend genuinely restarted (pid 47633 → 47903, fresh
+   `lake serve` → `lean --server` → `lean --worker` chain), and the client's next tool call
+   succeeded with no intervention — reconnect is transparent to the caller.
+
+   ⚠️ **Project-root stability needed a discriminating test.** Comparing HEADs proves nothing:
+   `prepare` resets the slot to the base, so wt1 and `main` sit at the same commit and every read
+   looks identical from either root. Verified instead by planting a module that exists **only** in
+   the slot's tree and resolving it through the endpoint — plus the backend argv, which stays
+   pinned to `…/worktrees/wt1/lean`. A same-content check would have passed against the wrong root.
+4. **PARTIAL** — two concurrent slots ran with no ENFILE and no process accumulation; the third was
+   unavailable (see capacity). Peak measured at 2/3, not 3/3.
+5. **PASSED** — a Claude lease on wt1 and a Codex lease on wt3 dispatched real Lean tool calls
+   concurrently (`codex exec` returned `SUCCESS 33`, matching the Claude side). Sharing is denied at
+   **both** layers: the controller refuses the second `acquire` (`already leased by claude`), and the
+   endpoint refuses dispatch on a client mismatch (`skipped-nonmatching-lease`).
+6. **PASSED** — restart behaviour is documented in the operator guide and was exercised twice, once
+   for the transport switch and once for the stale-implementation fingerprint.
+7. **NOT MET, deliberately.** Tests 3 and 4 are partial, so the legacy stdio entries stay
+   recoverable via `config render --client claude --rollback`.
+
+⚠️ **Test 5 is why the gate exists.** Every mechanism read correctly before it ran, and the first
+two live attempts failed — see S-N. A single client's success would have been mistaken for the
+contract holding.
 
 ---
 

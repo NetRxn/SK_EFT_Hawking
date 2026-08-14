@@ -29,6 +29,21 @@ the whole workstation, not one per client or per subagent. **Restart after first
 `client` is `claude`. A connected server with no lease is not a working slot — it fails every call. Acquire
 first (step 1); this is why a dispatch without a lease fails immediately rather than degrading.
 
+**A leased slot gives a worker the FULL tool surface** — 21 tools, everything the MCP-first loop
+needs. The only removal anywhere is `lean_build`. An *unleased* endpoint advertises no tools, which
+is the "there is nothing here yet" signal, not a restriction on workers: a worker is only dispatched
+into a slot already leased and prepared.
+
+**A slot's Lean server is a consequence of its lease.** `prepare` starts the backend; the Lean server itself
+spawns lazily on the first tool call and costs **~4.4 GB** (`lake serve` + `lean --server` + `lean --worker`,
+measured). `release` / `absorb` reclaim it automatically. So an idle slot costs nothing, a full swarm costs
+~13 GB at peak, and you never need to remember `supervisor stop` to get the memory back.
+
+⚠️ **Before a full swarm, run `slotctl doctor`.** A concurrent swarm memory-maps thousands of `.olean` files
+per slot, which consumes kernel **vnodes** — not file descriptors, so `ulimit -n` will tell you everything is
+fine while the real ceiling binds. `doctor` asserts the declared floor and prints the exact command to fix a
+shortfall. Persistence (it is a runtime setting, lost on reboot) is in the slot operator guide.
+
 ## Lead's flow (per independent sub-chain)
 
 1. **Acquire and prepare the slot — IMMEDIATELY before dispatching *this* slot's worker**, per task, **not

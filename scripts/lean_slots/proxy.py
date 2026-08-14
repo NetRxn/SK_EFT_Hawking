@@ -152,6 +152,58 @@ class LeaseGate:
             raise SlotError(f"wt{self.number} paired dependency became dirty")
 
 
+#: Protocol version answered when we reply on the backend's behalf.
+_OFFLINE_PROTOCOL_VERSION = "2025-06-18"
+
+
+def offline_handshake(messages: list[dict[str, Any]]) -> dict[str, Any] | None:
+    """A local reply for MCP handshake traffic when the slot has no backend, else None.
+
+    A client opens every endpoint in its configuration at startup, long before any slot is
+    leased. Answering 503 to `initialize` is therefore wrong on principle — the backend is a
+    DISPATCH-time resource, and refusing the CONNECT-time handshake for its absence breaks
+    clients that treat a transport failure as fatal. Measured with codex-cli 0.145.0 (rmcp):
+    one 503 endpoint killed the whole session and produced no answer, `required = false`
+    notwithstanding. Claude Code tolerates it, so this is not symmetric across clients.
+
+    Nothing here weakens the gate. The tool list is empty, so no tool can be named, and
+    `LeaseGate.authorize` still refuses every `tools/call` without a matching active lease.
+    """
+    if not messages:
+        return None
+    message = messages[0]
+    method = message.get("method")
+    if method == "initialize":
+        params = message.get("params") or {}
+        requested = params.get("protocolVersion") or _OFFLINE_PROTOCOL_VERSION
+        return {
+            "jsonrpc": "2.0",
+            "id": message.get("id"),
+            "result": {
+                "protocolVersion": requested,
+                "capabilities": {"tools": {"listChanged": False}},
+                "serverInfo": {"name": "lean-slot proxy (backend idle)", "version": "1"},
+                "instructions": (
+                    "This slot holds no active lease, so its Lean backend is not running and "
+                    "it exposes no tools. Acquire and prepare the slot with slotctl first."
+                ),
+            },
+        }
+    if method == "tools/list":
+        return {"jsonrpc": "2.0", "id": message.get("id"), "result": {"tools": []}}
+    if method == "ping":
+        return {"jsonrpc": "2.0", "id": message.get("id"), "result": {}}
+    return None
+
+
+def is_notification_only(messages: list[dict[str, Any]]) -> bool:
+    """True when every message is a notification, which takes 202 and no body."""
+    return bool(messages) and all(
+        "id" not in m and str(m.get("method", "")).startswith("notifications/")
+        for m in messages
+    )
+
+
 def make_handler(inventory: Inventory, number: int):
     slot = inventory.slot(number)
     backend_host = str(inventory.raw["server"]["host"])
@@ -177,6 +229,15 @@ def make_handler(inventory: Inventory, number: int):
                 }
             ).encode()
             self.send_response(status)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(body)))
+            self.send_header("Cache-Control", "no-store")
+            self.end_headers()
+            self.wfile.write(body)
+
+        def _respond_json(self, payload: dict[str, Any]) -> None:
+            body = json.dumps(payload).encode()
+            self.send_response(200)
             self.send_header("Content-Type", "application/json")
             self.send_header("Content-Length", str(len(body)))
             self.send_header("Cache-Control", "no-store")
@@ -241,7 +302,16 @@ def make_handler(inventory: Inventory, number: int):
             except (OSError, http.client.HTTPException) as exc:
                 if not self.wfile.closed:
                     try:
-                        self._deny(503, f"backend unavailable: {exc}", request_id)
+                        # The backend is a dispatch-time resource; do not fail the
+                        # connect-time handshake for its absence (see offline_handshake).
+                        if is_notification_only(parsed):
+                            self.send_response(202)
+                            self.send_header("Content-Length", "0")
+                            self.end_headers()
+                        elif (local := offline_handshake(parsed)) is not None:
+                            self._respond_json(local)
+                        else:
+                            self._deny(503, f"backend unavailable: {exc}", request_id)
                     except (BrokenPipeError, OSError):
                         pass
             finally:
