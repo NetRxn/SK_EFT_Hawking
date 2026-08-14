@@ -376,9 +376,20 @@ def count_python() -> dict:
         m = re.search(r"(\d+)\s+tests?\s+collected", result.stdout or result.stderr)
         if m:
             pytest_cases = int(m.group(1))
-    except Exception:
-        # Keep graceful degradation; 0 indicates "not collected this run"
-        pytest_cases = 0
+    except Exception as exc:
+        # ⚠️ DO NOT PUBLISH 0. "Graceful degradation" here wrote `pytest_cases: 0` into the
+        # tracked artifact, the mtime legs were satisfied because counts.json had just been
+        # written, and the value leg does not compare this key — so `counts_fresh` reported
+        # GREEN having just published `\totaltests{0}` into every paper. A collection that
+        # did not happen is not a count of zero. Refuse, and let the caller see it.
+        raise RuntimeError(
+            f"pytest collection failed ({type(exc).__name__}: {exc}); refusing to publish "
+            f"pytest_cases=0 into docs/counts.json — every paper \\input's that macro") from exc
+    if pytest_cases == 0:
+        raise RuntimeError(
+            f"pytest collection reported ZERO tests. The suite has >6000; a zero here means "
+            f"the collection errored or the regex stopped matching, not that the tests are "
+            f"gone. stdout tail: {(result.stdout or result.stderr)[-400:]!r}")
 
     # Key order preserved from before the cheap/expensive split, so the split
     # produces no diff in the tracked artifact.

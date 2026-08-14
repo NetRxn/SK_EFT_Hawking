@@ -110,11 +110,16 @@ class TestCountsFreshness:
             _d = tmp_path / _name.lower()
             _d.mkdir(parents=True, exist_ok=True)
             monkeypatch.setattr(_H, _name, _d)
-        # The COUNT leg (2026-08-13) compares published vs live values, so a fresh
-        # fixture must publish what the tmp trees actually contain. Derived through
-        # the same helper the check uses rather than hand-written zeros: a hand-
-        # written block would have to be edited every time a leg is added, and the
-        # edit that gets forgotten silently turns every case below into "stale".
+        # ⚠️ REPUBLISH IS THE CALLER'S JOB, NOT THE FIXTURE'S — and getting that wrong
+        # here VOIDED THREE PRE-EXISTING TESTS (pr-review 2026-08-13). Publishing counts
+        # at setup time meant that when a test later seeded a file into one of these
+        # trees, the LIVE count moved too, so the new value leg fired and
+        # `test_every_tree_counts_json_publishes_is_a_staleness_input[SRC_DIR|TESTS_DIR|
+        # NOTEBOOKS_DIR]` stayed green even with the entire four-tree MTIME loop deleted.
+        # They no longer tested their named subject. The fixture now publishes only the
+        # empty state; a test that seeds must call `_republish` itself if it wants the
+        # count leg silent, and the mtime cases assert on the REASON so each leg is
+        # attributed to the mechanism it is named for.
         self._republish(cj, counts_mtime)
         runner = _Ran()
         monkeypatch.setattr(fr.subprocess, "run", runner)
@@ -165,6 +170,14 @@ class TestCountsFreshness:
         2026-08-10; the other three had no positive test at all before it."""
         runner = self._setup(tmp_path, monkeypatch, counts_mtime=1000, source_mtime=500)
         _touch(getattr(_H, anchor) / rel, 3000)
+        # Republish AFTER seeding, so the published counts already include the new file:
+        # the count leg is then silent and only the MTIME leg can explain a stale verdict.
+        # Without this the count leg answers, and this test passes with its subject deleted.
+        self._republish(_H.COUNTS_JSON_PATH, 1000)
+        stale, reason = fr._counts_is_stale()
+        assert stale and "newer than counts.json" in reason, (
+            f"the mtime leg did not fire; verdict was {(stale, reason)!r} — if the count "
+            f"leg answered instead, this case is no longer testing its named subject")
         fr.check_counts_fresh()
         assert runner.calls, (
             f"a file under {anchor} newer than counts.json did not mark counts stale — "
@@ -221,9 +234,18 @@ class TestCountsFreshness:
         finally:
             real.write_bytes(original)
             os.utime(real, (st.st_atime, st.st_mtime))
-        assert fr._counts_is_stale()[0] is False, (
-            "the real counts.json is stale after restore — regenerate with "
-            "`uv run python scripts/update_counts.py`")
+        # ⚠️ THE NEGATIVE CONTROL ASSERTS THE COUNT LEG, NOT THE WHOLE PREDICATE.
+        # It used to assert `_counts_is_stale()[0] is False`, which is a claim about the
+        # DEVELOPER'S TREE: any edit under src/, tests/, notebooks/ or papers/ since the
+        # last regeneration makes an mtime leg fire and this test go red for a reason that
+        # has nothing to do with its subject. It fired on exactly that, one edit later, in
+        # this very file. The subject here is "published == live", so assert that.
+        import update_counts as _uc
+        published = json.loads(real.read_text(encoding="utf-8"))["python"]
+        live = _uc.count_python_cheap()
+        assert {k: published.get(k) for k in live} == live, (
+            "counts.json's published glob figures no longer match the live tree after "
+            "restore — regenerate with `uv run python scripts/update_counts.py`")
 
     def test_the_count_leg_covers_every_published_glob_figure(self):
         """SEAM GUARD (§2.5). The leg loops over whatever `count_python_cheap`

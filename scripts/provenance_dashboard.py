@@ -1167,6 +1167,10 @@ def index():
     # here would undo the module's whole refusal — so the except branch carries an
     # `error` key and the partial renders it as an error.
     flow_board = attention = loops = None
+    # The Attention pane resolves each item's label through the PRODUCER's map, since the
+    # five feeds are five stores with five different label keys. Passing the resolver keeps
+    # that vocabulary next to the code that mints the sources.
+    from dashboard_attention import label_of as _label_of
     _panes = {'flow': ('dashboard_flow', 'flow_board'),
               'attention': ('dashboard_attention', 'attention'),
               'loops': ('dashboard_loops', 'loops_panel')}
@@ -1189,6 +1193,7 @@ def index():
 
     return render_template("dashboard.html",
                            flow_board=flow_board,
+                           label_of=_label_of,
                            attention=attention,
                            loops=loops,
                            params=filtered_params,

@@ -149,6 +149,39 @@ def _needs_operator_bucket(value) -> str:
     return "needs_operator_unrecognised_value"
 
 
+#: The key each item SOURCE carries its human label under. Five producers, five keys —
+#: they are different stores with different vocabularies, which is why `attention()` refuses
+#: to merge the feeds in the first place.
+#:
+#: ⚠️ **THIS EXISTS BECAUSE THE PANE PRINTED RAW PYTHON DICTS AT 44 OF 49 ROWS.** The
+#: template read `item.label if item.label is defined else item`, and only `review_finding`
+#: carries `label`; Jinja's `is defined` made the fallback silent, so the operator control
+#: surface rendered `{'source': 'qi_derived', 'id': …}` (pr-review 2026-08-13).
+ITEM_LABEL_KEYS: dict[str, str] = {
+    "review_finding": "label",
+    "qi_derived": "pattern_summary",
+    "qi_register_open": "heading",
+    "system2_active_issues": "title",
+    "blocked_question": "question",
+}
+
+
+def label_of(item: dict) -> str:
+    """The item's human label — or a VISIBLE marker naming the gap.
+
+    ⚠️ An unknown source must not fall back to `str(item)`. That is what made the defect
+    silent: a dict repr looks like data, so nobody reads it as a missing mapping. A new
+    source renders as an explicit unlabelled marker instead, which is a bug report on the
+    face of the pane.
+    """
+    src = item.get("source", "?")
+    key = ITEM_LABEL_KEYS.get(src)
+    val = (item.get(key) or "").strip() if key else ""
+    if val:
+        return val
+    return f"⚠️ unlabelled item from source {src!r} — add it to ITEM_LABEL_KEYS"
+
+
 def _decision_package(meta: dict) -> dict:
     """What D11's five components can and cannot be checked from the finding store.
 

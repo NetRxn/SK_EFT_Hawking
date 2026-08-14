@@ -45,20 +45,33 @@
     <tbody>
       {% for item in attention[feed] %}
       <tr>
-        <td>{{ item.label if item.label is defined else item }}
+        {# ⚠️ `label_of` is the PRODUCER's resolver, not a template guess. The previous
+           `item.label if item.label is defined else item` printed a raw Python dict for
+           44 of 49 rows — `is defined` made it silent, and a dict repr reads as data. #}
+        <td>{{ label_of(item) }}
           {% if item.target is defined and item.target %}
           <div class="att-target">{{ item.target }}</div>{% endif %}</td>
         <td class="att-urgency att-{{ item.urgency if item.urgency is defined else 'none' }}">
           {{ item.urgency if item.urgency is defined else '—' }}</td>
         <td>{{ item.lane if item.lane is defined else '—' }}</td>
+        {# ⚠️ RENDER WHAT THE PRODUCER ACTUALLY COMPUTES. This read
+           `decision_package.complete` / `.missing` — neither key exists; the producer emits
+           `orientation_available`, `orientation_command`, `not_machine_checkable`. Jinja's
+           Undefined is falsy and `Undefined|join` is '', so EVERY row rendered
+           "missing ⟨nothing⟩": a five-component completeness verdict invented at the render
+           layer, over a producer that deliberately refuses to claim four of the five are
+           checkable. That inverts D11 in the pane built to serve it. #}
         <td>
-          {% if item.decision_package is defined and item.decision_package %}
-            {% if item.decision_package.complete %}
-              <span class="att-pkg-ok">complete</span>
+          {% set pkg = item.decision_package if item.decision_package is defined else none %}
+          {% if pkg %}
+            {% if pkg.orientation_available %}
+              <span class="att-pkg-ok" title="{{ pkg.orientation_command }}">orientation ready</span>
             {% else %}
-              <span class="att-pkg-short" title="D11 requires all five">
-                missing {{ item.decision_package.missing|join(', ') }}</span>
+              <span class="att-pkg-short" title="no target — D17 cannot generate the brief">
+                no orientation</span>
             {% endif %}
+            <div class="att-target">not machine-checkable:
+              {{ pkg.not_machine_checkable|join(', ') }} — judged by the reader, never by this pane</div>
           {% else %}—{% endif %}
         </td>
       </tr>

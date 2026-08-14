@@ -7175,6 +7175,71 @@
         "exit_code": 0,
         "run_at": "2026-08-13"
       }
+    },
+    {
+      "finding_id": "review:2026-08-13-pr-review-p10:infra:1",
+      "status": "fixed",
+      "evidence": "Template repaired to render what the producer actually computes. (1) the decision-package cell now shows orientation_available + the not_machine_checkable list verbatim, so D11's refusal to claim four of five components are checkable survives to the reader instead of being inverted into a fabricated five-component verdict. (2) labels resolve through dashboard_attention.label_of, a declared source-to-key map next to the producers that mint those sources, with an explicit unlabelled marker rather than a dict repr for an unmapped source. Measured 0 of 49 rows unlabelled; browser-verified.",
+      "superseded_by": null,
+      "date": "2026-08-13",
+      "verified_by": {
+        "command": "uv run python -m pytest tests/e2e -m e2e -k attention -q",
+        "declared": "uv run python -m pytest tests/e2e -m e2e -k attention -q",
+        "exit_code": 0,
+        "run_at": "2026-08-13"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-13-pr-review-p10:infra:2",
+      "status": "fixed",
+      "evidence": "Template repaired to render what the producer actually computes. (1) the decision-package cell now shows orientation_available + the not_machine_checkable list verbatim, so D11's refusal to claim four of five components are checkable survives to the reader instead of being inverted into a fabricated five-component verdict. (2) labels resolve through dashboard_attention.label_of, a declared source-to-key map next to the producers that mint those sources, with an explicit unlabelled marker rather than a dict repr for an unmapped source. Measured 0 of 49 rows unlabelled; browser-verified.",
+      "superseded_by": null,
+      "date": "2026-08-13",
+      "verified_by": {
+        "command": "uv run python -m pytest tests/e2e -m e2e -k attention -q",
+        "declared": "uv run python -m pytest tests/e2e -m e2e -k attention -q",
+        "exit_code": 0,
+        "run_at": "2026-08-13"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-13-pr-review-p10:infra:3",
+      "status": "fixed",
+      "evidence": "(3) update_counts now RAISES rather than publishing pytest_cases=0 — both on a collection exception and on a zero result, since a suite of 6000+ reporting zero means the collection errored, not that the tests are gone; a zero was reaching every paper through \\totaltests with counts_fresh green. (4) the _republish fixture no longer republishes before a test seeds its file, and the three per-tree mtime cases now assert on the REASON string, so each is attributed to the leg it is named for instead of being answered by the count leg. (5) the production-seeded negative control asserts published==live rather than the whole predicate, which was a claim about the developer's working tree and went red on any edit under tests/.",
+      "superseded_by": null,
+      "date": "2026-08-13",
+      "verified_by": {
+        "command": "uv run python -m pytest tests/test_d5_freshness.py -q",
+        "declared": "uv run python -m pytest tests/test_d5_freshness.py -q",
+        "exit_code": 0,
+        "run_at": "2026-08-13"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-13-pr-review-p10:infra:4",
+      "status": "fixed",
+      "evidence": "(3) update_counts now RAISES rather than publishing pytest_cases=0 — both on a collection exception and on a zero result, since a suite of 6000+ reporting zero means the collection errored, not that the tests are gone; a zero was reaching every paper through \\totaltests with counts_fresh green. (4) the _republish fixture no longer republishes before a test seeds its file, and the three per-tree mtime cases now assert on the REASON string, so each is attributed to the leg it is named for instead of being answered by the count leg. (5) the production-seeded negative control asserts published==live rather than the whole predicate, which was a claim about the developer's working tree and went red on any edit under tests/.",
+      "superseded_by": null,
+      "date": "2026-08-13",
+      "verified_by": {
+        "command": "uv run python -m pytest tests/test_d5_freshness.py -q",
+        "declared": "uv run python -m pytest tests/test_d5_freshness.py -q",
+        "exit_code": 0,
+        "run_at": "2026-08-13"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-13-pr-review-p10:infra:5",
+      "status": "fixed",
+      "evidence": "(3) update_counts now RAISES rather than publishing pytest_cases=0 — both on a collection exception and on a zero result, since a suite of 6000+ reporting zero means the collection errored, not that the tests are gone; a zero was reaching every paper through \\totaltests with counts_fresh green. (4) the _republish fixture no longer republishes before a test seeds its file, and the three per-tree mtime cases now assert on the REASON string, so each is attributed to the leg it is named for instead of being answered by the count leg. (5) the production-seeded negative control asserts published==live rather than the whole predicate, which was a claim about the developer's working tree and went red on any edit under tests/.",
+      "superseded_by": null,
+      "date": "2026-08-13",
+      "verified_by": {
+        "command": "uv run python -m pytest tests/test_d5_freshness.py -q",
+        "declared": "uv run python -m pytest tests/test_d5_freshness.py -q",
+        "exit_code": 0,
+        "run_at": "2026-08-13"
+      }
     }
   ]
 }
