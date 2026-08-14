@@ -1,6 +1,6 @@
 # ADR-004 — Substrate Integrity Gates: shift-left structural prevention of the proof-substance & assumption-disclosure failure classes
 
-- **Status:** **ACCEPTED + IMPLEMENTED (2026-06-13).** Five standing automated gates (R1–R5) installed and green, moving detection of the *proof-substance* and *assumption-disclosure* failure classes left from the Stage-13 fresh-context review into Stages 2/5/7; the two QI items that name these classes (`qi-leanproofsubstance`, `qi-assumptiondisclosure`) re-closed via **structural prevention** (Stage-14 pathway #2); Pipeline Invariants #4 and #9 given automated teeth and **new Invariant #16** added. Delivered as commits `6dc125ea` (W1+W2) / `1555759c`+`616cc35d` (W3) / `1df05fc9` (W4) / `047d73cf` (W5) / W6 integration; gates: `placeholder_not_cited`, `proxy_body_audit`, `tracked_hypothesis_ledger`, `tracked_hypotheses_fresh`, `formula_grounding`, `native_decide_regression`. Follow-up backlogs surfaced (NOT effort-deferred, gated + visible): **FormulaRefSweep** (81 dangling formula→Lean refs) — **CLEARED 2026-06-13** (commit `c5f55fb1`: 81 → 0, 66 replaced with statement-verified current names + 14 dropped; `formula_grounding` escalated to hard-fail on dangling; see `docs/roadmaps/FormulaRefSweep_Roadmap.md`); and the 6 `vacuous_proxy` theorem strengthenings (still open). Execution tracked by [SubstrateIntegrityGates roadmap](../roadmaps/SubstrateIntegrityGates_Roadmap.md).
+- **Status:** **ACCEPTED + IMPLEMENTED (2026-06-13); AMENDED 2026-08-14 (R6, prose statement-correspondence — see the Amendment under Decision).** Five standing automated gates (R1–R5) installed and green, moving detection of the *proof-substance* and *assumption-disclosure* failure classes left from the Stage-13 fresh-context review into Stages 2/5/7; the two QI items that name these classes (`qi-leanproofsubstance`, `qi-assumptiondisclosure`) re-closed via **structural prevention** (Stage-14 pathway #2); Pipeline Invariants #4 and #9 given automated teeth and **new Invariant #16** added. Delivered as commits `6dc125ea` (W1+W2) / `1555759c`+`616cc35d` (W3) / `1df05fc9` (W4) / `047d73cf` (W5) / W6 integration; gates: `placeholder_not_cited`, `proxy_body_audit`, `tracked_hypothesis_ledger`, `tracked_hypotheses_fresh`, `formula_grounding`, `native_decide_regression`. Follow-up backlogs surfaced (NOT effort-deferred, gated + visible): **FormulaRefSweep** (81 dangling formula→Lean refs) — **CLEARED 2026-06-13** (commit `c5f55fb1`: 81 → 0, 66 replaced with statement-verified current names + 14 dropped; `formula_grounding` escalated to hard-fail on dangling; see `docs/roadmaps/FormulaRefSweep_Roadmap.md`); and the 6 `vacuous_proxy` theorem strengthenings (still open). Execution tracked by [SubstrateIntegrityGates roadmap](../roadmaps/SubstrateIntegrityGates_Roadmap.md).
 - **Deciders:** John Roehm (project owner); investigation + draft by Claude (Opus 4.8).
 - **Context source:** the 2026-06-13 whole-substrate weakness audit ([SUBSTRATE_WEAKNESS_AUDIT_2026-06-13](../audits/SUBSTRATE_WEAKNESS_AUDIT_2026-06-13.md) — 408 findings → 60 ranked, with a primary-author hand-verification pass against source for the 7 highest-severity items); direct reads of `WAVE_EXECUTION_PIPELINE.md` (Stages 2/3a/5/7/10/13/14 + Invariants #4/#9/#15), `docs/QI_REGISTER.md` (`qi-leanproofsubstance`, `qi-assumptiondisclosure`, `qi-gate-5-self-audit-blind-spot-on-sibling-tautologies`, `qi-prose_lean_numerical_bound_gap`), `src/core/constants.py` (`PLACEHOLDER_THEOREMS`, `HYPOTHESIS_REGISTRY`), `scripts/validate.py` (`check_formulas_to_theorems`), and the Lean source behind findings #1/#3/#9/#13/#25.
 - **Related:** [ADR-002](ADR-002-native-decide-policy.md) (kernel-trust / `native_decide` posture — its **P4 gate** `axiom_closure_allowlist` owns the compiler-trust surface; R4 surfaces that gate's decl-closure count into `counts.json`, R2 defers the `native_decide` class to it, R5 enforces its Decision #2 prose-precision); [ADR-003](ADR-003-rokhlin-leg-discharge-and-deferred-topological-frontiers.md) (the `topo` `2 ∣ σ/8` tracked-hypothesis posture — confirms audit finding #1 is principled framing, not deception; `topo` is already in `HYPOTHESIS_REGISTRY['rokhlin_sigma_mod_16']` and is the template compliant-disclosed-assumption for R2/R3); [ADR-001](ADR-001-commring-qcyc5ext-roadmap.md) (upstream of ADR-002; supplies the `powerTable` machinery that *eliminates* native_decides in the qgroup cluster R4 counts); [Phase 5q.T roadmap](../roadmaps/Phase5qT_ExtSubstantiation_Roadmap.md) (its **T5 proxy-detector** is the seed R2 generalizes); `HYPOTHESIS_REGISTRY` + `PLACEHOLDER_THEOREMS` (`constants.py`); Pipeline Invariants #4, #9, #15. **See also [ADR-007](ADR-007-kernel-nogo-ledger-and-negative-frontier.md)** — the *negative-front mirror* of this ADR: it ledgers & integrity-gates *settled-dead* provably-false no-gos exactly as R2/R3 do *disclosed-open* assumptions, reusing this ADR's `vacuous_statement_audit`, and adds Invariant #17 (the settled-no-go mirror of #16).
@@ -47,6 +47,48 @@ Adopt the **Substrate Integrity Gates**: five standing automated gates, each a m
 | **R3 — single tracked-hypothesis source of truth** | the spirit of Invariant #9, extended to tracked Props + struct-field assumptions | **Collapse the two disjoint ledgers to ONE.** `HYPOTHESIS_REGISTRY` (machine-readable, rich) becomes the sole source (add a `prose`/`publication_note` field); `PERMANENT_TRACKED_HYPOTHESES.md` becomes AUTO-GENERATED from it (`scripts/render_tracked_hypotheses.py` + `tracked_hypotheses_fresh` check, à la counts.json→counts.tex). `validate.py --check tracked_hypothesis_ledger` asserts every consumed `(h : Prop)` AND Prop-valued struct field maps to a registry entry. `topo`/`16∣σ` is ALREADY covered by `rokhlin_sigma_mod_16` — do NOT double-register. **new Invariant #16** | 7 / 12 | structural-prevention close of `qi-assumptiondisclosure` |
 | **R4 — native_decide accounting** | ADR-002's P4 gate (`axiom_closure_allowlist`) already computes the decl-closure; `lint_native_decide_comments.py` enforces comments | **surface the EXISTING `axiom_closure_allowlist` decl-closure count into `counts.json`** (the authoritative trust-surface metric — `546` as of 2026-06-10; NOT the call-site grep, which is a different, larger number) via `update_counts.py`, with a no-silent-increase regression threshold. **Elimination policy stays owned by ADR-002**; R4 only makes the number a tracked metric. | 5 / 12 | makes the kernel-trust surface a regression-gated number (the "199" was a files-with-string misread) |
 | **R5 — placeholder-not-cited** | Invariant #9's unenforced paper-claim clause; **ADR-002 Decision #2** (precise "kernel-checked modulo `native_decide`" wording); generalizes `qi-prose_lean_numerical_bound_gap` | complete `PLACEHOLDER_THEOREMS` (11 → 26 on-disk); `validate.py --check placeholder_not_cited`; add Stage-10 claims-reviewer FAIL conditions for (a) placeholder cited as verified AND (b) a Category-A `native_decide` theorem cited as "kernel-verified" without the ADR-002 modulo-wording | 7 / 10 | direct fix of finding #3 (paper7) |
+
+### Amendment — R6, prose statement-correspondence (2026-08-14)
+
+**This ADR named the class and mechanized it for one population.** Context §3 states the
+principle exactly — a check that "only verifies the cited theorem **name string** exists …
+never that the theorem's *statement* encodes the relation" — and R1 discharged it for
+`formulas.py` → Lean. The **paper prose → Lean** population received R5, which covers the
+*placeholder* case (the cited declaration proves nothing) and not the *correspondence* case
+(the cited declaration proves something real, but not what the prose says). R5's row claims to
+generalize `qi-prose_lean_numerical_bound_gap`; it does not, and that QI item has stood
+**unassigned** since 2026-05-04.
+
+| Gate | Mechanizes | New artifact | Stage | Closes / enforces |
+|---|---|---|---|---|
+| **R6 — prose statement-correspondence** | Context §3's principle, applied to the population R1 did not reach; the fourth rung of `claims-reviewer`'s existing ladder | a new finding class **SC** in `claims-reviewer` (agent leg), plus a deterministic leg consuming `lean_deps.json`'s elaborated `type` field the way Class TN's auto-close path already consumes the name | 10 / 13 | structural-prevention (pathway #2) close of `qi-prose_lean_numerical_bound_gap` |
+
+**Why this is rung 4 and not a new mechanism.** `claims-reviewer` already walks every sentence
+and builds a chain of backing to theorems, and its Class PC description states the ladder it
+implements: **TN** fires when the cited theorem does not exist; **HD** when it exists but
+carries an undisclosed tracked hypothesis; **PC** when it exists, is disclosed, and proves
+nothing. The fourth rung — it exists, is disclosed, proves something real, but not what the
+prose claims — has no class, so no layer can fire. Building a separate checker beside
+`claims-reviewer` would be the "third prose→Lean resolver" this project's own rule 1 names by
+example.
+
+**The agent leg alone is insufficient, and this is measured rather than assumed.**
+`papers/D3/claims_review_r1.json` records `claims-reviewer` walking the exact contaminated
+sentence, flagging only its module qualifier as Class TN, and **accepting the semantics**. A
+seventh class improves the odds; the deterministic leg is what makes it a gate.
+
+**The deterministic leg is affordable because the discriminator already exists.**
+`lean_deps.json` carries each declaration's fully elaborated `type`. For the live instance the
+extracted type reads `∀ (c : Real), 0 < c → ∀ (χ : Real), Or (Eq χ …lower) (Eq χ …upper) → Not …`
+— a two-point disjunction — while the paper displays `∀ χ ∈ [0.1,10]`. Quantifier-and-shape
+correspondence is decidable from that field; full LaTeX↔Lean semantics is not, and **R6 claims
+only the former**. The residue is stated rather than hidden: a prose claim whose disagreement
+with the Lean is semantic rather than structural remains an agent judgement.
+
+**Scope boundary.** R6 governs a *displayed proposition attributed to a named declaration*. It
+does not govern prior-art fidelity — whether prose faithfully represents a cited **paper** —
+which `QA_QI_INFRASTRUCTURE_MAP.md` records as the failure class that survives every layer,
+and which has no mechanical discriminator.
 
 **Plus three pipeline edits:**
 
