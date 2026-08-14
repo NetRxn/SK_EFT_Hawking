@@ -282,25 +282,164 @@ All four terms in the expansion involve [h,h] = 0, so the bracket vanishes.
 theorem chevalley_GG_verification :
     ∀ (_m _n : ℤ), (0 : ℤ) = 0 := fun _ _ => rfl
 
+/-! ## 4b. The concrete loop-algebra realization
+
+Sections 1–4 axiomatize the two presentations. This section BUILDS the Onsager
+algebra inside `L(gl₂) = gl₂ ⊗ ℂ[t, t⁻¹]` and proves the Davies relations there
+by direct computation, so that `DaviesPresentation` is inhabited by the object it
+is named for rather than only by degenerate models (the zero Lie algebra satisfies
+every Davies relation — a structure alone therefore proves nothing about dimension).
+
+The embedding, in the sl₂ basis `e = E₀₁`, `f = E₁₀`, `h = E₀₀ − E₁₁`:
+
+  `A_m = 2(e ⊗ t^m + f ⊗ t^{-m})`,  `G_k = h ⊗ t^k − h ⊗ t^{-k}`.
+
+The factor 2 in `A` is forced by the Davies normalization `[A_m, A_n] = 4G_{m−n}`
+together with `[G_n, A_m] = 2A_{m+n} − 2A_{m−n}`: no other rescaling satisfies both.
+-/
+
+open LaurentPolynomial
+
+/-- `gl₂` over the Laurent polynomials `ℂ[t, t⁻¹]` — the loop algebra `L(gl₂)`,
+with the Lie bracket `⁅x, y⁆ = xy − yx` of its associative matrix algebra. -/
+abbrev LoopGl2 : Type := Matrix (Fin 2) (Fin 2) (LaurentPolynomial ℂ)
+
+instance : LieRing LoopGl2 := LieRing.ofAssociativeRing
+
+instance : LieAlgebra ℂ LoopGl2 := LieAlgebra.ofAssociativeAlgebra
+
+/-- The Davies generator `A_m = 2(e ⊗ t^m + f ⊗ t^{-m})` inside `L(gl₂)`. -/
+def onsagerA (m : ℤ) : LoopGl2 := !![0, (2 : ℂ) • T m; (2 : ℂ) • T (-m), 0]
+
+/-- The Davies generator `G_k = h ⊗ t^k − h ⊗ t^{-k}` inside `L(gl₂)`. -/
+def onsagerG (k : ℤ) : LoopGl2 := !![T k - T (-k), 0; 0, -(T k - T (-k))]
+
+private lemma smulT_mul_smulT (a b : ℂ) (x y : ℤ) :
+    (a • T x : LaurentPolynomial ℂ) * (b • T y) = (a * b) • T (x + y) := by
+  rw [Algebra.smul_def, Algebra.smul_def, Algebra.smul_def, map_mul, T_add]; ring
+
+private lemma T_mul_smulT (b : ℂ) (x y : ℤ) :
+    (T x : LaurentPolynomial ℂ) * (b • T y) = b • T (x + y) := by
+  rw [Algebra.smul_def, Algebra.smul_def, T_add]; ring
+
+private lemma smulT_mul_T (b : ℂ) (x y : ℤ) :
+    (b • T x : LaurentPolynomial ℂ) * T y = b • T (x + y) := by
+  rw [Algebra.smul_def, Algebra.smul_def, T_add]; ring
+
+/-- Davies relation `[A_m, A_n] = 4 G_{m−n}`, verified in `L(gl₂)`. -/
+theorem onsagerA_bracket_onsagerA (m n : ℤ) :
+    ⁅onsagerA m, onsagerA n⁆ = (4 : ℂ) • onsagerG (m - n) := by
+  ext i j : 2
+  fin_cases i <;> fin_cases j <;>
+    simp only [Ring.lie_def, onsagerA, onsagerG, Matrix.sub_apply, Matrix.mul_apply,
+      Fin.sum_univ_two, Matrix.smul_apply, Matrix.cons_val', Matrix.cons_val_zero,
+      Matrix.cons_val_one, Matrix.empty_val', Matrix.cons_val_fin_one,
+      Matrix.of_apply, Fin.isValue, Fin.zero_eta, Fin.mk_one,
+      smulT_mul_smulT, mul_zero, zero_mul, add_zero, zero_add, smul_zero, sub_zero,
+      smul_sub, smul_neg] <;>
+    ring_nf
+
+/-- Davies relation `[G_n, A_m] = 2A_{m+n} − 2A_{m−n}`, verified in `L(gl₂)`. -/
+theorem onsagerG_bracket_onsagerA (n m : ℤ) :
+    ⁅onsagerG n, onsagerA m⁆ = (2 : ℂ) • onsagerA (m + n) - (2 : ℂ) • onsagerA (m - n) := by
+  ext i j : 1
+  fin_cases i <;> fin_cases j <;>
+    simp only [Ring.lie_def, onsagerA, onsagerG, Matrix.sub_apply, Matrix.mul_apply,
+      Fin.sum_univ_two, Matrix.smul_apply, Matrix.cons_val', Matrix.cons_val_zero,
+      Matrix.cons_val_one, Matrix.empty_val', Matrix.cons_val_fin_one,
+      Matrix.of_apply, Fin.isValue, Fin.zero_eta, Fin.mk_one,
+      T_mul_smulT, smulT_mul_T, sub_mul, mul_sub, neg_mul, mul_neg,
+      mul_zero, zero_mul, add_zero, zero_add, smul_zero, sub_zero, smul_smul,
+      show n + m = m + n by ring, show -n + m = m - n by ring,
+      show m + -n = m - n by ring, show n + -m = -(m - n) by ring,
+      show -m + n = -(m - n) by ring, show -n + -m = -(m + n) by ring,
+      show -m + -n = -(m + n) by ring] <;>
+    module
+
+/-- Davies relation `[G_m, G_n] = 0`, verified in `L(gl₂)`. -/
+theorem onsagerG_bracket_onsagerG (m n : ℤ) : ⁅onsagerG m, onsagerG n⁆ = 0 := by
+  ext i j : 2
+  fin_cases i <;> fin_cases j <;>
+    simp only [Ring.lie_def, onsagerG, Matrix.sub_apply, Matrix.mul_apply, Matrix.zero_apply,
+      Fin.sum_univ_two, Matrix.cons_val', Matrix.cons_val_zero,
+      Matrix.cons_val_one, Matrix.empty_val', Matrix.cons_val_fin_one,
+      Matrix.of_apply, Fin.isValue, Fin.zero_eta, Fin.mk_one,
+      mul_zero, zero_mul, add_zero, zero_add] <;>
+    ring_nf
+
+/-- **The Davies presentation is realized.** `L(gl₂)` carries the Onsager generators
+with the exact Davies structure constants (4 and 2) — so `DaviesPresentation` is not
+an empty hypothesis, and every theorem quantified over it says something about a
+genuine object. -/
+def onsagerDavies : DaviesPresentation LoopGl2 where
+  A := onsagerA
+  G := onsagerG
+  AA_comm := onsagerA_bracket_onsagerA
+  GA_comm := onsagerG_bracket_onsagerA
+  GG_comm := onsagerG_bracket_onsagerG
+
+/-- **The Onsager algebra**, concretely: the Lie subalgebra of `L(gl₂)` generated by
+the Davies generators `{A_m} ∪ {G_k}`. -/
+def onsagerAlgebra : LieSubalgebra ℂ LoopGl2 :=
+  LieSubalgebra.lieSpan ℂ LoopGl2 (Set.range onsagerA ∪ Set.range onsagerG)
+
+/-- The `(0,1)` matrix entry, as a ℂ-linear functional on `L(gl₂)`. On the Onsager
+generators it reads off `A_m ↦ 2t^m`, which is what carries the infinite tower. -/
+def loopEntry01 : LoopGl2 →ₗ[ℂ] LaurentPolynomial ℂ where
+  toFun X := X 0 1
+  map_add' _ _ := rfl
+  map_smul' _ _ := rfl
+
+/-- `ℂ[t, t⁻¹]` is free on the Laurent monomials `{t^n | n ∈ ℤ}`. -/
+def laurentBasisT : Module.Basis ℤ ℂ (LaurentPolynomial ℂ) :=
+  Finsupp.basisSingleOne.map (AddMonoidAlgebra.coeffLinearEquiv ℂ (S := ℂ) (M := ℤ)).symm
+
+/-- The Laurent monomials span `ℂ[t, t⁻¹]`. -/
+theorem laurent_span_T :
+    Submodule.span ℂ (Set.range fun n : ℤ => (T n : LaurentPolynomial ℂ)) = ⊤ :=
+  laurentBasisT.span_eq
+
+/-- `ℂ[t, t⁻¹]` is infinite-dimensional over ℂ: its monomial basis is indexed by ℤ. -/
+theorem laurent_not_finiteDimensional : ¬ FiniteDimensional ℂ (LaurentPolynomial ℂ) := fun _ =>
+  Int.infinite.not_finite (Module.Finite.finite_basis laurentBasisT)
+
+/-- Each Davies generator `A_m` lies in the Onsager algebra. -/
+theorem onsagerA_mem (m : ℤ) : onsagerA m ∈ onsagerAlgebra :=
+  LieSubalgebra.subset_lieSpan (Set.mem_union_left _ ⟨m, rfl⟩)
+
+/-- The `(0,1)` entry map sends the Onsager algebra ONTO all of `ℂ[t, t⁻¹]`:
+every Laurent monomial `t^n` is `½ A_n` read off at `(0,1)`. -/
+theorem onsager_entry01_map_eq_top :
+    Submodule.map loopEntry01 onsagerAlgebra.toSubmodule = ⊤ := by
+  rw [eq_top_iff, ← laurent_span_T, Submodule.span_le]
+  rintro x ⟨n, rfl⟩
+  refine ⟨(2⁻¹ : ℂ) • onsagerA n, Submodule.smul_mem _ _ (onsagerA_mem n), ?_⟩
+  show ((2⁻¹ : ℂ) • onsagerA n) 0 1 = T n
+  simp [onsagerA, smul_smul]
+
 /-! ## 5. Algebraic Structure Theorems -/
 
 /--
-The Onsager algebra is infinite-dimensional. In the Davies presentation,
-the generators {A_m | m ∈ ℤ} ∪ {G_n | n > 0} form a basis.
+**The Onsager algebra is infinite-dimensional.**
 
-Proof sketch: the Chevalley embedding into L(sl₂) is injective, and the
-image spans an infinite-dimensional subspace (the A_m for distinct m
-map to linearly independent elements of L(sl₂)).
+Stated against the concrete realization `onsagerAlgebra ≤ L(gl₂)` of §4b, whose
+generators satisfy the Davies relations by `onsagerDavies`. The proof is the
+argument of Davies (1990): the `A_m` involve pairwise distinct powers of `t`, so
+the `(0,1)`-entry map carries the algebra onto the whole of `ℂ[t, t⁻¹]`
+(`onsager_entry01_map_eq_top`), which is free on the ℤ-indexed monomial basis and
+therefore not finite-dimensional. A finite-dimensional algebra has
+finitely-generated image, so the Onsager algebra cannot be finite-dimensional.
 
-PROVIDED SOLUTION
-Use the Chevalley embedding: A_m maps to f⊗t^m - e⊗t^{-m} in L(sl₂).
-For distinct m₁ ≠ m₂, these involve different powers of t and are therefore
-linearly independent in L(sl₂) = sl₂ ⊗ ℂ[t,t⁻¹]. Since the embedding is
-injective (it's a Lie algebra homomorphism that is injective on generators),
-the Onsager algebra contains infinitely many linearly independent elements.
+This replaces a former statement `∀ n : ℕ, ∃ m, m > n` — the Archimedean property
+of ℕ, which contains no project symbol and is true of every algebra whatsoever
+(2026-08-13, statement-substance review I1 §4).
 -/
-theorem onsager_infinite_dimensional :
-    ∀ (n : ℕ), ∃ (m : ℕ), m > n := fun n => ⟨n + 1, Nat.lt_succ_iff.mpr le_rfl⟩
+theorem onsager_infinite_dimensional : ¬ FiniteDimensional ℂ onsagerAlgebra := by
+  intro h
+  have hfg : (onsagerAlgebra.toSubmodule).FG := Module.Finite.iff_fg.mp h
+  have h2 := hfg.map loopEntry01
+  rw [onsager_entry01_map_eq_top] at h2
+  exact laurent_not_finiteDimensional (Module.finite_def.mpr h2)
 
 /--
 The DG presentation has exactly 2 generators. This is minimal:
