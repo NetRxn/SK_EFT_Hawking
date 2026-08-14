@@ -7397,6 +7397,20 @@
         "exit_code": 0,
         "run_at": "2026-08-14"
       }
+    },
+    {
+      "finding_id": "review:2026-08-14-suite-runtime:infra:2",
+      "status": "fixed",
+      "evidence": "The deferral premise was re-measured and was wrong: the 254,887-file / 16.5 GB figure is the surface a build COULD read, while the set it actually opens is 2,945 files / 127.5 MB across 236 directories (5.1ms to stat, 9.5ms to list). _graph_fingerprint is now derived from that read set, captured via a sys.addaudithook open recorder, plus the sorted listing of every ANCESTOR directory of each read file — ancestors because findings live in papers/AutomatedReviews/<date>/ and the corpus root itself was otherwise unwatched, so filing a finding (which creates a new dated directory) invalidated nothing. Cold build 7.4s, warm hit 16ms; editing a review document, editing the ledger, creating a dated directory and deleting one all rebuild, and an unchanged tree still serves the cached object. Nine guards mutation-proven twice against the production module (immediate-parent-only turns 3 red; reintroducing the original blind spot turns 6 red), both including an end-to-end seam test requiring the SERVED graph to contain a newly-filed finding.",
+      "superseded_by": null,
+      "date": "2026-08-14",
+      "commit": "d82f237b",
+      "verified_by": {
+        "command": "uv run python -m pytest -q tests/test_dashboard_graph_cache.py",
+        "declared": "uv run python -m pytest -q tests/test_dashboard_graph_cache.py",
+        "exit_code": 0,
+        "run_at": "2026-08-14"
+      }
     }
   ]
 }

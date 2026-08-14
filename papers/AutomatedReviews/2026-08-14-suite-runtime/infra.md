@@ -209,3 +209,48 @@
   earlier tests in the file touch files, the key had already moved for unrelated reasons —
   so it stayed green under the very mutation it existed to catch. Each invalidation test now
   captures its baseline immediately before its own change.
+
+---
+
+### 3 — 🟡 `test_production_seeded_a_wrong_published_count_is_stale` failed twice and I cannot reproduce it
+
+- **Severity:** minor
+- ⚠️ **Filed UNEXPLAINED, on purpose.** Every other finding in this document names a
+  mechanism. This one names only evidence, because two attempts to explain it were wrong and
+  a third guess recorded as fact is worse than an open question. A nondeterministic gate test
+  is worth a record even when the cause is unknown: the next person to see this red should
+  find the prior occurrences rather than re-derive them.
+- **Lane:** infra
+- **Gate:** `bundle_readiness`
+- **Location:** `tests/test_d5_freshness.py::TestCountsFreshness::test_production_seeded_a_wrong_published_count_is_stale`
+- **Observed:** the test bumps `docs/counts.json`'s `python.test_files` by one and asserts
+  `_counts_is_stale()` is True. It returned **False** in two full-gate runs — meaning the
+  live count equalled `published + 1` at that moment — and passes everywhere else.
+
+  | run | `update_counts.py` immediately before? | result |
+  |---|---|---|
+  | full gate, 705.66s | no (counts stale by one — a real, explained failure) | FAILED |
+  | full gate, 716.64s | **yes**, same shell command | FAILED |
+  | full gate, 725.82s (`-x`) | no | **passed** (6,731) |
+  | alphabetical prefix through this file, 1,671 tests | no | passed |
+  | the file alone (71), the test alone | no | passed |
+
+- **Ruled out, so nobody re-derives it:** it is not the ADR-008-era memo or the dashboard
+  cache — this test reads `counts.json` against a directory listing and touches neither.
+  `tests/test_build_graph_memo.py` runs before it and the two pass together (81).
+  `tests/test_dashboard_graph_cache.py` sorts **after** it and cannot pollute it.
+  Nothing in `tests/` before it pollutes it, since the whole alphabetical prefix passes.
+  `testpaths` puts the plugin suite after `tests/`, so that cannot be upstream either.
+  No stray `tests/test_gone.py` — the one temp test file any test creates — existed at the
+  stop point of the `-x` run.
+- ⚠️ **The only surviving correlation, stated as a hypothesis and NOT as a cause:** both
+  failures came from runs where `scripts/update_counts.py` executed immediately before
+  `pytest` in the same shell command; both clean runs did not. The first of those two is
+  independently explained (counts really were stale by one, because a test file had been
+  added), so the correlation rests on a single unexplained data point. **It is not evidence
+  of a mechanism yet.**
+- **Expected:** a gate test either passes deterministically or names the state it depends on.
+- **Fix:** reproduce first — run the full gate in a loop with `update_counts.py` immediately
+  before it, and have the test print live-vs-published on failure. Do not "fix" it by
+  regenerating counts; that was tried, and the failure recurred on the very next run.
+- **Verify:** `uv run python -m pytest -q tests/test_d5_freshness.py`
