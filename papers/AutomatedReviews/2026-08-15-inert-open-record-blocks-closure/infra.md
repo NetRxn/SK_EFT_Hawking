@@ -38,8 +38,15 @@ guard.
 
 - **Severity:** major
 - **Lane:** `infra`
-- **Verify:** `cd "$REPO" && uv run python -c "import ast,sys; src=open('scripts/close_finding.py').read(); t=ast.parse(src); fn=[n for n in ast.walk(t) if isinstance(n,ast.FunctionDef) and n.name=='_guard_prior'][0]; assert 'open' in ast.dump(fn), '_guard_prior never mentions the open status, so it cannot distinguish an inert record from a conflicting one'"`
-  *What it asserts:* that the guard distinguishes an inert `open` record from a genuinely conflicting closure. Exits 1 at HEAD.
+- **Verify:** `cd "$REPO" && uv run python -m pytest tests/test_close_finding.py::TestAnInertOpenRecordDoesNotBlockClosure -q`
+  *What it asserts:* that a closure with an inert `open` prior succeeds, records `supersedes_inert_open`, and that an `accepted` prior and a below-the-bar `fixed` prior are both STILL refused. Exits 1 at HEAD.
+  ⚠️ **Amended 2026-08-15 — the original command asserted a PROXY for its own purpose.** It
+  was `assert 'open' in ast.dump(_guard_prior)`, which the function's *docstring* already
+  satisfied: it could pass over a guard that still refused every inert record, and it said
+  nothing at all about the neighbouring refusals the fix must not widen. Assert what the
+  mechanism RETURNS, not what its source contains — the same defect class as
+  `2026-08-15-textbook-exemption-rewards-absent-metadata` and the `\bibitem`-as-proxy
+  defect retired in `d39d2ffb`.
 - **Gate:** FixPropagation
 - **Location:** `scripts/close_finding.py` — `_guard_prior` (the `prior_status != status` branch) and `_plan`
 - **Observed:** Closing `review:2026-05-01-L3-bundle-stage13:L3:6.1` — a BLOCKER whose defect is

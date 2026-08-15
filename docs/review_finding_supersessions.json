@@ -9327,6 +9327,20 @@
         "enforced": true,
         "run_at": "2026-08-14"
       }
+    },
+    {
+      "finding_id": "review:2026-08-15-inert-open-record-blocks-closure:infra:1.1",
+      "status": "fixed",
+      "evidence": "Fixed at the root in _guard_prior: prior_status == 'open' now falls through to the normal write, and the new closure records supersedes_inert_open so an inert prior stays distinguishable from no prior. Deliberately narrow — the fixed<->accepted and below-the-bar-fixed refusals are untouched and each now pinned by its own test. Non-vacuity per CHECK_AUTHORING_GUIDE 2.4: the seed goes into a copy of the PRODUCTION ledger (asserted >100 records), not a fixture. The Verify line was amended first: the original asserted a proxy (a substring of the function's AST dump, which its own docstring satisfied) rather than the behaviour.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -m pytest tests/test_close_finding.py::TestAnInertOpenRecordDoesNotBlockClosure -q",
+        "declared": "cd \"$REPO\" && uv run python -m pytest tests/test_close_finding.py::TestAnInertOpenRecordDoesNotBlockClosure -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
     }
   ]
 }
