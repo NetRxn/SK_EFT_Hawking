@@ -1405,12 +1405,25 @@ CITATION_REGISTRY = {
         'year': 2008,
         'doi': '10.1103/PhysRevD.77.085015',
         'arxiv': '0711.3170',
-        'doi_verified': None,
+        'doi_verified': '2026-08-15',  # CrossRef 10.1103/PhysRevD.77.085015 + primary PDF title page (arXiv:0711.3170v6)
         'inprep': False,
         'primary_source_path': 'Lit-Search/Phase-5x/primary-sources/KV2008.pdf',
-        'used_in': ['papers/paper17_dark_sector/paper_draft.tex'],
+        'used_in': [
+            'papers/paper17_dark_sector/paper_draft.tex',
+            'papers/D5/paper_draft.tex',
+            'notebooks/Phase6c1_StrongCPDarkEnergy_Stakeholder.ipynb',
+        ],
         'provides': [],
-        'notes': 'Klinkhamer-Volovik oscillating vacuum. arXiv ID tentative — user verify.',
+        'notes': 'ORIGIN of Klinkhamer-Volovik q-theory: introduces the self-tuning '
+                 'vacuum variable q. Cited as Ref. [3] by KlinkhamerVolovik2010. '
+                 'arXiv ID and DOI verified 2026-08-15 (primary PDF title page + '
+                 'CrossRef), superseding the prior "tentative — user verify" note. '
+                 '⚠️ This paper contains NO oscillating-vacuum result (zero occurrences '
+                 'of "oscillat" in the full text); the oscillating effective vacuum '
+                 'energy density is KV, "Dynamic vacuum variable and equilibrium '
+                 'approach in cosmology", PRD 78, 063528 (2008), arXiv:0806.2805. '
+                 'papers/paper17_dark_sector/paper_draft.tex:259 cites this key for the '
+                 '"KV oscillating-vacuum mechanism" — filed as a wrong-target citation.',
     },
     'Lean4': {
         'authors': 'de Moura, L., Ullrich, S.',
@@ -4943,16 +4956,26 @@ CITATION_REGISTRY = {
         'volume': 91,
         'page': '259',
         'year': 2010,
-        'doi': '10.1134/S0021364010050094',
+        'doi': '10.1134/S0021364010060019',
         'arxiv': '0907.4887',
-        'doi_verified': '2026-04-29',  # WebFetch arXiv:0907.4887 confirmed title (paper32 adversarial 2026-04-29)
+        'doi_verified': '2026-08-15',  # CrossRef 10.1134/S0021364010060019 -> title/authors/vol 91/pp 259-265 (2010)
         'inprep': False,
         'primary_source_path': 'Lit-Search/Phase-6c/primary-sources/KlinkhamerVolovik2010.pdf',
         'used_in': [
             'papers/paper32_strong_cp_de/paper_draft.tex',
+            'notebooks/Phase6c1_StrongCPDarkEnergy_Stakeholder.ipynb',
         ],
         'provides': [],
-        'notes': 'q-theory framework for cosmological-constant relaxation. Title corrected 2026-04-29 (was "Cosmological constant from gravitating Skyrmions" — that is a different paper) per WebFetch verification of arXiv:0907.4887.',
+        'notes': 'q-theory framework for cosmological-constant relaxation. This is the '
+                 'framework/synthesis paper, NOT the origin of q-theory: the vacuum '
+                 'variable q is introduced in KV2008 (PRD 77, 085015; arXiv:0711.3170), '
+                 'which this paper cites as its own Ref. [3]. Title corrected 2026-04-29 '
+                 '(was "Cosmological constant from gravitating Skyrmions" — no such '
+                 'Klinkhamer-Volovik paper exists; the gravitating-Skyrmion literature is '
+                 'a different community) per verification of arXiv:0907.4887. DOI '
+                 'corrected 2026-08-15: the prior 10.1134/S0021364010050094 returns 404 '
+                 'from CrossRef and resolves to nothing; the registered DOI is '
+                 '10.1134/S0021364010060019.',
     },
     'Pendlebury2015': {
         'authors': 'Pendlebury, J. M., et al.',

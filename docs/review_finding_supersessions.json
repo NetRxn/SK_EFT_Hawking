@@ -10136,6 +10136,28 @@
         "enforced": true,
         "run_at": "2026-08-15"
       }
+    },
+    {
+      "finding_id": "review:2026-04-29-0200-notebook-adversarial:paper32_strong_cp_de:F-1",
+      "status": "fixed",
+      "evidence": "All three Locations in F-1 now remediated. (1) Notebook cell p32s-4-md rewritten: the phantom 'gravitating-Skyrmion / q-theory family of cosmological-constant-from-topology models' gloss is gone — no Klinkhamer-Volovik gravitating-Skyrmion paper exists (F-1's own evidence line naming arXiv:0903.1326 as that paper is wrong; 0903.1326 is Shimizu et al. on solid He-4). Two further claim-level errors in the same sentence, which F-1 did not flag, are also fixed: q-theory is a thermodynamic self-tuning/Gibbs-Duhem equilibrium mechanism, NOT a topological one, and the parameter-free DE prediction belongs to Van Waerbeke-Zhitnitsky, not to K-V. The cell now cites KV PRD 77, 085015 (2008) arXiv:0711.3170 as the origin of the vacuum variable q and KV JETP Lett. 91, 259 (2010) arXiv:0907.4887 as the CC framework, per the 2010 paper's own Ref. [3]. The theorem gloss was also corrected to 'strictly exceeding the Zhitnitsky-alone prediction' to match combined_zhitnitsky_qtheory_exceeds_observation as stated in StrongCPTopologicalDE.lean:200. (2) paper_draft.tex:280-283 bibitem was already correct. (3) src/core/citations.py registry: title already correct; its DOI 10.1134/S0021364010050094 was a 404 (CrossRef returns no record) and is corrected to 10.1134/S0021364010060019, CrossRef-verified to title/authors/vol 91/pp 259-265 (2010).",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "amends_prior": {
+        "reason": "the 2026-08-12 closure recorded 'fixed' while disclosing an unremediated location that the finding itself lists (notebooks/Phase6c1_StrongCPDarkEnergy_Stakeholder.ipynb cell p32s-4-md); a closure that leaves a declared Location open does not cover the finding",
+        "superseded_record": {
+          "status": "fixed",
+          "commit": null,
+          "date": "2026-08-12"
+        }
+      },
+      "verified_by": {
+        "command": "uv run python -c \"import json,sys; from src.core.citations import CITATION_REGISTRY as R; nb=open('notebooks/Phase6c1_StrongCPDarkEnergy_Stakeholder.ipynb').read(); sys.exit(0 if ('Skyrmion' not in nb and 'from-topology' not in nb and '0711.3170' in nb and R['KlinkhamerVolovik2010']['doi']=='10.1134/S0021364010060019') else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-15"
+      }
     }
   ]
 }
