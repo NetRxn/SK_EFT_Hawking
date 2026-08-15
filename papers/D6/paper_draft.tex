@@ -100,8 +100,8 @@ that both locations of a malignant pair fail, and the natural formalization of
 asserts $\mu(s \cap t) = \mu(s)\,\mu(t)$. That is an equality, and the union
 bound consumes only the inequality $\mu(s \cap t) \le \mu(s)\,\mu(t)$. Stating
 the hypothesis as independence therefore excludes every negatively correlated
-noise model --- models in which one location's failure makes another's less
-likely --- and those lie inside the local stochastic class the theorem is
+noise model (models in which one location's failure makes another's less
+likely), and those lie inside the local stochastic class the theorem is
 supposed to cover, not outside it. Section~\ref{sec:single} isolates
 independence into a single lemma and states the recursion step from
 sub-multiplicativity alone.
@@ -119,8 +119,8 @@ proof surfaces because the proof assistant will not let an unused strength go
 unnoticed.
 
 \paragraph{Priority, and its limits.} To our knowledge the recursive threshold
-argument itself --- the concatenation recursion carried to the
-double-exponential bound with a numerical threshold attached --- has not
+argument itself (the concatenation recursion carried to the
+double-exponential bound with a numerical threshold attached) has not
 previously been machine-checked. Two limits bound that claim.
 
 The survey behind it covered three lines. In Coq: the stabilizer and
@@ -142,7 +142,7 @@ established.
 The second limit is that the claim is narrower than ``AGP formalized''. What is
 machine-checked is the concatenation recursion carried to the double-exponential
 bound with a numerical threshold attached. The semantic half of their argument
---- that a good extended rectangle correctly simulates its ideal gate --- is a
+, that a good extended rectangle correctly simulates its ideal gate, is a
 hypothesis here, as Section~\ref{sec:steane:half} sets out. Relatedly, the claim
 is about the threshold \emph{argument}, not its ingredients:
 concentration inequalities, stabilizer formalisms and code definitions all exist
@@ -183,8 +183,8 @@ the recursion consumes only
 \end{definition}
 
 The model is \emph{abstract} in two senses that matter for reading the results
-below. It says nothing about what a failure does to the state --- no channel, no
-Kraus operators, no Pauli decomposition --- so the argument is combinatorics over
+below. It says nothing about what a failure does to the state (no channel, no
+Kraus operators, no Pauli decomposition), so the argument is combinatorics over
 which locations fail rather than linear algebra over what they do. And it says
 nothing about the physical origin of $\varepsilon$: Eq.~\eqref{eq:rate} is a
 hypothesis about a mathematical object, and identifying it with a measured gate
@@ -292,7 +292,7 @@ the paper is this chain with more structure around it:
 The first step is countable subadditivity over a finite index set, the second is
 the hypothesis applied termwise, and the third is a constant sum. No step uses
 any property of $\mathrm{fail}$ beyond measurability, and in particular none uses
-independence --- a point that becomes load-bearing immediately below.
+independence, a point that becomes load-bearing immediately below.
 
 The statement is made over $\overline{\mathbb{R}}_{\ge 0}$ rather than
 $\mathbb{R}$, which is not a technicality. Over $\mathbb{R}$ each of the three
@@ -334,9 +334,9 @@ Eq.~\eqref{eq:union-bound} holds.
 Sub-multiplicativity is implied by independence, so nothing that had the stronger
 hypothesis loses anything; the converse fails, and the models in the gap are the
 negatively correlated ones. A noise process in which the failure of one circuit
-location suppresses the failure probability of another --- shared calibration
+location suppresses the failure probability of another (shared calibration
 that a fault perturbs, a control line whose failure idles a neighbouring gate,
-any mechanism that anticorrelates two locations --- satisfies
+any mechanism that anticorrelates two locations) satisfies
 Lemma~\ref{lem:submul} and violates Lemma~\ref{lem:indep}. AGP's local
 stochastic class is defined by an upper bound on joint failure probabilities,
 which is sub-multiplicativity, not by an equality. The formalization does not
@@ -503,7 +503,7 @@ for every $L \ge 1$. The distinction between Eq.~\eqref{eq:capstone-doubleexp}
 and Eq.~\eqref{eq:double-exp} is the entire point of the composition: the
 latter is about a sequence defined to satisfy its own recursion, and the former
 is about a measure of a set of noise realizations. Their dependency closures
-differ accordingly --- Eq.~\eqref{eq:capstone-doubleexp} reaches both the
+differ accordingly: Eq.~\eqref{eq:capstone-doubleexp} reaches both the
 measure-theoretic union bound of Section~\ref{sec:single} and the real-valued
 threshold chain of Section~\ref{sec:steane}, and that joint reach is what
 ``derived from the extended-rectangle structure'' means operationally.
@@ -511,16 +511,17 @@ threshold chain of Section~\ref{sec:steane}, and that joint reach is what
 \figuredeferred{fig:d6-hypothesis-dependency}{the figure must be generated
 through \texttt{src/core/visualizations.py} so the structural figure checks of
 Stage~9 can see it, and no generator for a proof-dependency diagram exists in
-that module yet; the content is fixed --- which of (H1)--(H4) each capstone
-consumes, and which two are modelling assumptions rather than consequences}
+that module yet; the content is fixed, namely which of (H1)--(H4) each
+capstone consumes and which two are modelling assumptions rather than
+consequences}
 
 \subsection{Satisfiability, and exactly what it establishes}
 
 Theorem~\ref{thm:levels} and its corollaries are conditional on four
 hypotheses, and a conditional theorem whose hypotheses cannot hold together
 proves nothing. \texttt{levelFailure\_hypotheses\_satisfiable} exhibits, for an
-arbitrary $A$ and an arbitrary base rate, a level structure satisfying all four
---- and additionally off-diagonality of the malignant pairs, which is strictly
+arbitrary $A$ and an arbitrary base rate, a level structure satisfying all
+four. It additionally makes the malignant pairs off-diagonal, which is strictly
 more than any of them requires. Off-diagonality is not cosmetic: a diagonal pair
 $(i,i)$ is not a pair of two distinct locations at all, AGP's malignant set
 counts pairs of different locations, and under an independence hypothesis
@@ -545,8 +546,8 @@ Section~\ref{sec:scope} names it as open work.
 
 AGP instantiate the argument on Steane's $[[7,1,3]]$ code, the smallest
 distance-three CSS code. Their level-1 error-correction gadget contains 142
-locations --- four encoders at 18 locations each, four 1-measurements at 7, two
-rests at 7, and four encoded CNOT gates at 7 --- so the CNOT extended rectangle,
+locations (four encoders at 18 locations each, four 1-measurements at 7, two
+rests at 7, and four encoded CNOT gates at 7), so the CNOT extended rectangle,
 comprising four such gadgets and one CNOT, contains
 \begin{equation}
   M_{\rm CNOT} = 575
@@ -679,7 +680,7 @@ than about hardware.
 
 \figuredeferred{fig:d6-threshold-double-exp}{double-exponential suppression
 against level, with the malignant-pair count swept over the four values AGP
-report --- $7\,183$, $22\,701$, $35\,235$, $36\,511$ --- so the model-choice
+report ($7\,183$, $22\,701$, $35\,235$ and $36\,511$), so the model-choice
 sensitivity of the preceding paragraphs is visible rather than asserted; blocked
 on a generator in \texttt{src/core/visualizations.py}, which is the canonical and
 only home for figure functions, and the curve is closed-form so the sweep is
@@ -693,7 +694,7 @@ formalized here, because the division is not visible from the statement of the
 threshold theorem.
 
 The first half is semantic. It establishes that a \emph{good} extended
-rectangle --- one whose faulty locations form a benign set --- correctly
+rectangle, one whose faulty locations form a benign set, correctly
 simulates the ideal gate it stands for, in the sense that the rectangle followed
 by an ideal decoder agrees with the ideal decoder followed by the ideal gate.
 That is the content of AGP's ``good implies correct'' lemma, and it is where the
@@ -709,8 +710,8 @@ well-formedness fact $A \le \binom{M}{2}$; no predicate in the development says
 which pairs of locations are malignant, and nothing proves that a good rectangle
 is correct. What makes Theorem~\ref{thm:levels} a statement about quantum error
 correction rather than about an arbitrary indexed family of events is therefore
-supplied by hypothesis --- by the inclusion Eq.~\eqref{eq:hstruct} and by the
-number $A$ --- and not by anything proved here.
+supplied by hypothesis, by the inclusion Eq.~\eqref{eq:hstruct} and by the
+number $A$, and not by anything proved here.
 
 The same boundary shows up one level down, in the code. The Steane code enters
 as a stabilizer-code record: seven physical qubits, one logical qubit, six
@@ -765,7 +766,7 @@ The open problem is the enumeration, and it is worth naming precisely because it
 closes two gaps at once. Enumerating the malignant pairs of the Steane CNOT
 extended rectangle means deciding, for each of the $\binom{575}{2} = 165\,025$
 candidate pairs, whether some fault pattern on that pair leaves the rectangle
-incorrect --- a decidable question about a fixed circuit, and the computation AGP
+incorrect, a decidable question about a fixed circuit and the computation AGP
 performed outside a proof assistant. Carrying it inside one would replace
 Eq.~\eqref{eq:acnot} with a derivation, and the concrete product space it
 requires over the circuit's locations is precisely the model with a strictly
@@ -805,8 +806,8 @@ Module & Contributes \\
 \end{ruledtabular}
 \end{table}
 
-Four further modules in the same directory --- \verb|ExRec|, \verb|Malignant|,
-\verb|NoiseModel| and \verb|NoiseModelMT| --- carry the extended-rectangle and
+Four further modules in the same directory (\verb|ExRec|, \verb|Malignant|,
+\verb|NoiseModel| and \verb|NoiseModelMT|) carry the extended-rectangle and
 noise-model records. \verb|ExRec| is reached by the capstone through
 Theorem~\ref{thm:bridge}; the other three are not reached by it at all, and we
 report that rather than presenting them as part of the proved chain. Their
