@@ -3153,7 +3153,11 @@ VACUOUS_STATEMENT_BASELINE = frozenset({
     "davies_AA_coeff", "davies_GA_coeff", "doublet_algebra_generators", "ext_degree_zero",
     "fib_wrt_S2xS1", "fierz_channel_count", "first_order_conformal_charged_count",
     "golterman_shamir_obstruction", "gsd_sphere_eq_one", "gt_lattice_dim_match",
-    "hom_tensor_adjunction_dim", "ising_wrt_S2xS1", "model3450_equal_species",
+    # `hom_tensor_adjunction_dim` REMOVED 2026-08-15 (Phase 5q.T): its statement is now
+    # `Module.finrank F2 ((Fin rank → A) →ₗ[A] F2) = rank` over the genuine A(1) algebra
+    # (`A1Algebra.A1sub`), not `rank = rank := rfl`. Dispositioned by STRENGTHENING, which
+    # is one of the four sanctioned ways to leave this set.
+    "ising_wrt_S2xS1", "model3450_equal_species",
     "onsager_two_u1_charges", "pillar1_nogo_requires_all", "q_V_on_site",
     "sixteen_fold_way_DEFINITIONAL", "su2_coefficient_match", "tetrad_modes_nf_independent",
     "three_gaps", "three_obstacles_exist", "vecZ2_F_trivial", "vec_G_simples_count",
@@ -3332,13 +3336,14 @@ MODELING_ASSUMPTION_THEOREMS: dict[str, dict[str, str]] = {
     },
 
     # ---- vacuous_proxy (DISCLOSED tracked debt: statement is content-free vs name) ----
-    'change_of_rings_ext_dim': {
-        'lean_name': 'change_of_rings_ext_dim', 'module': 'ChangeOfRings',
-        'category': 'vacuous_proxy',
-        'reason': 'Statement is `ext_dim = ext_dim` with hypothesis `ext_dim = ext_dim` — VACUOUS; the docstring claims Ext-dimension preservation but the proof term proves x=x (audit 2026-06-13 #25).',
-        'discharge': 'Phase 5q.T (A1ExtReal — the real Mathlib `Ext` functor via ProjectiveResolution.isoExt) replaces the `cols/8` proxy.',
-        'discloses': 'this registry entry + the audit report; paired with the `h2_discharged`→`*_TODO` placeholder.',
-    },
+    # `change_of_rings_ext_dim` REMOVED 2026-08-15 (Phase 5q.T). Its statement was
+    # `ext_dim = ext_dim` from hypothesis `ext_dim = ext_dim` (audit 2026-06-13 #25); it is
+    # now an equality of two `Module.finrank`s of genuine Hom-spaces over genuine rings,
+    # proven through `A1Algebra.finrank_hom_free`. Note the residual gap is DIFFERENT from
+    # the one this entry described and is now disclosed at its own site: the theorem is at
+    # the Hom level, not the Ext level, because Mathlib has no balanced tensor product over
+    # a noncommutative base ring — see `ChangeOfRings.h2_discharged_TODO`, which REMAINS a
+    # tracked placeholder.
     'rank2_classification_count': {
         'lean_name': 'rank2_classification_count', 'module': 'FusionExamples',
         'category': 'vacuous_proxy',

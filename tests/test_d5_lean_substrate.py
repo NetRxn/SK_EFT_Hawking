@@ -661,9 +661,14 @@ class TestVacuousDeclarationsMayNotBeCitedAsApexResults:
     field has neither.
     """
 
-    #: `∀ rank : ℕ, rank = rank`, in `VACUOUS_STATEMENT_BASELINE`, docstring promising a
-    #: change-of-rings adjunction. The finding's own §1.1 specimen.
-    BASELINED = "SKEFTHawking.hom_tensor_adjunction_dim"
+    #: A `VACUOUS_STATEMENT_BASELINE` declaration whose NAME claims a structural
+    #: obstruction. The finding's original §1.1 specimen was
+    #: `SKEFTHawking.hom_tensor_adjunction_dim`; Phase 5q.T (2026-08-15) STRENGTHENED that
+    #: theorem to a real `Module.finrank` equality over the genuine A(1) algebra and removed
+    #: it from the baseline, so the fixture moved to another baselined specimen. The gap
+    #: under test — a formally-recorded content-free declaration being citable as apex
+    #: backing — is a property of the SEAM between the two guards, not of any one specimen.
+    BASELINED = "SKEFTHawking.golterman_shamir_obstruction"
     #: `∃ φ : ZMod 16 ≃ ZMod 16, Function.Bijective φ := ⟨Equiv.refl _, …⟩` — named for the
     #: bordism identification Ω₅^{Spin^ℤ₄} ≅ ℤ₁₆, true of every type, witnessed by the
     #: identity. The finding's §1.2 specimen, and in NEITHER register.
@@ -693,11 +698,11 @@ class TestVacuousDeclarationsMayNotBeCitedAsApexResults:
         populations, and the seam between them unasserted."""
         r = self._declare_as_apex(
             tmp_path, monkeypatch, self.BASELINED,
-            "the A(1) -> A change-of-rings adjunction, discharging hypothesis H2")
+            "the Golterman-Shamir obstruction to a lattice chiral gauge theory")
         assert not r.passed, (
             "a VACUOUS_STATEMENT_BASELINE declaration was cited as a bundle's apex "
             "result and nothing failed — this is the §1.1 gap")
-        assert any("hom_tensor_adjunction_dim" in d.message for d in r.details)
+        assert any("golterman_shamir_obstruction" in d.message for d in r.details)
 
     def test_a_semantically_vacuous_existential_cited_as_an_apex_is_detected(
             self, tmp_path, monkeypatch):

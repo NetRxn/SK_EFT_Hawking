@@ -145,8 +145,11 @@ def test_decide_and_real_proofs_are_not_trivial():
 
 def test_known_flagged_decls_are_all_whitelisted():
     """Every decl the 2026-06-13 calibration flagged is disclosed in the whitelist."""
+    # `change_of_rings_ext_dim` left this set on 2026-08-15 (Phase 5q.T): it was
+    # strengthened from `ext_dim = ext_dim` to an equality of two genuine `Module.finrank`s,
+    # so it is no longer a flagged vacuous proxy needing disclosure.
     flagged = {
-        "change_of_rings_ext_dim", "g2k1_dims_eq_fib", "rank2_classification_count",
+        "g2k1_dims_eq_fib", "rank2_classification_count",
         "emanant_su2_dim", "hw_matches_sm_count", "sl2_dim_eq", "dg_generator_count",
         "dg_relation_count", "free_energy_well_defined", "ising_wrt_rank",
         "fib_wrt_rank", "sVec_fermion_dim_DEFINITIONAL",
