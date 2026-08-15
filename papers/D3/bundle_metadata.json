@@ -476,19 +476,18 @@
   "last_stage9_review": "2026-05-06T22:00:00Z",
   "last_stage10_review": null,
   "last_stage13_review": "2026-06-10T19:30:00Z",
-  "blockers_open": 7,
+  "blockers_open": 4,
   "advisories_open": 59,
   "stage13_review_doc": "docs/audits/stage13_attribution_sweep_2026-06-10.md#d3",
   "audit_log_path": "papers/D3/audit_log.jsonl",
   "supersession_ledger_anchor": "docs/review_finding_supersessions.json",
   "notes": "2026-05-06 Session-2 stage10 round-4 GREEN (8 focal sentences, 0 BLOCKER). Stage 9 GREEN (0 figures; advisory: D3 sibling figures absent for cross-bundle anchors — pre-existing, not Session-1 introduced). | Round-2 verification 2026-05-06: both BLOCKERs (7.1 biconditional overclaim + 6.1 trivial-HDB-witness misrepresentation) closed cleanly. REQUIRED 5.1 (Sakharov-Adler equilibrium-projection framing) + REQUIRED 4.1 (W-form bridge sentence) ALSO closed via paper_draft.tex Edits. 1 RECOMMENDED 5.2 (top-of-section Verlinde disclaimer) carry-forward advisory. | 2026-06-10 attribution-content sweep (docs/audits/stage13_attribution_sweep_2026-06-10.md): GREEN after fixes. Sen2013 -45/2->212/45 (Lean was already correct); KLRS 159GeV reattributed to DOnofrioRummukainen2016 (added).",
-  "open_findings": 66,
+  "open_findings": 63,
   "blocked_p1_gates": [
-    "FixPropagation",
     "LeanProofSubstance"
   ],
   "readiness": "RED",
-  "readiness_last_computed": "2026-08-13",
+  "readiness_last_computed": "2026-08-15",
   "length_target": {
     "unit": "pages",
     "floor": 30,
@@ -496,5 +495,6 @@
     "source": "PAPER_STRATEGY.md §6"
   },
   "compiled_pages": 58,
-  "compile_gate_ok": true
+  "compile_gate_ok": true,
+  "critical_open": 1
 }

@@ -211,11 +211,11 @@ Interesting-claim heuristic tags:
 
 **Passes iff:**
 - Every FLAGS incoming to this paper has `status != 'open'`
-- Every finding marked `fixed` has a SUPERSEDES edge to the finding that confirmed the fix (or a documented commit reference)
+- Every finding marked `fixed` has a SUPERSEDES edge to the finding that confirmed the fix, or a documented anchor: a commit, a date, or — for a finding whose artifact lives OUTSIDE this repository, where no commit can contain the change — an `artifact_sha256` written by `close_finding.py --artifact` (added 2026-08-14, D11 finding `2026-08-01-0009:D11:N3`)
 
 **Blocks on any:**
 - An open finding
-- A `fixed` finding without a SUPERSEDES / commit reference
+- A `fixed` finding without a SUPERSEDES edge or any anchor (commit / date / `artifact_sha256`)
 
 ---
 

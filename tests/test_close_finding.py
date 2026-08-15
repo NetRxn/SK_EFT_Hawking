@@ -324,6 +324,45 @@ class TestAnInertOpenRecordDoesNotBlockClosure:
                            evidence="x" * 60, commit="abc1234")
         assert ok is True, msg
 
+    def test_AMEND_supersedes_a_record_that_already_meets_the_bar(
+            self, tmp_path, monkeypatch):
+        """⚠️ The operation three refusal messages in this file have advised since ADR-012
+        while it did not exist. Its absence is not cosmetic: a record that MEETS the bar
+        but is WRONG was uncorrectable except by hand-editing the ledger, which is what
+        this writer exists to eliminate.
+
+        The measured case is `…1951…:D11:1.1`, anchored to a commit that cannot contain
+        its fix because the finding's only Location is untracked in this repo.
+        """
+        p = self._production_ledger_plus(
+            tmp_path, monkeypatch,
+            {"finding_id": FID, "status": "fixed", "evidence": "y" * 60,
+             "commit": "deadbeef", "date": "2026-01-01"})
+        ok, msg = cf.close(doc=DOC, sections=[SECTION], status="fixed",
+                           evidence="x" * 60, date="2026-08-15",
+                           amend="the prior commit cannot contain the fix")
+        assert ok is True, msg
+        rec = json.loads(p.read_text())["supersessions"][-1]
+        assert rec["amends_prior"]["reason"] == "the prior commit cannot contain the fix"
+        assert rec["amends_prior"]["superseded_record"]["commit"] == "deadbeef", (
+            "the amend must name WHAT it supersedes; the ledger is append-only and "
+            "last-wins, so two valid-looking closures with no account of the second is "
+            "exactly the ambiguity this writer removes")
+
+    def test_without_amend_a_bar_meeting_prior_is_still_reported_as_already_recorded(
+            self, tmp_path, monkeypatch):
+        """SILENT ON CORRECT DATA. `--amend` must not become the default path — an
+        ordinary duplicate closure still writes nothing and says so."""
+        p = self._production_ledger_plus(
+            tmp_path, monkeypatch,
+            {"finding_id": FID, "status": "fixed", "evidence": "y" * 60,
+             "commit": "deadbeef", "date": "2026-01-01"})
+        before = len(json.loads(p.read_text())["supersessions"])
+        ok, msg = cf.close(doc=DOC, sections=[SECTION], status="fixed",
+                           evidence="x" * 60, commit="abc1234")
+        assert ok is True and "already recorded" in msg
+        assert len(json.loads(p.read_text())["supersessions"]) == before
+
     def test_an_accepted_prior_is_STILL_refused(self, tmp_path, monkeypatch):
         """The narrowness is the point. `fixed`↔`accepted` and the below-the-bar-`fixed`
         refusals are each load-bearing; widening the guard past `open` reopens both."""

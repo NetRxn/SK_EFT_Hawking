@@ -869,6 +869,48 @@ class TestSeverityDeclarationIsValidated:
             f"an unparseable declaration must fall through to inference and escalation "
             f"exactly as an absent one; got {sev!r}")
 
+    def test_a_zero_blocker_report_does_not_escalate_its_own_findings(
+            self, tmp_path, monkeypatch):
+        """FIRES ON THE SEEDED DEFECT (D11 Stage-13 round-9 finding 4.5).
+
+        The document below DECLARES ZERO BLOCKERS in its summary and carries one
+        `- **Severity:** recommended` finding that never mentions the marker. Under the
+        deleted file-level escalation the bolded token in the summary rewrote every
+        glyph-inferred finding in the file to `critical` — the reviewer took a
+        zero-blocker report from 13 findings to 13 criticals by moving two asterisks.
+        The marker cannot tell "this report FOUND a blocker" from "this report says
+        there are NONE", so it must not escalate anything outside its own section.
+        """
+        # No `- **Severity:**` line: this is the GLYPH-INFERRED population, which is
+        # the only one the deleted rule could reach (a parseable declaration already
+        # short-circuits it) and which covers every pre-cutoff review in the corpus.
+        # The summary is written the way the round-9 reviewer demonstrated the exploit:
+        # asterisks bracketing the WORD rather than the count. `_BLOCKER_RE` needs an
+        # asterisk ADJACENT to the token, so `**0 BLOCKER / ...**` does not match while
+        # `0 **BLOCKER** / ...` does — moving two asterisks inside a sentence that
+        # declares zero blockers was the whole exploit.
+        body = ("## Summary\n\nSix findings: 0 **BLOCKER** / 0 REQUIRED / "
+                "1 RECOMMENDED.\n\n"
+                "### 2.1 \u2014 \U0001F535 RECOMMENDED \u2014 a cosmetic caption "
+                "inconsistency\n\nThe caption says 'bounds' where \u00a75 says "
+                "'averages'.\n")
+        nodes = self._extract(tmp_path, monkeypatch, body)
+        assert nodes, "the probe document minted no finding"
+        sev = nodes[0]["meta"]["severity"]
+        assert sev != "critical", (
+            "a report DECLARING ZERO BLOCKERS escalated its own recommendation to "
+            "critical because the word appears in its summary line \u2014 the "
+            "file-level escalation is back")
+        assert sev == "minor", f"expected the \U0001F535 glyph -> minor; got {sev!r}"
+
+    def test_a_section_scoped_marker_still_escalates(self, tmp_path, monkeypatch):
+        """The other direction. Deleting the FILE-level rule must not disarm the
+        SECTION-level one, which is what makes an unparseable `**Severity:**`
+        declaration fall through to critical rather than to advisory."""
+        nodes = self._extract(tmp_path, monkeypatch, self._HEADING.format(sev="blockr"))
+        assert nodes and nodes[0]["meta"]["severity"] == "critical", (
+            "a marker inside the finding's own body no longer escalates")
+
     def test_a_VALID_declaration_still_wins_over_the_body(self, tmp_path, monkeypatch):
         """The other direction, and it is load-bearing: the declared field is
         authoritative precisely so a glyph or a quoted marker in the body cannot

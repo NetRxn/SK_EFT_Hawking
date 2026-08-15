@@ -69,6 +69,81 @@ def _touch(p: Path, mtime: float, body: str = "x") -> Path:
     return p
 
 
+class TestMappingRowAgreesWithCountsTex:
+    """`docs/PAPER_DRAFT_MAPPING.md`'s bundle row is the LAST hand-typed copy of the
+    figures `counts.tex` emits, and it has drifted and been repaired three times under
+    three separate finding ids (D11 `1530:4.1`, `1801:4.1`, `2220:4.6`) — every repair
+    retyping a literal instead of removing the copy. Markdown cannot ``input`` a macro,
+    so the copy cannot be eliminated; this leg pins it.
+
+    PRODUCTION PROBE 2026-08-14: `6267 lines` set back to the historical stale `6144`
+    in the REAL `docs/PAPER_DRAFT_MAPPING.md` -> rc=1 naming
+    `mapping_row_stale:D11:lines`. Restored, `cmp` byte-identical.
+    """
+
+    def _write(self, tmp_path, monkeypatch, *, row, tex):
+        docs = tmp_path / "docs"
+        docs.mkdir(parents=True, exist_ok=True)
+        (docs / "PAPER_DRAFT_MAPPING.md").write_text(row)
+        ct = docs / "counts.tex"
+        ct.write_text(tex)
+        monkeypatch.setattr(_H, "PROJECT_ROOT", tmp_path)
+        monkeypatch.setattr(_H, "COUNTS_TEX_PATH", ct)
+        return fr._mapping_row_drift()
+
+    _TEX = ("\\newcommand{\\dxiLines}{6267}\n"
+            "\\newcommand{\\dxiTheorems}{403}\n"
+            "\\newcommand{\\dxiDefs}{82}\n")
+    _ROW = ("| `D11_initial_draft` (sourceless synthesis key) | 22 root-imported "
+            "modules ({lines} lines, {thms} theorems/lemmas, {defs} defs/structures "
+            "at source level) | x | y |\n")
+
+    def test_an_agreeing_row_passes(self, tmp_path, monkeypatch):
+        """SILENT ON CORRECT DATA."""
+        out = self._write(tmp_path, monkeypatch,
+                          row=self._ROW.format(lines=6267, thms=403, defs=82),
+                          tex=self._TEX)
+        assert all(d.passed for d in out), [(d.name, d.message) for d in out]
+
+    def test_a_stale_line_count_is_caught(self, tmp_path, monkeypatch):
+        """FIRES ON THE SEEDED DEFECT — the historical 6144."""
+        out = self._write(tmp_path, monkeypatch,
+                          row=self._ROW.format(lines=6144, thms=403, defs=82),
+                          tex=self._TEX)
+        assert any(d.name == "mapping_row_stale:D11:lines" and not d.passed
+                   for d in out), [(d.name, d.message) for d in out]
+
+    def test_a_stale_theorem_or_def_count_is_caught(self, tmp_path, monkeypatch):
+        out = self._write(tmp_path, monkeypatch,
+                          row=self._ROW.format(lines=6267, thms=394, defs=83),
+                          tex=self._TEX)
+        bad = {d.name for d in out if not d.passed}
+        assert "mapping_row_stale:D11:theorems" in bad
+        assert "mapping_row_stale:D11:defs" in bad
+
+    def test_a_RESHAPED_row_fails_rather_than_silently_stopping(
+            self, tmp_path, monkeypatch):
+        """The seam (guide §2.5). A prose edit that changes the sentence shape would
+        make the regex match nothing — and a scan that matches nothing passes
+        vacuously. That is the failure mode this leg exists to avoid, so it is a FAIL."""
+        out = self._write(
+            tmp_path, monkeypatch,
+            row="| `D11_initial_draft` | 22 modules, see docs/counts.tex | x | y |\n",
+            tex=self._TEX)
+        assert any(d.name == "mapping_row_unparsed:D11" and not d.passed for d in out)
+
+    def test_a_MISSING_row_fails_rather_than_silently_stopping(
+            self, tmp_path, monkeypatch):
+        out = self._write(tmp_path, monkeypatch,
+                          row="| `D99_initial_draft` | nothing | x | y |\n",
+                          tex=self._TEX)
+        bad = {d.name for d in out if not d.passed}
+        assert "mapping_row_missing:D11" in bad
+        assert "mapping_row_population" in bad, (
+            "zero figures were compared and the leg did not say so — an empty "
+            "population must read as unverified, not clean")
+
+
 class TestCountsFreshness:
     """`counts.json`/`counts.tex` reflect the current codebase. Papers `\\input` these
     macros, so a stale value is a wrong number in a published paper."""
@@ -94,8 +169,20 @@ class TestCountsFreshness:
         monkeypatch.setattr(_H, "COUNTS_JSON_PATH", cj)
         ct = docs / "counts.tex"
         if tex:
-            _touch(ct, counts_mtime)
+            _touch(ct, counts_mtime,
+                   "\\newcommand{\\dxiLines}{6267}\n"
+                   "\\newcommand{\\dxiTheorems}{403}\n"
+                   "\\newcommand{\\dxiDefs}{82}\n")
         monkeypatch.setattr(_H, "COUNTS_TEX_PATH", ct)
+        # counts_fresh also pins docs/PAPER_DRAFT_MAPPING.md's hand-typed bundle row
+        # against these macros (D11 finding 1530:4.1). PROJECT_ROOT is retargeted for
+        # the same reason LEAN_DIR is: a fixture that leaves a real-tree anchor in
+        # place is testing the developer's working copy. The row here AGREES, so the
+        # legs below are attributed to staleness, not to a mapping drift.
+        (docs / "PAPER_DRAFT_MAPPING.md").write_text(
+            "| `D11_initial_draft` | 22 root-imported modules (6267 lines, "
+            "403 theorems/lemmas, 82 defs/structures at source level) | a | b |\n")
+        monkeypatch.setattr(_H, "PROJECT_ROOT", tmp_path)
         src = _touch(tmp_path / "src" / "core" / "constants.py", source_mtime)
         monkeypatch.setattr(fr, "_COUNTS_SOURCES", [src])
         lean = tmp_path / "lean" / "SKEFTHawking"
@@ -549,6 +636,40 @@ class TestNotebookStoredOutputsCurrent:
         out = [_plotly_out("Maxwell-Garnett", [1.0, 2.0])]
         r = self._run(tmp_path, monkeypatch, out, out)
         assert r.passed is True, [(d.name, d.message) for d in r.details if not d.passed]
+
+    def test_an_UNANTICIPATED_mime_key_is_still_compared(self, tmp_path, monkeypatch):
+        """FIRES ON THE SEEDED DEFECT (D11 round-10 finding 5.2a). The MIME allow-list
+        this replaced was widened three rounds running — `text/markdown`, `text/latex`,
+        `image/svg+xml` — each time after a reviewer hid a claim in the one key it did
+        not name. `text/csv` is a key no version of that list ever carried; under the
+        deny-list it is compared like any other rendered text.
+
+        PRODUCTION PROBE 2026-08-14: a `text/csv` payload reading
+        `latticeChern,+1 (certified)` written into a stored output of the REAL
+        `notebooks/D11_TopologicalBandTheory_Technical.ipynb` -> rc=1 with the payload
+        quoted in the divergence. Restored, `git hash-object` identical (83e4911d)."""
+        stored = [{"output_type": "display_data", "metadata": {},
+                   "data": {"text/plain": "same",
+                            "text/csv": "quantity,value\nlatticeChern,+1 (certified)\n"}}]
+        fresh = [{"output_type": "display_data", "metadata": {},
+                  "data": {"text/plain": "same",
+                           "text/csv": "quantity,value\nlatticeChern,-1 (certified)\n"}}]
+        r = self._run(tmp_path, monkeypatch, stored, fresh)
+        assert r.passed is False, (
+            "a claim hidden in a MIME key the allow-list never named passed — the "
+            "deny-list inversion has been undone")
+
+    def test_raster_pixels_are_still_ignored(self, tmp_path, monkeypatch):
+        """The other direction: bit-level PNG churn is not a claim, and failing on it
+        would make the check fire on every library bump."""
+        stored = [{"output_type": "display_data", "metadata": {},
+                   "data": {"text/plain": "same", "image/png": "AAAA"}}]
+        fresh = [{"output_type": "display_data", "metadata": {},
+                  "data": {"text/plain": "same", "image/png": "BBBB"}}]
+        r = self._run(tmp_path, monkeypatch, stored, fresh)
+        assert r.passed is True, (
+            "raster bytes differing made the check fail — the deny-list lost its one "
+            "genuine exclusion")
 
     def test_an_empty_scope_fails(self, tmp_path, monkeypatch):
         """D11 round-12. The glob IS the scope, so renaming a notebook out of the
@@ -1023,3 +1144,101 @@ class TestModuleCensusFresh:
         assert "## Modules this census cannot describe" in text
         for rel, _ in data["undocumented"]:
             assert f"`{rel}`" in text, f"{rel} is counted but not named"
+
+
+class TestNotebookMarkdownRetractedClaims:
+    """The markdown-cell half of a bundle notebook's claim surface.
+
+    `notebook_stored_outputs_current` re-executes and compares. A markdown cell has no
+    code, so it is byte-identical before and after every re-execution and that check is
+    blind to it BY CONSTRUCTION. A D11 reviewer proved the gap end-to-end (round-10
+    MUT-N2): rewriting a markdown cell to the naming the project retracted left four
+    notebook-touching checks green.
+
+    PRODUCTION PROBE recorded 2026-08-14: the check found a live hit on the UNMODIFIED
+    shipped notebook (cell 10, correctly exempted as a quoted retraction), and MUT-N2
+    written verbatim into the REAL
+    `notebooks/D11_TopologicalBandTheory_Technical.ipynb` turned
+    `validate.py --check notebook_markdown_retracted_claims` red naming
+    `md-cell-0` / `'bounds on the effective modulus'`. Restored, `git hash-object`
+    identical.
+    """
+
+    def _run(self, tmp_path, monkeypatch, md_sources):
+        d = tmp_path / "notebooks"
+        d.mkdir(parents=True, exist_ok=True)
+        cells = [{"cell_type": "markdown", "source": [s], "metadata": {}, "id": f"m{i}"}
+                 for i, s in enumerate(md_sources)]
+        cells.append({"cell_type": "code", "source": ["1+1\n"], "metadata": {},
+                      "id": "c0", "execution_count": 1, "outputs": []})
+        (d / "D11_companion.ipynb").write_text(json.dumps({
+            "cells": cells, "metadata": {}, "nbformat": 4, "nbformat_minor": 5}))
+        monkeypatch.setattr(_H, "NOTEBOOKS_DIR", d)
+        return fr.check_notebook_markdown_retracted_claims()
+
+    def test_clean_prose_passes(self, tmp_path, monkeypatch):
+        """SILENT ON CORRECT DATA."""
+        r = self._run(tmp_path, monkeypatch, [
+            "Lean certifies `haldaneFrame_latticeChern_eq_neg_one`: **C = -1**."])
+        assert r.passed is True, [(d.name, d.message) for d in r.details if not d.passed]
+
+    def test_MUT_N2_the_retracted_modulus_naming_is_caught(self, tmp_path, monkeypatch):
+        """FIRES ON THE SEEDED DEFECT — the reviewer's mutation, verbatim."""
+        r = self._run(tmp_path, monkeypatch, [
+            "`effectiveModuli_enclosure` gives the **Voigt-Reuss bounds on the "
+            "effective modulus M_eff**."])
+        assert r.passed is False, (
+            "a markdown cell asserting the retracted Voigt-Reuss-on-M_eff naming "
+            "passed — this is D11 round-10 MUT-N2 and it must not be green")
+
+    def test_the_retracted_necessity_claim_is_caught(self, tmp_path, monkeypatch):
+        r = self._run(tmp_path, monkeypatch, [
+            "Mass inversion is necessary but NOT sufficient at fixed grid size."])
+        assert r.passed is False
+
+    def test_a_quoted_retraction_is_warned_not_failed(self, tmp_path, monkeypatch):
+        """The other direction, and it is load-bearing: a retraction is written by
+        naming the words it retracts. Failing that would make the honest artifact the
+        illegal one — the same line `bundle_reader_facing_voice` draws."""
+        r = self._run(tmp_path, monkeypatch, [
+            "A theorem asserting nonzero Chern exactly where the masses invert was "
+            "**deleted** as both false at fixed N and contentless."])
+        assert r.passed is True
+        assert any(d.warning and d.name.endswith(":quoted") for d in r.details), (
+            "the quoted retraction was dropped in silence rather than reported — the "
+            "exemption must be visible and countable, since it is the shape a real "
+            "assertion would hide behind")
+
+    def test_the_exemption_is_paragraph_scoped_not_cell_scoped(
+            self, tmp_path, monkeypatch):
+        """A cell that retracts one claim must not license asserting a DIFFERENT one
+        three paragraphs down — which is what a whole-cell context test would do."""
+        r = self._run(tmp_path, monkeypatch, [
+            "A theorem asserting nonzero Chern exactly where the masses invert was "
+            "**deleted** as false.\n\n"
+            "`effectiveModuli_enclosure` gives the Voigt-Reuss bounds on the effective "
+            "modulus M_eff."])
+        assert r.passed is False, (
+            "a retraction paragraph exempted an unrelated assertion elsewhere in the "
+            "same cell — the context window is the paragraph, not the cell")
+
+    def test_an_empty_scope_fails(self, tmp_path, monkeypatch):
+        """Cannot-measure is not success (guide §2.5)."""
+        d = tmp_path / "notebooks"
+        d.mkdir(parents=True, exist_ok=True)
+        monkeypatch.setattr(_H, "NOTEBOOKS_DIR", d)
+        r = fr.check_notebook_markdown_retracted_claims()
+        assert r.passed is False and r.measured is False
+
+    def test_zero_markdown_cells_fails_rather_than_passes(self, tmp_path, monkeypatch):
+        """The seam is what was READ, not whether the container exists: a notebook with
+        no markdown cell scans nothing and must not report a clean bill."""
+        d = tmp_path / "notebooks"
+        d.mkdir(parents=True, exist_ok=True)
+        (d / "D11_companion.ipynb").write_text(json.dumps({
+            "cells": [{"cell_type": "code", "source": ["1+1\n"], "metadata": {},
+                       "id": "c0", "execution_count": 1, "outputs": []}],
+            "metadata": {}, "nbformat": 4, "nbformat_minor": 5}))
+        monkeypatch.setattr(_H, "NOTEBOOKS_DIR", d)
+        r = fr.check_notebook_markdown_retracted_claims()
+        assert r.passed is False and r.measured is False

@@ -151,7 +151,8 @@ COLUMNS: tuple[Column, ...] = (
            "stage13_status + stage13_review_kind + stage13_redo_required",
            "only a `full-adversarial` review kind earns green."),
     Column("submission", "submission",
-           "readiness_submission_gate (ReadinessGate nodes) + blockers_open"),
+           "readiness_submission_gate (ReadinessGate nodes) + blockers_open "
+           "(= critical + major; the critical-only half is `critical_open`)"),
 )
 
 
@@ -771,7 +772,11 @@ def flow_board(*, by_bundle: dict | None = None,
             "cells": cells,
             "overlay": overlay,
             "overlay_ids": open_ids,
+            # `blockers_open` is critical+major; `critical_open` is the 🔴-only half.
+            # The pair ships together so the column cannot read "18 blockers" for a
+            # bundle carrying one (D11 Stage-13 round-9 finding 4.4).
             "blockers_open": (md or {}).get("blockers_open"),
+            "critical_open": (md or {}).get("critical_open"),
             "readiness_verdict": agg.get("readiness_display") or agg.get("readiness"),
             "soft_signals": {
                 "registered_lean_modules": registered_lean_modules(code),

@@ -60,7 +60,7 @@
   "open_findings": 0,
   "blocked_p1_gates": [],
   "readiness": "UNMEASURED",
-  "readiness_last_computed": "2026-08-09",
+  "readiness_last_computed": "2026-08-15",
   "apex_theorems": [
     {
       "name": "SKEFTHawking.QuantumNetwork.diamondDist_eq_choiSDP",
@@ -205,5 +205,6 @@
     "source": "PAPER_STRATEGY.md §6"
   },
   "compiled_pages": 12,
-  "compile_gate_ok": true
+  "compile_gate_ok": true,
+  "critical_open": 0
 }

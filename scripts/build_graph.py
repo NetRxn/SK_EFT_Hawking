@@ -1922,8 +1922,16 @@ def _closure_record_meets_bar(rec: dict, finding_has_verify: bool = False) -> bo
     """
     rec = rec or {}
     why = str(rec.get('evidence') or rec.get('note') or rec.get('rationale') or '').strip()
+    # `artifact_sha256` added 2026-08-14 (D11 Stage-13 finding 2026-08-01-0009:D11:N3).
+    # For a finding whose artifact lives OUTSIDE this repository — a `Lit-Search/`
+    # primary-source cache, which Pipeline Invariant #11 makes mandatory at every
+    # Stage 13 — a commit reference is structurally impossible, so the commit/date bar
+    # forced either a fabricated SHA or no closure. The content hash of the file at
+    # closure time is re-derivable by any later reviewer, which is what an anchor is
+    # for. Written by `close_finding.py --artifact`.
     anchor = any(str(rec.get(k) or '').strip()
-                 for k in ('commit', 'date', 'closed_date', 'applied_at'))
+                 for k in ('commit', 'date', 'closed_date', 'applied_at',
+                           'artifact_sha256'))
     base = bool(rec.get('status') in _CLOSING_STATUSES and len(why) >= 40 and anchor)
     if not base or not finding_has_verify:
         return base
@@ -2013,12 +2021,30 @@ def extract_review_finding_nodes() -> list[dict]:
             source = md_path.read_text()
         except (OSError, UnicodeDecodeError):
             continue
-        # File-level severity escalation: BLOCKER / severity: critical markers
-        # often live in summary tables OR QI Candidate sections (heading level
-        # 2: `## QI Candidate`) outside any `### Class N` finding body. If any
-        # such marker exists in the whole file, the report is critical-class
-        # and findings inherit that severity unless they declare lower locally.
-        file_has_critical_marker = bool(_BLOCKER_RE.search(source))
+        # ⚠️ FILE-LEVEL SEVERITY ESCALATION DELETED 2026-08-14 (D11 Stage-13 round-9
+        # finding 4.5). It read: "if a BLOCKER / severity: critical marker exists
+        # ANYWHERE in the file, findings inherit critical severity unless they declare
+        # lower locally". The premise is unsound — the marker cannot distinguish "this
+        # report FOUND a blocker" from "this report says there are NONE" — and both
+        # failure directions were demonstrated:
+        #
+        #   * A reviewer retypeset its own summary line `**0 BLOCKER / 4 REQUIRED ...**`
+        #     so the asterisks bracketed the WORD instead of the count, and all thirteen
+        #     findings of a ZERO-blocker report minted `critical`, taking the bundle from
+        #     18 blocking findings to 27. Two asterisks, no content change.
+        #   * Symmetrically, prose that merely QUOTES the marker escalates. Measured over
+        #     the whole 1747-finding corpus on the day of deletion, the rule was changing
+        #     exactly 10 findings in 2 files, and BOTH were false: one file's own summary
+        #     reads "Six findings: 0 BLOCKER, 3 REQUIRED, 3 RECOMMENDED" with three
+        #     findings whose Fix text says "Severity REQUIRED (not BLOCKER)"; the other's
+        #     is a table of past blockers annotated "(now closed)". Zero true positives.
+        #
+        # The code comment it replaced claimed findings inherit critical severity "unless
+        # they explicitly downgrade in body" — there was no downgrade path in the code.
+        # Section-level escalation (`_BLOCKER_RE` against the heading or the first 1000
+        # body chars) is retained below: that one is scoped to the finding it escalates,
+        # so a marker cannot leak across findings, and it is what makes an UNPARSEABLE
+        # `**Severity:**` declaration fall through to critical instead of to advisory.
 
         # Split source into sections by `### N.N` or `### Class N` headings.
         # When the heading uses "Class N" form, prefix the section number with
@@ -2098,10 +2124,10 @@ def extract_review_finding_nodes() -> list[dict]:
             # it was introduced to replace. Two reviewers also tripped the file-level rule
             # on their own reports by quoting the marker while describing it, escalating
             # entire clean rounds.
+            # SECTION-scoped only. The `elif file_has_critical_marker` arm that used to
+            # follow was deleted 2026-08-14 — see the block at the top of this loop.
             if _decl is None or _decl_unrecognised:
                 if _BLOCKER_RE.search(heading) or _BLOCKER_RE.search(body[:1000]):
-                    severity = 'critical'
-                elif file_has_critical_marker:
                     severity = 'critical'
 
             # ── BIRTH-STATUS INVARIANT (D12 Stage-13 round-11 finding 8.1b) ──

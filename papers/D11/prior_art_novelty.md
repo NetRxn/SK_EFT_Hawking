@@ -86,12 +86,32 @@ Related: arXiv:2212.04182 (cohomology rings), arXiv:2504.08664 (Steenrod squares
 > load-bearing in the wrong direction: it made our own carve-out concede more
 > than the source supports.
 
-**Carve-out wording:** the Gysin sequence is the machinery from which Euler and
-Chern classes are built. The honest claim is therefore: *no proof assistant defines Chern
-classes or Chern numbers; Cubical Agda has independently formalized the
-cohomological substrate from which they could be built.* Verified by direct
-fetch — the abstract does not mention Chern classes, characteristic classes,
-Euler class, or Thom class.
+**Carve-out wording (the paper's own, verbatim — `paper_draft.tex` §Novelty).**
+That development's §4.4 is "The Thom isomorphism and the Gysin sequence", and its
+Gysin map is stated as $(-)\smile e$ with $e$ constructed per fibration: the Euler
+class in substance, though the words "Euler" and "Chern" do not appear in it. Our
+claim is therefore narrower than "the machinery is absent": it is that no assistant
+**defines the Chern classes of a vector bundle**, which is a different object from a
+per-fibration Euler class. That development does not contain the cohomology ring of
+ℂP^∞: its infinite projective space is the *real* one, whose ring is the
+Stiefel–Whitney substrate H\*(ℝP^∞;ℤ/2), not the ℤ[c₁] from which Chern classes are
+defined, so the carve-out claims no more than the source supports.
+
+**Scope of the verification.** Confirmed against the **full v2 PDF** (40 pages,
+text-extracted), not only the abstract: `Euler` 0 occurrences, `Chern` 0,
+`characteristic class` 0; `Thom` 6 and `Gysin` 16. The development **does** formalize
+the Thom isomorphism (§4.4, generalizing Brunerie 2016), stated as
+$\varphi_i : H^i(B,R) \cong \tilde H^{i+n}(\tilde E,R)$.
+
+> ⚠️ **CORRECTED 2026-08-14 (D11 Stage-13 findings `1951:1.2` and `0009:N4`).** This
+> block previously read "*no proof assistant defines Chern classes or Chern numbers*"
+> — dropping **of a vector bundle**, the qualifier the paper retains and on which the
+> whole `ChernBridge` carve-out depends, so this file stated a strictly stronger
+> novelty claim than the paper it backs and contradicted its own N1 record sixty lines
+> above. It also closed with "*Verified by direct fetch — the abstract does not mention
+> … Thom class*": true of the abstract, but positioned as the evidential basis for the
+> carve-out's **scope**, where §4.4 contradicts it. The claim is now the paper's
+> wording and the verification is stated at the scope the evidence was gathered at.
 
 ### C3 — Isabelle/HOL winding numbers
 

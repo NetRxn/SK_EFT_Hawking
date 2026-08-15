@@ -53,7 +53,7 @@
         {% for col in flow_board.columns %}
         <th title="{{ col.source }}{% if col.note %} — {{ col.note }}{% endif %}">{{ col.label }}</th>
         {% endfor %}
-        <th>open</th>
+        <th title="BLOCKING findings still open — critical (🔴 BLOCKER) PLUS major (🟡 REQUIRED). The critical-only count is shown in parentheses.">blocking (🔴)</th>
         <th>lanes — who closes it</th>
       </tr>
     </thead>
@@ -68,7 +68,7 @@
           {{ cell.value if cell else 'unmeasured' }}
         </td>
         {% endfor %}
-        <td class="flow-open">{{ row.blockers_open }}</td>
+        <td class="flow-open">{{ row.blockers_open }}{% if row.critical_open is not none %} ({{ row.critical_open }}){% endif %}</td>
         <td class="flow-lanes">
           {% if not row.overlay.measured %}
             <span class="flow-unmeasured">unmeasured</span>

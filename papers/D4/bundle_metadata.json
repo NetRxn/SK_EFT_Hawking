@@ -339,7 +339,7 @@
     "LeanProofSubstance"
   ],
   "readiness": "YELLOW",
-  "readiness_last_computed": "2026-08-13",
+  "readiness_last_computed": "2026-08-15",
   "length_target": {
     "unit": "pages",
     "floor": 24,
@@ -347,5 +347,6 @@
     "source": "PAPER_STRATEGY.md §6"
   },
   "compiled_pages": 32,
-  "compile_gate_ok": true
+  "compile_gate_ok": true,
+  "critical_open": 0
 }

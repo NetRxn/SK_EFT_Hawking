@@ -296,7 +296,97 @@ def check_counts_fresh() -> CheckResult:
                                   f"counts.json unreadable: {exc}"))
             passed = False
 
+    # ── PAPER_DRAFT_MAPPING row agreement (D11 Stage-13 finding 1530:4.1) ──
+    # `docs/PAPER_DRAFT_MAPPING.md` restates a bundle's module/line/theorem/def
+    # figures in prose. That row is the LAST hand-typed copy of numbers `counts.tex`
+    # already emits, and it has drifted and been repaired three times under three
+    # separate finding ids (1530:4.1, 1801:4.1, 2220:4.6) — each repair retyped a
+    # literal instead of removing the copy. Markdown cannot `\input` a macro, so the
+    # copy cannot be eliminated; it is PINNED instead.
+    mrow = _mapping_row_drift()
+    details.extend(mrow)
+    passed = passed and all(d.passed for d in mrow)
+
     return CheckResult(passed=passed, details=details)
+
+
+#: Bundle rows in `docs/PAPER_DRAFT_MAPPING.md` that quote count figures, mapped to the
+#: `counts.tex` macro prefix that owns them. Extend when another bundle's row starts
+#: quoting figures; the seam guard below fails if a listed row stops being found, so a
+#: row that is renamed or deleted is loud rather than silently unchecked.
+_MAPPING_COUNT_ROWS: dict[str, str] = {"D11": "dxi"}
+
+
+def _mapping_row_drift() -> list[Detail]:
+    """Compare each `PAPER_DRAFT_MAPPING.md` bundle row's quoted figures against the
+    `counts.tex` macros that own them."""
+    out: list[Detail] = []
+    mapping = _H.PROJECT_ROOT / "docs" / "PAPER_DRAFT_MAPPING.md"
+    if not mapping.is_file() or not _H.COUNTS_TEX_PATH.is_file():
+        return [Detail("mapping_row_population", False,
+                       "PAPER_DRAFT_MAPPING.md or counts.tex is missing, so the "
+                       "hand-typed count row could not be compared — unverified, "
+                       "not clean")]
+    tex = _H.COUNTS_TEX_PATH.read_text(encoding="utf-8")
+    text = mapping.read_text(encoding="utf-8")
+
+    def _macro(name: str) -> str | None:
+        m = re.search(r"\\newcommand\{\\" + name + r"\}\{([^}]*)\}", tex)
+        return m.group(1) if m else None
+
+    compared = 0
+    for bundle, prefix in sorted(_MAPPING_COUNT_ROWS.items()):
+        # The row is the one line naming `<bundle>_initial_draft`.
+        row = next((ln for ln in text.splitlines()
+                    if f"`{bundle}_initial_draft`" in ln), None)
+        if row is None:
+            out.append(Detail(
+                f"mapping_row_missing:{bundle}", False,
+                f"no `{bundle}_initial_draft` row found in PAPER_DRAFT_MAPPING.md. "
+                f"The row this leg pins has been renamed or removed, so the figures "
+                f"it quotes are now unchecked."))
+            continue
+        m = re.search(
+            r"(\d[\d,]*)\s+lines?,\s*(\d[\d,]*)\s+theorems?/lemmas?,\s*"
+            r"(\d[\d,]*)\s+defs?/structures?", row)
+        if m is None:
+            out.append(Detail(
+                f"mapping_row_unparsed:{bundle}", False,
+                f"the `{bundle}_initial_draft` row no longer states "
+                f"'<N> lines, <M> theorems/lemmas, <K> defs/structures'. The prose "
+                f"shape changed, so this leg silently stopped comparing — that is the "
+                f"failure mode, not a pass."))
+            continue
+        for label, got, macro in (
+                ("lines", m.group(1), f"{prefix}Lines"),
+                ("theorems", m.group(2), f"{prefix}Theorems"),
+                ("defs", m.group(3), f"{prefix}Defs")):
+            want = _macro(macro)
+            if want is None:
+                out.append(Detail(
+                    f"mapping_row_macro_absent:{bundle}:{label}", False,
+                    f"counts.tex emits no \\{macro}, so the mapping row's {label} "
+                    f"figure has no owner to be checked against"))
+                continue
+            compared += 1
+            if got.replace(",", "") != want.replace(",", ""):
+                out.append(Detail(
+                    f"mapping_row_stale:{bundle}:{label}", False,
+                    f"PAPER_DRAFT_MAPPING.md's {bundle} row says {label}={got} but "
+                    f"counts.tex emits \\{macro}={want}. The mapping doc is quoted "
+                    f"as the bundle-assignment source of truth; it must not disagree "
+                    f"with the bundle's own generated figures. Re-derive the row from "
+                    f"docs/counts.tex."))
+    if compared == 0:
+        out.append(Detail(
+            "mapping_row_population", False,
+            "ZERO mapping-row figures were compared against counts.tex — the leg "
+            "matched nothing, which is unverified rather than clean"))
+    elif not out:
+        out.append(Detail(
+            "mapping_row_agreement", True,
+            f"{compared} PAPER_DRAFT_MAPPING.md count figure(s) agree with counts.tex"))
+    return out
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -317,17 +407,34 @@ _TABLES_SOURCES = [
 
 
 def _tables_specs() -> list[Path]:
-    """Every papers/<key>/tables.py that exists."""
+    """Every papers/<key>/tables.py that exists.
+
+    ⚠️ REUSE THE GENERATOR'S OWN POPULATION — never re-implement the discovery
+    predicate here. The private `paper*_*` glob this replaced could not see a
+    bundle spec (`papers/D12/tables.py`, `papers/I1/tables.py`), while
+    `render_paper_tables.py` could: the renderer wrote those outputs and this
+    check reported "fresh" without ever having them in scope. Importing the
+    renderer's `iter_spec_paths` keeps the population definable in one place.
+    """
     if not _H.PAPERS_DIR.exists():
         return []
-    return list(_H.PAPERS_DIR.glob("paper*_*/tables.py"))
+    from render_paper_tables import iter_spec_paths
+    return list(iter_spec_paths(_H.PAPERS_DIR))       # H1: anchor at each use
 
 
 def _tables_outputs() -> list[Path]:
-    """Every papers/<key>/tables/*.tex that has been generated."""
+    """Every papers/<key>/tables/*.tex a live spec is responsible for.
+
+    Derived from the spec population above, so a directory shape the renderer
+    can write is a directory shape this check reads. Orphans (a `.tex` whose
+    spec entry no longer exists) are deliberately excluded — see
+    `render_paper_tables.spec_output_paths`.
+    """
     if not _H.PAPERS_DIR.exists():
         return []
-    return list(_H.PAPERS_DIR.glob("paper*_*/tables/*.tex"))
+    from render_paper_tables import spec_output_paths
+    return [p for spec in _tables_specs()
+            for p in spec_output_paths(spec) if p.exists()]
 
 
 def _tables_is_stale() -> tuple[bool, str]:
@@ -493,6 +600,168 @@ def check_claim_clusters_fresh() -> CheckResult:
     return CheckResult(passed=True, details=details)
 
 
+#: The ONLY output MIME keys `notebook_stored_outputs_current` drops. Everything else —
+#: every `text/*`, every `application/*`, `image/svg+xml` — is compared. This is a
+#: DENY-list on purpose: three consecutive rounds of the allow-list it replaced were
+#: defeated by hiding a claim in whichever MIME key the list had not yet named
+#: (D11 Stage-13 round-10 finding 5.2). Raster pixels are the one surface where
+#: byte-level churn is genuinely not a claim.
+_NB_OPAQUE_MIME = frozenset({
+    "image/png", "image/jpeg", "image/jpg", "image/gif", "image/bmp", "image/tiff",
+    "image/webp",
+})
+
+#: Bundle notebooks are shipped artifacts, so a claim the project RETRACTED must not
+#: survive in one. Each entry is (regex, why-it-is-retracted). These are the D11
+#: retractions the Stage-13 rounds established, and they are matched against MARKDOWN
+#: CELL SOURCE — the one notebook surface a re-execution gate is structurally incapable
+#: of seeing, because a markdown cell has no code to compare against
+#: (D11 Stage-13 round-10 finding 5.2(b), MUT-N2).
+NOTEBOOK_RETRACTED_CLAIMS: tuple[tuple[str, str], ...] = (
+    (r"necessary\s+but\s+not\s+sufficient",
+     "Necessity of mass inversion for a nonzero lattice Chern number is NOT proved "
+     "anywhere in this development — it is sampled at m = 6. "
+     "`haldane_massInversion_not_sufficient_at_N4` is the INSUFFICIENCY theorem; "
+     "asserting necessity is half the claim the project retracted."),
+    (r"haldane_chern_iff_mass_inversion",
+     "Retracted and deleted 2026-07-29: false at fixed N and contentless."),
+    (r"exactly\s+where\s+the\s+masses?\s+invert",
+     "The standing rule (HaldaneWitness.lean, paper Sec. Novelty) forbids claiming the "
+     "invariant is nonzero exactly where the masses invert at fixed grid size."),
+    (r"Voigt[-–—]Reuss[-–—]Hill",
+     "`effectiveModuli_enclosure` is an ordering of two AVERAGES plus constituent "
+     "bounds; no physical effective modulus appears in the statement, so the "
+     "Voigt-Reuss-Hill theorem is NOT formalized here."),
+    (r"bounds?\s+on\s+the\s+effective\s+modulus",
+     "Same retraction: the bracket on a physical M_eff is not formalized."),
+    (r"(?:Wiener|Hashin[-–—]Shtrikman)\s+(?:bound|enclosure)\s+is\s+formalized",
+     "Neither the Wiener nor the Hashin-Shtrikman bound is formalized in this "
+     "development (EffectiveMediumBounds.lean module header)."),
+)
+
+#: A paragraph that NAMES a retraction may quote the retracted words — that is how a
+#: retraction is written, and the D11 draft does exactly this (`bundle_reader_facing_voice`
+#: draws the same line for correction history). A hit in such a paragraph is REPORTED AS A
+#: WARNING rather than dropped, so the exemption is visible and countable instead of
+#: silent, and the count is ratcheted below.
+_RETRACTION_CONTEXT = re.compile(
+    r"retract|\bdeleted\b|\bwas\s+deleted\b|\bno\s+longer\b|\bNOT\s+proved\b"
+    r"|\bnot\s+formalized\b|\bdo\s+not\s+cite\b|\bforbid|\bsuperseded\b"
+    r"|\bis\s+\*?not\*?\s+(?:a\s+)?claim",
+    re.IGNORECASE)
+
+#: Down-only ceiling on retraction-context exemptions across the bundle notebooks.
+#: 1 as of 2026-08-14 (D11 cell 10 narrates the deletion of
+#: `haldane_chern_iff_mass_inversion` and quotes the retracted phrase while doing so).
+#: Raising it means a new quoted retraction was added and reviewed; it may not rise
+#: silently, because "quoted inside a retraction" is exactly the shape a real assertion
+#: would try to hide behind.
+NOTEBOOK_RETRACTION_QUOTE_CEILING = 1
+
+
+@register_check("notebook_markdown_retracted_claims",
+                "Bundle companion notebooks' MARKDOWN cells carry no retracted claim")
+def check_notebook_markdown_retracted_claims() -> CheckResult:
+    """CHECK: a claim the project retracted must not survive in a shipped notebook's
+    markdown prose.
+
+    ⚠️ **This is not a duplicate of `notebook_stored_outputs_current`.** That check
+    re-executes the notebook and compares stored output to fresh output. A markdown cell
+    has no code, so it is byte-identical before and after every re-execution — the
+    comparison is vacuous for it by construction, not by oversight. A D11 reviewer
+    demonstrated it end-to-end (round-10 MUT-N2): rewriting markdown cell 13 to read
+    "`effectiveModuli_enclosure` gives the **Voigt-Reuss bounds on the effective modulus
+    M_eff**" — verbatim the naming that Sec. 5 and the module header retract, and the
+    subject of a past BLOCKER — left `notebook_stored_outputs_current`, `notebook_exec`,
+    `notebooks` and `viz_consistency` all green.
+
+    A markdown cell needs a PHRASE gate, not a re-execution gate. `_texts` records the
+    same boundary at its own site so neither half can be mistaken for covering the other.
+
+    Scope is the bundle companion notebooks — the ones the inventory lists as shipping
+    with a bundle. `docs/architecture/CHECK_AUTHORING_GUIDE.md` §2.5: the population is
+    asserted non-empty and the number of markdown cells actually read is reported, so a
+    glob that stops matching fails rather than passes.
+    """
+    import json as _json
+
+    targets = sorted(_H.NOTEBOOKS_DIR.glob("D1[12]_*.ipynb"))
+    if not targets:
+        return CheckResult(passed=False, measured=False, details=[
+            Detail("scope", False,
+                   "NO bundle companion notebook matches D1[12]_*.ipynb — unverified, "
+                   "not passing.")])
+
+    patterns = [(re.compile(rx, re.IGNORECASE), why)
+                for rx, why in NOTEBOOK_RETRACTED_CLAIMS]
+    details: list[Detail] = []
+    hits = 0
+    quoted = 0
+    n_md_cells = 0
+    for nb_path in targets:
+        try:
+            nb = _json.loads(nb_path.read_text(encoding="utf-8"))
+        except (OSError, _json.JSONDecodeError) as exc:
+            hits += 1
+            details.append(Detail(nb_path.name, False, f"unreadable: {exc}"))
+            continue
+        for idx, cell in enumerate(nb.get("cells") or []):
+            if cell.get("cell_type") != "markdown":
+                continue
+            n_md_cells += 1
+            src = cell.get("source")
+            text = "".join(src) if isinstance(src, list) else str(src or "")
+            # Paragraph-scoped context, not whole-cell: a cell that retracts one claim
+            # must not thereby license asserting a DIFFERENT one three paragraphs down.
+            paras = re.split(r"\n\s*\n", text)
+            for rx, why in patterns:
+                for para in paras:
+                    m = rx.search(para)
+                    if not m:
+                        continue
+                    if _RETRACTION_CONTEXT.search(para):
+                        quoted += 1
+                        details.append(Detail(
+                            f"{nb_path.name}:md-cell-{idx}:quoted", True,
+                            f"markdown cell {idx} contains {m.group(0)!r} inside a "
+                            f"paragraph that NAMES the retraction — reported, not "
+                            f"failed. {why}", warning=True))
+                        continue
+                    hits += 1
+                    details.append(Detail(
+                        f"{nb_path.name}:md-cell-{idx}", False,
+                        f"markdown cell {idx} asserts a RETRACTED claim "
+                        f"({m.group(0)!r}). {why} This notebook ships as a bundle "
+                        f"artifact, so the cell is what a reader sees; re-executing it "
+                        f"changes nothing, which is why no re-execution gate can catch "
+                        f"this."))
+
+    if n_md_cells == 0:
+        return CheckResult(passed=False, measured=False, details=[
+            Detail("population", False,
+                   f"{len(targets)} bundle notebook(s) found but ZERO markdown cells "
+                   f"were read — the scan matched nothing, which is unverified rather "
+                   f"than clean.")])
+
+    if quoted > NOTEBOOK_RETRACTION_QUOTE_CEILING:
+        hits += 1
+        details.append(Detail(
+            "quoted_ceiling", False,
+            f"{quoted} retraction-context exemption(s) against the frozen ceiling of "
+            f"{NOTEBOOK_RETRACTION_QUOTE_CEILING}. Each exemption is a paragraph that "
+            f"quotes a retracted claim while naming the retraction; a NEW one is a "
+            f"reviewable event, because 'quoted inside a retraction' is the shape a "
+            f"real assertion would hide behind. Raise the ceiling deliberately."))
+
+    details.insert(0, Detail(
+        "summary", hits == 0,
+        f"{n_md_cells} markdown cell(s) across {len(targets)} bundle notebook(s) "
+        f"scanned against {len(patterns)} retracted-claim pattern(s) — {hits} hit(s), "
+        f"{quoted} quoted-in-retraction exemption(s) "
+        f"(ceiling {NOTEBOOK_RETRACTION_QUOTE_CEILING})"))
+    return CheckResult(passed=hits == 0, details=details)
+
+
 @register_check("notebook_stored_outputs_current",
                 "Bundle companion notebooks' STORED outputs equal what their code produces")
 def check_notebook_stored_outputs_current() -> CheckResult:
@@ -652,7 +921,7 @@ def check_notebook_stored_outputs_current() -> CheckResult:
         return out
 
     def _texts(nb) -> list[str]:
-        """Every text-bearing output payload, in order.
+        """Every claim-bearing output payload, in order.
 
         ⚠️ Figure output is the point (D11 round-7 BLOCKER 5.1 was a stale *figure*,
         not stale stdout). In this repo figures serialize as
@@ -685,12 +954,33 @@ def check_notebook_stored_outputs_current() -> CheckResult:
                     # protect — and it reported "stored output matches a fresh run". SVG is
                     # the realistic attack because GitHub does not render Plotly JSON, so a
                     # static renderer is what an author reaches for.
-                    if key in ("text/plain", "text/html", "text/markdown",
-                               "text/latex", "application/x-latex", "image/svg+xml"):
-                        v = d[key]
-                        out.append(v if isinstance(v, str) else "".join(v))
-                    elif "json" in key:
+                    #
+                    # ⚠️ ALLOW-LIST INVERTED TO A DENY-LIST 2026-08-14 (D11 Stage-13
+                    # round-10 finding 5.2(a)). Every widening above was a round of
+                    # whack-a-mole: `text/markdown`, then `text/latex`, then
+                    # `image/svg+xml`, each added after a reviewer hid a claim in the one
+                    # MIME key the list did not name. Claim-bearing-ness is not a
+                    # function of the MIME key, any more than it was a function of array
+                    # length — so the discriminator is inverted. Everything is collected
+                    # EXCEPT raster images, where bit-level churn is not a claim, and
+                    # `application/vnd.jupyter.widget-state+json`-style state blobs still
+                    # route through the `json` branch for their string leaves.
+                    #
+                    # NOT COVERED by this function, stated so the next round starts from
+                    # the boundary instead of rediscovering it: (1) MARKDOWN CELL SOURCE
+                    # — a markdown cell has no code to re-execute, so a re-execution gate
+                    # is structurally incapable of seeing it; that surface is guarded by
+                    # `notebook_markdown_retracted_claims` instead. (2) Raster pixels.
+                    # (3) Anything a reader sees only after running the notebook
+                    # themselves.
+                    if key in _NB_OPAQUE_MIME:
+                        continue
+                    if "json" in key:
                         out.extend(_strings_in(d[key]))
+                    else:
+                        v = d[key]
+                        out.append(v if isinstance(v, str)
+                                   else "".join(v) if isinstance(v, list) else repr(v))
         return out
 
     details: list[Detail] = []

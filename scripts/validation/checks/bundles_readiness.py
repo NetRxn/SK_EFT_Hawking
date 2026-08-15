@@ -1805,6 +1805,14 @@ def check_bundle_manuscript_length() -> CheckResult:
                        measured=sized > 0, details=details)
 
 
+#: Down-only floor on how many bundle metadata blobs carry the `critical_open` field
+#: (D11 Stage-13 round-9 finding 4.4). 21 of 21 as of 2026-08-14, the run of
+#: `scripts/bundle_readiness.py` that introduced it. **May be LOWERED only with a stated
+#: reason** — a bundle legitimately retired is one; the writer quietly dropping the field
+#: is the defect this floor exists to catch.
+_CRITICAL_OPEN_FLOOR = 21
+
+
 @register_check("bundle_metadata_matches_graph",
                 "bundle_metadata.json finding counts equal the live graph's")
 def check_bundle_metadata_matches_graph() -> CheckResult:
@@ -1840,6 +1848,7 @@ def check_bundle_metadata_matches_graph() -> CheckResult:
     details: list[Detail] = []
     drift = 0
     checked = 0
+    n_with_critical = 0
     for bundle, agg in sorted(by_bundle.items()):
         mp = meta_path(bundle)
         if not mp.is_file():
@@ -1866,6 +1875,17 @@ def check_bundle_metadata_matches_graph() -> CheckResult:
             bad.append(f"blockers_open={meta.get('blockers_open')} live={live_blockers}")
         if meta.get("advisories_open") != live_adv:
             bad.append(f"advisories_open={meta.get('advisories_open')} live={live_adv}")
+        # `critical_open` — the 🔴-only count, split out 2026-08-14 (D11 Stage-13
+        # round-9 finding 4.4) because `blockers_open` is critical+major and its name
+        # says otherwise, so a bundle with one 🔴 read as carrying eighteen blockers.
+        # POPULATION-RATCHETED below rather than merely "compared when present": a
+        # field that quietly stops being written would otherwise make this leg vacuous.
+        live_crit = (agg.get("severity_mix") or {}).get("critical", 0)
+        if "critical_open" in meta:
+            n_with_critical += 1
+            if meta.get("critical_open") != live_crit:
+                bad.append(f"critical_open={meta.get('critical_open')} "
+                           f"live={live_crit}")
         if meta.get("readiness") != agg.get("readiness"):
             bad.append(f"readiness={meta.get('readiness')!r} live={agg.get('readiness')!r}")
         if bad:
@@ -1884,6 +1904,30 @@ def check_bundle_metadata_matches_graph() -> CheckResult:
             "passing (an empty population is the round-8 state: every readiness check "
             "green with nothing to check)"))
         return CheckResult(passed=False, measured=False, details=details)
+
+    # POPULATION RATCHET for the `critical_open` leg. Non-empty is not enough: the leg
+    # is skipped per-blob when the field is absent, so a writer that stopped emitting it
+    # would silently reduce this to zero comparisons while the check stayed green.
+    # Floor scaled to what was actually compared: the ratchet must bite on the live
+    # 21-bundle corpus without failing a fixture that legitimately compares fewer blobs.
+    # Every blob compared must carry the field either way, so the leg can never be
+    # skipped for a bundle in silence.
+    _floor = min(_CRITICAL_OPEN_FLOOR, checked)
+    if n_with_critical < _floor:
+        drift += 1
+        details.append(Detail(
+            "critical_open_population", False,
+            f"only {n_with_critical} of {checked} bundle blob(s) carry "
+            f"`critical_open`, below the floor of {_floor} (corpus ratchet "
+            f"{_CRITICAL_OPEN_FLOOR}). The 🔴-only count stopped being written "
+            f"for some bundles, so that leg compares nothing for them. Re-run "
+            f"`uv run python scripts/bundle_readiness.py`; lower the floor only with a "
+            f"stated reason."))
+    else:
+        details.append(Detail(
+            "critical_open_population", True,
+            f"{n_with_critical} of {checked} bundle blob(s) carry `critical_open` "
+            f"(floor {_floor}; corpus ratchet {_CRITICAL_OPEN_FLOOR})"))
 
     details.insert(0, Detail(
         "summary", drift == 0,

@@ -588,7 +588,8 @@ pipeline stage.** It runs once the preliminary work and checks are done.
 
 - **Total findings (lifetime):** {info['total_findings']}
 - **Open findings (post-supersession):** {info['open_findings']}
-- **Blocker-class (critical + major):** {info['blocker_count']}
+- **Blocking (critical + major):** {info['blocker_count']}
+- **Critical (\U0001F534 BLOCKER only):** {info['severity_mix'].get('critical', 0)}
 - **Severity mix:** {sev_lines}
 - **Gate mix:** {gate_lines}
 
@@ -847,8 +848,18 @@ def write_metadata_counts(by_bundle: dict[str, dict]) -> list[str]:
         # unstable. Blocker-clearance is reported by `blockers_open` and `readiness`, which
         # this function does own.
         n_blockers = agg.get("blocker_count", 0)
+        # ⚠️ `blockers_open` counts BLOCKING findings — `critical` + `major`, i.e.
+        # 🔴 BLOCKER *and* 🟡 REQUIRED. The name says only the first, and a D11 reviewer
+        # measured the consequence: a bundle with exactly ONE open 🔴 read, to the
+        # heatmap, the metadata blob and the readiness gate, as carrying eighteen
+        # blockers (D11 Stage-13 round-9 finding 4.4). The field is not renamed — every
+        # consumer and every blob keys on it — so the count is SPLIT instead:
+        # `critical_open` carries the 🔴-only figure beside it, and the two together say
+        # what one misnamed number could not.
+        n_critical = (agg.get("severity_mix") or {}).get("critical", 0)
         updates = {
             "blockers_open": n_blockers,
+            "critical_open": n_critical,
             "advisories_open": n_adv,
             "open_findings": agg.get("open_findings", 0),
             "blocked_p1_gates": agg.get("blocked_p1_gates", []),
@@ -900,7 +911,9 @@ def main() -> int:
     changed_meta = write_metadata_counts(by_bundle)
     for b in changed_meta:
         agg = by_bundle[b]
-        print(f"[METADATA] {b}: blockers_open={agg.get('blocker_count', 0)} "
+        print(f"[METADATA] {b}: blocking(critical+major)="
+              f"{agg.get('blocker_count', 0)} "
+              f"critical={(agg.get('severity_mix') or {}).get('critical', 0)} "
               f"readiness={agg.get('readiness')}")
 
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")

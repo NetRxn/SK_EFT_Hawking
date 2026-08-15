@@ -382,3 +382,173 @@ class TestBibitemTitlePrimarySource:
         r = ck.check_bibitem_title_primary_source()
         assert r.passed is True
         assert any(d.warning for d in r.details)
+
+
+class TestCitationCacheVenueAgreementProduction:
+    """PRODUCTION-SEEDED legs for `citation_primary_sources_present` (D11 Stage-13
+    round-4 findings 1.1/1.2, round-8 finding 1.1).
+
+    These run against the REAL `CITATION_REGISTRY` and the REAL
+    `Lit-Search/*/primary-sources/*.abstract.txt` caches, not a fixture. A fixture can
+    only show that the comparison logic works on data shaped the way the author
+    imagined; three rounds of reviewers defeated exactly that. The mutation is applied
+    to a deep copy of the production registry so the on-disk file is never touched.
+
+    Manual file-write probe recorded 2026-08-14: `volume: 274 -> 275` and
+    `journal -> 'Journal of Applied Physics'` written into the REAL
+    `src/core/citations.py` each turned `validate.py --check
+    citation_primary_sources_present` red naming `cache_venue_mismatch:Voigt1889`;
+    restored and verified byte-identical by `cmp`.
+    """
+
+    #: A D11 bibkey whose cache header carries a full `Venue: <journal>, <vol>, p. <page>`
+    #: line, so all three legs are exercisable. If this entry is ever retired, repoint at
+    #: another entry with the same header shape rather than deleting the class.
+    KEY = "Voigt1889"
+
+    def _run_with(self, monkeypatch, mutate):
+        import copy
+        from src.core.citations import CITATION_REGISTRY as REAL
+        reg = copy.deepcopy(dict(REAL))
+        assert self.KEY in reg, f"{self.KEY} left CITATION_REGISTRY — repoint this test"
+        mutate(reg[self.KEY])
+        monkeypatch.setattr(_cit, "CITATION_REGISTRY", reg)
+        return ck.check_citation_primary_sources_present()
+
+    def _names(self, r, prefix):
+        return [d.name for d in r.details
+                if d.name.startswith(prefix) and not d.passed]
+
+    def test_the_unmutated_production_corpus_has_no_venue_disagreement(self):
+        """NEGATIVE CONTROL. Every leg below rides on this: a check that is red on
+        clean data proves nothing when it goes red on a seed."""
+        r = ck.check_citation_primary_sources_present()
+        assert not self._names(r, "cache_venue_mismatch"), [
+            d.message for d in r.details
+            if d.name.startswith("cache_venue_mismatch")]
+
+    def test_real_registry_volume_drift_is_caught(self, monkeypatch):
+        """MUT — the leg `READINESS_GATES.md:36` requires and nothing checked until
+        2026-08-14. A reviewer mutated journal + volume + page together and the check
+        stayed green (round-8 MUT-7)."""
+        def _m(e):
+            e["volume"] = (int(e["volume"]) + 1) if e.get("volume") else 999
+        r = self._run_with(monkeypatch, _m)
+        assert f"cache_venue_mismatch:{self.KEY}" in self._names(
+            r, "cache_venue_mismatch"), "a registry VOLUME drift was not caught"
+        assert r.passed is False
+
+    def test_real_registry_journal_drift_is_caught(self, monkeypatch):
+        def _m(e):
+            e["journal"] = "Journal of Applied Physics"
+        r = self._run_with(monkeypatch, _m)
+        assert f"cache_venue_mismatch:{self.KEY}" in self._names(
+            r, "cache_venue_mismatch"), "a registry JOURNAL drift was not caught"
+
+    def test_real_registry_page_drift_is_caught(self, monkeypatch):
+        def _m(e):
+            e["page"] = "9999"
+        r = self._run_with(monkeypatch, _m)
+        assert f"cache_venue_mismatch:{self.KEY}" in self._names(
+            r, "cache_venue_mismatch"), "a registry PAGE drift was not caught"
+
+    def test_abbreviated_and_first_page_forms_are_NOT_flagged(self, monkeypatch):
+        """The tolerances, pinned. Without these the check ships false positives on
+        `Phys. Rev. Lett.` vs `Physical Review Letters` and on a registry holding a
+        page RANGE against a cache printing the first page — both measured in the
+        corpus, neither a citation defect."""
+        def _m(e):
+            e["journal"] = "Ann. Phys."          # abbreviation of the cache's spelling
+            e["page"] = "573-587"                # range vs the cache's first page
+        r = self._run_with(monkeypatch, _m)
+        assert not self._names(r, "cache_venue_mismatch"), (
+            "an ABBREVIATED journal name or a first-page-vs-range difference was "
+            "reported as a venue mismatch — the check now fires on formatting")
+
+    def test_a_cited_entry_with_an_unresolvable_declared_path_fails(self, monkeypatch):
+        """The silent `continue` that D11 round-4 finding 1.2 measured: a declared
+        `primary_source_path` resolving to nothing skipped EVERY content comparison and
+        the check reported `cache_content_agreement PASS` having read nothing."""
+        def _m(e):
+            e["primary_source_path"] = (
+                "Lit-Search/Phase-6c/primary-sources/__no_such_bibkey__.abstract.txt")
+        r = self._run_with(monkeypatch, _m)
+        assert (f"cache_path_unresolvable:{self.KEY}" in
+                self._names(r, "cache_path")
+                or f"cache_path_wrong:{self.KEY}" in self._names(r, "cache_path")), (
+            "a cited bibkey whose declared cache path resolves to nothing was skipped "
+            "in silence")
+        assert r.passed is False
+
+    def test_declared_phase_tokens_match_on_disk_case_sensitively(self):
+        """D11 round-4 finding 1.2's root cause, asserted directly rather than through
+        the check: `PAPER_TO_PHASE['D11']` was `Phase-6C` while the directory is
+        `Phase-6c`. Both spellings resolve on APFS, so nothing local could see it; on a
+        case-sensitive filesystem all 11 D11 entries fell through a `continue` and the
+        gate reported PASS having checked nothing. This leg is filesystem-independent."""
+        import re as _re
+        from src.core.citations import CITATION_REGISTRY, PAPER_TO_PHASE
+        from src.core.workspace import find_workspace
+        base = find_workspace() / "Lit-Search"
+        real = {p.name for p in base.iterdir() if p.is_dir()}
+        assert len(real) > 20, f"Lit-Search scan found only {len(real)} phase dirs"
+
+        bad_map = sorted({v for v in PAPER_TO_PHASE.values() if v not in real})
+        assert not bad_map, (
+            f"PAPER_TO_PHASE names phase directories that do not exist under this "
+            f"exact spelling: {bad_map}. On a case-sensitive filesystem every citation "
+            f"routed through them is unverifiable.")
+
+        bad_paths = sorted({
+            (k, v["primary_source_path"]) for k, v in CITATION_REGISTRY.items()
+            if v.get("primary_source_path")
+            and (m := _re.match(r"Lit-Search/([^/]+)/", str(v["primary_source_path"])))
+            and m.group(1) not in real})
+        assert not bad_paths, (
+            f"{len(bad_paths)} registry primary_source_path values name a phase "
+            f"directory that does not exist under this exact spelling: "
+            f"{bad_paths[:5]}")
+
+    def test_the_PROMOTE_SIDECAR_carries_the_same_spellings(self):
+        """`scripts/promote_primary_sources.py` writes `primary_source_path` into the
+        registry FROM `docs/primary_sources_state.json`. Normalizing the registry alone
+        would have left the next promote run free to write the wrong-case paths straight
+        back in — the "fixed in one layer, re-found in a third" pattern these rounds keep
+        catching. The sidecar is pinned to the same on-disk spellings."""
+        import json as _json
+        import re as _re
+        from src.core.workspace import find_workspace
+        ws = find_workspace()
+        real = {p.name for p in (ws / "Lit-Search").iterdir() if p.is_dir()}
+        sidecar = SK_ROOT / "docs" / "primary_sources_state.json"
+        if not sidecar.is_file():
+            import pytest as _pytest
+            _pytest.skip("promote sidecar absent")
+        bad, seen = [], 0
+
+        def _walk(o):
+            nonlocal seen
+            if isinstance(o, dict):
+                ps = o.get("primary_source_path")
+                if isinstance(ps, str) and ps.startswith("Lit-Search/"):
+                    seen += 1
+                    m = _re.match(r"Lit-Search/([^/]+)/", ps)
+                    if m and m.group(1) not in real:
+                        bad.append(ps)
+                ph = o.get("phase")
+                if isinstance(ph, str) and ph.startswith("Phase-") and ph not in real:
+                    bad.append(f"phase={ph}")
+                for v in o.values():
+                    _walk(v)
+            elif isinstance(o, list):
+                for v in o:
+                    _walk(v)
+
+        _walk(_json.loads(sidecar.read_text()))
+        assert seen > 50, (
+            f"only {seen} sidecar primary_source_path entries were read — the walk "
+            f"matched almost nothing, which is unverified rather than clean")
+        assert not bad, (
+            f"{len(bad)} promote-sidecar entries name a phase directory that does not "
+            f"exist under this exact spelling: {bad[:5]}. The next "
+            f"`promote_primary_sources.py` run would write them into CITATION_REGISTRY.")

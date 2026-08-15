@@ -79,6 +79,22 @@ _NOT_A_RATCHET = {
     # own limit). A charter sits under it by design; equality would be a defect,
     # not the goal, so zero headroom is the wrong property to assert.
     "_SECTION_CEILING_BY_TIER",
+
+    # `notebook_markdown_retracted_claims`' allowance for paragraphs that QUOTE a
+    # retracted claim while naming the retraction (D11 finding 1951:5.2b). Zero
+    # headroom is the wrong property: the corpus sits AT 1 today, but the correct
+    # value is "however many honest retractions the notebooks carry", and driving it
+    # to equality would make writing a new retraction a red build. Held behaviourally
+    # by tests/test_d5_freshness.py::TestNotebookMarkdownRetractedClaims, which pins
+    # both directions — an assertion fails, a quoted retraction warns.
+    "NOTEBOOK_RETRACTION_QUOTE_CEILING",
+
+    # A POPULATION FLOOR (down-only), not a violation ceiling: it counts how many
+    # bundle metadata blobs carry `critical_open` (D11 finding 1801:4.4). Zero
+    # headroom against a violation count is meaningless for a floor — it is at 21 of
+    # 21 by construction, and the property asserted is that it never drops, which
+    # tests/test_d5_bundles_readiness.py::TestBundleMetadataMatchesGraph exercises.
+    "_CRITICAL_OPEN_FLOOR",
 }
 
 #: ⚠️ `paper_latex_compiles` shells out to pdflatex across all 21 bundle drafts —

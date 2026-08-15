@@ -9884,6 +9884,107 @@
         "enforced": true,
         "run_at": "2026-08-14"
       }
+    },
+    {
+      "finding_id": "review:2026-07-31-1059-internal-adversarial:D11:1.1",
+      "status": "fixed",
+      "evidence": "Venue was compared NOWHERE, the one leg READINESS_GATES.md requires that was still missing (Authors, Year and DOI had landed since filing). Added _venue_mismatch over journal/volume/page with the two tolerances round-8 measured as mandatory — abbreviation-tolerant token-subset journal matching so Phys. Rev. Lett. vs Physical Review Letters does not fire, and first-page-vs-range matching so 573-587 vs 573 does not fire — volume exact, year deliberately advisory. The new leg immediately found a live registry defect: coqq2022 carried journal 'arXiv' against an ACM POPL DOI and a cache header naming Proc. ACM Program. Lang.; corrected. PRODUCTION-SEEDED: volume and then journal mutated in the real citations.py, red each time against the real cache, restored byte-identically, with a negative control and a leg pinning both tolerances so a future tightening that ships false positives goes red.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-07-31-1059-internal-adversarial:D11:1.2",
+      "status": "fixed",
+      "evidence": "Real at HEAD, and broader than filed. PAPER_TO_PHASE['D11'] said Phase-6C against a Phase-6c directory; a wider scan found the same in Phase-6E plus 3 Phase-6n and 2 Phase-6o paths naming directories that do not exist at all, and 2 naming .abstract.txt where the real cache is .pdf/.json. All normalized to the on-disk spelling; zero declared paths now fail to resolve. The silent continue at the case-retry failure is now a FAILURE for any CITED bibkey, advisory for an uncited registry row staged before its cache is fetched. Also normalized primary_sources_state.json, because promote_primary_sources.py writes primary_source_path into the registry FROM that sidecar — fixing only the registry would have let the next promote run write the wrong-case paths straight back in. Asserted filesystem-independently, since both spellings resolve on APFS and no local check could otherwise see it.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-07-31-1530-internal-adversarial:D11:4.1",
+      "status": "fixed",
+      "evidence": "STALE — the artifact is repaired and the filed figures no longer reproduce: PAPER_DRAFT_MAPPING.md's D11 row and counts.tex agree on all three. But that row is the last hand-typed copy of numbers counts.tex already emits, and it has drifted and been repaired THREE times under three finding ids, so a mapping_row leg was added to counts_fresh that pins it. Markdown cannot input a macro, so the copy cannot be removed, only pinned. PRODUCTION-SEEDED: the historical stale value written back into the real mapping doc turns it red naming the field, restored identically, with legs for a RESHAPED and a MISSING row that fail rather than silently comparing nothing.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "supersedes_inert_open": true
+    },
+    {
+      "finding_id": "review:2026-07-31-1652-internal-adversarial:D11:1.1",
+      "status": "fixed",
+      "evidence": "Half stale, half real, and the halves are recorded separately. Fix item 1 — close the primary_source_path opt-in and drive the loop from the cache discovered on disk — had already landed, and the mutations it named no longer pass. Fix item 2, the venue comparison, had not; it is the same work as 1059:1.1 and is now shipped with the exact normalizations this finding specified. Fix item 3 — do not gate year — was already honoured and was kept that way. The specific mutation this finding measured passing (journal, volume and page all wrong) is now caught.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-07-31-1801-internal-adversarial:D11:4.4",
+      "status": "fixed",
+      "evidence": "The first half is moot: the heading-parse blocking-closure rule this finding measured no longer exists — every finding is born open and the ledger is the sole transition channel — and the 14-to-18 claim survives only inside the immutable review document, recorded in no live artifact, so there is nothing to correct. The second half was live and is fixed by SPLITTING the count rather than renaming, because every consumer and every blob keys on blockers_open: bundle_readiness.py now writes critical_open beside it, the per-bundle doc distinguishes 'Blocking (critical + major)' from 'Critical (BLOCKER only)', the dashboard renders both, and bundle_metadata_matches_graph compares the new field. PRODUCTION-SEEDED per-blob with a population floor of 21 of 21 and a test asserting a blob OMITTING the field is not silently skipped.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-07-31-1801-internal-adversarial:D11:4.5",
+      "status": "fixed",
+      "evidence": "Exploit 1 is closed by changes that landed since — declared severity is authoritative and gated, and the birth-status invariant means no heading text closes anything. Exploit 2 was still live: file_has_critical_marker escalated EVERY glyph-inferred finding in a document whenever a BLOCKER marker appeared anywhere in it. Deleted, after measuring it over the whole 1747-finding corpus: it was changing exactly 10 findings in 2 files and BOTH ARE FALSE — one file's own summary reads '0 BLOCKER, 3 REQUIRED, 3 RECOMMENDED', the other's is a table of past blockers annotated '(now closed)'. Zero true positives. Section-scoped escalation is retained, since it is what makes an unparseable Severity line fall through to critical rather than advisory, and a companion test proves that half still fires.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-07-31-1951-internal-adversarial:D11:1.2",
+      "status": "fixed",
+      "evidence": "Re-measured: fix (b) was already done, and the cache file's caveat block already carried the mandatory carve-out. Fix (a) had not propagated — prior_art_novelty.md still closed with the abstract-scoped sentence positioned as the basis for the carve-out's SCOPE. Replaced with the paper's own wording verbatim plus a Scope of the verification paragraph stating the evidence at the scope the conclusion is stated at (full v2 PDF, 40 pages: Euler 0, Chern 0, 'characteristic class' 0, Thom 6, Gysin 16; section 4.4 does formalize the Thom isomorphism). A matching scope note was added to the cache file so a reader of its line 18 is not misled either. The verify excludes blockquoted lines, so it asserts the wording is gone AS AN ASSERTION rather than passing because the correction note quotes it.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-07-31-1951-internal-adversarial:D11:5.2",
+      "status": "fixed",
+      "evidence": "Fix (a): the MIME ALLOW-list had been widened three rounds running, each time after a reviewer hid a claim in the one key it had not yet named. Inverted to a DENY-list — everything collected except raster images. Fix (b): built notebook_markdown_retracted_claims, the companion phrase gate for markdown CELL SOURCE, which a re-execution gate is structurally blind to because a markdown cell is byte-identical before and after every run. Six retracted-claim patterns seeded from the D11 retractions; a paragraph that NAMES the retraction while quoting it is reported as a warning under a frozen ceiling rather than dropped in silence. Fix (c): both surfaces now state in-source what they do NOT cover. PRODUCTION-SEEDED TWICE, including a text/csv payload in a stored output — a MIME key no version of the allow-list ever named. Notably the check fired on the UNMODIFIED shipped notebook at first run, correctly classifying a quoted retraction, before any seeding.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-08-01-0009-internal-adversarial:D11:N4",
+      "status": "fixed",
+      "evidence": "Both defects reproduced. The C2 carve-out had dropped 'of a vector bundle', contradicting the same document's own N1 record sixty lines above and stating a strictly stronger novelty claim than the paper does; the block now carries the paper's wording verbatim. And the document nowhere acknowledged the Thom isomorphism section that both the paper and the cache file acknowledge; it now does. One edit closes this and 1951:1.2, which name the same lines.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-08-01-0142-internal-adversarial:D11:N4",
+      "status": "fixed",
+      "evidence": "The adjudication is independently confirmed: PAPER_DRAFT_MAPPING.md's D11 row and counts.tex agree on all three figures, so the recurrence reopening of 1530:D11:4.1 was correct when filed and is superseded by the repair. recurrence_reopens_closures passes at HEAD, so re-closing will not be re-contradicted. The drift is now machine-pinned by the new mapping_row leg of counts_fresh, so that row cannot rot silently again — which is what makes this the last filing of a defect that recurred three times.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-07-31-1951-internal-adversarial:D11:1.1",
+      "status": "fixed",
+      "evidence": "Re-anchored. The prior record cited commit a683b917, but this finding's only Location is a Lit-Search path untracked in this repo, so NO commit here can contain the change — a provenance record whose commit cannot contain the fix is worse than none, because it reads as an audit trail. Superseded with an artifact anchor: the file is hashed at closure time and recorded with its on-disk spelling, which a later reviewer can re-derive with one command. close_finding now REFUSES a --commit anchor when every path a finding's Location names is untracked here, so this cannot recur.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "artifact_path": "Lit-Search/Phase-6c/primary-sources/LjungstromMortberg2024.abstract.txt",
+      "artifact_sha256": "a5d160cac4745fa979d5e56a53f542c81c9f2d91ea4e5688ca564667b43a34aa",
+      "artifact_anchors": [
+        {
+          "path": "Lit-Search/Phase-6c/primary-sources/LjungstromMortberg2024.abstract.txt",
+          "sha256": "a5d160cac4745fa979d5e56a53f542c81c9f2d91ea4e5688ca564667b43a34aa"
+        }
+      ],
+      "amends_prior": {
+        "reason": "the prior record is anchored to commit a683b917, which cannot contain the change: this finding's only Location is a Lit-Search path that git ls-files confirms is untracked in this repo",
+        "superseded_record": {
+          "status": "fixed",
+          "commit": "a683b917",
+          "date": null
+        }
+      }
+    },
+    {
+      "finding_id": "review:2026-08-01-0009-internal-adversarial:D11:N3",
+      "status": "fixed",
+      "evidence": "The record is corrected and the class is closed. The prior closure of 1951:D11:1.1 cited commit a683b917 while the finding's only Location is a Lit-Search path git ls-files confirms is untracked here, so no commit in this repo could contain the change. It now carries an artifact anchor — the file hashed at closure time with its on-disk spelling — which a later reviewer can re-derive in one command. Three pieces of substrate made that possible and prevent recurrence: close_finding gained --artifact, _closure_record_meets_bar accepts artifact_sha256 as an anchor in its own right, and the writer now REFUSES a --commit anchor when every path a finding's Location names is untracked in this repo. Correcting the record additionally required --amend, which three refusal messages in close_finding had been advising since ADR-012 while it did not exist: a record that MEETS the bar but is WRONG was uncorrectable except by hand-editing the ledger, the exact operation this writer exists to eliminate. The amend records its reason and names the record it supersedes, so the append-only history does not become two valid-looking closures with no account of the second.",
+      "superseded_by": null,
+      "date": "2026-08-15"
     }
   ]
 }

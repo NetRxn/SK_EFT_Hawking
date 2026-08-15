@@ -121,7 +121,11 @@ CI_SKIP: dict[str, str] = {
 #: So `--ci` FAILS when fewer checks MEASURE than this. A missing toolchain becomes a
 #: red build naming how many fewer than the floor MEASURED, not a green tick. Lower it only with a stated
 #: reason, exactly like every other ratchet in this codebase.
-CI_MIN_CHECKS_RUN: int = 79  # 2026-08-15: +1 (review_verify_is_one_command — rule 4 of
+CI_MIN_CHECKS_RUN: int = 80  # 2026-08-14: +1 (notebook_markdown_retracted_claims — the
+                             #   markdown-cell half of a bundle notebook's claim surface,
+                             #   which a re-execution gate is structurally blind to;
+                             #   D11 finding 1951:5.2b). Not CI_SKIP.
+                             # 2026-08-15: +1 (review_verify_is_one_command — rule 4 of
                              #   the review-document marker contract, previously stated in
                              #   two docstrings and enforced nowhere). Not CI_SKIP.
                              # 2026-08-13: -1 (ADR-013 P4 — inventory_index_autogen_fresh

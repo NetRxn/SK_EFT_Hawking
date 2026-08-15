@@ -174,11 +174,12 @@ def _targets_are_all_out_of_repo(node) -> list[str]:
     return outside
 
 
-def close(doc: str, sections: list[str], status: str, evidence: str,
+def close(doc: str, sections: list[str], status: str, evidence: str,  # noqa: PLR0913
           commit: str | None = None, date: str | None = None,
           verify: str | None = None, superseded_by: str | None = None,
           dry_run: bool = False,
-          artifact: list[str] | None = None) -> tuple[bool, str]:
+          artifact: list[str] | None = None,
+          amend: str | None = None) -> tuple[bool, str]:
     """Close one or more findings from a single review document.
 
     Multiple sections write one record EACH, sharing the evidence string — meeting the
@@ -231,7 +232,7 @@ def close(doc: str, sections: list[str], status: str, evidence: str,
 
     try:
         to_add, already = _plan(minted, nodes, status, evidence, commit, date,
-                               verified_by, superseded_by, art_rec)
+                               verified_by, superseded_by, art_rec, amend=amend)
     except ValueError as exc:           # a conflicting or sub-bar pre-existing record
         return False, str(exc)
 
@@ -303,7 +304,7 @@ def _run_verifications(minted, nodes, verify, status: str = "fixed") -> tuple[bo
 
 
 def _plan(minted, nodes, status, evidence, commit, date, verified_by, superseded_by,
-          art_rec=None):
+          art_rec=None, amend=None):
     """`(to_add, already)` — or raise. Shared by the real write AND `--dry-run`.
 
     ⚠️ Planning is separate from writing so that `--dry-run` previews the REFUSALS. When
@@ -317,7 +318,7 @@ def _plan(minted, nodes, status, evidence, commit, date, verified_by, superseded
     for fid in minted:
         prior = existing.get(fid)
         if prior is not None:
-            _guard_prior(fid, prior, status, nodes, already)
+            _guard_prior(fid, prior, status, nodes, already, amend=amend)
             if fid in already:
                 continue
         rec = {"finding_id": fid, "status": status, "evidence": evidence,
@@ -336,13 +337,21 @@ def _plan(minted, nodes, status, evidence, commit, date, verified_by, superseded
             rec["commit"] = commit
         if art_rec:
             rec.update(art_rec)
+        if amend:
+            # A DELIBERATE supersession of a record that already met the bar. The reason
+            # travels with it, because the ledger is append-only and last-wins: without
+            # it, a later reader sees two valid-looking closures and no account of why the
+            # second exists.
+            rec["amends_prior"] = {"reason": amend,
+                                   "superseded_record": {k: prior.get(k) for k in
+                                                         ("status", "commit", "date")}}
         if verified_by.get(fid):
             rec["verified_by"] = verified_by[fid]
         to_add.append(rec)
     return to_add, already
 
 
-def _guard_prior(fid, prior, status, nodes, already) -> None:
+def _guard_prior(fid, prior, status, nodes, already, amend=None) -> None:
     """Decide what an existing record means for this write. Appends to `already` or raises.
 
     ⚠️ **Same status is NOT automatically idempotent.** A prior record carrying
@@ -352,6 +361,18 @@ def _guard_prior(fid, prior, status, nodes, already) -> None:
     regenerated inside the writer built to remove it.
     """
     prior_status = prior.get("status")
+    # ⚠️ `--amend` is the operation THREE refusal messages in this file have been advising
+    # since ADR-012 ("amend the existing record deliberately instead") while it did not
+    # exist. Its absence is not cosmetic: a record that MEETS the bar but is WRONG — the
+    # measured case is `…1951…:D11:1.1`, anchored to a commit that cannot contain the fix
+    # because the finding's only Location is untracked in this repo — was uncorrectable
+    # except by hand-editing the ledger, which is what this writer exists to eliminate.
+    #
+    # Deliberately loud rather than permissive: it requires an explicit reason, and the
+    # new record carries `amends_prior` naming what it supersedes, so the append-only
+    # history stays readable instead of showing two valid-looking closures.
+    if amend:
+        return
     if prior_status == status:
         has_verify = bool((nodes[fid].get("meta") or {}).get("verify"))
         if status in CLOSING_STATUSES and not _bg._closure_record_meets_bar(
@@ -524,10 +545,16 @@ def main(argv=None) -> int:
     ap.add_argument("--verify", help="command proving the fix; RUN before writing")
     ap.add_argument("--superseded-by", dest="superseded_by",
                     help="the re-review that confirmed it")
+    ap.add_argument("--amend", metavar="REASON",
+                    help="deliberately supersede a record that ALREADY meets the bar but "
+                         "is wrong (e.g. anchored to a commit that cannot contain the "
+                         "fix). Requires a reason, which is recorded in `amends_prior` "
+                         "beside what it supersedes. Not a way to re-close a finding: an "
+                         "ordinary duplicate closure is still reported as already recorded.")
     ap.add_argument("--dry-run", action="store_true")
     a = ap.parse_args(argv)
     ok, msg = close(a.doc, a.section, a.status, a.evidence, a.commit, a.date,
-                    a.verify, a.superseded_by, a.dry_run, a.artifact)
+                    a.verify, a.superseded_by, a.dry_run, a.artifact, a.amend)
     print(("✓ " if ok else "✗ REFUSED — ") + msg)
     return 0 if ok else 1
 

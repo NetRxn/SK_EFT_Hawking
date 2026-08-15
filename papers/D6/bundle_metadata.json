@@ -26,7 +26,7 @@
     "NarrativeGrounding"
   ],
   "readiness": "YELLOW",
-  "readiness_last_computed": "2026-07-31",
+  "readiness_last_computed": "2026-08-15",
   "apex_theorems": [
     {
       "name": "SKEFTHawking.FaultTolerance.GaugingQEC.wave_6v_1_substantive_closure",
@@ -151,5 +151,6 @@
     "source": "PAPER_STRATEGY.md §6"
   },
   "compiled_pages": 8,
-  "compile_gate_ok": true
+  "compile_gate_ok": true,
+  "critical_open": 0
 }

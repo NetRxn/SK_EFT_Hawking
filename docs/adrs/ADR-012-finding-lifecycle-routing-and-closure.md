@@ -99,10 +99,28 @@ attach each to its paper and bundle; a BLOCKER flips the affected `ReadinessGate
 **Status is `open` by default, and only a ledger can close it.** A finding's status is *inferred*
 as `open` unless `docs/review_finding_supersessions.json` carries a record for it. For a
 blocking-severity finding that record must additionally carry an explicit closing status, at
-least forty characters of rationale, and a commit or date anchor. This design was reached over
+least forty characters of rationale, and an anchor. This design was reached over
 four rounds of repair, each of which found a way through a narrower rule, and the code records
 why the current shape was chosen: *making the ledger the only transition channel removes the class
 instead of narrowing it.*
+
+**An anchor is a commit, a date, or an artifact content hash.** The third was added 2026-08-14
+(D11 Stage-13 finding `2026-08-01-0009:D11:N3`). `Lit-Search/` is a workspace sibling outside this
+repository and Pipeline Invariant #11 makes a primary-source cache mandatory at every Stage 13, so
+for a finding whose artifact lives there **no commit in this repo can contain the change** — the
+commit-or-date bar forced either a fabricated SHA or no closure, and a record shipped naming the
+very commit its finding said had *not* fixed it. `close_finding.py --artifact <path>` records the
+file's `sha256` at closure time, which a later reviewer re-derives in one command; it counts as an
+anchor, and the writer now **refuses** a `--commit` anchor when every path a finding's `Location:`
+names is untracked here.
+
+**Severity is inferred per finding, never per file.** A declared `- **Severity:**` line is
+authoritative; absent or unparseable, the glyph in the heading decides, and a `BLOCKER` marker
+inside that finding's own heading or first 1000 body characters escalates it. The file-level rule
+that escalated *every* glyph-inferred finding whenever a `BLOCKER` marker appeared anywhere in the
+document was **deleted 2026-08-14** (finding `1801:D11:4.5`): the marker cannot distinguish a report
+that *found* a blocker from one that says there are none, both directions were demonstrated, and
+measured across the whole corpus it was changing ten findings in two files with zero true positives.
 
 **The instrument is working.** `readiness_submission_gate` is RED. This ADR is not a response to a
 broken gate; it is a response to a gate whose output nobody could act on efficiently.
@@ -205,7 +223,7 @@ first draft of D1 would have added a second name for data the system already col
 
 **C8. Two mechanisms already enforce closure quality; a third would be duplication.**
 `build_graph.py` applies the blocking-closure bar (explicit closing status, ≥40 characters of
-rationale, and a commit or date anchor). `reviews.py::accepted_findings_carry_rationale` separately
+rationale, and a commit, date or artifact-hash anchor). `reviews.py::accepted_findings_carry_rationale` separately
 pins that `accepted` records justify acceptance in writing, and its own docstring records why:
 `accepted` had become "the cheapest way to make a blocking finding disappear from Gate 11". Any
 verification requirement belongs **inside the existing bar**, not beside it.
@@ -345,7 +363,7 @@ dimension entirely:
 
 `READINESS_GATES.md` gains a section stating: status is `open` until a ledger record says
 otherwise; the ledger is the only transition channel; a closure requires an explicit status, a
-rationale of at least forty characters, and a commit or date anchor; a finding carrying a `verify`
+rationale of at least forty characters, and a commit, date or artifact-hash anchor; a finding carrying a `verify`
 command additionally requires a passing `verified_by`; records are written with
 `scripts/close_finding.py`. The rule stops living exclusively in a code comment. Per architecture
 rule 2 this lands **before** the code that depends on it.

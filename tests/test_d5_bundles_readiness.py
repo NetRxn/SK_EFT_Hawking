@@ -63,7 +63,7 @@ import validate_helpers as _H  # noqa: E402
 from validation.checks import bundles_readiness as bru  # noqa: E402
 
 
-def _agg(blockers=0, advisories=0, readiness=None, bundle="D1"):
+def _agg(blockers=0, advisories=0, readiness=None, bundle="D1", critical=0):
     """The heatmap aggregate shape the checks actually read: `readiness`
     ('RED'/'GREEN'), `blocker_count`, `severity_mix` (from which the advisory count is
     summed), and `open_finding_ids`.
@@ -76,7 +76,7 @@ def _agg(blockers=0, advisories=0, readiness=None, bundle="D1"):
     """
     n = blockers + advisories
     return {"blocker_count": blockers,
-            "severity_mix": {"minor": advisories},
+            "severity_mix": {"minor": advisories, "critical": critical},
             "open_findings": n,
             "open_finding_ids": [f"review:fixture:{bundle}:{i}" for i in range(n)],
             "readiness": readiness or ("RED" if blockers else "GREEN")}
@@ -166,11 +166,45 @@ class TestBundleMetadataMatchesGraph:
     def test_agreeing_metadata_passes(self, tmp_path, monkeypatch):
         """SILENT ON CORRECT DATA."""
         _patch_readiness(monkeypatch, {"D1": _agg(blockers=0, advisories=3)})
+        # `critical_open` is part of the compared contract since 2026-08-14 (D11
+        # finding 1801:4.4): `blockers_open` counts critical+major while its name says
+        # only the first, so the 🔴-only half is written beside it. A blob that omits it
+        # is not "agreeing metadata" — the leg would compare nothing for that bundle.
         self._meta(tmp_path, monkeypatch, "D1",
-                   {"blockers_open": 0, "advisories_open": 3, "readiness": "GREEN",
-                    "stage13_status": "pending"})
+                   {"blockers_open": 0, "critical_open": 0, "advisories_open": 3,
+                    "readiness": "GREEN", "stage13_status": "pending"})
         r = bru.check_bundle_metadata_matches_graph()
         assert r.passed is True, [(d.name, d.message) for d in r.details if not d.passed]
+
+    def test_a_stale_CRITICAL_count_alone_fails(self, tmp_path, monkeypatch):
+        """FIRES ON THE SEEDED DEFECT. `blockers_open` is critical+major, and a D11
+        reviewer measured what that name costs: a bundle with exactly ONE open 🔴 read,
+        to the heatmap and the readiness gate, as carrying eighteen blockers. The
+        🔴-only count is written beside it and compared on its own."""
+        _patch_readiness(monkeypatch,
+                         {"D1": _agg(blockers=2, advisories=1, critical=1)})
+        self._meta(tmp_path, monkeypatch, "D1",
+                   {"blockers_open": 2, "critical_open": 0, "advisories_open": 1,
+                    "readiness": "RED", "stage13_status": "pending"})
+        r = bru.check_bundle_metadata_matches_graph()
+        assert r.passed is False, (
+            "a blob asserting zero criticals against a live count of 1 passed — the "
+            "🔴-only comparison does not reach the verdict")
+        assert any("critical_open=0 live=1" in (d.message or "") for d in r.details)
+
+    def test_a_blob_that_OMITS_critical_open_is_not_silently_skipped(
+            self, tmp_path, monkeypatch):
+        """The seam. The leg is per-blob, so a writer that stopped emitting the field
+        would reduce it to zero comparisons while the check stayed green — the exact
+        vacuity shape CHECK_AUTHORING_GUIDE §2.5 names."""
+        _patch_readiness(monkeypatch, {"D1": _agg(blockers=0, advisories=0)})
+        self._meta(tmp_path, monkeypatch, "D1",
+                   {"blockers_open": 0, "advisories_open": 0, "readiness": "GREEN",
+                    "stage13_status": "pending"})
+        r = bru.check_bundle_metadata_matches_graph()
+        assert r.passed is False
+        assert any(d.name == "critical_open_population" and not d.passed
+                   for d in r.details), [(d.name, d.message) for d in r.details]
 
     def test_a_stale_count_ALONE_fails(self, tmp_path, monkeypatch):
         """The count comparison, carrying the verdict alone. Before the 2026-08-07
