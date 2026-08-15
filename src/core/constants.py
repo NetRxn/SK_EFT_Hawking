@@ -1445,7 +1445,20 @@ ARISTOTLE_REGISTRY_UNRESOLVED_CEILING = 14
 #: `ARISTOTLE_REGISTRY_UNRESOLVED_CEILING` already tracks); exactly one is cited by a
 #: draft — `fock_space_finite_dim` in legacy paper7_chirality_formal. This is
 #: newly-VISIBLE pre-existing debt, not new debt, and no BUNDLE cites a dead key.
-LEGACY_DRAFT_UNRESOLVED_REF_CEILING = 80
+#: **80 → 91, raised 2026-08-15 with cause.** The Dirac heat-kernel trace correction
+#: renamed seven theorems whose statements became false (`G_N_from_a2_eq_G_N_sakharov`,
+#: `a2_matches_GNemerg_iff_alpha_ADW_unity`, `gNMicroscopic_at_alpha_one_eq_G_N_emerg`,
+#: `torsionAmplitude_at_alpha_one_eq_G_N_emerg_times_n`, `a4_alpha_neg`,
+#: `a4_R_sq_coef_neg`, `a4_Ricci_sq_coef_pos`). Those names are cited by five LEGACY
+#: source drafts — paper39, paper40, paper42, paper42b, paper43 — in exactly 11
+#: (name, draft) pairs, which is the whole of the 80 → 91 delta. They are deliberately
+#: NOT renamed in place: those drafts also state the pre-correction numbers (12π, the
+#: (-5,+7,-12) a_4 triple, α_ADW = 1), so pointing them at the corrected theorems would
+#: make a superseded document cite a current theorem while asserting the old physics —
+#: strictly worse than a dangling reference. The bundle drafts that supersede them (D3,
+#: F) are corrected and carry ZERO unresolved references. Lower this ceiling when the
+#: legacy corpus is retired or rewritten.
+LEGACY_DRAFT_UNRESOLVED_REF_CEILING = 91
 
 #: Provenance entries with no comparable value in code (`_lookup_provenance_value`
 #: returns None, or the value is non-numeric). Frozen 2026-08-05 at the live count.
