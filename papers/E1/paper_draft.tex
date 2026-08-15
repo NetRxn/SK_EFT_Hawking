@@ -70,8 +70,8 @@ condensates at $T_H \approx \SI{0.35}{\nano\kelvin}$
 the apparatus that the signal must be recovered from
 density-density correlations accumulated over thousands of
 realizations. Exciton-polariton fluids remove that constraint
-rather than fighting it: their sound speed is two orders of
-magnitude larger than in a dilute atomic gas and their horizons are
+rather than fighting it: their sound speed exceeds a dilute atomic
+gas's by some eight orders of magnitude, and their horizons are
 written optically, so the velocity gradient setting the surface
 gravity is both large and adjustable, and predicted temperatures
 lie in the \SI{0.1}{\kelvin} to \SI{1}{\kelvin} range
@@ -90,9 +90,9 @@ entitled to be believed.
 
 This Letter supplies both. We evaluate the Schwinger-Keldysh
 effective-field-theory (SK-EFT) analog-Hawking spectrum at the
-published Paris-LKB parameters, and we ask, in the same expansion,
-whether the polariton cavity is quiet enough for that spectrum to
-be the leading behavior. The answer is that the horizon is already
+published Paris-LKB parameters, and ask in the same expansion
+whether the cavity is quiet enough for that spectrum to be the
+leading behavior. The answer is that the horizon is already
 good enough and the cavity is not. Cavity loss, not surface gravity,
 is the gating parameter, and the gate closes at a lifetime we can
 name.
@@ -174,9 +174,10 @@ $(2\pi)^2 \approx \input{tables/lkb_norm_ratio.tex}\unskip$. We use
 Eq.~\eqref{eq:T_H}, the convention of the analog-gravity literature
 the same paper cites~\cite{Visser1998,Unruh1981,Barcelo2011}, and we
 flag the factor here so that a reader holding \SI{3}{\kelvin} in
-mind does not read \SI{85}{\milli\kelvin} as a disagreement about
-$\kappa$. The two papers agree on every measured quantity; they
-normalize $T_H$ differently.
+mind does not read
+$\input{tables/lkb_T_H_smooth_mK.tex}\unskip\,\si{\milli\kelvin}$ as a
+disagreement about $\kappa$. The two papers agree on every measured
+quantity; they normalize $T_H$ differently.
 
 The second is that Eq.~\eqref{eq:T_H} is only an observable where
 the spectrum is thermal, and at the steep horizon it is not. Falque
@@ -225,9 +226,9 @@ $\Gamma_{\rm pol}$ at fixed geometry
 $\Gamma_{\rm pol} = 0$, the closed-system limit
 (\texttt{attenuation\_eq\_one\_at\_zero\_decay}).
 
-The question is not whether $A$ can be divided out. It is whether
-$\Gamma_{\rm pol}$ is small enough that the emission being corrected
-is still the emission Eq.~\eqref{eq:T_H} describes. Dissipation
+The question is not whether $A$ can be divided out, but whether
+$\Gamma_{\rm pol}$ is small enough that what is being corrected is
+still the emission Eq.~\eqref{eq:T_H} describes. Dissipation
 enters the SK-EFT as an expansion in $\Gamma_{\rm pol}/\kappa$, and
 we take
 \begin{equation}
@@ -248,12 +249,12 @@ Against $\kappa = \input{tables/lkb_kappa_smooth.tex}\unskip\,\mathrm{s}^{-1}$ t
 \label{eq:ratio_asbuilt}
 \end{equation}
 about eighteen times the cut. The as-built cavity is not weakly
-dissipative; over one healing length of propagation the recovery
-factor $A$ is already
+dissipative: over one healing length the recovery factor $A$ is
+already
 $\input{tables/lkb_atten_per_xi_standard.tex}\unskip$, because the exponent in
 Eq.~\eqref{eq:attenuation} per healing length is exactly the product
-$(\Gamma_{\rm pol}/\kappa)\,D$ of the two dimensionless parameters
-of \S II.
+$(\Gamma_{\rm pol}/\kappa)\,D$ of this Letter's two dimensionless
+parameters.
 
 This is a cavity specification, and it is the one axis of the
 platform that is a fabrication choice rather than a physical limit.
@@ -269,9 +270,18 @@ is met from
 \label{eq:tau_required}
 \end{equation}
 onward, where the per-healing-length recovery factor has fallen to
-$\input{tables/lkb_atten_per_xi_required.tex}\unskip$. Long-lifetime microcavities in
-this range exist; the Paris-LKB horizon does not need to change to
-use one.
+$\input{tables/lkb_atten_per_xi_required.tex}\unskip$. Whether a GaAs
+microcavity at that lifetime is available to this group is a
+fabrication question rather than a physics one; the horizon itself
+does not need to change.
+%% TODO: the claim that GaAs microcavities with tau_cav >= 143 ps are
+%% demonstrated is NOT made here, because it is not verified. The
+%% repo's PARAMETER_PROVENANCE cites Ballarini 2017 for long-lifetime
+%% cavities, but only in support of the 100 ps projection, which is
+%% BELOW this threshold, and that source is not held in full text.
+%% Acquire it (and the higher-Q GaAs literature) before any future
+%% draft asserts availability. Filed nowhere else deliberately: this
+%% is a source-acquisition task, not a defect in the present text.
 
 Figure~\ref{fig:regime} places the device on that axis. The same
 criterion applied outside the GaAs family closes the other end of
@@ -423,9 +433,9 @@ corresponds to
 \begin{equation}
 T_{\rm noise} = \frac{m^* c_s^2}{k_B} = \input{tables/lkb_T_noise_K.tex}\unskip\,\si{\kelvin},
 \end{equation}
-an order of magnitude above $T_H$, and in a spontaneous measurement
-that ratio is the whole problem: the Hawking occupation would have
-to be dug out of a background ten times larger.
+an order of magnitude above $T_H$: in a spontaneous measurement the
+Hawking occupation would have to be dug out of a background ten
+times larger.
 
 The stimulated measurement does not face that ratio, and the reason
 is spectral and phase structure rather than magnitude. The
@@ -444,8 +454,8 @@ amplitude fluctuations, spectrally flat across the
 window~\cite{Amelio2020} and so unable to mimic the Planckian shape
 of Eq.~\eqref{eq:gain}.
 
-That shape is what makes the prediction falsifiable rather than
-merely quantitative. We give the window
+That shape is what makes the prediction falsifiable. We give the
+window
 \begin{equation}
 \boxed{\;\omega/\kappa \lesssim 0.30\;}
 \label{eq:window}

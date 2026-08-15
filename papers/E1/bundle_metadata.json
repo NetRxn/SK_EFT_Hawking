@@ -85,7 +85,7 @@
       "source_note": "UNVERIFIED against the primary. A 2026-08-15 research-scout pass could not reach journals.aps.org: its robots.txt disallows automated agents and every author-guide fetch returned 403. This figure is the one recorded in papers/AutomatedReviews/2026-08-15-l3-stage10-redraft/L3.md §5.1, not one read off the APS author guide. Confirm by hand before treating a pass here as venue conformance; the current abstracts are 2-5x over, so the exact figure does not change any live verdict."
     }
   },
-  "compiled_pages": 4,
+  "compiled_pages": 5,
   "compile_gate_ok": true,
   "critical_open": 0
 }
