@@ -8781,6 +8781,328 @@
         "enforced": true,
         "run_at": "2026-08-14"
       }
+    },
+    {
+      "finding_id": "review:2026-05-04-bundle-stage13:D3:1.1",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. D3 now ships a Tracked-hypothesis registry subsection at paper_draft.tex:2277, consolidating every tracked hypothesis by canonical module-qualified identifier with a one-line closure path, in the D2-style format the finding asked for.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "grep -q 'subsection{Tracked-hypothesis registry}' papers/D3/paper_draft.tex",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-06-bundle-stage13:D3-r2:4.1",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. The bridge sentence landed: the draft now states that the horizon-Crooks equation is the trajectory-form expression of the W-form predicate HorizonDetailedBalance, and that integrating over path space at fixed sigma identifies the two forms. ⚠️ The review text still annotates this as STILL OPEN — that annotation is itself the stale artifact.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "uv run python -c \"import re,sys;t=re.sub(r'\\\\s+',' ',open('papers/D3/paper_draft.tex').read());sys.exit(0 if 'trajectory-form expression of the W-form predicate' in t else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-06-bundle-stage13:D3-r2:5.1",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. The claim is softened exactly as recommended AND the conjectural framing now PRECEDES the claim rather than trailing it, which was the specific complaint.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "uv run python -c \"import re,sys;t=re.sub(r'\\\\s+',' ',open('papers/D3/paper_draft.tex').read());sys.exit(0 if 'can be read as' in t and 'Under that conjectured biconditional' in t else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-26-2112-internal-adversarial:D7:5.3",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. Its precondition is discharged at the substrate: the two named theorems are absent from lean/SKEFTHawking/, ChernBridge.lean:128 records the T5 deletion, and the abstract was recounted and reframed from demarcation theorem to simulability demarcation biconditional.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "! grep -rq 'analog_hawking_simulable_implies_both_conditions' lean/SKEFTHawking/",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-26-2112-internal-adversarial:D7:5.4",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. The abstract carries the exact scoped-search footnote Expected asked for, naming the indexes searched and the date, and explicitly disclaiming any broader first-claim.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "uv run python -c \"import re,sys;t=re.sub(r'\\\\s+',' ',open('papers/D7/paper_draft.tex').read());sys.exit(0 if 'We make no broader first-claim' in t else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-26-2112-internal-adversarial:D7:7.2",
+      "status": "fixed",
+      "evidence": "STALE on its body, which is what matters. headline_theorems now carries the DIFFERENCE theorem rather than the crystalline/quasicrystalline pair that could double-count. ⚠️ FILING DEFECT worth recording: this finding's LABEL says the last_lift timestamp is in the future, but its own Observed text says the timestamps are fine and pivots entirely to headline double-counting. Any automation keying on labels will mis-target it.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "uv run python -c \"import json,sys;h=json.load(open('papers/D7/bundle_metadata.json'))['headline_theorems'];sys.exit(0 if any('crystalline_minus_quasicrystalline_eq_twice_c1' in str(x) for x in h) else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-11-1550-bundle-stage13:E1:5.1",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. Both Expected legs landed: the abstract scopes the claim to the greybody-saturation limit, and the body after Eq. (3) states the assumption explicitly with the order of the neglected corrections and two supporting citations.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "uv run python -c \"import re,sys;t=re.sub(r'\\\\s+',' ',open('papers/E1/paper_draft.tex').read());sys.exit(0 if 'assume the greybody-saturation limit' in t else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-11-1550-bundle-stage13:E1:7.3",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. Both halves closed: the boxed-window equation now has a real label and eqref, and the two D.2 stubs are closed with recorded rationale rather than left dangling.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "grep -q 'label{eq:window}' papers/E1/paper_draft.tex && grep -q 'Status: CLOSED non-blocking' papers/E1/paper_draft.tex",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:D5:1.5",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. The DESI DR2 bibitem now carries the full title, Phys. Rev. D 112, 083515 (2025) and the arXiv id.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "uv run python -c \"import re,sys;t=re.sub(r'\\\\s+',' ',open('papers/D5/paper_draft.tex').read());sys.exit(0 if '083515 (2025)' in t else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:D5:1.6",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. The phantom published-version year is gone; the Superfluid Dark Matter entry now reads Physics Reports (in press, accepted 2026) with its arXiv id.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "uv run python -c \"import re,sys;t=re.sub(r'\\\\s+',' ',open('papers/D5/paper_draft.tex').read());sys.exit(0 if 'in press, accepted 2026' in t else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:D5:5.2",
+      "status": "fixed",
+      "evidence": "STALE — remediated via Expected option (b): the taxonomy novelty claim is now hedged rather than asserted flatly.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "uv run python -c \"import re,sys;t=re.sub(r'\\\\s+',' ',open('papers/D5/paper_draft.tex').read());sys.exit(0 if 'to the best of our knowledge, the first unified organisational framework' in t else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:D5:7.1",
+      "status": "fixed",
+      "evidence": "STALE — remediated STRUCTURALLY, which is why it will hold. The literal 17 is gone; the count is now the bbnThms macro emitted by update_counts.py from BBN.lean. Minor residue not worth reopening: the macro's 14 includes a module_summary_marker, so 'substantive' is arguably 13 — an off-by-one inside a now-correct mechanism.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "grep -q 'bbnThms' papers/D5/paper_draft.tex && grep -q 'bbnThms' docs/counts.tex",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-04-bundle-stage13:F_r1:1.2",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. The lemma shipped and is proved with no sorry, and F's overclaiming prose is gone. ⚠️ The remediation went the OPPOSITE way from the Lean: the theorem now exists, but the prose moved to disclaiming Lean coverage at the Newton-constant level and cites only the weaker coupling_deficit. Closed because the filed defect was an OVERclaim and the overclaim is gone; the residue is an under-cite. Whether 'not Lean-verified at the Newton-constant level' is accurate turns on whether the Lean ratio is the Newton-constant ratio or the four-fermion-coupling ratio — worth a one-line reconciliation.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "grep -q 'theorem wen_adw_factor_6000' lean/SKEFTHawking/EmergentGravityBounds.lean",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-04-bundle-stage13:F_r1:1.3",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. F now states the figure-eight knot invariant ships closed at zero sorry via the named theorems, and the open-list item was narrowed to the WRT surgery formula.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "uv run python -c \"import re,sys;t=re.sub(r'\\\\s+',' ',open('papers/F/paper_draft.tex').read());sys.exit(0 if 'ships closed at zero' in t else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-11-1730-bundle-stage13-reinvocation:F:1.5",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. All eight unbacked first-claims are gone from F; the count is now zero, including the two flagged subsection titles.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "uv run python -c \"import re,sys;t=open('papers/F/paper_draft.tex').read();import re as r;sys.exit(0 if len(r.findall(r'first.formalisation|first machine-checked|first formally verified|to our knowledge',t))==0 else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-11-1730-bundle-stage13-reinvocation:F:1.6",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. F now cites the current non-deprecated aggregator and its stated conjunct count matches the Lean body; the deprecated alias is not cited.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "uv run python -c \"import re,sys;t=re.sub(r'\\\\s+',' ',open('papers/F/paper_draft.tex').read());sys.exit(0 if 'both' in t and 'jeffreys' in t.lower() else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-11-1730-bundle-stage13-reinvocation:F:1.7",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated, and beyond the finding: the provenance entry now exists at MEASURED tier with its DOI, AND the attribution error was also fixed — F now says the Technion measurement, matching the provenance note that explicitly warns NOT Heidelberg.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "uv run python -c \"import sys;sys.path.insert(0,'.');from src.core.provenance import PARAMETER_PROVENANCE as P;sys.exit(0 if abs(P['Steinhauer.T_H_measured']['value']-0.351e-9)<1e-15 else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-04-bundle-stage13:D2:1.1",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. The Wang2024 bibitem now carries the verbatim arXiv title and drops the wrong PRD venue; the registry entry was corrected on 2026-08-12 with a note recording the wrong-target DOI removal.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "uv run python -c \"import re,sys;t=re.sub(r'\\\\s+',' ',open('papers/D2/paper_draft.tex').read());sys.exit(0 if 'Family Puzzle' in t else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:D2:1.1",
+      "status": "fixed",
+      "evidence": "STALE — same Wang2024 defect filed twice, same remediation. The verbatim title is in place and the wrong venue survives only inside a LaTeX comment documenting the correction.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "uv run python -c \"import re,sys;t=re.sub(r'\\\\s+',' ',open('papers/D2/paper_draft.tex').read());sys.exit(0 if 'Family Puzzle' in t else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:D2:3.3",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. The prose now says the chain is formally ENUMERATED, quoting the theorem's own docstring that it indexes four independent occurrences without asserting a common-origin theorem — the tautology is disclosed rather than dressed up.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "uv run python -c \"import re,sys;t=re.sub(r'\\\\s+',' ',open('papers/D2/paper_draft.tex').read());sys.exit(0 if 'formally enumerated' in t else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:D2:3.4",
+      "status": "fixed",
+      "evidence": "STALE via Expected option (a). The Lean statement is unchanged and still only an arithmetic identity, but the prose no longer attributes the physics to it: it now says the lcm identity is discharged at the Lean level and that the no-nu_R argument is PROSE-level. ⚠️ Note L2 3.4 is the same theorem cited the same wrong way in a different paper and is still LIVE — the D2-side fix was not propagated.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "uv run python -c \"import re,sys;t=re.sub(r'\\\\s+',' ',open('papers/D2/paper_draft.tex').read());sys.exit(0 if 'is discharged at the Lean level by' in t else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:D2:3.5",
+      "status": "fixed",
+      "evidence": "STALE — and remediated AT THE DECIDER, which is the right kind. The Lean statement itself changed: it formerly concluded True and now concludes a conjunction including an Iff, verified by reading the elaborated type in lean_deps.json rather than the docstring.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "uv run python -c \"import json,sys;d=json.load(open('lean/lean_deps.json'));e=[x for x in d if x['name'].endswith('schellekensChain_implies_24_divides_c_minus_iff_3_divides_N_gen')];sys.exit(0 if e and 'Iff' in e[0]['type'] else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-06-08-2240-internal-adversarial:D2:6.1",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. The prose no longer cites the removed field; it now names the two fields that exist and states that the algebraic residual is not a carried interface field but a derived kernel-pure theorem.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "uv run python -c \"import re,sys;t=re.sub(r'\\\\s+',' ',open('papers/D2/paper_draft.tex').read());sys.exit(0 if 'is \\\\emph{not} a carried interface field' in t else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
     }
   ]
 }
