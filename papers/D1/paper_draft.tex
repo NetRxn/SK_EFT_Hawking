@@ -14,8 +14,8 @@
 %% Source manifest: papers/D1/source_manifest.md
 %% Change log: papers/D1/change_log.md
 %% 2026-08-15 Stage-10 FULL REDRAFT. The prior draft is superseded in its
-%% entirety; nothing in it is carried forward unread. Every Lean identifier
-%% cited below was checked against its STATEMENT, not its name or docstring.
+%% entirety. Every Lean identifier cited below was checked against its
+%% STATEMENT, not its name and not its docstring.
 
 \input{bundle_counts}
 
@@ -30,37 +30,15 @@
 \date{\today}
 
 \begin{abstract}
-%% TODO(abstract): written last, after every number it quotes has been derived
-%% in the body. Placeholder marks the slot.
+%% TODO(abstract) — written last.
 \end{abstract}
 
 \maketitle
 
-%% ══════════════════════════════════════════════════════════════════
-%% OUTLINE OF THE ARGUMENT (planning comment; delete before submission)
-%%
-%% Spine: derive before spending.
-%%   II  builds the horizon, the SK action and delta_diss.
-%%   III builds the higher-order structure and the FDR that IV consumes.
-%%   IV  spends delta_diss + FDR to produce delta_k, the noise floor and
-%%       the crossover omega_x.
-%%   V   spends omega_x and delta_disp on the platform table.
-%%   VI  and VII are the two platforms whose leading observable is not the
-%%       BEC spectral floor.
-%%   VIII is the honest accounting of the verification layer. It is placed
-%%       after the physics because it is a statement ABOUT the preceding
-%%       sections, not a prerequisite for them.
-%%
-%% CUT from the superseded draft, with reasons, reported in the redraft note:
-%%   - Kibble-Zurek-Unruh / Tindall et al. tensor-network cross-check
-%%   - BP-on-PEPS "quantum-advantage demarcation", ChernBridge, moire
-%%   - four commented-out post-bibliography lift stubs (6n W1a/W2b/W2c, 6o W1a)
-%%   - the "bundle architecture" subsection
-%% ══════════════════════════════════════════════════════════════════
-
 \section{Introduction}
 \label{sec:intro}
-%% TODO(I)
+%% TODO(I) — includes the formal-status legend (Table: status vocabulary)
+%% and the named shared theorems.
 
 \section{The effective field theory of a dissipative fluid horizon}
 \label{sec:eft}
@@ -69,7 +47,7 @@
 \label{sec:eft-metric}
 %% TODO(II.A)
 
-\subsection{Schwinger--Keldysh doubling and the three constraints}
+\subsection{Contour doubling and three constraints: normalisation, positivity, KMS}
 \label{sec:eft-sk}
 %% TODO(II.B)
 
@@ -77,9 +55,13 @@
 \label{sec:eft-first}
 %% TODO(II.C)
 
+\subsection{The dispersive correction}
+\label{sec:eft-disp}
+%% TODO(II.D)
+
 \subsection{The dressed temperature, and what universality means here}
 \label{sec:eft-universality}
-%% TODO(II.D)
+%% TODO(II.E)
 
 \section{Higher orders in the gradient expansion}
 \label{sec:higher}
@@ -96,104 +78,71 @@
 \label{sec:higher-positivity}
 %% TODO(III.C)
 
-\subsection{Optimality of the first-order condition}
+\subsection{Optimality of the first-order condition, and the counterexample that produced it}
 \label{sec:higher-optimal}
 %% TODO(III.D)
 
-\subsection{The fluctuation--dissipation relation}
+\subsection{The fluctuation--dissipation closure, and what it assumes}
 \label{sec:higher-fdr}
 %% TODO(III.E)
 
-\section{The exact-WKB connection and three non-perturbative effects}
+\section{The dissipative Bogoliubov connection and the crossover frequency}
 \label{sec:wkb}
 
 \subsection{The complex turning point}
 \label{sec:wkb-turning}
 %% TODO(IV.A)
 
-\subsection{Modified unitarity and the decoherence parameter}
+\subsection{The modified-unitarity ansatz and its one parameter}
 \label{sec:wkb-unitarity}
 %% TODO(IV.B)
 
-\subsection{The noise floor}
-\label{sec:wkb-floor}
+\subsection{The crossover frequency}
+\label{sec:wkb-crossover}
 %% TODO(IV.C)
 
-\subsection{The spectral floor and the crossover frequency}
-\label{sec:wkb-crossover}
-%% TODO(IV.D)
-
-\section{Hierarchy of corrections by platform}
+\section{The condensate platform and the hierarchy of corrections}
 \label{sec:hierarchy}
-%% TODO(V) + Table I
-
-\section{Exciton-polariton microcavities}
-\label{sec:polariton}
-
-\subsection{Reservoir-corrected sound speed}
-\label{sec:pol-cs}
-%% TODO(VI.A)
-
-\subsection{Smooth and steep horizons; the Tier-1 attenuation patch}
-\label{sec:pol-tier1}
-%% TODO(VI.B)
-
-\subsection{Stimulated Hawking emission and the gain threshold}
-\label{sec:pol-gain}
-%% TODO(VI.C)
-
-\subsection{Where the Tier-1 patch fails}
-\label{sec:pol-scope}
-%% TODO(VI.D)
+%% TODO(V) — Table I + BEC benchmarks + Heidelberg projection caveat
 
 \section{The bilayer-graphene Dirac fluid}
 \label{sec:graphene}
 
-\subsection{The 2+1D acoustic metric and the quasi-1D reduction}
+\subsection{The 2+1D acoustic metric and the quasi-one-dimensional reduction}
 \label{sec:gr-metric}
+%% TODO(VI.A)
+
+\subsection{Subluminal dispersion and the absent trans-Planckian problem}
+\label{sec:gr-subluminal}
+%% TODO(VI.B)
+
+\subsection{The noise spectrum and the cancellation of $\sigma_Q$}
+\label{sec:gr-noise}
+%% TODO(VI.C)
+
+\subsection{Detection at the Dean device}
+\label{sec:gr-detect}
+%% TODO(VI.D)
+
+\section{Exciton-polariton microcavities}
+\label{sec:polariton}
+
+\subsection{Reservoir-corrected sound speed and the horizon}
+\label{sec:pol-cs}
 %% TODO(VII.A)
 
-\subsection{Cross-platform theorem reuse as a measure of universality}
-\label{sec:gr-reuse}
+\subsection{Attenuation, and where the model provably fails}
+\label{sec:pol-scope}
 %% TODO(VII.B)
-
-\subsection{Subluminal dispersion and the trans-Planckian problem}
-\label{sec:gr-subluminal}
-%% TODO(VII.C)
-
-\subsection{Comparable corrections with opposite signs}
-\label{sec:gr-hierarchy}
-%% TODO(VII.D)
-
-\subsection{The closed-form noise spectrum}
-\label{sec:gr-noise}
-%% TODO(VII.E)
-
-\subsection{Wiedemann--Franz violation as a transport cross-check}
-\label{sec:gr-wf}
-%% TODO(VII.F)
-
-\subsection{Detection feasibility}
-\label{sec:gr-detect}
-%% TODO(VII.G)
-
-\section{What the verification layer certifies}
-\label{sec:verification}
-
-\subsection{Three tiers of formal content}
-\label{sec:ver-tiers}
-%% TODO(VIII.A)
-
-\subsection{A counterexample that changed the theory}
-\label{sec:ver-aristotle}
-%% TODO(VIII.B)
-
-\subsection{Where the formal layer is thinner than the physics}
-\label{sec:ver-gaps}
-%% TODO(VIII.C)
 
 \section{Synthesis and outlook}
 \label{sec:synthesis}
-%% TODO(IX)
+%% TODO(VIII)
+
+\appendix
+
+\section{What is and is not machine-checked}
+\label{app:status}
+%% TODO(App A) — per-claim status table
 
 \end{document}
