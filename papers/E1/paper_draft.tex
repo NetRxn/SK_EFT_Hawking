@@ -66,15 +66,15 @@ close it.
 
 Analog Hawking radiation has been observed in atomic Bose-Einstein
 condensates at $T_H \approx \SI{0.35}{\nano\kelvin}$
-\cite{Steinhauer2016,deNova2019}, a temperature so far below every
-systematic in the apparatus that the signal must be recovered from
-density-density correlations accumulated over $\sim 10^{4}$
-realizations. Exciton-polariton fluids promise to remove that
-constraint rather than to fight it. Their sound speed is two orders
-of magnitude larger than in a dilute atomic gas and their horizons
-can be written optically, so the velocity gradient that sets the
-surface gravity is both large and adjustable, and predicted
-temperatures lie in the \SI{0.1}{\kelvin} to \SI{1}{\kelvin} range
+\cite{Steinhauer2016,deNova2019}, so far below every systematic in
+the apparatus that the signal must be recovered from
+density-density correlations accumulated over thousands of
+realizations. Exciton-polariton fluids remove that constraint
+rather than fighting it: their sound speed is two orders of
+magnitude larger than in a dilute atomic gas and their horizons are
+written optically, so the velocity gradient setting the surface
+gravity is both large and adjustable, and predicted temperatures
+lie in the \SI{0.1}{\kelvin} to \SI{1}{\kelvin} range
 \cite{Gerace2012,Nguyen2015}.
 
 Falque \emph{et al.}~\cite{Falque2025} have now built the horizon.
@@ -124,16 +124,14 @@ horizon steepnesses are reported: a smooth configuration at
 $\kappa = \input{tables/lkb_kappa_smooth.tex}\unskip\,\mathrm{s}^{-1}$ and a steep one at
 $\kappa = \input{tables/lkb_kappa_steep.tex}\unskip\,\mathrm{s}^{-1}$.
 
-One point of provenance is worth making explicit, because it is
-easy to mistake for a correction we have applied. The sound speed
-above is not a reservoir-free Bogoliubov estimate rescaled after the
-fact; the dark excitonic reservoir is already inside it. Falque
-\emph{et al.}'s Appendix~B carries the reservoir interaction energy
-$g_r n_r \approx 1.84\,gn$ through the dispersion from which $c_s$
-is extracted. Reservoir-free estimates for this class of device
-reach $\sim \SI{1.0}{\micro\meter/\pico\second}$, and the factor of
-roughly two-and-a-half between them and the measured value is the
-reservoir, but that reduction is the primary source's result and not
+That sound speed is not a reservoir-free Bogoliubov estimate
+rescaled after the fact: the dark excitonic reservoir is already
+inside it, carried as $g_r n_r \approx 1.84\,gn$ through the
+dispersion from which $c_s$ is extracted. Reservoir-free estimates
+for this class of device reach
+$\sim \SI{1.0}{\micro\meter/\pico\second}$, so the reservoir costs a
+factor of about two and a half, but that reduction is the primary
+source's result rather than
 ours~\cite{Estrecho2021,Stepanov2019,Claude2023}.
 
 \begin{center}
@@ -151,9 +149,7 @@ correction is
 \label{eq:delta_disp}
 \end{equation}
 giving $\input{tables/lkb_delta_disp_smooth.tex}\unskip$ and
-$\input{tables/lkb_delta_disp_steep.tex}\unskip$ respectively. Equation~\eqref{eq:delta_disp}
-is the manuscript's only dispersive coefficient, and \S IV uses the
-same expression rather than an independent one.
+$\input{tables/lkb_delta_disp_steep.tex}\unskip$ respectively.
 
 The Hawking temperature follows from the surface gravity alone,
 \begin{equation}
@@ -221,12 +217,12 @@ A = \exp\!\left(\frac{\Gamma_{\rm pol} L}{v_g}\right),
 with $L$ the propagation distance and $v_g$ the group velocity.
 Recovering the intrinsic spectrum means dividing by $A$. Three
 elementary properties of Eq.~\eqref{eq:attenuation} are checked in
-Lean~4 and hold for every parameter choice rather than for a fitted
-one: $A \geq 1$ always, so the recovery never deflates an inferred
+Lean~4 for every parameter choice rather than a fitted one:
+$A \geq 1$ always, so the recovery never deflates an inferred
 occupation (\texttt{attenuation\_ge\_one}); $A$ is monotone in
 $\Gamma_{\rm pol}$ at fixed geometry
-(\texttt{attenuation\_mono\_Gamma}); and $A = 1$ exactly when
-$\Gamma_{\rm pol} = 0$, which is the closed-system limit
+(\texttt{attenuation\_mono\_Gamma}); and $A = 1$ exactly at
+$\Gamma_{\rm pol} = 0$, the closed-system limit
 (\texttt{attenuation\_eq\_one\_at\_zero\_decay}).
 
 The question is not whether $A$ can be divided out. It is whether
@@ -261,8 +257,8 @@ of \S II.
 
 This is a cavity specification, and it is the one axis of the
 platform that is a fabrication choice rather than a physical limit.
-Holding the optically written horizon fixed and varying only the
-mirror stack, a \SI{100}{\pico\second} cavity gives
+Holding the horizon fixed and varying only the mirror stack, a
+\SI{100}{\pico\second} cavity gives
 $\Gamma_{\rm pol}/\kappa = \input{tables/lkb_ratio_long.tex}\unskip$ and a
 \SI{300}{\pico\second} cavity gives
 $\input{tables/lkb_ratio_ultralong.tex}\unskip$. Eq.~\eqref{eq:weak_dissipation}
@@ -337,13 +333,13 @@ prediction of what it will return.
 %% omega/kappa_eff, which is what the exponent contains.
 
 Waiting for spontaneous emission is what makes the atomic-BEC
-measurements slow. Driving the horizon instead removes that cost.
-A coherent probe injected at frequency $\omega$ scatters
-anomalously at the horizon, and the amplitude returned in the
-partner channel is set by the same Bogoliubov mixing that produces
-the spontaneous pairs, so a classical mean-field measurement reads
-out a quantum-gravitational analog coefficient~\cite{Grisins2016}.
-The gain is
+measurements slow, and driving the horizon removes that cost. A
+coherent probe injected at frequency $\omega$ scatters anomalously
+at the horizon, and the amplitude returned in the partner channel is
+set by the same Bogoliubov mixing that produces the spontaneous
+pairs, so a classical mean-field measurement reads out a
+quantum-gravitational analog coefficient~\cite{Grisins2016}. The
+gain is
 \begin{equation}
 G(\omega) = \frac{\Gamma(\omega)}{e^{2\pi\omega/\kappa_{\rm eff}} - 1},
 \label{eq:gain}
@@ -412,16 +408,12 @@ $\mathrm{SNR} = \sqrt{N_{\rm shots} N_{\rm probe}}\;G(\omega)$, so
 $G = 1/2$ with $N_{\rm probe} = 100$ probe photons per mode is a
 single-shot $5\sigma$ detection. At
 $\omega = 0.1\,\kappa_{\rm eff}$ the same 100 photons give
-$\mathrm{SNR} = \input{tables/lkb_snr_at_0p1.tex}\unskip$. The comparison that
-matters is not with a better spontaneous measurement but with the
-scaling: a spontaneous correlation signal at the
-$5\times 10^{-5}$ level needs of order $10^9$ repetitions to
-resolve~\cite{Grisins2016,Jacquet2022}, and a stimulated
-measurement replaces that repetition count with probe power.
-Quasinormal modes of the driven-dissipative
-geometry~\cite{Jacquet2023QNM,Burkhard2025} concentrate the response
-at particular frequencies and offer additional windows, which the
-Paris-LKB apparatus has already resolved.
+$\mathrm{SNR} = \input{tables/lkb_snr_at_0p1.tex}\unskip$. What matters is
+the scaling rather than any single figure: a spontaneous correlation
+signal at the $5\times 10^{-5}$ level needs of order $10^9$
+repetitions to resolve~\cite{Grisins2016,Jacquet2022}, and a
+stimulated measurement trades that repetition count for probe
+power.
 
 %% ══════════════════════════════════════════════════════════════════
 \section{Noise floor and the falsifiable window}
@@ -446,12 +438,11 @@ a modification of the Paris-LKB apparatus but a description of it:
 the existing coherent probe spectroscopy already modulates the
 probe at \SI{5}{\mega\hertz} and detects in a \SI{300}{\hertz}
 bandwidth around that modulation~\cite{Falque2025}. What survives
-in the detection band is the shot noise of the probe itself, which
-is what the SNR above assumes. The background enters the
-uncertainty only through its contribution to the condensate's
-amplitude fluctuations, which is spectrally flat across the
-window~\cite{Amelio2020} and so cannot mimic the Planckian shape of
-Eq.~\eqref{eq:gain}.
+in that band is the probe's own shot noise, which is what the SNR
+above assumes; the background enters only through condensate
+amplitude fluctuations, spectrally flat across the
+window~\cite{Amelio2020} and so unable to mimic the Planckian shape
+of Eq.~\eqref{eq:gain}.
 
 That shape is what makes the prediction falsifiable rather than
 merely quantitative. We give the window
@@ -474,13 +465,13 @@ configuration rather than for the one already
 published.
 
 Inside the window the prediction is over-determined, which is what
-gives it teeth. The three device quantities $(c_s, \xi, \kappa)$
-enter $G(\omega)$ only through $\kappa_{\rm eff}$, a single
-combination, so a measured gain profile is a one-parameter fit to a
-three-parameter set that has been independently measured. Agreement
-is a nontrivial check; disagreement in the shape of $G(\omega)$,
-as opposed to its overall scale, cannot be absorbed into the
-greybody factor and falsifies the framework.
+gives it teeth. The three measured quantities $(c_s, \xi, \kappa)$
+enter $G(\omega)$ only through the single combination
+$\kappa_{\rm eff}$, so a measured gain profile is a one-parameter
+fit to a three-parameter set already fixed independently.
+Disagreement in the \emph{shape} of $G(\omega)$, as opposed to its
+overall scale, cannot be absorbed into the greybody factor, and
+falsifies the framework.
 
 %% ══════════════════════════════════════════════════════════════════
 \section{What would settle it}
@@ -526,18 +517,15 @@ Mathlib at commit \texttt{\mathlibrev}. The polariton bounds cited in
 \end{acknowledgments}
 
 \section*{Methods and tools disclosure}
-The formal-verification layer of this work was developed with
-substantial machine assistance: Lean~4 proof drafting and iteration
-used LLM-based agents (Anthropic Claude-family models) operating
-under the project's staged validation pipeline. A subset of the
-underlying library's theorems was closed by the Aristotle automated
-theorem prover (Harmonic); every proof is ultimately certified by
-the Lean~4 kernel via \texttt{lake build} on the public repository,
-independently of any AI tool. Manuscript prose was AI-assisted and
-human-reviewed. Every device-derived numerical value in this
-manuscript is generated from \texttt{src/core/constants.py} and
-\texttt{src/core/formulas.py} through
-\texttt{papers/E1/tables.py} rather than typed into the text.
+The formal-verification layer used LLM-based agents (Anthropic
+Claude-family models) for Lean~4 proof drafting, and the Aristotle
+automated prover (Harmonic) for a subset of the underlying library;
+every proof is certified by the Lean~4 kernel via \texttt{lake
+build} on the public repository, independently of any AI tool.
+Manuscript prose was AI-assisted and human-reviewed. Every
+device-derived number here is generated from
+\texttt{src/core/constants.py} and \texttt{src/core/formulas.py},
+not typed into the text.
 
 \begin{thebibliography}{99}
 
@@ -601,10 +589,6 @@ Phys.\ Rev.\ D \textbf{85}, 124027 (2012).
 \bibitem{Jacquet2023QNM}
 M.~Jacquet \emph{et al.},
 Phys.\ Rev.\ Lett.\ \textbf{130}, 111501 (2023).
-
-\bibitem{Burkhard2025}
-M.~Burkhard \emph{et al.},
-arXiv:2511.12339 (2025).
 
 \bibitem{Amelio2020}
 I.~Amelio and I.~Carusotto,
