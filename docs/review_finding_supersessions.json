@@ -8109,6 +8109,370 @@
         "enforced": true,
         "run_at": "2026-08-14"
       }
+    },
+    {
+      "finding_id": "review:2026-07-31-1730-internal-adversarial:D12:8.3",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. The round-6 reconstruction now carries an explicit partial-coverage disclosure at papers/AutomatedReviews/2026-07-31-1210-reconstructed-round6/D12.md:27-36: it recovers 7 of the 14 findings round 6 raised, says the other 7 are unrecoverable, and records that rounds 4 and 5 have no D12 document at all. The silence the finding objected to is gone.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "grep -q 'This file recovers 7 findings; round 6 raised 14' papers/AutomatedReviews/2026-07-31-1210-reconstructed-round6/D12.md",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-07-31-1730-internal-adversarial:D12:8.4",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. check_ledger_ids_resolve no longer fails open: an AST sweep of its own except handlers returns zero CheckResult(passed=True), and the handler carries a comment recording that it once did. Verified by the AST predicate rather than by reading the comment, so the check cannot pass on the strength of its own docstring.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "python3 -c \"import ast,sys;t=ast.parse(open('scripts/validation/checks/reviews.py').read());f=next(n for n in ast.walk(t) if isinstance(n,ast.FunctionDef) and n.name=='check_ledger_ids_resolve');sys.exit(1 if [1 for h in ast.walk(f) if isinstance(h,ast.ExceptHandler) for r in ast.walk(h) if isinstance(r,ast.Return) and isinstance(r.value,ast.Call) for kw in r.value.keywords if kw.arg=='passed' and getattr(kw.value,'value',None) is True] else 0)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-07-31-1730-internal-adversarial:D12:8.5",
+      "status": "fixed",
+      "evidence": "STALE — the disk state satisfies it. All seven named bundles (D11, D12, D7, I2, I3, L1, L3) now carry freshness_stale: true alongside their open blockers; none still asserts the contradictory pair. ⚠️ NOTE FOR THE NEXT REVIEWER: the round-11 reviewer WITHDREW the underlying premise of this finding as his own misreading (see 2026-07-31-2022 finding 8.6). It is closed because the artifact satisfies it either way, not because the original reading was right. Residue: papers/I1/bundle_metadata.json — outside this finding set — does still show the pair.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "python3 -c \"import json,sys;bad=[b for b in ('D11','D12','D7','I2','I3','L1','L3') if json.load(open('papers/%s/bundle_metadata.json'%b)).get('freshness_stale') is False and (json.load(open('papers/%s/bundle_metadata.json'%b)).get('blockers_open') or 0)>0];sys.exit(1 if bad else 0)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-07-31-1823-internal-adversarial:D12:8.3",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. check_readiness_submission_gate no longer returns passed=True on ImportError; bundles_readiness.py:2158-2167 now returns passed=False with the text \"UNVERIFIED, not passing\". An AST sweep of that function finds zero fail-open handlers, and the module-wide count is down from 12 to 9 with none of the survivors in a readiness check.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "python3 -c \"import ast,sys;t=ast.parse(open('scripts/validation/checks/bundles_readiness.py').read());f=next(n for n in ast.walk(t) if isinstance(n,ast.FunctionDef) and n.name=='check_readiness_submission_gate');sys.exit(1 if [1 for h in ast.walk(f) if isinstance(h,ast.ExceptHandler) for r in ast.walk(h) if isinstance(r,ast.Return) and isinstance(r.value,ast.Call) for kw in r.value.keywords if kw.arg=='passed' and getattr(kw.value,'value',None) is True] else 0)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-07-31-2022-internal-adversarial:D12:8.3",
+      "status": "fixed",
+      "evidence": "STALE — duplicate of the 1823 round-8.3 finding, same artifact, same remediation. check_readiness_submission_gate returns passed=False on ImportError (bundles_readiness.py:2158-2167) and an AST sweep of it finds zero fail-open handlers.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "python3 -c \"import ast,sys;t=ast.parse(open('scripts/validation/checks/bundles_readiness.py').read());f=next(n for n in ast.walk(t) if isinstance(n,ast.FunctionDef) and n.name=='check_readiness_submission_gate');sys.exit(1 if [1 for h in ast.walk(f) if isinstance(h,ast.ExceptHandler) for r in ast.walk(h) if isinstance(r,ast.Return) and isinstance(r.value,ast.Call) for kw in r.value.keywords if kw.arg=='passed' and getattr(kw.value,'value',None) is True] else 0)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-07-31-2103-internal-adversarial:D12:8.3",
+      "status": "fixed",
+      "evidence": "STALE — third recurrence of the same ImportError fail-open finding, same artifact, same remediation. check_readiness_submission_gate returns passed=False (bundles_readiness.py:2158-2167); AST sweep of the function finds zero fail-open handlers.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "python3 -c \"import ast,sys;t=ast.parse(open('scripts/validation/checks/bundles_readiness.py').read());f=next(n for n in ast.walk(t) if isinstance(n,ast.FunctionDef) and n.name=='check_readiness_submission_gate');sys.exit(1 if [1 for h in ast.walk(f) if isinstance(h,ast.ExceptHandler) for r in ast.walk(h) if isinstance(r,ast.Return) and isinstance(r.value,ast.Call) for kw in r.value.keywords if kw.arg=='passed' and getattr(kw.value,'value',None) is True] else 0)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-07-31-2022-internal-adversarial:D12:2.2",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. PAPER_DEPENDENCIES[D12][formulas] is now 28 entries including gaussian_tail_birnbaum_lower, and that formula acquired the golden pins the reviewer asked for at tests/test_bundle_formulas_d11_d12.py — it is no longer bounds-only. Gate 4 now reads 28 formulas, 28 with golden/identity/roundtrip, 0 bounds-only. ⚠️ RESIDUE CARRIED FORWARD, not closed: paper:D12 still has ZERO GROUNDED_IN edges, so the formula set remains author-curated rather than derived. That is a separate defect and should be re-filed if it matters.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "grep -q 'gaussian_tail_birnbaum_lower' tests/test_bundle_formulas_d11_d12.py",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-07-31-2103-internal-adversarial:D12:2.2",
+      "status": "fixed",
+      "evidence": "STALE — recurrence of the Gate-4 formula-coverage finding; same artifact, same remediation. The list is 28 entries with golden pins and 0 bounds-only. Same residue: paper:D12 still has zero GROUNDED_IN edges, so the set is author-curated.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "grep -q 'gaussian_tail_birnbaum_lower' tests/test_bundle_formulas_d11_d12.py",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-07-31-2103-internal-adversarial:D12:8.7",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. The supersession ledger now carries D12 records for every round the finding said had none: 1524, 1730, 1823, 2022, 2103 and 2220, 70 D12 records in total against 24 before. D12 FLAGS status is now 57 fixed / 146 open, up from 13 fixed.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "python3 -c \"import json,sys;r=json.load(open('docs/review_finding_supersessions.json'))['supersessions'];rounds={'1524','1730','1823','2022','2103','2220'};hit={x for x in rounds if any('2026-07-31-%s-internal-adversarial:D12:'%x in q.get('finding_id','') for q in r)};sys.exit(0 if hit==rounds else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-07-31-2220-internal-adversarial:D12:8.7",
+      "status": "fixed",
+      "evidence": "STALE — recurrence of the missing-ledger-records finding; same remediation. Records exist for all of rounds 1524/1730/1823/2022/2103/2220.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "python3 -c \"import json,sys;r=json.load(open('docs/review_finding_supersessions.json'))['supersessions'];rounds={'1524','1730','1823','2022','2103','2220'};hit={x for x in rounds if any('2026-07-31-%s-internal-adversarial:D12:'%x in q.get('finding_id','') for q in r)};sys.exit(0 if hit==rounds else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-07-31-2220-internal-adversarial:D12:8.2",
+      "status": "fixed",
+      "evidence": "STALE and INDEPENDENTLY RE-VERIFIED BY THE LEAD, because this one is a closure bypass and worth not taking on trust. Heading-parse closure is deleted outright: build_graph.py:2107-2110 carries a BIRTH-STATUS INVARIANT comment and an unconditional status = open, there is no remaining status = fixed assignment anywhere in build_graph.py, and the closure bar is severity-unconditional (:1901). The adjudicating agent additionally re-ran the original exploit in an isolated tree with a two-key ledger: all four shapes, including the 🔴-heading-with-Severity-recommended one, now mint status=open with blocking_closure_rejected=True.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "python3 -c \"import re,sys;s=re.sub(r'\\\\s+',' ',open('scripts/build_graph.py').read());sys.exit(0 if 'APPLIES AT EVERY SEVERITY' in s and \\\"status = 'fixed'\\\" not in s else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-01-0001-internal-adversarial:D12:13.2",
+      "status": "fixed",
+      "evidence": "STALE — same defect as round-12 8.2, re-raised at round 13, same remediation, lead-verified. The severity guard on the closure bar is gone and heading-parse closure is deleted. ⚠️ RESIDUE EXPLICITLY NOT CLOSED: _decl still slices body[:1200] (build_graph.py:2053) and an unrecognised severity value still falls back silently rather than raising. Both now misreport severity only — they no longer close anything — but they are real and should be re-filed rather than assumed handled.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "python3 -c \"import re,sys;s=re.sub(r'\\\\s+',' ',open('scripts/build_graph.py').read());sys.exit(0 if 'APPLIES AT EVERY SEVERITY' in s and \\\"status = 'fixed'\\\" not in s else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:I3:1.2",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. papers/I3/paper_draft.tex:120 now cites mathlib4_2020 for the measure-theory hierarchy, so the bibitem at :1413 is no longer orphaned.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "grep -q 'cite{mathlib4_2020}' papers/I3/paper_draft.tex",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:I3:3.4",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. The redundant closure theorem was DELETED (Ito/ItoLemma.lean:51 records the removal) and the predicate was upgraded from Prop := True to a four-clause body at :41-43. The paper no longer names it. The vacuity the finding objected to is gone at the substrate, not merely hidden in prose.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "! grep -q 'itoBeta_5_itoLemma_closure' papers/I3/paper_draft.tex && ! grep -rq 'theorem wave_3b_itoBeta_5_itoLemma_closure' lean/SKEFTHawking/",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:I3:5.2",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. The novelty claim is gone: the paragraph is retitled \"Relation to existing libraries\" and now says the library CONTRIBUTES predicate-level scaffolding, with a scope caveat. A whitespace-normalised scan for \"first\" over the whole draft leaves only two non-claim uses.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "python3 -c \"import re,sys;t=re.sub(r'\\\\s+',' ',open('papers/I3/paper_draft.tex').read());sys.exit(0 if 'first explicit predicate-level scaffolding' not in t and 'This library contributes predicate-level scaffolding' in t else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:I3:5.4",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. The hardcoded 5800 literal is gone; paper_draft.tex:234 now reads the macro-driven totaltheorems. The count is derived rather than asserted, which is the durable form of the fix.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "grep -q 'totaltheorems' papers/I3/paper_draft.tex && ! grep -q '5800' papers/I3/paper_draft.tex",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:I3:5.6",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. The asserted \"release pair\" framing is gone (zero hits); the conclusion now describes a documented cross-reference to I2 section 7 rather than claiming a pairing.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "! grep -q 'release pair' papers/I3/paper_draft.tex",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:I3:6.1",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. The hypothesis is now disclosed at paper_draft.tex:954-961: the closure requires Fact (sigma^2 != 0), stated in words as positive variance, and the paper records that instantiating sigma^2 = 0 produces an instance-synthesis failure.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "python3 -c \"import re,sys;t=re.sub(r'\\\\s+',' ',open('papers/I3/paper_draft.tex').read());sys.exit(0 if 'The closure requires' in t and 'instance-synthesis failure' in t else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:I3:7.4",
+      "status": "fixed",
+      "evidence": "STALE — remediated, and the new count is arithmetically correct at HEAD, not merely different. The draft now says 9 per-module plus 2 overall closures and names all eleven; enumeration of the Ito and LDP modules confirms exactly 9 + 2.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "grep -q '9 per-module wave-closure summary theorems' papers/I3/paper_draft.tex && ! grep -q '12 wave-closure summary theorems' papers/I3/paper_draft.tex",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:L2:1.2",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. All five registry entries the finding named now carry populated titles, verified by reading CITATION_REGISTRY at runtime rather than by grepping the source.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "uv run python -c \"import sys;sys.path.insert(0,'.');from src.core.citations import CITATION_REGISTRY as R;sys.exit(0 if all(R[k].get('title') for k in ['AlvarezGaumeWitten1984','FidkowskiKitaev2010','GarciaEtxebarria2019','GrossJackiw1972','Rokhlin1952']) else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:L3:5.1",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. Expected option (b) was applied verbatim: the draft now states the four laws are NOT bundled into a single Lean Prop but appear as separate theorems and predicates.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "python3 -c \"import re,sys;t=re.sub(r'\\\\s+',' ',open('papers/L3/paper_draft.tex').read());sys.exit(0 if 'NOT bundled into a single Lean Prop structure' in t else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:L3:6.1",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. The Israel1986 bibitem exists at paper_draft.tex:374-376 with full metadata and is cited at :246, so the dangling reference is resolved.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "grep -q 'bibitem{Israel1986}' papers/L3/paper_draft.tex && grep -q 'cite{Israel1986}' papers/L3/paper_draft.tex",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-06-08-2239-internal-adversarial:L2:6.2",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. The abstract now scopes the three textbook topology results as commentary on the bordism-group identification, splits the machine-checked algebraic half from the single topological input carried as a disclosed tracked hypothesis, and names the same group as the body, so the abstract-vs-body group mismatch is gone.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "python3 -c \"import re,sys;t=re.sub(r'\\\\s+',' ',open('papers/L2/paper_draft.tex').read());sys.exit(0 if 'enter only as commentary on the separate bordism-group identification' in t else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-06-08-2239-internal-adversarial:L2:9.1",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. Both sites (paper_draft.tex:74 and :389) now use the axiomcount macro instead of a hardcoded axiom-count literal, so the figure is derived and cannot drift out of sync with the substrate.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "grep -q 'axiomcount' papers/L2/paper_draft.tex",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-06-08-2314-internal-adversarial:L2:4.1",
+      "status": "fixed",
+      "evidence": "STALE, AND IT WAS NEVER AN L2 DEFECT. Both papers now source the Mathlib commit from the same canonical macro (docs/counts.tex mathlibrev), so divergence is structurally impossible. ⚠️ The review itself said \"No L2 edit required, the defect is on the D2 side, this does not block the L2 gate\" — yet it was filed as an open BLOCKING L2 finding and has counted against L2 ever since. That is a mis-targeted filing, not a manuscript defect, and it is worth noticing that nothing in the pipeline catches a finding filed against the wrong bundle.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "grep -q 'mathlibrev' papers/L2/paper_draft.tex && grep -q 'mathlibrev' papers/D2/paper_draft.tex",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:L3:4.2",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. Both Expected legs landed: the draft describes a 2-conjunct structural partition and points at the substantive biconditional lift sakharov_iff_horizon_crooks, which exists at CrooksAnalogHawking/BiconditionalReformulation.lean:158. ⚠️ The adjudicating agent proposed a verify searching for the RAW underscore form, which fails because LaTeX escapes them as backslash-underscore — the verdict was right but its verify was vacuous-by-absence. Corrected to the escaped form before closing.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "python3 -c \"import re,sys;t=re.sub(r'\\\\s+',' ',open('papers/L3/paper_draft.tex').read());sys.exit(0 if 'structural partition' in t and r'sakharov\\_iff\\_horizon\\_crooks' in t else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
     }
   ]
 }
