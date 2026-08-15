@@ -179,13 +179,42 @@ a `/` boundary, so a single code-hosting repository is reachable without grantin
 host. **Never promote a code-hosting host to a bare `_WHITELIST` entry** — it serves arbitrary
 user-controlled content, a far broader grant than a prior-art check needs.
 
-⚠️ **Three places name scholarly domains and only one enforces.** `_WHITELIST` is the authority.
-`.claude/settings.local.json`'s `WebFetch(domain:…)` entries are a strict subset and are not the
-gate. `agents/research-scout.md` carries **none, deliberately** — an earlier revision embedded a
-list that drifted from the guard, and the agent now states that it does not hold the whitelist
-and must not reason from a remembered one. In the recorded failure that drift both refused a
-sanctioned fetch and downgraded primary evidence to orientation-grade. A fetch that returns
-content was sanctioned; the agent judges the **source**, not the domain.
+⚠️ **`_WHITELIST` is the ONLY whitelist. Nothing else may enumerate domains.**
+
+`agents/research-scout.md` carries none, deliberately — an earlier revision embedded a list that
+drifted from the guard, and the agent now states that it does not hold the whitelist and must not
+reason from a remembered one. In the recorded failure that drift both refused a sanctioned fetch
+and downgraded primary evidence to orientation-grade. A fetch that returns content was
+sanctioned; the agent judges the **source**, not the domain.
+
+`.claude/settings.local.json` carries **no `WebFetch(domain:…)` entries — and no bare `WebFetch`
+grant either.** Both are wrong, for opposite reasons, and the second is the dangerous one.
+
+Three layers act on a fetch, and only one of them is always present:
+
+| layer | present when | effect |
+|---|---|---|
+| the harness **auto classifier** | always | judges each call on its merits |
+| `permissions.allow` | `.claude/settings.local.json` exists for that checkout | pre-approves, **bypassing the classifier** |
+| this guard | the plugin is enabled for that checkout | denies off-whitelist; fail-closed |
+
+`enabledPlugins` lives in `.claude/settings.local.json`, which is per-machine and uncommitted, so
+**the guard is opt-in per checkout, not ambient**. A blanket `WebFetch` grant would therefore trade an
+always-on judgment layer for a conditionally-loaded one — strictly worse wherever the plugin is
+not enabled. Domain-scoped entries are the milder error: under an auto-approving mode the
+classifier already permits benign scholarly reads, so they enable nothing the classifier would
+not, while duplicating a list that drifts below the guard's and cannot deny anything (the block
+is `allow`-only). Delete them; add nothing in their place.
+
+⚠️ **A permission grant is not capability.** Measured 2026-08-15: one domain sat in
+`permissions.allow` and not in `_WHITELIST`. Granting it never made it reachable — the guard
+denied it, verified by fetching it — so the grant had never once worked. If a domain is wanted,
+it goes in `_WHITELIST`; nowhere else confers access.
+
+**Citation quality is not enforced here.** Fetching a code host for prior art is legitimate;
+*citing* it as a source is a different question, owned by the citation checks and the claims and
+adversarial reviewers. Filtering the fetch layer to police what may be cited is a category error,
+and is how the settings subset came to exist and then drift unnoticed.
 
 Adding an entry: name the *target* in the comment rather than the category, so a later reader
 can retire the grant once that target is acquired instead of inheriting an unexplained
