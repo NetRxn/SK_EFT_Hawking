@@ -857,9 +857,15 @@ codebase and must not be renumbered.**
     `scripts/back_fill_primary_sources.py` (sidecar state
     `docs/primary_sources_state.json`) and promoted into the registry by
     `scripts/promote_primary_sources.py`. Enforced by `citation_primary_sources_present`, mandatory
-    at every Stage 13. **Exempt:** in-prep self-cites
-    (`inprep: True`), and canonical-textbook or pre-DOI references (entries with
-    `primary_source_path`, `doi` and `arxiv` all `None`) verified via secondary academic citations.
+    at every Stage 13. **Exempt:** in-prep self-cites (`inprep: True`), and any entry that
+    **DECLARES** a non-cacheable reference class — `citation_class` ∈ {`textbook`, `pre_arxiv`,
+    `software`} plus an `exempt_reason` naming the verification pathway (ADR-014 D7).
+    ⚠️ **The exemption is claimed, never inferred from absent metadata.** Until 2026-08-15 it
+    fired on `primary_source_path`, `doi` and `arxiv` all being `None` — a proxy every unfinished
+    entry satisfies, which paid entries to stay empty and made recording a textbook's DOI cost it
+    the exemption. An entry with no identifiers and no declared class is now `undeclared_class`:
+    ratcheted against `CITATION_UNDECLARED_CLASS_CEILING`, not exempt. The declaration excuses
+    only ABSENCE — a declared entry that does hold a cache is still verified against it.
 
 12. **Provenance DOIs resolve to the registry.** Every DOI in a `PARAMETER_PROVENANCE` source
     resolves to a `CITATION_REGISTRY` bibkey, and every bibkey in a `cited_bibkeys` field exists.

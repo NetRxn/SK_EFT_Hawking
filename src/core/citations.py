@@ -1655,7 +1655,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper17_dark_sector/paper_draft.tex'],
         'provides': [],
-        'notes': 'RVM with nu ~ 10^-3 DESI-compatible. User verify DOI + arXiv.',
+        'notes': 'RVM with nu ~ 10^-3 DESI-compatible. User verify DOI + arXiv -- OPEN TODO, and until it lands this entry is `undeclared_class` (ADR-014 D7), never exempt. An unfinished entry used to read as a canonical-textbook exemption; it no longer does.',
     },
     'VanWaerbeke2025': {
         'authors': 'Van Waerbeke, L., Zhitnitsky, A. R.',
@@ -12517,7 +12517,7 @@ CITATION_REGISTRY = {
         'doi': None, 'arxiv': None, 'doi_verified': False, 'inprep': False,
         'primary_source_path': None,
         'used_in': ['papers/D10/paper_draft.tex'], 'provides': [],
-        'notes': 'arXiv:2110.01320; ID + authors verified by D10 Stage-13 adversarial review 2026-06-30. ITP-ecosystem honest-situating ref; PDF off egress whitelist; exempt.',
+        'notes': 'arXiv:2110.01320; ID + authors verified by D10 Stage-13 adversarial review 2026-06-30. ITP-ecosystem honest-situating ref. NOT EXEMPT (ADR-014 D7): the arXiv id above belongs in the `arxiv` field and the source needs caching. It sits in `undeclared_class` until then -- an under-populated entry, not a reference class.',
     },
     'coqq2022': {
         'authors': 'Zhou, L., Barthe, G., Strub, P.-Y., Liu, J., Ying, M.',
@@ -12539,7 +12539,7 @@ CITATION_REGISTRY = {
         'doi': None, 'arxiv': None, 'doi_verified': False, 'inprep': False,
         'primary_source_path': None,
         'used_in': ['papers/D10/paper_draft.tex'], 'provides': [],
-        'notes': 'arXiv:2510.08672; ID + authors verified + corrected by D10 Stage-13 review 2026-06-30 (Meiburg/Lessa/Soldati). The Lean PhysLib/QuantumInfo CPTP layer D10 builds on; PDF off egress whitelist; exempt.',
+        'notes': 'arXiv:2510.08672; ID + authors verified + corrected by D10 Stage-13 review 2026-06-30 (Meiburg/Lessa/Soldati). The Lean PhysLib/QuantumInfo CPTP layer D10 builds on. NOT EXEMPT (ADR-014 D7): the arXiv id above belongs in the `arxiv` field and the source needs caching. It sits in `undeclared_class` until then -- an under-populated entry, not a class.',
     },
     'isabelleCBO': {
         'authors': 'Rodríguez Caballero, J. M., Unruh, D.',
@@ -12548,7 +12548,7 @@ CITATION_REGISTRY = {
         'doi': None, 'arxiv': None, 'doi_verified': False, 'inprep': False,
         'primary_source_path': None,
         'used_in': ['papers/D10/paper_draft.tex'], 'provides': [],
-        'notes': 'arXiv:2512.05878; ID + title verified by D10 Stage-13 review 2026-06-30. ITP honest-situating ref; PDF off egress whitelist; exempt.',
+        'notes': 'arXiv:2512.05878; ID + title verified by D10 Stage-13 review 2026-06-30. ITP honest-situating ref. NOT EXEMPT (ADR-014 D7): the arXiv id above belongs in the `arxiv` field and the source needs caching. It sits in `undeclared_class` until then -- an under-populated entry, not a reference class.',
     },
     'datta1995': {
         'authors': 'Datta, S.',

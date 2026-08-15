@@ -212,15 +212,99 @@ class TestCitationPrimarySourcesPresent:
                       registry={"OurWork": {"inprep": True}})
         assert r.passed is True
 
-    def test_a_pre_doi_textbook_is_exempt(self, tmp_path, monkeypatch):
+    def test_a_DECLARED_textbook_is_exempt(self, tmp_path, monkeypatch):
         """Gilkey 1995 / Trautman 1973: verified via secondary academic citations
         because no downloadable primary source exists. Requiring a cache would make
-        the check unsatisfiable for a legitimate citation class."""
+        the check unsatisfiable for a legitimate citation class.
+
+        ⚠️ ADR-014 D7 — the exemption is now CLAIMED. Before, this test passed with the
+        `citation_class`/`exempt_reason` pair absent, because the three `None`s alone
+        bought the exemption. That is the defect: `notes` said "verified via secondary"
+        and no predicate ever read it."""
         r = self._run(tmp_path, monkeypatch, drafts={"D1": r"See \cite{Gilkey1995}."},
-                      registry={"Gilkey1995": {"primary_source_path": None,
-                                               "doi": None, "arxiv": None,
-                                               "notes": "verified via secondary"}})
+                      registry={"Gilkey1995": {
+                          "primary_source_path": None, "doi": None, "arxiv": None,
+                          "citation_class": "textbook",
+                          "exempt_reason": "CRC Press 2nd ed.; heat-kernel coefficients "
+                                           "verified via Vassilevich 2003 §4.",
+                          "notes": "verified via secondary"}})
         assert r.passed is True
+
+    def test_an_entry_that_is_merely_EMPTY_is_NOT_exempt(self, tmp_path, monkeypatch):
+        """THE DEFECT, STATED AS A TEST (ADR-014 D7). The identical entry with no
+        declaration is an entry nobody finished — not a textbook. It must land in
+        `undeclared_class`, never in the exempt population, and never in `cached`.
+
+        Under the replaced predicate this entry was indistinguishable from the one
+        above, which is how 74 auto-generated `\\bibitem` stubs read as deliberate
+        canonical-textbook exemptions."""
+        r = self._run(tmp_path, monkeypatch, drafts={"D1": r"See \cite{Nobody1999}."},
+                      registry={"Nobody1999": {"primary_source_path": None,
+                                               "doi": None, "arxiv": None,
+                                               "notes": "Auto-generated stub from "
+                                                        r"\bibitem block in `papers/x`"}})
+        det = {d.name: d for d in r.details}
+        assert "undeclared_class" in det, (
+            "an entry with no identifiers and no declared class was silently absorbed "
+            "somewhere else — absence is granting an exemption again")
+        assert "1 UNDECLARED-class" in det["summary"].message
+        assert "0 declared-class-exempt" in det["summary"].message
+
+    def test_an_unknown_citation_class_FAILS_rather_than_exempting(self, tmp_path,
+                                                                   monkeypatch):
+        """A typo must not quietly grant the exemption it misspells. This population is
+        declared and entirely ours to author, so unlike the acquisition-bound ones it can
+        be held to a hard failure."""
+        r = self._run(tmp_path, monkeypatch, drafts={"D1": r"See \cite{Typo1990}."},
+                      registry={"Typo1990": {"primary_source_path": None, "doi": None,
+                                             "arxiv": None, "citation_class": "textbok",
+                                             "exempt_reason": "a perfectly good reason "
+                                                              "of ample length here"}})
+        assert r.passed is False
+        assert "citation_class_invalid" in {d.name for d in r.details}
+
+    def test_a_declared_class_with_no_pathway_FAILS(self, tmp_path, monkeypatch):
+        """`exempt_reason` exists to carry the verification pathway. Restating the class
+        is not a pathway, and a one-word placeholder would make the field as worthless as
+        `notes` — which the stub generator populates for every entry."""
+        r = self._run(tmp_path, monkeypatch, drafts={"D1": r"See \cite{Thin1990}."},
+                      registry={"Thin1990": {"primary_source_path": None, "doi": None,
+                                             "arxiv": None, "citation_class": "textbook",
+                                             "exempt_reason": "textbook"}})
+        assert r.passed is False
+        assert "citation_class_invalid" in {d.name for d in r.details}
+
+    def test_a_DECLARED_textbook_with_a_DOI_KEEPS_its_exemption(self, tmp_path,
+                                                               monkeypatch):
+        """THE INCENTIVE, WITH ITS SIGN CORRECTED. Under the replaced predicate, recording
+        a textbook's DOI REMOVED its exemption and demanded a cache — so 17 DOIs sat in
+        `notes` prose rather than in the `doi` field. The class decides now, so filling the
+        entry in costs nothing."""
+        r = self._run(tmp_path, monkeypatch, drafts={"D1": r"See \cite{Kato1995}."},
+                      registry={"Kato1995": {
+                          "primary_source_path": None, "arxiv": None,
+                          "doi": "10.1007/978-3-642-66282-9",
+                          "citation_class": "textbook",
+                          "exempt_reason": "Springer 2nd ed.; canonical operator-theory "
+                                           "monograph, no cacheable full text."}})
+        assert r.passed is True, [(d.name, d.message) for d in r.details if not d.passed]
+        assert "1 declared-class-exempt" in {d.name: d for d in r.details}["summary"].message
+
+    def test_a_cache_is_checked_even_when_the_class_is_declared(self, tmp_path,
+                                                               monkeypatch):
+        """The declaration excuses ABSENCE, never verification. Ordering the exemption
+        ahead of the cache lookup — as the replaced code did — meant a declared entry
+        could never be checked even once its source was acquired."""
+        r = self._run(tmp_path, monkeypatch, drafts={"D1": r"See \cite{Held1990}."},
+                      registry={"Held1990": {"primary_source_path": None, "doi": None,
+                                             "arxiv": None, "citation_class": "textbook",
+                                             "exempt_reason": "a perfectly good reason "
+                                                              "of ample length here"}},
+                      cached=("Held1990",))
+        summary = {d.name: d for d in r.details}["summary"].message
+        assert "1 cached" in summary and "0 declared-class-exempt" in summary, (
+            f"a declared entry that HOLDS a cache was routed to the exemption instead of "
+            f"being verified: {summary}")
 
     def test_a_bibkey_absent_from_the_registry_fails(self, tmp_path, monkeypatch):
         r = self._run(tmp_path, monkeypatch, drafts={"D1": r"See \cite{Unknown2020}."},
@@ -614,3 +698,239 @@ class TestAbstractIsNotFullText:
             and e["primary_source_path"].endswith(".abstract.txt")
             and (ws / e["primary_source_path"]).is_file())
         assert on_disk > 0, "no abstract-fidelity cache files on disk — the pin measures nothing"
+
+
+class TestExemptionIsClaimedNotInferred:
+    """ADR-014 D7 — production-seeded, against the real `src/core/citations.py`.
+
+    The replaced predicate exempted an entry from needing a primary-source cache when
+    `primary_source_path is None AND doi is None AND arxiv is None`. That is a PROXY for
+    "canonical pre-DOI textbook" satisfied by ANY entry nobody finished, and the branch's
+    own comment claimed the entries were "verified via secondary academic citations per
+    `notes`" while the predicate never read `notes`.
+
+    ⚠️ WHY THESE ARE PRODUCTION SEEDS AND NOT FIXTURES (guide §2.4). A fixture registry
+    proves the classification logic; it cannot prove the *live corpus* is on the right
+    side of it. The measured population is what makes the defect severe — 129 of 544 cited
+    bibkeys took the branch, 74 with an auto-generated `\\bibitem` stub for `notes` — so
+    the pins below read the real registry.
+
+    ⚠️ THE ADVERSARIAL QUESTION, ASKED BEFORE WRITING THEM: which of these still passes
+    with the old predicate restored? Two do not, and they are the point —
+    `test_seeding_a_DOI_onto_a_declared_textbook_KEEPS_it_exempt` (old predicate: the DOI
+    revokes the exemption, no cache exists, the check goes red) and
+    `test_seeding_AWAY_a_declaration_turns_the_check_RED` (old predicate: the three Nones
+    exempt it again, the check stays green). A test both predicates pass is not a guard.
+
+    Crash-safety is `scripts/seed_journal.py`'s, not a local `try/finally`: a `finally`
+    does not run on SIGKILL, and a killed seeding run used to leave the mutation in the
+    tracked tree.
+    """
+
+    REG = SK_ROOT / "src" / "core" / "citations.py"
+
+    # ── seeding helpers ──────────────────────────────────────────────────────────
+    @staticmethod
+    def _entry_span(src: str, bibkey: str) -> tuple[int, int]:
+        """[start, end) line indices of `    '<bibkey>': { ... },` in the registry source."""
+        lines = src.splitlines(keepends=True)
+        start = next(i for i, ln in enumerate(lines) if ln == f"    '{bibkey}': {{\n")
+        end = next(i for i in range(start + 1, len(lines))
+                   if lines[i].rstrip("\n") == "    },")
+        return start, end
+
+    @classmethod
+    def _edit_entry(cls, src: str, bibkey: str, fn) -> str:
+        lines = src.splitlines(keepends=True)
+        lo, hi = cls._entry_span(src, bibkey)
+        block = fn(lines[lo:hi + 1])
+        assert block != lines[lo:hi + 1], (
+            f"the seed for {bibkey} changed nothing — a mutation that fails to apply "
+            f"proves nothing at all")
+        return "".join(lines[:lo] + block + lines[hi + 1:])
+
+    @staticmethod
+    def _drop_keys(block: list[str], keys: set[str]) -> list[str]:
+        """Drop `'<key>': ...` and its wrapped continuation lines from an entry block."""
+        import re as _re
+        key_re = _re.compile(r"^        '(\w+)':")
+        out, dropping = [], False
+        for ln in block:
+            m = key_re.match(ln)
+            if m:
+                dropping = m.group(1) in keys
+            elif ln.rstrip("\n") == "    },":
+                dropping = False
+            if not dropping:
+                out.append(ln)
+        return out
+
+    @staticmethod
+    def _reloaded_result():
+        """Re-import the seeded registry, then run the check against it.
+
+        The check does `from src.core.citations import CITATION_REGISTRY` per call, so a
+        reload of that module is what makes a source-level seed visible — writing the file
+        alone would leave the already-imported dict in place and the "mutation" would be
+        inert."""
+        import importlib
+        from src.core import citations as _c
+        importlib.reload(_c)
+        from validation.checks import citations as C
+        return C.check_citation_primary_sources_present()
+
+    @staticmethod
+    def _restore_registry_module():
+        import importlib
+        from src.core import citations as _c
+        importlib.reload(_c)
+
+    @staticmethod
+    def _summary(res) -> str:
+        return {d.name: d for d in res.details}["summary"].message
+
+    # ── the population, measured on the live corpus ──────────────────────────────
+    def test_the_declared_population_is_non_empty_and_carries_its_pathway(self):
+        """Guard the seam (§2.5). A vocabulary nothing uses is a mechanism that cannot
+        fire, and an `exempt_reason` nobody wrote is `notes` under a new name."""
+        from src.core.citations import CITATION_REGISTRY as C
+        declared = {k: v for k, v in C.items() if v.get("citation_class") is not None}
+        assert len(declared) >= 50, (
+            f"only {len(declared)} entries declare a citation_class — the migration has "
+            f"been reverted or the field renamed")
+        bad_class = {k: v["citation_class"] for k, v in declared.items()
+                     if v["citation_class"] not in ck._EXEMPT_CITATION_CLASSES}
+        assert not bad_class, f"entries declare an unknown citation_class: {bad_class}"
+        thin = [k for k, v in declared.items()
+                if len(str(v.get("exempt_reason") or "").strip())
+                < ck._EXEMPT_REASON_MIN_CHARS]
+        assert not thin, f"declared entries with no usable exempt_reason: {thin}"
+
+    def test_the_DISCRIMINATOR_is_the_declaration_not_the_absence_of_identifiers(self):
+        """⚠️ THE LEG THAT SURVIVES A DEGRADED PREDICATE. "Some entries are exempt" and
+        "the check is green" are both still true if the exemption reverts to keying on
+        absent metadata. What is NOT true under that revert: exempt entries that HOLD an
+        identifier. Pin exactly that — the two populations must not coincide."""
+        from src.core.citations import CITATION_REGISTRY as C
+        declared = {k: v for k, v in C.items() if v.get("citation_class") is not None}
+        with_id = [k for k, v in declared.items()
+                   if v.get("doi") is not None or v.get("arxiv") is not None]
+        assert len(with_id) >= 15, (
+            f"only {len(with_id)} declared-exempt entries carry an identifier. Under the "
+            f"replaced predicate this number was necessarily ZERO — recording a DOI cost "
+            f"the entry its exemption. If it has fallen back toward zero, the exemption "
+            f"is being inferred from absence again.")
+
+    def test_the_undeclared_ceiling_has_ZERO_headroom(self):
+        """Guide §2.3 — a ceiling above the live population cannot fire. The ratchet's job
+        is to red the check the moment a 79th undeclared entry appears, which it cannot do
+        with slack."""
+        from src.core.constants import CITATION_UNDECLARED_CLASS_CEILING as CEIL
+        res = ck.check_citation_primary_sources_present()
+        n = int(self._summary(res).split(" UNDECLARED-class")[0].split("/ ")[-1])
+        assert n == CEIL, (
+            f"{n} undeclared entries against a ceiling of {CEIL}. Slack here is headroom "
+            f"for exactly the defect the ceiling records; lower it to {n}.")
+
+    # ── production seeds ─────────────────────────────────────────────────────────
+    def test_seeding_a_DOI_onto_a_declared_textbook_KEEPS_it_exempt(self):
+        """FIRES ON THE OLD PREDICATE. `Gilkey1995` is a declared textbook with no cache
+        anywhere on disk. Give it a DOI: under the replaced predicate it loses the
+        exemption, finds no cache, and lands in the blocking `need cache` bucket. Under
+        the declaration it is untouched — which is what makes filling an entry in free."""
+        from seed_journal import seeded_mutation
+        orig = self.REG.read_text(encoding="utf-8")
+        before = self._summary(ck.check_citation_primary_sources_present())
+        seeded = self._edit_entry(
+            orig, "Gilkey1995",
+            lambda b: [ln.replace("'doi': None,", "'doi': '10.9999/seeded-by-test',")
+                       for ln in b])
+        try:
+            with seeded_mutation(
+                    self.REG, seeded,
+                    reason="ADR-014 D7: an identifier must not revoke a DECLARED "
+                           "textbook's exemption"):
+                res = self._reloaded_result()
+                after = self._summary(res)
+                assert res.passed is True, (
+                    f"recording a DOI on a declared textbook broke the check — the "
+                    f"exemption is keyed on absent metadata again: "
+                    f"{[(d.name, d.message) for d in res.details if not d.passed]}")
+                assert " 0 need cache " in after, (
+                    f"the seeded DOI pushed the entry into the cache-required population, "
+                    f"which is the replaced predicate's behaviour exactly: {after}")
+                assert (after.split("declared-class-exempt")[0]
+                        == before.split("declared-class-exempt")[0]), (
+                    f"the exempt population moved when only an identifier changed:\n"
+                    f"  before {before}\n  after  {after}")
+        finally:
+            self._restore_registry_module()
+
+    def test_seeding_AWAY_a_declaration_turns_the_check_RED(self):
+        """FIRES ON THE SEEDED DEFECT, and on the old predicate too. Strip `citation_class`
+        and `exempt_reason` from a real declared textbook and it becomes what it would have
+        been all along: an entry with no identifiers and nothing said about it. That is one
+        over the frozen ceiling, so the check must go red.
+
+        Under the replaced predicate the stripped entry is exempt again and the check stays
+        GREEN — this test is the one that cannot pass both ways."""
+        from seed_journal import seeded_mutation
+        from src.core.constants import CITATION_UNDECLARED_CLASS_CEILING as CEIL
+        orig = self.REG.read_text(encoding="utf-8")
+        seeded = self._edit_entry(
+            orig, "KobayashiNomizu1963",
+            lambda b: self._drop_keys(b, {"citation_class", "exempt_reason"}))
+        try:
+            with seeded_mutation(
+                    self.REG, seeded,
+                    reason="ADR-014 D7: an undeclared entry must not inherit the "
+                           "textbook exemption"):
+                res = self._reloaded_result()
+                det = {d.name: d for d in res.details}
+                # Prove the seed reached the imported object, not just the file. The
+                # message's key sample is truncated to eight, so it cannot carry this.
+                from src.core.citations import CITATION_REGISTRY as _seeded_reg
+                assert _seeded_reg["KobayashiNomizu1963"].get("citation_class") is None, (
+                    "the seed did not reach the imported registry — the reload is inert "
+                    "and this test proves nothing")
+                assert res.passed is False, (
+                    "stripping an entry down to no-metadata left the check GREEN — "
+                    "absence is buying the exemption again")
+                assert det["undeclared_class"].passed is False
+                assert f"{CEIL + 1} cited bibkey(s)" in det["undeclared_class"].message
+        finally:
+            self._restore_registry_module()
+
+    def test_seeding_a_TYPO_class_into_production_FAILS_rather_than_exempting(self):
+        """A misspelled class must not fall through to a silent exemption — that would
+        rebuild the original defect inside the mechanism meant to replace it."""
+        from seed_journal import seeded_mutation
+        orig = self.REG.read_text(encoding="utf-8")
+        seeded = self._edit_entry(
+            orig, "MTW1973",
+            lambda b: [ln.replace("'citation_class': 'textbook',",
+                                  "'citation_class': 'textbok',") for ln in b])
+        try:
+            with seeded_mutation(
+                    self.REG, seeded,
+                    reason="ADR-014 D7: an unknown citation_class is a hard failure"):
+                res = self._reloaded_result()
+                det = {d.name: d for d in res.details}
+                assert res.passed is False
+                assert "citation_class_invalid" in det
+                assert "MTW1973" in det["citation_class_invalid"].message
+        finally:
+            self._restore_registry_module()
+
+    def test_the_production_registry_is_restored_byte_identical(self):
+        """`seeded_mutation` asserts this internally; assert it here too, because every
+        seed above edits a TRACKED source file. A restore that silently drifted would ship
+        the seed."""
+        import subprocess
+        out = subprocess.run(
+            ["git", "diff", "--stat", "--", "src/core/citations.py"],
+            cwd=SK_ROOT, capture_output=True, text=True).stdout
+        assert "citations.py" not in out or "citation_class" in self.REG.read_text(
+            encoding="utf-8"), "the registry looks mutated without its declarations"
+        assert "10.9999/seeded-by-test" not in self.REG.read_text(encoding="utf-8"), (
+            "a seeded DOI survived in the tracked registry — the restore did not run")

@@ -1,6 +1,6 @@
 # ADR-014 — Source acquisition and citation fidelity: holding a cache is not holding the source
 
-- **Status:** **ACCEPTED + IMPLEMENTED (2026-08-15)**, except Decision 5. Decisions 1–4 shipped:
+- **Status:** **ACCEPTED + IMPLEMENTED (2026-08-15)**, except Decision 5. Decisions 1–4 and 7 shipped:
   the derived register and its curated overlay; the egress whitelist, extended the same day to
   every publisher the citation corpus resolves to and made repeatable by
   [`scripts/egress_policy.py`](../../scripts/egress_policy.py); and the fidelity dimension on
@@ -169,6 +169,73 @@ mechanism:
 - **Adding one is a command**, [`scripts/egress_policy.py`](../../scripts/egress_policy.py), not
   a remembered sequence.
 
+### 7. The textbook exemption is CLAIMED on the entry, never inferred from absent metadata
+
+Added 2026-08-15, second pass. Same check, same defect class as Decision 1 — a **proxy standing
+in for the property the check exists to assert** — and it is the more consequential of the two,
+because this proxy is *satisfied by neglect*.
+
+The exemption branch read:
+
+```python
+if (entry.get("primary_source_path") is None
+        and entry.get("doi") is None
+        and entry.get("arxiv") is None):
+    textbook_exempt.append(bibkey); continue
+```
+
+Its own comment said "canonical textbook references … verified via secondary academic citations
+per `notes`", and the predicate **never read `notes`**. So the exemption was earned by having no
+metadata. Recording a textbook's DOI *removed* its exemption and demanded a cache; leaving the
+entry blank kept it green. An entry nobody finished was indistinguishable from a deliberate
+exemption.
+
+**Measured at HEAD 2026-08-15** over the 129 exempt cited bibkeys — every figure re-derived, and
+the figures in the filed finding (150 / 85) had already drifted:
+
+| population | n | evidence |
+|---|---|---|
+| exempt, `notes` is a **human-authored rationale** | 55 | prose naming the class and the pathway |
+| exempt, `notes` is an **auto-generated `\bibitem` stub** | 74 | literally `"Auto-generated stub from \bibitem block in …"` |
+| **of the 55, genuinely a non-cacheable reference class** | 51 | textbook 24 · pre-arXiv 22 · software 5 |
+| **of the 55, under-populated rather than exempt** | 4 | `isabelleCBO`, `leanQI2025`, `survey2021` carry an arXiv id **in prose** with `arxiv: None`; `Sola2023`'s note is the TODO `"User verify DOI + arXiv"` |
+| exempt entries that already hold a cache on disk | **0 of 129** | this is why the repair cannot be a hard gate |
+
+That last row is the binding constraint. Not one of the 129 has a cache, so revoking the
+exemption drops every revoked entry straight into the blocking `not_cached` bucket. The honest
+repair therefore cannot be "demand a cache".
+
+**Decision.** Exemption is keyed on a **declared** field, `citation_class`, over a closed
+vocabulary — `textbook` · `pre_arxiv` · `software` — each requiring a dedicated
+`exempt_reason` string. Three properties follow, and each is the inverse of the defect:
+
+1. **A declaration cannot be earned by neglect.** No generator writes `citation_class`; the stub
+   generator writes `notes`, which is why `notes` is worthless as the discriminator — it is
+   non-empty for all 129.
+2. **Identifiers no longer cost anything.** The class decides, so a declared textbook keeps its
+   exemption *with* a DOI recorded. Demonstrated in the same commit: 17 DOIs sitting in prose
+   `notes` were lifted into the `doi` field, and all 17 stay exempt. Under the old predicate all
+   17 would have hard-failed — which is exactly why nobody lifted them.
+3. **The declaration excuses absence, never verification.** The cache lookup runs *first*; the
+   class is consulted only when no cache was found. A declared textbook that does acquire a cache
+   still gets the Decision-1 fidelity flag and the header-agreement comparison.
+
+**The undeclared residue is named and ratcheted, not exempted.** An entry with no identifiers and
+no `citation_class` lands in a bucket called `undeclared_class` — the honest state, "we cannot
+even ask the cache question of this entry" — counted against
+`CITATION_UNDECLARED_CLASS_CEILING` in `src/core/constants.py`, frozen at the measured value with
+zero headroom and permitted only to shrink. This is a ratchet rather than a flag because, unlike
+Decision 4's abstract population, the remedy here is **authoring, not money**.
+
+A misspelled or unknown `citation_class`, or a declared class with no `exempt_reason`, is a
+**hard failure**. That population is small, declared, and entirely within our authorship, so
+there is no acquisition queue to stall behind.
+
+**Explicitly rejected: back-filling `citation_class` onto everything currently exempt.** That
+reproduces the defect with extra steps, and the filed finding says so in its own Fix paragraph.
+The 74 stubs and the 4 under-populated entries were migrated by **nobody**; they sit in the
+ratchet until someone establishes what they actually are.
+
 ---
 
 ## Consequences
@@ -181,6 +248,12 @@ mechanism:
 - The `abstract`-counts-as-present hole existed for the life of the check. Every prior green
   run of `citation_primary_sources_present` should be read as "a file was present", not "the
   source was held".
+- Per Decision 7, that reading is narrower still: a prior green run means "a file was present
+  **for the entries the check asked about**". The textbook exemption silenced 129 of 544 cited
+  bibkeys, so roughly a quarter of the corpus was never asked at all.
+- Decision 7 leaves a **78-entry authoring debt** — 74 `\bibitem` stubs plus 4 under-populated
+  entries — visible under its own name and frozen against growth. Retiring it is bibliographic
+  work per entry, not a bulk operation, and the ratchet is what keeps it from being closed by one.
 
 ## Alternatives considered
 

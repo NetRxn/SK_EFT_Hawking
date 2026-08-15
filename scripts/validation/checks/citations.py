@@ -18,6 +18,15 @@ field, so blanking one field cannot opt a bibkey out. A declared
 a silent skip — that skip is how the whole `Phase-6C`/`Phase-6c` cohort went
 unchecked on any case-sensitive filesystem while the gate reported PASS.
 
+⚠️ The same check's EXEMPTION had the same shape and was worse (ADR-014 D7): it fired
+on `primary_source_path is None AND doi is None AND arxiv is None`, so an entry earned
+the "canonical textbook" exemption by having no metadata at all. 129 of 544 cited
+bibkeys took it, 74 of them carrying an auto-generated `\bibitem` stub for `notes` —
+i.e. a quarter of the corpus was never asked the cache question, and adding a DOI to a
+textbook was the thing that made the check demand a cache. Exemption is now CLAIMED via
+`citation_class` + `exempt_reason`; absence buys nothing and is ratcheted under its own
+name. Read `_EXEMPT_CITATION_CLASSES` before touching the classification loop.
+
 ⚠️ Year stays ADVISORY on purpose (Semantic Scholar returns `year: null` for the
 Wiley records), and the venue comparison is abbreviation- and first-page-tolerant.
 Both tolerances are pinned by tests; tightening either ships false positives on
@@ -480,9 +489,39 @@ def _venue_mismatch(venue_line: str, entry: dict) -> str | None:
     return "; ".join(reasons) if reasons else None
 
 
+# ── Declared reference classes (ADR-014 D7) ────────────────────────────────────
+#
+# ⚠️ THE EXEMPTION IS CLAIMED, NEVER INFERRED FROM ABSENCE. Until 2026-08-15 the
+# textbook exemption fired on `primary_source_path is None AND doi is None AND arxiv
+# is None` — a PROXY for "canonical pre-DOI textbook" that ANY unfinished entry
+# satisfies. The incentive ran backwards: recording a textbook's DOI REMOVED its
+# exemption and demanded a cache, so leaving the entry blank was the way to stay
+# green. 129 of 544 cited bibkeys took that branch and 74 of them carried an
+# auto-generated `\bibitem` stub for `notes` — i.e. nobody had ever said what they
+# were. The branch's own comment claimed the entries were "verified via secondary
+# academic citations per `notes`", and the predicate never read `notes`.
+#
+# `notes` is NOT the fix either: the stub generator writes it, so it is non-empty for
+# all 129 and discriminates nothing. The declaration has to live in a field no
+# generator produces.
+_EXEMPT_CITATION_CLASSES: dict[str, str] = {
+    "textbook":  "book or monograph — no downloadable full-text primary source to cache",
+    "pre_arxiv": "journal/conference paper predating arXiv deposit or DOI assignment",
+    "software":  "tool or library whose canonical reference is a commit hash or tool paper",
+}
+
+#: A floor on EFFORT, not a proof of content — whether an `exempt_reason` is *true* is the
+#: reviewer layer's question (`claims-reviewer`, `adversarial-reviewer`), not a predicate's.
+#: What it does buy: `exempt_reason: "textbook"` — restating the class instead of giving the
+#: pathway — does not clear it.
+_EXEMPT_REASON_MIN_CHARS = 25
+
+
 @register_check("citation_primary_sources_present",
-                "Every cited external bibitem has a primary-source cache, and an "
-                "abstract-only one is flagged rather than counted as the source")
+                "Every cited external bibitem has a primary-source cache, an "
+                "abstract-only one is flagged rather than counted as the source, and "
+                "exemption is claimed by a declared citation_class rather than inferred "
+                "from absent metadata")
 def check_citation_primary_sources_present() -> CheckResult:
     """For every \\cite{<bibkey>} in any papers/*/paper_draft.tex, verify a
     primary-source artifact exists on disk under
@@ -490,13 +529,28 @@ def check_citation_primary_sources_present() -> CheckResult:
 
     `inprep: True` entries are exempt (no external primary source to cache).
 
-    Textbook / pre-DOI references with `primary_source_path: None` AND
-    `doi: None` AND `arxiv: None` are also exempt — these are canonical
-    textbook citations (e.g. Gilkey 1995 CRC heat-equation textbook;
-    Trautman 1973 pre-DOI Symposia Mathematica volume) verified via
-    secondary academic citations rather than via a downloadable primary
-    source. The registry entry's `notes` field documents the secondary-
-    citation pathway. Phase 6i Wave 6 addition.
+    A reference class with no cacheable primary source is exempt only when the entry
+    DECLARES it: `citation_class` ∈ `_EXEMPT_CITATION_CLASSES` plus a dedicated
+    `exempt_reason` naming the verification pathway (ADR-014 D7). Three consequences,
+    each the inverse of the defect this replaced:
+
+    * **The cache lookup runs FIRST.** The declaration excuses ABSENCE, never
+      verification — a declared textbook that does hold a cache still gets the
+      fidelity flag and the header-agreement comparison.
+    * **Identifiers are free.** The class decides, so a declared textbook keeps its
+      exemption with a DOI recorded. 17 DOIs that had been parked in `notes` prose
+      precisely because recording them would have hard-failed the entry were lifted
+      into the `doi` field in the same commit, and all 17 stay exempt.
+    * **Absence buys nothing.** An entry with no identifiers and no declared class is
+      `undeclared_class` — the honest state — ratcheted against
+      `CITATION_UNDECLARED_CLASS_CEILING` with zero headroom. Blanking a field to dodge
+      the cache requirement now pushes that count OVER its ceiling and turns the check
+      red, which is the old incentive with its sign corrected.
+
+    An unknown `citation_class`, or a declared class without a usable `exempt_reason`,
+    is a hard FAIL — that population is small, declared, and entirely ours to author,
+    so unlike the acquisition-bound populations there is no purchase queue to stall
+    behind.
 
     Bibkeys absent from CITATION_REGISTRY surface as FAIL — that's already a
     CitationIntegrity violation, not a Wave 1 concern, but worth reporting.
@@ -575,7 +629,9 @@ def check_citation_primary_sources_present() -> CheckResult:
     # Second pass: classify each cited bibkey
     missing_from_registry: list[str] = []
     inprep_exempt: list[str] = []
-    textbook_exempt: list[str] = []
+    class_exempt: list[tuple[str, str]] = []           # (key, citation_class) — ADR-014 D7
+    undeclared_class: list[str] = []                   # (key) — ADR-014 D7, ratcheted
+    bad_class: list[tuple[str, object]] = []           # (key, offending value) — hard fail
     cached: list[str] = []
     not_cached: list[tuple[str, str, list[str]]] = []  # (key, phase, papers)
     abstract_only: list[tuple[str, list[str]]] = []    # (key, papers) — ADR-014 D1
@@ -588,15 +644,14 @@ def check_citation_primary_sources_present() -> CheckResult:
         if entry.get("inprep"):
             inprep_exempt.append(bibkey)
             continue
-        # Textbook / pre-DOI exemption (Wave-6): canonical textbook
-        # references with no DOI / no arXiv / no primary_source_path,
-        # verified via secondary academic citations per `notes`.
-        if (entry.get("primary_source_path") is None
-                and entry.get("doi") is None
-                and entry.get("arxiv") is None):
-            textbook_exempt.append(bibkey)
-            continue
-        # Resolve phase: prefer canonical (used_in[0] paper), else fallback
+
+        # ── 1. Does a cache exist? ────────────────────────────────────────────────
+        # DELIBERATELY FIRST, ahead of any exemption (ADR-014 D7). A declaration
+        # excuses the ABSENCE of a source, never its verification: a declared textbook
+        # that does hold a cache must still face the fidelity flag below and the
+        # header-agreement half further down. Ordering the exemption first — as the
+        # replaced code did — meant a declared entry could never be checked even once
+        # it was acquired.
         phase = bibkey_phase(entry) or FALLBACK
         target_dir = LIT_SEARCH / phase / "primary-sources"
         found = False
@@ -616,14 +671,50 @@ def check_citation_primary_sources_present() -> CheckResult:
                 break
         if found:
             cached.append(bibkey)
-        else:
-            not_cached.append((bibkey, phase, sorted(usage[bibkey])))
+            continue
+
+        # ── 2. No cache. Is the exemption DECLARED? ───────────────────────────────
+        # Keyed on the declaration, NOT on identifier absence, so recording a DOI or an
+        # arXiv id on a genuine textbook no longer costs it the exemption. That is the
+        # whole repair: the previous predicate paid entries to stay empty.
+        klass = entry.get("citation_class")
+        if klass is not None:
+            if klass not in _EXEMPT_CITATION_CLASSES:
+                bad_class.append((bibkey, klass))
+                continue
+            reason = entry.get("exempt_reason")
+            if (not isinstance(reason, str)
+                    or len(reason.strip()) < _EXEMPT_REASON_MIN_CHARS):
+                bad_class.append((bibkey, f"{klass} (exempt_reason missing/too thin)"))
+                continue
+            class_exempt.append((bibkey, klass))
+            continue
+
+        # ── 3. No cache, no declaration. ──────────────────────────────────────────
+        # An entry with no identifiers either is an entry nobody finished. Calling it
+        # "textbook-exempt" is what let 74 auto-generated `\bibitem` stubs read as
+        # deliberate exemptions. It is `undeclared_class` — a defect population under
+        # its own name, ratcheted so it cannot grow — not `not_cached`, because
+        # demanding a cache for a reference whose CLASS is unknown asks the wrong
+        # question, and because zero of the 129 legacy entries hold one.
+        if (entry.get("primary_source_path") is None
+                and entry.get("doi") is None
+                and entry.get("arxiv") is None):
+            undeclared_class.append(bibkey)
+            continue
+        not_cached.append((bibkey, phase, sorted(usage[bibkey])))
 
     # Report
+    from src.core.constants import (
+        CITATION_UNDECLARED_CLASS_CEILING as _UNDECL_CEIL,
+    )
+
     n_cited = len(usage)
     n_cached = len(cached)
     n_inprep = len(inprep_exempt)
-    n_textbook = len(textbook_exempt)
+    n_declared = len(class_exempt)
+    n_undeclared = len(undeclared_class)
+    n_badclass = len(bad_class)
     n_missing = len(missing_from_registry)
     n_uncached = len(not_cached)
 
@@ -635,9 +726,53 @@ def check_citation_primary_sources_present() -> CheckResult:
         f"{n_cited} bibkeys cited across {len(paper_tex_files)} papers — "
         f"{n_cached} cached ({n_cached - n_abstract} full text, "
         f"{n_abstract} ABSTRACT ONLY) / {n_inprep} inprep-exempt / "
-        f"{n_textbook} textbook-exempt / "
+        f"{n_declared} declared-class-exempt / "
+        f"{n_undeclared} UNDECLARED-class (ceiling {_UNDECL_CEIL}) / "
         f"{n_uncached} need cache / {n_missing} missing-from-registry"
     ))
+
+    # ── ADR-014 D7: exemption is CLAIMED, not inferred from absence ───────────────
+    if bad_class:
+        all_pass = False
+        sample = ", ".join(f"{k}={v!r}" for k, v in bad_class[:6])
+        more = f" (and {n_badclass - 6} more)" if n_badclass > 6 else ""
+        details.append(Detail(
+            "citation_class_invalid", False,
+            f"{n_badclass} entr(ies) declare an unusable citation_class: {sample}{more}. "
+            f"Allowed: {', '.join(sorted(_EXEMPT_CITATION_CLASSES))}; each also needs an "
+            f"`exempt_reason` of at least {_EXEMPT_REASON_MIN_CHARS} characters naming the "
+            f"verification pathway. A typo must FAIL rather than quietly grant the exemption "
+            f"it misspells — this population is declared and entirely ours to author, so "
+            f"there is no acquisition queue for it to stall behind."
+        ))
+
+    # A RATCHET with zero headroom, not an advisory. Unlike the abstract-only population
+    # (ADR-014 D4), the remedy here is AUTHORING, not money — so it can be held to a bar
+    # that money cannot clear. Pinned to the live value by
+    # `tests/test_d5_citations.py::test_undeclared_class_ceiling_has_zero_headroom`.
+    if n_undeclared > _UNDECL_CEIL:
+        all_pass = False
+        sample = ", ".join(undeclared_class[:8])
+        more = f" (and {n_undeclared - 8} more)" if n_undeclared > 8 else ""
+        details.append(Detail(
+            "undeclared_class", False,
+            f"{n_undeclared} cited bibkey(s) carry no identifiers and no declared "
+            f"citation_class, above the frozen ceiling of {_UNDECL_CEIL}: {sample}{more}. "
+            f"An entry earns no exemption by being empty. Either establish what the "
+            f"reference is and declare `citation_class` + `exempt_reason`, or record its "
+            f"doi/arxiv and cache the source. Do NOT raise the ceiling."
+        ))
+    elif undeclared_class:
+        sample = ", ".join(undeclared_class[:6])
+        more = f" (and {n_undeclared - 6} more)" if n_undeclared > 6 else ""
+        details.append(Detail(
+            "undeclared_class", True,
+            f"⚠️ {n_undeclared}/{_UNDECL_CEIL} cited bibkey(s) have neither an identifier nor "
+            f"a declared citation_class, so this check has never asked them the cache "
+            f"question: {sample}{more}. These are NOT textbook exemptions — they are "
+            f"unfinished entries, and the ceiling only ever shrinks.",
+            warning=True,
+        ))
 
     if abstract_only:
         # ADVISORY, not a failure — ADR-014 D4, operator decision 2026-08-15. Acquisition is
