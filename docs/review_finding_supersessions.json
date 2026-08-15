@@ -9103,6 +9103,230 @@
         "enforced": true,
         "run_at": "2026-08-14"
       }
+    },
+    {
+      "finding_id": "review:2026-07-31-1530-internal-adversarial:D11:4.2",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. D11's bundle_metadata now reports advisories_open 63 alongside blockers_open 18 with open_findings 81, internally consistent, and bundle_metadata_matches_graph lists drift for other bundles but not D11.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "uv run python -c \"import json,sys;d=json.load(open('papers/D11/bundle_metadata.json'));sys.exit(0 if d['open_findings']==d['blockers_open']+d['advisories_open'] and d['advisories_open']>0 else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-07-31-1652-internal-adversarial:D11:4.2",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. A missing metadata blob is now a FAIL rather than a silent skip, with a checked==0 seam guard beside it, and the stage13_status assertion moved to the registered check bundle_stage13_claim_consistent.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "grep -q 'no bundle_metadata.json at' scripts/validation/checks/bundles_readiness.py",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-07-31-1801-internal-adversarial:D11:4.3",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. All nine round-1530 D11 findings now carry ledger records; the zero-record gap the finding named is closed.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "uv run python -c \"import json,sys;s=json.load(open('docs/review_finding_supersessions.json'))['supersessions'];sys.exit(0 if len([x for x in s if '2026-07-31-1530-internal-adversarial:D11:' in str(x.get('finding_id',''))])>=9 else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-07-31-2220-internal-adversarial:D11:4.4",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. Round-1951 now carries six D11 records including both named criticals, and D11's open blocking count fell from 25 to 18 as a result.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "uv run python -c \"import json,sys;s=json.load(open('docs/review_finding_supersessions.json'))['supersessions'];sys.exit(0 if len([x for x in s if '2026-07-31-1951-internal-adversarial:D11:' in str(x.get('finding_id',''))])>=6 else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-07-31-2220-internal-adversarial:D11:5.1",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated, and both halves. The notebook guard now collects image/svg+xml, and an empty glob returns passed=False with the text 'unverified, not passing' rather than passing vacuously.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "grep -q 'image/svg+xml' scripts/validation/checks/freshness.py && grep -q 'unverified, not passing' scripts/validation/checks/freshness.py",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-01-0142-internal-adversarial:D11:N2",
+      "status": "fixed",
+      "evidence": "STALE — both fixes delivered. The matcher now reads the finding's name-or-label rather than a six-token window, with the measured separation table recorded in-comment, and calibration runs against a frozen labelled set in tests/fixtures/recurrence_pairs.json so it no longer consumes its own datum.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "grep -q 'recurrence_pairs.json' tests/fixtures/recurrence_pairs.json 2>/dev/null || test -f tests/fixtures/recurrence_pairs.json",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-01-0142-internal-adversarial:D11:N3",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. tests/test_d5_reviews.py now binds the recurrence guard with a firing case plus negatives for the earlier-open, different-bundle, marginal-score and resolution-notice paths, so the guard can no longer go inert unnoticed.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "grep -q 'check_recurrence_reopens_closures' tests/test_d5_reviews.py",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-04-bundle-stage13:D1_r1:7.1",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. All three unbacked first-claim phrasings are absent from D1; the counterexample is now reported as a methodology contribution rather than a priority claim.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "uv run python -c \"import re,sys;t=re.sub(r'\\\\s+',' ',open('papers/D1/paper_draft.tex').read()).lower();sys.exit(1 if any(p in t for p in ['to our knowledge','strongest','first documented']) else 0)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-06-bundle-stage13:D1-r2:1.5",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. Zero registry entries now carry an 'et al.' or TODO title; the four named stubs all have verbatim titles and author lists. The cache-backfill sub-item is a different finding (1.6) and remains open.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "uv run python -c \"import re,sys;sys.path.insert(0,'.');from src.core.citations import CITATION_REGISTRY as R;bad=[k for k,e in R.items() if re.match(r'^et\\\\.?\\\\s*~?al\\\\.?$',str(e.get('title','')).strip()) or 'TODO' in str(e.get('title',''))];sys.exit(1 if bad else 0)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-06-bundle-stage13:D1-r2:5.1",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated, and closed against a registered CHECK rather than a grep. The spectral-floor crossover now uses the same expression in abstract and body with the substitution stated, and d1_hierarchy_table passes with paper and canonical coefficients agreeing.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "uv run python scripts/validate.py --check d1_hierarchy_table",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-06-bundle-stage13:D1-r3:5.1",
+      "status": "fixed",
+      "evidence": "STALE — carry-forward of the r2 finding, same remediation. Note the r3 text quotes abstract and body figures that appear nowhere in the current draft, so its own description was already stale when filed.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "uv run python scripts/validate.py --check d1_hierarchy_table",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:D1:1.12",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. The Roman numeral is now outside the emphasised title, exactly the prescribed fix.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "grep -q 'dissipative fluids} (paper~I)' papers/D1/paper_draft.tex",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:D1:1.13",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. The Falque2025 bibitem now carries its PRL volume, article number and year alongside the arXiv id.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "grep -q '023401 (2025)' papers/D1/paper_draft.tex",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:D1:2.2",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. D1 now carries an explicit Heidelberg projection caveat naming the PROJECTED tier and stating that no transonic-flow experiment exists — the disclosure the finding asked for.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "grep -q 'Heidelberg projection caveat' papers/D1/paper_draft.tex",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:D1:5.5",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. The overstated 'dominant' is replaced by 'comparable, with dispersive leading', which matches the quoted magnitudes.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "uv run python -c \"import re,sys;t=re.sub(r'\\\\s+',' ',open('papers/D1/paper_draft.tex').read());sys.exit(0 if 'with dispersive leading' in t else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:D1:6.2",
+      "status": "fixed",
+      "evidence": "STALE — remediated STRUCTURALLY. The project-wide 5812 literal is gone and D1 now uses the bundle-scoped bundleTheorems macro, which is the fix that prevents the overstatement recurring rather than merely correcting it once.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "uv run python -c \"import sys;t=open('papers/D1/paper_draft.tex').read();sys.exit(0 if ('bundleTheorems' in t and '5812' not in t) else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
     }
   ]
 }
