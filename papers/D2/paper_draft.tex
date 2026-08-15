@@ -584,7 +584,7 @@ fermion species with the $\nu_R$-completed convention gives
 X[Q_L] = X[u_R] = X[d_R] = X[L_L] = X[e_R] = X[\nu_R] \equiv 1 \pmod 4,
 \]
 i.e., every Weyl component carries odd Z$_4$ charge. This is
-encoded exhaustively in \texttt{SMFermionData} (48 theorems
+encoded exhaustively in \texttt{SMFermionData} (\dtwoSmFermionDataThms{} theorems
 total). Per generation, the anomaly contribution is the sum of
 the squared Z$_4$ charges weighted by the multiplicity in the
 generator basis:
@@ -607,7 +607,7 @@ statement at the heart of
 \texttt{Z16AnomalyComputation.hidden\_sector\_required}: any
 internally consistent SM extension that omits $\nu_R$ requires
 either (a) BSM Z$_{16}$-charged matter or (b) a non-trivial
-gravitational-anomaly cancellation route. The proof contains 23
+gravitational-anomaly cancellation route. The proof contains \dtwoZsixteenAnomalyThms{}
 substantive theorems, no axioms, no \texttt{sorry}.
 
 \subsection{SPT stacking: 16-fold periodicity}
@@ -644,11 +644,11 @@ Z(\mathrm{Vec}_{\mathbb{Z}/2}) \;\cong\; D(\mathbb{Z}/2),
 the toric-code modular tensor category with four abelian anyons
 $\{1, e, m, em\}$ and total quantum dimension squared $D^2 = 4$.
 This is verified at the Lean level via
-\texttt{VecGMonoidal} (eleven theorems establishing the
+\texttt{VecGMonoidal} (\dtwoVecGMonoidalThms{} theorems establishing the
 monoidal $\mathrm{Vec}_G$ instance for finite abelian $G$),
-\texttt{ToricCodeCenter.braiding\_em\_is\_minus\_one} (52 theorems
+\texttt{ToricCodeCenter.braiding\_em\_is\_minus\_one} (\dtwoToricCodeCenterThms{} theorems
 total establishing the braiding structure), and the centre
-equivalence \texttt{CenterEquivalenceZ2} (30 theorems). The
+equivalence \texttt{CenterEquivalenceZ2} (\dtwoCenterEquivalenceThms{} theorems). The
 non-trivial mutual braiding $B(e, m) = -1$ is the categorical
 avatar of the Witten Z$_2$ inside Z$_{16}$.
 
@@ -790,8 +790,8 @@ exiting the joint scope of the nine applicability conditions,
 and with it the Nielsen-Ninomiya obstruction, not
 contradicting a theorem. Our
 formalisation of these nine conditions in
-\texttt{GoltermanShamir} (14 theorems) and
-\texttt{LatticeHamiltonian} (28 theorems) encodes seven of them as
+\texttt{GoltermanShamir} (\dtwoGoltermanShamirThms{} theorems) and
+\texttt{LatticeHamiltonian} (\dtwoLatticeHamiltonianThms{} theorems) encodes seven of them as
 substantive Lean propositions: the Brillouin zone via Mathlib's
 \texttt{AddCircle}; the fermionic Fock space via the
 exterior-algebra-finite-dimensionality result documented in
@@ -816,7 +816,7 @@ I3 via the infinite-dimensionality of $\ell^2(\mathbb{Z})$
 by Aristotle and re-exported from \texttt{TPFEvasion.lean}); the
 extra-dimensional 4+1D SPT slab; and C3 conditionally. The conjunction of these five evasion theorems is
 collected in \texttt{TPFEvasion.tpf\_outside\_gs\_scope\_main}
-(12 theorems total in the module).
+(\dtwoTpfEvasionThms{} theorems total in the module).
 
 The pillar is not merely "a TPF construction works"; it is
 "a TPF construction works \emph{exactly because} it sits at the
@@ -866,9 +866,9 @@ after the right
 $\sigma\otimes\tau$-block expansion is performed, and finding
 that expansion was the key insight discovered by the Aristotle
 prover (run \texttt{18969de2}). The closed-form identity is
-\texttt{GTCommutation.gt\_commutation\_4x4}, supported by 15
+\texttt{GTCommutation.gt\_commutation\_4x4}, supported by \dtwoPauliMatricesThms{}
 theorems of Pauli-matrix infrastructure in
-\texttt{PauliMatrices} (reusable elsewhere) and 8 BdG-Hamiltonian
+\texttt{PauliMatrices} (reusable elsewhere) and \dtwoBdgHamiltonianThms{} BdG-Hamiltonian
 theorems in \texttt{BdGHamiltonian}.
 
 The chiral-charge operator $q_A$ has spectrum $\pm \cos(p_3/2)$,
@@ -880,7 +880,7 @@ Pillar 1: they place the GT construction inside the TPF
 no-go-evasion scope, and outside the standard chiral-fermion
 no-go scope. The equivalence between "GT violates exactly the GS
 conditions Pillar 1 identified" and "the TPF construction works"
-is formalised in \texttt{ChiralityWallMaster} (16 bridge
+is formalised in \texttt{ChiralityWallMaster} (\dtwoChiralityWallMasterThms{} bridge
 theorems).
 
 The GT formalisation is a machine-verified construction of a lattice
@@ -897,7 +897,7 @@ relation~\cite{Onsager1944,DolanGrady1982}
 \]
 admits a Davies isomorphism with the loop algebra
 $L(\mathfrak{sl}_2)$ \cite{Davies1990}. We have formalised this
-isomorphism in \texttt{OnsagerAlgebra} (24 theorems).
+isomorphism in \texttt{OnsagerAlgebra} (\dtwoOnsagerAlgebraThms{} theorems).
 The In\"on\"u-Wigner contraction~\cite{InonuWigner1953} of
 $L(\mathfrak{sl}_2)$ to the Heisenberg-Onsager loop algebra is
 \[
@@ -905,11 +905,11 @@ $L(\mathfrak{sl}_2)$ to the Heisenberg-Onsager loop algebra is
 \;=\; \varepsilon^2 \cdot 4\, G_{m-n},
 \]
 with $G_n = G_{-n}$ the symmetric loop generators. The
-contraction theorem \texttt{OnsagerContraction.*} (12 theorems;
+contraction theorem \texttt{OnsagerContraction.*} (\dtwoOnsagerContractionThms{} theorems;
 closing identity by Aristotle, run \texttt{36b7796f}) shows the
 $\varepsilon \to 0$ limit reproduces an emanant
 $\mathfrak{su}(2)$ symmetry on the GT Weyl doublet
-(\texttt{GTWeylDoublet}, 12 theorems).
+(\texttt{GTWeylDoublet}, \dtwoGtWeylDoubletThms{} theorems).
 
 The fourth homotopy group of the contracted symmetry group is
 \[
@@ -949,7 +949,7 @@ matching, and the 16-fold periodicity at the K-matrix level is
 verified by \texttt{decide}.
 
 The 2+1D case is the Fidkowski-Kitaev (FK) interacting SPT
-classification in \texttt{FKGappedInterface} (20 theorems
+classification in \texttt{FKGappedInterface} (\dtwoFkGappedInterfaceThms{} theorems
 machine-checking the FK gapped-interface result). The eight-Majorana
 wire model has eigenvalue
 spectrum $\{-14, 0, +2\}$ with multiplicities $\{1, 8, 7\}$ (verified
@@ -971,7 +971,7 @@ exactly, and both are entirely machine-checked. We disclose the
 
 The three pillars of this section are not independent: each pair
 admits a bridge theorem in
-\texttt{ChiralityWallMaster} (16 theorems total). Pillar 1
+\texttt{ChiralityWallMaster} (\dtwoChiralityWallMasterThms{} theorems total). Pillar 1
 $\leftrightarrow$ Pillar 2 establishes that the GT construction
 violates exactly the GS conditions identified in
 Pillar 1, neither more nor fewer. Pillar 2 $\leftrightarrow$
@@ -1039,8 +1039,10 @@ formerly \texttt{axiom gapped\_interface\_axiom}, converted to a tracked
 explicit \texttt{(H : TPFConjecture)} hypothesis parameter rather than
 asserted as an axiom. It is supported by
 machine-checked 1+1D evidence (\texttt{VillainHamiltonian}) and
-2+1D evidence (\texttt{FKGappedInterface}, including the
-explicit $\Delta = 2$ spectral gap).
+2+1D evidence (\texttt{FKGappedInterface}, including the explicit
+$\Delta = E_1 - E_0 = 0 - (-14) = 14$ spectral gap of the
+eight-Majorana wire model,
+\texttt{FKGappedInterface.spectral\_gap}).
 
 A single Mathlib-deferral placeholder:
 \texttt{Z16AnomalyComputation.dai\_freed\_spin\_z4} asserts
@@ -1221,7 +1223,8 @@ arXiv:2601.04304 (2026).
 \bibitem{DaiFreed1994}
 X.-Z.~Dai and D.~S.~Freed,
 \emph{$\eta$-invariants and determinant lines},
-J.~Math.~Phys.~\textbf{35}, 5155 (1994).
+J.~Math.~Phys.~\textbf{35}, 5155 (1994),
+arXiv:hep-th/9405012.
 
 \bibitem{Rokhlin1952}
 V.~A.~Rokhlin,

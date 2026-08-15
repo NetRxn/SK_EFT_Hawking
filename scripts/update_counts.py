@@ -883,6 +883,95 @@ def generate_tex(counts: dict, path: Path, deps: list | None = None):
             )
             lines.extend(i1_lines)
 
+        # --- D2 chirality-bundle per-module theorem counts ------------------
+        # Consumer: papers/D2/paper_draft.tex §§4–6 quoted a per-module
+        # theorem count in fifteen places as a hand-typed literal. Round
+        # 2026-06-08 (findings 9.1 in both the -2240 and -2315 internal
+        # adversarial reviews) flagged them as "drift-prone" and claimed they
+        # "slip past count_literals" — re-measured 2026-08-14, that half of
+        # the finding is wrong: all twelve matched the check's patterns and
+        # were inside the frozen `COUNT_LITERAL_CEILING` debt, which is why
+        # removing them lowers it by twelve.
+        # MEASURED 2026-08-14, they had already drifted: SMFermionData 48→19,
+        # ToricCodeCenter 52→25, CenterEquivalenceZ2 30→10, GoltermanShamir
+        # 14→32, LatticeHamiltonian 28→33, TPFEvasion 12→14, OnsagerAlgebra
+        # 24→41, GTWeylDoublet 12→15, FKGappedInterface 20→12 — nine of
+        # fifteen wrong. Same convention and same emitter as the I1 block
+        # above, so a D2 per-module figure is comparable with \totaltheorems.
+        # A renamed/moved module emits NO macro and D2's compile fails on the
+        # undefined control sequence, which is the loud failure we want:
+        # a silently-wrong number is what this block exists to prevent.
+        _d2_modules = [
+            ("dtwoSmFermionDataThms",       "SKEFTHawking.SMFermionData"),
+            ("dtwoZsixteenAnomalyThms",     "SKEFTHawking.Z16AnomalyComputation"),
+            ("dtwoVecGMonoidalThms",        "SKEFTHawking.VecGMonoidal"),
+            ("dtwoToricCodeCenterThms",     "SKEFTHawking.ToricCodeCenter"),
+            ("dtwoCenterEquivalenceThms",   "SKEFTHawking.CenterEquivalenceZ2"),
+            ("dtwoGoltermanShamirThms",     "SKEFTHawking.GoltermanShamir"),
+            ("dtwoLatticeHamiltonianThms",  "SKEFTHawking.LatticeHamiltonian"),
+            ("dtwoTpfEvasionThms",          "SKEFTHawking.TPFEvasion"),
+            ("dtwoPauliMatricesThms",       "SKEFTHawking.PauliMatrices"),
+            ("dtwoBdgHamiltonianThms",      "SKEFTHawking.BdGHamiltonian"),
+            ("dtwoChiralityWallMasterThms", "SKEFTHawking.ChiralityWallMaster"),
+            ("dtwoOnsagerAlgebraThms",      "SKEFTHawking.OnsagerAlgebra"),
+            ("dtwoOnsagerContractionThms",  "SKEFTHawking.OnsagerContraction"),
+            ("dtwoGtWeylDoubletThms",       "SKEFTHawking.GTWeylDoublet"),
+            ("dtwoFkGappedInterfaceThms",   "SKEFTHawking.FKGappedInterface"),
+        ]
+        d2_lines = [f"\\newcommand{{\\{macro}}}{{{mod_thms[module]}}}"
+                    for macro, module in _d2_modules if module in mod_thms]
+        if d2_lines:
+            lines.append(
+                "% --- D2 chirality-bundle per-module theorem counts "
+                "(same convention as \\totaltheorems) ---"
+            )
+            lines.extend(d2_lines)
+
+    # --- Cross-platform 1+1D→2+1D Lean theorem reuse (D1 / paper16) --------
+    # Consumer: papers/D1/paper_draft.tex states the BEC→graphene reuse
+    # fraction in eleven places. It has drifted THREE times (109/119→92%,
+    # 106/114→93%, and again at 2026-08-15) because each repair replaced one
+    # hand-typed literal with another hand-typed literal while the population
+    # modules kept growing. Stage-13 finding
+    # `2026-05-11-1251-bundle-stage13:D1:6.3` prescribed exactly this fix —
+    # "define new macros in update_counts.py based on a deterministic
+    # partition of lean/SKEFTHawking/" — and its blocking prerequisite
+    # (finding 3.2, "no counter script exists") is discharged by
+    # scripts/count_theorem_reuse.py.
+    #
+    # The counter is the SOLE owner of the partition; nothing is recomputed
+    # here. It hard-exits when its population cannot be resolved in
+    # lean_deps.json — a stale extraction for the nine population modules —
+    # and that is deliberately NOT swallowed: an unresolvable population
+    # means the fraction is unknown, and emitting the previous value would
+    # reinstate the drift this block exists to end. `main()` refreshes
+    # lean_deps.json before calling this function, so a resolution failure
+    # means a population theorem was renamed, not that the cache is cold.
+    #
+    # ⚠️ NOT the same quantity as \bundleTheorems in papers/D1/bundle_counts.tex,
+    # which render_bundle_counts.py derives from D1's declared apex closure.
+    # Do not conflate them.
+    if str(SCRIPTS_DIR) not in sys.path:
+        sys.path.insert(0, str(SCRIPTS_DIR))
+    from count_theorem_reuse import classify as _classify_reuse
+    _reuse = _classify_reuse()["totals"]
+    _reuse_pct = _reuse["reuse_fraction_percent"]
+    lines.append(
+        "% --- Cross-platform Lean theorem reuse, 1+1D BEC -> 2+1D graphene "
+        "(D1) ---"
+    )
+    lines.append("% Owner: scripts/count_theorem_reuse.py (population = the nine")
+    lines.append("% 1+1D BEC modules; REUSED = statement is platform-parametric).")
+    lines.append(f"\\newcommand{{\\reuseTransferred}}{{{_reuse['reused']}}}")
+    lines.append(f"\\newcommand{{\\reusePopulation}}{{{_reuse['theorems']}}}")
+    lines.append(f"\\newcommand{{\\reuseSpecific}}{{{_reuse['platform_specific']}}}")
+    lines.append(f"\\newcommand{{\\reusePercent}}{{{_reuse_pct:.2f}}}")
+    lines.append(
+        f"\\newcommand{{\\reusePercentRounded}}{{{_reuse['reuse_percent_rounded']}}}")
+    lines.append(
+        f"\\newcommand{{\\reuseSpecificPercentRounded}}"
+        f"{{{round(100.0 - _reuse_pct)}}}")
+
     path.write_text("\n".join(lines) + "\n")
 
 

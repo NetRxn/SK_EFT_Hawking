@@ -9736,6 +9736,97 @@
       "superseded_by": null,
       "date": "2026-08-15",
       "supersedes_inert_open": true
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:D1:6.3",
+      "status": "fixed",
+      "evidence": "FIXED, not stale, and the distinction matters: this finding prescribed in 2026-05 exactly the remedy now applied — define macros in update_counts.py from a deterministic partition. Its named literals (109 of 119, 92%) had been superseded by a later round, but the defect it names — the fraction not flowing through counts.tex — was live until now.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:D1:3.2",
+      "status": "fixed",
+      "evidence": "STALE. The premise that no script implements the counter is false at HEAD: scripts/count_theorem_reuse.py exists, exits 0 under --json, and D1 cites it by path in four places; the orphan Phase-5w name appears nowhere. Worth recording: the script had been aborting on a parser bug until 2026-08-13, so earlier claims that it reproduces 114/106/8 were unverifiable when written — the partition it actually produces is 120/107/13.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-05-04-bundle-stage13:D1_r1:6.1",
+      "status": "fixed",
+      "evidence": "Live at HEAD in three places calling FirstOrderKMS an axiom, when SKDoubling.lean declares it as a Prop structure and axiomcount is now 0 (the finding was written when it was 1). The sidebar now states the declaration kind explicitly and cites the macro; the other two sites say constraint/formulation. The verify requires at least three mentions before asserting, so it cannot pass by the discussion disappearing.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-05-06-bundle-stage13:D1-r2:1.3",
+      "status": "fixed",
+      "evidence": "The parser artifact and truncated author field were already repaired; the surviving half was used_in, which omitted D1 although D1 cites the key. Added. doi_verified stays False deliberately, with the reason now in the note: the work is an arXiv preprint with NO DOI, so True would assert verification of a nonexistent identifier — the finding's instruction assumed a DOI that does not exist.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-05-04-bundle-stage13:D1_r1:1.6",
+      "status": "fixed",
+      "evidence": "STALE. The load-bearing premise — that Gate 1's pass criterion requires arxiv_verified and doi_verified — no longer holds: READINESS_GATES.md Gate 1 was rewritten to state in bold that it is registry COVERAGE, not content verification, and neither string appears in the section or in _eval_citation_integrity. All 42 D1 and 31 D2 bibkeys are registered and both delegated content checks pass. The residual observation about citation_verifications.jsonl is real but not a gate input — its consumers were traced and it is read only for fetch-avoidance. Deliberately not backfilled: appending records whose evidence is a local cached PDF rather than a live fetch would misrepresent what the cache records.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:D2:1.10",
+      "status": "fixed",
+      "evidence": "Measured every D2 bibitem against its registry entry: five of the six keys the finding named legitimately have arxiv None — there is no ID to print. Exactly one real gap survived, DaiFreed1994 with hep-th/9405012 absent from its bibitem; added. The verify requires at least 10 arXiv-bearing keys before asserting the gap set is empty, so it cannot pass vacuously.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:D2:5.2",
+      "status": "fixed",
+      "evidence": "The finding's cited section was already repaired, but a SECOND site survived in the outlook still claiming a Delta = 2 gap against the Lean theorem's 14. Repaired to the full derivation with the theorem named. The verify reads the value out of the Lean source rather than hardcoding it, so it re-fires if the theorem changes.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-06-08-2240-internal-adversarial:D2:9.1",
+      "status": "fixed",
+      "evidence": "The finding predicted these literals were drift-prone; measured at HEAD, NINE OF FIFTEEN were already wrong, several by more than a factor of two. Added a D2 block to update_counts.py using the same emitter and convention as the existing I1 per-module block, and repointed all sixteen prose sites. One sub-claim of the finding is itself wrong and the correction is recorded in code: it asserts these slip past count_literals, but re-measured against the check all twelve matched, which is why removing them lowered the debt by exactly twelve. COUNT_LITERAL_CEILING lowered 106 to 95 as the check's own message asks.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-06-08-2315-internal-adversarial:D2:9.1",
+      "status": "fixed",
+      "evidence": "The finding predicted these literals were drift-prone; measured at HEAD, NINE OF FIFTEEN were already wrong, several by more than a factor of two. Added a D2 block to update_counts.py using the same emitter and convention as the existing I1 per-module block, and repointed all sixteen prose sites. One sub-claim of the finding is itself wrong and the correction is recorded in code: it asserts these slip past count_literals, but re-measured against the check all twelve matched, which is why removing them lowered the debt by exactly twelve. COUNT_LITERAL_CEILING lowered 106 to 95 as the check's own message asks.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-06-08-2240-internal-adversarial:D2:1.1",
+      "status": "fixed",
+      "evidence": "STALE. Same root as D1 1.6: both rounds state the defect as Gate 1 requiring arxiv_verified per READINESS_GATES.md, and that criterion no longer exists in the document or the evaluator, so there is no unevaluable condition left to make evaluable. The rewrite implemented the finding's own option (b), routing content verification to the named checks and Stage 13. A decorative arxiv_verified field was deliberately NOT added: nothing reads it, and populating it from free-text notes would assert a verification the repo cannot re-derive.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-06-08-2315-internal-adversarial:D2:1.1",
+      "status": "fixed",
+      "evidence": "STALE. Same root as D1 1.6: both rounds state the defect as Gate 1 requiring arxiv_verified per READINESS_GATES.md, and that criterion no longer exists in the document or the evaluator, so there is no unevaluable condition left to make evaluable. The rewrite implemented the finding's own option (b), routing content verification to the named checks and Stage 13. A decorative arxiv_verified field was deliberately NOT added: nothing reads it, and populating it from free-text notes would assert a verification the repo cannot re-derive.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-08-15-d1-reuse-figure-drifted-again:D1:1.1",
+      "status": "fixed",
+      "evidence": "Bound, not re-typed. Re-derived at HEAD by running the cited script: 107/120 = 89.17%, against the 106/114 approx 93% the draft carried and a third figure in the finding itself — three prior repairs each swapped one literal for another. update_counts.py now imports count_theorem_reuse.classify() and emits six derived macros into docs/counts.tex, which D1 already inputs; all eleven sites reference macros and the two section headings dropped the number rather than carrying a macro in a title. Reuses the existing writer and its counts_fresh regeneration path rather than adding a second mechanism; the counter stays sole owner of the partition and its hard exit on an unresolvable population is not swallowed. bundle_counts.tex untouched, with a comment recording it is a different quantity. The finding's own Verify line was amended first: it demanded the draft STATE the current literal, which is the anti-pattern this finding's Fix prohibits in bold — it would have passed a fourth hand-typed number and it FAILED the actual repair.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -c \"import re,subprocess; out=subprocess.run(['uv','run','python','scripts/count_theorem_reuse.py'],capture_output=True,text=True).stdout; m=re.search(r'REUSE (\\d+)/(\\d+) = ([\\d.]+)%',out); assert m,'counter emitted no REUSE line'; n,d,p=m.groups(); tex=open('docs/counts.tex').read(); g=lambda k:re.search(r'\\\\\\\\newcommand\\{\\\\\\\\'+k+r'\\}\\{([^}]*)\\}',tex).group(1); assert (g('reuseTransferred'),g('reusePopulation'))==(n,d),'counts.tex disagrees with the counter'; t=re.sub(r'\\s+',' ',open('papers/D1/paper_draft.tex').read()); assert t.count(r'\\\\reuseTransferred')>=4 and t.count(r'\\\\reusePercent')>=4,'D1 does not consume the macros'; assert not re.search(r'\\b(106|114|109|119)\\b *(of|/)',t) and '92.98' not in t and not re.search(r'9[23]\\\\\\\\%',t),'a hand-typed reuse literal survives'\"",
+        "declared": "cd \"$REPO\" && uv run python -c \"import re,subprocess; out=subprocess.run(['uv','run','python','scripts/count_theorem_reuse.py'],capture_output=True,text=True).stdout; m=re.search(r'REUSE (\\d+)/(\\d+) = ([\\d.]+)%',out); assert m,'counter emitted no REUSE line'; n,d,p=m.groups(); tex=open('docs/counts.tex').read(); g=lambda k:re.search(r'\\\\\\\\newcommand\\{\\\\\\\\'+k+r'\\}\\{([^}]*)\\}',tex).group(1); assert (g('reuseTransferred'),g('reusePopulation'))==(n,d),'counts.tex disagrees with the counter'; t=re.sub(r'\\s+',' ',open('papers/D1/paper_draft.tex').read()); assert t.count(r'\\\\reuseTransferred')>=4 and t.count(r'\\\\reusePercent')>=4,'D1 does not consume the macros'; assert not re.search(r'\\b(106|114|109|119)\\b *(of|/)',t) and '92.98' not in t and not re.search(r'9[23]\\\\\\\\%',t),'a hand-typed reuse literal survives'\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
     }
   ]
 }
