@@ -113,7 +113,7 @@ def close(doc: str, sections: list[str], status: str, evidence: str,
     if not (commit or date):
         return False, "no anchor: pass --commit or --date"
 
-    ok, verified_by, msg = _run_verifications(minted, nodes, verify)
+    ok, verified_by, msg = _run_verifications(minted, nodes, verify, status)
     if not ok:
         return False, msg
 
@@ -135,7 +135,7 @@ def close(doc: str, sections: list[str], status: str, evidence: str,
     return True, f"{verb} {len(to_add)} record(s): {body}{tail}"
 
 
-def _run_verifications(minted, nodes, verify) -> tuple[bool, dict, str]:
+def _run_verifications(minted, nodes, verify, status: str = "fixed") -> tuple[bool, dict, str]:
     """Run each finding's verification command and record what actually ran.
 
     ⚠️ **The finding's OWN `Verify:` line is authoritative.** `verified_by` is the strongest
@@ -147,7 +147,17 @@ def _run_verifications(minted, nodes, verify) -> tuple[bool, dict, str]:
 
     So: when the finding declares a command, it is RUN. Passing a different one is a
     refusal, not an override — and passing none is not a way around it.
+
+    ⚠️ **`accepted` RECORDS the verify, it does not ENFORCE it** — and the distinction is
+    what makes the status reachable at all. `accepted` means *a decision not to fix*, so
+    its verify normally encodes the very state the decision declines to change and will
+    exit non-zero by construction. Gating on it made `accepted` unreachable exactly when
+    it was needed: found 2026-08-14 on `review:2026-08-14-l1-stage13:L1:3.2`, whose verify
+    asserts a Lean dependency the module must NOT have. The outcome is still recorded in
+    `verified_by` — a non-zero exit at acceptance is the useful forensic datum, not a
+    reason to refuse the write. `fixed` is unchanged and still fails closed.
     """
+    enforce = status != "accepted"
     verified_by: dict[str, dict] = {}
     for fid in minted:
         declared = ((nodes[fid].get("meta") or {}).get("verify") or "").strip().strip("`")
@@ -162,11 +172,13 @@ def _run_verifications(minted, nodes, verify) -> tuple[bool, dict, str]:
             continue
         proc = subprocess.run(cmd, shell=True, cwd=str(PROJECT_ROOT),
                               capture_output=True, text=True)
-        if proc.returncode != 0:
+        if proc.returncode != 0 and enforce:
             return False, {}, (f"verify command failed (exit {proc.returncode}): {cmd}\n"
                                f"{proc.stdout}{proc.stderr}")
         verified_by[fid] = {"command": cmd, "declared": declared or None,
-                            "exit_code": 0, "run_at": _date.today().isoformat()}
+                            "exit_code": proc.returncode,
+                            "enforced": enforce,
+                            "run_at": _date.today().isoformat()}
     return True, verified_by, ""
 
 

@@ -308,3 +308,43 @@ class TestTheCLI:
                       "--evidence", EVIDENCE, "--commit", "abc", "--dry-run"])
         assert rc == 0
         assert "✓ " in capsys.readouterr().out
+
+
+# ── ADR-012 — `accepted` records its verify, `fixed` still enforces it ────────
+#
+# `accepted` means a decision NOT to fix, so its declared verify normally encodes
+# the state the decision declines to change and exits non-zero by construction.
+# Gating on it made the status unreachable exactly when it was needed.
+
+def test_accepted_is_reachable_when_its_own_verify_fails(monkeypatch):
+    """The defect: `accepted` could only be recorded when the fix already passed."""
+    import scripts.close_finding as cf
+
+    nodes = {"review:x:y:1": {"id": "review:x:y:1", "meta": {"verify": "exit 1"}}}
+    ok, verified_by, msg = cf._run_verifications(
+        ["review:x:y:1"], nodes, None, "accepted")
+    assert ok, f"accepted must not be gated on its own verify: {msg}"
+    rec = verified_by["review:x:y:1"]
+    assert rec["exit_code"] == 1, "the real outcome must be RECORDED, not swallowed"
+    assert rec["enforced"] is False
+
+
+def test_fixed_still_fails_closed_on_a_failing_verify():
+    """The gate that matters is unchanged — a `fixed` closure still refuses."""
+    import scripts.close_finding as cf
+
+    nodes = {"review:x:y:1": {"id": "review:x:y:1", "meta": {"verify": "exit 1"}}}
+    ok, _verified_by, msg = cf._run_verifications(
+        ["review:x:y:1"], nodes, None, "fixed")
+    assert not ok
+    assert "verify command failed" in msg
+
+
+def test_a_passing_verify_records_exit_zero_under_both_statuses():
+    import scripts.close_finding as cf
+
+    nodes = {"review:x:y:1": {"id": "review:x:y:1", "meta": {"verify": "true"}}}
+    for status in ("fixed", "accepted"):
+        ok, verified_by, _ = cf._run_verifications(
+            ["review:x:y:1"], nodes, None, status)
+        assert ok and verified_by["review:x:y:1"]["exit_code"] == 0

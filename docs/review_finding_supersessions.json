@@ -8081,6 +8081,34 @@
         "exit_code": 0,
         "run_at": "2026-08-14"
       }
+    },
+    {
+      "finding_id": "review:2026-08-14-l1-stage13:L1:3.2",
+      "status": "accepted",
+      "evidence": "ACCEPTED on the finding own second branch. Its Expected offers either a Lean bridge OR prose stating chi_vest is a free parameter this Letter constrains, noting the latter is what the paper does everywhere else. Building the bridge would create a formal edge without making the claim true: chi_RPA chi_0 gamma_star is itself a function of two parameters the project never evaluates, so no numerical chi_vest would follow. Making \"computed in the RPA\" true requires deriving chi_0 and gamma_star from the ADW gap equation — open work, out of scope. The overstatement was removed at every site instead (commit a19f43a9): L1 now states chi_vest is a free parameter and that constraining it is what the Letter does; the chi_RPA-is-the-bubble-integral conflation is corrected; and GravitationalWaves.lean documents that chi_vest and gamma are free parameters and the module has no project dependencies BY DESIGN. The declared verify still exits 1 and correctly so — the dependency does not exist and must not.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -c \"import json; d=json.load(open('lean/lean_deps.json')); gw=[x for x in d if x.get('module')=='SKEFTHawking.GravitationalWaves']; r={n for x in gw for n in (x.get('name_deps_project') or [])}; assert any('VestigialSusceptibility' in n for n in r), 'GravitationalWaves has NO dependency on VestigialSusceptibility'\"",
+        "declared": "cd \"$REPO\" && uv run python -c \"import json; d=json.load(open('lean/lean_deps.json')); gw=[x for x in d if x.get('module')=='SKEFTHawking.GravitationalWaves']; r={n for x in gw for n in (x.get('name_deps_project') or [])}; assert any('VestigialSusceptibility' in n for n in r), 'GravitationalWaves has NO dependency on VestigialSusceptibility'\"",
+        "exit_code": 1,
+        "enforced": false,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-14-accepted-status-unreachable:infra:1.1",
+      "status": "fixed",
+      "evidence": "_run_verifications is now status-aware. For accepted the declared command is RUN and its real exit code RECORDED in verified_by (with enforced:false), but a non-zero exit no longer refuses the write — an acceptance is a decision not to fix, so its verify normally encodes the state the decision declines to change. fixed is unchanged and still fails closed. Proven by closing the finding this defect stranded: review:2026-08-14-l1-stage13:L1:3.2 is now recorded accepted, carrying its verify exit_code 1 honestly rather than swallowing it. Three tests added to tests/test_close_finding.py — the existing home for this surface, NOT a new file beside it, which I started to do and corrected: accepted reachable with a failing verify, fixed still refusing on one, and both statuses recording exit 0 on a passing one. 28 tests pass.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -c \"import ast,sys; src=open('scripts/close_finding.py').read(); t=ast.parse(src); fn=[n for n in ast.walk(t) if isinstance(n,ast.FunctionDef) and n.name=='_run_verifications'][0]; assert any('status' in ast.dump(a) for a in ast.walk(fn)), '_run_verifications takes no status argument, so it cannot skip verification for an accepted decision'\"",
+        "declared": "cd \"$REPO\" && uv run python -c \"import ast,sys; src=open('scripts/close_finding.py').read(); t=ast.parse(src); fn=[n for n in ast.walk(t) if isinstance(n,ast.FunctionDef) and n.name=='_run_verifications'][0]; assert any('status' in ast.dump(a) for a in ast.walk(fn)), '_run_verifications takes no status argument, so it cannot skip verification for an accepted decision'\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
     }
   ]
 }
