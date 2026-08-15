@@ -60,16 +60,16 @@
   "last_stage9_review": "2026-05-07T01:00:00Z",
   "last_stage10_review": "2026-08-15T00:00:00Z",
   "last_stage13_review": "2026-06-10T19:30:00Z",
-  "blockers_open": 1,
-  "advisories_open": 7,
+  "blockers_open": 7,
+  "advisories_open": 10,
   "stage13_review_doc": "docs/audits/stage13_attribution_sweep_2026-06-10.md#e1",
   "audit_log_path": "papers/E1/audit_log.jsonl",
   "supersession_ledger_anchor": "docs/review_finding_supersessions.json",
   "notes": "STAGE-10 FULL REDRAFT 2026-08-15 — the manuscript below is a complete rewrite; every prior stage verdict in this field describes a superseded document and none of them carries forward. Findings: papers/AutomatedReviews/2026-08-15-e1-stage10-redraft/E1.md. Re-spined on the weak-dissipation criterion: the as-built Falque cavity sits at Gamma_pol/kappa = 1.79, 18x the 0.1 cut the prior draft itself asserted, which the prior draft plotted in Fig. 2 and never wrote. Two claims withdrawn on a page-level read of the primary source (Lit-Search/Phase-5w/primary-sources/Falque2025.pdf): the steep-horizon T_H = 134 mK headline (the source states that spectrum is NOT thermal, p.6), and the 'reservoir-corrected c_s' framing (the source's Appendix B already carries g_r n_r = 1.84 gn inside the measured value). One reconciliation added: the source quotes T_H = 3 K for the SAME smooth horizon, a factor (2 pi)^2 from the standard k_B T_H = hbar kappa / 2 pi, now stated in print. Three of seven apexes withdrawn on statement reads. Sections cut: DKM/CHHK bimodal branch, Kibble-Zurek/D-Wave, Phase-6w ChernBridge c_1, cross-platform universality. Compile: pages=4 tex_errors=0 unresolved_refs=0; bundle_manuscript_length now PASSES (3895 -> under 3750 word-equivalents). | HISTORICAL (pre-redraft, describes a document that no longer exists): Stage 13 r1 2026-05-04: GREEN. 0 BLOCKER / 0 REQUIRED / 4 ADVISORY (5.1 Γ=1-limit qualifier on universal 0.175κ; 5.2 5229-thms project-vs-chain framing; 2.1 G(κ)≈0.002 sig-fig rounding; 8.1 boxed-eq label cosmetic). 14 bibitems all in CITATION_REGISTRY; 11 device-parameter audit points reproduce <0.5% from Falque §IV.1 + provenance.py human_verified 2026-04-28; 4 cited Lean theorems substantive; cross-paper diff vs paper12 + paper16 clean. **Bundle reviewer-triple closed: Stage 9 r3 GREEN + Stage 10 r2 GREEN + Stage 13 r1 GREEN.** QI-E1-1 candidate raised: validate.py --check tier4_device_audit. Stage 10 r2: Round-1 propagating drift block:E1:1 + block:E1:2 fully resolved. | 2026-05-06 Session-2 stage10 round-3 re-walk GREEN (28 sentences, 0 blocking_issues, 0 FAIL, 1 WARN cosmetic). Both 2 D.2 absorption stubs (W1a noise floor §3, W1b Kerr-Schild double-copy §4) properly commented post-Session-2 systematic cleanup. Cross-bundle E1↔D1 §6 polariton VERIFIED IDENTICAL LKB device specs. | 2026-05-06 Session-2 stage13 round-1 RED→fix-verified GREEN: BLOCKER 7.1 (Gate 9 CountFreshness, 5229/243 stale literal at lines 45 + 82) FIXED via mechanical replacement to 5812/322. Verified by grep (0 remaining 5229/243 references) + LaTeX recompile clean (3pp/373291 bytes). Cross-bundle E1↔D1 §6 polariton character-for-character agreement verified. | 2026-05-06 Session-2 stage9 Stage9 GREEN: D.2 absorption events were post-bib stubs only (now commented); no figure changes. E1 figures pre-existing GREEN per round-3 close 2026-05-04. | 2026-06-10 attribution-content sweep (docs/audits/stage13_attribution_sweep_2026-06-10.md): GREEN. 12 claims: 6 SUPPORTED / 6 CAVEAT / 0 NOT-SUPPORTED. Device specs verbatim. Amelio2020 registry-title flagged.",
-  "open_findings": 8,
+  "open_findings": 17,
   "blocked_p1_gates": [
-    "FixPropagation",
-    "LeanProofSubstance"
+    "CitationIntegrity",
+    "FixPropagation"
   ],
   "readiness": "RED",
   "readiness_last_computed": "2026-08-15",
@@ -87,5 +87,5 @@
   },
   "compiled_pages": 4,
   "compile_gate_ok": true,
-  "critical_open": 0
+  "critical_open": 2
 }

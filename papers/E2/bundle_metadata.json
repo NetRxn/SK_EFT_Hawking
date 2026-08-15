@@ -57,9 +57,7 @@
   "supersession_ledger_anchor": "docs/review_finding_supersessions.json",
   "notes": "2026-05-07 Session-3 cross-bundle propagation: E2 Geurs2025 + Majumdar2025 bibitems updated to match arXiv-version titles + author initials (S.~Majumdar → A.~Majumdar). Both received arXiv ID + Nat. Phys. coordinates where applicable. LaTeX recompile clean (4pp/569936 bytes). | 2026-05-07 Session-3 cross-bundle r1 GREEN: 0 BLOCKER, 3 RECOMMENDED (Falque2025 dangling bibitem; Zhao2023 missing arXiv/DOI; η/s device-equivalence one-sentence clarification). η/s ≈ 4 × ℏ/(4π k_B) attribution at E2:169 CORRECTLY GROUNDED — Majumdar2025 abstract explicitly reports three distinct universalities (σ_Q≈4 e²/h, >200× WF violation, η/s→ℏ/(4πk_B)); E2 cites all three correctly. E2↔D1 §7 cross-bundle CONSISTENT (8 shared narrative claims agree). | 2026-06-10 attribution-content sweep (docs/audits/stage13_attribution_sweep_2026-06-10.md): GREEN after fixes. Falque four-orders->order-of-magnitude + convention note; Geurs 500mK disclosure + 150K electron-temp relabel.",
   "open_findings": 22,
-  "blocked_p1_gates": [
-    "LeanProofSubstance"
-  ],
+  "blocked_p1_gates": [],
   "readiness": "YELLOW",
   "readiness_last_computed": "2026-08-15",
   "length_target": {
