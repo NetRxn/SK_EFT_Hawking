@@ -4060,7 +4060,7 @@ PAPER_DEPENDENCIES = {
         'topic': 'Seeley-DeWitt heat-kernel expansion of the Dirac fermion determinant. '
                  'Closed-form Christensen-Duff a₀, a₂, a₄ Dirac coefficients in 4D '
                  'vacuum; Decision Gate E.2 calibration biconditional that matches the '
-                 'a₂ coefficient to LinearizedEFE.G_N_sakharov iff α_ADW = 1; '
+                 'a₂ coefficient to LinearizedEFE.G_N_sakharov iff α_ADW = 1/4; '
                  'tracked-hypothesis structure DiracHeatKernelAsymptotic for the PDE-level '
                  'asymptotic existence (deferred to Mathlib spin-bundle infrastructure)',
         'formulas': [
@@ -4076,23 +4076,28 @@ PAPER_DEPENDENCIES = {
         'key_claims': [
             'a₀ = 4 N_f / (4π)² closed form (Lean: a0_dirac, a0_dirac_pos, '
                 'a0_dirac_linear) — leading cosmological-constant scale',
-            'a₂(R) = -(N_f/12) · R / (4π)² closed form (Lean: a2_R_coefficient, '
-                'a2_R_coefficient_neg, a2_R_coefficient_eq_zero_iff)',
-            'a₄ Christensen-Duff Dirac rationals (-5, +7, -12)/(12·180) per (4π)² '
+            'a₂(R) = -(N_f/3) · R / (4π)² closed form, carrying the Dirac fibre '
+                'trace tr_V 𝟙 = 4 N_f that a₀ also carries (Lean: a2_R_coefficient, '
+                'a2_R_coefficient_neg, a2_R_coefficient_eq_zero_iff, '
+                'a2_R_coefficient_eq_gilkey_trace)',
+            'a₄ Christensen-Duff spin-1/2 rationals (+30, -48, -42)/(12·180) per '
+                '(4π)², equivalently (1/360)[5R² - 8Ric² - 7Riem²] '
                 '(Lean: a4_R_sq_coef, a4_Ricci_sq_coef, a4_Riemann_sq_coef + '
-                'sign theorems _neg/_pos/_neg)',
-            'Sakharov-Adler closed form: G_N_from_a2 = 12π/(N_f Λ²) = G_N_sakharov '
-                '(Lean: G_N_from_a2_eq_G_N_sakharov — substantive cross-bridge '
-                'invokes LinearizedEFE.G_N_sakharov by name)',
+                'sign theorems _pos/_neg/_neg)',
+            'Heat-kernel closed form: G_N_from_a2 = 3π/(N_f Λ²), exactly one '
+                'quarter of LinearizedEFE.G_N_sakharov = 12π/(N_f Λ²) — the factor '
+                'is the Dirac index trace (Lean: G_N_from_a2_eq_quarter_G_N_sakharov '
+                '— substantive cross-bridge invokes LinearizedEFE.G_N_sakharov by '
+                'name)',
             'Decision Gate E.2 biconditional: G_N_from_a2 = G_N_emerg(Λ, N_f, α) '
-                'iff α = 1 (Lean: a2_matches_GNemerg_iff_alpha_ADW_unity)',
+                'iff α = 1/4 (Lean: a2_matches_GNemerg_iff_alpha_ADW_quarter)',
             'GUT-anchor inverse: 1/G_N_from_a2 at (Λ, N_f) = (10¹⁶, 15) = '
-                '15·10³²/(12π) ≈ 3.98·10³¹ GeV² (Lean: G_N_from_a2_at_GUT_inverse)',
+                '15·10³²/(3π) ≈ 1.59·10³² GeV² (Lean: G_N_from_a2_at_GUT_inverse)',
             'GUT inverse below Planck-squared: 1/G_N_from_a2(GUT) < (10¹⁹)² '
                 '(Lean: G_N_from_a2_inverse_at_GUT_below_planck_squared via '
                 'norm_num + Real.pi_gt_three)',
             'Gauss-Bonnet local-algebra combination: c_R - 4 c_Ricci + c_Riem = '
-                '-N_f/(48 (4π)²) (Lean: a4_gauss_bonnet_combination via ring)',
+                '+N_f/(12 (4π)²) (Lean: a4_gauss_bonnet_combination via ring)',
             'Tracked-hypothesis structure DiracHeatKernelAsymptotic encodes the '
                 'PDE-level asymptotic existence (Vassilevich 2003 Theorem 4.1); '
                 'invariants a0_value/a2_R_value force consumers to commit to '
@@ -4129,11 +4134,14 @@ PAPER_DEPENDENCIES = {
             'Algebraic engine: 𝒢 - C² = (2/3) R² - 2 R_μν² '
                 '(Lean: gaussBonnet_minus_weyl_eq_R_minus_Ricci_combination)',
             'Closed-form Stelle coefficients (α, β, γ) = '
-                '(-N_f/324, -41 N_f/4320, +17 N_f/4320) / (4π)² solved from 3×3 '
-                'linear system over Christensen-Duff rationals',
-            'Sign-definite for N_f > 0: α < 0, β < 0, γ > 0 (the topological '
+                '(0, -N_f/20, +11 N_f/360) / (4π)² solved from the 3×3 linear '
+                'system over the Christensen-Duff rationals; -β = 1/20 and '
+                'γ = 11/360 are the textbook Dirac Weyl-anomaly coefficients c and a',
+            'For N_f > 0: α = 0 exactly (a massless Dirac field is conformal, so '
+                'its a₄ carries no independent R²), β < 0, γ > 0 (the topological '
                 'coefficient carries the chiral-anomaly-positive sign) '
-                '(Lean: a4_alpha_neg, a4_beta_neg, a4_gamma_pos)',
+                '(Lean: a4_alpha_eq_zero, a4_stelle_triple_unique, a4_beta_neg, '
+                'a4_gamma_pos, a4_density_eq_dirac_weyl_anomaly_form)',
             'MAIN basis-change identity: a_4 density in {R², R_μν², R_μνρσ²} basis '
                 '= a_4 density in {R², C², 𝒢} basis with (α, β, γ) coefficients '
                 '(Lean: a4_density_eq_a4_density_in_RC2GB_basis — substantive '
@@ -4253,7 +4261,7 @@ PAPER_DEPENDENCIES = {
                 'calibration α=1, the EFE residual at G_N = G_N_emerg(Λ, N_f, 1) '
                 '= G_N_from_a2(Λ, N_f) is identically zero '
                 '(Lean: efeResidualTrace_at_dirac_calibration_vanishes — invokes '
-                'G_N_emerg_at_alpha_one + G_N_from_a2_eq_G_N_sakharov by name)',
+                'G_N_emerg_at_alpha_one + G_N_from_a2_eq_quarter_G_N_sakharov by name)',
             'Light deflection ratio: δθ_ADW/δθ_GR = α_ADW '
                 '(Lean: deflectionRatio); deviation linear in (α-1) '
                 '(Lean: deflectionRatio_minus_one_eq)',

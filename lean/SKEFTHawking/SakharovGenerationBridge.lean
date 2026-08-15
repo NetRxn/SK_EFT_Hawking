@@ -5,7 +5,7 @@ WHY THIS MODULE EXISTS
 ----------------------
 The flagship (bundle F, abstract / §1.4 / §6.1 / §12.1) elevates to a headline
 *synthesis claim* that the `N_f` in the Sakharov coefficient
-`G_N = 12π/(N_f Λ²)` and the `N_f` that fixes the Standard-Model anomaly
+`G_N = 3π/(N_f Λ²)` and the `N_f` that fixes the Standard-Model anomaly
 classification are **the same `N_f`** — "the substrate is one object; its faces
 are the sibling bundles' worth of predictive register."
 
@@ -74,7 +74,7 @@ namespace FermionContent
 def generationNf (c : FermionContent) : ℕ := c.generations
 
 /-- The Sakharov-side count: Dirac species, two Weyl fields per Dirac field.
-Enters `a₀ = 4 N_f/(4π)²` and `G_N = 12π/(N_f Λ²)`. -/
+Enters `a₀ = 4 N_f/(4π)²` and `G_N = 3π/(N_f Λ²)`. -/
 def diracFlavourNf (c : FermionContent) : ℚ :=
   (c.generations * c.weylPerGeneration : ℚ) / 2
 
@@ -211,13 +211,13 @@ above, and the proof still does not need it.
 
 What is NOT definitional is what the constraint does to the OBSERVABLE. If the
 anomaly condition forces `N_f = 24k`, then the emergent Newton constant
-`G_N = 12π/(N_f Λ²)` cannot take arbitrary values — it lands on a discrete ladder
+`G_N = 3π/(N_f Λ²)` cannot take arbitrary values — it lands on a discrete ladder
 indexed by `k`, and consecutive admissible rungs stand in a fixed ratio. That is a
 statement about `G_N_from_a2`, not about how `diracFlavourNf` was defined.
 
 ⚠️ **The `24` is NOT load-bearing in the two ladder theorems below, and an earlier
 version of this paragraph claimed it was** ("falsifiable: change the 24 and the ratio
-changes"). It is not: `G_N_from_a2 Λ N_f = 12π/(N_f Λ²)`, so in any ratio
+changes"). It is not: `G_N_from_a2 Λ N_f = 3π/(N_f Λ²)`, so in any ratio
 `G(d·k) / G(d·(k+1))` the divisor `d` cancels identically. Kernel-checked for an
 ARBITRARY divisor — `G_N_from_a2 Λ (d*k) / G_N_from_a2 Λ (d*(k+1)) = (k+1)/k` closes
 by `field_simp` alone for every `d ≠ 0`.

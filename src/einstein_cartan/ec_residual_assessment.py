@@ -9,7 +9,7 @@ The EC match residual
 
 vanishes iff ``α_EC = 1`` under positive ``(Λ_UV, N_f, n_spin)``.  This
 is the Wave 6 expression of Decision Gate E.2 (the Wave 1 closure
-``a2_matches_GNemerg_iff_alpha_ADW_unity`` lifted to the EC sector).
+``a2_matches_GNemerg_iff_alpha_ADW_quarter`` lifted to the EC sector).
 
 Lean: ``EinsteinCartanExtension.ecResidual``,
       ``EinsteinCartanExtension.ecResidual_eq_zero_iff_alpha_unity``

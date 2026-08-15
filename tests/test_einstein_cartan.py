@@ -119,9 +119,14 @@ class TestCosmologicalBackground:
         assert math.isclose(amp_general, amp_cosmic, rel_tol=1e-12)
 
     def test_natural_prediction_order_of_magnitude(self):
-        """At natural params (M_Pl, 16, 1), prediction is ~ 2×10⁻⁷⁷ GeV."""
+        """At natural params (M_Pl, 16, 1), prediction is ~ 5×10⁻⁷⁸ GeV.
+
+        Corrected 2026-08-15: the amplitude is proportional to
+        G_N_from_a2, which the Dirac fibre-trace correction divided by
+        four (12π → 3π), so this moved from ~2×10⁻⁷⁷.
+        """
         amp = torsion_amplitude_at_cosmological_background(M_PL, N_F_SM, 1.0)
-        assert 1.0e-77 < amp < 1.0e-76
+        assert 1.0e-78 < amp < 1.0e-77
 
     def test_natural_prediction_strictly_positive(self):
         """Wave 6 substantive non-vanishing-prediction guarantee."""

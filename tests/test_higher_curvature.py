@@ -49,23 +49,25 @@ class TestA4Closed_Forms:
 
     def test_a4_R_sq_at_unit_Nf(self):
         v = higher_curvature_R_sq_coefficient(1.0)
-        expected = -5.0 / (12.0 * 180.0) / HEAT_KERNEL_PARAMS['FOUR_PI_SQ']
+        expected = 30.0 / (12.0 * 180.0) / HEAT_KERNEL_PARAMS['FOUR_PI_SQ']
         assert math.isclose(v, expected, rel_tol=1e-12)
 
     def test_a4_Ricci_sq_at_unit_Nf(self):
         v = higher_curvature_Ricci_sq_coefficient(1.0)
-        expected = 7.0 / (12.0 * 180.0) / HEAT_KERNEL_PARAMS['FOUR_PI_SQ']
+        expected = -48.0 / (12.0 * 180.0) / HEAT_KERNEL_PARAMS['FOUR_PI_SQ']
         assert math.isclose(v, expected, rel_tol=1e-12)
 
     def test_a4_Riemann_sq_at_unit_Nf(self):
         v = higher_curvature_Riemann_sq_coefficient(1.0)
-        expected = -12.0 / (12.0 * 180.0) / HEAT_KERNEL_PARAMS['FOUR_PI_SQ']
+        expected = -42.0 / (12.0 * 180.0) / HEAT_KERNEL_PARAMS['FOUR_PI_SQ']
         assert math.isclose(v, expected, rel_tol=1e-12)
 
     def test_signs_at_positive_Nf(self):
+        # Corrected 2026-08-15: the R² and Ricci² signs are the reverse
+        # of the pre-correction triple.
         for n in (1.0, 5.0, 24.0, 27.0, 100.0):
-            assert higher_curvature_R_sq_coefficient(n) < 0
-            assert higher_curvature_Ricci_sq_coefficient(n) > 0
+            assert higher_curvature_R_sq_coefficient(n) > 0
+            assert higher_curvature_Ricci_sq_coefficient(n) < 0
             assert higher_curvature_Riemann_sq_coefficient(n) < 0
 
     def test_linearity_in_Nf(self):
@@ -147,25 +149,38 @@ class TestStelleBasis:
     """Sign-definite (α, β, γ) plus basis-change identity."""
 
     def test_alpha_beta_gamma_signs(self):
+        # Corrected 2026-08-15: α is exactly zero (a massless Dirac
+        # field is conformal), not negative.
         for n in (1.0, 5.0, 24.0, 27.0, 100.0):
             c = stelle_basis_coefficients(n)
-            assert c.alpha < 0   # α(N_f) < 0
+            assert c.alpha == 0.0  # α(N_f) ≡ 0
             assert c.beta < 0    # β(N_f) < 0
             assert 0 < c.gamma   # γ(N_f) > 0  (topological sign-definite)
 
     def test_alpha_closed_form_at_unit_Nf(self):
+        """Lean: a4_alpha_eq_zero / a4_stelle_triple_unique."""
         c = stelle_basis_coefficients(1.0)
-        expected_alpha = -1.0 / 324.0 / HEAT_KERNEL_PARAMS['FOUR_PI_SQ']
-        assert math.isclose(c.alpha, expected_alpha, rel_tol=1e-12)
+        assert c.alpha == 0.0
+
+    def test_alpha_is_zero_at_every_N_f(self):
+        """Ratchet: the R² Stelle coefficient must vanish identically.
+
+        Any non-zero α would mean the a_4 of a conformal field carries
+        an independent R² structure — the defect corrected 2026-08-15.
+        """
+        for n in (0.5, 1.0, 15.0, 27.0, 1000.0):
+            assert stelle_basis_coefficients(n).alpha == 0.0
 
     def test_beta_closed_form_at_unit_Nf(self):
+        """-β = 1/20 is the Dirac Weyl-anomaly coefficient c."""
         c = stelle_basis_coefficients(1.0)
-        expected_beta = -41.0 / 4320.0 / HEAT_KERNEL_PARAMS['FOUR_PI_SQ']
+        expected_beta = -1.0 / 20.0 / HEAT_KERNEL_PARAMS['FOUR_PI_SQ']
         assert math.isclose(c.beta, expected_beta, rel_tol=1e-12)
 
     def test_gamma_closed_form_at_unit_Nf(self):
+        """γ = 11/360 is the Dirac Euler-density anomaly coefficient a."""
         c = stelle_basis_coefficients(1.0)
-        expected_gamma = 17.0 / 4320.0 / HEAT_KERNEL_PARAMS['FOUR_PI_SQ']
+        expected_gamma = 11.0 / 360.0 / HEAT_KERNEL_PARAMS['FOUR_PI_SQ']
         assert math.isclose(c.gamma, expected_gamma, rel_tol=1e-12)
 
     def test_basis_change_identity_random(self):
@@ -355,11 +370,13 @@ class TestObservationalBandFormula:
             abs(higher_curvature_Ricci_sq_coefficient(27)),
             abs(higher_curvature_Riemann_sq_coefficient(27)),
         )
-        # Closed form: -N_f / (180 (4π)²) at N_f=27.
-        expected = 27.0 / (180.0 * (4.0 * math.pi) ** 2)
+        # Closed form: |c_Ricci| = N_f / (45 (4π)²) at N_f=27 is now the
+        # largest of the three (corrected 2026-08-15; it was |c_Riem| =
+        # N_f/(180 (4π)²) under the pre-correction triple).
+        expected = 27.0 / (45.0 * (4.0 * math.pi) ** 2)
         assert math.isclose(largest, expected, rel_tol=1e-12)
-        # Cross-pin against the paper40 §5 stated anchor (4 sig fig):
-        assert math.isclose(largest, 9.498861e-4, rel_tol=1e-6)
+        # Cross-pin to 4 significant figures:
+        assert math.isclose(largest, 3.799544e-3, rel_tol=1e-6)
         # Confirm the formula consumed by paper40 returns True at the
         # tightest published ceiling:
         assert higher_curvature_predicted_in_observational_band(

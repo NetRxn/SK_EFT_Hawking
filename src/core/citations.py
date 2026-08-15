@@ -2927,7 +2927,7 @@ CITATION_REGISTRY = {
                  'verified (Phase 6e Wave 5 SHIPPED 2026-04-28). Registry '
                  'entry created during Wave 6 to satisfy Gate 1 '
                  'CitationIntegrity for paper43 references to the Wave-5 '
-                 '`gNMicroscopic_at_alpha_one_eq_G_N_emerg` cross-bridge. '
+                 '`gNMicroscopic_eq_G_N_emerg_at_quarter_alpha` cross-bridge. '
                  'Flag as `year: 2026, journal: in preparation` until '
                  'paper42b is submitted and a journal venue is assigned.',
     },

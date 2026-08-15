@@ -28,8 +28,11 @@ basis change at the coefficient level and supplies the
 
 - §1: `gaussBonnet4D`, `weylSquared4D` definitions + identities
 - §2: `{α, β, γ}` coefficients in the `{R², C², 𝒢}` basis
-- §3: `a4_density` ↔ `a4_density_in_RC2GB_basis` cross-bridge identity
-- §4: Sign theorems `α < 0`, `β < 0`, `γ > 0` for `0 < N_f`
+- §3: `a4_density` ↔ `a4_density_in_RC2GB_basis` cross-bridge identity,
+  uniqueness of the triple, and the textbook Dirac Weyl-anomaly form
+- §4: Sign theorems `α = 0`, `β < 0`, `γ > 0` for `0 < N_f`
+  (`α = 0` exactly: a massless Dirac field is conformal, so its `a_4`
+  carries no independent `R²`)
 - §5: Observational ceilings (Calmet, Capozziello & Pryer 2017, Berti et al. 2015)
 - §6: Correctness-push — microscopic predictions far below the tightest
   observational bound (binary pulsar)
@@ -43,8 +46,9 @@ basis change at the coefficient level and supplies the
   on `(α, β)` from Eöt-Wash + Cassini
 - Berti et al, Class. Quantum Grav. 32, 243001 (2015) [arXiv:1501.07274] — pulsar timing GR
   precision
-- Phase 6e Wave 1 `HeatKernelExpansion.lean` — Christensen-Duff Dirac
-  `a_4` rationals (input to this wave)
+- Phase 6e Wave 1 `HeatKernelExpansion.lean` — the Christensen-Duff
+  spin-1/2 `a_4` rationals (input to this wave), corrected 2026-08-15
+  to carry the Dirac fibre trace
 
 ## Scope lock
 
@@ -123,26 +127,48 @@ theorem gaussBonnet_minus_weyl_eq_R_minus_Ricci_combination
 the Christensen-Duff Dirac `a_4` rationals (per `(4π)²` heat-kernel
 measure).  Solved from the linear system
 
-  `α + β/3 + γ = c_R = -5/2160`,
-  `-2β - 4γ      = c_Ricci = 7/2160`,
-  `β + γ           = c_Riemann = -1/180`.
+  `α + β/3 + γ = c_R      = +30/2160 =  1/72`,
+  `-2β - 4γ       = c_Ricci  = -48/2160 = -1/45`,
+  `β + γ            = c_Riemann = -42/2160 = -7/360`.
 
-Closed form: `α(N_f) = -N_f / (324 (4π)²)`. -/
-def a4_alpha (N_f : ℝ) : ℝ :=
-  N_f * (-1 / 324) * fourPiSqInv
+Closed form: **`α(N_f) = 0`**, identically.
+
+This is not a degenerate accident: a massless Dirac field is
+conformally invariant, so its `a_4` carries no *independent* `R²`
+structure — every `R²` piece is the one already inside `C²` and `𝒢`.
+The vanishing is *derived*, not stipulated: `a4_stelle_triple_unique`
+shows `(α, β, γ)` is the unique triple representing the Wave 1 `a_4`
+density in this basis, so `α = 0` is forced by the coefficients rather
+than chosen here.
+
+⚠️ Corrected 2026-08-15 (was `-N_f/(324 (4π)²)`, from the
+pre-correction `a_4` triple). The theorem `a4_alpha_neg` asserting
+`α < 0` is FALSE under the published Dirac coefficients and has been
+replaced by `a4_alpha_eq_zero`. -/
+def a4_alpha (_N_f : ℝ) : ℝ := 0
 
 /-- Coefficient of `C²` in Stelle's `{R², C², 𝒢}` basis.
-Closed form: `β(N_f) = -41 N_f / (4320 (4π)²)`. -/
+Closed form: `β(N_f) = -N_f / (20 (4π)²)`.
+
+`-β = 1/20` is exactly the textbook Weyl-anomaly coefficient `c` of a
+four-component Dirac field.
+
+⚠️ Corrected 2026-08-15 (was `-41 N_f/(4320 (4π)²)`). -/
 def a4_beta (N_f : ℝ) : ℝ :=
-  N_f * (-41 / 4320) * fourPiSqInv
+  N_f * (-1 / 20) * fourPiSqInv
 
 /-- Coefficient of the topological Gauss-Bonnet density.
-Closed form: `γ(N_f) = 17 N_f / (4320 (4π)²)`.
+Closed form: `γ(N_f) = 11 N_f / (360 (4π)²)`.
+
+`γ = 11/360` is exactly the textbook Euler-density anomaly coefficient
+`a` of a four-component Dirac field.
 
 In a closed-manifold integral this contributes `32 π² χ(M) · γ(N_f)`,
-i.e. a topological boundary term in the effective action. -/
+i.e. a topological boundary term in the effective action.
+
+⚠️ Corrected 2026-08-15 (was `17 N_f/(4320 (4π)²)`). -/
 def a4_gamma (N_f : ℝ) : ℝ :=
-  N_f * (17 / 4320) * fourPiSqInv
+  N_f * (11 / 360) * fourPiSqInv
 
 /-- a_4 density in the original `{R², R_μν², R_μνρσ²}` basis using
 Wave 1 Christensen-Duff coefficients. -/
@@ -159,14 +185,19 @@ def a4_density_in_RC2GB_basis (N_f R_sq Ricci_sq Riemann_sq : ℝ) : ℝ :=
 
 /-! ## §3. Sign theorems for `α, β, γ` -/
 
-/-- For positive `N_f`, the Stelle `R²` coefficient is negative. -/
-theorem a4_alpha_neg {N_f : ℝ} (hN : 0 < N_f) :
-    a4_alpha N_f < 0 := by
-  unfold a4_alpha
-  have h_inv : 0 < fourPiSqInv := fourPiSqInv_pos
-  nlinarith
+/-- **The Stelle `R²` coefficient vanishes identically.**  Replaces the
+pre-correction `a4_alpha_neg` (`α < 0`), which is false under the
+published Christensen-Duff Dirac `a_4`: the correct value is exactly
+zero, for every species count, because a massless Dirac field is
+conformal.
 
-/-- For positive `N_f`, the Stelle `C²` coefficient is negative. -/
+Read alone this is a definitional unfolding; its content lives in
+`a4_stelle_triple_unique`, which shows no *other* value of `α` can
+represent the Wave 1 `a_4` density in this basis. -/
+theorem a4_alpha_eq_zero (N_f : ℝ) : a4_alpha N_f = 0 := rfl
+
+/-- For positive `N_f`, the Stelle `C²` coefficient is negative.
+`-β/(N_f (4π)^{-2}) = 1/20` is the Dirac Weyl-anomaly `c`. -/
 theorem a4_beta_neg {N_f : ℝ} (hN : 0 < N_f) :
     a4_beta N_f < 0 := by
   unfold a4_beta
@@ -176,7 +207,8 @@ theorem a4_beta_neg {N_f : ℝ} (hN : 0 < N_f) :
 /-- For positive `N_f`, the Stelle topological coefficient is positive.
 This sign-definiteness is a non-trivial fingerprint of the
 Christensen-Duff Dirac sector: the chiral anomaly contributes a
-*positive* topological contribution to the effective action. -/
+*positive* topological contribution to the effective action.
+`γ/(N_f (4π)^{-2}) = 11/360` is the Dirac Euler-density anomaly `a`. -/
 theorem a4_gamma_pos {N_f : ℝ} (hN : 0 < N_f) :
     0 < a4_gamma N_f := by
   unfold a4_gamma
@@ -202,6 +234,57 @@ theorem a4_density_eq_a4_density_in_RC2GB_basis
   unfold a4_density a4_density_in_RC2GB_basis
   unfold a4_R_sq_coef a4_Ricci_sq_coef a4_Riemann_sq_coef
   unfold a4_alpha a4_beta a4_gamma
+  unfold weylSquared4D gaussBonnet4D
+  ring
+
+/-- **Uniqueness of the Stelle triple (anti-stipulation).**  `{R², C², 𝒢}`
+is a basis, so *any* triple `(a, b, c)` representing the Wave 1 `a_4`
+density pointwise is `(α, β, γ)`.  In particular `a = 0` is forced by
+the Christensen-Duff coefficients — `a4_alpha_eq_zero` is a derived
+fact about the Dirac `a_4`, not a convention chosen in the definition.
+
+Proof: instantiate the hypothesis at the three curvature points
+`(R², Ric², Riem²) = (0,0,1), (0,1,0), (1,0,0)` and solve the resulting
+3×3 linear system. -/
+theorem a4_stelle_triple_unique (N_f a b c : ℝ)
+    (h : ∀ R_sq Ricci_sq Riemann_sq : ℝ,
+      a4_density N_f R_sq Ricci_sq Riemann_sq =
+        a * R_sq + b * weylSquared4D R_sq Ricci_sq Riemann_sq
+          + c * gaussBonnet4D R_sq Ricci_sq Riemann_sq) :
+    a = a4_alpha N_f ∧ b = a4_beta N_f ∧ c = a4_gamma N_f := by
+  have h1 := h 0 0 1
+  have h2 := h 0 1 0
+  have h3 := h 1 0 0
+  unfold a4_density weylSquared4D gaussBonnet4D at h1 h2 h3
+  unfold a4_R_sq_coef a4_Ricci_sq_coef a4_Riemann_sq_coef at h1 h2 h3
+  unfold a4_alpha a4_beta a4_gamma
+  refine ⟨by linarith, by linarith, by linarith⟩
+
+/-- **Textbook Dirac Weyl-anomaly anchor (falsifiable numeric pin).**
+The Wave 1 `a_4` density is, for every species count and every
+curvature input,
+
+  `a_4 = N_f (4π)^{-2} [ -(1/20) C² + (11/360) 𝒢 ]`,
+
+i.e. the four-component Dirac conformal-anomaly coefficients
+`c = 1/20` and `a = 11/360`, and **no independent `R²` term** — the
+statement of conformal invariance at the level of the local `a_4`
+density.
+
+This is the load-bearing external check on the Wave 1 triple: an
+`a_4` with any `R²` residue, or with `(c, a) ≠ (1/20, 11/360)`, fails
+it.  The pre-correction triple `(-5, +7, -12)/2160` fails it in both
+respects.
+
+Proof unfolds the Wave 1 coefficients directly, so a drift in any of
+the three breaks this theorem. -/
+theorem a4_density_eq_dirac_weyl_anomaly_form
+    (N_f R_sq Ricci_sq Riemann_sq : ℝ) :
+    a4_density N_f R_sq Ricci_sq Riemann_sq =
+      N_f * fourPiSqInv *
+        (-(1 / 20) * weylSquared4D R_sq Ricci_sq Riemann_sq
+          + (11 / 360) * gaussBonnet4D R_sq Ricci_sq Riemann_sq) := by
+  unfold a4_density a4_R_sq_coef a4_Ricci_sq_coef a4_Riemann_sq_coef
   unfold weylSquared4D gaussBonnet4D
   ring
 
@@ -258,14 +341,18 @@ unfolding; drift-protection per `feedback_python_lean_refs_drift.md`.
 
 The numerical content is genuine:
 
-  `|c_R(N_f)|        ≤ N_f · (5  / 2160) · (4π)⁻²  ≤ 100/2160 < 1`
-  `|c_Ricci(N_f)|    ≤ N_f · (7  / 2160) · (4π)⁻²  ≤ 700/2160 < 1`
-  `|c_Riemann(N_f)|  ≤ N_f · (12 / 2160) · (4π)⁻²  ≤ 12·100/2160 < 1`
+  `|c_R(N_f)|        ≤ N_f · (30 / 2160) · (4π)⁻²  ≤ 3000/2160 < 10⁵⁹`
+  `|c_Ricci(N_f)|    ≤ N_f · (48 / 2160) · (4π)⁻²  ≤ 4800/2160 < 10⁵⁹`
+  `|c_Riemann(N_f)|  ≤ N_f · (42 / 2160) · (4π)⁻²  ≤ 4200/2160 < 10⁵⁹`
 
-All three are bounded by `< 1` and trivially below `10⁵⁹`. The
-3-conjunct bundle is **not** P2 redundancy — each conjunct invokes a
-distinct Wave 1 coefficient (different rational, different proof
-structure). -/
+The 3-conjunct bundle is **not** P2 redundancy — each conjunct invokes
+a distinct Wave 1 coefficient (different rational, different sign).
+
+Rewritten 2026-08-15: the pre-correction proof leant on each
+`|coefficient| < 1`, which the corrected `|c_Ricci|` at `N_f = 100`
+(≈ 2.2 before the `(4π)⁻²` suppression) no longer satisfies.  The
+argument now goes through a single uniform `|q| ≤ 1` bound on the
+*rational* factor. -/
 theorem higher_curvature_below_pulsar_bound
     {N_f : ℝ} (hN_pos : 0 < N_f) (hN_max : N_f ≤ 100) :
     |a4_R_sq_coef N_f|       < hc_bound_pulsar ∧
@@ -274,60 +361,23 @@ theorem higher_curvature_below_pulsar_bound
   unfold a4_R_sq_coef a4_Ricci_sq_coef a4_Riemann_sq_coef hc_bound_pulsar
   have h_inv_pos : 0 < fourPiSqInv := fourPiSqInv_pos
   have h_inv_lt_one : fourPiSqInv < 1 := fourPiSqInv_lt_one
-  have h_one_lt_pow : (1 : ℝ) < (10 : ℝ) ^ (59 : ℕ) := by norm_num
-  refine ⟨?_, ?_, ?_⟩
-  -- |c_R|
-  · have h_eq : N_f * (-5 / (12 * 180)) * fourPiSqInv =
-                  -(N_f * (5 / (12 * 180)) * fourPiSqInv) := by ring
-    rw [h_eq, abs_neg]
-    have h_pos : 0 < N_f * (5 / (12 * 180)) * fourPiSqInv := by
-      have h1 : 0 < N_f * (5 / (12 * 180)) := by positivity
-      exact mul_pos h1 h_inv_pos
-    rw [abs_of_pos h_pos]
-    -- Bound: N_f * (5/2160) * fourPiSqInv ≤ 100 * (5/2160) * 1 < 1 ≤ 10^59
-    have h_step1 : N_f * (5 / (12 * 180)) * fourPiSqInv ≤
-                    100 * (5 / (12 * 180)) * 1 := by
-      apply mul_le_mul
-      · apply mul_le_mul_of_nonneg_right hN_max
-        norm_num
-      · linarith
-      · linarith
-      · positivity
-    have h_step2 : (100 : ℝ) * (5 / (12 * 180)) * 1 < 1 := by norm_num
+  -- Uniform bound: any rational factor with |q| ≤ 1 stays far below 10⁵⁹.
+  have key : ∀ q : ℝ, |q| ≤ 1 →
+      |N_f * q * fourPiSqInv| < (10 : ℝ) ^ (59 : ℕ) := by
+    intro q hq
+    have habs : |N_f * q * fourPiSqInv| = N_f * |q| * fourPiSqInv := by
+      rw [abs_mul, abs_mul, abs_of_pos hN_pos, abs_of_pos h_inv_pos]
+    rw [habs]
+    have hq_nonneg : (0 : ℝ) ≤ |q| := abs_nonneg q
+    have hstep : N_f * |q| * fourPiSqInv ≤ 100 * 1 * 1 := by
+      have h1 : N_f * |q| ≤ 100 * 1 :=
+        mul_le_mul hN_max hq hq_nonneg (by norm_num)
+      exact mul_le_mul h1 (le_of_lt h_inv_lt_one) (le_of_lt h_inv_pos)
+        (by norm_num)
+    have hpow : (100 : ℝ) * 1 * 1 < (10 : ℝ) ^ (59 : ℕ) := by norm_num
     linarith
-  -- |c_Ricci|
-  · have h_pos : 0 < N_f * (7 / (12 * 180)) * fourPiSqInv := by
-      have h1 : 0 < N_f * (7 / (12 * 180)) := by positivity
-      exact mul_pos h1 h_inv_pos
-    rw [abs_of_pos h_pos]
-    have h_step1 : N_f * (7 / (12 * 180)) * fourPiSqInv ≤
-                    100 * (7 / (12 * 180)) * 1 := by
-      apply mul_le_mul
-      · apply mul_le_mul_of_nonneg_right hN_max
-        norm_num
-      · linarith
-      · linarith
-      · positivity
-    have h_step2 : (100 : ℝ) * (7 / (12 * 180)) * 1 < 1 := by norm_num
-    linarith
-  -- |c_Riemann|
-  · have h_eq : N_f * (-12 / (12 * 180)) * fourPiSqInv =
-                  -(N_f * (12 / (12 * 180)) * fourPiSqInv) := by ring
-    rw [h_eq, abs_neg]
-    have h_pos : 0 < N_f * (12 / (12 * 180)) * fourPiSqInv := by
-      have h1 : 0 < N_f * (12 / (12 * 180)) := by positivity
-      exact mul_pos h1 h_inv_pos
-    rw [abs_of_pos h_pos]
-    have h_step1 : N_f * (12 / (12 * 180)) * fourPiSqInv ≤
-                    100 * (12 / (12 * 180)) * 1 := by
-      apply mul_le_mul
-      · apply mul_le_mul_of_nonneg_right hN_max
-        norm_num
-      · linarith
-      · linarith
-      · positivity
-    have h_step2 : (100 : ℝ) * (12 / (12 * 180)) * 1 < 1 := by norm_num
-    linarith
+  refine ⟨key _ ?_, key _ ?_, key _ ?_⟩ <;> rw [abs_le] <;>
+    constructor <;> norm_num
 
 /-- **Falsifier.**  For positive `N_f`, every Wave 1 `a_4` coefficient
 is **non-zero** — the predictions are non-trivial.  This rules out the
@@ -342,32 +392,10 @@ theorem higher_curvature_predictions_strictly_positive
     0 < |a4_Ricci_sq_coef N_f| ∧
     0 < |a4_Riemann_sq_coef N_f| := by
   have h_inv_pos : 0 < fourPiSqInv := fourPiSqInv_pos
-  refine ⟨?_, ?_, ?_⟩
-  -- |c_R| > 0
-  · rw [abs_pos]
-    unfold a4_R_sq_coef
-    have h1 : N_f * (-5 / (12 * 180)) ≠ 0 := by
-      have : N_f * (-5 / (12 * 180)) = -(N_f * (5 / (12 * 180))) := by ring
-      rw [this]
-      apply neg_ne_zero.mpr
-      have : 0 < N_f * (5 / (12 * 180)) := by positivity
-      exact ne_of_gt this
-    exact mul_ne_zero h1 (ne_of_gt h_inv_pos)
-  -- |c_Ricci| > 0
-  · rw [abs_pos]
-    unfold a4_Ricci_sq_coef
-    have h1 : 0 < N_f * (7 / (12 * 180)) := by positivity
-    exact mul_ne_zero (ne_of_gt h1) (ne_of_gt h_inv_pos)
-  -- |c_Riemann| > 0
-  · rw [abs_pos]
-    unfold a4_Riemann_sq_coef
-    have h1 : N_f * (-12 / (12 * 180)) ≠ 0 := by
-      have : N_f * (-12 / (12 * 180)) = -(N_f * (12 / (12 * 180))) := by ring
-      rw [this]
-      apply neg_ne_zero.mpr
-      have : 0 < N_f * (12 / (12 * 180)) := by positivity
-      exact ne_of_gt this
-    exact mul_ne_zero h1 (ne_of_gt h_inv_pos)
+  have key : ∀ q : ℝ, q ≠ 0 → N_f * q * fourPiSqInv ≠ 0 := fun q hq =>
+    mul_ne_zero (mul_ne_zero (ne_of_gt hN) hq) (ne_of_gt h_inv_pos)
+  unfold a4_R_sq_coef a4_Ricci_sq_coef a4_Riemann_sq_coef
+  refine ⟨?_, ?_, ?_⟩ <;> rw [abs_pos] <;> exact key _ (by norm_num)
 
 /-! ## §8. Tracked-hypothesis Prop -/
 

@@ -25,9 +25,12 @@ class StelleBasisCoefficients:
     ``HigherCurvatureStructure.lean``.
 
     Sign-definite for ``N_f > 0``:
-    - ``alpha < 0``  (R² coefficient)
-    - ``beta < 0``   (C²  coefficient)
-    - ``gamma > 0``  (Gauss-Bonnet topological coefficient)
+    - ``alpha == 0`` (R² coefficient — exactly zero; a massless Dirac
+      field is conformal, so its a_4 carries no independent R²)
+    - ``beta < 0``   (C²  coefficient; ``-beta`` is the Dirac Weyl
+      anomaly ``c = 1/20``)
+    - ``gamma > 0``  (Gauss-Bonnet topological coefficient; the Dirac
+      Euler anomaly ``a = 11/360``)
     """
     N_f: float
     alpha: float
@@ -39,21 +42,27 @@ def stelle_basis_coefficients(N_f: float) -> StelleBasisCoefficients:
     """Compute ``(α, β, γ)`` for fermion count ``N_f``.
 
     Closed form (per ``(4π)²``):
-        α(N_f) = -N_f / 324
-        β(N_f) = -41 N_f / 4320
-        γ(N_f) = 17 N_f / 4320
+        α(N_f) = 0
+        β(N_f) = -N_f / 20
+        γ(N_f) = 11 N_f / 360
+
+    ⚠️ Corrected 2026-08-15 with the Wave 1 a_4 trace correction (was
+    ``(-1/324, -41/4320, +17/4320)``).  Canonical source is
+    ``src.core.formulas.higher_curvature_microscopic_stelle``; these
+    values must stay in step with it.
 
     Lean: HigherCurvatureStructure.a4_alpha,
           HigherCurvatureStructure.a4_beta,
-          HigherCurvatureStructure.a4_gamma
+          HigherCurvatureStructure.a4_gamma,
+          a4_alpha_eq_zero, a4_stelle_triple_unique
     """
     from src.core.constants import HEAT_KERNEL_PARAMS  # FOUR_PI_SQ lives here
     inv_4pi_sq = 1.0 / HEAT_KERNEL_PARAMS['FOUR_PI_SQ']
     return StelleBasisCoefficients(
         N_f=float(N_f),
-        alpha=float(N_f) * (-1.0 / 324.0) * inv_4pi_sq,
-        beta=float(N_f) * (-41.0 / 4320.0) * inv_4pi_sq,
-        gamma=float(N_f) * (17.0 / 4320.0) * inv_4pi_sq,
+        alpha=0.0 * float(N_f) * inv_4pi_sq,
+        beta=float(N_f) * (-1.0 / 20.0) * inv_4pi_sq,
+        gamma=float(N_f) * (11.0 / 360.0) * inv_4pi_sq,
     )
 
 

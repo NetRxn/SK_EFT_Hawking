@@ -29,7 +29,7 @@ The **load-bearing correctness-push** is a *Decision-Gate-style*
 biconditional: the trace-level EFE residual at the Wave-1
 Christensen-Duff Dirac calibration vanishes for **all** non-trivial
 matter sources iff `α_ADW = 1`.  This is the nonlinear analogue of
-Wave 1's Decision Gate E.2 (`a2_matches_GNemerg_iff_alpha_ADW_unity`).
+Wave 1's Decision Gate E.2 (`a2_matches_GNemerg_iff_alpha_ADW_quarter`).
 
 ## Module structure
 
@@ -129,7 +129,7 @@ calibrated configuration:
 
 — vanishes iff `α_ADW = 1` (under non-trivial source `ρ_ADW ≠ 0`).
 This is the nonlinear analogue of the Wave 1 Decision Gate E.2
-biconditional `a2_matches_GNemerg_iff_alpha_ADW_unity`. -/
+biconditional `a2_matches_GNemerg_iff_alpha_ADW_quarter`. -/
 def efeResidualTrace (G_N ρ_ADW α_ADW : ℝ) : ℝ :=
   8 * Real.pi * G_N * ρ_ADW * (α_ADW - 1)
 
@@ -253,7 +253,7 @@ theorem efeResidualTrace_at_alpha_one (G_N ρ_ADW : ℝ) :
 Under positive Newton constant and non-zero matter source, the
 trace-level EFE residual vanishes iff the ADW coefficient is at the
 Sakharov-Adler calibration `α_ADW = 1`.  This is the nonlinear
-analogue of Wave 1's `a2_matches_GNemerg_iff_alpha_ADW_unity` and
+analogue of Wave 1's `a2_matches_GNemerg_iff_alpha_ADW_quarter` and
 the load-bearing correctness-push for Wave 4.
 
 Substantive cross-module bridge: at `α_ADW = 1`, the consistency
@@ -289,16 +289,26 @@ Newton constant equals the heat-kernel-derived Newton constant from
 Wave 1, and the EFE residual at `(G_N_emerg(Λ, N_f, 1), ρ_ADW, 1)`
 vanishes.  Substantive cross-bridges: invokes both
 `LinearizedEFE.G_N_emerg_at_alpha_one` (Phase 6a.1) and
-`HeatKernelExpansion.G_N_from_a2_eq_G_N_sakharov` (Wave 1) by name —
-drift-protection per `feedback_python_lean_refs_drift.md`. -/
+`HeatKernelExpansion.G_N_from_a2_eq_quarter_G_N_sakharov` (Wave 1) by
+name — drift-protection per `feedback_python_lean_refs_drift.md`.
+
+The *statement* is unaffected by the 2026-08-15 `a_2` trace correction
+(the residual vanishes at `α_ADW = 1` for any `G_N` whatsoever); only
+the route through Wave 1 moved, from an equality to the exact
+factor-of-four relation. -/
 theorem efeResidualTrace_at_dirac_calibration_vanishes
     (Λ N_f ρ_ADW : ℝ) :
     efeResidualTrace
         (SKEFTHawking.LinearizedEFE.G_N_emerg Λ N_f 1) ρ_ADW 1 = 0 := by
   rw [SKEFTHawking.LinearizedEFE.G_N_emerg_at_alpha_one Λ N_f]
-  rw [← SKEFTHawking.HeatKernelExpansion.G_N_from_a2_eq_G_N_sakharov Λ N_f]
+  have h4 : SKEFTHawking.LinearizedEFE.G_N_sakharov Λ N_f
+      = 4 * SKEFTHawking.HeatKernelExpansion.G_N_from_a2 Λ N_f := by
+    rw [SKEFTHawking.HeatKernelExpansion.G_N_from_a2_eq_quarter_G_N_sakharov
+          Λ N_f]
+    ring
+  rw [h4]
   exact efeResidualTrace_at_alpha_one
-          (SKEFTHawking.HeatKernelExpansion.G_N_from_a2 Λ N_f) ρ_ADW
+          (4 * SKEFTHawking.HeatKernelExpansion.G_N_from_a2 Λ N_f) ρ_ADW
 
 /-! ## §4. Observable signatures -/
 

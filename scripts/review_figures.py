@@ -863,8 +863,8 @@ FIGURE_REGISTRY: list[FigureSpec] = [
             "M_Pl vertical anchor (1.22 × 10¹⁹ GeV). The heat-kernel "
             "G_N(Λ_UV) crosses CODATA near M_Pl, confirming the "
             "Sakharov-Adler scale anchor. Lean: "
-            "G_N_from_a2_eq_G_N_sakharov, "
-            "a2_matches_GNemerg_iff_alpha_ADW_unity, "
+            "G_N_from_a2_eq_quarter_G_N_sakharov, "
+            "a2_matches_GNemerg_iff_alpha_ADW_quarter, "
             "G_N_from_a2_at_GUT_inverse, "
             "G_N_from_a2_inverse_at_GUT_below_planck_squared."
         ),

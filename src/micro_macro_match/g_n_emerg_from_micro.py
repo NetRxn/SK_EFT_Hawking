@@ -4,7 +4,7 @@ Lean cross-references:
 - ``MicroscopicCoefficientMatch.gNMicroscopic``
 - ``MicroscopicCoefficientMatch.matchResidual``
 - ``MicroscopicCoefficientMatch.matchResidual_eq_zero_iff_alpha_unity``
-- ``MicroscopicCoefficientMatch.gNMicroscopic_at_alpha_one_eq_G_N_emerg``
+- ``MicroscopicCoefficientMatch.gNMicroscopic_eq_G_N_emerg_at_quarter_alpha``
 """
 
 from __future__ import annotations
