@@ -3,8 +3,9 @@
   "apex_theorems": [
     {
       "name": "SKEFTHawking.DiracFluidWKB.dean_lowest_channel_above_four_omega_H",
-      "claims": "§2/§5 the load-bearing quasi-1D guarantee: the lowest transverse channel exceeds 4ω_H across the whole integration window",
-      "declared": "2026-08-07"
+      "claims": "§2 a norm_num inequality between two numerals, (4.4e5)·π/1e-6 > 4·3.14e11. The draft states this exactly, and states that the identification of the left side with ω_⊥(0) and the right with 4ω_H is carried in prose, not in the theorem: the statement mentions no GrapheneWKBParams, no channelCutoffEnergy and no device record.",
+      "declared": "2026-08-07",
+      "restated": "2026-08-15"
     },
     {
       "name": "SKEFTHawking.DiracFluidMetric.diracFluidMetric_y_offdiag_zero",
@@ -23,13 +24,16 @@
     },
     {
       "name": "SKEFTHawking.GrapheneNoiseFormula.fdt_consistency",
-      "claims": "§4 the closed-form noise PSD's algebraic identity — the draft discloses this certifies the closed form, NOT the two-route equivalence",
-      "declared": "2026-08-07"
-    },
+      "claims": "§5 the Γ=1 substitution into the definition of hawkingNoisePSD. The draft states this certifies the closed form's algebraic identity at unit greybody factor, NOT either derivation and NOT the two-route equivalence, and notes that no fluctuation-dissipation content enters despite the name.",
+      "declared": "2026-08-07",
+      "restated": "2026-08-15"
+    }
+  ],
+  "apex_theorems_withdrawn": [
     {
       "name": "SKEFTHawking.AcousticMetric.hawking_temp_from_surface_gravity",
-      "claims": "§1 the name-binding of T_H = ħκ/2πk_B to surface gravity; disclosed as a rfl-discharge with the substantive content upstream",
-      "declared": "2026-08-07"
+      "withdrawn": "2026-08-15",
+      "reason": "Statement is `∀ bg h, hawkingTemp h.surfaceGravity = h.surfaceGravity / (2*π)`, a rfl against the definition `hawkingTemp κ := κ / (2*π)`. `SonicHorizon.surfaceGravity` (lean/SKEFTHawking/Basic.lean:82) is a bare structure FIELD carrying only `surfaceGravity_pos`; it is never derived from `bg.velocity` or `bg.soundSpeed`, so the theorem binds no physics to the background and cannot back a universality claim. Same defect and same declaration withdrawn from E1 on 2026-08-15; E1/E2 apex overlap remains zero."
     }
   ],
   "tier": 4,
@@ -70,7 +74,7 @@
       "source_note": "UNVERIFIED against the primary. A 2026-08-15 research-scout pass could not reach journals.aps.org: its robots.txt disallows automated agents and every author-guide fetch returned 403. This figure is the one recorded in papers/AutomatedReviews/2026-08-15-l3-stage10-redraft/L3.md §5.1, not one read off the APS author guide. Confirm by hand before treating a pass here as venue conformance; the current abstracts are 2-5x over, so the exact figure does not change any live verdict."
     }
   },
-  "compiled_pages": 5,
+  "compiled_pages": 4,
   "compile_gate_ok": true,
   "critical_open": 0
 }
