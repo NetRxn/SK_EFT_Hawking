@@ -178,6 +178,72 @@ class TestAMatchingRecordIsNotAutomaticallyIdempotent:
         assert len(json.loads(p.read_text())["supersessions"]) == 1
 
 
+class TestAnInertOpenRecordDoesNotBlockClosure:
+    """⚠️ Findings are BORN `open` (`build_graph.py` BIRTH-STATUS INVARIANT), so a ledger
+    record restating `open` asserts nothing and changes no reader's answer. Refusing on it
+    made the *presence of a record that does nothing* permanently unclosable through the
+    sole writer — and the refusal's own advice, "amend the existing record", names an
+    operation this tool does not offer.
+
+    Seeded into a COPY OF THE PRODUCTION LEDGER, not a two-record fixture: the guard reads
+    the real 645 KB record set, and a fixture-only mutation would prove the test works
+    rather than that the writer can be blocked in production. Measured 2026-08-15 before
+    the fix: 10 findings carried an inert `open` record and 5 were open BLOCKING findings
+    on the 21 submission bundles.
+    """
+
+    def _production_ledger_plus(self, tmp_path, monkeypatch, seeded):
+        real = json.loads(cf.LEDGER.read_text(encoding="utf-8"))
+        assert len(real["supersessions"]) > 100, (
+            "expected the production ledger; a tiny one means LEDGER was already repointed "
+            "and this test is no longer production-seeded")
+        real["supersessions"].append(seeded)
+        p = tmp_path / "review_finding_supersessions.json"
+        p.write_text(json.dumps(real))
+        monkeypatch.setattr(cf, "LEDGER", p)
+        return p
+
+    def test_an_inert_open_prior_falls_through_to_the_write(self, tmp_path, monkeypatch):
+        p = self._production_ledger_plus(
+            tmp_path, monkeypatch,
+            {"finding_id": FID, "status": "open", "evidence": "the original description"})
+        ok, msg = cf.close(doc=DOC, sections=[SECTION], status="fixed",
+                           evidence="x" * 60, commit="abc1234")
+        assert ok is True, msg
+        assert json.loads(p.read_text())["supersessions"][-1]["status"] == "fixed"
+
+    def test_the_closure_records_that_it_walked_over_an_inert_record(
+            self, tmp_path, monkeypatch):
+        """Without the marker the ledger reads as if nothing preceded the closure, and the
+        next reader cannot tell an inert prior from no prior at all."""
+        p = self._production_ledger_plus(
+            tmp_path, monkeypatch, {"finding_id": FID, "status": "open"})
+        ok, msg = cf.close(doc=DOC, sections=[SECTION], status="fixed",
+                           evidence="x" * 60, commit="abc1234")
+        assert ok is True, msg
+        assert json.loads(p.read_text())["supersessions"][-1]["supersedes_inert_open"] is True
+
+    def test_an_accepted_prior_is_STILL_refused(self, tmp_path, monkeypatch):
+        """The narrowness is the point. `fixed`↔`accepted` and the below-the-bar-`fixed`
+        refusals are each load-bearing; widening the guard past `open` reopens both."""
+        self._production_ledger_plus(
+            tmp_path, monkeypatch,
+            {"finding_id": FID, "status": "accepted", "evidence": "y" * 60,
+             "date": "2026-01-01"})
+        ok, msg = cf.close(doc=DOC, sections=[SECTION], status="fixed",
+                           evidence="x" * 60, commit="abc1234")
+        assert ok is False
+        assert "refusing to append a conflicting" in msg
+
+    def test_a_sub_bar_fixed_prior_is_STILL_refused(self, tmp_path, monkeypatch):
+        self._production_ledger_plus(
+            tmp_path, monkeypatch, {"finding_id": FID, "status": "fixed"})
+        ok, msg = cf.close(doc=DOC, sections=[SECTION], status="fixed",
+                           evidence="x" * 60, commit="abc1234")
+        assert ok is False
+        assert "does NOT meet the closure bar" in msg
+
+
 class TestTheLifecycleIsCyclable:
     """`reopened` is in `VALID_STATUSES`, so it must be reachable. Before this, every prior
     record raised a conflict and reopening a finding was possible only by the hand edit the
@@ -252,15 +318,21 @@ class TestSerialization:
         — the defect this script exists to remove, reintroduced by its own writer. And a
         raise mid-batch escapes AFTER earlier records were already written to a tracked
         file, so it must surface as a refusal.
+
+        ⚠️ This test seeded `status: "open"` until 2026-08-15 — using the one status that
+        is NOT a conflict as its stand-in for "a conflicting prior". Findings are born
+        `open`, so that record asserted nothing, and the test was pinning a refusal that
+        should never have fired (see `TestAnInertOpenRecordDoesNotBlockClosure`). The
+        intent below is unchanged; only the fixture moved to a genuine conflict.
         """
-        p = self._ledger(tmp_path, [{"finding_id": FID, "status": "open",
+        p = self._ledger(tmp_path, [{"finding_id": FID, "status": "accepted",
                                      "evidence": "y" * 60, "date": "2026-01-01"}])
         monkeypatch.setattr(cf, "LEDGER", p)
         ok, msg = cf.close(doc=DOC, sections=[SECTION], status="fixed",
                            evidence="x" * 60, commit="abc1234")
         assert ok is False
-        assert "already carries status='open'" in msg
-        assert json.loads(p.read_text())["supersessions"][0]["status"] == "open"
+        assert "already carries status='accepted'" in msg
+        assert json.loads(p.read_text())["supersessions"][0]["status"] == "accepted"
 
     def test_writing_the_same_status_twice_is_idempotent(self, tmp_path, monkeypatch):
         p = self._ledger(tmp_path, [{"finding_id": FID, "status": "fixed",

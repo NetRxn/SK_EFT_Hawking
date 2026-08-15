@@ -202,6 +202,11 @@ def _plan(minted, nodes, status, evidence, commit, date, verified_by, superseded
         rec = {"finding_id": fid, "status": status, "evidence": evidence,
                "superseded_by": superseded_by,
                "date": date or _date.today().isoformat()}
+        if prior is not None and prior.get("status") == "open":
+            # Keep the history legible: this closure walks over an inert `open` record
+            # rather than a genuine prior decision. Without the marker the ledger reads as
+            # if nothing preceded it, and the next reader cannot tell the two apart.
+            rec["supersedes_inert_open"] = True
         if commit:
             rec["commit"] = commit
         if verified_by.get(fid):
@@ -233,6 +238,21 @@ def _guard_prior(fid, prior, status, nodes, already) -> None:
                 + (", and a passing verified_by for its declared Verify: command."
                    if has_verify else "."))
         already.append(fid)
+        return
+    # An `open` prior is INERT. `build_graph.py` births every finding `open`
+    # (BIRTH-STATUS INVARIANT), so a record restating it asserts nothing, closes nothing,
+    # and changes no reader's answer — it is bookkeeping. Refusing on it made the *presence
+    # of a record that does nothing* permanently unclosable through the sole writer, and the
+    # refusal below advises "amend the existing record", an operation this tool does not
+    # offer; the only route left was hand-editing the ledger, which is what this writer
+    # exists to eliminate. Measured 2026-08-15: 10 findings carried an inert `open` record,
+    # 5 of them open BLOCKING findings on the 21 submission bundles, at least two already
+    # independently verified as remediated and held open by nothing but this guard.
+    #
+    # ⚠️ Deliberately narrow. The `fixed`↔`accepted` refusal and the below-the-bar-`fixed`
+    # refusal above are each load-bearing and were each written to close a real defect —
+    # widening this guard generally would reopen both.
+    if prior_status == "open":
         return
     # A lifecycle transition through the append-only ledger, which the reader resolves
     # last-wins: closing → reopened, and reopened → closing, are both legitimate.
