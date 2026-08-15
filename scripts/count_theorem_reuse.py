@@ -187,7 +187,12 @@ PLATFORM_SPECIFIC_ROOTS: dict[str, str] = {
     ),
 }
 
-_DECL_RE = re.compile(r"^(theorem|lemma)\s+([A-Za-z0-9_'₀-₉]+)")
+# ⚠️ THE NAME MAY BE DOTTED. Lean allows `theorem Namespace.name`, and this pattern
+# excluded `.`, so `theorem PhononEOM.coeffMatrix_entries` was captured as `PhononEOM` —
+# which resolves to a *structure*, not a theorem, and the script aborted. It broke on
+# 2026-08-13 (`c791c73b`) when two such theorems landed in AcousticMetric.lean, taking
+# D1's headline 106/114 reuse claim out of re-derivation with it.
+_DECL_RE = re.compile(r"^(theorem|lemma)\s+([A-Za-z0-9_'₀-₉]+(?:\.[A-Za-z0-9_'₀-₉]+)*)")
 _FQ_IDENT_RE = re.compile(r"SKEFTHawking\.[A-Za-z0-9_.'₀-₉]+")
 
 
