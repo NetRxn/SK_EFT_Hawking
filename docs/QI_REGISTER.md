@@ -16,6 +16,21 @@ This is the Stage 14 (advisory) register. Each QI item is a **process-level** is
 
 ## Open Items
 
+### qi-dispatching-agents-to-main-blocks-the-merge-queue — opened 2026-08-15 by the wave-3/4 orchestration
+
+- **First observed:** 2026-08-15. Two agents were dispatched to work directly on `main` (the apex-claims metadata check, and the dispersive-coefficient resolution) while five bundle redrafts ran in worktrees. Both blocked the `redraft/D3` merge — the first until it committed, the second for the remainder of the session.
+- **Pattern summary:** An agent working in the **main checkout** holds an uncommitted working tree for its whole lifetime. `git merge` refuses to run against a dirty tree, so *every* branch merge queues behind *every* main-resident agent, however unrelated. The lead cannot clear it either: stashing would yank files out from under a live agent mid-edit, and the honest alternative is to wait. Worktree-resident agents have none of this coupling — their dirt is theirs.
+- **Why it is not obvious in advance:** the choice looks like a scope question ("this task edits `src/` and `lean/`, which every worktree shares anyway") when it is really a **concurrency** question. The cost is not paid by the dispatched agent; it is paid by unrelated merges, later, and it looks like bad luck rather than a decision.
+- **Aggravating:** two agents independently reported killing or contending with other agents' processes from the main checkout — one used a `pytest -q` kill pattern broad enough to catch another agent's run, and one seeded `.lake` with a `cp -c -R` that split past a guard's flag pattern. Both disclosed it. Neither would have been possible from an isolated worktree.
+- **Pipeline stage affected:** wave orchestration; Stage-10 merge sequencing.
+- **Proposed structural prevention:**
+  - **(a) Default every dispatched agent to its own worktree**, including infra and substrate tasks. The worktree cost (~seconds) is trivially below one blocked merge.
+  - **(b) Reserve the main checkout for the lead**, whose job includes merging and who therefore must be able to keep the tree clean on demand.
+  - **(c) When a task genuinely must run on main** — a `lake build` the worker guard reserves to the orchestrator, a deps regeneration — the LEAD runs it, between merges, rather than delegating it into an open-ended agent lifetime.
+- **Owner:** lead. **Target:** applied from wave 5 onward.
+- **Evidence:** `redraft/D3` merge attempted twice and aborted twice, on disjoint file sets (`docs/`+`scripts/`+`tests/` the first time, `src/core/` the second).
+- **Severity:** moderate, and entirely self-inflicted. It costs throughput and merge ordering, never correctness.
+
 ### qi-stage10-lead-spends-runway-on-analysis-and-never-assembles — opened 2026-08-15 by the wave-2 portfolio redraft (D2 + D3, same wave)
 
 - **First observed:** 2026-08-15, wave 2 of the portfolio-wide Stage-10 redraft. **Two of two** bundle leads (D2, D3) hit it independently, in the same wave, without contact.
