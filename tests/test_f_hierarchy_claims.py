@@ -57,11 +57,11 @@ to the Hawking spectrum is $\delta_{\mathrm{diss}} \approx 1.59\times10^{-3}$
 contribution further suppressed by $\xi/c_s$; its sign and magnitude
 are substrate predictions.
 
-\item \textbf{Spectral floor at $\omega \sim 7 T_H$ for Heidelberg.}
+\item \textbf{Spectral floor at $\omega \sim 6 T_H$ for Heidelberg.}
   The exact-WKB closure produces a spectral-density floor onto which
-  the thermal Hawking tail settles once $\exp(-\omega/T_H)$ falls to the
-  FDR floor $\delta_{\mathrm{diss}}/2$; for Heidelberg this crossover
-  sits at $\omega_\times = T_H \ln(2/\delta_{\mathrm{diss}}) \approx 7.14\, T_H$.
+  the thermal Hawking tail settles once the thermal occupation falls to
+  the FDR floor $\delta_{\mathrm{diss}}$; for Heidelberg this crossover
+  sits at $\omega_\times = T_H \ln\!\left(1 + 1/\delta_{\mathrm{diss}}\right) \approx 6.44\, T_H$.
 
 analog-Hawking systems. On the BEC platform (Heidelberg), the
 dispersive correction is $\delta_{\mathrm{disp}} \approx -7.32\times10^{-5}$
@@ -131,7 +131,7 @@ class TestOneWrongValueAloneCarriesTheVerdict:
             f"expected exactly one failing detail, got {sorted(failed)}")
 
     def test_a_single_wrong_crossover_coefficient_fails(self, tmp_path, monkeypatch):
-        body = _FIXED_F.replace(r"\approx 7.14\, T_H", r"\approx 2.00\, T_H")
+        body = _FIXED_F.replace(r"\approx 6.44\, T_H", r"\approx 2.00\, T_H")
         assert body != _FIXED_F, "coefficient substitution did not apply"
         monkeypatch.setattr(_H, "PAPERS_DIR", _write_F(tmp_path, body))
         result = check_f_hierarchy_claims()

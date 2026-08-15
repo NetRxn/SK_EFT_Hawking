@@ -108,7 +108,26 @@ def compute_bec_hierarchy() -> dict[str, dict]:
         delta_disp = dispersive_correction(D)          # -(pi/6) D^2
         delta_diss = plat.gamma_dim                    # Gamma_H/kappa (horizon)
         ratio = delta_diss / abs(delta_disp)
-        ln_arg = math.log(2.0 / delta_diss)
+        # ⚠️ THE NOISE FLOOR IS delta_diss, NOT delta_diss/2 — and halving it twice is
+        # what produced a crossover too high by exactly ln 2 for three review cycles.
+        #
+        # `SKEFTHawking.WKBConnection.noise_floor_eq_delta_diss` states
+        # `noiseFloor p = p.Gamma_H / p.kappa`, and its docstring gives the whole chain:
+        # n_noise = delta_k/2 = (2*Gamma_H/kappa)/2 = Gamma_H/kappa = delta_diss. The
+        # division by two is ALREADY TAKEN inside that identity. `delta_diss` here is
+        # `plat.gamma_dim`, i.e. Gamma_H/kappa, so it IS the floor.
+        #
+        # The crossover is where the thermal occupation meets the floor:
+        #     1/(exp(x) - 1) = n_noise  =>  x = ln(1 + 1/n_noise)
+        # With n_noise = delta_diss/2 that becomes ln(1 + 2/delta_diss) ~ ln(2/delta_diss)
+        # for small delta_diss — which is the old expression. It was internally
+        # consistent with the halved floor below, so neither line looked wrong on its
+        # own; only the Lean statement settles which is right.
+        #
+        # Heidelberg: delta_diss = 1.585e-3 gives 7.14 the old way and 6.44 this way.
+        # The charter's "~6 T_H" was the only published figure that was ever correct,
+        # and it was the one this pipeline did not produce.
+        ln_arg = math.log(1.0 + 1.0 / delta_diss)
         omega_max_over_TH = plat.omega_max / plat.T_H
         out[name] = {
             "D": D,
@@ -119,7 +138,9 @@ def compute_bec_hierarchy() -> dict[str, dict]:
             "ln_arg": ln_arg,
             "omega_cross_over_TH": ln_arg,
             "omega_max_over_TH": omega_max_over_TH,
-            "spectral_floor": delta_diss / 2.0,
+            # n_noise = Gamma_H/kappa = delta_diss (noise_floor_eq_delta_diss). The
+            # delta_k/2 halving is inside that identity, not on top of it.
+            "spectral_floor": delta_diss,
             "cross_below_cutoff": ln_arg < omega_max_over_TH,
             "T_H_nominal_label": T_H_NOMINAL_LABEL[name],
         }

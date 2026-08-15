@@ -663,12 +663,18 @@ exact-WKB closure:
   fluctuation-dissipation relation forces a noise-floor amplitude
   that is independent of the platform-specific dispersion data; the
   noise floor is the substrate's universal experimental signature.
-\item \textbf{Spectral floor at $\omega \sim 7 T_H$ for Heidelberg.}
+\item \textbf{Spectral floor at $\omega \sim 6 T_H$ for Heidelberg.}
   The exact-WKB closure produces a spectral-density floor onto which
-  the thermal Hawking tail settles once
-  $\exp(-\omega/T_H)$ falls to the FDR floor $\delta_{\mathrm{diss}}/2$;
-  for Heidelberg this crossover sits at
-  $\omega_\times = T_H \ln(2/\delta_{\mathrm{diss}}) \approx 7.14\, T_H$.
+  the thermal Hawking tail settles once the thermal occupation
+  $\left(e^{\omega/T_H}-1\right)^{-1}$ falls to the FDR floor. That floor
+  is $\delta_{\mathrm{diss}}$, not $\delta_{\mathrm{diss}}/2$: the
+  factor of two is already taken inside
+  $n_{\mathrm{noise}} = \delta_k/2 = (2\Gamma_H/\kappa)/2 = \Gamma_H/\kappa
+  = \delta_{\mathrm{diss}}$
+  (\texttt{WKBConnection.noise\_floor\_eq\_delta\_diss}). The crossover is
+  therefore
+  $\omega_\times = T_H \ln\!\left(1 + 1/\delta_{\mathrm{diss}}\right)
+  \approx 6.44\, T_H$ for Heidelberg.
 \end{enumerate}
 
 The three non-perturbative effects are encoded in

@@ -56,9 +56,22 @@ def _generated_draft_body() -> str:
     """A minimal D1 draft whose table + crossover come from the generator."""
     heid = compute_bec_hierarchy()["Heidelberg"]
     diss_tex = fmt_sci_latex(heid["delta_diss"]).strip("$")
+    # ⚠️ This fixture previously emitted `ω_× ≈ T_H ln(2/X) ≈ Y T_H`, matching a
+    # check that required that shape. Both encoded the WRONG physics: the FDR
+    # floor is δ_diss, not δ_diss/2 (the halving is inside
+    # `noise_floor_eq_delta_diss`), so the crossover is `ln(1 + 1/δ_diss)` and
+    # the old form ran high by exactly ln 2. Because the fixture, the check and
+    # the draft all agreed with each other, the gate was green while the physics
+    # was wrong — and correcting the paper would have turned it red. Three
+    # Stage-13 passes flagged the discrepancy and none could close it.
+    #
+    # The coefficient is taken from the evaluator (`omega_cross_over_TH`), never
+    # recomputed here: a fixture that restates the formula under test proves only
+    # that two copies of the same mistake agree.
     crossover = (
-        r"$\omega_\times \approx T_H \ln(2/" + diss_tex + r") "
-        r"\approx " + f"{heid['ln_arg']:.2f}" + r"\, T_H$"
+        r"$\delta_{\rm diss} = " + diss_tex + r"$ gives "
+        r"$\omega_\times \simeq " + f"{heid['omega_cross_over_TH']:.2f}"
+        + r"\,T_{\rm eff}$"
     )
     return (
         TABULAR_HEAD + render_latex_rows() + TABULAR_TAIL
@@ -190,10 +203,14 @@ class TestEachFailureGroundCarriesTheVerdictAlone:
         the verdict must travel through the coefficient comparison alone."""
         heid = compute_bec_hierarchy()["Heidelberg"]
         diss_tex = fmt_sci_latex(heid["delta_diss"]).strip("$")
-        good = (r"$\omega_\times \approx T_H \ln(2/" + diss_tex + r") "
-                r"\approx " + f"{heid['ln_arg']:.2f}" + r"\, T_H$")
-        bad = (r"$\omega_\times \approx T_H \ln(2/" + diss_tex + r") "
-               r"\approx " + f"{heid['ln_arg'] * 2:.2f}" + r"\, T_H$")
+        # Seeds the defect in the CURRENT sentence form. The δ_diss is left
+        # canonical so `delta_diss_match` stays green and the verdict has to
+        # travel through the coefficient comparison alone; only the quoted
+        # coefficient is corrupted.
+        good = (r"$\omega_\times \simeq "
+                + f"{heid['omega_cross_over_TH']:.2f}" + r"\,T_{\rm eff}$")
+        bad = (r"$\omega_\times \simeq "
+               + f"{heid['omega_cross_over_TH'] * 2:.2f}" + r"\,T_{\rm eff}$")
         body = _generated_draft_body().replace(good, bad)
         assert body != _generated_draft_body(), "crossover substitution did not apply"
         monkeypatch.setattr(_H, "PAPERS_DIR", _write_draft(tmp_path, body))

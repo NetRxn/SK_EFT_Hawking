@@ -496,33 +496,61 @@ def check_d1_hierarchy_table() -> CheckResult:
                               f"paper={dom_cell!r}, canon={canon['dominance']!r}"))
         all_pass = all_pass and dom_ok
 
-    # --- (2) Numeric crossover sentences ω_× ≈ T_H ln(2/X) ≈ Y T_H -------
-    # Only the *numeric* sentences match (the symbolic abstract/display
-    # forms use `=`, `\;\approx\;` or `\cdot` and are excluded by shape).
+    # --- (2) Numeric crossover sentences: δ_diss = X gives ω_× ≃ Y T_eff ---
+    #
+    # ⚠️ THIS CHECK USED TO PIN THE WRONG PHYSICS, AND THAT IS WHY THE WRONG
+    # PHYSICS SURVIVED THREE REVIEW CYCLES. It required the prose to read
+    # `ω_× ≈ T_H ln(2/X)` and then asserted the coefficient against a
+    # re-derived `log(2.0 / X)`. The floor is δ_diss, not δ_diss/2 — the
+    # halving is already inside `noise_floor_eq_delta_diss`
+    # (`noiseFloor p = p.Gamma_H / p.kappa`) — so the crossover is
+    # `ln(1 + 1/δ_diss)`. A Stage-13 REQUIRED flagged the ln 2 discrepancy in
+    # May 2026 and it was carried forward three times unclosed, because
+    # CORRECTING THE PAPER WOULD HAVE TURNED THIS GATE RED. The guard was
+    # holding the defect in place.
+    #
+    # The coefficient is now compared against the canonical evaluator's own
+    # `omega_cross_over_TH` rather than against a formula restated here. A
+    # check that re-states the physics it is checking asserts nothing about
+    # the physics and drifts from it silently — the same reasoning that moved
+    # `test_node_shape` onto `build_graph.SEVERITY_VALUES` under ADR-009.
+    # There is now exactly one place the crossover formula lives.
+    #
+    # Matches the numeric sentences only: `δ_diss = X gives ω_× ≃ Y T_eff`.
+    # The symbolic abstract/display forms carry no numerals and are excluded
+    # by shape.
     cross_re = _re.compile(
-        r"\\omega_\\times\s*\\approx\s*T_H\s*\\ln\(2/([^)]+)\)\s*"
-        r"\\approx\s*([\d.]+)\\,\s*T_H", _re.DOTALL)
+        r"\\delta_\{?\\rm\s+diss\}?\s*=\s*([^$]+?)\s*\$?\s*gives\s*"
+        r"\$?\\omega_\\times\s*\\simeq\s*([\d.]+)\\,\s*T_\{?\\rm\s+eff\}?",
+        _re.DOTALL)
     matches = list(cross_re.finditer(text))
     if not matches:
-        details.append(Detail("crossover.present", False,
-                              "no numeric ω_× ≈ T_H ln(2/X) ≈ Y T_H sentence found"))
+        details.append(Detail(
+            "crossover.present", False,
+            "no numeric 'δ_diss = X gives ω_× ≃ Y T_eff' sentence found. NOTE: "
+            "this check previously required the ln(2/X) form, which is the "
+            "SUPERSEDED and incorrect expression; if the draft still carries "
+            "it, the draft is what must change."))
         all_pass = False
-    diss_values = [h["delta_diss"] for h in hier.values()]
+    # Canonical (δ_diss -> crossover) pairs, straight from the evaluator.
+    canon_cross = {h["delta_diss"]: h["omega_cross_over_TH"] for h in hier.values()}
     for i, m in enumerate(matches):
         X = _parse_latex_number(m.group(1))
         Y = float(m.group(2))
-        # (a) the ln-argument X must be one of the canonical δ_diss values
         if X is None:
             details.append(Detail(f"crossover[{i}].arg", False,
-                                  f"unparseable ln argument {m.group(1)!r}"))
+                                  f"unparseable δ_diss {m.group(1)!r}"))
             all_pass = False
             continue
-        best = min((abs(X - d) / abs(d)) for d in diss_values)
+        # (a) the quoted δ_diss must be one of the canonical values
+        nearest = min(canon_cross, key=lambda d: abs(X - d) / abs(d))
+        best = abs(X - nearest) / abs(nearest)
         arg_ok = best <= TOL
         details.append(Detail(f"crossover[{i}].delta_diss_match", arg_ok,
-                              f"ln-arg={X:.4g}, nearest canon δ_diss rel={best:.2%}"))
-        # (b) the quoted coefficient Y must equal ln(2/X)
-        y_ok, y_msg = _rel_ok(Y, _math.log(2.0 / X))
+                              f"δ_diss={X:.4g}, nearest canon rel={best:.2%}"))
+        # (b) the quoted coefficient must equal the EVALUATOR's crossover for
+        #     that δ_diss — not a formula restated inside this check.
+        y_ok, y_msg = _rel_ok(Y, canon_cross[nearest])
         details.append(Detail(f"crossover[{i}].coefficient", y_ok, y_msg))
         all_pass = all_pass and arg_ok and y_ok
 
@@ -600,16 +628,31 @@ def check_f_hierarchy_claims() -> CheckResult:
         details.append(Detail(label, ok, msg))
         all_pass = all_pass and ok
 
-    # Crossover sentence: ω_× = T_H ln(2/δ_diss) ≈ Y T_H (symbolic ln-arg;
-    # the coefficient Y must equal ln(2 / canonical δ_diss)).
+    # Crossover sentence: ω_× = T_H ln(1 + 1/δ_diss) ≈ Y T_H.
+    #
+    # ⚠️ SUPERSEDED FORM: this required `ln(2/δ_diss)` and asserted Y against a
+    # re-derived `log(2.0 / δ_diss)`. Both were wrong by exactly ln 2 — the FDR
+    # floor is δ_diss, not δ_diss/2, because the halving is already inside
+    # `WKBConnection.noise_floor_eq_delta_diss` (`noiseFloor p = Gamma_H/kappa`).
+    # The sibling `d1_hierarchy_table` carried the identical defect, so the two
+    # gates corroborated each other while both were wrong, and a Stage-13
+    # REQUIRED that flagged it in May 2026 went unclosed three times because
+    # fixing the papers would have turned both gates red.
+    #
+    # Y is now compared against the evaluator's own `omega_cross_over_TH`, so
+    # the formula lives in exactly one place and this check cannot drift from it.
     cm = _re.search(
-        r"\\ln\(2/\\delta_\{\\mathrm\{diss\}\}\)\s*\\approx\s*([\d.]+)\\,\s*T_H", text)
+        r"\\ln\\!?\s*\\left\(\s*1\s*\+\s*1/\\delta_\{\\mathrm\{diss\}\}\s*\\right\)"
+        r"\s*\\approx\s*([\d.]+)\\,\s*T_H", text)
     if not cm:
-        details.append(Detail("heidelberg.crossover", False,
-                              "expected ω_× = T_H ln(2/δ_diss) ≈ Y T_H sentence not found"))
+        details.append(Detail(
+            "heidelberg.crossover", False,
+            "expected ω_× = T_H ln(1 + 1/δ_diss) ≈ Y T_H sentence not found. NOTE: "
+            "the ln(2/δ_diss) form is SUPERSEDED and incorrect; if the draft still "
+            "carries it, the draft is what must change."))
         all_pass = False
     else:
-        y_ok, y_msg = _rel_ok(float(cm.group(1)), _math.log(2.0 / heid["delta_diss"]))
+        y_ok, y_msg = _rel_ok(float(cm.group(1)), heid["omega_cross_over_TH"])
         details.append(Detail("heidelberg.crossover", y_ok, y_msg))
         all_pass = all_pass and y_ok
 
