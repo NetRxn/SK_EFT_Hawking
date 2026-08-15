@@ -10173,6 +10173,21 @@
         "enforced": true,
         "run_at": "2026-08-15"
       }
+    },
+    {
+      "finding_id": "review:2026-08-15-declared-attribution-unread-by-the-aggregation:infra:1.1",
+      "status": "fixed",
+      "evidence": "build_graph._parse_frontmatter reads each review document's leading --- block and records declared_paper/declared_bundle verbatim in meta; bundle_readiness.resolve_attribution resolves them ahead of inference (declared mapping key, declared bundle code, filename stem, unique-prefix, legacy), exactly-one-match-or-nothing; resolve_unique_prefix is now the single normalisation shared with extract_flags_edges. Both ratchet legs re-derived in the same commit: leg 1 12 -> 39 bundle occurrences, leg 2 57 -> 45 findings, reconciling as 12 findings x 27 occurrences. Nine bundles flip YELLOW -> RED on findings already on disk. NOTE the finding's own evidence table was wrong: 19 of its claimed 29 (phase6EE_control 11, phase6EA_substrate 5+3) declare a paper: key that is neither a mapping key nor a bundle code and their scope: names D12 only in free prose, so they do NOT resolve under the finding's own prescribed precedence; against that it missed the paper17_dark_sector critical, which does.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "commit": "d9f2f49a",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -m pytest tests/test_declared_attribution.py -q",
+        "declared": "cd \"$REPO\" && uv run python -m pytest tests/test_declared_attribution.py -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-15"
+      }
     }
   ]
 }

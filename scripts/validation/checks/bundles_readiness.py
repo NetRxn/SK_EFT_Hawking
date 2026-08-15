@@ -479,7 +479,14 @@ def _required_open_ceilings() -> dict[str, int]:
 #: be a regex over prose, which is the channel this fix exists to remove. The remedy is for
 #: those documents to DECLARE `bundle_target: D12`, at which point this leg drops by 19
 #: without a line of code changing — which is the point of asserting the decider.
-UNATTRIBUTED_OPEN_BLOCKING_CEILING: int = 45
+#:
+#: ⚠️ **45 -> 44: the closure of the attribution finding itself.** `infra:1.1` of
+#: `2026-08-15-declared-attribution-unread-by-the-aggregation` was one of the 45 — it
+#: declares `bundle_target: infra` and so belongs to this leg by construction — and it
+#: is fixed by the change it describes. Lowered in the commit that records the closure,
+#: per the ratchet rule; a ceiling left standing above a corpus that improved is
+#: headroom, and headroom makes a ratchet unfireable.
+UNATTRIBUTED_OPEN_BLOCKING_CEILING: int = 44
 
 
 def _readiness_aggregate():
