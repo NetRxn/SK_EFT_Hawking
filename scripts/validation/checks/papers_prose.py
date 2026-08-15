@@ -493,7 +493,7 @@ LATEX_COMPILE_CACHE = "papers/.latex_compile_cache.json"
 #:
 #: The discharge is a `papers/<bundle>/tables.py` spec per table, rendered by
 #: `scripts/render_paper_tables.py` — NOT deleting the table.
-BUNDLE_HANDWRITTEN_TABLE_CEILING = 3
+BUNDLE_HANDWRITTEN_TABLE_CEILING = 1
 
 
 @register_check("bundle_tables_use_pipeline",

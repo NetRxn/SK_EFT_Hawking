@@ -2998,7 +2998,7 @@ COUNT_LITERAL_CEILING = 95       # hardcoded "N theorems/modules/sorry" in paper
 #: ratchet would push it far past 95 and force a re-baseline of a shared constant across
 #: drafts nobody is remediating, which is how a ceiling ends up raised to whatever a
 #: widened pattern produced. Two kinds, two constants, neither absorbing the other's debt.
-SPELLED_CENSUS_CEILING = 72
+SPELLED_CENSUS_CEILING = 71
                                  # 107 -> 106 on 2026-08-11: the I1 restructuring deleted a
                                  # count literal from prose. Lowered in the same commit, per
                                  # the rule above — a ratchet that keeps headroom stops being one.

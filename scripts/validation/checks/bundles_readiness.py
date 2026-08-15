@@ -1094,7 +1094,7 @@ _AMBIGUOUS_MODULE_BASENAMES = frozenset({
 #: claim than naming a file, which is what this check is for. Because 149 < 236 this is
 #: an ordinary down-ratchet — the honest number was always below the recorded one.
 #: The count is now COMPARABLE ONLY TO ITSELF: do not diff it against a pre-08-11 figure.
-LEAN_MODULE_ABSENT_CEILING = 149
+LEAN_MODULE_ABSENT_CEILING = 147
 
 
 def _deregistered_detail(dropped: dict[str, list[str]]) -> Detail:
