@@ -93,10 +93,16 @@ provably-false path (the compaction-boundary goldfish-reseed). Your brief from t
 ## ⛔ If your slot's `mcp__skeft_wtN__*` tools fail, STOP — do not hand-roll a gate
 
 Symptom: every tool returns `MCP error -32602: Invalid request parameters`, or the first call
-reports a missing session ID. Cause: the lead's session registered your slot's tools while the
-slot was IDLE, and the slot was leased afterwards — the session cannot address the endpoint any
-more. This is not something you can fix from inside the slot, and it is not an authentication
-problem you should go looking for credentials to solve.
+reports a missing session ID.
+
+⚠️ **This used to be expected and is now a real defect — report it, do not work around it.** Until
+2026-08-15 it meant the lead's session had registered your slot's tools while the slot was idle,
+and leasing afterwards orphaned the session. ADR-008 S-Q fixed that: the proxy now owns the
+client-facing session and re-establishes the backend side underneath, so lease, `prepare`, absorb
+and release are all transparent to a live session. If you still see `-32602`, the front door is
+not behaving to spec — say so plainly in your report, because it is new information, not the
+known condition. It is not an authentication problem, and it is not something you can fix from
+inside the slot.
 
 **Report it and stop.** Do NOT fall back to invoking `lean` directly over the slot's oleans: it
 discards the build isolation the slot exists to provide and bypasses the `lean_build` denial
