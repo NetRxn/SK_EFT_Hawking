@@ -40,4 +40,11 @@ a source.
 - **Lane:** `prose`
 - **Location:** `papers/paper38_cfl/paper_draft.tex`
 - **Gate:** CitationIntegrity (1)
-- **Verify:** `uv run python scripts/check_undefined_citations.py paper38_cfl --key SvetitskyYaffe1982`
+- **Verify:** `cd "$REPO" && uv run python -c "import sys; sys.path.insert(0,'scripts'); from pathlib import Path; import check_undefined_citations as C; p=Path('papers/paper38_cfl/paper_draft.tex'); b=C._COMMENT.sub('',p.read_text()); c={k.strip() for m in C._CITE.finditer(b) for k in m.group(1).split(',') if k.strip()}; assert 'SvetitskyYaffe1982' in c, 'VACUOUS: the key is not cited at all'; u=C.undefined_keys(p); assert not u, ('unresolvable', u)"`
+  ⚠️ **Amended 2026-08-15 — the original was VACUOUS, and measurably so.** It was
+  `check_undefined_citations.py paper38_cfl --key SvetitskyYaffe1982`, and that tool reports
+  "resolves" for a key **that is not cited at all**: confirmed by running it with
+  `--key NotACitedKeyXYZ`, which exits 0. So deleting the `\cite` would have satisfied the
+  verify while the citation vanished — the failure mode is not "the bibitem is missing" but
+  "nothing is asserted". The replacement requires the key to be in the CITED population
+  first, then requires every cited key in the draft to resolve.

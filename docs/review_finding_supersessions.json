@@ -10092,6 +10092,36 @@
       "evidence": "STALE, and adjudicated against the decider rather than the heading. This finding's own heading reads '🟡 → ✅ CLOSED', which closes nothing since heading-parse closure was retired and every finding is born open. Re-measured: the provenance notes are the remediated text with an llm_verified_date. The verify does not trust the note's prose either — it recomputes sqrt(2)*m_t/v against the live EW_PARAMS Y_TOP, checks the provenance values agree with code, requires the notes to quote those live numerals, and requires every occurrence of the superseded 172.76 / 0.9946 to sit inside a 'prior'-qualified clause, so a future re-drift citing a stale central value fails.",
       "superseded_by": null,
       "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-06-08-2242-internal-adversarial:paper10_modular_generation:6.1",
+      "status": "fixed",
+      "evidence": "The QUOTED defect was already stale — the draft cites sixteen_convergence_unconditional as the headline statement and names sixteen_convergence_full as the older conditional enumeration — but a live residual defect sat in the same location and the same gate, so this is not closable as STALE. The draft still said the relationship to the Kitaev Z16 classification 'is suggestive but has not been formalized here', which became FALSE when conjunct 4 of BOTH cited theorems was made kitaevCentralCharge_period16 earlier today. Both current Lean statements were read (each now four distinct conjuncts) and the Kitaev paragraph rewritten to state what IS formalized — period exactly 16, via kitaevCentralCharge_period16 and kitaevCentralCharge_faithful — and what is not (the Smith homomorphism route, Mathlib-absent). A per-conjunct disclosure names conjunct (ii) as an arithmetic tautology and conjunct (iii) as the only place the two theorems differ. The verify checks all four named theorems are both disclosed in the paper and live in lean_deps, and reads the Lean to confirm the conjunct-4 claim is backed; mutation-tested against the HEAD draft, it exits 1.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "supersedes_inert_open": true
+    },
+    {
+      "finding_id": "review:2026-06-08-2242-internal-adversarial:paper10_modular_generation:9.1",
+      "status": "fixed",
+      "evidence": "The finding's own three literals are STALE — the draft already inputs counts.tex and uses the project-wide macros. Two PER-MODULE literals survived and were WRONG: they counted compiler-generated equation lemmas, so under the canonical convention the project-wide figure beside them uses, they are 8 and 11 rather than 9 and 12. Both were invisible to count_literals TWICE OVER: its theorem pattern requires two-to-five digits, so a single-digit 9 never matched, and it requires whitespace, so a LaTeX tie in '12~theorems' never matched — which is why paper10 reported 'no count literals found (macros in use)' while carrying two wrong ones. Added a paper10 per-module block to update_counts.py following the D2/I1 convention exactly, including emit-nothing-on-missing-module so a rename fails loudly, and replaced both literals with macros. No literal was replaced by a newer literal. Bound in passing, same gate and paper: the acknowledgments cited a toolchain three versions stale, now macro-backed.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "supersedes_inert_open": true
+    },
+    {
+      "finding_id": "review:2026-08-12-0200-citation-integrity:paper38_cfl:1.1",
+      "status": "fixed",
+      "evidence": "Live, not stale: the declared command exited 1 at HEAD and the compile log carried natbib's 'Citation SvetitskyYaffe1982 undefined'. Emitted the bibitem from CITATION_REGISTRY (Svetitsky & Yaffe, Nucl. Phys. B 210, 423 (1982), doi_verified), matching the formatting already used for the same key in paper36. The finding's declared Verify was AMENDED first because it was vacuous and measurably so: check_undefined_citations --key X reports 'resolves' for a key that is not cited at all, confirmed by running it with a nonsense key, which exits 0 — so deleting the cite would have satisfied it while the citation vanished. The replacement requires the key to be in the CITED population first, then requires all cited keys in the draft to resolve.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -c \"import sys; sys.path.insert(0,'scripts'); from pathlib import Path; import check_undefined_citations as C; p=Path('papers/paper38_cfl/paper_draft.tex'); b=C._COMMENT.sub('',p.read_text()); c={k.strip() for m in C._CITE.finditer(b) for k in m.group(1).split(',') if k.strip()}; assert 'SvetitskyYaffe1982' in c, 'VACUOUS: the key is not cited at all'; u=C.undefined_keys(p); assert not u, ('unresolvable', u)\"",
+        "declared": "cd \"$REPO\" && uv run python -c \"import sys; sys.path.insert(0,'scripts'); from pathlib import Path; import check_undefined_citations as C; p=Path('papers/paper38_cfl/paper_draft.tex'); b=C._COMMENT.sub('',p.read_text()); c={k.strip() for m in C._CITE.finditer(b) for k in m.group(1).split(',') if k.strip()}; assert 'SvetitskyYaffe1982' in c, 'VACUOUS: the key is not cited at all'; u=C.undefined_keys(p); assert not u, ('unresolvable', u)\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-15"
+      }
     }
   ]
 }

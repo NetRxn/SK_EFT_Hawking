@@ -115,7 +115,8 @@ upon dimensional reduction to 2D~\cite{AlvarezGaumeWitten1984}.
 The coefficient ``8'' in $c_- = 8 N_f$ is thus \emph{derived}:
 $c_- = 16 \times \frac{1}{2} = 8$ per generation.
 
-This is formalized in \texttt{WangBridge.lean} (9~theorems, zero \texttt{sorry}):
+This is formalized in \texttt{WangBridge.lean}
+(\paperTenWangBridgeThms{}~theorems, zero \texttt{sorry}):
 \texttt{fermion\_count\_gives\_central\_charge} derives $c_- = 8$ from
 \texttt{SMFermionData.total\_components\_with\_nu\_R} = 16.
 
@@ -190,7 +191,8 @@ both ingredients: the numerator 24 from zeta regularization, the denominator
 8 from fermion counting. Their ratio is the generation constraint.
 
 This is formalized in \texttt{ModularInvarianceConstraint.lean}
-(12~theorems): the $q$-parameter shift \texttt{qParam\_shift} is proved
+(\paperTenModularInvarianceThms{}~theorems): the $q$-parameter shift
+\texttt{qParam\_shift} is proved
 from Mathlib's \texttt{Complex.exp\_add}, and the framing anomaly constraint
 \texttt{framing\_anomaly\_constraint} proves $e^{2\pi i c/24} = 1 \Leftrightarrow 24 \mid c$.
 
@@ -225,8 +227,19 @@ of spin structures in four dimensions: Wang~(2024)~\cite{Wang2024}
 establishes the relationship between the Rokhlin bound, the
 $\mathbb{Z}_{16}$ anomaly, and the SM fermion count via the string
 bordism $\mathbb{Z}_{24}$ class and the associated Smith homomorphism.
-The relationship to the Kitaev $\mathbb{Z}_{16}$ classification is
-suggestive but has not been formalized here.
+The Kitaev facet is formalized here as its arithmetic core:
+\texttt{KitaevSixteenFold.lean} defines the chiral central charge of the
+$\nu$-th class-D phase, $c_-(\nu) = \nu/2$, and proves its period is
+exactly 16 --- \texttt{kitaevCentralCharge\_period16} gives
+$c_-(\nu+16) = c_-(\nu) + 8$, and
+\texttt{kitaevCentralCharge\_faithful} shows the sixteen values
+$c_-(0),\ldots,c_-(15)$ are pairwise distinct modulo~8, so no smaller
+period suffices. What is \emph{not} formalized is the identification of
+that $\mathbb{Z}_{16}$ with the Rokhlin signature $\mathbb{Z}_{16}$ or
+the Dai--Freed anomaly $\mathbb{Z}_{16}$: that requires the Smith
+homomorphism and the computed
+$\Omega_4^{\mathrm{Pin}^+} \cong \mathbb{Z}_{16}$, which are absent from
+Mathlib. A shared $\mathbb{Z}_{16}$ constrains; it does not derive.
 
 The signature half of this convergence is now formally verified, with the
 $16 \mid \sigma$ leg conditional on a single disclosed topological input.
@@ -263,6 +276,23 @@ by design; we cite the interface form for the substantive claim. (The name
 \texttt{sixteen\_convergence\_unconditional} refers to its discharging the
 \emph{algebraic} $8 \mid \sigma$ floor unconditionally; the $16$ leg
 remains conditioned on the disclosed topological input, as it must be.)
+
+Both enumerations state the same four conjuncts, whose individual
+status we disclose rather than leave to the reader. (i)~The SM Weyl count
+$\sum_f \mathrm{components}(f) = 16$ is substantive, sourced from
+\texttt{total\_components\_with\_nu\_R}. (ii)~$(16 : \mathbb{Z}/16) = 0$
+is an arithmetic tautology discharged by \texttt{decide}, and carries no
+content beyond fixing the modulus. (iii)~The signature divisibility
+$16 \mid \sigma$ is the only conjunct on which the two theorems differ: in
+\texttt{sixteen\_convergence\_full} it is a verbatim echo of that
+theorem's own assumed Rokhlin hypothesis, whereas in
+\texttt{sixteen\_convergence\_unconditional} it is proved over the
+\texttt{SmoothSpinManifold4} interface, given the tracked topological
+input. (iv)~The Kitaev periodicity
+$c_-(\nu+16) = c_-(\nu) + 8$ is substantive, sourced from
+\texttt{kitaevCentralCharge\_period16}. Neither theorem asserts that the
+four occurrences of 16 are the same 16; each is an enumeration, and we
+report it as one.
 The formalization does \emph{not} prove the mathematical equivalence of
 all four phenomena; that equivalence is the content of Wang's cobordism
 argument, which we use as an external input rather than formalize.
@@ -388,7 +418,8 @@ a bridge between pure mathematics and particle physics, machine-checked
 end to end.
 
 \begin{acknowledgments}
-Lean~4 proofs verified by \texttt{lake build} (v4.29.1, Mathlib \texttt{5e932f97}).
+Lean~4 proofs verified by \texttt{lake build}
+(v\leantoolchain{}, Mathlib \texttt{\mathlibrev{}}).
 Automated proofs by the Aristotle theorem prover (Harmonic).
 \end{acknowledgments}
 

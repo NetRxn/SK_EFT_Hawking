@@ -927,6 +927,42 @@ def generate_tex(counts: dict, path: Path, deps: list | None = None):
             )
             lines.extend(d2_lines)
 
+        # --- paper10 per-module theorem counts (source paper for D2/L2/F/D3) --
+        # Consumer: papers/paper10_modular_generation/paper_draft.tex §§"The
+        # chiral central charge" and "The Framing Anomaly" each quoted a
+        # per-module theorem count as a hand-typed literal ("9~theorems",
+        # "12~theorems"). Finding
+        # `2026-06-08-2242-internal-adversarial:paper10_modular_generation:9.1`.
+        #
+        # ⚠️ These two literals are invisible to `validate.py --check
+        # count_literals`, twice over: its theorem pattern requires `\d{2,5}`
+        # (so "9" never matched) and `\s+` (so the LaTeX tie in "12~theorems"
+        # never matched). paper10 therefore reported "no count literals found
+        # (macros in use)" while carrying two. Measured 2026-08-15 both still
+        # happened to be right — which is exactly how a hand-typed count
+        # survives long enough to go wrong unobserved. Binding them removes the
+        # possibility rather than re-checking the value.
+        #
+        # Same convention and same emitter as the I1/D2 blocks above
+        # (`kind == "theorem"` grouped by module in lean/lean_deps.json,
+        # non-autogen), so a paper10 per-module figure is comparable with
+        # \totaltheorems. A renamed/moved module emits NO macro and paper10's
+        # compile fails on the undefined control sequence — the loud failure,
+        # not a silently-wrong 0.
+        _paper10_modules = [
+            ("paperTenWangBridgeThms",         "SKEFTHawking.WangBridge"),
+            ("paperTenModularInvarianceThms",
+             "SKEFTHawking.ModularInvarianceConstraint"),
+        ]
+        p10_lines = [f"\\newcommand{{\\{macro}}}{{{mod_thms[module]}}}"
+                     for macro, module in _paper10_modules if module in mod_thms]
+        if p10_lines:
+            lines.append(
+                "% --- paper10 per-module theorem counts "
+                "(same convention as \\totaltheorems) ---"
+            )
+            lines.extend(p10_lines)
+
     # --- Cross-platform 1+1D→2+1D Lean theorem reuse (D1 / paper16) --------
     # Consumer: papers/D1/paper_draft.tex states the BEC→graphene reuse
     # fraction in eleven places. It has drifted THREE times (109/119→92%,
