@@ -118,3 +118,45 @@ _Initial bookkeeping created 2026-05-01T04:18:23Z by `scripts/bundle_source_mani
 - Insertion point: (n/a)
 - Stage-13 redo required: no
 - Notes: 2026-06-10 source-reconciliation pass post external-review remediation: 4 flagged sources triaged — paper12_polariton + paper4_wkb_connection carry the real committed change (5207b72b axiom-retirement note: gapped_interface_axiom retired into tracked Prop TPFConjecture) with NO D1 counterpart claim (D1 axiom-count prose is macro-driven via counts.tex; all D1 'axiom' mentions are SK-EFT physics axioms); paper1_first_order + paper2_second_order are mtime-only (auto-regenerated tables byte-identical to committed content, zero commits since last_lift). Sweep themes (Geurs scope c574c1d0, 93% reuse 67157912, theorem renames 5207b72b) verified already applied in tandem to D1; Vergeles/Halenka not referenced. Standard DISCLOSURE_TEXT.md Variant A block inserted before bibliography (register-derived; pdflatex x2 clean). stage13_redo_required set true + freshness_stale deliberately retained by the reconciliation session (post-script metadata restore).
+
+## 2026-08-15 — Stage-10 full redraft
+
+The manuscript was rewritten end to end. The prior draft is superseded in
+its entirety and nothing was carried forward unread.
+
+**Structure.** Nine sections and twenty-five subsections became eight and
+eighteen, on a spine that derives each quantity before spending it. The
+standalone verification section was dissolved: its status vocabulary moved
+to Sec. I as a legend, the Aristotle counterexample into the KMS-optimality
+subsection where it is evidence inside an argument, its per-claim table into
+Appendix A, and its disclosures in-place at the claims they qualify. The
+condensate became a visible platform section, the platform order became
+BEC then graphene then polariton so the paper ends on the boundary of its
+own applicability, and a dispersive-correction subsection was added because
+Table I was spending a quantity no section derived.
+
+**Cut, with reasons.** The Kibble-Zurek-Unruh cross-check and the Tindall
+et al. tensor-network material; the BP-on-PEPS quantum-advantage
+demarcation with its ChernBridge and moire apparatus; four commented-out
+post-bibliography lift stubs; the bundle-architecture subsection; and the
+cross-platform reuse subsection, whose argument now runs on named shared
+theorems in Sec. I rather than on a percentage. The D1 charter asked for
+none of the first four.
+
+**Corrections.** The spectral-floor crossover is T_eff ln(1 + 1/delta_diss),
+6.44 / 10.65 / 11.17 T_eff at the three condensate benchmarks, not the
+ln(2/delta_diss) form the abstract, the body and the generator script all
+carried. Corley-Jacobson 1996 is cited for the subluminal result it
+establishes rather than as the source of the problem it resolves, and the
+pi/6 coefficient is presented as a definition because no held source
+derives it. The polariton rows of Table I are marked neither-dominant,
+since the cavity the horizons were built in has Gamma_pol/kappa about 1.8.
+The CGL relation is stated as the hypothesis it is in every theorem that
+mentions it. The Landauer-Buttiker agreement is no longer claimed as
+machine-checked.
+
+**State.** Compiles clean at 20 pages, zero LaTeX errors, zero undefined
+references or citations; below the 24-page floor. Eleven TODO comments mark
+claims whose primary source is not held in full text; the bundle is
+deliberately not green while they stand. Findings at
+`papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md`.
