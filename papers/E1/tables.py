@@ -203,6 +203,26 @@ SCALARS = {
                        'r as declared, matching the constants.py tier1_valid cut.',
         'value': lambda: f'{_WEAK_DISSIPATION_RATIO:g}',
     },
+    # The attenuation exponent over ONE healing length is exactly the product
+    # of the paper's two dimensionless parameters:
+    #   Gamma_pol * xi / c_s == (Gamma_pol/kappa) * (xi kappa / c_s) == ratio * D
+    # so §3 spends only quantities §2 already derived, and no new length scale
+    # is introduced (in particular no un-provenanced propagation distance).
+    'lkb_atten_per_xi_standard': {
+        'description': 'E1 §3: exp(Gamma_pol xi / c_s) = exp(ratio*D), the '
+                       'occupation-recovery factor per healing length of '
+                       'propagation, at the as-built cavity.',
+        'value': lambda: (
+            f"{math.exp(_LKB['Gamma_pol_over_kappa'] * _dispersion_ratio(_KAPPA_SMOOTH)):.1f}"
+        ),
+    },
+    'lkb_atten_per_xi_required': {
+        'description': 'E1 §3: the same recovery factor per healing length at '
+                       'the weak-dissipation boundary Gamma_pol = 0.1 kappa.',
+        'value': lambda: (
+            f'{math.exp(_WEAK_DISSIPATION_RATIO * _dispersion_ratio(_KAPPA_SMOOTH)):.2f}'
+        ),
+    },
     'penn_ratio_vs_steep': {
         'description': 'E1 §3: Penn TMD nanocavity Gamma_LP over the MOST GENEROUS '
                        'polariton-family kappa (Falque steep), matching the Lean '
