@@ -293,6 +293,84 @@ def check_numerical_literals() -> CheckResult:
     return CheckResult(passed=not over, details=details)
 
 
+#: English number words. Compounds ("twenty-seven") are matched by repetition below.
+_SPELLED_NUMBER = (r"(?:one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|"
+                   r"thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|"
+                   r"thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred)")
+#: The nouns that make a number a CENSUS figure rather than ordinary prose. "three stages"
+#: is a count of the pipeline; "three orders of magnitude" is a physical result, and only
+#: the first goes stale when the corpus changes.
+_CENSUS_NOUN = (r"(?:stages?|invariants?|checks?|gates?|classes|entries|runs?|theorems?|"
+                r"modules?|bundles?|agents?)")
+_SPELLED_CENSUS = re.compile(
+    rf"\b{_SPELLED_NUMBER}(?:[-\s]{_SPELLED_NUMBER})*[~\s]+(?:Lean[~\s]+)?{_CENSUS_NOUN}\b",
+    re.I)
+
+
+@register_check("spelled_out_census_figures",
+                "Census figures spelled out in words are frozen and may only shrink")
+def check_spelled_out_census_figures() -> CheckResult:
+    """CHECK: "fourteen stages" goes stale exactly as "14 stages" does.
+
+    Added 2026-08-15 (I1 Stage-13 finding 7.2). `count_literals` matches DIGITS, so a
+    census figure written in words is invisible to it — and this corpus writes them in
+    words routinely, because spelling a number out is house style in prose. Measured: I1's
+    intro said "seventeen invariants" while its own enumeration had fifteen items, and no
+    check could see it.
+
+    ⚠️ **A SEPARATE DETECTION KIND, deliberately, with its own constant.** Folding these
+    into `count_literals` would push that population far past `COUNT_LITERAL_CEILING` and
+    force a re-baseline of a shared ratchet across drafts nobody is remediating — which is
+    how a ceiling gets raised to whatever fell out of a widened pattern. Keeping the two
+    apart means a NEW spelled-out figure fails here without touching the digit ratchet's
+    semantics or its debt.
+
+    ⚠️ **Scoped to CENSUS nouns, not to every spelled number.** "three orders of
+    magnitude" is a physical result and must not be flagged; "three stages" is a count of
+    this project's own machinery and goes stale when the machinery changes. The noun list
+    is the discriminator, and widening it to ordinary nouns would make this check a style
+    police rather than a freshness guard.
+    """
+    from src.core.constants import SPELLED_CENSUS_CEILING as _CEIL
+
+    papers = sorted(_H.PAPERS_DIR.glob("*/paper_draft.tex"))
+    details: list[Detail] = []
+    per: dict[str, int] = {}
+    for tex in papers:
+        body = re.sub(r"(?<!\\)%.*", "", tex.read_text(encoding="utf-8", errors="replace"))
+        hits = _SPELLED_CENSUS.findall(re.sub(r"\s+", " ", body))
+        if hits:
+            per[tex.parent.name] = len(hits)
+    total = sum(per.values())
+    over = total > _CEIL
+
+    # ⚠️ GUARD THE SEAM. Every assertion here is "total <= ceiling", which an empty paper
+    # walk satisfies perfectly — so a moved PAPERS_DIR or a renamed draft would read as a
+    # corpus that had been cleaned up.
+    if not papers:
+        return CheckResult(passed=False, measured=False, details=[Detail(
+            "scope", False, measured=False,
+            message="no paper_draft.tex found — this check asserted nothing, which is not "
+                    "the same as a corpus with no spelled-out census figures")])
+
+    details.append(Detail(
+        "summary", not over,
+        f"{total} spelled-out census figure(s) across {len(per)} of {len(papers)} draft(s) "
+        f"(ceiling {_CEIL}, may only fall)"
+        + (f" — EXCEEDS by {total - _CEIL}: {dict(sorted(per.items(), key=lambda kv: -kv[1])[:5])}"
+           if over else
+           f" — {_CEIL - total} below; lower SPELLED_CENSUS_CEILING in the same commit"
+           if total < _CEIL else ""),
+        warning=(total > 0 and not over)))
+    if over:
+        details.append(Detail(
+            "ratchet", False,
+            f"spelled-out census total grew to {total}, above the frozen {_CEIL}. Bind the "
+            f"new figure to a counts.tex macro, or rephrase it to name the MECHANISM "
+            f"rather than the magnitude. Do not raise this ceiling to absorb a new one."))
+    return CheckResult(passed=not over, details=details)
+
+
 @register_check("count_literals",
                 "Paper .tex files reference counts via \\input{counts.tex} macros, not literals")
 def check_count_literals() -> CheckResult:

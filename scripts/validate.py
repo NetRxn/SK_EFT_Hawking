@@ -203,7 +203,8 @@ _CANONICAL_ORDER: tuple[str, ...] = (
     'tables_fresh', 'claim_clusters_fresh', 'numerical_literals', 'bundle_tables_use_pipeline',
     'graph_integrity', 'gate_edge_types_are_emitted', 'atlas_integrity',
     'atlas_hypothesis_discipline',
-    'count_literals', 'recurrence_reopens_closures', 'review_severity_declared',
+    'count_literals', 'spelled_out_census_figures',
+    'recurrence_reopens_closures', 'review_severity_declared',
     'review_docs_mint_findings', 'accepted_findings_carry_rationale',
     'review_verify_is_one_command',
     'ledger_ids_resolve',
@@ -702,6 +703,7 @@ check_provenance_doi_in_registry = _checks_citations.check_provenance_doi_in_reg
 check_bibitem_title_primary_source = _checks_citations.check_bibitem_title_primary_source
 check_recurrence_reopens_closures = _checks_reviews.check_recurrence_reopens_closures
 check_review_severity_declared = _checks_reviews.check_review_severity_declared
+check_spelled_out_census_figures = _checks_papers_prose.check_spelled_out_census_figures
 check_review_verify_is_one_command = _checks_reviews.check_review_verify_is_one_command
 check_review_docs_mint_findings = _checks_reviews.check_review_docs_mint_findings
 check_accepted_findings_carry_rationale = _checks_reviews.check_accepted_findings_carry_rationale

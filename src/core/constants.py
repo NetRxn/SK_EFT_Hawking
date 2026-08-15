@@ -2949,6 +2949,18 @@ NATIVE_DECIDE_BUNDLE_DEBT = {
 # asserted these literals "slip past count_literals"; measured against the
 # check they did not — all twelve matched, and removing them is the -12 here.
 COUNT_LITERAL_CEILING = 95       # hardcoded "N theorems/modules/sorry" in paper prose
+
+#: Census figures written in WORDS ("fourteen stages") rather than digits. **MAY ONLY
+#: FALL.** Measured 2026-08-15 over every `papers/*/paper_draft.tex`: 72 across 23 drafts,
+#: worst I1 20, I3 6, paper44 6, D4 5, paper15 5.
+#:
+#: ⚠️ SEPARATE FROM `COUNT_LITERAL_CEILING` ON PURPOSE. `count_literals` matches digits, so
+#: a spelled-out figure is invisible to it — I1's intro said "seventeen invariants" while
+#: its own enumeration had fifteen items and nothing could see it. Folding these into that
+#: ratchet would push it far past 95 and force a re-baseline of a shared constant across
+#: drafts nobody is remediating, which is how a ceiling ends up raised to whatever a
+#: widened pattern produced. Two kinds, two constants, neither absorbing the other's debt.
+SPELLED_CENSUS_CEILING = 72
                                  # 107 -> 106 on 2026-08-11: the I1 restructuring deleted a
                                  # count literal from prose. Lowered in the same commit, per
                                  # the rule above — a ratchet that keeps headroom stops being one.

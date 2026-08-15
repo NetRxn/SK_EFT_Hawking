@@ -66,29 +66,30 @@
 58 & \texttt{notebook\_exec} & All notebooks execute without errors \\
 59 & \texttt{paper\_provenance} & Paper figure references resolve and no placeholder bibliography ships \\
 60 & \texttt{numerical\_literals} & Paper .tex files free of inline numerical literals outside \texttt{\textbackslash input\{\}} blocks \\
-61 & \texttt{count\_literals} & Paper .tex files reference counts via \texttt{\textbackslash input\{counts.tex\}} macros, not literals \\
-62 & \texttt{bundle\_tables\_use\_pipeline} & Bundle drafts source tables from the pipeline (\texttt{\textbackslash input\{tables/\}}), not hand-written tabulars (ratcheted) \\
-63 & \texttt{paper\_latex\_compiles} & Every papers/*/paper\_draft.tex compiles under pdflatex --- bundles HARD-FAIL, legacy drafts ratchet; per-draft content-hash cache (--force-latex recompiles all) \\
-64 & \texttt{axiom\_count\_prose\_consistency} & Paper prose axiom-count claims agree with docs/counts.json \\
-65 & \texttt{paper\_toolchain\_pin\_drift} & Advisory (Class TP): paper-draft toolchain/Mathlib pins match lean-toolchain + lakefile.toml \\
-66 & \texttt{bundle\_cross\_references\_resolve} & Every \texttt{\textbackslash ref} in a draft has a matching \texttt{\textbackslash label} in its input closure (bundles at zero; legacy corpus ratcheted) \\
-67 & \texttt{numerical} & Experimental parameters match reference values \\
-68 & \texttt{identities} & Mathematical identities and boundary conditions hold \\
-69 & \texttt{paper\_table} & Paper 1's SHIPPED Table 1 cells match the canonical solver output \\
-70 & \texttt{d1\_hierarchy\_table} & D1 BEC hierarchy table + crossover match the canonical evaluator \\
-71 & \texttt{f\_hierarchy\_claims} & Flagship F inline Heidelberg BEC corrections match the canonical evaluator \\
-72 & \texttt{cgl\_fdr} & CGL FDR derivation produces correct results \\
-73 & \texttt{physical\_bounds} & All computed quantities within physical bounds \\
-74 & \texttt{cross\_path\_consistency} & Different code paths agree within 0.5\%/1\% tolerance \\
-75 & \texttt{quantum\_network} & QN Python formulas satisfy the QuantumNetwork Lean theorem identities \\
-76 & \texttt{prose\_theorem\_reference\_coverage} & Bundle-draft Lean references in any verbatim form (texttt, a preamble alias for it, verb, or a TeX `name' quote) resolve in lean\_deps.json \\
-77 & \texttt{theorem\_name\_embedded\_citations} & Declaration names embedding author+year have matching bibliography entries \\
-78 & \texttt{recurrence\_reopens\_closures} & A closure is not contradicted by a later review raising the same finding \\
-79 & \texttt{review\_severity\_declared} & Review documents from the cutoff forward declare each finding's severity \\
-80 & \texttt{review\_docs\_mint\_findings} & Every bundle Stage-13 review document mints at least one ReviewFinding node \\
-81 & \texttt{review\_verify\_is\_one\_command} & Every `Verify:` line is a single runnable command and nothing else \\
-82 & \texttt{accepted\_findings\_carry\_rationale} & Every `accepted` supersession record justifies acceptance in writing \\
-83 & \texttt{chain\_backing\_targets\_resolve} & Every Lean target named in a claims-review chain of backing exists \\
-84 & \texttt{ledger\_ids\_resolve} & Supersession records name findings that exist (ratcheted) \\
+61 & \texttt{spelled\_out\_census\_figures} & Census figures spelled out in words are frozen and may only shrink \\
+62 & \texttt{count\_literals} & Paper .tex files reference counts via \texttt{\textbackslash input\{counts.tex\}} macros, not literals \\
+63 & \texttt{bundle\_tables\_use\_pipeline} & Bundle drafts source tables from the pipeline (\texttt{\textbackslash input\{tables/\}}), not hand-written tabulars (ratcheted) \\
+64 & \texttt{paper\_latex\_compiles} & Every papers/*/paper\_draft.tex compiles under pdflatex --- bundles HARD-FAIL, legacy drafts ratchet; per-draft content-hash cache (--force-latex recompiles all) \\
+65 & \texttt{axiom\_count\_prose\_consistency} & Paper prose axiom-count claims agree with docs/counts.json \\
+66 & \texttt{paper\_toolchain\_pin\_drift} & Advisory (Class TP): paper-draft toolchain/Mathlib pins match lean-toolchain + lakefile.toml \\
+67 & \texttt{bundle\_cross\_references\_resolve} & Every \texttt{\textbackslash ref} in a draft has a matching \texttt{\textbackslash label} in its input closure (bundles at zero; legacy corpus ratcheted) \\
+68 & \texttt{numerical} & Experimental parameters match reference values \\
+69 & \texttt{identities} & Mathematical identities and boundary conditions hold \\
+70 & \texttt{paper\_table} & Paper 1's SHIPPED Table 1 cells match the canonical solver output \\
+71 & \texttt{d1\_hierarchy\_table} & D1 BEC hierarchy table + crossover match the canonical evaluator \\
+72 & \texttt{f\_hierarchy\_claims} & Flagship F inline Heidelberg BEC corrections match the canonical evaluator \\
+73 & \texttt{cgl\_fdr} & CGL FDR derivation produces correct results \\
+74 & \texttt{physical\_bounds} & All computed quantities within physical bounds \\
+75 & \texttt{cross\_path\_consistency} & Different code paths agree within 0.5\%/1\% tolerance \\
+76 & \texttt{quantum\_network} & QN Python formulas satisfy the QuantumNetwork Lean theorem identities \\
+77 & \texttt{prose\_theorem\_reference\_coverage} & Bundle-draft Lean references in any verbatim form (texttt, a preamble alias for it, verb, or a TeX `name' quote) resolve in lean\_deps.json \\
+78 & \texttt{theorem\_name\_embedded\_citations} & Declaration names embedding author+year have matching bibliography entries \\
+79 & \texttt{recurrence\_reopens\_closures} & A closure is not contradicted by a later review raising the same finding \\
+80 & \texttt{review\_severity\_declared} & Review documents from the cutoff forward declare each finding's severity \\
+81 & \texttt{review\_docs\_mint\_findings} & Every bundle Stage-13 review document mints at least one ReviewFinding node \\
+82 & \texttt{review\_verify\_is\_one\_command} & Every `Verify:` line is a single runnable command and nothing else \\
+83 & \texttt{accepted\_findings\_carry\_rationale} & Every `accepted` supersession record justifies acceptance in writing \\
+84 & \texttt{chain\_backing\_targets\_resolve} & Every Lean target named in a claims-review chain of backing exists \\
+85 & \texttt{ledger\_ids\_resolve} & Supersession records name findings that exist (ratcheted) \\
 \hline
 \end{tabular}

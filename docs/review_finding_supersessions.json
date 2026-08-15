@@ -10122,6 +10122,20 @@
         "enforced": true,
         "run_at": "2026-08-15"
       }
+    },
+    {
+      "finding_id": "review:2026-08-12-0006-internal-adversarial:I1:7.2",
+      "status": "fixed",
+      "evidence": "Built the mechanism the finding's own recommendation names, rather than folding the class into an existing ratchet. count_literals matches DIGITS, so a census figure written in words is invisible to it — and this corpus spells numbers out as house style. The demonstration is I1's own: its intro said 'seventeen invariants' while its enumeration had fifteen items and no check could see it. New registered check spelled_out_census_figures, frozen at its MEASURED population of 72 across 23 of 64 drafts (re-measured at HEAD; the finding's 61 was measured earlier and the corpus moved). Deliberately a SEPARATE detection kind with its own constant: folding these into COUNT_LITERAL_CEILING would push a shared ratchet far past 95 and force a re-baseline across drafts nobody is remediating, which is how a ceiling gets raised to whatever a widened pattern produced. The discriminator is the NOUN, not the number word — 'three orders of magnitude' is a physical result and must never fire, 'three stages' counts this project's machinery and goes stale when it changes; a test pins each direction. An EMPTY PAPER WALK fails rather than reading as a cleaned-up corpus, since every other assertion is total-under-ceiling which no drafts satisfies perfectly. PRODUCTION-SEEDED: a spelled-out figure appended to the real papers/D6 draft turns it red naming the draft and the +1, restored byte-identically. All registration sites satisfied via the architecture-change probe; CI_MIN_CHECKS_RUN 80 to 81; FIXTURE_ONLY_CEILING unchanged. The cannot-measure baseline entry I first added was REMOVED on the guard's own instruction — this check FAILS on missing input, which is stricter than the baseline it would have joined.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -m pytest tests/test_d5_prose_checks.py -q && uv run python scripts/validate.py --check spelled_out_census_figures",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-15"
+      }
     }
   ]
 }

@@ -217,6 +217,16 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
         "requirement in silence — the cutoff was an opt-out, and undecidable scope is now "
         "a failure rather than a skip)",
     ),
+    "spelled_out_census_figures": (
+        "test_d5_prose_checks.py",
+        "3 mutations, one PRODUCTION-SEEDED: a spelled-out census figure written into a "
+        "REAL draft pushes the total over the frozen ceiling and the check names the "
+        "draft (restored byte-identically); a physical result phrased with a spelled "
+        "number ('three orders of magnitude') must NOT fire, which is the whole "
+        "discriminator — the noun list, not the number word; and an EMPTY PAPER WALK "
+        "fails rather than reading as a cleaned-up corpus, since every other assertion "
+        "here is 'total <= ceiling' and no drafts satisfies it perfectly",
+    ),
     "review_verify_is_one_command": (
         "test_d5_reviews.py",
         "3 mutations: trailing prose after the command, a second backticked command on "
@@ -908,6 +918,10 @@ PRODUCTION_SEEDED: frozenset[str] = frozenset({
     # src/core/constants.py -> red; restored from saved bytes. Keeps FIXTURE_ONLY_CEILING
     # unchanged.
     "existential_witness_disclosure",
+    # 2026-08-15: a spelled-out census figure ("ninety-nine checks") appended to the real
+    # papers/D6/paper_draft.tex -> red, naming the draft and the +1 over the frozen
+    # ceiling; restored and asserted byte-identical. Keeps FIXTURE_ONLY_CEILING at 51.
+    "spelled_out_census_figures",
     # 2026-08-15: trailing prose appended to the Verify line of a REAL review document
     # (papers/AutomatedReviews/2026-08-15-closure-write-lost-under-concurrency/infra.md)
     # -> red; restored from saved bytes and asserted byte-identical. The target is a
