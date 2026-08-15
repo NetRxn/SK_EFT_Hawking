@@ -10158,6 +10158,21 @@
         "enforced": true,
         "run_at": "2026-08-15"
       }
+    },
+    {
+      "finding_id": "review:2026-08-15-seeded-mutation-survives-a-killed-run:infra:1.1",
+      "status": "fixed",
+      "evidence": "scripts/seed_journal.py now writes the original bytes, mtime and owning pid to .seed-journal/ and fsyncs them BEFORE the production file is touched, so a LATER process can finish a restore the seeding process did not live to perform — the capability a `finally` lacks. Sixteen seeding sites migrated to it (review documents, docs/counts.json, papers/D1/paper_draft.tex, the supersession ledger, two check modules, the four e2e guards where the writer is a browser reaching /verify). Three independent backstops: a session-scoped autouse fixture in tests/conftest.py repairs orphans at the start of every pytest run and announces what it repaired; validate.py --check seed_residue_absent FAILS while residue is present, reading the corpus and the journal rather than asking whether the fixture ran; and tests/test_seed_residue_guard.py ratchets the inventory so a bare `finally` restore anywhere under tests/ fails on arrival. Proven with a real SIGKILL, not a patched restore: a child process holds a seed open, is killed with signal 9, and the tree is repaired from the journal by the parent. The check is production-seeded through the mechanism it backstops. Two design points asserted rather than assumed — the corpus leg exempts NOBODY (exempting live owners made it unseedable, since only a live process can place a document in the corpus, and it then passed over its own seed), while the journal leg does exempt a live pid so a concurrent session is not misread as residue. The extractor still mints marked sections deliberately: refusing them would have forced two PRODUCTION_SEEDED entries back to fixtures and raised FIXTURE_ONLY_CEILING, and removing production seeding is not a fix.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "commit": "9a74af61",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -m pytest tests/test_seed_residue_guard.py -q",
+        "declared": "cd \"$REPO\" && uv run python -m pytest tests/test_seed_residue_guard.py -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-15"
+      }
     }
   ]
 }
