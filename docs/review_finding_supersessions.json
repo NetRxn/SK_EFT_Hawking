@@ -8473,6 +8473,314 @@
         "enforced": true,
         "run_at": "2026-08-14"
       }
+    },
+    {
+      "finding_id": "review:2026-05-01-1345-bundle-stage13:I1:5.1",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. All first-in-any-proof-assistant claims are gone; paper_draft.tex:2267-2277 now says the novelty claim is deliberately narrow and makes no claim about proof assistants beyond the two named. The Phase-6f audit path is no longer cited anywhere.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "uv run python -c \"import re,sys;t=re.sub(r'\\\\s+',' ',open('papers/I1/paper_draft.tex').read());sys.exit(0 if not re.search(r'new to any proof assistant|in any proof assistant prior to|Lit-Search/Phase-6f/audit',t) else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-01-1345-bundle-stage13:I1:6.1",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. The toolchain skew is now disclosed in the draft at :1628-1638 rather than left implicit.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "grep -q 'toolchain four minor versions behind' papers/I1/paper_draft.tex",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-01-1345-bundle-stage13:I1:7.1",
+      "status": "fixed",
+      "evidence": "STALE — remediated, and remediated STRUCTURALLY, which is why it held. The spelled-out per-module counts are gone and the draft now uses macros emitted by docs/counts.tex whose values equal the per-module theorem counts in lean_deps.json. Contrast I2 7.1, where the same class of finding was fixed by transcribing a literal and re-drifted within a month.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "uv run python -c \"import re,sys;t=re.sub(r'\\\\s+',' ',open('papers/I1/paper_draft.tex').read());sys.exit(0 if not re.search(r'(sixty-four|forty-four|thirteen) (substantive )?theorems',t) and 'curvatureThms' in t else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-01-1500-bundle-stage13:I1:7.1",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. The hand-summed 9+9+8+8+5 is gone; the draft now uses derived per-module macros that sum correctly at HEAD.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "uv run python -c \"import re,sys;t=re.sub(r'\\\\s+',' ',open('papers/I1/paper_draft.tex').read());sys.exit(0 if '9 + 9 + 8 + 8 + 5' not in t and 'bundleRiemannAuxThms' in t else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-01-1507-bundle-stage13:I1:1.4",
+      "status": "fixed",
+      "evidence": "STALE ON ITS OWN STATED DECIDER. The finding's decider was 'zero matches in citation_verifications.jsonl'; there is now one record for each of the five bibkeys. ⚠️ The REGISTRY half (empty titles, absent identifiers) is genuinely still open and is filed separately as 2026-08-15-textbook-exemption-rewards-absent-metadata — closing this on its own predicate is not a claim that those references are well-backed.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "uv run python -c \"import json,sys;ks={'physlean','compcert','sel4','leancipilot','alphaproof'};seen={json.loads(l).get('bibkey') for l in open('docs/citation_verifications.jsonl') if l.strip()};sys.exit(0 if ks<=seen else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-01-1507-bundle-stage13:I1:7.1",
+      "status": "fixed",
+      "evidence": "STALE — third filing of the same per-module count defect, same remediation: the hand-sum is gone and the counts are macro-derived.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "uv run python -c \"import re,sys;t=re.sub(r'\\\\s+',' ',open('papers/I1/paper_draft.tex').read());sys.exit(0 if '9 + 9 + 8 + 8 + 5' not in t and 'bundleRiemannAuxThms' in t else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-06-bundle-stage13:I1-r2:1.1",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. All five Glorioso-cluster bibkeys now carry cache records with verdict match.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "uv run python -c \"import json,sys;ks={'CrossleyGloriosoLiu2017','GloriosoCrossleyLiu2017','GloriosoLiu2018','GloriosoLiu2018TASI','JainKovtun2024'};seen={json.loads(l).get('bibkey') for l in open('docs/citation_verifications.jsonl') if l.strip()};sys.exit(0 if ks<=seen else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-06-bundle-stage13:I1-r2:1.2",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. The GloriosoLiu2018 entry now carries year 2016 with journal None and doi_verified True, and its note records the 2026-05-11 correction.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "uv run python -c \"import sys;sys.path.insert(0,'.');from src.core.citations import CITATION_REGISTRY as C;e=C['GloriosoLiu2018'];sys.exit(0 if e['year']==2016 and e.get('journal') is None else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-06-bundle-stage13:I1-r2:7.1",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. docs/counts.tex now carries a current auto-generation stamp rather than the frozen 2026-05-06 one.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "uv run python -c \"import sys;sys.exit(0 if '2026-05-06T12:04:34' not in open('docs/counts.tex').readline() else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:I1:3.4",
+      "status": "fixed",
+      "evidence": "STALE, AND IT WAS NEVER A DEFECT. Its own text reads 'Expected: No change; this is fine. Fix: N/A; included for completeness of audit' — it was filed as REQUIRED on section-heading severity rather than content. Its location has since been removed anyway. ⚠️ Worth noting as a filing defect: an audit note recorded as a blocking finding counts against a bundle forever.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "uv run python -c \"import re,sys;t=re.sub(r'\\\\s+',' ',open('papers/I1/paper_draft.tex').read());sys.exit(0 if 'substantive curve-theoretic modules' not in t else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-12-0006-internal-adversarial:I1:3.3",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated, and the remediation went BEYOND the finding. The vacuous-predicate disclosure landed at paper_draft.tex:2421-2442, naming the definitions that unfold to True and stating that two of the six SKEFTAxioms conditions therefore constrain nothing. The fixer also found a SEVENTH the finding missed, IsBelRobinsonEnergyFinite, whose Prop := / True split across lines hid it from a line-oriented scan.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "uv run python -c \"import re,sys;t=re.sub(r'\\\\s+',' ',open('papers/I1/paper_draft.tex').read());sys.exit(0 if 'hasCTPStructure' in t and 'two of that structure' in t else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-12-0006-internal-adversarial:I1:5.9",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. The stale spelled-out figure is gone; the draft now records that the sentence read thirty-three until an audit found the live figure had more than doubled.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "uv run python -c \"import re,sys;t=re.sub(r'\\\\s+',' ',open('papers/I1/paper_draft.tex').read());sys.exit(0 if 'seventy-nine' not in t else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-12-0006-internal-adversarial:I1:6.1",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. The disclosure landed at paper_draft.tex:792-800 and is unusually honest: it states the formal layer knows the bound and the Python layer does not, and that tetrad_gap_solution still iterates to a fixed point that does not satisfy the gap equation above the saturation coupling.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "uv run python -c \"import re,sys;t=re.sub(r'\\\\s+',' ',open('papers/I1/paper_draft.tex').read());sys.exit(0 if 'refutation has not yet propagated back to the numerics' in t else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-12-0006-internal-adversarial:I1:7.1",
+      "status": "fixed",
+      "evidence": "STALE ON ITS STATED DECIDER. The finding's decider was that docs/counts.tex emits NONE of the nineteen macros so the providecommand fallback always wins; every one is now emitted as a newcommand with matching values, and the input precedes the providecommands so they genuinely yield.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "uv run python -c \"import re,sys;p=open('papers/I1/paper_draft.tex').read();c=open('docs/counts.tex').read();m=re.findall(r'providecommand\\\\{..(\\\\w+)\\\\}',p);e=set(re.findall(r'newcommand\\\\{..(\\\\w+)\\\\}',c));sys.exit(0 if m and all(x in e for x in m) else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-01-1456-bundle-stage13:I2:5.2",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. The misattribution is corrected: UniMath is now attributed to the Coq/Rocq ecosystem and the Agda categories library named separately.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "uv run python -c \"import re,sys;t=re.sub(r'\\\\s+',' ',open('papers/I2/paper_draft.tex').read());sys.exit(0 if 'Agda' in t and 'UniMath' in t and 'Agda \\\\texttt{unimath}' not in t else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-01-1456-bundle-stage13:I2:5.3",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. The unsupported Isabelle/AFP Tensor Networks claim is gone; Isabelle now appears only in two neutral enumerations.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "uv run python -c \"import sys;sys.exit(0 if 'Tensor Networks' not in open('papers/I2/paper_draft.tex').read() else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-11-1550-bundle-stage13:I2:3.4",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. The draft now scopes the claim to the Fibonacci sub-block involution and states that the full F-symbol catalog and the hexagon/pentagon discharges are deferred, matching the module docstring.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "uv run python -c \"import re,sys;t=re.sub(r'\\\\s+',' ',open('papers/I2/paper_draft.tex').read());sys.exit(0 if 'hexagon and pentagon equation discharges are deferred' in t else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-11-1550-bundle-stage13:I2:5.4",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. Internal phase jargon is replaced by the named Lean structure IsolatedHorizonHypotheses with its three assumptions spelled out, and the broken cross-paper reference now points at bundle D3 explicitly.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "uv run python -c \"import re,sys;t=re.sub(r'\\\\s+',' ',open('papers/I2/paper_draft.tex').read());sys.exit(0 if 'IsolatedHorizonHypotheses' in t and 'Phase~6j' not in t else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-11-1550-bundle-stage13:I2:5.5",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. The heading is retitled and the companion module FibonacciUniversality.lean is cited as the finding suggested.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "uv run python -c \"import re,sys;t=re.sub(r'\\\\s+',' ',open('papers/I2/paper_draft.tex').read());sys.exit(0 if 'Fault-tolerant quantum-computing infrastructure' in t and 'FibonacciUniversality' in t else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-11-1550-bundle-stage13:I2:5.7",
+      "status": "fixed",
+      "evidence": "STALE — remediated by the removal path the finding itself specified. No first-in-proof-assistant claim survives; the remaining claims are hedged as of our 2026 prior-art sweep.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "uv run python -c \"import re,sys;t=re.sub(r'\\\\s+',' ',open('papers/I2/paper_draft.tex').read());sys.exit(0 if not re.search(r'first formaliz|first to formaliz|exhaustive prior-art',t) else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-11-1550-bundle-stage13:I2:6.1",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. The prose now carries the same side condition as the Lean statement in VerifiedJackknife.lean rather than asserting the result unconditionally.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "uv run python -c \"import re,sys;t=re.sub(r'\\\\s+',' ',open('papers/I2/paper_draft.tex').read());sys.exit(0 if 'for any window' in t else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-11-1550-bundle-stage13:I2:8.1",
+      "status": "fixed",
+      "evidence": "STALE — remediated, ledger never updated. The figure is now explicitly labelled a worked-example value rather than presented as a measurement.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "uv run python -c \"import re,sys;t=re.sub(r'\\\\s+',' ',open('papers/I2/paper_draft.tex').read());sys.exit(0 if '(a worked-example value, not' in t else 1)\"",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
     }
   ]
 }
