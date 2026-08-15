@@ -21,49 +21,42 @@
     "Rule: never set route=paywalled without recording in route_note which free",
     "routes were actually tried and failed. An unchecked paywall is a guess, not a cost."
   ],
-
   "IrwinHilton2005": {
     "load_bearing": true,
     "reason": "Attributed source of D12's diffuse-conduction closed form for the thermal-link gradient factor gamma (F_link). D12:474-475 currently discloses in reader-facing prose that we hold it only as a resolved DOI record -- a non-starter for submission. Either the attribution is verified or it must be re-sourced.",
     "route": "repository",
     "route_note": "Irwin and Hilton are NIST authors; try the NIST public-access repository and NIST TechBeat before purchase. Chapter in Cryogenic Particle Detection, Topics in Applied Physics 99 (Springer) -- a chapter purchase is the fallback, not the first move."
   },
-
   "Mather1982": {
     "load_bearing": true,
     "reason": "Supplies MATHER_1982_GRADIENT_REDUCTION (0.30). The convention -- whether the quoted 30% is a PSD or an amplitude reduction -- is UNRESOLVED because the body has never been read, and D12:498 discloses that in prose. The body settles it; the abstract cannot.",
     "route": "repository",
     "route_note": "John Mather is NASA; try NASA ADS full-text scan and the NASA Technical Reports Server before Optica purchase. Applied Optics 21(6) 1125-1129, 1982."
   },
-
   "PDG2024": {
     "load_bearing": true,
     "reason": "Supplies EW.M_H_GEV and EW.M_TOP_GEV.",
     "route": "open",
     "route_note": "Review of Particle Physics is fully open access at pdg.lbl.gov. No purchase under any circumstances -- if this is still unheld it is a fetch task, not a budget item."
   },
-
   "Sen2013": {
     "load_bearing": true,
     "reason": "Supplies BH.LOG_CORRECTION_SEN_4D_SCHWARZSCHILD; cited by both D3 and F.",
     "route": "open",
     "route_note": "JHEP is fully open access, and the preprint is on arXiv (1205.0971). Fetch task, not a budget item."
   },
-
   "BB84": {
     "load_bearing": true,
     "reason": "Referenced by formulas.py.",
     "route": "open",
     "route_note": "Bennett and Brassard 1984 was republished open access in Theoretical Computer Science 560 (2014) 7-11. Fetch task, not a budget item."
   },
-
   "Zhao2023": {
     "load_bearing": true,
     "reason": "Supplies Monolayer_100nm.c_s; cited by D1 and E2.",
     "route": "paywalled",
     "route_note": "Nature 614. CHECK arXiv and any author postprint before purchase -- not yet checked as of 2026-08-15, so the paywalled label is provisional."
   },
-
   "NielsenChuang2010": {
     "load_bearing": false,
     "reason": "Standard textbook, cited for background. If a specific theorem is load-bearing, register THAT rather than buying the book.",
@@ -78,5 +71,35 @@
     "load_bearing": false,
     "reason": "Textbook (Conformal Field Theory), background citation.",
     "route": "textbook"
+  },
+  "MilnorHusemoller1973": {
+    "load_bearing": true,
+    "reason": "Standing attribution for the classical 8|sigma theorem and the even-unimodular classification, quoted by D2's signatures section (Theorem 1). The theorem itself is PROVED in-tree kernel-pure (eight_dvd_latticeSig), so this source backs a HISTORICAL ATTRIBUTION and the characterisation of the classical proof route, not a load-bearing physical or mathematical claim. It also subsumes vanderBlij1959, which makes it the single best buy of this cluster.",
+    "route": "textbook",
+    "route_note": "Symmetric Bilinear Forms, Springer Ergebnisse der Mathematik 73 (1973). Try library lending and archive.org controlled lending BEFORE purchase. Buying this ONE book discharges the vanderBlij1959 attribution as well -- prefer it over the journal article."
+  },
+  "vanderBlij1959": {
+    "load_bearing": false,
+    "reason": "Cited by D2's signatures section as the origin of the congruence for even forms. Attribution only -- the theorem is proved in-tree. SUBSUMED by MilnorHusemoller1973; do NOT buy separately.",
+    "route": "paywalled",
+    "route_note": "Simon Stevin 34 (1959) 158-162 -- an obscure venue and a poor value target. Acquire MilnorHusemoller1973 instead and attribute through it. Not checked as of 2026-08-15."
+  },
+  "FreedmanKirby1978": {
+    "load_bearing": true,
+    "reason": "Supplies the congruence sigma = Sigma.Sigma + 8 Arf(M,Sigma) mod 16 that D2's section 5.5 quotes as the correct GEOMETRIC statement, against which the refuted lattice-Arf bridge is contrasted. The refutation itself is kernel-pure in-tree (lattice_arf_bridge_refuted); this source is needed to state correctly what the TRUE congruence is.",
+    "route": "repository",
+    "route_note": "'A geometric proof of Rochlin's theorem', Proc. Sympos. Pure Math. 32 (1978) 85-97. Check the AMS open-access backfile and author postprints before purchase. Not checked as of 2026-08-15, so the route is provisional."
+  },
+  "Freedman1982": {
+    "load_bearing": true,
+    "reason": "Supplies the topological E8 manifold -- the witness for D2 section 5.5's STRICTLY STRONGER claim that the residual factor of two cannot come from the underlying topology either, only from the smooth structure. The weaker ALGEBRAIC irreducibility claim is proved in-tree from E8 being even unimodular with sigma=8, so a failure to acquire this costs one paragraph, not the argument.",
+    "route": "repository",
+    "route_note": "J. Differential Geom. 17 (1982) 357-453. Check Project Euclid's JDG backfile for open access before any purchase. Not checked as of 2026-08-15, so the route is provisional."
+  },
+  "Rokhlin1952": {
+    "load_bearing": true,
+    "reason": "Has a bibitem in D2 but NO cached text. D2's section 5.5 quotes the statement of Rokhlin's theorem (16 | sigma for closed smooth spin 4-manifolds) from its standard formulation, unverified against the original. The theorem is universally standard, so the risk is attribution fidelity rather than correctness.",
+    "route": "repository",
+    "route_note": "Doklady Akad. Nauk SSSR 84 (1952) 221. Russian-language 2-page announcement. A standard English secondary source (MilnorHusemoller1973, or Kirby's Topology of 4-Manifolds) discharges the statement better than the original does -- prefer that over acquiring the Doklady note."
   }
 }

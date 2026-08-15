@@ -37,6 +37,7 @@ only once the free routes named in `route_note` have actually been tried.
 
 | source | held | bundles | route | why it is load-bearing |
 |---|---|---|---|---|
+| `Rokhlin1952` | none | D2, L2 | repository | Has a bibitem in D2 but NO cached text. D2's section 5.5 quotes the statement of Rokhlin's theorem (16 | sigma for closed smooth spin 4-manifolds) from its standard formulation, unverified against the original. The theorem is universally standard, so the risk is attribution fidelity rather than correctness. |
 | `Sen2013` | none | D3, F | open | Supplies BH.LOG_CORRECTION_SEN_4D_SCHWARZSCHILD; cited by both D3 and F. |
 | `Zhao2023` | none | D1, E2 | paywalled | Supplies Monolayer_100nm.c_s; cited by D1 and E2. |
 | `BB84` | none | D9 | open | Referenced by formulas.py. |
@@ -44,9 +45,9 @@ only once the free routes named in `route_note` have actually been tried.
 | `Mather1982` | abstract | D12 | repository | Supplies MATHER_1982_GRADIENT_REDUCTION (0.30). The convention -- whether the quoted 30% is a PSD or an amplitude reduction -- is UNRESOLVED because the body has never been read, and D12:498 discloses that in prose. The body settles it; the abstract cannot. |
 | `PDG2024` | abstract | D3 | open | Supplies EW.M_H_GEV and EW.M_TOP_GEV. |
 
-## P1 — cross-cutting, not detected as load-bearing (43)
+## P1 — cross-cutting, not detected as load-bearing (42)
 
-`Israel1986`, `KSS2005`, `PastawskiYoshidaHarlowPreskill2015`, `Volovik2024Vestigial`, `ABP1967`, `Adams1974`, `Adler1980`, `AharonovArad2011`, `AlmheiriMarolfPolchinskiSully2013`, `AlvarezGaumeWitten1984`, `AndersonBFP2013`, `ArnoldMcLerran1987`, `Balbinot2005`, `BardeenCarterHawking1973`, `CallenWelton1951`, `ChristensenDuff1978`, `DawsonNielsen2006`, `FreedmanLarsenWang2002`, `Hawking1971`, `Hawking1972`, `Hawking1975`, `Hietala2020VOQC`, `Jacquet2022`, `KehleUnger2024`, `KitaevShenVyalyi2002`, `KlinkhamerManton1984`, `Lewis2021VerifQC`, `Majumdar2025`, `Maldacena1997`, `NayakSimonSternFreedmanDasSarma2008`, `NielsenChuang2010`, `Niemeier1973`, `PretkoRadzihovsky2018`, `ReshetikhinTuraev1991`, `Rokhlin1952`, `Sakharov1968`, `Stepanov2019`, `Weinberg1989`, `Wen2003`, `Will2014`, `Witten1989`, `coqq2022`, `diFrancesco1997`
+`Israel1986`, `KSS2005`, `PastawskiYoshidaHarlowPreskill2015`, `Sakharov1968`, `Volovik2024Vestigial`, `ABP1967`, `Adams1974`, `Adler1980`, `AharonovArad2011`, `AlmheiriMarolfPolchinskiSully2013`, `AlvarezGaumeWitten1984`, `AndersonBFP2013`, `ArnoldMcLerran1987`, `Balbinot2005`, `BardeenCarterHawking1973`, `CallenWelton1951`, `ChristensenDuff1978`, `DawsonNielsen2006`, `FreedmanLarsenWang2002`, `Hawking1971`, `Hawking1972`, `Hawking1975`, `Hietala2020VOQC`, `Jacquet2022`, `KehleUnger2024`, `KitaevShenVyalyi2002`, `KlinkhamerManton1984`, `Lewis2021VerifQC`, `Majumdar2025`, `Maldacena1997`, `NayakSimonSternFreedmanDasSarma2008`, `NielsenChuang2010`, `Niemeier1973`, `PretkoRadzihovsky2018`, `ReshetikhinTuraev1991`, `Stepanov2019`, `Weinberg1989`, `Wen2003`, `Will2014`, `Witten1989`, `coqq2022`, `diFrancesco1997`
 
 ## P2 — single bundle, not detected as load-bearing (126)
 
@@ -58,4 +59,4 @@ only once the free routes named in `route_note` have actually been tried.
 
 ---
 
-*198 bundle-cited sources not held in full text: 6 P0, 43 P1, 126 P2, 23 internal.*
+*198 bundle-cited sources not held in full text: 7 P0, 42 P1, 126 P2, 23 internal.*

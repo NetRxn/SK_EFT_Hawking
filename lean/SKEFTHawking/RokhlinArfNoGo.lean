@@ -39,8 +39,11 @@ So the bridge would read `1 ≡ 0 (mod 2)` — false (`lattice_arf_bridge_refute
 - The genuine `σ/8 ≡ Arf` relation is the **GEOMETRIC** Freedman–Kirby / Guillou–Marin congruence
   `σ(M) ≡ Σ·Σ + 8·Arf(M,Σ) mod 16`, where `Arf(M,Σ)` is the Arf invariant of the quadratic refinement on
   `H₁(Σ;ℤ/2)` of a smoothly embedded *characteristic surface* `Σ` in a spin 4-MANIFOLD — data not present
-  in, and not recoverable from, the lattice. (`E₈`'s *characteristic-surface* Arf is `1`; its *lattice*
-  L/2L Arf is `0` — these are different invariants, and conflating them is the original error.)
+  in, and not recoverable from, the lattice. (These are different invariants, and conflating them is the
+  original error. Note `E₈` has NO smooth spin realisation, so it has no characteristic surface and no
+  geometric Arf invariant to compare against its *lattice* L/2L Arf of `0`: for a spin manifold `0` is
+  characteristic, both correction terms drop out, and the congruence reduces to `16∣σ` — which `σ(E₈)=8`
+  contradicts. That contradiction is exactly why no such manifold exists; it is not a computed `Arf=1`.)
 - Hence `16∣σ` for smooth spin 4-manifolds carries exactly ONE irreducible topological input, by
   mathematical necessity (E₈ is the even-unimodular counterexample with σ=8). The project carries it as
   the tracked hypothesis `SmoothSpinManifold4.topo : 2∣σ/8` (ADR-003). It CANNOT be re-expressed as a

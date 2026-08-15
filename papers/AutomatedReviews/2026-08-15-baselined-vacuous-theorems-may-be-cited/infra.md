@@ -123,3 +123,53 @@ keeps recording — two mechanisms, each sound, and the seam between them unasse
   that class, surviving the guard written for it because the guard reads the statement and
   the emptiness is in the proof.
 - **Cache:** N/A.
+
+---
+
+## Addendum 2026-08-15 — the sharpest instance, found by a Stage-10 drafter
+
+A D2 section drafter, working the redraft under the "contradictions between the brief and the
+sources" instruction, met the superseded `papers/D2/paper_draft.tex` §303-317 and declined to
+reproduce it. That passage is the clearest specimen of this defect class in the corpus, because
+it **states the vacuity in reader-facing prose and presents it as a discharge**:
+
+> "...\texttt{E8Lattice.e8\_det\_one} discharges unimodularity... The Serre algebraic bound is
+> then automatic ($8 \mid 8$); \texttt{e8\_sigma\_not\_div\_16} records that $E_8$ exhibits the
+> algebraic floor... The validity of the characteristic-square pairing on $E_8$ itself is closed
+> by \texttt{AlgebraicRokhlin.char\_sq\_valid\_e8}."
+
+Three separate problems, none of which any gate caught:
+
+1. **`e8_sigma_div_8` is `(8 : ℤ) ∣ (8 : ℤ) := dvd_refl 8`** (`E8Lattice.lean:98`), cited at
+   `D2:678` as what "underlies the $E_8$-lattice signature". The prose's own parenthetical
+   `($8 \mid 8$)` is a correct reading of the theorem — and it is offered as though a bound had
+   been established.
+2. **`char_sq_valid_e8` evaluates `selfPairing` at the zero vector**, and is cited as closing
+   "the validity of the characteristic-square pairing on $E_8$".
+3. **The cited chain is not the chain that proves the result, and is not kernel-pure.**
+   `e8_det_one`, `e8_diagonal_all_two`, `e8_symmetric` and `e8_minor_1` are all proved by
+   `native_decide` (`E8Lattice.lean:43,54,63,72`), putting `Lean.ofReduceBool` in their axiom
+   set. The theorems that actually carry `eight_dvd_latticeSig` are about the *literal* matrix
+   `E8lit`, proved kernel-pure by inverse exhibition and by the `C8ᵀC8 = 4·E8lit` certificate.
+   **There is no in-tree theorem `E8lit = CartanMatrix.E₈`**, so the two developments are not
+   linked at all — the manuscript attributes the kernel chain's E8 evaluation to declarations
+   that are neither kernel-pure nor on the chain.
+
+**Verified by the lead, 2026-08-15**, directly against `E8Lattice.lean` and `RokhlinArfNoGo.lean`,
+not from the drafter's report. Checked for blast radius: `I1:1658` also names `e8_det_one` but is
+**not** an instance — it lists the declaration descriptively as one of twenty-five a single
+Aristotle run registered, and argues that yield of that kind is a poor proxy for value.
+`papers/paper10_modular_generation/paper_draft.tex:377` discloses `native_decide` in-line.
+
+The D2 Stage-10 redraft replaces the passage and cites the `E8lit` chain instead, so the live
+prose instance closes with that redraft. **What does not close is the register gap this finding
+is about:** none of the three problems above was detectable by `placeholder_not_cited`
+(population too narrow), `vacuous_statement_audit` (statement shape, not witness triviality), or
+the `native_decide` ratchet (which tracks the debt but does not know the declarations are cited
+as backing). A drafter reading the source caught what three guards could not.
+
+**Consequence for the fix in §1.1/§1.2.** The missing `E8lit = CartanMatrix.E₈` bridge shows the
+population must be widened on a third axis as well: a citation can be defective not only because
+the cited theorem is empty, but because it is *sound and irrelevant* — true, kernel-checked, and
+not on the path to the claim it is offered for. That is not caught by any vacuity predicate and
+should be scoped explicitly before the extension in §1.1 is built.
