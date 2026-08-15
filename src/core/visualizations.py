@@ -6796,7 +6796,7 @@ def fig_fk_dimensional_ladder() -> go.Figure:
         xaxis=dict(showticklabels=False, showgrid=False, zeroline=False, range=[-0.25, 1.95]),
         yaxis=dict(showticklabels=False, showgrid=False, zeroline=False, range=[-0.6, 2.6]),
         title=dict(
-            text='Phase 5s Wave 4: dimensional-ladder evidence for gapped_interface_axiom',
+            text='Dimensional-ladder evidence for the gapped-interface assumption',
             font=TITLE_FONT,
         ),
         height=420, width=820,
@@ -7278,7 +7278,7 @@ def fig_phase5x_candidate_viability_matrix():
         ),
         yaxis=dict(title='', automargin=True),
         title=dict(
-            text=('Phase 5x candidate viability matrix '
+            text=('Dark-sector candidate viability matrix '
                   '(Lean: <i>phase5x_candidates_viability_matrix</i>)'),
             font=TITLE_FONT,
         ),
@@ -14533,13 +14533,13 @@ def fig_d8_su8_density_duality() -> go.Figure:
 
     # Route A box (left)
     box(0.03, 0.47, 0.30, 0.92, blue, "#EAF1F8")
-    fig.add_annotation(x=0.25, y=0.86, text="<b>Route A — Phase 6y</b>", showarrow=False, font=dict(size=14, color=blue))
+    fig.add_annotation(x=0.25, y=0.86, text="<b>Route A — CCZ over-complete</b>", showarrow=False, font=dict(size=14, color=blue))
     fig.add_annotation(x=0.25, y=0.62, xanchor="center", showarrow=False, font=dict(size=11, color="#222"),
         text=("⟨H, T, CNOT, CCZ⟩<br>density from {H,T,CNOT}<br><b>CCZ over-complete</b> (unused)<br>"
               "<i>cliffordCCZSU8_…_unconditional</i>"))
     # Route B box (right)
     box(0.53, 0.97, 0.30, 0.92, amber, "#FBF1DC")
-    fig.add_annotation(x=0.75, y=0.86, text="<b>Route B — Phase 6z</b>", showarrow=False, font=dict(size=14, color="#9a6b00"))
+    fig.add_annotation(x=0.75, y=0.86, text="<b>Route B — CCZ essential</b>", showarrow=False, font=dict(size=14, color="#9a6b00"))
     fig.add_annotation(x=0.75, y=0.62, xanchor="center", showarrow=False, font=dict(size=11, color="#222"),
         text=("⟨H, S, CNOT, CCZ⟩, <b>no T</b><br>seed CCZ·(H⊗H⊗H), tr = 1/√2 ∉ 𝒪<br>"
               "<b>CCZ essential</b> (load-bearing)<br><i>cliffordCCZLiteral_dense</i>"))
@@ -14553,11 +14553,11 @@ def fig_d8_su8_density_duality() -> go.Figure:
         showarrow=True, arrowhead=2, arrowcolor=amber, text="")
     # converse banner
     fig.add_annotation(x=0.5, y=0.97, xanchor="center", showarrow=False, font=dict(size=11, color="#9a6b00"),
-        text="Converse (Phase 6x′): ⟨H,S,CNOT⟩ alone is <b>finite</b> ⇒ not dense — <i>cliffordOnly_not_dense</i>")
+        text="Converse: ⟨H,S,CNOT⟩ alone is <b>finite</b> ⇒ not dense — <i>cliffordOnly_not_dense</i>")
     fig.update_xaxes(range=[0, 1], visible=False)
     fig.update_yaxes(range=[0, 1.04], visible=False)
     fig.update_layout(
-        title="D8 Fig. 2 — Two complementary density mechanisms for SU(8)",
+        title="Two complementary density mechanisms for SU(8)",
         height=500, width=900, margin=dict(l=30, r=30, t=90, b=30),
         plot_bgcolor="white", showlegend=False,
     )
@@ -14768,7 +14768,7 @@ def fig_qnet_readout_envelopes() -> go.Figure:
     fig.update_yaxes(title_text="thermal occupancy  p_th", range=[0, 0.62],
                      row=1, col=2, showgrid=True, gridcolor="#eee")
     fig.update_layout(
-        title="D9 §5 (Phase 6AQ) — readout-window envelopes inside Lean-proven rational enclosures",
+        title="Readout-window envelopes inside Lean-proven rational enclosures",
         legend=dict(orientation="h", yanchor="top", y=-0.18, xanchor="left", x=0),
         height=520, width=1000, margin=dict(l=80, r=40, t=90, b=110),
         plot_bgcolor="white")
