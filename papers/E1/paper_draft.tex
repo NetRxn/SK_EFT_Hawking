@@ -29,8 +29,8 @@
 
 \begin{document}
 
-\title{A Falsifiable Analog-Hawking Spectrum for Exciton-Polariton
-Microcavities, and the Cavity Lifetime It Requires}
+\title{Cavity Lifetime Gates Analog Hawking Detection in
+Exciton-Polariton Microcavities}
 
 \author{J.~Roehm}
 \affiliation{Independent Researcher}
@@ -38,18 +38,160 @@ Microcavities, and the Cavity Lifetime It Requires}
 \date{\today}
 
 \begin{abstract}
-%% DRAFTING — §abstract
+Exciton-polariton fluids now support acoustic horizons of tailored
+curvature with the surface gravity measured directly. At the
+Paris-LKB platform's published smooth-horizon value
+$\kappa = \input{tables/lkb_kappa_smooth.tex}\unskip\,\mathrm{s}^{-1}$~\cite{Falque2025} the
+standard analog-Hawking relation gives
+$T_H = \input{tables/lkb_T_H_smooth_mK.tex}\unskip\,\si{\milli\kelvin}$, eight orders above the
+atomic-BEC analogs, and a coherent probe crossing the horizon is
+amplified by $G(\omega) = \Gamma(\omega)/(e^{2\pi\omega/\kappa_{\rm eff}}-1)$,
+which reaches one half at
+$\omega = \input{tables/lkb_gain_threshold.tex}\unskip\,\kappa_{\rm eff}$ for a
+saturated greybody factor. The obstacle is not the horizon but the
+cavity: the as-built \SI{\input{tables/lkb_tau_cav_ps_standard.tex}\unskip}{\pico\second}
+device has $\Gamma_{\rm pol}/\kappa = \input{tables/lkb_ratio_standard.tex}\unskip$,
+so the weak-dissipation expansion that licenses these numbers fails
+by more than an order of magnitude and holds only for
+$\tau_{\rm cav} \gtrsim \SI{\input{tables/lkb_tau_required_ps.tex}\unskip}{\pico\second}$.
+We give the predicted spectrum, its falsifiable window
+$\omega \lesssim 0.3\,\kappa$, and the two measurements that would
+close it.
 \end{abstract}
 
 \maketitle
 
 %% ══════════════════════════════════════════════════════════════════
 \section{Introduction}
-%% DRAFTING — §I
+
+Analog Hawking radiation has been observed in atomic Bose-Einstein
+condensates at $T_H \approx \SI{0.35}{\nano\kelvin}$
+\cite{Steinhauer2016,deNova2019}, a temperature so far below every
+systematic in the apparatus that the signal must be recovered from
+density-density correlations accumulated over $\sim 10^{4}$
+realizations. Exciton-polariton fluids promise to remove that
+constraint rather than to fight it. Their sound speed is two orders
+of magnitude larger than in a dilute atomic gas and their horizons
+can be written optically, so the velocity gradient that sets the
+surface gravity is both large and adjustable, and predicted
+temperatures lie in the \SI{0.1}{\kelvin} to \SI{1}{\kelvin} range
+\cite{Gerace2012,Nguyen2015}.
+
+Falque \emph{et al.}~\cite{Falque2025} have now built the horizon.
+Their microcavity polariton fluid crosses from sub- to supersonic
+flow along an optically imprinted velocity profile, the horizon
+steepness is tuned all-optically between two measured values, and
+negative-energy Bogoliubov modes are resolved in the supersonic
+region, which is the kinematic signature that a horizon has formed
+and that pair emission across it is possible. What the platform does
+not yet have is a prediction sharp enough to falsify, and a
+statement of the device conditions under which that prediction is
+entitled to be believed.
+
+This Letter supplies both. We evaluate the Schwinger-Keldysh
+effective-field-theory (SK-EFT) analog-Hawking spectrum at the
+published Paris-LKB parameters, and we ask, in the same expansion,
+whether the polariton cavity is quiet enough for that spectrum to
+be the leading behavior. The answer is that the horizon is already
+good enough and the cavity is not. Cavity loss, not surface gravity,
+is the gating parameter, and the gate closes at a lifetime we can
+name.
 
 %% ══════════════════════════════════════════════════════════════════
 \section{Device parameters and the predicted Hawking temperature}
-%% DRAFTING — §II
+
+%% Data source: papers/E1/tables.py -> render_paper_tables.py, which reads
+%%   src/core/constants.py :: POLARITON_PLATFORMS['Paris_standard'] and
+%%   src/core/constants.py :: FALQUE_STEEP_HORIZON_KAPPA,
+%% and derives D = xi*kappa/c_s and delta_disp = -pi D^2/6 rather than
+%% quoting either. Every number in this section is generated.
+%% Primary-source verification (2026-08-15, page-level read of
+%% Lit-Search/Phase-5w/primary-sources/Falque2025.pdf):
+%%   p.5 §IV.A  "the healing length ... is typically 3.4 um upstream and
+%%               4.0 um downstream"; "the speed of sound c_s(x) ~ 0.40 um/ps"
+%%   p.5 §IV.A  "horizon steepness kappa = 0.07 ps^-1 (red) and 0.08 (purple)"
+%%   p.5 §IV.B  "We measure M_u = 0.7 and M_d = 4, with kappa = 0.11 ps^-1"
+%%   p.4 §III   "effective polariton mass at the working point, m* = 7.0e-35 kg"
+%%   p.9 App.B1 "We measure a polariton decay rate hbar*gamma ~ 80 ueV"
+
+We take the fluid parameters from Falque \emph{et al.}~\cite{Falque2025}
+directly rather than re-deriving them. Their \S IV.1 reports a sound
+speed $c_s \approx \input{tables/lkb_c_s_um_per_ps.tex}\unskip\,\si{\micro\meter/\pico\second}$
+and a healing length $\xi \approx \input{tables/lkb_xi_um.tex}\unskip\,\si{\micro\meter}$
+upstream (\SI{4.0}{\micro\meter} downstream), measured on a fluid whose
+effective polariton mass is $m^* = \SI{7.0e-35}{\kilo\gram}$. Two
+horizon steepnesses are reported: a smooth configuration at
+$\kappa = \input{tables/lkb_kappa_smooth.tex}\unskip\,\mathrm{s}^{-1}$ and a steep one at
+$\kappa = \input{tables/lkb_kappa_steep.tex}\unskip\,\mathrm{s}^{-1}$.
+
+One point of provenance is worth making explicit, because it is
+easy to mistake for a correction we have applied. The sound speed
+above is not a reservoir-free Bogoliubov estimate rescaled after the
+fact; the dark excitonic reservoir is already inside it. Falque
+\emph{et al.}'s Appendix~B carries the reservoir interaction energy
+$g_r n_r \approx 1.84\,gn$ through the dispersion from which $c_s$
+is extracted. Reservoir-free estimates for this class of device
+reach $\sim \SI{1.0}{\micro\meter/\pico\second}$, and the factor of
+roughly two-and-a-half between them and the measured value is the
+reservoir, but that reduction is the primary source's result and not
+ours~\cite{Estrecho2021,Stepanov2019,Claude2023}.
+
+\begin{center}
+\input{tables/lkb_device_params.tex}
+\end{center}
+
+The dimensionless ratio $D = \xi\kappa/c_s$ compares the horizon's
+gradient scale to the healing length and controls how far the
+hydrodynamic description can be trusted. It is
+$\input{tables/lkb_D_smooth.tex}\unskip$ at the smooth horizon and
+$\input{tables/lkb_D_steep.tex}\unskip$ at the steep one. The leading dispersive
+correction is
+\begin{equation}
+\delta_{\rm disp} = -\frac{\pi}{6}\,D^2 ,
+\label{eq:delta_disp}
+\end{equation}
+giving $\input{tables/lkb_delta_disp_smooth.tex}\unskip$ and
+$\input{tables/lkb_delta_disp_steep.tex}\unskip$ respectively. Equation~\eqref{eq:delta_disp}
+is the manuscript's only dispersive coefficient, and \S IV uses the
+same expression rather than an independent one.
+
+The Hawking temperature follows from the surface gravity alone,
+\begin{equation}
+k_B T_H = \frac{\hbar \kappa}{2\pi} ,
+\label{eq:T_H}
+\end{equation}
+which at the smooth horizon gives
+$T_H = \input{tables/lkb_T_H_smooth_mK.tex}\unskip\,\si{\milli\kelvin}$.
+
+Two qualifications attach to that number, and both come from the
+primary source rather than from the theory.
+
+The first is a normalization. Falque \emph{et al.} quote a Hawking
+temperature of \SI{3}{\kelvin} for their smoothest horizon, and
+their Eq.~(9) writes the emitted flux as
+$1/(e^{\omega/2\pi\kappa}-1)$. That exponent corresponds to
+$k_B T = h\kappa$, which at the same
+$\kappa = \input{tables/lkb_kappa_smooth.tex}\unskip\,\mathrm{s}^{-1}$ evaluates to
+$\input{tables/lkb_T_H_falque_norm_K.tex}\unskip\,\si{\kelvin}$ and reproduces the
+flux values they report. It exceeds Eq.~\eqref{eq:T_H} by
+$(2\pi)^2 \approx \input{tables/lkb_norm_ratio.tex}\unskip$. We use
+Eq.~\eqref{eq:T_H}, the convention of the analog-gravity literature
+the same paper cites~\cite{Visser1998,Unruh1981,Barcelo2011}, and we
+flag the factor here so that a reader holding \SI{3}{\kelvin} in
+mind does not read \SI{85}{\milli\kelvin} as a disagreement about
+$\kappa$. The two papers agree on every measured quantity; they
+normalize $T_H$ differently.
+
+The second is that Eq.~\eqref{eq:T_H} is only an observable where
+the spectrum is thermal, and at the steep horizon it is not. Falque
+\emph{et al.} state that the steep-horizon spectrum is dominated by
+nonlinear frequency dispersion and is therefore not thermal, which
+$D = \input{tables/lkb_D_steep.tex}\unskip$ anticipates: the dispersive correction
+Eq.~\eqref{eq:delta_disp} is then near one half and the expansion
+that produced it has stopped converging. We therefore quote a
+Hawking temperature at the smooth horizon only, and treat the steep
+configuration as what the source shows it to be, a demonstration
+that $\kappa$ is tunable, not a hotter black hole.
 
 %% ══════════════════════════════════════════════════════════════════
 \section{Where the perturbative-dissipation patch holds}
