@@ -6,6 +6,8 @@ import hmac
 import http.client
 import json
 import subprocess
+import threading
+import uuid
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from typing import Any
 from urllib.parse import parse_qs, urlsplit
@@ -229,12 +231,130 @@ def is_notification_only(messages: list[dict[str, Any]]) -> bool:
     )
 
 
+def wants_initialize(messages: list[dict[str, Any]]) -> bool:
+    """True when this request is an MCP `initialize`, which the FRONT DOOR always answers."""
+    return bool(messages) and any(m.get("method") == "initialize" for m in messages)
+
+
+def backend_rejected_session(status: int, body: bytes) -> bool:
+    """True when the backend's answer means "I do not know this session".
+
+    Two shapes, because the transport and the protocol each have their own way of
+    saying it: an HTTP 400/404 from the streamable-HTTP layer, or a JSON-RPC
+    `-32602` from the server. Either one means the mapping is stale and must be
+    re-established — which is exactly what happens when `prepare` restarts the Lean
+    server underneath a live client session.
+    """
+    if status in {400, 404}:
+        return True
+    return b"-32602" in body
+
+
+class SessionBroker:
+    """Owns the client-facing MCP session and maps it to a backend session (ADR-008 S-Q).
+
+    ⚠️ THE PROXY MUST MINT ITS OWN SESSION, ALWAYS — not only when the backend is
+    idle. Measured at HEAD 2026-08-15: the idle front door answered `initialize`
+    with HTTP 200 and no `Mcp-Session-Id` header at all, so a client that attached
+    to an idle slot held no session any later backend had issued and every
+    `tools/call` came back `-32602`, permanently. Minting only-when-idle would move
+    the same defect rather than fix it: a session that attached while the backend
+    was UP would hold the *backend's* id, which `prepare` invalidates the moment it
+    restarts the Lean server mid-wave. Uniform minting is what makes lease,
+    prepare, absorb and release all transparent to a live session.
+
+    State is in-memory and per-proxy, so `supervisor stop`/`start` still ends client
+    sessions. That is a configuration-change cost, not a per-wave one.
+    """
+
+    def __init__(self, host: str, port: int, token: str):
+        self._host = host
+        self._port = port
+        self._token = token
+        self._backend: dict[str, str] = {}
+        self._lock = threading.Lock()
+
+    def mint(self) -> str:
+        client_session = uuid.uuid4().hex
+        with self._lock:
+            self._backend[client_session] = ""
+        return client_session
+
+    def forget(self, client_session: str) -> None:
+        """Drop the backend mapping, keeping the client session valid for re-establishment."""
+        with self._lock:
+            if client_session in self._backend:
+                self._backend[client_session] = ""
+
+    def backend_session(self, client_session: str) -> str:
+        """The backend session for this client, establishing one if there is none.
+
+        An UNKNOWN client session is adopted rather than refused: after a supervisor
+        restart the client's session is genuinely gone, and refusing it would hand the
+        operator back exactly the restart-the-client tax S-Q exists to remove. The
+        lease gate is unaffected — it runs before this, on every dispatching method.
+        """
+        with self._lock:
+            existing = self._backend.get(client_session)
+        if existing:
+            return existing
+        established = self._establish()
+        with self._lock:
+            self._backend[client_session] = established
+        return established
+
+    def _establish(self) -> str:
+        """Handshake with the backend and return its session id."""
+        payload = json.dumps({
+            "jsonrpc": "2.0", "id": 1, "method": "initialize",
+            "params": {
+                "protocolVersion": _OFFLINE_PROTOCOL_VERSION,
+                "capabilities": {},
+                "clientInfo": {"name": "lean-slot proxy", "version": "1"},
+            },
+        }).encode()
+        headers = {
+            "Content-Type": "application/json",
+            "Accept": "application/json, text/event-stream",
+            "Authorization": f"Bearer {self._token}",
+            "Content-Length": str(len(payload)),
+        }
+        connection = http.client.HTTPConnection(self._host, self._port, timeout=180)
+        try:
+            connection.request("POST", "/mcp", body=payload, headers=headers)
+            response = connection.getresponse()
+            response.read()
+            session = next(
+                (v for k, v in response.getheaders() if k.lower() == "mcp-session-id"),
+                None,
+            )
+        finally:
+            connection.close()
+        if not session:
+            raise SlotError("backend initialize returned no Mcp-Session-Id")
+        note = json.dumps(
+            {"jsonrpc": "2.0", "method": "notifications/initialized", "params": {}}
+        ).encode()
+        connection = http.client.HTTPConnection(self._host, self._port, timeout=180)
+        try:
+            connection.request(
+                "POST", "/mcp", body=note,
+                headers={**headers, "Content-Length": str(len(note)),
+                         "Mcp-Session-Id": session},
+            )
+            connection.getresponse().read()
+        finally:
+            connection.close()
+        return session
+
+
 def make_handler(inventory: Inventory, number: int):
     slot = inventory.slot(number)
     backend_host = str(inventory.raw["server"]["host"])
     backend_port = int(slot["backend_port"])
     backend_token = inventory.backend_token(number)
     gate = LeaseGate(inventory, number)
+    broker = SessionBroker(backend_host, backend_port, backend_token)
 
     class Handler(BaseHTTPRequestHandler):
         server_version = "LeanSlotGate/1"
@@ -260,12 +380,16 @@ def make_handler(inventory: Inventory, number: int):
             self.end_headers()
             self.wfile.write(body)
 
-        def _respond_json(self, payload: dict[str, Any]) -> None:
+        def _respond_json(
+            self, payload: dict[str, Any], session_id: str | None = None
+        ) -> None:
             body = json.dumps(payload).encode()
             self.send_response(200)
             self.send_header("Content-Type", "application/json")
             self.send_header("Content-Length", str(len(body)))
             self.send_header("Cache-Control", "no-store")
+            if session_id:
+                self.send_header("Mcp-Session-Id", session_id)
             self.end_headers()
             self.wfile.write(body)
 
@@ -290,23 +414,75 @@ def make_handler(inventory: Inventory, number: int):
                 status = 401 if "credential" in str(exc) else 403
                 self._deny(status, str(exc), request_id)
                 return
+            # ADR-008 S-Q: the FRONT DOOR answers `initialize` and mints the session,
+            # whether or not a backend is up. Never forwarded — forwarding is what tied a
+            # client's session to a backend lifetime and made `prepare` fatal to it.
+            if wants_initialize(parsed):
+                minted = broker.mint()
+                reply = offline_handshake(parsed, cached_tool_list(inventory))
+                if reply is not None:
+                    self._respond_json(reply, session_id=minted)
+                    return
+
             headers = {
                 key: value
                 for key, value in self.headers.items()
                 if key.lower() not in _HOP_HEADERS
-                and key.lower() not in {"host", "authorization", "content-length"}
+                and key.lower() not in {
+                    "host", "authorization", "content-length", "mcp-session-id",
+                }
             }
             headers["Authorization"] = f"Bearer {backend_token}"
             if body:
                 headers["Content-Length"] = str(len(body))
+            client_session = next(
+                (v for k, v in self.headers.items() if k.lower() == "mcp-session-id"),
+                None,
+            )
             connection = http.client.HTTPConnection(
                 backend_host, backend_port, timeout=180
             )
             try:
+                if client_session:
+                    headers["Mcp-Session-Id"] = broker.backend_session(client_session)
                 connection.request(
                     self.command, request_url.path, body=body or None, headers=headers
                 )
                 response = connection.getresponse()
+                # A GET is the SSE stream and is passed through untouched. Anything else
+                # is small enough to buffer, which is what lets a stale mapping be
+                # retried instead of surfacing as `-32602` to the client.
+                if self.command != "GET":
+                    buffered = response.read()
+                    if client_session and backend_rejected_session(
+                        response.status, buffered
+                    ):
+                        broker.forget(client_session)
+                        headers["Mcp-Session-Id"] = broker.backend_session(client_session)
+                        connection.close()
+                        connection = http.client.HTTPConnection(
+                            backend_host, backend_port, timeout=180
+                        )
+                        connection.request(
+                            self.command, request_url.path,
+                            body=body or None, headers=headers,
+                        )
+                        response = connection.getresponse()
+                        buffered = response.read()
+                    self.send_response(response.status, response.reason)
+                    for key, value in response.getheaders():
+                        lowered = key.lower()
+                        if lowered not in _HOP_HEADERS and lowered not in {
+                            "content-length", "server", "date", "mcp-session-id",
+                        }:
+                            self.send_header(key, value)
+                    if client_session:
+                        self.send_header("Mcp-Session-Id", client_session)
+                    self.send_header("Content-Length", str(len(buffered)))
+                    self.send_header("Connection", "close")
+                    self.end_headers()
+                    self.wfile.write(buffered)
+                    return
                 self.send_response(response.status, response.reason)
                 for key, value in response.getheaders():
                     lowered = key.lower()

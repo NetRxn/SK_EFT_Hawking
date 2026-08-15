@@ -1529,3 +1529,144 @@ def test_a_missing_cache_yields_no_tools_rather_than_an_error(slot_repo) -> None
 
     controller, _, _ = slot_repo
     assert cached_tool_list(controller.inventory) == []
+
+
+# ── ADR-008 S-Q — the proxy owns the client-facing MCP session ────────────────
+#
+# ⚠️ THESE DRIVE THE REAL HTTP HANDLER, NOT `offline_handshake`.
+# The pre-existing handshake tests call `offline_handshake` as a pure function and
+# all passed while the defect was live, because the defect was never in that
+# function — it was in the handler that calls it, which sent the reply with no
+# `Mcp-Session-Id` header. Testing the seam is the whole point (CHECK_AUTHORING
+# _GUIDE §2.5): a unit test one layer in from the defect cannot see it.
+
+
+def _serve_proxy(inventory, number: int):
+    """Run one real proxy handler on an ephemeral port; yields (host, port, close)."""
+    import threading
+    from http.server import ThreadingHTTPServer
+    from scripts.lean_slots.proxy import make_handler
+
+    server = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(inventory, number))
+    thread = threading.Thread(target=server.serve_forever, kwargs={"poll_interval": 0.05})
+    thread.daemon = True
+    thread.start()
+
+    def close() -> None:
+        server.shutdown()
+        server.server_close()
+
+    return server.server_address[0], server.server_address[1], close
+
+
+def _post(host: str, port: int, payload: dict, session: str | None = None):
+    import http.client
+
+    body = json.dumps(payload).encode()
+    headers = {
+        "Content-Type": "application/json",
+        "Accept": "application/json, text/event-stream",
+        "Content-Length": str(len(body)),
+    }
+    if session:
+        headers["Mcp-Session-Id"] = session
+    connection = http.client.HTTPConnection(host, port, timeout=10)
+    try:
+        connection.request("POST", "/mcp?client=claude", body=body, headers=headers)
+        response = connection.getresponse()
+        raw = response.read()
+        got = {k.lower(): v for k, v in response.getheaders()}
+        return response.status, got, raw
+    finally:
+        connection.close()
+
+
+def test_an_idle_slot_mints_a_session_on_initialize(slot_repo) -> None:
+    """The defect, seeded at the seam: HTTP 200 with NO Mcp-Session-Id.
+
+    Measured at HEAD 2026-08-15 against the live wt1 front door before the fix:
+    `initialize` returned 200 and the header was absent, so a client that attached
+    to an idle slot held no session any later backend had issued and every
+    `tools/call` came back `-32602` for the life of that session.
+    """
+    controller, _repo, _worktrees = slot_repo
+    host, port, close = _serve_proxy(controller.inventory, 1)
+    try:
+        status, headers, raw = _post(host, port, {
+            "jsonrpc": "2.0", "id": 1, "method": "initialize",
+            "params": {"protocolVersion": "2025-06-18", "capabilities": {},
+                       "clientInfo": {"name": "probe", "version": "1"}},
+        })
+        assert status == 200
+        assert "mcp-session-id" in headers, (
+            "the idle front door answered initialize without minting a session — "
+            "this is the ADR-008 S-Q defect"
+        )
+        assert headers["mcp-session-id"]
+        assert json.loads(raw)["result"]["protocolVersion"] == "2025-06-18"
+    finally:
+        close()
+
+
+def test_each_initialize_mints_a_distinct_session(slot_repo) -> None:
+    """Two clients on one idle slot must not be handed the same session."""
+    controller, _repo, _worktrees = slot_repo
+    host, port, close = _serve_proxy(controller.inventory, 1)
+    try:
+        payload = {"jsonrpc": "2.0", "id": 1, "method": "initialize",
+                   "params": {"protocolVersion": "2025-06-18"}}
+        _, first, _ = _post(host, port, payload)
+        _, second, _ = _post(host, port, payload)
+        assert first["mcp-session-id"] != second["mcp-session-id"]
+    finally:
+        close()
+
+
+def test_the_minted_session_does_not_weaken_the_lease_gate(slot_repo) -> None:
+    """S-Q must not become a way to dispatch without a lease (S-N is unaffected)."""
+    controller, _repo, _worktrees = slot_repo
+    host, port, close = _serve_proxy(controller.inventory, 1)
+    try:
+        _, headers, _ = _post(host, port, {
+            "jsonrpc": "2.0", "id": 1, "method": "initialize",
+            "params": {"protocolVersion": "2025-06-18"}})
+        session = headers["mcp-session-id"]
+        status, _, raw = _post(host, port, {
+            "jsonrpc": "2.0", "id": 2, "method": "tools/call",
+            "params": {"name": "lean_goal", "arguments": {}}}, session=session)
+        assert status == 403
+        assert b"no active lease" in raw
+    finally:
+        close()
+
+
+def test_a_stale_backend_mapping_is_re_established_not_surfaced() -> None:
+    """`prepare` restarts the Lean server mid-wave; the client session must survive it."""
+    from scripts.lean_slots.proxy import SessionBroker
+
+    broker = SessionBroker("127.0.0.1", 1, "tok")
+    established: list[str] = []
+
+    def fake_establish() -> str:
+        established.append(f"backend-{len(established)}")
+        return established[-1]
+
+    broker._establish = fake_establish  # type: ignore[method-assign]
+    client = broker.mint()
+    assert broker.backend_session(client) == "backend-0"
+    assert broker.backend_session(client) == "backend-0", "must not re-handshake per call"
+    broker.forget(client)
+    assert broker.backend_session(client) == "backend-1", (
+        "after the backend restarts, the SAME client session must map to a NEW backend "
+        "session rather than failing"
+    )
+
+
+def test_an_unknown_client_session_is_adopted_not_refused() -> None:
+    """After a supervisor restart the client's session is gone; refusing it would
+    hand back exactly the restart-the-client tax S-Q removes."""
+    from scripts.lean_slots.proxy import SessionBroker
+
+    broker = SessionBroker("127.0.0.1", 1, "tok")
+    broker._establish = lambda: "backend-x"  # type: ignore[method-assign]
+    assert broker.backend_session("never-minted-by-this-proxy") == "backend-x"

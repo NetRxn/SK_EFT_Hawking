@@ -161,16 +161,21 @@ restart is what activates both.
 
 ## Per-task orchestrator flow
 
-⛔ **ACQUIRE AND PREPARE THE SLOTS BEFORE STARTING THE SESSION THAT WILL USE THEM.** MCP tools
-attach at session start, and a session that registers a slot's tools while that slot is **idle**
-holds a session established against the idle proxy. Acquiring the lease starts the backend and
-re-establishes the proxy's downstream, after which the client's existing session no longer
-resolves: every call returns `MCP error -32602`, permanently, for the life of that session. The
-tools stay visible and are unusable. Measured 2026-08-14 — a fresh session against the same
-endpoint at the same moment returned HTTP 200 and served tool calls normally.
+✅ **The lease lifecycle is drivable from inside a live session. No restart, ever.** Acquire,
+prepare, dispatch, absorb and release all work against a session that attached while the slot was
+idle — which means an agent, a skill, or a `/goal` loop can run the whole thing unattended.
 
-So the working order is **prepare, then start the client** — or restart the client after
-preparing. Leasing mid-session is what fails.
+This was not always true, and the history is worth one line because the fix generalises. Until
+2026-08-15 the front door answered `initialize` without minting an `Mcp-Session-Id`, so a client
+that attached to an idle slot held no session any later backend had issued, and every call
+returned `MCP error -32602` for the life of that session. The guide used to tell you to acquire
+and prepare *before* starting the client. That was a workaround for our own defect written up as
+an operating rule; [ADR-008 S-Q](../adrs/ADR-008-shared-lean-slot-control-plane.md) fixed the
+proxy instead, and the rule is retired. **Do not reinstate it.**
+
+The one thing that still needs a client restart is changing *which endpoints exist* — adding or
+removing a slot in `.mcp.json` via `config render`. That is a configuration change, not a
+per-wave step.
 
 ⚠️ **The port trap, which produced two independent wrong diagnoses in one session.** The client
 config points at the **proxy** (`127.0.0.1:876N`); the lean-lsp backend listens on `1876N`.
