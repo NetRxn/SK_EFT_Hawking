@@ -10028,6 +10028,21 @@
         "enforced": true,
         "run_at": "2026-08-15"
       }
+    },
+    {
+      "finding_id": "review:2026-07-31-2220-internal-adversarial:D12:2.2",
+      "status": "fixed",
+      "evidence": "The artifact half was repaired since filing and I re-measured it rather than trusting the filing: the list is now 28 entries, all five named omissions are present, and the D12 region of formulas.py contains 27 public functions of which zero are absent. But the finding's own Expected says adding the five does not close it — 'the verdict is again a property of the list rather than of the bundle' — and a hand-written list that happens to be complete today can go short again tomorrow, silently, with Gate 4 green either way. So the closure is the SEAM GUARD, not the entries: tests/test_d12_formula_surface.py asserts that every public function in D12's region of formulas.py appears in the Gate-4 list, that the list names nothing that does not exist, and — guarding the seam per CHECK_AUTHORING_GUIDE 2.5 — that the region is non-empty, since every other assertion is 'region minus list is empty' and a renamed delimiter would turn the file into a tautology passing forever. Mutation-verified: dropping one entry turns it red, restoring returns it green. The structural point the finding raises stands and is NOT claimed fixed — paper:D12 still carries zero GROUNDED_IN edges, so Gate 4 still evaluates a hand-written list; what has changed is that the list can no longer go short without a red test.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "supersedes_inert_open": true,
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -m pytest tests/test_d12_formula_surface.py -q && uv run python scripts/validate.py --check paper_provenance",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-15"
+      }
     }
   ]
 }
