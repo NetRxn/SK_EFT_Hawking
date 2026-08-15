@@ -34,9 +34,9 @@ A Formally Verified Survey}
 \begin{abstract}
 %% Synthesis-claim history note (NEW to F, per SYNTHESIS_BRIEF.md):
 %%   The same antisymmetric-tetrad-bilinear (ADW) substrate that drives
-%%   the emergent-gravity content of Bundle D3 (single Sakharov coefficient
-%%   $G_N^{\rm Sak} = 12\pi/(N_f \Lambda_{\rm UV}^2)$ propagating across
-%%   six observables) also drives the SK-EFT analog-Hawking content of
+%%   the emergent-gravity content of Bundle D3 (single heat-kernel
+%%   coefficient $G_N^{a_2} = 3\pi/(N_f \Lambda_{\rm UV}^2)$ propagating
+%%   across six observables) also drives the SK-EFT analog-Hawking content of
 %%   Bundle D1 (across BEC, polariton, graphene; 93\% Lean-theorem reuse),
 %%   the chirality-wall + modular-invariance content of Bundle D2
 %%   (Spin$^{\mathbb{Z}_4}$ 5-bordism with $N_f = 16$ matching D3's
@@ -56,8 +56,8 @@ review reports the substrate as a single object across the program's
 sibling threads. The synthesis claim, NEW to this flagship and absent
 from any individual sibling, is that the same antisymmetric-tetrad-bilinear
 (ADW) substrate that drives the emergent-gravity content of
-Bundle~D3 (a single Sakharov coefficient
-$G_N^{\mathrm{Sak}} = 12\pi/(N_f\,\Lambda_{\mathrm{UV}}^{2})$
+Bundle~D3 (a single heat-kernel coefficient
+$G_N^{a_2} = 3\pi/(N_f\,\Lambda_{\mathrm{UV}}^{2})$
 propagating across six observables) also drives the SK--EFT analog-Hawking
 content of Bundle~D1 (across BEC, polariton, and graphene Dirac-fluid
 platforms; $93\%$ Lean-theorem reuse), the chirality-wall and
@@ -114,7 +114,7 @@ Diakonov2011}: an
 antisymmetric-tetrad-bilinear order parameter that condenses below a
 microscopic scale $\Lambda_{\mathrm{UV}}$ and produces a Sakharov-style
 emergent gravitational coupling
-$G_N^{\mathrm{Sak}} = 12\pi/(N_f\,\Lambda_{\mathrm{UV}}^{2})$
+$G_N^{a_2} = 3\pi/(N_f\,\Lambda_{\mathrm{UV}}^{2})$
 through the heat-kernel $a_2$ coefficient of an
 $N_f$-flavour Dirac fermion bundle~\cite{Sakharov1968,Adler1980,
 Vassilevich2003}. The sibling bundles in this series build on that
@@ -246,8 +246,8 @@ argument) is that the same ADW substrate with $N_f = 16$ drives the
 program's sibling threads. Concretely:
 
 \begin{itemize}
-\item The single Sakharov coefficient
-  $G_N^{\mathrm{Sak}} = 12\pi/(N_f\,\Lambda_{\mathrm{UV}}^{2})$
+\item The single heat-kernel coefficient
+  $G_N^{a_2} = 3\pi/(N_f\,\Lambda_{\mathrm{UV}}^{2})$
   derived from the heat-kernel $a_2$ coefficient on the substrate's
   $N_f$-flavour Dirac fermion bundle (D3 \S\ref{sec:emergent-gravity})
   uses the same $N_f = 16$ count that, on the modular-invariance side,
@@ -919,8 +919,8 @@ hypothesis, not as Lean-verified content).
 
 The substrate-identity synthesis claim of this flagship leans on the
 observation that the $N_f = 16$ derived in D2 (modular framing /
-Rokhlin / 16-convergence) and the $N_f$ in the Sakharov coefficient
-$G_N^{\mathrm{Sak}} = 12\pi/(N_f\,\Lambda_{\mathrm{UV}}^{2})$ derived
+Rokhlin / 16-convergence) and the $N_f$ in the heat-kernel coefficient
+$G_N^{a_2} = 3\pi/(N_f\,\Lambda_{\mathrm{UV}}^{2})$ derived
 in D3 \S 17 (heat-kernel calibration on the substrate's Dirac-fermion
 bundle) are two readings of ONE fermion content, related by a fixed
 proportionality rather than identical. They are not the same number:
@@ -964,15 +964,19 @@ D3 deep-paper submission per the strategy frame~\cite{Roehm2026Strategy}.
 The substrate's emergent-gravity content propagates across six
 observables through a \emph{single} closed-form coefficient
 \begin{equation}
-  G_N^{\mathrm{Sak}} \;=\; \frac{12\pi}{N_f\,\Lambda_{\mathrm{UV}}^{2}}\,,
+  G_N^{a_2} \;=\; \frac{3\pi}{N_f\,\Lambda_{\mathrm{UV}}^{2}}\,,
 \end{equation}
 derived from the heat-kernel $a_2$ coefficient of an $N_f$-flavour
 Dirac fermion bundle on the substrate~\cite{Sakharov1968,Adler1980,
 Vassilevich2003} (D3 \S 17;
-\texttt{HeatKernelExpansion.G\_N\_from\_a2\_eq\_G\_N\_sakharov}).
-The Sakharov coefficient identity is verified character-for-character
-against Vassilevich Eq.~4.37; the same coefficient propagates without
-an additional dial across the six observables of D3 (the BCH four
+\texttt{HeatKernelExpansion.G\_N\_from\_a2\_eq\_quarter\_G\_N\_sakharov}).
+This is exactly one quarter of the Sakharov--Adler
+$G_N^{\mathrm{Sak}} = 12\pi/(N_f\Lambda_{\mathrm{UV}}^{2})$ that Phase
+6a.1 states independently; the factor is the Dirac index trace
+$\operatorname{tr}_V\mathbb{1} = 4$ carried by Vassilevich Eq.~(4.27),
+and the named theorem is the exact ratio rather than an equality. The
+same coefficient propagates without an additional dial across the six
+observables of D3 (the BCH four
 laws regime-partition mass; the Bekenstein--Hawking entropy
 prefactor; the cosmological-constant overshoot ratio; the
 Einstein--Cartan torsion at the cosmological background; the
@@ -1819,9 +1823,10 @@ locations:
   substrate's tracked-hypothesis Prop record bundle (D3
   \S\ref{sec:emergent-gravity} with Bundle~D3 \S 2).
 \item \textbf{Decision Gate~E.2 (heat-kernel calibration).} The
-  Sakharov coefficient $G_N^{\mathrm{Sak}} = 12\pi/(N_f\,\Lambda_{\mathrm{UV}}^{2})$
-  is verified character-for-character against Vassilevich
-  Eq.~4.37~\cite{Vassilevich2003}. The same coefficient propagates
+  heat-kernel coefficient $G_N^{a_2} = 3\pi/(N_f\,\Lambda_{\mathrm{UV}}^{2})$
+  follows from Vassilevich Eq.~(4.27)~\cite{Vassilevich2003} with the
+  Dirac fibre trace, and is exactly one quarter of the Sakharov--Adler
+  $12\pi/(N_f\Lambda_{\mathrm{UV}}^{2})$. The same coefficient propagates
   across six observables in D3 without an additional dial.
 \item \textbf{Decision Gate~E.3 (diff invariance through $a_4$).}
   The path-(b) order-by-order invariance failure
@@ -2169,7 +2174,7 @@ the F-unique synthesis content:
 
 \begin{itemize}
 \item The $N_f$ in
-  $G_N^{\mathrm{Sak}} = 12\pi/(N_f\,\Lambda_{\mathrm{UV}}^{2})$
+  $G_N^{a_2} = 3\pi/(N_f\,\Lambda_{\mathrm{UV}}^{2})$
   (D3 \S\ref{sec:emergent-gravity}) and the $N_f = 16$ that uniquely
   fixes the Standard-Model anomaly classification via
   $\mathrm{Spin}^{\mathbb{Z}_4}$ 5-bordism (D2
